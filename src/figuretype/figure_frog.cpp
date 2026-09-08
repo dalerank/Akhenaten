@@ -243,10 +243,6 @@ void figure_frog::update_day() {
     }
 }
 
-sound_key figure_frog::phrase_key() const {
-    return {};
-}
-
 int figure_frog::spawn_swarm(int count) {
     const auto &p = figure_frog::current_params();
     if (count < 1) {

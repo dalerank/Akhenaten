@@ -4,14 +4,14 @@
 #include "city/city.h"
 #include "city/city_buildings.h"
 #include "city/city_figures.h"
-#include "core/random.h"
-#include "core/svector.h"
 #include "figure/figure.h"
 #include "grid/road_access.h"
 #include "grid/terrain.h"
 #include "js/js_game.h"
 #include "scenario/map.h"
 #include "scenario/scenario.h"
+
+const e_funeral_walker_action_tokens_t ANK_CONFIG_ENUM(e_funeral_walker_action_tokens)
 
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_funeral_walker);
 
@@ -85,9 +85,9 @@ bool tomb_has_road_access(building &tomb) {
 }
 
 bool is_active_funeral_action(int action) {
-    return action == ACTION_120_FUNERAL_CREATED
-        || action == ACTION_121_FUNERAL_GOING_TO_TOMB
-        || action == ACTION_122_FUNERAL_ARRIVED;
+    return action == ACTION_0_FUNERAL_CREATED
+        || action == ACTION_1_FUNERAL_GOING_TO_TOMB
+        || action == ACTION_2_FUNERAL_ARRIVED;
 }
 
 // Revive an inert slot targeting this tomb (action 0 / unknown) instead of spawning a duplicate.
@@ -99,7 +99,7 @@ figure *find_inert_funeral_for_tomb(building_id tomb_id) {
         if (!f->is_alive() || f->type != FIGURE_FUNERAL_WALKER) {
             continue;
         }
-        if (is_active_funeral_action(f->action_state) || f->action_state == ACTION_123_FUNERAL_ABORT
+        if (is_active_funeral_action(f->action_state) || f->action_state == ACTION_3_FUNERAL_ABORT
             || f->action_state == FIGURE_ACTION_149_CORPSE) {
             continue;
         }
@@ -204,12 +204,12 @@ void figure_funeral_walker::on_post_load() {
     }
 
     const int a = action_state();
-    const bool known = is_active_funeral_action(a) || a == ACTION_123_FUNERAL_ABORT
+    const bool known = is_active_funeral_action(a) || a == ACTION_3_FUNERAL_ABORT
         || a == FIGURE_ACTION_149_CORPSE;
     if (!known) {
         // Recover type-only / zeroed action slots so they resume instead of idling
         // while still holding a tomb id (would otherwise block respawn forever).
-        advance_action(ACTION_120_FUNERAL_CREATED);
+        advance_action(ACTION_0_FUNERAL_CREATED);
     }
 
     if (is_active_funeral_action(action_state())) {
@@ -222,7 +222,7 @@ void figure_funeral_walker::on_post_load() {
 
 void figure_funeral_walker::figure_action() {
     switch (action_state()) {
-    case ACTION_120_FUNERAL_CREATED: {
+    case ACTION_0_FUNERAL_CREATED: {
         building_id tomb_id = runtime_data().target_tomb_id;
         if (!tomb_id) {
             tomb_id = base.destination_building_id;
@@ -237,11 +237,11 @@ void figure_funeral_walker::figure_action() {
         set_destination(tomb->id);
         base.destination_tile = tomb_destination_tile(*tomb);
         route_remove();
-        advance_action(ACTION_121_FUNERAL_GOING_TO_TOMB);
+        advance_action(ACTION_1_FUNERAL_GOING_TO_TOMB);
         break;
     }
 
-    case ACTION_121_FUNERAL_GOING_TO_TOMB: {
+    case ACTION_1_FUNERAL_GOING_TO_TOMB: {
         building_id tomb_id = runtime_data().target_tomb_id;
         if (!tomb_id) {
             tomb_id = base.destination_building_id;
@@ -254,21 +254,21 @@ void figure_funeral_walker::figure_action() {
         }
 
         // do_goto advances to NEXT/FAIL itself; finish same tick when done.
-        do_goto(base.destination_tile, TERRAIN_USAGE_ANY, ACTION_122_FUNERAL_ARRIVED,
-                ACTION_123_FUNERAL_ABORT);
-        if (action_state() == ACTION_122_FUNERAL_ARRIVED) {
+        do_goto(base.destination_tile, TERRAIN_USAGE_ANY, ACTION_2_FUNERAL_ARRIVED,
+                ACTION_3_FUNERAL_ABORT);
+        if (action_state() == ACTION_2_FUNERAL_ARRIVED) {
             if (auto *m = tomb->dcast_monument()) {
                 m->set_funeral_done(true);
             }
             poof();
-        } else if (action_state() == ACTION_123_FUNERAL_ABORT) {
+        } else if (action_state() == ACTION_3_FUNERAL_ABORT) {
             // Leave funeral_done clear so daily try_spawn_all can retry.
             poof();
         }
         break;
     }
 
-    case ACTION_122_FUNERAL_ARRIVED: {
+    case ACTION_2_FUNERAL_ARRIVED: {
         // Reached via set_action in tests, or if do_goto advanced without same-tick finish.
         building_id tomb_id = runtime_data().target_tomb_id;
         if (!tomb_id) {
@@ -284,7 +284,7 @@ void figure_funeral_walker::figure_action() {
         break;
     }
 
-    case ACTION_123_FUNERAL_ABORT:
+    case ACTION_3_FUNERAL_ABORT:
         poof();
         break;
     }
@@ -296,15 +296,6 @@ void figure_funeral_walker::update_animation() {
         animkey = animkeys().death;
     }
     image_set_animation(animkey);
-}
-
-sound_key figure_funeral_walker::phrase_key() const {
-    // TEMP: worker lines until dedicated funeral wavs exist (RE).
-    svector<sound_key, 2> keys = {
-        "worker_going_to_workplace",
-        "worker_city_is_good",
-    };
-    return keys[rand() % keys.size()];
 }
 
 int figure_funeral_walker::try_spawn_all(bool force_ignore_road) {
@@ -328,7 +319,7 @@ int figure_funeral_walker::try_spawn_all(bool force_ignore_road) {
             figure_funeral_walker fw(inert);
             fw.runtime_data().target_tomb_id = b.id;
             fw.set_destination(b.id);
-            fw.advance_action(ACTION_120_FUNERAL_CREATED);
+            fw.advance_action(ACTION_0_FUNERAL_CREATED);
             if (!first_id) {
                 first_id = inert->id;
             }
@@ -352,7 +343,7 @@ int figure_funeral_walker::try_spawn_all(bool force_ignore_road) {
         figure_funeral_walker fw(f);
         fw.runtime_data().target_tomb_id = b.id;
         fw.set_destination(b.id);
-        fw.advance_action(ACTION_120_FUNERAL_CREATED);
+        fw.advance_action(ACTION_0_FUNERAL_CREATED);
         if (!first_id) {
             first_id = f->id;
         }

@@ -1078,6 +1078,19 @@ localization_en = [
   { key: "#flotsam_plato_war", text: "Only the dead have seen the end of war. The rest of us have seen the end of the hull." }
   { key: "#flotsam_plato_meta", text: "They call me debris. I quote Plato. Who is the philosopher now?" }
 
+  { key: "#frog_joke_ribbit", text: "Ribbit. That's all. No wait — also, your house is mine now." }
+  { key: "#frog_joke_plague", text: "They call it a plague. I call it a family reunion." }
+  { key: "#frog_joke_pad", text: "I asked for a lily pad. They gave me a mudbrick. Close enough." }
+  { key: "#frog_joke_pharaoh", text: "Pharaoh says hop to it. Joke's on him — I already hop." }
+  { key: "#frog_joke_flies", text: "What do frogs order at the bazaar? Whatever bugs them." }
+  { key: "#frog_joke_happy", text: "Why are frogs so happy? They eat whatever bugs them. Twice." }
+  { key: "#frog_joke_croak", text: "I came here to croak and chew flies. And I'm all out of flies." }
+  { key: "#frog_joke_swarm", text: "One frog is cute. Ten is a meeting. Twenty is policy." }
+  { key: "#frog_joke_happiness", text: "City happiness just dropped. You're welcome." }
+  { key: "#frog_joke_nile", text: "The Nile rises. So do I. Mostly on your doorstep." }
+  { key: "#frog_joke_amphibious", text: "Amphibious means land and water. Your pantry qualifies as both." }
+  { key: "#frog_joke_meta", text: "I'm a biblical omen with standup material. Ribbit." }
+
   {key: "#dwellers_palace_are_pinnacle", group:127, id:100}
   {key: "#house_upgrade_inprogress", group:127, id:101}
   {key: "#house_nearby_building", group:127, id:102}
@@ -1327,6 +1340,16 @@ localization_en = [
   { key: "#ferry_boat_city_is_good", text: "This crossing runs smooth! Short trips and full landings." }
   { key: "#ferry_boat_city_is_amazing", text: "Best ferry I've worked. These landings practically greet you!" }
 
+  { key: "#governor_city_left_much_nobles", text: "Too many nobles are leaving this city!" }
+  { key: "#governor_festival_was_near", text: "Ah, that festival was splendid! Still warm in the streets." }
+  { key: "#governor_disease_risk", text: "Sickness in the streets. A governor's city should not smell of fever." }
+  { key: "#governor_no_food_in_city", text: "Empty granaries? Nobles will not stay where bread runs short." }
+  { key: "#governor_city_have_no_army", text: "No forts? One raid and this palace is loot." }
+  { key: "#governor_gods_are_angry", text: "The gods look angry. Even the court whispers of ill omens." }
+  { key: "#governor_low_entertainment", text: "No festivals for ages. Even governors need diversion." }
+  { key: "#governor_city_is_good", text: "A solid city! Order in the streets and coin in the coffers." }
+  { key: "#governor_city_is_amazing", text: "Finest city I've governed. Pharaoh himself would be proud!" }
+
   { key: "#fishing_boat_ready", text: "Boat ready at the wharf. Crew waiting for the tide." }
   { key: "#fishing_boat_going_to_fish", text: "Sailing out to the fishing grounds." }
   { key: "#fishing_boat_fishing", text: "Hauling in fish. Keep the nets steady!" }
@@ -1344,6 +1367,21 @@ localization_en = [
   { key: "#fishing_boat_low_entertainment", text: "No festivals for ages. Fishermen need a shore leave too." }
   { key: "#fishing_boat_city_is_good", text: "Fine waters and a busy wharf. Not a bad berth." }
   { key: "#fishing_boat_city_is_amazing", text: "Best fishing I've known. Nets fill before noon!" }
+
+  { key: "#funeral_walker_ready", text: "The procession is ready. We walk for the honoured dead." }
+  { key: "#funeral_walker_going_to_tomb", text: "To the tomb. Keep the path clear and the lamps steady." }
+  { key: "#funeral_walker_arrived", text: "We have arrived. May the tomb receive them in peace." }
+  { key: "#funeral_walker_lost_path", text: "The road failed us. We must try the way again." }
+  { key: "#funeral_walker_disease_risk", text: "Sickness walks the streets. Even a funeral feels crowded." }
+  { key: "#funeral_walker_no_food_in_city", text: "Empty granaries, and still we bury. The living grow thin." }
+  { key: "#funeral_walker_city_have_no_army", text: "No forts? Raiders could desecrate every tomb we tend." }
+  { key: "#funeral_walker_need_workers", text: "Too few hands. Processions wait while monuments stand unfinished." }
+  { key: "#funeral_walker_gods_are_angry", text: "The gods are angry. What burial can soothe them now?" }
+  { key: "#funeral_walker_city_is_bad", text: "Pharaoh's favour is ash. Even tombs feel abandoned." }
+  { key: "#funeral_walker_much_unemployment", text: "Idle folk ashore, yet few will walk the funeral road." }
+  { key: "#funeral_walker_low_entertainment", text: "No festivals for ages. Mourning fills every plaza." }
+  { key: "#funeral_walker_city_is_good", text: "A fine city for the living — and a proper rest for the dead." }
+  { key: "#funeral_walker_city_is_amazing", text: "Such splendour! Even the tombs gleam with honour." }
 
   { key: "#malaria_problem", text: "(Not used)" }
   { key: "#malaria_not_a_problem", text: "Malaria doesn't seem to be a problem here." }

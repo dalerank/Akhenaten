@@ -4,7 +4,6 @@
 var ACTION_TOMB_ROBBER_CREATED = 120
 var ACTION_TOMB_ROBBER_GOING = 121
 var ACTION_TOMB_ROBBER_CAUGHT = 124
-var ACTION_FUNERAL_CREATED = 120
 
 function place_finished_small_royal() {
     if (!__scenario_building_allowed(BUILDING_SMALL_ROYAL_TOMB)) {
@@ -129,7 +128,7 @@ function run_test() {
         __test_signal_ready()
         return
     }
-    __test_figure_set_action(ffid, ACTION_FUNERAL_CREATED)
+    __test_figure_set_action(ffid, ACTION_0_FUNERAL_CREATED)
     __test_figure_action_perform(ffid)
     if (__test_funeral_target_tomb(ffid) != bid
             && __figure_get_destination_building_id(ffid) != bid) {

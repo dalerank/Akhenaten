@@ -2,12 +2,16 @@
 
 #include "figure/figure.h"
 
-enum e_funeral_walker_action {
-    ACTION_120_FUNERAL_CREATED = 120,
-    ACTION_121_FUNERAL_GOING_TO_TOMB = 121,
-    ACTION_122_FUNERAL_ARRIVED = 122,
-    ACTION_123_FUNERAL_ABORT = 123, // path fail — do not set funeral_done
+enum e_funeral_walker_action : uint16_t {
+    ACTION_0_FUNERAL_CREATED = 0,
+    ACTION_1_FUNERAL_GOING_TO_TOMB = 1,
+    ACTION_2_FUNERAL_ARRIVED = 2,
+    ACTION_3_FUNERAL_ABORT = 3, // path fail — do not set funeral_done
+
+    ACTION_4_FUNERAL_MAX
 };
+using e_funeral_walker_action_tokens_t = token_holder<e_funeral_walker_action, ACTION_0_FUNERAL_CREATED, ACTION_4_FUNERAL_MAX>;
+extern const e_funeral_walker_action_tokens_t e_funeral_walker_action_tokens;
 
 // One-shot funeral procession to a finished burial tomb.
 class figure_funeral_walker : public figure_impl {
@@ -24,7 +28,6 @@ public:
     virtual void figure_action() override;
     virtual void figure_roaming_action() override { /* no home-return roam */ }
     virtual void update_animation() override;
-    virtual sound_key phrase_key() const override;
 
     // Daily scan: spawn 1 walker per eligible finished tomb.
     // Returns first spawned figure id, or 0 if none.

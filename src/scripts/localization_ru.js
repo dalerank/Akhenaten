@@ -459,6 +459,19 @@ localization_ru = [
     { key: "#flotsam_plato_war", text: "Только мёртвые видели конец войны. Остальные видели конец корпуса." }
     { key: "#flotsam_plato_meta", text: "Меня зовут обломком, а я цитирую Платона. Кто тут философ?" }
 
+    { key: "#frog_joke_ribbit", text: "Ква. Это всё. Нет, стоп — ещё ваш дом теперь мой." }
+    { key: "#frog_joke_plague", text: "Они зовут это чумой. Я зову это семейной встречей." }
+    { key: "#frog_joke_pad", text: "Я просил кувшинку. Дали саманный кирпич. Почти то же." }
+    { key: "#frog_joke_pharaoh", text: "Фараон говорит: прыгай. Шутка на нём — я и так прыгаю." }
+    { key: "#frog_joke_flies", text: "Что лягушки заказывают на базаре? Всё, что их жужжит." }
+    { key: "#frog_joke_happy", text: "Почему лягушки счастливы? Едят всё, что их бесит. Дважды." }
+    { key: "#frog_joke_croak", text: "Я пришёл квакать и жевать мух. А мухи кончились." }
+    { key: "#frog_joke_swarm", text: "Одна лягушка — мило. Десять — собрание. Двадцать — политика." }
+    { key: "#frog_joke_happiness", text: "Счастье города упало. Пожалуйста." }
+    { key: "#frog_joke_nile", text: "Нил поднимается. И я тоже. В основном на вашем пороге." }
+    { key: "#frog_joke_amphibious", text: "Земноводный — и суша, и вода. Ваша кладовая подходит под оба." }
+    { key: "#frog_joke_meta", text: "Я библейское знамение со стендапом. Ква." }
+
     { key: "#recruiter_disease_in_city", text: "Я вижу больных людей повсюду. Может вспыхнуть чума!" }
     { key: "#recruiter_no_food_in_city", text: "Я голодаю. Я предпочёл бы искать еду, а не работников. " }
     { key: "#recruiter_city_not_safety", text: "Городская оборона настолько слаба, что скоро я мог бы заполнять вакансии иностранцами вместо египтян." }
@@ -690,6 +703,16 @@ localization_ru = [
     { key: "#ferry_boat_city_is_good", text: "Эта переправа споро! Короткие рейсы и полные пристани." }
     { key: "#ferry_boat_city_is_amazing", text: "Лучший паром, где я работал. Эти причалы сами вас встречают!" }
 
+    { key: "#governor_city_left_much_nobles", text: "Слишком много знати покидает этот город!" }
+    { key: "#governor_festival_was_near", text: "Ах, какой был праздник! Ещё тепло на улицах." }
+    { key: "#governor_disease_risk", text: "На улицах хворь. Город правителя не должен пахнуть лихорадкой." }
+    { key: "#governor_no_food_in_city", text: "Пустые амбары? Знать не останется без хлеба." }
+    { key: "#governor_city_have_no_army", text: "Нет фортов? Один набег — и дворец станет добычей." }
+    { key: "#governor_gods_are_angry", text: "Боги злятся. Даже при дворе шепчут о дурных знамениях." }
+    { key: "#governor_low_entertainment", text: "Праздников давно не было. Даже правителям нужно развлечение." }
+    { key: "#governor_city_is_good", text: "Крепкий город! Порядок на улицах и монеты в казне." }
+    { key: "#governor_city_is_amazing", text: "Лучший город, которым я правил. Сам фараон был бы горд!" }
+
     { key: "#fishing_boat_ready", text: "Лодка у пристани. Экипаж ждёт прилива." }
     { key: "#fishing_boat_going_to_fish", text: "Идём к рыболовным угодьям." }
     { key: "#fishing_boat_fishing", text: "Тащим рыбу. Держите сети!" }
@@ -707,6 +730,21 @@ localization_ru = [
     { key: "#fishing_boat_low_entertainment", text: "Праздников давно не было. Рыбакам тоже нужен сход на берег." }
     { key: "#fishing_boat_city_is_good", text: "Хорошие воды и бойкая пристань. Неплохой причал." }
     { key: "#fishing_boat_city_is_amazing", text: "Лучшая рыбалка, что знал. Сети полны до полудня!" }
+
+    { key: "#funeral_walker_ready", text: "Процессия готова. Идём за почтенным усопшим." }
+    { key: "#funeral_walker_going_to_tomb", text: "К гробнице. Держите путь свободным и лампады ровными." }
+    { key: "#funeral_walker_arrived", text: "Мы прибыли. Да примет гробница их с миром." }
+    { key: "#funeral_walker_lost_path", text: "Дорога отказала. Придётся искать путь снова." }
+    { key: "#funeral_walker_disease_risk", text: "По улицам ходит хворь. Даже на похоронах тесно." }
+    { key: "#funeral_walker_no_food_in_city", text: "Амбары пусты, а мы всё хороним. Живые худеют." }
+    { key: "#funeral_walker_city_have_no_army", text: "Нет фортов? Налётчики осквернят каждую гробницу." }
+    { key: "#funeral_walker_need_workers", text: "Мало рук. Процессии ждут, пока памятники стоят недостроенными." }
+    { key: "#funeral_walker_gods_are_angry", text: "Боги злы. Какое погребение их успокоит?" }
+    { key: "#funeral_walker_city_is_bad", text: "Милость фараона — пепел. Даже гробницы кажутся брошенными." }
+    { key: "#funeral_walker_much_unemployment", text: "На берегу праздные, а по похоронной дороге мало кто идёт." }
+    { key: "#funeral_walker_low_entertainment", text: "Праздников давно не было. Траур заполняет каждую площадь." }
+    { key: "#funeral_walker_city_is_good", text: "Хороший город для живых — и достойный покой для мёртвых." }
+    { key: "#funeral_walker_city_is_amazing", text: "Какое великолепие! Даже гробницы сияют честью." }
 
     { key: "#malaria_problem", text: "(Не используется)" }
     { key: "#malaria_not_a_problem", text: "Малярия, похоже, здесь не проблема." }

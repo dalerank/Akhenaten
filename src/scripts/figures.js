@@ -33,6 +33,9 @@ import figure.ferry_boat
 import figure.fishing_boat
 import figure.fireman
 import figure.flotsam
+import figure.frog
+import figure.funeral_walker
+import figure.governor
 
 figure_water_carrier {
   overlay : OVERLAY_WATER
@@ -931,45 +934,6 @@ figure_storageyard_cart = {
 	terrain_usage : TERRAIN_USAGE_ROADS,
 }
 
-figure_governor {
-	animations  {
-		walk { pack: PACK_SPR_MAIN, id:189, max_frames:12 }
-		death  { pack: PACK_SPR_MAIN, id:190, max_frames:8, loop:false }
-		big_image { pack:PACK_UNLOADED, id:25, offset:FIGURE_GOVERNOR }
-	}
-
-	sounds {
-		governor_city_left_much_nobles {sound:"governor_e01.WAV"}
-		governor_festival_was_near {sound:"governor_e02.wav"}
-	}
-
-	category: figure_category_citizen
-	max_damage: 10
-	terrain_usage : TERRAIN_USAGE_ROADS,
-}
-
-figure_frog {
-	animations {
-		walk { pack:PACK_EXPANSION_SPR, id:22, max_frames:9 }
-		idle { pack:PACK_EXPANSION_SPR, id:23, max_frames:9 }
-		death { pack:PACK_EXPANSION_SPR, id:25, max_frames:6, loop:false }
-		big_image { pack:PACK_UNLOADED, id:25, offset:FIGURE_FROG }
-		icon { pack:PACK_EXPANSION, id:32 }
-	}
-
-	category: figure_category_inactive
-	max_damage: 20
-	attack_value: 0
-	terrain_usage: TERRAIN_USAGE_ANIMAL
-	max_roam_length: 480
-
-	default_swarm: 10
-	max_amount: 24
-	plague_days: 80
-	house_infest_days: 80
-	happiness_hit: -10
-}
-
 // Locust swarm — Cleopatra SprMain2 bmp "locust":
 // groups 30–34 = 6-frame cloud strips (non-8-dir). Runtime picks variant 0–4.
 // Walk JS id=30 is timing only; main_image_update remaps to g30+variant.
@@ -1031,26 +995,6 @@ figure_pharaoh {
 	terrain_usage: TERRAIN_USAGE_ANY
 	max_amount: 2
 	max_roam_length: 320
-}
-
-// Funeral procession — TEMP worker sprites/sounds until SprMain funeral pack id known.
-figure_funeral_walker {
-	animations {
-		walk { pack:PACK_SPR_MAIN, id:116, max_frames:12 }
-		death { pack:PACK_SPR_MAIN, id:117, max_frames:8, loop:false }
-		big_image { pack:PACK_UNLOADED, id:25, offset:FIGURE_FUNERAL_WALKER }
-	}
-
-	// TEMP: reuse worker wavs (no dedicated funeral click lines yet).
-	sounds {
-		worker_going_to_workplace {sound:"worker_e02.wav", group:212, text:0}
-		worker_city_is_good {sound:"worker_g09.wav", group:212, text:10}
-	}
-
-	category: figure_category_citizen
-	max_damage: 10
-	terrain_usage: TERRAIN_USAGE_ANY
-	max_amount: 8
 }
 
 figure_trade_ship = {

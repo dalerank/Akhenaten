@@ -14,11 +14,6 @@
 //   [test-marker] funeral_inert_action_no_block_ok
 //   [test-marker] funeral_midwalk_saveload_ok  (or funeral_midwalk_saveload_skipped)
 
-var ACTION_FUNERAL_CREATED = 120
-var ACTION_FUNERAL_GOING = 121
-var ACTION_FUNERAL_ARRIVED = 122
-var ACTION_FUNERAL_ABORT = 123
-
 var __test84_saveload_ok = false
 var __test84_saveload_skipped = false
 
@@ -186,7 +181,7 @@ function run_test() {
         return
     }
 
-    __test_figure_set_action(fid, ACTION_FUNERAL_CREATED)
+    __test_figure_set_action(fid, ACTION_0_FUNERAL_CREATED)
     __test_figure_action_perform(fid)
 
     var dest = __figure_get_destination_building_id(fid)
@@ -196,15 +191,15 @@ function run_test() {
         __test_signal_ready()
         return
     }
-    if (action != ACTION_FUNERAL_GOING) {
-        __log_info_native('[test:84] expected GOING 121, got ' + action)
+    if (action != ACTION_1_FUNERAL_GOING_TO_TOMB) {
+        __log_info_native('[test:84] expected ACTION_1_FUNERAL_GOING_TO_TOMB, got ' + action)
         __test_signal_ready()
         return
     }
     __log_marker('funeral_goto_tomb_ok')
 
     // Abort mid-path must NOT set funeral_done.
-    __test_figure_set_action(fid, ACTION_FUNERAL_ABORT)
+    __test_figure_set_action(fid, ACTION_3_FUNERAL_ABORT)
     __test_figure_action_perform(fid)
     if (__test_monument_funeral_done(bid) != 0) {
         __log_info_native('[test:84] funeral_done set after ABORT')
@@ -221,7 +216,7 @@ function run_test() {
         __test_signal_ready()
         return
     }
-    __test_figure_set_action(fid, ACTION_FUNERAL_ARRIVED)
+    __test_figure_set_action(fid, ACTION_2_FUNERAL_ARRIVED)
     __test_figure_action_perform(fid)
     if (__test_monument_funeral_done(bid) != 1) {
         __log_info_native('[test:84] funeral_done not set after arrive')
@@ -279,7 +274,7 @@ function run_test() {
         return
     }
     // Arrive so funeral_done set; leave city clean for multi-tomb check.
-    __test_figure_set_action(fid2, ACTION_FUNERAL_ARRIVED)
+    __test_figure_set_action(fid2, ACTION_2_FUNERAL_ARRIVED)
     __test_figure_action_perform(fid2)
     __log_marker('funeral_no_provisions_required_ok')
 
@@ -319,7 +314,7 @@ function run_test() {
         __test_signal_ready()
         return
     }
-    __test_figure_set_action(pfid, ACTION_FUNERAL_CREATED)
+    __test_figure_set_action(pfid, ACTION_0_FUNERAL_CREATED)
     __test_figure_action_perform(pfid)
     if (__figure_get_destination_building_id(pfid) != pbid) {
         __log_info_native('[test:84] pyramid dest want ' + pbid + ' got '
@@ -349,7 +344,7 @@ function run_test() {
         __test_signal_ready()
         return
     }
-    __test_figure_set_action(mfid, ACTION_FUNERAL_CREATED)
+    __test_figure_set_action(mfid, ACTION_0_FUNERAL_CREATED)
     __test_figure_action_perform(mfid)
     if (__figure_get_destination_building_id(mfid) != mbid) {
         __log_info_native('[test:84] mausoleum dest want ' + mbid + ' got '
@@ -363,7 +358,7 @@ function run_test() {
         __test_signal_ready()
         return
     }
-    __test_figure_set_action(mfid, ACTION_FUNERAL_ARRIVED)
+    __test_figure_set_action(mfid, ACTION_2_FUNERAL_ARRIVED)
     __test_figure_action_perform(mfid)
     if (__test_monument_funeral_done(mbid) != 1) {
         __log_info_native('[test:84] mausoleum funeral_done not set after arrive')
@@ -394,8 +389,8 @@ function run_test() {
         __test_signal_ready()
         return
     }
-    if (__figure_get_action_state(ifid) != ACTION_FUNERAL_CREATED
-        && __figure_get_action_state(ifid) != ACTION_FUNERAL_GOING) {
+    if (__figure_get_action_state(ifid) != ACTION_0_FUNERAL_CREATED
+        && __figure_get_action_state(ifid) != ACTION_1_FUNERAL_GOING_TO_TOMB) {
         __log_info_native('[test:84] inert revive bad action '
             + __figure_get_action_state(ifid))
         __test_signal_ready()
@@ -417,9 +412,9 @@ function run_test() {
         __test_signal_ready()
         return
     }
-    __test_figure_set_action(pfid, ACTION_FUNERAL_CREATED)
+    __test_figure_set_action(pfid, ACTION_0_FUNERAL_CREATED)
     __test_figure_action_perform(pfid)
-    if (__figure_get_action_state(pfid) != ACTION_FUNERAL_GOING) {
+    if (__figure_get_action_state(pfid) != ACTION_1_FUNERAL_GOING_TO_TOMB) {
         __log_info_native('[test:84] expected GOING before saveload, got '
             + __figure_get_action_state(pfid))
         __test_signal_ready()
@@ -463,7 +458,7 @@ function run_test() {
     var figure_restored = loaded && loaded_action > 0
         && (loaded_dest == pbid || loaded_target == pbid)
     if (figure_restored) {
-        __test_figure_set_action(loaded, ACTION_FUNERAL_ARRIVED)
+        __test_figure_set_action(loaded, ACTION_2_FUNERAL_ARRIVED)
         __test_figure_action_perform(loaded)
         if (__test_monument_funeral_done(pbid) != 1) {
             __log_info_native('[test:84] restored walker arrive did not set funeral_done')

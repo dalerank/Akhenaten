@@ -62,8 +62,8 @@ mods {
 
         {
             name : "pharaoh_sounds_pack"
-            desc : "Custom walker speech (hunters, donkey, marketboy, drunkard, emigrant, ferry, fishing boat, flotsam, enemy walkers/ships)"
-            version : "1.12.0"
+            desc : "Custom walker speech (hunters, donkey, marketboy, drunkard, emigrant, ferry, fishing boat, funeral, flotsam, frog, governor, enemy walkers/ships)"
+            version : "1.15.0"
             author : "dalerank"
             url : "https://f003.backblazeb2.com/file/akhenaten-mods/pharaoh_sounds_pack.sgx"
             email : "dalerankn8@gmail.com"

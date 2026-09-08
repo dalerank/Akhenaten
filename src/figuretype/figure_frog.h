@@ -32,7 +32,6 @@ public:
     virtual void figure_roaming_action() override {}
     virtual void update_animation() override;
     virtual void update_day() override;
-    virtual sound_key phrase_key() const override;
     virtual e_minimap_figure_color minimap_color() const override { return FIGURE_COLOR_ANIMAL; }
 
     static int spawn_swarm(int count = 0);
