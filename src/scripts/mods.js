@@ -62,8 +62,8 @@ mods {
 
         {
             name : "pharaoh_sounds_pack"
-            desc : "Custom walker speech (hunters, donkey, marketboy, market seller, drunkard, emigrant, immigrant, ferry, fishing boat, funeral, flotsam, frog, governor, herbalist, lumberjack, mummy, noble, pharaoh, enemy walkers/ships)"
-            version : "1.22.0"
+            desc : "Custom walker speech (hunters, donkey, marketboy, market seller, drunkard, emigrant, immigrant, ferry, fishing boat, funeral, flotsam, frog, governor, herbalist, lumberjack, mummy, noble, pharaoh, plagued citizen, protestor, reed gatherer, rioter, robber, enemy walkers/ships)"
+            version : "1.27.0"
             author : "dalerank"
             url : "https://f003.backblazeb2.com/file/akhenaten-mods/pharaoh_sounds_pack.sgx"
             email : "dalerankn8@gmail.com"

@@ -16,9 +16,7 @@ public:
 
     virtual void on_create() override {}
     virtual void figure_action() override;
-    virtual sound_key phrase_key() const override;
     virtual void update_animation() override;
-    //virtual figure_sound_t get_sound_reaction(pcstr key) const override;
 
     static void create(building *b);
 };

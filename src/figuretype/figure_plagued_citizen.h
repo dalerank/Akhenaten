@@ -25,7 +25,6 @@ public:
     virtual void figure_roaming_action() override { /* free roam; no home return */ }
     virtual void update_animation() override;
     virtual int provide_service() override;
-    virtual sound_key phrase_key() const override;
     virtual bool ignores_roadblocks() const override { return true; }
 
     // Spawn one carrier at house road access. Returns figure id, or 0.

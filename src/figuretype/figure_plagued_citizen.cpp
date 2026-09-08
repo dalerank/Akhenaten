@@ -114,10 +114,6 @@ int figure_plagued_citizen::provide_service() {
     });
 }
 
-sound_key figure_plagued_citizen::phrase_key() const {
-    return {};
-}
-
 int figure_plagued_citizen::spawn_from_house(building &house) {
     if (!house.is_valid() || !house.is_main()) {
         return 0;

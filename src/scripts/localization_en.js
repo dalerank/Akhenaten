@@ -838,6 +838,61 @@ localization_en = [
   { key: "#pharaoh_city_is_good", text: "A fine city. Order, bread, and loyalty — as it should be." }
   { key: "#pharaoh_city_is_amazing", text: "This city shines like the Nile at dawn. Egypt itself is proud!" }
 
+  { key: "#plagued_i_feel_awful", text: "I feel awful... everything spins and burns." }
+  { key: "#plagued_fever_spreads", text: "The fever spreads. Stay back — I cannot stop walking." }
+  { key: "#plagued_no_food_in_city", text: "Empty granaries and a burning fever. What a way to starve." }
+  { key: "#plagued_city_have_no_army", text: "No forts? Disease will take this city before any enemy can." }
+  { key: "#plagued_gods_are_angry", text: "The gods are angry. Is this their curse crawling through me?" }
+  { key: "#plagued_low_entertainment", text: "No festival for ages... only coughing in the streets." }
+  { key: "#plagued_city_is_good", text: "The city seemed fine. Why did this fever choose me?" }
+  { key: "#plagued_city_is_amazing", text: "They call this the best city — then why am I dying in its streets?" }
+
+  { key: "#protestor_we_want_justice", text: "We want justice! Hear our voices in the street!" }
+  { key: "#protestor_tax_too_high", text: "These taxes bleed us dry! No more!" }
+  { key: "#protestor_wages_too_low", text: "Our wages won't buy bread. Fair pay or we stay!" }
+  { key: "#protestor_no_jobs", text: "No work, no hope — and you expect silence?" }
+  { key: "#protestor_no_food_in_city", text: "Empty granaries! How long must we starve quietly?" }
+  { key: "#protestor_city_have_no_army", text: "No forts? They leave us undefended and overtaxed!" }
+  { key: "#protestor_gods_are_angry", text: "Even the gods frown. This city has lost its way!" }
+  { key: "#protestor_low_entertainment", text: "No festivals, only hunger and taxes. What kind of life is this?" }
+  { key: "#protestor_city_is_good", text: "They say the city is fine. Fine for whom?" }
+  { key: "#protestor_city_is_amazing", text: "Amazing city? Tell that to empty stomachs and empty purses!" }
+
+  { key: "#rioter_burn_it_down", text: "Burn it down! This city will listen to fire!" }
+  { key: "#rioter_tax_too_high", text: "Tax collectors first — then the rest of your pretty city!" }
+  { key: "#rioter_wages_too_low", text: "Starve us on scraps and we smash what we can't buy!" }
+  { key: "#rioter_no_jobs", text: "No work? Then we make our own work — with torches!" }
+  { key: "#rioter_no_food_in_city", text: "Empty granaries! We'll take what we need from your stores!" }
+  { key: "#rioter_city_have_no_army", text: "No forts? Nothing stands between us and the palace!" }
+  { key: "#rioter_gods_are_angry", text: "The gods rage — so do we! Tear it all down!" }
+  { key: "#rioter_low_entertainment", text: "No festivals? Here's a show — watch the buildings fall!" }
+  { key: "#rioter_city_is_good", text: "Good city? Good for the rich. Not for us!" }
+  { key: "#rioter_city_is_amazing", text: "Amazing streets to burn. Watch them glow tonight!" }
+
+  { key: "#robber_maybe_stealing_will_get_attention", text: "Maybe stealing will get me some attention!" }
+  { key: "#robber_i_take_what_i_want", text: "I take what I want!" }
+  { key: "#robber_more_profitable_than_other_jobs", text: "More profitable than other jobs in this city." }
+  { key: "#robber_take_take_take", text: "Take, take, take!" }
+  { key: "#robber_tax_too_high", text: "Taxes take from you — I take from the palace!" }
+  { key: "#robber_wages_too_low", text: "Wages too low? My hands find better pay." }
+  { key: "#robber_no_jobs", text: "No honest work? Fine. Dishonest work pays." }
+  { key: "#robber_no_food_in_city", text: "Empty granaries? Gold still fills pockets." }
+  { key: "#robber_city_have_no_army", text: "No forts? Easy streets for a quiet thief." }
+  { key: "#robber_gods_are_angry", text: "Gods angry? Good cover — blame heaven, not me." }
+  { key: "#robber_low_entertainment", text: "No festivals? Stealing is my entertainment." }
+  { key: "#robber_city_is_good", text: "Nice city. Nice purses to lighten." }
+  { key: "#robber_city_is_amazing", text: "Best city to rob — fat purses everywhere!" }
+
+  { key: "#reed_to_the_marsh_i_march", text: "To the marsh I march!" }
+  { key: "#reed_will_make_some_fine_papyrus", text: "These reeds will make some fine papyrus." }
+  { key: "#reed_disease_risk", text: "Fever in the marshes. Hard to cut reeds with shaky hands." }
+  { key: "#reed_no_food_in_city", text: "Empty granaries? A hungry reed gatherer cuts crooked bundles." }
+  { key: "#reed_city_have_no_army", text: "No forts? One raid and these marshes belong to invaders." }
+  { key: "#reed_gods_are_angry", text: "The gods look angry. Even good reeds wilt under their gaze." }
+  { key: "#reed_low_entertainment", text: "No festivals for ages. Even marsh workers need a day off the mud." }
+  { key: "#reed_city_is_good", text: "This city is solid! Good reeds for fine papyrus." }
+  { key: "#reed_city_is_amazing", text: "Best city I've gathered for. These reeds will make scrolls forever!" }
+
   { key: "#noble_taking_a_stroll", text: "A leisurely stroll. The common folk should make way." }
   { key: "#noble_returning_home", text: "Back to my manor. These dusty streets tire a person of quality." }
   { key: "#noble_disease_risk", text: "Fever in the streets? Keep the rabble away from my courtyard." }
@@ -1645,6 +1700,8 @@ localization_en = [
   { key: "#osiris_city_is_amazing", text: "Osiris is proud to be worshiped in such a fine city." }
   { key: "#osiris_god_love_festival", text: "Festivals warm Osiris' heart." }
   { key: "#osiris_city_low_mood", text: "Osiris could punish the city for its neglect with a low flood." }
+  { key: "#osiris_disease_in_city", text: "Disease walks the streets. Osiris watches the living and the dead." }
+  { key: "#osiris_need_entertainment", text: "A little music would lift prayers as well as spirits." }
 
   { key: "#ra_city_low_health", text: "The people coming to the Temple don't look healthy. I hope the illness doesn't escalate." }
   { key: "#ra_no_food_in_city", text: "I don't have enough food to feed Ra or myself!" }
@@ -1658,19 +1715,23 @@ localization_en = [
   { key: "#ra_city_is_amazing", text: "The only place better than this city is the Field of Reeds." }
   { key: "#ra_god_love_festival", text: "Ra loves to see his people during the festival." }
   { key: "#ra_city_low_mood", text: "Our city is an embarrassment to the rest of the Kingdom." }
+  { key: "#ra_disease_in_city", text: "Illness spreads under Ra's sun. The temples must help." }
+  { key: "#ra_need_entertainment", text: "Even Ra's priests need diversion after long days of ritual." }
 
   { key: "#ptah_city_low_health", text: "Poor health could result in plague if nothing is done about conditions in the city." }
   { key: "#ptah_no_food_in_city", text: "The rumbling of my empty stomach distracts me from my duties to Ptah." }
   { key: "#ptah_city_not_safety", text: "Our holey defenses will be useless if anyone chooses to attack us." }
   { key: "#ptah_need_workers", text: "It saddens Ptah to see industries idle because of the worker shortage." }
   { key: "#ptah_gods_are_angry", text: "The gods my inflict a just retribution if the city continues to ignore them." }
-  { key: "#seth_low_sentiment", text: "Our ill repute could encourage invaders." }
+  { key: "#ptah_low_sentiment", text: "Our ill repute could encourage invaders." }
   { key: "#ptah_much_unemployments", text: "Ptah wishes that all the unemployed in the city could find productive work." }
   { key: "#ptah_low_entertainment", text: "I like to have a good time, just like anyone else. I wish there were more entertainers in this city." }
   { key: "#ptah_city_is_good", text: "This city has its problems, but its a good place to live." }
   { key: "#ptah_city_is_amazing", text: "This is the best crafted city in all of Egypt!" }
   { key: "#ptah_god_love_festival", text: "Ptah knows that holidays make workers happier." }
   { key: "#ptah_city_low_mood", text: "Ptah's guiding hand can do only so much. The industries in this city need more workers!" }
+  { key: "#ptah_disease_in_city", text: "Plague threatens the workshops. Ptah cannot craft health from neglect." }
+  { key: "#ptah_need_entertainment", text: "Craftsmen and priests alike need more than labor and prayer." }
 
   { key: "#seth_city_low_health", text: "A plague may wreak havoc on the city if health does not improve." }
   { key: "#seth_no_food_in_city", text: "All day, I battle my hunger. I need more food." }
@@ -1684,21 +1745,23 @@ localization_en = [
   { key: "#seth_city_is_amazing", text: "This city is unrivaled in all Egypt!" }
   { key: "#seth_god_love_festival", text: "Even Seth's warriors need the occasional festival." }
   { key: "#seth_city_low_mood", text: "Glory is on the horizon! Enemies are fast approaching the city." }
+  { key: "#seth_disease_in_city", text: "Disease weakens warriors. Seth cannot defend a sick city alone." }
+  { key: "#seth_need_entertainment", text: "Even Seth's priests need more than drills and omens." }
 
   { key: "#bast_city_low_health", text: "Bast cries to see so many sickly people. I hope the plague doesn't strike." }
   { key: "#bast_no_food_in_city", text: "It's hard to get enough food in this city. Hunger strikes everyone." }
   { key: "#bast_city_not_safety", text: "Our city's woeful defenses invite our foes to attack us." }
   { key: "#bast_need_workers", text: "Our city cannot possible run well with so many job openings." }
   { key: "#bast_gods_are_angry", text: "The gods are turning their backs on this city. We should pay them more respect." }
-  { key: "#seth_low_sentiment", text: "The city's reputation is terrible. An invasion could come at any time." }
-  { key: "#seth_much_unemployments", text: "Not even Bast can lighten the hearts of so many jobless people." }
-  { key: "#seth_low_entertainment", text: "Bast is horrified by the lack of entertainment in this city." }
-  { key: "#seth_city_is_good", text: "This city isn't a bad place to live." }
-  { key: "#seth_city_is_amazing", text: "This city is the greatest!" }
-  { key: "#seth_god_love_festival", text: "Bast loves a good festival." }
-  { key: "#seth_low_sentiment_2", text: "People in the city are deeply unhappy. They could soon turn to crime." }
-  { key: "#seth_low_entertainment_2", text: "What's a priestess to do? There is so little diversion here." }
-  { key: "#seth_city_low_mood_2", text: "Bast grants me power to heal the sick before they spread their disease." }
+  { key: "#bast_low_sentiment", text: "The city's reputation is terrible. An invasion could come at any time." }
+  { key: "#bast_much_unemployments", text: "Not even Bast can lighten the hearts of so many jobless people." }
+  { key: "#bast_low_entertainment", text: "Bast is horrified by the lack of entertainment in this city." }
+  { key: "#bast_need_entertainment", text: "What's a priestess to do? There is so little diversion here." }
+  { key: "#bast_city_is_good", text: "This city isn't a bad place to live." }
+  { key: "#bast_city_is_amazing", text: "This city is the greatest!" }
+  { key: "#bast_god_love_festival", text: "Bast loves a good festival." }
+  { key: "#bast_city_low_mood", text: "People in the city are deeply unhappy. They could soon turn to crime." }
+  { key: "#bast_disease_in_city", text: "Bast grants me power to heal the sick before they spread their disease." }
 
   { key: "#hunt_bird_birds_are_wily", text: "These birds are wily!" }
   { key: "#hunt_bird_birds_ready_for_roasting", text: "These birds are ready for roasting!" }
