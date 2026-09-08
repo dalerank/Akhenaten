@@ -7,11 +7,13 @@
 #include <SDL_log.h>
 
 #include <algorithm>
+#include <array>
 #include <cstdarg>
 #include <csignal>
 #include <cstdlib>
 #include <iostream>
 #include <fstream>
+#include <string>
 #include <core/flat_map.h>
 
 #ifdef CPPTRACE_ENABLED
@@ -38,6 +40,48 @@ static xstring logger_active_path_ = logger_filename_;
 #if defined(GAME_PLATFORM_ANDROID)
 static FILE *logger_file_ = nullptr;
 #endif
+
+static constexpr size_t k_recent_cap = 64;
+static constexpr size_t k_recent_line_max = 512;
+static std::array<std::string, k_recent_cap> recent_errors_;
+static size_t recent_errors_count_ = 0;
+static size_t recent_errors_next_ = 0;
+
+static void push_recent_error(pcstr prefix, pcstr message) {
+    std::string line;
+    line.reserve(k_recent_line_max);
+    if (prefix && *prefix) {
+        line += prefix;
+    }
+    if (message) {
+        line += message;
+    }
+    if (line.size() > k_recent_line_max) {
+        line.resize(k_recent_line_max);
+    }
+    recent_errors_[recent_errors_next_] = std::move(line);
+    recent_errors_next_ = (recent_errors_next_ + 1) % k_recent_cap;
+    if (recent_errors_count_ < k_recent_cap) {
+        ++recent_errors_count_;
+    }
+}
+
+xstring recent_errors(int max_lines) {
+    if (max_lines <= 0 || recent_errors_count_ == 0) {
+        return xstring();
+    }
+    const size_t n = std::min((size_t)max_lines, recent_errors_count_);
+    size_t start = (recent_errors_next_ + k_recent_cap - n) % k_recent_cap;
+    std::string out;
+    out.reserve(n * 96);
+    for (size_t i = 0; i < n; ++i) {
+        if (i) {
+            out += '\n';
+        }
+        out += recent_errors_[(start + i) % k_recent_cap];
+    }
+    return xstring(out.c_str());
+}
 
 const flat_map<xstring, SDL_LogPriority, 8> PRIORITY_DICT = {
     {"verbose", SDL_LOG_PRIORITY_VERBOSE},
@@ -267,6 +311,10 @@ Logger::~Logger() {
 void Logger::write(void* /* userdata */, int /* category */, SDL_LogPriority priority, pcstr message) {
     static Logger logger;
     pcstr prefix = get_prefix_of(priority);
+
+    if (priority >= SDL_LOG_PRIORITY_WARN) {
+        push_recent_error(prefix, message);
+    }
 
     write_to_output_(prefix, message);
     logger.write(prefix, message);

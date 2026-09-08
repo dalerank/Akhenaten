@@ -1,5 +1,29 @@
 log_info("akhenaten: report bug window started")
 
+function report_bug_diagnostics() {
+    var lines = []
+    lines.push("")
+    lines.push("---")
+    lines.push("Version: " + game.version)
+    lines.push("Language: " + game.languages.current)
+    if (game.session_active) {
+        lines.push("Session: active")
+        if (game.session_last_loaded_mission) {
+            lines.push("Last loaded: " + game.session_last_loaded_mission)
+        }
+        lines.push("Scenario id: " + scenario.campaign_scenario_id)
+    } else {
+        lines.push("Session: menu")
+    }
+    var log = __game_recent_log_errors(40)
+    if (log && log.length > 0) {
+        lines.push("")
+        lines.push("Recent errors:")
+        lines.push(log)
+    }
+    return lines.join("\n")
+}
+
 [es=window]
 report_bug_window {
     pos: [(sw(0) - px(32)) / 2, (sh(0) - px(20)) / 2]
@@ -45,7 +69,7 @@ function report_bug_on_submit(window) {
     window.status.text = "Sending..."
     window.btn_submit.enabled = false
     report_bug_window.sending = true
-    __game_report_bug(t, b)
+    __game_report_bug(t, b + report_bug_diagnostics())
 }
 
 [es=(report_bug_window, event_report_bug_result)]

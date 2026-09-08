@@ -338,7 +338,7 @@ void js_call_event_handlers(const xstring &event_name, const bvariant_map &objec
             ok = js_vm_trypcall(J, 1);
         }
         if (!ok) {
-            logs::info("Fatal error on call function %s", funcname);
+            logs::error("Fatal error on call function %s", funcname);
         }
 
         int current_top = js_gettop(J);
@@ -529,6 +529,7 @@ bool __game_session_active() { return game.session.active; } ANK_FUNCTION(__game
 int __game_session_last_loaded_kind() { return (int)game.session.last_loaded; } ANK_FUNCTION(__game_session_last_loaded_kind)
 xstring __game_session_last_loaded_mission() { return game.session.last_loaded_mission.empty() ? "" : game.session.last_loaded_mission; } ANK_FUNCTION(__game_session_last_loaded_mission)
 xstring __game_version() { return get_version(); } ANK_FUNCTION(__game_version)
+xstring __game_recent_log_errors(int max_lines) { return logs::recent_errors(max_lines); } ANK_FUNCTION_1(__game_recent_log_errors)
 int __game_io_file_schema_version() { return g_chunk_io.get_file_version(); } ANK_FUNCTION(__game_io_file_schema_version)
 bool __game_load_savegame(pcstr filename) { return GamestateIO::load_savegame(filename); } ANK_FUNCTION_1(__game_load_savegame)
 bool __game_write_savegame(pcstr filename_short) { return GamestateIO::write_savegame(filename_short); } ANK_FUNCTION_1(__game_write_savegame)

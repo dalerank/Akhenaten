@@ -10,6 +10,9 @@ void switch_output(pcstr folder);
 pcstr output_path();
 void flush();
 
+// Last warn/error/critical lines (newest last), for bug reports.
+xstring recent_errors(int max_lines = 40);
+
 namespace detail {
 
 void critical_v(pcstr format, ...);

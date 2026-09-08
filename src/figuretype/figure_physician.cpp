@@ -68,7 +68,7 @@ int figure_physician::provide_service() {
             return;
         }
 
-        auto &housed = house->runtime_data();        
+        auto &housed = house->runtime_data();
         if (housed.physician < MAX_COVERAGE / 2) {
             int house_population = house->house_population();
             physician_data.residents_served_this_month += house_population;

@@ -550,13 +550,13 @@ int js_vm_load_file_and_exec(pcstr path) {
             js_getglobal(vm.J, "");
             int ok = js_vm_trypcall(vm.J, 0);
             if (!ok) {
-                logs::info("Fatal error on call base after load %s", r.path.c_str());
+                logs::error("Fatal error on call base after load %s", r.path.c_str());
                 if (vm.error_str.len() > 0) {
-                    logs::info("Error details: %s", vm.error_str.c_str());
+                    logs::error("Error details: %s", vm.error_str.c_str());
                 } else if (js_gettop(vm.J) > 0) {
                     auto error_msg = js_tostring(vm.J, -1);
                     if (!error_msg->value.empty()) {
-                        logs::info("Error details: %s", error_msg->value.c_str());
+                        logs::error("Error details: %s", error_msg->value.c_str());
                     }
                 }
 #if defined(GAME_PLATFORM_ANDROID)
@@ -626,13 +626,13 @@ int js_vm_load_file_and_exec(pcstr path) {
     js_getglobal(vm.J, "");
     int ok = js_vm_trypcall(vm.J, 0);
     if (!ok) {
-        logs::info("Fatal error on call base after load %s", path);
+        logs::error("Fatal error on call base after load %s", path);
         if (vm.error_str.len() > 0) {
-            logs::info("Error details: %s", vm.error_str.c_str());
+            logs::error("Error details: %s", vm.error_str.c_str());
         } else if (js_gettop(vm.J) > 0) {
             auto error_msg = js_tostring(vm.J, -1);
             if (!error_msg->value.empty()) {
-                logs::info("Error details: %s", js_strnode_cstr(error_msg));
+                logs::error("Error details: %s", js_strnode_cstr(error_msg));
             }
         }
         //js_pop(internal_J, 1);
@@ -815,13 +815,13 @@ int js_vm_exec_function_args(pcstr funcname, const char *szTypes, ...) {
 
     ok = js_vm_trypcall(vm.J, (int)strlen(szTypes));
     if (!ok) {
-        logs::info("Fatal error on call function %s", funcname);
+        logs::error("Fatal error on call function %s", funcname);
         if (vm.error_str.len() > 0) {
-            logs::info("Error details: %s", vm.error_str.c_str());
+            logs::error("Error details: %s", vm.error_str.c_str());
         } else if (js_gettop(vm.J) > 0) {
             auto error_msg = js_tostring(vm.J, -1);
             if (!error_msg->value.empty()) {
-                logs::info("Error details: %s", error_msg->value.c_str());
+                logs::error("Error details: %s", error_msg->value.c_str());
             }
         }
         while (js_gettop(vm.J) > savetop) {
