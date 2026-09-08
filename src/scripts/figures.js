@@ -60,6 +60,8 @@ import figure.scriber
 import figure.slave
 import figure.soldier
 import figure.stonemason
+import figure.storageyard_cart
+import figure.tax_collector
 
 figure_water_carrier {
   overlay : OVERLAY_WATER
@@ -584,20 +586,6 @@ figure_tomb_artisan {
 	terrain_usage : TERRAIN_USAGE_PREFER_ROADS,
 }
 
-figure_storageyard_cart = {
-	animations : {
-		walk : { pack: PACK_SPR_MAIN, id:43, max_frames:12 }
-		idle : { pack: PACK_SPR_MAIN, id:43, max_frames:1, loop:false }
-		death : { pack: PACK_SPR_MAIN, id:44, max_frames:8, loop:false }
-		swim : { pack:PACK_SPR_MAIN, id:138, max_frames:4, duration:4 }
-		big_image : { pack:PACK_UNLOADED, id:25, offset:FIGURE_STORAGEYARD_CART }
-	}
-
-	category: figure_category_citizen
-	max_damage : 20
-	terrain_usage : TERRAIN_USAGE_ROADS,
-}
-
 // Locust swarm — Cleopatra SprMain2 bmp "locust":
 // groups 30–34 = 6-frame cloud strips (non-8-dir). Runtime picks variant 0–4.
 // Walk JS id=30 is timing only; main_image_update remaps to g30+variant.
@@ -845,35 +833,4 @@ figure_map_flag = {
 	category: figure_category_inactive
 	max_damage : 0
 	terrain_usage : TERRAIN_USAGE_ANY,
-}
-
-figure_tax_collector {
-  overlay : OVERLAY_TAX_INCOME
-	animations {
-		walk { pack:PACK_SPR_MAIN, id:41, max_frames:12 }
-		death { pack:PACK_SPR_MAIN, id:42, max_frames:8, loop:false }
-		big_image { pack:PACK_UNLOADED, id:25, offset:FIGURE_TAX_COLLECTOR }
-	}
-
-	sounds {
-		taxman_need_more_tax_collectors {sound: "taxman_e01.wav", group: 245, text:0}
-		taxman_high_taxes {sound: "taxman_e02.wav", group: 245, text:1}
-		taxman_much_pooh_houses {sound: "taxman_e03.wav", group: 245, text:2}
-		taxman_desease_can_start_at_any_moment {sound: "taxman_g01.wav", group: 245, text:3}
-		taxman_no_food_in_city {sound: "taxman_g02.wav", group: 245, text:4}
-		taxman_city_have_no_army {sound: "taxman_g03.wav", group: 245, text:5}
-		taxman_need_workers {sound: "taxman_g04.wav", group: 245, text:6}
-		taxman_gods_are_angry {sound: "taxman_g05.wav", group: 245, text:7}
-		taxman_city_is_bad {sound: "taxman_g06.wav", group: 245, text:8}
-		taxman_much_unemployments {sound: "taxman_g07.wav", group: 245, text:9}
-		taxman_low_entertainment {sound: "taxman_g08.wav", group: 245, text:10}
-		taxman_city_is_good {sound: "taxman_g09.wav", group: 245, text:11}
-		taxman_city_is_amazing {sound: "taxman_g10.wav", group: 245, text:12}
-	}
-
-	category: figure_category_citizen
-	max_damage : 20
-	terrain_usage : TERRAIN_USAGE_ROADS
-	max_roam_length : 512
-	permission : epermission_tax_collector
 }

@@ -89,35 +89,6 @@ void figure_tax_collector::figure_action() {
     };
 }
 
-sound_key figure_tax_collector::phrase_key() const {
-    auto &taxman = runtime_data();
-
-    int all_taxed = taxman.poor_taxed + taxman.middle_taxed + taxman.reach_taxed;
-    int poor_taxed = calc_percentage<int>(taxman.poor_taxed, all_taxed);
-    
-    const int sentiment = g_city.sentiment.value;
-    svector<sound_key_state, 16> keys = {
-        {"need_more_tax_collectors", g_city.taxes.percentage_taxed_people < 80},
-        {"high_taxes", g_city.sentiment.low_mood_cause == LOW_MOOD_HIGH_TAXES},
-        {"much_pooh_houses", poor_taxed > 50},
-        {"desease_can_start_at_any_moment", g_city.health.value < 30},
-        {"no_food_in_city", g_city.sentiment.low_mood_cause == LOW_MOOD_NO_FOOD},
-        {"city_have_no_army", formation_get_num_forts() < 1},
-        {"need_workers", g_city.labor.workers_needed >= 10},
-        {"gods_are_angry", g_city.religion.least_mood() <= GOD_MOOD_INDIFIRENT},
-        {"city_is_bad", g_city.kingdome.rating < 30},
-        {"much_unemployments", g_city.sentiment.low_mood_cause == LOW_MOOD_NO_JOBS},
-        {"low_entertainment", g_city.festival.entertainment_is_low()},
-        {"city_is_good", sentiment > 50},
-        {"city_is_amazing", sentiment > 90}
-    };
-
-    std::erase_if(keys, [] (auto &it) { return !it.valid; });
-
-    int index = rand() % keys.size();
-    return xstring().printf("taxman_%s", keys[index].prefix.c_str());
-}
-
 void figure_tax_collector::figure_before_action() {
     building* b = home();
     if (!b->is_valid() || !b->has_figure(0, id())) {
@@ -154,8 +125,4 @@ int figure_tax_collector::provide_service() {
     });
     base.min_max_seen = max_tax_rate;
     return houses_serviced;
-}
-
-figure_sound_t figure_tax_collector::get_sound_reaction(xstring key) const {
-    return current_params().sounds[key];
 }
