@@ -1035,6 +1035,19 @@ localization_ru = [
     { key: "#figure_birds_hunter", text: "Охотник на птиц" }
     { key: "#figure_funeral_walker", text: "Похоронный прохожий" }
     { key: "#figure_mummy", text: "Мумия" }
+    { key: "#mummy_risen", text: "Печать сломана. Я снова иду." }
+    { key: "#mummy_walks_streets", text: "Эти улицы узнают проклятие." }
+    { key: "#mummy_attacking", text: "Плоть мягка. Бинты помнят, как бить." }
+    { key: "#mummy_disease_risk", text: "Ваш город уже пахнет гробницей. Мне здесь уютно." }
+    { key: "#mummy_no_food_in_city", text: "Пустые амбары? Живые голодают — мёртвые терпят." }
+    { key: "#mummy_city_have_no_army", text: "Нет фортов? Тогда ничто не стоит между мной и вашими домами." }
+    { key: "#mummy_need_workers", text: "Так мало работников... и так много ещё пустых гробниц." }
+    { key: "#mummy_gods_are_angry", text: "Боги отворачиваются. Идеальная погода для проклятия." }
+    { key: "#mummy_city_is_bad", text: "Милость фараона гаснет. Мои бинты туже от радости." }
+    { key: "#mummy_much_unemployment", text: "Праздные руки? Праздные души? Мне пригодятся и те, и другие." }
+    { key: "#mummy_low_entertainment", text: "Нет праздников? Тогда мой парад придётся кстати." }
+    { key: "#mummy_city_is_good", text: "Аккуратный город. Жаль, что ему суждено обернуться прахом." }
+    { key: "#mummy_city_is_amazing", text: "Какая слава! Я буду бродить по каждой великолепной улице." }
     { key: "#figure_pharaoh", text: "Фараон" }
     { key: "#hunt_bird_birds_are_wily", text: "Эти птицы хитрые!" }
     { key: "#hunt_bird_birds_ready_for_roasting", text: "Эти птицы готовы к жарке!" }

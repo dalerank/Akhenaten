@@ -2,10 +2,14 @@
 
 #include "figure/figure.h"
 
-enum e_mummy_action {
-    ACTION_120_MUMMY_CREATED = 120,
-    ACTION_121_MUMMY_ROAMING = 121,
+enum e_mummy_action : uint16_t {
+    ACTION_0_MUMMY_CREATED = 0,
+    ACTION_1_MUMMY_ROAMING = 1,
+
+    ACTION_2_MUMMY_MAX
 };
+using e_mummy_action_tokens_t = token_holder<e_mummy_action, ACTION_0_MUMMY_CREATED, ACTION_2_MUMMY_MAX>;
+extern const e_mummy_action_tokens_t e_mummy_action_tokens;
 
 // Undead curse walker. Scenario EVENT_TYPE_MUMMY (29) / spawn_wave.
 class figure_mummy : public figure_impl {
@@ -23,7 +27,6 @@ public:
     virtual void figure_roaming_action() override { /* free roam; no home return */ }
     virtual void update_animation() override;
     virtual void acquire_attack() override;
-    virtual sound_key phrase_key() const override;
 
     // Spawn N mummies + one message_mummy_attacks (496). Returns first figure id, or 0.
     // Caps by k_mummy_max_wave and live mummies already on the map.

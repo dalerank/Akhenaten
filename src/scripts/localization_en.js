@@ -901,6 +901,19 @@ localization_en = [
   {key: "#figure_locust", group:64, id:107 }
   {key: "#figure_tomb_artisan", group:64, id:108 }
   {key: "#figure_mummy", group:64, id:109 }
+  { key: "#mummy_risen", text: "The seal is broken. I walk again." }
+  { key: "#mummy_walks_streets", text: "These streets will know the curse." }
+  { key: "#mummy_attacking", text: "Flesh is soft. Wrappings remember how to strike." }
+  { key: "#mummy_disease_risk", text: "Your city already reeks of the tomb. I feel at home." }
+  { key: "#mummy_no_food_in_city", text: "Empty granaries? The living starve; the dead endure." }
+  { key: "#mummy_city_have_no_army", text: "No forts? Then nothing stands between me and your houses." }
+  { key: "#mummy_need_workers", text: "So few workers... and so many tombs still empty." }
+  { key: "#mummy_gods_are_angry", text: "The gods turn away. Perfect weather for a curse." }
+  { key: "#mummy_city_is_bad", text: "Pharaoh's favor fades. My wrapping tightens with joy." }
+  { key: "#mummy_much_unemployment", text: "Idle hands? Idle souls? I can use both." }
+  { key: "#mummy_low_entertainment", text: "No festivals? Then my parade will have to do." }
+  { key: "#mummy_city_is_good", text: "A tidy city. Shame it must fall to dust." }
+  { key: "#mummy_city_is_amazing", text: "Such glory! I will haunt every splendid street." }
   {key: "#figure_pharaoh", group:64, id:110 }
   {key: "#figure_governor", group:64, id:111 }
   {key: "#figure_drunkard", group:64, id:112 }

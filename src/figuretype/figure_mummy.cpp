@@ -12,6 +12,8 @@
 #include "scenario/map.h"
 #include "scenario/scenario.h"
 
+const e_mummy_action_tokens_t ANK_CONFIG_ENUM(e_mummy_action_tokens)
+
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_mummy);
 
 namespace {
@@ -75,7 +77,7 @@ void figure_mummy::on_create() {
     // Soldiers target is_enemy() || is_criminal(); params().is_enemy sets enemy flag at create.
     base.flags |= e_figure_flag_criminal;
     // figure_create leaves action_state=0; start roam even if caller skips spawn_wave.
-    advance_action(ACTION_120_MUMMY_CREATED);
+    advance_action(ACTION_0_MUMMY_CREATED);
 }
 
 void figure_mummy::figure_action() {
@@ -92,17 +94,17 @@ void figure_mummy::figure_action() {
     }
 
     switch (action_state()) {
-    case ACTION_120_MUMMY_CREATED:
+    case ACTION_0_MUMMY_CREATED:
         // spawn_wave may set wait_ticks > 0 to stagger figures.
         if (base.wait_ticks > 0) {
             base.wait_ticks--;
             break;
         }
         runtime_data().roam_ticks = 0;
-        advance_action(ACTION_121_MUMMY_ROAMING);
+        advance_action(ACTION_1_MUMMY_ROAMING);
         break;
 
-    case ACTION_121_MUMMY_ROAMING:
+    case ACTION_1_MUMMY_ROAMING:
         if (map_terrain_is(tile(), TERRAIN_ROAD)) {
             base.roam_ticks(1);
         } else {
@@ -138,10 +140,6 @@ void figure_mummy::acquire_attack() {
     // Default acquire_attack() is empty — without the flag, tile-overlap combat
     // re-enters every step and never locks the mummy into handle_attack.
     base.set_flag(e_figure_flag_inattack);
-}
-
-sound_key figure_mummy::phrase_key() const {
-    return {};
 }
 
 int figure_mummy::spawn_wave(int count) {
@@ -180,7 +178,7 @@ int figure_mummy::spawn_wave(int count) {
         if (!f || !f->is_alive()) {
             continue;
         }
-        f->advance_action(ACTION_120_MUMMY_CREATED);
+        f->advance_action(ACTION_0_MUMMY_CREATED);
         f->wait_ticks = 4 + (random_byte() & 0x7);
         if (!first_id) {
             first_id = f->id;
