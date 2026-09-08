@@ -6,79 +6,103 @@
 #include "grid/crime.h"
 
 class building;
-class building_juggler_school;
-class building_storage_yard;
-class building_storage_room;
-class building_brewery;
-class building_pottery;
-class building_bazaar;
-class building_firehouse;
-class building_architect_post;
-class building_booth;
-class building_apothecary;
-class building_granary;
-class building_water_supply;
-class building_conservatory;
-class building_courthouse;
-class building_well;
-class building_clay_pit;
-class building_reed_gatherer;
-class building_papyrus_maker;
-class building_dock;
-class building_mastaba;
-class building_small_mastaba;
-class building_medium_mastaba;
-class building_large_mastaba;
-class building_wood_cutter;
-class building_work_camp;
-class building_recruiter;
-class building_pavilion;
-class building_statue;
-class building_ferry;
-class building_farm;
-class building_fort;
-class building_fort_ground;
-class building_fishing_wharf;
-class building_warship_wharf;
-class building_shipyard;
-class building_plaza;
-class building_garden;
-class building_house;
-class building_burning_ruin;
-class building_storage;
-class building_temple;
-class building_tax_collector;
-class building_roadblock;
-class building_mine;
-class building_quarry;
-class building_palace;
-class building_festival_square;
-class building_bandstand;
-class building_routeblock;
-class building_industry;
-class building_guild;
-class building_entertainment;
-class building_mansion;
-class building_physician;
-class building_wharf;
-class building_shrine;
-class building_transport_wharf;
-class building_temple_complex;
-class building_temple_complex_altar;
-class building_temple_complex_oracle;
-class building_water_lift;
-class building_monument;
-class building_scribal_school;
-class building_tower;
-class building_senet_house;
-class building_gatehouse;
-class building_dancer_school;
-class building_police_station;
-class building_dentist;
-class building_mortuary;
-class building_pyramid;
-class building_small_stepped_pyramid;
-class building_medium_stepped_pyramid;
+
+// Every building class reachable through dcast<T>() is listed here once. This list drives the
+// forward declarations below, the smart_cast specialisations in building_cast.h, the dcast_x()
+// shorthands on building, and the virtual dcast_x() hooks on building_impl -- four lists that
+// used to be written out by hand and had already drifted apart.
+#define BUILDING_CLASS_LIST(X) \
+    X(farm)                    \
+    X(juggler_school)          \
+    X(storage_yard)            \
+    X(storage_room)            \
+    X(brewery)                 \
+    X(pottery)                 \
+    X(bazaar)                  \
+    X(firehouse)               \
+    X(architect_post)          \
+    X(booth)                   \
+    X(apothecary)              \
+    X(granary)                 \
+    X(water_supply)            \
+    X(conservatory)            \
+    X(courthouse)              \
+    X(well)                    \
+    X(clay_pit)                \
+    X(reed_gatherer)           \
+    X(papyrus_maker)           \
+    X(dock)                    \
+    X(mastaba)                 \
+    X(small_mastaba)           \
+    X(medium_mastaba)          \
+    X(large_mastaba)           \
+    X(wood_cutter)             \
+    X(recruiter)               \
+    X(pavilion)                \
+    X(statue)                  \
+    X(ferry)                   \
+    X(fort)                    \
+    X(fort_ground)             \
+    X(fishing_wharf)           \
+    X(warship_wharf)           \
+    X(shipyard)                \
+    X(plaza)                   \
+    X(garden)                  \
+    X(house)                   \
+    X(burning_ruin)            \
+    X(storage)                 \
+    X(temple)                  \
+    X(tax_collector)           \
+    X(roadblock)               \
+    X(mine)                    \
+    X(quarry)                  \
+    X(palace)                  \
+    X(festival_square)         \
+    X(bandstand)               \
+    X(routeblock)              \
+    X(industry)                \
+    X(guild)                   \
+    X(entertainment)           \
+    X(mansion)                 \
+    X(physician)               \
+    X(wharf)                   \
+    X(shrine)                  \
+    X(transport_wharf)         \
+    X(temple_complex)          \
+    X(temple_complex_altar)    \
+    X(temple_complex_oracle)   \
+    X(water_lift)              \
+    X(monument)                \
+    X(scribal_school)          \
+    X(tower)                   \
+    X(senet_house)             \
+    X(gatehouse)               \
+    X(work_camp)               \
+    X(dancer_school)           \
+    X(police_station)          \
+    X(dentist)                 \
+    X(mortuary)                \
+    X(pyramid)                 \
+    X(small_stepped_pyramid)   \
+    X(medium_stepped_pyramid)  \
+    X(sphinx)                  \
+    X(obelisk)                 \
+    X(sun_temple)              \
+    X(abu_simbel)              \
+    X(caesareum)               \
+    X(alexandria_library)      \
+    X(mausoleum)               \
+    X(pharos_lighthouse)       \
+    X(royal_tomb)              \
+    X(food_mill)               \
+    X(industry_office)
+
+#define BUILDING_FWD_DECLARE(name) class building_##name;
+BUILDING_CLASS_LIST(BUILDING_FWD_DECLARE)
+#undef BUILDING_FWD_DECLARE
+
+// Declared but not castable: these have no dcast_x() of their own and are reached through the
+// base they share (pyramid, royal_tomb, mastaba, temple_complex).
 class building_large_stepped_pyramid;
 class building_stepped_pyramid_complex;
 class building_grand_stepped_pyramid_complex;
@@ -94,21 +118,10 @@ class building_medium_mudbrick_pyramid;
 class building_large_mudbrick_pyramid;
 class building_mudbrick_pyramid_complex;
 class building_grand_mudbrick_pyramid_complex;
-class building_sphinx;
-class building_obelisk;
-class building_sun_temple;
-class building_abu_simbel;
-class building_caesareum;
-class building_alexandria_library;
-class building_mausoleum;
-class building_pharos_lighthouse;
-class building_royal_tomb;
 class building_small_royal_tomb;
 class building_medium_royal_tomb;
 class building_large_royal_tomb;
 class building_grand_royal_tomb;
-class building_food_mill;
-class building_industry_office;
 
 using e_building_need_rules = uint32_t;
 
