@@ -19,6 +19,8 @@
 
 #include <cstdlib>
 
+const e_action_enemy_transport_tokens_t ANK_CONFIG_ENUM(e_action_enemy_transport_tokens)
+
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_enemy_transport_generic)
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_egyptian_transport_ship)
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_barbarian_transport_ship)
@@ -154,7 +156,7 @@ void figure_enemy_transport::on_create() {
     d.disembark_y = -1;
     d.ticks = 0;
     d.invasion_sequence = 0;
-    advance_action(ACTION_220_ENEMY_TRANSPORT_CREATED);
+    advance_action(ACTION_0_ENEMY_TRANSPORT_CREATED);
 }
 
 bool figure_enemy_transport::has_troops() const {
@@ -264,7 +266,7 @@ bool figure_enemy_transport::sail_to_landing(tile2i water_tile) {
     if (!base.source_tile.valid()) {
         base.source_tile = base.tile;
     }
-    advance_action(ACTION_221_ENEMY_TRANSPORT_SAILING);
+    advance_action(ACTION_1_ENEMY_TRANSPORT_SAILING);
     route_remove();
     return true;
 }
@@ -275,7 +277,7 @@ void figure_enemy_transport::disembark_troops() {
     if (!m || !m->in_use) {
         d.formation_id = 0;
         d.ticks = 0;
-        advance_action(ACTION_223_ENEMY_TRANSPORT_IDLE);
+        advance_action(ACTION_3_ENEMY_TRANSPORT_IDLE);
         return;
     }
 
@@ -285,7 +287,7 @@ void figure_enemy_transport::disembark_troops() {
     }
     if (!enemy_transport_land_ok(disembark)) {
         // Last resort: stay embarked rather than dumping onto water.
-        advance_action(ACTION_223_ENEMY_TRANSPORT_IDLE);
+        advance_action(ACTION_3_ENEMY_TRANSPORT_IDLE);
         return;
     }
 
@@ -333,7 +335,7 @@ void figure_enemy_transport::disembark_troops() {
 
     d.formation_id = 0;
     d.ticks = 0;
-    advance_action(ACTION_223_ENEMY_TRANSPORT_IDLE);
+    advance_action(ACTION_3_ENEMY_TRANSPORT_IDLE);
 }
 
 void figure_enemy_transport::kill_cargo() {
@@ -392,7 +394,7 @@ void figure_enemy_transport::dismiss_cargo() {
     }
 
     d.formation_id = 0;
-    advance_action(ACTION_223_ENEMY_TRANSPORT_IDLE);
+    advance_action(ACTION_3_ENEMY_TRANSPORT_IDLE);
 }
 
 void figure_enemy_transport::before_poof() {
@@ -456,25 +458,25 @@ void figure_enemy_transport::figure_action() {
     }
 
     switch (action_state()) {
-    case ACTION_220_ENEMY_TRANSPORT_CREATED:
+    case ACTION_0_ENEMY_TRANSPORT_CREATED:
         d.ticks++;
         if (d.ticks >= 20) {
             d.ticks = 0;
             if (has_troops() && d.landing_x >= 0 && d.landing_y >= 0) {
                 if (!sail_to_landing(tile2i(d.landing_x, d.landing_y))) {
-                    advance_action(ACTION_223_ENEMY_TRANSPORT_IDLE);
+                    advance_action(ACTION_3_ENEMY_TRANSPORT_IDLE);
                 }
             } else {
-                advance_action(ACTION_223_ENEMY_TRANSPORT_IDLE);
+                advance_action(ACTION_3_ENEMY_TRANSPORT_IDLE);
             }
         }
         break;
 
-    case ACTION_221_ENEMY_TRANSPORT_SAILING: {
+    case ACTION_1_ENEMY_TRANSPORT_SAILING: {
         base.move_ticks(1);
         base.height_adjusted_ticks = 0;
         if (direction() == DIR_FIGURE_NONE) {
-            advance_action(ACTION_222_ENEMY_TRANSPORT_DISEMBARKING);
+            advance_action(ACTION_2_ENEMY_TRANSPORT_DISEMBARKING);
             d.ticks = 0;
         } else if (direction() == DIR_FIGURE_REROUTE) {
             route_remove();
@@ -484,7 +486,7 @@ void figure_enemy_transport::figure_action() {
             if (shore.valid()) {
                 d.disembark_x = shore.x();
                 d.disembark_y = shore.y();
-                advance_action(ACTION_222_ENEMY_TRANSPORT_DISEMBARKING);
+                advance_action(ACTION_2_ENEMY_TRANSPORT_DISEMBARKING);
                 d.ticks = 0;
             } else if (has_troops()) {
                 tile2i alt = enemy_transport_find_alternate_landing(base.tile, 24);
@@ -495,31 +497,31 @@ void figure_enemy_transport::figure_action() {
                     if (d.ticks >= 50) {
                         d.ticks = 0;
                         if (!sail_to_landing(tile2i(d.landing_x, d.landing_y))) {
-                            advance_action(ACTION_223_ENEMY_TRANSPORT_IDLE);
+                            advance_action(ACTION_3_ENEMY_TRANSPORT_IDLE);
                         }
                     }
                 } else {
-                    advance_action(ACTION_223_ENEMY_TRANSPORT_IDLE);
+                    advance_action(ACTION_3_ENEMY_TRANSPORT_IDLE);
                 }
             } else {
-                advance_action(ACTION_223_ENEMY_TRANSPORT_IDLE);
+                advance_action(ACTION_3_ENEMY_TRANSPORT_IDLE);
             }
         }
         break;
     }
 
-    case ACTION_222_ENEMY_TRANSPORT_DISEMBARKING:
+    case ACTION_2_ENEMY_TRANSPORT_DISEMBARKING:
         d.ticks++;
         if (d.ticks >= ENEMY_TRANSPORT_DISEMBARK_TICKS) {
             if (has_troops()) {
                 disembark_troops();
             } else {
-                advance_action(ACTION_223_ENEMY_TRANSPORT_IDLE);
+                advance_action(ACTION_3_ENEMY_TRANSPORT_IDLE);
             }
         }
         break;
 
-    case ACTION_223_ENEMY_TRANSPORT_IDLE:
+    case ACTION_3_ENEMY_TRANSPORT_IDLE:
         // Loaded but stranded (no path earlier): keep looking for a shore.
         if (has_troops()) {
             d.ticks++;
@@ -529,7 +531,7 @@ void figure_enemy_transport::figure_action() {
                 if (shore.valid()) {
                     d.disembark_x = shore.x();
                     d.disembark_y = shore.y();
-                    advance_action(ACTION_222_ENEMY_TRANSPORT_DISEMBARKING);
+                    advance_action(ACTION_2_ENEMY_TRANSPORT_DISEMBARKING);
                 } else {
                     tile2i alt = enemy_transport_find_alternate_landing(base.tile, 24);
                     if (alt.valid() && sail_to_landing(alt)) {
@@ -552,12 +554,12 @@ void figure_enemy_transport::figure_action() {
 void figure_enemy_transport::update_animation() {
     pcstr anim_key = "swim";
     switch (action_state()) {
-    case ACTION_220_ENEMY_TRANSPORT_CREATED:
-    case ACTION_222_ENEMY_TRANSPORT_DISEMBARKING:
-    case ACTION_223_ENEMY_TRANSPORT_IDLE:
+    case ACTION_0_ENEMY_TRANSPORT_CREATED:
+    case ACTION_2_ENEMY_TRANSPORT_DISEMBARKING:
+    case ACTION_3_ENEMY_TRANSPORT_IDLE:
         anim_key = "idle";
         break;
-    case ACTION_221_ENEMY_TRANSPORT_SAILING:
+    case ACTION_1_ENEMY_TRANSPORT_SAILING:
         anim_key = "swim";
         break;
     default:

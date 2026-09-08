@@ -1254,6 +1254,14 @@ localization_en = [
   { key: "#enemy_sword_city_is_amazing", text: "So prosperous. The spoils will be magnificent." }
   { key: "#enemy_sword_for_glory", text: "For glory and the sword!" }
 
+  { key: "#enemy_spearman_shooting", text: "Throw! Let the spears find their mark!" }
+  { key: "#enemy_spearman_marching", text: "Advance. Our spears will thin their ranks." }
+  { key: "#enemy_spearman_waiting", text: "Hold. Ready the next cast." }
+  { key: "#enemy_spearman_leaving", text: "Fall back! Keep the spears for another day." }
+  { key: "#enemy_spearman_city_will_fall", text: "This city will fall under our spears." }
+  { key: "#enemy_spearman_spears_ready", text: "Spears ready! None will stand." }
+  { key: "#enemy_spearman_for_glory", text: "For glory and the spear!" }
+
   { key: "#enemy_archer_shooting", text: "Loose! Fill the sky with arrows!" }
   { key: "#enemy_archer_marching", text: "Bows ready. Their streets will run red." }
   { key: "#enemy_archer_waiting", text: "Hold. Wait for the range." }

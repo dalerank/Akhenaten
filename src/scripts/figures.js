@@ -23,6 +23,8 @@ import figure.emigrant
 import figure.enemy_chariot
 import figure.enemy_archer
 import figure.enemy_fast_sword
+import figure.enemy_spearman
+import figure.enemy_transport
 
 figure_fireman {
   overlay : OVERLAY_WATER

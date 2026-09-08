@@ -6,12 +6,16 @@
 // FIGURE_METAINFO so figure_impl::acquire resolves instead of asserting.
 // Config blocks live in src/scripts/enemies.js (figure_<nation>_transport_ship).
 
-enum e_action_enemy_transport {
-    ACTION_220_ENEMY_TRANSPORT_CREATED = 220,
-    ACTION_221_ENEMY_TRANSPORT_SAILING = 221,
-    ACTION_222_ENEMY_TRANSPORT_DISEMBARKING = 222,
-    ACTION_223_ENEMY_TRANSPORT_IDLE = 223,
+enum e_action_enemy_transport : uint16_t {
+    ACTION_0_ENEMY_TRANSPORT_CREATED = 0,
+    ACTION_1_ENEMY_TRANSPORT_SAILING = 1,
+    ACTION_2_ENEMY_TRANSPORT_DISEMBARKING = 2,
+    ACTION_3_ENEMY_TRANSPORT_IDLE = 3,
+
+    ACTION_4_ENEMY_TRANSPORT_MAX
 };
+using e_action_enemy_transport_tokens_t = token_holder<e_action_enemy_transport, ACTION_0_ENEMY_TRANSPORT_CREATED, ACTION_4_ENEMY_TRANSPORT_MAX>;
+extern const e_action_enemy_transport_tokens_t e_action_enemy_transport_tokens;
 
 class figure_enemy_transport : public figure_enemy {
 public:
@@ -35,6 +39,7 @@ public:
     virtual void before_poof() override;
     virtual void kill() override;
     virtual bool is_attack() const override { return false; }
+    virtual e_figure_action enemy_initial_action() const override { return (e_figure_action)ACTION_0_ENEMY_TRANSPORT_CREATED; }
 
     bool has_troops() const;
     int transported_formation() const;

@@ -2,14 +2,19 @@
 
 #include "figuretype/figure_enemy.h"
 
-enum e_action_enemy_spearman {
+enum e_action_enemy_spearman : uint16_t {
+    ACTION_0_ENEMY_SPEARMAN_NONE = 0,
     ACTION_151_ENEMY_SPEARMAN_INITIAL = 151,
     ACTION_152_ENEMY_SPEARMAN_WAITING = 152,
     ACTION_153_ENEMY_SPEARMAN_MARCHING = 153,
     ACTION_154_ENEMY_SPEARMAN_SHOOT_MISSILE = 154,
     ACTION_155_ENEMY_SPEARMAN_RELOAD = 155,
     ACTION_156_ENEMY_SPEARMAN_LEAVING = 156,
+
+    ACTION_157_ENEMY_SPEARMAN_MAX
 };
+using e_action_enemy_spearman_tokens_t = token_holder<e_action_enemy_spearman, ACTION_0_ENEMY_SPEARMAN_NONE, ACTION_157_ENEMY_SPEARMAN_MAX>;
+extern const e_action_enemy_spearman_tokens_t e_action_enemy_spearman_tokens;
 
 class figure_enemy_spearman : public figure_enemy {
 public:

@@ -27,6 +27,33 @@ enemy_archer_sounds = {
 	enemy_archer_for_glory { sound:"enemy_archer_for_glory.wav", text: "#enemy_archer_for_glory" }
 }
 
+enemy_spearman_sounds = {
+	enemy_spearman_shooting { sound:"enemy_spearman_shooting.wav", text: "#enemy_spearman_shooting" }
+	enemy_spearman_marching { sound:"enemy_spearman_marching.wav", text: "#enemy_spearman_marching" }
+	enemy_spearman_waiting { sound:"enemy_spearman_waiting.wav", text: "#enemy_spearman_waiting" }
+	enemy_spearman_leaving { sound:"enemy_spearman_leaving.wav", text: "#enemy_spearman_leaving" }
+	enemy_spearman_city_will_fall { sound:"enemy_spearman_city_will_fall.wav", text: "#enemy_spearman_city_will_fall" }
+	enemy_spearman_spears_ready { sound:"enemy_spearman_spears_ready.wav", text: "#enemy_spearman_spears_ready" }
+	enemy_spearman_for_glory { sound:"enemy_spearman_for_glory.wav", text: "#enemy_spearman_for_glory" }
+}
+
+enemy_transport_sounds = {
+	enemy_transport_created { sound:"enemy_transport_created.wav", text: "#enemy_transport_created" }
+	enemy_transport_sailing { sound:"enemy_transport_sailing.wav", text: "#enemy_transport_sailing" }
+	enemy_transport_disembarking { sound:"enemy_transport_disembarking.wav", text: "#enemy_transport_disembarking" }
+	enemy_transport_idle { sound:"enemy_transport_idle.wav", text: "#enemy_transport_idle" }
+	enemy_transport_no_army { sound:"enemy_transport_no_army.wav", text: "#enemy_transport_no_army" }
+	enemy_transport_no_food { sound:"enemy_transport_no_food.wav", text: "#enemy_transport_no_food" }
+	enemy_transport_disease { sound:"enemy_transport_disease.wav", text: "#enemy_transport_disease" }
+	enemy_transport_need_workers { sound:"enemy_transport_need_workers.wav", text: "#enemy_transport_need_workers" }
+	enemy_transport_gods_angry { sound:"enemy_transport_gods_angry.wav", text: "#enemy_transport_gods_angry" }
+	enemy_transport_city_is_bad { sound:"enemy_transport_city_is_bad.wav", text: "#enemy_transport_city_is_bad" }
+	enemy_transport_low_entertainment { sound:"enemy_transport_low_entertainment.wav", text: "#enemy_transport_low_entertainment" }
+	enemy_transport_city_is_good { sound:"enemy_transport_city_is_good.wav", text: "#enemy_transport_city_is_good" }
+	enemy_transport_city_is_amazing { sound:"enemy_transport_city_is_amazing.wav", text: "#enemy_transport_city_is_amazing" }
+	enemy_transport_for_glory { sound:"enemy_transport_for_glory.wav", text: "#enemy_transport_for_glory" }
+}
+
 enemy_attack_rules = {
     priority : {
         food_chain : [BUILDING_GRANARY, BUILDING_STORAGE_YARD, BUILDING_BAZAAR,
@@ -78,6 +105,7 @@ enemy_attack_rules = {
 // has no dedicated transport enum / console spawn.
 figure_enemy_transport_generic = {
   overlay : OVERLAY_ENEMIES
+    sounds: enemy_transport_sounds
     animations : {
         swim : { pack:PACK_ENEMY_HITTITE, id:7, max_frames:4 }
         death : { pack:PACK_ENEMY_HITTITE, id:8, max_frames:11, loop:false }
@@ -117,6 +145,7 @@ figure_enemy_warship_generic = {
 // barbarian
 figure_barbarian_archer = {
   overlay : OVERLAY_ENEMIES
+    sounds: enemy_archer_sounds
     animations : {
         walk : { pack:PACK_ENEMY_BARBARIAN, id:0, max_frames:12 }
         death : { pack:PACK_ENEMY_BARBARIAN, id:1, max_frames:8, loop:false }
@@ -162,6 +191,7 @@ figure_barbarian_sword = {
 // Barbarian pack has no ship sprites — Hittite transport fallback (E3b).
 figure_barbarian_transport_ship = {
   overlay : OVERLAY_ENEMIES
+    sounds: enemy_transport_sounds
     animations : {
         swim : { pack:PACK_ENEMY_HITTITE, id:7, max_frames:4 }
         death : { pack:PACK_ENEMY_HITTITE, id:8, max_frames:11, loop:false }
@@ -190,6 +220,7 @@ enemy_barbarian = {
 // assyrian
 figure_assyrian_archer = {
   overlay : OVERLAY_ENEMIES
+    sounds: enemy_archer_sounds
     animations : {
         walk : { pack:PACK_ENEMY_ASSYRIAN, id:0, max_frames:12 }
         death : { pack:PACK_ENEMY_ASSYRIAN, id:1, max_frames:8, loop:false }
@@ -234,6 +265,7 @@ figure_assyrian_sword = {
 
 figure_assyrian_transport_ship = {
   overlay : OVERLAY_ENEMIES
+    sounds: enemy_transport_sounds
     animations : {
         swim : { pack:PACK_ENEMY_ASSYRIAN, id:7, max_frames:4 }
         death : { pack:PACK_ENEMY_ASSYRIAN, id:8, max_frames:11, loop:false }
@@ -309,6 +341,7 @@ enemy_assyrian = {
 // canaanite
 figure_canaanite_archer = {
   overlay : OVERLAY_ENEMIES
+    sounds: enemy_archer_sounds
     animations : {
         walk : { pack:PACK_ENEMY_CANAANITE, id:0, max_frames:12 }
         death : { pack:PACK_ENEMY_CANAANITE, id:1, max_frames:8, loop:false }
@@ -353,6 +386,7 @@ figure_canaanite_sword = {
 
 figure_canaanite_transport_ship = {
   overlay : OVERLAY_ENEMIES
+    sounds: enemy_transport_sounds
     animations : {
         swim : { pack:PACK_ENEMY_CANAANITE, id:0, max_frames:4 }
         death : { pack:PACK_ENEMY_CANAANITE, id:1, max_frames:11, loop:false }
@@ -430,6 +464,7 @@ enemy_canaanite = {
 // transport strip in the pack — reuse galera hull frames for E3b.
 figure_egyptian_transport_ship = {
   overlay : OVERLAY_ENEMIES
+    sounds: enemy_transport_sounds
     animations : {
         swim : { pack:PACK_ENEMY_EGYPTIAN, id:0, max_frames:4 }
         death : { pack:PACK_ENEMY_EGYPTIAN, id:1, max_frames:11, loop:false }
@@ -485,6 +520,7 @@ figure_egyptian_war_ship = {
 
 figure_egyptian_archer = {
   overlay : OVERLAY_ENEMIES
+    sounds: enemy_archer_sounds
     animations : {
         walk : { pack:PACK_ENEMY_EGYPTIAN, id:7, max_frames:12 }
         death : { pack:PACK_ENEMY_EGYPTIAN, id:8, max_frames:8, loop:false }
@@ -509,6 +545,7 @@ figure_egyptian_archer = {
 
 figure_egyptian_spearman = {
   overlay : OVERLAY_ENEMIES
+    sounds: enemy_spearman_sounds
     animations : {
         walk : { pack:PACK_ENEMY_EGYPTIAN, id:11, max_frames:12 }
         death : { pack:PACK_ENEMY_EGYPTIAN, id:12, max_frames:8, loop:false }
@@ -675,6 +712,7 @@ figure_egyptian_camel = {
 
 figure_egyptian_mounted_archer = {
   overlay : OVERLAY_ENEMIES
+    sounds: enemy_archer_sounds
     animations : {
         // TEMP art: foot archer strips + horse sound from type branch
         walk : { pack:PACK_ENEMY_EGYPTIAN, id:7, max_frames:12 }
@@ -723,6 +761,7 @@ figure_egyptian_elephant = {
 // invasion kind is KINGDOME (remap of egyptian % slots → javelin/infantry/mounted).
 figure_kingdome_javelin = {
   overlay : OVERLAY_ENEMIES
+    sounds: enemy_spearman_sounds
     animations : {
         // TEMP art: egyptian spearman
         walk : { pack:PACK_ENEMY_EGYPTIAN, id:11, max_frames:12 }
@@ -808,6 +847,7 @@ enemy_egyptian = {
 // hittite
 figure_hittite_archer = {
   overlay : OVERLAY_ENEMIES
+    sounds: enemy_archer_sounds
     animations : {
         walk : { pack:PACK_ENEMY_HITTITE, id:0, max_frames:12 }
         death : { pack:PACK_ENEMY_HITTITE, id:1, max_frames:8, loop:false }
@@ -832,6 +872,7 @@ figure_hittite_archer = {
 
 figure_hittite_spearman = {
   overlay : OVERLAY_ENEMIES
+    sounds: enemy_spearman_sounds
     animations : {
         walk : { pack:PACK_ENEMY_HITTITE, id:4, max_frames:12 }
         death : { pack:PACK_ENEMY_HITTITE, id:5, max_frames:8, loop:false }
@@ -854,6 +895,7 @@ figure_hittite_spearman = {
 
 figure_hittite_transport_ship = {
   overlay : OVERLAY_ENEMIES
+    sounds: enemy_transport_sounds
     animations : {
         swim : { pack:PACK_ENEMY_HITTITE, id:7, max_frames:4 }
         death : { pack:PACK_ENEMY_HITTITE, id:8, max_frames:11, loop:false }
@@ -929,6 +971,7 @@ enemy_hittite = {
 // hyksos
 figure_hyksos_archer = {
   overlay : OVERLAY_ENEMIES
+    sounds: enemy_archer_sounds
     animations : {
         walk : { pack:PACK_ENEMY_HYKSOS, id:0, max_frames:12 }
         death : { pack:PACK_ENEMY_HYKSOS, id:1, max_frames:8, loop:false }
@@ -973,6 +1016,7 @@ figure_hyksos_sword = {
 
 figure_hyksos_transport_ship = {
   overlay : OVERLAY_ENEMIES
+    sounds: enemy_transport_sounds
     animations : {
         swim : { pack:PACK_ENEMY_HYKSOS, id:7, max_frames:4 }
         death : { pack:PACK_ENEMY_HYKSOS, id:8, max_frames:11, loop:false }
@@ -1045,6 +1089,7 @@ enemy_hyksos = {
 // kushite
 figure_kushite_spearman = {
   overlay : OVERLAY_ENEMIES
+    sounds: enemy_spearman_sounds
     animations : {
         walk : { pack:PACK_ENEMY_KUSHITE, id:0, max_frames:12 }
         death : { pack:PACK_ENEMY_KUSHITE, id:1, max_frames:8, loop:false }
@@ -1089,6 +1134,7 @@ figure_kushite_axeman = {
 
 figure_kushite_transport_ship = {
   overlay : OVERLAY_ENEMIES
+    sounds: enemy_transport_sounds
     animations : {
         swim : { pack:PACK_ENEMY_KUSHITE, id:7, max_frames:4 }
         death : { pack:PACK_ENEMY_KUSHITE, id:8, max_frames:11, loop:false }
@@ -1166,6 +1212,7 @@ enemy_kushite = {
 // libian
 figure_libian_archer = {
   overlay : OVERLAY_ENEMIES
+    sounds: enemy_archer_sounds
     animations : {
         walk : { pack:PACK_ENEMY_LIBIAN, id:0, max_frames:12 }
         death : { pack:PACK_ENEMY_LIBIAN, id:1, max_frames:8, loop:false }
@@ -1210,6 +1257,7 @@ figure_libian_sword = {
 
 figure_libian_transport_ship = {
   overlay : OVERLAY_ENEMIES
+    sounds: enemy_transport_sounds
     animations : {
         swim : { pack:PACK_ENEMY_LIBIAN, id:7, max_frames:4 }
         death : { pack:PACK_ENEMY_LIBIAN, id:8, max_frames:11, loop:false }
@@ -1283,6 +1331,7 @@ enemy_libian = {
 // nubian
 figure_nubian_archer = {
   overlay : OVERLAY_ENEMIES
+    sounds: enemy_archer_sounds
     animations : {
         walk : { pack:PACK_ENEMY_NUBIAN, id:0, max_frames:12 }
         death : { pack:PACK_ENEMY_NUBIAN, id:1, max_frames:8, loop:false }
@@ -1327,6 +1376,7 @@ figure_nubian_axeman = {
 
 figure_nubian_transport_ship = {
   overlay : OVERLAY_ENEMIES
+    sounds: enemy_transport_sounds
     animations : {
         swim : { pack:PACK_ENEMY_NUBIAN, id:7, max_frames:4 }
         death : { pack:PACK_ENEMY_NUBIAN, id:8, max_frames:11, loop:false }
@@ -1406,6 +1456,7 @@ enemy_nubian = {
 // persian
 figure_persian_archer = {
   overlay : OVERLAY_ENEMIES
+    sounds: enemy_archer_sounds
     animations : {
         walk : { pack:PACK_ENEMY_PERSIAN, id:0, max_frames:12 }
         death : { pack:PACK_ENEMY_PERSIAN, id:1, max_frames:8, loop:false }
@@ -1430,6 +1481,7 @@ figure_persian_archer = {
 
 figure_persian_spearman = {
   overlay : OVERLAY_ENEMIES
+    sounds: enemy_spearman_sounds
     animations : {
         walk : { pack:PACK_ENEMY_PERSIAN, id:4, max_frames:12 }
         death : { pack:PACK_ENEMY_PERSIAN, id:5, max_frames:8, loop:false }
@@ -1449,6 +1501,7 @@ figure_persian_spearman = {
 
 figure_persian_transport_ship = {
   overlay : OVERLAY_ENEMIES
+    sounds: enemy_transport_sounds
     animations : {
         swim : { pack:PACK_ENEMY_PERSIAN, id:7, max_frames:4 }
         death : { pack:PACK_ENEMY_PERSIAN, id:8, max_frames:11, loop:false }
@@ -1523,6 +1576,7 @@ enemy_persian = {
 // phoenician
 figure_phoenician_spearman = {
   overlay : OVERLAY_ENEMIES
+    sounds: enemy_spearman_sounds
     animations : {
         walk : { pack:PACK_ENEMY_PHOENICIAN, id:0, max_frames:12 }
         death : { pack:PACK_ENEMY_PHOENICIAN, id:1, max_frames:8, loop:false }
@@ -1560,6 +1614,7 @@ figure_phoenician_swordman = {
 
 figure_phoenician_transport_ship = {
   overlay : OVERLAY_ENEMIES
+    sounds: enemy_transport_sounds
     animations : {
         swim : { pack:PACK_ENEMY_PHOENICIAN, id:7, max_frames:4 }
         death : { pack:PACK_ENEMY_PHOENICIAN, id:8, max_frames:11, loop:false }
@@ -1639,6 +1694,7 @@ enemy_phoenician = {
 // roman
 figure_roman_archer = {
   overlay : OVERLAY_ENEMIES
+    sounds: enemy_archer_sounds
     animations : {
         walk : { pack:PACK_ENEMY_ROMAN, id:0, max_frames:12 }
         death : { pack:PACK_ENEMY_ROMAN, id:1, max_frames:8, loop:false }
@@ -1683,6 +1739,7 @@ figure_roman_legioner = {
 
 figure_roman_transport_ship = {
   overlay : OVERLAY_ENEMIES
+    sounds: enemy_transport_sounds
     animations : {
         swim : { pack:PACK_ENEMY_ROMAN, id:7, max_frames:4 }
         death : { pack:PACK_ENEMY_ROMAN, id:8, max_frames:11, loop:false }
@@ -1756,6 +1813,7 @@ enemy_roman = {
 // seapeople
 figure_seapeople_archer = {
   overlay : OVERLAY_ENEMIES
+    sounds: enemy_archer_sounds
     animations : {
         walk : { pack:PACK_ENEMY_SEAPEOPLE, id:0, max_frames:12 }
         death : { pack:PACK_ENEMY_SEAPEOPLE, id:1, max_frames:8, loop:false }
@@ -1800,6 +1858,7 @@ figure_seapeople_axeman = {
 
 figure_seapeople_transport_ship = {
   overlay : OVERLAY_ENEMIES
+    sounds: enemy_transport_sounds
     animations : {
         swim : { pack:PACK_ENEMY_SEAPEOPLE, id:7, max_frames:4 }
         death : { pack:PACK_ENEMY_SEAPEOPLE, id:8, max_frames:11, loop:false }

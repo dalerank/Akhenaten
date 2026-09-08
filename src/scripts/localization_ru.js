@@ -617,6 +617,14 @@ localization_ru = [
     { key: "#enemy_sword_city_is_amazing", text: "Такое богатство. Добыча будет великолепной." }
     { key: "#enemy_sword_for_glory", text: "За славу и меч!" }
 
+    { key: "#enemy_spearman_shooting", text: "Бросай! Пусть копья найдут цель!" }
+    { key: "#enemy_spearman_marching", text: "Вперёд. Наши копья проредят их строй." }
+    { key: "#enemy_spearman_waiting", text: "Стоять. Готовьте следующий бросок." }
+    { key: "#enemy_spearman_leaving", text: "Отходим! Копья пригодятся в другой день." }
+    { key: "#enemy_spearman_city_will_fall", text: "Этот город падёт под нашими копьями." }
+    { key: "#enemy_spearman_spears_ready", text: "Копья наготове! Никто не устоит." }
+    { key: "#enemy_spearman_for_glory", text: "За славу и копьё!" }
+
     { key: "#enemy_archer_shooting", text: "Огонь! Затмите небо стрелами!" }
     { key: "#enemy_archer_marching", text: "Луки наготове. Их улицы обагрятся." }
     { key: "#enemy_archer_waiting", text: "Стоять. Ждём дистанции." }

@@ -10,6 +10,8 @@
 #include "js/js_game.h"
 #include "scenario/invasion_auto_resolve.h"
 
+const e_action_enemy_spearman_tokens_t ANK_CONFIG_ENUM(e_action_enemy_spearman_tokens)
+
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_egyptian_spearman)
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_kingdome_javelin)
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_hittite_spearman)
