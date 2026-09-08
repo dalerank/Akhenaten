@@ -633,6 +633,21 @@ localization_ru = [
     { key: "#enemy_archer_arrows_ready", text: "Тетива натянута. Кто умрёт первым?" }
     { key: "#enemy_archer_for_glory", text: "За славу — и меткий выстрел!" }
 
+    { key: "#enemy_transport_created", text: "Отчаливаем! Их берег наш." }
+    { key: "#enemy_transport_sailing", text: "Держи вёсла. Скоро высадка." }
+    { key: "#enemy_transport_disembarking", text: "На берег! Опустошите трюм стали!" }
+    { key: "#enemy_transport_idle", text: "Корпус ждёт. Войска готовы к высадке." }
+    { key: "#enemy_transport_no_army", text: "Нет их военных кораблей? Эти воды наши." }
+    { key: "#enemy_transport_no_food", text: "Город голодает. Высадка будет лёгкой." }
+    { key: "#enemy_transport_disease", text: "Болезнь на их пристанях. Мягкая добыча." }
+    { key: "#enemy_transport_need_workers", text: "Даже верфи пустуют. Жалкий порт." }
+    { key: "#enemy_transport_gods_angry", text: "Боги отвернулись от них. Прилив с нами." }
+    { key: "#enemy_transport_city_is_bad", text: "Милость фараона — пепел. Флот их не спасёт." }
+    { key: "#enemy_transport_low_entertainment", text: "Нет праздников — нет духа. Сломаются на берегу." }
+    { key: "#enemy_transport_city_is_good", text: "Хороший порт. Жаль, что мы здесь, чтобы его взять." }
+    { key: "#enemy_transport_city_is_amazing", text: "Богатые причалы. Добыча заполнит трюмы." }
+    { key: "#enemy_transport_for_glory", text: "За славу — и плацдарм!" }
+
     { key: "#malaria_problem", text: "(Не используется)" }
     { key: "#malaria_not_a_problem", text: "Малярия, похоже, здесь не проблема." }
     { key: "#malaria_outbreak_could_strike", text: "Вспышка малярии может произойти, если ничего не сделать." }

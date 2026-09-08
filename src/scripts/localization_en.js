@@ -1270,6 +1270,21 @@ localization_en = [
   { key: "#enemy_archer_arrows_ready", text: "Nocked and ready. Who dies first?" }
   { key: "#enemy_archer_for_glory", text: "For glory — and a clean shot!" }
 
+  { key: "#enemy_transport_created", text: "Cast off! Their coast is ours to take." }
+  { key: "#enemy_transport_sailing", text: "Steady the oars. Landfall comes soon." }
+  { key: "#enemy_transport_disembarking", text: "Onto the shore! Empty the hold of steel!" }
+  { key: "#enemy_transport_idle", text: "Hull waiting. Troops ready for the beach." }
+  { key: "#enemy_transport_no_army", text: "No warships of theirs? We own these waters." }
+  { key: "#enemy_transport_no_food", text: "A hungry city. Our landing will be easy." }
+  { key: "#enemy_transport_disease", text: "Sickness on their docks. Soft prey ashore." }
+  { key: "#enemy_transport_need_workers", text: "They can't even man the yards. Pathetic harbor." }
+  { key: "#enemy_transport_gods_angry", text: "Their gods abandon them. The tide favors us." }
+  { key: "#enemy_transport_city_is_bad", text: "Pharaoh's favour is ash. No fleet will save them." }
+  { key: "#enemy_transport_low_entertainment", text: "No festivals, no spirit. They'll break at the beach." }
+  { key: "#enemy_transport_city_is_good", text: "A fine port. Shame we're here to seize it." }
+  { key: "#enemy_transport_city_is_amazing", text: "Wealthy quays. The plunder will fill our holds." }
+  { key: "#enemy_transport_for_glory", text: "For glory — and a beachhead!" }
+
   { key: "#malaria_problem", text: "(Not used)" }
   { key: "#malaria_not_a_problem", text: "Malaria doesn't seem to be a problem here." }
   { key: "#malaria_outbreak_could_strike", text: "An outbreak of malaria could strike if something isn't done." } 
