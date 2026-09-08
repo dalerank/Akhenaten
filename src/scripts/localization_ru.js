@@ -1212,6 +1212,30 @@ localization_ru = [
     { key: "#teacher_city_much_better", text: "Здесь гораздо лучше, чем в городах, о которых я читал." }
     { key: "#teacher_city_is_amazing", text: "Лучший город, где я учил. Эти ученики напишут историю!" }
 
+    { key: "#tomb_artisan_ready", text: "Глина и краска готовы. Пора украшать гробницу!" }
+    { key: "#tomb_artisan_going_to_work", text: "К гробнице — стены ждут цвета." }
+    { key: "#tomb_artisan_decorating", text: "Кисть ровнее. Эти стены будут говорить вечно." }
+    { key: "#tomb_artisan_return_home", text: "Пока всё. Обратно в гильдию." }
+    { key: "#tomb_artisan_disease_risk", text: "Лихорадка в шахтах. Трудно писать дрожащими руками." }
+    { key: "#tomb_artisan_no_food_in_city", text: "Пустые амбары? Голодный мастер рисует кривые линии." }
+    { key: "#tomb_artisan_city_have_no_army", text: "Нет фортов? Один набег — и гробницы разграбят." }
+    { key: "#tomb_artisan_gods_are_angry", text: "Боги злятся. Даже священная краска может треснуть." }
+    { key: "#tomb_artisan_low_entertainment", text: "Праздников давно не было. Даже живописцам гробниц нужен свет дня." }
+    { key: "#tomb_artisan_city_is_good", text: "Крепкий город! Достойные гробницы для достойных." }
+    { key: "#tomb_artisan_city_is_amazing", text: "Лучший город, для которого я писал. Эти стены вечны!" }
+
+    { key: "#tomb_robber_gold_should_be_for_living", text: "Золото в гробницах? Оно должно быть для живых!" }
+    { key: "#tomb_robber_just_think_of_the_fortune", text: "Подумай только о состоянии, что ждёт в той гробнице!" }
+    { key: "#tomb_robber_tax_too_high", text: "Налоги берут у вас — я беру у мёртвых!" }
+    { key: "#tomb_robber_wages_too_low", text: "Зарплата мизерная? Гробницы платят лучше честной работы." }
+    { key: "#tomb_robber_no_jobs", text: "Нет честной работы? Ладно. Ограбление гробниц кормит." }
+    { key: "#tomb_robber_no_food_in_city", text: "Пустые амбары? Золото всё равно наполняет карманы." }
+    { key: "#tomb_robber_city_have_no_army", text: "Нет фортов? Лёгкие ночи среди гробниц." }
+    { key: "#tomb_robber_gods_are_angry", text: "Боги злятся? Хорошая ширма — вините небо, не меня." }
+    { key: "#tomb_robber_low_entertainment", text: "Нет праздников? Грабёж гробниц — моё развлечение." }
+    { key: "#tomb_robber_city_is_good", text: "Хороший город. Хорошие гробницы облегчить." }
+    { key: "#tomb_robber_city_is_amazing", text: "Лучший город для грабежа — тугие гробницы повсюду!" }
+
     { key: "#dentist_concerned_about_plague", text: "Люди так обеспокоены заражением чумой, что пренебрегают своими зубами." }
     { key: "#dentist_no_food_in_city", text: "Я так мало ел в последнее время... какая печальная трата идеальных зубов." }
     { key: "#dentist_defenses_are_weak", text: "Оборона города полна пробелов. Наши враги могли бы сделать с нами всё, что захотят." }

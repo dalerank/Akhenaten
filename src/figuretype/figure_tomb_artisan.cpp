@@ -115,10 +115,6 @@ void figure_tomb_artisan::update_animation() {
     }
 }
 
-sound_key figure_tomb_artisan::phrase_key() const {
-    return "tomb_artisan_decorating";
-}
-
 void figure_tomb_artisan::on_destroy() {
     figure_impl::on_destroy();
 

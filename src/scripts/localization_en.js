@@ -1936,6 +1936,30 @@ localization_en = [
   { key: "#teacher_city_much_better", text: "Things are much better here than in cities I've read about." }
   { key: "#teacher_city_is_amazing", text: "Best city I've taught in. These pupils will write history!" }
 
+  { key: "#tomb_artisan_ready", text: "Clay and paint ready. Time to dress the tomb!" }
+  { key: "#tomb_artisan_going_to_work", text: "Off to the tomb — walls wait for color." }
+  { key: "#tomb_artisan_decorating", text: "Steady brush. These walls will speak for eternity." }
+  { key: "#tomb_artisan_return_home", text: "Decoration done for now. Back to the guild." }
+  { key: "#tomb_artisan_disease_risk", text: "Fever in the shafts. Hard to paint with shaky hands." }
+  { key: "#tomb_artisan_no_food_in_city", text: "Empty granaries? A hungry artisan paints crooked lines." }
+  { key: "#tomb_artisan_city_have_no_army", text: "No forts? One raid and these tombs are plundered." }
+  { key: "#tomb_artisan_gods_are_angry", text: "The gods look angry. Even sacred paint may crack." }
+  { key: "#tomb_artisan_low_entertainment", text: "No festivals for ages. Even tomb painters need daylight." }
+  { key: "#tomb_artisan_city_is_good", text: "This city is solid! Fine tombs for fine rulers." }
+  { key: "#tomb_artisan_city_is_amazing", text: "Best city I've painted for. These walls will last forever!" }
+
+  { key: "#tomb_robber_gold_should_be_for_living", text: "Gold in tombs? It should be for the living!" }
+  { key: "#tomb_robber_just_think_of_the_fortune", text: "Just think of the fortune waiting in that tomb!" }
+  { key: "#tomb_robber_tax_too_high", text: "Taxes take from you — I take from the dead!" }
+  { key: "#tomb_robber_wages_too_low", text: "Wages too low? Tombs pay better than honest work." }
+  { key: "#tomb_robber_no_jobs", text: "No honest work? Fine. Tomb-robbing pays." }
+  { key: "#tomb_robber_no_food_in_city", text: "Empty granaries? Gold still fills pockets." }
+  { key: "#tomb_robber_city_have_no_army", text: "No forts? Easy nights among the tombs." }
+  { key: "#tomb_robber_gods_are_angry", text: "Gods angry? Good cover — blame heaven, not me." }
+  { key: "#tomb_robber_low_entertainment", text: "No festivals? Plundering tombs is my entertainment." }
+  { key: "#tomb_robber_city_is_good", text: "Nice city. Nice tombs to lighten." }
+  { key: "#tomb_robber_city_is_amazing", text: "Best city to rob — fat tombs everywhere!" }
+
   { key: "#dentist_concerned_about_plague", text: "People are so concerned about catching the plague that they're neglecting their teeth." }
   { key: "#dentist_no_food_in_city", text: "I've had so little to eat lately...what a sad waste of perfect teeth." }
   { key: "#dentist_defenses_are_weak", text: "The city's defenses are full of gaps. Our enemies could have their way with us." }

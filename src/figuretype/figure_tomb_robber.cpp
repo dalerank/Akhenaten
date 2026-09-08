@@ -343,14 +343,6 @@ void figure_tomb_robber::update_animation() {
     image_set_animation(animkey);
 }
 
-sound_key figure_tomb_robber::phrase_key() const {
-    svector<sound_key, 2> keys = {
-        "tomb_robber_gold_should_be_for_living",
-        "tomb_robber_just_think_of_the_fortune",
-    };
-    return keys[rand() % keys.size()];
-}
-
 int figure_tomb_robber::try_spawn(bool force_gates) {
     if (count_active_tomb_robbers() >= k_max_active_tomb_robbers) {
         return 0;

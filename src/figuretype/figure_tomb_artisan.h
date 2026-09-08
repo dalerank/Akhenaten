@@ -25,5 +25,4 @@ public:
     virtual void figure_action() override;
     virtual void on_destroy() override;
     virtual void update_animation() override;
-    virtual sound_key phrase_key() const override;
 };

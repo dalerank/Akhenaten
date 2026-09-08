@@ -26,7 +26,6 @@ public:
     virtual void on_post_load() override;
     virtual void figure_action() override;
     virtual void update_animation() override;
-    virtual sound_key phrase_key() const override;
 
     // Apply steal / preexisting threat at tomb. Returns true if kingdom/provisions changed.
     bool commit_plunder();

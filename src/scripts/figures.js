@@ -63,6 +63,8 @@ import figure.stonemason
 import figure.storageyard_cart
 import figure.tax_collector
 import figure.teacher
+import figure.tomb_artisan
+import figure.tomb_robber
 
 figure_water_carrier {
   overlay : OVERLAY_WATER
@@ -88,26 +90,6 @@ figure_water_carrier {
   terrain_usage : TERRAIN_USAGE_ROADS
   max_roam_length : 640
   record_path : true
-}
-
-figure_tomb_robber {
-  overlay : OVERLAY_CRIME
-	animations {
-		walk { pack:PACK_SPR_MAIN, id:32, max_frames:12 }
-		death { pack:PACK_SPR_MAIN, id:33, max_frames:8, loop:false }
-		big_image { pack:PACK_UNLOADED, id:25, offset:FIGURE_TOMB_ROBER }
-	}
-
-	sounds {
-		tomb_robber_gold_should_be_for_living { sound: "robber_e01.wav" }
-		tomb_robber_just_think_of_the_fortune { sound: "robber_e02.wav" }
-	}
-
-	category : figure_category_criminal
-	max_damage : 10
-	speed_mult : 2
-	terrain_usage : TERRAIN_USAGE_ANY
-	max_amount : 25
 }
 
 figure_festival_guy {
@@ -564,27 +546,6 @@ figure_zookeeper {
 	terrain_usage : TERRAIN_USAGE_ROADS
 	max_roam_length: 640
 	permission : epermission_entertainer
-}
-
-// TODO: dump SprMain2 / Expansion walk/work/death ids — temporarily reuse bricklayer SprMain.
-figure_tomb_artisan {
-	animations {
-		_pack { pack:PACK_SPR_MAIN }
-		walk { id:109, max_frames:12 }
-		death { id:110, max_frames:8, loop:false }
-		work { id:111, max_frames:12, duration:4 }
-		idle { id:112, max_frames:8, duration:2 }
-		big_image { pack:PACK_UNLOADED, id:25, offset:FIGURE_TOMB_ARTISAN }
-	}
-
-	sounds {
-		tomb_artisan_decorating { sound:"brick_e01.wav" }
-	}
-
-	category: figure_category_citizen
-	max_damage: 10
-	// Prefer roads: guild may spawn beside monument without a paved spawn tile.
-	terrain_usage : TERRAIN_USAGE_PREFER_ROADS,
 }
 
 // Locust swarm — Cleopatra SprMain2 bmp "locust":
