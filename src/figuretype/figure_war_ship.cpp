@@ -528,34 +528,6 @@ void figure_warship::kill() {
     figure_impl::kill();
 }
 
-sound_key figure_warship::phrase_key() const {
-    svector<sound_key, 5> keys;
-
-    if (action_state() == ACTION_204_WARSHIP_ATTACK) {
-        keys.push_back("warship_well_fight_to_the_death");
-    }
-
-    if (g_city.figures.total_invading_enemies() > 0) {
-        keys.push_back("warship_enemies_coming_this_way");
-    }
-
-    if (action_state() == ACTION_206_WARSHIP_GOING_TO_PATROL ||
-        action_state() == ACTION_209_WARSHIP_ON_PATROL) {
-        keys.push_back("warship_ready_to_attack_invaders");
-    }
-
-    if (action_state() == ACTION_203_WARSHIP_MOORED) {
-        keys.push_back("warship_ready_if_foes_come");
-    }
-
-    if (keys.empty()) {
-        keys.push_back("warship_ready_if_foes_come");
-    }
-
-    int index = rand() % keys.size();
-    return keys[index];
-}
-
 void figure_warship::update_animation() {
     pcstr anim_key = "walk";
     switch (action_state()) {

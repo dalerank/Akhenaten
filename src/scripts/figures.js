@@ -57,6 +57,7 @@ import figure.reed_gatherer
 import figure.rioter
 import figure.robber
 import figure.scriber
+import figure.academy_scriber
 import figure.slave
 import figure.soldier
 import figure.stonemason
@@ -67,6 +68,8 @@ import figure.tomb_artisan
 import figure.tomb_robber
 import figure.tower_sentry
 import figure.trade_ship
+import figure.transport_ship
+import figure.warship
 import figure.water_carrier
 import figure.worker
 import figure.zookeeper
@@ -408,34 +411,6 @@ figure_native_trader = {
 	max_damage: 10
 }
 
-figure_academy_scriber {
-  overlay : OVERLAY_SCRIBAL_SCHOOL
-	animations {
-		walk { pack:PACK_SPR_MAIN, id:199, max_frames:12 }
-		death { pack:PACK_SPR_MAIN, id:200, max_frames:8, loop:false }
-		big_image { pack:PACK_UNLOADED, id:25, offset:FIGURE_SCRIBER }
-	}
-
-	sounds {
-		scriber_dicease_can_start { sound: "scribe_e01.wav" } 
-		scriber_plague_could_break_out { sound: "scribe_g01.wav" } 
-		scriber_no_food_in_city { sound: "scribe_g02.wav" } 
-		scriber_defenses_are_weak { sound: "scribe_g03.wav" } 
-		scriber_need_more_workers { sound: "scribe_g04.wav" } 
-		scriber_gods_are_angry { sound: "scribe_g05.wav" } 
-		scriber_reputation_is_low { sound: "scribe_g06.wav" } 
-		scriber_high_unemployment { sound: "scribe_g07.wav" } 
-		scriber_low_entertainment { sound: "scribe_g08.wav" } 
-		scriber_city_is_ok { sound: "scribe_g09.wav" } 
-		scriber_city_is_amazing { sound: "scribe_g10.wav" } 
-	}
-
-	category : figure_category_citizen
-	max_damage : 20
-	terrain_usage : TERRAIN_USAGE_ROADS
-	max_roam_length : 384
-}
-
 figure_cart {
 	stone: { pack:PACK_SPR_MAIN, id:102  }
 	granite: { pack:PACK_SPR_MAIN, id:103 }
@@ -561,65 +536,6 @@ figure_fishing_spot = {
 	}
 
 	terrain_usage : TERRAIN_USAGE_ANY,
-}
-
-figure_warship {
-	animations {
-		walk {pack:PACK_SPR_MAIN, id:141, max_frames:4, duration:10 }
-		swim {pack:PACK_SPR_MAIN, id:141, max_frames:4, duration:10 }
-		death {pack:PACK_SPR_MAIN, id:142, max_frames:8, loop:false }
-		attack {pack:PACK_SPR_MAIN, id:143, max_frames:6, duration:5 }
-		idle {pack:PACK_SPR_MAIN, id:143, offset:3, max_frames:1 }
-		big_image { pack:PACK_UNLOADED, id:25, offset:FIGURE_WARSHIP }
-	}
-
-	orders_info {
-		goto_wharf { id: 1, text: 17 }
-		engage_nearby { id: 2, text: 11 }
-		hold_position { id: 3, text: 9 }
-		seek_and_destroy { id: 4, text: 13 }
-		repair { id: 5, text: 15 }
-	}
-
-	sounds {
-		warship_well_fight_to_the_death { sound: "warship_e01.wav" }
-		warship_enemy_is_too_much_for_us { sound: "warship_e02.wav" }
-		warship_enemies_coming_this_way { sound: "warship_e03.wav" }
-		warship_ready_to_attack_invaders { sound: "warship_e04.wav" }
-		warship_ready_if_foes_come { sound: "warship_e05.wav" }
-	}
-
-	category: figure_category_armed
-	max_damage: 250
-	attack_value : 12
-	missile_attack_value : 6
-	missile_delay : 200
-
-	meta { text_id: 184, help_link:"message_building_warship" }
-	terrain_usage : TERRAIN_USAGE_ANY,
-}
-
-figure_transport_ship = {
-	animations {
-		_pack { pack:PACK_SPR_MAIN }
-		walk { id:34, max_frames:4, duration:10 }
-		swim { id:34, max_frames:4, duration:10 }
-		death { id:35, max_frames:8, loop:false }
-		idle { id:35, offset:8, max_frames:1 }
-		big_image { pack:PACK_UNLOADED, id:25, offset:FIGURE_TRANSPORT_SHIP }
-	}
-
-	sounds {
-		transport_must_protect_our_ship { sound: "transport_e01.wav" }
-		transport_enemy_is_here { sound: "transport_e02.wav" }
-		transport_were_prepared { sound: "transport_e03.wav" }
-		transport_ready_if_need_arises { sound: "transport_e04.wav" }
-	}
-
-	category: figure_category_citizen
-	max_damage: 250
-	terrain_usage : TERRAIN_USAGE_ANY
-	meta { text_id: 184, help_link:"message_figure_transport_ship" }
 }
 
 figure_explosion = {

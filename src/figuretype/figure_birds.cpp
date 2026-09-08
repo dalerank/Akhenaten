@@ -167,7 +167,3 @@ void figure_birds::herd_scare() {
 void figure_birds::moveto(tile2i tile) {
     advance_action(ACTION_10_BIRDS_GOING, tile);
 }
-
-sound_key figure_birds::phrase_key() const {
-    return "no_phrase";
-}

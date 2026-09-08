@@ -8,8 +8,6 @@ public:
     figure_academy_scriber(figure *f) : figure_impl(f) {}
 
     virtual void on_create() override {}
-    virtual sound_key phrase_key() const override;
     virtual int provide_service() override;
-    //virtual figure_sound_t get_sound_reaction(pcstr key) const override;
 };
 

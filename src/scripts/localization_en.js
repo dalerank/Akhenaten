@@ -1993,6 +1993,17 @@ localization_en = [
   { key: "#zookeeper_city_is_ok", text: "This city is fine enough — the animals seem content, and so am I." }
   { key: "#zookeeper_city_is_amazing", text: "Best city a keeper could ask for. Even the lions purr for Pharaoh!" }
 
+  { key: "#warship_well_fight_to_the_death", text: "We'll fight to the death! For Pharaoh and the river!" }
+  { key: "#warship_enemy_is_too_much_for_us", text: "This enemy is too much for us. Fall back to the wharf!" }
+  { key: "#warship_enemies_coming_this_way", text: "Enemies coming this way! Ready the archers!" }
+  { key: "#warship_ready_to_attack_invaders", text: "Ready to attack invaders. The Nile is ours." }
+  { key: "#warship_ready_if_foes_come", text: "Ready if foes come. Our hull is strong." }
+
+  { key: "#transport_must_protect_our_ship", text: "We must protect our ship and the troops aboard." }
+  { key: "#transport_enemy_is_here", text: "The enemy is here! Guard the transport!" }
+  { key: "#transport_were_prepared", text: "We're prepared. Troops can embark when ordered." }
+  { key: "#transport_ready_if_need_arises", text: "Ready if the need arises. Pharaoh's soldiers wait." }
+
   { key: "#embalmer_concerned_about_plague", text: "Judging by the number of sick people in this city, I could soon have my hands full!" }
   { key: "#embalmer_no_food_in_city", text: "I'm famished. Before long, I'll be skinnier than a mummy!" }
   { key: "#embalmer_defenses_weak", text: "The city is not securely wrapped in defenses. An enemy could easily defeat us." }

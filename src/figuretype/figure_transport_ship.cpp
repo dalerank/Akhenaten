@@ -765,29 +765,6 @@ void figure_transport_ship::kill() {
     figure_impl::kill();
 }
 
-sound_key figure_transport_ship::phrase_key() const {
-    svector<sound_key, 4> keys;
-
-    if (g_city.figures.total_invading_enemies() > 0) {
-        keys.push_back("transport_enemy_is_here");
-    }
-
-    if (action_state() == ACTION_213_TRANSPORT_SHIP_MOORED) {
-        keys.push_back("transport_were_prepared");
-    }
-
-    if (action_state() == ACTION_212_TRANSPORT_SHIP_GOING_TO_WHARF ||
-        action_state() == ACTION_211_TRANSPORT_SHIP_CREATED ||
-        action_state() == ACTION_215_TRANSPORT_SHIP_LEAVING) {
-        keys.push_back("transport_must_protect_our_ship");
-    }
-
-    keys.push_back("transport_ready_if_need_arises");
-
-    int index = rand() % keys.size();
-    return keys[index];
-}
-
 void figure_transport_ship::update_animation() {
     pcstr anim_key = "swim";
     switch (action_state()) {

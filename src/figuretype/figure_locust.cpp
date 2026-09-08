@@ -190,10 +190,6 @@ void figure_locust::update_day() {
     }
 }
 
-sound_key figure_locust::phrase_key() const {
-    return {};
-}
-
 int figure_locust::spawn_swarm(int count) {
     const auto &p = figure_locust::current_params();
     if (count < 1) {

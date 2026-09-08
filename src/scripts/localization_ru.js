@@ -1269,6 +1269,17 @@ localization_ru = [
     { key: "#zookeeper_city_is_ok", text: "Город вполне нормальный — животные довольны, и я тоже." }
     { key: "#zookeeper_city_is_amazing", text: "Лучший город для смотрителя. Даже львы мурлычут за фараона!" }
 
+    { key: "#warship_well_fight_to_the_death", text: "Будем биться насмерть! За фараона и реку!" }
+    { key: "#warship_enemy_is_too_much_for_us", text: "Этот враг нам не по силам. Отступаем к пристани!" }
+    { key: "#warship_enemies_coming_this_way", text: "Враги идут сюда! Готовьте лучников!" }
+    { key: "#warship_ready_to_attack_invaders", text: "Готовы атаковать захватчиков. Нил наш." }
+    { key: "#warship_ready_if_foes_come", text: "Готовы, если появятся враги. Корпус крепок." }
+
+    { key: "#transport_must_protect_our_ship", text: "Нужно защитить наш корабль и войска на борту." }
+    { key: "#transport_enemy_is_here", text: "Враг здесь! Охраняйте транспорт!" }
+    { key: "#transport_were_prepared", text: "Мы готовы. Войска могут сесть по приказу." }
+    { key: "#transport_ready_if_need_arises", text: "Готовы, если понадобится. Солдаты фараона ждут." }
+
     { key: "#embalmer_concerned_about_plague", text: "Судя по количеству больных людей в этом городе, у меня скоро будут заняты руки!" }
     { key: "#embalmer_no_food_in_city", text: "Я голодаю. Вскоре я буду худее мумии!" }
     { key: "#embalmer_defenses_weak", text: "Город не надёжно завёрнут в оборону. Враг мог бы легко победить нас." }

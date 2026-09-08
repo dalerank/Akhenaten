@@ -40,8 +40,6 @@ public:
     virtual void herd_scare() override;
     virtual void moveto(tile2i tile) override;
 
-    virtual sound_key phrase_key() const override;
-
     virtual e_minimap_figure_color minimap_color() const override { return FIGURE_COLOR_ANIMAL; }
 };
 ANK_CONFIG_STRUCT(figure_birds::static_params, scared_ticks)

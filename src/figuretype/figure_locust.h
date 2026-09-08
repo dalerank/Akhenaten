@@ -34,7 +34,6 @@ public:
     virtual void update_animation() override;
     virtual void main_image_update() override;
     virtual void update_day() override;
-    virtual sound_key phrase_key() const override;
     virtual e_minimap_figure_color minimap_color() const override { return FIGURE_COLOR_ANIMAL; }
 
     // Spawn N cloud figures over farms (or map center). count<=0 → default.
