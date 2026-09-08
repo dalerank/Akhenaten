@@ -56,6 +56,10 @@ import figure.protestor
 import figure.reed_gatherer
 import figure.rioter
 import figure.robber
+import figure.scriber
+import figure.slave
+import figure.soldier
+import figure.stonemason
 
 figure_water_carrier {
   overlay : OVERLAY_WATER
@@ -445,16 +449,6 @@ figure_standard_bearer {
 	terrain_usage : TERRAIN_USAGE_ANY
 }
 
-figure_slave = {
-	animations : {
-		walk : { pack:PACK_SPR_MAIN, id:45, max_frames:12 }
-		cart: { pack:PACK_SPR_MAIN, id:52, max_frames:1 }
-	}
-
-	category: figure_category_native
-	max_damage: 10
-}
-
 figure_native = {
 	animations : {
 		walk : { pack:PACK_SPR_MAIN, id:45, max_frames:12 }
@@ -503,34 +497,6 @@ figure_academy_scriber {
 	max_roam_length : 384
 }
 
-figure_scriber {
-  overlay : OVERLAY_SCRIBAL_SCHOOL
-	animations {
-		walk { pack:PACK_SPR_MAIN, id:199, max_frames:12 }
-		death { pack:PACK_SPR_MAIN, id:200, max_frames:8, loop:false }
-		big_image { pack:PACK_UNLOADED, id:25, offset:FIGURE_SCRIBER }
-	}
-
-	sounds {
-		scribe_these_festivals { sound: "scribe_e01.wav" } 
-		scribe_plague_could_break_out { sound: "scribe_g01.wav" } 
-		scribe_no_food_in_city { sound: "scribe_g02.wav" } 
-		scribe_defenses_are_weak { sound: "scribe_g03.wav" } 
-		scribe_need_more_workers { sound: "scribe_g04.wav" } 
-		scribe_gods_are_angry { sound: "scribe_g05.wav" } 
-		scribe_reputation_is_low { sound: "scribe_g06.wav" } 
-		scribe_high_unemployment { sound: "scribe_g07.wav" } 
-		scribe_low_entertainment { sound: "scribe_g08.wav" } 
-		scribe_city_is_ok { sound: "scribe_g09.wav" } 
-		scribe_city_is_amazing { sound: "scribe_g10.wav" } 
-	}
-
-	category : figure_category_citizen
-	max_damage : 20
-	terrain_usage : TERRAIN_USAGE_ROADS
-	max_roam_length : 384
-}
-
 figure_worker {
   overlay : OVERLAY_LABOR
 	animations {
@@ -557,30 +523,6 @@ figure_worker {
 	category: figure_category_citizen
 	max_damage : 10
 	record_path : true
-}
-
-figure_stonemason {
-	animations {
-		walk { pack:PACK_SPR_MAIN, id:150, max_frames:12 }
-		death { pack:PACK_SPR_MAIN, id:151, max_frames:8, loop:false }
-		work_ground { pack:PACK_SPR_MAIN, id:152, max_frames:7 }
-		work_wall { pack:PACK_SPR_MAIN, id:153, max_frames:7 }
-		climbing { pack:PACK_SPR_MAIN, id:154, max_frames:3 }
-		big_image { pack:PACK_UNLOADED, id:25, offset:FIGURE_STONEMASON }
-	}
-
-	sounds {
-		stonemason_ready {sound:"stone_e01.wav"}
-		stonemason_going_to_work {sound:"stone_e01.wav"}
-		stonemason_working_ground {sound:"stone_e02.wav"}
-		stonemason_working_wall {sound:"stone_e02.wav"}
-		stonemason_work_complete {sound:"stone_e02.wav"}
-		stonemason_looking_for_work {sound:"stone_e01.wav"}
-	}
-
-    category: figure_category_citizen
-	max_damage: 10
-	terrain_usage : TERRAIN_USAGE_ROADS,
 }
 
 figure_cart {
@@ -802,22 +744,6 @@ figure_teacher {
 	permission : epermission_education
 }
 
-figure_soldier_infantry {
-  overlay : OVERLAY_PAVILION
-	animations {
-		walk { pack:PACK_SPR_MAIN, id:64, max_frames:12 }
-		death { pack:PACK_SPR_MAIN, id:65, max_frames:8, loop:false }
-		attack { pack:PACK_SPR_MAIN, id:66, max_frames:12 }
-		big_image { pack:PACK_UNLOADED, id:25, offset:FIGURE_INFANTRY }
-	}
-
-  is_soldier : true
-	category: figure_category_armed
-  max_damage : 150
-  attack_value : 10
-	terrain_usage : TERRAIN_USAGE_ANY
-}
-
 figure_fishing_point {
 	animations {
 		point { pack:PACK_SPR_AMBIENT, id:8, max_frames:22, duration:4 }
@@ -898,40 +824,6 @@ figure_transport_ship = {
 	max_damage: 250
 	terrain_usage : TERRAIN_USAGE_ANY
 	meta { text_id: 184, help_link:"message_figure_transport_ship" }
-}
-
-figure_soldier_archer {
-  overlay : OVERLAY_PAVILION
-	animations {
-		walk {pack:PACK_SPR_MAIN, id:61, max_frames:12 }
-		death {pack:PACK_SPR_MAIN, id:62, max_frames:8, loop:false }
-		attack {pack:PACK_SPR_MAIN, id:63, max_frames:12 }
-		big_image { pack:PACK_UNLOADED, id:25, offset:FIGURE_ARCHER }
-	}
-
-  is_soldier : true
-	category: figure_category_armed
-  max_damage : 80
-  attack_value : 4
-  missile_attack_value : 4
-  missile_delay : 100
-	terrain_usage : TERRAIN_USAGE_ANY
-}
-
-figure_soldier_charioteer {
-  overlay : OVERLAY_PAVILION
-	animations {
-		walk {pack:PACK_SPR_MAIN, id:67, max_frames:12 }
-		death {pack:PACK_SPR_MAIN, id:68, max_frames:8, loop:false }
-		attack {pack:PACK_SPR_MAIN, id:69, max_frames:12 }
-		big_image { pack:PACK_UNLOADED, id:25, offset:FIGURE_FCHARIOTEER }
-	}
-
-    is_soldier : true
-	category: figure_category_armed
-    max_damage : 120
-    attack_value : 8
-	terrain_usage : TERRAIN_USAGE_ANY
 }
 
 figure_explosion = {

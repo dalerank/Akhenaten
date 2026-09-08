@@ -793,6 +793,42 @@ localization_ru = [
     { key: "#robber_city_is_good", text: "Хороший город. Хорошие кошельки облегчить." }
     { key: "#robber_city_is_amazing", text: "Лучший город для грабежа — тугие кошельки повсюду!" }
 
+    { key: "#slave_break_our_chains", text: "Разорвите цепи! Больше никаких хозяев!" }
+    { key: "#slave_tax_too_high", text: "Вас облагают налогом — нас бичом. Восстаньте!" }
+    { key: "#slave_wages_too_low", text: "Свободные голодают на объедках. Рабы берут своё!" }
+    { key: "#slave_no_jobs", text: "Нет работы для свободных? Тогда свободные в восстание!" }
+    { key: "#slave_no_food_in_city", text: "Пустые амбары, а мы голодаем в цепях. Хватит!" }
+    { key: "#slave_city_have_no_army", text: "Нет фортов? Ничто не остановит нас у дворца!" }
+    { key: "#slave_gods_are_angry", text: "Даже боги ненавидят этот город. Бейте с нами!" }
+    { key: "#slave_low_entertainment", text: "Рабам не праздники — только факел!" }
+    { key: "#slave_city_is_good", text: "Хороший город для свободных. Теперь берём своё!" }
+    { key: "#slave_city_is_amazing", text: "Удивительные улицы — освободить или сжечь!" }
+
+    { key: "#soldier_no_enemies_sighted", text: "Врагов не видно. Дозор спокоен." }
+    { key: "#soldier_ready_approaching_enemy", text: "Готовьтесь! Враг приближается — держите строй!" }
+    { key: "#soldier_no_trouble_defeating_army", text: "Мы без труда разобьём это войско." }
+    { key: "#soldier_enemy_is_fierce", text: "Этот враг свиреп. Стойко за фараона!" }
+    { key: "#soldier_disease_risk", text: "Лихорадка в рядах. Трудно маршировать дрожащими руками." }
+    { key: "#soldier_no_food_in_city", text: "Пустые амбары? Голодный солдат плохо дерётся." }
+    { key: "#soldier_gods_are_angry", text: "Боги злятся. Дурная примета перед боем." }
+    { key: "#soldier_low_entertainment", text: "Праздников давно не было. Даже солдатам нужен день без дозора." }
+    { key: "#soldier_city_is_good", text: "Крепкий город. Стоит защищать." }
+    { key: "#soldier_city_is_amazing", text: "Лучший город, который я охранял. За фараона!" }
+
+    { key: "#stonemason_ready", text: "Камень готов. Пора поднимать памятник!" }
+    { key: "#stonemason_going_to_work", text: "На площадку — блоки сами себя не уложат." }
+    { key: "#stonemason_working_ground", text: "Кладу камень на твёрдую землю. Ровнее." }
+    { key: "#stonemason_working_wall", text: "Ещё ряд камня на стену!" }
+    { key: "#stonemason_work_complete", text: "Пока всё. Обратно в гильдию." }
+    { key: "#stonemason_looking_for_work", text: "Ищу следующее место для камня." }
+    { key: "#stonemason_disease_risk", text: "Лихорадка на площадке. Трудно поднимать камень дрожащими руками." }
+    { key: "#stonemason_no_food_in_city", text: "Пустые амбары? Голодный каменщик кладёт кривые ряды." }
+    { key: "#stonemason_city_have_no_army", text: "Нет фортов? Один набег — и памятник рухнет." }
+    { key: "#stonemason_gods_are_angry", text: "Боги злятся. Даже хороший камень трескается под их взглядом." }
+    { key: "#stonemason_low_entertainment", text: "Праздников давно не было. Даже каменщикам нужен день без лесов." }
+    { key: "#stonemason_city_is_good", text: "Крепкий город! Хороший фундамент для великих памятников." }
+    { key: "#stonemason_city_is_amazing", text: "Лучший город, для которого я строил. Эти камни стоят вечно!" }
+
     { key: "#reed_to_the_marsh_i_march", text: "К болоту марш!" }
     { key: "#reed_will_make_some_fine_papyrus", text: "Из этих тростников выйдет отличный папирус." }
     { key: "#reed_disease_risk", text: "Лихорадка в болотах. Трудно резать тростник дрожащими руками." }
@@ -1150,12 +1186,15 @@ localization_ru = [
 
 
     { key: "#scriber_dicease_can_start", text: "Люди больны. Мои медицинские папирусы говорят мне, что болезнь может вскоре перерасти в чуму!" }
+    { key: "#scriber_these_festivals", text: "Эти праздники! Я читал о более пышных — нам бы ещё один." }
+    { key: "#scriber_plague_could_break_out", text: "Люди больны. Мои медицинские папирусы говорят мне, что болезнь может вскоре перерасти в чуму!" }
     { key: "#scriber_no_food_in_city", text: "Я голодаю. Трудно поднимать мои свитки на голодный желудок." }
     { key: "#scriber_defenses_are_weak", text: "Даже самый простой враг смог бы пройти через нашу оборону!" }
     { key: "#scriber_need_more_workers", text: "Если вскоре не прибудет больше работников, город наверняка пострадает." }
     { key: "#scriber_gods_are_angry", text: "Литература изобилует историями о разгневанных богах и их мести." }
     { key: "#scriber_reputation_is_low", text: "История показывает, что такой город, как наш, заплатит серьёзные последствия за свою плохую репутацию." }
     { key: "#scriber_much_unemployments", text: "В городе много безработных. По крайней мере, у них много времени для чтения." }
+    { key: "#scriber_high_unemployment", text: "В городе много безработных. По крайней мере, у них много времени для чтения." }
     { key: "#scriber_low_entertainment", text: "Иногда мои глаза хотят отдохнуть на чём-то другом, кроме иероглифов. Я хочу увидеть шоу!" }
     { key: "#scriber_city_is_ok", text: "Этот город сравним с другими, о которых я читал." }
     { key: "#scriber_city_is_amazing", text: "Этот город - лучший, который когда-либо знала история!" }

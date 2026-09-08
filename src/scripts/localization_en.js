@@ -883,6 +883,42 @@ localization_en = [
   { key: "#robber_city_is_good", text: "Nice city. Nice purses to lighten." }
   { key: "#robber_city_is_amazing", text: "Best city to rob — fat purses everywhere!" }
 
+  { key: "#slave_break_our_chains", text: "Break the chains! No more masters!" }
+  { key: "#slave_tax_too_high", text: "They tax you — they whip us. Rise!" }
+  { key: "#slave_wages_too_low", text: "Free men starve on scraps. Slaves take what we need!" }
+  { key: "#slave_no_jobs", text: "No work for freemen? Then freemen join the revolt!" }
+  { key: "#slave_no_food_in_city", text: "Empty granaries while we starve in chains. Enough!" }
+  { key: "#slave_city_have_no_army", text: "No forts? Nothing stops us from the palace!" }
+  { key: "#slave_gods_are_angry", text: "Even the gods hate this city. Strike with us!" }
+  { key: "#slave_low_entertainment", text: "No festivals for slaves — only the torch!" }
+  { key: "#slave_city_is_good", text: "Good city for the free. We take our share now!" }
+  { key: "#slave_city_is_amazing", text: "Amazing streets to free — or to burn!" }
+
+  { key: "#soldier_no_enemies_sighted", text: "No enemies sighted. The watch is quiet." }
+  { key: "#soldier_ready_approaching_enemy", text: "Ready! Approaching enemy — hold formation!" }
+  { key: "#soldier_no_trouble_defeating_army", text: "We'll have no trouble defeating this army." }
+  { key: "#soldier_enemy_is_fierce", text: "This enemy is fierce. Stand firm for Pharaoh!" }
+  { key: "#soldier_disease_risk", text: "Fever in the ranks. Hard to march with shaky hands." }
+  { key: "#soldier_no_food_in_city", text: "Empty granaries? A hungry soldier fights poorly." }
+  { key: "#soldier_gods_are_angry", text: "The gods look angry. Bad omen before battle." }
+  { key: "#soldier_low_entertainment", text: "No festivals for ages. Even soldiers need a day off watch." }
+  { key: "#soldier_city_is_good", text: "A solid city. Worth defending." }
+  { key: "#soldier_city_is_amazing", text: "Best city I've guarded. For Pharaoh!" }
+
+  { key: "#stonemason_ready", text: "Stone ready. Time to raise the monument!" }
+  { key: "#stonemason_going_to_work", text: "Off to the site — those blocks won't place themselves." }
+  { key: "#stonemason_working_ground", text: "Setting stone on solid ground. Steady now." }
+  { key: "#stonemason_working_wall", text: "Up the wall with another course of stone!" }
+  { key: "#stonemason_work_complete", text: "Work done for now. Back to the guild." }
+  { key: "#stonemason_looking_for_work", text: "Looking for the next place to set stone." }
+  { key: "#stonemason_disease_risk", text: "Fever on the site. Hard to lift stone with shaky hands." }
+  { key: "#stonemason_no_food_in_city", text: "Empty granaries? A hungry mason lays crooked courses." }
+  { key: "#stonemason_city_have_no_army", text: "No forts? One raid and this monument is rubble." }
+  { key: "#stonemason_gods_are_angry", text: "The gods look angry. Even good stone cracks under their gaze." }
+  { key: "#stonemason_low_entertainment", text: "No festivals for ages. Even masons need a day off the scaffold." }
+  { key: "#stonemason_city_is_good", text: "This city is solid! Good foundations for great monuments." }
+  { key: "#stonemason_city_is_amazing", text: "Best city I've built for. These stones will stand forever!" }
+
   { key: "#reed_to_the_marsh_i_march", text: "To the marsh I march!" }
   { key: "#reed_will_make_some_fine_papyrus", text: "These reeds will make some fine papyrus." }
   { key: "#reed_disease_risk", text: "Fever in the marshes. Hard to cut reeds with shaky hands." }
@@ -1874,12 +1910,15 @@ localization_en = [
 
 
   { key: "#scriber_dicease_can_start", text: "People are sick. My medical papyri tell me that the illness could soon escalate to plague!" }
+  { key: "#scriber_these_festivals", text: "These festivals! I've read of grander ones — we could use another here." }
+  { key: "#scriber_plague_could_break_out", text: "People are sick. My medical papyri tell me that the illness could soon escalate to plague!" }
   { key: "#scriber_no_food_in_city", text: "I'm famished. It's hard to lift my scrolls on an empty stomach." }
   { key: "#scriber_defenses_are_weak", text: "Even the simplest enemy could manage to get through our defenses!" }
   { key: "#scriber_need_more_workers", text: "Unless more workers arrive soon, the city will surely suffer." }
   { key: "#scriber_gods_are_angry", text: "The literature is replete with stories of angry gods and their vengeance." }
   { key: "#scriber_reputation_is_low", text: "History shows that a city like ours will pay serious consequences for its poor reputation." }
-  { key: "#scriber_much_unemployments", text: "There are a lot of umemployed in the city. At least they have plenty of time to read." }
+  { key: "#scriber_much_unemployments", text: "There are a lot of unemployed in the city. At least they have plenty of time to read." }
+  { key: "#scriber_high_unemployment", text: "There are a lot of unemployed in the city. At least they have plenty of time to read." }
   { key: "#scriber_low_entertainment", text: "Sometimes my eyes like to rest on something other than hieroglyphs. I want to see a show!" }
   { key: "#scriber_city_is_ok", text: "This city is comparable to others I've read about." }
   { key: "#scriber_city_is_amazing", text: "This city is the best that history has ever known!" }

@@ -43,7 +43,6 @@ public:
     FIGURE_METAINFO(FIGURE_INFANTRY, figure_soldier_infantry);
     figure_soldier_infantry(figure *f) : figure_soldier(f) {}
 
-    virtual sound_key phrase_key() const override;
     virtual void update_image(const formation *m, int &dir) override;
 };
 
@@ -59,6 +58,6 @@ class figure_soldier_charioteer : public figure_soldier {
 public:
     FIGURE_METAINFO(FIGURE_FCHARIOTEER, figure_soldier_charioteer)
     figure_soldier_charioteer(figure *f) : figure_soldier(f) {}
-    
+
     virtual void update_image(const formation *m, int &dir) override;
 };
