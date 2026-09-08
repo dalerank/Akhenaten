@@ -1923,6 +1923,19 @@ localization_en = [
   { key: "#scriber_city_is_ok", text: "This city is comparable to others I've read about." }
   { key: "#scriber_city_is_amazing", text: "This city is the best that history has ever known!" }
 
+  { key: "#teacher_festival_info", text: "Festivals teach as much as papyrus — the city could use another." }
+  { key: "#teacher_low_entertainment", text: "No shows for ages. Even pupils tire of only hieroglyphs." }
+  { key: "#teacher_desease_can_start_at_any_moment", text: "Illness in the streets. Hard to teach when the young are feverish." }
+  { key: "#teacher_no_food_in_city", text: "Empty granaries? Hungry students learn poorly." }
+  { key: "#teacher_city_not_safety", text: "No forts? Schools are little shelter from invaders." }
+  { key: "#teacher_need_workers", text: "We need more workers — education alone won't fill every job." }
+  { key: "#teacher_gods_are_angry", text: "The gods look angry. Even the wisest texts warn of their wrath." }
+  { key: "#teacher_low_rating", text: "Our standing with Pharaoh is poor. History will not be kind." }
+  { key: "#teacher_much_unemployments", text: "So many unemployed. At least they have time to study." }
+  { key: "#teacher_city_is_good", text: "This city is a fair place to learn and teach." }
+  { key: "#teacher_city_much_better", text: "Things are much better here than in cities I've read about." }
+  { key: "#teacher_city_is_amazing", text: "Best city I've taught in. These pupils will write history!" }
+
   { key: "#dentist_concerned_about_plague", text: "People are so concerned about catching the plague that they're neglecting their teeth." }
   { key: "#dentist_no_food_in_city", text: "I've had so little to eat lately...what a sad waste of perfect teeth." }
   { key: "#dentist_defenses_are_weak", text: "The city's defenses are full of gaps. Our enemies could have their way with us." }

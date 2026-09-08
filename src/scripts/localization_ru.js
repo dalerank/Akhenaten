@@ -1199,6 +1199,19 @@ localization_ru = [
     { key: "#scriber_city_is_ok", text: "Этот город сравним с другими, о которых я читал." }
     { key: "#scriber_city_is_amazing", text: "Этот город - лучший, который когда-либо знала история!" }
 
+    { key: "#teacher_festival_info", text: "Праздники учат не хуже папируса — городу бы ещё один." }
+    { key: "#teacher_low_entertainment", text: "Шоу давно не было. Даже ученики устали от одних иероглифов." }
+    { key: "#teacher_desease_can_start_at_any_moment", text: "Болезнь на улицах. Трудно учить, когда дети в лихорадке." }
+    { key: "#teacher_no_food_in_city", text: "Пустые амбары? Голодные ученики плохо учатся." }
+    { key: "#teacher_city_not_safety", text: "Нет фортов? Школы — слабое укрытие от захватчиков." }
+    { key: "#teacher_need_workers", text: "Нужно больше работников — одно образование все места не закроет." }
+    { key: "#teacher_gods_are_angry", text: "Боги злятся. Даже мудрейшие тексты предупреждают об их гневе." }
+    { key: "#teacher_low_rating", text: "Наше положение у фараона плохое. История не будет милостива." }
+    { key: "#teacher_much_unemployments", text: "Столько безработных. По крайней мере, есть время учиться." }
+    { key: "#teacher_city_is_good", text: "В этом городе хорошо учиться и учить." }
+    { key: "#teacher_city_much_better", text: "Здесь гораздо лучше, чем в городах, о которых я читал." }
+    { key: "#teacher_city_is_amazing", text: "Лучший город, где я учил. Эти ученики напишут историю!" }
+
     { key: "#dentist_concerned_about_plague", text: "Люди так обеспокоены заражением чумой, что пренебрегают своими зубами." }
     { key: "#dentist_no_food_in_city", text: "Я так мало ел в последнее время... какая печальная трата идеальных зубов." }
     { key: "#dentist_defenses_are_weak", text: "Оборона города полна пробелов. Наши враги могли бы сделать с нами всё, что захотят." }
