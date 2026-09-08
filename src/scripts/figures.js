@@ -25,6 +25,7 @@ import figure.enemy_archer
 import figure.enemy_fast_sword
 import figure.enemy_spearman
 import figure.enemy_transport
+import figure.enemy_warship
 
 figure_fireman {
   overlay : OVERLAY_WATER

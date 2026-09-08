@@ -6,12 +6,16 @@
 // FIGURE_METAINFO so figure_impl::acquire resolves instead of asserting.
 // Config blocks live in src/scripts/enemies.js (figure_<nation>_war_ship).
 
-enum e_action_enemy_warship {
-    ACTION_203_ENEMY_WARSHIP_IDLE = 203,
-    ACTION_204_ENEMY_WARSHIP_ATTACK = 204,
-    ACTION_205_ENEMY_WARSHIP_CREATED = 205,
-    ACTION_206_ENEMY_WARSHIP_PURSUING = 206,
+enum e_action_enemy_warship : uint16_t {
+    ACTION_0_ENEMY_WARSHIP_CREATED = 0,
+    ACTION_1_ENEMY_WARSHIP_IDLE = 1,
+    ACTION_2_ENEMY_WARSHIP_PURSUING = 2,
+    ACTION_3_ENEMY_WARSHIP_ATTACK = 3,
+
+    ACTION_4_ENEMY_WARSHIP_MAX
 };
+using e_action_enemy_warship_tokens_t = token_holder<e_action_enemy_warship, ACTION_0_ENEMY_WARSHIP_CREATED, ACTION_4_ENEMY_WARSHIP_MAX>;
+extern const e_action_enemy_warship_tokens_t e_action_enemy_warship_tokens;
 
 class figure_enemy_warship : public figure_enemy {
 public:
@@ -29,6 +33,7 @@ public:
     virtual void update_animation() override;
     virtual void kill() override;
     virtual bool is_attack() const override;
+    virtual e_figure_action enemy_initial_action() const override { return (e_figure_action)ACTION_0_ENEMY_WARSHIP_CREATED; }
 
     int invasion_sequence() const { return runtime_data().invasion_sequence; }
     void set_invasion_sequence(int seq) { runtime_data().invasion_sequence = (int16_t)seq; }

@@ -24,6 +24,8 @@
 #include "widget/widget_city.h"
 #include "input/mouse.h"
 
+const e_action_enemy_warship_tokens_t ANK_CONFIG_ENUM(e_action_enemy_warship_tokens)
+
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_enemy_warship_generic)
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_assyrian_war_ship)
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_canaanite_war_ship)
@@ -154,11 +156,11 @@ void figure_enemy_warship::on_create() {
     runtime_data().target_id = 0;
     runtime_data().invasion_sequence = 0;
     runtime_data().wreck_spawned = 0;
-    advance_action(ACTION_205_ENEMY_WARSHIP_CREATED);
+    advance_action(ACTION_0_ENEMY_WARSHIP_CREATED);
 }
 
 bool figure_enemy_warship::is_attack() const {
-    return action_state() == ACTION_204_ENEMY_WARSHIP_ATTACK;
+    return action_state() == ACTION_3_ENEMY_WARSHIP_ATTACK;
 }
 
 void figure_enemy_warship::check_sink() {
@@ -271,14 +273,14 @@ void figure_enemy_warship::combat_tick_vs_target(figure *target, int max_pursue_
     const int distance = calc_maximum_distance(base.tile, target->tile);
 
     if (is_player_fleet_target(target) && distance <= 1) {
-        advance_action(ACTION_204_ENEMY_WARSHIP_ATTACK);
+        advance_action(ACTION_3_ENEMY_WARSHIP_ATTACK);
         ram_target(target);
         return;
     }
 
     if (distance <= ENEMY_WARSHIP_MISSILE_RANGE
         && figure_movement_can_launch_cross_country_missile(base.tile, target->tile)) {
-        advance_action(ACTION_204_ENEMY_WARSHIP_ATTACK);
+        advance_action(ACTION_3_ENEMY_WARSHIP_ATTACK);
         launch_missile_at(target);
         return;
     }
@@ -288,10 +290,10 @@ void figure_enemy_warship::combat_tick_vs_target(figure *target, int max_pursue_
         return;
     }
 
-    if (action_state() != ACTION_206_ENEMY_WARSHIP_PURSUING) {
+    if (action_state() != ACTION_2_ENEMY_WARSHIP_PURSUING) {
         base.destination_tile = target->tile;
         base.source_tile = base.tile;
-        advance_action(ACTION_206_ENEMY_WARSHIP_PURSUING);
+        advance_action(ACTION_2_ENEMY_WARSHIP_PURSUING);
         route_remove();
     }
 
@@ -301,7 +303,7 @@ void figure_enemy_warship::combat_tick_vs_target(figure *target, int max_pursue_
         route_remove();
     } else if (direction() == DIR_FIGURE_CAN_NOT_REACH) {
         runtime_data().target_id = 0;
-        advance_action(ACTION_203_ENEMY_WARSHIP_IDLE);
+        advance_action(ACTION_1_ENEMY_WARSHIP_IDLE);
     }
 }
 
@@ -316,11 +318,11 @@ void figure_enemy_warship::figure_action() {
 
     assert(base.allow_move_type == EMOVE_WATER);
 
-    if (action_state() == ACTION_205_ENEMY_WARSHIP_CREATED) {
+    if (action_state() == ACTION_0_ENEMY_WARSHIP_CREATED) {
         base.wait_ticks++;
         if (base.wait_ticks >= 20) {
             base.wait_ticks = 0;
-            advance_action(ACTION_203_ENEMY_WARSHIP_IDLE);
+            advance_action(ACTION_1_ENEMY_WARSHIP_IDLE);
         }
         return;
     }
@@ -333,7 +335,7 @@ void figure_enemy_warship::figure_action() {
     }
 
     if (!target) {
-        advance_action(ACTION_203_ENEMY_WARSHIP_IDLE);
+        advance_action(ACTION_1_ENEMY_WARSHIP_IDLE);
         return;
     }
 
@@ -344,12 +346,12 @@ void figure_enemy_warship::update_animation() {
     // Enemy ship configs expose swim / idle / death (no walk/attack keys).
     pcstr anim_key = "swim";
     switch (action_state()) {
-    case ACTION_205_ENEMY_WARSHIP_CREATED:
-    case ACTION_203_ENEMY_WARSHIP_IDLE:
+    case ACTION_0_ENEMY_WARSHIP_CREATED:
+    case ACTION_1_ENEMY_WARSHIP_IDLE:
         anim_key = "idle";
         break;
-    case ACTION_204_ENEMY_WARSHIP_ATTACK:
-    case ACTION_206_ENEMY_WARSHIP_PURSUING:
+    case ACTION_3_ENEMY_WARSHIP_ATTACK:
+    case ACTION_2_ENEMY_WARSHIP_PURSUING:
         anim_key = "swim";
         break;
     default:

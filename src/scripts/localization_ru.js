@@ -648,6 +648,21 @@ localization_ru = [
     { key: "#enemy_transport_city_is_amazing", text: "Богатые причалы. Добыча заполнит трюмы." }
     { key: "#enemy_transport_for_glory", text: "За славу — и плацдарм!" }
 
+    { key: "#enemy_warship_created", text: "Поднять паруса! Их гавань наша." }
+    { key: "#enemy_warship_idle", text: "Держать позицию. Следите за их флотом." }
+    { key: "#enemy_warship_pursuing", text: "Гоните их! Ни один корабль не уйдёт." }
+    { key: "#enemy_warship_attacking", text: "Огонь! Тараньте и топите!" }
+    { key: "#enemy_warship_no_army", text: "Нет фортов на берегу? Причалы беззащитны." }
+    { key: "#enemy_warship_no_food", text: "Они голодают. Мягкая добыча ждёт." }
+    { key: "#enemy_warship_disease", text: "Чума в их городе. Лёгкая добыча." }
+    { key: "#enemy_warship_need_workers", text: "Нехватка рабочих. Стены рухнут." }
+    { key: "#enemy_warship_gods_angry", text: "Даже боги отвернулись от них." }
+    { key: "#enemy_warship_city_is_bad", text: "Слабый город. Идеален для набега." }
+    { key: "#enemy_warship_low_entertainment", text: "Нет праздников. Дух уже сломлен." }
+    { key: "#enemy_warship_city_is_good", text: "Богатые причалы. Впереди богатый груз." }
+    { key: "#enemy_warship_city_is_amazing", text: "Такое богатство. Добыча будет великолепной." }
+    { key: "#enemy_warship_for_glory", text: "За славу и море!" }
+
     { key: "#malaria_problem", text: "(Не используется)" }
     { key: "#malaria_not_a_problem", text: "Малярия, похоже, здесь не проблема." }
     { key: "#malaria_outbreak_could_strike", text: "Вспышка малярии может произойти, если ничего не сделать." }

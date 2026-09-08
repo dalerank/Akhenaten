@@ -54,6 +54,23 @@ enemy_transport_sounds = {
 	enemy_transport_for_glory { sound:"enemy_transport_for_glory.wav", text: "#enemy_transport_for_glory" }
 }
 
+enemy_warship_sounds = {
+	enemy_warship_created { sound:"enemy_warship_created.wav", text: "#enemy_warship_created" }
+	enemy_warship_idle { sound:"enemy_warship_idle.wav", text: "#enemy_warship_idle" }
+	enemy_warship_pursuing { sound:"enemy_warship_pursuing.wav", text: "#enemy_warship_pursuing" }
+	enemy_warship_attacking { sound:"enemy_warship_attacking.wav", text: "#enemy_warship_attacking" }
+	enemy_warship_no_army { sound:"enemy_warship_no_army.wav", text: "#enemy_warship_no_army" }
+	enemy_warship_no_food { sound:"enemy_warship_no_food.wav", text: "#enemy_warship_no_food" }
+	enemy_warship_disease { sound:"enemy_warship_disease.wav", text: "#enemy_warship_disease" }
+	enemy_warship_need_workers { sound:"enemy_warship_need_workers.wav", text: "#enemy_warship_need_workers" }
+	enemy_warship_gods_angry { sound:"enemy_warship_gods_angry.wav", text: "#enemy_warship_gods_angry" }
+	enemy_warship_city_is_bad { sound:"enemy_warship_city_is_bad.wav", text: "#enemy_warship_city_is_bad" }
+	enemy_warship_low_entertainment { sound:"enemy_warship_low_entertainment.wav", text: "#enemy_warship_low_entertainment" }
+	enemy_warship_city_is_good { sound:"enemy_warship_city_is_good.wav", text: "#enemy_warship_city_is_good" }
+	enemy_warship_city_is_amazing { sound:"enemy_warship_city_is_amazing.wav", text: "#enemy_warship_city_is_amazing" }
+	enemy_warship_for_glory { sound:"enemy_warship_for_glory.wav", text: "#enemy_warship_for_glory" }
+}
+
 enemy_attack_rules = {
     priority : {
         food_chain : [BUILDING_GRANARY, BUILDING_STORAGE_YARD, BUILDING_BAZAAR,
@@ -126,6 +143,7 @@ figure_enemy_transport_generic = {
 // console spawn when a nation has no dedicated warship enum.
 figure_enemy_warship_generic = {
   overlay : OVERLAY_ENEMIES
+    sounds: enemy_warship_sounds
     animations : {
         swim : { pack:PACK_ENEMY_HITTITE, id:10, max_frames:4 }
         death : { pack:PACK_ENEMY_HITTITE, id:11, max_frames:11, loop:false }
@@ -284,6 +302,7 @@ figure_assyrian_transport_ship = {
 
 figure_assyrian_war_ship = {
   overlay : OVERLAY_ENEMIES
+    sounds: enemy_warship_sounds
     animations : {
         swim : { pack:PACK_ENEMY_ASSYRIAN, id:10, max_frames:4 }
         death : { pack:PACK_ENEMY_ASSYRIAN, id:11, max_frames:11, loop:false }
@@ -405,6 +424,7 @@ figure_canaanite_transport_ship = {
 
 figure_canaanite_war_ship = {
   overlay : OVERLAY_ENEMIES
+    sounds: enemy_warship_sounds
     animations : {
         swim : { pack:PACK_ENEMY_CANAANITE, id:10, max_frames:4 }
         death : { pack:PACK_ENEMY_CANAANITE, id:11, max_frames:11, loop:false }
@@ -483,6 +503,7 @@ figure_egyptian_transport_ship = {
 
 figure_egyptian_galera = {
   overlay : OVERLAY_ENEMIES
+    sounds: enemy_warship_sounds
     animations : {
         swim : { pack:PACK_ENEMY_EGYPTIAN, id:0, max_frames:4 }
         death : { pack:PACK_ENEMY_EGYPTIAN, id:1, max_frames:11, loop:false }
@@ -502,6 +523,7 @@ figure_egyptian_galera = {
 
 figure_egyptian_war_ship = {
   overlay : OVERLAY_ENEMIES
+    sounds: enemy_warship_sounds
     animations : {
         swim : { pack:PACK_ENEMY_EGYPTIAN, id:4, max_frames:4 }
         death : { pack:PACK_ENEMY_EGYPTIAN, id:5, max_frames:11, loop:false }
@@ -915,6 +937,7 @@ figure_hittite_transport_ship = {
 
 figure_hittite_war_ship = {
   overlay : OVERLAY_ENEMIES
+    sounds: enemy_warship_sounds
     animations : {
         swim : { pack:PACK_ENEMY_HITTITE, id:10, max_frames:4 }
         death : { pack:PACK_ENEMY_HITTITE, id:11, max_frames:11, loop:false }
@@ -1034,6 +1057,7 @@ figure_hyksos_transport_ship = {
 
 figure_hyksos_war_ship = {
   overlay : OVERLAY_ENEMIES
+    sounds: enemy_warship_sounds
     animations : {
         swim : { pack:PACK_ENEMY_HYKSOS, id:10, max_frames:4 }
         death : { pack:PACK_ENEMY_HYKSOS, id:11, max_frames:11, loop:false }
@@ -1152,6 +1176,7 @@ figure_kushite_transport_ship = {
 
 figure_kushite_war_ship = {
   overlay : OVERLAY_ENEMIES
+    sounds: enemy_warship_sounds
     animations : {
         swim : { pack:PACK_ENEMY_KUSHITE, id:10, max_frames:4 }
         death : { pack:PACK_ENEMY_KUSHITE, id:11, max_frames:11, loop:false }
@@ -1275,6 +1300,7 @@ figure_libian_transport_ship = {
 
 figure_libian_war_ship = {
   overlay : OVERLAY_ENEMIES
+    sounds: enemy_warship_sounds
     animations : {
         swim : { pack:PACK_ENEMY_LIBIAN, id:10, max_frames:4 }
         death : { pack:PACK_ENEMY_LIBIAN, id:11, max_frames:11, loop:false }
@@ -1395,6 +1421,7 @@ figure_nubian_transport_ship = {
 
 figure_nubian_war_ship = {
   overlay : OVERLAY_ENEMIES
+    sounds: enemy_warship_sounds
     animations : {
         swim : { pack:PACK_ENEMY_NUBIAN, id:10, max_frames:4 }
         death : { pack:PACK_ENEMY_NUBIAN, id:11, max_frames:11, loop:false }
@@ -1520,6 +1547,7 @@ figure_persian_transport_ship = {
 
 figure_persian_war_ship = {
   overlay : OVERLAY_ENEMIES
+    sounds: enemy_warship_sounds
     animations : {
         swim : { pack:PACK_ENEMY_PERSIAN, id:10, max_frames:4 }
         death : { pack:PACK_ENEMY_PERSIAN, id:11, max_frames:11, loop:false }
@@ -1633,6 +1661,7 @@ figure_phoenician_transport_ship = {
 
 figure_phoenician_war_ship = {
   overlay : OVERLAY_ENEMIES
+    sounds: enemy_warship_sounds
     animations : {
         swim : { pack:PACK_ENEMY_PHOENICIAN, id:10, max_frames:4 }
         death : { pack:PACK_ENEMY_PHOENICIAN, id:11, max_frames:11, loop:false }
@@ -1757,6 +1786,7 @@ figure_roman_transport_ship = {
 
 figure_roman_war_ship = {
   overlay : OVERLAY_ENEMIES
+    sounds: enemy_warship_sounds
     animations : {
         swim : { pack:PACK_ENEMY_ROMAN, id:10, max_frames:4 }
         death : { pack:PACK_ENEMY_ROMAN, id:11, max_frames:11, loop:false }
@@ -1876,6 +1906,7 @@ figure_seapeople_transport_ship = {
 
 figure_seapeople_war_ship = {
   overlay : OVERLAY_ENEMIES
+    sounds: enemy_warship_sounds
     animations : {
         swim : { pack:PACK_ENEMY_SEAPEOPLE, id:10, max_frames:4 }
         death : { pack:PACK_ENEMY_SEAPEOPLE, id:11, max_frames:11, loop:false }

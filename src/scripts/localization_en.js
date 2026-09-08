@@ -1285,6 +1285,21 @@ localization_en = [
   { key: "#enemy_transport_city_is_amazing", text: "Wealthy quays. The plunder will fill our holds." }
   { key: "#enemy_transport_for_glory", text: "For glory — and a beachhead!" }
 
+  { key: "#enemy_warship_created", text: "Raise the sails! Their harbor is ours." }
+  { key: "#enemy_warship_idle", text: "Hold position. Watch for their fleet." }
+  { key: "#enemy_warship_pursuing", text: "Chase them down! No ship escapes." }
+  { key: "#enemy_warship_attacking", text: "Fire! Ram and sink them!" }
+  { key: "#enemy_warship_no_army", text: "No forts on shore? Their docks are defenseless." }
+  { key: "#enemy_warship_no_food", text: "They're starving. Soft plunder awaits." }
+  { key: "#enemy_warship_disease", text: "Plague in their city. Easy prey." }
+  { key: "#enemy_warship_need_workers", text: "Labor shortages. Their walls will crumble." }
+  { key: "#enemy_warship_gods_angry", text: "Even their gods have turned away." }
+  { key: "#enemy_warship_city_is_bad", text: "A weak city. Perfect for a raid." }
+  { key: "#enemy_warship_low_entertainment", text: "No festivals. Morale is broken already." }
+  { key: "#enemy_warship_city_is_good", text: "Wealthy docks. Rich cargo ahead." }
+  { key: "#enemy_warship_city_is_amazing", text: "Such prosperity. The spoils will be magnificent." }
+  { key: "#enemy_warship_for_glory", text: "For glory and the sea!" }
+
   { key: "#malaria_problem", text: "(Not used)" }
   { key: "#malaria_not_a_problem", text: "Malaria doesn't seem to be a problem here." }
   { key: "#malaria_outbreak_could_strike", text: "An outbreak of malaria could strike if something isn't done." } 
