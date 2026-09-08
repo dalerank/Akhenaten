@@ -65,32 +65,10 @@ import figure.tax_collector
 import figure.teacher
 import figure.tomb_artisan
 import figure.tomb_robber
-
-figure_water_carrier {
-  overlay : OVERLAY_WATER
-	animations {
-		walk {  pack:PACK_SPR_MAIN, id:59, max_frames:12 }
-		death {  pack:PACK_SPR_MAIN, id:60, max_frames:8, loop:false }
-		big_image { pack:PACK_UNLOADED, id:25, offset:FIGURE_WATER_CARRIER }
-  	}
-
-	sounds {
-		water_desease_can_start_at_any_moment { sound: "water_g01.wav" }
-		water_no_food_in_city { sound: "water_g02.wav" }
-		water_city_have_no_army { sound: "water_g03.wav" }
-		water_need_workers { sound: "water_g04.wav" }
-		water_gods_are_angry { sound: "water_g05.wav" }
-		water_city_is_bad { sound: "water_g06.wav" }
-		water_much_unemployments { sound: "water_g07.wav" }
-		water_low_entertainment { sound: "water_g08.wav" }
-		water_city_is_good { sound: "water_g09.wav" }
-		water_city_is_amazing { sound: "water_g10.wav" }
-	}
-
-  terrain_usage : TERRAIN_USAGE_ROADS
-  max_roam_length : 640
-  record_path : true
-}
+import figure.tower_sentry
+import figure.trade_ship
+import figure.water_carrier
+import figure.worker
 
 figure_festival_guy {
   overlay : OVERLAY_RELIGION
@@ -122,31 +100,6 @@ figure_festival_guy {
 	terrain_usage : TERRAIN_USAGE_ANY
 	max_amount : 25
 	permission : epermission_entertainer
-}
-
-figure_tower_sentry {
-  overlay : OVERLAY_CRIME
-	animations {
-		walk { pack:PACK_SPR_MAIN, id:54, max_frames:12 }
-		death { pack:PACK_SPR_MAIN, id:55, max_frames:8, loop:false }
-		fire { pack:PACK_SPR_MAIN, id:56, max_frames:12 }
-		attack { pack:PACK_SPR_MAIN, id:197, max_frames:12 }
-		big_image { pack:PACK_UNLOADED, id:25, offset:FIGURE_TOWER_SENTRY }
-	}
-
-	sounds {
-		tower_sentry_no_enemies_sighted { sound:"guard_e01.wav" }
-		tower_sentry_ready_approaching_enemy { sound:"guard_e02.wav" }
-		tower_sentry_no_trouble_defeating_army { sound:"guard_e03.wav" }
-		tower_sentry_enemy_is_fierce { sound:"guard_e04.wav" }
-	}
-
-	category: figure_category_armed
-	max_damage : 40
-	attack_value : 6
-	terrain_usage : TERRAIN_USAGE_ANY
-	max_amount : 25
-	missile_delay : 40
 }
 
 figure_ostrich {
@@ -482,34 +435,6 @@ figure_academy_scriber {
 	max_roam_length : 384
 }
 
-figure_worker {
-  overlay : OVERLAY_LABOR
-	animations {
-		walk { pack:PACK_SPR_MAIN, id:116, max_frames:12 }
-		death { pack:PACK_SPR_MAIN, id:117, max_frames:8, loop:false }
-		work { pack:PACK_SPR_MAIN, id:118, max_frames:12 }
-	}
-
-	sounds {
-		worker_going_to_workplace {sound:"worker_e02.wav", group:212, text:0}
-		worker_farm_is_flooded {sound:"worker_e03.wav", group:212, text:1}
-		worker_desease_can_start_at_any_moment {sound:"worker_g01.wav", group:212, text:2}
-		worker_no_food_in_city {sound:"worker_g02.wav", group:212, text:3}
-		worker_enemies_in_city {sound:"worker_g03.wav", group:212, text:4}
-		worker_need_workers {sound:"worker_g04.wav", group:212, text:5}
-		worker_gods_are_angry {sound:"worker_g05.wav", group:212, text:6}
-		worker_city_is_bad {sound:"worker_g06.wav", group:212, text:7}
-		worker_much_unemployments {sound:"worker_g07.wav", group:212, text:8}
-		worker_low_entertainment {sound:"worker_g08.wav", group:212, text:9}
-		worker_city_is_good {sound:"worker_g09.wav", group:212, text:10}
-		worker_city_is_amazing {sound:"worker_g10.wav", group:212, text:11}
-	}
-
-	category: figure_category_citizen
-	max_damage : 10
-	record_path : true
-}
-
 figure_cart {
 	stone: { pack:PACK_SPR_MAIN, id:102  }
 	granite: { pack:PACK_SPR_MAIN, id:103 }
@@ -573,28 +498,6 @@ figure_locust {
 	swarm_days: 48
 	happiness_hit: -10
 	float_height: 20
-}
-
-figure_trade_ship = {
-	animations : {
-		walk : { pack:PACK_SPR_MAIN, id:123, max_frames:4, duration:4 }
-		death : { pack:PACK_SPR_MAIN, id:124, max_frames:8 }
-		idle : { pack:PACK_SPR_MAIN, id:125, max_frames:1, offset:0 }
-		big_image : { pack:PACK_UNLOADED, id:25, offset:FIGURE_TRADE_SHIP }
-	}
-
-	sounds : {
-		barge_have_no_place_for_dock : {sound:"barge_e01.wav", group: 224, text:0}
-		barge_docked_wait_for_dockpushers : {sound:"barge_e02.wav", group: 224, text:1}
-		barge_city_not_trades : {sound:"barge_e03.wav", group: 224, text:2}
-		barge_i_like_to_trage : {sound:"barge_e04.wav", group: 224, text:3}
-		barge_amazing_trades : {sound:"barge_e05.wav", group: 224, text:4}
-	}
-
-	category: figure_category_citizen
-	max_damage : 250
-	terrain_usage : TERRAIN_USAGE_ANY
-	max_capacity : 1200
 }
 
 figure_shipwreck = {

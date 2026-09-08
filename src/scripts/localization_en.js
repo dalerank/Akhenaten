@@ -905,6 +905,17 @@ localization_en = [
   { key: "#soldier_city_is_good", text: "A solid city. Worth defending." }
   { key: "#soldier_city_is_amazing", text: "Best city I've guarded. For Pharaoh!" }
 
+  { key: "#tower_sentry_no_enemies_sighted", text: "No enemies sighted. The wall is quiet." }
+  { key: "#tower_sentry_ready_approaching_enemy", text: "Ready! Enemy approaching — loose arrows!" }
+  { key: "#tower_sentry_no_trouble_defeating_army", text: "We'll have no trouble defeating this army from the tower." }
+  { key: "#tower_sentry_enemy_is_fierce", text: "This enemy is fierce. Hold the wall for Pharaoh!" }
+  { key: "#tower_sentry_disease_risk", text: "Fever on the walls. Hard to keep watch with shaky hands." }
+  { key: "#tower_sentry_no_food_in_city", text: "Empty granaries? A hungry sentry watches poorly." }
+  { key: "#tower_sentry_gods_are_angry", text: "The gods look angry. Bad omen for the watch." }
+  { key: "#tower_sentry_low_entertainment", text: "No festivals for ages. Even sentries need a day off the wall." }
+  { key: "#tower_sentry_city_is_good", text: "A solid city. Worth guarding from this tower." }
+  { key: "#tower_sentry_city_is_amazing", text: "Best city I've watched over. For Pharaoh!" }
+
   { key: "#stonemason_ready", text: "Stone ready. Time to raise the monument!" }
   { key: "#stonemason_going_to_work", text: "Off to the site — those blocks won't place themselves." }
   { key: "#stonemason_working_ground", text: "Setting stone on solid ground. Steady now." }

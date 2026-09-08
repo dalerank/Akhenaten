@@ -15,8 +15,6 @@ public:
 
     virtual void figure_before_action() override;
     virtual void figure_action() override;
-    virtual sound_key phrase_key() const override;
     virtual int provide_service() override;
-    virtual figure_sound_t get_sound_reaction(xstring key) const override;
     virtual void acquire_attack() override;
 };

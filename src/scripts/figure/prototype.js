@@ -32,6 +32,7 @@ FigureTrade.property.empire_city_id = { get: function() { return this.__empire_c
 FigureTrade.property.has_traded = { get: function() { return this.__has_traded() } }
 FigureTrade.property.can_buy_at_destination = { get: function() { return this.__can_buy_at_destination() } }
 FigureTrade.property.can_sell_at_destination = { get: function() { return this.__can_sell_at_destination() } }
+FigureTrade.property.is_trading = { get: function() { return this.__is_trading() } }
 FigureTrade.property.city = { get: function() { return empire.get_city(this.empire_city_id) } }
 
 FigureTransportShip.property.valid = { get: function() { return this.__valid() } }

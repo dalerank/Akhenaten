@@ -484,28 +484,6 @@ void figure_trade_ship::debug_show_properties() {
     game_debug_show_property("trader_amount_bought", d.amount_bought);
 }
 
-sound_key figure_trade_ship::phrase_key() const {
-    if (action_state() == ACTION_115_TRADE_SHIP_LEAVING) {
-        if (!empire_trader().has_traded())
-            return "barge_no_trade";
-
-        return "barge_good_trade";
-    }
-
-    if (action_state() == ACTION_112_TRADE_SHIP_MOORED) {
-        int state = is_trading();
-        if (state == TRADE_SHIP_BUYING)
-            return "barge_waiting_for_cargo";
-
-        if (state == TRADE_SHIP_SELLING)
-            return "barge_looking_for_unload";
-
-        return "barge_no_trade";
-    }
-
-    return "barge_beatiful_journey";
-}
-
 void figure_trade_ship::kill() {
     auto dock = destination()->dcast_dock();
 

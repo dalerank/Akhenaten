@@ -27,10 +27,8 @@ public:
     virtual void on_create() override {}
     virtual void figure_before_action() override;
     virtual void figure_action() override;
-    virtual sound_key phrase_key() const override;
     virtual void update_animation() override;
     virtual void poof() override;
-    //virtual figure_sound_t get_sound_reaction(pcstr key) const override;
 
     void tower_sentry_pick_target();
     int tower_sentry_init_patrol(building *b, int *x_tile, int *y_tile);

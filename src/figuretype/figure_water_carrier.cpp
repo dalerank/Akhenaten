@@ -51,53 +51,6 @@ void figure_water_carrier::figure_action() {
     }
 }
 
-sound_key figure_water_carrier::phrase_key() const {
-    svector<sound_key, 10> keys;
-    if (g_city.health.value < 30) {
-        keys.push_back("desease_can_start_at_any_moment");
-    }
-
-    if (g_city.sentiment.low_mood_cause == LOW_MOOD_NO_FOOD) {
-        keys.push_back("no_food_in_city");
-    }
-
-    if (formation_get_num_forts() < 1) {
-        keys.push_back("city_have_no_army");
-    }
-
-    if (g_city.labor.workers_needed >= 10) {
-        keys.push_back("need_workers");
-    }
-
-    if (g_city.religion.least_mood() <= GOD_MOOD_INDIFIRENT) { // any gods in wrath
-        keys.push_back("gods_are_angry");
-    }
-
-    if (g_city.kingdome.rating < 30) {
-        keys.push_back("city_is_bad");
-    }
-
-    if (g_city.sentiment.low_mood_cause == LOW_MOOD_NO_JOBS) {
-        keys.push_back("much_unemployments");
-    }
-
-    if (g_city.festival.entertainment_is_low()) {  // low entertainment
-        keys.push_back("low_entertainment");
-    }
-
-    const int sentiment = g_city.sentiment.value;
-    if (sentiment > 50) {
-        keys.push_back("city_is_good");
-    }
-
-    if (sentiment > 90) {
-        keys.push_back("city_is_amazing");
-    }
-
-    int index = rand() % keys.size();
-    return xstring().printf("water_%s", keys[index].c_str());
-}
-
 int figure_water_carrier::provide_service() {
     int houses_serviced = figure_provide_service(tile(), &base, [] (building *b, figure *f) {
         auto house = b->dcast_house();
@@ -123,10 +76,6 @@ int figure_water_carrier::provide_service() {
     });
 
     return houses_serviced;
-}
-
-figure_sound_t figure_water_carrier::get_sound_reaction(xstring key) const {
-    return current_params().sounds[key];
 }
 
 void figure_water_carrier::acquire_attack() {

@@ -815,6 +815,17 @@ localization_ru = [
     { key: "#soldier_city_is_good", text: "Крепкий город. Стоит защищать." }
     { key: "#soldier_city_is_amazing", text: "Лучший город, который я охранял. За фараона!" }
 
+    { key: "#tower_sentry_no_enemies_sighted", text: "Врагов не видно. Стена спокойна." }
+    { key: "#tower_sentry_ready_approaching_enemy", text: "Готовьтесь! Враг приближается — стреляйте!" }
+    { key: "#tower_sentry_no_trouble_defeating_army", text: "С башни мы без труда разобьём это войско." }
+    { key: "#tower_sentry_enemy_is_fierce", text: "Этот враг свиреп. Держите стену за фараона!" }
+    { key: "#tower_sentry_disease_risk", text: "Лихорадка на стенах. Трудно нести дозор дрожащими руками." }
+    { key: "#tower_sentry_no_food_in_city", text: "Пустые амбары? Голодный часовой плохо смотрит." }
+    { key: "#tower_sentry_gods_are_angry", text: "Боги злятся. Дурная примета для дозора." }
+    { key: "#tower_sentry_low_entertainment", text: "Праздников давно не было. Даже часовым нужен день без стены." }
+    { key: "#tower_sentry_city_is_good", text: "Крепкий город. Стоит стеречь с этой башни." }
+    { key: "#tower_sentry_city_is_amazing", text: "Лучший город, который я стерег. За фараона!" }
+
     { key: "#stonemason_ready", text: "Камень готов. Пора поднимать памятник!" }
     { key: "#stonemason_going_to_work", text: "На площадку — блоки сами себя не уложат." }
     { key: "#stonemason_working_ground", text: "Кладу камень на твёрдую землю. Ровнее." }

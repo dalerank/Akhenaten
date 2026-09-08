@@ -219,10 +219,6 @@ void figure_tower_sentry::figure_action() {
     }
 }
 
-sound_key figure_tower_sentry::phrase_key() const {
-    return sound_key();
-}
-
 void figure_tower_sentry::update_animation() {
     xstring animkey = animkeys().walk;
     //int dir = base.figure_image_direction();

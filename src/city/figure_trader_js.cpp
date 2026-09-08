@@ -118,6 +118,12 @@ static void figure_trade_proto___can_sell_at_destination(js_State *J) {
     js_helpers::js_push_value(J, caravan->can_sell(caravan->destination(), caravan->empire_city()));
 }
 
+static void figure_trade_proto___is_trading(js_State *J) {
+    figure *f = figure_get(figure_trade_this_fid(J));
+    auto *ship = (f && f->is_valid()) ? f->dcast<figure_trade_ship>() : nullptr;
+    js_pushnumber(J, ship ? (double)ship->is_trading() : 0.0);
+}
+
 static void figure_trade_proto_bought_amount(js_State *J) {
     const int resource = js_helpers::js_to_value<int>(J, 1);
     empire_trader_handle trader = figure_trade_this_session(J).trader;
@@ -166,6 +172,7 @@ void js_register_figure_trade_proto(js_State *J) {
     jsB_propf(J, js_intern("FigureTrade.prototype.__has_traded"), figure_trade_proto___has_traded, 0);
     jsB_propf(J, js_intern("FigureTrade.prototype.__can_buy_at_destination"), figure_trade_proto___can_buy_at_destination, 0);
     jsB_propf(J, js_intern("FigureTrade.prototype.__can_sell_at_destination"), figure_trade_proto___can_sell_at_destination, 0);
+    jsB_propf(J, js_intern("FigureTrade.prototype.__is_trading"), figure_trade_proto___is_trading, 0);
     jsB_propf(J, js_intern("FigureTrade.prototype.bought_amount"), figure_trade_proto_bought_amount, 1);
     jsB_propf(J, js_intern("FigureTrade.prototype.sold_amount"), figure_trade_proto_sold_amount, 1);
     jsB_propf(J, js_intern("FigureTrade.prototype.toString"), figure_trade_proto_toString, 0);
