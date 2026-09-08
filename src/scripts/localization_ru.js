@@ -493,6 +493,9 @@ localization_ru = [
     { key: "#recruiter_city_is_amazing", text: "Этот город лучший!" }
     { key: "#recruiter_i_want_to_leave_city", text: "Я самый популярный человек в городе. Многим людям нужна работа." }
     { key: "#recruiter_much_unemployments", text: "Мой список вакансий огромен, и я не могу найти ни одного работника, чтобы заполнить должности." }
+    { key: "#recruiter_no_jobs", text: "Им нет работы, мне нет работников. Что-то здесь не так." }
+    { key: "#recruiter_no_some_workers", text: "Мне всё ещё нужно несколько работников на открытые места." }
+    { key: "#recruiter_need_more_workers", text: "Нужно гораздо больше работников. Список только растёт." }
 
     { key: "#barge_have_no_place_for_dock", text: "Интересно, есть ли в этом городе какие-нибудь достопримечательности, которые я мог бы увидеть, пока они разгружают мой корабль." }
     { key: "#barge_docked_wait_for_dockpushers", text: "Мы ждём, когда груз доставят на наш корабль." }

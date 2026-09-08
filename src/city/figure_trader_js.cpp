@@ -85,6 +85,39 @@ static void figure_trade_proto___has_traded(js_State *J) {
     js_helpers::js_push_value(J, trader.valid() && trader.has_traded());
 }
 
+static figure_trade_caravan *figure_trade_this_caravan(js_State *J) {
+    figure *f = figure_get(figure_trade_this_fid(J));
+    if (!f || !f->is_valid()) {
+        return nullptr;
+    }
+    if (auto caravan = f->dcast<figure_trade_caravan>()) {
+        return caravan;
+    }
+    if (auto donkey = f->dcast<figure_caravan_donkey>()) {
+        auto *head = donkey->head_of_caravan();
+        return head ? head->dcast<figure_trade_caravan>() : nullptr;
+    }
+    return nullptr;
+}
+
+static void figure_trade_proto___can_buy_at_destination(js_State *J) {
+    auto *caravan = figure_trade_this_caravan(J);
+    if (!caravan) {
+        js_helpers::js_push_value(J, false);
+        return;
+    }
+    js_helpers::js_push_value(J, caravan->can_buy(caravan->destination(), caravan->empire_city()));
+}
+
+static void figure_trade_proto___can_sell_at_destination(js_State *J) {
+    auto *caravan = figure_trade_this_caravan(J);
+    if (!caravan) {
+        js_helpers::js_push_value(J, false);
+        return;
+    }
+    js_helpers::js_push_value(J, caravan->can_sell(caravan->destination(), caravan->empire_city()));
+}
+
 static void figure_trade_proto_bought_amount(js_State *J) {
     const int resource = js_helpers::js_to_value<int>(J, 1);
     empire_trader_handle trader = figure_trade_this_session(J).trader;
@@ -131,6 +164,8 @@ void js_register_figure_trade_proto(js_State *J) {
     jsB_propf(J, js_intern("FigureTrade.prototype.__per_good"), figure_trade_proto___per_good, 0);
     jsB_propf(J, js_intern("FigureTrade.prototype.__empire_city_id"), figure_trade_proto___empire_city_id, 0);
     jsB_propf(J, js_intern("FigureTrade.prototype.__has_traded"), figure_trade_proto___has_traded, 0);
+    jsB_propf(J, js_intern("FigureTrade.prototype.__can_buy_at_destination"), figure_trade_proto___can_buy_at_destination, 0);
+    jsB_propf(J, js_intern("FigureTrade.prototype.__can_sell_at_destination"), figure_trade_proto___can_sell_at_destination, 0);
     jsB_propf(J, js_intern("FigureTrade.prototype.bought_amount"), figure_trade_proto_bought_amount, 1);
     jsB_propf(J, js_intern("FigureTrade.prototype.sold_amount"), figure_trade_proto_sold_amount, 1);
     jsB_propf(J, js_intern("FigureTrade.prototype.toString"), figure_trade_proto_toString, 0);

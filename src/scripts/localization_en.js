@@ -1139,6 +1139,9 @@ localization_en = [
   { key: "#recruiter_city_is_amazing", text: "This city is the best!" }
   { key: "#recruiter_i_want_to_leave_city", text: "I'm the most popular person in the city. A lot of people need jobs." }
   { key: "#recruiter_much_unemployments", text: "My list of job openings is huge, and I can't find any workers to fill the posts." }
+  { key: "#recruiter_no_jobs", text: "No jobs for them, no workers for me. Something's broken here." }
+  { key: "#recruiter_no_some_workers", text: "I'm still looking for a few more workers to fill the posts." }
+  { key: "#recruiter_need_more_workers", text: "We need many more workers. My list keeps growing." }
 
   { key: "#barge_have_no_place_for_dock", text: "I wonder if this city has any sights I could see while they unload my ship." }
   { key: "#barge_docked_wait_for_dockpushers", text: "We're waiting for some cargo to be delivered to our ship." }

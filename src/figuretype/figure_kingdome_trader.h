@@ -6,13 +6,17 @@
 
 struct event_trade_caravan_arrival { int cid; uint8_t tid; pcstr location; };
 
-enum e_trade_caravan_action {
-    ACTION_100_TRADE_CARAVAN_CREATED = 100,
-    ACTION_101_TRADE_CARAVAN_ARRIVING = 101,
-    ACTION_102_TRADE_CARAVAN_TRADING = 102,
-    ACTION_103_TRADE_CARAVAN_LEAVING = 103,
-    ACTION_104_TRADE_CARAVAN_RECALC_LEAVING = 104,
+enum e_trade_caravan_action : uint16_t {
+    ACTION_0_TRADE_CARAVAN_CREATED = 0,
+    ACTION_1_TRADE_CARAVAN_ARRIVING = 1,
+    ACTION_2_TRADE_CARAVAN_TRADING = 2,
+    ACTION_3_TRADE_CARAVAN_LEAVING = 3,
+    ACTION_4_TRADE_CARAVAN_RECALC_LEAVING = 4,
+
+    ACTION_5_TRADE_CARAVAN_MAX
 };
+using e_trade_caravan_action_tokens_t = token_holder<e_trade_caravan_action, ACTION_0_TRADE_CARAVAN_CREATED, ACTION_5_TRADE_CARAVAN_MAX>;
+extern const e_trade_caravan_action_tokens_t e_trade_caravan_action_tokens;
 
 class figure_trade_caravan : public figure_trader {
 public:
@@ -38,8 +42,6 @@ public:
     virtual void on_destroy() override;
     virtual void figure_action() override;
     virtual void before_poof() override;
-    virtual sound_key phrase_key() const override;
-    //virtual figure_sound_t get_sound_reaction(pcstr key) const override;
     virtual void update_animation() override;
     virtual xstring action_tip() const override;
     virtual void debug_show_properties() override;

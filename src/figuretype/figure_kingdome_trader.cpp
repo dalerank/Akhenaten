@@ -31,6 +31,8 @@
 #include "core/object_property.h"
 #include "js/js_game.h"
 
+const e_trade_caravan_action_tokens_t ANK_CONFIG_ENUM(e_trade_caravan_action_tokens)
+
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_trade_caravan);
 
 void ANK_PERMANENT_CALLBACK(event_trade_caravan_arrival, ev) {
@@ -58,16 +60,16 @@ void ANK_PERMANENT_CALLBACK(event_trade_caravan_arrival, ev) {
     assert(caravan != nullptr);
 
     caravan->runtime_data().empire_city = empire_city_handle{ emp_city->name_id };
-    caravan->advance_action(ACTION_100_TRADE_CARAVAN_CREATED);
+    caravan->advance_action(ACTION_0_TRADE_CARAVAN_CREATED);
     caravan->base.wait_ticks = caravan->current_params().wait_ticks_after_create;
     caravan->runtime_data().trader = empire_trader_handle{ ev.tid };
     // donkey 1
     figure* donkey1 = figure_create(FIGURE_TRADE_CARAVAN_DONKEY, entry, DIR_0_TOP_RIGHT);
-    donkey1->action_state = ACTION_100_TRADE_CARAVAN_CREATED;
+    donkey1->action_state = ACTION_0_TRADE_CARAVAN_CREATED;
     donkey1->leading_figure_id = caravan->id();
     // donkey 2
     figure* donkey2 = figure_create(FIGURE_TRADE_CARAVAN_DONKEY, entry, DIR_0_TOP_RIGHT);
-    donkey2->action_state = ACTION_100_TRADE_CARAVAN_CREATED;
+    donkey2->action_state = ACTION_0_TRADE_CARAVAN_CREATED;
     donkey2->leading_figure_id = donkey1->id;
 
     emp_city->trader_figure_ids[empire_trader_index] = caravan->id();
@@ -83,12 +85,12 @@ void figure_trade_caravan::go_to_next_storageyard(tile2i src_tile, int distance_
     int warehouse_id = get_closest_storageyard(src_tile, d.empire_city, distance_to_entry, dst);
     if (warehouse_id && warehouse_id != base.destinationID()) {
         set_destination(warehouse_id);
-        advance_action(ACTION_101_TRADE_CARAVAN_ARRIVING, dst);
+        advance_action(ACTION_1_TRADE_CARAVAN_ARRIVING, dst);
     } else {
         base.state = FIGURE_STATE_ALIVE;
         base.destination_tile = map_closest_road_within_radius(g_city.map.exit_point, 1, 2);
         base.direction = DIR_0_TOP_RIGHT;
-        advance_action(ACTION_103_TRADE_CARAVAN_LEAVING);
+        advance_action(ACTION_3_TRADE_CARAVAN_LEAVING);
     }
 }
 
@@ -127,14 +129,14 @@ void figure_trade_caravan::figure_action() {
         default:
             base.destination_tile = g_city.map.closest_exit_tile_within_radius();
             base.direction = DIR_0_TOP_RIGHT;
-            advance_action(ACTION_103_TRADE_CARAVAN_LEAVING);
+            advance_action(ACTION_3_TRADE_CARAVAN_LEAVING);
             break;
         }
     }
 
     switch (action_state()) {
     default:
-    case ACTION_100_TRADE_CARAVAN_CREATED:
+    case ACTION_0_TRADE_CARAVAN_CREATED:
         base.wait_ticks++;
         if (base.wait_ticks > 20) {
             base.wait_ticks = 0;
@@ -151,14 +153,14 @@ void figure_trade_caravan::figure_action() {
         base.animctx.frame = 0;
         break;
 
-    case ACTION_101_TRADE_CARAVAN_ARRIVING:
-        do_gotobuilding(destination(), true, TERRAIN_USAGE_PREFER_ROADS, ACTION_102_TRADE_CARAVAN_TRADING, ACTION_100_TRADE_CARAVAN_CREATED);
+    case ACTION_1_TRADE_CARAVAN_ARRIVING:
+        do_gotobuilding(destination(), true, TERRAIN_USAGE_PREFER_ROADS, ACTION_2_TRADE_CARAVAN_TRADING, ACTION_0_TRADE_CARAVAN_CREATED);
         if (direction() == DIR_FIGURE_CAN_NOT_REACH || direction() == DIR_FIGURE_REROUTE) {
             int i = 0; // break
         }
         break;
 
-    case ACTION_102_TRADE_CARAVAN_TRADING:
+    case ACTION_2_TRADE_CARAVAN_TRADING:
         base.wait_ticks++;
         if (base.wait_ticks > 10) {
             base.wait_ticks = 0;
@@ -198,16 +200,16 @@ void figure_trade_caravan::figure_action() {
         base.animctx.frame = 0;
         break;
 
-    case ACTION_104_TRADE_CARAVAN_RECALC_LEAVING:
+    case ACTION_4_TRADE_CARAVAN_RECALC_LEAVING:
         if (direction() == DIR_FIGURE_CAN_NOT_REACH) {
             base.direction = DIR_0_TOP_RIGHT;
             base.destination_tile = g_city.map.closest_exit_tile_within_radius();
-            advance_action(ACTION_103_TRADE_CARAVAN_LEAVING);
+            advance_action(ACTION_3_TRADE_CARAVAN_LEAVING);
         }
         break;
 
-    case ACTION_103_TRADE_CARAVAN_LEAVING:
-        if (do_goto(base.destination_tile, TERRAIN_USAGE_PREFER_ROADS, -1, ACTION_104_TRADE_CARAVAN_RECALC_LEAVING)) {
+    case ACTION_3_TRADE_CARAVAN_LEAVING:
+        if (do_goto(base.destination_tile, TERRAIN_USAGE_PREFER_ROADS, -1, ACTION_4_TRADE_CARAVAN_RECALC_LEAVING)) {
             runtime_data().trader.back_to_city();
             poof();
         }
@@ -217,35 +219,6 @@ void figure_trade_caravan::figure_action() {
 
 void figure_trade_caravan::before_poof() {
     ; // nothing
-}
-
-sound_key figure_trade_caravan::phrase_key() const {
-    auto& d = runtime_data();
-    
-    if (action_state() == ACTION_103_TRADE_CARAVAN_LEAVING) {
-        if (!empire_trader().has_traded()) {
-            return "trader_city_not_trades";
-        } else {
-            return "trader_you_talk_a_fine_bargain";
-        }
-    }
-
-    if (action_state() == ACTION_102_TRADE_CARAVAN_TRADING) {
-        if (can_buy(destination(), d.empire_city)) {
-            return "trader_buy_for_less_sell_for_more"; 
-        } else if (can_sell(destination(), d.empire_city)) {
-            return "trader_you_talk_a_fine_bargain"; 
-        } else {
-            return "trader_its_my_life";
-        }
-    }
-
-    if (action_state() == ACTION_101_TRADE_CARAVAN_ARRIVING) {
-        return "trader_i_ll_be_a_hero";
-    }
-    
-    // Default for other states (created, etc)
-    return "trader_its_my_life";
 }
 
 void figure_trade_caravan::update_animation() {
@@ -270,9 +243,9 @@ bvariant figure_trade_caravan::get_property(const xstring& domain, const xstring
 
 xstring figure_trade_caravan::action_tip() const {
     switch (action_state()) {
-    case ACTION_101_TRADE_CARAVAN_ARRIVING: return "#trader_heading_storage";
-    case ACTION_102_TRADE_CARAVAN_TRADING: return "#trader_trading_goods";
-    case ACTION_103_TRADE_CARAVAN_LEAVING:
+    case ACTION_1_TRADE_CARAVAN_ARRIVING: return "#trader_heading_storage";
+    case ACTION_2_TRADE_CARAVAN_TRADING: return "#trader_trading_goods";
+    case ACTION_3_TRADE_CARAVAN_LEAVING:
         return empire_trader().has_traded()
             ? "#trader_returning_home"
             : "#trader_nothing_to_trage";

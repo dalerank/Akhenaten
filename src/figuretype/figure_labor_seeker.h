@@ -1,3 +1,5 @@
+#pragma once
+
 #include "figure/figure.h"
 
 class figure_labor_seeker : public figure_impl {
@@ -10,7 +12,5 @@ public:
     virtual void figure_action() override;
     virtual void figure_before_action() override;
     virtual void figure_roaming_action() override { /*nothing*/ }
-    virtual sound_key phrase_key() const override;
     virtual int provide_service() override;
-    virtual figure_sound_t get_sound_reaction(xstring key) const override;
 };

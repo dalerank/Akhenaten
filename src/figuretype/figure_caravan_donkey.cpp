@@ -111,11 +111,11 @@ xstring figure_caravan_donkey::action_tip() const {
     }
 
     switch (head->action_state()) {
-    case ACTION_101_TRADE_CARAVAN_ARRIVING:
+    case ACTION_1_TRADE_CARAVAN_ARRIVING:
         return "#trader_heading_storage";
-    case ACTION_102_TRADE_CARAVAN_TRADING:
+    case ACTION_2_TRADE_CARAVAN_TRADING:
         return "#trader_trading_goods";
-    case ACTION_103_TRADE_CARAVAN_LEAVING:
+    case ACTION_3_TRADE_CARAVAN_LEAVING:
         return head->empire_trader().has_traded()
             ? "#trader_returning_home"
             : "#trader_nothing_to_trage";

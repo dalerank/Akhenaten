@@ -11,6 +11,7 @@ import figure.architector
 import figure.bricklayer
 import figure.carpenter
 import figure.caravan_donkey
+import figure.trade_caravan
 import figure.cartpusher
 import figure.constable
 import figure.dancer
@@ -39,6 +40,7 @@ import figure.governor
 import figure.herbalist
 import figure.homeless
 import figure.immigrant
+import figure.labor_seeker
 
 figure_water_carrier {
   overlay : OVERLAY_WATER
@@ -1042,30 +1044,6 @@ figure_sled_puller = {
 	terrain_usage: TERRAIN_USAGE_ANY,
 }
 
-figure_trade_caravan {
-	animations {
-		walk { pack:PACK_SPR_AMBIENT, id:20, max_frames:12 }
-		death { pack:PACK_SPR_AMBIENT, id:21, max_frames:8, loop:false }
-		big_image { pack:PACK_UNLOADED, id:25, offset:FIGURE_TRADE_CARAVAN }
-	}
-
-	sounds {
-		trader_city_not_trades { sound:"caravan_e01.wav" }
-		trader_buy_for_less_sell_for_more { sound:"caravan_e02.wav" }
-		trader_its_my_life { sound:"caravan_e03.wav" }
-		trader_i_ll_be_a_hero { sound:"caravan_e04.wav" }
-		trader_you_talk_a_fine_bargain { sound:"caravan_e05.wav" }
-	}
-
-	category : figure_category_citizen
-	max_damage : 20
-	wait_ticks_after_create : 10
-	terrain_usage : TERRAIN_USAGE_PREFER_ROADS
-	max_capacity : 800
-	min_capacity : 100
-	capacity_random : 701
-}
-
 // Plague carrier — SprMain GROUP_FIGURE_DESEASED (203/205).
 // TEMP: same strip ids as figure_drunkard (art collision; follow-up after pak dump).
 figure_plagued_citizen {
@@ -1317,35 +1295,6 @@ figure_market_trader = {
 	max_roam_length : 384
 	permission : epermission_market
 	record_path : true
-}
-
-figure_labor_seeker {
-  overlay : OVERLAY_DAMAGE
-	animations {
-		walk { pack:PACK_SPR_MAIN, id:206, max_frames:12 }
-		death { pack:PACK_SPR_MAIN, id:207, max_frames:8, loop:false }
-		big_image { pack:PACK_UNLOADED, id:25, offset:FIGURE_LABOR_SEEKER }
-	}
-
-	sounds {
-		recruiter_disease_in_city { sound:"Labor_e01.wav" }
-		recruiter_no_food_in_city { sound:"Labor_e02.wav" }
-		recruiter_city_not_safety { sound:"Labor_g01.wav" }
-		recruiter_need_workers { sound:"Labor_g02.wav" }
-		recruiter_gods_are_angry { sound:"Labor_g03.wav" }
-		recruiter_enemies_attack { sound:"Labor_g04.wav" }
-		recruiter_i_looking_for_the_workers { sound:"Labor_g05.wav" }
-		recruiter_boring { sound:"Labor_g06.wav" }
-		recruiter_living_here { sound:"Labor_g07.wav" }
-		recruiter_city_is_amazing { sound:"Labor_g08.wav" }
-		recruiter_i_want_to_leave_city { sound:"Labor_g09.wav" }
-		recruiter_much_unemployments { sound:"Labor_g10.wav" }
-	}
-
-	category: figure_category_citizen
-	max_damage : 10
-	terrain_usage : TERRAIN_USAGE_ROADS
-	max_roam_length : 384,
 }
 
 figure_reed_gatherer {
