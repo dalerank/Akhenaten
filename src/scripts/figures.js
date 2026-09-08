@@ -19,6 +19,7 @@ import figure.dentist
 import figure.docker
 import figure.drunkard
 import figure.embalmer
+import figure.emigrant
 
 figure_fireman {
   overlay : OVERLAY_WATER
@@ -1139,27 +1140,6 @@ figure_shipwreck = {
 	category: figure_category_inactive
 	max_damage: 10
 	terrain_usage : TERRAIN_USAGE_ANY,
-}
-
-figure_emigrant {
-	animations {
-		walk { pack:PACK_SPR_MAIN, id:2, max_frames:12 }
-		death { pack: PACK_SPR_MAIN, id:3, max_frames:8, loop:false }
-		cart { pack:PACK_SPR_MAIN, id:52, max_frames:1 }
-		big_image { pack:PACK_UNLOADED, id:25, offset:FIGURE_EMIGRANT }
-	}
-
-	sounds {
-		emigrant_no_job_in_city  {sound:"emigrant_e01.wav"}
-		emigrant_no_food_in_city {sound:"emigrant_e02.wav"}
-		emigrant_tax_too_high {sound:"emigrant_e03.wav"}
-		emigrant_salary_too_low {sound:"emigrant_e04.wav"}
-		emigrant_no_house_for_me {sound:"emigrant_e05.wav"}
-	}
-
-	category: figure_category_citizen
-	max_damage : 20
-	terrain_usage : TERRAIN_USAGE_ANIMAL,
 }
 
 figure_sled {

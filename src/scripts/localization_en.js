@@ -1082,6 +1082,14 @@ localization_en = [
   { key: "#emigrant_tax_too_high", text: "Taxes are too high here. I'm surprised I wasn't taxed for leaving." }
   { key: "#emigrant_salary_too_low", text: "I can't live on what they pay me here." }
   { key: "#emigrant_no_house_for_me", text: "Houses I've seen are overstuffed with people. I can't stay here without a place to live." }
+  { key: "#emigrant_disease_risk", text: "This place reeks of sickness. I'm not waiting around for plague." }
+  { key: "#emigrant_city_have_no_army", text: "No forts? One raid and there'd be nothing left of us. I'm gone." }
+  { key: "#emigrant_need_workers", text: "They cry for workers, yet there's no work for me. Time to leave." }
+  { key: "#emigrant_gods_are_angry", text: "The gods look furious. I'd rather pray somewhere safer." }
+  { key: "#emigrant_city_is_bad", text: "This city's name is mud. I won't be buried with its reputation." }
+  { key: "#emigrant_low_entertainment", text: "No festivals for ages. Even the road out of town feels livelier." }
+  { key: "#emigrant_city_is_good", text: "Nice enough city — for someone else. My cart is packed." }
+  { key: "#emigrant_city_is_amazing", text: "Amazing city, they say. Still not enough to keep me here." }
 
   { key: "#recruiter_disease_in_city", text: "I see sick people everywhere. A plague could break out!" }
   { key: "#recruiter_no_food_in_city", text: "I'm starving. I'd rather be looking for food than for workers. " }

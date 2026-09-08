@@ -415,6 +415,14 @@ localization_ru = [
     { key: "#emigrant_tax_too_high", text: "Налоги здесь слишком высоки. Я удивлён, что меня не обложили налогом за отъезд." }
     { key: "#emigrant_salary_too_low", text: "Я не могу жить на то, что мне здесь платят." }
     { key: "#emigrant_no_house_for_me", text: "Дома, которые я видел, переполнены людьми. Я не могу остаться здесь без места для жизни." }
+    { key: "#emigrant_disease_risk", text: "Тут пахнет болезнью. Не стану ждать чумы." }
+    { key: "#emigrant_city_have_no_army", text: "Нет фортов? Один набег — и от нас ничего не останется. Ухожу." }
+    { key: "#emigrant_need_workers", text: "Кричат, что нужны рабочие, а мне работы нет. Пора уезжать." }
+    { key: "#emigrant_gods_are_angry", text: "Боги в ярости. Лучше помолюсь где-нибудь безопаснее." }
+    { key: "#emigrant_city_is_bad", text: "Имя этого города — грязь. Не хочу делить с ним репутацию." }
+    { key: "#emigrant_low_entertainment", text: "Праздников давно не было. Даже дорога из города веселее." }
+    { key: "#emigrant_city_is_good", text: "Город неплохой — для кого-то другого. Моя телега уже собрана." }
+    { key: "#emigrant_city_is_amazing", text: "Говорят, город чудесный. Мне всё равно мало, чтобы остаться." }
 
     { key: "#trader_city_not_trades", text: "Наш долгий и опасный путь сюда был напрасным! Этот город не будет торговать." }
     { key: "#trader_buy_for_less_sell_for_more", text: "Покупай дёшево, продавай дорого. Это мой девиз!" }

@@ -110,26 +110,6 @@ void figure_emigrant::update_animation() {
     }
 }
 
-figure_sound_t figure_emigrant::get_sound_reaction(xstring key) const {
-    return current_params().sounds[key];
-}
-
-sound_key figure_emigrant::phrase_key() const {
-    switch (g_city.sentiment.low_mood_cause) {
-    case LOW_MOOD_NO_JOBS: return "emigrant_no_job_in_city";
-    case LOW_MOOD_NO_FOOD: return "emigrant_no_food_in_city";
-    case LOW_MOOD_HIGH_TAXES: return "emigrant_tax_too_high";
-    case LOW_MOOD_LOW_WAGES: return "emigrant_salary_too_low";
-    }
-
-    building *b = destination();
-    if (!b || !b->id) {
-        return "emigrant_no_house_for_me";
-    }
-
-    return "emigrant_all_good_in_city";
-}
-
 void figure_emigrant::set_cart_offset(int direction) const {
     base.cart_offset = immigrant_cart_offsets[direction];
 }
