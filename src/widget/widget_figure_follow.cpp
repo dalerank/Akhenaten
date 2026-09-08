@@ -30,6 +30,9 @@ figure_follow_t g_figure_follow;
 namespace {
 
     constexpr int k_panel_pad = 8;
+    constexpr int k_panel_margin = 8;
+    constexpr int k_panel_top_margin = 40;
+    constexpr int k_panel_block = 16;
     constexpr int k_panel_header = 24;
     constexpr int k_panel_footer = 28;
     constexpr int k_min_snapshot_size = 48;
@@ -50,16 +53,28 @@ vec2i figure_follow_t::panel_size() const {
 
 void figure_follow_t::ensure_panel_pos() {
     const vec2i sz = panel_size();
+    const vec2i screen{screen_width(), screen_height()};
     const int sidebar_x = widget_sidebar_city_offset_x();
-    if (panel_pos_set_ && last_sidebar_x_ == sidebar_x) {
+
+    // The position is derived from all three, so all three have to invalidate it: a
+    // height-only resize leaves the sidebar where it was, and figure_follow_size can change
+    // the panel size under a cached position.
+    if (panel_pos_set_ && last_sidebar_x_ == sidebar_x && last_screen_size_ == screen
+        && last_panel_size_ == sz) {
         return;
     }
 
-    panel_pos_ = {sidebar_x - sz.x - 8, screen_height() - sz.y - 8};
-    panel_pos_.x = std::max(panel_pos_.x, 8);
-    panel_pos_.y = std::max(panel_pos_.y, 40);
+    panel_pos_ = {sidebar_x - sz.x - k_panel_margin, screen.y - sz.y - k_panel_margin};
+    // Keep the whole panel on screen, top-left last so it wins on a screen smaller than it.
+    panel_pos_.x = std::min(panel_pos_.x, screen.x - sz.x - k_panel_margin);
+    panel_pos_.y = std::min(panel_pos_.y, screen.y - sz.y - k_panel_margin);
+    panel_pos_.x = std::max(panel_pos_.x, k_panel_margin);
+    panel_pos_.y = std::max(panel_pos_.y, k_panel_top_margin);
+
     panel_pos_set_ = true;
     last_sidebar_x_ = sidebar_x;
+    last_screen_size_ = screen;
+    last_panel_size_ = sz;
 }
 
 rect figure_follow_t::panel_rect() {
@@ -71,7 +86,13 @@ rect figure_follow_t::stop_button_rect() {
     ensure_panel_pos();
     const vec2i sz = panel_size();
     const vec2i pos = panel_pos_ + vec2i{k_panel_pad, sz.y - k_panel_footer + 2};
-    return {pos, pos + vec2i{sz.x - 2 * k_panel_pad, 22}};
+    // small_panel_draw() paints whole 16px blocks, so the clickable width has to be the width
+    // that actually gets drawn -- otherwise the hit area sticks out past the button.
+    return {pos, pos + vec2i{stop_button_blocks() * k_panel_block, 22}};
+}
+
+int figure_follow_t::stop_button_blocks() const {
+    return std::max(1, (panel_size().x - 2 * k_panel_pad) / k_panel_block);
 }
 
 bool figure_follow_t::target_still_valid() const {
@@ -177,7 +198,7 @@ void figure_follow_t::draw_panel() {
     }
 
     const rect stop_button = stop_button_rect();
-    small_panel_draw(stop_button.mn, std::max(1, stop_button.w() / 16), 1);
+    small_panel_draw(stop_button.mn, stop_button_blocks(), 1);
     ui::label(lang_text_from_key("#stop_following"), stop_button.mn + vec2i{4, 4}, FONT_NORMAL_BLACK_ON_DARK);
 }
 

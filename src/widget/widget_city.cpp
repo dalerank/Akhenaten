@@ -976,8 +976,11 @@ void screen_city_t::draw_ornaments_overlay(vec2i pixel, tile2i point, painter &c
 }
 
 
-void screen_city_t::draw_with_overlay(painter &ctx) {
+void screen_city_t::draw_with_overlay(painter &ctx, int selected_figure_id) {
     OZZY_PROFILER_FUNCTION();
+    // Both draw paths own this field: leaving a previous figure in it would hide every other
+    // walker in the overlay view (draw_figures_overlay honours it).
+    this->selected_figure_id = selected_figure_id;
     city_flat_prepare_draw();
 
     const auto overlay = g_city.overlay();
@@ -1035,7 +1038,7 @@ void screen_city_t::draw(painter &ctx) {
     set_city_clip_rectangle(ctx);
 
     if (g_city.overlay()) {
-        draw_with_overlay(ctx);
+        draw_with_overlay(ctx, 0);
     } else {
         draw_without_overlay(ctx, 0);
     }
@@ -1044,10 +1047,17 @@ void screen_city_t::draw(painter &ctx) {
     set_render_scale(ctx, 1.0f);
 }
 
+// figure_id 0 draws the scene the player sees; a non-zero id isolates that one walker for the
+// figure-info icons. Follows draw() in honouring the active overlay, so a snapshot cannot show
+// a different city than the main view.
 void screen_city_t::draw_for_figure(painter &ctx, int figure_id) {
     set_city_clip_rectangle(ctx);
 
-    draw_without_overlay(ctx, figure_id);
+    if (g_city.overlay()) {
+        draw_with_overlay(ctx, figure_id);
+    } else {
+        draw_without_overlay(ctx, figure_id);
+    }
 
     graphics_reset_clip_rectangle();
 }

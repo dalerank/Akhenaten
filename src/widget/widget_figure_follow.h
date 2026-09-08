@@ -34,6 +34,7 @@ private:
     void ensure_panel_pos();
     rect panel_rect();
     rect stop_button_rect();
+    int stop_button_blocks() const;
 
     figure_snapshot snapshot_;
     bool enabled_ = false;
@@ -44,6 +45,8 @@ private:
     vec2i panel_pos_ = {-1, -1};
     bool panel_pos_set_ = false;
     int last_sidebar_x_ = -1;
+    vec2i last_screen_size_ = {-1, -1};
+    vec2i last_panel_size_ = {-1, -1};
 };
 
 extern figure_follow_t g_figure_follow;

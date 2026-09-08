@@ -51,7 +51,7 @@ struct screen_city_t {
     int input_coords_in_city(int x, int y);
 
     void draw(painter &ctx);
-    void draw_with_overlay(painter &ctx);
+    void draw_with_overlay(painter &ctx, int selected_figure_id);
     void draw_ornaments_overlay(vec2i pixel, tile2i point, painter &ctx);
     void draw_ornaments_and_animations_height(vec2i point, tile2i tile, painter &ctx);
     void draw_without_overlay(painter &ctx, int selected_figure_id);

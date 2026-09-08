@@ -21,7 +21,8 @@ void figure_info_thumbnails::prepare_thumbnail(int index, figure_id id) {
 
     assert((int)figure_images_.size() == index);
     figure_images_.emplace_back();
-    figure_images_[index].capture(id, THUMBNAIL_SIZE, {figure_small_image_x(), figure_small_image_y()});
+    figure_images_[index].capture(id, THUMBNAIL_SIZE, {figure_small_image_x(), figure_small_image_y()},
+      e_figure_snapshot_mode::figure_only);
 }
 
 void figure_info_thumbnails::finish() {

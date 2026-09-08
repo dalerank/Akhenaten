@@ -2,6 +2,12 @@
 
 #include "grid/point.h"
 
+// What a snapshot shows around the figure.
+enum class e_figure_snapshot_mode {
+    city_view,   // the scene as the player sees it, other walkers included
+    figure_only, // just this walker over the terrain -- the figure-info icons
+};
+
 // One figure rendered into its own small texture.
 //
 // The city is drawn once with the camera snapped to the figure, the figure is cropped out of
@@ -31,9 +37,12 @@ public:
     // Re-renders into the texture this snapshot already owns. Keeps the previous image when
     // the figure is gone or landed outside the viewport, so the panel never flashes empty.
     // Returns true when a new image was taken.
-    bool capture(int figure_id, int size, vec2i crop_offset);
+    bool capture(int figure_id, int size, vec2i crop_offset,
+      e_figure_snapshot_mode mode = e_figure_snapshot_mode::city_view);
 
-    bool capture(int figure_id, int size) { return capture(figure_id, size, centered_offset(size)); }
+    bool capture(int figure_id, int size, e_figure_snapshot_mode mode = e_figure_snapshot_mode::city_view) {
+        return capture(figure_id, size, centered_offset(size), mode);
+    }
 
     int texture_id() const { return texture_id_; }
     bool valid() const { return texture_id_ != 0; }
