@@ -69,6 +69,7 @@ import figure.tower_sentry
 import figure.trade_ship
 import figure.water_carrier
 import figure.worker
+import figure.zookeeper
 
 figure_festival_guy {
   overlay : OVERLAY_RELIGION
@@ -442,35 +443,6 @@ figure_cart {
 	limestone: { pack:PACK_SPR_MAIN, id:104 }
 	bricks: { pack:PACK_SPR_MAIN, id:89 }
 	empty: { pack:PACK_SPR_MAIN, id:77 }
-}
-
-figure_zookeeper {
-  overlay : OVERLAY_ZOO
-	animations {
-		// Cleopatra SprMain2: bmp "zookeeper", group 35 starts at entry 1616 (SprMain2_01616).
-		walk { pack:PACK_EXPANSION_SPR, id:35, max_frames:12 }
-		death { pack:PACK_EXPANSION_SPR, id:36, max_frames:7, loop:false }
-		big_image { pack:PACK_UNLOADED, id:25, offset:FIGURE_ZOOKEEPER }
-	}
-
-	sounds {
-		zookeeper_danger_of_plague : { sound: "zookeeper_e01.wav"},
-		zookeeper_no_food_in_city : { sound: "zookeeper_e02.wav"},
-		zookeeper_defenses_are_weak : { sound: "zookeeper_e03.wav"},
-		zookeeper_need_more_workers : { sound: "zookeeper_e04.wav"},
-		zookeeper_gods_are_angry : { sound: "zookeeper_e05.wav"},
-		zookeeper_reputation_is_low : { sound: "zookeeper_e06.wav"},
-		zookeeper_high_unemployment : { sound: "zookeeper_e07.wav"},
-		zookeeper_low_entertainment : { sound: "zookeeper_e08.wav"},
-		zookeeper_city_is_ok : { sound: "zookeeper_e09.wav"},
-		zookeeper_city_is_amazing : { sound: "zookeeper_e10.wav"}
-	}
-
-	category: figure_category_citizen
-	max_damage : 20
-	terrain_usage : TERRAIN_USAGE_ROADS
-	max_roam_length: 640
-	permission : epermission_entertainer
 }
 
 // Locust swarm — Cleopatra SprMain2 bmp "locust":

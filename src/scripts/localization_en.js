@@ -1982,6 +1982,17 @@ localization_en = [
   { key: "#dentist_city_is_ok", text: "This city is okay. Only a few cavities!" }
   { key: "#dentist_city_is_amazing", text: "This city has the brightest smile in all of Egypt." }
 
+  { key: "#zookeeper_danger_of_plague", text: "Plague in the streets? I won't risk bringing sickness back to the animals." }
+  { key: "#zookeeper_no_food_in_city", text: "Empty granaries for people — and the cages still need feeding. This can't last." }
+  { key: "#zookeeper_defenses_are_weak", text: "Enemies at the gates? Keep the cages locked and the visitors indoors." }
+  { key: "#zookeeper_need_more_workers", text: "Jobs everywhere — even the zoo could use more keepers." }
+  { key: "#zookeeper_gods_are_angry", text: "Angry gods make restless beasts. We should show more respect." }
+  { key: "#zookeeper_reputation_is_low", text: "Our city's reputation is as wild as a hungry lion. We could be attacked." }
+  { key: "#zookeeper_high_unemployment", text: "So many idle hands. At least the animals never complain about overtime." }
+  { key: "#zookeeper_low_entertainment", text: "No festivals for ages. The zoo is the only show left in town." }
+  { key: "#zookeeper_city_is_ok", text: "This city is fine enough — the animals seem content, and so am I." }
+  { key: "#zookeeper_city_is_amazing", text: "Best city a keeper could ask for. Even the lions purr for Pharaoh!" }
+
   { key: "#embalmer_concerned_about_plague", text: "Judging by the number of sick people in this city, I could soon have my hands full!" }
   { key: "#embalmer_no_food_in_city", text: "I'm famished. Before long, I'll be skinnier than a mummy!" }
   { key: "#embalmer_defenses_weak", text: "The city is not securely wrapped in defenses. An enemy could easily defeat us." }

@@ -1258,6 +1258,17 @@ localization_ru = [
     { key: "#dentist_city_is_ok", text: "Этот город нормальный. Всего несколько полостей!" }
     { key: "#dentist_city_is_amazing", text: "У этого города самая яркая улыбка во всём Египте." }
 
+    { key: "#zookeeper_danger_of_plague", text: "Чума на улицах? Не рискну принести болезнь к животным." }
+    { key: "#zookeeper_no_food_in_city", text: "Амбары пусты, а клетки всё равно нужно кормить. Так долго не протянем." }
+    { key: "#zookeeper_defenses_are_weak", text: "Враги у ворот? Держите клетки на замке, а посетителей — дома." }
+    { key: "#zookeeper_need_more_workers", text: "Вакансий полно — даже зоопарку нужны ещё смотрители." }
+    { key: "#zookeeper_gods_are_angry", text: "Злые боги делают зверей беспокойными. Нужно больше уважения." }
+    { key: "#zookeeper_reputation_is_low", text: "Репутация города дика, как голодный лев. Нас могут атаковать." }
+    { key: "#zookeeper_high_unemployment", text: "Столько праздных рук. Хоть животные не жалуются на сверхурочные." }
+    { key: "#zookeeper_low_entertainment", text: "Праздников давно не было. Зоопарк — единственное зрелище в городе." }
+    { key: "#zookeeper_city_is_ok", text: "Город вполне нормальный — животные довольны, и я тоже." }
+    { key: "#zookeeper_city_is_amazing", text: "Лучший город для смотрителя. Даже львы мурлычут за фараона!" }
+
     { key: "#embalmer_concerned_about_plague", text: "Судя по количеству больных людей в этом городе, у меня скоро будут заняты руки!" }
     { key: "#embalmer_no_food_in_city", text: "Я голодаю. Вскоре я буду худее мумии!" }
     { key: "#embalmer_defenses_weak", text: "Город не надёжно завёрнут в оборону. Враг мог бы легко победить нас." }
