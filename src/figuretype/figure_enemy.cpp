@@ -49,7 +49,7 @@ void figure_enemy::formation_reset_to_initial(const formation *m) {
         return;
     }
 
-    base.action_state = ACTION_151_ENEMY_INITIAL;
+    base.action_state = enemy_initial_action();
     base.wait_ticks = 0;
 }
 
@@ -241,7 +241,7 @@ declare_console_command_p(spawn_enemy_figure) {
         return;
     }
     f->faction_id = 0;
-    f->action_state = ACTION_151_ENEMY_INITIAL;
+    f->action_state = f->dcast_enemy()->enemy_initial_action();
 
     events::emit(event_city_warning{ "Spawned enemy figure" });
 }

@@ -1,5 +1,32 @@
 log_info("akhenaten: enemies info started")
 
+enemy_fast_sword_sounds = {
+	enemy_sword_attacking { sound:"enemy_sword_attacking.wav", text: "#enemy_sword_attacking" }
+	enemy_sword_marching { sound:"enemy_sword_marching.wav", text: "#enemy_sword_marching" }
+	enemy_sword_waiting { sound:"enemy_sword_waiting.wav", text: "#enemy_sword_waiting" }
+	enemy_sword_leaving { sound:"enemy_sword_leaving.wav", text: "#enemy_sword_leaving" }
+	enemy_sword_no_army { sound:"enemy_sword_no_army.wav", text: "#enemy_sword_no_army" }
+	enemy_sword_no_food { sound:"enemy_sword_no_food.wav", text: "#enemy_sword_no_food" }
+	enemy_sword_disease { sound:"enemy_sword_disease.wav", text: "#enemy_sword_disease" }
+	enemy_sword_need_workers { sound:"enemy_sword_need_workers.wav", text: "#enemy_sword_need_workers" }
+	enemy_sword_gods_angry { sound:"enemy_sword_gods_angry.wav", text: "#enemy_sword_gods_angry" }
+	enemy_sword_city_is_bad { sound:"enemy_sword_city_is_bad.wav", text: "#enemy_sword_city_is_bad" }
+	enemy_sword_low_entertainment { sound:"enemy_sword_low_entertainment.wav", text: "#enemy_sword_low_entertainment" }
+	enemy_sword_city_is_good { sound:"enemy_sword_city_is_good.wav", text: "#enemy_sword_city_is_good" }
+	enemy_sword_city_is_amazing { sound:"enemy_sword_city_is_amazing.wav", text: "#enemy_sword_city_is_amazing" }
+	enemy_sword_for_glory { sound:"enemy_sword_for_glory.wav", text: "#enemy_sword_for_glory" }
+}
+
+enemy_archer_sounds = {
+	enemy_archer_shooting { sound:"enemy_archer_shooting.wav", text: "#enemy_archer_shooting" }
+	enemy_archer_marching { sound:"enemy_archer_marching.wav", text: "#enemy_archer_marching" }
+	enemy_archer_waiting { sound:"enemy_archer_waiting.wav", text: "#enemy_archer_waiting" }
+	enemy_archer_leaving { sound:"enemy_archer_leaving.wav", text: "#enemy_archer_leaving" }
+	enemy_archer_city_will_fall { sound:"enemy_archer_city_will_fall.wav", text: "#enemy_archer_city_will_fall" }
+	enemy_archer_arrows_ready { sound:"enemy_archer_arrows_ready.wav", text: "#enemy_archer_arrows_ready" }
+	enemy_archer_for_glory { sound:"enemy_archer_for_glory.wav", text: "#enemy_archer_for_glory" }
+}
+
 enemy_attack_rules = {
     priority : {
         food_chain : [BUILDING_GRANARY, BUILDING_STORAGE_YARD, BUILDING_BAZAAR,
@@ -113,6 +140,7 @@ figure_barbarian_archer = {
 
 figure_barbarian_sword = {
   overlay : OVERLAY_ENEMIES
+    sounds: enemy_fast_sword_sounds
     animations : {
         walk : { pack:PACK_ENEMY_BARBARIAN, id:3, max_frames:12 }
         death : { pack:PACK_ENEMY_BARBARIAN, id:4, max_frames:8, loop:false }
@@ -186,6 +214,7 @@ figure_assyrian_archer = {
 
 figure_assyrian_sword = {
   overlay : OVERLAY_ENEMIES
+    sounds: enemy_fast_sword_sounds
     animations : {
         walk : { pack:PACK_ENEMY_ASSYRIAN, id:4, max_frames:12 }
         death : { pack:PACK_ENEMY_ASSYRIAN, id:5, max_frames:8, loop:false }
@@ -241,6 +270,15 @@ figure_assyrian_war_ship = {
 
 figure_assyrian_chariot = {
   overlay : OVERLAY_ENEMIES
+    sounds {
+        enemy_chariot_attacking { sound:"enemy_chariot_attacking.wav", text: "#enemy_chariot_attacking" }
+        enemy_chariot_marching { sound:"enemy_chariot_marching.wav", text: "#enemy_chariot_marching" }
+        enemy_chariot_waiting { sound:"enemy_chariot_waiting.wav", text: "#enemy_chariot_waiting" }
+        enemy_chariot_leaving { sound:"enemy_chariot_leaving.wav", text: "#enemy_chariot_leaving" }
+        enemy_chariot_city_will_fall { sound:"enemy_chariot_city_will_fall.wav", text: "#enemy_chariot_city_will_fall" }
+        enemy_chariot_no_match { sound:"enemy_chariot_no_match.wav", text: "#enemy_chariot_no_match" }
+        enemy_chariot_for_glory { sound:"enemy_chariot_for_glory.wav", text: "#enemy_chariot_for_glory" }
+    }
     animations : {
         walk : { pack:PACK_ENEMY_ASSYRIAN, id:13, max_frames:12 }
         death : { pack:PACK_ENEMY_ASSYRIAN, id:14, max_frames:12, loop:false }
@@ -295,6 +333,7 @@ figure_canaanite_archer = {
 
 figure_canaanite_sword = {
   overlay : OVERLAY_ENEMIES
+    sounds: enemy_fast_sword_sounds
     animations : {
         walk : { pack:PACK_ENEMY_CANAANITE, id:4, max_frames:12 }
         death : { pack:PACK_ENEMY_CANAANITE, id:5, max_frames:8, loop:false }
@@ -350,6 +389,15 @@ figure_canaanite_war_ship = {
 
 figure_canaanite_chariot = {
   overlay : OVERLAY_ENEMIES
+    sounds {
+        enemy_chariot_attacking { sound:"enemy_chariot_attacking.wav", text: "#enemy_chariot_attacking" }
+        enemy_chariot_marching { sound:"enemy_chariot_marching.wav", text: "#enemy_chariot_marching" }
+        enemy_chariot_waiting { sound:"enemy_chariot_waiting.wav", text: "#enemy_chariot_waiting" }
+        enemy_chariot_leaving { sound:"enemy_chariot_leaving.wav", text: "#enemy_chariot_leaving" }
+        enemy_chariot_city_will_fall { sound:"enemy_chariot_city_will_fall.wav", text: "#enemy_chariot_city_will_fall" }
+        enemy_chariot_no_match { sound:"enemy_chariot_no_match.wav", text: "#enemy_chariot_no_match" }
+        enemy_chariot_for_glory { sound:"enemy_chariot_for_glory.wav", text: "#enemy_chariot_for_glory" }
+    }
     animations : {
         walk : { pack:PACK_ENEMY_CANAANITE, id:13, max_frames:12 }
         death : { pack:PACK_ENEMY_CANAANITE, id:14, max_frames:12, loop:false }
@@ -484,6 +532,15 @@ figure_egyptian_spearman = {
 
 figure_egyptian_chariot = {
   overlay : OVERLAY_ENEMIES
+    sounds {
+        enemy_chariot_attacking { sound:"enemy_chariot_attacking.wav", text: "#enemy_chariot_attacking" }
+        enemy_chariot_marching { sound:"enemy_chariot_marching.wav", text: "#enemy_chariot_marching" }
+        enemy_chariot_waiting { sound:"enemy_chariot_waiting.wav", text: "#enemy_chariot_waiting" }
+        enemy_chariot_leaving { sound:"enemy_chariot_leaving.wav", text: "#enemy_chariot_leaving" }
+        enemy_chariot_city_will_fall { sound:"enemy_chariot_city_will_fall.wav", text: "#enemy_chariot_city_will_fall" }
+        enemy_chariot_no_match { sound:"enemy_chariot_no_match.wav", text: "#enemy_chariot_no_match" }
+        enemy_chariot_for_glory { sound:"enemy_chariot_for_glory.wav", text: "#enemy_chariot_for_glory" }
+    }
     animations : {
         walk : { pack:PACK_ENEMY_EGYPTIAN, id:14, max_frames:12 }
         death : { pack:PACK_ENEMY_EGYPTIAN, id:14, max_frames:12, loop:false }
@@ -506,6 +563,7 @@ figure_egyptian_chariot = {
 // these in enemy_egyptian.figure_types[] without OG percentage confirmation.
 figure_egyptian_fast_sword = {
   overlay : OVERLAY_ENEMIES
+    sounds: enemy_fast_sword_sounds
     animations : {
         // TEMP art: spearman walk/death/attack
         walk : { pack:PACK_ENEMY_EGYPTIAN, id:11, max_frames:12 }
@@ -527,6 +585,7 @@ figure_egyptian_fast_sword = {
 
 figure_egyptian_sword = {
   overlay : OVERLAY_ENEMIES
+    sounds: enemy_fast_sword_sounds
     animations : {
         // TEMP art: spearman walk/death/attack
         walk : { pack:PACK_ENEMY_EGYPTIAN, id:11, max_frames:12 }
@@ -548,6 +607,7 @@ figure_egyptian_sword = {
 
 figure_egyptian_heavy_sword = {
   overlay : OVERLAY_ENEMIES
+    sounds: enemy_fast_sword_sounds
     animations : {
         // TEMP art: spearman walk/death/attack
         walk : { pack:PACK_ENEMY_EGYPTIAN, id:11, max_frames:12 }
@@ -569,6 +629,7 @@ figure_egyptian_heavy_sword = {
 
 figure_egyptian_axe = {
   overlay : OVERLAY_ENEMIES
+    sounds: enemy_fast_sword_sounds
     animations : {
         // TEMP art: spearman walk/death/attack
         walk : { pack:PACK_ENEMY_EGYPTIAN, id:11, max_frames:12 }
@@ -592,6 +653,7 @@ figure_egyptian_axe = {
 // Not in enemy_egyptian.figure_types[] without OG percentage confirmation.
 figure_egyptian_camel = {
   overlay : OVERLAY_ENEMIES
+    sounds: enemy_fast_sword_sounds
     animations : {
         // TEMP art: chariot walk/attack as mount stand-in
         walk : { pack:PACK_ENEMY_EGYPTIAN, id:14, max_frames:12 }
@@ -685,6 +747,7 @@ figure_kingdome_javelin = {
 
 figure_kingdome_infantry = {
   overlay : OVERLAY_ENEMIES
+    sounds: enemy_fast_sword_sounds
     animations : {
         // TEMP art: egyptian spearman melee stand-in
         walk : { pack:PACK_ENEMY_EGYPTIAN, id:11, max_frames:12 }
@@ -706,6 +769,15 @@ figure_kingdome_infantry = {
 
 figure_kingdome_mounted = {
   overlay : OVERLAY_ENEMIES
+    sounds {
+        enemy_chariot_attacking { sound:"enemy_chariot_attacking.wav", text: "#enemy_chariot_attacking" }
+        enemy_chariot_marching { sound:"enemy_chariot_marching.wav", text: "#enemy_chariot_marching" }
+        enemy_chariot_waiting { sound:"enemy_chariot_waiting.wav", text: "#enemy_chariot_waiting" }
+        enemy_chariot_leaving { sound:"enemy_chariot_leaving.wav", text: "#enemy_chariot_leaving" }
+        enemy_chariot_city_will_fall { sound:"enemy_chariot_city_will_fall.wav", text: "#enemy_chariot_city_will_fall" }
+        enemy_chariot_no_match { sound:"enemy_chariot_no_match.wav", text: "#enemy_chariot_no_match" }
+        enemy_chariot_for_glory { sound:"enemy_chariot_for_glory.wav", text: "#enemy_chariot_for_glory" }
+    }
     animations : {
         // TEMP art: egyptian chariot
         walk : { pack:PACK_ENEMY_EGYPTIAN, id:14, max_frames:12 }
@@ -819,6 +891,15 @@ figure_hittite_war_ship = {
 
 figure_hittite_chariot = {
   overlay : OVERLAY_ENEMIES
+    sounds {
+        enemy_chariot_attacking { sound:"enemy_chariot_attacking.wav", text: "#enemy_chariot_attacking" }
+        enemy_chariot_marching { sound:"enemy_chariot_marching.wav", text: "#enemy_chariot_marching" }
+        enemy_chariot_waiting { sound:"enemy_chariot_waiting.wav", text: "#enemy_chariot_waiting" }
+        enemy_chariot_leaving { sound:"enemy_chariot_leaving.wav", text: "#enemy_chariot_leaving" }
+        enemy_chariot_city_will_fall { sound:"enemy_chariot_city_will_fall.wav", text: "#enemy_chariot_city_will_fall" }
+        enemy_chariot_no_match { sound:"enemy_chariot_no_match.wav", text: "#enemy_chariot_no_match" }
+        enemy_chariot_for_glory { sound:"enemy_chariot_for_glory.wav", text: "#enemy_chariot_for_glory" }
+    }
     animations : {
         walk : { pack:PACK_ENEMY_HITTITE, id:13, max_frames:12 }
         death : { pack:PACK_ENEMY_HITTITE, id:14, max_frames:12, loop:false }
@@ -872,6 +953,7 @@ figure_hyksos_archer = {
 
 figure_hyksos_sword = {
   overlay : OVERLAY_ENEMIES
+    sounds: enemy_fast_sword_sounds
     animations : {
         walk : { pack:PACK_ENEMY_HYKSOS, id:4, max_frames:12 }
         death : { pack:PACK_ENEMY_HYKSOS, id:5, max_frames:8, loop:false }
@@ -925,6 +1007,15 @@ figure_hyksos_war_ship = {
 
 figure_hyksos_chariot = {
   overlay : OVERLAY_ENEMIES
+    sounds {
+        enemy_chariot_attacking { sound:"enemy_chariot_attacking.wav", text: "#enemy_chariot_attacking" }
+        enemy_chariot_marching { sound:"enemy_chariot_marching.wav", text: "#enemy_chariot_marching" }
+        enemy_chariot_waiting { sound:"enemy_chariot_waiting.wav", text: "#enemy_chariot_waiting" }
+        enemy_chariot_leaving { sound:"enemy_chariot_leaving.wav", text: "#enemy_chariot_leaving" }
+        enemy_chariot_city_will_fall { sound:"enemy_chariot_city_will_fall.wav", text: "#enemy_chariot_city_will_fall" }
+        enemy_chariot_no_match { sound:"enemy_chariot_no_match.wav", text: "#enemy_chariot_no_match" }
+        enemy_chariot_for_glory { sound:"enemy_chariot_for_glory.wav", text: "#enemy_chariot_for_glory" }
+    }
     animations : {
         walk : { pack:PACK_ENEMY_HYKSOS, id:13, max_frames:12 }
         death : { pack:PACK_ENEMY_HYKSOS, id:14, max_frames:12, loop:false }
@@ -978,6 +1069,7 @@ figure_kushite_spearman = {
 
 figure_kushite_axeman = {
   overlay : OVERLAY_ENEMIES
+    sounds: enemy_fast_sword_sounds
     animations : {
         walk : { pack:PACK_ENEMY_KUSHITE, id:4, max_frames:12 }
         death : { pack:PACK_ENEMY_KUSHITE, id:5, max_frames:8, loop:false }
@@ -1031,6 +1123,15 @@ figure_kushite_war_ship = {
 
 figure_kushite_chariot = {
   overlay : OVERLAY_ENEMIES
+    sounds {
+        enemy_chariot_attacking { sound:"enemy_chariot_attacking.wav", text: "#enemy_chariot_attacking" }
+        enemy_chariot_marching { sound:"enemy_chariot_marching.wav", text: "#enemy_chariot_marching" }
+        enemy_chariot_waiting { sound:"enemy_chariot_waiting.wav", text: "#enemy_chariot_waiting" }
+        enemy_chariot_leaving { sound:"enemy_chariot_leaving.wav", text: "#enemy_chariot_leaving" }
+        enemy_chariot_city_will_fall { sound:"enemy_chariot_city_will_fall.wav", text: "#enemy_chariot_city_will_fall" }
+        enemy_chariot_no_match { sound:"enemy_chariot_no_match.wav", text: "#enemy_chariot_no_match" }
+        enemy_chariot_for_glory { sound:"enemy_chariot_for_glory.wav", text: "#enemy_chariot_for_glory" }
+    }
     animations : {
         walk : { pack:PACK_ENEMY_KUSHITE, id:13, max_frames:12 }
         death : { pack:PACK_ENEMY_KUSHITE, id:14, max_frames:12, loop:false }
@@ -1089,6 +1190,7 @@ figure_libian_archer = {
 
 figure_libian_sword = {
   overlay : OVERLAY_ENEMIES
+    sounds: enemy_fast_sword_sounds
     animations : {
         walk : { pack:PACK_ENEMY_LIBIAN, id:4, max_frames:12 }
         death : { pack:PACK_ENEMY_LIBIAN, id:5, max_frames:8, loop:false }
@@ -1142,6 +1244,15 @@ figure_libian_war_ship = {
 
 figure_libian_chariot = {
   overlay : OVERLAY_ENEMIES
+    sounds {
+        enemy_chariot_attacking { sound:"enemy_chariot_attacking.wav", text: "#enemy_chariot_attacking" }
+        enemy_chariot_marching { sound:"enemy_chariot_marching.wav", text: "#enemy_chariot_marching" }
+        enemy_chariot_waiting { sound:"enemy_chariot_waiting.wav", text: "#enemy_chariot_waiting" }
+        enemy_chariot_leaving { sound:"enemy_chariot_leaving.wav", text: "#enemy_chariot_leaving" }
+        enemy_chariot_city_will_fall { sound:"enemy_chariot_city_will_fall.wav", text: "#enemy_chariot_city_will_fall" }
+        enemy_chariot_no_match { sound:"enemy_chariot_no_match.wav", text: "#enemy_chariot_no_match" }
+        enemy_chariot_for_glory { sound:"enemy_chariot_for_glory.wav", text: "#enemy_chariot_for_glory" }
+    }
     animations : {
         walk : { pack:PACK_ENEMY_LIBIAN, id:13, max_frames:12 }
         death : { pack:PACK_ENEMY_LIBIAN, id:14, max_frames:12, loop:false }
@@ -1196,6 +1307,7 @@ figure_nubian_archer = {
 
 figure_nubian_axeman = {
   overlay : OVERLAY_ENEMIES
+    sounds: enemy_fast_sword_sounds
     animations : {
         walk : { pack:PACK_ENEMY_NUBIAN, id:4, max_frames:12 }
         death : { pack:PACK_ENEMY_NUBIAN, id:5, max_frames:8, loop:false }
@@ -1250,6 +1362,15 @@ figure_nubian_war_ship = {
 
 figure_nubian_chariot = {
   overlay : OVERLAY_ENEMIES
+    sounds {
+        enemy_chariot_attacking { sound:"enemy_chariot_attacking.wav", text: "#enemy_chariot_attacking" }
+        enemy_chariot_marching { sound:"enemy_chariot_marching.wav", text: "#enemy_chariot_marching" }
+        enemy_chariot_waiting { sound:"enemy_chariot_waiting.wav", text: "#enemy_chariot_waiting" }
+        enemy_chariot_leaving { sound:"enemy_chariot_leaving.wav", text: "#enemy_chariot_leaving" }
+        enemy_chariot_city_will_fall { sound:"enemy_chariot_city_will_fall.wav", text: "#enemy_chariot_city_will_fall" }
+        enemy_chariot_no_match { sound:"enemy_chariot_no_match.wav", text: "#enemy_chariot_no_match" }
+        enemy_chariot_for_glory { sound:"enemy_chariot_for_glory.wav", text: "#enemy_chariot_for_glory" }
+    }
     animations : {
         walk : { pack:PACK_ENEMY_NUBIAN, id:13, max_frames:12 }
         death : { pack:PACK_ENEMY_NUBIAN, id:14, max_frames:12, loop:false }
@@ -1364,6 +1485,15 @@ figure_persian_war_ship = {
 
 figure_persian_chariot = {
   overlay : OVERLAY_ENEMIES
+    sounds {
+        enemy_chariot_attacking { sound:"enemy_chariot_attacking.wav", text: "#enemy_chariot_attacking" }
+        enemy_chariot_marching { sound:"enemy_chariot_marching.wav", text: "#enemy_chariot_marching" }
+        enemy_chariot_waiting { sound:"enemy_chariot_waiting.wav", text: "#enemy_chariot_waiting" }
+        enemy_chariot_leaving { sound:"enemy_chariot_leaving.wav", text: "#enemy_chariot_leaving" }
+        enemy_chariot_city_will_fall { sound:"enemy_chariot_city_will_fall.wav", text: "#enemy_chariot_city_will_fall" }
+        enemy_chariot_no_match { sound:"enemy_chariot_no_match.wav", text: "#enemy_chariot_no_match" }
+        enemy_chariot_for_glory { sound:"enemy_chariot_for_glory.wav", text: "#enemy_chariot_for_glory" }
+    }
     animations : {
         walk : { pack:PACK_ENEMY_PERSIAN, id:13, max_frames:12 }
         death : { pack:PACK_ENEMY_PERSIAN, id:14, max_frames:12, loop:false }
@@ -1417,6 +1547,7 @@ figure_phoenician_spearman = {
 
 figure_phoenician_swordman = {
   overlay : OVERLAY_ENEMIES
+    sounds: enemy_fast_sword_sounds
     animations : {
         walk : { pack:PACK_ENEMY_PHOENICIAN, id:4, max_frames:12 }
         death : { pack:PACK_ENEMY_PHOENICIAN, id:5, max_frames:8, loop:false }
@@ -1465,6 +1596,15 @@ figure_phoenician_war_ship = {
 
 figure_phoenician_chariot = {
   overlay : OVERLAY_ENEMIES
+    sounds {
+        enemy_chariot_attacking { sound:"enemy_chariot_attacking.wav", text: "#enemy_chariot_attacking" }
+        enemy_chariot_marching { sound:"enemy_chariot_marching.wav", text: "#enemy_chariot_marching" }
+        enemy_chariot_waiting { sound:"enemy_chariot_waiting.wav", text: "#enemy_chariot_waiting" }
+        enemy_chariot_leaving { sound:"enemy_chariot_leaving.wav", text: "#enemy_chariot_leaving" }
+        enemy_chariot_city_will_fall { sound:"enemy_chariot_city_will_fall.wav", text: "#enemy_chariot_city_will_fall" }
+        enemy_chariot_no_match { sound:"enemy_chariot_no_match.wav", text: "#enemy_chariot_no_match" }
+        enemy_chariot_for_glory { sound:"enemy_chariot_for_glory.wav", text: "#enemy_chariot_for_glory" }
+    }
     animations : {
         walk : { pack:PACK_ENEMY_PHOENICIAN, id:13, max_frames:12 }
         death : { pack:PACK_ENEMY_PHOENICIAN, id:14, max_frames:12, loop:false }
@@ -1523,6 +1663,7 @@ figure_roman_archer = {
 
 figure_roman_legioner = {
   overlay : OVERLAY_ENEMIES
+    sounds: enemy_fast_sword_sounds
     animations : {
         walk : { pack:PACK_ENEMY_ROMAN, id:4, max_frames:12 }
         death : { pack:PACK_ENEMY_ROMAN, id:5, max_frames:8, loop:false }
@@ -1576,6 +1717,15 @@ figure_roman_war_ship = {
 
 figure_roman_chariot = {
   overlay : OVERLAY_ENEMIES
+    sounds {
+        enemy_chariot_attacking { sound:"enemy_chariot_attacking.wav", text: "#enemy_chariot_attacking" }
+        enemy_chariot_marching { sound:"enemy_chariot_marching.wav", text: "#enemy_chariot_marching" }
+        enemy_chariot_waiting { sound:"enemy_chariot_waiting.wav", text: "#enemy_chariot_waiting" }
+        enemy_chariot_leaving { sound:"enemy_chariot_leaving.wav", text: "#enemy_chariot_leaving" }
+        enemy_chariot_city_will_fall { sound:"enemy_chariot_city_will_fall.wav", text: "#enemy_chariot_city_will_fall" }
+        enemy_chariot_no_match { sound:"enemy_chariot_no_match.wav", text: "#enemy_chariot_no_match" }
+        enemy_chariot_for_glory { sound:"enemy_chariot_for_glory.wav", text: "#enemy_chariot_for_glory" }
+    }
     animations : {
         walk : { pack:PACK_ENEMY_ROMAN, id:13, max_frames:12 }
         death : { pack:PACK_ENEMY_ROMAN, id:14, max_frames:12, loop:false }
@@ -1630,6 +1780,7 @@ figure_seapeople_archer = {
 
 figure_seapeople_axeman = {
   overlay : OVERLAY_ENEMIES
+    sounds: enemy_fast_sword_sounds
     animations : {
         walk : { pack:PACK_ENEMY_SEAPEOPLE, id:4, max_frames:12 }
         death : { pack:PACK_ENEMY_SEAPEOPLE, id:5, max_frames:8, loop:false }
@@ -1683,6 +1834,15 @@ figure_seapeople_war_ship = {
 
 figure_seapeople_chariot = {
   overlay : OVERLAY_ENEMIES
+    sounds {
+        enemy_chariot_attacking { sound:"enemy_chariot_attacking.wav", text: "#enemy_chariot_attacking" }
+        enemy_chariot_marching { sound:"enemy_chariot_marching.wav", text: "#enemy_chariot_marching" }
+        enemy_chariot_waiting { sound:"enemy_chariot_waiting.wav", text: "#enemy_chariot_waiting" }
+        enemy_chariot_leaving { sound:"enemy_chariot_leaving.wav", text: "#enemy_chariot_leaving" }
+        enemy_chariot_city_will_fall { sound:"enemy_chariot_city_will_fall.wav", text: "#enemy_chariot_city_will_fall" }
+        enemy_chariot_no_match { sound:"enemy_chariot_no_match.wav", text: "#enemy_chariot_no_match" }
+        enemy_chariot_for_glory { sound:"enemy_chariot_for_glory.wav", text: "#enemy_chariot_for_glory" }
+    }
     animations : {
         walk : { pack:PACK_ENEMY_SEAPEOPLE, id:13, max_frames:12 }
         death : { pack:PACK_ENEMY_SEAPEOPLE, id:14, max_frames:12, loop:false }

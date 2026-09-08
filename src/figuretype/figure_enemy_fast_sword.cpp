@@ -17,6 +17,8 @@
 #include "grid/grid.h"
 #include "js/js_game.h"
 
+const e_action_enemy_fast_sword_tokens_t ANK_CONFIG_ENUM(e_action_enemy_fast_sword_tokens)
+
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_barbarian_sword)
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_assyrian_sword)
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_canaanite_sword)

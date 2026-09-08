@@ -303,7 +303,11 @@ void figure_enemy_transport::disembark_troops() {
         f->set_flag(e_figure_flag_invisible, false);
         f->map_figure_remove();
         f->tile = pos;
-        f->action_state = ACTION_151_ENEMY_INITIAL;
+        if (auto *enemy = f->dcast_enemy()) {
+            f->action_state = enemy->enemy_initial_action();
+        } else {
+            f->action_state = ACTION_151_ENEMY_INITIAL;
+        }
         f->wait_ticks = 10 + index * 10;
         f->formation_at_rest = 0;
         f->allow_move_type = EMOVE_TERRAIN;

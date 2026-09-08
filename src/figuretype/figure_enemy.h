@@ -35,6 +35,7 @@ public:
 
     virtual bool is_attack() const { assert(false && "this function should be implemented"); return false; }
     virtual void formation_reset_to_initial(const formation *m) override;
+    virtual e_figure_action enemy_initial_action() const { return (e_figure_action)ACTION_151_ENEMY_INITIAL; }
 
     //virtual sound_key phrase_key() const override;
     //virtual figure_sound_t get_sound_reaction(pcstr key) const override;

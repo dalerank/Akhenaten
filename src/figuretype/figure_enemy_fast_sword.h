@@ -2,13 +2,18 @@
 
 #include "figuretype/figure_enemy.h"
 
-enum e_action_enemy_fast_sword {
+enum e_action_enemy_fast_sword : uint16_t {
+    ACTION_0_ENEMY_FAST_SWORD_NONE = 0,
     ACTION_151_ENEMY_FAST_SWORD_INITIAL = 151,
     ACTION_152_ENEMY_FAST_SWORD_WAITING = 152,
     ACTION_153_ENEMY_FAST_SWORD_MARCHING = 153,
     ACTION_154_ENEMY_FAST_SWORD_ATTACK = 154,
     ACTION_156_ENEMY_FAST_SWORD_LEAVING = 156,
+
+    ACTION_157_ENEMY_FAST_SWORD_MAX
 };
+using e_action_enemy_fast_sword_tokens_t = token_holder<e_action_enemy_fast_sword, ACTION_0_ENEMY_FAST_SWORD_NONE, ACTION_157_ENEMY_FAST_SWORD_MAX>;
+extern const e_action_enemy_fast_sword_tokens_t e_action_enemy_fast_sword_tokens;
 
 class figure_enemy_fast_sword : public figure_enemy {
 public:
@@ -26,9 +31,6 @@ public:
     //virtual void figure_before_action() override;
     virtual void update_animation() override;
     virtual bool is_attack() const override { return action_state() == ACTION_154_ENEMY_FAST_SWORD_ATTACK; }
-
-    //virtual sound_key phrase_key() const override;
-    //virtual figure_sound_t get_sound_reaction(pcstr key) const override;
 
     virtual void enemy_initial(formation *m) override;
     virtual void enemy_marching(formation *m) override;

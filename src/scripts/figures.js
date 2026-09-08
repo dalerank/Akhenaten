@@ -20,6 +20,9 @@ import figure.docker
 import figure.drunkard
 import figure.embalmer
 import figure.emigrant
+import figure.enemy_chariot
+import figure.enemy_archer
+import figure.enemy_fast_sword
 
 figure_fireman {
   overlay : OVERLAY_WATER

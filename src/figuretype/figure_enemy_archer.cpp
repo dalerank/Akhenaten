@@ -17,6 +17,8 @@
 #include "grid/image.h"
 #include "js/js_game.h"
 
+const e_action_enemy_archer_tokens_t ANK_CONFIG_ENUM(e_action_enemy_archer_tokens)
+
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_barbarian_archer)
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_assyrian_archer)
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_canaanite_archer)
@@ -55,14 +57,14 @@ void figure_enemy_archer::enemy_initial(formation *m) {
         tile2i formation_t = formation_layout_position(m->layout, base.index_in_formation);
         tile2i destination_tile = m->destination.shifted(formation_t);
         if (m->recent_fight || tile() == destination_tile) {
-            advance_action(ACTION_154_ENEMY_ARCHER_SHOOT_MISSILE);
+            advance_action(ACTION_3_ENEMY_ARCHER_SHOOT_MISSILE);
         } 
         
         if (!m->recent_fight && tile() != destination_tile) {
             base.destination_tile = destination_tile;
             int dir = calc_general_direction(tile(), base.destination_tile);
             if (dir > attack_distance()) {
-                advance_action(ACTION_153_ENEMY_ARCHER_MARCHING);
+                advance_action(ACTION_2_ENEMY_ARCHER_MARCHING);
             }
         }
     }
@@ -88,7 +90,7 @@ void figure_enemy_archer::enemy_marching(formation *m) {
 
         base.destination_tile = m->destination.shifted(formation_t);
         if (calc_general_direction(tile(), base.destination_tile) == DIR_FIGURE_NONE) {
-            advance_action(ACTION_151_ENEMY_ARCHER_INITIAL);
+            advance_action(ACTION_0_ENEMY_ARCHER_INITIAL);
             return;
         }
 
@@ -98,11 +100,11 @@ void figure_enemy_archer::enemy_marching(formation *m) {
 
     base.move_ticks(base.speed_multiplier);
     if (direction() == DIR_FIGURE_NONE || direction() == DIR_FIGURE_REROUTE || direction() == DIR_FIGURE_CAN_NOT_REACH) {
-        advance_action(ACTION_151_ENEMY_ARCHER_INITIAL);
+        advance_action(ACTION_0_ENEMY_ARCHER_INITIAL);
     }
 
     if (base.destination_tile == base.tile) {
-        advance_action(ACTION_154_ENEMY_ARCHER_SHOOT_MISSILE);
+        advance_action(ACTION_3_ENEMY_ARCHER_SHOOT_MISSILE);
     }
 }
 
@@ -197,7 +199,7 @@ void figure_enemy_archer::enemy_fighting(formation *m) {
             base.destination_tile = target->tile;
             route_remove();
         } else if (direction() == DIR_FIGURE_REROUTE || direction() == DIR_FIGURE_CAN_NOT_REACH) {
-            advance_action(ACTION_151_ENEMY_ARCHER_INITIAL);
+            advance_action(ACTION_0_ENEMY_ARCHER_INITIAL);
             base.target_figure_id = 0;
         }
     }
@@ -287,13 +289,13 @@ void figure_enemy_archer::enemy_fighting(formation *m) {
     }
 
     // fallback
-    advance_action(ACTION_151_ENEMY_ARCHER_INITIAL);
+    advance_action(ACTION_0_ENEMY_ARCHER_INITIAL);
     base.target_figure_id = 0;
 }
 
 void figure_enemy_archer::leave_city() {
     base.destination_tile = g_city.map.exit_point;
-    advance_action(ACTION_156_ENEMY_ARCHER_LEAVING);
+    advance_action(ACTION_4_ENEMY_ARCHER_LEAVING);
 }
 
 void figure_enemy_archer::figure_action() {
@@ -321,23 +323,23 @@ void figure_enemy_archer::figure_action() {
         }
         break;
 
-    case ACTION_151_ENEMY_ARCHER_INITIAL:
+    case ACTION_0_ENEMY_ARCHER_INITIAL:
         enemy_initial(m);
         break;
 
-    case ACTION_152_ENEMY_ARCHER_WAITING:
+    case ACTION_1_ENEMY_ARCHER_WAITING:
         base.map_figure_update(); // ???? WTF 
         break;
 
-    case ACTION_153_ENEMY_ARCHER_MARCHING:
+    case ACTION_2_ENEMY_ARCHER_MARCHING:
         enemy_marching(m);
         break;
 
-    case ACTION_154_ENEMY_ARCHER_SHOOT_MISSILE:
+    case ACTION_3_ENEMY_ARCHER_SHOOT_MISSILE:
         enemy_fighting(m);
         break;
 
-    case ACTION_156_ENEMY_ARCHER_LEAVING:
+    case ACTION_4_ENEMY_ARCHER_LEAVING:
         enemy_leaving();
         break;
     }
@@ -345,11 +347,11 @@ void figure_enemy_archer::figure_action() {
 
 void figure_enemy_archer::update_animation() {
     xstring animkey = animkeys().walk;
-    if (action_state() == ACTION_154_ENEMY_ARCHER_SHOOT_MISSILE) {
+    if (action_state() == ACTION_3_ENEMY_ARCHER_SHOOT_MISSILE) {
         animkey = animkeys().bow_attack;
     } else if (action_state() == FIGURE_ACTION_149_CORPSE) {
         animkey = animkeys().death;
-    } else if (action_state() == ACTION_153_ENEMY_ARCHER_MARCHING) {
+    } else if (action_state() == ACTION_2_ENEMY_ARCHER_MARCHING) {
         animkey = animkeys().walk;
     }
 

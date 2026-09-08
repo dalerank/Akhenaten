@@ -1223,6 +1223,45 @@ localization_en = [
   { key: "#docker_city_is_good", text: "This harbor runs smooth! Short hauls and full warehouses." }
   { key: "#docker_city_is_amazing", text: "Best port I've worked. These crates practically walk ashore!" }
 
+  { key: "#enemy_chariot_attacking", text: "Forward! Crush them under the wheels!" }
+  { key: "#enemy_chariot_marching", text: "The dust of our wheels will choke this city." }
+  { key: "#enemy_chariot_waiting", text: "Hold the line. The charge comes soon." }
+  { key: "#enemy_chariot_leaving", text: "Fall back! Live to ride again." }
+  { key: "#enemy_chariot_city_will_fall", text: "Your walls won't stop chariots." }
+  { key: "#enemy_chariot_no_match", text: "Infantry is no match for us!" }
+  { key: "#enemy_chariot_for_glory", text: "For glory and plunder!" }
+
+  { key: "#enemy_archer_shooting", text: "Loose! Fill the sky with arrows!" }
+  { key: "#enemy_archer_marching", text: "March on. Their walls won't stop our shafts." }
+  { key: "#enemy_archer_waiting", text: "Hold. Draw when the signal comes." }
+  { key: "#enemy_archer_leaving", text: "Fall back! We'll rain death another day." }
+  { key: "#enemy_archer_city_will_fall", text: "This city will fall under our arrows." }
+  { key: "#enemy_archer_arrows_ready", text: "Bows ready! None will escape." }
+  { key: "#enemy_archer_for_glory", text: "For glory and plunder!" }
+
+  { key: "#enemy_sword_attacking", text: "Steel and blood! Cut them down!" }
+  { key: "#enemy_sword_marching", text: "Keep moving. Their city will burn by nightfall." }
+  { key: "#enemy_sword_waiting", text: "Hold. When the signal comes, we strike." }
+  { key: "#enemy_sword_leaving", text: "Fall back! We return with more blades." }
+  { key: "#enemy_sword_no_army", text: "No forts? This city is already ours." }
+  { key: "#enemy_sword_no_food", text: "They're starving. Soft targets make easy plunder." }
+  { key: "#enemy_sword_disease", text: "Their streets reek of sickness. Even easier." }
+  { key: "#enemy_sword_need_workers", text: "They can't even man their workshops. Pathetic." }
+  { key: "#enemy_sword_gods_angry", text: "Their gods have turned away. So will we — after we take the gold." }
+  { key: "#enemy_sword_city_is_bad", text: "Pharaoh's favour is ash. No one will mourn this place." }
+  { key: "#enemy_sword_low_entertainment", text: "No festivals, no spirit. They'll break at the first charge." }
+  { key: "#enemy_sword_city_is_good", text: "A tidy city. Shame we're here to wreck it." }
+  { key: "#enemy_sword_city_is_amazing", text: "So prosperous. The spoils will be magnificent." }
+  { key: "#enemy_sword_for_glory", text: "For glory and the sword!" }
+
+  { key: "#enemy_archer_shooting", text: "Loose! Fill the sky with arrows!" }
+  { key: "#enemy_archer_marching", text: "Bows ready. Their streets will run red." }
+  { key: "#enemy_archer_waiting", text: "Hold. Wait for the range." }
+  { key: "#enemy_archer_leaving", text: "Fall back! Save the shafts for another day." }
+  { key: "#enemy_archer_city_will_fall", text: "Your walls are nothing to a rain of arrows." }
+  { key: "#enemy_archer_arrows_ready", text: "Nocked and ready. Who dies first?" }
+  { key: "#enemy_archer_for_glory", text: "For glory — and a clean shot!" }
+
   { key: "#malaria_problem", text: "(Not used)" }
   { key: "#malaria_not_a_problem", text: "Malaria doesn't seem to be a problem here." }
   { key: "#malaria_outbreak_could_strike", text: "An outbreak of malaria could strike if something isn't done." } 

@@ -898,7 +898,11 @@ tile2i scenario_start_invasion_impl(invasion_opts_t &opts) {
             for (int fig = 0; fig < soldiers_per_formation[type][i]; fig++) {
                 figure* f = figure_create(figure_type, invasion_tile, orientation);
                 f->faction_id = 0;
-                f->action_state = ACTION_151_ENEMY_INITIAL;
+                if (auto *enemy = f->dcast_enemy()) {
+                    f->action_state = enemy->enemy_initial_action();
+                } else {
+                    f->action_state = ACTION_151_ENEMY_INITIAL;
+                }
                 f->wait_ticks = 200 * seq + 10 * fig + 10;
                 f->formation_id = formation_id;
                 f->name = figure_name_get(figure_type);

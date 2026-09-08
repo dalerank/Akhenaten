@@ -2,13 +2,17 @@
 
 #include "figuretype/figure_enemy.h"
 
-enum e_action_enemy_archer {
-    ACTION_151_ENEMY_ARCHER_INITIAL = 151,
-    ACTION_152_ENEMY_ARCHER_WAITING = 152,
-    ACTION_153_ENEMY_ARCHER_MARCHING = 153,
-    ACTION_154_ENEMY_ARCHER_SHOOT_MISSILE = 154,
-    ACTION_156_ENEMY_ARCHER_LEAVING = 156,
+enum e_action_enemy_archer : uint16_t {
+    ACTION_0_ENEMY_ARCHER_INITIAL = 0,
+    ACTION_1_ENEMY_ARCHER_WAITING = 1,
+    ACTION_2_ENEMY_ARCHER_MARCHING = 2,
+    ACTION_3_ENEMY_ARCHER_SHOOT_MISSILE = 3,
+    ACTION_4_ENEMY_ARCHER_LEAVING = 4,
+
+    ACTION_5_ENEMY_ARCHER_MAX
 };
+using e_action_enemy_archer_tokens_t = token_holder<e_action_enemy_archer, ACTION_0_ENEMY_ARCHER_INITIAL, ACTION_5_ENEMY_ARCHER_MAX>;
+extern const e_action_enemy_archer_tokens_t e_action_enemy_archer_tokens;
 
 class figure_enemy_archer : public figure_enemy {
 public:
@@ -29,15 +33,13 @@ public:
     //virtual void figure_before_action() override;
     virtual void update_animation() override;
     virtual bool is_archer() const override { return true; }
-    virtual bool is_attack() const override { return action_state() == ACTION_154_ENEMY_ARCHER_SHOOT_MISSILE; }
+    virtual bool is_attack() const override { return action_state() == ACTION_3_ENEMY_ARCHER_SHOOT_MISSILE; }
+    virtual e_figure_action enemy_initial_action() const override { return (e_figure_action)ACTION_0_ENEMY_ARCHER_INITIAL; }
 
     virtual int8_t missile_attack_value() const { return base_params().missile_attack_value; }
     virtual int8_t missile_delay() const { return base_params().missile_delay;}
     virtual int8_t attack_distance() const { return base_params().attack_distance; }
     virtual e_figure_type missile_type() const override { return base_params().missile_type; }
-
-    //virtual sound_key phrase_key() const override;
-    //virtual figure_sound_t get_sound_reaction(pcstr key) const override;
 
     //bool fight_enemy(int category, int max_distance);
     virtual void enemy_initial(formation *m) override;

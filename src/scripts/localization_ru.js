@@ -586,6 +586,45 @@ localization_ru = [
     { key: "#docker_city_is_good", text: "В этой гавани всё споро! Короткие рейсы и полные склады." }
     { key: "#docker_city_is_amazing", text: "Лучший порт, где я работал. Эти ящики сами выходят на берег!" }
 
+    { key: "#enemy_chariot_attacking", text: "Вперёд! Раздавите их колёсами!" }
+    { key: "#enemy_chariot_marching", text: "Пыль от наших колёс задушит этот город." }
+    { key: "#enemy_chariot_waiting", text: "Держать строй. Скоро атака." }
+    { key: "#enemy_chariot_leaving", text: "Отходим! Живыми уйдём — ещё повоюем." }
+    { key: "#enemy_chariot_city_will_fall", text: "Ваши стены не остановят колесницы." }
+    { key: "#enemy_chariot_no_match", text: "Пехота нам не ровня!" }
+    { key: "#enemy_chariot_for_glory", text: "За славу и добычу!" }
+
+    { key: "#enemy_archer_shooting", text: "Пли! Засыпьте небо стрелами!" }
+    { key: "#enemy_archer_marching", text: "Вперёд. Стены не спасут от наших стрел." }
+    { key: "#enemy_archer_waiting", text: "Стоять. По сигналу — натягивайте." }
+    { key: "#enemy_archer_leaving", text: "Отходим! Ещё прольём кровь стрелами." }
+    { key: "#enemy_archer_city_will_fall", text: "Этот город падёт под нашими стрелами." }
+    { key: "#enemy_archer_arrows_ready", text: "Луки наготове! Никто не уйдёт." }
+    { key: "#enemy_archer_for_glory", text: "За славу и добычу!" }
+
+    { key: "#enemy_sword_attacking", text: "Сталь и кровь! Рубите их!" }
+    { key: "#enemy_sword_marching", text: "Вперёд. К ночи этот город сгорит." }
+    { key: "#enemy_sword_waiting", text: "Стоять. По сигналу — удар." }
+    { key: "#enemy_sword_leaving", text: "Отходим! Вернёмся с новыми клинками." }
+    { key: "#enemy_sword_no_army", text: "Нет фортов? Город уже наш." }
+    { key: "#enemy_sword_no_food", text: "Они голодают. Мягкая добыча." }
+    { key: "#enemy_sword_disease", text: "Улицы воняют болезнью. Тем проще." }
+    { key: "#enemy_sword_need_workers", text: "Даже мастерские пустуют. Жалко смотреть." }
+    { key: "#enemy_sword_gods_angry", text: "Боги отвернулись от них. Мы — тоже, но после золота." }
+    { key: "#enemy_sword_city_is_bad", text: "Милость фараона — пепел. Никто не будет оплакивать это место." }
+    { key: "#enemy_sword_low_entertainment", text: "Нет праздников — нет духа. Сломаются с первого натиска." }
+    { key: "#enemy_sword_city_is_good", text: "Аккуратный город. Жаль, что мы здесь, чтобы его разнести." }
+    { key: "#enemy_sword_city_is_amazing", text: "Такое богатство. Добыча будет великолепной." }
+    { key: "#enemy_sword_for_glory", text: "За славу и меч!" }
+
+    { key: "#enemy_archer_shooting", text: "Огонь! Затмите небо стрелами!" }
+    { key: "#enemy_archer_marching", text: "Луки наготове. Их улицы обагрятся." }
+    { key: "#enemy_archer_waiting", text: "Стоять. Ждём дистанции." }
+    { key: "#enemy_archer_leaving", text: "Отходим! Стрелы пригодятся в другой день." }
+    { key: "#enemy_archer_city_will_fall", text: "Ваши стены не спасут от града стрел." }
+    { key: "#enemy_archer_arrows_ready", text: "Тетива натянута. Кто умрёт первым?" }
+    { key: "#enemy_archer_for_glory", text: "За славу — и меткий выстрел!" }
+
     { key: "#malaria_problem", text: "(Не используется)" }
     { key: "#malaria_not_a_problem", text: "Малярия, похоже, здесь не проблема." }
     { key: "#malaria_outbreak_could_strike", text: "Вспышка малярии может произойти, если ничего не сделать." }
