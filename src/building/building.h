@@ -162,7 +162,7 @@ struct building_store : public std::array<resource_value, 4> {
 };
 
 
-class building {
+class building : public no_copy_assignment {
 public:
     enum { max_figures = 4 };
     // The impl object is constructed in place in this buffer (see acquire_impl), so the buffer

@@ -119,7 +119,10 @@ bool city_t::figures_has_security_breach() {
 }
 
 figure *figure_get(int id) {
-    verify_no_crash(id >= 0 || id < MAX_FIGURES);
+    verify_no_crash(id >= 0 && id < MAX_FIGURES);
+    if (id < 0 || id >= MAX_FIGURES) {
+        return figure_get(0);
+    }
     return g_figure_data.figures[id];
 }
 

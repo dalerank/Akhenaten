@@ -1,6 +1,7 @@
 #pragma once
 
 #include "core/archive.h"
+#include "core/xfunction.h"
 #include "graphics/image_desc.h"
 #include "graphics/animkeys.h"
 #include "core/system_time.h"
@@ -55,7 +56,7 @@ struct animation_context {
     bool tick_updated = false;
     bool force_valid = false; // set from figure::force_valid_animation in image_set_animation
     xstring path;
-    std::function<void()> on_finished_cb;
+    xfunction<void()> on_finished_cb;
 
     void setup(const animation_t &anim);
     void update(bool refresh_only);
@@ -63,8 +64,8 @@ struct animation_context {
     inline int current_frame() const { return std::clamp<int>(frame / frame_duration, 0, max_frames); }
     inline int start_frame() const { return base + offset; }
     inline void restart() { was_finished = false; frame = sframe; }
-    inline void restart(std::function<void()> cb) {
-        restart(); on_finished_cb = cb;
+    inline void restart(xfunction<void()> cb) {
+        restart(); on_finished_cb = std::move(cb);
     }
     inline bool finished() const {
         if (was_finished) return true;

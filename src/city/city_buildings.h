@@ -29,8 +29,8 @@ building *building_at(int grid_offset);
 building *building_at(int x, int y);
 building *building_at(tile2i tile);
 
-bool building_exists_at(int grid_offset, building *b);
-bool building_exists_at(tile2i point, building *b);
+building *building_exists_at(int grid_offset);
+building *building_exists_at(tile2i point);
 
 void building_clear_all();
 void building_update_state();

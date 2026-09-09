@@ -222,31 +222,26 @@ building *building_at(tile2i point) {
     return building_get(map_building_at(point.grid_offset()));
 }
 
-bool building_exists_at(int grid_offset, building *b) {
-    b = nullptr;
+building *building_exists_at(int grid_offset) {
     int b_id = map_building_at(grid_offset);
     if (b_id > 0) {
-        b = building_get(b_id);
+        building *b = building_get(b_id);
         if (b->state > BUILDING_STATE_UNUSED) {
-            return true;
-        } else {
-            b = nullptr;
+            return b;
         }
     }
-    return false;
+    return nullptr;
 }
 
-bool building_exists_at(tile2i tile, building *b) {
-    b = nullptr;
+building *building_exists_at(tile2i tile) {
     int b_id = map_building_at(tile);
     if (b_id > 0) {
-        b = building_get(b_id);
-        if (b->state > BUILDING_STATE_UNUSED)
-            return true;
-        else
-            b = nullptr;
+        building *b = building_get(b_id);
+        if (b->state > BUILDING_STATE_UNUSED) {
+            return b;
+        }
     }
-    return false;
+    return nullptr;
 }
 
 void building_clear_all() {
@@ -373,9 +368,6 @@ io_buffer *iob_buildings = new io_buffer([] (io_buffer *iob, size_t version) {
         //        building_state_load_from_buffer(buf, &all_buildings[i]);
         auto b = &g_all_buildings[i];
         int sind = (int)iob->get_offset();
-        if (sind == 640) {
-            int a = 2134;
-        }
 
         iob->bind(BIND_SIGNATURE_UINT8, &b->state);
         iob->bind____skip(1); // iob->bind(BIND_SIGNATURE_UINT8, &b->faction_id);
@@ -445,6 +437,7 @@ io_buffer *iob_buildings = new io_buffer([] (io_buffer *iob, size_t version) {
 
         int currind = iob->get_offset() - sind;
         verify_no_crash(currind > 0);
+        verify_no_crash_var(currind <= 186, "runtime_data overflow: %s wrote %d bytes", token::find_name(e_building_type_tokens, b->type), currind);
         iob->bind____skip(186 - currind);
 
         iob->bind____skip(2);
