@@ -25,6 +25,10 @@ building g_all_buildings[5000];
 xspan<building> g_city_buildings = make_span(g_all_buildings);
 
 building *building_get(building_id id) {
+    verify_no_crash(id < MAX_BUILDINGS);
+    if (id >= MAX_BUILDINGS) {
+        return &g_all_buildings[0];
+    }
     return &g_all_buildings[id];
 }
 

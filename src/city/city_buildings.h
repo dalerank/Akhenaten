@@ -5,10 +5,10 @@
 #include "core/svector.h"
 #include "core/hvector.h"
 
-inline building *building_begin() { return building_get(1); }
-inline building *building_end() { return building_get(MAX_BUILDINGS); }
-
 xspan<building> city_buildings();
+
+inline building *building_begin() { return building_get(1); }
+inline building *building_end() { return city_buildings().data() + MAX_BUILDINGS; }
 
 building *building_next(building_id id, e_building_type type);
 

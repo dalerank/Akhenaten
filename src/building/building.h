@@ -305,10 +305,16 @@ public:
     void initialize(e_building_type type, tile2i tile, int orientation);
 
     e_overlay get_overlay() const;
-    int get_figure_id(int i) const { return figure_ids[i]; };
+    int get_figure_id(int i) const {
+        verify_no_crash(i >= 0 && i < (int)max_figures);
+        if (i < 0 || i >= (int)max_figures) {
+            return 0;
+        }
+        return figure_ids[i];
+    };
 
     figure* get_figure(int i) const;
-    void set_figure(int i, int figure_id = -1);
+    void set_figure(int i, int figure_id);
     void set_figure(int i, figure* f);
     void remove_figure(int i);
     void remove_figure_by_id(int id);

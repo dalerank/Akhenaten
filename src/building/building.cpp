@@ -758,16 +758,20 @@ bool building::has_figure_of_type(int i, e_figure_type _type) {
     // seatrch through all the figures if index is -1
     if (i == -1) {
         bool has_any = false;
-        for (int i = 0; i < max_figures; i++) {
-            if (get_figure(i)->type == _type) {
+        for (int slot = 0; slot < max_figures; slot++) {
+            if (get_figure(slot)->type == _type) {
                 has_any = true;
             }
         }
 
         return has_any;
-    } else {
-        return (get_figure(i)->type == _type);
     }
+
+    verify_no_crash(i >= 0 && i < (int)max_figures);
+    if (i < 0 || i >= (int)max_figures) {
+        return false;
+    }
+    return (get_figure(i)->type == _type);
 }
 
 int building::get_figure_slot(figure *f) {
@@ -781,7 +785,10 @@ int building::get_figure_slot(figure *f) {
 }
 
 void building::set_figure(int i, int figure_id) {
-    //assert(figure_ids_array[i] == 0);
+    verify_no_crash(i >= 0 && i < (int)max_figures);
+    if (i < 0 || i >= (int)max_figures) {
+        return;
+    }
     figure_ids[i] = figure_id;
 }
 
@@ -809,14 +816,19 @@ bool building::has_figure(int i, int figure_id) const {
     // seatrch through all the figures if index is -1
     if (i == -1) {
         verify_no_crash(figure_id > 0);
-        for (int i = 0; i < max_figures; i++) {
-            figure* f = this->get_figure(i);
+        for (int slot = 0; slot < max_figures; slot++) {
+            figure* f = this->get_figure(slot);
             if (f->id == figure_id) {
                 return true;
             }
         }
         return false;
-    } 
+    }
+
+    verify_no_crash(i >= 0 && i < (int)max_figures);
+    if (i < 0 || i >= (int)max_figures) {
+        return false;
+    }
 
     figure *f = this->get_figure(i);
     if (figure_id == -1) {
