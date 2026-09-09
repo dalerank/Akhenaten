@@ -1781,13 +1781,7 @@ localization_hu = [
   { key: "#seth_city_is_good", text: "Ez a város nem rossz hely az életre." }
   { key: "#seth_city_is_amazing", text: "Ez a város a legnagyszerűbb!" }
   { key: "#seth_god_love_festival", text: "Bast szereti a jó ünnepségeket." }
-  { key: "#seth_low_sentiment_2", text: "A város lakói mélységesen boldogtalanok. Hamarosan a bűnözés felé fordulhatnak." }
-  { key: "#seth_low_entertainment_2", text: "Mit tehet egy papnő? Olyan kevés a szórakozási lehetőség itt." }
-  { key: "#seth_city_low_mood_2", text: "Bast erőt ad nekem, hogy meggyógyítsam a betegeket, mielőtt továbbterjesztik a kórt." }
 
-  { key: "#antelope_hunter_hunting", text: "Az antilopok nem ellenfeleink!" }
-  { key: "#antelope_hunter_back", text: "Ma este mindenkinek jut majd pecsenye." }
-  { key: "#antelope_hunter_city_is_good", text: "Ez a város jó!" }
   { key: "#hunt_bird_birds_are_wily", text: "Ezek a madarak ravaszak!" }
   { key: "#hunt_bird_birds_ready_for_roasting", text: "Ezek a madarak készen állnak a sütésre!" }
 
