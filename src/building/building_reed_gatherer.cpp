@@ -31,7 +31,7 @@ bool building_reed_gatherer::can_spawn_gatherer(int max_gatherers_per_building, 
         return false;
     }
 
-    int gatherers_this_yard = base.get_figures_number(FIGURE_REED_GATHERER);
+    int gatherers_this_yard = get_figures_number(FIGURE_REED_GATHERER);
     int max_storage = current_params().max_storage_amount;
     int max_loads = max_storage / carry_per_person;
     int stored_loads = base.stored_amount(base.output.resource) / carry_per_person;
@@ -83,7 +83,7 @@ void building_reed_gatherer::spawn_figure() {
         }
     }
 
-    figure* fcart = base.common_spawn_goods_output_cartpusher();
+    figure* fcart = common_spawn_goods_output_cartpusher();
     if (fcart) {
         events::emit(event_produced_resources{ base.output.resource, fcart->get_carrying_amount() });
     }

@@ -39,7 +39,7 @@ void building_stone_quarry::update_production() {
 void building_stone_quarry::update_day() {
     building_quarry::update_day();
 
-    base.anims[work_2] = anim(pct_workers() > 50 ? animkeys().work_2 : animkeys().none);
+    base.anims[work_2] = anim(worker_percentage() > 50 ? animkeys().work_2 : animkeys().none);
 }
 
 void building_limestone_quarry::update_production() {

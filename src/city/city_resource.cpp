@@ -353,7 +353,7 @@ void city_resources_t::calculate_available_food() {
         }
 
         b.has_road_access = true;
-        int pct_workers = calc_percentage<int>(b.num_workers, b.max_workers);
+        int pct_workers = b.worker_percentage();
         if (pct_workers < 100) {
             granaries.understaffed++;
         }

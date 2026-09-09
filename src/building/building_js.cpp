@@ -51,7 +51,7 @@ void __building_create_roaming_figure(int bid, int type, int action, int slot) {
     if (!b || !b->is_valid()) {
         return;
     }
-    b->create_roaming_figure((e_figure_type)type, (e_figure_action)action, (e_building_slot)slot);
+    b->dcast()->create_roaming_figure((e_figure_type)type, (e_figure_action)action, (e_building_slot)slot);
 }
 ANK_FUNCTION_4(__building_create_roaming_figure)
 
@@ -208,7 +208,7 @@ void __building_has_figure(js_State *J) {
 void __building_get_figures_number(js_State *J) {
     const int bid = building_this_id(J);
     const e_figure_type ftype = (e_figure_type)js_helpers::js_to_value<int>(J, 1);
-    js_helpers::js_push_value(J, building_get(bid)->get_figures_number(ftype));
+    js_helpers::js_push_value(J, building_get(bid)->dcast()->get_figures_number(ftype));
 }
 
 int __building_get_figure_id(int bid, int index) {

@@ -28,7 +28,7 @@ bool building_artisans_guild::has_paint_and_clay() const {
 }
 
 bool building_artisans_guild::can_spawn_tomb_artisan() {
-    if (base.get_figures_number(FIGURE_TOMB_ARTISAN) >= runtime_data().max_workers) {
+    if (get_figures_number(FIGURE_TOMB_ARTISAN) >= runtime_data().max_workers) {
         return false;
     }
 
@@ -49,12 +49,12 @@ bool building_artisans_guild::can_spawn_tomb_artisan() {
 }
 
 void building_artisans_guild::spawn_figure() {
-    base.check_labor_problem();
+    check_labor_problem();
     if (!base.has_road_access) {
         return;
     }
 
-    base.common_spawn_labor_seeker(current_params().min_houses_coverage);
+    common_spawn_labor_seeker(current_params().min_houses_coverage);
     if (base.worker_percentage() < 50) {
         return;
     }
@@ -63,7 +63,7 @@ void building_artisans_guild::spawn_figure() {
         return;
     }
 
-    int spawn_delay = base.figure_spawn_timer();
+    int spawn_delay = figure_spawn_timer();
     if (spawn_delay == -1) {
         return;
     }
@@ -95,7 +95,7 @@ void building_artisans_guild::spawn_figure() {
         return;
     }
 
-    auto *f = base.create_figure_with_destination(FIGURE_TOMB_ARTISAN, monument,
+    auto *f = create_figure_with_destination(FIGURE_TOMB_ARTISAN, monument,
                                                  (e_figure_action)ACTION_10_TOMB_ARTISAN_CREATED, BUILDING_SLOT_SERVICE);
     if (!f || !f->id) {
         return;

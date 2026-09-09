@@ -26,7 +26,7 @@ void building_stonemason_guild::on_create(int orientation) {
 }
 
 bool building_stonemason_guild::can_spawn_stonemason_man(int max_gatherers_per_building) {
-   bool has_free_man = (base.get_figures_number(FIGURE_STONEMASON) < runtime_data().max_workers);
+   bool has_free_man = (get_figures_number(FIGURE_STONEMASON) < runtime_data().max_workers);
    if (!has_free_man) {
        return false;
    }
@@ -35,18 +35,18 @@ bool building_stonemason_guild::can_spawn_stonemason_man(int max_gatherers_per_b
 }
 
 void building_stonemason_guild::spawn_figure() {
-    base.check_labor_problem();
+    check_labor_problem();
     if (!base.has_road_access) {
         return;
     }
 
-    base.common_spawn_labor_seeker(current_params().min_houses_coverage);
+    common_spawn_labor_seeker(current_params().min_houses_coverage);
     int pct_workers = base.worker_percentage();
     if (pct_workers < 50) {
         return;
     }
 
-    int spawn_delay = base.figure_spawn_timer();
+    int spawn_delay = figure_spawn_timer();
     if (spawn_delay == -1) {
         return;
     }
@@ -79,7 +79,7 @@ void building_stonemason_guild::spawn_figure() {
     });
 
     if (monument) {
-        auto f = base.create_figure_with_destination(FIGURE_STONEMASON, monument, (e_figure_action)FIGURE_ACTION_10_MASON_CREATED, BUILDING_SLOT_SERVICE);
+        auto f = create_figure_with_destination(FIGURE_STONEMASON, monument, (e_figure_action)FIGURE_ACTION_10_MASON_CREATED, BUILDING_SLOT_SERVICE);
         // Set destination_tile before figures.update(): PREFER_ROADS can poof walkers
         // that are off-road with an empty destination_tile (same as artisans guild).
         auto *mm = monument->dcast_monument();
@@ -116,7 +116,7 @@ void building_stonemason_guild::spawn_figure() {
     });
 
     if (min_service_statue) {
-        auto f = base.create_figure_with_destination(FIGURE_STONEMASON, &min_service_statue->base, (e_figure_action)FIGURE_ACTION_30_MASON_CREATED_ROAMING, BUILDING_SLOT_SERVICE);
+        auto f = create_figure_with_destination(FIGURE_STONEMASON, &min_service_statue->base, (e_figure_action)FIGURE_ACTION_30_MASON_CREATED_ROAMING, BUILDING_SLOT_SERVICE);
         min_service_statue->add_workers(f->id);
         f->wait_ticks = random_short() % 30;
         auto mason = smart_cast<figure_stonemason>(f);

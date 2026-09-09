@@ -498,63 +498,8 @@ bool building::is_monument() const {
     }
 }
 
-figure *building::create_figure_generic(e_figure_type _type, e_figure_action created_action, e_building_slot slot, int created_dir) {
-    figure *f = figure_create(_type, road_access, created_dir);
-    f->action_state = created_action;
-    f->set_home(id);
-    set_figure(slot, f);
-
-    return f;
-}
-
-figure *building::create_cartpusher(e_resource resource_id, int quantity, e_figure_action created_action, e_building_slot slot) {
-    figure *f = create_figure_generic(FIGURE_CART_PUSHER, created_action, slot, DIR_4_BOTTOM_LEFT);
-    auto cart = ::smart_cast<figure_cartpusher>(f);
-    if (!cart) {
-        return f;
-    }
-
-    cart->load_resource(resource_id, quantity);
-    cart->set_destination(nullptr);
-
-    set_figure(slot, cart->id()); // warning: this overwrites any existing figure!
-    if (!!game_features::gameplay_change_cart_speed_depends_quntity) {
-        f->progress_inside_speed = std::clamp(quantity / 400, 0, 2);
-    }
-    cart->base.wait_ticks = (short)figure_cartpusher::destination_wait_threshold();
-
-    return f;
-}
-
 void building::draw_usable_paths(painter &ctx) {
     dcast()->draw_usable_paths(ctx);
-}
-
-figure *building::create_figure_with_destination(e_figure_type _type, building *destination, e_figure_action created_action, e_building_slot slot) {
-    figure *f = create_figure_generic(_type, created_action, slot, DIR_4_BOTTOM_LEFT);
-    f->set_destination(destination->id);
-    f->set_direction(figure_find_best_road_direction(f->tile, destination->tile));
-
-    set_figure(slot, f->id); // warning: this overwrites any existing figure!
-    return f;
-}
-
-figure *building::create_roaming_figure(e_figure_type _type, e_figure_action created_action, e_building_slot slot) {
-    figure *f = create_figure_generic(_type, created_action, slot, figure_roam_direction);
-
-    f->set_destination(nullptr);
-
-    set_figure(slot, f->id); // warning: this overwrites any existing figure!
-    f->init_roaming_from_building(figure_roam_direction);
-    f->set_home(id);
-
-    // update building to have a different roamer direction for next time
-    figure_roam_direction += 2;
-    if (figure_roam_direction > 6) {
-        figure_roam_direction = 0;
-    }
-
-    return f;
 }
 
 int building::stored_amount(e_resource res) const {
@@ -801,94 +746,8 @@ tile2i building::access_tile() {
     return road_access;
 }
 
-int building::get_figures_number(e_figure_type ftype) {
-    int figures_this_yard = 0;
-    for (int i = 0; i < MAX_FIGURES; i++) {
-        figure *f = figure_get(i);
-        // Count only living walkers — DEAD figures keep type/home until delete.
-        if (f->is_alive() && f->has_type(ftype) && f->has_home(this)) {
-            figures_this_yard++;
-        }
-    }
-
-    return figures_this_yard;
-}
-
-figure* building::common_spawn_goods_output_cartpusher(int min_carry, int max_carry) {
-    // can only have one?
-    if (has_figure_of_type(BUILDING_SLOT_CARTPUSHER, FIGURE_CART_PUSHER)) {
-        return nullptr;
-    }
-
-    // no checking for work force? doesn't matter anyways.... there's no instance
-    // in the game that allows cartpushers to spawn before the workers disappear!
-    if (!has_road_access) {
-        return nullptr;
-    }
-
-    int stored_resources = stored_amount(output.resource);
-    if (stored_resources >= min_carry) {
-        const int carry_cap = std::min(max_carry, UNITS_PER_LOAD);
-        int amounts_to_carry = std::min<int>(stored_resources, carry_cap);
-        amounts_to_carry -= amounts_to_carry % 100; // remove pittance
-
-        figure* f = create_cartpusher(output.resource, amounts_to_carry, (e_figure_action)ACTION_20_CARTPUSHER_INITIAL, BUILDING_SLOT_CARTPUSHER);
-        consume_resource(output.resource, amounts_to_carry);
-        return f;
-    }
-
-    return nullptr;
-}
-
-void building::common_spawn_labor_seeker(int min_houses) {
-    if (g_city.population.current <= 0) {
-        return;
-    }
-
-    if (!!game_features::gameplay_change_global_labour) {
-        // If it can access kingdome
-        houses_covered = std::min(300, distance_from_entry ? 2 * min_houses : 0);
-        return;
-    }
-
-    if (houses_covered > min_houses) {
-        return;
-    }
-
-    if (has_figure(BUILDING_SLOT_LABOR_SEEKER)) { // no figure slot available!
-        return;
-    }
-
-    create_roaming_figure(FIGURE_LABOR_SEEKER, (e_figure_action)ACTION_125_ROAMER_ROAMING, BUILDING_SLOT_LABOR_SEEKER);
-}
-
-void building::check_labor_problem() {
-    if ((houses_covered <= 0 && labor_category != LABOR_CATEGORY_INVALID) || (labor_category == LABOR_CATEGORY_INVALID && num_workers <= 0)) {
-        show_on_problem_overlay = 2;
-    }
-}
-
 int building::worker_percentage() const {
     return calc_percentage<int>(num_workers, max_workers);
-}
-
-int building::figure_spawn_timer() {
-    int pct_workers = worker_percentage();
-    if (pct_workers <= 0) {
-        return -1;
-    }
-
-    const bool boost = game_features::gameplay_enhanced_walker_spawn_boost.to_bool();
-    if (pct_workers >= 100) {
-        return 0;
-    } else if (pct_workers >= 75) {
-        return boost ? 0 : 1;
-    } else if (pct_workers >= 50) {
-        return boost ? 1 : 3;
-    } else if (pct_workers >= 25) {
-        return boost ? 3 : 7;
-    }
-    return boost ? 7 : 15;
 }
 
 bool building::has_figure(int i, figure *f) {

@@ -99,7 +99,6 @@ public:
     bool common_spawn_roamer(e_figure_type type, int min_houses, e_figure_action created_action);
     void update_graphic_work_anim();
     int max_workers() const;
-    int pct_workers() const;
     int get_figure_id(int i) const;
     int need_resource_amount(e_resource r) const;
     void es(pcstr es_name) const;
@@ -114,6 +113,8 @@ public:
     figure *create_roaming_figure(e_figure_type _type, e_figure_action created_action, e_building_slot slot);
     figure *create_figure_generic(e_figure_type _type, e_figure_action created_action, e_building_slot slot, int created_dir);
     figure *create_cartpusher(e_resource resource_id, int quantity, e_figure_action created_action, e_building_slot slot);
+    figure *common_spawn_goods_output_cartpusher(int min_carry = 100, int max_carry = 100);
+    int get_figures_number(e_figure_type ftype) const;
     figure *get_figure(int slot);
     const figure *get_figure(int slot) const;
 

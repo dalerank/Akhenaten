@@ -70,7 +70,7 @@ void building_mine_copper::spawn_figure() {
         production_finished();
     }
 
-    figure* fcart = base.common_spawn_goods_output_cartpusher();
+    figure* fcart = common_spawn_goods_output_cartpusher();
     if (fcart) {
         events::emit(event_produced_resources{ base.output.resource, fcart->get_carrying_amount() });
     }

@@ -32,7 +32,7 @@ void building_bricklayers_guild::on_create(int orientation) {
 }
 
 bool building_bricklayers_guild::can_spawn_bricklayer_man() {
-    bool has_free_man = (base.get_figures_number(FIGURE_BRICKLAYER) < runtime_data().max_workers);
+    bool has_free_man = (get_figures_number(FIGURE_BRICKLAYER) < runtime_data().max_workers);
     if (!has_free_man) {
         return false;
     }
@@ -77,18 +77,18 @@ bool building_bricklayers_guild::can_spawn_bricklayer_man() {
 }
 
 void building_bricklayers_guild::spawn_figure() {
-    base.check_labor_problem();
+    check_labor_problem();
     if (!base.has_road_access) {
         return;
     }
 
-    base.common_spawn_labor_seeker(current_params().min_houses_coverage);
+    common_spawn_labor_seeker(current_params().min_houses_coverage);
     int pct_workers = base.worker_percentage();
     if (pct_workers < 50) {
         return;
     }
 
-    int spawn_delay = base.figure_spawn_timer();
+    int spawn_delay = figure_spawn_timer();
     if (spawn_delay == -1) {
         return;
     }
@@ -121,7 +121,7 @@ void building_bricklayers_guild::spawn_figure() {
     });
 
     if (monument) {
-        auto f = base.create_figure_with_destination(FIGURE_BRICKLAYER, monument, (e_figure_action)ACTION_0_BRICKLAYER_CREATED, BUILDING_SLOT_SERVICE);
+        auto f = create_figure_with_destination(FIGURE_BRICKLAYER, monument, (e_figure_action)ACTION_0_BRICKLAYER_CREATED, BUILDING_SLOT_SERVICE);
         auto *mm = monument->dcast_monument();
         f->destination_tile = mm ? mm->access_point() : monument->access_tile();
         f->terrain_usage = TERRAIN_USAGE_PREFER_ROADS;
@@ -155,7 +155,7 @@ void building_bricklayers_guild::spawn_figure() {
     });
 
     if (min_service_statue) {
-        auto f = base.create_figure_with_destination(FIGURE_BRICKLAYER, &min_service_statue->base, (e_figure_action)ACTION_10_BRICKLAYER_CREATED_ROAMING, BUILDING_SLOT_SERVICE);
+        auto f = create_figure_with_destination(FIGURE_BRICKLAYER, &min_service_statue->base, (e_figure_action)ACTION_10_BRICKLAYER_CREATED_ROAMING, BUILDING_SLOT_SERVICE);
         min_service_statue->add_workers(f->id);
         f->wait_ticks = random_short() % 30;
         auto bricklayer = smart_cast<figure_bricklayer>(f);

@@ -695,14 +695,14 @@ void building_bazaar::on_post_load() {
 }
 
 void building_bazaar::spawn_figure() {
-    base.check_labor_problem();
+    check_labor_problem();
     if (!base.has_road_access) {
         return;
     }
 
-    base.common_spawn_labor_seeker(current_params().min_houses_coverage);
+    common_spawn_labor_seeker(current_params().min_houses_coverage);
 
-    int spawn_delay = base.figure_spawn_timer();
+    int spawn_delay = figure_spawn_timer();
     if (spawn_delay == -1) {
         return;
     }
@@ -724,7 +724,7 @@ void building_bazaar::spawn_figure() {
                 reclaim_inactive_buyer_slot(slot);
                 building *dest = pick_next_buyer_destination();
                 if (dest->id) {
-                    figure *f = base.create_figure_with_destination(FIGURE_MARKET_BUYER, dest,
+                    figure *f = create_figure_with_destination(FIGURE_MARKET_BUYER, dest,
                                                                    (e_figure_action)ACTION_145_MARKET_BUYER_GOING_TO_STORAGE, slot);
                     f->collecting_item_id = d.fetch_inventory_id;
                     return;
@@ -742,7 +742,7 @@ void building_bazaar::spawn_figure() {
             reclaim_inactive_buyer_slot(BUILDING_SLOT_MARKET_BUYER);
             building *dest = get_storage_destination();
             if (dest->id) {
-                figure *f = base.create_figure_with_destination(FIGURE_MARKET_BUYER, dest,
+                figure *f = create_figure_with_destination(FIGURE_MARKET_BUYER, dest,
                                                                (e_figure_action)ACTION_145_MARKET_BUYER_GOING_TO_STORAGE,
                                                                BUILDING_SLOT_MARKET_BUYER);
                 f->collecting_item_id = d.fetch_inventory_id;
@@ -755,7 +755,7 @@ void building_bazaar::spawn_figure() {
         int bazar_inventory = std::accumulate(d.inventory, d.inventory + INVENTORY_MAX, 0,
                                               [](int sum, const resource_value &rv) { return sum + rv.value; });
         if (bazar_inventory > 0) {
-            base.create_roaming_figure(FIGURE_MARKET_TRADER, ACTION_125_MARKET_TRADER_ROAMING, BUILDING_SLOT_SERVICE);
+            create_roaming_figure(FIGURE_MARKET_TRADER, ACTION_125_MARKET_TRADER_ROAMING, BUILDING_SLOT_SERVICE);
         }
     }
 }

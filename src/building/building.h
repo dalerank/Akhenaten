@@ -328,18 +328,9 @@ public:
 
     int mothball_toggle();
 
-    figure* create_figure_generic(e_figure_type _type, e_figure_action created_action, e_building_slot slot, int created_dir);
-    figure* create_roaming_figure(e_figure_type _type, e_figure_action created_action, e_building_slot slot);
-    figure* create_figure_with_destination(e_figure_type _type, building* destination, e_figure_action created_action, e_building_slot slot = BUILDING_SLOT_SERVICE);
-    figure* create_cartpusher(e_resource resource_id, int quantity, e_figure_action created_action, e_building_slot slot);
-
     void draw_usable_paths(painter &ctx);
 
     int worker_percentage() const;
-    int figure_spawn_timer();
-    void check_labor_problem();
-    void common_spawn_labor_seeker(int min_houses);
-    figure* common_spawn_goods_output_cartpusher(int min_carry = 100, int max_carry = 100);
     bool workshop_has_resources();
 
     void force_damage(e_damage_type type, int16_t value);
@@ -373,8 +364,6 @@ public:
 
     #define ALLOW_SMART_CAST_BUILDING(type) building_##type *dcast_##type() { return dcast<building_##type>(); };
     BUILDING_CLASS_LIST(ALLOW_SMART_CAST_BUILDING)
-
-    int get_figures_number(e_figure_type ftype);
 
     tile2i access_tile();
 

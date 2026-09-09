@@ -262,7 +262,7 @@ building_id building_storage_yard_for_storing(tile2i tile, e_resource resource, 
         }
 
         if (!game_features::gameplay_change_understaffed_accept_goods) {
-            int pct_workers = warehouse->pct_workers();
+            int pct_workers = warehouse->worker_percentage();
             if (pct_workers < 100) {
                 if (understaffed)
                     *understaffed += 1;
@@ -350,7 +350,7 @@ static bool determine_granary_accept_foods(resource_list &foods, int road_networ
             return;
         }
 
-        int pct_workers = granary->pct_workers();
+        int pct_workers = granary->worker_percentage();
         if (pct_workers < 100 || granary->amount(RESOURCE_NONE) < 1200) {
             return;
         }
@@ -853,7 +853,7 @@ storage_worker_task building_storage_yard_deliver_emptying_resources(building *b
 
 storage_worker_task building_storage_yard::determine_worker_task() {
     // check workers - if less than enough, no task will be done today.
-    if (pct_workers() < 50) {
+    if (worker_percentage() < 50) {
         return {STORAGEYARD_TASK_NONE};
     }
 
@@ -951,7 +951,7 @@ void building_storage_yard::on_place_checks() {
 }
 
 void building_storage_yard::spawn_figure() {
-    base.check_labor_problem();
+    check_labor_problem();
     if (!base.has_road_access) {
         return;
     }
@@ -969,17 +969,17 @@ void building_storage_yard::spawn_figure() {
         }
     }
 
-    base.common_spawn_labor_seeker(current_params().min_houses_coverage);
+    common_spawn_labor_seeker(current_params().min_houses_coverage);
     auto task = determine_worker_task();
     if (task.result == STORAGEYARD_TASK_NONE || task.amount <= 0) {
         return;
     }
 
     if (!base.has_figure(BUILDING_SLOT_SERVICE) && task.result == STORAGEYARD_TASK_MONUMENT) {
-        figure *leader = base.create_figure_with_destination(FIGURE_SLED_PULLER, task.dest, (e_figure_action)ACTION_50_SLED_PULLER_CREATED);
+        figure *leader = create_figure_with_destination(FIGURE_SLED_PULLER, task.dest, (e_figure_action)ACTION_50_SLED_PULLER_CREATED);
         leader->set_direction_to(task.dest);
         for (int i = 0; i < 5; ++i) {
-            figure *follower = base.create_figure_with_destination(FIGURE_SLED_PULLER, task.dest, (e_figure_action)ACTION_50_SLED_PULLER_CREATED);
+            figure *follower = create_figure_with_destination(FIGURE_SLED_PULLER, task.dest, (e_figure_action)ACTION_50_SLED_PULLER_CREATED);
             follower->set_direction_to(task.dest);
             follower->wait_ticks = i * 4;
         }

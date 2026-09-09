@@ -56,9 +56,9 @@ e_figure_type building_hunting_lodge::resolve_hunter_type() const {
 }
 
 int building_hunting_lodge::active_hunters_count() const {
-    return base.get_figures_number(FIGURE_OSTRICH_HUNTER)
-        + base.get_figures_number(FIGURE_ANTELOPE_HUNTER)
-        + base.get_figures_number(FIGURE_BIRDS_HUNTER);
+    return get_figures_number(FIGURE_OSTRICH_HUNTER)
+        + get_figures_number(FIGURE_ANTELOPE_HUNTER)
+        + get_figures_number(FIGURE_BIRDS_HUNTER);
 }
 
 bool building_hunting_lodge::can_spawn_hunter() {
@@ -104,7 +104,7 @@ void building_hunting_lodge::spawn_figure() {
         create_figure_generic(resolve_hunter_type(), ACTION_8_RECALCULATE, BUILDING_SLOT_HUNTER, DIR_4_BOTTOM_LEFT);
     }
 
-    figure* fcart = base.common_spawn_goods_output_cartpusher();
+    figure* fcart = common_spawn_goods_output_cartpusher();
     if (fcart) {
         events::emit(event_produced_resources{ base.output.resource, fcart->get_carrying_amount() });
         base.figure_spawn_delay = 0;

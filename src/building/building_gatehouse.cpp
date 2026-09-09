@@ -323,13 +323,14 @@ void building_gatehouse::spawn_figure() {
         return;
     }
 
-    main_building->check_labor_problem();
+    building_impl *main_impl = main_building->dcast();
+    main_impl->check_labor_problem();
     tile2i road = map_get_road_access_tile(main_building->tile, main_building->size);
     if (!road.valid()) {
         return;
     }
 
-    main_building->common_spawn_labor_seeker(main_building->params().min_houses_coverage);
+    main_impl->common_spawn_labor_seeker(main_building->params().min_houses_coverage);
     if (main_building->num_workers <= 0) {
         return;
     }
@@ -638,13 +639,13 @@ void building_decorative_gatehouse::spawn_figure() {
         return;
     }
 
-    base.check_labor_problem();
+    check_labor_problem();
     tile2i road = map_get_road_access_tile(base.tile, 5);
     if (!road.valid()) {
         return;
     }
 
-    base.common_spawn_labor_seeker(base.params().min_houses_coverage);
+    common_spawn_labor_seeker(base.params().min_houses_coverage);
     if (base.num_workers <= 0) {
         return;
     }

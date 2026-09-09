@@ -25,7 +25,7 @@ bool building_wood_cutter::can_spawn_lumberjack(int max_gatherers_per_building, 
         return false;
     }
 
-    int gatherers_this_yard = base.get_figures_number(FIGURE_LUMBERJACK);
+    int gatherers_this_yard = get_figures_number(FIGURE_LUMBERJACK);
 
     // can only spawn if there's space for more reed in the building
     int max_loads = 500 / carry_per_person;
@@ -66,7 +66,7 @@ void building_wood_cutter::spawn_figure() {
         }
     }
 
-    figure* fcart = base.common_spawn_goods_output_cartpusher();
+    figure* fcart = common_spawn_goods_output_cartpusher();
     if (fcart) {
         events::emit(event_produced_resources{ base.output.resource, fcart->get_carrying_amount() });
     }

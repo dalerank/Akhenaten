@@ -1230,7 +1230,7 @@ static int __test_building_create_cartpusher_wait_ticks(int bid) {
     if (!b) {
         return -1;
     }
-    figure *f = b->create_cartpusher(RESOURCE_GRAIN, 100, (e_figure_action)ACTION_20_CARTPUSHER_INITIAL,
+    figure *f = b->dcast()->create_cartpusher(RESOURCE_GRAIN, 100, (e_figure_action)ACTION_20_CARTPUSHER_INITIAL,
                                      BUILDING_SLOT_CARTPUSHER);
     return f ? f->wait_ticks : -1;
 }
@@ -1953,7 +1953,7 @@ ANK_FUNCTION_1(__test_building_figure_spawn_delay);
 
 static int __test_building_figure_spawn_timer(int bid) {
     building *b = building_get(bid);
-    return b ? b->figure_spawn_timer() : -2;
+    return b ? b->dcast()->figure_spawn_timer() : -2;
 }
 ANK_FUNCTION_1(__test_building_figure_spawn_timer);
 
@@ -1970,9 +1970,10 @@ static int __test_hunting_lodge_active_hunters(building *b) {
     if (!b) {
         return -1;
     }
-    return b->get_figures_number(FIGURE_OSTRICH_HUNTER)
-        + b->get_figures_number(FIGURE_ANTELOPE_HUNTER)
-        + b->get_figures_number(FIGURE_BIRDS_HUNTER);
+    building_impl *impl = b->dcast();
+    return impl->get_figures_number(FIGURE_OSTRICH_HUNTER)
+        + impl->get_figures_number(FIGURE_ANTELOPE_HUNTER)
+        + impl->get_figures_number(FIGURE_BIRDS_HUNTER);
 }
 
 static int __test_hunting_lodge_spawn_figure(int bid) {

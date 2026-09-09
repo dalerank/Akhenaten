@@ -219,7 +219,7 @@ void figure_fishing_boat::figure_action() {
             int fishing_time_base = current_params().fishing_time_base;
             int fishing_time = fishing_time_base;
             if (wharf) {
-                int pct_workers = calc_percentage<int>(wharf->num_workers(), wharf->max_workers());
+                int pct_workers = wharf->worker_percentage();
                 int time_multiplier = current_params().fishing_time_multiplier;
                 // Reduce fishing time based on worker percentage
                 // Formula: time = base - (multiplier * worker_percentage)
@@ -270,7 +270,7 @@ void figure_fishing_boat::figure_action() {
             int current_storage = wharf->stored_amount(RESOURCE_FISH);
 
             // Calculate wait time based on worker percentage
-            int pct_workers = calc_percentage<int>(wharf->num_workers(), wharf->max_workers());
+            int pct_workers = wharf->worker_percentage();
             int wait_multiplier = wharf->current_params().wait_time_multiplier;
             int wait_base = wharf->current_params().wait_time_base;
             int max_wait_ticks = wait_multiplier * (wait_base - pct_workers);
