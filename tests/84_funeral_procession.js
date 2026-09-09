@@ -12,6 +12,7 @@
 //   [test-marker] funeral_pyramid_spawn_ok
 //   [test-marker] funeral_mausoleum_spawn_ok
 //   [test-marker] funeral_inert_action_no_block_ok
+//   [test-marker] funeral_active_action_blocks_ok
 //   [test-marker] funeral_midwalk_saveload_ok  (or funeral_midwalk_saveload_skipped)
 
 var __test84_saveload_ok = false
@@ -367,7 +368,12 @@ function run_test() {
     }
     __log_marker('funeral_mausoleum_spawn_ok')
 
-    // Inert action (0) with tomb id must not block daily respawn forever.
+    // A slot left in a state the machine never assigns -- not active, not aborted, not a
+    // corpse -- must not block the daily respawn forever: the scan revives it instead.
+    // Actions used to start at 120, so plain 0 was such an unknown state. They were renumbered
+    // from zero, which made 0 mean ACTION_0_FUNERAL_CREATED, so the unknown state to use here
+    // is the one past the last real action.
+    var INERT_ACTION = ACTION_3_FUNERAL_ABORT + 1
     city.figures.remove_figures(FIGURE_FUNERAL_WALKER)
     __test_monument_set_funeral_done(mbid, 0)
     var ifid = __test_funeral_try_spawn(1)
@@ -376,10 +382,10 @@ function run_test() {
         __test_signal_ready()
         return
     }
-    __test_figure_set_action(ifid, 0)
+    __test_figure_set_action(ifid, INERT_ACTION)
     var inert_again = __test_funeral_try_spawn(1)
     if (!inert_again) {
-        __log_info_native('[test:84] inert action=0 blocked respawn')
+        __log_info_native('[test:84] inert action=' + INERT_ACTION + ' blocked respawn')
         __test_signal_ready()
         return
     }
@@ -399,6 +405,29 @@ function run_test() {
     city.figures.remove_figures(FIGURE_FUNERAL_WALKER)
     __test_monument_set_funeral_done(mbid, 1)
     __log_marker('funeral_inert_action_no_block_ok')
+
+    // The other half of the same rule, and the half that moved: a walker in a live state does
+    // hold its tomb, so the scan must not add a second one. Every action the machine assigns is
+    // live, ACTION_0_FUNERAL_CREATED included -- which is why the inert case above cannot use 0.
+    city.figures.remove_figures(FIGURE_FUNERAL_WALKER)
+    __test_monument_set_funeral_done(mbid, 0)
+    var afid = __test_funeral_try_spawn(1)
+    if (!afid) {
+        __log_info_native('[test:84] active-action setup spawn failed')
+        __test_signal_ready()
+        return
+    }
+    __test_figure_set_action(afid, ACTION_0_FUNERAL_CREATED)
+    var active_again = __test_funeral_try_spawn(1)
+    if (active_again) {
+        __log_info_native('[test:84] active action=' + ACTION_0_FUNERAL_CREATED
+            + ' did not hold the tomb, got fid ' + active_again)
+        __test_signal_ready()
+        return
+    }
+    city.figures.remove_figures(FIGURE_FUNERAL_WALKER)
+    __test_monument_set_funeral_done(mbid, 1)
+    __log_marker('funeral_active_action_blocks_ok')
 
     // Mid-walk save/load: while GOING, funeral_done must stay clear; then verify
     // the monument bind roundtrips (no re-spawn).
@@ -520,7 +549,8 @@ function check_valid() {
         'funeral_multi_tomb_ok',
         'funeral_pyramid_spawn_ok',
         'funeral_mausoleum_spawn_ok',
-        'funeral_inert_action_no_block_ok'
+        'funeral_inert_action_no_block_ok',
+        'funeral_active_action_blocks_ok'
     ]
     for (var i = 0; i < markers.length; i++) {
         var marker = '[test-marker] ' + markers[i]
