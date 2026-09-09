@@ -464,6 +464,14 @@ void rebuild_minimap_preview() {
         g_camera.init();
     }
 
+    // Drop the previous preview texture. graphics_save_to_texture only reuses a
+    // texture of the same size, and the saved-texture pool holds 8 entries, so
+    // leaking one per rebuild overflows it after a handful of map clicks.
+    if (g_minimap_preview.texture_id > 0) {
+        graphics_delete_saved_texture(g_minimap_preview.texture_id);
+        g_minimap_preview.texture_id = 0;
+    }
+
     // The playable area is a diamond in grid space (see map_grid_inside_map_area),
     // which the minimap projects onto a width x height pixel rectangle: each
     // minimap column is 2px wide and covers |x - y| <= width / 2, each row is
@@ -501,7 +509,7 @@ void rebuild_minimap_preview() {
     graphics_set_clip_rectangle(capture_pos, native);
     fill_with_minimap_water(capture_pos, native);
     g_minimap_window.draw(UiFlags_None);
-    g_minimap_preview.texture_id = graphics_save_to_texture(g_minimap_preview.texture_id, capture_pos, native);
+    g_minimap_preview.texture_id = graphics_save_to_texture(-1, capture_pos, native);
 
     vec2i final_size = native;
     const vec2i target = g_minimap_preview.generate_size;
