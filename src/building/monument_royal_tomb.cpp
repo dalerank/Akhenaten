@@ -357,10 +357,6 @@ bool building_royal_tomb::need_artisan() {
     return artisans < max_artisans;
 }
 
-bool building_royal_tomb::need_workers() {
-    return static_cast<const building_royal_tomb *>(this)->need_workers();
-}
-
 bool building_royal_tomb::need_workers() const {
     if (is_finished()) {
         return false;

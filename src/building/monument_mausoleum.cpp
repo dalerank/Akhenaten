@@ -304,10 +304,6 @@ bool building_mausoleum::need_carpenter() {
     return std::find(w.begin(), w.end(), 0) != w.end();
 }
 
-bool building_mausoleum::need_workers() {
-    return static_cast<const building_mausoleum *>(this)->need_workers();
-}
-
 bool building_mausoleum::need_workers() const {
     if (is_finished()) {
         return false;

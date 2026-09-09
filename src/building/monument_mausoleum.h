@@ -43,7 +43,6 @@ public:
     virtual int building_image_get() const override;
     virtual bool need_stonemason() override;
     virtual bool need_carpenter() override;
-    virtual bool need_workers() override;
     virtual bool need_workers() const override;
     virtual bool needs_resources() const override;
     virtual void add_workers(figure_id fid) override;

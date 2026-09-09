@@ -59,7 +59,8 @@ public:
     // Tall monument ornaments (tiers/cones) - skip in flat buildings view.
     virtual bool suppress_ornaments_in_flat_view() const override { return true; }
 
-    virtual bool need_workers() const { return false; }
+    virtual bool need_workers() const;
+    bool has_free_worker_slot() const;
     virtual uint8_t phase() const { return runtime_data().phase; }
 
     virtual bool deliver_resource(e_resource resource, int amount);
@@ -92,7 +93,6 @@ public:
     virtual int upgraded();
     virtual int working();
     virtual int module_type();
-    virtual bool need_workers();
     virtual int is_construction_halted();
     virtual int toggle_construction_halted();
     virtual bool need_stonemason();

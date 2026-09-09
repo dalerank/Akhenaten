@@ -52,7 +52,6 @@ public:
     virtual bool deliver_resource(e_resource resource, int amount) override;
     virtual bool need_stonemason() override;
     virtual bool need_artisan() override;
-    virtual bool need_workers() override;
     virtual bool need_workers() const override;
     virtual bool needs_resources() const override;
     virtual void add_workers(figure_id fid) override;

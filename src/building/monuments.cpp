@@ -589,7 +589,11 @@ io_buffer *iob_city_building_monuments = new io_buffer([] (io_buffer *iob, size_
     }
 });
 
-bool building_monument::need_workers() {
+bool building_monument::need_workers() const {
+    return has_free_worker_slot();
+}
+
+bool building_monument::has_free_worker_slot() const {
     if (!is_main()) {
         return false;
     }
@@ -641,7 +645,7 @@ bool building_monument::need_carpenter() {
 
     // Free worker slot required — without this, guilds keep spawning carpenters
     // that add_workers silently drops while need_carpenter stays true.
-    if (!need_workers()) {
+    if (!has_free_worker_slot()) {
         return false;
     }
 
@@ -671,7 +675,7 @@ bool building_monument::need_bricklayers() {
     // Free worker slot required — same gate as need_carpenter. Without it, guilds
     // keep spawning bricklayers that add_workers silently drops (mudbrick pyramids
     // share the 5-slot list with masons/carpenters) while need_bricklayers stays true.
-    if (!need_workers()) {
+    if (!has_free_worker_slot()) {
         return false;
     }
 
