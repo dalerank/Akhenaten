@@ -28,8 +28,9 @@ struct mission_step_t {
     int scenario_id = -1;
     int intro_MM = -1;
     int victory_text_id = -1;
-    int path_ids[MAX_MISSION_CHOICE_BRANCHES] = {-1};
-    const uint8_t* map_name;
+    // Every branch, not just the first: {-1} leaves the rest zeroed, and 0 is a valid path id.
+    int path_ids[MAX_MISSION_CHOICE_BRANCHES] = {-1, -1, -1, -1, -1};
+    const uint8_t* map_name = nullptr;
     bool is_campaign_end = false;
     int campaign_id = -1;
     int mission_rank = -1;

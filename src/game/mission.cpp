@@ -10,12 +10,16 @@
 
 const e_campaign_tokens_t ANK_CONFIG_ENUM(e_campaign_tokens);
 
+constexpr int MAX_MISSION_NAMES = 300;
+constexpr int MISSION_NAME_SIZE = 300;
+constexpr int MAX_MISSION_STEPS = 50;
+
 struct mission_data_t {
-    uint8_t map_names[300][300];
+    uint8_t map_names[MAX_MISSION_NAMES][MISSION_NAME_SIZE];
     int map_name_nums = 0;
 
     struct {
-        mission_step_t steps[50];
+        mission_step_t steps[MAX_MISSION_STEPS];
         int num_steps = 0;
     } campaigns[MAX_MISSION_CAMPAIGNS];
     int num_campaigns = 0;
@@ -46,7 +50,8 @@ static campaign_mission_id find_in_campaigns(int scenario_id) {
 }
 
 const uint8_t* game_mission_get_name(int scenario_id) {
-    if (scenario_id >= g_mission_data.map_name_nums || scenario_id > 299)
+    if (scenario_id < 0 || scenario_id >= g_mission_data.map_name_nums
+        || scenario_id >= MAX_MISSION_NAMES)
         return g_mission_data.map_names[0];
     return g_mission_data.map_names[scenario_id];
 }
@@ -83,12 +88,19 @@ int get_first_mission_in_campaign(int campaign_id) {
         return SCENARIO_NULL;
 
     auto campaign = &g_mission_data.campaigns[campaign_id];
-    auto step = &campaign->steps[0];
-    while (step->scenario_id == SCENARIO_NULL) {
-        step = step->next_in_list;
+    if (campaign->num_steps <= 0) {
+        return SCENARIO_NULL;
     }
 
-    return step->scenario_id;
+    // The list ends in a null next_in_list, and a campaign made of nothing but legacy
+    // choicescreen rows has no real scenario in it at all, so the walk has to be able to stop.
+    for (auto step = &campaign->steps[0]; step != nullptr; step = step->next_in_list) {
+        if (step->scenario_id != SCENARIO_NULL) {
+            return step->scenario_id;
+        }
+    }
+
+    return SCENARIO_NULL;
 }
 
 bool game_scenario_beaten(int scenario_id) {
@@ -118,6 +130,10 @@ static const uint8_t* get_value(const uint8_t* ptr, const uint8_t* end_ptr, int*
     int skip = index_of(ptr, ',', (int)(end_ptr - ptr));
     if (skip == 0)
         skip = index_of(ptr, '\n', (int)(end_ptr - ptr) + 2) - 1;
+    // Neither separator in reach: index_of answers 0, so skip is -1 and the pointer would walk
+    // backwards into what was already parsed. There is nothing left on this line.
+    if (skip < 0)
+        return end_ptr;
     ptr += skip;
     return ptr;
 }
@@ -151,12 +167,24 @@ bool game_load_campaign_file() {
     int action = -2;
     int data_line_idx = 0;
     do {
-        line_end = index_of(ptr, '\n', filesize);
-        int line_size = line_end;
-        if (line_end == 0)
-            line_size = filesize - (ptr - haystack);
-        else
-            line_size -= 2;
+        // Search only what is left of the file: the old bound let index_of read past the end of
+        // the buffer once ptr had moved into it.
+        const int remaining = filesize - (int)(ptr - haystack);
+        line_end = index_of(ptr, '\n', remaining);
+        int line_size = 0;
+        int eol_size = 0;
+        if (line_end == 0) {
+            line_size = remaining; // last line, nothing after it
+        } else {
+            // campaign.txt ships CRLF, but drop the '\r' only when it is really there:
+            // subtracting two from an LF-only copy ate the last character of every line.
+            line_size = line_end - 1;
+            eol_size = 1;
+            if (line_size > 0 && ptr[line_size - 1] == '\r') {
+                line_size--;
+                eol_size = 2;
+            }
+        }
         const uint8_t* endl = ptr + line_size;
         int comment = index_of(ptr, ';', line_size);
         if (comment != 1 && line_size > 0) {
@@ -164,20 +192,39 @@ bool game_load_campaign_file() {
                 data_line_idx = 0;
                 if (index_of_string((pcstr)ptr, string_from_ascii("MISSION_NAMES"), line_size)) {
                     action = -1;
-                } else {
+                } else if (g_mission_data.num_campaigns < MAX_MISSION_CAMPAIGNS) {
                     g_mission_data.num_campaigns++;
                     action++;
+                } else {
+                    logs::error("campaign.txt: more than %d campaigns, section ignored",
+                      MAX_MISSION_CAMPAIGNS);
                 }
             } else {
                 if (action == -1) {
-                    buf2.clear();
-                    buf2.write_raw(ptr, line_size);
-                    buf2.reset_offset();
-                    buf2.read_raw(g_mission_data.map_names[data_line_idx], line_size);
-                    g_mission_data.map_name_nums++;
+                    // Both the row index and the row width come straight out of the file.
+                    if (data_line_idx < MAX_MISSION_NAMES) {
+                        int name_size = line_size;
+                        if (name_size > MISSION_NAME_SIZE - 1) {
+                            name_size = MISSION_NAME_SIZE - 1;
+                        }
+
+                        buf2.clear();
+                        buf2.write_raw(ptr, name_size);
+                        buf2.reset_offset();
+                        buf2.read_raw(g_mission_data.map_names[data_line_idx], name_size);
+                        g_mission_data.map_name_nums++;
+                    }
+                } else if (g_mission_data.num_campaigns <= 0) {
+                    // A data row before the first [section] would index campaigns[-1].
+                    logs::error("campaign.txt: data line outside any campaign section");
                 } else {
                     auto campaign = &g_mission_data.campaigns[g_mission_data.num_campaigns - 1];
-                    if (index_of_string((pcstr)ptr, string_from_ascii("mission"), line_size)) {
+                    const bool mission_row
+                      = index_of_string((pcstr)ptr, string_from_ascii("mission"), line_size);
+                    if (mission_row && campaign->num_steps >= MAX_MISSION_STEPS) {
+                        logs::error("campaign.txt: more than %d missions in one campaign,"
+                          " row ignored", MAX_MISSION_STEPS);
+                    } else if (mission_row) {
                         campaign->num_steps++;
                         auto step = &campaign->steps[campaign->num_steps - 1];
                         ptr = skip_non_digits(ptr);
@@ -192,7 +239,10 @@ bool game_load_campaign_file() {
                             else
                                 step->path_ids[i] = -1;
                         }
-                        step->map_name = (const uint8_t*)g_mission_data.map_names[step->scenario_id];
+                        step->map_name = (step->scenario_id >= 0
+                            && step->scenario_id < MAX_MISSION_NAMES)
+                          ? (const uint8_t*)g_mission_data.map_names[step->scenario_id]
+                          : nullptr;
                         step->campaign_id = g_mission_data.num_campaigns - 1;
                         if (step->campaign_id == 0 && campaign->num_steps == 1)
                             step->mission_rank = 0;
@@ -231,7 +281,7 @@ bool game_load_campaign_file() {
         }
         num_lines++;
         if (line_end)
-            ptr = endl + 2;
+            ptr = endl + eol_size;
     } while (line_end);
 
     for (int c = 0; c < g_mission_data.num_campaigns; ++c) {

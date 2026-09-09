@@ -200,7 +200,12 @@ building *building_create(e_building_type type, tile2i tile, int orientation) {
 
     events::emit(event_building_create{ b->id });
 
-    g_city.buildings.update_counters();
+    // The building is CREATED, not VALID, so a full update_counters() here would recompute every
+    // counter to the value it already held and then add this one building -- the same thing this
+    // line does. Counters are only ever written from that rebuild, so nothing drifts in between.
+    // The rebuild is two passes over all 4000 slots plus a virtual call per building, and a drag
+    // of houses or walls used to pay for it once per tile.
+    g_city.buildings.increase_count(b->type, false);
 
     return b;
 }
