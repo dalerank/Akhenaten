@@ -90,7 +90,7 @@ window_scenario_selection_custom {
         debug_file_schema     : text({ pos[265, 170], size[160, 20], text:"", font:FONT_NORMAL_BLACK_ON_DARK })
 
         img_custom            : image({ pos[0, 0], pack:PACK_UNLOADED, id:32, offset:0, enabled:true })
-        scenario_minimap      : dummy({ pos[270, 200], size[256, 152], ondraw_event: "draw_minimap" })
+        scenario_minimap      : dummy({ pos[270, 179], size[181, 140], ondraw_event: "draw_minimap" })
 
         scenario_map_list     : scrollable_list({
             pos[210, 360]

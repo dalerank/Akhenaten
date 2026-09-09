@@ -464,9 +464,14 @@ void rebuild_minimap_preview() {
         g_camera.init();
     }
 
-    // Full map in minimap tile space (see set_bounds camera-tracking conditions).
-    int ds_x = map->width;
-    int ds_y = 2 * map->height;
+    // The playable area is a diamond in grid space (see map_grid_inside_map_area),
+    // which the minimap projects onto a width x height pixel rectangle: each
+    // minimap column is 2px wide and covers |x - y| <= width / 2, each row is
+    // 1px tall and covers |x + y - center| <= height / 2. Sizing by the grid
+    // rectangle instead (width columns, 2 * height rows) doubles the texture on
+    // both axes and leaves the land as a small square in a sea of water.
+    int ds_x = map->width / 2 + 1;
+    int ds_y = map->height + 2;
     ds_y &= ~1;
 
     const int max_ds_x = std::max(8, screen_width() / 2);
