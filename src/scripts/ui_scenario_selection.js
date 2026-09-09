@@ -211,10 +211,25 @@ function window_scenario_selection_update_monuments(ev) {
 function window_scenario_selection_update_goals(ev) {
     var invasion_id = 112 + ((__game_scenario_invasion_count() / 2) | 0)
     ev.info_line_invasion.text = __loc(44, invasion_id)
-    ev.info_line_start_region.text = __loc("#top_menu_difficulty")
+    var difficulty_keys = ["very_easy", "easy", "normal", "hard", "very_hard"]
+    ev.info_line_start_region.text = __loc(44, 216) + " " + __loc("#difficulty_" + difficulty_keys[game.difficulty])
+
+    // Open play maps have no goals: the original screen drops the
+    // "Win conditions" header and the monuments block and draws only the
+    // open-play sentence in their place. Only touch visibility while the
+    // goals view is showing, the campaign window's scores toggle owns it
+    // otherwise.
+    var open_play = !!scenario.is_open_play
+    var hdr = ev.info_hdr_goals.pos
+    if (ev.info_hdr_mission.enabled) {
+        ev.info_hdr_goals.enabled = !open_play
+        ev.info_hdr_monuments.enabled = !open_play
+        ev.info_monuments_body.enabled = !open_play
+    }
+    ev.info_goals_body.pos = { x: hdr.x, y: hdr.y + (open_play ? 8 : 27) }
 
     var goal_lines = []
-    if (scenario.is_open_play) {
+    if (open_play) {
         goal_lines.push(__loc(145, 0))
     } else {
         if (scenario.culture_goal > 0)
