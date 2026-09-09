@@ -70,7 +70,7 @@ xstring recent_errors(int max_lines) {
     if (max_lines <= 0 || recent_errors_count_ == 0) {
         return xstring();
     }
-    const size_t n = std::min((size_t)max_lines, recent_errors_count_);
+    const size_t n = (std::min)((size_t)max_lines, recent_errors_count_);
     size_t start = (recent_errors_next_ + k_recent_cap - n) % k_recent_cap;
     std::string out;
     out.reserve(n * 96);

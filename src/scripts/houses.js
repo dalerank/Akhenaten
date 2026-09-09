@@ -14,6 +14,10 @@ building_house_crude_hut {
   building_size : 1
   can_merge : true
 
+  evolve_to : BUILDING_HOUSE_STURDY_HUT
+  merge_before_evolve : true
+  can_devolve : false
+
   variants {
     _1 { pack: PACK_GENERAL, id: 26, offset:0 }
     _2 { pack: PACK_GENERAL, id: 26, offset:1 }
@@ -87,6 +91,9 @@ building_house_sturdy_hut {
   }
   building_size : 1
   can_merge : true
+  evolve_to : BUILDING_HOUSE_MEAGER_SHANTY
+  devolve_to : BUILDING_HOUSE_CRUDE_HUT
+  merge_before_evolve : true
 
   variants {
     _1 { pack: PACK_GENERAL, id: 26, offset:2 }
@@ -154,6 +161,9 @@ building_house_meager_shanty {
   }
   building_size : 1
   can_merge : true
+  evolve_to : BUILDING_HOUSE_COMMON_SHANTY
+  devolve_to : BUILDING_HOUSE_STURDY_HUT
+  merge_before_evolve : true
   variants {
     _1 { pack: PACK_GENERAL, id: 27, offset:0 }
     _2 { pack: PACK_GENERAL, id: 27, offset:1 }
@@ -220,6 +230,9 @@ building_house_common_shanty {
   }
   building_size : 1
   can_merge : true
+  evolve_to : BUILDING_HOUSE_ROUGH_COTTAGE
+  devolve_to : BUILDING_HOUSE_MEAGER_SHANTY
+  merge_before_evolve : true
   variants {
     _1 { pack: PACK_GENERAL, id: 27, offset:2 }
     _2 { pack: PACK_GENERAL, id: 27, offset:3 }
@@ -285,6 +298,9 @@ building_house_rough_cottage {
   }
   building_size : 1
   can_merge : true
+  evolve_to : BUILDING_HOUSE_ORDINARY_COTTAGE
+  devolve_to : BUILDING_HOUSE_COMMON_SHANTY
+  merge_before_evolve : true
 
   variants {
     _1 { pack: PACK_GENERAL, id: 28, offset:0 }
@@ -355,6 +371,9 @@ building_house_ordinary_cottage {
   }
   building_size : 1
   can_merge : true
+  evolve_to : BUILDING_HOUSE_MODEST_HOMESTEAD
+  devolve_to : BUILDING_HOUSE_ROUGH_COTTAGE
+  merge_before_evolve : true
   variants {
     _1 { pack: PACK_GENERAL, id: 28, offset:2 }
     _2 { pack: PACK_GENERAL, id: 28, offset:3 }
@@ -420,6 +439,9 @@ building_house_modest_homestead {
   }
   building_size : 1
   can_merge : true
+  evolve_to : BUILDING_HOUSE_SPACIOUS_HOMESTEAD
+  devolve_to : BUILDING_HOUSE_ORDINARY_COTTAGE
+  merge_before_evolve : true
   variants {
     _0 { pack: PACK_GENERAL, id: 29, offset:0 }
     _1 { pack: PACK_GENERAL, id: 29, offset:1 }
@@ -487,6 +509,9 @@ building_house_spacious_homestead {
   }
   building_size : 1
   can_merge : true
+  evolve_to : BUILDING_HOUSE_MODEST_APARTMENT
+  devolve_to : BUILDING_HOUSE_MODEST_HOMESTEAD
+  merge_before_evolve : true
   variants {
     _1 { pack: PACK_GENERAL, id: 29, offset:2 }
     _2 { pack: PACK_GENERAL, id: 29, offset:3 }
@@ -551,6 +576,9 @@ building_house_modest_apartment {
   }
   building_size : 1
   can_merge : true
+  evolve_to : BUILDING_HOUSE_SPACIOUS_APARTMENT
+  devolve_to : BUILDING_HOUSE_SPACIOUS_HOMESTEAD
+  merge_before_evolve : false
   variants {
     _1 { pack: PACK_GENERAL, id: 30, offset:0 }
     _2 { pack: PACK_GENERAL, id: 30, offset:1 }
@@ -615,6 +643,9 @@ building_house_spacious_apartment {
   }
   building_size : 1
   can_merge : true
+  // grows onto 4 tiles instead of changing type, see evolve_expand()
+  devolve_to : BUILDING_HOUSE_MODEST_APARTMENT
+  merge_before_evolve : true
   variants {
     _1 { pack: PACK_GENERAL, id: 30, offset:2 }
     _2 { pack: PACK_GENERAL, id: 30, offset:3 }
@@ -679,6 +710,9 @@ building_house_common_residence {
   }
   building_size : 1
   can_merge : true
+ 
+  evolve_to : BUILDING_HOUSE_SPACIOUS_RESIDENCE
+  merge_before_evolve : false
   variants {
     _1 { pack: PACK_GENERAL, id: 31, offset:0 }
     _2 { pack: PACK_GENERAL, id: 31, offset:1 }
@@ -743,6 +777,9 @@ building_house_spacious_residence {
   }
   building_size : 1
   can_merge : true
+  evolve_to : BUILDING_HOUSE_ELEGANT_RESIDENCE
+  devolve_to : BUILDING_HOUSE_COMMON_RESIDENCE
+  merge_before_evolve : false
   variants {
     _1 { pack: PACK_GENERAL, id: 31, offset:2 }
     _2 { pack: PACK_GENERAL, id: 31, offset:3 }
@@ -807,6 +844,9 @@ building_house_elegant_residence {
   }
   building_size : 1
   can_merge : true
+  evolve_to : BUILDING_HOUSE_FANCY_RESIDENCE
+  devolve_to : BUILDING_HOUSE_SPACIOUS_RESIDENCE
+  merge_before_evolve : false
   variants {
     _1 { pack: PACK_GENERAL, id: 32, offset:0 }
     _2 { pack: PACK_GENERAL, id: 32, offset:1 }
@@ -871,6 +911,9 @@ building_house_fancy_residence {
   }
   building_size : 1
   can_merge : true
+
+  devolve_to : BUILDING_HOUSE_ELEGANT_RESIDENCE
+  merge_before_evolve : false
   variants {
     _1 { pack: PACK_GENERAL, id: 32, offset:2 }
     _2 { pack: PACK_GENERAL, id: 32, offset:3 }
@@ -935,6 +978,9 @@ building_house_common_manor {
   }
   building_size : 1
   can_merge : false
+
+  evolve_to : BUILDING_HOUSE_SPACIOUS_MANOR
+  merge_before_evolve : false
   variants {
     _1 { pack: PACK_GENERAL, id: 33, offset:0 }
   }
@@ -992,6 +1038,9 @@ building_house_spacious_manor {
   }
   building_size : 1
   can_merge : false
+  evolve_to : BUILDING_HOUSE_ELEGANT_MANOR
+  devolve_to : BUILDING_HOUSE_COMMON_MANOR
+  merge_before_evolve : false
   variants {
     _1 { pack: PACK_GENERAL, id: 33, offset:1 }
   }
@@ -1049,6 +1098,9 @@ building_house_elegant_manor {
   }
   building_size : 1
   can_merge : false
+  evolve_to : BUILDING_HOUSE_STATELY_MANOR
+  devolve_to : BUILDING_HOUSE_SPACIOUS_MANOR
+  merge_before_evolve : false
   variants {
     _1 { pack: PACK_GENERAL, id: 34, offset:0 }
   }
@@ -1107,6 +1159,9 @@ building_house_stately_manor {
   }
   building_size : 1
   can_merge : false
+
+  devolve_to : BUILDING_HOUSE_ELEGANT_MANOR
+  merge_before_evolve : false
   variants {
     _1 { pack: PACK_GENERAL, id: 34, offset:1 }
   }
@@ -1165,6 +1220,9 @@ building_house_modest_estate {
   }
   building_size : 1
   can_merge : false
+
+  evolve_to : BUILDING_HOUSE_PALATIAL_ESTATE
+  merge_before_evolve : false
   variants {
     _1 { pack: PACK_GENERAL, id: 35, offset:0 }
   }
@@ -1224,6 +1282,9 @@ building_house_palatial_estate {
 
   building_size : 1
   can_merge : false
+
+  devolve_to : BUILDING_HOUSE_MODEST_ESTATE
+  merge_before_evolve : false
   variants {
     _1 { pack: PACK_GENERAL, id: 35, offset:1 }
   }
