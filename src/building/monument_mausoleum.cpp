@@ -193,23 +193,10 @@ int building_mausoleum::yards_available(e_resource r) {
 }
 
 bool building_mausoleum::has_unfinished_mausoleum() {
-    for (building *b = building_begin(); b != building_end(); ++b) {
-        if (!b || b->type != BUILDING_MAUSOLEUM) {
-            continue;
-        }
-        // Include CREATED: VALID is applied on the next building_update_state tick
-        // (or by test validate_last_created). Same-frame second place must still see it.
-        if (b->state != BUILDING_STATE_VALID
-            && b->state != BUILDING_STATE_CREATED
-            && b->state != BUILDING_STATE_MOTHBALLED) {
-            continue;
-        }
-        auto *m = b->dcast_monument();
-        if (m && m->is_unfinished()) {
-            return true;
-        }
-    }
-    return false;
+    // Include CREATED: VALID is applied on the next building_update_state tick
+    // (or by test validate_last_created). Same-frame second place must still see it.
+    return building_monument_has_unfinished({BUILDING_MAUSOLEUM}, /*main_parts_only*/ false,
+      /*include_just_placed*/ true);
 }
 
 vec2i building_mausoleum::footprint_size() const {

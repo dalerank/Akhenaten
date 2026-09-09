@@ -220,16 +220,8 @@ int building_sun_temple::yards_available(e_resource r) {
 }
 
 bool building_sun_temple::has_unfinished_sun_temple() {
-    for (building *b = building_begin(); b != building_end(); ++b) {
-        if (!b || !b->is_valid() || b->type != BUILDING_SUN_TEMPLE || !b->is_main()) {
-            continue;
-        }
-        auto *m = b->dcast_monument();
-        if (m && m->is_unfinished()) {
-            return true;
-        }
-    }
-    return false;
+    // Parts of a sun temple do not share a construction phase, so only the main one answers.
+    return building_monument_has_unfinished({BUILDING_SUN_TEMPLE}, /*main_parts_only*/ true);
 }
 
 int building_sun_temple::art_stage() const {

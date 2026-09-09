@@ -82,19 +82,7 @@ int building_obelisk::yards_available(e_resource r) {
 }
 
 bool building_obelisk::has_unfinished_obelisk() {
-    for (building *b = building_begin(); b != building_end(); ++b) {
-        if (!b || !b->is_valid()) {
-            continue;
-        }
-        if (b->type != BUILDING_SMALL_OBELISK && b->type != BUILDING_LARGE_OBELISK) {
-            continue;
-        }
-        auto *m = b->dcast_monument();
-        if (m && m->is_unfinished()) {
-            return true;
-        }
-    }
-    return false;
+    return building_monument_has_unfinished({BUILDING_SMALL_OBELISK, BUILDING_LARGE_OBELISK});
 }
 
 int building_obelisk::art_stage() const {

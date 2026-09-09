@@ -210,16 +210,7 @@ bool building_royal_tomb::is_padding_local(int dx, int dy, vec2i bulk, vec2i ent
 }
 
 bool building_royal_tomb::has_unfinished_royal_tomb(e_building_type type) {
-    for (building *b = building_begin(); b != building_end(); ++b) {
-        if (!b || !b->is_valid() || b->type != type) {
-            continue;
-        }
-        auto *tomb = b->dcast_royal_tomb();
-        if (tomb && tomb->is_unfinished()) {
-            return true;
-        }
-    }
-    return false;
+    return building_monument_has_unfinished({type});
 }
 
 vec2i building_royal_tomb::bulk_size() const {

@@ -127,7 +127,15 @@ enum module_type {
 
 };
 
-int building_monument_has_unfinished_monuments();
+// Is a monument of one of these types still under construction? The one-at-a-time placement
+// rules all ask this, and they used to ask it through seven near-identical copies of the same
+// scan. The two flags are where those copies actually differed:
+//   main_parts_only    -- skip linked parts, for monuments whose parts do not share a phase
+//   include_just_placed -- also see a monument placed in this very frame, still CREATED rather
+//                          than VALID, so a second placement in the same frame is caught
+bool building_monument_has_unfinished(std::initializer_list<e_building_type> types,
+  bool main_parts_only = false, bool include_just_placed = false);
+
 bool building_monument_has_delivery_for_worker(int figure_id);
 
 // Burial tombs (mastaba / pyramid / …) vs non-tomb monuments (sphinx / obelisk / …).
@@ -156,5 +164,3 @@ void map_monuments_clear();
 
 // Tile for stonemason work on mastaba/pyramid footprints (2×2 work sites).
 tile2i building_monument_mason_waiting_tile(building *b);
-
-building *city_has_unfinished_monuments();

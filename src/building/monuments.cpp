@@ -188,17 +188,31 @@ int building_monument_get_monument(tile2i tile, e_resource resource, int road_ne
     return 0;
 }
 
-int building_monument_has_unfinished_monuments() {
-    bool found = false;
-    buildings_valid_first([&] (building &b) {
-        auto monument = b.dcast_monument();
-        if (!monument) {
-            return false;
+bool building_monument_has_unfinished(std::initializer_list<e_building_type> types,
+  bool main_parts_only, bool include_just_placed) {
+    for (building *b = building_begin(); b != building_end(); ++b) {
+        if (!b || !building_type_any_of(b->type, types)) {
+            continue;
         }
 
-        return (monument->runtime_data().phase != MONUMENT_FINISHED);
-    });
-    return found;
+        const bool live = b->is_valid()
+          || (include_just_placed
+            && (b->state == BUILDING_STATE_CREATED || b->state == BUILDING_STATE_MOTHBALLED));
+        if (!live) {
+            continue;
+        }
+
+        if (main_parts_only && !b->is_main()) {
+            continue;
+        }
+
+        auto *m = b->dcast_monument();
+        if (m && m->is_unfinished()) {
+            return true;
+        }
+    }
+
+    return false;
 }
 
 int building_monument::phases() const {
@@ -871,13 +885,4 @@ void burial_provisions_migrate_city_pool_to_tombs() {
     }
 }
 
-building *city_has_unfinished_monuments() {
-    return buildings_valid_first([] (building &b) { 
-        auto monument = b.dcast_monument();
-        if (!monument) {
-            return false;
-        }
 
-        return (monument->runtime_data().phase == MONUMENT_FINISHED); 
-    });
-}

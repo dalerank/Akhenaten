@@ -161,16 +161,7 @@ const monument &building_pharos_lighthouse::config() const {
 }
 
 bool building_pharos_lighthouse::has_unfinished_pharos_lighthouse() {
-    for (building *b = building_begin(); b != building_end(); ++b) {
-        if (!b || !b->is_valid() || b->type != BUILDING_PHAROS_LIGHTHOUSE) {
-            continue;
-        }
-        auto *m = b->dcast_monument();
-        if (m && m->is_unfinished()) {
-            return true;
-        }
-    }
-    return false;
+    return building_monument_has_unfinished({BUILDING_PHAROS_LIGHTHOUSE});
 }
 
 vec2i building_pharos_lighthouse::footprint_size() const {

@@ -148,16 +148,7 @@ const monument &building_caesareum::config() const {
 }
 
 bool building_caesareum::has_unfinished_caesareum() {
-    for (building *b = building_begin(); b != building_end(); ++b) {
-        if (!b || !b->is_valid() || b->type != BUILDING_CAESAREUM) {
-            continue;
-        }
-        auto *m = b->dcast_monument();
-        if (m && m->is_unfinished()) {
-            return true;
-        }
-    }
-    return false;
+    return building_monument_has_unfinished({BUILDING_CAESAREUM});
 }
 
 vec2i building_caesareum::footprint_size() const {
