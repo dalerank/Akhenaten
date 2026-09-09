@@ -76,8 +76,17 @@ using e_house_level_tokens_t = token_holder<e_house_level, HOUSE_CRUDE_HUT, HOUS
 const e_house_level_tokens_t ANK_CONFIG_ENUM(e_house_level_tokens);
 
 static std::array<const building_static_params*, BUILDING_MAX> *building_impl_params = nullptr;
+static std::array<buildings::create_building_function_cb*, BUILDING_MAX> *building_ctors = nullptr;
 
 building_static_params building_static_params::dummy;
+
+void buildings::register_ctor(e_building_type e, create_building_function_cb *fn) {
+    if (!building_ctors) {
+        building_ctors = new std::array<create_building_function_cb*, BUILDING_MAX>();
+        std::fill(building_ctors->begin(), building_ctors->end(), nullptr);
+    }
+    (*building_ctors)[e] = fn;
+}
 
 void building::initialize(e_building_type _tp, tile2i _tl, int orientation) {
     verify_no_crash(!_ptr);
@@ -170,11 +179,11 @@ crime_t::influence_t building_crime_t::to_influence() const {
 void building_impl::acquire(e_building_type e, building &b) {
     static_assert(sizeof(building_impl) <= sizeof(building::ptr_buffer_t));
 
-    using namespace buildings;
-    for (auto static_ctor = BuildingCtorIterator::tail; static_ctor; static_ctor = static_ctor->next) {
-        auto impl = static_ctor->func(e, b);
-        if (impl) {
-            return;
+    if (building_ctors && e > BUILDING_NONE && e < BUILDING_MAX) {
+        if (auto *fn = (*building_ctors)[e]) {
+            if (fn(e, b)) {
+                return;
+            }
         }
     }
 

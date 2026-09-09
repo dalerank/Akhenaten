@@ -21,7 +21,7 @@
 #include "grid/road_access.h"
 #include "grid/grid_area.h"
 
-building g_all_buildings[5000];
+building g_all_buildings[MAX_BUILDINGS];
 xspan<building> g_city_buildings = make_span(g_all_buildings);
 
 building *building_get(building_id id) {

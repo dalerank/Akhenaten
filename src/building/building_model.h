@@ -14,8 +14,9 @@ namespace buildings {
     using load_building_static_params_cb = void();
 
     struct BuildingModelTag {};
-    using BuildingCtorIterator = FuncLinkedList<create_building_function_cb*, BuildingModelTag>;
     using BuildingParamIterator = FuncLinkedList<load_building_static_params_cb*, BuildingModelTag>;
+
+    void register_ctor(e_building_type e, create_building_function_cb *fn);
 
     template<typename T>
     struct model_t {
@@ -32,13 +33,13 @@ namespace buildings {
             static_params().name = CLSID;
             static_params().type = TYPE;
 
-            static BuildingCtorIterator ctor_handler(&create);
             static BuildingParamIterator static_params_handler(&static_params_load);
 
             static typename T::preview planer_renderer;
 
             building_static_params::register_model(TYPE, static_params());
             building_planer_renderer::register_model(TYPE, planer_renderer);
+            register_ctor(TYPE, &create);
         }
 
         static void static_params_load() {
