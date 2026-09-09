@@ -351,7 +351,7 @@ localization_base_hu = [
     { group:18, id:0, text: "Nem" }
     { group:18, id:1, text: "Igen" }
     { group:18, id:2, text: "Mégse" }
-    { group:18, id:3, text: "OK" }
+    { group:18, id:3, text: "Rendben" }
     { group:18, id:4, text: "BE" }
     { group:18, id:5, text: "KI" }
     { group:18, id:6, text: "N/A" }

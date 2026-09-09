@@ -6216,6 +6216,15 @@ game_messages_hu {
                 title { text: "Múmiatámadások!" }
                 content { text: "Egy múmia életre kelt, és városunk utcáin jár. Állítsd meg ezt az élőhalott átkot, mielőtt az egész földön elterjed." }
             }
+            message_wrath_of_bast_lions {
+                id: 497,
+                type: 2,
+
+                size [30, 20]
+                title { text: "Bast haragja" }
+                video { text: "@20" }
+                content { text: "Bast türelme elfogyott. Templomaiból — és még az állatkertből is, ha tartasz egyet — oroszlánfalkát szabadít az utcáidra. Polgárok és katonák egyaránt szétszélednek, ahogy kezdetét veszi a vadászat — tiszteld az Otthon Istennőjét, mielőtt még több vér festi vörösre az utakat." }
+            }
             message_invasion_quick_battle {
                 id: 498,
                 type: 7,
@@ -6244,6 +6253,97 @@ game_messages_hu {
                 title { text: "Az adó elfogadva" }
                 content { text: "A támadók elfogadták az adót és elvonultak. A kincstár könnyebb — de a város áll." }
             }
+            message_wrath_of_seth_asps {
+                id: 501,
+                type: 2,
+
+                size [30, 20]
+                title { text: "Seth haragja" }
+                video { text: "@21" }
+                content { text: "Seth dühe nem talál senkit, akit megátkozhatna — ezért templomaiból áspiskígyókat küld az utcáidra. A polgárok menekülnek, miközben a kígyók vadásznak. Engeszteld ki a Pusztítás Istenét, mielőtt még több vér folyik." }
+            }
+            message_kingdome_raises_wages {
+                id: 502,
+                type: 2,
+                size [30, 20]
+                title { text: "Béremelés a királyságban" }
+                content { text: "A bérek országszerte emelkedtek a Királyságban. Saját munkásaid is távozhatnak, ha nem kapnak legalább annyit, mint más városokban dolgozó társaik." }
+            }
+            message_kingdome_lowers_wages {
+                id: 503,
+                type: 2,
+                size [30, 20]
+                title { text: "Bércsökkenés a királyságban" }
+                content { text: "A bérek országszerte csökkentek Egyiptom Királyságában. Úgy tűnik, az emberek mindenütt kevesebbért is hajlandók dolgozni." }
+            }
+            message_price_increased {
+                id: 504,
+                type: 2,
+                size [30, 20]
+                title { text: "Áremelkedés" }
+                content { text: "Egy kereskedelmi áru ára emelkedett." }
+            }
+            message_price_decreased {
+                id: 505,
+                type: 2,
+                size [30, 20]
+                title { text: "Árcsökkenés" }
+                content { text: "Egy kereskedelmi áru ára csökkent." }
+            }
+            message_increased_trading {
+                id: 506,
+                type: 2,
+                size [30, 20]
+                title { text: "Növekvő kereskedelem a várossal" }
+                content { text: "Egy kereskedőváros idén többet vásárol vagy ad el egy árucikkből." }
+            }
+            message_decreased_trading {
+                id: 507,
+                type: 2,
+                size [30, 20]
+                title { text: "Csökkenő kereskedelem a várossal" }
+                content { text: "Egy kereskedőváros idén kevesebbet vásárol vagy ad el egy árucikkből." }
+            }
+            message_trade_stopped {
+                id: 508,
+                type: 2,
+                size [30, 20]
+                title { text: "Kereskedelem leállt" }
+                content { text: "Egy kereskedőváros idén már nem kereskedik egy adott árucikkel." }
+            }
+            message_wrath_of_ptah_scorpions {
+                id: 509,
+                type: 2,
+
+                size [30, 20]
+                title { text: "Ptah haragja" }
+                video { text: "@22" }
+                content { text: "Ptah nem talál műhelyeket, amelyeket szétzúzhatna — ezért templomaiból skorpiókat küld az utcáidra. A polgárok szétszélednek, ahogy a mesterember haragjának fullánkja eléri őket. Tiszteld a Mesterségek Istenét, mielőtt még több vér festi vörösre az utakat." }
+            }
+            pyramid_congratulations {
+                id: 520,
+                size [30, 18]
+                title { text: "A piramis elkészült!" }
+                content {
+                    text: "Ez lenyűgöző teljesítmény! Számtalan hónapnyi munka után végre elkészült a piramis!"
+                }
+            }
+            stepped_pyramid_congratulations {
+                id: 521,
+                size [30, 18]
+                title { text: "A lépcsős piramis elkészült!" }
+                content {
+                    text: "Végre elkészült a lépcsős piramis! Ez az emlékmű örökké tanúskodni fog képességeidről."
+                }
+            }
+            bent_pyramid_congratulations {
+                id: 522,
+                size [30, 18]
+                title { text: "A tört piramis elkészült!" }
+                content {
+                    text: "Végre elkészült a tört piramis építése! Ez városod számára nagyszerű teljesítmény."
+                }
+            }
             sun_temple_congratulations {
                 id: 523,
                 size [30, 18]
@@ -6268,6 +6368,30 @@ game_messages_hu {
                     text: "A Caesareum szent temploma és pompás, kertekkel díszített udvarai végre elkészültek! Csodálatos szépségének híre máris terjed az egész vidéken."
                 }
             }
+            alex_library_congratulations {
+                id: 527,
+                size [30, 18]
+                title { text: "Az alexandriai könyvtár elkészült!" }
+                content {
+                    text: "Sok kemény munka után végre készen állnak Alexandria fenséges Nagy Könyvtárának gyönyörű, kézzel készített ajtói, hogy szélesre táruljanak a világ tudósai előtt."
+                }
+            }
+            lighthouse_congratulations {
+                id: 529,
+                size [30, 18]
+                title { text: "A pharoszi világítótorony elkészült!" }
+                content {
+                    text: "Sok verejték és nem kevés kiontott vér árán a munkások gondosan a helyére illesztették a csodálatos pharoszi világítótorony utolsó márványtömbjét! Magasba törő, fényes jelzőtüze máris kereskedőket vonz mindenfelől."
+                }
+            }
+            mausoleum_congratulations {
+                id: 530,
+                size [30, 18]
+                title { text: "A mauzóleum elkészült!" }
+                content {
+                    text: "A szent mauzóleum végre elkészült! Ez városod számára figyelemre méltó teljesítmény."
+                }
+            }
             mudbrick_pyramid_congratulations {
                 id: 528,
                 size [30, 18]
@@ -6275,5 +6399,12 @@ game_messages_hu {
                 content {
                     text: "A kőművesek befejezték a ragyogó, finom mészkőből készült külső burkolat utolsó simításait, és a téglapiramis végre elkészült!"
                 }
+            }
+            message_dike_breach {
+                id: 524,
+                type: 2,
+                size [30, 16]
+                title { text: "Gátszakadás" }
+                content { text: "Ozirisz haragja réseket szakított az ártéri töltéseidbe. A lezárt medencék átszakadtak — javítsd meg a gátakat a következő áradás előtt, ha meg akarod őrizni az áradás ajándékát." }
             }
 }
