@@ -64,10 +64,6 @@ void building_palace::update_animation() {
     es(__func__);
 }
 
-void building_palace::update_graphic() {
-    update_graphic_work_anim();
-}
-
 bool building_palace::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {
     draw_normal_anim(ctx, point, tile, color_mask);
 

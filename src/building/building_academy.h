@@ -21,7 +21,4 @@ public:
 
     // Spawns a worker/service figure associated with the Academy.
     virtual void spawn_figure() override;
-
-    // Updates the building graphics/animations depending on state.
-    virtual void update_graphic() override;
 };

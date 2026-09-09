@@ -1059,10 +1059,6 @@ void building_storage_yard::spawn_figure() {
     }
 }
 
-void building_storage_yard::update_graphic() {
-    update_graphic_work_anim();
-}
-
 building_storage_yard *storage_yard_cast(building *b) {
     auto yard = b->dcast_storage_yard();
     if (yard) {

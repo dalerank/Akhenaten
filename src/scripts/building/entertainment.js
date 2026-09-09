@@ -49,6 +49,7 @@ building_juggler_school {
   flags {
     is_entertainment: true
     draw_normal_anim: true
+    work_anim: true
   }
 }
 
@@ -73,6 +74,7 @@ building_dancer_school {
   flags {
     is_entertainment: true
     draw_normal_anim: true
+    work_anim: true
   }
 }
 

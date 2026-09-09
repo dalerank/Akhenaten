@@ -17,7 +17,6 @@ public:
     virtual building_dentist *dcast_dentist() override { return this; }
 
     virtual e_sound_channel_city sound_channel() const override { return SOUND_CHANNEL_CITY_DENTIST; }
-    virtual void update_graphic() override;
     virtual void spawn_figure() override;
     virtual void update_month() override;
 

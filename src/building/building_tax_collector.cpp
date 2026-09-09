@@ -83,7 +83,3 @@ void building_tax_collector::update_month() {
         f->sender_building_id = base.id;
     }
 }
-
-void building_tax_collector::update_graphic() {
-    update_graphic_work_anim();
-}

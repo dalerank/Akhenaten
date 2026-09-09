@@ -12,7 +12,6 @@ public:
 
     virtual void on_create(int orientation) override;
     virtual void spawn_figure() override;
-    virtual void update_graphic() override;
     bool can_spawn_bricklayer_man();
 };
 ANK_CONFIG_STRUCT(building_bricklayers_guild::static_params, max_workers)

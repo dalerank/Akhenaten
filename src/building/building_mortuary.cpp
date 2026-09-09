@@ -57,10 +57,6 @@ void building_mortuary::update_animation() {
     }
 }
 
-void building_mortuary::update_graphic() {
-    update_graphic_work_anim();
-}
-
 bool building_mortuary::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {
     draw_normal_anim(ctx, point, tile, color_mask);
 

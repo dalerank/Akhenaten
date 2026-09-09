@@ -82,7 +82,3 @@ void building_dancer_school::spawn_figure() {
     }
 }
 
-void building_dancer_school::update_graphic() {
-    update_graphic_work_anim();
-}
-

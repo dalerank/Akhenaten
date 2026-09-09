@@ -73,10 +73,6 @@ void building_industry::update_animation() {
     }
 }
 
-void building_industry::update_graphic() {
-    update_graphic_work_anim();
-}
-
 void building_industry::production_finished() {
     if (stored_amount(base.output.resource) >= base.max_storage_amount(base.output.resource)) {
         return;

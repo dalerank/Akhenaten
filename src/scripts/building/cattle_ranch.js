@@ -26,6 +26,7 @@ building_cattle_ranch {
   info_advisors [ADVISOR_LABOR]
   flags {
     is_food: true
+    work_anim: true
   }
 }
 

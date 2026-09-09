@@ -22,6 +22,7 @@ building_clay_pit {
   flags {
     is_extractor: true
     is_industry: true
+    work_anim: true
   }
   labor_category : LABOR_CATEGORY_INDUSTRY_COMMERCE
   cost[ 8, 15, 30, 50, 100 ]

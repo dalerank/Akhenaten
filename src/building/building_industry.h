@@ -34,7 +34,6 @@ public:
     virtual void production_finished();
 
     virtual void bind_dynamic(io_buffer *iob, size_t version) override;
-    virtual void update_graphic() override;
     virtual void on_create(int orientation) override;
     virtual int progress() const { return runtime_data().progress; }
     virtual int progress_max() const { return runtime_data().progress_max; }

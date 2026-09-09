@@ -19,7 +19,6 @@ public:
     virtual void on_destroy() override;
     virtual void update_count() const override;
     virtual void update_animation() override;
-    virtual void update_graphic() override;
     virtual bool draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color mask) override;
     virtual void bind_dynamic(io_buffer *iob, size_t version) override;
     virtual void spawn_figure() override;

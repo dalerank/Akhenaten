@@ -31,6 +31,7 @@ building_storage_yard {
     marble_monument_min_haul: 400
     flags {
         is_industry: true
+        work_anim: true
     }
 }
 

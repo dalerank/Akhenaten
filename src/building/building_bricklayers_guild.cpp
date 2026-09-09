@@ -23,10 +23,6 @@ REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_bricklayers_guild);
 
 declare_console_command(add_bricks, game_cheat_add_resource<RESOURCE_BRICKS>);
 
-void building_bricklayers_guild::update_graphic() {
-    update_graphic_work_anim();
-}
-
 void building_bricklayers_guild::on_create(int orientation) {
     runtime_data().max_workers = current_params().max_workers;
 }

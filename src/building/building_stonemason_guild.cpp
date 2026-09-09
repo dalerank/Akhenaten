@@ -17,10 +17,6 @@
 
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_stonemason_guild);
 
-void building_stonemason_guild::update_graphic() {
-    update_graphic_work_anim();
-}
-
 void building_stonemason_guild::on_create(int orientation) {
     runtime_data().max_workers = 1;
 }

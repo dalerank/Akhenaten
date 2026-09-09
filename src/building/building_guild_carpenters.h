@@ -8,6 +8,5 @@ public:
 
     virtual void on_create(int orientation) override;
     virtual void spawn_figure() override;
-    virtual void update_graphic() override;
     bool can_spawn_carpenter(int max_gatherers_per_building);
 };

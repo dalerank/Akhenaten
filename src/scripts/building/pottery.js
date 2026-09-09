@@ -36,6 +36,7 @@ building_pottery {
     flags {
         is_workshop: true
         is_industry: true
+        work_anim: true
     }
 }
 

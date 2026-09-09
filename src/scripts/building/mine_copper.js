@@ -23,6 +23,7 @@ building_mine_copper {
     is_extractor: true
     is_industry: true
     keeps_visitor_paths: true
+    work_anim: true
   }
   cost [ 50, 75, 100, 150, 300 ]
   desirability { value[-12], step[2], step_size[2], range[6] }

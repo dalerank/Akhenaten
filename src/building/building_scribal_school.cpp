@@ -25,10 +25,6 @@ void building_scribal_school::spawn_figure() {
     }
 }
 
-void building_scribal_school::update_graphic() {
-    update_graphic_work_anim();
-}
-
 bool building_scribal_school::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color mask) {
     building_impl::draw_ornaments_and_animations_height(ctx, point, tile, mask);
 

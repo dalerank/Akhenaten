@@ -10,10 +10,6 @@
 
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_artisans_guild);
 
-void building_artisans_guild::update_graphic() {
-    update_graphic_work_anim();
-}
-
 void building_artisans_guild::on_create(int orientation) {
     building_guild::on_create(orientation);
     // Same as bricklayers: walker cap from JS static_params.max_workers.

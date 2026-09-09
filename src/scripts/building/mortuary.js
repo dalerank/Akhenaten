@@ -45,6 +45,9 @@ building_mortuary {
   laborers[8]
   fire_risk[4]
   damage_risk[2]
+  flags {
+    work_anim: true
+  }
 }
 
 [es=(building_mortuary, on_place_checks)]

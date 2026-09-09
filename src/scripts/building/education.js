@@ -56,5 +56,6 @@ building_academy {
   max_service: 100
   flags {
     draw_normal_anim: true
+    work_anim: true
   }
 }

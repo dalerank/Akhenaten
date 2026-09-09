@@ -19,7 +19,6 @@ public:
     virtual void spawn_figure() override;
     virtual e_overlay get_overlay() const override { return OVERLAY_TAX_INCOME; }
     virtual void update_month() override;
-    virtual void update_graphic() override;
     virtual e_sound_channel_city sound_channel() const override { return SOUND_CHANNEL_CITY_TAX_COLLECTOR; }
     virtual void bind_dynamic(io_buffer *iob, size_t version) override;
 

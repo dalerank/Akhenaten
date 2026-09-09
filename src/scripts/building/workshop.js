@@ -31,6 +31,7 @@ building_brewery {
   flags {
     is_workshop: true
     is_industry: true
+    work_anim: true
   }
 }
 
@@ -101,6 +102,7 @@ building_weaver = {
   flags {
     is_workshop: true
     is_industry: true
+    work_anim: true
   }
 }
 
@@ -142,6 +144,7 @@ building_jewels_workshop = {
   flags {
     is_workshop: true
     is_industry: true
+    work_anim: true
   }
 }
 
@@ -172,6 +175,7 @@ building_lamp_workshop {
   flags {
     is_workshop: true
     is_industry: true
+    work_anim: true
   }
 }
 
@@ -204,5 +208,6 @@ building_paint_workshop {
   flags {
     is_workshop: true
     is_industry: true
+    work_anim: true
   }
 }

@@ -9,10 +9,6 @@
 BUILDING_RUNTIME_DATA_IMPL(building_dentist)
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_dentist);
 
-void building_dentist::update_graphic() {
-    update_graphic_work_anim();
-}
-
 void building_dentist::spawn_figure() {
     common_spawn_roamer(FIGURE_DENTIST, current_params().min_houses_coverage, (e_figure_action)ACTION_125_ROAMER_ROAMING);
 }

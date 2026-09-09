@@ -45,6 +45,7 @@ building_dentist {
   damage_risk[2]
   flags {
     draw_normal_anim: true
+    work_anim: true
   }
 }
 

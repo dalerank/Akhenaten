@@ -10,7 +10,3 @@ void building_academy::spawn_figure() {
 
     common_spawn_labor_seeker(current_params().min_houses_coverage);
 }
-
-void building_academy::update_graphic() {
-    update_graphic_work_anim();
-}

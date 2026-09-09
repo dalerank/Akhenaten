@@ -58,6 +58,7 @@ building_stonemason_guild = {
   flags {
     is_guild: true
     is_industry: true
+    work_anim: true
   }
 }
 
@@ -83,6 +84,7 @@ building_bricklayers_guild = {
   flags {
     is_guild: true
     is_industry: true
+    work_anim: true
   }
 }
 
@@ -102,6 +104,7 @@ building_carpenters_guild = {
   flags {
     is_guild: true
     is_industry: true
+    work_anim: true
   }
 }
 
@@ -151,6 +154,7 @@ building_reed_gatherer {
   flags {
     is_harvester: true
     is_industry: true
+    work_anim: true
   }
   building_size : 2
   meta { text_id : 116, help_link:"message_building_woodcutter_and_reed_gatherer" }
@@ -187,6 +191,7 @@ building_wood_cutter {
   flags {
     is_harvester: true
     is_industry: true
+    work_anim: true
   }
   building_size : 2
   meta { text_id:120, help_link:"message_building_woodcutter_and_reed_gatherer" }
@@ -223,6 +228,7 @@ building_artisans_guild = {
   flags {
     is_guild: true
     is_industry: true
+    work_anim: true
   }
 }
 
@@ -243,6 +249,7 @@ building_tax_collector = {
   flags {
     is_tax_collector: true
     is_administration: true
+    work_anim: true
   }
 }
 
@@ -262,6 +269,7 @@ building_tax_collector_up = {
   flags {
     is_tax_collector: true
     is_administration: true
+    work_anim: true
   }
 }
 
@@ -569,6 +577,7 @@ building_sandstone_quarry {
     is_extractor: true
     is_industry: true
     draw_normal_anim: true
+    work_anim: true
   }
   cost [ 15, 30, 50, 80, 150 ]
   desirability { value[-6], step[1], step_size[1], range[6] }
@@ -594,6 +603,7 @@ building_marble_quarry {
   flags {
     is_extractor: true
     is_industry: true
+    work_anim: true
   }
 }
 
@@ -619,6 +629,7 @@ building_stone_quarry {
   flags {
     is_extractor: true
     is_industry: true
+    work_anim: true
   }
 
   cost [ 15, 30, 50, 80, 150 ]
@@ -650,6 +661,7 @@ building_granite_quarry {
     is_extractor: true
     is_industry: true
     draw_normal_anim: true
+    work_anim: true
   }
   cost [ 20, 40, 80, 150, 200 ]
   desirability { value[-6], step[1], step_size[1], range[6] }
@@ -685,6 +697,7 @@ building_limestone_quarry {
     is_extractor: true
     is_industry: true
     draw_normal_anim: true
+    work_anim: true
   }
 }
 
@@ -699,7 +712,7 @@ building_clay_gatehouse = {
     base_second_w : { pack:PACK_GENERAL, id:219, offset:1 }
     base_cover_w : { pack:PACK_GENERAL, id:220, offset:1 }
   }
-  
+
   ghost : {
       main_view_offset : [[-55, 20], [-55, -35], [-55, -35], [-60, -40]]
       part_view_offset : [[35, 65], [5, -70], [-200, -55], [-180, 46]]

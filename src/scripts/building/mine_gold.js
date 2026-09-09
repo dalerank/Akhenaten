@@ -23,6 +23,7 @@ building_mine_gold {
     is_industry: true
     keeps_visitor_paths: true
     draw_normal_anim: true
+    work_anim: true
   }
   cost [ 50, 100, 150, 250, 400 ]
   desirability { value[-16], step[2], step_size[3], range[6] }

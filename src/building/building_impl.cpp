@@ -90,14 +90,13 @@ void building_impl::on_place_checks() {
 }
 
 void building_impl::update_graphic() {
+    if (current_params().flags.work_anim) {
+        set_animation(base.play_animation ? animkeys().work : animkeys().none);
+    }
+
     es(__func__);
 
     base.minimap_anim = anim("minimap");
-}
-
-void building_impl::update_graphic_work_anim() {
-    set_animation(base.play_animation ? animkeys().work : animkeys().none);
-    building_impl::update_graphic();
 }
 
 void building_impl::remove_dead_figures() {

@@ -19,6 +19,9 @@ building_scribal_school = {
   desirability : { value:[4], step:[1], step_size:[-1], range:[4] }
   laborers:[10], fire_risk:[6], damage_risk: [2]
   max_service: 75
+  flags {
+    work_anim: true
+  }
 }
 
 [es=(building_scribal_school, on_place_checks)]

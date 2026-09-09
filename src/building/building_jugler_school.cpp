@@ -18,10 +18,6 @@ void building_juggler_school::update_day() {
     }
 }
 
-void building_juggler_school::update_graphic() {
-    update_graphic_work_anim();
-}
-
 void building_juggler_school::spawn_figure() {
     if (!common_spawn_figure_trigger(current_params().min_houses_coverage, BUILDING_SLOT_JUGGLER)) {
         return;
