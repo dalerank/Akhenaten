@@ -419,6 +419,39 @@ localization_en = [
 
   {key: "#main_menu_mods", text:"Mods"}
   {key: "#main_menu_editor", text:"Editor"}
+  // strings that used to be hard-coded in ui_*.js
+  {key:"#advisor_imperial_political_overseer_for", text:"Political overseer for"}
+  {key:"#warship_moving_to_position", text:"Moving to position"}
+  {key:"#warship_moving_to_position_text", text:"The ship is sailing to the position you designated and will hold there until ordered otherwise."}
+  {key:"#main_menu_update_downloading", text:"Downloading update..."}
+  {key:"#main_menu_update_opening_page", text:"Opening download page..."}
+  {key:"#main_menu_update_now", text:"update now"}
+  {key:"#main_menu_update_later", text:"later"}
+  {key:"#main_menu_loading_commits", text:"Loading recent commits..."}
+  {key:"#main_menu_new_build", text:"New build: ${commit} (you have ${local})"}
+  {key:"#main_menu_updated", text:"Updated"}
+  {key:"#main_menu_build_up_to_date", text:"Build ${build} (up to date)"}
+  {key:"#message_dialog_distant_battle", text:"Distant Battle"}
+  {key:"#mods_window_title", text:"Mods"}
+  {key:"#mods_window_unpack_scripts", text:"Unpack scripts"}
+  {key:"#mods_window_check_github", text:"Check on github"}
+  {key:"#mods_window_hint", text:"Right click to exit, double click to toggle mod"}
+  {key:"#records_not_played_yet", text:"haven't played yet"}
+  {key:"#report_bug_title", text:"Report Bug"}
+  {key:"#report_bug_field_title", text:"Title"}
+  {key:"#report_bug_field_description", text:"Description"}
+  {key:"#report_bug_submit_question", text:"Submit?"}
+  {key:"#report_bug_error_no_title", text:"Please enter a title."}
+  {key:"#report_bug_error_short_description", text:"Please write a description (at least 10 characters)."}
+  {key:"#report_bug_sending", text:"Sending..."}
+  {key:"#report_bug_sent", text:"Reported! Thank you."}
+  {key:"#report_bug_error", text:"Error:"}
+  {key:"#report_bug_tooltip", text:"Report bug"}
+  {key:"#scenario_selection_file_schema", text:"Fileschema:"}
+  {key:"#features_god_enabled", text:"God Enabled"}
+  {key:"#features_city_allow", text:"City allow"}
+  {key:"#features_prev_page", text:"Prev"}
+  {key:"#features_next_page", text:"Next"}
   {key: "#mission2_store_figs", text:"Build a Granary and fill it with figs"}
 
   {key: "#message_population_title", text:"Population Milestone"}

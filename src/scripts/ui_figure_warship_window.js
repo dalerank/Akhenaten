@@ -47,8 +47,8 @@ function figure_warship_crew_fatigue_text_id(ship) {
 function figure_warship_action_text(order) {
     if (order == WARSHIP_ORDER_MOVE_TO_TILE) {
         return {
-            header: "Moving to position",
-            text: "The ship is sailing to the position you designated and will hold there until ordered otherwise.",
+            header: __loc("#warship_moving_to_position"),
+            text: __loc("#warship_moving_to_position_text"),
         }
     }
 

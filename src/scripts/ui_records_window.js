@@ -49,7 +49,7 @@ function records_window_on_init(window) {
                 "  C:" + culture + " P:" + prosper + " K:" + kingdom +
                 "  m:" + months + " F:" + funds + " Pop:" + pop
         } else {
-            window["record_" + i].text = "haven't played yet"
+            window["record_" + i].text = "#records_not_played_yet"
         }
     }
 }

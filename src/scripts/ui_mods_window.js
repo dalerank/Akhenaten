@@ -49,18 +49,18 @@ mods_window {
     ui {
         background_image : background({pack:PACK_UNLOADED, id:9})
         background     : outer_panel({size[40, 30]})
-        title          : header({text:"Mods"
+        title          : header({text:"#mods_window_title"
                                font:FONT_LARGE_BLACK_ON_LIGHT, size[px(40), 20]
                                multiline:false, align:"center"
                                margin{top:20}})
 
         unpack_scripts : large_button({ size[156, 25]
-                                        text:"Unpack scripts"
+                                        text:"#mods_window_unpack_scripts"
                                         margin{right:-156, top:20}
                                       })
 
         refresh_mods : large_button({ size[156, 25]
-                                      text:"Check on github"
+                                      text:"#mods_window_check_github"
                                       margin{right:-156, top:44}
                                     })
 
@@ -69,7 +69,7 @@ mods_window {
                                         onrender_item: mods_window_on_render_item
                                         ondoubleclick_event: "doubleclick_item" })
 
-        bottom_text  : text({text:"Right click to exit, double click to toggle mod"
+        bottom_text  : text({text:"#mods_window_hint"
                              font:FONT_NORMAL_BLACK_ON_LIGHT, size[px(40), 20]
                              multiline:false
                              align:"center"

@@ -224,7 +224,7 @@ function advisor_imperial_window_salary_rank(window) {
 [es=(advisor_imperial_window, init)]
 function advisor_imperial_window_on_init(window) {
     advisors_toolbar_refresh(window, ADVISOR_IMPERIAL)
-    window.header_label.text = "Political overseer for " + game.dynasty_name
+    window.header_label.text = __loc("#advisor_imperial_political_overseer_for") + " " + game.dynasty_name
     window.rating_label.text = __loc(52, 0) + " " + city.rating_kingdom
 }
 

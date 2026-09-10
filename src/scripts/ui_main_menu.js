@@ -24,9 +24,9 @@ function main_menu_update_now(window) {
 		return
 	}
 	if (__platform_can_auto_update()) {
-		window.update_status.text = "Downloading update..."
+		window.update_status.text = "#main_menu_update_downloading"
 	} else {
-		window.update_status.text = "Opening download page..."
+		window.update_status.text = "#main_menu_update_opening_page"
 	}
 	window.update_status.enabled = true
 	// Empty URL → C++ picks the platform nightly artifact (Win/Linux/macOS).
@@ -53,11 +53,11 @@ window_main_menu {
 
 		update_panel  : outer_panel({ size[20, 27], enabled:false,
 			ui {
-				update_game : large_button({ pos[32, 16], size[256, 25], text:"update now", enabled: false })
-				update_later : large_button({ pos[32, 48], size[256, 25], text:"later", enabled: false })
+				update_game : large_button({ pos[32, 16], size[256, 25], text:"#main_menu_update_now", enabled: false })
+				update_later : large_button({ pos[32, 48], size[256, 25], text:"#main_menu_update_later", enabled: false })
 				new_version : text({pos[18, 84], text: game.version, font: FONT_SMALL_PLAIN, enabled: false})
 				update_status : text({pos[18, 104], size[280, 20], text:"", font: FONT_SMALL_PLAIN, enabled: false})
-				recent_commits : text({pos[18, 124], size[280, 280], wrap:px(17), rich:true, text:"Loading recent commits...", font: FONT_SMALL_PLAIN, enabled: false, clip_area: true})
+				recent_commits : text({pos[18, 124], size[280, 280], wrap:px(17), rich:true, text:"#main_menu_loading_commits", font: FONT_SMALL_PLAIN, enabled: false, clip_area: true})
 			}
 		})
 	}
@@ -186,15 +186,15 @@ function main_menu_on_update_version(window) {
 
 	if (update_available) {
 		window.update_game.readonly = false
-		window.update_game.text = "update now"
+		window.update_game.text = "#main_menu_update_now"
 		window.update_later.enabled = true
-		window.new_version.text = "New build: " + window.current_commit + " (you have " + local_build + ")"
+		window.new_version.text = _eformat(__loc("#main_menu_new_build"), { commit: window.current_commit, local: local_build })
 		game_features.gameopt_last_game_version = window.current_commit
 	} else {
 		window.update_game.readonly = true
-		window.update_game.text = "Updated"
+		window.update_game.text = "#main_menu_updated"
 		window.update_later.enabled = false
-		window.new_version.text = "Build " + local_build + " (up to date)"
+		window.new_version.text = _eformat(__loc("#main_menu_build_up_to_date"), { build: local_build })
 	}
 }
 

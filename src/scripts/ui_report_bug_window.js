@@ -33,17 +33,17 @@ report_bug_window {
 
     ui {
         background: outer_panel({ size: [32, 20] })
-        title: text({ pos:[0, 14], size:[px(32), 22], align:"center", font:FONT_LARGE_BLACK_ON_LIGHT, text:"Report Bug" })
+        title: text({ pos:[0, 14], size:[px(32), 22], align:"center", font:FONT_LARGE_BLACK_ON_LIGHT, text:"#report_bug_title" })
 
-        lbl_title: text({ pos:[16, 44], font:FONT_NORMAL_WHITE_ON_DARK, text:"Title" })
+        lbl_title: text({ pos:[16, 44], font:FONT_NORMAL_WHITE_ON_DARK, text:"#report_bug_field_title" })
         bug_title: input({ pos:[16, 60], size:[30, 2], font:FONT_NORMAL_WHITE_ON_DARK, max_length:120 })
 
-        lbl_body: text({ pos:[16, 95], font:FONT_NORMAL_WHITE_ON_DARK, text:"Description" })
+        lbl_body: text({ pos:[16, 95], font:FONT_NORMAL_WHITE_ON_DARK, text:"#report_bug_field_description" })
         bug_body: input({ pos:[16, 116], size:[30, 10], font:FONT_NORMAL_WHITE_ON_DARK, max_length:2000, multiline:true })
 
         status: text({ margin:{bottom:-67}, size:[px(32), 22], align:"center", font:FONT_NORMAL_WHITE_ON_DARK, text:"" })
 
-        lb_submit: label({ margin:{centerx:-70, bottom:-35}, text:"Submit?"})
+        lb_submit: label({ margin:{centerx:-70, bottom:-35}, text:"#report_bug_submit_question"})
         btn_submit: ok_button({ margin:{centerx:0, bottom:-40}, text:"", onclick_event:"on_submit" })
         btn_cancel: cancel_button({ margin:{centerx:50, bottom:-40}, onclick_event: "go_back" })
     }
@@ -59,14 +59,14 @@ function report_bug_on_submit(window) {
     var t = window.bug_title.value
     var b = window.bug_body.value
     if (!t || t.length === 0) {
-        window.status.text = "Please enter a title."
+        window.status.text = "#report_bug_error_no_title"
         return
     }
     if (!b || b.length < 10) {
-        window.status.text = "Please write a description (at least 10 characters)."
+        window.status.text = "#report_bug_error_short_description"
         return
     }
-    window.status.text = "Sending..."
+    window.status.text = "#report_bug_sending"
     window.btn_submit.enabled = false
     report_bug_window.sending = true
     __game_report_bug(t, b + report_bug_diagnostics())
@@ -77,10 +77,10 @@ function report_bug_on_result(window, ev) {
     report_bug_window.sending = false
     window.btn_submit.enabled = true
     if (ev.ok) {
-        window.status.text = "Reported! Thank you."
+        window.status.text = "#report_bug_sent"
         window.bug_title.value = ""
         window.bug_body.value = ""
     } else {
-        window.status.text = "Error: " + ev.error
+        window.status.text = __loc("#report_bug_error") + " " + ev.error
     }
 }

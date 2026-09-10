@@ -153,7 +153,7 @@ message_dialog_window_troop_request {
         image          : image({ margin { left:0, top:16 }, pack:PACK_UNLOADED, id:16, offset:11, size [px(30), px(16)], centering [0, 0] })
         content_panel  : inner_panel({ margin{ left:8, bottom:-px(14) }, size [29, 11]})
         content_text   : text({ margin{ left:16, bottom:-px(13) }, size [px(28), px(12)], font: FONT_NORMAL_WHITE_ON_DARK, rich: true, clip_area: true})
-        title          : text({ margin{ bottom:-36 }, size [px(30), 20], text: "Distant Battle", align: "center", font: FONT_NORMAL_BLACK_ON_LIGHT})
+        title          : text({ margin{ bottom:-36 }, size [px(30), 20], text: "#message_dialog_distant_battle", align: "center", font: FONT_NORMAL_BLACK_ON_LIGHT})
     })
 }
 
