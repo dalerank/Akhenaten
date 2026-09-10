@@ -50,7 +50,7 @@ localization_it = [
   {key:"#TR_CONFIG_VISUAL_FEEDBACK_ON_DELETE", text:"Migliora l'aspetto liberando il terreno"}
   {key:"#TR_CONFIG_ALLOW_CYCLING_TEMPLES", text:"Consente la costruzione di tutti i templi in successione"}
   {key:"#TR_CONFIG_SHOW_WATER_STRUCTURE_RANGE", text:"Mostra la copertura di cisterne, fontane e pozzi"}
-  {key:"#TR_CONFIG_SHOW_BUILDING_ROAD_ACCESS", text:"Mostra la casella di accesso stradale dell'edificio durante la posa o al passaggio del mouse (classico: una casella)"}
+  {key:"#TR_CONFIG_SHOW_BUILDING_ROAD_ACCESS", text:"Mostra la casella di accesso stradale in posa o al passaggio del mouse (classico: una casella)"}
   {key:"#TR_CONFIG_SHOW_DELIVERY_PATHS", text:"Mostra i percorsi di consegna recenti tenendo premuto Alt su un granaio o un casotto da caccia"}
   {key:"#delivery_path_no_road", text:"Nessun accesso stradale — consegna impossibile"}
   {key:"#delivery_path_understaffed", text:"Nessun deposito accetta merci — personale insufficiente"}
