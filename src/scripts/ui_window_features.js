@@ -98,7 +98,7 @@ function window_features_append_scenario_pages(pages) {
 function window_features_make_god(godIdx) {
     var godOrig = city.gods.is_known(godIdx)
     return {
-        text: "God Enabled " + city.gods.get_name(godIdx)
+        text: __loc("#features_god_enabled") + " " + city.gods.get_name(godIdx)
         key: godIdx
         original: godOrig
         type: "god"
@@ -124,7 +124,7 @@ function window_features_append_gods_pages(pages) {
 function window_features_make_resource(res) {
     var resOrig = city.resources.can_produce(res)
     return {
-        text: "City allow " + city.resources.get_name(res)
+        text: __loc("#features_city_allow") + " " + city.resources.get_name(res)
         original: resOrig
         type: "resource"
         key: res
@@ -273,8 +273,8 @@ window_features {
 
         title         : text({pos:[0, 16], size:[px(40), 20], align:"center", font:FONT_LARGE_BLACK_ON_LIGHT})
 
-        btn_prev      : button({margin:{left:20, top:16}, size:[50, 25], text:"Prev"})
-        btn_next      : button({margin:{right:-70, top:16}, size:[50, 25], text:"Next"})
+        btn_prev      : button({margin:{left:20, top:16}, size:[50, 25], text:"#features_prev_page"})
+        btn_next      : button({margin:{right:-70, top:16}, size:[50, 25], text:"#features_next_page"})
 
         bfeature0     : checkbox({pos:wposbtn(0)})
         tfeature0     : text({pos:wpostxt(0)  })

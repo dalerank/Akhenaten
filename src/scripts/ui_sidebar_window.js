@@ -166,7 +166,7 @@ sidebar_window_expanded {
         kingdom_header    : text({pos[11, 480 + 250], font:FONT_NORMAL_WHITE_ON_DARK})
         kingdom_current   : text({pos[11, 480 + 270]})
 
-        report_bug        : image_button({pos[114, 480 + 258], path:"pharaoh_general/interface_00086", tooltip:"Report bug", border:3})
+        report_bug        : image_button({pos[114, 480 + 258], path:"pharaoh_general/interface_00086", tooltip:"#report_bug_tooltip", border:3})
     }
 }
 

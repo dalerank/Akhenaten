@@ -187,7 +187,7 @@ function window_scenario_selection_update_climate(ev) {
 
 [es=(window_scenario_selection, mission_changed)]
 function window_scenario_selection_update_file_schema(ev) {
-    ev.debug_file_schema.text = "Fileschema: " + String(__game_io_file_schema_version())
+    ev.debug_file_schema.text = __loc("#scenario_selection_file_schema") + " " + String(__game_io_file_schema_version())
 }
 
 [es=(window_scenario_selection, mission_changed)]
