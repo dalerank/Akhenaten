@@ -99,7 +99,7 @@ game_languages = [
   {
     lang:"it", caption:"Italian", key:"italian",
     base_table:"localization_base_it", table:"localization_it", message_table:"eventmsg_it", game_messages:"game_messages_it"
-    symbols:"A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z,a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r,s,t,u,v,w,x,y,z"
+    symbols:"A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z,a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r,s,t,u,v,w,x,y,z,À,È,É,Ì,Ò,Ù,à,è,é,ì,ò,ù"
     font:"data/neucha.ttf"
     font_configs [
       { type: FONT_SMALL_PLAIN, size:12, color:0xff000000, bold:false, line_height:12 },
