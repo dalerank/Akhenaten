@@ -371,7 +371,6 @@ io_buffer *iob_buildings = new io_buffer([] (io_buffer *iob, size_t version) {
     for (int i = 0; i < MAX_BUILDINGS; i++) {
         //        building_state_load_from_buffer(buf, &all_buildings[i]);
         auto b = &g_all_buildings[i];
-        int sind = (int)iob->get_offset();
 
         iob->bind(BIND_SIGNATURE_UINT8, &b->state);
         iob->bind____skip(1); // iob->bind(BIND_SIGNATURE_UINT8, &b->faction_id);
@@ -437,10 +436,11 @@ io_buffer *iob_buildings = new io_buffer([] (io_buffer *iob, size_t version) {
         iob->bind(BIND_SIGNATURE_INT16, &b->formation_id);
 
         static_assert(sizeof(building::runtime_data) == 186, "runtime_data more then 186 bytes");
+        const int sind = (int)iob->get_offset();
         b->dcast()->bind_dynamic(iob, version); // 102 for PH
 
-        int currind = iob->get_offset() - sind;
-        verify_no_crash(currind > 0);
+        const int currind = (int)iob->get_offset() - sind;
+        verify_no_crash(currind >= 0);
         verify_no_crash_var(currind <= 186, "runtime_data overflow: %s wrote %d bytes", token::find_name(e_building_type_tokens, b->type), currind);
         iob->bind____skip(186 - currind);
 
@@ -460,7 +460,7 @@ io_buffer *iob_buildings = new io_buffer([] (io_buffer *iob, size_t version) {
         iob->bind(BIND_SIGNATURE_UINT8, &b->output.resource_second); // 1
         iob->bind(BIND_SIGNATURE_UINT8, &b->output_resource_second_rate); // 1
 
-        iob->bind____skip(2); 
+        iob->bind____skip(2);
         iob->bind(BIND_SIGNATURE_INT8, &b->input.resource);
         iob->bind(BIND_SIGNATURE_INT8, &b->input.resource_second);
         iob->bind(BIND_SIGNATURE_INT64, b->flags.data_ptr());
