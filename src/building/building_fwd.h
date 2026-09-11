@@ -22,7 +22,6 @@ class building;
     X(firehouse)               \
     X(architect_post)          \
     X(booth)                   \
-    X(apothecary)              \
     X(granary)                 \
     X(water_supply)            \
     X(conservatory)            \

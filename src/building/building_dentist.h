@@ -6,9 +6,8 @@ class building_dentist : public building_impl {
 public:
     BUILDING_METAINFO(BUILDING_DENTIST, building_dentist, building_impl)
 
-    struct static_params : public building_static_params {
-        int max_serve_clients;
-    } BUILDING_STATIC_DATA_T;
+    using static_params = building_impl::static_params;
+    BUILDING_STATIC_DATA_T
 
     struct runtime_data_t : public no_copy_assignment {
         int residents_served_this_month;
@@ -24,4 +23,3 @@ public:
 };
 
 ANK_CONFIG_PROPERTY(building_dentist::runtime_data_t, residents_served_this_month)
-ANK_CONFIG_STRUCT(building_dentist::static_params, max_serve_clients)

@@ -2,10 +2,10 @@
 
 #include "core/profiler.h"
 #include "core/calc.h"
-#include "building/building_apothecary.h"
 #include "building/building_mortuary.h"
 #include "building/building_physician.h"
 #include "building/building_dentist.h"
+#include "building/building_static_params.h"
 #include "building/building_house.h"
 #include "building/destruction.h"
 #include "city/city.h"
@@ -183,7 +183,7 @@ void city_health_t::update_coverage() {
     const auto &dentist_params = building_dentist::current_params();
     coverage.dentist = std::min<int>(calc_percentage(dentist_params.max_serve_clients * g_city.buildings.count_active(BUILDING_DENTIST), population), 100);
 
-    const auto &apothecary_params = building_apothecary::current_params();
+    const auto &apothecary_params = building_static_params::get(BUILDING_APOTHECARY);
     coverage.apothecary = std::min<int>(calc_percentage(apothecary_params.max_serve_clients * g_city.buildings.count_active(BUILDING_APOTHECARY), population), 100);
 }
 
