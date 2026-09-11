@@ -217,6 +217,8 @@ localization_en = [
   {key:"#TR_CONFIG_JEWELS_WORKSHOPS_CULTURE_BONUS", text:"Jewels workshops give culture bonus (+1 per 3 workshops)"}
   {key:"#TR_CONFIG_OVERLAY_SHOW_GRAY_BUILDINGS", text:"Show gray buildings on overlays when they are not displayed"}
   {key:"#TR_CONFIG_BREWERY_REQUIRES_WATER", text:"Brewery requires water access"}
+  {key:"#needs_water_access", text:"This brewery needs water access"}
+  {key:"#brewery_needs_water", text:"This brewery needs water before it can brew beer"}
   {key:"#TR_CONFIG_CARTPUSHERS_YIELD_BY_ID", text:"Cartpushers yield goods by worker ID"}
   {key:"#TR_CONFIG_REBALANCE_WORKSHOP_OUTPUT", text:"Workshop output scales with difficulty"}
   {key:"#TR_CONFIG_PREVENT_DELETE_NEAR_BURNING_RUINS", text:"Prevent deleting buildings near burning ruins"}

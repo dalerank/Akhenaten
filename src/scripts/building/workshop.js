@@ -16,6 +16,7 @@ building_brewery {
 
   overlay : OVERLAY_BREWERY
   water_amount_for_production : 50
+  max_water_storage : 100
   progress_max : 400,
   production_rate : 50,
   production_rate_dcy : [100, 80, 70, 60, 50],

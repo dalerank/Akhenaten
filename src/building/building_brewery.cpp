@@ -61,14 +61,15 @@ void building_brewery::update_production() {
     if (!!game_features::gameplay_brewery_requires_water) {
         auto &d = runtime_data();
 
-        // Consume 1 unit of water per day during active production
-        if (water_stored() > 0) {
-            set_water_stored(water_stored() - 1);
-        } else {
-            return; // No water, halt production
+        // Only burn water while a batch is running. Idle drain cancelled refill (+1/day).
+        if (d.progress > 0) {
+            if (water_stored() > 0) {
+                set_water_stored(water_stored() - 1);
+            } else {
+                return;
+            }
         }
 
-        // Update water supply (slow replenishment from well)
         update_water_supply();
     }
 
@@ -114,12 +115,12 @@ void building_brewery::update_water_supply() {
     }
 
     int current_water = water_stored();
-    if (current_water >= current_params().max_water_storage) {
+    const int max_water = current_params().max_water_storage;
+    if (max_water <= 0 || current_water >= max_water) {
         return;
     }
 
-    // Slow water replenishment from nearby well (TERRAIN_FOUNTAIN_RANGE)
-    if (!map_terrain_exists_tile_in_area_with_type(base.tile, base.size, TERRAIN_FOUNTAIN_RANGE)) {
+    if (!has_water_access()) {
         return;
     }
 

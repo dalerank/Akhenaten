@@ -373,6 +373,8 @@ localization_ru = [
     { key:"#palace_vaults_hold", text:"Хранилища содержат" }
     { key:"#debens", text:"Дебенов" }
     { key:"#building_no_road_access", text:"ПРЕДУПРЕЖДЕНИЕ: Это здание не примыкает к дороге" }
+    { key:"#needs_water_access", text:"Этой пивоварне нужен доступ к воде" }
+    { key:"#brewery_needs_water", text:"Пивоварне нужна вода, прежде чем она сможет варить пиво" }
     { key:"#building_no_people_in_city", text:"В городе нет людей!" }
     { key:"#building_no_workers_nearby", text:"Поблизости не живут рабочие" }
     { key:"#building_labor_could_shift", text:"Надзиратель работников мог бы сместить немного рабочей силы" }

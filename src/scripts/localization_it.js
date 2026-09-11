@@ -217,6 +217,8 @@ localization_it = [
   {key:"#TR_CONFIG_JEWELS_WORKSHOPS_CULTURE_BONUS", text:"Le gioiellerie danno un bonus alla cultura (+1 ogni 3 officine)"}
   {key:"#TR_CONFIG_OVERLAY_SHOW_GRAY_BUILDINGS", text:"Mostra in grigio gli edifici non visualizzati nelle tabelle"}
   {key:"#TR_CONFIG_BREWERY_REQUIRES_WATER", text:"La distilleria richiede accesso all'acqua"}
+  {key:"#needs_water_access", text:"Questa distilleria necessita di accesso all'acqua"}
+  {key:"#brewery_needs_water", text:"Questa distilleria ha bisogno di acqua per produrre birra"}
   {key:"#TR_CONFIG_CARTPUSHERS_YIELD_BY_ID", text:"I carrettieri consegnano le merci in base all'ID del lavoratore"}
   {key:"#TR_CONFIG_REBALANCE_WORKSHOP_OUTPUT", text:"La produzione delle officine varia con la difficoltà"}
   {key:"#TR_CONFIG_PREVENT_DELETE_NEAR_BURNING_RUINS", text:"Impedisci di demolire edifici vicino a rovine in fiamme"}

@@ -65,6 +65,10 @@ function workshop_info_window_status_reason(b) {
         reason.id = 5
     } else if (b.first_material_stored < 100) {
         reason.id = 11
+    } else if (b.type == BUILDING_BREWERY_WORKSHOP
+               && game_features.gameplay_brewery_requires_water
+               && b.stored_resource(RESOURCE_WATER) < 50) {
+        return { key: "#brewery_needs_water" }
     } else {
         reason.id = Math.approximate_value(b.worker_percentage / 100.0, [10, 9, 8, 7, 6])
     }
