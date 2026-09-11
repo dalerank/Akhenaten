@@ -467,8 +467,8 @@ void image_invalidate_pak_cache(int pak_id) {
         if (pak.handle->global_image_index_offset >= 0) {
             begin = pak.handle->global_image_index_offset;
         }
-        count = std::max(count, pak.handle->entries_num);
-        count = std::max(count, static_cast<int>(pak.handle->images_array.size()));
+        count = std::max<int>(count, pak.handle->entries_num);
+        count = std::max<int>(count, pak.handle->images_array.size());
     }
 
     if (begin < 0 || count <= 0) {
