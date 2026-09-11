@@ -145,6 +145,7 @@ bool image_pak_is_loaded(int pak_id);
 bool image_pak_is_loaded(const xstring &name);
 bool image_ensure_pak_loaded(int pak_id);
 void image_paks_pump();
+void image_invalidate_pak_cache(int pak_id);
 
 int image_id_resource_icon(int resource);
 int image_id_from_group(int collection, int group);

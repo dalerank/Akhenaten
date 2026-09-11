@@ -331,9 +331,15 @@ void font_atlas_regenerate() {
         return;
     }
 
-    // Reset font pack
+    image_invalidate_pak_cache(PACK_CUSTOM_FONT);
+    for (auto &mbmap : g_font_data.mbsymbols) {
+        mbmap.clear();
+    }
+
     font_pack.handle->cleanup_and_destroy();
     font_pack.handle->images_array.clear();
+    font_pack.handle->entries_num = 0;
+    font_pack.entries_num = 0;
 
     // Initialize packer
     vec2i max_texture_sizes = g_render.get_max_image_size();

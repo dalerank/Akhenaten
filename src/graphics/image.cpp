@@ -454,6 +454,33 @@ const image_t *image_get(int pak, int id, int offset) {
     return pakref.handle->get_image(img_id, true);
 }
 
+void image_invalidate_pak_cache(int pak_id) {
+    auto &data = *g_image_data;
+    if (pak_id < 0 || pak_id >= static_cast<int>(data.pak_list.size())) {
+        return;
+    }
+
+    const auto &pak = data.pak_list[pak_id];
+    int begin = pak.index;
+    int count = static_cast<int>(pak.entries_num);
+    if (pak.handle) {
+        if (pak.handle->global_image_index_offset >= 0) {
+            begin = pak.handle->global_image_index_offset;
+        }
+        count = std::max(count, pak.handle->entries_num);
+        count = std::max(count, static_cast<int>(pak.handle->images_array.size()));
+    }
+
+    if (begin < 0 || count <= 0) {
+        return;
+    }
+
+    const int end = begin + count;
+    for (int id = begin; id < end && static_cast<size_t>(id) < data.image_cache.size(); ++id) {
+        data.image_cache[id] = nullptr;
+    }
+}
+
 const image_t* image_get(int id) {
     OZZY_PROFILER_FUNCTION();
 
