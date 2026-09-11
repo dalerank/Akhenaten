@@ -11,7 +11,7 @@ mods {
             desc : "German voices for the game"
             version : "1.0.0"
             author : "dalerank"
-            url : "https://f003.backblazeb2.com/file/akhenaten-mods/pharaoh_german_voices.sgx"
+            url : "https://github.com/dalerank/Akhenaten/releases/download/mods/pharaoh_german_voices.sgx"
             email : "dalerankn8@gmail.com"
         }
 
@@ -20,7 +20,7 @@ mods {
             desc : "French voices for the game"
             version : "1.0.0"
             author : "dalerank"
-            url : "https://f003.backblazeb2.com/file/akhenaten-mods/pharaoh_french_voices.sgx"
+            url : "https://github.com/dalerank/Akhenaten/releases/download/mods/pharaoh_french_voices.sgx"
             email : "dalerankn8@gmail.com"
         }
 
@@ -29,7 +29,7 @@ mods {
             desc : "Spanish voices for the game"
             version : "1.0.0"
             author : "dalerank"
-            url : "https://f003.backblazeb2.com/file/akhenaten-mods/pharaoh_spanish_voices.sgx"
+            url : "https://github.com/dalerank/Akhenaten/releases/download/mods/pharaoh_spanish_voices.sgx"
             email : "dalerankn8@gmail.com"
         }
 
@@ -38,7 +38,7 @@ mods {
             desc : "Polish voices for the game"
             version : "1.0.0"
             author : "dalerank"
-            url : "https://f003.backblazeb2.com/file/akhenaten-mods/pharaoh_polish_voices.sgx"
+            url : "https://github.com/dalerank/Akhenaten/releases/download/mods/pharaoh_polish_voices.sgx"
             email : "dalerankn8@gmail.com"
         }
 
@@ -47,7 +47,7 @@ mods {
             desc : "Italian voices for the game"
             version : "1.0.0"
             author : "dalerank"
-            url : "https://f003.backblazeb2.com/file/akhenaten-mods/pharaoh_italian_voices.sgx"
+            url : "https://github.com/dalerank/Akhenaten/releases/download/mods/pharaoh_italian_voices.sgx"
             email : "dalerankn8@gmail.com"
         }
 
@@ -56,7 +56,7 @@ mods {
             desc : "Russian voices for the game"
             version : "1.0.0"
             author : "dalerank"
-            url : "https://f003.backblazeb2.com/file/akhenaten-mods/pharaoh_russian_voices.sgx"
+            url : "https://github.com/dalerank/Akhenaten/releases/download/mods/pharaoh_russian_voices.sgx"
             email : "dalerankn8@gmail.com"
         }
 
@@ -65,7 +65,7 @@ mods {
             desc : "Custom walker speech"
             version : "1.31.0"
             author : "dalerank"
-            url : "https://f003.backblazeb2.com/file/akhenaten-mods/pharaoh_sounds_pack.sgx"
+            url : "https://github.com/dalerank/Akhenaten/releases/download/mods/pharaoh_sounds_pack.sgx"
             email : "dalerankn8@gmail.com"
         }
     ]

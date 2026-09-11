@@ -17,6 +17,8 @@ namespace buildings {
     using BuildingParamIterator = FuncLinkedList<load_building_static_params_cb*, BuildingModelTag>;
 
     void register_ctor(e_building_type e, create_building_function_cb *fn);
+    void unregister_ctor(e_building_type e);
+    bool has_ctor(e_building_type e);
 
     template<typename T>
     struct model_t {

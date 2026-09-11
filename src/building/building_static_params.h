@@ -73,6 +73,7 @@ struct building_static_params {
     static void for_each(handler f);
 
     static void register_model(e_building_type, const building_static_params &);
+    static void unregister_model(e_building_type);
     static const building_static_params &get(e_building_type);
     static building_static_params &ref(e_building_type e);
 };

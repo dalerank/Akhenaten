@@ -44,6 +44,10 @@ void building_impl::es_t(const T &ev, pcstr func) const {
     js_event(ev, current_params().name, func);
 }
 
+void building_impl::on_create(int orientation) {
+    es(__func__);
+}
+
 void building_impl::on_place(int orientation, int variant) {
     const auto &p = current_params();
 

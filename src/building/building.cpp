@@ -88,6 +88,16 @@ void buildings::register_ctor(e_building_type e, create_building_function_cb *fn
     (*building_ctors)[e] = fn;
 }
 
+void buildings::unregister_ctor(e_building_type e) {
+    if (building_ctors && e > BUILDING_NONE && e < BUILDING_MAX) {
+        (*building_ctors)[e] = nullptr;
+    }
+}
+
+bool buildings::has_ctor(e_building_type e) {
+    return building_ctors && e > BUILDING_NONE && e < BUILDING_MAX && (*building_ctors)[e] != nullptr;
+}
+
 void building::initialize(e_building_type _tp, tile2i _tl, int orientation) {
     verify_no_crash(!_ptr);
     const auto &props = building_static_params::get(_tp);
@@ -354,6 +364,12 @@ void building_static_params::register_model(e_building_type e, const building_st
         std::fill(building_impl_params->begin(), building_impl_params->end(), nullptr);
     }
     (*building_impl_params)[e] = &p;
+}
+
+void building_static_params::unregister_model(e_building_type e) {
+    if (building_impl_params && e > BUILDING_NONE && e < BUILDING_MAX) {
+        (*building_impl_params)[e] = nullptr;
+    }
 }
 
 const building_static_params &building_static_params::get(e_building_type e) {

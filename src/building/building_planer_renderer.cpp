@@ -73,6 +73,12 @@ void building_planer_renderer::register_model(e_building_type e, const building_
     (*building_planer_rends)[e] = &p;
 }
 
+void building_planer_renderer::unregister_model(e_building_type e) {
+    if (building_planer_rends && e > BUILDING_NONE && e < BUILDING_MAX) {
+        (*building_planer_rends)[e] = nullptr;
+    }
+}
+
 void building_planer_renderer::ghost_blocked(build_planner &planer, painter &ctx, tile2i start, tile2i end, vec2i pixel, bool fully_blocked) const {
     const auto &params = building_static_params::get(planer.build_type);
     const xstring event_name = js_helpers::es_hash_str<64>(params.name, __func__).c_str();

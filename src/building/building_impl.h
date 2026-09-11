@@ -26,7 +26,7 @@ public:
     using preview = building_planer_renderer;
 
     building_impl(building &b) : base(b) {}
-    virtual void on_create(int orientation) {}
+    virtual void on_create(int orientation);
     virtual void on_place(int orientation, int variant);
     virtual void on_place_update_tiles(int orientation, int variant);
     virtual void on_place_checks();

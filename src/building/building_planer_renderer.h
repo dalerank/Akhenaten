@@ -29,6 +29,7 @@ struct building_planer_renderer {
     virtual bool is_need_flag(build_planner &p, e_building_need_rules flag) const;
 
     static void register_model(e_building_type e, const building_planer_renderer &p);
+    static void unregister_model(e_building_type e);
     static const building_planer_renderer &get(e_building_type e);
 
 protected:

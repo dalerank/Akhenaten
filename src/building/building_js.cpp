@@ -1,5 +1,7 @@
 #include "building/building.h"
 #include "building_static_params.h"
+#include "building_model.h"
+#include "building_planer_renderer.h"
 
 #include "building/building_bazaar.h"
 #include "building/building_dock.h"
@@ -30,7 +32,9 @@
 
 #include <cstdio>
 #include <cstring>
+#include <memory>
 
+#include "core/hvector.h"
 #include "game/game_events.h"
 
 static int building_this_id(js_State* J) {
@@ -522,3 +526,76 @@ void js_register_building(js_State *J) {
 js_Object *js_get_building_prototype(void) {
     return g_building_proto;
 }
+
+namespace {
+
+struct js_building_model {
+    e_building_type type = BUILDING_NONE;
+    xstring section;
+    building_static_params params;
+};
+
+hvector<std::unique_ptr<js_building_model>, 64> js_buildings;
+building_planer_renderer js_building_planer;
+
+building_impl *create_js_building(e_building_type, building &b) {
+    return b.acquire_impl<building_impl>();
+}
+
+void clear_es_building() {
+    logs::info("JS Building Registry: Clearing %d registered buildings", (int)js_buildings.size());
+    for (auto &m : js_buildings) {
+        if (!m || m->type <= BUILDING_NONE || m->type >= BUILDING_MAX) {
+            continue;
+        }
+        buildings::unregister_ctor(m->type);
+        building_static_params::unregister_model(m->type);
+        building_planer_renderer::unregister_model(m->type);
+    }
+    js_buildings.clear();
+}
+
+void register_es_building(pcstr name) {
+    e_building_type type = BUILDING_NONE;
+    g_config_arch.r_section(name, [&] (archive arch) {
+        type = arch.r_type<e_building_type>("type");
+    });
+
+    if (type <= BUILDING_NONE || type >= BUILDING_MAX) {
+        logs::info("JS Building Registry: Unknown type in '%s', skipping", name);
+        return;
+    }
+
+    if (buildings::has_ctor(type)) {
+        logs::info("JS Building Registry: Type %d already has a C++ model, skipping '%s'", (int)type, name);
+        return;
+    }
+
+    logs::info("JS Building Registry: Registering '%s' (type=%d)", name, (int)type);
+
+    auto model = std::make_unique<js_building_model>();
+    model->type = type;
+    model->section = name;
+    model->params.type = type;
+    model->params.name = model->section.c_str();
+
+    building_static_params::register_model(type, model->params);
+    building_planer_renderer::register_model(type, js_building_planer);
+    buildings::register_ctor(type, &create_js_building);
+
+    const bool loaded = g_config_arch.r(name, model->params);
+    verify_no_crash(loaded);
+    if (!loaded) {
+        logs::error("Failed to load building static params for '%s'", name);
+    }
+
+    model->params.type = type;
+    model->params.name = model->section.c_str();
+    model->params.initialize();
+
+    js_buildings.push_back(std::move(model));
+}
+
+} // namespace
+
+ANK_REGISTER_ES_ITERATOR(building, register_es_building, clear_es_building);
