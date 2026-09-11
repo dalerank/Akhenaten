@@ -521,29 +521,21 @@ void mods_refresh_from_remote_repo(pcstr remote_repo) {
         return;
     }
 
-    // Parse JSON response to extract .sgx files
-    // GitHub API returns an array of file objects, each with "name" and "download_url"
-    // We need to match each .sgx file name with its corresponding download_url
-    std::map<std::string, std::string> modMap; // name -> download_url
+    // Contents API: download_url; Releases API: browser_download_url
+    std::map<std::string, std::string> modMap;
 
-    // Find all file objects and extract .sgx files with their URLs
-    // Pattern: match "name": "filename.sgx" followed by "download_url": "url" within the same object
-    // We'll use a pattern that matches name and download_url that are close together
-    std::regex modPattern("\"name\"\\s*:\\s*\"([^\"]+\\.sgx)\"[^}]*\"download_url\"\\s*:\\s*\"([^\"]+)\"");
+    std::regex modPattern(
+      "\"name\"\\s*:\\s*\"([^\"]+\\.sgx)\"[^}]*\"(?:browser_)?download_url\"\\s*:\\s*\"([^\"]+)\"");
     std::sregex_iterator iter(readBuffer.begin(), readBuffer.end(), modPattern);
     std::sregex_iterator end;
 
     for (; iter != end; ++iter) {
-        std::string modName = (*iter)[1].str();
-        std::string downloadUrl = (*iter)[2].str();
-        modMap[modName] = downloadUrl;
+        modMap[(*iter)[1].str()] = (*iter)[2].str();
     }
 
-    // Fallback: if multiline JSON breaks the regex, try a different approach
     if (modMap.empty()) {
-        // Extract positions of .sgx names and find the nearest download_url after each name
         std::regex nameRegex("\"name\"\\s*:\\s*\"([^\"]+\\.sgx)\"");
-        std::regex urlRegex("\"download_url\"\\s*:\\s*\"([^\"]+)\"");
+        std::regex urlRegex("\"(?:browser_)?download_url\"\\s*:\\s*\"([^\"]+)\"");
 
         struct pos_name {
             size_t position;
@@ -553,24 +545,20 @@ void mods_refresh_from_remote_repo(pcstr remote_repo) {
             size_t position;
             std::string url;
         };
-        std::vector<pos_name> namePositions; // position, name
-        std::vector<pos_url> urlPositions;   // position, url
+        std::vector<pos_name> namePositions;
+        std::vector<pos_url> urlPositions;
 
         std::sregex_iterator nameIter(readBuffer.begin(), readBuffer.end(), nameRegex);
         for (; nameIter != std::sregex_iterator(); ++nameIter) {
-            size_t pos = nameIter->position();
-            namePositions.push_back({pos, (*nameIter)[1].str()});
+            namePositions.push_back({nameIter->position(), (*nameIter)[1].str()});
         }
 
         std::sregex_iterator urlIter(readBuffer.begin(), readBuffer.end(), urlRegex);
         for (; urlIter != std::sregex_iterator(); ++urlIter) {
-            size_t pos = urlIter->position();
-            urlPositions.push_back({pos, (*urlIter)[1].str()});
+            urlPositions.push_back({urlIter->position(), (*urlIter)[1].str()});
         }
 
-        // Match each .sgx name with the next download_url after it
         for (const auto& namePair : namePositions) {
-            // Find the first URL that comes after this name
             for (const auto& urlPair : urlPositions) {
                 if (urlPair.position > namePair.position) {
                     modMap[namePair.name] = urlPair.url;
