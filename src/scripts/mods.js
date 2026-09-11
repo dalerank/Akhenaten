@@ -1,10 +1,6 @@
 log_info("akhenaten: mods started")
 
 mods {
-    mods_repo [
-        { url:"https://api.github.com/repos/dalerank/Akhenaten/releases/tags/mods" }
-    ]
-
     mods_list [
         {
             name : "pharaoh_german_voices"

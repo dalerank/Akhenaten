@@ -61,3 +61,7 @@ doc
 /ext/lib/x86
 /ext/cpptrace
 /ext/openssl
+
+# Downloaded mod packs (hosted on GitHub Releases tag `mods`)
+/mods/*
+!/mods/.gitkeep

@@ -434,7 +434,7 @@ localization_en = [
   {key:"#message_dialog_distant_battle", text:"Distant Battle"}
   {key:"#mods_window_title", text:"Mods"}
   {key:"#mods_window_unpack_scripts", text:"Unpack scripts"}
-  {key:"#mods_window_check_github", text:"Check on github"}
+  {key:"#mods_window_refresh_list", text:"Refresh list"}
   {key:"#mods_window_hint", text:"Right click to exit, double click to toggle mod"}
   {key:"#records_not_played_yet", text:"haven't played yet"}
   {key:"#report_bug_title", text:"Report Bug"}

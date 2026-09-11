@@ -415,7 +415,7 @@ localization_it = [
   {key:"#message_dialog_distant_battle", text:"Battaglia lontana"}
   {key:"#mods_window_title", text:"Mod"}
   {key:"#mods_window_unpack_scripts", text:"Estrai gli script"}
-  {key:"#mods_window_check_github", text:"Vedi su github"}
+  {key:"#mods_window_refresh_list", text:"Aggiorna elenco"}
   {key:"#mods_window_hint", text:"Tasto destro per uscire, doppio clic per attivare o spegnere una mod"}
   {key:"#records_not_played_yet", text:"mai giocato"}
   {key:"#report_bug_title", text:"Segnala un problema"}

@@ -60,7 +60,7 @@ mods_window {
                                       })
 
         refresh_mods : large_button({ size[156, 25]
-                                      text:"#mods_window_check_github"
+                                      text:"#mods_window_refresh_list"
                                       margin{right:-156, top:44}
                                     })
 

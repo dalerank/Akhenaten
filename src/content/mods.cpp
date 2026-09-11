@@ -10,13 +10,8 @@
 #include "game/game_config.h"
 #include "core/settings_vars.h"
 #include "content/vfs.h"
-#include "window/popup_dialog.h"
-#include "platform/platform.h"
-#include "core/archive.h"
 #include "game/game.h"
 
-#include <regex>
-#include <map>
 #include <cstring>
 #include <fstream>
 #include <filesystem>
@@ -460,134 +455,6 @@ void mods_load() {
     }
 }
 
-#ifdef GAME_HAVE_CURL
-// Callback function for curl to write response data
-static size_t mods_refresh_available_list_cb(void* contents, size_t size, size_t nmemb, std::string* data) {
-    size_t totalSize = size * nmemb;
-    data->append((char*)contents, totalSize);
-    return totalSize;
-}
-#endif
-
-void mods_refresh_from_remote_repo(pcstr remote_repo) {
-#ifdef GAME_HAVE_CURL
-    CURLcode res;
-    std::string readBuffer;
-
-    CURL* curl = curl_easy_init();
-    if (!curl) {
-        logs::error("curl_easy_init failed");
-        popup_dialog::show_ok("Error", "Failed to initialize HTTP client.");
-        return;
-    }
-
-    curl_easy_setopt(curl, CURLOPT_URL, remote_repo);
-    curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, mods_refresh_available_list_cb);
-    curl_easy_setopt(curl, CURLOPT_WRITEDATA, &readBuffer);
-    curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1L);
-    curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 1L);
-    curl_easy_setopt(curl, CURLOPT_SSL_VERIFYHOST, 2L);
-    curl_easy_setopt(curl, CURLOPT_USERAGENT, "Akhenaten/1.0");
-    curl_easy_setopt(curl, CURLOPT_CONNECTTIMEOUT, 15L); // Timeout for connection
-    curl_easy_setopt(curl, CURLOPT_TIMEOUT, 30L);        // Total timeout for the operation
-
-    res = curl_easy_perform(curl);
-
-    long httpCode = 0;
-    curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &httpCode);
-
-    if (res != CURLE_OK) {
-        logs::error("curl_easy_perform failed: %s", curl_easy_strerror(res));
-        curl_easy_cleanup(curl);
-
-        // Provide more specific error message
-        xstring errorMsg;
-        if (res == CURLE_OPERATION_TIMEDOUT) {
-            errorMsg = "Connection timeout. Please check your internet connection and try again.";
-        } else if (res == CURLE_COULDNT_CONNECT) {
-            errorMsg = "Could not connect to GitHub. Please check your internet connection.";
-        } else {
-            errorMsg.printf("Failed to download mods list: %s", curl_easy_strerror(res));
-        }
-        popup_dialog::show_ok("Error", errorMsg);
-        return;
-    }
-
-    curl_easy_cleanup(curl);
-
-    if (httpCode != 200 || readBuffer.empty()) {
-        logs::error("Failed to download mods list (HTTP code: %ld)", httpCode);
-        popup_dialog::show_ok("Error", "Failed to download mods list from GitHub.");
-        return;
-    }
-
-    // Contents API: download_url; Releases API: browser_download_url
-    std::map<std::string, std::string> modMap;
-
-    std::regex modPattern(
-      "\"name\"\\s*:\\s*\"([^\"]+\\.sgx)\"[^}]*\"(?:browser_)?download_url\"\\s*:\\s*\"([^\"]+)\"");
-    std::sregex_iterator iter(readBuffer.begin(), readBuffer.end(), modPattern);
-    std::sregex_iterator end;
-
-    for (; iter != end; ++iter) {
-        modMap[(*iter)[1].str()] = (*iter)[2].str();
-    }
-
-    if (modMap.empty()) {
-        std::regex nameRegex("\"name\"\\s*:\\s*\"([^\"]+\\.sgx)\"");
-        std::regex urlRegex("\"(?:browser_)?download_url\"\\s*:\\s*\"([^\"]+)\"");
-
-        struct pos_name {
-            size_t position;
-            std::string name;
-        };
-        struct pos_url {
-            size_t position;
-            std::string url;
-        };
-        std::vector<pos_name> namePositions;
-        std::vector<pos_url> urlPositions;
-
-        std::sregex_iterator nameIter(readBuffer.begin(), readBuffer.end(), nameRegex);
-        for (; nameIter != std::sregex_iterator(); ++nameIter) {
-            namePositions.push_back({nameIter->position(), (*nameIter)[1].str()});
-        }
-
-        std::sregex_iterator urlIter(readBuffer.begin(), readBuffer.end(), urlRegex);
-        for (; urlIter != std::sregex_iterator(); ++urlIter) {
-            urlPositions.push_back({urlIter->position(), (*urlIter)[1].str()});
-        }
-
-        for (const auto& namePair : namePositions) {
-            for (const auto& urlPair : urlPositions) {
-                if (urlPair.position > namePair.position) {
-                    modMap[namePair.name] = urlPair.url;
-                    break;
-                }
-            }
-        }
-    }
-
-    if (modMap.empty()) {
-        popup_dialog::show_ok("Mods List", "No mods found on GitHub.");
-        return;
-    }
-
-    logs::info("Available mods on repo: %s", remote_repo);
-    for (const auto& pair : modMap) {
-        logs::info("* %s|%s", pair.first.c_str(), pair.second.c_str());
-        bstring128 mod_name = pair.first.c_str();
-        mod_name.replace_str(".sgx", "");
-        mods_add_remote_file(mod_name.c_str(), pair.second.c_str());
-    }
-    logs::info("Total: %d mod(s)", modMap.size());
-
-    xstring result;
-    result.printf("Found %zu mods on %s", modMap.size(), remote_repo);
-    popup_dialog::show_ok("Mods", result);
-#endif
-}
-
 void mods_refresh_from_config() {
     for (const auto& cmod : g_mods_config.mods_list) {
         auto& mod_info = mods_add_remote_file(cmod.name, cmod.url);
@@ -599,20 +466,8 @@ void mods_refresh_from_config() {
 }
 
 void mods_refresh_available_list() {
-#ifdef GAME_HAVE_CURL
-    if (!g_mods_config.mods_repo.empty()) {
-        mods_refresh_from_remote_repo(g_mods_config.mods_repo.front().url.c_str());
-    } else {
-        popup_dialog::show_ok("Error", "Mods repository URL is not configured.");
-    }
-
     mods_refresh_from_config();
-
     mods_remount();
-#else
-    popup_dialog::show_ok("Error",
-      "Mods list download not supported on this platform (libcurl was not found at build time).");
-#endif
 }
 
 void mod_info::fill_entries() {

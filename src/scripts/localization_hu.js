@@ -435,7 +435,7 @@ localization_hu = [
   {key:"#message_dialog_distant_battle", text:"Távoli csata"}
   {key:"#mods_window_title", text:"Modok"}
   {key:"#mods_window_unpack_scripts", text:"Parancsfájlok kicsomagolása"}
-  {key:"#mods_window_check_github", text:"Megtekintés a GitHubon"}
+  {key:"#mods_window_refresh_list", text:"Lista frissítése"}
   {key:"#mods_window_hint", text:"Jobb kattintás a kilépéshez, dupla kattintás a mod ki- és bekapcsolásához"}
   {key:"#records_not_played_yet", text:"még nem játszott vele"}
   {key:"#report_bug_title", text:"Hibajelentés"}
