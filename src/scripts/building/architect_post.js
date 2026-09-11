@@ -1,7 +1,8 @@
 log_info("akhenaten: building_architect_post started")
 
-
+[es=building]
 building_architect_post {
+    type: BUILDING_ARCHITECT_POST
     animations {
         _pack {pack:PACK_GENERAL}
         preview { id:81 },

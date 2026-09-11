@@ -20,7 +20,6 @@ class building;
     X(pottery)                 \
     X(bazaar)                  \
     X(firehouse)               \
-    X(architect_post)          \
     X(booth)                   \
     X(granary)                 \
     X(water_supply)            \

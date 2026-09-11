@@ -310,9 +310,17 @@ void building_impl::draw_overlay_anims(painter &ctx, vec2i point, color color_ma
 
         int amount = 0;
         if (ov.resource != RESOURCE_NONE) {
-            amount = (int)ceil((float)stored_amount(ov.resource) / 100.0f) - 1;
-            if (amount < 0) {
-                continue;
+            const int units = (int)ceil((float)stored_amount(ov.resource) / 100.0f);
+            if (ov.stack) {
+                amount = units;
+                if (amount <= 0) {
+                    continue;
+                }
+            } else {
+                amount = units - 1;
+                if (amount < 0) {
+                    continue;
+                }
             }
         } else if (ov.stack) {
             amount = 1;
