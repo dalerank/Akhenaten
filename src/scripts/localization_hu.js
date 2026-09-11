@@ -421,6 +421,38 @@ localization_hu = [
 
   {key: "#main_menu_mods", text:"Módosítások"}
   {key: "#main_menu_editor", text:"Szerkesztő"}
+  {key:"#advisor_imperial_political_overseer_for", text:"Politikai felügyelője"}
+  {key:"#warship_moving_to_position", text:"Elfoglalja a kijelölt pozíciót"}
+  {key:"#warship_moving_to_position_text", text:"A hajó a kijelölt pozíció felé hajózik, és ott marad, amíg más parancsot nem kap."}
+  {key:"#main_menu_update_downloading", text:"Frissítés letöltése..."}
+  {key:"#main_menu_update_opening_page", text:"Letöltési oldal megnyitása..."}
+  {key:"#main_menu_update_now", text:"frissítés most"}
+  {key:"#main_menu_update_later", text:"később"}
+  {key:"#main_menu_loading_commits", text:"Legutóbbi módosítások betöltése..."}
+  {key:"#main_menu_new_build", text:"Új build: ${commit} (a jelenlegi: ${local})"}
+  {key:"#main_menu_updated", text:"Frissítve"}
+  {key:"#main_menu_build_up_to_date", text:"Build: ${build} (naprakész)"}
+  {key:"#message_dialog_distant_battle", text:"Távoli csata"}
+  {key:"#mods_window_title", text:"Modok"}
+  {key:"#mods_window_unpack_scripts", text:"Parancsfájlok kicsomagolása"}
+  {key:"#mods_window_check_github", text:"Megtekintés a GitHubon"}
+  {key:"#mods_window_hint", text:"Jobb kattintás a kilépéshez, dupla kattintás a mod ki- és bekapcsolásához"}
+  {key:"#records_not_played_yet", text:"még nem játszott vele"}
+  {key:"#report_bug_title", text:"Hibajelentés"}
+  {key:"#report_bug_field_title", text:"Cím"}
+  {key:"#report_bug_field_description", text:"Leírás"}
+  {key:"#report_bug_submit_question", text:"Elküldi?"}
+  {key:"#report_bug_error_no_title", text:"Kérjük, adjon meg egy címet."}
+  {key:"#report_bug_error_short_description", text:"Kérjük, írjon leírást (legalább 10 karakterben)."}
+  {key:"#report_bug_sending", text:"Küldés..."}
+  {key:"#report_bug_sent", text:"Hiba jelentve! Köszönjük."}
+  {key:"#report_bug_error", text:"Hiba:"}
+  {key:"#report_bug_tooltip", text:"Hiba jelentése"}
+  {key:"#scenario_selection_file_schema", text:"Fájlséma:"}
+  {key:"#features_god_enabled", text:"Isten mód engedélyezve"}
+  {key:"#features_city_allow", text:"Város engedélyezése"}
+  {key:"#features_prev_page", text:"Előző"}
+  {key:"#features_next_page", text:"Következő"}
   {key: "#mission2_store_figs", text:"Építs magtárat, és töltsd fel fügével"}
 
   {key: "#message_population_title", text:"Népességi mérföldkő"}
