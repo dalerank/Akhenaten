@@ -2,6 +2,7 @@
 #include "building_static_params.h"
 #include "building_model.h"
 #include "building_planer_renderer.h"
+#include "building/building_industry.h"
 
 #include "building/building_bazaar.h"
 #include "building/building_dock.h"
@@ -542,6 +543,12 @@ building_impl *create_js_building(e_building_type, building &b) {
     return b.acquire_impl<building_impl>();
 }
 
+building_impl *create_js_building_industry(e_building_type, building &b) {
+    static_assert(sizeof(building_industry) <= sizeof(building::ptr_buffer_t),
+                  "building_industry does not fit the inline buffer");
+    return b.acquire_impl<building_industry>();
+}
+
 void clear_es_building() {
     logs::info("JS Building Registry: Clearing %d registered buildings", (int)js_buildings.size());
     for (auto &m : js_buildings) {
@@ -555,7 +562,7 @@ void clear_es_building() {
     js_buildings.clear();
 }
 
-void register_es_building(pcstr name) {
+void register_es_building_model(pcstr name, buildings::create_building_function_cb *create) {
     e_building_type type = BUILDING_NONE;
     g_config_arch.r_section(name, [&] (archive arch) {
         type = arch.r_type<e_building_type>("type");
@@ -581,7 +588,7 @@ void register_es_building(pcstr name) {
 
     building_static_params::register_model(type, model->params);
     building_planer_renderer::register_model(type, js_building_planer);
-    buildings::register_ctor(type, &create_js_building);
+    buildings::register_ctor(type, create);
 
     const bool loaded = g_config_arch.r(name, model->params);
     verify_no_crash(loaded);
@@ -596,6 +603,15 @@ void register_es_building(pcstr name) {
     js_buildings.push_back(std::move(model));
 }
 
+void register_es_building(pcstr name) {
+    register_es_building_model(name, &create_js_building);
+}
+
+void register_es_building_industry(pcstr name) {
+    register_es_building_model(name, &create_js_building_industry);
+}
+
 } // namespace
 
 ANK_REGISTER_ES_ITERATOR(building, register_es_building, clear_es_building);
+ANK_REGISTER_ES_ITERATOR(building_industry, register_es_building_industry, clear_es_building);

@@ -1,6 +1,8 @@
 log_info("akhenaten: building_bricks_workshop started")
 
+[es=building_industry]
 building_bricks_workshop = {
+  type: BUILDING_BRICKS_WORKSHOP
   animations : {
     preview : { pack:PACK_GENERAL, id:124 }
     base : { pack:PACK_GENERAL, id:124 }
