@@ -3,6 +3,7 @@
 #include "grid/grid.h"
 #include "grid/building_tiles.h"
 #include "grid/building.h"
+#include "io/io_buffer.h"
 #include "js/js_game.h"
 
 BUILDING_RUNTIME_DATA_IMPL(building_festival_square)
