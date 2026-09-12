@@ -118,6 +118,46 @@ static bool mujs_self_test_multi_es_modifiers(js_State *J)
     return hits == 2;
 }
 
+/** A composite [es=(a, b)] key longer than 64 bytes must reach C++ intact.
+ *  The parser joins identifiers into a 512-byte buffer; es_hash_str builds the same key
+ *  on the C++ side and must not truncate first, or the handler registers under one key
+ *  and is dispatched under another — silently, with no log. Uses the default es_hash_str
+ *  width on purpose, so it tracks whatever js_event() actually uses. */
+static bool mujs_self_test_long_es_key(js_State *J)
+{
+    static const char *k_probe =
+        "__mujs_long_es_hits = 0;\n"
+        "[es=(window_scenario_selection_campaign_extended, on_period_changed_redraw_labels)]\n"
+        "function __mujs_long_es_probe(ev) { __mujs_long_es_hits = (__mujs_long_es_hits|0) + 1; }\n"
+        "true";
+
+    if (!mujs_self_test_js(J, "long_es_define", k_probe))
+        return false;
+
+    // 31 + 1 + 43 = 75 bytes once sorted and joined.
+    static const char *k_expected =
+        "on_period_changed_redraw_labels+window_scenario_selection_campaign_extended";
+    const auto hash = js_helpers::es_hash_str("window_scenario_selection_campaign_extended",
+                                              "on_period_changed_redraw_labels");
+    verify_no_crash_var(hash == k_expected, "long_es: key truncated to '%s'", hash.c_str());
+    if (hash != k_expected)
+        return false;
+
+    js_register_game_handlers({});
+    verify_no_crash_var(js_has_event_handlers(xstring(hash.c_str())), "long_es: no handler for %s", hash.c_str());
+    if (!js_has_event_handlers(xstring(hash.c_str())))
+        return false;
+
+    bvariant_map empty;
+    js_call_event_handlers(xstring(hash.c_str()), empty);
+
+    js_getglobal(J, "__mujs_long_es_hits");
+    const int hits = js_tointeger(J, -1);
+    js_pop(J, 1);
+    verify_no_crash_var(hits == 1, "long_es: expected 1 call, got %d", hits);
+    return hits == 1;
+}
+
 } // namespace
 
 void mujs_run_self_tests(js_State *J)
@@ -134,6 +174,7 @@ void mujs_run_self_tests(js_State *J)
         "__mujs_self_test_cptr.u8_b = x; } two_writes(); "
         "return __mujs_self_test_cptr.u8_a === 7 && __mujs_self_test_cptr.u8_b === 42; })()");
     mujs_self_test_multi_es_modifiers(J);
+    mujs_self_test_long_es_key(J);
 
     {
         js_frame_zone zone(J);

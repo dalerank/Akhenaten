@@ -6,6 +6,8 @@
 #include <stddef.h>
 #include <stdint.h>
 
+#include <type_traits>
+
 typedef struct js_Property js_Property;
 typedef struct js_Iterator js_Iterator;
 typedef struct js_FunctionModifier js_FunctionModifier;
@@ -141,11 +143,15 @@ struct js_Object {
     volatile uint32_t gcmark;
     uint8_t ephemeral; /* 1 = frame-zone arena; not on gcobj */
 
-    ~js_Object() {
-    }
-
     js_Property* vgetproperty(const js_StringNode name);
 };
+
+/* Ephemeral objects come from the frame-zone arena (jsV_newobject), and the arena is
+ * released wholesale without running destructors — only the GC path calls ~js_Object
+ * explicitly (jsgc.cpp). Adding a member with a non-trivial destructor would leak
+ * silently for every ephemeral object, so fail the build instead. */
+static_assert(std::is_trivially_destructible<js_Object>::value,
+              "js_Object must stay trivially destructible: frame-arena objects are never destroyed");
 
 struct js_Property {
     js_StringNode name;

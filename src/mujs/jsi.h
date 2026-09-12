@@ -93,7 +93,13 @@ struct js_StackTrace
 	int line;
 };
 
-/* Exception handling */
+/* Exception handling.
+ *
+ * js_throw() unwinds with longjmp (jsrun.cpp), which does NOT run destructors of
+ * objects in the frames it jumps over. Engine code must therefore keep every local
+ * trivially destructible: no std::string/vector, no RAII guards, nothing owning a
+ * resource. Allocate through js_malloc / js_frame_alloc and release on the js_try
+ * error path instead. This holds for all of src/mujs today — keep it that way. */
 
 struct js_Jumpbuf
 {
