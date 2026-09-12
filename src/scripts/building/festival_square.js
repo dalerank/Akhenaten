@@ -20,6 +20,12 @@ building_festival_square = {
   }
 }
 
+[es=(building_festival_square, setup_preview_graphics)]
+function building_festival_square_setup_preview_graphics(ev) {
+    var size = city.get_building_params_by_type(BUILDING_FESTIVAL_SQUARE).building_size
+    city_planner.init_tiles(size, size)
+}
+
 [es=(building_festival_square, ghost_preview)]
 function building_festival_square_ghost_preview(ev) {
     var pixel = ev.pixel

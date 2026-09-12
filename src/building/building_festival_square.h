@@ -8,10 +8,6 @@ public:
 
     virtual building_festival_square *dcast_festival_square() override { return this; }
 
-    struct preview : building_planer_renderer {
-        virtual void setup_preview_graphics(build_planner &planer) const override;
-    };
-
     struct runtime_data_t {
         int booth_corner_grid_offset;
         uint8_t num_shows;

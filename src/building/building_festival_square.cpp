@@ -2,17 +2,11 @@
 
 #include "grid/grid.h"
 #include "grid/building_tiles.h"
-#include "construction/build_planner.h"
 #include "grid/building.h"
 #include "js/js_game.h"
 
 BUILDING_RUNTIME_DATA_IMPL(building_festival_square)
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_festival_square);
-
-void building_festival_square::preview::setup_preview_graphics(build_planner &planer) const {
-    const int s = building_static_params::get(planer.build_type).building_size;
-    planer.init_tiles(s, s);
-}
 
 bool building_festival_square::target_route_tile_blocked(int grid_offset) const {
     return false;
