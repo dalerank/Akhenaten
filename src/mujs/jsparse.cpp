@@ -1102,9 +1102,18 @@ static js_StringNode parse_modifier_tuple_value(js_State* J) {
     do {
         if (J->lookahead != TK_IDENTIFIER)
             jsP_error(J, "expected identifier in modifier tuple");
-        if (nparts < 16) {
-            strncpy(parts[nparts], js_strnode_cstr(J->text), 63);
-            parts[nparts][63] = '\0';
+        /* Dropping or truncating a part here would build a key the C++ side never
+           computes, so the handler would register and never fire — fail loudly instead. */
+        if (nparts >= (int)(sizeof(parts) / sizeof(parts[0])))
+            jsP_error(J, "too many identifiers in modifier tuple (max %d)",
+                      (int)(sizeof(parts) / sizeof(parts[0])));
+        {
+            const char *part = js_strnode_cstr(J->text);
+            size_t plen = strlen(part);
+            if (plen >= sizeof(parts[0]))
+                jsP_error(J, "identifier '%s' in modifier tuple is too long (max %d chars)",
+                          part, (int)sizeof(parts[0]) - 1);
+            memcpy(parts[nparts], part, plen + 1);
             nparts++;
         }
         jsP_next(J);
@@ -1129,11 +1138,11 @@ static js_StringNode parse_modifier_tuple_value(js_State* J) {
         int plen = (int)strlen(parts[i]);
         if (i > 0)
             buf[len++] = '+';
-        if (len + plen < (int)sizeof(buf) - 1) {
-            memcpy(buf + len, parts[i], plen);
-            len += plen;
-            buf[len] = '\0';
-        }
+        if (len + plen >= (int)sizeof(buf) - 1)
+            jsP_error(J, "modifier tuple key is too long (max %d chars)", (int)sizeof(buf) - 1);
+        memcpy(buf + len, parts[i], plen);
+        len += plen;
+        buf[len] = '\0';
     }
 
     return js_intern(buf);
