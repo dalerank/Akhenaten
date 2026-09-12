@@ -1,6 +1,5 @@
 #include "building_workshop_papyrus.h"
 
-#include "building_workshop.h"
 #include "widget/city/ornaments.h"
 #include "graphics/window.h"
 #include "graphics/graphics.h"

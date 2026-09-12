@@ -1,6 +1,5 @@
 #include "building/building_brewery.h"
 
-#include "building/building_workshop.h"
 #include "widget/city/ornaments.h"
 #include "city/city_resource.h"
 #include "game/game_config.h"

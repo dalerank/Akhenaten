@@ -1,7 +1,6 @@
 #include "building_chariots_workshop.h"
 
 #include "js/js_game.h"
-#include "building/building_workshop.h"
 #include "graphics/graphics.h"
 #include "graphics/image.h"
 

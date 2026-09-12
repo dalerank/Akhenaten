@@ -1,6 +1,5 @@
 #include "building_weaver.h"
 
-#include "building/building_workshop.h"
 #include "graphics/graphics.h"
 #include "city/city_resource.h"
 #include "js/js_game.h"

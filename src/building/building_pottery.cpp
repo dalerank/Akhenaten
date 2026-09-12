@@ -1,6 +1,5 @@
 #include "building/building_pottery.h"
 
-#include "building/building_workshop.h"
 #include "graphics/animation.h"
 #include "city/city.h"
 

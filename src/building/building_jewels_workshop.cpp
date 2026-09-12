@@ -1,6 +1,5 @@
 #include "building_jewels_workshop.h"
 
-#include "building/building_workshop.h"
 #include "city/city_resource_handle.h"
 #include "empire/empire.h"
 #include "city/city_resource.h"

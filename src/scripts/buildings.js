@@ -40,6 +40,8 @@ import building.statue_large
 import building.mansion
 import building.workshop
 import building.bricks_workshop
+import building.lamp_workshop
+import building.paint_workshop
 import building.chariots_workshop
 import building.cattle_ranch
 import building.clay_pit

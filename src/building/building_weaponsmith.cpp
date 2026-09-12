@@ -1,6 +1,5 @@
 #include "building/building_weaponsmith.h"
 
-#include "building/building_workshop.h"
 #include "graphics/animation.h"
 #include "graphics/graphics.h"
 #include "graphics/image.h"
