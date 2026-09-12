@@ -979,10 +979,15 @@ namespace js_helpers {
      *  cannot detect it afterwards (it measures the parts it was handed), so check here.
      *  The parser applies the same 63-char limit to script-side identifiers. */
     inline bstring64 es2str_checked(pcstr es) {
-        verify_no_crash_var(es && strlen(es) < (size_t)bstring64::capacity,
+        // An unset xstring yields a null c_str(); callers treat that as an empty
+        // component and filter the miss themselves, so only guard against truncation.
+        if (!es) {
+            return { "" };
+        }
+        verify_no_crash_var(strlen(es) < (size_t)bstring64::capacity,
                             "es2str: identifier '%s' does not fit in %d bytes",
-                            es ? es : "(null)", (int)bstring64::capacity);
-        return { es ? es : "" };
+                            es, (int)bstring64::capacity);
+        return { es };
     }
 
     inline bstring64 es2str(pcstr es) { return es2str_checked(es); }
