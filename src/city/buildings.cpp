@@ -122,14 +122,6 @@ tile2i city_building_get_festival_square_position() {
     return g_city.buildings.festival_square;
 }
 
-void city_buildings_add_festival_square(building* square) {
-    g_city.buildings.festival_square = square->tile;
-}
-
-void city_buildings_remove_festival_square() {
-    g_city.buildings.festival_square = tile2i::invalid;
-}
-
 int city_buildings_unknown_value() {
     return g_city.buildings.unknown_value;
 }
@@ -223,9 +215,15 @@ void city_buildings_t::shutdown() {
 
 void city_buildings_t::update_tick(bool refresh_only) {
     has_high_fire_risk = false;
+    festival_square = tile2i::invalid;
+    festival_building_id = 0;
     for (auto it = building_begin(), end = building_end(); it != end; ++it) {
         if (!it->is_valid()) {
             continue;
+        }
+        if (it->type == BUILDING_FESTIVAL_SQUARE && it->is_main()) {
+            festival_square = it->tile;
+            festival_building_id = it->id;
         }
         if (it->fire_risk > 70) {
             has_high_fire_risk = true;

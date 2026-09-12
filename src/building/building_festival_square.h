@@ -10,7 +10,6 @@ public:
 
     struct preview : building_planer_renderer {
         virtual void setup_preview_graphics(build_planner &planer) const override;
-        virtual void ghost_preview(build_planner &p, painter &ctx, tile2i tile, tile2i end, vec2i pixel) const override;
     };
 
     struct runtime_data_t {
@@ -21,12 +20,9 @@ public:
         uint8_t dancer_visited;
     } BUILDING_RUNTIME_DATA_T;
 
-    virtual void on_place(int orientation, int variant) override;
     virtual void on_place_update_tiles(int orientation, int variant) override;
-    virtual void on_destroy() override;
     virtual void update_day() override;
     virtual void on_undo() override;
-    virtual void on_post_load() override;
     virtual void bind_dynamic(io_buffer *iob, size_t version) override;
     virtual void update_map_orientation(int map_orientation) override;
     virtual bool target_route_tile_blocked(int grid_offset) const override;

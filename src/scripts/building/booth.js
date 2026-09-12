@@ -59,7 +59,7 @@ function building_booth_ghost_preview(ev) {
             x: pixel.x + (col - row) * 30,
             y: pixel.y + (col + row) * 15 - 15
         }
-        city_planner.draw_isometric_ghost(tile_pixel, square_id + i)
+        city_planner.draw_isometric_ghost(tile_pixel, square_id + i, COLOR_MASK_GREEN)
     }
 
     var booth_id = params.first_img("booth")

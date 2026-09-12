@@ -295,26 +295,6 @@ building_recruiter = {
   }
 }
 
-building_festival_square = {
-  animations : {
-    base : { pos:[0, 0], pack:PACK_GENERAL, id:49 },
-    square : { pos:[0, 0], pack:PACK_GENERAL, id:49 },
-  },
-  building_size : 5,
-  meta : { text_id: 188, help_link:"message_building_festival_square" }
-  info_sound : "Wavs/prefecture.wav"
-  fire_proof : true,
-  damage_proof : true,
-  planner_update_rule : {
-    unique_building : true
-  }
-  cost : [ 100, 250, 500, 1000, 1500 ]
-  desirability : { value:[16], step:[2], step_size:[-3], range: [5] }
-  flags {
-    is_religion: true
-  }
-}
-
 building_roadblock = {
   animations : {
     preview : { pack:PACK_GENERAL, id:98 },

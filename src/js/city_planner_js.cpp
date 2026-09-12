@@ -169,11 +169,11 @@ void __city_planner_draw_flat_tiles(vec2i pixel, int count) {
 }
 ANK_FUNCTION_2(__city_planner_draw_flat_tiles);
 
-void __city_planner_draw_isometric_ghost(vec2i pixel, int image_id) {
+void __city_planner_draw_isometric_ghost(vec2i pixel, int image_id, color color_mask) {
     painter ctx = game.painter();
-    ctx.img_isometric(image_id, pixel, COLOR_MASK_GREEN, 1.f, ImgFlag_None);
+    ctx.img_isometric(image_id, pixel, color_mask, 1.f, ImgFlag_None);
 }
-ANK_FUNCTION_2(__city_planner_draw_isometric_ghost);
+ANK_FUNCTION_3(__city_planner_draw_isometric_ghost);
 
 void __city_planner_draw_overlay_tile(vec2i pixel, int image_id, color color_mask, float scale) {
     painter ctx = game.painter();

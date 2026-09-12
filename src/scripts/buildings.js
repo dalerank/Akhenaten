@@ -46,6 +46,7 @@ import building.clay_pit
 import building.temple_complex
 import building.entertainment
 import building.booth
+import building.festival_square
 import building.firehouse
 import building.hunting_lodge
 import building.pottery
