@@ -8,13 +8,20 @@
 #include <array>
 #include <utility>
 
+enum e_features_profile : int {
+    features_profile_default = 0,
+    features_profile_og,
+    features_profile_enhanced,
+};
+
 namespace game_features {
     struct game_feature {
         const xstring name;
         const xstring text;
         const setting_variant defaultv;
+        const setting_variant ogv;
 
-        game_feature(const xstring &n, const xstring &t, setting_variant def);
+        game_feature(const xstring &n, const xstring &t, setting_variant def, setting_variant og);
         bool to_bool() const;
         xstring to_string() const;
         float to_float() const;
@@ -194,7 +201,17 @@ namespace game_features {
     xspan<game_feature*> all();
     game_feature* find(const xstring& name);
 
+    // Bool features with localization text (shown in Enhanced settings / options window).
+    bool is_toggleable(const game_feature &feature);
+
+    // Reset toggleable features to constructor defaults (original Pharaoh behavior).
+    void apply_og_profile();
+    // Enable every toggleable feature (full Akhenaten / Enhanced suite).
+    void apply_enhanced_profile();
+    void apply_cli_profiles(e_features_profile profile);
+
     void load();
+    void load(e_features_profile profile, span_const<std::pair<xstring, xstring>> overrides = {});
     void save();
     globals_settings_t &settings();
     void apply_cli_overrides(span_const<std::pair<xstring, xstring>> overrides);

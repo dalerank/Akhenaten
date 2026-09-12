@@ -419,6 +419,7 @@ void show_options_window(Arguments& args) {
     std::string features_filter;
 
     try_load_game_features(args.get_data_directory().c_str());
+    game_features::apply_cli_profiles(args.features_profile());
 
     std::unordered_map<std::string, bool> features_snapshot;
     for (auto *feature : game_features::all()) {

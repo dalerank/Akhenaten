@@ -6,6 +6,7 @@
 #include "core/log.h"
 #include "content/vfs.h"
 #include "game/game.h"
+#include "game/game_config.h"
 
 #include <cstring>
 #include <filesystem>
@@ -160,6 +161,8 @@ ANK_REGISTER_BOOL_ARGUMENT_HANDLER("--nocrashdlg", "crashdlg", false, "do not sh
 ANK_REGISTER_BOOL_ARGUMENT_HANDLER("--fulldmp", "fulldmp", true, "create full dump on crash");
 ANK_REGISTER_BOOL_ARGUMENT_HANDLER("--config", "config", true, "always show configuration window on startup");
 ANK_REGISTER_BOOL_ARGUMENT_HANDLER("--noconfig-window", "noconfig_window", true, "skip configuration window on startup (even if akhenaten.cfg is missing)");
+ANK_REGISTER_BOOL_ARGUMENT_HANDLER("--og", "features_og", true, "force original Pharaoh behavior: disable all Enhanced / gameplay-change features");
+ANK_REGISTER_BOOL_ARGUMENT_HANDLER("--enhanced", "features_enhanced", true, "enable all Enhanced / gameplay-change features (overrides --og if both are set)");
 ANK_REGISTER_BOOL_ARGUMENT_HANDLER("--save_debug_texture", "save_debug_texture", true, "save debug textures to DEV_TESTING/tex/");
 ANK_REGISTER_BOOL_ARGUMENT_HANDLER("--unpack_scripts", "unpack_scripts", true, "unpack embedded scripts to user directory");
 ANK_REGISTER_BOOL_ARGUMENT_HANDLER("--log-resources", "log_resources", true, "log resource loading (textures, image packs, etc.)");
@@ -495,6 +498,16 @@ bool Arguments::has_arg(const xstring& name) const {
 
 void Arguments::add_game_config_cli_override(xstring name, xstring value) {
     game_config_cli_overrides_.push_back({name, value});
+}
+
+e_features_profile Arguments::features_profile() const {
+    if (features_enhanced()) {
+        return features_profile_enhanced;
+    }
+    if (features_og()) {
+        return features_profile_og;
+    }
+    return features_profile_default;
 }
 
 namespace arguments {

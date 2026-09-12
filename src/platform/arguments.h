@@ -6,6 +6,8 @@
 #include "core/variant.h"
 #include <optional>
 
+enum e_features_profile : int;
+
 class Arguments;
 
 namespace arguments {
@@ -87,6 +89,9 @@ public:
     [[nodiscard]] bool should_skip_config_window() const { return is("noconfig_window", false); }
     [[nodiscard]] bool should_show_startup_config_window() const;
     [[nodiscard]] bool config_file_exists() const { return is("config_file_exists", false); }
+    [[nodiscard]] bool features_og() const { return is("features_og", false); }
+    [[nodiscard]] bool features_enhanced() const { return is("features_enhanced", false); }
+    [[nodiscard]] e_features_profile features_profile() const;
     [[nodiscard]] bool should_unpack_scripts() const { return is("unpack_scripts", false); }
     [[nodiscard]] bool is_integral_tests() const { return is("integral_tests", false); }
     [[nodiscard]] bool is_editor() const { return is("editor", false); }

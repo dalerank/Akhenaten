@@ -51,6 +51,8 @@ Sources are collected via `file(GLOB ...)` with **no `CONFIGURE_DEPENDS`**, so a
 --nodatacheck         skip Pharaoh/Cleopatra install validation at startup
 --config              show configuration dialog on startup
 --noconfig-window     skip configuration dialog on startup (even without akhenaten.cfg)
+--og                  force original Pharaoh behavior (disable all Enhanced / gameplay-change features)
+--enhanced            enable all Enhanced / gameplay-change features (overrides --og if both are set)
 --mods PATH           set mods directory
 --mixed PATH          hot-reload JS scripts from disk (dev mode)
 --unpack_scripts      extract embedded JS to user directory
