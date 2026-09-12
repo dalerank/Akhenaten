@@ -115,13 +115,14 @@ static int clear_land_confirmed(bool measure_only, clear_confirm_t confirm) {
                     continue;
                 }
 
+                if (map_building_at(grid_offset) && !b) {
+                    continue;
+                }
+
                 map_building_tiles_mark_deleting(grid_offset);
 
-                if (map_terrain_is(grid_offset, TERRAIN_BUILDING)) {
-                    if (b) {
-                        items_placed++;
-                    }
-
+                if (b) {
+                    items_placed++;
                 } else if (map_terrain_is(grid_offset, TERRAIN_WATER)) {
                     continue;
 
@@ -136,7 +137,7 @@ static int clear_land_confirmed(bool measure_only, clear_confirm_t confirm) {
                 continue;
             }
 
-            if (map_terrain_is(grid_offset, TERRAIN_BUILDING)) {
+            if (map_terrain_is(grid_offset, TERRAIN_BUILDING) || map_building_at(grid_offset)) {
                 building* b = get_deletable_building(grid_offset, measure_only ? nullptr : &warned_blocked);
                 if (!b) {
                     continue;

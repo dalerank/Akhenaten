@@ -36,6 +36,7 @@ public:
     virtual void on_undo() {}
     virtual void on_post_load();
     virtual xstring demolish_blocked_message() const { return {}; }
+    virtual bool allow_demolish() const { return true; }
     virtual void spawn_figure();
     virtual void update_animation();
     virtual void update_graphic();

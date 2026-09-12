@@ -148,6 +148,7 @@ localization_en = [
   {key:"#terrain_dike_farms", text:"farms"}
   {key:"#terrain_dike_bonus_hint", text:"Fertility and farm growth improve while sealed."}
   {key:"#farm_in_flood_basin", text:"In flood basin — better yields after the inundation while the contour stays sealed."}
+  {key:"#cannot_demolish_flooded_farm", text:"Cannot demolish a farm while the floodplain is under water"}
   {key:"#overlay_flood_basin", text:"Flood basins"}
   {key:"#overlay_flood_basin_off", text:"Flood basins (Enhanced) are disabled"}
   {key:"#overlay_flood_basin_open", text:"Open floodplain — not in a sealed basin"}

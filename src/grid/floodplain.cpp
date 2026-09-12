@@ -179,17 +179,7 @@ static void map_floodplain_update_inundation_row(int floodplain_is_flooding, int
 
         // bring back flooded buildings
         if (farm && farm->state() == BUILDING_STATE_VALID && !map_terrain_is(grid_offset, TERRAIN_BUILDING)) {
-            // check if any other tile of the farm is still submerged
-            bool still_flooded = false;
-            for (int _y = farm->tiley(); _y < farm->tiley() + farm->size(); _y++) {
-                for (int _x = farm->tilex(); _x < farm->tilex() + farm->size(); _x++) {
-                    if (map_terrain_is(MAP_OFFSET(_x, _y), TERRAIN_WATER)) {
-                        still_flooded = true;
-                    }
-                }
-            }
-
-            if (!still_flooded) {                
+            if (!farm->is_currently_flooded()) {
                 farm->add_tiles();
             }
         }

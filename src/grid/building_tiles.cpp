@@ -247,6 +247,17 @@ void map_building_tiles_remove(int building_id, tile2i tile) {
     map_tiles_update_region_rubble(x, y, x + size, y + size);
 }
 
+static void clear_building_water_terrain(int grid_offset) {
+    if (map_terrain_is(grid_offset, TERRAIN_FLOODPLAIN)) {
+        map_terrain_remove(grid_offset, TERRAIN_CLEARABLE);
+        map_refresh_river_image_at(grid_offset, true);
+        return;
+    }
+
+    map_terrain_set(grid_offset, TERRAIN_WATER);
+    map_tiles_set_water(grid_offset);
+}
+
 void map_building_tile_clear_at(int grid_offset, int building_type) {
     if (building_type != 0 && building_type != BUILDING_BURNING_RUIN) {
         map_set_rubble_building_type(grid_offset, building_type);
@@ -261,8 +272,7 @@ void map_building_tile_clear_at(int grid_offset, int building_type) {
     map_building_damage_clear(grid_offset);
     map_sprite_clear_tile(grid_offset);
     if (map_terrain_is(grid_offset, TERRAIN_WATER)) {
-        map_terrain_set(grid_offset, TERRAIN_WATER); // clear other flags
-        map_tiles_set_water(grid_offset);
+        clear_building_water_terrain(grid_offset);
     } else {
         map_image_set(grid_offset, image_id_from_group(GROUP_TERRAIN_UGLY_GRASS) + (map_random_get(grid_offset) & 7));
         map_terrain_remove(grid_offset, TERRAIN_CLEARABLE - TERRAIN_ROAD);
@@ -295,8 +305,7 @@ void map_building_tiles_set_rubble(int building_id, tile2i tile, int size) {
             map_sprite_clear_tile(grid_offset);
             map_property_set_multi_tile_xy(grid_offset, 0, 0, 1);
             if (map_terrain_is(grid_offset, TERRAIN_WATER)) {
-                map_terrain_set(grid_offset, TERRAIN_WATER); // clear other flags
-                map_tiles_set_water(grid_offset);
+                clear_building_water_terrain(grid_offset);
             } else {
                 map_terrain_remove(grid_offset, TERRAIN_CLEARABLE);
                 map_terrain_add(grid_offset, TERRAIN_RUBBLE);

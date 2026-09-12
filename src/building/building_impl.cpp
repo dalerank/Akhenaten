@@ -501,6 +501,7 @@ void building_impl::destroy_by_poof(bool clouds) {
     }
 
     do {
+        map_building_tiles_remove(b->id, b->tile);
         b->state = BUILDING_STATE_UNUSED;
         map_tiles_update_region_empty_land(true, b->tile, b->tile.shifted(b->size - 1, b->size - 1));
         if (b->next_part_building_id < 1) {

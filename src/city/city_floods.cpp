@@ -194,7 +194,12 @@ void floods_t::reset_farms() {
             continue;
         }
 
-        auto &d = it->dcast_farm()->runtime_data();
+        auto *farm = it->dcast_farm();
+        if (!farm) {
+            continue;
+        }
+
+        auto &d = farm->runtime_data();
         d.progress = 0;
         d.ready_production = 0;
         d.worker_id = 0;
@@ -202,6 +207,7 @@ void floods_t::reset_farms() {
         d.labor_state = LABOR_STATE_NONE;
         d.labor_days_left = 0;
         it->num_workers = 0;
+        farm->restore_tiles_if_emerged();
     }
 }
 

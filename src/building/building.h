@@ -292,7 +292,7 @@ public:
     bool is_religion() const { return get_flag(e_building_religion); }
     bool is_education() const { return get_flag(e_building_education); }
     bool is_military() const { return get_flag(e_building_military); }
-    bool is_deletable() const { return !get_flag(e_building_non_deletable); }
+    bool is_deletable() const;
 
     inline bool same_network(building &b) const { return road_network_id == b.road_network_id; }
     xstring get_sound();

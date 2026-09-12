@@ -55,6 +55,8 @@ public:
     virtual void update_graphic() override;
     virtual void on_undo() override;
     virtual void on_tick(bool refresh) override;
+    virtual bool allow_demolish() const override;
+    virtual xstring demolish_blocked_message() const override;
     virtual void bind_dynamic(io_buffer *iob, size_t version) override;
     virtual void start_production() override;
     virtual figure_id expected_worker_id() const { return runtime_data().worker_id; }
@@ -73,6 +75,7 @@ public:
     void deplete_soil();
     void update_tiles_image();
     bool is_currently_flooded() const;
+    void restore_tiles_if_emerged();
     void spawn_figure_harvests();
     inline bool is_floodplain_farm() const { return base.is_floodplain_farm(); }
 

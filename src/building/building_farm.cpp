@@ -175,6 +175,7 @@ void building_farm::on_create(int orientation) {
 void building_farm::on_post_load() {
     building_impl::on_post_load();
     runtime_data().is_floodplain = base.is_floodplain_farm();
+    restore_tiles_if_emerged();
 }
 
 void building_farm::on_place_update_tiles(int orientation, int variant) {
@@ -267,6 +268,7 @@ void building_farm::on_tick(bool refresh) {
     auto &d = runtime_data();
     d.is_floodplain = base.is_floodplain_farm();
     d.flood_imminent = (d.is_floodplain && g_floods.state_is(FLOOD_STATE_IMMINENT));
+    restore_tiles_if_emerged();
 }
 
 void building_farm::bind_dynamic(io_buffer *iob, size_t version) {
@@ -397,12 +399,36 @@ bool building_farm::is_currently_flooded() const {
 
     for (int _y = tile().y(); _y < tile().y() + size(); _y++) {
         for (int _x = tile().x(); _x < tile().x() + size(); _x++) {
-            if (map_terrain_is(MAP_OFFSET(_x, _y), TERRAIN_WATER))
+            const int offset = MAP_OFFSET(_x, _y);
+            // Nile tiles in a 3x3 edge farm stay WATER year-round — only floodplain water is inundation.
+            if (map_terrain_is(offset, TERRAIN_FLOODPLAIN) && map_terrain_is(offset, TERRAIN_WATER)) {
                 return true;
+            }
         }
     }
 
     return false;
+}
+
+bool building_farm::allow_demolish() const {
+    return !is_currently_flooded();
+}
+
+xstring building_farm::demolish_blocked_message() const {
+    return is_currently_flooded() ? xstring("#cannot_demolish_flooded_farm") : xstring{};
+}
+
+void building_farm::restore_tiles_if_emerged() {
+    if (!base.is_floodplain_farm() || !base.is_valid()) {
+        return;
+    }
+    if (is_currently_flooded()) {
+        return;
+    }
+    if (map_terrain_is(tile(), TERRAIN_BUILDING)) {
+        return;
+    }
+    add_tiles();
 }
 
 void building_farm::update_tiles_image() {

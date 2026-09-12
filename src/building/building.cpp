@@ -509,6 +509,14 @@ bool building::is_floodplain_farm() {
     return is_farm() && map_terrain_is(tile, TERRAIN_FLOODPLAIN);
 }
 
+bool building::is_deletable() const {
+    if (get_flag(e_building_non_deletable)) {
+        return false;
+    }
+    const building_impl *impl = dcast();
+    return !impl || impl->allow_demolish();
+}
+
 bool building::is_monument() const {
     switch (type) {
     case BUILDING_SPHINX:
