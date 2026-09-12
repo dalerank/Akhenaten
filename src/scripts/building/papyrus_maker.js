@@ -1,18 +1,31 @@
 log_info("akhenaten: building_papyrus_maker started")
 
+[es=building_industry]
 building_papyrus_maker = {
+  type: BUILDING_PAPYRUS_WORKSHOP
   animations : {
     preview : { pos: [0, 0], pack:PACK_GENERAL, id:44 },
     base : { pos : [0, 0], pack:PACK_GENERAL, id:44 },
     work : { pos : [7, -10], pack:PACK_GENERAL, id:44, offset:1, max_frames:10, duration:4 },
-    reeds : { pos : [35, 4], pack:PACK_GENERAL, id:206 },
   },
+  overlay_anims {
+    reeds {
+      pos : [35, 4]
+      pack:PACK_GENERAL
+      id:206
+      resource: RESOURCE_REEDS
+      stack: false
+      max_count: 2
+      default_active: true
+    }
+  }
   input : {
     resource : RESOURCE_REEDS
   }
   output : {
     resource : RESOURCE_PAPYRUS
   }
+  progress_max : 400
   production_rate : 50,
   production_rate_dcy : [100, 80, 70, 60, 50],
   building_size : 2,
@@ -42,4 +55,18 @@ function building_papyrus_maker_on_place_checks(ev) {
     city.warnings.show_if_not(reeds.can_produce, "#build_reed_gatherer")
     city.warnings.show_if_not(reeds.can_import, "#setup_trade_route_to_import")
     city.warnings.show_if_not(reeds.trade_status == TRADE_STATUS_IMPORT, "#overseer_of_commerce_to_import")
+}
+
+[es=(building_papyrus_maker, update_animation)]
+function building_papyrus_maker_on_update_animation(ev) {
+    var b = city.get_building(ev.bid)
+    if (!b.play_animation) {
+        return
+    }
+    if (__building_industry_progress_pct(b.id) != 0) {
+        return
+    }
+    if (b.stored_resource(RESOURCE_REEDS) < 100) {
+        b.play_animation = false
+    }
 }

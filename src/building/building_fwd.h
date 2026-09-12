@@ -27,7 +27,6 @@ class building;
     X(well)                    \
     X(clay_pit)                \
     X(reed_gatherer)           \
-    X(papyrus_maker)           \
     X(dock)                    \
     X(mastaba)                 \
     X(small_mastaba)           \
