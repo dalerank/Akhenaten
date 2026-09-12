@@ -484,7 +484,7 @@ void ui::dispatch_autoconfig_es_event(widget* root, xstring sub_event, const bva
         return;
     }
 
-    const xstring ev = js_helpers::es_hash_str<64>(sec, sub_event).c_str();
+    const xstring ev = js_helpers::es_hash_str(sec, sub_event).c_str();
     if (js_has_event_handlers(ev)) {
         root->event(ev, payload);
         return;
@@ -495,7 +495,7 @@ void ui::dispatch_autoconfig_es_event(widget* root, xstring sub_event, const bva
         return;
     }
 
-    const xstring parent_ev = js_helpers::es_hash_str<64>(parent, sub_event).c_str();
+    const xstring parent_ev = js_helpers::es_hash_str(parent, sub_event).c_str();
     if (js_has_event_handlers(parent_ev)) {
         root->event(parent_ev, payload);
     }

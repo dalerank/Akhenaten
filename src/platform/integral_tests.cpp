@@ -41,19 +41,19 @@ void expect_true(bool ok, const char *expr) {
     }
 }
 
-void expect_eq_str(const bstring64 &got, pcstr expected, const char *expr) {
-    if (got != expected) {
-        logs::error("[integraltests] FAIL: %s (got '%s', expected '%s')", expr, got.c_str(), expected);
+void expect_eq_str(pcstr got, pcstr expected, const char *expr) {
+    if (strcmp(got, expected) != 0) {
+        logs::error("[integraltests] FAIL: %s (got '%s', expected '%s')", expr, got, expected);
         failure_count++;
     }
 }
 
 namespace es_func_test {
 
-static bstring64 g_es2str_from_init;
-static bstring64 g_hash_from_init;
+static bstring128 g_es2str_from_init;
+static bstring128 g_hash_from_init;
 void init() {
-    g_es2str_from_init = js_helpers::es2str(__func__);
+    g_es2str_from_init = js_helpers::es2str(__func__).c_str();
     g_hash_from_init = js_helpers::es_hash_str("info_window_granary", __func__);
 }
 
@@ -61,7 +61,7 @@ void init() {
 
 namespace es_func_decay_test {
 
-static bstring64 g_hash_from_init_via_pcstr;
+static bstring128 g_hash_from_init_via_pcstr;
 
 static void record_sub_event(pcstr sub_event) {
     g_hash_from_init_via_pcstr = js_helpers::es_hash_str("info_window_granary", sub_event);
@@ -98,7 +98,7 @@ void run_es_hash_unit_tests() {
     // ANK_ESID(esid(pcstr)) must hash the passed id, not the helper's own __func__.
     struct esid_probe {
         ANK_ESID(city_animals)
-        static bstring64 create_herds() {
+        static bstring128 create_herds() {
             return esid(__func__);
         }
     };
@@ -109,10 +109,10 @@ void run_es_hash_unit_tests() {
 void run_multi_es_handler_unit_tests() {
     // Parent fallback: windows tagged [es=advisor_window] resolve
     // missing exact handlers via advisor_window+event.
-    const bstring64 show = js_helpers::es_hash_str("advisor_window", "show_advisor");
-    const bstring64 close = js_helpers::es_hash_str("advisor_window", "close_advisors");
-    const bstring64 overlay = js_helpers::es_hash_str("building_info_window", "show_overlay");
-    const bstring64 mothball = js_helpers::es_hash_str("building_info_window", "mothball");
+    const bstring128 show = js_helpers::es_hash_str("advisor_window", "show_advisor");
+    const bstring128 close = js_helpers::es_hash_str("advisor_window", "close_advisors");
+    const bstring128 overlay = js_helpers::es_hash_str("building_info_window", "show_overlay");
+    const bstring128 mothball = js_helpers::es_hash_str("building_info_window", "mothball");
 
     expect_true(js_has_event_handlers(xstring(show.c_str())),
                 "es_parent: advisor_window+show_advisor registered");

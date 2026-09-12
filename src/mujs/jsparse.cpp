@@ -1096,7 +1096,10 @@ static js_StringNode parse_modifier_tuple_value(js_State* J) {
     char parts[16][64];
     int nparts = 0;
     char tmp[64];
-    char buf[512];
+    /* Must not exceed what the C++ side can hold for the same key (bstring128 in
+       js_helpers::es_hash_str); keep both limits in step so an overlong key fails
+       here, at parse time, instead of degrading at dispatch. */
+    char buf[128];
     int i, j, len;
 
     do {

@@ -86,8 +86,8 @@ static bool mujs_self_test_multi_es_modifiers(js_State *J)
     if (!mujs_self_test_js(J, "multi_es_define", k_probe))
         return false;
 
-    const bstring64 hash_a = js_helpers::es_hash_str("win_a", "ping");
-    const bstring64 hash_b = js_helpers::es_hash_str("win_b", "ping");
+    const auto hash_a = js_helpers::es_hash_str("win_a", "ping");
+    const auto hash_b = js_helpers::es_hash_str("win_b", "ping");
     verify_no_crash_var(hash_a == "ping+win_a", "multi_es: hash_a");
     verify_no_crash_var(hash_b == "ping+win_b", "multi_es: hash_b");
     if (hash_a != "ping+win_a" || hash_b != "ping+win_b")

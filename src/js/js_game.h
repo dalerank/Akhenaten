@@ -975,26 +975,48 @@ inline void js_event(const T &ev, const xstring &evname_str) {
 }
 
 namespace js_helpers {
-    inline bstring64 es2str(pcstr es) { return { es }; }
-    inline bstring64 es2str(const xstring &es) { return { es.c_str() }; }
-    inline bstring64 es2str(const cstring &es) { return { es.c_str() }; }
+    /** One identifier of a composite key. bstring64 truncates silently, and es_hash_str
+     *  cannot detect it afterwards (it measures the parts it was handed), so check here.
+     *  The parser applies the same 63-char limit to script-side identifiers. */
+    inline bstring64 es2str_checked(pcstr es) {
+        verify_no_crash_var(es && strlen(es) < (size_t)bstring64::capacity,
+                            "es2str: identifier '%s' does not fit in %d bytes",
+                            es ? es : "(null)", (int)bstring64::capacity);
+        return { es ? es : "" };
+    }
+
+    inline bstring64 es2str(pcstr es) { return es2str_checked(es); }
+    inline bstring64 es2str(const xstring &es) { return es2str_checked(es.c_str()); }
+    inline bstring64 es2str(const cstring &es) { return es2str_checked(es.c_str()); }
 
     template<size_t N>
-    inline bstring64 es2str(const char (&es)[N]) { return { es }; }
+    inline bstring64 es2str(const char (&es)[N]) { return es2str_checked(es); }
 
     template<typename ES>
     inline bstring64 es2str(const ES &) {
         type_name_holder<ES> esname;
         auto buf = type_enclosing_function_name(esname.value.data());
-        return bstring64(buf);
+        return es2str_checked(buf);
     }
 
-    template<size_t S = 64, typename ... ES>
+    /** Composite [es=(a, b)] key: identifiers sorted, joined with '+'.
+     *  Must stay byte-identical to what parse_modifier_tuple_value builds in the parser,
+     *  which joins into a 512-byte buffer. bstring::append truncates silently, so a key
+     *  that does not fit here would register a handler under one name and dispatch it
+     *  under another, with no diagnostic — check the length instead of losing it. */
+    template<size_t S = 128, typename ... ES>
     bstring<S> es_hash_str(ES ... es) {
-        hvector<bstring<S>, 4> parts;
+        // Each identifier fits in bstring64 (the parser caps one at 63 chars); only the
+        // joined result needs the wider buffer.
+        hvector<bstring64, 4> parts;
         (parts.push_back(es2str(es)), ...);
         auto cstr_compare = [] (pcstr s1, pcstr s2) { return strcmp(s1, s2) < 0; };
         std::sort(parts.begin(), parts.end(), cstr_compare);
+        size_t needed = parts.empty() ? 0 : parts.size() - 1;
+        for (const auto &p : parts) {
+            needed += strlen(p.c_str());
+        }
+        verify_no_crash_var(needed < S, "es_hash_str: key needs %d bytes, capacity %d", (int)needed, (int)S);
         bstring<S> result;
         bool first = true;
         for (const auto &p : parts) {
@@ -1010,7 +1032,7 @@ namespace js_helpers {
 
 template<typename T, typename ... ES>
 inline void js_event(const T &ev, ES ... es) {
-    js_event(ev, xstring(js_helpers::es_hash_str<64>(es...)));
+    js_event(ev, xstring(js_helpers::es_hash_str(es...)));
 }
 
 template<typename T>
