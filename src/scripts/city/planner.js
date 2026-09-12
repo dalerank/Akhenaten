@@ -4,6 +4,7 @@ city_planner = extend(__city_planner, {
     // => build_type
     // => in_progress
     // => construction_update_items
+    // => should_update_land_routing
 
     preview_path: null
 

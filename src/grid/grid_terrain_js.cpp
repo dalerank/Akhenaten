@@ -14,6 +14,7 @@
 #include "grid/canals.h"
 #include "grid/tiles.h"
 #include "grid/irrigation_value.h"
+#include "grid/gardens.h"
 #include "grid/routing/routing.h"
 #include "grid/routing/routing_terrain.h"
 #include "building/building_irrigation_ditch.h"
@@ -296,3 +297,18 @@ int __irrigation_value_get(tile2i tile) {
     return g_irrigation_value.get(tile);
 }
 ANK_FUNCTION_1(__irrigation_value_get);
+
+bool __map_grid_is_inside(tile2i tile) {
+    return map_grid_is_inside(tile, 1);
+}
+ANK_FUNCTION_1(__map_grid_is_inside)
+
+void __map_property_clear_constructing_and_deleted() {
+    map_property_clear_constructing_and_deleted();
+}
+ANK_FUNCTION(__map_property_clear_constructing_and_deleted)
+
+void __map_tiles_gardens_update_all() {
+    map_tiles_gardens_update_all();
+}
+ANK_FUNCTION(__map_tiles_gardens_update_all)

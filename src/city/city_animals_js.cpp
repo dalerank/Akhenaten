@@ -16,3 +16,8 @@ void __city_set_animals_area(int index, int radius) {
     g_city.animals.set_animals_area(index, radius);
 }
 ANK_FUNCTION_2(__city_set_animals_area)
+
+bool __city_animals_breeding_ground_at(tile2i tile, int size) {
+    return g_city.animals.breeding_ground_at(tile, size);
+}
+ANK_FUNCTION_2(__city_animals_breeding_ground_at)

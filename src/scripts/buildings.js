@@ -61,6 +61,7 @@ import building.health
 import building.mortuary
 import building.architect_post
 import building.courthouse
+import building.garden
 import building.work_camp
 import building.road
 import building.bridge

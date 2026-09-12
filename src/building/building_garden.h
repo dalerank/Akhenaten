@@ -13,15 +13,9 @@ public:
         animations_t variants3;
     } BUILDING_STATIC_DATA_T;
 
-    struct preview : building_planer_renderer {
-        int place_impl(tile2i start, tile2i end, bool place) const;
-        virtual int construction_place(build_planner &planer, tile2i start, tile2i end, int orientation, int variant) const override;
-        virtual int construction_update(build_planner &planer, tile2i start, tile2i end) const override;
-    };
-
     virtual e_sound_channel_city sound_channel() const override { return SOUND_CHANNEL_CITY_GARDEN; }
 
     static void set_image(int grid_offset);
     static void determine_tile(int grid_offset);
 };
-ANK_CONFIG_STRUCT(building_garden::static_params, variants1, variants2, variants3 )
+ANK_CONFIG_STRUCT(building_garden::static_params, variants1, variants2, variants3)

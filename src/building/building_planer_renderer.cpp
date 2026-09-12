@@ -81,7 +81,7 @@ void building_planer_renderer::unregister_model(e_building_type e) {
 
 void building_planer_renderer::ghost_blocked(build_planner &planer, painter &ctx, tile2i start, tile2i end, vec2i pixel, bool fully_blocked) const {
     const auto &params = building_static_params::get(planer.build_type);
-    const xstring event_name = js_helpers::es_hash_str<64>(params.name, __func__).c_str();
+    const xstring event_name = js_helpers::es_hash_str(params.name, __func__).c_str();
     if (js_has_event_handlers(event_name)) {
         es_t(ghost_preview_ev{ start, end, pixel, planer.in_progress }, params.name, __func__);
         return;
@@ -98,7 +98,7 @@ void building_planer_renderer::ghost_blocked(build_planner &planer, painter &ctx
 
 void building_planer_renderer::ghost_preview(build_planner &planer, painter &ctx, tile2i start, tile2i end, vec2i pixel) const {
     const auto &params = building_static_params::get(planer.build_type);
-    const xstring event_name = js_helpers::es_hash_str<64>(params.name, __func__).c_str();
+    const xstring event_name = js_helpers::es_hash_str(params.name, __func__).c_str();
     if (js_has_event_handlers(event_name)) {
         es_t(ghost_preview_ev{ start, end, pixel, planer.in_progress }, params.name, __func__);
         return;
@@ -109,7 +109,7 @@ void building_planer_renderer::ghost_preview(build_planner &planer, painter &ctx
 
 int building_planer_renderer::can_place(build_planner &planer, tile2i start, tile2i end, int state) const {
     const auto &params = building_static_params::get(planer.build_type);
-    const xstring event_name = js_helpers::es_hash_str<64>(params.name, __func__).c_str();
+    const xstring event_name = js_helpers::es_hash_str(params.name, __func__).c_str();
     if (js_has_event_handlers(event_name)) {
         planer.finalize_check_result = state;
         es_t(finalize_check_ev{ start, end, state }, params.name, __func__);
@@ -121,7 +121,7 @@ int building_planer_renderer::can_place(build_planner &planer, tile2i start, til
 
 int building_planer_renderer::finalize_check(build_planner &planer, tile2i start, tile2i end, int state) const {
     const auto &params = building_static_params::get(planer.build_type);
-    const xstring event_name = js_helpers::es_hash_str<64>(params.name, __func__).c_str();
+    const xstring event_name = js_helpers::es_hash_str(params.name, __func__).c_str();
     if (js_has_event_handlers(event_name)) {
         planer.finalize_check_result = state;
         es_t(finalize_check_ev{ start, end, state }, params.name, __func__);
@@ -132,8 +132,15 @@ int building_planer_renderer::finalize_check(build_planner &planer, tile2i start
 }
 
 int building_planer_renderer::construction_place(build_planner &planer, tile2i start, tile2i end, int orientation, int variant) const {
-    // by default, get size from building's properties
     const auto &params = building_static_params::get(planer.build_type);
+    const xstring place_event = js_helpers::es_hash_str(params.name, __func__).c_str();
+    if (js_has_event_handlers(place_event)) {
+        planer.construction_update_items = 0;
+        es_t(construction_update_ev{ start.x(), start.y(), end.x(), end.y() }, params.name, __func__);
+        return planer.construction_update_items;
+    }
+
+    // by default, get size from building's properties
     verify_no_crash(params.building_size > 0);
 
     // correct building placement for city orientations
@@ -174,7 +181,7 @@ int building_planer_renderer::update_building_variant(build_planner &planer) con
 
 int building_planer_renderer::construction_update(build_planner &planer, tile2i start, tile2i end) const {
     const auto &params = building_static_params::get(planer.build_type);
-    const xstring event_name = js_helpers::es_hash_str<64>(params.name, __func__).c_str();
+    const xstring event_name = js_helpers::es_hash_str(params.name, __func__).c_str();
     if (js_has_event_handlers(event_name)) {
         planer.construction_update_items = 0;
         es_t(construction_update_ev{ start.x(), start.y(), end.x(), end.y() }, params.name, __func__);
