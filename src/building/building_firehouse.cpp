@@ -1,15 +1,9 @@
 #include "building_firehouse.h"
 
-#include "figuretype/figure_fireman.h"
-#include "graphics/animation.h"
 #include "js/js_game.h"
 
 BUILDING_RUNTIME_DATA_IMPL(building_firehouse)
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_firehouse);
-
-void building_firehouse::spawn_figure() {
-    common_spawn_roamer(FIGURE_FIREMAN, current_params().min_houses_coverage, (e_figure_action)ACTION_70_FIREMAN_CREATED);
-}
 
 void building_firehouse::update_month() {
     building_impl::update_month();

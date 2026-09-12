@@ -49,6 +49,12 @@ building_firehouse {
     }
 }
 
+[es=(building_firehouse, spawn_figure)]
+function building_firehouse_spawn_figure(ev) {
+    var building = city.get_building(ev.bid)
+    building.common_spawn_roamer(FIGURE_FIREMAN, building_firehouse.min_houses_coverage, ACTION_0_FIREMAN_CREATED)
+}
+
 [es=(building_firehouse, update_graphic)]
 function building_firehouse_on_update_graphic(ev) {
     var building = city.get_building(ev.bid)

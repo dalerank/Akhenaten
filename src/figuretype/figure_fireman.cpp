@@ -18,6 +18,8 @@
 
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_fireman);
 
+const figure_fireman_action_tokens_t ANK_CONFIG_ENUM(figure_fireman_action_tokens);
+
 void figure_fireman::on_create() {
     figure_impl::on_create();
 }
@@ -34,11 +36,11 @@ void figure_fireman::figure_action() { // doubles as fireman! not as policeman!!
 
     building* b = home();
     switch (base.action_state) {
-    case ACTION_70_FIREMAN_CREATED:
-        advance_action(ACTION_72_FIREMAN_ROAMING);
+    case ACTION_0_FIREMAN_CREATED:
+        advance_action(ACTION_2_FIREMAN_ROAMING);
         break;
 
-    case ACTION_73_FIREMAN_RETURNING:
+    case ACTION_3_FIREMAN_RETURNING:
         if (do_returnhome(TERRAIN_USAGE_PREFER_ROADS)) {
             building *h = home();
             if (h && h->params().flags.keeps_visitor_paths) {
@@ -50,16 +52,16 @@ void figure_fireman::figure_action() { // doubles as fireman! not as policeman!!
         }
         break;
 
-    case ACTION_71_FIREMAN_ENTERING_EXITING:
+    case ACTION_1_FIREMAN_ENTERING_EXITING:
         do_enterbuilding(true, home());
         break;
 
-    case ACTION_72_FIREMAN_ROAMING:
-        do_roam(TERRAIN_USAGE_ROADS, ACTION_73_FIREMAN_RETURNING);
+    case ACTION_2_FIREMAN_ROAMING:
+        do_roam(TERRAIN_USAGE_ROADS, ACTION_3_FIREMAN_RETURNING);
         break;
 
-    case ACTION_74_FIREMAN_GOING_TO_FIRE:
-        if (do_goto(base.destination_tile, TERRAIN_USAGE_PREFER_ROADS, ACTION_75_FIREMAN_AT_FIRE)) {
+    case ACTION_4_FIREMAN_GOING_TO_FIRE:
+        if (do_goto(base.destination_tile, TERRAIN_USAGE_PREFER_ROADS, ACTION_5_FIREMAN_AT_FIRE)) {
             base.wait_ticks = 50;
         }
 
@@ -73,14 +75,14 @@ void figure_fireman::figure_action() { // doubles as fireman! not as policeman!!
             if (next_tile_b && next_tile_b->type == BUILDING_BURNING_RUIN) {
                 clear_ruin_destination();
                 base.set_destination(next_tile_b);
-                advance_action(ACTION_75_FIREMAN_AT_FIRE);
+                advance_action(ACTION_5_FIREMAN_AT_FIRE);
             }
 
             if (!next_b || next_b->state == BUILDING_STATE_UNUSED || next_b->type != BUILDING_BURNING_RUIN) {
                 clear_ruin_destination();
                 bool has_fire_around = fight_fire();
                 if (!has_fire_around) {
-                    advance_action(ACTION_73_FIREMAN_RETURNING);
+                    advance_action(ACTION_3_FIREMAN_RETURNING);
                 }
             }
 
@@ -88,21 +90,21 @@ void figure_fireman::figure_action() { // doubles as fireman! not as policeman!!
                 base.movement_ticks_watchdog = 0;
                 clear_ruin_destination();
                 route_remove();
-                advance_action(ACTION_73_FIREMAN_RETURNING);
+                advance_action(ACTION_3_FIREMAN_RETURNING);
             }
         }
         break;
 
-    case ACTION_75_FIREMAN_AT_FIRE:
+    case ACTION_5_FIREMAN_AT_FIRE:
         extinguish_fire();
         break;
 
-    case ACTION_76_FIREMAN_GOING_TO_ENEMY:
+    case ACTION_6_FIREMAN_GOING_TO_ENEMY:
         //terrain_usage = TERRAIN_USAGE_ANY;
         //if (!target_is_alive()) {
         //    map_point road_tile;
         //    if (map_closest_road_within_radius(b->tile.x(), b->tile.y(), b->size, 2, road_tile)) {
-        //        action_state = FIGURE_ACTION_73_FIREMAN_RETURNING;
+        //        action_state = ACTION_3_FIREMAN_RETURNING;
         //        destination_tile = road_tile;
         //        route_remove();
         //        roam_length = 0;
@@ -119,7 +121,7 @@ void figure_fireman::figure_action() { // doubles as fireman! not as policeman!!
         //    poof();
         //}
         assert(false && "should not happens");
-        advance_action(ACTION_73_FIREMAN_RETURNING);
+        advance_action(ACTION_3_FIREMAN_RETURNING);
         break;
     }
 }
@@ -141,7 +143,7 @@ void figure_fireman::extinguish_fire() {
     base.wait_ticks--;
     if (base.wait_ticks <= 0) {
         base.wait_ticks_missile = 20;
-        advance_action(ACTION_73_FIREMAN_RETURNING);
+        advance_action(ACTION_3_FIREMAN_RETURNING);
 
         if (!game_features::gameplay_change_fireman_returning) {
             if (!fight_fire()) {
@@ -160,10 +162,10 @@ bool figure_fireman::fight_fire() {
 
     switch (base.action_state) {
     case FIGURE_ACTION_149_CORPSE:
-    case ACTION_70_FIREMAN_CREATED:
-    case ACTION_71_FIREMAN_ENTERING_EXITING:
-    case ACTION_74_FIREMAN_GOING_TO_FIRE:
-    case ACTION_75_FIREMAN_AT_FIRE:
+    case ACTION_0_FIREMAN_CREATED:
+    case ACTION_1_FIREMAN_ENTERING_EXITING:
+    case ACTION_4_FIREMAN_GOING_TO_FIRE:
+    case ACTION_5_FIREMAN_AT_FIRE:
         return false;
     }
 
@@ -177,7 +179,7 @@ bool figure_fireman::fight_fire() {
     if (result.first > 0 && distance <= current_params().fire_detection_distance) {
         building* ruin = building_get(result.first);
         base.wait_ticks_missile = 0;
-        advance_action(ACTION_74_FIREMAN_GOING_TO_FIRE, result.second);
+        advance_action(ACTION_4_FIREMAN_GOING_TO_FIRE, result.second);
         base.set_destination(result.first);
         route_remove();
         ruin->set_figure(3, base.id);
@@ -214,14 +216,14 @@ void figure_fireman::update_animation() {
     figure_impl::update_animation();
 
     switch (action_state()) {
-    case ACTION_75_FIREMAN_AT_FIRE:
+    case ACTION_5_FIREMAN_AT_FIRE:
         base.direction = base.attack_direction;
         image_set_animation(animkeys().fight_fire);
         break;
 
-    case ACTION_73_FIREMAN_RETURNING:
-    case ACTION_72_FIREMAN_ROAMING:
-    case ACTION_74_FIREMAN_GOING_TO_FIRE:
+    case ACTION_3_FIREMAN_RETURNING:
+    case ACTION_2_FIREMAN_ROAMING:
+    case ACTION_4_FIREMAN_GOING_TO_FIRE:
         image_set_animation(animkeys().walk);
         break;
     }

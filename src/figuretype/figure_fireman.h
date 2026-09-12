@@ -3,15 +3,19 @@
 #include "figure/figure.h"
 
 enum e_fireman_action {
-    ACTION_70_FIREMAN_CREATED = 70,
-    ACTION_71_FIREMAN_ENTERING_EXITING = 71,
-    ACTION_72_FIREMAN_ROAMING = 72,
-    ACTION_73_FIREMAN_RETURNING = 73,
-    ACTION_74_FIREMAN_GOING_TO_FIRE = 74,
-    ACTION_75_FIREMAN_AT_FIRE = 75,
-    ACTION_76_FIREMAN_GOING_TO_ENEMY = 76,
-    ACTION_77_FIREMAN_AT_ENEMY = 77,
+    ACTION_0_FIREMAN_CREATED = 0,
+    ACTION_1_FIREMAN_ENTERING_EXITING = 1,
+    ACTION_2_FIREMAN_ROAMING = 2,
+    ACTION_3_FIREMAN_RETURNING = 3,
+    ACTION_4_FIREMAN_GOING_TO_FIRE = 4,
+    ACTION_5_FIREMAN_AT_FIRE = 5,
+    ACTION_6_FIREMAN_GOING_TO_ENEMY = 6,
+    ACTION_7_FIREMAN_AT_ENEMY = 7,
+
+    ACTION_8_FIREMAN_MAX
 };
+using figure_fireman_action_tokens_t = token_holder<e_fireman_action, ACTION_0_FIREMAN_CREATED, ACTION_8_FIREMAN_MAX>;
+extern const figure_fireman_action_tokens_t figure_fireman_action_tokens;
 
 class figure_fireman : public figure_impl {
 public:

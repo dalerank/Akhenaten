@@ -96,13 +96,13 @@ function figure_fireman_city_phrase_key() {
 
 function figure_fireman_phrase_key(f) {
 	var state = f.action_state
-	// ACTION_74_FIREMAN_GOING_TO_FIRE
-	if (state == 74) {
+	// ACTION_4_FIREMAN_GOING_TO_FIRE
+	if (state == ACTION_4_FIREMAN_GOING_TO_FIRE) {
 		return "fireman_going_to_fire"
 	}
 
-	// ACTION_75_FIREMAN_AT_FIRE
-	if (state == 75) {
+	// ACTION_5_FIREMAN_AT_FIRE
+	if (state == ACTION_5_FIREMAN_AT_FIRE) {
 		var fighting = ["fireman_fighting_fire", "fireman_fighting_fire_also"]
 		return fighting[Math.floor(Math.random() * fighting.length)]
 	}
