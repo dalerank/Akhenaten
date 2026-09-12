@@ -103,7 +103,6 @@ enum e_building_flag : uint8_t {
     e_building_non_deletable = 27,
 };
 
-class building_work_camp;
 class building_farm;
 struct building_static_params;
 

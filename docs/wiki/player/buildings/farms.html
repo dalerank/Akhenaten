@@ -492,7 +492,7 @@ d.ready_production = d.progress * farm_fertility / <span class="num">100</span>;
     FLOOD_STATE_RESTING     = <span class="num">5</span>,
     FLOOD_STATE_FARMABLE    = <span class="num">6</span>,  <span class="cmt">// Work Camp laborers dispatched; progress grows</span>
 };</code></pre>
-            <p><code>g_floods.state_is(FLOOD_STATE_FARMABLE)</code> is checked in <span class="file-ref">src/building/building_work_camp.cpp</span> before dispatching a laborer. <code>FLOOD_STATE_IMMINENT</code> is checked in <code>building_farm::time_to_deliver()</code> to trigger the cartpusher.</p>
+            <p><code>g_floods.state_is(FLOOD_STATE_FARMABLE)</code> is checked in <span class="file-ref">src/scripts/building/work_camp.js</span> before dispatching a laborer. <code>FLOOD_STATE_IMMINENT</code> is checked in <code>building_farm::time_to_deliver()</code> to trigger the cartpusher.</p>
           </div>
         </details>
 

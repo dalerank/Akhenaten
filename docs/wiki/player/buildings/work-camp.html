@@ -352,10 +352,10 @@
         </details>
 
         <details>
-          <summary>Spawn logic — <code>src/building/building_work_camp.cpp</code></summary>
+          <summary>Spawn logic — <code>src/scripts/building/work_camp.js</code></summary>
           <div class="details-body">
-            <p>The Work Camp's core behavior lives in <span class="file-ref">src/building/building_work_camp.cpp</span>.</p>
-            <p><code>determine_worker_needed()</code> scans all valid buildings and picks the nearest eligible target by squared distance:</p>
+            <p>The Work Camp's core behavior lives in <span class="file-ref">src/scripts/building/work_camp.js</span>.</p>
+            <p><code>nearest_eligible_farm</code> / <code>nearest_eligible_monument</code> scan valid buildings and pick the nearest eligible target by squared distance:</p>
             <pre><code><span class="cmt">// Floodplain farm eligible when:</span>
 <span class="cmt">//   - Nile is in FLOOD_STATE_FARMABLE</span>
 <span class="cmt">//   - farm has road access</span>
@@ -365,7 +365,7 @@
 <span class="cmt">// Monument eligible when:</span>
 <span class="cmt">//   - monument phase &lt; 2  (still under construction)</span>
 <span class="cmt">//   - monument needs workers</span></code></pre>
-            <p><code>spawn_figure()</code> creates a <code>FIGURE_LABORER</code> with the destination returned by <code>determine_worker_needed()</code>. The flag <code>gameplay_change_work_camp_one_worker_per_month</code> limits spawning to one laborer per month when enabled (tracked by <code>base.spawned_worker_this_month</code>, reset in <code>update_month()</code>).</p>
+            <p><code>spawn_figure</code> creates a <code>FIGURE_LABORER</code> with the destination from those helpers. The flag <code>gameplay_change_work_camp_one_worker_per_month</code> limits spawning to one laborer per month when enabled (tracked by <code>spawned_worker_this_month</code>, reset in <code>update_month</code>).</p>
           </div>
         </details>
 

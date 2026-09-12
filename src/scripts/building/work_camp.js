@@ -1,6 +1,8 @@
 log_info("akhenaten: building_work_camp started")
 
+[es=building]
 building_work_camp = {
+    type: BUILDING_WORK_CAMP
     animations {
         preview { pos : [0, 0], pack:PACK_GENERAL, id:77 }
         base { pos : [0, 0], pack:PACK_GENERAL, id:77 }

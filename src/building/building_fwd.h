@@ -73,7 +73,6 @@ class building;
     X(tower)                   \
     X(senet_house)             \
     X(gatehouse)               \
-    X(work_camp)               \
     X(dancer_school)           \
     X(police_station)          \
     X(dentist)                 \
