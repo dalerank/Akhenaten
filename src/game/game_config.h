@@ -5,16 +5,14 @@
 #include "core/settings_vars.h"
 #include "core/typename.h"
 #include "core/custom_span.hpp"
+#include "core/hvector.h"
+#include "city/constants.h"
 #include <array>
 #include <utility>
 
-enum e_features_profile : int {
-    features_profile_default = 0,
-    features_profile_og,
-    features_profile_enhanced,
-};
-
 namespace game_features {
+    using cli_overrides_t = hvector<std::pair<xstring, xstring>, 32>;
+
     struct game_feature {
         const xstring name;
         const xstring text;
@@ -204,15 +202,15 @@ namespace game_features {
     // Bool features with localization text (shown in Enhanced settings / options window).
     bool is_toggleable(const game_feature &feature);
 
-    // Reset toggleable features to constructor defaults (original Pharaoh behavior).
+    // Reset toggleable features to ogv (original Pharaoh behavior).
     void apply_og_profile();
     // Enable every toggleable feature (full Akhenaten / Enhanced suite).
     void apply_enhanced_profile();
     void apply_cli_profiles(e_features_profile profile);
 
     void load();
-    void load(e_features_profile profile, span_const<std::pair<xstring, xstring>> overrides = {});
+    void load(e_features_profile profile, const cli_overrides_t &overrides = {});
     void save();
     globals_settings_t &settings();
-    void apply_cli_overrides(span_const<std::pair<xstring, xstring>> overrides);
+    void apply_cli_overrides(const cli_overrides_t &overrides);
 }

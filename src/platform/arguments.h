@@ -4,9 +4,8 @@
 #include "core/core.h"
 #include "core/hvector.h"
 #include "core/variant.h"
+#include "city/constants.h"
 #include <optional>
-
-enum e_features_profile : int;
 
 class Arguments;
 

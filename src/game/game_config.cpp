@@ -291,7 +291,7 @@ void game_features::apply_cli_profiles(e_features_profile profile) {
     }
 }
 
-void game_features::load(e_features_profile profile, span_const<std::pair<xstring, xstring>> overrides) {
+void game_features::load(e_features_profile profile, const cli_overrides_t &overrides) {
     load();
     apply_cli_profiles(profile);
     apply_cli_overrides(overrides);
@@ -333,7 +333,7 @@ static vec2i parse_vec2i_setting_value(pcstr value) {
     return {};
 }
 
-void game_features::apply_cli_overrides(span_const<std::pair<xstring, xstring>> overrides) {
+void game_features::apply_cli_overrides(const cli_overrides_t &overrides) {
     for (const auto& override_entry : overrides) {
         game_feature* feature = find(override_entry.first);
         if (!feature) {

@@ -6,7 +6,6 @@
 #include "core/log.h"
 #include "content/vfs.h"
 #include "game/game.h"
-#include "game/game_config.h"
 
 #include <cstring>
 #include <filesystem>

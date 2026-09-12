@@ -107,3 +107,9 @@ enum e_sound_type {
     SOUND_COUNT
 };
 using e_sound_type_tokens_t = token_holder<e_sound_type, SOUND_NONE, SOUND_COUNT>;
+
+enum e_features_profile : int {
+    features_profile_default = 0,
+    features_profile_og,
+    features_profile_enhanced,
+};
