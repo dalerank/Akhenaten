@@ -10,7 +10,7 @@
 #include <sys/timeb.h>
 #endif
 
-#define js_optnumber(J,I,V) (js_isdefined(J,I) ? js_tonumber(J,I) : V)
+#define js_optnumber(J,I,V) (J->isdefined(I) ? js_tonumber(J,I) : V)
 
 static double Now(void) {
 #if defined(__unix__)
@@ -376,7 +376,7 @@ static void jsB_new_Date(js_State *J) {
         t = Now();
     else if (top == 2) {
         js_toprimitive(J, 1, JS_HNONE);
-        if (js_isstring(J, 1))
+        if (J->isstring(1))
             t = parseDateTime(js_tostring(J, 1)->value.c_str());
         else
             t = TimeClip(js_tonumber(J, 1));
@@ -651,7 +651,7 @@ js_StringNode toISOString = js_intern("toISOString");
 static void Dp_toJSON(js_State* J) {
     js_copy(J, 0);
     js_toprimitive(J, -1, JS_HNUMBER);
-    if (js_isnumber(J, -1) && !isfinite(js_tonumber(J, -1))) {
+    if (J->isnumber(-1) && !isfinite(js_tonumber(J, -1))) {
         js_pushnull(J);
         return;
     }

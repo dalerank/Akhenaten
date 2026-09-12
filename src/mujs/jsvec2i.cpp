@@ -8,18 +8,18 @@ static js_StringNode property_x = js_intern("x");
 static js_StringNode property_y = js_intern("y");
 
 static void vec2i_read_arg(js_State *J, int idx, int *x, int *y) {
-	if (js_iscvec2i(J, idx)) {
+	if (J->iscvec2i(idx)) {
 		js_Object *o = J->toobject(idx);
 		*x = o->u.vec2.x;
 		*y = o->u.vec2.y;
 		return;
 	}
-	if (J->isobject(idx) && !js_isarray(J, idx)) {
+	if (J->isobject(idx) && !J->isarray(idx)) {
 		J->getproperty(idx, property_x);
-		*x = js_isnumber(J, -1) ? js_tointeger(J, -1) : 0;
+		*x = J->isnumber(-1) ? js_tointeger(J, -1) : 0;
 		js_pop(J, 1);
 		J->getproperty(idx, property_y);
-		*y = js_isnumber(J, -1) ? js_tointeger(J, -1) : 0;
+		*y = J->isnumber(-1) ? js_tointeger(J, -1) : 0;
 		js_pop(J, 1);
 		return;
 	}
@@ -39,7 +39,7 @@ static void jsB_new_Vec2i(js_State *J)
 {
 	int x = 0;
 	int y = 0;
-	if (js_gettop(J) > 1 && (J->isobject(1) || js_iscvec2i(J, 1)) && js_gettop(J) <= 2) {
+	if (js_gettop(J) > 1 && (J->isobject(1) || J->iscvec2i(1)) && js_gettop(J) <= 2) {
 		vec2i_read_arg(J, 1, &x, &y);
 	} else {
 		x = js_gettop(J) > 1 ? js_tointeger(J, 1) : 0;

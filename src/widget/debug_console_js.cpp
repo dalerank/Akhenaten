@@ -70,7 +70,7 @@ static void __debug_props_show(js_State *J) {
 
     // 3-arg form: property_input("display_name", obj, "field_name")
     // Resolves the real C++ pointer via JS_CPTR / JS_CPTROFF binding.
-    if (argc >= 3 && js_isstring(J, 3)) {
+    if (argc >= 3 && J->isstring(3)) {
         js_StringNode prop_sn = js_tostring(J, 3);
         if (try_show_cptr_property(J, field, 2, prop_sn)) {
             return;
@@ -80,7 +80,7 @@ static void __debug_props_show(js_State *J) {
     // 2-arg fallback: property_input("display_name", value) — read-only display.
     const int val_idx = 2;
 
-    if (J->isobject(val_idx) && !js_isarray(J, val_idx)) {
+    if (J->isobject(val_idx) && !J->isarray(val_idx)) {
         js_Object *obj = J->toobject(val_idx);
         if (obj && obj->type == JS_CVEC2I) {
             const vec2i v{obj->u.vec2.x, obj->u.vec2.y};
@@ -89,14 +89,14 @@ static void __debug_props_show(js_State *J) {
         }
     }
 
-    if (js_isboolean(J, val_idx)) {
+    if (J->isboolean(val_idx)) {
         bool v = js_toboolean(J, val_idx);
         game_debug_show_property(field, v);
         js_pushboolean(J, v);
         return;
     }
 
-    if (js_isnumber(J, val_idx) || js_iscnumber(J, val_idx)) {
+    if (J->isnumber(val_idx) || J->iscnumber(val_idx)) {
         const double num = js_tonumber(J, val_idx);
         const int as_int = static_cast<int>(num);
         if (static_cast<double>(as_int) == num) {
@@ -107,7 +107,7 @@ static void __debug_props_show(js_State *J) {
         return;
     }
 
-    if (js_isstring(J, val_idx)) {
+    if (J->isstring(val_idx)) {
         game_debug_show_property(field, js_toxstring(J, val_idx).c_str());
     }
 }

@@ -117,7 +117,7 @@ void js_register_console_command(js_State *J) {
         return;
     }
 
-    if (!js_isstring(J, 1)) {
+    if (!J->isstring(1)) {
         logs::error("__register_console_command: first argument must be a string (command name)");
         J->pushundefined();
         return;

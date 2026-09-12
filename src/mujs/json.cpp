@@ -243,13 +243,13 @@ static int fmtvalue(js_State *J, js_Buffer **sb, const char *key, const char *ga
 		default: fmtobject(J, sb, obj, gap, level); break;
 		}
 	}
-	else if (js_isboolean(J, -1))
+	else if (J->isboolean(-1))
 		js_puts(J, sb, js_toboolean(J, -1) ? "true" : "false");
-	else if (js_isnumber(J, -1))
+	else if (J->isnumber(-1))
 		fmtnum(J, sb, js_tonumber(J, -1));
-	else if (js_isstring(J, -1))
+	else if (J->isstring(-1))
         fmtstr(J, sb, js_strnode_cstr(js_tostring(J, -1)));
-	else if (js_isnull(J, -1))
+	else if (J->isnull(-1))
 		js_puts(J, sb, "null");
 	else
 		return 0;
@@ -266,14 +266,14 @@ static void JSON_stringify(js_State *J)
 
 	gap = NULL;
 
-	if (js_isnumber(J, 3)) {
+	if (J->isnumber(3)) {
 		n = js_tointeger(J, 3);
 		if (n < 0) n = 0;
 		if (n > 10) n = 10;
 		memset(buf, ' ', n);
 		buf[n] = 0;
 		if (n > 0) gap = buf;
-	} else if (js_isstring(J, 3)) {
+	} else if (J->isstring(3)) {
         s = js_strnode_cstr(js_tostring(J, 3));
 		n = strlen(s);
 		if (n > 10) n = 10;
@@ -284,7 +284,7 @@ static void JSON_stringify(js_State *J)
 
 	// TODO: replacer
 
-	if (js_isdefined(J, 1)) {
+	if (J->isdefined(1)) {
 		js_copy(J, 1);
 		if (fmtvalue(J, &sb, "", gap, 0)) {
 			js_putc(J, &sb, 0);

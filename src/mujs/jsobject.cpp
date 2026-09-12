@@ -4,7 +4,7 @@
 
 static void jsB_new_Object(js_State *J)
 {
-	if (js_isundefined(J, 1) || js_isnull(J, 1))
+	if (J->isundefined(1) || J->isnull(1))
 		js_newobject(J);
 	else
 		js_pushobject(J, J->toobject(1));
@@ -12,7 +12,7 @@ static void jsB_new_Object(js_State *J)
 
 static void jsB_Object(js_State *J)
 {
-	if (js_isundefined(J, 1) || js_isnull(J, 1))
+	if (J->isundefined(1) || J->isnull(1))
 		js_newobject(J);
 	else
 		js_pushobject(J, J->toobject(1));
@@ -326,7 +326,7 @@ static void O_create(js_State *J)
 
 	if (J->isobject(1))
 		proto = J->toobject(1);
-	else if (js_isnull(J, 1))
+	else if (J->isnull(1))
 		proto = NULL;
 	else
 		js_typeerror(J, "not an object or null");
@@ -334,7 +334,7 @@ static void O_create(js_State *J)
 	obj = jsV_newobject(J, JS_COBJECT, proto);
 	js_pushobject(J, obj);
 
-	if (js_isdefined(J, 2)) {
+	if (J->isdefined(2)) {
 		if (!J->isobject(2)) js_typeerror(J, "not an object");
 		props = J->toobject(2);
 		for (ref = props->head; ref; ref = ref->next) {

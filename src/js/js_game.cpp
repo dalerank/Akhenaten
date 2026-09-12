@@ -59,7 +59,7 @@ using event_handlers = hvector<xstring, 16>;
 std::unordered_map<xstring, event_handlers> event_type_handlers;
 
 void js_log_info_native(js_State *J) {
-    if (js_isundefined(J, 1)) {
+    if (J->isundefined(1)) {
         logs::info("log() Try to print undefined object", 0, 0);
     } else {
         logs::info("%s", js_toxstring(J, 1).c_str());
@@ -68,7 +68,7 @@ void js_log_info_native(js_State *J) {
 }
 
 void js_log_warn_native(js_State *J) {
-    if (js_isundefined(J, 1)) {
+    if (J->isundefined(1)) {
         logs::info("warning() Try to print undefined object", 0, 0);
     } else {
         logs::info("WARN: %s", js_toxstring(J, 1).c_str());
@@ -77,7 +77,7 @@ void js_log_warn_native(js_State *J) {
 }
 
 void js_loc_native(js_State *J) {
-    if (js_isstring(J, 1)) {
+    if (J->isstring(1)) {
         const xstring key = js_toxstring(J, 1);
         const xstring resolved = lang_xtext_from_key(key);
         J->pushstring(resolved.c_str());
@@ -86,9 +86,9 @@ void js_loc_native(js_State *J) {
 
     // __loc is registered with arity 2, so a one-arg call still has gettop==3
     // (arg2 is undefined). Treat that as the object form, not group/id 0/0.
-    if (J->isobject(1) && !js_isarray(J, 1) && (js_gettop(J) < 3 || js_isundefined(J, 2))) {
+    if (J->isobject(1) && !J->isarray(1) && (js_gettop(J) < 3 || J->isundefined(2))) {
         J->getproperty(1, js_intern("key"));
-        if (js_isstring(J, -1)) {
+        if (J->isstring(-1)) {
             const xstring key_node = js_toxstring(J, -1); js_pop(J, 1);
             const xstring resolved = lang_xtext_from_key(key_node);
             J->pushstring((js_StringNode)resolved._get());
@@ -144,38 +144,38 @@ void js_game_get_image(js_State *J) {
     }
 
     int tid;
-    if (js_isstring(J, 1)) {
+    if (J->isstring(1)) {
         xstring path = js_toxstring(J, 1);
         image_desc desc;
         desc.path = path.c_str();
         tid = desc.tid();
-    } else if (J->isobject(1) && !js_isarray(J, 1)) {
+    } else if (J->isobject(1) && !J->isarray(1)) {
         J->getproperty(1, property_tid);
-        if (!js_isundefined(J, -1)) {
+        if (!J->isundefined(-1)) {
             tid = (int)js_tointeger(J, -1);
             js_pop(J, 1);
         } else {
             js_pop(J, 1);
 
             J->getproperty(1, property_pack);
-            int16_t pack = !js_isundefined(J, -1) ? (int16_t)js_tointeger(J, -1) : 0;
+            int16_t pack = !J->isundefined(-1) ? (int16_t)js_tointeger(J, -1) : 0;
             js_pop(J, 1);
 
             J->getproperty(1, property_id);
-            int16_t id = !js_isundefined(J, -1) ? (int16_t)js_tointeger(J, -1) : 0;
+            int16_t id = !J->isundefined(-1) ? (int16_t)js_tointeger(J, -1) : 0;
             js_pop(J, 1);
 
             J->getproperty(1, property_offset);
-            int16_t offset = !js_isundefined(J, -1) ? (int16_t)js_tointeger(J, -1) : 0;
+            int16_t offset = !J->isundefined(-1) ? (int16_t)js_tointeger(J, -1) : 0;
             js_pop(J, 1);
 
             image_desc desc{ pack, id, offset };
             tid = desc.tid();
         }
-    } else if (js_isnumber(J, 1) || js_iscnumber(J, 1)) {
+    } else if (J->isnumber(1) || J->iscnumber(1)) {
         int16_t pack = js_touint32(J, 1);
-        int16_t id = (js_isnumber(J, 2) || js_iscnumber(J, 2)) ? js_touint32(J, 2) : 0;
-        int16_t offset = (js_isnumber(J, 3) || js_iscnumber(J, 3)) ? js_touint32(J, 3) : 0;
+        int16_t id = (J->isnumber(2) || J->iscnumber(2)) ? js_touint32(J, 2) : 0;
+        int16_t offset = (J->isnumber(3) || J->iscnumber(3)) ? js_touint32(J, 3) : 0;
 
         image_desc desc{ pack, id, offset };
         tid = desc.tid();

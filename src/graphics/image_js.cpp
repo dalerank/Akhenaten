@@ -8,12 +8,12 @@
 #include "mujs/mujs.h"
 
 static bool __image_request_pak(js_State *J) {
-    if (js_isstring(J, 1)) {
+    if (J->isstring(1)) {
         xstring name = js_toxstring(J, 1);
         return image_request_pak(name);
     }
 
-    if (js_isnumber(J, 1) || js_iscnumber(J, 1)) {
+    if (J->isnumber(1) || J->iscnumber(1)) {
         return image_request_pak(static_cast<int>(js_tonumber(J, 1)));
     }
 
@@ -23,12 +23,12 @@ static bool __image_request_pak(js_State *J) {
 ANK_FUNCTION_RAW(__image_request_pak)
 
 static bool __image_pak_is_loaded(js_State *J) {
-    if (js_isstring(J, 1)) {
+    if (J->isstring(1)) {
         xstring name = js_toxstring(J, 1);
         return image_pak_is_loaded(name);
     }
 
-    if (js_isnumber(J, 1) || js_iscnumber(J, 1)) {
+    if (J->isnumber(1) || J->iscnumber(1)) {
         return image_pak_is_loaded(static_cast<int>(js_tonumber(J, 1)));
     }
 

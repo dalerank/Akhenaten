@@ -45,7 +45,7 @@ void js_conf_panic(js_State *J) {
 }
 
 void js_conf_log_info(js_State *J) {
-    if (!js_isundefined(J, 1)) {
+    if (!J->isundefined(1)) {
         logs::info("%s", js_toxstring(J, 1).c_str());
     }
     J->pushundefined();

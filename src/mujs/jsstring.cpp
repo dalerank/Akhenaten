@@ -8,7 +8,7 @@ js_StringNode empty_string = js_intern("");
 
 static const char *checkstring(js_State *J, int idx)
 {
-    if (!js_iscoercible(J, idx)) {
+    if (!J->iscoercible(idx)) {
         js_typeerror(J, "string function called on null or undefined");
     }
 
@@ -166,7 +166,7 @@ static void Sp_lastIndexOf(js_State *J)
 {
 	const char *haystack = checkstring(J, 0);
     const char* needle = js_strnode_cstr(js_tostring(J, 1));
-	int pos = js_isdefined(J, 2) ? js_tointeger(J, 2) : strlen(haystack);
+	int pos = J->isdefined(2) ? js_tointeger(J, 2) : strlen(haystack);
 	int len = strlen(needle);
 	int k = 0, last = -1;
 	Rune rune;
@@ -192,7 +192,7 @@ static void Sp_slice(js_State *J)
 	const char *ss, *ee;
 	int len = utflen(str);
 	int s = js_tointeger(J, 1);
-	int e = js_isdefined(J, 2) ? js_tointeger(J, 2) : len;
+	int e = J->isdefined(2) ? js_tointeger(J, 2) : len;
 
 	s = s < 0 ? s + len : s;
 	e = e < 0 ? e + len : e;
@@ -217,7 +217,7 @@ static void Sp_substring(js_State *J)
 	const char *ss, *ee;
 	int len = utflen(str);
 	int s = js_tointeger(J, 1);
-	int e = js_isdefined(J, 2) ? js_tointeger(J, 2) : len;
+	int e = J->isdefined(2) ? js_tointeger(J, 2) : len;
 
 	s = s < 0 ? 0 : s > len ? len : s;
 	e = e < 0 ? 0 : e > len ? len : e;
@@ -329,9 +329,9 @@ static void Sp_match(js_State *J)
 
 	text = checkstring(J, 0);
 
-	if (js_isregexp(J, 1))
+	if (J->isregexp(1))
 		js_copy(J, 1);
-	else if (js_isundefined(J, 1))
+	else if (J->isundefined(1))
 		js_newregexp(J, "", 0);
 	else
         js_newregexp(J, js_strnode_cstr(js_tostring(J, 1)), 0);
@@ -373,9 +373,9 @@ static void Sp_search(js_State *J)
 
 	text = checkstring(J, 0);
 
-	if (js_isregexp(J, 1))
+	if (J->isregexp(1))
 		js_copy(J, 1);
-	else if (js_isundefined(J, 1))
+	else if (J->isundefined(1))
 		js_newregexp(J, "", 0);
 	else
         js_newregexp(J, js_strnode_cstr(js_tostring(J, 1)), 0);
@@ -546,7 +546,7 @@ static void Sp_replace_string(js_State *J)
 
 static void Sp_replace(js_State *J)
 {
-	if (js_isregexp(J, 1))
+	if (J->isregexp(1))
 		Sp_replace_regexp(J);
 	else
 		Sp_replace_string(J);
@@ -562,7 +562,7 @@ static void Sp_split_regexp(js_State *J)
 
 	text = checkstring(J, 0);
 	re = js_toregexp(J, 1);
-	limit = js_isdefined(J, 2) ? js_tointeger(J, 2) : 1 << 30;
+	limit = J->isdefined(2) ? js_tointeger(J, 2) : 1 << 30;
 
 	js_newarray(J);
 	len = 0;
@@ -615,7 +615,7 @@ static void Sp_split_string(js_State *J)
 {
 	const char *str = checkstring(J, 0);
     const char* sep = js_strnode_cstr(js_tostring(J, 1));
-	int limit = js_isdefined(J, 2) ? js_tointeger(J, 2) : 1 << 30;
+	int limit = J->isdefined(2) ? js_tointeger(J, 2) : 1 << 30;
 	int i, n;
 
 	js_newarray(J);
@@ -650,11 +650,11 @@ static void Sp_split_string(js_State *J)
 
 static void Sp_split(js_State *J)
 {
-	if (js_isundefined(J, 1)) {
+	if (J->isundefined(1)) {
 		js_newarray(J);
 		js_copy(J, 0);
 		js_setindex(J, -2, 0);
-	} else if (js_isregexp(J, 1)) {
+	} else if (J->isregexp(1)) {
 		Sp_split_regexp(J);
 	} else {
 		Sp_split_string(J);

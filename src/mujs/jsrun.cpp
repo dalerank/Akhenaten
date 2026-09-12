@@ -200,23 +200,23 @@ js_Value *js_tovalue(js_State *J, int idx) {
     return stackidx(J, idx);
 }
 
-int js_isdefined(js_State *J, int idx) { return stackidx(J, idx)->type != JS_TUNDEFINED; }
-int js_isundefined(js_State *J, int idx) { return stackidx(J, idx)->type == JS_TUNDEFINED; }
-int js_isnull(js_State *J, int idx) { return stackidx(J, idx)->type == JS_TNULL; }
-int js_isboolean(js_State *J, int idx) { return stackidx(J, idx)->type == JS_TBOOLEAN; }
-int js_isnumber(js_State *J, int idx) { return stackidx(J, idx)->type == JS_TNUMBER; }
-int js_iscnumber(js_State *J, int idx) {
-    js_Value *v = stackidx(J, idx);
+int js_State::isdefined(int idx) { return stackidx(this, idx)->type != JS_TUNDEFINED; }
+int js_State::isundefined(int idx) { return stackidx(this, idx)->type == JS_TUNDEFINED; }
+int js_State::isnull(int idx) { return stackidx(this, idx)->type == JS_TNULL; }
+int js_State::isboolean(int idx) { return stackidx(this, idx)->type == JS_TBOOLEAN; }
+int js_State::isnumber(int idx) { return stackidx(this, idx)->type == JS_TNUMBER; }
+int js_State::iscnumber(int idx) {
+    js_Value *v = stackidx(this, idx);
     return v->type == JS_TOBJECT && v->u.object->type == JS_CNUMBER;
 }
-int js_iscvec2i(js_State *J, int idx) {
-    js_Value *v = stackidx(J, idx);
+int js_State::iscvec2i(int idx) {
+    js_Value *v = stackidx(this, idx);
     return v->type == JS_TOBJECT && v->u.object->type == JS_CVEC2I;
 }
-int js_isstring(js_State *J, int idx) { enum js_Type t = (js_Type)stackidx(J, idx)->type; return t == JS_TSHRSTR; }
-int js_isprimitive(js_State *J, int idx) { return stackidx(J, idx)->type != JS_TOBJECT; }
+int js_State::isstring(int idx) { enum js_Type t = (js_Type)stackidx(this, idx)->type; return t == JS_TSHRSTR; }
+int js_State::isprimitive(int idx) { return stackidx(this, idx)->type != JS_TOBJECT; }
 int js_State::isobject(int idx) { return stackidx(this, idx)->type == JS_TOBJECT; }
-int js_iscoercible(js_State *J, int idx) { js_Value *v = stackidx(J, idx); return v->type != JS_TUNDEFINED && v->type != JS_TNULL; }
+int js_State::iscoercible(int idx) { js_Value *v = stackidx(this, idx); return v->type != JS_TUNDEFINED && v->type != JS_TNULL; }
 
 int js_State::iscallable(int idx) {
     js_Value *v = stackidx(this, idx);
@@ -229,13 +229,13 @@ int js_State::iscallable(int idx) {
     return 0;
 }
 
-int js_isarray(js_State *J, int idx) {
-    js_Value *v = stackidx(J, idx);
+int js_State::isarray(int idx) {
+    js_Value *v = stackidx(this, idx);
     return v->type == JS_TOBJECT && v->u.object->type == JS_CARRAY;
 }
 
-int js_isregexp(js_State *J, int idx) {
-    js_Value *v = stackidx(J, idx);
+int js_State::isregexp(int idx) {
+    js_Value *v = stackidx(this, idx);
     return v->type == JS_TOBJECT && v->u.object->type == JS_CREGEXP;
 }
 
@@ -249,8 +249,8 @@ void *js_frame_alloc(js_State *J, int size) {
     return ptr;
 }
 
-int js_isuserdata(js_State *J, int idx, const char *tag) {
-    js_Value *v = stackidx(J, idx);
+int js_State::isuserdata(int idx, const char *tag) {
+    js_Value *v = stackidx(this, idx);
     if (v->type == JS_TOBJECT && v->u.object->type == JS_CUSERDATA)
         return !strcmp(tag, v->u.object->u.user.tag);
     return 0;
@@ -726,9 +726,9 @@ static void jsR_setproperty(js_State* J, js_Object* obj, const js_StringNode nam
                 case JS_PTR_INT16:  *(int16_t *)p = (int16_t)js_tointeger(J, -1); break;
                 case JS_PTR_XSTRING: {
                     xstring *xs = (xstring *)p;
-                    if (js_isstring(J, -1)) {
+                    if (J->isstring(-1)) {
                         xs->_set(js_tostring(J, -1));
-                    } else if (js_isundefined(J, -1) || js_isnull(J, -1)) {
+                    } else if (J->isundefined(-1) || J->isnull(-1)) {
                         *xs = xstring();
                     }
                     break;
@@ -1420,7 +1420,7 @@ void js_State::construct(int n) {
 }
 
 void js_eval(js_State *J) {
-    if (!js_isstring(J, -1)) {
+    if (!J->isstring(-1)) {
         return;
     }
     js_loadeval(J, "(eval)", js_strnode_cstr(js_tostring(J, -1)));
@@ -1778,7 +1778,7 @@ void js_State::r_run(js_Function *F) {
             break;
 
         case OP_ITERATOR:
-            if (!js_isundefined(J, -1) && !js_isnull(J, -1)) {
+            if (!J->isundefined(-1) && !J->isnull(-1)) {
                 obj = jsV_newiterator(J, J->toobject(-1), 0);
                 js_pop(J, 1);
                 js_pushobject(J, obj);

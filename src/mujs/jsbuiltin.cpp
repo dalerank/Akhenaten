@@ -29,7 +29,7 @@ void jsB_props(js_State* J, const js_StringNode name, const char* string) {
 
 static void jsB_parseInt(js_State* J) {
     const char* s = js_strnode_cstr(js_tostring(J, 1));
-    int radix = js_isdefined(J, 2) ? js_tointeger(J, 2) : 10;
+    int radix = J->isdefined(2) ? js_tointeger(J, 2) : 10;
     double sign = 1;
     double n;
     char* e;

@@ -25,7 +25,7 @@ static void jsB_Function(js_State *J)
 	}
 
 	/* body */
-	body = js_isdefined(J, top - 1) ? js_tostring(J, top - 1)->value.c_str() : "";
+	body = J->isdefined(top - 1) ? js_tostring(J, top - 1)->value.c_str() : "";
 
 	if (js_try(J)) {
 		jsP_freeparse(J);
@@ -96,7 +96,7 @@ static void Fp_apply(js_State *J)
 	js_copy(J, 0);
 	js_copy(J, 1);
 
-	if (js_isnull(J, 2) || js_isundefined(J, 2)) {
+	if (J->isnull(2) || J->isundefined(2)) {
 		n = 0;
 	} else {
 		n = js_getlength(J, 2);

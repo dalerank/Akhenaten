@@ -24,7 +24,7 @@ void archive::getproperty(archive arch, int idx, xstring_value* name) {
 }
 
 bool archive::isarray(int idx) {
-    return js_isarray((js_State*)state, idx);
+    return ((js_State*)state)->isarray(idx);
 }
 
 int archive::getlength(int idx) {
@@ -36,15 +36,15 @@ void archive::getindex(int idx, int i) {
 }
 
 bool archive::isnumber(int idx) {
-    return (js_isnumber((js_State*)state, idx) || js_iscnumber((js_State*)state, idx));
+    return (((js_State*)state)->isnumber(idx) || ((js_State*)state)->iscnumber(idx));
 }
 
 bool archive::isstring(int idx) {
-    return js_isstring((js_State *)state, idx);
+    return ((js_State *)state)->isstring(idx);
 }
 
 bool archive::isboolean(int idx) {
-    return js_isboolean((js_State *)state, idx);
+    return ((js_State *)state)->isboolean(idx);
 }
 
 double archive::tonumber(int idx) {
@@ -99,27 +99,27 @@ xstring archive::r_string_impl(pcstr name, pcstr def) {
     auto vm = (js_State *)state;
     vm->getproperty(-1, js_intern(name));
     xstring result = def;
-    if (js_isundefined(vm, -1)) {
+    if (vm->isundefined(-1)) {
         ;
-    } else if (js_isstring(vm, -1)) {
+    } else if (vm->isstring(-1)) {
         auto pp = js_tostring(vm, -1);
         result._set(pp);
-    } else if (js_isarray(vm, -1)) {
+    } else if (vm->isarray(-1)) {
         int length = js_getlength(vm, -1);
         vec2i gx;
         if (length == 2) {
-            js_getindex(vm, -1, 0); gx.x = !js_isundefined(vm, -1) ? js_tointeger(vm, -1) : 0; js_pop(vm, 1);
-            js_getindex(vm, -1, 1); gx.y = !js_isundefined(vm, -1) ? js_tointeger(vm, -1) : 0; js_pop(vm, 1);
+            js_getindex(vm, -1, 0); gx.x = !vm->isundefined(-1) ? js_tointeger(vm, -1) : 0; js_pop(vm, 1);
+            js_getindex(vm, -1, 1); gx.y = !vm->isundefined(-1) ? js_tointeger(vm, -1) : 0; js_pop(vm, 1);
         }
 
         result = lang_get_string(gx.x, gx.y);
     } else if (vm->isobject(-1)) {
         vm->getproperty(-1, property_group);
-        int group = js_isundefined(vm, -1) ? 0 : js_tointeger(vm, -1);
+        int group = vm->isundefined(-1) ? 0 : js_tointeger(vm, -1);
         js_pop(vm, 1);
 
         vm->getproperty(-1, property_id);
-        int id = js_isundefined(vm, -1) ? 0 : js_tointeger(vm, -1);
+        int id = vm->isundefined(-1) ? 0 : js_tointeger(vm, -1);
         js_pop(vm, 1);
         result = lang_get_string(group, id);
     }
@@ -140,7 +140,7 @@ std::vector<xstring> archive::r_array_str(pcstr name) {
 
     vm->getproperty(-1, js_intern(name));
     std::vector<xstring> result;
-    if (js_isarray(vm, -1)) {
+    if (vm->isarray(-1)) {
         int length = js_getlength(vm, -1);
         for (int i = 0; i < length; ++i) {
             js_getindex(vm, -1, i);
@@ -151,7 +151,7 @@ std::vector<xstring> archive::r_array_str(pcstr name) {
             js_pop(vm, 1);
         }
     }
-    if (js_isundefined(vm, -1)) {
+    if (vm->isundefined(-1)) {
         int i = 0;
         ;
     }
@@ -168,7 +168,7 @@ std::vector<xstring> archive::to_array_str() {
     auto vm = (js_State *)state;
 
     std::vector<xstring> result;
-    if (js_isarray(vm, -1)) {
+    if (vm->isarray(-1)) {
         int length = js_getlength(vm, -1);
         for (int i = 0; i < length; ++i) {
             js_getindex(vm, -1, i);
@@ -179,7 +179,7 @@ std::vector<xstring> archive::to_array_str() {
             js_pop(vm, 1);
         }
     }
-    if (js_isundefined(vm, -1)) {
+    if (vm->isundefined(-1)) {
         int i = 0;
         ;
     }
@@ -194,9 +194,9 @@ std::vector<xstring> archive::to_array_str() {
 xstring archive::to_string() {
     auto vm = (js_State *)state;
 
-    if (js_isundefined(vm, -1)) {
+    if (vm->isundefined(-1)) {
         return "";
-    } else if (js_isstring(vm, -1)) {
+    } else if (vm->isstring(-1)) {
         auto pp = js_tostring(vm, -1);
         xstring v;
         v._set(pp);
@@ -211,22 +211,22 @@ archive::variant_t archive::to_variant() {
 
     variant_t result;
     pcstr name = "unknown";
-    if (js_isundefined(vm, -1)) {
+    if (vm->isundefined(-1)) {
         result = variant_t(variant_none_t{ name });
-    } else if (js_isstring(vm, -1)) {
+    } else if (vm->isstring(-1)) {
         auto pp = js_tostring(vm, -1);
         xstring str;
         str._set(pp);
         result = variant_t(str);
-    } else if (js_isboolean(vm, -1)) {
+    } else if (vm->isboolean(-1)) {
         const bool v = js_toboolean(vm, -1);
         result = variant_t(v);
-    } else if (js_isnumber(vm, -1)) {
+    } else if (vm->isnumber(-1)) {
         const float f = js_tonumber(vm, -1);
         result = variant_t(f);
     } else if (vm->isobject(-1)) {
         result = variant_t(variant_object_t{ name });
-    } else if (js_isarray(vm, -1)) {
+    } else if (vm->isarray(-1)) {
         result = variant_t(variant_array_t{ name });
     }
 
@@ -238,22 +238,22 @@ archive::variant_t archive::r_variant(pcstr name) {
 
     vm->getproperty(-1, js_intern(name));
     variant_t result;
-    if (js_isundefined(vm, -1)) {
+    if (vm->isundefined(-1)) {
         result = variant_t(variant_none_t{name});
-    } else if (js_isstring(vm, -1)) {
+    } else if (vm->isstring(-1)) {
         auto pp = js_tostring(vm, -1);
         xstring str;
         str._set(pp);
         result = variant_t(str);
-    } else if (js_isboolean(vm, -1)) {
+    } else if (vm->isboolean(-1)) {
         const bool v = js_toboolean(vm, -1);
         result = variant_t(v);
-    } else if (js_isnumber(vm, -1)) {
+    } else if (vm->isnumber(-1)) {
         const float f = js_tonumber(vm, -1);
         result = variant_t(f);
     } else if (vm->isobject(-1)) {
         result = variant_t(variant_object_t{ name });
-    } else if (js_isarray(vm, -1)) {
+    } else if (vm->isarray(-1)) {
         result = variant_t(variant_array_t{ name });
     }
     js_pop(vm, 1);
@@ -265,7 +265,7 @@ std::vector<vec2i> archive::r_array_vec2i(pcstr name, pcstr px, pcstr py) {
     auto vm = (js_State *)state;
     vm->getproperty(-1, js_intern(name));
     std::vector<vec2i> result;
-    if (js_isarray(vm, -1)) {
+    if (vm->isarray(-1)) {
         int length = js_getlength(vm, -1);
         for (int i = 0; i < length; ++i) {
             js_getindex(vm, -1, i);
@@ -281,7 +281,7 @@ std::vector<vec2i> archive::r_array_vec2i(pcstr name, pcstr px, pcstr py) {
 int archive::r_int(pcstr name, int def) {
     auto vm = (js_State *)state;
     vm->getproperty(-1, js_intern(name));
-    int result = js_isundefined(vm, -1) ? def : js_tointeger(vm, -1);
+    int result = vm->isundefined(-1) ? def : js_tointeger(vm, -1);
     js_pop(vm, 1);
     return result;
 }
@@ -289,7 +289,7 @@ int archive::r_int(pcstr name, int def) {
 float archive::r_float(pcstr name, float def) {
     auto vm = (js_State *)state;
     vm->getproperty(-1, js_intern(name));
-    float result = js_isundefined(vm, -1) ? def : (float)js_tonumber(vm, -1);
+    float result = vm->isundefined(-1) ? def : (float)js_tonumber(vm, -1);
     js_pop(vm, 1);
     return result;
 }
@@ -297,7 +297,7 @@ float archive::r_float(pcstr name, float def) {
 uint32_t archive::r_uint(pcstr name, uint32_t def) {
     auto vm = (js_State *)state;
     vm->getproperty(-1, js_intern(name));
-    uint32_t result = js_isundefined(vm, -1) ? def : js_touint32(vm, -1);
+    uint32_t result = vm->isundefined(-1) ? def : js_touint32(vm, -1);
     js_pop(vm, 1);
     return result;
 }
@@ -305,7 +305,7 @@ uint32_t archive::r_uint(pcstr name, uint32_t def) {
 bool archive::r_bool(pcstr name, bool def) {
     auto vm = (js_State *)state;
     vm->getproperty(-1, js_intern(name));
-    bool result = js_isundefined(vm, -1) ? def : js_toboolean(vm, -1);
+    bool result = vm->isundefined(-1) ? def : js_toboolean(vm, -1);
     js_pop(vm, 1);
     return result;
 }
@@ -318,17 +318,17 @@ vec2i archive::r_vec2i_impl(vec2i def, pcstr x, pcstr y) {
     auto vm = (js_State *)state;
     vec2i result = def;
     if (vm->isobject(-1)) {
-        if (js_isarray(vm, -1)) {
+        if (vm->isarray(-1)) {
             int length = js_getlength(vm, -1);
             if (length > 0) {
-                js_getindex(vm, -1, 0); result.x = !js_isundefined(vm, -1) ? js_tointeger(vm, -1) : def.x; js_pop(vm, 1);
+                js_getindex(vm, -1, 0); result.x = !vm->isundefined(-1) ? js_tointeger(vm, -1) : def.x; js_pop(vm, 1);
                 if (length > 1) {
-                    js_getindex(vm, -1, 1); result.y = !js_isundefined(vm, -1) ? js_tointeger(vm, -1) : def.y; js_pop(vm, 1);
+                    js_getindex(vm, -1, 1); result.y = !vm->isundefined(-1) ? js_tointeger(vm, -1) : def.y; js_pop(vm, 1);
                 }
             }
         } else {
-            vm->getproperty(-1, js_intern(x)); result.x = !js_isundefined(vm, -1) ? js_tointeger(vm, -1) : def.x; js_pop(vm, 1);
-            vm->getproperty(-1, js_intern(y)); result.y = !js_isundefined(vm, -1) ? js_tointeger(vm, -1) : def.y; js_pop(vm, 1);
+            vm->getproperty(-1, js_intern(x)); result.x = !vm->isundefined(-1) ? js_tointeger(vm, -1) : def.x; js_pop(vm, 1);
+            vm->getproperty(-1, js_intern(y)); result.y = !vm->isundefined(-1) ? js_tointeger(vm, -1) : def.y; js_pop(vm, 1);
         }
     }
 
@@ -363,14 +363,14 @@ bool archive::r_anim(pcstr name, animation_t &anim) {
     auto vm = (js_State *)state;
     vm->getproperty(-1, js_intern(name));
     bool ok = false;
-    if (js_isundefined(vm, -1)) {
+    if (vm->isundefined(-1)) {
         ;
     } else if (vm->isobject(-1)) {
-        vm->getproperty(-1, property_pack); anim.pack = js_isundefined(vm, -1) ? 0 : js_tointeger(vm, -1); js_pop(vm, 1);
-        vm->getproperty(-1, property_id); anim.id = js_isundefined(vm, -1) ? 0 : js_tointeger(vm, -1); js_pop(vm, 1);
-        vm->getproperty(-1, property_offset); anim.offset = js_isundefined(vm, -1) ? 0 : js_tointeger(vm, -1); js_pop(vm, 1);
-        vm->getproperty(-1, property_duration); anim.duration = js_isundefined(vm, -1) ? 0 : js_tointeger(vm, -1); js_pop(vm, 1);
-        vm->getproperty(-1, property_max_frames); anim.max_frames = js_isundefined(vm, -1) ? 0 : js_tointeger(vm, -1); js_pop(vm, 1);
+        vm->getproperty(-1, property_pack); anim.pack = vm->isundefined(-1) ? 0 : js_tointeger(vm, -1); js_pop(vm, 1);
+        vm->getproperty(-1, property_id); anim.id = vm->isundefined(-1) ? 0 : js_tointeger(vm, -1); js_pop(vm, 1);
+        vm->getproperty(-1, property_offset); anim.offset = vm->isundefined(-1) ? 0 : js_tointeger(vm, -1); js_pop(vm, 1);
+        vm->getproperty(-1, property_duration); anim.duration = vm->isundefined(-1) ? 0 : js_tointeger(vm, -1); js_pop(vm, 1);
+        vm->getproperty(-1, property_max_frames); anim.max_frames = vm->isundefined(-1) ? 0 : js_tointeger(vm, -1); js_pop(vm, 1);
         ok = true;
     }
     js_pop(vm, 1);
@@ -401,22 +401,22 @@ xstring archive::r_function(pcstr name) {
 
 bool archive::r_desc_impl(image_desc &desc) {
     auto vm = (js_State *)state;
-    if (js_isundefined(vm, -1)) {
+    if (vm->isundefined(-1)) {
         return false;
     }
 
-    if (js_isstring(vm, -1)) {
+    if (vm->isstring(-1)) {
         desc.path._set(js_tostring(vm, -1));
         return !desc.path.empty();
     }
 
     if (vm->isobject(-1)) {
-        vm->getproperty(-1, property_pack); desc.pack = js_isundefined(vm, -1) ? 0 : js_tointeger(vm, -1); js_pop(vm, 1);
-        vm->getproperty(-1, property_id); desc.id = js_isundefined(vm, -1) ? 0 : js_tointeger(vm, -1); js_pop(vm, 1);
-        vm->getproperty(-1, property_offset); desc.offset = js_isundefined(vm, -1) ? 0 : js_tointeger(vm, -1); js_pop(vm, 1);
+        vm->getproperty(-1, property_pack); desc.pack = vm->isundefined(-1) ? 0 : js_tointeger(vm, -1); js_pop(vm, 1);
+        vm->getproperty(-1, property_id); desc.id = vm->isundefined(-1) ? 0 : js_tointeger(vm, -1); js_pop(vm, 1);
+        vm->getproperty(-1, property_offset); desc.offset = vm->isundefined(-1) ? 0 : js_tointeger(vm, -1); js_pop(vm, 1);
 
         vm->getproperty(-1, property_path);
-        if (!js_isundefined(vm, -1) && js_isstring(vm, -1)) {
+        if (!vm->isundefined(-1) && vm->isstring(-1)) {
             desc.path._set(js_tostring(vm, -1));
         }
         js_pop(vm, 1);
@@ -433,7 +433,7 @@ void g_archive::w_property(pcstr name, pcstr prop, const xstring &value) {
 
     auto J = (js_State *)state;
     getglobal(name);
-    if (js_isundefined(J, -1)) {
+    if (J->isundefined(-1)) {
         pop(1);
         js_newobject(J);
     }
@@ -450,7 +450,7 @@ void g_archive::w_property(pcstr name, pcstr prop, bool value) {
 
     auto J = (js_State *)state;
     getglobal(name);
-    if (js_isundefined(J, -1)) {
+    if (J->isundefined(-1)) {
         pop(1);
         js_newobject(J);
     }
@@ -467,7 +467,7 @@ void g_archive::w_property(pcstr name, pcstr prop, float value) {
 
     auto J = (js_State *)state;
     getglobal(name);
-    if (js_isundefined(J, -1)) {
+    if (J->isundefined(-1)) {
         pop(1);
         js_newobject(J);
     }
@@ -487,7 +487,7 @@ void g_archive::w_property(pcstr name, pcstr prop, vec2i value) {
 
     auto J = (js_State *)state;
     getglobal(name);
-    if (js_isundefined(J, -1)) {
+    if (J->isundefined(-1)) {
         pop(1);
         js_newobject(J);
     }

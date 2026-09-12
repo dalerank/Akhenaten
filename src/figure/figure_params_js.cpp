@@ -9,7 +9,7 @@
 
 static int figure_params_this_type(js_State *J) {
     J->getproperty(J->toobject(0), js_intern("type"));
-    if (js_isundefined(J, -1) || js_isnull(J, -1)) {
+    if (J->isundefined(-1) || J->isnull(-1)) {
         js_pop(J, 1);
         return FIGURE_NONE;
     }

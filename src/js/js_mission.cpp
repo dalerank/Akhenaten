@@ -70,20 +70,20 @@ static void js_mission_var_setter(js_State *J) {
         return;
     }
 
-    if (js_isboolean(J, 1)) {
+    if (J->isboolean(1)) {
         bool value = js_toboolean(J, 1);
         g_scenario.vars.set_bool(name, value);
-    } else if (js_isnumber(J, 1)) {
+    } else if (J->isnumber(1)) {
         float value = (float)js_tonumber(J, 1);
         g_scenario.vars.set_float(name, value);
-    } else if (js_isstring(J, 1)) {
+    } else if (J->isstring(1)) {
         xstring value = js_toxstring(J, 1);
         g_scenario.vars.set_string(name, value);
     } else if (J->isobject(1)) {
         J->getproperty(1, property_x);
         J->getproperty(1, property_y);
 
-        if (js_isnumber(J, -2) && js_isnumber(J, -1)) {
+        if (J->isnumber(-2) && J->isnumber(-1)) {
             int x = (int)js_tonumber(J, -2);
             int y = (int)js_tonumber(J, -1);
             g_scenario.vars.set(name, setting_variant(vec2i{ x, y }));

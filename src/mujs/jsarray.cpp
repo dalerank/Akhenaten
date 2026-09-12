@@ -43,7 +43,7 @@ static void jsB_new_Array(js_State *J) {
     js_newarray(J);
 
     if (top == 2) {
-        if (js_isnumber(J, 1)) {
+        if (J->isnumber(1)) {
             js_copy(J, 1);
             js_setproperty(J, -2, property_length);
         } else {
@@ -67,7 +67,7 @@ static void Ap_concat(js_State *J) {
 
     for (i = 0; i < top; ++i) {
         js_copy(J, i);
-        if (js_isarray(J, -1)) {
+        if (J->isarray(-1)) {
             len = js_getlength(J, -1);
             for (k = 0; k < len; ++k)
                 if (js_hasindex(J, -1, k))
@@ -91,7 +91,7 @@ static void Ap_join(js_State *J) {
 
     len = js_getlength(J, 0);
 
-    if (js_isdefined(J, 1)) {
+    if (J->isdefined(1)) {
         sep = js_strnode_cstr(js_tostring(J, 1));
         seplen = strlen(sep);
     } else {
@@ -116,7 +116,7 @@ static void Ap_join(js_State *J) {
 
     for (k = 0; k < len; ++k) {
         js_getindex(J, 0, k);
-        if (js_isundefined(J, -1) || js_isnull(J, -1))
+        if (J->isundefined(-1) || J->isnull(-1))
             r = "";
         else
             r = js_strnode_cstr(js_tostring(J, -1));
@@ -241,7 +241,7 @@ static void Ap_slice(js_State *J) {
 
     len = js_getlength(J, 0);
     sv = js_tointeger(J, 1);
-    ev = js_isdefined(J, 2) ? js_tointeger(J, 2) : len;
+    ev = J->isdefined(2) ? js_tointeger(J, 2) : len;
 
     if (sv < 0) sv = sv + len;
     if (ev < 0) ev = ev + len;
@@ -262,8 +262,8 @@ static int compare(js_State *J, int x, int y, int *hasx, int *hasy, int hasfn) {
     *hasy = js_hasindex(J, 0, y);
 
     if (*hasx && *hasy) {
-        int unx = js_isundefined(J, -2);
-        int uny = js_isundefined(J, -1);
+        int unx = J->isundefined(-2);
+        int uny = J->isundefined(-1);
         if (unx && uny) return 0;
         if (unx) return 1;
         if (uny) return -1;
@@ -403,7 +403,7 @@ static void Ap_indexOf(js_State *J) {
     int k, len, from;
 
     len = js_getlength(J, 0);
-    from = js_isdefined(J, 2) ? js_tointeger(J, 2) : 0;
+    from = J->isdefined(2) ? js_tointeger(J, 2) : 0;
     if (from < 0) from = len + from;
     if (from < 0) from = 0;
 
@@ -425,7 +425,7 @@ static void Ap_lastIndexOf(js_State *J) {
     int k, len, from;
 
     len = js_getlength(J, 0);
-    from = js_isdefined(J, 2) ? js_tointeger(J, 2) : len - 1;
+    from = J->isdefined(2) ? js_tointeger(J, 2) : len - 1;
     if (from > len - 1) from = len - 1;
     if (from < 0) from = len + from;
 

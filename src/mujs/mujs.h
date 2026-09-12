@@ -221,7 +221,6 @@ void js_newarray(js_State *J);
 void js_newboolean(js_State *J, int v);
 void js_newnumber(js_State *J, double v);
 void js_newvec2i(js_State *J, int x, int y);
-int js_iscvec2i(js_State *J, int idx);
 void js_newstring(js_State *J, const char *v);
 void js_newcfunction(js_State* J, js_CFunction fun, const js_StringNode name, int length);
 void js_newcconstructor(js_State* J, js_CFunction fun, js_CFunction con, const js_StringNode name, int length);
@@ -232,18 +231,6 @@ void js_newregexp(js_State *J, const char *pattern, int flags);
 void js_pushiterator(js_State *J, int idx, int own);
 const js_StringNode js_nextiterator(js_State *J, int idx);
 
-int js_isdefined(js_State *J, int idx);
-int js_isundefined(js_State *J, int idx);
-int js_isnull(js_State *J, int idx);
-int js_isboolean(js_State *J, int idx);
-int js_isnumber(js_State *J, int idx);
-int js_iscnumber(js_State *J, int idx);
-int js_isstring(js_State *J, int idx);
-int js_isprimitive(js_State *J, int idx);
-int js_isarray(js_State *J, int idx);
-int js_isregexp(js_State *J, int idx);
-int js_iscoercible(js_State *J, int idx);
-int js_isuserdata(js_State *J, int idx, const char *tag);
 void *js_frame_alloc(js_State *J, int size);
 void js_frame_free(js_State *J, void *ptr);
 

@@ -226,6 +226,19 @@ struct js_State
 	int hasproperty(int idx, const js_StringNode name);
 
 	int isobject(int idx);
+	int isdefined(int idx);
+	int isundefined(int idx);
+	int isnull(int idx);
+	int isboolean(int idx);
+	int isnumber(int idx);
+	int iscnumber(int idx);
+	int isstring(int idx);
+	int isprimitive(int idx);
+	int isarray(int idx);
+	int isregexp(int idx);
+	int iscvec2i(int idx);
+	int iscoercible(int idx);
+	int isuserdata(int idx, const char *tag);
 
 	int pcall(int n);
 	void call(int n);

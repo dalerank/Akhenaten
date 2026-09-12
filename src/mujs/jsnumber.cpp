@@ -23,7 +23,7 @@ static void Np_toString(js_State *J)
 {
 	char buf[32];
 	js_Object *self = J->toobject(0);
-	int radix = js_isundefined(J, 1) ? 10 : js_tointeger(J, 1);
+	int radix = J->isundefined(1) ? 10 : js_tointeger(J, 1);
 	if (self->type != JS_CNUMBER) js_typeerror(J, "not a number");
 	if (radix < 2 || radix > 36)
 		js_rangeerror(J, "invalid radix");

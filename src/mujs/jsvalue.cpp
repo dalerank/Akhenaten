@@ -67,7 +67,7 @@ static int jsV_toString(js_State* J, js_Object* obj) {
     if (J->iscallable(-1)) {
         js_rot2(J);
         J->call(0);
-        if (js_isprimitive(J, -1))
+        if (J->isprimitive(-1))
             return 1;
         js_pop(J, 1);
         return 0;
@@ -83,7 +83,7 @@ static int jsV_valueOf(js_State* J, js_Object* obj) {
     if (J->iscallable(-1)) {
         js_rot2(J);
         J->call(0);
-        if (js_isprimitive(J, -1))
+        if (J->isprimitive(-1))
             return 1;
         js_pop(J, 1);
         return 0;
@@ -637,7 +637,7 @@ void js_concat(js_State* J) {
     js_toprimitive(J, -2, JS_HNONE);
     js_toprimitive(J, -1, JS_HNONE);
 
-    if (js_isstring(J, -2) || js_isstring(J, -1)) {
+    if (J->isstring(-2) || J->isstring(-1)) {
         const char* sa = js_strnode_cstr(js_tostring(J, -2));
         const char* sb = js_strnode_cstr(js_tostring(J, -1));
         char* sab = (char*)js_frame_alloc(J, strlen(sa) + strlen(sb) + 1);
@@ -664,7 +664,7 @@ int js_compare(js_State* J, int* okay) {
     js_toprimitive(J, -1, JS_HNUMBER);
 
     *okay = 1;
-    if (js_isstring(J, -2) && js_isstring(J, -1)) {
+    if (J->isstring(-2) && J->isstring(-1)) {
         auto sa = js_tostring(J, -2);
         auto sb = js_tostring(J, -1);
         return strcmp(js_strnode_cstr(sa), js_strnode_cstr(sb));

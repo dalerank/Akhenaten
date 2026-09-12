@@ -163,7 +163,7 @@ static void js_vm_log_stacktrace(js_State *J) {
     if (J->isobject(-1)) {
         if (J->hasproperty(-1, property_stackTrace)) {
             J->getproperty(-1, property_stackTrace);
-            if (js_isstring(J, -1)) {
+            if (J->isstring(-1)) {
                 auto stack_trace = js_tostring(J, -1);
                 logs::info("!!! Stack trace: %s", stack_trace->value.c_str());
                 js_pop(J, 1);
@@ -214,15 +214,15 @@ static void js_vm_dump_stack(js_State *J) {
         int idx = i - stack_size; // Convert to negative index
         bstring256 value_desc;
 
-        if (js_isundefined(J, idx)) {
+        if (J->isundefined(idx)) {
             value_desc = "undefined";
-        } else if (js_isnull(J, idx)) {
+        } else if (J->isnull(idx)) {
             value_desc = "null";
-        } else if (js_isboolean(J, idx)) {
+        } else if (J->isboolean(idx)) {
             value_desc.printf("boolean: %s", js_toboolean(J, idx) ? "true" : "false");
-        } else if (js_isnumber(J, idx)) {
+        } else if (J->isnumber(idx)) {
             value_desc.printf("number: %g", js_tonumber(J, idx));
-        } else if (js_isstring(J, idx)) {
+        } else if (J->isstring(idx)) {
             auto str = js_tostring(J, idx);
             if (str->value.length() > 50) {
                 value_desc.printf("string: \"%.50s...\"", str->value.c_str());
@@ -230,7 +230,7 @@ static void js_vm_dump_stack(js_State *J) {
                 value_desc.printf("string: \"%s\"", str->value.c_str());
             }
         } else if (J->isobject(idx)) {
-            if (js_isarray(J, idx)) {
+            if (J->isarray(idx)) {
                 value_desc.printf("array (length: %d)", js_getlength(J, idx));
             } else if (J->iscallable(idx)) {
                 value_desc = "function";
@@ -282,7 +282,7 @@ static js_StringNode property_name = js_intern("name");
 static js_StringNode property_message = js_intern("message");
 
 xstring js_toxstring(js_State* J, int idx) {
-    if (!js_isstring(J, idx)) {
+    if (!J->isstring(idx)) {
         return {};
     }
 
@@ -869,7 +869,7 @@ static void js_native_debugger_port(js_State *J) {
 
 static void js_native_debugger_start(js_State *J) {
     int port = 4711;
-    if (js_gettop(J) >= 1 && js_isnumber(J, 1)) {
+    if (js_gettop(J) >= 1 && J->isnumber(1)) {
         port = (int)js_tonumber(J, 1);
     }
     if (g_mujs_debugger.is_running()) {
@@ -891,7 +891,7 @@ static void js_native_debugger_stop(js_State *J) {
 
 /** Property lookup on the global object (undefined if missing). Safe in frame zone — no eval/try. */
 static void js_native_global_get(js_State *J) {
-    if (!js_isstring(J, 1) && !js_iscnumber(J, 1) && !js_isnumber(J, 1)) {
+    if (!J->isstring(1) && !J->iscnumber(1) && !J->isnumber(1)) {
         J->pushundefined();
         return;
     }

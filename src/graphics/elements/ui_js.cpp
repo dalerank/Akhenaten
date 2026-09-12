@@ -430,7 +430,7 @@ static js_StringNode property_undefined = js_intern("undefined");
 
 ui::element* ui::GET_ELEM(js_State* J) {
     J->getproperty(0, property_id);
-    js_StringNode id = js_isstring(J, -1) ? js_tostring(J, -1) : nullptr;
+    js_StringNode id = J->isstring(-1) ? js_tostring(J, -1) : nullptr;
     js_pop(J, 1);
     if (!id || id == property_undefined) {
         logs::error("UI element proxy: id is undefined");
@@ -518,7 +518,7 @@ void ui::proxy_get_darkened(js_State* J) {
 void ui::proxy_set_darkened(js_State* J) {
     auto elem = GET_ELEM(J);
     if (elem) {
-        if (js_isboolean(J, 1)) {
+        if (J->isboolean(1)) {
             elem->darkened = js_toboolean(J, 1) ? 1 : 0;
         } else {
             elem->darkened = (uint8_t)js_tointeger(J, 1);
@@ -620,7 +620,7 @@ void ui::proxy_set_ondraw(js_State* J) {
         return;
     }
 
-    if (js_isnull(J, 1) || js_isundefined(J, 1)) {
+    if (J->isnull(1) || J->isundefined(1)) {
         elem->set_ref(ui::element::ONDRAW, "");
         elem->ondraw(nullptr);
         J->pushundefined();
@@ -646,7 +646,7 @@ void ui::proxy_set_textfn(js_State* J) {
         return;
     }
 
-    if (js_isnull(J, 1) || js_isundefined(J, 1)) {
+    if (J->isnull(1) || J->isundefined(1)) {
         elem->set_ref(ui::element::TEXTFN, "");
         J->pushundefined();
         return;
@@ -688,7 +688,7 @@ void ui::proxy_set_checkedfn(js_State* J) {
         return;
     }
 
-    if (js_isnull(J, 1) || js_isundefined(J, 1)) {
+    if (J->isnull(1) || J->isundefined(1)) {
         elem->set_ref(ui::element::CHECKEDFN, "");
         J->pushundefined();
         return;

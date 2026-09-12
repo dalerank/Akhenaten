@@ -108,13 +108,13 @@ static void jsB_new_RegExp(js_State *J) {
     const char *pattern;
     int flags;
 
-    if (js_isregexp(J, 1)) {
-        if (js_isdefined(J, 2))
+    if (J->isregexp(1)) {
+        if (J->isdefined(2))
             js_typeerror(J, "cannot supply flags when creating one RegExp from another");
         old = js_toregexp(J, 1);
         pattern = old->source;
         flags = old->flags;
-    } else if (js_isundefined(J, 1)) {
+    } else if (J->isundefined(1)) {
         pattern = "";
         flags = 0;
     } else {
@@ -122,7 +122,7 @@ static void jsB_new_RegExp(js_State *J) {
         flags = 0;
     }
 
-    if (js_isdefined(J, 2)) {
+    if (J->isdefined(2)) {
         const char* s = js_strnode_cstr(js_tostring(J, 2));
         int g = 0, i = 0, m = 0;
         while (*s) {
@@ -144,7 +144,7 @@ static void jsB_new_RegExp(js_State *J) {
 }
 
 static void jsB_RegExp(js_State *J) {
-    if (js_isregexp(J, 1))
+    if (J->isregexp(1))
         return;
     jsB_new_RegExp(J);
 }

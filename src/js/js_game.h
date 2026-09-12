@@ -79,7 +79,7 @@ namespace js_helpers {
 
     template<>
     inline xstring js_to_value<xstring>(js_State *J, int idx) {
-        if (js_isundefined(J, idx) || js_isnull(J, idx)) {
+        if (J->isundefined(idx) || J->isnull(idx)) {
             return xstring();
         }
         auto pp = js_tostring(J, idx);
@@ -116,21 +116,21 @@ namespace js_helpers {
     template<>
     inline vec2i js_to_value<vec2i>(js_State *J, int idx) {
         vec2i result;
-        if (J->isobject(idx) && !js_isarray(J, idx) && J->toobject(idx)->type == JS_CVEC2I) {
+        if (J->isobject(idx) && !J->isarray(idx) && J->toobject(idx)->type == JS_CVEC2I) {
             js_Object *o = J->toobject(idx);
             return vec2i(o->u.vec2.x, o->u.vec2.y);
         }
-        if (J->isobject(idx) && !js_isarray(J, idx)) {
+        if (J->isobject(idx) && !J->isarray(idx)) {
             J->getproperty(idx, property_x);
-            result.x = js_isnumber(J, -1) ? (int)js_tonumber(J, -1) : 0;
+            result.x = J->isnumber(-1) ? (int)js_tonumber(J, -1) : 0;
             js_pop(J, 1);
 
             J->getproperty(idx, property_y);
-            result.y = js_isnumber(J, -1) ? (int)js_tonumber(J, -1) : 0;
+            result.y = J->isnumber(-1) ? (int)js_tonumber(J, -1) : 0;
             js_pop(J, 1);
-        } else if (js_isarray(J, idx)) {
-            js_getindex(J, idx, 0); result.x = js_isnumber(J, -1) ? (int)js_tonumber(J, -1) : 0; js_pop(J, 1);
-            js_getindex(J, idx, 1); result.y = js_isnumber(J, -1) ? (int)js_tonumber(J, -1) : 0; js_pop(J, 1);
+        } else if (J->isarray(idx)) {
+            js_getindex(J, idx, 0); result.x = J->isnumber(-1) ? (int)js_tonumber(J, -1) : 0; js_pop(J, 1);
+            js_getindex(J, idx, 1); result.y = J->isnumber(-1) ? (int)js_tonumber(J, -1) : 0; js_pop(J, 1);
         }
         return result;
     }
@@ -138,37 +138,37 @@ namespace js_helpers {
     template<>
     inline tile2i js_to_value<tile2i>(js_State *J, int idx) {
         int x = 0, y = 0;
-        if (J->isobject(idx) && !js_isarray(J, idx) && J->toobject(idx)->type == JS_CVEC2I) {
+        if (J->isobject(idx) && !J->isarray(idx) && J->toobject(idx)->type == JS_CVEC2I) {
             js_Object *o = J->toobject(idx);
             return tile2i(o->u.vec2.x, o->u.vec2.y);
         }
-        if (J->isobject(idx) && !js_isarray(J, idx)) {
+        if (J->isobject(idx) && !J->isarray(idx)) {
             J->getproperty(idx, property_x);
-            x = js_isnumber(J, -1) ? (int)js_tonumber(J, -1) : 0;
+            x = J->isnumber(-1) ? (int)js_tonumber(J, -1) : 0;
             js_pop(J, 1);
 
             J->getproperty(idx, property_y);
-            y = js_isnumber(J, -1) ? (int)js_tonumber(J, -1) : 0;
+            y = J->isnumber(-1) ? (int)js_tonumber(J, -1) : 0;
             js_pop(J, 1);
-        } else if (js_isarray(J, idx)) {
-            js_getindex(J, idx, 0); x = js_isnumber(J, -1) ? (int)js_tonumber(J, -1) : 0; js_pop(J, 1);
-            js_getindex(J, idx, 1); y = js_isnumber(J, -1) ? (int)js_tonumber(J, -1) : 0; js_pop(J, 1);
+        } else if (J->isarray(idx)) {
+            js_getindex(J, idx, 0); x = J->isnumber(-1) ? (int)js_tonumber(J, -1) : 0; js_pop(J, 1);
+            js_getindex(J, idx, 1); y = J->isnumber(-1) ? (int)js_tonumber(J, -1) : 0; js_pop(J, 1);
         }
         return tile2i(x, y);
     }
 
     template<>
     inline bvariant js_to_value<bvariant>(js_State *J, int idx) {
-        if (js_isundefined(J, idx)) {
+        if (J->isundefined(idx)) {
             return bvariant(); // none
-        } else if (js_isboolean(J, idx)) {
+        } else if (J->isboolean(idx)) {
             // js_toboolean returns int; cast so we hit bvariant(bool), not bvariant(int32).
             return bvariant(js_toboolean(J, idx) != 0);
-        } else if (js_isstring(J, idx)) {
+        } else if (J->isstring(idx)) {
             xstring str;
             str._set(js_tostring(J, idx));
             return bvariant(str);
-        } else if (js_isnumber(J, idx) || js_iscnumber(J, idx)) {
+        } else if (J->isnumber(idx) || J->iscnumber(idx)) {
             double num = js_tonumber(J, idx);
             // Try to preserve integer if possible
             if (num == (int)num) {
@@ -176,21 +176,21 @@ namespace js_helpers {
             } else {
                 return bvariant((float)num);
             }
-        } else if (js_iscvec2i(J, idx)) {
+        } else if (J->iscvec2i(idx)) {
             js_Object *o = J->toobject(idx);
             return bvariant(vec2i(o->u.vec2.x, o->u.vec2.y));
-        } else if (J->isobject(idx) && !js_isarray(J, idx)) {
+        } else if (J->isobject(idx) && !J->isarray(idx)) {
             // Check if it's a vec2i-like object with x and y properties
             J->getproperty(idx, property_x);
-            bool has_x = !js_isundefined(J, -1);
+            bool has_x = !J->isundefined(-1);
             js_pop(J, 1);
 
             if (has_x) {
                 J->getproperty(idx, property_x);
-                int x = js_isnumber(J, -1) ? (int)js_tonumber(J, -1) : 0;
+                int x = J->isnumber(-1) ? (int)js_tonumber(J, -1) : 0;
                 js_pop(J, 1);
                 J->getproperty(idx, property_y);
-                int y = js_isnumber(J, -1) ? (int)js_tonumber(J, -1) : 0;
+                int y = J->isnumber(-1) ? (int)js_tonumber(J, -1) : 0;
                 js_pop(J, 1);
                 return bvariant(vec2i(x, y));
             } else {
@@ -202,7 +202,7 @@ namespace js_helpers {
     }
 
     inline bvariant js_bvariant_from_js_stack(js_State *J, int idx) {
-        if (js_isundefined(J, idx) || js_isnull(J, idx)) {
+        if (J->isundefined(idx) || J->isnull(idx)) {
             return bvariant();
         }
         return js_to_value<bvariant>(J, idx);
@@ -411,22 +411,22 @@ namespace js_helpers {
     }
 
     inline bvariant js_bvariant_from_js_value(js_State *J, int idx) {
-        if (js_isboolean(J, idx)) {
+        if (J->isboolean(idx)) {
             return bvariant(js_toboolean(J, idx) != 0);
         }
-        if (js_isstring(J, idx)) {
+        if (J->isstring(idx)) {
             xstring pp;
             pp._set(js_tostring(J, idx));
             return bvariant(pp);
         }
-        if (js_isnumber(J, idx) || js_iscnumber(J, idx)) {
+        if (J->isnumber(idx) || J->iscnumber(idx)) {
             const double num = js_tonumber(J, idx);
             if (num == (int)num) {
                 return bvariant((int)num);
             }
             return bvariant((float)num);
         }
-        if (js_isarray(J, idx)) {
+        if (J->isarray(idx)) {
             return bvariant(js_to_value<vec2i>(J, idx));
         }
         if (J->isobject(idx)) {
@@ -435,10 +435,10 @@ namespace js_helpers {
                 return bvariant(js_to_value<vec2i>(J, idx));
             }
             J->getproperty(idx, property_x);
-            const bool has_x = js_isnumber(J, -1);
+            const bool has_x = J->isnumber(-1);
             js_pop(J, 1);
             J->getproperty(idx, property_y);
-            const bool has_y = js_isnumber(J, -1);
+            const bool has_y = J->isnumber(-1);
             js_pop(J, 1);
             if (has_x || has_y) {
                 return bvariant(js_to_value<vec2i>(J, idx));
@@ -450,7 +450,7 @@ namespace js_helpers {
     // Convert JS object to bvariant_map
     inline bvariant_map js_object_to_bvariant_map(js_State *J, int idx) {
         bvariant_map result;
-        if (!J->isobject(idx) || js_isarray(J, idx)) {
+        if (!J->isobject(idx) || J->isarray(idx)) {
             return result;
         }
 
