@@ -1,6 +1,8 @@
 log_info("akhenaten: building_courthouse started")
 
+[es=building]
 building_courthouse {
+  type: BUILDING_COURTHOUSE
   animations {
     preview { pack:PACK_GENERAL, id:62, }
     base { pack:PACK_GENERAL, id:62, }
