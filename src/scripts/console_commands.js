@@ -156,6 +156,20 @@ function console_command_addsandstone(args) {
 	__cheat_add_resource(RESOURCE_SANDSTONE, amount)
 }
 
+[console_command=addweapons]
+function console_command_addweapons(args) {
+	var amount = parseInt((args && args[0]) || "100", 10)
+	if (amount <= 0) amount = 100
+	__cheat_add_resource(RESOURCE_WEAPONS, amount)
+}
+
+[console_command=addcopper]
+function console_command_addcopper(args) {
+	var amount = parseInt((args && args[0]) || "100", 10)
+	if (amount <= 0) amount = 100
+	__cheat_add_resource(RESOURCE_COPPER, amount)
+}
+
 [console_command=collapse_no]
 function console_command_collapse_no(args) {
 	for (var i = 1; i <= MAX_BUILDINGS; i++) {

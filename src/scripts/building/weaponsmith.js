@@ -1,13 +1,24 @@
 log_info("akhenaten: building_weaponsmith started")
 
+[es=building_industry]
 building_weaponsmith = {
+  type: BUILDING_WEAPONSMITH
   animations : {
     preview : { pos : [0, 0], pack:PACK_GENERAL, id:123, },
     base : { pos : [0, 0], pack:PACK_GENERAL, id:123, offset:0 },
     work : { pos : [57, -16], pack:PACK_GENERAL, id:123, offset:1, max_frames:20, duration:5, can_reverse:true },
-    copper : { pos : [93, 0], pack:PACK_GENERAL, id:203 },
   }
-
+  overlay_anims {
+    copper {
+      pos : [93, 0]
+      pack:PACK_GENERAL
+      id:203
+      resource: RESOURCE_COPPER
+      stack: false
+      max_count: 2
+      default_active: true
+    }
+  }
   input : {
     resource : RESOURCE_COPPER
   }
@@ -41,4 +52,18 @@ function building_weaponsmith_on_place_checks(ev) {
     city.warnings.show_if_not(copper.can_produce, "#build_copper_mine")
     city.warnings.show_if_not(copper.can_import, "#setup_trade_route_to_import")
     city.warnings.show_if_not(copper.trade_status == TRADE_STATUS_IMPORT, "#overseer_of_commerce_to_import")
+}
+
+[es=(building_weaponsmith, update_animation)]
+function building_weaponsmith_on_update_animation(ev) {
+    var b = city.get_building(ev.bid)
+    if (!b.play_animation) {
+        return
+    }
+    if (__building_industry_progress_pct(b.id) != 0) {
+        return
+    }
+    if (b.stored_resource(RESOURCE_COPPER) < 100) {
+        b.play_animation = false
+    }
 }
