@@ -71,10 +71,3 @@ void building_wood_cutter::spawn_figure() {
         events::emit(event_produced_resources{ base.output.resource, fcart->get_carrying_amount() });
     }
 }
-
-void building_wood_cutter::update_animation() {
-    building_industry::update_animation();
-    if (base.stored_amount(RESOURCE_TIMBER) >= current_params().max_storage_amount) {
-        base.play_animation = false;
-    }
-}

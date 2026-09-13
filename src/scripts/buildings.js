@@ -45,6 +45,7 @@ import building.paint_workshop
 import building.chariots_workshop
 import building.cattle_ranch
 import building.clay_pit
+import building.wood_cutter
 import building.temple_complex
 import building.entertainment
 import building.booth

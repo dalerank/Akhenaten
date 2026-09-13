@@ -15,8 +15,6 @@ public:
     virtual void on_create(int orientation) override;
     virtual bool is_administration() const override { return true; }
     virtual void spawn_figure() override;
-    virtual e_sound_channel_city sound_channel() const override { return SOUND_CHANNEL_CITY_NONE; }
-    virtual void update_animation() override;
     // Output is deposited by lumberjack figures returning home — skip the
     // progress-driven industry tick so production isn't double-counted.
     virtual void update_production() override {}
