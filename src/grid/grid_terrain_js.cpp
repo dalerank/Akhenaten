@@ -4,6 +4,7 @@
 #include "grid/point.h"
 #include "grid/grid.h"
 #include "grid/water.h"
+#include "grid/water_supply.h"
 #include "grid/sprite.h"
 #include "grid/bridge.h"
 #include "grid/bridge_grid.h"
@@ -48,6 +49,11 @@ void __map_water_rebuild_shores() {
     map_water_rebuild_shores();
 }
 ANK_FUNCTION(__map_water_rebuild_shores)
+
+int __map_water_supply_is_well_unnecessary(int bid, int radius) {
+    return map_water_supply_is_well_unnecessary(bid, radius);
+}
+ANK_FUNCTION_2(__map_water_supply_is_well_unnecessary)
 
 void __map_tiles_set_water(tile2i tile) {
     map_tiles_set_water(tile.grid_offset());

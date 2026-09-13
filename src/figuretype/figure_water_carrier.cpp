@@ -9,7 +9,6 @@
 #include "graphics/animation.h"
 #include "building/building_house.h"
 #include "building/building_brewery.h"
-#include "building/building_well.h"
 #include "game/game_config.h"
 #include "js/js_game.h"
 
@@ -66,12 +65,6 @@ int figure_water_carrier::provide_service() {
                 constexpr uint8_t MAX_WATER = 100;
                 brewery->set_water_stored(MAX_WATER);
             }
-        }
-
-        // Refresh well ornaments immediately when nearby house coverage changes.
-        if (auto well = b->dcast_well()) {
-            well->update_animation();
-            well->update_graphic();
         }
     });
 

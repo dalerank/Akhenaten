@@ -24,7 +24,6 @@ class building;
     X(granary)                 \
     X(water_supply)            \
     X(conservatory)            \
-    X(well)                    \
     X(clay_pit)                \
     X(reed_gatherer)           \
     X(dock)                    \

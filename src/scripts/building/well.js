@@ -8,17 +8,19 @@ BuildingWell.prototype = Object.create(Building.prototype)
 BuildingWell.prototype.constructor = BuildingWell
 
 BuildingWell.prototype.necessity_status = function(radius) {
-    return __building_well_necessity_status(this.id, radius)
+    return __map_water_supply_is_well_unnecessary(this.id, radius)
 }
 
 city.get_well = function(building_id) {
-    if (!__building_is_well(building_id)) {
+    if (__building_type(building_id) != BUILDING_WELL) {
         return null
     }
     return new BuildingWell(building_id)
 }
 
+[es=building]
 building_well {
+  type: BUILDING_WELL
   animations {
     preview { pack: PACK_GENERAL, id:23, max_frames:1 }
     base { pack: PACK_GENERAL, id:23, max_frames:1 }
@@ -32,6 +34,7 @@ building_well {
   building_size : 1
   meta { text_id:109, help_link:"message_building_well" }
   info_sound : "Wavs/WELL.WAV"
+  sound_channel : SOUND_CHANNEL_CITY_WELL
   needs {
     groundwater : true
   }
@@ -58,6 +61,15 @@ function building_well_on_place_checks(ev) {
     city.warnings.show_if_not(has_groundwater, "#needs_groundwater")
 }
 
+[es=(building_well, update_animation)]
+function building_well_update_animation(ev) {
+    var well = city.get_well(ev.bid)
+    if (!well) {
+        return
+    }
+    well.play_animation = (well.necessity_status(building_well.unnecessary_range_check) == WELL_NECESSARY)
+}
+
 [es=(building_well, update_graphic)]
 function building_well_update_graphic(ev) {
     var well = city.get_well(ev.bid)
@@ -76,9 +88,8 @@ function building_well_update_graphic(ev) {
 [es=(building_well, update_month)]
 function building_well_update_month(ev) {
     var well = city.get_well(ev.bid)
-    var params = well.params
-    var avg_desirability = __desirability_get_avg(well.tile, params.desirability_range_check)
-    var is_fancy = avg_desirability > params.desirability_fancy
+    var avg_desirability = __desirability_get_avg(well.tile, building_well.desirability_range_check)
+    var is_fancy = avg_desirability > building_well.desirability_fancy
     well.set_fancy(is_fancy)
     var animkey = is_fancy ? "fancy" : "base"
     __map_image_set(well.tile, well.first_img(animkey))

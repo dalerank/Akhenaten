@@ -24,7 +24,6 @@
 #include "building/building_farm.h"
 #include "building/building_fishing_wharf.h"
 #include "building/building_festival_square.h"
-#include "building/building_well.h"
 #include "building/building_bridge.h"
 #include "city/city_industry.h"
 #include "building/building_fort.h"

@@ -7,7 +7,6 @@
 #include "grid/terrain.h"
 #include "game/game_config.h"
 #include "grid/canals.h"
-#include "building/building_well.h"
 #include "building/building_house.h"
 #include "building/building_water_lift.h"
 
@@ -34,9 +33,9 @@ void city_buildings_t::mark_well_access(building *well) {
 void city_buildings_t::update_wells_range() {
     OZZY_PROFILER_FUNCTION();
     map_terrain_remove_all(TERRAIN_FOUNTAIN_RANGE);
-    buildings_valid_do<building_well>([](building_well *b) {
-        map_terrain_add_with_radius(b->tile(), 1, 3, TERRAIN_FOUNTAIN_RANGE);
-    });
+    buildings_valid_do([](building &b) {
+        map_terrain_add_with_radius(b.tile, 1, 3, TERRAIN_FOUNTAIN_RANGE);
+    }, BUILDING_WELL);
 }
 
 void city_buildings_t::update_water_supply_houses() {

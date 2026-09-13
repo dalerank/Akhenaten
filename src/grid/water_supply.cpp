@@ -1,7 +1,6 @@
 #include "water_supply.h"
 
 #include "building/building.h"
-#include "building/building_well.h"
 #include "building/building_house.h"
 #include "core/svector.h"
 #include "core/profiler.h"
