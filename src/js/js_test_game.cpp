@@ -35,6 +35,7 @@
 #include "grid/water.h"
 #include "grid/building.h"
 #include "grid/building_tiles.h"
+#include "grid/gems.h"
 #include "graphics/view/view.h"
 #include "graphics/view/zoom.h"
 #include "graphics/image.h"
@@ -2687,6 +2688,16 @@ static void __test_building_update_day(int bid) {
     impl->update_day();
 }
 ANK_FUNCTION_1(__test_building_update_day);
+
+static void __test_city_industry_update_production() {
+    g_city.industry.update_production();
+}
+ANK_FUNCTION(__test_city_industry_update_production);
+
+static void __test_map_gems_init() {
+    map_gems_init();
+}
+ANK_FUNCTION(__test_map_gems_init);
 
 // Minimum map_monuments progress across the monument chain (all parts).
 static int __test_monument_min_progress(int bid) {

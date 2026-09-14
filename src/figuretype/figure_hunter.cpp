@@ -110,7 +110,6 @@ void figure_hunter::figure_action() {
             figure_get(base.target_figure_id)->targeted_by_figure_id = id();
             advance_action(ACTION_9_OSTRICH_HUNTER_CHASE_PREY);
         } else {
-            advance_action(ACTION_16_OSTRICH_HUNTER_INVESTIGATE);
             tile2i base_tile;
             auto max_result = base.is_nearby(NEARBY_ANIMAL, 10000, /*gang*/true, avoid_wrong_prey);
             if (max_result.fid) {
@@ -119,20 +118,33 @@ void figure_hunter::figure_action() {
                 base_tile = home()->tile;
             }
             base.destination_tile = random_around_point(base_tile, tile(), /*step*/4, /*bias*/8, /*max_dist*/32);
+            // Same-tile dest would finish do_goto immediately and thrash RECALCULATE↔INVESTIGATE.
+            if (base.destination_tile == tile()) {
+                base.wait_ticks = 20 + (random_byte() % 20);
+                advance_action(ACTION_13_OSTRICH_HUNTER_WAIT_FOR_ACTION);
+            } else {
+                advance_action(ACTION_16_OSTRICH_HUNTER_INVESTIGATE);
+            }
         }
     } break;
 
     case ACTION_16_OSTRICH_HUNTER_INVESTIGATE:
-        do_goto(base.destination_tile, TERRAIN_USAGE_ANIMAL, ACTION_8_RECALCULATE, ACTION_8_RECALCULATE);
-        if (direction() == DIR_FIGURE_CAN_NOT_REACH || direction() == DIR_FIGURE_REROUTE) {
-            base.direction = DIR_0_TOP_RIGHT;
-            advance_action(ACTION_8_RECALCULATE);
+        // Fail stays on INVESTIGATE so we can pause instead of snapping back to RECALCULATE.
+        do_goto(base.destination_tile, TERRAIN_USAGE_ANIMAL, ACTION_8_RECALCULATE, ACTION_16_OSTRICH_HUNTER_INVESTIGATE);
+        if (direction() == DIR_FIGURE_CAN_NOT_REACH) {
+            route_remove();
+            base.wait_ticks = 20 + (random_byte() % 20);
+            advance_action(ACTION_13_OSTRICH_HUNTER_WAIT_FOR_ACTION);
         }
         break;
 
     case ACTION_13_OSTRICH_HUNTER_WAIT_FOR_ACTION:
         if (!base.target_figure_id) {
-            return advance_action(ACTION_8_RECALCULATE);
+            base.wait_ticks--;
+            if (base.wait_ticks <= 0) {
+                advance_action(ACTION_8_RECALCULATE);
+            }
+            break;
         }
         if (!prey->is_alive()) {
             advance_action(ACTION_11_OSTRICH_HUNTER_GOING_TO_PICKUP_POINT);

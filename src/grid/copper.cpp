@@ -1,5 +1,7 @@
 #include "copper.h"
 
+#include "core/log.h"
+#include "dev/debug.h"
 #include "grid/grid.h"
 #include "grid/terrain.h"
 #include "io/io_buffer.h"
@@ -24,15 +26,20 @@ void map_copper_deplete(int grid_offset, int amount) {
     }
 }
 
+declare_console_command_p(recalc_copper) {
+    map_copper_init();
+    logs::info("copper map recalculated");
+}
+
 void map_copper_init() {
     // Initialize copper grid: mark all ore tiles and tiles within 2 tiles of ore with value 65000
     constexpr int COPPER_MAX = 65000;
     constexpr int RADIUS = 2;
-    
+
     int grid_offset = scenario_map_data()->start_offset;
     int map_width = scenario_map_data()->width;
     int map_height = scenario_map_data()->height;
-    
+
     // First pass: identify all ore tiles and mark them
     std::vector<tile2i> ore_tiles;
     for (int y = 0; y < map_height; y++, grid_offset += scenario_map_data()->border_size) {
@@ -45,25 +52,25 @@ void map_copper_init() {
             }
         }
     }
-    
+
     // Second pass: mark all tiles within RADIUS distance from any ore
     grid_offset = scenario_map_data()->start_offset;
     for (int y = 0; y < map_height; y++, grid_offset += scenario_map_data()->border_size) {
         for (int x = 0; x < map_width; x++, grid_offset++) {
             tile2i current_tile(grid_offset);
             int current_value = map_grid_get(g_terrain_copper, grid_offset);
-            
+
             // If already marked as ore, skip
             if (current_value == COPPER_MAX) {
                 continue;
             }
-            
+
             // Check if within RADIUS of any ore tile
             for (const auto& ore_tile : ore_tiles) {
                 int dx = std::abs(current_tile.x() - ore_tile.x());
                 int dy = std::abs(current_tile.y() - ore_tile.y());
                 int distance = std::max(dx, dy); // Chebyshev distance (king move)
-                
+
                 if (distance <= RADIUS) {
                     map_grid_set(g_terrain_copper, grid_offset, COPPER_MAX);
                     break;
@@ -73,10 +80,8 @@ void map_copper_init() {
     }
 }
 
-io_buffer* iob_copper = new io_buffer([](io_buffer* iob, size_t version) {
-    iob->bind(BIND_SIGNATURE_GRID, &g_terrain_copper);
-}, [](size_t version) {
-    // saves older than this grid carry no ore at all
-    map_grid_clear(g_terrain_copper);
-});
+io_buffer* iob_copper = new io_buffer(
+    [](io_buffer* iob, size_t version) { iob->bind(BIND_SIGNATURE_GRID, &g_terrain_copper); }, 
+    [](size_t version) { map_grid_clear(g_terrain_copper); }
+);
 
