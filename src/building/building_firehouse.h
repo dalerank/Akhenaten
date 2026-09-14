@@ -13,11 +13,6 @@ public:
         int total_buildings_served;
         int months_active;
     } BUILDING_RUNTIME_DATA_T;
-
-    virtual void update_month() override;
-    virtual void update_year() override;
-    virtual e_overlay get_overlay() const override { return OVERLAY_FIRE; }
-    virtual int animation_speed(int speed) const override { return 4; }
 };
 ANK_CONFIG_PROPERTY(building_firehouse::runtime_data_t,
     buildings_served_this_month,

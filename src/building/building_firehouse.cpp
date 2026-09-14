@@ -4,18 +4,3 @@
 
 BUILDING_RUNTIME_DATA_IMPL(building_firehouse)
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_firehouse);
-
-void building_firehouse::update_month() {
-    building_impl::update_month();
-
-    auto &data = runtime_data();
-    data.months_active += (data.buildings_served_this_month > 0) ? 1 : 0;
-    data.total_buildings_served += data.buildings_served_this_month;
-    data.buildings_served_this_year += data.buildings_served_this_month;
-    data.buildings_served_this_month = 0;
-}
-
-void building_firehouse::update_year() {
-    building_impl::update_year();
-    runtime_data().buildings_served_this_year = 0;
-}

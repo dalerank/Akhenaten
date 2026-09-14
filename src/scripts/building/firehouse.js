@@ -33,6 +33,7 @@ building_firehouse {
     }
 
     labor_category : LABOR_CATEGORY_INFRASTRUCTURE
+    overlay : OVERLAY_FIRE
     min_houses_coverage : 50
     meta { text_id: 164, help_link:"message_building_firehouse" }
     info_sound : "Wavs/prefecture.wav"
@@ -65,5 +66,30 @@ function building_firehouse_on_update_graphic(ev) {
 [es=(building_firehouse, draw_usable_paths)]
 function building_firehouse_draw_usable_paths(ev) {
     city.get_building(ev.bid).draw_usable_paths()
+}
+
+[es=(building_firehouse, update_month)]
+function building_firehouse_update_month(ev) {
+    var f = city.get_firehouse(ev.bid)
+    if (!f) {
+        return
+    }
+
+    var served = f.buildings_served_this_month
+    if (served > 0) {
+        f.months_active += 1
+    }
+    f.total_buildings_served += served
+    f.buildings_served_this_year += served
+    f.buildings_served_this_month = 0
+}
+
+[es=(building_firehouse, update_year)]
+function building_firehouse_update_year(ev) {
+    var f = city.get_firehouse(ev.bid)
+    if (!f) {
+        return
+    }
+    f.buildings_served_this_year = 0
 }
 

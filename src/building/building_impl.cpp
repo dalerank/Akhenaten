@@ -136,6 +136,10 @@ void building_impl::update_month() {
     es(__func__);
 }
 
+void building_impl::update_year() {
+    es(__func__);
+}
+
 figure *building_impl::get_figure_in_slot(int slot) {
     return figure_get(get_figure_id(slot));
 }
