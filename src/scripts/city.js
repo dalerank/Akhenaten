@@ -7,6 +7,7 @@ city {
     @player_rank { get: __city_player_rank }
     @rating_kingdom { get: __city_rating_kingdom }
     @num_forts { get: __formation_get_num_forts }
+    @max_forts { get: __formation_get_max_forts }
     @num_enemy_formations { get: __enemy_army_total_enemy_formations }
     @current_overlay { get: __city_get_current_overlay, set: __city_set_current_overlay }
 

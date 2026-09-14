@@ -22,11 +22,6 @@ public:
         building_fort_ghost ghost;
     };
 
-    struct preview : building_planer_renderer {
-        virtual void ghost_preview(build_planner &planer, painter &ctx, tile2i tile, tile2i end, vec2i pixel) const override;
-        virtual void ghost_blocked(build_planner &planer, painter &ctx, tile2i tile, tile2i end, vec2i pixel, bool fully_blocked) const override;
-    };
-
     struct runtime_data_t {
         building_id ground;
         formation_id fid;
@@ -45,8 +40,6 @@ public:
     building_fort_ground* ground() const { return building_get(runtime_data().ground)->dcast_fort_ground(); }
     formation_id create_batalion();
     void remove_batalion();
-
-    const base_params &base_params_ref() const;
 };
 ANK_CONFIG_PROPERTY(building_fort::runtime_data_t, fid)
 
@@ -54,7 +47,7 @@ class building_fort_ground : public building_impl {
 public:
     BUILDING_METAINFO(BUILDING_FORT_GROUND, building_fort_ground, building_impl)
     virtual building_fort_ground *dcast_fort_ground() override { return this; }
-    
+
     virtual bool target_route_tile_blocked(int grid_offset) const override;
 };
 
