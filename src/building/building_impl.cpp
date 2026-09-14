@@ -113,6 +113,9 @@ void building_impl::remove_dead_figures() {
 }
 
 void building_impl::on_post_load() {
+    const auto &p = current_params();
+    base.output = p.output;
+    base.input = p.input;
     base.setup_static_flags();
     seed_default_overlays();
     update_animation();

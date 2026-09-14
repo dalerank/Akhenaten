@@ -2436,6 +2436,18 @@ pcstr __test_info_ui_text(pcstr element_id) {
 }
 ANK_FUNCTION_1(__test_info_ui_text);
 
+int __test_info_ui_enabled(pcstr element_id) {
+    if (!element_id || !*element_id) {
+        return -1;
+    }
+    object_info &context = common_info_window::get_object_info();
+    if (!context.ui || !context.ui->contains(element_id)) {
+        return -1;
+    }
+    return (*context.ui)[element_id].enabled ? 1 : 0;
+}
+ANK_FUNCTION_1(__test_info_ui_enabled);
+
 static e_building_type test_mastaba_params_type(building *head) {
     switch (head->type) {
     case BUILDING_MEDIUM_MASTABA:

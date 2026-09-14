@@ -76,9 +76,9 @@ building_info_window {
                                             workers_desc : text({pos[50, 16 + 16], font: FONT_NORMAL_BLACK_ON_DARK,  multiline:true, wrap:px(24) })
                                         }
                                     })
-        first_advisor  : image_button({ margin:{left:40, bottom:-40}, size[28, 28], pack:PACK_GENERAL, id:106, param1:0, onclick_event:"show_advisor" })
-        second_advisor : image_button({ margin:{left:65, bottom:-40}, size[28, 28], pack:PACK_GENERAL, id:106, param1:1, onclick_event:"show_advisor" })
-        third_advisor  : image_button({ margin:{left:96, bottom:-40}, size[28, 28], pack:PACK_GENERAL, id:106, param1:2, onclick_event:"show_advisor" })
+        first_advisor  : image_button({ margin:{left:40, bottom:-40}, size[28, 28], pack:PACK_GENERAL, id:106, param1:0, onclick_event:"show_advisor", enabled:false })
+        second_advisor : image_button({ margin:{left:65, bottom:-40}, size[28, 28], pack:PACK_GENERAL, id:106, param1:1, onclick_event:"show_advisor", enabled:false })
+        third_advisor  : image_button({ margin:{left:96, bottom:-40}, size[28, 28], pack:PACK_GENERAL, id:106, param1:2, onclick_event:"show_advisor", enabled:false })
 
         show_overlay   : button({
                                   margin{right:-64, bottom:-40}, size[23, 23]

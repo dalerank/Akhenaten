@@ -2,6 +2,7 @@ log_info("akhenaten: ui tower info window started")
 
 [es=building_info_window]
 info_window_tower {
+    first_advisor : ADVISOR_MILITARY
     related_buildings [BUILDING_MUD_TOWER, BUILDING_BRICK_TOWER]
     ui : baseui(building_info_window, {
     })
@@ -26,4 +27,5 @@ function info_window_tower_on_init(window) {
     var worker_desc = b.worker_percentage > 0 ? 3 : 2
     window.workers_desc.text = __loc(gid, worker_desc)
     window.warning_text.text = __loc(reason)
+    building_info_window_setup_advisors(window)
 }

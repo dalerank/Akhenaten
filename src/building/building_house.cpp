@@ -250,7 +250,7 @@ const model_house &building_house::get_model(int level) {
 
 void building_house::create_vacant_lot(tile2i tile, int image_id) {
     building* b = building_create(BUILDING_HOUSE_VACANT_LOT, tile, 0);
-    
+
     b->distance_from_entry = 0;
     map_building_tiles_add(b->id, b->tile, 1, image_id, TERRAIN_BUILDING);
 }
@@ -912,13 +912,13 @@ bool building_house::can_expand(int num_tiles) {
             if (!map_terrain_is(tile_offset, TERRAIN_NOT_CLEAR)) {
                 ok_tiles++;
                 continue;
-            } 
+            }
 
             if (map_terrain_is(tile_offset, TERRAIN_GARDEN) && !game_features::gameplay_change_houses_dont_expand_into_gardens) {
                 ok_tiles++;
                 continue;
             }
-            
+
             if (!map_terrain_is(tile_offset, TERRAIN_BUILDING)) {
                 continue;
             }
@@ -955,7 +955,7 @@ e_house_progress building_house::check_evolve_desirability() {
     auto &d = runtime_data();
     if (current_des <= model().devolve_desirability) {
         status = e_house_decay;
-        d.evolve_text = "#cannot_evolve_cause_low_desirability"; 
+        d.evolve_text = "#cannot_evolve_cause_low_desirability";
     } else if (current_des >= evolve_des) {
         status = e_house_evolve;
         d.evolve_text = "#house_upgrade_inprogress";

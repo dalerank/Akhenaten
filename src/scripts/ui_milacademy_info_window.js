@@ -2,6 +2,7 @@ log_info("akhenaten: ui military academy info window started")
 
 [es=building_info_window]
 info_window_milacademy {
+    first_advisor : ADVISOR_MILITARY
     related_buildings [BUILDING_MILITARY_ACADEMY, BUILDING_MILITARY_ACADEMY_2, BUILDING_MILITARY_ACADEMY_3]
     ui : baseui(building_info_window, {
     })
@@ -21,4 +22,5 @@ function info_window_milacademy_on_init(window) {
 
     var worker_desc = b.worker_percentage > 0 ? 1 : 3
     window.workers_desc.text = __loc(b.meta_text_id, worker_desc)
+    building_info_window_setup_advisors(window)
 }

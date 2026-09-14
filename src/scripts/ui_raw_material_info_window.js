@@ -18,6 +18,7 @@ raw_material_info_window {
 
 [es=building_info_window]
 info_window_raw_material {
+    first_advisor : ADVISOR_LABOR
     related_buildings [
         BUILDING_STONE_QUARRY, BUILDING_LIMESTONE_QUARRY, BUILDING_WOOD_CUTTERS, BUILDING_CLAY_PIT,
         BUILDING_GOLD_MINE, BUILDING_GEMSTONE_MINE, BUILDING_REED_GATHERER,
@@ -45,4 +46,5 @@ function info_window_raw_material_on_init(window) {
 
     var wdesc = window.workers_desc || (window.workers_panel && window.workers_panel.workers_desc) || (window.inner_panel && window.inner_panel.workers_desc)
     if (wdesc) wdesc.text = __loc(reason)
+    building_info_window_setup_advisors(window)
 }

@@ -12,6 +12,7 @@ function recruiter_info_window_text_fort_button() {
 
 [es=building_info_window]
 info_window_recruiter {
+    first_advisor : ADVISOR_MILITARY
     related_buildings [BUILDING_RECRUITER]
     ui : baseui(building_info_window, {
         background    : outer_panel({size: [29, 20]}),
@@ -72,4 +73,5 @@ function info_window_recruiter_on_init(window) {
         warning_text += " " + __loc(reason)
     }
     window.warning_text.text = warning_text
+    building_info_window_setup_advisors(window)
 }
