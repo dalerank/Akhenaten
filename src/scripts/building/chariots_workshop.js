@@ -1,13 +1,35 @@
 log_info("akhenaten: building_chariots_workshop started")
 
+[es=building_industry]
 building_chariots_workshop = {
+  type: BUILDING_CHARIOTS_WORKSHOP
   animations : {
     preview : { pack:PACK_GENERAL, id:124 },
     base : { pack:PACK_GENERAL, id:124 },
     work : { pack:PACK_GENERAL, id:124 },
-    timber : { pos:[51, 18], pack:PACK_GENERAL, id:206 },
-    weapon : { pos:[46, 25], pack:PACK_GENERAL, id:207 },
   },
+  overlay_anims {
+    timber {
+      pos:[51, 18]
+      pack:PACK_GENERAL
+      id:206
+      resource: RESOURCE_TIMBER
+      stack: true
+      step: [5, -5]
+      max_count: 8
+      default_active: true
+    }
+    weapon {
+      pos:[46, 25]
+      pack:PACK_GENERAL
+      id:207
+      resource: RESOURCE_WEAPONS
+      stack: true
+      step: [5, -5]
+      max_count: 8
+      default_active: true
+    }
+  }
   input : {
     resource : RESOURCE_TIMBER
     resource_second : RESOURCE_WEAPONS
