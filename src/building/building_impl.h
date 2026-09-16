@@ -137,7 +137,6 @@ public:
     inline const int first_img(const xstring &key) const { return  current_params().first_img(key); }
     inline const int base_img() const { return  current_params().base_img(); }
 
-    virtual bool is_workshop() const { return false; }
     virtual bool is_administration() const { return false; }
     virtual bool is_unique_building() const { return false; }
     virtual void destroy_by_poof(bool clouds);

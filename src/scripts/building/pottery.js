@@ -5,7 +5,19 @@ building_pottery {
         preview { pos[-1, -1], pack:PACK_GENERAL, id:125 }
         base { pos[-1, -1], pack:PACK_GENERAL, id:125 }
         work { pos[36, -4], pack:PACK_GENERAL, id:125, offset:1, max_frames:18, duration:12 }
-        clay { pos[60, 30], pack:PACK_GENERAL, id:205, offset:9 }
+    }
+    overlay_anims {
+        clay {
+            pos: [60, 30]
+            pack: PACK_GENERAL
+            id: 205
+            offset: 9
+            resource: RESOURCE_CLAY
+            stack: true
+            step: [5, -5]
+            max_count: 8
+            default_active: true
+        }
     }
 
     input {
@@ -22,6 +34,7 @@ building_pottery {
     building_size : 2
     meta { text_id:126, help_link:"message_potter_history" }
     info_sound : "Wavs/pottery.wav"
+    sound_channel : SOUND_CHANNEL_CITY_POTTERY_WORKSHOP
     cost [ 12, 20, 30, 40, 50 ]
     desirability {
         value[-4]

@@ -3,7 +3,6 @@
 #include "city/object_info.h"
 #include "window/building/common.h"
 #include "graphics/elements/ui.h"
-#include "widget/city/ornaments.h"
 #include "figuretype/figure_constable.h"
 #include "building/building_storage_yard.h"
 #include "building/building.h"
@@ -14,8 +13,6 @@
 #include "grid/road_network.h"
 #include "city/city_buildings.h"
 #include "js/js_game.h"
-#include "graphics/image.h"
-#include "graphics/graphics.h"
 
 BUILDING_RUNTIME_DATA_IMPL(building_police_station)
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_police_station);
@@ -126,13 +123,6 @@ void building_police_station::update_month() {
     d.weapon_requested_this_month = false;
 }
 
-bool building_police_station::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {
-    draw_normal_anim(ctx, point, tile, color_mask);
-    draw_weapons(point, color_mask, ctx);
-
-    return true;
-}
-
 bool building_police_station::add_resource(e_resource resource, int amount) {
     if (resource == RESOURCE_WEAPONS) {
         int max_storage = 200;
@@ -140,19 +130,4 @@ bool building_police_station::add_resource(e_resource resource, int amount) {
         return true;
     }
     return false;
-}
-
-void building_police_station::draw_weapons(vec2i point, color color_mask, painter &ctx) {
-    int weapon_amount = stored_amount(RESOURCE_WEAPONS);
-    if (weapon_amount <= 0) {
-        return;
-    }
-
-    int resources_id = first_img("resources");
-    const vec2i weapon_spot_pos = current_params().weapon_spot_pos;
-
-    auto &command = ImageDraw::create_subcommand(ctx, render_command_t::ert_generic);
-    command.image_id = resources_id + RESOURCE_WEAPONS;
-    command.pixel = point + weapon_spot_pos;
-    command.mask = color_mask;
 }
