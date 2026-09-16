@@ -5,7 +5,18 @@ building_scribal_school = {
     preview : { pack:PACK_GENERAL, id:42},
     base : { pack:PACK_GENERAL, id:42},
     work : { pos:[2, -25], pack:PACK_GENERAL, id:42, offset:1, max_frames:11, duration:4, can_reverse:true },
-    papyrus : { pos:[61, 14], pack:PACK_GENERAL, id:207, offset:0},
+  }
+  overlay_anims {
+    papyrus {
+      pos : [61, 14]
+      pack:PACK_GENERAL
+      id:207
+      resource : RESOURCE_PAPYRUS
+      stack : true
+      step : [5, -5]
+      max_count : 8
+      default_active : true
+    }
   }
   input : {
     resource : RESOURCE_PAPYRUS
