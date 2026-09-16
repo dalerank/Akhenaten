@@ -35,6 +35,7 @@
 e_advisor_tokens_t ANK_CONFIG_ENUM(e_advisor_tokens);
 e_trade_status_tokens_t ANK_CONFIG_ENUM(e_trade_status_tokens);
 e_labor_category_tokens_t ANK_CONFIG_ENUM(e_labor_category_tokens);
+e_planner_rules_t ANK_CONFIG_ENUM(e_planner_rules);
 
 js_State* js_vm_state();
 #define _R(name)            \

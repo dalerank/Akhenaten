@@ -68,8 +68,6 @@ public:
 };
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(build_planner_clear_land);
 
-e_planner_rules_t e_planner_rules;
-
 enum e_place_reservoir {
     PLACE_RESERVOIR_BLOCKED = -1,
     PLACE_RESERVOIR_NO = 0,
@@ -497,7 +495,7 @@ void build_planner::setup_build_flags() {
 
     case BUILDING_MUD_TOWER:
     case BUILDING_BRICK_TOWER:
-        set_flag(e_planner_rule::Walls);
+        set_flag(PLANNER_RULE_WALLS);
         break;
 
         //        case BUILDING_LIBRARY: // TODO
@@ -508,11 +506,11 @@ void build_planner::setup_build_flags() {
 
     case BUILDING_LOW_BRIDGE:
     case BUILDING_UNUSED_SHIP_BRIDGE_83:
-        set_flag(e_planner_rule::Bridge);
+        set_flag(PLANNER_RULE_BRIDGE);
         break;
 
     case BUILDING_ROAD:
-        set_flag(e_planner_rule::Road, false);
+        set_flag(PLANNER_RULE_ROAD, false);
         break;
 
     case BUILDING_MUD_GATEHOUSE:
@@ -520,51 +518,51 @@ void build_planner::setup_build_flags() {
     case BUILDING_BRICK_GATEHOUSE:
     case BUILDING_BRICK_GATEHOUSE_UP:
     case BUILDING_DECORATIVE_GATEHOUSE:
-        set_flag(e_planner_rule::Road, false);
+        set_flag(PLANNER_RULE_ROAD, false);
         break;
 
     case BUILDING_ROADBLOCK:
         set_warning("#only_build_roadblocks_on_roads");
-        set_flag(e_planner_rule::Road, true);
+        set_flag(PLANNER_RULE_ROAD, true);
         break;
 
     case BUILDING_PLAZA:
-        set_flag(e_planner_rule::Road, true);
-        set_flag(e_planner_rule::FancyRoad);
+        set_flag(PLANNER_RULE_ROAD, true);
+        set_flag(PLANNER_RULE_FANCY_ROAD);
         break;
 
     case BUILDING_BOOTH:
         set_warning("#entertainment_venue_at_intersection");
-        set_flag(e_planner_rule::Intersection, 0);
+        set_flag(PLANNER_RULE_INTERSECTION, 0);
         break;
 
     case BUILDING_BANDSTAND:
         set_warning("#entertainment_venue_at_intersection");
-        set_flag(e_planner_rule::Intersection, 1);
+        set_flag(PLANNER_RULE_INTERSECTION, 1);
         break;
 
     case BUILDING_PAVILLION:
         set_warning("#entertainment_venue_at_intersection");
-        set_flag(e_planner_rule::Intersection, 2);
+        set_flag(PLANNER_RULE_INTERSECTION, 2);
         break;
 
     case BUILDING_FESTIVAL_SQUARE:
         set_warning("#entertainment_venue_at_intersection");
-        set_flag(e_planner_rule::Intersection, 3);
+        set_flag(PLANNER_RULE_INTERSECTION, 3);
         break;
 
     case BUILDING_CLEAR_LAND:
-        set_flag(e_planner_rule::IgnoreNearbyEnemy);
+        set_flag(PLANNER_RULE_IGNORE_NEARBY_ENEMY);
         break;
     }
 
     if (params.planner_update_rule.is_draggable) {
-        set_flag(e_planner_rule::Draggable);
+        set_flag(PLANNER_RULE_DRAGGABLE);
     }
 }
 
 void build_planner::setup_build_graphics() {
-    const auto &preview = building_planer_renderer::get(build_type);   
+    const auto &preview = building_planer_renderer::get(build_type);
     preview.setup_preview_graphics(*this);
 }
 
@@ -782,7 +780,7 @@ void build_planner::update_special_case_orientations_check() {
     }
 
     const bool temple_altar = needTempleUpgradeAltar();
-    const bool temple_oracle = is_flag(e_planner_rule::TempleUpgradeOracle);
+    const bool temple_oracle = is_flag(PLANNER_RULE_TEMPLE_UPGRADE_ORACLE);
     const int temple_options = (temple_altar ? etc_upgrade_altar : 0) | (temple_oracle ? etc_upgrade_oracle : 0);
     if (temple_altar || temple_oracle) {
         auto complex = building_at(end)->main()->dcast_temple_complex();

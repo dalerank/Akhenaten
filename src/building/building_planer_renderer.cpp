@@ -39,25 +39,39 @@ struct building_variant_ev {
 };
 ANK_REGISTER_STRUCT_WRITER(building_variant_ev, type, tile, variant, global_orientation)
 
+struct need_flag_ev {
+    int flag;
+    bool result;
+};
+ANK_REGISTER_STRUCT_WRITER(need_flag_ev, flag, result)
+
 static std::array<const building_planer_renderer *, BUILDING_MAX> *building_planer_rends = nullptr;
 
 bool building_planer_renderer::is_need_flag(build_planner &planer, e_building_need_rules flag) const {
     const auto &params = building_static_params::get(planer.build_type);
     const auto &needs = params.needs;
+    bool result = false;
     switch (flag) {
-    case e_planner_rule::Meadow: return needs.meadow;
-    case e_planner_rule::Rock: return needs.rock;
-    case e_planner_rule::Ore: return needs.ore;
-    case e_planner_rule::TempleUpgradeAltar: return needs.altar;
-    case e_planner_rule::TempleUpgradeOracle: return needs.oracle;
-    case e_planner_rule::NearbyWater: return needs.nearby_water;
-    case e_planner_rule::Groundwater: return needs.groundwater;
-    case e_planner_rule::ShoreLine: return needs.shoreline;
-    case e_planner_rule::Canals: return needs.canals;
-    case e_planner_rule::FloodplainShore: return needs.floodplain_shoreline;
+    case PLANNER_RULE_MEADOW: result = needs.meadow; break;
+    case PLANNER_RULE_ROCK: result = needs.rock; break;
+    case PLANNER_RULE_ORE: result = needs.ore; break;
+    case PLANNER_RULE_TEMPLE_UPGRADE_ALTAR: result = needs.altar; break;
+    case PLANNER_RULE_TEMPLE_UPGRADE_ORACLE: result = needs.oracle; break;
+    case PLANNER_RULE_NEARBY_WATER: result = needs.nearby_water; break;
+    case PLANNER_RULE_GROUNDWATER: result = needs.groundwater; break;
+    case PLANNER_RULE_SHORELINE: result = needs.shoreline; break;
+    case PLANNER_RULE_CANALS: result = needs.canals; break;
+    case PLANNER_RULE_FLOODPLAIN_SHORE: result = needs.floodplain_shoreline; break;
     }
 
-    return false;
+    const xstring event_name = js_helpers::es_hash_str(params.name, __func__).c_str();
+    if (js_has_event_handlers(event_name)) {
+        planer.need_flag_result = result;
+        es_t(need_flag_ev{ (int)flag, result }, params.name, __func__);
+        return planer.need_flag_result != 0;
+    }
+
+    return result;
 }
 
 bool building_planer_renderer::ghost_allow_tile(build_planner &p, tile2i tile) const {

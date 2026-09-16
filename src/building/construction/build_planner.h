@@ -8,37 +8,36 @@
 #include "grid/terrain.h"
 
 enum e_planner_rule : uint8_t {
-    Groundwater = 0,
-    Water = 1,
-    NearbyWater = 2,
-    ShoreLine = 3,
-    RiverAccess = 4,
-    FloodplainShore = 5,
-    //
-    Meadow = 6,
-    Trees = 7,
-    Rock = 8,
-    Ore = 9,
-    Road = 10,
-    Intersection = 11,
-    FancyRoad = 12,
-    Walls = 13,
-    Canals = 14,
-    //
-    Reserved = 16,
-    Resources = 17,
-    IgnoreNearbyEnemy = 18,
-    //
-    Draggable = 21,
-    Ferry = 22,
-    Bridge = 23,
-    //
-    TempleUpgradeAltar = 24,
-    TempleUpgradeOracle = 25,
+    PLANNER_RULE_GROUNDWATER = 0,
+    PLANNER_RULE_WATER = 1,
+    PLANNER_RULE_NEARBY_WATER = 2,
+    PLANNER_RULE_SHORELINE = 3,
+    PLANNER_RULE_RIVER_ACCESS = 4,
+    PLANNER_RULE_FLOODPLAIN_SHORE = 5,
+    PLANNER_RULE_MEADOW = 6,
+    PLANNER_RULE_TREES = 7,
+    PLANNER_RULE_ROCK = 8,
+    PLANNER_RULE_ORE = 9,
+    PLANNER_RULE_ROAD = 10,
+    PLANNER_RULE_INTERSECTION = 11,
+    PLANNER_RULE_FANCY_ROAD = 12,
+    PLANNER_RULE_WALLS = 13,
+    PLANNER_RULE_CANALS = 14,
+    PLANNER_RULE_UNUSED_15 = 15,
+    PLANNER_RULE_RESERVED = 16,
+    PLANNER_RULE_RESOURCES = 17,
+    PLANNER_RULE_IGNORE_NEARBY_ENEMY = 18,
+    PLANNER_RULE_UNUSED_19 = 19,
+    PLANNER_RULE_UNUSED_20 = 20,
+    PLANNER_RULE_DRAGGABLE = 21,
+    PLANNER_RULE_FERRY = 22,
+    PLANNER_RULE_BRIDGE = 23,
+    PLANNER_RULE_TEMPLE_UPGRADE_ALTAR = 24,
+    PLANNER_RULE_TEMPLE_UPGRADE_ORACLE = 25,
 
-    PlannerRuleMax
+    PLANNER_RULE_MAX
 };
-using e_planner_rules_t = token_holder<e_planner_rule, e_planner_rule::Groundwater, e_planner_rule::PlannerRuleMax>;
+using e_planner_rules_t = token_holder<e_planner_rule, PLANNER_RULE_GROUNDWATER, PLANNER_RULE_MAX>;
 extern e_planner_rules_t e_planner_rules;
 
 enum e_place_action {
@@ -105,28 +104,28 @@ public:
     void set_warning(xstring warning) { immediate_warning = warning; }
     void set_extra_warning(xstring warning) { extra_warning = warning; }
 
-    inline bool needGroundwater() const { return is_flag(e_planner_rule::Groundwater); }
-    inline bool needWater() const { return is_flag(e_planner_rule::Water); }
-    inline bool needShoreLine() const { return is_flag(e_planner_rule::ShoreLine); }
-    inline bool needNearbyWater() const { return is_flag(e_planner_rule::NearbyWater); }
-    inline bool needMeadow() const { return is_flag(e_planner_rule::Meadow); }
-    inline bool needRiverAccess() const { return is_flag(e_planner_rule::RiverAccess); }
-    inline bool needFloodplainShore() const { return is_flag(e_planner_rule::FloodplainShore); }
-    inline bool needTrees() const { return is_flag(e_planner_rule::Trees); }
-    inline bool needRock() const { return is_flag(e_planner_rule::Rock); }
-    inline bool needOre() const { return is_flag(e_planner_rule::Ore); }
-    inline bool needRoad() const { return is_flag(e_planner_rule::Road); }
-    inline bool needIntersection() const { return is_flag(e_planner_rule::Intersection); }
-    inline bool needFancyRoad() const { return is_flag(e_planner_rule::FancyRoad); }
-    inline bool needWalls() const { return is_flag(e_planner_rule::Walls); }
-    inline bool needCanals() const { return is_flag(e_planner_rule::Canals); }
-    inline bool needResources() const { return is_flag(e_planner_rule::Resources); }
-    inline bool ignoreNearbyEnemy() const { return is_flag(e_planner_rule::IgnoreNearbyEnemy); }
-    inline bool draggable() const { return is_flag(e_planner_rule::Draggable); }
-    inline bool needFerry() const { return is_flag(e_planner_rule::Ferry); }
-    inline bool needBridge() const { return is_flag(e_planner_rule::Bridge); }
-    inline bool needTempleUpgradeAltar() const { return is_flag(e_planner_rule::TempleUpgradeAltar); }
-    inline bool needTempleUpgradeOracle() const { return is_flag(e_planner_rule::TempleUpgradeOracle); }
+    inline bool needGroundwater() const { return is_flag(PLANNER_RULE_GROUNDWATER); }
+    inline bool needWater() const { return is_flag(PLANNER_RULE_WATER); }
+    inline bool needShoreLine() const { return is_flag(PLANNER_RULE_SHORELINE); }
+    inline bool needNearbyWater() const { return is_flag(PLANNER_RULE_NEARBY_WATER); }
+    inline bool needMeadow() const { return is_flag(PLANNER_RULE_MEADOW); }
+    inline bool needRiverAccess() const { return is_flag(PLANNER_RULE_RIVER_ACCESS); }
+    inline bool needFloodplainShore() const { return is_flag(PLANNER_RULE_FLOODPLAIN_SHORE); }
+    inline bool needTrees() const { return is_flag(PLANNER_RULE_TREES); }
+    inline bool needRock() const { return is_flag(PLANNER_RULE_ROCK); }
+    inline bool needOre() const { return is_flag(PLANNER_RULE_ORE); }
+    inline bool needRoad() const { return is_flag(PLANNER_RULE_ROAD); }
+    inline bool needIntersection() const { return is_flag(PLANNER_RULE_INTERSECTION); }
+    inline bool needFancyRoad() const { return is_flag(PLANNER_RULE_FANCY_ROAD); }
+    inline bool needWalls() const { return is_flag(PLANNER_RULE_WALLS); }
+    inline bool needCanals() const { return is_flag(PLANNER_RULE_CANALS); }
+    inline bool needResources() const { return is_flag(PLANNER_RULE_RESOURCES); }
+    inline bool ignoreNearbyEnemy() const { return is_flag(PLANNER_RULE_IGNORE_NEARBY_ENEMY); }
+    inline bool draggable() const { return is_flag(PLANNER_RULE_DRAGGABLE); }
+    inline bool needFerry() const { return is_flag(PLANNER_RULE_FERRY); }
+    inline bool needBridge() const { return is_flag(PLANNER_RULE_BRIDGE); }
+    inline bool needTempleUpgradeAltar() const { return is_flag(PLANNER_RULE_TEMPLE_UPGRADE_ALTAR); }
+    inline bool needTempleUpgradeOracle() const { return is_flag(PLANNER_RULE_TEMPLE_UPGRADE_ORACLE); }
 
     int additional_req_param1 = -1;
 
@@ -138,6 +137,7 @@ public:
     bool draw_as_constructing;
     int construction_update_items = 0;
     int finalize_check_result = 0;
+    int need_flag_result = 0;
     tile2i start;
     tile2i end;
     int total_cost;

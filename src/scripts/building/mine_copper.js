@@ -32,6 +32,13 @@ building_mine_copper {
   damage_risk[2]
 }
 
+[es=(building_mine_copper, is_need_flag)]
+function building_mine_copper_is_need_flag(ev) {
+    if (ev.flag == PLANNER_RULE_ORE) {
+        city_planner.need_flag_result = !game_features.gameplay_copper_mine_can_build_near_mountains && ev.result
+    }
+}
+
 [es=(building_mine_copper, on_before_collapse)]
 function building_mine_copper_on_before_collapse(ev) {
     if (!game_features.gameplay_change_random_mine_or_pit_collapses_take_money) {
