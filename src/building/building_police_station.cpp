@@ -3,7 +3,6 @@
 #include "city/object_info.h"
 #include "window/building/common.h"
 #include "graphics/elements/ui.h"
-#include "graphics/animation.h"
 #include "widget/city/ornaments.h"
 #include "figuretype/figure_constable.h"
 #include "building/building_storage_yard.h"
@@ -29,8 +28,8 @@ bool building_police_station::request_weapons_if_need() {
 
     if (stored_amount(RESOURCE_WEAPONS) > 50) {
         return false;
-    } 
-    
+    }
+
     if (has_figure_of_type(BUILDING_SLOT_SERVICE, FIGURE_CONSTABLE)) {
         return false;
     }
@@ -89,7 +88,7 @@ void building_police_station::spawn_figure() {
     }
 
     common_spawn_labor_seeker(current_params().min_houses_coverage);
-    
+
     int pct_workers = worker_percentage();
     int spawn_delay = figure_spawn_timer();
     if (spawn_delay == -1) {
@@ -118,15 +117,6 @@ void building_police_station::spawn_figure() {
         base.figure_spawn_delay = 0;
         create_roaming_figure(FIGURE_CONSTABLE, (e_figure_action)ACTION_70_CONSTABLE_CREATED, BUILDING_SLOT_SERVICE);
     }
-}
-
-void building_police_station::update_graphic() {
-    const xstring &animkey = base.play_animation
-                                ? animkeys().work
-                                : animkeys().none;
-    set_animation(animkey);
-
-    building_impl::update_graphic();
 }
 
 void building_police_station::update_month() {

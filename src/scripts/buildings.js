@@ -52,6 +52,7 @@ import building.entertainment
 import building.booth
 import building.festival_square
 import building.firehouse
+import building.police_station
 import building.hunting_lodge
 import building.pottery
 import building.papyrus_maker
