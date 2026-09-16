@@ -25,7 +25,18 @@ building_mortuary {
     preview { pack:PACK_GENERAL, id:175 },
     base { pack:PACK_GENERAL, id:175 },
     work { pos[35, -20], pack:PACK_GENERAL, id:175, offset:1, max_frames:12, duration:4 },
-    linen { pos : [45, 3], pack:PACK_GENERAL, id:206 },
+  }
+  overlay_anims {
+    linen {
+      pos : [45, 3]
+      pack:PACK_GENERAL
+      id:206
+      resource : RESOURCE_LINEN
+      stack : true
+      step : [5, -5]
+      max_count : 8
+      default_active : true
+    }
   }
 
   input : {

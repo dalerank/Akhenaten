@@ -28,7 +28,6 @@ public:
     virtual e_sound_channel_city sound_channel() const override { return SOUND_CHANNEL_CITY_MORTUARY; }
     virtual int animation_speed(int speed) const override { return 3; }
     virtual void update_animation() override;
-    virtual bool draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) override;
     virtual void update_count() const override;
 };
 ANK_CONFIG_STRUCT(building_mortuary::static_params, linen_required_for_spawn, linen_required_for_animation, monthly_linen_consumption)

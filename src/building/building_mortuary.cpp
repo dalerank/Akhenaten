@@ -7,13 +7,11 @@ BUILDING_RUNTIME_DATA_IMPL(building_mortuary)
 #include "game/resource.h"
 #include "graphics/elements/panel.h"
 #include "graphics/elements/lang_text.h"
-#include "graphics/graphics.h"
 #include "io/gamefiles/lang.h"
 #include "game/game_config.h"
 #include "window/building/common.h"
 #include "window/building/figures.h"
 #include "sound/sound_building.h"
-#include "widget/city/ornaments.h"
 #include "city/city.h"
 #include "city/city_resource.h"
 #include "dev/debug.h"
@@ -55,26 +53,6 @@ void building_mortuary::update_animation() {
     if (base.stored_amount(RESOURCE_LINEN) < params.linen_required_for_animation) {
         base.play_animation = false;
     }
-}
-
-bool building_mortuary::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {
-    draw_normal_anim(ctx, point, tile, color_mask);
-
-    int amount = base.stored_amount(RESOURCE_LINEN) / 100;
-    if (amount > 0) {
-        const auto &ranim = anim(animkeys().linen);
-        vec2i pos = ranim.pos;
-        for (int i = 0; i < amount; ++i) {
-            auto& command = ImageDraw::create_subcommand(ctx, render_command_t::ert_generic);
-            command.image_id = ranim.first_img();
-            command.pixel = point + pos;
-            command.mask = color_mask;
-
-            pos += {5, -5};
-        }
-    }
-
-    return true;
 }
 
 void building_mortuary::update_count() const {
