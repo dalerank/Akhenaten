@@ -1,10 +1,5 @@
 #include "building_jewels_workshop.h"
 
-#include "city/city_resource_handle.h"
-#include "empire/empire.h"
-#include "city/city_resource.h"
-#include "city/city_warnings.h"
-#include "city/city.h"
 #include "js/js_game.h"
 #include "graphics/image.h"
 #include "graphics/image_groups.h"
@@ -21,26 +16,6 @@ void building_jewels_workshop::update_animation() {
     if (base.stored_amount(RESOURCE_GEMS) < 100) {
         base.play_animation = false;
     }
-}
-
-void building_jewels_workshop::on_place_checks() {
-    building_impl::on_place_checks();
-
-    if (g_city.buildings.count_industry_active(RESOURCE_GEMS) > 0) {
-        return;
-    }
-
-    if (g_city.resource.yards_stored(RESOURCE_GEMS) > 0) {
-        return;
-    }
-
-    construction_warnings warnings("#needs_gems");
-
-    const bool is_import_gems = (city_resource_gems.trade_status() == TRADE_STATUS_IMPORT);
-
-    warnings.add_if(!city_resource_gems.can_produce(), "#build_gem_mine");
-    warnings.add_if(!city_resource_gems.can_import(true), "#setup_trade_route_to_import");
-    warnings.add_if(!is_import_gems, "#overseer_of_commerce_to_import");
 }
 
 bool building_jewels_workshop::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {

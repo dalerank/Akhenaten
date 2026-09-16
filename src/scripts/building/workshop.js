@@ -106,3 +106,17 @@ building_jewels_workshop = {
     work_anim: true
   }
 }
+
+[es=(building_jewels_workshop, on_place_checks)]
+function building_jewels_workshop_on_place_checks(ev) {
+    var gems = city.resources.gems
+    var has_supply = (gems.count_active_industry > 0) || (gems.yards_stored > 0)
+    if (has_supply) {
+        return
+    }
+
+    city.warnings.show("#needs_gems")
+    city.warnings.show_if_not(gems.can_produce, "#build_gem_mine")
+    city.warnings.show_if_not(gems.can_import, "#setup_trade_route_to_import")
+    city.warnings.show_if_not(gems.trade_status == TRADE_STATUS_IMPORT, "#overseer_of_commerce_to_import")
+}
