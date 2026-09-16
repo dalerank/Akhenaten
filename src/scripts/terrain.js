@@ -65,6 +65,22 @@ terrain = {
         return __map_tiles_set_canal(tile)
     }
 
+    update_canal_tiles: function(include_construction) {
+        __map_canal_update_all_tiles(include_construction)
+    }
+
+    update_canal_tiles_region: function(pmin, pmax) {
+        __map_tiles_update_region_canals(pmin, pmax)
+    }
+
+    can_place_initial_road_or_canal: function(tile, is_canal) {
+        return __map_can_place_initial_road_or_canal(tile, is_canal)
+    }
+
+    canal_ghost_image: function(tile) {
+        return __map_canal_ghost_image(tile)
+    }
+
     canal_with_road_image: function(tile) {
         return __map_get_canal_with_road_image(tile)
     }

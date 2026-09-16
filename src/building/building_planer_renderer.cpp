@@ -45,6 +45,17 @@ struct need_flag_ev {
 };
 ANK_REGISTER_STRUCT_WRITER(need_flag_ev, flag, result)
 
+struct construction_start_ev {
+    tile2i start;
+};
+ANK_REGISTER_STRUCT_WRITER(construction_start_ev, start)
+
+struct ghost_allow_tile_ev {
+    tile2i tile;
+    bool in_progress;
+};
+ANK_REGISTER_STRUCT_WRITER(ghost_allow_tile_ev, tile, in_progress)
+
 static std::array<const building_planer_renderer *, BUILDING_MAX> *building_planer_rends = nullptr;
 
 bool building_planer_renderer::is_need_flag(build_planner &planer, e_building_need_rules flag) const {
@@ -75,8 +86,30 @@ bool building_planer_renderer::is_need_flag(build_planner &planer, e_building_ne
 }
 
 bool building_planer_renderer::ghost_allow_tile(build_planner &p, tile2i tile) const {
-    return (map_has_figure_at(tile) == false);
-};
+    bool result = !map_has_figure_at(tile);
+    const auto &params = building_static_params::get(p.build_type);
+    const xstring event_name = js_helpers::es_hash_str(params.name, __func__).c_str();
+    if (js_has_event_handlers(event_name)) {
+        p.preview_allow_result = result ? 1 : 0;
+        es_t(ghost_allow_tile_ev{ tile, p.in_progress }, params.name, __func__);
+        return p.preview_allow_result != 0;
+    }
+
+    return result;
+}
+
+bool building_planer_renderer::can_construction_start(build_planner &p, tile2i start) const {
+    const auto &params = building_static_params::get(p.build_type);
+    const xstring event_name = js_helpers::es_hash_str(params.name, __func__).c_str();
+    if (js_has_event_handlers(event_name)) {
+        p.preview_allow_result = 1;
+        es_t(construction_start_ev{ start }, params.name, __func__);
+        return p.preview_allow_result != 0;
+    }
+
+    return true;
+}
+
 const building_planer_renderer building_planer_renderer::dummy;
 
 void building_planer_renderer::register_model(e_building_type e, const building_planer_renderer &p) {

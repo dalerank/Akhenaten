@@ -12,7 +12,7 @@ struct building_planer_renderer {
     static const building_planer_renderer dummy;
     virtual bool ghost_allow_tile(build_planner &p, tile2i tile) const;
     virtual uint32_t ghost_ignore_terrain(build_planner &p, tile2i tile) const { return 0; }
-    virtual bool can_construction_start(build_planner &p, tile2i start) const { return true; }
+    virtual bool can_construction_start(build_planner &p, tile2i start) const;
     virtual int setup_orientation(int orientation) const { return orientation; }
     virtual void setup_build(build_planner &planer) const {}
     virtual void setup_preview_graphics(build_planner &planer) const;

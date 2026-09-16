@@ -138,6 +138,7 @@ public:
     int construction_update_items = 0;
     int finalize_check_result = 0;
     int need_flag_result = 0;
+    int preview_allow_result = 0;
     tile2i start;
     tile2i end;
     int total_cost;
