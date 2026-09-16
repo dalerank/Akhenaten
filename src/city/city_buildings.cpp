@@ -371,6 +371,8 @@ io_buffer *iob_buildings = new io_buffer([] (io_buffer *iob, size_t version) {
     for (int i = 0; i < MAX_BUILDINGS; i++) {
         //        building_state_load_from_buffer(buf, &all_buildings[i]);
         auto b = &g_all_buildings[i];
+        // 186 is header+runtime from record start (Pharaoh: ~82 header + ~102 runtime).
+        const int sind = (int)iob->get_offset();
 
         iob->bind(BIND_SIGNATURE_UINT8, &b->state);
         iob->bind____skip(1); // iob->bind(BIND_SIGNATURE_UINT8, &b->faction_id);
@@ -436,7 +438,6 @@ io_buffer *iob_buildings = new io_buffer([] (io_buffer *iob, size_t version) {
         iob->bind(BIND_SIGNATURE_INT16, &b->formation_id);
 
         static_assert(sizeof(building::runtime_data) == 186, "runtime_data more then 186 bytes");
-        const int sind = (int)iob->get_offset();
         b->dcast()->bind_dynamic(iob, version); // 102 for PH
 
         const int currind = (int)iob->get_offset() - sind;
