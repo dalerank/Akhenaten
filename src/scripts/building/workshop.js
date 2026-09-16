@@ -85,6 +85,17 @@ building_jewels_workshop = {
     base : { pos : [0, 0], pack:PACK_GENERAL, id:119 },
     work : { pos : [7, -10], pack:PACK_GENERAL, id:119, offset:1, max_frames:9 },
   },
+  overlay_anims {
+    gems {
+      pos : [65, 3]
+      pack:PACK_GENERAL
+      id:200
+      resource: RESOURCE_GEMS
+      stack: false
+      max_count: 2
+      default_active: true
+    }
+  }
   input : {
     resource: RESOURCE_GEMS
   }
@@ -94,6 +105,7 @@ building_jewels_workshop = {
   building_size : 2,
   meta : { text_id:125, help_link:"message_building_jeweler_and_luxury_goods" }
   info_sound : "Wavs/gem_r.wav"
+  sound_channel : SOUND_CHANNEL_CITY_NONE
   labor_category : LABOR_CATEGORY_INDUSTRY_COMMERCE
   cost: [ 18, 30, 50, 100, 200 ]
   desirability : { value:[-2], step:[1], step_size:[1], range: [2] }

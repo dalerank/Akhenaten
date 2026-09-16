@@ -1,10 +1,6 @@
 #include "building_jewels_workshop.h"
 
 #include "js/js_game.h"
-#include "graphics/image.h"
-#include "graphics/image_groups.h"
-#include "graphics/animkeys.h"
-#include "widget/city/ornaments.h"
 #include "grid/building.h"
 #include "grid/grid.h"
 #include <set>
@@ -16,22 +12,6 @@ void building_jewels_workshop::update_animation() {
     if (base.stored_amount(RESOURCE_GEMS) < 100) {
         base.play_animation = false;
     }
-}
-
-bool building_jewels_workshop::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {
-    draw_normal_anim(ctx, point, tile, color_mask);
-
-    int amount = std::min<int>(2, ceil((float)base.stored_amount(RESOURCE_GEMS) / 100.0) - 1);
-    if (amount >= 0) {
-        int image_id = image_id_from_group(GROUP_RESOURCE_STOCK_GEMS_2) + amount;
-
-        auto& command = ImageDraw::create_subcommand(ctx, render_command_t::ert_generic);
-        command.image_id = image_id;
-        command.pixel = point + vec2i(65, 3);
-        command.mask = color_mask;
-    }
-
-    return true;
 }
 
 int building_jewels_workshop::count_nearby_workshops() const {
