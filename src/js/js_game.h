@@ -1,11 +1,10 @@
 #pragma once
 
-#include "mujs/mujs.h"
+#include "mujs/jsi.h"
 
 #include "js/js_constants.h"
 #include "js/js_struct.h"
 #include "js/js_global_object.h"
-#include "mujs/jsi.h"
 #include "mujs/jsvalue.h"
 #include "core/bstring.h"
 #include "core/core.h"
@@ -252,17 +251,17 @@ namespace js_helpers {
 
     template<>
     inline void js_push_value<vec2i>(js_State *J, vec2i value) {
-        js_newvec2i(J, value.x, value.y);
+        J->newvec2i(value.x, value.y);
     }
 
     template<>
     inline void js_push_value<tile2i>(js_State *J, tile2i value) {
-        js_newvec2i(J, value.x(), value.y());
+        J->newvec2i(value.x(), value.y());
     }
 
     template<>
     inline void js_push_value<grid_area>(js_State *J, grid_area value) {
-        js_newobject(J);
+        J->newobject();
         js_pushnumber(J, value.tmin_x); js_setproperty(J, -2, property_minx);
         js_pushnumber(J, value.tmin_y); js_setproperty(J, -2, property_miny);
         js_pushnumber(J, value.tmax_x); js_setproperty(J, -2, property_maxx);
@@ -281,7 +280,7 @@ namespace js_helpers {
 
     template<typename T, size_t Cap>
     inline void js_push_value(js_State *J, const svector<T, Cap> &arr) {
-        js_newarray(J);
+        J->newarray();
         for (size_t i = 0; i < arr.size(); ++i) {
             js_pushnumber(J, (double)arr[i]);
             js_setindex(J, -2, (int)i);
@@ -290,7 +289,7 @@ namespace js_helpers {
 
     template<typename T, size_t Cap>
     inline void js_push_value(js_State *J, const hvector<T, Cap> &arr) {
-        js_newarray(J);
+        J->newarray();
         for (size_t i = 0; i < arr.size(); ++i) {
             js_pushnumber(J, (double)arr[i]);
             js_setindex(J, -2, (int)i);
@@ -299,7 +298,7 @@ namespace js_helpers {
 
     template<size_t Cap>
     inline void js_push_value(js_State *J, const hvector<vec2i, Cap> &arr) {
-        js_newarray(J);
+        J->newarray();
         for (size_t i = 0; i < arr.size(); ++i) {
             js_push_value<vec2i>(J, arr[i]);
             js_setindex(J, -2, (int)i);
@@ -344,7 +343,7 @@ namespace js_helpers {
         case bvariant::etype_grid_area:
         {
             const grid_area a = val.as_grid_area();
-            js_newobject(J);
+            J->newobject();
             js_pushnumber(J, a.tmin_x); js_setproperty(J, -2, property_minx);
             js_pushnumber(J, a.tmin_y); js_setproperty(J, -2, property_miny);
             js_pushnumber(J, a.tmax_x); js_setproperty(J, -2, property_maxx);
@@ -359,7 +358,7 @@ namespace js_helpers {
     }
 
     inline void js_push_bvariant_map_as_js_object(js_State *J, const bvariant_map &params) {
-        js_newobject(J);
+        J->newobject();
         for (const auto &kv : params) {
             js_push_bvariant(J, kv.second);
             js_setproperty(J, -2, js_intern(kv.first.c_str()));
@@ -582,7 +581,7 @@ struct js_function_traits<R(C:: *)(Args...) const> : js_function_traits<R(C:: *)
         const bool already_registered = J->isobject(-1);                                                            \
         js_pop(J, 1);                                                                                               \
         if (already_registered) return;                                                                             \
-        js_newobject(J);                        /* stack: [obj]      */                                             \
+        J->newobject();                        /* stack: [obj]      */                                             \
         js_dup(J);                              /* stack: [obj, obj] */                                             \
         js_defglobal(J, js_intern(#JsName), 0); /* stores top, pops  → stack: [obj] */                              \
         ANK_GLOBAL_OBJ_PASTE(ContainerExpr, __VA_ARGS__);  /* attaches CPTR props to [obj] */                       \

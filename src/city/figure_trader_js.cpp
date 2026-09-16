@@ -177,6 +177,6 @@ void js_register_figure_trade_proto(js_State *J) {
     jsB_propf(J, js_intern("FigureTrade.prototype.sold_amount"), figure_trade_proto_sold_amount, 1);
     jsB_propf(J, js_intern("FigureTrade.prototype.toString"), figure_trade_proto_toString, 0);
 
-    js_newcconstructor(J, jsB_new_FigureTrade, jsB_new_FigureTrade, js_intern("FigureTrade"), 1);
+    J->newcconstructor(jsB_new_FigureTrade, jsB_new_FigureTrade, js_intern("FigureTrade"), 1);
     js_defglobal(J, js_intern("FigureTrade"), JS_DONTENUM);
 }

@@ -191,7 +191,7 @@ void js_game_get_image(js_State *J) {
         return;
     }
 
-    js_newobject(J);
+    J->newobject();
 
     js_pushnumber(J, tid);
     js_setproperty(J, -2, property_tid);
@@ -278,7 +278,7 @@ void js_call_event_handlers(const xstring &event_name, const bvariant_map &objec
 
         js_pushnull(J); // this
 
-        js_newobject(J);
+        J->newobject();
 
         // First pass: add regular properties and collect UI element IDs
         hvector<bstring64, 64> ui_element_ids;
@@ -306,12 +306,12 @@ void js_call_event_handlers(const xstring &event_name, const bvariant_map &objec
 
             case bvariant::etype_vec2i: {
                     const vec2i pos = val.as_vec2i();
-                    js_newvec2i(J, pos.x, pos.y);
+                    J->newvec2i(pos.x, pos.y);
                 }
                 break;
             case bvariant::etype_tile2i: {
                     const tile2i pos = val.as_tile2i();
-                    js_newvec2i(J, pos.x(), pos.y());
+                    J->newvec2i(pos.x(), pos.y());
                 }
                 break;
             case bvariant::etype_none:

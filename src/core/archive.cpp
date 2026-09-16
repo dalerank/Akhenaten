@@ -435,7 +435,7 @@ void g_archive::w_property(pcstr name, pcstr prop, const xstring &value) {
     getglobal(name);
     if (J->isundefined(-1)) {
         pop(1);
-        js_newobject(J);
+        J->newobject();
     }
 
     J->pushstring(value.c_str());
@@ -452,7 +452,7 @@ void g_archive::w_property(pcstr name, pcstr prop, bool value) {
     getglobal(name);
     if (J->isundefined(-1)) {
         pop(1);
-        js_newobject(J);
+        J->newobject();
     }
 
     js_pushboolean(J, value);
@@ -469,7 +469,7 @@ void g_archive::w_property(pcstr name, pcstr prop, float value) {
     getglobal(name);
     if (J->isundefined(-1)) {
         pop(1);
-        js_newobject(J);
+        J->newobject();
     }
 
     js_pushnumber(J, value);
@@ -489,10 +489,10 @@ void g_archive::w_property(pcstr name, pcstr prop, vec2i value) {
     getglobal(name);
     if (J->isundefined(-1)) {
         pop(1);
-        js_newobject(J);
+        J->newobject();
     }
 
-    js_newobject(J);
+    J->newobject();
     js_pushnumber(J, value.x);
     js_setproperty(J, -2, property_x);
 

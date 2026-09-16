@@ -114,6 +114,6 @@ void js_register_storage_yard(js_State *J) {
     jsB_propf(J, js_intern("StorageYard.prototype.increase_decrease_resource_state"), storage_yard_proto_increase_decrease_resource_state, 2);
     jsB_propf(J, js_intern("StorageYard.prototype.toString"), storage_yard_proto_toString, 0);
 
-    js_newcconstructor(J, jsB_new_StorageYard, jsB_new_StorageYard, js_intern("StorageYard"), 1);
+    J->newcconstructor(jsB_new_StorageYard, jsB_new_StorageYard, js_intern("StorageYard"), 1);
     js_defglobal(J, js_intern("StorageYard"), JS_DONTENUM);
 }

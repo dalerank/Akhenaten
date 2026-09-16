@@ -85,8 +85,8 @@ static void enemy_army_set_readonly(js_State *J) {
 }
 
 static void def_readonly_prop(js_State *J, js_CFunction get, const char *name) {
-    js_newcfunction(J, get, js_intern(""), 0);
-    js_newcfunction(J, enemy_army_set_readonly, js_intern(""), 1);
+    J->newcfunction(get, js_intern(""), 0);
+    J->newcfunction(enemy_army_set_readonly, js_intern(""), 1);
     js_defaccessor(J, -3, js_intern(name), 0);
 }
 
@@ -114,6 +114,6 @@ void js_register_enemy_army(js_State *J) {
     jsB_propf(J, js_intern("EnemyArmy.prototype.battalion_ids"), enemy_army_proto_battalion_ids, 0);
     jsB_propf(J, js_intern("EnemyArmy.prototype.toString"), enemy_army_proto_toString, 0);
 
-    js_newcconstructor(J, jsB_new_EnemyArmy, jsB_new_EnemyArmy, js_intern("EnemyArmy"), 1);
+    J->newcconstructor(jsB_new_EnemyArmy, jsB_new_EnemyArmy, js_intern("EnemyArmy"), 1);
     js_defglobal(J, js_intern("EnemyArmy"), JS_DONTENUM);
 }

@@ -22,7 +22,7 @@ static void mujs_self_test_register_cptr_holder(js_State *J)
 {
     mujs_self_test_u8_a = 0;
     mujs_self_test_u8_b = 0;
-    js_newobject(J);
+    J->newobject();
     js_register_bound_uint8_property(J, js_intern("u8_a"), &mujs_self_test_u8_a);
     js_register_bound_uint8_property(J, js_intern("u8_b"), &mujs_self_test_u8_b);
     js_setglobal(J, "__mujs_self_test_cptr");
@@ -178,7 +178,7 @@ void mujs_run_self_tests(js_State *J)
 
     {
         js_frame_zone zone(J);
-        js_newobject(J);
+        J->newobject();
         js_Object *ephem = J->toobject(-1);
         verify_no_crash_var(ephem && ephem->ephemeral, "frame_zone_ephemeral_flag");
         js_pop(J, 1);
@@ -193,7 +193,7 @@ void mujs_run_self_tests(js_State *J)
             verify_no_crash_var(js_frame_escape_count(J) > before,
                 "frame_zone_escape_hard: expected escape count bump");
         } else {
-            js_newobject(J);
+            J->newobject();
             js_setglobal(J, "__mujs_frame_zone_escape_probe");
             js_endtry(J);
             verify_no_crash_var(false, "frame_zone_escape_hard: expected js_error on heap store");

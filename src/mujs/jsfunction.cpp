@@ -185,7 +185,7 @@ static void Fp_bind(js_State *J)
 
 	/* Reuse target function's prototype for HasInstance check. */
     J->getproperty(0, property_prototype);
-    js_newcconstructor(J, callbound, constructbound, js_intern("[bind]"), n);
+    J->newcconstructor(callbound, constructbound, js_intern("[bind]"), n);
 
 	/* target function */
 	js_copy(J, 0);
@@ -196,7 +196,7 @@ static void Fp_bind(js_State *J)
     js_defproperty(J, -2, property___BoundThis__, JS_READONLY | JS_DONTENUM | JS_DONTCONF);
 
 	/* bound arguments */
-	js_newarray(J);
+	J->newarray();
 	for (i = 2; i < top; ++i) {
 		js_copy(J, i);
 		js_setindex(J, -2, i - 2);
@@ -216,6 +216,6 @@ void jsB_initfunction(js_State *J)
 		jsB_propf(J, js_intern("Function.prototype.call"), Fp_call, 1);
 		jsB_propf(J, js_intern("Function.prototype.bind"), Fp_bind, 1);
 	}
-    js_newcconstructor(J, jsB_Function, jsB_Function, js_intern("Function"), 1);
+    J->newcconstructor(jsB_Function, jsB_Function, js_intern("Function"), 1);
     js_defglobal(J, js_intern("Function"), JS_DONTENUM);
 }

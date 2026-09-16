@@ -42,7 +42,7 @@ static void jsonvalue(js_State *J)
 		break;
 
 	case '{':
-		js_newobject(J);
+		J->newobject();
 		jsonnext(J);
 		if (jsonaccept(J, '}'))
 			return;
@@ -61,7 +61,7 @@ static void jsonvalue(js_State *J)
 		break;
 
 	case '[':
-		js_newarray(J);
+		J->newarray();
 		jsonnext(J);
 		i = 0;
 		if (jsonaccept(J, ']'))

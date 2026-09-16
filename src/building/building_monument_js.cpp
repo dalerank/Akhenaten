@@ -162,7 +162,7 @@ void js_register_monument(js_State* J) {
     jsB_propf(J, js_intern("Monument.prototype.set_tile_progress"), monument_proto_set_tile_progress, 2);
     jsB_propf(J, js_intern("Monument.prototype.toString"), monument_proto_toString, 0);
 
-    js_newcconstructor(J, jsB_new_Monument, jsB_new_Monument, js_intern("Monument"), 1);
+    J->newcconstructor(jsB_new_Monument, jsB_new_Monument, js_intern("Monument"), 1);
     js_defglobal(J, js_intern("Monument"), JS_DONTENUM);
 }
 

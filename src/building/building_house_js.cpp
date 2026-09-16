@@ -125,6 +125,6 @@ void js_register_house(js_State *J) {
     jsB_propf(J, js_intern("House.prototype.inv"), house_proto_get_inventory, 1);
     jsB_propf(J, js_intern("House.prototype.toString"), house_proto_toString, 0);
 
-    js_newcconstructor(J, jsB_new_House, jsB_new_House, js_intern("House"), 1);
+    J->newcconstructor(jsB_new_House, jsB_new_House, js_intern("House"), 1);
     js_defglobal(J, js_intern("House"), JS_DONTENUM);
 }

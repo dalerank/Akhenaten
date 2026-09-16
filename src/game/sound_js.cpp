@@ -79,7 +79,7 @@ static void js_register_sound_channel_proto(js_State *J) {
     JS_REGISTER_BOUND_OFFSET_MEMBER_LIT(J, sound_channel_t, playing);
     jsB_propf(J, js_intern("SoundChannel.prototype.filename"), sound_channel_proto_filename, 0);
     jsB_propf(J, js_intern("SoundChannel.prototype.toString"), sound_channel_proto_toString, 0);
-    js_newcconstructor(J, jsB_new_SoundChannel, jsB_new_SoundChannel, js_intern("SoundChannel"), 1);
+    J->newcconstructor(jsB_new_SoundChannel, jsB_new_SoundChannel, js_intern("SoundChannel"), 1);
     js_defglobal(J, js_intern("SoundChannel"), JS_DONTENUM);
 }
 
@@ -124,7 +124,7 @@ void js_register_sound_object(js_State *J) {
     }
     js_pop(J, 1);
 
-    js_newobject(J);
+    J->newobject();
     REGISTER_FUNCTION(J, js_sound_set_volume, "set_volume", 3);
     REGISTER_FUNCTION(J, js_sound_music_stop, "music_stop", 0);
     REGISTER_FUNCTION(J, js_sound_music_update, "music_update", 1);

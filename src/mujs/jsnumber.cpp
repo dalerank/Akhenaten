@@ -4,7 +4,7 @@
 
 static void jsB_new_Number(js_State *J)
 {
-	js_newnumber(J, js_gettop(J) > 1 ? js_tonumber(J, 1) : 0);
+	J->newnumber(js_gettop(J) > 1 ? js_tonumber(J, 1) : 0);
 }
 
 static void jsB_Number(js_State *J)
@@ -97,7 +97,7 @@ void jsB_initnumber(js_State *J)
 		jsB_propf(J, js_intern("Number.prototype.toExponential"), Np_toExponential, 1);
 		jsB_propf(J, js_intern("Number.prototype.toPrecision"), Np_toPrecision, 1);
 	}
-    js_newcconstructor(J, jsB_Number, jsB_new_Number, js_intern("Number"), 0); /* 1 */
+    J->newcconstructor(jsB_Number, jsB_new_Number, js_intern("Number"), 0); /* 1 */
 	{
 		jsB_propn(J, js_intern("MAX_VALUE"), 1.7976931348623157e+308);
 		jsB_propn(J, js_intern("MIN_VALUE"), 5e-324);

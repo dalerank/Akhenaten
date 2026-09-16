@@ -89,6 +89,6 @@ void js_register_figure_warship_proto(js_State *J) {
     jsB_propf(J, js_intern("FigureWarship.prototype.set_order"), figure_warship_proto_set_order, 1);
     jsB_propf(J, js_intern("FigureWarship.prototype.toString"), figure_warship_proto_toString, 0);
 
-    js_newcconstructor(J, jsB_new_FigureWarship, jsB_new_FigureWarship, js_intern("FigureWarship"), 1);
+    J->newcconstructor(jsB_new_FigureWarship, jsB_new_FigureWarship, js_intern("FigureWarship"), 1);
     js_defglobal(J, js_intern("FigureWarship"), JS_DONTENUM);
 }

@@ -37,7 +37,7 @@ static void __clouds_cloud(js_State *J) {
     }
 
     cloud_t &cloud = g_clouds.clouds[index];
-    js_newobject(J);
+    J->newobject();
     ank_global_obj_bind_field(J, js_intern("status"), &cloud.status);
     ank_global_obj_bind_field(J, js_intern("pos"), &cloud.pos);
     ank_global_obj_bind_field(J, js_intern("render_pos"), &cloud.render_pos);

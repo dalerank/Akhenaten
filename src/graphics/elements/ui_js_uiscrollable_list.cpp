@@ -158,13 +158,13 @@ static void ui_proxy_set_view_items(js_State* J) {
 }
 
 static void def_accessor(js_State *J, js_CFunction get, js_CFunction set, const char *name) {
-    js_newcfunction(J, get ? get : ui::proxy_noop, js_intern(""), 0);
-    js_newcfunction(J, set, js_intern(""), 1);
+    J->newcfunction(get ? get : ui::proxy_noop, js_intern(""), 0);
+    J->newcfunction(set, js_intern(""), 1);
     js_defaccessor(J, -3, js_intern(name), 0);
 }
 
 static void def_function(js_State *J, js_CFunction fn, const char *name, int nargs) {
-    js_newcfunction(J, fn, js_intern(name), nargs);
+    J->newcfunction(fn, js_intern(name), nargs);
     js_setproperty(J, -2, js_intern(name));
 }
 
@@ -198,7 +198,7 @@ void js_register_ui_element_scrollable_list(js_State *J) {
     def_function(J, ui_proxy_scroll_to_selected, "scroll_to_selected", 0);
     def_function(J, ui_proxy_get_selected_text, "selected_text", 1);
 
-    js_newcconstructor(J, jsB_UIScrollableList_call, jsB_UIScrollableList_construct, (js_StringNode)ui::escrollable_list::skind()._get(), 0);
+    J->newcconstructor(jsB_UIScrollableList_call, jsB_UIScrollableList_construct, (js_StringNode)ui::escrollable_list::skind()._get(), 0);
     js_defglobal(J, (js_StringNode)ui::escrollable_list::skind()._get(), JS_DONTENUM);
 
     js_ui_register_element_proto(ui::escrollable_list::skind(), proto);

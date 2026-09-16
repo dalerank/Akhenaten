@@ -3,13 +3,13 @@
 #include "jsbuiltin.h"
 #include "regexp.h"
 
-void js_newregexp(js_State *J, const char *pattern, int flags) {
+void js_State::newregexp(const char *pattern, int flags) {
     const char *error;
     js_Object *obj;
     Reprog *prog;
     int opts;
 
-    obj = jsV_newobject(J, JS_CREGEXP, J->RegExp_prototype);
+    obj = jsV_newobject(this, JS_CREGEXP, RegExp_prototype);
 
     opts = 0;
     if (flags & JS_REGEXP_I) opts |= REG_ICASE;
@@ -17,13 +17,13 @@ void js_newregexp(js_State *J, const char *pattern, int flags) {
 
     prog = js_regcomp(pattern, opts, &error);
     if (!prog)
-        js_syntaxerror(J, "regular expression: %s", error);
+        js_syntaxerror(this, "regular expression: %s", error);
 
     obj->u.r.prog = prog;
     obj->u.r.source = pattern;
     obj->u.r.flags = flags;
     obj->u.r.last = 0;
-    js_pushobject(J, obj);
+    js_pushobject(this, obj);
 }
 
 static js_StringNode property_input = js_intern("input");
@@ -48,7 +48,7 @@ void js_RegExp_prototype_exec(js_State *J, js_Regexp *re, const char *text) {
     }
 
     if (!js_regexec((Reprog *)re->prog, text, &m, opts)) {
-        js_newarray(J);
+        J->newarray();
         J->pushstring(text);
         js_setproperty(J, -2, property_input);
         js_pushnumber(J, js_utfptrtoidx(text, m.sub[0].sp));
@@ -140,7 +140,7 @@ static void jsB_new_RegExp(js_State *J) {
         if (m) flags |= JS_REGEXP_M;
     }
 
-    js_newregexp(J, pattern, flags);
+    J->newregexp(pattern, flags);
 }
 
 static void jsB_RegExp(js_State *J) {
@@ -184,6 +184,6 @@ void jsB_initregexp(js_State *J) {
         jsB_propf(J, js_intern("RegExp.prototype.test"), Rp_test, 0);
         jsB_propf(J, js_intern("RegExp.prototype.exec"), Rp_exec, 0);
     }
-    js_newcconstructor(J, jsB_RegExp, jsB_new_RegExp, js_intern("RegExp"), 1);
+    J->newcconstructor(jsB_RegExp, jsB_new_RegExp, js_intern("RegExp"), 1);
     js_defglobal(J, js_intern("RegExp"), JS_DONTENUM);
 }

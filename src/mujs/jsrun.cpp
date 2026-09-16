@@ -1228,7 +1228,7 @@ void js_State::callfunction(int n, js_Function *F, js_Environment *scope) {
     savescope(scope);
 
     if (F->arguments) {
-        js_newobject(J);
+        J->newobject();
         if (!strict) {
             js_currentfunction(J);
             js_defproperty(J, -2, property_callee, JS_DONTENUM);
@@ -1606,9 +1606,9 @@ void js_State::r_run(js_Function *F) {
         case OP_STRING: pushliteral(ST[*pc++]); break;
 
         case OP_CLOSURE: js_newfunction(J, FT[*pc++], J->E); break;
-        case OP_NEWOBJECT: js_newobject(J); break;
-        case OP_NEWARRAY: js_newarray(J); break;
-        case OP_NEWREGEXP: js_newregexp(J, js_strnode_cstr(ST[pc[0]]), pc[1]); pc += 2; break;
+        case OP_NEWOBJECT: J->newobject(); break;
+        case OP_NEWARRAY: J->newarray(); break;
+        case OP_NEWREGEXP: J->newregexp(js_strnode_cstr(ST[pc[0]]), pc[1]); pc += 2; break;
         case OP_SETMODIFIERS:
         {
             int mod_count = *pc++;

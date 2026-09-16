@@ -81,6 +81,6 @@ void js_register_temple_complex_building(js_State *J) {
     jsB_propf(J, js_intern("BuildingTempleComplex.prototype.allowed_oracle_at"),    temple_complex_proto_allowed_oracle_at,    1);
     jsB_propf(J, js_intern("BuildingTempleComplex.prototype.toString"),             temple_complex_proto_toString,             0);
 
-    js_newcconstructor(J, jsB_new_BuildingTempleComplex, jsB_new_BuildingTempleComplex, js_intern("BuildingTempleComplex"), 1);
+    J->newcconstructor(jsB_new_BuildingTempleComplex, jsB_new_BuildingTempleComplex, js_intern("BuildingTempleComplex"), 1);
     js_defglobal(J, js_intern("BuildingTempleComplex"), JS_DONTENUM);
 }

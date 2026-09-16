@@ -364,13 +364,13 @@ void jsB_initerror(js_State *J)
       jsB_props(J, property_message, "an error has occurred");
       jsB_propf(J, js_intern("Error.prototype.toString"), Ep_toString, 0);
   }
-  js_newcconstructor(J, jsB_Error, jsB_Error, js_intern("Error"), 1);
+  J->newcconstructor(jsB_Error, jsB_Error, js_intern("Error"), 1);
   js_defglobal(J, js_intern("Error"), JS_DONTENUM);
 
   #define IERROR(NAME) \
     js_pushobject(J, J->NAME##_prototype); \
     jsB_props(J, property_name, Q(NAME)); \
-    js_newcconstructor(J, jsB_##NAME, jsB_##NAME, js_intern(Q(NAME)), 1); \
+    J->newcconstructor(jsB_##NAME, jsB_##NAME, js_intern(Q(NAME)), 1); \
     js_defglobal(J, js_intern(Q(NAME)), JS_DONTENUM);
 
   IERROR(EvalError);

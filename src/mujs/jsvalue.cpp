@@ -489,30 +489,30 @@ js_Object* js_State::toobject(js_Value* v) {
     }
 }
 
-void js_newobject(js_State* J) {
+void js_State::newobject() {
     OZZY_PROFILER_FUNCTION();
 
-    js_pushobject(J, jsV_newobject(J, JS_COBJECT, J->Object_prototype));
+    js_pushobject(this, jsV_newobject(this, JS_COBJECT, Object_prototype));
 }
 
-void js_newarray(js_State* J) {
-    js_pushobject(J, jsV_newobject(J, JS_CARRAY, J->Array_prototype));
+void js_State::newarray() {
+    js_pushobject(this, jsV_newobject(this, JS_CARRAY, Array_prototype));
 }
 
-void js_newboolean(js_State* J, int v) {
-    js_pushobject(J, jsV_newboolean(J, v));
+void js_State::newboolean(int v) {
+    js_pushobject(this, jsV_newboolean(this, v));
 }
 
-void js_newnumber(js_State* J, double v) {
-    js_pushobject(J, jsV_newnumber(J, v));
+void js_State::newnumber(double v) {
+    js_pushobject(this, jsV_newnumber(this, v));
 }
 
-void js_newvec2i(js_State* J, int x, int y) {
-    js_pushobject(J, jsV_newvec2i(J, x, y));
+void js_State::newvec2i(int x, int y) {
+    js_pushobject(this, jsV_newvec2i(this, x, y));
 }
 
-void js_newstring(js_State* J, const char* v) {
-    js_pushobject(J, jsV_newstring(J, v));
+void js_State::newstring(const char* v) {
+    js_pushobject(this, jsV_newstring(this, v));
 }
 
 void js_newfunction(js_State* J, js_Function* fun, js_Environment* scope) {
@@ -526,7 +526,7 @@ void js_newfunction(js_State* J, js_Function* fun, js_Environment* scope) {
     {
         js_pushnumber(J, fun->numparams);
         js_defproperty(J, -2, property_length, JS_READONLY | JS_DONTENUM | JS_DONTCONF);
-        js_newobject(J);
+        J->newobject();
         {
             js_copy(J, -2);
             js_defproperty(J, -2, property_constructor, JS_DONTENUM);
@@ -545,65 +545,65 @@ void js_newscript(js_State* J, js_Function* fun, js_Environment* scope) {
     js_pushobject(J, obj);
 }
 
-void js_newcfunction(js_State* J, js_CFunction cfun, const js_StringNode name, int length) {
-    js_Object* obj = jsV_newobject(J, JS_CCFUNCTION, J->Function_prototype);
+void js_State::newcfunction(js_CFunction cfun, const js_StringNode name, int length) {
+    js_Object* obj = jsV_newobject(this, JS_CCFUNCTION, Function_prototype);
     obj->u.c.name = name;
     obj->u.c.function = cfun;
     obj->u.c.constructor = NULL;
     obj->u.c.length = length;
-    js_pushobject(J, obj);
+    js_pushobject(this, obj);
     {
-        js_pushnumber(J, length);
-        js_defproperty(J, -2, property_length, JS_READONLY | JS_DONTENUM | JS_DONTCONF);
-        js_newobject(J);
+        js_pushnumber(this, length);
+        js_defproperty(this, -2, property_length, JS_READONLY | JS_DONTENUM | JS_DONTCONF);
+        newobject();
         {
-            js_copy(J, -2);
-            js_defproperty(J, -2, property_constructor, JS_DONTENUM);
+            js_copy(this, -2);
+            js_defproperty(this, -2, property_constructor, JS_DONTENUM);
         }
-        js_defproperty(J, -2, property_prototype, JS_DONTCONF);
+        js_defproperty(this, -2, property_prototype, JS_DONTCONF);
     }
 }
 
 /* prototype -- constructor */
-void js_newcconstructor(js_State* J, js_CFunction cfun, js_CFunction ccon, const js_StringNode name, int length) {
-    js_Object* obj = jsV_newobject(J, JS_CCFUNCTION, J->Function_prototype);
+void js_State::newcconstructor(js_CFunction cfun, js_CFunction ccon, const js_StringNode name, int length) {
+    js_Object* obj = jsV_newobject(this, JS_CCFUNCTION, Function_prototype);
     obj->u.c.name = name;
     obj->u.c.function = cfun;
     obj->u.c.constructor = ccon;
     obj->u.c.length = length;
-    js_pushobject(J, obj); /* proto obj */
+    js_pushobject(this, obj); /* proto obj */
     {
-        js_pushnumber(J, length);
-        js_defproperty(J, -2, property_length, JS_READONLY | JS_DONTENUM | JS_DONTCONF);
-        js_rot2(J);     /* obj proto */
-        js_copy(J, -2); /* obj proto obj */
-        js_defproperty(J, -2, property_constructor, JS_DONTENUM);
-        js_defproperty(J, -2, property_prototype, JS_READONLY | JS_DONTENUM | JS_DONTCONF);
+        js_pushnumber(this, length);
+        js_defproperty(this, -2, property_length, JS_READONLY | JS_DONTENUM | JS_DONTCONF);
+        js_rot2(this);     /* obj proto */
+        js_copy(this, -2); /* obj proto obj */
+        js_defproperty(this, -2, property_constructor, JS_DONTENUM);
+        js_defproperty(this, -2, property_prototype, JS_READONLY | JS_DONTENUM | JS_DONTCONF);
     }
 }
 
-void js_newuserdatax(js_State* J, const char* tag, void* data, js_HasProperty has, js_Put put, js_Delete rdelete,
+void js_State::newuserdatax(const char* tag, void* data, js_HasProperty has, js_Put put, js_Delete rdelete,
   js_Finalize finalize) {
     js_Object* prototype = NULL;
     js_Object* obj;
 
-    if (J->isobject(-1)) {
-        prototype = J->toobject(-1);
+    if (isobject(-1)) {
+        prototype = toobject(-1);
     }
-    js_pop(J, 1);
+    js_pop(this, 1);
 
-    obj = jsV_newobject(J, JS_CUSERDATA, prototype);
+    obj = jsV_newobject(this, JS_CUSERDATA, prototype);
     obj->u.user.tag = tag;
     obj->u.user.data = data;
     obj->u.user.has = has;
     obj->u.user.put = put;
     obj->u.user.rdelete = rdelete;
     obj->u.user.finalize = finalize;
-    js_pushobject(J, obj);
+    js_pushobject(this, obj);
 }
 
-void js_newuserdata(js_State* J, const char* tag, void* data, js_Finalize finalize) {
-    js_newuserdatax(J, tag, data, NULL, NULL, NULL, finalize);
+void js_State::newuserdata(const char* tag, void* data, js_Finalize finalize) {
+    newuserdatax(tag, data, NULL, NULL, NULL, finalize);
 }
 
 /* Non-trivial operations on values. These are implemented using the stack. */

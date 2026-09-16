@@ -5,7 +5,7 @@
 #include "jsbuiltin.h"
 
 static void jsB_globalf(js_State* J, const js_StringNode name, js_CFunction cfun, int n) {
-    js_newcfunction(J, cfun, name, n);
+    J->newcfunction(cfun, name, n);
     js_defglobal(J, name, JS_DONTENUM);
 }
 
@@ -13,7 +13,7 @@ void jsB_propf(js_State* J, const js_StringNode name, js_CFunction cfun, int n) 
     pcstr name_str = js_strnode_cstr(name);
     const char* pname = strrchr(name_str, '.');
     pname = pname ? pname + 1 : name_str;
-    js_newcfunction(J, cfun, js_intern(name_str), n);
+    J->newcfunction(cfun, js_intern(name_str), n);
     js_defproperty(J, -2, js_intern(pname), JS_DONTENUM);
 }
 

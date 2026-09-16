@@ -40,7 +40,7 @@ void js_delindex(js_State *J, int idx, int i) {
 static void jsB_new_Array(js_State *J) {
     int i, top = js_gettop(J);
 
-    js_newarray(J);
+    J->newarray();
 
     if (top == 2) {
         if (J->isnumber(1)) {
@@ -62,7 +62,7 @@ static void Ap_concat(js_State *J) {
     int i, top = js_gettop(J);
     int n, k, len;
 
-    js_newarray(J);
+    J->newarray();
     n = 0;
 
     for (i = 0; i < top; ++i) {
@@ -237,7 +237,7 @@ static void Ap_slice(js_State *J) {
     int len, s, e, n;
     double sv, ev;
 
-    js_newarray(J);
+    J->newarray();
 
     len = js_getlength(J, 0);
     sv = js_tointeger(J, 1);
@@ -322,7 +322,7 @@ static void Ap_splice(js_State *J) {
     int len, start, del, add, k;
     double f;
 
-    js_newarray(J);
+    J->newarray();
 
     len = js_getlength(J, 0);
 
@@ -533,7 +533,7 @@ static void Ap_map(js_State *J) {
     if (!J->iscallable(1))
         js_typeerror(J, "callback is not a function");
 
-    js_newarray(J);
+    J->newarray();
 
     len = js_getlength(J, 0);
     for (k = 0; k < len; ++k) {
@@ -560,7 +560,7 @@ static void Ap_filter(js_State *J) {
     if (!J->iscallable(1))
         js_typeerror(J, "callback is not a function");
 
-    js_newarray(J);
+    J->newarray();
     to = 0;
 
     len = js_getlength(J, 0);
@@ -700,7 +700,7 @@ void jsB_initarray(js_State *J) {
         jsB_propf(J, js_intern("Array.prototype.reduce"), Ap_reduce, 1);
         jsB_propf(J, js_intern("Array.prototype.reduceRight"), Ap_reduceRight, 1);
     }
-    js_newcconstructor(J, jsB_new_Array, jsB_new_Array, js_intern("Array"), 0); /* 1 */
+    J->newcconstructor(jsB_new_Array, jsB_new_Array, js_intern("Array"), 0); /* 1 */
     {
         /* ES5 */
         jsB_propf(J, js_intern("Array.isArray"), A_isArray, 1);

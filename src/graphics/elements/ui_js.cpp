@@ -458,13 +458,13 @@ void ui::proxy_set_text(js_State* J) {
 void ui::proxy_get_pos(js_State* J) {
     auto elem = GET_ELEM(J);
     const vec2i pos = elem ? elem->pos : vec2i{0, 0};
-    js_newvec2i(J, pos.x, pos.y);
+    J->newvec2i(pos.x, pos.y);
 }
 
 void ui::proxy_get_screen_pos(js_State* J) {
     auto elem = GET_ELEM(J);
     const vec2i pos = elem ? elem->screen_pos() : vec2i{0, 0};
-    js_newvec2i(J, pos.x, pos.y);
+    J->newvec2i(pos.x, pos.y);
 }
 
 void ui::proxy_set_pos(js_State* J) {
@@ -478,7 +478,7 @@ void ui::proxy_set_pos(js_State* J) {
 void ui::proxy_get_size(js_State* J) {
     auto elem = GET_ELEM(J);
     const vec2i sz = elem ? elem->pxsize() : vec2i{0, 0};
-    js_newvec2i(J, sz.x, sz.y);
+    J->newvec2i(sz.x, sz.y);
 }
 
 void ui::proxy_set_size(js_State* J) {
@@ -768,7 +768,7 @@ void __ui_set_window_pos(pcstr window_id, vec2i pos) {
 ANK_FUNCTION_2(__ui_set_window_pos)
 
 #define _R(name)            \
-    js_newnumber(J, name);  \
+    J->newnumber(name);  \
     js_setglobal(J, #name);
 
 void js_register_ui_objects(js_State* J) {

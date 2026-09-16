@@ -61,7 +61,7 @@ int js_utfptrtoidx(const char *s, const char *p)
 
 static void jsB_new_String(js_State *J)
 {
-    js_newstring(J, js_gettop(J) > 1 ? js_strnode_cstr(js_tostring(J, 1)) : "");
+    J->newstring(js_gettop(J) > 1 ? js_strnode_cstr(js_tostring(J, 1)) : "");
 }
 
 static void jsB_String(js_State *J)
@@ -332,9 +332,9 @@ static void Sp_match(js_State *J)
 	if (J->isregexp(1))
 		js_copy(J, 1);
 	else if (J->isundefined(1))
-		js_newregexp(J, "", 0);
+		J->newregexp("", 0);
 	else
-        js_newregexp(J, js_strnode_cstr(js_tostring(J, 1)), 0);
+        J->newregexp(js_strnode_cstr(js_tostring(J, 1)), 0);
 
 	re = js_toregexp(J, -1);
 	if (!(re->flags & JS_REGEXP_G)) {
@@ -344,7 +344,7 @@ static void Sp_match(js_State *J)
 
 	re->last = 0;
 
-	js_newarray(J);
+	J->newarray();
 
 	len = 0;
 	a = text;
@@ -376,9 +376,9 @@ static void Sp_search(js_State *J)
 	if (J->isregexp(1))
 		js_copy(J, 1);
 	else if (J->isundefined(1))
-		js_newregexp(J, "", 0);
+		J->newregexp("", 0);
 	else
-        js_newregexp(J, js_strnode_cstr(js_tostring(J, 1)), 0);
+        J->newregexp(js_strnode_cstr(js_tostring(J, 1)), 0);
 
 	re = js_toregexp(J, -1);
 
@@ -564,7 +564,7 @@ static void Sp_split_regexp(js_State *J)
 	re = js_toregexp(J, 1);
 	limit = J->isdefined(2) ? js_tointeger(J, 2) : 1 << 30;
 
-	js_newarray(J);
+	J->newarray();
 	len = 0;
 
 	e = text + strlen(text);
@@ -618,7 +618,7 @@ static void Sp_split_string(js_State *J)
 	int limit = J->isdefined(2) ? js_tointeger(J, 2) : 1 << 30;
 	int i, n;
 
-	js_newarray(J);
+	J->newarray();
 
 	n = strlen(sep);
 
@@ -651,7 +651,7 @@ static void Sp_split_string(js_State *J)
 static void Sp_split(js_State *J)
 {
 	if (J->isundefined(1)) {
-		js_newarray(J);
+		J->newarray();
 		js_copy(J, 0);
 		js_setindex(J, -2, 0);
 	} else if (J->isregexp(1)) {
@@ -690,7 +690,7 @@ void jsB_initstring(js_State *J)
 		/* ES5 */
         jsB_propf(J, js_intern("String.prototype.trim"), Sp_trim, 0);
 	}
-    js_newcconstructor(J, jsB_String, jsB_new_String, js_intern("String"), 0); /* 1 */
+    J->newcconstructor(jsB_String, jsB_new_String, js_intern("String"), 0); /* 1 */
 	{
         jsB_propf(J, js_intern("String.fromCharCode"), S_fromCharCode, 0); /* 1 */
 	}

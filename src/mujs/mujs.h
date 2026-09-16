@@ -216,17 +216,6 @@ void js_pushnumber(js_State *J, double v);
 void js_pushlstring(js_State* J, const js_StringNode v);
 void js_pushlstring(js_State* J, const char* v, int n);
 
-void js_newobject(js_State *J);
-void js_newarray(js_State *J);
-void js_newboolean(js_State *J, int v);
-void js_newnumber(js_State *J, double v);
-void js_newvec2i(js_State *J, int x, int y);
-void js_newstring(js_State *J, const char *v);
-void js_newcfunction(js_State* J, js_CFunction fun, const js_StringNode name, int length);
-void js_newcconstructor(js_State* J, js_CFunction fun, js_CFunction con, const js_StringNode name, int length);
-void js_newuserdata(js_State *J, const char *tag, void *data, js_Finalize finalize);
-void js_newuserdatax(js_State *J, const char *tag, void *data, js_HasProperty has, js_Put put, js_Delete delet, js_Finalize finalize);
-void js_newregexp(js_State *J, const char *pattern, int flags);
 
 void js_pushiterator(js_State *J, int idx, int own);
 const js_StringNode js_nextiterator(js_State *J, int idx);

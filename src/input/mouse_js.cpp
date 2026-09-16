@@ -4,7 +4,7 @@
 #include "js/js_game.h"
 
 void ank_global_obj_bind_field(js_State *J, js_StringNode name, mouse_button *ptr) {
-    js_newobject(J);
+    J->newobject();
     ank_global_obj_bind_field(J, js_intern("is_down"), &ptr->is_down);
     ank_global_obj_bind_field(J, js_intern("went_down"), &ptr->went_down);
     ank_global_obj_bind_field(J, js_intern("went_up"), &ptr->went_up);

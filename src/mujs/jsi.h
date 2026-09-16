@@ -246,6 +246,18 @@ struct js_State
 	int iscoercible(int idx);
 	int isuserdata(int idx, const char *tag);
 
+	void newobject();
+	void newarray();
+	void newboolean(int v);
+	void newnumber(double v);
+	void newvec2i(int x, int y);
+	void newstring(const char *v);
+	void newcfunction(js_CFunction fun, const js_StringNode name, int length);
+	void newcconstructor(js_CFunction fun, js_CFunction con, const js_StringNode name, int length);
+	void newuserdata(const char *tag, void *data, js_Finalize finalize);
+	void newuserdatax(const char *tag, void *data, js_HasProperty has, js_Put put, js_Delete delet, js_Finalize finalize);
+	void newregexp(const char *pattern, int flags);
+
 	int pcall(int n);
 	void call(int n);
 

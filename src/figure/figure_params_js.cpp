@@ -84,7 +84,7 @@ void js_register_figure_params(js_State *J) {
     jsB_propf(J, js_intern("FigureParams.prototype.first_img"), figure_params_proto_first_img, 1);
     jsB_propf(J, js_intern("FigureParams.prototype.toString"), figure_params_proto_toString, 0);
 
-    js_newcconstructor(J, jsB_FigureParams_for_type, jsB_FigureParams_for_type, js_intern("FigureParams"), 1);
+    J->newcconstructor(jsB_FigureParams_for_type, jsB_FigureParams_for_type, js_intern("FigureParams"), 1);
     jsB_propf(J, js_intern("FigureParams.for_type"), jsB_FigureParams_for_type, 1);
     js_defglobal(J, js_intern("FigureParams"), JS_DONTENUM);
 }

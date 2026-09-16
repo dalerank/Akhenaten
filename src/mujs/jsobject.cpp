@@ -5,7 +5,7 @@
 static void jsB_new_Object(js_State *J)
 {
 	if (J->isundefined(1) || J->isnull(1))
-		js_newobject(J);
+		J->newobject();
 	else
 		js_pushobject(J, J->toobject(1));
 }
@@ -13,7 +13,7 @@ static void jsB_new_Object(js_State *J)
 static void jsB_Object(js_State *J)
 {
 	if (J->isundefined(1) || J->isnull(1))
-		js_newobject(J);
+		J->newobject();
 	else
 		js_pushobject(J, J->toobject(1));
 }
@@ -138,7 +138,7 @@ static void O_getOwnPropertyDescriptor(js_State *J)
 	{
 		js_StringNode key = js_tostring(J, 2);
 		if (obj->type == JS_CVEC2I && (key == op_prop_vec2_x || key == op_prop_vec2_y)) {
-			js_newobject(J);
+			J->newobject();
 			js_pushnumber(J, key == op_prop_vec2_x ? obj->u.vec2.x : obj->u.vec2.y);
 			js_setproperty(J, -2, property_value);
 			js_pushboolean(J, 1);
@@ -154,7 +154,7 @@ static void O_getOwnPropertyDescriptor(js_State *J)
 	if (!ref)
 		J->pushundefined();
 	else {
-		js_newobject(J);
+		J->newobject();
 		if (!ref->getter && !ref->setter) {
 			js_pushvalue(J, ref->value);
             js_setproperty(J, -2, property_value);
@@ -190,7 +190,7 @@ static void O_getOwnPropertyNames(js_State *J)
 		js_typeerror(J, "not an object");
 	obj = J->toobject(1);
 
-	js_newarray(J);
+	J->newarray();
 
 	i = 0;
 	for (ref = obj->head; ref; ref = ref->next) {
@@ -358,7 +358,7 @@ static void O_keys(js_State *J)
 
 	obj = J->toobject(1);
 
-	js_newarray(J);
+	J->newarray();
 
 	i = 0;
 	for (ref = obj->head; ref; ref = ref->next) {
@@ -498,7 +498,7 @@ void jsB_initobject(js_State *J)
 		jsB_propf(J, js_intern("Object.prototype.isPrototypeOf"), Op_isPrototypeOf, 1);
 		jsB_propf(J, js_intern("Object.prototype.propertyIsEnumerable"), Op_propertyIsEnumerable, 1);
 	}
-    js_newcconstructor(J, jsB_Object, jsB_new_Object, js_intern("Object"), 1);
+    J->newcconstructor(jsB_Object, jsB_new_Object, js_intern("Object"), 1);
 	{
 		/* ES5 */
 		jsB_propf(J, js_intern("Object.getPrototypeOf"), O_getPrototypeOf, 1);

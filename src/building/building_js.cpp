@@ -555,7 +555,7 @@ void js_register_building(js_State *J) {
 
     jsB_propf(J, js_intern("Building.prototype.toString"), building_proto_toString, 0);
 
-    js_newcconstructor(J, jsB_new_Building, jsB_new_Building, js_intern("Building"), 1);
+    J->newcconstructor(jsB_new_Building, jsB_new_Building, js_intern("Building"), 1);
     js_defglobal(J, js_intern("Building"), JS_DONTENUM);
 }
 

@@ -100,6 +100,6 @@ void js_register_figure_transport_ship_proto(js_State *J) {
     jsB_propf(J, js_intern("FigureTransportShip.prototype.sail_to"), figure_transport_ship_proto_sail_to, 2);
     jsB_propf(J, js_intern("FigureTransportShip.prototype.toString"), figure_transport_ship_proto_toString, 0);
 
-    js_newcconstructor(J, jsB_new_FigureTransportShip, jsB_new_FigureTransportShip, js_intern("FigureTransportShip"), 1);
+    J->newcconstructor(jsB_new_FigureTransportShip, jsB_new_FigureTransportShip, js_intern("FigureTransportShip"), 1);
     js_defglobal(J, js_intern("FigureTransportShip"), JS_DONTENUM);
 }

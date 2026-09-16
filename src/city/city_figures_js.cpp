@@ -331,6 +331,6 @@ void js_register_figure(js_State *J) {
     jsB_propf(J, js_intern("Figure.prototype.sound_path"), figure_proto_sound_path, 1);
     jsB_propf(J, js_intern("Figure.prototype.toString"), figure_proto_toString, 0);
 
-    js_newcconstructor(J, jsB_new_Figure, jsB_new_Figure, js_intern("Figure"), 1);
+    J->newcconstructor(jsB_new_Figure, jsB_new_Figure, js_intern("Figure"), 1);
     js_defglobal(J, js_intern("Figure"), JS_DONTENUM);
 }
