@@ -191,6 +191,7 @@ public:
     unsigned char figure_roam_direction;
     bool has_water_access;
     bool has_open_water_access;
+    int tiles[2];
     figure_id prev_part_building_id;
     figure_id next_part_building_id;
 

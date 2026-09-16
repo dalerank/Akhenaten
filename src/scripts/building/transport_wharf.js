@@ -34,3 +34,10 @@ building_transport_wharf = {
 function building_transport_wharf_update_graphic(ev) {
     building_wharf_update_graphic_moored(city.get_building(ev.bid), false)
 }
+
+[es=(building_transport_wharf, highlight_waypoints)]
+function building_transport_wharf_highlight_waypoints(ev) {
+    var building = city.get_building(ev.bid)
+    __map_highlight_set(building.water_access_tile(0), HIGHLIGHT_GREEN)
+    __map_highlight_set(building.water_access_tile(1), HIGHLIGHT_GREEN)
+}

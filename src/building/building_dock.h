@@ -9,7 +9,6 @@ public:
 
     struct runtime_data_t {
         short queued_docker_id;
-        int dock_tiles[2];
         sbitarray64 trading_goods;
         uint8_t num_ships;
         short docker_ids[3];
@@ -33,8 +32,6 @@ public:
     virtual void spawn_figure() override;
     virtual bool draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) override;
     virtual void bind_dynamic(io_buffer *iob, size_t version) override;
-    virtual void highlight_waypoints() override;
-    virtual void set_water_access_tiles(const water_access_tiles &tiles) override;
 
     void unaccept_all_goods();
     void accept_all_goods();

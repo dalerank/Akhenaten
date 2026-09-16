@@ -18,6 +18,7 @@
 #include "grid/gardens.h"
 #include "grid/routing/routing.h"
 #include "grid/routing/routing_terrain.h"
+#include "grid/building.h"
 #include "building/building_irrigation_ditch.h"
 #include "graphics/image.h"
 #include "graphics/image_groups.h"
@@ -294,6 +295,28 @@ void __map_update_canals() {
 }
 ANK_FUNCTION(__map_update_canals);
 
+void __map_canal_update_all_tiles(int include_construction) {
+    map_canal_update_all_tiles(include_construction);
+}
+ANK_FUNCTION_1(__map_canal_update_all_tiles);
+
+bool __map_can_place_initial_road_or_canal(tile2i tile, int is_canal) {
+    return map_can_place_initial_road_or_canal(tile.grid_offset(), is_canal);
+}
+ANK_FUNCTION_2(__map_can_place_initial_road_or_canal);
+
+int __map_canal_ghost_image(tile2i tile) {
+    const terrain_image img = map_image_context_get_canal(tile.grid_offset());
+    const bool is_road = map_terrain_is(tile, TERRAIN_ROAD);
+    return get_canal_image(tile.grid_offset(), is_road, 0, img);
+}
+ANK_FUNCTION_1(__map_canal_ghost_image);
+
+void __map_tiles_update_region_canals(tile2i pmin, tile2i pmax) {
+    map_tiles_update_region_canals(pmin, pmax);
+}
+ANK_FUNCTION_2(__map_tiles_update_region_canals);
+
 void __irrigation_value_update() {
     g_irrigation_value.update();
 }
@@ -318,3 +341,13 @@ void __map_tiles_gardens_update_all() {
     map_tiles_gardens_update_all();
 }
 ANK_FUNCTION(__map_tiles_gardens_update_all)
+
+void __map_highlight_set(tile2i tile, int mode) {
+    map_highlight_set(tile, (e_highlight_mode)mode);
+}
+ANK_FUNCTION_2(__map_highlight_set)
+
+int __map_is_highlighted(tile2i tile) {
+    return (int)map_is_highlighted(tile);
+}
+ANK_FUNCTION_1(__map_is_highlighted)

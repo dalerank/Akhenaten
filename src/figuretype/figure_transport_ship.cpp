@@ -110,7 +110,7 @@ water_dest map_water_get_wharf_for_new_transport_ship(figure &boat) {
         return { false, 0 };
     }
 
-    tile2i dock_tile(wharf->runtime_data().dock_tiles[0]);
+    tile2i dock_tile(wharf->base.tiles[0]);
     return { dock_tile.valid(), wharf->id(), dock_tile };
 }
 

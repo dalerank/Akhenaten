@@ -27,7 +27,7 @@ struct water_access_tiles {
 };
 
 void map_water_update_docking_points(building &b, int orientation, int offset);
-water_access_tiles map_water_get_access_points(building &b, int orientation, int offset);
+water_access_tiles map_water_get_access_points(const building &b, int orientation, int offset);
 bool map_water_is_point_inside(tile2i tile);
 
 void map_water_add_building(int building_id, tile2i tile, int size, int image_id, int ext_terrain_flags = 0);

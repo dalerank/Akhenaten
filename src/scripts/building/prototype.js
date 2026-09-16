@@ -60,3 +60,6 @@ Building.property.is_protected_by_police = { get: function() { return __building
 
 Building.prototype.get_figure = function(index) { return city.get_figure(__building_get_figure_id(this.id, index)) }
 Building.prototype.draw_usable_paths = function() { __building_draw_usable_paths(this.id) }
+Building.prototype.water_access_tile = function(index) { return __building_water_access_tile(this.id, index) }
+Building.prototype.water_output_tile = function(index) { return __building_water_output_tile(this.id, index) }
+Building.prototype.highlight_waypoints = function() { __building_highlight_waypoints(this.id) }

@@ -63,7 +63,7 @@ void map_water_update_docking_points(building &b, int orientation, int offset) {
     b.dcast()->set_water_access_tiles(ppoints);
 }
 
-water_access_tiles map_water_get_access_points(building &b, int orientation, int offset) {
+water_access_tiles map_water_get_access_points(const building &b, int orientation, int offset) {
     const auto &params = building_static_params::get(b.type);
     if (!params.needs.water_access) {
         return {{-1, -1},{-1, -1}};
@@ -71,22 +71,23 @@ water_access_tiles map_water_get_access_points(building &b, int orientation, int
 
     water_access_tiles result;
     const int bsize = params.building_size;
+    tile2i origin = b.tile;
     switch (orientation) {
     case 0:
-        result.point_a = b.tile.shifted(1, -offset);
-        result.point_b = b.tile.shifted(0, -offset);
+        result.point_a = origin.shifted(1, -offset);
+        result.point_b = origin.shifted(0, -offset);
         break;
     case 1:
-        result.point_a = b.tile.shifted(bsize + (offset - 1), 0);
-        result.point_b = b.tile.shifted(bsize + (offset - 1), 1);
+        result.point_a = origin.shifted(bsize + (offset - 1), 0);
+        result.point_b = origin.shifted(bsize + (offset - 1), 1);
         break;
     case 2:
-        result.point_a = b.tile.shifted(0, bsize + (offset - 1));
-        result.point_b = b.tile.shifted(1, bsize + (offset - 1));
+        result.point_a = origin.shifted(0, bsize + (offset - 1));
+        result.point_b = origin.shifted(1, bsize + (offset - 1));
         break;
     case 3:
-        result.point_a = b.tile.shifted(-offset, 0);
-        result.point_b = b.tile.shifted(-offset, 1);
+        result.point_a = origin.shifted(-offset, 0);
+        result.point_b = origin.shifted(-offset, 1);
         break;
     }
 

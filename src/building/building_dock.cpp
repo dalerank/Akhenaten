@@ -148,8 +148,8 @@ bool building_dock::draw_ornaments_and_animations_height(painter &ctx, vec2i poi
 void building_dock::bind_dynamic(io_buffer *iob, size_t version) {
     auto &d = runtime_data();
     iob->bind(BIND_SIGNATURE_INT16, &d.queued_docker_id);
-    iob->bind(BIND_SIGNATURE_INT32, &d.dock_tiles[0]);
-    iob->bind(BIND_SIGNATURE_INT32, &d.dock_tiles[1]);
+    iob->bind(BIND_SIGNATURE_INT32, &base.tiles[0]);
+    iob->bind(BIND_SIGNATURE_INT32, &base.tiles[1]);
     iob->bind(BIND_SIGNATURE_UINT64, d.trading_goods.data_ptr());
     iob->bind____skip(9);
     iob->bind(BIND_SIGNATURE_UINT8, &d.num_ships);
@@ -344,20 +344,6 @@ int building_dock::yard_proximity_cost() const {
     }, BUILDING_STORAGE_YARD);
 
     return min_distance;
-}
-
-void building_dock::highlight_waypoints() {
-    building_impl::highlight_waypoints();
-
-    auto &d = runtime_data();
-    map_highlight_set(d.dock_tiles[0], ehighligth_green);
-    map_highlight_set(d.dock_tiles[1], ehighligth_green);
-}
-
-void building_dock::set_water_access_tiles(const water_access_tiles &tiles) {
-    auto &d = runtime_data();
-    d.dock_tiles[0] = tiles.point_a.grid_offset();
-    d.dock_tiles[1] = tiles.point_b.grid_offset();
 }
 
 tile2i building_dock::moor_tile() const {

@@ -1,5 +1,6 @@
 ﻿#include "building.h"
 #include "io/io_buffer.h"
+#include "js/js_game.h"
 
 #include "building/building.h"
 #include "building/building_wall.h"
@@ -11,6 +12,8 @@
 #include "graphics/graphics.h"
 #include "graphics/image.h"
 #include "widget/city/ornaments.h"
+
+const e_highlight_mode_tokens_t ANK_CONFIG_ENUM(e_highlight_mode_tokens);
 
 grid_xx g_buildings_grid(FS_UINT16);
 grid_xx g_damage_grid(FS_UINT16);
@@ -46,7 +49,7 @@ void map_building_damage_clear(int grid_offset) {
     map_grid_set(g_damage_grid, grid_offset, 0);
 }
 
-void map_highlight_set(int grid_offset, e_highligth_mode mode) {
+void map_highlight_set(int grid_offset, e_highlight_mode mode) {
     if (grid_offset < 0) {
         return;
     }
@@ -54,12 +57,12 @@ void map_highlight_set(int grid_offset, e_highligth_mode mode) {
     map_grid_set(g_highlight_grid, grid_offset, mode);
 }
 
-e_highligth_mode map_is_highlighted(int grid_offset) {
+e_highlight_mode map_is_highlighted(int grid_offset) {
     if (!!game_features::gameui_walker_waypoints) {
-        return (e_highligth_mode)map_grid_get(g_highlight_grid, grid_offset);
+        return (e_highlight_mode)map_grid_get(g_highlight_grid, grid_offset);
     }
 
-    return ehighligth_none;
+    return HIGHLIGHT_NONE;
 }
 
 void map_highlight_clear(int grid_offset) {

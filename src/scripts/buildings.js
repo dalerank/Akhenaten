@@ -10,6 +10,7 @@ import building.transport_wharf
 import building.warship_wharf
 import building.fishing_wharf
 import building.shipyard
+import building.ferry
 import building.roadblock
 import building.house
 import building.monument
@@ -68,6 +69,7 @@ import building.courthouse
 import building.garden
 import building.work_camp
 import building.road
+import building.irrigation_ditch
 import building.bridge
 import building.dike
 import building.food_mill

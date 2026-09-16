@@ -102,8 +102,8 @@ void building_shipyard::bind_dynamic(io_buffer *iob, size_t version) {
     iob->bind(BIND_SIGNATURE_UINT8, &base.orientation);
     iob->bind(BIND_SIGNATURE_UINT8, &d.process_type);
     iob->bind(BIND_SIGNATURE_UINT8, &d.reparing);
-    iob->bind(BIND_SIGNATURE_INT32, &d.dock_tiles[0]);
-    iob->bind(BIND_SIGNATURE_INT32, &d.dock_tiles[1]);
+    iob->bind(BIND_SIGNATURE_INT32, &base.tiles[0]);
+    iob->bind(BIND_SIGNATURE_INT32, &base.tiles[1]);
 }
 
 void building_shipyard::update_map_orientation(int orientation) {
@@ -124,20 +124,6 @@ bool building_shipyard::draw_ornaments_and_animations_height(painter &ctx, vec2i
         command.mask = mask;
     }
     return true;
-}
-
-void building_shipyard::set_water_access_tiles(const water_access_tiles &tiles) {
-    auto &d = runtime_data();
-    d.dock_tiles[0] = tiles.point_a.grid_offset();
-    d.dock_tiles[1] = tiles.point_b.grid_offset();
-}
-
-void building_shipyard::highlight_waypoints() {
-    building_impl::highlight_waypoints();
-
-    auto &d = runtime_data();
-    map_highlight_set(d.dock_tiles[0], ehighligth_green);
-    map_highlight_set(d.dock_tiles[1], ehighligth_green);
 }
 
 void building_shipyard::on_create(int orientation) {

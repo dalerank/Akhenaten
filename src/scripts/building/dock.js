@@ -72,3 +72,10 @@ function building_dock_on_update_graphic(ev) {
     }
     building_wharf_set_orient_animation(dock, "work")
 }
+
+[es=(building_dock, highlight_waypoints)]
+function building_dock_highlight_waypoints(ev) {
+    var building = city.get_building(ev.bid)
+    __map_highlight_set(building.water_access_tile(0), HIGHLIGHT_GREEN)
+    __map_highlight_set(building.water_access_tile(1), HIGHLIGHT_GREEN)
+}

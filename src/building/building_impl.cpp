@@ -9,6 +9,7 @@
 #include "city/city.h"
 #include "grid/image.h"
 #include "grid/building.h"
+#include "grid/water.h"
 #include "graphics/image.h"
 #include "widget/city/ornaments.h"
 #include "core/object_property.h"
@@ -555,10 +556,23 @@ bool building_impl::common_spawn_figure_trigger(int min_houses, int slot) {
     return false;
 }
 
+void building_impl::set_water_access_tiles(const water_access_tiles &tiles) {
+    base.tiles[0] = tiles.point_a.grid_offset();
+    base.tiles[1] = tiles.point_b.grid_offset();
+}
+
+water_access_tiles building_impl::get_water_access_tiles() const {
+    return { tile2i(base.tiles[0]), tile2i(base.tiles[1]) };
+}
+
+water_access_tiles building_impl::get_water_output_tiles() const {
+    return {};
+}
+
 void building_impl::highlight_waypoints() { // highlight the 4 routing tiles for roams from this building
     map_clear_highlights();
     if (has_road_access()) {
-        map_highlight_set(base.road_access, ehighligth_red);
+        map_highlight_set(base.road_access, HIGHLIGHT_RED);
     }
 
     int hx, hy;
@@ -567,7 +581,7 @@ void building_impl::highlight_waypoints() { // highlight the 4 routing tiles for
     map_grid_bound(&hx, &hy);
     tile2i road_tile = map_closest_road_within_radius(tile2i(hx, hy), 1, 6);
     if (road_tile.valid()) {
-        map_highlight_set(road_tile, ehighligth_blue);
+        map_highlight_set(road_tile, HIGHLIGHT_BLUE);
     }
 
     hx = tilex() + 8;
@@ -575,7 +589,7 @@ void building_impl::highlight_waypoints() { // highlight the 4 routing tiles for
     map_grid_bound(&hx, &hy);
     road_tile = map_closest_road_within_radius(tile2i(hx, hy), 1, 6);
     if (road_tile.valid()) {
-        map_highlight_set(road_tile, ehighligth_blue);
+        map_highlight_set(road_tile, HIGHLIGHT_BLUE);
     }
 
     hx = tilex();
@@ -583,7 +597,7 @@ void building_impl::highlight_waypoints() { // highlight the 4 routing tiles for
     map_grid_bound(&hx, &hy);
     road_tile = map_closest_road_within_radius(tile2i(hx, hy), 1, 6);
     if (road_tile.valid()) {
-        map_highlight_set(road_tile, ehighligth_blue);
+        map_highlight_set(road_tile, HIGHLIGHT_BLUE);
     }
 
     hx = tilex() - 8;
@@ -591,8 +605,10 @@ void building_impl::highlight_waypoints() { // highlight the 4 routing tiles for
     map_grid_bound(&hx, &hy);
     road_tile = map_closest_road_within_radius(tile2i(hx, hy), 1, 6);
     if (road_tile.valid()) {
-        map_highlight_set(road_tile, ehighligth_blue);
+        map_highlight_set(road_tile, HIGHLIGHT_BLUE);
     }
+
+    es(__func__);
 }
 
 void building_impl::on_tick(bool refresh_only) {

@@ -151,7 +151,7 @@ water_dest map_water_get_wharf_for_new_warship(figure &boat) {
         return { false, 0 };
     }
 
-    tile2i dock_tile(wharf->runtime_data().dock_tiles[0]);
+    tile2i dock_tile(wharf->base.tiles[0]);
     return { dock_tile.valid(), wharf->id(), dock_tile };
 }
 
@@ -566,7 +566,7 @@ void figure_warship::figure_action_goto_wharf() {
     }
 
     advance_action(ACTION_207_WARSHIP_GOING_TO_WHARF);
-    base.destination_tile.set(wharf->runtime_data().dock_tiles[0]);
+    base.destination_tile.set(wharf->base.tiles[0]);
     base.move_ticks(1);
     base.height_adjusted_ticks = 0;
     if (direction() == DIR_FIGURE_NONE) {

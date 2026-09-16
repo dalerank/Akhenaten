@@ -39,3 +39,12 @@ building_water_lift {
     draw_normal_anim: true
   }
 }
+
+[es=(building_water_lift, highlight_waypoints)]
+function building_water_lift_highlight_waypoints(ev) {
+    var building = city.get_building(ev.bid)
+    __map_highlight_set(building.water_access_tile(0), HIGHLIGHT_GREEN)
+    __map_highlight_set(building.water_access_tile(1), HIGHLIGHT_GREEN)
+    __map_highlight_set(building.water_output_tile(0), HIGHLIGHT_YELLOW)
+    __map_highlight_set(building.water_output_tile(1), HIGHLIGHT_YELLOW)
+}

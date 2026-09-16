@@ -29,7 +29,8 @@ public:
     virtual void update_map_orientation(int orientation) override;
     virtual void bind_dynamic(io_buffer *iob, size_t version) override;
     virtual void update_graphic() override;
-    virtual void highlight_waypoints() override;
+    virtual water_access_tiles get_water_access_tiles() const override;
+    virtual water_access_tiles get_water_output_tiles() const override;
     virtual void spawn_figure() override;
 
     void update_inout_tiles();

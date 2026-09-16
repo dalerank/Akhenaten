@@ -73,3 +73,10 @@ function building_fishing_wharf_update_graphic(ev) {
 
     building.set_animation("work" + suffix)
 }
+
+[es=(building_fishing_wharf, highlight_waypoints)]
+function building_fishing_wharf_highlight_waypoints(ev) {
+    var building = city.get_building(ev.bid)
+    __map_highlight_set(building.water_access_tile(0), HIGHLIGHT_GREEN)
+    __map_highlight_set(building.water_access_tile(1), HIGHLIGHT_GREEN)
+}

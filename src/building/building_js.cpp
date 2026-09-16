@@ -18,6 +18,7 @@
 #include "city/city_buildings.h"
 #include "grid/building.h"
 #include "grid/road_access.h"
+#include "grid/water.h"
 #include "core/bstring.h"
 #include "core/log.h"
 #include "core/object_property.h"
@@ -392,6 +393,35 @@ tile2i __building_tile(int bid) {
     return b->tile;
 }
 ANK_FUNCTION_1(__building_tile)
+
+tile2i __building_water_access_tile(int bid, int index) {
+    building *b = building_get(bid);
+    if (!b || !b->is_valid() || index < 0 || index > 1) {
+        return tile2i::invalid;
+    }
+    const water_access_tiles tiles = b->dcast()->get_water_access_tiles();
+    return index == 0 ? tiles.point_a : tiles.point_b;
+}
+ANK_FUNCTION_2(__building_water_access_tile)
+
+tile2i __building_water_output_tile(int bid, int index) {
+    building *b = building_get(bid);
+    if (!b || !b->is_valid() || index < 0 || index > 1) {
+        return tile2i::invalid;
+    }
+    const water_access_tiles tiles = b->dcast()->get_water_output_tiles();
+    return index == 0 ? tiles.point_a : tiles.point_b;
+}
+ANK_FUNCTION_2(__building_water_output_tile)
+
+void __building_highlight_waypoints(int bid) {
+    building *b = building_get(bid);
+    if (!b || !b->is_valid()) {
+        return;
+    }
+    b->dcast()->highlight_waypoints();
+}
+ANK_FUNCTION_1(__building_highlight_waypoints)
 
 xstring __building_display_name(int bid) {
     building *b = building_get(bid);

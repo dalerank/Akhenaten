@@ -27,19 +27,10 @@ void building_wharf::update_map_orientation(int orientation) {
     map_water_add_building(id(), tile(), size(), image_id);
 }
 
-void building_wharf::highlight_waypoints() {
-    building_impl::highlight_waypoints();
-
-    auto &d = runtime_data();
-    map_highlight_set(d.dock_tiles[0], ehighligth_green);
-    map_highlight_set(d.dock_tiles[1], ehighligth_green);
-}
-
 void building_wharf::bind_dynamic(io_buffer *iob, size_t version) {
-    auto &d = runtime_data();
     iob->bind(BIND_SIGNATURE_UINT8, &base.orientation);
-    iob->bind(BIND_SIGNATURE_INT32, &d.dock_tiles[0]);
-    iob->bind(BIND_SIGNATURE_INT32, &d.dock_tiles[1]);
+    iob->bind(BIND_SIGNATURE_INT32, &base.tiles[0]);
+    iob->bind(BIND_SIGNATURE_INT32, &base.tiles[1]);
 }
 
 void building_wharf::on_tick(bool refresh_only) {
@@ -65,17 +56,4 @@ bool building_wharf::draw_ornaments_and_animations_height(painter &ctx, vec2i po
     }
 
     return true;
-}
-
-void building_wharf::set_water_access_tiles(const water_access_tiles &tiles) {
-    auto &d = runtime_data();
-    d.dock_tiles[0] = tiles.point_a.grid_offset();
-    d.dock_tiles[1] = tiles.point_b.grid_offset();
-}
-
-water_access_tiles building_wharf::get_water_access_tiles() const {
-    auto &d = runtime_data();
-    return water_access_tiles {
-                tile2i{ d.dock_tiles[0] }, tile2i{ d.dock_tiles[1] }
-           };
 }

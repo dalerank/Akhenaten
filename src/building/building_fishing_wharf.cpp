@@ -59,7 +59,6 @@ void building_fishing_wharf::update_month() {
 void building_fishing_wharf::spawn_figure() {
     check_labor_problem();
 
-    auto &d = runtime_data();
     if (has_road_access()) {
         common_spawn_labor_seeker(current_params().min_houses_coverage);
         int pct_workers = worker_percentage();
@@ -73,7 +72,7 @@ void building_fishing_wharf::spawn_figure() {
                 base.figure_spawn_delay = 0;
 
 
-                int dock_tile = d.dock_tiles[0];
+                int dock_tile = base.tiles[0];
                 if (!!game_features::gameplay_fishing_wharf_spawn_boats && dock_tile > 0) {
                     tile2i dtile(dock_tile);
                     figure* f = figure_create(FIGURE_FISHING_BOAT, dtile, DIR_4_BOTTOM_LEFT);
@@ -125,14 +124,6 @@ bool building_fishing_wharf::draw_ornaments_and_animations_height(painter &ctx, 
     }
 
     return true;
-}
-
-void building_fishing_wharf::highlight_waypoints() {
-    building_impl::highlight_waypoints();
-
-    const auto &d = runtime_data();
-    map_highlight_set(d.dock_tiles[0], ehighligth_green);
-    map_highlight_set(d.dock_tiles[1], ehighligth_green);
 }
 
 void building_fishing_wharf::bind_dynamic(io_buffer *iob, size_t version) {

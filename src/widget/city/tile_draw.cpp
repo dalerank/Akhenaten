@@ -203,7 +203,7 @@ void draw_isometrics_overlay_flat(vec2i pixel, tile2i tile, painter &ctx) {
             map_render_set(tile, (img && img->isometric_top_height > 0) ? RENDER_TALL_TILE : 0);
 
         } else if (map_is_highlighted(tile)) {
-            e_highligth_mode mode = map_is_highlighted(tile);
+            e_highlight_mode mode = map_is_highlighted(tile);
 
             auto& command = ImageDraw::create_command(ctx, render_command_t::ert_drawtile);
             command.image_id = map_image_at(tile);

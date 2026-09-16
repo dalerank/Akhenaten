@@ -10,7 +10,6 @@ public:
 
     struct runtime_data_t {
         int reserved;
-        int dock_tiles[2];
         uint8_t docker_anim_frame;
     } BUILDING_RUNTIME_DATA_T;
 
@@ -21,12 +20,8 @@ public:
     virtual void on_place_update_tiles(int orientation, int variant) override;
     virtual void on_tick(bool refresh_only) override;
     virtual void update_map_orientation(int orientation) override;
-    virtual void highlight_waypoints() override;
     virtual void bind_dynamic(io_buffer *iob, size_t version) override;
     virtual bool draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) override;
-    virtual void set_water_access_tiles(const water_access_tiles &tiles) override;
-
-    water_access_tiles get_water_access_tiles() const;
 };
 
 ANK_CONFIG_PROPERTY(building_wharf::runtime_data_t, reserved)

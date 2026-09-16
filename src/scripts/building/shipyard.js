@@ -22,3 +22,10 @@ city.get_shipyard = function(building_id) {
     }
     return new Shipyard(building_id)
 }
+
+[es=(building_shipyard, highlight_waypoints)]
+function building_shipyard_highlight_waypoints(ev) {
+    var building = city.get_building(ev.bid)
+    __map_highlight_set(building.water_access_tile(0), HIGHLIGHT_GREEN)
+    __map_highlight_set(building.water_access_tile(1), HIGHLIGHT_GREEN)
+}

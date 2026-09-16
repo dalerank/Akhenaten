@@ -106,15 +106,14 @@ void building_water_lift::update_graphic() {
     set_animation(animkey);
 }
 
-void building_water_lift::highlight_waypoints() {
-    building_impl::highlight_waypoints();
-
+water_access_tiles building_water_lift::get_water_access_tiles() const {
     const auto &d = runtime_data();
-    map_highlight_set(d.input_tiles[0], ehighligth_green);
-    map_highlight_set(d.input_tiles[1], ehighligth_green);
+    return { tile2i(d.input_tiles[0]), tile2i(d.input_tiles[1]) };
+}
 
-    map_highlight_set(d.output_tiles[0], ehighligth_yellow);
-    map_highlight_set(d.output_tiles[1], ehighligth_yellow);
+water_access_tiles building_water_lift::get_water_output_tiles() const {
+    const auto &d = runtime_data();
+    return { tile2i(d.output_tiles[0]), tile2i(d.output_tiles[1]) };
 }
 
 void building_water_lift::update_inout_tiles() {
