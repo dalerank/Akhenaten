@@ -168,3 +168,22 @@ function building_road_construction_update(ev) {
     building_road_mark_preview_for_map_order(preview.tiles)
     city_planner.construction_update_items = items
 }
+
+[es=(building_road, can_construction_start)]
+function building_road_can_construction_start(ev) {
+    city_planner.preview_allow_result = __map_routing_calculate_distances_for_building(ROUTED_BUILDING_ROAD, ev.start)
+}
+
+[es=(building_road, construction_place)]
+function building_road_construction_place(ev) {
+    __game_undo_restore_map(0)
+
+    var start = { x: ev.start_x, y: ev.start_y }
+    var end = { x: ev.end_x, y: ev.end_y }
+    var items = 0
+    if (__map_routing_calculate_distances_for_building(ROUTED_BUILDING_ROAD, start)) {
+        items = __place_routed_building(start, end, ROUTED_BUILDING_ROAD)
+        city_planner.should_update_land_routing = true
+    }
+    city_planner.construction_update_items = items
+}

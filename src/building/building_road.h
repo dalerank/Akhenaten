@@ -6,11 +6,6 @@ class building_road : public building_impl {
 public:
     BUILDING_METAINFO(BUILDING_ROAD, building_road, building_impl)
 
-    struct preview : building_planer_renderer {
-        virtual bool can_construction_start(build_planner &p, tile2i start) const override;
-        virtual int construction_place(build_planner &planer, tile2i start, tile2i end, int orientation, int variant) const override;
-    };
-
     static void set_image(tile2i tile);
     static bool set_road(tile2i tile);
     static bool is_paved(tile2i tile);

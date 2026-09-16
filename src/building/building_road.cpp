@@ -1,11 +1,7 @@
 #include "building/building_road.h"
 
-#include "game/undo.h"
 #include "city/city.h"
 #include "city/city_labor.h"
-#include "grid/routing/routing.h"
-#include "grid/routing/routing_terrain.h"
-#include "building/construction/routed.h"
 #include "grid/terrain.h"
 #include "grid/tiles.h"
 #include "grid/floodplain.h"
@@ -15,7 +11,6 @@
 #include "grid/road_canal.h"
 #include "graphics/graphics.h"
 #include "graphics/image.h"
-#include "construction/build_planner.h"
 #include "building/building_static_params.h"
 
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_road);
@@ -31,23 +26,6 @@ bool building_road::set_road(tile2i tile) {
 
     map_tiles_foreach_region_tile_ex(tile.shifted(-1, -1), tile.shifted(1, 1), set_image);
     return tile_set;
-}
-
-bool building_road::preview::can_construction_start(build_planner &p, tile2i start) const {
-    return map_routing_calculate_distances_for_building(ROUTED_BUILDING_ROAD, start);
-}
-
-int building_road::preview::construction_place(build_planner &planer, tile2i start, tile2i end, int orientation, int variant) const {
-    game_undo_restore_map(0);
-
-    const bool route_exist = map_routing_calculate_distances_for_building(ROUTED_BUILDING_ROAD, start);
-    int items_placed = 0;
-    if (route_exist) {
-        auto result = place_routed_building(start, end, ROUTED_BUILDING_ROAD);
-        items_placed = result.items;
-        map_routing_update_land();
-    }
-    return items_placed;
 }
 
 bool building_road::is_paved(tile2i tile) {
