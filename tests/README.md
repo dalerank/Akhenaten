@@ -95,6 +95,7 @@ See **IT1** in `REMAKE_TODO.md` / `REMAKE_NOTES.md` §4.
 | `23_ferry_placement.js` | Ferry landing on synthetic shoreline |
 | `24_brewery_placement.js` | Brewery via `test_building_place`; also reads `stored_resource(RESOURCE_WATER)` pseudo-resource |
 | `33_clay_pit_placement.js` | Clay pit near synthetic water (`needs.nearby_water`) |
+| `204_clay_pit_overlay.js` | Clay pit `overlay_anims.clay` seeded on place; `update_graphic` removes it when `destroy_reason` is set |
 | `34_meadow_farm_placement.js` | Grain meadow farm on synthetic meadow; rejected on clear land |
 | `35_floodplain_farm_placement.js` | Grain farm on synthetic floodplain via `test_farm_place` |
 | `36_house_evolve_text_property.js` | House runtime `{}` property bindings: `evolve_text` xstring roundtrip, `worst_desirability_building_id` int (uint16) roundtrip, and the info-window fill path (`house_determine_*` helpers) without TypeError (H1) |

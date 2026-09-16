@@ -240,7 +240,7 @@
               <li><code>update_production()</code> — scans the footprint for the richest clay tile via <code>map_get_clay()</code>, runs the shared <code>building_industry</code> production, then depletes that deposit with <code>map_clay_deplete()</code> by the progress gained. Stops if no clay remains under the pit.</li>
               <li><code>on_before_flooded()</code> — sets <code>destroy_reason = e_destroy_flooded</code>, zeroes <code>num_workers</code> and progress; with <code>gameplay_change_random_mine_or_pit_collapses_take_money</code> enabled it emits a 250&nbsp;Db <code>event_finance_request</code>.</li>
               <li><code>spawn_figure()</code> / <code>update_production()</code> — early-return while flooded, so a swamped pit dispatches no cartpushers and produces nothing.</li>
-              <li><code>update_graphic()</code> — shows the <code>"flooded"</code> animation while swamped, otherwise the normal work animation; <code>draw_ornaments_and_animations_height()</code> stacks the clay-pile sprite by stored amount.</li>
+              <li><code>update_graphic()</code> (JS in <span class="file-ref">src/scripts/building/clay_pit.js</span>) — shows the <code>"flooded"</code> animation and removes the clay overlay while <code>destroy_reason</code> is set; otherwise restores <code>overlay_anims.clay</code> (pile sprite by stored amount) and the normal work animation.</li>
               <li><code>is_deletable()</code> — returns <code>false</code> while flooded, so the player cannot demolish a swamped pit.</li>
               <li><code>get_fire_risk()</code> — halves the configured fire risk when <code>gameplay_change_fire_risk_clay_pit_reduced</code> is enabled.</li>
             </ul>

@@ -7,6 +7,15 @@ building_clay_pit {
     work { pos[18, -20], pack:PACK_GENERAL, id:40, offset:1, max_frames:23, duration:2 }
     flooded { pack:PACK_GENERAL, id:40 }
   }
+  overlay_anims {
+    clay {
+      pos : [65, 3]
+      pack:PACK_GENERAL
+      id:208
+      resource : RESOURCE_CLAY
+      default_active : true
+    }
+  }
   output {
     resource : RESOURCE_CLAY
   }
@@ -35,10 +44,13 @@ building_clay_pit {
 [es=(building_clay_pit, update_graphic)]
 function building_clay_pit_on_update_graphic(ev) {
     var b = city.get_building(ev.bid)
-    if (b.destroy_reason == e_destroy_flooded) {
+    if (b.destroy_reason) {
+        b.play_animation = false
         b.set_animation("flooded")
+        b.remove_overlay("clay")
         return
     }
+    b.add_overlay("clay")
     var animkey = b.play_animation ? "work" : "none"
     b.set_animation(animkey)
 }

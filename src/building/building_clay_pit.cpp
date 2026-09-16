@@ -4,21 +4,15 @@
 #include "game/game_config.h"
 #include "city/city_finance.h"
 #include "city/city_resource.h"
-#include "widget/city/ornaments.h"
 #include "game/game_events.h"
 #include "js/js_game.h"
-#include "graphics/graphics.h"
-#include "graphics/image.h"
-#include "graphics/animation.h"
 #include "figure/figure.h"
-#include "game/resource.h"
 #include "grid/clay.h"
 #include "grid/grid.h"
 #include "grid/terrain.h"
 #include "sound/sound.h"
 #include "city/city_maintenance.h"
 #include "building/construction/clear.h"
-#include <cmath>
 
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_clay_pit);
 
@@ -80,23 +74,3 @@ void building_clay_pit::update_production() {
         map_clay_deplete(best_tile, delta_progress);
     }
 }
-
-bool building_clay_pit::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {
-    draw_normal_anim(ctx, point, tile, color_mask);
-
-    if (base.destroy_reason == e_destroy_flooded) {
-        return true;
-    }
-
-    int amount = ceil((float)stored_amount(RESOURCE_CLAY) / 100.0) - 1;
-    if (amount >= 0) {
-        const auto &ranim = anim(animkeys().clay);
-        auto& command = ImageDraw::create_subcommand(ctx, render_command_t::ert_generic);
-        command.image_id = ranim.first_img() + amount;
-        command.pixel = point + ranim.pos;
-        command.mask = color_mask;
-    }
-
-    return true;
-}
-
