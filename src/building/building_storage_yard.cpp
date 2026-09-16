@@ -3,7 +3,6 @@
 #include "building/building_barracks.h"
 #include "building/building_storage_room.h"
 #include "building/building_granary.h"
-#include "building/building_scribal_school.h"
 #include "building/building_senet_house.h"
 #include "building/building_police_station.h"
 #include "city/city_industry.h"

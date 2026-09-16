@@ -67,7 +67,6 @@ class building;
     X(temple_complex_oracle)   \
     X(water_lift)              \
     X(monument)                \
-    X(scribal_school)          \
     X(tower)                   \
     X(senet_house)             \
     X(gatehouse)               \

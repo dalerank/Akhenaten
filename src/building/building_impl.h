@@ -69,7 +69,7 @@ public:
     virtual void bind_dynamic(io_buffer *iob, size_t version);
     virtual bvariant get_property(const xstring &domain, const xstring &name) const;
     virtual bool set_property(const xstring &domain, const xstring &name, const bvariant &value);
-    virtual bool add_resource(e_resource resource, int amount) { return false; }
+    virtual bool add_resource(e_resource resource, int amount);
     virtual int get_orientation() const;
     virtual void on_config_reload() {}
     virtual void set_water_access_tiles(const water_access_tiles &tiles);

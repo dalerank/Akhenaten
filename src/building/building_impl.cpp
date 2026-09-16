@@ -38,6 +38,9 @@ ANK_REGISTER_STRUCT_WRITER(building_ev, bid)
 struct building_tooltip_ev { building_id bid; int mx, my; };
 ANK_REGISTER_STRUCT_WRITER(building_tooltip_ev, bid, mx, my)
 
+struct add_resource_ev { building_id bid; int resource; int amount; };
+ANK_REGISTER_STRUCT_WRITER(add_resource_ev, bid, resource, amount)
+
 using namespace render_cmd;
 
 template<typename T>
@@ -408,6 +411,12 @@ void building_impl::consume_resource(e_resource r, int16_t amount) {
 
 void building_impl::store_resource(e_resource r, int16_t amount) {
     base.store_resource(r, amount);
+}
+
+bool building_impl::add_resource(e_resource resource, int amount) {
+    const int before = stored_amount(resource);
+    es_t(add_resource_ev{ id(), (int)resource, amount }, __func__);
+    return stored_amount(resource) != before;
 }
 
 const resource_value& building_impl::stored_first() const {

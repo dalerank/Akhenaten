@@ -183,6 +183,17 @@ void __building_consume_resource(js_State* J) {
     js_helpers::js_push_void(J);
 }
 
+void __building_store_resource(js_State* J) {
+    const int bid = building_this_id(J);
+    const int resource = js_helpers::js_to_value<int>(J, 1);
+    const int amount = js_helpers::js_to_value<int>(J, 2);
+    building *b = building_get(bid);
+    if (b && b->is_valid()) {
+        b->dcast()->store_resource((e_resource)resource, (int16_t)amount);
+    }
+    js_helpers::js_push_void(J);
+}
+
 void __building_get_overlay(js_State *J) {
     const int bid = building_this_id(J);
     js_helpers::js_push_value<int>(J, building_get(bid)->get_overlay());
@@ -529,6 +540,7 @@ void js_register_building(js_State *J) {
     jsB_propf(J, js_intern("Building.prototype.destroy_by_fire"), __building_destroy_by_fire, 0);
     jsB_propf(J, js_intern("Building.prototype.stored_resource"), __building_stored_resource, 1);
     jsB_propf(J, js_intern("Building.prototype.consume_resource"), __building_consume_resource, 2);
+    jsB_propf(J, js_intern("Building.prototype.store_resource"), __building_store_resource, 2);
     jsB_propf(J, js_intern("Building.prototype.set_animation"), __building_set_animation, 1);
     jsB_propf(J, js_intern("Building.prototype.add_overlay"), __building_add_overlay, 1);
     jsB_propf(J, js_intern("Building.prototype.remove_overlay"), __building_remove_overlay, 1);

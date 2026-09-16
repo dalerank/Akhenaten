@@ -1,6 +1,8 @@
 log_info("akhenaten: building_scribal_school started")
 
-building_scribal_school = {
+[es=building]
+building_scribal_school {
+  type: BUILDING_SCRIBAL_SCHOOL
   animations : {
     preview : { pack:PACK_GENERAL, id:42},
     base : { pack:PACK_GENERAL, id:42},
@@ -67,4 +69,13 @@ function building_scribal_school_update_month(ev) {
 function building_scribal_school_spawn_figure(ev) {
     var building = city.get_building(ev.bid)
     building.common_spawn_roamer(FIGURE_TEACHER, building_scribal_school.min_houses_coverage, ACTION_125_ROAMER_ROAMING)
+}
+
+[es=(building_scribal_school, add_resource)]
+function building_scribal_school_add_resource(ev) {
+    if (ev.resource != RESOURCE_PAPYRUS) {
+        return
+    }
+    var building = city.get_building(ev.bid)
+    building.store_resource(ev.resource, ev.amount)
 }
