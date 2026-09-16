@@ -23,6 +23,7 @@ building_scribal_school = {
   }
   meta : { text_id: 85, help_link:"message_building_scribal_school" }
   info_sound : "Wavs/school_scribe.wav"
+  overlay : OVERLAY_SCRIBAL_SCHOOL
   min_houses_coverage : 50
   building_size : 2
   labor_category : LABOR_CATEGORY_EDUCATION
@@ -60,4 +61,10 @@ function building_scribal_school_update_month(ev) {
   var want_spent = Math.floor(building.num_workers * 50 / 100)
   var spent = Math.min(stored, want_spent)
   building.consume_resource(RESOURCE_PAPYRUS, spent)
+}
+
+[es=(building_scribal_school, spawn_figure)]
+function building_scribal_school_spawn_figure(ev) {
+    var building = city.get_building(ev.bid)
+    building.common_spawn_roamer(FIGURE_TEACHER, building_scribal_school.min_houses_coverage, ACTION_125_ROAMER_ROAMING)
 }
