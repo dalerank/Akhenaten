@@ -5,7 +5,15 @@ building_mine_gems {
     preview { pack:PACK_GENERAL, id:188 },
     base { pack:PACK_GENERAL, id:188 },
     work { pos [54, 15], pack:PACK_SPR_AMBIENT, id:48, max_frames: 16, duration:2, internal_offset:true },
-    gems { pos : [93, 0], pack:PACK_GENERAL, id:203 }
+  }
+  overlay_anims {
+    gems {
+      pos : [93, 0]
+      pack:PACK_GENERAL
+      id:203
+      resource : RESOURCE_GEMS
+      default_active : true
+    }
   }
 
   output {

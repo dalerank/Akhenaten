@@ -3,12 +3,6 @@
 #include "building/building.h"
 #include "grid/gems.h"
 #include "grid/grid.h"
-#include "game/game_config.h"
-#include "graphics/graphics.h"
-#include "graphics/image.h"
-#include "graphics/animation.h"
-#include "widget/city/ornaments.h"
-#include "game/resource.h"
 #include "js/js_game.h"
 
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_mine_gems);
@@ -51,20 +45,5 @@ void building_mine_gems::update_production() {
     if (delta_progress > 0) {
         map_gems_deplete(best_tile, delta_progress);
     }
-}
-
-bool building_mine_gems::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {
-    draw_normal_anim(ctx, point, tile, color_mask);
-
-    int amount = ceil((float)stored_amount(RESOURCE_GEMS) / 100.0) - 1;
-    if (amount >= 0) {
-        const auto &ranim = anim(animkeys().gems);
-        auto& command = ImageDraw::create_subcommand(ctx, render_command_t::ert_generic);
-        command.image_id = ranim.first_img() + amount;
-        command.pixel = point + ranim.pos;
-        command.mask = color_mask;
-    }
-
-    return true;
 }
 
