@@ -1,12 +1,15 @@
 log_info("akhenaten: building education started")
 
+[es=building]
 building_library {
+  type: BUILDING_LIBRARY
   animations {
     preview { pos[0, 0], pack:PACK_GENERAL, id:43 }
     base { pos[0, 0], pack:PACK_GENERAL, id:43 }
     work { pos[48, -20], pack:PACK_GENERAL, id:43, offset:1, max_frames:12, duration:8 }
   }
 
+  overlay : OVERLAY_LIBRARY
   min_houses_coverage : 50
   meta { text_id: 87, help_link:"message_building_library" }
   labor_category : LABOR_CATEGORY_EDUCATION
