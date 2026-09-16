@@ -170,8 +170,7 @@ void kingdome_relation_t::process_invasion() {
     } else if (invasion.favour_only && invasion.size > 0) {
         // Active favour/scenario bookkeeping with no counted soldiers yet.
         // duration == 192: just spawned / not yet in kingdome_soldiers (same-day gap) /
-        // embarked sea troops still invisible — must NOT fall through to Caesar
-        // days_until (would warn/spawn and begin_invasion overwrites favour_only).
+        // embarked sea troops still invisible — must not start a wrath countdown.
         // duration != 192: army left the map without a full kill wipe — clear slot.
         // Use != 192 (not < 192): duration may go negative; field is saved as UINT16.
         if (invasion.duration_day_countdown != 192) {
@@ -181,36 +180,11 @@ void kingdome_relation_t::process_invasion() {
             invasion.favour_only = 0;
             invasion.cheated = 0;
         }
-    } else if (invasion.days_until_invasion <= 0) {
-        if (rating <= 10) {
-            // warn player that caesar is angry and will invade in a year
-            invasion.warnings_given++;
-            invasion.days_until_invasion = 192;
-            if (invasion.warnings_given <= 1)
-                messages::popup("message_wrath_of_the_emperor", 0, 0);
-        }
-    } else {
-        invasion.days_until_invasion--;
-        if (invasion.days_until_invasion == 0) {
-            // invade!
-            int size;
-            if (invasion.count == 0)
-                size = 32;
-            else if (invasion.count == 1)
-                size = 64;
-            else if (invasion.count == 2)
-                size = 96;
-            else {
-                size = 144;
-            }
-            if (scenario_invasion_start_from_kingdome(size)) {
-                begin_invasion(size, false);
-            } else {
-                // Spawn failed (no tile / formations) — retry next day instead of
-                // leaving days_until at 0 (which never re-enters this branch when rating > 10).
-                invasion.days_until_invasion = 1;
-            }
-        }
+    } else if (invasion.days_until_invasion != 0) {
+        // Drop Caesar-3 auto-wrath countdown. Pharaoh sends a low-KR army only via
+        // mission favour scripts / map KNGDOME events (Men-nefer has neither).
+        invasion.days_until_invasion = 0;
+        invasion.warnings_given = 0;
     }
 }
 
