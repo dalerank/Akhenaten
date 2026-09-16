@@ -1,6 +1,8 @@
 log_info("akhenaten: building_pottery started")
 
+[es=building_industry]
 building_pottery {
+    type: BUILDING_POTTERY_WORKSHOP
     animations {
         preview { pos[-1, -1], pack:PACK_GENERAL, id:125 }
         base { pos[-1, -1], pack:PACK_GENERAL, id:125 }
@@ -68,4 +70,18 @@ function building_pottery_on_update_graphic(ev) {
     var building = city.get_building(ev.bid)
     var animkey = building.play_animation ? "work" : "none"
     building.set_animation(animkey)
+}
+
+[es=(building_pottery, update_animation)]
+function building_pottery_on_update_animation(ev) {
+    var b = city.get_building(ev.bid)
+    if (!b.play_animation) {
+        return
+    }
+    if (__building_industry_progress_pct(b.id) != 0) {
+        return
+    }
+    if (b.stored_resource(RESOURCE_POTTERY) < 100) {
+        b.play_animation = false
+    }
 }
