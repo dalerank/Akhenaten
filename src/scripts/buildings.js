@@ -33,7 +33,11 @@ import building.apothecary
 import building.scribal_school
 import building.palace
 import building.temple
-import building.shrine
+import building.shrine_osiris
+import building.shrine_ra
+import building.shrine_ptah
+import building.shrine_seth
+import building.shrine_bast
 import building.statue
 import building.statue_small
 import building.statue_medium
