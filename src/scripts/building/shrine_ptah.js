@@ -1,6 +1,8 @@
 log_info("akhenaten: building_shrine_ptah started")
 
-building_shrine_ptah = {
+[es=building]
+building_shrine_ptah {
+    type: BUILDING_SHRINE_PTAH
     animations : {
       preview : {pack:PACK_GENERAL, id:73, },
       base : {pack:PACK_GENERAL, id:73, offset:0 },

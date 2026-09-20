@@ -1,6 +1,8 @@
 log_info("akhenaten: building_shrine_bast started")
 
-building_shrine_bast = {
+[es=building]
+building_shrine_bast {
+    type: BUILDING_SHRINE_BAST
     animations : {
       preview : {pack:PACK_GENERAL, id:71, },
       base : {pack:PACK_GENERAL, id:71, offset:0 },

@@ -1,6 +1,8 @@
 log_info("akhenaten: building_shrine_osiris started")
 
-building_shrine_osiris = {
+[es=building]
+building_shrine_osiris {
+    type: BUILDING_SHRINE_OSIRIS
     animations : {
       preview : {pack:PACK_GENERAL, id:75, }
       base : {pack:PACK_GENERAL, id:75, offset:0 }

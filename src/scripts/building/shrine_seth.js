@@ -1,6 +1,8 @@
 log_info("akhenaten: building_shrine_seth started")
 
-building_shrine_seth = {
+[es=building]
+building_shrine_seth {
+    type: BUILDING_SHRINE_SETH
     animations : {
       preview : {pack:PACK_GENERAL, id:72, },
       base : {pack:PACK_GENERAL, id:72, offset:0 },

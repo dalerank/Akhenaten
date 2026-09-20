@@ -60,7 +60,6 @@ class building;
     X(mansion)                 \
     X(physician)               \
     X(wharf)                   \
-    X(shrine)                  \
     X(transport_wharf)         \
     X(temple_complex)          \
     X(temple_complex_altar)    \

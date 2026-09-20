@@ -1,9 +1,0 @@
-#include "building_shrine.h"
-
-#include "js/js_game.h"
-
-REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_shrine_osiris);
-REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_shrine_ra);
-REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_shrine_ptah);
-REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_shrine_seth);
-REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_shrine_bast);

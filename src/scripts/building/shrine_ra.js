@@ -1,6 +1,8 @@
 log_info("akhenaten: building_shrine_ra started")
 
-building_shrine_ra = {
+[es=building]
+building_shrine_ra {
+    type: BUILDING_SHRINE_RA
     animations : {
       preview : {pack:PACK_GENERAL, id:74, },
       base : {pack:PACK_GENERAL, id:74, offset:0 },
