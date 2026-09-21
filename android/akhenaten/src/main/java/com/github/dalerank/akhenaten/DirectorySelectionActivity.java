@@ -70,10 +70,15 @@ public class DirectorySelectionActivity extends AppCompatActivity {
         setContentView(R.layout.activity_directory_selection);
 
         Button button = findViewById(R.id.directory_selector_button);
-        button.setOnClickListener(v -> directorySelectionLauncher.launch(Uri.EMPTY));
+        button.setOnClickListener(v -> launchDirectoryPicker());
 
         if (savedInstanceState == null && getIntent().getBooleanExtra(ARG_SKIP_INSTRUCTIONS, false)) {
-            directorySelectionLauncher.launch(Uri.EMPTY);
+            launchDirectoryPicker();
         }
+    }
+
+    private void launchDirectoryPicker() {
+        Uri initial = FileManager.getBaseUri(this);
+        directorySelectionLauncher.launch(Uri.EMPTY.equals(initial) ? null : initial);
     }
 }

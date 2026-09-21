@@ -67,12 +67,14 @@ public class AkhenatenMainActivity extends SDLActivity {
         clearStartupLog();
         appendStartupLog("App started");
         FileManager.restoreBaseUri(this);
-        if (FileManager.hasBaseUri()) {
+        if (FileManager.hasAccessibleBaseUri(this)) {
             appendStartupLog("Remembered folder: " + FileManager.getDisplayName(this));
+            // Reuse last Pharaoh folder; native will prompt again only if validation fails.
+            shouldLaunchInitialDirectorySelection = false;
         } else {
             appendStartupLog("No remembered folder");
+            shouldLaunchInitialDirectorySelection = true;
         }
-        shouldLaunchInitialDirectorySelection = true;
     }
 
     @Override
@@ -113,8 +115,13 @@ public class AkhenatenMainActivity extends SDLActivity {
                 FileManager.setBaseUri(this, data.getData());
                 appendStartupLog("Folder selected: " + FileManager.getDisplayName(this));
             } else {
-                FileManager.setBaseUri(this, Uri.EMPTY);
-                appendStartupLog("Folder selection cancelled");
+                // Keep the previous remembered folder on cancel so relaunch can reuse it.
+                if (FileManager.hasAccessibleBaseUri(this)) {
+                    appendStartupLog("Folder selection cancelled; keeping " + FileManager.getDisplayName(this));
+                } else {
+                    FileManager.setBaseUri(this, Uri.EMPTY);
+                    appendStartupLog("Folder selection cancelled");
+                }
             }
             gotDirectory();
         } else {
