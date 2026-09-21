@@ -77,23 +77,3 @@ bool building_senet_house::draw_ornaments_and_animations_height(painter &ctx, ve
 
     return true;
 }
-
-bool building_bullfight_school::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {
-    building_impl::draw_ornaments_and_animations_height(ctx, point, tile, color_mask);
-
-    int amount = ceil((float)base.stored_amount(RESOURCE_STRAW) / 100.0) - 1;
-    if (amount >= 0) {
-        const auto &ranim = anim(animkeys().straw);
-        vec2i pos = ranim.pos;
-        for (int i = 0; i < amount; ++i) {
-            auto& command = ImageDraw::create_subcommand(ctx, render_command_t::ert_generic);
-            command.image_id = ranim.first_img();
-            command.pixel = point + pos;
-            command.mask = color_mask;
-
-            pos += {5, -5};
-        }
-    }
-
-    return true;
-}

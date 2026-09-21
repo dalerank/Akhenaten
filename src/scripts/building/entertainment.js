@@ -256,6 +256,18 @@ building_bullfight_school = {
     preview : { pack:PACK_CUSTOM, id:0 },
     base : { pack:PACK_CUSTOM, id:0 },
   }
+  overlay_anims {
+    straw {
+      pos : [65, 3]
+      pack:PACK_GENERAL
+      id:206
+      resource : RESOURCE_STRAW
+      stack : true
+      step : [5, -5]
+      max_count : 8
+      default_active : true
+    }
+  }
   meta : { text_id:78, help_link:"message_building_trading_centers" }
   info_sound : "Wavs/bullfight_school.wav"
   building_size : 2
