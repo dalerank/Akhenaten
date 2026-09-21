@@ -16,7 +16,7 @@ building_small_obelisk {
         stage_1 {
             timber: 200
             ladders: [{x: 20, y: -40}]
-            carpenter_point: {x: 20, y: -40}
+            carpenter_point: {x: 20, y: -20}
             carpenter_need: true
             stonemasons_need: false
         }

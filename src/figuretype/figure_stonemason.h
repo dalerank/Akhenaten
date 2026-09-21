@@ -23,6 +23,7 @@ class figure_stonemason : public figure_impl {
 public:
     FIGURE_METAINFO(FIGURE_STONEMASON, figure_stonemason)
     figure_stonemason(figure *f) : figure_impl(f) {}
+    virtual figure_stonemason *dcast_stonemason() override { return this; }
 
     struct runtime_data_t {
         short idle_wait_count;

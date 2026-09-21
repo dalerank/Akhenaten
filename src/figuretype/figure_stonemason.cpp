@@ -2,6 +2,7 @@
 
 #include "building/monument_mastaba.h"
 #include "building/monument_pyramid.h"
+#include "building/monument_obelisk.h"
 #include "building/building_statue.h"
 #include "building/monuments.h"
 #include "grid/terrain.h"
@@ -90,8 +91,13 @@ void figure_stonemason::figure_action() {
             base.destination_tile = wait_tile;
             advance_action(FIGURE_ACTION_12_MASON_GOING_TO_PLACE);
         } else {
+            if (auto *obelisk = b_dest->dcast_obelisk()) {
+                base.set_flag(e_figure_flag_invisible);
+                obelisk->set_stonemason_works(id());
+            }
             base.wait_ticks++;
             if (base.wait_ticks > simulation_time_t::ticks_in_day * 2) {
+                base.set_flag(e_figure_flag_invisible, false);
                 advance_action(FIGURE_ACTION_16_MASON_RETURN_HOME);
             }
         }
@@ -176,6 +182,7 @@ void figure_stonemason::figure_action() {
         break;
 
     case FIGURE_ACTION_16_MASON_RETURN_HOME:
+        base.set_flag(e_figure_flag_invisible, false);
         // Fail → destroy (action 18 had no handler and left the walker stuck).
         if (do_gotobuilding(home(), true, TERRAIN_USAGE_PREFER_ROADS,
                             FIGURE_ACTION_20_MASON_DESTROY, FIGURE_ACTION_20_MASON_DESTROY)) {
@@ -192,6 +199,8 @@ void figure_stonemason::figure_action() {
 
 void figure_stonemason::on_destroy() {
     figure_impl::on_destroy();
+
+    base.set_flag(e_figure_flag_invisible, false);
 
     // Clear monument/statue worker slot. destination_bid is set at spawn; fall back
     // to figure destination when missing (older saves / mid-path).
@@ -213,6 +222,12 @@ void figure_stonemason::update_animation() {
     switch (action_state()) {
     case FIGURE_ACTION_13_MASON_WAITING_RESOURCES:
         image_set_animation(animkeys().work_ground);
+        break;
+
+    case FIGURE_ACTION_17_MASON_LOOKING_FOR_WORK_TILE:
+        if (destination() && destination()->dcast_obelisk()) {
+            image_set_animation(animkeys().work_wall);
+        }
         break;
 
     case FIGURE_ACTION_14_MASON_WORK_GROUND:

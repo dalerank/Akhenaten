@@ -56,35 +56,49 @@ void figure_carpenter::figure_action() {
         }
         break;
 
-    case ACTION_1_CARPENTER_GOING:
-        if (do_goto(base.destination_tile, terrain_usage,
-                    ACTION_2_CARPENTER_WORK_GROUND, ACTION_7_CARPENTER_DESTROY)) {
+    case ACTION_1_CARPENTER_GOING: {
+        const bool to_obelisk = b_dest->dcast_obelisk() != nullptr;
+        const short arrived = to_obelisk ? ACTION_3_CARPENTER_WORK_VERT : ACTION_2_CARPENTER_WORK_GROUND;
+        if (do_goto(base.destination_tile, terrain_usage, arrived, ACTION_7_CARPENTER_DESTROY)) {
             base.wait_ticks = 0;
+            if (to_obelisk) {
+                // Obelisk is impassable — stand at access_point; building draws work anim.
+                base.set_flag(e_figure_flag_invisible);
+            }
         }
         break;
+    }
 
     case ACTION_5_CARPENTER_LOOKING_FOR_WORK_TILE:
         advance_action(ACTION_2_CARPENTER_WORK_GROUND);
         break;
 
     case ACTION_2_CARPENTER_WORK_GROUND:
-    case ACTION_3_CARPENTER_WORK_VERT:
+    case ACTION_3_CARPENTER_WORK_VERT: {
+        building *worked = building_get(runtime_data().destination_bid);
+        if (!worked || !worked->id) {
+            worked = destination();
+        }
+        if (auto *obelisk = worked ? worked->dcast_obelisk() : nullptr) {
+            base.set_flag(e_figure_flag_invisible);
+            obelisk->set_carpenter_works(id());
+        }
+
         base.wait_ticks++;
         if (base.wait_ticks > simulation_time_t::ticks_in_day * 2) {
-            building *worked = building_get(runtime_data().destination_bid);
-            if (!worked || !worked->id) {
-                worked = destination();
-            }
             if (auto *obelisk = worked ? worked->dcast_obelisk() : nullptr) {
                 obelisk->place_scaffold();
             } else if (auto statue = smart_cast<building_statue>(worked)) {
                 statue->set_service(100);
             }
+            base.set_flag(e_figure_flag_invisible, false);
             advance_action(ACTION_4_CARPENTER_RETURN_HOME);
         }
         break;
+    }
 
     case ACTION_4_CARPENTER_RETURN_HOME:
+        base.set_flag(e_figure_flag_invisible, false);
         if (do_gotobuilding(home(), true, TERRAIN_USAGE_PREFER_ROADS,
                             ACTION_7_CARPENTER_DESTROY, ACTION_7_CARPENTER_DESTROY)) {
             poof();
@@ -95,6 +109,8 @@ void figure_carpenter::figure_action() {
 
 void figure_carpenter::on_destroy() {
     figure_impl::on_destroy();
+
+    base.set_flag(e_figure_flag_invisible, false);
 
     building *b_dest = building_get(runtime_data().destination_bid);
     if (!b_dest || !b_dest->id) {

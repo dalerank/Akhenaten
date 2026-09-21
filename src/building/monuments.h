@@ -54,6 +54,9 @@ public:
         uint16_t lamp_stock;     // royal tomb working stock (≤700); unused elsewhere
         // Burial goods loads at this tomb (BP1 ledger). Fits former bind____skip(36).
         uint8_t burial_stock[RESOURCES_MAX];
+        // Ephemeral (not saved): working figure id set each tick; cleared daily.
+        uint16_t carpenter_works;
+        uint16_t stonemason_works;
     } BUILDING_RUNTIME_DATA_T;
 
     // Tall monument ornaments (tiers/cones) - skip in flat buildings view.

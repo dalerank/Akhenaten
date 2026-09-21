@@ -65,6 +65,10 @@ public:
     const obelisk_stage *current_stage() const;
     vec2i carpenter_work_pixel() const;
     vec2i stonemasons_work_pixel() const;
+    void set_carpenter_works(figure_id fid);
+    void set_stonemason_works(figure_id fid);
+    figure_id carpenter_works() const;
+    figure_id stonemason_works() const;
     static int yards_available(e_resource r);
     static bool has_unfinished_obelisk();
 

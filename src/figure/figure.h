@@ -220,6 +220,8 @@ public:
     ALLOW_SMART_CAST_FIGURE(enemy)
     ALLOW_SMART_CAST_FIGURE(worker)
     ALLOW_SMART_CAST_FIGURE(hunter)
+    ALLOW_SMART_CAST_FIGURE(carpenter)
+    ALLOW_SMART_CAST_FIGURE(stonemason)
 
     figure(int _id) {
         // ...can't be bothered to add default values to ALL

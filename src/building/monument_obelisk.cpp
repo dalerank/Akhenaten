@@ -137,6 +137,22 @@ vec2i building_obelisk::stonemasons_work_pixel() const {
     return st ? st->stonemasons_point : vec2i{};
 }
 
+void building_obelisk::set_carpenter_works(figure_id fid) {
+    runtime_data().carpenter_works = fid;
+}
+
+void building_obelisk::set_stonemason_works(figure_id fid) {
+    runtime_data().stonemason_works = fid;
+}
+
+figure_id building_obelisk::carpenter_works() const {
+    return runtime_data().carpenter_works;
+}
+
+figure_id building_obelisk::stonemason_works() const {
+    return runtime_data().stonemason_works;
+}
+
 static int placement_amount_for(e_building_type t, e_resource r) {
     const auto &bp = obelisk_params_for(t);
     for (const auto &pr : bp.placement_resources) {
@@ -357,6 +373,8 @@ void building_obelisk::on_destroy() {
 
 void building_obelisk::update_day() {
     building_impl::update_day();
+    runtime_data().carpenter_works = 0;
+    runtime_data().stonemason_works = 0;
     if (is_finished()) {
         return;
     }
@@ -378,35 +396,53 @@ bool building_obelisk::draw_ornaments_and_animations_height(painter &ctx, vec2i 
         return false;
     }
 
+    bool drew = false;
     const int phase = runtime_data().phase;
     const auto *st = stage_at(phase);
-    if (!st) {
-        return false;
-    }
+    const auto *ladder_st = st;
 
     // Carpenter stage: ladders appear after timber is delivered for this stage.
-    if (st->carpenter_need && resource_pct(RESOURCE_TIMBER) < 100) {
-        st = stage_at(phase - 1);
-        if (!st || st->ladders.empty()) {
-            return false;
+    if (ladder_st && ladder_st->carpenter_need && resource_pct(RESOURCE_TIMBER) < 100) {
+        ladder_st = stage_at(phase - 1);
+    }
+
+    if (ladder_st && !ladder_st->ladders.empty()) {
+        const int ladder = building_static_params::get(base.type).first_img("ladder");
+        if (ladder > 0) {
+            for (const auto &off : ladder_st->ladders) {
+                auto &command = ImageDraw::create_command(ctx, render_command_t::ert_drawtile);
+                command.image_id = ladder;
+                command.pixel = point + off;
+                command.mask = color_mask;
+            }
+            drew = true;
         }
     }
 
-    if (st->ladders.empty()) {
-        return false;
+    if (!st) {
+        return drew;
     }
 
-    const int ladder = building_static_params::get(base.type).first_img("ladder");
-    if (ladder <= 0) {
-        return false;
-    }
-    for (const auto &off : st->ladders) {
-        auto &command = ImageDraw::create_command(ctx, render_command_t::ert_drawtile);
-        command.image_id = ladder;
-        command.pixel = point + off;
+    const auto draw_worker = [&](figure_id fid, vec2i work_off) {
+        figure *f = fid > 0 ? figure_get(fid) : nullptr;
+        if (!f || !f->is_alive() || f->main_image_id <= 0) {
+            return;
+        }
+        auto &command = ImageDraw::create_subcommand(ctx, render_command_t::ert_sprite);
+        command.image_id = f->main_image_id;
+        command.pixel = point + work_off;
         command.mask = color_mask;
+        drew = true;
+    };
+
+    if (st->carpenter_need) {
+        draw_worker(carpenter_works(), st->carpenter_point);
     }
-    return true;
+    if (st->stonemasons_need) {
+        draw_worker(stonemason_works(), st->stonemasons_point);
+    }
+
+    return drew;
 }
 
 tile2i building_obelisk::center_point() const {

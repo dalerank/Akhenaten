@@ -107,6 +107,14 @@ struct platform_t {
 
 	pcstr get_steam_path();
 
+	inline constexpr bool is_unix() const {
+#ifdef GAME_PLATFORM_UNIX
+		return true;
+#else
+		return false;
+#endif
+	}
+
 	inline constexpr bool is_android() const {
 #ifdef GAME_PLATFORM_ANDROID
 		return true;
