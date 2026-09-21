@@ -72,6 +72,7 @@ const mod_info& mods_find(xstring hash);
 void mods_remount();
 void mods_save();
 void mods_load();
+void mods_refresh_from_config();
 void mods_refresh_available_list();
 void mods_download_mod_async(xstring name);
 void mods_download_info_async();

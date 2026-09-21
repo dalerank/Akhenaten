@@ -24,7 +24,7 @@ int __mods_download_progress(pcstr mod_id) { return mods_find(mod_id).download_p
 bool __mods_enabled(pcstr mod_id) { return mods_find(mod_id).enabled; } ANK_FUNCTION_1(__mods_enabled)
 
 void __mods_download_mod_async(pcstr mod_id) { mods_download_mod_async(mod_id); } ANK_FUNCTION_1(__mods_download_mod_async)
-void __mods_download_info_async(pcstr mod_id) { mods_download_info_async(); } ANK_FUNCTION_1(__mods_download_info_async)
+void __mods_download_info_async() { mods_download_info_async(); } ANK_FUNCTION(__mods_download_info_async)
 void __mods_toggle(pcstr mod_id) { mods_toggle(mod_id); } ANK_FUNCTION_1(__mods_toggle)
 void __mods_remount() { mods_remount(); } ANK_FUNCTION(__mods_remount)
 bool __mods_inupdate() { return g_mods.inupdate; } ANK_FUNCTION(__mods_inupdate)

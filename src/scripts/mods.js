@@ -91,6 +91,8 @@ mods {
     download_progress : __mods_download_progress
     downloaded : __mods_downloaded
     download_mod_async : __mods_download_mod_async
+    download_info_async : __mods_download_info_async
     toggle : __mods_toggle
     remount : __mods_remount
+    inupdate : __mods_inupdate
 }

@@ -111,8 +111,8 @@ static int mods_download_progress_callback(void* clientp, curl_off_t dltotal, cu
 #endif
 
 void mods_download_info_async() {
-    game.mt.detach_task([]() {
-        g_mods.inupdate = true;
+    g_mods.inupdate = true;
+    game.add_frame_end_event([]() {
         mods_refresh_available_list();
         g_mods.inupdate = false;
         events::emit(event_mods_info_updated{static_cast<uint64_t>(g_mods.list.size())});
@@ -352,6 +352,7 @@ void mods_init() {
 
     const dir_listing* sgx_files = vfs::dir_find_files_with_extension("mods", "sgx");
     append_mods("mods/", sgx_files);
+    mods_refresh_from_config();
 }
 
 const mod_info& mods_find(xstring hash) {

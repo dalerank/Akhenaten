@@ -82,14 +82,34 @@ function mods_window_on_unpack_scripts(window) {
     mods_unpack_scripts()
 }
 
+function mods_window_fill_list(window) {
+    var n = mods.count()
+    window.mods.clear()
+    for (var i = 0; i < n; i++) {
+        window.mods.add_item(mods.name(i))
+    }
+}
+
 [es=(mods_window, refresh_mods)]
 function mods_window_on_refresh_mods(window) {
-    __mods_download_info_async()
+    mods.download_info_async()
+}
+
+[es=event_mods_info_updated]
+function mods_on_catalog_updated(ev) {
+    emit mods_window.list_updated{ count: ev.count }
+}
+
+[es=(mods_window, list_updated)]
+function mods_window_on_list_updated(window) {
+    mods_window_fill_list(window)
 }
 
 [es=(mods_window, ui_draw_foreground)]
 function mods_window_update(window) {
-    if (!mods.inupdate) {
+    if (!mods.inupdate()) {
+        if (window.refresh_mods.text !== window.refresh_mods_text)
+            window.refresh_mods.text = window.refresh_mods_text
         return
     }
 
@@ -105,10 +125,5 @@ function mods_window_update(window) {
 function mods_window_on_init(window) {
     __log_marker("window_show:mods_window")
     window.refresh_mods_text = window.refresh_mods.text
-
-    var n = mods.count()
-    window.mods.clear()
-    for (var i = 0; i < n; i++) {
-        window.mods.add_item(mods.name(i))
-    }
+    mods_window_fill_list(window)
 }
