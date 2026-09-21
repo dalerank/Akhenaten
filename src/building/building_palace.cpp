@@ -40,15 +40,6 @@ REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_village_palace);
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_town_palace);
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_city_palace);
 
-void building_palace::on_post_load() {
-    building_impl::on_post_load();
-    g_city.buildings.track_building(base, true);
-}
-
-void building_palace::on_destroy() {
-    g_city.buildings.remove_palace(base);
-}
-
 void building_palace::update_count() const {
     g_city.buildings.track_building(base, true);
 }

@@ -10,8 +10,6 @@ public:
     building_palace(building &b) : building_impl(b) {}
     virtual building_palace *dcast_palace() override { return this; }
 
-    virtual void on_post_load() override;
-    virtual void on_destroy() override;
     virtual void update_count() const override;
     virtual void update_animation() override;
     virtual bool draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color mask) override;

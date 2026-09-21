@@ -11,21 +11,6 @@
 
 city_buildings_t::tracked_buildings_t g_tracked_buildings;
 
-const auto palace_types = { BUILDING_VILLAGE_PALACE, BUILDING_TOWN_PALACE, BUILDING_VILLAGE_PALACE_UP, BUILDING_TOWN_PALACE_UP, BUILDING_CITY_PALACE };
-int city_buildings_t::get_palace_id() {
-    for (auto btype : palace_types) {
-        const auto &palace = tracked_buildings().at(btype);
-        if (!palace.empty()) {
-            return palace.front();
-        }
-    }
-
-    return 0;
-}
-
-void city_buildings_t::remove_palace(building &palace) {
-}
-
 void city_buildings_t::track_building(building &b, bool active) {
     g_tracked_buildings[b.type].push_back(b.id);
     increase_count(b.type, active);
@@ -217,6 +202,8 @@ void city_buildings_t::update_tick(bool refresh_only) {
     has_high_fire_risk = false;
     festival_square = tile2i::invalid;
     festival_building_id = 0;
+    palace_point = tile2i::invalid;
+    palace_building_id = 0;
     for (auto it = building_begin(), end = building_end(); it != end; ++it) {
         if (!it->is_valid()) {
             continue;
@@ -224,6 +211,10 @@ void city_buildings_t::update_tick(bool refresh_only) {
         if (it->type == BUILDING_FESTIVAL_SQUARE && it->is_main()) {
             festival_square = it->tile;
             festival_building_id = it->id;
+        }
+        if (it->is_palace() && it->is_main() && palace_building_id == 0) {
+            palace_point = it->tile;
+            palace_building_id = it->id;
         }
         if (it->fire_risk > 70) {
             has_high_fire_risk = true;

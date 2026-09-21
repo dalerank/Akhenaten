@@ -15,6 +15,9 @@ struct city_buildings_t {
     int32_t festival_building_id;
     tile2i festival_square;
 
+    int32_t palace_building_id = 0;
+    tile2i palace_point;
+
     int32_t senet_house_placed;
 
     bool distribution_center_placed;
@@ -64,9 +67,7 @@ struct city_buildings_t {
     bool has_temple_complex();
     span_const<e_building_type> temple_complex_types();
 
-    int get_palace_id();
-
-    void remove_palace(building &palace);
+    int get_palace_id() const { return palace_building_id; }
 
     void reset_tracked_buildings_counters();
     void track_building(building &b, bool active);
