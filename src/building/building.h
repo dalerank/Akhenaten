@@ -247,6 +247,7 @@ public:
     animation_t minimap_anim;
     uint8_t show_on_problem_overlay;
     uint16_t deben_storage;
+    int16_t tax_income_or_storage;
     animation_context anim;
     std::array<animation_context, 4> anims;
     svector<building_overlay_anim, 4> overlay_anims;
@@ -394,7 +395,7 @@ ANK_CONFIG_PROPERTY(building, has_road_access, num_workers, max_workers, type, o
     prev_part_building_id, next_part_building_id, formation_id, collapse_risk, fire_risk, malaria_risk, structure_damage, spawned_worker_this_month,
     current_desirability, has_water_access, has_well_access, curse_days_left,
     common_health, disease_days, has_plague, houses_covered, show_on_problem_overlay, play_animation, destroy_reason,
-    fire_proof, road_network_id, distance_from_entry)
+    fire_proof, road_network_id, distance_from_entry, deben_storage, tax_income_or_storage)
 
 #define BUILDING_METAINFO(type, clsid, base_class)                                                      \
     clsid(building &b) : base_class(b) {}                                                               \

@@ -271,7 +271,7 @@ void city_finance_t::collect_monthly_taxes() {
                 housed.tax_collector_id = 0;
             }
 
-            housed.tax_income_or_storage += tax;
+            house->base.tax_income_or_storage += tax;
         } else {
             if (is_nobles) {
                 data.taxes.untaxed_nobles += population;
@@ -397,7 +397,7 @@ static void reset_taxes() {
     for (int i = 1; i < MAX_BUILDINGS; i++) {
         auto house = building_get(i)->dcast_house();
         if (house && house->state() == BUILDING_STATE_VALID) {
-            house->runtime_data().tax_income_or_storage = 0;
+            house->base.tax_income_or_storage = 0;
         }
     }
 }

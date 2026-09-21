@@ -116,6 +116,7 @@ void building::initialize(e_building_type _tp, tile2i _tl, int orientation) {
     crime_influence = props.crime.to_influence();
 
     max_workers = props.laborers;
+    labor_category = props.labor_category;
     fire_risk_increase = props.fire_risk;
     collapse_risk_increase = props.damage_risk;
 

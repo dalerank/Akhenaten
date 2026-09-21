@@ -22,7 +22,6 @@
 #include "figuretype/figure_cartpusher.h"
 #include "js/js_game.h"
 
-BUILDING_RUNTIME_DATA_IMPL(building_tax_collector)
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_tax_collector);
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_tax_collector_up);
 
@@ -62,9 +61,7 @@ void building_tax_collector::spawn_figure() {
 }
 
 void building_tax_collector::bind_dynamic(io_buffer *iob, size_t version) {
-    auto &d = runtime_data();
-
-    iob->bind(BIND_SIGNATURE_INT16, &d.tax_income_or_storage);
+    iob->bind(BIND_SIGNATURE_INT16, &base.tax_income_or_storage);
 }
 
 void building_tax_collector::update_month() {

@@ -23,10 +23,6 @@
 
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_hunting_lodge);
 
-void building_hunting_lodge::on_create(int orientation) {
-    base.labor_category = current_params().labor_category;
-}
-
 int building_hunting_lodge::spawn_timer() {
     const auto &params = current_params();
     int pct_workers = worker_percentage();

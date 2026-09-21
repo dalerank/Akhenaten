@@ -17,7 +17,6 @@ public:
         e_figure_type hunter_type = FIGURE_NONE; // FIGURE_NONE = climate resolve
     } BUILDING_STATIC_DATA_T;
 
-    virtual void on_create(int orientation) override;
     virtual void spawn_figure() override;
     virtual e_sound_channel_city sound_channel() const override { return SOUND_CHANNEL_CITY_HUNTER_LOUDGE; }
 

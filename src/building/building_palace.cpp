@@ -36,15 +36,9 @@
 #include "core/profiler.h"
 #include "graphics/elements/ui_js.h"
 
-BUILDING_RUNTIME_DATA_IMPL(building_palace)
-
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_village_palace);
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_town_palace);
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_city_palace);
-
-void building_palace::on_create(int orientation) {
-    base.labor_category = current_params().labor_category;
-}
 
 void building_palace::on_post_load() {
     building_impl::on_post_load();
@@ -87,9 +81,7 @@ bool building_palace::draw_ornaments_and_animations_height(painter &ctx, vec2i p
 }
 
 void building_palace::bind_dynamic(io_buffer *iob, size_t version) {
-    auto &d = runtime_data();
-
-    iob->bind(BIND_SIGNATURE_INT16, &d.tax_income_or_storage);
+    iob->bind(BIND_SIGNATURE_INT16, &base.tax_income_or_storage);
 }
 
 void building_palace::spawn_figure() {

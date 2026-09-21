@@ -48,7 +48,6 @@ public:
         uint32_t last_update_day;
         building_id tax_collector_id;
         uint16_t population;
-        int16_t tax_income_or_storage;
         uint8_t is_merged;
         uint8_t booth_juggler;
         uint8_t bandstand_juggler;
@@ -164,7 +163,7 @@ public:
     static const model_house &get_model(int level);
 };
 ANK_CONFIG_PROPERTY(building_house::runtime_data_t,
-    population, tax_coverage, tax_income_or_storage, house_happiness,
+    population, tax_coverage, house_happiness,
     entertainment, water_supply, bazaar_access, education, school, library, academy,
     magistrate, num_gods, dentist, apothecary, health, mortuary, physician,
     booth_juggler, bandstand_juggler, senet_player, zookeeper, criminal_active,

@@ -1,7 +1,5 @@
 #include "city/city.h"
 
-#include "building/building_tax_collector.h"
-#include "building/building_palace.h"
 #include "city/city_finance.h"
 #include "core/profiler.h"
 #include "game/game_config.h"
@@ -52,25 +50,20 @@ void city_t::government_distribute_treasury() {
         case BUILDING_VILLAGE_PALACE:
         case BUILDING_TOWN_PALACE:
         case BUILDING_CITY_PALACE:
-            {
-                auto palace = b.dcast_palace();    
-                palace->runtime_data().tax_income_or_storage = palace_units * amount_per_unit + remainder;
-                remainder = 0;
-            }
+            b.tax_income_or_storage = palace_units * amount_per_unit + remainder;
+            remainder = 0;
             break;
 
         case BUILDING_TAX_COLLECTOR_UPGRADED:
             if (!game_features::gameplay_change_new_tax_collection_system) {
-                auto collector = b.dcast_tax_collector();
-                collector->runtime_data().tax_income_or_storage = tax_collectpr_up_units * amount_per_unit + remainder;
+                b.tax_income_or_storage = tax_collectpr_up_units * amount_per_unit + remainder;
                 remainder = 0;
             }
             break;
 
         case BUILDING_TAX_COLLECTOR:
             if (!game_features::gameplay_change_new_tax_collection_system) {
-                auto collector = b.dcast_tax_collector();
-                collector->runtime_data().tax_income_or_storage = amount_per_unit + remainder;
+                b.tax_income_or_storage = amount_per_unit + remainder;
                 remainder = 0;
             }
             break;
