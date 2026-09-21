@@ -9,6 +9,7 @@
 #include <algorithm>
 #include <array>
 #include <cstdarg>
+#include <cstdio>
 #include <csignal>
 #include <cstdlib>
 #include <iostream>
@@ -43,9 +44,41 @@ static FILE *logger_file_ = nullptr;
 
 static constexpr size_t k_recent_cap = 64;
 static constexpr size_t k_recent_line_max = 512;
+static constexpr size_t k_console_buf_flush = 8 * 1024;
+static constexpr size_t k_stdio_buf_size = 64 * 1024;
 static std::array<std::string, k_recent_cap> recent_errors_;
 static size_t recent_errors_count_ = 0;
 static size_t recent_errors_next_ = 0;
+static std::string console_out_buf_;
+#if defined(GAME_PLATFORM_WIN)
+static std::string debug_string_buf_;
+#endif
+
+static void flush_console_out_() {
+    if (console_out_buf_.empty()) {
+        return;
+    }
+    std::cout.write(console_out_buf_.data(), (std::streamsize)console_out_buf_.size());
+    std::cout.flush();
+    console_out_buf_.clear();
+}
+
+#if defined(GAME_PLATFORM_WIN)
+static void flush_debug_string_() {
+    if (debug_string_buf_.empty()) {
+        return;
+    }
+    OutputDebugStringA(debug_string_buf_.c_str());
+    debug_string_buf_.clear();
+}
+#endif
+
+static void flush_output_buffers_() {
+    flush_console_out_();
+#if defined(GAME_PLATFORM_WIN)
+    flush_debug_string_();
+#endif
+}
 
 static void push_recent_error(pcstr prefix, pcstr message) {
     std::string line;
@@ -163,7 +196,11 @@ void initialize() {
     SDL_LogSetOutputFunction(Logger::write, nullptr);
     SDL_LogSetAllPriority(get_log_priority());
 
+    setvbuf(stdout, nullptr, _IOFBF, k_stdio_buf_size);
+    setvbuf(stderr, nullptr, _IOFBF, k_stdio_buf_size);
+    console_out_buf_.reserve(k_console_buf_flush);
 #if defined(GAME_PLATFORM_WIN)
+    debug_string_buf_.reserve(k_console_buf_flush);
     SetConsoleOutputCP(CP_UTF8);
     if (IsDebuggerPresent()) {
         return;
@@ -177,6 +214,7 @@ void initialize() {
 }
 
 void switch_output(pcstr folder) {
+    flush();
 #if defined(GAME_PLATFORM_ANDROID)
     (void)folder;
     if (logger_file_) {
@@ -212,6 +250,7 @@ pcstr output_path() {
 }
 
 void flush() {
+    flush_output_buffers_();
 #if defined(GAME_PLATFORM_ANDROID)
     if (logger_file_) {
         fflush(logger_file_);
@@ -298,6 +337,7 @@ Logger::Logger() {
 }
 
 Logger::~Logger() {
+    flush_output_buffers_();
 #if defined(GAME_PLATFORM_ANDROID)
     if (logger_file_) {
         fclose(logger_file_);
@@ -318,23 +358,31 @@ void Logger::write(void* /* userdata */, int /* category */, SDL_LogPriority pri
 
     write_to_output_(prefix, message);
     logger.write(prefix, message);
+
+    if (priority >= SDL_LOG_PRIORITY_WARN) {
+        flush();
+    }
 }
 
 void Logger::write(pcstr prefix, pcstr message) {
 #if defined(GAME_PLATFORM_ANDROID)
     if (logger_file_) {
         fprintf(logger_file_, "%s%s\n", prefix, message);
-        fflush(logger_file_);
     }
     __android_log_print(ANDROID_LOG_INFO, "ank-and", "%s%s", prefix, message);
     android_append_startup_log(message);
 #else
-    logger_file_stream_ << prefix << message << std::endl;
+    if (logger_file_stream_.is_open()) {
+        logger_file_stream_ << prefix << message << '\n';
+    }
 
 #if defined(GAME_PLATFORM_WIN)
-    OutputDebugStringA(prefix);
-    OutputDebugStringA(message);
-    OutputDebugStringA("\n");
+    debug_string_buf_ += prefix;
+    debug_string_buf_ += message;
+    debug_string_buf_ += '\n';
+    if (debug_string_buf_.size() >= k_console_buf_flush) {
+        flush_debug_string_();
+    }
 #endif
 
     game_debug_cli_message(message);
@@ -342,7 +390,12 @@ void Logger::write(pcstr prefix, pcstr message) {
 }
 
 void Logger::write_to_output_(pcstr prefix, pcstr message) {
-    std::cout << prefix << message << std::endl;
+    console_out_buf_ += prefix;
+    console_out_buf_ += message;
+    console_out_buf_ += '\n';
+    if (console_out_buf_.size() >= k_console_buf_flush) {
+        flush_console_out_();
+    }
 }
 
 } // namespace logs
