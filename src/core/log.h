@@ -1,8 +1,16 @@
 #pragma once
 
+#include "core/core.h"
+#include "core/xfunction.h"
 #include "core/xstring.h"
 
 namespace logs {
+
+using sink_write_fn = xfunction<void(int priority, pcstr prefix, pcstr message)>;
+using sink_flush_fn = xfunction<void()>;
+using sink_handle = uint32_t;
+
+constexpr sink_handle invalid_sink = 0;
 
 void initialize();
 void switch_output(pcstr folder);
@@ -10,6 +18,9 @@ void switch_output(pcstr folder);
 pcstr output_path();
 void flush();
 void tick();
+
+sink_handle add_sink(sink_write_fn write, sink_flush_fn flush = {});
+void remove_sink(sink_handle handle);
 
 // Last warn/error/critical lines (newest last), for bug reports.
 xstring recent_errors(int max_lines = 40);

@@ -1,6 +1,7 @@
 ﻿#include "debug_console.h"
 
 #include "core/custom_span.hpp"
+#include "core/log.h"
 #include "graphics/screen.h"
 #include "graphics/graphics.h"
 #include "graphics/text.h"
@@ -379,6 +380,19 @@ void game_debug_cli_message(pcstr msg) {
     debug_console() << msg << std::endl;
 }
 
+namespace {
+logs::sink_handle debug_console_sink_handle = logs::invalid_sink;
+} // namespace
+
+void game_debug_cli_attach_log_sink() {
+    if (debug_console_sink_handle != logs::invalid_sink) {
+        return;
+    }
+    debug_console_sink_handle = logs::add_sink([](int, pcstr, pcstr message) {
+        game_debug_cli_message(message);
+    });
+}
+
 void game_imgui_overlay_init() {
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
@@ -399,6 +413,8 @@ void game_imgui_overlay_init() {
 }
 
 void game_imgui_overlay_destroy() {
+    logs::remove_sink(debug_console_sink_handle);
+    debug_console_sink_handle = logs::invalid_sink;
     ImGui_ImplSDLRenderer2_Shutdown();
     ImGui_ImplSDL2_Shutdown();
     ImGui::DestroyContext();

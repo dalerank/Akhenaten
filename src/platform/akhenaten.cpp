@@ -648,6 +648,7 @@ int main(int argc, char** argv) {
     crashhandler_install();
 
     logs::initialize();
+    game_debug_cli_attach_log_sink();
 
     setup();
 
