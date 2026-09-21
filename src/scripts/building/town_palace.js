@@ -1,0 +1,51 @@
+log_info("akhenaten: building_town_palace started")
+
+building_town_palace {
+  animations {
+    preview { pack:PACK_GENERAL, id:39 },
+    base { pack:PACK_GENERAL, id:39 },
+    work { pos : [-1, -1], pack:PACK_GENERAL, id:39, offset:1, max_frames:12 }
+  }
+
+  labor_category : LABOR_CATEGORY_GOVERNMENT
+  planner_update_rule {
+    unique_building : true
+  }
+
+  meta { text_id:105, help_link:"message_building_palace" }
+  info_sound : "Wavs/palace.wav"
+  building_size : 5
+
+  needs {
+    groundwater : true
+  }
+
+  flags {
+    is_palace: true
+    is_administration: true
+    keeps_visitor_paths: true
+    work_anim: true
+  }
+
+  cost [ 200, 300, 400, 500, 800 ]
+  desirability { value:[8], step:[2], step_size:[-1], range: [6] }
+  laborers[30]
+  fire_risk[4]
+  damage_risk[1]
+}
+
+[es=(building_town_palace, update_animation)]
+function building_town_palace_on_update_animation(ev) {
+    var b = city.get_building(ev.bid)
+    b.play_animation = b.worker_percentage > 50
+}
+
+[es=(building_town_palace, draw_tooltip)]
+function building_town_palace_draw_tooltip(ev) {
+    building_palace_show_tooltip(ev)
+}
+
+[es=(building_town_palace, draw_usable_paths)]
+function building_town_palace_draw_usable_paths(ev) {
+    city.get_building(ev.bid).draw_usable_paths()
+}

@@ -32,6 +32,9 @@ import building.academy
 import building.apothecary
 import building.scribal_school
 import building.palace
+import building.village_palace
+import building.town_palace
+import building.city_palace
 import building.temple
 import building.shrine_osiris
 import building.shrine_ra

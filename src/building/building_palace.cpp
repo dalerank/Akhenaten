@@ -44,11 +44,6 @@ void building_palace::update_count() const {
     g_city.buildings.track_building(base, true);
 }
 
-void building_palace::update_animation() {
-    base.play_animation = worker_percentage() > 50;
-    es(__func__);
-}
-
 bool building_palace::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {
     draw_normal_anim(ctx, point, tile, color_mask);
 
