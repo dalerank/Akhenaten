@@ -122,6 +122,11 @@ int android_get_file_descriptor(const char *filename, const char *mode)
 
 void *android_open_asset(const char *asset, const char *mode)
 {
+    // Prefer direct APK assets for engine data paths (data/, Data/).
+    void *apk = asset_handler_open_apk_asset(asset, mode);
+    if (apk) {
+        return apk;
+    }
     return asset_handler_open_asset(asset, mode);
 }
 

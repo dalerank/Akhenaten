@@ -30,6 +30,25 @@ def depsDir = new File(projectDir, "src/main/cpp/_deps")
 def sdlAndroidJavaDir = new File(depsDir, "SDL2-src/android-project/app/src/main/java")
 // Директория для prebuilt библиотек
 def prebuiltDir = new File(projectDir.parent, "prebuilt")
+// Engine data (maps/packs/fonts) staged into APK assets/data/
+def engineDataAssetsDir = new File(buildDir, "engineDataAssets")
+def engineDataSourceDir = new File(projectDir, "../../data")
+
+task syncEngineDataAssets(type: Sync) {
+    description = "Stages repo data/ into APK assets/data for mission maps and engine packs"
+    group = "build"
+    from engineDataSourceDir
+    into new File(engineDataAssetsDir, "data")
+    include "**/*"
+    exclude "README.md"
+}
+
+preBuild.dependsOn syncEngineDataAssets
+afterEvaluate {
+    tasks.matching { it.name.startsWith("merge") && it.name.contains("Assets") }.configureEach {
+        dependsOn syncEngineDataAssets
+    }
+}
 
 // Функция для получения путей к NDK и CMake
 def getNdkPath() {
@@ -198,6 +217,8 @@ def createBuildLibraryTask(libName, abi) {
             expectedLibName = "libSDL2-static.a"
         } else if (libName == "SDL2_mixer") {
             expectedLibName = "libSDL2_mixer.a"
+        } else if (libName == "libpng") {
+            expectedLibName = "libpng.a"
         }
         
         doLast {
@@ -570,12 +591,15 @@ android {
         sourceSets {
             main.res.srcDirs += '../../res/android'
             main.java.srcDirs += sdlAndroidJavaDir.absolutePath
+            main.assets.srcDirs += engineDataAssetsDir.absolutePath
             if (file('../../res/packed_assets').exists()) {
                 println 'Using packed assets'
                 main.assets.srcDirs += '../../res/packed_assets'
-            } else {
-                println 'Packed assets not found. Using regular assets'
+            } else if (file('../../res/assets').exists()) {
+                println 'Using regular assets'
                 main.assets.srcDirs += '../../res/assets'
+            } else {
+                println 'No res/assets — shipping engine data/ only'
             }
         }
     }

@@ -74,28 +74,49 @@ static int asset_close(void *asset)
     return 0;
 }
 
+void *asset_handler_open_apk_asset(const char *asset_name, const char *mode)
+{
+    if (!asset_name || !*asset_name || !mode || !strchr(mode, 'r') || strchr(mode, 'w') || strchr(mode, 'a')) {
+        return 0;
+    }
+
+    if (!get_asset_manager()) {
+        return 0;
+    }
+
+    // APK assets are rooted at assets/; accept optional leading "./"
+    const char *path = asset_name;
+    if (path[0] == '.' && (path[1] == '/' || path[1] == '\\')) {
+        path += 2;
+    }
+    while (*path == '/' || *path == '\\') {
+        ++path;
+    }
+
+    AAsset *asset = AAssetManager_open(get_asset_manager(), path, AASSET_MODE_STREAMING);
+    return asset ? funopen(asset, asset_read, 0, asset_seek, asset_close) : 0;
+}
+
 void *asset_handler_open_asset(const char *asset_name, const char *mode)
 {
     static bstring256 location;
     location = bstring256(ASSETS_DIR_NAME, "/");
+
+    if (assets_location == ASSETS_LOCATION_NONE) {
+        determine_assets_location();
+    }
 
     switch (assets_location) {
         case ASSETS_LOCATION_DIRECTORY: {
             location.append_fmt("%s", asset_name);
             int fd = android_get_file_descriptor(location, mode);
             if (!fd) {
-                return 0;
+                return asset_handler_open_apk_asset(asset_name, mode);
             }
             return fdopen(fd, mode);
         }
-        case ASSETS_LOCATION_APK: {
-            if (!get_asset_manager()) {
-                return 0;
-            }
-            AAsset *asset = AAssetManager_open(get_asset_manager(), asset_name,
-                                               AASSET_MODE_STREAMING);
-            return asset ? funopen(asset, asset_read, 0, asset_seek, asset_close) : 0;
-        }
+        case ASSETS_LOCATION_APK:
+            return asset_handler_open_apk_asset(asset_name, mode);
         default:
             return 0;
     }
