@@ -25,7 +25,7 @@ function food_stocks_is_food_resource(resource) {
 function food_stocks_total(house) {
     var stocks = 0
     for (var i = 0; i < 4; i++) {
-        stocks += house.food(i)
+        stocks += house.get_food(i)
     }
     return stocks
 }

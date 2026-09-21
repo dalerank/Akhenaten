@@ -26,7 +26,7 @@ function goods_stock_tooltip_key(prefix, amount) {
 function goods_stock_food_amount(house, resource) {
     for (var i = 0; i < 4; i++) {
         if (city.allowed_foods(i) == resource) {
-            return house.food(i)
+            return house.get_food(i)
         }
     }
     return 0

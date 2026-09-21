@@ -148,7 +148,7 @@ public:
     void merge_impl();
     inline bool is_merged() const { return runtime_data().is_merged; }
     resource_list consume_goods_weekly();
-    resource_list consume_food_weekly();
+    void consume_food_weekly();
     void split(int num_tiles);
     const model_house &model() const;
 
@@ -169,7 +169,8 @@ ANK_CONFIG_PROPERTY(building_house::runtime_data_t,
     magistrate, num_gods, dentist, apothecary, health, mortuary, physician,
     booth_juggler, bandstand_juggler, senet_player, zookeeper, criminal_active,
     no_space_to_expand, fancy_bazaar_access, worst_desirability_building_id,
-    frog_infest_days, evolve_text, unreachable_ticks, days_without_food)
+    frog_infest_days, evolve_text, unreachable_ticks, days_without_food,
+    num_foods, hsize)
 
 // --- Individual housing tiers -------------------------------------------------
 // some info shared with vacant lot, so this is unique twice-config class

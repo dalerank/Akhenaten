@@ -64,5 +64,6 @@ ANK_CONFIG_STRUCT(model_house, devolve_desirability,
 
 ANK_CONFIG_PROPERTY(model_house,
     devolve_desirability, evolve_desirability, entertainment, water, food_types,
+    food_consumption_percentage,
     pottery, linen, jewelry, beer, religion, education, health, dentist, physician,
     fancy_bazaar)

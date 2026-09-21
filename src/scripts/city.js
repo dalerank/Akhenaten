@@ -157,6 +157,7 @@ city {
         cycle_trade_export : __city_resource_cycle_trade_export
         change_trading_amount : __city_resource_change_trading_amount
         toggle_stockpiled : __city_resource_toggle_stockpiled
+        note_consumed : __city_resource_note_consumed
     }
 
     gods {
@@ -375,6 +376,7 @@ city.get_house_model = function(level) {
         @entertainment { }
         @water { }
         @food_types { }
+        @food_consumption_percentage { }
         @pottery { }
         @linen { }
         @jewelry { }

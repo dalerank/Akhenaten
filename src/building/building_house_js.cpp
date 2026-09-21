@@ -85,12 +85,23 @@ static void house_proto___is_vacant_lot(js_State *J) {
     js_helpers::js_push_value(J, value);
 }
 
-static void house_proto_food(js_State *J) {
+static void house_proto_get_food(js_State *J) {
     const int bid = house_this_id(J);
     const int index = js_helpers::js_to_value<int>(J, 1);
     building_house* house = house_from_bid(bid);
     const int value = (!house || index < 0 || index >= 8) ? 0 : house->runtime_data().foods[index];
     js_helpers::js_push_value(J, value);
+}
+
+static void house_proto_set_food(js_State *J) {
+    const int bid = house_this_id(J);
+    const int index = js_helpers::js_to_value<int>(J, 1);
+    building_house* house = house_from_bid(bid);
+    if (house && index >= 0 && index < 8) {
+        const int amount = js_helpers::js_to_value<int>(J, 2);
+        house->runtime_data().foods[index] = (uint16_t)(amount < 0 ? 0 : amount);
+    }
+    js_helpers::js_push_void(J);
 }
 
 static void house_proto_toString(js_State *J) {
@@ -121,7 +132,8 @@ void js_register_house(js_State *J) {
     jsB_propf(J, js_intern("House.prototype.__house_level"), house_proto___house_level, 0);
     jsB_propf(J, js_intern("House.prototype.__is_vacant_lot"), house_proto___is_vacant_lot, 0);
     jsB_propf(J, js_intern("House.prototype.get_inventory"), house_proto_get_inventory, 1);
-    jsB_propf(J, js_intern("House.prototype.food"), house_proto_food, 1);
+    jsB_propf(J, js_intern("House.prototype.get_food"), house_proto_get_food, 1);
+    jsB_propf(J, js_intern("House.prototype.set_food"), house_proto_set_food, 2);
     jsB_propf(J, js_intern("House.prototype.inv"), house_proto_get_inventory, 1);
     jsB_propf(J, js_intern("House.prototype.toString"), house_proto_toString, 0);
 

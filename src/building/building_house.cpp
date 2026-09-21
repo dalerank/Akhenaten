@@ -8,7 +8,6 @@
 #include "core/custom_span.hpp"
 #include "city/city_labor.h"
 #include "figuretype/figure_noble.h"
-#include "game/difficulty.h"
 #include "game/resource.h"
 #include "graphics/image.h"
 #include "graphics/image_groups.h"
@@ -255,68 +254,12 @@ void building_house::create_vacant_lot(tile2i tile, int image_id) {
     map_building_tiles_add(b->id, b->tile, 1, image_id, TERRAIN_BUILDING);
 }
 
-resource_list building_house::consume_food_weekly() {
+void building_house::consume_food_weekly() {
     if (!hsize()) {
-        return {};
+        return;
     }
 
-    auto &d = runtime_data();
-
-    int food_types = model().food_types;
-    const int adjusted_pct = difficulty_adjust_food_consumption(model().food_consumption_percentage);
-    uint16_t amount_per_type = calc_adjust_with_percentage<short>(d.population, adjusted_pct);
-    if (food_types > 1) {
-        amount_per_type /= food_types;
-    }
-
-    if (amount_per_type > 0) {
-        amount_per_type /= simulation_time_t::weeks_in_month;
-        amount_per_type = std::max(amount_per_type, uint16_t(1));
-    }
-
-    d.num_foods = 0;
-    resource_list food_types_eaten;
-    if (g_scenario.kingdom_supplies_grain) {
-        d.foods[0] = amount_per_type;
-        food_types_eaten[RESOURCE_GRAIN] += amount_per_type;
-        d.num_foods = 1;
-        return food_types_eaten;
-    }
-
-    if (food_types <= 0) {
-        return {};
-    }
-
-    int16_t want_consumed = amount_per_type * food_types;
-    bool slot_counted[INVENTORY_MAX_FOOD] = {};
-    auto consume_food_impl = [&] {
-        for (int t = INVENTORY_MIN_FOOD; t < INVENTORY_MAX_FOOD; t++) {
-            if (d.num_foods >= food_types && !slot_counted[t]) {
-                continue;
-            }
-
-            const uint16_t exist_amount = std::min(d.foods[t], amount_per_type);
-            if (exist_amount <= 0) {
-                continue;
-            }
-
-            want_consumed -= exist_amount;
-            d.foods[t] -= exist_amount;
-            e_resource food_res = g_city.allowed_foods(t);
-            food_types_eaten[food_res] += exist_amount;
-            if (!slot_counted[t]) {
-                slot_counted[t] = true;
-                d.num_foods++;
-            }
-        }
-    };
-
-    consume_food_impl();
-    if (want_consumed > 0) {
-        consume_food_impl();
-    }
-
-    return food_types_eaten;
+    es(__func__);
 }
 
 resource_list building_house::consume_goods_weekly() {

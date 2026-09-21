@@ -447,24 +447,14 @@ void city_resources_t::consume_food_weekly(const simulation_time_t& t) {
     }
     food_types_eaten_max_value = 0;
 
-    resource_list consumed_food;
     buildings_house_do([&] (building_house *house) {
-        resource_list consumed = house->consume_food_weekly();
-        consumed_food.append(consumed);
+        house->consume_food_weekly();
 
         const uint8_t num_foods = house->runtime_data().num_foods;
         if (num_foods > food_types_eaten_max_value) {
             food_types_eaten_max_value = num_foods;
         }
-
-        for (const auto &item : consumed) {
-            if (item.type > RESOURCE_NONE && item.type < RESOURCES_FOODS_MAX) {
-                food_types_eaten[item.type] = 1;
-            }
-        }
     });
-
-    res_this_month.consumed.append(consumed_food);
 }
 
 void city_resources_t::advance_month() {

@@ -145,3 +145,16 @@ void __city_resource_toggle_stockpiled(int resource) {
     h.toggle_stockpiled();
 }
 ANK_FUNCTION_1(__city_resource_toggle_stockpiled)
+
+void __city_resource_note_consumed(int resource, int amount) {
+    if (amount <= 0) {
+        return;
+    }
+
+    const auto r = (e_resource)resource;
+    g_city.resource.res_this_month.consumed[r] += (uint16_t)amount;
+    if (r > RESOURCE_NONE && r < RESOURCES_FOODS_MAX) {
+        g_city.resource.food_types_eaten[r] = 1;
+    }
+}
+ANK_FUNCTION_2(__city_resource_note_consumed)

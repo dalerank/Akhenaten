@@ -77,7 +77,7 @@ function house_people_text(house) {
 function house_foodtypes_available(house) {
     var n = 0
     for (var i = 0; i < 8; i++)
-        if (house.food(i) > 0) n++
+        if (house.get_food(i) > 0) n++
     return n
 }
 
@@ -334,16 +334,16 @@ function info_window_house_init_fill(window) {
 
     var resource1 = city.allowed_foods(0)
     window.food0_icon.image = resource1
-    window.food0_text.text = (resource1 != RESOURCE_NONE) ? (" " + house.food(0)) : ""
+    window.food0_text.text = (resource1 != RESOURCE_NONE) ? (" " + house.get_food(0)) : ""
     var resource2 = city.allowed_foods(1)
     window.food1_icon.image = resource2
-    window.food1_text.text = (resource2 != RESOURCE_NONE) ? (" " + house.food(1)) : ""
+    window.food1_text.text = (resource2 != RESOURCE_NONE) ? (" " + house.get_food(1)) : ""
     var resource3 = city.allowed_foods(2)
     window.food2_icon.image = resource3
-    window.food2_text.text = (resource3 != RESOURCE_NONE) ? (" " + house.food(2)) : ""
+    window.food2_text.text = (resource3 != RESOURCE_NONE) ? (" " + house.get_food(2)) : ""
     var resource4 = city.allowed_foods(3)
     window.food3_icon.image = resource4
-    window.food3_text.text = (resource4 != RESOURCE_NONE) ? (" " + house.food(3)) : ""
+    window.food3_text.text = (resource4 != RESOURCE_NONE) ? (" " + house.get_food(3)) : ""
 
     window.good0_icon.image = RESOURCE_POTTERY
     window.good0_text.text = "" + house.inv(0)

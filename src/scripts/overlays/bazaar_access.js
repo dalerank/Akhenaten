@@ -13,7 +13,7 @@ overlay_bazaar_access {
 function bazaar_access_food_stocks(house) {
     var stocks = 0
     for (var i = 0; i < 4; i++) {
-        stocks += house.food(i)
+        stocks += house.get_food(i)
     }
     return stocks
 }
