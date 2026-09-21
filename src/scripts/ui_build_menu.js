@@ -15,7 +15,6 @@ build_menu_widget = {
     btn_w_add : 128
     btn_w_start_pos : {x: 0, y: 110}
     btn_text_w_offset : {x: 8, y: 3}
-    btn_text_w_size : {x: 176, y: 24}
     btn_w_cost_offset : -82
     btn_w_tot_margin : 10
     btn_w_tot_offset : 20
@@ -160,6 +159,7 @@ function build_menu_widget_ui_draw_foreground(window) {
     var x_offset = __ui_widget_sidebar_city_offset_x()
     var btn_w_tot = 256 + build_menu_widget.btn_w_add
     var label_margin = btn_w_tot + build_menu_widget.btn_w_tot_margin
+    var text_clip_w = btn_w_tot + build_menu_widget.btn_w_cost_offset - build_menu_widget.btn_w_tot_offset - build_menu_widget.btn_text_w_offset.x
     var submenu = build_menu_widget.selected_submenu
     var num_items = building_menu_ctrl.count_items(submenu)
     var y_offset = build_menu_widget.y_offset_for(num_items)
@@ -196,7 +196,7 @@ function build_menu_widget_ui_draw_foreground(window) {
         }
 
         __ui_draw_label_ex(label_str, [btn_pos.x + build_menu_widget.btn_text_w_offset.x, btn_pos.y + build_menu_widget.btn_text_w_offset.y],
-            font, UiFlags_None, build_menu_widget.btn_text_w_size.x)
+            font, UiFlags_None, text_clip_w)
 
         var cost = 0
         if (!building_menu_ctrl.is_submenu(type)) {

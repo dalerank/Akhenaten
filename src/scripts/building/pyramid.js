@@ -35,6 +35,7 @@ building_small_stepped_pyramid {
 
     flags {
       is_monument: true
+      non_deletable: true
     }
 
     enter_offset : [1, 8]
@@ -270,6 +271,7 @@ building_small_stepped_pyramid {
 
     flags {
         is_monument: true
+        non_deletable: true
     }
 
     corner_type : BUILDING_MEDIUM_STEPPED_PYRAMID_CORNER
@@ -530,6 +532,7 @@ building_small_stepped_pyramid {
 
     flags {
         is_monument: true
+        non_deletable: true
     }
 
     corner_type : BUILDING_LARGE_STEPPED_PYRAMID_CORNER
@@ -789,6 +792,7 @@ building_small_stepped_pyramid {
 
     flags {
         is_monument: true
+        non_deletable: true
     }
 
     corner_type : BUILDING_LARGE_STEPPED_PYRAMID_CORNER
@@ -1044,6 +1048,7 @@ building_small_stepped_pyramid {
 
     flags {
         is_monument: true
+        non_deletable: true
     }
 
     corner_type : BUILDING_LARGE_STEPPED_PYRAMID_CORNER
@@ -1089,6 +1094,7 @@ building_small_stepped_pyramid {
 
     flags {
       is_monument: true
+      non_deletable: true
     }
 
     enter_offset : [1, 8]
@@ -1267,6 +1273,7 @@ building_small_stepped_pyramid {
 
     flags {
         is_monument: true
+        non_deletable: true
     }
 
     corner_type : BUILDING_MEDIUM_BENT_PYRAMID_CORNER
@@ -1315,6 +1322,7 @@ building_small_stepped_pyramid {
 
     flags {
       is_monument: true
+      non_deletable: true
     }
 
     enter_offset : [1, 8]
@@ -1370,6 +1378,7 @@ building_small_stepped_pyramid {
 
     flags {
       is_monument: true
+      non_deletable: true
     }
 
     enter_offset : [1, 8]
@@ -1425,6 +1434,7 @@ building_small_stepped_pyramid {
 
     flags {
       is_monument: true
+      non_deletable: true
     }
 
     enter_offset : [2, 12]
@@ -1594,6 +1604,7 @@ building_small_stepped_pyramid {
 
     flags {
       is_monument: true
+      non_deletable: true
     }
 
     enter_offset : [2, 16]
@@ -1762,6 +1773,7 @@ building_small_stepped_pyramid {
 
     flags {
       is_monument: true
+      non_deletable: true
     }
 
     enter_offset : [2, 20]
@@ -1820,6 +1832,7 @@ building_small_stepped_pyramid {
 
     flags {
       is_monument: true
+      non_deletable: true
     }
 
     enter_offset : [2, 20]
@@ -1871,6 +1884,7 @@ building_small_stepped_pyramid {
 
     flags {
       is_monument: true
+      non_deletable: true
     }
 
     enter_offset : [2, 12]
@@ -2256,6 +2270,7 @@ building_small_stepped_pyramid {
 
     flags {
         is_monument: true
+        non_deletable: true
     }
 
     corner_type : BUILDING_LARGE_PYRAMID_CORNER
@@ -2521,6 +2536,7 @@ building_small_stepped_pyramid {
 
     flags {
       is_monument: true
+      non_deletable: true
     }
 
     corner_type : BUILDING_LARGE_PYRAMID_CORNER
@@ -2782,6 +2798,7 @@ building_small_stepped_pyramid {
 
     flags {
       is_monument: true
+      non_deletable: true
     }
 
     corner_type : BUILDING_LARGE_PYRAMID_CORNER

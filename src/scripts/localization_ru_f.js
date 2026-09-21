@@ -1013,4 +1013,5 @@ localization_ru_f = [
     { key: "#only_one_sun_temple_at_a_time", group:19, id:89 }
     { key: "#one_caesareum_only", group:19, id:243 }
     { key: "#abu_simbel_not_demolishable", text: "Абу-Симбел нельзя снести" }
+    { key: "#monument_not_demolishable", text: "Монументы нельзя снести" }
 ]

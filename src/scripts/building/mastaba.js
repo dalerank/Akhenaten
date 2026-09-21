@@ -37,6 +37,7 @@ building_small_mastaba {
 
     flags {
         is_monument: true
+        non_deletable: true
         allow_rotate: true
     }
 
@@ -116,6 +117,7 @@ building_small_mastaba {
 
     flags {
         is_monument: true
+        non_deletable: true
         allow_rotate: true
     }
 
@@ -202,6 +204,7 @@ building_small_mastaba {
 
     flags {
         is_monument: true
+        non_deletable: true
         allow_rotate: true
     }
 

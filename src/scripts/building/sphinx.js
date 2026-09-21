@@ -53,5 +53,6 @@ building_sphinx {
     cost [ 2500, 3500, 4500, 6500, 10000 ]
     flags {
         is_monument: true
+        non_deletable: true
     }
 }

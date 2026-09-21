@@ -25,5 +25,6 @@ building_caesareum {
     cost [ 5000, 6500, 8000, 11000, 16000 ]
     flags {
         is_monument: true
+        non_deletable: true
     }
 }

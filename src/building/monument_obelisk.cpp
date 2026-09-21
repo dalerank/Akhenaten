@@ -152,8 +152,20 @@ int building_obelisk::building_image_get() const {
     return params.first_img("preview");
 }
 
+static xstring granite_need_warning(e_building_type t, int need) {
+    const int lang_id = (t == BUILDING_LARGE_OBELISK) ? 84 : 83;
+    pcstr tmpl = lang_get_string(19, lang_id);
+    bstring256 msg;
+    if (tmpl && tmpl[0]) {
+        msg.printf(tmpl, need);
+    } else {
+        msg.printf("You need %d blocks of granite to build an obelisk", need);
+    }
+    return xstring(msg.c_str());
+}
+
 int building_obelisk::preview::can_place(build_planner &p, tile2i /*tile*/, tile2i /*end*/, int state) const {
-    if (state != CAN_PLACE) {
+    if (state != CAN_PLACE && state != CAN_NOT_BUT_GREEN) {
         return state;
     }
     if (has_unfinished_obelisk()) {
@@ -162,9 +174,10 @@ int building_obelisk::preview::can_place(build_planner &p, tile2i /*tile*/, tile
     }
     const int need = placement_amount_for(p.build_type, RESOURCE_GRANITE);
     if (need > 0 && yards_available(RESOURCE_GRANITE) < need) {
-        return CAN_NOT_PLACE;
+        p.set_warning(granite_need_warning(p.build_type, need));
+        return CAN_NOT_BUT_GREEN;
     }
-    return CAN_PLACE;
+    return state;
 }
 
 int building_obelisk::preview::finalize_check(build_planner &p, tile2i tile, tile2i end, int state) const {
@@ -178,31 +191,18 @@ int building_obelisk::preview::finalize_check(build_planner &p, tile2i tile, til
     }
     const int need = placement_amount_for(p.build_type, RESOURCE_GRANITE);
     if (need > 0 && yards_available(RESOURCE_GRANITE) < need) {
-        const int lang_id = (p.build_type == BUILDING_LARGE_OBELISK) ? 84 : 83;
-        pcstr tmpl = lang_get_string(19, lang_id);
-        bstring256 msg;
-        if (tmpl && tmpl[0]) {
-            msg.printf(tmpl, need);
-        } else {
-            msg.printf("You need %d blocks of granite to build an obelisk", need);
-        }
+        const xstring msg = granite_need_warning(p.build_type, need);
+        p.set_warning(msg);
         g_warning_manager.show_custom(msg.c_str());
         return CAN_NOT_PLACE;
     }
     return CAN_PLACE;
 }
 
-void building_obelisk::preview::ghost_preview(build_planner &planer, painter &ctx, tile2i /*start*/, tile2i end, vec2i pixel) const {
+void building_obelisk::preview::ghost_preview(build_planner &planer, painter &ctx, tile2i /*start*/, tile2i /*end*/, vec2i pixel) const {
     const auto &params = building_static_params::get(planer.build_type);
-    const int size = params.building_size > 0 ? params.building_size : 3;
-    blocked_tile_vec blocked;
-    const bool is_blocked = !!planer.is_blocked_for_building(end, size, blocked);
     const int preview = params.first_img("preview");
     const int img = params.first_img("sa");
-    if (is_blocked) {
-        planer.draw_partially_blocked(ctx, false, blocked);
-        return;
-    }
     planer.draw_building_ghost(ctx, img > 0 ? img : preview, pixel);
 }
 

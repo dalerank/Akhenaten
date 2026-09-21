@@ -543,6 +543,7 @@ localization_it = [
   {key:"#mansion_protected_by_police", text:"Protetto dalla polizia"}
   {key:"#mansion_not_protected_theft", text:"Non protetto — i ladri possono rubare i risparmi"}
   {key:"#abu_simbel_not_demolishable", text:"Abu Simbel non può essere demolito"}
+  {key:"#monument_not_demolishable", text:"I monumenti non possono essere demoliti"}
   {key:"#pharaoh_inspecting_city", text:"Cammino tra il mio popolo. Che vedano il loro Faraone."}
   {key:"#pharaoh_disease_risk", text:"Febbre nelle mie strade? I miei medici sistemeranno la cosa."}
   {key:"#pharaoh_no_food_in_city", text:"Granai vuoti sotto il mio regno? Non lo tollererò."}

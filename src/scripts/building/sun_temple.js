@@ -83,5 +83,6 @@ building_sun_temple {
     cost [ 4000, 5000, 6500, 9000, 13000 ]
     flags {
         is_monument: true
+        non_deletable: true
     }
 }

@@ -101,6 +101,7 @@ public:
     virtual bool need_artisan();
     virtual bool is_unfinished() const;
     virtual bool is_finished() const;
+    virtual xstring demolish_blocked_message() const override;
 
     bool has_funeral_done() const;
     void set_funeral_done(bool done = true);

@@ -48,6 +48,7 @@ building_mausoleum {
     cost [ 3500, 4500, 6000, 8500, 12000 ]
     flags {
         is_monument: true
+        non_deletable: true
         allow_rotate: true
     }
 }

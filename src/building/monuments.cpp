@@ -696,6 +696,10 @@ bool building_monument::is_finished() const {
     return runtime_data().phase == MONUMENT_FINISHED;
 }
 
+xstring building_monument::demolish_blocked_message() const {
+    return "#monument_not_demolishable";
+}
+
 bool building_monument_is_non_tomb_type(e_building_type type) {
     switch (type) {
     case BUILDING_SPHINX:

@@ -42,6 +42,7 @@ building_small_royal_tomb {
     cost [ 2500, 3500, 4500, 6000, 8500 ]
     flags {
         is_monument: true
+        non_deletable: true
         allow_rotate: true
     }
 }
@@ -83,6 +84,7 @@ building_medium_royal_tomb {
     cost [ 3500, 4500, 6000, 8500, 11000 ]
     flags {
         is_monument: true
+        non_deletable: true
         allow_rotate: true
     }
 }
@@ -124,6 +126,7 @@ building_large_royal_tomb {
     cost [ 5000, 6500, 8500, 11000, 15000 ]
     flags {
         is_monument: true
+        non_deletable: true
         allow_rotate: true
     }
 }
@@ -164,6 +167,7 @@ building_grand_royal_tomb {
     cost [ 8000, 10000, 13000, 17000, 22000 ]
     flags {
         is_monument: true
+        non_deletable: true
         allow_rotate: true
     }
 }
