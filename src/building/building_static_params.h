@@ -54,6 +54,7 @@ struct building_static_params {
     uint8_dcy laborers;
     int8_dcy fire_risk;
     int8_dcy damage_risk;
+    uint8_t max_walkers;
 
     building_planner_update_rule planner_update_rule;
     building_planner_need_rule needs;
@@ -84,7 +85,7 @@ ANK_CONFIG_STRUCT(building_overlay_anim,
 
 ANK_CONFIG_STRUCT(building_static_params,
     labor_category, fire_proof, damage_proof, input, output,
-    fire_proof, damage_proof, animations, overlay_anims, laborers, fire_risk, damage_risk, planner_update_rule, needs, flags,
+    fire_proof, damage_proof, animations, overlay_anims, laborers, fire_risk, damage_risk, max_walkers, planner_update_rule, needs, flags,
     build_menu_text, info_sound, cost, desirability, crime,
     output_resource_second_rate, building_size, info_title_id, progress_max, overlay, sound_channel,
     max_service, max_storage_amount, max_serve_clients,
@@ -92,7 +93,7 @@ ANK_CONFIG_STRUCT(building_static_params,
 
 ANK_CONFIG_PROPERTY(building_static_params,
     labor_category, fire_proof, damage_proof,
-    fire_proof, damage_proof, laborers, fire_risk, damage_risk,
+    fire_proof, damage_proof, laborers, fire_risk, damage_risk, max_walkers,
     build_menu_text, info_sound, cost,
     output_resource_second_rate, building_size, info_title_id, progress_max, overlay, sound_channel,
     max_service, max_storage_amount, max_serve_clients,

@@ -12,7 +12,7 @@ void building_guild::bind_dynamic(io_buffer *iob, size_t version) {
     iob->bind____skip(56);
 
     auto &d = runtime_data();
-    iob->bind(BIND_SIGNATURE_UINT8, &d.max_workers);
+    iob->bind(BIND_SIGNATURE_UINT8, &d.max_walkers);
     iob->bind(BIND_SIGNATURE_UINT16, &d.progress);
     iob->bind(BIND_SIGNATURE_UINT16, &d.progress_max);
 }

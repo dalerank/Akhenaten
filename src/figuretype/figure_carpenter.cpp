@@ -19,7 +19,7 @@ void figure_carpenter::figure_action() {
     building *bhome = home();
     building *b_dest = destination();
     e_terrain_usage terrain_usage = TERRAIN_USAGE_ROADS;
-    if (!bhome->is_valid() || !b_dest->is_valid()) {
+    if (!bhome || !bhome->is_valid() || !b_dest || !b_dest->is_valid()) {
         poof();
         return;
     }
@@ -36,8 +36,7 @@ void figure_carpenter::figure_action() {
         advance_action(ACTION_9_CARPENTER_GOING_TO_GARDEN);
         break;
 
-    case ACTION_0_CARPENTER_CREATED: {
-        // Prefer monument access_point (enter_offset); fall back to access_tile.
+    case ACTION_0_CARPENTER_CREATED:
         if (auto *mon = b_dest->dcast_monument()) {
             base.destination_tile = mon->access_point();
         } else {
@@ -45,7 +44,6 @@ void figure_carpenter::figure_action() {
         }
         advance_action(ACTION_1_CARPENTER_GOING);
         break;
-    }
 
     case ACTION_7_CARPENTER_DESTROY:
         poof();
@@ -98,7 +96,6 @@ void figure_carpenter::figure_action() {
 void figure_carpenter::on_destroy() {
     figure_impl::on_destroy();
 
-    // Clear monument/statue worker slot (same pattern as stonemason).
     building *b_dest = building_get(runtime_data().destination_bid);
     if (!b_dest || !b_dest->id) {
         b_dest = destination();

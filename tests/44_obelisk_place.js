@@ -129,8 +129,8 @@ function run_test() {
         __log_marker('obelisk_granite_fail:' + staffed_before + '->' + staffed_after)
     }
 
-    // Carpenter slot + one scaffold visit (consumes timber_loads[0] from a staffed yard).
-    var timber_need = 200 // matches first timber_loads entry in small_obelisk.js
+    // Carpenter slot + one scaffold visit (consumes stages.stage_1.timber from a staffed yard).
+    var timber_need = 200 // matches stage_1.timber in small_obelisk.js
     var ty = 0
     var timber_spots = [
         {x: 12, y: 40}, {x: 25, y: 25}, {x: 30, y: 10}, {x: 40, y: 40}

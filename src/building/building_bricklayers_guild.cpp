@@ -23,12 +23,8 @@ REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_bricklayers_guild);
 
 declare_console_command(add_bricks, game_cheat_add_resource<RESOURCE_BRICKS>);
 
-void building_bricklayers_guild::on_create(int orientation) {
-    runtime_data().max_workers = current_params().max_workers;
-}
-
 bool building_bricklayers_guild::can_spawn_bricklayer_man() {
-    bool has_free_man = (get_figures_number(FIGURE_BRICKLAYER) < runtime_data().max_workers);
+    bool has_free_man = (get_figures_number(FIGURE_BRICKLAYER) < current_params().max_walkers);
     if (!has_free_man) {
         return false;
     }

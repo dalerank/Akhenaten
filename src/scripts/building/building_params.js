@@ -9,6 +9,7 @@ BuildingParams.property.labor_category = { }
 BuildingParams.property.fire_proof = { }
 BuildingParams.property.damage_proof = { }
 BuildingParams.property.laborers = { }
+BuildingParams.property.max_walkers = { }
 BuildingParams.property.fire_risk = { }
 BuildingParams.property.damage_risk = { }
 BuildingParams.property.build_menu_text = { }

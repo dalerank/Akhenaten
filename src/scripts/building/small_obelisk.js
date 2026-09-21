@@ -11,9 +11,55 @@ building_small_obelisk {
     }
     building_size : 3
     art_stages : 4
-    // Timber per phase 0..; remaining art_stages are masons-only. Tune vs original .pak.
-    timber_loads [ 200, 200, 200 ]
-    scaffold_offsets [[20, -40], [44, -24], [-4, -24]]
+
+    stages {
+        stage_1 {
+            timber: 200
+            ladders: [{x: 20, y: -40}]
+            carpenter_point: {x: 20, y: -40}
+            carpenter_need: true
+            stonemasons_need: false
+        }
+        stage_2 {
+            timber: 200
+            ladders: [{x: 44, y: -24}, {x: 20, y: -40}]
+            carpenter_point: {x: 44, y: -24}
+            carpenter_need: true
+            stonemasons_need: false
+        }
+        stage_3 {
+            timber: 200
+            ladders: [{x: -4, y: -24}, {x: 44, y: -24}, {x: 20, y: -40}]
+            carpenter_point: {x: -4, y: -24}
+            carpenter_need: true
+            stonemasons_need: false
+        }
+        stage_4 {
+            ladders: [{x: -4, y: -24}, {x: 44, y: -24}, {x: 20, y: -40}]
+            stonemasons_point: {x: -4, y: -24}
+            carpenter_need: false
+            stonemasons_need: true
+        }
+        stage_5 {
+            ladders: [{x: -4, y: -24}, {x: 44, y: -24}]
+            stonemasons_point: {x: -4, y: -24}
+            carpenter_need: false
+            stonemasons_need: true
+        }
+        stage_6 {
+            ladders: [{x: -4, y: -24}]
+            stonemasons_point: {x: -4, y: -24}
+            carpenter_need: false
+            stonemasons_need: true
+        }
+        stage_7 {
+            ladders: []
+            stonemasons_point: {x: -4, y: -24}
+            carpenter_need: false
+            stonemasons_need: true
+        }
+    }
+
     placement_resources [
         { resource: RESOURCE_GRANITE, count: 100 }
     ]

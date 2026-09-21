@@ -15,17 +15,8 @@
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_carpenters_guild);
 declare_console_command(add_timber, game_cheat_add_resource<RESOURCE_TIMBER>);
 
-void building_carpenters_guild::on_create(int orientation) {
-    runtime_data().max_workers = 1;
-}
-
-bool building_carpenters_guild::can_spawn_carpenter(int max_gatherers_per_building) {
-    bool has_free_man = (get_figures_number(FIGURE_CARPENTER) < runtime_data().max_workers);
-    if (!has_free_man) {
-        return false;
-    }
-
-    return true;
+bool building_carpenters_guild::can_spawn_carpenter() {
+    return get_figures_number(FIGURE_CARPENTER) < current_params().max_walkers;
 }
 
 void building_carpenters_guild::spawn_figure() {
@@ -51,7 +42,7 @@ void building_carpenters_guild::spawn_figure() {
     }
 
     base.figure_spawn_delay = 0;
-    if (!can_spawn_carpenter(runtime_data().max_workers)) {
+    if (!can_spawn_carpenter()) {
         return;
     }
 

@@ -10,21 +10,12 @@
 
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_artisans_guild);
 
-void building_artisans_guild::on_create(int orientation) {
-    building_guild::on_create(orientation);
-    // Same as bricklayers: walker cap from JS static_params.max_workers.
-    runtime_data().max_workers = current_params().max_workers;
-    if (runtime_data().max_workers < 1) {
-        runtime_data().max_workers = 1;
-    }
-}
-
 bool building_artisans_guild::has_paint_and_clay() const {
     return stored_amount(RESOURCE_PAINT) >= 100 && stored_amount(RESOURCE_CLAY) >= 100;
 }
 
 bool building_artisans_guild::can_spawn_tomb_artisan() {
-    if (get_figures_number(FIGURE_TOMB_ARTISAN) >= runtime_data().max_workers) {
+    if (get_figures_number(FIGURE_TOMB_ARTISAN) >= current_params().max_walkers) {
         return false;
     }
 

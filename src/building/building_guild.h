@@ -12,7 +12,7 @@ public:
     struct runtime_data_t {
         uint16_t progress; // Progress of the building's construction or upgrade
         uint16_t progress_max;
-        uint8_t max_workers;
+        uint8_t max_walkers;
     } BUILDING_RUNTIME_DATA_T;
 
     virtual void on_create(int orientation) override;

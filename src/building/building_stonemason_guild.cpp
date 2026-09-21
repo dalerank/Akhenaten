@@ -17,17 +17,8 @@
 
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_stonemason_guild);
 
-void building_stonemason_guild::on_create(int orientation) {
-    runtime_data().max_workers = 1;
-}
-
-bool building_stonemason_guild::can_spawn_stonemason_man(int max_gatherers_per_building) {
-   bool has_free_man = (get_figures_number(FIGURE_STONEMASON) < runtime_data().max_workers);
-   if (!has_free_man) {
-       return false;
-   }
-
-   return true;
+bool building_stonemason_guild::can_spawn_stonemason_man() {
+    return get_figures_number(FIGURE_STONEMASON) < current_params().max_walkers;
 }
 
 void building_stonemason_guild::spawn_figure() {
@@ -53,7 +44,7 @@ void building_stonemason_guild::spawn_figure() {
     }
 
     base.figure_spawn_delay = 0;
-    if (!can_spawn_stonemason_man(runtime_data().max_workers)) {
+    if (!can_spawn_stonemason_man()) {
         return;
     }
 
