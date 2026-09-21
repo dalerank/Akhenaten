@@ -458,6 +458,20 @@ localization_de = [
   {key: "#building_no_workers_nearby", text: "Keine Arbeiter leben in der Nähe"}
   {key: "#building_labor_could_shift", text: "Der Arbeiteraufseher könnte etwas Arbeitskraft umverteilen"}
   {key: "#building_poor_worker_access", text: "WARNUNG: Schlechter Zugang zu Arbeitern"}
+  {key: "#hunting_lodge", text: "Jagdhütte"}
+  {key: "#hunting_lodge_info", text: "Von hier aus aufspüren und jagen Jäger lokale Wildtiere. Die Jagdhütte verteilt dann Wildfleisch an örtliche Lagerhöfe oder Getreidespeicher."}
+  {key: "#hunting_lodge_production_is", text: "Produktion ist"}
+  {key: "#hunting_lodge_complete", text: "abgeschlossen."}
+  {key: "#hunting_lodge_mothballed", text: "Der Handelsaufseher verfügte, dass die Jagd eingestellt werden sollte."}
+  {key: "#hunting_lodge_no_workers", text: "Diese Hütte hat keine Arbeiter. Die Jagd ist abgesagt."}
+  {key: "#hunting_lodge_workers_full", text: "Diese Hütte hat alle Arbeiter, die sie braucht. Die Jäger verfolgen jede Herde, die sie finden können."}
+  {key: "#hunting_lodge_workers_below_max", text: "Diese Hütte arbeitet unter maximaler Kapazität. Die Nahrungssammlung wird dadurch langsamer sein."}
+  {key: "#hunting_lodge_workers_understaffed", text: "Diese Hütte ist unterbesetzt, und es dauert länger, Fleisch zu sammeln, als es sollte."}
+  {key: "#hunting_lodge_workers_few", text: "Sehr wenige Menschen arbeiten hier. Die Fleischsammlung ist wahrlich langsam."}
+  {key: "#hunting_lodge_workers_hardly", text: "Mit kaum Jägern, die hier arbeiten, tollen Beutetiere unbehelligt herum. Es könnte eine sehr hungrige Trockenzeit werden..."}
+  {key: "#hunting_lodge_hunters_seeking", text: "Die Jäger dieser Hütte sind unterwegs auf der Suche nach Beute."}
+  {key: "#hunting_lodge_too_far", text: "Es dauert zu lange, bis Fleisch zur Hütte zurückkommt. Versucht, sie näher an Wildtiere zu platzieren."}
+  {key: "#hunting_lodge_stored_meat", text: "Gelagertes Fleisch,"}
   {key: "#gardens_describe", text: "Dieses angenehme Grundstück verschafft Bürgern Erleichterung von Lärm, Hitze und Schmutz der Stadt mit einer kühlen Oase grünen Raums. Jeder möchte einen Garten nebenan."}
   {key: "#popup_dialog_proceed", text: "Fortfahren?"}
 

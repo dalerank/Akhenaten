@@ -4381,20 +4381,6 @@ localization_base_hu = [
     { group:152, id:28, text: "XXVIII." }
     { group:152, id:29, text: "XXIX." }
     { group:152, id:30, text: "XXX." }
-    { group:154, id:0, text: "Vadászház" }
-    { group:154, id:1, text: "Az itt élő vadászok követik és elejtik a környék vadállatait. A Vadászház ezután a vadhúst a helyi raktárakba vagy magtárakba szállítja." }
-    { group:154, id:2, text: "A termelés" }
-    { group:154, id:3, text: "befejeződött." }
-    { group:154, id:4, text: "A Kereskedelmi felügyelő elrendelte a vadászat beszüntetését." }
-    { group:154, id:5, text: "Ennek a vadászháznak nincsenek dolgozói. A vadászatot törölték." }
-    { group:154, id:6, text: "Ennek a vadászháznak minden szükséges dolgozója megvan. A vadászok minden fellelhető csordát nyomon követnek." }
-    { group:154, id:7, text: "Ez a vadászház nem teljes kapacitással működik. Emiatt az élelem begyűjtése lassabb lesz." }
-    { group:154, id:8, text: "Ennek a vadászháznak kevés a dolgozója, ezért a hús begyűjtése tovább tart a kelleténél." }
-    { group:154, id:9, text: "Nagyon kevesen dolgoznak itt. A hús begyűjtése valóban lassú." }
-    { group:154, id:10, text: "Alig dolgozik itt néhány vadász, ezért a zsákmányállatok zavartalanul járják a vidéket. Könnyen lehet, hogy nagyon éhes száraz évszak elé nézünk..." }
-    { group:154, id:11, text: "Ennek a vadászháznak a vadászai zsákmány után kutatnak." }
-    { group:154, id:12, text: "Túl sokáig tart, amíg a hús visszajut a vadászházba. Próbáld közelebb építeni a vadon élő állatokhoz." }
-    { group:154, id:13, text: "Tárolt hús," }
 
     { group:155, id:0, text: "Úttorlasz" }
     { group:155, id:1, text: "Helyezz el úttorlaszokat a gyalogosok útvonalainak korlátozására. Azok, akiknek meghatározott céljuk van (például szállítók vagy a bazár vásárlói), szabadon áthaladhatnak." }

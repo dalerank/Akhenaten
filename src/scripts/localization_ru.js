@@ -380,6 +380,20 @@ localization_ru = [
     { key:"#building_no_workers_nearby", text:"Поблизости не живут рабочие" }
     { key:"#building_labor_could_shift", text:"Надзиратель работников мог бы сместить немного рабочей силы" }
     { key:"#building_poor_worker_access", text:"ПРЕДУПРЕЖДЕНИЕ: Плохой доступ к рабочим" }
+    { key:"#hunting_lodge", text:"Охотничий домик" }
+    { key:"#hunting_lodge_info", text:"Охотники, базирующиеся здесь, выслеживают и охотятся на местную дикую природу. Охотничий домик затем распределяет дичь по местным складам или зернохранилищам." }
+    { key:"#hunting_lodge_production_is", text:"Производство" }
+    { key:"#hunting_lodge_complete", text:"завершено." }
+    { key:"#hunting_lodge_mothballed", text:"Надзиратель торговли постановил, что охота должна прекратиться." }
+    { key:"#hunting_lodge_no_workers", text:"В этом домике нет рабочих. Охота отменена." }
+    { key:"#hunting_lodge_workers_full", text:"В этом домике есть все нужные рабочие. Охотники преследуют каждое стадо, которое могут найти." }
+    { key:"#hunting_lodge_workers_below_max", text:"Этот домик работает ниже максимальной мощности. Сбор еды будет медленнее в результате." }
+    { key:"#hunting_lodge_workers_understaffed", text:"Этот домик недоукомплектован, и ему требуется больше времени для сбора мяса, чем должно." }
+    { key:"#hunting_lodge_workers_few", text:"Здесь работает очень мало людей. Сбор мяса действительно медленный." }
+    { key:"#hunting_lodge_workers_hardly", text:"С едва ли какими-то охотниками, работающими здесь, животные-жертвы резвятся беспрепятственно. Это может быть очень голодный сухой сезон..." }
+    { key:"#hunting_lodge_hunters_seeking", text:"Охотники этого домика вышли искать добычу." }
+    { key:"#hunting_lodge_too_far", text:"Мясу требуется слишком много времени, чтобы вернуться к домику. Попробуйте поместить его ближе к дикой природе." }
+    { key:"#hunting_lodge_stored_meat", text:"Сохранённое мясо," }
     { key:"#gardens_describe", text:"Этот приятный участок даёт гражданам облегчение от шума, жары и грязи города с прохладным оазисом зелёного пространства. Каждый хочет сад по соседству." }
     { key:"#popup_dialog_proceed", text:"Продолжить?" }
 	{ key:"#TR_CONFIG_HEADER_LANGUAGES", lang:"en", text: "Язык игры"}

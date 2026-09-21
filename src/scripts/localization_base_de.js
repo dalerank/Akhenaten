@@ -4227,21 +4227,7 @@ localization_base_de = [
     { group:152, id:28, text: "XVIII" }
     { group:152, id:29, text: "XXIX" }
     { group:152, id:30, text: "XXX" }
-    
-    { group:154, id:0, text: "Jagdhütte" }
-    { group:154, id:1, text: "Von hier aus aufspüren und jagen Jäger lokale Wildtiere. Die Jagdhütte verteilt dann Wildfleisch an örtliche Lagerhöfe oder Getreidespeicher." }
-    { group:154, id:2, text: "Produktion ist" }
-    { group:154, id:3, text: "abgeschlossen." }
-    { group:154, id:4, text: "Der Handelsaufseher verfügte, dass die Jagd eingestellt werden sollte." }
-    { group:154, id:5, text: "Diese Hütte hat keine Arbeiter. Die Jagd ist abgesagt." }
-    { group:154, id:6, text: "Diese Hütte hat alle Arbeiter, die sie braucht. Die Jäger verfolgen jede Herde, die sie finden können." }
-    { group:154, id:7, text: "Diese Hütte arbeitet unter maximaler Kapazität. Die Nahrungssammlung wird dadurch langsamer sein." }
-    { group:154, id:8, text: "Diese Hütte ist unterbesetzt, und es dauert länger, Fleisch zu sammeln, als es sollte." }
-    { group:154, id:9, text: "Sehr wenige Menschen arbeiten hier. Die Fleischsammlung ist wahrlich langsam." }
-    { group:154, id:10, text: "Mit kaum Jägern, die hier arbeiten, tollen Beutetiere unbehelligt herum. Es könnte eine sehr hungrige Trockenzeit werden..." }
-    { group:154, id:11, text: "Die Jäger dieser Hütte sind unterwegs auf der Suche nach Beute." }
-    { group:154, id:12, text: "Es dauert zu lange, bis Fleisch zur Hütte zurückkommt. Versucht, sie näher an Wildtiere zu platzieren." }
-    { group:154, id:13, text: "Gelagertes Fleisch," }
+
     { group:155, id:0, text: "Straßensperre" }
     { group:155, id:1, text: "Platziert Straßensperren, um die Patrouillenrouten von Wanderern einzuschränken. Menschen mit bestimmten Zielen (wie Lieferanten oder Basarkäufer) können frei passieren." }
     { group:156, id:0, text: "Freies Ereignis" }

@@ -548,6 +548,20 @@ localization_hu = [
   {key: "#building_no_workers_nearby", text:"Nem élnek munkások a közelben"}
   {key: "#building_labor_could_shift", text:"A munkások felügyelője átcsoportosíthatna némi munkaerőt"}
   {key: "#building_poor_worker_access", text:"FIGYELEM: Rossz hozzáférés a munkásokhoz"}
+  {key: "#hunting_lodge", text:"Vadászház"}
+  {key: "#hunting_lodge_info", text:"Az itt élő vadászok követik és elejtik a környék vadállatait. A Vadászház ezután a vadhúst a helyi raktárakba vagy magtárakba szállítja."}
+  {key: "#hunting_lodge_production_is", text:"A termelés"}
+  {key: "#hunting_lodge_complete", text:"befejeződött."}
+  {key: "#hunting_lodge_mothballed", text:"A Kereskedelmi felügyelő elrendelte a vadászat beszüntetését."}
+  {key: "#hunting_lodge_no_workers", text:"Ennek a vadászháznak nincsenek dolgozói. A vadászatot törölték."}
+  {key: "#hunting_lodge_workers_full", text:"Ennek a vadászháznak minden szükséges dolgozója megvan. A vadászok minden fellelhető csordát nyomon követnek."}
+  {key: "#hunting_lodge_workers_below_max", text:"Ez a vadászház nem teljes kapacitással működik. Emiatt az élelem begyűjtése lassabb lesz."}
+  {key: "#hunting_lodge_workers_understaffed", text:"Ennek a vadászháznak kevés a dolgozója, ezért a hús begyűjtése tovább tart a kelleténél."}
+  {key: "#hunting_lodge_workers_few", text:"Nagyon kevesen dolgoznak itt. A hús begyűjtése valóban lassú."}
+  {key: "#hunting_lodge_workers_hardly", text:"Alig dolgozik itt néhány vadász, ezért a zsákmányállatok zavartalanul járják a vidéket. Könnyen lehet, hogy nagyon éhes száraz évszak elé nézünk..."}
+  {key: "#hunting_lodge_hunters_seeking", text:"Ennek a vadászháznak a vadászai zsákmány után kutatnak."}
+  {key: "#hunting_lodge_too_far", text:"Túl sokáig tart, amíg a hús visszajut a vadászházba. Próbáld közelebb építeni a vadon élő állatokhoz."}
+  {key: "#hunting_lodge_stored_meat", text:"Tárolt hús,"}
   {key: "#gardens_describe", text:"Ez a kellemes terület enyhülést nyújt a polgároknak a város zajától, hőségétől és szennyeződésétől, hűs zöld oázist biztosítva. Mindenki szívesen látna egy kertet a szomszédságában."}
   {key: "#popup_dialog_proceed", text:"Folytatod?"}
 

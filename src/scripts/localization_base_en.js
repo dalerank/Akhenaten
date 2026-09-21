@@ -4223,20 +4223,6 @@ localization_base_en = [
     { group:152, id:28, text: "XVIII" }
     { group:152, id:29, text: "XXIX" }
     { group:152, id:30, text: "XXX" }
-    { group:154, id:0, text: "Hunting Lodge" }
-    { group:154, id:1, text: "Hunters based here track and hunt local wildlife. The Hunting Lodge then distributes game meat to local Storage Yards or Granaries." }
-    { group:154, id:2, text: "Production is" }
-    { group:154, id:3, text: "complete." }
-    { group:154, id:4, text: "The Overseer of Commerce decreed that hunting should cease." }
-    { group:154, id:5, text: "This lodge has no workers. The hunt is cancelled." }
-    { group:154, id:6, text: "This lodge has all the workers it needs. The hunters are stalking every herd they can find." }
-    { group:154, id:7, text: "This lodge is working below maximum capacity. Food collection will be slower as a result." }
-    { group:154, id:8, text: "This lodge is understaffed, and it takes longer to collect meat than it should." }
-    { group:154, id:9, text: "Very few people work here. Meat collection is slow, indeed." }
-    { group:154, id:10, text: "With hardly any hunters working here, prey animals cavort unmolested. It could be a very hungry dry season..." }
-    { group:154, id:11, text: "This lodge's hunters are out seeking prey." }
-    { group:154, id:12, text: "It takes too long for meat to get back to the lodge. Try putting it closer to wildlife." }
-    { group:154, id:13, text: "Stored meat," }
     { group:155, id:0, text: "Roadblock" }
     { group:155, id:1, text: "Place roadblocks to restrict walkers' patrol routes. People with specific destinations (like delivery men or Bazaar buyers) can pass freely." }
     { group:156, id:0, text: "Free Event" }

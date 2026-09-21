@@ -522,6 +522,20 @@ localization_it = [
   {key:"#building_no_workers_nearby", text:"Nessun lavoratore vive nelle vicinanze"}
   {key:"#building_labor_could_shift", text:"Il Supervisore dei lavoratori potrebbe spostare della manodopera"}
   {key:"#building_poor_worker_access", text:"ATTENZIONE: scarso accesso ai lavoratori"}
+  {key:"#hunting_lodge", text:"Casotto da caccia"}
+  {key:"#hunting_lodge_info", text:"Qui i cacciatori recuperano cibo cacciando gli animali selvatici. Il casotto può distribuire cacciagione ai depositi merci o ai granai."}
+  {key:"#hunting_lodge_production_is", text:"Produzione completa: "}
+  {key:"#hunting_lodge_complete", text:" "}
+  {key:"#hunting_lodge_mothballed", text:"Il supervisore commerciale ha ordinato di sospendere la caccia."}
+  {key:"#hunting_lodge_no_workers", text:"Questo casotto da caccia non ha cacciatori. Caccia annullata."}
+  {key:"#hunting_lodge_workers_full", text:"Questo casotto da caccia ha tutti i cacciatori che occorrono. I cacciatori stanno stanando tutti gli animali che trovano."}
+  {key:"#hunting_lodge_workers_below_max", text:"Questo casotto da caccia sta lavorando a ritmo ridotto. La raccolta di cibo va a rilento."}
+  {key:"#hunting_lodge_workers_understaffed", text:"Questo casotto da caccia è a corto di addetti e raccoglie cibo con più lentezza di quanto dovrebbe."}
+  {key:"#hunting_lodge_workers_few", text:"Qui lavorano pochissime persone. La raccolta di carne è molto lenta."}
+  {key:"#hunting_lodge_workers_hardly", text:"Con così pochi cacciatori in questo casotto da caccia, si trovano ben pochi animali per non parlare di quelli abbattuti. Sarà una stagione difficile."}
+  {key:"#hunting_lodge_hunters_seeking", text:"I cacciatori di questo casotto da caccia sono alla ricerca di prede."}
+  {key:"#hunting_lodge_too_far", text:"La carne impiega troppo tempo per tornare al casotto. Prova a posizionare il casotto più vicino agli animali selvatici."}
+  {key:"#hunting_lodge_stored_meat", text:"Carne conservata,"}
   {key:"#gardens_describe", text:"Questo piacevole spazio offre ai cittadini sollievo dal rumore, dal caldo e dallo sporco della città con una fresca oasi di verde.  Tutti vogliono un giardino accanto a casa."}
   {key:"#popup_dialog_proceed", text:"Continua?"}
   {key:"#autosave_slots", text:"Slot di salvataggio automatico"}

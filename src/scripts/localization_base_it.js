@@ -4221,20 +4221,6 @@ localization_base_it = [
     { group:152, id:28, text: "XVIII" }
     { group:152, id:29, text: "XXIX" }
     { group:152, id:30, text: "XXX" }
-    { group:154, id:0, text: "Casotto da caccia" }
-    { group:154, id:1, text: "Qui i cacciatori recuperano cibo cacciando gli animali selvatici. Il casotto può distribuire cacciagione ai depositi merci o ai granai." }
-    { group:154, id:2, text: "Produzione completa: " }
-    { group:154, id:3, text: " " }
-    { group:154, id:4, text: "Il supervisore commerciale ha ordinato di sospendere la caccia." }
-    { group:154, id:5, text: "Questo casotto da caccia non ha cacciatori. Caccia annullata." }
-    { group:154, id:6, text: "Questo casotto da caccia ha tutti i cacciatori che occorrono. I cacciatori stanno stanando tutti gli animali che trovano." }
-    { group:154, id:7, text: "Questo casotto da caccia sta lavorando a ritmo ridotto. La raccolta di cibo va a rilento." }
-    { group:154, id:8, text: "Questo casotto da caccia è a corto di addetti e raccoglie cibo con più lentezza di quanto dovrebbe." }
-    { group:154, id:9, text: "Qui lavorano pochissime persone. La raccolta di carne è molto lenta." }
-    { group:154, id:10, text: "Con così pochi cacciatori in questo casotto da caccia, si trovano ben pochi animali per non parlare di quelli abbattuti. Sarà una stagione difficile." }
-    { group:154, id:11, text: "I cacciatori di questo casotto da caccia sono alla ricerca di prede." }
-    { group:154, id:12, text: "La carne impiega troppo tempo per tornare al casotto. Prova a posizionare il casotto più vicino agli animali selvatici." }
-    { group:154, id:13, text: "Carne conservata," }
     { group:155, id:0, text: "Blocco stradale" }
     { group:155, id:1, text: "Disponi dei blocchi stradali per ridurre i percorsi delle sentinelle. La gente con destinazioni specifiche (come i carrettieri o i clienti dei bazar) possono passare liberamente." }
     { group:156, id:0, text: "Evento libero" }

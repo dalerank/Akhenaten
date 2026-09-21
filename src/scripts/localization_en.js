@@ -551,6 +551,20 @@ localization_en = [
   {key: "#building_no_workers_nearby", text: "No workers live nearby"}
   {key: "#building_labor_could_shift", text: "The Overseer of Workers could shift some labor"}
   {key: "#building_poor_worker_access", text: "WARNING: Poor access to workers"}
+  {key: "#hunting_lodge", text: "Hunting Lodge"}
+  {key: "#hunting_lodge_info", text: "Hunters based here track and hunt local wildlife. The Hunting Lodge then distributes game meat to local Storage Yards or Granaries."}
+  {key: "#hunting_lodge_production_is", text: "Production is"}
+  {key: "#hunting_lodge_complete", text: "complete."}
+  {key: "#hunting_lodge_mothballed", text: "The Overseer of Commerce decreed that hunting should cease."}
+  {key: "#hunting_lodge_no_workers", text: "This lodge has no workers. The hunt is cancelled."}
+  {key: "#hunting_lodge_workers_full", text: "This lodge has all the workers it needs. The hunters are stalking every herd they can find."}
+  {key: "#hunting_lodge_workers_below_max", text: "This lodge is working below maximum capacity. Food collection will be slower as a result."}
+  {key: "#hunting_lodge_workers_understaffed", text: "This lodge is understaffed, and it takes longer to collect meat than it should."}
+  {key: "#hunting_lodge_workers_few", text: "Very few people work here. Meat collection is slow, indeed."}
+  {key: "#hunting_lodge_workers_hardly", text: "With hardly any hunters working here, prey animals cavort unmolested. It could be a very hungry dry season..."}
+  {key: "#hunting_lodge_hunters_seeking", text: "This lodge's hunters are out seeking prey."}
+  {key: "#hunting_lodge_too_far", text: "It takes too long for meat to get back to the lodge. Try putting it closer to wildlife."}
+  {key: "#hunting_lodge_stored_meat", text: "Stored meat,"}
   {key: "#gardens_describe", text: "This pleasant lot gives citizens relief from the noise, heat and dirt of the city with a cool oasis of green space.  Everyone wants a garden next door."}
   {key: "#popup_dialog_proceed", text: "Proceed?"}
 

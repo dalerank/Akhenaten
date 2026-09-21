@@ -356,7 +356,7 @@ mission0 {
                 </tr>
               </tbody>
             </table>
-            <p style="margin-top:0.6rem">The building's <code>meta</code> field in the script (<code>help_id:90, text_id:154</code>) maps to these message IDs. <code>text_id</code> is the in-game building name string; <code>help_id</code> points to the extended help panel.</p>
+            <p style="margin-top:0.6rem">The building's <code>meta.help_link</code> is <code>message_building_hunting_lodge</code> (extended help). The in-game name and info-window copy live as named keys in <code>src/scripts/localization_en.js</code> (<code>#hunting_lodge</code>, <code>#hunting_lodge_info</code>, staffing lines, stored meat). The title is wired via <code>info_title_id : "#hunting_lodge"</code> in <code>src/scripts/building/hunting_lodge.js</code>.</p>
           </div>
         </details>
 

@@ -13,22 +13,28 @@ info_window_hunting_lodge {
 [es=(info_window_hunting_lodge, init)]
 function info_window_hunting_lodge_on_init(window) {
     var b = city.get_building(window.bid)
-    var reason = { group: b.meta_text_id, id: 0 }
+    var reason = "#hunting_lodge_info"
     if (b.has_road_access == false) {
-        reason = { key: "#building_no_road_access" }
+        reason = "#building_no_road_access"
     } else if (b.num_workers <= 0) {
-        reason.id = 5
+        reason = "#hunting_lodge_no_workers"
     } else if (__city_resource_is_mothballed(RESOURCE_GAMEMEAT)) {
-        reason.id = 4
+        reason = "#hunting_lodge_mothballed"
     } else if (b.stored_resource(RESOURCE_GAMEMEAT) <= 0) {
-        reason.id = 11
+        reason = "#hunting_lodge_hunters_seeking"
     }
 
     window.warning_text.text = __loc(reason)
 
-    var workers_desc = Math.approximate_value(b.worker_percentage / 100.0, [10, 9, 8, 7, 6])
-    window.workers_desc.text = __loc(b.meta_text_id, workers_desc)
+    var workers_desc = Math.approximate_value(b.worker_percentage / 100.0, [
+        "#hunting_lodge_workers_hardly",
+        "#hunting_lodge_workers_few",
+        "#hunting_lodge_workers_understaffed",
+        "#hunting_lodge_workers_below_max",
+        "#hunting_lodge_workers_full"
+    ])
+    window.workers_desc.text = __loc(workers_desc)
 
     var meat_stored = b.stored_resource(RESOURCE_GAMEMEAT)
-    window.resource_amount.text = __loc(b.meta_text_id, 13) + " " + meat_stored
+    window.resource_amount.text = __loc("#hunting_lodge_stored_meat") + " " + meat_stored
 }
