@@ -6,11 +6,21 @@
 
 namespace logs {
 
+constexpr pcstr default_filename = "akhenaten-log.txt";
+
 using sink_write_fn = xfunction<void(int priority, pcstr prefix, pcstr message)>;
 using sink_flush_fn = xfunction<void()>;
 using sink_handle = uint32_t;
 
 constexpr sink_handle invalid_sink = 0;
+
+struct file_backend {
+    xfunction<bool(pcstr folder, pcstr filename, xstring &out_path)> open;
+    xfunction<void()> close;
+    xfunction<void(pcstr prefix, pcstr message)> write;
+    xfunction<void()> flush;
+    xfunction<bool()> has_pending;
+};
 
 void initialize();
 void switch_output(pcstr folder);
@@ -18,6 +28,12 @@ void switch_output(pcstr folder);
 pcstr output_path();
 void flush();
 void tick();
+
+void set_file_backend(file_backend backend);
+
+using debugger_present_fn = xfunction<bool()>;
+void set_debugger_present(debugger_present_fn fn);
+bool debugger_present();
 
 sink_handle add_sink(sink_write_fn write, sink_flush_fn flush = {});
 void remove_sink(sink_handle handle);
