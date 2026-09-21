@@ -18,6 +18,7 @@
 #include "city/city_buildings.h"
 #include "grid/building.h"
 #include "grid/road_access.h"
+#include "grid/routing/routing.h"
 #include "grid/water.h"
 #include "core/bstring.h"
 #include "core/log.h"
@@ -321,6 +322,37 @@ void __building_check_labor_problem(js_State *J) {
     js_helpers::js_push_void(J);
 }
 
+void __building_figure_spawn_timer(js_State *J) {
+    const int bid = building_this_id(J);
+    building *b = building_get(bid);
+    if (!b || !b->is_valid()) {
+        js_helpers::js_push_value(J, -1);
+        return;
+    }
+    js_helpers::js_push_value(J, b->dcast()->figure_spawn_timer());
+}
+
+void __building_is_enemies_nearby(js_State *J) {
+    const int bid = building_this_id(J);
+    building *b = building_get(bid);
+    if (!b || !b->is_valid()) {
+        js_helpers::js_push_value(J, false);
+        return;
+    }
+    js_helpers::js_push_value(J, b->dcast()->is_enemies_nearby());
+}
+
+void __building_citizen_found_terrain(js_State *J) {
+    const int bid = building_this_id(J);
+    const int terrain = js_helpers::js_to_value<int>(J, 1);
+    building *b = building_get(bid);
+    if (!b || !b->is_valid() || !b->road_access.valid()) {
+        js_helpers::js_push_value(J, false);
+        return;
+    }
+    js_helpers::js_push_value(J, map_routing_citizen_found_terrain(b->road_access, nullptr, terrain));
+}
+
 void __building_common_spawn_labor_seeker(js_State *J) {
     const int bid = building_this_id(J);
     const int min_houses = js_helpers::js_to_value<int>(J, 1);
@@ -597,6 +629,9 @@ void js_register_building(js_State *J) {
     jsB_propf(J, js_intern("Building.prototype.common_spawn_roamer"), __building_common_spawn_roamer, 3);
     jsB_propf(J, js_intern("Building.prototype.common_spawn_figure_trigger"), __building_common_spawn_figure_trigger, 2);
     jsB_propf(J, js_intern("Building.prototype.check_labor_problem"), __building_check_labor_problem, 0);
+    jsB_propf(J, js_intern("Building.prototype.figure_spawn_timer"), __building_figure_spawn_timer, 0);
+    jsB_propf(J, js_intern("Building.prototype.is_enemies_nearby"), __building_is_enemies_nearby, 0);
+    jsB_propf(J, js_intern("Building.prototype.citizen_found_terrain"), __building_citizen_found_terrain, 1);
     jsB_propf(J, js_intern("Building.prototype.common_spawn_labor_seeker"), __building_common_spawn_labor_seeker, 1);
     jsB_propf(J, js_intern("Building.prototype.create_figure_generic"), __building_create_figure_generic, 3);
     jsB_propf(J, js_intern("Building.prototype.common_spawn_goods_output_cartpusher"), __building_common_spawn_goods_output_cartpusher, 0);

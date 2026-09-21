@@ -30,7 +30,6 @@ class building;
     X(small_mastaba)           \
     X(medium_mastaba)          \
     X(large_mastaba)           \
-    X(wood_cutter)             \
     X(recruiter)               \
     X(pavilion)                \
     X(statue)                  \

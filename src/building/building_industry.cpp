@@ -88,6 +88,10 @@ void building_industry::production_finished() {
 }
 
 void building_industry::update_production() {
+    if (base.is_harverster()) {
+        return;
+    }
+
     auto &d = runtime_data();
     // d.has_raw_materials = false;
 
@@ -198,6 +202,10 @@ void building_industry::update_count() const {
 
 void building_industry::update_day() {
     building_impl::update_day();
+    if (base.is_harverster()) {
+        return;
+    }
+
     const auto &d = runtime_data();
 
     verify_no_crash(d.progress_max > 100);
