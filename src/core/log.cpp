@@ -4,6 +4,7 @@
 #include "core/app.h"
 #include "widget/debug_console.h"
 
+#include <SDL.h>
 #include <SDL_log.h>
 
 #include <algorithm>
@@ -35,86 +36,7 @@
 
 namespace logs {
 
-pcstr logger_filename_ = "akhenaten-log.txt";
-static std::fstream logger_file_stream_;
-static xstring logger_active_path_ = logger_filename_;
-#if defined(GAME_PLATFORM_ANDROID)
-static FILE *logger_file_ = nullptr;
-#endif
-
-static constexpr size_t k_recent_cap = 64;
-static constexpr size_t k_recent_line_max = 512;
-static constexpr size_t k_console_buf_flush = 8 * 1024;
-static constexpr size_t k_stdio_buf_size = 64 * 1024;
-static std::array<std::string, k_recent_cap> recent_errors_;
-static size_t recent_errors_count_ = 0;
-static size_t recent_errors_next_ = 0;
-static std::string console_out_buf_;
-#if defined(GAME_PLATFORM_WIN)
-static std::string debug_string_buf_;
-#endif
-
-static void flush_console_out_() {
-    if (console_out_buf_.empty()) {
-        return;
-    }
-    std::cout.write(console_out_buf_.data(), (std::streamsize)console_out_buf_.size());
-    std::cout.flush();
-    console_out_buf_.clear();
-}
-
-#if defined(GAME_PLATFORM_WIN)
-static void flush_debug_string_() {
-    if (debug_string_buf_.empty()) {
-        return;
-    }
-    OutputDebugStringA(debug_string_buf_.c_str());
-    debug_string_buf_.clear();
-}
-#endif
-
-static void flush_output_buffers_() {
-    flush_console_out_();
-#if defined(GAME_PLATFORM_WIN)
-    flush_debug_string_();
-#endif
-}
-
-static void push_recent_error(pcstr prefix, pcstr message) {
-    std::string line;
-    line.reserve(k_recent_line_max);
-    if (prefix && *prefix) {
-        line += prefix;
-    }
-    if (message) {
-        line += message;
-    }
-    if (line.size() > k_recent_line_max) {
-        line.resize(k_recent_line_max);
-    }
-    recent_errors_[recent_errors_next_] = std::move(line);
-    recent_errors_next_ = (recent_errors_next_ + 1) % k_recent_cap;
-    if (recent_errors_count_ < k_recent_cap) {
-        ++recent_errors_count_;
-    }
-}
-
-xstring recent_errors(int max_lines) {
-    if (max_lines <= 0 || recent_errors_count_ == 0) {
-        return xstring();
-    }
-    const size_t n = (std::min)((size_t)max_lines, recent_errors_count_);
-    size_t start = (recent_errors_next_ + k_recent_cap - n) % k_recent_cap;
-    std::string out;
-    out.reserve(n * 96);
-    for (size_t i = 0; i < n; ++i) {
-        if (i) {
-            out += '\n';
-        }
-        out += recent_errors_[(start + i) % k_recent_cap];
-    }
-    return xstring(out.c_str());
-}
+namespace detail {
 
 const flat_map<xstring, SDL_LogPriority, 8> PRIORITY_DICT = {
     {"verbose", SDL_LOG_PRIORITY_VERBOSE},
@@ -136,12 +58,12 @@ const std::array<pcstr, 8> PRIORITY_PREFIX = {
     /* SDL_NUM_LOG_PRIORITIES, 7 */ "unknown: ",
 };
 
-pcstr get_prefix_of(SDL_LogPriority priority) {
-    int ridx = std::clamp<int>(priority, 0, SDL_NUM_LOG_PRIORITIES);
+pcstr prefix_of(SDL_LogPriority priority) {
+    priority = (SDL_LogPriority)std::clamp<int>(priority, 0, SDL_NUM_LOG_PRIORITIES);
     return PRIORITY_PREFIX[priority];
 }
 
-SDL_LogPriority get_log_priority() {
+SDL_LogPriority env_log_priority() {
     pcstr env_str = std::getenv("SDL_LOG_PRIORITY");
     xstring priority_str = xstring(env_str ? env_str : "").tolower();
     if (priority_str.empty()) {
@@ -155,12 +77,10 @@ SDL_LogPriority get_log_priority() {
 
     std::cerr << "Unknown SDL_LOG_PRIORITY value, VERBOSE will be used" << std::endl;
     return SDL_LOG_PRIORITY_VERBOSE;
- 
 }
 
 void sig_handler(int signal_num) {
 #if defined(GAME_PLATFORM_WIN)
-    // SIGABRT обрабатывается отдельным обработчиком под отладчиком
     if (signal_num == SIGABRT && IsDebuggerPresent()) {
         return;
     }
@@ -179,87 +99,310 @@ void log_v(SDL_LogPriority priority, pcstr format, va_list args) {
     SDL_LogMessageV(SDL_LOG_CATEGORY_APPLICATION, priority, format, args);
 }
 
-/// Logger used by SDL to store messages to the file.
+} // namespace detail
+
 class Logger {
 public:
-    static void write(void* userdata, int category, SDL_LogPriority priority, pcstr message);
-
-private:
-    Logger();
-    ~Logger();
-
-    void write(pcstr prefix, pcstr message);
-    static void write_to_output_(pcstr prefix, pcstr message);
-};
-
-void initialize() {
-    SDL_LogSetOutputFunction(Logger::write, nullptr);
-    SDL_LogSetAllPriority(get_log_priority());
-
-    setvbuf(stdout, nullptr, _IOFBF, k_stdio_buf_size);
-    setvbuf(stderr, nullptr, _IOFBF, k_stdio_buf_size);
-    console_out_buf_.reserve(k_console_buf_flush);
-#if defined(GAME_PLATFORM_WIN)
-    debug_string_buf_.reserve(k_console_buf_flush);
-    SetConsoleOutputCP(CP_UTF8);
-    if (IsDebuggerPresent()) {
-        return;
+    static Logger &instance() {
+        static Logger logger;
+        return logger;
     }
+
+    static void sdl_write(void * /*userdata*/, int /*category*/, SDL_LogPriority priority, pcstr message) {
+        instance().handle_message(priority, message);
+    }
+
+    void initialize() {
+        SDL_LogSetOutputFunction(sdl_write, nullptr);
+        SDL_LogSetAllPriority(detail::env_log_priority());
+
+        setvbuf(stdout, nullptr, _IOFBF, k_stdio_buf_size);
+        setvbuf(stderr, nullptr, _IOFBF, k_stdio_buf_size);
+        console_out_buf_.reserve(k_console_buf_flush);
+        last_flush_ms_ = SDL_GetTicks();
+#if defined(GAME_PLATFORM_WIN)
+        debug_string_buf_.reserve(k_console_buf_flush);
+        SetConsoleOutputCP(CP_UTF8);
+        if (IsDebuggerPresent()) {
+            return;
+        }
 #endif
 
 #if !(defined(GAME_PLATFORM_UNIX) && !defined(GAME_PLATFORM_WIN64) && !defined(ANDROID_BUILD))
-    signal(SIGSEGV, sig_handler);
+        signal(SIGSEGV, detail::sig_handler);
 #endif
-    signal(SIGABRT, sig_handler);
+        signal(SIGABRT, detail::sig_handler);
+    }
+
+    void switch_output(pcstr folder) {
+        flush();
+#if defined(GAME_PLATFORM_ANDROID)
+        (void)folder;
+        if (logger_file_) {
+            fclose(logger_file_);
+            logger_file_ = nullptr;
+        }
+        file_stream_.close();
+        active_path_ = k_filename;
+        vfs::platform_file_manager_remove_file(k_filename);
+        logger_file_ = vfs::platform_file_manager_open_file(k_filename, "w");
+        if (!logger_file_) {
+            __android_log_print(ANDROID_LOG_WARN, "ank-and", "Failed to open log file: %s", k_filename);
+            return;
+        }
+        write_bom_android_();
+#else
+        file_stream_.close();
+
+        bstring256 filename(folder, "/", k_filename);
+        active_path_ = filename.c_str();
+        file_stream_.open(filename, std::fstream::out | std::fstream::trunc | std::fstream::binary);
+        if (file_stream_.is_open()) {
+            write_bom_();
+        }
+#endif
+    }
+
+    pcstr output_path() const {
+        return active_path_.c_str();
+    }
+
+    void flush() {
+        flush_console_out_();
+#if defined(GAME_PLATFORM_WIN)
+        flush_debug_string_();
+#endif
+#if defined(GAME_PLATFORM_ANDROID)
+        if (logger_file_) {
+            fflush(logger_file_);
+        }
+#else
+        if (file_stream_.is_open()) {
+            file_stream_.flush();
+        }
+#endif
+        file_dirty_ = false;
+        last_flush_ms_ = SDL_GetTicks();
+    }
+
+    void tick() {
+        if (!has_pending_output_()) {
+            return;
+        }
+        const Uint32 now = SDL_GetTicks();
+        if ((now - last_flush_ms_) < k_flush_interval_ms) {
+            return;
+        }
+        flush();
+    }
+
+    xstring recent_errors(int max_lines) const {
+        if (max_lines <= 0 || recent_errors_count_ == 0) {
+            return xstring();
+        }
+        const size_t n = (std::min)((size_t)max_lines, recent_errors_count_);
+        size_t start = (recent_errors_next_ + k_recent_cap - n) % k_recent_cap;
+        std::string out;
+        out.reserve(n * 96);
+        for (size_t i = 0; i < n; ++i) {
+            if (i) {
+                out += '\n';
+            }
+            out += recent_errors_[(start + i) % k_recent_cap];
+        }
+        return xstring(out.c_str());
+    }
+
+private:
+    static constexpr pcstr k_filename = "akhenaten-log.txt";
+    static constexpr size_t k_recent_cap = 64;
+    static constexpr size_t k_recent_line_max = 512;
+    static constexpr size_t k_console_buf_flush = 8 * 1024;
+    static constexpr size_t k_stdio_buf_size = 64 * 1024;
+    static constexpr Uint32 k_flush_interval_ms = 1000;
+
+    Logger()
+      : active_path_(k_filename) {
+#if !defined(GAME_PLATFORM_ANDROID)
+        file_stream_.open(k_filename, std::fstream::out | std::fstream::trunc | std::fstream::binary);
+        if (file_stream_.is_open()) {
+            write_bom_();
+        }
+#endif
+    }
+
+    ~Logger() {
+        flush_console_out_();
+#if defined(GAME_PLATFORM_WIN)
+        flush_debug_string_();
+#endif
+#if defined(GAME_PLATFORM_ANDROID)
+        if (logger_file_) {
+            fclose(logger_file_);
+            logger_file_ = nullptr;
+        }
+#else
+        file_stream_.close();
+#endif
+    }
+
+    Logger(const Logger &) = delete;
+    Logger &operator=(const Logger &) = delete;
+
+    void handle_message(SDL_LogPriority priority, pcstr message) {
+        pcstr prefix = detail::prefix_of(priority);
+
+        if (priority >= SDL_LOG_PRIORITY_WARN) {
+            push_recent_error_(prefix, message);
+        }
+
+        write_to_console_(prefix, message);
+        write_sinks_(prefix, message);
+
+        if (priority >= SDL_LOG_PRIORITY_WARN) {
+            flush();
+        } else {
+            tick();
+        }
+    }
+
+    void push_recent_error_(pcstr prefix, pcstr message) {
+        std::string line;
+        line.reserve(k_recent_line_max);
+        if (prefix && *prefix) {
+            line += prefix;
+        }
+        if (message) {
+            line += message;
+        }
+        if (line.size() > k_recent_line_max) {
+            line.resize(k_recent_line_max);
+        }
+        recent_errors_[recent_errors_next_] = std::move(line);
+        recent_errors_next_ = (recent_errors_next_ + 1) % k_recent_cap;
+        if (recent_errors_count_ < k_recent_cap) {
+            ++recent_errors_count_;
+        }
+    }
+
+    void write_to_console_(pcstr prefix, pcstr message) {
+        console_out_buf_ += prefix;
+        console_out_buf_ += message;
+        console_out_buf_ += '\n';
+        if (console_out_buf_.size() >= k_console_buf_flush) {
+            flush_console_out_();
+        }
+    }
+
+    void write_sinks_(pcstr prefix, pcstr message) {
+#if defined(GAME_PLATFORM_ANDROID)
+        if (logger_file_) {
+            fprintf(logger_file_, "%s%s\n", prefix, message);
+            file_dirty_ = true;
+        }
+        __android_log_print(ANDROID_LOG_INFO, "ank-and", "%s%s", prefix, message);
+        android_append_startup_log(message);
+#else
+        if (file_stream_.is_open()) {
+            file_stream_ << prefix << message << '\n';
+            file_dirty_ = true;
+        }
+
+#if defined(GAME_PLATFORM_WIN)
+        debug_string_buf_ += prefix;
+        debug_string_buf_ += message;
+        debug_string_buf_ += '\n';
+        if (debug_string_buf_.size() >= k_console_buf_flush) {
+            flush_debug_string_();
+        }
+#endif
+
+        game_debug_cli_message(message);
+#endif
+    }
+
+    void flush_console_out_() {
+        if (console_out_buf_.empty()) {
+            return;
+        }
+        std::cout.write(console_out_buf_.data(), (std::streamsize)console_out_buf_.size());
+        std::cout.flush();
+        console_out_buf_.clear();
+    }
+
+#if defined(GAME_PLATFORM_WIN)
+    void flush_debug_string_() {
+        if (debug_string_buf_.empty()) {
+            return;
+        }
+        OutputDebugStringA(debug_string_buf_.c_str());
+        debug_string_buf_.clear();
+    }
+#endif
+
+    bool has_pending_output_() const {
+        if (!console_out_buf_.empty()) {
+            return true;
+        }
+#if defined(GAME_PLATFORM_WIN)
+        if (!debug_string_buf_.empty()) {
+            return true;
+        }
+#endif
+        return file_dirty_;
+    }
+
+    void write_bom_() {
+        const unsigned char bom[] = {0xEF, 0xBB, 0xBF};
+        file_stream_.write(reinterpret_cast<const char *>(bom), sizeof(bom));
+    }
+
+#if defined(GAME_PLATFORM_ANDROID)
+    void write_bom_android_() {
+        const unsigned char bom[] = {0xEF, 0xBB, 0xBF};
+        fwrite(bom, 1, sizeof(bom), logger_file_);
+        fflush(logger_file_);
+    }
+#endif
+
+    xstring active_path_;
+    std::fstream file_stream_;
+#if defined(GAME_PLATFORM_ANDROID)
+    FILE *logger_file_ = nullptr;
+#endif
+    std::array<std::string, k_recent_cap> recent_errors_{};
+    size_t recent_errors_count_ = 0;
+    size_t recent_errors_next_ = 0;
+    std::string console_out_buf_;
+#if defined(GAME_PLATFORM_WIN)
+    std::string debug_string_buf_;
+#endif
+    Uint32 last_flush_ms_ = 0;
+    bool file_dirty_ = false;
+};
+
+void initialize() {
+    Logger::instance().initialize();
 }
 
 void switch_output(pcstr folder) {
-    flush();
-#if defined(GAME_PLATFORM_ANDROID)
-    (void)folder;
-    if (logger_file_) {
-        fclose(logger_file_);
-        logger_file_ = nullptr;
-    }
-    logger_file_stream_.close();
-    logger_active_path_ = logger_filename_;
-    vfs::platform_file_manager_remove_file(logger_filename_);
-    logger_file_ = vfs::platform_file_manager_open_file(logger_filename_, "w");
-    if (!logger_file_) {
-        __android_log_print(ANDROID_LOG_WARN, "ank-and", "Failed to open log file: %s", logger_filename_);
-        return;
-    }
-    const unsigned char bom[] = {0xEF, 0xBB, 0xBF};
-    fwrite(bom, 1, sizeof(bom), logger_file_);
-    fflush(logger_file_);
-#else
-    logger_file_stream_.close();
-
-    bstring256 filename(folder, "/", logger_filename_);
-    logger_active_path_ = filename.c_str();
-    logger_file_stream_.open(filename, std::fstream::out | std::fstream::trunc | std::fstream::binary);
-    if (logger_file_stream_.is_open()) {
-        const unsigned char bom[] = { 0xEF, 0xBB, 0xBF };
-        logger_file_stream_.write(reinterpret_cast<const char*>(bom), sizeof(bom));
-    }
-#endif
+    Logger::instance().switch_output(folder);
 }
 
 pcstr output_path() {
-    return logger_active_path_.c_str();
+    return Logger::instance().output_path();
 }
 
 void flush() {
-    flush_output_buffers_();
-#if defined(GAME_PLATFORM_ANDROID)
-    if (logger_file_) {
-        fflush(logger_file_);
-    }
-#else
-    if (logger_file_stream_.is_open()) {
-        logger_file_stream_.flush();
-    }
-#endif
+    Logger::instance().flush();
+}
+
+void tick() {
+    Logger::instance().tick();
+}
+
+xstring recent_errors(int max_lines) {
+    return Logger::instance().recent_errors(max_lines);
 }
 
 namespace detail {
@@ -325,77 +468,5 @@ void verbose_v(pcstr format, ...) {
 }
 
 } // namespace detail
-
-Logger::Logger() {
-#if !defined(GAME_PLATFORM_ANDROID)
-    logger_file_stream_.open(logger_filename_, std::fstream::out | std::fstream::trunc | std::fstream::binary);
-    if (logger_file_stream_.is_open()) {
-        const unsigned char bom[] = { 0xEF, 0xBB, 0xBF };
-        logger_file_stream_.write((pcstr)bom, sizeof(bom));
-    }
-#endif
-}
-
-Logger::~Logger() {
-    flush_output_buffers_();
-#if defined(GAME_PLATFORM_ANDROID)
-    if (logger_file_) {
-        fclose(logger_file_);
-        logger_file_ = nullptr;
-    }
-#else
-    logger_file_stream_.close();
-#endif
-}
-
-void Logger::write(void* /* userdata */, int /* category */, SDL_LogPriority priority, pcstr message) {
-    static Logger logger;
-    pcstr prefix = get_prefix_of(priority);
-
-    if (priority >= SDL_LOG_PRIORITY_WARN) {
-        push_recent_error(prefix, message);
-    }
-
-    write_to_output_(prefix, message);
-    logger.write(prefix, message);
-
-    if (priority >= SDL_LOG_PRIORITY_WARN) {
-        flush();
-    }
-}
-
-void Logger::write(pcstr prefix, pcstr message) {
-#if defined(GAME_PLATFORM_ANDROID)
-    if (logger_file_) {
-        fprintf(logger_file_, "%s%s\n", prefix, message);
-    }
-    __android_log_print(ANDROID_LOG_INFO, "ank-and", "%s%s", prefix, message);
-    android_append_startup_log(message);
-#else
-    if (logger_file_stream_.is_open()) {
-        logger_file_stream_ << prefix << message << '\n';
-    }
-
-#if defined(GAME_PLATFORM_WIN)
-    debug_string_buf_ += prefix;
-    debug_string_buf_ += message;
-    debug_string_buf_ += '\n';
-    if (debug_string_buf_.size() >= k_console_buf_flush) {
-        flush_debug_string_();
-    }
-#endif
-
-    game_debug_cli_message(message);
-#endif
-}
-
-void Logger::write_to_output_(pcstr prefix, pcstr message) {
-    console_out_buf_ += prefix;
-    console_out_buf_ += message;
-    console_out_buf_ += '\n';
-    if (console_out_buf_.size() >= k_console_buf_flush) {
-        flush_console_out_();
-    }
-}
 
 } // namespace logs

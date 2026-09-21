@@ -550,6 +550,7 @@ static void run_and_draw() {
         game.frame_end();
     }
 
+    logs::tick();
     js_vm_frame_end();
     game.frame_serial_part();
 }

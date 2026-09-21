@@ -9,6 +9,7 @@ void switch_output(pcstr folder);
 
 pcstr output_path();
 void flush();
+void tick();
 
 // Last warn/error/critical lines (newest last), for bug reports.
 xstring recent_errors(int max_lines = 40);
