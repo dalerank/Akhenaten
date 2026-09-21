@@ -19,16 +19,6 @@ void building_senet_house::on_destroy() {
     city_buildings_remove_senet_house();
 }
 
-bool building_senet_house::add_resource(e_resource resource, int amount) {
-    if (resource != RESOURCE_BEER) {
-        return false;
-    }
-
-    verify_no_crash(id() > 0);
-    store_resource(RESOURCE_BEER, amount);
-    return true;
-}
-
 void building_senet_house::spawn_figure() {
     const bool can_spawn_master = common_spawn_figure_trigger(100, BUILDING_SLOT_SERVICE);
     if (can_spawn_master) {

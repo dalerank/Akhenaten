@@ -228,6 +228,7 @@ building_senet_house = {
   meta : { text_id:73, help_link:"message_building_senet_house" }
   building_size : 4
   labor_category : LABOR_CATEGORY_ENTERTAINMENT
+  sound_channel : SOUND_CHANNEL_CITY_SENET_HOUSE
   cost : [ 300, 400, 500, 700, 1000 ]
   desirability : { value:[-6], step:[1], step_size:[2], range: [3] }
   crime : { value:[5], step:[1], step_size:[1], range: [3] }
@@ -249,6 +250,15 @@ function building_senet_house_on_place_checks(ev) {
   city.warnings.show_if_not(beer.can_produce, "#build_brewery")
   city.warnings.show_if_not(beer.can_import, "#import_beer_overseer")
   city.warnings.show_if_not(is_import_beer, "#import_beer_trade_route")
+}
+
+[es=(building_senet_house, add_resource)]
+function building_senet_house_add_resource(ev) {
+  if (ev.resource != RESOURCE_BEER) {
+    return
+  }
+  var building = city.get_building(ev.bid)
+  building.store_resource(ev.resource, ev.amount)
 }
 
 building_bullfight_school = {
