@@ -5,6 +5,8 @@
 #include "city/city_resource.h"
 #include "city/city_warnings.h"
 #include "construction/build_planner.h"
+#include "figure/figure.h"
+#include "figure/figure_type.h"
 #include "game/game_events.h"
 #include "game/resource.h"
 #include "graphics/image.h"
@@ -61,6 +63,48 @@ static const building_obelisk::base_params &obelisk_params_for(e_building_type t
         return (const building_obelisk::base_params &)building_large_obelisk::current_params();
     }
     return (const building_obelisk::base_params &)building_small_obelisk::current_params();
+}
+
+void building_obelisk::scrub_dead_workers() {
+    for (auto &wid : runtime_data().workers) {
+        if (!wid) {
+            continue;
+        }
+        figure *f = figure_get(wid);
+        if (!f || !f->is_alive()) {
+            wid = 0;
+        }
+    }
+}
+
+bool building_obelisk::has_live_worker(e_figure_type type) const {
+    for (auto wid : runtime_data().workers) {
+        figure *f = wid > 0 ? figure_get(wid) : nullptr;
+        if (f && f->is_alive() && f->type == type) {
+            return true;
+        }
+    }
+    return false;
+}
+
+int building_obelisk::max_scaffolds() const {
+    const auto &bp = obelisk_params_for(base.type);
+    if (!bp.scaffold_offsets.empty()) {
+        return (int)bp.scaffold_offsets.size();
+    }
+    int n = 0;
+    for (uint16_t load : bp.timber_loads) {
+        n += (load > 0) ? 1 : 0;
+    }
+    return std::max(1, n);
+}
+
+vec2i building_obelisk::scaffold_pixel_offset(int i) const {
+    const auto &bp = obelisk_params_for(base.type);
+    if (i >= 0 && i < (int)bp.scaffold_offsets.size()) {
+        return bp.scaffold_offsets[i];
+    }
+    return vec2i{20 + i * 16, -40};
 }
 
 static int placement_amount_for(e_building_type t, e_resource r) {
@@ -132,10 +176,97 @@ bool building_obelisk::need_stonemason() {
     if (is_finished()) {
         return false;
     }
+    if (needs_resource(RESOURCE_TIMBER) > 0) {
+        return false;
+    }
     const auto &bp = obelisk_params_for(base.type);
     const int max_stage = bp.art_stages > 0 ? bp.art_stages : 4;
-    const int p = runtime_data().phase;
-    return p >= 2 && p < max_stage;
+    return runtime_data().phase < max_stage;
+}
+
+bool building_obelisk::need_carpenter() {
+    if (is_finished()) {
+        return false;
+    }
+    scrub_dead_workers();
+    const int need = needs_resource(RESOURCE_TIMBER);
+    if (need <= 0) {
+        return false;
+    }
+    if (resource_pct(RESOURCE_TIMBER) >= 100) {
+        return false;
+    }
+    if (yards_available(RESOURCE_TIMBER) < need) {
+        return false;
+    }
+    if (has_live_worker(FIGURE_CARPENTER)) {
+        return false;
+    }
+    return has_free_worker_slot();
+}
+
+bool building_obelisk::accepts_yard_delivery(e_resource resource) const {
+    return resource != RESOURCE_TIMBER;
+}
+
+void building_obelisk::add_workers(figure_id fid) {
+    scrub_dead_workers();
+    auto &d = runtime_data();
+    for (auto &wid : d.workers) {
+        if (wid == 0) {
+            wid = fid;
+            return;
+        }
+    }
+}
+
+void building_obelisk::remove_worker(figure_id fid) {
+    auto &d = runtime_data();
+    for (auto &wid : d.workers) {
+        if (wid == fid) {
+            wid = 0;
+            return;
+        }
+    }
+}
+
+int building_obelisk::scaffold_count() const {
+    if (is_finished()) {
+        return 0;
+    }
+    const int placed = (int)runtime_data().phase;
+    const int extra = (needs_resource(RESOURCE_TIMBER) > 0 && resource_pct(RESOURCE_TIMBER) >= 100) ? 1 : 0;
+    return std::min(placed + extra, max_scaffolds());
+}
+
+bool building_obelisk::place_scaffold() {
+    if (is_finished()) {
+        return false;
+    }
+    const int need = needs_resource(RESOURCE_TIMBER);
+    if (need <= 0) {
+        return false;
+    }
+    if (resource_pct(RESOURCE_TIMBER) >= 100) {
+        return false;
+    }
+    if (yards_available(RESOURCE_TIMBER) < need) {
+        return false;
+    }
+    events::emit(event_city_remove_resource{RESOURCE_TIMBER, need, /*staffed_only*/true});
+    return deliver_resource(RESOURCE_TIMBER, need);
+}
+
+void building_obelisk::on_phase_changed(int /*old_phase*/, int current) {
+    const int size = base.size > 0 ? base.size : 3;
+    map_building_tiles_add(id(), tile(), size, building_image_get(), TERRAIN_BUILDING);
+
+    if (current != MONUMENT_FINISHED) {
+        auto &d = runtime_data();
+        for (e_resource resource = RESOURCE_NONE; resource < RESOURCES_MAX; ++resource) {
+            d.resources_pct[resource] = 0;
+        }
+    }
 }
 
 bool building_obelisk::need_workers() const {
@@ -164,22 +295,6 @@ static xstring granite_need_warning(e_building_type t, int need) {
     return xstring(msg.c_str());
 }
 
-int building_obelisk::preview::can_place(build_planner &p, tile2i /*tile*/, tile2i /*end*/, int state) const {
-    if (state != CAN_PLACE && state != CAN_NOT_BUT_GREEN) {
-        return state;
-    }
-    if (has_unfinished_obelisk()) {
-        p.set_warning("#only_one_obelisk_at_a_time");
-        return CAN_NOT_PLACE;
-    }
-    const int need = placement_amount_for(p.build_type, RESOURCE_GRANITE);
-    if (need > 0 && yards_available(RESOURCE_GRANITE) < need) {
-        p.set_warning(granite_need_warning(p.build_type, need));
-        return CAN_NOT_BUT_GREEN;
-    }
-    return state;
-}
-
 int building_obelisk::preview::finalize_check(build_planner &p, tile2i tile, tile2i end, int state) const {
     state = building_planer_renderer::finalize_check(p, tile, end, state);
     if (state != CAN_PLACE) {
@@ -206,15 +321,6 @@ void building_obelisk::preview::ghost_preview(build_planner &planer, painter &ct
     planer.draw_building_ghost(ctx, img > 0 ? img : preview, pixel);
 }
 
-void building_obelisk::on_place(int orientation, int variant) {
-    building_impl::on_place(orientation, variant);
-
-    const int need = placement_amount(RESOURCE_GRANITE);
-    if (need > 0) {
-        events::emit(event_city_remove_resource{RESOURCE_GRANITE, need, /*staffed_only*/true});
-    }
-}
-
 void building_obelisk::on_place_update_tiles(int /*orientation*/, int /*variant*/) {
     const int size = base.size > 0 ? base.size : 3;
     map_building_tiles_add(id(), tile(), size, building_image_get(), TERRAIN_BUILDING);
@@ -229,6 +335,10 @@ void building_obelisk::update_day() {
     if (is_finished()) {
         return;
     }
+    scrub_dead_workers();
+    if (needs_resource(RESOURCE_TIMBER) <= 0 && need_stonemason() && !has_live_worker(FIGURE_STONEMASON)) {
+        return;
+    }
     progress();
 }
 
@@ -238,20 +348,20 @@ void building_obelisk::update_map_orientation(int /*map_orientation*/) {
 }
 
 bool building_obelisk::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i /*tile*/, color color_mask) {
-    if (is_finished()) {
-        return false;
-    }
-    if (runtime_data().phase < 2) {
+    const int n = scaffold_count();
+    if (n <= 0) {
         return false;
     }
     const int ladder = building_static_params::get(base.type).first_img("ladder");
     if (ladder <= 0) {
         return false;
     }
-    auto &command = ImageDraw::create_command(ctx, render_command_t::ert_drawtile);
-    command.image_id = ladder;
-    command.pixel = point + vec2i{20, -40};
-    command.mask = color_mask;
+    for (int i = 0; i < n; ++i) {
+        auto &command = ImageDraw::create_command(ctx, render_command_t::ert_drawtile);
+        command.image_id = ladder;
+        command.pixel = point + scaffold_pixel_offset(i);
+        command.mask = color_mask;
+    }
     return true;
 }
 

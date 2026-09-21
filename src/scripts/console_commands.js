@@ -105,7 +105,7 @@ function console_command_add_pottery(args) {
 	__cheat_add_resource(RESOURCE_POTTERY, amount)
 }
 
-[console_command=addpapyrus]
+[console_command=add_papyrus]
 function console_command_addpapyrus(args) {
 	var amount = parseInt((args && args[0]) || "100", 10)
 	if (amount <= 0) {
@@ -128,42 +128,51 @@ function console_command_add_gamemeat(args) {
 	__cheat_add_resource(RESOURCE_GAMEMEAT, amount)
 }
 
-[console_command=addstone]
+[console_command=add_stone]
 function console_command_addstone(args) {
 	var amount = parseInt((args && args[0]) || "100", 10)
 	if (amount <= 0) amount = 100
 	__cheat_add_resource(RESOURCE_STONE, amount)
 }
 
-[console_command=addlimestone]
+[console_command=add_limestone]
 function console_command_addlimestone(args) {
 	var amount = parseInt((args && args[0]) || "100", 10)
 	if (amount <= 0) amount = 100
 	__cheat_add_resource(RESOURCE_LIMESTONE, amount)
 }
 
-[console_command=addgranite]
+[console_command=add_granite]
 function console_command_addgranite(args) {
 	var amount = parseInt((args && args[0]) || "100", 10)
 	if (amount <= 0) amount = 100
 	__cheat_add_resource(RESOURCE_GRANITE, amount)
 }
 
-[console_command=addsandstone]
+[console_command=add_wood]
+function console_command_add_wood(args) {
+	var amount = parseInt((args && args[0]) || "100", 10)
+	if (amount <= 0) {
+		amount = 100
+	}
+	__cheat_add_resource(RESOURCE_TIMBER, amount)
+}
+
+[console_command=add_sandstone]
 function console_command_addsandstone(args) {
 	var amount = parseInt((args && args[0]) || "100", 10)
 	if (amount <= 0) amount = 100
 	__cheat_add_resource(RESOURCE_SANDSTONE, amount)
 }
 
-[console_command=addweapons]
+[console_command=add_weapons]
 function console_command_addweapons(args) {
 	var amount = parseInt((args && args[0]) || "100", 10)
 	if (amount <= 0) amount = 100
 	__cheat_add_resource(RESOURCE_WEAPONS, amount)
 }
 
-[console_command=addcopper]
+[console_command=add_copper]
 function console_command_addcopper(args) {
 	var amount = parseInt((args && args[0]) || "100", 10)
 	if (amount <= 0) amount = 100

@@ -22,8 +22,6 @@ function carpenters_guild_info_window_on_init(window) {
         reason.id = 4
     } else if (b.num_workers <= 0) {
         reason.id = 5
-    } else if (b.stored_resource(RESOURCE_TIMBER) < 100) {
-        reason.id = 11
     } else {
         reason.id = Math.approximate_value(b.worker_percentage / 100.0, [10, 9, 8, 7, 6])
     }

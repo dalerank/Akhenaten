@@ -27,6 +27,7 @@
 #include "building/monument_mastaba.h"
 #include "building/monument_pyramid.h"
 #include "building/monument_royal_tomb.h"
+#include "building/monument_obelisk.h"
 #include "building/monuments.h"
 #include "building/construction_blessing.h"
 #include "city/city_recorded_paths.h"
@@ -2616,6 +2617,14 @@ static bool __test_monument_add_resource(int bid, int resource, int amount) {
     return mm->deliver_resource(static_cast<e_resource>(resource), amount);
 }
 ANK_FUNCTION_3(__test_monument_add_resource);
+
+static bool __test_obelisk_place_scaffold(int bid) {
+    building *b = building_get(bid);
+    building *head = b ? b->main() : nullptr;
+    auto *ob = head ? head->dcast_obelisk() : nullptr;
+    return ob && ob->place_scaffold();
+}
+ANK_FUNCTION_1(__test_obelisk_place_scaffold);
 
 // Current delivery progress for a resource on the monument (0..100+).
 static int __test_monument_resource_pct(int bid, int resource) {

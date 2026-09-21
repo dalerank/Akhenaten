@@ -105,6 +105,7 @@ void js_register_game_constants(js_State* J) {
 
     _R(CAN_PLACE)
     _R(CAN_NOT_PLACE)
+    _R(CAN_NOT_BUT_GREEN)
 
     _R(SCREENSHOT_FULL_CITY)
     _R(SCREENSHOT_DISPLAY)

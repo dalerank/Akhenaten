@@ -17,6 +17,8 @@ import building.monument
 import building.mastaba
 import building.sphinx
 import building.obelisk
+import building.small_obelisk
+import building.large_obelisk
 import building.sun_temple
 import building.abu_simbel
 import building.caesareum

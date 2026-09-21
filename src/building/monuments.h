@@ -99,6 +99,7 @@ public:
     virtual bool need_carpenter();
     virtual bool need_bricklayers();
     virtual bool need_artisan();
+    virtual bool accepts_yard_delivery(e_resource /*resource*/) const { return true; }
     virtual bool is_unfinished() const;
     virtual bool is_finished() const;
     virtual xstring demolish_blocked_message() const override;

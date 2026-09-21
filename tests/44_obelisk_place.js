@@ -1,5 +1,5 @@
 // Small obelisk place via planner after staffing a Storage Yard with granite
-// from placement_resources (100 in obelisk.js). Also rejects place without granite
+// from placement_resources (100 in small_obelisk.js). Also rejects place without granite
 // and a second unfinished obelisk, then exercises monument resource delivery.
 
 function run_test() {
@@ -30,7 +30,7 @@ function run_test() {
     }
     __log_marker('obelisk_reject_no_granite_ok')
 
-    // Granite amount must match building_small_obelisk.placement_resources in obelisk.js.
+    // Granite amount must match building_small_obelisk.placement_resources in small_obelisk.js.
     var granite_need = 100
 
     // Keep the Storage Yard off-centre so the 3×3 obelisk can sit at the map centre
@@ -129,10 +129,34 @@ function run_test() {
         __log_marker('obelisk_granite_fail:' + staffed_before + '->' + staffed_after)
     }
 
-    // Test helper: push timber into the monument as if a carpenter cart delivered.
+    // Carpenter slot + one scaffold visit (consumes timber_loads[0] from a staffed yard).
+    var timber_need = 200 // matches first timber_loads entry in small_obelisk.js
+    var ty = 0
+    var timber_spots = [
+        {x: 12, y: 40}, {x: 25, y: 25}, {x: 30, y: 10}, {x: 40, y: 40}
+    ]
+    for (var ti = 0; ti < timber_spots.length && !ty; ti++) {
+        ty = test_staffed_yard_with_resource(RESOURCE_TIMBER, timber_need, timber_spots[ti].x, timber_spots[ti].y)
+    }
+    if (!ty) {
+        ty = test_staffed_yard_with_resource(RESOURCE_TIMBER, timber_need, -1, -1)
+    }
+
+    var cid = __test_figure_create(FIGURE_CARPENTER, tile.x, tile.y)
+    if (cid && b) {
+        b.add_workers(cid)
+    }
+    var mon = city.get_monument(bid)
+    if (mon && mon.workers_assigned() >= 1) {
+        __log_marker('obelisk_workers_ok')
+    } else {
+        __log_info_native('[test:44] workers_assigned expected >=1, got '
+            + (mon ? mon.workers_assigned() : -1) + ' cid=' + cid)
+        __log_marker('obelisk_workers_fail')
+    }
+
     __test_monument_set_phase(bid, 0)
-    var timber_need = 200 // matches first timber_loads entry in obelisk.js
-    if (__test_monument_add_resource(bid, RESOURCE_TIMBER, timber_need)) {
+    if (ty && __test_obelisk_place_scaffold(bid)) {
         var pct = __test_monument_resource_pct(bid, RESOURCE_TIMBER)
         if (pct >= 100) {
             __log_marker('obelisk_monument_add_resource_ok:' + pct)
@@ -141,7 +165,7 @@ function run_test() {
             __log_marker('obelisk_monument_add_resource_pct:' + pct)
         }
     } else {
-        __log_info_native('[test:44] __test_monument_add_resource failed')
+        __log_info_native('[test:44] __test_obelisk_place_scaffold failed ty=' + ty)
         __log_marker('obelisk_monument_add_resource_fail')
     }
 
@@ -177,6 +201,7 @@ function check_valid() {
         'obelisk_single_ok',
         'obelisk_size_ok:3',
         'obelisk_granite_consumed',
+        'obelisk_workers_ok',
         'obelisk_monument_add_resource_ok',
         'obelisk_info_ok',
         'obelisk_screenshot_done',

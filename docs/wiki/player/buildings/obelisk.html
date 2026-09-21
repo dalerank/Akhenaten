@@ -255,18 +255,19 @@
       <div class="note-box">
         <strong>Akhenaten status:</strong> place, granite pre-stock / consume, only-one unfinished rule, art stages, info window, menu, and Buhen buildings list are in.
         Timber units per scaffolding phase live in <code>timber_loads</code> in
-        <span class="file-ref">src/scripts/building/obelisk.js</span> (tune without C++ rebuild;
+        <span class="file-ref">src/scripts/building/small_obelisk.js</span> /
+        <span class="file-ref">src/scripts/building/large_obelisk.js</span> (tune without C++ rebuild;
         current values are working defaults pending original <code>.pak</code> calibration).
         Large granite (200 vs some charts’ 300) is likewise config-only via <code>placement_resources</code>.
         Integral test <code>44_obelisk_place</code> covers staffed-SY place + granite consume +
-        <code>__test_monument_add_resource</code>. Visual polish (ladder offset) still open.
+        carpenter worker slots + one scaffold / timber consume.
       </div>
 
       <h2 id="construction">Construction</h2>
       <ol>
         <li>Accumulate granite in staffed Storage Yards (≥ amount from the building config).</li>
         <li>Place when the ghost footprint is all green. Granite is deducted immediately; the monument appears at stage <strong>a</strong>.</li>
-        <li>Carpenters’ Guild + timber build scaffolding (early phases).</li>
+        <li>Carpenters’ Guild: each visit takes one timber load from staffed yards and adds one ladder overlay.</li>
         <li>Stonemasons’ Guild carve hieroglyphs through remaining art stages.</li>
         <li>Finished — contributes its monument weight to the city rating.</li>
       </ol>
@@ -280,7 +281,9 @@
           </tbody>
         </table>
       </div>
-      <p>Scaffolding ornament uses <code>obelisk_extra</code> image id <strong>1</strong> (ladder). Work Camp laborers are not used.</p>
+      <p>Each carpenter visit consumes one <code>timber_loads</code> entry from staffed yards and draws one copy of
+        <code>obelisk_extra</code> image id <strong>1</strong> (only that sprite is valid; later extra ids are empty).
+        Pixel offsets live in <code>scaffold_offsets</code>. Work Camp laborers are not used.</p>
 
       <h2 id="placement">Placement</h2>
       <p>Clear land with an all-green footprint — <strong>3×3</strong> (small) or <strong>5×5</strong> (large). Each stage pack has a single isometric sprite (no alternate camera diagonals, unlike the Sphinx). Warnings fire if granite in staffed yards is insufficient, or if another unfinished obelisk already exists (text group <strong>19</strong> ids 83 / 84 / 86). Road access is not required on the monument tiles themselves, but guilds and storage need roads so carpenters and stonemasons can reach the site.</p>
@@ -305,12 +308,14 @@
         <p style="color:var(--text-muted);font-size:0.85rem">All paths relative to the repository root. </p>
 
         <details open>
-          <summary>Building config — <code>src/scripts/building/obelisk.js</code></summary>
+          <summary>Building config — <code>src/scripts/building/small_obelisk.js</code> /
+            <code>src/scripts/building/large_obelisk.js</code></summary>
           <div class="details-body">
             <pre><code><span class="kw">building_small_obelisk</span> {
   <span class="kw">building_size</span> : <span class="num">3</span>
   <span class="kw">art_stages</span> : <span class="num">4</span>
   <span class="kw">timber_loads</span> [ <span class="num">200</span>, <span class="num">200</span>, <span class="num">200</span> ]
+  <span class="kw">scaffold_offsets</span> [[20, -40], [44, -24], [-4, -24]]
   <span class="kw">placement_resources</span> [
     { resource: RESOURCE_GRANITE, count: <span class="num">100</span> }
   ]
@@ -324,6 +329,7 @@
   <span class="kw">building_size</span> : <span class="num">5</span>
   <span class="kw">art_stages</span> : <span class="num">6</span>
   <span class="kw">timber_loads</span> [ <span class="num">400</span>, <span class="num">400</span>, <span class="num">400</span>, <span class="num">200</span> ]
+  <span class="kw">scaffold_offsets</span> [[30, -56], [58, -36], [2, -36], [30, -16]]
   <span class="kw">placement_resources</span> [
     { resource: RESOURCE_GRANITE, count: <span class="num">200</span> }
   ]
@@ -342,6 +348,7 @@
             Shared <code>building_obelisk</code> base; pre-stock via
             <code>yards_stored_staffed</code> / <code>staffed_only</code> remove on place;
             <code>has_unfinished_obelisk()</code> enforces only-one.
+            Carpenter visits call <code>place_scaffold()</code> (timber from staffed yards + one ladder copy).
             Info UI: <span class="file-ref">src/window/window_obelisk_info.cpp</span>.</p>
           </div>
         </details>

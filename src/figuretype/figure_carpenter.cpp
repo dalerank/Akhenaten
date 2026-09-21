@@ -1,8 +1,10 @@
 #include "figure_carpenter.h"
 
 #include "building/monument_mastaba.h"
+#include "building/monument_obelisk.h"
 #include "building/monuments.h"
 #include "building/building_statue.h"
+#include "game/simulation_time.h"
 #include "grid/terrain.h"
 #include "grid/grid.h"
 #include "js/js_game.h"
@@ -57,8 +59,10 @@ void figure_carpenter::figure_action() {
         break;
 
     case ACTION_1_CARPENTER_GOING:
-        do_goto(base.destination_tile, terrain_usage,
-                ACTION_2_CARPENTER_WORK_GROUND, ACTION_7_CARPENTER_DESTROY);
+        if (do_goto(base.destination_tile, terrain_usage,
+                    ACTION_2_CARPENTER_WORK_GROUND, ACTION_7_CARPENTER_DESTROY)) {
+            base.wait_ticks = 0;
+        }
         break;
 
     case ACTION_5_CARPENTER_LOOKING_FOR_WORK_TILE:
@@ -69,8 +73,13 @@ void figure_carpenter::figure_action() {
     case ACTION_3_CARPENTER_WORK_VERT:
         base.wait_ticks++;
         if (base.wait_ticks > simulation_time_t::ticks_in_day * 2) {
-            auto statue = smart_cast<building_statue>(building_get(runtime_data().destination_bid));
-            if (statue) {
+            building *worked = building_get(runtime_data().destination_bid);
+            if (!worked || !worked->id) {
+                worked = destination();
+            }
+            if (auto *obelisk = worked ? worked->dcast_obelisk() : nullptr) {
+                obelisk->place_scaffold();
+            } else if (auto statue = smart_cast<building_statue>(worked)) {
                 statue->set_service(100);
             }
             advance_action(ACTION_4_CARPENTER_RETURN_HOME);

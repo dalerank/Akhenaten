@@ -787,6 +787,9 @@ storage_worker_task building_storageyard_deliver_to_monuments(building *b) {
         }
 
         for (auto monument : monuments) {
+            if (!monument->accepts_yard_delivery(resource)) {
+                continue;
+            }
             int remaining = 0;
             if (resource == RESOURCE_LAMPS) {
                 if (auto *tomb = monument->dcast_royal_tomb()) {

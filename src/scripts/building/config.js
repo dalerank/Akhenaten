@@ -96,7 +96,7 @@ building_carpenters_guild = {
   }
   labor_category : LABOR_CATEGORY_INFRASTRUCTURE
   building_size : 2
-  meta : { help_link:"message_construction_guilds" }
+  meta : { text_id: 171, help_link:"message_construction_guilds" }
   cost : [ 10, 15, 30, 50, 100 ]
   desirability : { value:[-6], step:[1], step_size:[1], range: [4] }
   laborers:[8], fire_risk:[4], damage_risk: [2]
