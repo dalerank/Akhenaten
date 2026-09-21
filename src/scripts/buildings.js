@@ -58,6 +58,8 @@ import building.clay_pit
 import building.wood_cutter
 import building.temple_complex
 import building.entertainment
+import building.senet_house
+import building.bullfight_school
 import building.booth
 import building.festival_square
 import building.firehouse

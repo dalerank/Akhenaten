@@ -18,8 +18,6 @@ struct city_buildings_t {
     int32_t palace_building_id = 0;
     tile2i palace_point;
 
-    int32_t senet_house_placed;
-
     bool distribution_center_placed;
     int32_t distribution_center_building_id;
     tile2i distribution_center;
@@ -102,10 +100,6 @@ void city_buildings_remove_distribution_center(building* center);
 
 int city_buildings_get_trade_center();
 void city_buildings_set_trade_center(int building_id);
-
-bool city_buildings_has_senet_house();
-void city_buildings_add_senet_house();
-void city_buildings_remove_senet_house();
 
 int city_buildings_triumphal_obelisk_available();
 void city_buildings_earn_triumphal_obelisk();

@@ -984,7 +984,7 @@ io_buffer* iob_city_data = new io_buffer([](io_buffer* iob, size_t version) {
         iob->bind(BIND_SIGNATURE_INT32, &data.unused.unknown_4294[i]);
     }
 
-    iob->bind(BIND_SIGNATURE_INT32, &data.buildings.senet_house_placed);
+    iob->bind____skip(4); // was senet_house_placed
     iob->bind(BIND_SIGNATURE_INT32, &data.houses.missing.mortuary);
     iob->bind(BIND_SIGNATURE_INT32, &data.houses.missing.physician);
     iob->bind(BIND_SIGNATURE_INT32, &data.houses.requiring.dentist);

@@ -3,7 +3,6 @@
 #include "building/building_barracks.h"
 #include "building/building_storage_room.h"
 #include "building/building_granary.h"
-#include "building/building_senet_house.h"
 #include "building/building_police_station.h"
 #include "city/city_industry.h"
 #include "building/rotation.h"
@@ -548,14 +547,14 @@ storage_worker_task building_storageyard_deliver_beer_to_senet_house(building *b
 
     auto warehouse = b->dcast_storage_yard();
     auto result = building_get_asker_for_resource(warehouse->tile(), BUILDING_SENET_HOUSE, RESOURCE_BEER, warehouse->road_network(), warehouse->distance_from_entry());
-    auto senet_house = building_get_ex<building_senet_house>(result.building_id);
-    if (!senet_house) {
+    building *senet_house = building_get(result.building_id);
+    if (!senet_house || !senet_house->is_valid()) {
         return { STORAGEYARD_TASK_NONE };
     }
 
     const int school_want = senet_house->need_resource_amount(RESOURCE_BEER);
 
-    if (school_want > 0 && warehouse->road_network() == senet_house->road_network()) {
+    if (school_want > 0 && warehouse->road_network() == senet_house->road_network_id) {
         int available = 0;
         auto space = warehouse->room();
         while (space) {

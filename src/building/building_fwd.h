@@ -67,7 +67,6 @@ class building;
     X(water_lift)              \
     X(monument)                \
     X(tower)                   \
-    X(senet_house)             \
     X(gatehouse)               \
     X(dancer_school)           \
     X(police_station)          \

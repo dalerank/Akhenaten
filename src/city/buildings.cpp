@@ -59,18 +59,6 @@ void city_buildings_set_trade_center(int building_id) {
     g_city.buildings.trade_center_building_id = building_id;
 }
 
-bool city_buildings_has_senet_house() {
-    return g_city.buildings.senet_house_placed;
-}
-
-void city_buildings_add_senet_house() {
-    g_city.buildings.senet_house_placed = 1;
-}
-
-void city_buildings_remove_senet_house() {
-    g_city.buildings.senet_house_placed = 0;
-}
-
 int city_buildings_triumphal_obelisk_available() {
     return g_city.buildings.triumphal_obelisk_available > g_city.buildings.triumphal_obelisk_placed;
 }

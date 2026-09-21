@@ -635,6 +635,12 @@ building_impl *create_js_building_industry(e_building_type, building &b) {
     return b.acquire_impl<building_industry>();
 }
 
+building_impl *create_js_building_entertainment(e_building_type, building &b) {
+    static_assert(sizeof(building_entertainment) <= sizeof(building::ptr_buffer_t),
+                  "building_entertainment does not fit the inline buffer");
+    return b.acquire_impl<building_entertainment>();
+}
+
 void clear_es_building() {
     logs::info("JS Building Registry: Clearing %d registered buildings", (int)js_buildings.size());
     for (auto &m : js_buildings) {
@@ -697,7 +703,12 @@ void register_es_building_industry(pcstr name) {
     register_es_building_model(name, &create_js_building_industry);
 }
 
+void register_es_building_entertainment(pcstr name) {
+    register_es_building_model(name, &create_js_building_entertainment);
+}
+
 } // namespace
 
 ANK_REGISTER_ES_ITERATOR(building, register_es_building, clear_es_building);
 ANK_REGISTER_ES_ITERATOR(building_industry, register_es_building_industry, clear_es_building);
+ANK_REGISTER_ES_ITERATOR(building_entertainment, register_es_building_entertainment, clear_es_building);
