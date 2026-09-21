@@ -42,10 +42,9 @@ function run_test() {
     }
 
     var max_hunters = test48_dcy_first(lodge.max_hunters)
-    var delay100 = test48_dcy_first(lodge.spawn_delay_100_percent)
+    var delay100 = lodge.spawn_delay && lodge.spawn_delay[0] && lodge.spawn_delay[0].delay
     if (!test48_expect(max_hunters == 3, 'max_hunters want 3, got ' + max_hunters)
-        || !test48_expect(delay100 !== null && delay100 >= 1,
-            'spawn_delay_100_percent missing/invalid: ' + delay100)) {
+        || !test48_expect(delay100 == 1, 'spawn_delay 100% want 1, got ' + delay100)) {
         __test_signal_ready()
         return
     }

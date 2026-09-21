@@ -27,6 +27,7 @@
 #include "js/js_game.h"
 #include "js/js_struct.h"
 #include "game/game_config.h"
+#include "game/game_events.h"
 #include "graphics/graphics.h"
 
 #include <algorithm>
@@ -40,6 +41,9 @@ ANK_REGISTER_STRUCT_WRITER(building_tooltip_ev, bid, mx, my)
 
 struct add_resource_ev { building_id bid; int resource; int amount; };
 ANK_REGISTER_STRUCT_WRITER(add_resource_ev, bid, resource, amount)
+
+struct produced_resources_ev { building_id bid; int resource; int amount; };
+ANK_REGISTER_STRUCT_WRITER(produced_resources_ev, bid, resource, amount)
 
 using namespace render_cmd;
 
@@ -224,6 +228,7 @@ figure *building_impl::common_spawn_goods_output_cartpusher(int min_carry, int m
 
         figure *f = create_cartpusher(base.output.resource, amounts_to_carry, (e_figure_action)ACTION_20_CARTPUSHER_INITIAL, BUILDING_SLOT_CARTPUSHER);
         consume_resource(base.output.resource, amounts_to_carry);
+        produced_resources(base.output.resource, f->get_carrying_amount());
         return f;
     }
 
@@ -417,6 +422,11 @@ bool building_impl::add_resource(e_resource resource, int amount) {
     const int before = stored_amount(resource);
     es_t(add_resource_ev{ id(), (int)resource, amount }, __func__);
     return stored_amount(resource) != before;
+}
+
+void building_impl::produced_resources(e_resource resource, int amount) {
+    events::emit(event_produced_resources{ resource, amount });
+    es_t(produced_resources_ev{ id(), (int)resource, amount }, __func__);
 }
 
 const resource_value& building_impl::stored_first() const {

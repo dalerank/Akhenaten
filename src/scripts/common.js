@@ -171,3 +171,23 @@ function normalize_savegame_path_for_load(path) {
 
     return s + ".svx"
 }
+
+function dcy_get(v) {
+    if (v == null) {
+        return 0
+    }
+    if (typeof v !== 'object' || v.length === undefined) {
+        return v
+    }
+    if (v.length == 0) {
+        return 0
+    }
+    var i = game.difficulty
+    if (i < 0) {
+        i = 0
+    }
+    if (i >= v.length) {
+        i = v.length - 1
+    }
+    return v[i]
+}

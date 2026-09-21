@@ -56,6 +56,7 @@ Building.property.houses_covered = { }
 Building.property.show_on_problem_overlay = { }
 Building.property.deben_storage = { }
 Building.property.tax_income_or_storage = { }
+Building.property.figure_spawn_delay = { }
 Building.property.is_protected_by_police = { get: function() { return __building_is_protected_by_police(this.id) } }
 
 Building.prototype.get_figure = function(index) { return city.get_figure(__building_get_figure_id(this.id, index)) }

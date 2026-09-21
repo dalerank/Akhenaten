@@ -35,20 +35,6 @@ e_figure_type climate_prey_type() {
     }
 }
 
-// Pre-Cleopatra / maps without prey points: one climate animal on killer-point slots.
-e_figure_type climate_legacy_animal_type() {
-    switch (g_scenario.climate) {
-    case CLIMATE_CENTRAL:
-        return FIGURE_ANTELOPE;
-    case CLIMATE_NORTHERN:
-        return FIGURE_CROCODILE;
-    case CLIMATE_DESERT:
-        return FIGURE_OSTRICH;
-    default:
-        return FIGURE_NONE;
-    }
-}
-
 bool scenario_has_prey_points() {
     for (const herd_point_t &hp : g_scenario.herd_points_prey) {
         if (hp.valid()) {
@@ -57,6 +43,11 @@ bool scenario_has_prey_points() {
     }
     return false;
 }
+
+bool __scenario_has_prey_points() {
+    return scenario_has_prey_points();
+}
+ANK_FUNCTION(__scenario_has_prey_points)
 
 // Cleopatra Killer Type: climate pair + alt_predator_type flag.
 // Arid: hyena | scorpion; Normal: crocodile | lion; Humid: hippo | asp.
@@ -71,27 +62,6 @@ e_figure_type climate_predator_type() {
         return alt ? FIGURE_SCORPION : FIGURE_HYENA;
     default:
         return FIGURE_NONE;
-    }
-}
-
-e_figure_type hunting_lodge_default_hunter_type() {
-    e_figure_type prey = FIGURE_NONE;
-    if (scenario_has_prey_points()) {
-        prey = climate_prey_type();
-    } else {
-        prey = climate_legacy_animal_type();
-    }
-
-    switch (prey) {
-    case FIGURE_ANTELOPE:
-        return FIGURE_ANTELOPE_HUNTER;
-    case FIGURE_OSTRICH:
-        return FIGURE_OSTRICH_HUNTER;
-    case FIGURE_BIRDS:
-        return FIGURE_BIRDS_HUNTER;
-    default:
-        // Legacy Northern crocodile etc. — keep ostrich interim.
-        return FIGURE_OSTRICH_HUNTER;
     }
 }
 

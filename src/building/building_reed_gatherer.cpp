@@ -64,8 +64,5 @@ void building_reed_gatherer::spawn_figure() {
         }
     }
 
-    figure* fcart = common_spawn_goods_output_cartpusher();
-    if (fcart) {
-        events::emit(event_produced_resources{ base.output.resource, fcart->get_carrying_amount() });
-    }
+    common_spawn_goods_output_cartpusher();
 }

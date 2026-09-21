@@ -41,6 +41,8 @@ scenario = extend(__scenario, {
     // => subtitle
     // => player_rank
 
+    @has_prey_points: { get: function() { return !!__scenario_has_prey_points() } }
+
     // Live bind (extend would snapshot a bool and desync from C++ / map load).
     @alt_predator_type: {
         get: function() { return __scenario_alt_predator_type }

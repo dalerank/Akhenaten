@@ -22,7 +22,7 @@ function run_test() {
         return
     }
 
-    // 3/6 workers → 50% → spawn_delay_50_percent = 10
+    // 3/6 workers → 50% → spawn_delay pct 50 = 10
     __test_building_set_workers(bid, 3)
 
     var hunters0 = __test_count_figures(FIGURE_OSTRICH_HUNTER)

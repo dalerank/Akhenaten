@@ -25,6 +25,7 @@
 #include "core/profiler.h"
 #include "figure/figure.h"
 #include "figure/action.h"
+#include "core/direction.h"
 #include "js/js_game.h"
 #include "js/js.h"
 #include "mujs/mujs.h"
@@ -311,6 +312,52 @@ void __building_common_spawn_figure_trigger(js_State *J) {
     js_helpers::js_push_value(J, b->dcast()->common_spawn_figure_trigger(min_houses, (e_building_slot)slot));
 }
 
+void __building_check_labor_problem(js_State *J) {
+    const int bid = building_this_id(J);
+    building *b = building_get(bid);
+    if (b && b->is_valid()) {
+        b->dcast()->check_labor_problem();
+    }
+    js_helpers::js_push_void(J);
+}
+
+void __building_common_spawn_labor_seeker(js_State *J) {
+    const int bid = building_this_id(J);
+    const int min_houses = js_helpers::js_to_value<int>(J, 1);
+    building *b = building_get(bid);
+    if (b && b->is_valid()) {
+        b->dcast()->common_spawn_labor_seeker(min_houses);
+    }
+    js_helpers::js_push_void(J);
+}
+
+void __building_create_figure_generic(js_State *J) {
+    const int bid = building_this_id(J);
+    const int figure_type = js_helpers::js_to_value<int>(J, 1);
+    const int action = js_helpers::js_to_value<int>(J, 2);
+    const int slot = js_helpers::js_to_value<int>(J, 3);
+    building *b = building_get(bid);
+    if (!b || !b->is_valid()) {
+        js_helpers::js_push_value(J, 0);
+        return;
+    }
+
+    figure *f = b->dcast()->create_figure_generic((e_figure_type)figure_type, (e_figure_action)action, (e_building_slot)slot, DIR_4_BOTTOM_LEFT);
+    js_helpers::js_push_value(J, f ? f->id : 0);
+}
+
+void __building_common_spawn_goods_output_cartpusher(js_State *J) {
+    const int bid = building_this_id(J);
+    building *b = building_get(bid);
+    if (!b || !b->is_valid()) {
+        js_helpers::js_push_value(J, 0);
+        return;
+    }
+
+    figure *f = b->dcast()->common_spawn_goods_output_cartpusher();
+    js_helpers::js_push_value(J, f ? f->id : 0);
+}
+
 void __building_create_figure_with_destination(js_State *J) {
     const int bid = building_this_id(J);
     const int figure_type = js_helpers::js_to_value<int>(J, 1);
@@ -549,6 +596,10 @@ void js_register_building(js_State *J) {
     jsB_propf(J, js_intern("Building.prototype.__is_fancy"), __building_is_fancy, 0);
     jsB_propf(J, js_intern("Building.prototype.common_spawn_roamer"), __building_common_spawn_roamer, 3);
     jsB_propf(J, js_intern("Building.prototype.common_spawn_figure_trigger"), __building_common_spawn_figure_trigger, 2);
+    jsB_propf(J, js_intern("Building.prototype.check_labor_problem"), __building_check_labor_problem, 0);
+    jsB_propf(J, js_intern("Building.prototype.common_spawn_labor_seeker"), __building_common_spawn_labor_seeker, 1);
+    jsB_propf(J, js_intern("Building.prototype.create_figure_generic"), __building_create_figure_generic, 3);
+    jsB_propf(J, js_intern("Building.prototype.common_spawn_goods_output_cartpusher"), __building_common_spawn_goods_output_cartpusher, 0);
     jsB_propf(J, js_intern("Building.prototype.create_figure_with_destination"), __building_create_figure_with_destination, 4);
     jsB_propf(J, js_intern("Building.prototype.add_workers"), __building_add_workers, 1);
     jsB_propf(J, js_intern("Building.prototype.first_img"), building_proto_first_img, 1);

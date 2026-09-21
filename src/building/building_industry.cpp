@@ -177,10 +177,10 @@ void building_industry::spawn_figure() {
 
     const uint16_t stored_output = base.stored_amount(base.output.resource);
     const uint16_t load_to_cart = ready_production();
-    if (stored_output >= load_to_cart) {        
+    if (stored_output >= load_to_cart) {
         create_cartpusher(base.output.resource, load_to_cart, (e_figure_action)ACTION_20_CARTPUSHER_INITIAL, BUILDING_SLOT_CARTPUSHER);
         consume_resource(base.output.resource, load_to_cart);
-        events::emit(event_produced_resources{ base.output.resource, load_to_cart });
+        produced_resources(base.output.resource, load_to_cart);
     }
 }
 

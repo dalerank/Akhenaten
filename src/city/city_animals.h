@@ -29,13 +29,11 @@ struct city_animals_t : public game_system {
     void set_animals_area(int index, int reseach_radius);
 };
 
-// Hunting lodge: climate prey / legacy animal → hunter figure type.
+// Climate prey animal for herd spawn points.
 e_figure_type climate_prey_type();
-e_figure_type climate_legacy_animal_type();
 // Cleopatra Killer Type: climate pair + alt_predator_type (hyena|scorpion / croc|lion / hippo|asp).
 e_figure_type climate_predator_type();
 bool scenario_has_prey_points();
-e_figure_type hunting_lodge_default_hunter_type();
 
 ANK_CONFIG_STRUCT(city_animals_t, herd_migration)
 

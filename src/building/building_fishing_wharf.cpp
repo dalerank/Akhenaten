@@ -86,10 +86,7 @@ void building_fishing_wharf::spawn_figure() {
         }
     }
 
-    figure* fcart = common_spawn_goods_output_cartpusher();
-    if (fcart) {
-        events::emit(event_produced_resources{ base.output.resource, fcart->get_carrying_amount() });
-    }
+    common_spawn_goods_output_cartpusher();
 }
 
 void building_fishing_wharf::on_place_checks() {

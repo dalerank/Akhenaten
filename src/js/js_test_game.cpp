@@ -1946,11 +1946,6 @@ static int __test_find_accessible_herd_tile(int ftype) {
 }
 ANK_FUNCTION_1(__test_find_accessible_herd_tile);
 
-static int __test_hunting_lodge_default_hunter_type() {
-    return (int)hunting_lodge_default_hunter_type();
-}
-ANK_FUNCTION(__test_hunting_lodge_default_hunter_type);
-
 static int __test_building_figure_spawn_delay(int bid) {
     building *b = building_get(bid);
     return b ? b->figure_spawn_delay : -1;

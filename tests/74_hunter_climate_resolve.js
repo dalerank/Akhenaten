@@ -24,24 +24,24 @@ function run_test() {
     __test_set_scenario_prey_point(0, 20, 20)
 
     __test_set_scenario_climate(CLIMATE_CENTRAL)
-    if (__test_hunting_lodge_default_hunter_type() != FIGURE_ANTELOPE_HUNTER) {
+    if (hunting_lodge_resolve_hunter_type() != FIGURE_ANTELOPE_HUNTER) {
         test74_fail('Central+prey → antelope hunter, got '
-            + __test_hunting_lodge_default_hunter_type())
+            + hunting_lodge_resolve_hunter_type())
         return
     }
 
     __test_set_scenario_climate(CLIMATE_DESERT)
-    if (__test_hunting_lodge_default_hunter_type() != FIGURE_OSTRICH_HUNTER) {
+    if (hunting_lodge_resolve_hunter_type() != FIGURE_OSTRICH_HUNTER) {
         test74_fail('Desert+prey → ostrich hunter, got '
-            + __test_hunting_lodge_default_hunter_type())
+            + hunting_lodge_resolve_hunter_type())
         return
     }
 
     __test_set_scenario_climate(CLIMATE_NORTHERN)
     // Birds hunter leaf: Northern+prey → birds hunter.
-    if (__test_hunting_lodge_default_hunter_type() != FIGURE_BIRDS_HUNTER) {
+    if (hunting_lodge_resolve_hunter_type() != FIGURE_BIRDS_HUNTER) {
         test74_fail('Northern+prey → birds hunter, got '
-            + __test_hunting_lodge_default_hunter_type())
+            + hunting_lodge_resolve_hunter_type())
         return
     }
 
@@ -49,16 +49,16 @@ function run_test() {
     __test_clear_scenario_prey_points()
 
     __test_set_scenario_climate(CLIMATE_CENTRAL)
-    if (__test_hunting_lodge_default_hunter_type() != FIGURE_ANTELOPE_HUNTER) {
+    if (hunting_lodge_resolve_hunter_type() != FIGURE_ANTELOPE_HUNTER) {
         test74_fail('Central+legacy → antelope hunter, got '
-            + __test_hunting_lodge_default_hunter_type())
+            + hunting_lodge_resolve_hunter_type())
         return
     }
 
     __test_set_scenario_climate(CLIMATE_NORTHERN)
-    if (__test_hunting_lodge_default_hunter_type() != FIGURE_OSTRICH_HUNTER) {
+    if (hunting_lodge_resolve_hunter_type() != FIGURE_OSTRICH_HUNTER) {
         test74_fail('Northern+legacy → ostrich interim, got '
-            + __test_hunting_lodge_default_hunter_type())
+            + hunting_lodge_resolve_hunter_type())
         return
     }
 
