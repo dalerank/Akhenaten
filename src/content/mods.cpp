@@ -275,6 +275,7 @@ void mods_remount() {
         }
 
         if (it.second.enabled) {
+            const bool already_mounted = vfs::is_pack_mounted(it.second.path);
             vfs::mount_pack(it.second.path);
 
             auto& modpack = g_image_data->pak_list[it.second.useridx];
@@ -287,12 +288,14 @@ void mods_remount() {
                 modpack.custom = true;
             }
 
-            it.second.fill_entries();
-
-            for (const auto& s : it.second.scripts) {
-                js_vm_reload_file(s.c_str());
+            if (!already_mounted) {
+                it.second.fill_entries();
+                for (const auto& s : it.second.scripts) {
+                    js_vm_reload_file(s.c_str());
+                }
             }
         } else {
+            const bool was_mounted = vfs::is_pack_mounted(it.second.path);
             vfs::umount_pack(it.second.path);
 
             auto& modpack = g_image_data->pak_list[it.second.useridx];
@@ -306,8 +309,10 @@ void mods_remount() {
                 modpack.name = xstring();
             }
 
-            for (const auto& s : it.second.scripts) {
-                js_vm_reload_file(s.c_str());
+            if (was_mounted) {
+                for (const auto& s : it.second.scripts) {
+                    js_vm_reload_file(s.c_str());
+                }
             }
         }
     }

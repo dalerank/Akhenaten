@@ -331,16 +331,23 @@ bool mounted_entry_exists(path in_path) {
     return mounted_entry_resolve(in_path, resolved);
 }
 
-bool mount_pack(path filename) {
-    if (filename.empty() || !file_exists(filename)) {
+bool is_pack_mounted(path filename) {
+    if (filename.empty()) {
         return false;
     }
 
     const auto it = std::find_if(g_mounted_archives.begin(), g_mounted_archives.end(), [&filename] (const ZipArchive *arch) {
         return arch->filepath() == filename;
     });
+    return it != g_mounted_archives.end();
+}
 
-    if (it != g_mounted_archives.end()) {
+bool mount_pack(path filename) {
+    if (filename.empty() || !file_exists(filename)) {
+        return false;
+    }
+
+    if (is_pack_mounted(filename)) {
         return true;
     }
 
