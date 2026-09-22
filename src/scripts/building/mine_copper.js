@@ -6,6 +6,15 @@ building_mine_copper {
     base { pack:PACK_GENERAL, id:196 },
     work { pos : [54, 15], pack:PACK_SPR_AMBIENT, id:48, max_frames: 16, duration:2, internal_offset:true }
   },
+  overlay_anims {
+    copper {
+      pos : [93, 0]
+      pack:PACK_GENERAL
+      id:203
+      resource : RESOURCE_COPPER
+      default_active : true
+    }
+  }
   output {
     resource : RESOURCE_COPPER
   }

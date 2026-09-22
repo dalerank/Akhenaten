@@ -1,18 +1,10 @@
 #include "building_mine_copper.h"
 
 #include "building/building.h"
-#include "city/city_resource.h"
-#include "game/game_events.h"
-#include "figure/figure.h"
 #include "js/js_game.h"
 #include "grid/copper.h"
 #include "grid/grid.h"
-#include "graphics/graphics.h"
-#include "graphics/image.h"
-#include "graphics/animation.h"
-#include "widget/city/ornaments.h"
 #include "game/resource.h"
-#include <cmath>
 
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_mine_copper);
 
@@ -52,7 +44,6 @@ void building_mine_copper::spawn_figure() {
 
     common_spawn_labor_seeker(current_params().min_houses_coverage);
 
-    // Check if production is finished and add resources to storage
     auto &d = runtime_data();
     if (d.progress >= d.progress_max) {
         production_finished();
@@ -71,22 +62,5 @@ void building_mine_copper::production_finished() {
         store_resource(RESOURCE_COPPER, ready_production());
 
         d.progress = 0;
-        //d.has_raw_materials = false;
     }
 }
-
-bool building_mine_copper::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {
-    draw_normal_anim(ctx, point, tile, color_mask);
-
-    int amount = ceil((float)stored_amount(RESOURCE_COPPER) / 100.0) - 1;
-    if (amount >= 0) {
-        const auto &ranim = anim(animkeys().copper);
-        auto& command = ImageDraw::create_subcommand(ctx, render_command_t::ert_generic);
-        command.image_id = ranim.first_img() + amount;
-        command.pixel = point + ranim.pos;
-        command.mask = color_mask;
-    }
-
-    return true;
-}
-
