@@ -37,7 +37,11 @@ import building.palace
 import building.village_palace
 import building.town_palace
 import building.city_palace
-import building.temple
+import building.temple_osiris
+import building.temple_ra
+import building.temple_ptah
+import building.temple_seth
+import building.temple_bast
 import building.shrine_osiris
 import building.shrine_ra
 import building.shrine_ptah
