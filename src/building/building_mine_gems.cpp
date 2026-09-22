@@ -7,19 +7,6 @@
 
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_mine_gems);
 
-void building_mine_gems::produce_uptick_per_day() {
-    if (base.num_workers <= 0) {
-        base.produce_uptick = 0;
-        return;
-    }
-
-    const auto &params = current_params();
-    int divider = std::max<int>(1, params.production_divider);
-
-    int production = base.num_workers / divider;
-    base.produce_uptick = std::max<int>(1, production);
-}
-
 void building_mine_gems::update_production() {
     auto &d = runtime_data();
     int current_progress = d.progress;
@@ -47,4 +34,3 @@ void building_mine_gems::update_production() {
         map_gems_deplete(best_tile, delta_progress);
     }
 }
-

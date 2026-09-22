@@ -21,7 +21,6 @@ building_mine_gems {
   }
   progress_max : 200,
   production_rate : 100,
-  production_divider : 3,
   building_size : 2,
   meta { text_id:163, help_link:"message_building_gemstone_mine" }
   labor_category : LABOR_CATEGORY_INDUSTRY_COMMERCE,
@@ -47,6 +46,18 @@ function building_mine_gems_on_before_collapse(ev) {
         return
     }
     emit event_finance_request { type: efinance_request_disasters, deben: 250 }
+}
+
+[es=(building_mine_gems, produce_uptick_per_day)]
+function building_mine_gems_produce_uptick_per_day(ev) {
+    var b = city.get_building(ev.bid)
+    if (b.num_workers <= 0) {
+        b.produce_uptick = 0
+        return
+    }
+
+    var production = Math.floor(b.num_workers / 3)
+    b.produce_uptick = production < 1 ? 1 : production
 }
 
 [es=(building_mine_gems, draw_usable_paths)]
