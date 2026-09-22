@@ -116,7 +116,7 @@ ANK_FUNCTION_1(__city_count_total_buildings);
 
 bool __city_building_is_temple(int bid) {
     building *b = building_get(bid);
-    return !!b->dcast_temple();
+    return b && b->is_temple();
 }
 ANK_FUNCTION_1(__city_building_is_temple);
 

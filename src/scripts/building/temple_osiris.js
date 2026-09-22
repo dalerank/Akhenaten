@@ -1,6 +1,8 @@
 log_info("akhenaten: building_temple_osiris started")
 
+[es=building]
 building_temple_osiris {
+    type: BUILDING_TEMPLE_OSIRIS
     animations {
       preview { pack:PACK_GENERAL, id:25 }
       base { pack:PACK_GENERAL, id:25 }

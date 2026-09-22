@@ -1,6 +1,8 @@
 log_info("akhenaten: building_temple_bast started")
 
+[es=building]
 building_temple_bast {
+    type: BUILDING_TEMPLE_BAST
     animations {
       preview { pack:PACK_GENERAL, id:76 }
       base { pack:PACK_GENERAL, id:76 }

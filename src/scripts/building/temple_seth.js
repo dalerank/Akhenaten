@@ -1,6 +1,8 @@
 log_info("akhenaten: building_temple_seth started")
 
+[es=building]
 building_temple_seth {
+    type: BUILDING_TEMPLE_SETH
     animations {
       preview { pack:PACK_GENERAL, id:19 }
       base { pack:PACK_GENERAL, id:19 }

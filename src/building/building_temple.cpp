@@ -1,9 +1,0 @@
-#include "building_temple.h"
-
-#include "js/js_game.h"
-
-REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_temple_osiris);
-REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_temple_ra);
-REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_temple_ptah);
-REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_temple_seth);
-REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_temple_bast);

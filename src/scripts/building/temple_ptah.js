@@ -1,6 +1,8 @@
 log_info("akhenaten: building_temple_ptah started")
 
+[es=building]
 building_temple_ptah {
+    type: BUILDING_TEMPLE_PTAH
     animations {
       preview { pack:PACK_GENERAL, id:20 }
       base { pack:PACK_GENERAL, id:20 }
