@@ -32,7 +32,6 @@ building_mine_gold {
   damage_risk [2]
   progress_max : 200
   production_rate : 100
-  production_divider : 10
 }
 
 [es=(building_mine_gold, on_before_collapse)]
@@ -51,10 +50,7 @@ function building_mine_gold_produce_uptick_per_day(ev) {
         return
     }
 
-    var divider = b.params.production_divider
-    if (divider < 1) {
-        divider = 1
-    }
+    var divider = 10
     if (game_features.gameplay_change_goldmine_twice_production) {
         divider = Math.floor(divider / 2)
         if (divider < 1) {
