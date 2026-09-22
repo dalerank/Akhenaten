@@ -53,11 +53,8 @@ int figure_physician::provide_service() {
         return 0;
     }
 
-    auto &physician_data = physician->runtime_data();
     const auto &params = physician->current_params();
-
-    // Check if already served 1000 residents this month
-    if (physician_data.residents_served_this_month >= params.max_serve_clients) {
+    if (physician_building->residents_served_this_month >= params.max_serve_clients) {
         return 0;
     }
 
@@ -71,7 +68,7 @@ int figure_physician::provide_service() {
         auto &housed = house->runtime_data();
         if (housed.physician < MAX_COVERAGE / 2) {
             int house_population = house->house_population();
-            physician_data.residents_served_this_month += house_population;
+            physician_building->residents_served_this_month += (uint16_t)house_population;
             housed.physician = MAX_COVERAGE;
         }
 

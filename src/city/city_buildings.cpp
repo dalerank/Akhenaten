@@ -417,7 +417,7 @@ io_buffer *iob_buildings = new io_buffer([] (io_buffer *iob, size_t version) {
         iob->bind(BIND_SIGNATURE_UINT8, &b->malaria_risk);
         iob->bind(BIND_SIGNATURE_INT16, &b->prev_part_building_id);
         iob->bind(BIND_SIGNATURE_INT16, &b->next_part_building_id);
-        iob->bind____skip(2);
+        iob->bind(BIND_SIGNATURE_UINT16, &b->residents_served_this_month);
         iob->bind(BIND_SIGNATURE_UINT8, &b->disease_days);
         iob->bind(BIND_SIGNATURE_UINT8, &b->has_well_access);
 
