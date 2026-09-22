@@ -8,8 +8,6 @@ public:
     virtual building_temple *dcast_temple() override { return this; }
 
     //virtual void on_create() override;
-    virtual e_overlay get_overlay() const override;
-    virtual e_sound_channel_city sound_channel() const override;
     virtual void spawn_figure() override;
     virtual bool draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color mask) override;
 };

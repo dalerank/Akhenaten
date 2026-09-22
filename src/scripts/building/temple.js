@@ -6,9 +6,11 @@ building_temple_osiris {
       base { pack:PACK_GENERAL, id:25 }
       work { pos[80, -125], pack:PACK_GENERAL, id:25, offset:1, max_frames:8 }
     }
-  
+
     min_houses_coverage : 50
     labor_category : LABOR_CATEGORY_RELIGION
+    overlay : OVERLAY_RELIGION_OSIRIS
+    sound_channel : SOUND_CHANNEL_CITY_TEMPLE_OSIRIS
     building_size : 3
     meta { text_id: 92, help_link:"message_building_shrine_and_temple" }
     info_sound : "Wavs/tem_osiris_l.wav"
@@ -34,6 +36,8 @@ building_temple_osiris {
 
     min_houses_coverage : 50
     labor_category : LABOR_CATEGORY_RELIGION
+    overlay : OVERLAY_RELIGION_RA
+    sound_channel : SOUND_CHANNEL_CITY_TEMPLE_RA
     building_size : 3
     meta  { text_id: 93, help_link:"message_building_shrine_and_temple" }
     info_sound : "Wavs/tem_RA_L.wav"
@@ -59,6 +63,8 @@ building_temple_osiris {
 
     min_houses_coverage : 50
     labor_category : LABOR_CATEGORY_RELIGION
+    overlay : OVERLAY_RELIGION_PTAH
+    sound_channel : SOUND_CHANNEL_CITY_TEMPLE_PTAH
     building_size : 3
     meta { text_id: 94, help_link:"message_building_shrine_and_temple" }
     info_sound : "Wavs/tem_ptah_l.wav"
@@ -84,6 +90,8 @@ building_temple_osiris {
 
     min_houses_coverage : 50
     labor_category : LABOR_CATEGORY_RELIGION
+    overlay : OVERLAY_RELIGION_SETH
+    sound_channel : SOUND_CHANNEL_CITY_TEMPLE_SETH
     building_size : 3
     meta { text_id: 95, help_link:"message_building_shrine_and_temple" }
     info_sound : "Wavs/tem_seth_l.wav"
@@ -109,6 +117,8 @@ building_temple_osiris {
 
     min_houses_coverage : 50
     labor_category : LABOR_CATEGORY_RELIGION
+    overlay : OVERLAY_RELIGION_BAST
+    sound_channel : SOUND_CHANNEL_CITY_TEMPLE_BAST
     building_size : 3
     meta { text_id: 96, help_link:"message_building_shrine_and_temple" }
     info_sound : "Wavs/tem_bast_l.wav"

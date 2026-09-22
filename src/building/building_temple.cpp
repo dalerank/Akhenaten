@@ -25,36 +25,6 @@ REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_temple_ptah);
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_temple_seth);
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_temple_bast);
 
-e_overlay building_temple::get_overlay() const {
-    switch(type()) {
-    case BUILDING_TEMPLE_OSIRIS: return OVERLAY_RELIGION_OSIRIS;
-    case BUILDING_TEMPLE_RA: return OVERLAY_RELIGION_RA;
-    case BUILDING_TEMPLE_PTAH: return OVERLAY_RELIGION_PTAH;
-    case BUILDING_TEMPLE_SETH: return OVERLAY_RELIGION_SETH;
-    case BUILDING_TEMPLE_BAST: return OVERLAY_RELIGION_BAST;
-
-    default:
-        verify_no_crash(false);
-    }
-
-    return OVERLAY_NONE;
-}
-
-e_sound_channel_city building_temple::sound_channel() const {
-    switch (type()) {
-    case BUILDING_TEMPLE_OSIRIS: return SOUND_CHANNEL_CITY_TEMPLE_OSIRIS;
-    case BUILDING_TEMPLE_RA: return SOUND_CHANNEL_CITY_TEMPLE_RA;
-    case BUILDING_TEMPLE_PTAH: return SOUND_CHANNEL_CITY_TEMPLE_PTAH;
-    case BUILDING_TEMPLE_SETH: return SOUND_CHANNEL_CITY_TEMPLE_SETH;
-    case BUILDING_TEMPLE_BAST: return SOUND_CHANNEL_CITY_TEMPLE_BAST;
-
-    default:
-        verify_no_crash(false);
-    }
-
-    return SOUND_CHANNEL_CITY_NONE;
-}
-
 void building_temple::spawn_figure() {
     if (is_main()) {
         common_spawn_roamer(FIGURE_PRIEST, current_params().min_houses_coverage, (e_figure_action)ACTION_125_ROAMER_ROAMING);
