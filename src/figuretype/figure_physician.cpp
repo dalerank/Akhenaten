@@ -2,7 +2,6 @@
 
 #include "core/profiler.h"
 #include "building/building_house.h"
-#include "building/building_physician.h"
 #include "figure/service.h"
 #include "js/js_game.h"
 
@@ -10,7 +9,6 @@ REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_physician);
 
 void figure_physician::figure_action() {
     OZZY_PROFILER_FUNCTION();
-    //    building *b = building_get(building_id);
     switch (action_state()) {
     case ACTION_60_PHYSICIAN_CREATED:
         advance_action(ACTION_10_PHYSICIAN_GOING);
@@ -48,12 +46,7 @@ int figure_physician::provide_service() {
         return 0;
     }
 
-    auto physician = physician_building->dcast_physician();
-    if (!physician) {
-        return 0;
-    }
-
-    const auto &params = physician->current_params();
+    const auto &params = physician_building->params();
     if (physician_building->residents_served_this_month >= params.max_serve_clients) {
         return 0;
     }

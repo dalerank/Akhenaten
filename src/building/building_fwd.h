@@ -57,7 +57,6 @@ class building;
     X(guild)                   \
     X(entertainment)           \
     X(mansion)                 \
-    X(physician)               \
     X(wharf)                   \
     X(transport_wharf)         \
     X(temple_complex)          \

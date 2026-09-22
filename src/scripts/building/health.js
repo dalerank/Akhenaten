@@ -25,7 +25,9 @@ building_dentist {
   }
 }
 
+[es=building]
 building_physician {
+  type: BUILDING_PHYSICIAN
   animations {
     _pack { pack:PACK_GENERAL }
     preview { id:70 }
