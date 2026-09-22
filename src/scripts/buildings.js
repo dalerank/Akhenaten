@@ -32,6 +32,7 @@ import building.fort
 import building.education
 import building.academy
 import building.apothecary
+import building.physician
 import building.scribal_school
 import building.palace
 import building.village_palace

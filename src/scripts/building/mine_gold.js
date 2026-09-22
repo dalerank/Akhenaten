@@ -1,6 +1,8 @@
 log_info("akhenaten: building_mine_gold started")
 
+[es=building_mine]
 building_mine_gold {
+  type: BUILDING_GOLD_MINE
   animations {
     _pack { pack:PACK_GENERAL }
     preview { id:185 }

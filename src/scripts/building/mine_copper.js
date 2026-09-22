@@ -1,6 +1,8 @@
 log_info("akhenaten: building_mine_copper started")
 
+[es=building_mine]
 building_mine_copper {
+  type: BUILDING_COPPER_MINE
   animations {
     preview { pack:PACK_GENERAL, id:196 },
     base { pack:PACK_GENERAL, id:196 },

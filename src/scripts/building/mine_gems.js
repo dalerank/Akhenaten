@@ -1,6 +1,8 @@
 log_info("akhenaten: building_mine_gems started")
 
+[es=building_mine]
 building_mine_gems {
+  type: BUILDING_GEMSTONE_MINE
   animations {
     preview { pack:PACK_GENERAL, id:188 },
     base { pack:PACK_GENERAL, id:188 },
