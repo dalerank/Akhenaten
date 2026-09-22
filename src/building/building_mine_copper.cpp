@@ -35,19 +35,3 @@ void building_mine_copper::update_production() {
         map_copper_deplete(best_tile, delta_progress);
     }
 }
-
-void building_mine_copper::spawn_figure() {
-    check_labor_problem();
-    if (!has_road_access()) {
-        return;
-    }
-
-    common_spawn_labor_seeker(current_params().min_houses_coverage);
-
-    auto &d = runtime_data();
-    if (d.progress >= d.progress_max) {
-        production_finished();
-    }
-
-    common_spawn_goods_output_cartpusher();
-}

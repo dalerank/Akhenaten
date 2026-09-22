@@ -7,5 +7,4 @@ public:
     BUILDING_METAINFO(BUILDING_COPPER_MINE, building_mine_copper, building_mine)
 
     virtual void update_production() override;
-    virtual void spawn_figure() override;
 };
