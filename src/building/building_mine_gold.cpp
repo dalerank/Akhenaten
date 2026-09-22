@@ -3,26 +3,9 @@
 #include "building/building.h"
 #include "grid/golden.h"
 #include "grid/grid.h"
-#include "game/game_config.h"
 #include "js/js_game.h"
 
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_mine_gold);
-
-int building_mine_gold::produce_uptick_per_day() const {
-    if (base.num_workers <= 0) {
-        return 0;
-    }
-
-    const auto &params = current_params();
-    int divider = std::max<int>(1, params.production_divider);
-
-    if (!!game_features::gameplay_change_goldmine_twice_production) {
-        divider = std::max(1, divider / 2);
-    }
-
-    int production = base.num_workers / divider;
-    return std::max<int>(1, production);
-}
 
 void building_mine_gold::production_finished() {
     const auto &params = current_params();
@@ -64,4 +47,3 @@ void building_mine_gold::update_production() {
 
     map_golden_deplete(best_tile, delta_progress);
 }
-

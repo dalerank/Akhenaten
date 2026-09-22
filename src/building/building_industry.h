@@ -26,7 +26,7 @@ public:
         e_figure_type processed_figure;
     } BUILDING_RUNTIME_DATA_T;
 
-    virtual int produce_uptick_per_day() const { return base.num_workers; }
+    virtual void produce_uptick_per_day();
 
     virtual void update_preproduction() { /*do nothing*/ }
     virtual void update_production();

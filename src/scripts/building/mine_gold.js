@@ -43,6 +43,29 @@ function building_mine_gold_on_before_collapse(ev) {
     emit event_finance_request { type: efinance_request_disasters, deben: 250 }
 }
 
+[es=(building_mine_gold, produce_uptick_per_day)]
+function building_mine_gold_produce_uptick_per_day(ev) {
+    var b = city.get_building(ev.bid)
+    if (b.num_workers <= 0) {
+        b.produce_uptick = 0
+        return
+    }
+
+    var divider = b.params.production_divider
+    if (divider < 1) {
+        divider = 1
+    }
+    if (game_features.gameplay_change_goldmine_twice_production) {
+        divider = Math.floor(divider / 2)
+        if (divider < 1) {
+            divider = 1
+        }
+    }
+
+    var production = Math.floor(b.num_workers / divider)
+    b.produce_uptick = production < 1 ? 1 : production
+}
+
 [es=(building_mine_gold, draw_usable_paths)]
 function building_mine_gold_draw_usable_paths(ev) {
     city.get_building(ev.bid).draw_usable_paths()

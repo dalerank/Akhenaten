@@ -15,6 +15,11 @@ constexpr short MAX_PROGRESS_RAW = 200;
 constexpr short MAX_PROGRESS_WORKSHOP = 400;
 BUILDING_RUNTIME_DATA_IMPL(building_industry)
 
+void building_industry::produce_uptick_per_day() {
+    base.produce_uptick = base.num_workers;
+    es(__func__);
+}
+
 void building_industry::bind_dynamic(io_buffer *iob, size_t version) {
     auto &d = runtime_data();
 
@@ -116,7 +121,8 @@ void building_industry::update_production() {
         base.blessing_days_left--;
     }
 
-    const int progress_per_day = produce_uptick_per_day();
+    produce_uptick_per_day();
+    const int progress_per_day = base.produce_uptick;
     d.progress += progress_per_day;
 
     if (base.blessing_days_left) {

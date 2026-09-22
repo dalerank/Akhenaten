@@ -18,6 +18,7 @@ BuildingParams.property.info_title_id = { }
 BuildingParams.property.progress_max = { }
 BuildingParams.property.production_rate = { }
 BuildingParams.property.production_rate_dcy = { }
+BuildingParams.property.production_divider = { }
 BuildingParams.property.output_resource_second_rate = { }
 BuildingParams.property.overlay = { }
 BuildingParams.property.sound_channel = { }

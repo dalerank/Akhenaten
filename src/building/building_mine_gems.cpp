@@ -7,16 +7,17 @@
 
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_mine_gems);
 
-int building_mine_gems::produce_uptick_per_day() const {
+void building_mine_gems::produce_uptick_per_day() {
     if (base.num_workers <= 0) {
-        return 0;
+        base.produce_uptick = 0;
+        return;
     }
 
     const auto &params = current_params();
     int divider = std::max<int>(1, params.production_divider);
 
     int production = base.num_workers / divider;
-    return std::max<int>(1, production);
+    base.produce_uptick = std::max<int>(1, production);
 }
 
 void building_mine_gems::update_production() {

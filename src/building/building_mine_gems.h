@@ -11,7 +11,7 @@ public:
         uint16_t production_divider;
     } BUILDING_STATIC_DATA_T;
 
-    virtual int produce_uptick_per_day() const override;
+    virtual void produce_uptick_per_day() override;
     virtual void update_production() override;
 };
 ANK_CONFIG_STRUCT(building_mine_gems::static_params, production_divider)

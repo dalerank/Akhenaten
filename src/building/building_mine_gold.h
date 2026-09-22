@@ -10,9 +10,7 @@ public:
         uint16_t production_divider;
     } BUILDING_STATIC_DATA_T;
 
-    virtual int produce_uptick_per_day() const override;
     virtual void update_production() override;
     virtual void production_finished() override;
 };
 ANK_CONFIG_STRUCT(building_mine_gold::static_params, production_divider)
-
