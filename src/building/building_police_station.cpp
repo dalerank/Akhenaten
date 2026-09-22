@@ -123,7 +123,7 @@ void building_police_station::update_month() {
     d.weapon_requested_this_month = false;
 }
 
-bool building_police_station::add_resource(e_resource resource, int amount) {
+bool building_police_station::add_resource(e_resource resource, int amount, figure_id fid) {
     if (resource == RESOURCE_WEAPONS) {
         int max_storage = 200;
         store_resource(RESOURCE_WEAPONS, amount);

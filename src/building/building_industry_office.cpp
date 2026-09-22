@@ -37,7 +37,7 @@ int building_industry_office::management_radius() const {
     return r > 0 ? r : 7;
 }
 
-bool building_industry_office::add_resource(e_resource resource, int amount) {
+bool building_industry_office::add_resource(e_resource resource, int amount, figure_id fid) {
     if (resource != RESOURCE_PAPYRUS) {
         return false;
     }

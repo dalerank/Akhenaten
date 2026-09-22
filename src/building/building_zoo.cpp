@@ -26,7 +26,7 @@ int building_zoo::resource_consume_amount() {
     }
 }
 
-bool building_zoo::add_resource(e_resource resource, int amount) {
+bool building_zoo::add_resource(e_resource resource, int amount, figure_id fid) {
     if (resource != RESOURCE_STRAW && resource != RESOURCE_GAMEMEAT) {
         return false;
     }

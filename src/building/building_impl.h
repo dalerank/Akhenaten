@@ -69,7 +69,7 @@ public:
     virtual void bind_dynamic(io_buffer *iob, size_t version);
     virtual bvariant get_property(const xstring &domain, const xstring &name) const;
     virtual bool set_property(const xstring &domain, const xstring &name, const bvariant &value);
-    virtual bool add_resource(e_resource resource, int amount);
+    virtual bool add_resource(e_resource resource, int amount, figure_id fid = 0);
     virtual void produced_resources(e_resource resource, int amount);
     virtual int get_orientation() const;
     virtual void on_config_reload() {}

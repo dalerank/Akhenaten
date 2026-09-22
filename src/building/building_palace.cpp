@@ -4,7 +4,10 @@
 #include "building/building.h"
 #include "city/ratings.h"
 #include "city/city.h"
+#include "city/city_finance.h"
+#include "game/game_events.h"
 #include "game/resource.h"
+#include "figure/figure.h"
 #include "core/object_property.h"
 #include "graphics/elements/lang_text.h"
 #include "graphics/elements/tooltip.h"
@@ -72,4 +75,19 @@ void building_palace::bind_dynamic(io_buffer *iob, size_t version) {
 
 void building_palace::spawn_figure() {
     common_spawn_figure_trigger(50);
+}
+
+bool building_palace::add_resource(e_resource resource, int amount, figure_id fid) {
+    if (resource != RESOURCE_GOLD) {
+        return false;
+    }
+
+    e_finance_request_type request_type = efinance_request_gold_delivered;
+    building *home = figure_get(fid)->home();
+    if (home && home->dcast_tax_collector()) {
+        request_type = efinance_request_tax_collected;
+    }
+
+    events::emit(event_finance_request{ request_type, amount });
+    return true;
 }

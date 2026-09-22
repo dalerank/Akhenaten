@@ -24,6 +24,8 @@ building_temple_ptah {
       is_temple: true
       is_religion: true
       keeps_visitor_paths: true
+      draw_normal_anim: true
+      work_anim: true
     }
 }
 

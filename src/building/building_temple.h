@@ -9,7 +9,6 @@ public:
 
     //virtual void on_create() override;
     virtual void spawn_figure() override;
-    virtual bool draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color mask) override;
 };
 
 struct building_temple_osiris : public building_temple {

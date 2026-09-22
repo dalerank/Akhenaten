@@ -8,8 +8,6 @@ public:
 
     virtual building_tax_collector *dcast_tax_collector() override { return this; }
 
-    virtual void bind_dynamic(io_buffer *iob, size_t version) override;
-
     int16_t deben_storage() const { return base.deben_storage; }
     int16_t tax_storage() const { return base.tax_income_or_storage; }
 };

@@ -31,7 +31,7 @@ public:
     virtual e_sound_channel_city sound_channel() const override { return SOUND_CHANNEL_CITY_STORAGE_YARD; }
     virtual bool draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color mask) override;
     virtual void bind_dynamic(io_buffer *iob, size_t version) override;
-    virtual bool add_resource(e_resource resource, int amount) override;
+    virtual bool add_resource(e_resource resource, int amount, figure_id fid = 0) override;
 };
 ANK_CONFIG_STRUCT(building_shipyard::static_params,
     warship_progress_cost, transport_progress_cost, fishingboat_progress_cost)

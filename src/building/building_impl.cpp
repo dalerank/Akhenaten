@@ -425,7 +425,7 @@ void building_impl::store_resource(e_resource r, int16_t amount) {
     base.store_resource(r, amount);
 }
 
-bool building_impl::add_resource(e_resource resource, int amount) {
+bool building_impl::add_resource(e_resource resource, int amount, figure_id fid) {
     const int before = stored_amount(resource);
     es_t(add_resource_ev{ id(), (int)resource, amount }, __func__);
     return stored_amount(resource) != before;

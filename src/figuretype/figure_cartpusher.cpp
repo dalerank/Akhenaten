@@ -161,28 +161,16 @@ void figure_cartpusher::do_deliver(bool warehouseman, int action_done, int actio
             case BUILDING_INDUSTRY_OFFICE:
             case BUILDING_SENET_HOUSE:
             case BUILDING_ZOO:
-            case BUILDING_POLICE_STATION: {
+            case BUILDING_POLICE_STATION:
+            case BUILDING_VILLAGE_PALACE:
+            case BUILDING_TOWN_PALACE:
+            case BUILDING_CITY_PALACE: {
                     building_impl *b = dest->dcast();
-                    bool ok = b->add_resource(resource, amount_single_turn);
+                    bool ok = b->add_resource(resource, amount_single_turn, id());
                     if (!ok) {
                         advance_action(action_fail);
                         return;
                     }
-                    dump_resource(amount_single_turn);
-                    deposited = true;
-                }
-                break;
-
-            case BUILDING_VILLAGE_PALACE:
-            case BUILDING_TOWN_PALACE:
-            case BUILDING_CITY_PALACE: {
-                    e_finance_request_type request_type = efinance_request_gold_delivered;
-                    if (base.home()->dcast_mine()) {
-                        request_type = efinance_request_gold_delivered;
-                    } else if (base.home()->dcast_tax_collector()) {
-                        request_type = efinance_request_tax_collected;
-                    }
-                    events::emit(event_finance_request{ request_type, amount_single_turn });
                     dump_resource(amount_single_turn);
                     deposited = true;
                 }

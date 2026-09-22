@@ -196,7 +196,7 @@ void building_recruiter::on_place_checks() {
     warnings.add_if(!has_weapons, "#soldiers_need_supplies_of_weapons");
 }
 
-bool building_recruiter::add_resource(e_resource resource, int amount) {
+bool building_recruiter::add_resource(e_resource resource, int amount, figure_id fid) {
     if (resource != RESOURCE_WEAPONS) {
         return false;
     }

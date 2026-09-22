@@ -135,7 +135,7 @@ void building_shipyard::on_place_update_tiles(int orientation, int variant) {
     map_water_add_building(id(), tile(), size(), base_img() + orientation_rel);
 }
 
-bool building_shipyard::add_resource(e_resource resource, int amount) {
+bool building_shipyard::add_resource(e_resource resource, int amount, figure_id fid) {
     if (resource != RESOURCE_TIMBER) {
         return false;
     }
