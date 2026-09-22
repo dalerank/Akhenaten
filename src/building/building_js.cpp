@@ -390,6 +390,22 @@ void __building_common_spawn_goods_output_cartpusher(js_State *J) {
     js_helpers::js_push_value(J, f ? f->id : 0);
 }
 
+void __building_create_cartpusher(js_State *J) {
+    const int bid = building_this_id(J);
+    const int resource = js_helpers::js_to_value<int>(J, 1);
+    const int quantity = js_helpers::js_to_value<int>(J, 2);
+    const int action = js_helpers::js_to_value<int>(J, 3);
+    const int slot = js_helpers::js_to_value<int>(J, 4);
+    building *b = building_get(bid);
+    if (!b || !b->is_valid()) {
+        js_helpers::js_push_value(J, 0);
+        return;
+    }
+
+    figure *f = b->dcast()->create_cartpusher((e_resource)resource, quantity, (e_figure_action)action, (e_building_slot)slot);
+    js_helpers::js_push_value(J, f ? f->id : 0);
+}
+
 void __building_create_figure_with_destination(js_State *J) {
     const int bid = building_this_id(J);
     const int figure_type = js_helpers::js_to_value<int>(J, 1);
@@ -635,6 +651,7 @@ void js_register_building(js_State *J) {
     jsB_propf(J, js_intern("Building.prototype.common_spawn_labor_seeker"), __building_common_spawn_labor_seeker, 1);
     jsB_propf(J, js_intern("Building.prototype.create_figure_generic"), __building_create_figure_generic, 3);
     jsB_propf(J, js_intern("Building.prototype.common_spawn_goods_output_cartpusher"), __building_common_spawn_goods_output_cartpusher, 0);
+    jsB_propf(J, js_intern("Building.prototype.create_cartpusher"), __building_create_cartpusher, 4);
     jsB_propf(J, js_intern("Building.prototype.create_figure_with_destination"), __building_create_figure_with_destination, 4);
     jsB_propf(J, js_intern("Building.prototype.add_workers"), __building_add_workers, 1);
     jsB_propf(J, js_intern("Building.prototype.first_img"), building_proto_first_img, 1);

@@ -314,6 +314,7 @@ void js_register_figure(js_State *J) {
     JS_REGISTER_BOUND_OFFSET_MEMBER_LIT(J, figure, target_figure_id);
     JS_REGISTER_BOUND_OFFSET_MEMBER_LIT(J, figure, destination_building_id);
     JS_REGISTER_BOUND_OFFSET_MEMBER_LIT(J, figure, home_building_id);
+    JS_REGISTER_BOUND_OFFSET_MEMBER_LIT(J, figure, sender_building_id);
     JS_REGISTER_BOUND_OFFSET_MEMBER_LIT(J, figure, movement_ticks_watchdog);
     JS_REGISTER_BOUND_OFFSET_MEMBER_LIT(J, figure, resource_id);
     JS_REGISTER_BOUND_OFFSET_MEMBER_LIT(J, figure, resource_amount_full);
