@@ -1,5 +1,7 @@
 #include "building_mine.h"
 
-#include "building/building.h"
-#include "graphics/animation.h"
+#include "js/js_game.h"
 
+void building_mine::update_production() {
+    es(__func__);
+}
