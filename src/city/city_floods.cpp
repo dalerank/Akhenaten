@@ -200,7 +200,7 @@ void floods_t::reset_farms() {
         }
 
         auto &d = farm->runtime_data();
-        d.progress = 0;
+        it->progress = 0;
         d.ready_production = 0;
         d.worker_id = 0;
         d.work_camp_id = 0;

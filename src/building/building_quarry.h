@@ -14,8 +14,7 @@ public:
 protected:
     template<typename GetResourceFunc, typename DepleteResourceFunc>
     void update_production_with_resource_depletion(GetResourceFunc get_resource, DepleteResourceFunc deplete_resource) {
-        auto &d = runtime_data();
-        int current_progress = d.progress;
+        int current_progress = base.progress;
 
         tile2i best_tile = tile2i::invalid;
         int best_resource = 0;
@@ -34,7 +33,7 @@ protected:
         }
 
         building_industry::update_production();
-        int delta_progress = d.progress - current_progress;
+        int delta_progress = base.progress - current_progress;
 
         deplete_resource(best_tile, delta_progress);
     }

@@ -28,8 +28,7 @@ void building_clay_pit::on_before_flooded() {
     base.destroy_reason = e_destroy_flooded;
     base.set_flag(e_building_non_deletable, true);
     base.num_workers = 0;
-    auto &d = runtime_data();
-    d.progress = 0;
+    base.progress = 0;
 
     if (!!game_features::gameplay_change_random_mine_or_pit_collapses_take_money) {
         events::emit(event_finance_request{ efinance_request_disasters, 250 });
@@ -49,8 +48,7 @@ void building_clay_pit::update_production() {
         return;
     }
 
-    auto &d = runtime_data();
-    int current_progress = d.progress;
+    int current_progress = base.progress;
 
     tile2i best_tile = tile2i::invalid;
     int best_clay = 0;
@@ -69,7 +67,7 @@ void building_clay_pit::update_production() {
     }
 
     building_industry::update_production();
-    int delta_progress = d.progress - current_progress;
+    int delta_progress = base.progress - current_progress;
     if (delta_progress > 0) {
         map_clay_deplete(best_tile, delta_progress);
     }

@@ -17,7 +17,6 @@ public:
     struct runtime_data_t {
         e_figure_type process_type;
         bool reparing;
-        short progress;
     } BUILDING_RUNTIME_DATA_T;
 
     virtual void on_create(int orientation) override;
@@ -36,4 +35,4 @@ public:
 ANK_CONFIG_STRUCT(building_shipyard::static_params,
     warship_progress_cost, transport_progress_cost, fishingboat_progress_cost)
 
-ANK_CONFIG_PROPERTY(building_shipyard::runtime_data_t, process_type, reparing, progress)
+ANK_CONFIG_PROPERTY(building_shipyard::runtime_data_t, process_type, reparing)

@@ -202,6 +202,9 @@ public:
     uint8_t num_workers;
     uint8_t max_workers;
     uint16_t produce_uptick;
+    uint16_t progress_before;
+    uint16_t progress;
+    uint16_t progress_max;
     uint16_t residents_served_this_month;
     sbitarray64 flags;
     e_labor_category labor_category;
@@ -393,7 +396,7 @@ private:
     void destroy_on_fire_impl(bool plagued);
     void destroy_linked_parts(bool on_fire);
 };
-ANK_CONFIG_PROPERTY(building, has_road_access, num_workers, max_workers, produce_uptick, residents_served_this_month, type, orientation, size,
+ANK_CONFIG_PROPERTY(building, has_road_access, num_workers, max_workers, produce_uptick, progress_before, progress, progress_max, residents_served_this_month, type, orientation, size,
     prev_part_building_id, next_part_building_id, formation_id, collapse_risk, fire_risk, malaria_risk, structure_damage, spawned_worker_this_month,
     current_desirability, has_water_access, has_well_access, curse_days_left,
     common_health, disease_days, has_plague, houses_covered, show_on_problem_overlay, play_animation, destroy_reason,

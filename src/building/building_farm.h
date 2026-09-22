@@ -33,8 +33,6 @@ public:
         uint8_t worker_action;
         bool is_floodplain;
         bool flood_imminent;
-        uint16_t progress;
-        uint16_t progress_max;
         uint16_t ready_production;
         figure_id worker_id;
         uint8_t labor_days_left;
@@ -63,9 +61,6 @@ public:
     virtual bool requested_workers() const;
     virtual bool target_route_tile_blocked(int grid_offset) const override;
 
-    short progress() const { return runtime_data().progress; }
-    short progress_max() const { return runtime_data().progress_max; }
-
     void map_building_tiles_add_farm(e_building_type type, int building_id, tile2i tile, int progress);
     void add_tiles();
     static int get_crops_image(e_building_type type, int growth);
@@ -89,7 +84,7 @@ public:
 
     virtual const farm_params_t &farm_params() const = 0;
 };
-ANK_CONFIG_PROPERTY(building_farm::runtime_data_t, is_floodplain, flood_imminent, progress)
+ANK_CONFIG_PROPERTY(building_farm::runtime_data_t, is_floodplain, flood_imminent)
 
 struct building_floodplain_farm : public building_farm {
     building_floodplain_farm(building &b) : building_farm(b) {}

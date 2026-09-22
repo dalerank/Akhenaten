@@ -1,6 +1,6 @@
 log_info("akhenaten: building_mine_gold started")
 
-[es=building_mine]
+[es=building_industry]
 building_mine_gold {
   type: BUILDING_GOLD_MINE
   animations {
@@ -46,7 +46,7 @@ function building_mine_gold_on_before_collapse(ev) {
 
 [es=(building_mine_gold, update_production)]
 function building_mine_gold_update_production(ev) {
-    industry_mine_update_production_deplete(
+    industry_mine_deplete_production(
         city.get_building(ev.bid),
         __map_get_golden,
         __map_golden_deplete
@@ -71,6 +71,7 @@ function building_mine_gold_produce_uptick_per_day(ev) {
 
     var production = Math.floor(b.num_workers / divider)
     b.produce_uptick = production < 1 ? 1 : production
+    industry_mine_require_ore_for_uptick(b, __map_get_golden)
 }
 
 [es=(building_mine_gold, draw_usable_paths)]

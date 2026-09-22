@@ -10,18 +10,12 @@ public:
     virtual building_guild *dcast_guild() override { return this; }
 
     struct runtime_data_t {
-        uint16_t progress; // Progress of the building's construction or upgrade
-        uint16_t progress_max;
         uint8_t max_walkers;
     } BUILDING_RUNTIME_DATA_T;
 
     virtual void on_create(int orientation) override;
     virtual void bind_dynamic(io_buffer *iob, size_t version) override;
 
-    virtual int progress() const { return runtime_data().progress; }
-    virtual int progress_max() const { return runtime_data().progress_max; }
-
     bool has_resources() const;
 };
 
-ANK_CONFIG_PROPERTY(building_guild::runtime_data_t, progress)

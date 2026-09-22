@@ -1,6 +1,6 @@
 log_info("akhenaten: building mine_common started")
 
-function industry_mine_update_production_deplete(b, get_ore, deplete_ore) {
+function industry_mine_best_ore_tile(b, get_ore) {
     var area = city.get_grid_area(b.tile, b.size, 0)
     var best_tile = null
     var best = 0
@@ -16,13 +16,26 @@ function industry_mine_update_production_deplete(b, get_ore, deplete_ore) {
     }
 
     if (best <= 0) {
+        return null
+    }
+
+    return best_tile
+}
+
+function industry_mine_require_ore_for_uptick(b, get_ore) {
+    if (!industry_mine_best_ore_tile(b, get_ore)) {
+        b.produce_uptick = 0
+    }
+}
+
+function industry_mine_deplete_production(b, get_ore, deplete_ore) {
+    var delta = b.progress - b.progress_before
+    if (delta <= 0) {
         return
     }
 
-    var before = __building_industry_progress(b.id)
-    __building_industry_update_production(b.id)
-    var delta = __building_industry_progress(b.id) - before
-    if (delta > 0) {
+    var best_tile = industry_mine_best_ore_tile(b, get_ore)
+    if (best_tile) {
         deplete_ore(best_tile, delta)
     }
 }

@@ -10,8 +10,6 @@ public:
     virtual building_industry *dcast_industry() override { return this; }
 
     struct runtime_data_t : public no_copy_assignment {
-        short progress;
-        short progress_max;
         bool spawned_worker_this_month;
         uint8_t max_gatheres;
         uint8_t water_stored;
@@ -35,8 +33,6 @@ public:
 
     virtual void bind_dynamic(io_buffer *iob, size_t version) override;
     virtual void on_create(int orientation) override;
-    virtual int progress() const { return runtime_data().progress; }
-    virtual int progress_max() const { return runtime_data().progress_max; }
     virtual int stored_amount(e_resource) const override;
     virtual void start_production() override;
     virtual void spawn_figure() override;
@@ -46,4 +42,3 @@ public:
 
     virtual void debug_draw_properties() override;
 };
-ANK_CONFIG_PROPERTY(building_industry::runtime_data_t, progress)

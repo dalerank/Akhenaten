@@ -56,36 +56,36 @@ void building_shipyard::spawn_figure() {
     const auto &params = current_params();
     switch (d.process_type) {
     case FIGURE_WARSHIP:
-        if ((params.warship_progress_cost > 0) && d.progress >= params.warship_progress_cost) {
+        if ((params.warship_progress_cost > 0) && base.progress >= params.warship_progress_cost) {
             figure *f = figure_create(FIGURE_WARSHIP, boat_tile, DIR_0_TOP_RIGHT);
             f->action_state = ACTION_205_WARSHIP_CREATED;
             f->direction = (base.orientation + 3) % 8;
             f->set_home(&base);
             base.set_figure(BUILDING_SLOT_BOAT, f);
-            d.progress = 0;
+            base.progress = 0;
             d.process_type = FIGURE_NONE;
         }
         break;
 
     case FIGURE_TRANSPORT_SHIP:
-        if ((params.transport_progress_cost > 0) && d.progress >= params.transport_progress_cost) {
+        if ((params.transport_progress_cost > 0) && base.progress >= params.transport_progress_cost) {
             figure *f = figure_create(FIGURE_TRANSPORT_SHIP, boat_tile, DIR_0_TOP_RIGHT);
             f->action_state = ACTION_211_TRANSPORT_SHIP_CREATED;
             f->direction = (base.orientation + 3) % 8;
             f->set_home(&base);
             base.set_figure(BUILDING_SLOT_BOAT, f);
-            d.progress = 0;
+            base.progress = 0;
             d.process_type = FIGURE_NONE;
         }
         break;
 
     case FIGURE_FISHING_BOAT:
-        if ((params.fishingboat_progress_cost > 0 ) && d.progress >= params.fishingboat_progress_cost) {
+        if ((params.fishingboat_progress_cost > 0 ) && base.progress >= params.fishingboat_progress_cost) {
             figure *f = figure_create(FIGURE_FISHING_BOAT, boat_tile, DIR_0_TOP_RIGHT);
             f->action_state = ACTION_0_FISHING_BOAT_CREATED;
             f->set_home(&base);
             base.set_figure(BUILDING_SLOT_BOAT, f);
-            d.progress = 0;
+            base.progress = 0;
             d.process_type = FIGURE_NONE;
         }
         break;
@@ -98,7 +98,7 @@ void building_shipyard::spawn_figure() {
 void building_shipyard::bind_dynamic(io_buffer *iob, size_t version) {
     auto &d = runtime_data();
 
-    iob->bind(BIND_SIGNATURE_INT16, &d.progress);
+    iob->bind(BIND_SIGNATURE_INT16, &base.progress);
     iob->bind(BIND_SIGNATURE_UINT8, &base.orientation);
     iob->bind(BIND_SIGNATURE_UINT8, &d.process_type);
     iob->bind(BIND_SIGNATURE_UINT8, &d.reparing);
@@ -178,7 +178,7 @@ void building_shipyard::update_day() {
         resources = std::min<int>(resources, timber_amount);
         delta = resources;
     }
-    d.progress += delta;
+    base.progress += delta;
     consume_resource(RESOURCE_TIMBER, resources);
 
     if (d.process_type == FIGURE_WARSHIP && g_city.buildings.warships_requested > 0) {

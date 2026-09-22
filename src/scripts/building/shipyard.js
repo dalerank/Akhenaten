@@ -11,7 +11,6 @@ Shipyard.prototype.__property_getter = function(property) {
     return __shipyard_get_property(this.id, property)
 }
 
-Shipyard.property.progress = { }
 Shipyard.property.reparing = { }
 Shipyard.property.process_type = { }
 

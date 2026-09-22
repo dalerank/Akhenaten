@@ -10,7 +10,6 @@ Farm.prototype = Object.create(Building.prototype)
 Farm.prototype.constructor = Farm
 
 Farm.property.flood_imminent = { }
-Farm.property.progress = { }
 Farm.property.is_floodplain = { }
 
 Farm.prototype.set_worker = function(action, coords) {

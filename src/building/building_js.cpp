@@ -3,7 +3,6 @@
 #include "building_model.h"
 #include "building_planer_renderer.h"
 #include "building/building_industry.h"
-#include "building/building_mine.h"
 
 #include "building/building_bazaar.h"
 #include "building/building_dock.h"
@@ -688,12 +687,6 @@ building_impl *create_js_building_industry(e_building_type, building &b) {
     return b.acquire_impl<building_industry>();
 }
 
-building_impl *create_js_building_mine(e_building_type, building &b) {
-    static_assert(sizeof(building_mine) <= sizeof(building::ptr_buffer_t),
-                  "building_mine does not fit the inline buffer");
-    return b.acquire_impl<building_mine>();
-}
-
 building_impl *create_js_building_entertainment(e_building_type, building &b) {
     static_assert(sizeof(building_entertainment) <= sizeof(building::ptr_buffer_t),
                   "building_entertainment does not fit the inline buffer");
@@ -762,10 +755,6 @@ void register_es_building_industry(pcstr name) {
     register_es_building_model(name, &create_js_building_industry);
 }
 
-void register_es_building_mine(pcstr name) {
-    register_es_building_model(name, &create_js_building_mine);
-}
-
 void register_es_building_entertainment(pcstr name) {
     register_es_building_model(name, &create_js_building_entertainment);
 }
@@ -774,5 +763,4 @@ void register_es_building_entertainment(pcstr name) {
 
 ANK_REGISTER_ES_ITERATOR(building, register_es_building, clear_es_building);
 ANK_REGISTER_ES_ITERATOR(building_industry, register_es_building_industry, clear_es_building);
-ANK_REGISTER_ES_ITERATOR(building_mine, register_es_building_mine, clear_es_building);
 ANK_REGISTER_ES_ITERATOR(building_entertainment, register_es_building_entertainment, clear_es_building);

@@ -155,7 +155,7 @@ void building_industry_update_farms(void) {
             // advance production
             auto &d = b.dcast_farm()->runtime_data();
             if (d.labor_days_left > 0) {
-                d.progress += progress_step;
+                b.progress += progress_step;
             }
             // update labor state
             if (d.labor_state == LABOR_STATE_JUST_ENTERED) {
@@ -171,15 +171,13 @@ void building_industry_update_farms(void) {
             }
         } else { // meadow farms
             // advance production
-            auto &d = b.dcast_farm()->runtime_data();
             if (b.num_workers > 0) {
-                d.progress += progress_step * ((float)b.num_workers / 10.0f);
+                b.progress += progress_step * ((float)b.num_workers / 10.0f);
             }
         }
 
         // clamp progress
-        int max = farmd.progress_max;
-        farmd.progress = std::clamp<int>(farmd.progress, 0, max);
+        b.progress = std::clamp<uint16_t>(b.progress, 0, b.progress_max);
 
         farm->update_tiles_image();
     });
@@ -200,17 +198,16 @@ void building_industry_update_wheat_production() {
             return;
         }
 
-        auto &farm = b.dcast_farm()->runtime_data();
         if (b.curse_days_left) {
             return;
         }
 
-        farm.progress += b.num_workers;
+        b.progress += b.num_workers;
         if (b.blessing_days_left) {
-            farm.progress += b.num_workers;
+            b.progress += b.num_workers;
         }
 
-        farm.progress = std::min<short>(farm.progress, 200);
+        b.progress = std::min<uint16_t>(b.progress, 200);
         b.dcast_farm()->update_tiles_image();
     }, BUILDING_GRAIN_FARM);
 }
@@ -221,7 +218,7 @@ void building_curse_farms(int big_curse) {
         if (!farm) {
             return;
         }
-        farm->runtime_data().progress = 0;
+        b.progress = 0;
         b.blessing_days_left = 0;
         b.curse_days_left = big_curse ? 48 : 4;
         farm->update_tiles_image();

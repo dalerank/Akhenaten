@@ -1,6 +1,6 @@
 log_info("akhenaten: building_mine_gems started")
 
-[es=building_mine]
+[es=building_industry]
 building_mine_gems {
   type: BUILDING_GEMSTONE_MINE
   animations {
@@ -52,7 +52,7 @@ function building_mine_gems_on_before_collapse(ev) {
 
 [es=(building_mine_gems, update_production)]
 function building_mine_gems_update_production(ev) {
-    industry_mine_update_production_deplete(
+    industry_mine_deplete_production(
         city.get_building(ev.bid),
         __map_get_gems,
         __map_gems_deplete
@@ -69,6 +69,7 @@ function building_mine_gems_produce_uptick_per_day(ev) {
 
     var production = Math.floor(b.num_workers / 3)
     b.produce_uptick = production < 1 ? 1 : production
+    industry_mine_require_ore_for_uptick(b, __map_get_gems)
 }
 
 [es=(building_mine_gems, draw_usable_paths)]

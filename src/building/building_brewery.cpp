@@ -61,7 +61,7 @@ void building_brewery::update_production() {
         auto &d = runtime_data();
 
         // Only burn water while a batch is running. Idle drain cancelled refill (+1/day).
-        if (d.progress > 0) {
+        if (base.progress > 0) {
             if (water_stored() > 0) {
                 set_water_stored(water_stored() - 1);
             } else {

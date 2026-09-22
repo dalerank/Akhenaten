@@ -1,6 +1,6 @@
 log_info("akhenaten: building_mine_copper started")
 
-[es=building_mine]
+[es=building_industry]
 building_mine_copper {
   type: BUILDING_COPPER_MINE
   animations {
@@ -60,7 +60,7 @@ function building_mine_copper_on_before_collapse(ev) {
 
 [es=(building_mine_copper, update_production)]
 function building_mine_copper_update_production(ev) {
-    industry_mine_update_production_deplete(
+    industry_mine_deplete_production(
         city.get_building(ev.bid),
         __map_get_copper,
         __map_copper_deplete
@@ -77,6 +77,7 @@ function building_mine_copper_produce_uptick_per_day(ev) {
 
     var production = Math.floor(b.num_workers / 2)
     b.produce_uptick = production < 1 ? 1 : production
+    industry_mine_require_ore_for_uptick(b, __map_get_copper)
 }
 
 [es=(building_mine_copper, draw_usable_paths)]

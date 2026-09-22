@@ -393,14 +393,11 @@ io_buffer *iob_buildings = new io_buffer([] (io_buffer *iob, size_t version) {
         iob->bind(BIND_SIGNATURE_INT16, &b->houses_covered);
         iob->bind(BIND_SIGNATURE_INT16, &b->percentage_houses_covered);
 
-        iob->bind____skip(1);
-        iob->bind____skip(1);
-        iob->bind____skip(1);
-        iob->bind____skip(1);
+        iob->bind____skip(4);
         iob->bind(BIND_SIGNATURE_INT16, &b->distance_from_entry);
 
-        iob->bind____skip(2);
-        iob->bind____skip(2);
+        iob->bind(BIND_SIGNATURE_UINT16, &b->progress);
+        iob->bind(BIND_SIGNATURE_UINT16, &b->progress_max);
 
         iob->bind(BIND_SIGNATURE_TILE2I, b->road_access);
 

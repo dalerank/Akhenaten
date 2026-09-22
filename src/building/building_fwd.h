@@ -47,7 +47,6 @@ class building;
     X(temple)                  \
     X(tax_collector)           \
     X(roadblock)               \
-    X(mine)                    \
     X(quarry)                  \
     X(palace)                  \
     X(festival_square)         \

@@ -25,7 +25,7 @@ void building_industry::bind_dynamic(io_buffer *iob, size_t version) {
 
     short tmp_short;
     iob->bind_i16(tmp_short);
-    iob->bind_i16(d.progress);
+    iob->bind(BIND_SIGNATURE_INT16, &base.progress);
     iob->bind_bool(d.spawned_worker_this_month);
     iob->bind_u8(d.max_gatheres);
     iob->bind_u8(d.water_stored);
@@ -44,9 +44,9 @@ void building_industry::bind_dynamic(io_buffer *iob, size_t version) {
     iob->bind____skip(1);  // iob->bind(BIND_SIGNATURE_UINT8, &d.has_raw_materials);
     iob->bind____skip(1);
     iob->bind____skip(1);
-    iob->bind(BIND_SIGNATURE_UINT16, &d.progress_max);
-    if (d.progress_max == 0) {
-        d.progress_max = 400;
+    iob->bind(BIND_SIGNATURE_UINT16, &base.progress_max);
+    if (base.progress_max == 0) {
+        base.progress_max = 400;
     }
 
     iob->bind____skip(1);
@@ -83,11 +83,10 @@ void building_industry::production_finished() {
         return;
     }
 
-    auto &d = runtime_data();
-    if (d.progress >= d.progress_max) {
+    if (base.progress >= base.progress_max) {
         store_resource(base.output.resource, ready_production());
 
-        d.progress = 0;
+        base.progress = 0;
         //d.has_raw_materials = false;
     }
 }
@@ -97,10 +96,9 @@ void building_industry::update_production() {
         return;
     }
 
-    auto &d = runtime_data();
     // d.has_raw_materials = false;
 
-    if (d.progress == 0) {
+    if (base.progress == 0) {
         return;
     }
 
@@ -121,25 +119,28 @@ void building_industry::update_production() {
         base.blessing_days_left--;
     }
 
+    base.progress_before = base.progress;
+
     produce_uptick_per_day();
     const int progress_per_day = base.produce_uptick;
-    d.progress += progress_per_day;
+    base.progress += progress_per_day;
 
     if (base.blessing_days_left) {
         const float normal_progress = progress_per_day;
-        d.progress += normal_progress;
+        base.progress += normal_progress;
     }
 
-    d.progress = std::clamp<short>(d.progress, 0, d.progress_max);
+    base.progress = std::clamp<uint16_t>(base.progress, 0, base.progress_max);
+
+    es(__func__);
 }
 
 void building_industry::on_create(int orientation) {
     building_impl::on_create(orientation);
 
-    auto &d = runtime_data();
-    if (d.progress_max <= 0) {
+    if (base.progress_max <= 0) {
         const uint16_t maxp = base.is_workshop() ? MAX_PROGRESS_WORKSHOP : MAX_PROGRESS_RAW;
-        d.progress_max = maxp;
+        base.progress_max = maxp;
     }
 }
 
@@ -151,7 +152,7 @@ void building_industry::start_production() {
     bool can_start_b = true;
     if (base.input.resource_second != RESOURCE_NONE) {
         can_start_b = (stored_amount(base.input.resource_second) >= 100);
-    } 
+    }
 
     bool can_start_a = true;
     if (base.input.resource != RESOURCE_NONE) {
@@ -159,8 +160,7 @@ void building_industry::start_production() {
     }
 
     if (can_start_b && can_start_a) {
-        auto &d = runtime_data();
-        d.progress = 1;
+        base.progress = 1;
 
         if (stored_amount(base.input.resource_second) >= 100) {
             consume_resource(base.input.resource_second, 100);
@@ -212,66 +212,43 @@ void building_industry::update_day() {
         return;
     }
 
-    const auto &d = runtime_data();
-
-    verify_no_crash(d.progress_max > 100);
-    const bool has_produced_resource = (d.progress >= d.progress_max);
+    verify_no_crash(base.progress_max > 100);
+    const bool has_produced_resource = (base.progress >= base.progress_max);
 
     if (has_produced_resource) {
         production_finished();
         return;
     }
 
-    if (d.progress == 0) {
+    if (base.progress == 0) {
         start_production();
     }
 }
 
 int __building_industry_progress_pct(int bid) {
     building *b = building_get(bid);
-    if (!b || !b->is_valid()) {
+    if (!b || !b->is_valid() || !b->dcast_industry()) {
         return 0;
     }
 
-    building_industry *ind = b->dcast_industry();
-    if (!ind) {
-        return 0;
-    }
-
-    return calc_percentage<int>(ind->progress(), ind->progress_max());
+    return calc_percentage<int>(b->progress, b->progress_max);
 }
 ANK_FUNCTION_1(__building_industry_progress_pct)
 
 int __building_industry_progress(int bid) {
     building *b = building_get(bid);
-    if (!b || !b->is_valid()) {
+    if (!b || !b->is_valid() || !b->dcast_industry()) {
         return 0;
     }
 
-    building_industry *ind = b->dcast_industry();
-    return ind ? ind->progress() : 0;
+    return b->progress;
 }
 ANK_FUNCTION_1(__building_industry_progress)
 
-void __building_industry_update_production(int bid) {
-    building *b = building_get(bid);
-    if (!b || !b->is_valid()) {
-        return;
-    }
-
-    building_industry *ind = b->dcast_industry();
-    if (!ind) {
-        return;
-    }
-
-    ind->building_industry::update_production();
-}
-ANK_FUNCTION_1(__building_industry_update_production)
-
 void building_industry::debug_draw_properties() {
     auto &d = runtime_data();
-    game_debug_show_property("progress", d.progress);
-    game_debug_show_property("progress_max", d.progress_max);
+    game_debug_show_property("progress", base.progress);
+    game_debug_show_property("progress_max", base.progress_max);
     game_debug_show_property("spawned_worker_this_month", d.spawned_worker_this_month);
     game_debug_show_property("max_gatheres", d.max_gatheres);
     game_debug_show_property("produce_multiplier", d.produce_multiplier);

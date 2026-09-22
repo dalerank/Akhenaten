@@ -168,7 +168,7 @@ bool building_farm::time_to_deliver(bool floodplains, int resource_id) {
 
 void building_farm::on_create(int orientation) {
     auto &d = runtime_data();
-    d.progress_max = 2000;
+    base.progress_max = 2000;
     d.is_floodplain = base.is_floodplain_farm();
 }
 
@@ -186,7 +186,7 @@ bool building_farm::draw_ornaments_and_animations_height(painter &ctx, vec2i poi
     if (is_currently_flooded()) {
         return true;
     }
-    draw_crops(ctx, type(), progress(), tile(), point, mask);
+    draw_crops(ctx, type(), base.progress, tile(), point, mask);
     draw_workers(ctx, &base, t, point);
 
     return true;
@@ -276,19 +276,18 @@ void building_farm::bind_dynamic(io_buffer *iob, size_t version) {
     iob->bind____skip(48);
 
     auto &d = runtime_data();
-    iob->bind(BIND_SIGNATURE_UINT16, &d.progress_max);
+    iob->bind(BIND_SIGNATURE_UINT16, &base.progress_max);
     iob->bind(BIND_SIGNATURE_UINT8, &d.produce_multiplier);
     iob->bind(BIND_SIGNATURE_UINT16, &d.work_camp_id);
     iob->bind(BIND_SIGNATURE_UINT16, &d.worker_id);
     iob->bind(BIND_SIGNATURE_UINT8, &d.labor_state);
     iob->bind(BIND_SIGNATURE_UINT8, &d.labor_days_left);
-    iob->bind(BIND_SIGNATURE_UINT16, &d.progress);
+    iob->bind(BIND_SIGNATURE_UINT16, &base.progress);
     iob->bind____skip(1);
 }
 
 void building_farm::start_production() {
-    auto &d = runtime_data();
-    d.progress = 0;
+    base.progress = 0;
     update_tiles_image();
 }
 
@@ -301,7 +300,7 @@ int building_farm::expected_produce() {
 
     int progress = d.ready_production > 0
         ? d.ready_production
-        : d.progress;
+        : base.progress;
 
     if (!game_features::gameplay_fix_farm_produce_quantity) {
         progress = (progress / 20) * 20;
@@ -336,10 +335,10 @@ void building_farm::spawn_figure_harvests() {
         }
 
         auto &d = runtime_data();
-        if (base.has_road_access && d.progress > 0) {
+        if (base.has_road_access && base.progress > 0) {
             int farm_fertility = map_get_fertility_for_farm(tile());
 
-            d.ready_production = d.progress * farm_fertility / 100;
+            d.ready_production = base.progress * farm_fertility / 100;
             {
                 const int expected_produce = this->expected_produce();
                 produced_resources(base.output.resource, expected_produce);
@@ -349,7 +348,7 @@ void building_farm::spawn_figure_harvests() {
 
                 f->sender_building_id = id();
 
-                d.progress = 0;
+                base.progress = 0;
                 d.ready_production = 0;
                 d.worker_id = 0;
                 d.work_camp_id = 0;
@@ -433,14 +432,14 @@ void building_farm::restore_tiles_if_emerged() {
 
 void building_farm::update_tiles_image() {
     if (!is_currently_flooded()) {
-        map_building_tiles_add_farm(type(), id(), tile(), progress());
+        map_building_tiles_add_farm(type(), id(), tile(), base.progress);
     }
 }
 
 void building_farm::deplete_soil() {
     // DIFFERENT from original Pharaoh... and a bit easier to do?
     if (!!game_features::gameplay_change_soil_depletion) {
-        int malus = (float)progress() / (float)current_params().progress_max * (float)-100;
+        int malus = (float)base.progress / (float)current_params().progress_max * (float)-100;
         for (int _y = tiley(); _y < tiley() + size(); _y++) {
             for (int _x = tilex(); _x < tilex() + size(); _x++) {
                 map_soil_set_depletion(MAP_OFFSET(_x, _y), malus);
