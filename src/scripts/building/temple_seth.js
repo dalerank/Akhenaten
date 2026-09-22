@@ -29,6 +29,15 @@ building_temple_seth {
     }
 }
 
+[es=(building_temple_seth, spawn_figure)]
+function building_temple_seth_spawn_figure(ev) {
+    var b = city.get_building(ev.bid)
+    if (!b.is_main) {
+        return
+    }
+    b.common_spawn_roamer(FIGURE_PRIEST, b.params.min_houses_coverage, ACTION_125_ROAMER_ROAMING)
+}
+
 [es=(building_temple_seth, draw_usable_paths)]
 function building_temple_seth_draw_usable_paths(ev) {
     city.get_building(ev.bid).draw_usable_paths()

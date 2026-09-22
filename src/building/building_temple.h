@@ -6,9 +6,6 @@ class building_temple : public building_impl {
 public:
     building_temple(building &b) : building_impl(b) {}
     virtual building_temple *dcast_temple() override { return this; }
-
-    //virtual void on_create() override;
-    virtual void spawn_figure() override;
 };
 
 struct building_temple_osiris : public building_temple {

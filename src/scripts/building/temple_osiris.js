@@ -29,6 +29,15 @@ building_temple_osiris {
     }
 }
 
+[es=(building_temple_osiris, spawn_figure)]
+function building_temple_osiris_spawn_figure(ev) {
+    var b = city.get_building(ev.bid)
+    if (!b.is_main) {
+        return
+    }
+    b.common_spawn_roamer(FIGURE_PRIEST, b.params.min_houses_coverage, ACTION_125_ROAMER_ROAMING)
+}
+
 [es=(building_temple_osiris, draw_usable_paths)]
 function building_temple_osiris_draw_usable_paths(ev) {
     city.get_building(ev.bid).draw_usable_paths()

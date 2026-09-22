@@ -38,6 +38,7 @@ Building.property.type = { }
 Building.property.orientation = { }
 Building.property.size = { }
 Building.property.prev_part_building_id = { }
+Building.property.is_main = { get: function() { return !this.prev_part_building_id } }
 Building.property.produce_uptick = { }
 Building.property.next_part_building_id = { }
 Building.property.structure_damage = { }
