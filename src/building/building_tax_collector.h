@@ -12,7 +12,6 @@ public:
         uint16_t max_deben_storage;
     } BUILDING_STATIC_DATA_T;
 
-    virtual void spawn_figure() override;
     virtual e_overlay get_overlay() const override { return OVERLAY_TAX_INCOME; }
     virtual void update_month() override;
     virtual e_sound_channel_city sound_channel() const override { return SOUND_CHANNEL_CITY_TAX_COLLECTOR; }

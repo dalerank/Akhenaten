@@ -16,17 +16,19 @@
 
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_tax_collector);
 
+const e_tax_collector_action_tokens_t ANK_CONFIG_ENUM(e_tax_collector_action_tokens)
+
 void figure_tax_collector::figure_action() {
     OZZY_PROFILER_FUNCTION();
     building* b = home();
     switch (action_state()) {
-    case ACTION_40_TAX_COLLECTOR_CREATED:
+    case ACTION_0_TAX_COLLECTOR_CREATED:
         base.animctx.frame = 0;
         base.wait_ticks--;
         if (base.wait_ticks <= 0) {
             tile2i road_tile = map_closest_road_within_radius(b->tile, b->size, 2);
             if (road_tile.valid()) {
-                base.action_state = ACTION_41_TAX_COLLECTOR_ENTERING_EXITING;
+                base.action_state = ACTION_1_TAX_COLLECTOR_ENTERING_EXITING;
                 base.set_cross_country_destination(road_tile);
                 base.roam_length = 0;
             } else {
@@ -35,7 +37,7 @@ void figure_tax_collector::figure_action() {
         }
         break;
 
-    case ACTION_41_TAX_COLLECTOR_ENTERING_EXITING:
+    case ACTION_1_TAX_COLLECTOR_ENTERING_EXITING:
         {
             base.use_cross_country = true;
             const bool finished = base.move_ticks_cross_country(1);
@@ -44,7 +46,7 @@ void figure_tax_collector::figure_action() {
                     // returned to own building
                     poof();
                 } else {
-                    advance_action(ACTION_42_TAX_COLLECTOR_ROAMING);
+                    advance_action(ACTION_2_TAX_COLLECTOR_ROAMING);
                     base.init_roaming_from_building(0);
                     base.roam_length = 0;
                 }
@@ -52,12 +54,12 @@ void figure_tax_collector::figure_action() {
         }
         break;
 
-    case ACTION_42_TAX_COLLECTOR_ROAMING:
+    case ACTION_2_TAX_COLLECTOR_ROAMING:
         base.roam_length++;
         if (base.roam_length >= base.max_roam_length) {
             tile2i road_tile = map_closest_road_within_radius(b->tile, b->size, 2);
             if (road_tile.valid()) {
-                advance_action(ACTION_43_TAX_COLLECTOR_RETURNING, road_tile);
+                advance_action(ACTION_3_TAX_COLLECTOR_RETURNING, road_tile);
             } else {
                 poof();
             }
@@ -69,10 +71,10 @@ void figure_tax_collector::figure_action() {
         }
         break;
 
-    case ACTION_43_TAX_COLLECTOR_RETURNING:
+    case ACTION_3_TAX_COLLECTOR_RETURNING:
         base.move_ticks(1);
             if (direction() == DIR_FIGURE_NONE) {
-                advance_action(ACTION_41_TAX_COLLECTOR_ENTERING_EXITING);
+                advance_action(ACTION_1_TAX_COLLECTOR_ENTERING_EXITING);
                 base.set_cross_country_destination(b->tile);
                 base.roam_length = 0;
             } else if (direction() == DIR_FIGURE_REROUTE || direction() == DIR_FIGURE_CAN_NOT_REACH) {

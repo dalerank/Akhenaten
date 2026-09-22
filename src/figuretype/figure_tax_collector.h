@@ -3,11 +3,15 @@
 #include "figure/figure.h"
 
 enum e_tax_collector_action {
-    ACTION_40_TAX_COLLECTOR_CREATED = 40,
-    ACTION_41_TAX_COLLECTOR_ENTERING_EXITING = 41,
-    ACTION_42_TAX_COLLECTOR_ROAMING = 42,
-    ACTION_43_TAX_COLLECTOR_RETURNING = 43,
+    ACTION_0_TAX_COLLECTOR_CREATED = 0,
+    ACTION_1_TAX_COLLECTOR_ENTERING_EXITING = 1,
+    ACTION_2_TAX_COLLECTOR_ROAMING = 2,
+    ACTION_3_TAX_COLLECTOR_RETURNING = 3,
+
+    ACTION_4_TAX_COLLECTOR_MAX
 };
+using e_tax_collector_action_tokens_t = token_holder<e_tax_collector_action, ACTION_0_TAX_COLLECTOR_CREATED, ACTION_4_TAX_COLLECTOR_MAX>;
+extern const e_tax_collector_action_tokens_t e_tax_collector_action_tokens;
 
 class figure_tax_collector : public figure_impl {
 public:
