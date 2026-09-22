@@ -8,5 +8,4 @@ public:
 
     virtual void update_production() override;
     virtual void spawn_figure() override;
-    virtual void production_finished() override;
 };

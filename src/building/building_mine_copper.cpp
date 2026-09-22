@@ -51,16 +51,3 @@ void building_mine_copper::spawn_figure() {
 
     common_spawn_goods_output_cartpusher();
 }
-
-void building_mine_copper::production_finished() {
-    if (stored_amount(RESOURCE_COPPER) >= base.max_storage_amount(RESOURCE_COPPER)) {
-        return;
-    }
-
-    auto &d = runtime_data();
-    if (d.progress >= d.progress_max) {
-        store_resource(RESOURCE_COPPER, ready_production());
-
-        d.progress = 0;
-    }
-}
