@@ -1,34 +1,10 @@
 #include "building_mine_gold.h"
 
 #include "building/building.h"
-#include "grid/golden.h"
-#include "grid/grid.h"
 #include "js/js_game.h"
 
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_mine_gold);
 
 void building_mine_gold::update_production() {
-    auto &d = runtime_data();
-    int current_progress = d.progress;
-
-    tile2i best_tile = tile2i::invalid;
-    int best_resource = 0;
-
-    grid_area search_area = map_grid_get_area(base.tile, base.size, 0);
-    map_grid_area_foreach(search_area, [&] (tile2i t) {
-        int resource = map_get_golden(t);
-        if (resource > 0 && resource > best_resource) {
-            best_tile = t;
-            best_resource = resource;
-        }
-    });
-
-    if (best_resource <= 0) {
-        return;
-    }
-
-    building_industry::update_production();
-    int delta_progress = d.progress - current_progress;
-
-    map_golden_deplete(best_tile, delta_progress);
+    es(__func__);
 }

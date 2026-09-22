@@ -42,6 +42,15 @@ function building_mine_gold_on_before_collapse(ev) {
     emit event_finance_request { type: efinance_request_disasters, deben: 250 }
 }
 
+[es=(building_mine_gold, update_production)]
+function building_mine_gold_update_production(ev) {
+    industry_mine_update_production_deplete(
+        city.get_building(ev.bid),
+        __map_get_golden,
+        __map_golden_deplete
+    )
+}
+
 [es=(building_mine_gold, produce_uptick_per_day)]
 function building_mine_gold_produce_uptick_per_day(ev) {
     var b = city.get_building(ev.bid)

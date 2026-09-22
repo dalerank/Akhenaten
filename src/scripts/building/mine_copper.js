@@ -56,6 +56,15 @@ function building_mine_copper_on_before_collapse(ev) {
     emit event_finance_request { type: efinance_request_disasters, deben: 250 }
 }
 
+[es=(building_mine_copper, update_production)]
+function building_mine_copper_update_production(ev) {
+    industry_mine_update_production_deplete(
+        city.get_building(ev.bid),
+        __map_get_copper,
+        __map_copper_deplete
+    )
+}
+
 [es=(building_mine_copper, produce_uptick_per_day)]
 function building_mine_copper_produce_uptick_per_day(ev) {
     var b = city.get_building(ev.bid)

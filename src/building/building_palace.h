@@ -1,6 +1,8 @@
 #pragma once
 
 #include "building/building.h"
+#include "city/city_finance.h"
+#include "core/svector.h"
 #include "js/js_struct.h"
 
 class building_palace : public building_impl {
@@ -9,6 +11,15 @@ public:
 
     building_palace(building &b) : building_impl(b) {}
     virtual building_palace *dcast_palace() override { return this; }
+
+    struct add_resource_finance_t {
+        e_building_type building = BUILDING_NONE;
+        e_finance_request_type request = efinance_request_none;
+    };
+
+    struct static_params : public building_static_params {
+        svector<add_resource_finance_t, 8> add_resource_finance;
+    };
 
     virtual void update_count() const override;
     virtual bool draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color mask) override;
@@ -31,3 +42,6 @@ class building_city_palace : public building_palace {
 public:
     BUILDING_METAINFO(BUILDING_CITY_PALACE, building_city_palace, building_palace)
 };
+
+ANK_CONFIG_STRUCT(building_palace::add_resource_finance_t, building, request)
+ANK_CONFIG_STRUCT(building_palace::static_params, add_resource_finance)

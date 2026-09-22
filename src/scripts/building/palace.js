@@ -70,4 +70,3 @@ function building_palace_show_tooltip(ev) {
     }
     ui.end_widget()
 }
-

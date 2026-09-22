@@ -73,6 +73,7 @@ import building.pottery
 import building.papyrus_maker
 import building.weaver
 import building.weaponsmith
+import building.mine_common
 import building.mine_copper
 import building.mine_gold
 import building.mine_gems

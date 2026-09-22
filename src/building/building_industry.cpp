@@ -242,6 +242,32 @@ int __building_industry_progress_pct(int bid) {
 }
 ANK_FUNCTION_1(__building_industry_progress_pct)
 
+int __building_industry_progress(int bid) {
+    building *b = building_get(bid);
+    if (!b || !b->is_valid()) {
+        return 0;
+    }
+
+    building_industry *ind = b->dcast_industry();
+    return ind ? ind->progress() : 0;
+}
+ANK_FUNCTION_1(__building_industry_progress)
+
+void __building_industry_update_production(int bid) {
+    building *b = building_get(bid);
+    if (!b || !b->is_valid()) {
+        return;
+    }
+
+    building_industry *ind = b->dcast_industry();
+    if (!ind) {
+        return;
+    }
+
+    ind->building_industry::update_production();
+}
+ANK_FUNCTION_1(__building_industry_update_production)
+
 void building_industry::debug_draw_properties() {
     auto &d = runtime_data();
     game_debug_show_property("progress", d.progress);

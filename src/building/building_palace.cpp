@@ -82,12 +82,18 @@ bool building_palace::add_resource(e_resource resource, int amount, figure_id fi
         return false;
     }
 
-    e_finance_request_type request_type = efinance_request_gold_delivered;
     building *home = figure_get(fid)->home();
-    if (home && home->dcast_tax_collector()) {
-        request_type = efinance_request_tax_collected;
+    if (!home) {
+        return false;
     }
 
-    events::emit(event_finance_request{ request_type, amount });
-    return true;
+    const auto &params = (const static_params &)building_static_params::get(type());
+    for (const auto &entry : params.add_resource_finance) {
+        if (entry.building == home->type) {
+            events::emit(event_finance_request{ entry.request, amount });
+            return true;
+        }
+    }
+
+    return false;
 }

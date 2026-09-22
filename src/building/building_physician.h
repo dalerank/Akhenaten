@@ -14,9 +14,6 @@ public:
     } BUILDING_RUNTIME_DATA_T;
 
     virtual building_physician* dcast_physician() override { return this; }
-
-    virtual void update_month() override;
-    virtual e_overlay get_overlay() const override { return OVERLAY_PHYSICIAN; }
 };
 
 ANK_CONFIG_PROPERTY(building_physician::runtime_data_t, residents_served_this_month)

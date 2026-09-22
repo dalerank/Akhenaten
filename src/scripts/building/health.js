@@ -57,6 +57,11 @@ function building_physician_spawn_figure(ev) {
     building.common_spawn_roamer(FIGURE_PHYSICIAN, building_physician.min_houses_coverage, ACTION_60_PHYSICIAN_CREATED)
 }
 
+[es=(building_physician, update_month)]
+function building_physician_update_month(ev) {
+    city.get_building(ev.bid).residents_served_this_month = 0
+}
+
 [es=(building_physician, update_graphic)]
 function building_physician_update_graphic(ev) {
     var building = city.get_building(ev.bid)
