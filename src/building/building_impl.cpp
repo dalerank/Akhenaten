@@ -301,20 +301,27 @@ int building_impl::road_network() const { return base.road_network_id; }
 bool building_impl::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {
     if (current_params().flags.draw_normal_anim) {
         draw_normal_anim(ctx, point, tile, color_mask);
-        return true;
-    }
-
-    if (!base.anim.key) {
+    } else if (!base.anim.key) {
         int image_id = map_image_at(tile.grid_offset());
         building_draw_normal_anim(ctx, point, &base, tile, image_id, color_mask);
     } else {
         draw_normal_anim(ctx, point, tile, color_mask);
     }
 
+    for (const auto &a : base.anims) {
+        if (a.valid()) {
+            draw_normal_anim(ctx, a, point, tile, color_mask);
+        }
+    }
+
     if (base.has_plague) {
         int skull_img = image_id_from_group(GROUP_PLAGUE_SKULL);
 
         ImageDraw::generic_sub(ctx, ImageId{skull_img}, Pixel{vec2i{point.x + 18, point.y - 32}}, Mask{color_mask});
+    }
+
+    if (current_params().flags.draw_normal_anim) {
+        return true;
     }
 
     draw_overlay_anims(ctx, point, color_mask);
