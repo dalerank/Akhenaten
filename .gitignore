@@ -65,3 +65,7 @@ doc
 # Downloaded mod packs (hosted on GitHub Releases tag `mods`)
 /mods/*
 !/mods/.gitkeep
+
+# Agent configuration: shared rules are committed, per-developer overrides are not
+/.claude/settings.local.json
+/.claude/*.local.json

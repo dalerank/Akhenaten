@@ -11,7 +11,8 @@ Mission configuration, win criteria, timed events (invasions, requests, disaster
 | `map.h` | Map entry/exit points, herd spawns, invasion zones, fishing points |
 | `request.h` | `scenario_request` — resource requests with state machine |
 | `types.h` | Event type enums |
-| `earthquake.h / invasion.h / distant_battle.h` | Specific event parameter structures |
+| `earthquake.h / scenario_invasion.h / distant_battle.h` | Specific event parameter structures |
+| `invasion_auto_resolve.h / invasion_bribe.h` | Off-screen invasion resolution and bribe handling |
 | `*_change.h` (price, demand, farao) | Timed game-state changes |
 | `editor.h / editor_events.h` | Mission editor infrastructure |
 

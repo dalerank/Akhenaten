@@ -13,15 +13,26 @@
 | `window/` | Modal UI windows (city info, building panels, message dialogs, empire screen) |
 | `widget/` | Persistent HUD elements (sidebar, top menu, minimap, city view) |
 | `scenario/` | Mission metadata, win criteria, timed events, requests, invasions |
+| `editor/` | Scenario editor screens and tools |
 | `io/` | Chunk-based save/load, mod image loading, localization strings |
 | `game/` | Main game loop, resource type enums, config, simulation tick |
+| `config/` | Game settings and config-archive readers |
+| `content/` | Content/asset registration and loading |
+| `resource/` | Resource type metadata |
 | `empire/` | Empire cities, trade routes, caravans, ships |
 | `overlays/` | Map overlay rendering (desirability, crime, water, labor, etc.) |
+| `input/` | Mouse, keyboard, touch, hotkey handling |
+| `sound/` | Music, speech, effects, city ambient sounds |
+| `net/` | Networking / remote services |
 | `debug/` | Tile overlay / ImGui debug registration modules |
+| `dev/` | Dev tooling: console commands, event history ringbuffer |
 | `js/` | MuJS VM integration, script loading, DAP debugger server |
+| `scripts/` | Embedded game JS (`building/`, `city/`, `ui_*.js`, `mission_*.js`) |
 | `platform/` | Platform-specific init code (Android, PS Vita, Nintendo Switch) |
 | `events/` | Typed event bus infrastructure (`g_city_events`) |
-| `core/` | Utilities: CRC32, event bus, ZIP, threading, math |
+| `core/` | Utilities: CRC32, event bus, ZIP, threading, math, logging |
+
+Vendored third-party sources — do not edit: `bzip/`, `lame/`, `lzma/`, `mujs/`.
 
 ## Key Global Singletons
 

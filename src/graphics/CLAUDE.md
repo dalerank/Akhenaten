@@ -10,8 +10,14 @@ Rendering abstraction over SDL2. Owns the painter, image atlas, fonts, and the U
 | `painter.h / .cpp` | SDL2 abstraction: texture drawing, scaling, transforms |
 | `screen.h / .cpp` | Global screen state (width, height, dialog offset) |
 | `image.h / .cpp` | Image atlas management: SDL texture loading/caching |
+| `image_desc.h` / `image_groups.h` / `imagepak_holder.h` | Image id descriptors, atlas group enums, pak ownership |
+| `residency_atlas.h / .cpp` | Residency atlas: repacks the frame's live sprites onto one page (`res_atlas::`) |
+| `animation.h` / `animkeys.h` | Animation descriptors and config keys |
 | `window.h / .cpp` | Window manager queue (up to 6 concurrent windows), z-order |
 | `font.h / .cpp` | Font definitions, glyph management (10+ font types) |
+| `text.h` | Text measuring / drawing helpers |
+| `video.h` | Intro / cutscene video playback |
+| `screenshot.h` | Screenshot capture (`--screenshot-dir`) |
 | `elements/ui.h / .cpp` | Core UI command system: `cmd_t` accumulation and flush |
 | `elements/generic_button.h` | Simple button model with callbacks |
 | `elements/scrollbar.h` | Scrollbar state and input |
@@ -38,6 +44,20 @@ Types: tiles, sprites, ornaments, generic draws, rectangles.
 - Fonts: pick from `FONT_*` enum
 - Image IDs reference atlas groups (e.g., `GROUP_DIALOG_BACKGROUND`)
 - Images must be pre-loaded into atlases; IDs are stable references
+
+### Residency atlas (`res_atlas::`)
+The SDL2 renderer auto-batches only while the bound texture and blend mode stay put.
+Depth-sorted city drawing switches source texture constantly, which defeats batching.
+The residency atlas repacks the sprites actually touched this frame onto a single page,
+so consecutive draws share one texture.
+
+- Gated by the `graphics_atlas_render` game feature (`res_atlas::set_render`), wired in
+  `platform/akhenaten.cpp`; sources register from `platform/renderer.cpp`.
+- `painter` calls `res_atlas::resolve()` to swap a draw onto the page; a miss falls back
+  to the original texture, so correctness never depends on the atlas.
+- Anything that reloads or frees image paks must `invalidate()` / `forget_source()`, or
+  the page keeps stale rects.
+- Stats are exposed through `dev/perfmon.cpp` (fill %, pack+blit ms); `dump()` writes the page.
 
 ## SDL2 Usage
 
