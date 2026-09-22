@@ -238,4 +238,5 @@ src/
 ├── scripts/      embedded game JS (building/, city/, ui_*, mission_*)
 └── platform/     platform-specific code (Android, Vita, Switch)
 ```
-(`bzip/`, `lame/`, `lzma/`, `mujs/` are vendored third-party sources — don't edit them.)
+(`bzip/`, `lame/`, `lzma/` are vendored third-party sources — don't edit them.
+`mujs/` is vendored too, but it is a fork we actively modify — see `src/mujs/CLAUDE.md`.)

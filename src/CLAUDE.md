@@ -32,7 +32,10 @@
 | `events/` | Typed event bus infrastructure (`g_city_events`) |
 | `core/` | Utilities: CRC32, event bus, ZIP, threading, math, logging |
 
-Vendored third-party sources — do not edit: `bzip/`, `lame/`, `lzma/`, `mujs/`.
+Vendored third-party sources — do not edit: `bzip/`, `lame/`, `lzma/`.
+
+`mujs/` is also vendored, but it is a **fork we actively modify** (C→C++ migration,
+project-specific value types, frame arena). Read `src/mujs/CLAUDE.md` before touching it.
 
 ## Key Global Singletons
 
