@@ -4,7 +4,6 @@
 #include "dev/debug.h"
 
 #include <algorithm>
-#include <ostream>
 
 memory_manager_t g_memory;
 
@@ -90,7 +89,8 @@ void memory_manager_t::log() const {
 
 declare_console_command_p(memory) {
     g_memory.log();
-    os << "memory: total " << (g_memory.total() / (1024.0 * 1024.0)) << " MiB, pack_textures "
-       << (g_memory.used(MEMORY_PACK_TEXTURES) / (1024.0 * 1024.0)) << " MiB ("
-       << g_memory.pack_texture_allocs().size() << " allocs)" << std::endl;
+    out.printf("memory: total %.2f MiB, pack_textures %.2f MiB (%d allocs)\n",
+               g_memory.total() / (1024.0 * 1024.0),
+               g_memory.used(MEMORY_PACK_TEXTURES) / (1024.0 * 1024.0),
+               (int)g_memory.pack_texture_allocs().size());
 }

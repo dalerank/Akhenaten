@@ -3,7 +3,6 @@
 #include "core/profiler.h"
 #include "dev/debug.h"
 #include "js/js_game.h"
-#include <iostream>
 #include "empire/empire_traders.h"
 #include "city/buildings.h"
 #include "city/city_message.h"
@@ -22,7 +21,6 @@
 #include "content/vfs.h"
 #include <string>
 
-#include <iostream>
 #include <algorithm>
 #include <array>
 
@@ -42,8 +40,8 @@ declare_console_command_p(save_empire_routes) {
         return;
     }
 
-    std::string sroutesdata = "log_info(\"akhenaten: akhenaten.conf started\")\n";
-    sroutesdata.append("var empire_routes = [\n");
+    fputs("log_info(\"akhenaten: akhenaten.conf started\")\n", fp);
+    fputs("var empire_routes = [\n", fp);
 
     for (int id = 0; id < MAX_ROUTE_OBJECTS; id++) {
         const map_route_object& obj = g_empire.get_route_object(id);
@@ -51,39 +49,36 @@ declare_console_command_p(save_empire_routes) {
             continue;
         }
 
-        sroutesdata.append("{\n");
-        sroutesdata.append(bstring128().printf("\tunk_header : [%d, %d]\n", obj.unk_header[0], obj.unk_header[1]).c_str());;
+        fputs("{\n", fp);
+        fprintf(fp, "\tunk_header : [%d, %d]\n", obj.unk_header[0], obj.unk_header[1]);
 
-        sroutesdata.append("\tpoints = [\n");
+        fputs("\tpoints = [\n", fp);
         for (int i = 0; i < 50; i++) {
-            sroutesdata.append(bstring128().printf("\t\t{ x : %d, y : %d, is_in_use : %i },\n", obj.points[i].p.x, obj.points[i].p.y, obj.points[i].is_in_use).c_str());
+            fprintf(fp, "\t\t{ x : %d, y : %d, is_in_use : %i },\n", obj.points[i].p.x, obj.points[i].p.y, obj.points[i].is_in_use);
         }
-        sroutesdata.append("\t]\n");
+        fputs("\t]\n", fp);
 
         int city_id = g_empire.get_city_for_trade_route(id);
         const empire_city& city = *g_empire.city(city_id);
         const empire_city& ourcity = g_city.ourcity();
 
-        sroutesdata.append(bstring128().printf("\tstart : \"%s\"\n", lang_get_string(21, city.name_id)));
-        sroutesdata.append(bstring128().printf("\told_name : \"%s\"\n", lang_get_string(195, city.name_id)));
-        sroutesdata.append(bstring128().printf("\tstop : \"%s\"\n", lang_get_string(21, ourcity.name_id)));
-        sroutesdata.append(bstring128().printf("\tcity_id : %d\n", city.name_id));
-        sroutesdata.append(bstring128().printf("\troute_id : %d\n", id));
-        sroutesdata.append(bstring128().printf("\tlength : %d\n", obj.length));
-        sroutesdata.append(bstring128().printf("\tunk_00 : %d\n", obj.unk_00));
-        sroutesdata.append(bstring128().printf("\tunk_01 : %d\n", obj.unk_01));
+        fprintf(fp, "\tstart : \"%s\"\n", lang_get_string(21, city.name_id));
+        fprintf(fp, "\told_name : \"%s\"\n", lang_get_string(195, city.name_id));
+        fprintf(fp, "\tstop : \"%s\"\n", lang_get_string(21, ourcity.name_id));
+        fprintf(fp, "\tcity_id : %d\n", city.name_id);
+        fprintf(fp, "\troute_id : %d\n", id);
+        fprintf(fp, "\tlength : %d\n", obj.length);
+        fprintf(fp, "\tunk_00 : %d\n", obj.unk_00);
+        fprintf(fp, "\tunk_01 : %d\n", obj.unk_01);
 
-        sroutesdata.append(bstring128().printf("\troute_type : %d\n", obj.route_type)); // 1 = land, 2 = sea
-        sroutesdata.append(bstring128().printf("\tnum_points : %d\n", obj.num_points));
-        sroutesdata.append(bstring128().printf("\tin_use : %d\n", obj.in_use));
-        sroutesdata.append(bstring128().printf("\tunk_03 : %d\n", obj.unk_03));
+        fprintf(fp, "\troute_type : %d\n", obj.route_type); // 1 = land, 2 = sea
+        fprintf(fp, "\tnum_points : %d\n", obj.num_points);
+        fprintf(fp, "\tin_use : %d\n", obj.in_use);
+        fprintf(fp, "\tunk_03 : %d\n", obj.unk_03);
 
-        sroutesdata.append("},\n");
+        fputs("},\n", fp);
     }
-    sroutesdata.append("]\n");
-
-    fprintf(fp, "%s", sroutesdata.c_str());
-    sroutesdata.clear();
+    fputs("]\n", fp);
 
     vfs::file_close_os(fp);
 }
@@ -558,40 +553,38 @@ void empire_t::end_all_sieges() {
 
 // Console commands for testing siege functionality
 declare_console_command_p(siege_city) {
-    std::string args; is >> args;
-    int city_id = atoi(args.empty() ? "0" : args.c_str());
+    int city_id = args.next_int(0);
     
     empire_city* city = g_empire.city(city_id);
     if (city && city->in_use && city->can_trade()) {
         city->set_under_siege(true);
-        std::cout << "City " << city_id << " is now under siege!" << std::endl;
+        out.printf("City %d is now under siege!\n", city_id);
     } else {
-        std::cout << "City " << city_id << " cannot be sieged!" << std::endl;
+        out.printf("City %d cannot be sieged!\n", city_id);
     }
 }
 
 declare_console_command_p(end_siege) {
-    std::string args; is >> args;
-    int city_id = atoi(args.empty() ? "0" : args.c_str());
+    int city_id = args.next_int(0);
     
     if (city_id == 0) {
         g_empire.end_all_sieges();
-        std::cout << "All sieges ended!" << std::endl;
+        out.println("All sieges ended!");
     } else {
         g_empire.end_siege(city_id);
-        std::cout << "Siege ended for city " << city_id << std::endl;
+        out.printf("Siege ended for city %d\n", city_id);
     }
 }
 
 declare_console_command_p(list_cities) {
-    std::cout << "Empire Cities Status:" << std::endl;
+    out.println("Empire Cities Status:");
     for (int i = 0; i < empire_t::MAX_CITIES; i++) {
         empire_city* city = g_empire.city(i);
         if (city && city->in_use) {
-            std::cout << "City " << i << ": Type=" << (int)city->type 
-                      << ", Open=" << (city->is_open ? "Yes" : "No")
-                      << ", Sieged=" << (city->is_sieged() ? "Yes" : "No")
-                      << ", CanTrade=" << (city->can_trade() ? "Yes" : "No") << std::endl;
+            out.printf("City %d: Type=%d, Open=%s, Sieged=%s, CanTrade=%s\n", i, (int)city->type,
+                       city->is_open ? "Yes" : "No",
+                       city->is_sieged() ? "Yes" : "No",
+                       city->can_trade() ? "Yes" : "No");
         }
     }
 }

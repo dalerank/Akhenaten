@@ -27,8 +27,6 @@
 #include "input/keyboard.h"
 #include "input/keys.h"
 
-#include <iostream>
-
 #if !defined(GAME_PLATFORM_ANDROID)
 
 dev::imgui_qconsole *_debug_console = nullptr;
@@ -377,7 +375,7 @@ void game_debug_terrain_paint_draw() {
 }
 
 void game_debug_cli_message(pcstr msg) {
-    debug_console() << msg << std::endl;
+    debug_console().println(msg);
 }
 
 namespace {
@@ -408,7 +406,7 @@ void game_imgui_overlay_init() {
     ImGui_ImplSDL2_InitForSDLRenderer(g_render.window(), g_render.renderer());
     ImGui_ImplSDLRenderer2_Init(g_render.renderer());
 
-    debug_console().con.bind_command("close", [] (auto &, auto &) { game.debug_console = false; });
+    debug_console().con.bind_command("close", [] (console_args &, console_output &) { game.debug_console = false; });
     game.add_debug_ui_draw_handler([]() { game_debug_properties_draw(); });
 }
 
@@ -491,25 +489,25 @@ bool game_imgui_overlay_handle_event(void *e) {
 void game_toggle_debug_console() {
     game.debug_console = !game.debug_console;
     if (game.debug_console) {
-        debug_console().is.reclaim_focus = true;
+        debug_console().input.reclaim_focus = true;
     }
 
     static bool first_time = true;
     if (first_time) {
         first_time = false;
-        debug_console().loadCommandHistory();
+        debug_console().load_command_history();
     }
 }
 
-void bind_debug_command(pcstr cmd, std::function<void(std::istream &, std::ostream &)> f) {
-    debug_console().con.bind_command(cmd, f);
+void bind_debug_command(pcstr cmd, console_command_fn f) {
+    debug_console().con.bind_command(cmd, std::move(f));
 }
 
 void run_debug_command(pcstr line) {
     if (!line || !*line) {
         return;
     }
-    debug_console().con.commandExecute(std::string(line), debug_console());
+    debug_console().con.execute(line, debug_console());
 }
 
 void bind_debug_console_var_int(pcstr var, int &ref) {

@@ -38,9 +38,9 @@
 e_god_tokens_t ANK_CONFIG_ENUM(e_god_tokens);
 e_god_short_tokens_t e_god_short_tokens;
 
-e_god find_god_id_from_short_name(const std::string& god_name) {
+e_god find_god_id_from_short_name(pcstr god_name) {
     for (const auto& it: e_god_short_tokens.values) {
-        if (god_name == it.name) {
+        if (!::strcmp(god_name, it.name)) {
             return (e_god)it.id;
         }
     }
@@ -48,8 +48,7 @@ e_god find_god_id_from_short_name(const std::string& god_name) {
 }
 
 declare_console_command_p(god_minor_blessing) {
-    std::string god_name; is >> god_name;
-    e_god god = find_god_id_from_short_name(god_name);
+    e_god god = find_god_id_from_short_name(args.next_str().c_str());
     if (god != GOD_UNKNOWN) {
         g_city.religion.perform_minor_blessing(god, /*force_construction=*/true);
         events::emit(event_city_warning{ "Cheated minor blessing" });
@@ -57,32 +56,28 @@ declare_console_command_p(god_minor_blessing) {
 }
 
 declare_console_command_p(god_major_blessing) {
-    std::string args; is >> args;
-    int god_id = atoi(args.empty() ? (pcstr)"0" : args.c_str());
+    int god_id = args.next_int(0);
     g_city.religion.perform_major_blessing((e_god)god_id, /*force_construction=*/true);
 
     events::emit(event_city_warning{ "Casted major upset" });
 }
 
 declare_console_command_p(god_minor_curse) {
-    std::string args; is >> args;
-    int god_id = atoi(args.empty() ? (pcstr)"0" : args.c_str());
+    int god_id = args.next_int(0);
     g_city.religion.perform_minor_curse((e_god)god_id);
 
     events::emit(event_city_warning{ "Casted major upset" });
 }
 
 declare_console_command_p(god_major_curse) {
-    std::string args; is >> args;
-    int god_id = atoi(args.empty() ? (pcstr)"0" : args.c_str());
+    int god_id = args.next_int(0);
     g_city.religion.perform_major_curse((e_god)god_id);
 
     events::emit(event_city_warning{ "Casted upset" });
 }
 
 declare_console_command_p(ra_no_trade) {
-    std::string args; is >> args;
-    int nomonth = atoi(args.empty() ? (pcstr)"0" : args.c_str());
+    int nomonth = args.next_int(0);
 
     g_city.religion.ra_no_traders_months_left = nomonth;
     g_city.religion.ra_harshly_reduced_trading_months_left = nomonth;
@@ -98,7 +93,7 @@ declare_console_command_p(reset_god_moods) {
         god.blessing_done = false;
         god.curse_done = false;
     }
-    os << "God moods reset to initial values (50)" << std::endl;
+    out.println("God moods reset to initial values (50)");
 }
 
 stable_array<god_state::static_params_t> ANK_VARIABLE_N(gods_static_data, "gods");

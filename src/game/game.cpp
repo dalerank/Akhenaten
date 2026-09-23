@@ -59,7 +59,6 @@
 #include "undo.h"
 
 #include "dev/debug.h"
-#include <iostream>
 
 game_t game;
 events::typed_queue g_permanent_events;

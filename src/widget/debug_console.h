@@ -8,7 +8,6 @@
 #include "dev/debug.h"
 
 #include <functional>
-#include <iosfwd>
 
 #if !defined(GAME_PLATFORM_ANDROID)
 
@@ -24,7 +23,7 @@ void game_imgui_overlay_draw();
 bool game_imgui_overlay_handle_event(void *event);
 void game_toggle_debug_console();
 
-void bind_debug_command(pcstr cmd, std::function<void(std::istream &, std::ostream &)> f);
+void bind_debug_command(pcstr cmd, console_command_fn f);
 void run_debug_command(pcstr line);
 void bind_debug_console_var_int(pcstr var, int &ref);
 void bind_debug_console_var_int8(pcstr var, int8_t &ref);
@@ -72,7 +71,7 @@ inline void game_debug_show_property(pcstr, const bstring256 &, bool disabled = 
 inline void game_debug_show_property(pcstr, const bstring32 &, bool disabled = false) {}
 inline void game_imgui_overlay_init() {}
 inline bool game_imgui_overlay_handle_event(...) { return false; }
-inline void bind_debug_command(pcstr, std::function<void(std::istream &, std::ostream &)>) {}
+inline void bind_debug_command(pcstr, console_command_fn) {}
 inline void run_debug_command(pcstr) {}
 inline void bind_debug_console_var_int(...) {}
 inline void bind_debug_console_var_int8(...) {}

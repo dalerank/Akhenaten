@@ -11,7 +11,6 @@
 #include "graphics/image.h"
 #include "dev/debug.h"
 
-#include <iostream>
 
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_brewery);
 

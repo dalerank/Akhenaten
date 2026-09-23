@@ -17,7 +17,6 @@
 #include "game/game.h"
 #include "dev/debug.h"
 #include "js/js_game.h"
-#include <iostream>
 
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_bricklayers_guild);
 

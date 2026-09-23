@@ -102,8 +102,7 @@ auto_phrases_t ANK_VARIABLE(eventmsg_auto_phrases);
 events_data_t g_scenario_events;
 
 declare_console_command_p(run_scenario_event) {
-    bstring128 args; is >> args;
-    int tag_id = atoi(args.empty() ? (pcstr)"0" : args.c_str());
+    int tag_id = args.next_int(0);
 
     if (!tag_id) {
         return;

@@ -104,55 +104,51 @@ uint64_t js_mujs_heap_bytes()
 void js_reset_vm_state();
 
 declare_console_command_p(reload_scripts){
-    os << "Reloading JavaScript VM from scratch..." << std::endl;
+    out.println("Reloading JavaScript VM from scratch...");
 
     mission_id_t missionid(g_scenario.campaign_scenario_id);
 
     js_vm_setup();
 
     bool reloaded = js_vm_sync(missionid.value());
-    os << (reloaded ? "JavaScript VM reloaded successfully!" : "JavaScript VM reloaded (no files to sync)") << std::endl;
+    out.println(reloaded ? "JavaScript VM reloaded successfully!" : "JavaScript VM reloaded (no files to sync)");
 }
 
 declare_console_command_p(js_debugger){
-    std::string subcmd;
-    is >> subcmd;
+    const bstring128 subcmd = args.next_str();
 
     if (subcmd == "start") {
-        int port = 4711;
-        is >> port; // optional — keeps default 4711 on parse failure
+        const int port = args.next_int(4711);
         if (g_mujs_debugger.is_running()) {
-            os << "JS Debugger is already running on port " << g_mujs_debugger.port() << std::endl;
+            out.printf("JS Debugger is already running on port %d\n", g_mujs_debugger.port());
         } else {
             g_mujs_debugger.start(vm.J, port);
-            os << "JS Debugger started — attach VSCode on localhost:" << port << " (type: mujs)" << std::endl;
+            out.printf("JS Debugger started — attach VSCode on localhost:%d (type: mujs)\n", port);
         }
     } else if (subcmd == "stop") {
         if (!g_mujs_debugger.is_running()) {
-            os << "JS Debugger is not running" << std::endl;
+            out.println("JS Debugger is not running");
         } else {
             g_mujs_debugger.stop();
-            os << "JS Debugger stopped" << std::endl;
+            out.println("JS Debugger stopped");
         }
     } else if (subcmd == "status") {
         if (g_mujs_debugger.is_running()) {
-            os << "JS Debugger: running on port " << g_mujs_debugger.port() << std::endl;
+            out.printf("JS Debugger: running on port %d\n", g_mujs_debugger.port());
         } else {
-            os << "JS Debugger: stopped" << std::endl;
+            out.println("JS Debugger: stopped");
         }
     } else if (subcmd == "verbose") {
-        std::string onoff;
-        is >> onoff;
-        bool enable = (onoff != "off");
+        const bool enable = (args.next_str() != "off");
         g_mujs_debugger.set_verbose(enable);
-        os << "JS Debugger verbose trace: " << (enable ? "ON" : "OFF") << std::endl;
-        os << "(each JS line will be logged — use 'js_debugger verbose off' to stop)" << std::endl;
+        out.printf("JS Debugger verbose trace: %s\n", enable ? "ON" : "OFF");
+        out.println("(each JS line will be logged — use 'js_debugger verbose off' to stop)");
     } else {
-        os << "Usage: js_debugger <start [port]|stop|status|verbose [on|off]>" << std::endl;
-        os << "  start [port]  — start DAP server (default port 4711)" << std::endl;
-        os << "  stop          — stop DAP server, resume game if paused" << std::endl;
-        os << "  status        — show current state" << std::endl;
-        os << "  verbose [off] — log every JS line (diagnosis for missing breakpoints)" << std::endl;
+        out.println("Usage: js_debugger <start [port]|stop|status|verbose [on|off]>");
+        out.println("  start [port]  — start DAP server (default port 4711)");
+        out.println("  stop          — stop DAP server, resume game if paused");
+        out.println("  status        — show current state");
+        out.println("  verbose [off] — log every JS line (diagnosis for missing breakpoints)");
     }
 }
 

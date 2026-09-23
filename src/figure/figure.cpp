@@ -68,8 +68,7 @@ declare_console_command_p(kill_all_figures) {
 }
 
 declare_console_command_p(create_figure) {
-    std::string args; is >> args;
-    int f_type = atoi(args.empty() ? (pcstr)"0" : args.c_str());
+    int f_type = args.next_int(0);
 
     if (!f_type) {
         return;

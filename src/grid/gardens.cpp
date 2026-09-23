@@ -12,8 +12,7 @@ grid_xx g_terraing_garden_value(FS_INT8);
 grid_xx g_terraing_garden_decay(FS_INT8);
 
 declare_console_command_p(gardendecay) {
-    std::string args; is >> args;
-    int v = atoi(args.empty() ? (pcstr)"0" : args.c_str());
+    int v = args.next_int(0);
 
     map_tiles_foreach_map_tile([v] (tile2i tile) {
         const bool is_garden = map_terrain_is(tile, TERRAIN_GARDEN);

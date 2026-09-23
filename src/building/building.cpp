@@ -52,11 +52,9 @@
 
 #include "dev/debug.h"
 #include "js/js_game.h"
-#include <iostream>
 
 declare_console_command_p(destroytype) {
-    std::string args; is >> args;
-    int type = atoi(args.empty() ? (pcstr)"0" : args.c_str());
+    int type = args.next_int(0);
 
     buildings_valid_do([] (building &b) {
         b.destroy_by_collapse();

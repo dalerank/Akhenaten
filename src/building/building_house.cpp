@@ -26,7 +26,6 @@
 #include "js/js_game.h"
 #include "widget/widget_city.h"
 #include "dev/debug.h"
-#include <iostream>
 
 #define MAX_DIR 4
 

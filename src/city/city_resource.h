@@ -5,8 +5,7 @@
 #include "game/resource.h"
 #include "core/svector.h"
 
-#include <iosfwd>
-#include <string>
+#include "dev/console_io.h"
 
 struct simulation_time_t;
 
@@ -109,9 +108,8 @@ void city_granaries_remove_resource(event_granaries_remove_resource &ev);
 void city_storageyards_remove_resource(event_storageyards_remove_resource &ev);
 
 template<e_resource R>
-void game_cheat_add_resource(std::istream &is, std::ostream &os) {
-    std::string args; is >> args;
-    int amount = atoi(args.empty() ? (pcstr)"100" : args.c_str());
+void game_cheat_add_resource(console_args &args, console_output &) {
+    int amount = args.next_int(100);
     city_resource_add_items(R, amount);
     city_resource_was_added_warning(R);
 };

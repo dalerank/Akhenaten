@@ -2,80 +2,44 @@
 #include "js/js.h"
 #include "widget/debug_console.h"
 #include "core/log.h"
-#include "core/cstring.h"
-#include "core/hvector.h"
-
-#include <sstream>
-#include <string>
 
 #if !defined(GAME_PLATFORM_ANDROID)
-static void console_command_wrapper_global(const std::string &funcRefStr, std::istream &is, std::ostream &os) {
+enum e_console_callback_source {
+    CONSOLE_CALLBACK_GLOBAL,
+    CONSOLE_CALLBACK_REGISTRY,
+};
+
+static void console_command_wrapper(e_console_callback_source source, const xstring &func_ref, console_args &args, console_output &out) {
     auto J = js_vm_state();
     if (js_vm_have_error() || J == nullptr) {
-        os << "Error: JavaScript VM is not available" << std::endl;
+        out.println("Error: JavaScript VM is not available");
         return;
     }
 
     const int baseline = js_gettop(J);
-    js_getglobal(J, funcRefStr.c_str());
+    if (source == CONSOLE_CALLBACK_REGISTRY) {
+        js_getregistry(J, js_intern(func_ref.c_str()));
+    } else {
+        js_getglobal(J, func_ref.c_str());
+    }
+
     if (!J->iscallable(-1)) {
-        os << "Error: Console command function not found" << std::endl;
+        out.println("Error: Console command function not found");
         js_pop(J, 1);
         return;
     }
 
     js_pushnull(J);
 
-    hvector<cstring, 4> args;
-    cstring arg(frameAlloc());
-    while (is >> arg) {
-        args.emplace_back(std::move(arg));
-    }
     J->newarray();
-    for (size_t i = 0; i < args.size(); ++i) {
-        J->pushstring(args[i].c_str());
-        js_setindex(J, -2, (int)i);
+    bstring256 arg;
+    for (int i = 0; args.next(arg); ++i) {
+        J->pushstring(arg.c_str());
+        js_setindex(J, -2, i);
     }
 
     if (!js_vm_trypcall(J, 1)) {
-        os << "Error executing console command" << std::endl;
-        logs::error("JS console command error");
-    }
-    while (js_gettop(J) > baseline) {
-        js_pop(J, 1);
-    }
-}
-
-static void console_command_wrapper_registry(const std::string &funcRefStr, std::istream &is, std::ostream &os) {
-    auto J = js_vm_state();
-    if (js_vm_have_error() || J == nullptr) {
-        os << "Error: JavaScript VM is not available" << std::endl;
-        return;
-    }
-
-    const int baseline = js_gettop(J);
-    js_getregistry(J, js_intern(funcRefStr.c_str()));
-    if (!J->iscallable(-1)) {
-        os << "Error: Console command function not found" << std::endl;
-        js_pop(J, 1);
-        return;
-    }
-
-    js_pushnull(J);
-
-    hvector<cstring, 4> args;
-    cstring arg(frameAlloc());
-    while (is >> arg) {
-        args.emplace_back(std::move(arg));
-    }
-    J->newarray();
-    for (size_t i = 0; i < args.size(); ++i) {
-        J->pushstring(args[i].c_str());
-        js_setindex(J, -2, (int)i);
-    }
-
-    if (!js_vm_trypcall(J, 1)) {
-        os << "Error executing console command" << std::endl;
+        out.println("Error executing console command");
         logs::error("JS console command error");
     }
     while (js_gettop(J) > baseline) {
@@ -100,12 +64,10 @@ void js_register_console_command_from_function(pcstr functionName, pcstr command
     }
     js_pop(J, 1); // only needed the callable check; keep MuJS stack balanced across hot-reload
 
-    std::string funcRefStr(functionName);
-    auto wrapper = [funcRefStr](std::istream &is, std::ostream &os) {
-        console_command_wrapper_global(funcRefStr, is, os);
-    };
-
-    bind_debug_command(commandName, wrapper);
+    const xstring func_ref(functionName);
+    bind_debug_command(commandName, [func_ref] (console_args &args, console_output &out) {
+        console_command_wrapper(CONSOLE_CALLBACK_GLOBAL, func_ref, args, out);
+    });
 #endif
 }
 
@@ -135,12 +97,10 @@ void js_register_console_command(js_State *J) {
     js_copy(J, 2);
     auto funcRef = js_ref(J);
 
-    std::string funcRefStr = funcRef->value;
-    auto wrapper = [funcRefStr](std::istream &is, std::ostream &os) {
-        console_command_wrapper_registry(funcRefStr, is, os);
-    };
-
-    bind_debug_command(commandName->value.c_str(), wrapper);
+    const xstring func_ref(funcRef->value.c_str());
+    bind_debug_command(commandName->value.c_str(), [func_ref] (console_args &args, console_output &out) {
+        console_command_wrapper(CONSOLE_CALLBACK_REGISTRY, func_ref, args, out);
+    });
 #endif
 
     J->pushundefined();

@@ -326,7 +326,7 @@ void config_show_debug_render_properties(bool header) {
     }
 }
 
-console_command::console_command(pcstr name, std::function<void(std::istream &is, std::ostream &os)> f) {
+console_command::console_command(pcstr name, console_command_fn f) {
     bind_debug_command(name, f);
 }
 

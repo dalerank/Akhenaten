@@ -570,9 +570,9 @@ void figure_enemy_transport::update_animation() {
 }
 
 declare_console_command_p(spawn_enemy_transport) {
-    e_enemy_type enemy = (e_enemy_type)parse_integer_from<bstring32>(is);
-    int tilex = parse_integer_from<bstring32>(is);
-    int tiley = parse_integer_from<bstring32>(is);
+    e_enemy_type enemy = (e_enemy_type)args.next_int(0);
+    int tilex = args.next_int(0);
+    int tiley = args.next_int(0);
 
     tile2i preferred = tile2i::invalid;
     if (tilex >= 0 && tiley >= 0) {

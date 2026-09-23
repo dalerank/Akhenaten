@@ -5,15 +5,13 @@
 #include "city/city.h"
 #include "dev/debug.h"
 #include "grid/terrain.h"
-#include <iostream>
 
 static const vec2i FISHPOINT_OFFSETS[] = {{0, 0}, {0, -2}, {-2, 0}, {1, 2}, {2, 0}, {-3, 1}, {4, -3}, {-2, 4}, {0, 0}};
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_fishing_point);
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_fishing_spot);
 
 declare_console_command_p(addfishpoints) {
-    std::string args; is >> args;
-    int count = atoi(args.empty() ? (pcstr)"0" : args.c_str());
+    int count = args.next_int(0);
 
     g_city.fishing_points.update_month(count);
 }

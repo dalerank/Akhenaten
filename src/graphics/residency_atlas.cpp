@@ -13,9 +13,7 @@
 #include <atomic>
 #include <cstdint>
 #include <functional>
-#include <istream>
 #include <mutex>
-#include <ostream>
 #include <string>
 #include <unordered_map>
 #include <unordered_set>
@@ -754,56 +752,46 @@ void dump(const char *filename) {
 }
 
 declare_console_command_p(residency_atlas) {
-    std::string sub;
-    is >> sub;
+    const bstring128 sub = args.next_str();
     if (sub == "on") {
-        int size = 0;
-        is >> size;
-        res_atlas::enable(size);
+        res_atlas::enable(args.next_int(0));
         res_atlas::set_preview(true);
-        os << "residency_atlas: recording on, preview on" << std::endl;
+        out.println("residency_atlas: recording on, preview on");
     } else if (sub == "off") {
         res_atlas::disable();
         res_atlas::set_preview(false);
-        os << "residency_atlas: recording off, redirect off, preview off" << std::endl;
+        out.println("residency_atlas: recording off, redirect off, preview off");
     } else if (sub == "reset") {
         res_atlas::reset();
-        os << "residency_atlas: reset" << std::endl;
+        out.println("residency_atlas: reset");
     } else if (sub == "render") {
-        std::string v;
-        is >> v;
-        const bool on = (v == "on");
+        const bool on = (args.next_str() == "on");
         res_atlas::set_render(on);
-        os << "residency_atlas: render " << (on ? "on (recording forced on)" : "off") << std::endl;
+        out.printf("residency_atlas: render %s\n", on ? "on (recording forced on)" : "off");
     } else if (sub == "filter") {
-        std::string v;
-        is >> v;
+        const bstring128 v = args.next_str();
         if (v != "linear" && v != "nearest") {
-            os << "usage: residency_atlas filter nearest|linear" << std::endl;
+            out.println("usage: residency_atlas filter nearest|linear");
             return;
         }
         res_atlas::set_page_linear(v == "linear");
-        os << "residency_atlas: filter " << v << " (atlas repacked)" << std::endl;
+        out.printf("residency_atlas: filter %s (atlas repacked)\n", v);
     } else if (sub == "preview") {
-        std::string v;
-        is >> v;
-        const bool on = (v != "off");
+        const bool on = (args.next_str() != "off");
         res_atlas::set_preview(on);
-        os << "residency_atlas: preview " << (on ? "on" : "off") << std::endl;
+        out.printf("residency_atlas: preview %s\n", on ? "on" : "off");
     } else if (sub == "stats") {
         res_atlas::log_stats();
-        os << "residency_atlas: stats written to log" << std::endl;
+        out.println("residency_atlas: stats written to log");
     } else if (sub == "dump") {
-        std::string fn;
-        is >> fn;
-        if (fn.empty()) {
+        bstring256 fn;
+        if (!args.next(fn)) {
             fn = "residency_atlas.png";
         }
         res_atlas::dump(fn.c_str());
-        os << "residency_atlas: dumped to " << fn << std::endl;
+        out.printf("residency_atlas: dumped to %s\n", fn);
     } else {
-        os << "usage: residency_atlas on [size] | off | render on|off | filter nearest|linear | preview [on|off] | "
-              "stats | dump [file] | reset"
-           << std::endl;
+        out.println("usage: residency_atlas on [size] | off | render on|off | filter nearest|linear | preview [on|off] | "
+                    "stats | dump [file] | reset");
     }
 }

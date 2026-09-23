@@ -27,8 +27,7 @@ declare_console_command_p(empire_traders_reset) {
 };
 
 declare_console_command_p(empire_traders_create) {
-    std::string args; is >> args;
-    int city_id = atoi(args.empty() ? (pcstr)"0" : args.c_str());
+    int city_id = args.next_int(0);
 
     const empire_city &city = *g_empire.city(city_id);
     g_empire_traders.create_trader(city.route_id, -1);

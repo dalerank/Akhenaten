@@ -18,13 +18,11 @@
 
 #include "dev/debug.h"
 #include <algorithm>
-#include <iostream>
 
 kingdome_relation_t::static_params ANK_VARIABLE(kingdome_relation);
 
 declare_console_command_p(updatekingdome) {
-    std::string args; is >> args;
-    int value = atoi(args.empty() ? (pcstr)"0" : args.c_str());
+    int value = args.next_int(0);
     if (!!value) {
         g_city.kingdome.advance_year();
     } else {
@@ -33,15 +31,12 @@ declare_console_command_p(updatekingdome) {
 }
 
 declare_console_command_p(addkingdome) {
-    std::string args; is >> args;
-    int amount = atoi(args.empty() ? (pcstr)"10" : args.c_str());
+    int amount = args.next_int(10);
     g_city.kingdome.change(amount);
 }
 
 declare_console_command_p(addsavings) {
-    std::string args;
-    is >> args;
-    int amount = atoi(!args.empty() ? args.c_str() : "100");
+    int amount = args.next_int(100);
     g_city.kingdome.personal_savings += amount;
 }
 

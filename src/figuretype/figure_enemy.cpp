@@ -201,11 +201,11 @@ void figure_enemy::leave_city() {
 
 // Dev helper (R7): spawn any land enemy figure type at tile or mouse.
 declare_console_command_p(spawn_enemy_figure) {
-    e_figure_type ftype = (e_figure_type)parse_integer_from<bstring32>(is);
+    e_figure_type ftype = (e_figure_type)args.next_int(0);
     bstring32 sx;
     bstring32 sy;
-    const bool have_x = !!(is >> sx);
-    const bool have_y = have_x && !!(is >> sy);
+    const bool have_x = args.next(sx);
+    const bool have_y = have_x && args.next(sy);
 
     if (ftype <= FIGURE_NONE || ftype >= FIGURE_MAX) {
         events::emit(event_city_warning{ "spawn_enemy_figure: bad type" });

@@ -3,38 +3,25 @@
 #include "content/vfs.h"
 #include "platform/platform.h"
 
+#include <algorithm>
+
 namespace dev {
 
-    bool IMGUIOstream::linePassFilter(const ConsoleBuf::Line &l) const {
-        for (const ConsoleBuf::TextSequence &s : l.sequences) {
-            const char *item = s.text.c_str();
-            if (filter.PassFilter(item))
+    bool imgui_output_pane::line_pass_filter(const console_text_buffer::line &l) const {
+        for (const console_text_buffer::text_sequence &s : l.sequences) {
+            if (filter.PassFilter(s.text.c_str()))
                 return true;
         }
 
         return false;
     }
 
-    void IMGUIOstream::renderInWindow(bool &p_open, const char *title) {
-        ImGui::SetNextWindowSize(ImVec2(520, 600), ImGuiCond_FirstUseEver);
-
-        if (!ImGui::Begin(title, &p_open)) {
-            ImGui::End();
-            return;
-        }
-
-        render();
-
-        ImGui::End();
-    }
-
-
-    void IMGUIOstream::render() {
+    void imgui_output_pane::render() {
         const ImGuiIO &io = ImGui::GetIO();
         int line_idx = -1;
-        for (const ConsoleBuf::Line &line : strb.getLines()) {
+        for (const console_text_buffer::line &line : text.lines()) {
             ++line_idx;
-            if (!linePassFilter(line))
+            if (!line_pass_filter(line))
                 continue;
 
             // Wrap each line in a Selectable for click-to-copy + multi-select.
@@ -71,7 +58,7 @@ namespace dev {
                     last_clicked_idx = line_idx;
                 }
 
-                const std::string sel = getSelectionText();
+                const cstring sel = selection_text();
                 if (!sel.empty()) {
                     ImGui::SetClipboardText(sel.c_str());
                 }
@@ -79,32 +66,32 @@ namespace dev {
 
             ImGui::SetCursorPos(line_start);
 
-            for (const ConsoleBuf::TextSequence &seq : line.sequences) {
-                if (seq.style.hasBackgroundColor) {
+            for (const console_text_buffer::text_sequence &seq : line.sequences) {
+                if (seq.style.has_background_color) {
                     ImVec2 textSize = ImGui::CalcTextSize(seq.text.c_str());
                     ImVec2 cursorScreenPos = ImGui::GetCursorScreenPos();
                     ImVec2 sum = ImVec2(textSize[0] + cursorScreenPos[0], textSize[1] + cursorScreenPos[1]);
-                    ImGui::GetWindowDrawList()->AddRectFilled(cursorScreenPos, sum, seq.style.backgroundColor);
+                    ImGui::GetWindowDrawList()->AddRectFilled(cursorScreenPos, sum, seq.style.background_color);
                 }
 
-                ImGui::TextColored(seq.style.textColor, "%s", seq.text.c_str());
+                ImGui::TextColored(seq.style.text_color, "%s", seq.text.c_str());
                 ImGui::SameLine();
             }
 
             ImGui::NewLine();
         }
 
-        if ((autoScrollEnabled && shouldScrollToBottom) || (autoScrollEnabled && ImGui::GetScrollY() >= ImGui::GetScrollMaxY()))
+        if ((auto_scroll_enabled && should_scroll_to_bottom) || (auto_scroll_enabled && ImGui::GetScrollY() >= ImGui::GetScrollMaxY()))
             ImGui::SetScrollHereY(1.0f);
-        shouldScrollToBottom = false;
+        should_scroll_to_bottom = false;
     }
 
-    std::string IMGUIOstream::getAllText() const {
-        std::string result;
-        for (const ConsoleBuf::Line &line : strb.getLines()) {
-            if (!linePassFilter(line))
+    cstring imgui_output_pane::all_text() const {
+        cstring result;
+        for (const console_text_buffer::line &line : text.lines()) {
+            if (!line_pass_filter(line))
                 continue;
-            for (const ConsoleBuf::TextSequence &seq : line.sequences) {
+            for (const console_text_buffer::text_sequence &seq : line.sequences) {
                 result += seq.text;
             }
             result += '\n';
@@ -112,14 +99,14 @@ namespace dev {
         return result;
     }
 
-    std::string IMGUIOstream::getSelectionText() const {
-        std::string result;
-        const auto &lines = strb.getLines();
+    cstring imgui_output_pane::selection_text() const {
+        cstring result;
+        const auto &lines = text.lines();
         for (int idx : selected_lines) {
             if (idx < 0 || idx >= (int)lines.size()) {
                 continue;
             }
-            for (const ConsoleBuf::TextSequence &seq : lines[idx].sequences) {
+            for (const console_text_buffer::text_sequence &seq : lines[idx].sequences) {
                 result += seq.text;
             }
             result += '\n';
@@ -128,19 +115,13 @@ namespace dev {
     }
 
     imgui_qconsole::imgui_qconsole() {
-        addStream(os);
+        input.text_callbacks[ImGuiInputTextFlags_CallbackCompletion] = [this] (ImGuiInputTextCallbackData *data) { text_completion_callback(data); };
+        input.text_callbacks[ImGuiInputTextFlags_CallbackHistory] = [this] (ImGuiInputTextCallbackData *data) { history_callback(data); };
 
-        is.textCallbacks[ImGuiInputTextFlags_CallbackCompletion] = [this] (ImGuiInputTextCallbackData *data) { this->textCompletionCallback(data); };
-
-        is.textCallbacks[ImGuiInputTextFlags_CallbackHistory] = [this] (ImGuiInputTextCallbackData *data) { this->historyCallback(data); };
-
-        con.bind_member_command("clear", *this, &imgui_qconsole::clear, "Clear the console");
-        con.bind_cvar("fontScale", fontScale);
-        con.style = qconsole::ConsoleStylingColor();        
+        con.bind_command("clear", [this] (console_args &, console_output &) { clear(); }, "Clear the console");
+        con.bind_cvar("fontScale", font_scale);
+        con.style = qconsole::styling_color();
     }
-
-    void imgui_qconsole::clear() { os.Clear(); }
-    void imgui_qconsole::optionsMenu() { ImGui::Checkbox("Auto-scroll", &os.autoScrollEnabled); }
 
     void imgui_qconsole::render(const char *title, bool &p_open, int width, int height) {
         if (!p_open) return;
@@ -153,20 +134,20 @@ namespace dev {
         ImGui::SetNextWindowSize(ImVec2(width, height));
 
         ImGui::Begin(title, &p_open, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize);
-        ImGui::SetWindowFontScale(fontScale);
+        ImGui::SetWindowFontScale(font_scale);
 
         if (ImGui::SmallButton("Copy All")) {
-            const std::string all_text = os.getAllText();
-            if (!all_text.empty()) {
-                ImGui::SetClipboardText(all_text.c_str());
+            const cstring all = output.all_text();
+            if (!all.empty()) {
+                ImGui::SetClipboardText(all.c_str());
             }
         }
         ImGui::SameLine();
         if (ImGui::SmallButton("Clear")) {
-            os.Clear();
+            output.clear();
         }
         ImGui::SameLine();
-        ImGui::Checkbox("Auto-scroll", &os.autoScrollEnabled);
+        ImGui::Checkbox("Auto-scroll", &output.auto_scroll_enabled);
 
         // Reserve enough left-over height for 1 separator + 1 input text
         const float footer_height_to_reserve = ImGui::GetStyle().ItemSpacing.y + ImGui::GetFrameHeightWithSpacing();
@@ -174,24 +155,24 @@ namespace dev {
 
         ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(4, 1)); // Tighten spacing
 
-        os.render();
+        output.render();
 
-        if (prevLineCount < os.strb.getLines().size()) {
-            os.shouldScrollToBottom = true;
+        if (prev_line_count < output.text.lines().size()) {
+            output.should_scroll_to_bottom = true;
         }
-        prevLineCount = os.strb.getLines().size();
+        prev_line_count = output.text.lines().size();
 
         ImGui::PopStyleVar();
         ImGui::EndChild();
         ImGui::Separator();
 
-        if (is.render(width)) {
-            HistoryPos = -1;
+        if (input.render(width)) {
+            history_pos = -1;
 
-            con.commandExecute(is.getStream(), (*this)); 
-            saveCommandHistory();
+            con.execute(input.submitted(), *this);
+            save_command_history();
             // On command input, we scroll to bottom even if AutoScroll==false
-            os.shouldScrollToBottom = true;
+            output.should_scroll_to_bottom = true;
         }
 
         if (font) {
@@ -201,31 +182,32 @@ namespace dev {
         ImGui::End();
     }
 
-    void imgui_qconsole::historyCallback(ImGuiInputTextCallbackData *data) {
-        const int prev_history_pos = HistoryPos;
+    void imgui_qconsole::history_callback(ImGuiInputTextCallbackData *data) {
+        const int history_size = (int)con.history().size();
+        const int prev_history_pos = history_pos;
         if (data->EventKey == ImGuiKey_UpArrow) {
-            if (HistoryPos == -1) {
-                HistoryPos = con.historyBuffer().size() - 1;
-            } else if (HistoryPos > 0) {
-                HistoryPos--;
+            if (history_pos == -1) {
+                history_pos = history_size - 1;
+            } else if (history_pos > 0) {
+                history_pos--;
             }
         } else if (data->EventKey == ImGuiKey_DownArrow) {
-            if (HistoryPos != -1) {
-                if (++HistoryPos >= con.historyBuffer().size()) {
-                    HistoryPos = -1;
+            if (history_pos != -1) {
+                if (++history_pos >= history_size) {
+                    history_pos = -1;
                 }
             }
         }
 
         // A better implementation would preserve the data on the current input line along with cursor position.
-        if (prev_history_pos != HistoryPos) {
-            const char *history_str = (HistoryPos >= 0) ? con.historyBuffer()[HistoryPos].c_str() : "";
+        if (prev_history_pos != history_pos) {
+            const char *history_str = (history_pos >= 0) ? con.history()[history_pos].c_str() : "";
             data->DeleteChars(0, data->BufTextLen);
             data->InsertChars(0, history_str);
         }
     }
 
-    void imgui_qconsole::textCompletionCallback(ImGuiInputTextCallbackData *data) {
+    void imgui_qconsole::text_completion_callback(ImGuiInputTextCallbackData *data) {
         // Locate beginning of current word
         const char *word_end = data->Buf + data->CursorPos;
         const char *word_start = word_end;
@@ -236,39 +218,33 @@ namespace dev {
             word_start--;
         }
 
-        // Build a list of candidates
-        std::vector<std::string> candidates;
+        const int word_len = (int)(word_end - word_start);
 
-        // autocomplete commands...
-        for (auto it = con.getCommandTable().begin(); it != con.getCommandTable().end(); it++) {
-            if (Strnicmp(it->first.c_str(), word_start, (int)(word_end - word_start)) == 0) {
-                candidates.push_back(it->first);
+        // Command and cvar names are interned, so the pointers stay valid.
+        std::vector<pcstr> candidates;
+        for (const auto &it : con.commands()) {
+            if (Strnicmp(it.first.c_str(), word_start, word_len) == 0) {
+                candidates.push_back(it.first.c_str());
             }
         }
 
-        // ... and autcomplete variables
-        for (auto it = con.getCVarReadTable().begin(); it != con.getCVarReadTable().end(); it++) {
-            if (Strnicmp(it->first.c_str(), word_start, (int)(word_end - word_start)) == 0) {
-                candidates.push_back(it->first);
+        for (const auto &it : con.cvars()) {
+            if (Strnicmp(it.first.c_str(), word_start, word_len) == 0) {
+                candidates.push_back(it.first.c_str());
             }
         }
 
-        if (candidates.size() == 0) {
-            // No match
-            //AddLog("No match for %.*s, , word_start);
-            (*this) << "No match for ";
-            (*this) << (int)(word_end - word_start);
-            (*this) << ' ' << word_start;
-            (*this) << "!\n";
+        if (candidates.empty()) {
+            printf("No match for \"%.*s\"!\n", word_len, word_start);
         } else if (candidates.size() == 1) {
             // Single match. Delete the beginning of the word and replace it entirely so we've got nice casing.
-            data->DeleteChars((int)(word_start - data->Buf), (int)(word_end - word_start));
-            data->InsertChars(data->CursorPos, candidates[0].c_str());
+            data->DeleteChars((int)(word_start - data->Buf), word_len);
+            data->InsertChars(data->CursorPos, candidates[0]);
             data->InsertChars(data->CursorPos, " ");
         } else {
             // Multiple matches. Complete as much as we can..
             // So inputing "C"+Tab will complete to "CL" then display "CLEAR" and "CLASSIFY" as matches.
-            int match_len = (int)(word_end - word_start);
+            int match_len = word_len;
             for (;;) {
                 int c = 0;
                 bool all_candidates_matches = true;
@@ -287,60 +263,50 @@ namespace dev {
             }
 
             if (match_len > 0) {
-                data->DeleteChars((int)(word_start - data->Buf), (int)(word_end - word_start));
-                data->InsertChars(data->CursorPos, candidates[0].c_str(), candidates[0].c_str() + match_len);
+                data->DeleteChars((int)(word_start - data->Buf), word_len);
+                data->InsertChars(data->CursorPos, candidates[0], candidates[0] + match_len);
             }
 
-            // List matches
-            (*this) << "Possible matches:\n";
-            std::sort(candidates.begin(), candidates.end());
-            for (int i = 0; i < (int)candidates.size(); i++) {
-                (*this) << "- " << candidates[i] << '\n';
+            print("Possible matches:\n");
+            std::sort(candidates.begin(), candidates.end(), [] (pcstr a, pcstr b) { return ::strcmp(a, b) < 0; });
+            for (pcstr candidate : candidates) {
+                printf("- %s\n", candidate);
             }
         }
     }
 
-    int MultiStreamBuf::overflow(int in) {
-        char c = in; ///\todo check for eof, etc?
-        for (std::ostream *str : streams) {
-            (*str) << c;
-        }
-        return 1;
+    console_text_buffer::console_text_buffer() {
+        clear();
     }
 
-    std::streamsize MultiStreamBuf::xsputn(const char *s, std::streamsize n) {
-        std::streamsize ssz = 0;
-
-        for (std::ostream *str : streams) {
-            ssz = str->rdbuf()->sputn(s, n);
-        }
-
-        return ssz;
-    }
-
-    void ConsoleBuf::clear() {
+    void console_text_buffer::clear() {
         // swap forces reallocation, unlike clear
-        std::vector<Line> x;
-        lines.swap(x);
-        //lines.clear();
+        std::vector<line> x;
+        _lines.swap(x);
 
-        lines.push_back(Line());
-        currentLine().sequences.push_back(TextSequence()); // start a new run of chars with default formatting
+        _lines.push_back(line());
+        new_sequence();
     }
 
-    void ConsoleBuf::processANSICode(int code) {
+    void console_text_buffer::write(pcstr text, size_t len) {
+        for (size_t i = 0; i < len; ++i) {
+            put(text[i]);
+        }
+    }
+
+    void console_text_buffer::process_ansi_code(int code) {
         switch (code) {
         case ANSI_RESET:
-
-            currentStyle = defaultStyle;
-
+            current_style = default_style;
             break;
+
         case ANSI_BRIGHT_TEXT:
-            brightText = true;
-            if (textCode) {
-                currentStyle.textColor = getAnsiTextColorBright(textCode);
+            bright_text = true;
+            if (text_code) {
+                current_style.text_color = getAnsiTextColorBright(text_code);
             }
             break;
+
         case ANSI_BLACK:
         case ANSI_RED:
         case ANSI_GREEN:
@@ -349,14 +315,10 @@ namespace dev {
         case ANSI_MAGENTA:
         case ANSI_CYAN:
         case ANSI_WHITE:
-            textCode = (AnsiColorCode)code;
-
-            if (brightText) {
-                currentStyle.textColor = getAnsiTextColorBright((AnsiColorCode)code);
-            } else {
-                currentStyle.textColor = getAnsiTextColor((AnsiColorCode)code);
-            }
+            text_code = (AnsiColorCode)code;
+            current_style.text_color = bright_text ? getAnsiTextColorBright(text_code) : getAnsiTextColor(text_code);
             break;
+
         case ANSI_BLACK_BKGRND:
         case ANSI_RED_BKGRND:
         case ANSI_GREEN_BKGRND:
@@ -365,147 +327,86 @@ namespace dev {
         case ANSI_MAGENTA_BKGRND:
         case ANSI_CYAN_BKGRND:
         case ANSI_WHITE_BKGRND:
-            currentStyle.hasBackgroundColor = true;
-            currentStyle.backgroundColor = getANSIBackgroundColor((AnsiColorCode)code);
+            current_style.has_background_color = true;
+            current_style.background_color = getANSIBackgroundColor((AnsiColorCode)code);
             break;
+
         default:
-            std::cerr << "unknown ansi code " << code << " in output\n";
+            break;
+        }
+    }
+
+    void console_text_buffer::put(char c) {
+        if (parsing_ansi_code) {
+            if (::isdigit((unsigned char)c) && listening_digits) {
+                ansi_number = ansi_number * 10 + (c - '0');
+                has_ansi_number = true;
+                return;
+            }
+
+            switch (c) {
+            case 'm': // end of ansi code; apply color formatting to new sequence
+                parsing_ansi_code = false;
+                if (has_ansi_number) {
+                    process_ansi_code(ansi_number);
+                }
+                reset_ansi_number();
+                bright_text = false;
+                new_sequence();
+                break;
+
+            case '[':
+                listening_digits = true;
+                reset_ansi_number();
+                break;
+
+            case ';':
+                if (has_ansi_number) {
+                    process_ansi_code(ansi_number);
+                }
+                reset_ansi_number();
+                break;
+
+            default: // malformed sequence: drop it
+                reset_ansi_number();
+                listening_digits = false;
+                parsing_ansi_code = false;
+                break;
+            }
             return;
         }
-    }
 
-    int ConsoleBuf::overflow(int c) {
-        if (c != EOF) {
-            if (parsingANSICode) {
-                bool error = false;
+        switch (c) {
+        case '\u001b':
+            parsing_ansi_code = true;
+            reset_ansi_number();
+            break;
 
-                if (std::isdigit((char)c) && listeningDigits) {
-                    numParse << (char)c;
-                } else {
-                    switch (c) {
-                    case 'm': // end of ansi code; apply color formatting to new sequence
-                    {
-                        parsingANSICode = false;
+        case '\n':
+            _lines.push_back(line());
+            new_sequence();
+            break;
 
-                        int x;
-                        if (numParse >> x) {
-                            processANSICode(x);
-                        }
-
-                        numParse.clear();
-
-                        brightText = false;
-
-                        currentLine().sequences.push_back({ currentStyle, "" });
-
-                        break;
-                    }
-                    case '[':
-                    {
-                        listeningDigits = true;
-                        numParse.clear();
-                        break;
-                    }
-                    case ';':
-                    {
-                        int x;
-                        numParse >> x;
-
-                        numParse.clear();
-
-                        processANSICode(x);
-
-                        break;
-                    }
-                    default:
-                    {
-                        error = true;
-                        break;
-                    }
-                    }
-
-                    if (error) {
-                        numParse.clear();
-                        listeningDigits = false;
-                        parsingANSICode = false;
-
-                        std::cerr << c;
-                        //curStr() += (char)c;
-                    }
-                }
-            } else {
-                switch (c) {
-                case '\u001b':
-                {
-                    parsingANSICode = true;
-                    numParse.clear();
-                    break;
-                }
-                case '\n':
-                {
-                    //currentline add \n
-                    lines.push_back(Line());
-                    currentLine().sequences.push_back(TextSequence({ currentStyle, "", }));
-                    break;
-                }
-                default:
-                {
-                    //std::cerr <<c;
-                    curStr() += (char)c;
-                }
-                }
-            }
+        default:
+            current_line().cur_sequence().text += c;
+            break;
         }
-        return c;
     }
 
-    ConsoleBuf::ConsoleBuf() {
-        lines.push_back(Line());
-        currentLine().sequences.push_back(TextSequence()); // start a new run of chars with default formatting
-    }
-
-    IMGUIInputLine::IMGUIInputLine() {
-    }
-
-    std::istream &IMGUIInputLine::getStream() {
-        return stream;
-    }
-
-    std::string IMGUIInputLine::getInput() {
-        std::string rval;
-        std::getline(stream, rval);
-        return rval;
-    }
-
-    int IMGUIInputLine::TextEditCallbackStub(ImGuiInputTextCallbackData *data) {
-        TextInputCallbacks *ic = (TextInputCallbacks *)data->UserData;
-
+    int imgui_input_line::text_edit_callback_stub(ImGuiInputTextCallbackData *data) {
+        text_input_callbacks *ic = (text_input_callbacks *)data->UserData;
         if (!ic)
             return 0;
 
-        if (ic->find(data->EventFlag) != ic->end()) {
-            (*ic)[data->EventFlag](data);
+        auto it = ic->find(data->EventFlag);
+        if (it != ic->end()) {
+            it->second(data);
         }
 
         return 0;
     }
 
-    bool IMGUIInputLine::renderInWindow(bool &p_open, const char *title) {
-        ImGui::SetNextWindowSize(ImVec2(320, 0), ImGuiCond_FirstUseEver);
-
-        if (!ImGui::Begin(title, &p_open)) {
-            ImGui::End();
-            return false;
-        }
-
-        bool rval = render(ImGui::GetWindowWidth());
-
-        ImGui::End();
-
-        return rval;
-    }
-
-    bool IMGUIInputLine::render(int width) {
+    bool imgui_input_line::render(int width) {
         bool rval = false;
 
         ImGui::SetNextWindowSize(ImVec2(width, 0));
@@ -513,21 +414,15 @@ namespace dev {
             ImGui::SetKeyboardFocusHere(0); // Auto focus previous widget
             reclaim_focus = false;
         }
-        if (ImGui::InputText("##Input", &InputBuf, input_text_flags, &TextEditCallbackStub, (void *)(&textCallbacks))) {
+
+        if (ImGui::InputText("##Input", _buffer.data(), bstring512::capacity, input_text_flags, &text_edit_callback_stub, (void *)&text_callbacks)) {
             reclaim_focus = true;
 
-            char *s = InputBuf.data();
-            Strtrim(s);
-
-            if (InputBuf.length() && strlen(s)) {
+            Strtrim(_buffer.data());
+            if (!_buffer.empty()) {
+                _submitted = _buffer;
+                _buffer.clear();
                 rval = true;
-
-                auto pos1 = stream.tellp(); // save pos1
-                stream << s;                // write
-                stream << std::endl;
-                stream.seekg(pos1);
-
-                strcpy(s, "");
             }
         }
 
@@ -537,24 +432,24 @@ namespace dev {
         return rval;
     }
 
-    void imgui_qconsole::loadCommandHistory() {
+    void imgui_qconsole::load_command_history() {
         pcstr base_path = vfs::platform_file_manager_get_base_path();
         if (!base_path) {
             return;
         }
-        
+
         vfs::path filepath(base_path, "/qconsole_history.txt");
-        con.loadHistoryBuffer(filepath);
+        con.load_history(filepath);
     }
 
-    void imgui_qconsole::saveCommandHistory() {
+    void imgui_qconsole::save_command_history() {
         pcstr base_path = vfs::platform_file_manager_get_base_path();
         if (!base_path) {
             return;
         }
-        
+
         vfs::path filepath(base_path, "/qconsole_history.txt");
-        con.saveHistoryBuffer(filepath);
+        con.save_history(filepath);
     }
 
 }

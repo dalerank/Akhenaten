@@ -13,7 +13,6 @@
 #include "imgui.h"
 
 #include <algorithm>
-#include <iostream>
 #include <unordered_map>
 #include <vector>
 
@@ -134,9 +133,9 @@ void ANK_REGISTER_APPLICATION_MODULE(register_memorymon_module) {
         }
     });
 
-    bind_debug_command("memorymon", [&module](std::istream &, std::ostream &os) {
+    bind_debug_command("memorymon", [&module](console_args &, console_output &out) {
         module.visible = !module.visible;
-        os << (module.visible ? "memorymon on\n" : "memorymon off\n");
+        out.println(module.visible ? "memorymon on" : "memorymon off");
     });
 }
 

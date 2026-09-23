@@ -1,14 +1,12 @@
 #pragma once
 
-#include <unordered_set>
-#include <algorithm>
+#include <imgui.h>
+
+#include "core/cstring.h"
+#include "qconsole.h"
+
 #include <set>
 #include <vector>
-
-//dependencies
-#include <imgui.h>
-#include <misc/cpp/imgui_stdlib.h>
-#include "qconsole.h"
 
 namespace dev {
 
@@ -23,32 +21,6 @@ inline const ImVec4 WARNING_COLOR = ImVec4(1.0f, 1.0f, 0.0f, 1.0f);
 #define MAGENTA_BKGRND_COLOR IM_COL32(255, 0, 255, 255);
 #define CYAN_BKGRND_COLOR IM_COL32(0, 255, 255, 255);
 #define WHITE_BKGRND_COLOR IM_COL32(255, 255, 255, 255);
-
-inline constexpr std::string_view TEXT_COLOR_RESET = "\u001b[0m";
-inline constexpr std::string_view TEXT_COLOR_BLACK = "\u001b[30m";
-inline constexpr std::string_view TEXT_COLOR_RED = "\u001b[31m";
-inline constexpr std::string_view TEXT_COLOR_GREEN = "\u001b[32m";
-inline constexpr std::string_view TEXT_COLOR_YELLOW = "\u001b[33m";
-inline constexpr std::string_view TEXT_COLOR_BLUE = "\u001b[34m";
-inline constexpr std::string_view TEXT_COLOR_MAGENTA = "\u001b[35m";
-inline constexpr std::string_view TEXT_COLOR_CYAN = "\u001b[36m";
-inline constexpr std::string_view TEXT_COLOR_WHITE = "\u001b[37m";
-inline constexpr std::string_view TEXT_COLOR_BLACK_BRIGHT = "\u001b[30;1m";
-inline constexpr std::string_view TEXT_COLOR_RED_BRIGHT = "\u001b[31;1m";
-inline constexpr std::string_view TEXT_COLOR_GREEN_BRIGHT = "\u001b[32;1m";
-inline constexpr std::string_view TEXT_COLOR_YELLOW_BRIGHT = "\u001b[33;1m";
-inline constexpr std::string_view TEXT_COLOR_BLUE_BRIGHT = "\u001b[34;1m";
-inline constexpr std::string_view TEXT_COLOR_MAGENTA_BRIGHT = "\u001b[35;1m";
-inline constexpr std::string_view TEXT_COLOR_CYAN_BRIGHT = "\u001b[36;1m";
-inline constexpr std::string_view TEXT_COLOR_WHITE_BRIGHT = "\u001b[37;1m";
-inline constexpr std::string_view TEXT_COLOR_BLACK_BKGRND = "\u001b[40m";
-inline constexpr std::string_view TEXT_COLOR_RED_BKGRND = "\u001b[41m";
-inline constexpr std::string_view TEXT_COLOR_GREEN_BKGRND = "\u001b[42m";
-inline constexpr std::string_view TEXT_COLOR_YELLOW_BKGRND = "\u001b[43m";
-inline constexpr std::string_view TEXT_COLOR_BLUE_BKGRND = "\u001b[44m";
-inline constexpr std::string_view TEXT_COLOR_MAGENTA_BKGRND = "\u001b[45m";
-inline constexpr std::string_view TEXT_COLOR_CYAN_BKGRND = "\u001b[46m";
-inline constexpr std::string_view TEXT_COLOR_WHITE_BKGRND = "\u001b[47m";
 
 enum AnsiColorCode
 {
@@ -74,200 +46,136 @@ enum AnsiColorCode
     ANSI_WHITE_BKGRND = 47,
 };
 
-/// Stream Buffer for the IMGUI Console Terminal.  Breaks text stream into Lines, which are an array of formatted text sequences
-/// Formatting is presently handled via ANSI Color Codes.  Some other input transformation can be applied to the input before it hits this stream
-/// eg. to do syntax highlighting, etc.
-class ConsoleBuf : public std::streambuf {
-  public:
-    
-    struct FormattingParams
-    {
-        ImVec4 textColor = ImVec4(1.0, 1.0, 1.0, 1.0);
-        ImU32 backgroundColor = 0;
-        bool hasBackgroundColor = false;
-    };
-    
-    struct TextSequence
-    {
-        FormattingParams style;
-        std::string text = "";
+/// Console text split into lines of formatted runs. Formatting comes from ANSI color codes in the written text.
+class console_text_buffer {
+public:
+    struct formatting_params {
+        ImVec4 text_color = ImVec4(1.0, 1.0, 1.0, 1.0);
+        ImU32 background_color = 0;
+        bool has_background_color = false;
     };
 
-    struct Line
-    {
-        std::vector<TextSequence> sequences;
-
-        inline TextSequence &curSequence() { return sequences[sequences.size() - 1]; }
-        inline const TextSequence &curSequence() const { return sequences[sequences.size() - 1]; }
+    struct text_sequence {
+        formatting_params style;
+        cstring text;
     };
+
+    struct line {
+        std::vector<text_sequence> sequences;
+
+        inline text_sequence &cur_sequence() { return sequences.back(); }
+        inline const text_sequence &cur_sequence() const { return sequences.back(); }
+    };
+
+    console_text_buffer();
 
     void clear();
+    void write(pcstr text, size_t len);
 
-    inline void applyDefaultStyle(){currentStyle = defaultStyle;}
-    inline const Line &currentLine() const { return lines[lines.size() - 1]; }
-    inline const std::string &curStr() const { return currentLine().curSequence().text; }
+    inline void apply_default_style() { current_style = default_style; }
+    inline const std::vector<line> &lines() const { return _lines; }
 
-    ConsoleBuf();
+    formatting_params default_style;
 
-    inline const std::vector<Line>& getLines() const { return lines; }
-    
-    FormattingParams defaultStyle; ///< can change default text color and background
+protected:
+    void put(char c);
+    void process_ansi_code(int code);
+    void new_sequence() { current_line().sequences.push_back({ current_style, cstring() }); }
+    void reset_ansi_number() { ansi_number = 0; has_ansi_number = false; }
 
-  protected:
-    /// change formatting state based on an integer code in the ansi-code input stream.  called by the streambuf methods
-    void processANSICode(int code);
+    inline line &current_line() { return _lines.back(); }
 
-    // -- streambuf overloads --
-    int overflow(int c);
+    formatting_params current_style;
 
-    FormattingParams currentStyle; ///< // current formatting
-    
-    bool brightText = false;                       ///< saw ansi code for bright-mode text
-    AnsiColorCode textCode = ANSI_RESET;           ///< ANSI color code we last saw for text
+    bool bright_text = false;
+    AnsiColorCode text_code = ANSI_RESET;
 
-    std::vector<Line> lines; ///< All output lines
+    std::vector<line> _lines;
 
-    bool parsingANSICode = false; ///< ANSI color code parser state variable
-    bool listeningDigits = false; ///< ANSI color code parser state variable - listening for next digit
-
-    std::stringstream numParse; ///< ANSI color code parser state variable - digit accumulator
-
-    inline Line &currentLine() { return lines[lines.size() - 1]; }
-    inline std::string &curStr() { return currentLine().curSequence().text; }
+    bool parsing_ansi_code = false;
+    bool listening_digits = false;
+    int ansi_number = 0;
+    bool has_ansi_number = false;
 };
 
-/// streambuffer implementation for MultiStream
-class MultiStreamBuf : public std::streambuf
-{
-  public:
-    std::unordered_set<std::ostream *> streams;
+/// A user input line that supports callbacks; render() returns true when a line was submitted
+struct imgui_input_line {
+    using text_input_callbacks = std::unordered_map<ImGuiInputTextFlags, std::function<void(ImGuiInputTextCallbackData *)>>;
 
-    MultiStreamBuf() {}
+    text_input_callbacks text_callbacks;
 
-    int overflow(int in);
-
-    std::streamsize xsputn(const char *s, std::streamsize n);
-};
-
-/// An ostream that is actually a container of ostream pointers, that pipes output to every ostream in the container
-class MultiStream : public std::ostream
-{
-    MultiStreamBuf buf;
-
-  public:
-    MultiStream() : std::ostream(&buf) {}
-
-    void addStream(std::ostream &str) { buf.streams.insert(&str); }
-};
-
-/// A user input line that supports callbacks and pushes user input to a stream on enter
-struct IMGUIInputLine
-{
-  private:
-    std::string InputBuf;       ///< buffer user is typing into currently
-    std::stringstream stream; ///< stream that input lines accumulate into on enter presses
-
-  public:
-    typedef std::unordered_map<ImGuiInputTextFlags, std::function<void(ImGuiInputTextCallbackData *)>> TextInputCallbacks;
-
-    TextInputCallbacks textCallbacks; ///< IMGUI Text Input Callbacks.  Map flags to function objects
-
-    /// See definition of ImGui::InputText
     ImGuiInputTextFlags input_text_flags = ImGuiInputTextFlags_EnterReturnsTrue | ImGuiInputTextFlags_CallbackCompletion | ImGuiInputTextFlags_CallbackHistory;
 
-    IMGUIInputLine();
-
-    std::istream &getStream(); ///< returns the istream that user input accumulates into
-
-    std::string getInput(); ///< Pulls a single line from the input stream and returns it
-
-    /// Calls appropriate user defined callbacks
-    static int TextEditCallbackStub(ImGuiInputTextCallbackData *data);
-
-    /// Renders the control in a new IMGUI popup window.  Returns true if new user input is available.
-    bool renderInWindow(bool &p_open, const char *title);
-
-    /// Renders the contorl in whatever the surrounding IMGUI context is.  Returns true if new user input is available.
-    bool render(int width);
     bool reclaim_focus = false;
+
+    static int text_edit_callback_stub(ImGuiInputTextCallbackData *data);
+
+    bool render(int width);
+    pcstr submitted() const { return _submitted.c_str(); }
+
+private:
+    bstring512 _buffer;
+    bstring512 _submitted;
 };
 
-/// GUI Ostream pane with ANSI Color Code Support
-/// Supports text filtering as well via 'filter' member.
-class IMGUIOstream : public std::ostream
-{
-    /// checks if an output line passes the filter
-    bool linePassFilter(const ConsoleBuf::Line &l) const;
+/// Output pane with ANSI color code support and text filtering via 'filter'
+class imgui_output_pane {
+    bool line_pass_filter(const console_text_buffer::line &l) const;
 
-  public:
-    ConsoleBuf strb;        ///< custom streambuf
-    ImGuiTextFilter filter; ///< Text filter.
+public:
+    console_text_buffer text;
+    ImGuiTextFilter filter;
 
-    bool autoScrollEnabled = true;
-    bool shouldScrollToBottom = false;
+    bool auto_scroll_enabled = true;
+    bool should_scroll_to_bottom = false;
 
-    /// Indices (into strb.getLines()) of currently selected lines for multi-select copy.
+    /// Indices (into text.lines()) of currently selected lines for multi-select copy.
     std::set<int> selected_lines;
     /// Anchor index for shift+click range selection.
     int last_clicked_idx = -1;
 
-    inline void Clear() {
-        strb.clear();
+    inline void clear() {
+        text.clear();
         selected_lines.clear();
         last_clicked_idx = -1;
-    } ///< clear the output pane
+    }
 
-    inline IMGUIOstream() : std::ostream(&strb) {}
-
-    /// renders the control in a new popup window.
-    void renderInWindow(bool &p_open, const char *title = "");
-
-    /// Renders the control in whatever the surrounding IMGUI context is.
     void render();
 
-    /// Returns all log lines (passing the current filter) as plain text, newline-separated.
-    std::string getAllText() const;
+    /// All lines passing the current filter as plain text, newline-separated.
+    cstring all_text() const;
 
-    /// Returns currently-selected lines as plain text, newline-separated. Empty if no selection.
-    std::string getSelectionText() const;
-    
-    inline void applyDefaultStyle(){strb.applyDefaultStyle();}
-    inline ConsoleBuf::FormattingParams& defaultStyle(){return strb.defaultStyle;}
+    /// Currently-selected lines as plain text, newline-separated. Empty if no selection.
+    cstring selection_text() const;
 };
 
 /// Quake style console : IMGUI Widget
-/// The widget IS-A MultiStream, so you can call .addStream() to add additional streams to mirror the output - like a file or cout
-/// A MultiStream IS-A ostream, so you can write to it with << and pass it to ostream functions
-/// You can also get its streambuf and pass it to another ostream, such as cout so that those ostreams write to the console.  eg.  cout.rdbuf(console.rdbuf())
-class imgui_qconsole : public MultiStream
-{
-  public:
-    qconsole con; ///< implementation of the quake style console
-    IMGUIOstream os;                 ///< IMGUI ostream pane
-    IMGUIInputLine is;               ///< IMGUI input line
-    std::size_t prevLineCount = 0;   ///< previous line count for os; used to autoscroll when os gets a new line.
+class imgui_qconsole : public console_output {
+public:
+    qconsole con;
+    imgui_output_pane output;
+    imgui_input_line input;
+    size_t prev_line_count = 0; ///< used to autoscroll when output gets a new line
 
-    ImFont* font = nullptr;
+    ImFont *font = nullptr;
 
-    int HistoryPos = -1; ///< index into the console history buffer, for when we press up/down arrow to scroll previous commands
+    int history_pos = -1; ///< index into the console history, for up/down arrow
 
-    float fontScale = 1.2f; ///< text scale for the console widget window
+    float font_scale = 1.2f;
     bool skip_event = false;
-
-    void clear(); ///< Clear the ostream
-    void loadCommandHistory();
-    void render(const char *title, bool& p_open, int width, int height); ///< Renders an IMGUI window implementation of the console
 
     imgui_qconsole();
 
-  private:
-    void optionsMenu();
+    void write(pcstr text, size_t len) override { output.text.write(text, len); }
 
-    void historyCallback(ImGuiInputTextCallbackData *data);
+    void clear() { output.clear(); }
+    void load_command_history();
+    void render(const char *title, bool &p_open, int width, int height);
 
-    void textCompletionCallback(ImGuiInputTextCallbackData *data);
-    
-    void saveCommandHistory();
+private:
+    void history_callback(ImGuiInputTextCallbackData *data);
+    void text_completion_callback(ImGuiInputTextCallbackData *data);
+    void save_command_history();
 };
 
 // -------------------------------------------

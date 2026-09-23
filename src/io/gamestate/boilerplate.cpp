@@ -449,25 +449,22 @@ bool GamestateIO::delete_map(const char* filename_short) {
 }
 
 declare_console_command_p(save_map) {
-    std::string filename;
-
-    // Read filename from input stream
-    if (!(is >> filename)) {
-        os << "Error: Please provide a filename.\n";
-        os << "Usage: save_map <filename>\n";
-        os << "Example: save_map my_custom_map\n";
+    bstring256 filename;
+    if (!args.next(filename)) {
+        out.print("Error: Please provide a filename.\n");
+        out.print("Usage: save_map <filename>\n");
+        out.print("Example: save_map my_custom_map\n");
         return;
     }
 
-    // Check if we're in a valid game state
     if (!game.session.active) {
-        os << "Error: No active game session. Please load a map or start a mission first.\n";
+        out.print("Error: No active game session. Please load a map or start a mission first.\n");
         return;
     }
 
     bool success = GamestateIO::write_map(filename.c_str());
 
-    os << (success
-           ? "Map saved successfully!\n"
-           : "Error: Failed to save map.\n");
+    out.print(success
+              ? "Map saved successfully!\n"
+              : "Error: Failed to save map.\n");
 }

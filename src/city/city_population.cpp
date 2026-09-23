@@ -18,7 +18,6 @@
 #include <numeric>
 #include <algorithm>
 #include <array>
-#include <iostream>
 
 city_population_rules_t ANK_VARIABLE(city_population_rules)
 

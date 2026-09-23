@@ -23,16 +23,13 @@ floods_t g_floods;
 
 // Returns the cycle index for a calendar token (case-insensitive: JAN..DEC, MID_JAN..MID_DEC).
 // Falls back to numeric parsing if the token isn't a name. Returns -1 for empty input.
-static int parse_calendar_token(const std::string &arg) {
+static int parse_calendar_token(const bstring64 &arg) {
     if (arg.empty()) {
         return -1;
     }
 
-    std::string up;
-    up.reserve(arg.size());
-    for (char c : arg) {
-        up.push_back((char)std::toupper((unsigned char)c));
-    }
+    bstring64 up = arg;
+    up.toupper();
 
     static constexpr struct { const char *name; int cycle; } table[] = {
         {"JAN", 0},   {"MID_JAN", 16},
@@ -59,20 +56,22 @@ static int parse_calendar_token(const std::string &arg) {
 }
 
 declare_console_command_p(startflood) {
-    std::string args; is >> args;
+    bstring64 arg;
+    args.next(arg);
 
-    if (args == "+") {
+    if (arg == "+") {
         g_floods.force_inundation++;
-    } else if (args == "-") {
+    } else if (arg == "-") {
         g_floods.force_inundation--;
     } else {
-        g_floods.force_inundation = atoi(args.empty() ? (pcstr)"0" : args.c_str());
+        g_floods.force_inundation = atoi(arg.empty() ? (pcstr)"0" : arg.c_str());
     }
 }
 
 declare_console_command_p(set_flood_start) {
-    std::string args; is >> args;
-    const int target_cycle = parse_calendar_token(args);
+    bstring64 arg;
+    args.next(arg);
+    const int target_cycle = parse_calendar_token(arg);
     if (target_cycle < 0) {
         return;
     }
@@ -83,8 +82,9 @@ declare_console_command_p(set_flood_start) {
 }
 
 declare_console_command_p(set_flood_end) {
-    std::string args; is >> args;
-    const int target_cycle = parse_calendar_token(args);
+    bstring64 arg;
+    args.next(arg);
+    const int target_cycle = parse_calendar_token(arg);
     if (target_cycle < 0) {
         return;
     }

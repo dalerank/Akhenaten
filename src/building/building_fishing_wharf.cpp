@@ -15,7 +15,6 @@
 #include "graphics/graphics.h"
 #include "js/js_game.h"
 #include "dev/debug.h"
-#include <iostream>
 
 BUILDING_RUNTIME_DATA_IMPL(building_fishing_wharf)
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_fishing_wharf);

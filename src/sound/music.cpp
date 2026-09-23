@@ -16,7 +16,6 @@
 #include "js/js_game.h"
 
 #include "dev/debug.h"
-#include <iostream>
 #include <string_view>
 #include <vector>
 
@@ -81,9 +80,7 @@ struct music_pick {
 };
 
 declare_console_command_p(playtrack) {
-    std::string args;
-    is >> args;
-    g_sound.play_track(args.c_str());
+    g_sound.play_track(args.next_str().c_str());
 }
 
 void sound_manager_t::play_track(const xstring track, bool loop) {

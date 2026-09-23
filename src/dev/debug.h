@@ -12,9 +12,9 @@
 #include "core/core.h"
 #include "input/hotkey.h"
 
+#include "dev/console_io.h"
+
 #include <functional>
-#include <iosfwd>
-#include <iomanip>
 
 struct painter;
 
@@ -57,7 +57,7 @@ bool get_debug_draw_option(int opt);
 void set_debug_draw_option(int opt, bool e);
 
 struct console_command {
-    console_command(pcstr name, std::function<void(std::istream &is, std::ostream &os)> f);
+    console_command(pcstr name, console_command_fn f);
 };
 
 struct console_var_int {
@@ -104,7 +104,7 @@ struct console_ref_bool {
 };
 
 #define declare_console_command(a, ...) namespace console { bool cmd_##a; }; console_command a(#a, __VA_ARGS__);
-#define declare_console_command_p(a) namespace console { bool cmd_##a; }; void cmd_ ##a ##_impl(std::istream &, std::ostream &); console_command a(#a, cmd_ ##a ##_impl); void cmd_ ##a ##_impl(std::istream &is, std::ostream &os)
+#define declare_console_command_p(a) namespace console { bool cmd_##a; }; void cmd_ ##a ##_impl(console_args &, console_output &); console_command a(#a, cmd_ ##a ##_impl); void cmd_ ##a ##_impl(console_args &args, console_output &out)
 #define declare_console_var_int(a, v) namespace console { bool var_##a; }; console_var_int a(#a, v);
 #define declare_console_ref_int16(a, v) namespace console { bool var_##a; }; console_ref_int16 a(#a, v);
 #define declare_console_ref_uint8(a, v) namespace console { bool var_##a; }; console_ref_uint8 a(#a, v);
@@ -112,13 +112,6 @@ struct console_ref_bool {
 #define declare_console_ref_float(a, v) namespace console { bool var_##a; }; console_ref_float a(#a, v);
 #define declare_console_var_bool(a, v) namespace console { bool var_##a; }; console_var_bool a(#a, v);
 #define declare_console_ref_bool(a, v) namespace console { bool var_##a; }; console_ref_bool a(#a, v);
-
-inline std::istream& operator>>(std::istream& is, bstring128& arg) {
-    char tmp[bstring128::capacity];
-    is >> std::setw(bstring128::capacity) >> tmp;
-    arg = tmp;
-    return is;
-}
 
 namespace debug {
 

@@ -15,7 +15,6 @@
 
 #include "imgui.h"
 
-#include <iostream>
 
 struct game_perfmon_t {
     Perfmon::PerfmonWidget widget;
@@ -134,9 +133,9 @@ void ANK_REGISTER_APPLICATION_MODULE(register_perfmon_module) {
         }
     });
 
-    bind_debug_command("perfmon", [&module](std::istream &, std::ostream &os) {
+    bind_debug_command("perfmon", [&module](console_args &, console_output &out) {
         module.visible = !module.visible;
-        os << (module.visible ? "perfmon on\n" : "perfmon off\n");
+        out.println(module.visible ? "perfmon on" : "perfmon off");
     });
 }
 

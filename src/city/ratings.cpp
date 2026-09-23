@@ -12,17 +12,14 @@
 #include "js/js_game.h"
 
 #include "dev/debug.h"
-#include <iostream>
 
 declare_console_command_p(addprosperity) {
-    std::string args; is >> args;
-    int amount = atoi(args.empty() ? (pcstr)"10" : args.c_str());
+    int amount = args.next_int(10);
     g_city.ratings.prosperity = calc_bound(g_city.ratings.prosperity + amount, 0, 100);
 }
 
 declare_console_command_p(addculture) {
-    std::string args; is >> args;
-    int amount = atoi(args.empty() ? (pcstr)"10" : args.c_str());
+    int amount = args.next_int(10);
     g_city.ratings.culture = calc_bound(g_city.ratings.culture + amount, 0, 100);
 };
 

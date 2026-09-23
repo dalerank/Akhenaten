@@ -10,8 +10,6 @@
 #include "city/city_religion.h"
 #include "dev/debug.h"
 
-#include <iostream>
-#include <sstream>
 
 void ui::message_dialog_god::draw_foreground(UiFlags flags) {
     message_dialog_base::draw_foreground(flags);
@@ -72,22 +70,22 @@ void ui::message_dialog_god::draw_city_message_text(const lang_message& msg) {
 }
 
 declare_console_command_p(show_god_message) {
-    std::string god_str, message_id;
-    is >> god_str >> message_id;
+    const bstring128 god_str = args.next_str();
+    const bstring128 message_id = args.next_str();
 
     if (god_str.empty() || message_id.empty()) {
-        os << "Usage: show_god_message <god_id> <message_id>" << std::endl;
-        os << "God IDs: 0=Osiris, 1=Ra, 2=Ptah, 3=Seth, 4=Bast" << std::endl;
+        out.println("Usage: show_god_message <god_id> <message_id>");
+        out.println("God IDs: 0=Osiris, 1=Ra, 2=Ptah, 3=Seth, 4=Bast");
         return;
     }
 
     int god_id = atoi(god_str.c_str());
     if (god_id < 0 || god_id >= MAX_GODS) {
-        os << "Invalid god ID. Valid range: 0-" << (MAX_GODS - 1) << std::endl;
+        out.printf("Invalid god ID. Valid range: 0-%d\n", MAX_GODS - 1);
         return;
     }
 
     e_god god = (e_god)god_id;
     messages::god(god, message_id.c_str());
-    os << "Showing message from god " << god_id << " with message_id: " << message_id << std::endl;
+    out.printf("Showing message from god %d with message_id: %s\n", god_id, message_id);
 }

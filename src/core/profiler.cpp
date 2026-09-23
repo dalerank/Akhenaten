@@ -52,7 +52,6 @@ void operator delete[](void *ptr, std::size_t) noexcept {
 }
 
 declare_console_command_p(profile_memory) {
-	std::string args; is >> args;
-	TracyProfilerAvailable = atoi(args.empty() ? (pcstr)"0" : args.c_str());
+	TracyProfilerAvailable = args.next_int(0);
 };
 #endif // !TRACY_NO_CALLSTACK

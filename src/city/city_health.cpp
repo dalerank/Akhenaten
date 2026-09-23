@@ -19,8 +19,7 @@
 #include "dev/debug.h"
 
 declare_console_command_p(plague_start) {
-    std::string args; is >> args;
-    int plague_people = atoi(args.empty() ? "100" : args.c_str());
+    int plague_people = args.next_int(100);
 
     int total_population = 0;
     buildings_house_do([&] (building_house *house) {

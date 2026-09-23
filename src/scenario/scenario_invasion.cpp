@@ -64,14 +64,14 @@ e_formation_attack_type formation_attack_from_event_target(int invasion_attack_t
 declare_console_command_p(start_invasion) {
     invasion_opts_t opts;
     opts.mode = ATTACK_TYPE_ENEMIES;
-    opts.enemy_type = (e_enemy_type)parse_integer_from<bstring32>(is); // 0 type, 1 kingdome, 2 seth natives
-    opts.size = parse_integer_from<bstring32>(is);
-    int tilex = parse_integer_from<bstring32>(is);
-    int tiley = parse_integer_from<bstring32>(is);
+    opts.enemy_type = (e_enemy_type)args.next_int(0); // 0 type, 1 kingdome, 2 seth natives
+    opts.size = args.next_int(0);
+    int tilex = args.next_int(0);
+    int tiley = args.next_int(0);
     opts.invasion_point = { tilex, tiley };
     opts.invasion_id = 23;
-    opts.want_destroy = parse_integer_from<bstring32>(is);
-    opts.via_sea = parse_integer_from<bstring32>(is) != 0;
+    opts.want_destroy = args.next_int(0);
+    opts.via_sea = args.next_int(0) != 0;
     opts.kind = (opts.enemy_type == ENEMY_3_EGYPTIAN) ? INVASION_KIND_PHARAOH : INVASION_KIND_FOREIGN;
 
     scenario_invasion_start(opts);
