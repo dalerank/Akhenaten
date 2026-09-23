@@ -7,17 +7,12 @@
 #include "core/random.h"
 #include "game/game_events.h"
 #include "city/city_resource.h"
-#include "io/io_buffer.h"
 #include "js/js_game.h"
 
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_reed_gatherer);
 
 void building_reed_gatherer::on_create(int orientation) {
     runtime_data().max_gatheres = current_params().max_gatherers;
-}
-
-void building_reed_gatherer::bind_dynamic(io_buffer *iob, size_t version) {
-    building_industry::bind_dynamic(iob, version);
 }
 
 bool building_reed_gatherer::can_spawn_gatherer(int max_gatherers_per_building, int carry_per_person) {
