@@ -16,23 +16,16 @@ void building_reed_gatherer::on_create(int orientation) {
 }
 
 bool building_reed_gatherer::can_spawn_gatherer(int max_gatherers_per_building, int carry_per_person) {
-    bool resource_reachable = false;
-    resource_reachable = map_routing_citizen_found_terrain(base.road_access, nullptr, TERRAIN_MARSHLAND);
-
-    if (!resource_reachable) {
-        return false;
-    }
-
     int gatherers_this_yard = get_figures_number(FIGURE_REED_GATHERER);
     int max_storage = current_params().max_storage_amount;
     int max_loads = max_storage / carry_per_person;
     int stored_loads = base.stored_amount(base.output.resource) / carry_per_person;
 
-    if (gatherers_this_yard < max_gatherers_per_building && gatherers_this_yard + stored_loads < max_loads) {
-        return true;
+    if (gatherers_this_yard >= max_gatherers_per_building || gatherers_this_yard + stored_loads >= max_loads) {
+        return false;
     }
 
-    return false;
+    return map_routing_citizen_found_terrain(base.road_access, nullptr, TERRAIN_MARSHLAND);
 }
 
 void building_reed_gatherer::spawn_figure() {
