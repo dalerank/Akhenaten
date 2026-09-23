@@ -294,7 +294,7 @@ building_id building_closest_route(building &home, std::function<bool(building &
     return 0;
 }
 
-void building_update_state(void) {
+void building_update_state() {
     OZZY_PROFILER_FUNCTION();
     bool lands_recalc = false;
     bool walls_recalc = false;
