@@ -1,5 +1,5 @@
-// Causeway Slice A+B edge cases: grand east-only, south OK for plain complex,
-// demolish clears claimed strip.
+// Causeway Slice A+B edge cases: grand east-only, south OK for plain complex.
+// Monuments are non_deletable — no demolish/causeway-clear check.
 
 function allow_complexes() {
     if (!__scenario_building_allowed(BUILDING_STEPPED_PYRAMID_COMPLEX)) {
@@ -49,16 +49,6 @@ function count_causeway_dir(bid, px, py, dir) {
         n++
     }
     return { n: n, ox: ox, oy: oy, dir: dir, sx: v.sx, sy: v.sy }
-}
-
-function strip_still_owned(bid, info) {
-    for (var i = 0; i < info.n; i++) {
-        var a = city.get_building_at(info.ox + info.sx * i, info.oy + info.sy * i)
-        if (a && a.id == bid) {
-            return true
-        }
-    }
-    return false
 }
 
 function run_test() {
@@ -125,32 +115,6 @@ function run_test() {
         return
     }
 
-    // Demolish TYPE tile. Default delayed delete + pump_frames often yields 0
-    // sim ticks here — force immediate_delete so on_destroy clears the strip.
-    var imm_prev = game_features.get('gameplay_change_immediate_delete')
-    game_features.set('gameplay_change_immediate_delete', true)
-    if (!test_planner_enter_build_mode(BUILDING_CLEAR_LAND)) {
-        __log_info_native('[test:133] clear mode failed')
-        game_features.set('gameplay_change_immediate_delete', imm_prev)
-        __test_signal_ready()
-        return
-    }
-    city_planner.update(tile.x, tile.y)
-    city_planner.construction_start(tile.x, tile.y)
-    city_planner.construction_update(tile.x, tile.y)
-    city_planner.construction_finalize()
-    test_planner_exit_build_mode()
-    game_features.set('gameplay_change_immediate_delete', imm_prev)
-
-    if (!strip_still_owned(bid, claimed)) {
-        __log_marker('causeway_demolish_cleared_ok')
-    } else {
-        __log_info_native('[test:133] causeway tiles leaked after demolish')
-        __log_marker('causeway_demolish_cleared_fail')
-        __test_signal_ready()
-        return
-    }
-
     // Grand with east water → placeable (fresh site).
     var gx = 70
     var gy = 40
@@ -171,7 +135,6 @@ function check_valid() {
         'causeway_plain_south_ok',
         'causeway_plain_south_placed_ok',
         'causeway_south_claimed_ok',
-        'causeway_demolish_cleared_ok',
         'causeway_grand_east_ok'
     ]
     for (var i = 0; i < required.length; i++) {
@@ -183,7 +146,6 @@ function check_valid() {
     if (__test_find_inlog('causeway_grand_south_blocked_fail')
         || __test_find_inlog('causeway_plain_south_fail')
         || __test_find_inlog('causeway_south_claimed_fail')
-        || __test_find_inlog('causeway_demolish_cleared_fail')
         || __test_find_inlog('causeway_grand_east_fail')) {
         return false
     }
