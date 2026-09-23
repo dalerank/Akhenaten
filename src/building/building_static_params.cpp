@@ -1,5 +1,6 @@
 ﻿#include "building_static_params.h"
 
+#include "core/log.h"
 #include "grid/building.h"
 #include "city/city_labor.h"
 #include "city/buildings.h"
@@ -18,6 +19,10 @@ void building_static_params::archive_unload() {
 }
 
 void building_static_params::initialize() {
+    if (building_size == 0) {
+        logs::error("Building '%s' (type %d) has non-positive building_size",
+            name ? name : "?", (int)type);
+    }
     if (production_rate == 0) production_rate = 100;
     if (min_houses_coverage == 0) min_houses_coverage = 100;
     if (max_storage_amount == 0) max_storage_amount = 200;
