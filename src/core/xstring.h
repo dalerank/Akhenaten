@@ -84,7 +84,11 @@ public:
     xstring() { _p = nullptr; }
     xstring(pcstr rhs) { _p = nullptr; _set(rhs); }
     xstring(xstring const& rhs) { _p = 0; _set(rhs); }
+#ifdef XSTRING_USE_REFERENCE_COUNTING
     ~xstring() { _dec(); }
+#else
+    ~xstring() = default;
+#endif
 
     xstring& operator=(pcstr rhs) { _set(rhs); return (xstring&)*this; }
     xstring& operator=(xstring const& rhs) { _set(rhs); return (xstring&)*this; }
@@ -156,6 +160,11 @@ public:
         return xstring(buffer);
     }
 };
+
+#ifndef XSTRING_USE_REFERENCE_COUNTING
+// MuJS unwinds with longjmp, skipping destructors: xstring is safe in bridge frames only while this holds.
+static_assert(std::is_trivially_destructible_v<xstring>, "xstring must stay trivially destructible");
+#endif
 
 template<>
 struct std::hash<xstring>

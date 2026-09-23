@@ -71,12 +71,6 @@ namespace js_helpers {
     }
 
     template<>
-    inline std::string js_to_value<std::string>(js_State *J, int idx) {
-        auto pp = js_tostring(J, idx);
-        return std::string(js_strnode_cstr(pp));
-    }
-
-    template<>
     inline xstring js_to_value<xstring>(js_State *J, int idx) {
         if (J->isundefined(idx) || J->isnull(idx)) {
             return xstring();
@@ -242,11 +236,6 @@ namespace js_helpers {
     template<>
     inline void js_push_value<const char *>(js_State *J, const char *value) {
         J->pushstring(value);
-    }
-
-    template<>
-    inline void js_push_value<const std::string &>(js_State *J, const std::string &value) {
-        J->pushstring(value.c_str());
     }
 
     template<>
