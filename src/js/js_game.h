@@ -37,41 +37,50 @@ enum e_resource : uint8_t;
 // Helper functions to convert JS values to C++ types
 namespace js_helpers {
     template<typename T>
-    inline T js_to_value(js_State *J, int idx);
+    inline T js_to_value_impl(js_State *J, int idx);
+
+    // Any conversion may run script code (toString/valueOf) and js_throw, whose longjmp
+    // skips destructors of the bridge frames holding already-converted arguments.
+    template<typename T>
+    inline T js_to_value(js_State *J, int idx) {
+        static_assert(std::is_trivially_destructible_v<T>,
+                      "js_to_value: JS-bound argument types must be trivially destructible (MuJS unwinds with longjmp)");
+        return js_to_value_impl<T>(J, idx);
+    }
 
     template<>
-    inline int js_to_value<int>(js_State *J, int idx) {
+    inline int js_to_value_impl<int>(js_State *J, int idx) {
         return js_tointeger(J, idx);
     }
 
     template<>
-    inline unsigned int js_to_value<unsigned int>(js_State *J, int idx) {
+    inline unsigned int js_to_value_impl<unsigned int>(js_State *J, int idx) {
         return js_touint32(J, idx);
     }
 
     template<>
-    inline double js_to_value<double>(js_State *J, int idx) {
+    inline double js_to_value_impl<double>(js_State *J, int idx) {
         return js_tonumber(J, idx);
     }
 
     template<>
-    inline float js_to_value<float>(js_State *J, int idx) {
+    inline float js_to_value_impl<float>(js_State *J, int idx) {
         return (float)js_tonumber(J, idx);
     }
 
     template<>
-    inline bool js_to_value<bool>(js_State *J, int idx) {
+    inline bool js_to_value_impl<bool>(js_State *J, int idx) {
         return js_toboolean(J, idx);
     }
 
     template<>
-    inline const char *js_to_value<const char *>(js_State *J, int idx) {
+    inline const char *js_to_value_impl<const char *>(js_State *J, int idx) {
         auto pp = js_tostring(J, idx);
         return js_strnode_cstr(pp);
     }
 
     template<>
-    inline xstring js_to_value<xstring>(js_State *J, int idx) {
+    inline xstring js_to_value_impl<xstring>(js_State *J, int idx) {
         if (J->isundefined(idx) || J->isnull(idx)) {
             return xstring();
         }
@@ -88,7 +97,7 @@ namespace js_helpers {
     };
 
     template<>
-    inline js_function_ref js_to_value<js_function_ref>(js_State *J, int idx) {
+    inline js_function_ref js_to_value_impl<js_function_ref>(js_State *J, int idx) {
         if (!J->iscallable(idx)) {
             return js_function_ref{};
         }
@@ -107,7 +116,7 @@ namespace js_helpers {
     extern js_StringNode property_maxy;
 
     template<>
-    inline vec2i js_to_value<vec2i>(js_State *J, int idx) {
+    inline vec2i js_to_value_impl<vec2i>(js_State *J, int idx) {
         vec2i result;
         if (J->isobject(idx) && !J->isarray(idx) && J->toobject(idx)->type == JS_CVEC2I) {
             js_Object *o = J->toobject(idx);
@@ -129,7 +138,7 @@ namespace js_helpers {
     }
 
     template<>
-    inline tile2i js_to_value<tile2i>(js_State *J, int idx) {
+    inline tile2i js_to_value_impl<tile2i>(js_State *J, int idx) {
         int x = 0, y = 0;
         if (J->isobject(idx) && !J->isarray(idx) && J->toobject(idx)->type == JS_CVEC2I) {
             js_Object *o = J->toobject(idx);
@@ -151,7 +160,7 @@ namespace js_helpers {
     }
 
     template<>
-    inline bvariant js_to_value<bvariant>(js_State *J, int idx) {
+    inline bvariant js_to_value_impl<bvariant>(js_State *J, int idx) {
         if (J->isundefined(idx)) {
             return bvariant(); // none
         } else if (J->isboolean(idx)) {
@@ -202,7 +211,7 @@ namespace js_helpers {
     }
 
     template<>
-    inline e_resource js_to_value<e_resource>(js_State *J, int idx) {
+    inline e_resource js_to_value_impl<e_resource>(js_State *J, int idx) {
         return (e_resource)js_tointeger(J, idx);
     }
 

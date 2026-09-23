@@ -49,10 +49,8 @@ namespace buildings {
 
             const bool loaded = g_config_arch.r(CLSID, base);
             if (!loaded) {
-                logs::error("Failed to load building static params for TYPE %d with CLSID %s (global missing or not an object)",
-                            (int)TYPE, CLSID);
-                logs::error("building model load diagnostics: vm=%p", g_config_arch.state);
-                g_config_arch.log_global(CLSID);
+                logs::error("Failed to load building static params TYPE=%d CLSID=%s vm=%p",
+                            (int)TYPE, CLSID, g_config_arch.state);
             }
             verify_no_crash(loaded);
 

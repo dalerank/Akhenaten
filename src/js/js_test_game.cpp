@@ -2673,7 +2673,7 @@ static int __test_royal_tomb_attach_worker(int bid, int figure_type) {
         return 0;
     }
     if (figure_type == FIGURE_STONEMASON) {
-        f->action_state = FIGURE_ACTION_14_MASON_WORK_GROUND;
+        f->action_state = ACTION_4_MASON_WORK_GROUND;
     } else if (figure_type == FIGURE_TOMB_ARTISAN) {
         f->action_state = ACTION_14_TOMB_ARTISAN_WORK;
         if (auto *impl = static_cast<figure_tomb_artisan *>(f->dcast())) {

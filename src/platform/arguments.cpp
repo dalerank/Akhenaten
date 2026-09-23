@@ -472,7 +472,7 @@ void Arguments::parse_cli_(int argc, char** argv) {
             app_terminate(usage());
 
         } else if (SDL_strncmp(argv[i], "--", 2) == 0) {
-            logs::info(bstring256(UNKNOWN_OPTION_ERROR_MESSAGE, argv[i]));
+            logs::info(UNKNOWN_OPTION_ERROR_MESSAGE, argv[i]);
 
         } else {
             // TODO: ???? check that there are no other arguments after

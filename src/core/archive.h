@@ -412,9 +412,6 @@ protected:
     static void pushiterator(archive arch, int idx, int own);
     static xstring_value* nextiterator(archive arch, int idx);
     void getglobal(std::string_view name);
-    pcstr describe_value(int idx) const;
-    int count_own_keys(int idx) const;
-    void log_global(pcstr name) const;
 };
 
 struct g_archive : public archive {

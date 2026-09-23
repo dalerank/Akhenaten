@@ -20,34 +20,12 @@
 #include "js/js_game.h"
 
 #include <algorithm>
-#include <cstdlib>
 
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_small_obelisk);
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_large_obelisk);
 
 static monument g_monument_small_obelisk{BUILDING_SMALL_OBELISK};
 static monument g_monument_large_obelisk{BUILDING_LARGE_OBELISK};
-
-static int stage_name_number(const xstring &name) {
-    const char *p = name.c_str();
-    while (*p && (*p < '0' || *p > '9')) {
-        ++p;
-    }
-    return std::atoi(p);
-}
-
-void building_obelisk::static_params::load_stages(archive arch) {
-    stages.clear();
-    arch.r_objects("stages", [&](pcstr key, archive sarch) {
-        obelisk_stage st;
-        st.name = key;
-        archive_helper::reader(sarch, st);
-        stages.push_back(st);
-    });
-    std::sort(stages.begin(), stages.end(), [](const obelisk_stage &a, const obelisk_stage &b) {
-        return stage_name_number(a.name) < stage_name_number(b.name);
-    });
-}
 
 void building_obelisk::static_params::rebuild_construction(e_building_type type) {
     monument &m = (type == BUILDING_LARGE_OBELISK) ? g_monument_large_obelisk : g_monument_small_obelisk;
@@ -65,13 +43,11 @@ void building_obelisk::static_params::rebuild_construction(e_building_type type)
     m.phases.push_back({(uint8_t)stages.size(), monument_phase_resource{RESOURCE_NONE, 0}});
 }
 
-void building_small_obelisk::static_params::archive_load(archive arch) {
-    load_stages(arch);
+void building_small_obelisk::static_params::archive_load(archive /*arch*/) {
     rebuild_construction(BUILDING_SMALL_OBELISK);
 }
 
-void building_large_obelisk::static_params::archive_load(archive arch) {
-    load_stages(arch);
+void building_large_obelisk::static_params::archive_load(archive /*arch*/) {
     rebuild_construction(BUILDING_LARGE_OBELISK);
 }
 
@@ -315,6 +291,21 @@ bool building_obelisk::need_workers() const {
 }
 
 int building_obelisk::building_image_get() const {
+    const auto &bp = obelisk_params_for(base.type);
+    int phase = runtime_data().phase;
+    if (is_finished() || phase < 0 || phase >= (int)bp.stages.size()) {
+        phase = std::max(0, (int)bp.stages.size() - 1);
+    }
+    if (const auto *st = stage_at(phase)) {
+        if (st->obelisk_tx.valid()) {
+            image_desc desc = st->obelisk_tx;
+            const int img = desc.tid();
+            if (img > 0) {
+                return img;
+            }
+        }
+    }
+
     const xstring key = anim_key_for(art_stage());
     const auto &params = building_static_params::get(base.type);
     int img = params.first_img(key);
@@ -357,9 +348,18 @@ int building_obelisk::preview::finalize_check(build_planner &p, tile2i tile, til
 
 void building_obelisk::preview::ghost_preview(build_planner &planer, painter &ctx, tile2i /*start*/, tile2i /*end*/, vec2i pixel) const {
     const auto &params = building_static_params::get(planer.build_type);
-    const int preview = params.first_img("preview");
-    const int img = params.first_img("sa");
-    planer.draw_building_ghost(ctx, img > 0 ? img : preview, pixel);
+    int img = 0;
+    const auto &bp = (planer.build_type == BUILDING_LARGE_OBELISK)
+        ? (const building_obelisk::base_params &)building_large_obelisk::current_params()
+        : (const building_obelisk::base_params &)building_small_obelisk::current_params();
+    if (!bp.stages.empty() && bp.stages[0].obelisk_tx.valid()) {
+        image_desc desc = bp.stages[0].obelisk_tx;
+        img = desc.tid();
+    }
+    if (img <= 0) {
+        img = params.first_img("preview");
+    }
+    planer.draw_building_ghost(ctx, img, pixel);
 }
 
 void building_obelisk::on_place_update_tiles(int /*orientation*/, int /*variant*/) {
@@ -380,7 +380,19 @@ void building_obelisk::update_day() {
     }
     scrub_dead_workers();
     const auto *st = current_stage();
-    if (st && st->stonemasons_need && !st->carpenter_need && !has_live_worker(FIGURE_STONEMASON)) {
+
+    if (st && st->stonemasons_need && !st->carpenter_need) {
+        return;
+    }
+    progress();
+}
+
+void building_obelisk::stonemason_complete_work() {
+    if (is_finished()) {
+        return;
+    }
+    const auto *st = current_stage();
+    if (!st || !st->stonemasons_need) {
         return;
     }
     progress();
@@ -399,19 +411,16 @@ bool building_obelisk::draw_ornaments_and_animations_height(painter &ctx, vec2i 
     bool drew = false;
     const int phase = runtime_data().phase;
     const auto *st = stage_at(phase);
+    // Draw current-phase ladders (no previous-stage fallback) so --mixed edits are visible.
     const auto *ladder_st = st;
 
-    // Carpenter stage: ladders appear after timber is delivered for this stage.
-    if (ladder_st && ladder_st->carpenter_need && resource_pct(RESOURCE_TIMBER) < 100) {
-        ladder_st = stage_at(phase - 1);
-    }
+    const int ladder_img = building_static_params::get(base.type).first_img("ladder");
 
     if (ladder_st && !ladder_st->ladders.empty()) {
-        const int ladder = building_static_params::get(base.type).first_img("ladder");
-        if (ladder > 0) {
+        if (ladder_img > 0) {
             for (const auto &off : ladder_st->ladders) {
-                auto &command = ImageDraw::create_command(ctx, render_command_t::ert_drawtile);
-                command.image_id = ladder;
+                auto &command = ImageDraw::create_subcommand(ctx, render_command_t::ert_drawtile);
+                command.image_id = ladder_img;
                 command.pixel = point + off;
                 command.mask = color_mask;
             }

@@ -726,10 +726,10 @@ static bool rt_mason_onsite(figure *f) {
     }
     // Mastaba tile-work OR sphinx/royal on-site linger (ACTION_17).
     const int a = f->action_state;
-    return a == FIGURE_ACTION_14_MASON_WORK_GROUND
-        || a == FIGURE_ACTION_17_MASON_LOOKING_FOR_WORK_TILE
-        || a == FIGURE_ACTION_12_MASON_GOING_TO_PLACE
-        || a == FIGURE_ACTION_15_MASON_WORK_WALL;
+    return a == ACTION_4_MASON_WORK_GROUND
+        || a == ACTION_7_MASON_LOOKING_FOR_WORK_TILE
+        || a == ACTION_2_MASON_GOING_TO_PLACE
+        || a == ACTION_5_MASON_WORK_WALL;
 }
 
 static bool rt_artisan_onsite(figure *f) {

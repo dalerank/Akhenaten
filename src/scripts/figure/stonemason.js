@@ -108,29 +108,30 @@ function figure_stonemason_setup_phrase(ev) {
 
 	var state = f.action_state
 	switch (state) {
-	case 10: // FIGURE_ACTION_10_MASON_CREATED
-	case 30: // FIGURE_ACTION_30_MASON_CREATED_ROAMING
+	case ACTION_0_MASON_CREATED:
+	case ACTION_11_MASON_CREATED_ROAMING:
 		figure_apply_phrase(f, "stonemason_ready")
 		return
-	case 11: // FIGURE_ACTION_11_MASON_GOING
-	case 31: // FIGURE_ACTION_31_MASON_GOING_TO_STATUE
+	case ACTION_1_MASON_GOING:
+	case ACTION_12_MASON_GOING_TO_STATUE:
 		figure_apply_phrase(f, "stonemason_going_to_work")
 		return
-	case 14: // FIGURE_ACTION_14_MASON_WORK_GROUND
-	case 32: // FIGURE_ACTION_14_MASON_WORK_STATUE_GROUND
+	case ACTION_4_MASON_WORK_GROUND:
+	case ACTION_13_MASON_WORK_STATUE_GROUND:
 		figure_apply_phrase(f, "stonemason_working_ground")
 		return
-	case 15: // FIGURE_ACTION_15_MASON_WORK_WALL
-	case 33: // FIGURE_ACTION_14_MASON_WORK_STATUE_WALL
+	case ACTION_5_MASON_WORK_WALL:
+	case ACTION_9_MASON_WORK_OBELISK:
+	case ACTION_14_MASON_WORK_STATUE_WALL:
 		figure_apply_phrase(f, "stonemason_working_wall")
 		return
-	case 16: // FIGURE_ACTION_16_MASON_RETURN_HOME
+	case ACTION_6_MASON_RETURN_HOME:
 		figure_apply_phrase(f, "stonemason_work_complete")
 		return
-	case 12: // FIGURE_ACTION_12_MASON_GOING_TO_PLACE
-	case 13: // FIGURE_ACTION_13_MASON_WAITING_RESOURCES
-	case 17: // FIGURE_ACTION_17_MASON_LOOKING_FOR_WORK_TILE
-	case 18: // FIGURE_ACTION_18_MASON_RANDOM_TILE
+	case ACTION_2_MASON_GOING_TO_PLACE:
+	case ACTION_3_MASON_WAITING_RESOURCES:
+	case ACTION_7_MASON_LOOKING_FOR_WORK_TILE:
+	case ACTION_8_MASON_RANDOM_TILE:
 		figure_apply_phrase(f, "stonemason_looking_for_work")
 		return
 	}

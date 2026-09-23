@@ -2,63 +2,88 @@ log_info("akhenaten: building_small_obelisk started")
 
 building_small_obelisk {
     animations {
-      sa { pack:PACK_OBELISK_X3_A, id:1 }
-      sb { pack:PACK_OBELISK_X3_B, id:1 }
-      sc { pack:PACK_OBELISK_X3_C, id:1 }
-      sd { pack:PACK_OBELISK_X3_D, id:1 }
       preview { pack:PACK_OBELISK_X3_A, id:1 }
       ladder { pack:PACK_OBELISK_EXTRA, id:1 }
     }
     building_size : 3
-    art_stages : 4
 
-    stages {
-        stage_1 {
+    // Array order = construction phase. ladders/carpenter_point are pixel offsets
+    // from the building draw origin (tune via --mixed).
+    stages [
+        {
             timber: 200
-            ladders: [{x: 20, y: -40}]
-            carpenter_point: {x: 20, y: -20}
+            obelisk_tx { pack:PACK_OBELISK_X3_A, id:1 }
+            ladders [[30, 10]]
+            carpenter_point [30, 40]
             carpenter_need: true
             stonemasons_need: false
         }
-        stage_2 {
+        {
             timber: 200
-            ladders: [{x: 44, y: -24}, {x: 20, y: -40}]
-            carpenter_point: {x: 44, y: -24}
+            obelisk_tx { pack:PACK_OBELISK_X3_A, id:1 }
+            ladders [[30, 10], [85, 10]]
+            carpenter_point [120, -20]
             carpenter_need: true
             stonemasons_need: false
         }
-        stage_3 {
+        {
             timber: 200
-            ladders: [{x: -4, y: -24}, {x: 44, y: -24}, {x: 20, y: -40}]
-            carpenter_point: {x: -4, y: -24}
+            obelisk_tx { pack:PACK_OBELISK_X3_A, id:1 }
+            ladders [[30, 10], [85, 10], [30, -50]]
+            carpenter_point [160, 40]
             carpenter_need: true
             stonemasons_need: false
         }
-        stage_4 {
-            ladders: [{x: -4, y: -24}, {x: 44, y: -24}, {x: 20, y: -40}]
-            stonemasons_point: {x: -4, y: -24}
+        {
+            obelisk_tx { pack:PACK_OBELISK_X3_A, id:1 }
+            ladders [[30, 10], [85, 10], [30, -50], [85, -50]]
+            stonemasons_point [70, -84]
             carpenter_need: false
             stonemasons_need: true
         }
-        stage_5 {
-            ladders: [{x: -4, y: -24}, {x: 44, y: -24}]
-            stonemasons_point: {x: -4, y: -24}
+        {
+            obelisk_tx { pack:PACK_OBELISK_X3_A, id:1 }
+            ladders [[30, 10], [85, 10], [30, -50], [85, -50]]
+            stonemasons_point [120, -84]
             carpenter_need: false
             stonemasons_need: true
         }
-        stage_6 {
-            ladders: [{x: -4, y: -24}]
-            stonemasons_point: {x: -4, y: -24}
+        {
+            obelisk_tx { pack:PACK_OBELISK_X3_B, id:1 }
+            ladders [[30, 10], [85, 10]]
+            stonemasons_point [70, -24]
             carpenter_need: false
             stonemasons_need: true
         }
-        stage_7 {
-            ladders: []
-            stonemasons_point: {x: -4, y: -24}
+        {
+            obelisk_tx { pack:PACK_OBELISK_X3_B, id:1 }
+            ladders [[30, 10], [85, 10]]
+            stonemasons_point [120, -24]
             carpenter_need: false
             stonemasons_need: true
         }
-    }
+        {
+            obelisk_tx { pack:PACK_OBELISK_X3_B, id:1 }
+            ladders [[30, 10]]
+            stonemasons_point [120, 0]
+            carpenter_need: false
+            stonemasons_need: true
+        }
+        {
+            obelisk_tx { pack:PACK_OBELISK_X3_C, id:1 }
+            ladders []
+            stonemasons_point [70, 0]
+            carpenter_need: false
+            stonemasons_need: true
+        }
+        {
+            obelisk_tx { pack:PACK_OBELISK_X3_D, id:1 }
+            ladders []
+            stonemasons_point [70, 0]
+            carpenter_need: false
+            stonemasons_need: true
+        }
+    ]
 
     placement_resources [
         { resource: RESOURCE_GRANITE, count: 100 }

@@ -4,18 +4,19 @@
 #include "building/building.h"
 #include "core/svector.h"
 #include "core/vec2i.h"
-#include "core/xstring.h"
+#include "graphics/image_desc.h"
 
 struct obelisk_stage {
-    xstring name;
     uint16_t timber = 0;
+    image_desc obelisk_tx{};
     svector<vec2i, 8> ladders;
     vec2i carpenter_point{};
     vec2i stonemasons_point{};
     bool carpenter_need = false;
     bool stonemasons_need = false;
 };
-ANK_CONFIG_STRUCT(obelisk_stage, timber, ladders, carpenter_point, stonemasons_point, carpenter_need, stonemasons_need)
+ANK_CONFIG_STRUCT(obelisk_stage, timber, obelisk_tx, ladders, carpenter_point, stonemasons_point, carpenter_need,
+                  stonemasons_need)
 
 // Shared base for small (3×3) and large (5×5) granite obelisks — single building, no parts.
 class building_obelisk : public building_monument {
@@ -30,7 +31,6 @@ public:
     };
 
     struct static_params : public base_params, public building_static_params {
-        void load_stages(archive arch);
         void rebuild_construction(e_building_type type);
     };
 
@@ -61,6 +61,7 @@ public:
     xstring anim_key_for(int stage) const;
     int placement_amount(e_resource r) const;
     bool place_scaffold();
+    void stonemason_complete_work();
     const obelisk_stage *stage_at(int phase) const;
     const obelisk_stage *current_stage() const;
     vec2i carpenter_work_pixel() const;
@@ -85,7 +86,7 @@ public:
     } BUILDING_STATIC_DATA_T;
     virtual const monument &config() const override;
 };
-ANK_CONFIG_STRUCT(building_small_obelisk::static_params, placement_resources, art_stages)
+ANK_CONFIG_STRUCT(building_small_obelisk::static_params, placement_resources, art_stages, stages)
 
 class building_large_obelisk : public building_obelisk {
 public:
@@ -95,4 +96,4 @@ public:
     } BUILDING_STATIC_DATA_T;
     virtual const monument &config() const override;
 };
-ANK_CONFIG_STRUCT(building_large_obelisk::static_params, placement_resources, art_stages)
+ANK_CONFIG_STRUCT(building_large_obelisk::static_params, placement_resources, art_stages, stages)

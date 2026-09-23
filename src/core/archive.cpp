@@ -1,6 +1,5 @@
 #include "core/archive.h"
 
-#include "core/log.h"
 #include "graphics/animation.h"
 #include "graphics/image_desc.h"
 #include "mujs/jsi.h"
@@ -89,67 +88,6 @@ xstring_value* archive::nextiterator(archive arch, int idx) {
 
 void archive::getglobal(std::string_view name) {
     js_getglobal((js_State *)state, name.data());
-}
-
-pcstr archive::describe_value(int idx) const {
-    if (!state) {
-        return "no-vm";
-    }
-    auto *vm = (js_State *)state;
-    if (vm->isundefined(idx)) {
-        return "undefined";
-    }
-    if (vm->isnull(idx)) {
-        return "null";
-    }
-    if (vm->isobject(idx)) {
-        return vm->isarray(idx) ? "array" : "object";
-    }
-    if (vm->isstring(idx)) {
-        return "string";
-    }
-    if (vm->isnumber(idx) || vm->iscnumber(idx)) {
-        return "number";
-    }
-    if (vm->isboolean(idx)) {
-        return "boolean";
-    }
-    if (vm->iscallable(idx)) {
-        return "function";
-    }
-    return "other";
-}
-
-int archive::count_own_keys(int idx) const {
-    if (!state || !((js_State *)state)->isobject(idx)) {
-        return -1;
-    }
-    int count = 0;
-    auto *vm = (js_State *)state;
-    js_pushiterator(vm, idx, 1);
-    while (js_nextiterator(vm, -1)) {
-        ++count;
-    }
-    js_pop(vm, 1);
-    return count;
-}
-
-void archive::log_global(pcstr name) const {
-    if (!state) {
-        logs::error("archive global '%s': vm state is null", name ? name : "(null)");
-        return;
-    }
-    auto *vm = (js_State *)state;
-    const int top_before = js_gettop(vm);
-    js_getglobal(vm, name);
-    const pcstr kind = describe_value(-1);
-    const int keys = count_own_keys(-1);
-    if (keys >= 0) {
-        logs::info("archive global '%s': type=%s keys=%d stack_top=%d", name, kind, keys, top_before);
-    } else {
-        logs::info("archive global '%s': type=%s stack_top=%d", name, kind, top_before);
-    }
-    js_pop(vm, 1);
 }
 
 pcstr lang_get_string(int group, int index);

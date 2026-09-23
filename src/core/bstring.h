@@ -23,6 +23,14 @@ struct arg {
     static constexpr type get(const T &v) noexcept { return v; }
 };
 
+// Normalize mutable/const C-strings to pcstr so concat(pcstr, char*) does not
+// prefer the peeling template over concat(pcstr, pcstr) and recurse forever.
+template <typename Char>
+struct arg<Char *, std::enable_if_t<std::is_same_v<std::remove_cv_t<Char>, char>>> {
+    using type = pcstr;
+    static type get(Char * const &v) noexcept { return v ? v : ""; }
+};
+
 template <typename T>
 struct arg<T, std::void_t<decltype(static_cast<pcstr>(std::declval<const T &>().c_str()))>> {
     using type = pcstr;
