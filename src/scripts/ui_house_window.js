@@ -95,8 +95,8 @@ function house_determine_worst_desirability_building(house) {
     var lowest_building_id = 0
     var myTile = house.tile
 
-    for (var y = area.min_y; y <= area.max_y; y++) {
-        for (var x = area.min_x; x <= area.max_x; x++) {
+    for (var y = area.miny; y <= area.maxy; y++) {
+        for (var x = area.minx; x <= area.maxx; x++) {
             var building = city.get_building_at(x, y)
             var building_id = building.id
             if (!building.valid || building.id === house_id)

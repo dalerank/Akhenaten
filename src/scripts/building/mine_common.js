@@ -4,8 +4,8 @@ function industry_mine_best_ore_tile(b, get_ore) {
     var area = city.get_grid_area(b.tile, b.size, 0)
     var best_tile = null
     var best = 0
-    for (var y = area.min_y; y <= area.max_y; y++) {
-        for (var x = area.min_x; x <= area.max_x; x++) {
+    for (var y = area.miny; y <= area.maxy; y++) {
+        for (var x = area.minx; x <= area.maxx; x++) {
             var tile = { x: x, y: y }
             var amount = get_ore(tile)
             if (amount > best) {
