@@ -19,3 +19,4 @@ public:
     bool has_resources() const;
 };
 
+ANK_CONFIG_PROPERTY(building_guild::runtime_data_t, max_walkers)

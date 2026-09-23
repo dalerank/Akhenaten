@@ -42,3 +42,4 @@ public:
 
     virtual void debug_draw_properties() override;
 };
+ANK_CONFIG_PROPERTY(building_industry::runtime_data_t, spawned_worker_this_month, max_gatheres, water_stored, produce_multiplier, processed_figure)
