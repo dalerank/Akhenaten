@@ -8,7 +8,14 @@ function run_test() {
     test_reload_city_session('data/default.map')
     __test_set_treasury(10000)
 
-    var bid = test_building_place(BUILDING_WELL, -1, -1)
+    // Wells require groundwater; --no-resource maps often have none.
+    var cx = (__scenario_map.width / 2) | 0
+    var cy = (__scenario_map.height / 2) | 0
+    terrain.add({ x: cx, y: cy }, TERRAIN_GROUNDWATER)
+    var bid = test_building_place(BUILDING_WELL, cx, cy)
+    if (!bid) {
+        bid = test_building_place(BUILDING_WELL, -1, -1)
+    }
     if (!bid) {
         __log_info_native('[test:195] place failed')
         __test_signal_ready()
