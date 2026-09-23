@@ -26,6 +26,6 @@ building_shrine_seth {
 [es=(building_shrine_seth, on_place_checks)]
 function building_shrine_seth_on_place_checks(ev) {
     var b = city.get_building(ev.bid)
-    var has_road = __map_road_within_radius(b.tile, b.params.building_size, 2)
+    var has_road = __map_road_within_radius(b.tile, b.size, 2)
     city.warnings.show_if_not(has_road, "#shrines_near_road_required")
 }
