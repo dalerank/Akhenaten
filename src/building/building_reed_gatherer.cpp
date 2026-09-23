@@ -12,6 +12,7 @@
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_reed_gatherer);
 
 void building_reed_gatherer::on_create(int orientation) {
+    building_industry::on_create(orientation);
     runtime_data().max_gatheres = current_params().max_gatherers;
 }
 

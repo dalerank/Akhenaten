@@ -18,6 +18,7 @@ build_planner_clear_land {
   planner_update_rule {
     is_draggable : true
   }
+  building_size : 1
 }
 
 building_burning_ruin = {
@@ -40,7 +41,6 @@ building_burning_ruin = {
     draw_normal_anim: true
   }
 }
-
 
 building_bricklayers_guild = {
   animations : {

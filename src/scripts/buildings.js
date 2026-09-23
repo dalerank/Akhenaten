@@ -102,4 +102,6 @@ import building.decorative_gatehouse
 import building.tower_gatehouse
 import building.zoo
 import building.conservatory
+import building.tax_collector
+import building.tax_collector_up
 import building.stonemason_guild

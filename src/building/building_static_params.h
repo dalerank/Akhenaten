@@ -50,6 +50,7 @@ struct building_static_params {
     uint16_t max_service;
     uint16_t max_storage_amount;
     uint16_t max_serve_clients;
+    uint8_t max_gatherers;
 
     uint8_dcy laborers;
     int8_dcy fire_risk;
@@ -88,7 +89,7 @@ ANK_CONFIG_STRUCT(building_static_params,
     fire_proof, damage_proof, animations, overlay_anims, laborers, fire_risk, damage_risk, max_walkers, planner_update_rule, needs, flags,
     build_menu_text, info_sound, cost, desirability, crime,
     output_resource_second_rate, building_size, info_title_id, progress_max, overlay, sound_channel,
-    max_service, max_storage_amount, max_serve_clients,
+    max_service, max_storage_amount, max_serve_clients, max_gatherers,
     meta_id, meta, production_rate, production_rate_dcy, min_houses_coverage)
 
 ANK_CONFIG_PROPERTY(building_static_params,
@@ -96,5 +97,5 @@ ANK_CONFIG_PROPERTY(building_static_params,
     fire_proof, damage_proof, laborers, fire_risk, damage_risk, max_walkers,
     build_menu_text, info_sound, cost,
     output_resource_second_rate, building_size, info_title_id, progress_max, overlay, sound_channel,
-    max_service, max_storage_amount, max_serve_clients,
+    max_service, max_storage_amount, max_serve_clients, max_gatherers,
     meta_id, production_rate, production_rate_dcy, min_houses_coverage)
