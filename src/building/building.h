@@ -271,8 +271,8 @@ public:
     building* top_xy();
     bool is_main();
 
-    inline bool is_valid() { return type != BUILDING_NONE && state == BUILDING_STATE_VALID; }
-    inline bool is_valid() const { return type != BUILDING_NONE && state == BUILDING_STATE_VALID; }
+    inline bool is_valid() { return type != BUILDING_NONE && (state == BUILDING_STATE_VALID || state == BUILDING_STATE_CREATED); }
+    inline bool is_valid() const { return type != BUILDING_NONE && (state == BUILDING_STATE_VALID || state == BUILDING_STATE_CREATED); }
 
     bool is_defense() const { return get_flag(e_building_defense); }
     bool is_farm() const { return get_flag(e_building_farm); }

@@ -117,9 +117,7 @@ void __city_planner_validate_last_created() {
     if (!b || b->id <= 0) {
         return;
     }
-    // Promote the whole multi-part chain (fort ground, sphinx a/b/c, mastaba, …).
-    // JS Building properties / __building_type only see state == VALID.
-    // South/west mastaba leaves last_created on a SIDE tail — start from main().
+
     b = b->main();
     for (int guard = 0; b && b->id > 0 && guard < 128; ++guard) {
         b->state = BUILDING_STATE_VALID;
