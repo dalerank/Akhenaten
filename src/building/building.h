@@ -185,6 +185,7 @@ public:
     uint16_t road_network_id;
     short houses_covered;
     short percentage_houses_covered;
+    uint32_t exceptions;
     short distance_from_entry;
     tile2i road_access;
     short figure_spawn_delay;

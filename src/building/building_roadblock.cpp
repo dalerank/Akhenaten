@@ -6,7 +6,6 @@
 #include "window/window_building_info.h"
 #include "js/js_game.h"
 
-BUILDING_RUNTIME_DATA_IMPL(building_routeblock)
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_roadblock);
 
 bool building_roadblock::force_draw_flat_tile(painter &ctx, tile2i tile, vec2i pixel, color mask) {
@@ -18,19 +17,14 @@ bool building_roadblock::force_draw_top_tile(painter& ctx, tile2i tile, vec2i pi
     return false;
 }
 
-void building_roadblock::bind_dynamic(io_buffer *iob, size_t version) {
-    auto &d = runtime_data();
-    iob->bind(BIND_SIGNATURE_UINT8, &d.exceptions);
-}
-
 void building_roadblock::set_permission(e_permission p) {
-    const int permission_bit = 1 << p;
-    runtime_data().exceptions ^= permission_bit;
+    const uint32_t permission_bit = 1u << p;
+    base.exceptions ^= permission_bit;
 }
 
 bool building_roadblock::get_permission(e_permission p) {
-    const int permission_bit = 1 << p;
-    return (runtime_data().exceptions & permission_bit);
+    const uint32_t permission_bit = 1u << p;
+    return (base.exceptions & permission_bit) != 0;
 }
 
 bool building_roadblock::target_route_tile_blocked(int grid_offset) const {
