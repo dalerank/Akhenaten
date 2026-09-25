@@ -303,7 +303,7 @@ void building_impl::seed_default_overlays() {
 void building_impl::draw_overlay_anims(painter &ctx, vec2i point, color color_mask) const {
     for (const auto &ov : base.overlay_anims) {
         const int img = ov.first_img();
-        if (!img) {
+        if (img <= 0) {
             continue;
         }
 

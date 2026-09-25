@@ -1,10 +1,25 @@
 #include "stacktrace.h"
 
 #include "core/log.h"
+#include "platform/arguments.h"
 #include "platform/platform.h"
 #include "platform/screen.h"
 
 #include "SDL.h"
+
+#include <cstdlib>
+#include <cstring>
+
+static bool should_show_crash_dialog() {
+    if (!g_args.use_crashdlg() || g_args.is_integral_tests()) {
+        return false;
+    }
+    const char *vid = SDL_getenv("SDL_VIDEODRIVER");
+    if (vid && (!std::strcmp(vid, "dummy") || !std::strcmp(vid, "offscreen"))) {
+        return false;
+    }
+    return true;
+}
 
 #if defined(GAME_PLATFORM_WIN)
 #include <Windows.h>
@@ -64,15 +79,19 @@ static void backtrace_print() {
     char** stack = backtrace_symbols(array, size);
 
     for (int i = 0; i < size; i++) {
-        logs::info(stack[i]);
+        logs::info("%s", stack[i]);
     }
+    free(stack);
 }
 
 static void crash_handler(int sig) {
     logs::error("Oops, crashed with signal %d :(", sig);
     backtrace_print();
-    display_crash_message();
-    exit(1);
+    logs::flush();
+    if (should_show_crash_dialog()) {
+        display_crash_message();
+    }
+    _Exit(128 + (sig > 0 ? sig : 1));
 }
 
 void crashhandler_install() {

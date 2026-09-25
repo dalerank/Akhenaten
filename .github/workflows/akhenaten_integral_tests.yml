@@ -24,12 +24,13 @@ jobs:
         cmake --build --preset linux-gcc-release-make -- -j$(nproc)
     - name: Run integral tests
       id: tests
+      timeout-minutes: 45
       env:
         SDL_VIDEODRIVER: dummy
         SDL_AUDIODRIVER: dummy
       run: |
         set +e
-        ./build/akhenaten --integraltests --no-logo --no-resource --nosound --window --size 800x600
+        ./build/akhenaten --integraltests --nocrashdlg --no-logo --no-resource --nosound --window --size 800x600
         echo "rc=$?" >> "$GITHUB_OUTPUT"
         exit 0
     - name: Stage integral test log
