@@ -178,7 +178,7 @@ function window_mission_lost_on_init(window) {
 
     __game_sound.music_stop()
     __game_sound.speech_stop()
-    __game_sound.speech_play("Wavs/lose_game.wav")
+    __game_sound.speech_play("Wavs/FANFARE2.WAV")
 }
 
 [es=(window_mission_lost, replay_mission)]

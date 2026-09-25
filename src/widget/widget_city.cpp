@@ -1350,7 +1350,7 @@ void screen_city_t::military_map_click(int legion_formation_id, tile2i tile) {
         events::emit(event_city_warning{ "#warning_auto_resolve_orders_blocked" });
     } else {
         formation_batalion_move_to(m, tile);
-        g_sound.speech_play_file("Wavs/cohort5.wav", 255);
+        g_sound.speech_play_file("Wavs/WEAPON.WAV", 255);
     }
 
     window_city_show();

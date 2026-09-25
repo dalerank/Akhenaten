@@ -153,7 +153,7 @@ void figure_soldier::update_image(const formation* m, int &dir) {
 
 bool figure_soldier::play_die_sound() {
     if (g_city.figures.soldiers == 1) {
-        g_sound.speech_play_file("Wavs/barbarian_war_cry.wav", 255);
+        g_sound.speech_play_file("Wavs/sword_atk.wav", 255);
     }
 
     return true;

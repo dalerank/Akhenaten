@@ -58,7 +58,7 @@ mods {
 
         {
             name : "pharaoh_sounds_pack"
-            desc : "Custom walker speech"
+            desc : "Custom walker speech (Voice/Walker); required for figure phrase audio"
             version : "1.31.0"
             author : "dalerank"
             url : "https://github.com/dalerank/Akhenaten/releases/download/mods/pharaoh_sounds_pack.sgx"

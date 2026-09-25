@@ -18,7 +18,7 @@ info_window_native_hut {
 
 [es=(info_window_native_hut, init)]
 function info_window_native_hut_on_init(window) {
-    legacy_info_window_play("Wavs/empty_land.wav")
+    legacy_info_window_play("Wavs/DESERT1.WAV")
 }
 
 [es=building_info_window]
@@ -35,7 +35,7 @@ info_window_native_meeting {
 
 [es=(info_window_native_meeting, init)]
 function info_window_native_meeting_on_init(window) {
-    legacy_info_window_play("Wavs/empty_land.wav")
+    legacy_info_window_play("Wavs/DESERT1.WAV")
 }
 
 [es=building_info_window]
@@ -52,7 +52,7 @@ info_window_native_crops {
 
 [es=(info_window_native_crops, init)]
 function info_window_native_crops_on_init(window) {
-    legacy_info_window_play("Wavs/empty_land.wav")
+    legacy_info_window_play("Wavs/DESERT1.WAV")
 }
 
 [es=building_info_window]
@@ -66,5 +66,5 @@ info_window_mission_post {
 
 [es=(info_window_mission_post, init)]
 function info_window_mission_post_on_init(window) {
-    legacy_info_window_play("Wavs/mission.wav")
+    legacy_info_window_play("Wavs/BARRACK.WAV")
 }

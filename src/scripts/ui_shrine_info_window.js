@@ -73,5 +73,5 @@ info_window_oracle {
 
 [es=(info_window_oracle, init)]
 function info_window_oracle_on_init(window) {
-    __game_sound.speech_play("Wavs/oracle.wav")
+    __game_sound.speech_play("Wavs/tem_osiris_s.wav")
 }

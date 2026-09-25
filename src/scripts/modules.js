@@ -47,6 +47,7 @@ import migration
 import eventmsg_phrase_auto
 import figure_names_en
 import music
+import speech
 import invasions
 import enemies
 import sentiment

@@ -235,11 +235,11 @@ void figure_enemy_fast_sword::enemy_initial(formation *m) {
 
     if (base.index_in_formation == 0) {
         if (m->layout == FORMATION_ENEMY_MOB) {
-            g_sound.speech_play_file("Wavs/drums.wav", 255);
+            g_sound.speech_play_file("Wavs/WEAPON.WAV", 255);
         } else if (m->layout == FORMATION_ENEMY12) {
-            g_sound.speech_play_file("Wavs/horn2.wav", 255);
+            g_sound.speech_play_file("Wavs/CHARIOT.WAV", 255);
         } else {
-            g_sound.speech_play_file("Wavs/horn1.wav", 255);
+            g_sound.speech_play_file("Wavs/BARRACK.WAV", 255);
         }
     }
 

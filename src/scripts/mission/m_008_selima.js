@@ -29,7 +29,7 @@ mission8 { // Selima — The Road to Africa
 
 	sounds {
 		briefing : "Voice/Mission/208_mission.mp3"
-		victory : "Voice/Mission/20_victory.mp3"
+		victory : "Voice/Mission/208_victory.mp3"
 	}
 
 	buildings [

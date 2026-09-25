@@ -1,6 +1,7 @@
 #pragma once
 
 #include "core/xstring.h"
+#include "core/svector.h"
 #include "core/custom_span.hpp"
 #include "content/dir.h"
 #include "content/vfs.h"
@@ -24,6 +25,11 @@ public:
         int volume = 0;
         void* chunk = nullptr;
         bool playing = false;
+    };
+
+    struct speech_t {
+        svector<xstring, 8> dirs;
+        xstring walker_dir;
     };
 
     void init();
@@ -66,6 +72,8 @@ public:
     void on_sound_effect(event_sound_effect);
     void on_sound_track(event_sound_track);
 
+    speech_t speech;
+
 private:
     static void channel_finished_cb(int channel);
     void init_channel(int index, vfs::path filename);
@@ -84,6 +92,8 @@ private:
     static void custom_music_callback(void *dummy, uint8_t *stream, int len);
     vfs::path speech_filename(xstring filename);
     bool speech_try_rel(pcstr rel, vfs::path &fs_path);
+    static bool speech_ieq_prefix(pcstr path, pcstr prefix);
+    vfs::path speech_normalize_rel(pcstr filename) const;
     bool load_channel(channel_t *channel);
     void *load_chunk(pcstr filename);
     vfs::reader load_cached_chunk(vfs::path filename);

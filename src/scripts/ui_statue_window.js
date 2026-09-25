@@ -33,5 +33,5 @@ info_window_triumphal_arch {
 
 [es=(info_window_triumphal_arch, init)]
 function info_window_triumphal_arch_on_init(window) {
-    __game_sound.speech_play("Wavs/statue.wav")
+    __game_sound.speech_play("Wavs/STATUE1.WAV")
 }

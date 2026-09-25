@@ -60,7 +60,7 @@ void figure::play_die_sound() {
 
     if (is_enemy()) {
         if (g_city.figures.total_invading_enemies() == 1) {
-            g_sound.speech_play_file("Wavs/army_war_cry.wav", 255);
+            g_sound.speech_play_file("Wavs/sword_atk.wav", 255);
         }
     }
 }

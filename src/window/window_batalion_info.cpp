@@ -90,19 +90,19 @@ void batalion_info_window::change_layout(e_formation_layout new_layout) {
     formation_batalion_change_layout(m, new_layout);
     switch (new_layout) {
     case 0:
-        g_sound.speech_play_file("Wavs/cohort1.wav", 255);
+        g_sound.speech_play_file("Wavs/f_infantry.wav", 255);
         break;
     case 1:
-        g_sound.speech_play_file("Wavs/cohort2.wav", 255);
+        g_sound.speech_play_file("Wavs/F_ARCHER.WAV", 255);
         break;
     case 2:
-        g_sound.speech_play_file("Wavs/cohort3.wav", 255);
+        g_sound.speech_play_file("Wavs/f_chariot.wav", 255);
         break;
     case 3:
-        g_sound.speech_play_file("Wavs/cohort4.wav", 255);
+        g_sound.speech_play_file("Wavs/BARRACK.WAV", 255);
         break;
     case 4:
-        g_sound.speech_play_file("Wavs/cohort5.wav", 255);
+        g_sound.speech_play_file("Wavs/WEAPON.WAV", 255);
         break;
     }
     window_city_military_show(b->formation_id);

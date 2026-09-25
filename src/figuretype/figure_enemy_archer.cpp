@@ -46,11 +46,11 @@ void figure_enemy_archer::enemy_initial(formation *m) {
     if (base.wait_ticks <= 0) {
         if (base.index_in_formation == 0) {
             if (m->layout == FORMATION_ENEMY_MOB) {
-                g_sound.speech_play_file("Wavs/drums.wav", 255);
+                g_sound.speech_play_file("Wavs/WEAPON.WAV", 255);
             } else if (m->layout == FORMATION_ENEMY12) {
-                g_sound.speech_play_file("Wavs/horn2.wav", 255);
+                g_sound.speech_play_file("Wavs/CHARIOT.WAV", 255);
             } else {
-                g_sound.speech_play_file("Wavs/horn1.wav", 255);
+                g_sound.speech_play_file("Wavs/BARRACK.WAV", 255);
             }
         }
 
@@ -58,8 +58,8 @@ void figure_enemy_archer::enemy_initial(formation *m) {
         tile2i destination_tile = m->destination.shifted(formation_t);
         if (m->recent_fight || tile() == destination_tile) {
             advance_action(ACTION_3_ENEMY_ARCHER_SHOOT_MISSILE);
-        } 
-        
+        }
+
         if (!m->recent_fight && tile() != destination_tile) {
             base.destination_tile = destination_tile;
             int dir = calc_general_direction(tile(), base.destination_tile);

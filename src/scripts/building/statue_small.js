@@ -12,7 +12,7 @@ building_small_statue = {
       text_id:80
       help_link:"message_building_garden_plaze_statue"
     }
-    info_sound : "Wavs/statue1.wav"
+    info_sound : "Wavs/STATUE1.WAV"
     building_size : 1
     cost : [ 3, 5, 8, 13, 21 ]
     desirability : { value:[3], step:[1], step_size:[-1], range: [3] }

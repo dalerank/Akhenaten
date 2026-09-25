@@ -16,7 +16,7 @@ building_physician {
   labor_category : LABOR_CATEGORY_WATER_HEALTH,
   sound_channel : SOUND_CHANNEL_CITY_PHYSICIAN
   meta { text_id: 83, help_link:"message_building_physician" }
-  info_sound : "Wavs/physician.wav"
+  info_sound : "Wavs/DOCTOR.WAV"
   building_size : 2
   cost [ 10, 15, 30, 50, 100 ]
   desirability { value[2], step[1], step_size[-1], range[2] }

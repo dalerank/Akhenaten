@@ -13,7 +13,7 @@ building_dentist {
   max_serve_clients : 1000
   building_size : 1
   meta { text_id:84, help_link:"message_building_dentist" }
-  info_sound : "Wavs/dentist.wav"
+  info_sound : "Wavs/DOCTOR.WAV"
   cost [ 10, 15, 30, 50, 80 ]
   desirability { value[2], step[1], step_size[-1], range[2] }
   laborers[5]

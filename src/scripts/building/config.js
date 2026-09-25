@@ -221,7 +221,7 @@ building_recruiter = {
   labor_category : LABOR_CATEGORY_MILITARY
   min_houses_coverage : 100
   meta : { text_id:136, help_link:"message_building_recruiter_academy" }
-  info_sound : "Wavs/barracks.WAV"
+  info_sound : "Wavs/BARRACK.WAV"
   building_size : 3
   planner_update_rule : {
     unique_building : true

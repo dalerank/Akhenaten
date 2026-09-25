@@ -76,7 +76,7 @@ terrain_info_window = {
 [es=terrain_info_window]
 terrain_info_empty {
     related_terrain [terrain_info_empty]
-    open_sounds     : [ "Wavs/empty_land.wav" ]
+    open_sounds     : [ "Wavs/DESERT1.WAV" ]
     ui : baseui(terrain_info_window, {
         title    : text({pos: [0, 16], size: [px(29), 13], text:[70, 20], font:FONT_LARGE_BLACK_ON_LIGHT, align:"center"})
         describe : text({pos: [30, 78], text:[70, 42], font: FONT_NORMAL_BLACK_ON_DARK, multiline:true, wrap:px(26) })
@@ -101,7 +101,7 @@ function terrain_info_road_on_init(window) {
 terrain_info_wall = {
     related_terrain [terrain_info_wall]
     help_id           : "message_building_defensive_structures"
-    open_sounds       : [ "Wavs/wall.wav" ]
+    open_sounds       : [ "Wavs/ROCK1.WAV" ]
     ui : baseui(terrain_info_window, {
         title         : text({pos: [0, 16], size: [px(29), 13], text:[139, 0], font:FONT_LARGE_BLACK_ON_LIGHT, align:"center"})
         describe      : text({pos: [30, 78], text:[139, 1], font: FONT_NORMAL_BLACK_ON_DARK, multiline:true, wrap:px(26) })
@@ -116,7 +116,7 @@ function terrain_info_wall_on_init(window) {
 terrain_info_mud_wall = {
     related_terrain [terrain_info_mud_wall]
     help_id           : "message_building_defensive_structures"
-    open_sounds       : [ "Wavs/wall.wav" ]
+    open_sounds       : [ "Wavs/ROCK1.WAV" ]
     ui : baseui(terrain_info_window, {
         title         : text({pos: [0, 16], size: [px(29), 13], text:[139, 0], font:FONT_LARGE_BLACK_ON_LIGHT, align:"center"})
         describe      : text({pos: [30, 78], text:[139, 1], font: FONT_NORMAL_BLACK_ON_DARK, multiline:true, wrap:px(26) })
@@ -131,7 +131,7 @@ function terrain_info_mud_wall_on_init(window) {
 terrain_info_brick_wall = {
     related_terrain [terrain_info_brick_wall]
     help_id           : "message_building_defensive_structures"
-    open_sounds       : [ "Wavs/wall.wav" ]
+    open_sounds       : [ "Wavs/ROCK1.WAV" ]
     ui : baseui(terrain_info_window, {
         title         : text({pos: [0, 16], size: [px(29), 13], text:[28, 168], font:FONT_LARGE_BLACK_ON_LIGHT, align:"center"})
         describe      : text({pos: [30, 78], text:[70, 59], font: FONT_NORMAL_BLACK_ON_DARK, multiline:true, wrap:px(26) })
@@ -253,7 +253,7 @@ function terrain_info_water_on_init(window) {
 terrain_info_bridge {
     related_terrain [terrain_info_bridge]
     help_id           : "message_game_concept_water_crossings"
-    open_sounds       : [ "Wavs/empty_land.wav" ]
+    open_sounds       : [ "Wavs/DESERT1.WAV" ]
     ui : baseui(terrain_info_window, {
         title         : text({pos: [0, 16], size: [px(29), 13], text:[70, 21], font:FONT_LARGE_BLACK_ON_LIGHT, align:"center"})
         describe      : text({pos: [30, 78], text:[70, 47], font: FONT_NORMAL_BLACK_ON_DARK, multiline:true, wrap:px(26) })
@@ -300,7 +300,7 @@ function terrain_info_rubble_on_init(window) {
 terrain_info_canal {
     related_terrain [terrain_info_canal]
     help_id           : "message_game_concept_irrigation"
-    open_sounds       : [ "Wavs/aquaduct.wav" ]
+    open_sounds       : [ "Wavs/WATER1.WAV" ]
     ui : baseui(terrain_info_window, {
         title         : text({pos: [0, 16], size: [px(29), 13], text:[141, 0], font:FONT_LARGE_BLACK_ON_LIGHT, align:"center"})
         describe      : text({pos: [30, 78], font: FONT_NORMAL_BLACK_ON_DARK, multiline:true, wrap:px(26) })
@@ -353,7 +353,7 @@ function terrain_info_dike_on_init(window) {
 [es=terrain_info_window]
 terrain_info_marshland {
     related_terrain [terrain_info_marshland]
-    open_sounds     : [ "Wavs/empty_land.wav" ]
+    open_sounds     : [ "Wavs/DESERT1.WAV" ]
     ui : baseui(terrain_info_window, {
         title    : text({pos: [0, 16], size: [px(29), 13], text:[70, 31], font:FONT_LARGE_BLACK_ON_LIGHT, align:"center"})
         describe : text({pos: [30, 78], text:[70, 57], font: FONT_NORMAL_BLACK_ON_DARK, multiline:true, wrap:px(26) })
@@ -363,7 +363,7 @@ terrain_info_marshland {
 [es=terrain_info_window]
 terrain_info_dunes {
     related_terrain [terrain_info_dunes]
-    open_sounds     : [ "Wavs/empty_land.wav" ]
+    open_sounds     : [ "Wavs/DESERT1.WAV" ]
     ui : baseui(terrain_info_window, {
         title    : text({pos: [0, 16], size: [px(29), 13], text:[70, 32], font:FONT_LARGE_BLACK_ON_LIGHT, align:"center"})
         describe : text({pos: [30, 78], text:[70, 58], font: FONT_NORMAL_BLACK_ON_DARK, multiline:true, wrap:px(26) })
@@ -373,7 +373,7 @@ terrain_info_dunes {
 [es=terrain_info_window]
 terrain_info_shrub {
     related_terrain [terrain_info_shrub]
-    open_sounds     : [ "Wavs/empty_land.wav" ]
+    open_sounds     : [ "Wavs/DESERT1.WAV" ]
     ui : baseui(terrain_info_window, {
         title    : text({pos: [0, 16], size: [px(29), 13], text:[70, 14], font:FONT_LARGE_BLACK_ON_LIGHT, align:"center"})
         describe : text({pos: [30, 78], text:[70, 40], font: FONT_NORMAL_BLACK_ON_DARK, multiline:true, wrap:px(26) })
@@ -383,7 +383,7 @@ terrain_info_shrub {
 [es=terrain_info_window]
 terrain_info_entry_flag {
     related_terrain [terrain_info_entry_flag]
-    open_sounds     : [ "Wavs/empty_land.wav" ]
+    open_sounds     : [ "Wavs/DESERT1.WAV" ]
     ui : baseui(terrain_info_window, {
         title    : text({pos: [0, 16], size: [px(29), 13], text:[70, 24], font:FONT_LARGE_BLACK_ON_LIGHT, align:"center"})
         describe : text({pos: [30, 78], text:[70, 50], font: FONT_NORMAL_BLACK_ON_DARK, multiline:true, wrap:px(26) })
@@ -393,7 +393,7 @@ terrain_info_entry_flag {
 [es=terrain_info_window]
 terrain_info_exit_flag {
     related_terrain [terrain_info_exit_flag]
-    open_sounds     : [ "Wavs/empty_land.wav" ]
+    open_sounds     : [ "Wavs/DESERT1.WAV" ]
     ui : baseui(terrain_info_window, {
         title    : text({pos: [0, 16], size: [px(29), 13], text:[70, 25], font:FONT_LARGE_BLACK_ON_LIGHT, align:"center"})
         describe : text({pos: [30, 78], text:[70, 51], font: FONT_NORMAL_BLACK_ON_DARK, multiline:true, wrap:px(26) })
@@ -403,7 +403,7 @@ terrain_info_exit_flag {
 [es=terrain_info_window]
 terrain_info_earthquake {
     related_terrain [terrain_info_earthquake]
-    open_sounds     : [ "Wavs/empty_land.wav" ]
+    open_sounds     : [ "Wavs/DESERT1.WAV" ]
     ui : baseui(terrain_info_window, {
         title    : text({pos: [0, 16], size: [px(29), 13], text:[70, 15], font:FONT_LARGE_BLACK_ON_LIGHT, align:"center"})
         describe : text({pos: [30, 78], text:[70, 41], font: FONT_NORMAL_BLACK_ON_DARK, multiline:true, wrap:px(26) })
