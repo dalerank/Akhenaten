@@ -551,27 +551,13 @@ struct js_function_traits<R(C:: *)(Args...) const> : js_function_traits<R(C:: *)
 #define ANK_FUNCTION(func) \
     ANK_FUNCTION_NAMED(func, func)
 
-/** Register a C int* as a global JS variable (JS_CPTR). Scripts read/write it directly. */
-#define ANK_BOUND_INT(js_name, cptr) \
-    static void ANK_CONFIG_CC1(ank_bound_int_reg_, __LINE__)(js_State * J) { js_register_bound_int(J, js_intern(#js_name), &(cptr)); } \
-    ANK_DECLARE_JSFUNCTION_ITERATOR(ANK_CONFIG_CC1(ank_bound_int_reg_, __LINE__));
+/** Register a C variable as a global JS variable (JS_CPTR); the JS_PTR_* slot comes from its type.
+ *  Scripts read/write it in place. */
+#define ANK_BOUND(js_name, cptr) \
+    static void ANK_CONFIG_CC1(ank_bound_reg_, __LINE__)(js_State * J) { J->bind_global(js_intern(#js_name), &(cptr)); } \
+    ANK_DECLARE_JSFUNCTION_ITERATOR(ANK_CONFIG_CC1(ank_bound_reg_, __LINE__));
 
-/** Register a C int8_t* as a global JS variable (JS_CPTR); writes clamp to [-128,127]. */
-#define ANK_BOUND_INT8(js_name, cptr) \
-    static void ANK_CONFIG_CC1(ank_bound_int8_reg_, __LINE__)(js_State * J) { js_register_bound_int8(J, js_intern(#js_name), &(cptr)); } \
-    ANK_DECLARE_JSFUNCTION_ITERATOR(ANK_CONFIG_CC1(ank_bound_int8_reg_, __LINE__));
-
-/** Register a C bool* as a global JS variable (JS_CPTR). */
-#define ANK_BOUND_BOOL(js_name, cptr) \
-    static void ANK_CONFIG_CC1(ank_bound_bool_reg_, __LINE__)(js_State * J) { js_register_bound_bool(J, js_intern(#js_name), &(cptr)); } \
-    ANK_DECLARE_JSFUNCTION_ITERATOR(ANK_CONFIG_CC1(ank_bound_bool_reg_, __LINE__));
-
-/** Register a C float* as a global JS variable (JS_CPTR). */
-#define ANK_BOUND_FLOAT(js_name, cptr) \
-    static void ANK_CONFIG_CC1(ank_bound_float_reg_, __LINE__)(js_State* J) { js_register_bound_float(J, js_intern(#js_name), &(cptr)); } \
-    ANK_DECLARE_JSFUNCTION_ITERATOR(ANK_CONFIG_CC1(ank_bound_float_reg_, __LINE__));
-
-/** Register a global JS object (JsName) whose listed fields bind as JS_CPTR ints (same storage as ANK_BOUND_INT).
+/** Register a global JS object (JsName) whose listed fields bind as JS_CPTR ints (same storage as ANK_BOUND).
  *  Fields must map to int-sized storage (enums, int8_t, etc. via (int*) cast in implementation). */
 #define ANK_GLOBAL_OBJECT(ContainerExpr, JsName, ...)                                                               \
     static void ank_register_global_obj_##JsName(js_State *J) {                                                     \

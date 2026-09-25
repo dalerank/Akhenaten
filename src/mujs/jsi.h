@@ -12,6 +12,8 @@
 #include <math.h>
 #include <float.h>
 
+#include <type_traits>
+
 #include "core/string.h"
 #include "jsstring.h"
 
@@ -115,6 +117,43 @@ void *js_savetrypc(js_State *J, js_Instruction *pc);
 
 #define js_trypc(J, PC) \
 	setjmp(*((jmp_buf *)js_savetrypc(J, PC)))
+
+class xstring;
+
+/* Enums bind by width only: 1- and 2-byte enums read back as unsigned, whatever their underlying type. */
+template<typename FieldT>
+constexpr js_CPtrType js_cptr_type_of() {
+	using T = std::remove_cv_t<FieldT>;
+	if constexpr (std::is_same_v<T, bool>) {
+		return JS_PTR_BOOL;
+	} else if constexpr (std::is_same_v<T, float>) {
+		return JS_PTR_FLOAT;
+	} else if constexpr (std::is_same_v<T, int8_t>) {
+		return JS_PTR_INT8;
+	} else if constexpr (std::is_same_v<T, uint8_t>) {
+		return JS_PTR_UINT8;
+	} else if constexpr (std::is_same_v<T, int16_t>) {
+		return JS_PTR_INT16;
+	} else if constexpr (std::is_same_v<T, uint16_t>) {
+		return JS_PTR_UINT16;
+	} else if constexpr (std::is_same_v<T, int> || std::is_same_v<T, unsigned int>) {
+		return JS_PTR_INT;
+	} else if constexpr (std::is_same_v<T, xstring>) {
+		return JS_PTR_XSTRING;
+	} else if constexpr (std::is_enum_v<T>) {
+		static_assert(sizeof(T) == 1 || sizeof(T) == 2 || sizeof(T) == sizeof(int), "js_cptr_type_of: enum must be 1, 2 or 4 bytes");
+		if constexpr (sizeof(T) == 1) {
+			return JS_PTR_UINT8;
+		} else if constexpr (sizeof(T) == 2) {
+			return JS_PTR_UINT16;
+		} else {
+			return JS_PTR_INT;
+		}
+	} else {
+		static_assert(sizeof(T) == 0, "js_cptr_type_of: unsupported native type for a JS binding");
+		return JS_PTR_INT;
+	}
+}
 
 /* State struct */
 
@@ -279,4 +318,22 @@ struct js_State
 
 	void dup2();
     void pushliteral(js_StringNode val);
+
+	/* JS_CPTR bindings: the script reads and writes *ptr in place.
+	   bind_global defines a global; bind_property sets a property on the object at -1. */
+	void bind_global(const js_StringNode name, void *ptr, js_CPtrType ptype);
+	void bind_property(const js_StringNode name, void *ptr, js_CPtrType ptype);
+	/* JS_CPTROFF: field at byte_offset from the receiver's cobj_ptr, set with set_cobj_ptr. */
+	void bind_offset_property(const js_StringNode name, size_t byte_offset, js_CPtrType ptype);
+	/* Object at -1 becomes the base for its JS_CPTROFF prototype fields. */
+	void set_cobj_ptr(void *cpp_object);
+
+	template<typename T>
+	void bind_global(const js_StringNode name, T *ptr) { bind_global(name, (void *)ptr, js_cptr_type_of<T>()); }
+
+	template<typename T>
+	void bind_property(const js_StringNode name, T *ptr) { bind_property(name, (void *)ptr, js_cptr_type_of<T>()); }
+
+	template<typename FieldT>
+	void bind_offset_property(const js_StringNode name, size_t byte_offset) { bind_offset_property(name, byte_offset, js_cptr_type_of<FieldT>()); }
 };

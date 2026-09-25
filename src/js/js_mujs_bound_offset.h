@@ -1,52 +1,16 @@
 #pragma once
 
-#include "core/xstring.h"
-#include "mujs/mujs.h"
+#include "mujs/jsi.h"
 
 #include <cstddef>
-#include <cstdint>
-#include <type_traits>
 #include <utility>
 
-/**
- * Typed CPTROFF (offset) bindings: picks js_register_bound_*_offset_property from the C++ field type.
- * Unscoped enums are bound as JS_PTR_INT when sizeof(enum) == sizeof(int).
- */
+/** Typed CPTROFF (offset) bindings: the JS_PTR_* slot comes from the C++ field type (js_cptr_type_of). */
 namespace js_bound_offset {
 
 template<typename FieldT>
 void bind_offset_field(js_State *J, js_StringNode name, size_t byte_offset) {
-    using T = std::remove_cv_t<FieldT>;
-    if constexpr (std::is_same_v<T, bool>) {
-        js_register_bound_bool_offset_property(J, name, byte_offset);
-    } else if constexpr (std::is_same_v<T, float>) {
-        js_register_bound_float_offset_property(J, name, byte_offset);
-    } else if constexpr (std::is_same_v<T, int8_t> || std::is_same_v<T, int8_t>) {
-        js_register_bound_int8_offset_property(J, name, byte_offset);
-    } else if constexpr (std::is_same_v<T, uint8_t> || std::is_same_v<T, uint8_t>) {
-        js_register_bound_uint8_offset_property(J, name, byte_offset);
-    } else if constexpr (std::is_same_v<T, int16_t> || std::is_same_v<T, int16_t>) {
-        js_register_bound_int16_offset_property(J, name, byte_offset);
-    } else if constexpr (std::is_same_v<T, uint16_t> || std::is_same_v<T, uint16_t>) {
-        js_register_bound_uint16_offset_property(J, name, byte_offset);
-    } else if constexpr (std::is_same_v<T, int> || std::is_same_v<T, unsigned int> || std::is_same_v<T, int32_t> ||
-                         std::is_same_v<T, uint32_t>) {
-        js_register_bound_int_offset_property(J, name, byte_offset);
-    } else if constexpr (std::is_enum_v<T>) {
-        if constexpr (sizeof(T) == sizeof(uint8_t)) {
-            js_register_bound_uint8_offset_property(J, name, byte_offset);
-        } else if constexpr (sizeof(T) == sizeof(uint16_t)) {
-            js_register_bound_uint16_offset_property(J, name, byte_offset);
-        } else if constexpr (sizeof(T) == sizeof(int)) {
-            js_register_bound_int_offset_property(J, name, byte_offset);
-        } else {
-            static_assert(sizeof(T) == 0, "js_bound_offset: enum field must be 1, 2, or 4 bytes for JS binding");
-        }
-    } else if constexpr (std::is_same_v<T, xstring>) {
-        js_register_bound_xstring_offset_property(J, name, byte_offset);
-    } else {
-        static_assert(sizeof(T) == 0, "js_bound_offset: unsupported field type — extend bind_offset_field");
-    }
+    J->bind_offset_property<FieldT>(name, byte_offset);
 }
 
 } // namespace js_bound_offset

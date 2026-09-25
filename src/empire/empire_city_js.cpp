@@ -73,7 +73,7 @@ static void js_push_empire_object(js_State* J, int slot) {
     js_pushobject(J, jsV_newobject(J, JS_COBJECT, g_empire_object_proto));
     js_pushnumber(J, (double)slot);
     js_setproperty(J, -2, js_intern("id"));
-    js_register_cobj_ptr_property(J, full);
+    J->set_cobj_ptr(full);
 }
 
 static void jsB_new_EmpireObject(js_State* J) {
@@ -115,7 +115,7 @@ static void js_push_empire_city_object(js_State* J, int id, js_Object* proto) {
     js_pushobject(J, jsV_newobject(J, JS_COBJECT, proto));
     js_pushnumber(J, (double)id);
     js_setproperty(J, -2, js_intern("id"));
-    js_register_cobj_ptr_property(J, full);
+    J->set_cobj_ptr(full);
 }
 
 static void js_push_empire_city(js_State* J, int id, js_Object* proto) {
@@ -127,7 +127,7 @@ static void js_push_empire_city(js_State* J, int id, js_Object* proto) {
     js_pushobject(J, jsV_newobject(J, JS_COBJECT, proto));
     js_pushnumber(J, (double)id);
     js_setproperty(J, -2, js_intern("id"));
-    js_register_cobj_ptr_property(J, cobj_slot);
+    J->set_cobj_ptr(cobj_slot);
 }
 
 static void jsB_new_EmpireCityObject(js_State* J) {
@@ -269,7 +269,7 @@ static void js_push_empire_trader(js_State* J, int index) {
     js_pushobject(J, jsV_newobject(J, JS_COBJECT, g_empire_trader_proto));
     js_pushnumber(J, (double)index);
     js_setproperty(J, -2, js_intern("id"));
-    js_register_cobj_ptr_property(J, t);
+    J->set_cobj_ptr(t);
 }
 
 static void jsB_new_EmpireTrader(js_State* J) {
@@ -325,7 +325,7 @@ static void js_push_invasion_warning(js_State* J, int index) {
     js_pushobject(J, jsV_newobject(J, JS_COBJECT, g_invasion_warning_proto));
     js_pushnumber(J, (double)index);
     js_setproperty(J, -2, js_intern("id"));
-    js_register_cobj_ptr_property(J, w);
+    J->set_cobj_ptr(w);
 }
 
 static void jsB_new_InvasionWarning(js_State* J) {

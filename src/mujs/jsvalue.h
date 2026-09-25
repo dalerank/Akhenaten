@@ -49,17 +49,6 @@ enum js_Class {
     JS_CPTROFF, /* (char*)receiver->cobj_ptr + off; read yields undefined if cobj_ptr null; write no-op */
 };
 
-enum js_CPtrType {
-    JS_PTR_INT,
-    JS_PTR_BOOL,
-    JS_PTR_FLOAT,
-    JS_PTR_INT8,
-    JS_PTR_UINT8,
-    JS_PTR_UINT16,
-    JS_PTR_INT16,
-    JS_PTR_XSTRING
-};
-
 /*
     Short strings abuse the js_Value struct. By putting the type tag in the
     last byte, and using 0 as the tag for short strings, we can use the

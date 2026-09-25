@@ -51,7 +51,7 @@ static void js_push_sound_channel(js_State *J, int index) {
     js_pushobject(J, jsV_newobject(J, JS_COBJECT, g_sound_channel_proto));
     js_pushnumber(J, static_cast<double>(index));
     js_setproperty(J, -2, js_intern("index"));
-    js_register_cobj_ptr_property(J, &channels[index]);
+    J->set_cobj_ptr(&channels[index]);
 }
 
 static void sound_channel_proto_filename(js_State *J) {

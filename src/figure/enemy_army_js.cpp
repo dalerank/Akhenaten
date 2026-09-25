@@ -56,7 +56,7 @@ static void js_push_enemy_army(js_State *J, int invasion_id) {
     js_pushobject(J, jsV_newobject(J, JS_COBJECT, g_enemy_army_proto));
     js_pushnumber(J, (double)invasion_id);
     js_setproperty(J, -2, js_intern("invasion_id"));
-    js_register_cobj_ptr_property(J, army);
+    J->set_cobj_ptr(army);
 }
 
 static void enemy_army_proto_home(js_State *J) {

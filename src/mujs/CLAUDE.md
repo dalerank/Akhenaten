@@ -68,7 +68,7 @@ are all node pointers, so compare with `js_stringnode_cmp` and read with
 | Type | Backing | Purpose |
 |------|---------|---------|
 | `JS_CVEC2I` | `u.vec2`, `jsvec2i.cpp` | Integer 2D point with virtual `x`/`y` slots |
-| `JS_CPTR` | raw native pointer | Script reads/writes a bound `int`/`int8`/`bool`/`float` in place (`js_register_bound_*`) |
+| `JS_CPTR` | raw native pointer | Script reads/writes a bound native field in place (`js_State::bind_global` / `bind_property`, slot from `js_cptr_type_of`) |
 | `JS_CPTROFF` | `(char*)receiver->cobj_ptr + off` | Field of a native struct; reads yield `undefined` and writes no-op when `cobj_ptr` is null |
 
 ### Frame-zone arena

@@ -1,62 +1,13 @@
 #pragma once
 
-#include "mujs/mujs.h"
+#include "mujs/jsi.h"
 
-#include <cstddef>
-#include <cstdint>
-#include <type_traits>
-
-/** Binds &(obj).field to a JS CPTR property; anything else selects the deleted overload below. */
-inline void ank_global_obj_bind_field(js_State *J, js_StringNode name, int *ptr) {
-    js_register_bound_int_property(J, name, ptr);
-}
-
-inline void ank_global_obj_bind_field(js_State *J, js_StringNode name, bool *ptr) {
-    js_register_bound_bool_property(J, name, ptr);
-}
-
-inline void ank_global_obj_bind_field(js_State *J, js_StringNode name, float *ptr) {
-    js_register_bound_float_property(J, name, ptr);
-}
-
-inline void ank_global_obj_bind_field(js_State *J, js_StringNode name, int8_t *ptr) {
-    js_register_bound_int8_property(J, name, ptr);
-}
-
-inline void ank_global_obj_bind_field(js_State *J, js_StringNode name, uint8_t *ptr) {
-    js_register_bound_uint8_property(J, name, ptr);
-}
-
-inline void ank_global_obj_bind_field(js_State *J, js_StringNode name, uint16_t *ptr) {
-    js_register_bound_uint16_property(J, name, ptr);
-}
-
-inline void ank_global_obj_bind_field(js_State *J, js_StringNode name, int16_t *ptr) {
-    js_register_bound_int16_property(J, name, ptr);
-}
-
-inline void ank_global_obj_bind_field(js_State *J, js_StringNode name, xstring *ptr) {
-    js_register_bound_xstring_property(J, name, ptr);
-}
-
+/** Binds &(obj).field to a JS CPTR property; the JS_PTR_* slot comes from the field type (js_cptr_type_of).
+ *  Types it rejects, or that need a different slot, get their own non-template overload. */
 template<typename T>
-inline typename std::enable_if<std::is_enum<T>::value, void>::type
-ank_global_obj_bind_field(js_State *J, js_StringNode name, T *ptr) {
-    using U = std::underlying_type_t<T>;
-    if constexpr (sizeof(T) == sizeof(uint8_t)) {
-        js_register_bound_uint8_property(J, name, reinterpret_cast<uint8_t *>(ptr));
-    } else if constexpr (sizeof(T) == sizeof(uint16_t)) {
-        js_register_bound_uint16_property(J, name, reinterpret_cast<uint16_t *>(ptr));
-    } else if constexpr (sizeof(T) == sizeof(int)) {
-        js_register_bound_int_property(J, name, reinterpret_cast<int *>(ptr));
-    } else {
-        static_assert(sizeof(T) == 0, "ank_global_obj_bind_field: enum must be 1, 2, or 4 bytes");
-    }
+inline void ank_global_obj_bind_field(js_State *J, js_StringNode name, T *ptr) {
+    J->bind_property(name, ptr);
 }
-
-template<typename T>
-inline typename std::enable_if<!std::is_enum<T>::value, void>::type
-ank_global_obj_bind_field(js_State *J, js_StringNode name, T *ptr) = delete;
 
 struct vec2i;
 class tile2i;

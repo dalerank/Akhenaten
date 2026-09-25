@@ -23,8 +23,8 @@ static void mujs_self_test_register_cptr_holder(js_State *J)
     mujs_self_test_u8_a = 0;
     mujs_self_test_u8_b = 0;
     J->newobject();
-    js_register_bound_uint8_property(J, js_intern("u8_a"), &mujs_self_test_u8_a);
-    js_register_bound_uint8_property(J, js_intern("u8_b"), &mujs_self_test_u8_b);
+    J->bind_property(js_intern("u8_a"), &mujs_self_test_u8_a);
+    J->bind_property(js_intern("u8_b"), &mujs_self_test_u8_b);
     js_setglobal(J, "__mujs_self_test_cptr");
 }
 

@@ -6,7 +6,7 @@
 #include "js/js_global_object.h"
 
 void ank_global_obj_bind_field(js_State *J, js_StringNode name, e_rating_change *ptr) {
-    js_register_bound_uint8_property(J, name, reinterpret_cast<uint8_t *>(ptr));
+    J->bind_property(name, reinterpret_cast<uint8_t *>(ptr));
 }
 
 ANK_GLOBAL_OBJECT(g_city.kingdome, __city_kingdome,

@@ -187,170 +187,33 @@ void* js_getcontext(js_State* J) {
     return J->uctx;
 }
 
-void js_register_bound_int(js_State* J, const js_StringNode name, int* ptr) {
-    js_Object* obj = jsV_newobject(J, JS_CPTR, NULL);
+void js_State::bind_global(const js_StringNode name, void *ptr, js_CPtrType ptype) {
+    js_Object *obj = jsV_newobject(this, JS_CPTR, NULL);
     obj->u.p.ptr = ptr;
-    obj->u.p.ptype = JS_PTR_INT;
-    js_pushobject(J, obj);
-    js_defglobal(J, name, 0);
+    obj->u.p.ptype = ptype;
+    js_pushobject(this, obj);
+    js_defglobal(this, name, 0);
 }
 
-void js_register_bound_bool(js_State* J, const js_StringNode name, void* ptr) {
-    js_Object* obj = jsV_newobject(J, JS_CPTR, NULL);
+void js_State::bind_property(const js_StringNode name, void *ptr, js_CPtrType ptype) {
+    js_Object *obj = jsV_newobject(this, JS_CPTR, NULL);
     obj->u.p.ptr = ptr;
-    obj->u.p.ptype = JS_PTR_BOOL;
-    js_pushobject(J, obj);
-    js_defglobal(J, name, 0);
+    obj->u.p.ptype = ptype;
+    js_pushobject(this, obj);
+    js_setproperty(this, -2, name);
 }
 
-void js_register_bound_float(js_State* J, const js_StringNode name, float* ptr) {
-    js_Object* obj = jsV_newobject(J, JS_CPTR, NULL);
-    obj->u.p.ptr = ptr;
-    obj->u.p.ptype = JS_PTR_FLOAT;
-    js_pushobject(J, obj);
-    js_defglobal(J, name, 0);
-}
-
-void js_register_bound_int8(js_State *J, const js_StringNode name, int8_t *ptr) {
-    js_Object *obj = jsV_newobject(J, JS_CPTR, NULL);
-    obj->u.p.ptr = ptr;
-    obj->u.p.ptype = JS_PTR_INT8;
-    js_pushobject(J, obj);
-    js_defglobal(J, name, 0);
-}
-
-void js_register_bound_uint8(js_State *J, const js_StringNode name, uint8_t *ptr) {
-    js_Object *obj = jsV_newobject(J, JS_CPTR, NULL);
-    obj->u.p.ptr = ptr;
-    obj->u.p.ptype = JS_PTR_UINT8;
-    js_pushobject(J, obj);
-    js_defglobal(J, name, 0);
-}
-
-void js_register_bound_uint16(js_State *J, const js_StringNode name, uint16_t *ptr) {
-    js_Object *obj = jsV_newobject(J, JS_CPTR, NULL);
-    obj->u.p.ptr = ptr;
-    obj->u.p.ptype = JS_PTR_UINT16;
-    js_pushobject(J, obj);
-    js_defglobal(J, name, 0);
-}
-
-void js_register_bound_int16(js_State *J, const js_StringNode name, int16_t *ptr) {
-    js_Object *obj = jsV_newobject(J, JS_CPTR, NULL);
-    obj->u.p.ptr = ptr;
-    obj->u.p.ptype = JS_PTR_INT16;
-    js_pushobject(J, obj);
-    js_defglobal(J, name, 0);
-}
-
-void js_register_bound_int_property(js_State *J, const js_StringNode name, int *ptr) {
-    js_Object *obj = jsV_newobject(J, JS_CPTR, NULL);
-    obj->u.p.ptr = ptr;
-    obj->u.p.ptype = JS_PTR_INT;
-    js_pushobject(J, obj);
-    js_setproperty(J, -2, name);
-}
-
-void js_register_bound_bool_property(js_State *J, const js_StringNode name, void *ptr) {
-    js_Object *obj = jsV_newobject(J, JS_CPTR, NULL);
-    obj->u.p.ptr = ptr;
-    obj->u.p.ptype = JS_PTR_BOOL;
-    js_pushobject(J, obj);
-    js_setproperty(J, -2, name);
-}
-
-void js_register_bound_float_property(js_State *J, const js_StringNode name, float *ptr) {
-    js_Object *obj = jsV_newobject(J, JS_CPTR, NULL);
-    obj->u.p.ptr = ptr;
-    obj->u.p.ptype = JS_PTR_FLOAT;
-    js_pushobject(J, obj);
-    js_setproperty(J, -2, name);
-}
-
-void js_register_bound_int8_property(js_State *J, const js_StringNode name, int8_t *ptr) {
-    js_Object *obj = jsV_newobject(J, JS_CPTR, NULL);
-    obj->u.p.ptr = ptr;
-    obj->u.p.ptype = JS_PTR_INT8;
-    js_pushobject(J, obj);
-    js_setproperty(J, -2, name);
-}
-
-void js_register_bound_uint8_property(js_State *J, const js_StringNode name, uint8_t *ptr) {
-    js_Object *obj = jsV_newobject(J, JS_CPTR, NULL);
-    obj->u.p.ptr = ptr;
-    obj->u.p.ptype = JS_PTR_UINT8;
-    js_pushobject(J, obj);
-    js_setproperty(J, -2, name);
-}
-
-void js_register_bound_uint16_property(js_State *J, const js_StringNode name, uint16_t *ptr) {
-    js_Object *obj = jsV_newobject(J, JS_CPTR, NULL);
-    obj->u.p.ptr = ptr;
-    obj->u.p.ptype = JS_PTR_UINT16;
-    js_pushobject(J, obj);
-    js_setproperty(J, -2, name);
-}
-
-void js_register_bound_int16_property(js_State *J, const js_StringNode name, int16_t *ptr) {
-    js_Object *obj = jsV_newobject(J, JS_CPTR, NULL);
-    obj->u.p.ptr = ptr;
-    obj->u.p.ptype = JS_PTR_INT16;
-    js_pushobject(J, obj);
-    js_setproperty(J, -2, name);
-}
-
-void js_register_bound_xstring_property(js_State *J, const js_StringNode name, xstring *ptr) {
-    js_Object *obj = jsV_newobject(J, JS_CPTR, NULL);
-    obj->u.p.ptr = ptr;
-    obj->u.p.ptype = JS_PTR_XSTRING;
-    js_pushobject(J, obj);
-    js_setproperty(J, -2, name);
-}
-
-void js_register_cobj_ptr_property(js_State *J, void *cpp_object) {
+void js_State::set_cobj_ptr(void *cpp_object) {
     /* Receiver is stack top: e.g. pushobject, push value, setproperty(-2) pops value — instance remains at -1. */
-    js_Object *o = J->toobject(-1);
-    o->cobj_ptr = cpp_object;
+    toobject(-1)->cobj_ptr = cpp_object;
 }
 
-static void js_register_bound_offset_property_impl(js_State *J, const js_StringNode name, size_t byte_offset, js_CPtrType ptype) {
-    js_Object *obj = jsV_newobject(J, JS_CPTROFF, NULL);
+void js_State::bind_offset_property(const js_StringNode name, size_t byte_offset, js_CPtrType ptype) {
+    js_Object *obj = jsV_newobject(this, JS_CPTROFF, NULL);
     obj->u.poff.off = byte_offset;
     obj->u.poff.ptype = ptype;
-    js_pushobject(J, obj);
-    js_setproperty(J, -2, name);
-}
-
-void js_register_bound_int_offset_property(js_State *J, const js_StringNode name, size_t byte_offset) {
-    js_register_bound_offset_property_impl(J, name, byte_offset, JS_PTR_INT);
-}
-
-void js_register_bound_bool_offset_property(js_State *J, const js_StringNode name, size_t byte_offset) {
-    js_register_bound_offset_property_impl(J, name, byte_offset, JS_PTR_BOOL);
-}
-
-void js_register_bound_float_offset_property(js_State *J, const js_StringNode name, size_t byte_offset) {
-    js_register_bound_offset_property_impl(J, name, byte_offset, JS_PTR_FLOAT);
-}
-
-void js_register_bound_int8_offset_property(js_State *J, const js_StringNode name, size_t byte_offset) {
-    js_register_bound_offset_property_impl(J, name, byte_offset, JS_PTR_INT8);
-}
-
-void js_register_bound_uint8_offset_property(js_State *J, const js_StringNode name, size_t byte_offset) {
-    js_register_bound_offset_property_impl(J, name, byte_offset, JS_PTR_UINT8);
-}
-
-void js_register_bound_uint16_offset_property(js_State *J, const js_StringNode name, size_t byte_offset) {
-    js_register_bound_offset_property_impl(J, name, byte_offset, JS_PTR_UINT16);
-}
-
-void js_register_bound_int16_offset_property(js_State *J, const js_StringNode name, size_t byte_offset) {
-    js_register_bound_offset_property_impl(J, name, byte_offset, JS_PTR_INT16);
-}
-
-void js_register_bound_xstring_offset_property(js_State *J, const js_StringNode name, size_t byte_offset) {
-    js_register_bound_offset_property_impl(J, name, byte_offset, JS_PTR_XSTRING);
+    js_pushobject(this, obj);
+    js_setproperty(this, -2, name);
 }
 
 void js_set_framealloc(js_State* J, js_Alloc frame_alloc, void* frame_actx) {

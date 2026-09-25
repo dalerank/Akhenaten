@@ -6,7 +6,7 @@
 #include "js/js_global_object.h"
 
 void ank_global_obj_bind_field(js_State *J, js_StringNode name, city_finance_t::treasury_t *ptr) {
-    js_register_bound_int_property(J, name, &ptr->value);
+    J->bind_property(name, &ptr->value);
 }
 
 ANK_GLOBAL_OBJECT(g_city.finance, __city_finance,

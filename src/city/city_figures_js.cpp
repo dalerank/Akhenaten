@@ -229,7 +229,7 @@ static void js_push_figure(js_State *J, int id) {
     js_pushobject(J, jsV_newobject(J, JS_COBJECT, g_figure_proto));
     js_pushnumber(J, (double)id);
     js_setproperty(J, -2, js_intern("id"));
-    js_register_cobj_ptr_property(J, f);
+    J->set_cobj_ptr(f);
 }
 
 static void jsB_new_Figure(js_State *J) {

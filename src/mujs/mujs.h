@@ -48,38 +48,17 @@ typedef int (*js_Emit)(js_State *J, const char *name);
 typedef void (*js_DebugHook)(js_State *J, const char *file, int line, void *udata);
 void js_setdebughook(js_State *J, js_DebugHook hook, void *udata);
 
-/* Bound globals: register C pointers so they appear in global scope (like C functions).
-   Script reads/writes the name and MuJS reads/writes *ptr. For bool use void* (bool* in C++, int* in C). */
-void js_register_bound_int(js_State *J, const js_StringNode name, int *ptr);
-void js_register_bound_bool(js_State* J, const js_StringNode name, void* ptr);
-void js_register_bound_float(js_State* J, const js_StringNode name, float* ptr);
-void js_register_bound_int8(js_State *J, const js_StringNode name, int8_t *ptr);
-void js_register_bound_uint8(js_State *J, const js_StringNode name, uint8_t *ptr);
-void js_register_bound_uint16(js_State *J, const js_StringNode name, uint16_t *ptr);
-void js_register_bound_int16(js_State *J, const js_StringNode name, int16_t *ptr);
-
-/** Same as js_register_bound_* but attach CPTR as a property of the object left on stack at -2 (value pushed on -1). */
-void js_register_bound_int_property(js_State *J, const js_StringNode name, int *ptr);
-void js_register_bound_bool_property(js_State *J, const js_StringNode name, void *ptr);
-void js_register_bound_float_property(js_State *J, const js_StringNode name, float *ptr);
-void js_register_bound_int8_property(js_State *J, const js_StringNode name, int8_t *ptr);
-void js_register_bound_uint8_property(js_State *J, const js_StringNode name, uint8_t *ptr);
-void js_register_bound_uint16_property(js_State *J, const js_StringNode name, uint16_t *ptr);
-void js_register_bound_int16_property(js_State *J, const js_StringNode name, int16_t *ptr);
-
-class xstring;
-void js_register_bound_xstring_property(js_State *J, const js_StringNode name, xstring *ptr);
-
-/** Stack: native object at -1; sets its cobj_ptr for JS_CPTROFF prototype fields. */
-void js_register_cobj_ptr_property(js_State *J, void *cpp_object);
-void js_register_bound_int_offset_property(js_State *J, const js_StringNode name, size_t byte_offset);
-void js_register_bound_bool_offset_property(js_State *J, const js_StringNode name, size_t byte_offset);
-void js_register_bound_float_offset_property(js_State *J, const js_StringNode name, size_t byte_offset);
-void js_register_bound_int8_offset_property(js_State *J, const js_StringNode name, size_t byte_offset);
-void js_register_bound_uint8_offset_property(js_State *J, const js_StringNode name, size_t byte_offset);
-void js_register_bound_uint16_offset_property(js_State *J, const js_StringNode name, size_t byte_offset);
-void js_register_bound_int16_offset_property(js_State *J, const js_StringNode name, size_t byte_offset);
-void js_register_bound_xstring_offset_property(js_State *J, const js_StringNode name, size_t byte_offset);
+/* Native storage type behind a JS_CPTR / JS_CPTROFF binding (see js_State::bind_*). */
+enum js_CPtrType {
+    JS_PTR_INT,
+    JS_PTR_BOOL,
+    JS_PTR_FLOAT,
+    JS_PTR_INT8,
+    JS_PTR_UINT8,
+    JS_PTR_UINT16,
+    JS_PTR_INT16,
+    JS_PTR_XSTRING
+};
 
 /* Basic functions */
 js_State *js_newstate(js_Alloc alloc, void *actx, int flags);
