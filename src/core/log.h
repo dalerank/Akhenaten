@@ -41,6 +41,9 @@ void remove_sink(sink_handle handle);
 // Last warn/error/critical lines (newest last), for bug reports.
 xstring recent_errors(int max_lines = 40);
 
+// Last info+ lines written this session (newest last) — session log tail for bug reports.
+xstring recent_log_tail(int max_lines = 80);
+
 namespace detail {
 
 void critical_v(pcstr format, ...);

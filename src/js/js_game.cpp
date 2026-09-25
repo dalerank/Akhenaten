@@ -530,6 +530,7 @@ int __game_session_last_loaded_kind() { return (int)game.session.last_loaded; } 
 xstring __game_session_last_loaded_mission() { return game.session.last_loaded_mission.empty() ? "" : game.session.last_loaded_mission; } ANK_FUNCTION(__game_session_last_loaded_mission)
 xstring __game_version() { return get_version(); } ANK_FUNCTION(__game_version)
 xstring __game_recent_log_errors(int max_lines) { return logs::recent_errors(max_lines); } ANK_FUNCTION_1(__game_recent_log_errors)
+xstring __game_recent_log_tail(int max_lines) { return logs::recent_log_tail(max_lines); } ANK_FUNCTION_1(__game_recent_log_tail)
 int __game_io_file_schema_version() { return g_chunk_io.get_file_version(); } ANK_FUNCTION(__game_io_file_schema_version)
 bool __game_load_savegame(pcstr filename) { return GamestateIO::load_savegame(filename); } ANK_FUNCTION_1(__game_load_savegame)
 bool __game_write_savegame(pcstr filename_short) { return GamestateIO::write_savegame(filename_short); } ANK_FUNCTION_1(__game_write_savegame)

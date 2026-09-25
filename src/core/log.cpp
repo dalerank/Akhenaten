@@ -261,29 +261,39 @@ public:
     }
 
     xstring recent_errors(int max_lines) const {
-        if (max_lines <= 0 || recent_errors_count_ == 0) {
+        return format_ring_(recent_errors_, recent_errors_next_, recent_errors_count_, max_lines);
+    }
+
+    xstring recent_log_tail(int max_lines) const {
+        return format_ring_(recent_log_, recent_log_next_, recent_log_count_, max_lines);
+    }
+
+private:
+    static constexpr size_t k_recent_cap = 64;
+    static constexpr size_t k_recent_log_cap = 128;
+    static constexpr size_t k_recent_line_max = 512;
+    static constexpr size_t k_console_buf_flush = 8 * 1024;
+    static constexpr size_t k_stdio_buf_size = 64 * 1024;
+    static constexpr Uint32 k_flush_interval_ms = 1000;
+    static constexpr size_t k_max_sinks = 8;
+
+    template <size_t Cap>
+    static xstring format_ring_(const std::array<std::string, Cap> &ring, size_t next, size_t count, int max_lines) {
+        if (max_lines <= 0 || count == 0) {
             return xstring();
         }
-        const size_t n = (std::min)((size_t)max_lines, recent_errors_count_);
-        size_t start = (recent_errors_next_ + k_recent_cap - n) % k_recent_cap;
+        const size_t n = (std::min)((size_t)max_lines, count);
+        size_t start = (next + Cap - n) % Cap;
         std::string out;
         out.reserve(n * 96);
         for (size_t i = 0; i < n; ++i) {
             if (i) {
                 out += '\n';
             }
-            out += recent_errors_[(start + i) % k_recent_cap];
+            out += ring[(start + i) % Cap];
         }
         return xstring(out.c_str());
     }
-
-private:
-    static constexpr size_t k_recent_cap = 64;
-    static constexpr size_t k_recent_line_max = 512;
-    static constexpr size_t k_console_buf_flush = 8 * 1024;
-    static constexpr size_t k_stdio_buf_size = 64 * 1024;
-    static constexpr Uint32 k_flush_interval_ms = 1000;
-    static constexpr size_t k_max_sinks = 8;
 
     Logger()
       : active_path_(default_filename) {
@@ -331,8 +341,11 @@ private:
     void handle_message(SDL_LogPriority priority, pcstr message) {
         pcstr prefix = detail::prefix_of(priority);
 
+        if (priority >= SDL_LOG_PRIORITY_INFO) {
+            push_recent_line_(recent_log_, recent_log_next_, recent_log_count_, prefix, message);
+        }
         if (priority >= SDL_LOG_PRIORITY_WARN) {
-            push_recent_error_(prefix, message);
+            push_recent_line_(recent_errors_, recent_errors_next_, recent_errors_count_, prefix, message);
         }
 
         for (const auto &s : sinks_) {
@@ -346,7 +359,12 @@ private:
         }
     }
 
-    void push_recent_error_(pcstr prefix, pcstr message) {
+    template <size_t Cap>
+    void push_recent_line_(std::array<std::string, Cap> &ring,
+                           size_t &next,
+                           size_t &count,
+                           pcstr prefix,
+                           pcstr message) {
         std::string line;
         line.reserve(k_recent_line_max);
         if (prefix && *prefix) {
@@ -358,10 +376,10 @@ private:
         if (line.size() > k_recent_line_max) {
             line.resize(k_recent_line_max);
         }
-        recent_errors_[recent_errors_next_] = std::move(line);
-        recent_errors_next_ = (recent_errors_next_ + 1) % k_recent_cap;
-        if (recent_errors_count_ < k_recent_cap) {
-            ++recent_errors_count_;
+        ring[next] = std::move(line);
+        next = (next + 1) % Cap;
+        if (count < Cap) {
+            ++count;
         }
     }
 
@@ -388,6 +406,9 @@ private:
     std::array<std::string, k_recent_cap> recent_errors_{};
     size_t recent_errors_count_ = 0;
     size_t recent_errors_next_ = 0;
+    std::array<std::string, k_recent_log_cap> recent_log_{};
+    size_t recent_log_count_ = 0;
+    size_t recent_log_next_ = 0;
     std::string console_out_buf_;
     Uint32 last_flush_ms_ = 0;
     bool defaults_registered_ = false;
@@ -429,6 +450,10 @@ void remove_sink(sink_handle handle) {
 
 xstring recent_errors(int max_lines) {
     return Logger::instance().recent_errors(max_lines);
+}
+
+xstring recent_log_tail(int max_lines) {
+    return Logger::instance().recent_log_tail(max_lines);
 }
 
 namespace detail {

@@ -15,12 +15,17 @@ function report_bug_diagnostics() {
     } else {
         lines.push("Session: menu")
     }
-    var log = __game_recent_log_errors(40)
-    if (log && log.length > 0) {
-        lines.push("")
-        lines.push("Recent errors:")
-        lines.push(log)
-    }
+
+    lines.push("")
+    lines.push("Recent errors:")
+    var errors = __game_recent_log_errors(40)
+    lines.push(errors && errors.length > 0 ? errors : "(none)")
+
+    lines.push("")
+    lines.push("Recent log:")
+    var log = __game_recent_log_tail(80)
+    lines.push(log && log.length > 0 ? log : "(none)")
+
     return lines.join("\n")
 }
 
