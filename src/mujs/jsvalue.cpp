@@ -65,7 +65,7 @@ static int jsV_toString(js_State* J, js_Object* obj) {
     js_pushobject(J, obj);
     J->getproperty(-1, property_toString);
     if (J->iscallable(-1)) {
-        js_rot2(J);
+        J->rot2();
         J->call(0);
         if (J->isprimitive(-1))
             return 1;
@@ -81,7 +81,7 @@ static int jsV_valueOf(js_State* J, js_Object* obj) {
     js_pushobject(J, obj);
     J->getproperty(-1, property_valueOf);
     if (J->iscallable(-1)) {
-        js_rot2(J);
+        J->rot2();
         J->call(0);
         if (J->isprimitive(-1))
             return 1;
@@ -575,7 +575,7 @@ void js_State::newcconstructor(js_CFunction cfun, js_CFunction ccon, const js_St
     {
         js_pushnumber(this, length);
         js_defproperty(this, -2, property_length, JS_READONLY | JS_DONTENUM | JS_DONTCONF);
-        js_rot2(this);     /* obj proto */
+        this->rot2();     /* obj proto */
         js_copy(this, -2); /* obj proto obj */
         js_defproperty(this, -2, property_constructor, JS_DONTENUM);
         js_defproperty(this, -2, property_prototype, JS_READONLY | JS_DONTENUM | JS_DONTCONF);

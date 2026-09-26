@@ -453,7 +453,7 @@ struct js_function_traits<R(C:: *)(Args...) const> : js_function_traits<R(C:: *)
         js_pop(J, 1);                                                                                               \
         if (already_registered) return;                                                                             \
         J->newobject();                        /* stack: [obj]      */                                             \
-        js_dup(J);                              /* stack: [obj, obj] */                                             \
+        J->dup();                               /* stack: [obj, obj] */                                             \
         js_defglobal(J, js_intern(#JsName), 0); /* stores top, pops  → stack: [obj] */                              \
         ANK_GLOBAL_OBJ_PASTE(ContainerExpr, __VA_ARGS__);  /* attaches CPTR props to [obj] */                       \
         js_pop(J, 1);                           /* stack: []         */                                             \

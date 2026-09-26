@@ -74,15 +74,6 @@ int js_runeat(js_State *J, const char *s, int i);
 int js_utfptrtoidx(const char *s, const char *p);
 const char *js_utfidxtoptr(const char *s, int i);
 
-void js_dup(js_State *J);
-void js_rot2(js_State *J);
-void js_rot3(js_State *J);
-void js_rot4(js_State *J);
-void js_rot2pop1(js_State *J);
-void js_rot3pop2(js_State *J);
-void js_dup1rot3(js_State *J);
-void js_dup1rot4(js_State *J);
-
 void js_RegExp_prototype_exec(js_State *J, js_Regexp *re, const char *text);
 
 void js_trap(js_State *J, int pc); /* dump stack and environment to stdout */
@@ -320,7 +311,16 @@ struct js_State
 	void r_run(js_Function *F);
 	void construct(int n);
 
+	void dup();
 	void dup2();
+	void rot(int n);
+	void rot2();
+	void rot3();
+	void rot4();
+	void rot2pop1();
+	void rot3pop2();
+	void remove(int idx);
+	void replace(int idx);
     void pushliteral(js_StringNode val);
 
 	/* JS_CPTR bindings: the script reads and writes *ptr in place.

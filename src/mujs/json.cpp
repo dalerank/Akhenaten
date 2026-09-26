@@ -216,7 +216,7 @@ static int fmtvalue(js_State *J, js_Buffer **sb, const char *key, const char *ga
 				js_copy(J, -2);
 				J->pushliteral(js_intern(key));
 				J->call(1);
-				js_rot2pop1(J);
+				J->rot2pop1();
 			} else {
 				js_pop(J, 1);
 			}

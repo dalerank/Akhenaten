@@ -418,24 +418,20 @@ void js_pop(js_State *J, int n) {
     }
 }
 
-void js_remove(js_State *J, int idx) {
-    idx = idx < 0 ? TOP + idx : BOT + idx;
-    if (idx < BOT || idx >= TOP)
-        js_error(J, "stack error!");
-    for (; idx < TOP - 1; ++idx)
-        STACK[idx] = STACK[idx + 1];
-    --TOP;
+void js_State::remove(int idx) {
+    idx = idx < 0 ? top + idx : bot + idx;
+    if (idx < bot || idx >= top)
+        js_error(this, "stack error!");
+    for (; idx < top - 1; ++idx)
+        stack[idx] = stack[idx + 1];
+    --top;
 }
 
-void js_insert(js_State *J, int idx) {
-    js_error(J, "not implemented yet");
-}
-
-void js_replace(js_State *J, int idx) {
-    idx = idx < 0 ? TOP + idx : BOT + idx;
-    if (idx < BOT || idx >= TOP)
-        js_error(J, "stack error!");
-    STACK[idx] = STACK[--TOP];
+void js_State::replace(int idx) {
+    idx = idx < 0 ? top + idx : bot + idx;
+    if (idx < bot || idx >= top)
+        js_error(this, "stack error!");
+    stack[idx] = stack[--top];
 }
 
 void js_copy(js_State *J, int idx) {
@@ -444,10 +440,10 @@ void js_copy(js_State *J, int idx) {
     ++TOP;
 }
 
-void js_dup(js_State *J) {
-    CHECKSTACK(1);
-    STACK[TOP] = STACK[TOP - 1];
-    ++TOP;
+void js_State::dup() {
+    JCHECKSTACK(1);
+    stack[top] = stack[top - 1];
+    ++top;
 }
 
 void js_State::dup2() {
@@ -457,48 +453,48 @@ void js_State::dup2() {
     top += 2;
 }
 
-void js_rot2(js_State *J) {
+void js_State::rot2() {
     /* A B -> B A */
-    js_Value tmp = STACK[TOP - 1];	/* A B (B) */
-    STACK[TOP - 1] = STACK[TOP - 2];	/* A A */
-    STACK[TOP - 2] = tmp;		/* B A */
+    js_Value tmp = stack[top - 1];	/* A B (B) */
+    stack[top - 1] = stack[top - 2];	/* A A */
+    stack[top - 2] = tmp;		/* B A */
 }
 
-void js_rot3(js_State *J) {
+void js_State::rot3() {
     /* A B C -> C A B */
-    js_Value tmp = STACK[TOP - 1];	/* A B C (C) */
-    STACK[TOP - 1] = STACK[TOP - 2];	/* A B B */
-    STACK[TOP - 2] = STACK[TOP - 3];	/* A A B */
-    STACK[TOP - 3] = tmp;		/* C A B */
+    js_Value tmp = stack[top - 1];	/* A B C (C) */
+    stack[top - 1] = stack[top - 2];	/* A B B */
+    stack[top - 2] = stack[top - 3];	/* A A B */
+    stack[top - 3] = tmp;		/* C A B */
 }
 
-void js_rot4(js_State *J) {
+void js_State::rot4() {
     /* A B C D -> D A B C */
-    js_Value tmp = STACK[TOP - 1];	/* A B C D (D) */
-    STACK[TOP - 1] = STACK[TOP - 2];	/* A B C C */
-    STACK[TOP - 2] = STACK[TOP - 3];	/* A B B C */
-    STACK[TOP - 3] = STACK[TOP - 4];	/* A A B C */
-    STACK[TOP - 4] = tmp;		/* D A B C */
+    js_Value tmp = stack[top - 1];	/* A B C D (D) */
+    stack[top - 1] = stack[top - 2];	/* A B C C */
+    stack[top - 2] = stack[top - 3];	/* A B B C */
+    stack[top - 3] = stack[top - 4];	/* A A B C */
+    stack[top - 4] = tmp;		/* D A B C */
 }
 
-void js_rot2pop1(js_State *J) {
+void js_State::rot2pop1() {
     /* A B -> B */
-    STACK[TOP - 2] = STACK[TOP - 1];
-    --TOP;
+    stack[top - 2] = stack[top - 1];
+    --top;
 }
 
-void js_rot3pop2(js_State *J) {
+void js_State::rot3pop2() {
     /* A B C -> C */
-    STACK[TOP - 3] = STACK[TOP - 1];
-    TOP -= 2;
+    stack[top - 3] = stack[top - 1];
+    top -= 2;
 }
 
-void js_rot(js_State *J, int n) {
+void js_State::rot(int n) {
     int i;
-    js_Value tmp = STACK[TOP - 1];
+    js_Value tmp = stack[top - 1];
     for (i = 1; i < n; ++i)
-        STACK[TOP - i] = STACK[TOP - i - 1];
-    STACK[TOP - i] = tmp;
+        stack[top - i] = stack[top - i - 1];
+    stack[top - i] = tmp;
 }
 
 /* Property access that takes care of attributes and getters/setters */
@@ -1386,7 +1382,7 @@ void js_State::construct(int n) {
         int savebot = bot;
         js_pushnull(J);
         if (n > 0) {
-            js_rot(J, n + 1);
+            J->rot(n + 1);
         }
         bot = top - n - 1;
 
@@ -1407,7 +1403,7 @@ void js_State::construct(int n) {
     newobj = jsV_newobject(J, JS_COBJECT, prototype);
     js_pushobject(J, newobj);
     if (n > 0)
-        js_rot(J, n + 1);
+        J->rot(n + 1);
 
     /* call the function */
     call(n);
@@ -1424,7 +1420,7 @@ void js_eval(js_State *J) {
         return;
     }
     js_loadeval(J, "(eval)", js_strnode_cstr(js_tostring(J, -1)));
-    js_rot2pop1(J);
+    J->rot2pop1();
     js_copy(J, 0); /* copy 'this' */
     J->call(0);
 }
@@ -1592,11 +1588,11 @@ void js_State::r_run(js_Function *F) {
         js_OpCode opcode = (js_OpCode)(*pc++);
         switch (opcode) {
         case OP_POP: js_pop(J, 1); break;
-        case OP_DUP: js_dup(J); break;
+        case OP_DUP: J->dup(); break;
         case OP_DUP2: dup2(); break;
-        case OP_ROT2: js_rot2(J); break;
-        case OP_ROT3: js_rot3(J); break;
-        case OP_ROT4: js_rot4(J); break;
+        case OP_ROT2: J->rot2(); break;
+        case OP_ROT3: J->rot3(); break;
+        case OP_ROT4: J->rot4(); break;
 
         case OP_NUMBER_0: js_pushnumber(J, 0); break;
         case OP_NUMBER_1: js_pushnumber(J, 1); break;
@@ -1737,28 +1733,28 @@ void js_State::r_run(js_Function *F) {
             str = js_tostring(J, -1);
             obj = toobject_pending(-2, js_strnode_cstr(str));
             J->getproperty(obj, str);
-            js_rot3pop2(J);
+            J->rot3pop2();
             break;
 
         case OP_GETPROP_S:
             str = ST[*pc++];
             obj = toobject_pending(-1, js_strnode_cstr(str));
             J->getproperty(obj, str);
-            js_rot2pop1(J);
+            J->rot2pop1();
             break;
 
         case OP_SETPROP:
             str = js_tostring(J, -2);
             obj = toobject_pending(-3, js_strnode_cstr(str));
             jsR_setproperty(J, obj, str);
-            js_rot3pop2(J);
+            J->rot3pop2();
             break;
 
         case OP_SETPROP_S:
             str = ST[*pc++];
             obj = toobject_pending(-2, js_strnode_cstr(str));
             jsR_setproperty(J, obj, str);
-            js_rot2pop1(J);
+            J->rot2pop1();
             break;
 
         case OP_DELPROP:
@@ -2012,7 +2008,7 @@ void js_State::r_run(js_Function *F) {
             str = ST[*pc++];
             obj = jsV_newobject(J, JS_COBJECT, NULL);
             js_pushobject(J, obj);
-            js_rot2(J);
+            J->rot2();
             js_setproperty(J, -2, str);
             J->E = jsR_newenvironment(J, obj, J->E);
             js_pop(J, 1);

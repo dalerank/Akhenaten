@@ -613,8 +613,8 @@ static void Ap_reduce(js_State *J) {
         if (js_hasindex(J, 0, k)) {
             js_copy(J, 1);
             J->pushundefined();
-            js_rot(J, 4); /* accumulator on top */
-            js_rot(J, 4); /* property on top */
+            J->rot(4); /* accumulator on top */
+            J->rot(4); /* property on top */
             js_pushnumber(J, k);
             js_copy(J, 0);
             J->call(4); /* calculate new accumulator */
@@ -653,8 +653,8 @@ static void Ap_reduceRight(js_State *J) {
         if (js_hasindex(J, 0, k)) {
             js_copy(J, 1);
             J->pushundefined();
-            js_rot(J, 4); /* accumulator on top */
-            js_rot(J, 4); /* property on top */
+            J->rot(4); /* accumulator on top */
+            J->rot(4); /* property on top */
             js_pushnumber(J, k);
             js_copy(J, 0);
             J->call(4); /* calculate new accumulator */

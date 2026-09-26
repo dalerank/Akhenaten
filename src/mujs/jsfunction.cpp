@@ -140,7 +140,7 @@ static void callbound(js_State *J)
 	n = js_getlength(J, args);
 	for (i = 0; i < n; ++i)
 		js_getindex(J, args, i);
-	js_remove(J, args);
+	J->remove(args);
 
 	for (i = 1; i < top; ++i)
 		js_copy(J, i);
@@ -161,7 +161,7 @@ static void constructbound(js_State* J) {
     n = js_getlength(J, args);
     for (i = 0; i < n; ++i)
         js_getindex(J, args, i);
-    js_remove(J, args);
+    J->remove(args);
 
     for (i = 1; i < top; ++i)
         js_copy(J, i);
