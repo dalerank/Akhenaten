@@ -28,6 +28,17 @@ building_booth {
     }
 }
 
+[es=(building_booth, ghost_allow_tile)]
+function building_booth_ghost_allow_tile(ev) {
+    city_planner.preview_allow_result = terrain.is(ev.tile, TERRAIN_ROAD) || !__map_has_figure_at(ev.tile)
+}
+
+[es=(building_booth, setup_preview_graphics)]
+function building_booth_setup_preview_graphics(ev) {
+    var size = building_booth.building_size
+    city_planner.init_tiles(size, size)
+}
+
 [es=(building_booth, on_place_checks)]
 function building_booth_on_place_checks(ev) {
     var has_juggler_school = city.count_active_buildings(BUILDING_JUGGLER_SCHOOL) > 0

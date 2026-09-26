@@ -7,11 +7,6 @@ public:
     BUILDING_METAINFO(BUILDING_BOOTH, building_booth, building_entertainment)
     virtual building_booth *dcast_booth() override { return this; }
 
-    struct preview : public building_planer_renderer {
-        virtual bool ghost_allow_tile(build_planner &p, tile2i tile) const override;
-        virtual void setup_preview_graphics(build_planner &planer) const override;
-    };
-
     virtual void on_create(int orientation) override {}
     virtual void update_day() override;
     virtual void update_month() override;

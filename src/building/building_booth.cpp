@@ -13,7 +13,6 @@
 #include "grid/building_tiles.h"
 #include "grid/property.h"
 #include "grid/building.h"
-#include "grid/figure.h"
 #include "grid/image.h"
 #include "grid/orientation.h"
 #include "window/building/common.h"
@@ -30,12 +29,6 @@
 
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_booth);
 
-bool building_booth::preview::ghost_allow_tile(build_planner &p, tile2i tile) const {
-    const bool is_road = map_terrain_is(tile, TERRAIN_ROAD);
-    const bool has_figure = map_has_figure_at(tile);
-    return (is_road || !has_figure);
-}
-
 bool building_booth::get_route_citizen_land_type(int grid_offset, int &land_result) const {
     if (map_terrain_is(grid_offset, TERRAIN_ROAD)) {
         land_result = CITIZEN_0_ROAD;
@@ -48,11 +41,6 @@ bool building_booth::get_route_citizen_land_type(int grid_offset, int &land_resu
 
 bool building_booth::target_route_tile_blocked(int grid_offset) const {
     return false;
-}
-
-void building_booth::preview::setup_preview_graphics(build_planner &planer) const {
-    const int s = building_static_params::get(planer.build_type).building_size;
-    planer.init_tiles(s, s);
 }
 
 void building_booth::update_day() {
