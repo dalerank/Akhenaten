@@ -9,15 +9,6 @@
 
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_juggler_school);
 
-void building_juggler_school::update_day() {
-    building_impl::update_day();
-
-    auto &d = runtime_data();
-    if (d.spawned_entertainer_days > 0) {
-        d.spawned_entertainer_days--;
-    }
-}
-
 void building_juggler_school::spawn_figure() {
     if (!common_spawn_figure_trigger(current_params().min_houses_coverage, BUILDING_SLOT_JUGGLER)) {
         return;

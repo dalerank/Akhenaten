@@ -35,5 +35,5 @@ public:
 };
 
 ANK_CONFIG_PROPERTY(building_entertainment::runtime_data_t,
-    num_shows, juggler_visited, musician_visited, dancer_visited, play_index,
+    spawned_entertainer_days, num_shows, juggler_visited, musician_visited, dancer_visited, play_index,
     booth_corner_grid_offset, latched_venue_main_grid_offset, latched_venue_add_grid_offset)

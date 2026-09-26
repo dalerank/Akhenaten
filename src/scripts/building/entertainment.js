@@ -17,6 +17,7 @@ EntertainmentBuilding.property.juggler_visited = { }
 EntertainmentBuilding.property.musician_visited = { }
 EntertainmentBuilding.property.dancer_visited = { }
 EntertainmentBuilding.property.play_index = { }
+EntertainmentBuilding.property.spawned_entertainer_days = { }
 EntertainmentBuilding.property.booth_corner_grid_offset = { }
 EntertainmentBuilding.property.latched_venue_main_grid_offset = { }
 EntertainmentBuilding.property.latched_venue_add_grid_offset = { }
@@ -51,6 +52,17 @@ building_juggler_school {
     draw_normal_anim: true
     work_anim: true
   }
+}
+
+[es=(building_juggler_school, update_day)]
+function building_juggler_school_update_day(ev) {
+    var b = city.get_entertainment_building(ev.bid)
+    if (!b) {
+        return
+    }
+    if (b.spawned_entertainer_days > 0) {
+        b.spawned_entertainer_days = b.spawned_entertainer_days - 1
+    }
 }
 
 building_dancer_school {
