@@ -418,10 +418,18 @@ const auto& get_properties() {
 }
 
 void building_impl::consume_resource(e_resource r, int16_t amount) {
+    if (r == RESOURCE_GOLD) {
+        base.deben_storage = (uint16_t)std::max(0, (int)base.deben_storage - amount);
+        return;
+    }
     base.consume_resource(r, amount);
 }
 
 void building_impl::store_resource(e_resource r, int16_t amount) {
+    if (r == RESOURCE_GOLD) {
+        base.deben_storage = (uint16_t)std::min(0xffff, (int)base.deben_storage + amount);
+        return;
+    }
     base.store_resource(r, amount);
 }
 

@@ -212,12 +212,15 @@ bool building_impl::required_resource(e_resource r) const {
 }
 
 int building_impl::stored_amount(e_resource r) const {
+    if (r == RESOURCE_GOLD) {
+        return base.deben_storage;
+    }
     return base.storage.get(r);
 }
 
-resource_vec building_impl::required_resources() const { 
+resource_vec building_impl::required_resources() const {
     if (base.input.resource == RESOURCE_NONE && base.input.resource_second == RESOURCE_NONE) {
-        return {}; 
+        return {};
     }
 
     resource_vec r;

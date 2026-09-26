@@ -32,11 +32,11 @@ building_town_palace {
   laborers[30]
   fire_risk[4]
   damage_risk[1]
-  add_resource_finance [
-    { building: BUILDING_GOLD_MINE, request: efinance_request_gold_delivered }
-    { building: BUILDING_TAX_COLLECTOR, request: efinance_request_tax_collected }
-    { building: BUILDING_TAX_COLLECTOR_UPGRADED, request: efinance_request_tax_collected }
-  ]
+}
+
+[es=(building_town_palace, add_resource)]
+function building_town_palace_add_resource(ev) {
+    building_palace_add_resource(ev)
 }
 
 [es=(building_town_palace, update_animation)]

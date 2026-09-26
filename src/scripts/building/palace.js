@@ -29,6 +29,35 @@ building_palace_base {
   ]
 }
 
+function building_palace_add_resource(ev) {
+    if (ev.resource != RESOURCE_GOLD) {
+        return
+    }
+
+    var fig = city.get_figure(ev.fid)
+    if (!fig || !fig.valid) {
+        return
+    }
+
+    var home = fig.home
+    if (!home || !home.valid) {
+        return
+    }
+
+    var request = efinance_request_none
+    if (home.type == BUILDING_GOLD_MINE) {
+        request = efinance_request_gold_delivered
+    } else if (home.type == BUILDING_TAX_COLLECTOR || home.type == BUILDING_TAX_COLLECTOR_UPGRADED) {
+        request = efinance_request_tax_collected
+    } else {
+        return
+    }
+
+    var b = city.get_building(ev.bid)
+    b.store_resource(RESOURCE_GOLD, ev.amount)
+    emit event_finance_request { type: request, deben: ev.amount }
+}
+
 function building_palace_show_tooltip(ev) {
     var tooltip_lines = building_palace_base.tooltips
     if (!tooltip_lines || tooltip_lines.length === 0) {

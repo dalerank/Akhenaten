@@ -68,24 +68,3 @@ bool building_palace::draw_ornaments_and_animations_height(painter &ctx, vec2i p
 void building_palace::spawn_figure() {
     common_spawn_figure_trigger(50);
 }
-
-bool building_palace::add_resource(e_resource resource, int amount, figure_id fid) {
-    if (resource != RESOURCE_GOLD) {
-        return false;
-    }
-
-    building *home = figure_get(fid)->home();
-    if (!home) {
-        return false;
-    }
-
-    const auto &params = (const static_params &)building_static_params::get(type());
-    for (const auto &entry : params.add_resource_finance) {
-        if (entry.building == home->type) {
-            events::emit(event_finance_request{ entry.request, amount });
-            return true;
-        }
-    }
-
-    return false;
-}
