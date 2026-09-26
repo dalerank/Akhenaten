@@ -1,6 +1,8 @@
 log_info("akhenaten: building_town_palace started")
 
+[es=building]
 building_town_palace {
+  type: BUILDING_TOWN_PALACE
   animations {
     preview { pack:PACK_GENERAL, id:39 },
     base { pack:PACK_GENERAL, id:39 },

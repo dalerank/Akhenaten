@@ -22,7 +22,6 @@
 #include "city/city_kingdome_relations.h"
 #include "city/city_population.h"
 #include "dev/debug.h"
-#include "building/building_palace.h"
 #include "content/mods.h"
 #include "game/game.h"
 #include "js/js_game.h"
