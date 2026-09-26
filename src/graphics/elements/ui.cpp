@@ -542,7 +542,6 @@ void ui::clear_active_elements() {
     g_state.rich_text_targets.clear();
     g_state.scrollable_lists.clear();
     g_state.input_boxes.clear();
-    stop_active_input();
 }
 
 void ui::stop_active_input() {

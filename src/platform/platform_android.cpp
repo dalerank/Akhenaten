@@ -74,11 +74,15 @@ void platform_show_virtual_keyboard(const uint8_t *text, int max_length) {
     (void)text;
     (void)max_length;
 
-    SDL_StartTextInput();
+    if (!SDL_IsTextInputActive()) {
+        SDL_StartTextInput();
+    }
 }
 
 void platform_hide_virtual_keyboard(void) {
-    SDL_StopTextInput();
+    if (SDL_IsTextInputActive()) {
+        SDL_StopTextInput();
+    }
 }
 
 #endif
