@@ -59,7 +59,7 @@ public:
     struct static_params : public base_params_t, public figure_static_params {
     } FIGURE_STATIC_DATA_T;
 
-    const base_params_t &base_params() const { return static_cast<const base_params_t &>(current_params()); }
+    const base_params_t &base_params() const override { return static_cast<const base_params_t &>(current_params()); }
 };
 ANK_CONFIG_STRUCT(figure_barbarian_archer::static_params,
     missile_attack_value, missile_delay, attack_distance, missile_type)
@@ -72,7 +72,7 @@ public:
     struct static_params : public base_params_t, public figure_static_params {
     } FIGURE_STATIC_DATA_T;
 
-    const base_params_t &base_params() const { return static_cast<const base_params_t &>(current_params()); }
+    const base_params_t &base_params() const override { return static_cast<const base_params_t &>(current_params()); }
 };
 ANK_CONFIG_STRUCT(figure_assyrian_archer::static_params,
     missile_attack_value, missile_delay, attack_distance, missile_type)
@@ -85,7 +85,7 @@ public:
     struct static_params : public base_params_t, public figure_static_params {
     } FIGURE_STATIC_DATA_T;
 
-    const base_params_t &base_params() const { return static_cast<const base_params_t &>(current_params()); }
+    const base_params_t &base_params() const override { return static_cast<const base_params_t &>(current_params()); }
 };
 ANK_CONFIG_STRUCT(figure_canaanite_archer::static_params,
     missile_attack_value, missile_delay, attack_distance, missile_type)
@@ -98,7 +98,7 @@ public:
     struct static_params : public base_params_t, public figure_static_params {
     } FIGURE_STATIC_DATA_T;
 
-    const base_params_t &base_params() const { return static_cast<const base_params_t &>(current_params()); }
+    const base_params_t &base_params() const override { return static_cast<const base_params_t &>(current_params()); }
 };
 ANK_CONFIG_STRUCT(figure_egyptian_archer::static_params,
     missile_attack_value, missile_delay, attack_distance, missile_type)
@@ -111,7 +111,7 @@ public:
     struct static_params : public base_params_t, public figure_static_params {
     } FIGURE_STATIC_DATA_T;
 
-    const base_params_t &base_params() const { return static_cast<const base_params_t &>(current_params()); }
+    const base_params_t &base_params() const override { return static_cast<const base_params_t &>(current_params()); }
 };
 ANK_CONFIG_STRUCT(figure_hittite_archer::static_params,
     missile_attack_value, missile_delay, attack_distance, missile_type)
@@ -124,7 +124,7 @@ public:
     struct static_params : public base_params_t, public figure_static_params {
     } FIGURE_STATIC_DATA_T;
 
-    const base_params_t &base_params() const { return static_cast<const base_params_t &>(current_params()); }
+    const base_params_t &base_params() const override { return static_cast<const base_params_t &>(current_params()); }
 };
 ANK_CONFIG_STRUCT(figure_hyksos_archer::static_params,
     missile_attack_value, missile_delay, attack_distance, missile_type)
@@ -137,7 +137,7 @@ public:
     struct static_params : public base_params_t, public figure_static_params {
     } FIGURE_STATIC_DATA_T;
 
-    const base_params_t &base_params() const { return static_cast<const base_params_t &>(current_params()); }
+    const base_params_t &base_params() const override { return static_cast<const base_params_t &>(current_params()); }
 };
 ANK_CONFIG_STRUCT(figure_libian_archer::static_params,
     missile_attack_value, missile_delay, attack_distance, missile_type)
@@ -150,7 +150,7 @@ public:
     struct static_params : public base_params_t, public figure_static_params {
     } FIGURE_STATIC_DATA_T;
 
-    const base_params_t &base_params() const { return static_cast<const base_params_t &>(current_params()); }
+    const base_params_t &base_params() const override { return static_cast<const base_params_t &>(current_params()); }
 };
 ANK_CONFIG_STRUCT(figure_nubian_archer::static_params,
     missile_attack_value, missile_delay, attack_distance, missile_type)
@@ -163,7 +163,7 @@ public:
     struct static_params : public base_params_t, public figure_static_params {
     } FIGURE_STATIC_DATA_T;
 
-    const base_params_t &base_params() const { return static_cast<const base_params_t &>(current_params()); }
+    const base_params_t &base_params() const override { return static_cast<const base_params_t &>(current_params()); }
 };
 ANK_CONFIG_STRUCT(figure_persian_archer::static_params,
     missile_attack_value, missile_delay, attack_distance, missile_type)
@@ -176,7 +176,7 @@ public:
     struct static_params : public base_params_t, public figure_static_params {
     } FIGURE_STATIC_DATA_T;
 
-    const base_params_t &base_params() const { return static_cast<const base_params_t &>(current_params()); }
+    const base_params_t &base_params() const override { return static_cast<const base_params_t &>(current_params()); }
 };
 ANK_CONFIG_STRUCT(figure_roman_archer::static_params,
     missile_attack_value, missile_delay, attack_distance, missile_type)
@@ -189,7 +189,7 @@ public:
     struct static_params : public base_params_t, public figure_static_params {
     } FIGURE_STATIC_DATA_T;
 
-    const base_params_t &base_params() const { return static_cast<const base_params_t &>(current_params()); }
+    const base_params_t &base_params() const override { return static_cast<const base_params_t &>(current_params()); }
 };
 ANK_CONFIG_STRUCT(figure_seapeople_archer::static_params,
     missile_attack_value, missile_delay, attack_distance, missile_type)
@@ -203,7 +203,7 @@ public:
     struct static_params : public base_params_t, public figure_static_params {
     } FIGURE_STATIC_DATA_T;
 
-    const base_params_t &base_params() const { return static_cast<const base_params_t &>(current_params()); }
+    const base_params_t &base_params() const override { return static_cast<const base_params_t &>(current_params()); }
     virtual bool is_mounted_archer() const override { return true; }
     virtual int8_t enemy_speed_multiplier() const override { return 2; }
 };
