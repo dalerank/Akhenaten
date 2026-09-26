@@ -43,22 +43,6 @@ bool building_booth::target_route_tile_blocked(int grid_offset) const {
     return false;
 }
 
-void building_booth::update_day() {
-    building_impl::update_day();
-
-    auto &d = runtime_data();
-    d.num_shows = 0;
-    if (d.juggler_visited > 0) {
-        --d.juggler_visited;
-        ++d.num_shows;
-    }
-}
-
-void building_booth::update_month() {
-    auto &d = runtime_data();
-    d.play_index = std::rand() % 10;
-}
-
 void building_booth::on_place(int orientation, int variant) {
     base.orientation = orientation;
 

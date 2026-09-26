@@ -45,6 +45,28 @@ function building_booth_on_place_checks(ev) {
     city.warnings.show_if_not(has_juggler_school, "#build_juggling_school")
 }
 
+[es=(building_booth, update_day)]
+function building_booth_update_day(ev) {
+    var b = city.get_entertainment_building(ev.bid)
+    if (!b) {
+        return
+    }
+    b.num_shows = 0
+    if (b.juggler_visited > 0) {
+        b.juggler_visited = b.juggler_visited - 1
+        b.num_shows = b.num_shows + 1
+    }
+}
+
+[es=(building_booth, update_month)]
+function building_booth_update_month(ev) {
+    var b = city.get_entertainment_building(ev.bid)
+    if (!b) {
+        return
+    }
+    b.play_index = Math.floor(Math.random() * 10)
+}
+
 [es=(building_booth, draw_usable_paths)]
 function building_booth_draw_usable_paths(ev) {
     city.get_building(ev.bid).draw_usable_paths()
