@@ -98,35 +98,12 @@ void building_bandstand::preview::ghost_preview(build_planner &planer, painter &
     }
 }
 
-void building_bandstand::update_day() {
-    building_impl::update_day();
-
-    int shows = 0;
-    auto update_shows = [&] (auto &days) { if (days > 0) { --days; ++shows; } };
-
-    auto &d = runtime_data();
-    update_shows(d.juggler_visited);
-    update_shows(d.musician_visited);
-
-    d.num_shows = shows;
-}
-
 void building_bandstand::on_place(int orientation, int variant) {
     auto &d = runtime_data();
     d.booth_corner_grid_offset = tile().grid_offset();
     base.orientation = orientation;
 
     building_impl::on_place(orientation, variant);
-}
-
-void building_bandstand::on_place_checks() {
-    building_impl::on_place_checks();
-
-    construction_warnings warnings;
-    const bool has_conservatory = g_city.buildings.count_active(BUILDING_CONSERVATORY) > 0;
-    const bool has_jungles = g_city.buildings.count_active(BUILDING_JUGGLER_SCHOOL) > 0;
-    warnings.add_if(!has_conservatory, "#build_conservatory");
-    warnings.add_if(!has_jungles, "#build_juggling_school");
 }
 
 void building_bandstand::on_place_update_tiles(int /*orientation*/, int /*variant*/) {
@@ -264,7 +241,7 @@ void building_bandstand::draw_shows_juggler(painter &ctx, vec2i pixel, tile2i ti
     if (map_image_at(tile) != first_img(parts::booth)) {
         return;
     }
-    
+
     base.anims[juggler_anim] = anim(animkeys().juggler);
     draw_normal_anim(ctx, base.anims[juggler_anim], pixel, tile, color_mask);
 }

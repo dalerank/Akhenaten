@@ -40,3 +40,30 @@ function building_bandstand_setup_preview_graphics(ev) {
     var size = building_bandstand.building_size
     city_planner.init_tiles(size, size)
 }
+
+[es=(building_bandstand, on_place_checks)]
+function building_bandstand_on_place_checks(ev) {
+    var has_conservatory = city.count_active_buildings(BUILDING_CONSERVATORY) > 0
+    var has_juggler_school = city.count_active_buildings(BUILDING_JUGGLER_SCHOOL) > 0
+    city.warnings.show_if_not(has_conservatory, "#build_conservatory")
+    city.warnings.show_if_not(has_juggler_school, "#build_juggling_school")
+}
+
+[es=(building_bandstand, update_day)]
+function building_bandstand_update_day(ev) {
+    var b = city.get_entertainment_building(ev.bid)
+    if (!b) {
+        return
+    }
+
+    var shows = 0
+    if (b.juggler_visited > 0) {
+        b.juggler_visited = b.juggler_visited - 1
+        shows = shows + 1
+    }
+    if (b.musician_visited > 0) {
+        b.musician_visited = b.musician_visited - 1
+        shows = shows + 1
+    }
+    b.num_shows = shows
+}

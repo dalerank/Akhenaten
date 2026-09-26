@@ -17,9 +17,7 @@ public:
         virtual void ghost_preview(build_planner &p, painter &ctx, tile2i tile, tile2i end, vec2i pixel) const override;
     };
 
-    virtual void update_day() override;
     virtual void on_place(int orientation, int variant) override;
-    virtual void on_place_checks() override;
     virtual void on_place_update_tiles(int orientation, int variant) override;
     virtual void update_map_orientation(int map_orientation) override;
     virtual void spawn_figure() override;
