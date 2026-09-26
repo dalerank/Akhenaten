@@ -42,17 +42,6 @@ namespace parts {
     xstring booth("booth");
 }
 
-bool building_bandstand::preview::ghost_allow_tile(build_planner& p, tile2i tile) const {
-    const bool is_road = map_terrain_is(tile, TERRAIN_ROAD);
-    const bool has_figure = map_has_figure_at(tile);
-    return (is_road || !has_figure);
-}
-
-void building_bandstand::preview::setup_preview_graphics(build_planner &planer) const {
-    const int s = building_static_params::get(planer.build_type).building_size;
-    planer.init_tiles(s, s);
-}
-
 bool building_bandstand::get_route_citizen_land_type(int grid_offset, int &land_result) const {
     if (map_terrain_is(grid_offset, TERRAIN_ROAD)) {
         land_result = CITIZEN_0_ROAD;
@@ -107,9 +96,6 @@ void building_bandstand::preview::ghost_preview(build_planner &planer, painter &
             break;
         }
     }
-}
-
-void building_bandstand::on_create(int orientation) {
 }
 
 void building_bandstand::update_day() {

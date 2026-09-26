@@ -66,6 +66,7 @@ import building.entertainment
 import building.senet_house
 import building.bullfight_school
 import building.booth
+import building.bandstand
 import building.festival_square
 import building.firehouse
 import building.police_station

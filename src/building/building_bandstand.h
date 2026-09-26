@@ -14,12 +14,9 @@ public:
     };
 
     struct preview : public building_planer_renderer {
-        virtual bool ghost_allow_tile(build_planner & p, tile2i tile) const override;
-        virtual void setup_preview_graphics(build_planner &planer) const override;
         virtual void ghost_preview(build_planner &p, painter &ctx, tile2i tile, tile2i end, vec2i pixel) const override;
     };
 
-    virtual void on_create(int orientation) override;
     virtual void update_day() override;
     virtual void on_place(int orientation, int variant) override;
     virtual void on_place_checks() override;
