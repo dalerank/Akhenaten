@@ -603,7 +603,7 @@ static void building_proto_first_img(js_State *J) {
 }
 
 static void jsB_new_Building(js_State *J) {
-    const int id = js_gettop(J) > 1 ? (int)js_tointeger(J, 1) : 0;
+    const int id = J->gettop() > 1 ? (int)js_tointeger(J, 1) : 0;
     js_pushobject(J, jsV_newobject(J, JS_COBJECT, g_building_proto));
     js_pushnumber(J, (double)id);
     js_setproperty(J, -2, js_intern("id"));

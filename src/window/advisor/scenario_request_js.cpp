@@ -73,7 +73,7 @@ static void scenario_request_proto_toString(js_State *J) {
 }
 
 static void jsB_new_ScenarioRequest(js_State *J) {
-    const int index = js_gettop(J) > 1 ? (int)js_tointeger(J, 1) : -1;
+    const int index = J->gettop() > 1 ? (int)js_tointeger(J, 1) : -1;
 
     js_pushobject(J, jsV_newobject(J, JS_COBJECT, g_imperial_visible_request_proto));
     js_pushnumber(J, index);

@@ -111,7 +111,7 @@ static void house_proto_toString(js_State *J) {
 }
 
 static void jsB_new_House(js_State *J) {
-    const int id = js_gettop(J) > 1 ? (int)js_tointeger(J, 1) : 0;
+    const int id = J->gettop() > 1 ? (int)js_tointeger(J, 1) : 0;
     building *b = building_get(id);
     if (!b || !b->is_valid() || !b->is_house()) {
         js_pushnull(J);

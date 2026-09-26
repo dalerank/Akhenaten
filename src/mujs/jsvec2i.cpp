@@ -39,11 +39,11 @@ static void jsB_new_Vec2i(js_State *J)
 {
 	int x = 0;
 	int y = 0;
-	if (js_gettop(J) > 1 && (J->isobject(1) || J->iscvec2i(1)) && js_gettop(J) <= 2) {
+	if (J->gettop() > 1 && (J->isobject(1) || J->iscvec2i(1)) && J->gettop() <= 2) {
 		vec2i_read_arg(J, 1, &x, &y);
 	} else {
-		x = js_gettop(J) > 1 ? js_tointeger(J, 1) : 0;
-		y = js_gettop(J) > 2 ? js_tointeger(J, 2) : x;
+		x = J->gettop() > 1 ? js_tointeger(J, 1) : 0;
+		y = J->gettop() > 2 ? js_tointeger(J, 2) : x;
 	}
 	J->newvec2i(x, y);
 }

@@ -16,7 +16,7 @@ static void console_command_wrapper(e_console_callback_source source, const xstr
         return;
     }
 
-    const int baseline = js_gettop(J);
+    const int baseline = J->gettop();
     if (source == CONSOLE_CALLBACK_REGISTRY) {
         js_getregistry(J, js_intern(func_ref.c_str()));
     } else {
@@ -42,7 +42,7 @@ static void console_command_wrapper(e_console_callback_source source, const xstr
         out.println("Error executing console command");
         logs::error("JS console command error");
     }
-    while (js_gettop(J) > baseline) {
+    while (J->gettop() > baseline) {
         js_pop(J, 1);
     }
 }
@@ -73,7 +73,7 @@ void js_register_console_command_from_function(pcstr functionName, pcstr command
 
 void js_register_console_command(js_State *J) {
 #if !defined(GAME_PLATFORM_ANDROID)
-    if (js_gettop(J) < 2) {
+    if (J->gettop() < 2) {
         logs::error("__register_console_command: expected at least 2 arguments (commandName, callback)");
         J->pushundefined();
         return;
@@ -94,7 +94,7 @@ void js_register_console_command(js_State *J) {
     auto commandName = js_tostring(J, 1);
 
     // js_ref() stores the value in the registry and pops it
-    js_copy(J, 2);
+    J->copy(2);
     auto funcRef = js_ref(J);
 
     const xstring func_ref(funcRef->value.c_str());

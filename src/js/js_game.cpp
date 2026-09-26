@@ -86,7 +86,7 @@ void js_loc_native(js_State *J) {
 
     // __loc is registered with arity 2, so a one-arg call still has gettop==3
     // (arg2 is undefined). Treat that as the object form, not group/id 0/0.
-    if (J->isobject(1) && !J->isarray(1) && (js_gettop(J) < 3 || J->isundefined(2))) {
+    if (J->isobject(1) && !J->isarray(1) && (J->gettop() < 3 || J->isundefined(2))) {
         J->getproperty(1, js_intern("key"));
         if (J->isstring(-1)) {
             const xstring key_node = js_toxstring(J, -1); js_pop(J, 1);
@@ -138,7 +138,7 @@ static js_StringNode property_width = js_intern("width");
 static js_StringNode property_height = js_intern("height");
 
 void js_game_get_image(js_State *J) {
-    if (js_gettop(J) < 1) {
+    if (J->gettop() < 1) {
         js_pushnull(J);
         return;
     }
@@ -262,7 +262,7 @@ void js_call_event_handlers(const xstring &event_name, const bvariant_map &objec
 
         OZZY_PROFILER_SECTION(_, funcname)
 
-        int savetop = js_gettop(J);
+        int savetop = J->gettop();
         js_getglobal(J, funcname);
 
         bool iscallable = J->iscallable(-1);
@@ -341,7 +341,7 @@ void js_call_event_handlers(const xstring &event_name, const bvariant_map &objec
             logs::error("Fatal error on call function %s", funcname);
         }
 
-        int current_top = js_gettop(J);
+        int current_top = J->gettop();
         if (current_top > savetop) {
             js_pop(J, current_top - savetop);
         } else if (current_top < savetop) {
@@ -350,11 +350,11 @@ void js_call_event_handlers(const xstring &event_name, const bvariant_map &objec
         }
 
         // Verify stack is correct
-        int final_top = js_gettop(J);
+        int final_top = J->gettop();
         if (final_top != savetop) {
             logs::info("STACK mismatch for %s [%d] (expected %d) - forcing cleanup", funcname, final_top, savetop);
             // Force cleanup to prevent stack overflow
-            while (js_gettop(J) > savetop) {
+            while (J->gettop() > savetop) {
                 js_pop(J, 1);
             }
         }

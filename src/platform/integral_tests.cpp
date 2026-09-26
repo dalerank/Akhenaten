@@ -405,7 +405,7 @@ hvector<xstring, 16> list_test_files() {
 }
 
 void pop_to(js_State *J, int baseline) {
-    while (js_gettop(J) > baseline) {
+    while (J->gettop() > baseline) {
         js_pop(J, 1);
     }
 }
@@ -414,7 +414,7 @@ void pop_to(js_State *J, int baseline) {
 // the sticky vm.have_error flag. Caller must have verified existence via
 // js_vm_global_is_callable. Returns true on success.
 bool call_global_void(js_State *J, const char *name) {
-    int baseline = js_gettop(J);
+    int baseline = J->gettop();
     js_vm_reset_error();
     js_getglobal(J, name);
     js_pushnull(J); // `this` (functions don't use it)
@@ -460,7 +460,7 @@ int run_js_tests() {
             logs::info("[test:%s] cleared %d stale MuJS stack slot(s) before test", name.c_str(), stale);
         }
 
-        const int load_baseline = js_gettop(J);
+        const int load_baseline = J->gettop();
         js_vm_reset_error();
         logs::info("[test:%s] loading script", name.c_str());
         if (!js_vm_load_file_and_exec(name.c_str())) {
@@ -536,7 +536,7 @@ int run_js_tests() {
             ++failed;
             continue;
         }
-        const int cv_baseline = js_gettop(J);
+        const int cv_baseline = J->gettop();
         js_vm_reset_error();
         logs::info("[test:%s] calling check_valid() (log=%s)", name.c_str(), logs::output_path());
         js_getglobal(J, "check_valid");

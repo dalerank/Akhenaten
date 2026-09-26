@@ -38,35 +38,35 @@ void js_delindex(js_State *J, int idx, int i) {
 }
 
 static void jsB_new_Array(js_State *J) {
-    int i, top = js_gettop(J);
+    int i, top = J->gettop();
 
     J->newarray();
 
     if (top == 2) {
         if (J->isnumber(1)) {
-            js_copy(J, 1);
+            J->copy(1);
             js_setproperty(J, -2, property_length);
         } else {
-            js_copy(J, 1);
+            J->copy(1);
             js_setindex(J, -2, 0);
         }
     } else {
         for (i = 1; i < top; ++i) {
-            js_copy(J, i);
+            J->copy(i);
             js_setindex(J, -2, i - 1);
         }
     }
 }
 
 static void Ap_concat(js_State *J) {
-    int i, top = js_gettop(J);
+    int i, top = J->gettop();
     int n, k, len;
 
     J->newarray();
     n = 0;
 
     for (i = 0; i < top; ++i) {
-        js_copy(J, i);
+        J->copy(i);
         if (J->isarray(-1)) {
             len = js_getlength(J, -1);
             for (k = 0; k < len; ++k)
@@ -167,13 +167,13 @@ static void Ap_pop(js_State *J) {
 }
 
 static void Ap_push(js_State *J) {
-    int i, top = js_gettop(J);
+    int i, top = J->gettop();
     int n;
 
     n = js_getlength(J, 0);
 
     for (i = 1; i < top; ++i, ++n) {
-        js_copy(J, i);
+        J->copy(i);
         js_setindex(J, 0, n);
     }
 
@@ -206,7 +206,7 @@ static void Ap_reverse(js_State *J) {
         ++lower;
     }
 
-    js_copy(J, 0);
+    J->copy(0);
 }
 
 static void Ap_shift(js_State *J) {
@@ -269,10 +269,10 @@ static int compare(js_State *J, int x, int y, int *hasx, int *hasy, int hasfn) {
         if (uny) return -1;
 
         if (hasfn) {
-            js_copy(J, 1); /* copy function */
+            J->copy(1); /* copy function */
             J->pushundefined(); /* set this object */
-            js_copy(J, -4); /* copy x */
-            js_copy(J, -4); /* copy y */
+            J->copy(-4); /* copy x */
+            J->copy(-4); /* copy y */
             J->call(2);
             c = js_tonumber(J, -1);
             js_pop(J, 1);
@@ -314,11 +314,11 @@ static void Ap_sort(js_State *J) {
         }
     }
 
-    js_copy(J, 0);
+    J->copy(0);
 }
 
 static void Ap_splice(js_State *J) {
-    int top = js_gettop(J);
+    int top = J->gettop();
     int len, start, del, add, k;
     double f;
 
@@ -361,7 +361,7 @@ static void Ap_splice(js_State *J) {
 
     /* copy new items into the hole */
     for (k = 0; k < add; ++k) {
-        js_copy(J, 3 + k);
+        J->copy(3 + k);
         js_setindex(J, 0, start + k);
     }
 
@@ -369,7 +369,7 @@ static void Ap_splice(js_State *J) {
 }
 
 static void Ap_unshift(js_State *J) {
-    int i, top = js_gettop(J);
+    int i, top = J->gettop();
     int k, len;
 
     len = js_getlength(J, 0);
@@ -384,7 +384,7 @@ static void Ap_unshift(js_State *J) {
     }
 
     for (i = 1; i < top; ++i) {
-        js_copy(J, i);
+        J->copy(i);
         js_setindex(J, 0, i - 1);
     }
 
@@ -394,7 +394,7 @@ static void Ap_unshift(js_State *J) {
 }
 
 static void Ap_toString(js_State *J) {
-    int top = js_gettop(J);
+    int top = J->gettop();
     js_pop(J, top - 1);
     Ap_join(J);
 }
@@ -407,7 +407,7 @@ static void Ap_indexOf(js_State *J) {
     if (from < 0) from = len + from;
     if (from < 0) from = 0;
 
-    js_copy(J, 1);
+    J->copy(1);
     for (k = from; k < len; ++k) {
         if (js_hasindex(J, 0, k)) {
             if (js_strictequal(J)) {
@@ -429,7 +429,7 @@ static void Ap_lastIndexOf(js_State *J) {
     if (from > len - 1) from = len - 1;
     if (from < 0) from = len + from;
 
-    js_copy(J, 1);
+    J->copy(1);
     for (k = from; k >= 0; --k) {
         if (js_hasindex(J, 0, k)) {
             if (js_strictequal(J)) {
@@ -444,7 +444,7 @@ static void Ap_lastIndexOf(js_State *J) {
 }
 
 static void Ap_every(js_State *J) {
-    int hasthis = js_gettop(J) >= 3;
+    int hasthis = J->gettop() >= 3;
     int k, len;
 
     if (!J->iscallable(1)) {
@@ -454,14 +454,14 @@ static void Ap_every(js_State *J) {
     len = js_getlength(J, 0);
     for (k = 0; k < len; ++k) {
         if (js_hasindex(J, 0, k)) {
-            js_copy(J, 1);
+            J->copy(1);
             if (hasthis)
-                js_copy(J, 2);
+                J->copy(2);
             else
                 J->pushundefined();
-            js_copy(J, -3);
+            J->copy(-3);
             js_pushnumber(J, k);
-            js_copy(J, 0);
+            J->copy(0);
             J->call(3);
             if (!js_toboolean(J, -1))
                 return;
@@ -473,7 +473,7 @@ static void Ap_every(js_State *J) {
 }
 
 static void Ap_some(js_State *J) {
-    int hasthis = js_gettop(J) >= 3;
+    int hasthis = J->gettop() >= 3;
     int k, len;
 
     if (!J->iscallable(1))
@@ -482,14 +482,14 @@ static void Ap_some(js_State *J) {
     len = js_getlength(J, 0);
     for (k = 0; k < len; ++k) {
         if (js_hasindex(J, 0, k)) {
-            js_copy(J, 1);
+            J->copy(1);
             if (hasthis)
-                js_copy(J, 2);
+                J->copy(2);
             else
                 J->pushundefined();
-            js_copy(J, -3);
+            J->copy(-3);
             js_pushnumber(J, k);
-            js_copy(J, 0);
+            J->copy(0);
             J->call(3);
             if (js_toboolean(J, -1))
                 return;
@@ -501,7 +501,7 @@ static void Ap_some(js_State *J) {
 }
 
 static void Ap_forEach(js_State *J) {
-    int hasthis = js_gettop(J) >= 3;
+    int hasthis = J->gettop() >= 3;
     int k, len;
 
     if (!J->iscallable(1))
@@ -510,14 +510,14 @@ static void Ap_forEach(js_State *J) {
     len = js_getlength(J, 0);
     for (k = 0; k < len; ++k) {
         if (js_hasindex(J, 0, k)) {
-            js_copy(J, 1);
+            J->copy(1);
             if (hasthis)
-                js_copy(J, 2);
+                J->copy(2);
             else
                 J->pushundefined();
-            js_copy(J, -3);
+            J->copy(-3);
             js_pushnumber(J, k);
-            js_copy(J, 0);
+            J->copy(0);
             J->call(3);
             js_pop(J, 2);
         }
@@ -527,7 +527,7 @@ static void Ap_forEach(js_State *J) {
 }
 
 static void Ap_map(js_State *J) {
-    int hasthis = js_gettop(J) >= 3;
+    int hasthis = J->gettop() >= 3;
     int k, len;
 
     if (!J->iscallable(1))
@@ -538,14 +538,14 @@ static void Ap_map(js_State *J) {
     len = js_getlength(J, 0);
     for (k = 0; k < len; ++k) {
         if (js_hasindex(J, 0, k)) {
-            js_copy(J, 1);
+            J->copy(1);
             if (hasthis)
-                js_copy(J, 2);
+                J->copy(2);
             else
                 J->pushundefined();
-            js_copy(J, -3);
+            J->copy(-3);
             js_pushnumber(J, k);
-            js_copy(J, 0);
+            J->copy(0);
             J->call(3);
             js_setindex(J, -3, k);
             js_pop(J, 1);
@@ -554,7 +554,7 @@ static void Ap_map(js_State *J) {
 }
 
 static void Ap_filter(js_State *J) {
-    int hasthis = js_gettop(J) >= 3;
+    int hasthis = J->gettop() >= 3;
     int k, to, len;
 
     if (!J->iscallable(1))
@@ -566,14 +566,14 @@ static void Ap_filter(js_State *J) {
     len = js_getlength(J, 0);
     for (k = 0; k < len; ++k) {
         if (js_hasindex(J, 0, k)) {
-            js_copy(J, 1);
+            J->copy(1);
             if (hasthis)
-                js_copy(J, 2);
+                J->copy(2);
             else
                 J->pushundefined();
-            js_copy(J, -3);
+            J->copy(-3);
             js_pushnumber(J, k);
-            js_copy(J, 0);
+            J->copy(0);
             J->call(3);
             if (js_toboolean(J, -1)) {
                 js_pop(J, 1);
@@ -586,7 +586,7 @@ static void Ap_filter(js_State *J) {
 }
 
 static void Ap_reduce(js_State *J) {
-    int hasinitial = js_gettop(J) >= 3;
+    int hasinitial = J->gettop() >= 3;
     int k, len;
 
     if (!J->iscallable(1))
@@ -600,7 +600,7 @@ static void Ap_reduce(js_State *J) {
 
     /* initial value of accumulator */
     if (hasinitial)
-        js_copy(J, 2);
+        J->copy(2);
     else {
         while (k < len)
             if (js_hasindex(J, 0, k++))
@@ -611,12 +611,12 @@ static void Ap_reduce(js_State *J) {
 
     while (k < len) {
         if (js_hasindex(J, 0, k)) {
-            js_copy(J, 1);
+            J->copy(1);
             J->pushundefined();
             J->rot(4); /* accumulator on top */
             J->rot(4); /* property on top */
             js_pushnumber(J, k);
-            js_copy(J, 0);
+            J->copy(0);
             J->call(4); /* calculate new accumulator */
         }
         ++k;
@@ -626,7 +626,7 @@ static void Ap_reduce(js_State *J) {
 }
 
 static void Ap_reduceRight(js_State *J) {
-    int hasinitial = js_gettop(J) >= 3;
+    int hasinitial = J->gettop() >= 3;
     int k, len;
 
     if (!J->iscallable(1))
@@ -640,7 +640,7 @@ static void Ap_reduceRight(js_State *J) {
 
     /* initial value of accumulator */
     if (hasinitial)
-        js_copy(J, 2);
+        J->copy(2);
     else {
         while (k >= 0)
             if (js_hasindex(J, 0, k--))
@@ -651,12 +651,12 @@ static void Ap_reduceRight(js_State *J) {
 
     while (k >= 0) {
         if (js_hasindex(J, 0, k)) {
-            js_copy(J, 1);
+            J->copy(1);
             J->pushundefined();
             J->rot(4); /* accumulator on top */
             J->rot(4); /* property on top */
             js_pushnumber(J, k);
-            js_copy(J, 0);
+            J->copy(0);
             J->call(4); /* calculate new accumulator */
         }
         --k;

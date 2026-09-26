@@ -128,7 +128,7 @@ int js_game_emit_es(xstring es, xstring sub_event, bvariant_map args) {
 }
 
 int js_game_emit(js_State *J, pcstr event_name) {
-    int payload_idx = js_gettop(J) - 1;
+    int payload_idx = J->gettop() - 1;
     bvariant_map args = js_helpers::js_object_to_bvariant_map(J, payload_idx);
 
     const char *dot = strchr(event_name, '.');

@@ -634,7 +634,7 @@ void ui::proxy_set_ondraw(js_State* J) {
         return;
     }
 
-    js_copy(J, 1);
+    J->copy(1);
     elem->set_ref(ui::element::ONDRAW, js_xref(J));
     elem->ondraw(nullptr);
     J->pushundefined();
@@ -658,7 +658,7 @@ void ui::proxy_set_textfn(js_State* J) {
         return;
     }
 
-    js_copy(J, 1);
+    J->copy(1);
     elem->set_ref(ui::element::TEXTFN, js_xref(J));
     J->pushundefined();
 }
@@ -700,7 +700,7 @@ void ui::proxy_set_checkedfn(js_State* J) {
         return;
     }
 
-    js_copy(J, 1);
+    J->copy(1);
     elem->set_ref(ui::element::CHECKEDFN, js_xref(J));
     J->pushundefined();
 }

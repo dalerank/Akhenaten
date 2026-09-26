@@ -57,7 +57,7 @@ static bool try_show_cptr_property(js_State *J, pcstr display_name, int obj_idx,
 }
 
 static void __debug_props_show(js_State *J) {
-    const int argc = js_gettop(J);
+    const int argc = J->gettop();
     if (argc < 2) {
         return;
     }

@@ -84,7 +84,7 @@ static void storage_yard_proto_toString(js_State *J) {
 static js_Object *g_storage_yard_proto = nullptr;
 
 static void jsB_new_StorageYard(js_State *J) {
-    int id = js_gettop(J) > 1 ? (int)js_tointeger(J, 1) : 0;
+    int id = J->gettop() > 1 ? (int)js_tointeger(J, 1) : 0;
     building_storage_yard *yard = storage_yard_cast(building_get(id));
     if (!yard) {
         js_pushnull(J);

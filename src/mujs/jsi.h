@@ -311,6 +311,8 @@ struct js_State
 	void r_run(js_Function *F);
 	void construct(int n);
 
+	int gettop();
+	void copy(int idx);
 	void dup();
 	void dup2();
 	void rot(int n);

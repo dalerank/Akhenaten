@@ -55,7 +55,7 @@ static void Op_toString(js_State *J)
 
 static void Op_valueOf(js_State *J)
 {
-	js_copy(J, 0);
+	J->copy(0);
 }
 
 static js_StringNode op_prop_vec2_x = js_intern("x");
@@ -294,7 +294,7 @@ static void O_defineProperty(js_State *J)
 	if (!J->isobject(1)) js_typeerror(J, "not an object");
 	if (!J->isobject(3)) js_typeerror(J, "not an object");
 	ToPropertyDescriptor(J, J->toobject(1), js_tostring(J, 2), J->toobject(3));
-	js_copy(J, 1);
+	J->copy(1);
 }
 
 static void O_defineProperties(js_State *J)
@@ -314,7 +314,7 @@ static void O_defineProperties(js_State *J)
 		}
 	}
 
-	js_copy(J, 1);
+	J->copy(1);
 }
 
 static void O_create(js_State *J)
@@ -390,7 +390,7 @@ static void O_preventExtensions(js_State *J)
     }
 
 	J->toobject(1)->extensible = 0;
-	js_copy(J, 1);
+	J->copy(1);
 }
 
 static void O_isExtensible(js_State *J)
@@ -418,7 +418,7 @@ static void O_seal(js_State *J)
 		ref->atts |= JS_DONTCONF;
 	}
 
-	js_copy(J, 1);
+	J->copy(1);
 }
 
 static void O_isSealed(js_State *J)
@@ -459,7 +459,7 @@ static void O_freeze(js_State *J)
 	for (ref = obj->head; ref; ref = ref->next)
 		ref->atts |= JS_READONLY | JS_DONTCONF;
 
-	js_copy(J, 1);
+	J->copy(1);
 }
 
 static void O_isFrozen(js_State *J)

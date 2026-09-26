@@ -368,7 +368,7 @@ static void jsB_Date(js_State *J) {
 }
 
 static void jsB_new_Date(js_State *J) {
-    int top = js_gettop(J);
+    int top = J->gettop();
     js_Object *obj;
     double t;
 
@@ -649,7 +649,7 @@ static void Dp_setUTCFullYear(js_State *J) {
 js_StringNode toISOString = js_intern("toISOString");
 
 static void Dp_toJSON(js_State* J) {
-    js_copy(J, 0);
+    J->copy(0);
     js_toprimitive(J, -1, JS_HNUMBER);
     if (J->isnumber(-1) && !isfinite(js_tonumber(J, -1))) {
         js_pushnull(J);
@@ -662,7 +662,7 @@ static void Dp_toJSON(js_State* J) {
         js_typeerror(J, "Date.prototype.toJSON: this.toISOString not a function");
     }
 
-    js_copy(J, 0);
+    J->copy(0);
     J->call(0);
 }
 

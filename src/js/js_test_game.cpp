@@ -2941,11 +2941,11 @@ static bool __test_js_hotreload_handlers_stack_ok(int iterations) {
         return false;
     }
 
-    const int baseline = js_gettop(J);
+    const int baseline = J->gettop();
     for (int i = 0; i < iterations; ++i) {
         js_register_game_handlers({});
     }
-    const int after = js_gettop(J);
+    const int after = J->gettop();
     logs::info("[test-marker] hotreload_handlers_stack baseline=%d after=%d iterations=%d",
                baseline, after, iterations);
     if (after != baseline) {
@@ -2962,12 +2962,12 @@ static bool __test_js_hotreload_file_stack_ok(pcstr path, int iterations) {
         return false;
     }
 
-    const int baseline = js_gettop(J);
+    const int baseline = J->gettop();
     for (int i = 0; i < iterations; ++i) {
         js_vm_reload_file(path);
         js_vm_sync({});
     }
-    const int after = js_gettop(J);
+    const int after = J->gettop();
     logs::info("[test-marker] hotreload_file_stack path=%s baseline=%d after=%d iterations=%d",
                path, baseline, after, iterations);
     if (after != baseline) {

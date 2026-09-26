@@ -66,7 +66,7 @@ static void sound_channel_proto_toString(js_State *J) {
 }
 
 static void jsB_new_SoundChannel(js_State *J) {
-    const int index = js_gettop(J) > 1 ? static_cast<int>(js_tointeger(J, 1)) : 0;
+    const int index = J->gettop() > 1 ? static_cast<int>(js_tointeger(J, 1)) : 0;
     js_push_sound_channel(J, index);
 }
 
@@ -105,7 +105,7 @@ static void js_sound_speech_stop(js_State *J) {
 
 static void js_sound_speech_play(js_State *J) {
     const xstring path = js_toxstring(J, 1);
-    const int volume = js_gettop(J) > 2 ? js_tointeger(J, 2) : 255;
+    const int volume = J->gettop() > 2 ? js_tointeger(J, 2) : 255;
     js_pushboolean(J, g_sound.speech_play_file(path.c_str(), volume));
 }
 

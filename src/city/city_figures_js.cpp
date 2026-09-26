@@ -233,7 +233,7 @@ static void js_push_figure(js_State *J, int id) {
 }
 
 static void jsB_new_Figure(js_State *J) {
-    const int id = js_gettop(J) > 1 ? (int)js_tointeger(J, 1) : 0;
+    const int id = J->gettop() > 1 ? (int)js_tointeger(J, 1) : 0;
     js_push_figure(J, id);
 }
 

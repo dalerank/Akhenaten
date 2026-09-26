@@ -73,7 +73,7 @@ static void js_push_figure_warship(js_State *J, int fid) {
 }
 
 static void jsB_new_FigureWarship(js_State *J) {
-    const int fid = js_gettop(J) > 1 ? (int)js_tointeger(J, 1) : 0;
+    const int fid = J->gettop() > 1 ? (int)js_tointeger(J, 1) : 0;
     js_push_figure_warship(J, fid);
 }
 

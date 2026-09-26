@@ -289,7 +289,7 @@ static void Ep_toString(js_State *J)
 
 static int jsB_ErrorX(js_State *J, js_Object *prototype)
 {
-  int top = js_gettop(J);
+  int top = J->gettop();
   js_pushobject(J, jsV_newobject(J, JS_CERROR, prototype));
   if (top > 1) {
     J->pushstring(js_tostring(J, 1));

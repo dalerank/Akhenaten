@@ -213,7 +213,7 @@ static int fmtvalue(js_State *J, js_Buffer **sb, const char *key, const char *ga
 	if (J->isobject(-1)) {
         if (J->hasproperty(-1, propert_toJson)) {
 			if (J->iscallable(-1)) {
-				js_copy(J, -2);
+				J->copy(-2);
 				J->pushliteral(js_intern(key));
 				J->call(1);
 				J->rot2pop1();
@@ -285,7 +285,7 @@ static void JSON_stringify(js_State *J)
 	// TODO: replacer
 
 	if (J->isdefined(1)) {
-		js_copy(J, 1);
+		J->copy(1);
 		if (fmtvalue(J, &sb, "", gap, 0)) {
 			js_putc(J, &sb, 0);
 			if (js_try(J)) {

@@ -91,7 +91,7 @@ static void def_readonly_prop(js_State *J, js_CFunction get, const char *name) {
 }
 
 static void jsB_new_EnemyArmy(js_State *J) {
-    const int id = js_gettop(J) > 1 ? (int)js_tointeger(J, 1) : 0;
+    const int id = J->gettop() > 1 ? (int)js_tointeger(J, 1) : 0;
     js_push_enemy_army(J, id);
 }
 

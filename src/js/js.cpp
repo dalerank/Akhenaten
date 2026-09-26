@@ -193,7 +193,7 @@ static void js_vm_log_stacktrace(js_State *J) {
 
 // Helper function to dump stack values for debugging
 static void js_vm_dump_stack(js_State *J) {
-    int stack_size = js_gettop(J);
+    int stack_size = J->gettop();
     logs::info("!!! ==================================================");
     logs::info("!!! Stack Dump (size: %d):", stack_size);
     logs::info("!!! ==================================================");
@@ -236,7 +236,7 @@ static void js_vm_dump_stack(js_State *J) {
                 bstring256 props_preview;
 
                 // Save stack state
-                int save_top = js_gettop(J);
+                int save_top = J->gettop();
 
                 // Try to iterate first few properties
                 js_pushiterator(J, idx, 0);
@@ -251,7 +251,7 @@ static void js_vm_dump_stack(js_State *J) {
                 js_pop(J, 1); // Remove iterator
 
                 // Restore stack state
-                while (js_gettop(J) > save_top) {
+                while (J->gettop() > save_top) {
                     js_pop(J, 1);
                 }
 
@@ -373,7 +373,7 @@ int js_vm_stack_depth_if_idle() {
     if (vm.J->bot != 0) {
         return -1;
     }
-    return js_gettop(vm.J);
+    return vm.J->gettop();
 }
 
 int js_vm_force_idle_stack() {
@@ -419,7 +419,7 @@ static void js_vm_log_script_parse_or_compile_failure(js_State *J, pcstr path_la
     char buf[768];
     buf[0] = '\0';
 
-    if (js_gettop(J) > 0) {
+    if (J->gettop() > 0) {
         js_Value *topv = js_tovalue(J, -1);
         if (topv->type == JS_TOBJECT && topv->u.object->type == JS_CERROR) {
             char namebuf[96];
@@ -549,7 +549,7 @@ int js_vm_load_file_and_exec(pcstr path) {
                 logs::error("Fatal error on call base after load %s", r.path.c_str());
                 if (vm.error_str.len() > 0) {
                     logs::error("Error details: %s", vm.error_str.c_str());
-                } else if (js_gettop(vm.J) > 0) {
+                } else if (vm.J->gettop() > 0) {
                     auto error_msg = js_tostring(vm.J, -1);
                     if (!error_msg->value.empty()) {
                         logs::error("Error details: %s", error_msg->value.c_str());
@@ -625,7 +625,7 @@ int js_vm_load_file_and_exec(pcstr path) {
         logs::error("Fatal error on call base after load %s", path);
         if (vm.error_str.len() > 0) {
             logs::error("Error details: %s", vm.error_str.c_str());
-        } else if (js_gettop(vm.J) > 0) {
+        } else if (vm.J->gettop() > 0) {
             auto error_msg = js_tostring(vm.J, -1);
             if (!error_msg->value.empty()) {
                 logs::error("Error details: %s", js_strnode_cstr(error_msg));
@@ -729,13 +729,13 @@ bool js_vm_sync(const xstring &mission_id) {
     // Only clear values *this* sync pushed (relative to entry depth). Absolute
     // pop-to-zero is unsafe when js_vm_sync runs nested under a JS→C call
     // (BOT != 0); at frame_end BOT is 0 and baseline is the idle top.
-    const int stack_baseline = vm.J ? js_gettop(vm.J) : 0;
+    const int stack_baseline = vm.J ? vm.J->gettop() : 0;
 
     js_register_game_handlers(mission_id);
     js_register_entity_systems();
 
     if (vm.J) {
-        const int top = js_gettop(vm.J);
+        const int top = vm.J->gettop();
         if (top > stack_baseline) {
             logs::info("JS: clearing leftover stack before config refresh (+%d)", top - stack_baseline);
             js_pop(vm.J, top - stack_baseline);
@@ -745,7 +745,7 @@ bool js_vm_sync(const xstring &mission_id) {
     config::refresh(vm.J);
 
     if (vm.J) {
-        const int top = js_gettop(vm.J);
+        const int top = vm.J->gettop();
         if (top > stack_baseline) {
             logs::info("JS: clearing leftover stack after config refresh (+%d)", top - stack_baseline);
             js_pop(vm.J, top - stack_baseline);
@@ -776,7 +776,7 @@ int js_vm_exec_function_args(pcstr funcname, const char *szTypes, ...) {
 
     //log_info("script-if:// exec function ", funcname, 0);
 
-    savetop = js_gettop(vm.J);
+    savetop = vm.J->gettop();
     js_getglobal(vm.J, funcname);
     js_pushnull(vm.J);
 
@@ -814,21 +814,21 @@ int js_vm_exec_function_args(pcstr funcname, const char *szTypes, ...) {
         logs::error("Fatal error on call function %s", funcname);
         if (vm.error_str.len() > 0) {
             logs::error("Error details: %s", vm.error_str.c_str());
-        } else if (js_gettop(vm.J) > 0) {
+        } else if (vm.J->gettop() > 0) {
             auto error_msg = js_tostring(vm.J, -1);
             if (!error_msg->value.empty()) {
                 logs::error("Error details: %s", error_msg->value.c_str());
             }
         }
-        while (js_gettop(vm.J) > savetop) {
+        while (vm.J->gettop() > savetop) {
             js_pop(vm.J, 1);
         }
         return 0;
     }
 
-    if (js_gettop(vm.J) != savetop) {
-        logs::info("STACK grow for %s [%d]", funcname, js_gettop(vm.J));
-        while (js_gettop(vm.J) > savetop) {
+    if (vm.J->gettop() != savetop) {
+        logs::info("STACK grow for %s [%d]", funcname, vm.J->gettop());
+        while (vm.J->gettop() > savetop) {
             js_pop(vm.J, 1);
         }
     }
@@ -865,7 +865,7 @@ static void js_native_debugger_port(js_State *J) {
 
 static void js_native_debugger_start(js_State *J) {
     int port = 4711;
-    if (js_gettop(J) >= 1 && J->isnumber(1)) {
+    if (J->gettop() >= 1 && J->isnumber(1)) {
         port = (int)js_tonumber(J, 1);
     }
     if (g_mujs_debugger.is_running()) {
@@ -1032,12 +1032,12 @@ void js_reset_vm_state() {
 
     int ok = js_vm_load_file_and_exec(":modules.js");
     if (ok) {
-        int stack_top = js_gettop(vm.J);
+        int stack_top = vm.J->gettop();
         if (stack_top > 0) {
             js_pop(vm.J, stack_top);
         }
     }
-    logs::info( "STACK state %d", js_gettop(vm.J));
+    logs::info( "STACK state %d", vm.J->gettop());
 
     // After a VM reset the js_State pointer changes — always re-register the hook.
     // The hook itself is a no-op when the debugger server is not running.

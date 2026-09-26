@@ -77,7 +77,7 @@ static void js_push_empire_object(js_State* J, int slot) {
 }
 
 static void jsB_new_EmpireObject(js_State* J) {
-    const int slot = js_gettop(J) > 1 ? (int)js_tointeger(J, 1) : 0;
+    const int slot = J->gettop() > 1 ? (int)js_tointeger(J, 1) : 0;
     js_push_empire_object(J, slot);
 }
 
@@ -131,7 +131,7 @@ static void js_push_empire_city(js_State* J, int id, js_Object* proto) {
 }
 
 static void jsB_new_EmpireCityObject(js_State* J) {
-    const int id = js_gettop(J) > 1 ? (int)js_tointeger(J, 1) : 0;
+    const int id = J->gettop() > 1 ? (int)js_tointeger(J, 1) : 0;
     js_push_empire_city_object(J, id, g_empire_city_map_proto);
 }
 
@@ -166,7 +166,7 @@ static void empire_city_proto_toString(js_State* J) {
 }
 
 static void jsB_new_EmpireCity(js_State* J) {
-    const int id = js_gettop(J) > 1 ? (int)js_tointeger(J, 1) : 0;
+    const int id = J->gettop() > 1 ? (int)js_tointeger(J, 1) : 0;
     js_push_empire_city(J, id, g_empire_city_proto);
 }
 
@@ -273,7 +273,7 @@ static void js_push_empire_trader(js_State* J, int index) {
 }
 
 static void jsB_new_EmpireTrader(js_State* J) {
-    const int index = js_gettop(J) > 1 ? (int)js_tointeger(J, 1) : 0;
+    const int index = J->gettop() > 1 ? (int)js_tointeger(J, 1) : 0;
     js_push_empire_trader(J, index);
 }
 
@@ -329,7 +329,7 @@ static void js_push_invasion_warning(js_State* J, int index) {
 }
 
 static void jsB_new_InvasionWarning(js_State* J) {
-    const int index = js_gettop(J) > 1 ? (int)js_tointeger(J, 1) : 0;
+    const int index = J->gettop() > 1 ? (int)js_tointeger(J, 1) : 0;
     js_push_invasion_warning(J, index);
 }
 

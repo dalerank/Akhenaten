@@ -99,7 +99,7 @@ struct js_convert<js_helpers::js_function_ref> {
         if (!J->iscallable(idx)) {
             return js_helpers::js_function_ref{};
         }
-        js_copy(J, idx);
+        J->copy(idx);
         auto pp = js_ref(J);
         xstring r; r._set(pp);
         js_pop(J, 1);

@@ -91,7 +91,7 @@ static void building_params_proto_toString(js_State *J) {
 }
 
 static void jsB_BuildingParams_for_type(js_State *J) {
-    const int type = js_gettop(J) > 0 ? (int)js_tointeger(J, 1) : BUILDING_NONE;
+    const int type = J->gettop() > 0 ? (int)js_tointeger(J, 1) : BUILDING_NONE;
     js_pushobject(J, jsV_newobject(J, JS_COBJECT, g_building_params_proto));
     js_pushnumber(J, (double)type);
     js_setproperty(J, -2, js_intern("type"));

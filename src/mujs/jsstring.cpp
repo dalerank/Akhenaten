@@ -61,12 +61,12 @@ int js_utfptrtoidx(const char *s, const char *p)
 
 static void jsB_new_String(js_State *J)
 {
-    J->newstring(js_gettop(J) > 1 ? js_strnode_cstr(js_tostring(J, 1)) : "");
+    J->newstring(J->gettop() > 1 ? js_strnode_cstr(js_tostring(J, 1)) : "");
 }
 
 static void jsB_String(js_State *J)
 {
-    J->pushstring(js_gettop(J) > 1 ? js_tostring(J, 1) : js_intern(""));
+    J->pushstring(J->gettop() > 1 ? js_tostring(J, 1) : js_intern(""));
 }
 
 static void Sp_toString(js_State *J)
@@ -110,7 +110,7 @@ static void Sp_charCodeAt(js_State *J)
 
 static void Sp_concat(js_State *J)
 {
-	int i, top = js_gettop(J);
+	int i, top = J->gettop();
 	int n;
 	char * volatile out;
 	const char *s;
@@ -297,7 +297,7 @@ static void Sp_trim(js_State *J)
 
 static void S_fromCharCode(js_State *J)
 {
-	int i, top = js_gettop(J);
+	int i, top = J->gettop();
 	Rune c;
 	char *s, *p;
 
@@ -330,7 +330,7 @@ static void Sp_match(js_State *J)
 	text = checkstring(J, 0);
 
 	if (J->isregexp(1))
-		js_copy(J, 1);
+		J->copy(1);
 	else if (J->isundefined(1))
 		J->newregexp("", 0);
 	else
@@ -374,7 +374,7 @@ static void Sp_search(js_State *J)
 	text = checkstring(J, 0);
 
 	if (J->isregexp(1))
-		js_copy(J, 1);
+		J->copy(1);
 	else if (J->isundefined(1))
 		J->newregexp("", 0);
 	else
@@ -400,7 +400,7 @@ static void Sp_replace_regexp(js_State *J)
 	re = js_toregexp(J, 1);
 
 	if (js_regexec((Reprog *)re->prog, source, &m, 0)) {
-		js_copy(J, 0);
+		J->copy(0);
 		return;
 	}
 
@@ -411,12 +411,12 @@ loop:
 	n = m.sub[0].ep - m.sub[0].sp;
 
 	if (J->iscallable(2)) {
-		js_copy(J, 2);
+		J->copy(2);
 		J->pushundefined();
 		for (x = 0; m.sub[x].sp; ++x) /* arg 0..x: substring and subexps that matched */
 			js_pushlstring(J, m.sub[x].sp, m.sub[x].ep - m.sub[x].sp);
 		js_pushnumber(J, s - source); /* arg x+2: offset within search string */
-		js_copy(J, 0); /* arg x+3: search string */
+		J->copy(0); /* arg x+3: search string */
 		J->call(2 + x);
         r = js_strnode_cstr(js_tostring(J, -1));
 		js_putm(J, &sb, source, s);
@@ -498,17 +498,17 @@ static void Sp_replace_string(js_State *J)
 
 	s = strstr(source, needle);
 	if (!s) {
-		js_copy(J, 0);
+		J->copy(0);
 		return;
 	}
 	n = strlen(needle);
 
 	if (J->iscallable(2)) {
-		js_copy(J, 2);
+		J->copy(2);
 		J->pushundefined();
 		js_pushlstring(J, s, n); /* arg 1: substring that matched */
 		js_pushnumber(J, s - source); /* arg 2: offset within search string */
-		js_copy(J, 0); /* arg 3: search string */
+		J->copy(0); /* arg 3: search string */
 		J->call(3);
 		r = js_strnode_cstr(js_tostring(J, -1));
 		js_putm(J, &sb, source, s);
@@ -652,7 +652,7 @@ static void Sp_split(js_State *J)
 {
 	if (J->isundefined(1)) {
 		J->newarray();
-		js_copy(J, 0);
+		J->copy(0);
 		js_setindex(J, -2, 0);
 	} else if (J->isregexp(1)) {
 		Sp_split_regexp(J);

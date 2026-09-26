@@ -6,7 +6,7 @@
 
 static void jsB_Function(js_State *J)
 {
-	int i, top = js_gettop(J);
+	int i, top = J->gettop();
 	js_Buffer *sb = NULL;
 	const char *body;
 	js_Ast *parse;
@@ -93,8 +93,8 @@ static void Fp_apply(js_State *J)
 	if (!J->iscallable(0))
 		js_typeerror(J, "not a function");
 
-	js_copy(J, 0);
-	js_copy(J, 1);
+	J->copy(0);
+	J->copy(1);
 
 	if (J->isnull(2) || J->isundefined(2)) {
 		n = 0;
@@ -109,13 +109,13 @@ static void Fp_apply(js_State *J)
 
 static void Fp_call(js_State *J)
 {
-	int i, top = js_gettop(J);
+	int i, top = J->gettop();
 
 	if (!J->iscallable(0))
 		js_typeerror(J, "not a function");
 
 	for (i = 0; i < top; ++i)
-		js_copy(J, i);
+		J->copy(i);
 
 	J->call(top - 2);
 }
@@ -127,15 +127,15 @@ js_StringNode property___BoundArguments__ = js_intern("__BoundArguments__");
 
 static void callbound(js_State *J)
 {
-	int top = js_gettop(J);
+	int top = J->gettop();
 	int i, fun, args, n;
 
-	fun = js_gettop(J);
+	fun = J->gettop();
 	js_currentfunction(J);
     J->getproperty(fun, property___TargetFunction__);
     J->getproperty(fun, property___BoundThis__);
 
-	args = js_gettop(J);
+	args = J->gettop();
     J->getproperty(fun, property___BoundArguments__);
 	n = js_getlength(J, args);
 	for (i = 0; i < n; ++i)
@@ -143,20 +143,20 @@ static void callbound(js_State *J)
 	J->remove(args);
 
 	for (i = 1; i < top; ++i)
-		js_copy(J, i);
+		J->copy(i);
 
 	J->call(n + top - 1);
 }
 
 static void constructbound(js_State* J) {
-    int top = js_gettop(J);
+    int top = J->gettop();
     int i, fun, args, n;
 
-    fun = js_gettop(J);
+    fun = J->gettop();
     js_currentfunction(J);
     J->getproperty(fun, property___TargetFunction__);
 
-    args = js_gettop(J);
+    args = J->gettop();
     J->getproperty(fun, property___BoundArguments__);
     n = js_getlength(J, args);
     for (i = 0; i < n; ++i)
@@ -164,14 +164,14 @@ static void constructbound(js_State* J) {
     J->remove(args);
 
     for (i = 1; i < top; ++i)
-        js_copy(J, i);
+        J->copy(i);
 
     J->construct(n + top - 1);
 }
 
 static void Fp_bind(js_State *J)
 {
-	int i, top = js_gettop(J);
+	int i, top = J->gettop();
 	int n;
 
 	if (!J->iscallable(0))
@@ -188,17 +188,17 @@ static void Fp_bind(js_State *J)
     J->newcconstructor(callbound, constructbound, js_intern("[bind]"), n);
 
 	/* target function */
-	js_copy(J, 0);
+	J->copy(0);
     js_defproperty(J, -2, property___TargetFunction__, JS_READONLY | JS_DONTENUM | JS_DONTCONF);
 
 	/* bound this */
-	js_copy(J, 1);
+	J->copy(1);
     js_defproperty(J, -2, property___BoundThis__, JS_READONLY | JS_DONTENUM | JS_DONTCONF);
 
 	/* bound arguments */
 	J->newarray();
 	for (i = 2; i < top; ++i) {
-		js_copy(J, i);
+		J->copy(i);
 		js_setindex(J, -2, i - 2);
 	}
     js_defproperty(J, -2, property___BoundArguments__, JS_READONLY | JS_DONTENUM | JS_DONTCONF);

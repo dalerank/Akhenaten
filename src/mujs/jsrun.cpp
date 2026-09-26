@@ -406,8 +406,8 @@ static js_Object *jsR_tofunction(js_State *J, int idx) {
 
 /* Stack manipulation */
 
-int js_gettop(js_State *J) {
-    return TOP - BOT;
+int js_State::gettop() {
+    return top - bot;
 }
 
 void js_pop(js_State *J, int n) {
@@ -434,10 +434,10 @@ void js_State::replace(int idx) {
     stack[idx] = stack[--top];
 }
 
-void js_copy(js_State *J, int idx) {
-    CHECKSTACK(1);
-    STACK[TOP] = *stackidx(J, idx);
-    ++TOP;
+void js_State::copy(int idx) {
+    JCHECKSTACK(1);
+    stack[top] = *stackidx(this, idx);
+    ++top;
 }
 
 void js_State::dup() {
@@ -1119,7 +1119,7 @@ static void js_setvar(js_State* J, const js_StringNode name) {
             if (ref->setter) {
                 js_pushobject(J, ref->setter);
                 js_pushobject(J, E->variables);
-                js_copy(J, -3);
+                J->copy(-3);
                 J->call(1);
                 js_pop(J, 1);
                 return;
@@ -1232,7 +1232,7 @@ void js_State::callfunction(int n, js_Function *F, js_Environment *scope) {
         js_pushnumber(J, n);
         js_defproperty(J, -2, property_length, JS_DONTENUM);
         for (i = 0; i < n; ++i) {
-            js_copy(J, i + 1);
+            J->copy(i + 1);
             js_setindex(J, -2, i);
         }
         js_initvar(J, property_arguments, -1);
@@ -1421,7 +1421,7 @@ void js_eval(js_State *J) {
     }
     js_loadeval(J, "(eval)", js_strnode_cstr(js_tostring(J, -1)));
     J->rot2pop1();
-    js_copy(J, 0); /* copy 'this' */
+    J->copy(0); /* copy 'this' */
     J->call(0);
 }
 
@@ -1647,7 +1647,7 @@ void js_State::r_run(js_Function *F) {
         case OP_TRUE: js_pushboolean(J, 1); break;
         case OP_FALSE: js_pushboolean(J, 0); break;
 
-        case OP_THIS: js_copy(J, 0); break;
+        case OP_THIS: J->copy(0); break;
         case OP_GLOBAL: js_pushobject(J, J->G); break;
         case OP_CURRENT: js_currentfunction(J); break;
 

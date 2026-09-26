@@ -58,7 +58,7 @@ static void temple_complex_proto_toString(js_State *J) {
 }
 
 static void jsB_new_BuildingTempleComplex(js_State *J) {
-    const int id = js_gettop(J) > 1 ? (int)js_tointeger(J, 1) : 0;
+    const int id = J->gettop() > 1 ? (int)js_tointeger(J, 1) : 0;
     building_temple_complex *complex = building_get_ex<building_temple_complex>(id);
     if (!complex) {
         js_pushnull(J);
