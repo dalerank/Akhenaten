@@ -27,7 +27,6 @@ public:
     virtual e_overlay get_overlay() const override { return OVERLAY_MORTUARY; }
     virtual e_sound_channel_city sound_channel() const override { return SOUND_CHANNEL_CITY_MORTUARY; }
     virtual int animation_speed(int speed) const override { return 3; }
-    virtual void update_animation() override;
     virtual void update_count() const override;
 };
 ANK_CONFIG_STRUCT(building_mortuary::static_params, linen_required_for_spawn, linen_required_for_animation, monthly_linen_consumption)

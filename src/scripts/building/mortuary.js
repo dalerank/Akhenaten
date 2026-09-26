@@ -74,3 +74,20 @@ function building_mortuary_on_place_checks(ev) {
     city.warnings.show_if_not(linen.can_import, "#setup_trade_route_to_import")
     city.warnings.show_if_not(linen.trade_status == TRADE_STATUS_IMPORT, "#overseer_of_commerce_to_import")
 }
+
+[es=(building_mortuary, update_animation)]
+function building_mortuary_update_animation(ev) {
+    var b = city.get_building(ev.bid)
+    if (!b.play_animation) {
+        return
+    }
+
+    if (__city_resource_is_mothballed(RESOURCE_LINEN)) {
+        b.play_animation = false
+        return
+    }
+
+    if (b.stored_resource(RESOURCE_LINEN) < building_mortuary.linen_required_for_animation) {
+        b.play_animation = false
+    }
+}

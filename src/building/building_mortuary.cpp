@@ -42,19 +42,6 @@ void building_mortuary::spawn_figure() {
     }
 }
 
-void building_mortuary::update_animation() {
-    building_impl::update_animation();
-    if (g_city.resource.is_mothballed(RESOURCE_LINEN)) {
-        base.play_animation = false;
-        return;
-    }
-
-    const auto &params = current_params();
-    if (base.stored_amount(RESOURCE_LINEN) < params.linen_required_for_animation) {
-        base.play_animation = false;
-    }
-}
-
 void building_mortuary::update_count() const {
     g_city.health.add_mortuary_workers(num_workers());
 }
