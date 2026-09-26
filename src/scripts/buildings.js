@@ -29,6 +29,7 @@ import building.royal_tomb
 import building.pyramid
 import building.farm
 import building.fort
+import building.recruiter
 import building.education
 import building.academy
 import building.apothecary

@@ -3,7 +3,6 @@
 #include "city/buildings.h"
 #include "city/military.h"
 #include "city/city_resource.h"
-#include "city/city_warnings.h"
 #include "city/city_labor.h"
 #include "core/calc.h"
 #include "figure/action.h"
@@ -188,22 +187,6 @@ void building_recruiter::on_post_load() {
 void building_recruiter::update_count() const {
     const bool is_active = (num_workers() > 0);
     g_city.buildings.track_building(base, is_active);
-}
-
-void building_recruiter::on_place_checks() {
-    construction_warnings warnings;
-    const bool has_weapons = g_city.resource.yards_stored(RESOURCE_WEAPONS) > 0;
-    warnings.add_if(!has_weapons, "#soldiers_need_supplies_of_weapons");
-}
-
-bool building_recruiter::add_resource(e_resource resource, int amount, figure_id fid) {
-    if (resource != RESOURCE_WEAPONS) {
-        return false;
-    }
-
-    verify_no_crash(id() > 0);
-    store_resource(resource, amount);
-    return true;
 }
 
 void building_recruiter::spawn_figure() {
