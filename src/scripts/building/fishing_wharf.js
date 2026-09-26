@@ -42,6 +42,11 @@ building_fishing_wharf {
   wait_time_base: 102
 }
 
+[es=(building_fishing_wharf, on_place_checks)]
+function building_fishing_wharf_on_place_checks(ev) {
+    city.warnings.show_if_not(city.count_active_buildings(BUILDING_SHIPWRIGHT) > 0, "#warning_shipwright_needed")
+}
+
 [es=(building_fishing_wharf, update_graphic)]
 function building_fishing_wharf_update_graphic(ev) {
     var building = city.get_building(ev.bid)

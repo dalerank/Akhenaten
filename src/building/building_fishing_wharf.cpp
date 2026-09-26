@@ -4,7 +4,6 @@
 #include "grid/water.h"
 #include "grid/building.h"
 #include "city/buildings.h"
-#include "city/city_warnings.h"
 #include "game/game_config.h"
 #include "figuretype/figure_fishing_boat.h"
 #include "core/random.h"
@@ -86,14 +85,6 @@ void building_fishing_wharf::spawn_figure() {
     }
 
     common_spawn_goods_output_cartpusher();
-}
-
-void building_fishing_wharf::on_place_checks() {
-    building_impl::on_place_checks();
-
-    construction_warnings warnings;
-    const bool has_shipyard = g_city.buildings.has_working_shipyard();
-    warnings.add_if(!has_shipyard, "#warning_shipwright_needed");
 }
 
 void building_fishing_wharf::on_undo() {
