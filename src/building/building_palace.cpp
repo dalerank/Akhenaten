@@ -1,70 +1,7 @@
-
 #include "building_palace.h"
 
-#include "building/building.h"
-#include "city/ratings.h"
-#include "city/city.h"
-#include "city/city_finance.h"
-#include "game/game_events.h"
-#include "game/resource.h"
-#include "figure/figure.h"
-#include "core/object_property.h"
-#include "graphics/elements/lang_text.h"
-#include "graphics/elements/tooltip.h"
-#include "graphics/elements/panel.h"
-#include "graphics/elements/ui.h"
-#include "core/bstring.h"
-#include "graphics/text.h"
-#include "graphics/view/view.h"
-#include "graphics/graphics.h"
-#include "graphics/image.h"
-#include "graphics/image_groups.h"
-#include "graphics/animkeys.h"
-#include "grid/desirability.h"
-#include "grid/property.h"
-#include "grid/terrain.h"
-#include "grid/building_tiles.h"
-#include "io/gamefiles/lang.h"
-#include "game/game_config.h"
-#include "window/building/common.h"
-#include "window/window_building_info.h"
-#include "widget/city/ornaments.h"
-#include "window/window_advisors.h"
-#include "scenario/criteria.h"
-#include "scenario/scenario.h"
-#include "sound/sound_building.h"
-#include "game/game.h"
 #include "js/js_game.h"
-#include "js/js_struct.h"
-#include "core/profiler.h"
-#include "graphics/elements/ui_js.h"
 
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_village_palace);
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_town_palace);
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_city_palace);
-
-bool building_palace::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {
-    draw_normal_anim(ctx, point, tile, color_mask);
-
-    // Draw rating indicators (flags/poles that show city ratings)
-    // int image_id = image_id_from_group(GROUP_BUILDING_PALACE);
-    // ctx.img_generic(image_id + 1, point + vec2i{138, 44 - g_city.ratings.culture / 2}, color_mask);
-    // ctx.img_generic(image_id + 2, point + vec2i{168, 36 - g_city.ratings.prosperity / 2}, color_mask);
-    // ctx.img_generic(image_id + 3, point + vec2i{198, 27 - g_city.ratings.monument / 2}, color_mask);
-    // ctx.img_generic(image_id + 4, point + vec2i{228, 19 - g_city.kingdome.rating / 2}, color_mask);
-
-    // Draw unemployed people when unemployment is high
-    // int unemployment_pct = g_city.labor.unemployment_percentage;
-    // int homeless_image_id = image_id_from_group(GROUP_FIGURE_PEASANT);
-    // if (unemployment_pct > 0)  ctx.img_generic(homeless_image_id + 108, point + vec2i{80, 0}, color_mask);
-    // if (unemployment_pct > 5)  ctx.img_generic(homeless_image_id + 104, point + vec2i{230, -30}, color_mask);
-    // if (unemployment_pct > 10) ctx.img_generic(homeless_image_id + 107, point + vec2i{100, 20}, color_mask);
-    // if (unemployment_pct > 15) ctx.img_generic(homeless_image_id + 106, point + vec2i{235, -10}, color_mask);
-    // if (unemployment_pct > 20) ctx.img_generic(homeless_image_id + 106, point + vec2i{66, 20}, color_mask);
-
-    return true;
-}
-
-void building_palace::spawn_figure() {
-    common_spawn_figure_trigger(50);
-}

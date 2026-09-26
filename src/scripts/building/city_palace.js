@@ -26,9 +26,15 @@ building_city_palace {
     is_administration: true
     keeps_visitor_paths: true
     work_anim: true
+    draw_normal_anim: true
   }
 
   cost [ 300, 400, 500, 800, 1000 ]
+}
+
+[es=(building_city_palace, spawn_figure)]
+function building_city_palace_spawn_figure(ev) {
+    city.get_building(ev.bid).common_spawn_figure_trigger(50)
 }
 
 [es=(building_city_palace, add_resource)]

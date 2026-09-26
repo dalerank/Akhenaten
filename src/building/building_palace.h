@@ -8,9 +8,6 @@ public:
 
     building_palace(building &b) : building_impl(b) {}
     virtual building_palace *dcast_palace() override { return this; }
-
-    virtual bool draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color mask) override;
-    virtual void spawn_figure() override;
 };
 
 class building_village_palace : public building_palace {

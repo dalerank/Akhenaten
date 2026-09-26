@@ -27,12 +27,18 @@ building_village_palace {
     is_administration: true
     keeps_visitor_paths: true
     work_anim: true
+    draw_normal_anim: true
   }
   cost [ 100, 200, 300, 400, 500 ]
   desirability { value:[8], step:[2], step_size:[-2], range: [6] }
   laborers[20]
   fire_risk[4]
   damage_risk [1]
+}
+
+[es=(building_village_palace, spawn_figure)]
+function building_village_palace_spawn_figure(ev) {
+    city.get_building(ev.bid).common_spawn_figure_trigger(50)
 }
 
 [es=(building_village_palace, add_resource)]
