@@ -286,6 +286,7 @@ public:
     bool is_harverster() const { return get_flag(e_building_harvester); }
     bool is_palace() const { return get_flag(e_building_palace); }
     bool is_temple() const { return get_flag(e_building_temple); }
+    bool is_tax_collector() const { return get_flag(e_building_tax_collector); }
     bool is_temple_complex() const { return get_flag(e_building_temple_complex); }
     bool is_house() const { return get_flag(e_building_house); }
     bool is_shrine() const { return get_flag(e_building_shrine); }

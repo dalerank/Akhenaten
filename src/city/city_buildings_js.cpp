@@ -142,7 +142,7 @@ ANK_FUNCTION(__city_is_empire_available)
 
 bool __city_building_is_tax_collector(int bid) {
     building *b = building_get(bid);
-    return !!b->dcast_tax_collector();
+    return b && b->is_tax_collector();
 }
 ANK_FUNCTION_1(__city_building_is_tax_collector)
 

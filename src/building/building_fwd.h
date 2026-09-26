@@ -45,7 +45,6 @@ class building;
     X(burning_ruin)            \
     X(storage)                 \
     X(temple)                  \
-    X(tax_collector)           \
     X(roadblock)               \
     X(quarry)                  \
     X(palace)                  \
