@@ -8,7 +8,6 @@
 #include "game/game_config.h"
 #include "building/building_house.h"
 #include "building/building_burning_ruin.h"
-#include "building/building_firehouse.h"
 #include "graphics/animation.h"
 #include "city/city.h"
 #include "city/city_recorded_paths.h"
@@ -190,8 +189,7 @@ bool figure_fireman::fight_fire() {
 }
 
 int figure_fireman::provide_service() {
-    building *firehouse_building = home();
-    auto firehouse = firehouse_building ? firehouse_building->dcast_firehouse() : nullptr;
+    building *firehouse = home();
 
     int min_happiness = 0;
     int result = figure_provide_service(tile(), &base, [&] (building *b, figure *f) {
@@ -203,9 +201,8 @@ int figure_fireman::provide_service() {
             min_happiness = std::max<short>(house->runtime_data().house_happiness, min_happiness);
         }
 
-        // Update statistics in firehouse
         if (firehouse) {
-            firehouse->runtime_data().buildings_served_this_month++;
+            firehouse->buildings_served_this_month++;
         }
     });
     base.min_max_seen = min_happiness;

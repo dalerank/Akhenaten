@@ -1,30 +1,16 @@
 log_info("akhenaten: loading building_firehouse")
 
-function Firehouse(building_id) {
-    this.id = building_id
-}
-
-Firehouse.prototype = Object.create(Building.prototype)
-Firehouse.prototype.constructor = Firehouse
-
-Firehouse.prototype.__property_getter = function(property) {
-    return __firehouse_get_property(this.id, property)
-}
-
-Firehouse.property.buildings_served_this_month = { }
-Firehouse.property.buildings_served_this_year = { }
-Firehouse.property.total_buildings_served = { }
-Firehouse.property.months_active = { }
-
 city.get_firehouse = function(building_id) {
     var b = city.get_building(building_id)
     if (!b.valid || b.type != BUILDING_FIREHOUSE) {
         return null
     }
-    return new Firehouse(building_id)
+    return b
 }
 
+[es=building]
 building_firehouse {
+    type: BUILDING_FIREHOUSE
     animations {
         _pack { pack:PACK_GENERAL }
         preview { id:78 }
@@ -70,26 +56,25 @@ function building_firehouse_draw_usable_paths(ev) {
 
 [es=(building_firehouse, update_month)]
 function building_firehouse_update_month(ev) {
-    var f = city.get_firehouse(ev.bid)
-    if (!f) {
+    var b = city.get_firehouse(ev.bid)
+    if (!b) {
         return
     }
 
-    var served = f.buildings_served_this_month
+    var served = b.buildings_served_this_month
     if (served > 0) {
-        f.months_active += 1
+        b.months_active += 1
     }
-    f.total_buildings_served += served
-    f.buildings_served_this_year += served
-    f.buildings_served_this_month = 0
+    b.total_buildings_served += served
+    b.buildings_served_this_year += served
+    b.buildings_served_this_month = 0
 }
 
 [es=(building_firehouse, update_year)]
 function building_firehouse_update_year(ev) {
-    var f = city.get_firehouse(ev.bid)
-    if (!f) {
+    var b = city.get_firehouse(ev.bid)
+    if (!b) {
         return
     }
-    f.buildings_served_this_year = 0
+    b.buildings_served_this_year = 0
 }
-

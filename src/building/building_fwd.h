@@ -18,7 +18,6 @@ class building;
     X(storage_room)            \
     X(brewery)                 \
     X(bazaar)                  \
-    X(firehouse)               \
     X(booth)                   \
     X(granary)                 \
     X(water_supply)            \
