@@ -1,6 +1,8 @@
 log_info("akhenaten: building_tax_collector_up started")
 
+[es=building]
 building_tax_collector_up {
+  type: BUILDING_TAX_COLLECTOR_UPGRADED
   animations {
     preview  { pos: [0, 0], pack:PACK_GENERAL, id:64 }
     base { pos : [0, 0], pack:PACK_GENERAL, id:64 }

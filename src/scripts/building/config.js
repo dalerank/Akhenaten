@@ -189,29 +189,6 @@ building_artisans_guild = {
   }
 }
 
-building_tax_collector = {
-  animations : {
-    preview : { pos: [0, 0], pack:PACK_GENERAL, id:63 },
-    base : { pos : [0, 0], pack:PACK_GENERAL, id:63 },
-    work : { pos : [60, -45], pack:PACK_GENERAL, id:63, offset:1, max_frames:11 },
-  }
-  labor_category : LABOR_CATEGORY_GOVERNMENT
-  overlay : OVERLAY_TAX_INCOME
-  sound_channel : SOUND_CHANNEL_CITY_TAX_COLLECTOR
-  meta : { text_id:106, help_link:"message_building_tax_collector" }
-  info_sound : "Wavs/taxfarm.wav"
-  building_size : 2
-  min_houses_coverage : 50
-  cost: [ 15, 20, 40, 70, 100 ]
-  desirability : { value:[3], step:[1], step_size:[-1], range: [3] }
-  laborers:[6], fire_risk:[4], damage_risk: [3]
-  flags {
-    is_tax_collector: true
-    is_administration: true
-    work_anim: true
-  }
-}
-
 building_recruiter = {
   animations : {
     preview : { pos: [0, 0], pack:PACK_GENERAL, id:166 },
