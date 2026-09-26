@@ -86,7 +86,6 @@ void js_dup1rot4(js_State *J);
 void js_RegExp_prototype_exec(js_State *J, js_Regexp *re, const char *text);
 
 void js_trap(js_State *J, int pc); /* dump stack and environment to stdout */
-void js_stacktrace(js_State *J);
 
 struct js_StackTrace
 {
