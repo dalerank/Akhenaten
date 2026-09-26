@@ -151,7 +151,7 @@ xstring_value *xstring_container::dock(pcstr value) {
     const std::uint32_t crc = crc32(value, static_cast<std::uint32_t>(s_len));
     const auto it = g_xstring->data.find(crc);
     if (it != g_xstring->data.end()) {
-        assert(std::strcmp(it->second->value.c_str(), value) == 0 && "xstring intern CRC collision");
+        verify_no_crash((it->second->value == value) && "xstring intern CRC collision");
         return it->second;
     }
 

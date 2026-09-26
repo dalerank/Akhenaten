@@ -236,7 +236,7 @@ void city_finance_t::collect_monthly_taxes() {
         data.population.at_level[i] = 0;
     }
 
-    std::map<int, uint32_t> tax_collectors; 
+    std::map<int, uint32_t> tax_collectors;
     if (!!game_features::gameplay_change_new_tax_collection_system) {
         svector<building *, 64> buildings;
         buildings_get(buildings, BUILDING_TAX_COLLECTOR, BUILDING_TAX_COLLECTOR_UPGRADED);
