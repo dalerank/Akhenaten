@@ -11,6 +11,10 @@ int building::animation_offset(int image_id, int grid_offset, int max_frames, in
     }
 
     const image_t* img = image_get(image_id);
+    if (!img) {
+        return 0;
+    }
+
     if (!max_frames) {
         max_frames = img->animation.num_sprites;
     }
