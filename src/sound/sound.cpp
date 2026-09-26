@@ -104,7 +104,13 @@ vfs::reader load_music_data(pcstr filename, Mix_MusicType& music_type) {
     music_type = get_music_type(filename);
 
 #if defined(GAME_PLATFORM_ANDROID)
+    // Prefer native Mix MP3 (minimp3) when available; lame→WAV is the fallback
+    // for builds where SDL2_mixer was compiled without MIX_INIT_MP3.
     if (music_type == MUS_MP3) {
+        vfs::reader raw = vfs::file_open(filename, "rb");
+        if (raw) {
+            return raw;
+        }
         lame_helper helper;
         vfs::reader decoded = helper.decode(filename);
         if (decoded) {
@@ -150,21 +156,26 @@ vfs::reader sound_manager_t::load_cached_chunk(vfs::path filename) {
     }
 
     vfs::path converted_wav(filename);
-    bool need_converting = false;
     auto format = get_format_from_file(filename);
     if (format == FILE_FORMAT_MP3) {
-        // first check we have converted file on the disk
         converted_wav.change_extension("wav");
-        need_converting = !vfs::file_exists(converted_wav);
-    }
-
-    if (need_converting) {
+        if (vfs::file_exists(converted_wav)) {
+            it.first->second = vfs::file_open(converted_wav);
+            return it.first->second;
+        }
+#if defined(GAME_PLATFORM_ANDROID)
+        // Prefer raw MP3 bytes — Mix_LoadWAV decodes when MIX_INIT_MP3 (minimp3) is on.
+        it.first->second = vfs::file_open(filename);
+        if (it.first->second) {
+            return it.first->second;
+        }
+#endif
         lame_helper helper;
         it.first->second = helper.decode(filename);
-    } else {
-        it.first->second = vfs::file_open(converted_wav);
+        return it.first->second;
     }
 
+    it.first->second = vfs::file_open(converted_wav);
     return it.first->second;
 }
 
@@ -178,12 +189,27 @@ void* sound_manager_t::load_chunk(pcstr filename) {
         if (format == FILE_FORMAT_MP3 || format == FILE_FORMAT_WAV) {
             vfs::reader r = load_cached_chunk(filename);
 
-            if (!r) {
-                return nullptr;
+            if (r) {
+                SDL_RWops* sdl_fp = SDL_RWFromConstMem(r->data(), r->size());
+                Mix_Chunk* chunk = Mix_LoadWAV_RW(sdl_fp, SDL_FALSE);
+                if (chunk) {
+                    return chunk;
+                }
             }
 
-            SDL_RWops* sdl_fp = SDL_RWFromConstMem(r->data(), r->size());
-            return Mix_LoadWAV_RW(sdl_fp, SDL_FALSE);
+#if defined(GAME_PLATFORM_ANDROID)
+            // Cached raw MP3 but Mix_LoadWAV failed (old mixer without MP3) — lame→WAV.
+            if (format == FILE_FORMAT_MP3) {
+                lame_helper helper;
+                r = helper.decode(filename);
+                if (r) {
+                    _music_player->cached_chunks[filename] = r;
+                    SDL_RWops* sdl_fp = SDL_RWFromConstMem(r->data(), r->size());
+                    return Mix_LoadWAV_RW(sdl_fp, SDL_FALSE);
+                }
+            }
+#endif
+            return nullptr;
         }
 
 #if defined(__vita__) || defined(GAME_PLATFORM_ANDROID)
@@ -475,6 +501,18 @@ bool sound_manager_t::play_music(pcstr filename, int volume_pct, bool loop) {
     if (_music_player->current_music_data) {
         SDL_RWops* sdl_music = SDL_RWFromConstMem(_music_player->current_music_data->data(), _music_player->current_music_data->size());
         _music_player->music = Mix_LoadMUSType_RW(sdl_music, music_type, SDL_TRUE);
+#if defined(GAME_PLATFORM_ANDROID)
+        // Native MP3 failed (mixer without MIX_INIT_MP3) — decode via lame to WAV.
+        if (!_music_player->music && music_type == MUS_MP3) {
+            lame_helper helper;
+            vfs::reader decoded = helper.decode(filename);
+            if (decoded) {
+                _music_player->current_music_data = decoded;
+                sdl_music = SDL_RWFromConstMem(decoded->data(), decoded->size());
+                _music_player->music = Mix_LoadMUSType_RW(sdl_music, MUS_WAV, SDL_TRUE);
+            }
+        }
+#endif
     } else {
         _music_player->music = nullptr;
     }
