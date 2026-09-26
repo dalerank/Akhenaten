@@ -13,7 +13,6 @@ public:
     } BUILDING_STATIC_DATA_T;
 
     virtual int stored_amount(e_resource r) const override;
-    virtual bool draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) override;
     virtual e_sound_channel_city sound_channel() const override { return SOUND_CHANNEL_CITY_BREWERY_WORKSHOP; }
     virtual void update_preproduction() override;
     virtual void update_production() override;

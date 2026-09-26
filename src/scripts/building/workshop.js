@@ -5,7 +5,17 @@ building_brewery {
     preview { pack:PACK_GENERAL, id:116 },
     base { pack:PACK_GENERAL, id:116 },
     work { pack:PACK_GENERAL, id:116, max_frames: 12 }
-    barley { pos:[28, -35], pack:PACK_GENERAL, id:208, max_frames: 12 }
+  }
+  overlay_anims {
+    beer {
+      pos: [28, -35]
+      pack: PACK_GENERAL
+      id: 208
+      resource: RESOURCE_BEER
+      stack: false
+      max_count: 2
+      default_active: true
+    }
   }
   input {
     resource : RESOURCE_BARLEY

@@ -1,14 +1,11 @@
 #include "building/building_brewery.h"
 
-#include "widget/city/ornaments.h"
 #include "city/city_resource.h"
 #include "game/game_config.h"
 #include "grid/terrain.h"
 #include "io/io_buffer.h"
 
 #include "js/js_game.h"
-#include "graphics/graphics.h"
-#include "graphics/image.h"
 #include "dev/debug.h"
 
 
@@ -22,23 +19,6 @@ int building_brewery::stored_amount(e_resource r) const {
         return water_stored();
     }
     return building_industry::stored_amount(r);
-}
-
-bool building_brewery::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {
-    const auto &ranim = anim(animkeys().work);
-    building_draw_normal_anim(ctx, point, &base, tile, ranim, color_mask);
-
-    int amount = std::min<int>(2, ceil((float)stored_amount(RESOURCE_BEER) / 100.0) - 1);
-    if (amount >= 0) {
-        const auto &ranim = anim(animkeys().barley);
-
-        auto& command = ImageDraw::create_subcommand(ctx, render_command_t::ert_generic);
-        command.image_id = ranim.first_img() + amount;
-        command.pixel = point + ranim.pos;
-        command.mask = color_mask;
-    }
-
-    return true;
 }
 
 void building_brewery::update_preproduction() {
