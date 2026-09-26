@@ -43,10 +43,6 @@ REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_village_palace);
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_town_palace);
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_city_palace);
 
-void building_palace::update_count() const {
-    g_city.buildings.track_building(base, true);
-}
-
 bool building_palace::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {
     draw_normal_anim(ctx, point, tile, color_mask);
 
@@ -67,10 +63,6 @@ bool building_palace::draw_ornaments_and_animations_height(painter &ctx, vec2i p
     // if (unemployment_pct > 20) ctx.img_generic(homeless_image_id + 106, point + vec2i{66, 20}, color_mask);
 
     return true;
-}
-
-void building_palace::bind_dynamic(io_buffer *iob, size_t version) {
-    iob->bind(BIND_SIGNATURE_INT16, &base.tax_income_or_storage);
 }
 
 void building_palace::spawn_figure() {
