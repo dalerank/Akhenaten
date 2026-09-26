@@ -70,18 +70,18 @@ static void building_params_proto___property_getter(js_State *J) {
 
     xstring prop = js_toxstring(J, 1);
     auto opt = archive_helper::get(*params, prop, true);
-    js_helpers::js_push_value<std::optional<bvariant>>(J, opt);
+    J->push<std::optional<bvariant>>(opt);
 }
 
 static void building_params_proto___cost(js_State *J) {
     const building_static_params *params = building_params_for_type(building_params_this_type(J));
-    js_helpers::js_push_value(J, params ? (int)params->get_cost() : 0);
+    J->push(params ? (int)params->get_cost() : 0);
 }
 
 static void building_params_proto_first_img(js_State *J) {
     const int type = building_params_this_type(J);
-    const xstring anim_key = js_helpers::js_to_value<xstring>(J, 1);
-    js_helpers::js_push_value(J, building_static_first_img_for_type(type, anim_key));
+    const xstring anim_key = J->to<xstring>(1);
+    J->push(building_static_first_img_for_type(type, anim_key));
 }
 
 static void building_params_proto_toString(js_State *J) {

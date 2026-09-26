@@ -29,7 +29,7 @@ static figure_warship *figure_warship_this(js_State *J) {
 }
 
 static void figure_warship_proto___valid(js_State *J) {
-    js_helpers::js_push_value(J, figure_warship_this(J) != nullptr);
+    J->push(figure_warship_this(J) != nullptr);
 }
 
 static void figure_warship_proto___active_order(js_State *J) {
@@ -54,7 +54,7 @@ static void figure_warship_proto___max_damage(js_State *J) {
 
 static void figure_warship_proto_set_order(js_State *J) {
     figure_warship *ship = figure_warship_this(J);
-    const int order = js_helpers::js_to_value<int>(J, 1);
+    const int order = J->to<int>(1);
     if (ship) {
         ship->runtime_data().active_order = (short)order;
     }

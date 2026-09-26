@@ -61,17 +61,17 @@ static void js_push_enemy_army(js_State *J, int invasion_id) {
 
 static void enemy_army_proto_home(js_State *J) {
     enemy_army *army = enemy_army_this(J);
-    js_helpers::js_push_value<tile2i>(J, army ? army->home : tile2i{});
+    J->push<tile2i>(army ? army->home : tile2i{});
 }
 
 static void enemy_army_proto_destination(js_State *J) {
     enemy_army *army = enemy_army_this(J);
-    js_helpers::js_push_value<tile2i>(J, army ? army->destination : tile2i{});
+    J->push<tile2i>(army ? army->destination : tile2i{});
 }
 
 static void enemy_army_proto_battalion_ids(js_State *J) {
     enemy_army *army = enemy_army_this(J);
-    js_helpers::js_push_value(J, __enemy_army_battalion_ids(army ? army->army_id : -1));
+    J->push(__enemy_army_battalion_ids(army ? army->army_id : -1));
 }
 
 static void enemy_army_proto_toString(js_State *J) {

@@ -60,7 +60,7 @@ static figure_trade_session figure_trade_this_session(js_State *J) {
 }
 
 static void figure_trade_proto___valid(js_State *J) {
-    js_helpers::js_push_value(J, figure_trade_this_session(J).trader.valid());
+    J->push(figure_trade_this_session(J).trader.valid());
 }
 
 static void figure_trade_proto___capacity(js_State *J) {
@@ -73,7 +73,7 @@ static void figure_trade_proto___capacity(js_State *J) {
 }
 
 static void figure_trade_proto___per_good(js_State *J) {
-    js_helpers::js_push_value(J, empire_trader_ignore_total_bag());
+    J->push(empire_trader_ignore_total_bag());
 }
 
 static void figure_trade_proto___empire_city_id(js_State *J) {
@@ -82,7 +82,7 @@ static void figure_trade_proto___empire_city_id(js_State *J) {
 
 static void figure_trade_proto___has_traded(js_State *J) {
     empire_trader_handle trader = figure_trade_this_session(J).trader;
-    js_helpers::js_push_value(J, trader.valid() && trader.has_traded());
+    J->push(trader.valid() && trader.has_traded());
 }
 
 static figure_trade_caravan *figure_trade_this_caravan(js_State *J) {
@@ -103,19 +103,19 @@ static figure_trade_caravan *figure_trade_this_caravan(js_State *J) {
 static void figure_trade_proto___can_buy_at_destination(js_State *J) {
     auto *caravan = figure_trade_this_caravan(J);
     if (!caravan) {
-        js_helpers::js_push_value(J, false);
+        J->push(false);
         return;
     }
-    js_helpers::js_push_value(J, caravan->can_buy(caravan->destination(), caravan->empire_city()));
+    J->push(caravan->can_buy(caravan->destination(), caravan->empire_city()));
 }
 
 static void figure_trade_proto___can_sell_at_destination(js_State *J) {
     auto *caravan = figure_trade_this_caravan(J);
     if (!caravan) {
-        js_helpers::js_push_value(J, false);
+        J->push(false);
         return;
     }
-    js_helpers::js_push_value(J, caravan->can_sell(caravan->destination(), caravan->empire_city()));
+    J->push(caravan->can_sell(caravan->destination(), caravan->empire_city()));
 }
 
 static void figure_trade_proto___is_trading(js_State *J) {
@@ -125,7 +125,7 @@ static void figure_trade_proto___is_trading(js_State *J) {
 }
 
 static void figure_trade_proto_bought_amount(js_State *J) {
-    const int resource = js_helpers::js_to_value<int>(J, 1);
+    const int resource = J->to<int>(1);
     empire_trader_handle trader = figure_trade_this_session(J).trader;
     if (!trader.valid() || resource <= RESOURCE_NONE || resource >= RESOURCES_MAX) {
         js_pushnumber(J, 0);
@@ -135,7 +135,7 @@ static void figure_trade_proto_bought_amount(js_State *J) {
 }
 
 static void figure_trade_proto_sold_amount(js_State *J) {
-    const int resource = js_helpers::js_to_value<int>(J, 1);
+    const int resource = J->to<int>(1);
     empire_trader_handle trader = figure_trade_this_session(J).trader;
     if (!trader.valid() || resource <= RESOURCE_NONE || resource >= RESOURCES_MAX) {
         js_pushnumber(J, 0);

@@ -44,7 +44,7 @@ void house_proto___house_level(js_State *J) {
     const int bid = house_this_id(J);
     building_house* house = house_from_bid(bid);
     const int value = (!house) ? 0 : house->house_level();
-    js_helpers::js_push_value(J, value);
+    J->push(value);
 }
 
 std::optional<bvariant> __house_model_property(int level, pcstr property) {
@@ -54,10 +54,10 @@ ANK_FUNCTION_2(__house_model_property)
 
 void house_proto_get_inventory(js_State *J) {
     const int bid = house_this_id(J);
-    const int index = js_helpers::js_to_value<int>(J, 1);
+    const int index = J->to<int>(1);
     building_house* house = house_from_bid(bid);
     const int value = (!house || index < 0 || index >= 4) ? 0 : house->runtime_data().inventory[index + INVENTORY_MIN_GOOD];
-    js_helpers::js_push_value(J, value);
+    J->push(value);
 }
 
 /* ---- House JS object (inherits Building.prototype, like js_register_building) ---- */
@@ -68,37 +68,37 @@ static void house_proto___property_getter(js_State *J) {
     const int bid = house_this_id(J);
     xstring prop = js_toxstring(J, 1);
     auto opt = __house_get_property(bid, prop);
-    js_helpers::js_push_value<std::optional<bvariant>>(J, opt);
+    J->push<std::optional<bvariant>>(opt);
 }
 
 static void house_proto___population_room(js_State *J) {
     const int bid = house_this_id(J);
     building_house* house = house_from_bid(bid);
     const int value = (!house) ? 0 : house->population_room();
-    js_helpers::js_push_value(J, value);
+    J->push(value);
 }
 
 static void house_proto___is_vacant_lot(js_State *J) {
     const int bid = house_this_id(J);
     building_house* house = house_from_bid(bid);
     const bool value = (!house) ? false : house->is_vacant_lot();
-    js_helpers::js_push_value(J, value);
+    J->push(value);
 }
 
 static void house_proto_get_food(js_State *J) {
     const int bid = house_this_id(J);
-    const int index = js_helpers::js_to_value<int>(J, 1);
+    const int index = J->to<int>(1);
     building_house* house = house_from_bid(bid);
     const int value = (!house || index < 0 || index >= 8) ? 0 : house->runtime_data().foods[index];
-    js_helpers::js_push_value(J, value);
+    J->push(value);
 }
 
 static void house_proto_set_food(js_State *J) {
     const int bid = house_this_id(J);
-    const int index = js_helpers::js_to_value<int>(J, 1);
+    const int index = J->to<int>(1);
     building_house* house = house_from_bid(bid);
     if (house && index >= 0 && index < 8) {
-        const int amount = js_helpers::js_to_value<int>(J, 2);
+        const int amount = J->to<int>(2);
         house->runtime_data().foods[index] = (uint16_t)(amount < 0 ? 0 : amount);
     }
     js_helpers::js_push_void(J);

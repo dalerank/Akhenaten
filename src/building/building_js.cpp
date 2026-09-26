@@ -144,7 +144,7 @@ ANK_FUNCTION_1(__building_des_influence_value)
 
 void __building_des_influence_value_j(js_State* J) {
     const int bid = building_this_id(J);
-    js_helpers::js_push_value(J, (int)building_get(bid)->des_influence.value);
+    J->push((int)building_get(bid)->des_influence.value);
 }
 
 int __building_des_influence_step_size(int bid) {
@@ -154,30 +154,30 @@ ANK_FUNCTION_1(__building_des_influence_step_size)
 
 void __building_des_influence_step_size_j(js_State* J) {
     const int bid = building_this_id(J);
-    js_helpers::js_push_value(J, building_get(bid)->des_influence.step_size);
+    J->push(building_get(bid)->des_influence.step_size);
 }
 
 void __building_des_influence_range_j(js_State* J) {
     const int bid = building_this_id(J);
-    js_helpers::js_push_value(J, building_get(bid)->des_influence.range);
+    J->push(building_get(bid)->des_influence.range);
 }
 
 void __building_crime_influence_value_j(js_State* J) {
     const int bid = building_this_id(J);
     building *b = building_get(bid);
-    js_helpers::js_push_value(J, b ? b->crime_influence.value : 0);
+    J->push(b ? b->crime_influence.value : 0);
 }
 
 void __building_stored_resource(js_State* J) {
     const int bid = building_this_id(J);
-    const int resource = js_helpers::js_to_value<int>(J, 1);
-    js_helpers::js_push_value(J, building_get(bid)->stored_amount((e_resource)resource));
+    const int resource = J->to<int>(1);
+    J->push(building_get(bid)->stored_amount((e_resource)resource));
 }
 
 void __building_consume_resource(js_State* J) {
     const int bid = building_this_id(J);
-    const int resource = js_helpers::js_to_value<int>(J, 1);
-    const int amount = js_helpers::js_to_value<int>(J, 2);
+    const int resource = J->to<int>(1);
+    const int amount = J->to<int>(2);
     building *b = building_get(bid);
     if (b && b->is_valid()) {
         b->dcast()->consume_resource((e_resource)resource, (int16_t)amount);
@@ -187,8 +187,8 @@ void __building_consume_resource(js_State* J) {
 
 void __building_store_resource(js_State* J) {
     const int bid = building_this_id(J);
-    const int resource = js_helpers::js_to_value<int>(J, 1);
-    const int amount = js_helpers::js_to_value<int>(J, 2);
+    const int resource = J->to<int>(1);
+    const int amount = J->to<int>(2);
     building *b = building_get(bid);
     if (b && b->is_valid()) {
         b->dcast()->store_resource((e_resource)resource, (int16_t)amount);
@@ -198,29 +198,29 @@ void __building_store_resource(js_State* J) {
 
 void __building_get_overlay(js_State *J) {
     const int bid = building_this_id(J);
-    js_helpers::js_push_value<int>(J, building_get(bid)->get_overlay());
+    J->push<int>(building_get(bid)->get_overlay());
 }
 
 void __building_get_worker_percentage(js_State *J) {
     const int bid = building_this_id(J);
-    js_helpers::js_push_value(J, building_get(bid)->worker_percentage());
+    J->push(building_get(bid)->worker_percentage());
 }
 
 void __building_get_output_resource_id(js_State *J) {
     const int bid = building_this_id(J);
-    js_helpers::js_push_value(J, (int)building_get(bid)->output.resource);
+    J->push((int)building_get(bid)->output.resource);
 }
 
 void __building_has_figure(js_State *J) {
     const int bid = building_this_id(J);
-    const int index = js_helpers::js_to_value<int>(J, 1);
-    js_helpers::js_push_value(J, building_get(bid)->has_figure(index));
+    const int index = J->to<int>(1);
+    J->push(building_get(bid)->has_figure(index));
 }
 
 void __building_get_figures_number(js_State *J) {
     const int bid = building_this_id(J);
-    const e_figure_type ftype = (e_figure_type)js_helpers::js_to_value<int>(J, 1);
-    js_helpers::js_push_value(J, building_get(bid)->dcast()->get_figures_number(ftype));
+    const e_figure_type ftype = (e_figure_type)J->to<int>(1);
+    J->push(building_get(bid)->dcast()->get_figures_number(ftype));
 }
 
 int __building_get_figure_id(int bid, int index) {
@@ -230,37 +230,37 @@ ANK_FUNCTION_2(__building_get_figure_id)
 
 void __building_get_state(js_State *J) {
     const int bid = building_this_id(J);
-    js_helpers::js_push_value(J, (int)building_get(bid)->state);
+    J->push((int)building_get(bid)->state);
 }
 
 void __building_get_valid(js_State *J) {
     const int bid = building_this_id(J);
-    js_helpers::js_push_value(J, __building_is_valid(bid));
+    J->push(__building_is_valid(bid));
 }
 
 void __building_mothball_toggle(js_State *J) {
     const int bid = building_this_id(J);
     building* b = building_get(bid);
-    js_helpers::js_push_value(J, b->max_workers ? b->mothball_toggle() : 0);
+    J->push(b->max_workers ? b->mothball_toggle() : 0);
 }
 
 void __building_set_animation(js_State *J) {
     const int bid = building_this_id(J);
-    const char *animkey = js_helpers::js_to_value<const char *>(J, 1);
+    const char *animkey = J->to<const char *>(1);
     building_get(bid)->dcast()->set_animation(xstring(animkey));
     js_helpers::js_push_void(J);
 }
 
 void __building_add_overlay(js_State *J) {
     const int bid = building_this_id(J);
-    const xstring name = js_helpers::js_to_value<xstring>(J, 1);
+    const xstring name = J->to<xstring>(1);
     building *b = building_get(bid);
-    js_helpers::js_push_value(J, b && b->is_valid() ? b->dcast()->add_overlay(name) : false);
+    J->push(b && b->is_valid() ? b->dcast()->add_overlay(name) : false);
 }
 
 void __building_remove_overlay(js_State *J) {
     const int bid = building_this_id(J);
-    const xstring name = js_helpers::js_to_value<xstring>(J, 1);
+    const xstring name = J->to<xstring>(1);
     building *b = building_get(bid);
     if (b && b->is_valid()) {
         b->dcast()->remove_overlay(name);
@@ -270,14 +270,14 @@ void __building_remove_overlay(js_State *J) {
 
 void __building_has_overlay(js_State *J) {
     const int bid = building_this_id(J);
-    const xstring name = js_helpers::js_to_value<xstring>(J, 1);
+    const xstring name = J->to<xstring>(1);
     building *b = building_get(bid);
-    js_helpers::js_push_value(J, b && b->is_valid() ? b->dcast()->has_overlay(name) : false);
+    J->push(b && b->is_valid() ? b->dcast()->has_overlay(name) : false);
 }
 
 void __building_set_fancy(js_State *J) {
     const int bid = building_this_id(J);
-    const bool is_fancy = js_helpers::js_to_value<bool>(J, 1);
+    const bool is_fancy = J->to<bool>(1);
     building *b = building_get(bid);
     if (b) {
         b->set_flag(e_building_fancy, is_fancy);
@@ -288,29 +288,29 @@ void __building_set_fancy(js_State *J) {
 void __building_is_fancy(js_State *J) {
     const int bid = building_this_id(J);
     building *b = building_get(bid);
-    js_helpers::js_push_value(J, b ? b->get_flag(e_building_fancy) : false);
+    J->push(b ? b->get_flag(e_building_fancy) : false);
 }
 
 void __building_common_spawn_roamer(js_State *J) {
     const int bid = building_this_id(J);
-    const int figure_type = js_helpers::js_to_value<int>(J, 1);
-    const int min_houses_coverage = js_helpers::js_to_value<int>(J, 2);
-    const int action = js_helpers::js_to_value<int>(J, 3);
+    const int figure_type = J->to<int>(1);
+    const int min_houses_coverage = J->to<int>(2);
+    const int action = J->to<int>(3);
     bool result = building_get(bid)->dcast()->common_spawn_roamer((e_figure_type)figure_type, min_houses_coverage, (e_figure_action)action);
-    js_helpers::js_push_value(J, result);
+    J->push(result);
 }
 
 void __building_common_spawn_figure_trigger(js_State *J) {
     const int bid = building_this_id(J);
-    const int min_houses = js_helpers::js_to_value<int>(J, 1);
-    const int slot = js_helpers::js_to_value<int>(J, 2);
+    const int min_houses = J->to<int>(1);
+    const int slot = J->to<int>(2);
     building *b = building_get(bid);
     if (!b || !b->is_valid()) {
-        js_helpers::js_push_value(J, false);
+        J->push(false);
         return;
     }
 
-    js_helpers::js_push_value(J, b->dcast()->common_spawn_figure_trigger(min_houses, (e_building_slot)slot));
+    J->push(b->dcast()->common_spawn_figure_trigger(min_houses, (e_building_slot)slot));
 }
 
 void __building_check_labor_problem(js_State *J) {
@@ -326,36 +326,36 @@ void __building_figure_spawn_timer(js_State *J) {
     const int bid = building_this_id(J);
     building *b = building_get(bid);
     if (!b || !b->is_valid()) {
-        js_helpers::js_push_value(J, -1);
+        J->push(-1);
         return;
     }
-    js_helpers::js_push_value(J, b->dcast()->figure_spawn_timer());
+    J->push(b->dcast()->figure_spawn_timer());
 }
 
 void __building_is_enemies_nearby(js_State *J) {
     const int bid = building_this_id(J);
     building *b = building_get(bid);
     if (!b || !b->is_valid()) {
-        js_helpers::js_push_value(J, false);
+        J->push(false);
         return;
     }
-    js_helpers::js_push_value(J, b->dcast()->is_enemies_nearby());
+    J->push(b->dcast()->is_enemies_nearby());
 }
 
 void __building_citizen_found_terrain(js_State *J) {
     const int bid = building_this_id(J);
-    const int terrain = js_helpers::js_to_value<int>(J, 1);
+    const int terrain = J->to<int>(1);
     building *b = building_get(bid);
     if (!b || !b->is_valid() || !b->road_access.valid()) {
-        js_helpers::js_push_value(J, false);
+        J->push(false);
         return;
     }
-    js_helpers::js_push_value(J, map_routing_citizen_found_terrain(b->road_access, nullptr, terrain));
+    J->push(map_routing_citizen_found_terrain(b->road_access, nullptr, terrain));
 }
 
 void __building_common_spawn_labor_seeker(js_State *J) {
     const int bid = building_this_id(J);
-    const int min_houses = js_helpers::js_to_value<int>(J, 1);
+    const int min_houses = J->to<int>(1);
     building *b = building_get(bid);
     if (b && b->is_valid()) {
         b->dcast()->common_spawn_labor_seeker(min_houses);
@@ -365,67 +365,67 @@ void __building_common_spawn_labor_seeker(js_State *J) {
 
 void __building_create_figure_generic(js_State *J) {
     const int bid = building_this_id(J);
-    const int figure_type = js_helpers::js_to_value<int>(J, 1);
-    const int action = js_helpers::js_to_value<int>(J, 2);
-    const int slot = js_helpers::js_to_value<int>(J, 3);
+    const int figure_type = J->to<int>(1);
+    const int action = J->to<int>(2);
+    const int slot = J->to<int>(3);
     building *b = building_get(bid);
     if (!b || !b->is_valid()) {
-        js_helpers::js_push_value(J, 0);
+        J->push(0);
         return;
     }
 
     figure *f = b->dcast()->create_figure_generic((e_figure_type)figure_type, (e_figure_action)action, (e_building_slot)slot, DIR_4_BOTTOM_LEFT);
-    js_helpers::js_push_value(J, f ? f->id : 0);
+    J->push(f ? f->id : 0);
 }
 
 void __building_common_spawn_goods_output_cartpusher(js_State *J) {
     const int bid = building_this_id(J);
     building *b = building_get(bid);
     if (!b || !b->is_valid()) {
-        js_helpers::js_push_value(J, 0);
+        J->push(0);
         return;
     }
 
     figure *f = b->dcast()->common_spawn_goods_output_cartpusher();
-    js_helpers::js_push_value(J, f ? f->id : 0);
+    J->push(f ? f->id : 0);
 }
 
 void __building_create_cartpusher(js_State *J) {
     const int bid = building_this_id(J);
-    const int resource = js_helpers::js_to_value<int>(J, 1);
-    const int quantity = js_helpers::js_to_value<int>(J, 2);
-    const int action = js_helpers::js_to_value<int>(J, 3);
-    const int slot = js_helpers::js_to_value<int>(J, 4);
+    const int resource = J->to<int>(1);
+    const int quantity = J->to<int>(2);
+    const int action = J->to<int>(3);
+    const int slot = J->to<int>(4);
     building *b = building_get(bid);
     if (!b || !b->is_valid()) {
-        js_helpers::js_push_value(J, 0);
+        J->push(0);
         return;
     }
 
     figure *f = b->dcast()->create_cartpusher((e_resource)resource, quantity, (e_figure_action)action, (e_building_slot)slot);
-    js_helpers::js_push_value(J, f ? f->id : 0);
+    J->push(f ? f->id : 0);
 }
 
 void __building_create_figure_with_destination(js_State *J) {
     const int bid = building_this_id(J);
-    const int figure_type = js_helpers::js_to_value<int>(J, 1);
-    const int dest_bid = js_helpers::js_to_value<int>(J, 2);
-    const int action = js_helpers::js_to_value<int>(J, 3);
-    const int slot = js_helpers::js_to_value<int>(J, 4);
+    const int figure_type = J->to<int>(1);
+    const int dest_bid = J->to<int>(2);
+    const int action = J->to<int>(3);
+    const int slot = J->to<int>(4);
     building *b = building_get(bid);
     building *dest = building_get(dest_bid);
     if (!b || !b->is_valid() || !dest || !dest->is_valid()) {
-        js_helpers::js_push_value(J, 0);
+        J->push(0);
         return;
     }
 
     figure *f = b->dcast()->create_figure_with_destination((e_figure_type)figure_type, dest, (e_figure_action)action, (e_building_slot)slot);
-    js_helpers::js_push_value(J, f ? f->id : 0);
+    J->push(f ? f->id : 0);
 }
 
 void __building_add_workers(js_State *J) {
     const int bid = building_this_id(J);
-    const int worker_figure_id = js_helpers::js_to_value<int>(J, 1);
+    const int worker_figure_id = J->to<int>(1);
     building *b = building_get(bid);
     if (!b || !b->is_valid()) {
         js_helpers::js_push_void(J);
@@ -454,12 +454,12 @@ static void building_proto___property_setter(js_State *J) {
 
 void __building_meta_text_id(js_State *J) {
     const int bid = building_this_id(J);
-    js_helpers::js_push_value<int>(J, building_get(bid)->params().meta.text_id);
+    J->push<int>(building_get(bid)->params().meta.text_id);
 }
 
 void __building_add_fire_damage(js_State *J) {
     const int bid = building_this_id(J);
-    const int damage = js_helpers::js_to_value<int>(J, 1);
+    const int damage = J->to<int>(1);
     building *b = building_get(bid);
     if (b->is_valid()) {
         b->force_damage(e_damage_fire, damage);
@@ -469,7 +469,7 @@ void __building_add_fire_damage(js_State *J) {
 
 void __building_add_collapse_damage(js_State *J) {
     const int bid = building_this_id(J);
-    const int damage = js_helpers::js_to_value<int>(J, 1);
+    const int damage = J->to<int>(1);
     building *b = building_get(bid);
     if (b->is_valid()) {
         b->force_damage(e_damage_collapse, damage);
@@ -480,7 +480,7 @@ void __building_add_collapse_damage(js_State *J) {
 void __building_add_structure_damage(js_State* J) {
     const int bid = building_this_id(J);
     building *b = building_get(bid);
-    const int damage = js_helpers::js_to_value<int>(J, 1);
+    const int damage = J->to<int>(1);
     b->force_damage(e_damage_enemy, damage);
     js_helpers::js_push_void(J);
 }
@@ -553,7 +553,7 @@ ANK_FUNCTION_2(__building_static_text)
 void __building_tile_j(js_State *J) {
     const int bid = building_this_id(J);
     building* b = building_get(bid);
-    js_helpers::js_push_value(J, b->tile);
+    J->push(b->tile);
 }
 
 pcstr __building_static_config_name(int type) {
@@ -598,8 +598,8 @@ int building_static_first_img_for_type(int type, xstring anim_key);
 static void building_proto_first_img(js_State *J) {
     const int bid = building_this_id(J);
     building *b = building_get(bid);
-    const xstring anim_key = js_helpers::js_to_value<xstring>(J, 1);
-    js_helpers::js_push_value(J, b ? building_static_first_img_for_type(b->type, anim_key) : 0);
+    const xstring anim_key = J->to<xstring>(1);
+    J->push(b ? building_static_first_img_for_type(b->type, anim_key) : 0);
 }
 
 static void jsB_new_Building(js_State *J) {

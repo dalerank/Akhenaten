@@ -49,7 +49,7 @@ static void js_mission_var_getter(js_State *J) {
         js_pushnumber(J, std::get<float>(value));
         break;
     case setting_vec2i:
-        js_helpers::js_push_value<vec2i>(J, std::get<vec2i>(value));
+        J->push<vec2i>(std::get<vec2i>(value));
         break;
     case setting_string:
         J->pushstring(std::get<xstring>(value).c_str());

@@ -16,39 +16,39 @@ static int temple_complex_this_id(js_State *J) {
 
 static void temple_complex_proto_has_upgrade(js_State *J) {
     const int bid = temple_complex_this_id(J);
-    const int upgrade = js_helpers::js_to_value<int>(J, 1);
+    const int upgrade = J->to<int>(1);
     auto *b = building_get_ex<building_temple_complex>(bid);
-    js_helpers::js_push_value(J, b ? b->has_upgrade((e_temple_compex_upgrade)upgrade) : false);
+    J->push(b ? b->has_upgrade((e_temple_compex_upgrade)upgrade) : false);
 }
 
 static void temple_complex_proto_allowed_altar_count(js_State *J) {
     const int bid = temple_complex_this_id(J);
     auto *b = building_get_ex<building_temple_complex>(bid);
-    js_helpers::js_push_value(J, b ? (int)b->base_params().allowed_altar.size() : 0);
+    J->push(b ? (int)b->base_params().allowed_altar.size() : 0);
 }
 
 static void temple_complex_proto_allowed_altar_at(js_State *J) {
     const int bid = temple_complex_this_id(J);
-    const int idx = js_helpers::js_to_value<int>(J, 1);
+    const int idx = J->to<int>(1);
     auto *b = building_get_ex<building_temple_complex>(bid);
     const int result = (b && idx >= 0 && idx < (int)b->base_params().allowed_altar.size())
                        ? (int)b->base_params().allowed_altar[idx] : 0;
-    js_helpers::js_push_value(J, result);
+    J->push(result);
 }
 
 static void temple_complex_proto_allowed_oracle_count(js_State *J) {
     const int bid = temple_complex_this_id(J);
     auto *b = building_get_ex<building_temple_complex>(bid);
-    js_helpers::js_push_value(J, b ? (int)b->base_params().allowed_oracle.size() : 0);
+    J->push(b ? (int)b->base_params().allowed_oracle.size() : 0);
 }
 
 static void temple_complex_proto_allowed_oracle_at(js_State *J) {
     const int bid = temple_complex_this_id(J);
-    const int idx = js_helpers::js_to_value<int>(J, 1);
+    const int idx = J->to<int>(1);
     auto *b = building_get_ex<building_temple_complex>(bid);
     const int result = (b && idx >= 0 && idx < (int)b->base_params().allowed_oracle.size())
                        ? (int)b->base_params().allowed_oracle[idx] : 0;
-    js_helpers::js_push_value(J, result);
+    J->push(result);
 }
 
 static void temple_complex_proto_toString(js_State *J) {

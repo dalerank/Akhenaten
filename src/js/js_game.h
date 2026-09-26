@@ -36,77 +36,11 @@ enum e_resource : uint8_t;
 
 // Helper functions to convert JS values to C++ types
 namespace js_helpers {
-    template<typename T>
-    inline T js_to_value_impl(js_State *J, int idx);
-
-    // Any conversion may run script code (toString/valueOf) and js_throw, whose longjmp
-    // skips destructors of the bridge frames holding already-converted arguments.
-    template<typename T>
-    inline T js_to_value(js_State *J, int idx) {
-        static_assert(std::is_trivially_destructible_v<T>,
-                      "js_to_value: JS-bound argument types must be trivially destructible (MuJS unwinds with longjmp)");
-        return js_to_value_impl<T>(J, idx);
-    }
-
-    template<>
-    inline int js_to_value_impl<int>(js_State *J, int idx) {
-        return js_tointeger(J, idx);
-    }
-
-    template<>
-    inline unsigned int js_to_value_impl<unsigned int>(js_State *J, int idx) {
-        return js_touint32(J, idx);
-    }
-
-    template<>
-    inline double js_to_value_impl<double>(js_State *J, int idx) {
-        return js_tonumber(J, idx);
-    }
-
-    template<>
-    inline float js_to_value_impl<float>(js_State *J, int idx) {
-        return (float)js_tonumber(J, idx);
-    }
-
-    template<>
-    inline bool js_to_value_impl<bool>(js_State *J, int idx) {
-        return js_toboolean(J, idx);
-    }
-
-    template<>
-    inline const char *js_to_value_impl<const char *>(js_State *J, int idx) {
-        auto pp = js_tostring(J, idx);
-        return js_strnode_cstr(pp);
-    }
-
-    template<>
-    inline xstring js_to_value_impl<xstring>(js_State *J, int idx) {
-        if (J->isundefined(idx) || J->isnull(idx)) {
-            return xstring();
-        }
-        auto pp = js_tostring(J, idx);
-        xstring r;
-        r._set(pp);
-        return r;
-    }
-
     /** Reference to a JS function stored in the registry (for callbacks). */
     struct js_function_ref {
         xstring ref;
         bool empty() const { return ref.empty(); }
     };
-
-    template<>
-    inline js_function_ref js_to_value_impl<js_function_ref>(js_State *J, int idx) {
-        if (!J->iscallable(idx)) {
-            return js_function_ref{};
-        }
-        js_copy(J, idx);
-        auto pp = js_ref(J);
-        xstring r; r._set(pp);
-        js_pop(J, 1);
-        return js_function_ref{ r };
-    }
 
     extern js_StringNode property_x;
     extern js_StringNode property_y;
@@ -115,8 +49,8 @@ namespace js_helpers {
     extern js_StringNode property_maxx;
     extern js_StringNode property_maxy;
 
-    template<>
-    inline vec2i js_to_value_impl<vec2i>(js_State *J, int idx) {
+    /** Reads {x, y}, [x, y] or a native vec2i; missing components read as 0. */
+    inline vec2i js_read_xy(js_State *J, int idx) {
         vec2i result;
         if (J->isobject(idx) && !J->isarray(idx) && J->toobject(idx)->type == JS_CVEC2I) {
             js_Object *o = J->toobject(idx);
@@ -137,172 +71,85 @@ namespace js_helpers {
         return result;
     }
 
-    template<>
-    inline tile2i js_to_value_impl<tile2i>(js_State *J, int idx) {
-        int x = 0, y = 0;
-        if (J->isobject(idx) && !J->isarray(idx) && J->toobject(idx)->type == JS_CVEC2I) {
-            js_Object *o = J->toobject(idx);
-            return tile2i(o->u.vec2.x, o->u.vec2.y);
-        }
-        if (J->isobject(idx) && !J->isarray(idx)) {
-            J->getproperty(idx, property_x);
-            x = J->isnumber(-1) ? (int)js_tonumber(J, -1) : 0;
-            js_pop(J, 1);
-
-            J->getproperty(idx, property_y);
-            y = J->isnumber(-1) ? (int)js_tonumber(J, -1) : 0;
-            js_pop(J, 1);
-        } else if (J->isarray(idx)) {
-            js_getindex(J, idx, 0); x = J->isnumber(-1) ? (int)js_tonumber(J, -1) : 0; js_pop(J, 1);
-            js_getindex(J, idx, 1); y = J->isnumber(-1) ? (int)js_tonumber(J, -1) : 0; js_pop(J, 1);
-        }
-        return tile2i(x, y);
-    }
-
-    template<>
-    inline bvariant js_to_value_impl<bvariant>(js_State *J, int idx) {
-        if (J->isundefined(idx)) {
-            return bvariant(); // none
-        } else if (J->isboolean(idx)) {
-            // js_toboolean returns int; cast so we hit bvariant(bool), not bvariant(int32).
-            return bvariant(js_toboolean(J, idx) != 0);
-        } else if (J->isstring(idx)) {
-            xstring str;
-            str._set(js_tostring(J, idx));
-            return bvariant(str);
-        } else if (J->isnumber(idx) || J->iscnumber(idx)) {
-            double num = js_tonumber(J, idx);
-            // Try to preserve integer if possible
-            if (num == (int)num) {
-                return bvariant((int)num);
-            } else {
-                return bvariant((float)num);
-            }
-        } else if (J->iscvec2i(idx)) {
-            js_Object *o = J->toobject(idx);
-            return bvariant(vec2i(o->u.vec2.x, o->u.vec2.y));
-        } else if (J->isobject(idx) && !J->isarray(idx)) {
-            // Check if it's a vec2i-like object with x and y properties
-            J->getproperty(idx, property_x);
-            bool has_x = !J->isundefined(-1);
-            js_pop(J, 1);
-
-            if (has_x) {
-                J->getproperty(idx, property_x);
-                int x = J->isnumber(-1) ? (int)js_tonumber(J, -1) : 0;
-                js_pop(J, 1);
-                J->getproperty(idx, property_y);
-                int y = J->isnumber(-1) ? (int)js_tonumber(J, -1) : 0;
-                js_pop(J, 1);
-                return bvariant(vec2i(x, y));
-            } else {
-                return bvariant(); // none for other objects
-            }
-        } else {
-            return bvariant(); // none
-        }
-    }
-
-    inline bvariant js_bvariant_from_js_stack(js_State *J, int idx) {
-        if (J->isundefined(idx) || J->isnull(idx)) {
-            return bvariant();
-        }
-        return js_to_value<bvariant>(J, idx);
-    }
-
-    template<>
-    inline e_resource js_to_value_impl<e_resource>(js_State *J, int idx) {
-        return (e_resource)js_tointeger(J, idx);
-    }
-
-    template<typename T>
-    inline void js_push_value(js_State *J, T value) {
-        static_assert(std::is_arithmetic_v<T> || std::is_enum_v<T>,
-                      "js_push_value: no specialization for this type; add one in js_game.h");
-        js_pushnumber(J, (double)value);
-    }
-
-    template<>
-    inline void js_push_value<int>(js_State *J, int value) {
-        js_pushnumber(J, value);
-    }
-
-    template<>
-    inline void js_push_value<float>(js_State *J, float value) {
-        js_pushnumber(J, value);
-    }
-
-    template<>
-    inline void js_push_value<double>(js_State *J, double value) {
-        js_pushnumber(J, value);
-    }
-
-    template<>
-    inline void js_push_value<bool>(js_State *J, bool value) {
-        js_pushboolean(J, value);
-    }
-
-    template<>
-    inline void js_push_value<const char *>(js_State *J, const char *value) {
-        J->pushstring(value);
-    }
-
-    template<>
-    inline void js_push_value<vec2i>(js_State *J, vec2i value) {
-        J->newvec2i(value.x, value.y);
-    }
-
-    template<>
-    inline void js_push_value<tile2i>(js_State *J, tile2i value) {
-        J->newvec2i(value.x(), value.y());
-    }
-
-    template<>
-    inline void js_push_value<grid_area>(js_State *J, grid_area value) {
+    inline void js_push_grid_area(js_State *J, const grid_area &a) {
         J->newobject();
-        js_pushnumber(J, value.tmin_x); js_setproperty(J, -2, property_minx);
-        js_pushnumber(J, value.tmin_y); js_setproperty(J, -2, property_miny);
-        js_pushnumber(J, value.tmax_x); js_setproperty(J, -2, property_maxx);
-        js_pushnumber(J, value.tmax_y); js_setproperty(J, -2, property_maxy);
+        js_pushnumber(J, a.tmin_x); js_setproperty(J, -2, property_minx);
+        js_pushnumber(J, a.tmin_y); js_setproperty(J, -2, property_miny);
+        js_pushnumber(J, a.tmax_x); js_setproperty(J, -2, property_maxx);
+        js_pushnumber(J, a.tmax_y); js_setproperty(J, -2, property_maxy);
     }
+}
 
-    template<>
-    inline void js_push_value<xstring>(js_State *J, xstring value) {
-        J->pushstring((js_StringNode)value._get());
+template<>
+struct js_convert<xstring> {
+    static xstring to(js_State *J, int idx) {
+        if (J->isundefined(idx) || J->isnull(idx)) {
+            return xstring();
+        }
+        xstring r;
+        r._set(js_tostring(J, idx));
+        return r;
     }
+    static void push(js_State *J, const xstring &v) { J->pushstring((js_StringNode)v._get()); }
+};
 
-    template<>
-    inline void js_push_value<e_resource>(js_State *J, e_resource value) {
-        js_pushnumber(J, (int)value);
+template<>
+struct js_convert<js_helpers::js_function_ref> {
+    static js_helpers::js_function_ref to(js_State *J, int idx) {
+        if (!J->iscallable(idx)) {
+            return js_helpers::js_function_ref{};
+        }
+        js_copy(J, idx);
+        auto pp = js_ref(J);
+        xstring r; r._set(pp);
+        js_pop(J, 1);
+        return js_helpers::js_function_ref{ r };
     }
+};
 
-    template<typename T, size_t Cap>
-    inline void js_push_value(js_State *J, const svector<T, Cap> &arr) {
+template<>
+struct js_convert<vec2i> {
+    static vec2i to(js_State *J, int idx) { return js_helpers::js_read_xy(J, idx); }
+    static void push(js_State *J, const vec2i &v) { J->newvec2i(v.x, v.y); }
+};
+
+template<>
+struct js_convert<tile2i> {
+    static tile2i to(js_State *J, int idx) {
+        const vec2i xy = js_helpers::js_read_xy(J, idx);
+        return tile2i(xy.x, xy.y);
+    }
+    static void push(js_State *J, const tile2i &v) { J->newvec2i(v.x(), v.y()); }
+};
+
+template<>
+struct js_convert<grid_area> {
+    static void push(js_State *J, const grid_area &v) { js_helpers::js_push_grid_area(J, v); }
+};
+
+template<typename T, size_t Cap>
+struct js_convert<svector<T, Cap>> {
+    static void push(js_State *J, const svector<T, Cap> &arr) {
         J->newarray();
         for (size_t i = 0; i < arr.size(); ++i) {
-            js_pushnumber(J, (double)arr[i]);
+            J->push(arr[i]);
             js_setindex(J, -2, (int)i);
         }
     }
+};
 
-    template<typename T, size_t Cap>
-    inline void js_push_value(js_State *J, const hvector<T, Cap> &arr) {
+template<typename T, size_t Cap>
+struct js_convert<hvector<T, Cap>> {
+    static void push(js_State *J, const hvector<T, Cap> &arr) {
         J->newarray();
         for (size_t i = 0; i < arr.size(); ++i) {
-            js_pushnumber(J, (double)arr[i]);
+            J->push(arr[i]);
             js_setindex(J, -2, (int)i);
         }
     }
+};
 
-    template<size_t Cap>
-    inline void js_push_value(js_State *J, const hvector<vec2i, Cap> &arr) {
-        J->newarray();
-        for (size_t i = 0; i < arr.size(); ++i) {
-            js_push_value<vec2i>(J, arr[i]);
-            js_setindex(J, -2, (int)i);
-        }
-    }
-
+namespace js_helpers {
     inline void js_push_bvariant(js_State *J, const bvariant &val) {
         switch (val.value_type()) {
         case bvariant::etype_bool:
@@ -327,27 +174,14 @@ namespace js_helpers {
             js_pushnull(J);
             break;
         case bvariant::etype_vec2i:
-        {
-            const vec2i pos = val.as_vec2i();
-            js_push_value<vec2i>(J, pos);
+            J->push(val.as_vec2i());
             break;
-        }
         case bvariant::etype_tile2i:
-        {
-            const tile2i pos = val.as_tile2i();
-            js_push_value<tile2i>(J, pos);
+            J->push(val.as_tile2i());
             break;
-        }
         case bvariant::etype_grid_area:
-        {
-            const grid_area a = val.as_grid_area();
-            J->newobject();
-            js_pushnumber(J, a.tmin_x); js_setproperty(J, -2, property_minx);
-            js_pushnumber(J, a.tmin_y); js_setproperty(J, -2, property_miny);
-            js_pushnumber(J, a.tmax_x); js_setproperty(J, -2, property_maxx);
-            js_pushnumber(J, a.tmax_y); js_setproperty(J, -2, property_maxy);
+            js_push_grid_area(J, val.as_grid_area());
             break;
-        }
         case bvariant::etype_none:
         default:
             J->pushundefined();
@@ -362,24 +196,77 @@ namespace js_helpers {
             js_setproperty(J, -2, js_intern(kv.first.c_str()));
         }
     }
+}
 
-    template<>
-    inline void js_push_value<bvariant_map>(js_State *J, bvariant_map value) {
-        js_push_bvariant_map_as_js_object(J, value);
+template<>
+struct js_convert<bvariant> {
+    static bvariant to(js_State *J, int idx) {
+        if (J->isundefined(idx)) {
+            return bvariant(); // none
+        } else if (J->isboolean(idx)) {
+            // js_toboolean returns int; cast so we hit bvariant(bool), not bvariant(int32).
+            return bvariant(js_toboolean(J, idx) != 0);
+        } else if (J->isstring(idx)) {
+            xstring str;
+            str._set(js_tostring(J, idx));
+            return bvariant(str);
+        } else if (J->isnumber(idx) || J->iscnumber(idx)) {
+            double num = js_tonumber(J, idx);
+            // Try to preserve integer if possible
+            if (num == (int)num) {
+                return bvariant((int)num);
+            } else {
+                return bvariant((float)num);
+            }
+        } else if (J->iscvec2i(idx)) {
+            js_Object *o = J->toobject(idx);
+            return bvariant(vec2i(o->u.vec2.x, o->u.vec2.y));
+        } else if (J->isobject(idx) && !J->isarray(idx)) {
+            // Check if it's a vec2i-like object with x and y properties
+            J->getproperty(idx, js_helpers::property_x);
+            bool has_x = !J->isundefined(-1);
+            js_pop(J, 1);
+
+            if (has_x) {
+                J->getproperty(idx, js_helpers::property_x);
+                int x = J->isnumber(-1) ? (int)js_tonumber(J, -1) : 0;
+                js_pop(J, 1);
+                J->getproperty(idx, js_helpers::property_y);
+                int y = J->isnumber(-1) ? (int)js_tonumber(J, -1) : 0;
+                js_pop(J, 1);
+                return bvariant(vec2i(x, y));
+            } else {
+                return bvariant(); // none for other objects
+            }
+        } else {
+            return bvariant(); // none
+        }
     }
+    static void push(js_State *J, const bvariant &v) { js_helpers::js_push_bvariant(J, v); }
+};
 
-    template<>
-    inline void js_push_value<bvariant>(js_State *J, bvariant value) {
-        js_push_bvariant(J, value);
-    }
+template<>
+struct js_convert<bvariant_map> {
+    static void push(js_State *J, const bvariant_map &v) { js_helpers::js_push_bvariant_map_as_js_object(J, v); }
+};
 
-    template<>
-    inline void js_push_value<std::optional<bvariant>>(js_State *J, std::optional<bvariant> value) {
-        if (value.has_value()) {
-            js_push_bvariant(J, value.value());
+template<>
+struct js_convert<std::optional<bvariant>> {
+    static void push(js_State *J, const std::optional<bvariant> &v) {
+        if (v.has_value()) {
+            js_helpers::js_push_bvariant(J, v.value());
         } else {
             J->pushundefined();
         }
+    }
+};
+
+namespace js_helpers {
+    inline bvariant js_bvariant_from_js_stack(js_State *J, int idx) {
+        if (J->isundefined(idx) || J->isnull(idx)) {
+            return bvariant();
+        }
+        return J->to<bvariant>(idx);
     }
 
     inline void js_push_void(js_State *J) {
@@ -395,7 +282,7 @@ namespace js_helpers {
     template<typename Func>
     inline void js_invoke_and_push_impl(js_State *J, std::true_type, Func &&func) {
         auto result = func();
-        js_push_value(J, result);
+        J->push(result);
     }
 
     template<bool is_void, typename Func>
@@ -424,12 +311,12 @@ namespace js_helpers {
             return bvariant((float)num);
         }
         if (J->isarray(idx)) {
-            return bvariant(js_to_value<vec2i>(J, idx));
+            return bvariant(J->to<vec2i>(idx));
         }
         if (J->isobject(idx)) {
             js_Object *o = J->toobject(idx);
             if (o && o->type == JS_CVEC2I) {
-                return bvariant(js_to_value<vec2i>(J, idx));
+                return bvariant(J->to<vec2i>(idx));
             }
             J->getproperty(idx, property_x);
             const bool has_x = J->isnumber(-1);
@@ -438,7 +325,7 @@ namespace js_helpers {
             const bool has_y = J->isnumber(-1);
             js_pop(J, 1);
             if (has_x || has_y) {
-                return bvariant(js_to_value<vec2i>(J, idx));
+                return bvariant(J->to<vec2i>(idx));
             }
         }
         return bvariant();
@@ -615,7 +502,7 @@ inline void ank_function_1_callback_impl(js_State *J) {
     using param_type = typename traits:: template arg<0>::type;
     using return_type = typename traits::return_type;
 
-    param_type param = js_helpers::js_to_value<param_type>(J, 1);
+    param_type param = J->to<param_type>(1);
     constexpr bool is_void = std::is_void_v<return_type>;
     js_helpers::js_invoke_and_push<is_void>(J, [&] () { return Func(param); });
 }
@@ -646,8 +533,8 @@ inline void ank_function_2_callback_impl(js_State *J) {
     using param2_type = typename traits:: template arg<1>::type;
     using return_type = typename traits::return_type;
 
-    param1_type param1 = js_helpers::js_to_value<param1_type>(J, 1);
-    param2_type param2 = js_helpers::js_to_value<param2_type>(J, 2);
+    param1_type param1 = J->to<param1_type>(1);
+    param2_type param2 = J->to<param2_type>(2);
     constexpr bool is_void = std::is_void_v<return_type>;
     js_helpers::js_invoke_and_push<is_void>(J, [&] () { return Func(param1, param2); });
 }
@@ -679,9 +566,9 @@ inline void ank_function_3_callback_impl(js_State *J) {
     using param3_type = typename traits:: template arg<2>::type;
     using return_type = typename traits::return_type;
 
-    param1_type param1 = js_helpers::js_to_value<param1_type>(J, 1);
-    param2_type param2 = js_helpers::js_to_value<param2_type>(J, 2);
-    param3_type param3 = js_helpers::js_to_value<param3_type>(J, 3);
+    param1_type param1 = J->to<param1_type>(1);
+    param2_type param2 = J->to<param2_type>(2);
+    param3_type param3 = J->to<param3_type>(3);
     constexpr bool is_void = std::is_void_v<return_type>;
     js_helpers::js_invoke_and_push<is_void>(J, [&] () { return Func(param1, param2, param3); });
 }
@@ -714,10 +601,10 @@ inline void ank_function_4_callback_impl(js_State *J) {
     using param4_type = typename traits:: template arg<3>::type;
     using return_type = typename traits::return_type;
 
-    param1_type param1 = js_helpers::js_to_value<param1_type>(J, 1);
-    param2_type param2 = js_helpers::js_to_value<param2_type>(J, 2);
-    param3_type param3 = js_helpers::js_to_value<param3_type>(J, 3);
-    param4_type param4 = js_helpers::js_to_value<param4_type>(J, 4);
+    param1_type param1 = J->to<param1_type>(1);
+    param2_type param2 = J->to<param2_type>(2);
+    param3_type param3 = J->to<param3_type>(3);
+    param4_type param4 = J->to<param4_type>(4);
     constexpr bool is_void = std::is_void_v<return_type>;
     js_helpers::js_invoke_and_push<is_void>(J, [&] () { return Func(param1, param2, param3, param4); });
 }
@@ -751,11 +638,11 @@ inline void ank_function_5_callback_impl(js_State *J) {
     using param5_type = typename traits:: template arg<4>::type;
     using return_type = typename traits::return_type;
 
-    param1_type param1 = js_helpers::js_to_value<param1_type>(J, 1);
-    param2_type param2 = js_helpers::js_to_value<param2_type>(J, 2);
-    param3_type param3 = js_helpers::js_to_value<param3_type>(J, 3);
-    param4_type param4 = js_helpers::js_to_value<param4_type>(J, 4);
-    param5_type param5 = js_helpers::js_to_value<param5_type>(J, 5);
+    param1_type param1 = J->to<param1_type>(1);
+    param2_type param2 = J->to<param2_type>(2);
+    param3_type param3 = J->to<param3_type>(3);
+    param4_type param4 = J->to<param4_type>(4);
+    param5_type param5 = J->to<param5_type>(5);
     constexpr bool is_void = std::is_void_v<return_type>;
     js_helpers::js_invoke_and_push<is_void>(J, [&] () { return Func(param1, param2, param3, param4, param5); });
 }
@@ -790,12 +677,12 @@ inline void ank_function_6_callback_impl(js_State *J) {
     using param6_type = typename traits:: template arg<5>::type;
     using return_type = typename traits::return_type;
 
-    param1_type param1 = js_helpers::js_to_value<param1_type>(J, 1);
-    param2_type param2 = js_helpers::js_to_value<param2_type>(J, 2);
-    param3_type param3 = js_helpers::js_to_value<param3_type>(J, 3);
-    param4_type param4 = js_helpers::js_to_value<param4_type>(J, 4);
-    param5_type param5 = js_helpers::js_to_value<param5_type>(J, 5);
-    param6_type param6 = js_helpers::js_to_value<param6_type>(J, 6);
+    param1_type param1 = J->to<param1_type>(1);
+    param2_type param2 = J->to<param2_type>(2);
+    param3_type param3 = J->to<param3_type>(3);
+    param4_type param4 = J->to<param4_type>(4);
+    param5_type param5 = J->to<param5_type>(5);
+    param6_type param6 = J->to<param6_type>(6);
     constexpr bool is_void = std::is_void_v<return_type>;
     js_helpers::js_invoke_and_push<is_void>(J, [&] () { return Func(param1, param2, param3, param4, param5, param6); });
 }
@@ -831,13 +718,13 @@ inline void ank_function_7_callback_impl(js_State *J) {
     using param7_type = typename traits:: template arg<6>::type;
     using return_type = typename traits::return_type;
 
-    param1_type param1 = js_helpers::js_to_value<param1_type>(J, 1);
-    param2_type param2 = js_helpers::js_to_value<param2_type>(J, 2);
-    param3_type param3 = js_helpers::js_to_value<param3_type>(J, 3);
-    param4_type param4 = js_helpers::js_to_value<param4_type>(J, 4);
-    param5_type param5 = js_helpers::js_to_value<param5_type>(J, 5);
-    param6_type param6 = js_helpers::js_to_value<param6_type>(J, 6);
-    param7_type param7 = js_helpers::js_to_value<param7_type>(J, 7);
+    param1_type param1 = J->to<param1_type>(1);
+    param2_type param2 = J->to<param2_type>(2);
+    param3_type param3 = J->to<param3_type>(3);
+    param4_type param4 = J->to<param4_type>(4);
+    param5_type param5 = J->to<param5_type>(5);
+    param6_type param6 = J->to<param6_type>(6);
+    param7_type param7 = J->to<param7_type>(7);
     constexpr bool is_void = std::is_void_v<return_type>;
     js_helpers::js_invoke_and_push<is_void>(J, [&] () { return Func(param1, param2, param3, param4, param5, param6, param7); });
 }

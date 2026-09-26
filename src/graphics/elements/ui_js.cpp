@@ -43,7 +43,7 @@
 #include <cstring>
 
 vec2i js_tovec2i(js_State *J, int idx) {
-    return js_helpers::js_to_value<vec2i>(J, idx);
+    return J->to<vec2i>(idx);
 }
 
 xstring js_xref(js_State* J) {

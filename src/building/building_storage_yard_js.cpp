@@ -23,28 +23,28 @@ static building_storage_yard * storage_yard_this(js_State *J) {
 
 static void storage_yard_proto_is_empty_all(js_State *J) {
     building_storage_yard *b = storage_yard_this(J);
-    js_helpers::js_push_value(J, b ? b->is_empty_all() : false);
+    J->push(b ? b->is_empty_all() : false);
 }
 
 static void storage_yard_proto_resource_state(js_State *J) {
     building_storage_yard *b = storage_yard_this(J);
-    const int resource_id = js_helpers::js_to_value<int>(J, 1);
+    const int resource_id = J->to<int>(1);
     const storage_t* s = b ? building_storage_get(b->storage_id()) : nullptr;
-    js_helpers::js_push_value(J, s ? s->resource_state[resource_id] : 0);
+    J->push(s ? s->resource_state[resource_id] : 0);
 }
 
 static void storage_yard_proto_resource_max_accept(js_State *J) {
     building_storage_yard *b = storage_yard_this(J);
-    const int resource_id = js_helpers::js_to_value<int>(J, 1);
+    const int resource_id = J->to<int>(1);
     const storage_t *s = b ? building_storage_get(b->storage_id()) : nullptr;
-    js_helpers::js_push_value(J, s ? s->resource_max_accept[resource_id] : 0);
+    J->push(s ? s->resource_max_accept[resource_id] : 0);
 }
 
 static void storage_yard_proto_resource_max_get(js_State *J) {
     building_storage_yard *b = storage_yard_this(J);
-    const int resource_id = js_helpers::js_to_value<int>(J, 1);
+    const int resource_id = J->to<int>(1);
     const storage_t *s = b ? building_storage_get(b->storage_id()) : nullptr;
-    js_helpers::js_push_value(J, s ? s->resource_max_get[resource_id] : 0);
+    J->push(s ? s->resource_max_get[resource_id] : 0);
 }
 
 static void storage_yard_proto_toggle_empty_all(js_State *J) {
@@ -63,22 +63,22 @@ static void storage_yard_proto_accept_none(js_State *J) {
 
 static void storage_yard_proto_cycle_resource_state(js_State *J) {
     building_storage_yard *b = storage_yard_this(J);
-    const int resource_id = js_helpers::js_to_value<int>(J, 1);
-    const int increase = js_helpers::js_to_value<bool>(J, 2);
+    const int resource_id = J->to<int>(1);
+    const int increase = J->to<bool>(2);
     const storage_t *s = b ? building_storage_get(b->storage_id()) : nullptr;
     building_storage_cycle_resource_state(b ? b->storage_id() : 0, resource_id, increase);
 }
 
 static void storage_yard_proto_increase_decrease_resource_state(js_State *J) {
     building_storage_yard *b = storage_yard_this(J);
-    const int resource_id = js_helpers::js_to_value<int>(J, 1);
-    const bool increase = js_helpers::js_to_value<bool>(J, 2);
+    const int resource_id = J->to<int>(1);
+    const bool increase = J->to<bool>(2);
     building_storage_increase_decrease_resource_state(b ? b->storage_id() : 0, resource_id, increase);
 }
 
 static void storage_yard_proto_toString(js_State *J) {
     building_storage_yard *b = storage_yard_this(J);
-    js_helpers::js_push_value(J, b ? "StorageYard" : "unknown");
+    J->push(b ? "StorageYard" : "unknown");
 }
 
 static js_Object *g_storage_yard_proto = nullptr;

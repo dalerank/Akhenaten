@@ -46,7 +46,7 @@ static void figure_params_proto___property_getter(js_State *J) {
 
     xstring prop = js_toxstring(J, 1);
     auto opt = archive_helper::get(*params, prop, true);
-    js_helpers::js_push_value<std::optional<bvariant>>(J, opt);
+    J->push<std::optional<bvariant>>(opt);
 }
 
 int figure_static_first_img_for_type(int type, xstring anim_key) {
@@ -60,7 +60,7 @@ int figure_static_first_img_for_type(int type, xstring anim_key) {
 static void figure_params_proto_first_img(js_State *J) {
     const int type = figure_params_this_type(J);
     const xstring anim_key = js_toxstring(J, 1);
-    js_helpers::js_push_value(J, figure_static_first_img_for_type(type, anim_key));
+    J->push(figure_static_first_img_for_type(type, anim_key));
 }
 
 static void figure_params_proto_toString(js_State *J) {

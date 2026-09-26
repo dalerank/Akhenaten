@@ -54,12 +54,12 @@ static void empire_object_proto___property_getter(js_State* J) {
     }
 
     if (prop == "city_id") {
-        js_helpers::js_push_value(J, g_empire.get_city_for_object(slot));
+        J->push(g_empire.get_city_for_object(slot));
         return;
     }
 
     auto opt = archive_helper::get(*obj, prop, true);
-    js_helpers::js_push_value<std::optional<bvariant>>(J, opt);
+    J->push<std::optional<bvariant>>(opt);
 }
 
 static void empire_object_proto_toString(js_State* J) {
@@ -95,7 +95,7 @@ static void empire_city_map_proto___property_getter(js_State* J) {
         return;
     }
     auto opt = archive_helper::get(*empire_obj, prop, true);
-    js_helpers::js_push_value<std::optional<bvariant>>(J, opt);
+    J->push<std::optional<bvariant>>(opt);
 }
 
 static void empire_city_map_proto_toString(js_State* J) {
@@ -136,27 +136,27 @@ static void jsB_new_EmpireCityObject(js_State* J) {
 }
 
 static void empire_city_proto_city_buys_resource(js_State* J) {
-    const int res = js_helpers::js_to_value<int>(J, 1);
+    const int res = J->to<int>(1);
     const empire_city* city = empire_city_this_active(J);
-    js_helpers::js_push_value(J, city ? city->buys_resource[(e_resource)res] : false);
+    J->push(city ? city->buys_resource[(e_resource)res] : false);
 }
 
 static void empire_city_proto_city_sells_resource(js_State* J) {
-    const int res = js_helpers::js_to_value<int>(J, 1);
+    const int res = J->to<int>(1);
     const empire_city* city = empire_city_this_active(J);
-    js_helpers::js_push_value(J, city ? city->sells_resource[(e_resource)res] : false);
+    J->push(city ? city->sells_resource[(e_resource)res] : false);
 }
 
 static void empire_city_proto_trade_route_limit(js_State* J) {
-    const int res = js_helpers::js_to_value<int>(J, 1);
+    const int res = J->to<int>(1);
     const empire_city* city = empire_city_this_active(J);
-    js_helpers::js_push_value(J, city ? city->get_route().limit((e_resource)res) : 0);
+    J->push(city ? city->get_route().limit((e_resource)res) : 0);
 }
 
 static void empire_city_proto_trade_route_traded(js_State* J) {
-    const int res = js_helpers::js_to_value<int>(J, 1);
+    const int res = J->to<int>(1);
     const empire_city* city = empire_city_this_active(J);
-    js_helpers::js_push_value(J, city ? city->get_route().traded((e_resource)res) : 0);
+    J->push(city ? city->get_route().traded((e_resource)res) : 0);
 }
 
 static void empire_city_proto_toString(js_State* J) {
@@ -247,12 +247,12 @@ static empire_trader* empire_trader_this_ptr(js_State* J) {
 
 static void empire_trader_proto_current_position(js_State* J) {
     empire_trader* t = empire_trader_this_ptr(J);
-    js_helpers::js_push_value<vec2i>(J, t ? t->current_position : vec2i{});
+    J->push<vec2i>(t ? t->current_position : vec2i{});
 }
 
 static void empire_trader_proto_faces_left(js_State* J) {
     empire_trader* t = empire_trader_this_ptr(J);
-    js_helpers::js_push_value(J, t ? t->faces_left() : false);
+    J->push(t ? t->faces_left() : false);
 }
 
 static void empire_trader_proto_toString(js_State* J) {
@@ -308,7 +308,7 @@ static invasion_warning_t* invasion_warning_this_ptr(js_State* J) {
 
 static void invasion_warning_proto_pos(js_State* J) {
     invasion_warning_t* w = invasion_warning_this_ptr(J);
-    js_helpers::js_push_value<vec2i>(J, w ? w->pos : vec2i{});
+    J->push<vec2i>(w ? w->pos : vec2i{});
 }
 
 static void invasion_warning_proto_toString(js_State* J) {

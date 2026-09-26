@@ -30,17 +30,17 @@ static figure_transport_ship *figure_transport_ship_this(js_State *J) {
 }
 
 static void figure_transport_ship_proto___valid(js_State *J) {
-    js_helpers::js_push_value(J, figure_transport_ship_this(J) != nullptr);
+    J->push(figure_transport_ship_this(J) != nullptr);
 }
 
 static void figure_transport_ship_proto___has_troops(js_State *J) {
     figure_transport_ship *ship = figure_transport_ship_this(J);
-    js_helpers::js_push_value(J, ship && ship->has_troops());
+    J->push(ship && ship->has_troops());
 }
 
 static void figure_transport_ship_proto___can_embark(js_State *J) {
     figure_transport_ship *ship = figure_transport_ship_this(J);
-    js_helpers::js_push_value(J, ship && ship->can_embark());
+    J->push(ship && ship->can_embark());
 }
 
 static void figure_transport_ship_proto___transported_formation(js_State *J) {
@@ -55,7 +55,7 @@ static void figure_transport_ship_proto___phase(js_State *J) {
 
 static void figure_transport_ship_proto_embark(js_State *J) {
     figure_transport_ship *ship = figure_transport_ship_this(J);
-    const int formation_id = js_helpers::js_to_value<int>(J, 1);
+    const int formation_id = J->to<int>(1);
     if (ship) {
         ship->embark_formation(formation_id);
     }
@@ -63,8 +63,8 @@ static void figure_transport_ship_proto_embark(js_State *J) {
 
 static void figure_transport_ship_proto_sail_to(js_State *J) {
     figure_transport_ship *ship = figure_transport_ship_this(J);
-    const int x = js_helpers::js_to_value<int>(J, 1);
-    const int y = js_helpers::js_to_value<int>(J, 2);
+    const int x = J->to<int>(1);
+    const int y = J->to<int>(2);
     if (ship) {
         ship->sail_to_landing(tile2i(x, y));
     }

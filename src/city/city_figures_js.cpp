@@ -258,21 +258,21 @@ static void figure_proto___property_getter(js_State *J) {
 }
 
 static void figure_proto___valid(js_State *J) {
-    js_helpers::js_push_value(J, __figure_is_valid(figure_this_id(J)));
+    J->push(__figure_is_valid(figure_this_id(J)));
 }
 
 static void figure_proto___is_on_previous_tile(js_State *J) {
-    js_helpers::js_push_value(J, __figure_is_on_previous_tile(figure_this_id(J)));
+    J->push(__figure_is_on_previous_tile(figure_this_id(J)));
 }
 
 static void figure_proto___anim_key(js_State *J) {
-    js_helpers::js_push_value(J, __figure_get_anim_key(figure_this_id(J)));
+    J->push(__figure_get_anim_key(figure_this_id(J)));
 }
 
 static void figure_proto___overlay(js_State *J) {
     const int fid = figure_this_id(J);
     figure *f = figure_get(fid);
-    js_helpers::js_push_value(J, f && f->is_valid() ? (int)f->dcast()->get_overlay() : (int)OVERLAY_NONE);
+    J->push(f && f->is_valid() ? (int)f->dcast()->get_overlay() : (int)OVERLAY_NONE);
 }
 
 static void figure_proto_setup_phrase(js_State *J) {
@@ -286,7 +286,7 @@ static void figure_proto_setup_phrase(js_State *J) {
 static void figure_proto_sound_path(js_State *J) {
     figure *f = figure_get(figure_this_id(J));
     xstring prop = js_toxstring(J, 1);
-    js_helpers::js_push_value(J, f && f->is_valid() ? f->dcast()->get_sound_reaction(prop).sound : xstring());
+    J->push(f && f->is_valid() ? f->dcast()->get_sound_reaction(prop).sound : xstring());
 }
 
 static void figure_proto_toString(js_State *J) {

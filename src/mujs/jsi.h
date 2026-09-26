@@ -155,6 +155,11 @@ constexpr js_CPtrType js_cptr_type_of() {
 	}
 }
 
+/* Typed stack conversion behind js_State::to / push: static T to(J, idx) and static void push(J, v).
+   Primitives are specialized below js_State; game types in src/js/js_game.h. */
+template<typename T, typename Enable = void>
+struct js_convert;
+
 /* State struct */
 
 struct js_State
@@ -336,4 +341,64 @@ struct js_State
 
 	template<typename FieldT>
 	void bind_offset_property(const js_StringNode name, size_t byte_offset) { bind_offset_property(name, byte_offset, js_cptr_type_of<FieldT>()); }
+
+	/* A conversion may run script code (toString/valueOf) and js_throw, whose longjmp skips
+	   destructors of the bridge frames holding already-converted values. */
+	template<typename T>
+	T to(int idx) {
+		static_assert(std::is_trivially_destructible_v<T>,
+		              "js_State::to: JS-bound argument types must be trivially destructible (MuJS unwinds with longjmp)");
+		return js_convert<T>::to(this, idx);
+	}
+
+	template<typename T>
+	void push(const T &value) { js_convert<std::decay_t<const T>>::push(this, value); }
+};
+
+template<>
+struct js_convert<int> {
+	static int to(js_State *J, int idx) { return js_tointeger(J, idx); }
+	static void push(js_State *J, int v) { js_pushnumber(J, v); }
+};
+
+template<>
+struct js_convert<unsigned int> {
+	static unsigned int to(js_State *J, int idx) { return js_touint32(J, idx); }
+	static void push(js_State *J, unsigned int v) { js_pushnumber(J, v); }
+};
+
+template<>
+struct js_convert<double> {
+	static double to(js_State *J, int idx) { return js_tonumber(J, idx); }
+	static void push(js_State *J, double v) { js_pushnumber(J, v); }
+};
+
+template<>
+struct js_convert<float> {
+	static float to(js_State *J, int idx) { return (float)js_tonumber(J, idx); }
+	static void push(js_State *J, float v) { js_pushnumber(J, v); }
+};
+
+template<>
+struct js_convert<bool> {
+	static bool to(js_State *J, int idx) { return js_toboolean(J, idx) != 0; }
+	static void push(js_State *J, bool v) { js_pushboolean(J, v); }
+};
+
+template<>
+struct js_convert<const char *> {
+	static const char *to(js_State *J, int idx) { return js_strnode_cstr(js_tostring(J, idx)); }
+	static void push(js_State *J, const char *v) { J->pushstring(v); }
+};
+
+template<typename T>
+struct js_convert<T, std::enable_if_t<std::is_enum_v<T>>> {
+	static T to(js_State *J, int idx) { return (T)js_tointeger(J, idx); }
+	static void push(js_State *J, T v) { js_pushnumber(J, (double)v); }
+};
+
+template<typename T>
+struct js_convert<T, std::enable_if_t<std::is_arithmetic_v<T>>> {
+	static T to(js_State *J, int idx) { return (T)js_tonumber(J, idx); }
+	static void push(js_State *J, T v) { js_pushnumber(J, (double)v); }
 };
