@@ -16,6 +16,7 @@
 #include "building/building_temple_complex.h"
 #include "building_mansion.h"
 #include "city/city_buildings.h"
+#include "figuretype/figure_entertainer.h"
 #include "grid/building.h"
 #include "grid/road_access.h"
 #include "grid/routing/routing.h"
@@ -423,6 +424,36 @@ void __building_create_figure_with_destination(js_State *J) {
     J->push(f ? f->id : 0);
 }
 
+void __building_create_roaming_figure_proto(js_State *J) {
+    const int bid = building_this_id(J);
+    auto [figure_type, action, slot] = J->to<int, int, int>(1);
+    building *b = building_get(bid);
+    if (!b || !b->is_valid()) {
+        js_helpers::js_push_void(J);
+        return;
+    }
+
+    b->dcast()->create_roaming_figure((e_figure_type)figure_type, (e_figure_action)action, (e_building_slot)slot);
+    js_helpers::js_push_void(J);
+}
+
+int __building_determine_venue_destination(js_State *J) {
+    const int bid = J->to<int>(1);
+    const int figure_type = J->to<int>(2);
+    building *b = building_get(bid);
+    if (!b || !b->is_valid()) {
+        return 0;
+    }
+
+    svector<e_building_type, 4> btypes;
+    if (!J->fill_array(3, btypes)) {
+        return 0;
+    }
+
+    return figure_entertainer::determine_venue_destination(b->road_access, (e_figure_type)figure_type, btypes);
+}
+ANK_FUNCTION_RAW(__building_determine_venue_destination)
+
 void __building_add_workers(js_State *J) {
     const int bid = building_this_id(J);
     const int worker_figure_id = J->to<int>(1);
@@ -653,6 +684,7 @@ void js_register_building(js_State *J) {
     jsB_propf(J, js_intern("Building.prototype.common_spawn_goods_output_cartpusher"), __building_common_spawn_goods_output_cartpusher, 0);
     jsB_propf(J, js_intern("Building.prototype.create_cartpusher"), __building_create_cartpusher, 4);
     jsB_propf(J, js_intern("Building.prototype.create_figure_with_destination"), __building_create_figure_with_destination, 4);
+    jsB_propf(J, js_intern("Building.prototype.create_roaming_figure"), __building_create_roaming_figure_proto, 3);
     jsB_propf(J, js_intern("Building.prototype.add_workers"), __building_add_workers, 1);
     jsB_propf(J, js_intern("Building.prototype.first_img"), building_proto_first_img, 1);
 

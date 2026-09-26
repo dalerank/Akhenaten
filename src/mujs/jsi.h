@@ -13,6 +13,8 @@
 #include <float.h>
 
 #include <type_traits>
+#include <tuple>
+#include <utility>
 
 #include "core/string.h"
 #include "jsstring.h"
@@ -352,8 +354,48 @@ struct js_State
 		return js_convert<T>::to(this, idx);
 	}
 
+	/* Read consecutive stack slots starting at idx into a tuple for structured bindings:
+	   auto [a, b, c] = J->to<int, int, int>(1); */
+	template<typename T0, typename T1, typename... Rest>
+	std::tuple<T0, T1, Rest...> to(int idx) {
+		static_assert(std::conjunction_v<std::is_trivially_destructible<T0>,
+		                                 std::is_trivially_destructible<T1>,
+		                                 std::is_trivially_destructible<Rest>...>,
+		              "js_State::to: JS-bound argument types must be trivially destructible (MuJS unwinds with longjmp)");
+		return to_multi_impl<T0, T1, Rest...>(idx, std::index_sequence_for<T0, T1, Rest...>{});
+	}
+
 	template<typename T>
 	void push(const T &value) { js_convert<std::decay_t<const T>>::push(this, value); }
+
+	/* Fill a C++ container from a JS array at idx. Stops at out.max_size().
+	   Returns false if the value is not an array (out is cleared either way). */
+	template<typename Container>
+	bool fill_array(int idx, Container &out) {
+		out.clear();
+		if (!isarray(idx)) {
+			return false;
+		}
+		using value_type = typename Container::value_type;
+		static_assert(std::is_trivially_destructible_v<value_type>,
+		              "js_State::fill_array: element types must be trivially destructible (MuJS unwinds with longjmp)");
+		const int len = js_getlength(this, idx);
+		for (int i = 0; i < len; ++i) {
+			if (out.size() >= out.max_size()) {
+				break;
+			}
+			js_getindex(this, idx, i);
+			out.push_back(to<value_type>(-1));
+			js_pop(this, 1);
+		}
+		return true;
+	}
+
+private:
+	template<typename... Ts, std::size_t... Is>
+	std::tuple<Ts...> to_multi_impl(int idx, std::index_sequence<Is...>) {
+		return std::tuple<Ts...>{ to<Ts>(idx + (int)Is)... };
+	}
 };
 
 template<>

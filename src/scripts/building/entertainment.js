@@ -39,6 +39,8 @@ building_juggler_school {
   spawn_delay_default : 90      // 1 жонглер за 3 месяца (для 1-24% работников)
   meta { text_id:77, help_link:"message_building_trading_centers" }
   info_sound : "Wavs/juggler_school.wav"
+  overlay : OVERLAY_BOOTH
+  sound_channel : SOUND_CHANNEL_CITY_JUGGLER_SCHOOL
 
   building_size : 2
   min_houses_coverage : 50
@@ -63,6 +65,46 @@ function building_juggler_school_update_day(ev) {
     if (b.spawned_entertainer_days > 0) {
         b.spawned_entertainer_days = b.spawned_entertainer_days - 1
     }
+}
+
+[es=(building_juggler_school, spawn_figure)]
+function building_juggler_school_spawn_figure(ev) {
+    var b = city.get_entertainment_building(ev.bid)
+    if (!b) {
+        return
+    }
+
+    if (!b.common_spawn_figure_trigger(building_juggler_school.min_houses_coverage, BUILDING_SLOT_JUGGLER)) {
+        return
+    }
+
+    if (b.spawned_entertainer_days > 0) {
+        return
+    }
+
+    var pct = b.worker_percentage
+    var delay
+    if (pct >= 100) {
+        delay = building_juggler_school.spawn_delay_100_percent
+    } else if (pct >= 75) {
+        delay = building_juggler_school.spawn_delay_75_percent
+    } else if (pct >= 50) {
+        delay = building_juggler_school.spawn_delay_50_percent
+    } else if (pct >= 25) {
+        delay = building_juggler_school.spawn_delay_25_percent
+    } else if (pct >= 1) {
+        delay = building_juggler_school.spawn_delay_default
+    } else {
+        return
+    }
+
+    var dest_id = __building_determine_venue_destination(b.id, FIGURE_JUGGLER, [BUILDING_PAVILLION, BUILDING_BANDSTAND, BUILDING_BOOTH])
+    if (dest_id > 0) {
+        b.create_figure_with_destination(FIGURE_JUGGLER, dest_id, ACTION_2_ENTERTAINER_GOING_TO_VENUE, BUILDING_SLOT_JUGGLER)
+    } else {
+        b.create_roaming_figure(FIGURE_JUGGLER, ACTION_0_ENTERTAINER_AT_SCHOOL_CREATED, BUILDING_SLOT_JUGGLER)
+    }
+    b.spawned_entertainer_days = delay
 }
 
 building_dancer_school {
