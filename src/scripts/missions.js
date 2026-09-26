@@ -126,13 +126,27 @@ function mission_end_compute_next_scenario_id(completed_id) {
     return next_id
 }
 
+function mission_should_reshow_start_message() {
+    if (game.session_last_loaded_kind != e_session_save) {
+        return false
+    }
+    return game.simtime.year == scenario.start_year && game.simtime.month == 0
+}
+
 function mission_show_start_message(mission, message_id) {
+    if (mission.start_message_shown && mission_should_reshow_start_message()) {
+        mission.start_message_shown = false
+        log_info("mission_start_message: cleared for early save load m=" + game.simtime.month)
+    }
+
     if (mission.start_message_shown) {
         return
     }
+
     if (!message_id || message_id.length == 0) {
         return
     }
+
     ui.popup_message(message_id)
     mission.start_message_shown = true
 }

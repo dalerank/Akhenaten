@@ -420,12 +420,13 @@ void GamestateIO::start_loaded_file() {
     const bool show_briefing = (game.session.last_loaded == e_session_mission);
     if (show_briefing) {
         events::emit(event_mission_briefing_show_after_load{ g_scenario.campaign_scenario_id });
-        events::process();
     } else {
         game.paused = false;
         window_city_show();
         g_sound.music_update(true);
     }
+
+    events::process();
     game.session.last_loaded = e_session_none;
 }
 
