@@ -1,7 +1,19 @@
 #include "core/app.h"
 #include "input/mouse.h"
+#include "platform/screen.h"
 
 #include <SDL.h>
+
+namespace {
+
+vec2i mouse_pos_from_window() {
+    int wx = 0;
+    int wy = 0;
+    SDL_GetMouseState(&wx, &wy);
+    return {g_platform_screen.scale_pixels_to_logical(wx), g_platform_screen.scale_pixels_to_logical(wy)};
+}
+
+} // namespace
 
 struct mouse_module_t {
     void handle_motion(SDL_Event* ev);
@@ -15,7 +27,7 @@ struct mouse_module_t {
 void mouse_module_t::handle_mouse_button(SDL_MouseButtonEvent* event, int is_down) {
     auto& m = mouse::ref();
     if (!SDL_GetRelativeMouseMode()) {
-        m.set_position({event->x, event->y});
+        m.set_position(mouse_pos_from_window());
     }
 
     if (event->button == SDL_BUTTON_LEFT) {
@@ -33,7 +45,7 @@ void mouse_module_t::handle_motion(SDL_Event* ev) {
     }
 
     if (ev->motion.which != SDL_TOUCH_MOUSEID && !SDL_GetRelativeMouseMode()) {
-        mouse::ref().set_position({ev->motion.x, ev->motion.y});
+        mouse::ref().set_position(mouse_pos_from_window());
     }
 }
 
