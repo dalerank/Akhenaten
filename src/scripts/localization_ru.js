@@ -311,6 +311,8 @@ localization_ru = [
     { key:"#TR_BUILDING_ROADBLOCK", text:"Дорожный блок"}
     { key:"#TR_BUILDING_ROADBLOCK_DESC", text:"Блокирует проход бесцельно бродящим ходокам"}
     { key:"#display_options_title", text:"Настройки дисплея"}
+    { key:"#display_options_ui_scale", text:"Масштаб интерфейса"}
+    { key:"#display_options_restart_required", text:"Перезапустите игру, чтобы масштаб интерфейса применился корректно."}
     { key:"#popup_dialog_quit", text:"Выход" }
     { key:"#popup_dialog_open_trade", text:"Открыть торговый путь" }
     { key:"#popup_dialog_send_goods", text:"Отправить товары?" }

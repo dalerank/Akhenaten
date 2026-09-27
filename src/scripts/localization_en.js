@@ -478,6 +478,8 @@ localization_en = [
 
   {key: "#exit_this_panel", text:"Exit this panel"}
   {key: "#display_options_title", text:"Display options"}
+  {key: "#display_options_ui_scale", text:"Interface scale"}
+  {key: "#display_options_restart_required", text:"Restart the game for the interface scale to apply correctly."}
   {key: "#popup_dialog_quit", text:"Quit" }
   {key: "#popup_dialog_open_trade", text:"Open trade route" }
   {key: "#popup_dialog_send_goods", text:"Dispatch goods?" }

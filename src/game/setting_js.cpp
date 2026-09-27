@@ -2,6 +2,9 @@
 #include "js/js_game.h"
 #include "game/game.h"
 #include "platform/renderer.h"
+#include "platform/screen.h"
+#include "platform/arguments.h"
+#include "platform/platform.h"
 #include "dev/debug.h"
 #include "core/profiler.h"
 #include "graphics/screen.h"
@@ -94,3 +97,28 @@ xstring __display_options_video_driver_caption() {
     return get_video_driver();
 }
 ANK_FUNCTION(__display_options_video_driver_caption)
+
+bool __platform_is_android() {
+    return platform.is_android();
+}
+ANK_FUNCTION(__platform_is_android)
+
+int __display_options_get_scale() {
+    return g_platform_screen.get_scale();
+}
+ANK_FUNCTION(__display_options_get_scale)
+
+int __display_options_set_scale(int pct) {
+    return g_platform_screen.scale_display(pct);
+}
+ANK_FUNCTION_1(__display_options_set_scale)
+
+void __display_options_save() {
+    arguments::store(g_args);
+}
+ANK_FUNCTION(__display_options_save)
+
+vec2i __display_options_get_window_size() {
+    return g_platform_screen.get_window_size();
+}
+ANK_FUNCTION(__display_options_get_window_size)
