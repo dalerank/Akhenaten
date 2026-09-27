@@ -35,6 +35,7 @@
 #include "input/keyboard.h"
 #include "game/game_config.h"
 #include "io/gamefiles/lang.h"
+#include "platform/platform.h"
 #include "platform/renderer.h"
 #include "scenario/scenario.h"
 #include "scenario/invasion_auto_resolve.h"
@@ -1138,17 +1139,48 @@ bool screen_city_t::handle_cancel_construction_button(const touch_t * t) {
     if (!g_city_planner.build_type)
         return false;
 
-    vec2i view_pos = g_camera.offset;
     vec2i view_size = g_camera.size_pixels;
     int box_size = 5 * 16;
     view_size.x -= box_size;
+    int y_max = platform.is_android() ? 72 : (40 + box_size);
 
     if (t->current_point.x < view_size.x || t->current_point.x >= view_size.x + box_size || t->current_point.y < 24
-        || t->current_point.y >= 40 + box_size) {
+        || t->current_point.y >= y_max) {
         return false;
     }
 
     g_city_planner.construction_cancel();
+    return true;
+}
+
+bool screen_city_t::handle_confirm_construction_button(const touch_t * t) {
+    if (!platform.is_android() || !g_city_planner.build_type)
+        return false;
+
+    vec2i view_size = g_camera.size_pixels;
+    int box_size = 5 * 16;
+    view_size.x -= box_size;
+
+    if (t->current_point.x < view_size.x || t->current_point.x >= view_size.x + box_size || t->current_point.y < 72
+        || t->current_point.y >= 112) {
+        return false;
+    }
+
+    if (g_city_planner.draggable() && g_city_planner.in_progress) {
+        build_end();
+        clear_current_tile();
+        return true;
+    }
+
+    tile2i place = selected_tile.valid() ? selected_tile : current_tile;
+    if (!place.valid())
+        return true;
+
+    if (!g_city_planner.in_progress)
+        g_city_planner.construction_start(place);
+    build_move(place);
+    build_end();
+    clear_current_tile();
     return true;
 }
 
@@ -1219,7 +1251,8 @@ void screen_city_t::handle_first_touch(tile2i tile) {
     e_building_type type = g_city_planner.build_type;
 
     if (touch_was_click(first)) {
-        if (handle_cancel_construction_button(first) || handle_legion_click(tile) || handle_warship_click(tile) || handle_transport_click(tile)) {
+        if (handle_cancel_construction_button(first) || handle_confirm_construction_button(first)
+            || handle_legion_click(tile) || handle_warship_click(tile) || handle_transport_click(tile)) {
             return;
         }
 

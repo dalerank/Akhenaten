@@ -20,16 +20,8 @@
 application_t g_app;
 
 ANK_SCRIPT_EVENT(event_request_exit, value)
-void ANK_PERMANENT_CALLBACK(event_request_exit, ev) {
-    app_post_event(USER_EVENT_QUIT);
-}
-
-ANK_SCRIPT_EVENT(event_display_options_apply_resolution, w, h)
-void ANK_PERMANENT_CALLBACK(event_display_options_apply_resolution, ev) {
-    app_window_resize({ev.w, ev.h});
-}
-
 ANK_SCRIPT_EVENT(event_app_toggle_fullscreen, value)
+ANK_SCRIPT_EVENT(event_display_options_apply_resolution, w, h)
 
 void app_window_resize(const vec2i& wsize) {
     static int s_width;
@@ -198,5 +190,13 @@ void application_t::subscribe_events() {
 
     events::subscribe_permanent([] (event_app_city_screenshot ev) {
         graphics_save_screenshot(SCREENSHOT_FULL_CITY);
+    });
+
+    events::subscribe_permanent([] (event_request_exit ev) {
+        app_post_event(USER_EVENT_QUIT);
+    });
+
+    events::subscribe_permanent([] (event_display_options_apply_resolution ev) {
+        app_window_resize({ev.w, ev.h});
     });
 }

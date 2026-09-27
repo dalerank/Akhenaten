@@ -169,6 +169,8 @@ bool GamestateIO::write_savegame(pcstr filename_short) {
     }
 
     vfs::path full = fullpath_saves(filename_short);
+    vfs::path folders = vfs::content_path(fullpath_saves("").c_str());
+    vfs::create_folders(folders);
 
     logs::info("Save game: writing %s", full.c_str());
 

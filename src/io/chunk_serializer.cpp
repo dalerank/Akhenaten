@@ -174,7 +174,8 @@ bool ChunkSerializer::serialize(pcstr filename, int offset, e_file_format format
 
     file_sectioned = (file_format == FILE_FORMAT_SAVE_FILE_EXT);
 
-    const bool atomic_write = (file_offset == 0);
+    // Android SAF paths are not real filesystem paths — POSIX rename() cannot publish .tmp → final.
+    const bool atomic_write = !platform.is_android() && (file_offset == 0);
     const vfs::path write_path = atomic_write ? vfs::path(fs_path.c_str(), ".tmp") : fs_path;
 
     FILE* fp = vfs::file_open_os(write_path, "wb");

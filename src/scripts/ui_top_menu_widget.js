@@ -106,7 +106,7 @@ function top_menu_set_item_enabled(menu_id, item_id, enabled) {
 
 function top_menu_apply_item_enabled() {
 	top_menu_set_item_enabled("file", "new_game", !game_features.gameui_hide_new_game_top_menu)
-	top_menu_set_item_enabled("options", "display_options", !screen.is_fullscreen_only)
+	top_menu_set_item_enabled("options", "display_options", !screen.is_fullscreen_only || __platform_is_android())
 }
 
 function top_menu_header_layout(menu_id) {

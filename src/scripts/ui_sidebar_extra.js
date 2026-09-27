@@ -34,28 +34,20 @@ function sidebar_extra_calculate_displayable_info(isCollapsed, sidebarInfoOn, in
     var result = SIDEBAR_EXTRA_DISPLAY_NONE
     var ah = availableHeight
 
-    if (ah >= EXTRA_INFO_HEIGHT_GAME_SPEED) {
-        if (infoRequested & SIDEBAR_EXTRA_DISPLAY_GAME_SPEED) {
-            ah -= EXTRA_INFO_HEIGHT_GAME_SPEED
-            result |= SIDEBAR_EXTRA_DISPLAY_GAME_SPEED
-        }
-    } else {
-        return result
+    // Always keep game speed (minimal strip) even when the logical viewport is
+    // shorter than EXTRA_INFO_HEIGHT_GAME_SPEED — common with high Android UI scale.
+    if (infoRequested & SIDEBAR_EXTRA_DISPLAY_GAME_SPEED) {
+        result |= SIDEBAR_EXTRA_DISPLAY_GAME_SPEED
+        ah -= EXTRA_INFO_HEIGHT_GAME_SPEED
     }
 
-    if (ah >= EXTRA_INFO_HEIGHT_UNEMPLOYMENT) {
-        if (infoRequested & SIDEBAR_EXTRA_DISPLAY_UNEMPLOYMENT) {
-            ah -= EXTRA_INFO_HEIGHT_UNEMPLOYMENT
-            result |= SIDEBAR_EXTRA_DISPLAY_UNEMPLOYMENT
-        }
-    } else {
-        return result
+    if (ah >= EXTRA_INFO_HEIGHT_UNEMPLOYMENT && (infoRequested & SIDEBAR_EXTRA_DISPLAY_UNEMPLOYMENT)) {
+        ah -= EXTRA_INFO_HEIGHT_UNEMPLOYMENT
+        result |= SIDEBAR_EXTRA_DISPLAY_UNEMPLOYMENT
     }
 
-    if (ah >= EXTRA_INFO_HEIGHT_RATINGS) {
-        if (infoRequested & SIDEBAR_EXTRA_DISPLAY_RATINGS) {
-            result |= SIDEBAR_EXTRA_DISPLAY_RATINGS
-        }
+    if (ah >= EXTRA_INFO_HEIGHT_RATINGS && (infoRequested & SIDEBAR_EXTRA_DISPLAY_RATINGS)) {
+        result |= SIDEBAR_EXTRA_DISPLAY_RATINGS
     }
     return result
 }

@@ -133,7 +133,7 @@ function display_options_window_go_back(window) {
 
 [es=window]
 display_options_window {
-    allow_rmb_goback : true
+    allow_rmb_goback : false
     draw_underlying: true
     pos [(sw(0) - px(24))/2, (sh(0) - px(21))/2]
 

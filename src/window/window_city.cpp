@@ -25,7 +25,9 @@
 #include "widget/widget_figure_follow.h"
 #include "window/window_advisors.h"
 #include "graphics/elements/ui.h"
+#include "graphics/image_groups.h"
 #include "input/scroll.h"
+#include "platform/platform.h"
 
 window_city g_window_city;
 
@@ -71,13 +73,16 @@ static void draw_cancel_construction() {
         return;
     }
 
-    vec2i view_pos = g_camera.offset;
     vec2i view_size = g_camera.size_pixels;
     view_size.x -= 4 * 16;
-    inner_panel_draw({ view_size.x - 4, 40 }, { 3, 2 });
     painter ctx = game.painter();
+    inner_panel_draw({ view_size.x - 4, 40 }, { 3, 2 });
     ctx.img_generic(image_id_from_group(GROUP_OK_CANCEL_SCROLL_BUTTONS) + 4, vec2i{view_size.x, 44});
-    //    city_view_dirty = 1;
+
+    if (platform.is_android()) {
+        inner_panel_draw({ view_size.x - 4, 76 }, { 3, 2 });
+        ctx.img_generic(image_id_from_group(GROUP_OK_CANCEL_SCROLL_BUTTONS), vec2i{view_size.x, 80});
+    }
 }
 
 bool window_city_draw_construction_cost_and_size() {
