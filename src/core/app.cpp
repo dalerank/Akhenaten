@@ -132,11 +132,9 @@ void application_t::handle_window_event(void* ev) {
         g_mouse.set_inside_window(0);
         break;
     case SDL_WINDOWEVENT_SIZE_CHANGED:
-        logs::info("Window resized to %d x %d", (int)event.data1, (int)event.data2);
-        g_platform_screen.resize(event.data1, event.data2, 1);
-        break;
-    case SDL_WINDOWEVENT_RESIZED:
-        logs::info("System resize to %d x %d", (int)event.data1, (int)event.data2);
+        if (!g_platform_screen.ignore_window_size_changed()) {
+            g_platform_screen.resize(event.data1, event.data2, 1);
+        }
         break;
     case SDL_WINDOWEVENT_MOVED:
         logs::info("Window move to coordinates x: %d y: %d\n", (int)event.data1, (int)event.data2);

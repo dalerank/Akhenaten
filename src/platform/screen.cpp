@@ -47,12 +47,20 @@ void platform_screen_t::set_scale_percentage(int new_scale, int pixel_width, int
 
     int max_scale_pct = get_max_scale_percentage(pixel_width, pixel_height);
     if (max_scale_pct < scale_percentage) {
-        scale_percentage = max_scale_pct;
-        logs::info("Maximum scale of %i applied", scale_percentage);
+        // Keep the same floor as calc_bound — a tiny/bogus window size must not push scale to e.g. 10%.
+        scale_percentage = calc_bound(max_scale_pct, 50, 500);
     }
 
-    SDL_SetWindowMinimumSize(as_sdl_window(window), scale_logical_to_pixels(minimum.x),
-      scale_logical_to_pixels(minimum.y));
+    // Never raise the SDL minimum above the current window — that forces the OS window to grow.
+    int min_w = scale_logical_to_pixels(minimum.x);
+    int min_h = scale_logical_to_pixels(minimum.y);
+    if (min_w > pixel_width) {
+        min_w = pixel_width;
+    }
+    if (min_h > pixel_height) {
+        min_h = pixel_height;
+    }
+    SDL_SetWindowMinimumSize(as_sdl_window(window), min_w, min_h);
 
     const char* scale_quality = "linear";
 #if !defined(GAME_PLATFORM_ANDROID)
@@ -114,10 +122,8 @@ int platform_screen_t::create(const xstring& title, const xstring& renderer, boo
         if (wsize.x <= 0 || wsize.y <= 0) {
             wsize = {1280, 800};
         }
+        // Config / video-mode sizes are window pixels; scale only affects the logical backbuffer.
         game_features::gameopt_display_size.set(wsize);
-
-        wsize.x = scale_logical_to_pixels(wsize.x);
-        wsize.y = scale_logical_to_pixels(wsize.y);
     }
 
     destroy();
@@ -189,15 +195,27 @@ void platform_screen_t::destroy() {
 
 bool platform_screen_t::resize(int pixel_width, int pixel_height, int save) {
 #if defined(GAME_PLATFORM_ANDROID)
-    set_scale_percentage(android_get_screen_density() * 100, pixel_width, pixel_height);
-    logs::info("Auto-setting scale to %i", scale_percentage);
+    constexpr int k_min_logical_w = 800;
+    constexpr int k_min_logical_h = 600;
+    const int max_fit_scale = SDL_min(pixel_width * 100 / k_min_logical_w,
+                                      pixel_height * 100 / k_min_logical_h);
+    int requested;
+    if (g_args.has_arg("display_scale_percentage")) {
+        requested = g_args.get_display_scale_percentage();
+    } else {
+        requested = (int)(android_get_screen_density() * 100.0f + 0.5f);
+        g_args.set_display_scale_percentage(SDL_min(requested, max_fit_scale));
+        requested = g_args.get_display_scale_percentage();
+    }
+    set_scale_percentage(SDL_min(requested, max_fit_scale), pixel_width, pixel_height);
 #endif
 
     int logical_width = scale_pixels_to_logical(pixel_width);
     int logical_height = scale_pixels_to_logical(pixel_height);
 
     if (save) {
-        game_features::gameopt_display_size.set({logical_width, logical_height});
+        // Store window pixels (matches video-mode list), not logical size.
+        game_features::gameopt_display_size.set({pixel_width, pixel_height});
     }
 
     if (platform_renderer_create_render_texture(logical_width, logical_height)) {
@@ -208,11 +226,40 @@ bool platform_screen_t::resize(int pixel_width, int pixel_height, int save) {
     return false;
 }
 
+vec2i platform_screen_t::get_window_size() const {
+    int width = 0;
+    int height = 0;
+    if (window) {
+        SDL_GetWindowSize(as_sdl_window(window), &width, &height);
+    }
+    return {width, height};
+}
+
 int platform_screen_t::scale_display(int display_scale_percentage) {
     int width, height;
     SDL_GetWindowSize(as_sdl_window(window), &width, &height);
-    set_scale_percentage(display_scale_percentage, width, height);
-    resize(width, height, 1);
+
+    g_args.set_display_scale_percentage(display_scale_percentage);
+
+    // Keep the OS window pixel size fixed; only the logical backbuffer changes.
+    ignore_size_changed = true;
+
+    if (!platform.is_android()) {
+        set_scale_percentage(display_scale_percentage, width, height);
+    }
+
+    // save=0: do not overwrite gameopt_display_size with the logical (scaled) size.
+    resize(width, height, 0);
+
+    int new_w = 0;
+    int new_h = 0;
+    SDL_GetWindowSize(as_sdl_window(window), &new_w, &new_h);
+    if (new_w != width || new_h != height) {
+        SDL_SetWindowSize(as_sdl_window(window), width, height);
+        resize(width, height, 0);
+    }
+
+    ignore_size_changed = false;
     return scale_percentage;
 }
 
@@ -263,13 +310,10 @@ void platform_screen_t::set_windowed() {
     if (g_render.is_fullscreen_only()) {
         return;
     }
+    // gameopt_display_size is window pixels (same units as the video-mode list).
     auto wsize = game_features::gameopt_display_size.to_vec2i();
-    int pixel_width = scale_logical_to_pixels(wsize.x);
-    int pixel_height = scale_logical_to_pixels(wsize.y);
-    int display = SDL_GetWindowDisplayIndex(as_sdl_window(window));
-    logs::info("User to windowed %d x %d on display %d", pixel_width, pixel_height, display);
     SDL_SetWindowFullscreen(as_sdl_window(window), 0);
-    SDL_SetWindowSize(as_sdl_window(window), pixel_width, pixel_height);
+    SDL_SetWindowSize(as_sdl_window(window), wsize.x, wsize.y);
     if (centered) {
         center_window();
     }
@@ -277,16 +321,13 @@ void platform_screen_t::set_windowed() {
         SDL_SetWindowGrab(as_sdl_window(window), SDL_FALSE);
     }
     game.set_fullscreen(false);
-    game_features::gameopt_display_size.set({pixel_width, pixel_height});
 }
 
-void platform_screen_t::set_window_size(int logical_width, int logical_height) {
+void platform_screen_t::set_window_size(int pixel_width, int pixel_height) {
     if (g_render.is_fullscreen_only()) {
         return;
     }
-    int pixel_width = scale_logical_to_pixels(logical_width);
-    int pixel_height = scale_logical_to_pixels(logical_height);
-    int display = SDL_GetWindowDisplayIndex(as_sdl_window(window));
+    // Arguments are window pixels from the video-mode list — do not multiply by display scale.
     if (game.is_fullscreen()) {
         SDL_SetWindowFullscreen(as_sdl_window(window), 0);
     } else {
@@ -295,16 +336,19 @@ void platform_screen_t::set_window_size(int logical_width, int logical_height) {
     if (SDL_GetWindowFlags(as_sdl_window(window)) & SDL_WINDOW_MAXIMIZED) {
         SDL_RestoreWindow(as_sdl_window(window));
     }
+    ignore_size_changed = true;
     SDL_SetWindowSize(as_sdl_window(window), pixel_width, pixel_height);
     if (centered) {
         center_window();
     }
-    logs::info("User resize to %d x %d on display %d", pixel_width, pixel_height, display);
     if (SDL_GetWindowGrab(as_sdl_window(window)) == SDL_TRUE) {
         SDL_SetWindowGrab(as_sdl_window(window), SDL_FALSE);
     }
     game.set_fullscreen(false);
     game_features::gameopt_display_size.set({pixel_width, pixel_height});
+    // Refresh logical for current scale (SIZE_CHANGED ignored above; may not fire if size unchanged).
+    resize(pixel_width, pixel_height, 1);
+    ignore_size_changed = false;
 }
 
 void platform_screen_t::center_window() {

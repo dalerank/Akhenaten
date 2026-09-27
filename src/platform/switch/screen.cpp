@@ -209,6 +209,10 @@ int platform_screen_t::scale_display(int /*display_scale_percentage*/) {
     return scale_percentage;
 }
 
+vec2i platform_screen_t::get_window_size() const {
+    return {screen_width(), screen_height()};
+}
+
 void platform_screen_render(void) {
     if (config_get(CONFIG_UI_ZOOM)) {
         SDL_RenderClear(SDL.renderer);
