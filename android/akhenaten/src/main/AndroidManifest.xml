@@ -29,6 +29,7 @@
             android:exported="true"
             android:preferMinimalPostProcessing="true"
             android:resizeableActivity="true"
+            android:screenOrientation="sensorLandscape"
             android:windowSoftInputMode="adjustResize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
