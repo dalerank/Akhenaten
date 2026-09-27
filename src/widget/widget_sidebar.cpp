@@ -83,7 +83,13 @@ void ui::sidebar_window_expanded_t::expand() {
 }
 
 void ui::sidebar_window_expanded_t::ui_draw_relief(UiFlags flags) {
-    int relief_y_offset = SIDEBAR_MAIN_SECTION_HEIGHT + TOP_MENU_HEIGHT;
+    // Relief used to start below sidebar_extra_draw(); painting from y=480 covers the extra panel.
+    int extra_h = 0;
+    auto& bg = (*this)["extra_background"];
+    if (bg.enabled) {
+        extra_h = bg.pxsize().y;
+    }
+    int relief_y_offset = SIDEBAR_MAIN_SECTION_HEIGHT + TOP_MENU_HEIGHT + extra_h;
     sidebar_common_draw_relief({ x_offset, relief_y_offset }, relief_block);
 }
 
@@ -113,6 +119,8 @@ void ui::sidebar_window_expanded_t::ui_draw_foreground(UiFlags flags) {
 
     ui.pos.x = x_offset;
 
+    ui_draw_extra(flags);
+
     const bool is_disabled = !(g_window_manager.window_is("window_city") || g_window_manager.window_is("build_menu_widget"));
     const UiFlags wflags = is_disabled ? UiFlags_Readonly : UiFlags_None;
 
@@ -124,7 +132,6 @@ void ui::sidebar_window_expanded_t::ui_draw_foreground(UiFlags flags) {
 
     ui.end_widget();
 
-    ui_draw_extra(flags);
     ui_draw_relief(flags);
 }
 
