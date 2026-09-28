@@ -12,6 +12,7 @@
 #include "mujs/mujs.h"
 #include "platform/arguments.h"
 #include "platform/integral_tests.h"
+#include "platform/screen.h"
 #include "widget/debug_console.h"
 
 #include "building/building.h"
@@ -203,34 +204,37 @@ void __test_pump_frames(int n) {
 }
 ANK_FUNCTION_1(__test_pump_frames);
 
-static void push_mouse_motion(int x, int y) {
+static void push_mouse_motion(int pixel_x, int pixel_y) {
     SDL_Event e{};
     e.type = SDL_MOUSEMOTION;
     e.motion.which = 0; // not SDL_TOUCH_MOUSEID
-    e.motion.x = x;
-    e.motion.y = y;
+    e.motion.x = pixel_x;
+    e.motion.y = pixel_y;
     e.motion.xrel = 0;
     e.motion.yrel = 0;
     SDL_PushEvent(&e);
 }
 
-static void push_mouse_button(Uint32 type, Uint8 button, int x, int y) {
+static void push_mouse_button(Uint32 type, Uint8 button, int pixel_x, int pixel_y) {
     SDL_Event e{};
     e.type = type;
     e.button.which = 0;
     e.button.button = button;
     e.button.state = (type == SDL_MOUSEBUTTONDOWN) ? SDL_PRESSED : SDL_RELEASED;
     e.button.clicks = 1;
-    e.button.x = x;
-    e.button.y = y;
+    e.button.x = pixel_x;
+    e.button.y = pixel_y;
     SDL_PushEvent(&e);
 }
 
-static void do_synthetic_click(Uint8 sdl_button, int x, int y) {
-    push_mouse_motion(x, y);
-    push_mouse_button(SDL_MOUSEBUTTONDOWN, sdl_button, x, y);
+static void do_synthetic_click(Uint8 sdl_button, int logical_x, int logical_y) {
+    // Tests pass logical UI coords; mouse_module scales window pixels → logical.
+    const int px = g_platform_screen.scale_logical_to_pixels(logical_x);
+    const int py = g_platform_screen.scale_logical_to_pixels(logical_y);
+    push_mouse_motion(px, py);
+    push_mouse_button(SDL_MOUSEBUTTONDOWN, sdl_button, px, py);
     test_pump(2);
-    push_mouse_button(SDL_MOUSEBUTTONUP, sdl_button, x, y);
+    push_mouse_button(SDL_MOUSEBUTTONUP, sdl_button, px, py);
     test_pump(8);
 }
 

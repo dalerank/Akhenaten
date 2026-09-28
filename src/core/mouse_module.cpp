@@ -4,18 +4,9 @@
 
 #include <SDL.h>
 
-namespace {
-
-vec2i mouse_pos_from_window() {
-    int wx = 0;
-    int wy = 0;
-    SDL_GetMouseState(&wx, &wy);
-    return {g_platform_screen.scale_pixels_to_logical(wx), g_platform_screen.scale_pixels_to_logical(wy)};
-}
-
-} // namespace
-
 struct mouse_module_t {
+    vec2i mouse_pos_from_event(int x, int y) const;
+
     void handle_motion(SDL_Event* ev);
     void handle_button_down(SDL_Event* ev);
     void handle_button_up(SDL_Event* ev);
@@ -24,10 +15,14 @@ struct mouse_module_t {
     void handle_mouse_button(SDL_MouseButtonEvent* event, int is_down);
 };
 
+vec2i mouse_module_t::mouse_pos_from_event(int x, int y) const {
+    return {g_platform_screen.scale_pixels_to_logical(x), g_platform_screen.scale_pixels_to_logical(y)};
+}
+
 void mouse_module_t::handle_mouse_button(SDL_MouseButtonEvent* event, int is_down) {
     auto& m = mouse::ref();
     if (!SDL_GetRelativeMouseMode()) {
-        m.set_position(mouse_pos_from_window());
+        m.set_position(mouse_pos_from_event(event->x, event->y));
     }
 
     if (event->button == SDL_BUTTON_LEFT) {
@@ -45,7 +40,7 @@ void mouse_module_t::handle_motion(SDL_Event* ev) {
     }
 
     if (ev->motion.which != SDL_TOUCH_MOUSEID && !SDL_GetRelativeMouseMode()) {
-        mouse::ref().set_position(mouse_pos_from_window());
+        mouse::ref().set_position(mouse_pos_from_event(ev->motion.x, ev->motion.y));
     }
 }
 
