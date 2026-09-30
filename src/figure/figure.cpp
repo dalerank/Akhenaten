@@ -992,6 +992,42 @@ void figure::bind(io_buffer* iob) {
     iob->bind(BIND_SIGNATURE_UINT8, &f->progress_inside_speed);
     iob->bind(BIND_SIGNATURE_INT16, &f->wait_ticks);                // 0
     iob->bind(BIND_SIGNATURE_INT16, &f->action_state);              // 9
+
+    // Entertainer/boat/fireman actions were renumbered into linear per-figure ranges
+    // (entertainers 13,90..96 -> 0..7; fireman 70..77 -> 0..7; fishing boat 190..198
+    // -> 0..8; ferry 200..204 -> 0..4). Older saves still carry the legacy values;
+    // without this remap those figures are left in an unhandled state (e.g. a juggler
+    // stuck walking in place) after loading.
+    if (iob->is_read_access()) {
+        switch (f->type) {
+        case FIGURE_JUGGLER:
+        case FIGURE_MUSICIAN:
+        case FIGURE_DANCER:
+        case FIGURE_SENET_PLAYER:
+            if (f->action_state >= 90 && f->action_state <= 96) {
+                f->action_state -= 90;
+            } else if (f->action_state == 13) {
+                f->action_state = 7;
+            }
+            break;
+        case FIGURE_FIREMAN:
+            if (f->action_state >= 70 && f->action_state <= 77) {
+                f->action_state -= 70;
+            }
+            break;
+        case FIGURE_FISHING_BOAT:
+            if (f->action_state >= 190 && f->action_state <= 198) {
+                f->action_state -= 190;
+            }
+            break;
+        case FIGURE_FERRY_BOAT:
+            if (f->action_state >= 200 && f->action_state <= 204) {
+                f->action_state -= 200;
+            }
+            break;
+        }
+    }
+
     iob->bind(BIND_SIGNATURE_INT16, &f->routing_path_id);           // 12
     iob->bind(BIND_SIGNATURE_INT16, &f->routing_path_current_tile); // 4
     iob->bind(BIND_SIGNATURE_INT16, &f->routing_path_length);       // 28
