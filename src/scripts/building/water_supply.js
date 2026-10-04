@@ -10,6 +10,7 @@ building_water_supply {
   }
 
   min_houses_coverage : 50
+  overlay : OVERLAY_WATER
   labor_category : LABOR_CATEGORY_WATER_HEALTH,
   fire_proof : true
   meta { text_id:108, help_link:"message_building_water_supply" }
