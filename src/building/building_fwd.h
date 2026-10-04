@@ -20,7 +20,6 @@ class building;
     X(bazaar)                  \
     X(booth)                   \
     X(granary)                 \
-    X(water_supply)            \
     X(conservatory)            \
     X(clay_pit)                \
     X(reed_gatherer)           \

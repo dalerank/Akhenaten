@@ -296,20 +296,20 @@
   <span class="kw">needs</span> { groundwater : <span class="kw">true</span> }    <span class="cmt">// grassland only; no desert placement</span>
   <span class="kw">min_houses_coverage</span> : <span class="num">50</span>
 }</code></pre>
-            <p>To adjust the desirability bonus, change <code>value</code> and <code>step_size</code>. Note that <code>step_size[-1]</code> means the bonus decreases by 1 per tile outward from the building. The upgrade threshold (desirability at which the fancy sprite activates) is controlled in C++ — see <span class="file-ref">src/building/building_water_supply.cpp</span>.</p>
+            <p>To adjust the desirability bonus, change <code>value</code> and <code>step_size</code>. Note that <code>step_size[-1]</code> means the bonus decreases by 1 per tile outward from the building. The fancy-sprite threshold is in <span class="file-ref">src/scripts/building/water_supply.js</span> (<code>building_water_supply_update_month</code>, average desirability above 30).</p>
           </div>
         </details>
 
         <details>
-          <summary>C++ implementation — <code>src/building/building_water_supply.h / .cpp</code></summary>
+          <summary>Behavior — <code>src/scripts/building/water_supply.js</code></summary>
           <div class="details-body">
-            <p><span class="file-ref">src/building/building_water_supply.h</span> declares <code>building_water_supply</code> (inherits <code>building_impl</code>).</p>
+            <p>The building is ES-only: <code>[es=building]</code> with <code>type: BUILDING_WATER_SUPPLY</code>. There is no C++ class.</p>
             <ul style="font-size:0.82rem;line-height:1.9;padding-left:1.2rem">
-              <li><code>spawn_figure()</code> — creates the Water Carrier figure; respects staffing percentage</li>
-              <li><code>update_month()</code> — monthly tick; checks groundwater, manages figure lifecycle</li>
-              <li><code>update_graphic()</code> — switches between <code>base</code> and <code>fancy</code> animations based on local desirability</li>
-              <li><code>get_overlay()</code> — returns <code>OVERLAY_WATER</code>; the building is highlighted by the Water overlay</li>
-              <li><code>on_place_checks()</code> — validates groundwater under placement tile; shows warning if absent</li>
+              <li><code>spawn_figure</code> — spawns the water carrier; marks the problems overlay when the building has no water access</li>
+              <li><code>update_month</code> — switches the footprint between <code>base</code> and <code>fancy</code> when average desirability is above 30</li>
+              <li><code>update_graphic</code> — plays <code>base_work</code> or <code>fancy_work</code></li>
+              <li><code>overlay : OVERLAY_WATER</code> — highlighted by the water overlay</li>
+              <li><code>on_place_checks</code> — warns when the tile has no groundwater</li>
             </ul>
             <p>Water carrier figure logic lives in <span class="file-ref">src/figuretype/figure_water_carrier.cpp</span>. Coverage is tracked per-house in <span class="file-ref">src/grid/water_supply.cpp</span> and <span class="file-ref">src/city/city_water_supply.cpp</span>.</p>
           </div>

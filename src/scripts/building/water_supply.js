@@ -1,6 +1,8 @@
 log_info("akhenaten: building_water_supply started")
 
+[es=building]
 building_water_supply {
+  type: BUILDING_WATER_SUPPLY
   animations {
     preview { pack:PACK_GENERAL, id:69 }
     base { pack:PACK_GENERAL, id:69, offset:0 }
