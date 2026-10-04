@@ -29,6 +29,15 @@ building_water_supply {
   }
 }
 
+[es=(building_water_supply, spawn_figure)]
+function building_water_supply_spawn_figure(ev) {
+    var building = city.get_building(ev.bid)
+    if (!building.has_water_access) {
+        building.show_on_problem_overlay = 2
+    }
+    building.common_spawn_roamer(FIGURE_WATER_CARRIER, building_water_supply.min_houses_coverage, ACTION_72_WATER_CARRIER_ROAMING)
+}
+
 [es=(building_water_supply, on_place_checks)]
 function building_water_supply_on_place_checks(ev) {
     var b = city.get_building(ev.bid)

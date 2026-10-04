@@ -8,6 +8,5 @@ public:
 
     virtual building_water_supply *dcast_water_supply() override { return this; }
 
-    virtual void spawn_figure() override;
     virtual e_overlay get_overlay() const override { return OVERLAY_WATER; }
 };
