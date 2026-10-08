@@ -93,6 +93,19 @@ function advisor_population_window_ui_draw_foreground(window) {
 	}
 }
 
+[es=(advisor_population_window, info_line_click)]
+function advisor_population_window_on_info_line_click(p) {
+	var lines = advisor_population_window._info_panel_full_lines
+	if (lines === undefined || lines[p.user_data] === undefined) {
+		return
+	}
+	var full = lines[p.user_data]
+	if (full === advisor_population_window._info_panel_lines[p.user_data]) {
+		return
+	}
+	ui.show_ok(full, __loc(55, advisor_population_window.graph_order))
+}
+
 [es=advisor_window]
 advisor_population_window = {
 	advisor: ADVISOR_POPULATION
@@ -139,6 +152,7 @@ advisor_population_window = {
 								draw_scrollbar_always: false
 								draw_paneling: true
 								onrender_item: advisor_population_info_lines_on_render_item
+								onclick_event: "info_line_click"
 							})
 
 				button_help   : help_button({})

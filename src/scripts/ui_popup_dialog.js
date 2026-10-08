@@ -26,6 +26,7 @@ window_popup_dialog_ok {
                            multiline:true, wrap:px(30)})
         btn_yes    : image_button({margin{centerx:-20, bottom:-60}, size[39, 26], pack:PACK_GENERAL, id:96 })
         btn_no     : dummy({pos[0, 0], size[1, 1], enabled: false})
+        btn_close  : image_button({margin{right:-40, bottom:-40}, size[27, 27], pack:PACK_GENERAL, id:134, offset:4 })
         label_tip  : text({margin{bottom:-40}, align:"center", font: FONT_NORMAL_BLACK_ON_LIGHT})
     }
 }

@@ -162,6 +162,18 @@ int __ui_text_width(pcstr text, int font) {
 }
 ANK_FUNCTION_2(__ui_text_width)
 
+xstring __ui_text_ellipsize(pcstr text, int font, int max_width) {
+    if (!text) {
+        return "";
+    }
+    std::string buf = text;
+    buf.resize(buf.size() + 4); // room for trailing "..." that text_ellipsize writes in place
+    text_ellipsize((uint8_t*)buf.data(), (e_font)font, max_width);
+    buf.resize(strlen(buf.c_str()));
+    return xstring(buf.c_str());
+}
+ANK_FUNCTION_3(__ui_text_ellipsize)
+
 void __ui_unbordered_panel(int x, int y, int width_blocks, int height_blocks) {
     unbordered_panel_draw(x, y, width_blocks, height_blocks);
 }
