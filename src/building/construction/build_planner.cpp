@@ -441,7 +441,6 @@ void build_planner::setup_build(e_building_type type) { // select building for c
     reset();
 
     // ignore empty building types / menu groups (they have no footprint and
-    // must never be armed for placement even if the scenario allows them)
     switch (type) {
     case BUILDING_NONE:
     case BUILDING_MENU_FARMS:
