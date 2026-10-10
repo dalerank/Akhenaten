@@ -4,6 +4,7 @@ city.rating = {
     __property_getter: __city_get_rating_property
     @culture {}
     @prosperity {}
+    @prosperity_max {}
     @monument {}
     @kingdom { get: __city_rating_kingdom }
 }
