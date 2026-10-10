@@ -40,6 +40,7 @@ void popup_dialog::prepare(xstring header, xstring cbody, window_popup_dialog_ca
 
     ui["btn_yes"].onclick([this] { accept(); });
     ui["btn_no"].onclick([this] { reject(); });
+    ui["btn_close"].onclick([this] { reject(); });
 
     if (!num_buttons) {
         ui["btn_yes"].enabled = false;
@@ -48,8 +49,9 @@ void popup_dialog::prepare(xstring header, xstring cbody, window_popup_dialog_ca
         ui["btn_yes"].enabled = true;
         ui["btn_no"].enabled = (num_buttons == e_popup_btns_yesno);
     }
-    ui["label_tip"] = num_buttons ? textid{ 0, 0 } : textid{ 13, 1 };
-    ui["label_tip"].enabled = !num_buttons;
+    // Buttonless (OK) dialogs close with the X button instead of the "right-click to continue" hint.
+    ui["btn_close"].enabled = !num_buttons;
+    ui["label_tip"].enabled = false;
 
     ui["header"] = header;
     ui["text"] = cbody;
@@ -63,7 +65,7 @@ void popup_dialog::prepare(xstring header, xstring cbody, window_popup_dialog_ca
 int popup_dialog::ui_handle_mouse(const mouse *m) {
     const hotkeys *h = hotkey_state();
 
-    if (num_buttons) {
+    if (num_buttons || ui["btn_close"].enabled) {
         ui.begin_widget(pos);
         ui::handle_mouse(m);
         ui.end_widget();

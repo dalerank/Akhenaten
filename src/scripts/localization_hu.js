@@ -541,7 +541,7 @@ localization_hu = [
   {key: "#festival_square_info_title", group:188, id:0}
   {key: "#visit_rating_advisor", text:"Felkeresed az Értékelési felügyelőt?"}
   {key: "#tax_rate_of", text:"Adókulcs:"}
-  {key: "#palace_vaults_hold", text:"A trezorokban ennyi található:"}
+  {key: "#palace_vaults_hold", text:"A trezorban:"}
   {key: "#debens", text:"Deben"}
   {key: "#building_no_road_access", text:"FIGYELEM: Ez az épület nem kapcsolódik úthoz"}
   {key: "#building_no_people_in_city", text:"Nincsenek emberek a városban!"}

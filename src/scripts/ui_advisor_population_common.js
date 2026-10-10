@@ -53,8 +53,21 @@ function advisor_population_info_lines_on_render_item(p) {
 	}
 }
 
+function advisor_population_text_ellipsize(text) {
+	var max_width = px(32)
+	if (__ui_text_width(text, FONT_NORMAL_WHITE_ON_DARK) <= max_width) {
+		return text
+	}
+	return __ui_text_ellipsize(text, FONT_NORMAL_WHITE_ON_DARK, max_width)
+}
+
 function advisor_population_info_panel_fill_list(window, lines) {
-	advisor_population_window._info_panel_lines = lines
+	advisor_population_window._info_panel_full_lines = lines
+	var disp = []
+	for (var i = 0; i < lines.length; i++) {
+		disp.push(advisor_population_text_ellipsize(lines[i]))
+	}
+	advisor_population_window._info_panel_lines = disp
 	var list = window.info_lines_list
 	list.clear()
 	for (var i = 0; i < lines.length; i++) {
@@ -131,7 +144,7 @@ function advisor_population_print_history_info(window) {
 			tid = 32
 		}
 		if (tid) {
-			t += __loc(55, tid)
+			t += " " + __loc(55, tid)
 		}
 		line3 = t
 	} else {
