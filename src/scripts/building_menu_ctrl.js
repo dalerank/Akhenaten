@@ -127,7 +127,10 @@ building_menu_ctrl.next_index = function(submenu, current) {
         if (building_menu[i].id != submenu) continue
         var group = building_menu[i]
         for (var j = current + 1; j < group.items.length; j++) {
-            if (building_menu_ctrl.is_enabled(group.items[j])) return j
+            var item_type = group.items[j]
+            if (!building_menu_ctrl.is_enabled(item_type)) continue
+            if (building_menu_ctrl.is_submenu(item_type) && building_menu_ctrl.count_items(item_type) == 0) continue
+            return j
         }
         return 0
     }

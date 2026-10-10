@@ -439,26 +439,46 @@ void build_planner::next_building_variant() {
 
 void build_planner::setup_build(e_building_type type) { // select building for construction, set up main terrain restrictions/requirements
     reset();
-    build_type = type;
 
-    // ignore empty building types
+    // ignore empty building types / menu groups (they have no footprint and
+    // must never be armed for placement even if the scenario allows them)
     switch (type) {
     case BUILDING_NONE:
     case BUILDING_MENU_FARMS:
     case BUILDING_MENU_RAW_MATERIALS:
+    case BUILDING_MENU_CONSTURCTION_GUILDS:
     case BUILDING_MENU_SHRINES:
     case BUILDING_MENU_TEMPLES:
     case BUILDING_MENU_TEMPLE_COMPLEX:
-    case BUILDING_MENU_CONSTURCTION_GUILDS:
+    case BUILDING_MENU_MONUMENTS:
     case BUILDING_MENU_DEFENSES:
     case BUILDING_MENU_FORTS:
     case BUILDING_MENU_WATER_CROSSINGS:
     case BUILDING_MENU_BEAUTIFICATION:
-    case BUILDING_MENU_MONUMENTS:
+    case BUILDING_MENU_EDUCATION:
+    case BUILDING_MENU_MUD_STRUCTURES:
+    case BUILDING_MENU_BRICK_STRUCTURES:
+    case BUILDING_MENU_VACANT_HOUSE:
+    case BUILDING_MENU_CLEAR_LAND:
+    case BUILDING_MENU_ROAD:
+    case BUILDING_MENU_HEALTH:
+    case BUILDING_MENU_RELIGION:
+    case BUILDING_MENU_ENTERTAINMENT:
+    case BUILDING_MENU_ADMINISTRATION:
+    case BUILDING_MENU_SECURITY:
+    case BUILDING_MENU_INDUSTRY:
+    case BUILDING_MENU_GUILDS:
+    case BUILDING_MENU_LARGE_TEMPLES:
+    case BUILDING_MENU_FOOD:
+    case BUILDING_MENU_DISTRIBUTION:
+    case BUILDING_MENU_BRICK_DEFENSES:
+    case BUILDING_MENU_DEFAULT:
         return;
     default:
         break;
     }
+
+    build_type = type;
 
     // selecting a real building cancels any active debug terrain-paint tool
     // so the two placement modes can't both be armed at once
@@ -1463,6 +1483,11 @@ bool build_planner::place() {
 
     default:
         {
+            if (params.building_size <= 0) {
+                construction_cancel(false);
+                return false;
+            }
+
             int construction_placed = preview.construction_place(*this, start, end, absolute_orientation, building_variant);
             if (construction_placed == 0) {
                 return false;
