@@ -440,7 +440,7 @@ void build_planner::next_building_variant() {
 void build_planner::setup_build(e_building_type type) { // select building for construction, set up main terrain restrictions/requirements
     reset();
 
-    // ignore empty building types / menu groups (they have no footprint and
+    // ignore empty building types
     switch (type) {
     case BUILDING_NONE:
     case BUILDING_MENU_FARMS:
