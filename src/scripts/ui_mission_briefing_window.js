@@ -87,11 +87,28 @@ function mission_briefing_window_on_start_mission(window) {
 [es=(mission_briefing_window, go_back)]
 function mission_briefing_window_on_go_back(window) {
     var fork_scenario_id = game.mission_choice_open_scenario_id
+    var completed_id = game.mission_choice_completed_scenario_id
+    var briefing_id = game.mission_briefing_scenario_id
     if (!(fork_scenario_id > 0)) {
+        log_info("mission_briefing: go_back ignored — no fork host"
+            + " (briefing=" + briefing_id
+            + " open=" + fork_scenario_id
+            + " completed=" + completed_id
+            + " review=" + !!game.mission_briefing_is_review + ")")
         return
     }
+    // choice[] is only shown when host === completed; missing completed_id reloads the host.
+    if (completed_id === undefined || completed_id === null || completed_id < 0) {
+        log_info("mission_briefing: go_back completed_id missing/invalid ("
+            + completed_id + ") — fallback to fork host " + fork_scenario_id
+            + " (briefing=" + briefing_id + ")")
+        completed_id = fork_scenario_id
+    }
+    log_info("mission_briefing: go_back briefing=" + briefing_id
+        + " -> choice map host=" + fork_scenario_id
+        + " completed=" + completed_id)
     __game_sound.speech_stop()
-    game_show_mission_choice(fork_scenario_id)
+    game_show_mission_choice(fork_scenario_id, completed_id)
 }
 
 [es=(mission_briefing_window, dec_diff)]
@@ -180,7 +197,15 @@ function mission_briefing_window_on_init(window) {
     window.goal_immediate.text = goal_tooltip_text
 
     var fork_scenario_id = game.mission_choice_open_scenario_id
+    var completed_id = game.mission_choice_completed_scenario_id
     var src = get_mission_config(fork_scenario_id)
-    var has_choice = !is_review && fork_scenario_id > 0 && !!src && !!src.choice && src.choice.length > 0
+    var choice_count = (src && src.choice) ? src.choice.length : 0
+    var has_choice = !is_review && fork_scenario_id > 0 && choice_count > 0
     window.back.enabled = has_choice
+    log_info("mission_briefing: init scenario=" + scenario_id
+        + " review=" + !!is_review
+        + " back=" + (has_choice ? "on" : "off")
+        + " fork_host=" + fork_scenario_id
+        + " completed=" + completed_id
+        + " choice_count=" + choice_count)
 }

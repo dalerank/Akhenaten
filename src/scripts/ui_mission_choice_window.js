@@ -42,6 +42,10 @@ function game_show_mission_choice(choice_host_id, completed_id) {
         completed_id = -1
     }
 
+    log_info("mission_choice: show host=" + choice_host_id
+        + " completed=" + completed_id
+        + " host_eq_completed=" + (choice_host_id === completed_id))
+
     if (!mission_is_playable(choice_host_id)) {
         log_info("mission_choice: host " + choice_host_id + " not scripted/playable -> main menu (B5)")
         emit event_show_main_menu{ play_intro: true }
@@ -49,12 +53,20 @@ function game_show_mission_choice(choice_host_id, completed_id) {
     }
 
     var src = get_mission_config(choice_host_id)
+    var raw_choice_count = (src && src.choice) ? src.choice.length : 0
     var choices = (choice_host_id === completed_id)
         ? mission_get_visible_choices(src, completed_id)
         : []
+    if (choice_host_id !== completed_id && raw_choice_count > 0) {
+        log_info("mission_choice: host " + choice_host_id
+            + " has choice[" + raw_choice_count + "] but completed=" + completed_id
+            + " (host!==completed) — fork suppressed")
+    }
     if (!src || choices.length === 0) {
         log_info("mission_choice: no active fork for host " + choice_host_id
-            + " (completed " + completed_id + ") -> load_mission(" + choice_host_id + ",1)")
+            + " (completed " + completed_id
+            + " raw_choice=" + raw_choice_count
+            + " visible=0) -> load_mission(" + choice_host_id + ",1)")
         __game_load_mission(choice_host_id, 1)
         return
     }
@@ -65,6 +77,13 @@ function game_show_mission_choice(choice_host_id, completed_id) {
         return
     }
 
+    var ids = []
+    for (var i = 0; i < choices.length; i++) {
+        ids.push(choices[i].id)
+    }
+    log_info("mission_choice: open fork map host=" + choice_host_id
+        + " completed=" + completed_id
+        + " branches=[" + ids.join(",") + "]")
     game.mission_choice_open_scenario_id = choice_host_id
     game.mission_choice_completed_scenario_id = completed_id
     emit event_show_window{ id:"mission_choice_window" }
@@ -87,6 +106,9 @@ function mission_choice_resolve_text(v) {
 }
 
 function mission_choice_branch_start(scenario_id) {
+    log_info("mission_choice: branch selected id=" + scenario_id
+        + " (fork_host=" + game.mission_choice_open_scenario_id
+        + " completed=" + game.mission_choice_completed_scenario_id + ")")
     game.mission_briefing_scenario_id = scenario_id
     game.mission_briefing_is_review = false
     __game_load_mission(scenario_id, 1)
