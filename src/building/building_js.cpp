@@ -252,6 +252,14 @@ void __building_set_animation(js_State *J) {
     js_helpers::js_push_void(J);
 }
 
+void __building_set_slot_animation(js_State *J) {
+    const int bid = building_this_id(J);
+    const int slot = J->to<int>(1);
+    const xstring key = J->to<xstring>(2);
+    building_get(bid)->dcast()->set_slot_animation(slot, key);
+    js_helpers::js_push_void(J);
+}
+
 void __building_add_overlay(js_State *J) {
     const int bid = building_this_id(J);
     const xstring name = J->to<xstring>(1);
@@ -668,6 +676,7 @@ void js_register_building(js_State *J) {
     jsB_propf(J, js_intern("Building.prototype.consume_resource"), __building_consume_resource, 2);
     jsB_propf(J, js_intern("Building.prototype.store_resource"), __building_store_resource, 2);
     jsB_propf(J, js_intern("Building.prototype.set_animation"), __building_set_animation, 1);
+    jsB_propf(J, js_intern("Building.prototype.set_slot_animation"), __building_set_slot_animation, 2);
     jsB_propf(J, js_intern("Building.prototype.add_overlay"), __building_add_overlay, 1);
     jsB_propf(J, js_intern("Building.prototype.remove_overlay"), __building_remove_overlay, 1);
     jsB_propf(J, js_intern("Building.prototype.has_overlay"), __building_has_overlay, 1);

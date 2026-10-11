@@ -151,6 +151,7 @@ public:
     void set_animation(const animation_t &anim);
     xstring get_sound();
     inline void set_animation(const xstring &key) { set_animation(anim(key)); }
+    void set_slot_animation(int slot, const xstring &key);
     bool add_overlay(const xstring &name);
     void remove_overlay(const xstring &name);
     bool has_overlay(const xstring &name) const;

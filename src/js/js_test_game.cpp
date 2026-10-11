@@ -37,6 +37,10 @@
 #include "grid/building.h"
 #include "grid/building_tiles.h"
 #include "grid/gems.h"
+#include "grid/granite.h"
+#include "grid/limestone.h"
+#include "grid/sandstone.h"
+#include "grid/stone.h"
 #include "graphics/view/view.h"
 #include "graphics/view/zoom.h"
 #include "graphics/image.h"
@@ -2697,6 +2701,15 @@ static int __test_royal_tomb_attach_worker(int bid, int figure_type) {
 }
 ANK_FUNCTION_2(__test_royal_tomb_attach_worker);
 
+static xstring __test_building_slot_anim_key(int bid, int slot) {
+    building *b = building_get(bid);
+    if (!b || !b->is_valid() || slot < 0 || slot >= (int)b->anims.size()) {
+        return {};
+    }
+    return b->anims[slot].key;
+}
+ANK_FUNCTION_2(__test_building_slot_anim_key);
+
 // Call building_impl::update_day() (e.g. pyramid phase advance / congrats).
 static void __test_building_update_day(int bid) {
     building *b = building_get(bid);
@@ -2717,6 +2730,14 @@ static void __test_map_gems_init() {
     map_gems_init();
 }
 ANK_FUNCTION(__test_map_gems_init);
+
+static void __test_map_quarry_deposits_init() {
+    map_sandstone_init();
+    map_stone_init();
+    map_limestone_init();
+    map_granite_init();
+}
+ANK_FUNCTION(__test_map_quarry_deposits_init);
 
 // Minimum map_monuments progress across the monument chain (all parts).
 static int __test_monument_min_progress(int bid) {

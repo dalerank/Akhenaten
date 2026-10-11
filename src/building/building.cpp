@@ -246,6 +246,13 @@ void building_impl::set_animation(const animation_t &anim) {
     base.anim.setup(anim);
 }
 
+void building_impl::set_slot_animation(int slot, const xstring &key) {
+    if (slot < 0 || slot >= (int)base.anims.size()) {
+        return;
+    }
+    base.anims[slot] = anim(key);
+}
+
 bool building_impl::add_overlay(const xstring &name) {
     if (name.empty() || has_overlay(name)) {
         return false;
