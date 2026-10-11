@@ -46,7 +46,9 @@ void figure_info_window::init(object_info &c) {
 
     ui.check_errors = false;
     const int figure_id = c.figure_ids[c.figure_selected_index];
-    ui.event(figure_info_window_init{ figure_id }, get_section(), __func__);
+    bvariant_map::scoped js_j;
+    js_helper::writer(*js_j, figure_info_window_init{ figure_id });
+    ui::dispatch_autoconfig_es_event(this, __func__, *js_j);
 }
 
 bool figure_info_window::check(object_info &c) {
