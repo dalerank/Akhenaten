@@ -28,6 +28,8 @@ struct touch_t {
 
 const touch_t * get_earliest_touch();
 const touch_t * get_latest_touch();
+// Like get_earliest_touch, but includes fingers still in the start_delayed window.
+const touch_t * get_earliest_touch_raw();
 int get_total_active_touches();
 
 int touch_not_click(const touch_t * t);

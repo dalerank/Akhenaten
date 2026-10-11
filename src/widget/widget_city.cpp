@@ -35,7 +35,7 @@
 #include "input/keyboard.h"
 #include "game/game_config.h"
 #include "io/gamefiles/lang.h"
-#include "platform/platform.h"
+#include "core/log.h"
 #include "platform/renderer.h"
 #include "scenario/scenario.h"
 #include "scenario/invasion_auto_resolve.h"
@@ -1135,53 +1135,42 @@ bool screen_city_t::handle_legion_click(tile2i tile) {
     return false;
 }
 
-bool screen_city_t::handle_cancel_construction_button(const touch_t * t) {
-    if (!g_city_planner.build_type)
-        return false;
+void screen_city_t::confirm_construction_placement() {
+    logs::info("[build-btn] confirm_place enter type=%d progress=%d drag=%d sel=%d(%d,%d) cur=%d(%d,%d)",
+               (int)g_city_planner.build_type, g_city_planner.in_progress ? 1 : 0, g_city_planner.draggable() ? 1 : 0,
+               selected_tile.grid_offset(), selected_tile.x(), selected_tile.y(), current_tile.grid_offset(),
+               current_tile.x(), current_tile.y());
 
-    vec2i view_size = g_camera.size_pixels;
-    int box_size = 5 * 16;
-    view_size.x -= box_size;
-    int y_max = platform.is_android() ? 72 : (40 + box_size);
-
-    if (t->current_point.x < view_size.x || t->current_point.x >= view_size.x + box_size || t->current_point.y < 24
-        || t->current_point.y >= y_max) {
-        return false;
-    }
-
-    g_city_planner.construction_cancel();
-    return true;
-}
-
-bool screen_city_t::handle_confirm_construction_button(const touch_t * t) {
-    if (!platform.is_android() || !g_city_planner.build_type)
-        return false;
-
-    vec2i view_size = g_camera.size_pixels;
-    int box_size = 5 * 16;
-    view_size.x -= box_size;
-
-    if (t->current_point.x < view_size.x || t->current_point.x >= view_size.x + box_size || t->current_point.y < 72
-        || t->current_point.y >= 112) {
-        return false;
+    if (!g_city_planner.build_type) {
+        logs::info("[build-btn] confirm_place abort: no build_type");
+        return;
     }
 
     if (g_city_planner.draggable() && g_city_planner.in_progress) {
+        logs::info("[build-btn] confirm_place branch=drag_finalize");
         build_end();
         clear_current_tile();
-        return true;
+        logs::info("[build-btn] confirm_place exit type=%d progress=%d", (int)g_city_planner.build_type,
+                   g_city_planner.in_progress ? 1 : 0);
+        return;
     }
 
     tile2i place = selected_tile.valid() ? selected_tile : current_tile;
-    if (!place.valid())
-        return true;
+    if (!place.valid()) {
+        logs::info("[build-btn] confirm_place abort: invalid tile sel_valid=%d cur_valid=%d",
+                   selected_tile.valid() ? 1 : 0, current_tile.valid() ? 1 : 0);
+        return;
+    }
 
+    logs::info("[build-btn] confirm_place branch=start_move_end tile=%d(%d,%d) was_progress=%d", place.grid_offset(),
+               place.x(), place.y(), g_city_planner.in_progress ? 1 : 0);
     if (!g_city_planner.in_progress)
         g_city_planner.construction_start(place);
     build_move(place);
     build_end();
     clear_current_tile();
-    return true;
+    logs::info("[build-btn] confirm_place exit type=%d progress=%d", (int)g_city_planner.build_type,
+               g_city_planner.in_progress ? 1 : 0);
 }
 
 void screen_city_t::handle_touch_scroll(const touch_t * t, bool fore_capture_input) {
@@ -1251,8 +1240,7 @@ void screen_city_t::handle_first_touch(tile2i tile) {
     e_building_type type = g_city_planner.build_type;
 
     if (touch_was_click(first)) {
-        if (handle_cancel_construction_button(first) || handle_confirm_construction_button(first)
-            || handle_legion_click(tile) || handle_warship_click(tile) || handle_transport_click(tile)) {
+        if (handle_legion_click(tile) || handle_warship_click(tile) || handle_transport_click(tile)) {
             return;
         }
 
@@ -1339,6 +1327,12 @@ void screen_city_t::handle_touch() {
     if (!first->in_use) {
         g_scroll.restore_margins();
         return;
+    }
+
+    if (g_city_planner.build_type && (first->has_started || first->has_ended)) {
+        logs::info("[build-btn] CITY touch leaked start=(%d,%d) cur=(%d,%d) started=%d ended=%d click=%d",
+                   first->start_point.x, first->start_point.y, first->current_point.x, first->current_point.y,
+                   first->has_started, first->has_ended, touch_was_click(first));
     }
 
     if (!g_city_planner.in_progress || input_coords_in_city(first->current_point.x, first->current_point.y)) {

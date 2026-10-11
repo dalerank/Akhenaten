@@ -35,8 +35,7 @@ struct screen_city_t {
     void handle_input(const mouse *m, const hotkeys *h);
     void handle_escape(const hotkeys *h);
     xstring get_overlay_tooltip(tooltip_context *c, tile2i tile);
-    bool handle_cancel_construction_button(const touch_t *t);
-    bool handle_confirm_construction_button(const touch_t *t);
+    void confirm_construction_placement();
     bool handle_legion_click(tile2i tile);
     void update_zoom_level(painter &ctx);
     void scroll_map(const mouse *m);

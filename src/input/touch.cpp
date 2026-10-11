@@ -39,6 +39,19 @@ const touch_t * get_earliest_touch(void) {
     return &data.finger[touch_index];
 }
 
+const touch_t * get_earliest_touch_raw(void) {
+    auto &data = g_touch_data;
+    time_millis timestamp = -1;
+    int touch_index = MAX_ACTIVE_TOUCHES;
+    for (int i = 0; i < MAX_ACTIVE_TOUCHES; ++i) {
+        if (data.finger[i].in_use && data.finger[i].start_time < timestamp) {
+            timestamp = data.finger[i].start_time;
+            touch_index = i;
+        }
+    }
+    return &data.finger[touch_index];
+}
+
 const touch_t * get_latest_touch(void) {
     auto &data = g_touch_data;
     int active_touches = 0;

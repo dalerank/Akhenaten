@@ -24,12 +24,70 @@
 #include "widget/widget_city.h"
 #include "widget/widget_figure_follow.h"
 #include "window/window_advisors.h"
+#include "core/log.h"
+#include "graphics/elements/button.h"
+#include "graphics/elements/image_button.h"
 #include "graphics/elements/ui.h"
 #include "graphics/image_groups.h"
+#include "input/mouse.h"
+#include "input/touch.h"
 #include "input/scroll.h"
 #include "platform/platform.h"
 
 window_city g_window_city;
+
+static void button_cancel_construction(int, int) {
+    logs::info("[build-btn] CANCEL callback build_type=%d in_progress=%d", (int)g_city_planner.build_type,
+               g_city_planner.in_progress ? 1 : 0);
+    g_city_planner.construction_cancel();
+    logs::info("[build-btn] CANCEL done build_type=%d", (int)g_city_planner.build_type);
+}
+
+static void button_confirm_construction(int, int) {
+    logs::info("[build-btn] CONFIRM callback build_type=%d in_progress=%d draggable=%d sel=%d cur=%d",
+               (int)g_city_planner.build_type, g_city_planner.in_progress ? 1 : 0,
+               g_city_planner.draggable() ? 1 : 0, g_screen_city.selected_tile.grid_offset(),
+               g_screen_city.current_tile.grid_offset());
+    g_screen_city.confirm_construction_placement();
+    logs::info("[build-btn] CONFIRM done build_type=%d in_progress=%d", (int)g_city_planner.build_type,
+               g_city_planner.in_progress ? 1 : 0);
+}
+
+// Hit boxes match the 3x2 panels (48x32); drawn image stays 39x26 via image_buttons_draw.
+static image_button construction_buttons[] = {
+    {0, 0, 48, 32, IB_NORMAL, GROUP_OK_CANCEL_SCROLL_BUTTONS, 4, button_cancel_construction, button_none, 0, 0, 1},
+    {0, 36, 48, 32, IB_NORMAL, GROUP_OK_CANCEL_SCROLL_BUTTONS, 0, button_confirm_construction, button_none, 0, 0, 1},
+};
+
+static int construction_button_pressed = -1;
+
+static bool construction_buttons_visible() {
+    return mouse::get().is_touch && g_city_planner.build_type;
+}
+
+static vec2i construction_buttons_base_pos() {
+    return {g_camera.size_pixels.x - 4 * 16, 44};
+}
+
+static int construction_buttons_count() {
+    return platform.is_android() ? 2 : 1;
+}
+
+static int construction_button_at(vec2i pt) {
+    const vec2i base = construction_buttons_base_pos();
+    const int count = construction_buttons_count();
+    for (int i = 0; i < count; i++) {
+        const image_button &btn = construction_buttons[i];
+        if (!btn.enabled)
+            continue;
+        const int x0 = base.x + btn.x;
+        const int y0 = base.y + btn.y;
+        if (pt.x >= x0 && pt.x < x0 + btn.width && pt.y >= y0 && pt.y < y0 + btn.height)
+            return i;
+    }
+    return -1;
+}
+
 
 int window_city::draw_background(UiFlags flags) {
     OZZY_PROFILER_FUNCTION();
@@ -68,21 +126,86 @@ void window_city_draw_time_left_panel() {
     }
 }
 
-static void draw_cancel_construction() {
-    if (!mouse::get().is_touch || !g_city_planner.build_type) {
+static void draw_construction_buttons() {
+    if (!construction_buttons_visible()) {
         return;
     }
 
-    vec2i view_size = g_camera.size_pixels;
-    view_size.x -= 4 * 16;
-    painter ctx = game.painter();
-    inner_panel_draw({ view_size.x - 4, 40 }, { 3, 2 });
-    ctx.img_generic(image_id_from_group(GROUP_OK_CANCEL_SCROLL_BUTTONS) + 4, vec2i{view_size.x, 44});
-
-    if (platform.is_android()) {
-        inner_panel_draw({ view_size.x - 4, 76 }, { 3, 2 });
-        ctx.img_generic(image_id_from_group(GROUP_OK_CANCEL_SCROLL_BUTTONS), vec2i{view_size.x, 80});
+    const vec2i base = construction_buttons_base_pos();
+    const int count = construction_buttons_count();
+    inner_panel_draw({base.x - 4, 40}, {3, 2});
+    if (count > 1) {
+        inner_panel_draw({base.x - 4, 76}, {3, 2});
     }
+    image_buttons_draw(base, construction_buttons, count);
+}
+
+static bool handle_construction_buttons(const mouse *m) {
+    if (!construction_buttons_visible()) {
+        construction_button_pressed = -1;
+        return false;
+    }
+
+    const int count = construction_buttons_count();
+    construction_buttons[0].enabled = true;
+    construction_buttons[1].enabled = count > 1;
+
+    const vec2i base = construction_buttons_base_pos();
+    // get_earliest_touch() hides fingers for ~150ms (start_delayed). Button downs
+    // in that window never latched; use the raw finger and decide by start_point.
+    const touch_t *t = m->is_touch ? get_earliest_touch_raw() : nullptr;
+    if (!m->is_touch || !t || !t->in_use) {
+        construction_button_pressed = -1;
+        construction_buttons[0].pressed = 0;
+        construction_buttons[1].pressed = 0;
+        return false;
+    }
+
+    auto fire = [] (int which) {
+        if (which == 0)
+            button_cancel_construction(0, 0);
+        else if (which == 1)
+            button_confirm_construction(0, 0);
+    };
+
+    const int hit_start = construction_button_at(t->start_point);
+    const int hit_cur = construction_button_at(t->current_point);
+
+    if (t->has_started || t->has_ended) {
+        logs::info(
+            "[build-btn] touch start=(%d,%d) cur=(%d,%d) hit_start=%d hit_cur=%d "
+            "started=%d ended=%d moved=%d click=%d base=(%d,%d) view=(%d,%d) "
+            "btns={cancel:(%d,%d,%dx%d) confirm:(%d,%d,%dx%d)} build=%d progress=%d",
+            t->start_point.x, t->start_point.y, t->current_point.x, t->current_point.y, hit_start, hit_cur,
+            t->has_started, t->has_ended, t->has_moved, touch_was_click(t), base.x, base.y, g_camera.size_pixels.x,
+            g_camera.size_pixels.y, base.x, base.y, construction_buttons[0].width, construction_buttons[0].height,
+            base.x + construction_buttons[1].x, base.y + construction_buttons[1].y, construction_buttons[1].width,
+            construction_buttons[1].height, (int)g_city_planner.build_type, g_city_planner.in_progress ? 1 : 0);
+    }
+
+    // Whole gesture: only steal if the finger began on a button.
+    if (hit_start < 0) {
+        construction_button_pressed = -1;
+        return false;
+    }
+
+    if (t->has_started) {
+        logs::info("[build-btn] steal gesture which=%d", hit_start);
+    }
+
+    construction_button_pressed = hit_start;
+    construction_buttons[hit_start].pressed = 1;
+    construction_buttons[hit_start].hovered = 2;
+
+    if (t->has_ended) {
+        construction_button_pressed = -1;
+        construction_buttons[0].pressed = 0;
+        construction_buttons[1].pressed = 0;
+        logs::info("[build-btn] gesture click which=%d start=(%d,%d) end=(%d,%d)", hit_start, t->start_point.x,
+                   t->start_point.y, t->current_point.x, t->current_point.y);
+        fire(hit_start);
+    }
+    return true;
 }
 
 bool window_city_draw_construction_cost_and_size() {
@@ -140,7 +263,7 @@ void window_city::draw_foreground(UiFlags flags) {
     if (window_is_city_view()) {
         draw_paused_panel();
         window_city_draw_time_left_panel();
-        draw_cancel_construction();
+        draw_construction_buttons();
         g_figure_follow.draw_panel();
     }
 
@@ -201,6 +324,11 @@ void window_city::handle_input(const mouse* m, const hotkeys* h) {
 
     if (!g_city_planner.in_progress) {
         ui::dispatch_autoconfig_es_event(this, "handle_top_menu", {});
+    }
+
+    if (handle_construction_buttons(m)) {
+        city_has_loaded = true;
+        return;
     }
 
     if (g_figure_follow.handle_mouse(m)) {

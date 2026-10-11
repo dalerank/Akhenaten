@@ -1102,6 +1102,10 @@ void build_planner::checks_generic_rules(building *b, tile2i tile, int size, int
 }
 
 void build_planner::construction_finalize() { // confirm final placement
+    logs::info("[build-btn] finalize enter type=%d start=%d(%d,%d) end=%d(%d,%d) can_place=%d cost=%d",
+               (int)build_type, start.grid_offset(), start.x(), start.y(), end.grid_offset(), end.x(), end.y(),
+               (int)can_place, total_cost);
+
     in_progress = false;
 
     const auto &preview = building_planer_renderer::get(build_type);
@@ -1109,12 +1113,14 @@ void build_planner::construction_finalize() { // confirm final placement
     can_place = preview.finalize_check(*this, start, end, can_place);
 
     if (can_place != CAN_PLACE && !params.planner_update_rule.is_draggable) { // this is the FINAL check!
+        logs::info("[build-btn] finalize abort: can_place=%d (not draggable)", (int)can_place);
         dispatch_warnings();
         return;
     }
 
     // attempt placing, restore terrain data on failure
     if (!place()) {
+        logs::info("[build-btn] finalize place() FAILED type=%d cost=%d", (int)build_type, total_cost);
         map_property_clear_constructing_and_deleted();
         if (building_type_any_of(build_type, { BUILDING_MUD_WALL, BUILDING_BRICK_WALL, BUILDING_ROAD, BUILDING_IRRIGATION_DITCH, BUILDING_DIKE })) {
             game_undo_restore_map(0);
@@ -1127,6 +1133,9 @@ void build_planner::construction_finalize() { // confirm final placement
         dispatch_warnings();
         return;
     }
+
+    logs::info("[build-btn] finalize place() OK type=%d cost=%d end=%d(%d,%d)", (int)build_type, total_cost,
+               end.grid_offset(), end.x(), end.y());
 
     // final generic building warnings - these are in another file
     // TODO: bring these warnings over.
