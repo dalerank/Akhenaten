@@ -71,10 +71,9 @@ function report_bug_on_submit(window) {
         window.status.text = "#report_bug_error_short_description"
         return
     }
-    window.status.text = "#report_bug_sending"
-    window.btn_submit.enabled = false
-    report_bug_window.sending = true
-    __game_report_bug(t, b + report_bug_diagnostics())
+    var text = b + report_bug_diagnostics()
+    window_go_back()
+    __game_report_bug(t, text)
 }
 
 [es=(report_bug_window, event_report_bug_result)]

@@ -245,11 +245,19 @@ void game_t::add_frame_end_event(serial_event_t ev) {
 }
 
 void game_t::execute_frame_end_events() {
-    std::lock_guard<std::mutex> lock(frame_end_events_mutex);
-    for (auto &ev : frame_end_events) {
+    // A callback may queue the next frame. This mutex is not recursive, and clearing
+    // after the loop would drop that event.
+    hvector<serial_event_t, 16> batch;
+    {
+        std::lock_guard<std::mutex> lock(frame_end_events_mutex);
+        for (auto &ev : frame_end_events) {
+            batch.push_back(std::move(ev));
+        }
+        frame_end_events.clear();
+    }
+    for (auto &ev : batch) {
         ev();
     }
-    frame_end_events.clear();
 }
 
 void game_t::add_frame_pre_present_handler(serial_event_t handler) {

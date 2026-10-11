@@ -259,30 +259,46 @@ static void show_saved_notice(const char *filename) {
     events::emit(event_city_warning{ notice_text });
 }
 
-static void create_window_screenshot() {
+static bool write_display_png(pcstr filename, bool notify) {
+    if (!filename || !*filename) {
+        return false;
+    }
     if (!image_create(g_screen.size(), 0, 1)) {
         logs::error("Unable to create memory for screenshot");
-        return;
+        return false;
     }
-
-    pcstr filename = generate_filename(SCREENSHOT_DISPLAY);
     if (!image_begin_io(filename) || !image_write_header()) {
         logs::error("Unable to write screenshot to: %s", filename);
         image_free();
-        return;
+        return false;
     }
 
     painter ctx = game.painter();
     if (!image_write_canvas(ctx)) {
         logs::error("Error writing image");
         image_free();
-        return;
+        return false;
     }
 
     image_finish();
     logs::info("Saved screenshot: %s", filename);
-    show_saved_notice(filename);
+    if (notify) {
+        show_saved_notice(filename);
+    }
     image_free();
+    return true;
+}
+
+static void create_window_screenshot() {
+    write_display_png(generate_filename(SCREENSHOT_DISPLAY), true);
+}
+
+bool graphics_write_display_png(pcstr path) {
+    if (g_args.no_resource()) {
+        logs::info("Screenshot skipped (--no-resource)");
+        return false;
+    }
+    return write_display_png(path, false);
 }
 
 static void create_full_city_screenshot() {
