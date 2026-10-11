@@ -1,6 +1,8 @@
 log_info("akhenaten: building_granite_quarry started")
 
+[es=building_industry]
 building_granite_quarry {
+  type: BUILDING_GRANITE_QUARRY
   animations {
     preview { pack:PACK_GENERAL, id:38 },
     base { pack:PACK_GENERAL, id:38 },

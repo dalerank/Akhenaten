@@ -44,7 +44,6 @@ class building;
     X(storage)                 \
     X(temple)                  \
     X(roadblock)               \
-    X(quarry)                  \
     X(festival_square)         \
     X(bandstand)               \
     X(routeblock)              \

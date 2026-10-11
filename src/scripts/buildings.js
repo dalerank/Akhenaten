@@ -80,6 +80,11 @@ import building.mine_common
 import building.mine_copper
 import building.mine_gold
 import building.mine_gems
+import building.quarry_common
+import building.sandstone_quarry
+import building.stone_quarry
+import building.limestone_quarry
+import building.granite_quarry
 import building.granary
 import building.storage_yard
 import building.health

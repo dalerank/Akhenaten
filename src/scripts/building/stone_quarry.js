@@ -1,6 +1,8 @@
 log_info("akhenaten: building_stone_quarry started")
 
+[es=building_industry]
 building_stone_quarry {
+  type: BUILDING_STONE_QUARRY
   animations {
     preview { pack:PACK_GENERAL, id:187 },
     base { pack:PACK_GENERAL, id:187 },

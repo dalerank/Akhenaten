@@ -6,7 +6,7 @@
 
 var __test210_ok = false
 
-function __test210_footprint_sum(x, y, get_deposit) {
+function test210_footprint_sum(x, y, get_deposit) {
     var sum = 0
     var iy
     var ix
@@ -18,7 +18,7 @@ function __test210_footprint_sum(x, y, get_deposit) {
     return sum
 }
 
-function __test210_place(label, type, resource, x, y) {
+function test210_place(label, type, resource, x, y) {
     var bid = test_building_place(type, x, y)
     if (!bid) {
         bid = __test_building_create(type, x, y)
@@ -64,19 +64,19 @@ function run_test() {
     }
     __test_map_quarry_deposits_init()
 
-    var sandstone = __test210_place('sandstone', BUILDING_SANDSTONE_QUARRY, RESOURCE_SANDSTONE, cx, cy)
-    var stone = __test210_place('stone', BUILDING_STONE_QUARRY, RESOURCE_STONE, cx + 8, cy)
-    var limestone = __test210_place('limestone', BUILDING_LIMESTONE_QUARRY, RESOURCE_LIMESTONE, cx, cy + 8)
-    var granite = __test210_place('granite', BUILDING_GRANITE_QUARRY, RESOURCE_GRANITE, cx + 8, cy + 8)
+    var sandstone = test210_place('sandstone', BUILDING_SANDSTONE_QUARRY, RESOURCE_SANDSTONE, cx, cy)
+    var stone = test210_place('stone', BUILDING_STONE_QUARRY, RESOURCE_STONE, cx + 8, cy)
+    var limestone = test210_place('limestone', BUILDING_LIMESTONE_QUARRY, RESOURCE_LIMESTONE, cx, cy + 8)
+    var granite = test210_place('granite', BUILDING_GRANITE_QUARRY, RESOURCE_GRANITE, cx + 8, cy + 8)
     if (!sandstone || !stone || !limestone || !granite) {
         __test_signal_ready()
         return
     }
 
-    var sand_before = __test210_footprint_sum(cx, cy, __map_get_sandstone)
-    var stone_before = __test210_footprint_sum(cx + 8, cy, __map_get_stone)
-    var lime_before = __test210_footprint_sum(cx, cy + 8, __map_get_limestone)
-    var granite_before = __test210_footprint_sum(cx + 8, cy + 8, __map_get_granite)
+    var sand_before = test210_footprint_sum(cx, cy, __map_get_sandstone)
+    var stone_before = test210_footprint_sum(cx + 8, cy, __map_get_stone)
+    var lime_before = test210_footprint_sum(cx, cy + 8, __map_get_limestone)
+    var granite_before = test210_footprint_sum(cx + 8, cy + 8, __map_get_granite)
     if (sand_before <= 0 || stone_before <= 0 || lime_before <= 0 || granite_before <= 0) {
         __log_info_native('[test:210] missing deposit sand=' + sand_before + ' stone=' + stone_before
             + ' lime=' + lime_before + ' granite=' + granite_before)
@@ -89,24 +89,24 @@ function run_test() {
     }
 
     var failed = false
-    if (__building_industry_progress(sandstone) != 33 || __test210_footprint_sum(cx, cy, __map_get_sandstone) != sand_before - 32) {
+    if (__building_industry_progress(sandstone) != 33 || test210_footprint_sum(cx, cy, __map_get_sandstone) != sand_before - 32) {
         __log_info_native('[test:210] sandstone progress=' + __building_industry_progress(sandstone)
-            + ' deposit=' + __test210_footprint_sum(cx, cy, __map_get_sandstone) + ' before=' + sand_before)
+            + ' deposit=' + test210_footprint_sum(cx, cy, __map_get_sandstone) + ' before=' + sand_before)
         failed = true
     }
-    if (__building_industry_progress(stone) != 33 || __test210_footprint_sum(cx + 8, cy, __map_get_stone) != stone_before - 32) {
+    if (__building_industry_progress(stone) != 33 || test210_footprint_sum(cx + 8, cy, __map_get_stone) != stone_before - 32) {
         __log_info_native('[test:210] stone progress=' + __building_industry_progress(stone)
-            + ' deposit=' + __test210_footprint_sum(cx + 8, cy, __map_get_stone) + ' before=' + stone_before)
+            + ' deposit=' + test210_footprint_sum(cx + 8, cy, __map_get_stone) + ' before=' + stone_before)
         failed = true
     }
-    if (__building_industry_progress(limestone) != 33 || __test210_footprint_sum(cx, cy + 8, __map_get_limestone) != lime_before - 32) {
+    if (__building_industry_progress(limestone) != 33 || test210_footprint_sum(cx, cy + 8, __map_get_limestone) != lime_before - 32) {
         __log_info_native('[test:210] limestone progress=' + __building_industry_progress(limestone)
-            + ' deposit=' + __test210_footprint_sum(cx, cy + 8, __map_get_limestone) + ' before=' + lime_before)
+            + ' deposit=' + test210_footprint_sum(cx, cy + 8, __map_get_limestone) + ' before=' + lime_before)
         failed = true
     }
-    if (__building_industry_progress(granite) != 33 || __test210_footprint_sum(cx + 8, cy + 8, __map_get_granite) != granite_before - 32) {
+    if (__building_industry_progress(granite) != 33 || test210_footprint_sum(cx + 8, cy + 8, __map_get_granite) != granite_before - 32) {
         __log_info_native('[test:210] granite progress=' + __building_industry_progress(granite)
-            + ' deposit=' + __test210_footprint_sum(cx + 8, cy + 8, __map_get_granite) + ' before=' + granite_before)
+            + ' deposit=' + test210_footprint_sum(cx + 8, cy + 8, __map_get_granite) + ' before=' + granite_before)
         failed = true
     }
     if (failed) {
