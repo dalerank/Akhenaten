@@ -34,7 +34,12 @@ function building_info_window_set_advisor_button(btn, advisor, show) {
     if (frame <= 0) {
         return
     }
+    // get_image() returns null when the pack is unavailable (e.g. --no-resource
+    // without a Pharaoh install); keep the button enabled, just skip the portrait.
     var portrait = get_image({pack:PACK_GENERAL, id:106, offset:frame})
+    if (!portrait) {
+        return
+    }
     btn.image = portrait.tid
 }
 
