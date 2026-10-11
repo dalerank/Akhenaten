@@ -27,12 +27,6 @@ void building_wharf::update_map_orientation(int orientation) {
     map_water_add_building(id(), tile(), size(), image_id);
 }
 
-void building_wharf::bind_dynamic(io_buffer *iob, size_t version) {
-    iob->bind(BIND_SIGNATURE_UINT8, &base.orientation);
-    iob->bind(BIND_SIGNATURE_INT32, &base.tiles[0]);
-    iob->bind(BIND_SIGNATURE_INT32, &base.tiles[1]);
-}
-
 void building_wharf::on_tick(bool refresh_only) {
     auto &anim_wharf = base.anim;
     auto &d = runtime_data();

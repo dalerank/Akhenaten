@@ -430,13 +430,9 @@ void city_resources_t::calculate_food_stocks_and_supply_wheat() {
 }
 
 void city_resources_t::consume_goods_weekly(const simulation_time_t& t) {
-    resource_list consumed_goods;
     buildings_house_do([&] (building_house *house) {
-        auto house_consumed = house->consume_goods_weekly();
-        consumed_goods.append(house_consumed);
+        house->consume_goods_weekly();
     });
-
-    res_this_month.consumed.append(consumed_goods);
 }
 
 void city_resources_t::consume_food_weekly(const simulation_time_t& t) {

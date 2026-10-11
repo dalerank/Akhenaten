@@ -1,6 +1,6 @@
 log_info("akhenaten: building_house.js loaded")
 
-/* Constructor, prototype chain, __property_getter, get_food/set_food/inv/toString: native (js_register_house). */
+/* Constructor, prototype chain, __property_getter, get/set food+inv, toString: native (js_register_house). */
 
 House.property.population = { }
 House.property.tax_coverage = { }
@@ -126,162 +126,41 @@ function house_consume_food_pass(house, food_types, amount_per_type, want_consum
     }
 }
 
-[es=(building_house_crude_hut, consume_food_weekly)]
-function building_house_crude_hut_consume_food_weekly(ev) {
+House.prototype.consume_goods_weekly = function() {
+    if (!this.hsize) {
+        return
+    }
+
+    var model = this.model
+    house_consume_good(this, 0, model.pottery, RESOURCE_POTTERY)
+    house_consume_good(this, 1, model.jewelry, RESOURCE_LUXURY_GOODS)
+    house_consume_good(this, 2, model.linen, RESOURCE_LINEN)
+    house_consume_good(this, 3, model.beer, RESOURCE_BEER)
+}
+
+function house_consume_good(house, inv, amount, resource) {
+    if (amount <= 0) {
+        return
+    }
+    var stored = house.inv(inv)
+    var spent = Math.min(amount, stored)
+    if (spent <= 0) {
+        return
+    }
+    house.set_inv(inv, stored - spent)
+    city.resources.note_consumed(resource, spent)
+}
+
+function house_es_consume_food_weekly(ev) {
     var house = city.get_house(ev.bid)
     if (house) {
         house.consume_food_weekly()
     }
 }
 
-[es=(building_house_sturdy_hut, consume_food_weekly)]
-function building_house_sturdy_hut_consume_food_weekly(ev) {
+function house_es_consume_goods_weekly(ev) {
     var house = city.get_house(ev.bid)
     if (house) {
-        house.consume_food_weekly()
-    }
-}
-
-[es=(building_house_meager_shanty, consume_food_weekly)]
-function building_house_meager_shanty_consume_food_weekly(ev) {
-    var house = city.get_house(ev.bid)
-    if (house) {
-        house.consume_food_weekly()
-    }
-}
-
-[es=(building_house_common_shanty, consume_food_weekly)]
-function building_house_common_shanty_consume_food_weekly(ev) {
-    var house = city.get_house(ev.bid)
-    if (house) {
-        house.consume_food_weekly()
-    }
-}
-
-[es=(building_house_rough_cottage, consume_food_weekly)]
-function building_house_rough_cottage_consume_food_weekly(ev) {
-    var house = city.get_house(ev.bid)
-    if (house) {
-        house.consume_food_weekly()
-    }
-}
-
-[es=(building_house_ordinary_cottage, consume_food_weekly)]
-function building_house_ordinary_cottage_consume_food_weekly(ev) {
-    var house = city.get_house(ev.bid)
-    if (house) {
-        house.consume_food_weekly()
-    }
-}
-
-[es=(building_house_modest_homestead, consume_food_weekly)]
-function building_house_modest_homestead_consume_food_weekly(ev) {
-    var house = city.get_house(ev.bid)
-    if (house) {
-        house.consume_food_weekly()
-    }
-}
-
-[es=(building_house_spacious_homestead, consume_food_weekly)]
-function building_house_spacious_homestead_consume_food_weekly(ev) {
-    var house = city.get_house(ev.bid)
-    if (house) {
-        house.consume_food_weekly()
-    }
-}
-
-[es=(building_house_modest_apartment, consume_food_weekly)]
-function building_house_modest_apartment_consume_food_weekly(ev) {
-    var house = city.get_house(ev.bid)
-    if (house) {
-        house.consume_food_weekly()
-    }
-}
-
-[es=(building_house_spacious_apartment, consume_food_weekly)]
-function building_house_spacious_apartment_consume_food_weekly(ev) {
-    var house = city.get_house(ev.bid)
-    if (house) {
-        house.consume_food_weekly()
-    }
-}
-
-[es=(building_house_common_residence, consume_food_weekly)]
-function building_house_common_residence_consume_food_weekly(ev) {
-    var house = city.get_house(ev.bid)
-    if (house) {
-        house.consume_food_weekly()
-    }
-}
-
-[es=(building_house_spacious_residence, consume_food_weekly)]
-function building_house_spacious_residence_consume_food_weekly(ev) {
-    var house = city.get_house(ev.bid)
-    if (house) {
-        house.consume_food_weekly()
-    }
-}
-
-[es=(building_house_elegant_residence, consume_food_weekly)]
-function building_house_elegant_residence_consume_food_weekly(ev) {
-    var house = city.get_house(ev.bid)
-    if (house) {
-        house.consume_food_weekly()
-    }
-}
-
-[es=(building_house_fancy_residence, consume_food_weekly)]
-function building_house_fancy_residence_consume_food_weekly(ev) {
-    var house = city.get_house(ev.bid)
-    if (house) {
-        house.consume_food_weekly()
-    }
-}
-
-[es=(building_house_common_manor, consume_food_weekly)]
-function building_house_common_manor_consume_food_weekly(ev) {
-    var house = city.get_house(ev.bid)
-    if (house) {
-        house.consume_food_weekly()
-    }
-}
-
-[es=(building_house_spacious_manor, consume_food_weekly)]
-function building_house_spacious_manor_consume_food_weekly(ev) {
-    var house = city.get_house(ev.bid)
-    if (house) {
-        house.consume_food_weekly()
-    }
-}
-
-[es=(building_house_elegant_manor, consume_food_weekly)]
-function building_house_elegant_manor_consume_food_weekly(ev) {
-    var house = city.get_house(ev.bid)
-    if (house) {
-        house.consume_food_weekly()
-    }
-}
-
-[es=(building_house_stately_manor, consume_food_weekly)]
-function building_house_stately_manor_consume_food_weekly(ev) {
-    var house = city.get_house(ev.bid)
-    if (house) {
-        house.consume_food_weekly()
-    }
-}
-
-[es=(building_house_modest_estate, consume_food_weekly)]
-function building_house_modest_estate_consume_food_weekly(ev) {
-    var house = city.get_house(ev.bid)
-    if (house) {
-        house.consume_food_weekly()
-    }
-}
-
-[es=(building_house_palatial_estate, consume_food_weekly)]
-function building_house_palatial_estate_consume_food_weekly(ev) {
-    var house = city.get_house(ev.bid)
-    if (house) {
-        house.consume_food_weekly()
+        house.consume_goods_weekly()
     }
 }

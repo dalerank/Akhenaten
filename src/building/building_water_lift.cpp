@@ -45,10 +45,6 @@ void building_water_lift::update_day() {
     base.has_water_access = (is_water1 || is_water2);
 }
 
-void building_water_lift::on_tick(bool b) {
-    building_impl::on_tick(b);
-}
-
 int building_water_lift::animation_speed(int speed) const {
     if (num_workers() <= 0) {
         return 0;

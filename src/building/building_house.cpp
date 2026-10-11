@@ -261,31 +261,12 @@ void building_house::consume_food_weekly() {
     es(__func__);
 }
 
-resource_list building_house::consume_goods_weekly() {
+void building_house::consume_goods_weekly() {
     if (!hsize()) {
-        return {};
+        return;
     }
 
-    resource_list good_types_consumed;
-    auto &d = runtime_data();
-    const model_house& model = get_model(house_level());
-
-    auto consume_resource = [&] (int inventory, uint16_t amount) {
-        if (amount <= 0) {
-            return;
-        }
-
-        amount = std::min(amount, d.inventory[inventory]);
-        d.inventory[inventory] -= amount;
-        good_types_consumed.push_back({ (e_resource)inventory, amount });
-    };
-
-    consume_resource(INVENTORY_GOOD1, model.pottery);
-    consume_resource(INVENTORY_GOOD2, model.jewelry);
-    consume_resource(INVENTORY_GOOD3, model.linen);
-    consume_resource(INVENTORY_GOOD4, model.beer);
-
-    return good_types_consumed;
+    es(__func__);
 }
 
 template<bool use_offset>

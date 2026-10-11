@@ -22,7 +22,6 @@ public:
     virtual void on_place_update_tiles(int orientation, int variant) override;
     virtual void on_post_load() override;
     virtual void update_day() override;
-    virtual void on_tick(bool) override;
     virtual int animation_speed(int speed) const override;
     virtual e_overlay get_overlay() const override { return OVERLAY_WATER; }
     virtual e_sound_channel_city sound_channel() const override { return SOUND_CHANNEL_CITY_POLICE; }
