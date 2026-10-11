@@ -150,7 +150,7 @@ figure_asp {
 		idle { pack:PACK_EXPANSION_SPR, id:2, max_frames:12 }
 		death { pack:PACK_EXPANSION_SPR, id:3, max_frames:6, loop:false }
 		eating { pack:PACK_EXPANSION_SPR, id:4, max_frames:12 }
-		big_image { pack:PACK_EXPANSION, id:1, offset:4 } // Cleopatra asp portrait (Expansion g1 offset 4 = snake)
+		big_image { pack:PACK_EXPANSION, id:1, offset:4 }
 	}
 
 	category: figure_category_animal
@@ -169,7 +169,7 @@ figure_lion {
 		idle { pack:PACK_EXPANSION_SPR, id:7, max_frames:6 }
 		eating { pack:PACK_EXPANSION_SPR, id:8, max_frames:10 }
 		death { pack:PACK_EXPANSION_SPR, id:9, max_frames:4 } // sit/rest frames (not corpse)
-		big_image { pack:PACK_EXPANSION, id:1, offset:5 } // Cleopatra lion portrait
+		big_image { pack:PACK_EXPANSION, id:1, offset:5 }
 	}
 
 	category: figure_category_animal
@@ -188,7 +188,7 @@ figure_scorpion {
 		idle { pack:PACK_EXPANSION_SPR, id:12, max_frames:6 }
 		eating { pack:PACK_EXPANSION_SPR, id:14, max_frames:6 }
 		death { pack:PACK_EXPANSION_SPR, id:13, max_frames:6, loop:false }
-		big_image { pack:PACK_EXPANSION, id:1, offset:2 } // Cleopatra scorpion portrait
+		big_image { pack:PACK_EXPANSION, id:1, offset:2 }
 	}
 
 	category: figure_category_animal
@@ -431,7 +431,7 @@ figure_locust {
 		walk { pack:PACK_EXPANSION_SPR, id:30, max_frames:6 }
 		idle { pack:PACK_EXPANSION_SPR, id:30, max_frames:6 }
 		death { pack:PACK_EXPANSION_SPR, id:30, max_frames:6, loop:false }
-		big_image { pack:PACK_EXPANSION, id:1, offset:7 } // Cleopatra locust portrait
+		big_image { pack:PACK_EXPANSION, id:1, offset:7 }
 	}
 
 	category: figure_category_inactive
