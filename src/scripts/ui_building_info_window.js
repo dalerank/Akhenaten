@@ -35,7 +35,7 @@ function building_info_window_set_advisor_button(btn, advisor, show) {
         return
     }
     var portrait = get_image({pack:PACK_GENERAL, id:106, offset:frame})
-    btn.image = portrait.tid
+    btn.image = portrait ? portrait.tid : 0
 }
 
 function building_info_window_setup_advisors(window) {
