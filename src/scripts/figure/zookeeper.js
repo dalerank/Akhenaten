@@ -6,7 +6,7 @@ figure_zookeeper {
 	animations {
 		walk { pack:PACK_EXPANSION_SPR, id:35, max_frames:12 }
 		death { pack:PACK_EXPANSION_SPR, id:36, max_frames:7, loop:false }
-		big_image { pack:PACK_UNLOADED, id:25, offset:FIGURE_ZOOKEEPER }
+		big_image { pack:PACK_EXPANSION, id:1, offset:0 } // Cleopatra zookeeper portrait (Expansion g1 offset 0)
 	}
 
 	sounds {

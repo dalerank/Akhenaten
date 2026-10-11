@@ -9,7 +9,7 @@ figure_mummy {
 		attack { pack:PACK_EXPANSION_SPR, id:41, max_frames:11 }
 		idle { pack:PACK_EXPANSION_SPR, id:42, max_frames:12 }
 		death { pack:PACK_EXPANSION_SPR, id:40, max_frames:8, loop:false }
-		big_image { pack:PACK_UNLOADED, id:25, offset:FIGURE_MUMMY }
+		big_image { pack:PACK_EXPANSION, id:1, offset:8 } // Cleopatra mummy portrait
 	}
 
 	sounds {
