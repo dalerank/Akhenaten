@@ -9,7 +9,6 @@
 #include "game/game_config.h"
 #include "game/game.h"
 #include "js/js_game.h"
-#include "platform/arguments.h"
 
 #include <cmath>
 #include <cstdlib>
@@ -363,8 +362,15 @@ int scroll_t::get_alignment_delta(int direction, int camera_max_offset, int came
                                                         : (camera_offset * -direction);
 }
 
+void scroll_t::set_mouse_input(bool enabled) {
+    mouse_input = enabled;
+    if (!mouse_input) {
+        clear_speed();
+    }
+}
+
 bool scroll_t::set_speed_from_input(const mouse *m, type t) {
-    if (g_args.no_mouse()) {
+    if (!mouse_input) {
         clear_speed();
         return false;
     }

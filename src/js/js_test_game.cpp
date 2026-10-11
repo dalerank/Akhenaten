@@ -188,6 +188,7 @@ ANK_FUNCTION_1(__test_find_inlog);
 
 static void test_pump(int n) {
     for (int i = 0; i < n && !g_app.quit; ++i) {
+        game.tick_timer_ms = 0;
         g_app.pump_one_frame();
     }
 }

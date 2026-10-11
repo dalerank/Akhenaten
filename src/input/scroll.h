@@ -66,6 +66,7 @@ struct scroll_t {
     void restore_margins();
 
     void arrow(arrow_dir which, int value);
+    void set_mouse_input(bool enabled);
 
 private:
     struct arrow_key_t {
@@ -112,6 +113,7 @@ private:
         vec2i size;
     };
 
+    bool mouse_input = true;
     int is_scrolling = 0;
     int constant_input = 0;
     arrows_t arrows;

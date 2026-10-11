@@ -8,6 +8,7 @@
 #include "js/js_game.h"
 #include "core/profiler.h"
 #include "game/game.h"
+#include "input/scroll.h"
 #include "graphics/screen.h"
 #include "content/vfs.h"
 #include "io/gamefiles/lang.h"
@@ -644,6 +645,10 @@ static int handle_unpack_scripts() {
 
 int main(int argc, char** argv) {
     g_args.parse(argc, argv);
+
+    if (g_args.no_mouse() || g_args.is_integral_tests()) {
+        g_scroll.set_mouse_input(false);
+    }
 
     crashhandler_install();
 
