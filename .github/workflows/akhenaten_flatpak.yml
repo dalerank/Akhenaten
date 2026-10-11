@@ -25,7 +25,8 @@ jobs:
         from pathlib import Path
         path = Path("io.github.dalerank.Akhenaten.json")
         data = json.loads(path.read_text(encoding="utf-8"))
-        sources = data["modules"][0]["sources"]
+        module = next(m for m in data["modules"] if isinstance(m, dict) and m.get("name") == "akhenaten")
+        sources = module["sources"]
         if sources and sources[0].get("type") in ("git", "dir"):
             # Build the checked-out tree; Flathub uses the pinned git tag in the manifest.
             sources[0] = {"type": "dir", "path": "."}

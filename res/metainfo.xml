@@ -19,8 +19,10 @@
       original savegames and campaign missions on modern systems.
     </p>
     <p>
-      You need a legal copy of Pharaoh (and Cleopatra, if used). Point Akhenaten at your
-      game data directory, or place the files where the engine can find them.
+      You need a legal copy of Pharaoh (and Cleopatra, if used). Pass the Pharaoh
+      install directory as the last command-line argument, or grant the Flatpak
+      access to that folder (for example via Flatseal) so the in-app folder picker
+      can see it. Portal-based folder selection is planned.
     </p>
   </description>
 
