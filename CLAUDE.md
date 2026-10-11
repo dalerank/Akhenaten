@@ -4,7 +4,7 @@
 
 Modern open-source reimplementation of the classic city-builder **Pharaoh (1999)** by Impressions Games.
 Fork of Julius/Augustus, targets Pharaoh + Cleopatra expansion. Full savegame compatibility with the original.
-Version: 0.2.7 | License: AGPL-3.0 | Solo maintainer + community contributors.
+Version: 0.2.8 | License: AGPL-3.0 | Solo maintainer + community contributors.
 
 ## Build (Windows)
 
@@ -186,7 +186,7 @@ Default to the integral tests above; say so explicitly when a change cannot be c
 
 ## Git Commits
 
-Do not add `Co-Authored-By: Claude` or any Claude/Anthropic attribution to commit messages or pull request bodies. Do not include "Generated with Claude Code" or similar lines in PR descriptions.
+Do not add `Co-Authored-By` (Cursor, Claude, Codex, or any other AI/tool) or similar attribution to commit messages or pull request bodies. Do not include "Generated with …" lines in PR descriptions.
 
 ## Documentation
 

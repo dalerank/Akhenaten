@@ -27,8 +27,13 @@
                 {
                     "type": "git",
                     "url": "https://github.com/dalerank/Akhenaten.git",
-                    "tag": "v0.2.7",
-                    "commit": "9a0e874363cae8c6b3c21c8cc4068ba0e7c582e3"
+                    "tag": "v0.2.8",
+                    "commit": "0000000000000000000000000000000000000000",
+                    "x-checker-data": {
+                        "type": "git",
+                        "tag-pattern": "^v([0-9]+\\.[0-9]+\\.[0-9]+)$",
+                        "is-main-source": true
+                    }
                 },
                 {
                     "type": "shell",

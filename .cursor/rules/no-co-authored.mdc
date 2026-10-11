@@ -1,0 +1,28 @@
+---
+description: Never add Co-Authored-By or AI attribution to commits/PRs
+alwaysApply: true
+---
+
+# No Co-Authored-By / AI attribution
+
+Never add AI or tool attribution to git commits or pull requests.
+
+## Forbidden
+
+- `Co-Authored-By:` trailers (Cursor, Claude, Codex, Copilot, or any other)
+- "Generated with …", "Made with …", or similar attribution lines in commit messages or PR bodies
+
+## Required
+
+- Commit and PR text must contain only the human-facing summary of the change
+- If a hook or tool injects `Co-Authored-By` / attribution, remove it before finishing (amend only when amend rules allow; otherwise rewrite the local commit message)
+
+```text
+# ❌ BAD
+Prepare Flatpak packaging for Flathub app ID.
+
+Co-authored-by: Cursor <cursoragent@cursor.com>
+
+# ✅ GOOD
+Prepare Flatpak packaging for Flathub app ID.
+```

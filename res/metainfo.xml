@@ -75,6 +75,11 @@
   </content_rating>
 
   <releases>
+    <release version="0.2.8" date="2026-10-11">
+      <description>
+        <p>Flatpak/Flathub packaging: App ID io.github.dalerank.Akhenaten, AppStream metadata, and sandbox permissions.</p>
+      </description>
+    </release>
     <release version="0.2.7" date="2026-06-14">
       <description>
         <p>Version 0.2.7.</p>
