@@ -1300,19 +1300,46 @@ void build_planner::draw_bridge(tile2i tile, vec2i pixel, int type, painter &ctx
 }
 
 int build_planner::is_blocked_for_building(tile2i tile, int size, blocked_tile_vec &blocked_tiles, uint32_t restricted_terrain) {
-    int orientation_index = g_camera.orientation / 2;
-    int blocked = 0;
-    int num_tiles = (size * size);
-    for (int i = 0; i < num_tiles; i++) {
-        int offset = TILE_GRID_OFFSETS_PH[orientation_index][i];
-        tile2i check_tile = tile.shifted(offset);
-        bool tile_blocked = map_terrain_is(check_tile, restricted_terrain & TERRAIN_NOT_CLEAR)
-            || (map_terrain_count_directly_adjacent_with_type(check_tile, TERRAIN_FLOODPLAIN) > 0)
-            || (map_terrain_count_diagonally_adjacent_with_type(check_tile, TERRAIN_FLOODPLAIN) > 0)
-            || map_has_figure_at(check_tile);
+    // TILE_GRID_OFFSETS_PH is only 5×5. Indexing it with size*size for a 6×6 (sphinx
+    // part) reads off the end and paints tiles that are not in the footprint.
+    // blocked_tile_vec holds 36, so 6×6 is the largest square that fits.
+    if (size < 1) {
+        return 0;
+    }
+    if (size > 6) {
+        size = 6;
+    }
 
-        blocked_tiles.push_back({ check_tile, tile_blocked });
-        blocked += (tile_blocked ? 1 : 0);
+    const int orientation_index = g_camera.orientation / 2;
+    int blocked = 0;
+    for (int dy = 0; dy < size; dy++) {
+        for (int dx = 0; dx < size; dx++) {
+            int sx = dx;
+            int sy = dy;
+            switch (orientation_index) {
+            case 1:
+                sx = -dx;
+                break;
+            case 2:
+                sx = -dx;
+                sy = -dy;
+                break;
+            case 3:
+                sy = -dy;
+                break;
+            default:
+                break;
+            }
+
+            tile2i check_tile = tile.shifted(sx, sy);
+            bool tile_blocked = map_terrain_is(check_tile, restricted_terrain & TERRAIN_NOT_CLEAR)
+                || (map_terrain_count_directly_adjacent_with_type(check_tile, TERRAIN_FLOODPLAIN) > 0)
+                || (map_terrain_count_diagonally_adjacent_with_type(check_tile, TERRAIN_FLOODPLAIN) > 0)
+                || map_has_figure_at(check_tile);
+
+            blocked_tiles.push_back({ check_tile, tile_blocked });
+            blocked += (tile_blocked ? 1 : 0);
+        }
     }
 
     return blocked;

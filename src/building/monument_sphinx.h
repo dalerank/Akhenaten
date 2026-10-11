@@ -22,6 +22,11 @@ public:
     struct preview : building_planer_renderer {
         virtual void setup_preview_graphics(build_planner &planer) const override;
         virtual void ghost_preview(build_planner &planer, painter &ctx, tile2i start, tile2i end, vec2i pixel) const override;
+        virtual void ghost_blocked(build_planner &planer, painter &ctx, tile2i start,
+          tile2i end, vec2i pixel, bool fully_blocked) const override;
+        virtual bool ghost_allow_tile(build_planner &planer, tile2i tile) const override;
+        virtual uint32_t ghost_ignore_terrain(build_planner &planer, tile2i tile) const override;
+        virtual int can_place(build_planner &planer, tile2i start, tile2i end, int state) const override;
     };
 
     virtual void on_place_update_tiles(int orientation, int variant) override;

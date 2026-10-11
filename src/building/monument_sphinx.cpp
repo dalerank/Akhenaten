@@ -15,6 +15,7 @@
 #include "graphics/view/view.h"
 #include "grid/building_tiles.h"
 #include "grid/property.h"
+#include "grid/terrain.h"
 #include "io/io_buffer.h"
 #include "js/js_game.h"
 
@@ -49,6 +50,75 @@ static vec2i part_offset(const svector<vec2i, 4> &offsets, int rotation, vec2i f
         return offsets[rotation % 4];
     }
     return fallback;
+}
+
+struct sphinx_preview_parts {
+    tile2i a;
+    tile2i b;
+    tile2i c;
+    int size;
+};
+
+static sphinx_preview_parts sphinx_parts_at(const build_planner &planer, tile2i end) {
+    const auto &params = building_static_params::get(planer.build_type);
+    const auto &bp = sphinx_params();
+    const int rotation = building_rotation_global_rotation() % 4;
+    int size = params.building_size > 0 ? params.building_size : 6;
+    if (size > 6) {
+        size = 6;
+    }
+    sphinx_preview_parts parts;
+    parts.size = size;
+    parts.a = end;
+    parts.b = end.shifted(part_offset(bp.part_b_offset, rotation, vec2i{0, 6}));
+    parts.c = end.shifted(part_offset(bp.part_c_offset, rotation, vec2i{0, 12}));
+    return parts;
+}
+
+static bool sphinx_square_contains(tile2i origin, int size, tile2i tile) {
+    const int mx = tile.x() - origin.x();
+    const int my = tile.y() - origin.y();
+    int dx = mx;
+    int dy = my;
+    switch (g_camera.orientation / 2) {
+    case 1:
+        dx = -mx;
+        break;
+    case 2:
+        dx = -mx;
+        dy = -my;
+        break;
+    case 3:
+        dy = -my;
+        break;
+    default:
+        break;
+    }
+    return dx >= 0 && dy >= 0 && dx < size && dy < size;
+}
+
+static bool sphinx_covers_tile(const sphinx_preview_parts &parts, tile2i tile) {
+    return sphinx_square_contains(parts.a, parts.size, tile)
+        || sphinx_square_contains(parts.b, parts.size, tile)
+        || sphinx_square_contains(parts.c, parts.size, tile);
+}
+
+static bool sphinx_collect_blocked(build_planner &planer, const sphinx_preview_parts &parts,
+  blocked_tile_vec &blocked_a, blocked_tile_vec &blocked_b, blocked_tile_vec &blocked_c) {
+    bool blocked = false;
+    blocked |= !!planer.is_blocked_for_building(parts.a, parts.size, blocked_a);
+    blocked |= !!planer.is_blocked_for_building(parts.b, parts.size, blocked_b);
+    blocked |= !!planer.is_blocked_for_building(parts.c, parts.size, blocked_c);
+    return blocked;
+}
+
+static void draw_sphinx_part_mask(build_planner &planer, painter &ctx, tile2i end, bool fully_blocked) {
+    const sphinx_preview_parts parts = sphinx_parts_at(planer, end);
+    blocked_tile_vec blocked_a, blocked_b, blocked_c;
+    sphinx_collect_blocked(planer, parts, blocked_a, blocked_b, blocked_c);
+    planer.draw_partially_blocked(ctx, fully_blocked, blocked_a);
+    planer.draw_partially_blocked(ctx, fully_blocked, blocked_b);
+    planer.draw_partially_blocked(ctx, fully_blocked, blocked_c);
 }
 
 int building_sphinx::art_stage() const {
@@ -192,37 +262,62 @@ void building_sphinx::preview::setup_preview_graphics(build_planner &planer) con
 
 void building_sphinx::preview::ghost_preview(build_planner &planer, painter &ctx, tile2i start, tile2i end, vec2i pixel) const {
     const auto &params = building_static_params::get(planer.build_type);
-    const auto &bp = sphinx_params();
-    const int rotation = building_rotation_global_rotation() % 4;
-    const int size = params.building_size > 0 ? params.building_size : 6;
-
-    const vec2i off_b = part_offset(bp.part_b_offset, rotation, vec2i{0, 6});
-    const vec2i off_c = part_offset(bp.part_c_offset, rotation, vec2i{0, 12});
-
-    tile2i tile_b = end.shifted(off_b);
-    tile2i tile_c = end.shifted(off_c);
+    const sphinx_preview_parts parts = sphinx_parts_at(planer, end);
 
     blocked_tile_vec blocked_a, blocked_b, blocked_c;
-    bool blocked = false;
-    blocked |= !!planer.is_blocked_for_building(end, size, blocked_a);
-    blocked |= !!planer.is_blocked_for_building(tile_b, size, blocked_b);
-    blocked |= !!planer.is_blocked_for_building(tile_c, size, blocked_c);
-
-    const int img_a = params.first_img("s1a1");
-    const int img_b = params.first_img("s1b1");
-    const int img_c = params.first_img("s1c1");
-    const int preview = params.first_img("preview");
-
-    if (blocked) {
+    if (sphinx_collect_blocked(planer, parts, blocked_a, blocked_b, blocked_c)) {
         planer.draw_partially_blocked(ctx, false, blocked_a);
         planer.draw_partially_blocked(ctx, false, blocked_b);
         planer.draw_partially_blocked(ctx, false, blocked_c);
         return;
     }
 
+    const int img_a = params.first_img("s1a1");
+    const int img_b = params.first_img("s1b1");
+    const int img_c = params.first_img("s1c1");
+    const int preview = params.first_img("preview");
+
     planer.draw_building_ghost(ctx, img_a > 0 ? img_a : preview, pixel);
-    planer.draw_building_ghost(ctx, img_b > 0 ? img_b : preview, g_camera.lookup_tile_to_pixel(tile_b));
-    planer.draw_building_ghost(ctx, img_c > 0 ? img_c : preview, g_camera.lookup_tile_to_pixel(tile_c));
+    planer.draw_building_ghost(ctx, img_b > 0 ? img_b : preview, g_camera.lookup_tile_to_pixel(parts.b));
+    planer.draw_building_ghost(ctx, img_c > 0 ? img_c : preview, g_camera.lookup_tile_to_pixel(parts.c));
+}
+
+void building_sphinx::preview::ghost_blocked(build_planner &planer, painter &ctx, tile2i /*start*/,
+  tile2i end, vec2i /*pixel*/, bool fully_blocked) const {
+    // Base paints planer.size. That box follows the camera and is not the three part squares.
+    draw_sphinx_part_mask(planer, ctx, end, fully_blocked);
+}
+
+bool building_sphinx::preview::ghost_allow_tile(build_planner &planer, tile2i tile) const {
+    if (!sphinx_covers_tile(sphinx_parts_at(planer, planer.end), tile)) {
+        return true;
+    }
+    return building_planer_renderer::ghost_allow_tile(planer, tile);
+}
+
+uint32_t building_sphinx::preview::ghost_ignore_terrain(build_planner &planer, tile2i tile) const {
+    if (!sphinx_covers_tile(sphinx_parts_at(planer, planer.end), tile)) {
+        return TERRAIN_NOT_CLEAR;
+    }
+    return 0;
+}
+
+int building_sphinx::preview::can_place(build_planner &planer, tile2i /*start*/, tile2i end, int state) const {
+    if (state != CAN_PLACE && state != CAN_NOT_BUT_GREEN) {
+        return state;
+    }
+
+    blocked_tile_vec blocked_a, blocked_b, blocked_c;
+    if (sphinx_collect_blocked(planer, sphinx_parts_at(planer, end), blocked_a, blocked_b, blocked_c)) {
+        planer.set_warning("#must_build_on_cleared_land");
+        return CAN_NOT_BUT_GREEN;
+    }
+
+    if (state == CAN_NOT_BUT_GREEN) {
+        planer.set_warning("");
+        return CAN_PLACE;
+    }
+    return state;
 }
 
 void building_sphinx::on_place_update_tiles(int orientation, int variant) {
