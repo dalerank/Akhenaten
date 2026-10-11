@@ -2438,6 +2438,15 @@ pcstr __test_info_ui_text(pcstr element_id) {
 }
 ANK_FUNCTION_1(__test_info_ui_text);
 
+int __test_info_ui_image(pcstr element_id) {
+    auto &context = common_info_window::get_object_info();
+    if (!context.ui) {
+        return -1;
+    }
+    return (*context.ui)[element_id].image().tid();
+}
+ANK_FUNCTION_1(__test_info_ui_image);
+
 int __test_info_ui_enabled(pcstr element_id) {
     if (!element_id || !*element_id) {
         return -1;

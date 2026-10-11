@@ -281,7 +281,9 @@ vec2i common_info_window::bgsize() const {
 }
 
 void common_info_window::window_info_background(object_info &c) {
-    ui.event(window_info{c.offset}, get_section(), __func__);
+    bvariant_map::scoped js_j;
+    js_helper::writer(*js_j, window_info{c.offset});
+    ui::dispatch_autoconfig_es_event(this, __func__, *js_j);
 }
 
 void common_info_window::window_info_foreground(object_info &c) {
