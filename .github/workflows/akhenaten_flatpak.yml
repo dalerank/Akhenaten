@@ -18,12 +18,25 @@ jobs:
       run: |
         sudo apt -qq update
         sudo apt install --yes flatpak-builder appstream-util
+    - name: use-local-sources
+      run: |
+        python3 - <<'PY'
+        import json
+        from pathlib import Path
+        path = Path("io.github.dalerank.Akhenaten.json")
+        data = json.loads(path.read_text(encoding="utf-8"))
+        sources = data["modules"][0]["sources"]
+        if sources and sources[0].get("type") in ("git", "dir"):
+            # Build the checked-out tree; Flathub uses the pinned git tag in the manifest.
+            sources[0] = {"type": "dir", "path": "."}
+        path.write_text(json.dumps(data, indent=4) + "\n", encoding="utf-8")
+        PY
     - name: build-project
       run: |
         sudo flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
-        sudo flatpak-builder repo com.github.dalerank.akhenaten.json --install-deps-from=flathub --keep-build-dirs
+        sudo flatpak-builder repo io.github.dalerank.Akhenaten.json --install-deps-from=flathub --keep-build-dirs
         flatpak build-export export repo
-        flatpak build-bundle export akhenaten.flatpak com.github.dalerank.akhenaten --runtime-repo=https://flathub.org/repo/flathub.flatpakrepo
+        flatpak build-bundle export akhenaten.flatpak io.github.dalerank.Akhenaten --runtime-repo=https://flathub.org/repo/flathub.flatpakrepo
     - uses: actions/upload-artifact@v6
       with:
         name: akhenaten.flatpak

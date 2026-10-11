@@ -3,7 +3,7 @@
 Type=Application
 Version=1.0
 Exec=akhenaten
-Icon=com.github.dalerank.akhenaten
+Icon=io.github.dalerank.Akhenaten
 Name=Akhenaten
 GenericName=Egyptian city management game
 Comment=Open Source re-implementation of Pharaoh.

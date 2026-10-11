@@ -1,33 +1,84 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <component type="desktop-application">
-  <id>com.github.dalerank.akhenaten</id>
+  <id>io.github.dalerank.Akhenaten</id>
 
-  <developer id="com.github.dalerank">
+  <developer id="io.github.dalerank">
     <name>dalerank</name>
   </developer>
 
   <name>Akhenaten</name>
-  <summary>Open-source engine for Pharaoh (1999) game</summary>
+  <summary>Open-source engine for Pharaoh (1999)</summary>
 
   <metadata_license>FSFAP</metadata_license>
   <project_license>AGPL-3.0-only</project_license>
 
   <description>
     <p>
-      Akhenaten aims to make the original game Pharaoh compatible with modern systems with redesigned original engine. Unlike the original game, which was developed by Impressions Games, Akhenaten is a community-driven effort to keep the game alive and accessible. Allows you to load original save games from Pharaoh and play the initial campaign missions without major issues.
+      Akhenaten is an open-source reimplementation of the classic city-builder Pharaoh
+      (1999), including Cleopatra expansion support. It aims for compatibility with
+      original savegames and campaign missions on modern systems.
+    </p>
+    <p>
+      You need a legal copy of Pharaoh (and Cleopatra, if used). Point Akhenaten at your
+      game data directory, or place the files where the engine can find them.
     </p>
   </description>
+
+  <categories>
+    <category>Game</category>
+    <category>Simulation</category>
+  </categories>
 
   <url type="bugtracker">https://github.com/dalerank/Akhenaten/issues</url>
   <url type="homepage">https://dalerank.itch.io/akhenaten</url>
   <url type="donation">https://www.patreon.com/imspinner</url>
   <url type="contribute">https://github.com/dalerank/Akhenaten</url>
+  <url type="vcs-browser">https://github.com/dalerank/Akhenaten</url>
+
+  <launchable type="desktop-id">io.github.dalerank.Akhenaten.desktop</launchable>
 
   <screenshots>
     <screenshot type="default">
       <image>https://img.itch.zone/aW1nLzEyODg5OTY0LnBuZw==/original/q6p6us.png</image>
+      <caption>City view</caption>
     </screenshot>
   </screenshots>
 
-  <launchable type="desktop-id">com.github.dalerank.akhenaten.desktop</launchable>
+  <content_rating type="oars-1.1">
+    <content_attribute id="violence-cartoon">moderate</content_attribute>
+    <content_attribute id="violence-fantasy">moderate</content_attribute>
+    <content_attribute id="violence-realistic">none</content_attribute>
+    <content_attribute id="violence-bloodshed">none</content_attribute>
+    <content_attribute id="violence-sexual">none</content_attribute>
+    <content_attribute id="violence-desecration">none</content_attribute>
+    <content_attribute id="violence-slavery">mild</content_attribute>
+    <content_attribute id="violence-worship">none</content_attribute>
+    <content_attribute id="drugs-alcohol">none</content_attribute>
+    <content_attribute id="drugs-narcotics">none</content_attribute>
+    <content_attribute id="drugs-tobacco">none</content_attribute>
+    <content_attribute id="sex-nudity">none</content_attribute>
+    <content_attribute id="sex-themes">none</content_attribute>
+    <content_attribute id="sex-homosexuality">none</content_attribute>
+    <content_attribute id="sex-prostitution">none</content_attribute>
+    <content_attribute id="sex-adultery">none</content_attribute>
+    <content_attribute id="sex-appearance">none</content_attribute>
+    <content_attribute id="language-profanity">none</content_attribute>
+    <content_attribute id="language-humor">none</content_attribute>
+    <content_attribute id="language-discrimination">none</content_attribute>
+    <content_attribute id="social-chat">none</content_attribute>
+    <content_attribute id="social-info">mild</content_attribute>
+    <content_attribute id="social-audio">none</content_attribute>
+    <content_attribute id="social-location">none</content_attribute>
+    <content_attribute id="social-contacts">none</content_attribute>
+    <content_attribute id="money-purchasing">none</content_attribute>
+    <content_attribute id="money-gambling">none</content_attribute>
+  </content_rating>
+
+  <releases>
+    <release version="0.2.7" date="2026-06-14">
+      <description>
+        <p>Version 0.2.7.</p>
+      </description>
+    </release>
+  </releases>
 </component>
