@@ -1,3 +1,4 @@
 #include "version.rc"
 
-IDI_ICON1 ICON DISCARDABLE "akhenaten.ico"
+// Lowest id is the application icon (taskbar, Explorer). IDI_ICON1 is not defined here.
+1 ICON "akhenaten.ico"

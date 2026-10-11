@@ -995,6 +995,24 @@ endif()
 
 add_executable(${GAME} ${SOURCE_FILES})
 
+if(WIN32 AND NOT WIN_EMSCRIPTEN)
+    # Taskbar / Explorer use the icon embedded in the exe, not SDL_SetWindowIcon.
+    set(PROJECT_VERSION_MAJOR "${GAME_VERSION_MAJOR}")
+    set(PROJECT_VERSION_MINOR "${GAME_VERSION_MINOR}")
+    set(PROJECT_VERSION_PATCH "${GAME_VERSION_PATCH}")
+    math(EXPR PROJECT_VERSION_TWEAK "${GAME_BUILD_NUMBER} % 65536")
+    set(VERSION_REVISION ".${GAME_BUILD_NUMBER}")
+    configure_file(
+        "${CMAKE_SOURCE_DIR}/gen/version.rc.in"
+        "${CMAKE_BINARY_DIR}/version.rc"
+        @ONLY
+    )
+    target_sources(${GAME} PRIVATE "${CMAKE_SOURCE_DIR}/res/akhenaten.rc")
+    set_source_files_properties("${CMAKE_SOURCE_DIR}/res/akhenaten.rc" PROPERTIES
+        INCLUDE_DIRECTORIES "${CMAKE_BINARY_DIR}"
+    )
+endif()
+
 # Standalone in-place update helper (desktop only). Game downloads/extracts, then
 # launches this binary and exits so files can be overwritten.
 if(NOT PLATFORM_ANDROID AND NOT WIN_EMSCRIPTEN AND NOT EMSCRIPTEN)
