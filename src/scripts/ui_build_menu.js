@@ -130,12 +130,11 @@ build_menu_widget.button_menu_item = function(item) {
         return
     }
 
-    emit event_city_building_mode{ value: type }
-
     if (building_menu_ctrl.is_submenu(type)) {
         build_menu_widget.set_submenu(type)
         __ui_city_planner_reset()
     } else {
+        emit event_city_building_mode{ value: type }
         ui.window_city_show()
     }
 }
