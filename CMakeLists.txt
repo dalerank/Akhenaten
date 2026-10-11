@@ -110,6 +110,21 @@ if(CMAKE_BUILD_TYPE STREQUAL "RelWithDebInfo" OR CMAKE_BUILD_TYPE STREQUAL "Debu
     add_definitions(-DCPPTRACE_ENABLED=ON)
     add_definitions(-DCPPTRACE_STATIC_DEFINE)
 
+    set(LOCAL_DEPS_ROOT "${CMAKE_CURRENT_SOURCE_DIR}/_deps")
+    if (EXISTS "${LOCAL_DEPS_ROOT}/cpptrace-src/CMakeLists.txt")
+        set(FETCHCONTENT_SOURCE_DIR_CPPTRACE "${LOCAL_DEPS_ROOT}/cpptrace-src")
+        set(FETCHCONTENT_UPDATES_DISCONNECTED_CPPTRACE TRUE)
+    endif()
+    # Nested FetchContent targets declared by cpptrace (offline / Flatpak builds).
+    if (EXISTS "${LOCAL_DEPS_ROOT}/zstd-src/build/cmake/CMakeLists.txt")
+        set(FETCHCONTENT_SOURCE_DIR_ZSTD "${LOCAL_DEPS_ROOT}/zstd-src")
+        set(FETCHCONTENT_UPDATES_DISCONNECTED_ZSTD TRUE)
+    endif()
+    if (EXISTS "${LOCAL_DEPS_ROOT}/libdwarf-src/CMakeLists.txt")
+        set(FETCHCONTENT_SOURCE_DIR_LIBDWARF "${LOCAL_DEPS_ROOT}/libdwarf-src")
+        set(FETCHCONTENT_UPDATES_DISCONNECTED_LIBDWARF TRUE)
+    endif()
+
     FetchContent_Declare(
             cpptrace
             GIT_REPOSITORY https://github.com/jeremy-rifkin/cpptrace.git
