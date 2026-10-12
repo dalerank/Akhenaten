@@ -23,6 +23,7 @@
         {
             "name": "akhenaten",
             "buildsystem": "cmake-ninja",
+            "builddir": true,
             "config-opts": [
                 "-DCMAKE_BUILD_TYPE=RelWithDebInfo",
                 "-DOPTION_ENABLE_TRACY=OFF",
