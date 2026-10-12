@@ -23,6 +23,7 @@ void map_routing_calculate_distances_deepwater(tile2i tile);
 bool map_can_place_initial_road_or_canal(int grid_offset, int is_canal);
 bool map_routing_calculate_distances_for_building(e_routed_mode type, tile2i start);
 bool map_routing_ferry_has_routes(building *b);
+building *map_routing_ferry_partner(building *b);
 
 void map_routing_delete_first_wall_or_aqueduct(int x, int y);
 

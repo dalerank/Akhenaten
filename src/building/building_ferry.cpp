@@ -6,16 +6,19 @@
 #include "grid/building.h"
 #include "grid/building_tiles.h"
 #include "grid/routing/routing.h"
-#include "graphics/elements/ui.h"
 #include "js/js_game.h"
-#include "io/gamefiles/lang.h"
 #include "figuretype/figure_ferry_boat.h"
 #include "core/random.h"
 #include "core/profiler.h"
 
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_ferry);
 BUILDING_RUNTIME_DATA_IMPL(building_ferry)
-info_window_ferry ferry_infow;
+
+static int __ferry_partner_id(int bid) {
+    building *partner = map_routing_ferry_partner(building_get(bid));
+    return partner ? partner->id : 0;
+}
+ANK_FUNCTION_1(__ferry_partner_id);
 
 void building_ferry::on_create(int orientation) {
     base.orientation = orientation;
@@ -82,29 +85,6 @@ void building_ferry::bind_dynamic(io_buffer *iob, size_t verrsion) {
     iob->bind(BIND_SIGNATURE_UINT8, &base.orientation);
     iob->bind(BIND_SIGNATURE_INT32, &base.tiles[0]);
     iob->bind(BIND_SIGNATURE_INT32, &base.tiles[1]);
-}
-
-bool info_window_ferry::check(object_info &c) {
-    return !!c.bid && c.building_get()->dcast_ferry();
-}
-
-void info_window_ferry::init(object_info &c) {
-    building_info_window::init(c);
-
-    building *ferry = c.building_get();
-
-    textid reason{ 0, 0 };
-    if (!map_routing_ferry_has_routes(ferry)) {
-        reason = { c.group_id, 1 };
-    } else if (!ferry->has_road_access) {
-        reason = { c.group_id, 2 };
-    } else if (ferry->num_workers <= 0) {
-        reason = { c.group_id, 3 };
-    }
-
-    if (reason.id) {
-        ui["warning_text"] = reason;
-    }
 }
 
 void building_ferry::spawn_figure() {

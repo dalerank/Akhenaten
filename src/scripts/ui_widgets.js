@@ -15,13 +15,6 @@ empty_info_window = {
     }
 }
 
-[es=building_info_window]
-info_window_ferry {
-    ui : baseui(building_info_window, {
-        background  : outer_panel({size: [29, 20]}),
-    })
-}
-
 [es=ui_window]
 info_window_hunting_lodge {
     ui : baseui(building_info_window, {

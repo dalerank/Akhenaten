@@ -215,7 +215,7 @@ building_brick_tower = {
   fire_proof : true,
   labor_category : LABOR_CATEGORY_MILITARY,
   min_houses_coverage : 50
-  meta : { help_link:"message_building_defensive_structures" }
+  meta : { text_id: 91, help_link:"message_building_defensive_structures" }
   cost : [ 50, 100, 150, 300, 500 ]
   desirability : { value:[16], step:[2], step_size:[-3], range: [5] }
   laborers:[20], fire_risk:[0], damage_risk: [4]
@@ -234,7 +234,7 @@ building_clay_tower = {
   fire_proof : true,
   labor_category : LABOR_CATEGORY_MILITARY,
   min_houses_coverage : 50
-  meta : { help_link:"message_building_defensive_structures" }
+  meta : { text_id: 91, help_link:"message_building_defensive_structures" }
   cost : [ 50, 80, 100, 150, 300 ]
   desirability : { value:[-6], step:[1], step_size:[1], range: [6] }
   laborers:[20], fire_risk:[4], damage_risk: [4]
@@ -251,7 +251,7 @@ building_mud_tower = {
   }
   building_size : 2
   fire_proof : true
-  meta : { text_id: 159, help_link:"message_building_defensive_structures" }
+  meta : { text_id: 91, help_link:"message_building_defensive_structures" }
   labor_category : LABOR_CATEGORY_MILITARY
   min_houses_coverage : 50
   cost: [ 30, 50, 100, 150, 200 ]
@@ -285,7 +285,7 @@ building_ferry {
     is_infrastructure: true
   }
   fire_proof : true,
-  meta { text_id: 91, help_link:"message_game_concept_water_crossings" }
+  meta { text_id: 159, help_link:"message_game_concept_water_crossings" }
   labor_category : LABOR_CATEGORY_GOVERNMENT
   cost [8, 15, 30, 50, 100 ]
   desirability { value[-5], step[2], step_size[2], range[4] }

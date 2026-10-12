@@ -1,7 +1,6 @@
 #pragma once
 
 #include "building/building_roadblock.h"
-#include "window/window_building_info.h"
 
 class building_ferry : public building_routeblock {
 public:
@@ -29,8 +28,3 @@ public:
     virtual void spawn_figure() override;
 };
 ANK_CONFIG_PROPERTY(building_ferry::runtime_data_t, reserved)
-
-struct info_window_ferry : public building_info_window_t<info_window_ferry> {
-    virtual void init(object_info &c) override;
-    virtual bool check(object_info &c) override;
-};
