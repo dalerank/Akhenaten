@@ -133,6 +133,7 @@ namespace ui {
             clip_set,
             clip_reset,
             rich_draw,
+            rich_scrollbar,
             button_border,
             small_panel,
             shade_rect,

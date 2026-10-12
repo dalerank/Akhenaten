@@ -2273,15 +2273,21 @@ void ui::etext::draw(UiFlags flags) {
         }
         g_state.rich_text_targets.push_back(rich_text.get());
 
+        // Clip text only. Scrollbar chrome sits past the right edge of the text box;
+        // drawing it inside clip_area slices the track (arrows are deferred and looked fine).
+        const bool want_scroll = !(_flags & UiFlags_NoScroll);
         if (_clip_area) {
             push(cmd_t::clip_set, Pos{scr_pos}, Size{pxsize()});
         }
 
         push(cmd_t::rich_draw, RichTextPtr{rich_text.get()}, Caption{_text.c_str()}, Pos{scr_pos}, BoxWidth{rwrap},
-          Size{vec2i(0, maxlines)}, Flags{_flags & UiFlags_NoScroll});
+          Size{vec2i(0, maxlines)}, Flags{UiFlags_NoScroll});
 
         if (_clip_area) {
             push(cmd_t::clip_reset);
+        }
+        if (want_scroll) {
+            push(cmd_t::rich_scrollbar, RichTextPtr{rich_text.get()});
         }
     } else {
         if (_shadow_color) {

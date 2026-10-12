@@ -122,6 +122,12 @@ void execute_ui_command(painter& ctx, const ui::cmd_t& cmd) {
         }
         break;
 
+    case cmd_t::rich_scrollbar:
+        if (cmd.rt) {
+            cmd.rt->draw_scrollbar(vec2i{-16, 0});
+        }
+        break;
+
     case cmd_t::cursor_capture:
         text_capture_cursor(cmd.pos.x, cmd.pos.y, cmd.box_width);
         break;
