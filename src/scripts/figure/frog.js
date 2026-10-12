@@ -5,7 +5,7 @@ figure_frog {
 		walk { pack:PACK_EXPANSION_SPR, id:22, max_frames:9 }
 		idle { pack:PACK_EXPANSION_SPR, id:23, max_frames:9 }
 		death { pack:PACK_EXPANSION_SPR, id:25, max_frames:6, loop:false }
-		big_image { pack:PACK_UNLOADED, id:25, offset:FIGURE_FROG }
+		big_image { pack:PACK_EXPANSION, id:1, offset:6 }
 		icon { pack:PACK_EXPANSION, id:32 }
 	}
 

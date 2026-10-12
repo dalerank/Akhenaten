@@ -71,7 +71,13 @@ function figure_info_window_setup(window, figure_id) {
         return
     }
 
-    var img = get_image({ pack: PACK_UNLOADED, id: 25, offset: f.type })
+    // Prefer the figure's configured portrait; fall back to the type-ordered
+    // group 25 slot, which the Cleopatra figures (102-109) never received art for.
+    var tid = f.params.first_img("big_image")
+    var img = get_image({ tid: tid })
+    if (!img) {
+        img = get_image({ pack: PACK_UNLOADED, id: 25, offset: f.type })
+    }
     window.bigimage.image = img ? img.tid : 0
     window.phrase.text = ""
     f.setup_phrase()

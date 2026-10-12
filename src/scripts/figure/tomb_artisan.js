@@ -8,7 +8,7 @@ figure_tomb_artisan {
 		death { id:110, max_frames:8, loop:false }
 		work { id:111, max_frames:12, duration:4 }
 		idle { id:112, max_frames:8, duration:2 }
-		big_image { pack:PACK_UNLOADED, id:25, offset:FIGURE_TOMB_ARTISAN }
+		big_image { pack:PACK_EXPANSION, id:1, offset:3 }
 	}
 
 	sounds {
