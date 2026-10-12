@@ -5,14 +5,19 @@
 enum e_ferry_boat_action : uint16_t {
     ACTION_0_FERRY_BOAT_CREATED = 0,
     ACTION_1_FERRY_BOAT_GOING_TO_DESTINATION = 1,
-    ACTION_2_FERRY_BOAT_AT_DESTINATION = 2,
-    ACTION_3_FERRY_BOAT_RETURNING = 3,
+    ACTION_2_FERRY_BOAT_AT_DESTINATION = 2, // kept for phrases / saves
+    ACTION_3_FERRY_BOAT_RETURNING = 3,      // kept for phrases / saves
     ACTION_4_FERRY_BOAT_WAITING = 4,
 
     ACTION_5_FERRY_BOAT_MAX
 };
 using e_ferry_boat_action_tokens_t = token_holder<e_ferry_boat_action, ACTION_0_FERRY_BOAT_CREATED, ACTION_5_FERRY_BOAT_MAX>;
 extern const e_ferry_boat_action_tokens_t e_ferry_boat_action_tokens;
+
+struct event_ferry_boat_goto {
+    figure_id fid = 0;
+    tile2i destination;
+};
 
 class figure_ferry_boat : public figure_impl {
 public:
@@ -22,8 +27,7 @@ public:
 
     struct runtime_data_t {
         building_id destination_ferry_id;
-        tile2i destination_tile;     
-        int wait_ticks_at_destination;
+        tile2i destination_tile;
     } FIGURE_RUNTIME_DATA_T;
 
     virtual void on_create() override;
@@ -36,7 +40,6 @@ public:
     virtual void update_animation() override;
     virtual bool can_move_by_water() const override { return true; }
 
-private:
-    building* find_destination_ferry();
-    void update_destination();
+    bool is_idle_at_dock() const;
+    void order_goto(tile2i destination);
 };

@@ -6,8 +6,21 @@ class building_ferry : public building_routeblock {
 public:
     BUILDING_METAINFO(BUILDING_FERRY, building_ferry, building_routeblock)
 
+    enum e_crossing_phase : uint8_t {
+        phase_wait_home = 0,
+        phase_crossing = 1,
+        phase_wait_away = 2,
+        phase_returning = 3,
+    };
+
+    struct static_params : public building_static_params {
+        uint16_t dock_wait_ticks_min;
+        uint16_t dock_wait_ticks_max;
+    } BUILDING_STATIC_DATA_T;
+
     struct runtime_data_t {
-        int reserved;
+        e_crossing_phase phase;
+        int16_t wait_remaining;
     } BUILDING_RUNTIME_DATA_T;
 
     virtual building_ferry *dcast_ferry() override { return this; }
@@ -26,5 +39,13 @@ public:
     virtual bool get_permission(e_permission p) override { return false; }
 
     virtual void spawn_figure() override;
+
+    tile2i dock_tile() const;
+
+private:
+    void update_crossing();
+    void roll_dock_wait();
+    bool is_pair_leader(building *partner) const;
 };
-ANK_CONFIG_PROPERTY(building_ferry::runtime_data_t, reserved)
+ANK_CONFIG_STRUCT(building_ferry::static_params, dock_wait_ticks_min, dock_wait_ticks_max)
+ANK_CONFIG_PROPERTY(building_ferry::runtime_data_t, phase, wait_remaining)
