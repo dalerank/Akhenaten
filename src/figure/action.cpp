@@ -202,9 +202,12 @@ void figure::action_perform() {
             figure_combat_handle_corpse();
         }
 
-        if (map_terrain_is(tile, TERRAIN_ROAD|TERRAIN_FERRY_ROUTE)) { // update road flag
+        // Shore ferry tiles are WATER; route rebuilds can drop FERRY_ROUTE under walkers.
+        const bool on_ferry_lane = map_terrain_is(tile, TERRAIN_ROAD | TERRAIN_FERRY_ROUTE)
+            || (map_terrain_is(tile, TERRAIN_WATER) && map_terrain_is_near_ferry_route(tile.grid_offset(), 1));
+        if (on_ferry_lane) {
             outside_road_ticks = 0;
-            if (map_terrain_is(tile.grid_offset(), TERRAIN_WATER)) { // bridge
+            if (map_terrain_is(tile.grid_offset(), TERRAIN_WATER)) {
                 set_target_height_bridge();
             }
         } else {
@@ -212,12 +215,12 @@ void figure::action_perform() {
                 outside_road_ticks++;
             }
 
-            if (map_terrain_is(tile.grid_offset(), TERRAIN_BUILDING)) { // bridge
+            if (map_terrain_is(tile.grid_offset(), TERRAIN_BUILDING)) {
                 set_target_height_building();
             }
 
             const bool tile_is_water = map_terrain_is(tile.grid_offset(), TERRAIN_WATER);
-            if (!can_move_by_water() && tile_is_water) {
+            if (!can_move_by_water() && tile_is_water && routing_path_id <= 0) {
                 kill();
             }
 

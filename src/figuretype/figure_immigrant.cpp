@@ -180,7 +180,11 @@ void figure_immigrant::update_animation() {
 }
 
 bool figure_immigrant::can_move_by_water() const {
-    return map_terrain_is(tile(), TERRAIN_FERRY_ROUTE);
+    const int off = tile().grid_offset();
+    // Survive ferry-route rebuilds / shore tiles next to the dock lane.
+    return map_terrain_is(off, TERRAIN_FERRY_ROUTE)
+        || map_terrain_is_near_ferry_route(off, 1)
+        || base.routing_path_id > 0;
 }
 
 figure_sound_t figure_immigrant::get_sound_reaction(xstring key) const {
