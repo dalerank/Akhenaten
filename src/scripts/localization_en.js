@@ -1549,6 +1549,7 @@ localization_en = [
   { key: "#enemy_warship_city_is_amazing", text: "Such prosperity. The spoils will be magnificent." }
   { key: "#enemy_warship_for_glory", text: "For glory and the sea!" }
 
+  { key: "#ferry_landing_ok", text: "This Ferry Landing is linked across the water and staffed. Walkers can cross." }
   { key: "#ferry_boat_ready", text: "Ready at the landing. Who's crossing?" }
   { key: "#ferry_boat_going", text: "Cast off! Next shore ahead." }
   { key: "#ferry_boat_at_destination", text: "We've arrived. Step carefully onto the dock." }

@@ -746,6 +746,7 @@ localization_ru = [
     { key: "#enemy_warship_city_is_amazing", text: "Такое богатство. Добыча будет великолепной." }
     { key: "#enemy_warship_for_glory", text: "За славу и море!" }
 
+    { key: "#ferry_landing_ok", text: "Причал связан с другим берегом и укомплектован. Горожане могут переправляться." }
     { key: "#ferry_boat_ready", text: "У пристани готов. Кто переправляется?" }
     { key: "#ferry_boat_going", text: "Отчаливаем! Следующий берег впереди." }
     { key: "#ferry_boat_at_destination", text: "Прибыли. Осторожно на причал." }

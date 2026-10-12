@@ -36,7 +36,13 @@ function run_test() {
         __test_signal_ready()
         return
     }
-    if (!warning || warning.indexOf(expect_no_link) < 0) {
+    if (!warning || warning.length < 1) {
+        __log_info_native('[test:213] warning_text empty')
+        window_go_back()
+        __test_signal_ready()
+        return
+    }
+    if (warning.indexOf(expect_no_link) < 0) {
         __log_info_native('[test:213] warning_text mismatch: "' + warning + '"')
         window_go_back()
         __test_signal_ready()
