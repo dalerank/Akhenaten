@@ -202,10 +202,11 @@ void figure::action_perform() {
             figure_combat_handle_corpse();
         }
 
-        // Shore ferry tiles are WATER; route rebuilds can drop FERRY_ROUTE under walkers.
-        const bool on_ferry_lane = map_terrain_is(tile, TERRAIN_ROAD | TERRAIN_FERRY_ROUTE)
-            || (map_terrain_is(tile, TERRAIN_WATER) && map_terrain_is_near_ferry_route(tile.grid_offset(), 1));
-        if (on_ferry_lane) {
+
+        const bool on_ferry = map_terrain_is(tile, TERRAIN_FERRY_ROUTE);
+        const bool on_normal_road = map_terrain_is(tile, TERRAIN_ROAD) && !on_ferry;
+        const bool on_ferry_lane = can_cross_ferry() && (on_ferry || (map_terrain_is(tile, TERRAIN_WATER) && map_terrain_is_near_ferry_route(tile.grid_offset(), 1)));
+        if (on_normal_road || on_ferry_lane) {
             outside_road_ticks = 0;
             if (map_terrain_is(tile.grid_offset(), TERRAIN_WATER)) {
                 set_target_height_bridge();

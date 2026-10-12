@@ -31,6 +31,7 @@ struct figure_static_params {
     uint16_t corpse_time_delay;
     bool render_on_flat_tiles;
     bool record_path;
+    bool can_cross_ferry;
     e_overlay overlay = OVERLAY_NONE;
 
     static void set(e_figure_type, const figure_static_params &);
@@ -44,9 +45,9 @@ struct figure_static_params {
 ANK_CONFIG_STRUCT(figure_static_params, terrain_usage,  animations, sounds,
     max_roam_length, speed_mult, meta, permission, is_enemy, is_soldier, use_cart,
     category, max_damage, attack_value, defense_value, missile_defense_value, corpse_time_delay,
-    render_on_flat_tiles, record_path, overlay)
+    render_on_flat_tiles, record_path, can_cross_ferry, overlay)
 
 ANK_CONFIG_PROPERTY(figure_static_params,
     terrain_usage, max_roam_length, speed_mult, permission, is_enemy, is_soldier, use_cart,
     category, max_damage, attack_value, defense_value, missile_defense_value, corpse_time_delay,
-    render_on_flat_tiles, record_path, overlay)
+    render_on_flat_tiles, record_path, can_cross_ferry, overlay)

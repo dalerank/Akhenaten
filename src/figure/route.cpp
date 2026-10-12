@@ -168,18 +168,18 @@ void figure::figure_route_add() {
             break;
 
         case TERRAIN_USAGE_PREFER_ROADS:
-            can_travel = map_routing_citizen_can_travel_over_road(tile, destination_tile);
+            can_travel = map_routing_citizen_can_travel_over_road(tile, destination_tile, can_cross_ferry());
             if (!can_travel) {
-                can_travel = map_routing_citizen_can_travel_over_land(tile, destination_tile);
+                can_travel = map_routing_citizen_can_travel_over_land(tile, destination_tile, can_cross_ferry());
             }
             break;
 
         case TERRAIN_USAGE_ROADS:
-            can_travel = map_routing_citizen_can_travel_over_road(tile, destination_tile);
+            can_travel = map_routing_citizen_can_travel_over_road(tile, destination_tile, can_cross_ferry());
             break;
 
         default:
-            can_travel = map_routing_citizen_can_travel_over_land(tile, destination_tile);
+            can_travel = map_routing_citizen_can_travel_over_land(tile, destination_tile, can_cross_ferry());
             break;
         }
 

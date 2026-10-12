@@ -156,8 +156,11 @@ void figure::advance_route_tile(int roaming_enabled) {
     const bool is_amphibia_move = (allow_move_type == EMOVE_AMPHIBIAN);
     const bool is_deepwater_move = (allow_move_type == EMOVE_DEEPWATER);
     const bool is_ferry_route = map_terrain_is(target_grid_offset, TERRAIN_FERRY_ROUTE);
+    const bool may_use_ferry = can_cross_ferry();
     const bool is_water_tile = map_terrain_is(target_grid_offset, TERRAIN_WATER);
-    if (!is_deepwater_move && !is_water_move && !is_amphibia_move && !is_ferry_route && is_water_tile) {
+    if (is_ferry_route && !may_use_ferry) {
+        direction = DIR_FIGURE_REROUTE;
+    } else if (!is_deepwater_move && !is_water_move && !is_amphibia_move && !is_ferry_route && is_water_tile) {
         direction = DIR_FIGURE_REROUTE;
     } else if (is_water_move && !is_water_tile) { // boats can not travel on land
         direction = DIR_FIGURE_REROUTE;

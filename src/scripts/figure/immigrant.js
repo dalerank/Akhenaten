@@ -28,6 +28,7 @@ figure_immigrant {
 	category: figure_category_citizen
 	max_damage: 20
 	terrain_usage: TERRAIN_USAGE_ANIMAL
+	can_cross_ferry: true
 }
 
 function figure_immigrant_gods_are_angry() {

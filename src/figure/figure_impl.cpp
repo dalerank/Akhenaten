@@ -9,6 +9,7 @@
 #include "graphics/animkeys.h"
 #include "graphics/elements/lang_text.h"
 #include "graphics/elements/ui.h"
+#include "grid/grid.h"
 #include "grid/terrain.h"
 #include "core/object_property.h"
 #include "core/profiler.h"
@@ -268,6 +269,38 @@ sound_key figure_impl::default_phrase_key() const {
 
 bool figure_impl::can_move_by_water() const {
     return (base.allow_move_type == EMOVE_WATER || base.allow_move_type == EMOVE_DEEPWATER || base.allow_move_type == EMOVE_AMPHIBIAN);
+}
+
+bool figure_impl::can_cross_ferry() const {
+    return current_params().can_cross_ferry;
+}
+
+bool figure_impl::can_move_by_ferry_water() const {
+    if (!can_cross_ferry()) {
+        return false;
+    }
+
+    const int off = tile().grid_offset();
+    return map_terrain_is(off, TERRAIN_FERRY_ROUTE)
+        || map_terrain_is_near_ferry_route(off, 1)
+        || base.routing_path_id > 0;
+}
+
+void figure_impl::drop_route_if_heading_into_non_ferry_water() {
+    if (!can_cross_ferry() || direction() > DIR_FIGURE_NONE) {
+        return;
+    }
+
+    const int next = tile().grid_offset() + map_grid_direction_delta(direction());
+    if (!map_terrain_is(next, TERRAIN_WATER)) {
+        return;
+    }
+
+    if (map_terrain_is(next, TERRAIN_FERRY_ROUTE) || map_terrain_is_near_ferry_route(next, 1)) {
+        return;
+    }
+
+    route_remove();
 }
 
 void figure_impl::main_image_update() {

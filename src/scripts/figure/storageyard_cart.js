@@ -32,6 +32,7 @@ figure_storageyard_cart {
 	category: figure_category_citizen
 	max_damage : 20
 	terrain_usage : TERRAIN_USAGE_ROADS,
+	can_cross_ferry: true
 }
 
 function figure_storageyard_cart_phrase_key(f) {

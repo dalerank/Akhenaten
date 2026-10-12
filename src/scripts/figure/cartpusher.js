@@ -35,6 +35,7 @@ figure_cartpusher {
 	max_damage : 20
 	terrain_usage : TERRAIN_USAGE_ROADS,
 	record_path : true
+	can_cross_ferry: true
 }
 
 function figure_cartpusher_gods_are_angry() {

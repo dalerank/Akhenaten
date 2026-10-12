@@ -93,21 +93,7 @@ void figure_immigrant::figure_action() {
     case ACTION_1_IMMIGRANT_ARRIVING:
         {
             OZZY_PROFILER_FUNCTION();
-            if (direction() <= DIR_FIGURE_NONE) {
-                int next_tile_grid_offset = tile().grid_offset() + map_grid_direction_delta(direction());
-                if (map_terrain_is(next_tile_grid_offset, TERRAIN_WATER)) {
-                    bool is_ferry_route = map_terrain_is(next_tile_grid_offset, TERRAIN_FERRY_ROUTE);
-
-                    if (!is_ferry_route) {
-                        is_ferry_route = map_terrain_is_near_ferry_route(next_tile_grid_offset, 1);
-                    }
-
-                    if (!is_ferry_route) {
-                        route_remove();
-                    }
-                }
-            }
-
+            drop_route_if_heading_into_non_ferry_water();
             do_gotobuilding(home, true, TERRAIN_USAGE_ANY, ACTION_2_IMMIGRANT_ENTERING_HOUSE, ACTION_8_RECALCULATE);
             const bool isfloodplain = map_terrain_is(tile(), TERRAIN_FLOODPLAIN);
             if (isfloodplain) {
@@ -180,11 +166,7 @@ void figure_immigrant::update_animation() {
 }
 
 bool figure_immigrant::can_move_by_water() const {
-    const int off = tile().grid_offset();
-    // Survive ferry-route rebuilds / shore tiles next to the dock lane.
-    return map_terrain_is(off, TERRAIN_FERRY_ROUTE)
-        || map_terrain_is_near_ferry_route(off, 1)
-        || base.routing_path_id > 0;
+    return can_move_by_ferry_water();
 }
 
 figure_sound_t figure_immigrant::get_sound_reaction(xstring key) const {

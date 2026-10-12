@@ -569,10 +569,7 @@ void figure_cartpusher::figure_action() {
 }
 
 bool figure_cartpusher::can_move_by_water() const {
-    const int off = tile().grid_offset();
-    return map_terrain_is(off, TERRAIN_FERRY_ROUTE)
-        || map_terrain_is_near_ferry_route(off, 1)
-        || base.routing_path_id > 0;
+    return can_move_by_ferry_water();
 }
 
 void figure_cartpusher::update_animation() {

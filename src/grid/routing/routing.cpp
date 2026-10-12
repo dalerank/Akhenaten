@@ -477,32 +477,54 @@ resource_tile map_routing_citizen_found_timber(tile2i src) {
 }
 
 static void callback_travel_citizen_land(int next_offset, int dist) {
-    if (map_grid_get(routing_land_citizen, next_offset) >= CITIZEN_0_ROAD 
+    if (map_terrain_is(next_offset, TERRAIN_FERRY_ROUTE)) {
+        return;
+    }
+    if (map_grid_get(routing_land_citizen, next_offset) >= CITIZEN_0_ROAD
+        && !has_fighting_friendly(next_offset)
+        && !map_terrain_is(next_offset, TERRAIN_WATER)) {
+        enqueue(next_offset, dist);
+    }
+}
+
+static void callback_travel_citizen_land_ferry(int next_offset, int dist) {
+    if (map_grid_get(routing_land_citizen, next_offset) >= CITIZEN_0_ROAD
         && !has_fighting_friendly(next_offset)
         && (!map_terrain_is(next_offset, TERRAIN_WATER) || map_terrain_is(next_offset, TERRAIN_FERRY_ROUTE))) {
         enqueue(next_offset, dist);
     }
 }
 
-bool map_routing_citizen_can_travel_over_land(tile2i src, tile2i dst) {
+bool map_routing_citizen_can_travel_over_land(tile2i src, tile2i dst, bool allow_ferry) {
     int src_offset = src.grid_offset();
     int dst_offset = dst.grid_offset();
     ++g_routing_stats.total_routes_calculated;
-    route_queue(src_offset, dst_offset, callback_travel_citizen_land);
+    route_queue(src_offset, dst_offset, allow_ferry ? callback_travel_citizen_land_ferry : callback_travel_citizen_land);
     return map_grid_get(routing_distance, dst_offset) != 0;
 }
 
 static void callback_travel_citizen_road(int next_offset, int dist) {
+    if (map_terrain_is(next_offset, TERRAIN_FERRY_ROUTE)) {
+        return;
+    }
     if (map_grid_get(routing_land_citizen, next_offset) >= CITIZEN_0_ROAD
         && map_grid_get(routing_land_citizen, next_offset) < CITIZEN_2_PASSABLE_TERRAIN) {
         enqueue(next_offset, dist);
     }
 }
-bool map_routing_citizen_can_travel_over_road(tile2i src, tile2i dst) {
+
+static void callback_travel_citizen_road_ferry(int next_offset, int dist) {
+    if (map_grid_get(routing_land_citizen, next_offset) >= CITIZEN_0_ROAD
+        && map_grid_get(routing_land_citizen, next_offset) < CITIZEN_2_PASSABLE_TERRAIN) {
+        enqueue(next_offset, dist);
+    }
+}
+
+bool map_routing_citizen_can_travel_over_road(tile2i src, tile2i dst, bool allow_ferry) {
     int src_offset = src.grid_offset();
     int dst_offset = dst.grid_offset();
     ++g_routing_stats.total_routes_calculated;
-    route_queue(src_offset, dst_offset, callback_travel_citizen_road);
+    route_queue(src_offset, dst_offset, allow_ferry ? callback_travel_citizen_road_ferry : callback_travel_citizen_road);
     return map_grid_get(routing_distance, dst_offset) != 0;
 }
 

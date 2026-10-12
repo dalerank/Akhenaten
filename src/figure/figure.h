@@ -267,6 +267,7 @@ public:
     bool is_boat();
     bool can_move_by_water();
     bool can_move_by_terrain();
+    bool can_cross_ferry() const;
     void set_direction_to(building *b);
     void set_direction(int dir);
     void clear_impl();

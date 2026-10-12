@@ -413,6 +413,10 @@ bool figure::can_move_by_terrain() {
     return (allow_move_type == EMOVE_TERRAIN || allow_move_type == EMOVE_AMPHIBIAN);
 }
 
+bool figure::can_cross_ferry() const {
+    return params().can_cross_ferry;
+}
+
 void figure::set_direction_to(building *b) {
     direction = calc_general_direction(tile, b->tile);
 }

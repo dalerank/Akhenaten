@@ -39,8 +39,8 @@ bool map_routing_citizen_found_terrain(tile2i src, tile2i *dst, int terrain_type
 resource_tile map_routing_citizen_found_reeds(tile2i src);
 resource_tile map_routing_citizen_found_timber(tile2i src);
 
-bool map_routing_citizen_can_travel_over_land(tile2i src, tile2i dst);
-bool map_routing_citizen_can_travel_over_road(tile2i src, tile2i dst);
+bool map_routing_citizen_can_travel_over_land(tile2i src, tile2i dst, bool allow_ferry = false);
+bool map_routing_citizen_can_travel_over_road(tile2i src, tile2i dst, bool allow_ferry = false);
 bool map_routing_citizen_can_travel_over_road_garden(int src_x, int src_y, int dst_x, int dst_y);
 bool map_routing_can_travel_over_walls(int src_x, int src_y, int dst_x, int dst_y);
 

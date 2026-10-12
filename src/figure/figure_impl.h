@@ -52,6 +52,9 @@ public:
     virtual void update_animation();
     virtual void update_day() {}
     virtual bool can_move_by_water() const;
+    bool can_cross_ferry() const;
+    bool can_move_by_ferry_water() const;
+    void drop_route_if_heading_into_non_ferry_water();
     virtual void cart_image_update();
     virtual void set_cart_offset(int direction) const;
     virtual void main_image_update();
