@@ -18,12 +18,10 @@ inline void add_symbols_to_font_packer(image_packer &font_packer,
         DynamicFont::Charset charset;
         charset.AddCodepoint(codepoint);
 
-        uint8_t colors[4] = {
-            uint8_t((fconfig.color >> 16) & 0xff),
-            uint8_t((fconfig.color >> 8) & 0xff),
-            uint8_t((fconfig.color >> 0) & 0xff),
-            uint8_t((fconfig.color >> 24) & 0xff)
-        };
+        // Keep glyphs WHITE so draw-time colors (color-mod) can tint them, like the
+        // internal GLCD font; baking the config color (black) would cancel every JS
+        // text color under the premultiplied blend used for letters.
+        uint8_t colors[4] = { 0xff, 0xff, 0xff, 0xff };
         DynamicFont::Atlas atlas(font_data, fconfig.size, charset, DynamicFont::RenderMode::COLOR, 0, true, colors, fconfig.bold, fconfig.shadow_offset);
 
         const auto &bitmap = atlas.GetBitmap();
@@ -135,6 +133,7 @@ bool fill_font_packer_android(image_packer &font_packer,
     for (const auto &fconfig : font_configs) {
         add_symbols_to_font_packer(font_packer, font_pack, make_span(resolved_font_data), fconfig, utf8_symbols, cp_index);
         font_definition_ref(fconfig.type)->line_height = fconfig.line_height;
+        font_definition_ref(fconfig.type)->color = fconfig.color;
     }
     return true;
 }

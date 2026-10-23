@@ -12,6 +12,7 @@
 #include FT_FREETYPE_H
 #include FT_SYNTHESIS_H
 #include <cstdint>
+#include <cmath>
 #include <vector>
 #include <string_view>
 #include <stdexcept>
@@ -420,15 +421,11 @@ namespace DynamicFont {
         uint8_t a = glyph.ColorAlpha(glyphX, glyphY);
 
         if (glyph.Channels() == 1) {
-            // For grayscale glyphs, the alpha is the coverage
-            // If color is specified, apply it with the alpha from the glyph
+            // Premultiply so the atlas draws correctly with the premultiplied blend used
+            // for text; the gamma lifts thin low-coverage strokes (small TTF sizes).
             if (color && color[3] > 0) {
-                // To avoid color halo around text, interpolate RGB from black to target color
-                // based on alpha. This works with standard SDL_BLENDMODE_BLEND.
-                // For low alpha (anti-aliased edges), RGB gradually transitions from black to color
                 float alpha_normalized = a / 255.0f;
-                // Apply a power curve to make the transition more aggressive
-                float color_factor = alpha_normalized * alpha_normalized;
+                float color_factor = std::pow(alpha_normalized, 1.0f / 3.0f);
                 r = static_cast<uint8_t>(color[0] * color_factor);
                 g = static_cast<uint8_t>(color[1] * color_factor);
                 b = static_cast<uint8_t>(color[2] * color_factor);
@@ -442,7 +439,7 @@ namespace DynamicFont {
             // For color glyphs (e.g., emoji), use as-is or apply color override
             if (color && color[3] > 0) {
                 float alpha_normalized = a / 255.0f;
-                float color_factor = alpha_normalized * alpha_normalized;
+                float color_factor = alpha_normalized;
                 r = static_cast<uint8_t>(color[0] * color_factor);
                 g = static_cast<uint8_t>(color[1] * color_factor);
                 b = static_cast<uint8_t>(color[2] * color_factor);

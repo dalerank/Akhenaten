@@ -15,12 +15,10 @@ inline void add_symbols_to_font_packer(image_packer &font_packer,
         DynamicFont::Charset charset;
         charset.AddCodepoint(codepoint);
 
-        uint8_t colors[4] = {
-            uint8_t((fconfig.color >> 16) & 0xff),
-            uint8_t((fconfig.color >> 8) & 0xff),
-            uint8_t((fconfig.color >> 0) & 0xff),
-            uint8_t((fconfig.color >> 24) & 0xff)
-        };
+        // Keep glyphs WHITE so draw-time colors (color-mod) can tint them, like the
+        // internal GLCD font; baking the config color (black) would cancel every JS
+        // text color under the premultiplied blend used for letters.
+        uint8_t colors[4] = { 0xff, 0xff, 0xff, 0xff };
         // padding=0, fit=true to create bitmaps with exact glyph dimensions
         DynamicFont::Atlas atlas(symbols_font, fconfig.size, charset, DynamicFont::RenderMode::COLOR, 0, true, colors, fconfig.bold, fconfig.shadow_offset);
 
@@ -108,6 +106,7 @@ bool fill_font_packer_pc(image_packer &font_packer,
     for (const auto &fconfig : font_configs) {
         add_symbols_to_font_packer(font_packer, font_pack, resolved_font_path.c_str(), fconfig, utf8_symbols, cp_index);
         font_definition_ref(fconfig.type)->line_height = fconfig.line_height;
+        font_definition_ref(fconfig.type)->color = fconfig.color;
     }
     return true;
 }

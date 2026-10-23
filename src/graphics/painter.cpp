@@ -173,6 +173,11 @@ void painter::draw_rect(vec2i start, vec2i size, color color) {
 const image_t *painter::img_letter(const image_t *img, e_font font, int letter_id, int x, int y, color color_mask, float scale) {
     if (!color_mask) {
         color_mask = base_color_for_font(font);
+        // TTF glyphs are white in the atlas; tint with the font config color so
+        // default-colored text keeps its configured look.
+        if (img && img->pak_name == "pharaoh_fonts_pack") {
+            color_mask = font_definition_for(font)->color;
+        }
     }
 
     if (font == FONT_SMALL_SHADED) {

@@ -42,6 +42,9 @@ struct font_definition {
      * @return Offset to subtract from y coordinate
      */
     int (*image_y_offset)(const uint8_t *c, int image_height, int line_height);
+
+    /** Config color used as the default draw tint for this font (per-language font config). */
+    uint32_t color = 0;
 };
 
 /**

@@ -2673,7 +2673,7 @@ localization_base_hu = [
     { group:63, id:1, text: "Jelenleg nincs olvasatlan üzeneted. Ahogy a városod növekszik, vagy ha más városok árukat kérnek tőled, az üzenetek itt jelennek meg." }
     { group:63, id:2, text: "Dátum" }
     { group:63, id:3, text: "Tárgy" }
-    { group:63, id:4, text: "Bal egérgombbal kattints egy üzenetre az elolvasásához. Jobb egérgombbal kattints egy üzenetre a törléséhez." }
+    { group:63, id:4, text: "Az üzenet megnyitásához kattints a bal, törléséhez a jobb egérgombbal." }
     { group:63, id:5, text: "Címzett" }
     { group:63, id:6, text: "Megnyitott üzenetek törlése" }
 
