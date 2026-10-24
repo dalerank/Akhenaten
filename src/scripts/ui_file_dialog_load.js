@@ -58,6 +58,7 @@ function file_dialog_load_try_load(basename) {
     if (!game.load_savegame(normalize_savegame_path_for_load(full)))
         return 2
 
+    game.start_loaded_file()
     ui.window_city_show()
     __set_last_loaded_utf8(FILE_TYPE_SAVED_GAME, file_dialog_load_basename_from_list_entry(basename))
     return 0

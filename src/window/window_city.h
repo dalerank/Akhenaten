@@ -26,6 +26,7 @@ extern bool city_has_loaded;
 
 // True for the three windows that show the city view and share its overlays.
 bool window_is_city_view();
+bool is_in_construction_buttons_region(vec2i pt);
 
 void window_city_draw_all();
 void window_city_draw_panels();

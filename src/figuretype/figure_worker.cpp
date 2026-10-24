@@ -101,13 +101,16 @@ void figure_worker::figure_action() {
 
     switch (base.action_state) {
     case ACTION_9_WORKER_CREATED:
-    case ACTION_14_WORKER_CHECK_DESTINATION:        
         if (dest_fid && dest_fid != id()) {
             set_destination(home());
             advance_action(ACTION_13_WORKER_BACK_FROM_WORKS);
         } else {
             advance_action(ACTION_10_WORKER_GOING);
         }
+        break;
+
+    case ACTION_14_WORKER_CHECK_DESTINATION:
+        poof();
         break;
 
     case ACTION_15_REACHED_DESTINATION:

@@ -48,20 +48,26 @@ void graphics_shade_rect(vec2i start, vec2i size, int darkness) {
 
 void ui::textured::graphics_draw_background(painter& ctx, int image_id, float scale, vec2i offset) {
     const image_t* img = image_get(image_id);
-    if (!img) {
+    if (!img || img->width <= 0 || img->height <= 0) {
         return;
     }
 
-    if (scale == -1) {
-        //        graphics_renderer()->draw_image(img, 0, 0, COLOR_MASK_NONE, scale, false); // todo?
-    } else {
-        // Prefer any odd leftover pixel on top so the bottom edge of the art meets the screen.
-        const int pad_x = screen_width() - img->width;
-        const int pad_y = screen_height() - img->height;
-        const int x = (pad_x >= 0) ? (pad_x + 1) / 2 : pad_x / 2;
-        const int y = (pad_y >= 0) ? (pad_y + 1) / 2 : pad_y / 2;
-        ctx.draw_image(img, vec2i{x, y} + offset, COLOR_MASK_NONE, scale);
+    float fit_scale = scale;
+    if (scale <= 0.f) {
+        float fit_x = (float)screen_width() / (float)img->width;
+        float fit_y = (float)screen_height() / (float)img->height;
+        fit_scale = std::max(fit_x, fit_y);
+    } else if (screen_width() > img->width || screen_height() > img->height) {
+        float fit_x = (float)screen_width() / (float)img->width;
+        float fit_y = (float)screen_height() / (float)img->height;
+        fit_scale = std::max(fit_x, fit_y) * scale;
     }
+
+    const int scaled_w = (int)(img->width * fit_scale);
+    const int scaled_h = (int)(img->height * fit_scale);
+    const int x = (screen_width() - scaled_w) / 2;
+    const int y = (screen_height() - scaled_h) / 2;
+    ctx.draw_image(img, vec2i{x, y} + offset, COLOR_MASK_NONE, fit_scale);
 }
 
 void ImageDraw::execute_render_command(painter& ctx, const render_command_t& command) {

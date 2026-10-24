@@ -59,7 +59,18 @@ bool platform_run_main_loop(platform_pump_frame_cb pump_frame, platform_should_c
 }
 
 void platform_resolve_user_directory(bstring512& dir) {
-    dir = SDL_AndroidGetExternalStoragePath();
+    char* pref = SDL_GetPrefPath("", "Akhenaten");
+    if (pref && *pref) {
+        dir = pref;
+        SDL_free(pref);
+    } else {
+        const char* internal_path = SDL_AndroidGetInternalStoragePath();
+        if (internal_path && *internal_path) {
+            dir = internal_path;
+        } else {
+            dir = "/sdcard/";
+        }
+    }
 }
 
 void platform_t::open_url(pcstr url, pcstr prefix) {

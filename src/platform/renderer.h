@@ -34,6 +34,8 @@ enum e_image_filter_mode {
 
 int platform_renderer_init(SDL_Window* window, xstring renderer);
 int platform_renderer_create_render_texture(int width, int height);
+void platform_renderer_invalidate_all_textures();
+
 int platform_renderer_lost_render_texture(void);
 void platform_renderer_invalidate_target_textures(void);
 void platform_renderer_generate_mouse_cursor_texture(int cursor_id, int size, const color* pixels, int hotspot_x, int hotspot_y);

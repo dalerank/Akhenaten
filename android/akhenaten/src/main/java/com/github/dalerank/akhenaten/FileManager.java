@@ -479,13 +479,22 @@ public class FileManager {
             filePath = normalizeRelativePath(filePath);
             String internalMode = "";
             boolean isWrite = false;
-            // Either "r" or "w"
             if (mode.indexOf('r') != -1) {
                 internalMode += "r";
             }
             if (mode.indexOf('w') != -1) {
                 internalMode += "w";
                 isWrite = true;
+                if (mode.indexOf('a') == -1) {
+                    internalMode += "t";
+                }
+            } else if (mode.indexOf('a') != -1) {
+                internalMode += "w";
+                internalMode += "a";
+                isWrite = true;
+            }
+            if (internalMode.isEmpty()) {
+                internalMode = "r";
             }
 
             String[] fileParts = filePath.split("[\\\\/]");

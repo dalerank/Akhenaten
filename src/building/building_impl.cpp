@@ -301,11 +301,6 @@ int building_impl::road_network() const { return base.road_network_id; }
 bool building_impl::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {
     if (current_params().flags.draw_normal_anim) {
         draw_normal_anim(ctx, point, tile, color_mask);
-    } else if (!base.anim.key) {
-        int image_id = map_image_at(tile.grid_offset());
-        building_draw_normal_anim(ctx, point, &base, tile, image_id, color_mask);
-    } else {
-        draw_normal_anim(ctx, point, tile, color_mask);
     }
 
     for (const auto &a : base.anims) {
