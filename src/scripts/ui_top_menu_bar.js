@@ -28,9 +28,11 @@ function top_menu_measure_headers_right() {
 	}
 	var cur_x = top_menu_widget.offset.x
 	var spacing = top_menu_widget.spacing
+	// The hovered header draws in YELLOW (bold in TTF fonts) — lay out for the wider glyphs.
+	var font = !!game_features.gameui_highlight_top_menu_hover ? FONT_NORMAL_YELLOW : FONT_NORMAL_BLACK_ON_LIGHT
 	for (var i = 0; i < menus.length; i++) {
 		var text = top_menu_resolve_text(menus[i].text)
-		cur_x += __ui_text_width(text, FONT_NORMAL_BLACK_ON_LIGHT) + spacing
+		cur_x += __ui_text_width(text, font) + spacing
 	}
 	return cur_x - spacing
 }
@@ -100,6 +102,7 @@ function top_menu_draw_headers() {
 	var cur_y = top_menu_widget.offset.y
 	var spacing = top_menu_widget.spacing
 	var highlight = !!game_features.gameui_highlight_top_menu_hover
+	var hover_font = highlight ? FONT_NORMAL_YELLOW : FONT_NORMAL_BLACK_ON_LIGHT
 	var mx = __mouse.x
 	var my = __mouse.y
 	var y0 = top_menu_widget.offset.y
@@ -113,7 +116,7 @@ function top_menu_draw_headers() {
 	for (var i = 0; i < menus.length; i++) {
 		var menu = menus[i]
 		var text = top_menu_resolve_text(menu.text)
-		var width = __ui_text_width(text, FONT_NORMAL_BLACK_ON_LIGHT)
+		var width = __ui_text_width(text, hover_font)
 		var x_start = cur_x
 		var x_end = cur_x + width
 		top_menu_set_header_layout(menu.id, x_start, x_end)

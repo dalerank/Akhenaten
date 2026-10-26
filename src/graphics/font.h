@@ -12,6 +12,9 @@
 using e_font_tokens_t = token_holder<e_font, FONT_SMALL_PLAIN, FONT_TYPES_MAX>;
 extern const e_font_tokens_t e_font_tokens;
 
+// True while the dynamic TTF atlas is active (non-English, or English with --font).
+bool font_use_utf();
+
 using fonts_vec = std::array<e_font, 2>;
 
 struct font_glyph {

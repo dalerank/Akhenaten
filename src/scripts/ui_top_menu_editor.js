@@ -115,13 +115,14 @@ function top_menu_editor_calc_menu_size(menu) {
 			continue
 		}
 		var text = top_menu_editor_item_text(item)
-		var width_pixels = __ui_text_width(text, FONT_NORMAL_BLACK_ON_LIGHT)
+		// Items draw in YELLOW on hover — size the panel for the wider hover font.
+		var width_pixels = __ui_text_width(text, FONT_NORMAL_YELLOW)
 		if (width_pixels > max_width) {
 			max_width = width_pixels
 		}
 		height_pixels += top_menu_editor_widget.item_height
 	}
-	var blocks = ((max_width + 8) / 16 | 0) + 1
+	var blocks = ((max_width + 16) / 16 | 0) + 1
 	if (blocks < 10) {
 		blocks = 10
 	}
@@ -427,7 +428,7 @@ function top_menu_editor_draw_headers() {
 	for (var i = 0; i < menus.length; i++) {
 		var menu = menus[i]
 		var text = top_menu_editor_resolve_text(menu.text)
-		var width = __ui_text_width(text, FONT_NORMAL_BLACK_ON_LIGHT)
+		var width = __ui_text_width(text, FONT_NORMAL_YELLOW)
 		var x_start = cur_x
 		var x_end = cur_x + width
 		top_menu_editor_set_header_layout(menu.id, x_start, x_end)

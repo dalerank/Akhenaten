@@ -1,6 +1,7 @@
 #pragma once
 
 #include "core/vec2i.h"
+#include "graphics/font.h"
 #include "color.h"
 #include "game/resource.h"
 #include "graphics/image_desc.h"

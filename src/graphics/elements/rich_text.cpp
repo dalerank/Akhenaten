@@ -295,7 +295,9 @@ void rich_text_t::draw_line(painter &ctx, pcstr str, int x, int y, color clr, bo
                             int height = def->image_y_offset((const uint8_t *)str, img->height, def->line_height);
                             ctx.img_letter(img, def->font, glyph.imagid, x, y - height - glyph.bearing.y, clr);
                         }
-                        x += img->width + def->letter_spacing;
+                        // Same word-end rule as the measuring code: no spacing after the last letter of a word.
+                        const bool word_ends = !str[num_bytes] || str[num_bytes] == ' ' || str[num_bytes] == '&';
+                        x += img->width + (word_ends ? 0 : def->letter_spacing);
                     }
                 }
             }

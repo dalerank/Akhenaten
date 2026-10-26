@@ -66,7 +66,7 @@ terrain_info_window = {
     ui : {
         background    : outer_panel({size: [29, 20]}),
         title         : text({pos: [0, 16], size: [px(29), 13], font : FONT_LARGE_BLACK_ON_LIGHT, align:"center"})
-        describe      : text({pos: [30, 78], font: FONT_NORMAL_BLACK_ON_DARK, multiline:true, wrap:px(26) })
+        describe      : text({pos: [30, 78], font: FONT_NORMAL_BLACK_ON_DARK, multiline:true, wrap:(game.languages.current == 'en' ? px(26) : 404) })
 
         button_help   : help_button({})
         button_close  : close_button({})
@@ -79,7 +79,7 @@ terrain_info_empty {
     open_sounds     : [ "Wavs/DESERT1.WAV" ]
     ui : baseui(terrain_info_window, {
         title    : text({pos: [0, 16], size: [px(29), 13], text:[70, 20], font:FONT_LARGE_BLACK_ON_LIGHT, align:"center"})
-        describe : text({pos: [30, 78], text:[70, 42], font: FONT_NORMAL_BLACK_ON_DARK, multiline:true, wrap:px(26) })
+        describe : text({pos: [30, 78], text:[70, 42], font: FONT_NORMAL_BLACK_ON_DARK, multiline:true, wrap:(game.languages.current == 'en' ? px(26) : 404) })
     })
 }
 
@@ -89,7 +89,7 @@ terrain_info_road {
     help_id           : "message_game_concept_roads"
 	ui : baseui(terrain_info_window, {
         title         : text({pos: [0, 16], size: [px(29), 13], text:[28, 5], font:FONT_LARGE_BLACK_ON_LIGHT, align:"center"})
-        describe      : text({pos: [30, 78], text:[70, 42], font: FONT_NORMAL_BLACK_ON_DARK, multiline:true, wrap:px(26) })
+        describe      : text({pos: [30, 78], text:[70, 42], font: FONT_NORMAL_BLACK_ON_DARK, multiline:true, wrap:(game.languages.current == 'en' ? px(26) : 404) })
     })
 }
 
@@ -104,7 +104,7 @@ terrain_info_wall = {
     open_sounds       : [ "Wavs/ROCK1.WAV" ]
     ui : baseui(terrain_info_window, {
         title         : text({pos: [0, 16], size: [px(29), 13], text:[139, 0], font:FONT_LARGE_BLACK_ON_LIGHT, align:"center"})
-        describe      : text({pos: [30, 78], text:[139, 1], font: FONT_NORMAL_BLACK_ON_DARK, multiline:true, wrap:px(26) })
+        describe      : text({pos: [30, 78], text:[139, 1], font: FONT_NORMAL_BLACK_ON_DARK, multiline:true, wrap:(game.languages.current == 'en' ? px(26) : 404) })
     })
 }
 
@@ -119,7 +119,7 @@ terrain_info_mud_wall = {
     open_sounds       : [ "Wavs/ROCK1.WAV" ]
     ui : baseui(terrain_info_window, {
         title         : text({pos: [0, 16], size: [px(29), 13], text:[139, 0], font:FONT_LARGE_BLACK_ON_LIGHT, align:"center"})
-        describe      : text({pos: [30, 78], text:[139, 1], font: FONT_NORMAL_BLACK_ON_DARK, multiline:true, wrap:px(26) })
+        describe      : text({pos: [30, 78], text:[139, 1], font: FONT_NORMAL_BLACK_ON_DARK, multiline:true, wrap:(game.languages.current == 'en' ? px(26) : 404) })
     })
 }
 
@@ -134,7 +134,7 @@ terrain_info_brick_wall = {
     open_sounds       : [ "Wavs/ROCK1.WAV" ]
     ui : baseui(terrain_info_window, {
         title         : text({pos: [0, 16], size: [px(29), 13], text:[28, 168], font:FONT_LARGE_BLACK_ON_LIGHT, align:"center"})
-        describe      : text({pos: [30, 78], text:[70, 59], font: FONT_NORMAL_BLACK_ON_DARK, multiline:true, wrap:px(26) })
+        describe      : text({pos: [30, 78], text:[70, 59], font: FONT_NORMAL_BLACK_ON_DARK, multiline:true, wrap:(game.languages.current == 'en' ? px(26) : 404) })
     })
 }
 
@@ -149,7 +149,7 @@ terrain_info_plaza = {
     open_sounds       : [ ]
     ui : baseui(terrain_info_window, {
         title         : text({pos: [0, 16], size: [px(29), 13], text:[137, 0], font:FONT_LARGE_BLACK_ON_LIGHT, align:"center"})
-        describe      : text({pos: [30, 78], text:[137, 1], font: FONT_NORMAL_BLACK_ON_DARK, multiline:true, wrap:px(26) })
+        describe      : text({pos: [30, 78], text:[137, 1], font: FONT_NORMAL_BLACK_ON_DARK, multiline:true, wrap:(game.languages.current == 'en' ? px(26) : 404) })
     })
 }
 
@@ -164,7 +164,7 @@ terrain_info_ore_rock = {
     open_sounds       : [  "wavs/rock1.wav", "wavs/rock2.wav", "wavs/rock3.wav", "wavs/rock4.wav", "wavs/rock5.wav" ]
     ui : baseui(terrain_info_window, {
         title         : text({pos: [0, 16], size: [px(29), 13], text:[70, 26], font:FONT_LARGE_BLACK_ON_LIGHT, align:"center"})
-        describe      : text({pos: [30, 78], text:[70, 38], font: FONT_NORMAL_BLACK_ON_DARK, multiline:true, wrap:px(26) })
+        describe      : text({pos: [30, 78], text:[70, 38], font: FONT_NORMAL_BLACK_ON_DARK, multiline:true, wrap:(game.languages.current == 'en' ? px(26) : 404) })
     })
 }
 
@@ -179,7 +179,7 @@ terrain_info_rock = {
     open_sounds       : [ "wavs/rock1.wav", "wavs/rock2.wav", "wavs/rock3.wav", "wavs/rock4.wav", "wavs/rock5.wav" ]
     ui : baseui(terrain_info_window, {
         title         : text({pos: [0, 16], size: [px(29), 13], text:[70, 12], font:FONT_LARGE_BLACK_ON_LIGHT, align:"center"})
-        describe      : text({pos: [30, 78], text:[70, 38], font: FONT_NORMAL_BLACK_ON_DARK, multiline:true, wrap:px(26) })
+        describe      : text({pos: [30, 78], text:[70, 38], font: FONT_NORMAL_BLACK_ON_DARK, multiline:true, wrap:(game.languages.current == 'en' ? px(26) : 404) })
     })
 }
 
@@ -193,8 +193,8 @@ terrain_info_floodplain {
     help_id           : "message_tutorial_food_and_farming"
     ui : baseui(terrain_info_window, {
         title         : text({pos: [0, 16], size: [px(29), 13], text:[70, 29], font:FONT_LARGE_BLACK_ON_LIGHT, align:"center"})
-        describe      : text({pos: [30, 78], font: FONT_NORMAL_BLACK_ON_DARK, multiline:true, wrap:px(26) })
-        basin_status  : text({pos: [30, 170], size: [px(26), 80], font: FONT_NORMAL_BLACK_ON_DARK, multiline:true, wrap:px(26) })
+        describe      : text({pos: [30, 78], font: FONT_NORMAL_BLACK_ON_DARK, multiline:true, wrap:(game.languages.current == 'en' ? px(26) : 404) })
+        basin_status  : text({pos: [30, 170], size: [px(26), 80], font: FONT_NORMAL_BLACK_ON_DARK, multiline:true, wrap:(game.languages.current == 'en' ? px(26) : 404) })
     })
 }
 
@@ -222,8 +222,8 @@ terrain_info_floodplain_submerged {
     help_id           : "message_tutorial_food_and_farming"
     ui : baseui(terrain_info_window, {
         title         : text({pos: [0, 16], size: [px(29), 13], text:[70, 29], font:FONT_LARGE_BLACK_ON_LIGHT, align:"center"})
-        describe      : text({pos: [30, 78], font: FONT_NORMAL_BLACK_ON_DARK, multiline:true, wrap:px(26) })
-        basin_status  : text({pos: [30, 170], size: [px(26), 80], font: FONT_NORMAL_BLACK_ON_DARK, multiline:true, wrap:px(26) })
+        describe      : text({pos: [30, 78], font: FONT_NORMAL_BLACK_ON_DARK, multiline:true, wrap:(game.languages.current == 'en' ? px(26) : 404) })
+        basin_status  : text({pos: [30, 170], size: [px(26), 80], font: FONT_NORMAL_BLACK_ON_DARK, multiline:true, wrap:(game.languages.current == 'en' ? px(26) : 404) })
     })
 }
 
@@ -241,7 +241,7 @@ terrain_info_water = {
     open_sounds       : [ "Wavs/WATER1.WAV" ]
     ui : baseui(terrain_info_window, {
         title         : text({pos: [0, 16], size: [px(29), 13], text:[70, 13], font:FONT_LARGE_BLACK_ON_LIGHT, align:"center"})
-        describe      : text({pos: [30, 78], text:[70, 39], font: FONT_NORMAL_BLACK_ON_DARK, multiline:true, wrap:px(26) })
+        describe      : text({pos: [30, 78], text:[70, 39], font: FONT_NORMAL_BLACK_ON_DARK, multiline:true, wrap:(game.languages.current == 'en' ? px(26) : 404) })
     })
 }
 
@@ -256,7 +256,7 @@ terrain_info_bridge {
     open_sounds       : [ "Wavs/DESERT1.WAV" ]
     ui : baseui(terrain_info_window, {
         title         : text({pos: [0, 16], size: [px(29), 13], text:[70, 21], font:FONT_LARGE_BLACK_ON_LIGHT, align:"center"})
-        describe      : text({pos: [30, 78], text:[70, 47], font: FONT_NORMAL_BLACK_ON_DARK, multiline:true, wrap:px(26) })
+        describe      : text({pos: [30, 78], text:[70, 47], font: FONT_NORMAL_BLACK_ON_DARK, multiline:true, wrap:(game.languages.current == 'en' ? px(26) : 404) })
     })
 }
 
@@ -271,7 +271,7 @@ terrain_info_tree = {
     open_sounds       : [ ]
     ui : baseui(terrain_info_window, {
         title         : text({pos: [0, 16], size: [px(29), 13], text:[70, 11], font:FONT_LARGE_BLACK_ON_LIGHT, align:"center"})
-        describe      : text({pos: [30, 78], text:[70, 43], font: FONT_NORMAL_BLACK_ON_DARK, multiline:true, wrap:px(26) })
+        describe      : text({pos: [30, 78], text:[70, 43], font: FONT_NORMAL_BLACK_ON_DARK, multiline:true, wrap:(game.languages.current == 'en' ? px(26) : 404) })
     })
 }
 
@@ -286,7 +286,7 @@ terrain_info_rubble {
     ui : baseui(terrain_info_window, {
         title         : text({pos: [0, 16], text:"${140.0}", size: [px(29), 20], font : FONT_LARGE_BLACK_ON_LIGHT, align:"center"})
         warning_text  : text({debug_tag:1, pos: [0, 46], text:"no_text", size: [px(29), 20], wrap:px(29), align:"center", font : FONT_NORMAL_BLACK_ON_LIGHT })
-        subtitle      : text({pos: [30, 76], text:"${140.1}", size: [px(26), -1], wrap:px(26), font : FONT_NORMAL_BLACK_ON_LIGHT, multiline:true })
+        subtitle      : text({pos: [30, 76], text:"${140.1}", size: [px(26), -1], wrap:(game.languages.current == 'en' ? px(26) : 404), font : FONT_NORMAL_BLACK_ON_LIGHT, multiline:true })
     })
 }
 
@@ -303,7 +303,7 @@ terrain_info_canal {
     open_sounds       : [ "Wavs/WATER1.WAV" ]
     ui : baseui(terrain_info_window, {
         title         : text({pos: [0, 16], size: [px(29), 13], text:[141, 0], font:FONT_LARGE_BLACK_ON_LIGHT, align:"center"})
-        describe      : text({pos: [30, 78], font: FONT_NORMAL_BLACK_ON_DARK, multiline:true, wrap:px(26) })
+        describe      : text({pos: [30, 78], font: FONT_NORMAL_BLACK_ON_DARK, multiline:true, wrap:(game.languages.current == 'en' ? px(26) : 404) })
     })
 }
 
@@ -322,8 +322,8 @@ terrain_info_dike {
     open_sounds       : [ ]
     ui : baseui(terrain_info_window, {
         title         : text({pos: [0, 16], size: [px(29), 13], text:"#building_dike", font:FONT_LARGE_BLACK_ON_LIGHT, align:"center"})
-        describe      : text({pos: [30, 78], text:"#building_dike_info", font: FONT_NORMAL_BLACK_ON_DARK, multiline:true, wrap:px(26) })
-        basin_status  : text({pos: [30, 160], size: [px(26), 50], font: FONT_NORMAL_BLACK_ON_DARK, multiline:true, wrap:px(26) })
+        describe      : text({pos: [30, 78], text:"#building_dike_info", font: FONT_NORMAL_BLACK_ON_DARK, multiline:true, wrap:(game.languages.current == 'en' ? px(26) : 404) })
+        basin_status  : text({pos: [30, 160], size: [px(26), 50], font: FONT_NORMAL_BLACK_ON_DARK, multiline:true, wrap:(game.languages.current == 'en' ? px(26) : 404) })
     })
 }
 
@@ -356,7 +356,7 @@ terrain_info_marshland {
     open_sounds     : [ "Wavs/DESERT1.WAV" ]
     ui : baseui(terrain_info_window, {
         title    : text({pos: [0, 16], size: [px(29), 13], text:[70, 31], font:FONT_LARGE_BLACK_ON_LIGHT, align:"center"})
-        describe : text({pos: [30, 78], text:[70, 57], font: FONT_NORMAL_BLACK_ON_DARK, multiline:true, wrap:px(26) })
+        describe : text({pos: [30, 78], text:[70, 57], font: FONT_NORMAL_BLACK_ON_DARK, multiline:true, wrap:(game.languages.current == 'en' ? px(26) : 404) })
     })
 }
 
@@ -366,7 +366,7 @@ terrain_info_dunes {
     open_sounds     : [ "Wavs/DESERT1.WAV" ]
     ui : baseui(terrain_info_window, {
         title    : text({pos: [0, 16], size: [px(29), 13], text:[70, 32], font:FONT_LARGE_BLACK_ON_LIGHT, align:"center"})
-        describe : text({pos: [30, 78], text:[70, 58], font: FONT_NORMAL_BLACK_ON_DARK, multiline:true, wrap:px(26) })
+        describe : text({pos: [30, 78], text:[70, 58], font: FONT_NORMAL_BLACK_ON_DARK, multiline:true, wrap:(game.languages.current == 'en' ? px(26) : 404) })
     })
 }
 
@@ -376,7 +376,7 @@ terrain_info_shrub {
     open_sounds     : [ "Wavs/DESERT1.WAV" ]
     ui : baseui(terrain_info_window, {
         title    : text({pos: [0, 16], size: [px(29), 13], text:[70, 14], font:FONT_LARGE_BLACK_ON_LIGHT, align:"center"})
-        describe : text({pos: [30, 78], text:[70, 40], font: FONT_NORMAL_BLACK_ON_DARK, multiline:true, wrap:px(26) })
+        describe : text({pos: [30, 78], text:[70, 40], font: FONT_NORMAL_BLACK_ON_DARK, multiline:true, wrap:(game.languages.current == 'en' ? px(26) : 404) })
     })
 }
 
@@ -386,7 +386,7 @@ terrain_info_entry_flag {
     open_sounds     : [ "Wavs/DESERT1.WAV" ]
     ui : baseui(terrain_info_window, {
         title    : text({pos: [0, 16], size: [px(29), 13], text:[70, 24], font:FONT_LARGE_BLACK_ON_LIGHT, align:"center"})
-        describe : text({pos: [30, 78], text:[70, 50], font: FONT_NORMAL_BLACK_ON_DARK, multiline:true, wrap:px(26) })
+        describe : text({pos: [30, 78], text:[70, 50], font: FONT_NORMAL_BLACK_ON_DARK, multiline:true, wrap:(game.languages.current == 'en' ? px(26) : 404) })
     })
 }
 
@@ -396,7 +396,7 @@ terrain_info_exit_flag {
     open_sounds     : [ "Wavs/DESERT1.WAV" ]
     ui : baseui(terrain_info_window, {
         title    : text({pos: [0, 16], size: [px(29), 13], text:[70, 25], font:FONT_LARGE_BLACK_ON_LIGHT, align:"center"})
-        describe : text({pos: [30, 78], text:[70, 51], font: FONT_NORMAL_BLACK_ON_DARK, multiline:true, wrap:px(26) })
+        describe : text({pos: [30, 78], text:[70, 51], font: FONT_NORMAL_BLACK_ON_DARK, multiline:true, wrap:(game.languages.current == 'en' ? px(26) : 404) })
     })
 }
 
@@ -406,6 +406,6 @@ terrain_info_earthquake {
     open_sounds     : [ "Wavs/DESERT1.WAV" ]
     ui : baseui(terrain_info_window, {
         title    : text({pos: [0, 16], size: [px(29), 13], text:[70, 15], font:FONT_LARGE_BLACK_ON_LIGHT, align:"center"})
-        describe : text({pos: [30, 78], text:[70, 41], font: FONT_NORMAL_BLACK_ON_DARK, multiline:true, wrap:px(26) })
+        describe : text({pos: [30, 78], text:[70, 41], font: FONT_NORMAL_BLACK_ON_DARK, multiline:true, wrap:(game.languages.current == 'en' ? px(26) : 404) })
     })
 }
