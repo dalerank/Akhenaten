@@ -12,6 +12,7 @@
 #include FT_FREETYPE_H
 #include FT_SYNTHESIS_H
 #include <cstdint>
+#include <cmath>
 #include <vector>
 #include <string_view>
 #include <stdexcept>
@@ -155,15 +156,23 @@ namespace DynamicFont {
             return fontFace->glyph;
         }
 
-        FT_GlyphSlot LoadGlyphWithGrayscaleRender(FT_Face fontFace, uint32_t codepoint, bool bold) {
-            auto glyph = LoadGlyphWithoutRender(fontFace, codepoint, false);
-
-            // Apply bold effect before rendering if requested
-            if (bold && glyph->format == FT_GLYPH_FORMAT_OUTLINE) {
-                // Embolden by approximately 1/16th of em size (adjustable strength)
-                FT_Pos strength = fontFace->size->metrics.x_ppem * 64 / 16;
+        void EmboldenGlyphOutline(FT_Face fontFace, FT_GlyphSlot glyph, bool bold, int fontSize) {
+            if (glyph->format != FT_GLYPH_FORMAT_OUTLINE || (!bold && fontSize < 18)) {
+                return;
+            }
+            FT_Pos strength = fontFace->size->metrics.x_ppem * 64 / 16;
+            if (fontSize >= 18) {
+                // Mostly-horizontal embolden keeps the counters open so the bevel rim sits next to a solid core
+                strength = strength * 3 / 2;
+                FT_Outline_EmboldenXY(&glyph->outline, strength, strength / 8);
+            } else {
                 FT_Outline_Embolden(&glyph->outline, strength);
             }
+        }
+
+        FT_GlyphSlot LoadGlyphWithGrayscaleRender(FT_Face fontFace, uint32_t codepoint, bool bold, int fontSize) {
+            auto glyph = LoadGlyphWithoutRender(fontFace, codepoint, false);
+            EmboldenGlyphOutline(fontFace, glyph, bold, fontSize);
 
             FT_Error error = FT_Render_Glyph(glyph, FT_RENDER_MODE_NORMAL);            
             assert(!error && "Error: could not load and render char");
@@ -171,26 +180,21 @@ namespace DynamicFont {
             return glyph;
         }
 
-        FT_GlyphSlot LoadGlyphWithColorRender(FT_Face fontFace, uint32_t codepoint, bool bold) {
+        FT_GlyphSlot LoadGlyphWithColorRender(FT_Face fontFace, uint32_t codepoint, bool bold, int fontSize) {
             auto glyph = LoadGlyphWithoutRender(fontFace, codepoint, true);
-
-            // Apply bold effect before rendering if requested
-            if (bold && glyph->format == FT_GLYPH_FORMAT_OUTLINE) {
-                FT_Pos strength = fontFace->size->metrics.x_ppem * 64 / 16;
-                FT_Outline_Embolden(&glyph->outline, strength);
-            }
+            EmboldenGlyphOutline(fontFace, glyph, bold, fontSize);
 
             FT_Error error = FT_Render_Glyph(glyph, FT_RENDER_MODE_NORMAL);
             assert(!error && "Error: could not load and render char");
             return glyph;
         }
 
-        FT_GlyphSlot LoadGlyphWithSdfRender(FT_Face fontFace, uint32_t codepoint, bool bold) {
+        FT_GlyphSlot LoadGlyphWithSdfRender(FT_Face fontFace, uint32_t codepoint, bool bold, int fontSize) {
 #ifdef AKHN_HAVE_FT_SDF
             // Use bsdf renderer instead of sdf renderer.
             // See: https://freetype.org/freetype2/docs/reference/ft2-base_interface.html#ft_render_mode
             // First I need to render the glyph with normal mode, then render it with sdf mode.
-            auto glyph = LoadGlyphWithGrayscaleRender(fontFace, codepoint, bold);
+            auto glyph = LoadGlyphWithGrayscaleRender(fontFace, codepoint, bold, fontSize);
 
             // But the bsdf renderer cannot handle the glyph with zero width or height (e.g. space).
             // It is a result of a bug in FreeType. It is already fixed on master branch. (86d0ca24)
@@ -203,7 +207,7 @@ namespace DynamicFont {
             return glyph;
 #else
             // Fallback to grayscale render when SDF renderer is unavailable
-            return LoadGlyphWithGrayscaleRender(fontFace, codepoint, bold);
+            return LoadGlyphWithGrayscaleRender(fontFace, codepoint, bold, fontSize);
 #endif
         }
 
@@ -219,27 +223,27 @@ namespace DynamicFont {
             return fontFace->glyph;
         }
 
-        Atlas::FreeTypeGlyph LoadGlyph(FT_Face fontFace, uint32_t codepoint, RenderMode mode, bool bold) {
+        Atlas::FreeTypeGlyph LoadGlyph(FT_Face fontFace, uint32_t codepoint, RenderMode mode, bool bold, int fontSize) {
             switch (mode) {
             case RenderMode::DEFAULT:
-                return Atlas::FreeTypeGlyph{ codepoint, LoadGlyphWithGrayscaleRender(fontFace, codepoint, bold) };
+                return Atlas::FreeTypeGlyph{ codepoint, LoadGlyphWithGrayscaleRender(fontFace, codepoint, bold, fontSize) };
             case RenderMode::COLOR:
-                return Atlas::FreeTypeGlyph{ codepoint, LoadGlyphWithColorRender(fontFace, codepoint, bold) };
+                return Atlas::FreeTypeGlyph{ codepoint, LoadGlyphWithColorRender(fontFace, codepoint, bold, fontSize) };
             case RenderMode::SDF:
-                return Atlas::FreeTypeGlyph{ codepoint, LoadGlyphWithSdfRender(fontFace, codepoint, bold) };
+                return Atlas::FreeTypeGlyph{ codepoint, LoadGlyphWithSdfRender(fontFace, codepoint, bold, fontSize) };
             case RenderMode::LCD:
                 return Atlas::FreeTypeGlyph{ codepoint, LoadGlyphWithSubpixelRender(fontFace, codepoint) };
             default:
                 assert(false && "Unsupported render mode");
-                return Atlas::FreeTypeGlyph{ codepoint, LoadGlyphWithGrayscaleRender(fontFace, codepoint, bold) };
+                return Atlas::FreeTypeGlyph{ codepoint, LoadGlyphWithGrayscaleRender(fontFace, codepoint, bold, fontSize) };
             }
         }
 
-        std::vector<Atlas::FreeTypeGlyph> LoadAllGlyphs(FT_Face fontFace, const Charset &charset, RenderMode mode, bool bold) {
+        std::vector<Atlas::FreeTypeGlyph> LoadAllGlyphs(FT_Face fontFace, const Charset &charset, RenderMode mode, bool bold, int fontSize) {
             std::vector<Atlas::FreeTypeGlyph> allGlyphs;
             allGlyphs.reserve(charset.Size());
             for (uint32_t codepoint : charset.Codepoints()) {
-                allGlyphs.push_back(LoadGlyph(fontFace, codepoint, mode, bold));
+                allGlyphs.push_back(LoadGlyph(fontFace, codepoint, mode, bold, fontSize));
             }
 
             return allGlyphs;
@@ -302,7 +306,7 @@ namespace DynamicFont {
         }
 
         Atlas::Bitmap BuildAtlasBitmap(
-            Atlas::Glyphs &glyphs, const std::vector<Atlas::FreeTypeGlyph> &ftGlyphs, Size atlasSize, int padding, int channels, uint8_t *colors, int shadowOffset) {
+            Atlas::Glyphs &glyphs, const std::vector<Atlas::FreeTypeGlyph> &ftGlyphs, Size atlasSize, int padding, int channels, uint8_t *colors, int shadowOffset, int fontSize = 0) {
             Atlas::Bitmap bitmap(atlasSize.width, atlasSize.height, channels);
 
             int atlasX = 0;
@@ -327,7 +331,7 @@ namespace DynamicFont {
                 int glyphXPosInBitmap = atlasX / channels + padding; // in pixels
                 int glyphYPosInBitmap = atlasY + padding;
 
-                bitmap.Draw(glyphXPosInBitmap, glyphYPosInBitmap, glyph, colors, shadowOffset);
+                bitmap.Draw(glyphXPosInBitmap, glyphYPosInBitmap, glyph, colors, shadowOffset, fontSize);
                 glyphs.Add(glyphXPosInBitmap, glyphYPosInBitmap, glyph);
 
                 atlasX += glyphWidthPadding * channels;
@@ -412,26 +416,94 @@ namespace DynamicFont {
         std::fill(m_Data.begin(), m_Data.end(), fillColor);
     }
 
-    void DrawRGBA(std::vector<uint8_t> &data, const Atlas::FreeTypeGlyph &glyph, size_t atlasIdx, int glyphX, int glyphY, uint8_t *color) {
+    void DrawRGBA(std::vector<uint8_t> &data, const Atlas::FreeTypeGlyph &glyph, size_t atlasIdx, int glyphX, int glyphY, uint8_t *color, int fontSize) {
         assert(glyph.Channels() == 4 || glyph.Channels() == 1);
         uint8_t r = glyph.ColorRed(glyphX, glyphY);
         uint8_t g = glyph.ColorGreen(glyphX, glyphY);
         uint8_t b = glyph.ColorBlue(glyphX, glyphY);
         uint8_t a = glyph.ColorAlpha(glyphX, glyphY);
+        uint8_t out_a = a;
 
         if (glyph.Channels() == 1) {
             // For grayscale glyphs, the alpha is the coverage
             // If color is specified, apply it with the alpha from the glyph
             if (color && color[3] > 0) {
-                // To avoid color halo around text, interpolate RGB from black to target color
-                // based on alpha. This works with standard SDL_BLENDMODE_BLEND.
-                // For low alpha (anti-aliased edges), RGB gradually transitions from black to color
+                // Interpolate RGB from black to the target color by alpha so the AA
+                // edges blend without a halo. Small fonts get a gamma lift, larger
+                // fonts a contrast stretch to mimic the hard-edged 1-bit originals.
                 float alpha_normalized = a / 255.0f;
-                // Apply a power curve to make the transition more aggressive
-                float color_factor = alpha_normalized * alpha_normalized;
-                r = static_cast<uint8_t>(color[0] * color_factor);
-                g = static_cast<uint8_t>(color[1] * color_factor);
-                b = static_cast<uint8_t>(color[2] * color_factor);
+                float color_factor;
+                if (fontSize <= 12) {
+                    color_factor = std::pow(alpha_normalized, 1.0f / 3.0f);
+                } else {
+                    color_factor = alpha_normalized * 1.6f - 0.3f;
+                    color_factor = std::clamp(color_factor, 0.0f, 1.0f);
+                }
+                if (fontSize >= 18) {
+                    // The original bitmap title fonts bake a directional-light bevel
+                    // (light from the bottom-right) into the glyph rim; the coverage is
+                    // treated as a heightmap and the lit edges blend toward the cream.
+                    auto samp = [&](int x, int y) -> float {
+                        if (x < 0 || y < 0 || x >= (int)glyph.Width() || y >= (int)glyph.Height()) return 0.0f;
+                        return glyph.ColorAlpha(x, y) / 255.0f;
+                    };
+                    float gx = (samp(glyphX + 1, glyphY) - samp(glyphX - 1, glyphY)) * 0.5f;
+                    float gy = (samp(glyphX, glyphY + 1) - samp(glyphX, glyphY - 1)) * 0.5f;
+                    constexpr float kFlat = 1.35f;
+                    float nx = -gx;
+                    float ny = -gy;
+                    float nz = kFlat;
+                    float nlen = std::sqrt(nx * nx + ny * ny + nz * nz);
+                    nx /= nlen;
+                    ny /= nlen;
+                    nz /= nlen;
+                    constexpr float kLx = 0.55f, kLy = 0.70f, kLz = 0.30f;
+                    float llen = std::sqrt(kLx * kLx + kLy * kLy + kLz * kLz);
+                    float lx = kLx / llen, ly = kLy / llen, lz = kLz / llen;
+                    // Subtract the flat-top term so the letter face keeps the base color.
+                    float bright = (nx * lx + ny * ly + nz * lz) - lz;
+                    if (bright <= 0.0f) {
+                        bright = 0.0f;
+                    }
+                    bright *= 3.2f;
+                    if (bright > 1.0f) {
+                        bright = 1.0f;
+                    }
+                    // Only the outer silhouette is lit: ink a few pixels away on the lit
+                    // side means an inner counter wall, which stays dark in the original.
+                    if (bright > 0.0f && nx > 0.2f) {
+                        for (int dx = 2; dx <= 5; ++dx) {
+                            if (samp(glyphX + dx, glyphY) > 0.3f) {
+                                bright = 0.0f;
+                                break;
+                            }
+                        }
+                    }
+                    if (bright > 0.0f && ny > 0.2f) {
+                        for (int dy = 2; dy <= 5; ++dy) {
+                            if (samp(glyphX, glyphY + dy) > 0.3f) {
+                                bright = 0.0f;
+                                break;
+                            }
+                        }
+                    }
+                    if (bright > 0.0f) {
+                        // Painted opaque like the bitmap rim: the AA coverage is only
+                        // 30-70% and would wash the cream out.
+                        r = static_cast<uint8_t>(color[0] + (255.0f - color[0]) * bright);
+                        g = static_cast<uint8_t>(color[1] + (206.0f - color[1]) * bright);
+                        b = static_cast<uint8_t>(color[2] + (165.0f - color[2]) * bright);
+                        out_a = static_cast<uint8_t>(std::max(a / 255.0f, 0.35f + 0.65f * bright) * 255.0f);
+                    } else {
+                        r = static_cast<uint8_t>(color[0] * color_factor);
+                        g = static_cast<uint8_t>(color[1] * color_factor);
+                        b = static_cast<uint8_t>(color[2] * color_factor);
+                    }
+                } else {
+                    r = static_cast<uint8_t>(color[0] * color_factor);
+                    g = static_cast<uint8_t>(color[1] * color_factor);
+                    b = static_cast<uint8_t>(color[2] * color_factor);
+                }
             } else {
                 // No color specified, invert to get white text
                 r = 255 - r;
@@ -442,7 +514,7 @@ namespace DynamicFont {
             // For color glyphs (e.g., emoji), use as-is or apply color override
             if (color && color[3] > 0) {
                 float alpha_normalized = a / 255.0f;
-                float color_factor = alpha_normalized * alpha_normalized;
+                float color_factor = alpha_normalized;
                 r = static_cast<uint8_t>(color[0] * color_factor);
                 g = static_cast<uint8_t>(color[1] * color_factor);
                 b = static_cast<uint8_t>(color[2] * color_factor);
@@ -452,7 +524,7 @@ namespace DynamicFont {
         data[atlasIdx + 0] = r;
         data[atlasIdx + 1] = g;
         data[atlasIdx + 2] = b;
-        data[atlasIdx + 3] = a;
+        data[atlasIdx + 3] = out_a;
     }
 
     void DrawGray(std::vector<uint8_t> &data, const Atlas::FreeTypeGlyph &glyph, size_t atlasIdx, int glyphX, int glyphY) {
@@ -468,7 +540,7 @@ namespace DynamicFont {
         data[atlasIdx + 2] = glyph.ColorBlue(glyphX, glyphY);
     }
 
-    void Atlas::Bitmap::Draw(int x, int y, const Atlas::FreeTypeGlyph &glyph, uint8_t *colors, int shadowOffset) {
+    void Atlas::Bitmap::Draw(int x, int y, const Atlas::FreeTypeGlyph &glyph, uint8_t *colors, int shadowOffset, int fontSize) {
         int bitmapWidth = Width();
         int bitmapChannels = Channels();
 
@@ -509,7 +581,7 @@ namespace DynamicFont {
                     DrawRGB(m_Data, glyph, atlasBitmapIndex, glyphX, glyphY);
                     break;
                 case 4:
-                    DrawRGBA(m_Data, glyph, atlasBitmapIndex, glyphX, glyphY, colors);
+                    DrawRGBA(m_Data, glyph, atlasBitmapIndex, glyphX, glyphY, colors, fontSize);
                     break;
                 default:
                     assert(false && "Unsupported number of channels");
@@ -519,7 +591,7 @@ namespace DynamicFont {
     }
 
     Atlas::Atlas(const std::string &fontPath, int fontSize, const Charset &charset, RenderMode mode, int padding, bool fit, uint8_t *colors, bool bold, int shadowOffset)
-        : m_Font(std::make_shared<Font>(fontPath.c_str())), m_Glyphs(m_Font), m_ShadowOffset(shadowOffset) {
+        : m_Font(std::make_shared<Font>(fontPath.c_str())), m_Glyphs(m_Font), m_ShadowOffset(shadowOffset), m_FontSize(fontSize) {
         m_Font->SetSize(Pixels{ fontSize });
         if (colors) {
             m_Color[0] = colors[0];
@@ -531,7 +603,7 @@ namespace DynamicFont {
     }
 
     Atlas::Atlas(span_const<uint8_t> fontData, int fontSize, const Charset &charset, RenderMode mode, int padding, bool fit, uint8_t *colors, bool bold, int shadowOffset)
-        : m_Font(std::make_shared<Font>(fontData)), m_Glyphs(m_Font), m_ShadowOffset(shadowOffset) {
+        : m_Font(std::make_shared<Font>(fontData)), m_Glyphs(m_Font), m_ShadowOffset(shadowOffset), m_FontSize(fontSize) {
         m_Font->SetSize(Pixels{ fontSize });
         if (colors) {
             m_Color[0] = colors[0];
@@ -545,10 +617,10 @@ namespace DynamicFont {
     void Atlas::InitializeAtlas(const Charset &charset, RenderMode mode, int padding, bool fit, bool bold, int shadowOffset) {
         const Charset filledCharset = charset.IsFull() ? GetFullCharsetFilled(*m_Font) : charset;
 
-        auto ftGlyphs = LoadAllGlyphs(m_Font->face, filledCharset, mode, bold);
+        auto ftGlyphs = LoadAllGlyphs(m_Font->face, filledCharset, mode, bold, m_FontSize);
         auto atlasSize = GetAtlasSize(ftGlyphs, padding + shadowOffset, fit);
 
-        auto bitmap = BuildAtlasBitmap(m_Glyphs, ftGlyphs, atlasSize, padding, GetChannels(mode), m_Color[3] ? m_Color : nullptr, shadowOffset);
+        auto bitmap = BuildAtlasBitmap(m_Glyphs, ftGlyphs, atlasSize, padding, GetChannels(mode), m_Color[3] ? m_Color : nullptr, shadowOffset, m_FontSize);
         this->m_Bitmap = std::move(bitmap);
 
         InitializeDefaultGlyphIndex();

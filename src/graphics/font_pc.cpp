@@ -108,6 +108,7 @@ bool fill_font_packer_pc(image_packer &font_packer,
     for (const auto &fconfig : font_configs) {
         add_symbols_to_font_packer(font_packer, font_pack, resolved_font_path.c_str(), fconfig, utf8_symbols, cp_index);
         font_definition_ref(fconfig.type)->line_height = fconfig.line_height;
+        font_definition_ref(fconfig.type)->letter_spacing = fconfig.letter_spacing;
     }
     return true;
 }

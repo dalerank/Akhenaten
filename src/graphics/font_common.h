@@ -21,6 +21,7 @@ enum e_font {
     FONT_SMALL_OUTLINED,
     FONT_NORMAL_BLACK_ON_DARK,
     FONT_SMALL_SHADED,
+    FONT_MENU_BLACK_ON_LIGHT,
     FONT_TYPES_MAX,
     FONT_INVALID = 0xff
 };
@@ -32,6 +33,7 @@ struct font_config {
     int8_t shadow_offset;
     uint8_t size;
     uint8_t line_height;
+    int8_t letter_spacing;
 };
 
 template<>
