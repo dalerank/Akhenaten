@@ -4,7 +4,7 @@ building_brewery {
   animations {
     preview { pack:PACK_GENERAL, id:116 },
     base { pack:PACK_GENERAL, id:116 },
-    work { pack:PACK_GENERAL, id:116, max_frames: 12 }
+    work { pos: [7, -10], pack:PACK_GENERAL, id:116, offset: 1, max_frames: 10, duration: 4 }
   }
   overlay_anims {
     beer {

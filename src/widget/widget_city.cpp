@@ -1119,6 +1119,24 @@ bool screen_city_t::handle_legion_click(tile2i tile) {
     }
 
     int formation_id = formation_batalion_at(tile);
+    if (formation_id <= 0) {
+        // Search surrounding tiles (2-tile radius) where standard bearer / flag stands
+        for (int dy = -2; dy <= 2; dy++) {
+            for (int dx = -2; dx <= 2; dx++) {
+                int fid = formation_batalion_at(tile.shifted(dx, dy));
+                if (fid > 0) {
+                    formation_id = fid;
+                    break;
+                }
+            }
+            if (formation_id > 0) break;
+        }
+    }
+
+    if (formation_id <= 0) {
+        formation_id = formation_batalion_at_building(tile.grid_offset());
+    }
+
     if (formation_id > 0 && !formation_get(formation_id)->in_distant_battle) {
         window_city_military_show(formation_id);
         return true;

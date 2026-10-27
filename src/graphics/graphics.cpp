@@ -53,11 +53,7 @@ void ui::textured::graphics_draw_background(painter& ctx, int image_id, float sc
     }
 
     float fit_scale = scale;
-    if (scale <= 0.f) {
-        float fit_x = (float)screen_width() / (float)img->width;
-        float fit_y = (float)screen_height() / (float)img->height;
-        fit_scale = std::max(fit_x, fit_y);
-    } else if (screen_width() > img->width || screen_height() > img->height) {
+    if (img->width >= 500 && img->height >= 350) {
         float fit_x = (float)screen_width() / (float)img->width;
         float fit_y = (float)screen_height() / (float)img->height;
         fit_scale = std::max(fit_x, fit_y) * scale;

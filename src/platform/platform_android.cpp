@@ -85,9 +85,8 @@ void platform_show_virtual_keyboard(const uint8_t *text, int max_length) {
     (void)text;
     (void)max_length;
 
-    if (!SDL_IsTextInputActive()) {
-        SDL_StartTextInput();
-    }
+    SDL_StopTextInput();
+    SDL_StartTextInput();
 }
 
 void platform_hide_virtual_keyboard(void) {

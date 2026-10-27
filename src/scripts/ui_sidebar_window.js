@@ -135,7 +135,7 @@ sidebar_window_expanded {
         goto_problem      : image_button({
                                pos[86, 434], pack:PACK_GENERAL, id:136, offset:56, tooltip:[68,34]})
         show_briefing     : image_button({pos[116, 434], pack:PACK_GENERAL, id:136, offset:60, tooltip:[68,35]})
-        num_messages      : text({pos[52, 450], shadow:0xff000000, font:FONT_NORMAL_BLACK_ON_DARK, color:0xffffffff })
+        num_messages      : text_center({pos[46, 438], size:[28, 20], align:"center", shadow:0xff000000, font:FONT_NORMAL_WHITE_ON_DARK})
         undo_btn          : image_button({pos[9, 434], pack:PACK_GENERAL, id:136, offset:48, tooltip:[68,32] })
 
         extra_background  : inner_panel({pos[0, 480], size[10, 19]})

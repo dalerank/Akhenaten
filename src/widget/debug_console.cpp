@@ -499,39 +499,71 @@ void game_toggle_debug_console() {
     }
 }
 
+#endif //GAME_PLATFORM_ANDROID
+
+struct log_console_output : public console_output {
+    void write(pcstr text, size_t len) override {
+        if (text && len > 0) {
+            logs::info("[console] %s", std::string(text, len).c_str());
+        }
+    }
+};
+
+static log_console_output g_log_console_out;
+
+#if defined(GAME_PLATFORM_ANDROID)
+static dev::qconsole *g_android_qconsole = nullptr;
+static dev::qconsole &android_qconsole() {
+    if (!g_android_qconsole) {
+        g_android_qconsole = new dev::qconsole();
+    }
+    return *g_android_qconsole;
+}
+#endif
+
+static dev::qconsole &debug_qconsole_core() {
+#if !defined(GAME_PLATFORM_ANDROID)
+    return debug_console().con;
+#else
+    return android_qconsole();
+#endif
+}
+
 void bind_debug_command(pcstr cmd, console_command_fn f) {
-    debug_console().con.bind_command(cmd, std::move(f));
+    debug_qconsole_core().bind_command(cmd, std::move(f));
 }
 
 void run_debug_command(pcstr line) {
     if (!line || !*line) {
         return;
     }
-    debug_console().con.execute(line, debug_console());
+#if !defined(GAME_PLATFORM_ANDROID)
+    debug_qconsole_core().execute(line, debug_console());
+#else
+    debug_qconsole_core().execute(line, g_log_console_out);
+#endif
 }
 
 void bind_debug_console_var_int(pcstr var, int &ref) {
-    debug_console().con.bind_cvar(var, ref);
+    debug_qconsole_core().bind_cvar(var, ref);
 }
 
 void bind_debug_console_var_int8(pcstr var, int8_t &ref) {
-    debug_console().con.bind_cvar(var, ref);
+    debug_qconsole_core().bind_cvar(var, ref);
 }
 
 void bind_debug_console_var_int16(pcstr var, int16_t &ref) {
-    debug_console().con.bind_cvar(var, ref);
+    debug_qconsole_core().bind_cvar(var, ref);
 }
 
 void bind_debug_console_var_uint8(pcstr var, uint8_t &ref) {
-    debug_console().con.bind_cvar(var, ref);
+    debug_qconsole_core().bind_cvar(var, ref);
 }
 
 void bind_debug_console_var_float(pcstr var, float &ref) {
-    debug_console().con.bind_cvar(var, ref);
+    debug_qconsole_core().bind_cvar(var, ref);
 }
 
 void bind_debug_console_var_bool(pcstr var, bool &ref) {
-    debug_console().con.bind_cvar(var, ref);
+    debug_qconsole_core().bind_cvar(var, ref);
 }
-
-#endif //GAME_PLATFORM_ANDROID

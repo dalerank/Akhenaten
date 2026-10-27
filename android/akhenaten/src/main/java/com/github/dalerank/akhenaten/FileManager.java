@@ -471,6 +471,40 @@ public class FileManager {
     }
 
     @SuppressWarnings("unused")
+    public static boolean renameFile(AkhenatenMainActivity activity, String fromPath, String toPath) {
+        try {
+            if (baseUri == Uri.EMPTY) {
+                return false;
+            }
+            String normalizedFrom = normalizeRelativePath(fromPath);
+            String normalizedTo = normalizeRelativePath(toPath);
+
+            FileInfo fromInfo = getFileFromPath(activity, normalizedFrom);
+            if (fromInfo == null) {
+                return false;
+            }
+
+            FileInfo toInfo = getFileFromPath(activity, normalizedTo);
+            if (toInfo != null) {
+                deleteDocumentRecursively(activity, toInfo);
+            }
+
+            String[] toParts = normalizedTo.split("[\\\\/]");
+            String newName = toParts[toParts.length - 1];
+
+            Uri renamedUri = DocumentsContract.renameDocument(activity.getContentResolver(), fromInfo.getUri(), newName);
+            if (renamedUri != null) {
+                directoryStructureCache.clear();
+                return true;
+            }
+            return false;
+        } catch (Exception e) {
+            Log.e("akhenaten", "Error in renameFile: " + e);
+            return false;
+        }
+    }
+
+    @SuppressWarnings("unused")
     public static int openFileDescriptor(AkhenatenMainActivity activity, String filePath, String mode) {
         try {
             if (baseUri == Uri.EMPTY) {

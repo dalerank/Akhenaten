@@ -20,7 +20,7 @@ function mission_end_splash_tid(offset) {
 window_mission_won {
     pos: [(sw(0) - px(38))/2, (sh(0) - px(28))/2]
     ui {
-        splash              : image({pos[(px(38) - 1024)/2, (px(28) - 768)/2], pack:PACK_UNLOADED, id:18, offset:0 })
+        splash              : background({ pack:PACK_UNLOADED, id:18, offset:0 })
         background          : outer_panel({size:[38, 28]})
         title               : text({pos:[0, 16], size:[px(38), 20], text:{group:62, id:0}, align:"center", font: FONT_LARGE_BLACK_ON_LIGHT })
         description_panel   : inner_panel({pos:{x:32, y:48}, size:{w:34, h:7}})

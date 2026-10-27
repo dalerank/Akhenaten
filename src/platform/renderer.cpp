@@ -1145,6 +1145,9 @@ void platform_renderer_invalidate_all_textures() {
     int h = data.max_texture_size.height ? data.max_texture_size.height : screen_height();
     platform_renderer_create_render_texture(w, h);
 
+    // Invalidate residency atlas so it repacks onto a fresh GPU texture
+    res_atlas::invalidate();
+
     // Recreate imagepak static textures from buffers
     image_recreate_all_textures();
 }
