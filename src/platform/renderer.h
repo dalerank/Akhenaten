@@ -92,6 +92,9 @@ struct graphics_renderer_interface {
     void draw_custom_texture(int type, int x, int y, float scale);
 
     int save_texture_from_screen(int image_id, vec2i pos, int width, int height);
+    int ensure_saved_texture(int image_id, int width, int height);
+    bool begin_saved_texture_target(int image_id);
+    void end_saved_texture_target();
     void delete_saved_texture(int image_id);
     void draw_saved_texture_to_screen(int image_id, int x, int y, int width, int height);
     void clear_saved_texture(int image_id, color clr);

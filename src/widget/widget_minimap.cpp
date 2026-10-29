@@ -381,9 +381,28 @@ void minimap_window::draw(UiFlags flags) {
 void minimap_window::draw_uncached(vec2i pos) {
     screen_offset = pos;
     enemy_color = ENEMY_COLOR_BY_CLIMATE[g_scenario.climate];
-    draw(UiFlags_None);
 
-    cached_texture = graphics_save_to_texture(cached_texture, screen_offset, size);
+    // Draw into the cache texture directly. Copying from the main render target
+    // via save_texture_from_screen is unreliable on Android GLES and left a black
+    // cache that flickered in on non-refresh frames.
+    cached_texture = graphics_ensure_saved_texture(cached_texture, size);
+    if (cached_texture > 0) {
+        graphics_clear_saved_texture(cached_texture, 0xff000000);
+        if (graphics_begin_saved_texture_target(cached_texture)) {
+            city_view_foreach_minimap_tile(0, 0, absolute_tile.x(), absolute_tile.y(), draw_size.x, draw_size.y,
+                [this](vec2i screen, tile2i point) {
+                    draw_minimap_tile(screen, point);
+                });
+            graphics_end_saved_texture_target();
+            graphics_draw_from_texture(cached_texture, screen_offset, size);
+            return;
+        }
+    }
+
+    city_view_foreach_minimap_tile(screen_offset.x, screen_offset.y, absolute_tile.x(), absolute_tile.y(), draw_size.x, draw_size.y,
+        [this](vec2i screen, tile2i point) {
+            draw_minimap_tile(screen, point);
+        });
 }
 
 void widget_minimap_draw(vec2i offset, int force) {

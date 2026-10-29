@@ -399,12 +399,14 @@ int building_granary::better_getting_storage() {
     int min_building_id = 0;
 
     for (auto &b : city_buildings()) {
-        // Mill pulls from granary/SY; granaries must not treat mills as sources.
-        if (b.type == BUILDING_FOOD_MILL) {
+        if (b.type != T || b.id == id()) {
             continue;
         }
 
-        building_storage* dest = b.dcast_storage();
+        building_storage *dest = b.dcast_storage();
+        if (!dest || !dest->is_valid()) {
+            continue;
+        }
 
         if (!game_features::gameplay_change_getting_granaries_go_offroad) {
             if (dest->road_network() != road_network()) {
@@ -414,14 +416,15 @@ int building_granary::better_getting_storage() {
 
         int amount_gettable = 0;
         for (const auto &r : resource_list::foods) {
-            if ((is_getting(r.type)) && !dest->is_gettable(r.type)) {
+            if (is_getting(r.type) && !dest->is_gettable(r.type)) {
                 amount_gettable = std::max(dest->amount(r.type), amount_gettable);
             }
         }
 
         if (amount_gettable > 0) {
-            int dist = calc_distance_with_penalty(vec2i(tilex() + 1, tiley() + 1), vec2i(dest->tilex() + 1, dest->tiley() + 1), 
-                                                  distance_from_entry(), dest->distance_from_entry());
+            int dist = calc_distance_with_penalty(vec2i(tilex() + 1, tiley() + 1),
+                                                  vec2i(dest->tilex() + 1, dest->tiley() + 1), distance_from_entry(),
+                                                  dest->distance_from_entry());
             if (amount_gettable <= 400) {
                 dist *= 2; // penalty for less food
             }
@@ -458,10 +461,12 @@ granary_getting_result building_granary::find_storage_for_getting() {
     if (!min_building_id) {
         min_building_id = better_getting_storage<BUILDING_STORAGE_YARD>();
     }
+    if (!min_building_id) {
+        return {0, tile2i::invalid};
+    }
 
-    building* better_b = building_get(min_building_id);
-    tile2i road_tile = better_b->access_tile();
-    return {min_building_id, road_tile};
+    building *better_b = building_get(min_building_id);
+    return {min_building_id, better_b->access_tile()};
 }
 
 void building_granary::bless() {
