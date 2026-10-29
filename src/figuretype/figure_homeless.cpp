@@ -225,7 +225,7 @@ void figure_homeless::figure_action() {
         if (base.move_ticks_cross_country(1)) {
             building *b = building_get(house_id);
             building_house *house = b ? b->dcast_house() : nullptr;
-            if (house && house->is_house() && house->population_room() > 0) {
+            if (house && house->population_room() > 0) {
                 house->add_population(d.migrant_num_people, true);
             } else if (b && b->id) {
                 b->remove_figure_by_id(id());
