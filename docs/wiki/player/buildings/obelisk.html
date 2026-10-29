@@ -312,7 +312,6 @@
           <div class="details-body">
             <pre><code><span class="kw">building_small_obelisk</span> {
   <span class="kw">building_size</span> : <span class="num">3</span>
-  <span class="kw">art_stages</span> : <span class="num">4</span>
   <span class="com">// 10 stages: 4 carpenter (work_ticks 320/320/600/600) + 6 stonemason (580/580/520/520/340/340)</span>
   <span class="kw">placement_resources</span> [
     { resource: RESOURCE_GRANITE, count: <span class="num">100</span> }
@@ -325,9 +324,7 @@
 
 <span class="kw">building_large_obelisk</span> {
   <span class="kw">building_size</span> : <span class="num">5</span>
-  <span class="kw">art_stages</span> : <span class="num">6</span>
-  <span class="kw">timber_loads</span> [ <span class="num">400</span>, <span class="num">400</span>, <span class="num">400</span>, <span class="num">200</span> ]
-  <span class="kw">scaffold_offsets</span> [[30, -56], [58, -36], [2, -36], [30, -16]]
+  <span class="com">// 18 stages: 8 carpenter (320/320/610/610/680/680/750/750) + 10 stonemason (740..340)</span>
   <span class="kw">placement_resources</span> [
     { resource: RESOURCE_GRANITE, count: <span class="num">200</span> }
   ]
@@ -372,9 +369,11 @@
           <div class="details-body">
             <p>Mission 13: <span class="file-ref">src/scripts/mission/m_013_buhen.js</span>
               — <code>BUILDING_SMALL_OBELISK</code> + packs <code>PACK_OBELISK_EXTRA</code> / <code>X3_A..D</code>.</p>
-            <p>Integral test: <span class="file-ref">tests/44_obelisk_place.js</span> —
-              staffed SY granite → place; consume; <code>__test_monument_add_resource</code>.
-              Run: <code>--integraltests --integraltest-only 44_obelisk</code>.</p>
+            <p>Integral tests: <span class="file-ref">tests/44_obelisk_place.js</span> (small),
+              <span class="file-ref">tests/45_large_obelisk_place.js</span> (large) —
+              staffed SY granite → place; consume; scaffold phase advance.
+              Run: <code>--integraltests --integraltest-only 44_obelisk</code> /
+              <code>--integraltest-only 45_large_obelisk</code>.</p>
           </div>
         </details>
       </div>

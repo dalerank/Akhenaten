@@ -6,7 +6,6 @@ building_small_obelisk {
       ladder { pack:PACK_OBELISK_EXTRA, id:1 }
     }
     building_size : 3
-    art_stages : 4
 
     // OG small obelisk (0xCF): 10 spots — stages 1-4 carpenter, 5-10 stonemason.
     // work_ticks from obelisk_small_work_spots (320/320/600/600, 580/580/520/520/340/340).

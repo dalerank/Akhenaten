@@ -41,7 +41,6 @@ void building_obelisk::static_params::rebuild_construction(e_building_type type)
             m.phases.push_back({(uint8_t)i, monument_phase_resource{ARCHITECTS, 1}});
         }
     }
-    m.phases.push_back({(uint8_t)stages.size(), monument_phase_resource{RESOURCE_NONE, 0}});
 }
 
 void building_small_obelisk::static_params::archive_load(archive /*arch*/) {
@@ -158,33 +157,6 @@ int building_obelisk::yards_available(e_resource r) {
 
 bool building_obelisk::has_unfinished_obelisk() {
     return building_monument_has_unfinished({BUILDING_SMALL_OBELISK, BUILDING_LARGE_OBELISK});
-}
-
-int building_obelisk::art_stage() const {
-    const auto &bp = obelisk_params_for(base.type);
-    const int max_stage = bp.art_stages > 0 ? bp.art_stages : 4;
-    const int p = runtime_data().phase;
-    if (p == MONUMENT_FINISHED || p >= max_stage) {
-        return max_stage;
-    }
-    if (p <= 1) {
-        return 1;
-    }
-    return std::min(p, max_stage);
-}
-
-xstring building_obelisk::anim_key_for(int stage) const {
-    const auto &bp = obelisk_params_for(base.type);
-    const int max_stage = bp.art_stages > 0 ? bp.art_stages : 4;
-    if (stage < 1) {
-        stage = 1;
-    }
-    if (stage > max_stage) {
-        stage = max_stage;
-    }
-    bstring32 key;
-    key.printf("s%c", 'a' + (stage - 1));
-    return xstring(key.c_str());
 }
 
 bool building_obelisk::needs_resources() const {
@@ -314,21 +286,13 @@ int building_obelisk::building_image_get() const {
     }
     if (const auto *st = stage_at(phase)) {
         if (st->obelisk_tx.valid()) {
-            image_desc desc = st->obelisk_tx;
-            const int img = desc.tid();
+            const int img = st->obelisk_tx.tid();
             if (img > 0) {
                 return img;
             }
         }
     }
-
-    const xstring key = anim_key_for(art_stage());
-    const auto &params = building_static_params::get(base.type);
-    int img = params.first_img(key);
-    if (img > 0) {
-        return img;
-    }
-    return params.first_img("preview");
+    return building_static_params::get(base.type).first_img("preview");
 }
 
 static xstring granite_need_warning(e_building_type t, int need) {

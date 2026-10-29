@@ -27,8 +27,8 @@ public:
 
     struct base_params {
         svector<monument_phase_resource, 4> placement_resources;
-        uint8_t art_stages = 4;
-        svector<obelisk_stage, 16> stages;
+        // OG large: 18 spots (8 carpenter + 10 stonemason); small: 10.
+        svector<obelisk_stage, 18> stages;
     };
 
     struct static_params : public base_params, public building_static_params {
@@ -58,8 +58,6 @@ public:
     virtual tile2i access_point() const override;
     virtual void bind_dynamic(io_buffer *iob, size_t version) override;
 
-    int art_stage() const; // 1-based stage index → anim letter a..
-    xstring anim_key_for(int stage) const;
     int placement_amount(e_resource r) const;
     bool place_scaffold();
     void stonemason_complete_work();
@@ -88,7 +86,7 @@ public:
     } BUILDING_STATIC_DATA_T;
     virtual const monument &config() const override;
 };
-ANK_CONFIG_STRUCT(building_small_obelisk::static_params, placement_resources, art_stages, stages)
+ANK_CONFIG_STRUCT(building_small_obelisk::static_params, placement_resources, stages)
 
 class building_large_obelisk : public building_obelisk {
 public:
@@ -98,4 +96,4 @@ public:
     } BUILDING_STATIC_DATA_T;
     virtual const monument &config() const override;
 };
-ANK_CONFIG_STRUCT(building_large_obelisk::static_params, placement_resources, art_stages, stages)
+ANK_CONFIG_STRUCT(building_large_obelisk::static_params, placement_resources, stages)
