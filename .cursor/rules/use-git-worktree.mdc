@@ -1,0 +1,48 @@
+---
+description: Do fixes and feature changes in a git worktree, not the main checkout
+alwaysApply: true
+---
+
+# Use a git worktree for fixes and changes
+
+Do **not** edit, build, test, or commit fixes/features in the main Akhenaten checkout when it may already hold unrelated WIP.
+
+## Required
+
+- For CI fixes, bugfixes, and scoped changes: create (or reuse) a **git worktree** on a dedicated branch from a clean base (`origin/master` unless the user names another).
+- Prefer a sibling path, e.g. `d:\Work\Akhenaten-wt-<short-topic>` or under `.worktrees/<topic>/` if that convention already exists.
+- All edits, builds, integral-test runs, and commits for that task happen **inside the worktree**.
+- Leave the primary workspace (`d:\Work\Akhenaten`) untouched unless the user explicitly asks to work there.
+
+## Workflow
+
+```bat
+git fetch origin
+git worktree add -b fix/<topic> ../Akhenaten-wt-<topic> origin/master
+```
+
+Then open/use that worktree path for the task.
+
+## Merge back into master
+
+When the worktree work is finished (committed, and the user accepts / asks to integrate — or after a successful PR merge on the remote):
+
+1. In the **main** checkout (`d:\Work\Akhenaten`), on `master`: merge (or fast-forward) the worktree branch so local `master` includes the change.
+2. Only **push** to `origin` when the user explicitly asks.
+3. Remove the worktree when it is no longer needed:
+
+```bat
+git checkout master
+git merge --ff-only fix/<topic>
+git worktree remove ../Akhenaten-wt-<topic>
+```
+
+Prefer `--ff-only` when the branch is a linear tip on `origin/master`; otherwise merge/rebase as the situation requires, without force-pushing `master`.
+
+Do **not** leave finished fix commits stranded only in a worktree branch after the user asked to bring them back.
+
+## Exceptions
+
+- Pure read-only investigation in the main tree is OK.
+- User explicitly says to work in the current checkout / current branch.
+- Trivial single-file doc/rule edits the user asked to place in the main tree (like this rule).
