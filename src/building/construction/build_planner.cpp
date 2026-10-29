@@ -585,6 +585,18 @@ void build_planner::setup_build_graphics() {
     preview.setup_preview_graphics(*this);
 }
 
+static bool is_tile_occupied_by_active_building(tile2i tile) {
+    int bid = map_building_at(tile);
+    if (!bid) {
+        return false;
+    }
+    building *b = building_get(bid);
+    if (!b || b->id <= 0 || b->is_deleted || b->state == BUILDING_STATE_DELETED_BY_PLAYER || b->state == BUILDING_STATE_UNUSED) {
+        return false;
+    }
+    return true;
+}
+
 void build_planner::update_obstructions_check() {
     tiles_blocked_total = 0;
     const auto &params = building_static_params::get(build_type);
@@ -629,7 +641,8 @@ void build_planner::update_obstructions_check() {
             const bool inside_map = map_grid_is_inside(current_tile, 1);
             const uint32_t ignore_terrain = preview.ghost_ignore_terrain(*this, current_tile);
             const uint32_t not_clear_mask = (restricted_terrain & TERRAIN_NOT_CLEAR) & ~ignore_terrain;
-            const bool not_clear = inside_map && map_terrain_is(current_tile, not_clear_mask);
+            const bool has_existing_building = is_tile_occupied_by_active_building(current_tile);
+            const bool not_clear = inside_map && (map_terrain_is(current_tile, not_clear_mask) || has_existing_building);
             const bool allow_tile = inside_map && preview.ghost_allow_tile(*this, current_tile);
             if (!inside_map || not_clear || !allow_tile || blocked_by_floodplain_edge) {
                 tile_blocked_array[row][column] = true;

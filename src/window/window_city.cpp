@@ -55,14 +55,14 @@ static void button_confirm_construction(int, int) {
 
 // Hit boxes match the 3x2 panels (48x32); drawn image stays 39x26 via image_buttons_draw.
 static image_button construction_buttons[] = {
-    {0, 0, 48, 32, IB_NORMAL, GROUP_OK_CANCEL_SCROLL_BUTTONS, 4, button_cancel_construction, button_none, 0, 0, 1},
-    {0, 36, 48, 32, IB_NORMAL, GROUP_OK_CANCEL_SCROLL_BUTTONS, 0, button_confirm_construction, button_none, 0, 0, 1},
+    {-4, -4, 48, 32, IB_NORMAL, GROUP_OK_CANCEL_SCROLL_BUTTONS, 4, button_cancel_construction, button_none, 0, 0, 1},
+    {-4, 32, 48, 32, IB_NORMAL, GROUP_OK_CANCEL_SCROLL_BUTTONS, 0, button_confirm_construction, button_none, 0, 0, 1},
 };
 
 static int construction_button_pressed = -1;
 
 static bool construction_buttons_visible() {
-    return mouse::get().is_touch && g_city_planner.build_type;
+    return (platform.is_android() || mouse::get().is_touch) && g_city_planner.build_type;
 }
 
 static vec2i construction_buttons_base_pos() {
@@ -76,16 +76,31 @@ static int construction_buttons_count() {
 static int construction_button_at(vec2i pt) {
     const vec2i base = construction_buttons_base_pos();
     const int count = construction_buttons_count();
+    const int padding = 12; // Touch padding for touchscreen interactions
     for (int i = 0; i < count; i++) {
         const image_button &btn = construction_buttons[i];
         if (!btn.enabled)
             continue;
-        const int x0 = base.x + btn.x;
-        const int y0 = base.y + btn.y;
-        if (pt.x >= x0 && pt.x < x0 + btn.width && pt.y >= y0 && pt.y < y0 + btn.height)
+        const int x0 = base.x + btn.x - padding;
+        const int x1 = base.x + btn.x + btn.width + padding;
+        const int y0 = base.y + btn.y - padding;
+        const int y1 = base.y + btn.y + btn.height + padding;
+        if (pt.x >= x0 && pt.x < x1 && pt.y >= y0 && pt.y < y1)
             return i;
     }
     return -1;
+}
+
+bool is_in_construction_buttons_region(vec2i pt) {
+    if (!construction_buttons_visible())
+        return false;
+    const vec2i base = construction_buttons_base_pos();
+    const int count = construction_buttons_count();
+    const int x0 = base.x - 20;
+    const int x1 = base.x + 60;
+    const int y0 = 20;
+    const int y1 = (count > 1 ? 124 : 80);
+    return pt.x >= x0 && pt.x < x1 && pt.y >= y0 && pt.y < y1;
 }
 
 
@@ -153,8 +168,8 @@ static bool handle_construction_buttons(const mouse *m) {
     const vec2i base = construction_buttons_base_pos();
     // get_earliest_touch() hides fingers for ~150ms (start_delayed). Button downs
     // in that window never latched; use the raw finger and decide by start_point.
-    const touch_t *t = m->is_touch ? get_earliest_touch_raw() : nullptr;
-    if (!m->is_touch || !t || !t->in_use) {
+    const touch_t *t = (m->is_touch || platform.is_android()) ? get_earliest_touch_raw() : nullptr;
+    if (!t || !t->in_use) {
         construction_button_pressed = -1;
         construction_buttons[0].pressed = 0;
         construction_buttons[1].pressed = 0;
@@ -170,40 +185,48 @@ static bool handle_construction_buttons(const mouse *m) {
 
     const int hit_start = construction_button_at(t->start_point);
     const int hit_cur = construction_button_at(t->current_point);
+    const bool in_region = is_in_construction_buttons_region(t->start_point)
+                        || is_in_construction_buttons_region(t->current_point);
 
     if (t->has_started || t->has_ended) {
         logs::info(
-            "[build-btn] touch start=(%d,%d) cur=(%d,%d) hit_start=%d hit_cur=%d "
+            "[build-btn] touch start=(%d,%d) cur=(%d,%d) hit_start=%d hit_cur=%d in_region=%d "
             "started=%d ended=%d moved=%d click=%d base=(%d,%d) view=(%d,%d) "
             "btns={cancel:(%d,%d,%dx%d) confirm:(%d,%d,%dx%d)} build=%d progress=%d",
-            t->start_point.x, t->start_point.y, t->current_point.x, t->current_point.y, hit_start, hit_cur,
+            t->start_point.x, t->start_point.y, t->current_point.x, t->current_point.y, hit_start, hit_cur, in_region ? 1 : 0,
             t->has_started, t->has_ended, t->has_moved, touch_was_click(t), base.x, base.y, g_camera.size_pixels.x,
             g_camera.size_pixels.y, base.x, base.y, construction_buttons[0].width, construction_buttons[0].height,
             base.x + construction_buttons[1].x, base.y + construction_buttons[1].y, construction_buttons[1].width,
             construction_buttons[1].height, (int)g_city_planner.build_type, g_city_planner.in_progress ? 1 : 0);
     }
 
-    // Whole gesture: only steal if the finger began on a button.
-    if (hit_start < 0) {
+    // Whole gesture: only steal if finger began on or in region of buttons.
+    if (hit_start < 0 && !in_region) {
         construction_button_pressed = -1;
         return false;
     }
 
-    if (t->has_started) {
-        logs::info("[build-btn] steal gesture which=%d", hit_start);
-    }
+    const int active_btn = (hit_start >= 0) ? hit_start : (hit_cur >= 0 ? hit_cur : -1);
 
-    construction_button_pressed = hit_start;
-    construction_buttons[hit_start].pressed = 1;
-    construction_buttons[hit_start].hovered = 2;
+    if (active_btn >= 0) {
+        construction_button_pressed = active_btn;
+        construction_buttons[active_btn].pressed = 1;
+        construction_buttons[active_btn].hovered = 2;
+    } else {
+        construction_button_pressed = -1;
+        construction_buttons[0].pressed = 0;
+        construction_buttons[1].pressed = 0;
+    }
 
     if (t->has_ended) {
         construction_button_pressed = -1;
         construction_buttons[0].pressed = 0;
         construction_buttons[1].pressed = 0;
-        logs::info("[build-btn] gesture click which=%d start=(%d,%d) end=(%d,%d)", hit_start, t->start_point.x,
-                   t->start_point.y, t->current_point.x, t->current_point.y);
-        fire(hit_start);
+        if (active_btn >= 0) {
+            logs::info("[build-btn] gesture click which=%d start=(%d,%d) end=(%d,%d)", active_btn, t->start_point.x,
+                       t->start_point.y, t->current_point.x, t->current_point.y);
+            fire(active_btn);
+        }
     }
     return true;
 }

@@ -128,14 +128,16 @@ function top_menu_header_at_mouse() {
 	}
 	var mx = __mouse.x
 	var my = __mouse.y
-	var y0 = top_menu_widget.offset.y
-	var y1 = y0 + top_menu_widget.header_hit_height
+	var is_mobile = __platform_is_android() || __mouse.is_touch
+	var y0 = 0
+	var y1 = is_mobile ? (top_menu_widget.height + 10) : top_menu_widget.height
 	if (my < y0 || my >= y1) {
 		return ""
 	}
+	var padding_x = is_mobile ? 12 : 6
 	for (var i = 0; i < menus.length; i++) {
 		var layout = top_menu_header_layout(menus[i].id)
-		if (layout && layout.x_start <= mx && layout.x_end > mx) {
+		if (layout && (layout.x_start - padding_x) <= mx && (layout.x_end + padding_x) > mx) {
 			return menus[i].id
 		}
 	}
@@ -168,13 +170,14 @@ function top_menu_calc_menu_size(menu) {
 			continue
 		}
 		var text = top_menu_item_text(item)
-		var width_pixels = __ui_text_width(text, FONT_NORMAL_BLACK_ON_LIGHT)
+		// Items draw in YELLOW on hover — size the panel for the wider hover font.
+		var width_pixels = __ui_text_width(text, FONT_NORMAL_YELLOW)
 		if (width_pixels > max_width) {
 			max_width = width_pixels
 		}
 		height_pixels += top_menu_widget.item_height
 	}
-	var blocks = ((max_width + 8) / 16 | 0) + 1
+	var blocks = ((max_width + 16) / 16 | 0) + 1
 	if (blocks < 10) {
 		blocks = 10
 	}

@@ -82,18 +82,15 @@ if(ANDROID)
 endif()
 
 # ImGui sources (fetched by Gradle).
-set(IMGUI_FILES "")
-if(EXISTS "${DEPS_ROOT}/imgui-src/imgui.cpp")
-    list(APPEND IMGUI_FILES
-        ${DEPS_ROOT}/imgui-src/imgui.cpp
-        ${DEPS_ROOT}/imgui-src/imgui_draw.cpp
-        ${DEPS_ROOT}/imgui-src/imgui_tables.cpp
-        ${DEPS_ROOT}/imgui-src/imgui_widgets.cpp
-        ${DEPS_ROOT}/imgui-src/backends/imgui_impl_sdl2.cpp
-        ${DEPS_ROOT}/imgui-src/backends/imgui_impl_sdlrenderer2.cpp
-        ${DEPS_ROOT}/imgui-src/misc/cpp/imgui_stdlib.cpp
-    )
-endif()
+set(IMGUI_FILES
+    ${DEPS_ROOT}/imgui-src/imgui.cpp
+    ${DEPS_ROOT}/imgui-src/imgui_draw.cpp
+    ${DEPS_ROOT}/imgui-src/imgui_tables.cpp
+    ${DEPS_ROOT}/imgui-src/imgui_widgets.cpp
+    ${DEPS_ROOT}/imgui-src/backends/imgui_impl_sdl2.cpp
+    ${DEPS_ROOT}/imgui-src/backends/imgui_impl_sdlrenderer2.cpp
+    ${DEPS_ROOT}/imgui-src/misc/cpp/imgui_stdlib.cpp
+)
 
 # Prebuilt libs live under prebuilt/; build and place them under android/prebuilt/${ANDROID_ABI}/ first.
 

@@ -114,8 +114,6 @@ int text_get_width(const uint8_t* str, e_font font) {
     const font_definition* def = font_definition_for(font);
     int maxlen = 10000;
     int width = 0;
-    int last_letter_spacing = 0;
-    int has_chars = 0;
 
     while (*str && maxlen > 0) {
         int num_bytes = 1;
@@ -126,20 +124,14 @@ int text_get_width(const uint8_t* str, e_font font) {
             if (glyph.imagid >= 0) {
                 const image_t* img = image_letter(glyph.imagid);
                 if (img != nullptr) {
-                    width += img->width;
-                    last_letter_spacing = def->letter_spacing;
-                    width += last_letter_spacing;
-                    has_chars = 1;
+                    // Same word-end rule as text_draw(): spacing only between letters of a word.
+                    const bool word_ends = str[num_bytes] == ' ' || str[num_bytes] == '_' || str[num_bytes] == '\n' || str[num_bytes] == 0;
+                    width += img->width + (word_ends ? 0 : def->letter_spacing);
                 }
             }
         }
         str += num_bytes;
         maxlen -= num_bytes;
-    }
-
-    // Remove letter_spacing after the last character
-    if (has_chars && last_letter_spacing > 0) {
-        width -= last_letter_spacing;
     }
 
     return width;
@@ -345,8 +337,6 @@ int text_draw(painter &ctx, const uint8_t* str, int x, int y, e_font font, color
     }
 
     int current_x = x;
-    int last_letter_spacing = 0;
-    int has_letters = 0;
 
     while (length > 0) {
         int num_bytes = 1;
@@ -361,15 +351,14 @@ int text_draw(painter &ctx, const uint8_t* str, int x, int y, e_font font, color
 
             if (*str == ' ' || *str == '_') {
                 width = (def->space_width * scale);
-                last_letter_spacing = 0;
             } else {
                 const image_t* img = image_letter(glyph.imagid);
                 if (img != nullptr) {
                     int height = def->image_y_offset(str, img->height, def->line_height);
                     ctx.img_letter(img, font, glyph.imagid, current_x, y - height - glyph.bearing.y, color, scale);
-                    width = (img->width + def->letter_spacing) * scale;
-                    last_letter_spacing = (def->letter_spacing * scale);
-                    has_letters = 1;
+                    // get_word_width()/get_letter_width() count spacing only between letters of a word.
+                    const bool word_ends = str[num_bytes] == ' ' || str[num_bytes] == '_' || str[num_bytes] == '\n' || str[num_bytes] == 0;
+                    width = (img->width + (word_ends ? 0 : def->letter_spacing)) * scale;
                 }
             }
 
@@ -392,11 +381,6 @@ int text_draw(painter &ctx, const uint8_t* str, int x, int y, e_font font, color
         input_cursor.width = 4;
         input_cursor.x_offset = current_x - x;
         input_cursor.seen = 1;
-    }
-
-    // Remove letter_spacing after the last letter
-    if (has_letters && last_letter_spacing > 0) {
-        current_x -= last_letter_spacing;
     }
 
     current_x += def->space_width;

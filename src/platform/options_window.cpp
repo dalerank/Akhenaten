@@ -102,16 +102,16 @@ bool load_settings_file(pcstr path) {
         return false;
     }
 
-    FILE *fp = vfs::file_open_os(path, "rb");
+    vfs::reader fp = vfs::file_open(path, "rb");
     if (!fp) {
         return false;
     }
-    vfs::file_close_os(fp);
 
     js_State *J = create_conf_vm();
     conf_vm_scope scope(J);
 
-    if (js_dofile(J, path) != 0) {
+    std::string content((const char*)fp->data(), fp->size());
+    if (js_dostring(J, content.c_str()) != 0) {
         logs::warn("Failed to evaluate settings file %s", path);
         return false;
     }

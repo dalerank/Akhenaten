@@ -247,7 +247,11 @@ bool file_rename_os(path from, path to) {
     }
 
 #if defined(GAME_PLATFORM_ANDROID)
-    // POSIX rename() replaces an existing destination atomically
+    if (::android_rename_file(from.c_str(), to.c_str())) {
+        sync_em_fs();
+        return true;
+    }
+    // Fallback to POSIX rename() if native path
     const bool res = (::rename(from.c_str(), to.c_str()) == 0);
     if (!res) {
         logs::error("unable to rename %s -> %s", from.c_str(), to.c_str());

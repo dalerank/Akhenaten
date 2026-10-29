@@ -28,9 +28,11 @@ function top_menu_measure_headers_right() {
 	}
 	var cur_x = top_menu_widget.offset.x
 	var spacing = top_menu_widget.spacing
+	// The hovered header draws in YELLOW (bold in TTF fonts) — lay out for the wider glyphs.
+	var font = !!game_features.gameui_highlight_top_menu_hover ? FONT_NORMAL_YELLOW : FONT_NORMAL_BLACK_ON_LIGHT
 	for (var i = 0; i < menus.length; i++) {
 		var text = top_menu_resolve_text(menus[i].text)
-		cur_x += __ui_text_width(text, FONT_NORMAL_BLACK_ON_LIGHT) + spacing
+		cur_x += __ui_text_width(text, font) + spacing
 	}
 	return cur_x - spacing
 }
@@ -100,20 +102,23 @@ function top_menu_draw_headers() {
 	var cur_y = top_menu_widget.offset.y
 	var spacing = top_menu_widget.spacing
 	var highlight = !!game_features.gameui_highlight_top_menu_hover
+	var hover_font = highlight ? FONT_NORMAL_YELLOW : FONT_NORMAL_BLACK_ON_LIGHT
 	var mx = __mouse.x
 	var my = __mouse.y
-	var y0 = top_menu_widget.offset.y
-	var hit_h = top_menu_widget.header_hit_height
+	var is_mobile = __platform_is_android() || __mouse.is_touch
+	var y0 = 0
+	var hit_h = is_mobile ? (top_menu_widget.height + 10) : top_menu_widget.height
 	var in_bar = (my >= y0 && my < y0 + hit_h)
 	var focus_id = ""
 	if (top_menu_state.open_sub_menu) {
 		focus_id = top_menu_state.open_sub_menu
 	}
 
+	var padding_x = is_mobile ? 12 : 6
 	for (var i = 0; i < menus.length; i++) {
 		var menu = menus[i]
 		var text = top_menu_resolve_text(menu.text)
-		var width = __ui_text_width(text, FONT_NORMAL_BLACK_ON_LIGHT)
+		var width = __ui_text_width(text, hover_font)
 		var x_start = cur_x
 		var x_end = cur_x + width
 		top_menu_set_header_layout(menu.id, x_start, x_end)
@@ -122,7 +127,7 @@ function top_menu_draw_headers() {
 		if (focus_id) {
 			is_hovered = (menu.id == focus_id)
 		} else {
-			is_hovered = in_bar && x_start <= mx && x_end > mx
+			is_hovered = in_bar && (x_start - padding_x) <= mx && (x_end + padding_x) > mx
 			if (is_hovered) {
 				focus_id = menu.id
 			}

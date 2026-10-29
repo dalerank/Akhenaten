@@ -110,6 +110,9 @@ void screen_city_t::scroll_map(const mouse* m) {
 
 static tile2i city_planner_cursor_tile_from_mouse() {
     const mouse &m = mouse::get();
+    if (is_in_construction_buttons_region({m.x, m.y})) {
+        return tile2i::invalid;
+    }
     return g_screen_city.update_city_view_coords({m.x, m.y});
 }
 
@@ -1081,25 +1084,14 @@ static void build_end(void) {
 }
 
 static bool has_confirmed_construction(tile2i ghost, tile2i point, int range_size) {
-    //    map_point point = map_point(tile_offset);
-    switch (g_camera.orientation) {
-    case DIR_0_TOP_RIGHT:
-        point.shift(-range_size + 1, -range_size + 1);
-    case DIR_2_BOTTOM_RIGHT:
-        point.shift(0, -range_size + 1);
-    case DIR_6_TOP_LEFT:
-        point.shift(-range_size + 1, 0);
-    }
-    //    tile_offset = point.grid_offset();
-
-    //    int x = map_grid_offset_to_x(tile_offset);
-    //    int y = map_grid_offset_to_y(tile_offset);
-    if (ghost.grid_offset() <= 0 || !map_grid_is_inside(point, range_size))
+    if (!ghost.valid() || !point.valid() || ghost.grid_offset() <= 0)
         return false;
 
-    for (int dy = 0; dy < range_size; dy++) {
-        for (int dx = 0; dx < range_size; dx++) {
-            if (ghost == point.shifted(dx, dy)) // tile_offset + GRID_OFFSET(dx, dy)
+    // Allow 1 tile tolerance around building footprint for touch interactions
+    const int margin = 1;
+    for (int dy = -margin; dy < range_size + margin; dy++) {
+        for (int dx = -margin; dx < range_size + margin; dx++) {
+            if (ghost == point.shifted(dx, dy))
                 return true;
         }
     }
@@ -1127,6 +1119,24 @@ bool screen_city_t::handle_legion_click(tile2i tile) {
     }
 
     int formation_id = formation_batalion_at(tile);
+    if (formation_id <= 0) {
+        // Search surrounding tiles (2-tile radius) where standard bearer / flag stands
+        for (int dy = -2; dy <= 2; dy++) {
+            for (int dx = -2; dx <= 2; dx++) {
+                int fid = formation_batalion_at(tile.shifted(dx, dy));
+                if (fid > 0) {
+                    formation_id = fid;
+                    break;
+                }
+            }
+            if (formation_id > 0) break;
+        }
+    }
+
+    if (formation_id <= 0) {
+        formation_id = formation_batalion_at_building(tile.grid_offset());
+    }
+
     if (formation_id > 0 && !formation_get(formation_id)->in_distant_battle) {
         window_city_military_show(formation_id);
         return true;
@@ -1148,6 +1158,9 @@ void screen_city_t::confirm_construction_placement() {
 
     if (g_city_planner.draggable() && g_city_planner.in_progress) {
         logs::info("[build-btn] confirm_place branch=drag_finalize");
+        if (selected_tile.valid()) {
+            build_move(selected_tile);
+        }
         build_end();
         clear_current_tile();
         logs::info("[build-btn] confirm_place exit type=%d progress=%d", (int)g_city_planner.build_type,
@@ -1312,10 +1325,6 @@ static void handle_last_touch(void) {
     const touch_t * last = get_latest_touch();
     if (!last->in_use)
         return;
-    if (touch_was_click(last)) {
-        g_city_planner.construction_cancel();
-        return;
-    }
 
     if (touch_not_click(last)) {
         handle_touch_zoom(get_earliest_touch(), last);

@@ -50,7 +50,7 @@ building_well {
   desirability { value[1], step[1], step_size[-1], range[1] }
   flags {
     no_road_access: true
-    draw_normal_anim: true
+    draw_normal_anim: false
   }
 }
 
@@ -88,11 +88,14 @@ function building_well_update_graphic(ev) {
 [es=(building_well, update_month)]
 function building_well_update_month(ev) {
     var well = city.get_well(ev.bid)
+    if (!well) {
+        return
+    }
     var avg_desirability = __desirability_get_avg(well.tile, building_well.desirability_range_check)
     var is_fancy = avg_desirability > building_well.desirability_fancy
     well.set_fancy(is_fancy)
     var animkey = is_fancy ? "fancy" : "base"
-    __map_image_set(well.tile, well.first_img(animkey))
+    __map_building_tiles_add(well.id, well.tile, 1, well.first_img(animkey), TERRAIN_BUILDING)
 }
 
 [es=(building_well, ghost_preview)]

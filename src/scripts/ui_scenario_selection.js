@@ -308,7 +308,7 @@ window_scenario_selection {
 
     ui {
         background             : dummy({ size[64, 48] })
-        img_background         : image({ pos[0, 0], pack:PACK_UNLOADED, id:33, offset:0 })
+        img_background         : background({ pack:PACK_UNLOADED, id:33, offset:0 })
 
         debug_file_schema      : text({ pos[265, 170], size[160, 20], text:"", font:FONT_NORMAL_BLACK_ON_DARK })
         scenario_minimap       : dummy({ pos[270, 200], size[180, 142], ondraw_event: "draw_minimap" })

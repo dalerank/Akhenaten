@@ -96,15 +96,12 @@ int touch_was_double_click(const touch_t* t) {
 
 int touch_is_scroll(void) {
     int num_touches = get_total_active_touches();
-    if (num_touches > 2)
+    if (num_touches != 2)
         return 0;
 
     const touch_t * first = get_earliest_touch();
-    if (num_touches == 2) {
-        const touch_t * last = get_latest_touch();
-        return ((last->start_time - first->start_time) < CLICK_TIME) && !touch_was_click(last);
-    }
-    return first->in_use && start_delayed(first);
+    const touch_t * last = get_latest_touch();
+    return ((last->start_time - first->start_time) < CLICK_TIME) && !touch_was_click(last);
 }
 
 int touch_get_scroll(void) {
