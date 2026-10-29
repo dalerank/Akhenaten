@@ -39,6 +39,9 @@ figure_missile* figure_missile::create(figure_id fid, tile2i src, tile2i dst, e_
                 attack = spearman->missile_attack_value();
             } else if (auto warship = smart_cast<figure_warship>(shooter)) {
                 attack = warship->missile_attack_value();
+            } else if (shooter->is_soldier()) {
+                int value = figure_static_params::get(shooter->type).missile_attack_value;
+                attack = value > 0 ? value : shooter->attack_value();
             }
         }
         d.missile_attack_value = attack;

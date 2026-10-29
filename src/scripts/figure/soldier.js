@@ -63,6 +63,7 @@ figure_soldier_archer {
 	attack_value : 4
 	missile_attack_value : 4
 	missile_delay : 100
+	missile_range : 10
 	terrain_usage : TERRAIN_USAGE_ANY
 }
 
@@ -95,6 +96,9 @@ figure_soldier_charioteer {
 	category: figure_category_armed
 	max_damage : 120
 	attack_value : 8
+	missile_attack_value : 8
+	missile_delay : 100
+	missile_range : 10
 	terrain_usage : TERRAIN_USAGE_ANY
 }
 

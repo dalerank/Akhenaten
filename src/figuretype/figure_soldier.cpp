@@ -40,31 +40,94 @@ REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_soldier_infantry);
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_soldier_archer);
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_soldier_charioteer);
 
-void figure::javelin_launch_missile() {
-    tile2i tile = {-1, -1};
-    wait_ticks_missile++;
-    if (wait_ticks_missile > 100) { //figure_properties_for_type(type).missile_delay) {
-        wait_ticks_missile = 0;
-        if (figure_combat_get_missile_target_for_soldier(this, 10, &tile)) {
-            attack_image_offset = 1;
-            direction = calc_missile_shooter_direction(tile, tile);
-        } else
-            attack_image_offset = 0;
-    }
-    if (attack_image_offset) {
-        if (attack_image_offset == 1) {
-            if (tile.x() == -1 || tile.y() == -1) {
-                map_point_get_last_result(tile);
-            }
+static int soldier_missile_delay(e_figure_type type) {
+    int delay = figure_static_params::get(type).missile_delay;
+    return delay > 0 ? delay : 100;
+}
 
-            figure* f = figure_get(target_figure_id);
-            figure_missile::create(home_building_id, tile, f->tile, FIGURE_JAVELIN);
-            formation_record_missile_fired(formation_get(formation_id));
-        }
-        attack_image_offset++;
-        if (attack_image_offset > 100)
-            attack_image_offset = 0;
+static int soldier_missile_range(e_figure_type type) {
+    int range = figure_static_params::get(type).missile_range;
+    return range > 0 ? range : 10;
+}
+
+// OG military.c soldier_throw — fire on attack frame 7.
+static void soldier_throw_missile(figure *f) {
+    if (f->attack_image_offset != 7) {
+        return;
     }
+    figure *target = figure_get(f->target_figure_id);
+    if (!target || !target->is_valid()) {
+        return;
+    }
+    figure_missile::create(f->id, f->tile, target->tile, FIGURE_JAVELIN);
+    formation_record_missile_fired(formation_get(f->formation_id));
+}
+
+static void soldier_advance_missile_frame(figure *f) {
+    if (++f->attack_image_offset > 100) {
+        f->attack_image_offset = 0;
+    }
+}
+
+// OG military.c soldier_reload_and_look — used by mop-up / look-near-spot.
+static int soldier_reload_and_look(figure *f, int extra_range) {
+    if (++f->wait_ticks_missile <= soldier_missile_delay(f->type)) {
+        return f->target_figure_id;
+    }
+    f->wait_ticks_missile = 0;
+    tile2i tile;
+    int target_id = figure_combat_get_missile_target_for_soldier(f,
+        soldier_missile_range(f->type) + extra_range, &tile);
+    if (!target_id) {
+        f->attack_image_offset = 0;
+    } else {
+        f->attack_image_offset = 1;
+        f->direction = calc_missile_shooter_direction(f->tile, figure_get(target_id)->tile);
+    }
+    return target_id;
+}
+
+// OG military.c at-standard (0x0C) for missile legionaries: reload, aim, throw@7.
+void figure::javelin_launch_missile() {
+    const int delay = soldier_missile_delay(type);
+    const int range = soldier_missile_range(type);
+    int target_id = target_figure_id;
+
+    if (++wait_ticks_missile > delay) {
+        wait_ticks_missile = 0;
+        tile2i tile;
+        target_id = figure_combat_get_missile_target_for_soldier(this, range, &tile);
+        if (!target_id) {
+            attack_image_offset = 0;
+            target_figure_id = 0;
+            return;
+        }
+        attack_image_offset = 1;
+        direction = calc_missile_shooter_direction(this->tile, figure_get(target_id)->tile);
+    }
+
+    if (!target_id) {
+        return;
+    }
+
+    figure *target = figure_get(target_id);
+    if (!target->is_valid() || target->is_dead()) {
+        target_figure_id = 0;
+        attack_image_offset = 0;
+        return;
+    }
+
+    target_figure_id = target_id;
+    target->targeted_by_figure_id = id;
+
+    if (calc_maximum_distance(this->tile, target->tile) > range) {
+        return;
+    }
+
+    direction = calc_missile_shooter_direction(this->tile, target->tile);
+    soldier_throw_missile(this);
+    soldier_advance_missile_frame(this);
+    route_remove();
 }
 
 void figure::legionary_attack_adjacent_enemy() {
@@ -280,11 +343,13 @@ void figure_soldier::figure_action() {
         if (action_state() != ACTION_83_SOLDIER_GOING_TO_STANDARD) {
             if (type() == FIGURE_ARCHER) {
                 base.javelin_launch_missile();
-            } else if (type() == FIGURE_INFANTRY || type() == FIGURE_FCHARIOTEER) {
-                // FIGURE_INFANTRY is the legionary (melee) equivalent and must attack
-                // adjacent enemies while at the standard, like FIGURE_FORT_LEGIONARY did
-                // in the original. The JS-era port left infantry doing nothing here, so
-                // foot soldiers never engaged.
+            } else if (type() == FIGURE_FCHARIOTEER) {
+                // OG type 0x0D at standard: javelin when attacking, else adjacent melee.
+                base.javelin_launch_missile();
+                if (!base.attack_image_offset) {
+                    base.legionary_attack_adjacent_enemy();
+                }
+            } else if (type() == FIGURE_INFANTRY) {
                 base.legionary_attack_adjacent_enemy();
             }
         }
@@ -305,7 +370,49 @@ void figure_soldier::figure_action() {
 
     case ACTION_86_SOLDIER_MOPPING_UP:
         base.formation_at_rest = 0;
-        if (base.find_mop_up_target()) {
+        if (type() == FIGURE_ARCHER || type() == FIGURE_FCHARIOTEER) {
+            // OG mop-up (0x0E): missile units reload/look then engage (shoot in range, else walk).
+            int target_id = base.target_figure_id;
+            figure *target = figure_get(target_id);
+            if (!target->is_valid() || target->is_dead()) {
+                target_id = 0;
+                base.target_figure_id = 0;
+            }
+            if (target_id <= 0) {
+                target_id = soldier_reload_and_look(&base, 20);
+                if (target_id) {
+                    target = figure_get(target_id);
+                    base.target_figure_id = target_id;
+                    target->targeted_by_figure_id = base.id;
+                    base.destination_tile = target->tile;
+                } else {
+                    base.action_state = ACTION_84_SOLDIER_AT_STANDARD;
+                    base.animctx.frame = 0;
+                }
+                route_remove();
+            }
+            if (target_id) {
+                target = figure_get(target_id);
+                const int range = soldier_missile_range(type());
+                const bool in_range = calc_maximum_distance(tile(), target->tile) <= range;
+                if (!in_range) {
+                    base.move_ticks(speed_factor);
+                }
+                if (direction() == DIR_FIGURE_REROUTE || direction() == DIR_FIGURE_CAN_NOT_REACH) {
+                    base.action_state = ACTION_84_SOLDIER_AT_STANDARD;
+                    base.target_figure_id = 0;
+                    base.animctx.frame = 0;
+                } else if (in_range) {
+                    base.direction = calc_missile_shooter_direction(tile(), target->tile);
+                    soldier_throw_missile(&base);
+                    soldier_advance_missile_frame(&base);
+                    route_remove();
+                } else if (direction() == DIR_FIGURE_NONE) {
+                    base.destination_tile = target->tile;
+                    route_remove();
+                }
+            }
+        } else if (base.find_mop_up_target()) {
             base.move_ticks(speed_factor);
             if (direction() == DIR_FIGURE_NONE) {
                 figure* target = figure_get(base.target_figure_id);

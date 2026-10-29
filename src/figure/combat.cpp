@@ -124,9 +124,83 @@ int figure_combat_get_target_for_enemy(tile2i tile) {
     return 0;
 }
 
+static bool figure_is_enemy_transport_ship(e_figure_type type) {
+    switch (type) {
+    case FIGURE_ENEMY_TRANSPORT:
+    case FIGURE_ENEMY_EGYPTIAN_TRANSPORT_SHIP:
+    case FIGURE_ENEMY_BARBARIAN_TRANSPORT_SHIP:
+    case FIGURE_ENEMY_CANAANITE_TRANSPORT_SHIP:
+    case FIGURE_ENEMY_KUSHITE_TRANSPORT_SHIP:
+    case FIGURE_ENEMY_HITTITE_TRANSPORT_SHIP:
+    case FIGURE_ENEMY_PERSIAN_TRANSPORT_SHIP:
+    case FIGURE_ENEMY_ASSYRIAN_TRANSPORT_SHIP:
+    case FIGURE_ENEMY_LIBIAN_TRANSPORT_SHIP:
+    case FIGURE_ENEMY_NUBIAN_TRANSPORT_SHIP:
+    case FIGURE_ENEMY_PHOENICIAN_TRANSPORT_SHIP:
+    case FIGURE_ENEMY_ROMAN_TRANSPORT_SHIP:
+    case FIGURE_ENEMY_SEAPEOPLE_TRANSPORT_SHIP:
+    case FIGURE_ENEMY_HYKSOS_TRANSPORT_SHIP:
+        return true;
+    default:
+        return false;
+    }
+}
+
+static bool figure_is_enemy_warship(e_figure_type type) {
+    switch (type) {
+    case FIGURE_ENEMY_WARSHIP:
+    case FIGURE_ENEMY_EGYPTIAN_WAR_SHIP:
+    case FIGURE_ENEMY_EGYPTIAN_GALERA:
+    case FIGURE_ENEMY_CANAANITE_WAR_SHIP:
+    case FIGURE_ENEMY_KUSHITE_WAR_SHIP:
+    case FIGURE_ENEMY_HITTITE_WAR_SHIP:
+    case FIGURE_ENEMY_PERSIAN_WAR_SHIP:
+    case FIGURE_ENEMY_ASSYRIAN_WAR_SHIP:
+    case FIGURE_ENEMY_LIBIAN_WAR_SHIP:
+    case FIGURE_ENEMY_NUBIAN_WAR_SHIP:
+    case FIGURE_ENEMY_PHOENICIAN_WAR_SHIP:
+    case FIGURE_ENEMY_ROMAN_WAR_SHIP:
+    case FIGURE_ENEMY_SEAPEOPLE_WAR_SHIP:
+    case FIGURE_ENEMY_HYKSOS_WAR_SHIP:
+        return true;
+    default:
+        return false;
+    }
+}
+
+// OG get_missile_target_for_soldier: priority enemies(50) > warships(30) > transports(20) > predators(10).
+static int soldier_missile_target_priority(figure *f) {
+    switch (f->type) {
+    case FIGURE_CROCODILE:
+    case FIGURE_HYENA:
+    case FIGURE_HIPPO:
+    case FIGURE_ASP:
+    case FIGURE_LION:
+    case FIGURE_SCORPION:
+    case FIGURE_MUMMY:
+        return 10;
+    default:
+        break;
+    }
+    if (figure_is_enemy_warship(f->type)) {
+        return 30;
+    }
+    if (figure_is_enemy_transport_ship(f->type)) {
+        return 20;
+    }
+    if (f->is_enemy()) {
+        return 50;
+    }
+    return 0;
+}
+
 int figure_combat_get_missile_target_for_soldier(figure* shooter, int max_distance, tile2i* tile) {
-    int min_distance = max_distance;
-    figure* min_figure = 0;
+    int best_priority = 0;
+    int best_distance = max_distance;
+    figure* best_figure = nullptr;
+    formation *m = formation_get(shooter->formation_id);
+    const int target_formation = m ? m->missile_attack_formation_id : 0;
+
     for (figure* f: map_figures()) {
         if (!f->is_valid() || f->is_dead()) {
             continue;
@@ -140,18 +214,28 @@ int figure_combat_get_missile_target_for_soldier(figure* shooter, int max_distan
             continue;
         }
 
-        if (f->is_enemy() || f->is_herd()) {
-            int distance = calc_maximum_distance(shooter->tile, f->tile);
-            if (distance < min_distance && figure_movement_can_launch_cross_country_missile(shooter->tile, f->tile)) {
-                min_distance = distance;
-                min_figure = f;
-            }
+        const int priority = soldier_missile_target_priority(f);
+        if (priority <= 0) {
+            continue;
+        }
+
+        const bool is_ship = figure_is_enemy_transport_ship(f->type) || figure_is_enemy_warship(f->type);
+        if (!is_ship && target_formation > 0 && f->formation_id != target_formation) {
+            continue;
+        }
+
+        int distance = calc_maximum_distance(shooter->tile, f->tile);
+        if (priority > best_priority && distance < best_distance
+            && figure_movement_can_launch_cross_country_missile(shooter->tile, f->tile)) {
+            best_figure = f;
+            best_distance = distance;
+            best_priority = priority;
         }
     }
 
-    if (min_figure) {
-        map_point_store_result(min_figure->tile, *tile);
-        return min_figure->id;
+    if (best_figure) {
+        map_point_store_result(best_figure->tile, *tile);
+        return best_figure->id;
     }
 
     return 0;
