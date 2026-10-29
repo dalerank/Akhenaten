@@ -63,10 +63,11 @@ std::string get_configuration_path() {
         logs::error("Failed to retrieve AppData path.");
         result = CFG_FILE_NAME;
     }
-#elif defined(GAME_PLATFORM_MACOSX)
+#elif defined(GAME_PLATFORM_MACOSX) || defined(GAME_PLATFORM_ANDROID)
+    // SDL_GetPrefPath already creates the directory and ends with a separator.
     char* tmp_path = SDL_GetPrefPath("", "Akhenaten");
     if (tmp_path) {
-        result = std::string(tmp_path) + '/' + CFG_FILE_NAME;
+        result = std::string(tmp_path) + CFG_FILE_NAME;
         SDL_free(tmp_path);
     } else {
         logs::error("Failed to retrieve SDL pref path.");

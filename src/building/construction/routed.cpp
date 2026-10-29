@@ -10,6 +10,7 @@
 #include "grid/building_tiles.h"
 #include "grid/grid.h"
 #include "grid/property.h"
+#include "grid/road_canal.h"
 #include "grid/routing/routing.h"
 #include "grid/routing/routing_terrain.h"
 #include "grid/terrain.h"
@@ -40,13 +41,26 @@ routed_building_result place_routed_building(tile2i start, tile2i end, e_routed_
         }
 
         int distance = map_routing_distance(grid_offset);
+        // OG place_routed (construction_routed.c): roadblock tiles may sit on the route
+        // without a distance (start may be a roadblock; end may not).
         if (distance <= 0) {
-            return { false, 0 };
+            if (type != ROUTED_BUILDING_ROAD) {
+                return { false, 0 };
+            }
+            const int bid = map_building_at(grid_offset);
+            building *b = bid ? building_get(bid) : nullptr;
+            if (!b || b->type != BUILDING_ROADBLOCK) {
+                return { false, 0 };
+            }
         }
 
         switch (type) {
         default:
         case ROUTED_BUILDING_ROAD:
+            // OG: refuse canal tiles that cannot take a road crossing.
+            if (map_terrain_is(end, TERRAIN_CANAL) && !map_can_place_road_under_canal(end)) {
+                return { false, 0 };
+            }
             items += (building_road::set_road(end) ? 1 : 0);
             break;
 
@@ -77,12 +91,18 @@ routed_building_result place_routed_building(tile2i start, tile2i end, e_routed_
             int index = direction_indices[direction][i];
             int new_grid_offset = grid_offset + map_grid_direction_delta(index);
             int new_dist = map_routing_distance(new_grid_offset);
-            if (new_dist > 0 && new_dist < distance) {
-                grid_offset = new_grid_offset;
-                end = tile2i(grid_offset);
-                routed = 1;
-                break;
+            if (new_dist <= 0 || new_dist >= distance) {
+                continue;
             }
+            // OG: every routed step also asks map_can_place_road_under_canal for canal tiles.
+            if (map_terrain_is(new_grid_offset, TERRAIN_CANAL)
+                && !map_can_place_road_under_canal(tile2i(new_grid_offset))) {
+                continue;
+            }
+            grid_offset = new_grid_offset;
+            end = tile2i(grid_offset);
+            routed = 1;
+            break;
         }
 
         // update land graphics

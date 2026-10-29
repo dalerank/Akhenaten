@@ -114,11 +114,33 @@ function scenario_info_time_suffix(months) {
 }
 
 function scenario_info_goal_line(value, group, id) {
-    return __loc(group, id) + "@" + String(value)
+    return __loc(group, id) + " " + String(value)
 }
 
 function scenario_info_housing_goal_line(value, group, id) {
     return String(value) + " " + __loc(group, id)
+}
+
+// Pharaoh map-selection (0x0041E5C0) draws culture / prosperity / kingdom /
+// population / housing only — never monuments rating (label 0x83). Mission
+// briefing still lists monuments_goal separately.
+function scenario_info_collect_goal_lines() {
+    var goal_lines = []
+    if (scenario.is_open_play) {
+        goal_lines.push(__loc(145, 0))
+        return goal_lines
+    }
+    if (scenario.culture_goal > 0)
+        goal_lines.push(scenario_info_goal_line(scenario.culture_goal, 44, 129))
+    if (scenario.prosperity_goal > 0)
+        goal_lines.push(scenario_info_goal_line(scenario.prosperity_goal, 44, 130))
+    if (scenario.kingdom_goal > 0)
+        goal_lines.push(scenario_info_goal_line(scenario.kingdom_goal, 44, 132))
+    if (scenario.population_goal > 0)
+        goal_lines.push(scenario_info_goal_line(scenario.population_goal, 44, 133))
+    if (scenario.housing_count_goal > 0)
+        goal_lines.push(scenario_info_housing_goal_line(scenario.housing_count_goal, 29, scenario.housing_level_goal))
+    return goal_lines
 }
 
 function scenario_selection_format_start_year(y) {
@@ -228,23 +250,7 @@ function window_scenario_selection_update_goals(ev) {
     }
     ev.info_goals_body.pos = { x: hdr.x, y: hdr.y + (open_play ? 8 : 27) }
 
-    var goal_lines = []
-    if (open_play) {
-        goal_lines.push(__loc(145, 0))
-    } else {
-        if (scenario.culture_goal > 0)
-            goal_lines.push(scenario_info_goal_line(scenario.culture_goal, 44, 129))
-        if (scenario.prosperity_goal > 0)
-            goal_lines.push(scenario_info_goal_line(scenario.prosperity_goal, 44, 130))
-        if (scenario.monuments_goal > 0)
-            goal_lines.push(scenario_info_goal_line(scenario.monuments_goal, 44, 131))
-        if (scenario.kingdom_goal > 0)
-            goal_lines.push(scenario_info_goal_line(scenario.kingdom_goal, 44, 132))
-        if (scenario.population_goal > 0)
-            goal_lines.push(scenario_info_goal_line(scenario.population_goal, 44, 133))
-        if (scenario.housing_count_goal > 0)
-            goal_lines.push(scenario_info_housing_goal_line(scenario.housing_count_goal, 29, scenario.housing_level_goal))
-    }
+    var goal_lines = scenario_info_collect_goal_lines()
     ev.info_goals_body.text = goal_lines.join("\n")
 
     var LINE_STEP = 19

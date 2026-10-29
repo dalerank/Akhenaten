@@ -1054,7 +1054,7 @@ figure_names = [
 
   // Example: Generated names from three parts (prefix + middle + postfix)
   // { type:FIGURE_CITIZEN, use_parts_generation:true, prefixes:male_name_prefixes, middles:male_name_middles, postfixes:male_name_postfixes },
-  
+
   // Or use predefined names list:
   // { type:FIGURE_CITIZEN, names:default_citizen_male_names },
 
@@ -1062,7 +1062,8 @@ figure_names = [
   { type:FIGURE_EXPLOSION, empty_name:true  },
   { type:FIGURE_STANDARD_BEARER, empty_name:true  },
   { type:FIGURE_FISHING_POINT, empty_name:true  },
-  { type:FIGURE_FISHING_SPOT, empty_name:true  },
+  { type:FIGURE_SEAGULLS, empty_name:true  },
+  { type:FIGURE_BUBBLES, empty_name:true  },
   { type:FIGURE_CREATURE, empty_name:true  },
   { type:FIGURE_CHARIOR_RACER, empty_name:true  },
 ]

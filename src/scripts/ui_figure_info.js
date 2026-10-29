@@ -3,7 +3,7 @@ log_info("akhenaten: ui figure info started")
 def_object_info {
     forbidden_figure_types [ FIGURE_NONE, FIGURE_EXPLOSION, FIGURE_MAP_FLAG, FIGURE_ARROW,
                              FIGURE_JAVELIN, FIGURE_BOLT, FIGURE_BALLISTA, FIGURE_CREATURE,
-                             FIGURE_FISHING_POINT, FIGURE_FISHING_SPOT, FIGURE_SPEAR, FIGURE_CHARIOR_RACER
+                             FIGURE_FISHING_POINT, FIGURE_SPEAR, FIGURE_CHARIOR_RACER
                            ]
 }
 

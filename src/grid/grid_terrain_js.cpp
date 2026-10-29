@@ -20,6 +20,7 @@
 #include "grid/routing/routing_terrain.h"
 #include "grid/building.h"
 #include "building/building_irrigation_ditch.h"
+#include "city/city.h"
 #include "graphics/image.h"
 #include "graphics/image_groups.h"
 #include "core/profiler.h"
@@ -294,6 +295,20 @@ void __map_update_canals() {
     map_update_canals();
 }
 ANK_FUNCTION(__map_update_canals);
+
+void __map_canal_fill_from_offset(tile2i tile, int water) {
+    map_canal_fill_from_offset(tile, water);
+}
+ANK_FUNCTION_2(__map_canal_fill_from_offset);
+
+// Full OG-style water-lift supply tick (city case 27 canal half).
+void __buildings_update_water_lifts_cycle() {
+    g_city.buildings.update_canals_from_water_lifts();
+    map_update_canals();
+    g_city.buildings.pump_water_lifts_iterative();
+    g_city.buildings.stamp_water_lift_irrigation();
+}
+ANK_FUNCTION(__buildings_update_water_lifts_cycle);
 
 void __map_canal_update_all_tiles(int include_construction) {
     map_canal_update_all_tiles(include_construction);

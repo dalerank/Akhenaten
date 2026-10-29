@@ -5,7 +5,7 @@ figure_academy_scriber {
 	animations {
 		walk { pack:PACK_SPR_MAIN, id:199, max_frames:12 }
 		death { pack:PACK_SPR_MAIN, id:200, max_frames:8, loop:false }
-		big_image { pack:PACK_UNLOADED, id:25, offset:FIGURE_SCRIBER }
+		big_image { pack:PACK_UNLOADED, id:25, offset:29 } // reuse OG teacher portrait
 	}
 
 	sounds {

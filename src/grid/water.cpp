@@ -53,7 +53,9 @@ void map_water_update_docking_points(building &b, int orientation, int offset) {
     map_routing_calculate_distances_water_boat(river_entry);
 
     bool found = map_terrain_is_adjacent_to_open_water(b.tile, b.size);
-    b.has_water_access |= found;
+    if (found) {
+        b.has_water_access = 1;
+    }
     b.has_open_water_access = found;
 
     water_access_tiles ppoints;

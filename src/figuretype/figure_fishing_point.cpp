@@ -8,7 +8,6 @@
 
 static const vec2i FISHPOINT_OFFSETS[] = {{0, 0}, {0, -2}, {-2, 0}, {1, 2}, {2, 0}, {-3, 1}, {4, -3}, {-2, 4}, {0, 0}};
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_fishing_point);
-REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_fishing_spot);
 
 declare_console_command_p(addfishpoints) {
     int count = args.next_int(0);

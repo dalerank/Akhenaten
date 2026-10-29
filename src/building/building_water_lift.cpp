@@ -39,10 +39,20 @@ void building_water_lift::update_day() {
 
     update_inout_tiles();
 
+    // Full 0/1/2 relay runs on city tick 27. Keep river sourcing visible for
+    // animation between supply ticks without clearing canal-fed state.
     const auto &d = runtime_data();
-    const bool is_water1 = map_terrain_is(d.input_tiles[0], TERRAIN_WATER);
-    const bool is_water2 = map_terrain_is(d.input_tiles[1], TERRAIN_WATER);
-    base.has_water_access = (is_water1 || is_water2);
+    if (map_terrain_is(d.input_tiles[0], TERRAIN_WATER)
+        || map_terrain_is(d.input_tiles[1], TERRAIN_WATER)) {
+        if (!base.has_water_access) {
+            base.has_water_access = 2;
+        }
+    }
+}
+
+void building_water_lift::update_count() const {
+    // OG working count: workers and water.
+    g_city.buildings.increase_count(base.type, num_workers() > 0 && base.has_water_access);
 }
 
 int building_water_lift::animation_speed(int speed) const {

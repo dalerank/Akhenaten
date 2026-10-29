@@ -19,9 +19,8 @@ public:
     figure_enemy_archer(figure *f) : figure_enemy(f) {}
     virtual figure_enemy_archer *dcast_enemy_archer() override { return this; }
 
+    // Extras only — missile_attack_value / missile_delay live on figure_static_params.
     struct base_params_t {
-        int8_t missile_attack_value;
-        int8_t missile_delay;
         int8_t attack_distance;
         e_figure_type missile_type = FIGURE_ARROW;
     };
@@ -36,8 +35,8 @@ public:
     virtual bool is_attack() const override { return action_state() == ACTION_3_ENEMY_ARCHER_SHOOT_MISSILE; }
     virtual e_figure_action enemy_initial_action() const override { return (e_figure_action)ACTION_0_ENEMY_ARCHER_INITIAL; }
 
-    virtual int8_t missile_attack_value() const { return base_params().missile_attack_value; }
-    virtual int8_t missile_delay() const { return base_params().missile_delay;}
+    virtual int8_t missile_attack_value() const { return params().missile_attack_value; }
+    virtual int8_t missile_delay() const { return params().missile_delay; }
     virtual int8_t attack_distance() const { return base_params().attack_distance; }
     virtual e_figure_type missile_type() const override { return base_params().missile_type; }
 
@@ -62,7 +61,7 @@ public:
     const base_params_t &base_params() const override { return static_cast<const base_params_t &>(current_params()); }
 };
 ANK_CONFIG_STRUCT(figure_barbarian_archer::static_params,
-    missile_attack_value, missile_delay, attack_distance, missile_type)
+    attack_distance, missile_type)
 
 class figure_assyrian_archer : public figure_enemy_archer {
 public:
@@ -75,7 +74,7 @@ public:
     const base_params_t &base_params() const override { return static_cast<const base_params_t &>(current_params()); }
 };
 ANK_CONFIG_STRUCT(figure_assyrian_archer::static_params,
-    missile_attack_value, missile_delay, attack_distance, missile_type)
+    attack_distance, missile_type)
 
 class figure_canaanite_archer : public figure_enemy_archer {
 public:
@@ -88,7 +87,7 @@ public:
     const base_params_t &base_params() const override { return static_cast<const base_params_t &>(current_params()); }
 };
 ANK_CONFIG_STRUCT(figure_canaanite_archer::static_params,
-    missile_attack_value, missile_delay, attack_distance, missile_type)
+    attack_distance, missile_type)
 
 class figure_egyptian_archer : public figure_enemy_archer {
 public:
@@ -101,7 +100,7 @@ public:
     const base_params_t &base_params() const override { return static_cast<const base_params_t &>(current_params()); }
 };
 ANK_CONFIG_STRUCT(figure_egyptian_archer::static_params,
-    missile_attack_value, missile_delay, attack_distance, missile_type)
+    attack_distance, missile_type)
 
 class figure_hittite_archer : public figure_enemy_archer {
 public:
@@ -114,7 +113,7 @@ public:
     const base_params_t &base_params() const override { return static_cast<const base_params_t &>(current_params()); }
 };
 ANK_CONFIG_STRUCT(figure_hittite_archer::static_params,
-    missile_attack_value, missile_delay, attack_distance, missile_type)
+    attack_distance, missile_type)
 
 class figure_hyksos_archer : public figure_enemy_archer {
 public:
@@ -127,7 +126,7 @@ public:
     const base_params_t &base_params() const override { return static_cast<const base_params_t &>(current_params()); }
 };
 ANK_CONFIG_STRUCT(figure_hyksos_archer::static_params,
-    missile_attack_value, missile_delay, attack_distance, missile_type)
+    attack_distance, missile_type)
 
 class figure_libian_archer : public figure_enemy_archer {
 public:
@@ -140,7 +139,7 @@ public:
     const base_params_t &base_params() const override { return static_cast<const base_params_t &>(current_params()); }
 };
 ANK_CONFIG_STRUCT(figure_libian_archer::static_params,
-    missile_attack_value, missile_delay, attack_distance, missile_type)
+    attack_distance, missile_type)
 
 class figure_nubian_archer : public figure_enemy_archer {
 public:
@@ -153,7 +152,7 @@ public:
     const base_params_t &base_params() const override { return static_cast<const base_params_t &>(current_params()); }
 };
 ANK_CONFIG_STRUCT(figure_nubian_archer::static_params,
-    missile_attack_value, missile_delay, attack_distance, missile_type)
+    attack_distance, missile_type)
 
 class figure_persian_archer : public figure_enemy_archer {
 public:
@@ -166,7 +165,7 @@ public:
     const base_params_t &base_params() const override { return static_cast<const base_params_t &>(current_params()); }
 };
 ANK_CONFIG_STRUCT(figure_persian_archer::static_params,
-    missile_attack_value, missile_delay, attack_distance, missile_type)
+    attack_distance, missile_type)
 
 class figure_roman_archer : public figure_enemy_archer {
 public:
@@ -179,7 +178,7 @@ public:
     const base_params_t &base_params() const override { return static_cast<const base_params_t &>(current_params()); }
 };
 ANK_CONFIG_STRUCT(figure_roman_archer::static_params,
-    missile_attack_value, missile_delay, attack_distance, missile_type)
+    attack_distance, missile_type)
 
 class figure_seapeople_archer : public figure_enemy_archer {
 public:
@@ -192,7 +191,7 @@ public:
     const base_params_t &base_params() const override { return static_cast<const base_params_t &>(current_params()); }
 };
 ANK_CONFIG_STRUCT(figure_seapeople_archer::static_params,
-    missile_attack_value, missile_delay, attack_distance, missile_type)
+    attack_distance, missile_type)
 
 // Egyptian mounted archer — archer AI + horse march SFX (enemy_marching) + speed.
 class figure_egyptian_mounted_archer : public figure_enemy_archer {
@@ -208,4 +207,4 @@ public:
     virtual int8_t enemy_speed_multiplier() const override { return 2; }
 };
 ANK_CONFIG_STRUCT(figure_egyptian_mounted_archer::static_params,
-    missile_attack_value, missile_delay, attack_distance, missile_type)
+    attack_distance, missile_type)

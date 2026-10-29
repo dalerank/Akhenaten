@@ -28,7 +28,9 @@
 #include "building/monument_pyramid.h"
 #include "building/monument_royal_tomb.h"
 #include "building/monument_obelisk.h"
+#include "building/building_road.h"
 #include "building/monuments.h"
+#include "grid/desirability.h"
 #include "building/construction_blessing.h"
 #include "city/city_recorded_paths.h"
 #include "grid/grid.h"
@@ -48,6 +50,8 @@
 #include "figure/figure_impl.h"
 #include "figuretype/figure_market_buyer.h"
 #include "figuretype/figure_cartpusher.h"
+#include "figuretype/figure_immigrant.h"
+#include "game/game_events.h"
 #include "figuretype/figure_missile.h"
 #include "figuretype/figure_hunter.h"
 #include "figuretype/figure_stonemason.h"
@@ -1227,6 +1231,67 @@ static int __test_figure_get_wait_ticks(int fid) {
     return f->wait_ticks;
 }
 ANK_FUNCTION_1(__test_figure_get_wait_ticks);
+
+static void __test_figure_set_wait_ticks(int fid, int ticks) {
+    figure *f = figure_get(fid);
+    if (!f || !f->is_alive()) {
+        return;
+    }
+    f->wait_ticks = (int16_t)ticks;
+}
+ANK_FUNCTION_2(__test_figure_set_wait_ticks);
+
+static int __test_figure_get_action(int fid) {
+    figure *f = figure_get(fid);
+    if (!f || !f->is_alive()) {
+        return -1;
+    }
+    return f->action_state;
+}
+ANK_FUNCTION_1(__test_figure_get_action);
+
+static int __test_figure_is_visible(int fid) {
+    figure *f = figure_get(fid);
+    if (!f || !f->is_alive()) {
+        return -1;
+    }
+    return f->is_visible() ? 1 : 0;
+}
+ANK_FUNCTION_1(__test_figure_is_visible);
+
+static int __test_figure_cart_image_id(int fid) {
+    figure *f = figure_get(fid);
+    if (!f || !f->is_alive()) {
+        return -1;
+    }
+    return f->cart_image_id;
+}
+ANK_FUNCTION_1(__test_figure_cart_image_id);
+
+static int __test_building_map_random_7bit(int bid) {
+    building *b = building_get(bid);
+    if (!b || !b->is_valid()) {
+        return -1;
+    }
+    return b->map_random_7bit;
+}
+ANK_FUNCTION_1(__test_building_map_random_7bit);
+
+// OG immigrant create path (event_create_immigrant): entry point, wait from house map_random_7bit.
+static int __test_create_immigrant(int bid, int num_people) {
+    building *b = building_get(bid);
+    if (!b || !b->is_valid() || !b->is_house() || num_people <= 0) {
+        return 0;
+    }
+    events::emit(event_create_immigrant{ (building_id)bid, num_people, SOURCE_LOCATION });
+    events::process();
+    figure *f = b->get_figure(BUILDING_SLOT_IMMIGRANT);
+    if (!f || !f->is_alive() || f->type != FIGURE_IMMIGRANT) {
+        return 0;
+    }
+    return f->id;
+}
+ANK_FUNCTION_2(__test_create_immigrant);
 
 static int __test_cartpusher_destination_wait_threshold() {
     return figure_cartpusher::destination_wait_threshold();
@@ -3775,6 +3840,18 @@ static void __test_update_road_network() {
     g_city.map.update_road_network();
 }
 ANK_FUNCTION(__test_update_road_network);
+
+// OG: floodplain roads are never paved (0x0047B8E0), even at high desirability.
+static int __test_road_is_paved(int x, int y) {
+    return building_road::is_paved(tile2i(x, y)) ? 1 : 0;
+}
+ANK_FUNCTION_2(__test_road_is_paved);
+
+extern grid_xx g_desirability_grid;
+static void __test_set_desirability(int x, int y, int value) {
+    map_grid_set(g_desirability_grid, tile2i(x, y).grid_offset(), value);
+}
+ANK_FUNCTION_3(__test_set_desirability);
 
 static int __test_tile_road_network(int grid_offset) {
     if (grid_offset < 0) {

@@ -12,9 +12,11 @@
 #include "io/io_buffer.h"
 #include "grid/terrain.h"
 #include "grid/basin.h"
+#include "building/building.h"
 #include "building/building_road.h"
 #include "building/building_irrigation_ditch.h"
 #include "city/city_buildings.h"
+#include "grid/building.h"
 #include "grid/image_context.h"
 #include "graphics/view/view.h"
 #include "game/game.h"
@@ -23,6 +25,14 @@
 #include <cstdint>
 
 namespace {
+
+// Half-rate decay bookkeeping. Seeded from saved total_days; subpass allows multiple
+// decrease calls on the same calendar day (tests). Must reset on load — otherwise
+// an in-process load of the same total_days keeps a stale subpass and skews hold.
+uint32_t s_decay_prev_total_days = UINT32_MAX;
+unsigned s_decay_subpass = 0;
+
+} // namespace
 
 // When flood basins are on, do not stamp irrigation across a dike wall:
 // only tiles that share the canal's basin_id (0 = outside / unsealed).
@@ -40,14 +50,6 @@ void map_add_irrigation_range(tile2i tile, int size, int radius) {
         }
     });
 }
-
-// Half-rate decay bookkeeping. Seeded from saved total_days; subpass allows multiple
-// decrease calls on the same calendar day (tests). Must reset on load — otherwise
-// an in-process load of the same total_days keeps a stale subpass and skews hold.
-uint32_t s_decay_prev_total_days = UINT32_MAX;
-unsigned s_decay_subpass = 0;
-
-} // namespace
 
 void canals_reset_decay_phase() {
     s_decay_prev_total_days = UINT32_MAX;
@@ -165,7 +167,6 @@ void map_canal_fill_from_offset(tile2i tile, int water) {
     }
 
     hvector<water_supply_queue_tile, 64> g_water_supply_queue;
-    int next_offset;
     int image_canal_set_begin = building_irrigation_ditch::images().begin; // 119 C3
     int image_without_water = image_canal_set_begin + building_irrigation_ditch::image_set::IMAGE_FULL_OFFSET;
     g_water_supply_queue.push_back({ tile, water });
@@ -187,6 +188,16 @@ void map_canal_fill_from_offset(tile2i tile, int water) {
 
         for (const auto it : adjacent_offsets) {
             tile2i new_offset = wtile.tile.shifted(it);
+
+            // OG fill_canals: a dry water lift next to a wet canal gets has_water=2.
+            if (const int building_id = map_building_at(new_offset); building_id) {
+                building *b = building_get(building_id);
+                if (b->type == BUILDING_WATER_LIFT && !b->has_water_access) {
+                    b->has_water_access = 2;
+                }
+                continue;
+            }
+
             if (!map_terrain_is(new_offset, TERRAIN_CANAL)) {
                 continue;
             }

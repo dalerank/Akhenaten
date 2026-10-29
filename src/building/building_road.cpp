@@ -29,6 +29,11 @@ bool building_road::set_road(tile2i tile) {
 }
 
 bool building_road::is_paved(tile2i tile) {
+    // OG map_tiles_road_desirability_paved: never paved on floodplain.
+    if (map_terrain_is(tile, TERRAIN_FLOODPLAIN)) {
+        return false;
+    }
+
     int desirability = g_desirability.get(tile.grid_offset());
     if (desirability > 4) {
         return true;
