@@ -1,5 +1,63 @@
 log_info("akhenaten: ui advisor military started")
 
+function get_figure_type_str(figure_type) {
+    if (figure_type == FIGURE_INFANTRY)  return __loc(138, 34)
+    if (figure_type == FIGURE_FCHARIOTEER) return __loc(138, 33)
+    if (figure_type == FIGURE_ARCHER) return __loc(138, 35)
+    return ""
+}
+
+function advisor_military_forts_on_render_item(p) {
+    var i = p.user_data
+    var form = city.get_battalion_by_index(i)
+    if (!form) {
+        return
+    }
+    var px = p.x
+    var py = p.y
+
+    ui.button({ text:"", pos:[px + 2, py + 1], size:[px(35) - 4, 40], font:FONT_NORMAL_BLACK_ON_DARK, border:false, body:false })
+
+    var battalion_image = get_image(PACK_GENERAL, 127, form.batalion_id)
+    ui.image(battalion_image, {x: px + 6, y: py + 6})
+    ui.label(__loc(138, form.batalion_id), vec2i(px + 46, py + 7), FONT_NORMAL_WHITE_ON_DARK)
+
+    var num_figures_str = "" + form.num_figures + " " + get_figure_type_str(form.figure_type)
+    ui.label(num_figures_str, vec2i(px + 46, py + 24), FONT_NORMAL_BLACK_ON_DARK)
+
+    var morale_str = __loc(138, 37 + ((form.morale / 5) | 0))
+    ui.label_ex(morale_str, vec2i(px + 186, py + 15), FONT_NORMAL_BLACK_ON_DARK, UiFlags_AlignCentered, 0)
+
+    var exp_image = get_image("pharaoh_general/paneling_00537")
+    exp_image.tid += ((form.experience / 100) | 0)
+    ui.button({ text:"", pos:[px + 276, py + 7], size:[30, 30], font:FONT_NORMAL_BLACK_ON_DARK})
+    ui.image(exp_image, { x: px + 279, y: py + 10})
+
+    var goto_legion_image = get_image("pharaoh_general/paneling_00531")
+    var goto_clicked = ui.button({text:"", pos:[px + 356, py + 7], size:[30, 30]})
+    if (goto_clicked == ui.button_clicked) {
+        city.camera_go_to(form.home)
+        ui.window_city_show()
+    }
+    ui.image(goto_legion_image, { x: px + 359, y: py + 10 })
+
+    var fort_image = get_image("pharaoh_general/paneling_00532")
+    fort_image.tid += (form.is_at_fort ? 1 : 0)
+    var back_to_fort_clicked = ui.button({text:"", pos:[px + 426, py + 7], size:[30, 30], font:FONT_NORMAL_BLACK_ON_DARK})
+    if (back_to_fort_clicked == ui.button_clicked) {
+        form.return_home()
+    }
+    ui.image(fort_image, { x: px + 429, y: py + 10 })
+
+    var kingdom_service = get_image("pharaoh_general/paneling_00534")
+    kingdom_service.tid += (form.empire_service ? 1 : 0)
+    var kingdom_service_clicked = ui.button({text:"", pos:[px + 506, py + 7], size:[30, 30], font:FONT_NORMAL_BLACK_ON_DARK})
+    if (kingdom_service_clicked == ui.button_clicked) {
+        form.set_empire_service(!form.empire_service)
+    }
+    ui.image(kingdom_service, vec2i(px + 509, py + 10))
+}
+
 [es=advisor_window]
 advisor_military_window {
     advisor: ADVISOR_MILITARY
@@ -23,8 +81,22 @@ advisor_military_window {
                 h5_1         : text({text{group:51, id:17}, pos[304, 43], font:FONT_SMALL_PLAIN})
                 h5_2         : text({text{group:51, id:18}, pos[304, 58], font:FONT_SMALL_PLAIN})
 
-                inner_panel  : inner_panel({pos[32, 70], size[36, 17]})
-                list_anchor  : dummy({pos[0, 0]})
+                inner_panel  : inner_panel({pos[32, 70], size[36, 12]})
+
+                forts_list   : scrollable_list({
+                    pos[38, 76]
+                    size[35, 11]
+                    view_items: 4
+                    buttons_size_y: 44
+                    buttons_margin_x: 0
+                    buttons_margin_y: 0
+                    text_padding_x: 0
+                    text_padding_y: 0
+                    draw_scrollbar_always: false
+                    draw_paneling: false
+                    onrender_item: advisor_military_forts_on_render_item
+                })
+
                 nothing_text : text({text:"", pos[42, 70 + px(16) / 2], size[px(36), -1], multiline:true, font:FONT_NORMAL_BLACK_ON_LIGHT })
                 forts_area   : dummy({ margin{left:30, bottom:-90}
                                         ui {
@@ -45,19 +117,11 @@ advisor_military_window {
     })
 }
 
-function get_figure_type_str(figure_type) {
-    if (figure_type == FIGURE_INFANTRY)  return __loc(138, 34)
-    if (figure_type == FIGURE_FCHARIOTEER) return __loc(138, 33)
-    if (figure_type == FIGURE_ARCHER) return __loc(138, 35)
-    return ""
-}
-
 [es=(advisor_military_window, init)]
 function advisor_military_window_init(window) {
     var enemy_text_id = 8
     if (city.figures.enemies) { enemy_text_id = 10 }
     else if (city.figures.kingdome_soldiers) { enemy_text_id = 11 }
-    // else if (scenario_invasion_exists_upcoming()) { enemy_text_id = 9; }
 
     var distant_battle_text_id = 12
     if (empire.active_battle.egyptian_months_to_travel_back > 0) { distant_battle_text_id = 15 }
@@ -73,67 +137,18 @@ function advisor_military_window_init(window) {
 
     if (city.num_forts > 0) {
         window.nothing_text.enabled = false
+        window.forts_list.enabled = true
+        var list = window.forts_list
+        list.clear()
+        for (var i = 0; i < city.num_forts; i++) {
+            list.add_item("fort", i)
+        }
     } else {
         window.nothing_text.enabled = true
         window.nothing_text.text = __loc(51, 16)
+        window.forts_list.enabled = false
+        window.forts_list.clear()
     }
 
     advisors_toolbar_refresh(window, ADVISOR_MILITARY)
-}
-
-[es=(advisor_military_window, ui_draw_foreground)]
-function advisor_military_window_draw(window) {
-    if (city.num_forts > 0) {
-        // The legion rows are immediate-mode draws, so they must be offset by the
-        // (centered) advisor window origin; otherwise they render at the top-left
-        // of the screen. list_anchor sits at the advisor area's (0, 0).
-        var base = window.list_anchor.screen_pos
-        var goto_legion_image = get_image("pharaoh_general/paneling_00531")
-        for (var i = 0; i < city.num_forts; i++) {
-            var form = city.get_battalion_by_index(i)
-            var row_y = 44 * i
-
-            ui.button({ text:"", pos[base.x + 40, base.y + 77 + row_y], size[px(35), 40], font:FONT_NORMAL_BLACK_ON_DARK, border:false, body:false })
-
-            var battalion_image = get_image(PACK_GENERAL, 127, form.batalion_id)
-            ui.image(battalion_image, {x:base.x + 44, y:base.y + 82 + row_y})
-            ui.label(__loc(138, form.batalion_id), vec2i(base.x + 84, base.y + 83 + row_y), FONT_NORMAL_WHITE_ON_DARK)
-
-            var num_figures_str = "" + form.num_figures + " " + get_figure_type_str(form.figure_type)
-            ui.label(num_figures_str, vec2i(base.x + 84, base.y + 100 + row_y), FONT_NORMAL_BLACK_ON_DARK);
-
-            var morale_str = __loc(138, 37 + form.morale / 5)
-            ui.label_ex(morale_str, vec2i(base.x + 224, base.y + 91 + row_y), FONT_NORMAL_BLACK_ON_DARK, UiFlags_AlignCentered, 0);
-
-            // Fetch the state images inside the loop: they carry a per-legion tid
-            // offset, so reusing a single instance would accumulate across rows.
-            var exp_image = get_image("pharaoh_general/paneling_00537")
-            exp_image.tid += form.experience / 100
-            ui.button({ text:"", pos{x:base.x + 314, y:base.y + 83 + row_y}, size[30, 30], font:FONT_NORMAL_BLACK_ON_DARK})
-            ui.image(exp_image, { x:base.x + 317, y:base.y + 86 + row_y})
-
-            var goto_clicked = ui.button({text:"", pos{ x:base.x + 394, y:base.y + 83 + row_y }, size[ 30, 30 ] })
-            if (goto_clicked == ui.button_clicked) {
-                city.camera_go_to(form.home)
-                ui.window_city_show()
-            }
-            ui.image(goto_legion_image, { x:base.x + 397, y:base.y + 86 + row_y });
-
-            var fort_image = get_image("pharaoh_general/paneling_00532")
-            fort_image.tid += (form.is_at_fort ? 1 : 0)
-            var back_to_fort_clicked = ui.button({text:"", pos:{ x:base.x + 464, y:base.y + 83 + row_y }, size[ 30, 30 ], font:FONT_NORMAL_BLACK_ON_DARK});
-            if (back_to_fort_clicked == ui.button_clicked) {
-                form.return_home()
-            }
-            ui.image(fort_image, { x:base.x + 467, y:base.y + 86 + row_y });
-
-            var kingdom_service = get_image("pharaoh_general/paneling_00534")
-            kingdom_service.tid += (form.empire_service ? 1 : 0)
-            var kingdom_service_clicked = ui.button({text:"", pos:{ x:base.x + 544, y:base.y + 83 + row_y }, size[ 30, 30 ], font:FONT_NORMAL_BLACK_ON_DARK});
-            if (kingdom_service_clicked == ui.button_clicked) {
-                form.set_empire_service(!form.empire_service)
-            }
-            ui.image(kingdom_service, vec2i(base.x + 547, base.y + 86 + row_y ));
-        }
-    }
 }

@@ -47,5 +47,15 @@ void platform_touch_move(SDL_TouchFingerEvent* event) {
 }
 
 void platform_touch_end(SDL_TouchFingerEvent* event) {
-    touch_end(get_touch_index(event->fingerId), event->timestamp);
+    int index = get_touch_index(event->fingerId);
+    if (index != MAX_ACTIVE_TOUCHES) {
+        touch_end(index, event->timestamp);
+        touch_id[index] = 0;
+    }
+}
+
+void platform_touch_reset(void) {
+    for (int i = 0; i < MAX_ACTIVE_TOUCHES; ++i) {
+        touch_id[i] = 0;
+    }
 }

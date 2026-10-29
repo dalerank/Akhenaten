@@ -864,6 +864,11 @@ static void js_native_debugger_port(js_State *J) {
 }
 
 static void js_native_debugger_start(js_State *J) {
+#if defined(GAME_PLATFORM_ANDROID)
+    logs::warn("JS Debugger is not supported on Android");
+    js_pushboolean(J, false);
+    return;
+#else
     int port = 4711;
     if (J->gettop() >= 1 && J->isnumber(1)) {
         port = (int)js_tonumber(J, 1);
@@ -874,6 +879,7 @@ static void js_native_debugger_start(js_State *J) {
     }
     g_mujs_debugger.start(J, port);
     js_pushboolean(J, true);
+#endif
 }
 
 static void js_native_debugger_stop(js_State *J) {

@@ -92,10 +92,13 @@ void mouse::set_inside_window(int inside) {
     is_touch = 0;
 }
 
+#include "input/touch.h"
+
 void mouse::init() {
     relative_mode = 0;
     relative_mode_restore = { 0, 0 };
     set_inside_window(1);
+    touch_clear_all();
 }
 
 void mouse::get_relative_state(int *x, int *y) {

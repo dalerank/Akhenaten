@@ -22,8 +22,11 @@ function scenario_request_compute_status(rq) {
         return SCENARIO_REQ_NOT_ENOUGH
     }
     var rid = rq.resource_id
-    if (rid === RESOURCE_DEBEN && city.finance.treasury <= rq.raw_amount) {
-        return SCENARIO_REQ_NOT_ENOUGH
+    if (rid === RESOURCE_DEBEN) {
+        if (city.finance.treasury < rq.raw_amount) {
+            return SCENARIO_REQ_NOT_ENOUGH
+        }
+        return rq.event_id
     }
     var ab = empire.active_battle
     if (rid === RESOURCE_TROOPS && ab.months_until_battle > 0 && !ab.egyptian_months_to_travel_forth) {
@@ -53,11 +56,11 @@ function scenario_request_handle(rq) {
     }
     var s = scenario_request_compute_status(rq)
     if (s === SCENARIO_REQ_NO_LEGIONS_AVAILABLE) {
-        ui.show_ok("#popup_dialog_no_legions_available")
+        ui.show_ok(__loc(5, 41), __loc(5, 6))
         return
     }
     if (s === SCENARIO_REQ_NO_LEGIONS_SELECTED) {
-        ui.show_ok("#popup_dialog_no_legions_selected")
+        ui.show_ok(__loc(5, 41), __loc(5, 6))
         return
     }
     if (s === SCENARIO_REQ_CONFIRM_LEGIONS) {
@@ -69,7 +72,7 @@ function scenario_request_handle(rq) {
         return
     }
     if (s === SCENARIO_REQ_NOT_ENOUGH) {
-        ui.show_ok("#popup_dialog_not_enough_goods")
+        ui.show_ok(__loc(5, 31), __loc(5, 30))
         return
     }
     ui.show_yesno("#popup_dialog_send_goods", function (yes) {
@@ -121,13 +124,14 @@ function imperial_requests_on_render_item(p) {
             var treasury = city.finance.treasury
             savedLine = String(treasury) + " " + __loc(52, 44)
             allowStr = (treasury < rq.raw_amount) ? __loc("#ui_unable_to_fulfill_request") : __loc(52, 47)
-            allowFont = FONT_NORMAL_WHITE_ON_DARK
+            allowFont = (treasury < rq.raw_amount) ? FONT_NORMAL_WHITE_ON_DARK : FONT_NORMAL_YELLOW
         } else {
             var in_yards = rq.resource.yards_stored
             var cityStored = rq.resource.stack_proper_quantity(in_yards)
             savedLine = String(cityStored) + " " + __loc(52, 43)
-            allowStr = (cityStored < rq.amount_total) ? __loc("#ui_unable_to_fulfill_request") : __loc(52, 47)
-            allowFont = (cityStored < rq.amount_total) ? FONT_NORMAL_WHITE_ON_DARK : FONT_NORMAL_YELLOW
+            var notEnough = (in_yards < rq.amount_total)
+            allowStr = notEnough ? __loc("#ui_unable_to_fulfill_request") : __loc(52, 47)
+            allowFont = notEnough ? FONT_NORMAL_WHITE_ON_DARK : FONT_NORMAL_YELLOW
         }
         ui.label(savedLine, [px + 30, py + 25], FONT_NORMAL_WHITE_ON_DARK)
         ui.label(allowStr, [px + 310, py + 25], allowFont)

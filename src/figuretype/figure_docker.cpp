@@ -691,8 +691,6 @@ void figure_docker::update_animation() {
     if (base.cart_image_id) {
         base.cart_image_id += dir;
         set_cart_offset(dir);
-    } else {
-        base.main_image_id = 0;
     }
 }
 

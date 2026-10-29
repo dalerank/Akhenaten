@@ -30,6 +30,10 @@
 
 ## 👆 Touch UI, Gestures & Mobile Interactivity
 
+- **Touch-to-Mouse Mode Transition & Touch Reset**:
+  - Fixed `touch_to_mouse()` in [touch.cpp](file:///D:/Akhenaten/src/input/touch.cpp) to reset `m.is_touch = 0` when no fingers are touching the screen, ensuring standard mouse/trackpad events update `determine_button_state()` properly.
+  - Added automatic release timeout (3000 ms) for abandoned/stuck touches in `reset_touches()`.
+  - Added `touch_clear_all()` in `mouse::init()` in [mouse.cpp](file:///D:/Akhenaten/src/input/mouse.cpp) and cleared `touch_id` in [touch.cpp](file:///D:/Akhenaten/src/platform/touch.cpp#L45) upon touch release.
 - **Construction Confirm / Cancel Touch Buttons**:
   - Enabled construction confirm/cancel buttons on Android devices in [window_city.cpp](file:///D:/Akhenaten/src/window/window_city.cpp#L65).
   - Added touch padding around buttons and implemented `is_in_construction_buttons_region()` check in [window_city.cpp](file:///D:/Akhenaten/src/window/window_city.cpp#L93) and [widget_city.cpp](file:///D:/Akhenaten/src/widget/widget_city.cpp#L113) to prevent map cursor movement or building placement underneath construction UI controls.
@@ -53,11 +57,19 @@
   - Enabled JavaScript debug console command bindings (`js_register_console_command`) on Android platforms in [js_console_command_registry.cpp](file:///D:/Akhenaten/src/js/js_console_command_registry.cpp#L48).
 - **Console Command Parser Refactoring**:
   - Refactored argument and cvar parsing in `dev::qconsole::execute()` inside [qconsole.cpp](file:///D:/Akhenaten/src/dev/qconsole.cpp#L188) for cleaner variable lookup and syntax error reporting.
+- **Safe JS Debugger Guard on Android**:
+  - Added `#if defined(GAME_PLATFORM_ANDROID)` guards in `js.cpp` and [js_debugger.cpp](file:///D:/Akhenaten/src/js/js_debugger.cpp#L140) and notification in [ui_top_menu_actions.js](file:///D:/Akhenaten/src/scripts/ui_top_menu_actions.js#L88) to safely disable the DAP socket server on Android, preventing thread deadlocks.
 
 ---
 
 ## 🗡️ Gameplay, Military & Building Simulation Fixes
 
+- **Archer Missile Launch Fix**:
+  - Fixed three critical bugs in `figure::javelin_launch_missile()` in [figure_soldier.cpp](file:///D:/Akhenaten/src/figuretype/figure_soldier.cpp#L42):
+    1. Saved `target_figure_id = target_id` from `figure_combat_get_missile_target_for_soldier()`.
+    2. Corrected shooter rotation calculation (`calc_missile_shooter_direction(this->tile, target_tile)`).
+    3. Validated target figure existence before creating `FIGURE_JAVELIN` missiles.
+  - Static archers at standards now continuously fire arrows at approaching invaders from up to 10 tiles away.
 - **Recruiter Weapon Requirement Logic**:
   - Updated `building_recruiter::get_closest_batalion_needing_soldiers()` and `create_soldier()` in [building_barracks.cpp](file:///D:/Akhenaten/src/building/building_barracks.cpp#L41) so that the 100-weapon storage requirement only applies when recruiting **Infantry** or **Charioteers**. Non-weapon units (Archers, etc.) can now be trained without weapons.
   - Added explicit formation figure calculation updates upon soldier creation.
@@ -68,6 +80,74 @@
 - **Building Script Adjustments**:
   - Fixed `building_well_update_month()` in [well.js](file:///D:/Akhenaten/src/scripts/building/well.js#L91) to guard against missing well entities and update map building tiles correctly.
   - Adjusted work animation parameters for the Brewery in [workshop.js](file:///D:/Akhenaten/src/scripts/building/workshop.js#L7).
+
+---
+
+## ⚓ Ships, Shipyards, Ferries & Docks
+
+- **Ship Launching at Shipyards**:
+  - Fixed `map_water_can_spawn_boat()` in [water.cpp](file:///D:/Akhenaten/src/grid/water.cpp#L315) by changing the surrounding water requirement from `>= 8` to `>= 2`. Shipyards built on riverbanks can now successfully launch completed warships, transport ships, and fishing boats into the water.
+- **Fishing Wharf Boat Spawn Tile Fix**:
+  - Updated `building_fishing_wharf::spawn_figure()` in [building_fishing_wharf.cpp](file:///D:/Akhenaten/src/building/building_fishing_wharf.cpp#L69) to use `get_water_access_tiles().point_a` instead of `base.tiles[0]`. Prevents fishing boats from spawning on land tiles on wharves constructed along opposite riverbank orientations.
+- **Dock Worker (Docker) Visibility & Spawning**:
+  - Removed the `else { base.main_image_id = 0; }` override in `figure_docker::update_animation()` inside [figure_docker.cpp](file:///D:/Akhenaten/src/figuretype/figure_docker.cpp#L705), restoring full sprite visibility for dock workers walking and idling without a cart.
+  - Updated `building_dock::spawn_figure()` in [building_dock.cpp](file:///D:/Akhenaten/src/building/building_dock.cpp#L90) to validate alive/active docker figures and clear dead IDs, allowing docks to continuously replenish dock workers.
+- **Trade Ship Departure & Pathfinding Jitter Fix**:
+  - Fixed trade ship departure in `ACTION_112_TRADE_SHIP_MOORED` and `ACTION_115_TRADE_SHIP_LEAVING` in [figure_trader_ship.cpp](file:///D:/Akhenaten/src/figuretype/figure_trader_ship.cpp#L355): clears `destination_building_id = 0` and generates water pathfinding routes via `do_goto()`, preventing 45°/-45° rotation jitter in place upon leaving the dock.
+- **Ferry Boat Navigation & Oscillation Fix**:
+  - Updated `figure_ferry_boat::figure_action()` in [figure_ferry_boat.cpp](file:///D:/Akhenaten/src/figuretype/figure_ferry_boat.cpp#L140) to use `do_goto()` for water navigation between ferry landings, eliminating 45°/-45° rotation glitches.
+- **Unreachable Coast Fishing Spot Exclusion**:
+  - Updated [city_fishing_points.cpp](file:///D:/Akhenaten/src/city/city_fishing_points.cpp#L51) and [figure_fishing_boat.cpp](file:///D:/Akhenaten/src/figuretype/figure_fishing_boat.cpp#L205): when a fishing boat finds a spot across the river is unreachable (`DIR_FIGURE_CAN_NOT_REACH`), it stores `failed_tile_x/y` and excludes that spot on subsequent searches, picking a reachable fishing spot on its own coast instead.
+- **Shipyard Assembling Animation Offset**:
+  - Centered ship assembly animation positions in [config.js](file:///D:/Akhenaten/src/scripts/building/config.js#L301) (`pos: [0, 0]`) so workers assembling ships appear on the shipyard slipway instead of offset 70px to the right.
+
+---
+
+## 🧭 Empire Map & Trade Caravan Routing
+
+- **Out-of-Bounds Route Point Calculation Fix**:
+  - Fixed an out-of-bounds array access in `empire_trader::update()` in [empire_traders.cpp](file:///D:/Akhenaten/src/empire/empire_traders.cpp#L60) (`route.points[num_points - 0]`), which read uninitialized memory and caused land caravans to jump outside the map bounds and get stuck.
+- **Route Direction & Waypoint Traversal**:
+  - Corrected route point ordering: caravans moving to the player's city traverse `route.points[current_route_point]`, while returning caravans traverse `route.points[num_points - 1 - current_route_point]`.
+- **Spawn & Arrival Positions**:
+  - Corrected trader spawn position in `create_trader()` to `route.points[0]` (origin city) and arrival position in `complete_trade()` to `route.points[num_points - 1]` (player city).
+- **Route Index Reset on Return**:
+  - Added `traders[handle].current_route_point = 0` in `back_to_city()` in [trader_handler.cpp](file:///D:/Akhenaten/src/empire/trader_handler.cpp#L122) so returning caravans walk the full return trip back to their origin city instead of immediately deactivating on frame 1.
+- **Empire Map UI Layout Fix**:
+  - Repositioned `button_close` in [ui_empire_trade_panel.js](file:///D:/Akhenaten/src/scripts/ui_empire_trade_panel.js#L142) to the top-right corner of the map frame (`x: max_pos.x - 40, y: min_pos.y + 16`).
+  - Resolves overlaps between the close button, the simulation pause button, and the Android floating debug/log console button.
+
+---
+
+## 🗺️ Minimap & Nile Floods
+
+- **Minimap Flickering & Glitch Elimination**:
+  - Removed screen framebuffer capturing (`graphics_save_to_texture` / `graphics_draw_from_texture`) in [widget_minimap.cpp](file:///D:/Akhenaten/src/widget/widget_minimap.cpp#L145).
+  - Minimap tiles now render directly each frame, completely eliminating cursor ghosting, stale viewport box artifacts, and flickering during mouse movement or camera scrolling.
+- **Annual Flood Fish Spot Renewal**:
+  - Added `g_city.fishing_points.reset()` in [city_floods.cpp](file:///D:/Akhenaten/src/city/city_floods.cpp#L390) upon completion of the annual Nile flood (`cycle == cycle_end + 1`), regenerating and redistributing deep-water fishing spots with every flood.
+- **Fishing Boat Idle Loop Fix**:
+  - Fixed rapid `wait_ticks` resets in `ACTION_4_FISHING_BOAT_AT_WHARF` in [figure_fishing_boat.cpp](file:///D:/Akhenaten/src/figuretype/figure_fishing_boat.cpp#L315) when no fishing spots exist, allowing boats to idle cleanly without sprite flickering.
+
+---
+
+## 🏛️ Overseers / Advisor UI
+
+- **Financial Overseer Format & Color-Coding**:
+  - Updated [ui_advisor_finance.js](file:///D:/Akhenaten/src/scripts/ui_advisor_finance.js):
+    - Added explicit `"+"` sign prefix to all positive income values.
+    - Added explicit `"-"` sign prefix to all positive expense values.
+    - Added explicit `"+"` sign and **Gold/Yellow** font (`FONT_NORMAL_YELLOW`) for positive net totals (profit/ganancia).
+    - Kept standard **Black** font (`FONT_NORMAL_BLACK_ON_LIGHT`) for negative net totals (loss/pérdida).
+- **Military Overseer List Overflow Fix**:
+  - Converted the legion/fort list in [ui_advisor_military.js](file:///D:/Akhenaten/src/scripts/ui_advisor_military.js) to a `scrollable_list` container (`view_items: 4`).
+  - Prevents vertical list overflow from covering the bottom status panel (`forts_area`) or the advisor navigation toolbar when a city has more than 4 legions.
+- **Imperial Overseer Debens Request & Display Fixes**:
+  - Fixed `scenario_request_compute_status()` in [ui_advisor_imperial.js](file:///D:/Akhenaten/src/scripts/ui_advisor_imperial.js#L18) to check treasury funds (`city.finance.treasury < rq.raw_amount`) for Debens requests instead of checking non-existent storage yard quantities.
+  - Corrected raw units vs. stack count comparison (`in_yards < rq.amount_total`), resolving the bug where requests showed "Unable to fulfill request" even with full storage yards.
+  - Replaced missing popup strings with native localized dialog texts (`__loc(5, 31)`, `__loc(5, 30)`).
+- **Weaver Workshop Window Binding**:
+  - Added `BUILDING_WEAVER_WORKSHOP` to `workshop_info_window.related_buildings` in [ui_workshop_window.js](file:///D:/Akhenaten/src/scripts/ui_workshop_window.js#L78), enabling production progress, raw material storage, and status descriptions for Weavers.
 
 ---
 

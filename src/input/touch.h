@@ -40,6 +40,7 @@ int touch_is_scroll();
 int touch_get_scroll();
 
 void reset_touches(int reset_old_touch);
+void touch_clear_all();
 
 int touch_create(vec2i start_coords, time_millis start_time);
 void touch_move(int index, vec2i current_coords, time_millis current_time);

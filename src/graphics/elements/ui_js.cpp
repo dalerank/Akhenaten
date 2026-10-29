@@ -271,7 +271,11 @@ void __ui_dialog_show_yesno(pcstr text, js_helpers::js_function_ref cb_yes, js_h
 ANK_FUNCTION_3(__ui_dialog_show_yesno)
 
 void __ui_dialog_show_ok(pcstr text, pcstr title) {
-    popup_dialog::show_ok(title, text, [] {});
+    if (!title || !*title || strcmp(title, "undefined") == 0) {
+        popup_dialog::show_ok(text, [] {});
+    } else {
+        popup_dialog::show_ok(title, text, [] {});
+    }
 }
 ANK_FUNCTION_2(__ui_dialog_show_ok)
 

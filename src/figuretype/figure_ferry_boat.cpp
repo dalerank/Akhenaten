@@ -136,18 +136,11 @@ void figure_ferry_boat::figure_action() {
         break;
 
     case ACTION_1_FERRY_BOAT_GOING_TO_DESTINATION:
-        base.move_ticks(1);
-        base.height_adjusted_ticks = 0;
-        
-        if (direction() == DIR_FIGURE_NONE) {
-
+        if (do_goto(d.destination_tile, TERRAIN_USAGE_ANY)) {
             advance_action(ACTION_2_FERRY_BOAT_AT_DESTINATION);
             base.wait_ticks = 0;
             d.wait_ticks_at_destination = 50 + (random_short() % 50);
-        } else if (direction() == DIR_FIGURE_REROUTE) {
-            route_remove();
         } else if (direction() == DIR_FIGURE_CAN_NOT_REACH) {
-
             advance_action(ACTION_3_FERRY_BOAT_RETURNING);
             water_access_tiles fpoints = map_water_get_access_points(*home_ferry, home_ferry->dcast()->get_orientation(), 1);
             base.destination_tile = fpoints.point_a;
@@ -168,20 +161,18 @@ void figure_ferry_boat::figure_action() {
         break;
 
     case ACTION_3_FERRY_BOAT_RETURNING:
-        base.move_ticks(1);
-        base.height_adjusted_ticks = 0;
-        
-        if (direction() == DIR_FIGURE_NONE) {
-            // Вернулись домой, ищем новое назначение
-            advance_action(ACTION_0_FERRY_BOAT_CREATED);
-            base.wait_ticks = 0;
-            d.destination_ferry_id = 0;
-            update_destination();
-        } else if (direction() == DIR_FIGURE_REROUTE) {
-            route_remove();
-        } else if (direction() == DIR_FIGURE_CAN_NOT_REACH) {
-            // Не можем вернуться домой
-            poof();
+        {
+            water_access_tiles fpoints = map_water_get_access_points(*home_ferry, home_ferry->dcast()->get_orientation(), 1);
+            if (do_goto(fpoints.point_a, TERRAIN_USAGE_ANY)) {
+                // Вернулись домой, ищем новое назначение
+                advance_action(ACTION_0_FERRY_BOAT_CREATED);
+                base.wait_ticks = 0;
+                d.destination_ferry_id = 0;
+                update_destination();
+            } else if (direction() == DIR_FIGURE_CAN_NOT_REACH) {
+                // Не можем вернуться домой
+                poof();
+            }
         }
         break;
     }

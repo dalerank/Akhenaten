@@ -50,11 +50,13 @@ tile2i city_fishing_points_t::random_fishing_point(tile2i pos, bool free_only) {
     return tile2i::invalid;
 }
 
-tile2i city_fishing_points_t::closest_fishing_point(tile2i pos, bool free_only) {
+tile2i city_fishing_points_t::closest_fishing_point(tile2i pos, bool free_only, tile2i exclude_tile) {
     const auto &fpoints = g_scenario.fishing_points;
     
     svector<tile2i, MAX_FISH_POINTS> apoints;
-    std::copy_if(std::begin(fpoints), std::end(fpoints), std::back_inserter(apoints), [] (auto p) { return p.x() > 0; });
+    std::copy_if(std::begin(fpoints), std::end(fpoints), std::back_inserter(apoints), [exclude_tile] (auto p) {
+        return p.x() > 0 && p != exclude_tile;
+    });
 
     if (apoints.empty()) {
         return tile2i::invalid;

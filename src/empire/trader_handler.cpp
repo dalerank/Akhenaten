@@ -121,6 +121,8 @@ empire_trader_handle empire_create_trader() {
 void empire_trader_handle::back_to_city() {
     auto &traders = g_empire_traders.traders;
     traders[handle].state = empire_trader::estate_returning_home;
+    traders[handle].current_route_point = 0;
+    traders[handle].movement_delay = traders[handle].movement_delay_max;
 }
 
 e_resource empire_trader_handle::get_buy_resource(building* b, empire_city_handle city, int amount) {

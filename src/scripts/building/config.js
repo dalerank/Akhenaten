@@ -299,9 +299,9 @@ building_shipyard = {
     preview : { pack: PACK_TERRAIN, id:26, max_frames:1 },
     base : { pack: PACK_TERRAIN, id:26, max_frames:1 },
     wood : { pos : [55, 20], pack:PACK_GENERAL, id:202 },
-    work_warship : { pos : [70, 20], pack:PACK_SPR_AMBIENT, id:52, max_frames: 12, duration:4 },
-    work_fishing_boat : { pos : [70, 20], pack:PACK_SPR_AMBIENT, id:54, max_frames: 11, duration:4 },
-    work_transport : { pos : [70, 20], pack:PACK_SPR_AMBIENT, id:54, max_frames: 11, duration:4 },
+    work_warship : { pos : [0, 0], pack:PACK_SPR_AMBIENT, id:52, max_frames: 12, duration:4 },
+    work_fishing_boat : { pos : [0, 0], pack:PACK_SPR_AMBIENT, id:54, max_frames: 11, duration:4 },
+    work_transport : { pos : [0, 0], pack:PACK_SPR_AMBIENT, id:54, max_frames: 11, duration:4 },
   }
   transport_progress_cost : 400
   warship_progress_cost : 400

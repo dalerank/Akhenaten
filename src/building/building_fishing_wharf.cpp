@@ -70,15 +70,16 @@ void building_fishing_wharf::spawn_figure() {
                 base.figure_spawn_delay = 0;
 
 
-                int dock_tile = base.tiles[0];
-                if (!!game_features::gameplay_fishing_wharf_spawn_boats && dock_tile > 0) {
-                    tile2i dtile(dock_tile);
+                tile2i dtile = get_water_access_tiles().point_a;
+                if (!!game_features::gameplay_fishing_wharf_spawn_boats && dtile.valid() && map_terrain_is(dtile, TERRAIN_WATER)) {
                     figure* f = figure_create(FIGURE_FISHING_BOAT, dtile, DIR_4_BOTTOM_LEFT);
-                    f->action_state = ACTION_0_FISHING_BOAT_CREATED;
-                    f->set_home(id());
-                    base.set_figure(BUILDING_SLOT_BOAT, f);
-                    random_generate_next();
-                    f->wait_ticks = random_short() % 30; // ok
+                    if (f) {
+                        f->action_state = ACTION_0_FISHING_BOAT_CREATED;
+                        f->set_home(id());
+                        base.set_figure(BUILDING_SLOT_BOAT, f);
+                        random_generate_next();
+                        f->wait_ticks = random_short() % 30; // ok
+                    }
                 }
             }
         }

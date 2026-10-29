@@ -350,37 +350,39 @@ void figure_trade_ship::figure_action() {
     case ACTION_112_TRADE_SHIP_MOORED:
         if (lost_queue()) {
             d.failed_dock_attempts = 0;
-            base.action_state = ACTION_115_TRADE_SHIP_LEAVING;
-            base.wait_ticks = 0;
-            base.destination_tile = scenario_map_river_entry();
+            runtime_data().trader.back_to_city();
+            advance_action(ACTION_115_TRADE_SHIP_LEAVING, scenario_map_river_exit());
+            base.destination_building_id = 0;
             // Release pier if still reserved (e.g. dock lost workers).
             {
-                auto *dock = destination()->dcast_dock();
+                auto *dock = destination() ? destination()->dcast_dock() : nullptr;
                 if (dock && dock->runtime_data().trade_ship == id()) {
                     dock->runtime_data().trade_ship = 0;
                 }
             }
-        } else if (auto *dock = destination()->dcast_dock(); dock && !dock->accepts_ship(id())) {
+        } else if (auto *dock = destination() ? destination()->dcast_dock() : nullptr; dock && !dock->accepts_ship(id())) {
             // Orders no longer match — leave instead of idling until TRADE_SHIP_IDLE_DAYS_MAX.
             d.failed_dock_attempts = 0;
-            base.action_state = ACTION_115_TRADE_SHIP_LEAVING;
-            base.wait_ticks = 0;
-            base.destination_tile = scenario_map_river_entry();
+            runtime_data().trader.back_to_city();
+            advance_action(ACTION_115_TRADE_SHIP_LEAVING, scenario_map_river_exit());
             if (dock->runtime_data().trade_ship == id()) {
                 dock->runtime_data().trade_ship = 0;
             }
             dock->runtime_data().queued_docker_id = 0;
             dock->runtime_data().num_ships = 0;
+            base.destination_building_id = 0;
         } else if (done_trading()) {
             d.failed_dock_attempts = 0;
-            base.action_state = ACTION_115_TRADE_SHIP_LEAVING;
-            base.wait_ticks = 0;
-            base.destination_tile = scenario_map_river_entry();
             building* dst = destination();
-            auto &dock = dst->dcast_dock()->runtime_data();
-            dock.queued_docker_id = 0;
-            dock.num_ships = 0;
-            dock.trade_ship = 0;
+            if (dst) {
+                auto &dock = dst->dcast_dock()->runtime_data();
+                dock.queued_docker_id = 0;
+                dock.num_ships = 0;
+                dock.trade_ship = 0;
+            }
+            runtime_data().trader.back_to_city();
+            advance_action(ACTION_115_TRADE_SHIP_LEAVING, scenario_map_river_exit());
+            base.destination_building_id = 0;
         }
 
         switch (destination()->orientation) {
@@ -458,14 +460,11 @@ void figure_trade_ship::figure_action() {
         break;
 
     case ACTION_115_TRADE_SHIP_LEAVING:
-        base.move_ticks(1);
-        base.height_adjusted_ticks = 0;
-        if (direction() == DIR_FIGURE_NONE) {
+        base.destination_building_id = 0;
+        if (do_goto(base.destination_tile, TERRAIN_USAGE_ANY)) {
             base.action_state = ACTION_110_TRADE_SHIP_CREATED;
             runtime_data().trader.back_to_city();
             poof();
-        } else if (direction() == DIR_FIGURE_REROUTE) {
-            route_remove();
         } else if (direction() == DIR_FIGURE_CAN_NOT_REACH) {
             runtime_data().trader.back_to_city();
             poof();

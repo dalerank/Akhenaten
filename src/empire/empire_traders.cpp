@@ -59,22 +59,22 @@ void empire_trader::update() {
     }
 
     const map_route_object& route = g_empire.get_route_object(trade_route_id);
-    if (!route.in_use || current_route_point >= route.num_points) {
+    if (!route.in_use || route.num_points == 0) {
         is_active = false;
+        return;
+    }
+
+    if (is_at_destination()) {
+        complete_trade();
         return;
     }
 
     current_route_point++;
     current_route_point = std::clamp<uint8_t>(current_route_point, 0, route.num_points - 1);
     const auto& point = (state == estate_returning_home)
-                            ? route.points[current_route_point]
-                            : route.points[route.num_points - current_route_point];
+                            ? route.points[route.num_points - 1 - current_route_point]
+                            : route.points[current_route_point];
     current_position = point.p;
-
-    if (is_at_destination()) {
-        complete_trade();
-        return;
-    }
 
     movement_delay = movement_delay_max;
 }
@@ -123,7 +123,9 @@ void empire_trader::complete_trade() {
         current_route_point = 0;
 
         const map_route_object &route = g_empire.get_route_object(trade_route_id);
-        current_position = route.points[current_route_point].p;
+        if (route.in_use && route.num_points > 0) {
+            current_position = route.points[route.num_points - 1].p;
+        }
         movement_delay = 10;
 
         int city_id = g_empire.get_city_for_trade_route(trade_route_id);
@@ -199,7 +201,7 @@ void empire_traders_manager::create_trader(int trade_route_id, int destination_c
     trader->movement_delay_max = std::max<uint8_t>(movement_delay_range.x, rand() % delay_max_bound);
 
     if (route.in_use && route.num_points > 0) {
-        const auto &point = route.points[route.num_points - 1];
+        const auto &point = route.points[0];
         trader->current_position = point.p;
     }
 }

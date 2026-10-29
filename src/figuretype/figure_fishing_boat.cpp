@@ -195,19 +195,21 @@ void figure_fishing_boat::figure_action() {
     break;
 
     case ACTION_1_FISHING_BOAT_GOING_TO_FISH:
-        base.move_ticks(1);
-        base.height_adjusted_ticks = 0;
-        if (direction() == DIR_FIGURE_NONE) {
+        if (do_goto(base.destination_tile, TERRAIN_USAGE_ANY)) {
             // Reached the sticky fishing spot. Commit unconditionally — collisions
             // with other boats are tolerated; both can fish on/near the same tile.
             runtime_data().fishing_point_check_attempts = 0;
             advance_action(ACTION_2_FISHING_BOAT_FISHING);
             base.direction = base.previous_tile_direction;
             base.wait_ticks = 0;
-        } else if (direction() == DIR_FIGURE_REROUTE || direction() == DIR_FIGURE_CAN_NOT_REACH) {
+        } else if (direction() == DIR_FIGURE_CAN_NOT_REACH) {
             runtime_data().fishing_point_check_attempts = 0;
+            runtime_data().failed_tile_x = (int16_t)base.destination_tile.x();
+            runtime_data().failed_tile_y = (int16_t)base.destination_tile.y();
+            runtime_data().preferred_fishing_tile = tile2i::invalid;
             advance_action(ACTION_3_FISHING_BOAT_GOING_TO_WHARF);
             base.destination_tile = base.source_tile;
+            route_remove();
         }
         break;
 
@@ -240,13 +242,9 @@ void figure_fishing_boat::figure_action() {
         break;
 
     case ACTION_3_FISHING_BOAT_GOING_TO_WHARF:
-        base.move_ticks(1);
-        base.height_adjusted_ticks = 0;
-        if (direction() == DIR_FIGURE_NONE) {
+        if (do_goto(base.destination_tile, TERRAIN_USAGE_ANY)) {
             advance_action(ACTION_4_FISHING_BOAT_AT_WHARF);
             base.wait_ticks = 0;
-        } else if (direction() == DIR_FIGURE_REROUTE) {
-            route_remove();
         } else if (direction() == DIR_FIGURE_CAN_NOT_REACH) {
             // cannot reach grounds
             city_message_post_with_message_delay(MESSAGE_CAT_FISHING_BLOCKED, 1, "message_fishing_boats_cant_navigate", 12);
@@ -299,17 +297,22 @@ void figure_fishing_boat::figure_action() {
                     }
 
                     if (!sticky_valid) {
-                        fish_tile = g_city.fishing_points.closest_fishing_point(tile(), false);
+                        tile2i exclude(rd.failed_tile_x, rd.failed_tile_y);
+                        fish_tile = g_city.fishing_points.closest_fishing_point(tile(), false, exclude);
                         rd.preferred_fishing_tile = fish_tile;
                     }
 
                     if (fish_tile.valid() && map_water_is_point_inside(fish_tile)) {
+                        base.wait_ticks = 0;
                         wharf->runtime_data().no_fishing_points_warning_shown = 0;
                         runtime_data().fishing_point_check_attempts = 0;
                         advance_action(ACTION_1_FISHING_BOAT_GOING_TO_FISH);
                         base.destination_tile = fish_tile;
                         route_remove();
                     } else {
+                        // Keep wait_ticks near max to re-check periodically without rapid state reset/flicker
+                        base.wait_ticks = (int16_t)std::max(0, max_wait_ticks - 60);
+
                         // No fishing points available - show warning (limit frequency)
                         auto &d = wharf->runtime_data();
                         if (d.no_fishing_points_warning_shown == 0) {

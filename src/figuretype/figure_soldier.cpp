@@ -41,28 +41,33 @@ REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_soldier_archer);
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_soldier_charioteer);
 
 void figure::javelin_launch_missile() {
-    tile2i tile = {-1, -1};
+    tile2i target_tile = {-1, -1};
     wait_ticks_missile++;
-    if (wait_ticks_missile > 100) { //figure_properties_for_type(type).missile_delay) {
+    if (wait_ticks_missile > 30) {
         wait_ticks_missile = 0;
-        if (figure_combat_get_missile_target_for_soldier(this, 10, &tile)) {
+        const int target_id = figure_combat_get_missile_target_for_soldier(this, 10, &target_tile);
+        if (target_id > 0) {
+            target_figure_id = target_id;
             attack_image_offset = 1;
-            direction = calc_missile_shooter_direction(tile, tile);
-        } else
+            direction = calc_missile_shooter_direction(this->tile, target_tile);
+        } else {
             attack_image_offset = 0;
+        }
     }
     if (attack_image_offset) {
         if (attack_image_offset == 1) {
-            if (tile.x() == -1 || tile.y() == -1) {
-                map_point_get_last_result(tile);
+            if (target_tile.x() == -1 || target_tile.y() == -1) {
+                map_point_get_last_result(target_tile);
             }
 
             figure* f = figure_get(target_figure_id);
-            figure_missile::create(home_building_id, tile, f->tile, FIGURE_JAVELIN);
-            formation_record_missile_fired(formation_get(formation_id));
+            if (f && f->is_valid() && !f->is_dead()) {
+                figure_missile::create(home_building_id, this->tile, f->tile, FIGURE_JAVELIN);
+                formation_record_missile_fired(formation_get(formation_id));
+            }
         }
         attack_image_offset++;
-        if (attack_image_offset > 100)
+        if (attack_image_offset > 30)
             attack_image_offset = 0;
     }
 }

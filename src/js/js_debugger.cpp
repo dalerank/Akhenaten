@@ -140,6 +140,10 @@ cstring json_from_bvariant_map(const bvariant_map &m, pcstr raw_tail_key = nullp
 // ─────────────────────────────────────────────────────────────────────────────
 
 void MujsDebugger::start(js_State *J, int port) {
+#if defined(GAME_PLATFORM_ANDROID)
+    logs::warn("JS Debugger disabled on Android");
+    return;
+#else
     if (running_) {
         return;
     }
@@ -148,6 +152,7 @@ void MujsDebugger::start(js_State *J, int port) {
     port_ = port;
     running_ = true;
     server_thread_ = std::thread([this, port] () { server_loop(port); });
+#endif
 }
 
 void MujsDebugger::stop() {
@@ -187,6 +192,12 @@ void MujsDebugger::update_state(js_State *J) {
 // ─────────────────────────────────────────────────────────────────────────────
 
 void MujsDebugger::on_line(js_State *J, const char *file, int line) {
+#if defined(GAME_PLATFORM_ANDROID)
+    (void)J;
+    (void)file;
+    (void)line;
+    return;
+#else
     if (!running_) {
         return;
     }
@@ -208,6 +219,7 @@ void MujsDebugger::on_line(js_State *J, const char *file, int line) {
     logs::info("JS DBG stopped: %s:%d", file ? file : "<null>", line);
     send_stopped_event("breakpoint", file, line);
     block_until_command();
+#endif
 }
 
 bool MujsDebugger::should_break(const char *file, int line) {

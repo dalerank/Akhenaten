@@ -187,12 +187,31 @@ void touch_end(int index, time_millis current_time) {
         t->frame_movement = t->last_movement;
 }
 
+#include "platform/touch.h"
+
+void touch_clear_all(void) {
+    auto &data = g_touch_data;
+    for (int i = 0; i <= MAX_ACTIVE_TOUCHES; ++i) {
+        data.finger[i] = {};
+    }
+    data.old_touch = {};
+    data.last_scroll_position = 0;
+    data.touchpad_mode_click_type = EMULATED_MOUSE_CLICK_NONE;
+    mouse::ref().is_touch = 0;
+    platform_touch_reset();
+}
+
 void reset_touches(int reset_old_touch) {
     auto &data = g_touch_data;
+    time_millis now = time_get_millis();
     for (int i = 0; i < MAX_ACTIVE_TOUCHES; ++i) {
         touch_t * t = &data.finger[i];
         if (!t->in_use)
             continue;
+
+        if (!t->has_ended && (now - t->last_change_time > 3000)) {
+            t->has_ended = 1;
+        }
 
         if (t->has_ended) {
             t->in_use = 0;
@@ -293,11 +312,8 @@ int touch_to_mouse(void) {
     auto &m = mouse::ref();
 
     if (!first->in_use) {
-        if (m.is_touch) {
-            m.reset_scroll();
-            m.reset_button_state();
-            return 1;
-        } else if (data.touchpad_mode_click_type != EMULATED_MOUSE_CLICK_NONE)
+        m.is_touch = 0;
+        if (data.touchpad_mode_click_type != EMULATED_MOUSE_CLICK_NONE)
             return handle_emulated_mouse_clicks();
 
         return 0;
