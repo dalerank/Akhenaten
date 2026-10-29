@@ -12,6 +12,11 @@ enum e_emigrant_action : uint16_t {
     ACTION_0_EMIGRANT_CREATED = 0,
     ACTION_1_EMIGRANT_EXITING = 1,
     ACTION_2_EMIGRANT_LEAVING = 2,
+
+    // Pharaoh .sav action ids (OG 0x0048A260)
+    LEGACY_EMIGRANT_CREATED = 8,
+    LEGACY_EMIGRANT_EXITING = 9,
+    LEGACY_EMIGRANT_LEAVING = 10,
 };
 
 class figure_emigrant : public figure_impl {

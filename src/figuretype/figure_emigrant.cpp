@@ -51,7 +51,7 @@ void figure_emigrant::figure_action() {
 
     switch (action_state()) {
     case ACTION_0_EMIGRANT_CREATED:
-    case 8: // OG action id (Pharaoh .sav)
+    case LEGACY_EMIGRANT_CREATED:
         // OG action 8: ghost wait; after 5 ticks find road within radius 5
         base.set_flag(e_figure_flag_invisible, true);
         base.animctx.frame = 0;
@@ -70,7 +70,7 @@ void figure_emigrant::figure_action() {
         break;
 
     case ACTION_1_EMIGRANT_EXITING:
-    case 9: // OG action id
+    case LEGACY_EMIGRANT_EXITING:
         // OG action 9: cross-country to road; ghost while in_building_wait_ticks
         base.use_cross_country = true;
         base.set_flag(e_figure_flag_invisible, true);
@@ -83,7 +83,7 @@ void figure_emigrant::figure_action() {
         break;
 
     case ACTION_2_EMIGRANT_LEAVING:
-    case 10: // OG action id
+    case LEGACY_EMIGRANT_LEAVING:
         // OG action 10: walk to city entry; die on reached / reroute / lost
         base.use_cross_country = false;
         base.set_flag(e_figure_flag_invisible, false);
@@ -104,9 +104,9 @@ void figure_emigrant::figure_action() {
 void figure_emigrant::update_animation() {
     figure_impl::update_animation();
 
-    // OG: cart only while leaving (action 10 / ACTION_2), opposite facing
+    // OG: cart only while leaving (ACTION_2 / LEGACY 10), opposite facing
     const int state = action_state();
-    if (state != ACTION_2_EMIGRANT_LEAVING && state != 10) {
+    if (state != ACTION_2_EMIGRANT_LEAVING && state != LEGACY_EMIGRANT_LEAVING) {
         base.cart_image_id = 0;
         return;
     }
