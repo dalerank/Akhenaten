@@ -101,6 +101,7 @@ void city_population_t::update_room() {
 }
 
 int city_population_t::create_emigrants(int num_people) {
+    // OG 0x00458B60: house levels 0..9 only (crude hut … spacious apartment), lowest first, groups ≤ 4
     svector<building_house *, 2000> houses;
     buildings_houses_get(houses);
 
@@ -117,7 +118,13 @@ int city_population_t::create_emigrants(int num_people) {
         }
 
         const int level = house->house_level();
-        if (!game_features::gameplay_change_small_hut_not_create_emigrant && (level <= HOUSE_STURDY_HUT || (level < HOUSE_ORDINARY_COTTAGE && house->house_population() < 10))) {
+        if (level > HOUSE_SPACIOUS_APARTMENT) {
+            continue;
+        }
+
+        // Enhanced: optionally skip small huts (OFF by default = OG, huts do emigrate)
+        if (game_features::gameplay_change_small_hut_not_create_emigrant
+            && (level <= HOUSE_STURDY_HUT || (level < HOUSE_ORDINARY_COTTAGE && house->house_population() < 10))) {
             continue;
         }
 

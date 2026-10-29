@@ -9,11 +9,9 @@ struct event_create_emigrant {
 };
 
 enum e_emigrant_action : uint16_t {
-    ACTION_2_EMIGRANT_ARRIVING = 2,
-    ACTION_4_EMIGRANT_CREATED = 4,
-    ACTION_5_EMIGRANT_EXITING_HOUSE = 5,
-    ACTION_6_EMIGRANT_LEAVING = 6,
-    ACTION_16_EMIGRANT_RANDOM = 16,
+    ACTION_0_EMIGRANT_CREATED = 0,
+    ACTION_1_EMIGRANT_EXITING = 1,
+    ACTION_2_EMIGRANT_LEAVING = 2,
 };
 
 class figure_emigrant : public figure_impl {
