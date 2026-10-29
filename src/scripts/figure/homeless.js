@@ -62,13 +62,13 @@ function figure_homeless_phrase_key(f) {
 	var state = f.action_state
 	var sentiment = city.sentiment.value
 
-	// ACTION_8_HOMELESS_GOING_TO_HOUSE
-	if (state == 8) {
+	// ACTION_1 / LEGACY 9 going to house
+	if (state == 1 || state == 9) {
 		keys.push("homeless_found_new_house")
 	}
 
-	// ACTION_6_HOMELESS_LEAVING
-	if (state == 6) {
+	// ACTION_3 / LEGACY 11 leaving
+	if (state == 3 || state == 11) {
 		keys.push("homeless_no_house_for_me")
 	}
 

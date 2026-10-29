@@ -5,12 +5,16 @@
 struct event_create_homeless { tile2i tile; int num_people; pcstr location; };
 
 enum e_homeless_action {
-    ACTION_6_HOMELESS_LEAVING = 6,
-    ACTION_7_HOMELESS_CREATED = 7,
-    ACTION_8_HOMELESS_GOING_TO_HOUSE = 8,
-    ACTION_9_HOMELESS_ENTERING_HOUSE = 9,
-    ACTION_10_HOMELESS_ENTERING_HOUSE = 10,
-    ACTION_16_HOMELESS_RANDOM = 16,
+    ACTION_0_HOMELESS_CREATED = 0,
+    ACTION_1_HOMELESS_GOING_TO_HOUSE = 1,
+    ACTION_2_HOMELESS_ENTERING_HOUSE = 2,
+    ACTION_3_HOMELESS_LEAVING = 3,
+
+    // Pharaoh .sav action ids (OG 0x0048A720)
+    LEGACY_HOMELESS_CREATED = 8,
+    LEGACY_HOMELESS_GOING_TO_HOUSE = 9,
+    LEGACY_HOMELESS_ENTERING_HOUSE = 10,
+    LEGACY_HOMELESS_LEAVING = 11,
 };
 
 class figure_homeless : public figure_impl {
@@ -35,4 +39,5 @@ public:
     }
 
     int find_closest_house_with_room(tile2i tile);
+    bool go_to_house(int house_id);
 };

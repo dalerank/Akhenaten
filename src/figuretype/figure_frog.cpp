@@ -81,7 +81,7 @@ void cancel_incoming_immigrant(building &b) {
             hl->runtime_data().adv_home_building_id = 0;
         }
         f->home_building_id = 0;
-        f->advance_action(ACTION_7_HOMELESS_CREATED);
+        f->advance_action(ACTION_0_HOMELESS_CREATED);
         f->wait_ticks = 0;
     }
 }

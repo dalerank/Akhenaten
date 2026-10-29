@@ -279,7 +279,7 @@ static int house_image_group(int level) {
     return image_id + (use_offset ? anim.offset : 0);
 }
 
-void building_house::add_population(int num_people) {
+void building_house::add_population(int num_people, bool as_homeless) {
     int room = population_room();
     if (room <= 0 || num_people <= 0) {
         return;
@@ -298,7 +298,12 @@ void building_house::add_population(int num_people) {
 
     auto &d = runtime_data();
     d.population += num_people;
-    g_city.population.add(num_people);
+    // OG migrant_enter_house: homeless → add_homeless, immigrant → add
+    if (as_homeless) {
+        g_city.population.add_homeless(num_people);
+    } else {
+        g_city.population.add(num_people);
+    }
     base.remove_figure(2);
 }
 

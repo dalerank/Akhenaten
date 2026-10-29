@@ -141,7 +141,7 @@ public:
     int16_t population_room() const;
     void change_to_vacant_lot();
     bool is_vacant_lot() const;
-    void add_population(int num_people);
+    void add_population(int num_people, bool as_homeless = false);
     static void change_to(building &b, e_building_type type, bool force = false);
     void merge();
     void merge_impl();
