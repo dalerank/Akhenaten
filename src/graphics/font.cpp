@@ -25,7 +25,7 @@ void ANK_REGISTER_CONFIG_ITERATOR(config_load_external_fonts) {
     font_atlas_regenerate();
 }
 
-ANK_CONFIG_STRUCT(font_config, type, size, bold, color, shadow_offset, line_height)
+ANK_CONFIG_STRUCT(font_config, type, size, bold, color, shadow_offset, line_height, letter_spacing)
 const e_font_tokens_t ANK_CONFIG_ENUM(e_font_tokens);
 
 static int image_y_offset_none(const uint8_t *c, int image_height, int line_height);
@@ -64,7 +64,9 @@ static const std::array<font_definition, FONT_TYPES_MAX> DEFINITIONS_DEFAULT = {
      {FONT_LARGE_BLACK_ON_DARK, 804, 0, 8, 0, 23, image_y_offset_default},
      {FONT_SMALL_OUTLINED, 938, 0, 2, -1, 11, image_y_offset_default},
      {FONT_NORMAL_BLACK_ON_DARK, 1072, 0, 6, 0, 11, image_y_offset_default},
-     {FONT_SMALL_SHADED, 1206, 0, 6, 2, 11, image_y_offset_default}
+     {FONT_SMALL_SHADED, 1206, 0, 6, 2, 11, image_y_offset_default},
+     // Main-menu buttons: image_offset 134 = original NORMAL bitmap; non-EN gets an 18px TTF.
+     {FONT_MENU_BLACK_ON_LIGHT, 134, 0, 6, 0, 14, image_y_offset_default}
 } };
 
 enum E_MULTIBYTE {
@@ -87,6 +89,10 @@ struct font_data_t {
 };
 
 font_data_t g_font_data;
+
+bool font_use_utf() {
+    return g_font_data.use_utf_font;
+}
 
 static int image_y_offset_none(const uint8_t *c, int image_height, int line_height) {
     int offset = image_height - line_height;
@@ -316,6 +322,9 @@ void font_atlas_regenerate() {
     if (!g_args.get_custom_font().empty() && !g_font_data.use_utf_font) {
         g_font_data.use_utf_font = true;
     }
+
+    // Reset before applying font_configs so a previous session's tweaks never leak into an EN run.
+    g_font_data.font_definitions = DEFINITIONS_DEFAULT;
 
     // Add basic latin characters (ASCII 32-126) to ensure they are always generated from the TTF font
     // This ensures visual consistency between latin and UTF-8 characters

@@ -41,8 +41,6 @@ function info_window_ferry_on_init(window) {
         }
     }
 
-    // Group 159 only has problem strings (1-3). When the crossing is healthy,
-    // still fill warning_text so the body is not blank like a missing UI.
     if (reason_id) {
         window.warning_text.text = __loc(gid, reason_id)
     } else {

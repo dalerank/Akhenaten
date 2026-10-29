@@ -19,6 +19,7 @@ typedef uint32_t color;
 // #define COLOR_TOOLTIP_TEXT 0xff424242
 #define COLOR_TOOLTIP_TEXT 0xffffe7d6
 #define COLOR_TOOLTIP_SHADOW 0xff392410
+#define COLOR_FONT_SHADOW 0xff552f0b
 #define COLOR_TOOLTIP_BORDER 0xff5A1400
 #define COLOR_TOOLTIP_FILL 0xffbd7142
 #define COLOR_SIDEBAR 0xffbdb592

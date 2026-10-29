@@ -63,6 +63,18 @@ int graphics_save_to_texture(int image_id, vec2i pos, vec2i size) {
     return g_render.save_texture_from_screen(image_id, pos, size.x, size.y);
 }
 
+int graphics_ensure_saved_texture(int image_id, vec2i size) {
+    return g_render.ensure_saved_texture(image_id, size.x, size.y);
+}
+
+bool graphics_begin_saved_texture_target(int image_id) {
+    return g_render.begin_saved_texture_target(image_id);
+}
+
+void graphics_end_saved_texture_target() {
+    g_render.end_saved_texture_target();
+}
+
 void graphics_delete_saved_texture(int image_id) {
     g_render.delete_saved_texture(image_id);
 }

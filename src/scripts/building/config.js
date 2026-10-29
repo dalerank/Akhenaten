@@ -287,6 +287,8 @@ building_ferry {
   fire_proof : true,
   meta { text_id: 159, help_link:"message_game_concept_water_crossings" }
   labor_category : LABOR_CATEGORY_GOVERNMENT
+  dock_wait_ticks_min: 80
+  dock_wait_ticks_max: 220
   cost [8, 15, 30, 50, 100 ]
   desirability { value[-5], step[2], step_size[2], range[4] }
   laborers[5]

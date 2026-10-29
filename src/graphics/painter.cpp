@@ -176,7 +176,20 @@ const image_t *painter::img_letter(const image_t *img, e_font font, int letter_i
     }
 
     if (font == FONT_SMALL_SHADED) {
-        draw_image(img, vec2i{ x + 1, y + 1 }, COLOR_BLACK, scale);
+        if (font_use_utf()) {
+            // Thin antialiased TTF glyphs wash a single black pass out; accumulate it to
+            // match the opaque 1-bit bitmap shadow.
+            draw_image(img, vec2i{ x + 1, y + 1 }, COLOR_BLACK, scale);
+            draw_image(img, vec2i{ x + 1, y + 1 }, COLOR_BLACK, scale);
+            draw_image(img, vec2i{ x + 1, y + 1 }, COLOR_BLACK, scale);
+        } else {
+            draw_image(img, vec2i{ x + 1, y + 1 }, COLOR_BLACK, scale);
+        }
+    }
+
+    if (font_use_utf() && (font == FONT_NORMAL_WHITE_ON_DARK || font == FONT_NORMAL_YELLOW)) {
+        // The original bitmaps bake a dark top-left shadow next to each stroke.
+        draw_image(img, vec2i{ x - 1, y - 1 }, COLOR_FONT_SHADOW, scale);
     }
 
     draw_image(img, vec2i{ x, y }, color_mask, scale);

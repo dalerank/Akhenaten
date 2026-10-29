@@ -69,7 +69,7 @@ namespace DynamicFont {
             unsigned int Height() const { return m_Height; }
             unsigned int Channels() const { return m_Channels; }
 
-            void Draw(int x, int y, const FreeTypeGlyph &, uint8_t *colors, int shadowOffset = 0);
+            void Draw(int x, int y, const FreeTypeGlyph &, uint8_t *colors, int shadowOffset = 0, int fontSize = 0);
         private:
             std::vector<uint8_t> m_Data{};
             unsigned int m_Width{};
@@ -86,6 +86,7 @@ namespace DynamicFont {
         Glyphs m_Glyphs;
         uint8_t m_Color[4] = { 0, 0, 0, 0 };
         int m_ShadowOffset = 0;
+        int m_FontSize = 0;
     };
 }
 

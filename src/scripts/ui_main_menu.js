@@ -38,13 +38,13 @@ window_main_menu {
 	ui {
 		background    : { type:"background", path:"pharaoh_unloaded/title_00001" }
 
-		continue_game : large_button({ pos:mbutton(0), size[256, 25], text[13, 5] })
-		select_player : large_button({ pos:mbutton(1), size[256, 25], text[30, 0] })
-		show_records  : large_button({ pos:mbutton(2), size[256, 25], text[30, 5] })
-		show_config   : large_button({ pos:mbutton(3), size[256, 25], text[2,  0] })
-		show_mods     : large_button({ pos:mbutton(4), size[256, 25], text:"#main_menu_mods" })
-		show_editor   : large_button({ pos:mbutton(5), size[256, 25], text:"#main_menu_editor" })
-		quit_game     : large_button({ pos:mbutton(6), size[256, 25], text[30, 4] })
+		continue_game : large_button({ pos:mbutton(0), size[256, 25], text[13, 5], font: FONT_MENU_BLACK_ON_LIGHT })
+		select_player : large_button({ pos:mbutton(1), size[256, 25], text[30, 0], font: FONT_MENU_BLACK_ON_LIGHT })
+		show_records  : large_button({ pos:mbutton(2), size[256, 25], text[30, 5], font: FONT_MENU_BLACK_ON_LIGHT })
+		show_config   : large_button({ pos:mbutton(3), size[256, 25], text[2,  0], font: FONT_MENU_BLACK_ON_LIGHT })
+		show_mods     : large_button({ pos:mbutton(4), size[256, 25], text:"#main_menu_mods", font: FONT_MENU_BLACK_ON_LIGHT })
+		show_editor   : large_button({ pos:mbutton(5), size[256, 25], text:"#main_menu_editor", font: FONT_MENU_BLACK_ON_LIGHT })
+		quit_game     : large_button({ pos:mbutton(6), size[256, 25], text[30, 4], font: FONT_MENU_BLACK_ON_LIGHT })
 
 		discord 	  : image_button({ pos[sw(-100), sh(-50)], size[48, 48], icon_texture:"!discord", scale:0.75 })
 
@@ -53,14 +53,29 @@ window_main_menu {
 
 		update_panel  : outer_panel({ size[20, 27], enabled:false,
 			ui {
-				update_game : large_button({ pos[32, 16], size[256, 25], text:"#main_menu_update_now", enabled: false })
-				update_later : large_button({ pos[32, 48], size[256, 25], text:"#main_menu_update_later", enabled: false })
+				update_game : large_button({ pos[32, 16], size[256, 25], text:"#main_menu_update_now", enabled: false, font: FONT_MENU_BLACK_ON_LIGHT })
+				update_later : large_button({ pos[32, 48], size[256, 25], text:"#main_menu_update_later", enabled: false, font: FONT_MENU_BLACK_ON_LIGHT })
 				new_version : text({pos[18, 84], text: game.version, font: FONT_SMALL_PLAIN, enabled: false})
 				update_status : text({pos[18, 104], size[280, 20], text:"", font: FONT_SMALL_PLAIN, enabled: false})
 				recent_commits : text({pos[18, 124], size[280, 280], wrap:px(17), rich:true, text:"#main_menu_loading_commits", font: FONT_SMALL_PLAIN, enabled: false, clip_area: true})
 			}
 		})
 	}
+}
+
+function main_menu_button_width() {
+	var texts = [
+		__loc(13, 5), __loc(30, 0), __loc(30, 5), __loc(2, 0),
+		__loc('#main_menu_mods'), __loc('#main_menu_editor'), __loc(30, 4)
+	]
+	var maxw = 0
+	for (var i = 0; i < texts.length; i++) {
+		var w = __ui_text_width(texts[i], FONT_MENU_BLACK_ON_LIGHT)
+		if (w > maxw) {
+			maxw = w
+		}
+	}
+	return (((maxw + 24) / 16 | 0) + 1) * 16
 }
 
 function main_menu_can_continue() {
@@ -154,6 +169,18 @@ function main_menu_on_init(window) {
     __sound_city_init()
 
     window.continue_game.readonly = !main_menu_can_continue()
+
+	// Non-EN labels are longer; grow the buttons to fit the widest one at init.
+	if (game.languages.current != 'en') {
+		var w = main_menu_button_width()
+		var x0 = Math.floor(sw(0) / 2 - w / 2)
+		var y0 = Math.floor(sh(0) / 2 - 100)
+		var ids = ['continue_game', 'select_player', 'show_records', 'show_config', 'show_mods', 'show_editor', 'quit_game']
+		for (var i = 0; i < ids.length; i++) {
+			window[ids[i]].size = { x: w, y: 25 }
+			window[ids[i]].pos = { x: x0, y: y0 + 40 * i }
+		}
+	}
 
 	if (!game.is_integral_tests && github_is_active()) {
 		github_get_recent_commits_async("dalerank", "Akhenaten")

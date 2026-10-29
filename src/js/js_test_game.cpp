@@ -3479,6 +3479,33 @@ static int __test_granary_add_resource(int bid, int resource, int amount) {
 }
 ANK_FUNCTION_3(__test_granary_add_resource);
 
+static int __test_granary_set_getting(int bid, int resource) {
+    building *b = building_get(bid);
+    auto *granary = b ? b->dcast_granary() : nullptr;
+    if (!granary || !b->is_valid()) {
+        return 0;
+    }
+    for (int i = 0; i < 8; i++) {
+        if (granary->is_getting((e_resource)resource)) {
+            return 1;
+        }
+        building_storage_cycle_resource_state(granary->storage_id(), (e_resource)resource, false);
+    }
+    return granary->is_getting((e_resource)resource) ? 1 : 0;
+}
+ANK_FUNCTION_2(__test_granary_set_getting);
+
+static int __test_granary_find_getting_source(int bid) {
+    building *b = building_get(bid);
+    auto *granary = b ? b->dcast_granary() : nullptr;
+    if (!granary || !b->is_valid()) {
+        return 0;
+    }
+    g_city.resource.calculate_stocks();
+    return granary->find_storage_for_getting().building_id;
+}
+ANK_FUNCTION_1(__test_granary_find_getting_source);
+
 static int __test_granary_set_resource(int bid, int resource, int amount) {
     building *b = building_get(bid);
     auto *granary = b ? b->dcast_granary() : nullptr;

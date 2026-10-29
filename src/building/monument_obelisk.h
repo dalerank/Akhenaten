@@ -8,6 +8,7 @@
 
 struct obelisk_stage {
     uint16_t timber = 0;
+    uint16_t work_ticks = 0; // OG spot initial_work; 0 → figure default
     image_desc obelisk_tx{};
     svector<vec2i, 8> ladders;
     vec2i carpenter_point{};
@@ -15,8 +16,8 @@ struct obelisk_stage {
     bool carpenter_need = false;
     bool stonemasons_need = false;
 };
-ANK_CONFIG_STRUCT(obelisk_stage, timber, obelisk_tx, ladders, carpenter_point, stonemasons_point, carpenter_need,
-                  stonemasons_need)
+ANK_CONFIG_STRUCT(obelisk_stage, timber, work_ticks, obelisk_tx, ladders, carpenter_point, stonemasons_point,
+                  carpenter_need, stonemasons_need)
 
 // Shared base for small (3×3) and large (5×5) granite obelisks — single building, no parts.
 class building_obelisk : public building_monument {
@@ -26,8 +27,8 @@ public:
 
     struct base_params {
         svector<monument_phase_resource, 4> placement_resources;
-        uint8_t art_stages = 4;
-        svector<obelisk_stage, 16> stages;
+        // OG large: 18 spots (8 carpenter + 10 stonemason); small: 10.
+        svector<obelisk_stage, 18> stages;
     };
 
     struct static_params : public base_params, public building_static_params {
@@ -57,11 +58,10 @@ public:
     virtual tile2i access_point() const override;
     virtual void bind_dynamic(io_buffer *iob, size_t version) override;
 
-    int art_stage() const; // 1-based stage index → anim letter a..
-    xstring anim_key_for(int stage) const;
     int placement_amount(e_resource r) const;
     bool place_scaffold();
     void stonemason_complete_work();
+    int current_work_ticks() const;
     const obelisk_stage *stage_at(int phase) const;
     const obelisk_stage *current_stage() const;
     vec2i carpenter_work_pixel() const;
@@ -86,7 +86,7 @@ public:
     } BUILDING_STATIC_DATA_T;
     virtual const monument &config() const override;
 };
-ANK_CONFIG_STRUCT(building_small_obelisk::static_params, placement_resources, art_stages, stages)
+ANK_CONFIG_STRUCT(building_small_obelisk::static_params, placement_resources, stages)
 
 class building_large_obelisk : public building_obelisk {
 public:
@@ -96,4 +96,4 @@ public:
     } BUILDING_STATIC_DATA_T;
     virtual const monument &config() const override;
 };
-ANK_CONFIG_STRUCT(building_large_obelisk::static_params, placement_resources, art_stages, stages)
+ANK_CONFIG_STRUCT(building_large_obelisk::static_params, placement_resources, stages)

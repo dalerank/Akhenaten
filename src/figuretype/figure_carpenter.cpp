@@ -85,7 +85,11 @@ void figure_carpenter::figure_action() {
         }
 
         base.wait_ticks++;
-        if (base.wait_ticks > simulation_time_t::ticks_in_day * 2) {
+        int work_need = simulation_time_t::ticks_in_day * 2;
+        if (auto *obelisk = worked ? worked->dcast_obelisk() : nullptr) {
+            work_need = obelisk->current_work_ticks();
+        }
+        if (base.wait_ticks > work_need) {
             if (auto *obelisk = worked ? worked->dcast_obelisk() : nullptr) {
                 obelisk->place_scaffold();
             } else if (auto statue = smart_cast<building_statue>(worked)) {

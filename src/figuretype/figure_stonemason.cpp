@@ -125,7 +125,7 @@ void figure_stonemason::figure_action() {
         obelisk->set_stonemason_works(id());
 
         base.wait_ticks++;
-        if (base.wait_ticks > simulation_time_t::ticks_in_day * 2) {
+        if (base.wait_ticks > obelisk->current_work_ticks()) {
             obelisk->stonemason_complete_work();
             base.set_flag(e_figure_flag_invisible, false);
             advance_action(ACTION_6_MASON_RETURN_HOME);

@@ -38,6 +38,9 @@ namespace ui {
 }
 
 int graphics_save_to_texture(int image_id, vec2i pos, vec2i size);
+int graphics_ensure_saved_texture(int image_id, vec2i size);
+bool graphics_begin_saved_texture_target(int image_id);
+void graphics_end_saved_texture_target();
 void graphics_clear_saved_texture(int image_id, color clr);
 void graphics_delete_saved_texture(int image_id);
 void graphics_draw_from_texture(int image_id, vec2i pos, vec2i size);

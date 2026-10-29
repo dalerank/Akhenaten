@@ -115,6 +115,14 @@ struct renderer_data_t {
         SDL_Texture* texture;
     } unpacked_images[MAX_UNPACKED_IMAGES];
 
+    struct {
+        bool active = false;
+        SDL_Texture *former_target = nullptr;
+        SDL_Rect former_viewport = {};
+        SDL_Rect former_clip = {};
+        SDL_bool had_clip = SDL_FALSE;
+    } saved_texture_target;
+
     int supports_yuv_textures;
     bool is_opengl_context;
 
@@ -461,16 +469,108 @@ int graphics_renderer_interface::save_texture_from_screen(int texture_id, vec2i 
     }
 #endif // USE_TEXTURE_SCALE_MODE
 
+    // GLES keeps the screen clip across SetRenderTarget; a sidebar clip
+    // (e.g. minimap) lies outside the small save texture and blanks the copy.
+    // Prefer ensure_saved_texture + begin/end_saved_texture_target to draw into
+    // the cache directly — FBO→texture copies are unreliable on Android GLES.
     SDL_Rect former_viewport;
+    SDL_Rect former_clip;
     SDL_RenderGetViewport(data.renderer, &former_viewport);
+    SDL_bool had_clip = SDL_RenderIsClipEnabled(data.renderer);
+    if (had_clip) {
+        SDL_RenderGetClipRect(data.renderer, &former_clip);
+    }
     SDL_Rect src_rect = {pos.x + former_viewport.x, pos.y + former_viewport.y, width, height};
     SDL_Rect dst_rect = {0, 0, width, height};
+    SDL_BlendMode former_blend = SDL_BLENDMODE_BLEND;
+    SDL_GetTextureBlendMode(former_target, &former_blend);
+    SDL_SetTextureBlendMode(former_target, SDL_BLENDMODE_NONE);
+    SDL_RenderSetClipRect(data.renderer, nullptr);
     SDL_SetRenderTarget(data.renderer, texture_info.texture);
+    SDL_RenderSetViewport(data.renderer, &dst_rect);
     SDL_RenderCopy(data.renderer, former_target, &src_rect, &dst_rect);
     SDL_SetRenderTarget(data.renderer, former_target);
+    SDL_SetTextureBlendMode(former_target, former_blend);
     SDL_RenderSetViewport(data.renderer, &former_viewport);
+    SDL_RenderSetClipRect(data.renderer, had_clip ? &former_clip : nullptr);
 
     return texture_info.id;
+}
+
+int graphics_renderer_interface::ensure_saved_texture(int texture_id, int width, int height) {
+    assert(width > 0 && height > 0);
+
+    auto &data = g_renderer_data;
+    buffer_texture texture_info;
+    buffer_texture *exist_texture_info = get_saved_texture_info(texture_id);
+    if (exist_texture_info) {
+        int w, h;
+        uint32_t format;
+        SDL_QueryTexture(exist_texture_info->texture, &format, nullptr, &w, &h);
+        if (w == width && h == height) {
+            return exist_texture_info->id;
+        }
+        delete_saved_texture(exist_texture_info->id);
+    }
+
+    texture_info.texture = SDL_CreateTexture(data.renderer, SDL_PIXELFORMAT_ABGR8888, SDL_TEXTUREACCESS_TARGET, width, height);
+    if (!texture_info.texture) {
+        return 0;
+    }
+
+    texture_info.id = ++data.texture_buffer_id;
+    texture_info.width = width;
+    texture_info.height = height;
+    data.texture_buffers.push_back(texture_info);
+
+#ifdef USE_TEXTURE_SCALE_MODE
+    if (HAS_TEXTURE_SCALE_MODE) {
+        SDL_SetTextureScaleMode(texture_info.texture, SDL_ScaleModeNearest);
+    }
+#endif
+    SDL_SetTextureBlendMode(texture_info.texture, SDL_BLENDMODE_BLEND);
+    return texture_info.id;
+}
+
+bool graphics_renderer_interface::begin_saved_texture_target(int texture_id) {
+    auto &data = g_renderer_data;
+    if (data.saved_texture_target.active) {
+        return false;
+    }
+
+    buffer_texture *texture_info = get_saved_texture_info(texture_id);
+    if (!texture_info || !texture_info->texture) {
+        return false;
+    }
+
+    data.saved_texture_target.former_target = SDL_GetRenderTarget(data.renderer);
+    SDL_RenderGetViewport(data.renderer, &data.saved_texture_target.former_viewport);
+    data.saved_texture_target.had_clip = SDL_RenderIsClipEnabled(data.renderer);
+    if (data.saved_texture_target.had_clip) {
+        SDL_RenderGetClipRect(data.renderer, &data.saved_texture_target.former_clip);
+    }
+
+    SDL_Rect viewport = {0, 0, texture_info->width, texture_info->height};
+    SDL_RenderSetClipRect(data.renderer, nullptr);
+    if (SDL_SetRenderTarget(data.renderer, texture_info->texture) != 0) {
+        SDL_RenderSetClipRect(data.renderer, data.saved_texture_target.had_clip ? &data.saved_texture_target.former_clip : nullptr);
+        return false;
+    }
+    SDL_RenderSetViewport(data.renderer, &viewport);
+    data.saved_texture_target.active = true;
+    return true;
+}
+
+void graphics_renderer_interface::end_saved_texture_target() {
+    auto &data = g_renderer_data;
+    if (!data.saved_texture_target.active) {
+        return;
+    }
+
+    SDL_SetRenderTarget(data.renderer, data.saved_texture_target.former_target);
+    SDL_RenderSetViewport(data.renderer, &data.saved_texture_target.former_viewport);
+    SDL_RenderSetClipRect(data.renderer, data.saved_texture_target.had_clip ? &data.saved_texture_target.former_clip : nullptr);
+    data.saved_texture_target = {};
 }
 
 void graphics_renderer_interface::delete_saved_texture(int image_id) {
@@ -509,17 +609,26 @@ void graphics_renderer_interface::clear_saved_texture(int texture_id, color clr)
     }
 
     SDL_Rect former_viewport;
+    SDL_Rect former_clip;
     SDL_RenderGetViewport(data.renderer, &former_viewport);
-    SDL_Rect dst_rect = { 0, 0, texture_info->width, texture_info->height };
+    SDL_bool had_clip = SDL_RenderIsClipEnabled(data.renderer);
+    if (had_clip) {
+        SDL_RenderGetClipRect(data.renderer, &former_clip);
+    }
+    SDL_Rect dst_rect = {0, 0, texture_info->width, texture_info->height};
+    SDL_RenderSetClipRect(data.renderer, nullptr);
     SDL_SetRenderTarget(data.renderer, texture_info->texture);
+    SDL_RenderSetViewport(data.renderer, &dst_rect);
     SDL_SetRenderDrawColor(data.renderer,
-                            (clr & COLOR_CHANNEL_ALPHA) >> COLOR_BITSHIFT_ALPHA,
-                            (clr & COLOR_CHANNEL_RED) >> COLOR_BITSHIFT_RED,
-                            (clr & COLOR_CHANNEL_GREEN) >> COLOR_BITSHIFT_GREEN,
-                            (clr & COLOR_CHANNEL_BLUE) >> COLOR_BITSHIFT_BLUE);
+                           (clr & COLOR_CHANNEL_RED) >> COLOR_BITSHIFT_RED,
+                           (clr & COLOR_CHANNEL_GREEN) >> COLOR_BITSHIFT_GREEN,
+                           (clr & COLOR_CHANNEL_BLUE) >> COLOR_BITSHIFT_BLUE,
+                           (clr & COLOR_CHANNEL_ALPHA) >> COLOR_BITSHIFT_ALPHA);
+    SDL_RenderClear(data.renderer);
 
     SDL_SetRenderTarget(data.renderer, former_target);
     SDL_RenderSetViewport(data.renderer, &former_viewport);
+    SDL_RenderSetClipRect(data.renderer, had_clip ? &former_clip : nullptr);
 }
 
 static void create_blend_texture(int type) {
