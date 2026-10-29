@@ -15,9 +15,9 @@ constexpr uint8_t MAX_BATALIONS = 6;
 
 enum e_batalion_recruit_type {
     BATALION_RECRUIT_NONE = 0,
-    BATALION_RECRUIT_ARCHER = 1,
-    BATALION_RECRUIT_CHARIOTEER = 2,
-    BATALION_RECRUIT_INFANTRY = 3 
+    BATALION_RECRUIT_ARCHER = 1,      // fort figure type 11
+    BATALION_RECRUIT_INFANTRY = 2,    // fort figure type 12 (OG LEG_AUX)
+    BATALION_RECRUIT_CHARIOTEER = 3,  // fort figure type 13 (OG LEG_HEAVY)
 };
 
 enum e_formation_attack_type {

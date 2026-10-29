@@ -848,8 +848,8 @@ localization_hu = [
   {key: "#figure_storageyard_cart", group:64, id:9 }
   {key: "#figure_fireman", group:64, id:10 }
   {key: "#figure_archer", group:64, id:11 }
-  {key: "#figure_fcharioteer", group:64, id:12 }
-  {key: "#figure_infantry", group:64, id:13 }
+  {key: "#figure_infantry", group:64, id:12 }
+  {key: "#figure_fcharioteer", group:64, id:13 }
   {key: "#figure_standard_bearer", group:64, id:14 }
   {key: "#figure_juggler", group:64, id:15 }
   {key: "#figure_musician", group:64, id:16 }

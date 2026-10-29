@@ -2689,8 +2689,8 @@ localization_base_hu = [
     { group:64, id:9, text: "Raktáros" }
     { group:64, id:10, text: "Tűzoltó" }
     { group:64, id:11, text: "Íjász" }
-    { group:64, id:12, text: "Kocsihajtó" }
-    { group:64, id:13, text: "Gyalogság" }
+    { group:64, id:12, text: "Gyalogság" }
+    { group:64, id:13, text: "Kocsihajtó" }
     { group:64, id:14, text: "Zászlóvivő" }
     { group:64, id:15, text: "Zsonglőr" }
     { group:64, id:16, text: "Zenész" }

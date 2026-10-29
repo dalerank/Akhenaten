@@ -277,11 +277,12 @@ formation_id formations_t::get_battalion_id_from_index(int sequence_index) {
 
 void formation_change_morale(formation* m, int amount) {
     int max_morale;
-    if (m->figure_type == FIGURE_INFANTRY)
+
+    if (m->figure_type == FIGURE_FCHARIOTEER)
         max_morale = m->has_military_training ? 100 : 80;
     else if (figure_is_kingdome_army(m->figure_type))
         max_morale = 100;
-    else if (m->figure_type == FIGURE_ARCHER|| m->figure_type == FIGURE_FCHARIOTEER)
+    else if (m->figure_type == FIGURE_ARCHER || m->figure_type == FIGURE_INFANTRY)
         max_morale = m->has_military_training ? 80 : 60;
     else {
         switch (m->enemy_type) {

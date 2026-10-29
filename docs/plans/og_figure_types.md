@@ -23,9 +23,9 @@ Port-only types sit at 110+: e.g. `FIGURE_SCRIBER = 181` (was wrongly 29).
 | 8 | 0x08 | `FIG_ENGINEER` | engineer |
 | 9 | 0x09 | `FIG_WAREHOUSEMAN` | storage yard cartpusher |
 | 10 | 0x0A | `FIG_FIREMAN` | fireman |
-| 11 | 0x0B | `FIG_LEG_MISS` | legion missile |
-| 12 | 0x0C | `FIG_LEG_AUX` | legion light / aux |
-| 13 | 0x0D | `FIG_LEG_HEAVY` | legion heavy |
+| 11 | 0x0B | `FIG_LEG_MISS` | legion missile → `FIGURE_ARCHER` |
+| 12 | 0x0C | `FIG_LEG_AUX` | legion light / aux (melee) → `FIGURE_INFANTRY` |
+| 13 | 0x0D | `FIG_LEG_HEAVY` | legion heavy (chariot) → `FIGURE_FCHARIOTEER` |
 | 14 | 0x0E | `FIG_STANDARD` | military standard |
 | 15 | 0x0F | `FIG_JUGGLER` | juggler |
 | 16 | 0x10 | `FIG_MUSICIAN` | musician |

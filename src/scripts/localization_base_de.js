@@ -2662,8 +2662,8 @@ localization_base_de = [
     { group:64, id:9, text: "Lagerarbeiter" }
     { group:64, id:10, text: "Feuerwehrmann" }
     { group:64, id:11, text: "Bogenschütze" }
-    { group:64, id:12, text: "Streitwagenlenker" }
-    { group:64, id:13, text: "Infanterist" }
+    { group:64, id:12, text: "Infanterist" }
+    { group:64, id:13, text: "Streitwagenlenker" }
     { group:64, id:14, text: "Fahnenträger" }
     { group:64, id:15, text: "Gaukler" }
     { group:64, id:16, text: "Musiker" }

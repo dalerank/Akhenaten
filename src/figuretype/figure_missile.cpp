@@ -97,7 +97,7 @@ void figure_missile::figure_action() {
     bool should_die = base.move_ticks_cross_country(4);
     figure_id target_id = get_non_citizen_on_tile();
     if (target_id && target_id != runtime_data().shooter_id) {
-        missile_hit_figure(target_id, FIGURE_STANDARD_BEARER);
+        missile_hit_figure(target_id, FIGURE_INFANTRY);
         events::emit(event_sound_effect{ hit_sound_effect() });
         return;
     }
@@ -192,7 +192,7 @@ void figure_spear::figure_action() {
     int should_die = base.move_ticks_cross_country(4);
     int target_id = get_citizen_on_tile();
     if (target_id) {
-        missile_hit_figure(target_id, FIGURE_STANDARD_BEARER);
+        missile_hit_figure(target_id, FIGURE_INFANTRY);
         events::emit(event_sound_effect{ SOUND_EFFECT_JAVELIN });
     } else if (should_die) {
         poof();

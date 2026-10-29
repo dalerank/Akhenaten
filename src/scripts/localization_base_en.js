@@ -2657,8 +2657,8 @@ localization_base_en = [
     { group:64, id:9, text: "Warehouseman" }
     { group:64, id:10, text: "Fire marshal" }
     { group:64, id:11, text: "Archer" }
-    { group:64, id:12, text: "Charioteer" }
-    { group:64, id:13, text: "Infantry" }
+    { group:64, id:12, text: "Infantry" }
+    { group:64, id:13, text: "Charioteer" }
     { group:64, id:14, text: "Standard bearer" }
     { group:64, id:15, text: "Juggler" }
     { group:64, id:16, text: "Musican" }

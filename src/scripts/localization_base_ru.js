@@ -2663,8 +2663,8 @@ localization_base_ru = [
     { group:64, id:9, text: "Кладовщик" }
     { group:64, id:10, text: "Пожарный инспектор" }
     { group:64, id:11, text: "Лучник" }
-    { group:64, id:12, text: "Колесничий" }
-    { group:64, id:13, text: "Пехотинец" }
+    { group:64, id:12, text: "Пехотинец" }
+    { group:64, id:13, text: "Колесничий" }
     { group:64, id:14, text: "Знаменосец" }
     { group:64, id:15, text: "Жонглёр" }
     { group:64, id:16, text: "Музыкант" }

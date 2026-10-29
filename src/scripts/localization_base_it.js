@@ -2656,8 +2656,8 @@ localization_base_it = [
     { group:64, id:9, text: "Magazziniere" }
     { group:64, id:10, text: "Vigile del fuoco" }
     { group:64, id:11, text: "Arciere" }
-    { group:64, id:12, text: "Auriga" }
-    { group:64, id:13, text: "Fanteria" }
+    { group:64, id:12, text: "Fanteria" }
+    { group:64, id:13, text: "Auriga" }
     { group:64, id:14, text: "Messaggero" }
     { group:64, id:15, text: "Giocoliere" }
     { group:64, id:16, text: "Musicante" }
