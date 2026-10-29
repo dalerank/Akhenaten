@@ -28,7 +28,9 @@
 #include "building/monument_pyramid.h"
 #include "building/monument_royal_tomb.h"
 #include "building/monument_obelisk.h"
+#include "building/building_road.h"
 #include "building/monuments.h"
+#include "grid/desirability.h"
 #include "building/construction_blessing.h"
 #include "city/city_recorded_paths.h"
 #include "grid/grid.h"
@@ -3838,6 +3840,18 @@ static void __test_update_road_network() {
     g_city.map.update_road_network();
 }
 ANK_FUNCTION(__test_update_road_network);
+
+// OG: floodplain roads are never paved (0x0047B8E0), even at high desirability.
+static int __test_road_is_paved(int x, int y) {
+    return building_road::is_paved(tile2i(x, y)) ? 1 : 0;
+}
+ANK_FUNCTION_2(__test_road_is_paved);
+
+extern grid_xx g_desirability_grid;
+static void __test_set_desirability(int x, int y, int value) {
+    map_grid_set(g_desirability_grid, tile2i(x, y).grid_offset(), value);
+}
+ANK_FUNCTION_3(__test_set_desirability);
 
 static int __test_tile_road_network(int grid_offset) {
     if (grid_offset < 0) {
