@@ -97,6 +97,8 @@ e_delivery_dest_kind kind_from_building(building *b) {
         return e_delivery_dest_kind::granary;
     }
     switch (b->type) {
+    case BUILDING_RECRUITER:
+        return e_delivery_dest_kind::recruiter;
     case BUILDING_VILLAGE_PALACE:
     case BUILDING_TOWN_PALACE:
     case BUILDING_CITY_PALACE:
@@ -111,12 +113,14 @@ e_delivery_dest_kind kind_from_building(building *b) {
 
 bool is_enroute_delivering_cart_action(int action) {
     switch (action) {
-    case ACTION_9_CARTPUSHER_DELIVERING_GOODS:
-    case ACTION_10_CARTPUSHER_DELIVERING_FOOD:
-    case ACTION_11_CARTPUSHER_DELIVERING_GOLD:
-    case ACTION_21_CARTPUSHER_DELIVERING_TO_WAREHOUSE:
-    case ACTION_22_CARTPUSHER_DELIVERING_TO_GRANARY:
-    case ACTION_23_CARTPUSHER_DELIVERING_TO_WORKSHOP:
+    case ACTION_9_CARTPUSHER_DELIVERING_TO_WAREHOUSE:
+    case ACTION_10_CARTPUSHER_DELIVERING_TO_GRANARY:
+    case ACTION_11_CARTPUSHER_DELIVERING_TO_WORKSHOP:
+    case ACTION_16_CARTPUSHER_DELIVERING_TO_RECRUITER:
+    case ACTION_21_CARTPUSHER_DELIVERING_TO_WAREHOUSE_LEGACY:
+    case ACTION_22_CARTPUSHER_DELIVERING_TO_GRANARY_LEGACY:
+    case ACTION_23_CARTPUSHER_DELIVERING_TO_WORKSHOP_LEGACY:
+    case ACTION_28_CARTPUSHER_DELIVERING_GOLD:
     case ACTION_51_CARTPUSHER_DELIVERING_RESOURCE:
         return true;
     default:
@@ -152,7 +156,7 @@ cartpusher_deliveryman_prediction cartpusher_predict_deliveryman_destination(til
         return result;
     };
 
-    // Gold → palace
+    // Remake: gold → palace (not in OG cartpusher_determine_destination).
     if (resource == RESOURCE_GOLD) {
         const int senate_id = g_city.buildings.get_palace_id();
         building *palace = building_get(senate_id);
@@ -164,31 +168,18 @@ cartpusher_deliveryman_prediction cartpusher_predict_deliveryman_destination(til
         }
     }
 
-    // Priority 1: warehouse if resource is on stockpile
-    {
-        const building_id stockpile_id = building_storage_yard_for_storing(from_tile, resource, home.distance_from_entry,
-                                                                          road_network_id, &understaffed, dst);
-        if (stockpile_id && g_city.resource.is_stockpiled(resource)) {
-            result.destination = stockpile_id;
-            result.access_tile = dst;
-            result.kind = e_delivery_dest_kind::storage_yard;
+    // OG 0x0048AE50: recruiter (weapons/chariots) → workshop → SY → granary → granary even stockpiling.
+    if (resource == RESOURCE_WEAPONS || resource == RESOURCE_CHARIOTS) {
+        auto asker = building_get_asker_for_resource(from_tile, BUILDING_RECRUITER, resource, road_network_id,
+                                                    home.distance_from_entry);
+        if (asker.building_id) {
+            result.destination = (building_id)asker.building_id;
+            result.access_tile = asker.dest;
+            result.kind = e_delivery_dest_kind::recruiter;
             return finish();
         }
     }
 
-    // Priority 2: accepting granary for food
-    {
-        const int granary_food_id = building_granary_for_storing(from_tile, resource, home.distance_from_entry,
-                                                                road_network_id, 0, &understaffed, &dst);
-        if (granary_food_id && apply_farms_deliver_close(home, (building_id)granary_food_id)) {
-            result.destination = (building_id)granary_food_id;
-            result.access_tile = dst;
-            result.kind = e_delivery_dest_kind::granary;
-            return finish();
-        }
-    }
-
-    // Priority 3: workshop for raw material
     {
         const int workshop_id = building_get_workshop_for_raw_material_with_room(
             from_tile, resource, home.distance_from_entry, road_network_id, dst);
@@ -200,7 +191,6 @@ cartpusher_deliveryman_prediction cartpusher_predict_deliveryman_destination(til
         }
     }
 
-    // Priority 4: warehouse
     {
         const building_id warehouse_id = building_storage_yard_for_storing(from_tile, resource, home.distance_from_entry,
                                                                           road_network_id, &understaffed, dst);
@@ -212,7 +202,17 @@ cartpusher_deliveryman_prediction cartpusher_predict_deliveryman_destination(til
         }
     }
 
-    // Priority 5: granary forced when on stockpile
+    {
+        const int granary_food_id = building_granary_for_storing(from_tile, resource, home.distance_from_entry,
+                                                                road_network_id, 0, &understaffed, &dst);
+        if (granary_food_id && apply_farms_deliver_close(home, (building_id)granary_food_id)) {
+            result.destination = (building_id)granary_food_id;
+            result.access_tile = dst;
+            result.kind = e_delivery_dest_kind::granary;
+            return finish();
+        }
+    }
+
     {
         const int granary_id = building_granary_for_storing(from_tile, resource, home.distance_from_entry, road_network_id,
                                                            1, &understaffed, &dst);

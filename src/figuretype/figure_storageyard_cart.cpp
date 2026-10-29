@@ -121,12 +121,28 @@ void figure_storageyard_cart::figure_action() {
 
     base.use_cart = true;
     switch (action_state()) {
+    case ACTION_6_CARTPUSHER_ON_FERRY:
+        base.set_flag(e_figure_flag_invisible, true);
+        base.cart_image_id = 0;
+        break;
+
+    case ACTION_7_CARTPUSHER_WAIT_FOR_FERRY:
+        base.animctx.frame = 0;
+        base.wait_ticks++;
+        if (base.wait_ticks > 100) {
+            base.wait_ticks = 0;
+            base.set_flag(e_figure_flag_invisible, false);
+            advance_action(ACTION_8_RECALCULATE);
+        }
+        break;
+
     case ACTION_8_RECALCULATE:
     case ACTION_50_WAREHOUSECART_CREATED:
         calculate_destination(true);
         break;
 
     case ACTION_51_WAREHOUSECART_DELIVERING_RESOURCE:
+        drop_route_if_heading_into_non_ferry_water();
         do_gotobuilding(destination(), true, TERRAIN_USAGE_ROADS, ACTION_52_WAREHOUSECART_AT_DELIVERY_BUILDING, ACTION_8_RECALCULATE);
         break;
 
@@ -135,10 +151,12 @@ void figure_storageyard_cart::figure_action() {
         break;
 
     case ACTION_53_WAREHOUSECART_RETURNING_EMPTY:
+        drop_route_if_heading_into_non_ferry_water();
         do_returnhome(TERRAIN_USAGE_ROADS);
         break;
 
     case ACTION_54_WAREHOUSECART_GETTING_FOOD:
+        drop_route_if_heading_into_non_ferry_water();
         do_gotobuilding(destination(), true, TERRAIN_USAGE_ROADS, ACTION_55_WAREHOUSECART_AT_GRANARY_GETTING, ACTION_8_RECALCULATE);
         break;
 
@@ -148,6 +166,7 @@ void figure_storageyard_cart::figure_action() {
 
     case ACTION_56_WAREHOUSECART_RETURNING_WITH_FOOD:
     case ACTION_59_WAREHOUSECART_RETURNING_WITH_RESOURCE:
+        drop_route_if_heading_into_non_ferry_water();
         if (do_returnhome(TERRAIN_USAGE_ROADS)) {
             set_destination(home());
             advance_action(ACTION_60_WAREHOUSECART_UNLOADING_AT_HOME);
@@ -159,6 +178,7 @@ void figure_storageyard_cart::figure_action() {
         break;
 
     case ACTION_57_WAREHOUSECART_GETTING_RESOURCE:
+        drop_route_if_heading_into_non_ferry_water();
         do_gotobuilding(destination(), true, TERRAIN_USAGE_ROADS, ACTION_58_WAREHOUSECART_AT_WAREHOUSE_GETTING_GOODS, ACTION_8_RECALCULATE);
         break;
 

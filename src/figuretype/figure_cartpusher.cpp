@@ -99,7 +99,24 @@ void figure_cartpusher::do_deliver(bool warehouseman, int action_done, int actio
     base.animctx.frame = 0;
     base.wait_ticks++;
 
-    if ((!warehouseman && base.wait_ticks >= 10) || (warehouseman && base.wait_ticks >= 4)) {
+    // OG industry cart: SY unload waits 10 ticks; granary/workshop/recruiter wait 5.
+    // Storage-yard cart keeps the shorter remake/Julius wait of 4.
+    int wait_needed = 10;
+    if (warehouseman) {
+        wait_needed = 4;
+    } else if (building *dest = destination()) {
+        switch (dest->type) {
+        case BUILDING_STORAGE_YARD:
+        case BUILDING_STORAGE_ROOM:
+            wait_needed = 10;
+            break;
+        default:
+            wait_needed = 5;
+            break;
+        }
+    }
+
+    if (base.wait_ticks >= wait_needed) {
         base.wait_ticks = 0;
 
         int carrying = base.get_carrying_amount();
@@ -238,7 +255,7 @@ void figure_cartpusher::determine_deliveryman_destination() {
 
     // before we start... check that resource is not empty.
     if (base.resource_id == RESOURCE_NONE || base.get_carrying_amount() == 0) {
-        return advance_action(ACTION_27_CARTPUSHER_RETURNING);
+        return advance_action(ACTION_15_CARTPUSHER_RETURNING);
     }
 
     building *home_b = home();
@@ -251,21 +268,23 @@ void figure_cartpusher::determine_deliveryman_destination() {
     if (has_destination()) {
         switch (pred.kind) {
         case e_delivery_dest_kind::palace:
-            return advance_action(ACTION_11_CARTPUSHER_DELIVERING_GOLD);
+            return advance_action(ACTION_28_CARTPUSHER_DELIVERING_GOLD);
+        case e_delivery_dest_kind::recruiter:
+            return advance_action(ACTION_16_CARTPUSHER_DELIVERING_TO_RECRUITER);
         case e_delivery_dest_kind::storage_yard:
-            return advance_action(ACTION_21_CARTPUSHER_DELIVERING_TO_WAREHOUSE);
+            return advance_action(ACTION_9_CARTPUSHER_DELIVERING_TO_WAREHOUSE);
         case e_delivery_dest_kind::granary:
-            return advance_action(ACTION_22_CARTPUSHER_DELIVERING_TO_GRANARY);
+            return advance_action(ACTION_10_CARTPUSHER_DELIVERING_TO_GRANARY);
         case e_delivery_dest_kind::workshop:
-            return advance_action(ACTION_23_CARTPUSHER_DELIVERING_TO_WORKSHOP);
+            return advance_action(ACTION_11_CARTPUSHER_DELIVERING_TO_WORKSHOP);
         default:
-            // Kind/destination mismatch ? don't keep a stuck dest into recalc.
+            // Kind/destination mismatch — don't keep a stuck dest into recalc.
             set_destination(nullptr);
             break;
         }
     }
 
-    // Wait ? returning home would despawn and lose cargo already taken from home.
+    // Wait — returning home would despawn and lose cargo already taken from home.
     base.min_max_seen = pred.understaffed ? 2 : 1;
     advance_action(ACTION_8_RECALCULATE);
 }
@@ -511,55 +530,75 @@ void figure_cartpusher::figure_action() {
     }
 
     building* b = home();
-    int road_network_id = map_road_network_get(tile());
     switch (action_state()) {
+    case ACTION_6_CARTPUSHER_ON_FERRY:
+        // OG: hide walker + cart while aboard.
+        base.set_flag(e_figure_flag_invisible, true);
+        base.cart_image_id = 0;
+        break;
+
+    case ACTION_7_CARTPUSHER_WAIT_FOR_FERRY:
+        // OG: idle at landing; after 100 ticks without a ferry queue slot → back to initial.
+        base.animctx.frame = 0;
+        base.wait_ticks++;
+        if (base.wait_ticks > 100) {
+            base.wait_ticks = 0;
+            base.set_flag(e_figure_flag_invisible, false);
+            advance_action(ACTION_8_RECALCULATE);
+        }
+        break;
+
     case ACTION_8_RECALCULATE:
     case ACTION_20_CARTPUSHER_INITIAL:
         calculate_destination(false);
         break;
 
-    case ACTION_9_CARTPUSHER_DELIVERING_GOODS:
-        do_gotobuilding(destination(), true, TERRAIN_USAGE_ROADS, ACTION_12_CARTPUSHER_DELIVERING_UNLOADING_GOODS, ACTION_8_RECALCULATE);
+    case ACTION_9_CARTPUSHER_DELIVERING_TO_WAREHOUSE:
+    case ACTION_21_CARTPUSHER_DELIVERING_TO_WAREHOUSE_LEGACY:
+        drop_route_if_heading_into_non_ferry_water();
+        do_gotobuilding(destination(), true, TERRAIN_USAGE_ROADS, ACTION_12_CARTPUSHER_AT_WAREHOUSE, ACTION_8_RECALCULATE);
         break;
 
-    case ACTION_10_CARTPUSHER_DELIVERING_FOOD:
-        do_gotobuilding(destination(), true, TERRAIN_USAGE_ROADS, ACTION_13_CARTPUSHER_DELIVERING_UNLOADING_FOODS, ACTION_8_RECALCULATE);
+    case ACTION_10_CARTPUSHER_DELIVERING_TO_GRANARY:
+    case ACTION_22_CARTPUSHER_DELIVERING_TO_GRANARY_LEGACY:
+        drop_route_if_heading_into_non_ferry_water();
+        do_gotobuilding(destination(), true, TERRAIN_USAGE_ROADS, ACTION_13_CARTPUSHER_AT_GRANARY, ACTION_8_RECALCULATE);
         break;
 
-    case ACTION_11_CARTPUSHER_DELIVERING_GOLD:
-        do_gotobuilding(destination(), true, TERRAIN_USAGE_ROADS, ACTION_14_CARTPUSHER_UNLOADING_GOLD, ACTION_8_RECALCULATE);
+    case ACTION_11_CARTPUSHER_DELIVERING_TO_WORKSHOP:
+    case ACTION_23_CARTPUSHER_DELIVERING_TO_WORKSHOP_LEGACY:
+        drop_route_if_heading_into_non_ferry_water();
+        do_gotobuilding(destination(), true, TERRAIN_USAGE_ROADS, ACTION_14_CARTPUSHER_AT_WORKSHOP, ACTION_8_RECALCULATE);
         break;
 
-    case ACTION_21_CARTPUSHER_DELIVERING_TO_WAREHOUSE:
-        do_gotobuilding(destination(), true, TERRAIN_USAGE_ROADS, ACTION_24_CARTPUSHER_AT_WAREHOUSE, ACTION_8_RECALCULATE);
+    case ACTION_16_CARTPUSHER_DELIVERING_TO_RECRUITER:
+        drop_route_if_heading_into_non_ferry_water();
+        do_gotobuilding(destination(), true, TERRAIN_USAGE_ROADS, ACTION_17_CARTPUSHER_AT_RECRUITER, ACTION_8_RECALCULATE);
         break;
 
-    case ACTION_22_CARTPUSHER_DELIVERING_TO_GRANARY:
-        do_gotobuilding(destination(), true, TERRAIN_USAGE_ROADS, ACTION_25_CARTPUSHER_AT_GRANARY, ACTION_8_RECALCULATE);
+    case ACTION_28_CARTPUSHER_DELIVERING_GOLD:
+        drop_route_if_heading_into_non_ferry_water();
+        do_gotobuilding(destination(), true, TERRAIN_USAGE_ROADS, ACTION_29_CARTPUSHER_UNLOADING_GOLD, ACTION_8_RECALCULATE);
         break;
 
-    case ACTION_23_CARTPUSHER_DELIVERING_TO_WORKSHOP:
-        do_gotobuilding(destination(), true, TERRAIN_USAGE_ROADS, ACTION_26_CARTPUSHER_AT_WORKSHOP, ACTION_8_RECALCULATE);
+    case ACTION_12_CARTPUSHER_AT_WAREHOUSE:
+    case ACTION_13_CARTPUSHER_AT_GRANARY:
+    case ACTION_14_CARTPUSHER_AT_WORKSHOP:
+    case ACTION_17_CARTPUSHER_AT_RECRUITER:
+    case ACTION_24_CARTPUSHER_AT_WAREHOUSE_LEGACY:
+    case ACTION_25_CARTPUSHER_AT_GRANARY_LEGACY:
+    case ACTION_26_CARTPUSHER_AT_WORKSHOP_LEGACY:
+    case ACTION_29_CARTPUSHER_UNLOADING_GOLD:
+        do_deliver(false, ACTION_15_CARTPUSHER_RETURNING, ACTION_8_RECALCULATE);
         break;
 
-    case ACTION_12_CARTPUSHER_DELIVERING_UNLOADING_GOODS:
-    case ACTION_13_CARTPUSHER_DELIVERING_UNLOADING_FOODS:
-    case ACTION_14_CARTPUSHER_UNLOADING_GOLD:
-    case ACTION_24_CARTPUSHER_AT_WAREHOUSE:
-    case ACTION_25_CARTPUSHER_AT_GRANARY:
-    case ACTION_26_CARTPUSHER_AT_WORKSHOP:
-        do_deliver(false, ACTION_27_CARTPUSHER_RETURNING, ACTION_8_RECALCULATE);
-        break;
-
-    case ACTION_27_CARTPUSHER_RETURNING:
-        // the CARTPUSHER figure will never be retrieving goods to carry back.
-        // that's job for the WAREHOUSEMAN figure!
-        // so there is no need for `cartpusher_do_deliver` action.
-        if (b->is_floodplain_farm()) { // do not return to floodplain farms
+    case ACTION_15_CARTPUSHER_RETURNING:
+    case ACTION_27_CARTPUSHER_RETURNING_LEGACY:
+        // Industry cart never fetches — that is the storage-yard cart's job.
+        drop_route_if_heading_into_non_ferry_water();
+        if (b->is_floodplain_farm()) {
             poof();
         } else if (do_returnhome(TERRAIN_USAGE_ROADS)) {
-            // Arrived home (action_state becomes -1 ? dead next tick). Handoff lodge trail now ?
-            // action_perform kills via set_state(DEAD) without calling before_poof/poof().
             if (b->params().flags.keeps_visitor_paths) {
                 g_recorded_paths.handoff_to_building(base, b->main()->id);
             }
@@ -578,15 +617,30 @@ void figure_cartpusher::update_animation() {
         return;
     }
 
+    if (action_state() == ACTION_6_CARTPUSHER_ON_FERRY) {
+        base.set_flag(e_figure_flag_invisible, true);
+        base.cart_image_id = 0;
+        return;
+    }
+
+    if (action_state() == ACTION_7_CARTPUSHER_WAIT_FOR_FERRY) {
+        image_set_animation(animkeys().idle);
+        return;
+    }
+
     auto &d = runtime_data();
     const bool first_tick = d.movement_check_progress == 255;
     const bool moved = !first_tick && base.progress_on_tile != d.movement_check_progress;
-    const bool on_water = map_terrain_is(tile(), TERRAIN_WATER);
+    const int off = tile().grid_offset();
+    const bool on_ferry_lane = map_terrain_is(off, TERRAIN_FERRY_ROUTE)
+        || map_terrain_is_near_ferry_route(off, 1);
+    // Ferry lanes are roads-over-water: walk, don't swim. Swim only on free water.
+    const bool on_open_water = map_terrain_is(off, TERRAIN_WATER) && !on_ferry_lane;
 
     xstring animkey;
     if (!moved) {
         animkey = animkeys().idle;
-    } else if (on_water) {
+    } else if (on_open_water) {
         animkey = animkeys().swim;
     } else {
         animkey = animkeys().walk;

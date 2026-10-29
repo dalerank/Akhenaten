@@ -12,6 +12,7 @@ enum class e_delivery_dest_kind : uint8_t {
     granary,
     workshop,
     palace,
+    recruiter,
 };
 
 enum class e_delivery_path_reason : uint8_t {
