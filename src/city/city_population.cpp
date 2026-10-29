@@ -123,7 +123,7 @@ int city_population_t::create_emigrants(int num_people) {
         }
 
         // Enhanced: optionally skip small huts (OFF by default = OG, huts do emigrate)
-        if (game_features::gameplay_change_small_hut_not_create_emigrant
+        if (!!game_features::gameplay_change_small_hut_not_create_emigrant
             && (level <= HOUSE_STURDY_HUT || (level < HOUSE_ORDINARY_COTTAGE && house->house_population() < 10))) {
             continue;
         }
