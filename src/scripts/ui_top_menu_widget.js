@@ -128,14 +128,16 @@ function top_menu_header_at_mouse() {
 	}
 	var mx = __mouse.x
 	var my = __mouse.y
-	var y0 = top_menu_widget.offset.y
-	var y1 = y0 + top_menu_widget.header_hit_height
+	var is_mobile = __platform_is_android() || __mouse.is_touch
+	var y0 = 0
+	var y1 = is_mobile ? (top_menu_widget.height + 10) : top_menu_widget.height
 	if (my < y0 || my >= y1) {
 		return ""
 	}
+	var padding_x = is_mobile ? 12 : 6
 	for (var i = 0; i < menus.length; i++) {
 		var layout = top_menu_header_layout(menus[i].id)
-		if (layout && layout.x_start <= mx && layout.x_end > mx) {
+		if (layout && (layout.x_start - padding_x) <= mx && (layout.x_end + padding_x) > mx) {
 			return menus[i].id
 		}
 	}

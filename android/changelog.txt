@@ -1,0 +1,84 @@
+# Branch Changelog: `android-fixes` (vs. `master`)
+
+## 📱 Android Platform & Storage Access (SAF / VFS)
+
+- **Storage Access Framework (SAF) File Renaming**:
+  - Implemented `renameFile` in [FileManager.java](file:///D:/Akhenaten/android/akhenaten/src/main/java/com/github/dalerank/akhenaten/FileManager.java#L473) using `DocumentsContract.renameDocument` to support native Android document renaming over SAF.
+  - Added JNI bindings `android_rename_file()` in [android.cpp](file:///D:/Akhenaten/src/platform/android/android.cpp#L220) and integrated it into `vfs::file_rename_os()` in [vfs.cpp](file:///D:/Akhenaten/src/content/vfs.cpp#L250).
+- **File Descriptor Mode Parsing**:
+  - Fixed file open mode handling in [FileManager.java](file:///D:/Akhenaten/android/akhenaten/src/main/java/com/github/dalerank/akhenaten/FileManager.java#L484) to correctly format mode flags (`"wt"` for truncation, `"wa"` for append).
+- **User Directory Resolution**:
+  - Improved user storage path resolution in `platform_resolve_user_directory()` inside [platform_android.cpp](file:///D:/Akhenaten/src/platform/platform_android.cpp#L61) using `SDL_GetPrefPath()` with fallback to internal storage or standard paths.
+- **Gradle & Build Configuration**:
+  - Updated [build.gradle](file:///D:/Akhenaten/android/akhenaten/build.gradle#L591) to support target ABI selection via `-PtargetAbi` property.
+  - Configured debug builds to target `arm64-v8a`, `x86_64`, and `x86`, while release/CI builds compile `armeabi-v7a`, `arm64-v8a`, and `x86_64`.
+  - Cleaned up ImGui source inclusion in [CMakeLists.txt](file:///D:/Akhenaten/android/akhenaten/src/main/cpp/CMakeLists.txt#L85).
+
+---
+
+## 🎨 Graphics, Renderer & Android Context Restoration
+
+- **GPU Context Loss & Texture Recovery**:
+  - Added `platform_renderer_invalidate_all_textures()` in [renderer.cpp](file:///D:/Akhenaten/src/platform/renderer.cpp#L1116) and `image_recreate_all_textures()` in [image.cpp](file:///D:/Akhenaten/src/graphics/image.cpp#L486) to restore texture buffers, custom render targets, and imagepak atlases upon `SDL_RENDER_TARGETS_RESET` or `SDL_RENDER_DEVICE_RESET` events in [akhenaten.cpp](file:///D:/Akhenaten/src/platform/akhenaten.cpp#L587).
+  - Retained raw atlas pixel buffers in memory on Android (`#ifndef __ANDROID__`) inside [imagepak.cpp](file:///D:/Akhenaten/src/content/imagepak.cpp#L678) to enable on-the-fly GPU texture regeneration after app backgrounding or surface recreation.
+  - Fixed array deletion memory leaks by using `delete[]` for temporary pixel buffers in [imagepak.cpp](file:///D:/Akhenaten/src/content/imagepak.cpp#L417).
+- **Aspect-Ratio Background Image Scaling**:
+  - Refactored `ui::textured::graphics_draw_background()` in [graphics.cpp](file:///D:/Akhenaten/src/graphics/graphics.cpp#L55) to automatically compute scale factors (`max(fit_x, fit_y)`) and center background images (>= 500x350) on screens with varying aspect ratios.
+  - Converted raw image nodes to `background()` widgets across multiple UI script files ([ui_advisors_window.js](file:///D:/Akhenaten/src/scripts/ui_advisors_window.js#L50), [ui_mission_briefing_window.js](file:///D:/Akhenaten/src/scripts/ui_mission_briefing_window.js#L32), [ui_mission_end_window.js](file:///D:/Akhenaten/src/scripts/ui_mission_end_window.js#L23), [ui_scenario_selection.js](file:///D:/Akhenaten/src/scripts/ui_scenario_selection.js#L311), and [ui_scenario_selection_campaign.js](file:///D:/Akhenaten/src/scripts/ui_scenario_selection_campaign.js#L160)).
+
+---
+
+## 👆 Touch UI, Gestures & Mobile Interactivity
+
+- **Construction Confirm / Cancel Touch Buttons**:
+  - Enabled construction confirm/cancel buttons on Android devices in [window_city.cpp](file:///D:/Akhenaten/src/window/window_city.cpp#L65).
+  - Added touch padding around buttons and implemented `is_in_construction_buttons_region()` check in [window_city.cpp](file:///D:/Akhenaten/src/window/window_city.cpp#L93) and [widget_city.cpp](file:///D:/Akhenaten/src/widget/widget_city.cpp#L113) to prevent map cursor movement or building placement underneath construction UI controls.
+  - Fixed building drag finalization in `confirm_construction_placement()` in [widget_city.cpp](file:///D:/Akhenaten/src/widget/widget_city.cpp#L1161).
+- **Legion & Unit Selection**:
+  - Enhanced battalion click handling in `handle_legion_click()` in [widget_city.cpp](file:///D:/Akhenaten/src/widget/widget_city.cpp#L1122) with a 2-tile radius search around standard-bearer positions and building association checks.
+- **Touch Gesture Enhancements**:
+  - Simplified double-finger scroll detection logic in [touch.cpp](file:///D:/Akhenaten/src/input/touch.cpp#L99).
+  - Removed map construction cancellation on single touch release in [widget_city.cpp](file:///D:/Akhenaten/src/widget/widget_city.cpp#L1312).
+  - Updated `input_go_back_requested()` in [input.cpp](file:///D:/Akhenaten/src/input/input.cpp#L8) to avoid unintended back-navigation on double clicks.
+- **Top Menu Bar Touch Support**:
+  - Expanded hit-box region and added horizontal padding (`padding_x = 12`) for top menu headers on mobile and touch devices in [ui_top_menu_bar.js](file:///D:/Akhenaten/src/scripts/ui_top_menu_bar.js#L105) and [ui_top_menu_widget.js](file:///D:/Akhenaten/src/scripts/ui_top_menu_widget.js#L131).
+
+---
+
+## 💻 Developer Tools & Debug Console (Android Enablement)
+
+- **Android Debug Console Support**:
+  - Removed `#if !defined(GAME_PLATFORM_ANDROID)` guards around `bind_debug_command()`, `run_debug_command()`, and CVar binding functions in [debug_console.cpp](file:///D:/Akhenaten/src/widget/debug_console.cpp#L525) and [debug_console.h](file:///D:/Akhenaten/src/widget/debug_console.h#L12).
+  - Implemented `log_console_output` sink in [debug_console.cpp](file:///D:/Akhenaten/src/widget/debug_console.cpp#L504) to pipe debug console output directly to Android `logs::info("[console] ...")`.
+  - Enabled JavaScript debug console command bindings (`js_register_console_command`) on Android platforms in [js_console_command_registry.cpp](file:///D:/Akhenaten/src/js/js_console_command_registry.cpp#L48).
+- **Console Command Parser Refactoring**:
+  - Refactored argument and cvar parsing in `dev::qconsole::execute()` inside [qconsole.cpp](file:///D:/Akhenaten/src/dev/qconsole.cpp#L188) for cleaner variable lookup and syntax error reporting.
+
+---
+
+## 🗡️ Gameplay, Military & Building Simulation Fixes
+
+- **Recruiter Weapon Requirement Logic**:
+  - Updated `building_recruiter::get_closest_batalion_needing_soldiers()` and `create_soldier()` in [building_barracks.cpp](file:///D:/Akhenaten/src/building/building_barracks.cpp#L41) so that the 100-weapon storage requirement only applies when recruiting **Infantry** or **Charioteers**. Non-weapon units (Archers, etc.) can now be trained without weapons.
+  - Added explicit formation figure calculation updates upon soldier creation.
+- **Building Construction & Clear Mechanics**:
+  - Added `is_tile_occupied_by_active_building()` in [build_planner.cpp](file:///D:/Akhenaten/src/building/construction/build_planner.cpp#L588) to correctly identify occupied tiles during construction preview.
+  - Fixed building clearing on floodplains in `map_building_tile_clear_at()` inside [building_tiles.cpp](file:///D:/Akhenaten/src/grid/building_tiles.cpp#L262): prevents rubble placement on floodplains, removes building terrain masks, and refreshes river graphics.
+  - Ensured `map_building_tiles_remove()` is called when clearing buildings in `clear_land_confirmed()` inside [clear.cpp](file:///D:/Akhenaten/src/building/construction/clear.cpp#L196).
+- **Building Script Adjustments**:
+  - Fixed `building_well_update_month()` in [well.js](file:///D:/Akhenaten/src/scripts/building/well.js#L91) to guard against missing well entities and update map building tiles correctly.
+  - Adjusted work animation parameters for the Brewery in [workshop.js](file:///D:/Akhenaten/src/scripts/building/workshop.js#L7).
+
+---
+
+## 🔤 Localization, Fonts & UI Tweaks
+
+- **Font Decoding & Glyph Fallback**:
+  - Updated `font_has_letter()` and `font_letter_id()` in [font.cpp](file:///D:/Akhenaten/src/graphics/font.cpp#L176) to properly handle UTF fonts and fallback mappings for standard single-byte characters.
+- **Campaign & UI Fixes**:
+  - Updated campaign period unlocking logic in `campaign_period_is_unlocked()` in [ui_scenario_selection_campaign.js](file:///D:/Akhenaten/src/scripts/ui_scenario_selection_campaign.js#L23) to allow period access if any scenario in the current or previous period has been completed.
+  - Re-styled message counter text in the expanded sidebar UI in [ui_sidebar_window.js](file:///D:/Akhenaten/src/scripts/ui_sidebar_window.js#L138).
+- **Settings File Loader**:
+  - Refactored `load_settings_file()` in [options_window.cpp](file:///D:/Akhenaten/src/platform/options_window.cpp#L105) to evaluate settings via `vfs::file_open` and `js_dostring`.
+- **Event Subscription Safety**:
+  - Added a static `subscriptions_initialized` check in `message_manager_t::init()` in [city_message.cpp](file:///D:/Akhenaten/src/city/city_message.cpp#L165) to prevent duplicate event handler registrations on re-initialization.

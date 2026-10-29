@@ -179,13 +179,16 @@ bool font_has_letter(const font_definition *def, const uint8_t *str) {
     int num_bytes = 0;
     const uint32_t code = utf8_decode(str, &num_bytes);
     auto it = mbmap.find(code);
-    return (it != mbmap.end());
+    if (it != mbmap.end()) {
+        return true;
+    }
+    return (!data.use_utf_font && code < 256 && data.font_mapping[code] != 0);
 }
 
 font_glyph font_letter_id(const font_definition* def, const uint8_t* str, int* num_bytes) {
     auto& data = g_font_data;
 
-    if (data.use_internal_only) {
+    if (data.use_internal_only || data.use_utf_font) {
         const auto &mbmap = data.mbsymbols[def->font];
         const uint32_t code = utf8_decode(str, num_bytes);
         auto it = mbmap.find(code);
@@ -194,15 +197,16 @@ font_glyph font_letter_id(const font_definition* def, const uint8_t* str, int* n
         }
 
         font_add_missing_glyph(code);
-    } else if (*str >= 0x80 || data.use_utf_font) {
-        const auto &mbmap = data.mbsymbols[def->font];
+        return { 0xffffffff, -1 };
+    } else if (*str >= 0x80) {
         const uint32_t code = utf8_decode(str, num_bytes);
-        auto it = mbmap.find(code);
-        if (it != mbmap.end()) {
-            return it->second;
+        if (code < 256 && data.font_mapping[code]) {
+            font_glyph r;
+            r.code = code;
+            r.imagid = data.font_mapping[code] + def->image_offset - 1;
+            return r;
         }
 
-        // Add missing glyph for later regeneration
         font_add_missing_glyph(code);
     } else {
         *num_bytes = 1;

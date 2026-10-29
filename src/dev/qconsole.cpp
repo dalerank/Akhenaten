@@ -185,30 +185,35 @@ void dev::qconsole::execute(pcstr line, console_output &out) {
     expand_variables(raw.c_str(), expanded, out);
 
     console_args args(expanded.c_str());
-    bstring128 token;
-    bool command_found = false;
-    while (args.next(token)) {
-        auto it = _commands.find(xstring(token.c_str()));
-        if (it != _commands.end()) {
-            command_found = true;
-            it->second(args, out);
-            out.print("\n");
-        }
-    }
-
-    if (command_found) {
+    bstring128 cmd_token;
+    if (!args.next(cmd_token)) {
         return;
     }
 
-    auto cv = _cvars.find(xstring(token.c_str()));
+    auto it = _commands.find(xstring(cmd_token.c_str()));
+    if (it != _commands.end()) {
+        it->second(args, out);
+        out.print("\n");
+        return;
+    }
+
+    auto cv = _cvars.find(xstring(cmd_token.c_str()));
     if (cv != _cvars.end()) {
-        bstring256 value;
-        cv->second.get(value);
-        out.printf("%s %s\n", token, value);
+        bstring128 val_token;
+        if (args.next(val_token)) {
+            console_args var_args(val_token.c_str());
+            if (!cv->second.set(var_args)) {
+                error(out, "SYNTAX ERROR IN VARIABLE PARSER");
+            }
+        } else {
+            bstring256 value;
+            cv->second.get(value);
+            out.printf("%s %s\n", cmd_token.c_str(), value.c_str());
+        }
         return;
     }
 
-    error(out, "Variable/Command %s unknown.", token);
+    error(out, "Variable/Command %s unknown.", cmd_token.c_str());
 }
 
 void dev::qconsole::execute_file(pcstr filename, console_output &out) {

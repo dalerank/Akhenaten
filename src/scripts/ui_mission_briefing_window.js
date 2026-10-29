@@ -29,7 +29,7 @@ mission_briefing_window {
     pos [(sw(0) - px(38))/2, (sh(0) - px(27))/2]
 
     ui {
-        splash           : image({pos[(px(38) - 1024)/2, (px(27) - 768)/2], pack:PACK_UNLOADED, id:18, offset:1 })
+        splash           : background({ pack:PACK_UNLOADED, id:18, offset:1 })
         background       : outer_panel({pos[16, 32], size{w:38, h:27} })
         title            : text({pos[32, 48], font : FONT_LARGE_BLACK_ON_LIGHT })
         subtitle         : text({pos[32, 78], font : FONT_NORMAL_BLACK_ON_LIGHT })

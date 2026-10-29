@@ -20,8 +20,28 @@ function campaign_period_is_unlocked(period) {
     if (period <= 0) {
         return true
     }
-    var prev_last = campaign_period_last_scenario_id(period - 1)
-    return prev_last >= 0 && !!__game_mission_scenario_beaten(prev_last)
+    var i
+    // Unlocked if any scenario in this period has been beaten
+    for (i = 0; i < 64; i++) {
+        var sid = __game_campaign_mission_step_scenario_id(period, i)
+        if (sid < 0) {
+            break
+        }
+        if (__game_mission_scenario_beaten(sid)) {
+            return true
+        }
+    }
+    // Or if any scenario in the previous period has been beaten
+    for (i = 0; i < 64; i++) {
+        var prev_sid = __game_campaign_mission_step_scenario_id(period - 1, i)
+        if (prev_sid < 0) {
+            break
+        }
+        if (__game_mission_scenario_beaten(prev_sid)) {
+            return true
+        }
+    }
+    return false
 }
 
 [es=(window_scenario_selection_campaign, init)]
@@ -157,7 +177,7 @@ window_scenario_selection_campaign {
     ui {
         background : dummy({ size[64, 48] })
 
-        img_history : image({ pos[0, 0], pack:PACK_UNLOADED, id:33, offset:0 })
+        img_history : background({ pack:PACK_UNLOADED, id:33, offset:0 })
 
         campaign_hover_thumb : image_queue({ pos[270, 200], size[256, 152], fit:true, fade_ms:280, pack:PACK_UNLOADED, id:28, offset:0 })
 

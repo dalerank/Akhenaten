@@ -105,14 +105,16 @@ function top_menu_draw_headers() {
 	var hover_font = highlight ? FONT_NORMAL_YELLOW : FONT_NORMAL_BLACK_ON_LIGHT
 	var mx = __mouse.x
 	var my = __mouse.y
-	var y0 = top_menu_widget.offset.y
-	var hit_h = top_menu_widget.header_hit_height
+	var is_mobile = __platform_is_android() || __mouse.is_touch
+	var y0 = 0
+	var hit_h = is_mobile ? (top_menu_widget.height + 10) : top_menu_widget.height
 	var in_bar = (my >= y0 && my < y0 + hit_h)
 	var focus_id = ""
 	if (top_menu_state.open_sub_menu) {
 		focus_id = top_menu_state.open_sub_menu
 	}
 
+	var padding_x = is_mobile ? 12 : 6
 	for (var i = 0; i < menus.length; i++) {
 		var menu = menus[i]
 		var text = top_menu_resolve_text(menu.text)
@@ -125,7 +127,7 @@ function top_menu_draw_headers() {
 		if (focus_id) {
 			is_hovered = (menu.id == focus_id)
 		} else {
-			is_hovered = in_bar && x_start <= mx && x_end > mx
+			is_hovered = in_bar && (x_start - padding_x) <= mx && (x_end + padding_x) > mx
 			if (is_hovered) {
 				focus_id = menu.id
 			}

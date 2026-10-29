@@ -47,7 +47,7 @@ function window_advisors_show_advisor(advisor) {
 
 advisor_window_base {
     ui {
-        advisors_backdrop : image({ pack:PACK_UNLOADED, id:11, pos:[sw(-1024)/2, sh(-768)/2] })
+        advisors_backdrop : background({ pack:PACK_UNLOADED, id:11 })
         advisors_strip    : image({ pack:PACK_GENERAL, id:160, pos:[sw(-640)/2, sh(400)/2] })
         labor_btn         : image_button({ pos:[sw(-640)/2 + 12, sh(418)/2], size:[33, 32], pack:PACK_GENERAL, id:159, offset:0, tooltip:[68, 71], param1: ADVISOR_LABOR, onclick_event: "show_advisor" })
         military_btn      : image_button({ pos:[sw(-640)/2 + 52, sh(418)/2], size:[39, 32], pack:PACK_GENERAL, id:159, offset:4, tooltip:[68, 72], param1: ADVISOR_MILITARY, onclick_event: "show_advisor" })

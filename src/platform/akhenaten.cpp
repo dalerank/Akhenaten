@@ -584,7 +584,7 @@ static void handle_event(CoreEvent* event, bool& active, bool& quit) {
 
     case SDL_RENDER_TARGETS_RESET:
     case SDL_RENDER_DEVICE_RESET:
-        res_atlas::invalidate();
+        platform_renderer_invalidate_all_textures();
         break;
 
     case SDL_QUIT:

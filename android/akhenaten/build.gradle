@@ -588,7 +588,14 @@ android {
         versionCode getVersion.versionCode
 
         ndk {
-            abiFilters 'armeabi-v7a', 'arm64-v8a', 'x86', 'x86_64'
+            if (project.hasProperty('targetAbi')) {
+                abiFilters project.property('targetAbi').split(',')
+            } else if (getGradle().getStartParameter().getTaskNames().any { it.toLowerCase().contains("release") } || System.getenv("CI") == "true") {
+                abiFilters 'armeabi-v7a', 'arm64-v8a', 'x86_64'
+            } else {
+                // Support both physical ARM64 devices and x86/x86_64 emulators for debug
+                abiFilters 'arm64-v8a', 'x86_64', 'x86'
+            }
         }
         sourceSets {
             main.res.srcDirs += '../../res/android'

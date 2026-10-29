@@ -15,6 +15,8 @@
 #include <algorithm>
 #include <array>
 
+#include "platform/renderer.h"
+
 // These functions are actually related to the imagepak class I/O, but it made slightly more
 // sense to me to have here as "core" image struct/class & game graphics related functions.
 bool set_pak_in_collection(int pak_id, imagepak** pak, std::vector<imagepak*>* collection) {
@@ -478,6 +480,22 @@ void image_invalidate_pak_cache(int pak_id) {
     const int end = begin + count;
     for (int id = begin; id < end && static_cast<size_t>(id) < data.image_cache.size(); ++id) {
         data.image_cache[id] = nullptr;
+    }
+}
+
+void image_recreate_all_textures() {
+    auto &data = *g_image_data;
+    for (auto &pak : data.pak_list) {
+        if (pak.handle) {
+            for (auto &atlas : pak.handle->atlas_pages) {
+                if (atlas.temp.pixel_buffer) {
+                    if (atlas.texture) {
+                        SDL_DestroyTexture(atlas.texture);
+                    }
+                    atlas.texture = g_render.create_texture_from_buffer(atlas.temp.pixel_buffer, atlas.width, atlas.height);
+                }
+            }
+        }
     }
 }
 

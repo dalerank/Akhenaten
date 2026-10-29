@@ -38,11 +38,23 @@ bool building_recruiter::static_params::is_unique_building() const {
 }
 
 formation_id building_recruiter::get_closest_batalion_needing_soldiers() {
+    const bool has_weapons = (base.stored_amount(RESOURCE_WEAPONS) >= 100);
+
     svector<formation*, 10> formations;
-    formations_get(formations, [] (auto *m) {
+    formations_get(formations, [has_weapons] (auto *m) {
         const bool in_use = m->in_use && m->own_batalion;
         const bool allow_recruits = m->batalion_recruit_type != BATALION_RECRUIT_NONE;
-        return in_use && allow_recruits && !m->in_distant_battle;
+        if (!in_use || !allow_recruits || m->in_distant_battle) {
+            return false;
+        }
+
+        // Infantry and Charioteers require 100 weapons in storage at the recruiter.
+        if (!has_weapons && (m->batalion_recruit_type == BATALION_RECRUIT_INFANTRY ||
+                            m->batalion_recruit_type == BATALION_RECRUIT_CHARIOTEER)) {
+            return false;
+        }
+
+        return true;
     });
 
     int min_formation_id = 0;
@@ -76,17 +88,21 @@ static int get_closest_military_academy(building* fort) {
 }
 
 bool building_recruiter::create_soldier() {
-    if (base.stored_amount(RESOURCE_WEAPONS) < 100) {
-        return false;
-    }
-
     int formation_id = get_closest_batalion_needing_soldiers();
     if (formation_id > 0) {
         const formation* m = formation_get(formation_id);
+
+        if (m->batalion_recruit_type == BATALION_RECRUIT_INFANTRY ||
+            m->batalion_recruit_type == BATALION_RECRUIT_CHARIOTEER) {
+            if (base.stored_amount(RESOURCE_WEAPONS) < 100) {
+                return false;
+            }
+            consume_resource(RESOURCE_WEAPONS, 100);
+        }
+
         figure* f = figure_create(m->figure_type, base.road_access, DIR_0_TOP_RIGHT);
         f->formation_id = formation_id;
         f->formation_at_rest = 1;
-        consume_resource(RESOURCE_WEAPONS, 100);
 
         building* fort = building_get(m->building_id);
         int academy_id = get_closest_military_academy(fort);
@@ -102,9 +118,10 @@ bool building_recruiter::create_soldier() {
         } else {
             f->advance_action(ACTION_81_SOLDIER_GOING_TO_FORT);
         }
+        g_formations.calculate_figures();
+        return true;
     }
-    g_formations.calculate_figures();
-    return formation_id ? 1 : 0;
+    return false;
 }
 
 void building_barracks_request_tower_sentry() {

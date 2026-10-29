@@ -1113,6 +1113,46 @@ int platform_renderer_lost_render_texture() {
     return !data.render_texture && data.renderer;
 }
 
+void platform_renderer_invalidate_all_textures() {
+    auto &data = g_renderer_data;
+
+    // Destroy texture buffers (TARGET textures)
+    for (auto &tb : data.texture_buffers) {
+        if (tb.texture) {
+            SDL_DestroyTexture(tb.texture);
+        }
+    }
+    data.texture_buffers.clear();
+
+    // Destroy custom textures (e.g. blend textures which are TARGET)
+    for (int i = 0; i < CUSTOM_IMAGE_MAX; i++) {
+        if (data.custom_textures[i].texture) {
+            SDL_DestroyTexture(data.custom_textures[i].texture);
+            data.custom_textures[i].texture = nullptr;
+        }
+    }
+
+    // Destroy unpacked images (STATIC textures, might be invalid)
+    for (int i = 0; i < MAX_UNPACKED_IMAGES; i++) {
+        if (data.unpacked_images[i].texture) {
+            SDL_DestroyTexture(data.unpacked_images[i].texture);
+            data.unpacked_images[i].texture = nullptr;
+        }
+    }
+
+    // Recreate the main render texture
+    int w = data.max_texture_size.width ? data.max_texture_size.width : screen_width();
+    int h = data.max_texture_size.height ? data.max_texture_size.height : screen_height();
+    platform_renderer_create_render_texture(w, h);
+
+    // Invalidate residency atlas so it repacks onto a fresh GPU texture
+    res_atlas::invalidate();
+
+    // Recreate imagepak static textures from buffers
+    image_recreate_all_textures();
+}
+
+
 void platform_renderer_invalidate_target_textures() {
     auto &data = g_renderer_data;
     if (data.custom_textures[CUSTOM_IMAGE_RED_FOOTPRINT].texture) {

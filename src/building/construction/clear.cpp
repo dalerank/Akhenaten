@@ -191,6 +191,10 @@ static int clear_land_confirmed(bool measure_only, clear_confirm_t confirm) {
                     game_undo_add_building(space);
                     space->state = BUILDING_STATE_DELETED_BY_PLAYER;
                 }
+
+                if (!measure_only) {
+                    map_building_tiles_remove(b->id, b->tile);
+                }
             } else if (map_terrain_is(grid_offset, TERRAIN_CANAL)) {
                 map_terrain_remove(grid_offset, TERRAIN_CLEARABLE);
                 items_placed++;

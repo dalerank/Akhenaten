@@ -414,7 +414,7 @@ void imagepak::cleanup_and_destroy() {
     for (int i = 0; i < atlas_pages.size(); ++i) {
         auto &atlas_data = atlas_pages.at(i);
         if (atlas_data.temp.pixel_buffer != nullptr)
-            delete atlas_data.temp.pixel_buffer;
+            delete[] atlas_data.temp.pixel_buffer;
 
         atlas_data.temp.pixel_buffer = nullptr;
         if (atlas_data.texture != nullptr) {
@@ -675,9 +675,11 @@ bool imagepak::load_zip_pak(vfs::path pak, int starting_index) {
         }
         g_memory.track_pack_texture(name.c_str(), atlas_data.width, atlas_data.height, true);
 
-        // delete temp data buffer in the atlas
-        delete atlas_data.temp.pixel_buffer;
+#ifndef __ANDROID__
+        // delete temp data buffer in the atlas (except on Android where we need it for context loss)
+        delete[] atlas_data.temp.pixel_buffer;
         atlas_data.temp.pixel_buffer = nullptr;
+#endif
         if (g_args.is_log_resources()) {
             logs::info("VFS: Atlas texture %d/%d created successfully for folder pak '%s'", 
                        i + 1, atlas_pages.size(), name.c_str());
@@ -1070,9 +1072,11 @@ bool imagepak::load_pak(vfs::path pak_name, int starting_index) {
         }
         g_memory.track_pack_texture(name.c_str(), atlas_data.width, atlas_data.height, true);
 
+#ifndef __ANDROID__
         // delete temp data buffer in the atlas
-        delete atlas_data.temp.pixel_buffer;
+        delete[] atlas_data.temp.pixel_buffer;
         atlas_data.temp.pixel_buffer = nullptr;
+#endif
 
         if (g_args.is_log_resources()) {
             logs::info("VFS: Atlas texture %d/%d created successfully for pak '%s'", 

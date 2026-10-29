@@ -259,8 +259,10 @@ static void clear_building_water_terrain(int grid_offset) {
 }
 
 void map_building_tile_clear_at(int grid_offset, int building_type) {
-    if (building_type != 0 && building_type != BUILDING_BURNING_RUIN) {
+    if (building_type != 0 && building_type != BUILDING_BURNING_RUIN && !map_terrain_is(grid_offset, TERRAIN_FLOODPLAIN)) {
         map_set_rubble_building_type(grid_offset, building_type);
+    } else {
+        map_set_rubble_building_type(grid_offset, 0);
     }
 
     map_property_clear_constructing(grid_offset);
@@ -271,7 +273,11 @@ void map_building_tile_clear_at(int grid_offset, int building_type) {
     map_building_set(grid_offset, 0);
     map_building_damage_clear(grid_offset);
     map_sprite_clear_tile(grid_offset);
-    if (map_terrain_is(grid_offset, TERRAIN_WATER)) {
+    if (map_terrain_is(grid_offset, TERRAIN_FLOODPLAIN)) {
+        map_terrain_remove(grid_offset, TERRAIN_BUILDING | TERRAIN_GARDEN | TERRAIN_RUBBLE | TERRAIN_PLANER_FUTURE);
+        map_set_rubble_building_type(grid_offset, 0);
+        map_refresh_river_image_at(grid_offset, true);
+    } else if (map_terrain_is(grid_offset, TERRAIN_WATER)) {
         clear_building_water_terrain(grid_offset);
     } else {
         map_image_set(grid_offset, image_id_from_group(GROUP_TERRAIN_UGLY_GRASS) + (map_random_get(grid_offset) & 7));

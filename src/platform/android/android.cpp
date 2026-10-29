@@ -217,6 +217,24 @@ int android_remove_file(const char *filename)
     return result;
 }
 
+bool android_rename_file(const char *from, const char *to)
+{
+    jni_function_handler handler;
+    if (!jni_get_static_method_handler(CLASS_FILE_MANAGER, "renameFile",
+        "(L" CLASS_AKHENATEN_ACTIVITY ";Ljava/lang/String;Ljava/lang/String;)Z", &handler)) {
+        jni_destroy_function_handler(&handler);
+        return false;
+    }
+    jstring jfrom = handler.env->NewStringUTF(from ? from : "");
+    jstring jto = handler.env->NewStringUTF(to ? to : "");
+    jboolean result = handler.env->CallStaticBooleanMethod(handler.nclass, handler.method, handler.activity, jfrom, jto);
+    handler.env->DeleteLocalRef(jfrom);
+    handler.env->DeleteLocalRef(jto);
+    jni_destroy_function_handler(&handler);
+
+    return result != 0;
+}
+
 int android_create_directories(const char *path)
 {
     int result = 0;

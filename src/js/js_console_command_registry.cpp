@@ -3,7 +3,6 @@
 #include "widget/debug_console.h"
 #include "core/log.h"
 
-#if !defined(GAME_PLATFORM_ANDROID)
 enum e_console_callback_source {
     CONSOLE_CALLBACK_GLOBAL,
     CONSOLE_CALLBACK_REGISTRY,
@@ -46,10 +45,8 @@ static void console_command_wrapper(e_console_callback_source source, const xstr
         js_pop(J, 1);
     }
 }
-#endif
 
 void js_register_console_command_from_function(pcstr functionName, pcstr commandName) {
-#if !defined(GAME_PLATFORM_ANDROID)
     auto J = js_vm_state();
     if (js_vm_have_error() || J == nullptr) {
         logs::error("JS: Cannot register console command '%s': VM not available", commandName);
@@ -68,11 +65,9 @@ void js_register_console_command_from_function(pcstr functionName, pcstr command
     bind_debug_command(commandName, [func_ref] (console_args &args, console_output &out) {
         console_command_wrapper(CONSOLE_CALLBACK_GLOBAL, func_ref, args, out);
     });
-#endif
 }
 
 void js_register_console_command(js_State *J) {
-#if !defined(GAME_PLATFORM_ANDROID)
     if (J->gettop() < 2) {
         logs::error("__register_console_command: expected at least 2 arguments (commandName, callback)");
         J->pushundefined();
@@ -101,7 +96,6 @@ void js_register_console_command(js_State *J) {
     bind_debug_command(commandName->value.c_str(), [func_ref] (console_args &args, console_output &out) {
         console_command_wrapper(CONSOLE_CALLBACK_REGISTRY, func_ref, args, out);
     });
-#endif
 
     J->pushundefined();
 }
@@ -110,3 +104,4 @@ static void on_modifier_console_command(js_State *J, pcstr name, pcstr value) {
     js_register_console_command_from_function(name, value);
 }
 ANK_REGISTER_MODIFIER_ITERATOR(console_command, on_modifier_console_command);
+
