@@ -299,6 +299,11 @@ void figure_fishing_boat::figure_action() {
                     if (!sticky_valid) {
                         tile2i exclude(rd.failed_tile_x, rd.failed_tile_y);
                         fish_tile = g_city.fishing_points.closest_fishing_point(tile(), false, exclude);
+                        if (!fish_tile.valid()) {
+                            rd.failed_tile_x = -1;
+                            rd.failed_tile_y = -1;
+                            fish_tile = g_city.fishing_points.closest_fishing_point(tile(), false);
+                        }
                         rd.preferred_fishing_tile = fish_tile;
                     }
 

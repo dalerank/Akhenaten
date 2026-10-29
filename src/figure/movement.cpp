@@ -220,6 +220,10 @@ void figure::advance_route_tile(int roaming_enabled) {
 }
 
 void figure::move_ticks(int num_ticks, bool roaming_enabled) {
+    if (routing_path_id <= 0 && destination_tile.valid() && destination_tile != tile) {
+        figure_route_add();
+    }
+
     while (num_ticks > 0) {
         num_ticks--;
 

@@ -286,7 +286,7 @@ int building_obelisk::building_image_get() const {
     }
     if (const auto *st = stage_at(phase)) {
         if (st->obelisk_tx.valid()) {
-            const int img = st->obelisk_tx.tid();
+            const int img =st->obelisk_tx.tid();
             if (img > 0) {
                 return img;
             }

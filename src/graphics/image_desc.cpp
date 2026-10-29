@@ -2,7 +2,7 @@
 
 #include "image.h"
 
-int image_desc::tid() {
+int image_desc::tid() const {
     if (pack == -1) {
         return -1;
     }
