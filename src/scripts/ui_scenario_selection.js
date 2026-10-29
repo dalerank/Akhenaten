@@ -114,7 +114,7 @@ function scenario_info_time_suffix(months) {
 }
 
 function scenario_info_goal_line(value, group, id) {
-    return __loc(group, id) + "@" + String(value)
+    return __loc(group, id) + " " + String(value)
 }
 
 function scenario_info_housing_goal_line(value, group, id) {

@@ -423,9 +423,11 @@ void font_atlas_regenerate() {
         assert(atlas_data.texture != nullptr);
         g_memory.track_pack_texture(font_pack.handle->name.c_str(), atlas_data.width, atlas_data.height, true);
 
-        // Delete temp data buffer in the atlas
-        delete atlas_data.temp.pixel_buffer;
+#ifndef __ANDROID__
+        // Keep pixel buffer on Android for GPU context-loss recreate (same as imagepak).
+        delete[] atlas_data.temp.pixel_buffer;
         atlas_data.temp.pixel_buffer = nullptr;
+#endif
     }
 
     // Remove pointers to raw data buffer in the images

@@ -345,6 +345,14 @@ int text_draw(painter &ctx, const uint8_t* str, int x, int y, e_font font, color
             auto glyph = font_letter_id(def, str, &num_bytes);
             int width = 0;
 
+            // '@' is the Julius invisible number-prefix marker (no glyph in Pharaoh_Fonts).
+            // Skip it — do not substitute '?' (that produced Culture?65 / ?123).
+            if (glyph.imagid < 0 && *str == '@') {
+                str += num_bytes;
+                length -= num_bytes;
+                continue;
+            }
+
             if (glyph.imagid < 0) {
                 glyph = font_letter_id(def, (uint8_t*)"?", &num_bytes);
             }

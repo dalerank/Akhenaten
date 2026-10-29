@@ -4,6 +4,7 @@
 #include "content/imagepak.h"
 #include "graphics/image_desc.h"
 #include "graphics/imagepak_holder.h"
+#include "graphics/residency_atlas.h"
 #include "content/dir.h"
 #include "core/svector.h"
 #include "core/log.h"
@@ -490,7 +491,9 @@ void image_recreate_all_textures() {
             for (auto &atlas : pak.handle->atlas_pages) {
                 if (atlas.temp.pixel_buffer) {
                     if (atlas.texture) {
+                        res_atlas::forget_source(atlas.texture);
                         SDL_DestroyTexture(atlas.texture);
+                        atlas.texture = nullptr;
                     }
                     atlas.texture = g_render.create_texture_from_buffer(atlas.temp.pixel_buffer, atlas.width, atlas.height);
                 }
