@@ -3,6 +3,7 @@
 #include "city/city.h"
 #include "core/profiler.h"
 #include "core/calc.h"
+#include "core/random.h"
 #include "grid/road_access.h"
 #include "building/building.h"
 #include "building/building_house.h"
@@ -160,13 +161,45 @@ void figure_homeless::figure_action() {
         break;
     }
 
+    case ACTION_16_HOMELESS_RANDOM:
+        // Remake: unstick when exit is unreachable — wander then resume leaving
+        base.roam_wander_freely = false;
+        do_goto(base.destination_tile, TERRAIN_USAGE_ANY, ACTION_3_HOMELESS_LEAVING, ACTION_3_HOMELESS_LEAVING);
+        if (direction() == DIR_FIGURE_CAN_NOT_REACH || direction() == DIR_FIGURE_REROUTE) {
+            base.routing_try_reroute_counter++;
+            if (base.routing_try_reroute_counter > 20) {
+                poof();
+                break;
+            }
+            base.state = FIGURE_STATE_ALIVE;
+            base.destination_tile = random_around_point(tile(), tile(), /*step*/2, /*bias*/4, /*max_dist*/8);
+            base.direction = DIR_0_TOP_RIGHT;
+            advance_action(ACTION_3_HOMELESS_LEAVING);
+        }
+        break;
+
     case ACTION_3_HOMELESS_LEAVING:
     case LEGACY_HOMELESS_LEAVING:
-        // OG action 11: walk to exit; ARRIVED/LOST → die; REROUTE → drop route; reseek every 30
+        // OG action 11: walk to exit; ARRIVED → die; REROUTE → drop route; reseek every 30
+        // Remake: CAN_NOT_REACH → ACTION_16 wander (retry leave) instead of immediate poof
         base.destination_tile = g_city.map.exit_point;
         base.move_ticks(base.speed_multiplier);
-        if (direction() == DIR_FIGURE_NONE || direction() == DIR_FIGURE_CAN_NOT_REACH) {
+        if (direction() == DIR_FIGURE_NONE) {
             poof();
+            break;
+        }
+        if (direction() == DIR_FIGURE_CAN_NOT_REACH) {
+            base.routing_try_reroute_counter++;
+            if (base.routing_try_reroute_counter > 20) {
+                poof();
+                break;
+            }
+            base.wait_ticks = 20;
+            route_remove();
+            base.state = FIGURE_STATE_ALIVE;
+            base.destination_tile = g_city.map.closest_exit_tile_within_radius();
+            base.direction = DIR_0_TOP_RIGHT;
+            advance_action(ACTION_16_HOMELESS_RANDOM);
             break;
         }
         if (direction() == DIR_FIGURE_REROUTE) {

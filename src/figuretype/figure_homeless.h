@@ -9,6 +9,7 @@ enum e_homeless_action {
     ACTION_1_HOMELESS_GOING_TO_HOUSE = 1,
     ACTION_2_HOMELESS_ENTERING_HOUSE = 2,
     ACTION_3_HOMELESS_LEAVING = 3,
+    ACTION_16_HOMELESS_RANDOM = 16,
 
     // Pharaoh .sav action ids (OG 0x0048A720)
     LEGACY_HOMELESS_CREATED = 8,
