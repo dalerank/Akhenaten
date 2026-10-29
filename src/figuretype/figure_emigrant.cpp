@@ -58,15 +58,13 @@ void figure_emigrant::figure_action() {
         base.wait_ticks++;
         if (base.wait_ticks > 4) {
             tile2i road = map_closest_road_within_radius(tile(), 1, 5);
-            if (!road.valid()) {
-                // OG marks DEAD then still falls into action 9; remake just removes the figure
-                poof();
-                return;
-            }
-            base.destination_tile = road;
+            // OG marks DEAD on no road then still enters action 9 with a stale dest.
+            // Remake: still leave — cross-country toward entry when no road nearby.
+            tile2i dest = road.valid() ? road : g_city.map.entry_point;
+            base.destination_tile = dest;
             base.roam_length = 0;
             base.use_cross_country = true;
-            base.set_cross_country_destination(road);
+            base.set_cross_country_destination(dest);
             advance_action(ACTION_1_EMIGRANT_EXITING);
         }
         break;
