@@ -25,8 +25,8 @@ public:
     static figure *create(tile2i tile);
 };
 
+// Same OG id as FIGURE_FISHING_POINT (95 / JUMPING_FISH); no separate METAINFO.
 class figure_fishing_spot : public figure_fishing_point {
 public:
-    FIGURE_METAINFO(FIGURE_FISHING_SPOT, figure_fishing_spot)
     figure_fishing_spot(figure *f) : figure_fishing_point(f) {}
 };

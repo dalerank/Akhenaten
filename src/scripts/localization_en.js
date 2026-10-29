@@ -869,8 +869,9 @@ localization_en = [
   {key: "#figure_fishing_boat", group:64, id:25 }
   {key: "#figure_market_trader", group:64, id:26 }
   {key: "#figure_priest", group:64, id:27 }
-  {key: "#figure_teacher", group:64, id:28 }
-  {key: "#figure_scriber", group:64, id:29 }
+  {key: "#figure_bubbles", group:64, id:28 }
+  {key: "#figure_teacher", group:64, id:29 }
+  {key: "#figure_scriber", text: "Scribe" }
   {key: "#figure_librarian", group:64, id:30 }
   {key: "#figure_dentist", group:64, id:31 }
   {key: "#figure_physician", group:64, id:32 }
@@ -1026,7 +1027,8 @@ localization_en = [
   {key: "#figure_ballista", group:64, id:62 }
   {key: "#figure_creature", group:64, id:63 }
   {key: "#figure_missionary", group:64, id:64 }
-  {key: "#figure_fishing_point", group:64, id:65 }
+  {key: "#figure_seagulls", group:64, id:65 }
+  {key: "#figure_fishing_point", group:64, id:95 }
   {key: "#figure_delivery_boy", group:64, id:66 }
   {key: "#figure_shipwreck", group:64, id:67 }
   {key: "#figure_birds", group:64, id:68 }
@@ -1059,7 +1061,7 @@ localization_en = [
   {key: "#figure_enemy_transport", group:64, id:92 }
   {key: "#figure_enemy_warship", group:64, id:93 }
   {key: "#figure_funeral_walker", group:64, id:94 }
-  {key: "#figure_fishing_spot", group:64, id:95 }
+  {key: "#figure_fishing_spot", group:64, id:95 } // legacy key → same OG jumping-fish string
   {key: "#figure_sled_puller", group:64, id:96 }
   {key: "#figure_showman", group:64, id:97 }
   {key: "#figure_plagued_citizen", group:64, id:98 }

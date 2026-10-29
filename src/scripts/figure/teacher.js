@@ -5,7 +5,7 @@ figure_teacher {
 	animations {
 		walk { pack:PACK_SPR_MAIN, id:201, max_frames:12 }
 		death { pack:PACK_SPR_MAIN, id:202, max_frames:8, loop:false }
-		big_image { pack:PACK_UNLOADED, id:25, offset:FIGURE_TEACHER }
+		big_image { pack:PACK_UNLOADED, id:25, offset:29 } // OG FIG_TEACHER
 	}
 
 	sounds {

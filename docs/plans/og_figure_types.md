@@ -6,6 +6,10 @@ Recovered from `akhenatren-rm` — `figure_type_debug_names` @ `0x005DC444`
 **110 types.** No type ≥ 110 exists in the original; Akhenaten extras
 (PHARAOH, GOVERNOR, DRUNKARD, expanded enemy blocks, …) are port additions.
 
+Akhenaten `e_figure_type` is aligned with these ids for 0…109 (2026-10).
+Port-only types sit at 110+: e.g. `FIGURE_SCRIBER = 181` (was wrongly 29).
+`FIGURE_FISHING_POINT = 95` is OG `FIG_JUMPING_FISH`; `FIGURE_SEAGULLS = 65`.
+
 | id | hex | internal name | role |
 |---:|:---:|---|---|
 | 0 | 0x00 | `FIG_NULL` | empty / none |

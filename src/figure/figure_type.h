@@ -77,12 +77,12 @@ enum e_figure_type : uint16_t {
     FIGURE_FISHING_BOAT = 25,
     FIGURE_MARKET_TRADER = 26,
     FIGURE_PRIEST = 27,
-    FIGURE_TEACHER = 28,
-    FIGURE_SCRIBER = 29,
+    FIGURE_BUBBLES = 28, // OG ambient bubbles (ship sink / water)
+    FIGURE_TEACHER = 29, // OG; was 28 in older Akhenaten (SCRIBER wrongly occupied 29)
     FIGURE_LIBRARIAN = 30,
     FIGURE_DENTIST = 31,
     FIGURE_PHYSICIAN = 32,
-    FIGURE_HERBALIST = 33,
+    FIGURE_HERBALIST = 33, // OG APOTHECARY
     FIGURE_EMBALMER = 34,
     FIGURE_WORKER = 35, // dead enum; live work-camp walker = FIGURE_LABORER / figure_worker
     FIGURE_MAP_FLAG = 36, // editor flags — legacy action.cpp case; optional METAINFO wrap
@@ -114,7 +114,7 @@ enum e_figure_type : uint16_t {
     FIGURE_BALLISTA = 62,
     FIGURE_CREATURE = 63, // Caesar leftover — won't implement
     FIGURE_MISSIONARY = 64, // Caesar leftover (natives UNUSED) — won't implement
-    FIGURE_FISHING_POINT = 65,
+    FIGURE_SEAGULLS = 65, // OG ambient; fishing points wrongly used this id before
     FIGURE_DELIVERY_BOY = 66,
     FIGURE_SHIPWRECK = 67,
     FIGURE_BIRDS = 68,
@@ -144,7 +144,7 @@ enum e_figure_type : uint16_t {
     FIGURE_ENEMY_TRANSPORT = 92,
     FIGURE_ENEMY_WARSHIP = 93,
     FIGURE_FUNERAL_WALKER = 94,
-    FIGURE_FISHING_SPOT = 95,
+    FIGURE_FISHING_POINT = 95, // OG JUMPING_FISH — scenario fishing-point figure
     FIGURE_SLED_PULLER = 96,
     FIGURE_SHOWMAN = 97, // named lang slot only; no OG walker — won't implement
     FIGURE_PLAGUED_CITIZEN = 98,
@@ -258,6 +258,7 @@ enum e_figure_type : uint16_t {
     FIGURE_ANTELOPE_HUNTER = 178,
     FIGURE_ANTELOPE_HUNTER_JAVELIN = 179,
     FIGURE_BIRDS_HUNTER = 180,
+    FIGURE_SCRIBER = 181, // Akhenaten-only; was wrongly 29 (OG teacher slot)
 
     FIGURE_MAX,
 };
