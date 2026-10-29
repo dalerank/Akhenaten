@@ -6,12 +6,15 @@ building_small_obelisk {
       ladder { pack:PACK_OBELISK_EXTRA, id:1 }
     }
     building_size : 3
+    art_stages : 4
 
-    // Array order = construction phase. ladders/carpenter_point are pixel offsets
-    // from the building draw origin (tune via --mixed).
+    // OG small obelisk (0xCF): 10 spots — stages 1-4 carpenter, 5-10 stonemason.
+    // work_ticks from obelisk_small_work_spots (320/320/600/600, 580/580/520/520/340/340).
+    // ladders/carpenter_point/stonemasons_point are pixel offsets from the draw origin.
     stages [
         {
             timber: 200
+            work_ticks: 320
             obelisk_tx { pack:PACK_OBELISK_X3_A, id:1 }
             ladders [[30, 10]]
             carpenter_point [30, 40]
@@ -20,6 +23,7 @@ building_small_obelisk {
         }
         {
             timber: 200
+            work_ticks: 320
             obelisk_tx { pack:PACK_OBELISK_X3_A, id:1 }
             ladders [[30, 10], [85, 10]]
             carpenter_point [120, -20]
@@ -28,6 +32,7 @@ building_small_obelisk {
         }
         {
             timber: 200
+            work_ticks: 600
             obelisk_tx { pack:PACK_OBELISK_X3_A, id:1 }
             ladders [[30, 10], [85, 10], [30, -50]]
             carpenter_point [160, 40]
@@ -35,6 +40,16 @@ building_small_obelisk {
             stonemasons_need: false
         }
         {
+            timber: 200
+            work_ticks: 600
+            obelisk_tx { pack:PACK_OBELISK_X3_A, id:1 }
+            ladders [[30, 10], [85, 10], [30, -50], [85, -50]]
+            carpenter_point [70, -84]
+            carpenter_need: true
+            stonemasons_need: false
+        }
+        {
+            work_ticks: 580
             obelisk_tx { pack:PACK_OBELISK_X3_A, id:1 }
             ladders [[30, 10], [85, 10], [30, -50], [85, -50]]
             stonemasons_point [70, -84]
@@ -42,6 +57,7 @@ building_small_obelisk {
             stonemasons_need: true
         }
         {
+            work_ticks: 580
             obelisk_tx { pack:PACK_OBELISK_X3_A, id:1 }
             ladders [[30, 10], [85, 10], [30, -50], [85, -50]]
             stonemasons_point [120, -84]
@@ -49,6 +65,7 @@ building_small_obelisk {
             stonemasons_need: true
         }
         {
+            work_ticks: 520
             obelisk_tx { pack:PACK_OBELISK_X3_B, id:1 }
             ladders [[30, 10], [85, 10]]
             stonemasons_point [70, -24]
@@ -56,6 +73,7 @@ building_small_obelisk {
             stonemasons_need: true
         }
         {
+            work_ticks: 520
             obelisk_tx { pack:PACK_OBELISK_X3_B, id:1 }
             ladders [[30, 10], [85, 10]]
             stonemasons_point [120, -24]
@@ -63,20 +81,15 @@ building_small_obelisk {
             stonemasons_need: true
         }
         {
-            obelisk_tx { pack:PACK_OBELISK_X3_B, id:1 }
+            work_ticks: 340
+            obelisk_tx { pack:PACK_OBELISK_X3_C, id:1 }
             ladders [[30, 10]]
             stonemasons_point [120, 0]
             carpenter_need: false
             stonemasons_need: true
         }
         {
-            obelisk_tx { pack:PACK_OBELISK_X3_C, id:1 }
-            ladders []
-            stonemasons_point [70, 0]
-            carpenter_need: false
-            stonemasons_need: true
-        }
-        {
+            work_ticks: 340
             obelisk_tx { pack:PACK_OBELISK_X3_D, id:1 }
             ladders []
             stonemasons_point [70, 0]

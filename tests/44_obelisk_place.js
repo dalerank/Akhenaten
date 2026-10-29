@@ -157,12 +157,13 @@ function run_test() {
 
     __test_monument_set_phase(bid, 0)
     if (ty && __test_obelisk_place_scaffold(bid)) {
-        var pct = __test_monument_resource_pct(bid, RESOURCE_TIMBER)
-        if (pct >= 100) {
-            __log_marker('obelisk_monument_add_resource_ok:' + pct)
+        // place_scaffold delivers timber and advances the phase (OG spot completion).
+        var phase_after = mon ? mon.phase() : -99
+        if (phase_after == 1) {
+            __log_marker('obelisk_monument_add_resource_ok:' + phase_after)
         } else {
-            __log_info_native('[test:44] timber pct expected >=100, got ' + pct)
-            __log_marker('obelisk_monument_add_resource_pct:' + pct)
+            __log_info_native('[test:44] phase expected 1 after scaffold, got ' + phase_after)
+            __log_marker('obelisk_monument_add_resource_pct:' + phase_after)
         }
     } else {
         __log_info_native('[test:44] __test_obelisk_place_scaffold failed ty=' + ty)

@@ -8,6 +8,7 @@
 
 struct obelisk_stage {
     uint16_t timber = 0;
+    uint16_t work_ticks = 0; // OG spot initial_work; 0 → figure default
     image_desc obelisk_tx{};
     svector<vec2i, 8> ladders;
     vec2i carpenter_point{};
@@ -15,8 +16,8 @@ struct obelisk_stage {
     bool carpenter_need = false;
     bool stonemasons_need = false;
 };
-ANK_CONFIG_STRUCT(obelisk_stage, timber, obelisk_tx, ladders, carpenter_point, stonemasons_point, carpenter_need,
-                  stonemasons_need)
+ANK_CONFIG_STRUCT(obelisk_stage, timber, work_ticks, obelisk_tx, ladders, carpenter_point, stonemasons_point,
+                  carpenter_need, stonemasons_need)
 
 // Shared base for small (3×3) and large (5×5) granite obelisks — single building, no parts.
 class building_obelisk : public building_monument {
@@ -62,6 +63,7 @@ public:
     int placement_amount(e_resource r) const;
     bool place_scaffold();
     void stonemason_complete_work();
+    int current_work_ticks() const;
     const obelisk_stage *stage_at(int phase) const;
     const obelisk_stage *current_stage() const;
     vec2i carpenter_work_pixel() const;

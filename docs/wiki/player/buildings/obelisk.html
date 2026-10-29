@@ -254,11 +254,10 @@
 
       <div class="note-box">
         <strong>Akhenaten status:</strong> place, granite pre-stock / consume, only-one unfinished rule, art stages, info window, menu, and Buhen buildings list are in.
-        Timber units per scaffolding phase live in <code>timber_loads</code> in
-        <span class="file-ref">src/scripts/building/small_obelisk.js</span> /
-        <span class="file-ref">src/scripts/building/large_obelisk.js</span> (tune without C++ rebuild;
-        current values are working defaults pending original <code>.pak</code> calibration).
-        Large granite (200 vs some charts’ 300) is likewise config-only via <code>placement_resources</code>.
+        Small construction matches OG: <strong>4 carpenter + 6 stonemason</strong> stages with
+        <code>work_ticks</code> from Pharaoh <code>obelisk_small_work_spots</code>
+        (<span class="file-ref">src/scripts/building/small_obelisk.js</span>).
+        Large granite (200 vs some charts’ 300) is config-only via <code>placement_resources</code>.
         Integral test <code>44_obelisk_place</code> covers staffed-SY place + granite consume +
         carpenter worker slots + one scaffold / timber consume.
       </div>
@@ -314,8 +313,7 @@
             <pre><code><span class="kw">building_small_obelisk</span> {
   <span class="kw">building_size</span> : <span class="num">3</span>
   <span class="kw">art_stages</span> : <span class="num">4</span>
-  <span class="kw">timber_loads</span> [ <span class="num">200</span>, <span class="num">200</span>, <span class="num">200</span> ]
-  <span class="kw">scaffold_offsets</span> [[20, -40], [44, -24], [-4, -24]]
+  <span class="com">// 10 stages: 4 carpenter (work_ticks 320/320/600/600) + 6 stonemason (580/580/520/520/340/340)</span>
   <span class="kw">placement_resources</span> [
     { resource: RESOURCE_GRANITE, count: <span class="num">100</span> }
   ]

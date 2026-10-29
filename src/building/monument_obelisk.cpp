@@ -10,6 +10,7 @@
 #include "figure/figure_type.h"
 #include "game/game_events.h"
 #include "game/resource.h"
+#include "game/simulation_time.h"
 #include "graphics/image.h"
 #include "graphics/graphics.h"
 #include "grid/building_tiles.h"
@@ -101,6 +102,14 @@ const obelisk_stage *building_obelisk::current_stage() const {
         return nullptr;
     }
     return stage_at(runtime_data().phase);
+}
+
+int building_obelisk::current_work_ticks() const {
+    const auto *st = current_stage();
+    if (!st || st->work_ticks == 0) {
+        return simulation_time_t::ticks_in_day * 2;
+    }
+    return st->work_ticks;
 }
 
 vec2i building_obelisk::carpenter_work_pixel() const {
@@ -271,7 +280,14 @@ bool building_obelisk::place_scaffold() {
         return false;
     }
     events::emit(event_city_remove_resource{RESOURCE_TIMBER, need, /*staffed_only*/true});
-    return deliver_resource(RESOURCE_TIMBER, need);
+    if (!deliver_resource(RESOURCE_TIMBER, need)) {
+        return false;
+    }
+    // OG: finishing a carpenter spot advances progress immediately.
+    if (resource_pct(RESOURCE_TIMBER) >= 100) {
+        progress();
+    }
+    return true;
 }
 
 void building_obelisk::on_phase_changed(int /*old_phase*/, int current) {
@@ -379,12 +395,8 @@ void building_obelisk::update_day() {
         return;
     }
     scrub_dead_workers();
-    const auto *st = current_stage();
-
-    if (st && st->stonemasons_need && !st->carpenter_need) {
-        return;
-    }
-    progress();
+    // Phase advances from figure work (place_scaffold / stonemason_complete_work),
+    // matching OG spot completion — not a free day tick.
 }
 
 void building_obelisk::stonemason_complete_work() {
