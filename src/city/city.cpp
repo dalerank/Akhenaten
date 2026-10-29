@@ -289,8 +289,12 @@ void city_t::update_tick(int simtick) {
         break;
     case 27:
         buildings.update_wells_range();
+        // OG water_supply 0x004555D0: river-source lifts, canal fill (wakes
+        // canal-fed lifts), iterative pump, then irrigation stamps.
         buildings.update_canals_from_water_lifts();
         map_update_canals();
+        buildings.pump_water_lifts_iterative();
+        buildings.stamp_water_lift_irrigation();
         break;
     case 28:
         buildings.update_water_supply_houses();

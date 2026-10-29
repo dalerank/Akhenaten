@@ -52,6 +52,8 @@ struct city_buildings_t {
     void mark_well_access(building *well);
     void update_wells_range();
     void update_canals_from_water_lifts();
+    void pump_water_lifts_iterative();
+    void stamp_water_lift_irrigation();
     void update_religion_supply_houses();
     void update_counters();
     void on_post_load();

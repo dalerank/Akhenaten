@@ -190,7 +190,7 @@ public:
     tile2i road_access;
     short figure_spawn_delay;
     unsigned char figure_roam_direction;
-    bool has_water_access;
+    uint8_t has_water_access;
     bool has_open_water_access;
     int tiles[2];
     figure_id prev_part_building_id;

@@ -22,6 +22,8 @@ void canals_decrease_water_level(void);
 // Reset half-rate decay phase bookkeeping (call after load / new city).
 void canals_reset_decay_phase(void);
 void map_canal_fill_from_offset(tile2i tile, int water);
+// Basin-aware IRRIGATION_RANGE stamp (plain radius when flood basins off).
+void map_add_irrigation_range(tile2i tile, int size, int radius);
 // Clear IRRIGATION_RANGE and re-stamp from wet canals (no water decay). Flag toggle.
 void map_irrigation_restamp_from_wet_canals(void);
 void map_canal_update_all_tiles(int include_construction);

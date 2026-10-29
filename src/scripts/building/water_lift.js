@@ -13,7 +13,7 @@ building_water_lift {
     work_w { pos [68, 20], path:"sprambient/shadnw_00077", duration:8, max_frames:12, internal_offset:true }
     minimap { pack:PACK_GENERAL, id:151 }
   }
-  labor_category : LABOR_CATEGORY_INFRASTRUCTURE
+  labor_category : LABOR_CATEGORY_FOOD_PRODUCTION
   fire_proof : 1
   building_size : 2
   planner_update_rule {
