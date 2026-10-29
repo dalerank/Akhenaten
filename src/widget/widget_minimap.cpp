@@ -382,9 +382,6 @@ void minimap_window::draw_uncached(vec2i pos) {
     screen_offset = pos;
     enemy_color = ENEMY_COLOR_BY_CLIMATE[g_scenario.climate];
 
-    // Draw into the cache texture directly. Copying from the main render target
-    // via save_texture_from_screen is unreliable on Android GLES and left a black
-    // cache that flickered in on non-refresh frames.
     cached_texture = graphics_ensure_saved_texture(cached_texture, size);
     if (cached_texture > 0) {
         graphics_clear_saved_texture(cached_texture, 0xff000000);
