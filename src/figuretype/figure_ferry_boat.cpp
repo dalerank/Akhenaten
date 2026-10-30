@@ -82,13 +82,8 @@ void figure_ferry_boat::figure_action() {
 
     case ACTION_1_FERRY_BOAT_GOING_TO_DESTINATION:
     case ACTION_3_FERRY_BOAT_RETURNING:
-        base.move_ticks(1);
-        base.height_adjusted_ticks = 0;
-
-        if (direction() == DIR_FIGURE_NONE) {
+        if (do_goto(runtime_data().destination_tile, TERRAIN_USAGE_ANY)) {
             advance_action(ACTION_4_FERRY_BOAT_WAITING);
-        } else if (direction() == DIR_FIGURE_REROUTE) {
-            route_remove();
         } else if (direction() == DIR_FIGURE_CAN_NOT_REACH) {
             advance_action(ACTION_4_FERRY_BOAT_WAITING);
         }

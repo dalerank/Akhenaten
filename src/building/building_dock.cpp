@@ -90,7 +90,8 @@ void building_dock::spawn_figure() {
     auto &d = runtime_data();
     for (int i = 0; i < 3; i++) {
         if (d.docker_ids[i]) {
-            if (figure_get(d.docker_ids[i])->type == FIGURE_DOCKER) {
+            figure *f = figure_get(d.docker_ids[i]);
+            if (f && f->is_valid() && !f->is_dead() && f->type == FIGURE_DOCKER) {
                 existing_dockers++;
             } else {
                 d.docker_ids[i] = 0;
@@ -102,7 +103,11 @@ void building_dock::spawn_figure() {
         // too many dockers, poof one of them
         for (int i = 2; i >= 0; i--) {
             if (d.docker_ids[i]) {
-                figure_get(d.docker_ids[i])->poof();
+                figure *f = figure_get(d.docker_ids[i]);
+                if (f && f->is_valid() && !f->is_dead()) {
+                    f->poof();
+                }
+                d.docker_ids[i] = 0;
                 return;
             }
         }
@@ -110,12 +115,14 @@ void building_dock::spawn_figure() {
     
     if (existing_dockers < max_dockers) {
         figure *f = figure_create(FIGURE_DOCKER, base.road_access, DIR_4_BOTTOM_LEFT);
-        f->action_state = ACTION_0_DOCKER_IDLING;
-        f->set_home(&base);
-        for (int i = 0; i < 3; i++) {
-            if (!d.docker_ids[i]) {
-                d.docker_ids[i] = f->id;
-                return;
+        if (f) {
+            f->action_state = ACTION_0_DOCKER_IDLING;
+            f->set_home(&base);
+            for (int i = 0; i < 3; i++) {
+                if (!d.docker_ids[i]) {
+                    d.docker_ids[i] = f->id;
+                    return;
+                }
             }
         }
     }

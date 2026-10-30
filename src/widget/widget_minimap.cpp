@@ -147,21 +147,12 @@ bool minimap_window::is_in_minimap(const mouse *m) {
 void minimap_window::draw_foreground(UiFlags flags) {
     OZZY_PROFILER_FUNCTION();
 
-    const tile2i prev_absolute = absolute_tile;
     set_bounds(draw_size);
-    const bool view_shifted = absolute_tile != prev_absolute;
 
     painter ctx = game.painter();
     graphics_set_clip_rectangle(screen_offset, size);
 
-    if (refresh_requested || view_shifted || g_scroll.in_progress() || draw_force) {
-        draw_uncached(screen_offset);
-        refresh_requested = 0;
-    } else {
-        graphics_draw_from_texture(cached_texture, screen_offset, size);
-    }
-
-    draw_force = false;
+    draw_uncached(screen_offset);
 
     draw_viewport_rectangle(ctx);
     graphics_reset_clip_rectangle();
@@ -372,7 +363,6 @@ void minimap_window::clear() {
 
 void minimap_window::draw(UiFlags flags) {
     OZZY_PROFILER_FUNCTION();
-    clear();
     city_view_foreach_minimap_tile(screen_offset.x, screen_offset.y, absolute_tile.x(), absolute_tile.y(), draw_size.x, draw_size.y, [this] (vec2i screen, tile2i point) {
         draw_minimap_tile(screen, point);
     });
@@ -381,25 +371,7 @@ void minimap_window::draw(UiFlags flags) {
 void minimap_window::draw_uncached(vec2i pos) {
     screen_offset = pos;
     enemy_color = ENEMY_COLOR_BY_CLIMATE[g_scenario.climate];
-
-    cached_texture = graphics_ensure_saved_texture(cached_texture, size);
-    if (cached_texture > 0) {
-        graphics_clear_saved_texture(cached_texture, 0xff000000);
-        if (graphics_begin_saved_texture_target(cached_texture)) {
-            city_view_foreach_minimap_tile(0, 0, absolute_tile.x(), absolute_tile.y(), draw_size.x, draw_size.y,
-                [this](vec2i screen, tile2i point) {
-                    draw_minimap_tile(screen, point);
-                });
-            graphics_end_saved_texture_target();
-            graphics_draw_from_texture(cached_texture, screen_offset, size);
-            return;
-        }
-    }
-
-    city_view_foreach_minimap_tile(screen_offset.x, screen_offset.y, absolute_tile.x(), absolute_tile.y(), draw_size.x, draw_size.y,
-        [this](vec2i screen, tile2i point) {
-            draw_minimap_tile(screen, point);
-        });
+    draw(UiFlags_None);
 }
 
 void widget_minimap_draw(vec2i offset, int force) {

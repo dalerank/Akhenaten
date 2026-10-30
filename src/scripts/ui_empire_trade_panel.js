@@ -139,7 +139,7 @@ function empire_window_layout_ui(window) {
     window.city_name.size = { x: width, y: 20 }
 
     window.button_help.pos = { x: sb.min_pos.x + 16, y: openTradeTop }
-    window.button_close.pos = { x: sb.max_pos.x - 40, y: openTradeTop }
+    window.button_close.pos = { x: sb.max_pos.x - 40, y: sb.min_pos.y + 16 }
     window.button_advisor.pos = { x: sb.min_pos.x + 16, y: infoTop }
     window.button_pause.pos = { x: sb.max_pos.x - 48, y: infoTop - 2 }
 

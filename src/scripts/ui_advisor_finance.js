@@ -74,10 +74,17 @@ function advisor_financial_window_update_incomes(window) {
     var line_start_x = window.incomes_base.screen_pos.x + 50
     var line_size_x = 550
 
+    function format_income_val(val) {
+        if (val > 0) {
+            return "+" + val
+        }
+        return String(val)
+    }
+
     function draw_row(text, y, value_last_year, value_this_year) {
         ui.label(text, vec2i(row_text_x, y), FONT_NORMAL_BLACK_ON_LIGHT)
-        ui.label(String(value_last_year), vec2i(row_last_year_x, y), FONT_NORMAL_BLACK_ON_LIGHT)
-        ui.label(String(value_this_year), vec2i(row_this_year_x, y), FONT_NORMAL_BLACK_ON_LIGHT)
+        ui.label(format_income_val(value_last_year), vec2i(row_last_year_x, y), FONT_NORMAL_BLACK_ON_LIGHT)
+        ui.label(format_income_val(value_this_year), vec2i(row_this_year_x, y), FONT_NORMAL_BLACK_ON_LIGHT)
         return y + 15
     }
 
@@ -104,10 +111,35 @@ function advisor_financial_window_update_expenses(window) {
     var line_start_x = window.expenses_base.screen_pos.x + 50
     var line_size_x = 550
 
+    function format_expense_val(val) {
+        if (val > 0) {
+            return "-" + val
+        }
+        return String(val)
+    }
+
     function draw_row(text, y, value_last_year, value_this_year) {
         ui.label(text, vec2i(row_text_x, y), FONT_NORMAL_BLACK_ON_LIGHT)
-        ui.label(String(value_last_year), vec2i(row_last_year_x, y), FONT_NORMAL_BLACK_ON_LIGHT)
-        ui.label(String(value_this_year), vec2i(row_this_year_x, y), FONT_NORMAL_BLACK_ON_LIGHT)
+        ui.label(format_expense_val(value_last_year), vec2i(row_last_year_x, y), FONT_NORMAL_BLACK_ON_LIGHT)
+        ui.label(format_expense_val(value_this_year), vec2i(row_this_year_x, y), FONT_NORMAL_BLACK_ON_LIGHT)
+        return y + 15
+    }
+
+    function format_net_val(val) {
+        if (val > 0) {
+            return "+" + val
+        }
+        return String(val)
+    }
+
+    function draw_net_row(text, y, value_last_year, value_this_year) {
+        ui.label(text, vec2i(row_text_x, y), FONT_NORMAL_BLACK_ON_LIGHT)
+
+        var font_last = (value_last_year > 0) ? FONT_NORMAL_YELLOW : FONT_NORMAL_BLACK_ON_LIGHT
+        var font_this = (value_this_year > 0) ? FONT_NORMAL_YELLOW : FONT_NORMAL_BLACK_ON_LIGHT
+
+        ui.label(format_net_val(value_last_year), vec2i(row_last_year_x, y), font_last)
+        ui.label(format_net_val(value_this_year), vec2i(row_this_year_x, y), font_this)
         return y + 15
     }
 
@@ -131,7 +163,7 @@ function advisor_financial_window_update_expenses(window) {
     line_y += 5
 
     line_y = draw_row(__loc(60, 17), line_y, last_year.expenses.total, this_year.expenses.total)
-    line_y = draw_row(__loc(60, 18), line_y, last_year.net_in_out, this_year.net_in_out)
+    line_y = draw_net_row(__loc(60, 18), line_y, last_year.net_in_out, this_year.net_in_out)
 
     if (game_features.get('gameplay_enhanced_historical_economy')) {
         ui.label(__loc("#finance_historical_economy_hint"), vec2i(row_text_x, line_y + 4), FONT_NORMAL_BLACK_ON_LIGHT)

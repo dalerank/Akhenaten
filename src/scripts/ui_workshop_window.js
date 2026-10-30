@@ -77,7 +77,7 @@ function workshop_info_window_status_reason(b) {
 
 [es=building_info_window]
 workshop_info_window {
-    related_buildings [BUILDING_BREWERY_WORKSHOP, BUILDING_POTTERY_WORKSHOP
+    related_buildings [BUILDING_BREWERY_WORKSHOP, BUILDING_POTTERY_WORKSHOP, BUILDING_WEAVER_WORKSHOP
                        BUILDING_PAPYRUS_WORKSHOP, BUILDING_CHARIOTS_WORKSHOP, BUILDING_CATTLE_RANCH
                        BUILDING_PAINT_WORKSHOP, BUILDING_WEAPONSMITH, BUILDING_JEWELS_WORKSHOP]
     ui {

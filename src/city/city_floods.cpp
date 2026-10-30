@@ -389,8 +389,7 @@ void floods_t::tick_update(bool calc_only) {
             // This is where the fertility gets restored in the OG game.
             // It has been re-implemented differently inside the tile flooding/update procedure.
         } else if (cycle == cycle_end + 1) {
-            // todo: FUN_004be2b0(city_data_ptr)
-            // Something to do with figures/boats?
+            g_city.fishing_points.reset();
         }
     }
 

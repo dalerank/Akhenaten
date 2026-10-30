@@ -244,10 +244,12 @@ bool figure::do_goto(tile2i dest, int terrainchoice, short NEXT_ACTION, short FA
         terrain_usage = TERRAIN_USAGE_ANY;
     }
 
-    // refresh routing if destination is different
-    if (destination_tile != dest) {
+    // refresh routing if destination is different or missing path
+    if (destination_tile != dest || routing_path_id <= 0) {
         OZZY_PROFILER_SECTION(_, "Figure/Goto/Route remove (no dest)");
         route_remove();
+        destination_tile = dest;
+        figure_route_add();
     }
 
     // set up destination and move!!!

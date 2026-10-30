@@ -87,6 +87,10 @@ function top_menu_js_debugger_text(p1, p2) {
 [es=(top_menu_submenu, js_debugger)]
 function top_menu_js_debugger_toggle(ev) {
 	top_menu_dismiss()
+	if (__platform_is_android()) {
+		ui.show_ok("JS Debugger is not supported on Android.", "Debug")
+		return
+	}
 	if (__js_debugger_is_running())
 		__js_debugger_stop()
 	else
