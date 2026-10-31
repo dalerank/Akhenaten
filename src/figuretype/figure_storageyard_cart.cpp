@@ -14,6 +14,20 @@
 
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_storageyard_cart);
 
+int storageyard_cart_getting_load_cap(e_resource resource) {
+    if (!!game_features::gameplay_og_warehouseman) {
+        // OG warehouseman_fetch_amount: big cart goods, weapons (0x0A), chariots (0x1C) → 100; else 400.
+        if (resource_is_big_cart(resource) || resource == RESOURCE_WEAPONS || resource == RESOURCE_CHARIOTS) {
+            return 100;
+        }
+        return 400;
+    }
+    if (!!game_features::gameplay_change_granaries_get_double) {
+        return 400;
+    }
+    return 200;
+}
+
 void figure_storageyard_cart::figure_before_action() {
     if (has_destination()) {
         return;
@@ -43,12 +57,7 @@ std::pair<e_resource, int> acquire_resource_for_getting_deliveryman(building* sr
         }
     }
 
-    if (!!game_features::gameplay_change_granaries_get_double) {
-        max_amount = std::min(max_amount, 400);
-    } else {
-        max_amount = std::min(max_amount, 200);
-    }
-
+    max_amount = std::min(max_amount, storageyard_cart_getting_load_cap(max_resource));
     max_amount = std::min<int>(max_amount, dst->freespace());
     return {max_resource, max_amount};
 }
@@ -56,7 +65,14 @@ std::pair<e_resource, int> acquire_resource_for_getting_deliveryman(building* sr
 void figure_storageyard_cart::do_retrieve(int action_done) {
     base.wait_ticks++;
     base.animctx.frame = 0;
-    if (base.wait_ticks < 4) {
+
+    const bool og = !!game_features::gameplay_og_warehouseman;
+    // OG: ++wait > 4. Remake Julius: act once wait reaches 4.
+    if (og) {
+        if (base.wait_ticks <= 4) {
+            return;
+        }
+    } else if (base.wait_ticks < 4) {
         return;
     }
 
@@ -79,6 +95,44 @@ void figure_storageyard_cart::do_retrieve(int action_done) {
         return;
     }
 
+    if (og) {
+        // One-shot take (OG WH_AT_*_GETTING). Granary always asks 400; yard uses fetch_amount.
+        const bool from_granary = building_type_any_of(dest->type, { BUILDING_GRANARY, BUILDING_GRANARY_UP });
+        if (base.collecting_item_id == RESOURCE_NONE) {
+            auto loads = acquire_resource_for_getting_deliveryman(destination(), home());
+            base.collecting_item_id = loads.first;
+            base.collecting_item_max = loads.second;
+        }
+
+        const e_resource res = (e_resource)base.collecting_item_id;
+        if (res == RESOURCE_NONE) {
+            advance_action(ACTION_8_RECALCULATE);
+            return;
+        }
+
+        const int want = from_granary ? 400 : storageyard_cart_getting_load_cap(res);
+        const int left = dest_storage->remove_resource(res, want);
+        int amount;
+        if (from_granary) {
+            // OG quirk 0x0048D78F: partial granary take keeps amount *left* (unremoved), not taken.
+            amount = left == want ? 0 : left == 0 ? want : left;
+        } else {
+            amount = left == want ? 0 : left == 0 ? want : want - left;
+        }
+
+        base.wait_ticks = 0;
+        if (amount == 0) {
+            base.resource_id = RESOURCE_NONE;
+            base.resource_amount_full = 0;
+            advance_action(ACTION_8_RECALCULATE);
+            return;
+        }
+
+        load_resource(res, amount);
+        advance_action(action_done);
+        return;
+    }
+
     if (base.collecting_item_id == RESOURCE_NONE) {
         auto loads = acquire_resource_for_getting_deliveryman(destination(), home());
         base.collecting_item_id = loads.first;
@@ -86,8 +140,7 @@ void figure_storageyard_cart::do_retrieve(int action_done) {
     } else if (base.collecting_item_max == 0) {
         const e_resource res = (e_resource)base.collecting_item_id;
         int max_amount = dest_storage->amount(res);
-        const int load_cap = !!game_features::gameplay_change_granaries_get_double ? 400 : 200;
-        max_amount = std::min(max_amount, load_cap);
+        max_amount = std::min(max_amount, storageyard_cart_getting_load_cap(res));
         max_amount = std::min<int>(max_amount, home_storage->freespace());
         base.collecting_item_max = max_amount;
     }
@@ -95,16 +148,13 @@ void figure_storageyard_cart::do_retrieve(int action_done) {
     int home_accepting_quantity = home_storage->accepting_amount((e_resource)base.collecting_item_id);
     int carry_amount_goal_max = std::min<int>(base.collecting_item_max, home_accepting_quantity);
 
-    // grab goods, quantity & max load changed by above settings;
     int previous_amount = base.get_carrying_amount();
     if (base.get_carrying_amount() < carry_amount_goal_max) {
         int left_amount = dest_storage->remove_resource((e_resource)base.collecting_item_id, UNITS_PER_LOAD);
-        int dest_stored_amount = dest_storage->amount((e_resource)base.collecting_item_id);
         append_resource((e_resource)base.collecting_item_id, (UNITS_PER_LOAD - left_amount));
         base.wait_ticks = 0;
     }
 
-    // if load is finished, go back home
     if (previous_amount == base.get_carrying_amount()) {
         advance_action(action_done);
         base.wait_ticks = 4;

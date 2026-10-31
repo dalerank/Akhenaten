@@ -29,3 +29,7 @@ public:
 
     void do_retrieve(int action_done);
 };
+
+// Remake: 200, or 400 with granaries_get_double.
+// OG (--og / gameplay_og_warehouseman): 100 for big goods / weapons / chariots, else 400.
+int storageyard_cart_getting_load_cap(e_resource resource);

@@ -355,6 +355,7 @@ void figure_cartpusher::determine_granaryman_destination() {
 
 void figure_cartpusher::determine_storageyard_cart_destination() {
     int road_network_id = map_road_network_get(tile());
+    const bool og = !!game_features::gameplay_og_warehouseman;
 
     ////// getting resources!
     if (!base.resource_id) {
@@ -367,6 +368,9 @@ void figure_cartpusher::determine_storageyard_cart_destination() {
         if (has_destination()) {
             advance_action(ACTION_57_CARTPUSHER_GETTING_RESOURCE);
             base.terrain_usage = TERRAIN_USAGE_PREFER_ROADS;
+        } else if (og) {
+            // OG warehouseman_initial_yard: nothing to fetch → die (no image update).
+            poof();
         } else {
             advance_action(ACTION_53_CARTPUSHER_RETURNING_EMPTY);
         }
@@ -375,15 +379,52 @@ void figure_cartpusher::determine_storageyard_cart_destination() {
     building* warehouse = home();
 
     ////// delivering resource!
-    // priority 1: weapons to police stations (if destination already set)
-    if (base.resource_id == RESOURCE_WEAPONS && has_destination()) {
-        building* dest = destination();
-        if (dest && dest->type == BUILDING_POLICE_STATION) {
-            return advance_action(ACTION_51_CARTPUSHER_DELIVERING_RESOURCE);
+    // Remake-only consumers (not in OG warehouseman_initial_yard).
+    if (!og) {
+        if (base.resource_id == RESOURCE_WEAPONS && has_destination()) {
+            building* dest = destination();
+            if (dest && dest->type == BUILDING_POLICE_STATION) {
+                return advance_action(ACTION_51_CARTPUSHER_DELIVERING_RESOURCE);
+            }
+        }
+
+        if (base.resource_id == RESOURCE_PAPYRUS) {
+            const e_building_type consumers[] = { BUILDING_SCRIBAL_SCHOOL, BUILDING_INDUSTRY_OFFICE };
+            for (e_building_type consumer : consumers) {
+                auto result = building_get_asker_for_resource(tile(), consumer, base.resource_id, road_network_id, warehouse->distance_from_entry);
+                set_destination(result.building_id);
+                if (has_destination()) {
+                    return advance_action(ACTION_51_CARTPUSHER_DELIVERING_RESOURCE);
+                }
+            }
+        }
+
+        if (base.resource_id == RESOURCE_TIMBER) {
+            auto result = building_get_asker_for_resource(tile(), BUILDING_SHIPWRIGHT, base.resource_id, road_network_id, warehouse->distance_from_entry);
+            set_destination(result.building_id);
+            if (has_destination()) {
+                return advance_action(ACTION_51_CARTPUSHER_DELIVERING_RESOURCE);
+            }
+        }
+
+        if (base.resource_id == RESOURCE_BEER) {
+            auto result = building_get_asker_for_resource(tile(), BUILDING_SENET_HOUSE, base.resource_id, road_network_id, warehouse->distance_from_entry);
+            set_destination(result.building_id);
+            if (has_destination()) {
+                return advance_action(ACTION_51_CARTPUSHER_DELIVERING_RESOURCE);
+            }
+        }
+
+        if (base.resource_id == RESOURCE_STRAW || base.resource_id == RESOURCE_GAMEMEAT) {
+            auto result = building_get_asker_for_resource(tile(), BUILDING_ZOO, base.resource_id, road_network_id, warehouse->distance_from_entry);
+            set_destination(result.building_id);
+            if (has_destination()) {
+                return advance_action(ACTION_51_CARTPUSHER_DELIVERING_RESOURCE);
+            }
         }
     }
 
-    // priority 2: weapons to barracks
+    // OG order: recruiter → workshop(with room) → granary → getting granary → other yard → any workshop.
     if (base.resource_id == RESOURCE_WEAPONS) {
         auto result = building_get_asker_for_resource(tile(), BUILDING_RECRUITER, base.resource_id, road_network_id, warehouse->distance_from_entry);
         set_destination(result.building_id);
@@ -392,46 +433,6 @@ void figure_cartpusher::determine_storageyard_cart_destination() {
         }
     }
 
-    // priority 2: papyrus to scribal school / industry office
-    if (base.resource_id == RESOURCE_PAPYRUS) {
-        const e_building_type consumers[] = { BUILDING_SCRIBAL_SCHOOL, BUILDING_INDUSTRY_OFFICE };
-        for (e_building_type consumer : consumers) {
-            auto result = building_get_asker_for_resource(tile(), consumer, base.resource_id, road_network_id, warehouse->distance_from_entry);
-            set_destination(result.building_id);
-            if (has_destination()) {
-                return advance_action(ACTION_51_CARTPUSHER_DELIVERING_RESOURCE);
-            }
-        }
-    }
-
-    // priority 3: timber to shipyard
-    if (base.resource_id == RESOURCE_TIMBER) {
-        auto result = building_get_asker_for_resource(tile(), BUILDING_SHIPWRIGHT, base.resource_id, road_network_id, warehouse->distance_from_entry);
-        set_destination(result.building_id);
-        if (has_destination()) {
-            return advance_action(ACTION_51_CARTPUSHER_DELIVERING_RESOURCE);
-        }
-    }
-
-    // priority 4: beer to senet house
-    if (base.resource_id == RESOURCE_BEER) {
-        auto result = building_get_asker_for_resource(tile(), BUILDING_SENET_HOUSE, base.resource_id, road_network_id, warehouse->distance_from_entry);
-        set_destination(result.building_id);
-        if (has_destination()) {
-            return advance_action(ACTION_51_CARTPUSHER_DELIVERING_RESOURCE);
-        }
-    }
-
-    // priority 4b: straw / game meat to zoo
-    if (base.resource_id == RESOURCE_STRAW || base.resource_id == RESOURCE_GAMEMEAT) {
-        auto result = building_get_asker_for_resource(tile(), BUILDING_ZOO, base.resource_id, road_network_id, warehouse->distance_from_entry);
-        set_destination(result.building_id);
-        if (has_destination()) {
-            return advance_action(ACTION_51_CARTPUSHER_DELIVERING_RESOURCE);
-        }
-    }
-
-    // priority 5: raw materials to workshop
     {
         tile2i dest;
         int building_id = building_get_workshop_for_raw_material_with_room(tile(), base.resource_id, warehouse->distance_from_entry, road_network_id, dest);
@@ -441,7 +442,6 @@ void figure_cartpusher::determine_storageyard_cart_destination() {
         }
     }
 
-    // priority 6: food to granary
     {
         tile2i dest;
         int building_id = building_granary_for_storing(tile(), base.resource_id, warehouse->distance_from_entry, road_network_id, 0, 0, &dest);
@@ -451,7 +451,6 @@ void figure_cartpusher::determine_storageyard_cart_destination() {
         }
     }
 
-    // priority 7: food to getting granary
     {
         tile2i dest;
         int building_id = building_getting_granary_for_storing(tile(), base.resource_id, warehouse->distance_from_entry, road_network_id, &dest);
@@ -461,7 +460,6 @@ void figure_cartpusher::determine_storageyard_cart_destination() {
         }
     }
 
-    // priority 8: resource to other warehouse
     tile2i dest;
     int warehouse_id = building_storage_yard_for_storing(tile(), base.resource_id, warehouse->distance_from_entry, road_network_id, 0, dest);
     if (warehouse_id) {
@@ -474,24 +472,16 @@ void figure_cartpusher::determine_storageyard_cart_destination() {
     if (has_destination()) {
         return advance_action(ACTION_51_CARTPUSHER_DELIVERING_RESOURCE);
     }
-    //    int empty_warehouse = building_storage_get(home()->storage_id)->empty_all; // deliver to another warehouse
-    //    because this one is being emptied if (has_destination() && empty_warehouse) {
-    //        if (homeID() == destinationID())
-    //            poof();
-    //        else
-    //            advance_action(FIGURE_ACTION_51_WAREHOUSEMAN_DELIVERING_RESOURCE);
-    //        return;
-    //    }
 
-    //    // priority 6: raw material to well-stocked workshop
-    //    set_destination(building_get_workshop_for_raw_material(tile_x, tile_y, resource_id,
-    //    warehouse->distance_from_entry, road_network_id, &dst); if (destination_building_id) {
-    //        remove_resource_from_warehouse();
-    //        return advance_action(FIGURE_ACTION_51_WAREHOUSEMAN_DELIVERING_RESOURCE);
-    //    }
-
-    // no destination: recalculate
-    //    advance_action(FIGURE_ACTION_59_WAREHOUSEMAN_RETURNING_WITH_RESOURCE);
+    // OG / missing remake branch: deliver to a workshop even without free room.
+    {
+        tile2i any_dest;
+        int building_id = building_get_workshop_for_raw_material(tile(), base.resource_id, warehouse->distance_from_entry, road_network_id, any_dest);
+        set_destination(building_id);
+        if (has_destination()) {
+            return advance_action(ACTION_51_CARTPUSHER_DELIVERING_RESOURCE);
+        }
+    }
 }
 
 void figure_cartpusher::figure_before_action() {

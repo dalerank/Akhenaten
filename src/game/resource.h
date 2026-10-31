@@ -314,4 +314,13 @@ inline bool resource_is_food(e_resource resource) {
     );
 }
 
+// OG carriers.c carrier_is_big_resource — sled-style cart goods (bricks + monument stone).
+inline bool resource_is_big_cart(e_resource resource) {
+    return resource_type_any_of(
+        resource,
+        RESOURCE_BRICKS, RESOURCE_STONE, RESOURCE_LIMESTONE,
+        RESOURCE_GRANITE, RESOURCE_SANDSTONE, RESOURCE_MARBLE
+    );
+}
+
 e_resource get_raw_resource(e_resource resource);

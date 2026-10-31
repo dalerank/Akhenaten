@@ -59,7 +59,8 @@ namespace game_features {
     game_feature gameplay_buyers_dont_distribute{ "gameplay_buyers_dont_distribute", "#TR_CONFIG_NO_BUYER_DISTRIBUTION", false, false };
     game_feature gameplay_change_immediate_delete{ "gameplay_change_immediate_delete", "#TR_CONFIG_IMMEDIATELY_DELETE_BUILDINGS", false, false };
     game_feature gameplay_change_getting_granaries_go_offroad{ "gameplay_change_getting_granaries_go_offroad", "#TR_CONFIG_GETTING_GRANARIES_GO_OFFROAD", false, false };
-    game_feature gameplay_change_granaries_get_double{ "gameplay_change_granaries_get_double", "#TR_CONFIG_GRANARIES_GET_DOUBLE", false, false };
+    // Remake Julius default is half-load (200); true matches OG normal-goods haul (400). ogv true so --og is not stuck at 200.
+    game_feature gameplay_change_granaries_get_double{ "gameplay_change_granaries_get_double", "#TR_CONFIG_GRANARIES_GET_DOUBLE", false, true };
     game_feature gameplay_change_dock_double_haul{ "gameplay_change_dock_double_haul", "#TR_CONFIG_DOCK_DOUBLE_HAUL", false, false };
     game_feature gameplay_change_bazaar_multi_buyers{ "gameplay_change_bazaar_multi_buyers", "#TR_CONFIG_BAZAAR_MULTI_BUYERS", false, false };
     game_feature gameplay_change_tower_sentries_go_offroad{ "gameplay_change_tower_sentries_go_offroad", "#TR_CONFIG_TOWER_SENTRIES_GO_OFFROAD", false, false };
@@ -82,6 +83,7 @@ namespace game_features {
     game_feature gameplay_change_fireman_returning{ "gameplay_change_fireman_returning", "#TR_CONFIG_FIREMAN_RETURNING", false, false };
     game_feature gameplay_change_architect_patrol_most_damaged{ "gameplay_change_architect_patrol_most_damaged", "#TR_CONFIG_ARCHITECT_PATROL_MOST_DAMAGED", false, false };
     game_feature gameplay_og_architect{ "gameplay_og_architect", "#TR_CONFIG_OG_ARCHITECT", false, true };
+    game_feature gameplay_og_warehouseman{ "gameplay_og_warehouseman", "#TR_CONFIG_OG_WAREHOUSEMAN", false, true };
     game_feature gameui_draw_fps{ "gameui_draw_fps", "#TR_CONFIG_DRAW_FPS", false, false };
     game_feature gameplay_change_cart_speed_depends_quntity{ "gameplay_change_cart_speed_depends_quntity", "#TR_CONFIG_CART_SPEED_DEPENDS_QUANTITY", false, false };
     game_feature gameplay_change_citizen_road_offset{ "gameplay_change_citizen_road_offset", "#TR_CONFIG_CH_CITIZEN_ROAD_OFFSET", false, false };
