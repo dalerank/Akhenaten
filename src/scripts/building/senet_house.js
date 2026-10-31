@@ -37,6 +37,19 @@ building_senet_house = {
   }
 }
 
+// OG senet-house beer per walker trip (Heaven entertainment notes).
+function building_senet_house_beer_per_trip() {
+  var amounts = [5, 10, 20, 40, 60]
+  var i = game.difficulty
+  if (i < 0) {
+    i = 0
+  }
+  if (i >= amounts.length) {
+    i = amounts.length - 1
+  }
+  return amounts[i]
+}
+
 [es=(building_senet_house, on_place_checks)]
 function building_senet_house_on_place_checks(ev) {
   var has_senet_master = city.count_active_buildings(BUILDING_BULLFIGHT_SCHOOL) > 0
@@ -63,12 +76,25 @@ function building_senet_house_add_resource(ev) {
 [es=(building_senet_house, spawn_figure)]
 function building_senet_house_spawn_figure(ev) {
   var building = city.get_building(ev.bid)
+  var need = building_senet_house_beer_per_trip()
+  var beer = building.stored_resource(RESOURCE_BEER)
 
-  if (building.common_spawn_roamer(FIGURE_SENET_PLAYER, 100, ACTION_4_ENTERTAINER_ROAMING)) {
-    return
+  // OG: beer funds each senet-player trip (amount by difficulty).
+  if (beer >= need) {
+    if (building.common_spawn_figure_trigger(100, BUILDING_SLOT_SERVICE)) {
+      building.consume_resource(RESOURCE_BEER, need)
+      // Roamers do not hit update_shows(); mark plays active like zoo feed consume.
+      var ent = city.get_entertainment_building(ev.bid)
+      if (ent) {
+        ent.juggler_visited = 32
+      }
+      building.create_roaming_figure(FIGURE_SENET_PLAYER, ACTION_4_ENTERTAINER_ROAMING, BUILDING_SLOT_SERVICE)
+      return
+    }
   }
 
-  if (building.stored_resource(RESOURCE_BEER) <= 0) {
+  // Remake flavor drunkard: no extra beer drain (OG has no drunkard figure).
+  if (beer <= 0) {
     return
   }
 
@@ -76,8 +102,5 @@ function building_senet_house_spawn_figure(ev) {
     return
   }
 
-  var beer = building.stored_resource(RESOURCE_BEER)
-  var spent = beer < 20 ? beer : 20
-  building.consume_resource(RESOURCE_BEER, spent)
   __building_create_roaming_figure(ev.bid, FIGURE_DRUNKARD, 14, BUILDING_SLOT_DRUNKARD)
 }
