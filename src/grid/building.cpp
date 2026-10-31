@@ -49,6 +49,13 @@ void map_building_damage_clear(int grid_offset) {
     map_grid_set(g_damage_grid, grid_offset, 0);
 }
 
+void map_building_damage_set(int grid_offset, int value) {
+    if (!map_grid_is_valid_offset(grid_offset)) {
+        return;
+    }
+    map_grid_set(g_damage_grid, grid_offset, value < 0 ? 0 : value);
+}
+
 void map_highlight_set(int grid_offset, e_highlight_mode mode) {
     if (grid_offset < 0) {
         return;

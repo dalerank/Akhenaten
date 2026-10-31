@@ -23,7 +23,8 @@ public:
     struct static_params : public figure_static_params {
         int max_service_buildings;
         int effect_radius;
-        int risk_reduction_strength;
+        int risk_reduction_strength; // remake: % clear (100 = zero damage)
+        int risk_reduction_amount;   // OG (--og / gameplay_og_architect): absolute subtract per pass
     } FIGURE_STATIC_DATA_T;
 
     virtual void figure_action() override;
@@ -35,4 +36,4 @@ public:
     building_id find_most_damaged_building();
 };
 ANK_CONFIG_STRUCT(figure_architector::static_params,
-    max_service_buildings, effect_radius, risk_reduction_strength)
+    max_service_buildings, effect_radius, risk_reduction_strength, risk_reduction_amount)

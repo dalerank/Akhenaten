@@ -34,6 +34,7 @@ figure_architector {
 	permission : epermission_maintenance
 	effect_radius : 2
 	risk_reduction_strength : 100
+	risk_reduction_amount : 100
 	record_path : true
 }
 

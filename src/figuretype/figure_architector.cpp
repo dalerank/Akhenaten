@@ -1,17 +1,18 @@
 #include "figure_architector.h"
 
 #include "building/building.h"
+#include "building/building_house.h"
 #include "city/city.h"
 #include "city/city_buildings.h"
 #include "city/city_recorded_paths.h"
 #include "core/calc.h"
-#include "core/log.h"
 #include "core/profiler.h"
 #include "figure/service.h"
 #include "game/game_config.h"
 #include "grid/building.h"
 #include "grid/grid.h"
 #include "grid/road_access.h"
+#include "grid/terrain.h"
 #include "js/js_game.h"
 
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_architector);
@@ -110,13 +111,20 @@ void figure_architector::figure_action() {
 
     switch (action_state()) {
     default:
-        advance_action(ACTION_4_ENGINEER_RETURNING);
+        // OG: unknown state → created and clear wait. Remake: return home.
+        if (!!game_features::gameplay_og_architect) {
+            base.wait_ticks = 0;
+            advance_action(ACTION_1_ENGINEER_CREATED);
+        } else {
+            advance_action(ACTION_4_ENGINEER_RETURNING);
+        }
         break;
 
     case FIGURE_ACTION_149_CORPSE:
         break;
 
     case ACTION_1_ENGINEER_CREATED:
+        // Spawn is already on road_access; OG wait/cross-country exit needs spawn-on-building.
         advance_action(ACTION_3_ENGINEER_ROAMING);
         break;
 
@@ -176,20 +184,17 @@ void figure_architector::figure_before_action() {
 }
 
 void figure_architector::on_action_changed(int saved_action) {
-    if (action_state() == ACTION_8_RECALCULATE) {
-        logs::info("test");
-    }
 }
 
 int figure_architector::provide_service() {
     const auto& params = current_params();
-    int effect_radius = params.effect_radius > 0 ? params.effect_radius : 2; // Default to 2 if not set
-    int risk_reduction = params.risk_reduction_strength;
-
+    int effect_radius = params.effect_radius > 0 ? params.effect_radius : 2;
     int max_damage = 0;
     int houses_serviced = 0;
+    const bool og = !!game_features::gameplay_og_architect;
+    const int og_amount = params.risk_reduction_amount > 0 ? params.risk_reduction_amount : 100;
+    const int remake_pct = params.risk_reduction_strength;
 
-    // Use custom radius for service area
     grid_area area = map_grid_get_area(tile(), 1, effect_radius);
     map_grid_area_foreach(area, [&] (tile2i tile) {
         int grid_offset = tile.grid_offset();
@@ -198,16 +203,31 @@ int figure_architector::provide_service() {
             building *b = building_get(building_id)->main();
             max_damage = std::max<short>(b->collapse_risk, max_damage);
 
-            if (risk_reduction > 0) {
-                if (risk_reduction >= 100) {
-                    // Complete removal (original behavior)
+            if (og) {
+                // Pharaoh: subtract fixed amount from main building damage.
+                b->collapse_risk = (int16_t)std::max(0, b->collapse_risk - og_amount);
+                auto house = b->dcast_house();
+                if (house && house->house_population() > 0) {
+                    houses_serviced++;
+                }
+            } else if (remake_pct > 0) {
+                if (remake_pct >= 100) {
                     b->collapse_risk = 0;
                 } else {
-                    // Partial reduction as percentage
-                    b->collapse_risk = std::max(0, b->collapse_risk - (b->collapse_risk * risk_reduction / 100));
+                    b->collapse_risk = std::max(0, b->collapse_risk - (b->collapse_risk * remake_pct / 100));
                 }
+                houses_serviced++;
             }
-            houses_serviced++;
+            return;
+        }
+
+        // OG also repairs wall damage tiles with no building id.
+        if (og && map_terrain_is(grid_offset, TERRAIN_WALL)) {
+            int damage = map_get_building_damage(grid_offset);
+            if (damage > max_damage) {
+                max_damage = damage;
+            }
+            map_building_damage_set(grid_offset, damage - og_amount);
         }
     });
 

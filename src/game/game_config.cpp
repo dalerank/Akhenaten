@@ -5,6 +5,7 @@
 #include "core/vec2i.h"
 
 #include <variant>
+#include <cstring>
 #include "core/svector.h"
 #include "js/js_game.h"
 #include "dev/debug.h"
@@ -80,6 +81,7 @@ namespace game_features {
     game_feature gameplay_change_multiple_gatherers{ "gameplay_change_multiple_gatherers", "#TR_CONFIG_MULTIPLE_GATHERERS", false, false };
     game_feature gameplay_change_fireman_returning{ "gameplay_change_fireman_returning", "#TR_CONFIG_FIREMAN_RETURNING", false, false };
     game_feature gameplay_change_architect_patrol_most_damaged{ "gameplay_change_architect_patrol_most_damaged", "#TR_CONFIG_ARCHITECT_PATROL_MOST_DAMAGED", false, false };
+    game_feature gameplay_og_architect{ "gameplay_og_architect", "#TR_CONFIG_OG_ARCHITECT", false, true };
     game_feature gameui_draw_fps{ "gameui_draw_fps", "#TR_CONFIG_DRAW_FPS", false, false };
     game_feature gameplay_change_cart_speed_depends_quntity{ "gameplay_change_cart_speed_depends_quntity", "#TR_CONFIG_CART_SPEED_DEPENDS_QUANTITY", false, false };
     game_feature gameplay_change_citizen_road_offset{ "gameplay_change_citizen_road_offset", "#TR_CONFIG_CH_CITIZEN_ROAD_OFFSET", false, false };
@@ -204,6 +206,11 @@ namespace game_features {
     void apply_enhanced_profile() {
         for (auto *feature : _features) {
             if (!is_toggleable(*feature)) {
+                continue;
+            }
+            // gameplay_og_* are fidelity switches for --og, not Enhanced remake toggles.
+            pcstr name = feature->name.c_str();
+            if (name && strncmp(name, "gameplay_og_", 12) == 0) {
                 continue;
             }
             feature->set(true);
