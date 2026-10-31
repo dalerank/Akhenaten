@@ -160,6 +160,9 @@ public:
     short leading_figure_id;
     uint8_t attack_image_offset;
     uint8_t wait_ticks_missile;
+    // OG figure+0x134 / +0x13C / +0x140: tiles advanced while charging (action 0x13).
+    int16_t charge_steps;
+    tile2i charge_tile;
     vec2i cart_offset;
 
     bstring32 name;

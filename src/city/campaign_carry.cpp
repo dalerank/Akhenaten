@@ -288,7 +288,7 @@ bool campaign_carry_t::try_apply_to_fort(e_building_type fort_type, int formatio
         m->figures[spawned] = f->id;
         f->formation_id = m->id;
         f->formation_at_rest = 0;
-        f->advance_action(ACTION_81_SOLDIER_GOING_TO_FORT);
+        f->advance_action(ACTION_1_SOLDIER_GOING_TO_FORT);
         spawned++;
     }
     if (spawned <= 0) {

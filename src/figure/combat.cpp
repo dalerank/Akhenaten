@@ -5,6 +5,7 @@
 #include "figure/formation.h"
 #include "figure/movement.h"
 #include "figure/route.h"
+#include "figuretype/figure_soldier.h"
 #include "game/difficulty.h"
 #include "grid/figure.h"
 #include "grid/point.h"
@@ -340,6 +341,11 @@ void figure::hit_opponent() {
     int figure_attack = attack_value();
     int opponent_defense = opponent->defense_value();
 
+    // OG military.c figure_combat_hit_opponent: ×4 attack while charge.steps is 6..19.
+    if (charge_steps > 5 && charge_steps < 20) {
+        figure_attack <<= 2;
+    }
+
     // attack modifiers
     // if (type == /*FIGURE_WOLF*/)
     //    figure_attack = difficulty_adjust_wolf_attack(figure_attack);
@@ -448,20 +454,48 @@ void figure::figure_combat_attack_figure_at(int grid_offset) {
         return;
     }
 
+    // OG: a charging soldier (action 0x13) deals an immediate hit instead of entering melee state.
+    if (action_state == ACTION_12_SOLDIER_CHARGING) {
+        int cid = map_figure_id_get(grid_offset);
+        for (int guard = 0; cid > 0 && guard < MAX_FIGURES; guard++, cid = figure_get(cid)->next_figure) {
+            if (cid == id) {
+                continue;
+            }
+            figure *opp = figure_get(cid);
+            if (!opp->is_alive() || opp->faction_id == faction_id) {
+                continue;
+            }
+            e_figure_category oc = opp->category();
+            if (oc != figure_category_hostile && oc != figure_category_animal
+                && oc != figure_category_criminal && oc != figure_category_native) {
+                continue;
+            }
+            opponent_id = cid;
+            hit_opponent();
+            return;
+        }
+        return;
+    }
+
     int guard = 0;
-    int opponent_id = map_figure_id_get(grid_offset);
+    int opponent_id_tile = map_figure_id_get(grid_offset);
     for (;;) {
-        if (++guard >= MAX_FIGURES || opponent_id <= 0)
+        if (++guard >= MAX_FIGURES || opponent_id_tile <= 0)
             break;
 
-        figure* opponent = figure_get(opponent_id);
-        if (opponent_id == id) {
-            opponent_id = opponent->next_figure;
+        figure* opponent = figure_get(opponent_id_tile);
+        if (opponent_id_tile == id) {
+            opponent_id_tile = opponent->next_figure;
             continue;
         }
 
+        // OG: do not open a normal fight against a charging figure.
+        if (opponent->action_state == ACTION_12_SOLDIER_CHARGING) {
+            return;
+        }
+
         if (invasion_auto_resolve_figure_immune(this) || invasion_auto_resolve_figure_immune(opponent)) {
-            opponent_id = opponent->next_figure;
+            opponent_id_tile = opponent->next_figure;
             continue;
         }
 
@@ -499,12 +533,8 @@ void figure::figure_combat_attack_figure_at(int grid_offset) {
         if (attack) {
             action_state_before_attack = action_state;
             acquire_attack();
-            // NB: a local `int opponent_id` shadows the member here; the old
-            // `opponent_id = opponent_id;` was a no-op self-assign that left the
-            // member at 0, so handle_attack() saw figure_get(0) (dead) and bailed
-            // out before ever dealing damage. Assign the member explicitly.
-            this->opponent_id = opponent_id;
-            attacker_id1 = opponent_id;
+            this->opponent_id = opponent_id_tile;
+            attacker_id1 = opponent_id_tile;
             num_attackers = 1;
             attack_image_offset = 12;
             if (opponent->tile.x() != opponent->destination_tile.x()
@@ -534,6 +564,6 @@ void figure::figure_combat_attack_figure_at(int grid_offset) {
 
             return;
         }
-        opponent_id = opponent->next_figure;
+        opponent_id_tile = opponent->next_figure;
     }
 }

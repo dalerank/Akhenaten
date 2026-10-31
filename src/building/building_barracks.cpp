@@ -110,13 +110,13 @@ bool building_recruiter::create_soldier() {
             building* academy = building_get(academy_id);
             tile2i road = map_get_road_access_tile(academy->tile, academy->size);
             if (road.valid()) {
-                f->advance_action(ACTION_85_SOLDIER_GOING_TO_MILITARY_ACADEMY);
+                f->advance_action(ACTION_5_SOLDIER_GOING_TO_MILITARY_ACADEMY);
                 f->destination_tile = road;
             } else {
-                f->advance_action(ACTION_81_SOLDIER_GOING_TO_FORT);
+                f->advance_action(ACTION_1_SOLDIER_GOING_TO_FORT);
             }
         } else {
-            f->advance_action(ACTION_81_SOLDIER_GOING_TO_FORT);
+            f->advance_action(ACTION_1_SOLDIER_GOING_TO_FORT);
         }
         g_formations.calculate_figures();
         return true;

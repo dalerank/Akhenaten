@@ -192,7 +192,7 @@ bool figure_transport_ship::embark_formation(int formation_id) {
         f->set_flag(e_figure_flag_invisible);
         f->tile = base.tile;
         f->route_remove();
-        f->action_state = ACTION_84_SOLDIER_AT_STANDARD;
+        f->action_state = ACTION_4_SOLDIER_AT_STANDARD;
         f->formation_at_rest = 1;
         f->allow_move_type = EMOVE_AMPHIBIAN;
         loaded++;
@@ -322,7 +322,7 @@ void figure_transport_ship::disembark_troops() {
         f->set_flag(e_figure_flag_invisible, false);
         f->map_figure_remove();
         f->tile = pos;
-        f->action_state = ACTION_84_SOLDIER_AT_STANDARD;
+        f->action_state = ACTION_4_SOLDIER_AT_STANDARD;
         f->formation_at_rest = 0;
         f->allow_move_type = EMOVE_TERRAIN;
         f->map_figure_add();
@@ -454,7 +454,7 @@ void figure_transport_ship::sync_embarked_troops() {
         f->tile = base.tile;
         f->formation_at_rest = 1;
         f->allow_move_type = EMOVE_AMPHIBIAN;
-        f->action_state = ACTION_84_SOLDIER_AT_STANDARD;
+        f->action_state = ACTION_4_SOLDIER_AT_STANDARD;
         f->set_flag(e_figure_flag_invisible);
     }
 

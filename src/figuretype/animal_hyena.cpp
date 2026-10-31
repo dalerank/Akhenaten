@@ -47,7 +47,7 @@ int figure_combat_get_target_for_hyena(tile2i tile, int max_distance) {
         if (f->is_enemy() || f->is_herd()) {
             continue;
         }
-        if (::smart_cast<figure_soldier>(f) && f->action_state == ACTION_80_SOLDIER_AT_REST) {
+        if (::smart_cast<figure_soldier>(f) && f->action_state == ACTION_0_SOLDIER_AT_REST) {
             continue;
         }
         int distance = calc_maximum_distance(tile, f->tile);
@@ -154,7 +154,7 @@ void figure_hyena::figure_action() {
                     }
                     
                     // Check if it's a citizen but not a soldier at rest
-                    if (f->is_citizen() && !(::smart_cast<figure_soldier>(f) && f->action_state == ACTION_80_SOLDIER_AT_REST)) {
+                    if (f->is_citizen() && !(::smart_cast<figure_soldier>(f) && f->action_state == ACTION_0_SOLDIER_AT_REST)) {
                         int dist = calc_maximum_distance(tile(), f->tile);
                         if (dist <= current_params().max_hunting_distance && dist < result.distance) {
                             result.fid = i;

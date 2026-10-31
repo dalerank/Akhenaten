@@ -3,18 +3,21 @@
 #include "figure/figure.h"
 
 enum e_soldier_action {
-    ACTION_80_SOLDIER_AT_REST = 80,
-    ACTION_81_SOLDIER_GOING_TO_FORT = 81,
-    ACTION_82_SOLDIER_RETURNING_TO_BARRACKS = 82,
-    ACTION_83_SOLDIER_GOING_TO_STANDARD = 83,
-    ACTION_84_SOLDIER_AT_STANDARD = 84,
-    ACTION_85_SOLDIER_GOING_TO_MILITARY_ACADEMY = 85,
-    ACTION_86_SOLDIER_MOPPING_UP = 86,
-    ACTION_87_SOLDIER_GOING_TO_DISTANT_BATTLE = 87,
-    ACTION_88_SOLDIER_RETURNING_FROM_DISTANT_BATTLE = 88,
-    ACTION_89_SOLDIER_AT_DISTANT_BATTLE = 89,
-    ACTION_90_SOLDIER_ATTACK = 90,
-    ACTION_90_SOLDIER_INITIAL = 91,
+    ACTION_0_SOLDIER_AT_REST = 0,
+    ACTION_1_SOLDIER_GOING_TO_FORT = 1,
+    ACTION_2_SOLDIER_RETURNING_TO_BARRACKS = 2,
+    ACTION_3_SOLDIER_GOING_TO_STANDARD = 3,
+    ACTION_4_SOLDIER_AT_STANDARD = 4,
+    ACTION_5_SOLDIER_GOING_TO_MILITARY_ACADEMY = 5,
+    ACTION_6_SOLDIER_MOPPING_UP = 6,
+    ACTION_7_SOLDIER_GOING_TO_DISTANT_BATTLE = 7,
+    ACTION_8_SOLDIER_RETURNING_FROM_DISTANT_BATTLE = 8,
+    ACTION_9_SOLDIER_AT_DISTANT_BATTLE = 9,
+    ACTION_10_SOLDIER_ATTACK = 10,
+    ACTION_11_SOLDIER_INITIAL = 11,
+    // OG 0x13 / 0x14: charge rush + look-for-targets after arrival.
+    ACTION_12_SOLDIER_CHARGING = 12,
+    ACTION_13_SOLDIER_CHARGE_LOOK = 13,
 };
 
 class figure_soldier : public figure_impl {
@@ -26,7 +29,6 @@ public:
     virtual void acquire_attack() override;
     virtual figure_soldier *dcast_soldier() override { return this; }
 
-    //virtual bool play_die_sound() override;
     virtual void before_poof() override;
     virtual void update_image(const formation *m, int &dir);
     virtual e_minimap_figure_color minimap_color() const override { return FIGURE_COLOR_SOLDIER; }
@@ -34,8 +36,11 @@ public:
     virtual void formation_reset_to_initial(const formation *m) override;
 
     virtual void going_to_standard();
+    virtual void start_charging();
     virtual void send_to_distant_battle();
     virtual void goback_to_fort();
+
+    bool is_charging() const { return action_state() == ACTION_12_SOLDIER_CHARGING; }
 };
 
 class figure_soldier_infantry : public figure_soldier {

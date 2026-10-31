@@ -29,6 +29,7 @@ figure_soldier_infantry {
 	category: figure_category_armed
 	max_damage : 150
 	attack_value : 10
+	speed_mult : 1
 	terrain_usage : TERRAIN_USAGE_ANY
 }
 
@@ -64,6 +65,7 @@ figure_soldier_archer {
 	missile_attack_value : 4
 	missile_delay : 100
 	missile_range : 10
+	speed_mult : 1
 	terrain_usage : TERRAIN_USAGE_ANY
 }
 
@@ -99,6 +101,7 @@ figure_soldier_charioteer {
 	missile_attack_value : 8
 	missile_delay : 100
 	missile_range : 10
+	speed_mult : 2
 	terrain_usage : TERRAIN_USAGE_ANY
 }
 
@@ -163,13 +166,13 @@ function figure_soldier_city_phrase_key() {
 function figure_soldier_phrase_key(f) {
 	var state = f.action_state
 
-	// ACTION_90_SOLDIER_ATTACK
-	if (state == 90) {
+	// ACTION_10_SOLDIER_ATTACK
+	if (state == 10) {
 		return "soldier_ready_approaching_enemy"
 	}
 
-	// ACTION_87_SOLDIER_GOING_TO_DISTANT_BATTLE / ACTION_89_AT_DISTANT_BATTLE
-	if (state == 87 || state == 89) {
+	// ACTION_7_SOLDIER_GOING_TO_DISTANT_BATTLE / ACTION_9_SOLDIER_AT_DISTANT_BATTLE
+	if (state == 7 || state == 9) {
 		return "soldier_no_trouble_defeating_army"
 	}
 

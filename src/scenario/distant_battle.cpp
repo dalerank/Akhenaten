@@ -216,7 +216,7 @@ void dispatched_army_t::return_soldiers(formation *m) {
         if (m->figures[fig] > 0) {
             figure *f = figure_get(m->figures[fig]);
             if (!f->is_dead()) {
-                f->action_state = ACTION_88_SOLDIER_RETURNING_FROM_DISTANT_BATTLE;
+                f->action_state = ACTION_8_SOLDIER_RETURNING_FROM_DISTANT_BATTLE;
                 f->wait_ticks = (rand() % 64 + 4);
                 f->formation_at_rest = 1;
             }

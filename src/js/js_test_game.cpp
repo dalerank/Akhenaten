@@ -1,4 +1,4 @@
-﻿// Native JS bindings used only by the integraltests driver (see
+// Native JS bindings used only by the integraltests driver (see
 // src/platform/integral_tests.cpp and tests/*.js). Split out from js_game.cpp
 // to keep the test-only surface in one place and make it easy to audit /
 // disable later without touching the main game bindings.
@@ -2332,7 +2332,7 @@ int __test_player_transport_spawn_for_embark(int soldier_count) {
         s->faction_id = 1;
         s->formation_id = m->id;
         s->index_in_formation = (uint8_t)formation_add_figure(m->id, s->id, 1, 0, s->max_damage());
-        s->action_state = ACTION_84_SOLDIER_AT_STANDARD;
+        s->action_state = ACTION_4_SOLDIER_AT_STANDARD;
         s->formation_at_rest = 1;
         spawned_soldiers++;
     }

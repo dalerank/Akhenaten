@@ -52,7 +52,7 @@ declare_console_command_p(force_fill_fort) {
             m->figures[i] = f->id;
             f->formation_id = m->id;
             f->formation_at_rest = 1;
-            f->advance_action(ACTION_81_SOLDIER_GOING_TO_FORT);
+            f->advance_action(ACTION_1_SOLDIER_GOING_TO_FORT);
             created_soldiers = true;
             m->num_figures++;
         }

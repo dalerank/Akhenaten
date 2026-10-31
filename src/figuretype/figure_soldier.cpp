@@ -130,8 +130,64 @@ void figure::javelin_launch_missile() {
     route_remove();
 }
 
+// OG military.c type 0x0D at-standard: reload/look, melee if no missile target, else throw (no range gate).
+static void charioteer_at_standard(figure *f) {
+    const int delay = soldier_missile_delay(f->type);
+    const int range = soldier_missile_range(f->type);
+
+    if (++f->wait_ticks_missile > delay) {
+        f->wait_ticks_missile = 0;
+        tile2i tile;
+        int target_id = figure_combat_get_missile_target_for_soldier(f, range, &tile);
+        f->target_figure_id = target_id;
+        if (target_id) {
+            f->attack_image_offset = 1;
+            f->direction = calc_missile_shooter_direction(f->tile, figure_get(target_id)->tile);
+        } else {
+            f->attack_image_offset = 0;
+        }
+    }
+
+    if (!f->attack_image_offset) {
+        f->legionary_attack_adjacent_enemy();
+        return;
+    }
+
+    if (f->target_figure_id) {
+        figure *target = figure_get(f->target_figure_id);
+        if (target->is_valid() && !target->is_dead()) {
+            f->direction = calc_missile_shooter_direction(f->tile, target->tile);
+            soldier_throw_missile(f);
+        }
+    }
+    soldier_advance_missile_frame(f);
+}
+
+static tile2i soldier_standard_spot(figure *f, formation *m) {
+    tile2i spot = m->standard_tile.shifted(
+        formation_layout_position_for_figure(f->type, m->layout, f->index_in_formation));
+    if (f->alternative_location_index) {
+        spot.shift(ALTERNATIVE_POINTS[f->alternative_location_index]);
+    }
+    return spot;
+}
+
+static int soldier_speed(figure *f) {
+    int speed = figure_static_params::get(f->type).speed_mult;
+    return speed > 0 ? speed : 1;
+}
+
+static int soldier_charge_speed(figure *f) {
+    int speed = soldier_speed(f);
+    // OG: double move ticks while charge.steps is 6..19.
+    if (f->charge_steps > 5 && f->charge_steps < 20) {
+        return speed * 2;
+    }
+    return speed;
+}
+
 void figure::legionary_attack_adjacent_enemy() {
-    for (int i = 0; i < 8 && action_state != ACTION_90_SOLDIER_ATTACK; i++) {
+    for (int i = 0; i < 8 && action_state != ACTION_10_SOLDIER_ATTACK; i++) {
         figure_combat_attack_figure_at(tile.grid_offset() + map_grid_direction_delta(i));
     }
 }
@@ -151,7 +207,7 @@ int figure::find_mop_up_target() {
             target->targeted_by_figure_id = id;
             //target_figure_created_sequence = target->created_sequence;
         } else {
-            action_state = ACTION_84_SOLDIER_AT_STANDARD;
+            action_state = ACTION_4_SOLDIER_AT_STANDARD;
             animctx.frame = 0;
         }
         route_remove();
@@ -164,28 +220,42 @@ void figure_soldier::formation_reset_to_initial(const formation *m) {
         return;
     }
 
-    base.action_state = ACTION_90_SOLDIER_INITIAL;
+    base.action_state = ACTION_11_SOLDIER_INITIAL;
     base.wait_ticks = 0;
 }
 
 void figure_soldier::going_to_standard() {
-    advance_action(ACTION_83_SOLDIER_GOING_TO_STANDARD);
+    formation *m = formation_get(base.formation_id);
+    // OG: charioteer "charge" order is COLUMN — rushes with action 0x13.
+    if (type() == FIGURE_FCHARIOTEER && m && m->layout == FORMATION_COLUMN) {
+        start_charging();
+        return;
+    }
+    advance_action(ACTION_3_SOLDIER_GOING_TO_STANDARD);
+}
+
+void figure_soldier::start_charging() {
+    base.alternative_location_index = 0;
+    base.charge_steps = 0;
+    base.charge_tile = tile();
+    advance_action(ACTION_12_SOLDIER_CHARGING);
+    route_remove();
 }
 
 void figure_soldier::send_to_distant_battle() {
     base.destination_tile = g_city.map.exit_point;
-    advance_action(ACTION_87_SOLDIER_GOING_TO_DISTANT_BATTLE);
+    advance_action(ACTION_7_SOLDIER_GOING_TO_DISTANT_BATTLE);
 }
 
 void figure_soldier::goback_to_fort() {
     if (base.in_attack()) {
         return;
     }
-    
+
     if (base.action_state == FIGURE_ACTION_149_CORPSE) {
         return;
     }
-        
+
     if (action_state(FIGURE_ACTION_148_FLEEING)) {
         return;
     }
@@ -199,11 +269,11 @@ void figure_soldier::before_poof() {
 }
 
 void figure_soldier::update_image(const formation* m, int &dir) {
-    if (action_state() == ACTION_90_SOLDIER_ATTACK) {
+    if (action_state() == ACTION_10_SOLDIER_ATTACK) {
         dir = base.attack_direction;
     } else if (m->missile_fired) {
         dir = direction();
-    } else if (action_state() == ACTION_84_SOLDIER_AT_STANDARD) {
+    } else if (action_state() == ACTION_4_SOLDIER_AT_STANDARD) {
         dir = m->direction;
     } else if (direction() < 8) {
         dir = direction();
@@ -223,7 +293,7 @@ bool figure_soldier::play_die_sound() {
 }
 
 void figure_soldier::acquire_attack() {
-    base.action_state = ACTION_90_SOLDIER_ATTACK;
+    base.action_state = ACTION_10_SOLDIER_ATTACK;
     base.set_flag(e_figure_flag_inattack);
 }
 
@@ -252,46 +322,39 @@ void figure_soldier::figure_action() {
         base.kill();
     }
 
-    int speed_factor;
-    if (type() == FIGURE_INFANTRY) {
-        speed_factor = 1;
-    } else if (type() == FIGURE_ARCHER) {
-        speed_factor = 1;
-    } else {
-        speed_factor = 1;
-    }
+    int speed_factor = soldier_speed(&base);
     int layout = m->layout;
-    if (base.formation_at_rest || action_state() == ACTION_81_SOLDIER_GOING_TO_FORT)
+    if (base.formation_at_rest || action_state() == ACTION_1_SOLDIER_GOING_TO_FORT)
         layout = FORMATION_AT_REST;
 
-    const tile2i offset = formation_layout_position(layout, base.index_in_formation);
+    const tile2i offset = formation_layout_position_for_figure(type(), layout, base.index_in_formation);
     tile2i formation_position = m->tile.shifted(offset);
 
     switch (action_state()) {
-    case ACTION_80_SOLDIER_AT_REST:
+    case ACTION_0_SOLDIER_AT_REST:
         base.map_figure_update();
         base.wait_ticks = 0;
         base.formation_at_rest = 1;
         base.animctx.frame = 0;
         if (tile() != formation_position) {
-            base.action_state = ACTION_81_SOLDIER_GOING_TO_FORT;
+            base.action_state = ACTION_1_SOLDIER_GOING_TO_FORT;
         }
         break;
 
-    case ACTION_81_SOLDIER_GOING_TO_FORT:
+    case ACTION_1_SOLDIER_GOING_TO_FORT:
         base.wait_ticks = 0;
         base.formation_at_rest = 1;
         base.destination_tile = formation_position;
         base.move_ticks(speed_factor);
         if (direction() == DIR_FIGURE_NONE)
-            base.action_state = ACTION_80_SOLDIER_AT_REST;
+            base.action_state = ACTION_0_SOLDIER_AT_REST;
         else if (direction() == DIR_FIGURE_REROUTE)
             route_remove();
         else if (direction() == DIR_FIGURE_CAN_NOT_REACH)
             poof();
         break;
 
-    case ACTION_82_SOLDIER_RETURNING_TO_BARRACKS:
+    case ACTION_2_SOLDIER_RETURNING_TO_BARRACKS:
         base.formation_at_rest = 1;
         base.destination_tile = base.source_tile;
         base.move_ticks(speed_factor);
@@ -302,16 +365,16 @@ void figure_soldier::figure_action() {
         }
         break;
 
-    case ACTION_83_SOLDIER_GOING_TO_STANDARD:
+    case ACTION_3_SOLDIER_GOING_TO_STANDARD:
         base.formation_at_rest = 0;
-        base.destination_tile = m->standard_tile.shifted(formation_layout_position(m->layout, base.index_in_formation));
-        if (base.alternative_location_index) {
-            base.destination_tile.shift(ALTERNATIVE_POINTS[base.alternative_location_index]);
-        }
+        base.destination_tile = soldier_standard_spot(&base, m);
 
         base.move_ticks(speed_factor);
         if (direction() == DIR_FIGURE_NONE) {
-            base.action_state = ACTION_84_SOLDIER_AT_STANDARD;
+            // OG: arriving into layout 0x0F goes to post-charge look (0x14).
+            base.action_state = (m->layout == FORMATION_CHARGE)
+                ? ACTION_13_SOLDIER_CHARGE_LOOK
+                : ACTION_4_SOLDIER_AT_STANDARD;
             base.animctx.frame = 0;
         } else if (direction() == DIR_FIGURE_REROUTE)
             route_remove();
@@ -325,42 +388,131 @@ void figure_soldier::figure_action() {
         }
         break;
 
-    case ACTION_84_SOLDIER_AT_STANDARD:
+    case ACTION_4_SOLDIER_AT_STANDARD:
         base.formation_at_rest = 0;
         base.animctx.frame = 0;
         base.map_figure_update();
-        base.destination_tile = m->standard_tile.shifted(formation_layout_position(m->layout, base.index_in_formation));
+        base.destination_tile = soldier_standard_spot(&base, m);
 
-        if (base.alternative_location_index) {
-            base.destination_tile.shift(ALTERNATIVE_POINTS[base.alternative_location_index]);
-        }
-        if (tile() != base.destination_tile) {
-            if (m->missile_fired <= 0 && m->recent_fight <= 0 && m->missile_attack_timeout <= 0) {
-                base.action_state = ACTION_83_SOLDIER_GOING_TO_STANDARD;
+        if (tile() == base.destination_tile) {
+            if (m->layout == FORMATION_CHARGE) {
+                base.action_state = ACTION_3_SOLDIER_GOING_TO_STANDARD;
                 base.alternative_location_index = 0;
             }
+        } else if (m->missile_fired <= 0 && m->recent_fight <= 0 && m->missile_attack_timeout <= 0) {
+            base.action_state = ACTION_3_SOLDIER_GOING_TO_STANDARD;
+            base.alternative_location_index = 0;
         }
-        if (action_state() != ACTION_83_SOLDIER_GOING_TO_STANDARD) {
+        if (action_state() != ACTION_3_SOLDIER_GOING_TO_STANDARD) {
             if (type() == FIGURE_ARCHER) {
                 base.javelin_launch_missile();
             } else if (type() == FIGURE_FCHARIOTEER) {
-                // OG type 0x0D at standard: javelin when attacking, else adjacent melee.
-                base.javelin_launch_missile();
-                if (!base.attack_image_offset) {
-                    base.legionary_attack_adjacent_enemy();
-                }
+                charioteer_at_standard(&base);
             } else if (type() == FIGURE_INFANTRY) {
                 base.legionary_attack_adjacent_enemy();
             }
         }
         break;
 
-    case ACTION_85_SOLDIER_GOING_TO_MILITARY_ACADEMY:
+    case ACTION_12_SOLDIER_CHARGING: {
+        // OG military.c case 0x13: rush to standard spot, double speed mid-charge, layout COLUMN then CHARGE.
+        base.formation_at_rest = 0;
+        base.destination_tile = soldier_standard_spot(&base, m);
+        if (tile() != base.charge_tile) {
+            base.charge_tile = tile();
+            base.charge_steps++;
+        }
+        base.move_ticks(soldier_charge_speed(&base));
+        if (direction() == DIR_FIGURE_NONE) {
+            base.action_state = ACTION_13_SOLDIER_CHARGE_LOOK;
+            base.animctx.frame = 0;
+            m->layout = FORMATION_CHARGE;
+            base.charge_steps = 0;
+        } else if (direction() == DIR_FIGURE_REROUTE) {
+            route_remove();
+        } else if (direction() == DIR_FIGURE_CAN_NOT_REACH) {
+            base.alternative_location_index++;
+            if (base.alternative_location_index > 168) {
+                poof();
+            }
+            base.animctx.frame = 0;
+        } else {
+            m->layout = FORMATION_COLUMN;
+        }
+        break;
+    }
+
+    case ACTION_13_SOLDIER_CHARGE_LOOK: {
+        // OG military.c case 0x14: fight near the arrival spot (range 6), else fall back to at-standard.
+        base.formation_at_rest = 0;
+        tile2i spot = soldier_standard_spot(&base, m);
+        if (calc_maximum_distance(tile(), spot) >= 6) {
+            base.action_state = ACTION_4_SOLDIER_AT_STANDARD;
+            base.target_figure_id = 0;
+            base.animctx.frame = 0;
+            break;
+        }
+
+        int target_id = base.target_figure_id;
+        figure *target = figure_get(target_id);
+        if (!target->is_valid() || target->is_dead()
+            || target->type == FIGURE_ARCHER || target->type == FIGURE_INFANTRY
+            || target->type == FIGURE_FCHARIOTEER) {
+            target_id = 0;
+            base.target_figure_id = 0;
+        }
+
+        if (target_id <= 0) {
+            if (type() == FIGURE_ARCHER || type() == FIGURE_FCHARIOTEER) {
+                target_id = soldier_reload_and_look(&base, 6);
+            } else {
+                target_id = figure_combat_get_target_for_soldier(tile(), 6);
+            }
+            if (target_id) {
+                target = figure_get(target_id);
+                base.target_figure_id = target_id;
+                target->targeted_by_figure_id = base.id;
+                base.destination_tile = target->tile;
+            } else if (spot == tile()) {
+                base.animctx.frame = 0;
+            } else {
+                base.action_state = ACTION_4_SOLDIER_AT_STANDARD;
+            }
+            route_remove();
+        }
+
+        if (target_id) {
+            target = figure_get(target_id);
+            bool in_range = false;
+            if (type() == FIGURE_ARCHER || type() == FIGURE_FCHARIOTEER) {
+                in_range = calc_maximum_distance(tile(), target->tile) <= soldier_missile_range(type());
+            }
+            if (!in_range) {
+                base.move_ticks(speed_factor);
+            }
+            if (direction() == DIR_FIGURE_REROUTE || direction() == DIR_FIGURE_CAN_NOT_REACH) {
+                base.action_state = ACTION_4_SOLDIER_AT_STANDARD;
+                base.target_figure_id = 0;
+                base.animctx.frame = 0;
+            } else if (in_range) {
+                base.direction = calc_missile_shooter_direction(tile(), target->tile);
+                soldier_throw_missile(&base);
+                soldier_advance_missile_frame(&base);
+                route_remove();
+            } else if (direction() == DIR_FIGURE_NONE) {
+                base.destination_tile = target->tile;
+                route_remove();
+            }
+        }
+        break;
+    }
+
+    case ACTION_5_SOLDIER_GOING_TO_MILITARY_ACADEMY:
         m->has_military_training = 1;
         base.formation_at_rest = 1;
         base.move_ticks(speed_factor);
         if (direction() == DIR_FIGURE_NONE) {
-            base.action_state = ACTION_81_SOLDIER_GOING_TO_FORT;
+            base.action_state = ACTION_1_SOLDIER_GOING_TO_FORT;
         } else if (direction() == DIR_FIGURE_REROUTE) {
             route_remove();
         } else if (direction() == DIR_FIGURE_CAN_NOT_REACH) {
@@ -368,7 +520,7 @@ void figure_soldier::figure_action() {
         }
         break;
 
-    case ACTION_86_SOLDIER_MOPPING_UP:
+    case ACTION_6_SOLDIER_MOPPING_UP:
         base.formation_at_rest = 0;
         if (type() == FIGURE_ARCHER || type() == FIGURE_FCHARIOTEER) {
             // OG mop-up (0x0E): missile units reload/look then engage (shoot in range, else walk).
@@ -386,7 +538,7 @@ void figure_soldier::figure_action() {
                     target->targeted_by_figure_id = base.id;
                     base.destination_tile = target->tile;
                 } else {
-                    base.action_state = ACTION_84_SOLDIER_AT_STANDARD;
+                    base.action_state = ACTION_4_SOLDIER_AT_STANDARD;
                     base.animctx.frame = 0;
                 }
                 route_remove();
@@ -399,7 +551,7 @@ void figure_soldier::figure_action() {
                     base.move_ticks(speed_factor);
                 }
                 if (direction() == DIR_FIGURE_REROUTE || direction() == DIR_FIGURE_CAN_NOT_REACH) {
-                    base.action_state = ACTION_84_SOLDIER_AT_STANDARD;
+                    base.action_state = ACTION_4_SOLDIER_AT_STANDARD;
                     base.target_figure_id = 0;
                     base.animctx.frame = 0;
                 } else if (in_range) {
@@ -419,17 +571,17 @@ void figure_soldier::figure_action() {
                 base.destination_tile = target->tile;
                 route_remove();
             } else if (direction() == DIR_FIGURE_REROUTE || direction() == DIR_FIGURE_CAN_NOT_REACH) {
-                base.action_state = ACTION_84_SOLDIER_AT_STANDARD;
+                base.action_state = ACTION_4_SOLDIER_AT_STANDARD;
                 base.target_figure_id = 0;
                 base.animctx.frame = 0;
             }
         }
         break;
 
-    case ACTION_87_SOLDIER_GOING_TO_DISTANT_BATTLE: {
+    case ACTION_7_SOLDIER_GOING_TO_DISTANT_BATTLE: {
             base.formation_at_rest = 0;
-            if (do_goto(base.destination_tile, TERRAIN_USAGE_ANIMAL, ACTION_89_SOLDIER_AT_DISTANT_BATTLE, ACTION_87_SOLDIER_GOING_TO_DISTANT_BATTLE)) {
-                base.action_state = ACTION_89_SOLDIER_AT_DISTANT_BATTLE;
+            if (do_goto(base.destination_tile, TERRAIN_USAGE_ANIMAL, ACTION_9_SOLDIER_AT_DISTANT_BATTLE, ACTION_7_SOLDIER_GOING_TO_DISTANT_BATTLE)) {
+                base.action_state = ACTION_9_SOLDIER_AT_DISTANT_BATTLE;
                 g_distant_battle.dispatched_army.append_soldier(base.id);
                 return;
             }
@@ -446,7 +598,7 @@ void figure_soldier::figure_action() {
             break;
         }
 
-    case ACTION_88_SOLDIER_RETURNING_FROM_DISTANT_BATTLE:
+    case ACTION_8_SOLDIER_RETURNING_FROM_DISTANT_BATTLE:
         if (base.wait_ticks > 0) {
             base.wait_ticks--;
             break;
@@ -456,7 +608,7 @@ void figure_soldier::figure_action() {
         base.destination_tile = formation_position;
         base.move_ticks(speed_factor);
         if (direction() == DIR_FIGURE_NONE) {
-            base.action_state = ACTION_80_SOLDIER_AT_REST;
+            base.action_state = ACTION_0_SOLDIER_AT_REST;
         } else if (direction() == DIR_FIGURE_REROUTE) {
             route_remove();
         } else if (direction() == DIR_FIGURE_CAN_NOT_REACH) {
@@ -464,12 +616,12 @@ void figure_soldier::figure_action() {
         }
         break;
 
-    case ACTION_89_SOLDIER_AT_DISTANT_BATTLE:
+    case ACTION_9_SOLDIER_AT_DISTANT_BATTLE:
         base.formation_at_rest = 1;
         base.set_flag(e_figure_flag_invisible);
         break;
 
-    case ACTION_90_SOLDIER_ATTACK:
+    case ACTION_10_SOLDIER_ATTACK:
         base.formation_at_rest = 0;
         base.figure_combat_handle_attack(); // deals damage via hit_opponent, resumes when done
         break;
@@ -483,11 +635,11 @@ void figure_soldier_infantry::update_image(const formation *m, int &dir) {
     figure_soldier::update_image(m, dir);
 
     xstring animkey = animkeys().walk;
-    if (action_state() == ACTION_90_SOLDIER_ATTACK) {
+    if (action_state() == ACTION_10_SOLDIER_ATTACK) {
         animkey = animkeys().attack;
     } else if (action_state() == FIGURE_ACTION_149_CORPSE) {
         animkey = animkeys().death;
-    } else if (action_state() == ACTION_84_SOLDIER_AT_STANDARD) {
+    } else if (action_state() == ACTION_4_SOLDIER_AT_STANDARD) {
         animkey = animkeys().walk;
         base.animctx.frame = 0;
     }
@@ -498,7 +650,7 @@ void figure_soldier_infantry::update_image(const formation *m, int &dir) {
 void figure_soldier_charioteer::update_image(const formation *m, int &dir) {
     figure_soldier::update_image(m, dir);
 
-    if (action_state() == ACTION_90_SOLDIER_ATTACK) {
+    if (action_state() == ACTION_10_SOLDIER_ATTACK) {
         image_set_animation(animkeys().attack);
     } else if (action_state() == FIGURE_ACTION_149_CORPSE) {
         image_set_animation(animkeys().death);
@@ -510,11 +662,11 @@ void figure_soldier_charioteer::update_image(const formation *m, int &dir) {
 void figure_soldier_archer::update_image(const formation *m, int &dir) {
     figure_soldier::update_image(m, dir);
 
-    if (action_state() == ACTION_90_SOLDIER_ATTACK) {
+    if (action_state() == ACTION_10_SOLDIER_ATTACK) {
         image_set_animation(animkeys().attack);
     } else if (action_state() == FIGURE_ACTION_149_CORPSE) {
         image_set_animation(animkeys().death);
-    } else if (action_state() == ACTION_84_SOLDIER_AT_STANDARD) {
+    } else if (action_state() == ACTION_4_SOLDIER_AT_STANDARD) {
         image_set_animation(animkeys().walk);
         base.animctx.frame = 0;
     } else {

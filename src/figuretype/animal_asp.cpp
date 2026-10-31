@@ -76,7 +76,7 @@ bool is_asp_prey(figure *f, figure *self) {
     if (f->category() == figure_category_animal) {
         return false;
     }
-    if (::smart_cast<figure_soldier>(f) && f->action_state == ACTION_80_SOLDIER_AT_REST) {
+    if (::smart_cast<figure_soldier>(f) && f->action_state == ACTION_0_SOLDIER_AT_REST) {
         return false;
     }
     return true;

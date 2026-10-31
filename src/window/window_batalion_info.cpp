@@ -125,6 +125,13 @@ void batalion_info_window::update_layout() {
       {{0, FORMATION_COLUMN}, {1, FORMATION_TORTOISE}, {3, FORMATION_DOUBLE_LINE_2}, {2, FORMATION_DOUBLE_LINE_1},
         {4, FORMATION_MOP_UP}},
     };
+    // OG charioteers: double-line / charge(COLUMN) / charge-hold(0x0F) / mop-up.
+    static const mode_t OFFSETS_CHARIOTEER[2][5] = {
+      {{0, FORMATION_DOUBLE_LINE_1}, {1, FORMATION_COLUMN}, {2, FORMATION_CHARGE}, {3, FORMATION_DOUBLE_LINE_2},
+        {4, FORMATION_MOP_UP}},
+      {{0, FORMATION_DOUBLE_LINE_2}, {1, FORMATION_COLUMN}, {2, FORMATION_CHARGE}, {3, FORMATION_DOUBLE_LINE_1},
+        {4, FORMATION_MOP_UP}},
+    };
     static const mode_t OFFSETS_OTHER[2][5] = {
       {{5, FORMATION_SINGLE_LINE_1}, {1, FORMATION_SINGLE_LINE_2}, {2, FORMATION_DOUBLE_LINE_1},
         {3, FORMATION_DOUBLE_LINE_2}, {4, FORMATION_MOP_UP}},
@@ -136,6 +143,8 @@ void batalion_info_window::update_layout() {
     const mode_t *offsets;
     if (m->figure_type == FIGURE_INFANTRY)
         offsets = OFFSETS_LEGIONARY[index];
+    else if (m->figure_type == FIGURE_FCHARIOTEER)
+        offsets = OFFSETS_CHARIOTEER[index];
     else {
         offsets = OFFSETS_OTHER[index];
     }
@@ -291,8 +300,18 @@ void batalion_info_window::update_describe_layout(object_info &c) {
         text_id = 21;
         break;
     case FORMATION_COLUMN:
-        title_id = 13;
-        text_id = m->has_military_training ? 19 : 17;
+        // OG charioteer charge order uses the same COLUMN layout with charge copy.
+        if (m->figure_type == FIGURE_FCHARIOTEER) {
+            title_id = 20;
+            text_id = 21;
+        } else {
+            title_id = 13;
+            text_id = m->has_military_training ? 19 : 17;
+        }
+        break;
+    case FORMATION_CHARGE:
+        title_id = 16;
+        text_id = 17;
         break;
     default:
         title_id = 16;

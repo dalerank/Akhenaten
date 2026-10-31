@@ -46,7 +46,7 @@ void formation_batalion_update_recruit_status(building* b) {
         int too_many = m->num_figures - m->max_figures;
         for (int i = formation::max_figures_count - 1; i >= 0 && too_many > 0; i--) {
             if (m->figures[i]) {
-                figure_get(m->figures[i])->action_state = ACTION_82_SOLDIER_RETURNING_TO_BARRACKS;
+                figure_get(m->figures[i])->action_state = ACTION_2_SOLDIER_RETURNING_TO_BARRACKS;
                 too_many--;
             }
         }
@@ -130,8 +130,18 @@ void formation_batalion_return_home(formation* m) {
         return;
     }
 
-    m->is_at_fort = true;
-    formation_batalion_restore_layout(m);
+    // Charioteers: OG legion_return_to_fort — charge home (action 0x13).
+    // Other companies: OG formation_legion_to_standard — walk to fort spots.
+    const bool chariot_charge = (m->figure_type == FIGURE_FCHARIOTEER);
+    if (chariot_charge) {
+        m->standard_tile = m->home;
+        m->is_at_fort = false;
+        m->layout = FORMATION_COLUMN;
+    } else {
+        m->is_at_fort = true;
+        formation_batalion_restore_layout(m);
+    }
+
     for (int i = 0; i < formation::max_figures_count && m->figures[i]; i++) {
         figure* f = figure_get(m->figures[i]);
         if (f->action_state == FIGURE_ACTION_149_CORPSE || f->in_attack()) {
@@ -139,8 +149,16 @@ void formation_batalion_return_home(formation* m) {
         }
 
         if (prepare_to_move(m)) {
-            f->action_state = ACTION_81_SOLDIER_GOING_TO_FORT;
-            f->route_remove();
+            figure_soldier *soldier = f->dcast_soldier();
+            if (!soldier) {
+                continue;
+            }
+            if (chariot_charge) {
+                soldier->start_charging();
+            } else {
+                f->action_state = ACTION_1_SOLDIER_GOING_TO_FORT;
+                f->route_remove();
+            }
         }
     }
 }
@@ -166,7 +184,7 @@ int formation_batalion_curse() {
 
     for (int i = 0; i < formation::max_figures_count; i++) {
         if (best_legion->figures[i] > 0)
-            figure_get(best_legion->figures[i])->action_state = ACTION_82_SOLDIER_RETURNING_TO_BARRACKS;
+            figure_get(best_legion->figures[i])->action_state = ACTION_2_SOLDIER_RETURNING_TO_BARRACKS;
     }
 
     best_legion->cursed_by_seth = 96;
@@ -229,7 +247,7 @@ void formations_t::batalions_update() {
                     if (m->figures[n] != 0) {
                         figure* f = figure_get(m->figures[n]);
                         if (!f->in_attack() && f->action_state != FIGURE_ACTION_149_CORPSE) {
-                            f->action_state = ACTION_86_SOLDIER_MOPPING_UP;
+                            f->action_state = ACTION_6_SOLDIER_MOPPING_UP;
                         }
                     }
                 }
@@ -244,7 +262,7 @@ void formation_batalion_decrease_damage(void) {
     for (int i = 1; i < MAX_FIGURES; i++) {
         figure* f = figure_get(i);
         if (f->state == FIGURE_STATE_ALIVE && ::smart_cast<figure_soldier>(f)) {
-            if (f->action_state == ACTION_80_SOLDIER_AT_REST) {
+            if (f->action_state == ACTION_0_SOLDIER_AT_REST) {
                 if (f->damage) {
                     f->damage--;
                 }
