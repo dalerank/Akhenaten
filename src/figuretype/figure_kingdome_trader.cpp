@@ -103,6 +103,12 @@ void figure_trade_caravan::on_create() {
     figure_trader::on_create();
     auto &d = runtime_data();
     const auto &params = current_params();
+    // OG: fixed 8×100 loads (= max_capacity). Remake rolls; Enhanced 1600 raises the ceiling.
+    if (!!game_features::gameplay_og_trader
+        && !game_features::gameplay_change_trader_capacity_1600.to_bool()) {
+        d.capacity = params.max_capacity;
+        return;
+    }
     const uint16_t min_cap = params.min_capacity;
     const uint16_t max_cap = game_features::gameplay_change_trader_capacity_1600.to_bool()
         ? 1600
@@ -164,7 +170,7 @@ void figure_trade_caravan::figure_action() {
         base.wait_ticks++;
         if (base.wait_ticks > 10) {
             base.wait_ticks = 0;
-            int move_on = 0;
+            int failed = 0;
             if (can_buy(destination(), d.empire_city)) {
                 e_resource resource = empire_trader().get_buy_resource(destination(), d.empire_city, UNITS_PER_LOAD);
                 if (resource) {
@@ -173,13 +179,13 @@ void figure_trade_caravan::figure_action() {
                     empire_trader().record_bought_resource(resource);
                     buy(UNITS_PER_LOAD);
                 } else {
-                    move_on++;
+                    failed++;
                 }
             } else {
-                move_on++;
+                failed++;
             }
 
-            if (move_on > 0 && can_sell(destination(), d.empire_city)) {
+            if (can_sell(destination(), d.empire_city)) {
                 e_resource resource = empire_trader().get_sell_resource(destination(), d.empire_city);
                 if (resource) {
                     auto &trade_route = d.empire_city.get_route();
@@ -187,13 +193,13 @@ void figure_trade_caravan::figure_action() {
                     empire_trader().record_sold_resource(resource);
                     sell(UNITS_PER_LOAD);
                 } else {
-                    move_on++;
+                    failed++;
                 }
             } else {
-                move_on++;
+                failed++;
             }
 
-            if (move_on == 2) {
+            if (failed == 2) {
                 go_to_next_storageyard(tile(), -1);
             }
         }

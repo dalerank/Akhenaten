@@ -84,6 +84,7 @@ namespace game_features {
     game_feature gameplay_change_architect_patrol_most_damaged{ "gameplay_change_architect_patrol_most_damaged", "#TR_CONFIG_ARCHITECT_PATROL_MOST_DAMAGED", false, false };
     game_feature gameplay_og_architect{ "gameplay_og_architect", "#TR_CONFIG_OG_ARCHITECT", false, true };
     game_feature gameplay_og_warehouseman{ "gameplay_og_warehouseman", "#TR_CONFIG_OG_WAREHOUSEMAN", false, true };
+    game_feature gameplay_og_trader{ "gameplay_og_trader", "#TR_CONFIG_OG_TRADER", false, true };
     game_feature gameui_draw_fps{ "gameui_draw_fps", "#TR_CONFIG_DRAW_FPS", false, false };
     game_feature gameplay_change_cart_speed_depends_quntity{ "gameplay_change_cart_speed_depends_quntity", "#TR_CONFIG_CART_SPEED_DEPENDS_QUANTITY", false, false };
     game_feature gameplay_change_citizen_road_offset{ "gameplay_change_citizen_road_offset", "#TR_CONFIG_CH_CITIZEN_ROAD_OFFSET", false, false };

@@ -192,6 +192,7 @@ localization_en = [
   {key:"#TR_CONFIG_ARCHITECT_PATROL_MOST_DAMAGED", text:"Architects path to most damaged buildings"}
   {key:"#TR_CONFIG_OG_ARCHITECT", text:"Original Pharaoh architect (subtract damage, repair walls)"}
   {key:"#TR_CONFIG_OG_WAREHOUSEMAN", text:"Original Pharaoh storage-yard cart (fetch amounts, no-target despawn, granary take quirk)"}
+  {key:"#TR_CONFIG_OG_TRADER", text:"Original Pharaoh trade caravan (fixed 800 capacity, buy and sell each tick)"}
   {key:"#TR_CONFIG_CART_SPEED_DEPENDS_QUANTITY", text:"Cart speed depends from quantity resource"}
   {key:"#TR_CONFIG_CH_CITIZEN_ROAD_OFFSET", text:"Use different offsets for citizens in road"}
   {key:"#TR_CONFIG_CH_WORK_CAMP_ONE_WORKER_PER_MONTH", text:"Work camp spawn one worker per month"}

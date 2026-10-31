@@ -105,6 +105,7 @@ namespace game_features {
     extern game_feature gameplay_change_architect_patrol_most_damaged;
     extern game_feature gameplay_og_architect;
     extern game_feature gameplay_og_warehouseman;
+    extern game_feature gameplay_og_trader;
     extern game_feature gameui_draw_fps;
     extern game_feature gameplay_change_cart_speed_depends_quntity;
     extern game_feature gameplay_change_citizen_road_offset;
