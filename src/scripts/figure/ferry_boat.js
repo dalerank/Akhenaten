@@ -119,6 +119,12 @@ function figure_ferry_boat_setup_phrase(ev) {
 	case ACTION_4_FERRY_BOAT_WAITING:
 		keys.push("ferry_boat_waiting")
 		break
+	case ACTION_5_FERRY_BOAT_UNLOAD_HOME:
+		keys.push("ferry_boat_at_destination")
+		break
+	case ACTION_6_FERRY_BOAT_LOAD_AWAY:
+		keys.push("ferry_boat_ready")
+		break
 	}
 
 	var city_keys = figure_ferry_boat_city_phrase_keys()

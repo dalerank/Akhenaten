@@ -2,6 +2,7 @@
 
 #include "grid/road_network.h"
 #include "building/building.h"
+#include "building/building_ferry.h"
 #include "building/destruction.h"
 #include "building/building_roadblock.h"
 #include "building/monuments.h"
@@ -157,6 +158,27 @@ void figure::advance_route_tile(int roaming_enabled) {
     const bool is_deepwater_move = (allow_move_type == EMOVE_DEEPWATER);
     const bool is_ferry_route = map_terrain_is(target_grid_offset, TERRAIN_FERRY_ROUTE);
     const bool is_water_tile = map_terrain_is(target_grid_offset, TERRAIN_WATER);
+    building *target_building = map_terrain_is(target_grid_offset, TERRAIN_BUILDING)
+        ? building_at(target_grid_offset)
+        : nullptr;
+
+    // OG: ferry-using walkers board at the landing instead of walking the water lane.
+    if (!is_water_move && !is_deepwater_move && !is_amphibia_move && !roaming_enabled
+        && dcast()->boards_ferry()
+        && target_building && target_building->type == BUILDING_FERRY) {
+        auto *ferry = target_building->dcast_ferry();
+        if (ferry && ferry->try_enter_ferry(*this)) {
+            return;
+        }
+    }
+
+    // Boarding walkers must not step onto open ferry-route water.
+    if (!is_water_move && !is_deepwater_move && !is_amphibia_move && dcast()->boards_ferry()
+        && is_ferry_route && is_water_tile
+        && !(target_building && target_building->type == BUILDING_FERRY)) {
+        direction = DIR_FIGURE_REROUTE;
+        return;
+    }
 
     if (is_ferry_route && !is_water_move && !is_deepwater_move && !is_amphibia_move && !can_cross_ferry()) {
         direction = DIR_FIGURE_REROUTE;

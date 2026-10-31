@@ -10,7 +10,9 @@
 #include "graphics/elements/lang_text.h"
 #include "graphics/elements/ui.h"
 #include "grid/grid.h"
+#include "grid/building.h"
 #include "grid/terrain.h"
+#include "building/building.h"
 #include "core/object_property.h"
 #include "core/profiler.h"
 #include "scenario/invasion_auto_resolve.h"
@@ -275,8 +277,13 @@ bool figure_impl::can_cross_ferry() const {
     return current_params().can_cross_ferry;
 }
 
+bool figure_impl::boards_ferry() const {
+    return current_params().boards_ferry;
+}
+
 bool figure_impl::can_move_by_ferry_water() const {
-    if (!can_cross_ferry()) {
+    // Boarding walkers wait for the boat; they must not swim the ferry lane.
+    if (!can_cross_ferry() || boards_ferry()) {
         return false;
     }
 
@@ -293,6 +300,17 @@ void figure_impl::drop_route_if_heading_into_non_ferry_water() {
 
     const int next = tile().grid_offset() + map_grid_direction_delta(direction());
     if (!map_terrain_is(next, TERRAIN_WATER)) {
+        return;
+    }
+
+    // Boarding walkers never walk the ferry lane; drop so movement can board at the landing.
+    if (boards_ferry()) {
+        if (map_terrain_is(next, TERRAIN_FERRY_ROUTE) || map_terrain_is_near_ferry_route(next, 1)) {
+            const int bid = map_building_at(next);
+            if (!(bid && building_get(bid)->type == BUILDING_FERRY)) {
+                route_remove();
+            }
+        }
         return;
     }
 

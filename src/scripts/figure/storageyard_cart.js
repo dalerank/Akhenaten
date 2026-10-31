@@ -33,6 +33,7 @@ figure_storageyard_cart {
 	max_damage : 20
 	terrain_usage : TERRAIN_USAGE_ROADS,
 	can_cross_ferry: true
+	boards_ferry: true
 }
 
 function figure_storageyard_cart_phrase_key(f) {

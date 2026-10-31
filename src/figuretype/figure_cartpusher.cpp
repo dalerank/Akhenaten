@@ -1,5 +1,6 @@
 #include "figure_cartpusher.h"
 
+#include "building/building_ferry.h"
 #include "building/building_barracks.h"
 #include "building/building_delivery_path.h"
 #include "building/building_granary.h"
@@ -543,8 +544,10 @@ void figure_cartpusher::figure_action() {
         base.wait_ticks++;
         if (base.wait_ticks > 100) {
             base.wait_ticks = 0;
-            base.set_flag(e_figure_flag_invisible, false);
-            advance_action(ACTION_8_RECALCULATE);
+            if (!figure_is_queued_for_ferry(id())) {
+                base.set_flag(e_figure_flag_invisible, false);
+                advance_action(ACTION_8_RECALCULATE);
+            }
         }
         break;
 
