@@ -69,6 +69,7 @@ namespace game_features {
     extern game_feature gameplay_change_grandfestival;
     extern game_feature gameplay_change_jealous_gods;
     extern game_feature gameplay_change_global_labour;
+    extern game_feature gameplay_change_nobles_dont_provide_labor;
     extern game_feature gameplay_change_school_walkers;
     extern game_feature gameplay_change_retire_at_60;
     extern game_feature gameplay_change_fixed_workers;

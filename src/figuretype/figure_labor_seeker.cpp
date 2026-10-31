@@ -4,6 +4,7 @@
 #include "city/city.h"
 #include "figure/service.h"
 #include "building/building_house.h"
+#include "game/game_config.h"
 #include "js/js_game.h"
 
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_labor_seeker);
@@ -32,6 +33,7 @@ void figure_labor_seeker::figure_before_action() {
 }
 
 int figure_labor_seeker::provide_service() {
+    const bool skip_nobles = !!game_features::gameplay_change_nobles_dont_provide_labor;
     int houses_serviced = 0;
     figure_provide_service(tile(), &base, [&] (building *b, figure *f) {
         auto house = b->dcast_house();
@@ -43,7 +45,7 @@ int figure_labor_seeker::provide_service() {
             return;
         }
 
-        if (house->is_nobles()) {
+        if (skip_nobles && house->is_nobles()) {
             return;
         }
 

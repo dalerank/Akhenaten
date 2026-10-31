@@ -57,6 +57,7 @@ localization_de = [
   {key:"#TR_CONFIG_GRANDFESTIVAL", text:"Prächtige Feste erlauben zusätzlichen Segen von einem Gott"}
   {key:"#TR_CONFIG_JEALOUS_GODS", text:"Eifersucht der Götter deaktivieren"}
   {key:"#TR_CONFIG_GLOBAL_LABOUR", text:"Globalen Arbeitskräftepool aktivieren"}
+  {key:"#TR_CONFIG_NOBLES_DONT_PROVIDE_LABOR", text:"Herrenhäuser und höher stellen keine Arbeitskräfte"}
   {key:"#TR_CONFIG_SCHOOL_WALKERS", text:"Reichweite der Schulwanderer erweitern"}
   {key:"#TR_CONFIG_RETIRE_AT_60", text:"Rentenalter der Bürger von 50 auf 60 ändern"}
   {key:"#TR_CONFIG_FIXED_WORKERS", text:"Fester Arbeiterpool — 38% der Bürger (Plebs)"}

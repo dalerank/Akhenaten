@@ -55,6 +55,7 @@ localization_ru = [
     { key:"#TR_CONFIG_GRANDFESTIVAL", text:"Великий фестиваль разрешает дополнительное благословение от божества"}
     { key:"#TR_CONFIG_JEALOUS_GODS", text:"Отключить ревность божеств"}
     { key:"#TR_CONFIG_GLOBAL_LABOUR", text:"Включить глобальный пул работников"}
+    { key:"#TR_CONFIG_NOBLES_DONT_PROVIDE_LABOR", text:"Богатые дома (усадьбы и выше) не дают работников"}
     { key:"#TR_CONFIG_SCHOOL_WALKERS", text:"Увеличить зону покрытия школ"}
     { key:"#TR_CONFIG_RETIRE_AT_60", text:"Изменить возраст выхода на пенсию с 50 до 60 лет"}
     { key:"#TR_CONFIG_FIXED_WORKERS", text:"Фиксированный пул работников — 38% простолюдинов"}

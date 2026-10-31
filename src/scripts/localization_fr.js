@@ -52,6 +52,7 @@ localization_fr = [
   { key:"#TR_CONFIG_GRANDFESTIVAL", text:"Les grandes fêtes permettent une bénédiction supplémentaire d'un dieu"},
   { key:"#TR_CONFIG_JEALOUS_GODS", text:"Déactive la jalousie des dieux"},
   { key:"#TR_CONFIG_GLOBAL_LABOUR", text:"Active la main-d'œuvre globale"},
+  { key:"#TR_CONFIG_NOBLES_DONT_PROVIDE_LABOR", text:"Les manoirs et plus ne fournissent pas de main-d'œuvre"},
   { key:"#TR_CONFIG_SCHOOL_WALKERS", text:"Augmente la couverture des écoliers"},
   { key:"#TR_CONFIG_RETIRE_AT_60", text:"Change l'âge de retraitre des citoyens de 50 à 60"},
   { key:"#TR_CONFIG_FIXED_WORKERS", text:"Réserve de travailleurs fixe — 38% des plébéiens"},

@@ -46,6 +46,7 @@ namespace game_features {
     game_feature gameplay_change_hasanimals{ "gameplay_change_has_animals", "#TR_CONFIG_CITY_HAS_ANIMALS", false, false };
     game_feature gameplay_change_jealous_gods{ "gameplay_change_jealous_gods", "#TR_CONFIG_JEALOUS_GODS", false, false };
     game_feature gameplay_change_global_labour{ "gameplay_change_global_labour", "#TR_CONFIG_GLOBAL_LABOUR", false, false };
+    game_feature gameplay_change_nobles_dont_provide_labor{ "gameplay_change_nobles_dont_provide_labor", "#TR_CONFIG_NOBLES_DONT_PROVIDE_LABOR", false, false };
     game_feature gameplay_change_school_walkers{ "gameplay_change_school_walkers", "#TR_CONFIG_SCHOOL_WALKERS", false, false };
     game_feature gameplay_change_retire_at_60{ "gameplay_change_retire_at_60", "#TR_CONFIG_RETIRE_AT_60", false, false };
     game_feature gameplay_change_fixed_workers{ "gameplay_change_fixed_workers", "#TR_CONFIG_FIXED_WORKERS", false, false };

@@ -70,6 +70,7 @@ localization_en = [
   {key:"#TR_CONFIG_GRANDFESTIVAL", text:"Grand festivals allow extra blessing from a god"}
   {key:"#TR_CONFIG_JEALOUS_GODS", text:"Disable jealousness of gods"}
   {key:"#TR_CONFIG_GLOBAL_LABOUR", text:"Enable global labour pool"}
+  {key:"#TR_CONFIG_NOBLES_DONT_PROVIDE_LABOR", text:"Manor houses and above do not provide labor"}
   {key:"#TR_CONFIG_SCHOOL_WALKERS", text:"Extend school walkers range"}
   {key:"#TR_CONFIG_RETIRE_AT_60", text:"Change citizens' retirement age from 50 to 60"}
   {key:"#TR_CONFIG_FIXED_WORKERS", text:"Fixed worker pool — 38% of commoners"}

@@ -69,6 +69,7 @@ localization_hu = [
   {key:"#TR_CONFIG_GRANDFESTIVAL", text:"A nagy ünnepségek további isteni áldást adhatnak"}
   {key:"#TR_CONFIG_JEALOUS_GODS", text:"Az istenek féltékenységének kikapcsolása"}
   {key:"#TR_CONFIG_GLOBAL_LABOUR", text:"Globális munkaerőpiac engedélyezése"}
+  {key:"#TR_CONFIG_NOBLES_DONT_PROVIDE_LABOR", text:"A kúriák és magasabb házak nem adnak munkaerőt"}
   {key:"#TR_CONFIG_SCHOOL_WALKERS", text:"Iskolai járókelők hatótávjának növelése"}
   {key:"#TR_CONFIG_RETIRE_AT_60", text:"Nyugdíjkorhatár emelése 50-ről 60 évre"}
   {key:"#TR_CONFIG_FIXED_WORKERS", text:"Rögzített munkaerő: a közemberek 38%-a"}

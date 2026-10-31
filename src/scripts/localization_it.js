@@ -70,6 +70,7 @@ localization_it = [
   {key:"#TR_CONFIG_GRANDFESTIVAL", text:"Le festività maggiori concedono una benedizione extra da un dio"}
   {key:"#TR_CONFIG_JEALOUS_GODS", text:"Disattiva la gelosia degli dèi"}
   {key:"#TR_CONFIG_GLOBAL_LABOUR", text:"Attiva bacino di manodopera globale"}
+  {key:"#TR_CONFIG_NOBLES_DONT_PROVIDE_LABOR", text:"Le dimore e superiori non forniscono manodopera"}
   {key:"#TR_CONFIG_SCHOOL_WALKERS", text:"Estendi il raggio d'azione degli scolari"}
   {key:"#TR_CONFIG_RETIRE_AT_60", text:"Porta l'età della pensione dei cittadini da 50 a 60"}
   {key:"#TR_CONFIG_FIXED_WORKERS", text:"Manodopera fissa — 38% dei popolani"}
