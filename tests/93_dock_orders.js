@@ -147,8 +147,7 @@ function run_test() {
     }
     __log_marker('dock_orders_weight_ok')
 
-    // Ship integration (lite): spawn ship, accept-none → free dock 0; accept-all alone
-    // still yields 0 without empire city goods — but match_score_for_ship must be callable.
+    // Ship integration (lite): match_score_for_ship + smart-routing free-dock filter.
     var ship = test_figure_create(FIGURE_TRADE_SHIP)
     if (!ship) {
         __log_info_native('[test:93] trade ship create failed')
@@ -163,13 +162,31 @@ function run_test() {
         __test_signal_ready()
         return
     }
-    // No workers / no empire lists → free dock must not reserve.
+
+    __test_building_set_workers(bid, 12)
+    __test_building_set_workers(bid2, 12)
+
+    var prev_smart = game_features.get('gameplay_change_dock_smart_routing')
+    game_features.set('gameplay_change_dock_smart_routing', true)
     dock.unaccept_all_goods()
+    dock2.unaccept_all_goods()
     if (__test_map_get_free_dock(ship) !== 0) {
-        __log_info_native('[test:93] accept-none dock must not be chosen as free destination')
+        __log_info_native('[test:93] smart: accept-none dock must not be chosen as free destination')
+        game_features.set('gameplay_change_dock_smart_routing', prev_smart)
         __test_signal_ready()
         return
     }
+    game_features.set('gameplay_change_dock_smart_routing', false)
+    // OG linear list: staffed docks are eligible even with accept-none.
+    var og_free = __test_map_get_free_dock(ship)
+    if (og_free !== bid && og_free !== bid2) {
+        __log_info_native('[test:93] OG free dock expected staffed pier, got ' + og_free)
+        game_features.set('gameplay_change_dock_smart_routing', prev_smart)
+        __test_signal_ready()
+        return
+    }
+    game_features.set('gameplay_change_dock_smart_routing', prev_smart)
+
     // yard_proximity is defined (10000 if no road/SY); must not crash.
     if (__test_dock_yard_proximity(bid) < 0) {
         __log_info_native('[test:93] yard_proximity failed')

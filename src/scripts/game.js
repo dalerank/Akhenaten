@@ -107,6 +107,7 @@ game_features {
     @gameplay_change_disaster_events_use_amount {}
     @gameplay_change_trader_capacity_1600 {}
     @gameplay_change_trader_per_good_1600 {}
+    @gameplay_change_dock_smart_routing {}
     @gameplay_bast_lion_raid {}
     @gameplay_seth_asp_raid {}
     @gameplay_ptah_scorpion_raid {}

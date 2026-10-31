@@ -67,4 +67,6 @@ building_dest map_get_free_destination_dock(int ship_id);
 /** Free pier with score strictly greater than min_exclusive_score; no reservation change if none. */
 building_dest map_get_better_free_destination_dock(int ship_id, int min_exclusive_score);
 building_dest map_get_queue_destination_dock(int ship_id);
+/** Index of dock in OG working_dock_ids-style slots, or -1. */
+int building_dock_og_index(int building_id);
 bool map_tile_is_connected_to_open_water(tile2i tile);

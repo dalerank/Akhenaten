@@ -45,6 +45,7 @@ public:
         empire_trader_handle trader;
         empire_city_handle empire_city;
         uint8_t failed_dock_attempts;
+        uint8_t ship_dock_index; // OG working_dock_ids cursor (0…9); next_dock advances it
         uint16_t amount_bought;
         visit_budget_slot import_budgets[VISIT_BUDGET_SLOTS];
         uint16_t capacity; // trip snapshot at spawn (flag mid-game does not retarget live ships)
@@ -70,6 +71,8 @@ public:
 
     bool lost_queue();
     bool done_trading();
+    /** OG trade_ship_next_dock: try later pier slots, else leave via river exit. */
+    void try_next_dock(bool clear_dock);
     int is_trading() const;
     uint16_t total_bought() const { return runtime_data().amount_bought; }
 
