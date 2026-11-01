@@ -69,6 +69,7 @@ localization_ru = [
     { key:"#TR_CONFIG_GETTING_GRANARIES_GO_OFFROAD", text:"Тележки в амбар могут покидать дорогу"}
     { key:"#TR_CONFIG_GRANARIES_GET_DOUBLE", text:"Удвоить вместимость тележек распределяющих еду между амбарами"}
     { key:"#TR_CONFIG_BAZAAR_MULTI_BUYERS", text:"Базар может отправлять двух закупщиков сразу (еда + товары)"}
+    { key:"#TR_CONFIG_MARKET_DISTRIBUTE_REMAKE", text:"Раздача базара-ремейк: один тип еды за визит, заполнение по food_storage_multiplier (не как в оригинале)"}
     { key:"#TR_CONFIG_DOCK_SMART_ROUTING", text:"Умный выбор причала: по заказам/товарам и смена на лучший свободный (не как в оригинале)"}
     { key:"#TR_CONFIG_FOLLOWER_RUNAWAY", text:"Спутники убегают к выходу с карты, если лидер погиб (ослы каравана, разносчики; не как в оригинале)"}
     { key:"#TR_CONFIG_ROBBER_REMAKE", text:"Вор-ремейк: кража при появлении, всегда к дворцу, фоновые кражи из особняков (не как в оригинале)"}

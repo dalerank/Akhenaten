@@ -116,7 +116,9 @@ void figure_market_buyer::figure_action() {
     }
 }
 
-void distribute_good(building* b, building* market, int stock_wanted, int inventory_resource) {
+namespace {
+
+void distribute_good_remake(building *b, building *market, int stock_wanted, int inventory_resource) {
     building_bazaar *bazaar = market->dcast_bazaar();
     if (!bazaar) {
         return;
@@ -142,7 +144,44 @@ void distribute_good(building* b, building* market, int stock_wanted, int invent
     }
 }
 
-void distribute_market_resources(building* b, building* market) {
+// OG deliver_good: up to need*2 - have (need×4 first if house size > 1); sets demand flag to 10.
+void distribute_good_og(building_bazaar &bazaar, building_house &house, int need, short &demand_flag, int inventory_resource) {
+    if (house.base.size > 1) {
+        need <<= 2;
+    }
+    if (!need) {
+        return;
+    }
+
+    demand_flag = 10;
+    auto &marketd = bazaar.runtime_data();
+    int stock = marketd.inventory[inventory_resource].value;
+    if (stock <= 0) {
+        return;
+    }
+
+    auto &housed = house.runtime_data();
+    int have = housed.inventory[inventory_resource];
+    int want = need * 2 - have;
+    if (want <= 0) {
+        return;
+    }
+
+    if (want > stock) {
+        housed.inventory[inventory_resource] = (uint16_t)(have + stock);
+        marketd.inventory[inventory_resource].value = 0;
+    } else {
+        housed.inventory[inventory_resource] = (uint16_t)(have + want);
+        marketd.inventory[inventory_resource].value -= (uint16_t)want;
+    }
+}
+
+bool market_food_is_whole_load(e_resource resource) {
+    // OG food_index 0 (grain) and 6 (fish) take the full amount; others half.
+    return resource == RESOURCE_GRAIN || resource == RESOURCE_FISH;
+}
+
+void distribute_market_resources_remake(building *b, building *market) {
     building_bazaar *bazaar = market->dcast_bazaar();
     if (!bazaar) {
         return;
@@ -168,7 +207,7 @@ void distribute_market_resources(building* b, building* market) {
             food_types_stored_max++;
     }
 
-    const model_house& model = building_house::get_model(level);
+    const model_house &model = building_house::get_model(level);
     if (model.food_types > food_types_stored_max) {
         for (int i = INVENTORY_MIN_FOOD; i < INVENTORY_MAX_FOOD; i++) {
             if (housed.foods[i] >= max_food_stocks) {
@@ -195,23 +234,103 @@ void distribute_market_resources(building* b, building* market) {
     int aproximated_level = housed.highest_population / 10;
     if (model.pottery) {
         marketd.pottery_demand = 10;
-        distribute_good(b, market, goods_no * aproximated_level * model.pottery, INVENTORY_GOOD1);
+        distribute_good_remake(b, market, goods_no * aproximated_level * model.pottery, INVENTORY_GOOD1);
     }
 
     if (model.jewelry) {
         marketd.luxurygoods_demand = 10;
-        distribute_good(b, market, goods_no * aproximated_level * model.jewelry, INVENTORY_GOOD2);
+        distribute_good_remake(b, market, goods_no * aproximated_level * model.jewelry, INVENTORY_GOOD2);
     }
 
     if (model.linen) {
         marketd.linen_demand = 10;
-        distribute_good(b, market, goods_no * aproximated_level * model.linen, INVENTORY_GOOD3);
+        distribute_good_remake(b, market, goods_no * aproximated_level * model.linen, INVENTORY_GOOD3);
     }
 
     if (model.beer) {
         marketd.beer_demand = 10;
-        distribute_good(b, market, goods_no * aproximated_level * model.beer, INVENTORY_GOOD4);
+        distribute_good_remake(b, market, goods_no * aproximated_level * model.beer, INVENTORY_GOOD4);
     }
+}
+
+void distribute_market_resources_og(building *b, building *market) {
+    building_bazaar *bazaar = market->dcast_bazaar();
+    if (!bazaar) {
+        return;
+    }
+
+    auto house = b->dcast_house();
+    if (!house) {
+        return;
+    }
+
+    auto &marketd = bazaar->runtime_data();
+    auto &housed = house->runtime_data();
+    int level = house->house_level();
+    if (level < HOUSE_PALATIAL_ESTATE) {
+        level++;
+    }
+
+    const model_house &model = building_house::get_model(level);
+    const int population = house->house_population();
+
+    int types_left = model.food_types;
+    if (types_left > 0 && types_left < 4) {
+        types_left++;
+    }
+
+    for (int i = INVENTORY_MIN_FOOD; i < INVENTORY_MAX_FOOD; i++) {
+        e_resource resource = g_city.allowed_foods(i);
+        if (!resource) {
+            continue;
+        }
+
+        int stock = marketd.inventory[i].value;
+        if (stock <= 0 || !types_left) {
+            continue;
+        }
+
+        int have = housed.foods[i];
+        int amount = population * 6 - have;
+        if (population * 2 < amount) {
+            amount = population * 2;
+        }
+        if (amount <= 0) {
+            continue;
+        }
+
+        const bool whole = market_food_is_whole_load(resource);
+        if (stock >= amount) {
+            if (!whole) {
+                amount >>= 1;
+            }
+            housed.foods[i] = (uint16_t)(have + amount);
+            marketd.inventory[i].value -= (uint16_t)amount;
+        } else if (!whole && stock >= (amount >> 1)) {
+            amount >>= 1;
+            housed.foods[i] = (uint16_t)(have + amount);
+            marketd.inventory[i].value -= (uint16_t)amount;
+        } else {
+            housed.foods[i] = (uint16_t)(have + stock);
+            marketd.inventory[i].value = 0;
+        }
+        types_left--;
+    }
+
+    distribute_good_og(*bazaar, *house, model.pottery, marketd.pottery_demand, INVENTORY_GOOD1);
+    distribute_good_og(*bazaar, *house, model.jewelry, marketd.luxurygoods_demand, INVENTORY_GOOD2);
+    distribute_good_og(*bazaar, *house, model.linen, marketd.linen_demand, INVENTORY_GOOD3);
+    distribute_good_og(*bazaar, *house, model.beer, marketd.beer_demand, INVENTORY_GOOD4);
+}
+
+} // namespace
+
+void distribute_market_resources(building *b, building *market) {
+    if (game_features::gameplay_change_market_distribute_remake.to_bool()) {
+        distribute_market_resources_remake(b, market);
+        return;
+    }
+    distribute_market_resources_og(b, market);
 }
 
 
