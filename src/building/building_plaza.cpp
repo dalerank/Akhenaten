@@ -61,9 +61,10 @@ int building_plaza::preview::construction_place(build_planner &planer, tile2i st
 }
 
 int is_tile_plaza(int grid_offset) {
-
+    // OG map_plaza_square_fits: road + plaza bit, no water/building/canal, no image yet.
     if (map_terrain_is(grid_offset, TERRAIN_ROAD) && map_property_is_plaza_or_earthquake(tile2i(grid_offset))
-        && !map_terrain_is(grid_offset, TERRAIN_WATER | TERRAIN_BUILDING) && !map_image_at(grid_offset)) {
+        && !map_terrain_is(grid_offset, TERRAIN_WATER | TERRAIN_BUILDING | TERRAIN_CANAL)
+        && !map_image_at(grid_offset)) {
         return 1;
     }
     return 0;
