@@ -1,5 +1,6 @@
 #include "figure_shipwreck.h"
 
+#include "figuretype/figure_bubbles.h"
 #include "grid/water.h"
 #include "core/random.h"
 #include "figure/route.h"
@@ -48,6 +49,8 @@ bool figure_shipwreck::window_info_background(object_info &c) {
 
 figure *figure_shipwreck::create(tile2i tile) {
     random_generate_next();
+    // OG pairs shipwreck (0x43) with bubbles (0x1C) of a sinking ship.
+    figure_bubbles::create(tile);
     figure* f = figure_create(FIGURE_SHIPWRECK, tile, DIR_0_TOP_RIGHT);
     f->animctx.frame = random_byte() & 0x1f;
     f->progress_on_tile = random_byte() & 7;

@@ -30,6 +30,7 @@ int figure_combat_get_target_for_hyena(tile2i tile, int max_distance) {
         case FIGURE_FISHING_BOAT:
         case FIGURE_MAP_FLAG:
         case FIGURE_FLOTSAM:
+        case FIGURE_BUBBLES:
         case FIGURE_SHIPWRECK:
         case FIGURE_INDIGENOUS_NATIVE:
         case FIGURE_TOWER_SENTRY:
