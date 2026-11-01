@@ -132,6 +132,7 @@ namespace game_features {
     game_feature gameopt_sound_city_volume{ "gameopt_sound_city_volume", "", 100.0f, 100.0f };
     game_feature gameplay_brewery_requires_water{ "gameplay_brewery_requires_water", "#TR_CONFIG_BREWERY_REQUIRES_WATER", false, false };
     game_feature gameplay_conservatory_helps_dance_school{ "gameplay_conservatory_helps_dance_school", "#TR_CONFIG_CONSERVATORY_HELPS_DANCE_SCHOOL", false, false };
+    game_feature gameplay_juggler_school_one_walker{ "gameplay_juggler_school_one_walker", "#TR_CONFIG_JUGGLER_SCHOOL_ONE_WALKER", false, false };
     game_feature gameplay_jewels_workshops_culture_bonus{ "gameplay_jewels_workshops_culture_bonus", "#TR_CONFIG_JEWELS_WORKSHOPS_CULTURE_BONUS", false, false };
     game_feature gameui_overlay_show_gray_buildings{ "gameui_overlay_show_gray_buildings", "#TR_CONFIG_OVERLAY_SHOW_GRAY_BUILDINGS", false, false };
     game_feature gameplay_prevent_delete_near_burning_ruins{ "gameplay_prevent_delete_near_burning_ruins", "#TR_CONFIG_PREVENT_DELETE_NEAR_BURNING_RUINS", false, false };

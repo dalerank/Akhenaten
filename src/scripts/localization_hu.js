@@ -224,6 +224,7 @@ localization_hu = [
   {key:"#TR_CONFIG_EMPIRE_CITY_OLD_NAMES", text:"Régi városnevek megjelenítése a birodalmi térképen"}
   {key:"#TR_CONFIG_DRAW_CLOUD_SHADOWS", text:"Felhőárnyékok megjelenítése (kísérleti)"}
   {key:"#TR_CONFIG_CONSERVATORY_HELPS_DANCE_SCHOOL", text:"A konzervatórium segíti a tánciskolát (csökkenti a kiküldési késleltetést)"}
+  {key:"#TR_CONFIG_JUGGLER_SCHOOL_ONE_WALKER", text:"A zsonglőr iskola megvárja az előző zsonglőrt (OG átfedést enged)"}
   {key:"#TR_CONFIG_JEWELS_WORKSHOPS_CULTURE_BONUS", text:"Az ékszerkészítő műhelyek kulturális bónuszt adnak (+1 minden 3 műhely után)"}
   {key:"#TR_CONFIG_OVERLAY_SHOW_GRAY_BUILDINGS", text:"A nem megjelenített épületek szürkén látszanak a fedvényeken"}
   {key:"#TR_CONFIG_BREWERY_REQUIRES_WATER", text:"A sörfőzdéhez vízellátás szükséges"}

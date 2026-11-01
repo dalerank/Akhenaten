@@ -32,11 +32,12 @@ building_juggler_school {
     work { pos : [33, -38], id:46, offset:1, max_frames:14, duration:3 }
   }
 
-  spawn_delay_100_percent : 7   // ~4 жонглера в месяц
-  spawn_delay_75_percent : 15   // 2 жонглера в месяц
-  spawn_delay_50_percent : 30   // 1 жонглер в месяц
-  spawn_delay_25_percent : 60   // 1 жонглер за 2 месяца
-  spawn_delay_default : 90      // 1 жонглер за 3 месяца (для 1-24% работников)
+  // OG delays_service {3,7,15,29,44} — spawn_entertainment_school
+  spawn_delay_100_percent : 3
+  spawn_delay_75_percent : 7
+  spawn_delay_50_percent : 15
+  spawn_delay_25_percent : 29
+  spawn_delay_default : 44
   meta { text_id:77, help_link:"message_building_trading_centers" }
   info_sound : "Wavs/juggler_school.wav"
   overlay : OVERLAY_BOOTH
@@ -56,17 +57,6 @@ building_juggler_school {
   }
 }
 
-[es=(building_juggler_school, update_day)]
-function building_juggler_school_update_day(ev) {
-    var b = city.get_entertainment_building(ev.bid)
-    if (!b) {
-        return
-    }
-    if (b.spawned_entertainer_days > 0) {
-        b.spawned_entertainer_days = b.spawned_entertainer_days - 1
-    }
-}
-
 [es=(building_juggler_school, spawn_figure)]
 function building_juggler_school_spawn_figure(ev) {
     var b = city.get_entertainment_building(ev.bid)
@@ -74,11 +64,16 @@ function building_juggler_school_spawn_figure(ev) {
         return
     }
 
-    if (!b.common_spawn_figure_trigger(building_juggler_school.min_houses_coverage, BUILDING_SLOT_JUGGLER)) {
+    b.check_labor_problem()
+    if (!b.has_road_access) {
         return
     }
 
-    if (b.spawned_entertainer_days > 0) {
+    b.common_spawn_labor_seeker(building_juggler_school.min_houses_coverage)
+
+    // Remake: at most one living juggler from this school. OG has no walker_alive check.
+    if (game_features.gameplay_juggler_school_one_walker
+        && b.get_figures_number(FIGURE_JUGGLER) > 0) {
         return
     }
 
@@ -98,13 +93,18 @@ function building_juggler_school_spawn_figure(ev) {
         return
     }
 
+    b.figure_spawn_delay = b.figure_spawn_delay + 1
+    if (b.figure_spawn_delay <= delay) {
+        return
+    }
+    b.figure_spawn_delay = 0
+
     var dest_id = __building_determine_venue_destination(b.id, FIGURE_JUGGLER, [BUILDING_PAVILLION, BUILDING_BANDSTAND, BUILDING_BOOTH])
     if (dest_id > 0) {
         b.create_figure_with_destination(FIGURE_JUGGLER, dest_id, ACTION_2_ENTERTAINER_GOING_TO_VENUE, BUILDING_SLOT_JUGGLER)
     } else {
         b.create_roaming_figure(FIGURE_JUGGLER, ACTION_0_ENTERTAINER_AT_SCHOOL_CREATED, BUILDING_SLOT_JUGGLER)
     }
-    b.spawned_entertainer_days = delay
 }
 
 building_dancer_school {

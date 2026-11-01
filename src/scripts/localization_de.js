@@ -188,6 +188,7 @@ localization_de = [
   {key:"#TR_CONFIG_EMPIRE_CITY_OLD_NAMES", text:"Alte Namen für Städte auf Reichskarte anzeigen"}
   {key:"#TR_CONFIG_DRAW_CLOUD_SHADOWS", text:"Wolkenschatten zeichnen (experimentell)"}
   {key:"#TR_CONFIG_CONSERVATORY_HELPS_DANCE_SCHOOL", text:"Konservatorium hilft Tanzschule (reduziert Spawn-Verzögerung)"}
+  {key:"#TR_CONFIG_JUGGLER_SCHOOL_ONE_WALKER", text:"Jongleurschule wartet auf den vorherigen Jongleur (OG erlaubt Überlappung)"}
   {key:"#TR_CONFIG_JEWELS_WORKSHOPS_CULTURE_BONUS", text:"Juwelenwerkstätten geben Kulturbonus (+1 pro 3 Werkstätten)"}
   {key:"#TR_CONFIG_PROMPT_SAVE_ON_EXIT", text:"Beim Schließen des Spiels (Alt+F4) nach Speichern fragen"}
   {key:"#dock_order_trade", text:"Handeln"}

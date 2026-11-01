@@ -123,6 +123,7 @@ game_features {
     @gameplay_enhanced_walker_move_boost {}
     @gameplay_enhanced_festival_calendar {}
     @gameplay_enhanced_local_cults {}
+    @gameplay_juggler_school_one_walker {}
     @gameplay_change_fixed_workers {}
     @gameplay_fixed_worker_percent {}
     @gameopt_display_size {}

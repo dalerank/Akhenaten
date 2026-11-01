@@ -215,6 +215,7 @@ localization_it = [
   {key:"#TR_CONFIG_EMPIRE_CITY_OLD_NAMES", text:"Mostra i nomi antichi delle città sulla mappa dell'impero"}
   {key:"#TR_CONFIG_DRAW_CLOUD_SHADOWS", text:"Disegna le ombre delle nuvole (sperimentale)"}
   {key:"#TR_CONFIG_CONSERVATORY_HELPS_DANCE_SCHOOL", text:"Il conservatorio aiuta la scuola di danza (riduce il ritardo di uscita)"}
+  {key:"#TR_CONFIG_JUGGLER_SCHOOL_ONE_WALKER", text:"La scuola di giocolieri aspetta il precedente (OG permette sovrapposizione)"}
   {key:"#TR_CONFIG_JEWELS_WORKSHOPS_CULTURE_BONUS", text:"Le gioiellerie danno un bonus alla cultura (+1 ogni 3 officine)"}
   {key:"#TR_CONFIG_OVERLAY_SHOW_GRAY_BUILDINGS", text:"Mostra in grigio gli edifici non visualizzati nelle tabelle"}
   {key:"#TR_CONFIG_BREWERY_REQUIRES_WATER", text:"La distilleria richiede accesso all'acqua"}

@@ -222,6 +222,7 @@ localization_en = [
   {key:"#TR_CONFIG_EMPIRE_CITY_OLD_NAMES", text:"Show Old Names for city on empire map"}
   {key:"#TR_CONFIG_DRAW_CLOUD_SHADOWS", text:"Draw cloud shadows (experimental)"}
   {key:"#TR_CONFIG_CONSERVATORY_HELPS_DANCE_SCHOOL", text:"Conservatory helps dance school (reduces spawn delay)"}
+  {key:"#TR_CONFIG_JUGGLER_SCHOOL_ONE_WALKER", text:"Juggler school waits for previous juggler (OG allows overlapping)"}
   {key:"#TR_CONFIG_JEWELS_WORKSHOPS_CULTURE_BONUS", text:"Jewels workshops give culture bonus (+1 per 3 workshops)"}
   {key:"#TR_CONFIG_OVERLAY_SHOW_GRAY_BUILDINGS", text:"Show gray buildings on overlays when they are not displayed"}
   {key:"#TR_CONFIG_BREWERY_REQUIRES_WATER", text:"Brewery requires water access"}
