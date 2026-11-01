@@ -10,6 +10,7 @@
 #include "city/ratings.h"
 #include "core/calc.h"
 #include "core/random.h"
+#include "figuretype/figure_tomb_robber.h"
 #include "game/game.h"
 #include "game/game_config.h"
 #include "game/game_events.h"
@@ -352,9 +353,17 @@ void figure_robber::create(building *b) {
         return;
     }
 
-    figure *f = figure_create(FIGURE_ROBBER, road_tile, DIR_4_BOTTOM_LEFT);
+    // OG: when tomb robbers are possible, house crime prefers FIG_TOMB_ROBBER.
+    const bool spawn_tomb = !game_features::gameplay_change_tomb_robber_remake.to_bool()
+        && figure_tomb_robber::og_possible();
+    figure *f = figure_create(spawn_tomb ? FIGURE_TOMB_ROBER : FIGURE_ROBBER, road_tile, DIR_4_BOTTOM_LEFT);
     f->wait_ticks = 10 + (b->map_random_7bit & 0xf);
     g_city.ratings.monument_record_criminal();
+
+    if (spawn_tomb) {
+        f->advance_action(ACTION_8_TOMB_ROBBER_WAITING);
+        return;
+    }
 
     if (game_features::gameplay_change_robber_remake.to_bool()) {
         f->advance_action(ACTION_120_ROBBER_CREATED);

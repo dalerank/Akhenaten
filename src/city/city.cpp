@@ -149,9 +149,11 @@ void city_t::update_month(simulation_time_t simtime) {
 
     formation_update_monthly_morale_deployed();
 
-    // Monthly tomb-robber threat (anti-spam — not every day).
-    figure_tomb_robber::try_spawn(/*force_gates=*/false);
-    figure_tomb_robber::try_professional_wave();
+    // Remake-only monthly tomb-robber threat (OG spawns from house crime).
+    if (game_features::gameplay_change_tomb_robber_remake.to_bool()) {
+        figure_tomb_robber::try_spawn(/*force_gates=*/false);
+        figure_tomb_robber::try_professional_wave();
+    }
 }
 
 void city_t::init_custom_map() {

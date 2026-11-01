@@ -87,8 +87,10 @@ function run_test() {
         __test_signal_ready()
         return
     }
-    if (__figure_get_action_state(fid) != ACTION_TOMB_ROBBER_GOING) {
-        __log_info_native('[test:152] robber want GOING got ' + __figure_get_action_state(fid))
+    // OG going=9; remake going=121.
+    var going = __figure_get_action_state(fid)
+    if (going != 9 && going != ACTION_TOMB_ROBBER_GOING) {
+        __log_info_native('[test:152] robber want GOING got ' + going)
         __test_signal_ready()
         return
     }
@@ -108,8 +110,12 @@ function run_test() {
         __test_signal_ready()
         return
     }
-    if (__test_kingdom_rating() != before_kingdom - 10) {
-        __log_info_native('[test:152] steal kingdom want -10')
+    // OG finished-tomb hit is difficulty/2 (Normal → 3); remake is fixed 10.
+    var remake = game_features.get('gameplay_change_tomb_robber_remake') === true
+    var expect_pen = remake ? 10 : (([2, 4, 6, 8, 10][__game_difficulty()] / 2) | 0)
+    if (__test_kingdom_rating() != before_kingdom - expect_pen) {
+        __log_info_native('[test:152] steal kingdom want -' + expect_pen
+            + ' got ' + __test_kingdom_rating())
         __test_signal_ready()
         return
     }

@@ -110,6 +110,7 @@ game_features {
     @gameplay_change_dock_smart_routing {}
     @gameplay_change_follower_runaway {}
     @gameplay_change_robber_remake {}
+    @gameplay_change_tomb_robber_remake {}
     @gameplay_change_protestor_hunt_nobles {}
     @gameplay_bast_lion_raid {}
     @gameplay_seth_asp_raid {}

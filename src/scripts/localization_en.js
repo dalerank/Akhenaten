@@ -87,6 +87,7 @@ localization_en = [
   {key:"#TR_CONFIG_DOCK_SMART_ROUTING", text:"Smart dock routing: score pier by orders/goods, hop to a better free pier (not original Pharaoh)"}
   {key:"#TR_CONFIG_FOLLOWER_RUNAWAY", text:"Followers flee to the map exit when their leader dies (caravan donkeys, delivery boys; not original Pharaoh)"}
   {key:"#TR_CONFIG_ROBBER_REMAKE", text:"Mugger remake: steal on spawn, always head for the palace, ambient mansion theft (not original Pharaoh)"}
+  {key:"#TR_CONFIG_TOMB_ROBBER_REMAKE", text:"Tomb-robber remake: monthly spawn, flee/arrest, fixed kingdom hit (not original Pharaoh)"}
   {key:"#TR_CONFIG_PROTESTOR_HUNT_NOBLES", text:"Protestors hunt noble citizens and manor/estate houses (not original Pharaoh)"}
   {key:"#TR_CONFIG_BAZAAR_MULTI_BUYERS", text:"Bazaars can send two buyers at once (food + goods)"}
   {key:"#TR_CONFIG_TRADER_CAPACITY_1600", text:"Larger trader capacity (1600 per visit; not yearly empire limit)"}
