@@ -19,7 +19,7 @@ void ANK_REGISTER_CONFIG_ITERATOR(config_load_game_settings) {
 }
 
 namespace game_features {
-    svector<game_feature*, 160> _features;
+    svector<game_feature*, 192> _features;
     globals_settings_t _settings;
 
     game_feature gameplay_fix_immigration{ "gameplay_fix_immigration", "#TR_CONFIG_FIX_IMMIGRATION_BUG", false, false };

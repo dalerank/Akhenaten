@@ -221,7 +221,8 @@ function run_test() {
 
     var arrest_fid = 0
     for (var i = 1; i < 2000; i++) {
-        if (__figure_is_valid(i) && __figure_get_type(i) == FIGURE_TOMB_ROBER) {
+        if (__figure_is_valid(i) && __test_figure_is_alive(i)
+            && __figure_get_type(i) == FIGURE_TOMB_ROBER) {
             arrest_fid = i
             break
         }
