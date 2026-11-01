@@ -9,6 +9,7 @@ enum e_fishing_boat_action : uint16_t {
     ACTION_3_FISHING_BOAT_GOING_TO_WHARF = 3,
     ACTION_4_FISHING_BOAT_AT_WHARF = 4,
     ACTION_5_FISHING_BOAT_RETURNING_WITH_FISH = 5,
+    // Remake-only (gameplay_change_fishing_boat_remake).
     ACTION_6_FISHING_BOAT_RANDOM_FPOINT = 6,
     ACTION_7_FISHING_BOAT_FIND_RANDOM_WHARF_FOR_RETURN = 7,
     ACTION_8_FISHING_BOAT_RETURN_TO_RANDOM_WHARF = 8,
@@ -26,8 +27,8 @@ public:
 
     struct static_params : public figure_static_params {
         uint16_t fish_per_trip;
-        uint16_t fishing_time_base;        
-        uint8_t fishing_time_multiplier;  
+        uint16_t fishing_time_base;
+        uint8_t fishing_time_multiplier;
     } FIGURE_STATIC_DATA_T;
 
     struct runtime_data_t {
@@ -44,8 +45,11 @@ public:
     virtual void figure_before_action() override {}
     virtual void figure_action() override;
     virtual void kill() override;
-    //virtual e_overlay get_overlay() const override { return OVERLAY_APOTHECARY; }
     virtual bool window_info_background(object_info &ctx) override;
     virtual void update_animation() override;
+
+private:
+    void figure_action_og();
+    void figure_action_remake();
 };
 ANK_CONFIG_STRUCT(figure_fishing_boat::static_params, fish_per_trip, fishing_time_base, fishing_time_multiplier)

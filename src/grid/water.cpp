@@ -271,6 +271,26 @@ shore_orientation map_shore_determine_orientation(tile2i tile, int size, bool ad
     return {false, 0};
 }
 
+bool map_water_find_alternative_fishing_boat_tile(figure &boat, tile2i &tile) {
+    if (map_figure_id_get(boat.tile) == boat.id) {
+        return false;
+    }
+
+    for (int radius = 1; radius <= 5; radius++) {
+        grid_area area = map_grid_get_area(boat.tile, 1, radius);
+        for (int yy = area.tmin_y, endy = area.tmax_y; yy <= endy; yy++) {
+            for (int xx = area.tmin_x, endx = area.tmax_x; xx <= endx; xx++) {
+                int grid_offset = MAP_OFFSET(xx, yy);
+                if (!map_has_figure_at(grid_offset) && map_terrain_is(grid_offset, TERRAIN_WATER)) {
+                    map_point_store_result(tile2i(xx, yy), tile);
+                    return true;
+                }
+            }
+        }
+    }
+    return false;
+}
+
 water_dest map_water_find_shipwreck_tile(figure &wreck) {
     if (map_terrain_is(wreck.tile, TERRAIN_WATER) && map_figure_id_get(wreck.tile) == wreck.id) {
         return {false};
