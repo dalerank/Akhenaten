@@ -628,7 +628,7 @@ storage_worker_task building_storageyard_deliver_papyrus_to_scribal_school(build
         return { STORAGEYARD_TASK_NONE };
     }
 
-    const e_building_type consumers[] = { BUILDING_SCRIBAL_SCHOOL, BUILDING_INDUSTRY_OFFICE };
+    const e_building_type consumers[] = { BUILDING_SCRIBAL_SCHOOL, BUILDING_LIBRARY, BUILDING_INDUSTRY_OFFICE };
     for (e_building_type consumer : consumers) {
         if (g_city.buildings.count_active(consumer) <= 0) {
             continue;

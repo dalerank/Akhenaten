@@ -114,6 +114,7 @@ game_features {
     @gameplay_change_protestor_hunt_nobles {}
     @gameplay_change_fishing_boat_remake {}
     @gameplay_change_market_distribute_remake {}
+    @gameplay_change_library_service_cap {}
     @gameplay_bast_lion_raid {}
     @gameplay_seth_asp_raid {}
     @gameplay_ptah_scorpion_raid {}

@@ -75,6 +75,7 @@ namespace game_features {
     game_feature gameplay_change_fishing_boat_remake{ "gameplay_change_fishing_boat_remake", "#TR_CONFIG_FISHING_BOAT_REMAKE", false, false };
     game_feature gameplay_change_bazaar_multi_buyers{ "gameplay_change_bazaar_multi_buyers", "#TR_CONFIG_BAZAAR_MULTI_BUYERS", false, false };
     game_feature gameplay_change_market_distribute_remake{ "gameplay_change_market_distribute_remake", "#TR_CONFIG_MARKET_DISTRIBUTE_REMAKE", false, false };
+    game_feature gameplay_change_library_service_cap{ "gameplay_change_library_service_cap", "#TR_CONFIG_LIBRARY_SERVICE_CAP", false, false };
     game_feature gameplay_change_tower_sentries_go_offroad{ "gameplay_change_tower_sentries_go_offroad", "#TR_CONFIG_TOWER_SENTRIES_GO_OFFROAD", false, false };
     game_feature gameplay_change_farms_deliver_close{ "gameplay_change_farms_deliver_close", "#TR_CONFIG_FARMS_DELIVER_CLOSE", false, false };
     game_feature gameplay_change_only_deliver_to_accepting_granaries{ "gameplay_change_only_deliver_to_accepting_granaries", "#TR_CONFIG_DELIVER_ONLY_TO_ACCEPTING_GRANARIES", false, false };

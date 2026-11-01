@@ -1,0 +1,134 @@
+// Library OG spawn_stock_walker: days between librarians from {5,10,25,50,100} by worker %,
+// papyrus (walker_cost by difficulty) paid only when the librarian leaves; no papyrus => no librarian,
+// while the day counter keeps running.
+
+var __test222_ok = false
+
+function test222_fail(msg) {
+    __log_info_native('[test:222] FAIL: ' + msg)
+    __test_signal_ready()
+}
+
+function test222_spawn(bid) {
+    building_library_spawn_figure({ bid: bid })
+    return __test_count_figures(FIGURE_LIBRARIAN)
+}
+
+function run_test() {
+    __log_info_native('[test:222] library OG librarian spawn')
+    test_reload_city_session('data/default.map')
+    __test_set_treasury(100000)
+
+    var bid = test_building_place(BUILDING_LIBRARY, -1, -1)
+    if (!bid) {
+        test222_fail('place failed')
+        return
+    }
+
+    var zt = __building_tile(bid)
+    for (var dx = 0; dx < 4; dx++) {
+        terrain.add({ x: zt.x + dx, y: zt.y + 3 }, TERRAIN_ROAD)
+    }
+    __test_update_road_network()
+    __test_check_kingdome_access()
+
+    __test_building_set_workers(bid, 30)
+    var b = city.get_building(bid)
+    b.has_road_access = true
+    b.figure_spawn_delay = 0
+    city.figures.remove_figures(FIGURE_LIBRARIAN)
+
+    var cost = dcy_get(building_library.walker_cost)
+    if (cost <= 0) {
+        test222_fail('walker_cost not configured')
+        return
+    }
+
+    for (var i = 0; i < 10; i++) {
+        if (test222_spawn(bid) > 0) {
+            test222_fail('librarian spawned without papyrus at day ' + i)
+            return
+        }
+    }
+    b = city.get_building(bid)
+    if (b.figure_spawn_delay != 10) {
+        test222_fail('day counter must keep running without stock, got ' + b.figure_spawn_delay)
+        return
+    }
+    __log_marker('test222_no_papyrus_no_librarian')
+
+    b.consume_resource(RESOURCE_PAPYRUS, -(cost * 2))
+    if (test222_spawn(bid) < 1) {
+        test222_fail('expected librarian once papyrus stocked, cost=' + cost)
+        return
+    }
+    b = city.get_building(bid)
+    if (b.stored_resource(RESOURCE_PAPYRUS) != cost) {
+        test222_fail('papyrus after spawn expected ' + cost + ' got ' + b.stored_resource(RESOURCE_PAPYRUS))
+        return
+    }
+    if (b.figure_spawn_delay != 0) {
+        test222_fail('day counter must reset after spawn, got ' + b.figure_spawn_delay)
+        return
+    }
+    __log_marker('test222_paid_on_spawn:' + cost)
+
+    // 100% workers: OG delay 5 => 6th day spawns. Fresh library: a poofed librarian keeps its slot until cleanup.
+    var bid2 = test_building_place(BUILDING_LIBRARY, -1, -1)
+    if (!bid2) {
+        test222_fail('second place failed')
+        return
+    }
+    var zt2 = __building_tile(bid2)
+    for (var dx2 = 0; dx2 < 4; dx2++) {
+        terrain.add({ x: zt2.x + dx2, y: zt2.y + 3 }, TERRAIN_ROAD)
+    }
+    __test_update_road_network()
+    __test_building_set_workers(bid2, 30)
+    var b2 = city.get_building(bid2)
+    b2.has_road_access = true
+    b2.figure_spawn_delay = 0
+    b2.consume_resource(RESOURCE_PAPYRUS, -cost)
+
+    var librarians = __test_count_figures(FIGURE_LIBRARIAN)
+    for (var d = 1; d <= 5; d++) {
+        if (test222_spawn(bid2) > librarians) {
+            test222_fail('librarian spawned too early at day ' + d)
+            return
+        }
+    }
+    if (test222_spawn(bid2) <= librarians) {
+        test222_fail('librarian expected on day 6 at 100% workers')
+        return
+    }
+    __log_marker('test222_delay_100pct')
+
+    var cid = test_building_place(BUILDING_TEMPLE_COMPLEX_PTAH, -1, -1)
+    var complex = city.get_temple_complex()
+    if (!cid || !complex || complex.type != BUILDING_TEMPLE_COMPLEX_PTAH) {
+        test222_fail('ptah complex place failed id=' + cid)
+        return
+    }
+    if (building_library_walker_cost() != cost) {
+        test222_fail('discount applied without oracle')
+        return
+    }
+    complex.temple_complex_upgrades = TEMPLE_COMPLEX_UPGRADE_ORACLE
+    var discounted = Math.floor(cost * dcy_get(building_library.ptah_oracle_walker_cost_pct) / 100)
+    if (building_library_walker_cost() != discounted) {
+        test222_fail('ptah oracle cost expected ' + discounted + ' got ' + building_library_walker_cost())
+        return
+    }
+    __log_marker('test222_ptah_oracle_cost:' + discounted)
+
+    __test222_ok = true
+    __test_signal_ready()
+}
+
+function check_valid() {
+    return __test222_ok
+        && __test_find_inlog('[test-marker] test222_no_papyrus_no_librarian')
+        && __test_find_inlog('[test-marker] test222_paid_on_spawn:')
+        && __test_find_inlog('[test-marker] test222_delay_100pct')
+        && __test_find_inlog('[test-marker] test222_ptah_oracle_cost:')
+}

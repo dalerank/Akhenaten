@@ -176,6 +176,7 @@ void figure_cartpusher::do_deliver(bool warehouseman, int action_done, int actio
             case BUILDING_RECRUITER:
             case BUILDING_SHIPWRIGHT:
             case BUILDING_SCRIBAL_SCHOOL:
+            case BUILDING_LIBRARY:
             case BUILDING_INDUSTRY_OFFICE:
             case BUILDING_SENET_HOUSE:
             case BUILDING_ZOO:
@@ -389,7 +390,7 @@ void figure_cartpusher::determine_storageyard_cart_destination() {
         }
 
         if (base.resource_id == RESOURCE_PAPYRUS) {
-            const e_building_type consumers[] = { BUILDING_SCRIBAL_SCHOOL, BUILDING_INDUSTRY_OFFICE };
+            const e_building_type consumers[] = { BUILDING_SCRIBAL_SCHOOL, BUILDING_LIBRARY, BUILDING_INDUSTRY_OFFICE };
             for (e_building_type consumer : consumers) {
                 auto result = building_get_asker_for_resource(tile(), consumer, base.resource_id, road_network_id, warehouse->distance_from_entry);
                 set_destination(result.building_id);
