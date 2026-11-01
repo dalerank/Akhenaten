@@ -9,6 +9,7 @@ import figure.antelope_hunter
 import figure.birds_hunter
 import figure.architector
 import figure.bricklayer
+import figure.bubbles
 import figure.carpenter
 import figure.caravan_donkey
 import figure.trade_caravan

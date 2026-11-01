@@ -261,6 +261,7 @@ target_figure figure_combat_get_missile_target_for_enemy(figure* enemy, int max_
         case FIGURE_STANDARD_BEARER:
         case FIGURE_MAP_FLAG:
         case FIGURE_FLOTSAM:
+        case FIGURE_BUBBLES:
         case FIGURE_INDIGENOUS_NATIVE:
         case FIGURE_NATIVE_TRADER:
         case FIGURE_ARROW:

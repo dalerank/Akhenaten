@@ -33,6 +33,7 @@ bool is_scorpion_non_target(figure *f) {
     case FIGURE_FISHING_BOAT:
     case FIGURE_MAP_FLAG:
     case FIGURE_FLOTSAM:
+    case FIGURE_BUBBLES:
     case FIGURE_SHIPWRECK:
     case FIGURE_INDIGENOUS_NATIVE:
     case FIGURE_TOWER_SENTRY:
