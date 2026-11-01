@@ -268,6 +268,13 @@ if(NOT WIN_EMSCRIPTEN AND NOT MACOS_X64_BUILD)
     set(CURL_CA_BUNDLE "auto" CACHE STRING "Use system default CA bundle" FORCE)
     set(CURL_CA_PATH "auto" CACHE STRING "" FORCE)
 
+    if(APPLE)
+        # Homebrew links a newer default openssl into /opt/homebrew/include, which other deps put on the
+        # include path; pin curl to the headers of the OpenSSL it links (OPENSSL_ROOT_DIR = openssl@3).
+        find_package(OpenSSL REQUIRED)
+        include_directories(BEFORE ${OPENSSL_INCLUDE_DIR})
+    endif()
+
     FetchContent_MakeAvailable(curl)
 
     add_definitions(-DGAME_HAVE_CURL)
