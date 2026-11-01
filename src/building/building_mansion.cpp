@@ -23,6 +23,7 @@
 #include "core/object_property.h"
 #include "io/gamefiles/lang.h"
 #include "game/game_events.h"
+#include "game/game_config.h"
 #include "figure/service.h"
 #include "core/random.h"
 #include <algorithm>
@@ -120,6 +121,10 @@ bool building_mansion::is_protected_by_police() const {
 }
 
 void building_mansion::check_theft_from_mansions() {
+    // Remake ambient mansion theft — OG thieves steal only on arrival (figure_robber).
+    if (!game_features::gameplay_change_robber_remake.to_bool()) {
+        return;
+    }
     // Check for theft only if there are criminals in the city
     if (g_city.sentiment.criminals <= 0) {
         return;

@@ -109,6 +109,7 @@ game_features {
     @gameplay_change_trader_per_good_1600 {}
     @gameplay_change_dock_smart_routing {}
     @gameplay_change_follower_runaway {}
+    @gameplay_change_robber_remake {}
     @gameplay_bast_lion_raid {}
     @gameplay_seth_asp_raid {}
     @gameplay_ptah_scorpion_raid {}

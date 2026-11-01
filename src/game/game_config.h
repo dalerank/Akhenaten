@@ -85,6 +85,7 @@ namespace game_features {
     extern game_feature gameplay_change_dock_double_haul;
     extern game_feature gameplay_change_dock_smart_routing;
     extern game_feature gameplay_change_follower_runaway;
+    extern game_feature gameplay_change_robber_remake;
     extern game_feature gameplay_change_bazaar_multi_buyers;
     extern game_feature gameplay_change_tower_sentries_go_offroad;
     extern game_feature gameplay_change_farms_deliver_close;

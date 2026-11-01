@@ -3,6 +3,11 @@
 #include "figure/figure.h"
 
 enum e_robber_action {
+    // OG FIG_THIEF (figure_criminal_action): wait → route to rich building → steal → die.
+    ACTION_8_ROBBER_WAITING = 8,
+    ACTION_9_ROBBER_GOING_TO_ROB = 9,
+    ACTION_10_ROBBER_FLEEING = 10,
+    // Remake (Enhanced: gameplay_change_robber_remake).
     ACTION_120_ROBBER_CREATED = 120,
     ACTION_121_ROBBER_MOVING = 121,
     ACTION_122_ROBBER_HIDE = 122,

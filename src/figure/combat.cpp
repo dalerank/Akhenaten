@@ -6,7 +6,9 @@
 #include "figure/movement.h"
 #include "figure/route.h"
 #include "figuretype/figure_soldier.h"
+#include "figuretype/figure_robber.h" // ACTION_10_ROBBER_FLEEING
 #include "game/difficulty.h"
+#include "game/resource.h"
 #include "grid/figure.h"
 #include "grid/point.h"
 #include "sound/sound.h"
@@ -447,7 +449,43 @@ void figure::figure_combat_handle_attack() {
         hit_opponent();
 }
 
-void figure::figure_combat_attack_figure_at(int grid_offset) {    
+void figure::figure_combat_attack_figure_at(int grid_offset) {
+    // OG military.c: thief vs gold cartpusher — steal 100 after a short flee, kill the cart.
+    if (type == FIGURE_ROBBER && !in_attack()) {
+        int cid = map_figure_id_get(grid_offset);
+        for (int guard = 0; cid > 0 && guard < MAX_FIGURES; guard++, cid = figure_get(cid)->next_figure) {
+            if (cid == id) {
+                continue;
+            }
+            figure *opp = figure_get(cid);
+            if (!opp->is_alive()) {
+                continue;
+            }
+            if (opp->type == FIGURE_CART_PUSHER && opp->get_resource() == RESOURCE_GOLD) {
+                action_state = ACTION_10_ROBBER_FLEEING;
+                wait_ticks = 0;
+                opp->kill();
+                return;
+            }
+        }
+    }
+    if (type == FIGURE_CART_PUSHER && get_resource() == RESOURCE_GOLD && !in_attack()) {
+        int cid = map_figure_id_get(grid_offset);
+        for (int guard = 0; cid > 0 && guard < MAX_FIGURES; guard++, cid = figure_get(cid)->next_figure) {
+            if (cid == id) {
+                continue;
+            }
+            figure *opp = figure_get(cid);
+            if (!opp->is_alive() || opp->type != FIGURE_ROBBER) {
+                continue;
+            }
+            opp->action_state = ACTION_10_ROBBER_FLEEING;
+            opp->wait_ticks = 0;
+            kill();
+            return;
+        }
+    }
+
     if (category() <= figure_category_inactive
         || category() >= figure_category_criminal
         || in_attack()) {

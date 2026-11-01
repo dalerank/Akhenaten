@@ -65,6 +65,8 @@ namespace game_features {
     game_feature gameplay_change_dock_smart_routing{ "gameplay_change_dock_smart_routing", "#TR_CONFIG_DOCK_SMART_ROUTING", false, false };
     // Remake QoL: caravan donkeys / delivery boys flee to exit when leader dies. OG: die with leader.
     game_feature gameplay_change_follower_runaway{ "gameplay_change_follower_runaway", "#TR_CONFIG_FOLLOWER_RUNAWAY", false, false };
+    // Remake mugger: steal on spawn + always path to palace + ambient mansion theft. OG: wait, rob nearest rich building on arrival.
+    game_feature gameplay_change_robber_remake{ "gameplay_change_robber_remake", "#TR_CONFIG_ROBBER_REMAKE", false, false };
     game_feature gameplay_change_bazaar_multi_buyers{ "gameplay_change_bazaar_multi_buyers", "#TR_CONFIG_BAZAAR_MULTI_BUYERS", false, false };
     game_feature gameplay_change_tower_sentries_go_offroad{ "gameplay_change_tower_sentries_go_offroad", "#TR_CONFIG_TOWER_SENTRIES_GO_OFFROAD", false, false };
     game_feature gameplay_change_farms_deliver_close{ "gameplay_change_farms_deliver_close", "#TR_CONFIG_FARMS_DELIVER_CLOSE", false, false };
