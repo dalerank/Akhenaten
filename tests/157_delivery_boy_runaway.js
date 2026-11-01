@@ -12,21 +12,26 @@ function run_test() {
     test_ensure_city_session('data/default.map')
 
     var alone_prev = game_features.get('gameplay_change_delivery_boy_goes_to_market_alone')
+    var runaway_prev = game_features.get('gameplay_change_follower_runaway')
     game_features.set('gameplay_change_delivery_boy_goes_to_market_alone', false)
+    game_features.set('gameplay_change_follower_runaway', true)
+    function finish() {
+        game_features.set('gameplay_change_delivery_boy_goes_to_market_alone', alone_prev)
+        game_features.set('gameplay_change_follower_runaway', runaway_prev)
+        __test_signal_ready()
+    }
 
     var bid = __test_building_create(BUILDING_BAZAAR, -1, -1)
     if (!bid) {
         __log_info_native('[test:157] FAIL: bazaar create')
-        game_features.set('gameplay_change_delivery_boy_goes_to_market_alone', alone_prev)
-        __test_signal_ready()
+        finish()
         return
     }
 
     var tile = __building_tile(bid)
     if (!tile) {
         __log_info_native('[test:157] FAIL: bazaar tile')
-        game_features.set('gameplay_change_delivery_boy_goes_to_market_alone', alone_prev)
-        __test_signal_ready()
+        finish()
         return
     }
 
@@ -34,8 +39,7 @@ function run_test() {
     var boy = test_figure_create(FIGURE_DELIVERY_BOY, tile.x + 3, tile.y)
     if (!buyer || !boy) {
         __log_info_native('[test:157] FAIL: spawn buyer/boy')
-        game_features.set('gameplay_change_delivery_boy_goes_to_market_alone', alone_prev)
-        __test_signal_ready()
+        finish()
         return
     }
 
@@ -55,16 +59,14 @@ function run_test() {
 
     if (!__figure_is_valid(boy) || !__test_figure_is_alive(boy)) {
         __log_info_native('[test:157] FAIL: boy poofed instantly after buyer kill')
-        game_features.set('gameplay_change_delivery_boy_goes_to_market_alone', alone_prev)
-        __test_signal_ready()
+        finish()
         return
     }
     __log_marker('delivery_boy_runaway_alive_after_kill_ok')
 
     if (__figure_get_action_state(boy) != FIGURE_ACTION_132_FOLLOWER_RUNAWAY) {
         __log_info_native('[test:157] FAIL: want runaway 132 got ' + __figure_get_action_state(boy))
-        game_features.set('gameplay_change_delivery_boy_goes_to_market_alone', alone_prev)
-        __test_signal_ready()
+        finish()
         return
     }
     __log_marker('delivery_boy_runaway_action_ok')
@@ -72,8 +74,7 @@ function run_test() {
     var inv = __test_bazaar_get_inventory(bid, 0)
     if (inv != 50) {
         __log_info_native('[test:157] FAIL: inventory bumped want 50 got ' + inv)
-        game_features.set('gameplay_change_delivery_boy_goes_to_market_alone', alone_prev)
-        __test_signal_ready()
+        finish()
         return
     }
 
@@ -83,8 +84,7 @@ function run_test() {
     inv = __test_bazaar_get_inventory(bid, 0)
     if (inv != 50) {
         __log_info_native('[test:157] FAIL: inventory bumped during runaway want 50 got ' + inv)
-        game_features.set('gameplay_change_delivery_boy_goes_to_market_alone', alone_prev)
-        __test_signal_ready()
+        finish()
         return
     }
     __log_marker('delivery_boy_runaway_no_deposit_ok')
@@ -93,8 +93,7 @@ function run_test() {
         __log_info_native('[test:157] boy tile before kill=' + boy_tile_before.x + ',' + boy_tile_before.y)
     }
 
-    game_features.set('gameplay_change_delivery_boy_goes_to_market_alone', alone_prev)
-    __test_signal_ready()
+    finish()
 }
 
 function check_valid() {

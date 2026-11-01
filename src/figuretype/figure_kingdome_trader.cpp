@@ -27,6 +27,8 @@
 #include "scenario/map.h"
 #include "game/game.h"
 #include "game/game_config.h"
+#include "building/building_ferry.h"
+#include "figuretype/figure_cartpusher.h"
 #include "widget/debug_console.h"
 #include "core/object_property.h"
 #include "js/js_game.h"
@@ -141,6 +143,25 @@ void figure_trade_caravan::figure_action() {
     }
 
     switch (action_state()) {
+    case ACTION_6_CARTPUSHER_ON_FERRY:
+        // OG FIGURE_ACTION_ON_FERRY: hide while aboard (donkeys sync via head state).
+        base.set_flag(e_figure_flag_invisible, true);
+        base.main_image_id = 0;
+        break;
+
+    case ACTION_7_CARTPUSHER_WAIT_FOR_FERRY:
+        // OG: idle at landing; after 100 ticks without a queue slot → CREATED.
+        base.animctx.frame = 0;
+        base.wait_ticks++;
+        if (base.wait_ticks > 100) {
+            base.wait_ticks = 0;
+            if (!figure_is_queued_for_ferry(id())) {
+                base.set_flag(e_figure_flag_invisible, false);
+                advance_action(ACTION_0_TRADE_CARAVAN_CREATED);
+            }
+        }
+        break;
+
     default:
     case ACTION_0_TRADE_CARAVAN_CREATED:
         base.wait_ticks++;
@@ -160,6 +181,7 @@ void figure_trade_caravan::figure_action() {
         break;
 
     case ACTION_1_TRADE_CARAVAN_ARRIVING:
+        drop_route_if_heading_into_non_ferry_water();
         do_gotobuilding(destination(), true, TERRAIN_USAGE_PREFER_ROADS, ACTION_2_TRADE_CARAVAN_TRADING, ACTION_0_TRADE_CARAVAN_CREATED);
         if (direction() == DIR_FIGURE_CAN_NOT_REACH || direction() == DIR_FIGURE_REROUTE) {
             int i = 0; // break
@@ -215,6 +237,7 @@ void figure_trade_caravan::figure_action() {
         break;
 
     case ACTION_3_TRADE_CARAVAN_LEAVING:
+        drop_route_if_heading_into_non_ferry_water();
         if (do_goto(base.destination_tile, TERRAIN_USAGE_PREFER_ROADS, -1, ACTION_4_TRADE_CARAVAN_RECALC_LEAVING)) {
             runtime_data().trader.back_to_city();
             poof();
@@ -228,6 +251,14 @@ void figure_trade_caravan::before_poof() {
 }
 
 void figure_trade_caravan::update_animation() {
+    if (action_state() == ACTION_6_CARTPUSHER_ON_FERRY) {
+        base.set_flag(e_figure_flag_invisible, true);
+        base.main_image_id = 0;
+        return;
+    }
+    if (action_state() == ACTION_7_CARTPUSHER_WAIT_FOR_FERRY) {
+        base.animctx.frame = 0;
+    }
     int dir = base.figure_image_normalize_direction(direction() < 8 ? direction() : base.previous_tile_direction);
     base.main_image_id = anim(animkeys().walk).first_img() + dir + 8 * base.animctx.frame;
 }

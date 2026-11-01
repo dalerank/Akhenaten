@@ -14,8 +14,71 @@
 #include "game/game_events.h"
 #include "js/js_game.h"
 #include "figuretype/figure_cartpusher.h"
+#include "figuretype/figure_caravan_donkey.h"
+#include "figuretype/figure_deliveryboy.h"
 
 #include <cstring>
+
+namespace {
+
+// OG boats.c follower_leader: train head for ferry load/unload of followers.
+int ferry_follower_leader_id(figure &f) {
+    switch (f.type) {
+    case FIGURE_TRADE_CARAVAN_DONKEY: {
+        auto *donkey = f.dcast<figure_caravan_donkey>();
+        figure *head = donkey ? donkey->head_of_caravan() : nullptr;
+        return head ? head->id : -1;
+    }
+    case FIGURE_DELIVERY_BOY: {
+        // Walk leading_figure chain to the market buyer (same idea as OG delivery_boy_find_buyer).
+        figure *cur = &f;
+        int guard = 0;
+        while (cur && cur->type == FIGURE_DELIVERY_BOY) {
+            if (cur->leading_figure_id <= 0 || ++guard > 16) {
+                return -1;
+            }
+            cur = figure_get(cur->leading_figure_id);
+        }
+        return (cur && cur->type == FIGURE_MARKET_BUYER) ? cur->id : -1;
+    }
+    default:
+        return -1;
+    }
+}
+
+void ferry_remove_followers_of(figure_id passenger_id) {
+    for (int id = 1; id < MAX_FIGURES; id++) {
+        figure *f = figure_get(id);
+        if (!f || !f->is_alive()) {
+            continue;
+        }
+        if (ferry_follower_leader_id(*f) == (int)passenger_id) {
+            f->route_remove();
+            f->map_figure_remove();
+            f->set_flag(e_figure_flag_invisible, true);
+            f->main_image_id = 0;
+        }
+    }
+}
+
+void ferry_place_followers_with(figure &passenger) {
+    for (int id = 1; id < MAX_FIGURES; id++) {
+        figure *f = figure_get(id);
+        if (!f || !f->is_alive()) {
+            continue;
+        }
+        if (ferry_follower_leader_id(*f) != passenger.id) {
+            continue;
+        }
+        f->tile = passenger.tile;
+        f->previous_tile = passenger.tile;
+        f->progress_on_tile = 15;
+        f->set_flag(e_figure_flag_invisible, false);
+        f->map_figure_add();
+    }
+}
+
+} // namespace
 
 const e_ferry_boat_action_tokens_t ANK_CONFIG_ENUM(e_ferry_boat_action_tokens)
 
@@ -99,6 +162,8 @@ void figure_ferry_boat::load_passengers(building_ferry *landing, int max) {
         p->set_flag(e_figure_flag_invisible, true);
         p->route_remove();
         p->map_figure_remove();
+        // OG ferry_load: donkeys / delivery boys of this passenger leave the map too.
+        ferry_remove_followers_of(passenger_id);
 
         d.passengers[loaded] = passenger_id;
         loaded++;
@@ -138,6 +203,8 @@ void figure_ferry_boat::unload_passengers(building_ferry *landing) {
         p->set_flag(e_figure_flag_invisible, false);
         p->wait_ticks = 0;
         p->map_figure_add();
+        // OG ferry_unload: place train followers on the same landing tile.
+        ferry_place_followers_with(*p);
     }
 }
 

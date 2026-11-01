@@ -13,7 +13,7 @@ enum e_common_action {
     // Sentinel for JS token range (covers ACTION_8). High ids stay unbound.
     ACTION_9_COMMON_MAX = 9,
 
-    // Delivery boy / caravan donkey flee to map exit when leader dies (remake QoL).
+    // Delivery boy / caravan donkey flee to exit when leader dies (Enhanced: gameplay_change_follower_runaway).
     FIGURE_ACTION_132_FOLLOWER_RUNAWAY = 132,
     FIGURE_ACTION_148_FLEEING = 148,
     FIGURE_ACTION_149_CORPSE = 149,

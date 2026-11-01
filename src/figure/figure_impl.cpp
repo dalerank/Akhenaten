@@ -1,6 +1,7 @@
 #include "figure/figure_impl.h"
 
 #include "figure/figure.h"
+#include "game/game_config.h"
 #include "city/city.h"
 #include "city/city_recorded_paths.h"
 #include "city/city_resource.h"
@@ -490,6 +491,12 @@ bool figure_impl::is_follower_runaway() const {
 
 void figure_impl::start_follower_runaway() {
     if (is_follower_runaway()) {
+        return;
+    }
+
+    if (!game_features::gameplay_change_follower_runaway.to_bool()) {
+        // OG (FIG_VAN_FOLLOWER / delivery boy): die with the leader, no flee-to-exit.
+        poof();
         return;
     }
 

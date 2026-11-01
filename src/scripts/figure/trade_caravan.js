@@ -22,6 +22,8 @@ figure_trade_caravan {
 	max_capacity : 800
 	min_capacity : 100
 	capacity_random : 701
+	can_cross_ferry: true
+	boards_ferry: true
 }
 
 [es=(figure_trade_caravan, setup_phrase)]

@@ -2,6 +2,7 @@
 
 #include "empire/trader_handler.h"
 #include "figuretype/figure_kingdome_trader.h"
+#include "figuretype/figure_cartpusher.h"
 
 #include "building/building_storage_yard.h"
 #include "building/building_storage_room.h"
@@ -52,8 +53,37 @@ void figure_caravan_donkey::figure_action() {
         } else if (leader->type != FIGURE_TRADE_CARAVAN && leader->type != FIGURE_TRADE_CARAVAN_DONKEY) {
             poof();
         } else {
-            follow_ticks(1);
+            // OG: do not follow while the caravan head waits for / rides a ferry.
+            figure *head = head_of_caravan();
+            const int head_state = head ? head->action_state : -1;
+            if (head_state != ACTION_6_CARTPUSHER_ON_FERRY
+                && head_state != ACTION_7_CARTPUSHER_WAIT_FOR_FERRY) {
+                follow_ticks(1);
+            }
         }
+    }
+
+    figure *head = head_of_caravan();
+    const int head_state = head ? head->action_state : -1;
+
+    // OG: while head is on the ferry — no sprite (early return in trade.c).
+    if (head_state == ACTION_6_CARTPUSHER_ON_FERRY) {
+        base.set_flag(e_figure_flag_invisible, true);
+        base.main_image_id = 0;
+        return;
+    }
+
+    // OG: WAIT_FOR_FERRY freezes the walk frame.
+    if (head_state == ACTION_7_CARTPUSHER_WAIT_FOR_FERRY) {
+        base.animctx.frame = 0;
+    }
+
+    // OG: inherit leader ghost while boarding (leader is_ghost during embark).
+    figure *leader = base.leading_figure_id > 0 ? figure_get(base.leading_figure_id) : nullptr;
+    if (leader && !leader->is_visible()) {
+        base.set_flag(e_figure_flag_invisible, true);
+    } else {
+        base.set_flag(e_figure_flag_invisible, false);
     }
 
     int dir = base.figure_image_normalize_direction(direction() < 8 ? direction() : base.previous_tile_direction);
@@ -78,7 +108,7 @@ void figure_caravan_donkey::figure_before_action() {
 }
 
 void figure_caravan_donkey::update_animation() {
-    /*nothing*/
+    /*nothing — sprite set in figure_action like OG donkey_action */
 }
 
 figure *figure_caravan_donkey::head_of_caravan() const {
