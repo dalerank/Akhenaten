@@ -31,6 +31,8 @@
 #include "building/building_road.h"
 #include "building/monuments.h"
 #include "grid/desirability.h"
+#include "grid/property.h"
+#include "grid/image.h"
 #include "building/construction_blessing.h"
 #include "city/city_recorded_paths.h"
 #include "grid/grid.h"
@@ -3852,6 +3854,26 @@ static void __test_set_desirability(int x, int y, int value) {
     map_grid_set(g_desirability_grid, tile2i(x, y).grid_offset(), value);
 }
 ANK_FUNCTION_3(__test_set_desirability);
+
+// Mark a road tile as plaza (same bookkeeping as building_plaza::planer_place).
+static void __test_plaza_mark_tile(int x, int y) {
+    tile2i tile(x, y);
+    map_image_set(tile, 0);
+    map_property_mark_plaza_or_earthquake(tile.grid_offset());
+    map_property_set_multi_tile_size(tile.grid_offset(), 1);
+    map_property_mark_draw_tile(tile.grid_offset());
+}
+ANK_FUNCTION_2(__test_plaza_mark_tile);
+
+static void __test_plaza_update_all() {
+    map_tiles_update_all_plazas();
+}
+ANK_FUNCTION(__test_plaza_update_all);
+
+static int __test_map_multi_tile_size(int x, int y) {
+    return map_property_multi_tile_size(tile2i(x, y).grid_offset());
+}
+ANK_FUNCTION_2(__test_map_multi_tile_size);
 
 static int __test_tile_road_network(int grid_offset) {
     if (grid_offset < 0) {
