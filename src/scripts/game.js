@@ -112,6 +112,7 @@ game_features {
     @gameplay_change_robber_remake {}
     @gameplay_change_tomb_robber_remake {}
     @gameplay_change_protestor_hunt_nobles {}
+    @gameplay_change_fishing_boat_remake {}
     @gameplay_bast_lion_raid {}
     @gameplay_seth_asp_raid {}
     @gameplay_ptah_scorpion_raid {}

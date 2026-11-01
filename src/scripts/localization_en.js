@@ -89,6 +89,7 @@ localization_en = [
   {key:"#TR_CONFIG_ROBBER_REMAKE", text:"Mugger remake: steal on spawn, always head for the palace, ambient mansion theft (not original Pharaoh)"}
   {key:"#TR_CONFIG_TOMB_ROBBER_REMAKE", text:"Tomb-robber remake: monthly spawn, flee/arrest, fixed kingdom hit (not original Pharaoh)"}
   {key:"#TR_CONFIG_PROTESTOR_HUNT_NOBLES", text:"Protestors hunt noble citizens and manor/estate houses (not original Pharaoh)"}
+  {key:"#TR_CONFIG_FISHING_BOAT_REMAKE", text:"Fishing-boat remake: faster with staff, half load, sticky spots, soft lose-home (not original Pharaoh)"}
   {key:"#TR_CONFIG_BAZAAR_MULTI_BUYERS", text:"Bazaars can send two buyers at once (food + goods)"}
   {key:"#TR_CONFIG_TRADER_CAPACITY_1600", text:"Larger trader capacity (1600 per visit; not yearly empire limit)"}
   {key:"#TR_CONFIG_TRADER_PER_GOOD_1600", text:"New Era: traders buy/sell up to 1600 of each good per visit (not yearly limit; not total-bag only)"}

@@ -71,6 +71,8 @@ namespace game_features {
     game_feature gameplay_change_tomb_robber_remake{ "gameplay_change_tomb_robber_remake", "#TR_CONFIG_TOMB_ROBBER_REMAKE", false, false };
     // Remake protestor: hunt noble walkers / manor-estate houses. OG: stand still then vanish.
     game_feature gameplay_change_protestor_hunt_nobles{ "gameplay_change_protestor_hunt_nobles", "#TR_CONFIG_PROTESTOR_HUNT_NOBLES", false, false };
+    // Remake fishing boat: worker-scaled fish time, half load, sticky spot, soft lose-home. OG: 200 ticks, 100 fish, tile sidestep, sink.
+    game_feature gameplay_change_fishing_boat_remake{ "gameplay_change_fishing_boat_remake", "#TR_CONFIG_FISHING_BOAT_REMAKE", false, false };
     game_feature gameplay_change_bazaar_multi_buyers{ "gameplay_change_bazaar_multi_buyers", "#TR_CONFIG_BAZAAR_MULTI_BUYERS", false, false };
     game_feature gameplay_change_tower_sentries_go_offroad{ "gameplay_change_tower_sentries_go_offroad", "#TR_CONFIG_TOWER_SENTRIES_GO_OFFROAD", false, false };
     game_feature gameplay_change_farms_deliver_close{ "gameplay_change_farms_deliver_close", "#TR_CONFIG_FARMS_DELIVER_CLOSE", false, false };
