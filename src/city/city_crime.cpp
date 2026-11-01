@@ -5,11 +5,13 @@
 #include "city/city_message.h"
 #include "grid/road_access.h"
 #include "figuretype/figure_robber.h"
+#include "figuretype/figure_protestor.h"
 #include "building/building_house.h"
 #include "building/building_mansion.h"
 #include "figuretype/figure_rioter.h"
 #include "core/random.h"
 #include "building/destruction.h"
+#include "game/game_config.h"
 
 static void generate_rioter(building* b) {
     tile2i road_tile = map_closest_road_within_radius(b->tile, b->size, 4);
@@ -77,6 +79,10 @@ static void generate_protestor(building* b) {
         if (road_tile.valid()) {
             figure* f = figure_create(FIGURE_PROTESTER, road_tile, DIR_4_BOTTOM_LEFT);
             f->wait_ticks = 10 + (b->map_random_7bit & 0xf);
+            if (game_features::gameplay_change_protestor_hunt_nobles.to_bool()) {
+                f->advance_action(ACTION_8_PROTESTOR_WAITING);
+                f->set_flag(e_figure_flag_criminal, true);
+            }
             g_city.ratings.monument_record_criminal();
         }
     }
