@@ -15,7 +15,6 @@
 #include "building/building_storage_yard.h"
 #include "building/building_temple_complex.h"
 #include "building_mansion.h"
-#include "city/city.h"
 #include "city/city_buildings.h"
 #include "figuretype/figure_entertainer.h"
 #include "grid/building.h"
@@ -309,16 +308,6 @@ void __building_common_spawn_roamer(js_State *J) {
     bool result = building_get(bid)->dcast()->common_spawn_roamer((e_figure_type)figure_type, min_houses_coverage, (e_figure_action)action);
     J->push(result);
 }
-
-bool __city_temple_complex_has_upgrade(int complex_type, int upgrade) {
-    building *b = building_get(g_city.buildings.temple_complex_id());
-    if (!b || !b->is_valid() || b->type != complex_type) {
-        return false;
-    }
-    auto *complex = b->dcast_temple_complex();
-    return complex && complex->has_upgrade((e_temple_compex_upgrade)upgrade);
-}
-ANK_FUNCTION_2(__city_temple_complex_has_upgrade)
 
 void __building_common_spawn_figure_trigger(js_State *J) {
     const int bid = building_this_id(J);

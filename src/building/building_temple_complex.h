@@ -69,7 +69,7 @@ public:
 
     virtual const base_params_t &base_params() const = 0;
 };
-ANK_CONFIG_PROPERTY(building_temple_complex::runtime_data_t, variant)
+ANK_CONFIG_PROPERTY(building_temple_complex::runtime_data_t, variant, temple_complex_upgrades)
 
 class building_temple_complex_osiris : public building_temple_complex {
 public:
@@ -94,7 +94,7 @@ public:
     virtual const base_params_t &base_params() const override { return static_cast<const base_params_t &>(current_params()); }
 };
 ANK_CONFIG_STRUCT(building_temple_complex_ra::static_params, allowed_altar, allowed_oracle)
-  
+
 class building_temple_complex_ptah : public building_temple_complex {
 public:
     BUILDING_METAINFO(BUILDING_TEMPLE_COMPLEX_PTAH, building_temple_complex_ptah, building_temple_complex)

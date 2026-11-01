@@ -417,6 +417,11 @@ city.get_dock = function(building_id) {
     return new Dock(building_id)
 }
 
+city.get_temple_complex = function() {
+    var id = __city_temple_complex_id()
+    return id > 0 ? new TempleComplex(id) : null
+}
+
 city.get_roadblock = function(building_id) {
     if (!__building_is_roadblock(building_id)) {
         return null

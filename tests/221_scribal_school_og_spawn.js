@@ -103,6 +103,24 @@ function run_test() {
     }
     __log_marker('test221_delay_100pct')
 
+    var cid = test_building_place(BUILDING_TEMPLE_COMPLEX_PTAH, -1, -1)
+    var complex = city.get_temple_complex()
+    if (!cid || !complex || complex.type != BUILDING_TEMPLE_COMPLEX_PTAH) {
+        test221_fail('ptah complex place failed id=' + cid)
+        return
+    }
+    if (building_scribal_school_walker_cost() != cost) {
+        test221_fail('discount applied without oracle')
+        return
+    }
+    complex.temple_complex_upgrades = TEMPLE_COMPLEX_UPGRADE_ORACLE
+    var discounted = Math.floor(cost * dcy_get(building_scribal_school.ptah_oracle_walker_cost_pct) / 100)
+    if (building_scribal_school_walker_cost() != discounted) {
+        test221_fail('ptah oracle cost expected ' + discounted + ' got ' + building_scribal_school_walker_cost())
+        return
+    }
+    __log_marker('test221_ptah_oracle_cost:' + discounted)
+
     __test221_ok = true
     __test_signal_ready()
 }
@@ -112,4 +130,5 @@ function check_valid() {
         && __test_find_inlog('[test-marker] test221_no_papyrus_no_teacher')
         && __test_find_inlog('[test-marker] test221_paid_on_spawn:')
         && __test_find_inlog('[test-marker] test221_delay_100pct')
+        && __test_find_inlog('[test-marker] test221_ptah_oracle_cost:')
 }

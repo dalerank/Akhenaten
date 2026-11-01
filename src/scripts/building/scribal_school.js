@@ -59,7 +59,8 @@ function building_scribal_school_on_place_checks(ev) {
 function building_scribal_school_walker_cost() {
     var p = building_scribal_school
     var cost = dcy_get(p.walker_cost)
-    if (__city_temple_complex_has_upgrade(BUILDING_TEMPLE_COMPLEX_PTAH, 2 /* etc_upgrade_oracle */)) {
+    var complex = city.get_temple_complex()
+    if (complex && complex.type == BUILDING_TEMPLE_COMPLEX_PTAH && complex.has_upgrade(TEMPLE_COMPLEX_UPGRADE_ORACLE)) {
         cost = Math.floor(cost * dcy_get(p.ptah_oracle_walker_cost_pct) / 100)
     }
     return cost

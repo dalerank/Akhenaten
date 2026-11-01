@@ -1,5 +1,21 @@
 log_info("akhenaten: building temple complex started")
 
+var TEMPLE_COMPLEX_UPGRADE_ALTAR = 1
+var TEMPLE_COMPLEX_UPGRADE_ORACLE = 2
+
+function TempleComplex(building_id) {
+    this.id = building_id
+}
+
+TempleComplex.prototype = Object.create(Building.prototype)
+TempleComplex.prototype.constructor = TempleComplex
+
+TempleComplex.property.temple_complex_upgrades = { }
+
+TempleComplex.prototype.has_upgrade = function(upgrade) {
+    return (this.temple_complex_upgrades & upgrade) != 0
+}
+
 building_temple_complex_osiris {
     animations : {
       _pack { pack:PACK_TEMPLE_NILE }
@@ -22,12 +38,12 @@ building_temple_complex_osiris {
       statue_2s { id:6, offset:4 }
       statue_2w { id:6, offset:6 }
     }
-  
+
     building_size : 3
     planner_update_rule : {
       unique_building : true
     }
-  
+
     min_houses_coverage : 100
     damage_proof : true
     fire_proof : true
@@ -37,7 +53,7 @@ building_temple_complex_osiris {
     laborers[50]
     fire_risk[0]
     damage_risk[2]
-  
+
     allowed_altar [ BUILDING_TEMPLE_COMPLEX_ALTAR_AMON ]
     allowed_oracle [ BUILDING_TEMPLE_COMPLEX_ORACLE_THOTH ]
 
@@ -61,7 +77,7 @@ building_temple_complex_osiris {
       fancy_w { id:7, offset:1 }
     }
     build_menu_text [ 189, 4 ]
-  
+
     building_size : 3
     labor_category : LABOR_CATEGORY_RELIGION
     needs {
@@ -71,7 +87,7 @@ building_temple_complex_osiris {
     fire_proof : true
     cost [ 180, 250, 300, 500, 800 ]
   }
-  
+
   building_temple_complex_oracle_thoth {
     // BUILDING_TEMPLE_COMPLEX_ORACLE_THOTH
     animations {
@@ -85,18 +101,18 @@ building_temple_complex_osiris {
       fancy_w { id:7, offset:3 }
     }
     build_menu_text [ 189, 5 ]
-  
+
     building_size : 3
     labor_category : LABOR_CATEGORY_RELIGION
     needs {
       oracle : true
     }
-  
+
     damage_proof : true
     fire_proof : true
     cost [ 180, 250, 300, 500, 800 ]
   }
-  
+
   building_temple_complex_seth {
     animations {
       _pack { pack:PACK_TEMPLE_SETH }
@@ -170,7 +186,7 @@ building_temple_complex_osiris {
     fire_proof : true
     cost [ 180, 250, 300, 500, 800 ]
   }
-  
+
   building_temple_complex_oracle_sekhmet {
     // BUILDING_TEMPLE_COMPLEX_ORACLE_SEKHMET
     animations {
@@ -186,18 +202,18 @@ building_temple_complex_osiris {
       fancy_s { id:7, offset:3 }
     }
     build_menu_text [ 189, 7 ]
-  
+
     building_size : 3
     labor_category : LABOR_CATEGORY_RELIGION
     needs {
       oracle : true
     }
-  
+
     damage_proof : true
     fire_proof : true
     cost [ 180, 250, 300, 500, 800 ]
   }
-  
+
   building_temple_complex_ra {
     animations {
       _pack { pack:PACK_TEMPLE_RA }
@@ -260,7 +276,7 @@ building_temple_complex_osiris {
       fancy_s { id:7, offset:1 }
     }
     build_menu_text [ 189, 0 ]
-  
+
     building_size : 3
     labor_category : LABOR_CATEGORY_RELIGION
     needs {
@@ -270,35 +286,35 @@ building_temple_complex_osiris {
     fire_proof : true
     cost [ 180, 250, 300, 500, 800 ]
   }
-  
+
   building_temple_complex_oracle_min {
     animations {
       _pack { pack:PACK_TEMPLE_RA }
       preview { id:7, offset:2 }
-  
+
       base_n  { id:3, offset:3 }
       base_w  { id:1, offset:0 }
       base_e  { id:3, offset:0 }
       base_s  { id:1, offset:3 }
-      
+
       fancy_n { id:7, offset:3 }
       fancy_w { id:7, offset:2 }
       fancy_e { id:7, offset:2 }
       fancy_s { id:7, offset:3 }
     }
     build_menu_text [ 189, 1 ]
-  
+
     building_size : 3
     labor_category : LABOR_CATEGORY_RELIGION
     needs {
       oracle : true
     }
-  
+
     damage_proof : true
     fire_proof : true
     cost [ 180, 250, 300, 500, 800 ]
   }
-  
+
   building_temple_complex_ptah {
     animations {
       _pack { pack:PACK_TEMPLE_PTAH }
@@ -361,7 +377,7 @@ building_temple_complex_osiris {
       fancy_s { id:7, offset:1 }
     }
     build_menu_text [ 189, 2 ]
-  
+
     building_size : 3
     labor_category : LABOR_CATEGORY_RELIGION
     needs {
@@ -371,7 +387,7 @@ building_temple_complex_osiris {
     fire_proof : true
     cost [ 180, 250, 300, 500, 800 ]
   }
-  
+
   building_temple_complex_oracle_horus {
     animations {
       _pack { pack:PACK_TEMPLE_PTAH }
@@ -386,18 +402,18 @@ building_temple_complex_osiris {
       fancy_s { id:7, offset:3 }
     }
     build_menu_text [ 189, 3 ]
-  
+
     building_size : 3
     labor_category : LABOR_CATEGORY_RELIGION
     needs {
       oracle : true
     }
-  
+
     damage_proof : true
     fire_proof : true
     cost [ 180, 250, 300, 500, 800 ]
   }
-  
+
   building_temple_complex_bast {
     animations {
       _pack { pack:PACK_TEMPLE_BAST }
