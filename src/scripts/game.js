@@ -121,6 +121,8 @@ game_features {
     @gameplay_change_apothecary_remake {}
     @gameplay_change_mortuary_linen_upkeep {}
     @gameplay_change_mortuary_mothballed_linen {}
+    @gameplay_change_fort_rotation {}
+    @gameplay_change_fort_refund_carry_troops {}
     @gameplay_bast_lion_raid {}
     @gameplay_seth_asp_raid {}
     @gameplay_ptah_scorpion_raid {}

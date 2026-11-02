@@ -81,7 +81,7 @@ static int last_items_cleared;
 
 static const vec2i FORT_OFFSET[4][4] = {{{3, -1}, {4, -1}, {4, 0}, {3, 0}},
                                         {{-1, -4}, {0, -4}, {0, -3}, {-1, -3}},
-                                        {{-4, 0}, {-3, 0}, {-3, 1}, {4, 1}},
+                                        {{-4, 0}, {-3, 0}, {-3, 1}, {-4, 1}},
                                         {{0, 3}, {1, 3}, {1, 4}, {0, 4}}};
 
 const vec2i VIEW_OFFSETS[] = {                    {0, 0},
@@ -1040,7 +1040,6 @@ void build_planner::construction_update(tile2i tile) {
 
     map_property_clear_constructing_and_deleted();
     uint16_t current_cost = building_static_params::get(build_type).get_cost();
-    const int rotation = global_rotation;
     int items_placed = 1;
 
     const auto &params = building_static_params::get(build_type);
@@ -1072,8 +1071,8 @@ void build_planner::construction_update(tile2i tile) {
     case BUILDING_FORT_ARCHERS:
     case BUILDING_FORT_CHARIOTEERS:
     case BUILDING_FORT_INFANTRY:
-        if (g_formations.num_batalions < 6) {
-            vec2i offset = FORT_OFFSET[rotation][g_camera.orientation / 2];
+        if (g_formations.num_batalions < formation_get_max_forts()) {
+            vec2i offset = FORT_OFFSET[building_fort::placement_rotation()][g_camera.orientation / 2];
             tile2i ground = tile.shifted(offset.x, offset.y);
             if (map_building_tiles_are_clear(tile, 3, TERRAIN_ALL)
                 && map_building_tiles_are_clear(ground, 4, TERRAIN_ALL)) {
@@ -1550,23 +1549,6 @@ bool build_planner::place() {
         map_routing_update_land();
         should_update_land_routing = false;
     }
-
-    // TODO
-    //    if (building_is_fort(building_type)) {
-    //        const int offsets_x[] = {3, -1, -4, 0};
-    //        const int offsets_y[] = {-1, -4, 0, 3};
-    //        int orient_index = building_rotation_get_rotation();
-    //        int x_offset = offsets_x[orient_index];
-    //        int y_offset = offsets_y[orient_index];
-    //        if (!map_tiles_are_clear(x + x_offset, y + y_offset, 4, terrain_mask)) {
-    //            city_warning_show(WARNING_CLEAR_LAND_NEEDED);
-    //            return 0;
-    //        }
-    //        if (formation_get_num_legions_cached() >= formation_get_max_legions()) {
-    //            city_warning_show(WARNING_MAX_LEGIONS_REACHED);
-    //            return 0;
-    //        }
-    //    }
 
     total_cost = placement_cost;
     if (total_cost == 0) {

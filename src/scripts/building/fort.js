@@ -133,13 +133,55 @@ function building_fort_draw_partially_blocked(tiles, fully_blocked) {
     }
 }
 
+// OG: the parade ground always sits at x+3, y-1; rotating it is a remake feature.
+function building_fort_rotation() {
+    return game_features.gameplay_change_fort_rotation ? city_planner.global_rotation : 0
+}
+
+function building_fort_ground_blocked(end) {
+    var ghost = building_fort_ghost_config(city_planner.build_type)
+    var ground_params = city.get_building_params_by_type(BUILDING_FORT_GROUND)
+    var off = building_fort_vec(ghost.ground_check_offset[building_fort_rotation() * 4 + Math.floor(__camera.orientation / 2)])
+    var tile_ground = { x: end.x + off.x, y: end.y + off.y }
+    return building_fort_footprint_tiles(tile_ground, ground_params.building_size).blocked
+}
+
+// OG check_building: the parade ground needs cleared land, then at most the full complement of forts.
+function building_fort_can_place(ev) {
+    if (ev.state != CAN_PLACE) {
+        city_planner.finalize_check_result = ev.state
+        return
+    }
+    if (building_fort_ground_blocked(ev.end)) {
+        city_planner.set_warning("#must_build_on_cleared_land")
+        city_planner.finalize_check_result = CAN_NOT_PLACE
+        return
+    }
+    if (city.num_forts >= city.max_forts) {
+        city_planner.set_warning("#army_has_full_complement_of_forts")
+        city_planner.finalize_check_result = CAN_NOT_PLACE
+        return
+    }
+    city_planner.finalize_check_result = ev.state
+}
+
+[es=(building_fort_charioteers, can_place), es=(building_fort_infantry, can_place), es=(building_fort_archers, can_place)]
+function building_fort_can_place_es(ev) {
+    building_fort_can_place(ev)
+}
+
+[es=(building_fort_charioteers, finalize_check), es=(building_fort_infantry, finalize_check), es=(building_fort_archers, finalize_check)]
+function building_fort_finalize_check_es(ev) {
+    building_fort_can_place(ev)
+}
+
 function building_fort_placement_check(ev) {
     var fully_blocked = (city.num_forts >= city.max_forts) || !!city.finance.is_out_of_money
     var blocked = fully_blocked
     var params = city.get_building_params_by_type(city_planner.build_type)
     var ground_params = city.get_building_params_by_type(BUILDING_FORT_GROUND)
     var ghost = building_fort_ghost_config(city_planner.build_type)
-    var global_rotation = city_planner.global_rotation
+    var global_rotation = building_fort_rotation()
     var ground_off = building_fort_vec(ghost.ground_check_offset[global_rotation * 4 + Math.floor(__camera.orientation / 2)])
     var tile_ground = { x: ev.end.x + ground_off.x, y: ev.end.y + ground_off.y }
 

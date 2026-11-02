@@ -39,6 +39,7 @@ public:
 
     building_fort_ground* ground() const { return building_get(runtime_data().ground)->dcast_fort_ground(); }
     formation_id create_batalion();
+    static int placement_rotation();
     void remove_batalion();
 };
 ANK_CONFIG_PROPERTY(building_fort::runtime_data_t, fid)

@@ -25,6 +25,7 @@
 #include "graphics/animation.h"
 #include "city/city_labor.h"
 #include "game/undo.h"
+#include "game/game_config.h"
 
 #include "js/js_game.h"
 #include "dev/debug.h"
@@ -63,6 +64,28 @@ declare_console_command_p(force_fill_fort) {
     }
 }
 
+// OG formation_create_legion: the lowest legion index no other own legion uses (1-based here).
+static uint8_t free_batalion_index() {
+    bool used[MAX_FORMATIONS] = {};
+    for (int i = 1; i < MAX_FORMATIONS; i++) {
+        const formation &f = g_formations.formations[i];
+        if (f.in_use && f.own_batalion && f.batalion_id < MAX_FORMATIONS) {
+            used[f.batalion_id] = true;
+        }
+    }
+    const int max_index = std::min<int>(formation_get_max_forts(), 9);
+    for (int index = 1; index <= max_index; index++) {
+        if (!used[index]) {
+            return index;
+        }
+    }
+    return 1;
+}
+
+int building_fort::placement_rotation() {
+    return game_features::gameplay_change_fort_rotation.to_bool() ? building_rotation_global_rotation() : 0;
+}
+
 formation_id building_fort::create_batalion() {
     g_formations.calculate_batalion_totals();
 
@@ -85,7 +108,7 @@ formation_id building_fort::create_batalion() {
     m->layout = FORMATION_DOUBLE_LINE_1;
     m->morale = 50;
     m->is_at_fort = 1;
-    m->batalion_id = m->id;
+    m->batalion_id = free_batalion_index();
     m->max_figures = 16;
     verify_no_crash(m->batalion_id <= 9);
 
@@ -119,7 +142,7 @@ void building_fort::on_place_update_tiles(int orientation, int variant) {
     // create parade ground
     const int offsets_x[] = {3, -1, -4, 0};
     const int offsets_y[] = {-1, -4, 0, 3};
-    int global_rotation = building_rotation_global_rotation();
+    int global_rotation = placement_rotation();
     building* ground = building_create(BUILDING_FORT_GROUND, tile().shifted(offsets_x[global_rotation], offsets_y[global_rotation]), 0);
     game_undo_add_building(ground);
     ground->prev_part_building_id = id();
@@ -162,7 +185,9 @@ void building_fort::remove_batalion() {
 }
 
 void building_fort::on_destroy() {
-    g_campaign_carry.refund_fort_if_applied(type());
+    if (game_features::gameplay_change_fort_refund_carry_troops.to_bool()) {
+        g_campaign_carry.refund_fort_if_applied(type());
+    }
     remove_batalion();
 }
 
