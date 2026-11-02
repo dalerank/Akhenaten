@@ -7,6 +7,7 @@
 #include "building/building_house.h"
 #include "building/building_type.h"
 #include "grid/grid.h"
+#include "core/calc.h"
 #include "core/log.h"
 #include "game/game_events.h"
 #include "city/object_info.h"
@@ -108,6 +109,30 @@ int __city_count_active_buildings(int btype) {
     return g_city.buildings.count_active((e_building_type)btype);
 }
 ANK_FUNCTION_1(__city_count_active_buildings);
+
+int __city_get_palace_id() {
+    return g_city.buildings.get_palace_id();
+}
+ANK_FUNCTION(__city_get_palace_id);
+
+bool __city_palace_allows_tax_collectors() {
+    const int palace_id = g_city.buildings.get_palace_id();
+    if (palace_id <= 0) {
+        return false;
+    }
+    building *palace = building_get(palace_id);
+    if (!palace || !palace->is_valid()) {
+        return false;
+    }
+    // OG spawn_tax_collector: palace_pct = workers / model laborers; spawn only if > 0.
+    const int laborers = (int)palace->max_workers;
+    const int workers = (int)palace->num_workers;
+    if (laborers <= 0) {
+        return workers > 0;
+    }
+    return calc_percentage(workers, laborers) > 0;
+}
+ANK_FUNCTION(__city_palace_allows_tax_collectors);
 
 int __city_count_total_buildings(int btype) {
     return g_city.buildings.count_total((e_building_type)btype);

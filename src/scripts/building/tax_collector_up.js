@@ -28,7 +28,7 @@ building_tax_collector_up {
 [es=(building_tax_collector_up, spawn_figure)]
 function building_tax_collector_up_spawn_figure(ev) {
     var b = city.get_building(ev.bid)
-    b.common_spawn_roamer(FIGURE_TAX_COLLECTOR, b.params.min_houses_coverage, ACTION_0_TAX_COLLECTOR_CREATED)
+    building_tax_office_spawn_taxman(b)
 }
 
 [es=(building_tax_collector_up, update_month)]

@@ -25,10 +25,26 @@ building_tax_collector {
   }
 }
 
+function building_tax_office_palace_allows_spawn() {
+    // OG: tax offices only send a collector while the city palace has workers.
+    return __city_palace_allows_tax_collectors()
+}
+
+function building_tax_office_spawn_taxman(b) {
+    if (!b.common_spawn_figure_trigger(b.params.min_houses_coverage, BUILDING_SLOT_SERVICE)) {
+        return
+    }
+    // Delay already advanced/reset like OG; skip create when palace is unstaffed.
+    if (!building_tax_office_palace_allows_spawn()) {
+        return
+    }
+    b.create_roaming_figure(FIGURE_TAX_COLLECTOR, ACTION_0_TAX_COLLECTOR_CREATED, BUILDING_SLOT_SERVICE)
+}
+
 [es=(building_tax_collector, spawn_figure)]
 function building_tax_collector_spawn_figure(ev) {
     var b = city.get_building(ev.bid)
-    b.common_spawn_roamer(FIGURE_TAX_COLLECTOR, b.params.min_houses_coverage, ACTION_0_TAX_COLLECTOR_CREATED)
+    building_tax_office_spawn_taxman(b)
 }
 
 [es=(building_tax_collector, update_month)]

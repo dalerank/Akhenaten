@@ -4055,6 +4055,11 @@ static void __test_building_set_workers(int bid, int workers) {
 }
 ANK_FUNCTION_2(__test_building_set_workers);
 
+static void __test_city_buildings_update_tick() {
+    g_city.buildings.update_tick(/*refresh_only*/true);
+}
+ANK_FUNCTION(__test_city_buildings_update_tick);
+
 static void __test_storage_toggle_empty_all(int bid) {
     building *b = building_get(bid);
     if (!b) {

@@ -23,6 +23,8 @@ void figure_tax_collector::figure_action() {
     building* b = home();
     switch (action_state()) {
     case ACTION_0_TAX_COLLECTOR_CREATED:
+        // OG building_walker: invisible while waiting inside the office.
+        base.set_flag(e_figure_flag_invisible, true);
         base.animctx.frame = 0;
         base.wait_ticks--;
         if (base.wait_ticks <= 0) {
@@ -39,6 +41,8 @@ void figure_tax_collector::figure_action() {
 
     case ACTION_1_TAX_COLLECTOR_ENTERING_EXITING:
         {
+            // OG enter_exit: is_ghost while crossing to/from the building.
+            base.set_flag(e_figure_flag_invisible, true);
             base.use_cross_country = true;
             const bool finished = base.move_ticks_cross_country(1);
             if (finished) {
@@ -55,6 +59,7 @@ void figure_tax_collector::figure_action() {
         break;
 
     case ACTION_2_TAX_COLLECTOR_ROAMING:
+        base.set_flag(e_figure_flag_invisible, false);
         base.roam_length++;
         if (base.roam_length >= base.max_roam_length) {
             tile2i road_tile = map_closest_road_within_radius(b->tile, b->size, 2);
@@ -72,6 +77,7 @@ void figure_tax_collector::figure_action() {
         break;
 
     case ACTION_3_TAX_COLLECTOR_RETURNING:
+        base.set_flag(e_figure_flag_invisible, false);
         base.move_ticks(1);
             if (direction() == DIR_FIGURE_NONE) {
                 advance_action(ACTION_1_TAX_COLLECTOR_ENTERING_EXITING);
@@ -100,7 +106,9 @@ void figure_tax_collector::figure_before_action() {
 
 int figure_tax_collector::provide_service() {
     int max_tax_rate = 0;
-    int houses_serviced = figure_provide_service(tile(), &base, [&] (building *b, figure*) {
+    // OG service_provide_tax_collector_coverage: count inhabited house tiles only.
+    int houses_serviced = 0;
+    figure_provide_service(tile(), &base, [&] (building *b, figure*) {
         auto house = b->dcast_house();
         if (!house) {
             return;
@@ -123,6 +131,7 @@ int figure_tax_collector::provide_service() {
             auto &housed = house->runtime_data();
             housed.tax_collector_id = home()->id;
             housed.tax_coverage = 50;
+            houses_serviced++;
         }
     });
     base.min_max_seen = max_tax_rate;
