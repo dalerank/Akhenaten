@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Config File Format — Akhenaten Wiki</title>
+  <link rel="stylesheet" href="../../../style.css" />
+</head>
+<body>
+  <header>
+    <nav>
+      <a href="../../../index.html" class="nav-logo">Akhenaten</a>
+      <ul>
+        <li><a href="../../../about.html">About</a></li>
+        <li><a href="../../../devblog.html">Devblog</a></li>
+        <li><a href="../../index.html" class="active">Wiki</a></li>
+        <li><a href="../../../screenshots.html">Screenshots</a></li>
+        <li><a href="../../../downloads.html">Downloads</a></li>
+        <li><a href="../../../contributors.html">Contributors</a></li>
+        <li><a href="../../../contact.html">Join us</a></li>
+        <li><a href="../../../reportbug.html">Report Bug</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main class="wiki-layout">
+    <aside class="wiki-sidebar">
+      <div class="wiki-sidebar-section">
+        <div class="wiki-sidebar-title"><a href="../index.html">← Developer Docs</a></div>
+      </div>
+      <div class="wiki-sidebar-section">
+        <div class="wiki-sidebar-title">On this page</div>
+        <ul>
+          <li><a href="#where">Where configs live</a></li>
+          <li><a href="#loading">How C++ reads a config</a></li>
+          <li><a href="#syntax">Syntax extensions</a></li>
+          <li><a href="#example">Annotated building</a></li>
+          <li><a href="#difficulty">Difficulty arrays</a></li>
+          <li><a href="#images">Images and animations</a></li>
+          <li><a href="#building-fields">Building fields</a></li>
+          <li><a href="#custom-fields">Type-specific fields</a></li>
+          <li><a href="#figures">Figure configs</a></li>
+          <li><a href="#reuse">Shared objects and globals</a></li>
+          <li><a href="#events">Event handlers</a></li>
+          <li><a href="#features">Feature flags</a></li>
+          <li><a href="#pitfalls">Pitfalls</a></li>
+        </ul>
+      </div>
+    </aside>
+
+    <div class="wiki-content">
+      <div class="wiki-breadcrumb"><a href="../../index.html">Wiki</a> / <a href="../index.html">Developer Docs</a> / Config File Format</div>
+      <h1>Config File Format</h1>
+      <p class="section-intro">Buildings, figures, UI windows and most tunable game data are described in script files under <code>src/scripts/</code>. They are JavaScript run by the embedded MuJS engine, with a few syntax extensions that make them read like a config language. This page explains how those files are written and how the C++ side picks them up.</p>
+
+      <h2 id="where">Where Configs Live</h2>
+      <div class="wiki-table-wrap">
+        <table class="wiki-table">
+          <thead><tr><th>Path</th><th>Contents</th></tr></thead>
+          <tbody>
+            <tr><td><code>src/scripts/building/*.js</code></td><td>One file per building or building family: static params, ghost preview, spawn logic.</td></tr>
+            <tr><td><code>src/scripts/figure/*.js</code></td><td>One file per figure type: animations, sounds, phrases.</td></tr>
+            <tr><td><code>src/scripts/ui_*.js</code></td><td>Window layouts (<code>ui { … }</code> trees) and their handlers.</td></tr>
+            <tr><td><code>src/scripts/mission/*.js</code></td><td>Mission scripts.</td></tr>
+            <tr><td><code>src/scripts/game.js</code></td><td>The <code>game_features</code> list and other game-wide objects.</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>The scripts are embedded into the executable at build time (each becomes a generated <code>*.js.cpp</code>), so <strong>an edit needs a rebuild</strong>. Two command-line options help during development:</p>
+      <ul class="wiki-list">
+        <li><code>--mixed PATH</code> loads scripts from disk and hot-reloads them when they change.</li>
+        <li><code>--unpack_scripts</code> extracts the embedded scripts to the user directory, so you can read and edit the exact copy the build carries.</li>
+      </ul>
+
+      <h2 id="loading">How C++ Reads a Config</h2>
+      <p>Every building and figure class is registered with a metainfo macro. Its class name is also the name of the script object that configures it:</p>
+      <pre class="wiki-code">
+// src/building/building_mortuary.h
+class building_mortuary : public building_impl {
+public:
+    BUILDING_METAINFO(BUILDING_MORTUARY, building_mortuary, building_impl)
+    ...
+};
+
+// src/building/building_mortuary.cpp
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_mortuary);
+</pre>
+      <p>At startup, <code>REPLICATE_STATIC_PARAMS_FROM_CONFIG</code> makes the model loader (<code>buildings::model_t::static_params_load</code> in <code>building_model.h</code>) look up the global script object named <code>building_mortuary</code> and read it twice:</p>
+      <ol class="wiki-list">
+        <li>into the shared <code>building_static_params</code> (cost, size, labor, animations, flags…), then</li>
+        <li>into the class's own <code>static_params</code> struct, if the class declares extra fields.</li>
+      </ol>
+      <p>If the object is missing, the loader logs <code>Failed to load building static params TYPE=… CLSID=…</code> and stops. Figures work the same way through <code>FIGURE_METAINFO</code> and <code>figures::model_t</code> (<code>figure_impl.h</code>).</p>
+      <p>Which fields C++ reads is decided by <code>ANK_CONFIG_STRUCT(type, field1, field2, …)</code>. Only listed names are read, matched by exact spelling. <code>ANK_CONFIG_PROPERTY</code> exposes the same fields to scripts for reading and writing. Both macros must be used at global scope.</p>
+
+      <h2 id="syntax">Syntax Extensions</h2>
+      <p>The MuJS fork (<code>src/mujs/jsparse.cpp</code>) accepts a few forms that plain JavaScript does not. They all produce ordinary objects and arrays.</p>
+      <div class="wiki-table-wrap">
+        <table class="wiki-table">
+          <thead><tr><th>Written</th><th>Means</th></tr></thead>
+          <tbody>
+            <tr><td><code>building_x { … }</code></td><td>Top-level statement: <code>building_x = { … }</code>. Both forms are used in the codebase.</td></tr>
+            <tr><td><code>flags { … }</code> inside an object</td><td><code>flags: { … }</code>, a nested object without the colon.</td></tr>
+            <tr><td><code>cost [ 20, 30 ]</code>, <code>laborers[8]</code></td><td><code>cost: [20, 30]</code>, an array without the colon.</td></tr>
+            <tr><td>Newline or <code>;</code> between properties</td><td>Same as a comma. Commas are optional when each property is on its own line.</td></tr>
+            <tr><td><code>@name { }</code> inside an object</td><td>A computed property. An empty body routes reads to the object's <code>__property_getter(name)</code> (and writes to <code>__property_setter</code>); <code>@name { get: f, set: g }</code> names the accessors directly.</td></tr>
+            <tr><td><code>[es=building]</code> before an object</td><td>Tags the object with an event family: events for it fall back to <code>[es=(building, &lt;event&gt;)]</code> handlers.</td></tr>
+            <tr><td><code>[es=(a, b)]</code> before a function</td><td>Registers the function as the handler of event <code>b</code> on object <code>a</code>. Several tuples can be listed, comma-separated.</td></tr>
+            <tr><td><code>emit event_name{ … }</code></td><td>Statement that raises a script event.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h2 id="example">Annotated Building</h2>
+      <p>The mortuary (<code>src/scripts/building/mortuary.js</code>), shortened:</p>
+      <pre class="wiki-code">
+building_mortuary {
+  animations {
+    preview { pack:PACK_GENERAL, id:175 },           // image shown while placing
+    base { pack:PACK_GENERAL, id:175 },              // idle image
+    work { pos[35, -20], pack:PACK_GENERAL, id:175,  // working animation, offset from the base
+           offset:1, max_frames:12, duration:4 },
+  }
+  input : { resource : RESOURCE_LINEN }              // what cart pushers deliver
+  walker_cost : [5, 10, 20, 40, 60]                  // read by the script only (see below)
+  spawn_delays : [3, 7, 15, 29, 44]
+  linen_required_for_animation : 100                 // building_mortuary::static_params
+  min_houses_coverage : 50
+  building_size : 2
+  labor_category : LABOR_CATEGORY_WATER_HEALTH
+  meta { text_id:82, help_link:"message_building_mortuary" }
+  info_sound : "Wavs/EMBALM.WAV"
+  cost [ 20, 30, 50, 100, 200 ]                      // one value per difficulty
+  desirability { value[-3], step[2], step_size[1], range[2] }
+  laborers[8]
+  fire_risk[4]
+  damage_risk[2]
+  flags {
+    work_anim: true
+  }
+}
+
+[es=(building_mortuary, spawn_figure)]               // C++ spawn_figure() raises this event
+function building_mortuary_spawn_figure(ev) {
+    building_spawn_stock_walker(city.get_building(ev.bid), building_mortuary,
+                                FIGURE_EMBALMER, RESOURCE_LINEN, building_mortuary_walker_cost())
+}
+</pre>
+      <p>Constants such as <code>PACK_GENERAL</code>, <code>RESOURCE_LINEN</code> or <code>LABOR_CATEGORY_WATER_HEALTH</code> are C++ enum values registered as script globals.</p>
+
+      <h2 id="difficulty">Difficulty Arrays</h2>
+      <p>Fields of the <code>*_dcy</code> types (<code>cost</code>, <code>laborers</code>, <code>fire_risk</code>, <code>damage_risk</code>, <code>production_rate_dcy</code>) and every member of <code>desirability</code> and <code>crime</code> are arrays indexed by difficulty:</p>
+      <div class="wiki-table-wrap">
+        <table class="wiki-table">
+          <thead><tr><th>Index</th><th>0</th><th>1</th><th>2</th><th>3</th><th>4</th></tr></thead>
+          <tbody>
+            <tr><td>Difficulty</td><td>Very Easy</td><td>Easy</td><td>Normal</td><td>Hard</td><td>Very Hard</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>A shorter array repeats its last value for higher difficulties, so <code>laborers[8]</code> means 8 on every difficulty (<code>value_dcy::get</code> in <code>game/difficulty.h</code>). Scripts read their own per-difficulty fields with <code>dcy_get(array)</code> from <code>common.js</code>, which applies the same rule.</p>
+
+      <h2 id="images">Images and Animations</h2>
+      <p>An image reference is either an object or a string:</p>
+      <pre class="wiki-code">
+{ pack: PACK_GENERAL, id: 61, offset: 4 }   // image group 61 of the pack, 5th image
+"path/to/image"                             // a named image path
+</pre>
+      <p>An animation (<code>animation_t</code>) is an image reference plus playback fields. A building or figure keeps them in <code>animations { key { … } }</code> and C++ looks them up by key (<code>first_img("ground")</code>, <code>anim(animkeys().work)</code>).</p>
+      <div class="wiki-table-wrap">
+        <table class="wiki-table">
+          <thead><tr><th>Field</th><th>Meaning</th></tr></thead>
+          <tbody>
+            <tr><td><code>pack</code>, <code>id</code>, <code>offset</code>, <code>path</code></td><td>Where the first frame is.</td></tr>
+            <tr><td><code>pos</code></td><td>Pixel offset <code>[x, y]</code> from the building's base image.</td></tr>
+            <tr><td><code>max_frames</code></td><td>Number of frames.</td></tr>
+            <tr><td><code>duration</code></td><td>Ticks per frame.</td></tr>
+            <tr><td><code>start_frame</code>, <code>can_reverse</code>, <code>reverse</code></td><td>Playback control.</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>An <code>_pack { pack: … }</code> entry inside <code>animations</code> sets the default pack for the other entries (see <code>fort.js</code>). Buildings can also declare <code>overlay_anims</code>, animations tied to a stored resource, with the extra fields <code>resource</code>, <code>stack</code>, <code>step</code>, <code>max_count</code> and <code>default_active</code>.</p>
+
+      <h2 id="building-fields">Building Fields</h2>
+      <p>Read for every building (<code>ANK_CONFIG_STRUCT(building_static_params, …)</code> in <code>building_static_params.h</code>):</p>
+      <div class="wiki-table-wrap">
+        <table class="wiki-table">
+          <thead><tr><th>Field</th><th>Type</th><th>Meaning</th></tr></thead>
+          <tbody>
+            <tr><td><code>building_size</code></td><td>int</td><td>Footprint edge in tiles.</td></tr>
+            <tr><td><code>cost</code></td><td>difficulty array</td><td>Construction cost.</td></tr>
+            <tr><td><code>laborers</code></td><td>difficulty array</td><td>Workers needed.</td></tr>
+            <tr><td><code>labor_category</code></td><td>enum</td><td>Labor advisor category.</td></tr>
+            <tr><td><code>fire_risk</code>, <code>damage_risk</code></td><td>difficulty array</td><td>Risk increments.</td></tr>
+            <tr><td><code>fire_proof</code>, <code>damage_proof</code></td><td>bool</td><td>Immune to fire or collapse.</td></tr>
+            <tr><td><code>desirability</code></td><td><code>{ value, step, step_size, range }</code></td><td>Effect on nearby tiles; each member is a difficulty array.</td></tr>
+            <tr><td><code>crime</code></td><td><code>{ value, step, step_size, range }</code></td><td>Effect on the crime map.</td></tr>
+            <tr><td><code>input</code>, <code>output</code></td><td><code>{ resource, resource_second }</code></td><td>Consumed and produced resources.</td></tr>
+            <tr><td><code>production_rate</code>, <code>production_rate_dcy</code>, <code>output_resource_second_rate</code></td><td>int / array</td><td>Industry output.</td></tr>
+            <tr><td><code>min_houses_coverage</code></td><td>int</td><td>Houses covered below which a labor seeker is sent.</td></tr>
+            <tr><td><code>max_service</code>, <code>max_serve_clients</code>, <code>max_storage_amount</code>, <code>max_gatherers</code>, <code>max_walkers</code></td><td>int</td><td>Per-type limits; their meaning is up to the building class.</td></tr>
+            <tr><td><code>progress_max</code></td><td>int</td><td>Production progress needed for one unit.</td></tr>
+            <tr><td><code>animations</code>, <code>overlay_anims</code></td><td>objects</td><td>See <a href="#images">Images and animations</a>.</td></tr>
+            <tr><td><code>overlay</code></td><td>enum</td><td>Overlay the building belongs to.</td></tr>
+            <tr><td><code>sound_channel</code>, <code>info_sound</code></td><td>enum / string</td><td>City ambience and info-window sound.</td></tr>
+            <tr><td><code>meta</code></td><td><code>{ text_id, help_link }</code></td><td>Text group for names and the help page.</td></tr>
+            <tr><td><code>meta_id</code>, <code>info_title_id</code>, <code>build_menu_text</code></td><td>string</td><td>Text keys.</td></tr>
+            <tr><td><code>flags</code></td><td>object of bools</td><td>Classification and behaviour switches, listed below.</td></tr>
+            <tr><td><code>needs</code></td><td>object of bools</td><td>Placement requirements, listed below.</td></tr>
+            <tr><td><code>planner_update_rule</code></td><td>object</td><td>Planner behaviour, listed below.</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p><strong><code>flags</code></strong> (<code>building_flags_rule</code>): classification flags <code>is_monument</code>, <code>is_extractor</code>, <code>is_harvester</code>, <code>is_farm</code>, <code>is_fort</code>, <code>is_education</code>, <code>is_palace</code>, <code>is_temple</code>, <code>is_shrine</code>, <code>is_tax_collector</code>, <code>is_statue</code>, <code>is_administration</code>, <code>is_water_crossing</code>, <code>is_infrastructure</code>, <code>is_beautification</code>, <code>is_guild</code>, <code>is_industry</code>, <code>is_workshop</code>, <code>is_house</code>, <code>is_wall</code>, <code>is_defense</code>, <code>is_temple_complex</code>, <code>is_religion</code>, <code>is_military</code>, <code>is_entertainment</code>, <code>is_food</code>; behaviour flags <code>allow_rotate</code>, <code>no_road_access</code>, <code>non_deletable</code>, <code>keeps_visitor_paths</code>, <code>perimeter_access</code>, <code>draw_normal_anim</code>, <code>work_anim</code>.</p>
+      <p><strong><code>needs</code></strong> (<code>building_planner_need_rule</code>): <code>meadow</code>, <code>rock</code>, <code>ore</code>, <code>altar</code>, <code>oracle</code>, <code>nearby_water</code>, <code>groundwater</code>, <code>shoreline</code>, <code>canals</code>, <code>floodplain_shoreline</code>, <code>water_access</code>.</p>
+      <p><strong><code>planner_update_rule</code></strong> (<code>building_planner_update_rule</code>): <code>canals</code>, <code>roads</code>, <code>ferries</code>, <code>is_draggable</code>, <code>relative_orientation</code>, <code>unique_building</code>.</p>
+
+      <h2 id="custom-fields">Type-Specific Fields</h2>
+      <p>A class that needs more parameters declares its own <code>static_params</code> and lists the new fields:</p>
+      <pre class="wiki-code">
+// src/building/building_mortuary.h
+struct static_params : public building_static_params {
+    uint16_t linen_required_for_animation;
+    uint16_t monthly_linen_consumption;
+} BUILDING_STATIC_DATA_T;
+...
+ANK_CONFIG_STRUCT(building_mortuary::static_params,
+    linen_required_for_animation, monthly_linen_consumption)
+</pre>
+      <p>C++ reads them with <code>current_params().linen_required_for_animation</code>.</p>
+      <p>Fields that no <code>ANK_CONFIG_STRUCT</code> lists are still part of the script object, so script code can use them: the mortuary's <code>walker_cost</code> and <code>spawn_delays</code> are read only by its spawn handler, through <code>building_mortuary.walker_cost</code>. That is the usual place for values that only script logic needs.</p>
+
+      <h2 id="figures">Figure Configs</h2>
+      <p>A figure config follows the same rules. The embalmer (<code>src/scripts/figure/embalmer.js</code>), shortened:</p>
+      <pre class="wiki-code">
+figure_embalmer {
+    overlay : OVERLAY_MORTUARY
+    animations {
+        walk { pack:PACK_SPR_MAIN, id:195, max_frames:12 }
+        death { pack:PACK_SPR_MAIN, id:196, max_frames:8, loop:false }
+        big_image { pack:PACK_UNLOADED, id:25, offset:FIGURE_EMBALMER }
+    }
+    sounds {
+        embalmer_city_is_ok { sound:"embalmer_g09.WAV", text: "#embalmer_city_is_ok" }
+        ...
+    }
+    category: figure_category_citizen
+    max_damage : 10
+    terrain_usage : TERRAIN_USAGE_ROADS
+    max_roam_length : 384
+    permission : epermission_medicine
+}
+</pre>
+      <p>Fields read for every figure (<code>figure_static_params.h</code>): <code>terrain_usage</code>, <code>animations</code>, <code>sounds</code>, <code>max_roam_length</code>, <code>speed_mult</code>, <code>meta</code>, <code>permission</code>, <code>is_enemy</code>, <code>is_soldier</code>, <code>use_cart</code>, <code>category</code>, <code>max_damage</code>, <code>attack_value</code>, <code>defense_value</code>, <code>missile_defense_value</code>, <code>missile_attack_value</code>, <code>missile_delay</code>, <code>missile_range</code>, <code>corpse_time_delay</code>, <code>render_on_flat_tiles</code>, <code>record_path</code>, <code>can_cross_ferry</code>, <code>boards_ferry</code>, <code>overlay</code>.</p>
+      <p>Each <code>sounds</code> entry is a phrase key. Script code picks a key in the figure's <code>setup_phrase</code> handler; the key gives both the speech file and the text shown in the info window.</p>
+
+      <h2 id="reuse">Shared Objects and Globals</h2>
+      <p>A config may point at another script object instead of repeating it. The three forts share one ghost description:</p>
+      <pre class="wiki-code">
+base_fort_ghost {
+    main_view_offset [[-55, 20], [-55, -35], [-55, -35], [-60, -40]]
+    ...
+}
+
+building_fort_charioteers {
+    ghost : base_fort_ghost
+    ...
+}
+</pre>
+      <p>Plain C++ globals can be configured too. <code>std::array&lt;vec2i, 8&gt; ANK_VARIABLE(cartpusher_sled_offsets);</code> fills the C++ variable from the script global of the same name (<code>cartpusher_sled_offsets = [ … ]</code> in <code>images.js</code>). <code>ANK_VARIABLE_N</code> takes a different script name, and <code>ANK_ARRAY_VARIABLE</code> reads an array of objects.</p>
+
+      <h2 id="events">Event Handlers</h2>
+      <p>Behaviour lives next to the data. C++ raises named events on the config object, and a function tagged <code>[es=(object, event)]</code> handles them. Common building events:</p>
+      <div class="wiki-table-wrap">
+        <table class="wiki-table">
+          <thead><tr><th>Event</th><th>Raised when</th></tr></thead>
+          <tbody>
+            <tr><td><code>spawn_figure</code></td><td>The building may send out a walker (once per game day).</td></tr>
+            <tr><td><code>update_animation</code>, <code>update_graphic</code></td><td>The building picks what to draw.</td></tr>
+            <tr><td><code>add_resource</code></td><td>A cart pusher delivers goods.</td></tr>
+            <tr><td><code>on_place_checks</code></td><td>The building has been placed; show advisor warnings.</td></tr>
+            <tr><td><code>ghost_preview</code>, <code>ghost_blocked</code></td><td>The planner draws the placement ghost.</td></tr>
+            <tr><td><code>ghost_allow_tile</code></td><td>The planner asks whether one footprint tile is usable (set <code>city_planner.preview_allow_result</code>).</td></tr>
+            <tr><td><code>can_place</code>, <code>finalize_check</code></td><td>The planner decides whether the site is valid, every frame and on the final click (set <code>city_planner.finalize_check_result</code>).</td></tr>
+            <tr><td><code>setup_building_variant</code>, <code>next_building_variant</code>, <code>update_building_variant</code>, <code>update_relative_orientation</code></td><td>Variant and orientation handling while placing.</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>One function can serve several objects: <code>[es=(building_fort_charioteers, can_place), es=(building_fort_infantry, can_place)]</code>. When no handler is registered, C++ keeps its default behaviour.</p>
+
+      <h2 id="features">Feature Flags</h2>
+      <p>Behaviour that differs from the original game sits behind a feature flag that is off by default. A flag is declared in three places:</p>
+      <pre class="wiki-code">
+// src/game/game_config.h
+extern game_feature gameplay_change_fort_rotation;
+
+// src/game/game_config.cpp
+game_feature gameplay_change_fort_rotation{ "gameplay_change_fort_rotation", "#TR_CONFIG_FORT_ROTATION", false, false };
+
+// src/scripts/game.js, inside game_features { … }
+@gameplay_change_fort_rotation {}
+</pre>
+      <p>The <code>#TR_CONFIG_…</code> key is the settings label; add it to <code>localization_en.js</code> and the other localization files you maintain. C++ checks the flag with <code>game_features::gameplay_change_fort_rotation.to_bool()</code>, scripts with <code>game_features.gameplay_change_fort_rotation</code>.</p>
+
+      <h2 id="pitfalls">Pitfalls</h2>
+      <ul class="wiki-list">
+        <li><strong>A misspelt field is not an error.</strong> C++ reads only the names listed in <code>ANK_CONFIG_STRUCT</code>; any other name silently stays a script-only field, and the C++ value keeps its default.</li>
+        <li><strong>A new C++ field must be listed.</strong> Adding a member to <code>static_params</code> without adding it to <code>ANK_CONFIG_STRUCT</code> leaves it zero.</li>
+        <li><strong>The object name must match the class name.</strong> Renaming the class without renaming the script object stops the game at startup with <code>Failed to load building static params</code>.</li>
+        <li><strong>Script edits need a rebuild</strong> unless the game runs with <code>--mixed</code>. Integral tests in <code>tests/*.js</code> are the exception: they load from disk.</li>
+        <li><strong>A broken handler name fails silently.</strong> A typo in <code>[es=(object, event)]</code> registers a handler nobody calls.</li>
+      </ul>
+    </div>
+  </main>
+
+  <footer>
+    <p>Akhenaten is an open-source, non-commercial project. All rights to Pharaoh, its mechanics and setting belong to their respective copyright owners.</p>
+    <p><a href="https://github.com/dalerank/Akhenaten" target="_blank">github.com/dalerank/Akhenaten</a></p>
+  </footer>
+</body>
+</html>
