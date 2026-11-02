@@ -5,11 +5,16 @@
 #include "building/building_dentist.h"
 #include "city/city.h"
 #include "city/city_buildings.h"
+#include "game/game_config.h"
 #include "js/js_game.h"
 
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_dentist);
 
 void figure_dentist::figure_action() {
+    if (!game_features::gameplay_change_dentist_toothache.to_bool()) {
+        return;
+    }
+
     switch (action_state()) {
     case ACTION_125_DENTIST_ROAMING:
         {
@@ -17,13 +22,7 @@ void figure_dentist::figure_action() {
             if (noble_house_id > 0) {
                 set_destination(noble_house_id);
                 advance_action(ACTION_64_DENTIST_GOING_TO_NOBLE_HOUSE);
-                break;
             }
-        }
-
-        base.roam_length++;
-        if (base.roam_length >= base.max_roam_length) {
-            advance_action(ACTION_126_ROAMER_RETURNING);
         }
         break;
 
@@ -63,11 +62,6 @@ void figure_dentist::figure_action() {
             advance_action(ACTION_125_ROAMER_ROAMING);
         }
         break;
-
-    case ACTION_126_DENTIST_RETURNING:
-        do_returnhome(TERRAIN_USAGE_ROADS);
-        break;
-
     }
 }
 
@@ -119,7 +113,8 @@ void figure_dentist::treat_nobles_in_house(building_house *house) {
     auto &dentist_data = dentist->runtime_data();
     const auto &params = dentist->current_params();
 
-    if (dentist_data.residents_served_this_month >= params.max_serve_clients) {
+    const bool capped = game_features::gameplay_change_dentist_service_cap.to_bool();
+    if (capped && dentist_data.residents_served_this_month >= params.max_serve_clients) {
         return;
     }
 
@@ -135,6 +130,19 @@ void figure_dentist::treat_nobles_in_house(building_house *house) {
 }
 
 int figure_dentist::provide_service() {
+    if (!game_features::gameplay_change_dentist_service_cap.to_bool()) {
+        int houses = 0;
+        map_grid_area_foreach(map_grid_get_area(tile(), 1, 2), [&] (tile2i t) {
+            const int bid = map_building_at(t.grid_offset());
+            auto house = bid ? building_get(bid)->dcast_house() : nullptr;
+            if (house && house->house_population() > 0) {
+                house->runtime_data().dentist = MAX_COVERAGE;
+                houses++;
+            }
+        });
+        return houses;
+    }
+
     building *dentist_building = home();
     if (!dentist_building) {
         return 0;

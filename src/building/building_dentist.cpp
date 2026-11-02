@@ -5,13 +5,10 @@
 #include "io/gamefiles/lang.h"
 #include "js/js_game.h"
 #include "figuretype/figure_dentist.h"
+#include "game/game_config.h"
 
 BUILDING_RUNTIME_DATA_IMPL(building_dentist)
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_dentist);
-
-void building_dentist::spawn_figure() {
-    common_spawn_roamer(FIGURE_DENTIST, current_params().min_houses_coverage, (e_figure_action)ACTION_125_ROAMER_ROAMING);
-}
 
 building_id building_dentist::find_noble_house_with_max_bad_teeth() {
     building_house *max_house = nullptr;
@@ -43,6 +40,10 @@ building_id building_dentist::find_noble_house_with_max_bad_teeth() {
 void building_dentist::update_month() {
     building_impl::update_month();
     runtime_data().residents_served_this_month = 0;
+
+    if (!game_features::gameplay_change_dentist_toothache.to_bool()) {
+        return;
+    }
 
     if (has_figure(BUILDING_SLOT_SERVICE)) {
         return;

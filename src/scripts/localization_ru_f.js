@@ -158,6 +158,8 @@ localization_ru_f = [
     { key:"#TR_CONFIG_BAZAAR_MULTI_BUYERS", text:"Базар может отправлять двух закупщиков сразу (еда + товары)"}
     { key:"#TR_CONFIG_MARKET_DISTRIBUTE_REMAKE", text:"Раздача базара-ремейк: один тип еды за визит, заполнение по food_storage_multiplier (не как в оригинале)"}
     { key:"#TR_CONFIG_LIBRARY_SERVICE_CAP", text:"Библиотека-ремейк: библиотекарь обслуживает не больше max_service жителей за обход и только дома у дороги (не как в оригинале)"}
+    { key:"#TR_CONFIG_DENTIST_SERVICE_CAP", text:"Дантист-ремейк: дантист обслуживает не больше max_serve_clients жителей в месяц и обновляет только дома с покрытием ниже половины (не как в оригинале)"}
+    { key:"#TR_CONFIG_DENTIST_TOOTHACHE", text:"Дантист-ремейк: у знати болят зубы, дантисты сами находят и лечат дома знати (не как в оригинале)"}
     { key:"#TR_CONFIG_TOWER_SENTRIES_GO_OFFROAD", text:"Башенные часовые не нуждаются в дороге"}
     { key:"#TR_CONFIG_FARMS_DELIVER_CLOSE", text:"Фермы и причалы доставляют еду только в близкорасположенные амбары"}
     { key:"#TR_CONFIG_DELIVER_ONLY_TO_ACCEPTING_GRANARIES", text:"Не доставлять еду в амбары с включенной доставкой"}

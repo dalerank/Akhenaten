@@ -73,4 +73,12 @@ Building.prototype.get_figure = function(index) { return city.get_figure(__build
 Building.prototype.draw_usable_paths = function() { __building_draw_usable_paths(this.id) }
 Building.prototype.water_access_tile = function(index) { return __building_water_access_tile(this.id, index) }
 Building.prototype.water_output_tile = function(index) { return __building_water_output_tile(this.id, index) }
+Building.prototype.spawn_delay_by_workers = function(delays) {
+    var pct = this.worker_percentage
+    if (pct >= 100) return delays[0]
+    if (pct >= 75) return delays[1]
+    if (pct >= 50) return delays[2]
+    if (pct >= 25) return delays[3]
+    return delays[4]
+}
 Building.prototype.highlight_waypoints = function() { __building_highlight_waypoints(this.id) }

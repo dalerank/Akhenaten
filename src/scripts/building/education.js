@@ -40,15 +40,6 @@ function education_walker_cost(params) {
     return cost
 }
 
-function education_spawn_delay(params, pct_workers) {
-    var d = params.spawn_delays
-    if (pct_workers >= 100) return d[0]
-    if (pct_workers >= 75) return d[1]
-    if (pct_workers >= 50) return d[2]
-    if (pct_workers >= 25) return d[3]
-    return d[4]
-}
-
 // OG spawn_stock_walker: the day counter keeps running (uint8 wrap) while papyrus is short;
 // papyrus is paid only when the walker leaves.
 function education_spawn_stock_walker(building, params, figure_type) {
@@ -59,13 +50,12 @@ function education_spawn_stock_walker(building, params, figure_type) {
 
     building.common_spawn_labor_seeker(params.min_houses_coverage)
 
-    var pct_workers = building.worker_percentage
-    if (pct_workers <= 0) {
+    if (building.worker_percentage <= 0) {
         return
     }
 
     building.figure_spawn_delay = (building.figure_spawn_delay + 1) & 0xff
-    if (building.figure_spawn_delay <= education_spawn_delay(params, pct_workers)) {
+    if (building.figure_spawn_delay <= building.spawn_delay_by_workers(params.spawn_delays)) {
         return
     }
 

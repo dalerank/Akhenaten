@@ -709,6 +709,10 @@ void building_house::decay_tax_coverage() {
 }
 
 void building_house::update_monthly_nobles_toothache() {
+    if (!game_features::gameplay_change_dentist_toothache.to_bool()) {
+        return;
+    }
+
     if (!is_nobles() || house_population() <= 0) {
         return;
     }
