@@ -138,18 +138,23 @@ function run_test() {
     }
     __log_marker('delivery_paths_bazaar_ok')
 
-    if (!game_features.gameui_show_delivery_paths) {
-        __log_info_native('[test:95] gameui_show_delivery_paths should default ON')
+    // Remake UI: off by default since game features default to original Pharaoh (d1117381e).
+    if (game_features.default('gameui_show_delivery_paths')) {
+        __log_info_native('[test:95] gameui_show_delivery_paths should default OFF')
         __test_signal_ready()
         return
     }
-    game_features.gameui_show_delivery_paths = false
-    if (game_features.gameui_show_delivery_paths) {
-        __log_info_native('[test:95] failed to disable delivery paths flag')
-        __test_signal_ready()
-        return
-    }
+    var prev_paths = game_features.gameui_show_delivery_paths
     game_features.gameui_show_delivery_paths = true
+    var enabled = game_features.gameui_show_delivery_paths
+    game_features.gameui_show_delivery_paths = false
+    var disabled = !game_features.gameui_show_delivery_paths
+    game_features.gameui_show_delivery_paths = prev_paths
+    if (!enabled || !disabled) {
+        __log_info_native('[test:95] failed to toggle delivery paths flag on=' + enabled + ' off=' + disabled)
+        __test_signal_ready()
+        return
+    }
     __log_marker('delivery_paths_feature_ok')
 
     __test_signal_ready()

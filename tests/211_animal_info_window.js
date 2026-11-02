@@ -53,7 +53,8 @@ function test_211_check_window(label, bid, figure_type) {
         window_go_back()
         return false
     }
-    if (got_img != expected_img) {
+    // Without Pharaoh data (CI) the portrait pack is not loaded and there is no real image to compare.
+    if (expected_img > 0 && got_img != expected_img) {
         __log_info_native('[test:211] ' + label + ': FAIL bigimage tid ' + got_img + ' != expected ' + expected_img)
         window_go_back()
         return false

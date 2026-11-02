@@ -162,23 +162,19 @@ void message_manager_t::init() {
 
     init_problem_areas();
 
-    static bool subscriptions_initialized = false;
-    if (!subscriptions_initialized) {
-        subscriptions_initialized = true;
+    // city_t::init() drops every g_city_events listener; re-subscribe on each init (subscribe() dedups).
+    events::subscribe([this] (event_message ev) {
+        auto& msg = post_common(ev.use_popup, ev.message_id, ev.param1, ev.param2, GOD_UNKNOWN, 0);
+        msg.src_location = ev.src_location;
+    });
 
-        events::subscribe([this] (event_message ev) {
-            auto& msg = post_common(ev.use_popup, ev.message_id, ev.param1, ev.param2, GOD_UNKNOWN, 0);
-            msg.src_location = ev.src_location;
-        });
+    events::subscribe([this] (event_message_god ev) {
+        post_common(true, ev.message_id, 0, 0, ev.god, 0);
+    });
 
-        events::subscribe([this] (event_message_god ev) {
-            post_common(true, ev.message_id, 0, 0, ev.god, 0);
-        });
-
-        events::subscribe([this] (event_message_population ev) {
-            post_common(ev.use_popup, ev.message_id, 0, 0, GOD_UNKNOWN, messages::IMAGE_FROM_SCHEME);
-        });
-    }
+    events::subscribe([this] (event_message_population ev) {
+        post_common(ev.use_popup, ev.message_id, 0, 0, GOD_UNKNOWN, messages::IMAGE_FROM_SCHEME);
+    });
 }
 
 void message_manager_t::init_problem_areas() {
