@@ -15,9 +15,9 @@ building_dentist {
   building_size : 1
   meta { text_id:84, help_link:"message_building_dentist" }
   info_sound : "Wavs/DOCTOR.WAV"
-  cost [ 10, 15, 30, 50, 80 ]
+  cost [ 10, 40, 50, 60, 75 ]
   desirability { value[2], step[1], step_size[-1], range[2] }
-  laborers[5]
+  laborers[2]
   fire_risk[4]
   damage_risk[2]
   flags {

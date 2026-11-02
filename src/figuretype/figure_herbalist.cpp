@@ -5,6 +5,9 @@
 #include "figure/service.h"
 #include "figuretype/figure_plagued_citizen.h"
 #include "building/building_house.h"
+#include "game/game_config.h"
+#include "grid/building.h"
+#include "grid/grid.h"
 #include "grid/terrain.h"
 #include "js/js_game.h"
 
@@ -53,6 +56,25 @@ figure_sound_t figure_herbalist::get_sound_reaction(xstring key) const {
 }
 
 int figure_herbalist::provide_service() {
+    if (!game_features::gameplay_change_apothecary_remake.to_bool()) {
+        int houses = 0;
+        map_grid_area_foreach(map_grid_get_area(tile(), 1, 2), [&] (tile2i t) {
+            const int bid = map_building_at(t.grid_offset());
+            building *b = bid ? building_get(bid) : nullptr;
+            auto house = b ? b->dcast_house() : nullptr;
+            if (!house || house->house_population() <= 0) {
+                return;
+            }
+            runtime_data().see_low_health += (b->common_health < 20) ? 1 : 0;
+            house->runtime_data().apothecary = MAX_COVERAGE;
+            houses++;
+        });
+
+        base.min_max_seen = runtime_data().see_low_health;
+        figure_plagued_citizen::cure_nearby(tile(), 1);
+        return houses;
+    }
+
     int houses_serviced = figure_provide_service(tile(), &base, [&] (building *b, figure*) {
         runtime_data().see_low_health += (b->common_health < 20) ? 1 : 0;
         b->common_health = std::max<uint8_t>(b->common_health, 50);

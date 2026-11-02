@@ -96,6 +96,7 @@ localization_en = [
   {key:"#TR_CONFIG_DENTIST_SERVICE_CAP", text:"Dentist remake: a dentist serves up to max_serve_clients residents per month and refreshes only houses below half coverage (not original Pharaoh)"}
   {key:"#TR_CONFIG_DENTIST_TOOTHACHE", text:"Dentist remake: nobles get toothaches, dentists seek out and treat noble houses (not original Pharaoh)"}
   {key:"#TR_CONFIG_PHYSICIAN_SERVICE_CAP", text:"Physician remake: serves up to max_serve_clients residents per month, refreshes only houses below half coverage and raises house health instead of lowering malaria risk (not original Pharaoh)"}
+  {key:"#TR_CONFIG_APOTHECARY_REMAKE", text:"Apothecary remake: herbalist raises house health to 50 and lowers malaria risk by 30 (not original Pharaoh)"}
   {key:"#TR_CONFIG_TRADER_CAPACITY_1600", text:"Larger trader capacity (1600 per visit; not yearly empire limit)"}
   {key:"#TR_CONFIG_TRADER_PER_GOOD_1600", text:"New Era: traders buy/sell up to 1600 of each good per visit (not yearly limit; not total-bag only)"}
   {key:"#trader_capacity_per_good", text:"Capacity (per good)"}

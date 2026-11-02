@@ -19,7 +19,7 @@ building_physician {
   meta { text_id: 83, help_link:"message_building_physician" }
   info_sound : "Wavs/DOCTOR.WAV"
   building_size : 2
-  cost [ 10, 15, 30, 50, 100 ]
+  cost [ 10, 40, 50, 60, 75 ]
   desirability { value[2], step[1], step_size[-1], range[2] }
   laborers [8]
   fire_risk [3]

@@ -14,6 +14,7 @@
 void building_update_malaria_risk(void) {
     OZZY_PROFILER_FUNCTION();
     const bool physician_og = !game_features::gameplay_change_physician_service_cap.to_bool();
+    const bool apothecary_remake = game_features::gameplay_change_apothecary_remake.to_bool();
     const int physician_reduction = figure_physician::current_params().malaria_risk_reduction;
     buildings_valid_do([&] (building &b) {
         int risk = g_malaria_risk.get_max(b.tile, b.size);
@@ -41,7 +42,7 @@ void building_update_malaria_risk(void) {
         auto house = b.dcast_house();
         if (house) {
             auto &housed = house->runtime_data();
-            if (housed.apothecary > 0) {
+            if (apothecary_remake && housed.apothecary > 0) {
                 risk = std::max(base_terrain_risk, risk - 30);
             }
 

@@ -34,7 +34,7 @@ function test223_check_spawn_delay() {
     __test_update_road_network()
     __test_check_kingdome_access()
 
-    __test_building_set_workers(bid, 5)
+    __test_building_set_workers(bid, 2)
     var b = city.get_building(bid)
     b.has_road_access = true
     b.figure_spawn_delay = 0
