@@ -31,7 +31,7 @@ function building_recruiter_on_place_checks(ev) {
 
 [es=(building_recruiter, add_resource)]
 function building_recruiter_add_resource(ev) {
-    if (ev.resource != RESOURCE_WEAPONS) {
+    if (ev.resource != RESOURCE_WEAPONS && ev.resource != RESOURCE_CHARIOTS) {
         return
     }
     var building = city.get_building(ev.bid)

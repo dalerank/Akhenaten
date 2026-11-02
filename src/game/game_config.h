@@ -102,6 +102,7 @@ namespace game_features {
     extern game_feature gameplay_change_fort_refund_carry_troops;
     extern game_feature gameplay_change_statue_variants;
     extern game_feature gameplay_change_guild_statue_service;
+    extern game_feature gameplay_change_recruit_nearest_fort;
     extern game_feature gameplay_change_tower_sentries_go_offroad;
     extern game_feature gameplay_change_farms_deliver_close;
     extern game_feature gameplay_change_only_deliver_to_accepting_granaries;

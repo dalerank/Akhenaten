@@ -3,6 +3,9 @@
 // to keep the test-only surface in one place and make it easy to audit /
 // disable later without touching the main game bindings.
 
+#include "figure/formation_batalion.h"
+#include "building/building_fort.h"
+#include "building/building_barracks.h"
 #include "js_game.h"
 
 #include "core/app.h"
@@ -2082,6 +2085,31 @@ static int __test_hunting_lodge_spawn_figure(int bid) {
     return __test_hunting_lodge_active_hunters(b) - before;
 }
 ANK_FUNCTION_1(__test_hunting_lodge_spawn_figure);
+
+static building_recruiter *__test_recruiter(int bid) {
+    building *b = building_get(bid);
+    return (b && b->is_valid()) ? b->dcast_recruiter() : nullptr;
+}
+
+static int __test_recruiter_pick_batalion(int bid) {
+    building_recruiter *r = __test_recruiter(bid);
+    return r ? r->get_closest_batalion_needing_soldiers() : -1;
+}
+ANK_FUNCTION_1(__test_recruiter_pick_batalion);
+
+static int __test_recruiter_create_soldier(int bid) {
+    building_recruiter *r = __test_recruiter(bid);
+    return (r && r->create_soldier()) ? 1 : 0;
+}
+ANK_FUNCTION_1(__test_recruiter_create_soldier);
+
+static void __test_fort_update_recruit_status(int bid) {
+    building *b = building_get(bid);
+    if (b && b->is_valid() && b->dcast_fort()) {
+        formation_batalion_update_recruit_status(b);
+    }
+}
+ANK_FUNCTION_1(__test_fort_update_recruit_status);
 
 static void __test_figure_set_action(int fid, int action) {
     figure *f = figure_get(fid);

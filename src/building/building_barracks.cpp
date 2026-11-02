@@ -37,37 +37,46 @@ bool building_recruiter::static_params::is_unique_building() const {
     return exist;
 }
 
+// OG building_barracks_create_soldier: infantry needs weapons in stock and chariots need chariots; archers need
+// nothing. The legion with the highest recruit type (chariots, infantry, archers) wins, the closest fort breaks ties.
 formation_id building_recruiter::get_closest_batalion_needing_soldiers() {
-    const bool has_weapons = (base.stored_amount(RESOURCE_WEAPONS) >= 100);
+    const bool has_weapons = base.stored_amount(RESOURCE_WEAPONS) > 0;
+    const bool has_chariots = base.stored_amount(RESOURCE_CHARIOTS) > 0;
+    const bool nearest_only = game_features::gameplay_change_recruit_nearest_fort.to_bool();
 
     svector<formation*, 10> formations;
-    formations_get(formations, [has_weapons] (auto *m) {
+    formations_get(formations, [has_weapons, has_chariots] (auto *m) {
         const bool in_use = m->in_use && m->own_batalion;
         const bool allow_recruits = m->batalion_recruit_type != BATALION_RECRUIT_NONE;
         if (!in_use || !allow_recruits || m->in_distant_battle) {
             return false;
         }
 
-        // Infantry and Charioteers require 100 weapons in storage at the recruiter.
-        if (!has_weapons && (m->batalion_recruit_type == BATALION_RECRUIT_INFANTRY ||
-                            m->batalion_recruit_type == BATALION_RECRUIT_CHARIOTEER)) {
+        if (m->batalion_recruit_type == BATALION_RECRUIT_INFANTRY && !has_weapons) {
+            return false;
+        }
+
+        if (m->batalion_recruit_type == BATALION_RECRUIT_CHARIOTEER && !has_chariots) {
             return false;
         }
 
         return true;
     });
 
-    int min_formation_id = 0;
-    int min_distance = INFINITE;
+    int best_formation_id = 0;
+    int best_type = 0;
+    int best_distance = INFINITE;
     for (auto* m : formations) {
         building* fort = building_get(m->building_id);
-        int dist = calc_maximum_distance(tile(), fort->tile);
-        if (dist < min_distance) {
-            min_formation_id = m->id;
-            min_distance = dist;
+        const int dist = calc_maximum_distance(tile(), fort->tile);
+        const int type = nearest_only ? 0 : m->batalion_recruit_type;
+        if (type > best_type || (type == best_type && dist < best_distance)) {
+            best_formation_id = m->id;
+            best_type = type;
+            best_distance = dist;
         }
     }
-    return min_formation_id;
+    return best_formation_id;
 }
 
 static int get_closest_military_academy(building* fort) {
@@ -92,12 +101,12 @@ bool building_recruiter::create_soldier() {
     if (formation_id > 0) {
         const formation* m = formation_get(formation_id);
 
-        if (m->batalion_recruit_type == BATALION_RECRUIT_INFANTRY ||
-            m->batalion_recruit_type == BATALION_RECRUIT_CHARIOTEER) {
-            if (base.stored_amount(RESOURCE_WEAPONS) < 100) {
-                return false;
-            }
-            consume_resource(RESOURCE_WEAPONS, 100);
+        // OG takes 100 from a positive stock; the stock here cannot go below zero.
+        const e_resource used = (m->batalion_recruit_type == BATALION_RECRUIT_CHARIOTEER) ? RESOURCE_CHARIOTS
+                              : (m->batalion_recruit_type == BATALION_RECRUIT_INFANTRY) ? RESOURCE_WEAPONS
+                              : RESOURCE_NONE;
+        if (used != RESOURCE_NONE) {
+            consume_resource(used, std::min<int>(100, base.stored_amount(used)));
         }
 
         figure* f = figure_create(m->figure_type, base.road_access, DIR_0_TOP_RIGHT);

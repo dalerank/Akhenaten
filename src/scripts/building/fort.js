@@ -25,7 +25,7 @@ building_fort_charioteers {
     damage_proof : 1
     meta { text_id:89, help_link:"message_fort_and_company" }
     info_sound : "Wavs/f_chariot.wav"
-    cost [ 500, 700, 900, 1300, 2000 ]
+    cost [ 500, 800, 1000, 1200, 1500 ]
     desirability { value[-20], step[2], step_size[2], range[6] }
     flags {
         is_fort: true
@@ -47,7 +47,7 @@ building_fort_infantry {
     damage_proof : 1
     meta { text_id:89, help_link:"message_fort_and_company" }
     info_sound : "Wavs/f_infantry.wav"
-    cost [ 200, 300, 500, 800, 1200 ]
+    cost [ 200, 800, 1000, 1200, 1500 ]
     desirability { value[-20], step[2], step_size[2], range [6] }
     flags {
         is_fort: true
@@ -68,7 +68,7 @@ building_fort_archers = {
     damage_proof : 1
     meta : { text_id:89, help_link:"message_fort_and_company" }
     info_sound : "Wavs/F_ARCHER.WAV"
-    cost : [ 200, 300, 500, 800, 1200 ]
+    cost : [ 200, 800, 1000, 1200, 1500 ]
     desirability : { value:[-20], step:[2], step_size:[2], range: [6] }
     flags {
         is_fort: true

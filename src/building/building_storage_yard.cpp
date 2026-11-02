@@ -1,4 +1,5 @@
 #include "building_storage_yard.h"
+#include "figure/formation.h"
 
 #include "building/building_barracks.h"
 #include "building/building_storage_room.h"
@@ -468,6 +469,20 @@ storage_worker_task building_storageyard_deliver_weapons_to_police_stations(buil
     return { STORAGEYARD_TASK_NONE };
 }
 
+static int storageyard_available(building_storage_yard *warehouse, e_resource resource) {
+    int available = 0;
+    auto space = warehouse->room();
+    while (space) {
+        if (space->stored_first().value > 0 && space->resource() == resource) {
+            available += space->stored_first().value;
+        }
+        space = space->next_room();
+    }
+    return available;
+}
+
+// OG building_storageyard_resource_to_send: with any legion, the recruiter gets weapons and chariots, the one it
+// holds less of first.
 storage_worker_task building_storageyard_deliver_weapons(building *b) {
     building_storage_yard *warehouse = b->dcast_storage_yard();
     if (!warehouse) {
@@ -478,37 +493,45 @@ storage_worker_task building_storageyard_deliver_weapons(building *b) {
         return { STORAGEYARD_TASK_NONE };
     }
 
-    const bool need_weapons = (g_city.military.has_infantry_batalions() || !!game_features::gameplay_recruiter_not_need_forts);
-    if (!need_weapons) {
+    const bool has_legions = (g_formations.num_batalions > 0 || !!game_features::gameplay_recruiter_not_need_forts);
+    if (!has_legions) {
         return { STORAGEYARD_TASK_NONE };
     }
 
-    const bool weapons_stockpile = g_city.resource.is_stockpiled(RESOURCE_WEAPONS);
-    if (weapons_stockpile) {
-        return { STORAGEYARD_TASK_NONE };
-    }
-
-    auto result = building_get_asker_for_resource(warehouse->tile(), BUILDING_RECRUITER, RESOURCE_WEAPONS, warehouse->road_network(), warehouse->distance_from_entry());
-    building* barracks = building_get(result.building_id);
-    int barracks_want = barracks->need_resource_amount(RESOURCE_WEAPONS);
-
-    if (barracks_want > 0 && warehouse->road_network() == barracks->road_network_id) {
-        int available = 0;
-        auto space = warehouse->room();
-        while (space) {
-            if (space->stored_first().value > 0 && space->resource() == RESOURCE_WEAPONS) {
-                available += space->stored_first().value;
-            }
-            space = space->next_room();
+    auto try_send = [&] (e_resource resource) -> storage_worker_task {
+        if (g_city.resource.is_stockpiled(resource)) {
+            return { STORAGEYARD_TASK_NONE };
         }
 
-        if (available > 0) {
-            int amount = std::min(available, barracks_want);
-            return {STORAGEYARD_TASK_DELIVERING, &warehouse->base, amount, RESOURCE_WEAPONS};
+        auto result = building_get_asker_for_resource(warehouse->tile(), BUILDING_RECRUITER, resource, warehouse->road_network(), warehouse->distance_from_entry());
+        if (!result.building_id) {
+            return { STORAGEYARD_TASK_NONE };
         }
-    }
 
-    return {STORAGEYARD_TASK_NONE};
+        building *barracks = building_get(result.building_id);
+        const int barracks_want = barracks->need_resource_amount(resource);
+        if (barracks_want <= 0 || warehouse->road_network() != barracks->road_network_id) {
+            return { STORAGEYARD_TASK_NONE };
+        }
+
+        const int available = storageyard_available(warehouse, resource);
+        if (available <= 0) {
+            return { STORAGEYARD_TASK_NONE };
+        }
+
+        return { STORAGEYARD_TASK_DELIVERING, &warehouse->base, std::min(available, barracks_want), resource };
+    };
+
+    building *recruiter = building_first(BUILDING_RECRUITER);
+    const bool chariots_first = recruiter && recruiter->stored_amount(RESOURCE_CHARIOTS) < recruiter->stored_amount(RESOURCE_WEAPONS);
+    const e_resource first = chariots_first ? RESOURCE_CHARIOTS : RESOURCE_WEAPONS;
+    const e_resource second = chariots_first ? RESOURCE_WEAPONS : RESOURCE_CHARIOTS;
+
+    storage_worker_task task = try_send(first);
+    if (task.result != STORAGEYARD_TASK_NONE) {
+        return task;
+    }
+    return try_send(second);
 }
 
 storage_worker_task building_storageyard_deliver_timber_to_shipyard_school(building * b) {

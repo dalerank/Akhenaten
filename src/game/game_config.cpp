@@ -86,6 +86,7 @@ namespace game_features {
     game_feature gameplay_change_fort_refund_carry_troops{ "gameplay_change_fort_refund_carry_troops", "#TR_CONFIG_FORT_REFUND_CARRY_TROOPS", false, false };
     game_feature gameplay_change_statue_variants{ "gameplay_change_statue_variants", "#TR_CONFIG_STATUE_VARIANTS", false, false };
     game_feature gameplay_change_guild_statue_service{ "gameplay_change_guild_statue_service", "#TR_CONFIG_GUILD_STATUE_SERVICE", false, false };
+    game_feature gameplay_change_recruit_nearest_fort{ "gameplay_change_recruit_nearest_fort", "#TR_CONFIG_RECRUIT_NEAREST_FORT", false, false };
     game_feature gameplay_change_tower_sentries_go_offroad{ "gameplay_change_tower_sentries_go_offroad", "#TR_CONFIG_TOWER_SENTRIES_GO_OFFROAD", false, false };
     game_feature gameplay_change_farms_deliver_close{ "gameplay_change_farms_deliver_close", "#TR_CONFIG_FARMS_DELIVER_CLOSE", false, false };
     game_feature gameplay_change_only_deliver_to_accepting_granaries{ "gameplay_change_only_deliver_to_accepting_granaries", "#TR_CONFIG_DELIVER_ONLY_TO_ACCEPTING_GRANARIES", false, false };

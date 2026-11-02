@@ -19,6 +19,8 @@ info_window_recruiter {
         warning_text  : text({pos: [20, 46], text:"${text.1}", wrap:px(27), font : FONT_NORMAL_BLACK_ON_LIGHT, multiline:true }),
         icon_weapon   : resource_icon({pos:[24, 100], resource:RESOURCE_WEAPONS  }),
         storage_state : text({pos: [46, 104], text:"${8.10} ${building.first_material_stored}", font: FONT_NORMAL_BLACK_ON_LIGHT, wrap:px(27), multiline:true }),
+        icon_chariots : resource_icon({pos:[240, 100], resource:RESOURCE_CHARIOTS }),
+        chariots_state: text({pos: [262, 104], font: FONT_NORMAL_BLACK_ON_LIGHT }),
         progress_desc : text({pos: [32, 104], font: FONT_NORMAL_BLACK_ON_LIGHT }),
         inner_panel   : inner_panel({pos : [16, 125], size: [27, 5],
                                                 ui : {
@@ -53,6 +55,7 @@ function handle_set_fort_priority() {
 function info_window_recruiter_on_init(window) {
     var b = city.get_building(window.bid)
     var gid = b.meta_text_id
+    window.chariots_state.text = String(b.stored_resource(RESOURCE_CHARIOTS))
     var soldiers_requested = (__formation_batalion_recruits_needed() ? 1 : 0) + __building_barracks_has_tower_sentry_request()
 
     var reason = { group: gid, id: 0 }
