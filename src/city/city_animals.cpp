@@ -598,3 +598,24 @@ bool city_animals_t::breeding_ground_at(tile2i tile, int size) {
     }
     return false;
 }
+
+bool city_animals_t::herd_point_in_area(tile2i a, tile2i b) const {
+    const int x_min = std::min(a.x(), b.x());
+    const int x_max = std::max(a.x(), b.x());
+    const int y_min = std::min(a.y(), b.y());
+    const int y_max = std::max(a.y(), b.y());
+    auto inside = [&] (const herd_point_t &hp) {
+        return hp.valid() && hp.tile.x() >= x_min && hp.tile.x() <= x_max && hp.tile.y() >= y_min && hp.tile.y() <= y_max;
+    };
+    for (const herd_point_t &hp : g_scenario.herd_points_predator) {
+        if (inside(hp)) {
+            return true;
+        }
+    }
+    for (const herd_point_t &hp : g_scenario.herd_points_prey) {
+        if (inside(hp)) {
+            return true;
+        }
+    }
+    return false;
+}

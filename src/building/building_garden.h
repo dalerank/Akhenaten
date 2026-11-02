@@ -15,6 +15,7 @@ public:
 
     virtual e_sound_channel_city sound_channel() const override { return SOUND_CHANNEL_CITY_GARDEN; }
 
+    static bool can_place_on_tile(tile2i tile);
     static void set_image(int grid_offset);
     static void determine_tile(int grid_offset);
 };

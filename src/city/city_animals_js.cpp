@@ -21,3 +21,8 @@ bool __city_animals_breeding_ground_at(tile2i tile, int size) {
     return g_city.animals.breeding_ground_at(tile, size);
 }
 ANK_FUNCTION_2(__city_animals_breeding_ground_at)
+
+bool __city_animals_herd_point_in_area(tile2i a, tile2i b) {
+    return g_city.animals.herd_point_in_area(a, b);
+}
+ANK_FUNCTION_2(__city_animals_herd_point_in_area)

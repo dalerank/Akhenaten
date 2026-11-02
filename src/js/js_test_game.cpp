@@ -1116,6 +1116,14 @@ int __building_static_building_size(int type) {
 }
 ANK_FUNCTION_1(__building_static_building_size);
 
+int __building_static_base_img(int type) {
+    if (type <= BUILDING_NONE || type >= BUILDING_MAX) {
+        return 0;
+    }
+    return building_static_params::get((e_building_type)type).base_img();
+}
+ANK_FUNCTION_1(__building_static_base_img);
+
 static int __test_building_create(int type, int x, int y) {
     if (type <= BUILDING_NONE || type >= BUILDING_MAX) {
         return 0;

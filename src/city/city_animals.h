@@ -21,6 +21,7 @@ struct city_animals_t : public game_system {
     bool can_spawn_ostrich(formation *m);
     void set_herd_figures_to_initial(const formation *m);
     bool breeding_ground_at(tile2i tile, int size);
+    bool herd_point_in_area(tile2i a, tile2i b) const;
     bool get_free_tile(int x, int y, int allow_negative_desirability, tile2i &outtile);
     bool get_roaming_destination(int formation_id, int allow_negative_desirability, tile2i tile, int distance, int direction, tile2i &outtile);
     bool is_herd_spawn_accessible(tile2i tile, e_figure_type herd_type);

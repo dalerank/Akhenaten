@@ -8,6 +8,12 @@ function building_garden_place_impl(ev, place) {
     var min_y = Math.min(ev.start_y, ev.end_y)
     var max_y = Math.max(ev.start_y, ev.end_y)
 
+    if (place && __city_animals_herd_point_in_area({ x: min_x, y: min_y }, { x: max_x, y: max_y })) {
+        __map_property_clear_constructing_and_deleted()
+        city.warnings.show("#cannot_build_over_animal_breeding_grounds")
+        return 0
+    }
+
     var items_placed = 0
     for (var y = min_y; y <= max_y; y++) {
         for (var x = min_x; x <= max_x; x++) {
@@ -15,15 +21,10 @@ function building_garden_place_impl(ev, place) {
             if (!__map_grid_is_inside(tile)) {
                 continue
             }
-            if (terrain.is(tile, TERRAIN_NOT_CLEAR)) {
+            if (!__building_garden_can_place_on_tile(tile)) {
                 continue
             }
-            if (terrain.exists_in_radius(tile, 1, 1, TERRAIN_FLOODPLAIN)) {
-                continue
-            }
-            if (__city_animals_breeding_ground_at(tile, 1)) {
-                __map_property_clear_constructing_and_deleted()
-                city.warnings.show("#cannot_build_over_animal_breeding_grounds")
+            if (__city_animals_herd_point_in_area(tile, tile)) {
                 continue
             }
 
