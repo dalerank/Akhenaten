@@ -31,6 +31,12 @@ tile2i scenario_editor_land_invasion_point(int id);
 
 void scenario_editor_set_land_invasion_point(int id, int x, int y);
 
+tile2i scenario_editor_sea_invasion_point(int id);
+
+tile2i scenario_editor_prey_herd_point(int id);
+
+tile2i scenario_editor_disembark_point(int id);
+
 tile2i scenario_editor_earthquake_point(void);
 
 void scenario_editor_set_earthquake_point(int x, int y);

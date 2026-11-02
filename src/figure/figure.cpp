@@ -616,23 +616,15 @@ bool figure::do_returnhome(e_terrain_usage terrainchoice, short NEXT_ACTION) {
 void figure::draw_map_flag(vec2i pixel, int highlight, vec2i *coord_out) {
     OZZY_PROFILER_FUNCTION();
     painter ctx = game.painter();
-    // base
-    ctx.img_generic(main_image_id, pixel);
-    // flag
-    ctx.img_generic(cart_image_id, pixel + vec2i{ 0, -image_get(cart_image_id)->height });
-    // flag number
-    int number = 0;
-    int id = resource_id;
-    if (id >= MAP_FLAG_INVASION_MIN && id < MAP_FLAG_INVASION_MAX) {
-        number = id - MAP_FLAG_INVASION_MIN + 1;
-    } else if (id >= MAP_FLAG_FISHING_MIN && id < MAP_FLAG_FISHING_MAX) {
-        number = id - MAP_FLAG_FISHING_MIN + 1;
-    } else if (id >= MAP_FLAG_HERD_MIN && id < MAP_FLAG_HERD_MAX) {
-        number = id - MAP_FLAG_HERD_MIN + 1;
+    if (wait_ticks & 1) {
+        pixel.y -= 1;
     }
+    ctx.img_generic(main_image_id, pixel);
+    ctx.img_generic(cart_image_id, pixel + vec2i{ 0, -image_get(cart_image_id)->height });
 
+    const int number = map_flag_number(resource_id);
     if (number > 0) {
-        text_draw_number_colored(number, '@', " ", pixel.x + 6, pixel.y + 7, FONT_SMALL_PLAIN, COLOR_WHITE);
+        text_draw_number_colored(number, '@', " ", pixel.x + 9, pixel.y + 14, FONT_SMALL_PLAIN, COLOR_WHITE);
     }
 }
 

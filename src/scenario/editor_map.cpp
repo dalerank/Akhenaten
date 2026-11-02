@@ -114,6 +114,27 @@ void scenario_editor_set_land_invasion_point(int id, int x, int y) {
     g_scenario.is_saved = 0;
 }
 
+tile2i scenario_editor_sea_invasion_point(int id) {
+    if (id < 0 || (size_t)id >= g_scenario.invasion_points_sea.size()) {
+        return tile2i::invalid;
+    }
+    return g_scenario.invasion_points_sea[id];
+}
+
+tile2i scenario_editor_prey_herd_point(int id) {
+    if (id < 0 || (size_t)id >= g_scenario.herd_points_prey.size()) {
+        return tile2i::invalid;
+    }
+    return g_scenario.herd_points_prey[id].tile;
+}
+
+tile2i scenario_editor_disembark_point(int id) {
+    if (id < 0 || (size_t)id >= g_scenario.disembark_points.size()) {
+        return tile2i::invalid;
+    }
+    return g_scenario.disembark_points[id];
+}
+
 tile2i scenario_editor_earthquake_point(void) {
     return g_scenario.earthquake_point;
 }
