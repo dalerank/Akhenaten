@@ -78,6 +78,7 @@ namespace game_features {
     game_feature gameplay_change_library_service_cap{ "gameplay_change_library_service_cap", "#TR_CONFIG_LIBRARY_SERVICE_CAP", false, false };
     game_feature gameplay_change_dentist_service_cap{ "gameplay_change_dentist_service_cap", "#TR_CONFIG_DENTIST_SERVICE_CAP", false, false };
     game_feature gameplay_change_dentist_toothache{ "gameplay_change_dentist_toothache", "#TR_CONFIG_DENTIST_TOOTHACHE", false, false };
+    game_feature gameplay_change_physician_service_cap{ "gameplay_change_physician_service_cap", "#TR_CONFIG_PHYSICIAN_SERVICE_CAP", false, false };
     game_feature gameplay_change_tower_sentries_go_offroad{ "gameplay_change_tower_sentries_go_offroad", "#TR_CONFIG_TOWER_SENTRIES_GO_OFFROAD", false, false };
     game_feature gameplay_change_farms_deliver_close{ "gameplay_change_farms_deliver_close", "#TR_CONFIG_FARMS_DELIVER_CLOSE", false, false };
     game_feature gameplay_change_only_deliver_to_accepting_granaries{ "gameplay_change_only_deliver_to_accepting_granaries", "#TR_CONFIG_DELIVER_ONLY_TO_ACCEPTING_GRANARIES", false, false };

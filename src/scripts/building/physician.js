@@ -12,6 +12,7 @@ building_physician {
 
   min_houses_coverage : 50
   max_serve_clients : 1000
+  spawn_delays : [3, 7, 15, 29, 44]
   overlay: OVERLAY_PHYSICIAN
   labor_category : LABOR_CATEGORY_WATER_HEALTH,
   sound_channel : SOUND_CHANNEL_CITY_PHYSICIAN
@@ -30,8 +31,7 @@ building_physician {
 
 [es=(building_physician, spawn_figure)]
 function building_physician_spawn_figure(ev) {
-    var building = city.get_building(ev.bid)
-    building.common_spawn_roamer(FIGURE_PHYSICIAN, building_physician.min_houses_coverage, ACTION_60_PHYSICIAN_CREATED)
+    city.get_building(ev.bid).spawn_service_walker(building_physician, FIGURE_PHYSICIAN, ACTION_60_PHYSICIAN_CREATED)
 }
 
 [es=(building_physician, update_month)]

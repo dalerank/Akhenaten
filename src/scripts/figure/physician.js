@@ -28,6 +28,7 @@ figure_physician {
 	max_roam_length : 384
 	permission : epermission_medicine
 	health_heal_amount : 1
+	malaria_risk_reduction : 25
 }
 
 function figure_physician_gods_are_angry() {

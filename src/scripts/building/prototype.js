@@ -81,4 +81,25 @@ Building.prototype.spawn_delay_by_workers = function(delays) {
     if (pct >= 25) return delays[3]
     return delays[4]
 }
+// OG spawn_service_walker: one living walker, day counter (uint8 wrap) by worker percentage.
+Building.prototype.spawn_service_walker = function(params, figure_type, action) {
+    this.check_labor_problem()
+    if (this.has_figure(BUILDING_SLOT_SERVICE) || !this.has_road_access) {
+        return
+    }
+
+    this.common_spawn_labor_seeker(params.min_houses_coverage)
+
+    if (this.worker_percentage <= 0) {
+        return
+    }
+
+    this.figure_spawn_delay = (this.figure_spawn_delay + 1) & 0xff
+    if (this.figure_spawn_delay <= this.spawn_delay_by_workers(params.spawn_delays)) {
+        return
+    }
+
+    this.figure_spawn_delay = 0
+    this.create_roaming_figure(figure_type, action, BUILDING_SLOT_SERVICE)
+}
 Building.prototype.highlight_waypoints = function() { __building_highlight_waypoints(this.id) }

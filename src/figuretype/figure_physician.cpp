@@ -3,6 +3,9 @@
 #include "core/profiler.h"
 #include "building/building_house.h"
 #include "figure/service.h"
+#include "game/game_config.h"
+#include "grid/building.h"
+#include "grid/grid.h"
 #include "js/js_game.h"
 
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_physician);
@@ -41,6 +44,19 @@ void figure_physician::figure_before_action() {
 }
 
 int figure_physician::provide_service() {
+    if (!game_features::gameplay_change_physician_service_cap.to_bool()) {
+        int houses = 0;
+        map_grid_area_foreach(map_grid_get_area(tile(), 1, 2), [&] (tile2i t) {
+            const int bid = map_building_at(t.grid_offset());
+            auto house = bid ? building_get(bid)->dcast_house() : nullptr;
+            if (house && house->house_population() > 0) {
+                house->runtime_data().physician = MAX_COVERAGE;
+                houses++;
+            }
+        });
+        return houses;
+    }
+
     building *physician_building = home();
     if (!physician_building) {
         return 0;

@@ -7,11 +7,15 @@
 #include "grid/malaria_risk.h"
 #include "grid/terrain.h"
 #include "city/city_buildings.h"
+#include "figuretype/figure_physician.h"
+#include "game/game_config.h"
 #include "js/js_game.h"
 
 void building_update_malaria_risk(void) {
     OZZY_PROFILER_FUNCTION();
-    buildings_valid_do([] (building &b) {
+    const bool physician_og = !game_features::gameplay_change_physician_service_cap.to_bool();
+    const int physician_reduction = figure_physician::current_params().malaria_risk_reduction;
+    buildings_valid_do([&] (building &b) {
         int risk = g_malaria_risk.get_max(b.tile, b.size);
 
         int base_terrain_risk = 0;
@@ -39,6 +43,12 @@ void building_update_malaria_risk(void) {
             auto &housed = house->runtime_data();
             if (housed.apothecary > 0) {
                 risk = std::max(base_terrain_risk, risk - 30);
+            }
+
+            // OG lowers an accumulated house risk on each physician visit; our risk is recomputed daily,
+            // so physician coverage applies the same reduction here.
+            if (physician_og && housed.physician > 0) {
+                risk -= physician_reduction;
             }
 
             if (housed.water_supply > 0) {

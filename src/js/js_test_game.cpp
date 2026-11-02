@@ -41,6 +41,8 @@
 #include "grid/building.h"
 #include "grid/building_tiles.h"
 #include "grid/gems.h"
+#include "grid/malaria_risk.h"
+#include "city/city_malaria_risk.h"
 #include "grid/granite.h"
 #include "grid/limestone.h"
 #include "grid/sandstone.h"
@@ -4054,6 +4056,12 @@ static void __test_building_set_workers(int bid, int workers) {
     }
 }
 ANK_FUNCTION_2(__test_building_set_workers);
+
+static void __test_update_malaria_risk() {
+    g_malaria_risk.update();
+    building_update_malaria_risk();
+}
+ANK_FUNCTION(__test_update_malaria_risk);
 
 static void __test_city_buildings_update_tick() {
     g_city.buildings.update_tick(/*refresh_only*/true);

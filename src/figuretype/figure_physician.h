@@ -17,6 +17,7 @@ public:
 
     struct static_params : public figure_static_params {
         int health_heal_amount;
+        int malaria_risk_reduction;
     } FIGURE_STATIC_DATA_T;
 
     virtual void on_create() override {}
@@ -24,4 +25,4 @@ public:
     virtual void figure_before_action() override;
     virtual int provide_service() override;
 };
-ANK_CONFIG_STRUCT(figure_physician::static_params, health_heal_amount)
+ANK_CONFIG_STRUCT(figure_physician::static_params, health_heal_amount, malaria_risk_reduction)
