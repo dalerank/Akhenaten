@@ -50,6 +50,10 @@ bool building_bricklayers_guild::can_spawn_bricklayer_man() {
         return true;
     }
 
+    if (!building_statue::guild_service_enabled()) {
+        return false;
+    }
+
     // If no monument is found, check for statues that need service
     bool has_statue = false;
     buildings_valid_do([&] (building &b) {
@@ -121,6 +125,10 @@ void building_bricklayers_guild::spawn_figure() {
         if (auto bricklayer = smart_cast<figure_bricklayer>(f)) {
             bricklayer->runtime_data().destination_bid = monument->id;
         }
+        return;
+    }
+
+    if (!building_statue::guild_service_enabled()) {
         return;
     }
 

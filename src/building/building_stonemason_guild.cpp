@@ -81,6 +81,10 @@ void building_stonemason_guild::spawn_figure() {
         return;
     }
 
+    if (!building_statue::guild_service_enabled()) {
+        return;
+    }
+
     // If no monument is found, create a stonemason figure with a statue destination
     int min_service_value = 9999;
     building_impl *min_service_statue = nullptr;

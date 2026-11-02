@@ -166,6 +166,8 @@ localization_ru_f = [
     { key:"#TR_CONFIG_MORTUARY_MOTHBALLED_LINEN", text:"Морг-ремейк: эмбальмеры не выходят, пока лён законсервирован (не как в оригинале)"}
     { key:"#TR_CONFIG_FORT_ROTATION", text:"Форт-ремейк: клавиша поворота переставляет плац вокруг форта (не как в оригинале)"}
     { key:"#TR_CONFIG_FORT_REFUND_CARRY_TROOPS", text:"Форт-ремейк: снос форта возвращает войска, перенесённые из прошлой миссии (не как в оригинале)"}
+    { key:"#TR_CONFIG_STATUE_VARIANTS", text:"Статуи-ремейк: случайный вид при выборе, отдельные клавиши поворота и вида, дополнительные виды статуй (не как в оригинале)"}
+    { key:"#TR_CONFIG_GUILD_STATUE_SERVICE", text:"Гильдии-ремейк: свободные рабочие гильдий ухаживают за статуями (не как в оригинале)"}
     { key:"#TR_CONFIG_TOWER_SENTRIES_GO_OFFROAD", text:"Башенные часовые не нуждаются в дороге"}
     { key:"#TR_CONFIG_FARMS_DELIVER_CLOSE", text:"Фермы и причалы доставляют еду только в близкорасположенные амбары"}
     { key:"#TR_CONFIG_DELIVER_ONLY_TO_ACCEPTING_GRANARIES", text:"Не доставлять еду в амбары с включенной доставкой"}

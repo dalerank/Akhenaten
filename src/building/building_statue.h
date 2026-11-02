@@ -35,6 +35,7 @@ public:
     uint8_t service() const { return runtime_data().service; }
     void set_service(uint8_t v) { runtime_data().service = v; }
     static int get_image(e_building_type type, int orientation, int variant);
+    static bool guild_service_enabled();
 };
 ANK_CONFIG_PROPERTY(building_statue::runtime_data_t, variant)
 ANK_CONFIG_STRUCT(building_statue::statue_params_t, variants)

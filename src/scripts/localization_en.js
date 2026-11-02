@@ -101,6 +101,8 @@ localization_en = [
   {key:"#TR_CONFIG_MORTUARY_MOTHBALLED_LINEN", text:"Mortuary remake: no embalmers while linen is mothballed (not original Pharaoh)"}
   {key:"#TR_CONFIG_FORT_ROTATION", text:"Fort remake: the rotate key moves the parade ground around the fort (not original Pharaoh)"}
   {key:"#TR_CONFIG_FORT_REFUND_CARRY_TROOPS", text:"Fort remake: demolishing a fort returns troops carried over from the previous mission (not original Pharaoh)"}
+  {key:"#TR_CONFIG_STATUE_VARIANTS", text:"Statue remake: random starting look, separate rotate and variant keys, extra statue looks (not original Pharaoh)"}
+  {key:"#TR_CONFIG_GUILD_STATUE_SERVICE", text:"Guild remake: idle guild workers tend statues (not original Pharaoh)"}
   {key:"#TR_CONFIG_TRADER_CAPACITY_1600", text:"Larger trader capacity (1600 per visit; not yearly empire limit)"}
   {key:"#TR_CONFIG_TRADER_PER_GOOD_1600", text:"New Era: traders buy/sell up to 1600 of each good per visit (not yearly limit; not total-bag only)"}
   {key:"#trader_capacity_per_good", text:"Capacity (per good)"}

@@ -14,7 +14,7 @@ building_small_statue = {
     }
     info_sound : "Wavs/STATUE1.WAV"
     building_size : 1
-    cost : [ 3, 5, 8, 13, 21 ]
+    cost : [ 3, 10, 12, 14, 18 ]
     desirability : { value:[3], step:[1], step_size:[-1], range: [3] }
     flags {
       is_statue: true
@@ -32,7 +32,7 @@ function building_small_statue_setup_preview_graphics(ev) {
 
 [es=(building_small_statue, setup_building_variant)]
 function building_small_statue_setup_building_variant(ev) {
-    city_planner.custom_building_variant = Math.floor(Math.random() * building_small_statue.variants.length)
+    statue_setup_building_variant(building_small_statue.variants)
 }
 
 [es=(building_small_statue, next_building_variant)]

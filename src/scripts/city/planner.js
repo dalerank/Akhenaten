@@ -56,6 +56,11 @@ city_planner = extend(__city_planner, {
 
 [es=event_rotate_building]
 function city_planner_on_rotate_building(ev) {
+    if (statue_is_type(city_planner.build_type) && statue_og_mode()) {
+        statue_og_advance()
+        __city_planner_update_orientations()
+        return
+    }
     city_planner.rotate_by_hotkey()
     __city_planner_update_orientations()
 }

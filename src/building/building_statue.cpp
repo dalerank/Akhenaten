@@ -71,6 +71,11 @@ int building_statue::get_image(e_building_type type, int orientation, int varian
     return (imdesc + orientation).tid();
 }
 
+// Guild workers tending statues is a remake addition; OG statues need no service.
+bool building_statue::guild_service_enabled() {
+    return game_features::gameplay_change_guild_statue_service.to_bool();
+}
+
 void building_statue::on_create(int orientation) {
     base.orientation = orientation;
 

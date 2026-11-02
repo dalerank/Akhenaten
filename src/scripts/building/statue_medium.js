@@ -31,7 +31,7 @@ function building_medium_statue_setup_preview_graphics(ev) {
 
 [es=(building_medium_statue, setup_building_variant)]
 function building_medium_statue_setup_building_variant(ev) {
-    city_planner.custom_building_variant = Math.floor(Math.random() * building_medium_statue.variants.length)
+    statue_setup_building_variant(building_medium_statue.variants)
 }
 
 [es=(building_medium_statue, next_building_variant)]
