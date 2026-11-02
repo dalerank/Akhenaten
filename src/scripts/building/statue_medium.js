@@ -13,7 +13,7 @@ building_medium_statue = {
     }
     info_sound : "Wavs/STATUE1.WAV"
     building_size : 2
-    cost : [ 12, 18, 24, 30, 50 ]
+    cost : [ 12, 48, 60, 72, 90 ]
     desirability : { value:[10], step:[1], step_size:[-2], range: [4] }
     flags {
       is_statue: true

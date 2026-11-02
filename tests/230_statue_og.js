@@ -31,6 +31,14 @@ function run_test() {
             return
         }
     }
+    var mcost = building_medium_statue.cost
+    var mog = [12, 48, 60, 72, 90]
+    for (var m = 0; m < mog.length; m++) {
+        if (mcost[m] != mog[m]) {
+            test230_fail('medium statue cost[' + m + '] expected ' + mog[m] + ' got ' + mcost[m])
+            return
+        }
+    }
     __log_marker('test230_cost')
 
     test_reload_city_session('data/default.map')
