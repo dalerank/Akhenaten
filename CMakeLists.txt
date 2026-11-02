@@ -261,11 +261,6 @@ if(NOT WIN_EMSCRIPTEN AND NOT MACOS_X64_BUILD)
     if(WIN32)
         set(CURL_USE_SCHANNEL ON CACHE BOOL "" FORCE)  # Use Windows Schannel on Windows
         set(CURL_USE_OPENSSL OFF CACHE BOOL "" FORCE)
-    elseif(APPLE)
-        # Native Secure Transport: Homebrew's default openssl headers in /opt/homebrew/include
-        # shadow openssl@3 and break curl's vtls/openssl.c.
-        set(CURL_USE_SECTRANSP ON CACHE BOOL "" FORCE)
-        set(CURL_USE_OPENSSL OFF CACHE BOOL "" FORCE)
     else()
         set(CURL_USE_SCHANNEL OFF CACHE BOOL "" FORCE)
         set(CURL_USE_OPENSSL ON CACHE BOOL "" FORCE)  # Use OpenSSL on Linux/Unix
