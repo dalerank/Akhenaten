@@ -7,7 +7,6 @@ public:
     BUILDING_METAINFO(BUILDING_MORTUARY, building_mortuary, building_impl)
 
     struct static_params : public building_static_params {
-        uint16_t linen_required_for_spawn;
         uint16_t linen_required_for_animation;
         uint16_t monthly_linen_consumption;
     } BUILDING_STATIC_DATA_T;
@@ -21,7 +20,6 @@ public:
 
     virtual building_mortuary *dcast_mortuary() override { return this; }
 
-    virtual void spawn_figure() override;
     virtual void update_month() override;
     virtual void update_year() override;
     virtual e_overlay get_overlay() const override { return OVERLAY_MORTUARY; }
@@ -29,6 +27,6 @@ public:
     virtual int animation_speed(int speed) const override { return 3; }
     virtual void update_count() const override;
 };
-ANK_CONFIG_STRUCT(building_mortuary::static_params, linen_required_for_spawn, linen_required_for_animation, monthly_linen_consumption)
+ANK_CONFIG_STRUCT(building_mortuary::static_params, linen_required_for_animation, monthly_linen_consumption)
 ANK_CONFIG_PROPERTY(building_mortuary::runtime_data_t, residents_served_this_month, residents_served_this_year, total_residents_served, months_active)
 

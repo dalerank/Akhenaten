@@ -43,7 +43,10 @@ building_mortuary {
     resource : RESOURCE_LINEN
   }
   max_serve_clients : 1000
-  linen_required_for_spawn : 20
+  // OG Pharaoh_Model_*.txt: linen per embalmer and its % with a Seth complex altar (Large Temple to Seth row)
+  walker_cost : [5, 10, 20, 40, 60]
+  seth_altar_walker_cost_pct : [12, 60, 60, 70, 90]
+  spawn_delays : [3, 7, 15, 29, 44]
   linen_required_for_animation : 100
   monthly_linen_consumption : 20
   min_houses_coverage : 50
@@ -59,6 +62,25 @@ building_mortuary {
   flags {
     work_anim: true
   }
+}
+
+function building_mortuary_walker_cost() {
+    var params = building_mortuary
+    var cost = dcy_get(params.walker_cost)
+    var complex = city.get_temple_complex()
+    if (complex && complex.type == BUILDING_TEMPLE_COMPLEX_SETH && complex.has_upgrade(TEMPLE_COMPLEX_UPGRADE_ALTAR)) {
+        cost = Math.floor(cost * dcy_get(params.seth_altar_walker_cost_pct) / 100)
+    }
+    return cost
+}
+
+[es=(building_mortuary, spawn_figure)]
+function building_mortuary_spawn_figure(ev) {
+    if (game_features.gameplay_change_mortuary_mothballed_linen && __city_resource_is_mothballed(RESOURCE_LINEN)) {
+        return
+    }
+
+    building_spawn_stock_walker(city.get_building(ev.bid), building_mortuary, FIGURE_EMBALMER, RESOURCE_LINEN, building_mortuary_walker_cost())
 }
 
 [es=(building_mortuary, on_place_checks)]

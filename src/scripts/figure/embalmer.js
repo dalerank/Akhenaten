@@ -95,6 +95,14 @@ function figure_embalmer_city_phrase_key() {
 	return keys[Math.floor(Math.random() * keys.length)]
 }
 
+// OG figure_phrase_determine: the embalmer's own phrase (e01) below health 30, else the city phrase.
+function figure_embalmer_phrase_key() {
+	if (city.health_rating < 30) {
+		return "embalmer_health_worsening"
+	}
+	return figure_embalmer_city_phrase_key()
+}
+
 [es=(figure_embalmer, setup_phrase)]
 function figure_embalmer_setup_phrase(ev) {
 	var f = city.get_figure(ev.fid)
@@ -102,5 +110,5 @@ function figure_embalmer_setup_phrase(ev) {
 		return
 	}
 
-	figure_apply_phrase(f, figure_embalmer_city_phrase_key())
+	figure_apply_phrase(f, figure_embalmer_phrase_key())
 }

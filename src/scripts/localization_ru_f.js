@@ -162,6 +162,8 @@ localization_ru_f = [
     { key:"#TR_CONFIG_DENTIST_TOOTHACHE", text:"Дантист-ремейк: у знати болят зубы, дантисты сами находят и лечат дома знати (не как в оригинале)"}
     { key:"#TR_CONFIG_PHYSICIAN_SERVICE_CAP", text:"Врач-ремейк: обслуживает не больше max_serve_clients жителей в месяц, обновляет только дома с покрытием ниже половины и повышает здоровье дома вместо снижения риска малярии (не как в оригинале)"}
     { key:"#TR_CONFIG_APOTHECARY_REMAKE", text:"Аптекарь-ремейк: травник поднимает здоровье домов до 50 и снижает риск малярии на 30 (не как в оригинале)"}
+    { key:"#TR_CONFIG_MORTUARY_LINEN_UPKEEP", text:"Морг-ремейк: работающий морг ещё и тратит лён каждый месяц (не как в оригинале)"}
+    { key:"#TR_CONFIG_MORTUARY_MOTHBALLED_LINEN", text:"Морг-ремейк: эмбальмеры не выходят, пока лён законсервирован (не как в оригинале)"}
     { key:"#TR_CONFIG_TOWER_SENTRIES_GO_OFFROAD", text:"Башенные часовые не нуждаются в дороге"}
     { key:"#TR_CONFIG_FARMS_DELIVER_CLOSE", text:"Фермы и причалы доставляют еду только в близкорасположенные амбары"}
     { key:"#TR_CONFIG_DELIVER_ONLY_TO_ACCEPTING_GRANARIES", text:"Не доставлять еду в амбары с включенной доставкой"}

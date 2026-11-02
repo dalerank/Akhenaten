@@ -40,33 +40,8 @@ function education_walker_cost(params) {
     return cost
 }
 
-// OG spawn_stock_walker: the day counter keeps running (uint8 wrap) while papyrus is short;
-// papyrus is paid only when the walker leaves.
 function education_spawn_stock_walker(building, params, figure_type) {
-    building.check_labor_problem()
-    if (building.has_figure(BUILDING_SLOT_SERVICE) || !building.has_road_access) {
-        return
-    }
-
-    building.common_spawn_labor_seeker(params.min_houses_coverage)
-
-    if (building.worker_percentage <= 0) {
-        return
-    }
-
-    building.figure_spawn_delay = (building.figure_spawn_delay + 1) & 0xff
-    if (building.figure_spawn_delay <= building.spawn_delay_by_workers(params.spawn_delays)) {
-        return
-    }
-
-    var cost = education_walker_cost(params)
-    if (cost > building.stored_resource(RESOURCE_PAPYRUS)) {
-        return
-    }
-
-    building.consume_resource(RESOURCE_PAPYRUS, cost)
-    building.figure_spawn_delay = 0
-    building.create_roaming_figure(figure_type, ACTION_125_ROAMER_ROAMING, BUILDING_SLOT_SERVICE)
+    building_spawn_stock_walker(building, params, figure_type, RESOURCE_PAPYRUS, education_walker_cost(params))
 }
 
 function building_library_walker_cost() {

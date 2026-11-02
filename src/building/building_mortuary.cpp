@@ -20,28 +20,6 @@ BUILDING_RUNTIME_DATA_IMPL(building_mortuary)
 
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_mortuary);
 
-void building_mortuary::spawn_figure() {
-    if (g_city.resource.is_mothballed(RESOURCE_LINEN)) {
-        return;
-    }
-
-    if (num_workers() <= 0) {
-        return;
-    }
-
-    const auto &params = current_params();
-    if (base.stored_amount(RESOURCE_LINEN) < params.linen_required_for_spawn) {
-        return;
-    }
-
-    if (common_spawn_figure_trigger(params.min_houses_coverage, BUILDING_SLOT_SERVICE)) {
-        const short spent = std::min<short>(base.stored_amount(RESOURCE_LINEN), params.linen_required_for_spawn);
-        consume_resource(RESOURCE_LINEN, spent);
-
-        create_roaming_figure(FIGURE_EMBALMER, (e_figure_action)ACTION_125_ROAMER_ROAMING, BUILDING_SLOT_SERVICE);
-    }
-}
-
 void building_mortuary::update_count() const {
     g_city.health.add_mortuary_workers(num_workers());
 }
@@ -61,8 +39,7 @@ void building_mortuary::update_month() {
     // Reset monthly counter
     data.residents_served_this_month = 0;
 
-    // Monthly linen consumption if there are workers and road access
-    if (num_workers() > 0 && has_road_access()) {
+    if (game_features::gameplay_change_mortuary_linen_upkeep.to_bool() && num_workers() > 0 && has_road_access()) {
         const auto &params = current_params();
         if (params.monthly_linen_consumption > 0) {
             int pct_workers = worker_percentage();
