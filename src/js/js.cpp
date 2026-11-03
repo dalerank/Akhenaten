@@ -1028,6 +1028,7 @@ void js_reset_vm_state() {
     js_register_enemy_army(vm.J);
     js_register_temple_complex_building(vm.J);
     js_register_storage_yard(vm.J);
+    js_register_dock(vm.J);
     js_register_monument(vm.J);
     js_register_ui_objects(vm.J);
     //js_register_mouse_functions(vm.J);

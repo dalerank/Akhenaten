@@ -22,6 +22,8 @@
 #include "js/js_game.h"
 
 
+const e_trade_ship_action_tokens_t ANK_CONFIG_ENUM(e_trade_ship_action_tokens)
+
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_trade_ship);
 
 int figure_trade_ship::max_capacity() const {

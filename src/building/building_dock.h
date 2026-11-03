@@ -61,7 +61,7 @@ public:
     tile2i reid_tile() const;
 };
 
-ANK_CONFIG_PROPERTY(building_dock::runtime_data_t, has_fish, num_ships)
+ANK_CONFIG_PROPERTY(building_dock::runtime_data_t, has_fish, num_ships, trade_ship)
 
 building_dest map_get_free_destination_dock(int ship_id);
 /** Free pier with score strictly greater than min_exclusive_score; no reservation change if none. */

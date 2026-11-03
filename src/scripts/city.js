@@ -411,13 +411,6 @@ city.get_storage_yard = function(building_id) {
     return new StorageYard(building_id)
 }
 
-city.get_dock = function(building_id) {
-    if (!__building_is_dock(building_id)) {
-        return null
-    }
-    return new Dock(building_id)
-}
-
 city.get_temple_complex = function() {
     var id = __city_temple_complex_id()
     return id > 0 ? new TempleComplex(id) : null
