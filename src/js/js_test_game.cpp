@@ -1640,6 +1640,11 @@ static int __test_enemy_archer_fire_initial_missile(int fid) {
 }
 ANK_FUNCTION_1(__test_enemy_archer_fire_initial_missile);
 
+static void __test_make_floodplain_water(int x, int y) {
+    map_terrain_add(tile2i(x, y), TERRAIN_WATER | TERRAIN_FLOODPLAIN);
+}
+ANK_FUNCTION_2(__test_make_floodplain_water);
+
 static void __test_buildings_generate_figures() {
     g_city.buildings_generate_figure();
 }

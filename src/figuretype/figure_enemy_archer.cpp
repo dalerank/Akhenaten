@@ -24,6 +24,7 @@ REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_barbarian_archer)
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_assyrian_archer)
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_canaanite_archer)
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_egyptian_archer)
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_egyptian_camel)
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_egyptian_mounted_archer)
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_hittite_archer)
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_hyksos_archer)
@@ -124,12 +125,14 @@ void figure_enemy_archer::enemy_marching(formation *m) {
     OZZY_PROFILER_FUNCTION();
     base.wait_ticks--;
 
-    if (is_mounted_archer()) {
-        if (city_sound_update_march_horse()) {
-            g_sound.play_effect(SOUND_EFFECT_HORSE_MOVING);
+    if (!silent_on_march()) {
+        if (is_mounted_archer()) {
+            if (city_sound_update_march_horse()) {
+                g_sound.play_effect(SOUND_EFFECT_HORSE_MOVING);
+            }
+        } else if (city_sound_update_march_enemy()) {
+            g_sound.play_effect(SOUND_EFFECT_MARCHING);
         }
-    } else if (city_sound_update_march_enemy()) {
-        g_sound.play_effect(SOUND_EFFECT_MARCHING);
     }
 
     if (base.wait_ticks <= 0) {
@@ -162,12 +165,14 @@ void figure_enemy_archer::enemy_fighting(formation *m) {
         advance_action(ACTION_0_ENEMY_ARCHER_INITIAL);
     }
 
-    if (is_mounted_archer()) {
-        if (city_sound_update_march_horse()) {
-            g_sound.play_effect(SOUND_EFFECT_HORSE_MOVING);
+    if (!silent_on_march()) {
+        if (is_mounted_archer()) {
+            if (city_sound_update_march_horse()) {
+                g_sound.play_effect(SOUND_EFFECT_HORSE_MOVING);
+            }
+        } else if (city_sound_update_march_enemy()) {
+            g_sound.play_effect(SOUND_EFFECT_MARCHING);
         }
-    } else if (city_sound_update_march_enemy()) {
-        g_sound.play_effect(SOUND_EFFECT_MARCHING);
     }
 
     figure_id target_id = base.target_figure_id;
@@ -218,8 +223,10 @@ void figure_enemy_archer::figure_action() {
         return;
     }
 
-    // OG enemy_begin: foot missile drowns on flooded floodplain.
-    if (map_terrain_is(tile(), TERRAIN_WATER) && map_terrain_is(tile(), TERRAIN_FLOODPLAIN)) {
+    // OG enemy_begin(drowns): foot missile / mounted archer drown; camel does not.
+    if (drowns_on_floodplain()
+        && map_terrain_is(tile(), TERRAIN_WATER)
+        && map_terrain_is(tile(), TERRAIN_FLOODPLAIN)) {
         poof();
         return;
     }

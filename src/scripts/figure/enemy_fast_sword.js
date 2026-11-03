@@ -126,8 +126,5 @@ function figure_egyptian_heavy_sword_setup_phrase(ev) { figure_enemy_fast_sword_
 [es=(figure_egyptian_axe, setup_phrase)]
 function figure_egyptian_axe_setup_phrase(ev) { figure_enemy_fast_sword_setup_phrase(ev) }
 
-[es=(figure_egyptian_camel, setup_phrase)]
-function figure_egyptian_camel_setup_phrase(ev) { figure_enemy_fast_sword_setup_phrase(ev) }
-
 [es=(figure_kingdome_infantry, setup_phrase)]
 function figure_kingdome_infantry_setup_phrase(ev) { figure_enemy_fast_sword_setup_phrase(ev) }

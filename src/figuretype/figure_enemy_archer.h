@@ -193,7 +193,25 @@ public:
 ANK_CONFIG_STRUCT(figure_seapeople_archer::static_params,
     attack_distance, missile_type)
 
-// Egyptian mounted archer — archer AI + horse march SFX (enemy_marching) + speed.
+// Egyptian camel — OG enemy_rider_action(0, 1): missile in INITIAL, no drown, speed 1,
+// silent march; camel die/hit SFX in sound.cpp. TEMP rider art until pack dump.
+class figure_egyptian_camel : public figure_enemy_archer {
+public:
+    FIGURE_METAINFO(FIGURE_ENEMY_EGYPTIAN_CAMEL, figure_egyptian_camel)
+    figure_egyptian_camel(figure *f) : figure_enemy_archer(f) {}
+
+    struct static_params : public base_params_t, public figure_static_params {
+    } FIGURE_STATIC_DATA_T;
+
+    const base_params_t &base_params() const override { return static_cast<const base_params_t &>(current_params()); }
+    virtual bool drowns_on_floodplain() const override { return false; }
+    virtual bool silent_on_march() const override { return true; }
+    virtual int8_t enemy_speed_multiplier() const override { return 1; }
+};
+ANK_CONFIG_STRUCT(figure_egyptian_camel::static_params,
+    attack_distance, missile_type)
+
+// Egyptian mounted archer — OG enemy_rider_action(1, 3): archer AI + horse march + drown.
 class figure_egyptian_mounted_archer : public figure_enemy_archer {
 public:
     FIGURE_METAINFO(FIGURE_ENEMY_EGYPTIAN_MOUNTED_ARCHER, figure_egyptian_mounted_archer)

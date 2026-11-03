@@ -26,7 +26,8 @@ public:
     virtual bool is_archer() const { return false; }
     virtual bool is_spearman() const { return false; }
     virtual bool is_mounted_archer() const { return false; }
-    // March/fight tick scale; mounts (camel, mounted archer) return >1.
+    virtual bool drowns_on_floodplain() const { return true; }
+    virtual bool silent_on_march() const { return false; }
     virtual int8_t enemy_speed_multiplier() const { return 1; }
     virtual e_figure_type missile_type() const { return FIGURE_NONE; }
     virtual bool ignore_pharaoh_soldiers() const { return false; }

@@ -34,7 +34,6 @@ REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_egyptian_fast_sword)
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_egyptian_sword)
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_egyptian_heavy_sword)
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_egyptian_axe)
-REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_egyptian_camel)
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_kingdome_infantry)
 
 tile2i figure_enemy_fast_sword::get_formation_position(formation *m, int figure_index) {
@@ -66,8 +65,10 @@ void figure_enemy_fast_sword::figure_action() {
         return;
     }
 
-    // OG enemy_begin: FIG_ENEMY_AUX / foot infantry drowns on flooded floodplain.
-    if (map_terrain_is(tile(), TERRAIN_WATER) && map_terrain_is(tile(), TERRAIN_FLOODPLAIN)) {
+    // OG enemy_begin(drowns): foot infantry drowns; elephant overrides false.
+    if (drowns_on_floodplain()
+        && map_terrain_is(tile(), TERRAIN_WATER)
+        && map_terrain_is(tile(), TERRAIN_FLOODPLAIN)) {
         poof();
         return;
     }
@@ -130,8 +131,8 @@ void figure_enemy_fast_sword::enemy_fighting(formation *m) {
         advance_action(ACTION_151_ENEMY_FAST_SWORD_INITIAL);
     }
 
-    // Camel/elephant: no foot-march loop. Chariot / kingdom mounted: horse.
-    if (type() != FIGURE_ENEMY_EGYPTIAN_CAMEL && type() != FIGURE_ENEMY_EGYPTIAN_ELEPHANT) {
+    // OG: camel/elephant silent; chariot / kingdom mounted: horse; else foot march.
+    if (!silent_on_march()) {
         if (type() == FIGURE_ENEMY_EGYPTIAN_CHARIOT
             || type() == FIGURE_ENEMY_KINGDOME_MOUNTED) {
             if (city_sound_update_march_horse()) {

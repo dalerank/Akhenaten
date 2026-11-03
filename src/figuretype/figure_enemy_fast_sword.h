@@ -212,21 +212,6 @@ public:
 };
 ANK_CONFIG_STRUCT(figure_egyptian_axe::static_params, interval_attack_delay)
 
-// Egyptian camel — melee mount (fast_sword AI, faster march; silent march SFX
-// in figure_enemy_fast_sword; camel die/hit in sound.cpp).
-class figure_egyptian_camel : public figure_enemy_fast_sword {
-public:
-    FIGURE_METAINFO(FIGURE_ENEMY_EGYPTIAN_CAMEL, figure_egyptian_camel)
-    figure_egyptian_camel(figure *f) : figure_enemy_fast_sword(f) {}
-
-    struct static_params : public base_params_t, public figure_static_params {
-    } FIGURE_STATIC_DATA_T;
-
-    virtual int8_t interval_attack_delay() const override { return current_params().interval_attack_delay; }
-    virtual int8_t enemy_speed_multiplier() const override { return 2; }
-};
-ANK_CONFIG_STRUCT(figure_egyptian_camel::static_params, interval_attack_delay)
-
 // Kingdom infantry (57). Favour-army melee; formation_kingdome_pause/retreat key type.
 class figure_kingdome_infantry : public figure_enemy_fast_sword {
 public:
