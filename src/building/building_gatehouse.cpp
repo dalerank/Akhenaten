@@ -19,7 +19,6 @@
 #include "grid/road_access.h"
 #include "grid/orientation.h"
 #include "grid/routing/routing_terrain.h"
-#include "building/building_barracks.h"
 #include "building/building_wall.h"
 
 #include "js/js_game.h"
@@ -331,14 +330,6 @@ void building_gatehouse::spawn_figure() {
     }
 
     main_impl->common_spawn_labor_seeker(main_building->params().min_houses_coverage);
-    if (main_building->num_workers <= 0) {
-        return;
-    }
-
-    // Request sentry from barracks if no sentry is present
-    if (!main_building->has_figure(0)) {
-        building_barracks_request_tower_sentry();
-    }
 }
 
 bool building_mud_gatehouse::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {
@@ -646,13 +637,6 @@ void building_decorative_gatehouse::spawn_figure() {
     }
 
     common_spawn_labor_seeker(base.params().min_houses_coverage);
-    if (base.num_workers <= 0) {
-        return;
-    }
-
-    if (!base.has_figure(0)) {
-        building_barracks_request_tower_sentry();
-    }
 }
 
 void building_tower_gatehouse::update_map_orientation(int map_orientation) {

@@ -29,9 +29,13 @@ figure_tower_sentry {
 	category: figure_category_armed
 	max_damage : 40
 	attack_value : 6
-	terrain_usage : TERRAIN_USAGE_ANY
+	is_soldier : true
+	terrain_usage : TERRAIN_USAGE_WALLS
+	max_roam_length : 800
 	max_amount : 25
 	missile_delay : 40
+	missile_attack_value : 6
+	boards_ferry : true
 }
 
 function figure_tower_sentry_gods_are_angry() {

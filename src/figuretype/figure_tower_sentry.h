@@ -2,6 +2,7 @@
 
 #include "figure/figure.h"
 
+// Julius/Akhenaten action ids (OG Pharaoh wallguy uses 8..12 for the same states).
 enum e_tower_sentry_action {
     ACTION_150_TOWER_SENTRY_ATTACK = 150,
     ACTION_170_TOWER_SENTRY_AT_REST = 170,
@@ -28,7 +29,6 @@ public:
     virtual void figure_before_action() override;
     virtual void figure_action() override;
     virtual void update_animation() override;
-    virtual void poof() override;
 
     void tower_sentry_pick_target();
     int tower_sentry_init_patrol(building *b, int *x_tile, int *y_tile);
