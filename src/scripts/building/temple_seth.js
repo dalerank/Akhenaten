@@ -4,9 +4,9 @@ log_info("akhenaten: building_temple_seth started")
 building_temple_seth {
     type: BUILDING_TEMPLE_SETH
     animations {
-      preview { pack:PACK_GENERAL, id:19 }
-      base { pack:PACK_GENERAL, id:19 }
-      work { pos[70, -133], pack:PACK_GENERAL, id:19, offset:1, max_frames:11 }
+      preview { pack:PACK_GENERAL, id:21 }
+      base { pack:PACK_GENERAL, id:21 }
+      work { pos[78, -108], pack:PACK_GENERAL, id:21, offset:1, max_frames:12 }
     }
 
     min_houses_coverage : 50
@@ -17,11 +17,11 @@ building_temple_seth {
     building_size : 3
     meta { text_id: 95, help_link:"message_building_shrine_and_temple" }
     info_sound : "Wavs/tem_seth_l.wav"
-    cost [ 30, 50, 80, 150, 300 ]
+    cost [ 30, 120, 150, 180, 225 ]
     desirability { value[6], step[2], step_size[-2], range[6] }
     laborers[8]
     fire_risk[0]
-    damage_risk[2]
+    damage_risk[10]
 
     flags {
       is_temple: true

@@ -6,7 +6,7 @@ building_temple_osiris {
     animations {
       preview { pack:PACK_GENERAL, id:25 }
       base { pack:PACK_GENERAL, id:25 }
-      work { pos[80, -125], pack:PACK_GENERAL, id:25, offset:1, max_frames:8 }
+      work { pos[77, -106], pack:PACK_GENERAL, id:25, offset:1, max_frames:12 }
     }
 
     min_houses_coverage : 50
@@ -17,11 +17,11 @@ building_temple_osiris {
     building_size : 3
     meta { text_id: 92, help_link:"message_building_shrine_and_temple" }
     info_sound : "Wavs/tem_osiris_l.wav"
-    cost [ 30, 50, 80, 150, 300 ]
+    cost [ 30, 120, 150, 180, 225 ]
     desirability { value[6], step[2], step_size[-2], range[6] }
     laborers[8]
     fire_risk[0]
-    damage_risk[2]
+    damage_risk[10]
 
     flags {
       is_temple: true
