@@ -10,11 +10,13 @@ enum e_granary_task {
     GRANARY_TASK_NONE = 0,
     GRANARY_TASK_GETTING = 1,
     GRANARY_TASK_EMPTYING = 2,
+    GRANARY_TASK_GETTING_MOAR = 3,
 };
 
 struct granary_task_status {
     e_granary_task status;
     e_resource resource;
+    int amount = 0;
 };
 
 struct granary_getting_result {
@@ -39,6 +41,7 @@ public:
         uint8_t min_workers_percent_for_getting;
         uint16_t max_capacty_stored;
         uint8_t allow_food_types;
+        int16_t fancy_treshold_desirability = 30;
     } BUILDING_STATIC_DATA_T;
 
     struct runtime_data_t {
@@ -49,6 +52,7 @@ public:
     virtual void on_create(int orientation) override;
     virtual void on_post_load() override;
     virtual void spawn_figure() override;
+    virtual void update_graphic() override;
     virtual bool draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color mask) override;
     virtual void update_day() override;
     virtual void bind_dynamic(io_buffer *iob, size_t version) override;
@@ -74,7 +78,7 @@ public:
 ANK_CONFIG_PROPERTY(building_granary::runtime_data_t, reserved)
 ANK_CONFIG_STRUCT(building_granary::static_params, begin_spot_pos, res_image_offsets,
     min_workers_percent_for_tasks, min_workers_percent_for_accepting, min_workers_percent_for_getting,
-    max_capacty_stored, allow_food_types);
+    max_capacty_stored, allow_food_types, fancy_treshold_desirability);
 
 // Nearest adjacent road on road_network_id (granary is impassable; primary road_access is only one side).
 tile2i building_granary_access_on_network(const building &granary, int road_network_id,
