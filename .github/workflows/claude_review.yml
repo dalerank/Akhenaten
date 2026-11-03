@@ -1,0 +1,42 @@
+name: Claude PR review
+
+# pull_request_target so fork PRs get the secret. Never check out or run PR code here:
+# the job only reads the diff through gh, and the tool allowlist keeps it that way.
+on:
+  pull_request_target:
+    types: [opened, ready_for_review]
+
+concurrency:
+  group: claude-review-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  review:
+    if: ${{ !github.event.pull_request.draft }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+      id-token: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+      - uses: anthropics/claude-code-action@v1
+        with:
+          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+          prompt: |
+            Review PR #${{ github.event.pull_request.number }} in ${{ github.repository }}.
+            The checked-out tree is the base branch; read the change with `gh pr diff` and `gh pr view`.
+            Follow CLAUDE.md and CONTRIBUTING.md. Focus on:
+            - correctness bugs;
+            - divergence from original Pharaoh logic and savegame compatibility
+              (PRs changing game logic or major UI are declined for now — say so politely if it applies);
+            - changed behaviour without an integral test in tests/;
+            - comment-style rules from CLAUDE.md.
+            Be concise, no praise or summaries of what the PR does. Post one review comment with
+            `gh pr comment`. If there is nothing worth flagging, post a one-line comment saying so.
+            Write in the language of the PR description.
+          claude_args: >-
+            --model claude-sonnet-5-5 --max-turns 10
+            --allowedTools "Bash(gh pr diff:*),Bash(gh pr view:*),Bash(gh pr comment:*),Read,Grep,Glob"
