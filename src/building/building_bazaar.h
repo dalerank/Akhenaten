@@ -35,6 +35,8 @@ public:
         // FM3: per-bazaar variety orders (flag ON). Seeded from food_variety_target.
         uint8_t desired_variety;
         uint8_t min_variety;
+        // OG: second roaming trader while desirability > fancy threshold (not a figure slot).
+        int16_t second_trader_id;
     } BUILDING_RUNTIME_DATA_T;
 
     virtual void on_create(int orientation) override;
@@ -44,6 +46,10 @@ public:
     virtual e_sound_channel_city sound_channel() const override { return SOUND_CHANNEL_CITY_MARKET; }
     virtual bool draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) override;
     virtual void bind_dynamic(io_buffer *iob, size_t version) override;
+
+    void maintain_fancy_second_trader();
+    void update_good_demands_from_houses(int radius = 10);
+    int16_t second_trader_id() const { return runtime_data().second_trader_id; }
 
     building *get_storage_destination(e_bazaar_fetch_group group = e_bazaar_fetch_all,
                                       const bool *exclude = nullptr,

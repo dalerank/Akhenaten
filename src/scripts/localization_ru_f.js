@@ -156,6 +156,8 @@ localization_ru_f = [
     { key:"#invasion_quick_battle_head", text:"Волна #{id} ({i}/{n})"}
     { key:"#invasion_quick_battle_none", text:"Нет ожидающей битвы"}
     { key:"#TR_CONFIG_BAZAAR_MULTI_BUYERS", text:"Базар может отправлять двух закупщиков сразу (еда + товары)"}
+    { key:"#TR_CONFIG_BAZAAR_BUYER_SPAWN_TIMER", text:"Закупщики базара по таймеру labor spawn вместо оригинального day%8 (не как в Pharaoh)"}
+    { key:"#TR_CONFIG_BAZAAR_DEMAND_FROM_TRADER", text:"Спрос базара на товары только при визите продавца, вместо оригинального скана домов в радиусе 10 (не как в Pharaoh)"}
     { key:"#TR_CONFIG_MARKET_DISTRIBUTE_REMAKE", text:"Раздача базара-ремейк: один тип еды за визит, заполнение по food_storage_multiplier (не как в оригинале)"}
     { key:"#TR_CONFIG_LIBRARY_SERVICE_CAP", text:"Библиотека-ремейк: библиотекарь обслуживает не больше max_service жителей за обход и только дома у дороги (не как в оригинале)"}
     { key:"#TR_CONFIG_DENTIST_SERVICE_CAP", text:"Дантист-ремейк: дантист обслуживает не больше max_serve_clients жителей в месяц и обновляет только дома с покрытием ниже половины (не как в оригинале)"}

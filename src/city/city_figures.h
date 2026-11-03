@@ -15,6 +15,7 @@ struct city_figures_t {
     int32_t soldiers;
     int32_t security_breach_duration;
     bool house_noble_spawned_this_tick;
+    int bazaar_figure_pass_index;
 
     void reset();
     void on_post_load();

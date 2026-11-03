@@ -36,4 +36,5 @@
 //  186 akhenaten: labor STORAGE category priority (enhanced labor split LC4)
 //  188 akhenaten: recorded cart trails (pool + last-4 building rings)
 //  189 akhenaten: sectioned .svx container (chunk layout unchanged)
-constexpr uint32_t latest_save_version = 189;
+//  190 akhenaten: bazaar second_trader_id (OG fancy second market trader)
+constexpr uint32_t latest_save_version = 190;

@@ -3942,10 +3942,43 @@ static int __test_bazaar_force_spawn(int bid) {
         b.distance_from_entry = 1;
     }
     b.figure_spawn_delay = 0;
+    // Align OG buyer stagger: pass index becomes 1 on spawn → day % 8 == 1.
+    g_city.figures.bazaar_figure_pass_index = 0;
+    if (!game_features::gameplay_change_bazaar_buyer_spawn_timer.to_bool()) {
+        game.simtime.day = 1;
+    }
     bazaar->spawn_figure();
     return 1;
 }
 ANK_FUNCTION_1(__test_bazaar_force_spawn);
+
+static int __test_bazaar_count_traders(int bid) {
+    auto *bazaar = building_get(bid)->dcast_bazaar();
+    if (!bazaar) {
+        return -1;
+    }
+    int count = 0;
+    for (int i = 1; i < MAX_FIGURES; i++) {
+        figure *f = figure_get(i);
+        if (f && f->is_alive() && f->type == FIGURE_MARKET_TRADER && f->has_home(bid)) {
+            count++;
+        }
+    }
+    return count;
+}
+ANK_FUNCTION_1(__test_bazaar_count_traders);
+
+static int __test_bazaar_second_trader_id(int bid) {
+    auto *bazaar = building_get(bid)->dcast_bazaar();
+    return bazaar ? bazaar->second_trader_id() : -1;
+}
+ANK_FUNCTION_1(__test_bazaar_second_trader_id);
+
+static int __test_bazaar_fancy_threshold(int bid) {
+    auto *bazaar = building_get(bid)->dcast_bazaar();
+    return bazaar ? bazaar->current_params().fancy_treshold_desirability : -1;
+}
+ANK_FUNCTION_1(__test_bazaar_fancy_threshold);
 
 static int __test_granary_add_allowed_food(int bid, int food_index, int amount) {
     building *b = building_get(bid);

@@ -254,7 +254,9 @@ void distribute_good_og(building_bazaar &bazaar, building_house &house, int need
         return;
     }
 
-    demand_flag = 10;
+    if (game_features::gameplay_change_bazaar_demand_from_trader.to_bool()) {
+        demand_flag = 10;
+    }
     auto &marketd = bazaar.runtime_data();
     int stock = marketd.inventory[inventory_resource].value;
     if (stock <= 0) {
@@ -333,23 +335,32 @@ void distribute_market_resources_remake(building *b, building *market) {
     }
 
     int aproximated_level = housed.highest_population / 10;
+    const bool demand_on_visit = game_features::gameplay_change_bazaar_demand_from_trader.to_bool();
     if (model.pottery) {
-        marketd.pottery_demand = 10;
+        if (demand_on_visit) {
+            marketd.pottery_demand = 10;
+        }
         distribute_good_remake(b, market, goods_no * aproximated_level * model.pottery, INVENTORY_GOOD1);
     }
 
     if (model.jewelry) {
-        marketd.luxurygoods_demand = 10;
+        if (demand_on_visit) {
+            marketd.luxurygoods_demand = 10;
+        }
         distribute_good_remake(b, market, goods_no * aproximated_level * model.jewelry, INVENTORY_GOOD2);
     }
 
     if (model.linen) {
-        marketd.linen_demand = 10;
+        if (demand_on_visit) {
+            marketd.linen_demand = 10;
+        }
         distribute_good_remake(b, market, goods_no * aproximated_level * model.linen, INVENTORY_GOOD3);
     }
 
     if (model.beer) {
-        marketd.beer_demand = 10;
+        if (demand_on_visit) {
+            marketd.beer_demand = 10;
+        }
         distribute_good_remake(b, market, goods_no * aproximated_level * model.beer, INVENTORY_GOOD4);
     }
 }

@@ -90,6 +90,8 @@ namespace game_features {
     extern game_feature gameplay_change_protestor_hunt_nobles;
     extern game_feature gameplay_change_fishing_boat_remake;
     extern game_feature gameplay_change_bazaar_multi_buyers;
+    extern game_feature gameplay_change_bazaar_buyer_spawn_timer;
+    extern game_feature gameplay_change_bazaar_demand_from_trader;
     extern game_feature gameplay_change_market_distribute_remake;
     extern game_feature gameplay_change_library_service_cap;
     extern game_feature gameplay_change_dentist_service_cap;
