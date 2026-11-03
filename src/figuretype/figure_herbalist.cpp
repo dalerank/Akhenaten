@@ -57,6 +57,8 @@ figure_sound_t figure_herbalist::get_sound_reaction(xstring key) const {
 
 int figure_herbalist::provide_service() {
     if (!game_features::gameplay_change_apothecary_remake.to_bool()) {
+        // OG: inhabited houses in radius 2 get access 96. No health floor, no malaria cut,
+        // no plague-citizen cure. see_low_health feeds remake phrases (kept on purpose).
         int houses = 0;
         map_grid_area_foreach(map_grid_get_area(tile(), 1, 2), [&] (tile2i t) {
             const int bid = map_building_at(t.grid_offset());
@@ -71,7 +73,6 @@ int figure_herbalist::provide_service() {
         });
 
         base.min_max_seen = runtime_data().see_low_health;
-        figure_plagued_citizen::cure_nearby(tile(), 1);
         return houses;
     }
 

@@ -1,5 +1,7 @@
 // Apothecary OG: spawn_service_walker with delays_service {3,7,15,29,44} by worker %,
 // coverage gives 96 to every inhabited house in radius 2, no malaria cut and no health floor.
+// House culture health aggregate is physician+mortuary (not apothecary). Advisor coverage is
+// share of people with living apothecary access. Model fire_risk by difficulty, damage_risk 0.
 // gameplay_change_apothecary_remake restores health floor 50 and the malaria cut.
 
 var __test226_ok = false
@@ -121,6 +123,58 @@ function run_test() {
     }
     __log_marker('test226_og_coverage')
 
+    city.get_house(lived_id).apothecary = 96
+    city.get_house(lived_id).physician = 0
+    city.get_house(lived_id).mortuary = 0
+    city.get_house(empty_id).apothecary = 0
+    city.get_house(empty_id).physician = 96
+    city.get_house(empty_id).mortuary = 0
+    if (__test_house_set_population(empty_id, 5) < 1) {
+        test226_fail('set empty house population failed')
+        return
+    }
+    __test_house_calculate_culture_aggregates()
+    if (city.get_house(lived_id).health != 0) {
+        test226_fail('OG health aggregate must ignore apothecary, got ' + city.get_house(lived_id).health)
+        return
+    }
+    if (city.get_house(empty_id).health != 1) {
+        test226_fail('OG health aggregate must count physician, got ' + city.get_house(empty_id).health)
+        return
+    }
+    city.get_house(empty_id).mortuary = 96
+    __test_house_calculate_culture_aggregates()
+    if (city.get_house(empty_id).health != 2) {
+        test226_fail('OG health aggregate must count physician+mortuary, got ' + city.get_house(empty_id).health)
+        return
+    }
+    __log_marker('test226_og_health_aggregate')
+
+    city.get_house(lived_id).apothecary = 0
+    __test_health_update_coverage()
+    var cov_without = city.coverage.apothecary
+    city.get_house(lived_id).apothecary = 96
+    __test_health_update_coverage()
+    var cov_with = city.coverage.apothecary
+    if (cov_with <= cov_without) {
+        test226_fail('OG coverage must rise with house access: ' + cov_without + ' -> ' + cov_with)
+        return
+    }
+    __log_marker('test226_og_advisor_coverage')
+
+    var expected_fire = [4, 17, 20, 24, 30]
+    for (var d = 0; d < 5; d++) {
+        if (building_apothecary.fire_risk[d] != expected_fire[d]) {
+            test226_fail('fire_risk[' + d + '] expected ' + expected_fire[d] + ' got ' + building_apothecary.fire_risk[d])
+            return
+        }
+    }
+    if (building_apothecary.damage_risk[0] != 0) {
+        test226_fail('damage_risk must be 0, got ' + building_apothecary.damage_risk[0])
+        return
+    }
+    __log_marker('test226_og_model')
+
     var ax = cx - 20
     var bx = cx + 20
     var a_id = __test_building_create(BUILDING_HOUSE_CRUDE_HUT, ax, cy)
@@ -169,6 +223,9 @@ function check_valid() {
     return __test226_ok
         && __test_find_inlog('[test-marker] test226_delay_100pct')
         && __test_find_inlog('[test-marker] test226_og_coverage')
+        && __test_find_inlog('[test-marker] test226_og_health_aggregate')
+        && __test_find_inlog('[test-marker] test226_og_advisor_coverage')
+        && __test_find_inlog('[test-marker] test226_og_model')
         && __test_find_inlog('[test-marker] test226_og_no_malaria')
         && __test_find_inlog('[test-marker] test226_remake')
 }

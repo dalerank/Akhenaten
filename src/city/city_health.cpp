@@ -2,9 +2,6 @@
 
 #include "core/profiler.h"
 #include "core/calc.h"
-#include "building/building_mortuary.h"
-#include "building/building_dentist.h"
-#include "building/building_static_params.h"
 #include "building/building_house.h"
 #include "building/destruction.h"
 #include "city/city.h"
@@ -16,7 +13,10 @@
 #include "figuretype/figure_plagued_citizen.h"
 #include "scenario/scenario.h"
 #include "game/game.h"
+#include "js/js_game.h"
 #include "dev/debug.h"
+
+city_health_rules_t ANK_VARIABLE(city_health_rules)
 
 declare_console_command_p(plague_start) {
     int plague_people = args.next_int(100);
@@ -169,20 +169,38 @@ void city_health_t::start_disease(int total_people, bool force, int plague_peopl
 
 void city_health_t::update_coverage() {
     OZZY_PROFILER_FUNCTION();
-    int population = g_city.population.current;
+    // OG culture_update_health_coverage: share of people in houses still visited by each service.
+    int population = 0;
+    int with_apothecary = 0;
+    int with_mortuary = 0;
+    int with_physician = 0;
+    int with_dentist = 0;
+    buildings_house_do([&] (building_house *house) {
+        const int people = house->house_population();
+        if (people <= 0) {
+            return;
+        }
+        population += people;
+        auto &housed = house->runtime_data();
+        if (housed.apothecary) {
+            with_apothecary += people;
+        }
+        if (housed.mortuary) {
+            with_mortuary += people;
+        }
+        if (housed.physician) {
+            with_physician += people;
+        }
+        if (housed.dentist) {
+            with_dentist += people;
+        }
+    });
 
-    const auto &mortuary_params = building_mortuary::current_params();
     auto &coverage = g_city.coverage;
-    coverage.mortuary = std::min<int>(calc_percentage(mortuary_params.max_serve_clients * g_city.buildings.count_active(BUILDING_MORTUARY), population), 100);
-
-    const auto &physician_params = building_static_params::get(BUILDING_PHYSICIAN);
-    coverage.physician = std::min<int>(calc_percentage(physician_params.max_serve_clients * g_city.buildings.count_active(BUILDING_PHYSICIAN), population), 100);
-
-    const auto &dentist_params = building_dentist::current_params();
-    coverage.dentist = std::min<int>(calc_percentage(dentist_params.max_serve_clients * g_city.buildings.count_active(BUILDING_DENTIST), population), 100);
-
-    const auto &apothecary_params = building_static_params::get(BUILDING_APOTHECARY);
-    coverage.apothecary = std::min<int>(calc_percentage(apothecary_params.max_serve_clients * g_city.buildings.count_active(BUILDING_APOTHECARY), population), 100);
+    coverage.apothecary = (uint8_t)calc_percentage(with_apothecary, population);
+    coverage.mortuary = (uint8_t)calc_percentage(with_mortuary, population);
+    coverage.physician = (uint8_t)calc_percentage(with_physician, population);
+    coverage.dentist = (uint8_t)calc_percentage(with_dentist, population);
 }
 
 
@@ -192,6 +210,9 @@ void city_health_t::update_month() {
         target_value = 50;
         return;
     }
+
+    // OG city_health_update: mortuary / physician / food types (apothecary does not count).
+    const auto &rules = city_health_rules;
 
     int total_population = 0;
     int healthy_population = 0;
@@ -203,32 +224,47 @@ void city_health_t::update_month() {
 
         total_population += hpop;
         auto &housed = house->runtime_data();
-        if (house->house_level() <= HOUSE_STURDY_HUT) {
-            if (housed.apothecary) {
-                healthy_population += hpop;
-            } else {
-                healthy_population += hpop / 4;
-            }
-        } else if (housed.physician) {
-            if (housed.days_without_food == 0) {
-                healthy_population += hpop;
-            } else {
-                healthy_population += hpop / 4;
-            }
-        } else if (housed.days_without_food == 0) {
-            healthy_population += hpop / 4;
+        int coverage_pts = 0;
+        if (housed.mortuary) {
+            coverage_pts = rules.mortuary_points;
         }
+        if (housed.physician) {
+            coverage_pts += rules.physician_points;
+        }
+        const int food = housed.num_foods;
+        if (food) {
+            coverage_pts += rules.food_points;
+        }
+        if (food > 1) {
+            coverage_pts += rules.second_food_points;
+        }
+        if (food > 2) {
+            coverage_pts += rules.third_food_points;
+        }
+        if (food && housed.physician) {
+            coverage_pts += rules.physician_and_food_points;
+        }
+        healthy_population += (int)(coverage_pts * rules.coverage_factor * hpop);
     });
 
     target_value = calc_percentage(healthy_population, total_population);
+    const int pop = g_city.population.current;
+    for (const auto &entry : rules.population_bonus) {
+        if (pop < entry.pop) {
+            target_value += entry.bonus;
+            break;
+        }
+    }
+
+    const int step = rules.monthly_step;
     if (value < target_value) {
-        value += 2;
+        value += step;
         if (value > target_value) {
             value = target_value;
         }
 
     } else if (value > target_value) {
-        value -= 2;
+        value -= step;
         if (value < target_value) {
             value = target_value;
         }

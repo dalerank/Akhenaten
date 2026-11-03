@@ -4214,6 +4214,16 @@ static void __test_update_malaria_risk() {
 }
 ANK_FUNCTION(__test_update_malaria_risk);
 
+static void __test_house_calculate_culture_aggregates() {
+    g_city.house_service_calculate_culture_aggregates();
+}
+ANK_FUNCTION(__test_house_calculate_culture_aggregates);
+
+static void __test_health_update_coverage() {
+    g_city.health.update_coverage();
+}
+ANK_FUNCTION(__test_health_update_coverage);
+
 static void __test_city_buildings_update_tick() {
     g_city.buildings.update_tick(/*refresh_only*/true);
 }
