@@ -5,7 +5,6 @@
 #include "city/sound.h"
 #include "sound/sound.h"
 #include "figure/combat.h"
-#include "grid/building.h"
 #include "figuretype/figure_missile.h"
 #include "figure/formation_layout.h"
 #include "figure/formation.h"
@@ -15,6 +14,8 @@
 #include "graphics/view/lookup.h"
 #include "dev/debug.h"
 #include "grid/image.h"
+#include "grid/point.h"
+#include "grid/terrain.h"
 #include "js/js_game.h"
 
 const e_action_enemy_archer_tokens_t ANK_CONFIG_ENUM(e_action_enemy_archer_tokens)
@@ -32,6 +33,13 @@ REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_persian_archer)
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_roman_archer)
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_seapeople_archer)
 
+namespace {
+// OG figure_combat_get_missile_target_for_enemy / Julius enemy_initial scan range.
+constexpr int ENEMY_MISSILE_SCAN_RANGE = 10;
+constexpr int ENEMY_ORDER_WAIT_TICKS = 50;
+constexpr int ENEMY_SHOOT_TICKS = 100;
+}
+
 void figure_enemy_archer::on_create() {
     figure_impl::on_create();
 }
@@ -44,6 +52,8 @@ void figure_enemy_archer::enemy_initial(formation *m) {
     route_remove();
     base.wait_ticks--;
     if (base.wait_ticks <= 0) {
+        // OG resets wait every decision tick while holding INITIAL.
+        base.wait_ticks = ENEMY_ORDER_WAIT_TICKS;
         if (base.index_in_formation == 0) {
             if (m->layout == FORMATION_ENEMY_MOB) {
                 g_sound.speech_play_file("Wavs/WEAPON.WAV", 255);
@@ -54,18 +64,58 @@ void figure_enemy_archer::enemy_initial(formation *m) {
             }
         }
 
-        tile2i formation_t = formation_layout_position(m->layout, base.index_in_formation);
-        tile2i destination_tile = m->destination.shifted(formation_t);
-        if (m->recent_fight || tile() == destination_tile) {
-            advance_action(ACTION_3_ENEMY_ARCHER_SHOOT_MISSILE);
-        }
-
-        if (!m->recent_fight && tile() != destination_tile) {
-            base.destination_tile = destination_tile;
+        if (m->recent_fight) {
+            // OG ATTACKING: melee chase — not a shoot state.
+            advance_action(ACTION_3_ENEMY_ARCHER_ATTACKING);
+        } else {
+            tile2i formation_t = formation_layout_position(m->layout, base.index_in_formation);
+            base.destination_tile = m->destination.shifted(formation_t);
             int dir = calc_general_direction(tile(), base.destination_tile);
-            if (dir > attack_distance()) {
+            if (dir < 8) {
                 advance_action(ACTION_2_ENEMY_ARCHER_MARCHING);
             }
+        }
+    }
+
+    // OG: missile foot units shoot only while in INITIAL.
+    base.wait_ticks_missile++;
+    target_figure target;
+    if (base.wait_ticks_missile > missile_delay()) {
+        base.wait_ticks_missile = 0;
+        target = figure_combat_get_missile_target_for_enemy(&base, ENEMY_MISSILE_SCAN_RANGE, g_city.figures.soldiers < 4);
+        if (target.fid) {
+            base.attack_image_offset = 1;
+            base.direction = calc_missile_shooter_direction(tile(), target.tile);
+        } else {
+            base.attack_image_offset = 0;
+        }
+    }
+
+    if (base.attack_image_offset) {
+        e_figure_type missilet = missile_type();
+        if (missilet == FIGURE_NONE) {
+            missilet = FIGURE_SPEAR;
+        }
+
+        if (base.attack_image_offset == 1) {
+            tile2i dst = target.tile;
+            if (!dst.valid()) {
+                map_point_get_last_result(dst);
+            }
+            auto *missile = figure_missile::create(id(), tile(), dst, missilet);
+            if (missile) {
+                missile->runtime_data().missile_attack_value = missile_attack_value();
+            }
+            formation_record_missile_fired(m);
+        }
+
+        if (missilet == FIGURE_ARROW && city_sound_update_shoot_arrow()) {
+            g_sound.play_effect(SOUND_EFFECT_ARROW);
+        }
+
+        base.attack_image_offset++;
+        if (base.attack_image_offset > ENEMY_SHOOT_TICKS) {
+            base.attack_image_offset = 0;
         }
     }
 }
@@ -74,7 +124,6 @@ void figure_enemy_archer::enemy_marching(formation *m) {
     OZZY_PROFILER_FUNCTION();
     base.wait_ticks--;
 
-    // Mounted archer: horse loop (parity with figure_enemy::enemy_fighting); foot = march.
     if (is_mounted_archer()) {
         if (city_sound_update_march_horse()) {
             g_sound.play_effect(SOUND_EFFECT_HORSE_MOVING);
@@ -84,10 +133,9 @@ void figure_enemy_archer::enemy_marching(formation *m) {
     }
 
     if (base.wait_ticks <= 0) {
-        base.wait_ticks = 50;
+        base.wait_ticks = ENEMY_ORDER_WAIT_TICKS;
 
         tile2i formation_t = formation_layout_position(m->layout, base.index_in_formation);
-
         base.destination_tile = m->destination.shifted(formation_t);
         if (calc_general_direction(tile(), base.destination_tile) == DIR_FIGURE_NONE) {
             advance_action(ACTION_0_ENEMY_ARCHER_INITIAL);
@@ -102,25 +150,24 @@ void figure_enemy_archer::enemy_marching(formation *m) {
     if (direction() == DIR_FIGURE_NONE || direction() == DIR_FIGURE_REROUTE || direction() == DIR_FIGURE_CAN_NOT_REACH) {
         advance_action(ACTION_0_ENEMY_ARCHER_INITIAL);
     }
-
-    if (base.destination_tile == base.tile) {
-        advance_action(ACTION_3_ENEMY_ARCHER_SHOOT_MISSILE);
-    }
-}
-
-void figure_enemy_archer::enemy_shoot_around(formation *m) {
-    enemy_fighting(m);
 }
 
 void figure_enemy_archer::enemy_fighting(formation *m) {
     OZZY_PROFILER_FUNCTION();
 
+    // OG ATTACKING: chase nearest soldier — no missiles here.
     base.set_flag(e_figure_flag_inattack);
-    auto &d = runtime_data();
 
-    if (base.wait_ticks >= 0) {
-        --base.wait_ticks;
-        return;
+    if (!m->recent_fight) {
+        advance_action(ACTION_0_ENEMY_ARCHER_INITIAL);
+    }
+
+    if (is_mounted_archer()) {
+        if (city_sound_update_march_horse()) {
+            g_sound.play_effect(SOUND_EFFECT_HORSE_MOVING);
+        }
+    } else if (city_sound_update_march_enemy()) {
+        g_sound.play_effect(SOUND_EFFECT_MARCHING);
     }
 
     figure_id target_id = base.target_figure_id;
@@ -136,63 +183,12 @@ void figure_enemy_archer::enemy_fighting(formation *m) {
             figure *target = figure_get(target_id);
             base.destination_tile = target->tile;
             base.target_figure_id = target_id;
-            //target_figure_created_sequence = target->created_sequence;
             target->targeted_by_figure_id = id();
             route_remove();
         }
     }
 
-    bool can_shoot_building = false;
-    if (m->destination_building_id > 0) {
-        building *b = building_get(m->destination_building_id);
-        if (b->state == BUILDING_STATE_VALID) {
-            float dist = tile().dist(b->tile);
-            if (dist < attack_distance()) {
-                base.direction = calc_missile_shooter_direction(tile(), b->tile);
-                base.wait_ticks = missile_delay();
-                tile2i btile = b->tile;
-                figure_id owner = base.id;
-                tile2i owner_tile = base.tile;
-                e_figure_type missilet = missile_type();
-                int8_t attack_value = missile_attack_value();
-                d.last_target = btile;
-                base.animctx.restart([btile, owner, owner_tile, missilet, attack_value] {
-                    auto missile = figure_missile::create(owner, owner_tile, btile, missilet);
-                    assert(missile);
-                    missile->runtime_data().missile_attack_value = attack_value;
-                });
-                can_shoot_building = true;
-                return;
-            }
-        }
-    }
-
-    bool can_shoot_target = false;
     if (target_id > 0) {
-        figure *target = figure_get(target_id);
-        float dist = tile().dist(target->tile);
-        if (dist < attack_distance()) {
-            base.direction = calc_missile_shooter_direction(tile(), target->tile);
-            base.wait_ticks = missile_delay();
-            tile2i btile = target->tile;
-            figure_id owner = base.id;
-            tile2i owner_tile = base.tile;
-            e_figure_type missilet = missile_type();
-            int8_t attack_value = missile_attack_value();
-            d.last_target = btile;
-            base.animctx.restart([btile, owner, owner_tile, missilet, attack_value] {
-                auto missile = figure_missile::create(owner, owner_tile, btile, missilet);
-                assert(missile);
-                missile->runtime_data().missile_attack_value = attack_value;
-            });
-            can_shoot_target = true;
-            return;
-        }
-
-        // Mounted: horse only while closing distance (not during shoot cooldown).
-        if (is_mounted_archer() && city_sound_update_march_horse()) {
-            g_sound.play_effect(SOUND_EFFECT_HORSE_MOVING);
-        }
         base.move_ticks(base.speed_multiplier);
         if (direction() == DIR_FIGURE_NONE) {
             figure *target = figure_get(base.target_figure_id);
@@ -202,95 +198,10 @@ void figure_enemy_archer::enemy_fighting(formation *m) {
             advance_action(ACTION_0_ENEMY_ARCHER_INITIAL);
             base.target_figure_id = 0;
         }
+    } else {
+        advance_action(ACTION_0_ENEMY_ARCHER_INITIAL);
+        base.wait_ticks = ENEMY_ORDER_WAIT_TICKS;
     }
-
-    if (!can_shoot_building) {
-        grid_area area = map_grid_get_area(tile(), 1, attack_distance());
-        building *b = nullptr;
-        float dist = 100.f;
-        map_grid_area_foreach(area, [&] (tile2i t) {
-            building_id bid = map_building_at(t);
-            int cur_dist = t.dist(tile());
-            if (bid && building_get(bid)->is_valid() && cur_dist < dist) {
-                dist = cur_dist;
-                b = building_get(bid);
-            }
-        });
-
-        if (b) {
-            base.direction = calc_missile_shooter_direction(tile(), b->tile);
-            base.wait_ticks = missile_delay();
-            tile2i btile = b->tile;
-            figure_id owner = base.id;
-            tile2i owner_tile = base.tile;
-            e_figure_type missilet = missile_type();
-            int8_t attack_value = missile_attack_value();
-            d.last_target = btile;
-            base.animctx.restart([btile, owner, owner_tile, missilet, attack_value] {
-                
-                auto missile = figure_missile::create(owner, owner_tile, btile, missilet);
-                assert(missile);
-                missile->runtime_data().missile_attack_value = attack_value;
-            });
-            return;
-        }
-    }
-
-    if (!can_shoot_target) {
-        auto result = figure_combat_get_missile_target_for_enemy(&base, attack_distance(), g_city.figures.soldiers < 4);
-        if (result.fid) {
-            figure *f = figure_get(result.fid);
-            base.direction = calc_missile_shooter_direction(tile(), f->tile);
-            base.wait_ticks = missile_delay();
-            tile2i btile = f->tile;
-            figure_id owner = base.id;
-            tile2i owner_tile = base.tile;
-            e_figure_type missilet = missile_type();
-            int8_t attack_value = missile_attack_value();
-            d.last_target = btile;
-            base.animctx.restart([btile, owner, owner_tile, missilet, attack_value] {
-                auto missile = figure_missile::create(owner, owner_tile, btile, missilet);
-                assert(missile);
-                missile->runtime_data().missile_attack_value = attack_value;
-            });
-            return;
-        }
-    }
-
-    if (!can_shoot_target) {
-        grid_area area = map_grid_get_area(tile(), 1, attack_distance());
-        figure *f = nullptr;
-        float dist = 100.f;
-        map_grid_area_foreach(area, [&] (tile2i t) {
-            figure *ftile = map_figure_get(t);
-            int cur_dist = t.dist(tile());
-            if (ftile && ftile->is_valid() && cur_dist < dist) {
-                dist = cur_dist;
-                f = ftile;
-            }
-        });
-
-        if (f) {
-            base.direction = calc_missile_shooter_direction(tile(), f->tile);
-            base.wait_ticks = missile_delay();
-            tile2i btile = f->tile;
-            figure_id owner = base.id;
-            tile2i owner_tile = base.tile;
-            e_figure_type missilet = missile_type();
-            int8_t attack_value = missile_attack_value();
-            d.last_target = btile;
-            base.animctx.restart([btile, owner, owner_tile, missilet, attack_value] {
-                auto missile = figure_missile::create(owner, owner_tile, btile, missilet);
-                assert(missile);
-                missile->runtime_data().missile_attack_value = attack_value;
-            });
-            return;
-        }
-    }
-
-    // fallback
-    advance_action(ACTION_0_ENEMY_ARCHER_INITIAL);
-    base.target_figure_id = 0;
 }
 
 void figure_enemy_archer::leave_city() {
@@ -307,6 +218,12 @@ void figure_enemy_archer::figure_action() {
         return;
     }
 
+    // OG enemy_begin: foot missile drowns on flooded floodplain.
+    if (map_terrain_is(tile(), TERRAIN_WATER) && map_terrain_is(tile(), TERRAIN_FLOODPLAIN)) {
+        poof();
+        return;
+    }
+
     base.speed_multiplier = enemy_speed_multiplier();
     formation *m = formation_get(base.formation_id);
 
@@ -316,7 +233,6 @@ void figure_enemy_archer::figure_action() {
     switch (action_state()) {
     case FIGURE_ACTION_148_FLEEING:
         base.destination_tile = base.source_tile;
-
         base.move_ticks(base.speed_multiplier);
         if (direction() == DIR_FIGURE_NONE || direction() == DIR_FIGURE_REROUTE || direction() == DIR_FIGURE_CAN_NOT_REACH) {
             poof();
@@ -328,38 +244,47 @@ void figure_enemy_archer::figure_action() {
         break;
 
     case ACTION_1_ENEMY_ARCHER_WAITING:
-        base.map_figure_update(); // ???? WTF 
+        base.map_figure_update();
         break;
 
     case ACTION_2_ENEMY_ARCHER_MARCHING:
         enemy_marching(m);
         break;
 
-    case ACTION_3_ENEMY_ARCHER_SHOOT_MISSILE:
+    case ACTION_3_ENEMY_ARCHER_ATTACKING:
         enemy_fighting(m);
         break;
 
     case ACTION_4_ENEMY_ARCHER_LEAVING:
         enemy_leaving();
         break;
+
+    default:
+        advance_action(ACTION_0_ENEMY_ARCHER_INITIAL);
+        break;
     }
 }
 
 void figure_enemy_archer::update_animation() {
     xstring animkey = animkeys().walk;
-    if (action_state() == ACTION_3_ENEMY_ARCHER_SHOOT_MISSILE) {
-        animkey = animkeys().bow_attack;
-    } else if (action_state() == FIGURE_ACTION_149_CORPSE) {
+    if (action_state() == FIGURE_ACTION_149_CORPSE) {
         animkey = animkeys().death;
-    } else if (action_state() == ACTION_2_ENEMY_ARCHER_MARCHING) {
-        animkey = animkeys().walk;
+    } else if (action_state() == ACTION_0_ENEMY_ARCHER_INITIAL && base.attack_image_offset) {
+        animkey = animkeys().bow_attack;
+        if (anim(animkey).max_frames <= 0) {
+            animkey = animkeys().attack;
+        }
+    } else if (action_state() == ACTION_3_ENEMY_ARCHER_ATTACKING) {
+        animkey = animkeys().attack;
+        if (anim(animkey).max_frames <= 0) {
+            animkey = animkeys().bow_attack;
+        }
     }
 
     image_set_animation(animkey);
 }
 
 void figure_enemy_archer::debug_draw(painter &ctx) {
-    // Draw target building and target figure in routing mode
     if (!(base.draw_mode & e_figure_draw_routing)) {
         return;
     }
@@ -373,7 +298,6 @@ void figure_enemy_archer::debug_draw(painter &ctx) {
         return;
     }
 
-    // Draw target building
     if (m->destination_building_id > 0) {
         building *target_building = building_get(m->destination_building_id)->main();
         if (target_building && target_building->state == BUILDING_STATE_VALID) {
@@ -415,7 +339,6 @@ void figure_enemy_archer::debug_draw(painter &ctx) {
         command.location = SOURCE_LOCATION;
     }
 
-    // Draw target figure
     if (base.target_figure_id > 0) {
         figure *target_f = figure_get(base.target_figure_id);
         if (target_f && target_f->is_valid() && !target_f->is_dead()) {

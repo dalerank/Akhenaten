@@ -79,6 +79,7 @@
 #include "figuretype/figure_enemy_warship.h"
 #include "figuretype/figure_enemy_elephant.h"
 #include "figuretype/figure_enemy_spearman.h"
+#include "figuretype/figure_enemy_archer.h"
 #include "figuretype/figure_transport_ship.h"
 #include "figuretype/figure_soldier.h"
 #include "building/building_transport_wharf.h"
@@ -1495,6 +1496,53 @@ static int __test_count_figures(int type) {
     return count;
 }
 ANK_FUNCTION_1(__test_count_figures);
+
+// Drive OG archer INITIAL shoot path: wait_ticks_missile past delay → FIGURE_SPEAR + missile_fired.
+static int __test_enemy_archer_fire_initial_missile(int fid) {
+    figure *f = figure_get(fid);
+    if (!f || !f->is_alive()) {
+        return 0;
+    }
+    auto *ar = smart_cast<figure_enemy_archer>(f);
+    if (!ar) {
+        return 0;
+    }
+    if (ar->missile_type() != FIGURE_SPEAR) {
+        return 0;
+    }
+
+    formation *m = formation_get(f->formation_id > 0 ? f->formation_id : 1);
+    f->action_state = ACTION_0_ENEMY_ARCHER_INITIAL;
+    f->wait_ticks = 50;
+    f->wait_ticks_missile = (uint8_t)ar->missile_delay();
+    f->attack_image_offset = 0;
+
+    const int spears_before = __test_count_figures(FIGURE_SPEAR);
+    const int missile_fired_before = m->missile_fired;
+    ar->enemy_initial(m);
+    if (__test_count_figures(FIGURE_SPEAR) != spears_before + 1) {
+        return 0;
+    }
+    if (m->missile_fired <= missile_fired_before) {
+        return 0;
+    }
+
+    // ACTION_3 is melee chase — must not spawn another spear.
+    f->action_state = ACTION_3_ENEMY_ARCHER_ATTACKING;
+    m->recent_fight = 1;
+    const int spears_mid = __test_count_figures(FIGURE_SPEAR);
+    ar->enemy_fighting(m);
+    if (__test_count_figures(FIGURE_SPEAR) != spears_mid) {
+        return 0;
+    }
+    return 1;
+}
+ANK_FUNCTION_1(__test_enemy_archer_fire_initial_missile);
+
+static void __test_make_floodplain_water(int x, int y) {
+    map_terrain_add(tile2i(x, y), TERRAIN_WATER | TERRAIN_FLOODPLAIN);
+}
+ANK_FUNCTION_2(__test_make_floodplain_water);
 
 static void __test_buildings_generate_figures() {
     g_city.buildings_generate_figure();
