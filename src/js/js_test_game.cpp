@@ -1345,6 +1345,15 @@ static int __test_figure_is_visible(int fid) {
 }
 ANK_FUNCTION_1(__test_figure_is_visible);
 
+static void __test_figure_set_visible(int fid, int visible) {
+    figure *f = figure_get(fid);
+    if (!f || !f->is_alive()) {
+        return;
+    }
+    f->set_flag(e_figure_flag_invisible, visible == 0);
+}
+ANK_FUNCTION_2(__test_figure_set_visible);
+
 static int __test_figure_cart_image_id(int fid) {
     figure *f = figure_get(fid);
     if (!f || !f->is_alive()) {
