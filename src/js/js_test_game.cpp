@@ -6,6 +6,7 @@
 #include "figure/formation_batalion.h"
 #include "building/building_fort.h"
 #include "building/building_barracks.h"
+#include "building/building_gatehouse.h"
 #include "js_game.h"
 
 #include "core/app.h"
@@ -1159,6 +1160,73 @@ static int __test_building_create(int type, int x, int y) {
     return b->id;
 }
 ANK_FUNCTION_3(__test_building_create);
+
+// Place a mud gatehouse road-pair at (x,y)/(x+1,y) with flanking walls, claim the OG 2x2 footprint.
+// Returns the number of TERRAIN_GATEHOUSE tiles in the 2x2 (expect 4).
+static int __test_mud_gatehouse_place_2x2(int x, int y) {
+    if (x < 1 || y < 1) {
+        return 0;
+    }
+
+    const tile2i road_a(x, y);
+    const tile2i road_b(x + 1, y);
+    const tile2i side_a(x, y - 1);
+    const tile2i side_b(x + 1, y - 1);
+
+    for (int dy = -1; dy <= 1; dy++) {
+        for (int dx = 0; dx <= 1; dx++) {
+            const tile2i t(x + dx, y + dy);
+            map_terrain_remove(t, TERRAIN_CLEARABLE);
+            map_building_set(t.grid_offset(), 0);
+        }
+    }
+    map_terrain_add(side_a, TERRAIN_WALL);
+    map_terrain_add(side_b, TERRAIN_WALL);
+    map_terrain_add(road_a, TERRAIN_ROAD);
+    map_terrain_add(road_b, TERRAIN_ROAD);
+
+    building *part_a = building_create(BUILDING_MUD_GATEHOUSE, road_a, 0);
+    building *part_b = building_create(BUILDING_MUD_GATEHOUSE, road_b, 0);
+    if (!part_a || !part_b || part_a->id <= 0 || part_b->id <= 0) {
+        return 0;
+    }
+
+    add_building(part_a, 0, 0);
+    add_building(part_b, 0, 0);
+    part_a->state = BUILDING_STATE_VALID;
+    part_b->state = BUILDING_STATE_VALID;
+    part_a->prev_part_building_id = 0;
+    part_a->next_part_building_id = part_b->id;
+    part_b->prev_part_building_id = part_a->id;
+    part_b->next_part_building_id = 0;
+    part_a->orientation = 1;
+
+    building_gatehouse::claim_2x2_footprint(*part_a, *part_b);
+
+    tile2i origin(x, y - 1);
+    int count = 0;
+    for (int dy = 0; dy < 2; dy++) {
+        for (int dx = 0; dx < 2; dx++) {
+            if (map_terrain_is(origin.shifted(dx, dy), TERRAIN_GATEHOUSE)) {
+                count++;
+            }
+        }
+    }
+    return count;
+}
+ANK_FUNCTION_2(__test_mud_gatehouse_place_2x2);
+
+extern int g_tower_sentry_request;
+
+static void __test_tower_sentry_request_clear() {
+    g_tower_sentry_request = 0;
+}
+ANK_FUNCTION(__test_tower_sentry_request_clear);
+
+static int __test_tower_sentry_request_get() {
+    return building_barracks_has_tower_sentry_request();
+}
+ANK_FUNCTION(__test_tower_sentry_request_get);
 
 color __test_color_roundtrip(color c) {
     return c;
