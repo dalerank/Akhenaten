@@ -2,7 +2,11 @@ log_info("akhenaten: figure flotsam started")
 
 figure_flotsam = {
 	animations : {
-		walk : {pack:PACK_SPR_AMBIENT, id:0, max_frames: 12}
+		walk : {pack:PACK_GENERAL, id:153}
+		debris_a : {pack:PACK_GENERAL, id:154}
+		debris_b : {pack:PACK_GENERAL, id:155}
+		sinking : {pack:PACK_GENERAL, id:156}
+		special : {pack:PACK_GENERAL, id:163}
 		big_image : { pack:PACK_UNLOADED, id:25, offset:FIGURE_FLOTSAM }
 	}
 
@@ -24,6 +28,8 @@ figure_flotsam = {
 
 	category: figure_category_inactive
 	max_damage : 0
+	max_alive : 1
+	spawn_chance_pct : 12
 	terrain_usage : TERRAIN_USAGE_ANY
 }
 

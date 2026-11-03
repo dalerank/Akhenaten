@@ -57,6 +57,7 @@
 #include "figure/figure_impl.h"
 #include "figuretype/figure_market_buyer.h"
 #include "figuretype/figure_cartpusher.h"
+#include "figuretype/figure_flotsam.h"
 #include "figuretype/figure_immigrant.h"
 #include "game/game_events.h"
 #include "figuretype/figure_missile.h"
@@ -1282,6 +1283,36 @@ static int __test_figure_cart_image_id(int fid) {
     return f->cart_image_id;
 }
 ANK_FUNCTION_1(__test_figure_cart_image_id);
+
+static int __test_figure_main_image_id(int fid) {
+    figure* f = figure_get(fid);
+    if (!f || !f->is_alive()) {
+        return -1;
+    }
+    return f->main_image_id;
+}
+ANK_FUNCTION_1(__test_figure_main_image_id);
+
+static void __test_set_scenario_river_points(int entry_x, int entry_y, int exit_x, int exit_y) {
+    g_scenario.river_entry_point = (entry_x < 0 || entry_y < 0) ? tile2i::invalid : tile2i(entry_x, entry_y);
+    g_scenario.river_exit_point = (exit_x < 0 || exit_y < 0) ? tile2i::invalid : tile2i(exit_x, exit_y);
+}
+ANK_FUNCTION_4(__test_set_scenario_river_points);
+
+static void __test_make_deep_water(int x, int y) {
+    map_terrain_add(tile2i(x, y), TERRAIN_WATER | TERRAIN_DEEPWATER);
+}
+ANK_FUNCTION_2(__test_make_deep_water);
+
+static int __test_flotsam_spawn(int kind) {
+    return figure_flotsam::spawn(kind);
+}
+ANK_FUNCTION_1(__test_flotsam_spawn);
+
+static void __test_flotsam_spawn_update_day() {
+    figure_flotsam::spawn_update_day();
+}
+ANK_FUNCTION(__test_flotsam_spawn_update_day);
 
 static int __test_building_map_random_7bit(int bid) {
     building *b = building_get(bid);

@@ -25,7 +25,10 @@ function mission_selection_title(scenario_id) {
 scenario = extend(__scenario, {
     map: __scenario_map,
     has_animals: __scenario_has_animals
-    flotsam_enabled: __scenario_flotsam_enabled
+    @flotsam_enabled: {
+        get: function() { return __scenario_flotsam_enabled }
+        set: function(v) { __scenario_flotsam_enabled = !!v }
+    }
     building_allowed: __scenario_building_allowed
     // Live bind (extend would snapshot a bool and desync from C++ / map load).
     @hide_nilometer: {

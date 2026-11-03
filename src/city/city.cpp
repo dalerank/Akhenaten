@@ -33,8 +33,8 @@
 #include "figuretype/figure_fishing_point.h"
 #include "figuretype/figure_kingdome_trader.h"
 #include "figuretype/figure_trader_ship.h"
-#include "figuretype/figure_flotsam.h"
 #include "figuretype/figure_tomb_robber.h"
+#include "figuretype/figure_flotsam.h"
 #include "figuretype/figure_funeral_walker.h"
 #include "city_warnings.h"
 #include "game/game_events.h"
@@ -116,7 +116,7 @@ void city_t::update_day(simulation_time_t simtime) {
     // funeral_done is never cleared by steal, so same-day race is harmless.
     figure_funeral_walker::try_spawn_all(/*force_ignore_road=*/false);
     plague_update_day();
-    environment.update_day();
+    figure_flotsam::spawn_update_day();
     buildings.update_day();
     figures_update_day();
     population.update_day();
@@ -229,7 +229,7 @@ void city_t::update_tick(int simtick) {
         religion.update();
         coverage.update();
         break;
-    case 2:        
+    case 2:
         map_tree_growth_update();
         break;
     case 3:
@@ -1511,35 +1511,6 @@ void city_t::on_post_load() {
     buildings.on_post_load();
     figures.on_post_load();
     kingdome.on_post_load();
-}
-
-void city_t::environment_t::update_day() {
-    river_update_flotsam();
-}
-
-void city_t::environment_t::river_update_flotsam() {
-    constexpr int FLOTSAM_RESOURCE_IDS[] = {3, 1, 3, 2, 1, 3, 2, 3, 2, 1, 3, 3, 2, 3, 3, 3, 1, 2, 0, 1};
-    constexpr int FLOTSAM_WAIT_TICKS[]  = {10, 50, 100, 130, 200, 250, 400, 430, 500, 600, 70, 750, 820, 830, 900, 980, 1010, 1030, 1200, 1300};
-
-    if (!scenario_map_has_river_entry() || !scenario_map_has_river_exit() || !g_scenario.env.flotsam_enabled) {
-        return;
-    }
-
-    for (int i = 1; i < MAX_FIGURES; i++) {
-        figure* f = figure_get(i);
-        if (f->state == FIGURE_STATE_ALIVE && f->type == FIGURE_FLOTSAM) {
-            return;
-        }
-    }
-
-    tile2i river_entry = scenario_map_river_entry();
-    for (int i = 0; i < 1; i++) {
-        figure* f = figure_create(FIGURE_FLOTSAM, river_entry, DIR_0_TOP_RIGHT);
-        f->action_state = (e_figure_action)ACTION_128_FLOTSAM_CREATED;
-        f->set_resource((e_resource)FLOTSAM_RESOURCE_IDS[i]);
-        f->wait_ticks = FLOTSAM_WAIT_TICKS[i];
-        f->allow_move_type = EMOVE_DEEPWATER;
-    }
 }
 
 void city_t::figures_update_day() {

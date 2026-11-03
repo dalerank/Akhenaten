@@ -150,11 +150,6 @@ struct city_t {
     city_hotkeys_handler_t hotkeys_handler;
     map_bookmarks_t bookmarks;
 
-    struct environment_t {
-        void update_day();
-        void river_update_flotsam();
-    } environment;
-
     void houses_reset_demands();
     void houses_calculate_culture_demands();
     void house_service_update_health();
