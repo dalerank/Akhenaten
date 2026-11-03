@@ -1,9 +1,11 @@
 #include "building_house.h"
 
+#include "building/building_temple_complex.h"
 #include "city/city.h"
 #include "city/city_warnings.h"
 #include "city/city_population.h"
 #include "city/city_resource.h"
+#include "city/buildings.h"
 #include "core/object_property.h"
 #include "core/custom_span.hpp"
 #include "city/city_labor.h"
@@ -745,21 +747,39 @@ void building_house::decay_services() {
     }
 
     auto &housed = runtime_data();
-    decay_service(housed.booth_juggler);
-    decay_service(housed.bandstand_juggler);
-    decay_service(housed.bandstand_musician);
-    decay_service(housed.pavillion_musician);
-    decay_service(housed.senet_player);
-    decay_service(housed.zookeeper);
+
+    // OG Bast complex: entertainers / educators / health providers last longer.
+    bool decay_extended_services = true;
+    const building_id complex_id = g_city.buildings.temple_complex_id();
+    if (complex_id) {
+        building *complex_b = building_get(complex_id);
+        auto *complex = complex_b ? complex_b->dcast_temple_complex() : nullptr;
+        if (complex && complex->type() == BUILDING_TEMPLE_COMPLEX_BAST) {
+            const auto &params = building_temple_complex_bast::current_params();
+            if (params.service_decay_skip_odd_months && (game.simtime.month & 1)) {
+                decay_extended_services = false;
+            }
+        }
+    }
+
+    if (decay_extended_services) {
+        decay_service(housed.booth_juggler);
+        decay_service(housed.bandstand_juggler);
+        decay_service(housed.bandstand_musician);
+        decay_service(housed.pavillion_musician);
+        decay_service(housed.senet_player);
+        decay_service(housed.zookeeper);
+        decay_service(housed.bullfighter);
+        decay_service(housed.school);
+        decay_service(housed.library);
+        decay_service(housed.academy);
+        decay_service(housed.apothecary);
+        decay_service(housed.dentist);
+        decay_service(housed.mortuary);
+        decay_service(housed.physician);
+    }
+
     decay_service(housed.magistrate);
-    decay_service(housed.bullfighter);
-    decay_service(housed.school);
-    decay_service(housed.library);
-    decay_service(housed.academy);
-    decay_service(housed.apothecary);
-    decay_service(housed.dentist);
-    decay_service(housed.mortuary);
-    decay_service(housed.physician);
     decay_service(housed.water_supply);
     decay_service(housed.temple_osiris);
     decay_service(housed.temple_ra);

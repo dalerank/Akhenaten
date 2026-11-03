@@ -1641,11 +1641,6 @@ static void __test_building_set_native_meeting(int hut_id, int meeting_id) {
 }
 ANK_FUNCTION_2(__test_building_set_native_meeting);
 
-static void __test_make_floodplain_water(int x, int y) {
-    map_terrain_add(tile2i(x, y), TERRAIN_WATER | TERRAIN_FLOODPLAIN);
-}
-ANK_FUNCTION_2(__test_make_floodplain_water);
-
 static void __test_make_wall(int x, int y) {
     map_terrain_add(tile2i(x, y), TERRAIN_WALL);
 }
