@@ -2,18 +2,17 @@
 
 #include "figuretype/figure_enemy_fast_sword.h"
 
-// Enemy chariots are fast melee raiders. Behaviourally they reuse the shared
-// fast-sword enemy logic (marching, formation handling, melee fighting); this
-// dedicated type keeps them grouped and gives future chariot-specific tuning
-// (speed, the second attack animation) a home. Only Assyrian and Hyksos armies
-// field chariots today (enemies.js type3 = 10%); the rest are registered too so
-// every FIGURE_ENEMY_*_CHARIOT resolves to a class instead of asserting when a
-// mission or the console spawns it. Attack cadence against buildings falls back
-// to figure_enemy_fast_sword::interval_attack_delay() (the chariot configs carry
-// no interval field), so the leaves do not override it.
+// Enemy chariots are OG FIG_ENEMY_HEAVY (45) / FIGURE_ENEMY_CHARIOT: shared
+// fast-sword enemy AI plus the chariot cart trailer (enemy_set_cart). Only
+// Assyrian and Hyksos armies field chariots today (enemies.js type3 = 10%);
+// the rest are registered so every FIGURE_ENEMY_*_CHARIOT resolves to a class.
 class figure_enemy_chariot : public figure_enemy_fast_sword {
 public:
     figure_enemy_chariot(figure* f) : figure_enemy_fast_sword(f) {}
+
+    virtual void on_create() override;
+    virtual void update_animation() override;
+    void update_chariot_cart();
 };
 
 class figure_assyrian_chariot : public figure_enemy_chariot {
@@ -43,6 +42,9 @@ public:
 
     struct static_params : public base_params_t, public figure_static_params {
     } FIGURE_STATIC_DATA_T;
+
+    // OG ENEMY_FOOT_EGYPTIAN_CHARIOT speed_factor = 2.
+    virtual int8_t enemy_speed_multiplier() const override { return 2; }
 };
 ANK_CONFIG_STRUCT(figure_egyptian_chariot::static_params, interval_attack_delay)
 

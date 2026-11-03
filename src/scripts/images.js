@@ -69,3 +69,15 @@ cartpusher_sled_offsets = [
   {x:17, y:7},
   {x:0, y:-12}
 ]
+
+// OG enemy_cart_offsets (FIG_ENEMY_HEAVY / enemy chariot trailer).
+enemy_chariot_cart_offsets = [
+  {x:22, y:-18},
+  {x:27, y:-3},
+  {x:23, y:17},
+  {x:0, y:11},
+  {x:-21, y:17},
+  {x:-25, y:-1},
+  {x:-17, y:-17},
+  {x:0, y:-12}
+]
