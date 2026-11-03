@@ -6,7 +6,7 @@ building_temple_ptah {
     animations {
       preview { pack:PACK_GENERAL, id:20 }
       base { pack:PACK_GENERAL, id:20 }
-      work { pos[70, -103], pack:PACK_GENERAL, id:20, offset:1, max_frames:11 }
+      work { pos[94, -85], pack:PACK_GENERAL, id:20, offset:1, max_frames:12 }
     }
 
     min_houses_coverage : 50
@@ -16,11 +16,11 @@ building_temple_ptah {
     building_size : 3
     meta { text_id: 94, help_link:"message_building_shrine_and_temple" }
     info_sound : "Wavs/tem_ptah_l.wav"
-    cost [ 30, 50, 80, 150, 300 ]
+    cost [ 30, 120, 150, 180, 225 ]
     desirability { value[6], step[2], step_size[-2], range[6] }
     laborers[8]
     fire_risk[0]
-    damage_risk[2]
+    damage_risk[10]
 
     flags {
       is_temple: true
