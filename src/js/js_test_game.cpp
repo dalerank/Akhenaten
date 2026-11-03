@@ -1496,6 +1496,39 @@ static int __test_count_figures(int type) {
 }
 ANK_FUNCTION_1(__test_count_figures);
 
+static void __test_buildings_generate_figures() {
+    g_city.buildings_generate_figure();
+}
+ANK_FUNCTION(__test_buildings_generate_figures);
+
+static void __test_building_force_road_access(int bid) {
+    building *b = building_get(bid);
+    if (!b) {
+        return;
+    }
+    b->has_road_access = true;
+    if (!b->road_access.valid()) {
+        b->road_access = b->tile;
+    }
+}
+ANK_FUNCTION_1(__test_building_force_road_access);
+
+static int __test_figure_type_max_roam(int type) {
+    if (type <= FIGURE_NONE || type >= FIGURE_MAX) {
+        return -1;
+    }
+    return figure_static_params::get((e_figure_type)type).max_roam_length;
+}
+ANK_FUNCTION_1(__test_figure_type_max_roam);
+
+static int __test_figure_type_category(int type) {
+    if (type <= FIGURE_NONE || type >= FIGURE_MAX) {
+        return -1;
+    }
+    return (int)figure_static_params::get((e_figure_type)type).category;
+}
+ANK_FUNCTION_1(__test_figure_type_category);
+
 static int __test_mummy_spawn_wave(int count) {
     return figure_mummy::spawn_wave(count);
 }

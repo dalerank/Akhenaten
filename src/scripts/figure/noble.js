@@ -22,8 +22,9 @@ figure_noble {
 		noble_city_is_amazing { sound:"noble_city_is_amazing.wav", text: "#noble_city_is_amazing" }
 	}
 
-	category: figure_category_native
+	category: figure_category_citizen
 	max_damage: 10
+	max_roam_length: 128
 	terrain_usage: TERRAIN_USAGE_ROADS
 }
 

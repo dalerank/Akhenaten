@@ -220,13 +220,25 @@ void building_house::highlight_waypoints() {
 }
 
 void building_house::spawn_figure() {
-    if (!has_road_access()) {
+    // OG spawn_house_walker: manor/estate only, every 41 days, one house per generate pass.
+    // Does not bind figure_id / labor spawn timer / population gate.
+    if (!is_nobles() || !has_road_access()) {
         return;
     }
 
-    if (is_nobles() && house_population() > 20) {
-        common_spawn_roamer(FIGURE_NOBLES, 0, (e_figure_action)ACTION_0_NOBLE_ROAMING);
+    base.figure_spawn_delay++;
+    if (base.figure_spawn_delay <= 40 || g_city.figures.house_noble_spawned_this_tick) {
+        return;
     }
+
+    base.figure_spawn_delay = 0;
+    g_city.figures.house_noble_spawned_this_tick = true;
+
+    tile2i spawn_tile = base.road_access.valid() ? base.road_access : base.tile;
+    figure *f = figure_create(FIGURE_NOBLES, spawn_tile, DIR_4_BOTTOM_LEFT);
+    f->action_state = ACTION_0_NOBLE_ROAMING;
+    f->set_home(base.id);
+    f->init_roaming_from_building(DIR_4_BOTTOM_LEFT);
 }
 
 template<typename T>

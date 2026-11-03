@@ -538,6 +538,7 @@ bool city_t::available_resource(e_resource resource) {
 
 void city_t::buildings_generate_figure() {
     OZZY_PROFILER_FUNCTION();
+    figures.house_noble_spawned_this_tick = false;
     buildings_valid_do([] (building &b) {
         switch (b.type) {
         case BUILDING_UNUSED_NATIVE_HUT_88: 
