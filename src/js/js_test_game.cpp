@@ -3392,11 +3392,69 @@ static int __test_bazaar_attach_buyer(int bid, int slot, int collecting_item) {
     f->advance_action(ACTION_145_MARKET_BUYER_GOING_TO_STORAGE);
     bazaar->base.set_figure(slot, f->id);
     if (auto *buyer = f->dcast_market_buyer()) {
+        if (figure_market_buyer::use_og_trip()) {
+            int8_t items[4] = { -1, -1, -1, -1 };
+            items[0] = (int8_t)f->collecting_item_id;
+            const bool food = f->collecting_item_id <= INVENTORY_FOOD4;
+            buyer->init_og_trip(items, food);
+        }
         buyer->figure_before_action();
     }
     return f->is_alive() ? f->id : 0;
 }
 ANK_FUNCTION_3(__test_bazaar_attach_buyer);
+
+static int __test_market_buyer_og_resources(int fid, int index) {
+    figure *f = figure_get(fid);
+    if (!f || f->type != FIGURE_MARKET_BUYER || index < 0 || index > 3) {
+        return -2;
+    }
+    auto *buyer = f->dcast_market_buyer();
+    return buyer ? buyer->runtime_data().resources[index] : -2;
+}
+ANK_FUNCTION_2(__test_market_buyer_og_resources);
+
+static int __test_market_buyer_og_storages_visited(int fid) {
+    figure *f = figure_get(fid);
+    if (!f || f->type != FIGURE_MARKET_BUYER) {
+        return -1;
+    }
+    auto *buyer = f->dcast_market_buyer();
+    return buyer ? buyer->runtime_data().storages_visited : -1;
+}
+ANK_FUNCTION_1(__test_market_buyer_og_storages_visited);
+
+static int __test_market_buyer_og_is_food_trip(int fid) {
+    figure *f = figure_get(fid);
+    if (!f || f->type != FIGURE_MARKET_BUYER) {
+        return -1;
+    }
+    auto *buyer = f->dcast_market_buyer();
+    return buyer ? buyer->runtime_data().is_food_trip : -1;
+}
+ANK_FUNCTION_1(__test_market_buyer_og_is_food_trip);
+
+static int __test_bazaar_og_food_destination(int bid) {
+    auto *bazaar = building_get(bid)->dcast_bazaar();
+    if (!bazaar) {
+        return -1;
+    }
+    int8_t items[4] = { -1, -1, -1, -1 };
+    building *dest = bazaar->get_og_food_destination(items);
+    return (dest && dest->id) ? dest->id : 0;
+}
+ANK_FUNCTION_1(__test_bazaar_og_food_destination);
+
+static int __test_bazaar_og_goods_destination(int bid) {
+    auto *bazaar = building_get(bid)->dcast_bazaar();
+    if (!bazaar) {
+        return -1;
+    }
+    int8_t items[4] = { -1, -1, -1, -1 };
+    building *dest = bazaar->get_og_goods_destination(items);
+    return (dest && dest->id) ? dest->id : 0;
+}
+ANK_FUNCTION_1(__test_bazaar_og_goods_destination);
 
 static int __test_bazaar_max_buyers_param() {
     const auto &p = (const building_bazaar::static_params &)building_static_params::get(BUILDING_BAZAAR);

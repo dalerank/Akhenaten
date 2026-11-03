@@ -28,6 +28,109 @@
 
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_market_buyer);
 
+namespace {
+
+int og_stock_loads(int stock, int max_loads) {
+    int loads = 0;
+    for (int level = max_loads; level >= 1; level--) {
+        if (stock >= level * 100) {
+            loads = level;
+            break;
+        }
+    }
+    if (!loads) {
+        loads = stock > 0 ? 1 : 0;
+    }
+    return loads;
+}
+
+int og_buyer_loads(int want, int available) {
+    if (want < 1) {
+        return 0;
+    }
+    int max_want = want / 100 + 1;
+    int loads = available;
+    if (max_want < loads) {
+        loads = max_want;
+    }
+    return loads < 1 ? 0 : loads;
+}
+
+e_resource inventory_good_resource(int inv) {
+    switch (inv) {
+    case INVENTORY_GOOD1: return RESOURCE_POTTERY;
+    case INVENTORY_GOOD2: return RESOURCE_LUXURY_GOODS;
+    case INVENTORY_GOOD3: return RESOURCE_LINEN;
+    case INVENTORY_GOOD4: return RESOURCE_BEER;
+    default: return RESOURCE_NONE;
+    }
+}
+
+void handoff_arrival_path(figure &f, building *dest) {
+    if (dest && f.trail_path_id && dest->params().flags.keeps_visitor_paths) {
+        building *main = dest->main();
+        if (main) {
+            g_recorded_paths.handoff_to_building(f, main->id);
+        }
+    }
+    if (!f.trail_path_id) {
+        figure_recorded_path_acquire(f);
+    }
+}
+
+} // namespace
+
+bool figure_market_buyer::use_og_trip() {
+    return !game_features::gameplay_change_bazaar_multi_buyers.to_bool();
+}
+
+void figure_market_buyer::init_og_trip(const int8_t items[4], bool food) {
+    auto &d = runtime_data();
+    d.is_food_trip = food ? 1 : 0;
+    d.storages_visited = 0;
+    for (int i = 0; i < 4; i++) {
+        d.resources[i] = items[i];
+        d.amounts_bought[i] = 0;
+    }
+    for (int i = 0; i < 3; i++) {
+        d.visited_storage_ids[i] = 0;
+    }
+    for (int i = 0; i < 4; i++) {
+        if (items[i] >= 0) {
+            base.collecting_item_id = (uint8_t)items[i];
+            break;
+        }
+    }
+}
+
+bool figure_market_buyer::og_has_bought() const {
+    const auto &d = runtime_data();
+    for (int i = 0; i < 4; i++) {
+        if (d.amounts_bought[i] != 0) {
+            return true;
+        }
+    }
+    return false;
+}
+
+void figure_market_buyer::og_return_or_die() {
+    if (og_has_bought()) {
+        advance_action(ACTION_146_MARKET_BUYER_RETURNING);
+        return;
+    }
+    poof();
+}
+
+void figure_market_buyer::og_go_to_storage(int storage_id) {
+    building *b = building_get(storage_id);
+    if (!b || !b->id) {
+        og_return_or_die();
+        return;
+    }
+    base.set_destination(storage_id);
+    advance_action(ACTION_145_MARKET_BUYER_GOING_TO_STORAGE);
+}
+
 void figure_market_buyer::figure_before_action() {
     building *b = home();
     const bool in_buyer_slot = b->has_figure(BUILDING_SLOT_MARKET_BUYER, id())
@@ -43,13 +146,7 @@ void figure_market_buyer::apply_return_home_spawn_cooldown() {
         return;
     }
 
-    if (!game_features::gameplay_change_bazaar_multi_buyers) {
-        h->figure_spawn_delay = -3;
-        return;
-    }
-
-    // Cooldown only when this is the last active buyer. Exclude self, and ignore
-    // buyers that already finished return (action_state < 0 → dead next tick).
+    // Cooldown only when this is the last active buyer (OG dual food+goods, and enhanced multi).
     int others = 0;
     auto count_other = [&](e_building_slot slot) {
         if (!h->has_figure_of_type(slot, FIGURE_MARKET_BUYER)
@@ -74,6 +171,18 @@ void figure_market_buyer::figure_action() {
         break;
 
     case ACTION_145_MARKET_BUYER_GOING_TO_STORAGE:
+        if (use_og_trip()) {
+            // Stay in 145 on arrival so og_at_storage can chain another storage.
+            ok = do_gotobuilding(destination(), true, TERRAIN_USAGE_ROADS,
+                                 ACTION_145_MARKET_BUYER_GOING_TO_STORAGE,
+                                 ACTION_146_MARKET_BUYER_RETURNING);
+            if (ok) {
+                handoff_arrival_path(base, destination());
+                og_at_storage();
+            }
+            break;
+        }
+
         ok = do_gotobuilding(destination(), true, TERRAIN_USAGE_ROADS, ACTION_146_MARKET_BUYER_RETURNING);
         if (ok) {
             building *dest = destination();
@@ -83,15 +192,7 @@ void figure_market_buyer::figure_action() {
             } else {
                 took = take_food_from_storage(home(), destination());
             }
-            if (took && dest && base.trail_path_id && dest->params().flags.keeps_visitor_paths) {
-                building *main = dest->main();
-                if (main) {
-                    g_recorded_paths.handoff_to_building(base, main->id);
-                }
-            }
-            if (!base.trail_path_id) {
-                figure_recorded_path_acquire(base);
-            }
+            handoff_arrival_path(base, dest);
             if (!took) {
                 advance_action(ACTION_146_MARKET_BUYER_RETURNING);
             }
@@ -334,20 +435,166 @@ void distribute_market_resources(building *b, building *market) {
 }
 
 
+int figure_market_buyer::og_buy_food_slot(int index, building *storage_b) {
+    auto &d = runtime_data();
+    const int slot = d.resources[index];
+    if (slot < INVENTORY_FOOD1 || slot > INVENTORY_FOOD4) {
+        return 0;
+    }
+
+    e_resource resource = g_city.allowed_foods(slot);
+    if (!resource || g_city.resource.is_stockpiled(resource)) {
+        return 0;
+    }
+
+    building_bazaar *bazaar = home()->dcast_bazaar();
+    building_storage *storage = storage_b->dcast_storage();
+    if (!bazaar || !storage) {
+        return 0;
+    }
+
+    const int max_stock = slot == INVENTORY_FOOD1 ? 800 : 600;
+    const int want = max_stock - bazaar->runtime_data().inventory[slot].value - d.amounts_bought[index];
+    if (want < 1) {
+        return 0;
+    }
+
+    const int loads = og_buyer_loads(want, og_stock_loads(storage->amount(resource), 8));
+    if (loads <= 0) {
+        return 0;
+    }
+
+    storage->remove_resource(resource, loads * 100);
+    base.collecting_item_id = (uint8_t)slot;
+    int leader = id();
+    for (int i = 0; i < 8 && (i == 0 || i < loads); i++) {
+        leader = create_delivery_boy(leader, slot);
+    }
+    d.amounts_bought[index] = (uint16_t)(d.amounts_bought[index] + loads * 100);
+    return 1;
+}
+
+int figure_market_buyer::og_buy_goods_slot(int index, building *storage_b) {
+    auto &d = runtime_data();
+    const int slot = d.resources[index];
+    e_resource resource = inventory_good_resource(slot);
+    if (!resource || g_city.resource.is_stockpiled(resource)) {
+        return 0;
+    }
+
+    building_bazaar *bazaar = home()->dcast_bazaar();
+    building_storage_yard *warehouse = storage_b->dcast_storage_yard();
+    if (!bazaar || !warehouse) {
+        return 0;
+    }
+
+    const int want = 400 - bazaar->runtime_data().inventory[slot].value - d.amounts_bought[index];
+    if (want < 1) {
+        return 0;
+    }
+
+    const int loads = og_buyer_loads(want, og_stock_loads(warehouse->amount(resource), 4));
+    if (loads <= 0) {
+        return 0;
+    }
+
+    warehouse->remove_resource(resource, loads * 100);
+    base.collecting_item_id = (uint8_t)slot;
+    int leader = id();
+    for (int i = 0; i < 4 && (i == 0 || i < loads); i++) {
+        leader = create_delivery_boy(leader, slot);
+    }
+    d.amounts_bought[index] = (uint16_t)(d.amounts_bought[index] + loads * 100);
+    return 1;
+}
+
+void figure_market_buyer::og_next_storage() {
+    auto &d = runtime_data();
+    if (d.storages_visited >= 3) {
+        og_return_or_die();
+        return;
+    }
+
+    building_bazaar *bazaar = home()->dcast_bazaar();
+    if (!bazaar) {
+        og_return_or_die();
+        return;
+    }
+
+    int wants[4] = {};
+    for (int i = 0; i < 4; i++) {
+        const int item = d.resources[i];
+        wants[i] = 0;
+        if (item < 0) {
+            continue;
+        }
+        const int max = d.is_food_trip ? (item == INVENTORY_FOOD1 ? 800 : 600) : 400;
+        wants[i] = max - bazaar->runtime_data().inventory[item].value - d.amounts_bought[i];
+    }
+
+    auto best_slot = [&]() -> int {
+        int best = -1;
+        int max_loads = 0;
+        for (int i = 0; i < 4; i++) {
+            if (wants[i] / 100 > max_loads) {
+                best = i;
+                max_loads = wants[i] / 100;
+            }
+        }
+        return best;
+    };
+
+    int nearest[INVENTORY_MAX] = {};
+    bazaar->update_og_buyer_storages(nearest);
+
+    int index = best_slot();
+    while (index != -1) {
+        const int item = d.resources[index];
+        if (item >= 0 && item < INVENTORY_MAX && nearest[item] > 0) {
+            og_go_to_storage(nearest[item]);
+            return;
+        }
+        wants[index] = 0;
+        index = best_slot();
+    }
+    og_return_or_die();
+}
+
+void figure_market_buyer::og_at_storage() {
+    building *storage_b = destination();
+    if (!storage_b || !storage_b->id) {
+        og_return_or_die();
+        return;
+    }
+
+    auto &d = runtime_data();
+    for (int i = 0; i < 4; i++) {
+        const int item = d.resources[i];
+        if (item < 0) {
+            continue;
+        }
+        if (item <= INVENTORY_FOOD4) {
+            og_buy_food_slot(i, storage_b);
+        } else if (item <= INVENTORY_GOOD4) {
+            og_buy_goods_slot(i, storage_b);
+        }
+    }
+
+    if (d.storages_visited < 3) {
+        d.visited_storage_ids[d.storages_visited] = (uint16_t)storage_b->id;
+    }
+    d.storages_visited++;
+    og_next_storage();
+}
+
 bool figure_market_buyer::take_resource_from_storageyard(building* b) {
     building_storage_yard *warehouse = b->dcast_storage_yard();
     if (!warehouse) {
         return false;
     }
 
-    e_resource resource;
-    switch (base.collecting_item_id) {
-    case INVENTORY_GOOD1: resource = RESOURCE_POTTERY; break;
-    case INVENTORY_GOOD2: resource = RESOURCE_LUXURY_GOODS; break;
-    case INVENTORY_GOOD3: resource = RESOURCE_LINEN; break;
-    case INVENTORY_GOOD4: resource = RESOURCE_BEER; break;
-
-    default:
+    e_resource resource = inventory_good_resource(base.collecting_item_id);
+    if (!resource) {
         return false;
     }
 
@@ -385,10 +632,10 @@ int provide_market_goods(building* market, tile2i tile) {
     return serviced;
 }
 
-int figure_market_buyer::create_delivery_boy(int leader_id) {
+int figure_market_buyer::create_delivery_boy(int leader_id, int inventory_slot) {
     figure* boy = figure_create(FIGURE_DELIVERY_BOY, tile(), 0);
     boy->leading_figure_id = leader_id;
-    boy->collecting_item_id = base.collecting_item_id;
+    boy->collecting_item_id = inventory_slot >= 0 ? (uint8_t)inventory_slot : base.collecting_item_id;
     boy->set_home(base.homeID());
     return boy->id;
 }

@@ -45,12 +45,14 @@ public:
     virtual bool draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) override;
     virtual void bind_dynamic(io_buffer *iob, size_t version) override;
 
-    // exclude[i] = true → skip inventory slot i.
-    // tick_demand: decrement *_demand during scan (OFF path / parity).
-    // Multi pick_next ticks demand only after a successful destination (see tick_good_demands).
     building *get_storage_destination(e_bazaar_fetch_group group = e_bazaar_fetch_all,
                                       const bool *exclude = nullptr,
                                       bool tick_demand = true);
+
+    building *get_og_food_destination(int8_t items[4]);
+    building *get_og_goods_destination(int8_t items[4]);
+    // Refresh nearest storage ids for an in-progress OG buyer (demand countdown like OG).
+    void update_og_buyer_storages(int nearest_out[INVENTORY_MAX]);
     int effective_max_buyers() const;
     int count_market_buyers() const;
     e_building_slot free_market_buyer_slot() const;

@@ -15,7 +15,7 @@
 //   [test-marker] bazaar_multi_fallback_food2_ok
 //   [test-marker] bazaar_multi_demand_no_burn_on_fail_ok
 //   [test-marker] bazaar_multi_demand_freeze_ok
-//   [test-marker] bazaar_multi_off_slot1_ok
+//   [test-marker] bazaar_multi_off_slot1_ok   (OFF = OG dual food+goods)
 //   [test-marker] bazaar_multi_off_clears_slot3_ok
 
 var __test77_ok = {
@@ -301,10 +301,12 @@ function run_test() {
     __log_marker('bazaar_multi_demand_freeze_ok')
     __test77_ok.demand = true
 
-    // OFF path: spawn only uses slot 1, never slot 3.
+    // OFF path = OG: food buyer on slot 1, goods buyer on slot 3 (when demand + stock).
     game_features.set('gameplay_change_bazaar_multi_buyers', false)
     __test_bazaar_reclaim_slot(bid, BUILDING_SLOT_MARKET_BUYER)
     __test_bazaar_reclaim_slot(bid, BUILDING_SLOT_MARKET_BUYER_2)
+    __test_bazaar_set_inventory(bid, 0, 0)
+    __test_bazaar_set_inventory(bid, 4, 0)
     __test_bazaar_set_good_demands(bid, 10, 0, 0, 0)
     if (!__test_bazaar_force_spawn(bid)) {
         __log_info_native('[test:77] force spawn failed')
@@ -314,38 +316,41 @@ function run_test() {
     var s1 = __test_bazaar_slot_figure(bid, BUILDING_SLOT_MARKET_BUYER)
     var s3 = __test_bazaar_slot_figure(bid, BUILDING_SLOT_MARKET_BUYER_2)
     if (!s1) {
-        __log_info_native('[test:77] OFF spawn should fill slot 1')
+        __log_info_native('[test:77] OFF/OG spawn should fill food slot 1')
         finish()
         return
     }
-    if (s3) {
-        __log_info_native('[test:77] OFF must not spawn on slot 3, got ' + s3)
+    if (!s3) {
+        __log_info_native('[test:77] OFF/OG spawn should fill goods slot 3')
         finish()
         return
     }
-    // Second spawn while slot1 busy must not fill slot 3.
-    __test_bazaar_force_spawn(bid)
-    s3 = __test_bazaar_slot_figure(bid, BUILDING_SLOT_MARKET_BUYER_2)
-    if (s3) {
-        __log_info_native('[test:77] OFF second spawn wrote slot 3')
+    if (!__test_market_buyer_og_is_food_trip(s1)) {
+        __log_info_native('[test:77] slot1 should be food trip')
+        finish()
+        return
+    }
+    if (__test_market_buyer_og_is_food_trip(s3) != 0) {
+        __log_info_native('[test:77] slot3 should be goods trip')
         finish()
         return
     }
     __log_marker('bazaar_multi_off_slot1_ok')
     __test77_ok.offslot = true
 
-    // OFF must poof a leftover slot-3 buyer on spawn.
-    __test_bazaar_reclaim_slot(bid, BUILDING_SLOT_MARKET_BUYER)
-    var orphan = __test_bazaar_attach_buyer(bid, BUILDING_SLOT_MARKET_BUYER_2, 0)
-    if (!orphan) {
-        __log_info_native('[test:77] orphan slot3 attach failed')
+    // OFF/OG reclaims a dead leftover on slot 3 then can refill goods.
+    __test_figure_set_action(s3, -1)
+    __test_bazaar_reclaim_slot(bid, BUILDING_SLOT_MARKET_BUYER_2)
+    if (__test_bazaar_slot_figure(bid, BUILDING_SLOT_MARKET_BUYER_2)) {
+        __log_info_native('[test:77] reclaim should clear dead goods buyer')
         finish()
         return
     }
+    __test_bazaar_set_good_demands(bid, 10, 0, 0, 0)
     __test_bazaar_force_spawn(bid)
     s3 = __test_bazaar_slot_figure(bid, BUILDING_SLOT_MARKET_BUYER_2)
-    if (s3) {
-        __log_info_native('[test:77] OFF spawn must clear orphan slot3, got ' + s3)
+    if (!s3) {
+        __log_info_native('[test:77] OFF/OG should respawn goods buyer on slot 3')
         finish()
         return
     }
