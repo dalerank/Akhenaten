@@ -253,10 +253,10 @@ building_mud_tower = {
   fire_proof : true
   meta : { text_id: 91, help_link:"message_building_defensive_structures" }
   labor_category : LABOR_CATEGORY_MILITARY
-  min_houses_coverage : 50
-  cost: [ 30, 50, 100, 150, 200 ]
+  min_houses_coverage : 51
+  cost: [ 30, 120, 150, 180, 225 ]
   desirability : { value:[-8], step:[1], step_size:[2], range: [3] }
-  laborers:[6], fire_risk:[0], damage_risk: [3]
+  laborers:[6], fire_risk:[0], damage_risk: [3, 12, 15, 18, 22]
   flags {
     is_wall: true
     is_defense: true
