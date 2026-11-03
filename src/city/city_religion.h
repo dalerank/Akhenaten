@@ -111,7 +111,7 @@ struct city_religion_t {
     void reset();
     int coverage_avg(e_god god);
     void calc_coverage();
-    int god_coverage_total(e_god god, e_building_type temple, e_building_type shrine, e_building_type complex);
+    int god_coverage_total(e_god god, e_building_type shrine, e_building_type temple, e_building_type complex);
     void calculate_gods_mood_targets();
     void update();
     void update_mood(e_god randm_god);

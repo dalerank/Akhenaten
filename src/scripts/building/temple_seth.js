@@ -10,6 +10,7 @@ building_temple_seth {
     }
 
     min_houses_coverage : 50
+    spawn_delays : [3, 7, 10, 15, 20]
     labor_category : LABOR_CATEGORY_RELIGION
     overlay : OVERLAY_RELIGION_SETH
     sound_channel : SOUND_CHANNEL_CITY_TEMPLE_SETH
@@ -37,7 +38,7 @@ function building_temple_seth_spawn_figure(ev) {
     if (!b.is_main) {
         return
     }
-    b.common_spawn_roamer(FIGURE_PRIEST, b.params.min_houses_coverage, ACTION_125_ROAMER_ROAMING)
+    b.spawn_service_walker(building_temple_seth, FIGURE_PRIEST, ACTION_125_ROAMER_ROAMING)
 }
 
 [es=(building_temple_seth, draw_usable_paths)]
