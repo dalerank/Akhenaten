@@ -29,6 +29,7 @@ public:
     static back_tile_orientation second_part_tile(build_planner &planer, tile2i end, int city_orientation);
     static void update_image_set(building &maingate);
     static void update_image_set(building &maingate, tile2i back_tile);
+    static tile2i claim_2x2_footprint(building &part_a, building &part_b);
 
     virtual void spawn_figure() override;
 };

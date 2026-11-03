@@ -551,9 +551,9 @@ building_mud_gatehouse = {
 
   building_size : 1
   meta : { text_id:90, help_link:"message_building_defensive_structures" }
-  cost : [ 50, 70, 100, 150, 200 ]
+  cost : [ 50, 200, 250, 300, 375 ]
   desirability : { value:[-6], step:[1], step_size:[2], range: [6] }
-  laborers:[3], fire_risk:[0], damage_risk: [3]
+  laborers:[3], fire_risk:[0], damage_risk: [3, 12, 15, 18, 22]
   flags {
     is_defense: true
     is_wall: true

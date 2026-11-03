@@ -63,6 +63,60 @@ function building_gatehouse_second_part_tile(end, city_orientation) {
     return { tile: picked.tile, orientation: picked.orientation }
 }
 
+function building_gatehouse_footprint_origin(road_a, road_b) {
+    var x0 = Math.min(road_a.x, road_b.x)
+    var y0 = Math.min(road_a.y, road_b.y)
+    var horizontal = road_a.y == road_b.y
+    var candidates = horizontal
+        ? [{ x: x0, y: y0 - 1 }, { x: x0, y: y0 }]
+        : [{ x: x0 - 1, y: y0 }, { x: x0, y: y0 }]
+
+    function score(origin) {
+        var s = 0
+        if (__map_orientation_for_gatehouse(origin) > 0) {
+            s += 10
+        }
+        for (var dy = 0; dy < 2; dy++) {
+            for (var dx = 0; dx < 2; dx++) {
+                var t = { x: origin.x + dx, y: origin.y + dy }
+                if ((t.x == road_a.x && t.y == road_a.y) || (t.x == road_b.x && t.y == road_b.y)) {
+                    continue
+                }
+                if (terrain.is(t, TERRAIN_WALL) || terrain.is(t, TERRAIN_GATEHOUSE)) {
+                    s += 2
+                }
+            }
+        }
+        return s
+    }
+
+    var best = -1
+    var origin = candidates[1]
+    for (var i = 0; i < candidates.length; i++) {
+        var sc = score(candidates[i])
+        if (sc > best) {
+            best = sc
+            origin = candidates[i]
+        }
+    }
+    return origin
+}
+
+function building_gatehouse_side_tiles(end, back_tile) {
+    var origin = building_gatehouse_footprint_origin(end, back_tile.tile)
+    var sides = []
+    for (var dy = 0; dy < 2; dy++) {
+        for (var dx = 0; dx < 2; dx++) {
+            var t = { x: origin.x + dx, y: origin.y + dy }
+            if ((t.x == end.x && t.y == end.y) || (t.x == back_tile.tile.x && t.y == back_tile.tile.y)) {
+                continue
+            }
+            sides.push(t)
+        }
+    }
+    return sides
+}
+
 function building_gatehouse_placement_check(ev) {
     var fully_blocked = !!city.finance.is_out_of_money
     var blocked = fully_blocked
@@ -71,6 +125,7 @@ function building_gatehouse_placement_check(ev) {
     var back_tile = building_gatehouse_second_part_tile(end, city_orientation)
     var blocked_tiles_main = []
     var blocked_tiles_second = []
+    var side_tiles = []
 
     if (back_tile.orientation >= 0) {
         var main_blocked = building_gatehouse_tile_blocked(end)
@@ -78,6 +133,7 @@ function building_gatehouse_placement_check(ev) {
         blocked_tiles_main.push({ tile: end, blocked: main_blocked })
         blocked_tiles_second.push({ tile: back_tile.tile, blocked: second_blocked })
         blocked = blocked || main_blocked || second_blocked
+        side_tiles = building_gatehouse_side_tiles(end, back_tile)
     } else {
         blocked = true
         blocked_tiles_main.push({ tile: end, blocked: true })
@@ -90,7 +146,8 @@ function building_gatehouse_placement_check(ev) {
         city_orientation: city_orientation,
         back_tile: back_tile,
         blocked_tiles_main: blocked_tiles_main,
-        blocked_tiles_second: blocked_tiles_second
+        blocked_tiles_second: blocked_tiles_second,
+        side_tiles: side_tiles
     }
 }
 
@@ -130,12 +187,25 @@ function building_gatehouse_ghost_preview(ev) {
     var main_pixel = { x: pixel.x + main_off[0], y: pixel.y + main_off[1] }
     var ground_pixel = { x: pixel.x + part_off[0], y: pixel.y + part_off[1] }
 
+    var cover_key = (back_tile.orientation == 0 || back_tile.orientation == 2) ? "base_cover_n" : "base_cover_w"
     if (back_tile.orientation == 0 || back_tile.orientation == 2) {
         city_planner.draw_ghost(ground_pixel, params.first_img("base_second_n"))
         city_planner.draw_ghost(main_pixel, params.first_img("base_n"))
     } else {
         city_planner.draw_ghost(main_pixel, params.first_img("base_second_w"))
         city_planner.draw_ghost(ground_pixel, params.first_img("base_w"))
+    }
+
+    var cover_id = params.first_img(cover_key)
+    var end_view = building_gatehouse_tile_to_view(ev.end)
+    for (var i = 0; i < check.side_tiles.length; i++) {
+        var side = check.side_tiles[i]
+        var side_view = building_gatehouse_tile_to_view(side)
+        var side_pixel = {
+            x: pixel.x + (side_view.x - end_view.x),
+            y: pixel.y + (side_view.y - end_view.y)
+        }
+        city_planner.draw_ghost(side_pixel, cover_id)
     }
 }
 

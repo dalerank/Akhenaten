@@ -19,7 +19,6 @@
 #include "grid/road_access.h"
 #include "grid/orientation.h"
 #include "grid/routing/routing_terrain.h"
-#include "building/building_barracks.h"
 #include "building/building_wall.h"
 
 #include "js/js_game.h"
@@ -116,30 +115,79 @@ static bool is_gatehouse_building_type(e_building_type type) {
     }
 }
 
-static void apply_gatehouse_footprint_images(tile2i main_tile, tile2i back_tile, int main_image, int back_image) {
+// OG mud/brick gatehouse is a size-2 footprint. The road pair is two opposite tiles;
+// the other two tiles of the 2x2 are the flanking side parts (cover sprites).
+static tile2i gatehouse_footprint_origin(tile2i road_a, tile2i road_b) {
+    const int x0 = std::min(road_a.x(), road_b.x());
+    const int y0 = std::min(road_a.y(), road_b.y());
+    const bool horizontal = road_a.y() == road_b.y();
+
+    tile2i candidates[2];
+    if (horizontal) {
+        candidates[0] = tile2i(x0, y0 - 1);
+        candidates[1] = tile2i(x0, y0);
+    } else {
+        candidates[0] = tile2i(x0 - 1, y0);
+        candidates[1] = tile2i(x0, y0);
+    }
+
+    auto score = [&](tile2i origin) {
+        if (!map_grid_is_inside(origin, 2)) {
+            return -1;
+        }
+        int s = 0;
+        if (map_orientation_for_gatehouse(origin.x(), origin.y()) > 0) {
+            s += 10;
+        }
+        for (int dy = 0; dy < 2; dy++) {
+            for (int dx = 0; dx < 2; dx++) {
+                const tile2i t = origin.shifted(dx, dy);
+                if (t == road_a || t == road_b) {
+                    continue;
+                }
+                if (map_terrain_is(t, TERRAIN_WALL) || map_terrain_is(t, TERRAIN_GATEHOUSE)) {
+                    s += 2;
+                }
+            }
+        }
+        return s;
+    };
+
+    int best = -1;
+    tile2i origin = candidates[1];
+    for (tile2i c : candidates) {
+        const int s = score(c);
+        if (s > best) {
+            best = s;
+            origin = c;
+        }
+    }
+    return origin;
+}
+
+static void apply_gatehouse_footprint_images(tile2i main_tile, tile2i back_tile, int main_image, int back_image, int cover_main, int cover_back) {
     map_image_set(main_tile, main_image);
     map_image_set(back_tile, back_image);
 
-    const int x0 = std::min(main_tile.x(), back_tile.x());
-    const int y0 = std::min(main_tile.y(), back_tile.y());
+    tile2i origin = gatehouse_footprint_origin(main_tile, back_tile);
     const bool horizontal_pair = main_tile.y() == back_tile.y();
 
-    for (int dy = 0; dy <= 1; dy++) {
-        for (int dx = 0; dx <= 1; dx++) {
-            const tile2i tile(x0 + dx, y0 + dy);
+    for (int dy = 0; dy < 2; dy++) {
+        for (int dx = 0; dx < 2; dx++) {
+            const tile2i tile = origin.shifted(dx, dy);
             if (tile == main_tile || tile == back_tile) {
                 continue;
             }
-
             if (!map_terrain_is(tile, TERRAIN_GATEHOUSE)) {
                 continue;
             }
 
-            if (horizontal_pair) {
-                map_image_set(tile, tile.x() == main_tile.x() ? main_image : back_image);
-            } else {
-                map_image_set(tile, tile.y() == main_tile.y() ? main_image : back_image);
-            }
+            const int cover = horizontal_pair
+                ? (tile.x() == main_tile.x() ? cover_main : cover_back)
+                : (tile.y() == main_tile.y() ? cover_main : cover_back);
+            map_image_set(tile, cover ? cover : (horizontal_pair
+                ? (tile.x() == main_tile.x() ? main_image : back_image)
+                : (tile.y() == main_tile.y() ? main_image : back_image)));
         }
     }
 }
@@ -148,31 +196,43 @@ static void apply_gatehouse_tile_images(tile2i main_tile, tile2i back_tile, cons
     const int city_orientation = g_camera.orientation / 2;
     const int building_rotation = calc_general_direction(main_tile, back_tile) / 2;
 
-    static const xstring txs[4] = { "base_n", "base_w", "base_second_n", "base_second_w" };
-    int ids[4] = {};
-    for (int i = 0; i < 4; ++i) {
+    static const xstring txs[6] = {
+        "base_n", "base_w", "base_second_n", "base_second_w", "base_cover_n", "base_cover_w"
+    };
+    int ids[6] = {};
+    for (int i = 0; i < 6; ++i) {
         ids[i] = bparams.first_img(txs[i]);
     }
 
     int main_image = 0;
     int back_image = 0;
+    int cover_main = 0;
+    int cover_back = 0;
     if (building_rotation == 0 || building_rotation == 2) {
         switch (city_orientation) {
         case 0:
             main_image = ids[0];
             back_image = ids[2];
+            cover_main = ids[4];
+            cover_back = ids[4];
             break;
         case 1:
             main_image = ids[1];
             back_image = ids[3];
+            cover_main = ids[5];
+            cover_back = ids[5];
             break;
         case 2:
             main_image = ids[2];
             back_image = ids[0];
+            cover_main = ids[4];
+            cover_back = ids[4];
             break;
         case 3:
             main_image = ids[3];
             back_image = ids[1];
+            cover_main = ids[5];
+            cover_back = ids[5];
             break;
         }
     } else if (building_rotation == 1 || building_rotation == 3) {
@@ -180,25 +240,33 @@ static void apply_gatehouse_tile_images(tile2i main_tile, tile2i back_tile, cons
         case 0:
             main_image = ids[1];
             back_image = ids[3];
+            cover_main = ids[5];
+            cover_back = ids[5];
             break;
         case 1:
             main_image = ids[2];
             back_image = ids[0];
+            cover_main = ids[4];
+            cover_back = ids[4];
             break;
         case 2:
             main_image = ids[3];
             back_image = ids[1];
+            cover_main = ids[5];
+            cover_back = ids[5];
             break;
         case 3:
             main_image = ids[0];
             back_image = ids[2];
+            cover_main = ids[4];
+            cover_back = ids[4];
             break;
         }
     } else {
         return;
     }
 
-    apply_gatehouse_footprint_images(main_tile, back_tile, main_image, back_image);
+    apply_gatehouse_footprint_images(main_tile, back_tile, main_image, back_image, cover_main, cover_back);
 }
 
 static tile2i infer_gatehouse_back_tile(const building &maingate) {
@@ -300,24 +368,45 @@ void building_gatehouse::on_place(int orientation, int variant) {
     }
     verify_no_crash(backside && mainside);
 
-    // Remove walls on the territory of both parts of the gatehouse
-    map_terrain_remove_with_radius(base.tile, base.size, 0, TERRAIN_WALL);
-    map_terrain_remove_with_radius(backside->tile, 1, 0, TERRAIN_WALL);
-
-    map_building_tiles_add(base.id, base.tile, base.size, 0, TERRAIN_GATEHOUSE | TERRAIN_BUILDING | TERRAIN_ROAD);
-    map_building_tiles_add(backside->id, backside->tile, 1, 0, TERRAIN_GATEHOUSE | TERRAIN_BUILDING | TERRAIN_ROAD);
-
     base.orientation = back_tile.orientation;
+    claim_2x2_footprint(base, *backside);
 
-    update_image_set(*mainside);
-
-    // Update routing for walls and land after placing gatehouse
     map_routing_update_land();
     map_routing_update_walls();
 }
 
+tile2i building_gatehouse::claim_2x2_footprint(building &part_a, building &part_b) {
+    building *mainside = part_a.is_main() ? &part_a : &part_b;
+
+    const tile2i road_a = part_a.tile;
+    const tile2i road_b = part_b.tile;
+    tile2i origin = gatehouse_footprint_origin(road_a, road_b);
+
+    for (int dy = 0; dy < 2; dy++) {
+        for (int dx = 0; dx < 2; dx++) {
+            const tile2i tile = origin.shifted(dx, dy);
+            const bool is_road_part = (tile == road_a || tile == road_b);
+            const int existing = map_building_at(tile);
+            if (!is_road_part && existing && existing != part_a.id && existing != part_b.id) {
+                continue;
+            }
+
+            const int bid = (tile == road_b) ? part_b.id : mainside->id;
+            int terrain = TERRAIN_GATEHOUSE | TERRAIN_BUILDING;
+            if (is_road_part || map_terrain_is(tile, TERRAIN_ROAD)) {
+                terrain |= TERRAIN_ROAD;
+            }
+            map_building_tiles_add(bid, tile, 1, 0, terrain);
+        }
+    }
+
+    update_image_set(*mainside);
+    building_mud_wall::update_area_walls(origin, 2);
+    return origin;
+}
+
 void building_gatehouse::spawn_figure() {
-    // Use main part of the building for spawning figures
+    // OG: mud/brick gatehouses do not request tower sentries — only towers do.
     building *main_building = base.main();
     if (!main_building->is_valid()) {
         return;
@@ -331,53 +420,11 @@ void building_gatehouse::spawn_figure() {
     }
 
     main_impl->common_spawn_labor_seeker(main_building->params().min_houses_coverage);
-    if (main_building->num_workers <= 0) {
-        return;
-    }
-
-    // Request sentry from barracks if no sentry is present
-    if (!main_building->has_figure(0)) {
-        building_barracks_request_tower_sentry();
-    }
 }
 
 bool building_mud_gatehouse::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {
-    int xy = map_property_multi_tile_xy(tile.grid_offset());
-    int orientation = g_camera.orientation;
-    int x = point.x;
-    int y = point.y;
-    if ((orientation == DIR_0_TOP_RIGHT && xy == EDGE_X1Y1) || (orientation == DIR_2_BOTTOM_RIGHT && xy == EDGE_X0Y1)
-        || (orientation == DIR_4_BOTTOM_LEFT && xy == EDGE_X0Y0)
-        || (orientation == DIR_6_TOP_LEFT && xy == EDGE_X1Y0)) {
-        int image_id = base_img();
-        int color_mask = drawing_building_as_deleted(&base) ? COLOR_MASK_RED : 0;
-
-        if (base.orientation == 1) {
-            if (orientation == DIR_0_TOP_RIGHT || orientation == DIR_4_BOTTOM_LEFT) {
-                auto& command = ImageDraw::create_subcommand(ctx, render_command_t::ert_generic);
-                command.image_id = image_id;
-                command.pixel = vec2i{ x - 22, y - 80 };
-                command.mask = color_mask;
-            } else {
-                auto& command = ImageDraw::create_subcommand(ctx, render_command_t::ert_generic);
-                command.image_id = image_id + 1;
-                command.pixel = vec2i{ x - 18, y - 81 };
-                command.mask = color_mask;
-            }
-        } else if (base.orientation == 2) {
-            if (orientation == DIR_0_TOP_RIGHT || orientation == DIR_4_BOTTOM_LEFT) {
-                auto& command = ImageDraw::create_subcommand(ctx, render_command_t::ert_generic);
-                command.image_id = image_id + 1;
-                command.pixel = vec2i{ x - 18, y - 81 };
-                command.mask = color_mask;
-            } else {
-                auto& command = ImageDraw::create_subcommand(ctx, render_command_t::ert_generic);
-                command.image_id = image_id;
-                command.pixel = vec2i{ x - 22, y - 80 };
-                command.mask = color_mask;
-            }
-        }
-    }
+    // OG city_without_overlay skips special overlays for mud/brick gatehouses;
+    // flanking cover lives on the side tiles of the 2x2 footprint (base_cover_*).
     return true;
 }
 
@@ -646,13 +693,6 @@ void building_decorative_gatehouse::spawn_figure() {
     }
 
     common_spawn_labor_seeker(base.params().min_houses_coverage);
-    if (base.num_workers <= 0) {
-        return;
-    }
-
-    if (!base.has_figure(0)) {
-        building_barracks_request_tower_sentry();
-    }
 }
 
 void building_tower_gatehouse::update_map_orientation(int map_orientation) {
