@@ -28,6 +28,7 @@
 #include "building/building_storage.h"
 #include "building/building_storage_yard.h"
 #include "building/building_temple_complex.h"
+#include "building/building_shipyard.h"
 #include "building/monument_mastaba.h"
 #include "building/monument_pyramid.h"
 #include "building/monument_royal_tomb.h"
@@ -1531,6 +1532,32 @@ static int __test_figure_get_damage(int fid) {
     return f->damage;
 }
 ANK_FUNCTION_1(__test_figure_get_damage);
+
+static void __test_figure_set_damage(int fid, int damage) {
+    figure *f = figure_get(fid);
+    if (!f) {
+        return;
+    }
+    f->damage = (uint16_t)std::max(0, damage);
+}
+ANK_FUNCTION_2(__test_figure_set_damage);
+
+static int __test_shipyard_queue_ship(int bid, int fid) {
+    return building_shipyard_queue_ship((figure_id)fid, (building_id)bid) ? 1 : 0;
+}
+ANK_FUNCTION_2(__test_shipyard_queue_ship);
+
+static int __test_shipyard_is_reparing(int bid) {
+    building_shipyard *shipyard = building_get(bid)->dcast_shipyard();
+    return (shipyard && shipyard->runtime_data().reparing) ? 1 : 0;
+}
+ANK_FUNCTION_1(__test_shipyard_is_reparing);
+
+static int __test_shipyard_repair_fid(int bid) {
+    building_shipyard *shipyard = building_get(bid)->dcast_shipyard();
+    return shipyard ? (int)shipyard->runtime_data().repair_fid : 0;
+}
+ANK_FUNCTION_1(__test_shipyard_repair_fid);
 
 static int __test_figure_is_alive(int fid) {
     figure *f = figure_get(fid);

@@ -31,21 +31,20 @@ function shipyard_info_window_on_init(window) {
     window.resource_stored.text = _format(__loc(gid, 7) + " {0}", wood_stored)
     window.ready_prod.text = __loc(gid, 2) + " " + pct_done + "% " + __loc(gid, 3)
 
+    // OG shipwright_text: repair takes precedence; wood check is loads < 1.
     var reason = { group: gid, id: 0 }
     if (!shipyard.has_road_access) {
         reason = { key: "#building_no_road_access" }
+    } else if (shipyard.reparing) {
+        reason.id = wood_stored < 1 ? 10 : 6
+    } else if (shipyard.process_type != FIGURE_NONE) {
+        if (wood_stored == 0 && shipyard.process_type != FIGURE_FISHING_BOAT) {
+            reason.id = 9
+        } else {
+            reason.id = 5
+        }
     } else if (!__city_buildings_ships_requested()) {
         reason.id = 4
-    } else if (shipyard.process_type != FIGURE_NONE) {
-        if (wood_stored == 0) {
-            reason.id = 8
-        } else if (shipyard.reparing) {
-            var left_repair = 100 - progress
-            reason.id = wood_stored > left_repair ? 6 : 10
-        } else {
-            var left_building = 160 - progress
-            reason.id = wood_stored > left_building ? 5 : 9
-        }
     } else {
         reason.id = 4
     }

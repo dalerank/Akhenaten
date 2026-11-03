@@ -1,8 +1,8 @@
 #include "building_shipyard.h"
 BUILDING_RUNTIME_DATA_IMPL(building_shipyard)
 
-
 #include "building/building.h"
+#include "building/building_warship_wharf.h"
 #include "figuretype/figure_fishing_boat.h"
 #include "figuretype/figure_war_ship.h"
 #include "figuretype/figure_transport_ship.h"
@@ -10,6 +10,7 @@ BUILDING_RUNTIME_DATA_IMPL(building_shipyard)
 #include "city/buildings.h"
 #include "city/city.h"
 #include "core/calc.h"
+#include "core/svector.h"
 #include "game/resource.h"
 #include "graphics/elements/panel.h"
 #include "graphics/elements/lang_text.h"
@@ -27,7 +28,239 @@ BUILDING_RUNTIME_DATA_IMPL(building_shipyard)
 #include "city/city_labor.h"
 #include "js/js_game.h"
 
+#include <algorithm>
+
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_shipyard);
+
+namespace {
+
+enum { SHIPYARD_REPAIR_QUEUE_CAPACITY = 64 };
+
+struct shipyard_repair_queue_t {
+    bool in_use = false;
+    building_id bid = 0;
+    svector<figure_id, SHIPYARD_REPAIR_QUEUE_CAPACITY> waiting;
+};
+
+shipyard_repair_queue_t g_shipyard_repair_queues[SHIPYARD_REPAIR_QUEUES];
+
+// OG spawn_shipwright repair/build worker rates: +2/+4/+6/+8/+10.
+int og_shipwright_progress(int pct_workers) {
+    if (pct_workers >= 100) {
+        return 10;
+    }
+    if (pct_workers >= 75) {
+        return 8;
+    }
+    if (pct_workers >= 50) {
+        return 6;
+    }
+    if (pct_workers >= 25) {
+        return 4;
+    }
+    return (pct_workers > 0) ? 2 : 0;
+}
+
+void finish_ship_repair(figure *f) {
+    if (!f) {
+        return;
+    }
+
+    if (auto *warship = smart_cast<figure_warship>(f)) {
+        warship->runtime_data().active_order = figure_warship::e_order_goto_wharf;
+        building *home_b = warship->home();
+        building_warship_wharf *wharf = (home_b && home_b->id) ? home_b->dcast_warship_wharf() : nullptr;
+        if (wharf) {
+            tile2i dock = wharf->get_water_access_tiles().point_a;
+            if (dock.valid()) {
+                warship->move_to_wharf(wharf->id(), dock);
+                return;
+            }
+        }
+        warship->advance_action(ACTION_211_WARSHIP_IDLE_AT_TILE);
+        return;
+    }
+
+    if (auto *transport = smart_cast<figure_transport_ship>(f)) {
+        building *home_b = transport->home();
+        if (home_b && home_b->id) {
+            tile2i dock(home_b->tiles[0]);
+            if (dock.valid()) {
+                transport->move_to_wharf(home_b->id, dock);
+                return;
+            }
+        }
+    }
+}
+
+bool figure_alive_for_repair(figure *f) {
+    return f && f->is_valid() && f->is_alive() && !f->is_dead();
+}
+
+} // namespace
+
+void building_shipyard_repair_queues_clear() {
+    for (int i = 0; i < SHIPYARD_REPAIR_QUEUES; i++) {
+        g_shipyard_repair_queues[i].in_use = false;
+        g_shipyard_repair_queues[i].bid = 0;
+        g_shipyard_repair_queues[i].waiting.clear();
+    }
+}
+
+void building_shipyard_repair_queue_add(building_id bid) {
+    building_shipyard *shipyard = building_get(bid)->dcast_shipyard();
+    if (!shipyard) {
+        return;
+    }
+
+    auto &d = shipyard->runtime_data();
+    if (d.queue_slot != 0) {
+        int idx = d.queue_slot - 1;
+        if (idx >= 0 && idx < SHIPYARD_REPAIR_QUEUES) {
+            g_shipyard_repair_queues[idx].in_use = true;
+            g_shipyard_repair_queues[idx].bid = bid;
+        }
+        return;
+    }
+
+    for (int i = 0; i < SHIPYARD_REPAIR_QUEUES; i++) {
+        if (!g_shipyard_repair_queues[i].in_use) {
+            d.queue_slot = (uint8_t)(i + 1);
+            g_shipyard_repair_queues[i].in_use = true;
+            g_shipyard_repair_queues[i].bid = bid;
+            g_shipyard_repair_queues[i].waiting.clear();
+            return;
+        }
+    }
+}
+
+void building_shipyard_repair_queue_remove(building_id bid) {
+    building_shipyard *shipyard = building_get(bid)->dcast_shipyard();
+    if (!shipyard) {
+        return;
+    }
+
+    auto &d = shipyard->runtime_data();
+    int idx = (int)d.queue_slot - 1;
+    if (idx >= 0 && idx < SHIPYARD_REPAIR_QUEUES) {
+        g_shipyard_repair_queues[idx].in_use = false;
+        g_shipyard_repair_queues[idx].bid = 0;
+        g_shipyard_repair_queues[idx].waiting.clear();
+    }
+    d.queue_slot = 0;
+}
+
+int building_shipyard_repair_queue_size(building_id bid) {
+    building_shipyard *shipyard = building_get(bid)->dcast_shipyard();
+    if (!shipyard || !shipyard->base.is_valid()) {
+        return -1;
+    }
+    return shipyard->repair_queue_size();
+}
+
+int building_shipyard_find_best_dock(figure_id fid) {
+    figure *f = figure_get(fid);
+    if (!f) {
+        return 0;
+    }
+
+    int best_distance = 100000;
+    int best_id = 0;
+    int best_size = 200;
+
+    buildings_valid_do([&](building &b) {
+        auto *shipyard = b.dcast_shipyard();
+        if (!shipyard || shipyard->num_workers() <= 0) {
+            return;
+        }
+        int size = shipyard->repair_queue_size();
+        if (size < 0) {
+            return;
+        }
+        int dx = b.tile.x() - f->tile.x();
+        int dy = b.tile.y() - f->tile.y();
+        int distance = dx * dx + dy * dy;
+        if (size < best_size || (size == best_size && distance < best_distance)) {
+            best_id = b.id;
+            best_size = size;
+            best_distance = distance;
+        }
+    });
+
+    return best_id;
+}
+
+bool building_shipyard_queue_ship(figure_id fid, building_id bid) {
+    building_shipyard *shipyard = building_get(bid)->dcast_shipyard();
+    if (!shipyard) {
+        return false;
+    }
+
+    figure *f = figure_get(fid);
+    if (!figure_alive_for_repair(f)) {
+        return false;
+    }
+
+    auto &d = shipyard->runtime_data();
+    if (d.queue_slot == 0) {
+        building_shipyard_repair_queue_add(bid);
+    }
+    if (d.queue_slot == 0) {
+        return false;
+    }
+
+    auto &q = g_shipyard_repair_queues[d.queue_slot - 1].waiting;
+    for (figure_id existing : q) {
+        if (existing == fid) {
+            return true;
+        }
+    }
+    if (q.full()) {
+        return false;
+    }
+    q.push_back(fid);
+    f->set_destination(bid);
+    return true;
+}
+
+void building_shipyard_leave_queue(figure_id fid) {
+    for (int i = 0; i < SHIPYARD_REPAIR_QUEUES; i++) {
+        auto &q = g_shipyard_repair_queues[i].waiting;
+        for (size_t n = 0; n < q.size(); n++) {
+            if (q[n] == fid) {
+                q.erase(q.begin() + n);
+                return;
+            }
+        }
+    }
+}
+
+int building_shipyard::repair_queue_size() const {
+    const auto &d = runtime_data();
+    if (d.queue_slot == 0 || d.queue_slot > SHIPYARD_REPAIR_QUEUES) {
+        return -1;
+    }
+    return (int)g_shipyard_repair_queues[d.queue_slot - 1].waiting.size();
+}
+
+bool building_shipyard::pop_repair_order(figure_id &out_fid) {
+    auto &d = runtime_data();
+    if (d.queue_slot == 0 || d.queue_slot > SHIPYARD_REPAIR_QUEUES) {
+        return false;
+    }
+
+    auto &q = g_shipyard_repair_queues[d.queue_slot - 1].waiting;
+    while (!q.empty()) {
+        figure_id fid = q.front();
+        q.erase(q.begin());
+        figure *f = figure_get(fid);
+        if (figure_alive_for_repair(f)) {
+            out_fid = fid;
+            return true;
+        }
+    }
+    return false;
+}
 
 void building_shipyard::spawn_figure() {
     check_labor_problem();
@@ -41,7 +274,7 @@ void building_shipyard::spawn_figure() {
     }
 
     auto &d = runtime_data();
-    if (d.process_type == FIGURE_NONE) {
+    if (d.reparing || d.process_type == FIGURE_NONE) {
         return;
     }
 
@@ -80,7 +313,7 @@ void building_shipyard::spawn_figure() {
         break;
 
     case FIGURE_FISHING_BOAT:
-        if ((params.fishingboat_progress_cost > 0 ) && base.progress >= params.fishingboat_progress_cost) {
+        if ((params.fishingboat_progress_cost > 0) && base.progress >= params.fishingboat_progress_cost) {
             figure *f = figure_create(FIGURE_FISHING_BOAT, boat_tile, DIR_0_TOP_RIGHT);
             f->action_state = ACTION_0_FISHING_BOAT_CREATED;
             f->set_home(&base);
@@ -104,6 +337,12 @@ void building_shipyard::bind_dynamic(io_buffer *iob, size_t version) {
     iob->bind(BIND_SIGNATURE_UINT8, &d.reparing);
     iob->bind(BIND_SIGNATURE_INT32, &base.tiles[0]);
     iob->bind(BIND_SIGNATURE_INT32, &base.tiles[1]);
+    // repair_fid / queue_slot are runtime-only; queue_slot reassigned in on_post_load.
+    if (iob->is_read_access()) {
+        d.repair_fid = 0;
+        d.queue_slot = 0;
+        d.reparing = false;
+    }
 }
 
 void building_shipyard::update_map_orientation(int orientation) {
@@ -118,7 +357,7 @@ bool building_shipyard::draw_ornaments_and_animations_height(painter &ctx, vec2i
     int amount = ceil((float)base.stored_amount(RESOURCE_TIMBER) / 100.0) - 1;
     if (amount >= 0) {
         const auto &canim = anim(animkeys().wood);
-        auto& command = ImageDraw::create_subcommand(ctx, render_command_t::ert_generic);
+        auto &command = ImageDraw::create_subcommand(ctx, render_command_t::ert_generic);
         command.image_id = canim.first_img() + amount;
         command.pixel = point + canim.pos;
         command.mask = mask;
@@ -130,9 +369,26 @@ void building_shipyard::on_create(int orientation) {
     base.orientation = orientation;
 }
 
+void building_shipyard::on_place(int orientation, int variant) {
+    building_impl::on_place(orientation, variant);
+    building_shipyard_repair_queue_add(id());
+}
+
 void building_shipyard::on_place_update_tiles(int orientation, int variant) {
     int orientation_rel = g_camera.relative_orientation(orientation);
     map_water_add_building(id(), tile(), size(), base_img() + orientation_rel);
+}
+
+void building_shipyard::on_destroy() {
+    building_shipyard_repair_queue_remove(id());
+    building_impl::on_destroy();
+}
+
+void building_shipyard::on_post_load() {
+    building_impl::on_post_load();
+    if (runtime_data().queue_slot == 0) {
+        building_shipyard_repair_queue_add(id());
+    }
 }
 
 bool building_shipyard::add_resource(e_resource resource, int amount, figure_id fid) {
@@ -145,9 +401,11 @@ bool building_shipyard::add_resource(e_resource resource, int amount, figure_id 
     return true;
 }
 
-template<typename T>
+template <typename T>
 int approach_progress(int pct_workers, const T &thresholds) {
-    auto it = std::lower_bound(thresholds.begin(), thresholds.end(), pct_workers, [] (const auto &pair, int value) { return pair.first <= value; });
+    auto it = std::lower_bound(thresholds.begin(), thresholds.end(), pct_workers, [](const auto &pair, int value) {
+        return pair.first <= value;
+    });
     int delta = (it != thresholds.begin()) ? std::prev(it)->second : 0;
     return delta;
 }
@@ -155,22 +413,60 @@ int approach_progress(int pct_workers, const T &thresholds) {
 void building_shipyard::update_day() {
     building_impl::update_day();
 
+    auto &d = runtime_data();
     int pct_workers = worker_percentage();
+    int timber_amount = base.stored_amount(RESOURCE_TIMBER);
+
+    // OG: repair takes priority over new construction when the yard is idle.
+    if (!d.reparing && d.process_type == FIGURE_NONE) {
+        figure_id repair_fid = 0;
+        if (pop_repair_order(repair_fid)) {
+            d.reparing = true;
+            d.repair_fid = repair_fid;
+            d.process_type = FIGURE_NONE;
+            base.progress = 0;
+            return;
+        }
+    }
+
+    if (d.reparing) {
+        figure *f = figure_get(d.repair_fid);
+        if (!figure_alive_for_repair(f)) {
+            d.reparing = false;
+            d.repair_fid = 0;
+            return;
+        }
+
+        int heal = og_shipwright_progress(pct_workers);
+        if (timber_amount < 1 || heal <= 0) {
+            return;
+        }
+
+        // OG: consume 1 wood per tick; heal by worker progress amount.
+        consume_resource(RESOURCE_TIMBER, 1);
+        f->damage = (uint16_t)std::max(0, (int)f->damage - heal);
+        if (f->damage <= 0) {
+            f->damage = 0;
+            d.reparing = false;
+            d.repair_fid = 0;
+            finish_ship_repair(f);
+        }
+        return;
+    }
+
     int delta = 0;
     int resources = 0;
 
-    auto &d = runtime_data();
-    int timber_amount = base.stored_amount(RESOURCE_TIMBER);
     if (d.process_type == FIGURE_WARSHIP && timber_amount > 0) {
-        const std::array<std::pair<int, int>, 5> thresholds = { {{1, 1}, {25, 2}, {50, 3}, {75, 4}, {100, 5}} };
+        const std::array<std::pair<int, int>, 5> thresholds = {{{1, 1}, {25, 2}, {50, 3}, {75, 4}, {100, 5}}};
         delta = approach_progress(pct_workers, thresholds);
         resources = delta;
     } else if (d.process_type == FIGURE_TRANSPORT_SHIP && timber_amount > 0) {
-        const std::array<std::pair<int, int>, 5> thresholds = { {{1, 0}, {25, 1}, {50, 2}, {75, 2}, {100, 3}} };
+        const std::array<std::pair<int, int>, 5> thresholds = {{{1, 0}, {25, 1}, {50, 2}, {75, 2}, {100, 3}}};
         delta = approach_progress(pct_workers, thresholds);
         resources = delta;
     } else if (d.process_type == FIGURE_FISHING_BOAT) {
-        const std::array<std::pair<int, int>, 5> thresholds = { {{1, 1}, {25, 2}, {50, 4}, {75, 6}, {100, 8}} };
+        const std::array<std::pair<int, int>, 5> thresholds = {{{1, 1}, {25, 2}, {50, 4}, {75, 6}, {100, 8}}};
         delta = approach_progress(pct_workers, thresholds);
     }
 
@@ -227,12 +523,28 @@ void building_shipyard::update_graphic() {
     building_impl::update_graphic();
 
     xstring animkey;
-    switch (runtime_data().process_type) {
-    case FIGURE_WARSHIP: animkey = animkeys().work_warship; break;
-    case FIGURE_FISHING_BOAT: animkey = animkeys().work_fishing_boat; break;
-    case FIGURE_TRANSPORT_SHIP: animkey = animkeys().work_transport; break;
-    default:
-        break;
+    auto &d = runtime_data();
+    if (d.reparing) {
+        figure *f = figure_get(d.repair_fid);
+        if (f && f->type == FIGURE_TRANSPORT_SHIP) {
+            animkey = animkeys().work_transport;
+        } else {
+            animkey = animkeys().work_warship;
+        }
+    } else {
+        switch (d.process_type) {
+        case FIGURE_WARSHIP:
+            animkey = animkeys().work_warship;
+            break;
+        case FIGURE_FISHING_BOAT:
+            animkey = animkeys().work_fishing_boat;
+            break;
+        case FIGURE_TRANSPORT_SHIP:
+            animkey = animkeys().work_transport;
+            break;
+        default:
+            break;
+        }
     }
 
     set_animation(animkey);

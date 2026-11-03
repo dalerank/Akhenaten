@@ -20,6 +20,7 @@
 #include "graphics/elements/ui.h"
 #include "graphics/image_desc.h"
 #include "building/building_warship_wharf.h"
+#include "building/building_shipyard.h"
 #include "city/city.h"
 #include "js/js_game.h"
 #include "sound/sound.h"
@@ -34,8 +35,7 @@ constexpr int WARSHIP_MISSILE_RANGE = 10;
 constexpr int WARSHIP_ENGAGE_RANGE = 18;
 constexpr int WARSHIP_SEEK_RANGE = 80;
 constexpr int WARSHIP_RAM_INTERVAL = 50;
-constexpr int WARSHIP_REPAIR_INTERVAL = 20;
-constexpr int WARSHIP_REPAIR_AMOUNT = 2;
+constexpr int WARSHIP_HULL_AUTO_REPAIR_PERCENT = 15;
 constexpr int WARSHIP_FATIGUE_GROW_INTERVAL = 40;
 constexpr int WARSHIP_FATIGUE_COMBAT_INTERVAL = 20;
 constexpr int WARSHIP_FATIGUE_REST_INTERVAL = 20;
@@ -164,6 +164,7 @@ void figure_warship::on_create() {
 }
 
 void figure_warship::on_destroy() {
+    building_shipyard_leave_queue(id());
     building *b = home();
     if (b && b->id) {
         b->remove_figure_by_id(id());
@@ -366,21 +367,96 @@ void figure_warship::figure_action_combat() {
 void figure_warship::figure_action_repair() {
     check_sink();
     if (base.damage <= 0) {
+        building_shipyard_leave_queue(id());
+        runtime_data().active_order = e_order_goto_wharf;
         figure_action_goto_wharf();
         return;
     }
 
-    building_warship_wharf *wharf = home() ? home()->dcast_warship_wharf() : nullptr;
-    if (action_state() == ACTION_203_WARSHIP_MOORED && wharf && wharf->num_workers() > 0) {
-        base.wait_ticks++;
-        if (base.wait_ticks >= WARSHIP_REPAIR_INTERVAL) {
-            base.wait_ticks = 0;
-            base.damage = std::max(0, base.damage - WARSHIP_REPAIR_AMOUNT);
+    if (action_state() == ACTION_213_WARSHIP_QUEUED_AT_SHIPWRIGHT) {
+        building *dock = building_get(base.destination_building_id);
+        auto *shipyard = dock ? dock->dcast_shipyard() : nullptr;
+        if (!shipyard || !shipyard->base.is_valid() || shipyard->num_workers() <= 0) {
+            building_shipyard_leave_queue(id());
+            advance_action(ACTION_212_WARSHIP_GOING_TO_SHIPWRIGHT);
+            // Fall through to re-pick a dock below.
+        } else {
+            // Idle at the yard while shipwright heals us (OG QUEUED_AT_DOCK).
+            return;
+        }
+    }
+
+    if (action_state() == ACTION_212_WARSHIP_GOING_TO_SHIPWRIGHT) {
+        base.move_ticks(1);
+        base.height_adjusted_ticks = 0;
+        if (direction() == DIR_FIGURE_NONE) {
+            int dock_id = base.destination_building_id;
+            int best = building_shipyard_find_best_dock(id());
+            if (best > 0 && building_shipyard_repair_queue_size(dock_id) >= 1 && best != dock_id) {
+                dock_id = best;
+            }
+            if (dock_id > 0 && building_shipyard_queue_ship(id(), dock_id)) {
+                building *dock = building_get(dock_id);
+                auto *shipyard = dock ? dock->dcast_shipyard() : nullptr;
+                tile2i berth;
+                if (shipyard) {
+                    berth = shipyard->get_water_access_tiles().point_a;
+                    if (!berth.valid()) {
+                        berth = tile2i(dock->tiles[0]);
+                    }
+                }
+                if (berth.valid()) {
+                    base.tile = berth;
+                    base.destination_tile = berth;
+                    base.source_tile = berth;
+                }
+                advance_action(ACTION_213_WARSHIP_QUEUED_AT_SHIPWRIGHT);
+                base.wait_ticks = 0;
+            } else {
+                advance_action(ACTION_211_WARSHIP_IDLE_AT_TILE);
+            }
+        } else if (direction() == DIR_FIGURE_REROUTE) {
+            route_remove();
+        } else if (direction() == DIR_FIGURE_CAN_NOT_REACH) {
+            building_shipyard_leave_queue(id());
+            advance_action(ACTION_211_WARSHIP_IDLE_AT_TILE);
         }
         return;
     }
 
-    figure_action_goto_wharf();
+    int dock_id = building_shipyard_find_best_dock(id());
+    if (dock_id <= 0) {
+        advance_action(ACTION_211_WARSHIP_IDLE_AT_TILE);
+        return;
+    }
+
+    building *dock = building_get(dock_id);
+    auto *shipyard = dock ? dock->dcast_shipyard() : nullptr;
+    if (!shipyard) {
+        advance_action(ACTION_211_WARSHIP_IDLE_AT_TILE);
+        return;
+    }
+
+    tile2i berth = shipyard->get_water_access_tiles().point_a;
+    if (!berth.valid()) {
+        berth = tile2i(dock->tiles[0]);
+    }
+    if (!berth.valid()) {
+        advance_action(ACTION_211_WARSHIP_IDLE_AT_TILE);
+        return;
+    }
+
+    building *home_b = home();
+    if (home_b && home_b->id) {
+        home_b->remove_figure_by_id(id());
+    }
+
+    set_destination(dock_id);
+    base.destination_tile = berth;
+    base.source_tile = base.tile;
+    route_remove();
+    advance_action(ACTION_212_WARSHIP_GOING_TO_SHIPWRIGHT);
+    base.wait_ticks = 0;
 }
 
 void figure_warship::figure_action_move_to_tile() {
@@ -407,6 +483,29 @@ void figure_warship::figure_action() {
     }
 
     warship_update_crew_fatigue(this);
+
+    // OG: critically damaged ships head to a shipwright on their own.
+    {
+        const int max_d = base.max_damage();
+        if (max_d > 0 && runtime_data().active_order != e_order_repair) {
+            const int state = action_state();
+            const bool already_docking = state == ACTION_212_WARSHIP_GOING_TO_SHIPWRIGHT
+                || state == ACTION_213_WARSHIP_QUEUED_AT_SHIPWRIGHT;
+            if (!already_docking) {
+                const int health = calc_percentage(max_d - (int)base.damage, max_d);
+                if (health > 0 && health <= WARSHIP_HULL_AUTO_REPAIR_PERCENT) {
+                    runtime_data().active_order = e_order_repair;
+                }
+            }
+        }
+    }
+
+    if (action_state() == ACTION_212_WARSHIP_GOING_TO_SHIPWRIGHT
+        || action_state() == ACTION_213_WARSHIP_QUEUED_AT_SHIPWRIGHT
+        || runtime_data().active_order == e_order_repair) {
+        figure_action_repair();
+        return;
+    }
 
     building_warship_wharf *wharf = (b && b->id) ? b->dcast_warship_wharf() : nullptr;
 
@@ -458,8 +557,10 @@ void figure_warship::figure_action() {
             if (b && b->id) {
                 b->set_figure(BUILDING_SLOT_BOAT, &base);
             }
-        } else if (state == ACTION_207_WARSHIP_GOING_TO_WHARF) {
-            // Already heading to a berth — finish the trip; reclaim on MOOR.
+        } else if (state == ACTION_207_WARSHIP_GOING_TO_WHARF
+            || state == ACTION_212_WARSHIP_GOING_TO_SHIPWRIGHT
+            || state == ACTION_213_WARSHIP_QUEUED_AT_SHIPWRIGHT) {
+            // Heading to berth/shipwright — finish the trip; reclaim on MOOR.
         } else {
             water_dest result = map_water_get_wharf_for_new_warship(base);
             building *nb = building_get(result.bid);
@@ -518,6 +619,7 @@ void figure_warship::figure_action() {
 }
 
 void figure_warship::kill() {
+    building_shipyard_leave_queue(id());
     building *b = home();
     if (b && b->id) {
         b->remove_figure_by_id(id());

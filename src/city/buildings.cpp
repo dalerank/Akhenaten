@@ -1,6 +1,7 @@
 #include "buildings.h"
 
 #include "building/building_house.h"
+#include "building/building_shipyard.h"
 #include "core/profiler.h"
 #include "grid/water.h"
 #include "grid/building.h"
@@ -181,6 +182,7 @@ const city_buildings_t::tracked_buildings_t &city_buildings_t::tracked_buildings
 }
 
 void city_buildings_t::init() {
+    building_shipyard_repair_queues_clear();
 }
 
 void city_buildings_t::shutdown() {
