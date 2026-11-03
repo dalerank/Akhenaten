@@ -1,0 +1,35 @@
+name: Claude issue triage
+
+on:
+  issues:
+    types: [opened]
+
+jobs:
+  triage:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      issues: write
+      id-token: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+      - uses: anthropics/claude-code-action@v1
+        with:
+          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+          prompt: |
+            Triage issue #${{ github.event.issue.number }} in ${{ github.repository }}.
+            1. Read it with `gh issue view`. Get labels with `gh label list`.
+               Add fitting EXISTING labels with `gh issue edit --add-label` (never create or remove labels;
+               issue templates may already have set some). Look for duplicates with `gh search issues`;
+               if one is clearly the same, add the `duplicate` label and link it in a comment.
+            2. Bug report without a savegame or akhenaten.ini attached: ask for them in one short comment.
+            3. A common question (building, Pharaoh data files / install path, command-line options,
+               mods, log location, savegame compatibility) whose answer is in README.md, CLAUDE.md,
+               CONTRIBUTING.md or docs/wiki: post a short answer and cite the file.
+            Otherwise do not comment. Never guess; never promise features or timelines.
+            Reply in the language of the issue.
+          claude_args: >-
+            --model claude-sonnet-5-5 --max-turns 8
+            --allowedTools "Bash(gh issue view:*),Bash(gh issue edit:*),Bash(gh issue comment:*),Bash(gh label list:*),Bash(gh search issues:*),Read,Grep,Glob"
