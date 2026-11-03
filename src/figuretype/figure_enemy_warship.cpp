@@ -226,8 +226,8 @@ void figure_enemy_warship::launch_missile_at(figure *target) {
         return;
     }
 
-    figure_missile::create(id(), base.tile, target->tile, FIGURE_ARROW);
-    events::emit(event_sound_effect{ SOUND_EFFECT_ARROW });
+    figure_missile::create(id(), base.tile, target->tile, FIGURE_SPEAR);
+    events::emit(event_sound_effect{ SOUND_EFFECT_JAVELIN });
 }
 
 void figure_enemy_warship::ram_target(figure *target) {

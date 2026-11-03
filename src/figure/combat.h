@@ -3,6 +3,8 @@
 #include "figure/figure.h"
 #include "grid/point.h"
 
+int attack_is_same_direction(int dir1, int dir2);
+
 int figure_combat_get_target_for_soldier(tile2i tile, int max_distance);
 int figure_combat_get_target_for_enemy(tile2i tile);
 

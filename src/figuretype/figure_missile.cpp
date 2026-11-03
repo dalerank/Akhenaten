@@ -1,17 +1,22 @@
 ﻿#include "figure_missile.h"
 
 #include "graphics/view/view.h"
+#include "graphics/view/lookup.h"
 #include "grid/figure.h"
 #include "sound/sound.h"
 #include "sound/effect.h"
 #include "graphics/animkeys.h"
 #include "city/city_buildings.h"
 #include "city/city_figures.h"
+#include "figure/combat.h"
+#include "figure/formation.h"
 #include "figuretype/figure_enemy_archer.h"
 #include "figuretype/figure_enemy_spearman.h"
 #include "figuretype/figure_war_ship.h"
 #include "game/game_events.h"
 #include "js/js_game.h"
+
+missile_rules_t ANK_VARIABLE(missile_rules);
 
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_hunter_arrow);
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_arrow);
@@ -31,17 +36,23 @@ figure_missile* figure_missile::create(figure_id fid, tile2i src, tile2i dst, e_
         // on_create ran inside figure_create before shooter_id existed — set then refresh.
         auto &d = missile->runtime_data();
         d.shooter_id = fid;
-        int attack = 10;
-        if (figure *shooter = figure_get(fid)) {
-            if (auto archer = smart_cast<figure_enemy_archer>(shooter)) {
-                attack = archer->missile_attack_value();
-            } else if (auto spearman = smart_cast<figure_enemy_spearman>(shooter)) {
-                attack = spearman->missile_attack_value();
-            } else if (auto warship = smart_cast<figure_warship>(shooter)) {
-                attack = warship->missile_attack_value();
-            } else if (shooter->is_soldier()) {
-                int value = figure_static_params::get(shooter->type).missile_attack_value;
-                attack = value > 0 ? value : shooter->attack_value();
+        // OG arrow uses figure_properties[FIGURE_ARROW].missile_attack, not the shooter's.
+        int attack = figure_static_params::get(type).missile_attack_value;
+        if (attack <= 0) {
+            attack = 10;
+        }
+        if (type != FIGURE_ARROW) {
+            if (figure *shooter = figure_get(fid)) {
+                if (auto archer = smart_cast<figure_enemy_archer>(shooter)) {
+                    attack = archer->missile_attack_value();
+                } else if (auto spearman = smart_cast<figure_enemy_spearman>(shooter)) {
+                    attack = spearman->missile_attack_value();
+                } else if (auto warship = smart_cast<figure_warship>(shooter)) {
+                    attack = warship->missile_attack_value();
+                } else if (shooter->is_soldier()) {
+                    int value = figure_static_params::get(shooter->type).missile_attack_value;
+                    attack = value > 0 ? value : shooter->attack_value();
+                }
             }
         }
         d.missile_attack_value = attack;
@@ -125,6 +136,139 @@ void figure_missile::figure_action() {
 void figure_missile::main_image_update() {
     set_image_direction(base.tile.to_view(), base.destination_tile.to_view());
     base.main_image_id = anim(animkeys().walk).first_img() + runtime_data().image_direction;
+}
+
+// OG missile_hit_target: first non-corpse figure on tile in the citizen/ship band.
+static figure_id arrow_missile_hit_target(tile2i tile) {
+    int figure_id = map_figure_id_get(tile);
+    while (figure_id > 0) {
+        figure *f = figure_get(figure_id);
+        if (!f) {
+            break;
+        }
+        const e_figure_type type = f->type;
+        if (f->action_state != FIGURE_ACTION_149_CORPSE
+            && type != FIGURE_NONE
+            && type != FIGURE_EXPLOSION
+            && type != FIGURE_STANDARD_BEARER
+            && type != FIGURE_MAP_FLAG
+            && type != FIGURE_FLOTSAM
+            && (type < FIGURE_INDIGENOUS_NATIVE || type >= FIGURE_TRANSPORT_SHIP)
+            && type <= FIGURE_WARSHIP) {
+            return (figure_id)figure_id;
+        }
+        if (figure_id == f->next_figure) {
+            break;
+        }
+        figure_id = f->next_figure;
+    }
+    return 0;
+}
+
+static int arrow_missile_defense(figure *target, formation *legion, int defense) {
+    const auto &r = missile_rules;
+    if (defense >= r.max_defense) {
+        defense = r.max_defense;
+    }
+    if (legion && legion->is_halted) {
+        const e_figure_type ltype = legion->figure_type;
+        if (ltype >= FIGURE_ARCHER && ltype <= FIGURE_INFANTRY) {
+            if (!attack_is_same_direction(target->attack_direction, legion->direction)) {
+                defense -= r.facing_away_penalty;
+            } else if (legion->layout >= FORMATION_SINGLE_LINE_1 && legion->layout <= FORMATION_SINGLE_LINE_2) {
+                defense += r.single_line_bonus;
+            } else if (legion->layout == FORMATION_MOP_UP) {
+                defense -= r.mop_up_penalty;
+            }
+        } else if (ltype == FIGURE_FCHARIOTEER) {
+            if (!attack_is_same_direction(target->attack_direction, legion->direction)) {
+                defense -= r.facing_away_penalty;
+            } else if (legion->layout == FORMATION_MOP_UP) {
+                defense -= r.mop_up_penalty;
+            }
+        }
+    }
+    if (defense < 0) {
+        defense = 0;
+    }
+    if (defense > r.max_defense) {
+        defense = r.max_defense;
+    }
+    return defense;
+}
+
+static int arrow_missile_damage(int attack, int defense) {
+    if (attack == 0) {
+        return 0;
+    }
+    const auto &r = missile_rules;
+    const int damage = ((r.damage_base - defense) / r.max_defense) * attack;
+    return damage < 0 ? 0 : damage;
+}
+
+void figure_arrow::figure_action() {
+    base.use_cross_country = true;
+    base.progress_on_tile++;
+    if (base.progress_on_tile > missile_rules.flight_ticks) {
+        poof();
+        return;
+    }
+
+    const bool should_die = base.move_ticks_cross_country(missile_rules.speed);
+    const figure_id target_id = arrow_missile_hit_target(tile());
+    if (!target_id) {
+        if (should_die) {
+            poof();
+        }
+        return;
+    }
+
+    figure *target = figure_get(target_id);
+    formation *m = formation_get(target->formation_id);
+    int bonus = 0;
+    if (target->faction_id == 1 && m) {
+        bonus = (m->experience + 10) / 20;
+    }
+    const int defense = arrow_missile_defense(target, m, target->missile_defense_value() + bonus);
+    // OG: attack from figure_properties[FIGURE_ARROW], not shooter.
+    int attack = params().missile_attack_value;
+    if (attack <= 0) {
+        attack = runtime_data().missile_attack_value;
+    }
+    const int damage = arrow_missile_damage(attack, defense);
+    const int max_damage = target->max_damage();
+    const int total = target->damage + damage;
+    if (total > max_damage) {
+        target->damage = max_damage + 1;
+        target->kill();
+        target->wait_ticks = 0;
+        target->play_die_sound();
+        if (m) {
+            formation_update_morale_after_death(m);
+        }
+    } else {
+        target->damage = (uint8_t)total;
+    }
+
+    if (m && target->formation_id) {
+        m->missile_attack_timeout = missile_rules.attack_timeout;
+        figure *sh = shooter();
+        m->missile_attack_formation_id = sh ? sh->formation_id : 0;
+    }
+
+    events::emit(event_sound_effect{ hit_sound_effect() });
+    poof();
+}
+
+void figure_arrow::main_image_update() {
+    // OG missile_set_image: arrow_image_offset + 16-dir frame.
+    const auto &r = missile_rules;
+    int dir = direction() - 2 * g_camera.orientation;
+    if (dir < 0) {
+        dir += r.image_directions;
+    }
+    dir %= r.image_directions;
+    base.main_image_id = anim(animkeys().walk).first_img() + r.arrow_image_offset + dir;
 }
 
 void figure_missile::cart_image_update() {
