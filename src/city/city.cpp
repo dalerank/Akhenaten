@@ -30,7 +30,13 @@
 #include "building/building_barracks.h"
 #include "building/building_burning_ruin.h"
 #include "figure/figure.h"
+#include "figuretype/figure_native.h"
 #include "figuretype/figure_fishing_point.h"
+#include "graphics/image.h"
+#include "graphics/image_groups.h"
+#include "grid/image.h"
+#include "grid/random.h"
+#include "grid/terrain.h"
 #include "figuretype/figure_kingdome_trader.h"
 #include "figuretype/figure_trader_ship.h"
 #include "figuretype/figure_tomb_robber.h"
@@ -541,25 +547,31 @@ void city_t::buildings_generate_figure() {
     figures.house_noble_spawned_this_tick = false;
     buildings_valid_do([] (building &b) {
         switch (b.type) {
-        case BUILDING_UNUSED_NATIVE_HUT_88: 
-            //    map_image_set(grid_offset, image_id_from_group(GROUP_BUILDING_NATIVE) + (map_random_get(grid_offset) & 1));
-            //    if (has_figure_of_type(FIGURE_INDIGENOUS_NATIVE))
-            //        return;
-            //    int x_out, y_out;
-            //    if (subtype.native_meeting_center_id > 0 &&
-            //        map_terrain_get_adjacent_road_or_clear_land(x, y, size, &x_out, &y_out)) {
-            //        figure_spawn_delay++;
-            //        if (figure_spawn_delay > 4) {
-            //            figure_spawn_delay = 0;
-            //            figure *f = figure_create(FIGURE_INDIGENOUS_NATIVE, x_out, y_out, DIR_0_TOP_RIGHT);
-            //            f->action_state = FIGURE_ACTION_158_NATIVE_CREATED;
-            //            f->home() = b;
-            //            figure_id = f->id;
-            //        }
-            //    }
+        case BUILDING_UNUSED_NATIVE_HUT_88: {
+            // OG spawn_native_hut: hut image from random bit; native every 5 days when a meeting
+            // is linked and there is road/clear land next to the hut.
+            int native_image = image_id_from_group(GROUP_BUILDING_NATIVE);
+            map_image_set(b.tile, native_image + (map_random_get(b.tile.grid_offset()) & 1));
+            if (b.has_figure_of_type(-1, FIGURE_INDIGENOUS_NATIVE)) {
+                break;
+            }
+            int x_out = 0;
+            int y_out = 0;
+            if (b.native_meeting_center_id > 0
+                && map_terrain_get_adjacent_road_or_clear_land(b.tile.x(), b.tile.y(), b.size, &x_out, &y_out)) {
+                b.figure_spawn_delay++;
+                if (b.figure_spawn_delay > 4) {
+                    b.figure_spawn_delay = 0;
+                    figure *f = figure_create(FIGURE_INDIGENOUS_NATIVE, tile2i(x_out, y_out), DIR_0_TOP_RIGHT);
+                    f->action_state = ACTION_10_NATIVE_CREATED;
+                    f->set_home(b.id);
+                    b.set_figure(BUILDING_SLOT_SERVICE, f);
+                }
+            }
             break;
+        }
 
-        case BUILDING_UNUSED_NATIVE_MEETING_89: 
+        case BUILDING_UNUSED_NATIVE_MEETING_89:
             //    map_building_tiles_add(id, x, y, 2,
             //                           image_id_from_group(GROUP_BUILDING_NATIVE) + 2, TERRAIN_BUILDING);
             //    if (city_buildings_is_mission_post_operational() && !has_figure_of_type(FIGURE_NATIVE_TRADER)) {
@@ -575,10 +587,10 @@ void city_t::buildings_generate_figure() {
             //            }
             //        }
             //    }
-            
+
             break;
-        case BUILDING_UNUSED_NATIVE_CROPS_93: 
-            // todo 
+        case BUILDING_UNUSED_NATIVE_CROPS_93:
+            // todo
             //data.industry.progress++;
             //if (data.industry.progress >= 5) {
             //    data.industry.progress = 0;

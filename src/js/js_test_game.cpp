@@ -1513,6 +1513,20 @@ static void __test_building_force_road_access(int bid) {
 }
 ANK_FUNCTION_1(__test_building_force_road_access);
 
+static void __test_building_set_native_meeting(int hut_id, int meeting_id) {
+    building *b = building_get(hut_id);
+    if (!b) {
+        return;
+    }
+    b->native_meeting_center_id = (int16_t)meeting_id;
+}
+ANK_FUNCTION_2(__test_building_set_native_meeting);
+
+static void __test_make_floodplain_water(int x, int y) {
+    map_terrain_add(tile2i(x, y), TERRAIN_WATER | TERRAIN_FLOODPLAIN);
+}
+ANK_FUNCTION_2(__test_make_floodplain_water);
+
 static int __test_figure_type_max_roam(int type) {
     if (type <= FIGURE_NONE || type >= FIGURE_MAX) {
         return -1;
