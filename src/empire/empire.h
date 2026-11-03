@@ -26,6 +26,7 @@ public:
     resource_list exportable_resources_from_city(int city_id);
     bool can_export_resource_to_city(int city_id, e_resource resource);
     bool can_import_resource_from_city(int city_id, e_resource resource);
+    int import_stock_limit(e_resource resource);
     int get_city_for_trade_route(int route_id);
     bool is_trade_route_open(int route_id);
     int trade_route_for_city(int city_id);

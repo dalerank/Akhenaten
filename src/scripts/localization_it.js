@@ -83,7 +83,7 @@ localization_it = [
   {key:"#TR_CONFIG_IMMEDIATELY_DELETE_BUILDINGS", text:"Demolisci subito gli edifici"}
   {key:"#TR_CONFIG_GETTING_GRANARIES_GO_OFFROAD", text:"I carrettieri dei granai in raccolta possono uscire dalle strade"}
   {key:"#TR_CONFIG_GRANARIES_GET_DOUBLE", text:"Raddoppia la capacità dei carrettieri dei granai in prelievo"}
-  {key:"#TR_CONFIG_DOCK_DOUBLE_HAUL", text:"Raddoppia la quantità trasportata dai portuali (200 per viaggio)"}
+  {key:"#TR_CONFIG_DOCK_DOUBLE_HAUL", text:"Raddoppia la quantità trasportata dai portuali (800 per viaggio)"}
   {key:"#TR_CONFIG_BAZAAR_MULTI_BUYERS", text:"I bazar possono inviare due acquirenti insieme (cibo + merci)"}
   {key:"#TR_CONFIG_TRADER_CAPACITY_1600", text:"Capacità dei mercanti maggiore (1600 per visita; non il limite annuale dell'impero)"}
   {key:"#TR_CONFIG_TRADER_PER_GOOD_1600", text:"Nuova era: i mercanti comprano/vendono fino a 1600 unità per merce a visita (non è un limite annuale né solo sul carico totale)"}

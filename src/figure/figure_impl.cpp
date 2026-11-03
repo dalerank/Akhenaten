@@ -1,6 +1,7 @@
 #include "figure/figure_impl.h"
 
 #include "figure/figure.h"
+#include "figuretype/figure_cartpusher.h"
 #include "game/game_config.h"
 #include "city/city.h"
 #include "city/city_recorded_paths.h"
@@ -280,6 +281,18 @@ bool figure_impl::can_cross_ferry() const {
 
 bool figure_impl::boards_ferry() const {
     return current_params().boards_ferry;
+}
+
+short figure_impl::ferry_wait_action() const {
+    return ACTION_7_CARTPUSHER_WAIT_FOR_FERRY;
+}
+
+short figure_impl::ferry_ride_action() const {
+    return ACTION_6_CARTPUSHER_ON_FERRY;
+}
+
+short figure_impl::ferry_reroute_action() const {
+    return ACTION_8_RECALCULATE;
 }
 
 bool figure_impl::can_move_by_ferry_water() const {

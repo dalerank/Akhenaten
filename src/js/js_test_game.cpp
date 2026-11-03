@@ -58,6 +58,7 @@
 #include "figuretype/figure_market_buyer.h"
 #include "figuretype/figure_cartpusher.h"
 #include "figuretype/figure_flotsam.h"
+#include "figuretype/figure_docker.h"
 #include "figuretype/figure_immigrant.h"
 #include "game/game_events.h"
 #include "figuretype/figure_missile.h"
@@ -1313,6 +1314,62 @@ static void __test_flotsam_spawn_update_day() {
     figure_flotsam::spawn_update_day();
 }
 ANK_FUNCTION(__test_flotsam_spawn_update_day);
+
+static int __test_docker_haul_amount() {
+    return figure_docker::haul_amount();
+}
+ANK_FUNCTION(__test_docker_haul_amount);
+
+// Ferry action id a landing assigns to this figure: 0 wait, 1 ride, 2 reroute. -1 when missing.
+static int __test_figure_ferry_action(int fid, int which) {
+    figure *f = figure_get(fid);
+    if (!f || !f->is_alive()) {
+        return -1;
+    }
+    switch (which) {
+    case 0: return f->dcast()->ferry_wait_action();
+    case 1: return f->dcast()->ferry_ride_action();
+    case 2: return f->dcast()->ferry_reroute_action();
+    }
+    return -1;
+}
+ANK_FUNCTION_2(__test_figure_ferry_action);
+
+static int __test_docker_import_loads(int yard_bid, int resource, int max_amount) {
+    building *b = building_get(yard_bid);
+    auto *yard = b ? b->dcast_storage_yard() : nullptr;
+    if (!yard || !b->is_valid() || resource <= RESOURCE_NONE || resource >= RESOURCES_MAX) {
+        return -1;
+    }
+    return figure_docker::import_loads(yard, (e_resource)resource, max_amount);
+}
+ANK_FUNCTION_3(__test_docker_import_loads);
+
+// Cycles the yard's storage state for `resource` until it equals `state`. Returns 1 on success.
+static int __test_storage_yard_set_state(int yard_bid, int resource, int state) {
+    building *b = building_get(yard_bid);
+    auto *yard = b ? b->dcast_storage_yard() : nullptr;
+    if (!yard || !b->is_valid() || resource <= RESOURCE_NONE || resource >= RESOURCES_MAX) {
+        return 0;
+    }
+    for (int i = 0; i < STORAGE_STATE_MAX + 1; i++) {
+        if (yard->storage()->resource_state[resource] == state) {
+            return 1;
+        }
+        building_storage_cycle_resource_state(yard->storage_id(), (e_resource)resource, false);
+    }
+    return yard->storage()->resource_state[resource] == state ? 1 : 0;
+}
+ANK_FUNCTION_3(__test_storage_yard_set_state);
+
+static void __test_city_set_trade(int resource, int status, int trading_amount) {
+    if (resource <= RESOURCE_NONE || resource >= RESOURCES_MAX) {
+        return;
+    }
+    g_city.resource.trade_status[resource] = (e_trade_status)status;
+    g_city.resource.trading_amount[resource] = (int16_t)trading_amount;
+}
+ANK_FUNCTION_3(__test_city_set_trade);
 
 static int __test_building_map_random_7bit(int bid) {
     building *b = building_get(bid);

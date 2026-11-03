@@ -152,11 +152,11 @@ void figure_ferry_boat::load_passengers(building_ferry *landing, int max) {
     while (loaded < max && loaded < PASSENGER_SLOTS && landing->queue_size() > 0) {
         figure_id passenger_id = landing->queue_pop();
         figure *p = figure_get(passenger_id);
-        if (!p || !p->is_alive() || p->action_state != ACTION_7_CARTPUSHER_WAIT_FOR_FERRY) {
+        if (!p || !p->is_alive() || p->action_state != p->dcast()->ferry_wait_action()) {
             continue;
         }
 
-        p->action_state = ACTION_6_CARTPUSHER_ON_FERRY;
+        p->action_state = p->dcast()->ferry_ride_action();
         p->main_image_id = 0;
         p->cart_image_id = 0;
         p->set_flag(e_figure_flag_invisible, true);
@@ -189,7 +189,7 @@ void figure_ferry_boat::unload_passengers(building_ferry *landing) {
         }
 
         figure *p = figure_get(passenger_id);
-        if (!p || !p->is_alive() || p->action_state != ACTION_6_CARTPUSHER_ON_FERRY) {
+        if (!p || !p->is_alive() || p->action_state != p->dcast()->ferry_ride_action()) {
             continue;
         }
 

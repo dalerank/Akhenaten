@@ -24,9 +24,14 @@ figure_docker {
 	}
 
 	use_cart : true
+	load_amount : 100
+	max_loads : 4 // OG trade.c: a docker moves up to 4 loads per trip
+	room_capacity : 400
 	category: figure_category_citizen
 	max_damage : 10
 	terrain_usage : TERRAIN_USAGE_ROADS,
+	can_cross_ferry: true
+	boards_ferry: true
 }
 
 function figure_docker_gods_are_angry() {

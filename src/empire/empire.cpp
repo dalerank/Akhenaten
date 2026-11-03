@@ -431,11 +431,15 @@ bool empire_t::can_import_resource_from_city(int city_id, e_resource resource) {
         return false;
     }
 
+    return g_city.resource.yards_stored(resource) < import_stock_limit(resource);
+}
+
+int empire_t::import_stock_limit(e_resource resource) {
+    city_resource_handle hresource{ resource };
     const int city_population = g_city.population.current;
-    int in_stock = g_city.resource.yards_stored(resource);
     int max_in_stock = 0;
 
-    if (status == TRADE_STATUS_IMPORT_AS_NEEDED) {
+    if (hresource.trade_status() == TRADE_STATUS_IMPORT_AS_NEEDED) {
         switch (resource) {
             // food and finished materials
         case RESOURCE_GRAIN:
@@ -485,7 +489,7 @@ bool empire_t::can_import_resource_from_city(int city_id, e_resource resource) {
         max_in_stock = hresource.trading_amount();
     }
 
-    return in_stock < max_in_stock ? 1 : 0;
+    return max_in_stock;
 }
 
 

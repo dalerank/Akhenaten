@@ -172,7 +172,7 @@ void building_ferry::queue_release_waiting() {
             if (!f || !f->is_alive()) {
                 continue;
             }
-            if (f->action_state == ACTION_7_CARTPUSHER_WAIT_FOR_FERRY) {
+            if (f->action_state == f->dcast()->ferry_wait_action()) {
                 f->action_state = f->action_state_before_attack;
                 f->route_remove();
             }
@@ -212,7 +212,7 @@ int building_ferry::route_find_partner_on_path(const figure &f, building *ferry)
 }
 
 bool building_ferry::try_enter_ferry(figure &f) {
-    if (f.action_state == ACTION_7_CARTPUSHER_WAIT_FOR_FERRY) {
+    if (f.action_state == f.dcast()->ferry_wait_action()) {
         f.direction = DIR_FIGURE_NONE;
         return true;
     }
@@ -224,11 +224,11 @@ bool building_ferry::try_enter_ferry(figure &f) {
             if (!queue_push(f.id)) {
                 f.route_remove();
                 f.direction = DIR_FIGURE_REROUTE;
-                f.action_state = ACTION_8_RECALCULATE;
+                f.action_state = f.dcast()->ferry_reroute_action();
                 return true;
             }
             f.action_state_before_attack = (uint8_t)f.action_state;
-            f.action_state = ACTION_7_CARTPUSHER_WAIT_FOR_FERRY;
+            f.action_state = f.dcast()->ferry_wait_action();
             f.wait_ticks = 0;
             f.route_remove();
             f.direction = DIR_FIGURE_NONE;
@@ -246,7 +246,7 @@ bool building_ferry::try_enter_ferry(figure &f) {
             f.previous_tile = road;
             f.map_figure_add();
         }
-        f.action_state = ACTION_8_RECALCULATE;
+        f.action_state = f.dcast()->ferry_reroute_action();
         f.direction = DIR_FIGURE_REROUTE;
         return true;
     }
@@ -265,8 +265,8 @@ bool figure_is_queued_for_ferry(figure_id fid) {
     if (!f || !f->is_alive()) {
         return true;
     }
-    if (f->action_state == ACTION_6_CARTPUSHER_ON_FERRY
-        || f->action_state != ACTION_7_CARTPUSHER_WAIT_FOR_FERRY) {
+    if (f->action_state == f->dcast()->ferry_ride_action()
+        || f->action_state != f->dcast()->ferry_wait_action()) {
         return true;
     }
 
