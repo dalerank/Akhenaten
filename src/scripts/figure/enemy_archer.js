@@ -11,8 +11,8 @@ function figure_enemy_archer_taunt_keys() {
 function figure_enemy_archer_phrase_key(f) {
 	var state = f.action_state
 	switch (state) {
-	case ACTION_3_ENEMY_ARCHER_SHOOT_MISSILE:
-		return "enemy_archer_shooting"
+	case ACTION_3_ENEMY_ARCHER_ATTACKING:
+		return "enemy_archer_arrows_ready"
 	case ACTION_2_ENEMY_ARCHER_MARCHING:
 		return "enemy_archer_marching"
 	case ACTION_4_ENEMY_ARCHER_LEAVING:

@@ -6,7 +6,8 @@ enum e_action_enemy_archer : uint16_t {
     ACTION_0_ENEMY_ARCHER_INITIAL = 0,
     ACTION_1_ENEMY_ARCHER_WAITING = 1,
     ACTION_2_ENEMY_ARCHER_MARCHING = 2,
-    ACTION_3_ENEMY_ARCHER_SHOOT_MISSILE = 3,
+    // OG FIGURE_ACTION_ENEMY_ATTACKING — melee chase (missiles fire only in INITIAL).
+    ACTION_3_ENEMY_ARCHER_ATTACKING = 3,
     ACTION_4_ENEMY_ARCHER_LEAVING = 4,
 
     ACTION_5_ENEMY_ARCHER_MAX
@@ -22,17 +23,17 @@ public:
     // Extras only — missile_attack_value / missile_delay live on figure_static_params.
     struct base_params_t {
         int8_t attack_distance;
-        e_figure_type missile_type = FIGURE_ARROW;
+        // OG FIG_ENEMY_MISS always throws FIGURE_SPEAR (71).
+        e_figure_type missile_type = FIGURE_SPEAR;
     };
 
     virtual const base_params_t &base_params() const = 0;
 
     virtual void on_create() override;
     virtual void figure_action() override;
-    //virtual void figure_before_action() override;
     virtual void update_animation() override;
     virtual bool is_archer() const override { return true; }
-    virtual bool is_attack() const override { return action_state() == ACTION_3_ENEMY_ARCHER_SHOOT_MISSILE; }
+    virtual bool is_attack() const override { return action_state() == ACTION_3_ENEMY_ARCHER_ATTACKING; }
     virtual e_figure_action enemy_initial_action() const override { return (e_figure_action)ACTION_0_ENEMY_ARCHER_INITIAL; }
 
     virtual int8_t missile_attack_value() const { return params().missile_attack_value; }
@@ -47,7 +48,6 @@ public:
     virtual void leave_city() override;
     virtual void debug_draw(painter &ctx) override;
 
-    void enemy_shoot_around(formation *m);
 };
 
 class figure_barbarian_archer : public figure_enemy_archer {
