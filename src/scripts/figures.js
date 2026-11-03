@@ -394,12 +394,18 @@ figure_standard_bearer {
 
 figure_native = {
 	animations : {
-		walk : { pack:PACK_SPR_MAIN, id:45, max_frames:12 }
+		// OG draws from the scenario enemy infantry strip; barbarian infantry is the closest standalone pack.
+		walk : { pack:PACK_ENEMY_BARBARIAN, id:3, max_frames:12 }
+		death : { pack:PACK_ENEMY_BARBARIAN, id:4, max_frames:8, loop:false }
+		attack : { pack:PACK_ENEMY_BARBARIAN, id:5, max_frames:12, loop:false }
 		cart: { pack:PACK_SPR_MAIN, id:52, max_frames:1 }
+		big_image { pack:PACK_UNLOADED, id:25, offset:FIGURE_INDIGENOUS_NATIVE }
 	}
 
 	category: figure_category_native
 	max_damage: 10
+	max_roam_length: 800
+	terrain_usage: TERRAIN_USAGE_ANY
 }
 
 figure_native_trader = {
