@@ -357,6 +357,7 @@ city.get_formation = function(formation_id) {
         @is_at_fort { }
         @in_distant_battle { }
         @empire_service { }
+        @ship_figure_id { }
     }
 }
 

@@ -2199,6 +2199,33 @@ static void __test_fort_update_recruit_status(int bid) {
 }
 ANK_FUNCTION_1(__test_fort_update_recruit_status);
 
+static void __test_formation_set_experience(int formation_id, int experience) {
+    formation *m = formation_get(formation_id);
+    if (!m || !m->in_use) {
+        return;
+    }
+    m->experience = (uint16_t)std::max(0, experience);
+}
+ANK_FUNCTION_2(__test_formation_set_experience);
+
+static void __test_formation_set_ship_figure(int formation_id, int ship_figure_id) {
+    formation *m = formation_get(formation_id);
+    if (!m || !m->in_use) {
+        return;
+    }
+    m->ship_figure_id = (int16_t)ship_figure_id;
+}
+ANK_FUNCTION_2(__test_formation_set_ship_figure);
+
+static void __test_formation_set_in_distant_battle(int formation_id, int value) {
+    formation *m = formation_get(formation_id);
+    if (!m || !m->in_use) {
+        return;
+    }
+    m->in_distant_battle = value ? 1 : 0;
+}
+ANK_FUNCTION_2(__test_formation_set_in_distant_battle);
+
 static void __test_figure_set_action(int fid, int action) {
     figure *f = figure_get(fid);
     if (!f || !f->is_alive()) {

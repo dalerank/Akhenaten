@@ -20,6 +20,12 @@ enum e_batalion_recruit_type {
     BATALION_RECRUIT_CHARIOTEER = 3,  // fort figure type 13 (OG LEG_HEAVY)
 };
 
+enum e_batalion_recruit_constants {
+    BATALION_ACADEMY_EXPERIENCE = 25,   // OG LEGION_ACADEMY_EXPERIENCE
+    BATALION_MAX_EXPERIENCE = 100,      // OG LEGION_MAX_EXPERIENCE
+    BATALION_SETH_TRAINING_BONUS = 10,  // OG city_military_training_bonus Seth complex
+};
+
 enum e_formation_attack_type {
     FORMATION_ATTACK_FOOD_CHAIN = 0,
     FORMATION_ATTACK_GOLD_STORES = 1,
@@ -118,6 +124,7 @@ struct formation {
     uint8_t reseach_radius;
     uint8_t herd_point;
     bool is_at_fort;            /**< Flag to indicate this batalion is resting at the fort */
+    int16_t ship_figure_id; /**< OG ship_figure_id: transport ship carrying this legion (0 = none) */
 
     /* Enemy-related */
     e_enemy_type enemy_type;
@@ -149,7 +156,7 @@ ANK_CONFIG_PROPERTY(formation,
     num_figures, morale, experience,
     total_damage, max_total_damage, cursed_by_seth,
     is_at_fort, home, in_distant_battle,
-    empire_service);
+    empire_service, ship_figure_id);
 
 using attacked_buildings = flat_map<building_id, bool, 32>;
 

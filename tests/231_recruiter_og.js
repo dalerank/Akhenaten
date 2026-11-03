@@ -1,6 +1,8 @@
 // Recruiter OG (building_barracks_create_soldier): archers need no stock, infantry needs weapons and
 // charioteers need chariots; the highest recruit type wins (charioteers, infantry, archers), and a recruit
-// takes 100 of its stock. gameplay_change_recruit_nearest_fort sends the recruit to the nearest fort instead.
+// takes 100 of its stock. Legions on a kingdom request (in_distant_battle) or on a transport ship
+// (ship_figure_id) are skipped. A recruit averages experience into the legion (no academy -> training 0).
+// gameplay_change_recruit_nearest_fort sends the recruit to the nearest fort instead.
 // Fort costs come from Pharaoh_Model_*.txt.
 
 var __test231_ok = false
@@ -109,6 +111,40 @@ function run_test() {
     }
     __log_marker('test231_charioteer_uses_chariots')
 
+    // OG: request_event_id >= 0 (mapped to in_distant_battle) skips the legion.
+    __test_formation_set_in_distant_battle(fid_chariots, 1)
+    if (__test_recruiter_pick_batalion(rid) != fid_infantry) {
+        test231_fail('distant-battle charioteers must yield to infantry, got ' + __test_recruiter_pick_batalion(rid))
+        return
+    }
+    __test_formation_set_in_distant_battle(fid_chariots, 0)
+    __log_marker('test231_skip_distant_battle')
+
+    // OG: ship_figure_id != 0 skips the legion.
+    __test_formation_set_ship_figure(fid_infantry, 1)
+    if (__test_recruiter_pick_batalion(rid) != fid_archers) {
+        test231_fail('infantry on a ship must yield to archers, got ' + __test_recruiter_pick_batalion(rid))
+        return
+    }
+    __test_formation_set_ship_figure(fid_infantry, 0)
+    __log_marker('test231_skip_ship')
+
+    __test_formation_set_experience(fid_infantry, 40)
+    if (__test_recruiter_pick_batalion(rid) != fid_infantry) {
+        test231_fail('infantry should win with weapons for experience check, got ' + __test_recruiter_pick_batalion(rid))
+        return
+    }
+    if (!__test_recruiter_create_soldier(rid)) {
+        test231_fail('infantry create_soldier for experience failed')
+        return
+    }
+    var form_inf = city.get_formation(fid_infantry)
+    if (!form_inf || form_inf.experience != 20) {
+        test231_fail('OG no-academy experience want 20 got ' + (form_inf ? form_inf.experience : 'null'))
+        return
+    }
+    __log_marker('test231_experience')
+
     game_features.set('gameplay_change_recruit_nearest_fort', true)
     var eligible = [[archers, fid_archers], [infantry, fid_infantry]]
     var nearest = eligible[0]
@@ -131,5 +167,8 @@ function check_valid() {
         && __test_find_inlog('[test-marker] test231_archers_free')
         && __test_find_inlog('[test-marker] test231_infantry_weapons')
         && __test_find_inlog('[test-marker] test231_charioteer_uses_chariots')
+        && __test_find_inlog('[test-marker] test231_skip_distant_battle')
+        && __test_find_inlog('[test-marker] test231_skip_ship')
+        && __test_find_inlog('[test-marker] test231_experience')
         && __test_find_inlog('[test-marker] test231_remake_nearest')
 }

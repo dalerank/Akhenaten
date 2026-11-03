@@ -204,6 +204,8 @@ bool figure_transport_ship::embark_formation(int formation_id) {
         return false;
     }
 
+    // OG ships_player: legion->ship_figure_id = the transport while embarked.
+    m->ship_figure_id = (int16_t)id();
     m->is_halted = 1;
     m->is_at_fort = 0;
     return true;
@@ -332,6 +334,7 @@ void figure_transport_ship::disembark_troops() {
     m->standard_tile = disembark;
     m->is_halted = 1;
     m->is_at_fort = 0;
+    m->ship_figure_id = 0;
 
     d.formation_id = 0;
     d.phase = 0;
@@ -381,6 +384,7 @@ void figure_transport_ship::before_poof() {
             f->allow_move_type = EMOVE_AMPHIBIAN;
             f->map_figure_add();
         }
+        m->ship_figure_id = 0;
     }
     d.formation_id = 0;
     d.phase = 0;
@@ -427,6 +431,7 @@ void figure_transport_ship::clear_stale_cargo() {
         return;
     }
 
+    m->ship_figure_id = 0;
     d.formation_id = 0;
     d.phase = 0;
     d.embark_ticks = 0;

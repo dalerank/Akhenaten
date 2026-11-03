@@ -703,6 +703,9 @@ io_buffer* iob_formations = new io_buffer([](io_buffer* iob, size_t version) {
         iob->bind____skip(17);
         iob->bind(BIND_SIGNATURE_INT16, &f->invasion_sequence);
 
+        // ship_figure_id is runtime-only (OG embark link); never trust leftover memory after load.
+        f->ship_figure_id = 0;
+
         if (!f->home.valid() && f->is_herd) {
             memset(f, 0, sizeof(formation));
         }

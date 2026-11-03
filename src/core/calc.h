@@ -132,6 +132,18 @@ int calc_missile_direction(int x_from, int y_from, int x_to, int y_to);
  */
 int32_t calc_bound(int32_t value, int32_t min, int32_t max);
 
+/** OG calc_divide_round_up: integer division rounded up; 0 divisor -> 0. */
+inline int32_t calc_divide_round_up(int32_t value, int32_t divisor) {
+    if (divisor == 0) {
+        return 0;
+    }
+    int32_t result = value / divisor;
+    if (value % divisor != 0) {
+        result++;
+    }
+    return result;
+}
+
 /**
  * Absolutely increments a value by "step" until it reaches "max"
  * If "max" is negative, "step" will *always* decrease "value",

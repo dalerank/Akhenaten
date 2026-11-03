@@ -21,6 +21,8 @@
 #include "figuretype/figure_soldier.h"
 #include "figuretype/figure_tower_sentry.h"
 
+#include <algorithm>
+
 #define INFINITE 10000
 
 int g_tower_sentry_request = 0;
@@ -37,8 +39,22 @@ bool building_recruiter::static_params::is_unique_building() const {
     return exist;
 }
 
-// OG building_barracks_create_soldier: infantry needs weapons in stock and chariots need chariots; archers need
-// nothing. The legion with the highest recruit type (chariots, infantry, archers) wins, the closest fort breaks ties.
+// OG city_military_training_bonus: academy present -> 25, Seth temple complex adds +10.
+static int city_military_training_bonus(int academy_id) {
+    int extra = 0;
+    const building_id complex_id = g_city.buildings.temple_complex_id();
+    if (complex_id) {
+        building *complex = building_get(complex_id);
+        if (complex && complex->type == BUILDING_TEMPLE_COMPLEX_SETH) {
+            extra = BATALION_SETH_TRAINING_BONUS;
+        }
+    }
+    return (academy_id != 0 ? BATALION_ACADEMY_EXPERIENCE : 0) + extra;
+}
+
+// OG building_barracks_create_soldier: skip legions on a kingdom request (in_distant_battle) or on a
+// transport ship (ship_figure_id). Infantry needs weapons, charioteers need chariots; archers need
+// nothing. Highest recruit type wins; closest fort breaks ties.
 formation_id building_recruiter::get_closest_batalion_needing_soldiers() {
     const bool has_weapons = base.stored_amount(RESOURCE_WEAPONS) > 0;
     const bool has_chariots = base.stored_amount(RESOURCE_CHARIOTS) > 0;
@@ -47,8 +63,13 @@ formation_id building_recruiter::get_closest_batalion_needing_soldiers() {
     svector<formation*, 10> formations;
     formations_get(formations, [has_weapons, has_chariots] (auto *m) {
         const bool in_use = m->in_use && m->own_batalion;
+        // OG: request_event_id >= 0  ->  in_distant_battle for Akhenaten's dispatch path
+        if (!in_use || m->in_distant_battle || m->ship_figure_id != 0) {
+            return false;
+        }
+
         const bool allow_recruits = m->batalion_recruit_type != BATALION_RECRUIT_NONE;
-        if (!in_use || !allow_recruits || m->in_distant_battle) {
+        if (!allow_recruits) {
             return false;
         }
 
@@ -96,41 +117,76 @@ static int get_closest_military_academy(building* fort) {
     return min_building_id;
 }
 
+// OG is_formation_figure excludes the standard bearer from num_figures; Akhenaten's calculate_figures
+// still counts it, so derive the soldier count here for the average.
+static int formation_soldier_count(const formation *m) {
+    int soldiers = 0;
+    for (int i = 0; i < formation::max_figures_count && m->figures[i]; i++) {
+        figure *f = figure_get(m->figures[i]);
+        if (f && f->is_alive() && f->type != FIGURE_STANDARD_BEARER) {
+            soldiers++;
+        }
+    }
+    return soldiers;
+}
+
+// OG formation experience after a recruit: average the newcomer (academy / Seth bonus) into the legion.
+static void formation_apply_recruit_experience(formation *recruiting, int academy_id) {
+    const int training = city_military_training_bonus(academy_id);
+    const int experience = recruiting->experience;
+    const int others = std::max(0, formation_soldier_count(recruiting) - 1);
+    if (experience < BATALION_ACADEMY_EXPERIENCE && training == BATALION_ACADEMY_EXPERIENCE) {
+        recruiting->experience = (uint16_t)calc_divide_round_up((others * experience) + BATALION_ACADEMY_EXPERIENCE, others + 1);
+        return;
+    }
+
+    const int total = (((others * 2) + 1) * experience) + training;
+    const int average = calc_divide_round_up(total, (others * 2) + 2);
+    if (average < BATALION_MAX_EXPERIENCE) {
+        recruiting->experience = (uint16_t)average;
+    } else {
+        recruiting->experience = BATALION_MAX_EXPERIENCE;
+    }
+}
+
 bool building_recruiter::create_soldier() {
     int formation_id = get_closest_batalion_needing_soldiers();
-    if (formation_id > 0) {
-        const formation* m = formation_get(formation_id);
+    if (formation_id <= 0) {
+        return false;
+    }
 
-        // OG takes 100 from a positive stock; the stock here cannot go below zero.
-        const e_resource used = (m->batalion_recruit_type == BATALION_RECRUIT_CHARIOTEER) ? RESOURCE_CHARIOTS
-                              : (m->batalion_recruit_type == BATALION_RECRUIT_INFANTRY) ? RESOURCE_WEAPONS
-                              : RESOURCE_NONE;
-        if (used != RESOURCE_NONE) {
-            consume_resource(used, std::min<int>(100, base.stored_amount(used)));
-        }
+    formation* m = formation_get(formation_id);
 
-        figure* f = figure_create(m->figure_type, base.road_access, DIR_0_TOP_RIGHT);
-        f->formation_id = formation_id;
-        f->formation_at_rest = 1;
+    // OG takes 100 from a positive stock; the stock here cannot go below zero.
+    const e_resource used = (m->batalion_recruit_type == BATALION_RECRUIT_CHARIOTEER) ? RESOURCE_CHARIOTS
+                          : (m->batalion_recruit_type == BATALION_RECRUIT_INFANTRY) ? RESOURCE_WEAPONS
+                          : RESOURCE_NONE;
+    if (used != RESOURCE_NONE) {
+        consume_resource(used, std::min<int>(100, base.stored_amount(used)));
+    }
 
-        building* fort = building_get(m->building_id);
-        int academy_id = get_closest_military_academy(fort);
-        if (academy_id) {
-            building* academy = building_get(academy_id);
-            tile2i road = map_get_road_access_tile(academy->tile, academy->size);
-            if (road.valid()) {
-                f->advance_action(ACTION_5_SOLDIER_GOING_TO_MILITARY_ACADEMY);
-                f->destination_tile = road;
-            } else {
-                f->advance_action(ACTION_1_SOLDIER_GOING_TO_FORT);
-            }
+    figure* f = figure_create(m->figure_type, base.road_access, DIR_0_TOP_RIGHT);
+    f->formation_id = formation_id;
+    f->formation_at_rest = 1;
+
+    building* fort = building_get(m->building_id);
+    int academy_id = get_closest_military_academy(fort);
+    if (academy_id) {
+        building* academy = building_get(academy_id);
+        tile2i road = map_get_road_access_tile(academy->tile, academy->size);
+        if (road.valid()) {
+            f->advance_action(ACTION_5_SOLDIER_GOING_TO_MILITARY_ACADEMY);
+            f->destination_tile = road;
         } else {
             f->advance_action(ACTION_1_SOLDIER_GOING_TO_FORT);
         }
-        g_formations.calculate_figures();
-        return true;
+    } else {
+        f->advance_action(ACTION_1_SOLDIER_GOING_TO_FORT);
     }
-    return false;
+
+    g_formations.calculate_figures();
+    formation_apply_recruit_experience(m, academy_id);
+    return true;
 }
 
 void building_barracks_request_tower_sentry() {
@@ -170,12 +226,12 @@ bool building_recruiter::create_tower_sentry() {
         building* b = building_get(i);
         // Check for towers and gatehouses (use main part for multi-part buildings)
         building* main_b = b->main();
-        bool is_tower_or_gatehouse = (main_b->type == BUILDING_MUD_TOWER || 
+        bool is_tower_or_gatehouse = (main_b->type == BUILDING_MUD_TOWER ||
                                        main_b->type == BUILDING_BRICK_TOWER ||
-                                       main_b->type == BUILDING_MUD_GATEHOUSE || 
+                                       main_b->type == BUILDING_MUD_GATEHOUSE ||
                                        main_b->type == BUILDING_BRICK_GATEHOUSE ||
                                        main_b->type == BUILDING_TOWER_GATEHOUSE);
-        
+
         if (main_b->state == BUILDING_STATE_VALID && is_tower_or_gatehouse && main_b->num_workers > 0 && !main_b->has_figure(0)
             && (main_b->road_network_id == base.road_network_id || !!game_features::gameplay_change_tower_sentries_go_offroad)) {
             tower = main_b;
