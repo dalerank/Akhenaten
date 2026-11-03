@@ -324,6 +324,20 @@ figure_antelope_hunter_javelin = {
 	terrain_usage : TERRAIN_USAGE_ANY,
 }
 
+// OG missiles.h / missiles.c constants (figure_arrow_action, missile_set_image).
+missile_rules {
+    speed: 4
+    flight_ticks: 120
+    max_defense: 20
+    damage_base: 30
+    arrow_image_offset: 16
+    image_directions: 16
+    facing_away_penalty: 4
+    single_line_bonus: 4
+    mop_up_penalty: 2
+    attack_timeout: 6
+}
+
 figure_arrow = {
 	animations : {
 		walk : { pack:PACK_SPR_MAIN, id:0, max_frames:12 }
