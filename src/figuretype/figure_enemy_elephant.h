@@ -16,6 +16,9 @@ public:
     } FIGURE_RUNTIME_DATA_T;
 
     virtual void figure_action() override;
+    // OG enemy_begin(0, 1) / silent march for 0x2F.
+    virtual bool drowns_on_floodplain() const override { return false; }
+    virtual bool silent_on_march() const override { return true; }
 
     // Splash damage to adjacent player soldiers. force=true bypasses cooldown (tests).
     void trample_adjacent(bool force = false);

@@ -125,7 +125,7 @@ void figure_enemy::enemy_fighting(formation *m) {
         advance_action(ACTION_151_ENEMY_INITIAL);
     }
 
-    if (type() != FIGURE_ENEMY_EGYPTIAN_CAMEL && type() != FIGURE_ENEMY_EGYPTIAN_ELEPHANT) {
+    if (!silent_on_march()) {
         if (type() == FIGURE_ENEMY_EGYPTIAN_CHARIOT
             || type() == FIGURE_ENEMY_EGYPTIAN_MOUNTED_ARCHER
             || type() == FIGURE_ENEMY_KINGDOME_MOUNTED) {

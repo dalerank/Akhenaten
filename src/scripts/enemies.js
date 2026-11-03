@@ -708,16 +708,18 @@ figure_egyptian_axe = {
     max_amount : 25
 }
 
-// Camel + mounted archer. TEMP art until PACK_ENEMY_EGYPTIAN dump (ids ≥16).
+// Camel: OG enemy_rider_action(0,1) — SPEAR in INITIAL, no drown, speed 1.
+// TEMP rider art until PACK_ENEMY_EGYPTIAN dump (ids ≥16).
 // Not in enemy_egyptian.figure_types[] without OG percentage confirmation.
 figure_egyptian_camel = {
   overlay : OVERLAY_ENEMIES
-    sounds: enemy_fast_sword_sounds
+    sounds: enemy_archer_sounds
     animations : {
-        // TEMP art: chariot walk/attack as mount stand-in
+        // TEMP art: chariot strips as rider stand-in
         walk : { pack:PACK_ENEMY_EGYPTIAN, id:14, max_frames:12 }
         death : { pack:PACK_ENEMY_EGYPTIAN, id:14, max_frames:12, loop:false }
         attack : { pack:PACK_ENEMY_EGYPTIAN, id:15, max_frames:12 }
+        bow_attack : { pack:PACK_ENEMY_EGYPTIAN, id:15, max_frames:12 }
         big_image : { pack:PACK_UNLOADED, id:25, offset:44 }
     }
 
@@ -725,9 +727,12 @@ figure_egyptian_camel = {
     max_damage : 100
     attack_value : 8
     defense_value: 3
+    missile_attack_value : 7
     missile_defense_value : 0
+    missile_delay : 40
     terrain_usage : TERRAIN_USAGE_ANY
-    interval_attack_delay : 25
+    missile_type : FIGURE_SPEAR
+    attack_distance : 5
     is_enemy : true
     max_amount : 25
 }

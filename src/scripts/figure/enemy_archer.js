@@ -47,6 +47,9 @@ function figure_canaanite_archer_setup_phrase(ev) { figure_enemy_archer_setup_ph
 [es=(figure_egyptian_archer, setup_phrase)]
 function figure_egyptian_archer_setup_phrase(ev) { figure_enemy_archer_setup_phrase(ev) }
 
+[es=(figure_egyptian_camel, setup_phrase)]
+function figure_egyptian_camel_setup_phrase(ev) { figure_enemy_archer_setup_phrase(ev) }
+
 [es=(figure_egyptian_mounted_archer, setup_phrase)]
 function figure_egyptian_mounted_archer_setup_phrase(ev) { figure_enemy_archer_setup_phrase(ev) }
 

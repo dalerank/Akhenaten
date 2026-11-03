@@ -11,6 +11,7 @@
 #include "city/city.h"
 #include "core/profiler.h"
 #include "figure/figure.h"
+#include "figuretype/figure_enemy.h"
 #include "game/game_config.h"
 #include "graphics/animkeys.h"
 #include "graphics/image_desc.h"
@@ -222,7 +223,11 @@ void figure::action_perform() {
 
             const bool tile_is_water = map_terrain_is(tile.grid_offset(), TERRAIN_WATER);
             if (!can_move_by_water() && tile_is_water && routing_path_id <= 0) {
-                kill();
+                figure_enemy *enemy = dcast()->dcast_enemy();
+                const bool floodplain = map_terrain_is(tile.grid_offset(), TERRAIN_FLOODPLAIN);
+                if (!(enemy && !enemy->drowns_on_floodplain() && floodplain)) {
+                    kill();
+                }
             }
 
             if (!can_move_by_terrain() && !tile_is_water) {
