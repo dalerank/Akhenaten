@@ -14,9 +14,12 @@ function info_window_fishing_wharf_on_init(window) {
     var b = city.get_building(window.bid)
     var gid = b.meta_text_id
     var reason = { group: gid, id: 0 }
+    var remake = game_features.get('gameplay_change_fishing_boat_remake') === true
 
     if (!b.has_road_access) {
         reason = { key: "#building_no_road_access" }
+    } else if (city.resources.fish.mothballed) {
+        reason = { group: gid, id: 9 }
     } else if (!b.has_figure(BUILDING_SLOT_BOAT)) {
         reason = { group: gid, id: 2 }
     } else {
@@ -32,6 +35,10 @@ function info_window_fishing_wharf_on_init(window) {
     }
 
     window.warning_text.text = __loc(reason)
-    window.storage_desc.text = _format("Stored fish {0}", b.stored_resource(RESOURCE_FISH))
+    if (remake) {
+        window.storage_desc.text = _format("Stored fish {0}", b.stored_resource(RESOURCE_FISH))
+    } else {
+        window.storage_desc.text = ""
+    }
     building_info_window_setup_advisors(window)
 }

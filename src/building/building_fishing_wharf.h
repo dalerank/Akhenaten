@@ -15,7 +15,8 @@ public:
     } BUILDING_STATIC_DATA_T;
 
     struct runtime_data_t : public building_wharf::runtime_data_t {
-        uint8_t no_fishing_points_warning_shown;  // Counter to limit warning frequency
+        uint8_t fish_caught;
+        uint8_t no_fishing_points_warning_shown;
     } BUILDING_RUNTIME_DATA_T;
 
     virtual void on_place_update_tiles(int orientation, int variant) override;
@@ -30,5 +31,5 @@ public:
     virtual void bind_dynamic(io_buffer *iob, size_t version) override;
 };
 
-ANK_CONFIG_PROPERTY(building_fishing_wharf::runtime_data_t, no_fishing_points_warning_shown)
+ANK_CONFIG_PROPERTY(building_fishing_wharf::runtime_data_t, fish_caught, no_fishing_points_warning_shown)
 ANK_CONFIG_STRUCT(building_fishing_wharf::static_params, max_storage, wait_time_multiplier, wait_time_base)

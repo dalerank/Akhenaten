@@ -29,6 +29,7 @@
 #include "building/building_storage_yard.h"
 #include "building/building_temple_complex.h"
 #include "building/building_shipyard.h"
+#include "building/building_fishing_wharf.h"
 #include "building/monument_mastaba.h"
 #include "building/monument_pyramid.h"
 #include "building/monument_royal_tomb.h"
@@ -2372,6 +2373,45 @@ static void __test_building_set_figure_spawn_delay(int bid, int delay) {
     b->figure_spawn_delay = (short)delay;
 }
 ANK_FUNCTION_2(__test_building_set_figure_spawn_delay);
+
+static int __test_fishing_wharf_spawn_figure(int bid) {
+    building *b = building_get(bid);
+    auto *wharf = (b && b->is_valid()) ? b->dcast_fishing_wharf() : nullptr;
+    if (!wharf) {
+        return -1;
+    }
+    b->has_road_access = true;
+    if (!b->road_access.valid()) {
+        b->road_access = b->tile;
+    }
+    if (b->road_network_id <= 0) {
+        b->road_network_id = 1;
+    }
+    if (b->distance_from_entry <= 0) {
+        b->distance_from_entry = 1;
+    }
+    const int before = wharf->get_figures_number(FIGURE_CART_PUSHER);
+    wharf->spawn_figure();
+    return wharf->get_figures_number(FIGURE_CART_PUSHER) - before;
+}
+ANK_FUNCTION_1(__test_fishing_wharf_spawn_figure);
+
+static int __test_fishing_wharf_fish_caught(int bid) {
+    building *b = building_get(bid);
+    auto *wharf = (b && b->is_valid()) ? b->dcast_fishing_wharf() : nullptr;
+    return wharf ? wharf->runtime_data().fish_caught : -1;
+}
+ANK_FUNCTION_1(__test_fishing_wharf_fish_caught);
+
+static void __test_fishing_wharf_set_fish_caught(int bid, int value) {
+    building *b = building_get(bid);
+    auto *wharf = (b && b->is_valid()) ? b->dcast_fishing_wharf() : nullptr;
+    if (!wharf) {
+        return;
+    }
+    wharf->runtime_data().fish_caught = (uint8_t)value;
+}
+ANK_FUNCTION_2(__test_fishing_wharf_set_fish_caught);
 
 static int __test_hunting_lodge_active_hunters(building *b) {
     if (!b) {

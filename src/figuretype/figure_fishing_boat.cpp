@@ -28,7 +28,6 @@ REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_fishing_boat);
 namespace {
 
 constexpr int k_og_fishing_time_ticks = 200;
-constexpr int k_og_fish_per_trip = 100;
 
 water_dest map_water_get_wharf_for_new_fishing_boat(figure &boat) {
     building_wharf *wharf = building_first_ex<building_wharf>([&boat](building_wharf *w) {
@@ -231,7 +230,7 @@ void figure_fishing_boat::figure_action_og() {
     case ACTION_4_FISHING_BOAT_AT_WHARF: {
         int pct_workers = wharf->worker_percentage();
         int max_wait_ticks = 5 * (102 - pct_workers);
-        if (wharf->stored_amount(RESOURCE_FISH) > 0) {
+        if (wharf->runtime_data().fish_caught > 0) {
             pct_workers = 0;
         }
         if (pct_workers <= 0) {
@@ -258,12 +257,7 @@ void figure_fishing_boat::figure_action_og() {
             advance_action(ACTION_4_FISHING_BOAT_AT_WHARF);
             base.wait_ticks = 0;
             wharf->base.figure_spawn_delay = 1;
-            int max_storage = wharf->current_params().max_storage;
-            int current_storage = wharf->stored_amount(RESOURCE_FISH);
-            int amount_to_add = std::min(k_og_fish_per_trip, max_storage - current_storage);
-            if (amount_to_add > 0) {
-                wharf->store_resource(RESOURCE_FISH, amount_to_add);
-            }
+            wharf->runtime_data().fish_caught++;
         } else if (direction() == DIR_FIGURE_REROUTE) {
             route_remove();
         } else if (direction() == DIR_FIGURE_CAN_NOT_REACH) {
