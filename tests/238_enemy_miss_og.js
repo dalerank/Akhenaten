@@ -16,12 +16,12 @@ function test238_fail(msg) {
 function run_test() {
     __log_info_native('[test:238] FIG_ENEMY_MISS / enemy archer OG')
 
+    test_ensure_city_session('data/default.map')
+
     if (!__test_enemy_figure_registered(FIGURE_ENEMY_EGYPTIAN_ARCHER)) {
         return test238_fail('egyptian archer not registered')
     }
     __log_marker('enemy_miss_params_ok')
-
-    test_reload_city_session('data/default.map')
 
     var cx = (__scenario_map.width / 2) | 0
     var cy = (__scenario_map.height / 2) | 0
