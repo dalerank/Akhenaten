@@ -1,6 +1,7 @@
 // Dentist OG: spawn_service_walker with delays_service {3,7,15,29,44} by worker %,
 // coverage gives 96 to every inhabited house in radius 2 (no monthly cap, no half-coverage gate).
-// gameplay_change_dentist_service_cap restores the remake cap; toothache flag defaults off.
+// Model fire_risk by difficulty, damage_risk 0. gameplay_change_dentist_service_cap restores the
+// remake cap; toothache flag defaults off.
 
 var __test223_ok = false
 var __test223_cap_prev = false
@@ -120,6 +121,19 @@ function run_test() {
     }
     __log_marker('test223_remake_cap')
 
+    var expected_fire = [4, 15, 20, 24, 30]
+    for (var d = 0; d < 5; d++) {
+        if (building_dentist.fire_risk[d] != expected_fire[d]) {
+            test223_fail('fire_risk[' + d + '] expected ' + expected_fire[d] + ' got ' + building_dentist.fire_risk[d])
+            return
+        }
+    }
+    if (building_dentist.damage_risk[0] != 0) {
+        test223_fail('damage_risk must be 0, got ' + building_dentist.damage_risk[0])
+        return
+    }
+    __log_marker('test223_og_model')
+
     __test223_ok = true
     test223_finish()
 }
@@ -129,4 +143,5 @@ function check_valid() {
         && __test_find_inlog('[test-marker] test223_delay_100pct')
         && __test_find_inlog('[test-marker] test223_og_coverage')
         && __test_find_inlog('[test-marker] test223_remake_cap')
+        && __test_find_inlog('[test-marker] test223_og_model')
 }

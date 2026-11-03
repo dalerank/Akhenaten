@@ -18,8 +18,8 @@ building_dentist {
   cost [ 10, 40, 50, 60, 75 ]
   desirability { value[2], step[1], step_size[-1], range[2] }
   laborers[2]
-  fire_risk[4]
-  damage_risk[2]
+  fire_risk [ 4, 15, 20, 24, 30 ]
+  damage_risk [0]
   flags {
     draw_normal_anim: true
     work_anim: true
