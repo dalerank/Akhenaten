@@ -15,6 +15,7 @@
 #include "dev/debug.h"
 #include "grid/image.h"
 #include "grid/grid.h"
+#include "grid/terrain.h"
 #include "js/js_game.h"
 
 const e_action_enemy_fast_sword_tokens_t ANK_CONFIG_ENUM(e_action_enemy_fast_sword_tokens)
@@ -62,6 +63,12 @@ void figure_enemy_fast_sword::figure_action() {
     count_as_city_invader();
     if (invasion_auto_resolve_figure_immune(&base)) {
         base.map_figure_update();
+        return;
+    }
+
+    // OG enemy_begin: FIG_ENEMY_AUX / foot infantry drowns on flooded floodplain.
+    if (map_terrain_is(tile(), TERRAIN_WATER) && map_terrain_is(tile(), TERRAIN_FLOODPLAIN)) {
+        poof();
         return;
     }
 
@@ -232,6 +239,10 @@ void figure_enemy_fast_sword::enemy_initial(formation *m) {
     if (base.wait_ticks > 0) {
         return;
     }
+
+    // OG enemy_action INITIAL: ENEMY_ORDER_WAIT_TICKS + clear ghost (invisible).
+    base.wait_ticks = 50;
+    base.set_flag(e_figure_flag_invisible, false);
 
     if (base.index_in_formation == 0) {
         if (m->layout == FORMATION_ENEMY_MOB) {
