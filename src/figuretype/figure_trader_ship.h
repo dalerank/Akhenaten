@@ -18,7 +18,11 @@ enum e_trade_ship_action {
     ACTION_113_TRADE_SHIP_GOING_TO_DOCK_QUEUE = 113,
     ACTION_114_TRADE_SHIP_ANCHORED = 114,
     ACTION_115_TRADE_SHIP_LEAVING = 115,
+
+    ACTION_116_TRADE_SHIP_MAX
 };
+using e_trade_ship_action_tokens_t = token_holder<e_trade_ship_action, ACTION_110_TRADE_SHIP_CREATED, ACTION_116_TRADE_SHIP_MAX>;
+extern const e_trade_ship_action_tokens_t e_trade_ship_action_tokens;
 
 struct empire_city;
 struct event_trade_ship_arrival { int cid; uint8_t tid; pcstr location; };

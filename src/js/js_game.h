@@ -814,6 +814,7 @@ void js_register_house(js_State *J);
 void js_register_enemy_army(js_State *J);
 void js_register_temple_complex_building(js_State *J);
 void js_register_storage_yard(js_State *J);
+void js_register_dock(js_State *J);
 void js_register_monument(js_State *J);
 void js_register_debug_props_functions(js_State* J);
 js_Object *js_get_building_prototype(void);

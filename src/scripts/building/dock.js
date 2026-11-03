@@ -1,30 +1,41 @@
 log_info("akhenaten: dock_prototype.js loaded")
 
-function Dock(building_id) {
-    this.id = building_id
-}
-
-Dock.prototype = Object.create(Building.prototype)
-Dock.prototype.constructor = Dock
+/* Constructor, prototype chain, trade-order methods, toString: native (js_register_dock). */
 
 Dock.property.num_ships = { }
+Dock.property.trade_ship = { }
 
-Dock.prototype.is_trade_accepted = function(resource) { return __dock_is_trade_accepted(this.id, resource) }
-Dock.prototype.toggle_good_accepted = function(resource) { __dock_toggle_good_accepted(this.id, resource) }
-Dock.prototype.unaccept_all_goods = function() { __dock_unaccept_all_goods(this.id) }
-Dock.prototype.accept_all_goods = function() { __dock_accept_all_goods(this.id) }
-Dock.prototype.accepts_any_goods = function() { return __dock_accepts_any_goods(this.id) }
-Dock.prototype.has_trade_ship = function() { return __dock_has_trade_ship(this.id) }
-Dock.prototype.count_idle_dockers = function() { return __dock_count_idle_dockers(this.id) }
+Dock.prototype.has_trade_ship = function() { return this.trade_ship > 0 }
+Dock.prototype.trade_ship_moored = function() {
+    if (!this.trade_ship) {
+        return false
+    }
+    var ship = city.get_figure(this.trade_ship)
+    return ship.valid && ship.action_state == ACTION_112_TRADE_SHIP_MOORED
+}
+
+city.get_dock = function(building_id) {
+    if (!__building_is_dock(building_id)) {
+        return null
+    }
+    return new Dock(building_id)
+}
 
 building_dock = {
   animations : {
     preview : { pack:PACK_TERRAIN, id:49 },
     base : { pack:PACK_TERRAIN, id:49 },
-    work_n : { pos:[135, -7], pack:PACK_SPR_AMBIENT, id:55, offset:3, max_frames:25, duration:8 },
-    work_w : { pos:[100, -7], pack:PACK_SPR_AMBIENT, id:55, offset:1, max_frames:25, duration:8 },
-    work_s : { pos:[55, 7], pack:PACK_SPR_AMBIENT, id:55, offset:0, max_frames:25, duration:4 },
-    work_e : { pos:[55, -27], pack:PACK_SPR_AMBIENT, id:55, offset:2, max_frames:25, duration:4 },
+    // OG draw_dock_anim: no ship → ANIM_FISHING_WHARF (= ambient 55), offsets dock_anim 0..3
+    wait_n : { pos:[132, -7], pack:PACK_SPR_AMBIENT, id:55, offset:3, max_frames:25, duration:8 },
+    wait_w : { pos:[115, 25], pack:PACK_SPR_AMBIENT, id:55, offset:0, max_frames:25, duration:8 },
+    wait_s : { pos:[60, 20], pack:PACK_SPR_AMBIENT, id:55, offset:1, max_frames:25, duration:4 },
+    wait_e : { pos:[49, -4], pack:PACK_SPR_AMBIENT, id:55, offset:2, max_frames:25, duration:4 },
+    // Ship docked → ANIM_DOCK_SHIP (= ambient 56), offsets dock_anim 4..7; OG caps frame at 20
+    work_n : { pos:[152, -13], pack:PACK_SPR_AMBIENT, id:56, offset:3, max_frames:20, duration:8 },
+    work_w : { pos:[123, 16], pack:PACK_SPR_AMBIENT, id:56, offset:0, max_frames:20, duration:8 },
+    work_s : { pos:[65, 14], pack:PACK_SPR_AMBIENT, id:56, offset:1, max_frames:20, duration:4 },
+    work_e : { pos:[38, -12], pack:PACK_SPR_AMBIENT, id:56, offset:2, max_frames:20, duration:4 },
+    minimap { pack:PACK_GENERAL, id:149, offset:160 }
   }
   labor_category : LABOR_CATEGORY_INDUSTRY_COMMERCE
   planner_update_rule : {
@@ -53,12 +64,8 @@ function building_dock_on_update_animation(ev) {
     if (!dock) {
         return
     }
-    if (dock.num_ships > 0) {
-        dock.play_animation = true
-        return
-    }
-    __map_sprite_animation_set(dock.tile, 1)
-    dock.play_animation = false
+    // OG animation_offset: listed_worker_type → workers_then_advance
+    dock.play_animation = dock.num_workers > 0
 }
 
 [es=(building_dock, update_graphic)]
@@ -67,10 +74,7 @@ function building_dock_on_update_graphic(ev) {
     if (!dock) {
         return
     }
-    if (dock.count_idle_dockers() <= 0) {
-        return
-    }
-    building_wharf_set_orient_animation(dock, "work")
+    building_wharf_update_graphic_moored(dock, dock.trade_ship_moored())
 }
 
 [es=(building_dock, highlight_waypoints)]

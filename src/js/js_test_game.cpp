@@ -3145,6 +3145,15 @@ static xstring __test_building_slot_anim_key(int bid, int slot) {
 }
 ANK_FUNCTION_2(__test_building_slot_anim_key);
 
+static xstring __test_building_anim_key(int bid) {
+    building *b = building_get(bid);
+    if (!b || !b->is_valid()) {
+        return {};
+    }
+    return b->anim.key;
+}
+ANK_FUNCTION_1(__test_building_anim_key);
+
 // Call building_impl::update_day() (e.g. pyramid phase advance / congrats).
 static void __test_building_update_day(int bid) {
     building *b = building_get(bid);
