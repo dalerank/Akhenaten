@@ -653,11 +653,11 @@ building_police_station = {
   min_houses_coverage : 50
   meta : { text_id: 88, help_link:"message_building_police_station" }
   building_size : 1
-  cost [ 6, 12, 25, 40, 60 ]
+  cost [ 6, 24, 30, 36, 45 ]
   desirability { value[-2], step[1], step_size[1], range[2] }
   laborers [6]
-  fire_risk [2]
-  damage_risk [2]
+  fire_risk [ 2, 8, 10, 12, 15 ]
+  damage_risk [0]
   flags {
     is_infrastructure: true
   }
