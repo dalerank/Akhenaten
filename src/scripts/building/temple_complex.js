@@ -448,14 +448,20 @@ building_temple_complex_osiris {
 
     min_houses_coverage : 50
     spawn_delays : [3, 7, 10, 15, 20]
-    damage_proof : true
-    fire_proof : true,
     labor_category : LABOR_CATEGORY_RELIGION
-    cost [ 400, 800, 1200, 1500, 2000 ]
+    // Pharaoh_Model_* Large Temple to Bast (CST / DRI)
+    cost [ 400, 1600, 2000, 2400, 3000 ]
     desirability { value[20], step[2], step_size[-4], range[6] }
     laborers[50]
     fire_risk[0]
-    damage_risk[2]
+    damage_risk [ 2, 8, 10, 12, 15 ]
+
+    // OG Bast complex bonuses (citywide while the complex stands)
+    food_consumption_pct : 80
+    goods_consumption_pct : 80
+    service_decay_skip_odd_months : 1
+    hathor_sentiment_bonus : 10
+    isis_health_bonus : 10
 
     allowed_altar [ BUILDING_TEMPLE_COMPLEX_ALTAR_ISIS ]
     allowed_oracle [ BUILDING_TEMPLE_COMPLEX_ORACLE_HATHOR ]

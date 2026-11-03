@@ -1,6 +1,8 @@
 #include "city_sentiment.h"
 
 #include "building/building_house.h"
+#include "building/building_temple_complex.h"
+#include "city/buildings.h"
 #include "city/constants.h"
 #include "city/city.h"
 #include "game/game_events.h"
@@ -191,6 +193,18 @@ void city_sentiment_t::update() {
     contribution_monuments = calc_contribution_monuments();
     contribution_penalty_huts = calc_penalty_for_hut_dwellers();
 
+    // OG Hathor oracle on Bast complex: improve city sentiment.
+    int contribution_hathor = 0;
+    const building_id complex_id = g_city.buildings.temple_complex_id();
+    if (complex_id) {
+        building *complex_b = building_get(complex_id);
+        auto *complex = complex_b ? complex_b->dcast_temple_complex() : nullptr;
+        if (complex && complex->type() == BUILDING_TEMPLE_COMPLEX_BAST
+            && complex->has_upgrade(etc_upgrade_oracle)) {
+            contribution_hathor = building_temple_complex_bast::current_params().hathor_sentiment_bonus;
+        }
+    }
+
     int houses_calculated = 0;
     int houses_needing_food = 0;
     int total_sentiment_contribution_food = 0;
@@ -222,6 +236,8 @@ void city_sentiment_t::update() {
                 // immigration is not halted simply because you are between pop 200 and 300
                 housed.house_happiness += 50 - default_sentiment;
             }
+            housed.house_happiness += contribution_hathor;
+            housed.house_happiness = calc_bound(housed.house_happiness, 0, 100);
             return;
         }
         // population >= 300
@@ -260,6 +276,7 @@ void city_sentiment_t::update() {
         housed.house_happiness += contribution_huts;
         housed.house_happiness += contribution_religion_coverage;
         housed.house_happiness += contribution_monuments;
+        housed.house_happiness += contribution_hathor;
         housed.house_happiness = calc_bound(housed.house_happiness, 0, 100);
     });
 
@@ -281,7 +298,7 @@ void city_sentiment_t::update() {
             total_sentiment += house->runtime_data().house_happiness;
         }
     });
-    
+
     value = total_houses ? total_sentiment / total_houses : 60;
 
     if (message_delay) {

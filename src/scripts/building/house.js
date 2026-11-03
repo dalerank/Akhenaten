@@ -58,6 +58,18 @@ function difficulty_adjust_food_consumption(pct) {
     return ((reduced / 5) | 0) * 5
 }
 
+// OG Bast temple complex (citywide): food/goods consumption × food_consumption_pct / 100.
+function house_bast_complex_consumption_pct(kind) {
+    var complex = city.get_temple_complex()
+    if (!complex || complex.type != BUILDING_TEMPLE_COMPLEX_BAST) {
+        return 100
+    }
+    var pct = (kind == "goods")
+        ? building_temple_complex_bast.goods_consumption_pct
+        : building_temple_complex_bast.food_consumption_pct
+    return pct > 0 ? pct : 100
+}
+
 House.prototype.consume_food_weekly = function() {
     if (!this.hsize) {
         return
@@ -69,6 +81,11 @@ House.prototype.consume_food_weekly = function() {
     var amount_per_type = (adjusted_pct * this.population / 100) | 0
     if (food_types > 1) {
         amount_per_type = (amount_per_type / food_types) | 0
+    }
+
+    var bast_pct = house_bast_complex_consumption_pct("food")
+    if (bast_pct != 100 && amount_per_type > 0) {
+        amount_per_type = (amount_per_type * bast_pct / 100) | 0
     }
 
     if (amount_per_type > 0) {
@@ -132,10 +149,18 @@ House.prototype.consume_goods_weekly = function() {
     }
 
     var model = this.model
-    house_consume_good(this, 0, model.pottery, RESOURCE_POTTERY)
-    house_consume_good(this, 1, model.jewelry, RESOURCE_LUXURY_GOODS)
-    house_consume_good(this, 2, model.linen, RESOURCE_LINEN)
-    house_consume_good(this, 3, model.beer, RESOURCE_BEER)
+    var bast_pct = house_bast_complex_consumption_pct("goods")
+    function scaled(amount) {
+        if (bast_pct == 100 || amount <= 0) {
+            return amount
+        }
+        var next = (amount * bast_pct / 100) | 0
+        return next < 1 ? 1 : next
+    }
+    house_consume_good(this, 0, scaled(model.pottery), RESOURCE_POTTERY)
+    house_consume_good(this, 1, scaled(model.jewelry), RESOURCE_LUXURY_GOODS)
+    house_consume_good(this, 2, scaled(model.linen), RESOURCE_LINEN)
+    house_consume_good(this, 3, scaled(model.beer), RESOURCE_BEER)
 }
 
 function house_consume_good(house, inv, amount, resource) {

@@ -3,7 +3,9 @@
 #include "core/profiler.h"
 #include "core/calc.h"
 #include "building/building_house.h"
+#include "building/building_temple_complex.h"
 #include "building/destruction.h"
+#include "city/buildings.h"
 #include "city/city.h"
 #include "city/city_figures.h"
 #include "game/game_events.h"
@@ -253,6 +255,17 @@ void city_health_t::update_month() {
         if (pop < entry.pop) {
             target_value += entry.bonus;
             break;
+        }
+    }
+
+    // OG Isis altar on Bast complex: improve overall city health.
+    const building_id complex_id = g_city.buildings.temple_complex_id();
+    if (complex_id) {
+        building *complex_b = building_get(complex_id);
+        auto *complex = complex_b ? complex_b->dcast_temple_complex() : nullptr;
+        if (complex && complex->type() == BUILDING_TEMPLE_COMPLEX_BAST
+            && complex->has_upgrade(etc_upgrade_altar)) {
+            target_value += building_temple_complex_bast::current_params().isis_health_bonus;
         }
     }
 
