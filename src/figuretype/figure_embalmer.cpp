@@ -3,6 +3,9 @@
 #include "figure/service.h"
 #include "building/building_house.h"
 #include "building/building_mortuary.h"
+#include "game/game_config.h"
+#include "grid/building.h"
+#include "grid/grid.h"
 #include "js/js_game.h"
 
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_embalmer);
@@ -15,6 +18,19 @@ void figure_embalmer::figure_before_action() {
 }
 
 int figure_embalmer::provide_service() {
+    if (!game_features::gameplay_change_mortuary_service_cap.to_bool()) {
+        int houses = 0;
+        map_grid_area_foreach(map_grid_get_area(tile(), 1, 2), [&] (tile2i t) {
+            const int bid = map_building_at(t.grid_offset());
+            auto house = bid ? building_get(bid)->dcast_house() : nullptr;
+            if (house && house->house_population() > 0) {
+                house->runtime_data().mortuary = MAX_COVERAGE;
+                houses++;
+            }
+        });
+        return houses;
+    }
+
     building *mortuary_building = home();
     if (!mortuary_building) {
         return 0;
@@ -28,7 +44,6 @@ int figure_embalmer::provide_service() {
     auto &mortuary_data = mortuary->runtime_data();
     const auto &params = mortuary->current_params();
 
-    // Check if already served max_serve_clients residents this month
     if (mortuary_data.residents_served_this_month >= params.max_serve_clients) {
         return 0;
     }

@@ -96,6 +96,7 @@ namespace game_features {
     extern game_feature gameplay_change_dentist_toothache;
     extern game_feature gameplay_change_physician_service_cap;
     extern game_feature gameplay_change_apothecary_remake;
+    extern game_feature gameplay_change_mortuary_service_cap;
     extern game_feature gameplay_change_mortuary_linen_upkeep;
     extern game_feature gameplay_change_mortuary_mothballed_linen;
     extern game_feature gameplay_change_fort_rotation;
