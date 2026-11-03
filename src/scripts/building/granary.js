@@ -35,6 +35,7 @@ building_granary {
     animations {
         preview { pack:PACK_GENERAL, id:99 },
         base { pack:PACK_GENERAL, id:99 },
+        fancy { pack:PACK_GENERAL, id:99, offset:1 },
         work { pack:PACK_SPR_AMBIENT, id:47, max_frames:23 },
         resources {pack:PACK_GENERAL, id:99, offset:2},
         minimap {pack:PACK_GENERAL, id:149, offset:160},
@@ -60,6 +61,7 @@ building_granary {
     fire_risk[0]
     damage_risk[5]
     desirability { value[-8], step[1], step_size[-2], range[4] }
+    fancy_treshold_desirability : 30
     begin_spot_pos [110, -74]
     res_image_offsets [[0, 0], [16, 9], [35, 18], [51, 26], [-16, 7], [1, 16], [20, 26], [37, 35]]
     min_workers_percent_for_tasks : 50

@@ -26,6 +26,9 @@
 #include "game/game.h"
 #include "city/city_labor.h"
 #include "figuretype/figure_storageyard_cart.h"
+#include "grid/building_tiles.h"
+#include "grid/desirability.h"
+#include "grid/terrain.h"
 #include "js/js_game.h"
 #include <cmath>
 
@@ -104,6 +107,18 @@ int building_granary::add_resource(e_resource resource, int amount, bool force) 
         return -1;
     }
 
+    if (!force && this->amount(resource) <= 0) {
+        int types = 0;
+        for (const auto &r : resource_list::foods) {
+            if (this->amount(r.type) > 0) {
+                types++;
+            }
+        }
+        if (types >= current_params().allow_food_types) {
+            return -1;
+        }
+    }
+
     const int deliverable_amount = std::min<int>(d.resource_stored[RESOURCE_NONE], amount);
     d.resource_stored[resource] += deliverable_amount;
     d.resource_stored[RESOURCE_NONE] -= deliverable_amount;
@@ -150,11 +165,20 @@ int building_granary::remove_resource(e_resource resource, int amount) {
 granary_task_status building_granary::determine_worker_task() {
     const int pct_workers = worker_percentage();
     if (pct_workers < current_params().min_workers_percent_for_tasks) {
-        return {GRANARY_TASK_NONE, RESOURCE_NONE};
+        return {GRANARY_TASK_NONE, RESOURCE_NONE, 0};
+    }
+
+    for (const auto &r : resource_list::foods) {
+        if (!is_emptying(r.type)) {
+            continue;
+        }
+        const int in_storage = amount(r.type);
+        if (in_storage > 0) {
+            return {GRANARY_TASK_EMPTYING, r.type, in_storage};
+        }
     }
 
     if (is_empty_all()) {
-        // bring food to another granary
         e_resource best_resource = RESOURCE_NONE;
         int max_amount = 0;
         for (const auto &r: resource_list::foods) {
@@ -166,25 +190,36 @@ granary_task_status building_granary::determine_worker_task() {
         }
 
         if (best_resource != RESOURCE_NONE && max_amount > 0) {
-            return {GRANARY_TASK_EMPTYING, best_resource};
+            return {GRANARY_TASK_EMPTYING, best_resource, max_amount};
         }
 
-        return {GRANARY_TASK_NONE, RESOURCE_NONE};
+        return {GRANARY_TASK_NONE, RESOURCE_NONE, 0};
     }
 
     if (freespace() <= 0) {
-        return {GRANARY_TASK_NONE, RESOURCE_NONE}; // granary full, nothing to get
+        return {GRANARY_TASK_NONE, RESOURCE_NONE, 0};
+    }
+
+    if (pct_workers < current_params().min_workers_percent_for_getting) {
+        return {GRANARY_TASK_NONE, RESOURCE_NONE, 0};
     }
 
     for (const auto &r : resource_list::foods) {
         int now = amount(r.type);
-        const bool can_take = uint16_t(g_city.resource.gettable(r.type) - now) > ONE_LOAD;
-        if (is_getting(r.type) && can_take) {
-            return {GRANARY_TASK_GETTING, r.type};
+        const int gettable = (int)g_city.resource.gettable(r.type) - now;
+        const bool can_take = gettable > ONE_LOAD;
+        if (!is_getting(r.type) || !can_take) {
+            continue;
         }
+
+        const storage_t *s = storage();
+        const int target = s->resource_max_get[r.type] > 0 ? s->resource_max_get[r.type] : FULL_GRANARY;
+        const int lacking = std::max(0, target - now);
+        const e_granary_task kind = (lacking > target / 2) ? GRANARY_TASK_GETTING_MOAR : GRANARY_TASK_GETTING;
+        return {kind, r.type, gettable};
     }
 
-    return {GRANARY_TASK_NONE, RESOURCE_NONE};
+    return {GRANARY_TASK_NONE, RESOURCE_NONE, 0};
 }
 
 tile2i building_granary_access_on_network(const building &granary, int road_network_id, tile2i prefer_near) {
@@ -474,11 +509,8 @@ void building_granary::bless() {
     building* min_building = 0;
     for (int i = 1; i < MAX_BUILDINGS; i++) {
         building* b = building_get(i);
-        if (b->state != BUILDING_STATE_VALID || b->type != BUILDING_GRANARY)
-            continue;
-
         building_granary* granary = b->dcast_granary();
-        if (!granary)
+        if (!granary || b->state != BUILDING_STATE_VALID)
             continue;
 
         int total_stored = 0;
@@ -523,7 +555,7 @@ void building_granary_storageyard_curse(int big) {
         if (b->type == BUILDING_STORAGE_YARD) {
             building_storage_yard *warehouse = b->dcast_storage_yard();
             total_stored = warehouse->total_stored();
-        } else if (b->type == BUILDING_GRANARY) {
+        } else if (b->dcast_granary()) {
             building_granary *granary = b->dcast_granary();
             total_stored = granary->total_stored();
             total_stored /= UNITS_PER_LOAD;
@@ -593,9 +625,11 @@ void building_granary::spawn_figure() {
         return;
     }
 
-    common_spawn_labor_seeker(current_params().min_houses_coverage);
-    if (has_figure_of_type(0, FIGURE_STORAGEYARD_CART)) {
-        return;
+    // OG: when both carts are out, labor seeker is not dispatched (can lose labor access).
+    const bool cart0 = has_figure_of_type(BUILDING_SLOT_SERVICE, FIGURE_STORAGEYARD_CART);
+    const bool cart1 = has_figure_of_type(BUILDING_SLOT_CARTPUSHER, FIGURE_STORAGEYARD_CART);
+    if (!(cart0 && cart1)) {
+        common_spawn_labor_seeker(current_params().min_houses_coverage);
     }
 
     auto task = determine_worker_task();
@@ -603,17 +637,48 @@ void building_granary::spawn_figure() {
         return;
     }
 
-    figure* f = figure_create(FIGURE_STORAGEYARD_CART, road, DIR_4_BOTTOM_LEFT);
-    auto cart = smart_cast<figure_storageyard_cart>(f);
+    auto spawn_cart = [&](int slot) {
+        figure *f = figure_create(FIGURE_STORAGEYARD_CART, road, DIR_4_BOTTOM_LEFT);
+        auto cart = smart_cast<figure_storageyard_cart>(f);
+        if (!cart) {
+            f->poof();
+            return;
+        }
 
-    cart->advance_action(ACTION_50_WAREHOUSECART_CREATED);
-    base.set_figure(0, cart->id());
-    cart->set_home(id());
-    if (task.status == GRANARY_TASK_GETTING) {
-        cart->load_resource(RESOURCE_NONE, 0);
-    } else if (task.status == GRANARY_TASK_EMPTYING) {
-        cart->load_resource(task.resource, 0);
+        cart->advance_action(ACTION_50_WAREHOUSECART_CREATED);
+        base.set_figure(slot, cart->id());
+        cart->set_home(id());
+
+        if (task.status == GRANARY_TASK_GETTING || task.status == GRANARY_TASK_GETTING_MOAR) {
+            cart->load_resource(RESOURCE_NONE, 0);
+            cart->base.collecting_item_id = task.resource;
+            cart->base.collecting_item_max = std::min(task.amount, storageyard_cart_getting_load_cap(task.resource));
+        } else if (task.status == GRANARY_TASK_EMPTYING) {
+            const int haul = std::min<int>(task.amount, 400);
+            cart->load_resource(task.resource, haul);
+            remove_resource(task.resource, haul);
+        }
+    };
+
+    if (!cart0) {
+        spawn_cart(BUILDING_SLOT_SERVICE);
+    } else if (task.status == GRANARY_TASK_GETTING_MOAR && !cart1) {
+        spawn_cart(BUILDING_SLOT_CARTPUSHER);
     }
+}
+
+void building_granary::update_graphic() {
+    if (base.state != BUILDING_STATE_VALID) {
+        return;
+    }
+
+    const bool is_fancy = g_desirability.get(base.tile) > current_params().fancy_treshold_desirability;
+    base.set_flag(e_building_fancy, is_fancy);
+
+    const xstring &animkey = is_fancy ? animkeys().fancy : animkeys().base;
+    map_building_tiles_add(base.id, base.tile, base.size, first_img(animkey), TERRAIN_BUILDING);
+
+    building_impl::update_graphic();
 }
 
 bool building_granary::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color mask) {
@@ -633,22 +698,27 @@ void building_granary::draw_stores(vec2i point, color color_mask, painter &ctx) 
     const auto &d = runtime_data();
     const vec2i begin_spot_pos = current_params().begin_spot_pos;
     const auto &res_image_offsets = current_params().res_image_offsets;
-    for (int r = 1; r < RESOURCES_FOODS_MAX; r++) {
-        if (d.resource_stored[r] > 0) {
-            int spots_filled = ceil((float)(d.resource_stored[r] - 199) / (float)400); // number of "spots" occupied by food
-            if (spots_filled == 0 && d.resource_stored[r] > 0)
-                spots_filled = 1;
-
-            for (int spot = last_spot_filled; spot < last_spot_filled + spots_filled; spot++) {
-                // draw sprite on each granary "spot"
-                vec2i spot_pos = res_image_offsets[spot];
-                auto &command = ImageDraw::create_subcommand(ctx, render_command_t::ert_generic);
-                command.image_id = resources_id + r;
-                command.pixel = point + spot_pos + begin_spot_pos;
-                command.mask = color_mask;
-            }
-
-            last_spot_filled += spots_filled;
+    const int max_spots = (int)res_image_offsets.size();
+    for (int r = RESOURCES_FOOD_MIN; r < RESOURCES_FOODS_MAX; r++) {
+        if (d.resource_stored[r] <= 0 || last_spot_filled >= max_spots) {
+            continue;
         }
+
+        // One roof hole per ~400 units (first hole from 1 unit).
+        int spots_filled = (int)ceil((float)(d.resource_stored[r] - 199) / (float)400);
+        if (spots_filled <= 0) {
+            spots_filled = 1;
+        }
+        spots_filled = std::min(spots_filled, max_spots - last_spot_filled);
+
+        for (int spot = last_spot_filled; spot < last_spot_filled + spots_filled; spot++) {
+            vec2i spot_pos = res_image_offsets[spot];
+            auto &command = ImageDraw::create_subcommand(ctx, render_command_t::ert_generic);
+            command.image_id = resources_id + (r - RESOURCES_FOOD_MIN);
+            command.pixel = point + spot_pos + begin_spot_pos;
+            command.mask = color_mask;
+        }
+
+        last_spot_filled += spots_filled;
     }
 }

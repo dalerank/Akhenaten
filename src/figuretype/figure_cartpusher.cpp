@@ -236,7 +236,7 @@ void figure_cartpusher::calculate_destination(bool warehouseman) {
         building* b = home();
         if (base.wait_ticks > 2) {
             base.wait_ticks = 0;
-            if (home()->type == BUILDING_GRANARY || home()->type == BUILDING_FOOD_MILL) {
+            if (home()->dcast_granary() || home()->type == BUILDING_FOOD_MILL) {
                 determine_granaryman_destination();
             } else {
                 determine_storageyard_cart_destination();
@@ -325,29 +325,36 @@ void figure_cartpusher::determine_granaryman_destination() {
         return;
     }
 
-    // delivering resource
-    // priority 1: another granary
+    // Delivering resource. Cargo is removed at spawn (OG 400-load); only top-up if empty.
+    auto take_for_delivery = [&]() {
+        if (base.get_carrying_amount() <= 0) {
+            const int haul = std::min(400, granary->amount(base.resource_id));
+            if (haul > 0) {
+                granary->remove_resource(base.resource_id, haul);
+                load_resource(base.resource_id, haul);
+            }
+        }
+    };
+
     tile2i dest_b;
     int granary_id = building_granary_for_storing(tile(), base.resource_id, granary->distance_from_entry(), road_network_id, 0, 0, &dest_b);
     set_destination(granary_id);
     if (has_destination()) {
-        granary->remove_resource(base.resource_id, 100);
+        take_for_delivery();
         return advance_action(ACTION_51_CARTPUSHER_DELIVERING_RESOURCE);
     }
 
-    // priority 2: warehouse
     int warehouse_id = building_storage_yard_for_storing(tile(), base.resource_id, granary->distance_from_entry(), road_network_id, 0, dest_b);
     set_destination(warehouse_id);
     if (has_destination()) {
-        granary->remove_resource(base.resource_id, 100);
+        take_for_delivery();
         return advance_action(ACTION_51_CARTPUSHER_DELIVERING_RESOURCE);
     }
 
-    // priority 3: granary even though resource is on stockpile
     int granary_second_id = building_granary_for_storing(tile(), base.resource_id, granary->distance_from_entry(), road_network_id, 1, 0, &dest_b);
     set_destination(granary_second_id);
     if (has_destination()) {
-        granary->remove_resource(base.resource_id, 100);
+        take_for_delivery();
         return advance_action(ACTION_51_CARTPUSHER_DELIVERING_RESOURCE);
     }
     // nowhere to go to: recalculate

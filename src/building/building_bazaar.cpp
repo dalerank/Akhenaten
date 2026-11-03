@@ -10,6 +10,7 @@
 #include "graphics/elements/ui.h"
 #include "city/city.h"
 #include "city/city_labor.h"
+#include "city/constants.h"
 #include "core/calc.h"
 #include "game/resource.h"
 #include "game/game_config.h"
@@ -149,7 +150,7 @@ void scan_bazaar_storages(building_bazaar &bazaar, resource_data *resources, boo
             resources[INVENTORY_FOOD3].update_food(g_city.allowed_foods(INVENTORY_FOOD3), b, distance, minimal_amount);
             resources[INVENTORY_FOOD4].update_food(g_city.allowed_foods(INVENTORY_FOOD4), b, distance, minimal_amount);
 
-        } else if (b.type == BUILDING_GRANARY) {
+        } else if (b.dcast_granary() || b.type == BUILDING_GRANARY || b.type == BUILDING_GRANARY_UP) {
             if (g_scenario.kingdom_supplies_grain) {
                 return;
             }
@@ -166,6 +167,11 @@ void scan_bazaar_storages(building_bazaar &bazaar, resource_data *resources, boo
                 if (!res || g_city.resource.is_stockpiled(res)) {
                     return;
                 }
+                // OG: bazaars take SY food only while that food is being imported.
+                const e_trade_status st = g_city.resource.trade_status[res];
+                if (st != TRADE_STATUS_IMPORT && st != TRADE_STATUS_IMPORT_AS_NEEDED) {
+                    return;
+                }
                 resources[inv].update_food(res, b, distance, 1);
             };
             sy_food(INVENTORY_FOOD1);
@@ -178,7 +184,7 @@ void scan_bazaar_storages(building_bazaar &bazaar, resource_data *resources, boo
             resources[INVENTORY_GOOD3].update_good(RESOURCE_LINEN, b, distance);
             resources[INVENTORY_GOOD4].update_good(RESOURCE_BEER, b, distance);
         }
-    }, {BUILDING_GRANARY, BUILDING_STORAGE_YARD, BUILDING_FOOD_MILL});
+    }, {BUILDING_GRANARY, BUILDING_GRANARY_UP, BUILDING_STORAGE_YARD, BUILDING_FOOD_MILL});
 
     auto &d = bazaar.runtime_data();
     auto apply_good_demand = [&](short &demand, int inv) {

@@ -4004,6 +4004,16 @@ static int __test_granary_add_resource(int bid, int resource, int amount) {
 }
 ANK_FUNCTION_3(__test_granary_add_resource);
 
+static int __test_granary_add_resource_noforce(int bid, int resource, int amount) {
+    building *b = building_get(bid);
+    auto *granary = b ? b->dcast_granary() : nullptr;
+    if (!granary || !b->is_valid() || amount <= 0) {
+        return 0;
+    }
+    return granary->add_resource((e_resource)resource, amount, /*force*/false) >= 0 ? 1 : 0;
+}
+ANK_FUNCTION_3(__test_granary_add_resource_noforce);
+
 static int __test_granary_set_getting(int bid, int resource) {
     building *b = building_get(bid);
     auto *granary = b ? b->dcast_granary() : nullptr;
@@ -4019,6 +4029,99 @@ static int __test_granary_set_getting(int bid, int resource) {
     return granary->is_getting((e_resource)resource) ? 1 : 0;
 }
 ANK_FUNCTION_2(__test_granary_set_getting);
+
+static int __test_granary_set_emptying(int bid, int resource) {
+    building *b = building_get(bid);
+    auto *granary = b ? b->dcast_granary() : nullptr;
+    if (!granary || !b->is_valid()) {
+        return 0;
+    }
+    for (int i = 0; i < 8; i++) {
+        if (granary->is_emptying((e_resource)resource)) {
+            return 1;
+        }
+        building_storage_cycle_resource_state(granary->storage_id(), (e_resource)resource, false);
+    }
+    return granary->is_emptying((e_resource)resource) ? 1 : 0;
+}
+ANK_FUNCTION_2(__test_granary_set_emptying);
+
+static int __test_granary_worker_task(int bid) {
+    building *b = building_get(bid);
+    auto *granary = b ? b->dcast_granary() : nullptr;
+    if (!granary || !b->is_valid()) {
+        return -1;
+    }
+    return (int)granary->determine_worker_task().status;
+}
+ANK_FUNCTION_1(__test_granary_worker_task);
+
+static int __test_granary_worker_task_resource(int bid) {
+    building *b = building_get(bid);
+    auto *granary = b ? b->dcast_granary() : nullptr;
+    if (!granary || !b->is_valid()) {
+        return 0;
+    }
+    return (int)granary->determine_worker_task().resource;
+}
+ANK_FUNCTION_1(__test_granary_worker_task_resource);
+
+static int __test_granary_worker_task_amount(int bid) {
+    building *b = building_get(bid);
+    auto *granary = b ? b->dcast_granary() : nullptr;
+    if (!granary || !b->is_valid()) {
+        return 0;
+    }
+    return granary->determine_worker_task().amount;
+}
+ANK_FUNCTION_1(__test_granary_worker_task_amount);
+
+static void __test_granary_spawn_figure(int bid) {
+    building *b = building_get(bid);
+    auto *granary = b ? b->dcast_granary() : nullptr;
+    if (!granary || !b->is_valid()) {
+        return;
+    }
+    granary->spawn_figure();
+}
+ANK_FUNCTION_1(__test_granary_spawn_figure);
+
+static int __test_building_figure_id(int bid, int slot) {
+    building *b = building_get(bid);
+    if (!b || !b->is_valid()) {
+        return 0;
+    }
+    return b->get_figure_id(slot);
+}
+ANK_FUNCTION_2(__test_building_figure_id);
+
+static int __test_figure_carrying_amount(int fid) {
+    figure *f = figure_get(fid);
+    return f ? f->get_carrying_amount() : -1;
+}
+ANK_FUNCTION_1(__test_figure_carrying_amount);
+
+static int __test_figure_resource(int fid) {
+    figure *f = figure_get(fid);
+    return f ? (int)f->get_resource() : -1;
+}
+ANK_FUNCTION_1(__test_figure_resource);
+
+static void __test_granary_update_graphic(int bid) {
+    building *b = building_get(bid);
+    auto *granary = b ? b->dcast_granary() : nullptr;
+    if (!granary || !b->is_valid()) {
+        return;
+    }
+    granary->update_graphic();
+}
+ANK_FUNCTION_1(__test_granary_update_graphic);
+
+static int __test_building_is_fancy(int bid) {
+    building *b = building_get(bid);
+    return (b && b->is_valid() && b->get_flag(e_building_fancy)) ? 1 : 0;
+}
+ANK_FUNCTION_1(__test_building_is_fancy);
 
 static int __test_granary_find_getting_source(int bid) {
     building *b = building_get(bid);
