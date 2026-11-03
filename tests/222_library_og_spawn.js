@@ -1,6 +1,6 @@
 // Library OG spawn_stock_walker: days between librarians from {5,10,25,50,100} by worker %,
 // papyrus (walker_cost by difficulty) paid only when the librarian leaves; no papyrus => no librarian,
-// while the day counter keeps running.
+// while the day counter keeps running. Model cost/fire/damage match Pharaoh_Model_*.txt.
 
 var __test222_ok = false
 
@@ -121,6 +121,25 @@ function run_test() {
     }
     __log_marker('test222_ptah_oracle_cost:' + discounted)
 
+    var expected_cost = [90, 360, 450, 540, 675]
+    var expected_fire = [6, 25, 30, 36, 45]
+    var expected_damage = [1, 3, 5, 6, 7]
+    for (var d = 0; d < 5; d++) {
+        if (building_library.cost[d] != expected_cost[d]) {
+            test222_fail('cost[' + d + '] expected ' + expected_cost[d] + ' got ' + building_library.cost[d])
+            return
+        }
+        if (building_library.fire_risk[d] != expected_fire[d]) {
+            test222_fail('fire_risk[' + d + '] expected ' + expected_fire[d] + ' got ' + building_library.fire_risk[d])
+            return
+        }
+        if (building_library.damage_risk[d] != expected_damage[d]) {
+            test222_fail('damage_risk[' + d + '] expected ' + expected_damage[d] + ' got ' + building_library.damage_risk[d])
+            return
+        }
+    }
+    __log_marker('test222_og_model')
+
     __test222_ok = true
     __test_signal_ready()
 }
@@ -131,4 +150,5 @@ function check_valid() {
         && __test_find_inlog('[test-marker] test222_paid_on_spawn:')
         && __test_find_inlog('[test-marker] test222_delay_100pct')
         && __test_find_inlog('[test-marker] test222_ptah_oracle_cost:')
+        && __test_find_inlog('[test-marker] test222_og_model')
 }

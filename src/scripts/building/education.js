@@ -14,11 +14,11 @@ building_library {
   meta { text_id: 87, help_link:"message_building_library" }
   labor_category : LABOR_CATEGORY_EDUCATION
   building_size : 3
-  cost [ 90, 140, 200, 300, 400 ]
+  cost [ 90, 360, 450, 540, 675 ]
   desirability { value[8], step[2], step_size[-2], range[6] }
   laborers[30]
-  fire_risk[6]
-  damage_risk[1]
+  fire_risk [ 6, 25, 30, 36, 45 ]
+  damage_risk [ 1, 3, 5, 6, 7 ]
   max_service: 800
   input { resource : RESOURCE_PAPYRUS }
   max_storage_amount : 500
