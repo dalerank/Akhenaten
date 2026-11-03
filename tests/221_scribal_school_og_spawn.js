@@ -1,6 +1,7 @@
 // Scribal School OG spawn_stock_walker: days between teachers from {5,10,25,50,100} by worker %,
 // papyrus (walker_cost by difficulty) paid only when the teacher leaves; no papyrus => no teacher,
-// while the day counter keeps running.
+// while the day counter keeps running. Model cost/fire/damage and advisor max_service 300 match OG.
+// Teacher coverage always sets 96 on inhabited houses only.
 
 var __test221_ok = false
 
@@ -121,6 +122,64 @@ function run_test() {
     }
     __log_marker('test221_ptah_oracle_cost:' + discounted)
 
+    var expected_cost = [30, 120, 150, 180, 225]
+    var expected_fire = [6, 25, 30, 36, 45]
+    for (var d = 0; d < 5; d++) {
+        if (building_scribal_school.cost[d] != expected_cost[d]) {
+            test221_fail('cost[' + d + '] expected ' + expected_cost[d] + ' got ' + building_scribal_school.cost[d])
+            return
+        }
+        if (building_scribal_school.fire_risk[d] != expected_fire[d]) {
+            test221_fail('fire_risk[' + d + '] expected ' + expected_fire[d] + ' got ' + building_scribal_school.fire_risk[d])
+            return
+        }
+    }
+    if (building_scribal_school.damage_risk[0] != 0) {
+        test221_fail('damage_risk must be 0, got ' + building_scribal_school.damage_risk[0])
+        return
+    }
+    if (building_scribal_school.max_service != 300) {
+        test221_fail('max_service expected 300 got ' + building_scribal_school.max_service)
+        return
+    }
+    __log_marker('test221_og_model')
+
+    var cx = (__scenario_map.width / 2) | 0
+    var cy = (__scenario_map.height / 2) | 0
+    var lived_id = __test_building_create(BUILDING_HOUSE_CRUDE_HUT, cx, cy)
+    var empty_id = __test_building_create(BUILDING_HOUSE_CRUDE_HUT, cx + 1, cy)
+    if (!lived_id || !empty_id) {
+        test221_fail('house create failed')
+        return
+    }
+    if (__test_house_set_population(lived_id, 10) < 1) {
+        test221_fail('set population failed')
+        return
+    }
+    city.get_house(lived_id).school = 50
+    city.get_house(empty_id).school = 0
+
+    var fid = test_figure_create(FIGURE_TEACHER, cx, cy + 1)
+    if (!fid) {
+        test221_fail('teacher figure create failed')
+        return
+    }
+    __test_figure_set_home(fid, bid)
+    var served = __test_figure_provide_service(fid)
+    if (city.get_house(lived_id).school != 96) {
+        test221_fail('OG must refresh inhabited house to 96, got ' + city.get_house(lived_id).school)
+        return
+    }
+    if (city.get_house(empty_id).school != 0) {
+        test221_fail('OG must skip empty house, got ' + city.get_house(empty_id).school)
+        return
+    }
+    if (served != 1) {
+        test221_fail('OG must count inhabited house tiles only, got ' + served)
+        return
+    }
+    __log_marker('test221_og_coverage')
+
     __test221_ok = true
     __test_signal_ready()
 }
@@ -131,4 +190,6 @@ function check_valid() {
         && __test_find_inlog('[test-marker] test221_paid_on_spawn:')
         && __test_find_inlog('[test-marker] test221_delay_100pct')
         && __test_find_inlog('[test-marker] test221_ptah_oracle_cost:')
+        && __test_find_inlog('[test-marker] test221_og_model')
+        && __test_find_inlog('[test-marker] test221_og_coverage')
 }

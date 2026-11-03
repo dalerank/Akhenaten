@@ -29,10 +29,13 @@ building_scribal_school {
   min_houses_coverage : 50
   building_size : 2
   labor_category : LABOR_CATEGORY_EDUCATION
-  cost : [ 30, 50, 70, 100, 150 ]
+  cost : [ 30, 120, 150, 180, 225 ]
   desirability : { value:[4], step:[1], step_size:[-1], range:[4] }
-  laborers:[10], fire_risk:[6], damage_risk: [2]
-  max_service: 75
+  laborers:[10]
+  fire_risk : [ 6, 25, 30, 36, 45 ]
+  damage_risk : [0]
+  // OG advisor education: active schools * 300 / school_age
+  max_service: 300
   // OG Pharaoh_Model_*.txt: papyrus per walker and its % with a Ptah complex oracle (Large Temple to Ptah row)
   walker_cost : [2, 5, 10, 20, 40]
   ptah_oracle_walker_cost_pct : [12, 60, 60, 70, 90]
