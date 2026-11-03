@@ -1607,11 +1607,6 @@ static int __test_enemy_archer_fire_initial_missile(int fid) {
 }
 ANK_FUNCTION_1(__test_enemy_archer_fire_initial_missile);
 
-static void __test_make_floodplain_water(int x, int y) {
-    map_terrain_add(tile2i(x, y), TERRAIN_WATER | TERRAIN_FLOODPLAIN);
-}
-ANK_FUNCTION_2(__test_make_floodplain_water);
-
 static void __test_buildings_generate_figures() {
     g_city.buildings_generate_figure();
 }
@@ -4542,6 +4537,24 @@ static int __test_recorded_path_used(int path_id) {
     return g_recorded_paths.slots[path_id].used ? 1 : 0;
 }
 ANK_FUNCTION_1(__test_recorded_path_used);
+
+static void __test_set_god_status(int god, int status) {
+    if (god < 0 || god >= MAX_GODS) {
+        return;
+    }
+    g_city.religion.set_god_known((e_god)god, (e_god_status)status);
+}
+ANK_FUNCTION_2(__test_set_god_status);
+
+static int __test_god_coverage_total(int god) {
+    if (god < 0 || god >= MAX_GODS) {
+        return -1;
+    }
+    g_city.buildings.update_counters();
+    const auto &p = g_city.religion.gods[god].static_params();
+    return g_city.religion.god_coverage_total((e_god)god, p.shrine_type, p.temple_type, p.complex_type);
+}
+ANK_FUNCTION_1(__test_god_coverage_total);
 
 ANK_DECLARE_JSFUNCTION_ITERATOR(register_test_js_functions);
 inline void register_test_js_functions(js_State *J) {

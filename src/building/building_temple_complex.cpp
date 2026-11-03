@@ -434,11 +434,10 @@ static building* temple_complex_find_part(const building& base, const svector<e_
 }
 
 void building_temple_complex::spawn_figure() {
-    // Same as local temples — needed for religion coverage and Bast/Isis plague cure.
-    if (is_main()) {
-        common_spawn_roamer(FIGURE_PRIEST, current_params().min_houses_coverage,
-                            (e_figure_action)ACTION_125_ROAMER_ROAMING);
+    if (!is_main()) {
+        return;
     }
+    building_impl::spawn_figure();
 }
 
 building* building_temple_complex::get_altar() const {

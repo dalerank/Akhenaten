@@ -44,7 +44,8 @@ building_temple_complex_osiris {
       unique_building : true
     }
 
-    min_houses_coverage : 100
+    min_houses_coverage : 50
+    spawn_delays : [3, 7, 10, 15, 20]
     damage_proof : true
     fire_proof : true
     labor_category : LABOR_CATEGORY_RELIGION
@@ -141,7 +142,8 @@ building_temple_complex_osiris {
       unique_building : true
     }
 
-    min_houses_coverage : 100
+    min_houses_coverage : 50
+    spawn_delays : [3, 7, 10, 15, 20]
     damage_proof : true
     fire_proof : true
     labor_category : LABOR_CATEGORY_RELIGION
@@ -242,7 +244,8 @@ building_temple_complex_osiris {
       unique_building : true
     }
 
-    min_houses_coverage : 100
+    min_houses_coverage : 50
+    spawn_delays : [3, 7, 10, 15, 20]
     damage_proof : true
     fire_proof : true
     labor_category : LABOR_CATEGORY_RELIGION
@@ -343,7 +346,8 @@ building_temple_complex_osiris {
       unique_building : true
     }
 
-    min_houses_coverage : 100
+    min_houses_coverage : 50
+    spawn_delays : [3, 7, 10, 15, 20]
     damage_proof : true
     fire_proof : true
     labor_category : LABOR_CATEGORY_RELIGION
@@ -442,7 +446,8 @@ building_temple_complex_osiris {
       unique_building : true
     }
 
-    min_houses_coverage : 100
+    min_houses_coverage : 50
+    spawn_delays : [3, 7, 10, 15, 20]
     damage_proof : true
     fire_proof : true,
     labor_category : LABOR_CATEGORY_RELIGION
@@ -512,6 +517,31 @@ building_temple_complex_osiris {
     fire_proof : true
     cost [ 180, 250, 300, 500, 800 ]
   }
+
+[es=(building_temple_complex_osiris, spawn_figure)]
+function building_temple_complex_osiris_spawn_figure(ev) {
+    city.get_building(ev.bid).spawn_service_walker(building_temple_complex_osiris, FIGURE_PRIEST, ACTION_125_ROAMER_ROAMING)
+}
+
+[es=(building_temple_complex_ra, spawn_figure)]
+function building_temple_complex_ra_spawn_figure(ev) {
+    city.get_building(ev.bid).spawn_service_walker(building_temple_complex_ra, FIGURE_PRIEST, ACTION_125_ROAMER_ROAMING)
+}
+
+[es=(building_temple_complex_ptah, spawn_figure)]
+function building_temple_complex_ptah_spawn_figure(ev) {
+    city.get_building(ev.bid).spawn_service_walker(building_temple_complex_ptah, FIGURE_PRIEST, ACTION_125_ROAMER_ROAMING)
+}
+
+[es=(building_temple_complex_seth, spawn_figure)]
+function building_temple_complex_seth_spawn_figure(ev) {
+    city.get_building(ev.bid).spawn_service_walker(building_temple_complex_seth, FIGURE_PRIEST, ACTION_125_ROAMER_ROAMING)
+}
+
+[es=(building_temple_complex_bast, spawn_figure)]
+function building_temple_complex_bast_spawn_figure(ev) {
+    city.get_building(ev.bid).spawn_service_walker(building_temple_complex_bast, FIGURE_PRIEST, ACTION_125_ROAMER_ROAMING)
+}
 
 [es=(building_temple_complex_osiris, draw_usable_paths)]
 function building_temple_complex_osiris_draw_usable_paths(ev) {
