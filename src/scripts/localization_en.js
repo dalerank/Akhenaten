@@ -97,6 +97,7 @@ localization_en = [
   {key:"#TR_CONFIG_DENTIST_TOOTHACHE", text:"Dentist remake: nobles get toothaches, dentists seek out and treat noble houses (not original Pharaoh)"}
   {key:"#TR_CONFIG_PHYSICIAN_SERVICE_CAP", text:"Physician remake: serves up to max_serve_clients residents per month, refreshes only houses below half coverage and raises house health instead of lowering malaria risk (not original Pharaoh)"}
   {key:"#TR_CONFIG_APOTHECARY_REMAKE", text:"Apothecary remake: herbalist raises house health to 50 and lowers malaria risk by 30 (not original Pharaoh)"}
+  {key:"#TR_CONFIG_MORTUARY_SERVICE_CAP", text:"Mortuary remake: embalmer serves up to max_serve_clients residents per month and refreshes only houses below half coverage (not original Pharaoh)"}
   {key:"#TR_CONFIG_MORTUARY_LINEN_UPKEEP", text:"Mortuary remake: staffed mortuaries also use up linen every month (not original Pharaoh)"}
   {key:"#TR_CONFIG_MORTUARY_MOTHBALLED_LINEN", text:"Mortuary remake: no embalmers while linen is mothballed (not original Pharaoh)"}
   {key:"#TR_CONFIG_FORT_ROTATION", text:"Fort remake: the rotate key moves the parade ground around the fort (not original Pharaoh)"}

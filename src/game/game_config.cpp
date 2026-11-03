@@ -80,6 +80,7 @@ namespace game_features {
     game_feature gameplay_change_dentist_toothache{ "gameplay_change_dentist_toothache", "#TR_CONFIG_DENTIST_TOOTHACHE", false, false };
     game_feature gameplay_change_physician_service_cap{ "gameplay_change_physician_service_cap", "#TR_CONFIG_PHYSICIAN_SERVICE_CAP", false, false };
     game_feature gameplay_change_apothecary_remake{ "gameplay_change_apothecary_remake", "#TR_CONFIG_APOTHECARY_REMAKE", false, false };
+    game_feature gameplay_change_mortuary_service_cap{ "gameplay_change_mortuary_service_cap", "#TR_CONFIG_MORTUARY_SERVICE_CAP", false, false };
     game_feature gameplay_change_mortuary_linen_upkeep{ "gameplay_change_mortuary_linen_upkeep", "#TR_CONFIG_MORTUARY_LINEN_UPKEEP", false, false };
     game_feature gameplay_change_mortuary_mothballed_linen{ "gameplay_change_mortuary_mothballed_linen", "#TR_CONFIG_MORTUARY_MOTHBALLED_LINEN", false, false };
     game_feature gameplay_change_fort_rotation{ "gameplay_change_fort_rotation", "#TR_CONFIG_FORT_ROTATION", false, false };

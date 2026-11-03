@@ -54,11 +54,11 @@ building_mortuary {
   labor_category : LABOR_CATEGORY_WATER_HEALTH
   meta { text_id:82, help_link:"message_building_mortuary" }
   info_sound : "Wavs/EMBALM.WAV"
-  cost [ 20, 30, 50, 100, 200 ]
+  cost [ 20, 80, 100, 120, 150 ]
   desirability { value[-3], step[2], step_size[1], range[2] }
   laborers[8]
-  fire_risk[4]
-  damage_risk[2]
+  fire_risk [ 4, 17, 20, 24, 30 ]
+  damage_risk [0]
   flags {
     work_anim: true
   }

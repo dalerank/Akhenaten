@@ -1,6 +1,7 @@
 // Mortuary OG spawn_stock_walker: days between embalmers from delays_service {3,7,15,29,44} by worker %,
 // linen (walker_cost by difficulty) paid only when the embalmer leaves, less with a Seth complex altar.
-// Monthly linen upkeep and the mothballed-linen gate default off.
+// Coverage always sets 96 on inhabited houses (no monthly cap / half-coverage refresh).
+// Model cost/fire/damage match Pharaoh_Model_*.txt. Remake service/linen flags default off.
 // Below health 30 the embalmer says its own phrase (e01), else its city phrase.
 
 var __test228_ok = false
@@ -34,13 +35,18 @@ function test228_place_mortuary() {
 
 function run_test() {
     __log_info_native('[test:228] mortuary OG')
-    var flags = ['gameplay_change_mortuary_linen_upkeep', 'gameplay_change_mortuary_mothballed_linen']
+    var flags = [
+        'gameplay_change_mortuary_service_cap',
+        'gameplay_change_mortuary_linen_upkeep',
+        'gameplay_change_mortuary_mothballed_linen'
+    ]
     for (var i = 0; i < flags.length; i++) {
         if (game_features.default(flags[i])) {
             test228_fail(flags[i] + ' must default OFF')
             return
         }
     }
+    game_features.set('gameplay_change_mortuary_service_cap', false)
 
     test_reload_city_session('data/default.map')
     __test_set_treasury(100000)
@@ -126,6 +132,60 @@ function run_test() {
     }
     __log_marker('test228_seth_altar_cost:' + discounted)
 
+    var cx = (__scenario_map.width / 2) | 0
+    var cy = (__scenario_map.height / 2) | 0
+    var lived_id = __test_building_create(BUILDING_HOUSE_CRUDE_HUT, cx, cy)
+    var empty_id = __test_building_create(BUILDING_HOUSE_CRUDE_HUT, cx + 1, cy)
+    if (!lived_id || !empty_id) {
+        test228_fail('house create failed')
+        return
+    }
+    if (__test_house_set_population(lived_id, 10) < 1) {
+        test228_fail('set population failed')
+        return
+    }
+    city.get_house(lived_id).mortuary = 50
+    city.get_house(empty_id).mortuary = 0
+
+    var fid = test_figure_create(FIGURE_EMBALMER, cx, cy + 1)
+    if (!fid) {
+        test228_fail('embalmer figure create failed')
+        return
+    }
+    __test_figure_set_home(fid, bid)
+    var served = __test_figure_provide_service(fid)
+    if (city.get_house(lived_id).mortuary != 96) {
+        test228_fail('OG must refresh inhabited house to 96, got ' + city.get_house(lived_id).mortuary)
+        return
+    }
+    if (city.get_house(empty_id).mortuary != 0) {
+        test228_fail('OG must skip empty house, got ' + city.get_house(empty_id).mortuary)
+        return
+    }
+    if (served != 1) {
+        test228_fail('OG must count inhabited house tiles only, got ' + served)
+        return
+    }
+    __log_marker('test228_og_coverage')
+
+    var expected_cost = [20, 80, 100, 120, 150]
+    var expected_fire = [4, 17, 20, 24, 30]
+    for (var d = 0; d < 5; d++) {
+        if (building_mortuary.cost[d] != expected_cost[d]) {
+            test228_fail('cost[' + d + '] expected ' + expected_cost[d] + ' got ' + building_mortuary.cost[d])
+            return
+        }
+        if (building_mortuary.fire_risk[d] != expected_fire[d]) {
+            test228_fail('fire_risk[' + d + '] expected ' + expected_fire[d] + ' got ' + building_mortuary.fire_risk[d])
+            return
+        }
+    }
+    if (building_mortuary.damage_risk[0] != 0) {
+        test228_fail('damage_risk must be 0, got ' + building_mortuary.damage_risk[0])
+        return
+    }
+    __log_marker('test228_og_model')
+
     var key = figure_embalmer_phrase_key()
     var low_health = city.health_rating < 30
     if (!figure_embalmer.sounds[key] || (low_health && key != 'embalmer_health_worsening')) {
@@ -144,5 +204,7 @@ function check_valid() {
         && __test_find_inlog('[test-marker] test228_paid_on_spawn:')
         && __test_find_inlog('[test-marker] test228_delay_100pct')
         && __test_find_inlog('[test-marker] test228_seth_altar_cost:')
+        && __test_find_inlog('[test-marker] test228_og_coverage')
+        && __test_find_inlog('[test-marker] test228_og_model')
         && __test_find_inlog('[test-marker] test228_phrase:')
 }

@@ -29,17 +29,6 @@ int figure::figure_service_provide_coverage() {
     case FIGURE_NOBLES:
         return 0;
 
-    case FIGURE_EMBALMER:
-        houses_serviced = figure_provide_culture(tile, this, [] (building * b, figure * f) {
-            auto house = ((building *)b)->dcast_house();
-
-            if (house) {
-                auto &housed = house->runtime_data();
-                housed.mortuary = MAX_COVERAGE;
-            }
-        });
-        break;
-
     case FIGURE_MISSIONARY:
         houses_serviced = provide_missionary_coverage(tile.x(), tile.y());
         break;
