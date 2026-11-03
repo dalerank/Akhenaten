@@ -111,6 +111,88 @@ struct resource_data {
     }
 };
 
+void scan_bazaar_storages(building_bazaar &bazaar, resource_data *resources, bool tick_demand) {
+    std::fill(resources, resources + INVENTORY_MAX, resource_data{0, bazaar.current_params().max_search_distance, 0});
+    const bool mill_enabled = game_features::gameplay_enhanced_food_mill.to_bool();
+    buildings_valid_do([&](building &b) {
+        if (!b.has_road_access) {
+            return;
+        }
+
+        if (b.params().flags.perimeter_access) {
+            if (!building_granary_touches_network(b, bazaar.base.road_network_id)) {
+                return;
+            }
+        } else if (b.distance_from_entry <= 0 || b.road_network_id != bazaar.base.road_network_id) {
+            return;
+        }
+
+        building_storage *s = b.dcast_storage();
+        if (!s || !s->get_permission(BUILDING_STORAGE_PERMISSION_MARKET)) {
+            return;
+        }
+
+        int distance = calc_maximum_distance(bazaar.base.tile, b.tile);
+        if (distance >= bazaar.current_params().max_search_distance) {
+            return;
+        }
+
+        if (b.type == BUILDING_FOOD_MILL) {
+            if (!mill_enabled || b.num_workers <= 0 || g_scenario.kingdom_supplies_grain) {
+                return;
+            }
+
+            const int minimal_amount = bazaar.current_params().minimal_pick_food_amount;
+            resources[INVENTORY_FOOD1].update_food(g_city.allowed_foods(INVENTORY_FOOD1), b, distance, minimal_amount);
+            resources[INVENTORY_FOOD2].update_food(g_city.allowed_foods(INVENTORY_FOOD2), b, distance, minimal_amount);
+            resources[INVENTORY_FOOD3].update_food(g_city.allowed_foods(INVENTORY_FOOD3), b, distance, minimal_amount);
+            resources[INVENTORY_FOOD4].update_food(g_city.allowed_foods(INVENTORY_FOOD4), b, distance, minimal_amount);
+
+        } else if (b.type == BUILDING_GRANARY) {
+            if (g_scenario.kingdom_supplies_grain) {
+                return;
+            }
+
+            const int minimal_amount = bazaar.current_params().minimal_pick_food_amount;
+            resources[INVENTORY_FOOD1].update_food(g_city.allowed_foods(INVENTORY_FOOD1), b, distance, minimal_amount);
+            resources[INVENTORY_FOOD2].update_food(g_city.allowed_foods(INVENTORY_FOOD2), b, distance, minimal_amount);
+            resources[INVENTORY_FOOD3].update_food(g_city.allowed_foods(INVENTORY_FOOD3), b, distance, minimal_amount);
+            resources[INVENTORY_FOOD4].update_food(g_city.allowed_foods(INVENTORY_FOOD4), b, distance, minimal_amount);
+
+        } else if (b.type == BUILDING_STORAGE_YARD) {
+            auto sy_food = [&](int inv) {
+                e_resource res = g_city.allowed_foods(inv);
+                if (!res || g_city.resource.is_stockpiled(res)) {
+                    return;
+                }
+                resources[inv].update_food(res, b, distance, 1);
+            };
+            sy_food(INVENTORY_FOOD1);
+            sy_food(INVENTORY_FOOD2);
+            sy_food(INVENTORY_FOOD3);
+            sy_food(INVENTORY_FOOD4);
+
+            resources[INVENTORY_GOOD1].update_good(RESOURCE_POTTERY, b, distance);
+            resources[INVENTORY_GOOD2].update_good(RESOURCE_LUXURY_GOODS, b, distance);
+            resources[INVENTORY_GOOD3].update_good(RESOURCE_LINEN, b, distance);
+            resources[INVENTORY_GOOD4].update_good(RESOURCE_BEER, b, distance);
+        }
+    }, {BUILDING_GRANARY, BUILDING_STORAGE_YARD, BUILDING_FOOD_MILL});
+
+    auto &d = bazaar.runtime_data();
+    auto apply_good_demand = [&](short &demand, int inv) {
+        if (!demand) {
+            resources[inv].num_buildings = 0;
+        } else if (tick_demand) {
+            demand--;
+        }
+    };
+    apply_good_demand(d.pottery_demand, INVENTORY_GOOD1);
+    apply_good_demand(d.luxurygoods_demand, INVENTORY_GOOD2);
+    apply_good_demand(d.linen_demand, INVENTORY_GOOD3);
+    apply_good_demand(d.beer_demand, INVENTORY_GOOD4);
+}
+
 uint16_t building_bazaar::get_resource_amount(e_resource res) const {
     auto it = std::find_if(std::begin(runtime_data().inventory), std::end(runtime_data().inventory),
                            [res](const resource_value &rv) { return rv.type == res; });
@@ -433,93 +515,167 @@ building *building_bazaar::pick_next_buyer_destination() {
     return dest;
 }
 
+namespace {
+
+void fill_og_food_items(building_bazaar &bazaar, const resource_data *resources, int8_t *items) {
+    const auto &d = bazaar.runtime_data();
+    int n = 0;
+    items[0] = items[1] = items[2] = items[3] = -1;
+    for (int foodi = INVENTORY_FOOD1; foodi <= INVENTORY_FOOD4; ++foodi) {
+        if (!bazaar.idx_accepted(foodi) || !g_city.allowed_foods(foodi) || !resources[foodi].num_buildings) {
+            continue;
+        }
+        if (d.inventory[foodi].value == 0) {
+            items[n++] = (int8_t)foodi;
+            if (n > 3) {
+                return;
+            }
+        }
+    }
+    for (int foodi = INVENTORY_FOOD1; foodi <= INVENTORY_FOOD4; ++foodi) {
+        if (!bazaar.idx_accepted(foodi) || !g_city.allowed_foods(foodi) || !resources[foodi].num_buildings) {
+            continue;
+        }
+        if (d.inventory[foodi].value < 600) {
+            bool listed = false;
+            for (int i = 0; i < n; i++) {
+                if (items[i] == foodi) {
+                    listed = true;
+                    break;
+                }
+            }
+            if (!listed) {
+                items[n++] = (int8_t)foodi;
+                if (n > 3) {
+                    return;
+                }
+            }
+        }
+    }
+}
+
+void fill_og_goods_items(building_bazaar &bazaar, const resource_data *resources, int8_t *items) {
+    const auto &d = bazaar.runtime_data();
+    int n = 0;
+    items[0] = items[1] = items[2] = items[3] = -1;
+    for (int goodi = INVENTORY_GOOD1; goodi <= INVENTORY_GOOD4; ++goodi) {
+        if (!bazaar.idx_accepted(goodi) || !resources[goodi].num_buildings) {
+            continue;
+        }
+        if (d.inventory[goodi].value == 0) {
+            items[n++] = (int8_t)goodi;
+            if (n > 3) {
+                return;
+            }
+        }
+    }
+    for (int goodi = INVENTORY_GOOD1; goodi <= INVENTORY_GOOD4; ++goodi) {
+        if (!bazaar.idx_accepted(goodi) || !resources[goodi].num_buildings) {
+            continue;
+        }
+        if (d.inventory[goodi].value < 100) {
+            bool listed = false;
+            for (int i = 0; i < n; i++) {
+                if (items[i] == goodi) {
+                    listed = true;
+                    break;
+                }
+            }
+            if (!listed) {
+                items[n++] = (int8_t)goodi;
+                if (n > 3) {
+                    return;
+                }
+            }
+        }
+    }
+}
+
+building *pick_og_food_destination(building_bazaar &bazaar, const resource_data *resources, int8_t *items) {
+    fill_og_food_items(bazaar, resources, items);
+    auto &d = bazaar.runtime_data();
+
+    for (int foodi = INVENTORY_FOOD1; foodi <= INVENTORY_FOOD4; ++foodi) {
+        if (!bazaar.idx_accepted(foodi) || !g_city.allowed_foods(foodi) || !resources[foodi].num_buildings) {
+            continue;
+        }
+        if (d.inventory[foodi].value == 0) {
+            d.fetch_inventory_id = (int16_t)foodi;
+            return building_get(resources[foodi].building_id);
+        }
+    }
+
+    int16_t lowest = 50;
+    int chosen = -1;
+    for (int foodi = INVENTORY_FOOD1; foodi <= INVENTORY_FOOD4; ++foodi) {
+        if (!bazaar.idx_accepted(foodi) || !g_city.allowed_foods(foodi) || !resources[foodi].num_buildings) {
+            continue;
+        }
+        if (d.inventory[foodi].value < lowest) {
+            lowest = d.inventory[foodi].value;
+            chosen = foodi;
+        }
+    }
+    if (chosen < 0) {
+        for (int foodi = INVENTORY_FOOD1; foodi <= INVENTORY_FOOD4; ++foodi) {
+            if (!bazaar.idx_accepted(foodi) || !g_city.allowed_foods(foodi) || !resources[foodi].num_buildings) {
+                continue;
+            }
+            if (d.inventory[foodi].value < 600) {
+                chosen = foodi;
+            }
+        }
+    }
+    if (chosen < 0) {
+        return building_get(0);
+    }
+    d.fetch_inventory_id = (int16_t)chosen;
+    return building_get(resources[chosen].building_id);
+}
+
+building *pick_og_goods_destination(building_bazaar &bazaar, const resource_data *resources, int8_t *items) {
+    fill_og_goods_items(bazaar, resources, items);
+    auto &d = bazaar.runtime_data();
+
+    for (int goodi = INVENTORY_GOOD1; goodi <= INVENTORY_GOOD4; ++goodi) {
+        if (!bazaar.idx_accepted(goodi) || !resources[goodi].num_buildings) {
+            continue;
+        }
+        if (d.inventory[goodi].value == 0) {
+            d.fetch_inventory_id = (int16_t)goodi;
+            return building_get(resources[goodi].building_id);
+        }
+    }
+
+    int chosen = -1;
+    int16_t lowest = 100;
+    for (int goodi = INVENTORY_GOOD1; goodi <= INVENTORY_GOOD4; ++goodi) {
+        if (!bazaar.idx_accepted(goodi) || !resources[goodi].num_buildings) {
+            continue;
+        }
+        if (d.inventory[goodi].value < lowest) {
+            chosen = goodi;
+            lowest = d.inventory[goodi].value;
+        }
+    }
+    if (chosen < 0) {
+        return building_get(0);
+    }
+    d.fetch_inventory_id = (int16_t)chosen;
+    return building_get(resources[chosen].building_id);
+}
+
+} // namespace
+
 building *building_bazaar::get_storage_destination(e_bazaar_fetch_group group, const bool *exclude, bool tick_demand) {
     if (waiting_for_mill_variety()) {
         return building_get(0);
     }
 
     resource_data resources[INVENTORY_MAX];
-
-    std::fill(std::begin(resources), std::end(resources), resource_data{0, current_params().max_search_distance, 0});
-    const bool mill_enabled = game_features::gameplay_enhanced_food_mill.to_bool();
-    buildings_valid_do([&](building &b) {
-        if (!b.has_road_access) {
-            return;
-        }
-
-        if (b.params().flags.perimeter_access) {
-            if (!building_granary_touches_network(b, base.road_network_id)) {
-                return;
-            }
-        } else if (b.distance_from_entry <= 0 || b.road_network_id != base.road_network_id) {
-            return;
-        }
-
-        building_storage *s = b.dcast_storage();
-        if (!s || !s->get_permission(BUILDING_STORAGE_PERMISSION_MARKET)) {
-            return;
-        }
-
-        int distance = calc_maximum_distance(base.tile, b.tile);
-        if (distance >= this->current_params().max_search_distance) {
-            return;
-        }
-
-        if (b.type == BUILDING_FOOD_MILL) {
-            if (!mill_enabled || b.num_workers <= 0 || g_scenario.kingdom_supplies_grain) {
-                return;
-            }
-
-            const int minimal_amount = this->current_params().minimal_pick_food_amount;
-            resources[INVENTORY_FOOD1].update_food(g_city.allowed_foods(INVENTORY_FOOD1), b, distance, minimal_amount);
-            resources[INVENTORY_FOOD2].update_food(g_city.allowed_foods(INVENTORY_FOOD2), b, distance, minimal_amount);
-            resources[INVENTORY_FOOD3].update_food(g_city.allowed_foods(INVENTORY_FOOD3), b, distance, minimal_amount);
-            resources[INVENTORY_FOOD4].update_food(g_city.allowed_foods(INVENTORY_FOOD4), b, distance, minimal_amount);
-
-        } else if (b.type == BUILDING_GRANARY) {
-            if (g_scenario.kingdom_supplies_grain) {
-                return;
-            }
-
-            const int minimal_amount = this->current_params().minimal_pick_food_amount;
-            resources[INVENTORY_FOOD1].update_food(g_city.allowed_foods(INVENTORY_FOOD1), b, distance, minimal_amount);
-            resources[INVENTORY_FOOD2].update_food(g_city.allowed_foods(INVENTORY_FOOD2), b, distance, minimal_amount);
-            resources[INVENTORY_FOOD3].update_food(g_city.allowed_foods(INVENTORY_FOOD3), b, distance, minimal_amount);
-            resources[INVENTORY_FOOD4].update_food(g_city.allowed_foods(INVENTORY_FOOD4), b, distance, minimal_amount);
-
-        } else if (b.type == BUILDING_STORAGE_YARD) {
-            auto sy_food = [&](int inv) {
-                e_resource res = g_city.allowed_foods(inv);
-                if (!res || g_city.resource.is_stockpiled(res)) {
-                    return;
-                }
-                resources[inv].update_food(res, b, distance, 1);
-            };
-            sy_food(INVENTORY_FOOD1);
-            sy_food(INVENTORY_FOOD2);
-            sy_food(INVENTORY_FOOD3);
-            sy_food(INVENTORY_FOOD4);
-
-            resources[INVENTORY_GOOD1].update_good(RESOURCE_POTTERY, b, distance);
-            resources[INVENTORY_GOOD2].update_good(RESOURCE_LUXURY_GOODS, b, distance);
-            resources[INVENTORY_GOOD3].update_good(RESOURCE_LINEN, b, distance);
-            resources[INVENTORY_GOOD4].update_good(RESOURCE_BEER, b, distance);
-        }
-    }, {BUILDING_GRANARY, BUILDING_STORAGE_YARD, BUILDING_FOOD_MILL});
+    scan_bazaar_storages(*this, resources, tick_demand);
 
     auto &d = runtime_data();
-    auto apply_good_demand = [&](short &demand, int inv) {
-        if (!demand) {
-            resources[inv].num_buildings = 0;
-        } else if (tick_demand) {
-            demand--;
-        }
-    };
-    apply_good_demand(d.pottery_demand, INVENTORY_GOOD1);
-    apply_good_demand(d.luxurygoods_demand, INVENTORY_GOOD2);
-    apply_good_demand(d.linen_demand, INVENTORY_GOOD3);
-    apply_good_demand(d.beer_demand, INVENTORY_GOOD4);
-
     auto can_pick = [&](int inv) {
         return inventory_in_group(inv, group)
             && !is_excluded(inv, exclude)
@@ -694,6 +850,27 @@ void building_bazaar::on_post_load() {
     }
 }
 
+building *building_bazaar::get_og_food_destination(int8_t items[4]) {
+    resource_data resources[INVENTORY_MAX];
+    // OG ticks good demands on every destination search.
+    scan_bazaar_storages(*this, resources, true);
+    return pick_og_food_destination(*this, resources, items);
+}
+
+building *building_bazaar::get_og_goods_destination(int8_t items[4]) {
+    resource_data resources[INVENTORY_MAX];
+    scan_bazaar_storages(*this, resources, true);
+    return pick_og_goods_destination(*this, resources, items);
+}
+
+void building_bazaar::update_og_buyer_storages(int nearest_out[INVENTORY_MAX]) {
+    resource_data resources[INVENTORY_MAX];
+    scan_bazaar_storages(*this, resources, true);
+    for (int i = 0; i < INVENTORY_MAX; i++) {
+        nearest_out[i] = resources[i].num_buildings ? resources[i].building_id : 0;
+    }
+}
+
 void building_bazaar::spawn_figure() {
     check_labor_problem();
     if (!base.has_road_access) {
@@ -732,22 +909,33 @@ void building_bazaar::spawn_figure() {
             }
         }
     } else {
-        // Flag OFF: never keep a second buyer (e.g. leftover after toggling the option).
-        force_clear_buyer_slot(BUILDING_SLOT_MARKET_BUYER_2);
-
-        figure *slot1 = base.get_figure(BUILDING_SLOT_MARKET_BUYER);
-        const bool slot1_busy = base.has_figure_of_type(BUILDING_SLOT_MARKET_BUYER, FIGURE_MARKET_BUYER)
-            && is_active_market_buyer(slot1);
-        if (!slot1_busy) {
-            reclaim_inactive_buyer_slot(BUILDING_SLOT_MARKET_BUYER);
-            building *dest = get_storage_destination();
-            if (dest->id) {
-                figure *f = create_figure_with_destination(FIGURE_MARKET_BUYER, dest,
-                                                               (e_figure_action)ACTION_145_MARKET_BUYER_GOING_TO_STORAGE,
-                                                               BUILDING_SLOT_MARKET_BUYER);
-                f->collecting_item_id = d.fetch_inventory_id;
+        // OG: dedicated food buyer (slot 1) + goods buyer (slot 2), shopping-list trips.
+        bool sent = false;
+        auto try_og_buyer = [&](e_building_slot slot, bool food) {
+            figure *cur = base.get_figure(slot);
+            const bool busy = base.has_figure_of_type(slot, FIGURE_MARKET_BUYER) && is_active_market_buyer(cur);
+            if (busy) {
                 return;
             }
+            reclaim_inactive_buyer_slot(slot);
+            int8_t items[4] = { -1, -1, -1, -1 };
+            building *dest = food ? get_og_food_destination(items) : get_og_goods_destination(items);
+            if (!dest->id) {
+                return;
+            }
+            figure *f = create_figure_with_destination(FIGURE_MARKET_BUYER, dest,
+                                                       (e_figure_action)ACTION_145_MARKET_BUYER_GOING_TO_STORAGE, slot);
+            if (auto *buyer = f->dcast_market_buyer()) {
+                buyer->init_og_trip(items, food);
+            } else {
+                f->collecting_item_id = d.fetch_inventory_id;
+            }
+            sent = true;
+        };
+        try_og_buyer(BUILDING_SLOT_MARKET_BUYER, true);
+        try_og_buyer(BUILDING_SLOT_MARKET_BUYER_2, false);
+        if (sent) {
+            return;
         }
     }
 
