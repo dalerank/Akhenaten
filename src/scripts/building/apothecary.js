@@ -20,8 +20,8 @@ building_apothecary {
     cost [ 6, 24, 30, 36, 45 ]
     desirability { value[1], step[1], step_size[-1], range[1] }
     laborers[5]
-    fire_risk[4]
-    damage_risk[2]
+    fire_risk [ 4, 17, 20, 24, 30 ]
+    damage_risk [0]
     flags {
         draw_normal_anim: true
     }

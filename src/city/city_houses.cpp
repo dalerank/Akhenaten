@@ -196,12 +196,12 @@ void city_t::house_service_calculate_culture_aggregates() {
             housed.num_gods = 1;
         }
 
-        // health
+        // health — OG: physician + mortuary (apothecary is a separate access byte)
         housed.health = 0;
-        if (housed.apothecary)
+        if (housed.physician)
             ++housed.health;
 
-        if (housed.physician)
+        if (housed.mortuary)
             ++housed.health;
     }
 }
