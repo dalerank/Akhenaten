@@ -1578,6 +1578,9 @@ static void __test_building_force_road_access(int bid) {
     if (!b->road_access.valid()) {
         b->road_access = b->tile;
     }
+    if (b->road_network_id <= 0) {
+        b->road_network_id = 1;
+    }
 }
 ANK_FUNCTION_1(__test_building_force_road_access);
 
@@ -1594,6 +1597,16 @@ static void __test_make_floodplain_water(int x, int y) {
     map_terrain_add(tile2i(x, y), TERRAIN_WATER | TERRAIN_FLOODPLAIN);
 }
 ANK_FUNCTION_2(__test_make_floodplain_water);
+
+static void __test_make_wall(int x, int y) {
+    map_terrain_add(tile2i(x, y), TERRAIN_WALL);
+}
+ANK_FUNCTION_2(__test_make_wall);
+
+static void __test_barracks_request_tower_sentry() {
+    building_barracks_request_tower_sentry();
+}
+ANK_FUNCTION(__test_barracks_request_tower_sentry);
 
 static int __test_figure_type_max_roam(int type) {
     if (type <= FIGURE_NONE || type >= FIGURE_MAX) {
@@ -2305,6 +2318,21 @@ static int __test_recruiter_create_soldier(int bid) {
     return (r && r->create_soldier()) ? 1 : 0;
 }
 ANK_FUNCTION_1(__test_recruiter_create_soldier);
+
+static int __test_recruiter_create_tower_sentry(int bid) {
+    building_recruiter *r = __test_recruiter(bid);
+    return (r && r->create_tower_sentry()) ? 1 : 0;
+}
+ANK_FUNCTION_1(__test_recruiter_create_tower_sentry);
+
+static void __test_building_set_figure_slot(int bid, int slot, int fid) {
+    building *b = building_get(bid);
+    if (!b) {
+        return;
+    }
+    b->set_figure(slot, fid);
+}
+ANK_FUNCTION_3(__test_building_set_figure_slot);
 
 static void __test_fort_update_recruit_status(int bid) {
     building *b = building_get(bid);

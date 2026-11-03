@@ -244,6 +244,9 @@ bool building_recruiter::create_tower_sentry() {
     figure* f = figure_create(FIGURE_TOWER_SENTRY, base.road_access, DIR_0_TOP_RIGHT);
     f->action_state = ACTION_174_TOWER_SENTRY_GOING_TO_TOWER;
     tile2i road = map_get_road_access_tile(tower->tile, tower->size);
+    if (!road.valid()) {
+        road = tower->road_access;
+    }
     if (road.valid()) {
         f->destination_tile = road;
     } else {
