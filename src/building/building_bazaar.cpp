@@ -6,6 +6,7 @@
 #include "building/building_food_mill.h"
 #include "figuretype/figure_market_buyer.h"
 #include "figuretype/figure_market_trader.h"
+#include "building/building_house.h"
 #include "graphics/elements/ui.h"
 #include "city/city.h"
 #include "city/city_labor.h"
@@ -850,6 +851,73 @@ void building_bazaar::on_post_load() {
     }
 }
 
+void building_bazaar::maintain_fancy_second_trader() {
+    auto &d = runtime_data();
+    figure *cur = figure_get(d.second_trader_id);
+    const bool alive = cur && cur->is_alive()
+        && (cur->type == FIGURE_MARKET_TRADER || cur->type == FIGURE_LABOR_SEEKER)
+        && cur->has_home(id());
+    if (!alive) {
+        d.second_trader_id = 0;
+    }
+
+    // OG: second trader only while desirability > fancy threshold (image_bazaar_fancy).
+    const int desir = g_desirability.get(base.tile);
+    if (desir <= current_params().fancy_treshold_desirability) {
+        return;
+    }
+
+    if (d.second_trader_id != 0) {
+        return;
+    }
+
+    const int inventory = std::accumulate(d.inventory, d.inventory + INVENTORY_MAX, 0,
+                                          [](int sum, const resource_value &rv) { return sum + rv.value; });
+    if (inventory <= 0) {
+        return;
+    }
+
+    tile2i spawn_tile = base.road_access.valid() ? base.road_access : base.tile;
+    figure *f = figure_create(FIGURE_MARKET_TRADER, spawn_tile, base.figure_roam_direction);
+    f->action_state = ACTION_125_MARKET_TRADER_ROAMING;
+    f->set_home(base.id);
+    f->init_roaming_from_building(base.figure_roam_direction);
+    base.figure_roam_direction += 2;
+    if (base.figure_roam_direction > 6) {
+        base.figure_roam_direction = 0;
+    }
+    d.second_trader_id = (int16_t)f->id;
+}
+
+void building_bazaar::update_good_demands_from_houses(int radius) {
+    auto &d = runtime_data();
+    buildings_house_do([&](building_house *house) {
+        if (!house || !house->hsize() || house->house_population() <= 0) {
+            return;
+        }
+        if (calc_maximum_distance(base.tile, house->base.tile) > radius) {
+            return;
+        }
+        int level = house->house_level();
+        if (level < HOUSE_PALATIAL_ESTATE) {
+            level++;
+        }
+        const model_house &model = building_house::get_model(level);
+        if (model.beer) {
+            d.beer_demand = 10;
+        }
+        if (model.pottery) {
+            d.pottery_demand = 10;
+        }
+        if (model.linen) {
+            d.linen_demand = 10;
+        }
+        if (model.jewelry) {
+            d.luxurygoods_demand = 10;
+        }
+    });
+}
+
 building *building_bazaar::get_og_food_destination(int8_t items[4]) {
     resource_data resources[INVENTORY_MAX];
     // OG ticks good demands on every destination search.
@@ -879,70 +947,91 @@ void building_bazaar::spawn_figure() {
 
     common_spawn_labor_seeker(current_params().min_houses_coverage);
 
+    // OG maintains the fancy second trader every visit (not behind spawn_delay).
+    maintain_fancy_second_trader();
+
+    // OG bazaar_index: counted for every road-connected bazaar in the generate pass.
+    g_city.figures.bazaar_figure_pass_index++;
+
     int spawn_delay = figure_spawn_timer();
     if (spawn_delay == -1) {
         return;
     }
 
     base.figure_spawn_delay++;
-    if (base.figure_spawn_delay <= spawn_delay) {
-        return;
+    const bool spawn_due = base.figure_spawn_delay > spawn_delay;
+    if (spawn_due) {
+        base.figure_spawn_delay = 0;
     }
-    base.figure_spawn_delay = 0;
 
     const auto &d = runtime_data();
-    const bool multi = !!game_features::gameplay_change_bazaar_multi_buyers;
+    const int inventory = std::accumulate(d.inventory, d.inventory + INVENTORY_MAX, 0,
+                                          [](int sum, const resource_value &rv) { return sum + rv.value; });
+    bool trader_alive = base.has_figure_of_type(BUILDING_SLOT_SERVICE, FIGURE_MARKET_TRADER);
+    if (!trader_alive && d.second_trader_id > 0) {
+        figure *second = figure_get(d.second_trader_id);
+        trader_alive = second && second->is_alive() && second->type == FIGURE_MARKET_TRADER;
+    }
 
-    if (multi) {
-        const int alive_buyers = count_market_buyers();
-        if (alive_buyers < effective_max_buyers()) {
-            e_building_slot slot = free_market_buyer_slot();
-            if (slot == BUILDING_SLOT_MARKET_BUYER || slot == BUILDING_SLOT_MARKET_BUYER_2) {
-                reclaim_inactive_buyer_slot(slot);
-                building *dest = pick_next_buyer_destination();
-                if (dest->id) {
-                    figure *f = create_figure_with_destination(FIGURE_MARKET_BUYER, dest,
-                                                                   (e_figure_action)ACTION_145_MARKET_BUYER_GOING_TO_STORAGE, slot);
-                    f->collecting_item_id = d.fetch_inventory_id;
-                    return;
-                }
-            }
-        }
-    } else {
-        // OG: dedicated food buyer (slot 1) + goods buyer (slot 2), shopping-list trips.
-        bool sent = false;
-        auto try_og_buyer = [&](e_building_slot slot, bool food) {
-            figure *cur = base.get_figure(slot);
-            const bool busy = base.has_figure_of_type(slot, FIGURE_MARKET_BUYER) && is_active_market_buyer(cur);
-            if (busy) {
-                return;
-            }
-            reclaim_inactive_buyer_slot(slot);
-            int8_t items[4] = { -1, -1, -1, -1 };
-            building *dest = food ? get_og_food_destination(items) : get_og_goods_destination(items);
-            if (!dest->id) {
-                return;
-            }
-            figure *f = create_figure_with_destination(FIGURE_MARKET_BUYER, dest,
-                                                       (e_figure_action)ACTION_145_MARKET_BUYER_GOING_TO_STORAGE, slot);
-            if (auto *buyer = f->dcast_market_buyer()) {
-                buyer->init_og_trip(items, food);
-            } else {
-                f->collecting_item_id = d.fetch_inventory_id;
-            }
-            sent = true;
-        };
-        try_og_buyer(BUILDING_SLOT_MARKET_BUYER, true);
-        try_og_buyer(BUILDING_SLOT_MARKET_BUYER_2, false);
-        if (sent) {
-            return;
+    // OG: when a trader is out or the bazaar is empty, scan houses in radius 10 for goods demand.
+    // Remake flag: demand is set only when a trader visits a house.
+    if (!game_features::gameplay_change_bazaar_demand_from_trader.to_bool()) {
+        if (trader_alive || inventory == 0) {
+            update_good_demands_from_houses(10);
         }
     }
 
-    if (!base.has_figure_of_type(BUILDING_SLOT_SERVICE, FIGURE_MARKET_TRADER)) {
-        int bazar_inventory = std::accumulate(d.inventory, d.inventory + INVENTORY_MAX, 0,
-                                              [](int sum, const resource_value &rv) { return sum + rv.value; });
-        if (bazar_inventory > 0) {
+    const bool multi = !!game_features::gameplay_change_bazaar_multi_buyers;
+    const bool remake_buyer_timer = !!game_features::gameplay_change_bazaar_buyer_spawn_timer;
+    // OG: day % 8 == bazaar_index % 8. Remake flag: buyers share labor spawn_due.
+    const bool buyers_due = remake_buyer_timer
+        ? spawn_due
+        : ((game.simtime.day % 8) == (g_city.figures.bazaar_figure_pass_index % 8));
+
+    if (buyers_due) {
+        if (multi) {
+            const int alive_buyers = count_market_buyers();
+            if (alive_buyers < effective_max_buyers()) {
+                e_building_slot slot = free_market_buyer_slot();
+                if (slot == BUILDING_SLOT_MARKET_BUYER || slot == BUILDING_SLOT_MARKET_BUYER_2) {
+                    reclaim_inactive_buyer_slot(slot);
+                    building *dest = pick_next_buyer_destination();
+                    if (dest->id) {
+                        figure *f = create_figure_with_destination(FIGURE_MARKET_BUYER, dest,
+                                                                       (e_figure_action)ACTION_145_MARKET_BUYER_GOING_TO_STORAGE, slot);
+                        f->collecting_item_id = d.fetch_inventory_id;
+                    }
+                }
+            }
+        } else {
+            // OG: dedicated food buyer (slot 1) + goods buyer (slot 2), shopping-list trips.
+            auto try_og_buyer = [&](e_building_slot slot, bool food) {
+                figure *cur = base.get_figure(slot);
+                const bool busy = base.has_figure_of_type(slot, FIGURE_MARKET_BUYER) && is_active_market_buyer(cur);
+                if (busy) {
+                    return;
+                }
+                reclaim_inactive_buyer_slot(slot);
+                int8_t items[4] = { -1, -1, -1, -1 };
+                building *dest = food ? get_og_food_destination(items) : get_og_goods_destination(items);
+                if (!dest->id) {
+                    return;
+                }
+                figure *f = create_figure_with_destination(FIGURE_MARKET_BUYER, dest,
+                                                           (e_figure_action)ACTION_145_MARKET_BUYER_GOING_TO_STORAGE, slot);
+                if (auto *buyer = f->dcast_market_buyer()) {
+                    buyer->init_og_trip(items, food);
+                } else {
+                    f->collecting_item_id = d.fetch_inventory_id;
+                }
+            };
+            try_og_buyer(BUILDING_SLOT_MARKET_BUYER, true);
+            try_og_buyer(BUILDING_SLOT_MARKET_BUYER_2, false);
+        }
+    }
+
+    if (spawn_due && !base.has_figure_of_type(BUILDING_SLOT_SERVICE, FIGURE_MARKET_TRADER)) {
+        if (inventory > 0) {
             create_roaming_figure(FIGURE_MARKET_TRADER, ACTION_125_MARKET_TRADER_ROAMING, BUILDING_SLOT_SERVICE);
         }
     }
@@ -983,5 +1072,11 @@ void building_bazaar::bind_dynamic(io_buffer *iob, size_t version) {
             d.desired_variety = 2;
         }
         d.min_variety = 1;
+    }
+
+    if (version >= 190) {
+        iob->bind(BIND_SIGNATURE_INT16, &d.second_trader_id);
+    } else {
+        d.second_trader_id = 0;
     }
 }
