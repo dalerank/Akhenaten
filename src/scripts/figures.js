@@ -254,19 +254,23 @@ figure_ballista {
 }
 
 figure_birds = {
+	// OG IMAGE_GROUP_FIGURE_BIRDS/_DEATH (SprMain 114/115); flock is non-directional (frame>>1).
 	animations : {
 		walk : { pack:PACK_SPR_MAIN, id:114, max_frames:25, loop:true }
-		idle : { pack:PACK_SPR_MAIN, id:114, max_frames:1, loop:false }
-		eating : { pack:PACK_SPR_MAIN, id:115, max_frames:25 }
 		death : { pack:PACK_SPR_MAIN, id:115, max_frames:25, loop:false }
 		big_image : { pack:PACK_UNLOADED, id:25, offset:FIGURE_BIRDS }
 	}
 
 	category: figure_category_animal
 	max_damage: 100
-	corpse_time_delay: 300
+	corpse_time_delay: 500
 	terrain_usage : TERRAIN_USAGE_ANIMAL
+	speed_mult: 1
 	scared_ticks: 128
+	rest_base_ticks: 150
+	rest_random_ticks: 150
+	no_tile_wait_ticks: 100
+	dying_ticks: 500
 }
 
 figure_crocodile = {

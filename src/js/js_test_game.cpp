@@ -1580,6 +1580,21 @@ static void __test_figure_set_damage(int fid, int damage) {
 }
 ANK_FUNCTION_2(__test_figure_set_damage);
 
+static void __test_figure_apply_damage(int fid, int damage) {
+    figure *f = figure_get(fid);
+    if (!f || !f->is_alive()) {
+        return;
+    }
+    f->apply_damage(damage, 0);
+}
+ANK_FUNCTION_2(__test_figure_apply_damage);
+
+static tile2i __figure_get_destination_tile(int fid) {
+    figure *f = figure_get(fid);
+    return (f && f->is_valid()) ? f->destination_tile : tile2i::invalid;
+}
+ANK_FUNCTION_1(__figure_get_destination_tile);
+
 static int __test_shipyard_queue_ship(int bid, int fid) {
     return building_shipyard_queue_ship((figure_id)fid, (building_id)bid) ? 1 : 0;
 }
