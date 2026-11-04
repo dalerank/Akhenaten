@@ -15,6 +15,7 @@
 #include "game/resource.h"
 #include "scenario/scenario.h"
 #include "scenario/distant_battle.h"
+#include "city/legion_requests.h"
 #include "figure/formation.h"
 #include "event_phrases.h"
 
@@ -215,10 +216,39 @@ void scenario_request_dispatch(int id) {
             g_distant_battle.determine_distant_battle_city();
         }
         g_distant_battle.source_request_event_id = (int16_t)ev->event_id;
-        // B8: egyptian strength from empire-service bataillons (not equal-abstract cheat).
-        // No marked bataillons → travel_forth stays 0 → lose (no troops) next month.
-        g_distant_battle.battle.egyptian_strength = 0;
-        g_formations.dispatch_batalions_to_distant_battle();
+        // OG legion_requests: sea (aboard transport / warship) or land (exit) by route kind.
+        formation_legions_dispatch_to_request(ev->event_id);
+
+        int warships = 0;
+        int legions = 0;
+        int strength = formation_request_strength(ev->event_id, &warships, &legions);
+        if (strength > 255) {
+            strength = 255;
+        }
+
+        int num_soldiers = 0;
+        bool any_on_ship = false;
+        for (int i = 1; i < MAX_FORMATIONS; i++) {
+            formation *m = formation_get(i);
+            if (!m || !m->in_use || !m->own_batalion || m->request_event_id != ev->event_id) {
+                continue;
+            }
+            num_soldiers += m->num_figures;
+            if (formation_legion_is_on_ship(i)) {
+                any_on_ship = true;
+            }
+        }
+
+        if (strength > 0) {
+            g_distant_battle.dispatch_to_distant_battle(strength, (uint8_t)std::min(255, num_soldiers));
+            // Sea request: troops stay aboard — do not wait for land exit join.
+            if (any_on_ship) {
+                g_distant_battle.dispatched_army.await_soldiers = 0;
+            }
+        } else {
+            g_distant_battle.battle.egyptian_strength = 0;
+        }
+
         g_distant_battle.battle.months_until_battle = 1;
         if (g_distant_battle.battle.egyptian_months_to_travel_forth > 0) {
             g_distant_battle.battle.egyptian_months_to_travel_forth = 1;

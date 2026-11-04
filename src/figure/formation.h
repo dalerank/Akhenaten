@@ -118,6 +118,8 @@ struct formation {
     /* Legion-related */
     bool empire_service;        /**< Flag to indicate this batalion is selected for empire service */
     uint8_t in_distant_battle;     /**< Flag to indicate this batalion is away in a distant battle */
+    // OG formation.request_event_id (−1 = none). Links legion to a kingdom troop request.
+    int16_t request_event_id;
     int16_t cursed_by_seth;        /**< Flag to indicate this batalion is cursed */
     uint8_t has_military_training; /**< Flag to indicate this batalion has had military training */
     uint8_t batalion_recruit_type;   /**< Recruit type: none if this batalion is fully occupied */
@@ -155,7 +157,7 @@ ANK_CONFIG_PROPERTY(formation,
     in_use, batalion_id, figure_type,
     num_figures, morale, experience,
     total_damage, max_total_damage, cursed_by_seth,
-    is_at_fort, home, in_distant_battle,
+    is_at_fort, home, in_distant_battle, request_event_id,
     empire_service, ship_figure_id);
 
 using attacked_buildings = flat_map<building_id, bool, 32>;

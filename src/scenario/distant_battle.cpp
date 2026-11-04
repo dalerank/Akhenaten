@@ -18,6 +18,7 @@
 #include "scenario/scenario.h"
 #include "scenario/scenario_event_manager.h"
 #include "scenario/request.h"
+#include "city/legion_requests.h"
 
 distant_battles_t g_distant_battle;
 
@@ -227,9 +228,14 @@ void dispatched_army_t::return_soldiers(formation *m) {
 void dispatched_army_t::return_from_distant_battle() {
     for (int i = 1; i < MAX_FORMATIONS; i++) {
         formation *m = formation_get(i);
-        if (m->in_use && m->own_batalion && m->in_distant_battle) {
-            return_soldiers(m);
+        if (!m->in_use || !m->own_batalion || !m->in_distant_battle) {
+            continue;
         }
+        // Sea request return owns landing via transport ACTION_223 — do not yank soldiers off the ship.
+        if (formation_legion_is_on_ship(i)) {
+            continue;
+        }
+        return_soldiers(m);
     }
 }
 
@@ -367,37 +373,6 @@ void dispatched_army_t::formation_batalions_kill_in_distant_battle(int kill_perc
     }
 }
 
-bool distant_battles_t::player_has_won() {
-    bool won;
-    int pct_loss;
-    if (battle.egyptian_strength < battle.enemy_strength) {
-        won = 0;
-        pct_loss = 100;
-    } else {
-        won = 1;
-        int pct_advantage = calc_percentage<int>(battle.egyptian_strength - battle.enemy_strength, battle.egyptian_strength);
-
-        if (pct_advantage < 10)
-            pct_loss = 70;
-        else if (pct_advantage < 25)
-            pct_loss = 50;
-        else if (pct_advantage < 50)
-            pct_loss = 25;
-        else if (pct_advantage < 75)
-            pct_loss = 15;
-        else if (pct_advantage < 100)
-            pct_loss = 10;
-        else if (pct_advantage < 150)
-            pct_loss = 5;
-        else {
-            pct_loss = 0;
-        }
-    }
-
-    dispatched_army.formation_batalions_kill_in_distant_battle(pct_loss);
-    return won;
-}
-
 static bool is_deferred_troop_request(const event_ph_t *ev) {
     return ev && ev->type == EVENT_TYPE_REQUEST
         && (e_resource)ev->item.value == RESOURCE_TROOPS
@@ -427,6 +402,37 @@ static int16_t resolve_source_request_event_id(int16_t linked) {
     return found;
 }
 
+static int distant_battle_pct_loss(bool &won) {
+    if (g_distant_battle.battle.egyptian_strength < g_distant_battle.battle.enemy_strength) {
+        won = false;
+        return 100;
+    }
+    won = true;
+    const int pct_advantage = calc_percentage<int>(
+        g_distant_battle.battle.egyptian_strength - g_distant_battle.battle.enemy_strength,
+        g_distant_battle.battle.egyptian_strength);
+    if (pct_advantage < 10)
+        return 70;
+    if (pct_advantage < 25)
+        return 50;
+    if (pct_advantage < 50)
+        return 25;
+    if (pct_advantage < 75)
+        return 15;
+    if (pct_advantage < 100)
+        return 10;
+    if (pct_advantage < 150)
+        return 5;
+    return 0;
+}
+
+bool distant_battles_t::player_has_won() {
+    bool won = false;
+    const int pct_loss = distant_battle_pct_loss(won);
+    dispatched_army.formation_batalions_kill_in_distant_battle(pct_loss);
+    return won;
+}
+
 // ONLY_VIA masters clone to ACTIVATED_*; drain so request ok/defeat leaves fire same month.
 static void drain_activated_events(int from_index) {
     while (from_index < g_scenario.events.events_count()) {
@@ -442,8 +448,6 @@ static void drain_activated_events(int from_index) {
 void distant_battles_t::fight_distant_battle() {
     const int16_t req_id = resolve_source_request_event_id(source_request_event_id);
     source_request_event_id = -1;
-    // Request-linked troop asks: chain leaves own the KR / status fallout — suppress the
-    // hardcoded ±kingdom swings and ad-hoc win_distant_battle event so they don't stack.
     const bool request_linked = req_id >= 0;
 
     bool won = false;
@@ -454,6 +458,9 @@ void distant_battles_t::fight_distant_battle() {
             g_city.kingdome.change(-50);
         }
         set_city_foreign();
+        if (request_linked) {
+            formation_legions_return_from_request(req_id);
+        }
     } else if (battle.egyptian_months_to_travel_forth > 2) {
         events::emit(event_message{ true, "message_distant_battle_lost_too_late", 0, 0, SOURCE_LOCATION });
         if (!request_linked) {
@@ -462,33 +469,47 @@ void distant_battles_t::fight_distant_battle() {
         set_city_foreign();
         battle.egyptian_months_to_travel_back = battle.egyptian_months_traveled;
         dispatched_army.state = dispatched_army_t::state_returning;
-    } else if (!player_has_won()) {
-        events::emit(event_message{ true, "message_distant_battle_lost_too_weak", 0, 0, SOURCE_LOCATION });
-        if (!request_linked) {
-            g_city.kingdome.change(-10);
+        if (request_linked) {
+            formation_legions_return_from_request(req_id);
         }
-        set_city_foreign();
-        battle.egyptian_months_traveled = 0;
-        dispatched_army.state = dispatched_army_t::state_returning_destroyed;
-        // no return: all soldiers killed
     } else {
-        won = true;
-        dispatched_army.state = dispatched_army_t::state_returning_win;
-
-        if (!request_linked) {
-            const auto city = g_empire.city(battle.city);
-            if (city && city->get_empire_object()) {
-                uint16_t rtag = rand() % 0xffff;
-                g_scenario.events.win_distant_battle(rtag, city->name_str.c_str(), city->get_empire_object()->pos);
-                g_scenario.events.execute_event(rtag);
-            }
-            g_city.kingdome.change(25);
-            city_buildings_earn_triumphal_obelisk();
+        int pct_loss = 0;
+        if (request_linked) {
+            pct_loss = distant_battle_pct_loss(won);
+            formation_legions_request_losses(pct_loss, req_id);
+            // Survivors sail/march home via transport 223 / land return — even on total wipe
+            // (then request_losses already sank ships / cleared flags).
+            formation_legions_return_from_request(req_id);
+        } else {
+            won = player_has_won();
         }
 
-        battle.won_count++;
-        battle.city_foreign_months_left = 0;
-        battle.egyptian_months_to_travel_back = 0;
+        if (!won) {
+            events::emit(event_message{ true, "message_distant_battle_lost_too_weak", 0, 0, SOURCE_LOCATION });
+            if (!request_linked) {
+                g_city.kingdome.change(-10);
+            }
+            set_city_foreign();
+            battle.egyptian_months_traveled = 0;
+            dispatched_army.state = dispatched_army_t::state_returning_destroyed;
+        } else {
+            dispatched_army.state = dispatched_army_t::state_returning_win;
+
+            if (!request_linked) {
+                const auto city = g_empire.city(battle.city);
+                if (city && city->get_empire_object()) {
+                    uint16_t rtag = rand() % 0xffff;
+                    g_scenario.events.win_distant_battle(rtag, city->name_str.c_str(), city->get_empire_object()->pos);
+                    g_scenario.events.execute_event(rtag);
+                }
+                g_city.kingdome.change(25);
+                city_buildings_earn_triumphal_obelisk();
+            }
+
+            battle.won_count++;
+            battle.city_foreign_months_left = 0;
+            battle.egyptian_months_to_travel_back = 0;
+        }
     }
 
     if (request_linked) {

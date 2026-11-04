@@ -18,6 +18,8 @@ enum e_soldier_action {
     // OG 0x13 / 0x14: charge rush + look-for-targets after arrival.
     ACTION_12_SOLDIER_CHARGING = 12,
     ACTION_13_SOLDIER_CHARGE_LOOK = 13,
+    // OG FIGURE_ACTION_SOLDIER_ON_SHIP — boarded on a player transport (off-map).
+    ACTION_18_SOLDIER_ON_SHIP = 18,
 };
 
 class figure_soldier : public figure_impl {

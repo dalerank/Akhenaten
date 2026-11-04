@@ -1553,9 +1553,11 @@ void screen_city_t::transport_map_click(int transport_figure_id, int pick_mode, 
                 && map_terrain_is(t, TERRAIN_WATER | TERRAIN_DEEPWATER)
                 && !map_terrain_is(t, TERRAIN_BUILDING);
         };
+
+        tile2i land_order = tile2i::invalid;
         tile2i water = tile;
         if (!is_nav_water(water)) {
-            // Shore click ? adjacent water that can actually land (has shore).
+            land_order = tile;
             static const vec2i dirs[] = {
                 {0, 1}, {1, 1}, {1, 0}, {1, -1}, {0, -1}, {-1, -1}, {-1, 0}, {-1, 1}
             };
@@ -1594,8 +1596,8 @@ void screen_city_t::transport_map_click(int transport_figure_id, int pick_mode, 
                 water = fallback;
             }
         }
-        if (water.valid()) {
-            ship->sail_to_landing(water);
+        if (water.valid() && land_order.valid()) {
+            ship->sail_to_landing(water, land_order);
         }
         highlighted_formation = 0;
         window_city_show();

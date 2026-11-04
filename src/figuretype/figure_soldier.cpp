@@ -298,18 +298,17 @@ void figure_soldier::acquire_attack() {
 }
 
 void figure_soldier::figure_action() {
-    // Aboard a player transport: stay glued/invisible and skip land AI.
-    // (Enemy cargo uses ACTION_152_WAITING; embark sets EMOVE_AMPHIBIAN + invisible.)
-    // Must run before the unconditional invisible clear below.
-    if (base.allow_move_type == EMOVE_AMPHIBIAN && !base.is_visible()) {
+    // OG FIGURE_ACTION_SOLDIER_ON_SHIP: idle off-map while the transport sails.
+    if (action_state() == ACTION_18_SOLDIER_ON_SHIP) {
         g_city.figures_add_soldier();
         formation *m = formation_get(base.formation_id);
         if (!m || m->in_use != 1) {
-            // Formation wiped while we were aboard — don't stay invisible forever.
-            base.set_flag(e_figure_flag_invisible, false);
             base.allow_move_type = EMOVE_TERRAIN;
             base.kill();
+            return;
         }
+        base.wait_ticks = 0;
+        base.formation_at_rest = 0;
         return;
     }
 
