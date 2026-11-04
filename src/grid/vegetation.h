@@ -10,6 +10,8 @@ void vegetation_tile_update(int grid_offset, vegetation_opt opt);
 
 int map_get_vegetation_growth(int grid_offset);
 inline int map_get_vegetation_growth(tile2i tile) { return map_get_vegetation_growth(tile.grid_offset()); }
+void map_vegetation_set_growth(int grid_offset, int growth);
+inline void map_vegetation_set_growth(tile2i tile, int growth) { map_vegetation_set_growth(tile.grid_offset(), growth); }
 void map_vegetation_deplete(int grid_offset);
 inline void map_vegetation_deplete(tile2i tile) { return map_vegetation_deplete(tile.grid_offset()); }
 void map_vegetation_deplete(tile2i tile, int delta);

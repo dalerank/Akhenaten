@@ -103,6 +103,7 @@
 #include "core/xstring.h"
 #include "grid/road_network.h"
 #include "grid/tiles.h"
+#include "grid/vegetation.h"
 #include "grid/routing/routing_terrain.h"
 #include "game/autosave_module.h"
 #include "core/bstring.h"
@@ -4615,6 +4616,34 @@ static int __test_building_road_access_tile(int bid) {
     return m->road_access.grid_offset();
 }
 ANK_FUNCTION_1(__test_building_road_access_tile);
+
+static void __test_building_set_road_access(int bid, int x, int y) {
+    building *b = building_get(bid);
+    if (!b || !b->is_valid()) {
+        return;
+    }
+    building *m = b->main();
+    if (!m) {
+        return;
+    }
+    m->has_road_access = true;
+    m->road_access = tile2i(x, y);
+}
+ANK_FUNCTION_3(__test_building_set_road_access);
+
+static void __test_map_set_vegetation_growth(int x, int y, int growth) {
+    tile2i tile(x, y);
+    if (!map_grid_is_inside(tile, 1)) {
+        return;
+    }
+    map_vegetation_set_growth(tile, growth);
+}
+ANK_FUNCTION_3(__test_map_set_vegetation_growth);
+
+static void __test_map_routing_update_land() {
+    map_routing_update_land();
+}
+ANK_FUNCTION(__test_map_routing_update_land);
 
 static void __test_building_road_access_set_stale(int bid) {
     building *b = building_get(bid);

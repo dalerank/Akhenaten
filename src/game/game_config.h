@@ -123,6 +123,7 @@ namespace game_features {
     extern game_feature gameplay_change_multiple_monuments;
     extern game_feature gameplay_change_soil_depletion;
     extern game_feature gameplay_change_multiple_gatherers;
+    extern game_feature gameplay_change_wood_cutter_single_gatherer;
     extern game_feature gameplay_change_fireman_returning;
     extern game_feature gameplay_change_architect_patrol_most_damaged;
     extern game_feature gameplay_og_architect;

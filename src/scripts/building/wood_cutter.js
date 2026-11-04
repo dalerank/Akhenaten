@@ -38,17 +38,60 @@ building_wood_cutter {
   laborers[8], fire_risk[4], damage_risk[3]
 }
 
+// OG spawn_wood_cutters: pct>=100→3, >=50→2, >=1→1; then (500-stored)/25.
+// Remake feature caps the worker-based max at max_gatherers (1).
+function wood_cutter_max_lumberjacks(b) {
+    var pct = b.worker_percentage
+    var max = 0
+    if (pct >= 100) {
+        max = 3
+    } else if (pct >= 50) {
+        max = 2
+    } else if (pct >= 1) {
+        max = 1
+    }
+
+    if (game_features.get('gameplay_change_wood_cutter_single_gatherer') === true) {
+        var remake_cap = dcy_get(building_wood_cutter.max_gatherers)
+        if (max > remake_cap) {
+            max = remake_cap
+        }
+    }
+
+    var carry = dcy_get(figure_lumberjack.max_amount)
+    if (carry < 1) {
+        carry = 25
+    }
+    var space = Math.floor((500 - b.stored_resource(RESOURCE_TIMBER)) / carry)
+    if (space < max) {
+        max = space
+    }
+    if (max < 0) {
+        max = 0
+    }
+    return max
+}
+
 function wood_cutter_has_lumberjack_capacity(b) {
-    var max_gatherers = dcy_get(building_wood_cutter.max_gatherers)
-    var gatherers = b.get_figures_number(FIGURE_LUMBERJACK)
-    var carry = figure_lumberjack.max_amount
-    var max_loads = 500 / carry
-    return gatherers < max_gatherers
-        && gatherers + Math.floor(b.stored_resource(RESOURCE_TIMBER) / carry) < (max_loads - gatherers)
+    return b.get_figures_number(FIGURE_LUMBERJACK) < wood_cutter_max_lumberjacks(b)
 }
 
 function wood_cutter_can_spawn_lumberjack(b) {
-    return b.citizen_found_terrain(TERRAIN_TREE) && wood_cutter_has_lumberjack_capacity(b)
+    var trees_ok = game_features.get('gameplay_change_wood_cutter_single_gatherer') === true
+        ? b.citizen_found_terrain(TERRAIN_TREE)
+        : b.citizen_found_timber()
+    return trees_ok && wood_cutter_has_lumberjack_capacity(b)
+}
+
+function wood_cutter_spawn_lumberjacks_up_to_max(b) {
+    // OG send_gatherers: burst-fill to max in one spawn tick.
+    while (wood_cutter_can_spawn_lumberjack(b)) {
+        var fid = b.create_figure_generic(FIGURE_LUMBERJACK, ACTION_1_LUMBERJACK_RECALCULATE, BUILDING_SLOT_SERVICE)
+        if (!fid) {
+            break
+        }
+        city.get_figure(fid).wait_ticks = fid % 30
+    }
 }
 
 [es=(building_wood_cutter, spawn_figure)]
@@ -69,12 +112,7 @@ function building_wood_cutter_spawn_figure(ev) {
         b.figure_spawn_delay += 1
         if (b.figure_spawn_delay > spawn_delay) {
             b.figure_spawn_delay = 0
-            if (wood_cutter_can_spawn_lumberjack(b)) {
-                var fid = b.create_figure_generic(FIGURE_LUMBERJACK, ACTION_1_LUMBERJACK_RECALCULATE, BUILDING_SLOT_SERVICE)
-                if (fid) {
-                    city.get_figure(fid).wait_ticks = fid % 30
-                }
-            }
+            wood_cutter_spawn_lumberjacks_up_to_max(b)
         }
     }
 

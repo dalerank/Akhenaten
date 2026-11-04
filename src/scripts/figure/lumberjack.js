@@ -29,7 +29,10 @@ figure_lumberjack {
 	max_damage: 40
 	attack_value: 4
 	terrain_usage : TERRAIN_USAGE_ANY
-	max_amount : 50
+	can_cross_ferry: true
+	boards_ferry: true
+	// OG animals.c: loads_stored += 0x19 (25); capacity uses same divisor.
+	max_amount : 25
 }
 
 function figure_lumberjack_gods_are_angry() {

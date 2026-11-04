@@ -362,6 +362,18 @@ void __building_citizen_found_terrain(js_State *J) {
     J->push(map_routing_citizen_found_terrain(b->road_access, nullptr, terrain));
 }
 
+// OG vegetation_wood_cutter_reach: reachable fully grown tree (growth==255), not mere TERRAIN_TREE.
+void __building_citizen_found_timber(js_State *J) {
+    const int bid = building_this_id(J);
+    building *b = building_get(bid);
+    if (!b || !b->is_valid() || !b->road_access.valid()) {
+        J->push(false);
+        return;
+    }
+    const resource_tile tile = map_routing_citizen_found_timber(b->road_access);
+    J->push(tile.res == RESOURCE_TIMBER);
+}
+
 void __building_common_spawn_labor_seeker(js_State *J) {
     const int bid = building_this_id(J);
     const int min_houses = J->to<int>(1);
@@ -688,6 +700,7 @@ void js_register_building(js_State *J) {
     jsB_propf(J, js_intern("Building.prototype.figure_spawn_timer"), __building_figure_spawn_timer, 0);
     jsB_propf(J, js_intern("Building.prototype.is_enemies_nearby"), __building_is_enemies_nearby, 0);
     jsB_propf(J, js_intern("Building.prototype.citizen_found_terrain"), __building_citizen_found_terrain, 1);
+    jsB_propf(J, js_intern("Building.prototype.citizen_found_timber"), __building_citizen_found_timber, 0);
     jsB_propf(J, js_intern("Building.prototype.common_spawn_labor_seeker"), __building_common_spawn_labor_seeker, 1);
     jsB_propf(J, js_intern("Building.prototype.create_figure_generic"), __building_create_figure_generic, 3);
     jsB_propf(J, js_intern("Building.prototype.common_spawn_goods_output_cartpusher"), __building_common_spawn_goods_output_cartpusher, 0);

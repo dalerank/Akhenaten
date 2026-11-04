@@ -113,6 +113,7 @@ game_features {
     @gameplay_change_tomb_robber_remake {}
     @gameplay_change_protestor_hunt_nobles {}
     @gameplay_change_fishing_boat_remake {}
+    @gameplay_change_wood_cutter_single_gatherer {}
     @gameplay_fishing_wharf_spawn_boats {}
     @gameplay_change_market_distribute_remake {}
     @gameplay_change_library_service_cap {}

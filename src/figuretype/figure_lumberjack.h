@@ -27,6 +27,8 @@ public:
     virtual void figure_before_action() override;
     virtual void figure_action() override;
     virtual void update_animation() override;
+    virtual void acquire_attack() override;
+    virtual short ferry_reroute_action() const override { return ACTION_1_LUMBERJACK_RECALCULATE; }
 };
 ANK_CONFIG_STRUCT(figure_lumberjack::static_params,
     max_amount)
