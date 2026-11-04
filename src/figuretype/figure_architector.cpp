@@ -109,10 +109,13 @@ void figure_architector::figure_action() {
         seek_damaged_building();
     }
 
+    const bool og = !!game_features::gameplay_og_architect;
+    building *b = home();
+
     switch (action_state()) {
     default:
-        // OG: unknown state → created and clear wait. Remake: return home.
-        if (!!game_features::gameplay_og_architect) {
+        // OG building_walker: unknown → CREATED with wait_ticks cleared. Remake: return home.
+        if (og) {
             base.wait_ticks = 0;
             advance_action(ACTION_1_ENGINEER_CREATED);
         } else {
@@ -124,21 +127,68 @@ void figure_architector::figure_action() {
         break;
 
     case ACTION_1_ENGINEER_CREATED:
-        // Spawn is already on road_access; OG wait/cross-country exit needs spawn-on-building.
-        advance_action(ACTION_3_ENGINEER_ROAMING);
+        if (og) {
+            // OG engineer: invisible wait, then ENTER_EXIT toward road_access.
+            base.set_flag(e_figure_flag_invisible, true);
+            base.animctx.frame = 0;
+            base.wait_ticks--;
+            if (base.wait_ticks <= 0) {
+                if (b && b->has_road_access) {
+                    advance_action(ACTION_2_ENGINEER_ENTERING_EXITING);
+                    base.set_cross_country_destination(b->road_access);
+                    base.roam_length = 0;
+                } else {
+                    poof();
+                }
+            }
+        } else {
+            advance_action(ACTION_3_ENGINEER_ROAMING);
+        }
         break;
 
     case ACTION_2_ENGINEER_ENTERING_EXITING:
     case 9:
-        do_enterbuilding(true, home());
+        if (og) {
+            // OG enter_exit: ghost while crossing; home tile → die, else roam.
+            base.set_flag(e_figure_flag_invisible, true);
+            base.use_cross_country = true;
+            if (base.move_ticks_cross_country(1)) {
+                if (base.has_home(map_building_at(tile()))) {
+                    poof();
+                } else {
+                    advance_action(ACTION_3_ENGINEER_ROAMING);
+                    base.init_roaming_from_building(0);
+                    base.roam_length = 0;
+                }
+            }
+        } else {
+            do_enterbuilding(true, home());
+        }
         break;
 
     case ACTION_3_ENGINEER_ROAMING:
+        if (og) {
+            base.set_flag(e_figure_flag_invisible, false);
+        }
         do_roam(TERRAIN_USAGE_ROADS, ACTION_4_ENGINEER_RETURNING);
         break;
 
     case ACTION_4_ENGINEER_RETURNING:
-        if (do_returnhome(TERRAIN_USAGE_ROADS, ACTION_2_ENGINEER_ENTERING_EXITING)) {
+        if (og) {
+            base.set_flag(e_figure_flag_invisible, false);
+            base.move_ticks(1);
+            if (direction() == DIR_FIGURE_NONE) {
+                if (b) {
+                    advance_action(ACTION_2_ENGINEER_ENTERING_EXITING);
+                    base.set_cross_country_destination(b->tile);
+                    base.roam_length = 0;
+                } else {
+                    poof();
+                }
+            } else if (direction() == DIR_FIGURE_REROUTE || direction() == DIR_FIGURE_CAN_NOT_REACH) {
+                poof();
+            }
+        } else if (do_returnhome(TERRAIN_USAGE_ROADS, ACTION_2_ENGINEER_ENTERING_EXITING)) {
             building *h = home();
             if (h && h->params().flags.keeps_visitor_paths) {
                 building *main = h->main();
@@ -227,7 +277,7 @@ int figure_architector::provide_service() {
             if (damage > max_damage) {
                 max_damage = damage;
             }
-            map_building_damage_set(grid_offset, damage - og_amount);
+            map_building_damage_set(grid_offset, std::max(0, damage - og_amount));
         }
     });
 
