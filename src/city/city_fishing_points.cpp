@@ -3,6 +3,7 @@
 #include "scenario/scenario.h"
 #include "scenario/map.h"
 #include "figuretype/figure_fishing_point.h"
+#include "figuretype/figure_seagulls.h"
 #include "city/city_figures.h"
 #include "grid/water.h"
 #include "grid/figure.h"
@@ -14,6 +15,8 @@
 
 void city_fishing_points_t::create() {
     scenario_map_foreach_fishing_point([] (tile2i tile) {
+        // OG: create_flotsam spawns FIGURE_SEAGULLS; create_fishing_points spawns JUMPING_FISH.
+        figure_seagulls::create(tile);
         figure_fishing_point::create(tile);
     });
 }
@@ -93,16 +96,10 @@ void city_fishing_points_t::reset() {
 
 void city_fishing_points_t::clear() {
     for (int i = 1; i < MAX_FIGURES; i++) {
-        if (figure_get(i)->type == FIGURE_NONE) {
-            continue;
+        figure *f = figure_get(i);
+        if (f->type == FIGURE_FISHING_POINT || f->type == FIGURE_SEAGULLS) {
+            f->poof();
         }
-
-        figure_fishing_point *fish_point = figure_get<figure_fishing_point>(i);
-        if (!fish_point) {
-            continue;
-        }
-
-        fish_point->poof();
     }
 }
 

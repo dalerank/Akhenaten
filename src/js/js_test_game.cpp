@@ -2296,6 +2296,32 @@ static void __test_create_herds() {
 }
 ANK_FUNCTION(__test_create_herds);
 
+static void __test_clear_scenario_fishing_points() {
+    g_scenario.fishing_points.assign(MAX_FISH_POINTS, tile2i::invalid);
+}
+ANK_FUNCTION(__test_clear_scenario_fishing_points);
+
+static void __test_set_scenario_fishing_point(int index, int x, int y) {
+    if (index < 0 || index >= MAX_FISH_POINTS) {
+        return;
+    }
+    if ((int)g_scenario.fishing_points.size() <= index) {
+        g_scenario.fishing_points.resize(index + 1, tile2i::invalid);
+    }
+    g_scenario.fishing_points[index] = tile2i(x, y);
+}
+ANK_FUNCTION_3(__test_set_scenario_fishing_point);
+
+static void __test_fishing_points_create() {
+    g_city.fishing_points.create();
+}
+ANK_FUNCTION(__test_fishing_points_create);
+
+static void __test_fishing_points_clear() {
+    g_city.fishing_points.clear();
+}
+ANK_FUNCTION(__test_fishing_points_clear);
+
 // Pack (x << 16) | y for a land tile where is_herd_spawn_accessible(ftype) holds; -1 if none.
 static int __test_find_accessible_herd_tile(int ftype) {
     if (ftype <= FIGURE_NONE || ftype >= FIGURE_MAX) {

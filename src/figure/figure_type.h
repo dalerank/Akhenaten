@@ -115,7 +115,7 @@ enum e_figure_type : uint16_t {
     FIGURE_BALLISTA = 62,
     FIGURE_CREATURE = 63, // Caesar leftover — won't implement
     FIGURE_MISSIONARY = 64, // Caesar leftover (natives UNUSED) — won't implement
-    FIGURE_SEAGULLS = 65, // OG ambient; fishing points wrongly used this id before
+    FIGURE_SEAGULLS = 65, // OG fishing-point ghost stub (create_flotsam); ≠ JUMPING_FISH 95
     FIGURE_DELIVERY_BOY = 66,
     FIGURE_SHIPWRECK = 67,
     FIGURE_BIRDS = 68,

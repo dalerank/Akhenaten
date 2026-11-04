@@ -269,6 +269,7 @@ target_figure figure_combat_get_missile_target_for_enemy(figure* enemy, int max_
         case FIGURE_BOLT:
         case FIGURE_BALLISTA:
         case FIGURE_CREATURE:
+        case FIGURE_SEAGULLS:
         case FIGURE_FISHING_POINT:
         case FIGURE_SHIPWRECK:
         case FIGURE_BIRDS:

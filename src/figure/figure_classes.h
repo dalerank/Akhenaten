@@ -13,6 +13,7 @@ class figure_worker;
 class figure_soldier;
 class figure_fishing_boat;
 class figure_fishing_point;
+class figure_seagulls;
 class figure_trade_caravan;
 class figure_caravan_donkey;
 class figure_transport_ship;
