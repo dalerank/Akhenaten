@@ -23,6 +23,7 @@
 #include "building/building_house.h"
 #include "building/building_bazaar.h"
 #include "building/building_granary.h"
+#include "building/building_mansion.h"
 #include "building/building_food_mill.h"
 #include "building/building_static_params.h"
 #include "building/building_storage.h"
@@ -1164,6 +1165,41 @@ static int __test_building_create(int type, int x, int y) {
     return b->id;
 }
 ANK_FUNCTION_3(__test_building_create);
+
+static int __test_building_destroy_by_enemy(int bid) {
+    building *b = building_get(bid);
+    if (!b || !b->is_valid()) {
+        return 0;
+    }
+    g_city.maintenance.destroy_by_enemy(b);
+    return 1;
+}
+ANK_FUNCTION_1(__test_building_destroy_by_enemy);
+
+static int __test_destroy_buildings_of_type(int type) {
+    if (type <= BUILDING_NONE || type >= BUILDING_MAX) {
+        return 0;
+    }
+    svector<int, 64> ids;
+    buildings_valid_do([&](building &b) {
+        if ((int)b.type == type) {
+            ids.push_back(b.id);
+        }
+    });
+    for (int id : ids) {
+        building *b = building_get(id);
+        if (b && b->is_valid()) {
+            g_city.maintenance.destroy_by_enemy(b);
+        }
+    }
+    return (int)ids.size();
+}
+ANK_FUNCTION_1(__test_destroy_buildings_of_type);
+
+static void __test_mansion_update_money_values() {
+    building_mansion::update_money_values();
+}
+ANK_FUNCTION(__test_mansion_update_money_values);
 
 // Place a mud gatehouse road-pair at (x,y)/(x+1,y) with flanking walls, claim the OG 2x2 footprint.
 // Returns the number of TERRAIN_GATEHOUSE tiles in the 2x2 (expect 4).

@@ -25,6 +25,7 @@
 #include "building/building_fishing_wharf.h"
 #include "building/building_festival_square.h"
 #include "building/building_bridge.h"
+#include "building/building_mansion.h"
 #include "city/city_industry.h"
 #include "building/building_fort.h"
 #include "building/building.h"
@@ -857,6 +858,12 @@ void build_planner::update_unique_only_one_check() {
         if (g_city.buildings.has_temple_complex() && !game_features::gameplay_change_multiple_temple_complexes) {
             unique_already_placed = true;
         }
+        break;
+    case BUILDING_PERSONAL_MANSION:
+    case BUILDING_FAMILY_MANSION:
+    case BUILDING_DYNASTY_MANSION:
+        // OG mansion_placed: one mansion of any tier.
+        unique_already_placed = building_mansion::exist_in_city();
         break;
     default:
         break;

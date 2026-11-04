@@ -616,6 +616,21 @@ void building::destroy_by_collapse() {
     g_sound.play_effect(SOUND_EFFECT_EXPLOSION);
 }
 
+void building::destroy_by_enemy() {
+    verify_no_crash(is_main());
+
+    events::emit(event_collase_damage{ id });
+
+    destroy_reason = e_destroy_enemy;
+    state = BUILDING_STATE_RUBBLE;
+    city_flat_erase_raised(id);
+    dcast()->on_before_collapse();
+    map_building_tiles_set_rubble(id, tile, size);
+    figure_create_explosion_cloud(tile, size);
+    destroy_linked_parts(false);
+    g_sound.play_effect(SOUND_EFFECT_EXPLOSION);
+}
+
 void building::destroy_by_flooded() {
     verify_no_crash(is_main());
 
