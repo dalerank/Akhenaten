@@ -5,12 +5,9 @@ function scenario_win_criteria_goal(c) {
 }
 
 function mission_selection_title(scenario_id) {
-    // Use the original "history" message name (id 200 + scenario_id) as the primary
-    // title. These use the Egyptian place names (e.g. "Abedju") and match the mission
-    // briefing window, keeping the Explore History list consistent. The JS config's
-    // selection_title is an Anglicized fallback (e.g. "Abydos") for any mission whose
-    // history message is missing; "No title" is the last resort for unported ids with
-    // neither.
+    if (scenario_id === undefined || scenario_id === null || scenario_id < 0) {
+        return "No title"
+    }
     var orig = __lang_message_title_text(200 + scenario_id)
     if (orig && orig.length > 0) {
         return orig
@@ -20,6 +17,21 @@ function mission_selection_title(scenario_id) {
         return config.selection_title
     }
     return "No title"
+}
+
+function custom_map_selection_title(filename) {
+    var base = filename || ""
+    var slash = base.lastIndexOf("/")
+    var bslash = base.lastIndexOf("\\")
+    var cut = slash > bslash ? slash : bslash
+    if (cut >= 0) {
+        base = base.substring(cut + 1)
+    }
+    var n = base.length
+    if (n >= 4 && base.substring(n - 4).toLowerCase() === ".map") {
+        return base.substring(0, n - 4)
+    }
+    return base
 }
 
 scenario = extend(__scenario, {
