@@ -640,7 +640,9 @@ extern const e_pack_tokens_t e_pack_type_tokens;
 //#define GROUP_FIGURE_SHIP PACK_SPR_MAIN, 34                // 165
 //#define GROUP_FIGURE_TOWER_SENTRY PACK_SPR_MAIN, 194       // TODO
 //#define GROUP_FIGURE_MISSILE PACK_SPR_MAIN, 198            // TODO
-#define GROUP_FIGURE_BALLISTA PACK_SPR_MAIN, 200           // TODO
+// OG image groups 594 / 596 → SprAmbient local 17 / 19 (slot starts after empire group_end 577).
+#define GROUP_FIGURE_BALLISTA PACK_SPR_AMBIENT, 17
+#define GROUP_FIGURE_BALLISTA_FIRE PACK_SPR_AMBIENT, 19
 #define GROUP_FIGURE_CHARIOTEER PACK_SPR_MAIN, 215         // this isn't in Pharaoh
 #define GROUP_FIGURE_HIPPODROME_HORSE_1 PACK_SPR_MAIN, 217 // // this isn't in Pharaoh this isn't in Pharaoh
 #define GROUP_FIGURE_HIPPODROME_HORSE_2 PACK_SPR_MAIN, 218 // this isn't in Pharaoh

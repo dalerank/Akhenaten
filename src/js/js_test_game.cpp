@@ -1766,6 +1766,39 @@ static int __test_figure_type_category(int type) {
 }
 ANK_FUNCTION_1(__test_figure_type_category);
 
+static int __test_figure_type_missile_attack(int type) {
+    if (type <= FIGURE_NONE || type >= FIGURE_MAX) {
+        return -1;
+    }
+    return figure_static_params::get((e_figure_type)type).missile_attack_value;
+}
+ANK_FUNCTION_1(__test_figure_type_missile_attack);
+
+static int __test_figure_type_missile_delay(int type) {
+    if (type <= FIGURE_NONE || type >= FIGURE_MAX) {
+        return -1;
+    }
+    return figure_static_params::get((e_figure_type)type).missile_delay;
+}
+ANK_FUNCTION_1(__test_figure_type_missile_delay);
+
+static int __test_figure_type_missile_range(int type) {
+    if (type <= FIGURE_NONE || type >= FIGURE_MAX) {
+        return -1;
+    }
+    return figure_static_params::get((e_figure_type)type).missile_range;
+}
+ANK_FUNCTION_1(__test_figure_type_missile_range);
+
+static void __test_figure_set_wait_ticks_missile(int fid, int ticks) {
+    figure *f = figure_get(fid);
+    if (!f || !f->is_alive()) {
+        return;
+    }
+    f->wait_ticks_missile = (uint8_t)ticks;
+}
+ANK_FUNCTION_2(__test_figure_set_wait_ticks_missile);
+
 static int __test_mummy_spawn_wave(int count) {
     return figure_mummy::spawn_wave(count);
 }

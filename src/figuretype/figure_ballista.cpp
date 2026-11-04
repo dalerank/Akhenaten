@@ -1,34 +1,40 @@
 ﻿#include "figure_ballista.h"
 
-#include "graphics/view/view.h"
-#include "figure/combat.h"
+#include "building/building.h"
 #include "city/city_figures.h"
+#include "core/calc.h"
+#include "figure/combat.h"
 #include "figuretype/figure_missile.h"
-#include "sound/sound.h"
 #include "game/game_events.h"
+#include "graphics/animkeys.h"
+#include "graphics/image.h"
+#include "graphics/view/view.h"
 #include "js/js_game.h"
+#include "sound/effect.h"
+#include "sound/sound.h"
+
+ballista_rules_t ANK_VARIABLE(ballista_rules);
 
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_ballista);
 
-static const int BALLISTA_FIRING_OFFSETS[] = {
-   0, 1, 2, 3, 4, 5, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-   0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-   0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-   0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 
-};
-
 void figure_ballista::figure_action() {
     building *b = home();
+    runtime_data().shooting = 0;
     base.terrain_usage = TERRAIN_USAGE_WALLS;
     base.use_cross_country = false;
+    // OG is_ghost=1: drawn with tower height, not a ground walker.
     base.height_adjusted_ticks = 10;
-    base.current_height = 45;
+    base.current_height = 0x2D;
 
-    if (b->state != BUILDING_STATE_VALID || !b->has_figure(3, id()))
+    if (!b || b->state != BUILDING_STATE_VALID || !b->has_figure(BUILDING_SLOT_BALLISTA, id())) {
         poof();
-
-    if (b->num_workers <= 0 || !b->has_figure(3))
+        return;
+    }
+    // Goes with its tower workers or its sentry (OG figure_id / slot 0).
+    if (b->num_workers < 1 || !b->has_figure(0)) {
         poof();
+        return;
+    }
 
     base.map_figure_remove();
     switch (g_camera.orientation) {
@@ -45,54 +51,77 @@ void figure_ballista::figure_action() {
         base.tile = b->tile.shifted(0, 1);
         break;
     }
-    //    tile.grid_offset() = MAP_OFFSET(tile.x(), tile.y());
     base.map_figure_add();
+
+    const auto &params = current_params();
+    const int missile_delay = params.missile_delay;
+    const int missile_range = params.missile_range > 0 ? params.missile_range : 15;
+    const auto &rules = ballista_rules;
 
     switch (base.action_state) {
     case FIGURE_ACTION_149_CORPSE:
         poof();
-        break;
+        return;
 
     case ACTION_180_BALLISTA_CREATED:
-        base.wait_ticks++;
-        if (base.wait_ticks > 20) {
-            base.wait_ticks = 0;
+        if (++base.wait_ticks <= rules.search_ticks) {
+            break;
+        }
+        base.wait_ticks = 0;
+        {
             tile2i tile;
-            if (figure_combat_get_missile_target_for_soldier(&base, 15, &tile)) {
+            if (figure_combat_get_missile_target_for_soldier(&base, missile_range, &tile)) {
                 base.action_state = ACTION_181_BALLISTA_FIRING;
-                base.wait_ticks_missile = 100; // figure_properties_for_type(type).missile_delay;
+                base.wait_ticks_missile = (uint8_t)missile_delay;
             }
         }
         break;
 
     case ACTION_181_BALLISTA_FIRING:
-        base.wait_ticks_missile++;
-        if (base.wait_ticks_missile > 100) { // figure_properties_for_type(type).missile_delay) {
+        if (++base.wait_ticks_missile <= missile_delay) {
+            break;
+        }
+        runtime_data().shooting = 1;
+        {
             tile2i tile;
-            if (figure_combat_get_missile_target_for_soldier(&base, 15, &tile)) {
-                base.direction = calc_missile_shooter_direction(tile, tile);
-                base.wait_ticks_missile = 0;
-                figure *f = figure_get(base.target_figure_id);
-                // OG ballista fires FIGURE_JAVELIN (figure_javelin_action), not bolt.
-                figure_missile::create(id(), tile, f->tile, FIGURE_JAVELIN);
-                events::emit(event_sound_effect{ SOUND_EFFECT_BALLISTA_SHOOT });
-            } else {
+            if (!figure_combat_get_missile_target_for_soldier(&base, missile_range, &tile)) {
                 base.action_state = ACTION_180_BALLISTA_CREATED;
+                break;
+            }
+            base.wait_ticks++;
+            base.direction = (uint8_t)calc_missile_shooter_direction(base.tile, tile);
+            if (base.wait_ticks == rules.aim_ticks) {
+                // OG fires FIGURE_JAVELIN (figure_javelin_action), not bolt.
+                figure_missile::create(id(), base.tile, tile, FIGURE_JAVELIN);
+                events::emit(event_sound_effect{SOUND_EFFECT_BALLISTA_SHOOT});
+            } else if (base.wait_ticks > rules.reload_ticks) {
+                base.wait_ticks = 0;
+                base.wait_ticks_missile = 0;
             }
         }
+        break;
+
+    default:
+        base.action_state = ACTION_180_BALLISTA_CREATED;
         break;
     }
 }
 
 void figure_ballista::update_animation() {
     int dir = base.figure_image_direction();
-    if (base.action_state == ACTION_181_BALLISTA_FIRING) {
-        base.main_image_id = image_id_from_group(GROUP_FIGURE_BALLISTA) + dir + 8 * BALLISTA_FIRING_OFFSETS[base.wait_ticks_missile / 4];
+    if (dir < 0) {
+        dir += 8;
+    }
+    dir %= 8;
+
+    if (base.action_state == ACTION_181_BALLISTA_FIRING && runtime_data().shooting) {
+        const int first = anim(animkeys().fire).first_img();
+        base.main_image_id = first + ((base.wait_ticks / 2) * 8) + dir;
     } else {
-        base.main_image_id = image_id_from_group(GROUP_FIGURE_BALLISTA) + dir;
+        const int first = anim(animkeys().walk).first_img();
+        base.main_image_id = first + dir;
     }
 }
 
 void figure_ballista::before_poof() {
-    // do nothing
 }

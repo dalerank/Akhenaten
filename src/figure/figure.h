@@ -284,7 +284,7 @@ public:
     void poof();
     inline bool available() { return state == FIGURE_STATE_NONE; };
     inline bool is_valid() const { return state != FIGURE_STATE_NONE; }
-    inline bool is_alive() { return state == FIGURE_STATE_ALIVE; }
+    inline bool is_alive() const { return state == FIGURE_STATE_ALIVE; }
     inline bool has_type(e_figure_type value) { return type == value; }
     inline bool has_state(e_figure_state value) { return state == value; }
     bool has_cart() const;

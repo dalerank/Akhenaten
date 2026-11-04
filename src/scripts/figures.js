@@ -230,17 +230,27 @@ figure_horses = {
 	terrain_usage : TERRAIN_USAGE_ANIMAL,
 }
 
+// OG military.c figure_ballista_action (FIG_BALLISTA).
+ballista_rules {
+	search_ticks: 20
+	aim_ticks: 10
+	reload_ticks: 23
+}
+
 figure_ballista {
 	animations {
-		flying { pack:PACK_SPR_MAIN, id:114, max_frames:25, loop:true }
-		eating { pack:PACK_SPR_MAIN, id:115, max_frames:25 }
+		// OG IMAGE_GROUP_FIGURE_BALLISTA / _FIRE (SprAmbient 17 / 19).
+		walk { pack:PACK_SPR_AMBIENT, id:17, max_frames:8 }
+		fire { pack:PACK_SPR_AMBIENT, id:19, max_frames:12 }
 		big_image : { pack:PACK_UNLOADED, id:25, offset:FIGURE_BALLISTA }
 	}
 
 	category: figure_category_inactive
 	max_damage: 100
 	missile_attack_value: 100
-	terrain_usage : TERRAIN_USAGE_ANIMAL
+	missile_delay: 100
+	missile_range: 15
+	terrain_usage : TERRAIN_USAGE_WALLS
 }
 
 figure_birds = {

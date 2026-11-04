@@ -15,7 +15,7 @@ REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_javelin);
 // OG map_figure_find_target / is_attack_target (military.c figure_javelin_action).
 static bool javelin_is_attack_target(const figure *f) {
     // Poof sets FIGURE_STATE_DEAD before the figure leaves the tile map.
-    if (!f || !f->is_alive() || f->action_state == FIGURE_ACTION_149_CORPSE) {
+    if (!f || f->state != FIGURE_STATE_ALIVE || f->action_state == FIGURE_ACTION_149_CORPSE) {
         return false;
     }
     if (f->is_enemy()) {
