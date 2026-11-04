@@ -1,12 +1,15 @@
 ﻿#include "building_farm.h"
 
+#include "building/building_granary.h"
 #include "core/object_property.h"
 #include "city/object_info.h"
 #include "city/city_resource.h"
 #include "city/city.h"
+#include "city/city_warnings.h"
 #include "core/calc.h"
 #include "game/resource.h"
 #include "game/game.h"
+#include "game/game_events.h"
 #include "graphics/elements/panel.h"
 #include "graphics/elements/lang_text.h"
 #include "graphics/view/view.h"
@@ -277,7 +280,7 @@ void building_farm::bind_dynamic(io_buffer *iob, size_t version) {
 
     auto &d = runtime_data();
     iob->bind(BIND_SIGNATURE_UINT16, &base.progress_max);
-    iob->bind(BIND_SIGNATURE_UINT8, &d.produce_multiplier);
+    iob->bind____skip(1); // was produce_multiplier (removed; keep save layout)
     iob->bind(BIND_SIGNATURE_UINT16, &d.work_camp_id);
     iob->bind(BIND_SIGNATURE_UINT16, &d.worker_id);
     iob->bind(BIND_SIGNATURE_UINT8, &d.labor_state);
@@ -308,18 +311,11 @@ int building_farm::expected_produce() {
     // In OG Pharaoh, the progress value gets counted as if it was rounded
     // down to the lowest 20 points. No idea why! But here's as an option.
 
+    // OG farm_harvest_loads: floodplain harvest doubles while the city Osiris flag is set.
     float modifier = 1.f;
-    const bool osiris_blessing = (g_city.religion.osiris_double_farm_yield_days > 0);
-    if (base.is_floodplain_farm()) {
-        if (osiris_blessing) {
-            modifier = 2.f;
-        } else {
-            modifier = (1.f + d.produce_multiplier / 100.f);
-        }
-    } else {
-        modifier = (1.f + d.produce_multiplier / 100.f);
+    if (base.is_floodplain_farm() && g_city.religion.osiris_double_farm_yield_days > 0) {
+        modifier = 2.f;
     }
-    d.produce_multiplier = 0.f;
 
     return int((progress / 2.5f) * modifier);
 }
@@ -339,32 +335,33 @@ void building_farm::spawn_figure_harvests() {
             int farm_fertility = map_get_fertility_for_farm(tile());
 
             d.ready_production = base.progress * farm_fertility / 100;
-            {
-                const int expected_produce = this->expected_produce();
-                produced_resources(base.output.resource, expected_produce);
-                figure *f = create_cartpusher(base.output.resource, expected_produce, (e_figure_action)ACTION_20_CARTPUSHER_INITIAL, BUILDING_SLOT_CARTPUSHER);
-                building_farm *farm = dcast_farm();
-                farm->deplete_soil();
+            // OG: any floodplain harvest under the blessing marks the flag used; clear after the wave.
+            if (g_city.religion.osiris_double_farm_yield_days > 0) {
+                g_city.religion.osiris_double_farm_yield_used = true;
+            }
+            const int primary = this->expected_produce();
+            produced_resources(base.output.resource, primary);
+            figure *f = create_cartpusher(base.output.resource, primary, (e_figure_action)ACTION_20_CARTPUSHER_INITIAL, BUILDING_SLOT_CARTPUSHER);
+            deplete_soil();
+            f->sender_building_id = id();
 
-                f->sender_building_id = id();
-
-                base.progress = 0;
-                d.ready_production = 0;
-                d.worker_id = 0;
-                d.work_camp_id = 0;
-                d.labor_state = LABOR_STATE_NONE;
-                d.labor_days_left = 0;
-                base.num_workers = 0;
+            // OG building_figure.c: grain harvest also sends a fixed 100-load straw cart (not progress-based).
+            if (base.output.resource_second != RESOURCE_NONE
+                && !g_city.resource.is_mothballed(base.output.resource_second)) {
+                const int secondary = 100;
+                produced_resources(base.output.resource_second, secondary);
+                figure *f2 = create_cartpusher(base.output.resource_second, secondary,
+                    (e_figure_action)ACTION_20_CARTPUSHER_INITIAL, BUILDING_SLOT_CARTPUSHER_2);
+                f2->sender_building_id = id();
             }
 
-            if (base.output.resource_second != RESOURCE_NONE) {
-                const int rate = std::max<int>(1, base.output_resource_second_rate);
-                const int expected_produce = this->expected_produce();
-                const int second_produce_expected = expected_produce / rate;
-                produced_resources(base.output.resource_second, second_produce_expected);
-                figure *f = create_cartpusher(base.output.resource_second, second_produce_expected, (e_figure_action)ACTION_20_CARTPUSHER_INITIAL, BUILDING_SLOT_CARTPUSHER_2);
-                f->sender_building_id = id();
-            }
+            base.progress = 0;
+            d.ready_production = 0;
+            d.worker_id = 0;
+            d.work_camp_id = 0;
+            d.labor_state = LABOR_STATE_NONE;
+            d.labor_days_left = 0;
+            base.num_workers = 0;
         }
     } else { // meadow farms
         if (base.has_road_access) {
@@ -372,9 +369,18 @@ void building_farm::spawn_figure_harvests() {
                 return;
             }
 
-            const int amount = expected_produce();
-            produced_resources(base.output.resource, amount);
-            create_cartpusher(base.output.resource, amount, (e_figure_action)ACTION_20_CARTPUSHER_INITIAL, BUILDING_SLOT_CARTPUSHER);
+            const int primary = expected_produce();
+            produced_resources(base.output.resource, primary);
+            create_cartpusher(base.output.resource, primary, (e_figure_action)ACTION_20_CARTPUSHER_INITIAL, BUILDING_SLOT_CARTPUSHER);
+
+            if (base.output.resource_second != RESOURCE_NONE
+                && !g_city.resource.is_mothballed(base.output.resource_second)) {
+                const int secondary = 100;
+                produced_resources(base.output.resource_second, secondary);
+                figure *f2 = create_cartpusher(base.output.resource_second, secondary,
+                    (e_figure_action)ACTION_20_CARTPUSHER_INITIAL, BUILDING_SLOT_CARTPUSHER_2);
+                f2->sender_building_id = id();
+            }
             start_production();
         }
     }
@@ -455,4 +461,67 @@ void building_farm::deplete_soil() {
         }
     }
     update_tiles_image();
+}
+
+int building_farm::food_warning() {
+    // OG map/farm.c building_farm_food_warning — once near flood start.
+    enum {
+        PRODUCE_FACTOR = 8,
+        MIN_PRODUCE = 800,
+        GRANARY_GAP = 50,
+        GRANARIES_GAP = 3200,
+    };
+
+    int produced = 0;
+    buildings_valid_do([&](building &b) {
+        if (!b.is_floodplain_farm()) {
+            return;
+        }
+        // Industrial crops are not food for this warning.
+        switch (b.type) {
+        case BUILDING_BARLEY_FARM:
+        case BUILDING_FLAX_FARM:
+        case BUILDING_HENNA_FARM:
+            return;
+        default:
+            break;
+        }
+
+        const int fert = map_get_fertility_for_farm(b.tile);
+        const int laborers = building_static_params::get(b.type).laborers;
+        // OG: fertility * 0.16 * (1/99) * laborers * 10
+        const int expected = std::max(1, (int)((double)fert * 0.16 * (1.0 / 99.0) * laborers * 10.0));
+        const int progress_max = b.progress_max > 0 ? b.progress_max : 2000;
+        const int growth_pct = calc_percentage<int>(b.progress, progress_max);
+        int amount = (expected + growth_pct) * PRODUCE_FACTOR;
+        if (amount < MIN_PRODUCE) {
+            amount = MIN_PRODUCE;
+        }
+        if (g_city.religion.osiris_double_farm_yield_days > 0) {
+            amount += amount;
+        }
+        produced += amount;
+    });
+
+    int free_space = 0;
+    buildings_valid_do([&](building &b) {
+        if (b.type != BUILDING_GRANARY && b.type != BUILDING_GRANARY_UP) {
+            return;
+        }
+        auto *g = b.dcast_granary();
+        if (g) {
+            free_space += g->freespace();
+        }
+    });
+
+    const int gap = produced - free_space;
+    if (gap > GRANARIES_GAP) {
+        events::emit(event_city_warning{ "#build_granaries" });
+        return 2;
+    }
+    if (gap > GRANARY_GAP) {
+        events::emit(event_city_warning{ "#build_granary" });
+        return 1;
+    }
+    return 0;
 }

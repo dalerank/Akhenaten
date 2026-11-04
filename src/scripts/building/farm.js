@@ -79,7 +79,6 @@ building_meadow_farm_tile_offsets = [
       is_industry: true
       is_food: true
     }
-    output_resource_second_rate : 10
 
     build_menu_text : "Grain Meadow Farm"
     info_sound : "Wavs/farm1.wav"
@@ -128,7 +127,6 @@ building_meadow_farm_tile_offsets = [
       is_industry: true
       is_food: true
     }
-    output_resource_second_rate : 10
 
     building_size : 3
     month_harvest: [MONTH_JANUARY, MONTH_MAY]

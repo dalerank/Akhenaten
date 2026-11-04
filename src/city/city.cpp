@@ -603,6 +603,11 @@ void city_t::buildings_generate_figure() {
             break;
         }
     });
+
+    if (religion.osiris_double_farm_yield_used) {
+        religion.osiris_double_farm_yield_days = 0;
+        religion.osiris_double_farm_yield_used = false;
+    }
 }
 
 void city_t::plague_update_day() {

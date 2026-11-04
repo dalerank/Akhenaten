@@ -133,7 +133,6 @@ void building_industry_update_farms(void) {
         int fert = map_get_fertility_for_farm(b.tile.grid_offset());
         // Truncate base first (OG / remake meadow parity). Basin bonus applied after.
         int progress_step = (int)((float)fert * get_farm_produce_uptick_per_day(b)); // 0.16f
-        const bool osiris_blessing = g_city.religion.osiris_double_farm_yield_days > 0;
 
         // Sealed basin holds moisture → slightly faster progress while labor is present.
         if (is_floodplain && game_features::gameplay_enhanced_flood_basins.to_bool()
@@ -144,11 +143,6 @@ void building_industry_update_farms(void) {
                 boosted = progress_step + 1;
             }
             progress_step = boosted;
-        }
-        
-        auto& farmd = farm->runtime_data();
-        if (osiris_blessing) {
-            farmd.produce_multiplier++;
         }
 
         if (is_floodplain) { // floodplain farms

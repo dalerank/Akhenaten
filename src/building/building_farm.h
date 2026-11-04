@@ -38,7 +38,6 @@ public:
         uint8_t labor_days_left;
         e_labor_state labor_state;
         building_id work_camp_id;
-        uint8_t produce_multiplier;
     } BUILDING_RUNTIME_DATA_T;
 
     virtual void on_create(int orientation) override;
@@ -73,6 +72,8 @@ public:
     void restore_tiles_if_emerged();
     void spawn_figure_harvests();
     inline bool is_floodplain_farm() const { return base.is_floodplain_farm(); }
+
+    static int food_warning();
 
     virtual void add_workers(figure_id fid) override;
     virtual void remove_worker(figure_id fid) override;

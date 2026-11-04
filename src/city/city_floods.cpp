@@ -367,6 +367,9 @@ void floods_t::tick_update(bool calc_only) {
 
     // update at every full cycle
     if (subcycle == 0) {
+        if (!calc_only && cycle == cycle_start - 49) {
+            building_farm::food_warning();
+        }
         if (cycle == cycle_start - 1) {
             if (!calc_only) {
                 update_next_flood_params();

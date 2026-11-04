@@ -258,7 +258,7 @@
           <tbody>
             <tr>
               <td><strong>Grain</strong></td>
-              <td>grain + straw (1:10)</td>
+              <td>grain + straw (100 loads)</td>
               <td>January, May</td>
               <td>January, May</td>
               <td>grain → <a href="granary.html">Granary</a> → food; straw → Cattle Ranch, Brickworks, Zoo</td>
@@ -335,7 +335,7 @@
       <p>At harvest, the yield formula is:</p>
       <div style="background:var(--surface);border:1px solid var(--border);border-radius:3px;padding:0.6rem 1rem;margin:0.75rem 0;font-family:'Consolas','Courier New',monospace;font-size:0.82rem">
         yield = (progress / 2.5) × modifier<br/>
-        <span style="color:var(--text-muted)">// modifier = 1 + produce_multiplier/100 (Osiris blessing doubles yield: modifier = 2)</span><br/>
+        <span style="color:var(--text-muted)">// modifier = 2 for floodplain farms while the city Osiris double-yield flag is set; else 1</span><br/>
         <span style="color:var(--text-muted)">// floodplain: ready_production = progress × fertility / 100</span>
       </div>
       <p>A farm at 100% progress (2000) on 100% fertile soil with no blessings delivers the theoretical maximum. In practice, partial harvests are common — a farm whose laborer arrived late in the growing season will have lower progress and deliver less.</p>
@@ -344,7 +344,7 @@
       <p>Every harvest depletes the soil: tile fertility drops significantly after a crop is taken. The next flood naturally restores fertility — so floodplain farms that experience a strong inundation start the next season with good fertility regardless of the previous harvest. Conversely, if the flood is weak, tiles may still be depleted from the prior year, and yields will be lower. Osiris worship is the primary tool for ensuring strong floods.</p>
 
       <h3>Osiris blessing</h3>
-      <p>An active Osiris blessing (from a Temple Complex of Osiris) doubles the harvest modifier. This is the single largest yield multiplier in the game. Even a partially-progressed farm under an Osiris blessing can outperform a full-progress farm without one.</p>
+      <p>A major Osiris blessing sets a city flag that doubles <strong>floodplain</strong> farm yields at harvest (meadow farms are unchanged). The flag clears after a harvest that used it. This is the single largest yield multiplier in the game.</p>
 
       <h3>Locust blight</h3>
       <p>When Osiris is wrathful — or when a <strong>Plague of Locusts</strong> strikes — a swarm descends and <strong>destroys growing crops</strong> on floodplain and meadow farms alike. Blighted farms show no progress until the curse wears off (several months). City sentiment also falls. Keeping Osiris content is the main defense; locusts can also arrive as a random Major Plague.</p>
@@ -365,7 +365,7 @@
       <ul>
         <li>Floodplain farms produce only one crop per year. Build enough <a href="granary.html">Granaries</a> to store the entire harvest before placing farms — if all Granaries are full when the cartpusher arrives, the food is lost.</li>
         <li>Pomegranates and Barley each harvest twice a year (floodplain and meadow). They are efficient crops when your Nile has a long growing season.</li>
-        <li>Grain farms produce straw as a free byproduct at a 10:1 ratio. If you have Cattle Ranches or Brickworks, a single Grain Farm can supply a small amount of straw without dedicated effort.</li>
+        <li>Grain farms send a fixed 100-load straw cart with every harvest (if straw is not mothballed). One Grain Farm can feed Cattle Ranches, Brickworks, or the Zoo without a dedicated straw industry.</li>
         <li>Industrial crops (Barley, Flax, Henna) go directly to workshops, not Granaries. Build the workshop <em>before</em> the farm, or the first harvest cartpusher will wander looking for a destination and end up at a Storage Yard.</li>
         <li>One Barley Farm can typically supply two Breweries at full output. Scale proportionally.</li>
         <li>Meadow farms are more consistent than floodplain farms in poor-flood years — they are never affected by inundation quality. Use them for industrial crops if your Osiris mood is unreliable.</li>
@@ -404,7 +404,7 @@
             <p>All 16 farm variants are defined in <span class="file-ref">src/scripts/building/farm.js</span>. Each entry follows the same structure; here is the floodplain grain farm as a representative example:</p>
             <pre><code><span class="kw">building_farm_grain</span> {
   <span class="kw">output</span>  { resource: RESOURCE_GRAIN, resource_second: RESOURCE_STRAW }
-  <span class="kw">output_resource_second_rate</span> : <span class="num">10</span>   <span class="cmt">// 1 straw per 10 grain</span>
+  <span class="cmt">// harvest also spawns a fixed 100-load straw cart (OG)</span>
 
   <span class="kw">building_size</span>  : <span class="num">3</span>
   <span class="kw">month_harvest</span>  : [MONTH_JANUARY, MONTH_MAY]
@@ -448,7 +448,7 @@
 d.ready_production = d.progress * farm_fertility / <span class="num">100</span>;
 <span class="kw">int</span> yield = <span class="fn">expected_produce</span>();
 <span class="cmt">// expected_produce() = (progress / 2.5) * modifier</span>
-<span class="cmt">// modifier = 1 + produce_multiplier/100  (or 2.0 under Osiris blessing)</span>
+<span class="cmt">// floodplain + city Osiris double-yield flag → modifier = 2; else 1</span>
 
 <span class="cmt">// Placement rule: 4 of 9 tiles must be TERRAIN_FLOODPLAIN | TERRAIN_MEADOW</span>
 

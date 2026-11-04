@@ -1,5 +1,6 @@
 #include "building_farm.h"
 
+#include "city/city.h"
 #include "core/calc.h"
 #include "core/profiler.h"
 #include "grid/floodplain.h"
@@ -79,3 +80,55 @@ bool __farm_requested_workers(int bid) {
     return farm && farm->requested_workers();
 }
 ANK_FUNCTION_1(__farm_requested_workers)
+
+int __building_farm_expected_produce(int bid) {
+    building_farm *farm = building_get(bid)->dcast_farm();
+    return farm ? farm->expected_produce() : 0;
+}
+ANK_FUNCTION_1(__building_farm_expected_produce)
+
+void __test_set_osiris_double_farm_yield(int active) {
+    g_city.religion.osiris_double_farm_yield_days = active ? 1 : 0;
+    g_city.religion.osiris_double_farm_yield_used = false;
+}
+ANK_FUNCTION_1(__test_set_osiris_double_farm_yield)
+
+void __test_farm_harvest_and_clear_osiris(int bid) {
+    building *b = building_get(bid);
+    building_farm *farm = b ? b->dcast_farm() : nullptr;
+    if (!farm) {
+        return;
+    }
+    b->has_road_access = true;
+    farm->spawn_figure_harvests();
+    if (g_city.religion.osiris_double_farm_yield_used) {
+        g_city.religion.osiris_double_farm_yield_days = 0;
+        g_city.religion.osiris_double_farm_yield_used = false;
+    }
+}
+ANK_FUNCTION_1(__test_farm_harvest_and_clear_osiris)
+
+int __test_farm_food_warning() {
+    return building_farm::food_warning();
+}
+ANK_FUNCTION(__test_farm_food_warning)
+
+int __building_farm_cart_resource(int bid, int slot) {
+    building *b = building_get(bid);
+    if (!b) {
+        return RESOURCE_NONE;
+    }
+    figure *f = b->get_figure(slot);
+    return f ? f->get_resource() : RESOURCE_NONE;
+}
+ANK_FUNCTION_2(__building_farm_cart_resource)
+
+int __building_farm_cart_amount(int bid, int slot) {
+    building *b = building_get(bid);
+    if (!b) {
+        return 0;
+    }
+    figure *f = b->get_figure(slot);
+    return f ? f->get_carrying_amount() : 0;
+}
+ANK_FUNCTION_2(__building_farm_cart_amount)
