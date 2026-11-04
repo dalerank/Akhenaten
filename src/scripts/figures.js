@@ -343,6 +343,7 @@ missile_rules {
     max_defense: 20
     damage_base: 30
     arrow_image_offset: 16
+    bolt_image_offset: 32
     image_directions: 16
     facing_away_penalty: 4
     single_line_bonus: 4
@@ -402,16 +403,17 @@ figure_javelin = {
     terrain_usage : TERRAIN_USAGE_ANY
 }
 
+// OG FIG_BOLT: game never spawns it in play (only test / create); ballista fires javelin.
 figure_bolt = {
 	animations : {
-		walk : { pack:PACK_SPR_MAIN, id:198, max_frames:12 }
+		walk : { pack:PACK_SPR_MAIN, id:0, max_frames:16 }
+		big_image : { pack:PACK_UNLOADED, id:25, offset:FIGURE_BOLT }
 	}
 
 	category: figure_category_inactive
-  max_damage : 100
-  missile_attack_value : 100
-  terrain_usage : TERRAIN_USAGE_ANY,
-  big_image : { pack:PACK_UNLOADED, id:25, offset:FIGURE_BOLT }
+    max_damage : 100
+    missile_attack_value : 100
+    terrain_usage : TERRAIN_USAGE_ANY
 }
 
 figure_standard_bearer {

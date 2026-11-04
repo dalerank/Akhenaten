@@ -21,7 +21,6 @@ missile_rules_t ANK_VARIABLE(missile_rules);
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_hunter_arrow);
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_arrow);
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_spear);
-REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_bolt);
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_antelope_hunter_javelin);
 
 figure_missile* figure_missile::create(figure_id fid, tile2i src, tile2i dst, e_figure_type type) {
@@ -164,7 +163,7 @@ static figure_id arrow_missile_hit_target(tile2i tile) {
     return 0;
 }
 
-static int arrow_missile_defense(figure *target, formation *legion, int defense) {
+int missile_og_defense(figure *target, formation *legion, int defense) {
     const auto &r = missile_rules;
     if (defense >= r.max_defense) {
         defense = r.max_defense;
@@ -196,7 +195,7 @@ static int arrow_missile_defense(figure *target, formation *legion, int defense)
     return defense;
 }
 
-static int arrow_missile_damage(int attack, int defense) {
+int missile_og_damage(int attack, int defense) {
     if (attack == 0) {
         return 0;
     }
@@ -228,13 +227,13 @@ void figure_arrow::figure_action() {
     if (target->faction_id == 1 && m) {
         bonus = (m->experience + 10) / 20;
     }
-    const int defense = arrow_missile_defense(target, m, target->missile_defense_value() + bonus);
+    const int defense = missile_og_defense(target, m, target->missile_defense_value() + bonus);
     // OG: attack from figure_properties[FIGURE_ARROW], not shooter.
     int attack = params().missile_attack_value;
     if (attack <= 0) {
         attack = runtime_data().missile_attack_value;
     }
-    const int damage = arrow_missile_damage(attack, defense);
+    const int damage = missile_og_damage(attack, defense);
     const int max_damage = target->max_damage();
     const int total = target->damage + damage;
     if (total > max_damage) {
@@ -345,43 +344,4 @@ void figure_spear::figure_action() {
     base.main_image_id = anim(animkeys().walk).first_img() + dir;
 }
 
-void figure_bolt::figure_action() {
-    base.use_cross_country = true;
-    base.progress_on_tile++;
-    if (base.progress_on_tile > 120) {
-        poof();
-    }
-
-    int should_die = base.move_ticks_cross_country(4);
-    int target_id = get_non_citizen_on_tile();
-    if (target_id) {
-        figure* target = figure_get(target_id);
-        int target_max_damage = target->max_damage();
-        int damage_inflicted = runtime_data().missile_attack_value - target->missile_defense_value();
-        if (damage_inflicted < 0) {
-            damage_inflicted = 0;
-        }
-
-        int target_damage = damage_inflicted + target->damage;
-        if (target_damage < target_max_damage) {
-            target->damage = target_damage;
-        } else { // poof target
-            target->damage = target_max_damage + 1;
-            target->kill();
-            target->wait_ticks = 0;
-            target->play_die_sound();
-            formation_update_morale_after_death(formation_get(target->formation_id));
-        }
-
-        g_sound.play_effect(SOUND_EFFECT_BALLISTA_HIT_PERSON);
-        poof();
-
-    } else if (should_die) {
-        g_sound.play_effect(SOUND_EFFECT_BALLISTA_HIT_GROUND);
-        poof();
-    }
-
-    int dir = (16 + direction() - 2 * g_camera.orientation) % 16;
-    base.main_image_id = anim(animkeys().walk).first_img() + 32 + dir;
-}
 
