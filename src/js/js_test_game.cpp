@@ -4987,6 +4987,18 @@ static void __test_building_set_workers(int bid, int workers) {
 }
 ANK_FUNCTION_2(__test_building_set_workers);
 
+static void __test_building_spawn_figure(int bid) {
+    building *b = building_get(bid);
+    if (!b || !b->is_valid()) {
+        return;
+    }
+    b->has_road_access = true;
+    if (auto *impl = b->dcast()) {
+        impl->spawn_figure();
+    }
+}
+ANK_FUNCTION_1(__test_building_spawn_figure);
+
 static void __test_update_malaria_risk() {
     g_malaria_risk.update();
     building_update_malaria_risk();

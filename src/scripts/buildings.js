@@ -50,6 +50,7 @@ import building.pyramid
 import building.farm
 import building.fort
 import building.recruiter
+import building.military_academy
 import building.education
 import building.academy
 import building.apothecary

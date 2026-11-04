@@ -100,18 +100,28 @@ formation_id building_recruiter::get_closest_batalion_needing_soldiers() {
     return best_formation_id;
 }
 
+static bool building_is_military_academy(e_building_type type) {
+    return type == BUILDING_MILITARY_ACADEMY
+        || type == BUILDING_MILITARY_ACADEMY_2
+        || type == BUILDING_MILITARY_ACADEMY_3;
+}
+
+// OG formation_find_closest_academy: working academy (full laborers) nearest the fort.
 static int get_closest_military_academy(building* fort) {
     int min_building_id = 0;
     int min_distance = INFINITE;
     for (int i = 1; i < MAX_BUILDINGS; i++) {
         building* b = building_get(i);
-        if (b->state == BUILDING_STATE_VALID && b->type == BUILDING_MILITARY_ACADEMY
-            && b->num_workers >= (b->max_workers / 2)) {
-            int dist = calc_maximum_distance(fort->tile, b->tile);
-            if (dist < min_distance) {
-                min_distance = dist;
-                min_building_id = i;
-            }
+        if (b->state != BUILDING_STATE_VALID || !building_is_military_academy(b->type)) {
+            continue;
+        }
+        if (b->max_workers > b->num_workers) {
+            continue;
+        }
+        int dist = calc_maximum_distance(fort->tile, b->tile);
+        if (dist < min_distance) {
+            min_distance = dist;
+            min_building_id = i;
         }
     }
     return min_building_id;

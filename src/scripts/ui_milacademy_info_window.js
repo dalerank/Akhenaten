@@ -11,11 +11,14 @@ info_window_milacademy {
 [es=(info_window_milacademy, init)]
 function info_window_milacademy_on_init(window) {
     var b = city.get_building(window.bid)
+    // OG group 135: 0 description (understaffed), 2 no staff, 3 training (full).
     var reason = { group: b.meta_text_id, id: 0 }
     if (b.has_road_access == false) {
         reason = { key: "#building_no_road_access" }
-    } else if (b.num_workers <= 0) {
+    } else if (b.num_workers < 1) {
         reason.id = 2
+    } else if (b.num_workers >= b.max_workers) {
+        reason.id = 3
     }
 
     window.warning_text.text = __loc(reason)

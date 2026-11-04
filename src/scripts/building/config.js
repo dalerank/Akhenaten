@@ -96,39 +96,6 @@ building_carpenters_guild = {
   }
 }
 
-building_military_academy = {
-  animations : {
-    preview : { pos : [0, 0], pack:PACK_GENERAL, id:173 },
-    base : { pos : [0, 0], pack:PACK_GENERAL, id:173 },
-    work : { pos : [33, -38], pack:PACK_GENERAL, id:173, offset:1, max_frames:12 }
-  },
-  meta : { text_id: 135, help_link:"message_building_recruiter_academy" }
-  building_size : 4,
-  min_houses_coverage : 50
-  cost : [ 240, 300, 500, 1000, 1500 ]
-  desirability : { value:[8], step:[2], step_size:[-2], range: [6] }
-  laborers:[25], fire_risk:[4], damage_risk: [1]
-  flags {
-    is_military: true
-  }
-}
-
-building_military_academy_adv = {
-  animations : {
-    preview : { pos : [0, 0], pack:PACK_GENERAL, id:173 },
-    base : { pos : [0, 0], pack:PACK_GENERAL, id:173 },
-    work : { pos : [33, -38], pack:PACK_GENERAL, id:173, offset:1, max_frames:12 }
-  },
-  meta : { text_id: 135, help_link:"message_building_recruiter_academy" }
-  building_size : 4,
-  cost : [ 300, 500, 1000, 1500, 2000 ]
-  desirability : { value:[8], step:[2], step_size:[-2], range: [6] }
-  laborers:[30], fire_risk:[4], damage_risk: [1]
-  flags {
-    is_military: true
-  }
-}
-
 building_reed_gatherer {
   animations {
     preview { pos : [0, 0], pack:PACK_GENERAL, id:24 }
