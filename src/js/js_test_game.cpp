@@ -1810,6 +1810,34 @@ static void __test_make_wall(int x, int y) {
 }
 ANK_FUNCTION_2(__test_make_wall);
 
+static void __test_make_road(int x, int y) {
+    map_terrain_add(tile2i(x, y), TERRAIN_ROAD);
+}
+ANK_FUNCTION_2(__test_make_road);
+
+static void __test_building_set_road_access(int bid, int x, int y) {
+    building *b = building_get(bid);
+    if (!b) {
+        return;
+    }
+    b->has_road_access = true;
+    b->road_access = tile2i(x, y);
+    if (b->road_network_id <= 0) {
+        b->road_network_id = 1;
+    }
+}
+ANK_FUNCTION_3(__test_building_set_road_access);
+
+static void __test_map_building_damage_set(int x, int y, int value) {
+    map_building_damage_set(tile2i(x, y).grid_offset(), value);
+}
+ANK_FUNCTION_3(__test_map_building_damage_set);
+
+static int __test_map_building_damage_get(int x, int y) {
+    return map_get_building_damage(tile2i(x, y).grid_offset());
+}
+ANK_FUNCTION_2(__test_map_building_damage_get);
+
 static void __test_barracks_request_tower_sentry() {
     building_barracks_request_tower_sentry();
 }
