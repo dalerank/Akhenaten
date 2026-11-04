@@ -383,7 +383,11 @@ static void setup() {
         }
     }
 
-    if (!skip_data_bootstrap) {
+    // Options window may enable --integraltests / --no-resource after skip_data_bootstrap
+    // was computed — re-check live args here.
+    const bool skip_engine_data = g_args.is_integral_tests() || g_args.no_resource() || platform.is_android()
+                                  || platform.is_emscripten();
+    if (!skip_engine_data) {
         if (!check_engine_data_files()) {
             logs::error("Exiting: Akhenaten engine data files missing");
             exit(2);

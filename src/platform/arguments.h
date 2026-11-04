@@ -93,11 +93,14 @@ public:
     [[nodiscard]] e_features_profile features_profile() const;
     [[nodiscard]] bool should_unpack_scripts() const { return is("unpack_scripts", false); }
     [[nodiscard]] bool is_integral_tests() const { return is("integral_tests", false); }
+    void set_integral_tests(bool flag = true) { args_["integral_tests"] = bvariant(flag); }
     [[nodiscard]] bool is_editor() const { return is("editor", false); }
     [[nodiscard]] bool no_logo() const { return is("no_logo", false); }
+    void set_no_logo(bool flag = true) { args_["no_logo"] = bvariant(flag); }
     [[nodiscard]] bool no_intro() const { return is("nointro", false); }
     [[nodiscard]] bool no_mouse() const { return is("nomouse", false); }
     [[nodiscard]] bool no_resource() const { return is("no_resource", false); }
+    void set_no_resource(bool flag = true) { args_["no_resource"] = bvariant(flag); }
     [[nodiscard]] bool no_data_check() const { return is("no_data_check", false); }
 
     [[nodiscard]] const xstring& get_language() const { return get_str("language"); }
@@ -106,6 +109,7 @@ public:
     [[nodiscard]] const xstring& get_custom_font() const { return get_str("custom_font"); }
     [[nodiscard]] const xstring& get_load_map() const { return get_str("load_map"); }
     [[nodiscard]] const xstring& get_integraltest_only() const { return get_str("integraltest_only"); }
+    void set_integraltest_only(pcstr value);
     [[nodiscard]] const xstring& get_extract_installer() const { return get_str("extract_installer"); }
     [[nodiscard]] const xstring& get_extract_dir() const { return get_str("extract_dir"); }
     [[nodiscard]] const xstring& get_screenshot_dir() const { return get_str("screenshot_dir"); }

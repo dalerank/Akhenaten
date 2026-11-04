@@ -341,39 +341,7 @@ void run_integral_tests_impl() {
 }
 
 hvector<xstring, 16> list_test_files() {
-    hvector<xstring, 16> found_tests;
-    auto add_tests_from_folder = [&](pcstr root) {
-        vfs::dir_look_entries(root, [&](pcstr e, bool is_folder) {
-            if (is_folder || !e) {
-                return;
-            }
-            // Skip files whose basename starts with '_' (disabled tests). `e`
-            // here is the full path returned by the directory iterator, so we
-            // need to look past the last path separator.
-            pcstr basename = e;
-            for (pcstr p = e; *p; ++p) {
-                if (*p == '/' || *p == '\\') {
-                    basename = p + 1;
-                }
-            }
-            if (*basename == '_') {
-                return;
-            }
-            // vfs::file_has_extension expects the extension without the dot.
-            if (!vfs::file_has_extension(e, "js")) {
-                return;
-            }
-            vfs::path path = e;
-            found_tests.push_back(path.tolower().c_str());
-        });
-    };
-
-    add_tests_from_folder("tests");
-    add_tests_from_folder("../tests");
-
-    std::sort(found_tests.begin(), found_tests.end(), [](const xstring &a, const xstring &b) {
-        return std::strcmp(a.c_str(), b.c_str()) < 0;
-    });
+    hvector<xstring, 16> found_tests = list_integral_test_files();
 
     logs::info("[integraltests] %d test file(s)", (int)found_tests.size());
     for (const auto &p : found_tests) {
@@ -586,6 +554,43 @@ int run_js_tests() {
 }
 
 } // namespace
+
+hvector<xstring, 16> list_integral_test_files() {
+    hvector<xstring, 16> found_tests;
+    auto add_tests_from_folder = [&](pcstr root) {
+        vfs::dir_look_entries(root, [&](pcstr e, bool is_folder) {
+            if (is_folder || !e) {
+                return;
+            }
+            // Skip files whose basename starts with '_' (disabled tests). `e`
+            // here is the full path returned by the directory iterator, so we
+            // need to look past the last path separator.
+            pcstr basename = e;
+            for (pcstr p = e; *p; ++p) {
+                if (*p == '/' || *p == '\\') {
+                    basename = p + 1;
+                }
+            }
+            if (*basename == '_') {
+                return;
+            }
+            // vfs::file_has_extension expects the extension without the dot.
+            if (!vfs::file_has_extension(e, "js")) {
+                return;
+            }
+            vfs::path path = e;
+            found_tests.push_back(path.tolower().c_str());
+        });
+    };
+
+    add_tests_from_folder("tests");
+    add_tests_from_folder("../tests");
+
+    std::sort(found_tests.begin(), found_tests.end(), [](const xstring &a, const xstring &b) {
+        return std::strcmp(a.c_str(), b.c_str()) < 0;
+    });
+    return found_tests;
+}
 
 int run_integral_tests() {
     failure_count = 0;

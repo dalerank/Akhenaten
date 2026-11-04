@@ -2,6 +2,7 @@
 
 #include "platform/arguments.h"
 #include "platform/innoextract_util.h"
+#include "platform/integral_tests.h"
 #include "platform/platform.h"
 #include "platform/prefs.h"
 #include "core/xvalue.h"
@@ -285,7 +286,7 @@ void draw_game_features_section(std::string &filter) {
     ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x - 80.0f);
     ImGui::InputTextWithHint("##features_filter", "Filter...", &filter);
     ImGui::SameLine();
-    if (ImGui::Button("Clear")) {
+    if (ImGui::Button("Clear##features")) {
         filter.clear();
     }
 
@@ -311,6 +312,106 @@ void draw_game_features_section(std::string &filter) {
         }
     }
     ImGui::EndChild();
+}
+
+pcstr test_file_basename(pcstr path) {
+    if (!path || !*path) {
+        return "";
+    }
+    pcstr basename = path;
+    for (pcstr p = path; *p; ++p) {
+        if (*p == '/' || *p == '\\') {
+            basename = p + 1;
+        }
+    }
+    return basename;
+}
+
+std::string test_file_stem(pcstr path) {
+    std::string name = test_file_basename(path);
+    const auto dot = name.find_last_of('.');
+    if (dot != std::string::npos) {
+        name.resize(dot);
+    }
+    return name;
+}
+
+bool test_matches_filter(pcstr path, const std::string &filter) {
+    if (filter.empty()) {
+        return true;
+    }
+    std::string hay = test_file_basename(path);
+    std::string needle = filter;
+    std::transform(hay.begin(), hay.end(), hay.begin(),
+      [](unsigned char c) { return static_cast<char>(std::tolower(c)); });
+    std::transform(needle.begin(), needle.end(), needle.begin(),
+      [](unsigned char c) { return static_cast<char>(std::tolower(c)); });
+    return hay.find(needle) != std::string::npos;
+}
+
+void apply_integral_test_launch_args(Arguments &args, pcstr only_filter) {
+    args.set_integral_tests(true);
+    args.set_integraltest_only(only_filter ? only_filter : "");
+    args.set_no_resource(true);
+    args.set_no_logo(true);
+    args.set_use_sound(false);
+    args.set_window_mode(true);
+    args.set_window_size({800, 600});
+}
+
+// Returns true when the caller should close the options window and start the game/tests.
+bool draw_integral_tests_section(Arguments &args, std::string &filter, int &selected_idx,
+  const hvector<xstring, 16> &tests) {
+    ImGui::Text("Integral tests (%d):", (int)tests.size());
+    ImGui::SameLine();
+    ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x - 80.0f);
+    ImGui::InputTextWithHint("##tests_filter", "Filter...", &filter);
+    ImGui::SameLine();
+    if (ImGui::Button("Clear##tests")) {
+        filter.clear();
+    }
+
+    ImGui::BeginChild("TestsList", ImVec2(0, -36.0f), ImGuiChildFlags_Borders);
+    if (tests.empty()) {
+        ImGui::TextDisabled("No tests/*.js found (run from repo root or build/).");
+    } else {
+        int visible_i = 0;
+        for (int i = 0; i < (int)tests.size(); ++i) {
+            if (!test_matches_filter(tests[i].c_str(), filter)) {
+                continue;
+            }
+            const bool selected = (selected_idx == i);
+            if (ImGui::Selectable(test_file_basename(tests[i].c_str()), selected)) {
+                selected_idx = i;
+            }
+            if (selected) {
+                ImGui::SetItemDefaultFocus();
+            }
+            ++visible_i;
+        }
+        if (visible_i == 0) {
+            ImGui::TextDisabled("No tests match filter.");
+        }
+    }
+    ImGui::EndChild();
+
+    const bool have_selection = selected_idx >= 0 && selected_idx < (int)tests.size();
+    if (!have_selection) {
+        ImGui::BeginDisabled();
+    }
+    if (ImGui::Button("Run selected test")) {
+        apply_integral_test_launch_args(args, test_file_stem(tests[selected_idx].c_str()).c_str());
+        return true;
+    }
+    if (!have_selection) {
+        ImGui::EndDisabled();
+    }
+    ImGui::SameLine();
+    if (ImGui::Button("Run all tests")) {
+        apply_integral_test_launch_args(args, "");
+        return true;
+    }
+    return false;
 }
 
 void push_changed_feature_overrides(Arguments &args,
@@ -417,6 +518,9 @@ void show_options_window(Arguments& args) {
     ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
 
     std::string features_filter;
+    std::string tests_filter;
+    int selected_test_idx = -1;
+    const hvector<xstring, 16> integral_tests = list_integral_test_files();
 
     try_load_game_features(args.get_data_directory().c_str());
     game_features::apply_cli_profiles(args.features_profile());
@@ -734,8 +838,22 @@ void show_options_window(Arguments& args) {
 
             ImGui::EndChild(); // RenderSection
 
-            ImGui::BeginChild("FeaturesSection", ImVec2(0, -bottom_bar_h), ImGuiChildFlags_Borders);
-            draw_game_features_section(features_filter);
+            ImGui::BeginChild("FeaturesAndTests", ImVec2(0, -bottom_bar_h), ImGuiChildFlags_Borders);
+            {
+                const float half = ImGui::GetContentRegionAvail().x * 0.5f - 4.0f;
+                ImGui::BeginChild("FeaturesSection", ImVec2(half, 0), ImGuiChildFlags_Borders);
+                draw_game_features_section(features_filter);
+                ImGui::EndChild();
+                ImGui::SameLine();
+                ImGui::BeginChild("TestsSection", ImVec2(0, 0), ImGuiChildFlags_Borders);
+                if (draw_integral_tests_section(args, tests_filter, selected_test_idx, integral_tests)) {
+                    args.set_data_directory(data_directory.c_str());
+                    sync_display_options_from_args(args);
+                    // Do not persist integral-test launch flags into akhenaten.cfg.
+                    done = true;
+                }
+                ImGui::EndChild();
+            }
             ImGui::EndChild();
 
             {ImGui::BeginChild("StartSection", ImVec2(0, 0));

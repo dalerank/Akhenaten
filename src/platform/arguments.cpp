@@ -419,6 +419,10 @@ void Arguments::set_data_directory(pcstr value) {
     args_["data_directory"] = bvariant(xstring(value));
 }
 
+void Arguments::set_integraltest_only(pcstr value) {
+    args_["integraltest_only"] = bvariant(xstring(value ? value : ""));
+}
+
 const xstring& Arguments::get_str(const xstring& name) const {
     const bvariant& font = get_arg(name);
     if (font.is_str() && !font.as_str().empty()) {
