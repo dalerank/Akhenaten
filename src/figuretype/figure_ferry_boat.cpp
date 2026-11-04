@@ -208,10 +208,77 @@ void figure_ferry_boat::unload_passengers(building_ferry *landing) {
     }
 }
 
+void figure_ferry_boat::move_with_staff_slowness(building *home_ferry) {
+    // OG ferry_move: slowness = (100 - staff%) / step; every Nth tick is skipped.
+    const auto &p = current_params();
+    const int step = p.slowness_step > 0 ? p.slowness_step : 10;
+    const int slowness = (100 - home_ferry->worker_percentage()) / step;
+    const int min_s = p.slowness_min > 0 ? p.slowness_min : 2;
+    if (slowness < min_s) {
+        base.move_ticks(1);
+        return;
+    }
+
+    const int16_t ticks = ++base.wait_ticks;
+    if (ticks % slowness != 0) {
+        base.move_ticks(1);
+        return;
+    }
+
+    const int limit = p.tick_counter_limit > 0 ? p.tick_counter_limit : 100;
+    if (ticks > limit) {
+        base.wait_ticks = 0;
+    }
+}
+
+void figure_ferry_boat::kill_aboard_passengers() {
+    auto &d = runtime_data();
+    for (int i = 0; i < PASSENGER_SLOTS; i++) {
+        const figure_id passenger_id = d.passengers[i];
+        d.passengers[i] = 0;
+        if (passenger_id <= 0) {
+            continue;
+        }
+
+        // Followers stay off-map after ferry_load — sink them with the passenger.
+        for (int id = 1; id < MAX_FIGURES; id++) {
+            figure *f = figure_get(id);
+            if (!f || !f->is_alive()) {
+                continue;
+            }
+            if (ferry_follower_leader_id(*f) == (int)passenger_id) {
+                f->kill();
+            }
+        }
+
+        figure *p = figure_get(passenger_id);
+        if (p && p->is_alive()) {
+            p->kill();
+        }
+    }
+}
+
+void figure_ferry_boat::sink() {
+    // OG ferry_sink: CORPSE with wait_ticks = -1; passengers die with the boat.
+    kill_aboard_passengers();
+    if (building *b = home()) {
+        b->remove_figure_by_id(id());
+    }
+    base.set_home(0);
+    if (action_state() != FIGURE_ACTION_149_CORPSE) {
+        base.wait_ticks = -1;
+    }
+    figure_impl::kill();
+}
+
 void figure_ferry_boat::figure_action() {
+    if (action_state() == FIGURE_ACTION_149_CORPSE) {
+        return;
+    }
+
     building *home_ferry = home();
     if (!home_ferry || !home_ferry->is_valid() || home_ferry->type != BUILDING_FERRY) {
-        poof();
+        sink();
         return;
     }
 
@@ -221,19 +288,14 @@ void figure_ferry_boat::figure_action() {
 
     assert(base.allow_move_type == EMOVE_WATER);
 
-    if (!partner_b || home_ferry->num_workers == 0 || partner->num_workers == 0) {
-        if (action_state() != ACTION_0_FERRY_BOAT_CREATED) {
-            // Keep waiting / idle; passengers stay queued until staff returns.
-            if (action_state() == ACTION_1_FERRY_BOAT_GOING_TO_DESTINATION
-                || action_state() == ACTION_3_FERRY_BOAT_RETURNING) {
-                // Sink mid-crossing: put waiters back; kill aboard passengers via corpse path later.
-                advance_action(ACTION_4_FERRY_BOAT_WAITING);
-            }
-        }
-    }
+    const bool unstaffed = home_ferry->num_workers == 0 || !partner || partner->num_workers == 0;
 
     switch (action_state()) {
     case ACTION_0_FERRY_BOAT_CREATED:
+        if (unstaffed) {
+            sink();
+            break;
+        }
         base.wait_ticks++;
         if (base.wait_ticks >= 20) {
             base.wait_ticks = 0;
@@ -242,7 +304,8 @@ void figure_ferry_boat::figure_action() {
         break;
 
     case ACTION_4_FERRY_BOAT_WAITING: {
-        if (!partner_b || home_ferry->num_workers == 0 || partner->num_workers == 0) {
+        if (!partner_b || unstaffed) {
+            sink();
             break;
         }
 
@@ -274,14 +337,14 @@ void figure_ferry_boat::figure_action() {
     }
 
     case ACTION_1_FERRY_BOAT_GOING_TO_DESTINATION:
-        base.move_ticks(1);
+        move_with_staff_slowness(home_ferry);
         base.height_adjusted_ticks = 0;
         if (direction() == DIR_FIGURE_NONE) {
             advance_action(ACTION_2_FERRY_BOAT_AT_DESTINATION);
         } else if (direction() == DIR_FIGURE_REROUTE) {
             route_remove();
         } else if (direction() == DIR_FIGURE_CAN_NOT_REACH) {
-            advance_action(ACTION_4_FERRY_BOAT_WAITING);
+            advance_action(ACTION_0_FERRY_BOAT_CREATED);
         }
         break;
 
@@ -307,14 +370,14 @@ void figure_ferry_boat::figure_action() {
     }
 
     case ACTION_3_FERRY_BOAT_RETURNING:
-        base.move_ticks(1);
+        move_with_staff_slowness(home_ferry);
         base.height_adjusted_ticks = 0;
         if (direction() == DIR_FIGURE_NONE) {
             advance_action(ACTION_5_FERRY_BOAT_UNLOAD_HOME);
         } else if (direction() == DIR_FIGURE_REROUTE) {
             route_remove();
         } else if (direction() == DIR_FIGURE_CAN_NOT_REACH) {
-            advance_action(ACTION_4_FERRY_BOAT_WAITING);
+            advance_action(ACTION_0_FERRY_BOAT_CREATED);
         }
         break;
 
@@ -327,10 +390,7 @@ void figure_ferry_boat::figure_action() {
 }
 
 void figure_ferry_boat::kill() {
-    home()->remove_figure_by_id(id());
-    base.set_home(0);
-    base.wait_ticks = 0;
-    figure_impl::kill();
+    sink();
 }
 
 bool figure_ferry_boat::window_info_background(object_info &c) {
@@ -341,6 +401,25 @@ bool figure_ferry_boat::window_info_background(object_info &c) {
 }
 
 void figure_ferry_boat::update_animation() {
+    if (action_state() == FIGURE_ACTION_149_CORPSE) {
+        // OG: sinking strip until sinking_ticks, then bubbles on the same figure.
+        const auto &p = current_params();
+        const int sink_ticks = p.sinking_ticks > 0 ? p.sinking_ticks : 33;
+        if (base.wait_ticks >= sink_ticks) {
+            int frame = base.wait_ticks - sink_ticks;
+            const int bubbles = p.bubbles_frames > 0 ? p.bubbles_frames : 23;
+            if (frame >= bubbles) {
+                frame = bubbles - 1;
+            }
+            const int img = anim(animkeys().bubbles).first_img();
+            base.main_image_id = img + frame;
+            base.animctx.base = 0;
+            return;
+        }
+        image_set_animation(animkeys().death);
+        return;
+    }
+
     pcstr anim_key = "idle";
     switch (action_state()) {
     case ACTION_1_FERRY_BOAT_GOING_TO_DESTINATION:

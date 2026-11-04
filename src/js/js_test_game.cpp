@@ -61,6 +61,7 @@
 #include "figure/figure_impl.h"
 #include "figuretype/figure_market_buyer.h"
 #include "figuretype/figure_cartpusher.h"
+#include "figuretype/figure_ferry_boat.h"
 #include "figuretype/figure_flotsam.h"
 #include "figuretype/figure_docker.h"
 #include "figuretype/figure_immigrant.h"
@@ -2721,6 +2722,81 @@ static void __test_figure_set_action(int fid, int action) {
 }
 ANK_FUNCTION_2(__test_figure_set_action);
 
+static int __test_ferry_boat_board_passenger(int boat_fid, int passenger_fid) {
+    figure *boat_f = figure_get(boat_fid);
+    figure *p = figure_get(passenger_fid);
+    auto *boat = boat_f ? boat_f->dcast_ferry_boat() : nullptr;
+    if (!boat || !boat->is_alive() || !p || !p->is_alive() || !p->dcast()) {
+        return 0;
+    }
+    auto &d = boat->runtime_data();
+    for (int i = 0; i < figure_ferry_boat::PASSENGER_SLOTS; i++) {
+        if (d.passengers[i] > 0) {
+            continue;
+        }
+        d.passengers[i] = (figure_id)passenger_fid;
+        p->action_state = p->dcast()->ferry_ride_action();
+        p->main_image_id = 0;
+        p->cart_image_id = 0;
+        p->set_flag(e_figure_flag_invisible, true);
+        p->route_remove();
+        p->map_figure_remove();
+        return 1;
+    }
+    return 0;
+}
+ANK_FUNCTION_2(__test_ferry_boat_board_passenger);
+
+static int __test_figure_is_dying(int fid) {
+    figure *f = figure_get(fid);
+    return (f && f->state == FIGURE_STATE_DYING) ? 1 : 0;
+}
+ANK_FUNCTION_1(__test_figure_is_dying);
+
+static void __test_figure_action_perform_dying(int fid) {
+    figure *f = figure_get(fid);
+    if (!f || (f->state != FIGURE_STATE_ALIVE && f->state != FIGURE_STATE_DYING)) {
+        return;
+    }
+    f->action_perform();
+}
+ANK_FUNCTION_1(__test_figure_action_perform_dying);
+
+static int __test_ferry_boat_slowness_step(int boat_fid) {
+    figure *boat_f = figure_get(boat_fid);
+    auto *boat = boat_f ? boat_f->dcast_ferry_boat() : nullptr;
+    if (!boat || !boat->is_alive()) {
+        return -1;
+    }
+    building *home = boat->home();
+    if (!home || !home->is_valid()) {
+        return -1;
+    }
+    boat->move_with_staff_slowness(home);
+    return boat_f->wait_ticks;
+}
+ANK_FUNCTION_1(__test_ferry_boat_slowness_step);
+
+static int __test_ferry_boat_passenger_count(int boat_fid) {
+    figure *boat_f = figure_get(boat_fid);
+    auto *boat = boat_f ? boat_f->dcast_ferry_boat() : nullptr;
+    if (!boat) {
+        return -1;
+    }
+    return boat->passenger_count();
+}
+ANK_FUNCTION_1(__test_ferry_boat_passenger_count);
+
+static void __test_ferry_boat_sink(int boat_fid) {
+    figure *boat_f = figure_get(boat_fid);
+    auto *boat = boat_f ? boat_f->dcast_ferry_boat() : nullptr;
+    if (!boat || (!boat_f->is_alive() && boat_f->state != FIGURE_STATE_DYING)) {
+        return;
+    }
+    boat->sink();
+}
+ANK_FUNCTION_1(__test_ferry_boat_sink);
+
 static void __test_figure_update_animation(int fid) {
     figure *f = figure_get(fid);
     if (!f || !f->is_alive()) {
@@ -4616,20 +4692,6 @@ static int __test_building_road_access_tile(int bid) {
     return m->road_access.grid_offset();
 }
 ANK_FUNCTION_1(__test_building_road_access_tile);
-
-static void __test_building_set_road_access(int bid, int x, int y) {
-    building *b = building_get(bid);
-    if (!b || !b->is_valid()) {
-        return;
-    }
-    building *m = b->main();
-    if (!m) {
-        return;
-    }
-    m->has_road_access = true;
-    m->road_access = tile2i(x, y);
-}
-ANK_FUNCTION_3(__test_building_set_road_access);
 
 static void __test_map_set_vegetation_growth(int x, int y, int growth) {
     tile2i tile(x, y);

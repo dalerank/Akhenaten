@@ -31,6 +31,15 @@ public:
 
     static constexpr int PASSENGER_SLOTS = 4;
 
+    // OG boats.h: BOAT_SINKING_TICKS / BOAT_BUBBLES_FRAMES / FERRY_SLOWNESS_* / FERRY_TICK_COUNTER_LIMIT
+    struct static_params : public figure_static_params {
+        uint16_t sinking_ticks;
+        uint16_t bubbles_frames;
+        uint8_t slowness_min;
+        uint8_t slowness_step;
+        uint16_t tick_counter_limit;
+    } FIGURE_STATIC_DATA_T;
+
     struct runtime_data_t {
         building_id destination_ferry_id;
         tile2i destination_tile;
@@ -54,4 +63,14 @@ public:
     int passenger_count() const;
     void load_passengers(building_ferry *landing, int max);
     void unload_passengers(building_ferry *landing);
+
+    void sink();
+    // OG ferry_move — public for integral tests.
+    void move_with_staff_slowness(building *home_ferry);
+
+private:
+    void kill_aboard_passengers();
 };
+
+ANK_CONFIG_STRUCT(figure_ferry_boat::static_params,
+    sinking_ticks, bubbles_frames, slowness_min, slowness_step, tick_counter_limit)

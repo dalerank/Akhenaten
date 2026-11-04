@@ -3,10 +3,12 @@ log_info("akhenaten: figure ferry_boat started")
 figure_ferry_boat {
 	animations {
 		_pack { pack:PACK_SPR_MAIN }
+		// OG groups 177 boat / 178 sinking / 179 idle — same packing as fishing_boat 134/135/136.
 		walk { id:138, max_frames:4, duration:4 }
-		idle { id:139, offset:3, max_frames:1 }
-		death { id: 15, max_frames:8, loop:false }
 		swim { id:138, max_frames:4, duration:4 }
+		death { id:139, max_frames:8, loop:false }
+		idle { id:140, offset:3, max_frames:1 }
+		bubbles { pack:PACK_SPR_AMBIENT, id:11, max_frames:22, duration:1 }
 		big_image { pack:PACK_UNLOADED, id:25, offset:FIGURE_FERRY_BOAT }
 	}
 
@@ -31,6 +33,12 @@ figure_ferry_boat {
 	category: figure_category_citizen
 	max_damage: 20
 	terrain_usage: TERRAIN_USAGE_ANY
+
+	sinking_ticks: 33
+	bubbles_frames: 23
+	slowness_min: 2
+	slowness_step: 10
+	tick_counter_limit: 100
 }
 
 function figure_ferry_boat_gods_are_angry() {
