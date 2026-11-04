@@ -1603,6 +1603,15 @@ static int __test_figure_is_alive(int fid) {
 }
 ANK_FUNCTION_1(__test_figure_is_alive);
 
+static void __test_figure_set_faction(int fid, int faction) {
+    figure *f = figure_get(fid);
+    if (!f) {
+        return;
+    }
+    f->faction_id = (uint8_t)faction;
+}
+ANK_FUNCTION_2(__test_figure_set_faction);
+
 static int __test_elephant_trample(int fid) {
     figure *f = figure_get(fid);
     if (!f || !f->is_alive() || f->type != FIGURE_ENEMY_EGYPTIAN_ELEPHANT) {

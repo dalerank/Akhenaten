@@ -34,12 +34,12 @@ figure_missile* figure_missile::create(figure_id fid, tile2i src, tile2i dst, e_
         // on_create ran inside figure_create before shooter_id existed — set then refresh.
         auto &d = missile->runtime_data();
         d.shooter_id = fid;
-        // OG arrow uses figure_properties[FIGURE_ARROW].missile_attack, not the shooter's.
+        // OG arrow/bolt/spear: figure_properties[type].missile_attack (spear ships use shooter type at hit).
         int attack = figure_static_params::get(type).missile_attack_value;
         if (attack <= 0) {
             attack = 10;
         }
-        if (type != FIGURE_ARROW) {
+        if (type != FIGURE_ARROW && type != FIGURE_BOLT && type != FIGURE_SPEAR) {
             if (figure *shooter = figure_get(fid)) {
                 if (auto archer = smart_cast<figure_enemy_archer>(shooter)) {
                     attack = archer->missile_attack_value();
@@ -324,24 +324,128 @@ void figure_missile::missile_hit_figure(figure_id target_id, int legionary_type)
     formation_record_missile_attack(m, missile_formation);
 }
 
-void figure_spear::figure_action() {
-    base.use_cross_country = true;
-    base.progress_on_tile++;
-    if (base.progress_on_tile > 120) {
-        poof();
+static bool spear_is_ship(e_figure_type type) {
+    return type == FIGURE_WARSHIP || type == FIGURE_TRANSPORT_SHIP || type == FIGURE_FISHING_BOAT;
+}
+
+static void spear_hit(figure_spear *spear, figure_id target_id, figure_id shooter_id, int shooter_formation) {
+    const auto &r = missile_rules;
+    figure *target = figure_get(target_id);
+    if (!target) {
+        spear->poof();
+        return;
     }
 
-    int should_die = base.move_ticks_cross_country(4);
-    int target_id = get_citizen_on_tile();
+    const int formation_id = target->formation_id;
+    formation *m = formation_get(formation_id);
+    int bonus = 0;
+    const e_figure_type type = target->type;
+    const bool is_ship = spear_is_ship(type);
+
+    if (target->faction_id == 1 && type == FIGURE_WARSHIP
+        && target->action_state == ACTION_203_WARSHIP_MOORED) {
+        bonus = r.docked_warship_bonus;
+    } else if (target->faction_id == 1 && type >= FIGURE_ARCHER && type <= FIGURE_FCHARIOTEER) {
+        bonus = m ? (m->experience + 10) / 20 : 0;
+    }
+
+    int defense = bonus + target->missile_defense_value();
+    if (defense >= r.max_defense) {
+        defense = r.max_defense;
+    }
+
+    e_figure_type attack_type;
+    if (is_ship) {
+        figure *sh = figure_get(shooter_id);
+        if (!sh || sh->state != FIGURE_STATE_ALIVE) {
+            spear->poof();
+            return;
+        }
+        attack_type = sh->type;
+    } else {
+        attack_type = FIGURE_SPEAR;
+    }
+
+    int attack = figure_static_params::get(attack_type).missile_attack_value;
+    if (attack <= 0) {
+        attack = spear->runtime_data().missile_attack_value;
+    }
+    defense = missile_og_defense(target, m, defense);
+    const int damage = missile_og_damage(attack, defense);
+
+    if (is_ship) {
+        const int max_hp = target->max_damage();
+        const int remaining = max_hp - (int)target->damage - damage;
+        if (remaining <= 0) {
+            target->damage = max_hp + 1;
+            target->kill();
+            target->wait_ticks = 0;
+            target->play_die_sound();
+        } else {
+            target->damage = (uint16_t)(max_hp - remaining);
+        }
+    } else {
+        const int max_damage = target->max_damage();
+        const int total = target->damage + damage;
+        if (total > max_damage) {
+            target->damage = max_damage + 1;
+            target->kill();
+            target->wait_ticks = 0;
+            target->play_die_sound();
+            if (m && formation_id) {
+                formation_update_morale_after_death(m);
+            }
+        } else {
+            target->damage = (uint16_t)total;
+        }
+        if (m && formation_id) {
+            m->missile_attack_timeout = r.attack_timeout;
+            m->missile_attack_formation_id = shooter_formation;
+        }
+    }
+
+    events::emit(event_sound_effect{ spear->hit_sound_effect() });
+    spear->poof();
+}
+
+void figure_spear::figure_action() {
+    const auto &r = missile_rules;
+    base.use_cross_country = true;
+    base.progress_on_tile++;
+    if (base.progress_on_tile > r.flight_ticks) {
+        poof();
+        main_image_update();
+        return;
+    }
+
+    const bool should_die = base.move_ticks_cross_country(r.speed);
+    const figure_id target_id = arrow_missile_hit_target(tile());
+    figure *sh = shooter();
+    const int shooter_formation = sh ? sh->formation_id : 0;
+
     if (target_id) {
-        missile_hit_figure(target_id, FIGURE_INFANTRY);
-        events::emit(event_sound_effect{ SOUND_EFFECT_JAVELIN });
+        spear_hit(this, target_id, runtime_data().shooter_id, shooter_formation);
     } else if (should_die) {
         poof();
     }
 
-    int dir = (16 + direction() - 2 * g_camera.orientation) % 16;
+    main_image_update();
+}
+
+void figure_spear::main_image_update() {
+    // OG spear_set_image: 32 dirs, orientation*4; enemy-archer sprite path is dead (spear type ≠ archer).
+    const auto &r = missile_rules;
+    int dir = direction() - r.spear_orientation_mult * g_camera.orientation;
+    if (dir < 0) {
+        dir += r.spear_image_directions;
+    }
+    dir %= r.spear_image_directions;
     base.main_image_id = anim(animkeys().walk).first_img() + dir;
+
+    const int shadow = anim("shadow").first_img();
+    if (shadow) {
+        base.cart_image_id = shadow + dir;
+    }
 }
 
 
