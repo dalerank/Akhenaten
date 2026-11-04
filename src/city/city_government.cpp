@@ -1,77 +1,75 @@
 #include "city/city.h"
 
+#include "building/building.h"
 #include "building/building_mansion.h"
 #include "city/city_finance.h"
 #include "core/profiler.h"
 #include "game/game_config.h"
+
+#include <algorithm>
+#include <cstdint>
 
 void city_t::government_distribute_treasury() {
     OZZY_PROFILER_FUNCTION();
 
     building_mansion::update_money_values();
 
-    constexpr int greate_palace_units = 8;
-    constexpr int palace_units = 5;
-    constexpr int tax_collectpr_up_units = 2;
-    constexpr int tax_collector_units = 1;
+    // OG building_update_money_values + city_finance_building_money_value / palace_share_table.
+    // No worker gate — unstaffed vaults still show their share.
+    const auto &shares = palace_treasury_shares;
+    const int tax_w = shares.tax_collector_weight;
+    const int court_w = shares.courthouse_weight;
+    const int palace_w = shares.palace_weight;
 
-    const uint32_t vil_palace_count = g_city.buildings.count_active(BUILDING_VILLAGE_PALACE);
-    const uint32_t town_palace_count = g_city.buildings.count_active(BUILDING_TOWN_PALACE);
-    const uint32_t city_palace_count = g_city.buildings.count_active(BUILDING_CITY_PALACE);
-    const uint32_t tax_col_count = g_city.buildings.count_active(BUILDING_TAX_COLLECTOR);
-    const uint32_t tax_col_up_count = g_city.buildings.count_active(BUILDING_TAX_COLLECTOR_UPGRADED);
+    auto &blds = buildings;
+    const int tax_count = blds.count_total(BUILDING_TAX_COLLECTOR)
+        + blds.count_total(BUILDING_TAX_COLLECTOR_UPGRADED);
+    const int court_count = blds.count_total(BUILDING_COURTHOUSE);
+    const int palace_count = blds.count_total({
+        BUILDING_VILLAGE_PALACE,
+        BUILDING_TOWN_PALACE,
+        BUILDING_CITY_PALACE,
+        BUILDING_VILLAGE_PALACE_UP,
+        BUILDING_TOWN_PALACE_UP,
+    });
 
-    int units = palace_units * (vil_palace_count + town_palace_count + city_palace_count);
-                    //+ greate_palace_units * palace_up_count;
+    int total_weight = tax_w * tax_count + court_w * court_count + palace_w * palace_count;
 
-    if (!game_features::gameplay_change_new_tax_collection_system) {
-        units += tax_collector_units * tax_col_count + tax_collectpr_up_units * tax_col_up_count;
+    // Remake optional tax vault system: exclude tax offices from the display split.
+    if (!!game_features::gameplay_change_new_tax_collection_system) {
+        total_weight -= tax_w * tax_count;
     }
 
-    int amount_per_unit = 0;
-    int remainder = 0;
     const int treasury = finance.treasury;
 
-    if (treasury > 0 && units > 0) {
-        amount_per_unit = treasury / units;
-        remainder = treasury - units * amount_per_unit;
-    }
-
-    buildings_valid_do([&] (building &b) {
-        if (b.num_workers <= 0) {
-            return;
-        }
-
+    buildings_valid_do([&](building &b) {
+        int weight = 0;
         switch (b.type) {
-        // ordered based on importance: most important gets the remainder
-        //case BUILDING_GREATE_PALACE_UPGRADED:
-        //    b.tax_income_or_storage = greate_palace_units * amount_per_unit + remainder;
-        //    remainder = 0;
-        //    break;
-
         case BUILDING_VILLAGE_PALACE:
         case BUILDING_TOWN_PALACE:
         case BUILDING_CITY_PALACE:
-            b.tax_income_or_storage = palace_units * amount_per_unit + remainder;
-            remainder = 0;
+        case BUILDING_VILLAGE_PALACE_UP:
+        case BUILDING_TOWN_PALACE_UP:
+            weight = palace_w;
             break;
-
-        case BUILDING_TAX_COLLECTOR_UPGRADED:
-            if (!game_features::gameplay_change_new_tax_collection_system) {
-                b.tax_income_or_storage = tax_collectpr_up_units * amount_per_unit + remainder;
-                remainder = 0;
-            }
+        case BUILDING_COURTHOUSE:
+            weight = court_w;
             break;
-
         case BUILDING_TAX_COLLECTOR:
-            if (!game_features::gameplay_change_new_tax_collection_system) {
-                b.tax_income_or_storage = amount_per_unit + remainder;
-                remainder = 0;
+        case BUILDING_TAX_COLLECTOR_UPGRADED:
+            if (!!game_features::gameplay_change_new_tax_collection_system) {
+                return;
             }
+            weight = tax_w;
             break;
-
         default:
-            ; // nothing
+            return;
         }
+
+        int value = 0;
+        if (treasury > 0 && total_weight > 0 && weight > 0) {
+            value = (int)(((double)weight / (double)total_weight) * (double)treasury);
+        }
+        b.tax_income_or_storage = (int16_t)std::clamp(value, 0, (int)INT16_MAX);
     });
 }

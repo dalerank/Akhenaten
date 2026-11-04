@@ -11,9 +11,11 @@ function building_is_unique_built(type) {
     var cfg = get_building_config_by_id(type)
     if (!cfg || !cfg.planner_update_rule || !cfg.planner_update_rule.unique_building) return false
     if (type == BUILDING_PERSONAL_MANSION || type == BUILDING_FAMILY_MANSION || type == BUILDING_DYNASTY_MANSION) {
-        return __city_count_total_buildings(BUILDING_PERSONAL_MANSION) > 0
-            || __city_count_total_buildings(BUILDING_FAMILY_MANSION) > 0
-            || __city_count_total_buildings(BUILDING_DYNASTY_MANSION) > 0
+        return __city_get_mansion_id() > 0
+    }
+    if (type == BUILDING_VILLAGE_PALACE || type == BUILDING_TOWN_PALACE || type == BUILDING_CITY_PALACE
+        || type == BUILDING_VILLAGE_PALACE_UP || type == BUILDING_TOWN_PALACE_UP) {
+        return __city_get_palace_id() > 0
     }
     return __city_count_total_buildings(type) > 0
 }

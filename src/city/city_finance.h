@@ -95,6 +95,14 @@ struct city_taxes_t {
 ANK_CONFIG_PROPERTY(city_taxes_t,
     percentage_taxed_people, estimated_uncollected, estimated_income)
 
+struct palace_treasury_shares_t {
+    int tax_collector_weight = 2;
+    int courthouse_weight = 3;
+    int palace_weight = 50;
+};
+ANK_CONFIG_STRUCT(palace_treasury_shares_t, tax_collector_weight, courthouse_weight, palace_weight)
+extern palace_treasury_shares_t palace_treasury_shares;
+
 struct city_finance_t {
     struct treasury_t {
         int value;

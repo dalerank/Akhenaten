@@ -24,9 +24,10 @@
 using e_finance_value_tokens_t = token_holder<e_finance_value, e_finance_value_gold_delivered, e_finance_value_max>;
 const e_finance_value_tokens_t ANK_CONFIG_ENUM(e_finance_value_tokens);
 
-using e_finance_request_type_tokens_t
-  = token_holder<e_finance_request_type, efinance_request_none, efinance_request_max>;
+using e_finance_request_type_tokens_t = token_holder<e_finance_request_type, efinance_request_none, efinance_request_max>;
 const e_finance_request_type_tokens_t ANK_CONFIG_ENUM(e_finance_request_type_tokens);
+
+palace_treasury_shares_t ANK_VARIABLE(palace_treasury_shares);
 
 void city_finance_t::init() {
     wages_kingdome = 30;

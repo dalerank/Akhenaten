@@ -863,7 +863,24 @@ void build_planner::update_unique_only_one_check() {
     case BUILDING_FAMILY_MANSION:
     case BUILDING_DYNASTY_MANSION:
         // OG mansion_placed: one mansion of any tier.
-        unique_already_placed = building_mansion::exist_in_city();
+        unique_already_placed = g_city.buildings.has_mansion();
+        break;
+    case BUILDING_VILLAGE_PALACE:
+    case BUILDING_TOWN_PALACE:
+    case BUILDING_CITY_PALACE:
+    case BUILDING_VILLAGE_PALACE_UP:
+    case BUILDING_TOWN_PALACE_UP:
+        // OG palace_placed: one palace of any tier.
+        unique_already_placed = g_city.buildings.has_palace();
+        break;
+    case BUILDING_TAX_COLLECTOR:
+    case BUILDING_TAX_COLLECTOR_UPGRADED:
+        // OG: cannot place tax office without a palace.
+        if (!g_city.buildings.has_palace()) {
+            immediate_warning = "#no_taxes_without_palace";
+            can_place = CAN_NOT_PLACE;
+            return;
+        }
         break;
     default:
         break;

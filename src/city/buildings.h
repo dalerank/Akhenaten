@@ -18,6 +18,8 @@ struct city_buildings_t {
     int32_t palace_building_id = 0;
     tile2i palace_point;
 
+    int32_t mansion_building_id = 0;
+
     bool distribution_center_placed;
     int32_t distribution_center_building_id;
     tile2i distribution_center;
@@ -68,6 +70,10 @@ struct city_buildings_t {
     span_const<e_building_type> temple_complex_types();
 
     int get_palace_id() const { return palace_building_id; }
+    bool has_palace() const;
+
+    int get_mansion_id() const { return mansion_building_id; }
+    bool has_mansion() const;
 
     void reset_tracked_buildings_counters();
     void track_building(building &b, bool active);

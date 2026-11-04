@@ -115,6 +115,11 @@ int __city_get_palace_id() {
 }
 ANK_FUNCTION(__city_get_palace_id);
 
+int __city_get_mansion_id() {
+    return g_city.buildings.get_mansion_id();
+}
+ANK_FUNCTION(__city_get_mansion_id);
+
 bool __city_palace_allows_tax_collectors() {
     const int palace_id = g_city.buildings.get_palace_id();
     if (palace_id <= 0) {

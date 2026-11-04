@@ -4917,6 +4917,16 @@ static void __test_city_buildings_update_tick() {
 }
 ANK_FUNCTION(__test_city_buildings_update_tick);
 
+static void __test_government_distribute_treasury() {
+    g_city.government_distribute_treasury();
+}
+ANK_FUNCTION(__test_government_distribute_treasury);
+
+static int __test_city_has_palace() {
+    return g_city.buildings.has_palace() ? 1 : 0;
+}
+ANK_FUNCTION(__test_city_has_palace);
+
 static void __test_storage_toggle_empty_all(int bid) {
     building *b = building_get(bid);
     if (!b) {

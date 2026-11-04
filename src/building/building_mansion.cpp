@@ -272,10 +272,5 @@ void building_mansion::check_theft_from_mansions() {
 }
 
 bool building_mansion::exist_in_city() {
-    for (e_building_type type : k_mansion_types) {
-        if (g_city.buildings.count_total(type) > 0) {
-            return true;
-        }
-    }
-    return false;
+    return g_city.buildings.has_mansion();
 }

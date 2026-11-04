@@ -102,6 +102,8 @@ e_delivery_dest_kind kind_from_building(building *b) {
     case BUILDING_VILLAGE_PALACE:
     case BUILDING_TOWN_PALACE:
     case BUILDING_CITY_PALACE:
+    case BUILDING_VILLAGE_PALACE_UP:
+    case BUILDING_TOWN_PALACE_UP:
         return e_delivery_dest_kind::palace;
     default:
         if (b->is_workshop()) {
@@ -156,11 +158,11 @@ cartpusher_deliveryman_prediction cartpusher_predict_deliveryman_destination(til
         return result;
     };
 
-    // Remake: gold → palace (not in OG cartpusher_determine_destination).
+    // Gold → palace when staffed (OG upgraded-palace input: num_workers > 0).
     if (resource == RESOURCE_GOLD) {
         const int senate_id = g_city.buildings.get_palace_id();
         building *palace = building_get(senate_id);
-        if (senate_id && palace && palace->state == BUILDING_STATE_VALID && palace->num_workers >= 5) {
+        if (senate_id && palace && palace->state == BUILDING_STATE_VALID && palace->num_workers > 0) {
             result.destination = (building_id)senate_id;
             result.access_tile = palace->road_access.valid() ? palace->road_access : palace->tile;
             result.kind = e_delivery_dest_kind::palace;

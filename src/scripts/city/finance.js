@@ -1,5 +1,11 @@
 log_info("akhenaten: city finance started")
 
+palace_treasury_shares {
+  tax_collector_weight : 2
+  courthouse_weight : 3
+  palace_weight : 50
+}
+
 function city_finance_clamp_tax_percentage(v) {
     if (v < 0) return 0
     if (v > 25) return 25

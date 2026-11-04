@@ -58,6 +58,7 @@ function run_test() {
     __test_destroy_buildings_of_type(BUILDING_PERSONAL_MANSION)
     __test_destroy_buildings_of_type(BUILDING_FAMILY_MANSION)
     __test_destroy_buildings_of_type(BUILDING_DYNASTY_MANSION)
+    __test_city_buildings_update_tick()
     city.kingdome.personal_savings = 1000
 
     var mid = __test_building_create(BUILDING_PERSONAL_MANSION, cx, cy)
@@ -66,6 +67,7 @@ function run_test() {
         __test_signal_ready()
         return
     }
+    __test_city_buildings_update_tick()
     __test_mansion_update_money_values()
 
     if (!building_is_unique_built(BUILDING_PERSONAL_MANSION)

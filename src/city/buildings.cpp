@@ -194,6 +194,7 @@ void city_buildings_t::update_tick(bool refresh_only) {
     festival_building_id = 0;
     palace_point = tile2i::invalid;
     palace_building_id = 0;
+    mansion_building_id = 0;
     for (auto it = building_begin(), end = building_end(); it != end; ++it) {
         if (!it->is_valid()) {
             continue;
@@ -205,6 +206,11 @@ void city_buildings_t::update_tick(bool refresh_only) {
         if (it->is_palace() && it->is_main() && palace_building_id == 0) {
             palace_point = it->tile;
             palace_building_id = it->id;
+        }
+        if (mansion_building_id == 0 && it->is_main()
+            && (it->type == BUILDING_PERSONAL_MANSION || it->type == BUILDING_FAMILY_MANSION
+                || it->type == BUILDING_DYNASTY_MANSION)) {
+            mansion_building_id = it->id;
         }
         if (it->fire_risk > 70) {
             has_high_fire_risk = true;
@@ -257,6 +263,14 @@ building_id city_buildings_t::temple_complex_id() {
 
 bool city_buildings_t::has_temple_complex() {
     return temple_complex_id() > 0;
+}
+
+bool city_buildings_t::has_palace() const {
+    return palace_building_id > 0;
+}
+
+bool city_buildings_t::has_mansion() const {
+    return mansion_building_id > 0;
 }
 
 span_const<e_building_type> city_buildings_t::temple_complex_types() {
