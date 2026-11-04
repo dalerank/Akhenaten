@@ -4,6 +4,7 @@
 //   [test-marker] mansion_og_config_ok
 //   [test-marker] mansion_og_unique_ok
 //   [test-marker] mansion_og_savings_display_ok
+//   [test-marker] mansion_og_governor_spawn_ok
 //   [test-marker] mansion_og_enemy_destroy_ok
 
 var ENEMY_THEFT_PCT = [0, 15, 30, 60, 100]
@@ -31,6 +32,20 @@ function run_test() {
         || (dynasty.building_size | 0) !== 5) {
         __log_info_native('[test:241] sizes want 3/4/5 got '
             + personal.building_size + '/' + family.building_size + '/' + dynasty.building_size)
+        __test_signal_ready()
+        return
+    }
+    // OG building_properties labor_category -1 (LABOR_CATEGORY_NONE).
+    if ((personal.labor_category | 0) !== (LABOR_CATEGORY_NONE | 0)
+        || (family.labor_category | 0) !== (LABOR_CATEGORY_NONE | 0)
+        || (dynasty.labor_category | 0) !== (LABOR_CATEGORY_NONE | 0)) {
+        __log_info_native('[test:241] labor_category want NONE got '
+            + personal.labor_category + '/' + family.labor_category + '/' + dynasty.labor_category)
+        __test_signal_ready()
+        return
+    }
+    if (typeof building_village_mansion !== 'undefined' && building_village_mansion) {
+        __log_info_native('[test:241] remake-only building_village_mansion must be removed')
         __test_signal_ready()
         return
     }
@@ -71,6 +86,23 @@ function run_test() {
     }
     __log_marker('mansion_og_savings_display_ok')
 
+    // Remake governor: paced spawn on road access, no labor seekers (OG has none).
+    __test_building_force_road_access(mid)
+    __test_building_set_figure_spawn_delay(mid, 32)
+    var spawned = 0
+    for (var s = 0; s < 4; s++) {
+        spawned = __test_mansion_spawn_figure(mid) | 0
+        if (spawned) {
+            break
+        }
+    }
+    if (!spawned) {
+        __log_info_native('[test:241] governor spawn failed after paced calls')
+        __test_signal_ready()
+        return
+    }
+    __log_marker('mansion_og_governor_spawn_ok')
+
     var diff = __game_difficulty() | 0
     if (diff < 0 || diff > 4) {
         diff = 2
@@ -97,6 +129,7 @@ function check_valid() {
         'mansion_og_config_ok',
         'mansion_og_unique_ok',
         'mansion_og_savings_display_ok',
+        'mansion_og_governor_spawn_ok',
         'mansion_og_enemy_destroy_ok'
     ]
     for (var i = 0; i < markers.length; i++) {

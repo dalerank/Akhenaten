@@ -7,11 +7,13 @@
 #include "core/calc.h"
 #include "core/random.h"
 #include "figure/figure.h"
+#include "figuretype/figure_governor.h"
 #include "game/game.h"
 #include "game/game_config.h"
 #include "game/game_events.h"
 #include "grid/building.h"
 #include "grid/figure.h"
+#include "grid/road_access.h"
 #include "widget/city/ornaments.h"
 
 #include <algorithm>
@@ -77,7 +79,37 @@ void building_mansion::update_count() const {
 }
 
 void building_mansion::spawn_figure() {
-    // OG: mansions spawn no walkers (labor_category -1). Governor is non-OG.
+    // OG: labor_category -1, no service walkers / labor seekers.
+    // Remake: one governor walks mansion → palace (phrases). Fixed delay — 0 laborers
+    // makes figure_spawn_timer() always -1, so common_spawn_figure_trigger cannot pace this.
+    if (!has_road_access()) {
+        return;
+    }
+    if (base.has_figure(BUILDING_SLOT_GOVERNOR)) {
+        return;
+    }
+
+    constexpr int k_governor_spawn_delay = 32;
+    base.figure_spawn_delay++;
+    if (base.figure_spawn_delay <= k_governor_spawn_delay) {
+        return;
+    }
+    base.figure_spawn_delay = 0;
+
+    // Prefer cached road_access (same as create_figure_generic); closest-road is fallback.
+    tile2i spawn_tile = base.road_access;
+    if (!spawn_tile.valid()) {
+        spawn_tile = map_closest_road_within_radius(tile(), size(), 2);
+    }
+    if (!spawn_tile.valid()) {
+        return;
+    }
+
+    figure *f = figure_create(FIGURE_GOVERNOR, spawn_tile, DIR_4_BOTTOM_LEFT);
+    f->advance_action(ACTION_0_GOVERNOR_CREATED);
+    f->set_home(&base);
+    f->wait_ticks = 10 + (base.map_random_7bit & 0xf);
+    base.set_figure(BUILDING_SLOT_GOVERNOR, f);
 }
 
 void building_mansion::update_graphic() {

@@ -1201,6 +1201,20 @@ static void __test_mansion_update_money_values() {
 }
 ANK_FUNCTION(__test_mansion_update_money_values);
 
+static int __test_mansion_spawn_figure(int bid) {
+    building *b = building_get(bid);
+    if (!b || !b->is_valid()) {
+        return 0;
+    }
+    auto *m = b->dcast_mansion();
+    if (!m) {
+        return 0;
+    }
+    m->spawn_figure();
+    return b->has_figure_of_type(BUILDING_SLOT_GOVERNOR, FIGURE_GOVERNOR) ? 1 : 0;
+}
+ANK_FUNCTION_1(__test_mansion_spawn_figure);
+
 // Place a mud gatehouse road-pair at (x,y)/(x+1,y) with flanking walls, claim the OG 2x2 footprint.
 // Returns the number of TERRAIN_GATEHOUSE tiles in the 2x2 (expect 4).
 static int __test_mud_gatehouse_place_2x2(int x, int y) {
