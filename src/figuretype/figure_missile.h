@@ -15,14 +15,18 @@ struct missile_rules_t {
     int16_t arrow_image_offset = 16;
     int16_t bolt_image_offset = 32;
     int16_t image_directions = 16;
+    int16_t spear_image_directions = 32;
+    int16_t spear_orientation_mult = 4;
     int16_t facing_away_penalty = 4;
     int16_t single_line_bonus = 4;
     int16_t mop_up_penalty = 2;
     int16_t attack_timeout = 6;
+    int16_t docked_warship_bonus = 2;
 };
 ANK_CONFIG_STRUCT(missile_rules_t,
     speed, flight_ticks, max_defense, damage_base, arrow_image_offset, bolt_image_offset, image_directions,
-    facing_away_penalty, single_line_bonus, mop_up_penalty, attack_timeout)
+    spear_image_directions, spear_orientation_mult, facing_away_penalty, single_line_bonus, mop_up_penalty,
+    attack_timeout, docked_warship_bonus)
 
 extern missile_rules_t missile_rules;
 
@@ -79,6 +83,8 @@ public:
     figure_spear(figure *f) : figure_missile(f) {}
 
     virtual void figure_action() override;
+    virtual void main_image_update() override;
+    virtual e_sound_effect hit_sound_effect() const override { return SOUND_EFFECT_JAVELIN; }
 };
 
 class figure_antelope_hunter_javelin : public figure_missile {

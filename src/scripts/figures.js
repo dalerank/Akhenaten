@@ -355,7 +355,7 @@ figure_antelope_hunter_javelin = {
 	terrain_usage : TERRAIN_USAGE_ANY,
 }
 
-// OG missiles.h / missiles.c constants (figure_arrow_action, missile_set_image).
+// OG missiles.h / missiles.c constants (arrow/bolt/spear flight + spear_set_image).
 missile_rules {
     speed: 4
     flight_ticks: 120
@@ -364,10 +364,13 @@ missile_rules {
     arrow_image_offset: 16
     bolt_image_offset: 32
     image_directions: 16
+    spear_image_directions: 32
+    spear_orientation_mult: 4
     facing_away_penalty: 4
     single_line_bonus: 4
     mop_up_penalty: 2
     attack_timeout: 6
+    docked_warship_bonus: 2
 }
 
 figure_arrow = {
@@ -383,16 +386,18 @@ figure_arrow = {
     terrain_usage : TERRAIN_USAGE_ANY
 }
 
+// OG FIG_ENEMY_MISSILE / figure_spear_action — SprMain 198 + shadow 199, 32 dirs.
 figure_spear = {
 	animations : {
-		walk : { pack:PACK_SPR_MAIN, id:198, max_frames:12 }
+		walk : { pack:PACK_SPR_MAIN, id:198, max_frames:32 }
+		shadow : { pack:PACK_SPR_MAIN, id:199, max_frames:32 }
+		big_image : { pack:PACK_UNLOADED, id:25, offset:FIGURE_SPEAR }
 	}
 
 	category: figure_category_inactive
-  max_damage : 100
-  missile_attack_value : 20
-  terrain_usage : TERRAIN_USAGE_ANY,
-  big_image : { pack:PACK_UNLOADED, id:25, offset:FIGURE_SPEAR }
+	max_damage : 100
+	missile_attack_value : 20
+	terrain_usage : TERRAIN_USAGE_ANY
 }
 
 // OG military.c figure_javelin_action (FIG_PLAYER_MISSILE).
