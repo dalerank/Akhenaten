@@ -84,6 +84,7 @@ void city_t::init() {
     health.value = 50;
     unused.unknown_00c0 = 3;
     finance.tax_percentage = 7;
+    taxes.house_tax_bonus_percentage = 110;
     trade.caravan_import_resource = RESOURCES_MIN;
     trade.caravan_backup_import_resource = RESOURCES_MIN;
     population.monthly.next_index = 0;

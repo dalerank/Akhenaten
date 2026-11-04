@@ -105,6 +105,7 @@ city {
         @percentage_taxed_people { }
         @estimated_uncollected { }
         @estimated_income { }
+        @house_tax_bonus_percentage { }
     }
 
     military {

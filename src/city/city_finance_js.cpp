@@ -51,6 +51,11 @@ void __city_finance_update_estimate_taxes() {
 }
 ANK_FUNCTION(__city_finance_update_estimate_taxes)
 
+void __city_finance_collect_monthly_taxes() {
+    g_city.finance.collect_monthly_taxes();
+}
+ANK_FUNCTION(__city_finance_collect_monthly_taxes)
+
 void __city_finance_calculate_totals() {
     g_city.finance.calculate_totals();
 }
