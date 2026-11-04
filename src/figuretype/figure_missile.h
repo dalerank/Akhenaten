@@ -74,14 +74,6 @@ public:
     virtual void figure_action() override;
 };
 
-class figure_javelin : public figure_missile {
-public:
-    FIGURE_METAINFO(FIGURE_JAVELIN, figure_javelin)
-    figure_javelin(figure *f) : figure_missile(f) {}
-
-    virtual void figure_action() override;
-};
-
 class figure_bolt : public figure_missile {
 public:
     FIGURE_METAINFO(FIGURE_BOLT, figure_bolt)
