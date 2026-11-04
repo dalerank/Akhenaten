@@ -563,6 +563,16 @@ figure_drunkard {
 	max_roam_length : 384
 }
 
+figure_seagulls {
+	animations {
+		big_image { pack:PACK_UNLOADED, id:25, offset:FIGURE_SEAGULLS }
+	}
+
+	category: figure_category_inactive
+	max_damage: 0
+	terrain_usage : TERRAIN_USAGE_ANY
+}
+
 figure_fishing_point {
 	animations {
 		point { pack:PACK_SPR_AMBIENT, id:8, max_frames:22, duration:4 }
