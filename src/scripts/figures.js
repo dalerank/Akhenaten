@@ -112,16 +112,23 @@ figure_ostrich {
 		_pack { pack:PACK_SPR_MAIN }
 		walk { id:156, max_frames:12 }
 		death { id:157, max_frames:8, duration:3, loop:false }
-		eating { id:159, max_frames:7 }
-		idle { id:160, max_frames:7 }
+		attack { id:158, max_frames:7 }
+		eating { id:159, max_frames:8 }
+		idle { id:160, max_frames:8 }
 		big_image { pack:PACK_UNLOADED, id:25, offset:FIGURE_OSTRICH }
 	}
 
 	category: figure_category_animal
 	max_damage: 100
-	corpse_time_delay: 300
+	corpse_time_delay: 500
 	terrain_usage : TERRAIN_USAGE_ANIMAL
+	speed_mult: 1
 	scared_ticks: 128
+	rest_base_ticks: 150
+	rest_random_ticks: 150
+	no_tile_wait_ticks: 100
+	dying_ticks: 500
+	alert_ticks: 20
 }
 
 figure_hyena {
@@ -203,21 +210,29 @@ figure_scorpion {
 }
 
 figure_antelope {
+	// OG ANTELOPE…FLEE (SprAmbient 30–35); flee uses run; rest=idle, graze=eating.
 	animations {
 		_pack { pack:PACK_SPR_AMBIENT }
-		walk { id:30, max_frames: 12 }
+		walk { id:30, max_frames:12 }
 		death { id:31, max_frames:8, duration:3, loop:false }
-		eating { id:33, max_frames:7 }
-		idle { id:33, max_frames:8 }
-		run { id:34, max_frames:8 }
+		attack { id:32, max_frames:7 }
+		eating { id:33, max_frames:8 }
+		idle { id:34, max_frames:8 }
+		run { id:35, max_frames:8 }
 		big_image { pack:PACK_UNLOADED, id:25, offset:FIGURE_ANTELOPE }
 	}
 
 	category: figure_category_animal
 	max_damage: 100
 	terrain_usage : TERRAIN_USAGE_ANIMAL
+	speed_mult: 1
 	scared_ticks: 128
-	corpse_time_delay: 300
+	corpse_time_delay: 500
+	rest_base_ticks: 150
+	rest_random_ticks: 150
+	no_tile_wait_ticks: 100
+	dying_ticks: 500
+	alert_ticks: 20
 }
 
 figure_horses = {
