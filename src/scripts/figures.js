@@ -495,9 +495,11 @@ figure_locust {
 	float_height: 20
 }
 
+// OG FIG_SHIPWRECK: 36 animation frames then gone; settle to open water once (wait=1000).
 figure_shipwreck = {
 	animations : {
-		walk : { pack:PACK_SPR_MAIN, id:226, max_frames:12 }
+		// Frame index is animation_frame (0..35); pack id still provisional vs image_shipwreck.
+		walk : { pack:PACK_SPR_MAIN, id:226, max_frames:36 }
 		big_image : { pack:PACK_UNLOADED, id:25, offset:FIGURE_SHIPWRECK }
 	}
 
