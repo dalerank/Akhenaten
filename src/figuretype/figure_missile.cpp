@@ -21,7 +21,6 @@ missile_rules_t ANK_VARIABLE(missile_rules);
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_hunter_arrow);
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_arrow);
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_spear);
-REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_javelin);
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_bolt);
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_antelope_hunter_javelin);
 
@@ -140,9 +139,9 @@ void figure_missile::main_image_update() {
 
 // OG missile_hit_target: first non-corpse figure on tile in the citizen/ship band.
 static figure_id arrow_missile_hit_target(tile2i tile) {
-    int figure_id = map_figure_id_get(tile);
-    while (figure_id > 0) {
-        figure *f = figure_get(figure_id);
+    int fid = map_figure_id_get(tile);
+    while (fid > 0) {
+        figure *f = figure_get(fid);
         if (!f) {
             break;
         }
@@ -155,12 +154,12 @@ static figure_id arrow_missile_hit_target(tile2i tile) {
             && type != FIGURE_FLOTSAM
             && (type < FIGURE_INDIGENOUS_NATIVE || type >= FIGURE_TRANSPORT_SHIP)
             && type <= FIGURE_WARSHIP) {
-            return (figure_id)figure_id;
+            return fid;
         }
-        if (figure_id == f->next_figure) {
+        if (fid == f->next_figure) {
             break;
         }
-        figure_id = f->next_figure;
+        fid = f->next_figure;
     }
     return 0;
 }
@@ -344,23 +343,6 @@ void figure_spear::figure_action() {
 
     int dir = (16 + direction() - 2 * g_camera.orientation) % 16;
     base.main_image_id = anim(animkeys().walk).first_img() + dir;
-}
-
-void figure_javelin::figure_action() {
-    base.use_cross_country = true;
-    base.progress_on_tile++;
-    if (base.progress_on_tile > 120) {
-        poof();
-    }
-
-    int should_die = base.move_ticks_cross_country(4);
-    int target_id = get_non_citizen_on_tile();
-    if (target_id) {
-        missile_hit_figure(target_id, FIGURE_ENEMY_KINGDOME_INFANTRY);
-        g_sound.play_effect(SOUND_EFFECT_JAVELIN);
-    } else if (should_die) {
-        poof();
-    }
 }
 
 void figure_bolt::figure_action() {

@@ -73,7 +73,8 @@ void figure_ballista::figure_action() {
                 base.direction = calc_missile_shooter_direction(tile, tile);
                 base.wait_ticks_missile = 0;
                 figure *f = figure_get(base.target_figure_id);
-                figure_missile::create(base.home_building_id, tile, f->tile, FIGURE_BOLT);
+                // OG ballista fires FIGURE_JAVELIN (figure_javelin_action), not bolt.
+                figure_missile::create(id(), tile, f->tile, FIGURE_JAVELIN);
                 events::emit(event_sound_effect{ SOUND_EFFECT_BALLISTA_SHOOT });
             } else {
                 base.action_state = ACTION_180_BALLISTA_CREATED;

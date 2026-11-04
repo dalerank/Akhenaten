@@ -138,6 +138,7 @@ figure_hyena {
 	category: figure_category_animal
 	max_damage: 100
 	attack_value: 6
+	missile_defense_value: 0
 	terrain_usage : TERRAIN_USAGE_ANIMAL
 	max_hungry : 30
 	max_hunting_distance : 12
@@ -233,11 +234,12 @@ figure_ballista {
 	animations {
 		flying { pack:PACK_SPR_MAIN, id:114, max_frames:25, loop:true }
 		eating { pack:PACK_SPR_MAIN, id:115, max_frames:25 }
-		big_image : { pack:PACK_UNLOADED, id:25, offset:FIGURE_BIRDS }
+		big_image : { pack:PACK_UNLOADED, id:25, offset:FIGURE_BALLISTA }
 	}
 
 	category: figure_category_inactive
 	max_damage: 100
+	missile_attack_value: 100
 	terrain_usage : TERRAIN_USAGE_ANIMAL
 }
 
@@ -363,18 +365,31 @@ figure_spear = {
   big_image : { pack:PACK_UNLOADED, id:25, offset:FIGURE_SPEAR }
 }
 
+// OG military.c figure_javelin_action (FIG_PLAYER_MISSILE).
+javelin_rules {
+    speed: 4
+    flight_ticks: 120
+    max_defense: 20
+    damage_base: 20
+    image_directions: 32
+    orientation_mult: 4
+    max_experience: 100
+    attack_timeout: 6
+}
+
+// OG: javelin draws hunter spear; tower/ballista draws enemy spear (tower anim).
 figure_javelin = {
 	animations : {
-		walk : { pack:PACK_SPR_MAIN, id:198, max_frames:4 }
+		walk : { pack:PACK_SPR_AMBIENT, id:44, max_frames:32 }
+		shadow : { pack:PACK_SPR_AMBIENT, id:43, max_frames:32 }
+		tower : { pack:PACK_SPR_MAIN, id:198, max_frames:32 }
+		big_image : { pack:PACK_UNLOADED, id:25, offset:FIGURE_JAVELIN }
 	}
 
-	category: figure_category_hostile
-  max_damage : 70
-  attack_value : 5
-  missile_attack_value : 5
-  missile_delay : 70
-  terrain_usage : TERRAIN_USAGE_ANY
-  big_image : { pack:PACK_UNLOADED, id:25, offset:FIGURE_JAVELIN }
+	category: figure_category_inactive
+    max_damage : 100
+    missile_attack_value : 5
+    terrain_usage : TERRAIN_USAGE_ANY
 }
 
 figure_bolt = {

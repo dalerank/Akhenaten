@@ -65,6 +65,7 @@
 #include "figuretype/figure_immigrant.h"
 #include "game/game_events.h"
 #include "figuretype/figure_missile.h"
+#include "figuretype/figure_javelin.h"
 #include "figuretype/figure_hunter.h"
 #include "figuretype/figure_stonemason.h"
 #include "figuretype/figure_tomb_artisan.h"
@@ -1667,6 +1668,43 @@ static int __test_enemy_archer_fire_initial_missile(int fid) {
     return 1;
 }
 ANK_FUNCTION_1(__test_enemy_archer_fire_initial_missile);
+
+// Spawn a missile on dst (same tile as target) so the next action tick can hit.
+static int __test_missile_create(int shooter_fid, int type, int dst_x, int dst_y) {
+    figure *shooter = figure_get(shooter_fid);
+    if (!shooter || !shooter->is_alive()) {
+        return 0;
+    }
+    tile2i dst(dst_x, dst_y);
+    auto *missile = figure_missile::create(shooter_fid, dst, dst, (e_figure_type)type);
+    return missile ? missile->id() : 0;
+}
+ANK_FUNCTION_4(__test_missile_create);
+
+// Returns figure type of OG javelin attack target on tile, or 0.
+static int __test_javelin_target_type_at(int x, int y) {
+    figure_id tid = javelin_find_attack_target(tile2i(x, y));
+    figure *f = tid ? figure_get(tid) : nullptr;
+    return f ? (int)f->type : 0;
+}
+ANK_FUNCTION_2(__test_javelin_target_type_at);
+
+static int __test_figure_missile_defense(int type) {
+    return figure_static_params::get((e_figure_type)type).missile_defense_value;
+}
+ANK_FUNCTION_1(__test_figure_missile_defense);
+
+static int __test_figure_get_formation_id(int fid) {
+    figure *f = figure_get(fid);
+    return f ? f->formation_id : 0;
+}
+ANK_FUNCTION_1(__test_figure_get_formation_id);
+
+static int __test_formation_get_experience(int formation_id) {
+    formation *m = formation_get(formation_id);
+    return m ? m->experience : -1;
+}
+ANK_FUNCTION_1(__test_formation_get_experience);
 
 static void __test_make_floodplain_water(int x, int y) {
     map_terrain_add(tile2i(x, y), TERRAIN_WATER | TERRAIN_FLOODPLAIN);
