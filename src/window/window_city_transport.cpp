@@ -44,6 +44,10 @@ e_transport_pick_mode window_city_transport_pick_mode() {
     return selected_transport_pick_mode;
 }
 
+int window_city_transport_figure_id() {
+    return selected_transport_figure_id;
+}
+
 void __window_city_transport_show(int transport_figure_id, int mode) {
     window_city_transport_show(transport_figure_id, (e_transport_pick_mode)mode);
 }

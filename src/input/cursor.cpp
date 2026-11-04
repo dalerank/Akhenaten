@@ -1,7 +1,14 @@
 #include "cursor.h"
 
 #include "building/construction/build_planner.h"
+#include "city/city_figures.h"
+#include "figure/formation.h"
+#include "figure/formation_batalion.h"
+#include "figuretype/figure_transport_ship.h"
+#include "grid/terrain.h"
 #include "input/mouse.h"
+#include "widget/widget_city.h"
+#include "window/window_city_transport.h"
 
 static const cursor ARROW[] = {{0,
                                 0,
@@ -370,9 +377,53 @@ const cursor* input_cursor_data(cursor_shape cursor_id, cursor_scale scale) {
     }
 }
 
+namespace {
+
+// OG transport_cursor_can_embark / can_land — valid target under mouse.
+// Dedicated ship cursor bitmaps are not in the engine yet; sword = allowed,
+// arrow = blocked (same gating, remake stand-ins).
+bool transport_cursor_can_embark(int ship_id, tile2i tile) {
+    figure *f = figure_get(ship_id);
+    auto *ship = f ? smart_cast<figure_transport_ship>(f) : nullptr;
+    if (!ship || !ship->base.is_alive() || ship->has_troops() || !tile.valid()) {
+        return false;
+    }
+    int fid = formation_batalion_at(tile);
+    if (fid <= 0) {
+        fid = formation_batalion_at_building(tile.grid_offset());
+    }
+    if (fid <= 0) {
+        return false;
+    }
+    formation *m = formation_get(fid);
+    return m && m->in_use && m->own_batalion && !m->in_distant_battle && m->num_figures > 0;
+}
+
+bool transport_cursor_can_land(int ship_id, tile2i tile) {
+    figure *f = figure_get(ship_id);
+    auto *ship = f ? smart_cast<figure_transport_ship>(f) : nullptr;
+    if (!ship || !ship->base.is_alive() || !ship->has_troops() || !tile.valid()) {
+        return false;
+    }
+    return !map_terrain_is(tile, TERRAIN_WATER | TERRAIN_DEEPWATER);
+}
+
+} // namespace
+
 void input_cursor_update(xstring window) {
     if (window == "window_city_military" || window == "window_city_warship") {
         mouse_set_cursor(CURSOR_SWORD);
+    } else if (window == "window_city_transport") {
+        const int ship_id = window_city_transport_figure_id();
+        const tile2i tile = g_screen_city.current_tile;
+        const e_transport_pick_mode mode = window_city_transport_pick_mode();
+        bool allowed = false;
+        if (mode == TRANSPORT_PICK_FORMATION) {
+            allowed = transport_cursor_can_embark(ship_id, tile);
+        } else if (mode == TRANSPORT_PICK_LANDING) {
+            allowed = transport_cursor_can_land(ship_id, tile);
+        }
+        mouse_set_cursor(allowed ? CURSOR_SWORD : CURSOR_ARROW);
     } else if (window == "window_city" && g_city_planner.build_type == BUILDING_CLEAR_LAND) {
         mouse_set_cursor(CURSOR_SHOVEL);
     } else {

@@ -13,3 +13,4 @@ using e_transport_pick_mode_tokens_t = token_holder<e_transport_pick_mode, TRANS
 
 void window_city_transport_show(int transport_figure_id, e_transport_pick_mode mode);
 e_transport_pick_mode window_city_transport_pick_mode();
+int window_city_transport_figure_id();

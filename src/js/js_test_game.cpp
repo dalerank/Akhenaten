@@ -100,6 +100,7 @@
 #include "city/city_religion_seth.h"
 #include "grid/road_access.h"
 #include "city/city_warnings.h"
+#include "city/legion_requests.h"
 #include "core/xstring.h"
 #include "grid/road_network.h"
 #include "grid/tiles.h"
@@ -2206,7 +2207,12 @@ static void __test_figure_kill(int fid) {
     figure *f = figure_get(fid);
     if (f && f->is_alive()) {
         f->wait_ticks = 0; // corpse timer must not inherit roam lifetime
-        f->kill();
+        // Prefer type override (e.g. transport drown + shipwreck) over figure::kill.
+        if (figure_impl *impl = f->dcast()) {
+            impl->kill();
+        } else {
+            f->kill();
+        }
     }
 }
 ANK_FUNCTION_1(__test_figure_kill);
@@ -2835,9 +2841,9 @@ int __test_player_transport_spawn_for_embark(int soldier_count) {
         soldier_count = 8;
     }
 
-    // Prefer a clear shore tile on the land strip (avoid stomping map buildings).
+    // Prefer a clear shore tile adjacent to embark water (Chebyshev distance 1).
     tile2i shore = tile2i::invalid;
-    for (int dx = -2; dx <= 2; dx++) {
+    for (int dx = -1; dx <= 1; dx++) {
         tile2i cand(cx + dx, cy - 1);
         if (!cand.valid()) {
             continue;
@@ -2950,7 +2956,8 @@ int __test_player_transport_water_y() {
 }
 ANK_FUNCTION(__test_player_transport_water_y);
 
-// Snap player transport to its sail destination and enter ANCHORED so disembark timer can run.
+// Snap player transport to its sail destination. Keep GOING_TO_LANDING so the next
+// action tick lands troops immediately (OG: disembark on arrival, no timer).
 void __test_transport_ship_snap_to_destination(int fid) {
     figure *f = figure_get(fid);
     if (!f || !f->is_alive()) {
@@ -2964,12 +2971,117 @@ void __test_transport_ship_snap_to_destination(int fid) {
         f->tile = f->destination_tile;
         f->previous_tile = f->destination_tile;
     }
-    ship->runtime_data().embark_ticks = 0;
-    f->advance_action(ACTION_214_TRANSPORT_SHIP_ANCHORED);
+    if (ship->has_troops()) {
+        const int state = f->action_state;
+        // Keep kingdom-request / return states; only force landing for ordinary sail-home snaps.
+        if (state != ACTION_221_TRANSPORT_SHIP_GOING_TO_REQUEST
+            && state != ACTION_222_TRANSPORT_SHIP_AWAY_ON_REQUEST
+            && state != ACTION_223_TRANSPORT_SHIP_RETURNING_FROM_REQUEST
+            && state != ACTION_220_TRANSPORT_SHIP_RETURNING_TO_LANDING) {
+            f->advance_action(ACTION_219_TRANSPORT_SHIP_GOING_TO_LANDING);
+        }
+    }
     f->direction = DIR_FIGURE_NONE;
     f->route_remove();
 }
 ANK_FUNCTION_1(__test_transport_ship_snap_to_destination);
+
+void __test_formation_set_empire_service(int formation_id, int value) {
+    formation *m = formation_get(formation_id);
+    if (!m || !m->in_use) {
+        return;
+    }
+    m->empire_service = value ? 1 : 0;
+}
+ANK_FUNCTION_2(__test_formation_set_empire_service);
+
+int __test_formation_request_event_id(int formation_id) {
+    formation *m = formation_get(formation_id);
+    if (!m || !m->in_use) {
+        return -1;
+    }
+    return m->request_event_id;
+}
+ANK_FUNCTION_1(__test_formation_request_event_id);
+
+int __test_transport_ship_request_event_id(int ship_id) {
+    figure *f = figure_get(ship_id);
+    auto *ship = f ? smart_cast<figure_transport_ship>(f) : nullptr;
+    if (!ship) {
+        return -1;
+    }
+    return ship->runtime_data().request_event_id;
+}
+ANK_FUNCTION_1(__test_transport_ship_request_event_id);
+
+void __test_legion_dispatch_to_request(int event_id) {
+    formation_legions_dispatch_to_request(event_id);
+}
+ANK_FUNCTION_1(__test_legion_dispatch_to_request);
+
+void __test_legion_return_from_request(int event_id) {
+    formation_legions_return_from_request(event_id);
+}
+ANK_FUNCTION_1(__test_legion_return_from_request);
+
+int __test_formation_request_strength(int event_id) {
+    return formation_request_strength(event_id, nullptr, nullptr);
+}
+ANK_FUNCTION_1(__test_formation_request_strength);
+
+void __transport_ship_set_evade(int ship_id) {
+    figure *f = figure_get(ship_id);
+    if (!f) {
+        return;
+    }
+    if (auto *ship = smart_cast<figure_transport_ship>(f)) {
+        ship->set_evade_order();
+    }
+}
+ANK_FUNCTION_1(__transport_ship_set_evade)
+
+void __transport_ship_move_to(int ship_id, int x, int y) {
+    figure *f = figure_get(ship_id);
+    if (!f) {
+        return;
+    }
+    if (auto *ship = smart_cast<figure_transport_ship>(f)) {
+        ship->move_to_tile(tile2i(x, y));
+    }
+}
+ANK_FUNCTION_3(__transport_ship_move_to)
+
+void __transport_ship_set_repair(int ship_id) {
+    figure *f = figure_get(ship_id);
+    if (!f) {
+        return;
+    }
+    if (auto *ship = smart_cast<figure_transport_ship>(f)) {
+        ship->set_repair_order();
+    }
+}
+ANK_FUNCTION_1(__transport_ship_set_repair)
+
+int __test_shipyard_find_best_dock(int fid) {
+    return building_shipyard_find_best_dock((figure_id)fid);
+}
+ANK_FUNCTION_1(__test_shipyard_find_best_dock)
+
+int __test_formation_alive_count(int formation_id) {
+    formation *m = formation_get(formation_id);
+    if (!m || !m->in_use) {
+        return 0;
+    }
+    int alive = 0;
+    for (int i = 0; i < formation::max_figures_count && m->figures[i]; i++) {
+        figure *f = figure_get(m->figures[i]);
+        if (f && f->is_alive()) {
+            alive++;
+        }
+    }
+    return alive;
+}
+ANK_FUNCTION_1(__test_formation_alive_count)
 
 int __test_count_visible_enemy_soldiers() {
     int count = 0;

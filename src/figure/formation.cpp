@@ -27,12 +27,14 @@ void formations_t::clear_all() {
     for (int i = 0; i < MAX_FORMATIONS; i++) {
         memset(&formations[i], 0, sizeof(formation));
         formations[i].id = i;
+        formations[i].request_event_id = -1;
     }
 }
 
 void formations_t::clear(int formation_id) {
     memset(&formations[formation_id], 0, sizeof(formation));
     formations[formation_id].id = formation_id;
+    formations[formation_id].request_event_id = -1;
 }
 
 formation *formations_t::get_from_herd(int index) {
@@ -703,8 +705,9 @@ io_buffer* iob_formations = new io_buffer([](io_buffer* iob, size_t version) {
         iob->bind____skip(17);
         iob->bind(BIND_SIGNATURE_INT16, &f->invasion_sequence);
 
-        // ship_figure_id is runtime-only (OG embark link); never trust leftover memory after load.
+        // ship_figure_id / request_event_id are runtime embark/request links.
         f->ship_figure_id = 0;
+        f->request_event_id = -1;
 
         if (!f->home.valid() && f->is_herd) {
             memset(f, 0, sizeof(formation));

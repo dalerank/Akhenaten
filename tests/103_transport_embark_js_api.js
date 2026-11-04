@@ -28,18 +28,24 @@ function run_test() {
         return
     }
 
+    // OG: embark arms GOING_TO_LEGION; board happens when the ship arrives and
+    // the company is ready at the shore (soldiers already staged in this test).
     __transport_ship_embark(ship, company)
-    if (!__transport_ship_has_troops(ship)) {
+
+    var boarded = false
+    for (var i = 0; i < 40; i++) {
+        __test_figure_action_perform(ship)
+        if (__transport_ship_has_troops(ship)) {
+            boarded = true
+            break
+        }
+    }
+    if (!boarded) {
         __log_info_native('[test:103] embark failed')
         __test_signal_ready()
         return
     }
     __log_marker('player_transport_embark_ok')
-
-    // Finish boarding timer at moored (phase 1 → 2).
-    for (var i = 0; i < 60; i++) {
-        __test_figure_action_perform(ship)
-    }
 
     var wx = __test_player_transport_water_x()
     var wy = __test_player_transport_water_y()
@@ -48,12 +54,11 @@ function run_test() {
     __transport_ship_sail_to(ship, wx + 2, wy)
     __log_marker('player_transport_sail_ok')
 
-    // Avoid long water-path waits in the hermetic map: snap to destination then
-    // let the ANCHORED disembark timer complete.
+    // Avoid long water-path waits: snap to destination; OG lands on the next action.
     __test_transport_ship_snap_to_destination(ship)
 
     var disembarked = false
-    for (var j = 0; j < 80; j++) {
+    for (var j = 0; j < 20; j++) {
         __test_figure_action_perform(ship)
         if (!__transport_ship_has_troops(ship)) {
             disembarked = true

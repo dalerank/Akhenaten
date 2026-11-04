@@ -11,6 +11,7 @@
 #include "grid/water.h"
 #include "grid/figure.h"
 #include "grid/terrain.h"
+#include "scenario/map.h"
 #include "city/city_message.h"
 #include "city/city_figures.h"
 #include "game/game.h"
@@ -158,9 +159,48 @@ water_dest map_water_get_wharf_for_new_warship(figure &boat) {
 void figure_warship::on_create() {
     figure_impl::on_create();
     base.allow_move_type = EMOVE_WATER;
-    runtime_data().active_order = e_order_goto_wharf;
-    runtime_data().crew_fatigue = 0;
-    runtime_data().fatigue_tick = 0;
+    auto &d = runtime_data();
+    d.active_order = e_order_goto_wharf;
+    d.crew_fatigue = 0;
+    d.fatigue_tick = 0;
+    d.answers_requests = 0;
+    d.request_event_id = -1;
+}
+
+void figure_warship::begin_kingdom_request(int event_id) {
+    auto &d = runtime_data();
+    d.request_event_id = (int16_t)event_id;
+    tile2i entry = scenario_map_river_entry();
+    if (!entry.valid()) {
+        entry = scenario_map_entry();
+    }
+    base.destination_tile = entry;
+    route_remove();
+    advance_action(ACTION_221_WARSHIP_GOING_TO_REQUEST);
+}
+
+void figure_warship::return_from_kingdom_request() {
+    auto &d = runtime_data();
+    d.request_event_id = -1;
+    building *home_b = home();
+    building_warship_wharf *wharf = (home_b && home_b->id) ? home_b->dcast_warship_wharf() : nullptr;
+    tile2i dock = tile2i::invalid;
+    if (wharf) {
+        dock = wharf->get_water_access_tiles().point_a;
+        if (!dock.valid()) {
+            map_water_tile_next_to(wharf->base.tile, wharf->base.size, dock);
+        }
+    }
+    if (!dock.valid()) {
+        dock = scenario_map_river_entry();
+    }
+    if (!dock.valid()) {
+        dock = base.tile;
+    }
+    base.destination_tile = dock;
+    base.set_flag(e_figure_flag_invisible, false);
+    route_remove();
+    advance_action(ACTION_223_WARSHIP_RETURNING_FROM_REQUEST);
 }
 
 void figure_warship::on_destroy() {
@@ -482,6 +522,50 @@ void figure_warship::figure_action() {
         return;
     }
 
+    // OG kingdom request cycle: sail out → off-map → return to wharf water.
+    switch (action_state()) {
+    case ACTION_221_WARSHIP_GOING_TO_REQUEST: {
+        tile2i entry = scenario_map_river_entry();
+        if (!entry.valid()) {
+            entry = scenario_map_entry();
+        }
+        base.destination_tile = entry;
+        base.move_ticks(1);
+        base.height_adjusted_ticks = 0;
+        if (direction() == DIR_FIGURE_NONE) {
+            advance_action(ACTION_222_WARSHIP_AWAY_ON_REQUEST);
+            route_remove();
+            base.set_flag(e_figure_flag_invisible);
+        } else if (direction() == DIR_FIGURE_REROUTE) {
+            route_remove();
+        } else if (direction() == DIR_FIGURE_CAN_NOT_REACH) {
+            kill();
+        }
+        return;
+    }
+    case ACTION_222_WARSHIP_AWAY_ON_REQUEST:
+        base.set_flag(e_figure_flag_invisible);
+        return;
+    case ACTION_223_WARSHIP_RETURNING_FROM_REQUEST:
+        base.set_flag(e_figure_flag_invisible, false);
+        base.move_ticks(1);
+        base.height_adjusted_ticks = 0;
+        if (direction() == DIR_FIGURE_NONE) {
+            runtime_data().active_order = e_order_goto_wharf;
+            advance_action(ACTION_207_WARSHIP_GOING_TO_WHARF);
+            route_remove();
+        } else if (direction() == DIR_FIGURE_REROUTE) {
+            route_remove();
+        } else if (direction() == DIR_FIGURE_CAN_NOT_REACH) {
+            runtime_data().active_order = e_order_goto_wharf;
+            advance_action(ACTION_207_WARSHIP_GOING_TO_WHARF);
+            route_remove();
+        }
+        return;
+    default:
+        break;
+    }
+
     warship_update_crew_fatigue(this);
 
     // OG: critically damaged ships head to a shipwright on their own.
@@ -640,6 +724,9 @@ void figure_warship::update_animation() {
     case ACTION_211_WARSHIP_IDLE_AT_TILE: anim_key = "idle"; break;
     case ACTION_206_WARSHIP_GOING_TO_PATROL: anim_key = "walk"; break;
     case ACTION_210_WARSHIP_GOING_TO_TILE: anim_key = "walk"; break;
+    case ACTION_221_WARSHIP_GOING_TO_REQUEST:
+    case ACTION_223_WARSHIP_RETURNING_FROM_REQUEST: anim_key = "walk"; break;
+    case ACTION_222_WARSHIP_AWAY_ON_REQUEST: anim_key = "idle"; break;
     }
 
     image_set_animation(anim_key);

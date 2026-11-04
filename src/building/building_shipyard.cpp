@@ -3,6 +3,7 @@ BUILDING_RUNTIME_DATA_IMPL(building_shipyard)
 
 #include "building/building.h"
 #include "building/building_warship_wharf.h"
+#include "building/building_transport_wharf.h"
 #include "figuretype/figure_fishing_boat.h"
 #include "figuretype/figure_war_ship.h"
 #include "figuretype/figure_transport_ship.h"
@@ -83,13 +84,18 @@ void finish_ship_repair(figure *f) {
 
     if (auto *transport = smart_cast<figure_transport_ship>(f)) {
         building *home_b = transport->home();
-        if (home_b && home_b->id) {
-            tile2i dock(home_b->tiles[0]);
+        building_transport_wharf *wharf = (home_b && home_b->id) ? home_b->dcast_transport_wharf() : nullptr;
+        if (wharf) {
+            tile2i dock = wharf->get_water_access_tiles().point_a;
+            if (!dock.valid()) {
+                dock = tile2i(home_b->tiles[0]);
+            }
             if (dock.valid()) {
                 transport->move_to_wharf(home_b->id, dock);
                 return;
             }
         }
+        transport->advance_action(ACTION_214_TRANSPORT_SHIP_SAILING);
     }
 }
 
@@ -174,6 +180,10 @@ int building_shipyard_find_best_dock(figure_id fid) {
             return;
         }
         int size = shipyard->repair_queue_size();
+        if (size < 0) {
+            building_shipyard_repair_queue_add(b.id);
+            size = shipyard->repair_queue_size();
+        }
         if (size < 0) {
             return;
         }
@@ -303,10 +313,19 @@ void building_shipyard::spawn_figure() {
     case FIGURE_TRANSPORT_SHIP:
         if ((params.transport_progress_cost > 0) && base.progress >= params.transport_progress_cost) {
             figure *f = figure_create(FIGURE_TRANSPORT_SHIP, boat_tile, DIR_0_TOP_RIGHT);
-            f->action_state = ACTION_211_TRANSPORT_SHIP_CREATED;
+            // OG: WAITING, then sail to a free transport wharf (not the shipwright).
+            f->action_state = ACTION_211_TRANSPORT_SHIP_WAITING;
             f->direction = (base.orientation + 3) % 8;
-            f->set_home(&base);
-            base.set_figure(BUILDING_SLOT_BOAT, f);
+            water_dest wharf = map_water_get_wharf_for_new_transport_ship(*f);
+            if (wharf.found) {
+                building *home_wharf = building_get(wharf.bid);
+                f->set_home(wharf.bid);
+                if (home_wharf && home_wharf->id) {
+                    home_wharf->set_figure(BUILDING_SLOT_BOAT, f);
+                }
+            } else {
+                f->set_home(&base);
+            }
             base.progress = 0;
             d.process_type = FIGURE_NONE;
         }

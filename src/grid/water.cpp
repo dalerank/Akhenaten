@@ -8,13 +8,17 @@
 #include "grid/image.h"
 #include "grid/point.h"
 #include "grid/property.h"
+#include "grid/ring.h"
 #include "grid/terrain.h"
 #include "grid/tiles.h"
 #include "grid/routing/routing.h"
+#include "scenario/map.h"
 
 #include <algorithm>
 #include <array>
+#include <cmath>
 #include <cstdlib>
+#include <cfloat>
 
 tile_cache river_tiles_cache;
 tile_cache g_river_shore;
@@ -403,4 +407,339 @@ void map_water_recompute_depth_region(tile2i tmin, tile2i tmax) {
     tile2i rmin(tmin.x() - 1, tmin.y() - 1);
     tile2i rmax(tmax.x() + 1, tmax.y() + 1);
     map_tiles_foreach_region_tile(rmin, rmax, recompute_depth_tile);
+}
+
+namespace {
+
+bool landing_tile_ok(tile2i t) {
+    if (!t.valid()) {
+        return false;
+    }
+    const int offset = t.grid_offset();
+    if (map_terrain_is(offset, TERRAIN_ROAD) || map_terrain_is(offset, TERRAIN_SUBMERGED_ROAD)) {
+        return true;
+    }
+    if (map_terrain_is(offset, TERRAIN_WATER | TERRAIN_DEEPWATER)) {
+        return false;
+    }
+    for (int d = 0; d < 8; d++) {
+        const int n = offset + map_grid_direction_delta(d);
+        if (map_grid_is_valid_offset(n) && map_terrain_is(n, TERRAIN_WATER | TERRAIN_DEEPWATER)) {
+            return false;
+        }
+    }
+    return true;
+}
+
+bool free_land_tile(tile2i t) {
+    if (!t.valid()) {
+        return false;
+    }
+    if (map_terrain_is(t, TERRAIN_WATER | TERRAIN_DEEPWATER | TERRAIN_BUILDING | TERRAIN_WALL | TERRAIN_ROCK
+            | TERRAIN_ELEVATION)) {
+        return false;
+    }
+    if (map_building_at(t) > 0) {
+        return false;
+    }
+    return true;
+}
+
+} // namespace
+
+int map_water_landing_point(tile2i landing, tile2i ship, tile2i &out) {
+    // OG map_water_landing_point(x0,y0 landing → x1,y1 ship).
+    if (!landing.valid()) {
+        out = tile2i::invalid;
+        return 0;
+    }
+    if (landing == ship || !ship.valid()) {
+        out = landing;
+        return 0;
+    }
+
+    const int x0 = landing.x();
+    const int y0 = landing.y();
+    const int x1 = ship.x();
+    const int y1 = ship.y();
+    const int dx = x1 - x0;
+    const int dy = y1 - y0;
+
+    int best = 0;
+    int best_x = x0;
+    int best_y = y0;
+    int sx = 0;
+    int sy = 0;
+    double slope;
+    double inverse;
+    if (dx == 0) {
+        slope = FLT_MAX;
+        inverse = 0.0;
+    } else if (dy == 0) {
+        slope = 0.0;
+        inverse = FLT_MAX;
+    } else {
+        slope = (double)dy / (double)dx;
+        inverse = 1.0 / slope;
+    }
+    if (dx < 0) {
+        sx = -1;
+    } else if (dx > 0) {
+        sx = 1;
+    }
+    if (dy < 0) {
+        sy = -1;
+    } else if (dy > 0) {
+        sy = 1;
+    }
+
+    const int rows = std::abs(dy);
+    const int columns = std::abs(dx);
+    int y = y0;
+    for (int i = rows; i > 0; i--) {
+        if (inverse == (double)FLT_MAX) {
+            continue;
+        }
+        y += sy;
+        const int ry = y - y0;
+        const int x = (int)std::lround(((double)ry * inverse) + (double)x0);
+        tile2i cand(x, y);
+        if (landing_tile_ok(cand)) {
+            const int d = (x - x0) * (x - x0) + ry * ry;
+            if (d >= best) {
+                best = d;
+                best_x = x;
+                best_y = y;
+            }
+        }
+    }
+    int x = x0;
+    for (int i = columns; i > 0; i--) {
+        if (slope == (double)FLT_MAX) {
+            continue;
+        }
+        x += sx;
+        const int rx = x - x0;
+        const int ty = (int)std::lround(((double)rx * slope) + (double)y0);
+        tile2i cand(x, ty);
+        if (landing_tile_ok(cand)) {
+            const int d = rx * rx + (ty - y0) * (ty - y0);
+            if (d >= best) {
+                best = d;
+                best_x = x;
+                best_y = ty;
+            }
+        }
+    }
+
+    out = tile2i(best_x, best_y);
+    if (x0 != best_x || y0 != best_y) {
+        return best;
+    }
+
+    // Nothing inland along the line: nudge to first dry neighbour (OG order).
+    static const vec2i nudge[8] = {
+        {0, -1}, {1, -1}, {0, 1}, {-1, -1}, {1, 0}, {1, 1}, {-1, 0}, {-1, 1}
+    };
+    for (const vec2i &n : nudge) {
+        tile2i cand = landing.shifted(n);
+        if (cand.valid() && !map_terrain_is(cand, TERRAIN_WATER | TERRAIN_DEEPWATER)) {
+            out = cand;
+            break;
+        }
+    }
+    return best;
+}
+
+bool map_find_nearest_free_land_tile(tile2i &tile) {
+    if (free_land_tile(tile)) {
+        return true;
+    }
+
+    const int map_w = scenario_map_data()->width;
+    const int map_h = scenario_map_data()->height;
+    constexpr int k_max_radius = 5;
+    for (int radius = 1; radius <= k_max_radius; radius++) {
+        const int x_lo = tile.x() - radius;
+        const int x_hi = tile.x() + radius;
+        const int y_lo = tile.y() - radius;
+        const int y_hi = tile.y() + radius;
+        for (int xx = x_lo; xx <= x_hi; xx++) {
+            tile2i top(xx, y_lo);
+            if (top.x() >= 0 && top.x() < map_w && top.y() >= 0 && top.y() < map_h && free_land_tile(top)) {
+                tile = top;
+                return true;
+            }
+            tile2i bot(xx, y_hi);
+            if (bot.x() >= 0 && bot.x() < map_w && bot.y() >= 0 && bot.y() < map_h && free_land_tile(bot)) {
+                tile = bot;
+                return true;
+            }
+        }
+        for (int yy = y_lo + 1; yy <= y_hi - 1; yy++) {
+            tile2i left(x_lo, yy);
+            if (left.x() >= 0 && left.x() < map_w && left.y() >= 0 && left.y() < map_h && free_land_tile(left)) {
+                tile = left;
+                return true;
+            }
+            tile2i right(x_hi, yy);
+            if (right.x() >= 0 && right.x() < map_w && right.y() >= 0 && right.y() < map_h && free_land_tile(right)) {
+                tile = right;
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
+namespace {
+
+bool open_reached_water(tile2i t) {
+    if (!t.valid() || !map_terrain_is(t, TERRAIN_WATER | TERRAIN_DEEPWATER)) {
+        return false;
+    }
+    if (map_routing_distance(t) <= 0) {
+        return false;
+    }
+    // OG open_reached_water: tile + 4 orthogonal neighbours are water.
+    static const vec2i orth[4] = {{0, -1}, {1, 0}, {0, 1}, {-1, 0}};
+    for (const vec2i &d : orth) {
+        tile2i n = t.shifted(d);
+        if (!n.valid() || !map_terrain_is(n, TERRAIN_WATER | TERRAIN_DEEPWATER)) {
+            return false;
+        }
+    }
+    return true;
+}
+
+} // namespace
+
+int map_water_farthest_on_line(tile2i from, tile2i to, tile2i &out) {
+    if (!from.valid()) {
+        out = tile2i::invalid;
+        return 0;
+    }
+    if (!to.valid() || from == to) {
+        out = from;
+        return 0;
+    }
+
+    map_routing_calculate_distances_water_boat(from);
+
+    const int x = from.x();
+    const int y = from.y();
+    const int dx = to.x() - x;
+    const int dy = to.y() - y;
+    int step_x = 0;
+    int step_y = 0;
+    int best = 0;
+    int best_x = x;
+    int best_y = y;
+    double slope;
+    double inverse;
+    if (dx == 0) {
+        slope = FLT_MAX;
+        inverse = 0.0;
+    } else if (dy == 0) {
+        slope = 0.0;
+        inverse = FLT_MAX;
+    } else {
+        slope = (double)dy / (double)dx;
+        inverse = 1.0 / slope;
+    }
+    if (dx < 0) {
+        step_x = -1;
+    } else if (dx > 0) {
+        step_x = 1;
+    }
+    if (dy < 0) {
+        step_y = -1;
+    } else if (dy > 0) {
+        step_y = 1;
+    }
+
+    const int rows = std::abs(dy);
+    const int columns = std::abs(dx);
+    int yy = y;
+    for (int i = rows; i > 0; i--) {
+        if (inverse == (double)FLT_MAX) {
+            continue;
+        }
+        yy += step_y;
+        const int xx = (int)std::lround(((double)(yy - y) * inverse) + (double)x);
+        tile2i cand(xx, yy);
+        if (open_reached_water(cand)) {
+            const int d = (yy - y) * (yy - y) + (xx - x) * (xx - x);
+            if (d >= best) {
+                best = d;
+                best_x = xx;
+                best_y = yy;
+            }
+        }
+    }
+    int xx = x;
+    for (int i = columns; i > 0; i--) {
+        if (slope == (double)FLT_MAX) {
+            continue;
+        }
+        xx += step_x;
+        const int yv = (int)std::lround(((double)(xx - x) * slope) + (double)y);
+        tile2i cand(xx, yv);
+        if (open_reached_water(cand)) {
+            const int d = (yv - y) * (yv - y) + (xx - x) * (xx - x);
+            if (d >= best) {
+                best = d;
+                best_x = xx;
+                best_y = yv;
+            }
+        }
+    }
+
+    out = tile2i(best_x, best_y);
+    return best;
+}
+
+bool map_water_tile_next_to(tile2i building_tile, int size, tile2i &out) {
+    out = tile2i::invalid;
+    if (!building_tile.valid() || size < 1) {
+        return false;
+    }
+
+    constexpr int k_min_water_around = 8;
+    tile2i fallback = tile2i::invalid;
+    const int start = map_ring_start(size, 1);
+    const int end = map_ring_end(size, 1);
+    for (int i = start; i < end; i++) {
+        const ring_tile *rt = map_ring_tile(i);
+        if (!rt) {
+            continue;
+        }
+        const int tx = building_tile.x() + rt->x;
+        const int ty = building_tile.y() + rt->y;
+        if (!map_ring_is_inside_map(tx, ty)) {
+            continue;
+        }
+        tile2i cand(tx, ty);
+        if (!map_terrain_is(cand, TERRAIN_WATER | TERRAIN_DEEPWATER)) {
+            continue;
+        }
+        if (map_terrain_is(cand, TERRAIN_BUILDING)) {
+            continue;
+        }
+        if (!fallback.valid()) {
+            fallback = cand;
+        }
+        const int around =
+            map_terrain_count_directly_adjacent_with_type(cand.grid_offset(), TERRAIN_WATER | TERRAIN_DEEPWATER)
+            + map_terrain_count_diagonally_adjacent_with_type(cand.grid_offset(), TERRAIN_WATER | TERRAIN_DEEPWATER);
+        if (around >= k_min_water_around) {
+            out = cand;
+            return true;
+        }
+    }
+    if (fallback.valid()) {
+        out = fallback;
+        return true;
+    }
+    return false;
 }

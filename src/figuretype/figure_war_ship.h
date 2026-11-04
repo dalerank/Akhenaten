@@ -15,6 +15,10 @@ enum e_warship_action {
     // OG FIGURE_ACTION_WARSHIP_GOING_TO_DOCK / QUEUED_AT_DOCK (shipwright repair).
     ACTION_212_WARSHIP_GOING_TO_SHIPWRIGHT = 212,
     ACTION_213_WARSHIP_QUEUED_AT_SHIPWRIGHT = 213,
+    // OG kingdom troop-request cycle (ships_player / military.c warship).
+    ACTION_221_WARSHIP_GOING_TO_REQUEST = 221,
+    ACTION_222_WARSHIP_AWAY_ON_REQUEST = 222,
+    ACTION_223_WARSHIP_RETURNING_FROM_REQUEST = 223,
 };
 
 class figure_warship : public figure_impl {
@@ -52,7 +56,12 @@ public:
         short last_order;
         int8_t crew_fatigue;   // 0–100; UI bands Rested/Tired/Exhausted
         uint8_t fatigue_tick;  // sub-counter for growth/decay intervals
+        uint8_t answers_requests; // OG figure.answers_requests (fleet advisor)
+        int16_t request_event_id; // OG figure.request_event_id (−1 = none)
     } FIGURE_RUNTIME_DATA_T;
+
+    void begin_kingdom_request(int event_id);
+    void return_from_kingdom_request();
 
     int8_t missile_attack_value() const { return current_params().missile_attack_value; }
     int16_t missile_delay() const { return current_params().missile_delay; }

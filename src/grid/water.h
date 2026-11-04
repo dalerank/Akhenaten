@@ -48,16 +48,14 @@ struct water_dest {
 shore_orientation map_shore_determine_orientation(tile2i tile, int size, bool adjust_xy, bool adjacent = false, int shore_terrain = TERRAIN_WATER);
 
 water_dest map_water_find_shipwreck_tile(figure &wreck);
-// OG fishing boat: if another figure shares the boat's water tile, find a free
-// water tile within radius 5. Returns true when an alternative was found.
+
 bool map_water_find_alternative_fishing_boat_tile(figure &boat, tile2i &tile);
 void map_water_rebuild_shores();
 bool map_water_can_spawn_boat(tile2i tile, int size, tile2i &boat_tile);
 
-// Walk every water tile inside the region (widened by 1) and set/clear
-// TERRAIN_DEEPWATER based on Chebyshev distance to land: d == 1 keeps
-// TERRAIN_WATER only (the 1-tile shallow shore collar), d >= 2 promotes
-// to TERRAIN_DEEPWATER. Off-map counts as land. Mirrors the 1-tile shallow
-// collar that original Pharaoh maps maintain by hand and keeps the
-// deepwater pattern table (which has no land-edge art) off shore tiles.
+int map_water_landing_point(tile2i landing, tile2i ship, tile2i &out);
+bool map_find_nearest_free_land_tile(tile2i &tile);
+
+bool map_water_tile_next_to(tile2i building_tile, int size, tile2i &out);
+int map_water_farthest_on_line(tile2i from, tile2i to, tile2i &out);
 void map_water_recompute_depth_region(tile2i tmin, tile2i tmax);
