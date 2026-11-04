@@ -26,7 +26,8 @@ function window_scenario_selection_custom_on_map_list_click(p) {
 }
 
 function window_scenario_selection_custom_btn_start() {
-    if (scenario.campaign_scenario_id < 0) {
+    // Custom maps outside custom_missions get campaign_scenario_id = -1; still playable.
+    if (!game.session_last_loaded_mission) {
         return
     }
     __game_start_loaded_file()
@@ -40,7 +41,7 @@ function window_scenario_selection_custom_on_btn_start(window) {
 [es=(window_scenario_selection_custom, mission_changed)]
 function window_scenario_selection_custom_on_mission_changed(ev) {
     ui.invalidate_minimap_preview(ev.scenario_minimap.size)
-    ev.side_mission_title.text = mission_selection_title(scenario.campaign_scenario_id)
+    ev.side_mission_title.text = custom_map_selection_title(game.session_last_loaded_mission)
     ev.side_subtitle.text = scenario.subtitle
     ev.side_year.text = scenario_selection_format_start_year(scenario.start_year)
 }
