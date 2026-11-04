@@ -24,6 +24,17 @@
 using e_finance_value_tokens_t = token_holder<e_finance_value, e_finance_value_gold_delivered, e_finance_value_max>;
 const e_finance_value_tokens_t ANK_CONFIG_ENUM(e_finance_value_tokens);
 
+int city_finance_t::house_monthly_tax_units(building_house *house) const {
+    auto &housed = house->runtime_data();
+    int tax_mult = house->model().tax_multiplier;
+    // OG city_finance_collect_monthly_taxes: model tax × house_tax_bonus_percentage when tax_bonus set.
+    if (housed.tax_bonus) {
+        tax_mult = calc_adjust_with_percentage(tax_mult, g_city.taxes.house_tax_bonus_percentage);
+    }
+    tax_mult = g_scenario.house_tax_multiplier(tax_mult);
+    return housed.population * tax_mult;
+}
+
 using e_finance_request_type_tokens_t = token_holder<e_finance_request_type, efinance_request_none, efinance_request_max>;
 const e_finance_request_type_tokens_t ANK_CONFIG_ENUM(e_finance_request_type_tokens);
 
@@ -254,10 +265,9 @@ void city_finance_t::collect_monthly_taxes() {
         auto &housed = house->runtime_data();
         int is_nobles = (house->house_level() >= HOUSE_COMMON_MANOR);
         int population = housed.population;
-        const int scenario_tax_multiplier = g_scenario.house_tax_multiplier(house->model().tax_multiplier);
         data.population.at_level[house->house_level()] += population;
 
-        const int tax = population * scenario_tax_multiplier;
+        const int tax = house_monthly_tax_units(house);
         if (housed.tax_coverage) {
             if (is_nobles) {
                 data.taxes.taxed_nobles += population;

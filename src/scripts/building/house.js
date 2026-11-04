@@ -4,6 +4,7 @@ log_info("akhenaten: building_house.js loaded")
 
 House.property.population = { }
 House.property.tax_coverage = { }
+House.property.tax_bonus = { }
 House.property.tax_income_or_storage = { }
 House.property.house_happiness = { }
 House.property.current_desirability = { }

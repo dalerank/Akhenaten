@@ -205,6 +205,7 @@ void building_house::bind_dynamic(io_buffer *iob, size_t version) {
     iob->bind_u8(d.zookeeper);
     iob->bind_u8(d.frog_infest_days);
     iob->bind_u32(d.last_update_day);
+    iob->bind_u8(d.tax_bonus);
 }
 
 int building_house::get_fire_risk(int value) const {

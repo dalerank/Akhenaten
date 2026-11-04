@@ -84,6 +84,7 @@ public:
         uint8_t house_happiness;
         uint8_t criminal_active;
         uint8_t tax_coverage;
+        uint8_t tax_bonus;
         uint8_t days_without_food;
         uint8_t hsize;
         uint8_t drunkard_active;
@@ -163,7 +164,7 @@ public:
     static const model_house &get_model(int level);
 };
 ANK_CONFIG_PROPERTY(building_house::runtime_data_t,
-    population, tax_coverage, house_happiness,
+    population, tax_coverage, tax_bonus, house_happiness,
     entertainment, water_supply, bazaar_access, education, school, library, academy,
     magistrate, num_gods, dentist, apothecary, health, mortuary, physician,
     booth_juggler, bandstand_juggler, senet_player, zookeeper, criminal_active,

@@ -4,6 +4,8 @@
 
 #include "core/archive.h"
 
+class building_house;
+
 enum e_finance_request_type {
     efinance_request_none = 0,
     efinance_request_festival,
@@ -76,6 +78,7 @@ struct city_taxes_t {
     int32_t untaxed_nobles;
     int32_t estimated_uncollected;
     int32_t estimated_income;
+    int house_tax_bonus_percentage = 110;
     int8_t percentage_taxed_citizens;
     int8_t percentage_taxed_nobles;
     int8_t percentage_taxed_people;
@@ -93,7 +96,7 @@ struct city_taxes_t {
     } monthly;
 };
 ANK_CONFIG_PROPERTY(city_taxes_t,
-    percentage_taxed_people, estimated_uncollected, estimated_income)
+    percentage_taxed_people, estimated_uncollected, estimated_income, house_tax_bonus_percentage)
 
 struct palace_treasury_shares_t {
     int tax_collector_weight = 2;
@@ -133,6 +136,7 @@ struct city_finance_t {
     void update_estimate_taxes();
     void estimate_wages();
     void collect_monthly_taxes();
+    int house_monthly_tax_units(building_house *house) const;
     void advance_month();
     void pay_monthly_wages();
     void pay_monthly_interest();
