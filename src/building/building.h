@@ -199,7 +199,7 @@ public:
     building_input input;
     building_output output;
 
-    bool has_well_access;
+    uint8_t has_well_access; // 0..5; house ticks ±1/day from well coverage
     uint8_t num_workers;
     uint8_t max_workers;
     uint16_t produce_uptick;

@@ -3,6 +3,7 @@
 #include "grid/road_canal.h"
 #include "grid/point.h"
 #include "grid/grid.h"
+#include "grid/moisture.h"
 #include "grid/water.h"
 #include "grid/water_supply.h"
 #include "grid/sprite.h"
@@ -46,6 +47,11 @@ void __map_terrain_remove(tile2i tile, int terrain) {
     map_terrain_remove(tile, terrain);
 }
 ANK_FUNCTION_2(__map_terrain_remove)
+
+int __map_moisture_get(tile2i tile) {
+    return map_moisture_get(tile.grid_offset());
+}
+ANK_FUNCTION_1(__map_moisture_get)
 
 void __map_water_rebuild_shores() {
     map_water_rebuild_shores();

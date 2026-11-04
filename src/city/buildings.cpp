@@ -5,6 +5,7 @@
 #include "core/profiler.h"
 #include "grid/water.h"
 #include "grid/building.h"
+#include "grid/terrain.h"
 #include "grid/routing/routing.h"
 #include "city/city.h"
 
@@ -226,7 +227,7 @@ void city_buildings_t::reset_tracked_buildings_counters() {
 }
 
 void city_buildings_t::update_day() {
-    buildings_valid_do([] (building &b) {
+    buildings_valid_do([](building &b) {
         b.dcast()->update_day();
     });
 }
@@ -284,7 +285,8 @@ void city_buildings_t::update_month() {
 }
 
 void city_buildings_t::update_week() {
-    buildings_valid_do([] (building &b) {
+    map_terrain_remove_all(TERRAIN_FOUNTAIN_RANGE);
+    buildings_valid_do([](building &b) {
         b.dcast()->update_week();
     });
 }

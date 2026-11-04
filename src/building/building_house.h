@@ -105,6 +105,7 @@ public:
     virtual void on_place_checks() override;
     virtual e_sound_channel_city sound_channel() const override { return SOUND_CHANNEL_CITY_STATUE; }
     virtual void on_undo() override;
+    virtual void update_day() override;
     virtual void update_week() override;
     virtual void update_count() const override;
     virtual void bind_dynamic(io_buffer *iob, size_t version) override;

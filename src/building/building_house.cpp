@@ -128,6 +128,12 @@ void building_house::on_undo() {
     /*nothing*/
 }
 
+void building_house::update_day() {
+    base.has_well_access = (uint8_t)std::clamp((int)base.has_well_access + (map_terrain_is(base.tile, TERRAIN_FOUNTAIN_RANGE) ? 1 : -1), 0, 5);
+    base.has_water_access = runtime_data().water_supply ? 1 : 0;
+    building_impl::update_day();
+}
+
 void building_house::update_week() {
     building_impl::update_week();
 }

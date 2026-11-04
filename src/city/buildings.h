@@ -50,9 +50,6 @@ struct city_buildings_t {
     void shutdown();
 
     void update_tick(bool refresh_only);
-    void update_water_supply_houses();
-    void mark_well_access(building *well);
-    void update_wells_range();
     void update_canals_from_water_lifts();
     void pump_water_lifts_iterative();
     void stamp_water_lift_irrigation();

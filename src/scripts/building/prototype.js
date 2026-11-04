@@ -29,6 +29,7 @@ Building.property.has_road_access = { }
 Building.property.road_network_id = { }
 Building.property.distance_from_entry = { }
 Building.property.has_water_access = { }
+Building.property.has_well_access = { }
 Building.property.spawned_worker_this_month = { }
 Building.property.play_animation = { }
 Building.property.destroy_reason = { }
