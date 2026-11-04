@@ -21,6 +21,35 @@ struct grid_bridge_t {
 
 grid_bridge_t g_bridge;
 
+namespace {
+// Pharaoh: open-water tiles between shores; middle >= 4 aborts (max total span 5).
+constexpr int BRIDGE_MAX_OPEN_WATER_TILES = 4;
+
+bool is_shore_water(int grid_offset) {
+    return map_terrain_count_directly_adjacent_with_type(grid_offset, TERRAIN_WATER) == 3
+      && map_terrain_count_directly_adjacent_with_type(grid_offset, TERRAIN_FLOODPLAIN) == 0;
+}
+
+bool has_ferry_lane_around(int grid_offset) {
+    static const int deltas[] = {
+        GRID_OFFSET(0, -1),
+        GRID_OFFSET(1, -1),
+        GRID_OFFSET(1, 0),
+        GRID_OFFSET(1, 1),
+        GRID_OFFSET(0, 1),
+        GRID_OFFSET(-1, 1),
+        GRID_OFFSET(-1, 0),
+        GRID_OFFSET(-1, -1),
+    };
+    for (int delta : deltas) {
+        if (map_terrain_is(grid_offset + delta, TERRAIN_FERRY_ROUTE)) {
+            return true;
+        }
+    }
+    return false;
+}
+} // namespace
+
 int map_bridge_building_length(void) {
     return g_bridge.length;
 }
@@ -39,14 +68,11 @@ int map_bridge_calculate_length_direction(int x, int y, int* length, int* direct
     if (!map_terrain_is(grid_offset, TERRAIN_WATER))
         return 0;
 
-    // Floodplain water is not a valid bridge span (Nile channel without floodplain is OK).
-    if (map_terrain_is(grid_offset, TERRAIN_FLOODPLAIN))
-        return 0;
-
     if (map_terrain_is(grid_offset, TERRAIN_ROAD | TERRAIN_BUILDING))
         return 0;
 
-    if (map_terrain_count_directly_adjacent_with_type(grid_offset, TERRAIN_WATER) != 3)
+    // OG shore water: three water neighbors and no adjacent floodplain.
+    if (!is_shore_water(grid_offset))
         return 0;
 
     if (!map_terrain_is(grid_offset + GRID_OFFSET(0, -1), TERRAIN_WATER)) {
@@ -66,7 +92,62 @@ int map_bridge_calculate_length_direction(int x, int y, int* length, int* direct
     }
     *direction = g_bridge.direction;
     g_bridge.length = 1;
-    const int max_length = bridge_span_max_length(is_ship_bridge);
+
+    if (!is_ship_bridge) {
+        // OG low bridge: walk until land, reject on tree/ferry/deepwater-road/diagonal gap;
+        // open-water middle tiles capped at BRIDGE_MAX_OPEN_WATER_TILES.
+        int middle = 0;
+        while (true) {
+            grid_offset += g_bridge.direction_grid_delta;
+            g_bridge.length++;
+
+            const int next_offset = grid_offset + g_bridge.direction_grid_delta;
+            if (map_terrain_is(next_offset, TERRAIN_TREE)) {
+                *length = g_bridge.length;
+                return 0;
+            }
+
+            if (map_terrain_is(grid_offset, TERRAIN_DEEPWATER) && map_terrain_is(grid_offset, TERRAIN_ROAD)) {
+                *length = g_bridge.length;
+                return 0;
+            }
+
+            if (has_ferry_lane_around(grid_offset)) {
+                *length = g_bridge.length;
+                return 0;
+            }
+
+            if (!map_terrain_is(next_offset, TERRAIN_WATER)) {
+                break;
+            }
+
+            if (map_terrain_is(next_offset, TERRAIN_ROAD | TERRAIN_BUILDING)) {
+                *length = g_bridge.length;
+                return 0;
+            }
+
+            if (map_terrain_count_diagonally_adjacent_with_type(grid_offset, TERRAIN_WATER) != 4) {
+                *length = g_bridge.length;
+                return 0;
+            }
+
+            middle++;
+            if (middle >= BRIDGE_MAX_OPEN_WATER_TILES) {
+                *length = g_bridge.length;
+                return 0;
+            }
+        }
+
+        g_bridge.end_grid_offset = grid_offset;
+        if (!is_shore_water(grid_offset)) {
+            g_bridge.end_grid_offset = 0;
+        }
+        *length = g_bridge.length;
+        return g_bridge.end_grid_offset;
+    }
+
+    // Ship bridge: remake long-span path (Julius-compatible), with OG ferry/deepwater checks.
+    const int max_length = bridge_span_max_length(true);
     for (int i = 0; i < max_length; i++) {
         grid_offset += g_bridge.direction_grid_delta;
         g_bridge.length++;
@@ -77,14 +158,19 @@ int map_bridge_calculate_length_direction(int x, int y, int* length, int* direct
         if (map_terrain_is(next_offset, TERRAIN_TREE))
             break;
 
+        if (map_terrain_is(grid_offset, TERRAIN_DEEPWATER) && map_terrain_is(grid_offset, TERRAIN_ROAD))
+            break;
+
+        if (has_ferry_lane_around(grid_offset))
+            break;
+
         if (!map_terrain_is(next_offset, TERRAIN_WATER)) {
-            // length includes the start tile; reject spans longer than configured max
             if (g_bridge.length > max_length) {
                 break;
             }
 
             g_bridge.end_grid_offset = grid_offset;
-            if (map_terrain_count_directly_adjacent_with_type(grid_offset, TERRAIN_WATER) != 3)
+            if (!is_shore_water(grid_offset))
                 g_bridge.end_grid_offset = 0;
 
             *length = g_bridge.length;
@@ -96,7 +182,6 @@ int map_bridge_calculate_length_direction(int x, int y, int* length, int* direct
         if (map_terrain_count_diagonally_adjacent_with_type(grid_offset, TERRAIN_WATER) != 4)
             break;
     }
-    // invalid bridge
     *length = g_bridge.length;
     return 0;
 }

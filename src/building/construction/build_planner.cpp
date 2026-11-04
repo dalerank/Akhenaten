@@ -1520,7 +1520,12 @@ bool build_planner::place() {
         int length = 0;
         int direction = 0;
         map_bridge_calculate_length_direction(end.x(), end.y(), &length, &direction, is_ship);
-        placement_cost *= map_bridge_add(end.x(), end.y(), is_ship);
+        const int placed = map_bridge_add(end.x(), end.y(), is_ship);
+        placement_cost *= placed;
+        if (placed < 2) {
+            events::emit(event_city_warning{"#scout_along_river_for_site"});
+            return false;
+        }
         break;
     }
 

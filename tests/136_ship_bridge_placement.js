@@ -67,12 +67,12 @@ function run_test() {
 
     __log_marker('test_ship_bridge_placed:len=' + length + ':' + start.x + ',' + start.y)
 
-    // --- long span: length 10 > low max 8, OK for ship max 40 ---
+    // --- long span: length 10 > low OG max 5, OK for ship max 40 ---
     test_reload_city_session('data/default.map')
     __test_set_treasury(10000)
     start = test_prepare_bridge_channel(cx, cy, 3, 10)
     if (__map_bridge_calculate_valid(start, false)) {
-        __log_info_native('[test:136] low should reject len=10')
+        __log_info_native('[test:136] low should reject len=10 (OG middle cap)')
         __test_signal_ready()
         return
     }
