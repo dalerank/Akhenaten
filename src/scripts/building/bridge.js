@@ -7,7 +7,7 @@ building_low_bridge {
     base { id:63 }
   }
   building_size : 1
-  max_length : 8
+  max_length : 5
   min_length : 2
   flags {
     is_water_crossing: true

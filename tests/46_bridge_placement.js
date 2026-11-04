@@ -1,6 +1,8 @@
-// Low Bridge: synthetic 3-wide channel → place via map_bridge_add; floodplain reject;
-// span longer than max_length reject; citizen road routing on bridge tiles.
-// Markers: test_bridge_placed / test_bridge_floodplain_reject / test_bridge_max_reject / test_bridge_citizen_road
+// Low Bridge (OG): synthetic 3-wide channel → place via map_bridge_add;
+// floodplain-adjacent shore reject; open-water middle < 4 (total ≤ 5);
+// ferry-lane reject; citizen road routing on bridge tiles.
+// Markers: test_bridge_placed / test_bridge_floodplain_reject /
+//          test_bridge_max_reject / test_bridge_ferry_reject / test_bridge_citizen_road
 
 var __test46_ok = false
 
@@ -19,7 +21,7 @@ function run_test() {
     var cx = (__scenario_map.width / 2) | 0
     var cy = (__scenario_map.height / 2) | 0
 
-    // --- happy path: length 4 channel ---
+    // --- happy path: length 4 channel (within OG max 5) ---
     var start = test_prepare_bridge_channel(cx, cy, 3, 4)
     var length = test46_place_bridge(start)
     if (length < 2) {
@@ -62,7 +64,7 @@ function run_test() {
 
     __log_marker('test_bridge_placed:len=' + length + ':' + start.x + ',' + start.y)
 
-    // --- floodplain reject ---
+    // --- floodplain adjacent to shore reject (OG is_shore_water) ---
     test_reload_city_session('data/default.map')
     __test_set_treasury(10000)
     start = test_prepare_bridge_channel(cx, cy + 8, 3, 4)
@@ -78,10 +80,21 @@ function run_test() {
     }
     __log_marker('test_bridge_floodplain_reject')
 
-    // --- max_length reject (10 water rows > config max 8) ---
+    // --- OG max open-water: length 6 → middle hits 4 → reject; length 5 OK ---
     test_reload_city_session('data/default.map')
     __test_set_treasury(10000)
-    start = test_prepare_bridge_channel(cx, cy, 3, 10)
+    start = test_prepare_bridge_channel(cx, cy, 3, 5)
+    if (!__map_bridge_calculate_valid(start, false) || test46_place_bridge(start) < 2) {
+        __log_info_native('[test:46] len=5 should place under OG middle cap'
+            + ' valid=' + __map_bridge_calculate_valid(start, false)
+            + ' calc_len=' + __map_bridge_calculate_length(start, false))
+        __test_signal_ready()
+        return
+    }
+
+    test_reload_city_session('data/default.map')
+    __test_set_treasury(10000)
+    start = test_prepare_bridge_channel(cx, cy, 3, 6)
     var calc_len = __map_bridge_calculate_length(start, false)
     var valid = __map_bridge_calculate_valid(start, false)
     if (valid || test46_place_bridge(start) > 0) {
@@ -91,6 +104,19 @@ function run_test() {
         return
     }
     __log_marker('test_bridge_max_reject:calc_len=' + calc_len)
+
+    // --- ferry lane beside span reject ---
+    test_reload_city_session('data/default.map')
+    __test_set_treasury(10000)
+    start = test_prepare_bridge_channel(cx, cy, 3, 4)
+    // Ferry route on a tile next to the channel axis (middle column + 1).
+    terrain.add({ x: cx + 1, y: cy + 1 }, TERRAIN_FERRY_ROUTE)
+    if (__map_bridge_calculate_valid(start, false) || test46_place_bridge(start) > 0) {
+        __log_info_native('[test:46] ferry-lane span should be rejected')
+        __test_signal_ready()
+        return
+    }
+    __log_marker('test_bridge_ferry_reject')
 
     __log_marker('test_bridge_citizen_road')
     __test46_ok = true
@@ -105,6 +131,7 @@ function check_valid() {
         '[test-marker] test_bridge_placed:',
         '[test-marker] test_bridge_floodplain_reject',
         '[test-marker] test_bridge_max_reject:',
+        '[test-marker] test_bridge_ferry_reject',
         '[test-marker] test_bridge_citizen_road'
     ]
     for (var i = 0; i < required.length; i++) {

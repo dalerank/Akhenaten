@@ -19,6 +19,9 @@
 #include "city/city_industry.h"
 #include "js/js_game.h"
 #include "grid/basin.h"
+#include "grid/bridge.h"
+#include "grid/bridge_grid.h"
+#include "grid/sprite.h"
 
 #include <cstdint>
 #include <algorithm>
@@ -168,10 +171,14 @@ static void map_floodplain_update_inundation_row(int floodplain_is_flooding, int
             }
         }
 
-        // flood roads
+        // flood roads — OG flood_one_tile also clears bridge sprite on the tile
         if (map_terrain_is(grid_offset, TERRAIN_ROAD)) {
             map_terrain_remove(grid_offset, TERRAIN_ROAD);
             map_terrain_add(grid_offset, TERRAIN_SUBMERGED_ROAD);
+        }
+        if (map_bridge_part_at(grid_offset) != 0) {
+            map_bridge_tile_clear(grid_offset);
+            map_sprite_clear_tile(grid_offset);
         }
 
     } else if (floodplain_is_flooding == -1) { // tile is RESURFACING
