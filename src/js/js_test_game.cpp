@@ -87,6 +87,7 @@
 #include "figuretype/figure_enemy_spearman.h"
 #include "figuretype/figure_enemy_archer.h"
 #include "figuretype/figure_transport_ship.h"
+#include "figuretype/figure_war_ship.h"
 #include "figuretype/figure_soldier.h"
 #include "building/building_transport_wharf.h"
 #include "figure/combat.h"
@@ -1391,6 +1392,42 @@ static int __test_figure_get_action(int fid) {
     return f->action_state;
 }
 ANK_FUNCTION_1(__test_figure_get_action);
+
+static void __test_warship_set_order(int fid, int order) {
+    figure *f = figure_get(fid);
+    auto *warship = f ? smart_cast<figure_warship>(f) : nullptr;
+    if (warship) {
+        warship->set_order(order);
+    }
+}
+ANK_FUNCTION_2(__test_warship_set_order);
+
+static int __test_warship_get_secondary_action(int fid) {
+    figure *f = figure_get(fid);
+    auto *warship = f ? smart_cast<figure_warship>(f) : nullptr;
+    return warship ? warship->runtime_data().secondary_action : 0;
+}
+ANK_FUNCTION_1(__test_warship_get_secondary_action);
+
+static void __test_shipyard_set_water_access_to_figure(int bid, int fid) {
+    building *b = building_get(bid);
+    figure *f = figure_get(fid);
+    auto *shipyard = b ? b->dcast_shipyard() : nullptr;
+    if (shipyard && f && f->is_alive()) {
+        shipyard->set_water_access_tiles({ f->tile, f->tile });
+    }
+}
+ANK_FUNCTION_2(__test_shipyard_set_water_access_to_figure);
+
+static void __test_warship_force_low_hull(int fid) {
+    figure *f = figure_get(fid);
+    auto *warship = f ? smart_cast<figure_warship>(f) : nullptr;
+    if (warship) {
+        const int max_damage = warship->base.max_damage();
+        warship->base.damage = (uint16_t)(max_damage - (max_damage * 15 / 100));
+    }
+}
+ANK_FUNCTION_1(__test_warship_force_low_hull);
 
 static int __test_figure_is_visible(int fid) {
     figure *f = figure_get(fid);
@@ -2857,6 +2894,13 @@ tile2i test_find_or_make_water_strip(int *out_cx, int *out_cy) {
 }
 
 } // namespace
+
+int __test_spawn_warship_on_water() {
+    tile2i water = test_find_or_make_water_strip(nullptr, nullptr);
+    figure *f = figure_create(FIGURE_WARSHIP, water, DIR_0_TOP_RIGHT);
+    return f && f->is_valid() ? f->id : 0;
+}
+ANK_FUNCTION(__test_spawn_warship_on_water);
 
 // Spawn enemy transport with N soldiers loaded and sailing to a nearby shore.
 // Returns transport figure id, or 0 on failure.

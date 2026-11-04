@@ -24,8 +24,12 @@ function warshipwharf_info_window_on_init(window) {
     } else {
         var boat = b.get_figure(BUILDING_SLOT_BOAT)
         switch (boat.action_state) {
-        case ACTION_203_WARSHIP_MOORED: reason.id = 2; break
-        case ACTION_204_WARSHIP_ATTACK: reason.id = 3; break
+        case ACTION_8_WARSHIP_WAITING:
+        case ACTION_20_WARSHIP_DOCKED: reason.id = 2; break
+        case ACTION_9_WARSHIP_STRAIGHT:
+        case ACTION_10_WARSHIP_HUNTING:
+        case ACTION_23_WARSHIP_PATROLLING:
+        case ACTION_24_WARSHIP_ATTACKING_SHIP: reason.id = 3; break
         default: reason.id = 8; break
         }
     }

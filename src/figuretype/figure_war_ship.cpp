@@ -1,159 +1,130 @@
 #include "figure_war_ship.h"
 
-#include "figure/route.h"
-#include "figure_shipwreck.h"
+#include "building/building_shipyard.h"
+#include "building/building_warship_wharf.h"
+#include "city/city.h"
+#include "city/city_figures.h"
+#include "core/calc.h"
 #include "figure/combat.h"
 #include "figure/movement.h"
-#include "figuretype/figure_missile.h"
-#include "figuretype/figure_transport_ship.h"
-#include "figuretype/figure_enemy_warship.h"
+#include "figure/route.h"
 #include "figuretype/figure_enemy_transport.h"
-#include "grid/water.h"
+#include "figuretype/figure_enemy_warship.h"
+#include "figuretype/figure_missile.h"
+#include "figuretype/figure_shipwreck.h"
+#include "core/random.h"
+#include "game/game_events.h"
 #include "grid/figure.h"
 #include "grid/terrain.h"
+#include "grid/water.h"
 #include "scenario/map.h"
-#include "city/city_message.h"
-#include "city/city_figures.h"
-#include "game/game.h"
-#include "core/calc.h"
-#include "graphics/image.h"
-#include "graphics/graphics.h"
-#include "graphics/elements/ui.h"
-#include "graphics/image_desc.h"
-#include "building/building_warship_wharf.h"
-#include "building/building_shipyard.h"
-#include "city/city.h"
-#include "js/js_game.h"
-#include "sound/sound.h"
+#include "scenario/scenario.h"
 #include "sound/effect.h"
-#include "game/game_events.h"
+#include "sound/sound.h"
+
+#include <algorithm>
 
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_warship)
 
 namespace {
 
-constexpr int WARSHIP_MISSILE_RANGE = 10;
-constexpr int WARSHIP_ENGAGE_RANGE = 18;
-constexpr int WARSHIP_SEEK_RANGE = 80;
-constexpr int WARSHIP_RAM_INTERVAL = 50;
-constexpr int WARSHIP_HULL_AUTO_REPAIR_PERCENT = 15;
-constexpr int WARSHIP_FATIGUE_GROW_INTERVAL = 40;
-constexpr int WARSHIP_FATIGUE_COMBAT_INTERVAL = 20;
-constexpr int WARSHIP_FATIGUE_REST_INTERVAL = 20;
-constexpr int WARSHIP_FATIGUE_REST_AMOUNT = 2;
+// OG figure_ship_direction_table reduced: divisor from circular heading delta.
+int ram_direction_divisor(int target_dir, int own_dir) {
+    int delta = (own_dir - target_dir) & 7;
+    if (delta > 4) {
+        delta = 8 - delta;
+    }
+    switch (delta) {
+    case 0: return 5; // same heading
+    case 1: return 3;
+    case 2: return 1; // strongest glancing / broadside
+    case 3: return 2;
+    default: return 4; // opposite
+    }
+}
 
-void warship_update_crew_fatigue(figure_warship *ship) {
-    auto &d = ship->runtime_data();
-    building *home_b = ship->home();
-    building_warship_wharf *wharf = (home_b && home_b->id) ? home_b->dcast_warship_wharf() : nullptr;
-    const bool moored_resting = ship->action_state() == ACTION_203_WARSHIP_MOORED
-        && wharf && wharf->num_workers() > 0;
+bool is_enemy(figure *f) {
+    return f && f->is_valid() && !f->is_dead() && (f->is_enemy() || f->category() == figure_category_hostile);
+}
 
-    d.fatigue_tick++;
-    if (moored_resting) {
-        if (d.fatigue_tick >= WARSHIP_FATIGUE_REST_INTERVAL) {
-            d.fatigue_tick = 0;
-            d.crew_fatigue = (int8_t)std::max(0, (int)d.crew_fatigue - WARSHIP_FATIGUE_REST_AMOUNT);
+bool is_enemy_ship(figure *f) {
+    return is_enemy(f) && (smart_cast<figure_enemy_transport>(f) || smart_cast<figure_enemy_warship>(f));
+}
+
+tile2i tile_ahead(tile2i tile, int direction) {
+    switch (direction) {
+    case DIR_0_TOP_RIGHT: tile.shift(0, -1); break;
+    case DIR_1_RIGHT: tile.shift(1, -1); break;
+    case DIR_2_BOTTOM_RIGHT: tile.shift(1, 0); break;
+    case DIR_3_BOTTOM: tile.shift(1, 1); break;
+    case DIR_4_BOTTOM_LEFT: tile.shift(0, 1); break;
+    case DIR_5_LEFT: tile.shift(-1, 1); break;
+    case DIR_6_TOP_LEFT: tile.shift(-1, 0); break;
+    case DIR_7_TOP: tile.shift(-1, -1); break;
+    default: break;
+    }
+    return tile;
+}
+
+bool usable_water(tile2i tile) {
+    return tile.valid()
+        && map_terrain_is(tile, TERRAIN_WATER | TERRAIN_DEEPWATER)
+        && !map_terrain_is(tile, TERRAIN_BUILDING);
+}
+
+// OG ship_pick_escape_point: farthest boat-routable water on (dir-1, dir, dir+1) rays.
+tile2i pick_escape_tile(tile2i from, int direction, int distance) {
+    if (direction < 0 || direction > 7) {
+        direction = DIR_0_TOP_RIGHT;
+    }
+    if (distance <= 0) {
+        distance = 10;
+    }
+    tile2i best = from;
+    int best_d2 = -1;
+    for (int delta = -1; delta <= 1; ++delta) {
+        const int d = (direction + delta + 8) % 8;
+        const tile2i unit = tile_ahead(tile2i(0, 0), d);
+        tile2i toward(from.x() + unit.x() * distance, from.y() + unit.y() * distance);
+        tile2i cand;
+        const int d2 = map_water_farthest_on_line(from, toward, cand);
+        if (d2 < 0 || cand == from) {
+            continue;
         }
-        return;
-    }
-
-    const int interval = (ship->action_state() == ACTION_204_WARSHIP_ATTACK)
-        ? WARSHIP_FATIGUE_COMBAT_INTERVAL
-        : WARSHIP_FATIGUE_GROW_INTERVAL;
-    if (d.fatigue_tick >= interval) {
-        d.fatigue_tick = 0;
-        d.crew_fatigue = (int8_t)std::min(100, (int)d.crew_fatigue + 1);
-    }
-}
-
-bool is_water_figure(const figure *f) {
-    return f->allow_move_type == EMOVE_WATER || f->allow_move_type == EMOVE_DEEPWATER;
-}
-
-bool is_enemy_warship_target(figure *f) {
-    if (!f || !f->is_valid() || f->is_dead()) {
-        return false;
-    }
-
-    if (!f->is_enemy() && f->category() != figure_category_hostile) {
-        return false;
-    }
-
-    if (smart_cast<figure_enemy_warship>(f)) {
-        return true;
-    }
-
-    return is_water_figure(f) || f->type == FIGURE_WARSHIP || f->type == FIGURE_ENEMY_WARSHIP;
-}
-
-bool is_shore_enemy_target(figure *f) {
-    if (!f || !f->is_valid() || f->is_dead()) {
-        return false;
-    }
-
-    // Embarked troops ride an enemy transport hull — shoot the ship, not cargo.
-    if (!f->is_visible()) {
-        return false;
-    }
-
-    if (!f->is_enemy() && f->category() != figure_category_hostile) {
-        return false;
-    }
-
-    return !is_water_figure(f);
-}
-
-int warship_target_priority(figure *f) {
-    if (!f || !f->is_valid() || f->is_dead()) {
-        return 0;
-    }
-
-    // OG: transports carrying enemy soldiers are the top priority.
-    if (auto enemy_transport = smart_cast<figure_enemy_transport>(f)) {
-        if (enemy_transport->has_troops()) {
-            return 40;
+        if (d2 >= best_d2) {
+            best_d2 = d2;
+            best = cand;
         }
-        return 10;
     }
+    return best;
+}
 
-    // Player transports are never valid targets for the player navy.
-    // (Enemy cargo ships are FIGURE_ENEMY_TRANSPORT — handled above.)
-    if (f->type == FIGURE_TRANSPORT_SHIP) {
-        return 0;
+int clamp_dir8(int dir) {
+    if (dir > DIR_7_TOP) {
+        return DIR_7_TOP;
     }
-
-    if (smart_cast<figure_enemy_warship>(f) || (is_enemy_warship_target(f) && is_water_figure(f))) {
-        return 30;
+    if (dir < 0) {
+        return DIR_0_TOP_RIGHT;
     }
-
-    if (is_shore_enemy_target(f)) {
-        return 20;
-    }
-
-    return 0;
+    return dir;
 }
 
 } // namespace
 
 water_dest map_water_get_wharf_for_new_warship(figure &boat) {
-    building_warship_wharf *wharf = nullptr;
-
-    wharf = building_first_ex<building_warship_wharf>([&boat] (building_warship_wharf *w) {
-        int wharf_boat_id = w->get_figure_id(BUILDING_SLOT_BOAT);
-        if (!wharf_boat_id || wharf_boat_id == boat.id) {
-            return true;
-        }
-
-        return false;
+    building_warship_wharf *wharf = building_first_ex<building_warship_wharf>([&boat](building_warship_wharf *w) {
+        const int boat_id = w->get_figure_id(BUILDING_SLOT_BOAT);
+        return !boat_id || boat_id == boat.id;
     });
-
     if (!wharf) {
         return { false, 0 };
     }
 
-    tile2i dock_tile(wharf->base.tiles[0]);
-    return { dock_tile.valid(), wharf->id(), dock_tile };
+    tile2i dock = wharf->get_water_access_tiles().point_a;
+    if (!dock.valid()) {
+        dock = tile2i(wharf->base.tiles[0]);
+    }
+    return { dock.valid(), wharf->id(), dock };
 }
 
 void figure_warship::on_create() {
@@ -161,46 +132,20 @@ void figure_warship::on_create() {
     base.allow_move_type = EMOVE_WATER;
     auto &d = runtime_data();
     d.active_order = e_order_goto_wharf;
+    d.target_id = 0;
+    d.action_before_attack = ACTION_10_WARSHIP_HUNTING;
+    d.patrol_x = base.tile.x();
+    d.patrol_y = base.tile.y();
+    d.move_count = 0;
+    d.move_steps = 0;
+    d.secondary_action = WARSHIP_SECONDARY_WAITING;
+    d.ship_move_mode = WARSHIP_MOVE_FULL_SPEED;
+    d.ram_cooldown = 0;
+    d.request_event_id = -1;
+    d.answers_requests = 1;
     d.crew_fatigue = 0;
     d.fatigue_tick = 0;
-    d.answers_requests = 0;
-    d.request_event_id = -1;
-}
-
-void figure_warship::begin_kingdom_request(int event_id) {
-    auto &d = runtime_data();
-    d.request_event_id = (int16_t)event_id;
-    tile2i entry = scenario_map_river_entry();
-    if (!entry.valid()) {
-        entry = scenario_map_entry();
-    }
-    base.destination_tile = entry;
-    route_remove();
-    advance_action(ACTION_221_WARSHIP_GOING_TO_REQUEST);
-}
-
-void figure_warship::return_from_kingdom_request() {
-    auto &d = runtime_data();
-    d.request_event_id = -1;
-    building *home_b = home();
-    building_warship_wharf *wharf = (home_b && home_b->id) ? home_b->dcast_warship_wharf() : nullptr;
-    tile2i dock = tile2i::invalid;
-    if (wharf) {
-        dock = wharf->get_water_access_tiles().point_a;
-        if (!dock.valid()) {
-            map_water_tile_next_to(wharf->base.tile, wharf->base.size, dock);
-        }
-    }
-    if (!dock.valid()) {
-        dock = scenario_map_river_entry();
-    }
-    if (!dock.valid()) {
-        dock = base.tile;
-    }
-    base.destination_tile = dock;
-    base.set_flag(e_figure_flag_invisible, false);
-    route_remove();
-    advance_action(ACTION_223_WARSHIP_RETURNING_FROM_REQUEST);
+    advance_action(ACTION_8_WARSHIP_WAITING);
 }
 
 void figure_warship::on_destroy() {
@@ -215,265 +160,417 @@ void figure_warship::before_poof() {
 }
 
 void figure_warship::check_sink() {
-    if (base.damage > base.max_damage()) {
+    if (base.damage >= base.max_damage()) {
         kill();
     }
 }
 
-figure_id figure_warship::find_combat_target(int max_distance) {
-    figure_id best_id = 0;
-    int best_priority = 0;
-    int best_distance = 10000;
+int figure_warship::target_score(figure *f, int distance) const {
+    const auto &p = current_params();
+    if (auto *transport = smart_cast<figure_enemy_transport>(f)) {
+        return transport->has_troops() ? p.score_loaded_transport : p.score_transport;
+    }
+    if (smart_cast<figure_enemy_warship>(f)) {
+        return p.score_warship;
+    }
+    if (is_enemy(f) && f->allow_move_type != EMOVE_WATER && f->allow_move_type != EMOVE_DEEPWATER
+        && distance <= p.missile_range) {
+        return p.score_land_enemy;
+    }
+    return 0;
+}
 
-    for (figure *f : map_figures()) {
-        if (!f || f->id == id()) {
+figure_id figure_warship::find_enemy_at(tile2i origin, int range) {
+    figure_id best = 0;
+    int best_metric = -range;
+    for (figure *candidate : map_figures()) {
+        if (!candidate || candidate->id == id() || !is_enemy(candidate)) {
             continue;
         }
-
-        const int priority = warship_target_priority(f);
-        if (priority <= 0) {
+        const int distance = calc_maximum_distance(origin, candidate->tile);
+        if (distance > range) {
             continue;
         }
+        const int score = target_score(candidate, distance);
+        if (score && score - distance > best_metric) {
+            best_metric = score - distance;
+            best = candidate->id;
+        }
+    }
+    return best;
+}
 
-        const int distance = calc_maximum_distance(base.tile, f->tile);
-        if (distance > max_distance) {
+figure_id figure_warship::find_closest_enemy_ship(int range) {
+    figure_id best = 0;
+    int best_distance = range;
+    for (figure *candidate : map_figures()) {
+        if (!is_enemy_ship(candidate)) {
             continue;
         }
-
-        if (priority > best_priority || (priority == best_priority && distance < best_distance)) {
-            best_priority = priority;
+        const int distance = calc_maximum_distance(base.tile, candidate->tile);
+        if (distance < best_distance) {
+            best = candidate->id;
             best_distance = distance;
-            best_id = f->id;
         }
     }
-
-    return best_id;
+    return best;
 }
 
-void figure_warship::launch_missile_at(figure *target) {
-    if (!target || !target->is_valid()) {
-        return;
-    }
-
-    base.wait_ticks++;
-    if (base.wait_ticks < missile_delay()) {
-        return;
-    }
-
-    base.wait_ticks = 0;
-    if (!figure_movement_can_launch_cross_country_missile(base.tile, target->tile)) {
-        return;
-    }
-
-    figure_missile::create(id(), base.tile, target->tile, FIGURE_JAVELIN);
-    events::emit(event_sound_effect{ SOUND_EFFECT_JAVELIN });
-}
-
-void figure_warship::ram_target(figure *target) {
-    if (!target || !target->is_valid()) {
-        return;
-    }
-
-    base.wait_ticks++;
-    if (base.wait_ticks < WARSHIP_RAM_INTERVAL) {
-        return;
-    }
-
-    base.wait_ticks = 0;
-
-    const int attack = base.attack_value();
-    const int defense = target->defense_value();
-    int net = attack - defense;
-    if (net < 0) {
-        net = 0;
-    }
-
-    target->apply_damage(net, id());
-    if (target->damage > target->max_damage()) {
-        if (smart_cast<figure_warship>(target)) {
-            smart_cast<figure_warship>(target)->kill();
-        } else if (auto transport = smart_cast<figure_enemy_transport>(target)) {
-            transport->kill();
-        } else {
-            target->kill();
+figure_id figure_warship::find_ram_target() {
+    const tile2i ahead = tile_ahead(base.tile, direction());
+    for (figure *candidate : map_figures()) {
+        if (is_enemy_ship(candidate) && (candidate->tile == base.tile || candidate->tile == ahead)) {
+            return candidate->id;
         }
     }
-
-    base.apply_damage(net / 2, target->id);
-    check_sink();
+    return 0;
 }
 
-void figure_warship::combat_tick_vs_target(figure *target, int max_pursue_distance) {
-    if (!target || !target->is_valid() || target->is_dead()) {
-        runtime_data().target_id = 0;
+void figure_warship::fire_missile(figure_id target_id) {
+    figure *target = figure_get(target_id);
+    if (!target || !target->is_valid() || target->is_dead() || !base.attack_image_offset) {
+        base.attack_image_offset = 0;
         return;
     }
-
-    const int distance = calc_maximum_distance(base.tile, target->tile);
-    const bool hold_position = runtime_data().active_order == e_order_hold_position;
-
-    if (is_enemy_warship_target(target) && distance <= 1) {
-        advance_action(ACTION_204_WARSHIP_ATTACK);
-        ram_target(target);
-        return;
+    if (base.attack_image_offset == 1) {
+        figure_missile::create(id(), base.tile, target->tile, FIGURE_JAVELIN);
+        events::emit(event_sound_effect{ SOUND_EFFECT_JAVELIN });
     }
-
-    if (distance <= WARSHIP_MISSILE_RANGE
-        && figure_movement_can_launch_cross_country_missile(base.tile, target->tile)) {
-        advance_action(ACTION_204_WARSHIP_ATTACK);
-        launch_missile_at(target);
-        return;
-    }
-
-    if (hold_position) {
-        advance_action(ACTION_211_WARSHIP_IDLE_AT_TILE);
-        return;
-    }
-
-    if (distance > max_pursue_distance) {
-        runtime_data().target_id = 0;
-        return;
-    }
-
-    if (action_state() != ACTION_206_WARSHIP_GOING_TO_PATROL) {
-        base.destination_tile = target->tile;
-        base.source_tile = base.tile;
-        advance_action(ACTION_206_WARSHIP_GOING_TO_PATROL);
-        route_remove();
-    }
-
-    base.move_ticks(1);
-    base.height_adjusted_ticks = 0;
-    if (direction() == DIR_FIGURE_REROUTE) {
-        route_remove();
-    } else if (direction() == DIR_FIGURE_CAN_NOT_REACH) {
-        runtime_data().target_id = 0;
-        advance_action(ACTION_211_WARSHIP_IDLE_AT_TILE);
+    if (++base.attack_image_offset > current_params().shoot_ticks) {
+        base.attack_image_offset = 0;
     }
 }
 
-void figure_warship::figure_action_combat() {
-    check_sink();
-    if (!is_alive()) {
-        return;
+void figure_warship::shoot() {
+    const auto &p = current_params();
+    if (++base.wait_ticks_missile > missile_delay()) {
+        base.wait_ticks_missile = 0;
+        runtime_data().target_id = find_enemy_at(base.tile, p.missile_range);
+        base.attack_image_offset = runtime_data().target_id ? 1 : 0;
     }
+    fire_missile(runtime_data().target_id);
+}
 
+void figure_warship::ram() {
     auto &d = runtime_data();
-    if (d.last_order != d.active_order) {
-        d.last_order = d.active_order;
-        d.target_id = 0;
-        if (d.active_order == e_order_hold_position) {
-            base.source_tile = base.tile;
-            advance_action(ACTION_211_WARSHIP_IDLE_AT_TILE);
-        } else if (action_state() == ACTION_203_WARSHIP_MOORED) {
-            base.source_tile = base.tile;
-            advance_action(ACTION_211_WARSHIP_IDLE_AT_TILE);
-        }
-    }
-
-    if (d.active_order == e_order_hold_position && action_state() == ACTION_211_WARSHIP_IDLE_AT_TILE) {
-        if (base.tile != base.source_tile) {
-            base.destination_tile = base.source_tile;
-            advance_action(ACTION_210_WARSHIP_GOING_TO_TILE);
-            route_remove();
-            figure_action_move_to_tile();
-            return;
-        }
-    }
-
-    int search_range = WARSHIP_ENGAGE_RANGE;
-    if (d.active_order == e_order_seek_and_destroy) {
-        search_range = WARSHIP_SEEK_RANGE;
-    }
-
-    figure *target = figure_get(d.target_id);
-    if (!target || !target->is_valid() || target->is_dead()) {
-        d.target_id = find_combat_target(search_range);
-        target = figure_get(d.target_id);
-    }
-
-    if (!target) {
-        if (d.active_order == e_order_hold_position) {
-            advance_action(ACTION_211_WARSHIP_IDLE_AT_TILE);
-        } else if (action_state() == ACTION_204_WARSHIP_ATTACK) {
-            advance_action(ACTION_211_WARSHIP_IDLE_AT_TILE);
-        }
+    const auto &p = current_params();
+    if (d.ram_cooldown) {
+        d.ram_cooldown--;
         return;
     }
 
-    combat_tick_vs_target(target, search_range);
+    figure *target = figure_get(find_ram_target());
+    if (!target) {
+        return;
+    }
+
+    int target_dir = target->direction;
+    if (target_dir > DIR_7_TOP) {
+        target_dir = target->previous_tile_direction;
+    }
+    int own_dir = direction();
+    if (own_dir > DIR_7_TOP) {
+        own_dir = base.previous_tile_direction;
+    }
+    const int divisor = ram_direction_divisor(target_dir & 7, own_dir & 7);
+    const int slow_damage = base.attack_value();
+    int damage = d.move_steps < p.full_steps
+        ? calc_adjust_with_percentage(slow_damage, (int)p.ram_fast_percent)
+        : slow_damage;
+    if (divisor > 0) {
+        damage /= divisor;
+    }
+    target->apply_damage(damage, id());
+    if (target->damage >= target->max_damage()) {
+        target->dcast()->kill();
+    }
+
+    const int turn = (random_byte() & 2) - 1;
+    base.set_direction(clamp_dir8(own_dir + turn));
+    target->set_direction(clamp_dir8(target_dir - turn));
+    figure_create_explosion_cloud(target->tile, 0);
+
+    d.ram_cooldown = (uint8_t)p.ram_cooldown;
+    d.target_id = 0;
+    advance_action(ACTION_10_WARSHIP_HUNTING);
+    d.secondary_action = WARSHIP_SECONDARY_WAITING;
+    route_remove();
 }
 
-void figure_warship::figure_action_repair() {
-    check_sink();
-    if (base.damage <= 0) {
-        building_shipyard_leave_queue(id());
-        runtime_data().active_order = e_order_goto_wharf;
-        figure_action_goto_wharf();
+void figure_warship::ship_move(bool cautious) {
+    auto &d = runtime_data();
+    const auto &p = current_params();
+    if (base.tile == base.destination_tile && direction() == DIR_FIGURE_NONE) {
         return;
     }
 
-    if (action_state() == ACTION_213_WARSHIP_QUEUED_AT_SHIPWRIGHT) {
-        building *dock = building_get(base.destination_building_id);
-        auto *shipyard = dock ? dock->dcast_shipyard() : nullptr;
-        if (!shipyard || !shipyard->base.is_valid() || shipyard->num_workers() <= 0) {
-            building_shipyard_leave_queue(id());
-            advance_action(ACTION_212_WARSHIP_GOING_TO_SHIPWRIGHT);
-            // Fall through to re-pick a dock below.
-        } else {
-            // Idle at the yard while shipwright heals us (OG QUEUED_AT_DOCK).
+    switch (d.ship_move_mode) {
+    case WARSHIP_MOVE_FULL_SPEED:
+        if (cautious && ++d.move_count >= p.full_moves) {
+            d.move_count = 0;
+            d.ship_move_mode = WARSHIP_MOVE_RESTING;
             return;
         }
+        if (base.tile != base.previous_tile) {
+            d.move_steps++;
+        }
+        base.move_ticks(cautious && d.move_steps >= p.full_steps ? 1 : 2);
+        break;
+    case WARSHIP_MOVE_SLOW:
+        base.move_ticks(1);
+        if (++d.move_count >= p.fatigue_ticks) {
+            d.move_count = 0;
+            d.move_steps = 0;
+            d.ship_move_mode = WARSHIP_MOVE_FULL_SPEED;
+        }
+        break;
+    case WARSHIP_MOVE_RESTING:
+        if (++d.move_count >= p.fatigue_ticks) {
+            d.move_count = 0;
+            d.ship_move_mode = WARSHIP_MOVE_SLOW;
+        }
+        break;
+    }
+    base.height_adjusted_ticks = 0;
+}
+
+void figure_warship::move_attack() {
+    ship_move(true);
+    ram();
+    if (direction() == DIR_FIGURE_REROUTE || direction() == DIR_FIGURE_CAN_NOT_REACH) {
+        route_remove();
+    }
+}
+
+void figure_warship::sail_to_destination() {
+    if (base.tile != base.destination_tile) {
+        ship_move(false);
+    }
+    if (direction() == DIR_FIGURE_REROUTE || direction() == DIR_FIGURE_CAN_NOT_REACH) {
+        route_remove();
+        return;
+    }
+    if (base.tile != base.destination_tile && direction() != DIR_FIGURE_NONE) {
+        return;
     }
 
-    if (action_state() == ACTION_212_WARSHIP_GOING_TO_SHIPWRIGHT) {
-        base.move_ticks(1);
-        base.height_adjusted_ticks = 0;
+    building *home_b = home();
+    auto *wharf = home_b ? home_b->dcast_warship_wharf() : nullptr;
+    if (action_state() != ACTION_20_WARSHIP_DOCKED
+        && action_state() != ACTION_10_WARSHIP_HUNTING
+        && action_state() != ACTION_13_WARSHIP_GOING_TO_DOCK
+        && wharf) {
+        advance_action(ACTION_23_WARSHIP_PATROLLING);
+        auto &d = runtime_data();
+        d.secondary_action = WARSHIP_SECONDARY_PATROL;
+        d.patrol_x = base.tile.x();
+        d.patrol_y = base.tile.y();
+    }
+}
+
+void figure_warship::patrol() {
+    auto &d = runtime_data();
+    const auto &p = current_params();
+    figure *target = figure_get(d.target_id);
+
+    switch (d.secondary_action) {
+    case WARSHIP_SECONDARY_MOVING:
+        if (action_state() != ACTION_10_WARSHIP_HUNTING) {
+            d.secondary_action = WARSHIP_SECONDARY_PATROLLING;
+        }
+        if (!target || !is_enemy(target)) {
+            d.secondary_action = WARSHIP_SECONDARY_WAITING;
+            d.target_id = 0;
+            return;
+        }
+        if (calc_maximum_distance(base.tile, target->tile) < p.missile_range
+            && ++base.wait_ticks_missile > missile_delay()) {
+            base.wait_ticks_missile = 0;
+            base.attack_image_offset = 1;
+        }
+        fire_missile(target->id);
+        move_attack();
         if (direction() == DIR_FIGURE_NONE) {
-            int dock_id = base.destination_building_id;
-            int best = building_shipyard_find_best_dock(id());
-            if (best > 0 && building_shipyard_repair_queue_size(dock_id) >= 1 && best != dock_id) {
-                dock_id = best;
-            }
-            if (dock_id > 0 && building_shipyard_queue_ship(id(), dock_id)) {
-                building *dock = building_get(dock_id);
-                auto *shipyard = dock ? dock->dcast_shipyard() : nullptr;
-                tile2i berth;
-                if (shipyard) {
-                    berth = shipyard->get_water_access_tiles().point_a;
-                    if (!berth.valid()) {
-                        berth = tile2i(dock->tiles[0]);
-                    }
-                }
-                if (berth.valid()) {
-                    base.tile = berth;
-                    base.destination_tile = berth;
-                    base.source_tile = berth;
-                }
-                advance_action(ACTION_213_WARSHIP_QUEUED_AT_SHIPWRIGHT);
-                base.wait_ticks = 0;
-            } else {
-                advance_action(ACTION_211_WARSHIP_IDLE_AT_TILE);
-            }
-        } else if (direction() == DIR_FIGURE_REROUTE) {
+            d.secondary_action = WARSHIP_SECONDARY_WAITING;
             route_remove();
-        } else if (direction() == DIR_FIGURE_CAN_NOT_REACH) {
-            building_shipyard_leave_queue(id());
-            advance_action(ACTION_211_WARSHIP_IDLE_AT_TILE);
+        }
+        return;
+
+    case WARSHIP_SECONDARY_WAITING:
+        if (action_state() != ACTION_10_WARSHIP_HUNTING) {
+            d.secondary_action = WARSHIP_SECONDARY_PATROLLING;
+        }
+        d.target_id = find_enemy_at(base.tile, p.hunt_range);
+        target = figure_get(d.target_id);
+        if (target) {
+            d.secondary_action = WARSHIP_SECONDARY_MOVING;
+            base.destination_tile = target->tile;
+            route_remove();
+            return;
+        }
+        ship_move(false);
+        return;
+
+    case WARSHIP_SECONDARY_PATROL_ATTACK:
+        if (action_state() != ACTION_23_WARSHIP_PATROLLING) {
+            d.secondary_action = WARSHIP_SECONDARY_WAITING;
+            return;
+        }
+        if (target
+            && calc_maximum_distance(tile2i(d.patrol_x, d.patrol_y), base.tile) < p.patrol_radius
+            && calc_maximum_distance(target->tile, base.tile) < p.missile_range) {
+            if (++base.wait_ticks_missile > missile_delay()) {
+                base.wait_ticks_missile = 0;
+                base.attack_image_offset = 1;
+            }
+            fire_missile(target->id);
+            move_attack();
+            if (direction() != DIR_FIGURE_NONE) {
+                return;
+            }
+        }
+        d.secondary_action = WARSHIP_SECONDARY_PATROLLING;
+        base.destination_tile = tile2i(d.patrol_x, d.patrol_y);
+        route_remove();
+        return;
+
+    case WARSHIP_SECONDARY_PATROLLING:
+        d.target_id = find_enemy_at(base.tile, p.missile_range + p.patrol_extra_range);
+        target = figure_get(d.target_id);
+        if (action_state() != ACTION_23_WARSHIP_PATROLLING) {
+            d.secondary_action = WARSHIP_SECONDARY_WAITING;
+            return;
+        }
+        if (target && calc_maximum_distance(tile2i(d.patrol_x, d.patrol_y), target->tile) < p.patrol_radius) {
+            d.secondary_action = WARSHIP_SECONDARY_PATROL_ATTACK;
+            base.destination_tile = target->tile;
+            route_remove();
+            return;
+        }
+        ship_move(false);
+        return;
+    }
+}
+
+void figure_warship::evade() {
+    auto &d = runtime_data();
+    const auto &p = current_params();
+    if (d.secondary_action == WARSHIP_SECONDARY_SAILING) {
+        sail_to_destination();
+        if (base.tile == base.destination_tile) {
+            d.secondary_action = WARSHIP_SECONDARY_WAITING;
+        }
+        return;
+    }
+    if (d.secondary_action != WARSHIP_SECONDARY_WAITING || ++base.wait_ticks < p.evade_ticks) {
+        return;
+    }
+    base.wait_ticks = 0;
+    figure *enemy = figure_get(find_closest_enemy_ship(p.evade_range));
+    if (!enemy) {
+        return;
+    }
+
+    // OG: direction from enemy to ship, then ship_escape_moves for that facing.
+    int dir = calc_general_direction(enemy->tile, base.tile);
+    if (dir > DIR_7_TOP) {
+        dir = DIR_0_TOP_RIGHT;
+    }
+    tile2i escape = pick_escape_tile(base.tile, dir, p.escape_distance);
+    if (escape == base.tile) {
+        return;
+    }
+    base.destination_tile = escape;
+    route_remove();
+    d.secondary_action = WARSHIP_SECONDARY_SAILING;
+}
+
+void figure_warship::attack_ship() {
+    auto &d = runtime_data();
+    const auto &p = current_params();
+    figure *target = figure_get(d.target_id);
+    if (!target || !is_enemy(target)) {
+        d.target_id = find_enemy_at(base.tile, p.hunt_range);
+        target = figure_get(d.target_id);
+        d.secondary_action = WARSHIP_SECONDARY_WAITING;
+    }
+
+    if (d.secondary_action == WARSHIP_SECONDARY_FOLLOW_TARGET) {
+        if (!target) {
+            d.secondary_action = WARSHIP_SECONDARY_WAITING;
+            return;
+        }
+        if (calc_maximum_distance(base.tile, target->tile) < p.missile_range
+            && ++base.wait_ticks_missile > missile_delay()) {
+            base.wait_ticks_missile = 0;
+            base.attack_image_offset = 1;
+        }
+        fire_missile(target->id);
+        move_attack();
+        if (direction() == DIR_FIGURE_NONE) {
+            d.secondary_action = WARSHIP_SECONDARY_WAITING;
+            route_remove();
+            return;
+        }
+        if (++base.wait_ticks > p.target_check_ticks) {
+            base.wait_ticks = 0;
+            if (base.destination_tile.x() != target->tile.x() && base.destination_tile.y() != target->tile.y()) {
+                d.secondary_action = WARSHIP_SECONDARY_WAITING;
+                route_remove();
+            }
         }
         return;
     }
 
-    int dock_id = building_shipyard_find_best_dock(id());
-    if (dock_id <= 0) {
-        advance_action(ACTION_211_WARSHIP_IDLE_AT_TILE);
+    if (d.secondary_action != WARSHIP_SECONDARY_WAITING) {
+        return;
+    }
+    if (target) {
+        d.secondary_action = WARSHIP_SECONDARY_FOLLOW_TARGET;
+        base.destination_tile = target->tile;
+        route_remove();
         return;
     }
 
+    advance_action(d.action_before_attack);
+    base.destination_tile = base.tile;
+    d.patrol_x = base.tile.x();
+    d.patrol_y = base.tile.y();
+    d.secondary_action = action_state() == ACTION_23_WARSHIP_PATROLLING
+        ? WARSHIP_SECONDARY_PATROL
+        : WARSHIP_SECONDARY_WAITING;
+    d.target_id = 0;
+    route_remove();
+}
+
+void figure_warship::wait_at_shipyard() {
+    if (++base.wait_ticks < current_params().dock_wait_ticks) {
+        return;
+    }
+    base.wait_ticks = 0;
+
+    building *home_b = home();
+    auto *home_wharf = home_b ? home_b->dcast_warship_wharf() : nullptr;
+    water_dest result;
+    if (home_wharf) {
+        tile2i dock = home_wharf->get_water_access_tiles().point_a;
+        result = { dock.valid(), home_wharf->id(), dock };
+    } else {
+        result = map_water_get_wharf_for_new_warship(base);
+    }
+    if (!result.found) {
+        return;
+    }
+    move_to_wharf(result.bid, result.tile);
+}
+
+void figure_warship::go_to_best_dock() {
+    building_shipyard_leave_queue(id());
+    const int dock_id = building_shipyard_find_best_dock(id());
     building *dock = building_get(dock_id);
     auto *shipyard = dock ? dock->dcast_shipyard() : nullptr;
     if (!shipyard) {
-        advance_action(ACTION_211_WARSHIP_IDLE_AT_TILE);
+        advance_action(ACTION_8_WARSHIP_WAITING);
         return;
     }
 
@@ -482,222 +579,226 @@ void figure_warship::figure_action_repair() {
         berth = tile2i(dock->tiles[0]);
     }
     if (!berth.valid()) {
-        advance_action(ACTION_211_WARSHIP_IDLE_AT_TILE);
+        advance_action(ACTION_8_WARSHIP_WAITING);
         return;
     }
-
-    building *home_b = home();
-    if (home_b && home_b->id) {
-        home_b->remove_figure_by_id(id());
-    }
-
     set_destination(dock_id);
     base.destination_tile = berth;
-    base.source_tile = base.tile;
     route_remove();
-    advance_action(ACTION_212_WARSHIP_GOING_TO_SHIPWRIGHT);
-    base.wait_ticks = 0;
+    advance_action(ACTION_13_WARSHIP_GOING_TO_DOCK);
 }
 
-void figure_warship::figure_action_move_to_tile() {
-    base.move_ticks(1);
-    base.height_adjusted_ticks = 0;
-    if (direction() == DIR_FIGURE_NONE) {
-        advance_action(ACTION_211_WARSHIP_IDLE_AT_TILE);
-        base.source_tile = base.destination_tile;
-        base.wait_ticks = 0;
-    } else if (direction() == DIR_FIGURE_REROUTE) {
+void figure_warship::sail_to_dock() {
+    ship_move(false);
+    if (direction() == DIR_FIGURE_REROUTE) {
         route_remove();
-    } else if (direction() == DIR_FIGURE_CAN_NOT_REACH) {
-        advance_action(ACTION_211_WARSHIP_IDLE_AT_TILE);
-        base.source_tile = base.tile;
+        return;
     }
-}
-
-void figure_warship::figure_action() {
-    building *b = home();
-
-    if (action_state() == ACTION_205_WARSHIP_CREATED) {
-        figure_action_common();
+    if (direction() == DIR_FIGURE_CAN_NOT_REACH) {
+        go_to_best_dock();
+        return;
+    }
+    if (base.tile != base.destination_tile && direction() != DIR_FIGURE_NONE) {
         return;
     }
 
-    // OG kingdom request cycle: sail out → off-map → return to wharf water.
-    switch (action_state()) {
-    case ACTION_221_WARSHIP_GOING_TO_REQUEST: {
-        tile2i entry = scenario_map_river_entry();
-        if (!entry.valid()) {
-            entry = scenario_map_entry();
+    int dock_id = base.destination_building_id;
+    const int best = building_shipyard_find_best_dock(id());
+    if (best > 0 && dock_id > 0 && building_shipyard_repair_queue_size(dock_id) >= 1 && best != dock_id) {
+        go_to_best_dock();
+        return;
+    }
+    if (dock_id > 0 && building_shipyard_queue_ship(id(), dock_id)) {
+        advance_action(ACTION_15_WARSHIP_QUEUED_AT_DOCK);
+        base.wait_ticks = 0;
+    } else {
+        advance_action(ACTION_8_WARSHIP_WAITING);
+    }
+}
+
+void figure_warship::docked() {
+    sail_to_destination();
+    shoot();
+    const auto &p = current_params();
+    if (++base.wait_ticks <= p.face_enemy_wait || runtime_data().ship_move_mode == WARSHIP_MOVE_RESTING) {
+        return;
+    }
+    base.wait_ticks = 0;
+    figure *enemy = figure_get(find_closest_enemy_ship(p.face_enemy_range));
+    if (enemy) {
+        base.previous_tile_direction = calc_general_direction(base.tile, enemy->tile);
+    }
+}
+
+void figure_warship::send_to_request(int event_id) {
+    auto &d = runtime_data();
+    d.request_event_id = (int16_t)event_id;
+    d.target_id = 0;
+    route_remove();
+    if (action_state() != ACTION_18_WARSHIP_AWAY_ON_REQUEST) {
+        advance_action(ACTION_17_WARSHIP_GOING_TO_REQUEST);
+    }
+}
+
+void figure_warship::return_from_request() {
+    auto &d = runtime_data();
+    d.request_event_id = -1;
+    base.set_flag(e_figure_flag_invisible, false);
+    building *home_b = home();
+    auto *wharf = home_b ? home_b->dcast_warship_wharf() : nullptr;
+    tile2i dock;
+    if (wharf) {
+        dock = wharf->get_water_access_tiles().point_a;
+        if (!dock.valid()) {
+            dock = tile2i(home_b->tiles[0]);
         }
-        base.destination_tile = entry;
-        base.move_ticks(1);
-        base.height_adjusted_ticks = 0;
-        if (direction() == DIR_FIGURE_NONE) {
-            advance_action(ACTION_222_WARSHIP_AWAY_ON_REQUEST);
-            route_remove();
+    }
+    if (!dock.valid()) {
+        water_dest result = map_water_get_wharf_for_new_warship(base);
+        if (result.found) {
+            dock = result.tile;
+            set_home(result.bid);
+        }
+    }
+    if (dock.valid()) {
+        base.destination_tile = dock;
+        route_remove();
+        advance_action(ACTION_19_WARSHIP_RETURNING_FROM_REQUEST);
+    } else {
+        advance_action(ACTION_8_WARSHIP_WAITING);
+    }
+}
+
+void figure_warship::request_action() {
+    switch (action_state()) {
+    case ACTION_17_WARSHIP_GOING_TO_REQUEST:
+        if (!scenario_map_has_river_entry()) {
+            return;
+        }
+        base.destination_tile = scenario_map_river_entry();
+        ship_move(false);
+        if (base.tile == base.destination_tile || direction() == DIR_FIGURE_NONE) {
+            advance_action(ACTION_18_WARSHIP_AWAY_ON_REQUEST);
             base.set_flag(e_figure_flag_invisible);
+            route_remove();
         } else if (direction() == DIR_FIGURE_REROUTE) {
             route_remove();
         } else if (direction() == DIR_FIGURE_CAN_NOT_REACH) {
             kill();
         }
-        return;
-    }
-    case ACTION_222_WARSHIP_AWAY_ON_REQUEST:
+        break;
+    case ACTION_18_WARSHIP_AWAY_ON_REQUEST:
         base.set_flag(e_figure_flag_invisible);
-        return;
-    case ACTION_223_WARSHIP_RETURNING_FROM_REQUEST:
+        break;
+    case ACTION_19_WARSHIP_RETURNING_FROM_REQUEST:
         base.set_flag(e_figure_flag_invisible, false);
-        base.move_ticks(1);
-        base.height_adjusted_ticks = 0;
-        if (direction() == DIR_FIGURE_NONE) {
-            runtime_data().active_order = e_order_goto_wharf;
-            advance_action(ACTION_207_WARSHIP_GOING_TO_WHARF);
-            route_remove();
+        ship_move(false);
+        if (base.tile == base.destination_tile || direction() == DIR_FIGURE_NONE) {
+            advance_action(ACTION_8_WARSHIP_WAITING);
         } else if (direction() == DIR_FIGURE_REROUTE) {
             route_remove();
         } else if (direction() == DIR_FIGURE_CAN_NOT_REACH) {
-            runtime_data().active_order = e_order_goto_wharf;
-            advance_action(ACTION_207_WARSHIP_GOING_TO_WHARF);
+            kill();
+        }
+        break;
+    }
+}
+
+void figure_warship::update_crew_fatigue() {
+    auto &d = runtime_data();
+    const auto &p = current_params();
+    building *home_b = home();
+    auto *wharf = home_b ? home_b->dcast_warship_wharf() : nullptr;
+    const int state = action_state();
+    const bool moored_resting = (state == ACTION_8_WARSHIP_WAITING || state == ACTION_20_WARSHIP_DOCKED)
+        && wharf && wharf->num_workers() > 0;
+
+    d.fatigue_tick++;
+    if (moored_resting) {
+        if (d.fatigue_tick >= p.fatigue_rest_interval) {
+            d.fatigue_tick = 0;
+            d.crew_fatigue = (int8_t)std::max(0, (int)d.crew_fatigue - (int)p.fatigue_rest_amount);
+        }
+        return;
+    }
+
+    const int interval = (state == ACTION_24_WARSHIP_ATTACKING_SHIP)
+        ? p.fatigue_combat_interval
+        : p.fatigue_grow_interval;
+    if (d.fatigue_tick >= interval) {
+        d.fatigue_tick = 0;
+        d.crew_fatigue = (int8_t)std::min(100, (int)d.crew_fatigue + 1);
+    }
+}
+
+void figure_warship::figure_action() {
+    check_sink();
+    if (!is_alive()) {
+        return;
+    }
+
+    update_crew_fatigue();
+
+    if (runtime_data().request_event_id >= 0) {
+        if (action_state() == ACTION_18_WARSHIP_AWAY_ON_REQUEST) {
+            request_action();
+            return;
+        }
+        if (action_state() != ACTION_17_WARSHIP_GOING_TO_REQUEST) {
             route_remove();
-        }
-        return;
-    default:
-        break;
-    }
-
-    warship_update_crew_fatigue(this);
-
-    // OG: critically damaged ships head to a shipwright on their own.
-    {
-        const int max_d = base.max_damage();
-        if (max_d > 0 && runtime_data().active_order != e_order_repair) {
-            const int state = action_state();
-            const bool already_docking = state == ACTION_212_WARSHIP_GOING_TO_SHIPWRIGHT
-                || state == ACTION_213_WARSHIP_QUEUED_AT_SHIPWRIGHT;
-            if (!already_docking) {
-                const int health = calc_percentage(max_d - (int)base.damage, max_d);
-                if (health > 0 && health <= WARSHIP_HULL_AUTO_REPAIR_PERCENT) {
-                    runtime_data().active_order = e_order_repair;
-                }
-            }
+            advance_action(ACTION_17_WARSHIP_GOING_TO_REQUEST);
         }
     }
 
-    if (action_state() == ACTION_212_WARSHIP_GOING_TO_SHIPWRIGHT
-        || action_state() == ACTION_213_WARSHIP_QUEUED_AT_SHIPWRIGHT
-        || runtime_data().active_order == e_order_repair) {
-        figure_action_repair();
+    const int max_damage = base.max_damage();
+    const int health = max_damage > 0 ? calc_percentage(max_damage - base.damage, max_damage) : 0;
+    if (health > 0 && health <= current_params().damaged_percent
+        && action_state() != ACTION_13_WARSHIP_GOING_TO_DOCK
+        && action_state() != ACTION_15_WARSHIP_QUEUED_AT_DOCK
+        && runtime_data().request_event_id < 0) {
+        runtime_data().active_order = e_order_repair;
+        go_to_best_dock();
         return;
     }
 
-    building_warship_wharf *wharf = (b && b->id) ? b->dcast_warship_wharf() : nullptr;
-
-    if (!wharf) {
-        if (action_state() != ACTION_207_WARSHIP_GOING_TO_WHARF || base.destination_building_id == 0) {
-            water_dest result = map_water_get_wharf_for_new_warship(base);
-            if (result.found) {
-                building *nb = building_get(result.bid);
-                if (b && b->id) {
-                    b->remove_figure_by_id(id());
-                }
-                set_home(result.bid);
-                if (nb && nb->id) {
-                    nb->set_figure(BUILDING_SLOT_BOAT, &base);
-                }
-                set_destination(nb);
-                base.destination_tile = result.tile;
-                base.source_tile = result.tile;
-                route_remove();
-                advance_action(ACTION_207_WARSHIP_GOING_TO_WHARF);
-            } else {
-                kill();
-                return;
-            }
-        }
-
-        base.move_ticks(1);
-        if (direction(DIR_FIGURE_NONE, DIR_FIGURE_CAN_NOT_REACH, DIR_FIGURE_REROUTE)) {
-            poof();
-        }
-        return;
-    }
-
-    if (wharf->num_workers() == 0
-        && action_state() != ACTION_207_WARSHIP_GOING_TO_WHARF
-        && runtime_data().active_order == e_order_goto_wharf) {
-        runtime_data().active_order = e_order_goto_wharf;
-        set_destination(&wharf->base);
-        base.destination_tile = wharf->get_water_access_tiles().point_a;
-        route_remove();
-        advance_action(ACTION_207_WARSHIP_GOING_TO_WHARF);
-    }
-
-    int wharf_boat_id = b ? b->get_figure_id(BUILDING_SLOT_BOAT) : 0;
-    if (action_state() != ACTION_205_WARSHIP_CREATED && wharf_boat_id != id()) {
-        const int state = action_state();
-        if (state == ACTION_203_WARSHIP_MOORED) {
-            // Sitting at home berth — reclaim rather than flee/poof.
-            if (b && b->id) {
-                b->set_figure(BUILDING_SLOT_BOAT, &base);
-            }
-        } else if (state == ACTION_207_WARSHIP_GOING_TO_WHARF
-            || state == ACTION_212_WARSHIP_GOING_TO_SHIPWRIGHT
-            || state == ACTION_213_WARSHIP_QUEUED_AT_SHIPWRIGHT) {
-            // Heading to berth/shipwright — finish the trip; reclaim on MOOR.
-        } else {
-            water_dest result = map_water_get_wharf_for_new_warship(base);
-            building *nb = building_get(result.bid);
-            if (nb && nb->id) {
-                if (b && b->id && b->id != nb->id) {
-                    b->remove_figure_by_id(id());
-                }
-                set_home(nb->id);
-                nb->set_figure(BUILDING_SLOT_BOAT, &base);
-                b = nb;
-                wharf = nb->dcast_warship_wharf();
-                advance_action(ACTION_207_WARSHIP_GOING_TO_WHARF);
-                base.destination_tile = result.tile;
-                base.source_tile = result.tile;
-                route_remove();
-            } else if (wharf) {
-                // No free berth elsewhere — reclaim our home instead of poofing.
-                tile2i dock = wharf->get_water_access_tiles().point_a;
-                if (dock.valid() && b && b->id) {
-                    b->set_figure(BUILDING_SLOT_BOAT, &base);
-                    set_destination(&wharf->base);
-                    advance_action(ACTION_207_WARSHIP_GOING_TO_WHARF);
-                    base.destination_tile = dock;
-                    base.source_tile = dock;
-                    route_remove();
-                } else {
-                    poof();
-                }
-            } else {
-                poof();
-            }
-        }
-    }
-
-    assert(base.allow_move_type == EMOVE_WATER);
-
-    switch (runtime_data().active_order) {
-    case e_order_goto_wharf:
-        figure_action_goto_wharf();
+    switch (action_state()) {
+    case ACTION_8_WARSHIP_WAITING:
+        wait_at_shipyard();
+        shoot();
         break;
-    case e_order_repair:
-        figure_action_repair();
+    case ACTION_9_WARSHIP_STRAIGHT:
+        move_attack();
         break;
-    case e_order_hold_position:
-    case e_order_engage_nearby:
-    case e_order_seek_and_destroy:
-        figure_action_combat();
+    case ACTION_10_WARSHIP_HUNTING:
+    case ACTION_23_WARSHIP_PATROLLING:
+        patrol();
         break;
-    case e_order_move_to_tile:
-        figure_action_move_to_tile();
+    case ACTION_11_WARSHIP_SAILING:
+        sail_to_destination();
+        shoot();
+        break;
+    case ACTION_12_WARSHIP_EVADING:
+        evade();
+        shoot();
+        break;
+    case ACTION_13_WARSHIP_GOING_TO_DOCK:
+        sail_to_dock();
+        break;
+    case ACTION_15_WARSHIP_QUEUED_AT_DOCK:
+        break;
+    case ACTION_17_WARSHIP_GOING_TO_REQUEST:
+    case ACTION_18_WARSHIP_AWAY_ON_REQUEST:
+    case ACTION_19_WARSHIP_RETURNING_FROM_REQUEST:
+        request_action();
+        break;
+    case ACTION_20_WARSHIP_DOCKED:
+        docked();
+        break;
+    case ACTION_24_WARSHIP_ATTACKING_SHIP:
+        attack_ship();
         break;
     default:
-        figure_action_goto_wharf();
+        advance_action(ACTION_8_WARSHIP_WAITING);
         break;
     }
 }
@@ -715,111 +816,106 @@ void figure_warship::kill() {
 }
 
 void figure_warship::update_animation() {
-    pcstr anim_key = "walk";
+    pcstr key = "walk";
     switch (action_state()) {
-    case ACTION_205_WARSHIP_CREATED: anim_key = "idle"; break;
-    case ACTION_204_WARSHIP_ATTACK: anim_key = "attack"; break;
-    case ACTION_209_WARSHIP_ON_PATROL: anim_key = "walk"; break;
-    case ACTION_203_WARSHIP_MOORED: anim_key = "idle"; break;
-    case ACTION_211_WARSHIP_IDLE_AT_TILE: anim_key = "idle"; break;
-    case ACTION_206_WARSHIP_GOING_TO_PATROL: anim_key = "walk"; break;
-    case ACTION_210_WARSHIP_GOING_TO_TILE: anim_key = "walk"; break;
-    case ACTION_221_WARSHIP_GOING_TO_REQUEST:
-    case ACTION_223_WARSHIP_RETURNING_FROM_REQUEST: anim_key = "walk"; break;
-    case ACTION_222_WARSHIP_AWAY_ON_REQUEST: anim_key = "idle"; break;
+    case ACTION_8_WARSHIP_WAITING:
+    case ACTION_15_WARSHIP_QUEUED_AT_DOCK:
+    case ACTION_18_WARSHIP_AWAY_ON_REQUEST:
+    case ACTION_20_WARSHIP_DOCKED:
+        key = "idle";
+        break;
+    case ACTION_24_WARSHIP_ATTACKING_SHIP:
+        key = "attack";
+        break;
+    default:
+        key = runtime_data().ship_move_mode == WARSHIP_MOVE_RESTING ? "idle" : "walk";
+        break;
     }
-
-    image_set_animation(anim_key);
+    image_set_animation(key);
 }
 
-void figure_warship::figure_action_goto_wharf() {
-    if (action_state() == ACTION_204_WARSHIP_ATTACK) {
-        base.wait_ticks++;
-        if (base.wait_ticks >= 200) {
-            base.wait_ticks = 0;
-            advance_action(ACTION_207_WARSHIP_GOING_TO_WHARF);
-            base.destination_tile = base.source_tile;
-            route_remove();
-        }
-        return;
-    }
+void figure_warship::set_order(int order) {
+    auto &d = runtime_data();
+    d.active_order = (short)order;
+    d.target_id = 0;
+    base.attack_image_offset = 0;
 
-    if (action_state() == ACTION_203_WARSHIP_MOORED) {
-        return;
-    }
-
-    building *home_building = home();
-    building_warship_wharf *wharf = home_building ? home_building->dcast_warship_wharf() : nullptr;
-    if (!wharf || !home_building || !home_building->is_valid() || wharf->num_workers() == 0) {
-        return;
-    }
-
-    advance_action(ACTION_207_WARSHIP_GOING_TO_WHARF);
-    base.destination_tile.set(wharf->base.tiles[0]);
-    base.move_ticks(1);
-    base.height_adjusted_ticks = 0;
-    if (direction() == DIR_FIGURE_NONE) {
-        advance_action(ACTION_203_WARSHIP_MOORED);
-        base.wait_ticks = 0;
-        if (home_building && home_building->id) {
-            home_building->set_figure(BUILDING_SLOT_BOAT, &base);
-        }
-    } else if (direction() == DIR_FIGURE_REROUTE) {
-        route_remove();
-    } else if (direction() == DIR_FIGURE_CAN_NOT_REACH) {
-        advance_action(ACTION_205_WARSHIP_CREATED);
-    }
-}
-
-void figure_warship::figure_action_common() {
-    building *b = home();
-
-    switch (action_state()) {
-    case ACTION_205_WARSHIP_CREATED:
-        base.wait_ticks++;
-        if (base.wait_ticks >= 50) {
-            base.wait_ticks = 0;
-            water_dest result = map_water_get_wharf_for_new_warship(base);
-            if (result.bid && result.found) {
-                if (b && b->id) {
-                    b->remove_figure_by_id(id());
-                }
-                building *new_home = building_get(result.bid);
-                set_home(new_home->id);
-                new_home->set_figure(BUILDING_SLOT_BOAT, &base);
-                advance_action(ACTION_207_WARSHIP_GOING_TO_WHARF);
-                base.destination_tile = result.tile;
-                base.source_tile = result.tile;
+    switch (order) {
+    case e_order_goto_wharf: {
+        building *home_b = home();
+        auto *wharf = home_b ? home_b->dcast_warship_wharf() : nullptr;
+        if (wharf) {
+            tile2i dock = wharf->get_water_access_tiles().point_a;
+            if (dock.valid()) {
+                base.destination_tile = dock;
+                advance_action(ACTION_11_WARSHIP_SAILING);
                 route_remove();
+                return;
             }
         }
-        break;
-
-    case ACTION_207_WARSHIP_GOING_TO_WHARF:
-        base.move_ticks(1);
-        base.height_adjusted_ticks = 0;
-        if (direction() == DIR_FIGURE_NONE) {
-            advance_action(ACTION_203_WARSHIP_MOORED);
-            base.wait_ticks = 0;
-            building *home_b = home();
-            if (home_b && home_b->id) {
-                home_b->set_figure(BUILDING_SLOT_BOAT, &base);
-            }
-        } else if (direction() == DIR_FIGURE_REROUTE) {
-            route_remove();
-        } else if (direction() == DIR_FIGURE_CAN_NOT_REACH) {
-            advance_action(ACTION_205_WARSHIP_CREATED);
-        }
+        advance_action(ACTION_8_WARSHIP_WAITING);
+        base.wait_ticks = current_params().dock_wait_ticks;
         break;
     }
+    case e_order_engage_nearby:
+        d.patrol_x = base.tile.x();
+        d.patrol_y = base.tile.y();
+        d.secondary_action = WARSHIP_SECONDARY_PATROL;
+        base.destination_tile = base.tile;
+        advance_action(ACTION_23_WARSHIP_PATROLLING);
+        route_remove();
+        break;
+    case e_order_hold_position:
+        base.destination_tile = base.tile;
+        advance_action(ACTION_20_WARSHIP_DOCKED);
+        route_remove();
+        break;
+    case e_order_seek_and_destroy:
+        d.secondary_action = WARSHIP_SECONDARY_WAITING;
+        base.destination_tile = base.tile;
+        advance_action(ACTION_10_WARSHIP_HUNTING);
+        route_remove();
+        break;
+    case e_order_repair:
+        go_to_best_dock();
+        break;
+    case e_order_move_to_tile:
+    default:
+        break;
+    }
+}
+
+void figure_warship::attack_target(figure_id target_id) {
+    figure *target = figure_get(target_id);
+    if (!is_enemy_ship(target)) {
+        return;
+    }
+    auto &d = runtime_data();
+    d.action_before_attack = action_state() == ACTION_23_WARSHIP_PATROLLING
+        ? ACTION_23_WARSHIP_PATROLLING
+        : ACTION_10_WARSHIP_HUNTING;
+    d.target_id = target_id;
+    d.secondary_action = WARSHIP_SECONDARY_WAITING;
+    advance_action(ACTION_24_WARSHIP_ATTACKING_SHIP);
+    route_remove();
 }
 
 void figure_warship::move_to_tile(tile2i dest) {
-    runtime_data().active_order = e_order_move_to_tile;
-    runtime_data().target_id = 0;
+    auto &d = runtime_data();
+    d.active_order = e_order_move_to_tile;
+    d.target_id = 0;
     base.destination_tile = dest;
-    advance_action(ACTION_210_WARSHIP_GOING_TO_TILE);
     route_remove();
+
+    if (action_state() == ACTION_23_WARSHIP_PATROLLING) {
+        d.patrol_x = dest.x();
+        d.patrol_y = dest.y();
+        d.secondary_action = WARSHIP_SECONDARY_PATROL;
+    } else if (action_state() == ACTION_10_WARSHIP_HUNTING) {
+        d.secondary_action = WARSHIP_SECONDARY_WAITING;
+    } else {
+        advance_action(ACTION_11_WARSHIP_SAILING);
+    }
 }
 
 void figure_warship::move_to_wharf(int wharf_building_id, tile2i dock_tile) {
@@ -827,19 +923,15 @@ void figure_warship::move_to_wharf(int wharf_building_id, tile2i dock_tile) {
     if (!new_home || !new_home->is_valid()) {
         return;
     }
-
     building *old_home = home();
     if (old_home && old_home->id != wharf_building_id) {
         old_home->remove_figure_by_id(id());
     }
-
     set_home(wharf_building_id);
     new_home->set_figure(BUILDING_SLOT_BOAT, &base);
-
     runtime_data().active_order = e_order_goto_wharf;
     runtime_data().target_id = 0;
     base.destination_tile = dock_tile;
-    base.source_tile = dock_tile;
-    advance_action(ACTION_207_WARSHIP_GOING_TO_WHARF);
     route_remove();
+    advance_action(ACTION_11_WARSHIP_SAILING);
 }

@@ -31,6 +31,32 @@ figure_warship {
 	attack_value : 12
 	missile_attack_value : 6
 	missile_delay : 200
+	hunt_range : 228
+	missile_range : 10
+	patrol_extra_range : 10
+	patrol_radius : 10
+	damaged_percent : 15
+	dock_wait_ticks : 50
+	face_enemy_wait : 19
+	face_enemy_range : 5
+	ram_cooldown : 15
+	evade_ticks : 75
+	evade_range : 18
+	shoot_ticks : 100
+	target_check_ticks : 10
+	full_moves : 80
+	full_steps : 8
+	fatigue_ticks : 200
+	ram_fast_percent : 120
+	score_loaded_transport : 25
+	score_land_enemy : 17
+	score_warship : 15
+	score_transport : 10
+	escape_distance : 10
+	fatigue_rest_interval : 40
+	fatigue_grow_interval : 80
+	fatigue_combat_interval : 20
+	fatigue_rest_amount : 2
 
 	meta { text_id: 184, help_link:"message_building_warship" }
 	terrain_usage : TERRAIN_USAGE_ANY
@@ -40,8 +66,7 @@ function figure_warship_phrase_key(f) {
 	var keys = []
 	var state = f.action_state
 
-	// ACTION_204_WARSHIP_ATTACK
-	if (state == 204) {
+	if (state == ACTION_24_WARSHIP_ATTACKING_SHIP || state == ACTION_9_WARSHIP_STRAIGHT) {
 		keys.push("warship_well_fight_to_the_death")
 	}
 
@@ -49,13 +74,11 @@ function figure_warship_phrase_key(f) {
 		keys.push("warship_enemies_coming_this_way")
 	}
 
-	// ACTION_206_WARSHIP_GOING_TO_PATROL / ACTION_209_WARSHIP_ON_PATROL
-	if (state == 206 || state == 209) {
+	if (state == ACTION_10_WARSHIP_HUNTING || state == ACTION_23_WARSHIP_PATROLLING) {
 		keys.push("warship_ready_to_attack_invaders")
 	}
 
-	// ACTION_203_WARSHIP_MOORED
-	if (state == 203) {
+	if (state == ACTION_8_WARSHIP_WAITING || state == ACTION_20_WARSHIP_DOCKED) {
 		keys.push("warship_ready_if_foes_come")
 	}
 

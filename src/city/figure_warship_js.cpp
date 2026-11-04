@@ -42,6 +42,11 @@ static void figure_warship_proto___crew_fatigue(js_State *J) {
     js_pushnumber(J, (double)(ship ? ship->runtime_data().crew_fatigue : 0));
 }
 
+static void figure_warship_proto___secondary_action(js_State *J) {
+    figure_warship *ship = figure_warship_this(J);
+    js_pushnumber(J, (double)(ship ? ship->runtime_data().secondary_action : 0));
+}
+
 static void figure_warship_proto___damage(js_State *J) {
     figure_warship *ship = figure_warship_this(J);
     js_pushnumber(J, (double)(ship ? ship->base.damage : 0));
@@ -56,7 +61,7 @@ static void figure_warship_proto_set_order(js_State *J) {
     figure_warship *ship = figure_warship_this(J);
     const int order = J->to<int>(1);
     if (ship) {
-        ship->runtime_data().active_order = (short)order;
+        ship->set_order(order);
     }
 }
 
@@ -84,6 +89,7 @@ void js_register_figure_warship_proto(js_State *J) {
     jsB_propf(J, js_intern("FigureWarship.prototype.__valid"), figure_warship_proto___valid, 0);
     jsB_propf(J, js_intern("FigureWarship.prototype.__active_order"), figure_warship_proto___active_order, 0);
     jsB_propf(J, js_intern("FigureWarship.prototype.__crew_fatigue"), figure_warship_proto___crew_fatigue, 0);
+    jsB_propf(J, js_intern("FigureWarship.prototype.__secondary_action"), figure_warship_proto___secondary_action, 0);
     jsB_propf(J, js_intern("FigureWarship.prototype.__damage"), figure_warship_proto___damage, 0);
     jsB_propf(J, js_intern("FigureWarship.prototype.__max_damage"), figure_warship_proto___max_damage, 0);
     jsB_propf(J, js_intern("FigureWarship.prototype.set_order"), figure_warship_proto_set_order, 1);

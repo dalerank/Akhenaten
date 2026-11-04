@@ -34,7 +34,7 @@ building_warship_wharf = {
 function building_warship_wharf_update_graphic(ev) {
     var building = city.get_building(ev.bid)
     var boat = building.get_figure(BUILDING_SLOT_BOAT)
-    var moored = boat.valid && boat.action_state == ACTION_203_WARSHIP_MOORED
+    var moored = boat.valid && (boat.action_state == ACTION_8_WARSHIP_WAITING || boat.action_state == ACTION_20_WARSHIP_DOCKED)
     building_wharf_update_graphic_moored(building, moored)
 }
 

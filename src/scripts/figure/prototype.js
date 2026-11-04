@@ -44,5 +44,6 @@ FigureTransportShip.property.phase = { get: function() { return this.__phase() }
 FigureWarship.property.valid = { get: function() { return this.__valid() } }
 FigureWarship.property.active_order = { get: function() { return this.__active_order() } }
 FigureWarship.property.crew_fatigue = { get: function() { return this.__crew_fatigue() } }
+FigureWarship.property.secondary_action = { get: function() { return this.__secondary_action() } }
 FigureWarship.property.damage = { get: function() { return this.__damage() } }
 FigureWarship.property.max_damage = { get: function() { return this.__max_damage() } }
