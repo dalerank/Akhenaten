@@ -1,11 +1,14 @@
 #include "city/city.h"
 
+#include "building/building_mansion.h"
 #include "city/city_finance.h"
 #include "core/profiler.h"
 #include "game/game_config.h"
 
 void city_t::government_distribute_treasury() {
     OZZY_PROFILER_FUNCTION();
+
+    building_mansion::update_money_values();
 
     constexpr int greate_palace_units = 8;
     constexpr int palace_units = 5;
@@ -22,8 +25,7 @@ void city_t::government_distribute_treasury() {
                     //+ greate_palace_units * palace_up_count;
 
     if (!game_features::gameplay_change_new_tax_collection_system) {
-        units += tax_collector_units * tax_col_count 
-                    + tax_collectpr_up_units * tax_col_up_count;
+        units += tax_collector_units * tax_col_count + tax_collectpr_up_units * tax_col_up_count;
     }
 
     int amount_per_unit = 0;
@@ -33,7 +35,7 @@ void city_t::government_distribute_treasury() {
     if (treasury > 0 && units > 0) {
         amount_per_unit = treasury / units;
         remainder = treasury - units * amount_per_unit;
-    } 
+    }
 
     buildings_valid_do([&] (building &b) {
         if (b.num_workers <= 0) {

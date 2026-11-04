@@ -353,6 +353,7 @@ public:
 
     void force_damage(e_damage_type type, int16_t value);
     void destroy_by_collapse();
+    void destroy_by_enemy();
     void destroy_by_flooded();
     void destroy_by_fire();
 

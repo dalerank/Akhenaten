@@ -81,7 +81,7 @@ void city_maintenance_t::destroy_by_enemy(building *b) {
     if (b->state == BUILDING_STATE_VALID) {
         was_valid_building = true;
         g_city.ratings.monument_building_destroyed(b->type);
-        b->destroy_by_collapse();
+        b->destroy_by_enemy();
     }
 
     if (map_terrain_is(tile, TERRAIN_WALL)) {

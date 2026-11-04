@@ -14,6 +14,9 @@ building_personal_mansion {
     planner_update_rule {
       unique_building : true
     }
+    needs {
+      groundwater : true
+    }
     cost [ 30, 50, 100, 200, 400 ]
     desirability { value[12], step[2], step_size[-2], range[4] }
     laborers[0], fire_risk[4], damage_risk[1]
@@ -43,7 +46,7 @@ building_personal_mansion {
       is_administration: true
     }
   }
-  
+
   building_family_mansion {
     animations {
       preview { pack:PACK_GENERAL, id:86 }
@@ -58,6 +61,9 @@ building_personal_mansion {
     planner_update_rule {
       unique_building : true
     }
+    needs {
+      groundwater : true
+    }
     cost[ 80, 120, 150, 200, 300 ]
     desirability { value[20], step[2], step_size[-3], range[5] }
     laborers[0], fire_risk[4], damage_risk[1]
@@ -65,7 +71,7 @@ building_personal_mansion {
       is_administration: true
     }
   }
-  
+
   building_dynasty_mansion {
     animations {
       preview { pack:PACK_GENERAL, id:87 }
@@ -73,11 +79,14 @@ building_personal_mansion {
       work { pos[-1, -1], pack:PACK_GENERAL, id:87, offset:1, max_frames:12 }
     }
     labor_category : LABOR_CATEGORY_GOVERNMENT
-    building_size : 4
+    building_size : 5
     planner_update_rule {
       unique_building : true
     }
-  
+    needs {
+      groundwater : true
+    }
+
     min_houses_coverage : 50
     info_sound : "Wavs/GOV_MAN3.WAV"
     cost [ 140, 200, 300, 400, 500 ]
@@ -87,4 +96,3 @@ building_personal_mansion {
       is_administration: true
     }
   }
-  
