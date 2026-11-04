@@ -128,7 +128,7 @@ function run_test() {
             + ' state=' + __figure_get_state(ostrich)
             + ' dmg=' + test_figure_get_damage(ostrich)
             + ' shots=' + shots
-            + ' arrows=' + __test_count_figures(FIGURE_HUNTER_ARROW))
+            + ' spears=' + __test_count_figures(FIGURE_HUNTER_SPEAR))
         __test_signal_ready()
         return
     }

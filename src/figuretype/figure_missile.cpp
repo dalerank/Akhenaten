@@ -19,11 +19,12 @@
 #include "figuretype/figure_antelope.h"
 #include "game/game_events.h"
 #include "js/js_game.h"
+#include "scenario/scenario.h"
 
 missile_rules_t ANK_VARIABLE(missile_rules);
 hunter_spear_rules_t ANK_VARIABLE(hunter_spear_rules);
 
-REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_hunter_arrow);
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_hunter_spear);
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_arrow);
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_spear);
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_antelope_hunter_javelin);
@@ -542,11 +543,20 @@ void hunter_spear_main_image_update(figure_missile *missile) {
     }
 }
 
-void figure_hunter_arrow::figure_action() {
+void figure_hunter_spear::figure_action() {
     hunter_spear_figure_action(this);
 }
 
-void figure_hunter_arrow::main_image_update() {
+void figure_hunter_spear::main_image_update() {
+    // OG: central climate uses frame-only stick (no 32-dir shadow); others SpeAmbient spear+shadow.
+    if (g_scenario.climate == CLIMATE_CENTRAL) {
+        const int central = anim("central").first_img();
+        if (central) {
+            base.main_image_id = central + (base.progress_on_tile % 5);
+            base.cart_image_id = 0;
+            return;
+        }
+    }
     hunter_spear_main_image_update(this);
 }
 

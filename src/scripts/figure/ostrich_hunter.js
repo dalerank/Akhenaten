@@ -45,6 +45,8 @@ figure_ostrich_hunter {
 	attack_distance: 3
 	terrain_usage : TERRAIN_USAGE_ANIMAL
 	max_hunting_distance : 15
+	prey_type : FIGURE_OSTRICH
+	missile_type : FIGURE_HUNTER_SPEAR
 	record_path : true
 }
 

@@ -73,10 +73,10 @@ public:
 };
 
 // OG FIG_HUNTER_SPEAR (74): marks herd prey HUNTED, does not apply HP damage.
-class figure_hunter_arrow : public figure_missile {
+class figure_hunter_spear : public figure_missile {
 public:
-    FIGURE_METAINFO(FIGURE_HUNTER_ARROW, figure_hunter_arrow)
-    figure_hunter_arrow(figure *f) : figure_missile(f) {}
+    FIGURE_METAINFO(FIGURE_HUNTER_SPEAR, figure_hunter_spear)
+    figure_hunter_spear(figure *f) : figure_missile(f) {}
 
     virtual void figure_action() override;
     virtual void main_image_update() override;

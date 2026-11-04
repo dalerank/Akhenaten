@@ -37,14 +37,16 @@ public:
         uint8_t animal_attack_value = 0;
         int16_t shoot_tick = 9;
         int16_t shoot_timeout = 300;
+        e_figure_type prey_type = FIGURE_NONE;
+        e_figure_type missile_type = FIGURE_HUNTER_SPEAR;
 
         void archive_init();
     };
 
     virtual figure_hunter *dcast_hunter() override { return this; }
 
-    virtual e_figure_type prey_type() const = 0;
-    virtual e_figure_type missile_type() const = 0;
+    virtual e_figure_type prey_type() const { return hunter_params().prey_type; }
+    virtual e_figure_type missile_type() const { return hunter_params().missile_type; }
 
     const static_params &hunter_params() const {
         return static_cast<const static_params &>(figure_static_params::get(base.type));

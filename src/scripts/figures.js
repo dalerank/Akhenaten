@@ -329,7 +329,7 @@ figure_hippo = {
 	terrain_usage : TERRAIN_USAGE_AMPHIBIA
 }
 
-// OG animals_internal.h hunter spear flight (FIG_HUNTER_SPEAR = FIGURE_HUNTER_ARROW 74).
+// OG animals.c hunter_spear_action (FIG_HUNTER_SPEAR = 74).
 hunter_spear_rules {
 	speed: 3
 	flight_ticks: 104
@@ -337,11 +337,14 @@ hunter_spear_rules {
 	orientation_mult: 4
 }
 
-figure_hunter_arrow {
+figure_hunter_spear {
 	animations {
+		// OG SpeAmbient groups 39/40 → remake ambient 44/43 (same as hunter javelin sheet).
 		walk { pack:PACK_SPR_AMBIENT, id:44, max_frames:32 }
 		shadow { pack:PACK_SPR_AMBIENT, id:43, max_frames:32 }
-		big_image { pack:PACK_UNLOADED, id:25, offset:FIGURE_HUNTER_ARROW }
+		// OG SpeMain group 50: central climate frame stick (5 frames, no shadow).
+		central { pack:PACK_SPR_MAIN, id:50, max_frames:5 }
+		big_image { pack:PACK_UNLOADED, id:25, offset:FIGURE_HUNTER_SPEAR }
 	}
 
 	category: figure_category_inactive
@@ -350,11 +353,12 @@ figure_hunter_arrow {
 	terrain_usage : TERRAIN_USAGE_ANY
 }
 
+// Remake-only alias type (179); hunters fire FIGURE_HUNTER_SPEAR like OG.
 figure_antelope_hunter_javelin = {
 	animations : {
 		walk : { pack:PACK_SPR_AMBIENT, id:44, max_frames:12 }
 		shadow : { pack:PACK_SPR_AMBIENT, id:43, max_frames:12 }
-		big_image : { pack:PACK_UNLOADED, id:25, offset:FIGURE_HUNTER_ARROW }
+		big_image : { pack:PACK_UNLOADED, id:25, offset:FIGURE_HUNTER_SPEAR }
 	}
 
 	category: figure_category_inactive

@@ -429,8 +429,9 @@ extern const e_pack_tokens_t e_pack_type_tokens;
 
 //#define GROUP_FIGURE_DANCER_WHIP PACK_SPR_MAIN, 109     // this isn't in Pharaoh
 //#define GROUP_FIGURE_MUSICIAN PACK_SPR_MAIN, 191        // 111
-//#define GROUP_FIGURE_HUNTER_ARROW PACK_SPR_MAIN, 0
-//#define GROUP_FIGURE_HUNTER_ARROW_SHADOW PACK_SPR_MAIN, 1         // 33
+//#define GROUP_FIGURE_HUNTER_SPEAR_CENTRAL PACK_SPR_MAIN, 50     // OG image_group(50)
+//#define GROUP_FIGURE_HUNTER_SPEAR PACK_SPR_AMBIENT, 44          // OG SpeAmbient 39
+//#define GROUP_FIGURE_HUNTER_SPEAR_SHADOW PACK_SPR_AMBIENT, 43   // OG SpeAmbient 40
 //#define GROUP_FIGURE_EMIGRANT PACK_SPR_MAIN, 2                    // 65
 //#define GROUP_FIGURE_EMIGRANT_DEATH PACK_SPR_MAIN, 3              // 161
 //#define GROUP_FIGURE_ENGINEER PACK_SPR_MAIN, 4                    //  169

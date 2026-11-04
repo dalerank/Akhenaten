@@ -23,6 +23,8 @@ void figure_hunter::static_params::archive_init() {
     verify_no_crash(attack_distance > 0);
     verify_no_crash(shoot_tick > 0);
     verify_no_crash(shoot_timeout > shoot_tick);
+    verify_no_crash(prey_type != FIGURE_NONE);
+    verify_no_crash(missile_type != FIGURE_NONE);
 }
 
 static void scared_animals_in_area(tile2i center, int size) {

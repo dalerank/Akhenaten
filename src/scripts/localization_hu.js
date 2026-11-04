@@ -1024,7 +1024,7 @@ localization_hu = [
   {key: "#figure_spear", group:64, id:71 }
   {key: "#figure_charior_racer", group:64, id:72 }
   {key: "#figure_ostrich_hunter", group:64, id:73 }
-  {key: "#figure_hunter_arrow", group:64, id:74 }
+  {key: "#figure_hunter_spear", group:64, id:74 }
   {key: "#figure_antelope_hunter", text: "Antilopvadász" }
   {key: "#figure_antelope_hunter_javelin", text: "Vadász gerely" }
   {key: "#figure_birds_hunter", text: "Madárvadász" }

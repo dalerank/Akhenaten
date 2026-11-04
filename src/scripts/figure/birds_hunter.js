@@ -42,6 +42,8 @@ figure_birds_hunter {
 	attack_distance: 3
 	terrain_usage : TERRAIN_USAGE_ANIMAL
 	max_hunting_distance : 15
+	prey_type : FIGURE_BIRDS
+	missile_type : FIGURE_HUNTER_SPEAR
 	record_path : true
 }
 

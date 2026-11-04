@@ -124,7 +124,7 @@ enum e_figure_type : uint16_t {
     FIGURE_SPEAR = 71,
     FIGURE_CHARIOR_RACER = 72, // Caesar hippodrome leftover — legacy hippodrome_horse_action stub
     FIGURE_OSTRICH_HUNTER = 73,
-    FIGURE_HUNTER_ARROW = 74,
+    FIGURE_HUNTER_SPEAR = 74, // OG FIG_HUNTER_SPEAR
     FIGURE_LUMBERJACK = 75,
     FIGURE_FERRY_BOAT = 76,
     FIGURE_TRANSPORT_SHIP = 77,
