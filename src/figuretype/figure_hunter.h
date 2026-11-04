@@ -5,6 +5,8 @@
 /**
  * Shared hunting-lodge hunter FSM (chase / hunt / pickup / pack / unload).
  * Action token names stay ACTION_*_OSTRICH_HUNTER_* for test/token stability.
+ * Shoot/hit timings follow OG figure_hunter_action / figure_hunter_spear_action;
+ * climate-split hunters, herd scare, and stuck-pack recovery stay remake.
  */
 enum e_ostrich_hunter_action : uint16_t {
     ACTION_0_OSTRICH_HUNTER_NONE = 0,
@@ -31,9 +33,10 @@ public:
 
     struct static_params : public figure_static_params {
         uint8_t max_hunting_distance = 0;
-        uint8_t attack_distance = 0;
+        uint8_t attack_distance = 3;
         uint8_t animal_attack_value = 0;
-        int8_t missile_delay = 0;
+        int16_t shoot_tick = 9;
+        int16_t shoot_timeout = 300;
 
         void archive_init();
     };
@@ -46,6 +49,11 @@ public:
     const static_params &hunter_params() const {
         return static_cast<const static_params &>(figure_static_params::get(base.type));
     }
+
+    void on_spear_hit_prey(figure *prey);
+    void on_spear_miss();
+
+    static bool prey_is_downed(const figure *prey);
 
     virtual void figure_before_action() override;
     virtual void figure_action() override;

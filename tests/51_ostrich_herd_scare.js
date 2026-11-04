@@ -70,7 +70,9 @@ function run_test() {
 
         var ha = __figure_is_valid(hunter) ? __figure_get_action_state(hunter) : -1
 
-        if (!hunting && ha == ACTION_15_OSTRICH_HUNTER_HUNT) {
+        if (!hunting && (ha == ACTION_15_OSTRICH_HUNTER_HUNT
+                || ha == ACTION_11_OSTRICH_HUNTER_GOING_TO_PICKUP_POINT
+                || ha == ACTION_10_OSTRICH_HUNTER_PICKUP_ANIMAL)) {
             __log_marker('ostrich_herd_scare_hunting_ok')
             hunting = true
         }
@@ -84,8 +86,10 @@ function run_test() {
         }
 
         if (!killed) {
+            var pa = __figure_is_valid(prey) ? __figure_get_action_state(prey) : -1
             var dead = !__figure_is_valid(prey)
                 || __figure_get_state(prey) == FIGURE_STATE_DYING
+                || pa == 12 || pa == 149
                 || test_figure_get_damage(prey) >= 100
             if (dead) {
                 __log_marker('ostrich_herd_scare_killed_ok')

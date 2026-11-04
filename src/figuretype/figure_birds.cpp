@@ -288,6 +288,9 @@ void figure_birds::herd_rest() {
 }
 
 void figure_birds::herd_scare() {
+    if (action_state(ACTION_12_BIRDS_HUNTED, FIGURE_ACTION_149_CORPSE)) {
+        return;
+    }
     const uint8_t duration = current_params().scared_ticks;
     if (duration == 0) {
         return;

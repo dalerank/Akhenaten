@@ -39,9 +39,11 @@ figure_ostrich_hunter {
 	attack_value: 4
 	missile_attack_value: 4
 	animal_attack_value: 100
-	missile_delay: 25
-	attack_distance: 5
-	terrain_usage : TERRAIN_USAGE_ANIMAL,
+	// OG shoot tick/timeout/dist; terrain stays ANIMAL (remake — roads strand off-map hunts).
+	shoot_tick: 9
+	shoot_timeout: 300
+	attack_distance: 3
+	terrain_usage : TERRAIN_USAGE_ANIMAL
 	max_hunting_distance : 15
 	record_path : true
 }

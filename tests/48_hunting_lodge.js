@@ -57,12 +57,14 @@ function run_test() {
         __test_signal_ready()
         return
     }
-    if (!test48_expect(hunter.attack_distance == 5,
-            'attack_distance want 5, got ' + hunter.attack_distance)
+    if (!test48_expect(hunter.attack_distance == 3,
+            'attack_distance want 3, got ' + hunter.attack_distance)
         || !test48_expect(hunter.animal_attack_value == 100,
             'animal_attack_value want 100, got ' + hunter.animal_attack_value)
-        || !test48_expect(hunter.missile_delay == 25,
-            'missile_delay want 25, got ' + hunter.missile_delay)) {
+        || !test48_expect(hunter.shoot_tick == 9,
+            'shoot_tick want 9, got ' + hunter.shoot_tick)
+        || !test48_expect(hunter.shoot_timeout == 300,
+            'shoot_timeout want 300, got ' + hunter.shoot_timeout)) {
         __test_signal_ready()
         return
     }

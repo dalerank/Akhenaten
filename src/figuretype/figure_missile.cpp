@@ -13,10 +13,15 @@
 #include "figuretype/figure_enemy_archer.h"
 #include "figuretype/figure_enemy_spearman.h"
 #include "figuretype/figure_war_ship.h"
+#include "figuretype/figure_hunter.h"
+#include "figuretype/animal_ostrich.h"
+#include "figuretype/figure_birds.h"
+#include "figuretype/figure_antelope.h"
 #include "game/game_events.h"
 #include "js/js_game.h"
 
 missile_rules_t ANK_VARIABLE(missile_rules);
+hunter_spear_rules_t ANK_VARIABLE(hunter_spear_rules);
 
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_hunter_arrow);
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_arrow);
@@ -446,6 +451,111 @@ void figure_spear::main_image_update() {
     if (shadow) {
         base.cart_image_id = shadow + dir;
     }
+}
+
+static figure_id hunter_spear_prey_on_tile(tile2i tile) {
+    int fid = map_figure_id_get(tile);
+    while (fid > 0) {
+        figure *f = figure_get(fid);
+        if (!f) {
+            break;
+        }
+        const e_figure_type type = f->type;
+        if ((type == FIGURE_ANTELOPE || type == FIGURE_BIRDS || type == FIGURE_OSTRICH)
+            && f->action_state != FIGURE_ACTION_149_CORPSE
+            && !figure_hunter::prey_is_downed(f)) {
+            return fid;
+        }
+        if (fid == f->next_figure) {
+            break;
+        }
+        fid = f->next_figure;
+    }
+    return 0;
+}
+
+static void hunter_spear_mark_hunted(figure *prey) {
+    switch (prey->type) {
+    case FIGURE_OSTRICH:
+        prey->advance_action(ACTION_12_OSTRICH_HUNTED);
+        break;
+    case FIGURE_BIRDS:
+        prey->advance_action(ACTION_12_BIRDS_HUNTED);
+        break;
+    case FIGURE_ANTELOPE:
+        prey->advance_action(ACTION_12_ANTELOPE_HUNTED);
+        break;
+    default:
+        break;
+    }
+    prey->wait_ticks = 0;
+}
+
+void hunter_spear_figure_action(figure_missile *missile) {
+    const auto &r = hunter_spear_rules;
+    auto &base = missile->base;
+    base.use_cross_country = true;
+    base.progress_on_tile++;
+    if (base.progress_on_tile > r.flight_ticks) {
+        missile->poof();
+        missile->main_image_update();
+        return;
+    }
+
+    const bool landed = base.move_ticks_cross_country(r.speed);
+    const figure_id prey_id = hunter_spear_prey_on_tile(missile->tile());
+    figure *hunter = missile->shooter();
+
+    if (prey_id) {
+        figure *prey = figure_get(prey_id);
+        hunter_spear_mark_hunted(prey);
+        if (auto *h = hunter ? hunter->dcast_hunter() : nullptr) {
+            h->on_spear_hit_prey(prey);
+        }
+        events::emit(event_sound_effect{ missile->hit_sound_effect() });
+        missile->poof();
+        missile->main_image_update();
+        return;
+    }
+
+    if (landed) {
+        if (auto *h = hunter ? hunter->dcast_hunter() : nullptr) {
+            h->on_spear_miss();
+        }
+        missile->poof();
+    }
+
+    missile->main_image_update();
+}
+
+void hunter_spear_main_image_update(figure_missile *missile) {
+    const auto &r = hunter_spear_rules;
+    int dir = missile->direction() - r.orientation_mult * g_camera.orientation;
+    if (dir < 0) {
+        dir += r.image_directions;
+    }
+    dir %= r.image_directions;
+    missile->base.main_image_id = missile->anim(animkeys().walk).first_img() + dir;
+    const int shadow = missile->anim("shadow").first_img();
+    if (shadow) {
+        missile->base.cart_image_id = shadow + dir;
+    }
+}
+
+void figure_hunter_arrow::figure_action() {
+    hunter_spear_figure_action(this);
+}
+
+void figure_hunter_arrow::main_image_update() {
+    hunter_spear_main_image_update(this);
+}
+
+void figure_antelope_hunter_javelin::figure_action() {
+    hunter_spear_figure_action(this);
+}
+
+void figure_antelope_hunter_javelin::main_image_update() {
+    hunter_spear_main_image_update(this);
 }
 
 

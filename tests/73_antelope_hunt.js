@@ -29,7 +29,8 @@ function run_test() {
     }
 
     // Ostrich closer than antelope — must still be ignored by prey filter.
-    var ostrich = test_figure_create(FIGURE_OSTRICH, tile.x + 2, tile.y)
+    // Hunter within OG attack_distance (3) of antelope.
+    var ostrich = test_figure_create(FIGURE_OSTRICH, tile.x + 1, tile.y)
     var antelope = test_figure_create(FIGURE_ANTELOPE, tile.x + 3, tile.y)
     var hunter = test_figure_create(FIGURE_ANTELOPE_HUNTER, tile.x + 4, tile.y)
     if (!ostrich || !antelope || !hunter) {
@@ -37,6 +38,10 @@ function run_test() {
         __test_signal_ready()
         return
     }
+
+    // Lodge may spawn other climate hunters — keep this test on the hand-made one.
+    city.figures.remove_figures(FIGURE_OSTRICH_HUNTER)
+    city.figures.remove_figures(FIGURE_BIRDS_HUNTER)
 
     test_figure_set_home(hunter, bid)
     test_figure_set_speed(ostrich, 0)
@@ -69,7 +74,9 @@ function run_test() {
             return
         }
 
-        if (!hunting && ha == ACTION_15_OSTRICH_HUNTER_HUNT) {
+        if (!hunting && (ha == ACTION_15_OSTRICH_HUNTER_HUNT
+                || ha == ACTION_11_OSTRICH_HUNTER_GOING_TO_PICKUP_POINT
+                || ha == ACTION_10_OSTRICH_HUNTER_PICKUP_ANIMAL)) {
             if (target != antelope && target != 0) {
                 __log_info_native('[test:73] FAIL: hunt target not antelope: ' + target)
                 __test_signal_ready()
@@ -88,8 +95,11 @@ function run_test() {
         }
 
         if (!killed) {
+            var aa = __figure_is_valid(antelope) ? __figure_get_action_state(antelope) : -1
             var dead = !__figure_is_valid(antelope)
                 || __figure_get_state(antelope) == FIGURE_STATE_DYING
+                || aa == 12 // ACTION_12_ANTELOPE_HUNTED
+                || aa == 149 // FIGURE_ACTION_149_CORPSE
                 || test_figure_get_damage(antelope) >= 100
             if (dead) {
                 __log_marker('antelope_hunt_killed_ok')

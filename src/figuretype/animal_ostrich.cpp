@@ -312,6 +312,9 @@ void figure_ostrich::herd_rest() {
 }
 
 void figure_ostrich::herd_scare() {
+    if (action_state(ACTION_12_OSTRICH_HUNTED, FIGURE_ACTION_149_CORPSE)) {
+        return;
+    }
     const uint8_t duration = current_params().scared_ticks;
     if (duration == 0) {
         return;

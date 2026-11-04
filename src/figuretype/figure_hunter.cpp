@@ -6,6 +6,9 @@
 #include "graphics/animkeys.h"
 #include "figuretype/figure_animal.h"
 #include "figuretype/figure_missile.h"
+#include "figuretype/animal_ostrich.h"
+#include "figuretype/figure_birds.h"
+#include "figuretype/figure_antelope.h"
 #include "city/city_figures.h"
 #include "city/city_recorded_paths.h"
 #include "core/random.h"
@@ -18,12 +21,12 @@ const e_ostrich_hunter_action_tokens_t ANK_CONFIG_ENUM(e_ostrich_hunter_action_t
 void figure_hunter::static_params::archive_init() {
     verify_no_crash(max_hunting_distance > 0);
     verify_no_crash(attack_distance > 0);
+    verify_no_crash(shoot_tick > 0);
+    verify_no_crash(shoot_timeout > shoot_tick);
 }
 
 static void scared_animals_in_area(tile2i center, int size) {
     map_grid_area_foreach(center, size, [](tile2i tile) {
-        // Kill tile often has DYING prey as list head — walk next_figure so
-        // living companions on the same tile still get herd_scare.
         int figure_id = map_figure_id_get(tile);
         while (figure_id > 0) {
             figure *f = figure_get(figure_id);
@@ -31,7 +34,7 @@ static void scared_animals_in_area(tile2i center, int size) {
                 break;
             }
             const int next_id = (f->next_figure != figure_id) ? f->next_figure : 0;
-            if (f->is_alive()) {
+            if (f->is_alive() && !figure_hunter::prey_is_downed(f)) {
                 if (auto *animal = f->dcast_animal()) {
                     animal->herd_scare();
                 }
@@ -39,6 +42,51 @@ static void scared_animals_in_area(tile2i center, int size) {
             figure_id = next_id;
         }
     });
+}
+
+bool figure_hunter::prey_is_downed(const figure *prey) {
+    if (!prey || !prey->is_valid()) {
+        return true;
+    }
+    if (!prey->is_alive()) {
+        return true;
+    }
+    const int state = prey->action_state;
+    return state == ACTION_12_OSTRICH_HUNTED
+        || state == ACTION_12_BIRDS_HUNTED
+        || state == ACTION_12_ANTELOPE_HUNTED
+        || state == FIGURE_ACTION_149_CORPSE;
+}
+
+void figure_hunter::on_spear_hit_prey(figure *prey) {
+    if (!prey) {
+        return;
+    }
+    base.target_figure_id = prey->id;
+    base.destination_tile = prey->tile;
+    advance_action(ACTION_11_OSTRICH_HUNTER_GOING_TO_PICKUP_POINT);
+    scared_animals_in_area(prey->tile, /*dist*/16);
+}
+
+void figure_hunter::on_spear_miss() {
+    // A later spear may land after the first already marked prey HUNTED — keep pickup.
+    if (action_state(ACTION_11_OSTRICH_HUNTER_GOING_TO_PICKUP_POINT,
+                     ACTION_10_OSTRICH_HUNTER_PICKUP_ANIMAL,
+                     ACTION_12_OSTRICH_HUNTER_MOVE_PACKED,
+                     ACTION_12_OSTRICH_HUNTER_MOVE_RANDOM_PACKED,
+                     ACTION_12_OSTRICH_HUNTER_LOOK_RANDOM_PACKED,
+                     ACTION_14_OSTRICH_HUNTER_UNLOADING)) {
+        return;
+    }
+    if (base.target_figure_id) {
+        figure *prey = figure_get(base.target_figure_id);
+        if (prey_is_downed(prey)) {
+            advance_action(ACTION_11_OSTRICH_HUNTER_GOING_TO_PICKUP_POINT);
+            return;
+        }
+    }
+    base.wait_ticks = 0;
+    advance_action(ACTION_8_RECALCULATE);
 }
 
 void figure_hunter::figure_before_action() {
@@ -51,6 +99,7 @@ void figure_hunter::figure_before_action() {
 void figure_hunter::figure_action() {
     const auto &params = hunter_params();
     const e_figure_type prey_t = prey_type();
+    const e_terrain_usage terrain = (e_terrain_usage)params.terrain_usage;
 
     figure *prey = figure_get(base.target_figure_id);
     if (base.target_figure_id && (!prey->is_valid() || prey->type != prey_t)) {
@@ -58,9 +107,10 @@ void figure_hunter::figure_action() {
             prey->targeted_by_figure_id = 0;
         }
         base.target_figure_id = 0;
+        prey = nullptr;
     }
 
-    const int dist = base.target_figure_id ? calc_maximum_distance(tile(), prey->tile) : 0;
+    const int dist = base.target_figure_id && prey ? calc_maximum_distance(tile(), prey->tile) : 0;
 
     const bool stationary_ok = action_state(
         ACTION_13_OSTRICH_HUNTER_WAIT_FOR_ACTION,
@@ -78,7 +128,6 @@ void figure_hunter::figure_action() {
         if (base.movement_ticks_watchdog > 60) {
             base.movement_ticks_watchdog = 0;
             route_remove();
-            // Packed return: never RECALCULATE — that drops the carcass.
             if (action_state(ACTION_12_OSTRICH_HUNTER_MOVE_PACKED,
                              ACTION_12_OSTRICH_HUNTER_MOVE_RANDOM_PACKED,
                              ACTION_12_OSTRICH_HUNTER_LOOK_RANDOM_PACKED)) {
@@ -99,7 +148,7 @@ void figure_hunter::figure_action() {
     }
 
     auto avoid_wrong_prey = [prey_t](figure *f) {
-        return !f || f->type != prey_t;
+        return !f || f->type != prey_t || prey_is_downed(f);
     };
 
     switch (action_state()) {
@@ -118,7 +167,6 @@ void figure_hunter::figure_action() {
                 base_tile = home()->tile;
             }
             base.destination_tile = random_around_point(base_tile, tile(), /*step*/4, /*bias*/8, /*max_dist*/32);
-            // Same-tile dest would finish do_goto immediately and thrash RECALCULATE↔INVESTIGATE.
             if (base.destination_tile == tile()) {
                 base.wait_ticks = 20 + (random_byte() % 20);
                 advance_action(ACTION_13_OSTRICH_HUNTER_WAIT_FOR_ACTION);
@@ -129,8 +177,7 @@ void figure_hunter::figure_action() {
     } break;
 
     case ACTION_16_OSTRICH_HUNTER_INVESTIGATE:
-        // Fail stays on INVESTIGATE so we can pause instead of snapping back to RECALCULATE.
-        do_goto(base.destination_tile, TERRAIN_USAGE_ANIMAL, ACTION_8_RECALCULATE, ACTION_16_OSTRICH_HUNTER_INVESTIGATE);
+        do_goto(base.destination_tile, terrain, ACTION_8_RECALCULATE, ACTION_16_OSTRICH_HUNTER_INVESTIGATE);
         if (direction() == DIR_FIGURE_CAN_NOT_REACH) {
             route_remove();
             base.wait_ticks = 20 + (random_byte() % 20);
@@ -146,9 +193,11 @@ void figure_hunter::figure_action() {
             }
             break;
         }
-        if (!prey->is_alive()) {
+        if (prey_is_downed(prey)) {
             advance_action(ACTION_11_OSTRICH_HUNTER_GOING_TO_PICKUP_POINT);
-            scared_animals_in_area(prey->tile, /*dist*/16);
+            if (prey) {
+                scared_animals_in_area(prey->tile, /*dist*/16);
+            }
             break;
         }
 
@@ -162,67 +211,71 @@ void figure_hunter::figure_action() {
         if (!base.target_figure_id) {
             return advance_action(ACTION_8_RECALCULATE);
         }
-        if (!prey->is_alive()) {
+        if (prey_is_downed(prey)) {
             advance_action(ACTION_11_OSTRICH_HUNTER_GOING_TO_PICKUP_POINT);
-            scared_animals_in_area(prey->tile, /*dist*/16);
+            if (prey) {
+                scared_animals_in_area(prey->tile, /*dist*/16);
+            }
             break;
         }
 
         if (dist >= params.attack_distance) {
-            const bool finished = do_goto(prey->tile, TERRAIN_USAGE_ANIMAL, ACTION_15_OSTRICH_HUNTER_HUNT, ACTION_8_RECALCULATE);
-            if (!finished && direction() == DIR_FIGURE_REROUTE) {
+            const bool finished = do_goto(prey->tile, terrain, ACTION_15_OSTRICH_HUNTER_HUNT, ACTION_8_RECALCULATE);
+            if (finished) {
+                base.wait_ticks = 0;
+            } else if (direction() == DIR_FIGURE_REROUTE) {
                 advance_action(ACTION_16_OSTRICH_HUNTER_INVESTIGATE);
             }
         } else {
-            base.wait_ticks = params.missile_delay;
+            base.wait_ticks = 0;
             advance_action(ACTION_15_OSTRICH_HUNTER_HUNT);
         }
         break;
 
-    case ACTION_15_OSTRICH_HUNTER_HUNT:
-        base.wait_ticks--;
-        if (base.wait_ticks <= 0) {
-            if (!base.target_figure_id) {
-                return advance_action(ACTION_8_RECALCULATE);
-            }
-
-            base.wait_ticks = params.missile_delay;
-            // DYING or already DEAD carcass — do not keep the HUNT shoot loop.
-            if (!prey->is_alive()) {
-                advance_action(ACTION_11_OSTRICH_HUNTER_GOING_TO_PICKUP_POINT);
-                scared_animals_in_area(prey->tile, /*dist*/16);
-            } else if (dist >= params.attack_distance) {
-                base.wait_ticks = 12;
-                advance_action(ACTION_13_OSTRICH_HUNTER_WAIT_FOR_ACTION);
-            } else {
-                const int attack_value = params.animal_attack_value;
-                const e_figure_type mtype = missile_type();
-                base.direction = calc_missile_shooter_direction(tile(), prey->tile);
-                base.animctx.restart([this, attack_value, mtype] {
-                    if (!base.target_figure_id) {
-                        return;
-                    }
-                    figure *f = figure_get(base.target_figure_id);
-                    // DYING prey must keep target_figure_id for pickup; only skip the shot.
-                    if (!f || !f->is_alive()) {
-                        return;
-                    }
-                    auto missile = figure_missile::create(id(), tile(), f->tile, mtype);
-                    if (!missile) {
-                        return;
-                    }
-                    missile->runtime_data().missile_attack_value = attack_value;
-                });
-            }
+    case ACTION_15_OSTRICH_HUNTER_HUNT: {
+        // OG FIGURE_ACTION_HUNTER_SHOOT: fire once at shoot_tick, then wait until timeout.
+        if (!base.target_figure_id) {
+            return advance_action(ACTION_8_RECALCULATE);
         }
-        break;
+        if (prey_is_downed(prey)) {
+            advance_action(ACTION_11_OSTRICH_HUNTER_GOING_TO_PICKUP_POINT);
+            if (prey) {
+                scared_animals_in_area(prey->tile, /*dist*/16);
+            }
+            break;
+        }
+        if (dist >= params.attack_distance) {
+            base.wait_ticks = 12;
+            advance_action(ACTION_13_OSTRICH_HUNTER_WAIT_FOR_ACTION);
+            break;
+        }
+
+        const int16_t shot = ++base.wait_ticks;
+        if (shot == params.shoot_tick) {
+            base.direction = calc_missile_shooter_direction(tile(), prey->tile);
+            const e_figure_type mtype = missile_type();
+            base.animctx.restart([this, mtype] {
+                if (!base.target_figure_id) {
+                    return;
+                }
+                figure *f = figure_get(base.target_figure_id);
+                if (!f || prey_is_downed(f)) {
+                    return;
+                }
+                figure_missile::create(id(), tile(), f->tile, mtype);
+            });
+        }
+        if (shot > params.shoot_timeout) {
+            advance_action(ACTION_8_RECALCULATE);
+        }
+    } break;
 
     case ACTION_11_OSTRICH_HUNTER_GOING_TO_PICKUP_POINT:
         if (!base.target_figure_id) {
             return advance_action(ACTION_8_RECALCULATE);
         }
 
-        if (do_goto(prey->tile, TERRAIN_USAGE_ANIMAL, ACTION_10_OSTRICH_HUNTER_PICKUP_ANIMAL, ACTION_11_OSTRICH_HUNTER_GOING_TO_PICKUP_POINT)) {
+        if (do_goto(prey->tile, terrain, ACTION_10_OSTRICH_HUNTER_PICKUP_ANIMAL, ACTION_11_OSTRICH_HUNTER_GOING_TO_PICKUP_POINT)) {
             animation().offset = 0;
         }
         break;
@@ -243,7 +296,7 @@ void figure_hunter::figure_action() {
         break;
 
     case ACTION_12_OSTRICH_HUNTER_MOVE_PACKED: {
-        const bool finished = do_returnhome(TERRAIN_USAGE_ANIMAL, ACTION_14_OSTRICH_HUNTER_UNLOADING);
+        const bool finished = do_returnhome(terrain, ACTION_14_OSTRICH_HUNTER_UNLOADING);
         if (!finished && direction() == DIR_FIGURE_REROUTE) {
             if (home()->is_ajacent_tile(tile())) {
                 advance_action(ACTION_14_OSTRICH_HUNTER_UNLOADING);
@@ -269,7 +322,7 @@ void figure_hunter::figure_action() {
     } break;
 
     case ACTION_12_OSTRICH_HUNTER_MOVE_RANDOM_PACKED:
-        do_goto(base.destination_tile, TERRAIN_USAGE_ANIMAL, ACTION_12_OSTRICH_HUNTER_MOVE_PACKED, ACTION_12_OSTRICH_HUNTER_MOVE_PACKED);
+        do_goto(base.destination_tile, terrain, ACTION_12_OSTRICH_HUNTER_MOVE_PACKED, ACTION_12_OSTRICH_HUNTER_MOVE_PACKED);
         break;
 
     case ACTION_14_OSTRICH_HUNTER_UNLOADING:

@@ -329,17 +329,25 @@ figure_hippo = {
 	terrain_usage : TERRAIN_USAGE_AMPHIBIA
 }
 
+// OG animals_internal.h hunter spear flight (FIG_HUNTER_SPEAR = FIGURE_HUNTER_ARROW 74).
+hunter_spear_rules {
+	speed: 3
+	flight_ticks: 104
+	image_directions: 32
+	orientation_mult: 4
+}
+
 figure_hunter_arrow {
 	animations {
-		walk { pack:PACK_SPR_MAIN, id:0, max_frames:12 }
-		shadow { pack:PACK_SPR_MAIN, id:1, max_frames:12 }
+		walk { pack:PACK_SPR_AMBIENT, id:44, max_frames:32 }
+		shadow { pack:PACK_SPR_AMBIENT, id:43, max_frames:32 }
 		big_image { pack:PACK_UNLOADED, id:25, offset:FIGURE_HUNTER_ARROW }
 	}
 
 	category: figure_category_inactive
-    max_damage : 100
-    missile_attack_value : 6
-    terrain_usage : TERRAIN_USAGE_ANY
+	max_damage : 100
+	missile_attack_value : 6
+	terrain_usage : TERRAIN_USAGE_ANY
 }
 
 figure_antelope_hunter_javelin = {

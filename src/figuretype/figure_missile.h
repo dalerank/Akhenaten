@@ -30,6 +30,16 @@ ANK_CONFIG_STRUCT(missile_rules_t,
 
 extern missile_rules_t missile_rules;
 
+// OG animals_internal.h hunter spear flight.
+struct hunter_spear_rules_t {
+    int16_t speed = 3;
+    int16_t flight_ticks = 104;
+    int16_t image_directions = 32;
+    int16_t orientation_mult = 4;
+};
+ANK_CONFIG_STRUCT(hunter_spear_rules_t, speed, flight_ticks, image_directions, orientation_mult)
+extern hunter_spear_rules_t hunter_spear_rules;
+
 // Shared OG missiles.c combat helpers (arrow + bolt).
 int missile_og_defense(figure *target, formation *legion, int defense);
 int missile_og_damage(int attack, int defense);
@@ -62,10 +72,15 @@ public:
     static figure_missile* create(figure_id building_id, tile2i tile, tile2i dst, e_figure_type type);
 };
 
+// OG FIG_HUNTER_SPEAR (74): marks herd prey HUNTED, does not apply HP damage.
 class figure_hunter_arrow : public figure_missile {
 public:
     FIGURE_METAINFO(FIGURE_HUNTER_ARROW, figure_hunter_arrow)
     figure_hunter_arrow(figure *f) : figure_missile(f) {}
+
+    virtual void figure_action() override;
+    virtual void main_image_update() override;
+    virtual e_sound_effect hit_sound_effect() const override { return SOUND_EFFECT_JAVELIN; }
 };
 
 class figure_arrow : public figure_missile {
@@ -92,5 +107,11 @@ public:
     FIGURE_METAINFO(FIGURE_ANTELOPE_HUNTER_JAVELIN, figure_antelope_hunter_javelin)
     figure_antelope_hunter_javelin(figure *f) : figure_missile(f) {}
 
+    virtual void figure_action() override;
+    virtual void main_image_update() override;
     virtual e_sound_effect hit_sound_effect() const override { return SOUND_EFFECT_JAVELIN; }
 };
+
+// Shared OG hunter-spear flight/hit (ostrich/birds/antelope → HUNTED).
+void hunter_spear_figure_action(figure_missile *missile);
+void hunter_spear_main_image_update(figure_missile *missile);

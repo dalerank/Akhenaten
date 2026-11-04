@@ -47,7 +47,7 @@ function run_test() {
         return
     }
 
-    // Prey next to lodge; hunter within attack_distance (config: 5).
+    // Prey next to lodge; hunter within attack_distance (OG: 3).
     var ostrich = test_figure_create(FIGURE_OSTRICH, tile.x + 2, tile.y)
     var hunter = test_figure_create(FIGURE_OSTRICH_HUNTER, tile.x + 4, tile.y)
     if (!ostrich || !hunter) {
@@ -78,7 +78,10 @@ function run_test() {
 
         var ha = __figure_is_valid(hunter) ? __figure_get_action_state(hunter) : -1
 
-        if (!hunting && ha == ACTION_15_OSTRICH_HUNTER_HUNT) {
+        // Natural OG shoot can leave HUNT within one pump; GO_PICKUP also counts.
+        if (!hunting && (ha == ACTION_15_OSTRICH_HUNTER_HUNT
+                || ha == ACTION_11_OSTRICH_HUNTER_GOING_TO_PICKUP_POINT
+                || ha == ACTION_10_OSTRICH_HUNTER_PICKUP_ANIMAL)) {
             __log_marker('ostrich_hunt_hunting_ok')
             hunting = true
         }
@@ -94,8 +97,11 @@ function run_test() {
         }
 
         if (!killed) {
+            var oa = __figure_is_valid(ostrich) ? __figure_get_action_state(ostrich) : -1
             var dead = !__figure_is_valid(ostrich)
                 || __figure_get_state(ostrich) == FIGURE_STATE_DYING
+                || oa == 12 // ACTION_12_OSTRICH_HUNTED
+                || oa == 149 // FIGURE_ACTION_149_CORPSE
                 || test_figure_get_damage(ostrich) >= 100
             if (dead) {
                 __log_marker('ostrich_hunt_killed_ok')

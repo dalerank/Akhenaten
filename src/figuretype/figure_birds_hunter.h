@@ -15,4 +15,4 @@ public:
 };
 
 ANK_CONFIG_STRUCT(figure_birds_hunter::static_params,
-    max_hunting_distance, attack_distance, missile_delay, animal_attack_value)
+    max_hunting_distance, attack_distance, shoot_tick, shoot_timeout, animal_attack_value)
