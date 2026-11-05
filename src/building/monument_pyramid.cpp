@@ -201,14 +201,63 @@ pyramid_causeway_probe causeway_probe_from_runtime(tile2i pyramid_nw, vec2i size
     return probe;
 }
 
+int complex_walkway_image(e_building_type complex_type) {
+    const auto &params = building_static_params::get(complex_type);
+    int img = params.first_img("complex_walkway");
+    if (img <= 0) {
+        img = params.first_img("clear_land");
+    }
+    if (img <= 0) {
+        img = params.first_img("empty_land");
+    }
+    return img;
+}
+
+int annex_building_image(e_building_type complex_type, e_building_type annex_type) {
+    // Pack from the parent complex `_pack` / base anim; group id from the annex
+    // building's `base { id:… }` (9/10/11). OG orientation: valley uses ori/2
+    // (4 frames), mortuary/causeway use ori/2&1 (2 frames).
+    const auto &cx = building_static_params::get(complex_type);
+    int pack = cx.animations["base"].pack;
+    if (pack <= 0) {
+        pack = cx.animations["clear_land"].pack;
+    }
+    if (pack <= 0) {
+        pack = building_static_params::get(annex_type).animations["base"].pack;
+    }
+    if (pack <= 0) {
+        return 0;
+    }
+
+    const auto &ax = building_static_params::get(annex_type).animations["base"];
+    const int group = ax.id > 0 ? ax.id : 9;
+    image_ensure_pak_loaded(pack);
+    const int base = image_id_from_group(pack, group);
+    if (base <= 0) {
+        return 0;
+    }
+    const int ori2 = (g_camera.orientation / 2) & 3;
+    if (annex_type == BUILDING_VALLEY_TEMPLE) {
+        return base + ori2;
+    }
+    return base + (ori2 & 1);
+}
+
 void claim_causeway_tiles(int building_id, const pyramid_causeway_probe &probe) {
     if (!probe.ok || probe.length <= 0 || building_id <= 0) {
         return;
     }
+    int walk_img = 0;
+    if (building *b = building_get(building_id)) {
+        walk_img = complex_walkway_image(b->type);
+    }
     const vec2i step = k_causeway_dir[probe.dir & 3];
     const vec2i perp = k_causeway_perp[probe.dir & 3];
     tile2i origin = probe.origin;
+    // OG pyramid_complex_area_op mode 2: walkway image on the start 2×2 and the
+    // water-edge land column only; middle strip keeps existing ground tiles.
     for (int i = 0; i < probe.length; ++i) {
+        const bool paint_walkway = (i < 2) || (i == probe.length - 1);
         for (int w = 0; w < k_causeway_width; ++w) {
             tile2i t = origin.shifted(step.x * i + perp.x * w, step.y * i + perp.y * w);
             if (!map_grid_is_inside(t, 1)) {
@@ -222,6 +271,9 @@ void claim_causeway_tiles(int building_id, const pyramid_causeway_probe &probe) 
             map_property_set_multi_tile_size(grid_offset, 1);
             map_property_set_multi_tile_xy(grid_offset, 0, 0, true);
             map_monuments_set_progress(t, 0);
+            if (paint_walkway && walk_img > 0) {
+                map_image_set(grid_offset, walk_img);
+            }
         }
     }
 }
@@ -243,9 +295,21 @@ void clear_causeway_tiles(int building_id, const pyramid_causeway_probe &probe) 
                 continue;
             }
             const int grid_offset = t.grid_offset();
+            const int owner = map_building_at(grid_offset);
+            bool wipe = false;
+            if (owner > 0) {
+                if (building *ob = building_get(owner)) {
+                    if (building_type_is_pyramid_complex_annex(ob->type)) {
+                        if (ob->state != BUILDING_STATE_DELETED_BY_GAME) {
+                            ob->state = BUILDING_STATE_DELETED_BY_GAME;
+                        }
+                        wipe = true;
+                    }
+                }
+            }
             // Only wipe tiles still owned by this complex (avoid clearing
             // unrelated buildings if runtime length/dir were stale).
-            if (building_id > 0 && map_building_at(grid_offset) != building_id) {
+            if (!wipe && building_id > 0 && owner != building_id) {
                 continue;
             }
             map_building_tile_clear_at(grid_offset, /*building_type*/ 0);
@@ -261,7 +325,99 @@ void clear_causeway_tiles(int building_id, const pyramid_causeway_probe &probe) 
     }
 }
 
+bool slot_owned_by_complex(tile2i t, int complex_id) {
+    for (int dy = 0; dy < 2; ++dy) {
+        for (int dx = 0; dx < 2; ++dx) {
+            if (map_building_at(t.shifted(dx, dy).grid_offset()) != complex_id) {
+                return false;
+            }
+        }
+    }
+    return true;
+}
+
+bool place_next_complex_annex(int complex_id, const pyramid_causeway_probe &probe) {
+    if (!probe.ok || probe.length < 2 || complex_id <= 0) {
+        return false;
+    }
+    building *cx = building_get(complex_id);
+    if (!cx) {
+        return false;
+    }
+
+    const vec2i step = k_causeway_dir[probe.dir & 3];
+    const int slots = std::max(1, probe.length / 2);
+    tile2i origin = probe.origin;
+    for (int s = 0; s < slots; ++s) {
+        tile2i t = origin.shifted(step.x * (s * 2), step.y * (s * 2));
+        if (!map_grid_is_inside(t, 2) || !slot_owned_by_complex(t, complex_id)) {
+            continue;
+        }
+
+        e_building_type bt = BUILDING_CAUSEWAY;
+        if (s == 0) {
+            bt = BUILDING_MORTUARY_TEMPLE;
+        }
+        if (s == slots - 1) {
+            bt = BUILDING_VALLEY_TEMPLE;
+        }
+
+        for (int dy = 0; dy < 2; ++dy) {
+            for (int dx = 0; dx < 2; ++dx) {
+                map_building_tile_clear_at(t.shifted(dx, dy).grid_offset(), 0);
+            }
+        }
+
+        building *b = building_create(bt, t, 0);
+        if (!b) {
+            return false;
+        }
+        game_undo_add_building(b);
+        int img = annex_building_image(cx->type, bt);
+        if (img <= 0) {
+            img = building_static_params::get(bt).base_img();
+        }
+        if (img <= 0) {
+            img = complex_walkway_image(cx->type);
+        }
+        map_building_tiles_add(b->id, t, 2, img, TERRAIN_BUILDING);
+        return true;
+    }
+    return false;
+}
+
+void place_all_complex_annex(int complex_id, const pyramid_causeway_probe &probe) {
+    if (!probe.ok || complex_id <= 0) {
+        return;
+    }
+    claim_causeway_tiles(complex_id, probe);
+    while (place_next_complex_annex(complex_id, probe)) {
+    }
+}
+
+bool complex_annex_has_free_slot(int complex_id, const pyramid_causeway_probe &probe) {
+    if (!probe.ok || probe.length < 2 || complex_id <= 0) {
+        return false;
+    }
+    const vec2i step = k_causeway_dir[probe.dir & 3];
+    const int slots = std::max(1, probe.length / 2);
+    tile2i origin = probe.origin;
+    for (int s = 0; s < slots; ++s) {
+        tile2i t = origin.shifted(step.x * (s * 2), step.y * (s * 2));
+        if (map_grid_is_inside(t, 2) && slot_owned_by_complex(t, complex_id)) {
+            return true;
+        }
+    }
+    return false;
+}
+
 } // namespace
+
+bool building_type_is_pyramid_complex_annex(e_building_type t) {
+    return t == BUILDING_MORTUARY_TEMPLE
+        || t == BUILDING_CAUSEWAY
+        || t == BUILDING_VALLEY_TEMPLE;
+}
 
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_small_stepped_pyramid)
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_small_stepped_pyramid_corner)
@@ -323,6 +479,22 @@ REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_large_mudbrick_pyramid_wall)
 
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_mudbrick_pyramid_complex)
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_grand_mudbrick_pyramid_complex)
+
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_mortuary_temple)
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_pyramid_causeway)
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_valley_temple)
+
+void building_mortuary_temple::on_place_update_tiles(int, int) {
+    map_building_tiles_add(id(), tile(), size(), base_img(), TERRAIN_BUILDING);
+}
+
+void building_pyramid_causeway::on_place_update_tiles(int, int) {
+    map_building_tiles_add(id(), tile(), size(), base_img(), TERRAIN_BUILDING);
+}
+
+void building_valley_temple::on_place_update_tiles(int, int) {
+    map_building_tiles_add(id(), tile(), size(), base_img(), TERRAIN_BUILDING);
+}
 
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_medium_pyramid)
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_medium_pyramid_corner)
@@ -752,6 +924,19 @@ bool building_pyramid::run_block_day() {
         return false;
     }
 
+    // OG: when masons have no frontier block work they build the next free
+    // complex annex tile. Remake: advance one annex slot while block phase runs.
+    if (building_type_is_pyramid_complex(type()) && ms->block_phase_active) {
+        const auto &d = runtime_data();
+        if (d.causeway_length >= 2) {
+            const pyramid_causeway_probe probe = causeway_probe_from_runtime(
+                tile(), pyramid_params().init_tiles, d.causeway_length, d.causeway_dir);
+            if (complex_annex_has_free_slot(id(), probe)) {
+                place_next_complex_annex(id(), probe);
+            }
+        }
+    }
+
     if (ms->remaining_blocks == 0) {
         finish_block_construction();
         return true;
@@ -797,6 +982,16 @@ void building_stepped_pyramid::finish_block_construction() {
                                    TERRAIN_BUILDING | TERRAIN_CANAL);
         }
         part = part->has_next() ? part->next() : nullptr;
+    }
+
+    // OG completion waits until complex free tiles are gone — fill remaining annex.
+    if (building_type_is_pyramid_complex(type())) {
+        const auto &d = runtime_data();
+        if (d.causeway_length >= 2) {
+            const pyramid_causeway_probe probe = causeway_probe_from_runtime(
+                tile(), pyramid_params().init_tiles, d.causeway_length, d.causeway_dir);
+            place_all_complex_annex(id(), probe);
+        }
     }
 
     building_pyramid::finish_block_construction();
@@ -1712,6 +1907,11 @@ void building_stepped_pyramid::draw_ornaments_and_animations_stairs_impl(painter
     if (is_finished()) {
         return;
     }
+    // Remake stairs[] are decorative phase sprites — OG mudbrick uses carpenter ramps
+    // (still stubbed). Drawing them on the complex SE edge looks like a serrated annex.
+    if (pyramid_params().pyramide_type == PYRAMID_STYLE_MUDBRICK) {
+        return;
+    }
 
     auto &d = runtime_data();
     const auto &stairs = footprint_params().stairs;
@@ -2270,8 +2470,7 @@ void building_stepped_pyramid::on_place(int orientation, int variant) {
                 d.causeway_dir = probe.ok ? (uint8_t)probe.dir : 0;
             }
         }
-        // Claim to this building (NW / complex TYPE), not list-head — orientation
-        // can put a corner first in the chain.
+
         if (probe.ok) {
             claim_causeway_tiles(id(), probe);
         }

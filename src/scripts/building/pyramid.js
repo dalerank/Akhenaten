@@ -1742,7 +1742,7 @@ building_small_stepped_pyramid {
   building_large_mudbrick_pyramid_wall = building_large_mudbrick_pyramid
   building_large_mudbrick_pyramid_cone = building_large_mudbrick_pyramid
 
-  // Mudbrick complex — on-land 20x20 + causeway (annex later). Reuses LARGE_MUDBRICK parts.
+  // Mudbrick complex — on-land 20x20 + causeway annex (types 218–220). Reuses LARGE_MUDBRICK parts.
   building_mudbrick_pyramid_complex {
     animations {
       _pack { pack:PACK_MUDBRICK_PYRAMID }
@@ -1765,6 +1765,8 @@ building_small_stepped_pyramid {
       ground_phase_0 { path:"mudbrick_pyramid/pyramid_phase_one_00013" }
       basement { path:"mudbrick_pyramid/pyramid_phase_one_00058" }
       enter { path:"pharaoh_general/plazatiles_00064"}
+      // OG image_mausoleum_walkway_b = pack group 8 (58×48), not clear_land.
+      complex_walkway { id:8, offset:0 }
     }
     build_menu_text : "Mudbrick Pyramid Complex"
     building_size : 2
@@ -1825,6 +1827,7 @@ building_small_stepped_pyramid {
       ground_phase_0 { path:"mudbrick_pyramid/pyramid_phase_one_00013" }
       basement { path:"mudbrick_pyramid/pyramid_phase_one_00058" }
       enter { path:"pharaoh_general/plazatiles_00064"}
+      complex_walkway { id:8, offset:0 }
     }
     build_menu_text : "Grand Mudbrick Pyramid Complex"
     building_size : 2
@@ -1854,6 +1857,50 @@ building_small_stepped_pyramid {
     cone_type : BUILDING_LARGE_MUDBRICK_PYRAMID_CONE
     filler_type : BUILDING_GRAND_MUDBRICK_PYRAMID_COMPLEX
     pyramide_type : PYRAMID_STYLE_MUDBRICK
+  }
+
+  // OG complex annex 0xDA–0xDC = consecutive pack groups 9/10/11.
+  // Pack comes from the parent complex `_pack` at place time; only group ids here.
+  building_mortuary_temple {
+    animations {
+      _pack { pack:PACK_MUDBRICK_PYRAMID }
+      base { id:9, offset:0 }
+    }
+    building_size : 2
+    fire_proof : true
+    damage_proof : true
+    flags {
+      is_monument: true
+      non_deletable: true
+    }
+  }
+
+  building_pyramid_causeway {
+    animations {
+      _pack { pack:PACK_MUDBRICK_PYRAMID }
+      base { id:10, offset:0 }
+    }
+    building_size : 2
+    fire_proof : true
+    damage_proof : true
+    flags {
+      is_monument: true
+      non_deletable: true
+    }
+  }
+
+  building_valley_temple {
+    animations {
+      _pack { pack:PACK_MUDBRICK_PYRAMID }
+      base { id:11, offset:0 }
+    }
+    building_size : 2
+    fire_proof : true
+    damage_proof : true
+    flags {
+      is_monument: true
+      non_deletable: true
+    }
   }
 
   building_medium_pyramid {

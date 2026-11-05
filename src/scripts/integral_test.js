@@ -223,9 +223,6 @@ function test_prepare_pyramid_complex_causeway(pyramid_x, pyramid_y, pyramid_siz
     }
 }
 
-// Verify east causeway tiles are claimed to the complex main building id.
-// Probe prefers east and returns the first (shortest) hit; with
-// test_prepare_pyramid_complex_causeway(gap) that length is exactly `gap`.
 function test_pyramid_complex_causeway_claimed(bid, pyramid_x, pyramid_y, pyramid_size, gap) {
     if (typeof pyramid_size !== 'number' || pyramid_size <= 0) {
         pyramid_size = 20
@@ -238,7 +235,14 @@ function test_pyramid_complex_causeway_claimed(bid, pyramid_x, pyramid_y, pyrami
     for (var i = 0; i < gap; i++) {
         for (var w = 0; w < 2; w++) {
             var at = city.get_building_at(ox + i, causeway_y + w)
-            if (!at || at.id != bid) {
+            if (!at || !at.valid) {
+                return false
+            }
+            var ok_owner = (at.id == bid)
+                || at.type == BUILDING_MORTUARY_TEMPLE
+                || at.type == BUILDING_CAUSEWAY
+                || at.type == BUILDING_VALLEY_TEMPLE
+            if (!ok_owner) {
                 return false
             }
             if (!terrain.is({ x: ox + i, y: causeway_y + w }, TERRAIN_BUILDING)) {
@@ -248,7 +252,7 @@ function test_pyramid_complex_causeway_claimed(bid, pyramid_x, pyramid_y, pyrami
     }
     // Tile at water edge must not be claimed (water starts at ox+gap).
     var past = city.get_building_at(ox + gap, causeway_y)
-    if (past && past.id == bid) {
+    if (past && past.valid && past.id == bid) {
         return false
     }
     return true

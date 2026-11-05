@@ -632,4 +632,32 @@ public:
 ANK_CONFIG_STRUCT(building_grand_pyramid_complex::static_params,
     init_tiles, corner_type, wall_type, cone_type, filler_type, enter_offset, stairs);
 
+// OG complex annex (size_variant 3/4): mortuary temple → causeway → valley temple.
+// Placeholder art until pak sprites are wired; placement is along the causeway strip.
+class building_mortuary_temple : public building_impl {
+public:
+    BUILDING_METAINFO(BUILDING_MORTUARY_TEMPLE, building_mortuary_temple, building_impl)
+    using static_params = building_impl::static_params;
+    BUILDING_STATIC_DATA_T
+    virtual void on_place_update_tiles(int orientation, int variant) override;
+};
+
+class building_pyramid_causeway : public building_impl {
+public:
+    BUILDING_METAINFO(BUILDING_CAUSEWAY, building_pyramid_causeway, building_impl)
+    using static_params = building_impl::static_params;
+    BUILDING_STATIC_DATA_T
+    virtual void on_place_update_tiles(int orientation, int variant) override;
+};
+
+class building_valley_temple : public building_impl {
+public:
+    BUILDING_METAINFO(BUILDING_VALLEY_TEMPLE, building_valley_temple, building_impl)
+    using static_params = building_impl::static_params;
+    BUILDING_STATIC_DATA_T
+    virtual void on_place_update_tiles(int orientation, int variant) override;
+};
+
+bool building_type_is_pyramid_complex_annex(e_building_type t);
+
 void map_pyramid_tiles_add(int building_id, tile2i tile, int size, int image_id, int terrain);

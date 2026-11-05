@@ -19,11 +19,11 @@ function run_test() {
     var cy = (__scenario_map.height / 2) | 0
     var px = cx - 10
     var py = cy - 10
-    test_prepare_pyramid_complex_causeway(px, py, 20, 4, 3)
+    test_prepare_pyramid_complex_causeway(px, py, 20, 12, 4)
 
     var bid = test_building_place(BUILDING_MUDBRICK_PYRAMID_COMPLEX, px, py)
     if (!bid) {
-        test_prepare_pyramid_complex_causeway(cx, cy, 20, 4, 3)
+        test_prepare_pyramid_complex_causeway(cx, cy, 20, 12, 4)
         bid = test_building_place(BUILDING_MUDBRICK_PYRAMID_COMPLEX, cx, cy)
     }
     if (!bid) {
@@ -35,7 +35,8 @@ function run_test() {
     var tile = __building_tile(bid)
     __log_marker('mudbrick_pyramid_complex_placed_ok:' + bid + ':' + tile.x + ',' + tile.y)
 
-    if (test_pyramid_complex_causeway_claimed(bid, tile.x, tile.y, 20, 4)) {
+    __test_camera_center_building(bid)
+    if (test_pyramid_complex_causeway_claimed(bid, tile.x, tile.y, 20, 12)) {
         __log_marker('mudbrick_pyramid_complex_causeway_claimed_ok')
     } else {
         __log_info_native('[test:127] causeway tiles not claimed')
@@ -88,6 +89,17 @@ function run_test() {
             __log_info_native('[test:127] phase want ' + want + ' got ' + got)
             all_ok = false
         }
+        // Polish check while still on phase 36 (before finish) — do not
+        // re-open a finished monument or keep-window shows a broken body.
+        if (want == 36) {
+            var mon36 = city.get_monument(bid)
+            if (mon36 && mon36.phase() == 36 && mon36.material_pct_min() == 100) {
+                __log_marker('mudbrick_pyramid_complex_polish_no_lime_ok')
+            } else {
+                __log_marker('mudbrick_pyramid_complex_polish_fail')
+                all_ok = false
+            }
+        }
     }
 
     __test_monument_set_phase(bid, total)
@@ -95,16 +107,6 @@ function run_test() {
     var fin = __test_monument_phase(bid)
     if (fin != -1 && fin != 255) {
         __log_info_native('[test:127] finish want -1 after set_phase(total), got ' + fin)
-        all_ok = false
-    }
-
-    __test_monument_set_phase(bid, 36)
-    __test_pump_frames(2)
-    var mon36 = city.get_monument(bid)
-    if (mon36 && mon36.phase() == 36 && mon36.material_pct_min() == 100) {
-        __log_marker('mudbrick_pyramid_complex_polish_no_lime_ok')
-    } else {
-        __log_marker('mudbrick_pyramid_complex_polish_fail')
         all_ok = false
     }
 
