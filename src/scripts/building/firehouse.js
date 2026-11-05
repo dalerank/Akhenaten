@@ -20,7 +20,7 @@ building_firehouse {
 
     labor_category : LABOR_CATEGORY_INFRASTRUCTURE
     overlay : OVERLAY_FIRE
-    min_houses_coverage : 50
+    min_houses_coverage : 101
     meta { text_id: 164, help_link:"message_building_firehouse" }
     info_sound : "Wavs/prefecture.wav"
     building_size : 1

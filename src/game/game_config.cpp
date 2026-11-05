@@ -115,6 +115,7 @@ namespace game_features {
     game_feature gameplay_change_fireman_returning{ "gameplay_change_fireman_returning", "#TR_CONFIG_FIREMAN_RETURNING", false, false };
     game_feature gameplay_change_architect_patrol_most_damaged{ "gameplay_change_architect_patrol_most_damaged", "#TR_CONFIG_ARCHITECT_PATROL_MOST_DAMAGED", false, false };
     game_feature gameplay_og_architect{ "gameplay_og_architect", "#TR_CONFIG_OG_ARCHITECT", false, true };
+    game_feature gameplay_og_fireman{ "gameplay_og_fireman", "#TR_CONFIG_OG_FIREMAN", false, true };
     game_feature gameplay_og_warehouseman{ "gameplay_og_warehouseman", "#TR_CONFIG_OG_WAREHOUSEMAN", false, true };
     game_feature gameplay_og_trader{ "gameplay_og_trader", "#TR_CONFIG_OG_TRADER", false, true };
     game_feature gameui_draw_fps{ "gameui_draw_fps", "#TR_CONFIG_DRAW_FPS", false, false };

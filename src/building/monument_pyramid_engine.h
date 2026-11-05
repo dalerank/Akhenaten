@@ -50,6 +50,7 @@ private:
 
 extern monument_pyramid_engine g_monument_pyramid_engine;
 
+void pyramid_engine_clear_all();
 void pyramid_engine_init_mudbrick(building *main);
 void pyramid_engine_start_block_phase(building *main);
 bool pyramid_engine_blocks_finished(building *main);

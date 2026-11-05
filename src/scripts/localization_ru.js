@@ -196,6 +196,7 @@ localization_ru = [
     { key:"#TR_CONFIG_DISASTER_EVENTS_USE_AMOUNT", text:"Затопление глины / обвал золота ломают amount зданий из события"}
     { key:"#TR_CONFIG_MULTIPLE_BARRACKS", text:"Разрешить постройку нескольких казарм"}
     { key:"#TR_CONFIG_OG_ARCHITECT", text:"Оригинальный архитектор Pharaoh (вычитание урона, ремонт стен)"}
+    { key:"#TR_CONFIG_OG_FIREMAN", text:"Оригинальный пожарный Pharaoh (вычитание риска огня, дальше видит пожары)"}
     { key:"#TR_CONFIG_OG_WAREHOUSEMAN", text:"Оригинальная тележка склада Pharaoh (объём забора, despawn без цели, quirk амбара)"}
     { key:"#TR_CONFIG_OG_TRADER", text:"Оригинальный торговый караван Pharaoh (фиксированная вместимость 800, покупка и продажа за тик)"}
     { key:"#TR_HOTKEY_TITLE", text:"Настройки горячих клавиш Ozzy"}

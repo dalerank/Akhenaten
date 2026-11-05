@@ -24,6 +24,8 @@ public:
 
     struct static_params : public figure_static_params {
         int fire_detection_distance;
+        int risk_reduction_strength; // remake: % clear (100 = zero fire_risk)
+        int risk_reduction_amount;   // OG (--og / gameplay_og_fireman): absolute subtract per pass
     } FIGURE_STATIC_DATA_T;
 
     virtual figure_fireman *dcast_fireman() override { return this; }
@@ -38,4 +40,4 @@ public:
     bool fight_fire();
 };
 ANK_CONFIG_STRUCT(figure_fireman::static_params,
-    fire_detection_distance)
+    fire_detection_distance, risk_reduction_strength, risk_reduction_amount)

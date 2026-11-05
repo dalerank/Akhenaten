@@ -96,6 +96,9 @@ static uint8_t mudbrick_target_layers_for_part(building *head, building *part, i
     return (uint8_t)std::max(0, from_outside - (side_parts / 2 - 1));
 }
 
+void pyramid_engine_clear_all() {
+}
+
 void pyramid_engine_init_mudbrick(building *main) {
     if (!main) {
         return;

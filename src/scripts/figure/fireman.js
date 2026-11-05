@@ -1,7 +1,7 @@
 log_info("akhenaten: figure fireman started")
 
 figure_fireman {
-	overlay : OVERLAY_WATER
+	overlay : OVERLAY_FIRE
 	animations {
 		_pack { pack:PACK_SPR_MAIN }
 		walk { id:6, max_frames:12 }
@@ -31,7 +31,9 @@ figure_fireman {
 	terrain_usage : TERRAIN_USAGE_ANIMAL
 	max_roam_length : 640
 	permission : epermission_maintenance
-	fire_detection_distance : 10
+	fire_detection_distance : 25
+	risk_reduction_strength : 100
+	risk_reduction_amount : 100
 	record_path : true
 }
 

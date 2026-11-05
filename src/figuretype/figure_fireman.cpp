@@ -190,22 +190,38 @@ bool figure_fireman::fight_fire() {
 
 int figure_fireman::provide_service() {
     building *firehouse = home();
+    const auto &params = current_params();
+    const bool og = !!game_features::gameplay_og_fireman;
+    const int og_amount = params.risk_reduction_amount > 0 ? params.risk_reduction_amount : 100;
+    const int remake_pct = params.risk_reduction_strength;
 
+    int houses_serviced = 0;
     int min_happiness = 0;
-    int result = figure_provide_service(tile(), &base, [&] (building *b, figure *f) {
+    int result = figure_provide_service(tile(), &base, [&](building *b, figure *f) {
         b = b->main();
-        b->fire_risk = 0;
 
-        auto house = b->dcast_house();
-        if (house) {
-            min_happiness = std::max<short>(house->runtime_data().house_happiness, min_happiness);
-        }
-
-        if (firehouse) {
-            firehouse->buildings_served_this_month++;
+        if (og) {
+            b->fire_risk = (int16_t)std::max(0, b->fire_risk - og_amount);
+            auto house = b->dcast_house();
+            if (house && house->house_population() > 0) {
+                houses_serviced++;
+            }
+        } else {
+            if (remake_pct >= 100) {
+                b->fire_risk = 0;
+            } else if (remake_pct > 0) {
+                b->fire_risk = (int16_t)std::max(0, b->fire_risk - (b->fire_risk * remake_pct / 100));
+            }
+            auto house = b->dcast_house();
+            if (house) {
+                min_happiness = std::max<short>(house->runtime_data().house_happiness, min_happiness);
+            }
+            if (firehouse) {
+                firehouse->buildings_served_this_month++;
+            }
         }
     });
-    base.min_max_seen = min_happiness;
+    base.min_max_seen = og ? (uint8_t)houses_serviced : (uint8_t)min_happiness;
     return result;
 }
 
