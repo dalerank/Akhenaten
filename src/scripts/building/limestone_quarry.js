@@ -25,11 +25,13 @@ building_limestone_quarry {
   fire_risk[0]
   damage_risk[2]
 
+  nearby_houses_radius: 6
   flags {
     is_extractor: true
     is_industry: true
     draw_normal_anim: true
     work_anim: true
+    need_nearby_houses_for_work: true
   }
 }
 

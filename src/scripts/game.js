@@ -148,7 +148,6 @@ game_features {
     @gameplay_change_fixed_workers {}
     @gameplay_fixed_worker_percent {}
     @gameplay_change_industry_nearby_houses {}
-    @gameplay_industry_nearby_houses_radius {}
     @gameopt_display_size {}
     @gameplay_change_multiple_temple_complexes {}
     @gameplay_change_work_camp_one_worker_per_month {}

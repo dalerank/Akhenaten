@@ -186,8 +186,10 @@ void building_industry::spawn_figure() {
         return;
     }
 
-    // Remake nearby-houses scan replaces labor-seeker coverage for industry.
-    if (!game_features::gameplay_change_industry_nearby_houses) {
+    // Remake nearby-houses scan replaces labor-seeker for flagged industry types.
+    const bool nearby_houses = !!game_features::gameplay_change_industry_nearby_houses
+        && current_params().flags.need_nearby_houses_for_work;
+    if (!nearby_houses) {
         common_spawn_labor_seeker(current_params().min_houses_coverage);
     }
     if (has_figure_of_type(BUILDING_SLOT_CARTPUSHER, FIGURE_CART_PUSHER)) {

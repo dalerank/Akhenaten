@@ -26,6 +26,9 @@ void building_static_params::initialize() {
     }
     if (production_rate == 0) production_rate = 100;
     if (min_houses_coverage == 0) min_houses_coverage = 100;
+    if (flags.need_nearby_houses_for_work && nearby_houses_radius == 0) {
+        nearby_houses_radius = 6;
+    }
     if (max_storage_amount == 0) max_storage_amount = 200;
 
     city_labor_t::set_category(type, labor_category);

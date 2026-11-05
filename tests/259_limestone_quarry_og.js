@@ -5,22 +5,16 @@
 
 var __test259_ok = false
 var __test259_feat_prev = false
-var __test259_radius_prev = 6
 
 function test259_fail(msg) {
     __log_info_native('[test:259] ' + msg)
     game_features.set('gameplay_change_industry_nearby_houses', __test259_feat_prev)
-    game_features.set('gameplay_industry_nearby_houses_radius', __test259_radius_prev)
     __test_signal_ready()
 }
 
 function run_test() {
     __log_info_native('[test:259] limestone quarry kind_b + houses_covered')
     __test259_feat_prev = !!game_features.get('gameplay_change_industry_nearby_houses')
-    __test259_radius_prev = game_features.get('gameplay_industry_nearby_houses_radius') | 0
-    if (__test259_radius_prev <= 0) {
-        __test259_radius_prev = 6
-    }
 
     test_reload_city_session('data/default.map')
     __test_set_treasury(10000)
@@ -103,9 +97,8 @@ function run_test() {
         return
     }
 
-    // Remake weekly radius coverage
+    // Remake weekly radius coverage (building nearby_houses_radius + need_nearby_houses_for_work)
     game_features.set('gameplay_change_industry_nearby_houses', true)
-    game_features.set('gameplay_industry_nearby_houses_radius', 6)
     city.get_building(bid).houses_covered = 0
 
     var house_id = __test_building_create(BUILDING_HOUSE_CRUDE_HUT, cx + 3, cy + 3)
@@ -123,7 +116,6 @@ function run_test() {
     }
 
     game_features.set('gameplay_change_industry_nearby_houses', __test259_feat_prev)
-    game_features.set('gameplay_industry_nearby_houses_radius', __test259_radius_prev)
 
     __log_marker('limestone_quarry_og_ok')
     __test259_ok = true

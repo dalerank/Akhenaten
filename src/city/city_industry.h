@@ -7,7 +7,7 @@
 struct city_industry_t {
     void update_production();
     // Remake: when gameplay_change_industry_nearby_houses is on, set houses_covered
-    // from houses within gameplay_industry_nearby_houses_radius (default 6).
+    // from houses within building nearby_houses_radius for flags.need_nearby_houses_for_work.
     void update_nearby_houses_weekly();
 };
 

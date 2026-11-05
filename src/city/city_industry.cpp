@@ -117,13 +117,16 @@ void city_industry_t::update_nearby_houses_weekly() {
         return;
     }
 
-    const int radius = std::max(1, game_features::gameplay_industry_nearby_houses_radius.to_int());
-
-    buildings_valid_do([radius] (building &b) {
+    buildings_valid_do([] (building &b) {
+        const auto &params = b.params();
+        if (!params.flags.need_nearby_houses_for_work) {
+            return;
+        }
         if (!b.output.resource || b.is_farm() || !b.dcast_industry()) {
             return;
         }
 
+        const int radius = std::max(1, (int)params.nearby_houses_radius);
         int covered = 0;
         buildings_house_do([&] (building_house *house) {
             if (!house || !house->is_valid() || house->house_population() <= 0) {
