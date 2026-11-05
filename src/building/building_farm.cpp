@@ -164,8 +164,9 @@ bool building_farm::time_to_deliver(bool floodplains, int resource_id) {
     } else {
         const auto &months = farm_params().month_harvest;
         const bool is_correct_month = std::count(months.begin(), months.end(), game.simtime.month) > 0;
-        const bool result = is_correct_month && game.simtime.day < 2;
-        return result;
+        // OG: day == 0 only. Remake retry window (day < 2) behind the feature flag.
+        const int day_limit = game_features::gameplay_change_farm_meadow_harvest_retry.to_bool() ? 2 : 1;
+        return is_correct_month && game.simtime.day < day_limit;
     }
 }
 
@@ -332,9 +333,12 @@ void building_farm::spawn_figure_harvests() {
 
         auto &d = runtime_data();
         if (base.has_road_access && base.progress > 0) {
-            int farm_fertility = map_get_fertility_for_farm(tile());
-
-            d.ready_production = base.progress * farm_fertility / 100;
+            if (!!game_features::gameplay_change_farm_harvest_fertility) {
+                const int farm_fertility = map_get_fertility_for_farm(tile());
+                d.ready_production = base.progress * farm_fertility / 100;
+            } else {
+                d.ready_production = 0;
+            }
             // OG: any floodplain harvest under the blessing marks the flag used; clear after the wave.
             if (g_city.religion.osiris_double_farm_yield_days > 0) {
                 g_city.religion.osiris_double_farm_yield_used = true;

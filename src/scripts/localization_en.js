@@ -193,6 +193,8 @@ localization_en = [
   {key:"#invasion_quick_battle_none", text:"No pending battle"}
   {key:"#TR_CONFIG_TOWER_SENTRIES_GO_OFFROAD", text:"Tower sentries don't need road access from barracks"}
   {key:"#TR_CONFIG_FARMS_DELIVER_CLOSE", text:"Farms and wharves deliver only to nearby granaries"}
+  {key:"#TR_CONFIG_FARM_HARVEST_FERTILITY", text:"Floodplain harvest scaled by fertility (remake; original uses progress only)"}
+  {key:"#TR_CONFIG_FARM_MEADOW_HARVEST_RETRY", text:"Meadow farms also harvest on day 1 (remake; original day 0 only)"}
   {key:"#TR_CONFIG_DELIVER_ONLY_TO_ACCEPTING_GRANARIES", text:"Food isn't delivered to getting granaries"}
   {key:"#TR_CONFIG_ALL_HOUSES_MERGE", text:"All houses merge"}
   {key:"#TR_CONFIG_WINE_COUNTS_IF_OPEN_TRADE_ROUTE", text:"Open trade route count as providing different wine type"}

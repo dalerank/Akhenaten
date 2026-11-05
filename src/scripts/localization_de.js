@@ -147,6 +147,8 @@ localization_de = [
   {key:"#TR_CONFIG_BAZAAR_MULTI_BUYERS", text:"Basare können zwei Einkäufer gleichzeitig aussenden (Nahrung + Waren)"}
   {key:"#TR_CONFIG_TOWER_SENTRIES_GO_OFFROAD", text:"Turmwachen benötigen keinen Straßenzugang von Kasernen"}
   {key:"#TR_CONFIG_FARMS_DELIVER_CLOSE", text:"Farmen und Werften liefern nur an nahe Kornkammern"}
+  {key:"#TR_CONFIG_FARM_HARVEST_FERTILITY", text:"Überschwemmungsfarm-Ernte skaliert mit Fruchtbarkeit (Remake; Original nur Fortschritt)"}
+  {key:"#TR_CONFIG_FARM_MEADOW_HARVEST_RETRY", text:"Wiesenfarmen ernten auch am Tag 1 (Remake; Original nur Tag 0)"}
   {key:"#TR_CONFIG_DELIVER_ONLY_TO_ACCEPTING_GRANARIES", text:"Nahrung wird nicht an abholende Kornkammern geliefert"}
   {key:"#TR_CONFIG_ALL_HOUSES_MERGE", text:"Alle Häuser verschmelzen"}
   {key:"#TR_CONFIG_WINE_COUNTS_IF_OPEN_TRADE_ROUTE", text:"Offene Handelsroute zählt als Bereitstellung verschiedener Weintypen"}

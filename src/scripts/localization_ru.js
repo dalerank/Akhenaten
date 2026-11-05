@@ -183,6 +183,10 @@ localization_ru = [
     { key:"#invasion_quick_battle_none", text:"Нет ожидающей битвы"}
     { key:"#TR_CONFIG_TOWER_SENTRIES_GO_OFFROAD", text:"Башенные часовые не нуждаются в дороге"}
     { key:"#TR_CONFIG_FARMS_DELIVER_CLOSE", text:"Фермы и причалы доставляют еду только в близкорасположенные амбары"}
+    { key:"#TR_CONFIG_FARM_HARVEST_FERTILITY", text:"Урожай на пойме масштабируется плодородием (ремейк; в оригинале только progress)"}
+    { key:"#TR_CONFIG_FARM_MEADOW_HARVEST_RETRY", text:"Луговые фермы собирают урожай и в день 1 (ремейк; в оригинале только день 0)"}
+    { key:"#TR_CONFIG_FARM_HARVEST_FERTILITY", text:"Урожай на пойме масштабируется плодородием (ремейк; в оригинале только progress)"}
+    { key:"#TR_CONFIG_FARM_MEADOW_HARVEST_RETRY", text:"Луговые фермы собирают урожай и в день 1 (ремейк; в оригинале только день 0)"}
     { key:"#TR_CONFIG_DELIVER_ONLY_TO_ACCEPTING_GRANARIES", text:"Не доставлять еду в амбары с включенной доставкой"}
     { key:"#TR_CONFIG_ALL_HOUSES_MERGE", text:"Разрешить слияние всех домов"}
     { key:"#TR_CONFIG_WINE_COUNTS_IF_OPEN_TRADE_ROUTE", text:"Торговые пути увеличивают разнообразие вина"}

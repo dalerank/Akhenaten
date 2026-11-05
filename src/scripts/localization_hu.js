@@ -178,6 +178,10 @@ localization_hu = [
   {key:"#TR_CONFIG_BAZAAR_MULTI_BUYERS", text:"A bazárok egyszerre két beszerzőt küldhetnek (élelem + áruk)"}
   {key:"#TR_CONFIG_TOWER_SENTRIES_GO_OFFROAD", text:"Az őrtornyok őreinek nem kell útkapcsolat a laktanyához"}
   {key:"#TR_CONFIG_FARMS_DELIVER_CLOSE", text:"A farmok és kikötők csak közeli magtárakba szállítanak"}
+  {key:"#TR_CONFIG_FARM_HARVEST_FERTILITY", text:"Ártéri aratás termékenység szerint (remake; eredeti: csak progress)"}
+  {key:"#TR_CONFIG_FARM_MEADOW_HARVEST_RETRY", text:"Réti farmok 1. napon is aratnak (remake; eredeti: csak 0. nap)"}
+  {key:"#TR_CONFIG_FARM_HARVEST_FERTILITY", text:"Ártéri aratás termékenység szerint (remake; eredeti: csak progress)"}
+  {key:"#TR_CONFIG_FARM_MEADOW_HARVEST_RETRY", text:"Réti farmok 1. napon is aratnak (remake; eredeti: csak 0. nap)"}
   {key:"#TR_CONFIG_DELIVER_ONLY_TO_ACCEPTING_GRANARIES", text:"Az élelem nem kerül beszállító magtárakba"}
   {key:"#TR_CONFIG_ALL_HOUSES_MERGE", text:"Minden ház összevonható"}
   {key:"#TR_CONFIG_WINE_COUNTS_IF_OPEN_TRADE_ROUTE", text:"A megnyitott kereskedelmi útvonal külön borfajtának számít"}

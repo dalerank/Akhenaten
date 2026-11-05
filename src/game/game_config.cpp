@@ -92,6 +92,10 @@ namespace game_features {
     game_feature gameplay_change_recruit_nearest_fort{ "gameplay_change_recruit_nearest_fort", "#TR_CONFIG_RECRUIT_NEAREST_FORT", false, false };
     game_feature gameplay_change_tower_sentries_go_offroad{ "gameplay_change_tower_sentries_go_offroad", "#TR_CONFIG_TOWER_SENTRIES_GO_OFFROAD", false, false };
     game_feature gameplay_change_farms_deliver_close{ "gameplay_change_farms_deliver_close", "#TR_CONFIG_FARMS_DELIVER_CLOSE", false, false };
+    // Remake: scale floodplain harvest by tile fertility. OG uses progress/growth% only.
+    game_feature gameplay_change_farm_harvest_fertility{ "gameplay_change_farm_harvest_fertility", "#TR_CONFIG_FARM_HARVEST_FERTILITY", false, false };
+    // Remake: meadow harvest also on day 1. OG harvests only on day 0 of the month.
+    game_feature gameplay_change_farm_meadow_harvest_retry{ "gameplay_change_farm_meadow_harvest_retry", "#TR_CONFIG_FARM_MEADOW_HARVEST_RETRY", false, false };
     game_feature gameplay_change_only_deliver_to_accepting_granaries{ "gameplay_change_only_deliver_to_accepting_granaries", "#TR_CONFIG_DELIVER_ONLY_TO_ACCEPTING_GRANARIES", false, false };
     game_feature gameplay_change_all_houses_merge{ "gameplay_change_all_houses_merge", "#TR_CONFIG_ALL_HOUSES_MERGE", false, false };
     game_feature gameplay_change_beer_open_trade_route_counts{ "gameplay_change_beer_open_trade_route_counts", "#TR_CONFIG_WINE_COUNTS_IF_OPEN_TRADE_ROUTE", false, false };

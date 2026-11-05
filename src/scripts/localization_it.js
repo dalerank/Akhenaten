@@ -169,6 +169,10 @@ localization_it = [
   {key:"#invasion_quick_battle_none", text:"Nessuna battaglia in attesa"}
   {key:"#TR_CONFIG_TOWER_SENTRIES_GO_OFFROAD", text:"Le sentinelle delle torri non richiedono strade dalle caserme"}
   {key:"#TR_CONFIG_FARMS_DELIVER_CLOSE", text:"Fattorie e moli consegnano solo ai granai vicini"}
+  {key:"#TR_CONFIG_FARM_HARVEST_FERTILITY", text:"Raccolto in pianura alluvionale scalato per fertilità (remake; originale solo progresso)"}
+  {key:"#TR_CONFIG_FARM_MEADOW_HARVEST_RETRY", text:"Fattorie di prato raccolgono anche il giorno 1 (remake; originale solo giorno 0)"}
+  {key:"#TR_CONFIG_FARM_HARVEST_FERTILITY", text:"Raccolto in pianura alluvionale scalato per fertilità (remake; originale solo progresso)"}
+  {key:"#TR_CONFIG_FARM_MEADOW_HARVEST_RETRY", text:"Fattorie di prato raccolgono anche il giorno 1 (remake; originale solo giorno 0)"}
   {key:"#TR_CONFIG_DELIVER_ONLY_TO_ACCEPTING_GRANARIES", text:"Il cibo non viene consegnato ai granai in raccolta"}
   {key:"#TR_CONFIG_ALL_HOUSES_MERGE", text:"Tutte le case si uniscono"}
   {key:"#TR_CONFIG_WINE_COUNTS_IF_OPEN_TRADE_ROUTE", text:"Una via commerciale aperta conta come un tipo di vino diverso"}

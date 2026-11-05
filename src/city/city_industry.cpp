@@ -177,35 +177,6 @@ void building_industry_update_farms(void) {
     });
 }
 
-void building_industry_update_wheat_production() {
-    OZZY_PROFILER_FUNCTION();
-    if (g_scenario.climate == CLIMATE_NORTHERN)
-        return;
-
-    buildings_valid_do([] (building &b) {
-        verify_no_crash(b.type == BUILDING_GRAIN_FARM);
-        if (!b.output.resource) {
-            return;
-        }
-
-        if (b.houses_covered <= 0 || b.num_workers <= 0) {
-            return;
-        }
-
-        if (b.curse_days_left) {
-            return;
-        }
-
-        b.progress += b.num_workers;
-        if (b.blessing_days_left) {
-            b.progress += b.num_workers;
-        }
-
-        b.progress = std::min<uint16_t>(b.progress, 200);
-        b.dcast_farm()->update_tiles_image();
-    }, BUILDING_GRAIN_FARM);
-}
-
 void building_curse_farms(int big_curse) {
     buildings_valid_farms_do([big_curse](building &b) {
         building_farm *farm = b.dcast_farm();

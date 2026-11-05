@@ -356,9 +356,6 @@ void city_t::update_tick(int simtick) {
     case 45:
         figures_generate_criminals();
         break;
-    case 46:
-        building_industry_update_wheat_production();
-        break;
     case 48:
         house_decay_tax_coverage();
         break;

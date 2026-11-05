@@ -9,7 +9,6 @@ struct city_industry_t {
 };
 
 void building_industry_update_farms();
-void building_industry_update_wheat_production(void);
 
 struct delivery_destination {
     int building_id = 0;
