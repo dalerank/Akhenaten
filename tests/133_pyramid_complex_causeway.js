@@ -28,6 +28,16 @@ function causeway_dir_vectors(dir) {
     return { sx: -1, sy: 0, px: 0, py: -1 }
 }
 
+function causeway_strip_owner_ok(b, bid) {
+    if (!b || !b.valid) {
+        return false
+    }
+    return b.id == bid
+        || b.type == BUILDING_MORTUARY_TEMPLE
+        || b.type == BUILDING_CAUSEWAY
+        || b.type == BUILDING_VALLEY_TEMPLE
+}
+
 function count_causeway_dir(bid, px, py, dir) {
     var half = ((20 - 2) / 2) | 0
     var v = causeway_dir_vectors(dir)
@@ -43,7 +53,7 @@ function count_causeway_dir(bid, px, py, dir) {
         var y0 = oy + v.sy * i
         var a = city.get_building_at(x0, y0)
         var b = city.get_building_at(x0 + v.px, y0 + v.py)
-        if (!a || a.id != bid || !b || b.id != bid) {
+        if (!causeway_strip_owner_ok(a, bid) || !causeway_strip_owner_ok(b, bid)) {
             break
         }
         n++

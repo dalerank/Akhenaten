@@ -17,8 +17,10 @@ function run_test() {
             {x: px, y: py}, {x: cx, y: cy}
         ],
         prepare: function () {
-            test_prepare_pyramid_complex_causeway(px, py, 20, 4, 3)
-            test_prepare_pyramid_complex_causeway(cx, cy, 20, 4, 3)
+            // gap=12 → mortuary + 4 causeway segments + valley to water
+            // (gap=4 only fits mortuary+valley; no visible road).
+            test_prepare_pyramid_complex_causeway(px, py, 20, 12, 4)
+            test_prepare_pyramid_complex_causeway(cx, cy, 20, 12, 4)
         }
     })
 }
