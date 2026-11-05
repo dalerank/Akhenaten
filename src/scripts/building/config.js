@@ -82,12 +82,17 @@ building_carpenters_guild = {
     work : { pos : [73, -12], pack:PACK_GENERAL, id:91, offset:1, max_frames:13, duration:4 },
   }
   labor_category : LABOR_CATEGORY_INFRASTRUCTURE
+  input : {
+    resource : RESOURCE_TIMBER
+  }
   building_size : 2
   meta : { text_id: 171, help_link:"message_construction_guilds" }
   cost : [ 10, 15, 30, 50, 100 ]
   desirability : { value:[-6], step:[1], step_size:[1], range: [4] }
   laborers:[8], fire_risk:[4], damage_risk: [2]
-  max_walkers : 1
+  // Cap is dynamic from staffing (1–4); keep a soft upper bound for UI/config.
+  max_walkers : 4
+  min_houses_coverage : 100
   info_advisors [ADVISOR_LABOR]
   flags {
     is_guild: true
