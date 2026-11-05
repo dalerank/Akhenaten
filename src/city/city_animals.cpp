@@ -1,6 +1,8 @@
 #include "city_animals.h"
 
+#include "building/building_temple_complex.h"
 #include "city/city.h"
+#include "city/city_buildings.h"
 #include "core/log.h"
 #include "core/random.h"
 #include "figuretype/figure_animal.h"
@@ -113,6 +115,17 @@ int climate_herd_count(e_figure_type type) {
 
 bool figure_is_prey(e_figure_type type) {
     return type == FIGURE_OSTRICH || type == FIGURE_ANTELOPE || type == FIGURE_BIRDS;
+}
+
+bool temple_complex_osiris_has_oracle() {
+    for (building &b : city_buildings()) {
+        if (!b.is_valid() || b.type != BUILDING_TEMPLE_COMPLEX_OSIRIS) {
+            continue;
+        }
+        auto *complex = b.dcast_temple_complex();
+        return complex && complex->has_upgrade(etc_upgrade_oracle);
+    }
+    return false;
 }
 
 bool herd_can_travel_to(tile2i src, tile2i dst, e_figure_type herd_type) {
@@ -420,9 +433,12 @@ bool city_animals_t::can_spawn_ph_wolf(formation *m) {
 }
 
 bool city_animals_t::can_spawn_ostrich(formation *m) {
-    if (m->num_figures < m->max_figures && m->figure_type == FIGURE_OSTRICH) {
+    if (m->num_figures < m->max_figures && figure_is_prey(m->figure_type)) {
         m->herd_spawn_delay++;
         int delay = 4;
+        if (temple_complex_osiris_has_oracle()) {
+            delay /= 2;
+        }
         if (m->herd_spawn_delay > delay) {
             m->herd_spawn_delay = 0;
             return true;
@@ -465,22 +481,23 @@ void city_animals_t::update_herd_formation(formation *m) {
             m->home = random_around_point(m->home, m->home, /*step*/4, /*bias*/8, /*max_dist*/32);
         }
 
-        bool is_passible = !map_terrain_is(m->tile, TERRAIN_IMPASSABLE_OSTRICH);
+        const int impassable = herd_impassable_mask(m->figure_type);
+        bool is_passible = !map_terrain_is(m->tile, impassable);
         bool valid_tile = m->tile.valid();
         if (is_passible && valid_tile) {
-            figure *ostrich = figure_create(m->figure_type, m->tile, DIR_0_TOP_RIGHT);
-            ostrich->formation_id = m->id;
-            ostrich->wait_ticks = ostrich->id & 0x1f;
+            figure *prey = figure_create(m->figure_type, m->tile, DIR_0_TOP_RIGHT);
+            prey->formation_id = m->id;
+            prey->wait_ticks = prey->id & 0x1f;
             m->failed_creation_count = 0;
 
-            auto fanimal = ostrich->dcast_animal();
+            auto fanimal = prey->dcast_animal();
             if (fanimal) {
                 fanimal->herd_rest();
             }
         } else {
             m->tile = random_around_point(m->home, m->home, /*step*/4, /*bias*/8, /*max_dist*/32);
 
-            bool is_passible = !map_terrain_is(m->tile, TERRAIN_IMPASSABLE_OSTRICH);
+            bool is_passible = !map_terrain_is(m->tile, impassable);
             bool valid_tile = m->tile.valid();
 
             m->failed_creation_count += !(is_passible && valid_tile) ? 1 : 0;

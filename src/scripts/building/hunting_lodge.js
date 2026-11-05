@@ -82,6 +82,30 @@ function hunting_lodge_can_spawn_hunter(b) {
     return hunters < max_hunters
 }
 
+function hunting_lodge_osiris_oracle() {
+    return !!__city_osiris_oracle_active()
+}
+
+function hunting_lodge_try_spawn_cart(b) {
+    if (b.has_figure(BUILDING_SLOT_CARTPUSHER)) {
+        return false
+    }
+    if (b.stored_resource(RESOURCE_GAMEMEAT) <= 0) {
+        return false
+    }
+
+    var amount = 100
+    if (hunting_lodge_osiris_oracle()) {
+        amount = amount << 1
+    }
+    b.consume_resource(RESOURCE_GAMEMEAT, 100)
+    var fid = b.create_cartpusher(RESOURCE_GAMEMEAT, amount, ACTION_20_CARTPUSHER_INITIAL, BUILDING_SLOT_CARTPUSHER)
+    if (fid) {
+        b.produced_resources(RESOURCE_GAMEMEAT, amount)
+    }
+    return !!fid
+}
+
 [es=(building_hunting_lodge, spawn_figure)]
 function building_hunting_lodge_spawn_figure(ev) {
     if (city.resources.gamemeat.mothballed) {
@@ -103,6 +127,8 @@ function building_hunting_lodge_spawn_figure(ev) {
         return
     }
 
+    hunting_lodge_try_spawn_cart(b)
+
     b.figure_spawn_delay += 1
     if (b.figure_spawn_delay < spawn_delay) {
         return
@@ -111,10 +137,6 @@ function building_hunting_lodge_spawn_figure(ev) {
     if (hunting_lodge_can_spawn_hunter(b)) {
         b.figure_spawn_delay = 0
         b.create_figure_generic(hunting_lodge_resolve_hunter_type(), ACTION_8_RECALCULATE, BUILDING_SLOT_HUNTER)
-    }
-
-    if (b.common_spawn_goods_output_cartpusher()) {
-        b.figure_spawn_delay = 0
     }
 }
 
