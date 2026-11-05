@@ -2,6 +2,7 @@
 
 #include "core/log.h"
 #include "grid/building.h"
+#include "city/city.h"
 #include "city/city_labor.h"
 #include "city/buildings.h"
 #include "graphics/view/view.h"
@@ -28,6 +29,10 @@ void building_static_params::initialize() {
     if (max_storage_amount == 0) max_storage_amount = 200;
 
     city_labor_t::set_category(type, labor_category);
+
+    if (flags.is_temple_complex) {
+        g_city.buildings.register_temple_complex_type(type);
+    }
 }
 
 void add_building(building *b, int orientation, int variant) {

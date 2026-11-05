@@ -55,6 +55,12 @@ function building_weaver_on_place_checks(ev) {
     city.warnings.show_if_not(flax.trade_status == TRADE_STATUS_IMPORT, "#overseer_of_commerce_to_import")
 }
 
+[es=(building_weaver, produce_uptick_per_day)]
+function building_weaver_produce_uptick_per_day(ev) {
+    var b = city.get_building(ev.bid)
+    b.produce_uptick += industry_ptah_complex_bonus(b)
+}
+
 [es=(building_weaver, update_animation)]
 function building_weaver_on_update_animation(ev) {
     var b = city.get_building(ev.bid)

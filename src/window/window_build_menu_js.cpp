@@ -25,10 +25,13 @@ bool __city_has_temple_complex() {
 }
 ANK_FUNCTION(__city_has_temple_complex)
 
-int __city_temple_complex_id() {
-    return g_city.buildings.temple_complex_id();
+int __city_temple_complex_id(int type) {
+    if (type <= 0) {
+        return g_city.buildings.temple_complex_id();
+    }
+    return g_city.buildings.temple_complex_id((e_building_type)type);
 }
-ANK_FUNCTION(__city_temple_complex_id)
+ANK_FUNCTION_1(__city_temple_complex_id)
 
 int __city_temple_complex_types_count() {
     return (int)g_city.buildings.temple_complex_types().size();

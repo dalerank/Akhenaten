@@ -129,6 +129,12 @@ building_jewels_workshop = {
   }
 }
 
+[es=(building_jewels_workshop, produce_uptick_per_day)]
+function building_jewels_workshop_produce_uptick_per_day(ev) {
+    var b = city.get_building(ev.bid)
+    b.produce_uptick += industry_ptah_complex_bonus(b)
+}
+
 [es=(building_jewels_workshop, on_place_checks)]
 function building_jewels_workshop_on_place_checks(ev) {
     var gems = city.resources.gems

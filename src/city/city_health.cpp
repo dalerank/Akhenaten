@@ -259,12 +259,11 @@ void city_health_t::update_month() {
     }
 
     // OG Isis altar on Bast complex: improve overall city health.
-    const building_id complex_id = g_city.buildings.temple_complex_id();
+    const building_id complex_id = g_city.buildings.temple_complex_id(BUILDING_TEMPLE_COMPLEX_BAST);
     if (complex_id) {
         building *complex_b = building_get(complex_id);
         auto *complex = complex_b ? complex_b->dcast_temple_complex() : nullptr;
-        if (complex && complex->type() == BUILDING_TEMPLE_COMPLEX_BAST
-            && complex->has_upgrade(etc_upgrade_altar)) {
+        if (complex && complex->has_upgrade(etc_upgrade_altar)) {
             target_value += building_temple_complex_bast::current_params().isis_health_bonus;
         }
     }

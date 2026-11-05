@@ -70,6 +70,9 @@ function building_mine_gems_produce_uptick_per_day(ev) {
     var production = Math.floor(b.num_workers / 3)
     b.produce_uptick = production < 1 ? 1 : production
     industry_mine_require_ore_for_uptick(b, __map_get_gems)
+    if (b.produce_uptick > 0) {
+        b.produce_uptick += industry_ptah_complex_bonus(b)
+    }
 }
 
 [es=(building_mine_gems, draw_usable_paths)]

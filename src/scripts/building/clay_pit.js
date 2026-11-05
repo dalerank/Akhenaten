@@ -41,6 +41,12 @@ building_clay_pit {
   damage_risk[1]
 }
 
+[es=(building_clay_pit, produce_uptick_per_day)]
+function building_clay_pit_produce_uptick_per_day(ev) {
+    var b = city.get_building(ev.bid)
+    b.produce_uptick += industry_ptah_complex_bonus(b)
+}
+
 [es=(building_clay_pit, update_graphic)]
 function building_clay_pit_on_update_graphic(ev) {
     var b = city.get_building(ev.bid)

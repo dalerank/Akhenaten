@@ -33,8 +33,8 @@ building_library {
 
 function education_walker_cost(params) {
     var cost = dcy_get(params.walker_cost)
-    var complex = city.get_temple_complex()
-    if (complex && complex.type == BUILDING_TEMPLE_COMPLEX_PTAH && complex.has_upgrade(TEMPLE_COMPLEX_UPGRADE_ORACLE)) {
+    var complex = city.get_temple_complex(BUILDING_TEMPLE_COMPLEX_PTAH)
+    if (complex && complex.has_upgrade(TEMPLE_COMPLEX_UPGRADE_ORACLE)) {
         cost = Math.floor(cost * dcy_get(params.ptah_oracle_walker_cost_pct) / 100)
     }
     return cost

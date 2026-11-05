@@ -109,7 +109,7 @@ ANK_CONFIG_STRUCT(building_temple_complex_ptah::static_params, allowed_altar, al
 
 class building_temple_complex_seth : public building_temple_complex {
 public:
-    BUILDING_METAINFO(BUILDING_TEMPLE_COMPLEX_SETH, building_temple_complex_seth, building_temple_complex)\
+    BUILDING_METAINFO(BUILDING_TEMPLE_COMPLEX_SETH, building_temple_complex_seth, building_temple_complex)
 
     struct static_params : public base_params_t, public building_static_params {
     } BUILDING_STATIC_DATA_T;

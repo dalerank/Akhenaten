@@ -67,8 +67,8 @@ building_mortuary {
 function building_mortuary_walker_cost() {
     var params = building_mortuary
     var cost = dcy_get(params.walker_cost)
-    var complex = city.get_temple_complex()
-    if (complex && complex.type == BUILDING_TEMPLE_COMPLEX_SETH && complex.has_upgrade(TEMPLE_COMPLEX_UPGRADE_ALTAR)) {
+    var complex = city.get_temple_complex(BUILDING_TEMPLE_COMPLEX_SETH)
+    if (complex && complex.has_upgrade(TEMPLE_COMPLEX_UPGRADE_ALTAR)) {
         cost = Math.floor(cost * dcy_get(params.seth_altar_walker_cost_pct) / 100)
     }
     return cost

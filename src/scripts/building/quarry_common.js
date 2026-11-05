@@ -9,4 +9,7 @@ function industry_quarry_produce_uptick(b, get_deposit) {
     var production = Math.floor(b.num_workers / 2)
     b.produce_uptick = production < 1 ? 1 : production
     industry_mine_require_ore_for_uptick(b, get_deposit)
+    if (b.produce_uptick > 0) {
+        b.produce_uptick += industry_ptah_altar_bonus(b)
+    }
 }

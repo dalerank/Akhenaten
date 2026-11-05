@@ -2,6 +2,7 @@
 
 #include "grid/point.h"
 #include "core/custom_span.hpp"
+#include "core/svector.h"
 #include "building/building.h"
 
 #include <array>
@@ -63,8 +64,13 @@ struct city_buildings_t {
     void reload_objects();
 
     building_id temple_complex_id();
+    building_id temple_complex_id(e_building_type type);
     bool has_temple_complex();
     span_const<e_building_type> temple_complex_types();
+    void register_temple_complex_type(e_building_type type);
+    void clear_temple_complex_types() { temple_complex_type_list.clear(); }
+
+    svector<e_building_type, 16> temple_complex_type_list;
 
     int get_palace_id() const { return palace_building_id; }
     bool has_palace() const;

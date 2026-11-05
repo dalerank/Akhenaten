@@ -60,6 +60,12 @@ building_bricks_workshop = {
   }
 }
 
+[es=(building_bricks_workshop, produce_uptick_per_day)]
+function building_bricks_workshop_produce_uptick_per_day(ev) {
+    var b = city.get_building(ev.bid)
+    b.produce_uptick += industry_ptah_altar_bonus(b)
+}
+
 [es=(building_bricks_workshop, update_animation)]
 function building_bricks_workshop_on_update_animation(ev) {
     var b = city.get_building(ev.bid)

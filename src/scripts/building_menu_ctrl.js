@@ -198,7 +198,7 @@ building_menu_ctrl.update_temple_complexes = function() {
         return
     }
 
-    var complex_id = __city_temple_complex_id()
+    var complex_id = __city_temple_complex_id(0)
     var complex = complex_id ? new BuildingTempleComplex(complex_id) : null
     var types_count = __city_temple_complex_types_count()
 

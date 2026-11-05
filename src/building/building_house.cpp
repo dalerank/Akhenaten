@@ -757,15 +757,11 @@ void building_house::decay_services() {
 
     // OG Bast complex: entertainers / educators / health providers last longer.
     bool decay_extended_services = true;
-    const building_id complex_id = g_city.buildings.temple_complex_id();
+    const building_id complex_id = g_city.buildings.temple_complex_id(BUILDING_TEMPLE_COMPLEX_BAST);
     if (complex_id) {
-        building *complex_b = building_get(complex_id);
-        auto *complex = complex_b ? complex_b->dcast_temple_complex() : nullptr;
-        if (complex && complex->type() == BUILDING_TEMPLE_COMPLEX_BAST) {
-            const auto &params = building_temple_complex_bast::current_params();
-            if (params.service_decay_skip_odd_months && (game.simtime.month & 1)) {
-                decay_extended_services = false;
-            }
+        const auto &params = building_temple_complex_bast::current_params();
+        if (params.service_decay_skip_odd_months && (game.simtime.month & 1)) {
+            decay_extended_services = false;
         }
     }
 

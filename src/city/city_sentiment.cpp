@@ -195,12 +195,11 @@ void city_sentiment_t::update() {
 
     // OG Hathor oracle on Bast complex: improve city sentiment.
     int contribution_hathor = 0;
-    const building_id complex_id = g_city.buildings.temple_complex_id();
+    const building_id complex_id = g_city.buildings.temple_complex_id(BUILDING_TEMPLE_COMPLEX_BAST);
     if (complex_id) {
         building *complex_b = building_get(complex_id);
         auto *complex = complex_b ? complex_b->dcast_temple_complex() : nullptr;
-        if (complex && complex->type() == BUILDING_TEMPLE_COMPLEX_BAST
-            && complex->has_upgrade(etc_upgrade_oracle)) {
+        if (complex && complex->has_upgrade(etc_upgrade_oracle)) {
             contribution_hathor = building_temple_complex_bast::current_params().hathor_sentiment_bonus;
         }
     }

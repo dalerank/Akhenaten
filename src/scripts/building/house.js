@@ -61,8 +61,8 @@ function difficulty_adjust_food_consumption(pct) {
 
 // OG Bast temple complex (citywide): food/goods consumption × food_consumption_pct / 100.
 function house_bast_complex_consumption_pct(kind) {
-    var complex = city.get_temple_complex()
-    if (!complex || complex.type != BUILDING_TEMPLE_COMPLEX_BAST) {
+    var complex = city.get_temple_complex(BUILDING_TEMPLE_COMPLEX_BAST)
+    if (!complex) {
         return 100
     }
     var pct = (kind == "goods")

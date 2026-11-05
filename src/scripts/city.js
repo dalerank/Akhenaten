@@ -412,8 +412,8 @@ city.get_storage_yard = function(building_id) {
     return new StorageYard(building_id)
 }
 
-city.get_temple_complex = function() {
-    var id = __city_temple_complex_id()
+city.get_temple_complex = function(type) {
+    var id = __city_temple_complex_id(type != null ? type : 0)
     return id > 0 ? new TempleComplex(id) : null
 }
 

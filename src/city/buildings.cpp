@@ -9,6 +9,7 @@
 #include "grid/routing/routing.h"
 #include "city/city.h"
 
+#include <algorithm>
 #include <set>
 
 city_buildings_t::tracked_buildings_t g_tracked_buildings;
@@ -244,21 +245,31 @@ void city_buildings_t::reload_objects() {
     });
 }
 
-const e_building_type _temple_complex_types[] = {
-    BUILDING_TEMPLE_COMPLEX_OSIRIS, BUILDING_TEMPLE_COMPLEX_RA, BUILDING_TEMPLE_COMPLEX_PTAH, BUILDING_TEMPLE_COMPLEX_SETH, BUILDING_TEMPLE_COMPLEX_BAST
-};
+void city_buildings_t::register_temple_complex_type(e_building_type type) {
+    if (std::find(temple_complex_type_list.begin(), temple_complex_type_list.end(), type) != temple_complex_type_list.end()) {
+        return;
+    }
+    temple_complex_type_list.push_back(type);
+}
 
-building_id city_buildings_t::temple_complex_id() {
-    for (const e_building_type type : _temple_complex_types) {
-        const auto &complexes = tracked_buildings().at(type);
-        for (building_id id : complexes) {
-            building *b = building_get(id);
-            if (b && b->is_valid() && b->type == type) {
-                return id;
-            }
+building_id city_buildings_t::temple_complex_id(e_building_type type) {
+    const auto &complexes = tracked_buildings().at(type);
+    for (building_id id : complexes) {
+        building *b = building_get(id);
+        if (b && b->is_valid() && b->type == type) {
+            return id;
         }
     }
+    return 0;
+}
 
+building_id city_buildings_t::temple_complex_id() {
+    for (const e_building_type type : temple_complex_type_list) {
+        const building_id id = temple_complex_id(type);
+        if (id) {
+            return id;
+        }
+    }
     return 0;
 }
 
@@ -275,7 +286,7 @@ bool city_buildings_t::has_mansion() const {
 }
 
 span_const<e_building_type> city_buildings_t::temple_complex_types() {
-    return span_const<e_building_type>(_temple_complex_types);
+    return make_span(temple_complex_type_list);
 }
 
 void city_buildings_t::update_month() {
