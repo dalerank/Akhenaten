@@ -27,6 +27,7 @@ city_sounds = [
   {c: SOUND_CHANNEL_CITY_PALACE,        p: "Wavs/palace.wav"},
   {c: SOUND_CHANNEL_CITY_POLICE,        p: "Wavs/POLICE.WAV"},
   {c: SOUND_CHANNEL_CITY_POTTERY_WORKSHOP, p: "Wavs/POTTERY.WAV"},
+  {c: SOUND_CHANNEL_CITY_WEAPONS_WORKSHOP, p: "Wavs/weapon.wav"},
   {c: SOUND_CHANNEL_CITY_BREWERY_WORKSHOP, p: "Wavs/brewery.wav"},
   {c: SOUND_CHANNEL_CITY_ROCK,          p: "Ambient/ROCK.MP3"},
   {c: SOUND_CHANNEL_CITY_SHIPYARD,      p: "Wavs/SHIPYRD.WAV"},
