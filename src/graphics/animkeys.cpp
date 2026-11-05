@@ -12,6 +12,7 @@ const xstring id_anim_t::work = "work";
 const xstring id_anim_t::work_2 = "work_2";
 const xstring id_anim_t::work_ground = "work_ground";
 const xstring id_anim_t::work_wall = "work_wall";
+const xstring id_anim_t::climbing = "climbing";
 const xstring id_anim_t::womit = "womit";
 const xstring id_anim_t::none = "none";
 const xstring id_anim_t::fire = "fire";
