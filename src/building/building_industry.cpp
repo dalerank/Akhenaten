@@ -6,6 +6,7 @@
 #include "city/city.h"
 #include "core/object_property.h"
 #include "figuretype/figure_cartpusher.h"
+#include "game/game_config.h"
 #include "game/game_events.h"
 #include "city/city_resource.h"
 #include "js/js_game.h"
@@ -106,6 +107,11 @@ void building_industry::update_production() {
         return;
     }
 
+    // OG produce(): non-floodplain industry needs houses_covered >= 1.
+    if (base.houses_covered < 1) {
+        return;
+    }
+
     if (base.num_workers <= 0) {
         return;
     }
@@ -180,7 +186,10 @@ void building_industry::spawn_figure() {
         return;
     }
 
-    common_spawn_labor_seeker(current_params().min_houses_coverage);
+    // Remake nearby-houses scan replaces labor-seeker coverage for industry.
+    if (!game_features::gameplay_change_industry_nearby_houses) {
+        common_spawn_labor_seeker(current_params().min_houses_coverage);
+    }
     if (has_figure_of_type(BUILDING_SLOT_CARTPUSHER, FIGURE_CART_PUSHER)) {
         return;
     }

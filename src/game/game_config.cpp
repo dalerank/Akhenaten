@@ -96,6 +96,9 @@ namespace game_features {
     game_feature gameplay_change_farm_harvest_fertility{ "gameplay_change_farm_harvest_fertility", "#TR_CONFIG_FARM_HARVEST_FERTILITY", false, false };
     // Remake: meadow harvest also on day 1. OG harvests only on day 0 of the month.
     game_feature gameplay_change_farm_meadow_harvest_retry{ "gameplay_change_farm_meadow_harvest_retry", "#TR_CONFIG_FARM_MEADOW_HARVEST_RETRY", false, false };
+    // Remake: set industry houses_covered from houses within radius (weekly). OG uses labor seekers.
+    game_feature gameplay_change_industry_nearby_houses{ "gameplay_change_industry_nearby_houses", "#TR_CONFIG_INDUSTRY_NEARBY_HOUSES", false, false };
+    game_feature gameplay_industry_nearby_houses_radius{ "gameplay_industry_nearby_houses_radius", "#TR_CONFIG_INDUSTRY_NEARBY_HOUSES_RADIUS", 6, 6 };
     game_feature gameplay_change_only_deliver_to_accepting_granaries{ "gameplay_change_only_deliver_to_accepting_granaries", "#TR_CONFIG_DELIVER_ONLY_TO_ACCEPTING_GRANARIES", false, false };
     game_feature gameplay_change_all_houses_merge{ "gameplay_change_all_houses_merge", "#TR_CONFIG_ALL_HOUSES_MERGE", false, false };
     game_feature gameplay_change_beer_open_trade_route_counts{ "gameplay_change_beer_open_trade_route_counts", "#TR_CONFIG_WINE_COUNTS_IF_OPEN_TRADE_ROUTE", false, false };

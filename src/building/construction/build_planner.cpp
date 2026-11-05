@@ -705,7 +705,16 @@ void build_planner::update_requirements_check() {
     }
 
     if (needRock()) {
-        if (!map_terrain_exists_tile_in_radius_with_type(end, size.x, 1, TERRAIN_ROCK)) {
+        // OG: plain stone quarry accepts any ROCK bit; limestone/granite/sandstone/gem
+        // require build_flags_is_kind_b (ROCK without ORE / monument-rock bits).
+        const bool kind_b = (build_type == BUILDING_LIMESTONE_QUARRY
+                             || build_type == BUILDING_GRANITE_QUARRY
+                             || build_type == BUILDING_SANDSTONE_QUARRY
+                             || build_type == BUILDING_GEMSTONE_MINE);
+        const bool has_rock = kind_b
+            ? map_terrain_exists_rock_kind_b_in_radius(end, size.x, 1)
+            : map_terrain_exists_tile_in_radius_with_type(end, size.x, 1, TERRAIN_ROCK);
+        if (!has_rock) {
             immediate_warning = "#build_next_to_rocky_areas";
             can_place = CAN_NOT_PLACE;
         }

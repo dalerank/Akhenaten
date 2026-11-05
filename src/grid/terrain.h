@@ -118,6 +118,10 @@ bool map_terrain_exists_tile_in_area_with_type(tile2i tile, int size, int terrai
 bool map_terrain_exists_tile_in_radius_with_type(tile2i tile, int size, int radius, int terrain);
 bool map_terrain_exists_tile_in_radius_with_exact(int x, int y, int size, int radius, int terrain);
 
+// OG build_flags_is_kind_b: (terrain & ROCK|ORE|0x200000|ROCK_NEAR_MONUMENT) == ROCK.
+// Used by limestone / granite / sandstone quarries and gem mines.
+bool map_terrain_exists_rock_kind_b_in_radius(tile2i tile, int size, int radius);
+
 bool map_terrain_exists_clear_tile_in_radius(tile2i tile, int size, int radius, int except_grid_offset, tile2i &result);
 
 bool map_terrain_all_tiles_in_area_are(tile2i tile, int size, int terrain);

@@ -35,6 +35,7 @@ function test210_place(label, type, resource, x, y) {
     }
 
     __test_building_set_workers(bid, 8)
+    city.get_building(bid).houses_covered = 100
     __test_building_update_day(bid)
     if (__building_industry_progress(bid) != 1) {
         __log_info_native('[test:210] ' + label + ' progress after update_day=' + __building_industry_progress(bid))

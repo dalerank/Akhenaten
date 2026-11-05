@@ -35,6 +35,7 @@ function run_test() {
     }
 
     __test_building_set_workers(bid, 8)
+    city.get_building(bid).houses_covered = 100
     __test_building_update_day(bid)
     var before = __building_industry_progress_pct(bid)
     var i

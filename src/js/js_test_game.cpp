@@ -3674,6 +3674,11 @@ static void __test_city_industry_update_production() {
 }
 ANK_FUNCTION(__test_city_industry_update_production);
 
+static void __test_city_industry_update_nearby_houses_weekly() {
+    g_city.industry.update_nearby_houses_weekly();
+}
+ANK_FUNCTION(__test_city_industry_update_nearby_houses_weekly);
+
 static void __test_map_gems_init() {
     map_gems_init();
 }

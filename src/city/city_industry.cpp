@@ -2,6 +2,7 @@
 
 #include "building/building_type.h"
 #include "building/building_farm.h"
+#include "building/building_house.h"
 #include "building/building_industry.h"
 #include "building/monuments.h"
 #include "city/city_resource.h"
@@ -22,6 +23,7 @@
 #include "grid/grid.h"
 #include "grid/basin.h"
 
+#include <algorithm>
 #include <cmath>
 
 #define INFINITE 10000
@@ -107,6 +109,31 @@ void city_industry_t::update_production() {
 
         industry->update_preproduction();
         industry->update_production();
+    });
+}
+
+void city_industry_t::update_nearby_houses_weekly() {
+    if (!game_features::gameplay_change_industry_nearby_houses) {
+        return;
+    }
+
+    const int radius = std::max(1, game_features::gameplay_industry_nearby_houses_radius.to_int());
+
+    buildings_valid_do([radius] (building &b) {
+        if (!b.output.resource || b.is_farm() || !b.dcast_industry()) {
+            return;
+        }
+
+        int covered = 0;
+        buildings_house_do([&] (building_house *house) {
+            if (!house || !house->is_valid() || house->house_population() <= 0) {
+                return;
+            }
+            if (calc_maximum_distance(b.tile, house->base.tile) <= radius) {
+                covered++;
+            }
+        });
+        b.houses_covered = (short)std::min(300, covered);
     });
 }
 

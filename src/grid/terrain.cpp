@@ -153,7 +153,7 @@ bool map_terrain_exists_tile_in_area_with_type(tile2i tile, int size, int terrai
     tile2i res = map_grid_area_first(area, [terrain] (tile2i t) {
         return map_grid_is_inside(t, 1) && map_grid_get(g_terrain_grid, t) & terrain;
     });
-   
+
     return res.valid();
 }
 bool map_terrain_exists_tile_in_radius_with_type(tile2i tile, int size, int radius, int terrain) {
@@ -171,9 +171,26 @@ bool map_terrain_exists_tile_in_radius_with_exact(int x, int y, int size, int ra
     grid_area area = map_grid_get_area(tile2i(x, y), size, radius);
 
     for (int yy = area.tmin_y, endy = area.tmax_y; yy <= endy; yy++) {
-        for (int xx = area.tmin_x, endx = area.tmin_x; xx <= endx; xx++) {
+        for (int xx = area.tmin_x, endx = area.tmax_x; xx <= endx; xx++) {
             if (map_terrain_get(MAP_OFFSET(xx, yy)) == terrain)
                 return true;
+        }
+    }
+    return false;
+}
+
+bool map_terrain_exists_rock_kind_b_in_radius(tile2i tile, int size, int radius) {
+    // Matches OG BUILD_FLAGS_KIND_MASK / BUILD_FLAGS_KIND_B.
+    constexpr uint32_t kind_mask = TERRAIN_ROCK | TERRAIN_ORE | TERRAIN_UNK_02 | TERRAIN_UNK_08;
+    constexpr uint32_t kind_b = TERRAIN_ROCK;
+
+    grid_area area = map_grid_get_area(tile, size, radius);
+    for (int yy = area.tmin_y, endy = area.tmax_y; yy <= endy; yy++) {
+        for (int xx = area.tmin_x, endx = area.tmax_x; xx <= endx; xx++) {
+            const uint32_t flags = (uint32_t)map_terrain_get(MAP_OFFSET(xx, yy));
+            if ((flags & kind_mask) == kind_b) {
+                return true;
+            }
         }
     }
     return false;
