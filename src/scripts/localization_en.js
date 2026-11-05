@@ -225,7 +225,7 @@ localization_en = [
   {key:"#TR_CONFIG_CH_WORK_CAMP_ONE_WORKER_PER_MONTH", text:"Work camp spawn one worker per month"}
   {key:"#TR_CONFIG_CH_CLAY_PIT_FIRE_RISK_REDUCED", text:"Clay pit fire risk reduced"}
   {key:"#TR_CONFIG_CITY_HAS_ANIMALS", text:"City has animals" }
-  {key:"#TR_CONFIG_GOLDMINE_TWICE_PRODUCTION", text:"Goldmine twice production"}
+  {key:"#TR_CONFIG_GOLDMINE_REDUCED_PRODUCTION", text:"Gold mine produces at 1/10 worker rate"}
   {key:"#TR_CONFIG_NEW_TAX_COLLECTION_SYSTEM", text:"New tax collection system"}
   {key:"#TR_CONFIG_SMALL_HUT_NOT_CREATE_EMIGRANT", text:"Small hut houses not create enimgrant"}
   {key:"#TR_CONFIG_DELIVERY_BOY_GOES_TO_MARKET_ALONE", text:"Delivery boy goes to market alone"}

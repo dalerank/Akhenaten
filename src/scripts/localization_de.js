@@ -171,7 +171,7 @@ localization_de = [
   {key:"#TR_CONFIG_CH_WORK_CAMP_ONE_WORKER_PER_MONTH", text:"Arbeitslager erzeugt einen Arbeiter pro Monat"}
   {key:"#TR_CONFIG_CH_CLAY_PIT_FIRE_RISK_REDUCED", text:"Feuerrisiko der Tongrube reduziert"}
   {key:"#TR_CONFIG_CITY_HAS_ANIMALS", text:"Stadt hat Tiere" }
-  {key:"#TR_CONFIG_GOLDMINE_TWICE_PRODUCTION", text:"Goldmine doppelte Produktion"}
+  {key:"#TR_CONFIG_GOLDMINE_REDUCED_PRODUCTION", text:"Goldmine produziert mit 1/10 der Arbeiter-Rate"}
   {key:"#TR_CONFIG_NEW_TAX_COLLECTION_SYSTEM", text:"Neues Steuererhebungssystem"}
   {key:"#TR_CONFIG_SMALL_HUT_NOT_CREATE_EMIGRANT", text:"Kleine Hütten erzeugen keine Auswanderer"}
   {key:"#TR_CONFIG_DELIVERY_BOY_GOES_TO_MARKET_ALONE", text:"Lieferjunge geht alleine zum Markt"}

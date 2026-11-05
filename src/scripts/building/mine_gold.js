@@ -61,16 +61,15 @@ function building_mine_gold_produce_uptick_per_day(ev) {
         return
     }
 
-    var divider = 10
-    if (game_features.gameplay_change_goldmine_twice_production) {
-        divider = Math.floor(divider / 2)
-        if (divider < 1) {
-            divider = 1
+    // OG: progress += num_workers per day. Remake nerf (/10) is optional.
+    var production = b.num_workers
+    if (game_features.get('gameplay_change_goldmine_reduced_production')) {
+        production = Math.floor(b.num_workers / 10)
+        if (production < 1) {
+            production = 1
         }
     }
-
-    var production = Math.floor(b.num_workers / divider)
-    b.produce_uptick = production < 1 ? 1 : production
+    b.produce_uptick = production
     industry_mine_require_ore_for_uptick(b, __map_get_golden)
     if (b.produce_uptick > 0) {
         b.produce_uptick += industry_ptah_complex_bonus(b)

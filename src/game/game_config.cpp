@@ -122,7 +122,7 @@ namespace game_features {
     game_feature gameplay_change_citizen_road_offset{ "gameplay_change_citizen_road_offset", "#TR_CONFIG_CH_CITIZEN_ROAD_OFFSET", false, false };
     game_feature gameplay_change_work_camp_one_worker_per_month{ "gameplay_change_work_camp_one_worker_per_month", "#TR_CONFIG_CH_WORK_CAMP_ONE_WORKER_PER_MONTH", false, false };
     game_feature gameplay_change_fire_risk_clay_pit_reduced{ "gameplay_change_fire_risk_clay_pit_reduced", "#TR_CONFIG_CH_CLAY_PIT_FIRE_RISK_REDUCED", false, false };
-    game_feature gameplay_change_goldmine_twice_production{ "gameplay_change_goldmine_twice_production", "#TR_CONFIG_GOLDMINE_TWICE_PRODUCTION", false, false };
+    game_feature gameplay_change_goldmine_reduced_production{ "gameplay_change_goldmine_reduced_production", "#TR_CONFIG_GOLDMINE_REDUCED_PRODUCTION", false, false };
     game_feature gameplay_change_new_tax_collection_system{ "gameplay_change_new_tax_collection_system", "#TR_CONFIG_NEW_TAX_COLLECTION_SYSTEM", false, false };
     game_feature gameplay_change_small_hut_not_create_emigrant{ "gameplay_change_small_hut_not_create_emigrant", "#TR_CONFIG_SMALL_HUT_NOT_CREATE_EMIGRANT", false, false };
     game_feature gameplay_change_delivery_boy_goes_to_market_alone{ "gameplay_change_delivery_boy_goes_to_market_alone", "#TR_CONFIG_DELIVERY_BOY_GOES_TO_MARKET_ALONE", false, false };
