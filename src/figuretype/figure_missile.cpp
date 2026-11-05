@@ -349,7 +349,7 @@ static void spear_hit(figure_spear *spear, figure_id target_id, figure_id shoote
     const bool is_ship = spear_is_ship(type);
 
     if (target->faction_id == 1 && type == FIGURE_WARSHIP
-        && target->action_state == ACTION_203_WARSHIP_MOORED) {
+        && target->action_state == ACTION_20_WARSHIP_DOCKED) {
         bonus = r.docked_warship_bonus;
     } else if (target->faction_id == 1 && type >= FIGURE_ARCHER && type <= FIGURE_FCHARIOTEER) {
         bonus = m ? (m->experience + 10) / 20 : 0;

@@ -53,6 +53,8 @@
 #include "window/window_city_transport.h"
 #include "figuretype/figure_war_ship.h"
 #include "figuretype/figure_transport_ship.h"
+#include "figuretype/figure_enemy_transport.h"
+#include "figuretype/figure_enemy_warship.h"
 #include "building/building_warship_wharf.h"
 #include "building/building_transport_wharf.h"
 #include "grid/water.h"
@@ -1462,6 +1464,18 @@ void screen_city_t::warship_map_click(int warship_figure_id, tile2i tile) {
     if (!w) {
         window_city_show();
         return;
+    }
+
+    int target_id = map_figure_id_get(tile);
+    while (target_id > 0) {
+        figure *target = ::figure_get(target_id);
+        if (target->state == FIGURE_STATE_ALIVE
+            && (smart_cast<figure_enemy_transport>(target) || smart_cast<figure_enemy_warship>(target))) {
+            w->attack_target(target_id);
+            window_city_show();
+            return;
+        }
+        target_id = (target_id != target->next_figure) ? target->next_figure : 0;
     }
 
     // If the click landed on a warship wharf, route there to moor.

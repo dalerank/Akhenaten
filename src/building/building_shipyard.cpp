@@ -78,7 +78,7 @@ void finish_ship_repair(figure *f) {
                 return;
             }
         }
-        warship->advance_action(ACTION_211_WARSHIP_IDLE_AT_TILE);
+        warship->advance_action(ACTION_8_WARSHIP_WAITING);
         return;
     }
 
@@ -301,7 +301,7 @@ void building_shipyard::spawn_figure() {
     case FIGURE_WARSHIP:
         if ((params.warship_progress_cost > 0) && base.progress >= params.warship_progress_cost) {
             figure *f = figure_create(FIGURE_WARSHIP, boat_tile, DIR_0_TOP_RIGHT);
-            f->action_state = ACTION_205_WARSHIP_CREATED;
+            f->action_state = ACTION_8_WARSHIP_WAITING;
             f->direction = (base.orientation + 3) % 8;
             f->set_home(&base);
             base.set_figure(BUILDING_SLOT_BOAT, f);

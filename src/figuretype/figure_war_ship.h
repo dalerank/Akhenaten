@@ -3,22 +3,35 @@
 #include "figure/figure.h"
 
 enum e_warship_action {
-    ACTION_203_WARSHIP_MOORED = 203,
-    ACTION_204_WARSHIP_ATTACK = 204,
-    ACTION_205_WARSHIP_CREATED = 205,
-    ACTION_206_WARSHIP_GOING_TO_PATROL = 206,
-    ACTION_207_WARSHIP_GOING_TO_WHARF = 207,
-    ACTION_208_WARSHIP_GOING_TO_RANDOM = 208,
-    ACTION_209_WARSHIP_ON_PATROL = 209,
-    ACTION_210_WARSHIP_GOING_TO_TILE = 210,
-    ACTION_211_WARSHIP_IDLE_AT_TILE = 211,
-    // OG FIGURE_ACTION_WARSHIP_GOING_TO_DOCK / QUEUED_AT_DOCK (shipwright repair).
-    ACTION_212_WARSHIP_GOING_TO_SHIPWRIGHT = 212,
-    ACTION_213_WARSHIP_QUEUED_AT_SHIPWRIGHT = 213,
-    // OG kingdom troop-request cycle (ships_player / military.c warship).
-    ACTION_221_WARSHIP_GOING_TO_REQUEST = 221,
-    ACTION_222_WARSHIP_AWAY_ON_REQUEST = 222,
-    ACTION_223_WARSHIP_RETURNING_FROM_REQUEST = 223,
+    ACTION_8_WARSHIP_WAITING = 8,
+    ACTION_9_WARSHIP_STRAIGHT = 9,
+    ACTION_10_WARSHIP_HUNTING = 10,
+    ACTION_11_WARSHIP_SAILING = 11,
+    ACTION_12_WARSHIP_EVADING = 12,
+    ACTION_13_WARSHIP_GOING_TO_DOCK = 13,
+    ACTION_15_WARSHIP_QUEUED_AT_DOCK = 15,
+    ACTION_17_WARSHIP_GOING_TO_REQUEST = 17,
+    ACTION_18_WARSHIP_AWAY_ON_REQUEST = 18,
+    ACTION_19_WARSHIP_RETURNING_FROM_REQUEST = 19,
+    ACTION_20_WARSHIP_DOCKED = 20,
+    ACTION_23_WARSHIP_PATROLLING = 23,
+    ACTION_24_WARSHIP_ATTACKING_SHIP = 24,
+};
+
+enum e_warship_secondary_action {
+    WARSHIP_SECONDARY_MOVING = 9,
+    WARSHIP_SECONDARY_FOLLOW_TARGET = 9,
+    WARSHIP_SECONDARY_SAILING = 11,
+    WARSHIP_SECONDARY_WAITING = 16,
+    WARSHIP_SECONDARY_PATROL_ATTACK = 21,
+    WARSHIP_SECONDARY_PATROLLING = 22,
+    WARSHIP_SECONDARY_PATROL = 22,
+};
+
+enum e_warship_move_mode {
+    WARSHIP_MOVE_FULL_SPEED = 0,
+    WARSHIP_MOVE_SLOW = 1,
+    WARSHIP_MOVE_RESTING = 2,
 };
 
 class figure_warship : public figure_impl {
@@ -48,20 +61,50 @@ public:
         std::unordered_map<xstring, order_t> orders_info;
         int8_t missile_attack_value = 6;
         int16_t missile_delay = 200;
+        int16_t hunt_range = 228;
+        int16_t missile_range = 10;
+        int16_t patrol_extra_range = 10;
+        int16_t patrol_radius = 10;
+        int16_t damaged_percent = 15;
+        int16_t dock_wait_ticks = 50;
+        int16_t face_enemy_wait = 19;
+        int16_t face_enemy_range = 5;
+        int16_t ram_cooldown = 15;
+        int16_t evade_ticks = 75;
+        int16_t evade_range = 18;
+        int16_t shoot_ticks = 100;
+        int16_t target_check_ticks = 10;
+        int16_t full_moves = 80;
+        int16_t full_steps = 8;
+        int16_t fatigue_ticks = 200;
+        int16_t ram_fast_percent = 120;
+        int8_t score_loaded_transport = 25;
+        int8_t score_land_enemy = 17;
+        int8_t score_warship = 15;
+        int8_t score_transport = 10;
+        int16_t escape_distance = 10;
+        int16_t fatigue_rest_interval = 40;
+        int16_t fatigue_grow_interval = 80;
+        int16_t fatigue_combat_interval = 20;
+        int8_t fatigue_rest_amount = 2;
     } FIGURE_STATIC_DATA_T;
 
     struct runtime_data_t {
         short active_order;
         short target_id;
-        short last_order;
-        int8_t crew_fatigue;   // 0–100; UI bands Rested/Tired/Exhausted
-        uint8_t fatigue_tick;  // sub-counter for growth/decay intervals
-        uint8_t answers_requests; // OG figure.answers_requests (fleet advisor)
-        int16_t request_event_id; // OG figure.request_event_id (−1 = none)
+        short action_before_attack;
+        int16_t patrol_x;
+        int16_t patrol_y;
+        int16_t request_event_id = -1;
+        uint16_t move_count;
+        uint16_t move_steps;
+        uint8_t secondary_action;
+        uint8_t ship_move_mode;
+        uint8_t ram_cooldown;
+        uint8_t answers_requests = 1;
+        int8_t crew_fatigue = 0;
+        uint8_t fatigue_tick = 0;
     } FIGURE_RUNTIME_DATA_T;
-
-    void begin_kingdom_request(int event_id);
-    void return_from_kingdom_request();
 
     int8_t missile_attack_value() const { return current_params().missile_attack_value; }
     int16_t missile_delay() const { return current_params().missile_delay; }
@@ -74,20 +117,43 @@ public:
     virtual void kill() override;
     virtual void update_animation() override;
 
-    void figure_action_goto_wharf();
-    void figure_action_common();
-    void figure_action_combat();
-    void figure_action_repair();
-    void figure_action_move_to_tile();
-
-    figure_id find_combat_target(int max_distance);
-    void combat_tick_vs_target(figure *target, int max_pursue_distance);
-    void launch_missile_at(figure *target);
-    void ram_target(figure *target);
-    void check_sink();
-
+    void set_order(int order);
+    void attack_target(figure_id target_id);
     void move_to_tile(tile2i dest);
     void move_to_wharf(int wharf_building_id, tile2i dock_tile);
+
+    int target_score(figure *f, int distance) const;
+    figure_id find_enemy_at(tile2i origin, int range);
+    figure_id find_closest_enemy_ship(int range);
+    figure_id find_ram_target();
+    void fire_missile(figure_id target_id);
+    void shoot();
+    void ram();
+    void ship_move(bool cautious);
+    void move_attack();
+    void sail_to_destination();
+    void patrol();
+    void evade();
+    void attack_ship();
+    void wait_at_shipyard();
+    void go_to_best_dock();
+    void sail_to_dock();
+    void docked();
+    void request_action();
+    void check_sink();
+    void update_crew_fatigue();
+
+    void send_to_request(int event_id);
+    void return_from_request();
+    // legion_requests.cpp entry points (OG city/legion_requests).
+    void begin_kingdom_request(int event_id) { send_to_request(event_id); }
+    void return_from_kingdom_request() { return_from_request(); }
 };
 ANK_CONFIG_STRUCT(figure_warship::order_t, id, text)
-ANK_CONFIG_STRUCT(figure_warship::static_params, orders_info, missile_attack_value, missile_delay)
+ANK_CONFIG_STRUCT(figure_warship::static_params,
+    orders_info, missile_attack_value, missile_delay, hunt_range, missile_range, patrol_extra_range,
+    patrol_radius, damaged_percent, dock_wait_ticks, face_enemy_wait, face_enemy_range, ram_cooldown,
+    evade_ticks, evade_range, shoot_ticks, target_check_ticks, full_moves, full_steps, fatigue_ticks,
+    ram_fast_percent, score_loaded_transport, score_land_enemy, score_warship, score_transport,
+    escape_distance, fatigue_rest_interval, fatigue_grow_interval, fatigue_combat_interval,
+    fatigue_rest_amount)

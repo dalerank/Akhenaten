@@ -39,8 +39,8 @@ function figure_warship_hull_strength_text_id(ship) {
 
 function figure_warship_crew_fatigue_text_id(ship) {
     var fatigue = ship.crew_fatigue
-    if (fatigue >= 75) { return 30 }
-    if (fatigue >= 40) { return 29 }
+    if (fatigue == 2) { return 30 }
+    if (fatigue == 1) { return 29 }
     return 28
 }
 
@@ -132,7 +132,7 @@ function figure_warship_info_window_window_info_background(window) {
     window.crewfatique_val.text = __loc(184, figure_warship_crew_fatigue_text_id(ship))
 
     window.repair.darkened = ship.damage == 0 ? UiFlags_Grayscale : 0
-    window.return_to_wharf.darkened = f.action_state == ACTION_203_WARSHIP_MOORED ? UiFlags_Grayscale : 0
+    window.return_to_wharf.darkened = f.action_state == ACTION_20_WARSHIP_DOCKED ? UiFlags_Grayscale : 0
 
     var order = ship.active_order
     for (var i = 0; i < figure_warship_order_buttons.length; i++) {
