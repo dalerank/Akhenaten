@@ -5281,6 +5281,11 @@ static void __test_house_calculate_culture_aggregates() {
 }
 ANK_FUNCTION(__test_house_calculate_culture_aggregates);
 
+static void __test_update_religion_supply_houses() {
+    g_city.buildings.update_religion_supply_houses();
+}
+ANK_FUNCTION(__test_update_religion_supply_houses);
+
 static void __test_health_update_coverage() {
     g_city.health.update_coverage();
 }

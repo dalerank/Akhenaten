@@ -4,6 +4,7 @@
 #include "core/profiler.h"
 #include "figure/service.h"
 #include "game/game.h"
+#include "game/game_config.h"
 #include "grid/routing/routing_terrain.h"
 #include "building/building_house.h"
 
@@ -192,7 +193,8 @@ void city_t::house_service_calculate_culture_aggregates() {
         if (housed.temple_bast)
             ++housed.num_gods;
 
-        if (housed.num_gods == 0 && housed.shrine_access) {
+        if (game_features::gameplay_change_shrine_house_access.to_bool()
+            && housed.num_gods == 0 && housed.shrine_access) {
             housed.num_gods = 1;
         }
 

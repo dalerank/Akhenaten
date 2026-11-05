@@ -128,6 +128,7 @@ namespace game_features {
     game_feature gameplay_change_delivery_boy_goes_to_market_alone{ "gameplay_change_delivery_boy_goes_to_market_alone", "#TR_CONFIG_DELIVERY_BOY_GOES_TO_MARKET_ALONE", false, false };
     game_feature gameplay_change_religion_coverage_influence_sentiment{ "gameplay_change_religion_coverage_influence_sentiment", "#TR_CONFIG_RELIGION_COVERAGE_INFLUENCE_SENTIMENT", false, false };
     game_feature gameplay_change_monuments_influence_sentiment{ "gameplay_change_monuments_influence_sentiment", "#TR_CONFIG_MONUMENTS_INFLUENCE_SENTIMENT", false, false };
+    game_feature gameplay_change_shrine_house_access{ "gameplay_change_shrine_house_access", "#TR_CONFIG_SHRINE_HOUSE_ACCESS", false, false };
     game_feature gameplay_change_well_radius_depends_moisture{ "gameplay_change_well_radius_depends_moisture", "#TR_CONFIG_WELL_RADIUS_DEPENDS_MOISTURE", false, false };
     game_feature gameplay_change_enter_point_on_nearest_tile{ "gameplay_change_enter_point_on_nearest_tile", "#TR_CONFIG_ENTER_POINT_ON_NEAREST_TILE", false, false };
     game_feature gameplay_fishing_wharf_spawn_boats{ "gameplay_fishing_wharf_spawn_boats", "#TR_CONFIG_FISHING_WHARF_SPAWN_BOATS", false, false };
