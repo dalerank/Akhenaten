@@ -236,9 +236,9 @@ Recovered from `akhenatren-rm`:
 | 215 | 0xD7 | 1 | `BUILDING_PYRAMID_ENTRY_TILE` | Pyramid entry tile |
 | 216 | 0xD8 | 2 | `BUILDING_GRANITE_QUARRY` | Granite Quarry |
 | 217 | 0xD9 | 2 | `BUILDING_COPPER_MINE` | Copper Mine |
-| 218 | 0xDA | 2 | `BUILDING_PYRAMID_COMPLEX_TEMPLE` | Pyramid complex temple |
-| 219 | 0xDB | 2 | `BUILDING_PYRAMID_COMPLEX_B` | Pyramid complex part B |
-| 220 | 0xDC | 2 | `BUILDING_PYRAMID_COMPLEX_C` | Pyramid complex part C |
+| 218 | 0xDA | 2 | `BUILDING_MORTUARY_TEMPLE` | Pyramid complex temple (annex start) |
+| 219 | 0xDB | 2 | `BUILDING_CAUSEWAY` | Pyramid complex causeway segment |
+| 220 | 0xDC | 2 | `BUILDING_VALLEY_TEMPLE` | Pyramid complex valley temple (water end) |
 | 221 | 0xDD | 2 | `BUILDING_SANDSTONE_QUARRY` | Sandstone Quarry |
 | 222 | 0xDE | 1 | `BUILDING_MAUSOLEUM` | Mausoleum |
 | 223 | 0xDF | 1 | `BUILDING_CLIFF` | Cliff |

@@ -205,6 +205,16 @@ void claim_causeway_tiles(int building_id, const pyramid_causeway_probe &probe) 
     if (!probe.ok || probe.length <= 0 || building_id <= 0) {
         return;
     }
+    // OG paints complex annex ground with walkway sprites. Without an image the
+    // claimed strip renders as raw building tiles (jagged cubes next to the body).
+    int walk_img = 0;
+    if (building *b = building_get(building_id)) {
+        const auto &params = building_static_params::get(b->type);
+        walk_img = params.first_img("empty_land");
+        if (walk_img <= 0) {
+            walk_img = params.first_img("enter");
+        }
+    }
     const vec2i step = k_causeway_dir[probe.dir & 3];
     const vec2i perp = k_causeway_perp[probe.dir & 3];
     tile2i origin = probe.origin;
@@ -222,6 +232,9 @@ void claim_causeway_tiles(int building_id, const pyramid_causeway_probe &probe) 
             map_property_set_multi_tile_size(grid_offset, 1);
             map_property_set_multi_tile_xy(grid_offset, 0, 0, true);
             map_monuments_set_progress(t, 0);
+            if (walk_img > 0) {
+                map_image_set(grid_offset, walk_img);
+            }
         }
     }
 }
@@ -1710,6 +1723,11 @@ int building_stepped_pyramid::get_masonry_image(int orientation, tile2i tile, ti
 void building_stepped_pyramid::draw_ornaments_and_animations_stairs_impl(painter &ctx, vec2i point, tile2i tile, color color_mask, const vec2i tiles_size) {
     // phase() is uint8_t: MONUMENT_FINISHED (-1) becomes 255, which would match every stair.
     if (is_finished()) {
+        return;
+    }
+    // Remake stairs[] are decorative phase sprites — OG mudbrick uses carpenter ramps
+    // (still stubbed). Drawing them on the complex SE edge looks like a serrated annex.
+    if (pyramid_params().pyramide_type == PYRAMID_STYLE_MUDBRICK) {
         return;
     }
 
