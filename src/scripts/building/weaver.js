@@ -27,8 +27,8 @@ building_weaver = {
   }
   building_size : 2,
   meta : { text_id:123, help_link:"message_building_weaver" }
-  info_sound : "Wavs/flaxfarm.wav"
-  sound_channel : SOUND_CHANNEL_CITY_NONE
+  info_sound : "Wavs/weaver.wav"
+  sound_channel : SOUND_CHANNEL_CITY_WEAVER_WORKSHOP
   labor_category : LABOR_CATEGORY_INDUSTRY_COMMERCE
   cost: [ 16, 30, 50, 100, 150 ]
   desirability : { value:[-3], step:[1], step_size:[1], range: [3] }
