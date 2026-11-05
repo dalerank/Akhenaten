@@ -144,6 +144,7 @@ namespace game_features {
     extern game_feature gameplay_change_delivery_boy_goes_to_market_alone;
     extern game_feature gameplay_change_religion_coverage_influence_sentiment;
     extern game_feature gameplay_change_monuments_influence_sentiment;
+    extern game_feature gameplay_change_shrine_house_access;
     extern game_feature gameplay_change_well_radius_depends_moisture;
     extern game_feature gameplay_change_enter_point_on_nearest_tile;
     extern game_feature gameplay_fishing_wharf_spawn_boats;

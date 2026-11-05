@@ -8,6 +8,7 @@
 #include "grid/terrain.h"
 #include "grid/routing/routing.h"
 #include "city/city.h"
+#include "game/game_config.h"
 
 #include <algorithm>
 #include <set>
@@ -304,15 +305,33 @@ void city_buildings_t::update_week() {
 
 void city_buildings_t::update_religion_supply_houses() {
     OZZY_PROFILER_FUNCTION();
-    svector<building*, 512> shrines;
 
-    auto mark_shrine_access = [] (building *shrine, int radius) {
+    // Always clear; remake proximity access is opt-in (OG: houses get religion from priests only).
+    for (auto &b : city_buildings()) {
+        if (b.state != BUILDING_STATE_VALID) {
+            continue;
+        }
+        if (auto house = b.dcast_house(); !!house) {
+            house->runtime_data().shrine_access = false;
+        }
+    }
+
+    if (!game_features::gameplay_change_shrine_house_access.to_bool()) {
+        return;
+    }
+
+    svector<building *, 512> shrines;
+    for (auto &b : city_buildings()) {
+        if (b.state == BUILDING_STATE_VALID && b.is_shrine()) {
+            shrines.push_back(&b);
+        }
+    }
+
+    auto mark_shrine_access = [](building *shrine, int radius) {
         grid_area area = map_grid_get_area(shrine->tile, 1, radius);
-
         for (int yy = area.tmin_y, endy = area.tmax_y; yy <= endy; yy++) {
             for (int xx = area.tmin_x, endx = area.tmax_x; xx <= endx; xx++) {
                 int building_id = map_building_at(tile2i(xx, yy));
-
                 auto house = building_get(building_id)->dcast_house();
                 if (house) {
                     house->runtime_data().shrine_access = true;
@@ -321,18 +340,7 @@ void city_buildings_t::update_religion_supply_houses() {
         }
     };
 
-    for (auto& b : city_buildings()) {
-        if (b.state != BUILDING_STATE_VALID)
-            continue;
-
-        if (b.is_shrine()) {
-            shrines.push_back(&b);
-        } else if (auto house = b.dcast_house(); !!house) {
-            house->runtime_data().shrine_access = false;
-        }
-    }
-
-    for (auto& s : shrines) {
+    for (auto &s : shrines) {
         mark_shrine_access(s, 3);
     }
 }

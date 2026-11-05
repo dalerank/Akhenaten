@@ -231,6 +231,7 @@ localization_en = [
   {key:"#TR_CONFIG_DELIVERY_BOY_GOES_TO_MARKET_ALONE", text:"Delivery boy goes to market alone"}
   {key:"#TR_CONFIG_RELIGION_COVERAGE_INFLUENCE_SENTIMENT", text:"Religion coverage influence sentiment"}
   {key:"#TR_CONFIG_MONUMENTS_INFLUENCE_SENTIMENT", text:"Monuments influence sentiment"}
+  {key:"#TR_CONFIG_SHRINE_HOUSE_ACCESS", text:"Shrines grant nearby houses religion access without priests"}
   {key:"#TR_CONFIG_WELL_RADIUS_DEPENDS_MOISTURE", text:"Well radius depends from moisture"}
   {key:"#TR_CONFIG_ENTER_POINT_ON_NEAREST_TILE", text:"Building entrance on the neareast tile"}
   {key:"#TR_CONFIG_FISHING_WHARF_SPAWN_BOATS", text:"Fishing wharf spawn boats"}

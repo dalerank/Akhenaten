@@ -19,6 +19,7 @@ House.property.library = { }
 House.property.academy = { }
 House.property.magistrate = { }
 House.property.num_gods = { }
+House.property.shrine_access = { }
 House.property.temple_osiris = { }
 House.property.temple_ra = { }
 House.property.temple_ptah = { }

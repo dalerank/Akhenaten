@@ -167,7 +167,7 @@ public:
 ANK_CONFIG_PROPERTY(building_house::runtime_data_t,
     population, tax_coverage, tax_bonus, house_happiness,
     entertainment, water_supply, bazaar_access, education, school, library, academy,
-    magistrate, num_gods, dentist, apothecary, health, mortuary, physician,
+    magistrate, num_gods, shrine_access, dentist, apothecary, health, mortuary, physician,
     booth_juggler, bandstand_juggler, senet_player, zookeeper, criminal_active,
     no_space_to_expand, fancy_bazaar_access, worst_desirability_building_id,
     frog_infest_days, evolve_text, unreachable_ticks, days_without_food,
