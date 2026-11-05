@@ -1,8 +1,22 @@
 #include "city_animals.h"
 
+#include "building/building_temple_complex.h"
 #include "city/city.h"
+#include "city/city_buildings.h"
 #include "js/js_game.h"
 #include "core/profiler.h"
+
+bool __city_osiris_oracle_active() {
+    for (building &b : city_buildings()) {
+        if (!b.is_valid() || b.type != BUILDING_TEMPLE_COMPLEX_OSIRIS) {
+            continue;
+        }
+        auto *complex = b.dcast_temple_complex();
+        return complex && complex->has_upgrade(etc_upgrade_oracle);
+    }
+    return false;
+}
+ANK_FUNCTION(__city_osiris_oracle_active)
 
 void __city_remove_animals() { g_city.animals.remove_all(); }
 ANK_FUNCTION(__city_remove_animals);

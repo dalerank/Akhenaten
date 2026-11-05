@@ -2510,6 +2510,23 @@ static void __test_create_herds() {
 }
 ANK_FUNCTION(__test_create_herds);
 
+// OG herds.c: prey spawn_delay is 4, halved with Osiris complex + oracle.
+static int __test_prey_respawn_delay() {
+    int delay = 4;
+    for (building &b : city_buildings()) {
+        if (!b.is_valid() || b.type != BUILDING_TEMPLE_COMPLEX_OSIRIS) {
+            continue;
+        }
+        auto *complex = b.dcast_temple_complex();
+        if (complex && complex->has_upgrade(etc_upgrade_oracle)) {
+            delay /= 2;
+        }
+        break;
+    }
+    return delay;
+}
+ANK_FUNCTION(__test_prey_respawn_delay);
+
 static void __test_clear_scenario_fishing_points() {
     g_scenario.fishing_points.assign(MAX_FISH_POINTS, tile2i::invalid);
 }
