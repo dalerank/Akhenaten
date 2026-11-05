@@ -52,4 +52,5 @@ city_sounds = [
   {c: SOUND_CHANNEL_CITY_MARSHLAND,     p: "Ambient/vegetation.mp3"},
   {c: SOUND_CHANNEL_CITY_CHICKFARM,     p: "Wavs/chickfarm.wav"},
   {c: SOUND_CHANNEL_CITY_COWFARM,       p: "Wavs/cowfarm_r.wav"},
+  {c: SOUND_CHANNEL_CITY_LETTUCE_FARM,  p: "Wavs/lettucefarm.wav"},
 ]

@@ -265,7 +265,7 @@ building_meadow_farm_tile_offsets = [
 
     build_menu_text : "Lettuce Meadow Farm"
     info_sound : "Wavs/lettucefarm.wav"
-    sound_channel : SOUND_CHANNEL_CITY_FIG_FARM
+    sound_channel : SOUND_CHANNEL_CITY_LETTUCE_FARM
 
     building_size : 3
     month_harvest: [MONTH_APRIL]
@@ -322,7 +322,7 @@ building_meadow_farm_tile_offsets = [
     damage_proof : true
     meta { text_id:113, help_link:"message_building_fruit_vegetables_farm" }
     info_sound : "Wavs/lettucefarm.wav"
-    sound_channel : SOUND_CHANNEL_CITY_FIG_FARM
+    sound_channel : SOUND_CHANNEL_CITY_LETTUCE_FARM
     progress_max: 2000
     labor_category : LABOR_CATEGORY_FOOD_PRODUCTION,
     needs {
