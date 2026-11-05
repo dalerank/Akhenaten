@@ -75,6 +75,7 @@ Sources are collected via `file(GLOB ...)` with **no `CONFIGURE_DEPENDS`**, so a
 --unpack_scripts      extract embedded JS to user directory
 --integraltests       run the built-in integral test suite and exit (see "Testing" below)
 --integraltest-only NAME  with --integraltests, run only tests whose filename contains NAME
+--integraltest-keep   with --integraltests, keep the window open after the suite (inspect final state)
 --editor              start in the scenario editor (dev-only; blank map, bypasses main menu)
 --load-map PATH       load a .map straight into the city, bypassing the main menu
 --screenshot-dir PATH directory for screenshots (created if missing; default: working dir)

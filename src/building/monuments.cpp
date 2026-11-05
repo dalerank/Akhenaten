@@ -21,6 +21,8 @@
 #include "grid/terrain.h"
 #include "core/calc.h"
 #include "core/log.h"
+
+#include <algorithm>
 #include "city/city.h"
 #include "city/city_buildings.h"
 #include "io/io_buffer.h"
@@ -219,13 +221,81 @@ int building_monument::phases() const {
     return config().phases.size();
 }
 
-int building_monument::needs_bricklayers(int ph_id) const {
-    const monument &config = this->config();
-    if (ph_id >= config.phases.size()) {
+int building_monument::phase_blocks(int ph_id) const {
+    const monument &cfg = config();
+    if (ph_id < 0 || ph_id >= (int)cfg.phases.size()) {
         return 0;
     }
+    return cfg.phases[ph_id].blocks;
+}
 
-    const monument_phase &ph = config.phases[ph_id];
+int building_monument::brick_blocks_total() const {
+    int sum = 0;
+    for (const auto &ph : config().phases) {
+        sum += ph.blocks;
+    }
+    return sum;
+}
+
+int building_monument::phase_worker_count(int ph_id, e_figure_type type) const {
+    const monument &cfg = config();
+    if (ph_id < 0 || ph_id >= (int)cfg.phases.size()) {
+        return 0;
+    }
+    int total = 0;
+    for (const auto &w : cfg.phases[ph_id].workers) {
+        if (w.type == type) {
+            total += w.count;
+        }
+    }
+    return total;
+}
+
+int building_monument::phase_bricks_per_block(int ph_id) const {
+    int blocks = phase_blocks(ph_id);
+    int bricks = needs_resource(RESOURCE_BRICKS, ph_id);
+    if (blocks > 0 && bricks > 0) {
+        return std::max(1, bricks / blocks);
+    }
+    return bricks > 0 ? bricks : 100;
+}
+
+int building_monument::phase_for_blocks_done(int blocks_done) const {
+    const monument &cfg = config();
+    int cum = 0;
+    int last_brick_phase = -1;
+    for (int i = 0; i < (int)cfg.phases.size(); i++) {
+        const int n = cfg.phases[i].blocks;
+        if (n <= 0) {
+            continue;
+        }
+        last_brick_phase = cfg.phases[i].id;
+        cum += n;
+        if (blocks_done < cum) {
+            return cfg.phases[i].id;
+        }
+    }
+    if (last_brick_phase >= 0) {
+        const int next = last_brick_phase + 1;
+        if (next < (int)cfg.phases.size()) {
+            return cfg.phases[next].id;
+        }
+        return last_brick_phase;
+    }
+    return phase();
+}
+
+int building_monument::needs_bricklayers(int ph_id) const {
+    const int from_workers = phase_worker_count(ph_id, FIGURE_BRICKLAYER);
+    if (from_workers > 0) {
+        return from_workers;
+    }
+
+    const monument &cfg = config();
+    if (ph_id < 0 || ph_id >= (int)cfg.phases.size()) {
+        return 0;
+    }
+    const monument_phase &ph = cfg.phases[ph_id];
     return ph.resources.size() > 0 ? ph.resources[0].count : 0;
 }
 

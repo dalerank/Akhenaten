@@ -9,7 +9,10 @@ enum e_worker_action {
     ACTION_12_WORKER_LEVELING_GROUND = 12,
     ACTION_13_WORKER_BACK_FROM_WORKS = 13,
     ACTION_14_WORKER_CHECK_DESTINATION = 14,
-    ACTION_15_REACHED_DESTINATION = 15
+    ACTION_15_REACHED_DESTINATION = 15,
+    ACTION_16_WORKER_TO_YARD = 16,
+    ACTION_17_WORKER_TO_MASON = 17,
+    ACTION_18_WORKER_DELIVER_BLOCK = 18,
 };
 
 class figure_worker : public figure_impl {
@@ -19,6 +22,11 @@ public:
     figure_worker(figure *f) : figure_impl(f) {}
     virtual figure_worker *dcast_worker() override { return this; }
 
+    struct runtime_data_t {
+        figure_id mason_fid;
+        uint8_t delivering_block;
+    } FIGURE_RUNTIME_DATA_T;
+
     virtual void on_destroy() override;
     virtual void figure_action() override;
     virtual void figure_before_action() override;
@@ -26,4 +34,5 @@ public:
     virtual void poof() override;
 
     tile2i monumen_tile4work(building *b);
+    void assign_brick_delivery(building *monument, figure_id mason_fid);
 };

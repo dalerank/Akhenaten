@@ -33,8 +33,10 @@
 #include "building/building_fishing_wharf.h"
 #include "building/monument_mastaba.h"
 #include "building/monument_pyramid.h"
+#include "building/monument_pyramid_engine.h"
 #include "building/monument_royal_tomb.h"
 #include "building/monument_obelisk.h"
+#include "figuretype/figure_worker.h"
 #include "building/building_road.h"
 #include "building/monuments.h"
 #include "grid/desirability.h"
@@ -230,6 +232,17 @@ void __test_pump_frames(int n) {
     test_pump(n);
 }
 ANK_FUNCTION_1(__test_pump_frames);
+
+// Wall-clock pause while still drawing (for visual layer-step tests).
+static void __test_sleep_ms(int ms) {
+    ms = std::clamp(ms, 0, 60000);
+    const Uint32 deadline = SDL_GetTicks() + (Uint32)ms;
+    while (!g_app.quit && !SDL_TICKS_PASSED(SDL_GetTicks(), deadline)) {
+        g_app.pump_one_frame();
+        SDL_Delay(16);
+    }
+}
+ANK_FUNCTION_1(__test_sleep_ms);
 
 static void push_mouse_motion(int x, int y) {
     SDL_Event e{};
@@ -3590,6 +3603,35 @@ static int __test_monument_resource_pct(int bid, int resource) {
     return mm->runtime_data().resources_pct[resource];
 }
 ANK_FUNCTION_2(__test_monument_resource_pct);
+
+static int __pyramid_remaining_blocks(int bid) {
+    building *b = building_get(bid);
+    building *head = b ? b->main() : nullptr;
+    auto *ms = pyramid_main_state_get(head ? head->id : 0);
+    return ms ? (int)ms->remaining_blocks : -1;
+}
+ANK_FUNCTION_1(__pyramid_remaining_blocks);
+
+static void __pyramid_start_block_phase(int bid) {
+    building *b = building_get(bid);
+    building *head = b ? b->main() : nullptr;
+    if (!head) {
+        return;
+    }
+    pyramid_engine_init_mastaba(head);
+    pyramid_engine_start_block_phase(head);
+}
+ANK_FUNCTION_1(__pyramid_start_block_phase);
+
+static void __pyramid_laborer_wake_mason(int mason_fid) {
+    pyramid_engine_laborer_deliver_block((figure_id)mason_fid);
+}
+ANK_FUNCTION_1(__pyramid_laborer_wake_mason);
+
+static int __pyramid_claim_bricklayer_task(int fid) {
+    return pyramid_engine_find_task_bricklayer((figure_id)fid);
+}
+ANK_FUNCTION_1(__pyramid_claim_bricklayer_task);
 
 static int __test_royal_tomb_lamp_stock(int bid) {
     building *b = building_get(bid);

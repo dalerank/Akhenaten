@@ -128,6 +128,7 @@ game_features {
     @gameplay_change_fort_refund_carry_troops {}
     @gameplay_change_statue_variants {}
     @gameplay_change_guild_statue_service {}
+    @gameplay_change_mastaba_clay_delivery {}
     @gameplay_change_recruit_nearest_fort {}
     @gameplay_bast_lion_raid {}
     @gameplay_seth_asp_raid {}

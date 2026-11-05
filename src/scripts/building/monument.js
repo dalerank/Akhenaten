@@ -24,7 +24,8 @@ Monument.prototype.foreach_tile = function(fn) {
     }
 }
 
-// Dev cheat: set incomplete tiles to 200. max_count <= 0 = all.
+// Dev cheat: set incomplete tiles to 200, then place OG engine blocks.
+// max_count <= 0 = all remaining tiles/blocks for this monument.
 Monument.prototype.boost_incomplete_tiles = function(max_count) {
     if (this.phase() === -1) {
         return 0
@@ -47,6 +48,11 @@ Monument.prototype.boost_incomplete_tiles = function(max_count) {
         }
         self.set_tile_progress(tile, 200)
     })
+
+    var left = limit > 0 ? (limit - bumped) : 0
+    if (limit <= 0 || left > 0) {
+        bumped += this.boost_engine_blocks(limit > 0 ? left : 0)
+    }
     return bumped
 }
 

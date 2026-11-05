@@ -17,6 +17,7 @@
 #include "grid/crime.h"
 #include "building/building_house.h"
 #include "building/building_wall.h"
+#include "building/monument_pyramid_engine.h"
 #include "io/io_buffer.h"
 #include "grid/road_access.h"
 #include "grid/grid_area.h"
@@ -249,6 +250,7 @@ building *building_exists_at(tile2i tile) {
 }
 
 void building_clear_all() {
+    pyramid_engine_clear_all();
     for (int i = 0; i < MAX_BUILDINGS; i++) {
         memset(&g_all_buildings[i], 0, sizeof(building));
         g_all_buildings[i].id = i;

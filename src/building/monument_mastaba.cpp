@@ -1,5 +1,6 @@
 ﻿#include "monument_mastaba.h"
 
+#include "building/monument_pyramid_engine.h"
 #include "graphics/view/view.h"
 #include "monuments.h"
 #include "core/direction.h"
@@ -12,6 +13,7 @@
 #include "city/city_figures.h"
 #include "figure/figure.h"
 #include "game/game.h"
+#include "game/game_config.h"
 #include "game/undo.h"
 #include "city/city_resource.h"
 #include "grid/random.h"
@@ -181,9 +183,36 @@ void building_mastaba::update_images(building *b, int curr_phase, const vec2i si
         return;
     }
 
+    // Layer index is 1-based in get_bricks_image; phase BRICKS (2) → layer 1.
+    // COMPLETE/FINISHED share the last brick course (same as update_map_orientation).
+    const int layer = (curr_phase >= MASTABA_PHASE_COMPLETE)
+        ? (MASTABA_PHASE_COMPLETE - MASTABA_PHASE_BRICKS)
+        : std::max(1, curr_phase - MASTABA_PHASE_BRICKS + 1);
     while (part) {
-        int image_id = building_small_mastabe_get_bricks_image(b->orientation, part->type, part->tile, main->tile, main->tile.shifted(size_b.y - 1, size_b.x - 1), curr_phase - MASTABA_PHASE_BRICKS);
+        int image_id = building_small_mastabe_get_bricks_image(b->orientation, part->type, part->tile, main->tile, main->tile.shifted(size_b.y - 1, size_b.x - 1), layer);
         map_building_tiles_add(part->id, part->tile, part->size, image_id, TERRAIN_BUILDING);
+        part = part->has_next() ? part->next() : nullptr;
+    }
+}
+
+void building_mastaba::sync_visuals() {
+    if (!is_main() || is_finished()) {
+        return;
+    }
+    const int ph = runtime_data().phase;
+    if (ph < MASTABA_PHASE_BRICKS) {
+        return;
+    }
+
+    const vec2i tiles_size = get_params(type()).init_tiles;
+    update_images(&base, ph, tiles_size);
+
+    // OG engine has no per-tile course progress — mark footprint complete so flat
+    // "in progress" overlays do not fight height brick ornaments.
+    building *part = &base;
+    while (part) {
+        grid_tiles tiles = map_grid_get_tiles(part, 0);
+        map_grid_area_foreach(tiles, [](tile2i t) { map_monuments_set_progress(t, 200); });
         part = part->has_next() ? part->next() : nullptr;
     }
 }
@@ -309,6 +338,11 @@ int building_small_mastabe_get_bricks_image(int orientation, e_building_type typ
 void building_mastaba::on_create(int orientation) {
 }
 
+void building_mastaba::on_destroy() {
+    pyramid_engine_clear_building(id());
+    building_impl::on_destroy();
+}
+
 void building_mastaba::on_place(int orientation, int variant) {
     building_monument::on_place(orientation, variant);
 
@@ -358,6 +392,8 @@ void building_mastaba::on_place(int orientation, int variant) {
         }
         prev_part = part.b;
     }
+
+    pyramid_engine_init_mastaba(&base);
 }
 
 static color mastaba_progress_alpha_mask(uint32_t progress, color color_mask) {
@@ -474,7 +510,11 @@ bool building_mastaba::draw_ornaments_and_animations_flat_impl(painter &ctx, vec
         draw_flat_phase_foundation(ctx, color_mask, tiles_size, image_grounded);
         break;
     case MASTABA_PHASE_BRICKS:
-        draw_flat_phase_bricks(ctx, color_mask, tiles_size);
+        // OG block-engine drives courses via remaining_blocks; flat tile-progress
+        // overlay fights height art when progress was never remake-worked.
+        if (!pyramid_engine_block_phase_active(&base)) {
+            draw_flat_phase_bricks(ctx, color_mask, tiles_size);
+        }
         break;
     default:
         break;
@@ -583,15 +623,15 @@ bool building_mastaba::draw_ornaments_and_animations_hight_impl(painter &ctx, ve
     });
 
     const int phase = runtime_data().phase;
-    if (phase == MASTABA_PHASE_BRICKS) {
+    if (is_finished() || phase == MASTABA_PHASE_COMPLETE) {
+        draw_height_phase_complete(ctx, color_mask, tiles_size, city_offset, tiles2draw);
+    } else if (phase == MASTABA_PHASE_BRICKS) {
         draw_height_phase_bricks(ctx, color_mask, tiles_size, city_offset, tiles2draw);
     } else if (phase > MASTABA_PHASE_BRICKS && phase < MASTABA_PHASE_COMPLETE) {
         draw_height_phase_layers(ctx, color_mask, tiles_size, city_offset, tiles2draw);
-    } else if (phase == MASTABA_PHASE_COMPLETE) {
-        draw_height_phase_complete(ctx, color_mask, tiles_size, city_offset, tiles2draw);
     }
 
-    if (phase > MASTABA_PHASE_BRICKS) {
+    if (is_finished() || phase > MASTABA_PHASE_BRICKS) {
         draw_height_side_figures(ctx);
     }
 
@@ -609,6 +649,73 @@ void building_mastaba::complete_construction(const vec2i tiles_size) {
     js_event(mastaba_complete_ev{ id() }, params.name, "complete_construction");
 }
 
+bool building_mastaba::clay_delivery_enabled() {
+    return game_features::gameplay_change_mastaba_clay_delivery.to_bool();
+}
+
+bool building_mastaba::clay_stock_ready() const {
+    if (!clay_delivery_enabled()) {
+        return true;
+    }
+    const int need = needs_resource(RESOURCE_CLAY);
+    if (need <= 0) {
+        return true;
+    }
+    return resource_pct(RESOURCE_CLAY) >= 100;
+}
+
+int building_mastaba::needs_resource(e_resource resource) const {
+    return needs_resource(resource, runtime_data().phase);
+}
+
+int building_mastaba::needs_resource(e_resource resource, int phase) const {
+    if (resource == RESOURCE_CLAY && !clay_delivery_enabled()) {
+        return 0;
+    }
+    return building_monument::needs_resource(resource, phase);
+}
+
+bool building_mastaba::accepts_yard_delivery(e_resource resource) const {
+    if (resource == RESOURCE_CLAY) {
+        return clay_delivery_enabled();
+    }
+    return true;
+}
+
+bool building_mastaba::need_bricklayers() {
+    if (!is_main() || is_finished()) {
+        return false;
+    }
+    auto &d = runtime_data();
+    if (d.phase < MASTABA_PHASE_BRICKS) {
+        return false;
+    }
+    if (!clay_stock_ready()) {
+        return false;
+    }
+    auto *ms = pyramid_main_state_get(id());
+    if (!ms || !ms->block_phase_active || ms->remaining_blocks == 0) {
+        return false;
+    }
+    if (!has_free_worker_slot()) {
+        return false;
+    }
+    int works = 0;
+    for (auto &wid : d.workers) {
+        figure *f = wid > 0 ? figure_get(wid) : nullptr;
+        works += (f && f->type == FIGURE_BRICKLAYER) ? 1 : 0;
+    }
+    return works < needs_bricklayers(d.phase);
+}
+
+int building_mastaba::needs_bricklayers(int ph_id) const {
+    const int want = phase_worker_count(ph_id, FIGURE_BRICKLAYER);
+    if (want > 0) {
+        return want;
+    }
+    return has_free_worker_slot() ? 1 : 0;
+}
+
 void building_mastaba::update_construction_day(const vec2i tiles_size) {
     auto &monumentd = runtime_data();
     if (monumentd.phase >= MASTABA_PHASE_COMPLETE) {
@@ -616,19 +723,38 @@ void building_mastaba::update_construction_day(const vec2i tiles_size) {
         return;
     }
 
-    grid_tiles tiles = map_grid_get_tiles(&base, 0);
-    tile2i tile2works = map_grid_area_first(tiles, [] (tile2i tile) { return map_monuments_get_progress(tile) < 200; });
-    bool all_tiles_finished = (tile2works == tile2i{ -1, -1 });
-    building *main = base.main();
-    building_impl *part = this;
     if (!is_main()) {
         return;
     }
 
+    if (monumentd.phase >= MASTABA_PHASE_BRICKS) {
+        auto *ms = pyramid_main_state_get(id());
+        if (!ms) {
+            pyramid_engine_init_mastaba(&base);
+            ms = pyramid_main_state_get(id());
+        }
+        if (ms && !ms->block_phase_active && monumentd.phase == MASTABA_PHASE_BRICKS) {
+            pyramid_engine_start_block_phase(&base);
+        }
+        if (pyramid_engine_blocks_finished(&base)) {
+            building_impl *part = this;
+            while (part) {
+                if (auto *m = part->dcast_monument()) {
+                    m->set_phase(MASTABA_PHASE_COMPLETE);
+                }
+                part = part->has_next() ? part->next() : nullptr;
+            }
+        }
+        return;
+    }
+
+    grid_tiles tiles = map_grid_get_tiles(&base, 0);
+    tile2i tile2works = map_grid_area_first(tiles, [] (tile2i tile) { return map_monuments_get_progress(tile) < 200; });
+    bool all_tiles_finished = (tile2works == tile2i{ -1, -1 });
+    building_impl *part = this;
+
     if (all_tiles_finished) {
         int curr_phase = monumentd.phase;
-        // COMPLETE â†’ finalize next day; don't zero progress on that transition
-        // (bricklayer still on-site would otherwise reclaim forever).
         if (curr_phase + 1 < MASTABA_PHASE_COMPLETE) {
             map_grid_area_foreach(tiles, [] (tile2i tile) { map_monuments_set_progress(tile, 0); });
         }
@@ -638,25 +764,8 @@ void building_mastaba::update_construction_day(const vec2i tiles_size) {
             part->dcast_monument()->set_phase(curr_phase + 1);
             part = part->has_next() ? part->next() : nullptr;
         }
-    }
-
-    if (monumentd.phase >= MASTABA_PHASE_BRICKS) {
-        int minimal_percent = 100;
-        for (e_resource r = RESOURCES_MIN; r < RESOURCES_MAX; ++r) {
-            bool need_resource = needs_resource(r);
-            if (need_resource) {
-                minimal_percent = std::min<int>(minimal_percent, monumentd.resources_pct[r]);
-            }
-        }
-
-        grid_tiles tiles = map_grid_get_tiles(&base, 0);
-        tiles.resize(tiles.size() * minimal_percent / 100);
-
-        for (auto &tile : tiles) {
-            int progress = map_monuments_get_progress(tile);
-            if (progress == 1) {
-               map_monuments_set_progress(tile, 2);
-            }
+        if (monumentd.phase >= MASTABA_PHASE_BRICKS) {
+            pyramid_engine_start_block_phase(&base);
         }
     }
 }
@@ -720,6 +829,27 @@ void building_mastaba::bind_dynamic(io_buffer *iob, size_t version) {
     for (int i = 0; i < RESOURCES_MAX; i++) {
         iob->bind(BIND_SIGNATURE_UINT8, &monumentd.resources_pct[i]);
     }
+
+    if (version >= 191) {
+        auto &main = monumentd.og_main;
+        iob->bind_u8((uint8_t &)main.style);
+        iob->bind_u8(main.size_variant);
+        iob->bind_u16(main.remaining_blocks);
+        iob->bind_u8(main.block_phase_active);
+        iob->bind____skip(1);
+
+        auto &part = monumentd.og_part;
+        iob->bind_u8(part.size_variant);
+        iob->bind_u8(part.stage);
+        iob->bind_u8(part.blocks);
+        iob->bind_u8(part.layer);
+        iob->bind_u8(part.target_layers);
+        iob->bind_u8(part.subtype);
+        iob->bind_u16(part.worker_figure_id);
+    } else {
+        monumentd.og_main = {};
+        monumentd.og_part = {};
+    }
 }
 
 bool building_mastaba::get_route_citizen_land_type(int grid_offset, int &land_result) const {
@@ -761,13 +891,12 @@ grid_area building_mastaba::get_area() const {
 }
 
 bool building_mastaba::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {
-    if (is_finished()) {
+    if (city_flat_should_flatten_building(base)) {
         return false;
     }
 
-    // Construction progress lives in flat ornaments; under flat view skip tall height_impl.
-    if (city_flat_should_flatten_building(base)) {
-        return false;
+    if (is_finished()) {
+        return draw_ornaments_and_animations_hight_impl(ctx, point, tile, color_mask, get_params(type()).init_tiles);
     }
 
     if (runtime_data().phase < MASTABA_PHASE_BRICKS) {

@@ -32,7 +32,13 @@ figure_bricklayer {
 
 	category: figure_category_citizen
 	max_damage: 10
-	terrain_usage : TERRAIN_USAGE_ROADS,
+	terrain_usage : TERRAIN_USAGE_ROADS
+	max_roam_length: 512
+	ghost_ticks: 10
+	task_search_base: 30
+	task_search_rand: 30
+	guild_road_radius: 2
+	climb_ticks: 30
 }
 
 function figure_bricklayer_gods_are_angry() {
@@ -109,22 +115,22 @@ function figure_bricklayer_setup_phrase(ev) {
 
 	var state = f.action_state
 	switch (state) {
-	case ACTION_4_BRICKLAYER_LAY_BRICKS:
+	case ACTION_2_BRICKLAYER_WORK:
 		figure_apply_phrase(f, "brick_monument_will_be_strong")
 		return
-	case ACTION_12_BRICKLAYER_WORK_STATUE:
-		figure_apply_phrase(f, "brick_work_statue")
-		return
-	case ACTION_5_BRICKLAYER_LOOKING_FOR_IDLE_TILE:
-		figure_apply_phrase(f, "brick_looking_for_spot")
-		return
-	case ACTION_3_BRICKLAYER_WAITING_RESOURCES:
+	case ACTION_8_BRICKLAYER_WAIT_FOR_BLOCK:
 		figure_apply_phrase(f, "brick_waiting_for_bricks")
 		return
-	case ACTION_6_BRICKLAYER_RETURN_HOME:
+	case ACTION_5_BRICKLAYER_FIND_PART:
+	case ACTION_0_BRICKLAYER_ROAM:
+		figure_apply_phrase(f, "brick_looking_for_spot")
+		return
+	case ACTION_3_BRICKLAYER_RETURN_HOME:
+	case ACTION_6_BRICKLAYER_GO_TO_GUILD_ROAD:
 		figure_apply_phrase(f, "brick_return_to_guild")
 		return
-	case ACTION_7_BRICKLAYER_EXIT_FROM_MONUMENT:
+	case ACTION_7_BRICKLAYER_WALK_TO_PART:
+	case ACTION_4_BRICKLAYER_CLIMB_RAMP:
 		figure_apply_phrase(f, "brick_leaving_site")
 		return
 	}

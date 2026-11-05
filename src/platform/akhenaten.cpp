@@ -679,11 +679,15 @@ int main(int argc, char** argv) {
     platform.append_startup_log("Startup: first frame done");
     platform.hide_startup_log();
 
+    int integral_rc = EXIT_SUCCESS;
     if (g_args.is_integral_tests()) {
-        int rc = run_integral_tests();
-        game_imgui_overlay_destroy();
-        teardown();
-        return rc;
+        integral_rc = run_integral_tests();
+        if (!g_args.integraltest_keep()) {
+            game_imgui_overlay_destroy();
+            teardown();
+            return integral_rc;
+        }
+        logs::info("[integraltests] keep: suite finished (rc=%d), leaving window open", integral_rc);
     }
 
     bool ok = platform.run_main_loop(
@@ -694,5 +698,5 @@ int main(int argc, char** argv) {
 
     teardown();
 
-    return EXIT_SUCCESS;
+    return g_args.is_integral_tests() ? integral_rc : EXIT_SUCCESS;
 }

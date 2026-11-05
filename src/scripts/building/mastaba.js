@@ -13,6 +13,9 @@ building_small_mastaba {
       enter { id:114 }
     }
     building_size : 2
+    part_count : 10
+    brick_layers : 6
+    entry_part : 8
     info_title_id[198, 18]
     fire_proof :  true
     damage_proof : true
@@ -21,16 +24,18 @@ building_small_mastaba {
     init_tiles [10, 4]
 
     // RESOURCE_NONE count = architects (ARCHITECTS). Phase 8 = finished.
+    // Brick phases: blocks = OG block quota; BRICKS = blocks*100; workers drive guild spawn.
+    // CLAY quotas are remake-only (gameplay_change_mastaba_clay_delivery); OG hauled bricks only.
     construction {
         phases [
             { id: 0, resources: [ { resource: RESOURCE_NONE, count: 1 } ] }
             { id: 1, resources: [ { resource: RESOURCE_NONE, count: 1 } ] }
-            { id: 2, resources: [ { resource: RESOURCE_NONE, count: 1 }, { resource: RESOURCE_BRICKS, count: 4800 } ] }
-            { id: 3, resources: [ { resource: RESOURCE_NONE, count: 1 }, { resource: RESOURCE_CLAY, count: 2000 }, { resource: RESOURCE_BRICKS, count: 4000 } ] }
-            { id: 4, resources: [ { resource: RESOURCE_NONE, count: 1 }, { resource: RESOURCE_CLAY, count: 1600 }, { resource: RESOURCE_BRICKS, count: 3200 } ] }
-            { id: 5, resources: [ { resource: RESOURCE_NONE, count: 1 }, { resource: RESOURCE_CLAY, count: 1200 }, { resource: RESOURCE_BRICKS, count: 2400 } ] }
-            { id: 6, resources: [ { resource: RESOURCE_NONE, count: 1 }, { resource: RESOURCE_CLAY, count: 800 }, { resource: RESOURCE_BRICKS, count: 1600 } ] }
-            { id: 7, resources: [ { resource: RESOURCE_NONE, count: 1 }, { resource: RESOURCE_CLAY, count: 400 }, { resource: RESOURCE_BRICKS, count: 800 } ] }
+            { id: 2, blocks: 9,  resources: [ { resource: RESOURCE_NONE, count: 1 }, { resource: RESOURCE_BRICKS, count: 900 } ],  workers: [ { type: FIGURE_BRICKLAYER, count: 1 }, { type: FIGURE_LABORER, count: 1 } ] }
+            { id: 3, blocks: 9,  resources: [ { resource: RESOURCE_NONE, count: 1 }, { resource: RESOURCE_CLAY, count: 2000 }, { resource: RESOURCE_BRICKS, count: 900 } ],  workers: [ { type: FIGURE_BRICKLAYER, count: 1 }, { type: FIGURE_LABORER, count: 1 } ] }
+            { id: 4, blocks: 9,  resources: [ { resource: RESOURCE_NONE, count: 1 }, { resource: RESOURCE_CLAY, count: 1600 }, { resource: RESOURCE_BRICKS, count: 900 } ],  workers: [ { type: FIGURE_BRICKLAYER, count: 1 }, { type: FIGURE_LABORER, count: 1 } ] }
+            { id: 5, blocks: 9,  resources: [ { resource: RESOURCE_NONE, count: 1 }, { resource: RESOURCE_CLAY, count: 1200 }, { resource: RESOURCE_BRICKS, count: 900 } ],  workers: [ { type: FIGURE_BRICKLAYER, count: 1 }, { type: FIGURE_LABORER, count: 1 } ] }
+            { id: 6, blocks: 9,  resources: [ { resource: RESOURCE_NONE, count: 1 }, { resource: RESOURCE_CLAY, count: 800 },  { resource: RESOURCE_BRICKS, count: 900 } ],  workers: [ { type: FIGURE_BRICKLAYER, count: 1 }, { type: FIGURE_LABORER, count: 1 } ] }
+            { id: 7, blocks: 10, resources: [ { resource: RESOURCE_NONE, count: 1 }, { resource: RESOURCE_CLAY, count: 400 },  { resource: RESOURCE_BRICKS, count: 1000 } ], workers: [ { type: FIGURE_BRICKLAYER, count: 1 }, { type: FIGURE_LABORER, count: 1 } ] }
             { id: 8, resources: [ { resource: RESOURCE_NONE, count: 0 } ] }
         ]
     }
@@ -94,6 +99,9 @@ building_small_mastaba {
     }
 
     building_size : 2
+    part_count : 21
+    brick_layers : 6
+    entry_part : 19
     info_title_id [198, 19]
     fire_proof :  true
     damage_proof : true
@@ -101,16 +109,17 @@ building_small_mastaba {
     info_sound : "Wavs/rock3.wav"
     init_tiles [14, 6]
 
+    // Brick phases sum to OG medium block total 121.
     construction {
         phases [
             { id: 0, resources: [ { resource: RESOURCE_NONE, count: 1 } ] }
             { id: 1, resources: [ { resource: RESOURCE_NONE, count: 1 } ] }
-            { id: 2, resources: [ { resource: RESOURCE_NONE, count: 1 }, { resource: RESOURCE_BRICKS, count: 8000 } ] }
-            { id: 3, resources: [ { resource: RESOURCE_NONE, count: 1 }, { resource: RESOURCE_CLAY, count: 4000 }, { resource: RESOURCE_BRICKS, count: 8000 } ] }
-            { id: 4, resources: [ { resource: RESOURCE_NONE, count: 1 }, { resource: RESOURCE_CLAY, count: 3200 }, { resource: RESOURCE_BRICKS, count: 6400 } ] }
-            { id: 5, resources: [ { resource: RESOURCE_NONE, count: 1 }, { resource: RESOURCE_CLAY, count: 2400 }, { resource: RESOURCE_BRICKS, count: 4800 } ] }
-            { id: 6, resources: [ { resource: RESOURCE_NONE, count: 1 }, { resource: RESOURCE_CLAY, count: 1600 }, { resource: RESOURCE_BRICKS, count: 3200 } ] }
-            { id: 7, resources: [ { resource: RESOURCE_NONE, count: 1 }, { resource: RESOURCE_CLAY, count: 800 }, { resource: RESOURCE_BRICKS, count: 1600 } ] }
+            { id: 2, blocks: 20, resources: [ { resource: RESOURCE_NONE, count: 1 }, { resource: RESOURCE_BRICKS, count: 2000 } ], workers: [ { type: FIGURE_BRICKLAYER, count: 1 }, { type: FIGURE_LABORER, count: 1 } ] }
+            { id: 3, blocks: 20, resources: [ { resource: RESOURCE_NONE, count: 1 }, { resource: RESOURCE_CLAY, count: 4000 }, { resource: RESOURCE_BRICKS, count: 2000 } ], workers: [ { type: FIGURE_BRICKLAYER, count: 1 }, { type: FIGURE_LABORER, count: 1 } ] }
+            { id: 4, blocks: 20, resources: [ { resource: RESOURCE_NONE, count: 1 }, { resource: RESOURCE_CLAY, count: 3200 }, { resource: RESOURCE_BRICKS, count: 2000 } ], workers: [ { type: FIGURE_BRICKLAYER, count: 1 }, { type: FIGURE_LABORER, count: 1 } ] }
+            { id: 5, blocks: 20, resources: [ { resource: RESOURCE_NONE, count: 1 }, { resource: RESOURCE_CLAY, count: 2400 }, { resource: RESOURCE_BRICKS, count: 2000 } ], workers: [ { type: FIGURE_BRICKLAYER, count: 1 }, { type: FIGURE_LABORER, count: 1 } ] }
+            { id: 6, blocks: 20, resources: [ { resource: RESOURCE_NONE, count: 1 }, { resource: RESOURCE_CLAY, count: 1600 }, { resource: RESOURCE_BRICKS, count: 2000 } ], workers: [ { type: FIGURE_BRICKLAYER, count: 1 }, { type: FIGURE_LABORER, count: 1 } ] }
+            { id: 7, blocks: 21, resources: [ { resource: RESOURCE_NONE, count: 1 }, { resource: RESOURCE_CLAY, count: 800 },  { resource: RESOURCE_BRICKS, count: 2100 } ], workers: [ { type: FIGURE_BRICKLAYER, count: 1 }, { type: FIGURE_LABORER, count: 1 } ] }
             { id: 8, resources: [ { resource: RESOURCE_NONE, count: 0 } ] }
         ]
     }
@@ -180,6 +189,9 @@ building_small_mastaba {
     }
 
     building_size : 2
+    part_count : 36
+    brick_layers : 12
+    entry_part : 33
     info_title_id [198, 20]
     fire_proof :  true
     damage_proof : true
@@ -187,17 +199,17 @@ building_small_mastaba {
     info_sound : "Wavs/rock3.wav"
     init_tiles [18, 8]
 
-    // Provisional: medium × (144/84)=×12/7, rounded to 400. No Heaven/OG per-phase dump.
+    // Brick phases sum to OG large block total 373.
     construction {
         phases [
             { id: 0, resources: [ { resource: RESOURCE_NONE, count: 1 } ] }
             { id: 1, resources: [ { resource: RESOURCE_NONE, count: 1 } ] }
-            { id: 2, resources: [ { resource: RESOURCE_NONE, count: 1 }, { resource: RESOURCE_BRICKS, count: 13600 } ] }
-            { id: 3, resources: [ { resource: RESOURCE_NONE, count: 1 }, { resource: RESOURCE_CLAY, count: 6800 }, { resource: RESOURCE_BRICKS, count: 13600 } ] }
-            { id: 4, resources: [ { resource: RESOURCE_NONE, count: 1 }, { resource: RESOURCE_CLAY, count: 5600 }, { resource: RESOURCE_BRICKS, count: 10800 } ] }
-            { id: 5, resources: [ { resource: RESOURCE_NONE, count: 1 }, { resource: RESOURCE_CLAY, count: 4000 }, { resource: RESOURCE_BRICKS, count: 8400 } ] }
-            { id: 6, resources: [ { resource: RESOURCE_NONE, count: 1 }, { resource: RESOURCE_CLAY, count: 2800 }, { resource: RESOURCE_BRICKS, count: 5600 } ] }
-            { id: 7, resources: [ { resource: RESOURCE_NONE, count: 1 }, { resource: RESOURCE_CLAY, count: 1400 }, { resource: RESOURCE_BRICKS, count: 2800 } ] }
+            { id: 2, blocks: 62, resources: [ { resource: RESOURCE_NONE, count: 1 }, { resource: RESOURCE_BRICKS, count: 6200 } ], workers: [ { type: FIGURE_BRICKLAYER, count: 1 }, { type: FIGURE_LABORER, count: 1 } ] }
+            { id: 3, blocks: 62, resources: [ { resource: RESOURCE_NONE, count: 1 }, { resource: RESOURCE_CLAY, count: 6800 }, { resource: RESOURCE_BRICKS, count: 6200 } ], workers: [ { type: FIGURE_BRICKLAYER, count: 1 }, { type: FIGURE_LABORER, count: 1 } ] }
+            { id: 4, blocks: 62, resources: [ { resource: RESOURCE_NONE, count: 1 }, { resource: RESOURCE_CLAY, count: 5600 }, { resource: RESOURCE_BRICKS, count: 6200 } ], workers: [ { type: FIGURE_BRICKLAYER, count: 1 }, { type: FIGURE_LABORER, count: 1 } ] }
+            { id: 5, blocks: 62, resources: [ { resource: RESOURCE_NONE, count: 1 }, { resource: RESOURCE_CLAY, count: 4000 }, { resource: RESOURCE_BRICKS, count: 6200 } ], workers: [ { type: FIGURE_BRICKLAYER, count: 1 }, { type: FIGURE_LABORER, count: 1 } ] }
+            { id: 6, blocks: 62, resources: [ { resource: RESOURCE_NONE, count: 1 }, { resource: RESOURCE_CLAY, count: 2800 }, { resource: RESOURCE_BRICKS, count: 6200 } ], workers: [ { type: FIGURE_BRICKLAYER, count: 1 }, { type: FIGURE_LABORER, count: 1 } ] }
+            { id: 7, blocks: 63, resources: [ { resource: RESOURCE_NONE, count: 1 }, { resource: RESOURCE_CLAY, count: 1400 }, { resource: RESOURCE_BRICKS, count: 6300 } ], workers: [ { type: FIGURE_BRICKLAYER, count: 1 }, { type: FIGURE_LABORER, count: 1 } ] }
             { id: 8, resources: [ { resource: RESOURCE_NONE, count: 0 } ] }
         ]
     }
