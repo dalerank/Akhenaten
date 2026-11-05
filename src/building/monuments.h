@@ -1,6 +1,7 @@
 #pragma once
 
 #include "building.h"
+#include "figure/figure_type.h"
 #include "game/resource.h"
 #include "grid/road_access.h"
 #include "grid/grid.h"
@@ -17,18 +18,53 @@ struct monument_phase_resource {
 };
 ANK_CONFIG_STRUCT(monument_phase_resource, resource, count)
 
+struct monument_phase_worker {
+    e_figure_type type = FIGURE_NONE;
+    uint8_t count = 0;
+};
+ANK_CONFIG_STRUCT(monument_phase_worker, type, count)
+
 struct monument_phase {
     uint8_t id = 0;
-    // Default-init zeros unused slots; archive only overwrites the first N from JS.
     std::array<monument_phase_resource, 6> resources{};
+    uint16_t blocks = 0;
+    std::array<monument_phase_worker, 4> workers{};
 };
-ANK_CONFIG_STRUCT(monument_phase, id, resources)
+ANK_CONFIG_STRUCT(monument_phase, id, resources, blocks, workers)
 
 struct monument {
     e_building_type btype = BUILDING_NONE;
     hvector<monument_phase, 16> phases;
 };
 ANK_CONFIG_STRUCT(monument, phases)
+
+// OG mastaba/pyramid block-engine state (saved on the building, v191+).
+enum e_pyramid_style : uint8_t {
+    PYRAMID_STYLE_NONE = 0,
+    PYRAMID_STYLE_MASTABA = 1,
+};
+
+enum e_pyramid_part_stage : uint8_t {
+    PYRAMID_STAGE_MAIN_MATERIAL = 0,
+    PYRAMID_STAGE_CASING = 1,
+};
+
+struct pyramid_part_state {
+    uint8_t size_variant = 0;
+    uint8_t stage = 0;
+    uint8_t blocks = 0;
+    uint8_t layer = 0;
+    uint8_t target_layers = 0;
+    uint8_t subtype = 0;
+    uint16_t worker_figure_id = 0;
+};
+
+struct pyramid_main_state {
+    e_pyramid_style style = PYRAMID_STYLE_NONE;
+    uint8_t size_variant = 0;
+    uint16_t remaining_blocks = 0;
+    uint8_t block_phase_active = 0;
+};
 
 class building_monument : public building_impl {
 public:
@@ -57,6 +93,9 @@ public:
         // Ephemeral (not saved): working figure id set each tick; cleared daily.
         uint16_t carpenter_works;
         uint16_t stonemason_works;
+        // OG block engine (mastaba); zero for remake tile-progress monuments.
+        pyramid_main_state og_main;
+        pyramid_part_state og_part;
     } BUILDING_RUNTIME_DATA_T;
 
     // Tall monument ornaments (tiers/cones) - skip in flat buildings view.
@@ -73,9 +112,15 @@ public:
     virtual int progress();
     virtual void set_phase(int phase);
     virtual void on_phase_changed(int old, int current);
+    virtual void sync_visuals() {}
     virtual int phases() const;
     virtual grid_area get_area() const;
     virtual int needs_bricklayers(int ph_id) const;
+    int phase_blocks(int ph_id) const;
+    int brick_blocks_total() const;
+    int phase_worker_count(int ph_id, e_figure_type type) const;
+    int phase_bricks_per_block(int ph_id) const;
+    int phase_for_blocks_done(int blocks_done) const;
     virtual void add_delivery(int figure_id, int resource_id, int num_loads);
     virtual bool requires_resource(e_resource resource) const;
     virtual span_const<uint16_t> active_workers() const;

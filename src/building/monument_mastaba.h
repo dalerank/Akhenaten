@@ -33,6 +33,7 @@ public:
 
     virtual void on_create(int orientation) override;
     virtual void on_place(int orientation, int variant) override;
+    virtual void on_destroy() override;
     virtual void update_day() override;
     virtual void update_count() const override;
     virtual void update_month() override;
@@ -58,15 +59,28 @@ public:
         vec2i init_tiles;
         // Construction phases live here (parts resolve to main type via get_params).
         monument construction;
+        // OG block-engine geometry for this mastaba size.
+        uint8_t part_count = 0;
+        uint8_t brick_layers = 0;
+        uint8_t entry_part = 0;
 
         void finalize_construction(e_building_type btype);
     };
 
     virtual const monument &config() const override;
 
+    virtual int needs_resource(e_resource resource) const override;
+    virtual int needs_resource(e_resource resource, int phase) const override;
+    virtual bool accepts_yard_delivery(e_resource resource) const override;
     virtual bool need_workers() const override;
+    virtual bool need_bricklayers() override;
+    virtual int needs_bricklayers(int ph_id) const override;
+
+    static bool clay_delivery_enabled();
+    bool clay_stock_ready() const;
 
     static void update_images(building *b, int curr_phase, const vec2i size_b);
+    virtual void sync_visuals() override;
     static void finalize(building *b, const vec2i size_b);
     static int get_image(int orientation, tile2i tile, tile2i start, tile2i end);
     static const base_params &get_params(e_building_type type);
@@ -101,7 +115,8 @@ public:
     } BUILDING_STATIC_DATA_T;
 };
 ANK_CONFIG_STRUCT(building_small_mastaba::static_params,
-    init_tiles, config_north, config_east, config_south, config_west, construction);
+    init_tiles, config_north, config_east, config_south, config_west, construction,
+    part_count, brick_layers, entry_part);
 
 class building_small_mastaba_part_side : public building_small_mastaba {
 public:
@@ -128,7 +143,8 @@ public:
     } BUILDING_STATIC_DATA_T;
 };
 ANK_CONFIG_STRUCT(building_medium_mastaba::static_params,
-    init_tiles, config_north, config_east, config_south, config_west, construction);
+    init_tiles, config_north, config_east, config_south, config_west, construction,
+    part_count, brick_layers, entry_part);
 
 class building_medium_mastaba_part_side : public building_medium_mastaba {
 public:
@@ -155,7 +171,8 @@ public:
     } BUILDING_STATIC_DATA_T;
 };
 ANK_CONFIG_STRUCT(building_large_mastaba::static_params,
-    init_tiles, config_north, config_east, config_south, config_west, construction);
+    init_tiles, config_north, config_east, config_south, config_west, construction,
+    part_count, brick_layers, entry_part);
 
 class building_large_mastaba_part_side : public building_large_mastaba {
 public:

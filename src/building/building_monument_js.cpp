@@ -1,4 +1,5 @@
 #include "building/building.h"
+#include "building/monument_pyramid_engine.h"
 #include "building/monuments.h"
 #include "figure/figure_type.h"
 #include "game/resource.h"
@@ -122,6 +123,12 @@ static void monument_proto_set_tile_progress(js_State* J) {
     js_helpers::js_push_void(J);
 }
 
+static void monument_proto_boost_engine_blocks(js_State* J) {
+    building_monument* m = monument_this(J);
+    const int max_count = J->gettop() > 1 ? J->to<int>(1) : 0;
+    J->push(m ? pyramid_engine_boost_blocks(&m->base, max_count) : 0);
+}
+
 static void monument_proto_toString(js_State* J) {
     char buf[64];
     snprintf(buf, sizeof buf, "Monument(%d)", monument_this_id(J));
@@ -160,6 +167,7 @@ void js_register_monument(js_State* J) {
     jsB_propf(J, js_intern("Monument.prototype.workers_onsite"), monument_proto_workers_onsite, 1);
     jsB_propf(J, js_intern("Monument.prototype.tile_progress"), monument_proto_tile_progress, 1);
     jsB_propf(J, js_intern("Monument.prototype.set_tile_progress"), monument_proto_set_tile_progress, 2);
+    jsB_propf(J, js_intern("Monument.prototype.boost_engine_blocks"), monument_proto_boost_engine_blocks, 1);
     jsB_propf(J, js_intern("Monument.prototype.toString"), monument_proto_toString, 0);
 
     J->newcconstructor(jsB_new_Monument, jsB_new_Monument, js_intern("Monument"), 1);

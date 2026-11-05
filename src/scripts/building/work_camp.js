@@ -84,6 +84,31 @@ building_work_camp.nearest_eligible_monument = function(building) {
     return result
 }
 
+building_work_camp.nearest_waiting_bricklayer_monument = function(building) {
+    var camp_tile = building.tile
+    var mindist_sq = 9999
+    var result = { monument_id: 0, mason_fid: 0 }
+    var monuments = city.find_monuments(camp_tile, building_work_camp.search_radius)
+
+    for (var i = 0; i < monuments.length; i++) {
+        var monument = city.get_monument(monuments[i])
+        if (!monument || monument.phase() < 2) {
+            continue
+        }
+        var mason = __pyramid_find_mason_waiting(monument.id)
+        if (!mason) {
+            continue
+        }
+        var dist_sq = building_work_camp_tile_dist_sq(camp_tile, monument.tile)
+        if (dist_sq < mindist_sq) {
+            mindist_sq = dist_sq
+            result = { monument_id: monument.id, mason_fid: mason }
+        }
+    }
+
+    return result
+}
+
 [es=(building_work_camp, spawn_figure)]
 function building_work_camp_spawn_figure(ev) {
     var building = city.get_building(ev.bid)
@@ -102,6 +127,14 @@ function building_work_camp_spawn_figure(ev) {
         dest_id = building_work_camp.nearest_eligible_monument(building)
     }
 
+    var brick_task = null
+    if (!dest_id) {
+        brick_task = building_work_camp.nearest_waiting_bricklayer_monument(building)
+        if (brick_task && brick_task.monument_id) {
+            dest_id = brick_task.monument_id
+        }
+    }
+
     if (!dest_id) {
         return
     }
@@ -113,6 +146,10 @@ function building_work_camp_spawn_figure(ev) {
 
     building.spawned_worker_this_month = 1
     city.get_building(dest_id).add_workers(figure_id)
+
+    if (brick_task && brick_task.mason_fid) {
+        __worker_assign_brick_delivery(figure_id, dest_id, brick_task.mason_fid)
+    }
 }
 
 [es=(building_work_camp, update_month)]

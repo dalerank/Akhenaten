@@ -1,74 +1,56 @@
 #include "building_bricklayers_guild.h"
 
-#include "building/building.h"
-#include "building/monuments.h"
 #include "building/building_statue.h"
-#include "city/object_info.h"
+#include "building/monument_pyramid_engine.h"
+#include "building/monuments.h"
 #include "city/city.h"
-#include "city/city_labor.h"
-#include "figure/figure.h"
-#include "game/resource.h"
 #include "core/random.h"
-#include "game/game_config.h"
-#include "window/building/figures.h"
-#include "figuretype/figure_bricklayer.h"
-#include "sound/sound_building.h"
-#include "widget/city/ornaments.h"
-#include "game/game.h"
 #include "dev/debug.h"
+#include "figuretype/figure_bricklayer.h"
+#include "game/game.h"
+#include "game/resource.h"
 #include "js/js_game.h"
 
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_bricklayers_guild);
 
 declare_console_command(add_bricks, game_cheat_add_resource<RESOURCE_BRICKS>);
 
-bool building_bricklayers_guild::can_spawn_bricklayer_man() {
-    bool has_free_man = (get_figures_number(FIGURE_BRICKLAYER) < current_params().max_walkers);
-    if (!has_free_man) {
-        return false;
-    }
-
-    // Check if there are any unfinished monuments that need bricklayers
-    building* monument = buildings_valid_first([&] (building &b) {
-        if (!b.is_main()) {
-            return false;
-        }
-
-        if (!b.is_monument()) {
-            return false;
-        }
-
-        auto monument = b.dcast_monument();
-        if (!monument->is_unfinished()) {
-            return false;
-        }
-
-        return monument->need_bricklayers();
-    });
-
-    if (monument) {
-        return true;
-    }
-
-    if (!building_statue::guild_service_enabled()) {
-        return false;
-    }
-
-    // If no monument is found, check for statues that need service
-    bool has_statue = false;
-    buildings_valid_do([&] (building &b) {
-        const auto statue = b.dcast_statue();
+building *building_bricklayers_guild::find_statue_task() {
+    int min_service_value = 9999;
+    building *best = nullptr;
+    buildings_valid_do([&](building &b) {
+        auto *statue = b.dcast_statue();
         if (!statue) {
             return;
         }
-
-        const bool has_worker = statue->get_figure_id(BUILDING_SLOT_SERVICE) != 0;
-        if (!has_worker) {
-            has_statue = true;
+        if (statue->get_figure_id(BUILDING_SLOT_SERVICE) != 0) {
+            return;
+        }
+        const int value = statue->service();
+        if (value < min_service_value) {
+            min_service_value = value;
+            best = &b;
         }
     });
+    return best;
+}
 
-    return has_statue;
+int building_bricklayers_guild::max_active_bricklayers() const {
+    const int pct = worker_percentage();
+    if (pct >= 100) {
+        return 4;
+    }
+    if (pct >= 75) {
+        return 3;
+    }
+    if (pct >= 50) {
+        return 2;
+    }
+    return 0;
+}
+
+bool building_bricklayers_guild::can_spawn_bricklayer() const {
+    return get_figures_number(FIGURE_BRICKLAYER) < max_active_bricklayers();
 }
 
 void building_bricklayers_guild::spawn_figure() {
@@ -78,90 +60,58 @@ void building_bricklayers_guild::spawn_figure() {
     }
 
     common_spawn_labor_seeker(current_params().min_houses_coverage);
-    int pct_workers = base.worker_percentage();
-    if (pct_workers < 50) {
+
+    if (!can_spawn_bricklayer()) {
         return;
     }
 
-    int spawn_delay = figure_spawn_timer();
-    if (spawn_delay == -1) {
-        return;
-    }
-
-    base.figure_spawn_delay++;
-    if (base.figure_spawn_delay < spawn_delay) {
-        return;
-    }
-
-    base.figure_spawn_delay = 0;
-    if (!can_spawn_bricklayer_man()) {
-        return;
-    }
-
-    building* monument = buildings_valid_first([&] (building &b) {
-        if (!b.is_main()) {
-            return false;
-        }
-
-        if (!b.is_monument()) {
-            return false;
-        }
-
-        auto monument = b.dcast_monument();
-        if (!monument->is_unfinished()) {
-           return false;
-        }
-
-        return monument->need_bricklayers();
-    });
-
-    if (monument) {
-        auto f = create_figure_with_destination(FIGURE_BRICKLAYER, monument, (e_figure_action)ACTION_0_BRICKLAYER_CREATED, BUILDING_SLOT_SERVICE);
-        auto *mm = monument->dcast_monument();
-        f->destination_tile = mm ? mm->access_point() : monument->access_tile();
-        f->terrain_usage = TERRAIN_USAGE_PREFER_ROADS;
-        monument->dcast()->add_workers(f->id);
-        f->wait_ticks = random_short() % 30; // ok
-        if (auto bricklayer = smart_cast<figure_bricklayer>(f)) {
-            bricklayer->runtime_data().destination_bid = monument->id;
-        }
-        return;
-    }
-
-    if (!building_statue::guild_service_enabled()) {
-        return;
-    }
-
-    // If no monument is found, create a bricklayer figure with a statue destination
-    int min_service_value = 9999;
-    building_impl *min_service_statue = nullptr;
-    buildings_valid_do([&] (building &b) {
-        const auto statue = b.dcast_statue();
-        if (!statue) {
+    // OG bricklayers guild: roam spawn when staffed; figure finds task while roaming.
+    // Remake: only spawn when mastaba block work or (feature) statue service exists.
+    bool has_mastaba_work = false;
+    buildings_valid_do([&](building &b) {
+        if (has_mastaba_work || !b.is_main() || !pyramid_engine_is_mastaba(&b)) {
             return;
         }
-
-        const bool has_worker = statue->get_figure_id(BUILDING_SLOT_SERVICE) != 0;
-        if (has_worker) {
+        auto *mon = b.dcast_monument();
+        if (!mon || !mon->is_unfinished() || mon->phase() < 2) {
             return;
         }
-
-        const int value = statue->service();
-        if (value < min_service_value) {
-            min_service_value = value;
-            min_service_statue = statue;
+        if (!pyramid_main_state_get(b.id)) {
+            pyramid_engine_init_mastaba(&b);
+            if (mon->phase() >= 2) {
+                pyramid_engine_start_block_phase(&b);
+            }
+        }
+        auto *ms = pyramid_main_state_get(b.id);
+        if (ms && ms->block_phase_active && ms->remaining_blocks > 0 && mon->has_free_worker_slot()) {
+            has_mastaba_work = true;
         }
     });
 
-    if (min_service_statue) {
-        auto f = create_figure_with_destination(FIGURE_BRICKLAYER, &min_service_statue->base, (e_figure_action)ACTION_10_BRICKLAYER_CREATED_ROAMING, BUILDING_SLOT_SERVICE);
-        min_service_statue->add_workers(f->id);
-        f->wait_ticks = random_short() % 30;
-        auto bricklayer = smart_cast<figure_bricklayer>(f);
-        if (bricklayer) {
-            bricklayer->runtime_data().destination_bid = min_service_statue->id();
-        }
+    building *statue = nullptr;
+    if (!has_mastaba_work && building_statue::guild_service_enabled()) {
+        statue = find_statue_task();
+    }
+    if (!has_mastaba_work && !statue) {
         return;
     }
+
+    figure *f = create_roaming_figure(FIGURE_BRICKLAYER, (e_figure_action)ACTION_0_BRICKLAYER_ROAM, BUILDING_SLOT_SERVICE);
+    if (!f || !f->id) {
+        return;
+    }
+
+    f->roam_length = 0;
+    f->wait_ticks = 0;
+    auto *bricklayer = smart_cast<figure_bricklayer>(f);
+    if (!bricklayer) {
+        return;
+    }
+
+    if (has_mastaba_work) {
+        bricklayer->try_find_task();
+        return;
+    }
+
+    bricklayer->assign_statue_task(statue);
 }
-

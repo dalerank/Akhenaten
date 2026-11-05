@@ -349,9 +349,10 @@ bool test_matches_filter(pcstr path, const std::string &filter) {
     return hay.find(needle) != std::string::npos;
 }
 
-void apply_integral_test_launch_args(Arguments &args, pcstr only_filter) {
+void apply_integral_test_launch_args(Arguments &args, pcstr only_filter, bool keep_open) {
     args.set_integral_tests(true);
     args.set_integraltest_only(only_filter ? only_filter : "");
+    args.set_integraltest_keep(keep_open);
     args.set_no_resource(true);
     args.set_no_logo(true);
     args.set_use_sound(false);
@@ -361,7 +362,7 @@ void apply_integral_test_launch_args(Arguments &args, pcstr only_filter) {
 
 // Returns true when the caller should close the options window and start the game/tests.
 bool draw_integral_tests_section(Arguments &args, std::string &filter, int &selected_idx,
-  const hvector<xstring, 16> &tests) {
+  const hvector<xstring, 16> &tests, bool &keep_open) {
     ImGui::Text("Integral tests (%d):", (int)tests.size());
     ImGui::SameLine();
     ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x - 80.0f);
@@ -370,6 +371,7 @@ bool draw_integral_tests_section(Arguments &args, std::string &filter, int &sele
     if (ImGui::Button("Clear##tests")) {
         filter.clear();
     }
+    ImGui::Checkbox("Keep open after tests", &keep_open);
 
     ImGui::BeginChild("TestsList", ImVec2(0, -36.0f), ImGuiChildFlags_Borders);
     if (tests.empty()) {
@@ -400,7 +402,7 @@ bool draw_integral_tests_section(Arguments &args, std::string &filter, int &sele
         ImGui::BeginDisabled();
     }
     if (ImGui::Button("Run selected test")) {
-        apply_integral_test_launch_args(args, test_file_stem(tests[selected_idx].c_str()).c_str());
+        apply_integral_test_launch_args(args, test_file_stem(tests[selected_idx].c_str()).c_str(), keep_open);
         return true;
     }
     if (!have_selection) {
@@ -408,7 +410,7 @@ bool draw_integral_tests_section(Arguments &args, std::string &filter, int &sele
     }
     ImGui::SameLine();
     if (ImGui::Button("Run all tests")) {
-        apply_integral_test_launch_args(args, "");
+        apply_integral_test_launch_args(args, "", keep_open);
         return true;
     }
     return false;
@@ -520,6 +522,7 @@ void show_options_window(Arguments& args) {
     std::string features_filter;
     std::string tests_filter;
     int selected_test_idx = -1;
+    bool tests_keep_open = false;
     const hvector<xstring, 16> integral_tests = list_integral_test_files();
 
     try_load_game_features(args.get_data_directory().c_str());
@@ -846,7 +849,7 @@ void show_options_window(Arguments& args) {
                 ImGui::EndChild();
                 ImGui::SameLine();
                 ImGui::BeginChild("TestsSection", ImVec2(0, 0), ImGuiChildFlags_Borders);
-                if (draw_integral_tests_section(args, tests_filter, selected_test_idx, integral_tests)) {
+                if (draw_integral_tests_section(args, tests_filter, selected_test_idx, integral_tests, tests_keep_open)) {
                     args.set_data_directory(data_directory.c_str());
                     sync_display_options_from_args(args);
                     // Do not persist integral-test launch flags into akhenaten.cfg.
