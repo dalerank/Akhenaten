@@ -144,7 +144,7 @@
       <h2 id="depletion">Depletion</h2>
       <p>Each day that a mine advances its internal production progress, the underlying ore tile is partially depleted. The depletion amount per day is proportional to the production tick size, which in turn depends on current worker count. A fully staffed mine depletes ore faster than an understaffed one — but produces proportionally more. On most maps a single deposit sustains one mine for many in-game decades; resource-sparse maps or two mines sharing one small deposit will exhaust it much sooner.</p>
       <p>When a tile's ore value reaches zero the mine becomes idle on that tile. If <em>all four</em> footprint tiles are exhausted the mine stops producing entirely. Demolishing the idle mine and relocating it to a fresh deposit — if one exists on the map — is the only remedy. Deposits are <strong>never replenished</strong>.</p>
-      <p>The optional feature <code>gameplay_change_goldmine_twice_production</code> halves the production divider for Gold Mines, effectively doubling both output and depletion rate for gold ore deposits.</p>
+      <p>The optional feature <code>gameplay_change_goldmine_reduced_production</code> slows Gold Mines to <code>workers / 10</code> progress per day, which also slows ore depletion proportionally.</p>
 
       <!-- ─── Developer reference ───────────────────────────── -->
       <div class="dev-section">

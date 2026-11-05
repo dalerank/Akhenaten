@@ -197,7 +197,7 @@ localization_it = [
   {key:"#TR_CONFIG_CH_WORK_CAMP_ONE_WORKER_PER_MONTH", text:"Il campo di lavoro genera un lavoratore al mese"}
   {key:"#TR_CONFIG_CH_CLAY_PIT_FIRE_RISK_REDUCED", text:"Rischio d'incendio ridotto per la cava d'argilla"}
   {key:"#TR_CONFIG_CITY_HAS_ANIMALS", text:"La città ha animali"}
-  {key:"#TR_CONFIG_GOLDMINE_TWICE_PRODUCTION", text:"Miniera d'oro a produzione doppia"}
+  {key:"#TR_CONFIG_GOLDMINE_REDUCED_PRODUCTION", text:"Miniera d'oro a produzione 1/10 dei lavoratori"}
   {key:"#TR_CONFIG_NEW_TAX_COLLECTION_SYSTEM", text:"Nuovo sistema di riscossione delle tasse"}
   {key:"#TR_CONFIG_SMALL_HUT_NOT_CREATE_EMIGRANT", text:"Le capanne piccole non generano emigranti"}
   {key:"#TR_CONFIG_DELIVERY_BOY_GOES_TO_MARKET_ALONE", text:"Il fattorino va al bazar da solo"}

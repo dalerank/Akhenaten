@@ -176,12 +176,9 @@
       <h2 id="mechanics">Mechanics</h2>
 
       <h3>Production</h3>
-      <p>The Gold Mine accumulates <em>progress</em> each day based on its current workforce. At full staffing of 12 workers the daily progress increment is:</p>
-      <blockquote style="font-family:monospace;font-size:0.88rem;background:var(--surface);border:1px solid var(--border);border-radius:3px;padding:0.6rem 1rem;margin:0.75rem 0">
-        progress_per_day = workers / production_divider = 12 / 10 = 1.2 per day
-      </blockquote>
-      <p>When accumulated progress reaches <strong>200</strong> (<code>progress_max</code>), one batch of gold is produced and progress resets to zero. At full staffing this yields one batch roughly every <strong>167 game days</strong>. The minimum daily increment is 1, so a mine with a single worker still produces — just very slowly.</p>
-      <p>An optional enhanced-edition feature (<code>gameplay_change_goldmine_twice_production</code>) halves the production divider to 5, effectively doubling throughput to one batch every ~83 days at full staffing.</p>
+      <p>The Gold Mine accumulates <em>progress</em> each day equal to its current workforce (OG Pharaoh). At full staffing of 12 workers the daily progress increment is <strong>12</strong>.</p>
+      <p>When accumulated progress reaches <strong>200</strong> (<code>progress_max</code>), one batch of gold is produced and progress resets to zero. At full staffing this yields one batch roughly every <strong>17 game days</strong>.</p>
+      <p>An optional remake feature (<code>gameplay_change_goldmine_reduced_production</code>) divides the worker rate by 10 (minimum 1), slowing a fully staffed mine to about one batch every <strong>200 game days</strong>.</p>
 
       <h3>Gold delivery</h3>
       <p>When a batch is ready, a <strong>Cartpusher</strong> figure spawns and carries the gold to the Palace. Unlike all other resources, gold <em>cannot</em> be stored in Storage Yards — the cartpusher's only valid destination is the Palace. If no Palace is reachable via roads, the cartpusher will wander and eventually return, leaving the gold undelivered. Ensure continuous road access between every Gold Mine and the Palace.</p>
@@ -268,7 +265,6 @@
   damage_risk     [<span class="num">2</span>]
   progress_max    : <span class="num">200</span>
   production_rate : <span class="num">100</span>
-  production_divider : <span class="num">10</span>
 }</pre>
           </div>
         </details>
@@ -293,24 +289,10 @@
         <details>
           <summary>C++ — <span class="file-ref">building_mine_gold.h</span> / <span class="file-ref">building_mine_gold.cpp</span></summary>
           <div class="details-body">
-            <p>The class inherits from <code>building_mine</code> &#8594; <code>building_industry</code> &#8594; <code>building_impl</code>. The only custom static param is <code>production_divider</code>:</p>
-<pre><span class="kw">class</span> <span class="fn">building_mine_gold</span> : <span class="kw">public</span> building_mine {
-<span class="kw">public</span>:
-    BUILDING_METAINFO(<span class="str">BUILDING_GOLD_MINE</span>, building_mine_gold, building_mine)
-
-    <span class="kw">struct</span> <span class="fn">static_params</span> : <span class="kw">public</span> building_static_params {
-        uint16_t production_divider;   <span class="cmt">// default: 10</span>
-    } BUILDING_STATIC_DATA_T;
-
-    <span class="kw">virtual int</span>  <span class="fn">produce_uptick_per_day</span>() <span class="kw">const override</span>;
-    <span class="kw">virtual void</span> <span class="fn">update_production</span>()            <span class="kw">override</span>;
-    <span class="kw">virtual void</span> <span class="fn">production_finished</span>()          <span class="kw">override</span>;
-};</pre>
-            <p>Key method details:</p>
+            <p>Production rate and ore depletion live in JS (<span class="file-ref">src/scripts/building/mine_gold.js</span>) on top of <code>building_industry</code>:</p>
             <ul>
-              <li><code>produce_uptick_per_day()</code> — returns <code>max(1, workers / divider)</code>. With the <code>gameplay_change_goldmine_twice_production</code> feature the divider is halved first.</li>
-              <li><code>update_production()</code> — scans the 2×2 footprint tiles with <code>map_get_golden()</code>, finds the tile with the most remaining ore, calls <code>building_industry::update_production()</code> to advance progress, then depletes that tile by the progress delta via <code>map_golden_deplete()</code>.</li>
-              <li><code>production_finished()</code> — when <code>progress &gt;= progress_max</code> (200), calls <code>store_resource(RESOURCE_GOLD, ready_production())</code> and resets progress. The stored gold is later picked up by a Cartpusher spawned by the base class.</li>
+              <li><code>produce_uptick_per_day</code> — <code>num_workers</code> (OG). With <code>gameplay_change_goldmine_reduced_production</code>: <code>max(1, floor(workers / 10))</code>.</li>
+              <li><code>update_production</code> — depletes the best footprint ore tile via <code>map_get_golden</code> / <code>map_golden_deplete</code> by the progress delta.</li>
             </ul>
             <p>Enum value: <code>BUILDING_GOLD_MINE = 161</code> (<span class="file-ref">src/building/building_type.h</span> line 140).</p>
           </div>

@@ -206,7 +206,7 @@ localization_hu = [
   {key:"#TR_CONFIG_CH_WORK_CAMP_ONE_WORKER_PER_MONTH", text:"A munkatábor havonta egy munkást küld"}
   {key:"#TR_CONFIG_CH_CLAY_PIT_FIRE_RISK_REDUCED", text:"Az agyagbánya tűzveszélye csökkentve"}
   {key:"#TR_CONFIG_CITY_HAS_ANIMALS", text:"Állatok megjelennek a városban"}
-  {key:"#TR_CONFIG_GOLDMINE_TWICE_PRODUCTION", text:"Az aranybánya kétszeres termelése"}
+  {key:"#TR_CONFIG_GOLDMINE_REDUCED_PRODUCTION", text:"Az aranybánya a munkások 1/10-es ütemében termel"}
   {key:"#TR_CONFIG_NEW_TAX_COLLECTION_SYSTEM", text:"Új adóbeszedési rendszer"}
   {key:"#TR_CONFIG_SMALL_HUT_NOT_CREATE_EMIGRANT", text:"A kis kunyhókból nem indul kivándorlás"}
   {key:"#TR_CONFIG_DELIVERY_BOY_GOES_TO_MARKET_ALONE", text:"A kifutó egyedül megy a piacra"}

@@ -50,6 +50,7 @@
 #include "grid/building.h"
 #include "grid/building_tiles.h"
 #include "grid/gems.h"
+#include "grid/golden.h"
 #include "grid/malaria_risk.h"
 #include "city/city_malaria_risk.h"
 #include "grid/granite.h"
@@ -3742,6 +3743,11 @@ static void __test_map_gems_init() {
     map_gems_init();
 }
 ANK_FUNCTION(__test_map_gems_init);
+
+static void __test_map_golden_init() {
+    map_golden_init();
+}
+ANK_FUNCTION(__test_map_golden_init);
 
 static void __test_map_quarry_deposits_init() {
     map_sandstone_init();
