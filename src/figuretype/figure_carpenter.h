@@ -21,6 +21,18 @@ public:
     figure_carpenter(figure *f) : figure_impl(f) {}
     virtual figure_carpenter *dcast_carpenter() override { return this; }
 
+    struct static_params : public figure_static_params {
+        uint16_t ghost_ticks = 10;
+        uint16_t task_search_base = 30;
+        uint16_t task_search_rand = 30;
+        uint8_t guild_road_radius = 2;
+        uint16_t mausoleum_head_start = 10;
+        uint16_t mausoleum_work_ticks = 50;
+        uint16_t pyramid_work_ticks = 30;
+        uint16_t climb_ticks = 30;
+        uint16_t statue_work_ticks = 100;
+    } FIGURE_STATIC_DATA_T;
+
     struct runtime_data_t {
         short idle_wait_count;
         building_id destination_bid;
@@ -36,3 +48,6 @@ public:
     void assign_statue_task(building *statue);
     bool try_find_task();
 };
+ANK_CONFIG_STRUCT(figure_carpenter::static_params,
+    ghost_ticks, task_search_base, task_search_rand, guild_road_radius,
+    mausoleum_head_start, mausoleum_work_ticks, pyramid_work_ticks, climb_ticks, statue_work_ticks)

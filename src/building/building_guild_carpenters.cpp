@@ -10,16 +10,12 @@
 #include "game/game.h"
 #include "js/js_game.h"
 
-#include <algorithm>
 #include <initializer_list>
 
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_carpenters_guild);
 declare_console_command(add_timber, game_cheat_add_resource<RESOURCE_TIMBER>);
 
 namespace {
-constexpr int k_carpenter_progress_ready = 400;
-constexpr int k_carpenter_timber_load = 100;
-
 bool monument_needs_carpenter(building &b) {
     if (!b.is_main() || !b.is_monument()) {
         return false;
@@ -144,12 +140,16 @@ void building_carpenters_guild::update_day() {
         return;
     }
 
-    const int cap = std::max<int>(base.progress_max, k_carpenter_progress_ready) * 2;
+    const auto &params = current_params();
+    const int cap = params.progress_cap;
     int next = (int)base.progress + base.num_workers;
     if (next > cap) {
         next = cap;
     }
     base.progress = (uint16_t)next;
+    if (base.progress_max < cap) {
+        base.progress_max = (uint16_t)cap;
+    }
 }
 
 void building_carpenters_guild::spawn_figure() {
@@ -158,13 +158,14 @@ void building_carpenters_guild::spawn_figure() {
         return;
     }
 
-    common_spawn_labor_seeker(current_params().min_houses_coverage);
+    const auto &params = current_params();
+    common_spawn_labor_seeker(params.min_houses_coverage);
 
     if (!can_spawn_carpenter()) {
         return;
     }
 
-    if (base.progress < k_carpenter_progress_ready) {
+    if (base.progress < params.progress_ready) {
         return;
     }
 
@@ -174,7 +175,6 @@ void building_carpenters_guild::spawn_figure() {
         statue = find_statue_task();
     }
     if (!monument && !statue) {
-        // OG creates a ghost corpse here; remake skips the useless spawn.
         return;
     }
 
@@ -192,11 +192,12 @@ void building_carpenters_guild::spawn_figure() {
 
     if (monument) {
         base.progress = 0;
+        // OG guild_send_worker: always subtract LOAD, clamp stock at 0.
+        const int load = params.timber_load;
         int stock = stored_amount(RESOURCE_TIMBER);
-        if (stock >= k_carpenter_timber_load) {
-            consume_resource(RESOURCE_TIMBER, k_carpenter_timber_load);
-        } else if (stock > 0) {
-            consume_resource(RESOURCE_TIMBER, (int16_t)stock);
+        int take = stock >= load ? load : stock;
+        if (take > 0) {
+            consume_resource(RESOURCE_TIMBER, (int16_t)take);
         }
         carpenter->assign_monument_task(monument);
         return;

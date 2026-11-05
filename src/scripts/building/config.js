@@ -90,9 +90,12 @@ building_carpenters_guild = {
   cost : [ 10, 15, 30, 50, 100 ]
   desirability : { value:[-6], step:[1], step_size:[1], range: [4] }
   laborers:[8], fire_risk:[4], damage_risk: [2]
-  // Cap is dynamic from staffing (1–4); keep a soft upper bound for UI/config.
   max_walkers : 4
-  min_houses_coverage : 100
+  min_houses_coverage : 50
+
+  progress_ready : 400
+  progress_cap : 400
+  timber_load : 100
   info_advisors [ADVISOR_LABOR]
   flags {
     is_guild: true

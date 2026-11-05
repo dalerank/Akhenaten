@@ -32,7 +32,17 @@ figure_carpenter {
 
 	category: figure_category_citizen
 	max_damage: 10
-	terrain_usage : TERRAIN_USAGE_ROADS,
+	terrain_usage : TERRAIN_USAGE_ROADS
+	max_roam_length: 512
+	ghost_ticks: 10
+	task_search_base: 30
+	task_search_rand: 30
+	guild_road_radius: 2
+	mausoleum_head_start: 10
+	mausoleum_work_ticks: 50
+	pyramid_work_ticks: 30
+	climb_ticks: 30
+	statue_work_ticks: 100
 }
 
 function figure_carpenter_gods_are_angry() {

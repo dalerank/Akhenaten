@@ -1,8 +1,9 @@
-// Carpenter guild OG: progress>=400 + timber load dispatch, staffing 1-4,
+// Carpenter guild OG: progress>=400 (cap 400) + timber load dispatch, staffing 1-4,
 // site-poof after work. Statue service stays behind gameplay feature flag.
 // Markers:
 //   [test-marker] carpenter_staffing_ok
 //   [test-marker] carpenter_progress_gate_ok
+//   [test-marker] carpenter_progress_cap_ok
 //   [test-marker] carpenter_dispatch_ok
 //   [test-marker] carpenter_statue_flag_off_ok
 
@@ -68,6 +69,20 @@ function run_test() {
     }
     __log_marker('carpenter_progress_gate_ok')
 
+    // OG industry max for carpenter guild is 400 (2 * PROGRESS_DONE), not 800.
+    guild.progress = 0
+    for (var d = 0; d < 80; d++) {
+        __test_building_update_day(gid)
+    }
+    if (guild.progress > 400) {
+        return test258_fail('progress cap want <=400, got ' + guild.progress)
+    }
+    if (guild.progress != 400) {
+        // 8 workers/day → hits 400 in 50 days; 80 days must sit at cap.
+        return test258_fail('progress should sit at 400 after long staffed run, got ' + guild.progress)
+    }
+    __log_marker('carpenter_progress_cap_ok')
+
     guild.progress = 400
     var timber0 = guild.stored_resource(RESOURCE_TIMBER)
     before = __test_count_figures(FIGURE_CARPENTER)
@@ -132,6 +147,7 @@ function check_valid() {
     return __test258_ok
         && __test_find_inlog('[test-marker] carpenter_staffing_ok')
         && __test_find_inlog('[test-marker] carpenter_progress_gate_ok')
+        && __test_find_inlog('[test-marker] carpenter_progress_cap_ok')
         && __test_find_inlog('[test-marker] carpenter_dispatch_ok')
         && __test_find_inlog('[test-marker] carpenter_statue_flag_off_ok')
 }
