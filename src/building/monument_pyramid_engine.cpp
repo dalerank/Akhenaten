@@ -1,34 +1,185 @@
 #include "monument_pyramid_engine.h"
 
-#include "building/monument_mastaba.h"
+#include "building/monument_mastaba_engine.h"
+#include "building/monument_pyramid.h"
 #include "building/monuments.h"
 #include "city/city_buildings.h"
 #include "city/city_figures.h"
 #include "figure/figure.h"
 #include "figuretype/figure_bricklayer.h"
-#include "figuretype/figure_worker.h"
 #include "js/js_game.h"
 
 #include <algorithm>
 
-monument_engine_config_t ANK_VARIABLE(monument_engine_config)
+pyramid_engine_config_t ANK_VARIABLE(pyramid_engine_config)
 monument_pyramid_engine g_monument_pyramid_engine;
 
-int monument_pyramid_engine::part_height(const pyramid_part_state &p) const {
-    return p.blocks + p.layer * monument_engine_config.blocks_per_layer;
-}
-
-int monument_pyramid_engine::layer_capacity(const pyramid_part_state & /*p*/, bool is_main) const {
-    if (is_main) {
-        return 1;
+building *monument_pyramid_engine::chain_head(building *any_part) const {
+    if (!any_part) {
+        return nullptr;
     }
-    return monument_engine_config.blocks_per_layer;
+    return any_part->main();
 }
 
-void monument_pyramid_engine::add_block(pyramid_part_state &p, bool is_main) const {
+void monument_pyramid_engine::collect_parts(building *any_part, svector<building *, PYRAMID_PARTS_CAPACITY> &out) const {
+    out.clear();
+    building *head = chain_head(any_part);
+    building *p = head;
+    while (p) {
+        if ((int)out.size() >= PYRAMID_PARTS_CAPACITY) {
+            break;
+        }
+        out.push_back(p);
+        p = p->has_next() ? p->next() : nullptr;
+    }
+}
+
+int monument_pyramid_engine::size_variant(building *main) const {
+    building *head = chain_head(main);
+    if (!head) {
+        return 0;
+    }
+    if (auto *pyr = head->dcast_pyramid()) {
+        // Complex reuses LARGE corner/wall types (16×16); use monument footprint.
+        const vec2i tiles = pyr->footprint_params().init_tiles;
+        const int parts_edge = std::max(tiles.x, tiles.y) / 2;
+        // 4→0, 6→1, 8→2, 10→3, 12→4
+        const int idx = parts_edge / 2 - 2;
+        return std::clamp(idx, 0, PYRAMID_SIZE_COUNT - 1);
+    }
+    return 0;
+}
+
+int monument_pyramid_engine::block_total(int size_variant) const {
+    size_variant = std::clamp(size_variant, 0, PYRAMID_SIZE_COUNT - 1);
+    return k_pyramid_block_totals[size_variant];
+}
+
+bool monument_pyramid_engine::is_mudbrick_type(e_building_type t) const {
+    return building_pyramid::params_for_type(t).pyramide_type == PYRAMID_STYLE_MUDBRICK;
+}
+
+bool monument_pyramid_engine::is_mudbrick(building *b) const {
+    if (!b) {
+        return false;
+    }
+    building *head = chain_head(b);
+    return head && is_mudbrick_type(head->type);
+}
+
+bool monument_pyramid_engine::block_phase_active(building *main) const {
+    auto *st = pyramid_main_state_get(main ? main->main()->id : 0);
+    return st && st->style == PYRAMID_STYLE_MUDBRICK && st->block_phase_active && st->remaining_blocks > 0;
+}
+
+// Size-0 (4×4 parts): OG layout gives layers=1 to the NW 2×2, layers=0 to the outer ring.
+static uint8_t mudbrick_target_layers_for_part(building *head, building *part, int size_variant) {
+    if (!head || !part) {
+        return 0;
+    }
+    // Linked-list head can be a corner/wall — measure from geometric footprint NW.
+    tile2i nw = head->tile;
+    if (auto *pyr = head->dcast_pyramid()) {
+        nw = pyr->footprint_nw();
+    }
+    const int dx = (part->tile.x() - nw.x()) / 2;
+    const int dy = (part->tile.y() - nw.y()) / 2;
+    const int ring = std::max(dx, dy);
+    // Size 0 OG layout: NW 2×2 parts layers=1, outer ring layers=0.
+    if (size_variant == 0) {
+        return (ring <= 1) ? 1 : 0;
+    }
+    // side in 2×2 parts: 6/8/10/12 for size 1..4 (not 2+2*sv — that under-counted).
+    const int side_parts = 4 + size_variant * 2;
+    const int max_ring = side_parts - 1;
+    const int from_outside = max_ring - ring;
+    return (uint8_t)std::max(0, from_outside - (side_parts / 2 - 1));
+}
+
+void pyramid_engine_init_mudbrick(building *main) {
+    if (!main) {
+        return;
+    }
+    building *head = g_monument_pyramid_engine.chain_head(main);
+    auto &engine = g_monument_pyramid_engine;
+    if (!head || !engine.is_mudbrick(head)) {
+        return;
+    }
+
+    const int size_variant = engine.size_variant(head);
+    svector<building *, PYRAMID_PARTS_CAPACITY> parts;
+    engine.collect_parts(head, parts);
+    const int expect = k_pyramid_part_counts[size_variant];
+    const int n_parts = std::min((int)parts.size(), expect);
+    if (n_parts <= 0) {
+        return;
+    }
+
+    pyramid_main_state &ms = g_monument_mastaba_engine.ensure_main(head->id);
+    ms.style = PYRAMID_STYLE_MUDBRICK;
+    ms.size_variant = (uint8_t)size_variant;
+    ms.remaining_blocks = (uint16_t)engine.block_total(size_variant);
+    ms.block_phase_active = 0;
+
+    for (int i = 0; i < n_parts; i++) {
+        pyramid_part_state &ps = g_monument_mastaba_engine.ensure_part(parts[i]->id);
+        ps = {};
+        ps.size_variant = (uint8_t)size_variant;
+        ps.subtype = (uint8_t)i;
+        ps.target_layers = mudbrick_target_layers_for_part(head, parts[i], size_variant);
+        ps.stage = PYRAMID_STAGE_MAIN_MATERIAL;
+        ps.worker_figure_id = 0;
+    }
+}
+
+void pyramid_engine_start_block_phase(building *main) {
+    building *head = g_monument_pyramid_engine.chain_head(main);
+    if (!head) {
+        return;
+    }
+    if (!pyramid_main_state_get(head->id) || pyramid_main_state_get(head->id)->style != PYRAMID_STYLE_MUDBRICK) {
+        pyramid_engine_init_mudbrick(head);
+    }
+    auto *ms = pyramid_main_state_get(head->id);
+    if (!ms || ms->style != PYRAMID_STYLE_MUDBRICK) {
+        return;
+    }
+
+    svector<building *, PYRAMID_PARTS_CAPACITY> parts;
+    g_monument_pyramid_engine.collect_parts(head, parts);
+    for (building *p : parts) {
+        if (auto *ps = pyramid_part_state_get(p->id)) {
+            ps->stage = PYRAMID_STAGE_MAIN_MATERIAL;
+            ps->blocks = 0;
+            ps->layer = 0;
+            ps->worker_figure_id = 0;
+        }
+    }
+    ms->remaining_blocks = (uint16_t)g_monument_pyramid_engine.block_total(ms->size_variant);
+    ms->block_phase_active = 1;
+}
+
+bool pyramid_engine_blocks_finished(building *main) {
+    building *head = g_monument_pyramid_engine.chain_head(main);
+    auto *ms = pyramid_main_state_get(head ? head->id : 0);
+    if (!ms || ms->style != PYRAMID_STYLE_MUDBRICK || !ms->block_phase_active) {
+        return false;
+    }
+    return ms->remaining_blocks == 0;
+}
+
+int monument_pyramid_engine::part_height(const pyramid_part_state &p) const {
+    return p.blocks + p.layer * pyramid_engine_config.blocks_per_layer;
+}
+
+int monument_pyramid_engine::layer_capacity() const {
+    return pyramid_engine_config.blocks_per_layer;
+}
+
+void monument_pyramid_engine::add_block(pyramid_part_state &p) const {
     if (p.stage == PYRAMID_STAGE_MAIN_MATERIAL) {
         int blocks = ++p.blocks;
-        int capacity = layer_capacity(p, is_main);
+        int capacity = layer_capacity();
         if (blocks >= capacity) {
             if (p.layer < p.target_layers) {
                 if (blocks > capacity) {
@@ -62,243 +213,45 @@ int monument_pyramid_engine::frontier_order(const pyramid_part_state &part, cons
 }
 
 bool monument_pyramid_engine::needs_main_material(const pyramid_part_state &p) const {
+    // OG pyramid_part_needs_main_material: bricklayers only while layer < target.
+    if (p.stage != PYRAMID_STAGE_MAIN_MATERIAL) {
+        return false;
+    }
     if (p.layer >= p.target_layers) {
         return false;
     }
-    int capacity = layer_capacity(p, p.subtype == 0);
+    const int capacity = layer_capacity();
     return p.blocks != capacity || p.layer + 1 != p.target_layers;
 }
 
-pyramid_main_state *monument_pyramid_engine::main_state(building_id main_id) {
-    building *b = building_get(main_id);
-    auto *mon = b ? b->dcast_monument() : nullptr;
-    if (!mon || !b->is_main()) {
-        return nullptr;
-    }
-    auto &st = mon->runtime_data().og_main;
-    return st.style != PYRAMID_STYLE_NONE ? &st : nullptr;
-}
-
-pyramid_part_state *monument_pyramid_engine::part_state(building_id part_id) {
-    building *b = building_get(part_id);
-    auto *mon = b ? b->dcast_monument() : nullptr;
-    if (!mon) {
-        return nullptr;
-    }
-    auto &ps = mon->runtime_data().og_part;
-    // target_layers is set by init; zero means this part was never engine-inited.
-    return ps.target_layers != 0 ? &ps : nullptr;
-}
-
-pyramid_main_state &monument_pyramid_engine::ensure_main(building_id main_id) {
-    building *b = building_get(main_id);
-    auto *mon = b->dcast_monument();
-    return mon->runtime_data().og_main;
-}
-
-pyramid_part_state &monument_pyramid_engine::ensure_part(building_id part_id) {
-    building *b = building_get(part_id);
-    auto *mon = b->dcast_monument();
-    return mon->runtime_data().og_part;
-}
-
-void monument_pyramid_engine::clear_building(building_id id) {
-    building *b = building_get(id);
-    auto *mon = b ? b->dcast_monument() : nullptr;
-    if (!mon) {
-        return;
-    }
-    mon->runtime_data().og_main = {};
-    mon->runtime_data().og_part = {};
-}
-
-void monument_pyramid_engine::clear_all() {
-    buildings_valid_do([](building &b) {
-        auto *mon = b.dcast_monument();
-        if (!mon || !pyramid_engine_is_mastaba(&b)) {
-            return;
-        }
-        mon->runtime_data().og_main = {};
-        mon->runtime_data().og_part = {};
-    });
-}
-
-// Production JS helpers used by work_camp / guild scripts.
-static int __pyramid_find_mason_waiting(int bid) {
-    building *b = building_get(bid);
-    building *head = b ? b->main() : nullptr;
-    if (!head) {
-        return 0;
-    }
-    return pyramid_engine_find_mason_waiting_for_block(head);
-}
-ANK_FUNCTION_1(__pyramid_find_mason_waiting)
-
-static void __worker_assign_brick_delivery(int fid, int monument_bid, int mason_fid) {
-    figure *f = figure_get(fid);
-    auto *worker = f ? f->dcast_worker() : nullptr;
-    building *mon = building_get(monument_bid);
-    if (!worker || !mon) {
-        return;
-    }
-    worker->assign_brick_delivery(mon->main() ? mon->main() : mon, (figure_id)mason_fid);
-}
-ANK_FUNCTION_3(__worker_assign_brick_delivery)
-
-building *mastaba_chain_head(building *any_part) {
-    if (!any_part || !any_part->id) {
-        return nullptr;
-    }
-    building *head = any_part;
-    while (head->prev_part_building_id) {
-        building *prev = building_get(head->prev_part_building_id);
-        if (!prev || !prev->id) {
-            break;
-        }
-        head = prev;
-    }
-    return head;
-}
-
-void mastaba_collect_parts(building *any_part, svector<building *, MASTABA_PARTS_CAPACITY> &out) {
-    out.clear();
-    building *head = mastaba_chain_head(any_part);
-    for (building *p = head; p && p->id; p = p->has_next() ? p->next() : nullptr) {
-        out.push_back(p);
-        if ((int)out.size() >= monument_engine_config.mastaba_max_parts || out.size() >= MASTABA_PARTS_CAPACITY) {
-            break;
-        }
-    }
-}
-
-pyramid_main_state *pyramid_main_state_get(building_id main_id) {
-    return g_monument_pyramid_engine.main_state(main_id);
-}
-
-pyramid_part_state *pyramid_part_state_get(building_id part_id) {
-    return g_monument_pyramid_engine.part_state(part_id);
-}
-
-void pyramid_engine_clear_building(building_id id) {
-    g_monument_pyramid_engine.clear_building(id);
-}
-
-void pyramid_engine_clear_all() {
-    g_monument_pyramid_engine.clear_all();
-}
-
-bool pyramid_engine_is_mastaba(building *b) {
-    if (!b) {
-        return false;
-    }
-    const auto &p = building_mastaba::get_params(b->type);
-    return p.part_count > 0 && p.brick_layers > 0;
-}
-
-bool pyramid_engine_block_phase_active(building *main) {
-    auto *st = pyramid_main_state_get(main ? main->id : 0);
-    return st && st->block_phase_active && st->remaining_blocks > 0;
-}
-
-void pyramid_engine_init_mastaba(building *main) {
-    if (!main) {
-        return;
-    }
-    building *head = mastaba_chain_head(main);
-    if (!head || !pyramid_engine_is_mastaba(head)) {
-        return;
-    }
-
-    const auto &cfg = building_mastaba::get_params(head->type);
-    svector<building *, MASTABA_PARTS_CAPACITY> parts;
-    mastaba_collect_parts(head, parts);
-    const int n_parts = std::min((int)parts.size(), (int)cfg.part_count);
-    if (n_parts <= 0) {
-        return;
-    }
-
-    pyramid_main_state &ms = g_monument_pyramid_engine.ensure_main(head->id);
-    ms.style = PYRAMID_STYLE_MASTABA;
-    ms.size_variant = 0;
-    int total_blocks = 0;
-    if (auto *mon = head->dcast_monument()) {
-        total_blocks = mon->brick_blocks_total();
-    }
-    ms.remaining_blocks = (uint16_t)std::max(0, total_blocks);
-    ms.block_phase_active = 0;
-
-    for (int i = 0; i < n_parts; i++) {
-        pyramid_part_state &ps = g_monument_pyramid_engine.ensure_part(parts[i]->id);
-        ps = {};
-        ps.size_variant = 0;
-        ps.subtype = (uint8_t)i;
-        ps.target_layers = cfg.brick_layers;
-        ps.stage = PYRAMID_STAGE_MAIN_MATERIAL;
-        ps.worker_figure_id = 0;
-    }
-}
-
-void pyramid_engine_start_block_phase(building *main) {
-    building *head = mastaba_chain_head(main);
-    if (!head) {
-        return;
-    }
-    if (!pyramid_main_state_get(head->id)) {
-        pyramid_engine_init_mastaba(head);
-    }
-    auto *ms = pyramid_main_state_get(head->id);
-    if (!ms) {
-        return;
-    }
-
-    svector<building *, MASTABA_PARTS_CAPACITY> parts;
-    mastaba_collect_parts(head, parts);
-    for (building *p : parts) {
-        if (auto *ps = pyramid_part_state_get(p->id)) {
-            ps->stage = PYRAMID_STAGE_MAIN_MATERIAL;
-            ps->blocks = 0;
-            ps->layer = 0;
-            ps->worker_figure_id = 0;
-        }
-    }
-    int total_blocks = 0;
-    if (auto *mon = head->dcast_monument()) {
-        total_blocks = mon->brick_blocks_total();
-    }
-    ms->remaining_blocks = (uint16_t)std::max(0, total_blocks);
-    ms->block_phase_active = 1;
-}
-
-bool pyramid_engine_blocks_finished(building *main) {
-    building *head = mastaba_chain_head(main);
-    auto *ms = pyramid_main_state_get(head ? head->id : 0);
-    if (!ms || !ms->block_phase_active) {
-        return false;
-    }
-    return ms->remaining_blocks == 0;
-}
-
-void monument_pyramid_engine::find_frontier(building *main, svector<building_id, MASTABA_PARTS_CAPACITY> &frontier) {
+void monument_pyramid_engine::find_frontier(building *main, svector<building_id, PYRAMID_PARTS_CAPACITY> &frontier) {
     frontier.clear();
-    building *head = mastaba_chain_head(main);
+    building *head = chain_head(main);
     if (!head) {
         return;
     }
 
-    svector<building *, MASTABA_PARTS_CAPACITY> parts;
-    mastaba_collect_parts(head, parts);
+    svector<building *, PYRAMID_PARTS_CAPACITY> parts;
+    collect_parts(head, parts);
 
     building_id best = 0;
     for (building *p : parts) {
-        auto *ps = part_state(p->id);
+        auto *ps = pyramid_part_state_get(p->id);
         if (!ps) {
             continue;
         }
-        // Mastaba: skip finished casing parts (stage!=0 and blocks==0).
         if (ps->stage != 0 && ps->blocks == 0) {
             continue;
         }
-        int order = best ? frontier_order(*ps, *part_state(best)) : -1;
+        // Boost/assign only parts that still need main bricks — otherwise
+        // target_layers==0 parts drain remaining into a fake casing stage.
+        if (ps->stage == PYRAMID_STAGE_MAIN_MATERIAL && !needs_main_material(*ps)) {
+            continue;
+        }
+        if (pyramid_engine_part_needs_ramp(p->id) != 0) {
+            continue;
+        }
+        int order = best ? frontier_order(*ps, *pyramid_part_state_get(best)) : -1;
         if (order > 0) {
             continue;
         }
@@ -310,8 +263,13 @@ void monument_pyramid_engine::find_frontier(building *main, svector<building_id,
     }
 }
 
-void pyramid_engine_find_frontier(building *main, svector<building_id, MASTABA_PARTS_CAPACITY> &frontier) {
+void pyramid_engine_find_frontier(building *main, svector<building_id, PYRAMID_PARTS_CAPACITY> &frontier) {
     g_monument_pyramid_engine.find_frontier(main, frontier);
+}
+
+int pyramid_engine_part_needs_ramp(building_id /*part_id*/) {
+    // Carpenter ramp thresholds deferred; allow block assignment.
+    return 0;
 }
 
 bool pyramid_engine_part_has_active_worker(building_id part_id) {
@@ -324,70 +282,171 @@ bool pyramid_engine_part_has_active_worker(building_id part_id) {
         ps->worker_figure_id = 0;
         return false;
     }
-    if (f->type != FIGURE_BRICKLAYER) {
-        return false;
+    if (f->type == FIGURE_BRICKLAYER) {
+        switch (f->action_state) {
+        case ACTION_1_BRICKLAYER_GO_TO_SITE:
+        case ACTION_4_BRICKLAYER_CLIMB_RAMP:
+        case ACTION_5_BRICKLAYER_FIND_PART:
+        case ACTION_7_BRICKLAYER_WALK_TO_PART:
+        case ACTION_2_BRICKLAYER_WORK:
+        case ACTION_8_BRICKLAYER_WAIT_FOR_BLOCK:
+            return true;
+        default:
+            ps->worker_figure_id = 0;
+            return false;
+        }
     }
-    switch (f->action_state) {
-    case ACTION_1_BRICKLAYER_GO_TO_SITE:
-    case ACTION_4_BRICKLAYER_CLIMB_RAMP:
-    case ACTION_5_BRICKLAYER_FIND_PART:
-    case ACTION_7_BRICKLAYER_WALK_TO_PART:
-    case ACTION_2_BRICKLAYER_WORK:
-    case ACTION_8_BRICKLAYER_WAIT_FOR_BLOCK:
-        return true;
-    default:
-        ps->worker_figure_id = 0;
-        return false;
+    // Stonemason casing workers accepted once wired.
+    ps->worker_figure_id = 0;
+    return false;
+}
+
+void monument_pyramid_engine::apply_block_placed(building *head, pyramid_main_state &ms, pyramid_part_state &ps) {
+    ms.remaining_blocks--;
+    add_block(ps);
+
+    if (auto *mon = head ? head->dcast_monument() : nullptr) {
+        mon->sync_visuals();
+    }
+    if (ms.remaining_blocks == 0) {
+        ms.block_phase_active = 0;
     }
 }
 
-int pyramid_engine_find_task_bricklayer(figure_id fid) {
+void monument_pyramid_engine::place_block(building_id part_id, figure_id fid) {
     figure *f = figure_get(fid);
-    if (!f) {
+    auto *ps = pyramid_part_state_get(part_id);
+    if (!f || !ps) {
+        return;
+    }
+    auto *bl = f->dcast_bricklayer();
+    if (!bl) {
+        return;
+    }
+    auto &rd = bl->runtime_data();
+
+    building *part = building_get(part_id);
+    building *head = chain_head(part);
+    auto *ms = pyramid_main_state_get(head ? head->id : 0);
+    if (!ms || ms->remaining_blocks < 1) {
+        f->advance_action(ACTION_3_BRICKLAYER_RETURN_HOME);
+        rd.walk_mode = PYRAMID_WALK_NONE;
+        return;
+    }
+
+    if (ps->worker_figure_id != fid && pyramid_engine_part_has_active_worker(part_id)) {
+        f->advance_action(ACTION_3_BRICKLAYER_RETURN_HOME);
+        rd.walk_mode = PYRAMID_WALK_NONE;
+        return;
+    }
+
+    const int ticks = (ps->stage == 0)
+        ? (pyramid_engine_config.block_ticks_a + pyramid_engine_config.block_ticks_b)
+        : pyramid_engine_config.casing_ticks;
+    if (++f->wait_ticks < ticks) {
+        return;
+    }
+
+    ps->worker_figure_id = 0;
+    f->wait_ticks = 0;
+    apply_block_placed(head, *ms, *ps);
+
+    f->advance_action(ACTION_3_BRICKLAYER_RETURN_HOME);
+    rd.walk_mode = PYRAMID_WALK_NONE;
+}
+
+void pyramid_engine_place_block(building_id part_id, figure_id fid) {
+    g_monument_pyramid_engine.place_block(part_id, fid);
+}
+
+int monument_pyramid_engine::boost_blocks(building *main, int max_count) {
+    building *head = chain_head(main);
+    if (!head || !is_mudbrick(head)) {
         return 0;
     }
 
-    building *found_main = nullptr;
-    buildings_valid_do([&](building &b) {
-        if (found_main) {
-            return;
-        }
-        if (!b.is_main() || !pyramid_engine_is_mastaba(&b)) {
-            return;
-        }
-        auto *mon = b.dcast_monument();
-        if (!mon || !mon->is_unfinished()) {
-            return;
-        }
-        if (mon->phase() < MASTABA_PHASE_BRICKS) {
-            return;
-        }
-        if (auto *mastaba = mon->dcast_mastaba()) {
-            if (!mastaba->clay_stock_ready()) {
-                return;
+    auto *mon = head->dcast_monument();
+    if (!mon || mon->is_finished() || mon->phase() < 2) {
+        return 0;
+    }
+
+    auto *ms = pyramid_main_state_get(head->id);
+    if (!ms || ms->style != PYRAMID_STYLE_MUDBRICK) {
+        pyramid_engine_init_mudbrick(head);
+        ms = pyramid_main_state_get(head->id);
+    }
+    if (!ms) {
+        return 0;
+    }
+    if (!ms->block_phase_active) {
+        pyramid_engine_start_block_phase(head);
+        ms = pyramid_main_state_get(head->id);
+    }
+    if (!ms || !ms->block_phase_active || ms->remaining_blocks == 0) {
+        return 0;
+    }
+
+    const int limit = max_count > 0 ? max_count : (int)ms->remaining_blocks;
+    int placed = 0;
+    while (placed < limit && ms->remaining_blocks > 0) {
+        svector<building_id, PYRAMID_PARTS_CAPACITY> frontier;
+        find_frontier(head, frontier);
+        if (frontier.empty()) {
+            // Remake part target_layers can saturate before OG block_total —
+            // still burn remaining so sync_footprint_layers / finish can complete.
+            ms->remaining_blocks--;
+            placed++;
+            if (auto *mon = head->dcast_monument()) {
+                mon->sync_visuals();
             }
+            if (ms->remaining_blocks == 0) {
+                ms->block_phase_active = 0;
+            }
+            continue;
         }
-        auto *ms = pyramid_main_state_get(b.id);
-        if (!ms) {
-            pyramid_engine_init_mastaba(&b);
-            pyramid_engine_start_block_phase(&b);
-            ms = pyramid_main_state_get(b.id);
+        auto *ps = pyramid_part_state_get(frontier[0]);
+        if (!ps) {
+            break;
         }
-        if (!ms || !ms->block_phase_active || ms->remaining_blocks == 0) {
-            return;
-        }
-        found_main = &b;
-    });
+        ps->worker_figure_id = 0;
+        apply_block_placed(head, *ms, *ps);
+        placed++;
+    }
+    return placed;
+}
 
-    if (!found_main) {
+int pyramid_engine_boost_blocks(building *main, int max_count) {
+    return g_monument_pyramid_engine.boost_blocks(main, max_count);
+}
+
+int pyramid_engine_try_assign_bricklayer(building *main, figure_id fid) {
+    figure *f = figure_get(fid);
+    building *head = g_monument_pyramid_engine.chain_head(main);
+    if (!f || !head || !g_monument_pyramid_engine.is_mudbrick(head)) {
+        return 0;
+    }
+    auto *mon = head->dcast_monument();
+    if (!mon || !mon->is_unfinished() || mon->phase() < 2) {
+        return 0;
+    }
+    auto *ms = pyramid_main_state_get(head->id);
+    if (!ms || ms->style != PYRAMID_STYLE_MUDBRICK) {
+        pyramid_engine_init_mudbrick(head);
+        pyramid_engine_start_block_phase(head);
+        ms = pyramid_main_state_get(head->id);
+    }
+    if (!ms || !ms->block_phase_active || ms->remaining_blocks == 0) {
         return 0;
     }
 
-    svector<building_id, MASTABA_PARTS_CAPACITY> frontier;
-    pyramid_engine_find_frontier(found_main, frontier);
+    svector<building_id, PYRAMID_PARTS_CAPACITY> frontier;
+    pyramid_engine_find_frontier(head, frontier);
     for (building_id part_id : frontier) {
         auto *ps = pyramid_part_state_get(part_id);
         if (!ps) {
+            continue;
+        }
+        if (!g_monument_pyramid_engine.needs_main_material(*ps)) {
             continue;
         }
         if (ps->worker_figure_id && pyramid_engine_part_has_active_worker(part_id)) {
@@ -401,156 +460,25 @@ int pyramid_engine_find_task_bricklayer(figure_id fid) {
             return 0;
         }
         auto &rd = bl->runtime_data();
-        rd.destination_bid = found_main->id;
+        rd.destination_bid = head->id;
         rd.part_bid = part_id;
         rd.serving_statue = 0;
         rd.walk_mode = PYRAMID_WALK_ACTIVE;
 
-        f->set_destination(found_main);
-        tile2i entry = pyramid_engine_entry_tile(found_main);
-        f->destination_tile = entry;
+        f->set_destination(head);
+        f->destination_tile = mon->access_point();
         return part_id;
     }
     return 0;
 }
 
-void monument_pyramid_engine::apply_block_placed(building *head, pyramid_main_state &ms, pyramid_part_state &ps) {
-    ms.remaining_blocks--;
-    add_block(ps, ps.subtype == 0);
-
-    auto *mon = head ? head->dcast_monument() : nullptr;
-    if (!mon) {
-        return;
-    }
-
-    // Advance remake visual phase from per-phase block quotas in construction config.
-    const int total = mon->brick_blocks_total();
-    if (total <= 0) {
-        return;
-    }
-    const int done = total - ms.remaining_blocks;
-    const int want = (ms.remaining_blocks == 0)
-        ? MASTABA_PHASE_COMPLETE
-        : mon->phase_for_blocks_done(done);
-    if (want > mon->phase()) {
-        building_impl *part_it = mon;
-        while (part_it) {
-            if (auto *m = part_it->dcast_monument()) {
-                m->set_phase(want);
-            }
-            part_it = part_it->has_next() ? part_it->next() : nullptr;
-        }
-        mon->sync_visuals();
-    }
-    if (ms.remaining_blocks == 0) {
-        ms.block_phase_active = 0;
-        mon->sync_visuals();
-    }
-}
-
-void monument_pyramid_engine::place_block(building_id part_id, figure_id fid) {
-    figure *f = figure_get(fid);
-    auto *ps = part_state(part_id);
-    if (!f || !ps) {
-        return;
-    }
-    auto *bl = f->dcast_bricklayer();
-    if (!bl) {
-        return;
-    }
-    auto &rd = bl->runtime_data();
-
-    building *part = building_get(part_id);
-    building *head = mastaba_chain_head(part);
-    auto *ms = main_state(head ? head->id : 0);
-    if (!ms || ms->remaining_blocks < 1) {
-        f->advance_action(ACTION_3_BRICKLAYER_RETURN_HOME);
-        rd.walk_mode = PYRAMID_WALK_NONE;
-        return;
-    }
-
-    if (ps->worker_figure_id != fid && pyramid_engine_part_has_active_worker(part_id)) {
-        f->advance_action(ACTION_3_BRICKLAYER_RETURN_HOME);
-        rd.walk_mode = PYRAMID_WALK_NONE;
-        return;
-    }
-
-    int ticks = (ps->stage == 0) ? (monument_engine_config.block_ticks_a + monument_engine_config.block_ticks_b) : monument_engine_config.casing_ticks;
-    if (++f->wait_ticks < ticks) {
-        return;
-    }
-
-    ps->worker_figure_id = 0;
-    f->wait_ticks = 0;
-    apply_block_placed(head, *ms, *ps);
-
-    // Bricklayer done_action == next_action (RETURN) in OG — after one block, go home.
-    f->advance_action(ACTION_3_BRICKLAYER_RETURN_HOME);
-    rd.walk_mode = PYRAMID_WALK_NONE;
-}
-
-int monument_pyramid_engine::boost_blocks(building *main, int max_count) {
-    building *head = mastaba_chain_head(main);
-    if (!head || !pyramid_engine_is_mastaba(head)) {
-        return 0;
-    }
-
-    auto *mon = head->dcast_monument();
-    if (!mon || mon->is_finished() || mon->phase() < MASTABA_PHASE_BRICKS) {
-        return 0;
-    }
-
-    auto *ms = main_state(head->id);
-    if (!ms) {
-        pyramid_engine_init_mastaba(head);
-        ms = main_state(head->id);
-    }
-    if (!ms) {
-        return 0;
-    }
-    if (!ms->block_phase_active) {
-        pyramid_engine_start_block_phase(head);
-        ms = main_state(head->id);
-    }
-    if (!ms || !ms->block_phase_active || ms->remaining_blocks == 0) {
-        return 0;
-    }
-
-    const int limit = max_count > 0 ? max_count : (int)ms->remaining_blocks;
-    int placed = 0;
-    while (placed < limit && ms->remaining_blocks > 0) {
-        svector<building_id, MASTABA_PARTS_CAPACITY> frontier;
-        find_frontier(head, frontier);
-        if (frontier.empty()) {
-            break;
-        }
-
-        auto *ps = part_state(frontier[0]);
-        if (!ps) {
-            break;
-        }
-        ps->worker_figure_id = 0;
-        apply_block_placed(head, *ms, *ps);
-        placed++;
-    }
-    return placed;
-}
-
-void pyramid_engine_place_block(building_id part_id, figure_id fid) {
-    g_monument_pyramid_engine.place_block(part_id, fid);
-}
-
-int pyramid_engine_boost_blocks(building *main, int max_count) {
-    return g_monument_pyramid_engine.boost_blocks(main, max_count);
-}
-
 building_id pyramid_engine_find_mason_waiting_for_block(building *main) {
-    building *head = mastaba_chain_head(main);
+    building *head = g_monument_pyramid_engine.chain_head(main);
     if (!head) {
         return 0;
     }
-    svector<building *, MASTABA_PARTS_CAPACITY> parts;
-    mastaba_collect_parts(head, parts);
+    svector<building *, PYRAMID_PARTS_CAPACITY> parts;
+    g_monument_pyramid_engine.collect_parts(head, parts);
     for (building *p : parts) {
         auto *ps = pyramid_part_state_get(p->id);
         if (!ps || !ps->worker_figure_id) {
@@ -578,26 +506,12 @@ void pyramid_engine_laborer_deliver_block(figure_id mason_fid) {
 }
 
 tile2i pyramid_engine_entry_tile(building *main) {
-    building *head = mastaba_chain_head(main);
+    building *head = g_monument_pyramid_engine.chain_head(main);
     if (!head) {
         return tile2i::invalid;
-    }
-    const auto &cfg = building_mastaba::get_params(head->type);
-    const int entry_idx = cfg.entry_part;
-
-    svector<building *, MASTABA_PARTS_CAPACITY> parts;
-    mastaba_collect_parts(head, parts);
-    const int n_parts = std::min((int)parts.size(), (int)cfg.part_count);
-    if (entry_idx >= 0 && entry_idx < n_parts) {
-        tile2i t = parts[entry_idx]->tile;
-        return t.shifted(0, 2);
     }
     if (auto *mon = head->dcast_monument()) {
         return mon->access_point();
     }
     return head->tile;
-}
-
-tile2i pyramid_engine_part_tile(building *part) {
-    return part ? part->tile : tile2i::invalid;
 }

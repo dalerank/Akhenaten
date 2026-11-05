@@ -30,6 +30,8 @@ public:
         e_building_type wall_type;
         e_building_type cone_type;
         e_building_type filler_type;
+        // OG square-pyramid block engine style (NONE = remake tile-progress only).
+        e_pyramid_style pyramide_type = PYRAMID_STYLE_NONE;
 
         vec2i init_tiles;
         vec2i enter_offset;
@@ -37,16 +39,27 @@ public:
     };
 
     virtual const base_params &pyramid_params() const = 0;
+    static const base_params &params_for_type(e_building_type type);
 
-    // Geometric NW of the init_tiles rect. Linked-list head (is_main) can be a
-    // corner/wall when orientation != 0 — never use main()->tile() as footprint origin.
     tile2i footprint_nw() const;
+    const base_params &footprint_params() const;
 
     virtual tile2i center_point() const override;
-    // enter_offset is relative to footprint NW.
-    virtual tile2i access_point() const override { return footprint_nw().shifted(pyramid_params().enter_offset); }
-    // Full init_tiles footprint — sled delivery checks this (must not be part size 2×2).
+    virtual tile2i access_point() const override { return footprint_nw().shifted(footprint_params().enter_offset); }
     virtual grid_area get_area() const override;
+
+    // OG block engine (pyramide_type) — shared by all mudbrick sizes.
+    virtual void sync_visuals() override;
+    virtual bool need_bricklayers() override;
+    virtual bool need_stonemason() override;
+    virtual int try_assign_bricklayer(figure_id fid) override;
+    virtual void place_bricklayer_block(figure_id fid) override;
+
+protected:
+    // true ⇒ caller must return (engine owns the day).
+    bool run_block_day();
+    // Remake layer/part types + map tiles, then MONUMENT_FINISHED.
+    virtual void finish_block_construction();
 };
 
 class building_stepped_pyramid : public building_pyramid {
@@ -72,9 +85,7 @@ public:
     virtual bool force_draw_flat_tile(painter &ctx, tile2i tile, vec2i pixel, color mask) override;
     virtual void bind_dynamic(io_buffer *iob, size_t version) override;
 
-    // Nested class names are NOT inherited; expose via `using` so every
-    // BUILDING_METAINFO subclass (complex/grand/bent/mudbrick/true) registers
-    // the same planner hooks (causeway gate, init_tiles NW correction).
+
     struct preview_renderer : building_planer_renderer {
         virtual void setup_preview_graphics(build_planner &planer) const override;
         virtual void ghost_preview(build_planner &planer, painter &ctx, tile2i tile, tile2i end, vec2i pixel) const override;
@@ -87,15 +98,15 @@ public:
 
     bool draw_ornaments_and_animations_flat_impl(painter &ctx, vec2i point, tile2i tile, color mask, const vec2i tiles_size);
     bool draw_ornaments_and_animations_hight_impl(painter &ctx, vec2i point, tile2i tile, color mask, const vec2i tiles_size);
-    // Unfinished: phase-6 alt cue; under flat view skip tall height_impl tiers.
     bool draw_unfinished_height_ornaments(painter &ctx, vec2i point, tile2i tile, color mask, const vec2i tiles_size);
-    // All present layers at full brick course (finished). True pyramid may polish
-    // individual layers via use_polish_sprites_for_layer.
     bool draw_completed_height_ornaments(painter &ctx, vec2i point, tile2i tile, color mask, const vec2i tiles_size);
-    // True (smooth) polish: which footprint layers already use casing sprites.
     virtual bool use_polish_sprites_for_layer(int layer) const { return false; }
     void draw_ornaments_and_animations_stairs_impl(painter &ctx, vec2i point, tile2i tile, color color_mask, const vec2i tiles_size);
     void change_parts_types_in_layer(tile2i begin, const vec2i layer_size, uint8_t layer);
+
+    void sync_footprint_layers(int done_blocks, int total_blocks);
+    virtual void sync_visuals() override;
+    virtual void finish_block_construction() override;
 
     void assign_stair();
     layer_area get_layer_area(int layer) const;
@@ -357,8 +368,7 @@ public:
     virtual bool draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) override;
     virtual int building_image_get() const override;
     virtual const base_params &pyramid_params() const override { return current_params(); }
-    virtual bool need_stonemason() override;
-    // Top-down casing: phase 24 → layers ≥1; phase ≥25 / finished → all.
+
     virtual bool use_polish_sprites_for_layer(int layer) const override;
     static constexpr int k_polish_phase_begin = 24;
     virtual void on_phase_changed(int old, int current) override;
@@ -366,7 +376,7 @@ public:
     virtual const monument &config() const override;
 };
 ANK_CONFIG_STRUCT(building_small_mudbrick_pyramid::static_params,
-    init_tiles, corner_type, wall_type, cone_type, filler_type, enter_offset, stairs);
+    init_tiles, corner_type, wall_type, cone_type, filler_type, enter_offset, stairs, pyramide_type);
 
 class building_small_mudbrick_pyramid_corner : public building_small_mudbrick_pyramid {
 public:
@@ -398,13 +408,12 @@ public:
     virtual bool draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) override;
     virtual int building_image_get() const override;
     virtual const base_params &pyramid_params() const override { return current_params(); }
-    virtual bool need_stonemason() override;
     virtual bool use_polish_sprites_for_layer(int layer) const override;
 
     virtual const monument &config() const override;
 };
 ANK_CONFIG_STRUCT(building_medium_mudbrick_pyramid::static_params,
-    init_tiles, corner_type, wall_type, cone_type, filler_type, enter_offset, stairs);
+    init_tiles, corner_type, wall_type, cone_type, filler_type, enter_offset, stairs, pyramide_type);
 
 class building_medium_mudbrick_pyramid_corner : public building_medium_mudbrick_pyramid {
 public:
@@ -438,14 +447,13 @@ public:
     virtual bool draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) override;
     virtual int building_image_get() const override;
     virtual const base_params &pyramid_params() const override { return current_params(); }
-    virtual bool need_stonemason() override;
     virtual bool use_polish_sprites_for_layer(int layer) const override;
     virtual void on_phase_changed(int old, int current) override;
 
     virtual const monument &config() const override;
 };
 ANK_CONFIG_STRUCT(building_large_mudbrick_pyramid::static_params,
-    init_tiles, corner_type, wall_type, cone_type, filler_type, enter_offset, stairs);
+    init_tiles, corner_type, wall_type, cone_type, filler_type, enter_offset, stairs, pyramide_type);
 
 class building_large_mudbrick_pyramid_corner : public building_large_mudbrick_pyramid {
 public:
@@ -484,7 +492,7 @@ public:
     virtual const monument &config() const override;
 };
 ANK_CONFIG_STRUCT(building_mudbrick_pyramid_complex::static_params,
-    init_tiles, corner_type, wall_type, cone_type, filler_type, enter_offset, stairs);
+    init_tiles, corner_type, wall_type, cone_type, filler_type, enter_offset, stairs, pyramide_type);
 
 // Grand mudbrick — same on-land 20×20 until annex; separate TYPE for weight 44.
 class building_grand_mudbrick_pyramid_complex : public building_large_mudbrick_pyramid {
@@ -506,9 +514,8 @@ public:
     virtual const monument &config() const override;
 };
 ANK_CONFIG_STRUCT(building_grand_mudbrick_pyramid_complex::static_params,
-    init_tiles, corner_type, wall_type, cone_type, filler_type, enter_offset, stairs);
+    init_tiles, corner_type, wall_type, cone_type, filler_type, enter_offset, stairs, pyramide_type);
 
-// C3a2: True (smooth) medium pyramid — 12×12, limestone + polish after height 31.
 class building_medium_pyramid : public building_stepped_pyramid {
 public:
     BUILDING_METAINFO(BUILDING_MEDIUM_PYRAMID, building_medium_pyramid, building_stepped_pyramid)
@@ -566,7 +573,6 @@ public:
     virtual const base_params &pyramid_params() const override { return current_params(); }
     virtual bool need_stonemason() override;
     virtual bool use_polish_sprites_for_layer(int layer) const override;
-    // Phase 36 is polish begin and also 6*(L+1) for L=5 — must not raise a phantom ring.
     virtual void on_phase_changed(int old, int current) override;
 
     virtual const monument &config() const override;
@@ -589,8 +595,6 @@ public:
     BUILDING_METAINFO(BUILDING_LARGE_PYRAMID_CONE, building_large_pyramid_cone, building_large_pyramid)
 };
 
-// True pyramid complex = plain 20×20 (same as large) + causeway; temples later.
-// Reuses LARGE_PYRAMID part types (344–346) via JS corner/wall/cone/filler params.
 class building_pyramid_complex : public building_large_pyramid {
 public:
     BUILDING_METAINFO(BUILDING_PYRAMID_COMPLEX, building_pyramid_complex, building_large_pyramid)

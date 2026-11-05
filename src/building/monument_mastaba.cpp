@@ -1,6 +1,6 @@
 ﻿#include "monument_mastaba.h"
 
-#include "building/monument_pyramid_engine.h"
+#include "building/monument_mastaba_engine.h"
 #include "graphics/view/view.h"
 #include "monuments.h"
 #include "core/direction.h"
@@ -339,7 +339,7 @@ void building_mastaba::on_create(int orientation) {
 }
 
 void building_mastaba::on_destroy() {
-    pyramid_engine_clear_building(id());
+    mastaba_engine_clear_building(id());
     building_impl::on_destroy();
 }
 
@@ -393,7 +393,7 @@ void building_mastaba::on_place(int orientation, int variant) {
         prev_part = part.b;
     }
 
-    pyramid_engine_init_mastaba(&base);
+    mastaba_engine_init(&base);
 }
 
 static color mastaba_progress_alpha_mask(uint32_t progress, color color_mask) {
@@ -512,7 +512,7 @@ bool building_mastaba::draw_ornaments_and_animations_flat_impl(painter &ctx, vec
     case MASTABA_PHASE_BRICKS:
         // OG block-engine drives courses via remaining_blocks; flat tile-progress
         // overlay fights height art when progress was never remake-worked.
-        if (!pyramid_engine_block_phase_active(&base)) {
+        if (!mastaba_engine_block_phase_active(&base)) {
             draw_flat_phase_bricks(ctx, color_mask, tiles_size);
         }
         break;
@@ -682,6 +682,14 @@ bool building_mastaba::accepts_yard_delivery(e_resource resource) const {
     return true;
 }
 
+int building_mastaba::try_assign_bricklayer(figure_id fid) {
+    return mastaba_engine_try_assign_bricklayer(&base, fid);
+}
+
+void building_mastaba::place_bricklayer_block(figure_id fid) {
+    mastaba_engine_place_block(id(), fid);
+}
+
 bool building_mastaba::need_bricklayers() {
     if (!is_main() || is_finished()) {
         return false;
@@ -730,13 +738,13 @@ void building_mastaba::update_construction_day(const vec2i tiles_size) {
     if (monumentd.phase >= MASTABA_PHASE_BRICKS) {
         auto *ms = pyramid_main_state_get(id());
         if (!ms) {
-            pyramid_engine_init_mastaba(&base);
+            mastaba_engine_init(&base);
             ms = pyramid_main_state_get(id());
         }
         if (ms && !ms->block_phase_active && monumentd.phase == MASTABA_PHASE_BRICKS) {
-            pyramid_engine_start_block_phase(&base);
+            mastaba_engine_start_block_phase(&base);
         }
-        if (pyramid_engine_blocks_finished(&base)) {
+        if (mastaba_engine_blocks_finished(&base)) {
             building_impl *part = this;
             while (part) {
                 if (auto *m = part->dcast_monument()) {
@@ -765,7 +773,7 @@ void building_mastaba::update_construction_day(const vec2i tiles_size) {
             part = part->has_next() ? part->next() : nullptr;
         }
         if (monumentd.phase >= MASTABA_PHASE_BRICKS) {
-            pyramid_engine_start_block_phase(&base);
+            mastaba_engine_start_block_phase(&base);
         }
     }
 }

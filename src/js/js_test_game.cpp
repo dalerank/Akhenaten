@@ -33,6 +33,7 @@
 #include "building/building_fishing_wharf.h"
 #include "building/monument_mastaba.h"
 #include "building/monument_pyramid.h"
+#include "building/monument_mastaba_engine.h"
 #include "building/monument_pyramid_engine.h"
 #include "building/monument_royal_tomb.h"
 #include "building/monument_obelisk.h"
@@ -399,7 +400,7 @@ int __test_request_cleared_was_overdue() {
 }
 ANK_FUNCTION(__test_request_cleared_was_overdue);
 
-// ED4a: editor request slots â†” EVENT_TYPE_REQUEST (tag 8000+slot).
+// ED4a: editor request slots ? EVENT_TYPE_REQUEST (tag 8000+slot).
 int __test_editor_request_roundtrip() {
     g_scenario.events.clear_for_editor();
 
@@ -577,7 +578,7 @@ int __test_editor_map_meta_roundtrip() {
     g_scenario.events.editor_request_get(0, &out0);
     editor_request out3{};
     g_scenario.events.editor_request_get(3, &out3);
-    // sort_invasions() packs filled slots by year â€” expect years 2 then 5 at 0/1.
+    // sort_invasions() packs filled slots by year � expect years 2 then 5 at 0/1.
     const invasion_t &out_inv0 = g_scenario.invasions[0];
     const invasion_t &out_inv1 = g_scenario.invasions[1];
     const price_change_t &out_price = g_scenario.price_changes[0];
@@ -645,7 +646,7 @@ int __test_editor_invasion_meta_play() {
     }
 
     const invasion_t &got = g_scenario.invasions[0];
-    // Custom maps often have no empire invasion path â€” init may no-op month assign.
+    // Custom maps often have no empire invasion path � init may no-op month assign.
     // Success = sidecar applied on play load (schedule present for scenario_invasion_process).
     const bool ok = got.year == 1 && got.type == INVASION_TYPE_ENEMY_ARMY && got.amount == 12
                     && got.from == 2 && got.attack_type == FORMATION_ATTACK_BEST_BUILDINGS;
@@ -927,7 +928,7 @@ void __test_request_force_overdue(int tag, int months_left) {
 }
 ANK_FUNCTION_2(__test_request_force_overdue);
 
-// Expire grace immediately â†’ refuse path on next process_active_request.
+// Expire grace immediately ? refuse path on next process_active_request.
 void __test_request_force_refuse_now(int tag) {
     event_ph_t *e = __test_find_request_by_tag(tag);
     if (!e || !e->is_active) {
@@ -957,7 +958,7 @@ void __test_request_force_fulfill(int tag, int as_late) {
 }
 ANK_FUNCTION_2(__test_request_force_fulfill);
 
-// Advisor-style dispatch (RESOURCE_TROOPS + defeat â†’ distant battle; B8).
+// Advisor-style dispatch (RESOURCE_TROOPS + defeat ? distant battle; B8).
 void __test_request_dispatch_by_tag(int tag) {
     event_ph_t *e = __test_find_request_by_tag(tag);
     if (!e || !e->is_active) {
@@ -1099,7 +1100,7 @@ static void __test_poof_kingdome_figures() {
 ANK_FUNCTION(__test_poof_kingdome_figures);
 
 // Force figures.reset()+action_perform. Needed when --integraltests pumps
-// frames faster than tick_timer_ms (get_elapsed_ticks â†’ 0).
+// frames faster than tick_timer_ms (get_elapsed_ticks ? 0).
 static void __test_figures_update() {
     g_city.figures.update();
 }
@@ -1699,7 +1700,7 @@ static int __test_elephant_trample(int fid) {
     if (!f || !f->is_alive() || f->type != FIGURE_ENEMY_EGYPTIAN_ELEPHANT) {
         return 0;
     }
-    // Type check above: leaf is figure_egyptian_elephant â†’ figure_enemy_elephant.
+    // Type check above: leaf is figure_egyptian_elephant ? figure_enemy_elephant.
     auto *el = static_cast<figure_enemy_elephant *>(f->dcast());
     if (!el) {
         return 0;
@@ -1754,7 +1755,7 @@ static int __test_count_figures(int type) {
 }
 ANK_FUNCTION_1(__test_count_figures);
 
-// Drive OG archer INITIAL shoot path: wait_ticks_missile past delay → FIGURE_SPEAR + missile_fired.
+// Drive OG archer INITIAL shoot path: wait_ticks_missile past delay ? FIGURE_SPEAR + missile_fired.
 static int __test_enemy_archer_fire_initial_missile(int fid) {
     figure *f = figure_get(fid);
     if (!f || !f->is_alive()) {
@@ -1784,7 +1785,7 @@ static int __test_enemy_archer_fire_initial_missile(int fid) {
         return 0;
     }
 
-    // ACTION_3 is melee chase — must not spawn another spear.
+    // ACTION_3 is melee chase ? must not spawn another spear.
     f->action_state = ACTION_3_ENEMY_ARCHER_ATTACKING;
     m->recent_fight = 1;
     const int spears_mid = __test_count_figures(FIGURE_SPEAR);
@@ -1978,7 +1979,7 @@ static void __test_burial_provisions_force_dispatched(int resource, int dispatch
         return;
     }
     // Reset this resource on non-preexisting tombs, then deposit exactly `dispatched`.
-    // Otherwise a prior steal leaves tomb stock > 0 and migrate skips â€” city/tomb desync.
+    // Otherwise a prior steal leaves tomb stock > 0 and migrate skips � city/tomb desync.
     buildings_valid_do([&](building &b) {
         auto *m = b.dcast_monument();
         if (!m || !b.is_main() || m->is_preexisting()) {
@@ -3466,7 +3467,7 @@ static void test_monument_apply_phase(building *head, int phase) {
 }
 
 // Force a monument to `phase`. When advancing forward, walks one phase at a time so
-// per-phase hooks (pyramid setup_phase_6, layer type changes, â€¦) all fire â€” a direct
+// per-phase hooks (pyramid setup_phase_6, layer type changes, �) all fire � a direct
 // jump used to skip them and left the first brick ring with missing edge textures.
 static void __test_monument_set_phase(int bid, int phase) {
     building *b = building_get(bid);
@@ -3635,18 +3636,24 @@ static void __pyramid_start_block_phase(int bid) {
     if (!head) {
         return;
     }
-    pyramid_engine_init_mastaba(head);
-    pyramid_engine_start_block_phase(head);
+    if (g_monument_pyramid_engine.is_mudbrick(head)) {
+        pyramid_engine_init_mudbrick(head);
+        pyramid_engine_start_block_phase(head);
+        return;
+    }
+    mastaba_engine_init(head);
+    mastaba_engine_start_block_phase(head);
 }
 ANK_FUNCTION_1(__pyramid_start_block_phase);
 
 static void __pyramid_laborer_wake_mason(int mason_fid) {
     pyramid_engine_laborer_deliver_block((figure_id)mason_fid);
+    mastaba_engine_laborer_deliver_block((figure_id)mason_fid);
 }
 ANK_FUNCTION_1(__pyramid_laborer_wake_mason);
 
 static int __pyramid_claim_bricklayer_task(int fid) {
-    return pyramid_engine_find_task_bricklayer((figure_id)fid);
+    return building_monument_find_bricklayer_task((figure_id)fid);
 }
 ANK_FUNCTION_1(__pyramid_claim_bricklayer_task);
 
@@ -3758,7 +3765,7 @@ static int __test_monument_min_progress(int bid) {
     if (!head || !head->dcast_monument()) {
         return -1;
     }
-    // map_grid_get_tiles(head) already walks the whole part chain â€” do not
+    // map_grid_get_tiles(head) already walks the whole part chain � do not
     // nest another per-part walk (that re-counts the same tiles).
     grid_tiles tiles = map_grid_get_tiles(head, 0);
     if (tiles.empty()) {
@@ -3812,7 +3819,7 @@ static bool __test_storage_yard_add_resource(int bid, int resource, int amount) 
 ANK_FUNCTION_3(__test_storage_yard_add_resource);
 
 // Returns resource id if this yard would dispatch a monument sled task, else 0.
-// Used to assert stockpile blocks SYâ†’monument delivery without waiting for spawn.
+// Used to assert stockpile blocks SY?monument delivery without waiting for spawn.
 storage_worker_task building_storageyard_deliver_to_monuments(building *b);
 static int __test_storageyard_monument_task_resource(int yard_bid) {
     building *b = building_get(yard_bid);
@@ -3915,7 +3922,7 @@ static void __test_camera_center_building(int bid) {
     if (auto *pyr = head->dcast_pyramid()) {
         const vec2i foot = pyr->pyramid_params().init_tiles;
         c = head->tile.shifted(foot.x / 2, foot.y / 2);
-        // Aim by *built* height, not max monument size â€” otherwise a 2-tier shot
+        // Aim by *built* height, not max monument size � otherwise a 2-tier shot
         // is framed as a 5-tier stack and looks like a tight close-up.
         const int max_layers = std::max(1, foot.x / 4);
         const int phase = pyr->phase();
@@ -3931,12 +3938,12 @@ static void __test_camera_center_building(int bid) {
         return;
     }
 
-    // Instant collapse â€” animated widget_sidebar_expanded_collapse() leaves the
+    // Instant collapse � animated widget_sidebar_expanded_collapse() leaves the
     // expanded chrome on screen until the slide finishes (and screenshots skip that).
     g_camera.toggle_sidebar(1);
 
     // Zoom OUT = higher percentage (zoom_min=25 is close-up, zoom_max=250 is far).
-    // 180 fits a 20Ã—20 two-tier stepped pyramid in a ~1200Ã—770 collapsed viewport.
+    // 180 fits a 20�20 two-tier stepped pyramid in a ~1200�770 collapsed viewport.
     g_zoom.set_scale(180.f);
     g_camera.set_extra_scroll_margin(120);
 
@@ -3976,8 +3983,8 @@ static void __camera_sidebar_collapsed(int collapsed) {
 ANK_FUNCTION_1(__camera_sidebar_collapsed);
 
 // Hot-reload stack regression: each js_vm_sync used to leave ~1 stack slot per
-// [console_command=â€¦] handler (~30). JS_STACKSIZE is 256, so ~10 reloads then
-// crashed in config::refresh / UI archive load (stackoverflow â†’ fatal exit).
+// [console_command=�] handler (~30). JS_STACKSIZE is 256, so ~10 reloads then
+// crashed in config::refresh / UI archive load (stackoverflow ? fatal exit).
 static bool __test_js_hotreload_handlers_stack_ok(int iterations) {
     js_State *J = js_vm_state();
     if (!J || iterations < 1) {
@@ -4519,7 +4526,7 @@ static int __test_bazaar_force_spawn(int bid) {
         b.distance_from_entry = 1;
     }
     b.figure_spawn_delay = 0;
-    // Align OG buyer stagger: pass index becomes 1 on spawn → day % 8 == 1.
+    // Align OG buyer stagger: pass index becomes 1 on spawn ? day % 8 == 1.
     g_city.figures.bazaar_figure_pass_index = 0;
     if (!game_features::gameplay_change_bazaar_buyer_spawn_timer.to_bool()) {
         game.simtime.day = 1;
@@ -4863,7 +4870,7 @@ static int __test_food_mill_spawn_figure(int bid) {
     if (b->distance_from_entry <= 0) {
         b->distance_from_entry = 1;
     }
-    // gettable stocks skip buildings with distance_from_entry <= 0 â€” ensure sources count.
+    // gettable stocks skip buildings with distance_from_entry <= 0 � ensure sources count.
     buildings_valid_do([](building &src) {
         if (!src.has_road_access) {
             src.has_road_access = true;

@@ -1,4 +1,5 @@
 #include "building/building.h"
+#include "building/monument_mastaba_engine.h"
 #include "building/monument_pyramid_engine.h"
 #include "building/monuments.h"
 #include "figure/figure_type.h"
@@ -126,7 +127,14 @@ static void monument_proto_set_tile_progress(js_State* J) {
 static void monument_proto_boost_engine_blocks(js_State* J) {
     building_monument* m = monument_this(J);
     const int max_count = J->gettop() > 1 ? J->to<int>(1) : 0;
-    J->push(m ? pyramid_engine_boost_blocks(&m->base, max_count) : 0);
+    int placed = 0;
+    if (m) {
+        placed = pyramid_engine_boost_blocks(&m->base, max_count);
+        if (placed <= 0) {
+            placed = mastaba_engine_boost_blocks(&m->base, max_count);
+        }
+    }
+    J->push(placed);
 }
 
 static void monument_proto_toString(js_State* J) {

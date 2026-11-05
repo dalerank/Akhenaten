@@ -2,8 +2,7 @@
 
 #include "building/building_bricklayers_guild.h"
 #include "building/building_statue.h"
-#include "building/monument_mastaba.h"
-#include "building/monument_pyramid_engine.h"
+#include "building/monument_mastaba_engine.h"
 #include "building/monuments.h"
 #include "core/random.h"
 #include "game/simulation_time.h"
@@ -21,7 +20,9 @@ void figure_bricklayer::assign_monument_task(building_id part_id) {
         return;
     }
 
-    building *head = mastaba_chain_head(part);
+    auto *mon = part->dcast_monument();
+    auto *head_mon = mon ? mon->main()->dcast_monument() : nullptr;
+    building *head = head_mon ? &head_mon->base : nullptr;
     set_destination(head);
     auto &rd = runtime_data();
     rd.destination_bid = head ? head->id : 0;
@@ -29,14 +30,14 @@ void figure_bricklayer::assign_monument_task(building_id part_id) {
     rd.serving_statue = 0;
     rd.walk_mode = PYRAMID_WALK_NONE;
 
-    base.destination_tile = pyramid_engine_entry_tile(head);
+    base.destination_tile = head_mon ? head_mon->access_point() : tile2i::invalid;
     base.terrain_usage = TERRAIN_USAGE_PREFER_ROADS;
     base.roam_length = 0;
     base.wait_ticks = 0;
     route_remove();
 
-    if (auto *mm = head ? head->dcast_monument() : nullptr) {
-        mm->add_workers(id());
+    if (head_mon) {
+        head_mon->add_workers(id());
     }
 
     advance_action(ACTION_1_BRICKLAYER_GO_TO_SITE);
@@ -65,7 +66,7 @@ void figure_bricklayer::assign_statue_task(building *statue) {
 }
 
 bool figure_bricklayer::try_find_task() {
-    if (pyramid_engine_find_task_bricklayer(id())) {
+    if (building_monument_find_bricklayer_task(id())) {
         assign_monument_task(runtime_data().part_bid);
         return true;
     }
@@ -148,7 +149,7 @@ void figure_bricklayer::figure_action() {
             base.wait_ticks = 0;
             if (rd.serving_statue) {
                 advance_action(ACTION_2_BRICKLAYER_WORK);
-            } else if (pyramid_engine_is_mastaba(b_dest)) {
+            } else if (b_dest->dcast_monument()) {
                 rd.walk_mode = PYRAMID_WALK_ACTIVE;
                 advance_action(ACTION_4_BRICKLAYER_CLIMB_RAMP);
             } else {
@@ -177,7 +178,7 @@ void figure_bricklayer::figure_action() {
             rd.walk_mode = PYRAMID_WALK_NONE;
             break;
         }
-        base.destination_tile = pyramid_engine_part_tile(part);
+        base.destination_tile = part->tile;
         route_remove();
         advance_action(ACTION_7_BRICKLAYER_WALK_TO_PART);
         break;
@@ -238,7 +239,12 @@ void figure_bricklayer::figure_action() {
         }
 
         if (rd.part_bid) {
-            pyramid_engine_place_block(rd.part_bid, id());
+            building *part = building_get(rd.part_bid);
+            if (auto *mon = part ? part->dcast_monument() : nullptr) {
+                mon->place_bricklayer_block(id());
+            } else {
+                advance_action(ACTION_3_BRICKLAYER_RETURN_HOME);
+            }
         } else {
             advance_action(ACTION_3_BRICKLAYER_RETURN_HOME);
         }

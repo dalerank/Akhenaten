@@ -32,6 +32,9 @@
 
 #include <algorithm>
 
+using e_pyramid_style_tokens_t = token_holder<e_pyramid_style, PYRAMID_STYLE_NONE, PYRAMID_STYLE_COUNT>;
+const e_pyramid_style_tokens_t ANK_CONFIG_ENUM(e_pyramid_style_tokens);
+
 #define DELIVERY_ARRAY_SIZE_STEP 200
 #define ORIGINAL_DELIVERY_BUFFER_SIZE 16
 #define MODULES_PER_TEMPLE 2
@@ -729,6 +732,19 @@ bool building_monument::need_carpenter() {
     // Carpenters are needed if monument needs TIMBER and we don't have enough carpenters
     // Typically need 1 carpenter for scaffolding construction
     return works_carpenters < 1;
+}
+
+int building_monument_find_bricklayer_task(figure_id fid) {
+    int part = 0;
+    buildings_valid_do([&](building &b) {
+        if (part || !b.is_main()) {
+            return;
+        }
+        if (auto *mon = b.dcast_monument()) {
+            part = mon->try_assign_bricklayer(fid);
+        }
+    });
+    return part;
 }
 
 bool building_monument::need_bricklayers() {
