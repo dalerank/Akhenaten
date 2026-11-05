@@ -199,9 +199,7 @@ bool building_obelisk::need_carpenter() {
     if (resource_pct(RESOURCE_TIMBER) >= 100) {
         return false;
     }
-    if (yards_available(RESOURCE_TIMBER) < need) {
-        return false;
-    }
+    // OG: timber is prepaid from the carpenters guild at dispatch, not city yards.
     if (has_live_worker(FIGURE_CARPENTER)) {
         return false;
     }
@@ -248,10 +246,7 @@ bool building_obelisk::place_scaffold() {
     if (resource_pct(RESOURCE_TIMBER) >= 100) {
         return false;
     }
-    if (yards_available(RESOURCE_TIMBER) < need) {
-        return false;
-    }
-    events::emit(event_city_remove_resource{RESOURCE_TIMBER, need, /*staffed_only*/true});
+    // Guild already deducted timber on dispatch; credit the monument stage here.
     if (!deliver_resource(RESOURCE_TIMBER, need)) {
         return false;
     }

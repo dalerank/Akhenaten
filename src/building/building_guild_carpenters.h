@@ -7,5 +7,11 @@ public:
     BUILDING_METAINFO(BUILDING_CARPENTERS_GUILD, building_carpenters_guild, building_guild)
 
     virtual void spawn_figure() override;
-    bool can_spawn_carpenter();
+    virtual void update_day() override;
+
+    int max_active_carpenters() const;
+    bool can_spawn_carpenter() const;
+
+    static building *find_monument_task(tile2i from);
+    static building *find_statue_task();
 };

@@ -109,20 +109,21 @@ function figure_carpenter_setup_phrase(ev) {
 
 	var state = f.action_state
 	switch (state) {
-	case ACTION_2_CARPENTER_WORK_GROUND:
-		figure_apply_phrase(f, "carpenter_this_monument_will_be_short")
-		return
-	case ACTION_3_CARPENTER_WORK_VERT:
-		figure_apply_phrase(f, "carpenter_work_wall")
-		return
-	case ACTION_5_CARPENTER_LOOKING_FOR_WORK_TILE:
+	case ACTION_0_CARPENTER_ROAM:
 		figure_apply_phrase(f, "carpenter_looking_for_spot")
 		return
-	case ACTION_4_CARPENTER_RETURN_HOME:
+	case ACTION_2_CARPENTER_WORK:
+		figure_apply_phrase(f, "carpenter_this_monument_will_be_short")
+		return
+	case ACTION_4_CARPENTER_CLIMB_RAMP:
+		figure_apply_phrase(f, "carpenter_work_wall")
+		return
+	case ACTION_3_CARPENTER_RETURN:
+	case ACTION_5_CARPENTER_GO_TO_GUILD_ROAD:
 		figure_apply_phrase(f, "carpenter_return_to_guild")
 		return
-	case ACTION_9_CARPENTER_GOING_TO_GARDEN:
-		figure_apply_phrase(f, "carpenter_work_garden")
+	case ACTION_1_CARPENTER_GO_TO_SITE:
+		figure_apply_phrase(f, "carpenter_work_my_tools_need_for_monument")
 		return
 	}
 

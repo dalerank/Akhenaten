@@ -1,21 +1,155 @@
 #include "building_guild_carpenters.h"
 
-#include "dev/debug.h"
-#include "game/game.h"
-#include "core/random.h"
-#include "city/city_resource.h"
-#include "building/monument_mastaba.h"
 #include "building/building_statue.h"
-#include "city/city_buildings.h"
-#include "figuretype/figure_carpenter.h"
+#include "building/monuments.h"
 #include "city/city.h"
+#include "city/city_buildings.h"
+#include "core/random.h"
+#include "dev/debug.h"
+#include "figuretype/figure_carpenter.h"
+#include "game/game.h"
 #include "js/js_game.h"
+
+#include <algorithm>
+#include <initializer_list>
 
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_carpenters_guild);
 declare_console_command(add_timber, game_cheat_add_resource<RESOURCE_TIMBER>);
 
-bool building_carpenters_guild::can_spawn_carpenter() {
-    return get_figures_number(FIGURE_CARPENTER) < current_params().max_walkers;
+namespace {
+constexpr int k_carpenter_progress_ready = 400;
+constexpr int k_carpenter_timber_load = 100;
+
+bool monument_needs_carpenter(building &b) {
+    if (!b.is_main() || !b.is_monument()) {
+        return false;
+    }
+    auto *monument = b.dcast_monument();
+    return monument && monument->is_unfinished() && monument->need_carpenter();
+}
+
+building *first_monument_of_types(std::initializer_list<e_building_type> types) {
+    for (e_building_type type : types) {
+        building *found = buildings_valid_first([&](building &b) {
+            return b.type == type && monument_needs_carpenter(b);
+        });
+        if (found) {
+            return found;
+        }
+    }
+    return nullptr;
+}
+} // namespace
+
+building *building_carpenters_guild::find_monument_task(tile2i /*from*/) {
+    // OG monument_find_task_carpenter priority order.
+    if (building *b = first_monument_of_types({
+            BUILDING_SMALL_PYRAMID,
+            BUILDING_MEDIUM_PYRAMID,
+            BUILDING_LARGE_PYRAMID,
+            BUILDING_PYRAMID_COMPLEX,
+            BUILDING_GRAND_PYRAMID_COMPLEX,
+            BUILDING_SMALL_STEPPED_PYRAMID,
+            BUILDING_MEDIUM_STEPPED_PYRAMID,
+            BUILDING_LARGE_STEPPED_PYRAMID,
+            BUILDING_STEPPED_PYRAMID_COMPLEX,
+            BUILDING_GRAND_STEPPED_PYRAMID_COMPLEX,
+            BUILDING_SMALL_BENT_PYRAMID,
+            BUILDING_MEDIUM_BENT_PYRAMID,
+            BUILDING_SMALL_MUDBRICK_PYRAMID,
+            BUILDING_MEDIUM_MUDBRICK_PYRAMID,
+            BUILDING_LARGE_MUDBRICK_PYRAMID,
+            BUILDING_MUDBRICK_PYRAMID_COMPLEX,
+            BUILDING_GRAND_MUDBRICK_PYRAMID_COMPLEX,
+            BUILDING_PYRAMID,
+        })) {
+        return b;
+    }
+
+    if (building *b = first_monument_of_types({BUILDING_SPHINX})) {
+        return b;
+    }
+    if (building *b = first_monument_of_types({BUILDING_SMALL_OBELISK, BUILDING_LARGE_OBELISK})) {
+        return b;
+    }
+    if (building *b = first_monument_of_types({BUILDING_CAESAREUM})) {
+        return b;
+    }
+    if (building *b = first_monument_of_types({BUILDING_PHAROS_LIGHTHOUSE})) {
+        return b;
+    }
+    if (building *b = first_monument_of_types({BUILDING_SUN_TEMPLE})) {
+        return b;
+    }
+    if (building *b = first_monument_of_types({BUILDING_ALEXANDRIA_LIBRARY, BUILDING_ALEXANDRIAS_LIBRARY})) {
+        return b;
+    }
+    if (building *b = first_monument_of_types({BUILDING_ABU_SIMBEL})) {
+        return b;
+    }
+    return first_monument_of_types({BUILDING_MAUSOLEUM});
+}
+
+building *building_carpenters_guild::find_statue_task() {
+    int min_service_value = 9999;
+    building *best = nullptr;
+    buildings_valid_do([&](building &b) {
+        auto *statue = b.dcast_statue();
+        if (!statue) {
+            return;
+        }
+        if (statue->get_figure_id(BUILDING_SLOT_SERVICE) != 0) {
+            return;
+        }
+        const int value = statue->service();
+        if (value < min_service_value) {
+            min_service_value = value;
+            best = &b;
+        }
+    });
+    return best;
+}
+
+int building_carpenters_guild::max_active_carpenters() const {
+    const int pct = worker_percentage();
+    if (pct >= 100) {
+        return 4;
+    }
+    if (pct >= 75) {
+        return 3;
+    }
+    if (pct >= 50) {
+        return 2;
+    }
+    // OG carpenter guild uses one_below_25: any staffing above 0 → 1 walker.
+    if (pct >= 1) {
+        return 1;
+    }
+    return 0;
+}
+
+bool building_carpenters_guild::can_spawn_carpenter() const {
+    return get_figures_number(FIGURE_CARPENTER) < max_active_carpenters();
+}
+
+void building_carpenters_guild::update_day() {
+    building_impl::update_day();
+
+    if (base.num_workers <= 0) {
+        return;
+    }
+
+    // OG: progress while staffed and (no input subtype OR any timber stock).
+    if (base.input.resource != RESOURCE_NONE && stored_amount(base.input.resource) <= 0) {
+        return;
+    }
+
+    const int cap = std::max<int>(base.progress_max, k_carpenter_progress_ready) * 2;
+    int next = (int)base.progress + base.num_workers;
+    if (next > cap) {
+        next = cap;
+    }
+    base.progress = (uint16_t)next;
 }
 
 void building_carpenters_guild::spawn_figure() {
@@ -25,95 +159,48 @@ void building_carpenters_guild::spawn_figure() {
     }
 
     common_spawn_labor_seeker(current_params().min_houses_coverage);
-    int pct_workers = base.worker_percentage();
-    if (pct_workers < 50) {
-        return;
-    }
 
-    int spawn_delay = figure_spawn_timer();
-    if (spawn_delay == -1) {
-        return;
-    }
-
-    base.figure_spawn_delay++;
-    if (base.figure_spawn_delay < spawn_delay) {
-        return;
-    }
-
-    base.figure_spawn_delay = 0;
     if (!can_spawn_carpenter()) {
         return;
     }
 
-    // Check if TIMBER resource is available (not mothballed)
-    if (g_city.resource.is_mothballed(RESOURCE_TIMBER)) {
+    if (base.progress < k_carpenter_progress_ready) {
         return;
     }
 
-    building *monument = buildings_valid_first([&] (building &b) {
-        if (!b.is_main()) {
-            return false;
-        }
+    building *monument = find_monument_task(base.road_access);
+    building *statue = nullptr;
+    if (!monument && building_statue::guild_service_enabled()) {
+        statue = find_statue_task();
+    }
+    if (!monument && !statue) {
+        // OG creates a ghost corpse here; remake skips the useless spawn.
+        return;
+    }
 
-        if (!b.is_monument()) {
-            return false;
-        }
+    figure *f = create_roaming_figure(FIGURE_CARPENTER, (e_figure_action)ACTION_0_CARPENTER_ROAM, BUILDING_SLOT_SERVICE);
+    if (!f || !f->id) {
+        return;
+    }
 
-        const auto monument = b.dcast_monument();
-        if (!monument->is_unfinished()) {
-            return false;
-        }
-
-        return monument->need_carpenter();
-    });
+    f->roam_length = 0;
+    f->wait_ticks = 0;
+    auto *carpenter = smart_cast<figure_carpenter>(f);
+    if (!carpenter) {
+        return;
+    }
 
     if (monument) {
-        auto f = create_figure_with_destination(FIGURE_CARPENTER, monument, (e_figure_action)ACTION_0_CARPENTER_CREATED, BUILDING_SLOT_SERVICE);
-        auto *mm = monument->dcast_monument();
-        f->destination_tile = mm ? mm->access_point() : monument->access_tile();
-        f->terrain_usage = TERRAIN_USAGE_PREFER_ROADS;
-        monument->dcast()->add_workers(f->id);
-        f->wait_ticks = random_short() % 30;
-        if (auto carpenter = smart_cast<figure_carpenter>(f)) {
-            carpenter->runtime_data().destination_bid = monument->id;
+        base.progress = 0;
+        int stock = stored_amount(RESOURCE_TIMBER);
+        if (stock >= k_carpenter_timber_load) {
+            consume_resource(RESOURCE_TIMBER, k_carpenter_timber_load);
+        } else if (stock > 0) {
+            consume_resource(RESOURCE_TIMBER, (int16_t)stock);
         }
+        carpenter->assign_monument_task(monument);
         return;
     }
 
-    if (!building_statue::guild_service_enabled()) {
-        return;
-    }
-
-    // If no monument is found, create a carpenter figure with a statue/garden destination
-    int min_service_value = 9999;
-    building_impl *min_service_statue = nullptr;
-    buildings_valid_do([&] (building &b) {
-        const auto statue = b.dcast_statue();
-        if (!statue) {
-            return;
-        }
-
-        const bool has_worker = statue->get_figure_id(BUILDING_SLOT_SERVICE) != 0;
-        if (has_worker) {
-            return;
-        }
-
-        const int value = statue->service();
-        if (value < min_service_value) {
-            min_service_value = value;
-            min_service_statue = statue;
-        }
-    });
-
-    if (min_service_statue) {
-        auto f = create_figure_with_destination(FIGURE_CARPENTER, &min_service_statue->base, (e_figure_action)ACTION_8_CARPENTER_CREATED_ROAMING, BUILDING_SLOT_SERVICE);
-        min_service_statue->add_workers(f->id);
-        f->wait_ticks = random_short() % 30;
-        auto carpenter = smart_cast<figure_carpenter>(f);
-        if (carpenter) {
-            carpenter->runtime_data().destination_bid = min_service_statue->id();
-        }
-        return;
-    }
+    carpenter->assign_statue_task(statue);
 }
-
