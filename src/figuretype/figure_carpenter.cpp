@@ -5,7 +5,6 @@
 #include "building/monument_obelisk.h"
 #include "building/monuments.h"
 #include "core/random.h"
-#include "game/simulation_time.h"
 #include "grid/road_access.h"
 #include "js/js_game.h"
 
@@ -14,14 +13,25 @@ REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_carpenter);
 const figure_carpenter_action_tokens_t ANK_CONFIG_ENUM(figure_carpenter_action_tokens)
 
 namespace {
-constexpr int k_max_roam_ticks = 512;
-constexpr int k_ghost_ticks = 10;
-constexpr int k_task_search_base = 30;
-constexpr int k_task_search_rand = 30;
-constexpr int k_guild_road_radius = 2;
-constexpr int k_mausoleum_head_start = 10;
-constexpr int k_climb_ticks = 30;
+int work_ticks_for(const figure_carpenter::static_params &params, building *worked, bool serving_statue) {
+    if (serving_statue) {
+        return params.statue_work_ticks;
+    }
+    if (!worked) {
+        return params.pyramid_work_ticks;
+    }
+    if (auto *obelisk = worked->dcast_obelisk()) {
+        return obelisk->current_work_ticks();
+    }
+    if (worked->type == BUILDING_MAUSOLEUM) {
+        return params.mausoleum_work_ticks;
+    }
+    if (worked->dcast_pyramid()) {
+        return params.pyramid_work_ticks;
+    }
+    return params.statue_work_ticks;
 }
+} // namespace
 
 void figure_carpenter::assign_monument_task(building *monument) {
     if (!monument) {
@@ -82,8 +92,9 @@ bool figure_carpenter::try_find_task() {
 }
 
 void figure_carpenter::figure_action() {
+    const auto &params = current_params();
     base.use_cross_country = false;
-    base.max_roam_length = k_max_roam_ticks;
+    base.max_roam_length = params.max_roam_length;
 
     building *bhome = home();
     if (!bhome || !bhome->is_valid() || bhome->type != BUILDING_CARPENTERS_GUILD) {
@@ -97,7 +108,7 @@ void figure_carpenter::figure_action() {
     switch (action_state()) {
     case ACTION_0_CARPENTER_ROAM: {
         if (!base.is_visible()) {
-            if (++base.wait_ticks > k_ghost_ticks) {
+            if (++base.wait_ticks > params.ghost_ticks) {
                 base.set_flag(e_figure_flag_invisible, false);
                 base.wait_ticks = 0;
             }
@@ -105,7 +116,8 @@ void figure_carpenter::figure_action() {
         }
 
         base.wait_ticks++;
-        const int search_after = k_task_search_base + (random_short() % k_task_search_rand);
+        const int search_rand = params.task_search_rand > 0 ? (random_short() % params.task_search_rand) : 0;
+        const int search_after = params.task_search_base + search_rand;
         if (base.wait_ticks > search_after) {
             try_find_task();
             base.wait_ticks = 0;
@@ -117,7 +129,7 @@ void figure_carpenter::figure_action() {
 
         base.terrain_usage = TERRAIN_USAGE_ROADS;
         if (++base.roam_length >= base.max_roam_length) {
-            tile2i road = map_closest_road_within_radius(*bhome, k_guild_road_radius);
+            tile2i road = map_closest_road_within_radius(*bhome, params.guild_road_radius);
             if (!road.valid()) {
                 poof();
                 return;
@@ -140,9 +152,12 @@ void figure_carpenter::figure_action() {
             break;
         }
 
+        // Default PREFER_ROADS; building.guild_worker_terrain overrides (OG ROADS_OR_MONUMENT → ANY).
         e_terrain_usage terrain = TERRAIN_USAGE_PREFER_ROADS;
         if (rd.serving_statue) {
             terrain = TERRAIN_USAGE_ROADS;
+        } else {
+            terrain = (e_terrain_usage)building_static_params::get(b_dest->type).guild_worker_terrain;
         }
 
         if (do_goto(base.destination_tile, terrain, -1, ACTION_0_CARPENTER_ROAM)) {
@@ -161,8 +176,9 @@ void figure_carpenter::figure_action() {
     }
 
     case ACTION_4_CARPENTER_CLIMB_RAMP: {
+        // OG pyramid_figure_walk_on_ramp stand-in: fixed climb then work.
         base.wait_ticks++;
-        if (base.wait_ticks > k_climb_ticks) {
+        if (base.wait_ticks > params.climb_ticks) {
             base.wait_ticks = 0;
             advance_action(ACTION_2_CARPENTER_WORK);
         }
@@ -180,17 +196,18 @@ void figure_carpenter::figure_action() {
             break;
         }
 
+        if (!bhome->is_valid()) {
+            poof();
+            break;
+        }
+
         if (auto *obelisk = worked->dcast_obelisk()) {
             base.set_flag(e_figure_flag_invisible);
             obelisk->set_carpenter_works(id());
         }
 
         base.wait_ticks++;
-        int work_need = simulation_time_t::ticks_in_day * 2;
-        if (auto *obelisk = worked->dcast_obelisk()) {
-            work_need = obelisk->current_work_ticks();
-        }
-
+        const int work_need = work_ticks_for(params, worked, rd.serving_statue != 0);
         if (base.wait_ticks <= work_need) {
             break;
         }
@@ -213,6 +230,7 @@ void figure_carpenter::figure_action() {
             }
         }
 
+        // OG mausoleum_figure_work_tick → GUILD_WORKER_ROAM with head-start ticks.
         if (worked->type == BUILDING_MAUSOLEUM) {
             if (auto *mon = worked->dcast_monument()) {
                 mon->remove_worker(id());
@@ -220,7 +238,7 @@ void figure_carpenter::figure_action() {
             set_destination(nullptr);
             rd.destination_bid = 0;
             rd.serving_statue = 0;
-            base.wait_ticks = k_mausoleum_head_start;
+            base.wait_ticks = params.mausoleum_head_start;
             advance_action(ACTION_0_CARPENTER_ROAM);
             break;
         }
@@ -230,12 +248,14 @@ void figure_carpenter::figure_action() {
     }
 
     case ACTION_3_CARPENTER_RETURN:
-        // OG: destination stays at the work site, so arrival / lost / reroute all poof.
+        // OG return_and_disappear with destination still at the work site:
+        // arrival / lost / reroute all end the figure where it stands.
         poof();
         break;
 
     case ACTION_5_CARPENTER_GO_TO_GUILD_ROAD:
-        if (do_goto(base.destination_tile, TERRAIN_USAGE_PREFER_ROADS, -1, ACTION_3_CARPENTER_RETURN)) {
+        // OG TERRAIN_USAGE_ROADS_OR_MONUMENT → remake ANY.
+        if (do_goto(base.destination_tile, TERRAIN_USAGE_ANY, -1, ACTION_3_CARPENTER_RETURN)) {
             base.wait_ticks = 0;
             base.set_flag(e_figure_flag_invisible);
             advance_action(ACTION_0_CARPENTER_ROAM);

@@ -27,6 +27,7 @@ building_pharos_lighthouse {
     meta { text_id: 178, help_link:"message_building_pharos_lighthouse" }
     info_sound : "Wavs/rock3.wav"
     cost [ 5000, 6500, 8000, 11000, 16000 ]
+    guild_worker_terrain: TERRAIN_USAGE_ANY
     flags {
         is_monument: true
         non_deletable: true

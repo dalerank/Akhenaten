@@ -38,7 +38,7 @@ struct building_static_params {
     std::unordered_map<xstring, building_overlay_anim> overlay_anims;
     uint8_t building_size;
     uint8_t min_houses_coverage;
-    // Remake (need_nearby_houses_for_work): Chebyshev radius for weekly house scan; 0 → 6.
+
     uint8_t nearby_houses_radius;
     uint16_t production_rate;
     uint16_dcy production_rate_dcy;
@@ -58,6 +58,7 @@ struct building_static_params {
     int8_dcy fire_risk;
     int8_dcy damage_risk;
     uint8_t max_walkers;
+    int8_t guild_worker_terrain = 3;
 
     building_planner_update_rule planner_update_rule;
     building_planner_need_rule needs;
@@ -88,7 +89,8 @@ ANK_CONFIG_STRUCT(building_overlay_anim,
 
 ANK_CONFIG_STRUCT(building_static_params,
     labor_category, fire_proof, damage_proof, input, output,
-    fire_proof, damage_proof, animations, overlay_anims, laborers, fire_risk, damage_risk, max_walkers, planner_update_rule, needs, flags,
+    fire_proof, damage_proof, animations, overlay_anims, laborers, fire_risk, damage_risk, max_walkers,
+    guild_worker_terrain, planner_update_rule, needs, flags,
     build_menu_text, info_sound, cost, desirability, crime,
     output_resource_second_rate, building_size, info_title_id, progress_max, overlay, sound_channel,
     max_service, max_storage_amount, max_serve_clients, max_gatherers,
@@ -96,7 +98,7 @@ ANK_CONFIG_STRUCT(building_static_params,
 
 ANK_CONFIG_PROPERTY(building_static_params,
     labor_category, fire_proof, damage_proof,
-    fire_proof, damage_proof, laborers, fire_risk, damage_risk, max_walkers,
+    fire_proof, damage_proof, laborers, fire_risk, damage_risk, max_walkers, guild_worker_terrain,
     build_menu_text, info_sound, cost,
     output_resource_second_rate, building_size, info_title_id, progress_max, overlay, sound_channel,
     max_service, max_storage_amount, max_serve_clients, max_gatherers,

@@ -46,6 +46,7 @@ building_mausoleum {
     meta { text_id: 178, help_link:"message_building_mausoleum" }
     info_sound : "Wavs/rock3.wav"
     cost [ 3500, 4500, 6000, 8500, 12000 ]
+    guild_worker_terrain: TERRAIN_USAGE_ANY
     flags {
         is_monument: true
         non_deletable: true
