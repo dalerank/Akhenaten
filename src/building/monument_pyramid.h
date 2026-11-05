@@ -44,6 +44,7 @@ public:
 
     tile2i footprint_nw() const;
     const base_params &footprint_params() const;
+    bool tile_in_monument_footprint(tile2i tile) const;
 
     virtual tile2i center_point() const override;
     virtual tile2i access_point() const override { return footprint_nw().shifted(footprint_params().enter_offset); }
@@ -641,6 +642,7 @@ public:
     using static_params = building_impl::static_params;
     BUILDING_STATIC_DATA_T
     virtual void on_place_update_tiles(int orientation, int variant) override;
+    virtual void update_map_orientation(int map_orientation) override;
 };
 
 class building_pyramid_causeway : public building_impl {
@@ -649,6 +651,7 @@ public:
     using static_params = building_impl::static_params;
     BUILDING_STATIC_DATA_T
     virtual void on_place_update_tiles(int orientation, int variant) override;
+    virtual void update_map_orientation(int map_orientation) override;
 };
 
 class building_valley_temple : public building_impl {
@@ -657,6 +660,7 @@ public:
     using static_params = building_impl::static_params;
     BUILDING_STATIC_DATA_T
     virtual void on_place_update_tiles(int orientation, int variant) override;
+    virtual void update_map_orientation(int map_orientation) override;
 };
 
 bool building_type_is_pyramid_complex_annex(e_building_type t);

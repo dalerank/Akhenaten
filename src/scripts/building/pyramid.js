@@ -1287,7 +1287,7 @@ building_small_stepped_pyramid {
   building_medium_bent_pyramid_cone = building_medium_bent_pyramid
   // --- True (smooth) pyramids — PACK_PYRAMID + limestone + polish ---
   // Same layout as stepped/bent (159 Pyramid_* + phase one + buildings). Polish
-  // casing at Pyramid_00054+ (top-down via use_polish_sprites_for_layer).
+  // casing continues at Pyramid_00049 (OG offsets 48..88; finished row is 00089).
   building_small_pyramid {
     animations {
       _pack { pack:PACK_PYRAMID }
@@ -1296,10 +1296,10 @@ building_small_stepped_pyramid {
       base_bricks { path:"Pyramid/Pyramid_00103" }
       corner_bricks { path:"Pyramid/Pyramid_00001" }
       wall_bricks { path:"Pyramid/Pyramid_00005" }
-      // Polish casing (same corner/wall offset layout as bricks, pack index +53)
+      // Rows after the 6 brick courses: OG (11-blocks)*8 for blocks 5..0.
       base_polish { path:"Pyramid/Pyramid_00103" }
-      corner_polish { path:"Pyramid/Pyramid_00054" }
-      wall_polish { path:"Pyramid/Pyramid_00058" }
+      corner_polish { path:"Pyramid/Pyramid_00049" }
+      wall_polish { path:"Pyramid/Pyramid_00053" }
       base_grounded { path:"Pyramid/pyramid_phase_one_00013" }
       clear_land { id:2, offset:12 }
       image_stick { path:"Pyramid/pyramid_phase_one_00021" }
@@ -1913,8 +1913,8 @@ building_small_stepped_pyramid {
       corner_bricks { path:"Pyramid/Pyramid_00001" }
       wall_bricks { path:"Pyramid/Pyramid_00005" }
       base_polish { path:"Pyramid/Pyramid_00103" }
-      corner_polish { path:"Pyramid/Pyramid_00054" }
-      wall_polish { path:"Pyramid/Pyramid_00058" }
+      corner_polish { path:"Pyramid/Pyramid_00049" }
+      wall_polish { path:"Pyramid/Pyramid_00053" }
       base_grounded { path:"Pyramid/pyramid_phase_one_00013" }
       clear_land { id:2, offset:12 }
       image_stick { path:"Pyramid/pyramid_phase_one_00021" }
@@ -2083,8 +2083,8 @@ building_small_stepped_pyramid {
       corner_bricks { path:"Pyramid/Pyramid_00001" }
       wall_bricks { path:"Pyramid/Pyramid_00005" }
       base_polish { path:"Pyramid/Pyramid_00103" }
-      corner_polish { path:"Pyramid/Pyramid_00054" }
-      wall_polish { path:"Pyramid/Pyramid_00058" }
+      corner_polish { path:"Pyramid/Pyramid_00049" }
+      wall_polish { path:"Pyramid/Pyramid_00053" }
       base_grounded { path:"Pyramid/pyramid_phase_one_00013" }
       clear_land { id:2, offset:12 }
       image_stick { path:"Pyramid/pyramid_phase_one_00021" }
@@ -2350,8 +2350,8 @@ building_small_stepped_pyramid {
       corner_bricks { path:"Pyramid/Pyramid_00001" }
       wall_bricks { path:"Pyramid/Pyramid_00005" }
       base_polish { path:"Pyramid/Pyramid_00103" }
-      corner_polish { path:"Pyramid/Pyramid_00054" }
-      wall_polish { path:"Pyramid/Pyramid_00058" }
+      corner_polish { path:"Pyramid/Pyramid_00049" }
+      wall_polish { path:"Pyramid/Pyramid_00053" }
       base_grounded { path:"Pyramid/pyramid_phase_one_00013" }
       clear_land { id:2, offset:12 }
       image_stick { path:"Pyramid/pyramid_phase_one_00021" }
@@ -2615,8 +2615,8 @@ building_small_stepped_pyramid {
       corner_bricks { path:"Pyramid/Pyramid_00001" }
       wall_bricks { path:"Pyramid/Pyramid_00005" }
       base_polish { path:"Pyramid/Pyramid_00103" }
-      corner_polish { path:"Pyramid/Pyramid_00054" }
-      wall_polish { path:"Pyramid/Pyramid_00058" }
+      corner_polish { path:"Pyramid/Pyramid_00049" }
+      wall_polish { path:"Pyramid/Pyramid_00053" }
       base_grounded { path:"Pyramid/pyramid_phase_one_00013" }
       clear_land { id:2, offset:12 }
       image_stick { path:"Pyramid/pyramid_phase_one_00021" }

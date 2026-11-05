@@ -172,6 +172,13 @@ function run_test() {
         __log_marker('true_pyramid_small_art_skipped:no_resource')
     }
 
+    // Leave FINISHED for --integraltest-keep: smooth casing row (Pyramid_00089).
+    __test_monument_set_phase(bid, total)
+    __test_pump_frames(4)
+    if (img > 0) {
+        __game_save_screenshot(SCREENSHOT_DISPLAY)
+    }
+
     // Remake polish day-tick finish retired — OG square block engine owns phase>=2
     // (see tests/266_true_pyramid_og_complete.js).
 
