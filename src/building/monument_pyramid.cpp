@@ -217,10 +217,13 @@ int annex_building_image(e_building_type complex_type, e_building_type annex_typ
     // Pack from the parent complex `_pack` / base anim; group id from the annex
     // building's `base { id:… }` (9/10/11). OG orientation: valley uses ori/2
     // (4 frames), mortuary/causeway use ori/2&1 (2 frames).
-    const auto &cx = building_static_params::get(complex_type);
-    int pack = cx.animations["base"].pack;
-    if (pack <= 0) {
-        pack = cx.animations["clear_land"].pack;
+    int pack = 0;
+    if (complex_type != BUILDING_NONE) {
+        const auto &cx = building_static_params::get(complex_type);
+        pack = cx.animations["base"].pack;
+        if (pack <= 0) {
+            pack = cx.animations["clear_land"].pack;
+        }
     }
     if (pack <= 0) {
         pack = building_static_params::get(annex_type).animations["base"].pack;
@@ -241,6 +244,91 @@ int annex_building_image(e_building_type complex_type, e_building_type annex_typ
         return base + ori2;
     }
     return base + (ori2 & 1);
+}
+
+e_building_type annex_parent_complex_type(tile2i annex_tile) {
+    // Causeway strip tiles around the annex stay owned by the complex main.
+    for (int dy = -2; dy <= 3; ++dy) {
+        for (int dx = -2; dx <= 3; ++dx) {
+            tile2i n = annex_tile.shifted(dx, dy);
+            if (!map_grid_is_inside(n, 1)) {
+                continue;
+            }
+            building *b = building_at(n);
+            if (!b || b->state == BUILDING_STATE_UNUSED) {
+                continue;
+            }
+            building *main = b->main();
+            if (main && building_type_is_pyramid_complex(main->type)) {
+                return main->type;
+            }
+        }
+    }
+    return BUILDING_NONE;
+}
+
+void refresh_annex_orientation_tiles(building &annex) {
+    const e_building_type cx = annex_parent_complex_type(annex.tile);
+    int img = annex_building_image(cx, annex.type);
+    if (img <= 0) {
+        img = building_static_params::get(annex.type).base_img();
+    }
+    if (img <= 0) {
+        return;
+    }
+    map_building_tiles_add(annex.id, annex.tile, annex.size, img, TERRAIN_BUILDING);
+}
+
+void refresh_complex_causeway_orientation(building &complex) {
+    auto *mon = complex.dcast_monument();
+    if (!mon) {
+        return;
+    }
+    const auto &d = mon->runtime_data();
+    if (d.causeway_length == 0) {
+        return;
+    }
+    building_pyramid *pyr = complex.dcast_pyramid();
+    if (!pyr) {
+        return;
+    }
+    const pyramid_causeway_probe probe = causeway_probe_from_runtime(
+        complex.tile, pyr->pyramid_params().init_tiles, d.causeway_length, d.causeway_dir);
+    if (!probe.ok || probe.length <= 0) {
+        return;
+    }
+
+    const int walk_img = complex_walkway_image(complex.type);
+    const vec2i step = k_causeway_dir[probe.dir & 3];
+    const vec2i perp = k_causeway_perp[probe.dir & 3];
+    tile2i origin = probe.origin;
+    for (int i = 0; i < probe.length; ++i) {
+        const bool paint_walkway = (i < 2) || (i == probe.length - 1);
+        for (int w = 0; w < k_causeway_width; ++w) {
+            tile2i t = origin.shifted(step.x * i + perp.x * w, step.y * i + perp.y * w);
+            if (!map_grid_is_inside(t, 1)) {
+                continue;
+            }
+            const int owner = map_building_at(t.grid_offset());
+            if (owner <= 0) {
+                continue;
+            }
+            building *ob = building_get(owner);
+            if (!ob) {
+                continue;
+            }
+            if (building_type_is_pyramid_complex_annex(ob->type)) {
+                // One refresh per 2×2 annex (draw from its NW tile only).
+                if (ob->tile == t) {
+                    refresh_annex_orientation_tiles(*ob);
+                }
+                continue;
+            }
+            if (owner == complex.id && paint_walkway && walk_img > 0) {
+                map_image_set(t.grid_offset(), walk_img);
+            }
+        }
+    }
 }
 
 void claim_causeway_tiles(int building_id, const pyramid_causeway_probe &probe) {
@@ -485,15 +573,27 @@ REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_pyramid_causeway)
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_valley_temple)
 
 void building_mortuary_temple::on_place_update_tiles(int, int) {
-    map_building_tiles_add(id(), tile(), size(), base_img(), TERRAIN_BUILDING);
+    refresh_annex_orientation_tiles(base);
+}
+
+void building_mortuary_temple::update_map_orientation(int /*map_orientation*/) {
+    refresh_annex_orientation_tiles(base);
 }
 
 void building_pyramid_causeway::on_place_update_tiles(int, int) {
-    map_building_tiles_add(id(), tile(), size(), base_img(), TERRAIN_BUILDING);
+    refresh_annex_orientation_tiles(base);
+}
+
+void building_pyramid_causeway::update_map_orientation(int /*map_orientation*/) {
+    refresh_annex_orientation_tiles(base);
 }
 
 void building_valley_temple::on_place_update_tiles(int, int) {
-    map_building_tiles_add(id(), tile(), size(), base_img(), TERRAIN_BUILDING);
+    refresh_annex_orientation_tiles(base);
+}
+
+void building_valley_temple::update_map_orientation(int /*map_orientation*/) {
+    refresh_annex_orientation_tiles(base);
 }
 
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_medium_pyramid)
@@ -812,6 +912,13 @@ tile2i building_pyramid::footprint_nw() const {
         min_y = std::min(min_y, part->tile.y());
     }
     return tile2i(min_x, min_y);
+}
+
+bool building_pyramid::tile_in_monument_footprint(tile2i tile) const {
+    const tile2i nw = footprint_nw();
+    const vec2i sz = footprint_params().init_tiles;
+    return tile.x() >= nw.x() && tile.y() >= nw.y()
+        && tile.x() < nw.x() + sz.x && tile.y() < nw.y() + sz.y;
 }
 
 const building_pyramid::base_params &building_pyramid::footprint_params() const {
@@ -1506,6 +1613,11 @@ void building_stepped_pyramid::on_config_reload() {
 }
 
 bool building_stepped_pyramid::draw_unfinished_height_ornaments(painter &ctx, vec2i point, tile2i tile, color color_mask, const vec2i tiles_size) {
+    // Complex causeway tiles are owned by the main building but are outside the
+    // 20×20 core — OG only ORs TERRAIN_MONUMENT there, so no pyramid bricks.
+    if (!tile_in_monument_footprint(tile)) {
+        return true;
+    }
     if (pyramid_params().pyramide_type != PYRAMID_STYLE_NONE && phase() >= 2) {
         if (city_flat_should_flatten_building(base)) {
             return true;
@@ -1536,8 +1648,10 @@ bool building_stepped_pyramid::draw_unfinished_height_ornaments(painter &ctx, ve
 }
 
 bool building_stepped_pyramid::draw_ornaments_and_animations_flat_impl(painter &ctx, vec2i point, tile2i tile, color color_mask, const vec2i tiles_size) {
-    // Use the same implementation as building_mastaba::draw_ornaments_and_animations_flat_impl
-    // This can be customized later if pyramid needs different rendering
+
+    if (!tile_in_monument_footprint(tile)) {
+        return false;
+    }
     if (is_finished()) {
         return false;
     }
@@ -1849,10 +1963,13 @@ int building_stepped_pyramid::get_masonry_image(int orientation, tile2i tile, ti
         BUILDING_LARGE_MUDBRICK_PYRAMID, BUILDING_LARGE_MUDBRICK_PYRAMID_CONE,
         BUILDING_MUDBRICK_PYRAMID_COMPLEX, BUILDING_GRAND_MUDBRICK_PYRAMID_COMPLEX
     });
+    // True polish casing is the outer slope only — flat filler tops read as
+    // ledges and leak through the ridge once draw-tile order changes on rotate.
     if (is_floor && !is_nw_origin) {
-        const xstring floor_key = polished && current_params().first_img("base_polish") > 0
-            ? "base_polish" : "base_bricks";
-        return current_params().first_img(floor_key) + layer;
+        if (polished) {
+            return 0;
+        }
+        return current_params().first_img("base_bricks") + layer;
     }
 
     tile = building_at(tile)->tile;
@@ -1868,19 +1985,24 @@ int building_stepped_pyramid::get_masonry_image(int orientation, tile2i tile, ti
         BUILDING_MEDIUM_MUDBRICK_PYRAMID_CORNER,
         BUILDING_LARGE_MUDBRICK_PYRAMID_CORNER
     });
+    // OG pyramid_images.rotated_kind: face index += view (orientation/2), wrap in 0..3.
+    const int view = (g_camera.orientation / 2) & 3;
+
     if (is_corner || is_nw_origin) {
         const xstring corner_key = polished && current_params().first_img("corner_polish") > 0
             ? "corner_polish" : "corner_bricks";
         int image_corner_bricks = current_params().first_img(corner_key) + (layer * 8);
-        const bool at_min_x = (tile.x() == start.x());
-        const bool at_min_y = (tile.y() == start.y());
-        const bool at_max_x = (tile.x() == end.x());
-        const bool at_max_y = (tile.y() == end.y());
-        if (at_min_x && at_min_y) return image_corner_bricks + 0;
-        if (at_min_x && at_max_y) return image_corner_bricks + 1;
-        if (at_max_x && at_max_y) return image_corner_bricks + 2; // visual bottom → stepped_pyramid_00043 at layer 5
-        if (at_max_x && at_min_y) return image_corner_bricks + 3;
-        return image_corner_bricks;
+        // 2×2 part may not sit on the exact remapped corner tile — use touch.
+        const bool at_min_x = (tile.x() <= start.x());
+        const bool at_min_y = (tile.y() <= start.y());
+        const bool at_max_x = (tile.x() >= end.x());
+        const bool at_max_y = (tile.y() >= end.y());
+        int face = 0;
+        if (at_min_x && at_min_y) face = 0;
+        else if (at_min_x && at_max_y) face = 1;
+        else if (at_max_x && at_max_y) face = 2; // visual bottom → stepped_pyramid_00043 at layer 5
+        else if (at_max_x && at_min_y) face = 3;
+        return image_corner_bricks + ((face + view) & 3);
     }
 
     const bool is_wall = building_type_any_of(type(), {
@@ -1896,11 +2018,12 @@ int building_stepped_pyramid::get_masonry_image(int orientation, tile2i tile, ti
         const xstring wall_key = polished && current_params().first_img("wall_polish") > 0
             ? "wall_polish" : "wall_bricks";
         int image_wall_bricks = current_params().first_img(wall_key) + (layer * 8);
-        if (tile.x() == start.x()) return image_wall_bricks + 0;
-        if (tile.y() == start.y()) return image_wall_bricks + 3;
-        if (tile.x() == end.x()) return image_wall_bricks + 2;
-        if (tile.y() == end.y()) return image_wall_bricks + 1;
-        return image_wall_bricks;
+        int face = 0;
+        if (tile.x() <= start.x()) face = 0;
+        else if (tile.y() <= start.y()) face = 3;
+        else if (tile.x() >= end.x()) face = 2;
+        else if (tile.y() >= end.y()) face = 1;
+        return image_wall_bricks + ((face + view) & 3);
     }
 
     return 0;
@@ -1933,6 +2056,9 @@ void building_stepped_pyramid::draw_ornaments_and_animations_stairs_impl(painter
 }
 
 bool building_stepped_pyramid::draw_ornaments_and_animations_hight_impl(painter &ctx, vec2i point, tile2i tile, color color_mask, const vec2i tiles_size) {
+    if (!tile_in_monument_footprint(tile)) {
+        return true;
+    }
     color_mask = (color_mask ? color_mask : 0xffffffff);
     const auto &d = runtime_data();
     const int ph = phase();
@@ -1967,15 +2093,24 @@ bool building_stepped_pyramid::draw_ornaments_and_animations_hight_impl(painter 
     const int building_L = ph / 6 - 1;
     const int L = d.layer;
 
+    tile2i anchor = base.tile;
+    switch (g_camera.orientation) {
+    case DIR_0_TOP_RIGHT: anchor = base.tile.shifted(0, 1); break;
+    case DIR_4_BOTTOM_LEFT: anchor = base.tile.shifted(1, 0); break;
+    case DIR_6_TOP_LEFT: anchor = base.tile.shifted(1, 1); break;
+    default: break;
+    }
+    const vec2i anchor_px = g_camera.lookup_tile_to_pixel(anchor);
+
     if (L < building_L) {
         if (L >= 0 && L < nlayers) {
             auto layer_area = get_layer_area(L);
             int img = get_bricks_image(base.orientation, tile, layer_area.begin, layer_area.end, 5);
             auto &command = ImageDraw::create_subcommand(ctx, render_command_t::ert_drawtile_full);
             command.image_id = img;
-            command.pixel = point - vec2i{0, TILE_HEIGHT_PIXELS * 3 * L};
+            command.pixel = anchor_px - vec2i{0, TILE_HEIGHT_PIXELS * 3 * L};
             command.mask = color_mask;
-            fill_tiles_height(ctx, tile, img);
+            fill_tiles_height(ctx, anchor, img);
         }
     } else if (building_L >= 0 && building_L < nlayers) {
         uint32_t progress = map_monuments_get_progress(tile);
@@ -1986,7 +2121,7 @@ bool building_stepped_pyramid::draw_ornaments_and_animations_hight_impl(painter 
             int layer_img = current_params().first_img("base_bricks") + 5;
             auto &command = ImageDraw::create_subcommand(ctx, render_command_t::ert_drawtile_full);
             command.image_id = layer_img;
-            command.pixel = point - vec2i{0, TILE_HEIGHT_PIXELS * 3 * (building_L - 1)};
+            command.pixel = anchor_px - vec2i{0, TILE_HEIGHT_PIXELS * 3 * (building_L - 1)};
             command.mask = color_mask;
         }
 
@@ -1998,9 +2133,9 @@ bool building_stepped_pyramid::draw_ornaments_and_animations_hight_impl(painter 
             int img = get_bricks_image(base.orientation, tile, layer_area.begin, layer_area.end, base_level - 1);
             auto &command = ImageDraw::create_subcommand(ctx, render_command_t::ert_drawtile_full);
             command.image_id = img;
-            command.pixel = point - vec2i{0, TILE_HEIGHT_PIXELS * 3 * building_L};
+            command.pixel = anchor_px - vec2i{0, TILE_HEIGHT_PIXELS * 3 * building_L};
             command.mask = color_mask;
-            fill_tiles_height(ctx, tile, img);
+            fill_tiles_height(ctx, anchor, img);
         }
     }
 
@@ -2012,12 +2147,15 @@ bool building_stepped_pyramid::draw_ornaments_and_animations_hight_impl(painter 
 }
 
 bool building_stepped_pyramid::draw_completed_height_ornaments(painter &ctx, vec2i point, tile2i tile, color color_mask, const vec2i tiles_size) {
+    if (!tile_in_monument_footprint(tile)) {
+        return true;
+    }
+
     color_mask = (color_mask ? color_mask : 0xffffffff);
     const auto &d = runtime_data();
     const bool polished = use_polish_sprites_for_layer(d.layer);
     const int L = d.layer;
-    // Prefer monument footprint (complex 20×20) over the caller's part params
-    // (LARGE wall/corner still carry init_tiles 16×16).
+
     const vec2i footprint = footprint_params().init_tiles;
     const int nlayers = std::max(1, footprint.x / 4);
 
@@ -2027,11 +2165,20 @@ bool building_stepped_pyramid::draw_completed_height_ornaments(painter &ctx, vec
         auto *ms = pyramid_main_state_get(head ? head->id : 0);
         if (ms && ms->style != PYRAMID_STYLE_NONE && ms->style != PYRAMID_STYLE_MASTABA) {
             const int total = g_monument_pyramid_engine.block_total(ms->size_variant);
-            const int done = is_finished() ? total : (total - (int)ms->remaining_blocks);
-            const int blocks_per_ring = std::max(1, total / nlayers);
-            const int ring_start = L * blocks_per_ring;
-            const int ring_done = std::clamp(done - ring_start, 0, blocks_per_ring);
-            course = std::clamp(ring_done * 6 / blocks_per_ring, 0, 5);
+            if (polished) {
+                if (!is_finished() && ms->block_phase_active && ms->remaining_blocks > 0) {
+                    const int done = total - (int)ms->remaining_blocks;
+                    course = std::clamp(done * 6 / std::max(1, total), 0, 5);
+                } else {
+                    course = 5;
+                }
+            } else {
+                const int done = is_finished() ? total : (total - (int)ms->remaining_blocks);
+                const int blocks_per_ring = std::max(1, total / nlayers);
+                const int ring_start = L * blocks_per_ring;
+                const int ring_done = std::clamp(done - ring_start, 0, blocks_per_ring);
+                course = std::clamp(ring_done * 6 / blocks_per_ring, 0, 5);
+            }
         }
     }
 
@@ -2051,29 +2198,43 @@ bool building_stepped_pyramid::draw_completed_height_ornaments(painter &ctx, vec
         return true;
     }
 
-    // Upper tiers need a ledge underlay (same as unfinished height_impl) —
-    // without it the raised ring leaves a black hole over the map tile.
-    if (L >= 1) {
-        const xstring floor_key = polished && current_params().first_img("base_polish") > 0
-            ? "base_polish" : "base_bricks";
-        int under_img = current_params().first_img(floor_key) + course;
+    // Anchor to the orientation draw-tile of this 2×2 part (same as map_building_tiles_add),
+    // not whatever city pass `point` is — keeps casing joined across rotates.
+    tile2i anchor = base.tile;
+    switch (g_camera.orientation) {
+    case DIR_0_TOP_RIGHT: anchor = base.tile.shifted(0, 1); break;
+    case DIR_4_BOTTOM_LEFT: anchor = base.tile.shifted(1, 0); break;
+    case DIR_6_TOP_LEFT: anchor = base.tile.shifted(1, 1); break;
+    default: break;
+    }
+    const vec2i anchor_px = g_camera.lookup_tile_to_pixel(anchor);
+
+    // Stepped/brick: ledge underlay fills the raised ring. True polish casing
+    // must stay a continuous slope — the flat ledge reads as extra steps.
+    if (L >= 1 && !polished) {
+        int under_img = current_params().first_img("base_bricks") + course;
         if (under_img > course) {
             auto &under = ImageDraw::create_subcommand(ctx, render_command_t::ert_drawtile_full);
             under.image_id = under_img;
-            under.pixel = point - vec2i{0, TILE_HEIGHT_PIXELS * 3 * (L - 1)};
+            under.pixel = anchor_px - vec2i{0, TILE_HEIGHT_PIXELS * 3 * (L - 1)};
             under.mask = color_mask;
         }
     }
 
     auto layer_area = get_layer_area(L);
     int img = get_masonry_image(base.orientation, tile, layer_area.begin, layer_area.end, course, polished);
+    if (img <= 0) {
+        return true;
+    }
+
+    const vec2i pixel = anchor_px - vec2i{0, TILE_HEIGHT_PIXELS * 3 * L};
 
     auto &command = ImageDraw::create_subcommand(ctx, render_command_t::ert_drawtile_full);
     command.image_id = img;
-    command.pixel = point - vec2i{0, TILE_HEIGHT_PIXELS * 3 * L};
+    command.pixel = pixel;
     command.mask = color_mask;
 
-    fill_tiles_height(ctx, tile, img);
+    fill_tiles_height(ctx, anchor, img);
     return true;
 }
 
@@ -2205,14 +2366,19 @@ void building_stepped_pyramid::update_month() {
 
 void building_stepped_pyramid::update_map_orientation(int map_orientation) {
     if (is_finished()) {
-        // Finished stepped pyramids are drawn via height ornaments (full tiers).
-        // Do not reuse mastaba brick lookup — wrong footprint (3,9) and images → black grid.
         map_building_tiles_add(id(), tile(), base.size, building_image_get(), TERRAIN_BUILDING);
+    }
+
+    if (is_main() && building_type_is_pyramid_complex(type())) {
+        refresh_complex_causeway_orientation(base);
     }
 }
 
 bool building_stepped_pyramid::force_draw_flat_tile(painter &ctx, tile2i tile, vec2i pixel, color mask) {
     if (is_finished()) {
+        return false;
+    }
+    if (!tile_in_monument_footprint(tile)) {
         return false;
     }
 
