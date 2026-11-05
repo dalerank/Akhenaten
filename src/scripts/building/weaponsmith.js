@@ -28,6 +28,7 @@ building_weaponsmith = {
   labor_category : LABOR_CATEGORY_MILITARY
   meta : { text_id: 124, help_link:"message_building_weapongsmith_and_chariot_maker" }
   info_sound : "Wavs/weapon.wav"
+  sound_channel : SOUND_CHANNEL_CITY_WEAPONS_WORKSHOP
   building_size: 2
   cost: [ 24, 40, 80, 120, 150 ]
   desirability : { value:[-3], step:[1], step_size:[1], range: [3] }
