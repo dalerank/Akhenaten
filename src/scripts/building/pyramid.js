@@ -1337,6 +1337,7 @@ building_small_stepped_pyramid {
     wall_type : BUILDING_SMALL_PYRAMID_WALL
     cone_type : BUILDING_SMALL_PYRAMID_CONE
     filler_type : BUILDING_SMALL_PYRAMID
+    pyramide_type : PYRAMID_STYLE_TRUE
   }
 
   building_small_pyramid_corner = building_small_pyramid
@@ -2066,6 +2067,7 @@ building_small_stepped_pyramid {
     wall_type : BUILDING_MEDIUM_PYRAMID_WALL
     cone_type : BUILDING_MEDIUM_PYRAMID_CONE
     filler_type : BUILDING_MEDIUM_PYRAMID
+    pyramide_type : PYRAMID_STYLE_TRUE
   }
 
   building_medium_pyramid_corner = building_medium_pyramid
@@ -2329,6 +2331,7 @@ building_small_stepped_pyramid {
     wall_type : BUILDING_LARGE_PYRAMID_WALL
     cone_type : BUILDING_LARGE_PYRAMID_CONE
     filler_type : BUILDING_LARGE_PYRAMID
+    pyramide_type : PYRAMID_STYLE_TRUE
   }
 
 
@@ -2360,6 +2363,8 @@ building_small_stepped_pyramid {
       ground_phase_0 { path:"Pyramid/pyramid_phase_one_00013" }
       basement { path:"Pyramid/pyramid_phase_one_00058" }
       enter { path:"pharaoh_general/plazatiles_00064"}
+      // OG image_mausoleum_walkway_b = pack group 8 (same as mudbrick complex).
+      complex_walkway { id:8, offset:0 }
       stair_0_2 { path:"Pyramid/Pyramid_00112" }
       stair_0_4 { path:"Pyramid/Pyramid_00110" }
       stair_0_4_corner { path:"Pyramid/Pyramid_00122" }
@@ -2595,6 +2600,7 @@ building_small_stepped_pyramid {
     wall_type : BUILDING_LARGE_PYRAMID_WALL
     cone_type : BUILDING_LARGE_PYRAMID_CONE
     filler_type : BUILDING_PYRAMID_COMPLEX
+    pyramide_type : PYRAMID_STYLE_TRUE
   }
 
 
@@ -2622,6 +2628,7 @@ building_small_stepped_pyramid {
       ground_phase_0 { path:"Pyramid/pyramid_phase_one_00013" }
       basement { path:"Pyramid/pyramid_phase_one_00058" }
       enter { path:"pharaoh_general/plazatiles_00064"}
+      complex_walkway { id:8, offset:0 }
       stair_0_2 { path:"Pyramid/Pyramid_00112" }
       stair_0_4 { path:"Pyramid/Pyramid_00110" }
       stair_0_4_corner { path:"Pyramid/Pyramid_00122" }
@@ -2857,6 +2864,7 @@ building_small_stepped_pyramid {
     wall_type : BUILDING_LARGE_PYRAMID_WALL
     cone_type : BUILDING_LARGE_PYRAMID_CONE
     filler_type : BUILDING_GRAND_PYRAMID_COMPLEX
+    pyramide_type : PYRAMID_STYLE_TRUE
   }
 
 

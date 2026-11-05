@@ -32,6 +32,9 @@ public:
     int size_variant(building *main) const;
     int block_total(int size_variant) const;
     bool is_mudbrick(building *b) const;
+    // True when building config sets pyramide_type (OG block engine, not remake).
+    bool uses_block_engine(building *b) const;
+    e_pyramid_style style_of(building *b) const;
     bool block_phase_active(building *main) const;
 
     void find_frontier(building *main, svector<building_id, PYRAMID_PARTS_CAPACITY> &frontier);
@@ -41,6 +44,7 @@ public:
 
 private:
     bool is_mudbrick_type(e_building_type t) const;
+    bool uses_block_engine_type(e_building_type t) const;
     int part_height(const pyramid_part_state &p) const;
     int layer_capacity() const;
     void add_block(pyramid_part_state &p) const;
@@ -51,6 +55,8 @@ private:
 extern monument_pyramid_engine g_monument_pyramid_engine;
 
 void pyramid_engine_clear_all();
+void pyramid_engine_init(building *main);
+
 void pyramid_engine_init_mudbrick(building *main);
 void pyramid_engine_start_block_phase(building *main);
 bool pyramid_engine_blocks_finished(building *main);

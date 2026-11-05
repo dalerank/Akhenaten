@@ -43,7 +43,8 @@ enum e_pyramid_style : uint8_t {
     PYRAMID_STYLE_NONE = 0,
     PYRAMID_STYLE_MASTABA = 1,
     PYRAMID_STYLE_MUDBRICK = 2,
-    // TRUE / STEPPED / BENT share the square engine later.
+    PYRAMID_STYLE_TRUE = 3, // OG style 4; shares mudbrick block totals @ 0x005F5C40
+    // STEPPED / BENT share the square engine later (own totals).
     PYRAMID_STYLE_COUNT,
 };
 

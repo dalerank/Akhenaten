@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "grid/point.h"
 #include "core/custom_span.hpp"
@@ -30,7 +30,8 @@ public:
         e_building_type wall_type;
         e_building_type cone_type;
         e_building_type filler_type;
-        // OG square-pyramid block engine style (NONE = remake tile-progress only).
+        // OG pyramid block engine style (NONE = remake tile-progress only).
+        // Mastaba is a separate engine; all pyramid styles share this one.
         e_pyramid_style pyramide_type = PYRAMID_STYLE_NONE;
 
         vec2i init_tiles;
@@ -48,7 +49,7 @@ public:
     virtual tile2i access_point() const override { return footprint_nw().shifted(footprint_params().enter_offset); }
     virtual grid_area get_area() const override;
 
-    // OG block engine (pyramide_type) — shared by all mudbrick sizes.
+    // OG pyramid block engine when pyramide_type != NONE.
     virtual void sync_visuals() override;
     virtual bool need_bricklayers() override;
     virtual bool need_stonemason() override;
@@ -338,7 +339,7 @@ public:
     virtual const monument &config() const override;
 };
 ANK_CONFIG_STRUCT(building_small_pyramid::static_params,
-    init_tiles, corner_type, wall_type, cone_type, filler_type, enter_offset, stairs);
+    init_tiles, corner_type, wall_type, cone_type, filler_type, enter_offset, stairs, pyramide_type);
 
 class building_small_pyramid_corner : public building_small_pyramid {
 public:
@@ -537,7 +538,7 @@ public:
     virtual const monument &config() const override;
 };
 ANK_CONFIG_STRUCT(building_medium_pyramid::static_params,
-    init_tiles, corner_type, wall_type, cone_type, filler_type, enter_offset, stairs);
+    init_tiles, corner_type, wall_type, cone_type, filler_type, enter_offset, stairs, pyramide_type);
 
 class building_medium_pyramid_corner : public building_medium_pyramid {
 public:
@@ -578,7 +579,7 @@ public:
     virtual const monument &config() const override;
 };
 ANK_CONFIG_STRUCT(building_large_pyramid::static_params,
-    init_tiles, corner_type, wall_type, cone_type, filler_type, enter_offset, stairs);
+    init_tiles, corner_type, wall_type, cone_type, filler_type, enter_offset, stairs, pyramide_type);
 
 class building_large_pyramid_corner : public building_large_pyramid {
 public:
@@ -611,7 +612,7 @@ public:
     virtual const monument &config() const override;
 };
 ANK_CONFIG_STRUCT(building_pyramid_complex::static_params,
-    init_tiles, corner_type, wall_type, cone_type, filler_type, enter_offset, stairs);
+    init_tiles, corner_type, wall_type, cone_type, filler_type, enter_offset, stairs, pyramide_type);
 
 // Grand = same on-land footprint until causeway; separate TYPE for monument weight 44.
 class building_grand_pyramid_complex : public building_large_pyramid {
@@ -630,7 +631,7 @@ public:
     virtual const monument &config() const override;
 };
 ANK_CONFIG_STRUCT(building_grand_pyramid_complex::static_params,
-    init_tiles, corner_type, wall_type, cone_type, filler_type, enter_offset, stairs);
+    init_tiles, corner_type, wall_type, cone_type, filler_type, enter_offset, stairs, pyramide_type);
 
 // OG complex annex (size_variant 3/4): mortuary temple → causeway → valley temple.
 // Placeholder art until pak sprites are wired; placement is along the causeway strip.

@@ -172,55 +172,8 @@ function run_test() {
         __log_marker('true_pyramid_small_art_skipped:no_resource')
     }
 
-    // Natural finish via update_day (not set_phase cheat):
-    // 23→24 clears progress; 25→26 keeps tiles at 200; 26→FINISHED posts congrats.
-    function find_msg_key(key) {
-        var total = __city_message_count()
-        for (var i = total - 1; i >= 0; i--) {
-            if (__lang_get_message_id(__city_message_mm_text_id(i)) == key) {
-                return i
-            }
-        }
-        return -1
-    }
-
-    __test_monument_set_phase(bid, 23)
-    var prog23 = __test_monument_min_progress(bid)
-    __test_building_update_day(bid)
-    var ph24 = __test_monument_phase(bid)
-    var prog24 = __test_monument_min_progress(bid)
-    if (ph24 == 24 && prog23 >= 200 && prog24 == 0) {
-        __log_marker('true_pyramid_small_polish_clear_ok')
-    } else {
-        __log_info_native('[test:108] polish clear want phase=24 progress=0 got ph=' + ph24
-            + ' prog23=' + prog23 + ' prog24=' + prog24)
-        __log_marker('true_pyramid_small_polish_clear_fail')
-    }
-
-    __test_monument_set_phase(bid, 25)
-    var prog25 = __test_monument_min_progress(bid)
-    __test_building_update_day(bid)
-    var ph26 = __test_monument_phase(bid)
-    var prog26 = __test_monument_min_progress(bid)
-    if (ph26 == 26 && prog25 >= 200 && prog26 >= 200) {
-        __log_marker('true_pyramid_small_terminal_keep_ok')
-    } else {
-        __log_info_native('[test:108] terminal keep want phase=26 progress>=200 got ph=' + ph26
-            + ' prog25=' + prog25 + ' prog26=' + prog26)
-        __log_marker('true_pyramid_small_terminal_keep_fail')
-    }
-
-    var msg_before = __city_message_count()
-    __test_building_update_day(bid)
-    var ph_fin = __test_monument_phase(bid)
-    var msg_idx = find_msg_key('pyramid_congratulations')
-    if ((ph_fin == -1 || ph_fin == 255) && msg_idx >= 0) {
-        __log_marker('true_pyramid_small_natural_finish_ok')
-    } else {
-        __log_info_native('[test:108] natural finish want FINISHED+congrats got ph=' + ph_fin
-            + ' msg_idx=' + msg_idx + ' msgs=' + msg_before + '→' + __city_message_count())
-        __log_marker('true_pyramid_small_natural_finish_fail')
-    }
+    // Remake polish day-tick finish retired — OG square block engine owns phase>=2
+    // (see tests/266_true_pyramid_og_complete.js).
 
     __log_info_native('[test:108] done')
     __test_signal_ready()
@@ -232,10 +185,7 @@ function check_valid() {
         'true_pyramid_small_schedule_ok',
         'true_pyramid_small_phases_ok',
         'true_pyramid_small_polish_no_lime_ok',
-        'true_pyramid_small_polish_mason_ok',
-        'true_pyramid_small_polish_clear_ok',
-        'true_pyramid_small_terminal_keep_ok',
-        'true_pyramid_small_natural_finish_ok'
+        'true_pyramid_small_polish_mason_ok'
     ]
     for (var i = 0; i < required.length; i++) {
         if (!__test_find_inlog(required[i])) {
@@ -246,10 +196,7 @@ function check_valid() {
     if (__test_find_inlog('true_pyramid_small_phases_fail')
         || __test_find_inlog('true_pyramid_small_polish_pct_fail')
         || __test_find_inlog('true_pyramid_small_polish_mason_fail')
-        || __test_find_inlog('true_pyramid_small_saveload_fail')
-        || __test_find_inlog('true_pyramid_small_polish_clear_fail')
-        || __test_find_inlog('true_pyramid_small_terminal_keep_fail')
-        || __test_find_inlog('true_pyramid_small_natural_finish_fail')) {
+        || __test_find_inlog('true_pyramid_small_saveload_fail')) {
         return false
     }
     // Soft-skip when write/load unavailable; otherwise require success marker.

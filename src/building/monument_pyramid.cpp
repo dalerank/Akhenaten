@@ -853,7 +853,7 @@ grid_area building_pyramid::get_area() const {
 }
 
 void building_pyramid::sync_visuals() {
-    if (pyramid_params().pyramide_type != PYRAMID_STYLE_MUDBRICK) {
+    if (pyramid_params().pyramide_type == PYRAMID_STYLE_NONE) {
         return;
     }
     if (!is_main() || is_finished()) {
@@ -895,11 +895,11 @@ void building_stepped_pyramid::sync_footprint_layers(int done_blocks, int total_
 
 void building_stepped_pyramid::sync_visuals() {
     building_pyramid::sync_visuals();
-    if (pyramid_params().pyramide_type != PYRAMID_STYLE_MUDBRICK || !is_main() || is_finished()) {
+    if (pyramid_params().pyramide_type == PYRAMID_STYLE_NONE || !is_main() || is_finished()) {
         return;
     }
     auto *ms = pyramid_main_state_get(id());
-    if (!ms || ms->style != PYRAMID_STYLE_MUDBRICK) {
+    if (!ms || ms->style == PYRAMID_STYLE_NONE || ms->style == PYRAMID_STYLE_MASTABA) {
         return;
     }
     const int total = g_monument_pyramid_engine.block_total(ms->size_variant);
@@ -908,7 +908,7 @@ void building_stepped_pyramid::sync_visuals() {
 }
 
 bool building_pyramid::run_block_day() {
-    if (pyramid_params().pyramide_type != PYRAMID_STYLE_MUDBRICK) {
+    if (pyramid_params().pyramide_type == PYRAMID_STYLE_NONE) {
         return false;
     }
     if (!is_main() || phase() < 2) {
@@ -916,11 +916,11 @@ bool building_pyramid::run_block_day() {
     }
 
     auto *ms = pyramid_main_state_get(id());
-    if (!ms || ms->style != PYRAMID_STYLE_MUDBRICK) {
-        pyramid_engine_init_mudbrick(&base);
+    if (!ms || ms->style == PYRAMID_STYLE_NONE || ms->style == PYRAMID_STYLE_MASTABA) {
+        pyramid_engine_init(&base);
         ms = pyramid_main_state_get(id());
     }
-    if (!ms || ms->style != PYRAMID_STYLE_MUDBRICK) {
+    if (!ms || ms->style == PYRAMID_STYLE_NONE || ms->style == PYRAMID_STYLE_MASTABA) {
         return false;
     }
 
@@ -998,6 +998,7 @@ void building_stepped_pyramid::finish_block_construction() {
 }
 
 bool building_pyramid::need_bricklayers() {
+    // OG: bricklayers only on mudbrick main-material stage; true uses stonemasons.
     if (pyramid_params().pyramide_type == PYRAMID_STYLE_MUDBRICK) {
         if (is_finished() || !is_main() || phase() < 2) {
             return false;
@@ -1007,11 +1008,14 @@ bool building_pyramid::need_bricklayers() {
             return ms->remaining_blocks > 0 && need_workers();
         }
     }
+    if (pyramid_params().pyramide_type == PYRAMID_STYLE_TRUE) {
+        return false;
+    }
     return building_monument::need_bricklayers();
 }
 
 bool building_pyramid::need_stonemason() {
-    if (pyramid_params().pyramide_type == PYRAMID_STYLE_MUDBRICK) {
+    if (pyramid_params().pyramide_type != PYRAMID_STYLE_NONE) {
         if (is_finished() || !is_main()) {
             return false;
         }
@@ -1502,7 +1506,7 @@ void building_stepped_pyramid::on_config_reload() {
 }
 
 bool building_stepped_pyramid::draw_unfinished_height_ornaments(painter &ctx, vec2i point, tile2i tile, color color_mask, const vec2i tiles_size) {
-    if (pyramid_params().pyramide_type == PYRAMID_STYLE_MUDBRICK && phase() >= 2) {
+    if (pyramid_params().pyramide_type != PYRAMID_STYLE_NONE && phase() >= 2) {
         if (city_flat_should_flatten_building(base)) {
             return true;
         }
@@ -1537,9 +1541,9 @@ bool building_stepped_pyramid::draw_ornaments_and_animations_flat_impl(painter &
     if (is_finished()) {
         return false;
     }
-    // OG mudbrick owns construction from phase 2 — remake ditch/flat ornaments
-    // fight sync_visuals(progress=200) and produce black voids / wrong casing.
-    if (pyramid_params().pyramide_type == PYRAMID_STYLE_MUDBRICK && phase() >= 2) {
+    // OG square block engine owns construction from phase 2 — remake ditch/flat
+    // ornaments fight sync_visuals(progress=200) and produce black voids.
+    if (pyramid_params().pyramide_type != PYRAMID_STYLE_NONE && phase() >= 2) {
         return false;
     }
 
@@ -1907,9 +1911,9 @@ void building_stepped_pyramid::draw_ornaments_and_animations_stairs_impl(painter
     if (is_finished()) {
         return;
     }
-    // Remake stairs[] are decorative phase sprites — OG mudbrick uses carpenter ramps
-    // (still stubbed). Drawing them on the complex SE edge looks like a serrated annex.
-    if (pyramid_params().pyramide_type == PYRAMID_STYLE_MUDBRICK) {
+    // Remake stairs[] are decorative phase sprites — OG square engine uses carpenter
+    // ramps (still stubbed). Drawing them on the complex SE edge looks serrated.
+    if (pyramid_params().pyramide_type != PYRAMID_STYLE_NONE) {
         return;
     }
 
@@ -2018,10 +2022,10 @@ bool building_stepped_pyramid::draw_completed_height_ornaments(painter &ctx, vec
     const int nlayers = std::max(1, footprint.x / 4);
 
     int course = 5;
-    if (pyramid_params().pyramide_type == PYRAMID_STYLE_MUDBRICK) {
+    if (pyramid_params().pyramide_type != PYRAMID_STYLE_NONE) {
         building *head = base.main();
         auto *ms = pyramid_main_state_get(head ? head->id : 0);
-        if (ms && ms->style == PYRAMID_STYLE_MUDBRICK) {
+        if (ms && ms->style != PYRAMID_STYLE_NONE && ms->style != PYRAMID_STYLE_MASTABA) {
             const int total = g_monument_pyramid_engine.block_total(ms->size_variant);
             const int done = is_finished() ? total : (total - (int)ms->remaining_blocks);
             const int blocks_per_ring = std::max(1, total / nlayers);
@@ -2756,6 +2760,9 @@ void building_small_pyramid::update_day() {
     if (is_finished()) {
         return;
     }
+    if (run_block_day()) {
+        return;
+    }
 
     building_stepped_pyramid::update_day(current_params().init_tiles);
 }
@@ -2790,6 +2797,9 @@ bool building_small_pyramid::draw_ornaments_and_animations_height(painter &ctx, 
 }
 
 bool building_small_pyramid::need_stonemason() {
+    if (pyramid_params().pyramide_type == PYRAMID_STYLE_TRUE) {
+        return building_pyramid::need_stonemason();
+    }
     if (is_finished() || !is_main()) {
         return false;
     }
@@ -3212,6 +3222,9 @@ void building_medium_pyramid::update_day() {
     if (is_finished()) {
         return;
     }
+    if (run_block_day()) {
+        return;
+    }
 
     building_stepped_pyramid::update_day(current_params().init_tiles);
 }
@@ -3247,6 +3260,9 @@ bool building_medium_pyramid::draw_ornaments_and_animations_height(painter &ctx,
 }
 
 bool building_medium_pyramid::need_stonemason() {
+    if (pyramid_params().pyramide_type == PYRAMID_STYLE_TRUE) {
+        return building_pyramid::need_stonemason();
+    }
     if (is_finished() || !is_main()) {
         return false;
     }
@@ -3287,6 +3303,9 @@ void building_large_pyramid::update_day() {
     if (is_finished()) {
         return;
     }
+    if (run_block_day()) {
+        return;
+    }
 
     building_stepped_pyramid::update_day(current_params().init_tiles);
 }
@@ -3321,6 +3340,9 @@ bool building_large_pyramid::draw_ornaments_and_animations_height(painter &ctx, 
 }
 
 bool building_large_pyramid::need_stonemason() {
+    if (pyramid_params().pyramide_type == PYRAMID_STYLE_TRUE) {
+        return building_pyramid::need_stonemason();
+    }
     if (is_finished() || !is_main()) {
         return false;
     }
@@ -3380,6 +3402,9 @@ void building_pyramid_complex::update_day() {
     if (is_finished()) {
         return;
     }
+    if (run_block_day()) {
+        return;
+    }
 
     building_stepped_pyramid::update_day(current_params().init_tiles);
 }
@@ -3425,6 +3450,9 @@ void building_grand_pyramid_complex::update_day() {
     building_impl::update_day();
 
     if (is_finished()) {
+        return;
+    }
+    if (run_block_day()) {
         return;
     }
 

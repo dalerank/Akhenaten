@@ -3640,8 +3640,8 @@ static void __pyramid_start_block_phase(int bid) {
     if (!head) {
         return;
     }
-    if (g_monument_pyramid_engine.is_mudbrick(head)) {
-        pyramid_engine_init_mudbrick(head);
+    if (g_monument_pyramid_engine.uses_block_engine(head)) {
+        pyramid_engine_init(head);
         pyramid_engine_start_block_phase(head);
         return;
     }

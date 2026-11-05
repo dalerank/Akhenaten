@@ -156,54 +156,8 @@ function run_test() {
         }
     }
 
-    // Natural finish: 35→36 clears; 40→41 keeps; 41→FINISHED
-    __test_monument_set_phase(bid, 35)
-    var prog35 = __test_monument_min_progress(bid)
-    __test_building_update_day(bid)
-    var ph36 = __test_monument_phase(bid)
-    var prog36 = __test_monument_min_progress(bid)
-    if (ph36 == 36 && prog35 >= 200 && prog36 == 0) {
-        __log_marker('true_pyramid_large_polish_clear_ok')
-    } else {
-        __log_info_native('[test:110] polish clear want phase=36 progress=0 got ph=' + ph36
-            + ' prog35=' + prog35 + ' prog36=' + prog36)
-        __log_marker('true_pyramid_large_polish_clear_fail')
-    }
-
-    __test_monument_set_phase(bid, 40)
-    var prog40 = __test_monument_min_progress(bid)
-    __test_building_update_day(bid)
-    var ph41 = __test_monument_phase(bid)
-    var prog41 = __test_monument_min_progress(bid)
-    if (ph41 == 41 && prog40 >= 200 && prog41 >= 200) {
-        __log_marker('true_pyramid_large_terminal_keep_ok')
-    } else {
-        __log_info_native('[test:110] terminal keep want phase=41 progress>=200 got ph=' + ph41
-            + ' prog40=' + prog40 + ' prog41=' + prog41)
-        __log_marker('true_pyramid_large_terminal_keep_fail')
-    }
-
-    function find_msg_key(key) {
-        var n = __city_message_count()
-        for (var i = n - 1; i >= 0; i--) {
-            if (__lang_get_message_id(__city_message_mm_text_id(i)) == key) {
-                return i
-            }
-        }
-        return -1
-    }
-
-    var before = __city_message_count()
-    __test_building_update_day(bid)
-    var ph_fin = __test_monument_phase(bid)
-    var msg = find_msg_key('pyramid_congratulations')
-    if ((ph_fin == -1 || ph_fin == 255) && msg >= 0) {
-        __log_marker('true_pyramid_large_congrats_ok')
-    } else {
-        __log_info_native('[test:110] congrats want finished+msg got ph=' + ph_fin
-            + ' msg=' + msg + ' before_msgs=' + before)
-        __log_marker('true_pyramid_large_congrats_fail')
-    }
+    // Remake polish day-tick finish retired — OG square block engine owns phase>=2
+    // (see tests/268_true_large_pyramid_og_complete.js).
 
     __log_info_native('[test:110] done')
     __test_signal_ready()
@@ -216,9 +170,6 @@ function check_valid() {
         'true_pyramid_large_phases_ok',
         'true_pyramid_large_polish_no_lime_ok',
         'true_pyramid_large_polish_mason_ok',
-        'true_pyramid_large_polish_clear_ok',
-        'true_pyramid_large_terminal_keep_ok',
-        'true_pyramid_large_congrats_ok',
         'true_pyramid_large_rating_ok'
     ]
     for (var i = 0; i < required.length; i++) {
@@ -231,9 +182,6 @@ function check_valid() {
         || __test_find_inlog('true_pyramid_large_polish_pct_fail')
         || __test_find_inlog('true_pyramid_large_polish_mason_fail')
         || __test_find_inlog('true_pyramid_large_saveload_fail')
-        || __test_find_inlog('true_pyramid_large_polish_clear_fail')
-        || __test_find_inlog('true_pyramid_large_terminal_keep_fail')
-        || __test_find_inlog('true_pyramid_large_congrats_fail')
         || __test_find_inlog('true_pyramid_large_rating_fail')) {
         return false
     }

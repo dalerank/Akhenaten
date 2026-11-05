@@ -59,6 +59,10 @@ bool monument_pyramid_engine::is_mudbrick_type(e_building_type t) const {
     return building_pyramid::params_for_type(t).pyramide_type == PYRAMID_STYLE_MUDBRICK;
 }
 
+bool monument_pyramid_engine::uses_block_engine_type(e_building_type t) const {
+    return building_pyramid::params_for_type(t).pyramide_type != PYRAMID_STYLE_NONE;
+}
+
 bool monument_pyramid_engine::is_mudbrick(building *b) const {
     if (!b) {
         return false;
@@ -67,13 +71,30 @@ bool monument_pyramid_engine::is_mudbrick(building *b) const {
     return head && is_mudbrick_type(head->type);
 }
 
+bool monument_pyramid_engine::uses_block_engine(building *b) const {
+    if (!b) {
+        return false;
+    }
+    building *head = chain_head(b);
+    return head && uses_block_engine_type(head->type);
+}
+
+e_pyramid_style monument_pyramid_engine::style_of(building *b) const {
+    building *head = chain_head(b);
+    if (!head) {
+        return PYRAMID_STYLE_NONE;
+    }
+    return building_pyramid::params_for_type(head->type).pyramide_type;
+}
+
 bool monument_pyramid_engine::block_phase_active(building *main) const {
-    auto *st = pyramid_main_state_get(main ? main->main()->id : 0);
-    return st && st->style == PYRAMID_STYLE_MUDBRICK && st->block_phase_active && st->remaining_blocks > 0;
+    building *head = chain_head(main);
+    auto *st = pyramid_main_state_get(head ? head->id : 0);
+    return st && uses_block_engine(head) && st->block_phase_active && st->remaining_blocks > 0;
 }
 
 // Size-0 (4×4 parts): OG layout gives layers=1 to the NW 2×2, layers=0 to the outer ring.
-static uint8_t mudbrick_target_layers_for_part(building *head, building *part, int size_variant) {
+static uint8_t square_target_layers_for_part(building *head, building *part, int size_variant) {
     if (!head || !part) {
         return 0;
     }
@@ -99,16 +120,17 @@ static uint8_t mudbrick_target_layers_for_part(building *head, building *part, i
 void pyramid_engine_clear_all() {
 }
 
-void pyramid_engine_init_mudbrick(building *main) {
+void pyramid_engine_init(building *main) {
     if (!main) {
         return;
     }
     building *head = g_monument_pyramid_engine.chain_head(main);
     auto &engine = g_monument_pyramid_engine;
-    if (!head || !engine.is_mudbrick(head)) {
+    if (!head || !engine.uses_block_engine(head)) {
         return;
     }
 
+    const e_pyramid_style style = engine.style_of(head);
     const int size_variant = engine.size_variant(head);
     svector<building *, PYRAMID_PARTS_CAPACITY> parts;
     engine.collect_parts(head, parts);
@@ -119,7 +141,7 @@ void pyramid_engine_init_mudbrick(building *main) {
     }
 
     pyramid_main_state &ms = g_monument_mastaba_engine.ensure_main(head->id);
-    ms.style = PYRAMID_STYLE_MUDBRICK;
+    ms.style = style;
     ms.size_variant = (uint8_t)size_variant;
     ms.remaining_blocks = (uint16_t)engine.block_total(size_variant);
     ms.block_phase_active = 0;
@@ -129,10 +151,14 @@ void pyramid_engine_init_mudbrick(building *main) {
         ps = {};
         ps.size_variant = (uint8_t)size_variant;
         ps.subtype = (uint8_t)i;
-        ps.target_layers = mudbrick_target_layers_for_part(head, parts[i], size_variant);
+        ps.target_layers = square_target_layers_for_part(head, parts[i], size_variant);
         ps.stage = PYRAMID_STAGE_MAIN_MATERIAL;
         ps.worker_figure_id = 0;
     }
+}
+
+void pyramid_engine_init_mudbrick(building *main) {
+    pyramid_engine_init(main);
 }
 
 void pyramid_engine_start_block_phase(building *main) {
@@ -140,11 +166,15 @@ void pyramid_engine_start_block_phase(building *main) {
     if (!head) {
         return;
     }
-    if (!pyramid_main_state_get(head->id) || pyramid_main_state_get(head->id)->style != PYRAMID_STYLE_MUDBRICK) {
-        pyramid_engine_init_mudbrick(head);
+    if (!g_monument_pyramid_engine.uses_block_engine(head)) {
+        return;
+    }
+    auto *existing = pyramid_main_state_get(head->id);
+    if (!existing || existing->style == PYRAMID_STYLE_NONE) {
+        pyramid_engine_init(head);
     }
     auto *ms = pyramid_main_state_get(head->id);
-    if (!ms || ms->style != PYRAMID_STYLE_MUDBRICK) {
+    if (!ms) {
         return;
     }
 
@@ -165,7 +195,7 @@ void pyramid_engine_start_block_phase(building *main) {
 bool pyramid_engine_blocks_finished(building *main) {
     building *head = g_monument_pyramid_engine.chain_head(main);
     auto *ms = pyramid_main_state_get(head ? head->id : 0);
-    if (!ms || ms->style != PYRAMID_STYLE_MUDBRICK || !ms->block_phase_active) {
+    if (!ms || !g_monument_pyramid_engine.uses_block_engine(head) || !ms->block_phase_active) {
         return false;
     }
     return ms->remaining_blocks == 0;
@@ -364,7 +394,7 @@ void pyramid_engine_place_block(building_id part_id, figure_id fid) {
 
 int monument_pyramid_engine::boost_blocks(building *main, int max_count) {
     building *head = chain_head(main);
-    if (!head || !is_mudbrick(head)) {
+    if (!head || !uses_block_engine(head)) {
         return 0;
     }
 
@@ -374,8 +404,8 @@ int monument_pyramid_engine::boost_blocks(building *main, int max_count) {
     }
 
     auto *ms = pyramid_main_state_get(head->id);
-    if (!ms || ms->style != PYRAMID_STYLE_MUDBRICK) {
-        pyramid_engine_init_mudbrick(head);
+    if (!ms || ms->style == PYRAMID_STYLE_NONE) {
+        pyramid_engine_init(head);
         ms = pyramid_main_state_get(head->id);
     }
     if (!ms) {
@@ -434,11 +464,11 @@ int pyramid_engine_try_assign_bricklayer(building *main, figure_id fid) {
     }
     auto *ms = pyramid_main_state_get(head->id);
     if (!ms || ms->style != PYRAMID_STYLE_MUDBRICK) {
-        pyramid_engine_init_mudbrick(head);
+        pyramid_engine_init(head);
         pyramid_engine_start_block_phase(head);
         ms = pyramid_main_state_get(head->id);
     }
-    if (!ms || !ms->block_phase_active || ms->remaining_blocks == 0) {
+    if (!ms || ms->style != PYRAMID_STYLE_MUDBRICK || !ms->block_phase_active || ms->remaining_blocks == 0) {
         return 0;
     }
 
