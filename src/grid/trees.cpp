@@ -1,23 +1,46 @@
 #include "trees.h"
 
-#include "tile_cache.h"
+#include "city/city.h"
 #include "core/profiler.h"
+#include "game/resource.h"
+#include "graphics/graphics.h"
+#include "graphics/image.h"
+#include "graphics/image_groups.h"
+#include "grid/canals.h"
+#include "grid/image.h"
+#include "grid/moisture.h"
+#include "grid/property.h"
+#include "grid/random.h"
+#include "grid/routing/routing.h"
 #include "grid/terrain.h"
 #include "grid/tiles.h"
-#include "graphics/image_groups.h"
-#include "graphics/image.h"
-#include "graphics/graphics.h"
-#include "grid/random.h"
-#include "grid/moisture.h"
-#include "grid/image.h"
-#include "grid/property.h"
+#include "tile_cache.h"
 #include "vegetation.h"
-#include "grid/canals.h"
 
 tile_cache trees_tiles_cache;
 
+bool map_trees_reachable() {
+    return g_city.vegetation.trees_reachable;
+}
+
+void map_trees_set_reachable(bool reachable) {
+    g_city.vegetation.trees_reachable = reachable;
+}
+
+void map_trees_update_reachable() {
+    // OG city-wide gate: one citizen reach pass from the map entry, not per wood cutter.
+    const tile2i entry = g_city.map.entry_point;
+    if (!entry.valid()) {
+        g_city.vegetation.trees_reachable = false;
+        return;
+    }
+    const resource_tile tile = map_routing_citizen_found_timber(entry);
+    g_city.vegetation.trees_reachable = (tile.res == RESOURCE_TIMBER);
+}
+
 void map_tree_clear() {
     trees_tiles_cache.clear();
+    g_city.vegetation.trees_reachable = false;
 }
 
 void map_tree_push_back(int grid_offset) {
@@ -36,6 +59,7 @@ void map_tree_growth_update() {
     for (int tile_offset : trees_tiles_cache) {
         vegetation_tile_update(tile_offset, opt);
     }
+    map_trees_update_reachable();
 }
 
 void map_tree_update_image(int grid_offset) {

@@ -15,6 +15,7 @@
 #include "grid/floodplain.h"
 #include "grid/canals.h"
 #include "grid/tiles.h"
+#include "grid/trees.h"
 #include "grid/irrigation_value.h"
 #include "grid/gardens.h"
 #include "grid/routing/routing.h"
@@ -372,3 +373,18 @@ int __map_is_highlighted(tile2i tile) {
     return (int)map_is_highlighted(tile);
 }
 ANK_FUNCTION_1(__map_is_highlighted)
+
+bool __map_trees_reachable() {
+    return map_trees_reachable();
+}
+ANK_FUNCTION(__map_trees_reachable)
+
+void __map_trees_set_reachable(bool reachable) {
+    map_trees_set_reachable(reachable);
+}
+ANK_FUNCTION_1(__map_trees_set_reachable)
+
+void __map_trees_update_reachable() {
+    map_trees_update_reachable();
+}
+ANK_FUNCTION(__map_trees_update_reachable)

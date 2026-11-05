@@ -92,6 +92,13 @@ struct city_t {
 
     city_trade_t trade;
     city_map_t map;
+
+    // OG vegetation_growth_state gatherer reach flags (refreshed with daily growth).
+    struct {
+        bool trees_reachable = false;
+        bool reeds_reachable = false;
+    } vegetation;
+
     struct {
         bool fired_message_shown;
         bool victory_message_shown;

@@ -51,7 +51,7 @@ function wood_cutter_max_lumberjacks(b) {
         max = 1
     }
 
-    if (game_features.get('gameplay_change_wood_cutter_single_gatherer') === true) {
+    if (game_features.gameplay_change_wood_cutter_single_gatherer) {
         var remake_cap = dcy_get(building_wood_cutter.max_gatherers)
         if (max > remake_cap) {
             max = remake_cap
@@ -77,9 +77,9 @@ function wood_cutter_has_lumberjack_capacity(b) {
 }
 
 function wood_cutter_can_spawn_lumberjack(b) {
-    var trees_ok = game_features.get('gameplay_change_wood_cutter_single_gatherer') === true
+    var trees_ok = game_features.gameplay_change_wood_cutter_single_gatherer
         ? b.citizen_found_terrain(TERRAIN_TREE)
-        : b.citizen_found_timber()
+        : __map_trees_reachable()
     return trees_ok && wood_cutter_has_lumberjack_capacity(b)
 }
 

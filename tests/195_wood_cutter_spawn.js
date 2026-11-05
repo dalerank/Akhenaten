@@ -13,7 +13,7 @@ var __test195_ok = false
 var __test195_feat_prev = false
 
 function test195_fail(msg) {
-    game_features.set('gameplay_change_wood_cutter_single_gatherer', __test195_feat_prev)
+    game_features.gameplay_change_wood_cutter_single_gatherer = __test195_feat_prev
     __log_info_native('[test:195] FAIL: ' + msg)
     __test_signal_ready()
 }
@@ -22,8 +22,8 @@ function run_test() {
     __log_info_native('[test:195] wood cutter lumberjack spawn (OG staffing)')
     test_reload_city_session('data/default.map')
     __test_set_treasury(10000)
-    __test195_feat_prev = game_features.get('gameplay_change_wood_cutter_single_gatherer') === true
-    game_features.set('gameplay_change_wood_cutter_single_gatherer', false)
+    __test195_feat_prev = !!game_features.gameplay_change_wood_cutter_single_gatherer
+    game_features.gameplay_change_wood_cutter_single_gatherer = false
 
     var bid = test_building_place(BUILDING_WOOD_CUTTERS, -1, -1)
     if (!bid) {
@@ -51,11 +51,11 @@ function run_test() {
     __log_marker('test195_half_staff_max_2')
 
     __test_building_set_workers(bid, 8)
-    game_features.set('gameplay_change_wood_cutter_single_gatherer', true)
+    game_features.gameplay_change_wood_cutter_single_gatherer = true
     if (wood_cutter_max_lumberjacks(b) != 1) {
         return test195_fail('remake feature should cap at 1, got ' + wood_cutter_max_lumberjacks(b))
     }
-    game_features.set('gameplay_change_wood_cutter_single_gatherer', false)
+    game_features.gameplay_change_wood_cutter_single_gatherer = false
     __log_marker('test195_remake_feature_caps_1')
 
     b.consume_resource(RESOURCE_TIMBER, -500)
@@ -65,10 +65,15 @@ function run_test() {
     __log_marker('test195_full_stock_no_capacity')
 
     b.consume_resource(RESOURCE_TIMBER, 500)
+    // OG spawn gate uses the daily city flag, not a per-tick BFS.
+    __map_trees_set_reachable(true)
     building_wood_cutter_spawn_figure({ bid: bid })
+    if (b.get_figures_number(FIGURE_LUMBERJACK) < 1) {
+        return test195_fail('spawn with trees_reachable should create lumberjacks')
+    }
     __log_marker('test195_spawn_figure_ran')
 
-    game_features.set('gameplay_change_wood_cutter_single_gatherer', __test195_feat_prev)
+    game_features.gameplay_change_wood_cutter_single_gatherer = __test195_feat_prev
     __test195_ok = true
     __test_signal_ready()
 }
