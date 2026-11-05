@@ -75,6 +75,8 @@ public:
     virtual bool need_workers() const override;
     virtual bool need_bricklayers() override;
     virtual int needs_bricklayers(int ph_id) const override;
+    virtual int try_assign_bricklayer(figure_id fid) override;
+    virtual void place_bricklayer_block(figure_id fid) override;
 
     static bool clay_delivery_enabled();
     bool clay_stock_ready() const;

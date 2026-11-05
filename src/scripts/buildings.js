@@ -35,6 +35,7 @@ import building.house_modest_estate
 import building.house_palatial_estate
 import building.monument
 import building.monument_engine
+import building.pyramid_engine
 import building.mastaba
 import building.sphinx
 import building.obelisk

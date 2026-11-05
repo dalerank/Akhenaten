@@ -446,3 +446,121 @@ function test_shoreline_building_place(type, building_size) {
     test_planner_exit_build_mode()
     return 0
 }
+
+// OG mudbrick block engine: place → phase 2 → boost one masonry course per
+// footprint ring step → update_day → FINISHED.
+// opts: { tag, marker, type, total, nlayers, candidates, sleep_ms, prepare }
+// marker prefix for log markers, e.g. 'mudbrick_og_medium'.
+function test_mudbrick_pyramid_og_complete(opts) {
+    var tag = opts.tag || '?'
+    var marker = opts.marker || ('mudbrick_og_' + tag)
+    var type = opts.type
+    var total = opts.total
+    var nlayers = opts.nlayers
+    var sleep_ms = opts.sleep_ms != null ? opts.sleep_ms : 100
+
+    __log_info_native('[test:' + tag + '] mudbrick OG complete type=' + type + ' total=' + total)
+
+    test_ensure_city_session('data/default.map')
+
+    if (!__scenario_building_allowed(type)) {
+        __scenario_building_allow(type, true)
+    }
+    __test_set_treasury(500000)
+
+    if (opts.prepare) {
+        opts.prepare()
+    }
+
+    var bid = 0
+    var candidates = opts.candidates || []
+    for (var i = 0; i < candidates.length && !bid; i++) {
+        bid = test_building_place(type, candidates[i].x, candidates[i].y)
+    }
+    if (!bid) {
+        bid = test_building_place(type, -1, -1)
+    }
+    if (!bid) {
+        __log_info_native('[test:' + tag + '] failed to place type ' + type)
+        __log_marker(marker + '_place_fail')
+        __test_signal_ready()
+        return 0
+    }
+
+    __test_camera_center_building(bid)
+    __test_monument_set_phase(bid, 2)
+    __pyramid_start_block_phase(bid)
+
+    var remaining0 = __pyramid_remaining_blocks(bid)
+    if (remaining0 != total) {
+        __log_info_native('[test:' + tag + '] expected ' + total + ' blocks, got ' + remaining0)
+        __log_marker(marker + '_init_fail:' + remaining0)
+        __test_signal_ready()
+        return 0
+    }
+    __log_marker(marker + '_init_ok:' + total)
+
+    var steps = nlayers * 6
+    var blocks_per_step = (total / steps) | 0
+    if (blocks_per_step < 1) {
+        blocks_per_step = 1
+    }
+
+    var mon = new Monument(bid)
+    var total_placed = 0
+    for (var c = 0; c < steps; c++) {
+        var want = blocks_per_step
+        if (c == steps - 1) {
+            want = total - total_placed
+        }
+        if (want < 1) {
+            break
+        }
+        var n = mon.boost_engine_blocks(want)
+        total_placed += n
+        __log_marker(marker + '_layer:' + (c + 1) + ':' + n)
+        if (sleep_ms > 0) {
+            __test_sleep_ms(sleep_ms)
+        }
+    }
+
+    if (total_placed == total) {
+        __log_marker(marker + '_boost_ok:' + total)
+    } else {
+        __log_info_native('[test:' + tag + '] boost placed ' + total_placed + ' (want ' + total + ')')
+        __log_marker(marker + '_boost_fail:' + total_placed)
+    }
+
+    var rem = __pyramid_remaining_blocks(bid)
+    if (rem == 0) {
+        __log_marker(marker + '_remaining_ok:0')
+    } else {
+        __log_marker(marker + '_remaining_fail:' + rem)
+    }
+
+    if (sleep_ms > 0) {
+        __test_sleep_ms(sleep_ms)
+    }
+
+    __test_building_update_day(bid)
+    var ph = __test_monument_phase(bid)
+    if (ph != -1) {
+        __test_building_update_day(bid)
+        ph = __test_monument_phase(bid)
+    }
+    if (ph == -1) {
+        __log_marker(marker + '_finished_ok')
+    } else {
+        __log_marker(marker + '_finished_fail:' + ph)
+    }
+
+    __test_signal_ready()
+    return bid
+}
+
+function test_mudbrick_pyramid_og_complete_valid(marker, total) {
+    return __test_find_inlog('[test-marker] ' + marker + '_init_ok:' + total)
+        && __test_find_inlog('[test-marker] ' + marker + '_boost_ok:' + total)
+        && __test_find_inlog('[test-marker] ' + marker + '_remaining_ok:0')
+        && __test_find_inlog('[test-marker] ' + marker + '_finished_ok')
+}

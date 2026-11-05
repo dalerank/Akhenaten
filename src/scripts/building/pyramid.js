@@ -1393,6 +1393,7 @@ building_small_stepped_pyramid {
     wall_type : BUILDING_SMALL_MUDBRICK_PYRAMID_WALL
     cone_type : BUILDING_SMALL_MUDBRICK_PYRAMID_CONE
     filler_type : BUILDING_SMALL_MUDBRICK_PYRAMID
+    pyramide_type : PYRAMID_STYLE_MUDBRICK
   }
 
   building_small_mudbrick_pyramid_corner = building_small_mudbrick_pyramid
@@ -1563,6 +1564,7 @@ building_small_stepped_pyramid {
     wall_type : BUILDING_MEDIUM_MUDBRICK_PYRAMID_WALL
     cone_type : BUILDING_MEDIUM_MUDBRICK_PYRAMID_CONE
     filler_type : BUILDING_MEDIUM_MUDBRICK_PYRAMID
+    pyramide_type : PYRAMID_STYLE_MUDBRICK
   }
 
   building_medium_mudbrick_pyramid_corner = building_medium_mudbrick_pyramid
@@ -1733,6 +1735,7 @@ building_small_stepped_pyramid {
     wall_type : BUILDING_LARGE_MUDBRICK_PYRAMID_WALL
     cone_type : BUILDING_LARGE_MUDBRICK_PYRAMID_CONE
     filler_type : BUILDING_LARGE_MUDBRICK_PYRAMID
+    pyramide_type : PYRAMID_STYLE_MUDBRICK
   }
 
   building_large_mudbrick_pyramid_corner = building_large_mudbrick_pyramid
@@ -1796,6 +1799,7 @@ building_small_stepped_pyramid {
     wall_type : BUILDING_LARGE_MUDBRICK_PYRAMID_WALL
     cone_type : BUILDING_LARGE_MUDBRICK_PYRAMID_CONE
     filler_type : BUILDING_MUDBRICK_PYRAMID_COMPLEX
+    pyramide_type : PYRAMID_STYLE_MUDBRICK
   }
 
   // Grand mudbrick — same on-land 20x20; own TYPE for weight 44.
@@ -1849,6 +1853,7 @@ building_small_stepped_pyramid {
     wall_type : BUILDING_LARGE_MUDBRICK_PYRAMID_WALL
     cone_type : BUILDING_LARGE_MUDBRICK_PYRAMID_CONE
     filler_type : BUILDING_GRAND_MUDBRICK_PYRAMID_COMPLEX
+    pyramide_type : PYRAMID_STYLE_MUDBRICK
   }
 
   building_medium_pyramid {

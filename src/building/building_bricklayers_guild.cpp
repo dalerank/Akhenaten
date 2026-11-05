@@ -1,6 +1,7 @@
 #include "building_bricklayers_guild.h"
 
 #include "building/building_statue.h"
+#include "building/monument_mastaba_engine.h"
 #include "building/monument_pyramid_engine.h"
 #include "building/monuments.h"
 #include "city/city.h"
@@ -66,33 +67,49 @@ void building_bricklayers_guild::spawn_figure() {
     }
 
     // OG bricklayers guild: roam spawn when staffed; figure finds task while roaming.
-    // Remake: only spawn when mastaba block work or (feature) statue service exists.
-    bool has_mastaba_work = false;
+    // Remake: only spawn when mastaba/mudbrick block work or (feature) statue service exists.
+    bool has_block_work = false;
     buildings_valid_do([&](building &b) {
-        if (has_mastaba_work || !b.is_main() || !pyramid_engine_is_mastaba(&b)) {
+        if (has_block_work || !b.is_main()) {
             return;
         }
         auto *mon = b.dcast_monument();
         if (!mon || !mon->is_unfinished() || mon->phase() < 2) {
             return;
         }
-        if (!pyramid_main_state_get(b.id)) {
-            pyramid_engine_init_mastaba(&b);
-            if (mon->phase() >= 2) {
-                pyramid_engine_start_block_phase(&b);
+        if (mastaba_engine_is(&b)) {
+            if (!pyramid_main_state_get(b.id)) {
+                mastaba_engine_init(&b);
+                if (mon->phase() >= 2) {
+                    mastaba_engine_start_block_phase(&b);
+                }
             }
+            auto *ms = pyramid_main_state_get(b.id);
+            if (ms && ms->block_phase_active && ms->remaining_blocks > 0 && mon->has_free_worker_slot()) {
+                has_block_work = true;
+            }
+            return;
         }
-        auto *ms = pyramid_main_state_get(b.id);
-        if (ms && ms->block_phase_active && ms->remaining_blocks > 0 && mon->has_free_worker_slot()) {
-            has_mastaba_work = true;
+        if (g_monument_pyramid_engine.is_mudbrick(&b)) {
+            if (!pyramid_main_state_get(b.id) || pyramid_main_state_get(b.id)->style != PYRAMID_STYLE_MUDBRICK) {
+                pyramid_engine_init_mudbrick(&b);
+                if (mon->phase() >= 2) {
+                    mastaba_engine_start_block_phase(&b);
+                }
+            }
+            auto *ms = pyramid_main_state_get(b.id);
+            if (ms && ms->style == PYRAMID_STYLE_MUDBRICK && ms->block_phase_active
+                && ms->remaining_blocks > 0 && mon->has_free_worker_slot()) {
+                has_block_work = true;
+            }
         }
     });
 
     building *statue = nullptr;
-    if (!has_mastaba_work && building_statue::guild_service_enabled()) {
+    if (!has_block_work && building_statue::guild_service_enabled()) {
         statue = find_statue_task();
     }
-    if (!has_mastaba_work && !statue) {
+    if (!has_block_work && !statue) {
         return;
     }
 
@@ -108,7 +125,7 @@ void building_bricklayers_guild::spawn_figure() {
         return;
     }
 
-    if (has_mastaba_work) {
+    if (has_block_work) {
         bricklayer->try_find_task();
         return;
     }

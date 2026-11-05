@@ -5,6 +5,7 @@
 #include "building/building_storage_yard.h"
 #include "building/monument_mastaba.h"
 #include "grid/building.h"
+#include "building/monument_mastaba_engine.h"
 #include "building/monument_pyramid_engine.h"
 #include "building/monument_sun_temple.h"
 #include "figuretype/figure_bricklayer.h"
@@ -251,7 +252,9 @@ void figure_worker::figure_action() {
         break;
 
     case ACTION_18_WORKER_DELIVER_BLOCK:
+        // Mastaba and mudbrick bricklayers share wait-for-block wake.
         pyramid_engine_laborer_deliver_block(rd.mason_fid);
+        mastaba_engine_laborer_deliver_block(rd.mason_fid);
         rd.delivering_block = 0;
         rd.mason_fid = 0;
         set_destination(home());

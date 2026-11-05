@@ -42,6 +42,9 @@ ANK_CONFIG_STRUCT(monument, phases)
 enum e_pyramid_style : uint8_t {
     PYRAMID_STYLE_NONE = 0,
     PYRAMID_STYLE_MASTABA = 1,
+    PYRAMID_STYLE_MUDBRICK = 2,
+    // TRUE / STEPPED / BENT share the square engine later.
+    PYRAMID_STYLE_COUNT,
 };
 
 enum e_pyramid_part_stage : uint8_t {
@@ -146,6 +149,9 @@ public:
     virtual bool need_stonemason();
     virtual bool need_carpenter();
     virtual bool need_bricklayers();
+    // OG block engines: claim a frontier part for this figure (0 = none).
+    virtual int try_assign_bricklayer(figure_id /*fid*/) { return 0; }
+    virtual void place_bricklayer_block(figure_id /*fid*/) {}
     virtual bool need_artisan();
     virtual bool accepts_yard_delivery(e_resource /*resource*/) const { return true; }
     virtual bool is_unfinished() const;
@@ -207,6 +213,7 @@ void building_monument_finish_monuments();
 
 
 int building_monument_workers_onsite(building *b, e_figure_type figure_type);
+int building_monument_find_bricklayer_task(figure_id fid);
 
 uint32_t map_monuments_get_progress(tile2i tile);
 void map_monuments_set_progress(tile2i tile, uint32_t progress);
