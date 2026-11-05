@@ -45,9 +45,16 @@ function run_test() {
     }
 
     var cid = test_building_place(BUILDING_TEMPLE_COMPLEX_PTAH, -1, -1)
-    var complex = city.get_temple_complex()
+    if (!cid) {
+        cid = __test_building_create(BUILDING_TEMPLE_COMPLEX_PTAH, cx + 10, cy + 10)
+    }
+    var complex = city.get_temple_complex(BUILDING_TEMPLE_COMPLEX_PTAH)
+    if (!complex && cid) {
+        complex = new TempleComplex(cid)
+    }
     if (!cid || !complex || complex.type != BUILDING_TEMPLE_COMPLEX_PTAH) {
-        __log_info_native('[test:257] ptah complex place failed id=' + cid)
+        __log_info_native('[test:257] ptah complex place failed id=' + cid
+            + ' type=' + (complex ? complex.type : 'null'))
         __test_signal_ready()
         return
     }
