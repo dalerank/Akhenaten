@@ -110,6 +110,9 @@
 #include "grid/tiles.h"
 #include "grid/vegetation.h"
 #include "grid/routing/routing_terrain.h"
+#include "grid/routing/routing.h"
+#include "figure/route.h"
+#include <array>
 #include "game/autosave_module.h"
 #include "core/bstring.h"
 #include "game/game.h"
@@ -4926,6 +4929,48 @@ static void __test_map_routing_update_land() {
     map_routing_update_land();
 }
 ANK_FUNCTION(__test_map_routing_update_land);
+
+static void __test_map_routing_update_water() {
+    map_routing_update_water();
+}
+ANK_FUNCTION(__test_map_routing_update_water);
+
+// Returns 1 if ferry_water_path_exists between two ferries (same check as partner search).
+static int __test_ferry_water_path(int a, int b) {
+    building *ba = building_get(a);
+    building *bb = building_get(b);
+    if (!ba || !bb || ba->type != BUILDING_FERRY || bb->type != BUILDING_FERRY) {
+        return -1;
+    }
+    water_access_tiles begin = map_water_get_access_points(*ba, ba->dcast()->get_orientation(), 1);
+    water_access_tiles end = map_water_get_access_points(*bb, bb->dcast()->get_orientation(), 1);
+    const tile2i starts[] = { begin.point_a, begin.point_b };
+    const tile2i ends[] = { end.point_a, end.point_b };
+    std::array<uint8_t, 500> path_data;
+    for (tile2i start : starts) {
+        if (!start.valid()) {
+            continue;
+        }
+        map_routing_calculate_distances_water_boat(start);
+        for (tile2i dest : ends) {
+            if (!dest.valid()) {
+                continue;
+            }
+            const int len = map_routing_get_path_on_water(path_data.data(), dest, false);
+            if (len > 0) {
+                return len;
+            }
+        }
+    }
+    // Encode access-point water flags for diagnosis: bit0..3 = a0,a1,b0,b1 on water.
+    int flags = 0;
+    if (begin.point_a.valid() && map_terrain_is(begin.point_a, TERRAIN_WATER)) flags |= 1;
+    if (begin.point_b.valid() && map_terrain_is(begin.point_b, TERRAIN_WATER)) flags |= 2;
+    if (end.point_a.valid() && map_terrain_is(end.point_a, TERRAIN_WATER)) flags |= 4;
+    if (end.point_b.valid() && map_terrain_is(end.point_b, TERRAIN_WATER)) flags |= 8;
+    return -100 - flags;
+}
+ANK_FUNCTION_2(__test_ferry_water_path);
 
 static void __test_building_road_access_set_stale(int bid) {
     building *b = building_get(bid);

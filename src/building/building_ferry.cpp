@@ -18,7 +18,6 @@
 #include "figure/route.h"
 #include "figuretype/figure_cartpusher.h"
 #include "figuretype/figure_ferry_boat.h"
-#include "core/random.h"
 #include "core/profiler.h"
 
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_ferry);
@@ -294,28 +293,51 @@ void building_ferry::spawn_figure() {
 
     if (num_workers() <= 0) {
         queue_release_waiting();
+        return;
     }
 
-    int boat_id = base.get_figure_id(BUILDING_SLOT_BOAT);
-    if (boat_id <= 0) {
-        if (!map_routing_ferry_has_routes(&base)) {
-            return;
-        }
-
-        if (num_workers() <= 0) {
-            return;
-        }
-
-        tile2i dock = dock_tile();
-        if (dock.valid() && map_terrain_is(dock, TERRAIN_WATER)) {
-            figure *f = figure_create(FIGURE_FERRY_BOAT, dock, DIR_4_BOTTOM_LEFT);
-            if (f) {
-                f->action_state = ACTION_0_FERRY_BOAT_CREATED;
-                f->set_home(id());
-                base.set_figure(BUILDING_SLOT_BOAT, f);
-                random_generate_next();
-                f->wait_ticks = random_short() % 20;
-            }
-        }
+    // OG spawn_ferry: need a partner route before the worker-% delay gate.
+    if (!map_routing_ferry_has_routes(&base)) {
+        return;
     }
+
+    // OG delays: 100%→3, 75%→7, 50%→15, 25%→29, 1%→-1 (immediate).
+    const int pct = worker_percentage();
+    int delay;
+    if (pct >= 100) {
+        delay = 3;
+    } else if (pct >= 75) {
+        delay = 7;
+    } else if (pct >= 50) {
+        delay = 15;
+    } else if (pct >= 25) {
+        delay = 29;
+    } else if (pct >= 1) {
+        delay = -1;
+    } else {
+        return;
+    }
+
+    const int days = ++base.figure_spawn_delay;
+    if (days <= delay) {
+        return;
+    }
+    base.figure_spawn_delay = 0;
+
+    if (base.get_figure_id(BUILDING_SLOT_BOAT) > 0) {
+        return;
+    }
+
+    tile2i dock = dock_tile();
+    if (!dock.valid() || !map_terrain_is(dock, TERRAIN_WATER)) {
+        return;
+    }
+
+    figure *f = figure_create(FIGURE_FERRY_BOAT, dock, DIR_4_BOTTOM_LEFT);
+    if (!f) {
+        return;
+    }
+    f->action_state = ACTION_0_FERRY_BOAT_CREATED;
+    f->set_home(id());
+    base.set_figure(BUILDING_SLOT_BOAT, f);
 }

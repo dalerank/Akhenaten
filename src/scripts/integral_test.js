@@ -131,10 +131,13 @@ function test_prepare_shoreline_patch(cx, cy, water_width, water_height) {
     var x0 = cx - ((water_width / 2) | 0)
     for (var dy = 0; dy < water_height; dy++) {
         for (var dx = 0; dx < water_width; dx++) {
-            terrain.add({ x: x0 + dx, y: cy + dy }, TERRAIN_WATER)
+            // set_water updates terrain + river tile images; add(WATER) is flag-only.
+            terrain.set_water({ x: x0 + dx, y: cy + dy })
         }
     }
+    __map_water_cache_river_tiles()
     __map_water_rebuild_shores()
+    __test_map_routing_update_water()
 }
 
 // Straight N–S channel (width ≥ 3) with land shores — valid Low Bridge span.
@@ -146,10 +149,12 @@ function test_prepare_bridge_channel(cx, cy, water_width, water_length) {
     var x0 = cx - ((water_width / 2) | 0)
     for (var dy = 0; dy < water_length; dy++) {
         for (var dx = 0; dx < water_width; dx++) {
-            terrain.add({ x: x0 + dx, y: cy + dy }, TERRAIN_WATER)
+            terrain.set_water({ x: x0 + dx, y: cy + dy })
         }
     }
+    __map_water_cache_river_tiles()
     __map_water_rebuild_shores()
+    __test_map_routing_update_water()
     return { x: cx, y: cy }
 }
 

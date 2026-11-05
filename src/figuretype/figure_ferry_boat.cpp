@@ -292,14 +292,19 @@ void figure_ferry_boat::figure_action() {
 
     switch (action_state()) {
     case ACTION_0_FERRY_BOAT_CREATED:
+        if (passenger_count() > 0 && partner_b) {
+            runtime_data().destination_ferry_id = partner->id;
+            order_goto(partner_b->dock_tile());
+        } else {
+            runtime_data().destination_ferry_id = home_ferry->id;
+            tile2i home_dock = home_b->dock_tile();
+            runtime_data().destination_tile = home_dock;
+            base.destination_tile = home_dock;
+            route_remove();
+            advance_action(ACTION_3_FERRY_BOAT_RETURNING);
+        }
         if (unstaffed) {
             sink();
-            break;
-        }
-        base.wait_ticks++;
-        if (base.wait_ticks >= 20) {
-            base.wait_ticks = 0;
-            advance_action(ACTION_4_FERRY_BOAT_WAITING);
         }
         break;
 
