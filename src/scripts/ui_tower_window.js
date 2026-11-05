@@ -3,7 +3,7 @@ log_info("akhenaten: ui tower info window started")
 [es=building_info_window]
 info_window_tower {
     first_advisor : ADVISOR_MILITARY
-    related_buildings [BUILDING_MUD_TOWER, BUILDING_BRICK_TOWER]
+    related_buildings [BUILDING_MUD_TOWER, BUILDING_BRICK_TOWER, BUILDING_TOWER]
     ui : baseui(building_info_window, {
     })
 }

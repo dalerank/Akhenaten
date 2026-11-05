@@ -50,7 +50,7 @@ void map_wall_material_migrate_from_terrain() {
                 continue;
             }
             const e_wall_material material = map_wall_material_at(grid_offset);
-            if (material != WALL_MATERIAL_MUD && material != WALL_MATERIAL_BRICK) {
+            if (material != WALL_MATERIAL_MUD && material != WALL_MATERIAL_BRICK && material != WALL_MATERIAL_STRONG) {
                 map_wall_material_set(grid_offset, WALL_MATERIAL_MUD);
             }
         }
@@ -61,6 +61,8 @@ e_wall_material wall_material_from_building_type(e_building_type type) {
     switch (type) {
     case BUILDING_BRICK_WALL:
         return WALL_MATERIAL_BRICK;
+    case BUILDING_WALL:
+        return WALL_MATERIAL_STRONG;
     case BUILDING_MUD_WALL:
     default:
         return WALL_MATERIAL_MUD;
@@ -71,6 +73,8 @@ e_building_type wall_building_type_from_material(e_wall_material material) {
     switch (material) {
     case WALL_MATERIAL_BRICK:
         return BUILDING_BRICK_WALL;
+    case WALL_MATERIAL_STRONG:
+        return BUILDING_WALL;
     case WALL_MATERIAL_MUD:
     case WALL_MATERIAL_NONE:
     default:

@@ -2,7 +2,7 @@ log_info("akhenaten: ui gatehouse info window")
 
 [es=building_info_window]
 info_window_gatehouse {
-    related_buildings [BUILDING_MUD_GATEHOUSE, BUILDING_BRICK_GATEHOUSE]
+    related_buildings [BUILDING_MUD_GATEHOUSE, BUILDING_BRICK_GATEHOUSE, BUILDING_GATEHOUSE]
     ui : baseui(building_info_window, {
     })
 }

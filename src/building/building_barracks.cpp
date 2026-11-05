@@ -230,11 +230,11 @@ bool building_recruiter::create_tower_sentry() {
     building* tower = 0;
     for (int i = 1; i < MAX_BUILDINGS; i++) {
         building* b = building_get(i);
-        // OG create_tower_sentry fills towers only (mud / brick / clay) — not gatehouses.
+        // OG create_tower_sentry fills towers only (mud / brick / clay) ? not gatehouses.
         building* main_b = b->main();
         const bool is_tower = (main_b->type == BUILDING_MUD_TOWER ||
                                main_b->type == BUILDING_BRICK_TOWER ||
-                               main_b->type == BUILDING_CLAY_TOWER);
+                               main_b->type == BUILDING_TOWER);
 
         if (main_b->state == BUILDING_STATE_VALID && is_tower && main_b->num_workers > 0 && !main_b->has_figure(0)
             && (main_b->road_network_id == base.road_network_id || !!game_features::gameplay_change_tower_sentries_go_offroad)) {

@@ -1237,13 +1237,14 @@ static int __test_mansion_spawn_figure(int bid) {
 }
 ANK_FUNCTION_1(__test_mansion_spawn_figure);
 
-// Place a mud gatehouse road-pair at (x,y)/(x+1,y) with flanking walls, claim the OG 2x2 footprint.
+// Place a gatehouse road-pair at (x,y)/(x+1,y) with flanking walls, claim the OG 2x2 footprint.
 // Returns the number of TERRAIN_GATEHOUSE tiles in the 2x2 (expect 4).
-static int __test_mud_gatehouse_place_2x2(int x, int y) {
+static int __test_gatehouse_place_2x2(int type, int x, int y) {
     if (x < 1 || y < 1) {
         return 0;
     }
 
+    const e_building_type gate_type = (e_building_type)type;
     const tile2i road_a(x, y);
     const tile2i road_b(x + 1, y);
     const tile2i side_a(x, y - 1);
@@ -1261,8 +1262,8 @@ static int __test_mud_gatehouse_place_2x2(int x, int y) {
     map_terrain_add(road_a, TERRAIN_ROAD);
     map_terrain_add(road_b, TERRAIN_ROAD);
 
-    building *part_a = building_create(BUILDING_MUD_GATEHOUSE, road_a, 0);
-    building *part_b = building_create(BUILDING_MUD_GATEHOUSE, road_b, 0);
+    building *part_a = building_create(gate_type, road_a, 0);
+    building *part_b = building_create(gate_type, road_b, 0);
     if (!part_a || !part_b || part_a->id <= 0 || part_b->id <= 0) {
         return 0;
     }
@@ -1289,6 +1290,11 @@ static int __test_mud_gatehouse_place_2x2(int x, int y) {
         }
     }
     return count;
+}
+ANK_FUNCTION_3(__test_gatehouse_place_2x2);
+
+static int __test_mud_gatehouse_place_2x2(int x, int y) {
+    return __test_gatehouse_place_2x2(BUILDING_MUD_GATEHOUSE, x, y);
 }
 ANK_FUNCTION_2(__test_mud_gatehouse_place_2x2);
 

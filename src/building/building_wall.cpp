@@ -16,6 +16,7 @@
 
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_mud_wall);
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_brick_wall);
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_wall);
 
 void ANK_PERMANENT_CALLBACK(event_building_update_walls, ev) {
     building_mud_wall::update_area_walls( ev.tile, ev.size );
@@ -416,5 +417,21 @@ bool building_brick_wall::preview::can_construction_start(build_planner &p, tile
 }
 
 void building_brick_wall::on_place_checks() {
+    // nothing
+}
+
+int building_wall::preview::construction_update(build_planner &p, tile2i start, tile2i end) const {
+    return building_mud_wall::place_wall(true, start, end, BUILDING_WALL);
+}
+
+int building_wall::preview::construction_place(build_planner &planer, tile2i start, tile2i end, int orientation, int variant) const {
+    return building_mud_wall::place_wall(false, start, end, BUILDING_WALL);
+}
+
+bool building_wall::preview::can_construction_start(build_planner &p, tile2i start) const {
+    return map_routing_calculate_distances_for_building(ROUTED_BUILDING_WALL, start);
+}
+
+void building_wall::on_place_checks() {
     // nothing
 }

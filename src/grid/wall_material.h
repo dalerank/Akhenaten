@@ -10,6 +10,7 @@ enum e_wall_material : uint8_t {
     WALL_MATERIAL_NONE = 0,
     WALL_MATERIAL_MUD = 1,
     WALL_MATERIAL_BRICK = 2,
+    WALL_MATERIAL_STRONG = 3,
 
     WALL_MATERIAL_COUNT
 };

@@ -598,7 +598,7 @@ static bool building_type_is_road_access_excluded(e_building_type type) {
     if (building_type_any_of(type,
             {BUILDING_GRANARY, BUILDING_GRANARY_UP, BUILDING_FERRY, BUILDING_DOCK, BUILDING_DOCK_UP,
                 BUILDING_MUD_GATEHOUSE, BUILDING_MUD_GATEHOUSE_UP, BUILDING_BRICK_GATEHOUSE,
-                BUILDING_BRICK_GATEHOUSE_UP, BUILDING_DECORATIVE_GATEHOUSE})) {
+                BUILDING_BRICK_GATEHOUSE_UP, BUILDING_GATEHOUSE, BUILDING_DECORATIVE_GATEHOUSE})) {
         return true;
     }
 

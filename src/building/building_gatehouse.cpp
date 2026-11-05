@@ -26,6 +26,7 @@
 #include <algorithm>
 
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_brick_gatehouse);
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_strong_gatehouse);
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_mud_gatehouse);
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_decorative_gatehouse);
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_tower_gatehouse);
@@ -104,9 +105,9 @@ static bool is_gatehouse_building_type(e_building_type type) {
     switch (type) {
     case BUILDING_MUD_GATEHOUSE:
     case BUILDING_MUD_GATEHOUSE_UP:
+    case BUILDING_GATEHOUSE:
     case BUILDING_BRICK_GATEHOUSE:
     case BUILDING_BRICK_GATEHOUSE_UP:
-    case BUILDING_CLAY_GATEHOUSE:
     case BUILDING_DECORATIVE_GATEHOUSE:
     case BUILDING_TOWER_GATEHOUSE:
         return true;

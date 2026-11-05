@@ -52,9 +52,14 @@ function classify_terrain_info(ev) {
     } else if (terrain.is(tile, TERRAIN_CANAL)) {
         oi.terrain_type = terrain_info_canal
     } else if (terrain.is(tile, TERRAIN_WALL)) {
-        oi.terrain_type = (terrain.wall_material(tile) === WALL_MATERIAL_BRICK)
-            ? terrain_info_brick_wall
-            : terrain_info_mud_wall
+        var wall_material = terrain.wall_material(tile)
+        if (wall_material === WALL_MATERIAL_BRICK) {
+            oi.terrain_type = terrain_info_brick_wall
+        } else if (wall_material === WALL_MATERIAL_STRONG) {
+            oi.terrain_type = terrain_info_strong_wall
+        } else {
+            oi.terrain_type = terrain_info_mud_wall
+        }
     } else if (!bid && terrain.is(tile, TERRAIN_RUBBLE)) {
         oi.terrain_type = terrain_info_rubble
     } else {
@@ -140,6 +145,21 @@ terrain_info_brick_wall = {
 
 [es=(terrain_info_brick_wall, init)]
 function terrain_info_brick_wall_on_init(window) {
+}
+
+[es=terrain_info_window]
+terrain_info_strong_wall = {
+    related_terrain [terrain_info_strong_wall]
+    help_id           : "message_building_defensive_structures"
+    open_sounds       : [ "Wavs/ROCK1.WAV" ]
+    ui : baseui(terrain_info_window, {
+        title         : text({pos: [0, 16], size: [px(29), 13], text:[166, 0], font:FONT_LARGE_BLACK_ON_LIGHT, align:"center"})
+        describe      : text({pos: [30, 78], text:[166, 1], font: FONT_NORMAL_BLACK_ON_DARK, multiline:true, wrap:(game.languages.current == 'en' ? px(26) : 404) })
+    })
+}
+
+[es=(terrain_info_strong_wall, init)]
+function terrain_info_strong_wall_on_init(window) {
 }
 
 [es=terrain_info_window]

@@ -258,7 +258,9 @@ void game_undo_perform() {
         map_property_restore();
         map_property_clear_constructing_and_deleted();
 
-    } else if (building_type_any_of((e_building_type)data.type, make_array(BUILDING_IRRIGATION_DITCH, BUILDING_ROAD, BUILDING_MUD_WALL, BUILDING_BRICK_WALL, BUILDING_DIKE))) {
+    } else if (building_type_any_of((e_building_type)data.type,
+                   make_array(BUILDING_IRRIGATION_DITCH, BUILDING_ROAD, BUILDING_MUD_WALL, BUILDING_BRICK_WALL,
+                       BUILDING_WALL, BUILDING_DIKE))) {
         map_terrain_restore();
         map_canal_restore();
         map_wall_material_restore();
@@ -340,6 +342,7 @@ void game_undo_reduce_time_available(void) {
     case BUILDING_ROAD:
     case BUILDING_MUD_WALL:
     case BUILDING_BRICK_WALL:
+    case BUILDING_WALL:
     case BUILDING_DIKE:
     case BUILDING_LOW_BRIDGE:
     case BUILDING_UNUSED_SHIP_BRIDGE_83:

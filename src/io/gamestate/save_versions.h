@@ -23,7 +23,7 @@
 //  173 akhenaten: invasion_runtime — bind resolve + history ring
 //  174 akhenaten: house zookeeper coverage (Cleopatra Zoo)
 //  175 akhenaten: storage Empty All order snapshot
-//  176 akhenaten: wall_material_grid (mud/brick terrain walls)
+//  176 akhenaten: wall_material_grid (mud/brick/strong terrain walls)
 //  177 akhenaten: invasion auto-resolve pending queue
 //  178 akhenaten: (reserved / in-tree)
 //  179 akhenaten: monument funeral_done (pyramid append; mastaba reclaims skip byte)

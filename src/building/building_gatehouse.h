@@ -43,6 +43,15 @@ public:
 };
 ANK_CONFIG_STRUCT(building_brick_gatehouse::static_params, ghost)
 
+class building_strong_gatehouse : public building_gatehouse {
+public:
+    BUILDING_METAINFO(BUILDING_GATEHOUSE, building_strong_gatehouse, building_gatehouse)
+
+    struct static_params : public gatehouse_params_t, public building_static_params {
+    } BUILDING_STATIC_DATA_T;
+};
+ANK_CONFIG_STRUCT(building_strong_gatehouse::static_params, ghost)
+
 class building_mud_gatehouse : public building_gatehouse {
 public:
     BUILDING_METAINFO(BUILDING_MUD_GATEHOUSE, building_mud_gatehouse, building_gatehouse)

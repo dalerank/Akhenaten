@@ -186,12 +186,12 @@ Recovered from `akhenatren-rm`:
 | 165 | 0xA5 | 1 | `BUILDING_UNUSED_165` | Unused 1030 |
 | 166 | 0xA6 | 1 | `BUILDING_UNUSED_166` | Unused 1031 |
 | 167 | 0xA7 | 1 | `BUILDING_FIREHOUSE` | Firehouse |
-| 168 | 0xA8 | 1 | `BUILDING_BRICK_WALL_LANG` | Brick Wall |
-| 169 | 0xA9 | 1 | `BUILDING_BRICK_WALL` | Wall |
-| 170 | 0xAA | 2 | `BUILDING_CLAY_GATEHOUSE` | Brick Gatehouse |
-| 171 | 0xAB | 2 | `BUILDING_BRICK_GATEHOUSE` | Gatehouse |
+| 168 | 0xA8 | 1 | `BUILDING_BRICK_WALL` | Brick Wall |
+| 169 | 0xA9 | 1 | `BUILDING_WALL` | Wall |
+| 170 | 0xAA | 2 | `BUILDING_BRICK_GATEHOUSE` | Brick Gatehouse |
+| 171 | 0xAB | 2 | `BUILDING_GATEHOUSE` | Gatehouse |
 | 172 | 0xAC | 2 | `BUILDING_BRICK_TOWER` | Brick Tower |
-| 173 | 0xAD | 2 | `BUILDING_CLAY_TOWER` | Tower |
+| 173 | 0xAD | 2 | `BUILDING_TOWER` | Tower |
 | 174 | 0xAE | 0 | `BUILDING_MENU_MUD_STRUCTURES` | Mud structures |
 | 175 | 0xAF | 0 | `BUILDING_MENU_BRICK_STRUCTURES` | Brick structures |
 | 176 | 0xB0 | 0 | `BUILDING_MENU_DEFENSES` | Defensive Structures |

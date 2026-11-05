@@ -515,6 +515,7 @@ void build_planner::setup_build_flags() {
 
     case BUILDING_MUD_TOWER:
     case BUILDING_BRICK_TOWER:
+    case BUILDING_TOWER:
         set_flag(PLANNER_RULE_WALLS);
         break;
 
@@ -537,6 +538,7 @@ void build_planner::setup_build_flags() {
     case BUILDING_MUD_GATEHOUSE_UP:
     case BUILDING_BRICK_GATEHOUSE:
     case BUILDING_BRICK_GATEHOUSE_UP:
+    case BUILDING_GATEHOUSE:
     case BUILDING_DECORATIVE_GATEHOUSE:
         set_flag(PLANNER_RULE_ROAD, false);
         break;
@@ -1167,7 +1169,9 @@ void build_planner::construction_finalize() { // confirm final placement
     if (!place()) {
         logs::info("[build-btn] finalize place() FAILED type=%d cost=%d", (int)build_type, total_cost);
         map_property_clear_constructing_and_deleted();
-        if (building_type_any_of(build_type, { BUILDING_MUD_WALL, BUILDING_BRICK_WALL, BUILDING_ROAD, BUILDING_IRRIGATION_DITCH, BUILDING_DIKE })) {
+        if (building_type_any_of(build_type,
+                {BUILDING_MUD_WALL, BUILDING_BRICK_WALL, BUILDING_WALL, BUILDING_ROAD, BUILDING_IRRIGATION_DITCH,
+                    BUILDING_DIKE})) {
             game_undo_restore_map(0);
         } else if (build_type == BUILDING_PLAZA || build_type == BUILDING_GARDENS) {
             game_undo_restore_map(1);
