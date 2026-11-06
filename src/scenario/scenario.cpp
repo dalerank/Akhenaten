@@ -211,11 +211,18 @@ void scenario_data_t::bind_data(io_buffer *iob, size_t version, size_t size) {
 }
 
 bool scenario_building_allowed(e_building_type building_type) {
+    if (building_type == BUILDING_DOCK_UP) {
+        return g_scenario.allowed_buildings[BUILDING_DOCK]
+            || g_scenario.allowed_buildings[BUILDING_DOCK_UP];
+    }
     return g_scenario.allowed_buildings[building_type];
 }
 
 void scenario_building_allow(e_building_type btype, bool allow) {
     g_scenario.allowed_buildings[btype] = allow;
+    if (btype == BUILDING_DOCK) {
+        g_scenario.allowed_buildings[BUILDING_DOCK_UP] = allow;
+    }
 }
 
 int16_t scenario_data_t::pak_editor_allow_flag(int slot) const {

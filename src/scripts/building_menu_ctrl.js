@@ -69,6 +69,10 @@ building_menu_ctrl.use_building = function(type, en) {
         en = true
     }
     building_menu_ctrl.enabled[type] = en
+
+    if (type == BUILDING_DOCK) {
+        building_menu_ctrl.enabled[BUILDING_DOCK_UP] = en
+    }
     building_menu_ctrl.invalidate_counts()
     __scenario_building_allow(type, en)
 

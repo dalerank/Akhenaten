@@ -6,6 +6,7 @@ import building.building_params
 import building.bazaar
 import building.wharf_common
 import building.dock
+import building.dock_up
 import building.transport_wharf
 import building.warship_wharf
 import building.fishing_wharf
