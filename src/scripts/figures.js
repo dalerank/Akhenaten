@@ -292,11 +292,11 @@ figure_crocodile = {
   animations : {
 		walk : { pack:PACK_SPR_MAIN, id:23, max_frames:12 }
 		death : { pack:PACK_SPR_MAIN, id:24, max_frames:8, duration:3, loop:false }
+		bubbles : { pack:PACK_SPR_AMBIENT, id:11, max_frames:23, duration:1, loop:false }
 		attack : { pack:PACK_SPR_MAIN, id:25, max_frames:6 }
 		swim : { pack:PACK_SPR_MAIN, id:26, max_frames:11 }
 		idle : { pack:PACK_SPR_MAIN, id:23, max_frames:1, loop: false }
 		swim_idle : { pack:PACK_SPR_MAIN, id:27, max_frames:11 }
-		eating : { pack:PACK_SPR_MAIN, id:25, max_frames:6 }
 		big_image : { pack:PACK_UNLOADED, id:25, offset:FIGURE_CROCODILE }
 	}
 
@@ -304,9 +304,27 @@ figure_crocodile = {
 	max_damage: 200
 	attack_value: 7
 	terrain_usage : TERRAIN_USAGE_AMPHIBIA
-	max_hungry : 25
-	max_hunting_distance : 10
-	chase_speed_mult : 2
+	speed_mult: 1
+	// climate_animals northern_predator_0 + animal_rules predator rests.
+	rest_base_ticks: 250
+	rest_random_ticks: 100
+	no_tile_wait_ticks: 100
+	dying_ticks: 500
+	hunt_delay: 50
+	hunt_radius: 2
+	chase_ticks_per_ring: 18
+	// animal_choices % for GO_TO_WATER vs REST.
+	water_chance_idle: 50
+	water_chance_in_water: 90
+	water_chance_other: 25
+	// OG figure_is_boat skip.
+	forbidden_prey: [
+		FIGURE_TRADE_SHIP, FIGURE_FERRY_BOAT,
+		FIGURE_TRANSPORT_SHIP, FIGURE_WARSHIP, FIGURE_SHIPWRECK,
+		FIGURE_ENEMY_TRANSPORT, FIGURE_ENEMY_WARSHIP,
+		FIGURE_ENEMY_EGYPTIAN_TRANSPORT_SHIP, FIGURE_ENEMY_EGYPTIAN_WAR_SHIP,
+		FIGURE_EGYPTIAN_WARSHIP, FIGURE_EGYPTIAN_TRANSPORT
+	]
 }
 
 figure_hippo = {

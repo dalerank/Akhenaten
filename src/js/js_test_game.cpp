@@ -1995,6 +1995,28 @@ static void __test_figure_action_perform(int fid) {
 }
 ANK_FUNCTION_1(__test_figure_action_perform);
 
+static int __test_figure_combat_attack_at(int fid, int x, int y) {
+    figure *f = figure_get(fid);
+    if (!f || !f->is_alive()) {
+        return 0;
+    }
+    f->figure_combat_attack_figure_at(tile2i(x, y).grid_offset());
+    return f->in_attack() ? 1 : 0;
+}
+ANK_FUNCTION_3(__test_figure_combat_attack_at);
+
+static int __test_figure_in_attack(int fid) {
+    figure *f = figure_get(fid);
+    return (f && f->is_alive() && f->in_attack()) ? 1 : 0;
+}
+ANK_FUNCTION_1(__test_figure_in_attack);
+
+static int __test_figure_get_opponent_id(int fid) {
+    figure *f = figure_get(fid);
+    return f ? (int)f->opponent_id : 0;
+}
+ANK_FUNCTION_1(__test_figure_get_opponent_id);
+
 static void __test_sentiment_set(int value) {
     g_city.sentiment.value = value;
 }

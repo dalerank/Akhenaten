@@ -215,13 +215,9 @@ formation* city_animals_t::create_herd(tile2i tile, e_figure_type herd_type, int
 
             figure *f = figure_create(herd_type, tile, DIR_0_TOP_RIGHT);
             f->formation_id = formation->id;
-            f->wait_ticks = f->id & 0x1f;
-
-            auto fanimal = f->dcast_animal();
-
-            if (fanimal) {
-                fanimal->herd_rest();
-            }
+            // OG herds.c herd_new_animal: HERD/PREDATOR_SPAWNED (24), wait 10 (ghost).
+            f->action_state = 24;
+            f->wait_ticks = 10;
         }
     }
 
@@ -467,12 +463,7 @@ void city_animals_t::update_herd_formation(formation *m) {
             figure *wolf = figure_create(m->figure_type, m->tile, DIR_0_TOP_RIGHT);
             wolf->action_state = 24;
             wolf->formation_id = m->id;
-            wolf->wait_ticks = wolf->id & 0x1f;
-
-            auto fanimal = wolf->dcast_animal();
-            if (fanimal) {
-                fanimal->herd_rest();
-            }
+            wolf->wait_ticks = 10;
         }
     }
 
@@ -487,13 +478,10 @@ void city_animals_t::update_herd_formation(formation *m) {
         if (is_passible && valid_tile) {
             figure *prey = figure_create(m->figure_type, m->tile, DIR_0_TOP_RIGHT);
             prey->formation_id = m->id;
-            prey->wait_ticks = prey->id & 0x1f;
+            // OG herd_new_animal: SPAWNED (24), wait 10.
+            prey->action_state = 24;
+            prey->wait_ticks = 10;
             m->failed_creation_count = 0;
-
-            auto fanimal = prey->dcast_animal();
-            if (fanimal) {
-                fanimal->herd_rest();
-            }
         } else {
             m->tile = random_around_point(m->home, m->home, /*step*/4, /*bias*/8, /*max_dist*/32);
 
