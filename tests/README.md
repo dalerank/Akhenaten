@@ -91,6 +91,8 @@ See **IT1** in `REMAKE_TODO.md` / `REMAKE_NOTES.md` §4.
 | `18_water_lift_placement.js` | Water lift on synthetic shoreline via `test_building_place` |
 | `19_transport_wharf_placement.js` | Transport wharf on synthetic shoreline |
 | `20_warship_wharf_placement.js` | Warship wharf on synthetic shoreline |
+| `262_warship_wharf_og.js` | OG warship wharf spawn: clear stale boat, labor seeker, request ship |
+| `270_warship_wharf_max_og.js` | OG max 6 warship wharves + inland open-water refusal |
 | `21_dock_placement.js` | Dock on synthetic shoreline |
 | `22_shipyard_placement.js` | Shipyard on synthetic shoreline |
 | `23_ferry_placement.js` | Ferry landing on synthetic shoreline |
