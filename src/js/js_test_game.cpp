@@ -1349,6 +1349,17 @@ static void __test_figure_set_home(int fid, int bid) {
 }
 ANK_FUNCTION_2(__test_figure_set_home);
 
+static void __test_figure_set_home_slot(int fid, int bid) {
+    figure *f = figure_get(fid);
+    building *b = building_get(bid);
+    if (!f || !f->is_alive() || !b || !b->is_valid()) {
+        return;
+    }
+    f->set_home(bid);
+    b->set_figure(0, f);
+}
+ANK_FUNCTION_2(__test_figure_set_home_slot);
+
 static void __test_figure_set_leading(int fid, int leader_id) {
     figure *f = figure_get(fid);
     if (!f || !f->is_alive()) {
@@ -3777,6 +3788,40 @@ static int __pyramid_claim_bricklayer_task(int fid) {
     return building_monument_find_bricklayer_task((figure_id)fid);
 }
 ANK_FUNCTION_1(__pyramid_claim_bricklayer_task);
+
+static int __pyramid_spawn_sled_train(int laborer_fid, int monument_bid) {
+    figure *laborer = figure_get(laborer_fid);
+    building *mon = building_get(monument_bid);
+    if (!laborer || !laborer->is_alive() || !mon) {
+        return 0;
+    }
+    const int before = __test_count_figures(FIGURE_SLED) + __test_count_figures(FIGURE_SLED_PULLER);
+    pyramid_figure_spawn_sled_train((figure_id)laborer_fid, mon);
+    return (__test_count_figures(FIGURE_SLED) + __test_count_figures(FIGURE_SLED_PULLER)) - before;
+}
+ANK_FUNCTION_2(__pyramid_spawn_sled_train);
+
+static int __pyramid_count_sled_train_followers(int laborer_fid) {
+    int n = 0;
+    for (int id = 1; id < MAX_FIGURES; ++id) {
+        figure *f = figure_get(id);
+        if (!f || !f->is_alive()) {
+            continue;
+        }
+        if (f->type != FIGURE_SLED && f->type != FIGURE_SLED_PULLER) {
+            continue;
+        }
+        if (f->action_state != 8) {
+            continue;
+        }
+        int pos = 0;
+        if (pyramid_figure_find_train_leader((figure_id)id, &pos) == (figure_id)laborer_fid) {
+            ++n;
+        }
+    }
+    return n;
+}
+ANK_FUNCTION_1(__pyramid_count_sled_train_followers);
 
 // Snap bricklayer/carpenter to monument access_point, start_climb, enter CLIMB_RAMP.
 static int __pyramid_figure_begin_climb(int fid) {

@@ -6,6 +6,7 @@ localization_ru_f = [
     { key:"#TR_NO_EDITOR_TITLE", text:"Редактор карт не установлен"}
     { key:"#TR_NO_EDITOR_MESSAGE", text:"Файлы редактора карт в вашей версии игры отсутствуют."}
     { key:"#main_menu_editor", text:"Редактор"}
+    { key:"#main_menu_free_play", text:"Свободная игра"}
     { key:"#TR_INVALID_LANGUAGE_TITLE", text:"Неправильная языковая директория"}
     { key:"#TR_INVALID_LANGUAGE_MESSAGE", text:"В указанной папке языковые пакеты отсутствуют. Пожалуйста, проверьте записи журнала игры (log)."}
     { key:"#TR_BUTTON_OK", text:"Ок"}

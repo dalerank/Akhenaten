@@ -31,6 +31,10 @@ bool game_has_campaign_data() {
     return g_mission_data.num_campaigns > 0;
 }
 
+int game_campaign_count() {
+    return g_mission_data.num_campaigns;
+}
+
 struct campaign_mission_id {
     int campaign_id = -1;
     int step_index = -1;

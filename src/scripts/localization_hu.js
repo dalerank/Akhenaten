@@ -427,6 +427,7 @@ localization_hu = [
 
   {key: "#main_menu_mods", text:"Módosítások"}
   {key: "#main_menu_editor", text:"Szerkesztő"}
+  {key: "#main_menu_free_play", text:"Szabad játék"}
   {key:"#advisor_imperial_political_overseer_for", text:"Politikai felügyelője"}
   {key:"#warship_moving_to_position", text:"Elfoglalja a kijelölt pozíciót"}
   {key:"#warship_moving_to_position_text", text:"A hajó a kijelölt pozíció felé hajózik, és ott marad, amíg más parancsot nem kap."}

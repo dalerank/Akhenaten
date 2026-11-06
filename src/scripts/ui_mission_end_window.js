@@ -211,7 +211,8 @@ function mission_end_advance_to_next_mission() {
         next_scenario_id = mission_end_compute_next_scenario_id(completed_id)
     }
 
-    if (scenario.scmode != e_scenario_custom_map) {
+    var is_campaign = scenario.scmode == e_scenario_normal
+    if (is_campaign) {
         // Terminus: drop carry so the next campaign from the menu starts clean.
         city.kingdome.campaign_carry_personal_savings = (next_scenario_id == -1) ? 0 : savings
     }
@@ -219,7 +220,7 @@ function mission_end_advance_to_next_mission() {
     // Snapshot troops while the won city still exists; terminus clears inside the handler.
     emit event_mission_won { scenario_id: completed_id, next_scenario_id: next_scenario_id }
 
-    if (scenario.scmode != e_scenario_custom_map) {
+    if (is_campaign) {
         __game_player_record_mission_win(completed_id)
     }
 
@@ -235,7 +236,7 @@ function mission_end_advance_to_next_mission() {
 
     if (next_scenario_id == -1) {
         emit event_show_main_menu{ play_intro: true }
-        if (scenario.scmode != e_scenario_custom_map) {
+        if (is_campaign) {
             __scenario_init()
             scenario.campaign_mission_rank = 2
         }
@@ -262,7 +263,7 @@ function mission_end_show(state) {
     var completed_for_video = scenario.campaign_scenario_id
     if (!mission_has_post_victory_choice(completed_for_video)
         && mission_end_compute_next_scenario_id(completed_for_video) == -1
-        && scenario.scmode != e_scenario_custom_map) {
+        && scenario.scmode == e_scenario_normal) {
         __game_victory_video_show("smk/win_game.smk", 400, 292, "mission_end_after_video")
         return
     }

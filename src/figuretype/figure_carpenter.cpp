@@ -46,9 +46,17 @@ void figure_carpenter::assign_monument_task(building *monument) {
     }
 
     set_destination(monument);
-    runtime_data().destination_bid = monument->id;
-    runtime_data().ramp_part_bid = 0;
-    runtime_data().serving_statue = 0;
+    auto &rd = runtime_data();
+    rd.destination_bid = monument->id;
+    rd.ramp_part_bid = 0;
+    rd.serving_statue = 0;
+
+    // OG pyramid_find_ramp_task: claim the ramp part before walking to the site
+    // so climb mode 1 can keep worker_has_ramp_part / needs_ramp alive.
+    if (monument->dcast_pyramid() && g_monument_pyramid_engine.uses_block_engine(monument)
+        && pyramid_engine_has_ramp_work(monument)) {
+        rd.ramp_part_bid = pyramid_engine_find_ramp_part(monument, id());
+    }
 
     auto *mm = monument->dcast_monument();
     base.destination_tile = mm ? mm->access_point() : monument->access_tile();
@@ -187,12 +195,17 @@ void figure_carpenter::figure_action() {
     case ACTION_4_CARPENTER_CLIMB_RAMP: {
         base.terrain_usage = TERRAIN_USAGE_ANY;
         base.outside_road_ticks = 0;
-        pyramid_figure_walk_on_ramp(id(), 0, ACTION_3_CARPENTER_RETURN, ACTION_2_CARPENTER_WORK);
-        if (action_state() == ACTION_2_CARPENTER_WORK && b_dest && b_dest->dcast_pyramid()) {
-            rd.ramp_part_bid = pyramid_engine_find_ramp_part(b_dest, id());
-            if (!rd.ramp_part_bid) {
-                advance_action(ACTION_3_CARPENTER_RETURN);
+        // OG: mode 1 claims via needs_ramp / worker_figure_id. Mode 0 is remake
+        // timber climb when no ramp part was claimed at assign.
+        const int climb_mode = rd.ramp_part_bid ? 1 : 0;
+        pyramid_figure_walk_on_ramp(id(), climb_mode, ACTION_3_CARPENTER_RETURN, ACTION_2_CARPENTER_WORK);
+        if (action_state() == ACTION_3_CARPENTER_RETURN && rd.ramp_part_bid) {
+            if (auto *ps = pyramid_part_state_get(rd.ramp_part_bid)) {
+                if (ps->worker_figure_id == id()) {
+                    ps->worker_figure_id = 0;
+                }
             }
+            rd.ramp_part_bid = 0;
         }
         break;
     }

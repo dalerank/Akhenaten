@@ -364,6 +364,7 @@ localization_de = [
 
   {key: "#main_menu_mods", text:"Mods"}
   {key: "#main_menu_editor", text:"Editor"}
+  {key: "#main_menu_free_play", text:"Freies Spiel"}
   {key: "#mission2_store_figs", text:"Baut eine Kornkammer und füllt sie mit Feigen"}
 
   {key: "#message_population_title", text:"Bevölkerungsmeilenstein"}

@@ -3,9 +3,13 @@ log_info("akhenaten: scenario selection window")
 function scenario_selection_add_campaign_missions(list, campaign_id, MAX_MANUAL_ENTRIES) {
     var first_sid = -1
     for (var i = 0; i < MAX_MANUAL_ENTRIES; i++) {
-        var sid = __game_campaign_mission_step_scenario_id(campaign_id, i)
-        if (sid < 0) {
+        if (!__game_campaign_has_mission_step(campaign_id, i)) {
             break
+        }
+        var sid = __game_campaign_mission_step_scenario_id(campaign_id, i)
+        // Leading choicescreen rows are placeholders (sid=-1); OG free_play skips them.
+        if (sid < 0) {
+            continue
         }
         if (first_sid < 0) {
             first_sid = sid
@@ -15,20 +19,55 @@ function scenario_selection_add_campaign_missions(list, campaign_id, MAX_MANUAL_
     return first_sid
 }
 
+// Free play: every remake mission*.js config (Pharaoh + Cleopatra). Custom Maps/
+// sandbox ids stay under Custom Missions.
+function scenario_selection_add_free_play_missions(list) {
+    var first_sid = -1
+    var skip = {}
+    for (var i = 0; i < custom_missions.length; i++) {
+        skip[custom_missions[i].mission_id] = true
+    }
+    for (var sid = 0; sid < 100; sid++) {
+        if (skip[sid] || get_mission_config(sid) === undefined) {
+            continue
+        }
+        if (first_sid < 0) {
+            first_sid = sid
+        }
+        list.add_item(mission_selection_title(sid), sid)
+    }
+    return first_sid
+}
+
+function scenario_selection_apply_free_play_mode() {
+    if (window_scenario_selection.free_play) {
+        scenario.scmode = e_scenario_selected
+    }
+}
+
 [es=(window_scenario_selection, init)]
 function window_scenario_selection_on_init(ev) {
     var list = ev.scenario_map_list
     var MAX_MANUAL_ENTRIES = 300
 
+    if (window_scenario_selection.free_play) {
+        __log_marker("window_show:window_scenario_selection_free_play")
+    }
+
     list.set_use_file_finder(false)
     list.clear()
 
     var individual = !!window_scenario_selection.individual_missions
+    var free_play = !!window_scenario_selection.free_play
     var sub = window_scenario_selection.campaign_sub_dialog
     var first_sid = -1
-    if (individual) {
+    if (free_play) {
         window_scenario_selection.campaign_first_mission = -1
-        for (var c = 0; c < CAMPAIGN_PERIOD_COUNT; c++) {
+        first_sid = scenario_selection_add_free_play_missions(list)
+    } else if (individual) {
+        window_scenario_selection.campaign_first_mission = -1
+        var periods = __game_has_campaign_data() ? (__game_campaign_count() | 0) : CAMPAIGN_PERIOD_COUNT
+        for (var c = 0; c < periods; c++) {
             var sid = scenario_selection_add_campaign_missions(list, c, MAX_MANUAL_ENTRIES)
             if (first_sid < 0 && sid >= 0) {
                 first_sid = sid
@@ -48,6 +87,7 @@ function window_scenario_selection_on_init(ev) {
     if (list.items_count > 0 && first_sid >= 0) {
         list.select_index(0)
         __game_load_mission(first_sid, 0)
+        scenario_selection_apply_free_play_mode()
         window_scenario_selection.selected_mission_index = first_sid
     }
 
@@ -282,6 +322,7 @@ function window_scenario_selection_btn_start() {
     city.kingdome.campaign_carry_personal_savings = 0
     city.kingdome.personal_savings = 0
     __campaign_carry_clear()
+    scenario_selection_apply_free_play_mode()
     __game_start_loaded_file()
 }
 
@@ -298,6 +339,7 @@ function window_scenario_selection_on_map_list_click(entry) {
     // old "campaign_first_mission + display_index" math could load a different
     // mission than the one the player selected.
     __game_load_mission(entry.user_data | 0, 0)
+    scenario_selection_apply_free_play_mode()
 
     emit window_scenario_selection.mission_changed { id: scenario.campaign_scenario_id }
 }
@@ -310,6 +352,7 @@ window_scenario_selection {
     campaign_first_mission : -1
     campaign_sub_dialog : -1
     individual_missions : false
+    free_play : false
     pos [(sw(0) - 1024) / 2, (sh(0) - 768) / 2]
 
     ui {

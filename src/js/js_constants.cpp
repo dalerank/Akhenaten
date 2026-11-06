@@ -51,6 +51,7 @@ void js_register_game_constants(js_State* J) {
     _R(e_session_save)
     _R(e_session_custom_map)
     _R(e_scenario_normal)
+    _R(e_scenario_selected)
     _R(e_scenario_custom_map)
     _R(SCENARIO_NUBT)
     _R(GOD_UNKNOWN)

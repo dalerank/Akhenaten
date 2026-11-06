@@ -11,6 +11,7 @@
 #include "building/monument_sun_temple.h"
 #include "building/monuments.h"
 #include "figuretype/figure_bricklayer.h"
+#include "figuretype/figure_sled.h"
 #include "figuretype/figure_stonemason.h"
 #include "city/city.h"
 #include "city/city_floods.h"
@@ -273,6 +274,8 @@ void figure_worker::figure_action() {
                 if (uses_ramp_climb(b_dest)) {
                     tile2i entry = ramp_entry_tile(b_dest);
                     base.destination_tile = entry.valid() ? entry : mason->tile;
+                    // OG at_storage_yard: spawn 5 pullers + sled chained to this laborer.
+                    pyramid_figure_spawn_sled_train(id(), b_dest);
                 } else {
                     base.destination_tile = mason->tile;
                 }
