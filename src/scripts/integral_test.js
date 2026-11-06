@@ -136,7 +136,10 @@ function test_prepare_shoreline_patch(cx, cy, water_width, water_height) {
             terrain.set_water({ x: x0 + dx, y: cy + dy })
         }
     }
-    __test_set_scenario_river_points(cx, cy, cx, cy + water_height - 1)
+    // Boat routing only starts from WATER_0_PASSABLE tiles (fully surrounded water).
+    // Use the patch interior — edge shoreline tiles are WATER_N1_BLOCKED.
+    var entry_y = cy + ((water_height / 2) | 0)
+    __test_set_scenario_river_points(cx, entry_y, cx, entry_y)
     __map_water_cache_river_tiles()
     __map_water_rebuild_shores()
     __test_map_routing_update_water()
