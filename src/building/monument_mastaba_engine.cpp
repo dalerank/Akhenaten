@@ -2,6 +2,7 @@
 
 #include "building/monument_mastaba.h"
 #include "building/monument_pyramid_engine.h"
+#include "building/monument_pyramid_figure.h"
 #include "building/monuments.h"
 #include "city/city_buildings.h"
 #include "city/city_figures.h"
@@ -134,10 +135,10 @@ static int __pyramid_find_mason_waiting(int bid) {
     if (!head) {
         return 0;
     }
-    if (g_monument_pyramid_engine.is_mudbrick(head)) {
-        return pyramid_engine_find_mason_waiting_for_block(head);
+    if (mastaba_engine_is(head)) {
+        return mastaba_engine_find_mason_waiting_for_block(head);
     }
-    return mastaba_engine_find_mason_waiting_for_block(head);
+    return g_monument_pyramid_figure.find_mason_waiting_for_block(head, 0);
 }
 ANK_FUNCTION_1(__pyramid_find_mason_waiting)
 

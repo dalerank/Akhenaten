@@ -62,6 +62,8 @@ function run_test() {
     }
     __test_figure_set_action(fid, ACTION_8_BRICKLAYER_WAIT_FOR_BLOCK)
     __test_figures_update()
+    // OG pair_waiting_mason: a paired part is served only while its partner waits too.
+    __test_pyramid_park_waiting_mason(bid, fid)
 
     var mason = __pyramid_find_mason_waiting(bid)
     if (mason != fid) {

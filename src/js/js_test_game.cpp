@@ -3789,6 +3789,31 @@ static int __pyramid_claim_bricklayer_task(int fid) {
 }
 ANK_FUNCTION_1(__pyramid_claim_bricklayer_task);
 
+static int __test_pyramid_park_waiting_mason(int bid, int fid) {
+    building* b = building_get(bid);
+    building* head = b ? b->main() : nullptr;
+    figure* f = figure_get(fid);
+    if (!head || !f || !f->is_alive()) {
+        return 0;
+    }
+    svector<building_id, PYRAMID_PARTS_CAPACITY> frontier;
+    pyramid_engine_find_frontier(head, frontier);
+    if (frontier.empty()) {
+        return 0;
+    }
+    for (building_id id : frontier) {
+        if (auto* ps = pyramid_part_state_get(id)) {
+            ps->worker_figure_id = (figure_id)fid;
+        }
+    }
+    g_monument_pyramid_figure.set_work_part_bid(f, frontier[0]);
+    g_monument_pyramid_figure.walk_mode(f) = PYRAMID_WALK_ON_LAYER;
+    f->action_state
+      = f->type == FIGURE_BRICKLAYER ? ACTION_8_BRICKLAYER_WAIT_FOR_BLOCK : ACTION_19_MASON_WAIT_FOR_BLOCK;
+    return frontier[0];
+}
+ANK_FUNCTION_2(__test_pyramid_park_waiting_mason);
+
 static int __pyramid_spawn_sled_train(int laborer_fid, int monument_bid) {
     figure *laborer = figure_get(laborer_fid);
     building *mon = building_get(monument_bid);
