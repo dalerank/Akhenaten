@@ -40,11 +40,12 @@ window_main_menu {
 
 		continue_game : large_button({ pos:mbutton(0), size[256, 25], text[13, 5], font: FONT_MENU_BLACK_ON_LIGHT })
 		select_player : large_button({ pos:mbutton(1), size[256, 25], text[30, 0], font: FONT_MENU_BLACK_ON_LIGHT })
-		show_records  : large_button({ pos:mbutton(2), size[256, 25], text[30, 5], font: FONT_MENU_BLACK_ON_LIGHT })
-		show_config   : large_button({ pos:mbutton(3), size[256, 25], text[2,  0], font: FONT_MENU_BLACK_ON_LIGHT })
-		show_mods     : large_button({ pos:mbutton(4), size[256, 25], text:"#main_menu_mods", font: FONT_MENU_BLACK_ON_LIGHT })
-		show_editor   : large_button({ pos:mbutton(5), size[256, 25], text:"#main_menu_editor", font: FONT_MENU_BLACK_ON_LIGHT })
-		quit_game     : large_button({ pos:mbutton(6), size[256, 25], text[30, 4], font: FONT_MENU_BLACK_ON_LIGHT })
+		free_play     : large_button({ pos:mbutton(2), size[256, 25], text:"#main_menu_free_play", font: FONT_MENU_BLACK_ON_LIGHT })
+		show_records  : large_button({ pos:mbutton(3), size[256, 25], text[30, 5], font: FONT_MENU_BLACK_ON_LIGHT })
+		show_config   : large_button({ pos:mbutton(4), size[256, 25], text[2,  0], font: FONT_MENU_BLACK_ON_LIGHT })
+		show_mods     : large_button({ pos:mbutton(5), size[256, 25], text:"#main_menu_mods", font: FONT_MENU_BLACK_ON_LIGHT })
+		show_editor   : large_button({ pos:mbutton(6), size[256, 25], text:"#main_menu_editor", font: FONT_MENU_BLACK_ON_LIGHT })
+		quit_game     : large_button({ pos:mbutton(7), size[256, 25], text[30, 4], font: FONT_MENU_BLACK_ON_LIGHT })
 
 		discord 	  : image_button({ pos[sw(-100), sh(-50)], size[48, 48], icon_texture:"!discord", scale:0.75 })
 
@@ -65,7 +66,7 @@ window_main_menu {
 
 function main_menu_button_width() {
 	var texts = [
-		__loc(13, 5), __loc(30, 0), __loc(30, 5), __loc(2, 0),
+		__loc(13, 5), __loc(30, 0), __loc('#main_menu_free_play'), __loc(30, 5), __loc(2, 0),
 		__loc('#main_menu_mods'), __loc('#main_menu_editor'), __loc(30, 4)
 	]
 	var maxw = 0
@@ -118,12 +119,23 @@ function main_menu_on_show(ev) {
     }
 
     game_mission_options_locked = false
+    window_scenario_selection.free_play = false
     window_show_by_id("window_main_menu")
 }
 
 [es=(window_main_menu, select_player)]
 function main_menu_on_select_player(window) {
 	emit event_show_window{ id: "window_player_selection" }
+}
+
+[es=(window_main_menu, free_play)]
+function main_menu_on_free_play(window) {
+	// Port free-play: all campaign missions, no dynasty progress (e_scenario_selected).
+	window_scenario_selection.free_play = true
+	window_scenario_selection.individual_missions = true
+	window_scenario_selection.campaign_sub_dialog = -1
+	scenario.scmode = e_scenario_selected
+	window_show_by_id("window_scenario_selection")
 }
 
 [es=(window_main_menu, show_records)]
@@ -175,7 +187,7 @@ function main_menu_on_init(window) {
 		var w = main_menu_button_width()
 		var x0 = Math.floor(sw(0) / 2 - w / 2)
 		var y0 = Math.floor(sh(0) / 2 - 100)
-		var ids = ['continue_game', 'select_player', 'show_records', 'show_config', 'show_mods', 'show_editor', 'quit_game']
+		var ids = ['continue_game', 'select_player', 'free_play', 'show_records', 'show_config', 'show_mods', 'show_editor', 'quit_game']
 		for (var i = 0; i < ids.length; i++) {
 			window[ids[i]].size = { x: w, y: 25 }
 			window[ids[i]].pos = { x: x0, y: y0 + 40 * i }

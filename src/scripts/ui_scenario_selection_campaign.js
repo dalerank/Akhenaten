@@ -4,9 +4,12 @@ function campaign_period_last_scenario_id(period) {
     var last_sid = -1
     var i
     for (i = 0; i < 64; i++) {
+        if (!__game_campaign_has_mission_step(period, i)) {
+            break
+        }
         var sid = __game_campaign_mission_step_scenario_id(period, i)
         if (sid < 0) {
-            break
+            continue
         }
         last_sid = sid
     }
@@ -23,9 +26,12 @@ function campaign_period_is_unlocked(period) {
     var i
     // Unlocked if any scenario in this period has been beaten
     for (i = 0; i < 64; i++) {
+        if (!__game_campaign_has_mission_step(period, i)) {
+            break
+        }
         var sid = __game_campaign_mission_step_scenario_id(period, i)
         if (sid < 0) {
-            break
+            continue
         }
         if (__game_mission_scenario_beaten(sid)) {
             return true
@@ -33,9 +39,12 @@ function campaign_period_is_unlocked(period) {
     }
     // Or if any scenario in the previous period has been beaten
     for (i = 0; i < 64; i++) {
+        if (!__game_campaign_has_mission_step(period - 1, i)) {
+            break
+        }
         var prev_sid = __game_campaign_mission_step_scenario_id(period - 1, i)
         if (prev_sid < 0) {
-            break
+            continue
         }
         if (__game_mission_scenario_beaten(prev_sid)) {
             return true
@@ -148,6 +157,7 @@ function campaign_tab_campaigns() {
 function campaign_tab_individual() {
     window_scenario_selection_campaign.active_tab = CAMPAIGN_TAB_INDIVIDUAL
     window_scenario_selection.individual_missions = true
+    window_scenario_selection.free_play = false
     window_scenario_selection.campaign_sub_dialog = -1
     window_show_by_id("window_scenario_selection")
 }
@@ -162,6 +172,7 @@ function campaign_btn_play() {
         return
     }
     window_scenario_selection.individual_missions = false
+    window_scenario_selection.free_play = false
     window_scenario_selection.campaign_sub_dialog = index
     window_show_by_id("window_scenario_selection")
 }

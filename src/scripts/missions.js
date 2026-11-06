@@ -101,8 +101,8 @@ function mission_has_post_victory_choice(completed_id) {
 }
 
 function mission_end_compute_next_scenario_id(completed_id) {
-    if (scenario.scmode == e_scenario_custom_map) {
-        log_info("mission_end_compute_next: custom map, ending campaign")
+    if (scenario.scmode == e_scenario_custom_map || scenario.scmode == e_scenario_selected) {
+        log_info("mission_end_compute_next: free/custom play, ending session")
         return -1
     }
     var src = get_mission_config(completed_id)

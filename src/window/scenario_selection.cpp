@@ -19,9 +19,22 @@ int __game_get_first_mission_in_campaign(int campaign_id) {
 }
 ANK_FUNCTION_1(__game_get_first_mission_in_campaign)
 
+int __game_campaign_count() {
+    return game_campaign_count();
+}
+ANK_FUNCTION(__game_campaign_count)
+
+int __game_campaign_has_mission_step(int campaign_id, int step_index) {
+    return get_campaign_mission_step_data(campaign_id, step_index) ? 1 : 0;
+}
+ANK_FUNCTION_2(__game_campaign_has_mission_step)
+
+// Raw scenario_id for a campaign step. Missing step → -1. A choicescreen placeholder
+// also stores scenario_id=-1 — callers must use has_mission_step and continue, not break
+// (OG free_play skips invalid links and keeps walking the period).
 int __game_campaign_mission_step_scenario_id(int campaign_id, int step_index) {
     const mission_step_t* d = get_campaign_mission_step_data(campaign_id, step_index);
-    if (!d || d->scenario_id < 0) {
+    if (!d) {
         return -1;
     }
     return d->scenario_id;
