@@ -819,11 +819,13 @@ int monument_pyramid_figure::claim_next_part(figure_id fid, int set_height, int 
         }
 
         const bool needs_main = g_monument_pyramid_engine.uses_block_engine(head)
-            ? g_monument_pyramid_engine.needs_main_material(*ps)
-            : true;
+                                  ? g_monument_pyramid_engine.needs_main_material(*ps, style)
+                                  : true;
         switch (style) {
         case PYRAMID_STYLE_MASTABA:
         case PYRAMID_STYLE_TRUE:
+        case PYRAMID_STYLE_STEPPED:
+        case PYRAMID_STYLE_BENT:
             break;
         case PYRAMID_STYLE_MUDBRICK:
             if (f->type == FIGURE_BRICKLAYER ? !needs_main : needs_main) {

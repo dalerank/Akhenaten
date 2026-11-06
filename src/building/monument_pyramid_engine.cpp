@@ -76,6 +76,17 @@ int monument_pyramid_engine::block_total(building *main) const {
     return 0;
 }
 
+int monument_pyramid_engine::casing_total(building* main) const {
+    building* head = chain_head(main);
+    if (!head) {
+        return 0;
+    }
+    if (auto* pyr = head->dcast_pyramid()) {
+        return (int)pyr->pyramid_params().casing_total;
+    }
+    return 0;
+}
+
 const std::array<int32_t, PYRAMID_PARTS_CAPACITY> &monument_pyramid_engine::part_grid_offsets() const {
     return pyramid_engine_config.part_grid_offsets;
 }
@@ -195,6 +206,7 @@ int monument_pyramid_engine::ramp_base_image(building &part, int kind, e_pyramid
 
 void monument_pyramid_engine::set_ramp_offsets(pyramid_part_state &ps, int kind, e_pyramid_style style) const {
     const int layer = std::max(1, pyramid_engine_config.blocks_per_layer);
+    const bool bent_half = (style == PYRAMID_STYLE_BENT) && bent_is_half_layer(ps);
     auto apply = [&](uint8_t height, int16_t &ox, int16_t &oy) {
         if (!height) {
             ox = oy = 0;
@@ -209,12 +221,13 @@ void monument_pyramid_engine::set_ramp_offsets(pyramid_part_state &ps, int kind,
             oy = (int16_t)off.y;
             return;
         }
-        const int row = (height - 1) % layer;
         const int k = std::clamp(kind, 0, PYRAMID_RAMP_KIND_COUNT - 1);
         const auto &base = pyramid_engine_config.ramp_base[k];
+        // OG bent half-layer: row = (h*2-2)%6, y offset halved.
+        const int row = bent_half ? ((height * 2 - 2) % layer) : ((height - 1) % layer);
         const auto &off = ramp_offset_at(k, row);
         ox = (int16_t)(base.x + off.x);
-        oy = (int16_t)(base.y + off.y);
+        oy = bent_half ? (int16_t)(off.y / 2 + base.y) : (int16_t)(base.y + off.y);
     };
     apply(ps.ramp1_height, ps.ramp_image_x1, ps.ramp_image_y1);
     apply(ps.ramp2_height, ps.ramp_image_x2, ps.ramp_image_y2);
@@ -258,28 +271,13 @@ bool monument_pyramid_engine::block_phase_active(building *main) const {
     return st && uses_block_engine(head) && st->block_phase_active && st->remaining_blocks > 0;
 }
 
-// Size-0 (4×4 parts): OG layout gives layers=1 to the NW 2×2, layers=0 to the outer ring.
-static uint8_t square_target_layers_for_part(building *head, building *part, int size_variant) {
-    if (!head || !part) {
+static uint8_t layout_target_layers(int size_variant, int subtype) {
+    const int size = std::clamp(size_variant, 0, PYRAMID_SIZE_COUNT - 1);
+    if (subtype < 0 || subtype >= (int)PYRAMID_PARTS_CAPACITY) {
         return 0;
     }
-    // Linked-list head can be a corner/wall — measure from geometric footprint NW.
-    tile2i nw = head->tile;
-    if (auto *pyr = head->dcast_pyramid()) {
-        nw = pyr->footprint_nw();
-    }
-    const int dx = (part->tile.x() - nw.x()) / 2;
-    const int dy = (part->tile.y() - nw.y()) / 2;
-    const int ring = std::max(dx, dy);
-    // Size 0 OG layout: NW 2×2 parts layers=1, outer ring layers=0.
-    if (size_variant == 0) {
-        return (ring <= 1) ? 1 : 0;
-    }
-    // side in 2×2 parts: 6/8/10/12 for size 1..4 (not 2+2*sv — that under-counted).
-    const int side_parts = 4 + size_variant * 2;
-    const int max_ring = side_parts - 1;
-    const int from_outside = max_ring - ring;
-    return (uint8_t)std::max(0, from_outside - (side_parts / 2 - 1));
+    const int layers = pyramid_engine_config.part_layers[size * PYRAMID_PARTS_CAPACITY + subtype];
+    return (uint8_t)std::max(0, layers);
 }
 
 void pyramid_engine_clear_all() {
@@ -321,7 +319,7 @@ void pyramid_engine_init(building *main) {
         ps.size_variant = (uint8_t)size_variant;
         const int og = pyramid_ramp_og_subtype(expect > 0 ? expect : n_parts, nw, parts[i]->tile);
         ps.subtype = (uint8_t)(og >= 0 ? og : i);
-        ps.target_layers = square_target_layers_for_part(head, parts[i], size_variant);
+        ps.target_layers = layout_target_layers(size_variant, ps.subtype);
         ps.stage = PYRAMID_STAGE_MAIN_MATERIAL;
         ps.worker_figure_id = 0;
     }
@@ -376,14 +374,37 @@ int monument_pyramid_engine::part_height(const pyramid_part_state &p) const {
     return p.blocks + p.layer * pyramid_engine_config.blocks_per_layer;
 }
 
-int monument_pyramid_engine::layer_capacity() const {
+bool monument_pyramid_engine::bent_is_half_layer(int size_variant, int layer) const {
+    const int idx = size_variant * 6 + layer;
+    if (idx < 0 || idx >= (int)pyramid_engine_config.bent_half_layer.size()) {
+        return false;
+    }
+    return pyramid_engine_config.bent_half_layer[idx] != 0;
+}
+
+bool monument_pyramid_engine::bent_is_half_layer(const pyramid_part_state& p) const {
+    return bent_is_half_layer((int)p.size_variant, (int)p.layer);
+}
+
+int monument_pyramid_engine::bent_layer_pixel_height(int size_variant, int layer) const {
+    const int idx = size_variant * 6 + layer;
+    if (idx < 0 || idx >= (int)pyramid_engine_config.bent_pixel_heights.size()) {
+        return layer * 90;
+    }
+    return pyramid_engine_config.bent_pixel_heights[idx];
+}
+
+int monument_pyramid_engine::layer_capacity(const pyramid_part_state& p, e_pyramid_style style) const {
+    if (style == PYRAMID_STYLE_BENT && bent_is_half_layer(p)) {
+        return 3;
+    }
     return pyramid_engine_config.blocks_per_layer;
 }
 
-void monument_pyramid_engine::add_block(pyramid_part_state &p) const {
+void monument_pyramid_engine::add_block(pyramid_part_state& p, e_pyramid_style style) const {
     if (p.stage == PYRAMID_STAGE_MAIN_MATERIAL) {
         int blocks = ++p.blocks;
-        int capacity = layer_capacity();
+        int capacity = layer_capacity(p, style);
         if (blocks >= capacity) {
             if (p.layer < p.target_layers) {
                 if (blocks > capacity) {
@@ -423,7 +444,7 @@ int monument_pyramid_engine::frontier_order(const pyramid_part_state &part, cons
     return (part.blocks > best.blocks) ? -1 : (part.blocks != best.blocks);
 }
 
-bool monument_pyramid_engine::needs_main_material(const pyramid_part_state &p) const {
+bool monument_pyramid_engine::needs_main_material(const pyramid_part_state& p, e_pyramid_style style) const {
     // OG pyramid_part_needs_main_material: bricklayers only while layer < target.
     if (p.stage != PYRAMID_STAGE_MAIN_MATERIAL) {
         return false;
@@ -431,7 +452,7 @@ bool monument_pyramid_engine::needs_main_material(const pyramid_part_state &p) c
     if (p.layer >= p.target_layers) {
         return false;
     }
-    const int capacity = layer_capacity();
+    const int capacity = layer_capacity(p, style);
     return p.blocks != capacity || p.layer + 1 != p.target_layers;
 }
 
@@ -442,6 +463,7 @@ void monument_pyramid_engine::find_frontier(building *main, svector<building_id,
         return;
     }
 
+    const e_pyramid_style style = style_of(head);
     svector<building *, PYRAMID_PARTS_CAPACITY> parts;
     collect_parts(head, parts);
 
@@ -451,12 +473,13 @@ void monument_pyramid_engine::find_frontier(building *main, svector<building_id,
         if (!ps) {
             continue;
         }
-        if (ps->stage != 0 && ps->blocks == 0) {
-            continue;
-        }
-        // Boost/assign only parts that still need main bricks — otherwise
-        // target_layers==0 parts drain remaining into a fake casing stage.
-        if (ps->stage == PYRAMID_STAGE_MAIN_MATERIAL && !needs_main_material(*ps)) {
+        // frontier: stepped drops every casing part; bent/true keep while blocks>0.
+        if (ps->stage != PYRAMID_STAGE_MAIN_MATERIAL) {
+            if (ps->blocks == 0 || style == PYRAMID_STYLE_STEPPED) {
+                continue;
+            }
+        } else if (!needs_main_material(*ps, style) && casing_total(head) == 0) {
+            // No casing in block_total — skip saturated main (remaining burn finishes).
             continue;
         }
         if (pyramid_engine_part_needs_ramp(p->id) != 0) {
@@ -534,7 +557,7 @@ bool pyramid_engine_part_has_active_worker(building_id part_id) {
 
 void monument_pyramid_engine::apply_block_placed(building *head, pyramid_main_state &ms, pyramid_part_state &ps) {
     ms.remaining_blocks--;
-    add_block(ps);
+    add_block(ps, ms.style);
 
     if (auto *mon = head ? head->dcast_monument() : nullptr) {
         mon->sync_visuals();
@@ -684,7 +707,7 @@ int pyramid_engine_try_assign_bricklayer(building *main, figure_id fid) {
         if (!ps) {
             continue;
         }
-        if (!g_monument_pyramid_engine.needs_main_material(*ps)) {
+        if (!g_monument_pyramid_engine.needs_main_material(*ps, ms->style)) {
             continue;
         }
         if (ps->worker_figure_id && pyramid_engine_part_has_active_worker(part_id)) {

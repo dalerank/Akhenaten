@@ -1085,7 +1085,13 @@ building_small_stepped_pyramid {
       base { id:2, offset:7 }
       base_bricks { path:"bent_pyramid/Bent_pyramid_00103" }
       corner_bricks { path:"bent_pyramid/Bent_pyramid_00001" }
+      // OG IMAGE_GROUP_BENT_PYRAMID — half-course rows (6×8), not the Pyramid-shared 1..111.
+      half_bricks { path:"bent_pyramid/Bent_pyramid_00112" }
       wall_bricks { path:"bent_pyramid/Bent_pyramid_00005" }
+      // Same casing row layout as true: polish at 00049, finished course → 00089.
+      base_polish { path:"bent_pyramid/Bent_pyramid_00103" }
+      corner_polish { path:"bent_pyramid/Bent_pyramid_00049" }
+      wall_polish { path:"bent_pyramid/Bent_pyramid_00053" }
       base_grounded { path:"bent_pyramid/pyramid_phase_one_00013" }
       clear_land { id:2, offset:12 }
       image_stick { path:"bent_pyramid/pyramid_phase_one_00021" }
@@ -1138,6 +1144,20 @@ building_small_stepped_pyramid {
     wall_type : BUILDING_SMALL_BENT_PYRAMID_WALL
     cone_type : BUILDING_SMALL_BENT_PYRAMID_CONE
     filler_type : BUILDING_SMALL_BENT_PYRAMID
+    part_count : 16
+    // OG bent_pyramid_block_total includes casing (main 108 + casing 84).
+    block_total : 192
+    casing_total : 84
+    // OG pyramid_ramp_table (8×8).
+    ramps [
+      { part: 13, ramp1_height: 1 }
+      { part: 14, ramp1_height: 2, ramp1_linked_part: 15 }
+      { part: 11, ramp1_height: 3 }
+      { part: 9, ramp1_height: 4, ramp1_linked_part: 7 }
+      { part: 6, ramp1_height: 5 }
+      { part: 5, ramp1_height: 6 }
+    ]
+    pyramide_type : PYRAMID_STYLE_BENT
   }
 
   building_small_bent_pyramid_corner = building_small_bent_pyramid
@@ -1151,7 +1171,12 @@ building_small_stepped_pyramid {
       base { id:2, offset:7 }
       base_bricks { path:"bent_pyramid/Bent_pyramid_00103" }
       corner_bricks { path:"bent_pyramid/Bent_pyramid_00001" }
+      // OG IMAGE_GROUP_BENT_PYRAMID — half-course rows (6×8), not the Pyramid-shared 1..111.
+      half_bricks { path:"bent_pyramid/Bent_pyramid_00112" }
       wall_bricks { path:"bent_pyramid/Bent_pyramid_00005" }
+      base_polish { path:"bent_pyramid/Bent_pyramid_00103" }
+      corner_polish { path:"bent_pyramid/Bent_pyramid_00049" }
+      wall_polish { path:"bent_pyramid/Bent_pyramid_00053" }
       base_grounded { path:"bent_pyramid/pyramid_phase_one_00013" }
       clear_land { id:2, offset:12 }
       image_stick { path:"bent_pyramid/pyramid_phase_one_00021" }
@@ -1196,128 +1221,6 @@ building_small_stepped_pyramid {
       {first:23, second:25}, {first:26, second:28}, {first:27, second:29}, {first:30, second:31}, {first:32, second:33}, {first:34, second:35},
     ]
 
-
-    stairs [
-      {
-        phase : 7
-        part : [2, 10]
-        tex { path:"bent_pyramid/Bent_pyramid_00110" }
-        offset : [-15, 25]
-      }
-
-      {
-        phase : 8
-        part : [4, 10]
-        tex { path:"bent_pyramid/Bent_pyramid_00111" }
-        offset : [-15, 25]
-      }
-
-      {
-        phase : 9
-        part : [6, 10]
-        tex { path:"bent_pyramid/Bent_pyramid_00112" }
-        offset : [-15, 25]
-      }
-
-      {
-        phase : 10
-        part : [8, 10]
-        tex { path:"bent_pyramid/Bent_pyramid_00110" }
-        offset : [15, -35]
-      }
-
-      {
-        phase : 10
-        part : [10, 10]
-        tex { path:"bent_pyramid/Bent_pyramid_00122" }
-        offset : [15, -40]
-      }
-
-      {
-        phase : 11
-        part : [10, 8]
-        tex { path:"bent_pyramid/Bent_pyramid_00114" }
-        offset : [25, -30]
-      }
-
-      {
-        phase : 12
-        part : [10, 6]
-        tex { path:"bent_pyramid/Bent_pyramid_00115" }
-        offset : [20, -30]
-      }
-
-      {
-        phase : 13
-        part : [10, 4]
-        tex { path:"bent_pyramid/Bent_pyramid_00113" }
-        offset : [0, -90]
-      }
-
-      {
-        phase : 13
-        part : [10, 2]
-        tex { path:"bent_pyramid/Bent_pyramid_00124" }
-        offset : [0, -95]
-      }
-
-      {
-        phase : 16
-        part : [4, 8]
-        tex { path:"bent_pyramid/Bent_pyramid_00118" }
-        offset : [-28, -155]
-      }
-
-      {
-        phase : 17
-        part : [6, 8]
-        tex { path:"bent_pyramid/Bent_pyramid_00111" }
-        offset : [-48, -158]
-      }
-
-      {
-        phase : 18
-        part : [8, 8]
-        tex { path:"bent_pyramid/Bent_pyramid_00112" }
-        offset : [-48, -158]
-      }
-
-      {
-        phase : 19
-        part : [8, 6]
-        tex { path:"bent_pyramid/Bent_pyramid_00113" }
-        offset : [0, -180]
-      }
-
-      {
-        phase : 20
-        part : [8, 4]
-        tex { path:"bent_pyramid/Bent_pyramid_00124" }
-        offset : [-0, -180]
-      }
-
-      {
-        phase : 21
-        part : [4, 6]
-        tex { path:"bent_pyramid/Bent_pyramid_00119" }
-        offset : [-20, -175]
-      }
-
-      {
-        phase : 21
-        part : [6, 6]
-        tex { path:"bent_pyramid/Bent_pyramid_00112" }
-        offset : [-40, -175]
-      }
-
-      {
-        phase : 22
-        part : [6, 4]
-        tex { path:"bent_pyramid/Bent_pyramid_00113" }
-        offset : [10, -200]
-      }
-    ]
-
     flags {
         is_monument: true
         non_deletable: true
@@ -1327,6 +1230,26 @@ building_small_stepped_pyramid {
     wall_type : BUILDING_MEDIUM_BENT_PYRAMID_WALL
     cone_type : BUILDING_MEDIUM_BENT_PYRAMID_CONE
     filler_type : BUILDING_MEDIUM_BENT_PYRAMID
+    part_count : 36
+    // bent_pyramid_block_total includes casing (main 276 + casing 168).
+    block_total : 444
+    casing_total : 168
+    // pyramid_ramp_table (12×12).
+    ramps [
+      { part: 31, ramp1_height: 1 }
+      { part: 32, ramp1_height: 2 }
+      { part: 33, ramp1_height: 3 }
+      { part: 34, ramp1_height: 4, ramp1_linked_part: 35 }
+      { part: 29, ramp1_height: 5 }
+      { part: 27, ramp1_height: 6 }
+      { part: 9, ramp1_height: 7, ramp1_linked_part: 7 }
+      { part: 6, ramp1_height: 8 }
+      { part: 5, ramp1_height: 9 }
+      { part: 8, ramp1_height: 10 }
+      { part: 10, ramp1_height: 11, ramp1_linked_part: 12 }
+      { part: 13, ramp1_height: 12 }
+    ]
+    pyramide_type : PYRAMID_STYLE_BENT
   }
 
   building_medium_bent_pyramid_corner = building_medium_bent_pyramid

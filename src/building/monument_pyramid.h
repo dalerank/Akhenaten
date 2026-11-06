@@ -40,9 +40,11 @@ public:
 
         uint16_t part_count = 0;
         uint16_t block_total = 0;
+        // casing count inside block_total (bent 84/168; 0 = stepped — no casing).
+        uint16_t casing_total = 0;
         // pyramid_entry_points for this size — ramp walk hops {part subtype, height}.
         hvector<pyramid_entry_point, 60> entry_points;
-        // OG pyramid_part_pair_table for this size.
+        // pyramid_part_pair_table for this size.
         hvector<pyramid_paired_parts, 80> part_pairs;
     };
 
@@ -279,12 +281,14 @@ public:
     virtual bool draw_ornaments_and_animations_flat(painter &ctx, vec2i point, tile2i tile, color mask) override;
     virtual bool draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color mask) override;
     virtual int building_image_get() const override;
+    virtual bool use_polish_sprites_for_layer(int layer) const override;
     virtual const base_params &pyramid_params() const override { return current_params(); }
 
     virtual const monument &config() const override;
 };
-ANK_CONFIG_STRUCT(building_small_bent_pyramid::static_params,
-    init_tiles, corner_type, wall_type, cone_type, filler_type, enter_offset, stairs, ramps, part_count, block_total, entry_points, part_pairs);
+ANK_CONFIG_STRUCT(building_small_bent_pyramid::static_params, init_tiles, corner_type, wall_type, cone_type,
+  filler_type, enter_offset, stairs, ramps, part_count, block_total, casing_total, entry_points, part_pairs,
+  pyramide_type);
 
 class building_small_bent_pyramid_corner : public building_small_bent_pyramid {
 public:
@@ -307,12 +311,14 @@ public:
     virtual bool draw_ornaments_and_animations_flat(painter &ctx, vec2i point, tile2i tile, color mask) override;
     virtual bool draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color mask) override;
     virtual int building_image_get() const override;
+    virtual bool use_polish_sprites_for_layer(int layer) const override;
     virtual const base_params &pyramid_params() const override { return current_params(); }
 
     virtual const monument &config() const override;
 };
-ANK_CONFIG_STRUCT(building_medium_bent_pyramid::static_params,
-    init_tiles, corner_type, wall_type, cone_type, filler_type, enter_offset, stairs, ramps, part_count, block_total, entry_points, part_pairs);
+ANK_CONFIG_STRUCT(building_medium_bent_pyramid::static_params, init_tiles, corner_type, wall_type, cone_type,
+  filler_type, enter_offset, stairs, ramps, part_count, block_total, casing_total, entry_points, part_pairs,
+  pyramide_type);
 
 class building_medium_bent_pyramid_corner : public building_medium_bent_pyramid {
 public:

@@ -90,24 +90,30 @@ struct pyramid_engine_config_t {
     std::array<int32_t, PYRAMID_PARTS_CAPACITY> part_grid_offsets{};
 
     std::array<int, PYRAMID_SIZE_COUNT * PYRAMID_PARTS_CAPACITY> part_kinds{};
+    // pyramid_part_layout[].layers — target_layers per subtype (not geometric NW ring).
+    std::array<int, PYRAMID_SIZE_COUNT * PYRAMID_PARTS_CAPACITY> part_layers{};
 
-    // OG pyramid_neighbour_offsets[view][3] — flat view*3+slot; ramp-link uses slot 0/1.
+    // pyramid_neighbour_offsets[view][3] — flat view*3+slot; ramp-link uses slot 0/1.
     std::array<int32_t, 12> neighbour_offsets{};
 
     // pyramid_ramp_base — pixel base shift per part kind before ramp_offsets row.
     std::array<vec2i, PYRAMID_RAMP_KIND_COUNT> ramp_base{};
     // pyramid_ramp_offsets[kind][row] — pixel step by height within a layer.
     pyramid_ramp_offsets_t ramp_offsets{};
-    // OG pyramid_part_rings[6] — shared across all pyramid sizes.
+    // pyramid_part_rings[6] — shared across all pyramid sizes.
     hvector<pyramid_part_ring, PYRAMID_RING_COUNT> part_rings;
     // stepped_ramp_offsets[kind*6+row] — sprite xy (x_with_ramp unused until walk).
     pyramid_ramp_offsets_t stepped_ramp_offsets{};
     // stepped_ramp_shift[18] — draw shift by (ramp_image - ramps_base).
     std::array<vec2i, 18> stepped_ramp_shift{};
+    // bent_pyramid_half_layer[size*6+layer] — 1 → capacity 3 instead of 6.
+    std::array<uint8_t, 16> bent_half_layer{};
+    // bent_pixel_heights[size*6+layer] — part draw Y lift (true uses layer*90).
+    std::array<int32_t, 16> bent_pixel_heights{};
 };
-ANK_CONFIG_STRUCT(pyramid_engine_config_t,
-    blocks_per_layer, block_ticks_a, block_ticks_b, casing_ticks, part_grid_offsets, part_kinds,
-    neighbour_offsets, ramp_base, ramp_offsets, part_rings, stepped_ramp_offsets, stepped_ramp_shift)
+ANK_CONFIG_STRUCT(pyramid_engine_config_t, blocks_per_layer, block_ticks_a, block_ticks_b, casing_ticks,
+  part_grid_offsets, part_kinds, part_layers, neighbour_offsets, ramp_base, ramp_offsets, part_rings,
+  stepped_ramp_offsets, stepped_ramp_shift, bent_half_layer, bent_pixel_heights)
 
 extern pyramid_engine_config_t pyramid_engine_config;
 
@@ -128,6 +134,7 @@ public:
     int size_variant(building *main) const;
     int part_count(building *main) const;
     int block_total(building *main) const;
+    int casing_total(building* main) const;
     bool is_mudbrick(building *b) const;
     bool uses_block_engine(building *b) const;
     e_pyramid_style style_of(building *b) const;
@@ -150,13 +157,16 @@ public:
     void find_frontier(building *main, svector<building_id, PYRAMID_PARTS_CAPACITY> &frontier);
     void place_block(building_id part_id, figure_id fid);
     int boost_blocks(building *main, int max_count);
-    bool needs_main_material(const pyramid_part_state &p) const;
+    bool needs_main_material(const pyramid_part_state& p, e_pyramid_style style) const;
+    bool bent_is_half_layer(const pyramid_part_state& p) const;
+    bool bent_is_half_layer(int size_variant, int layer) const;
+    int bent_layer_pixel_height(int size_variant, int layer) const;
 
 private:
     bool is_mudbrick_type(e_building_type t) const;
     bool uses_block_engine_type(e_building_type t) const;
-    int layer_capacity() const;
-    void add_block(pyramid_part_state &p) const;
+    int layer_capacity(const pyramid_part_state& p, e_pyramid_style style) const;
+    void add_block(pyramid_part_state& p, e_pyramid_style style) const;
     int frontier_order(const pyramid_part_state &part, const pyramid_part_state &best) const;
     void apply_block_placed(building *head, pyramid_main_state &ms, pyramid_part_state &ps);
 };
