@@ -100,14 +100,18 @@ struct pyramid_engine_config_t {
     pyramid_ramp_offsets_t ramp_offsets{};
     // OG pyramid_part_rings[6] — shared across all pyramid sizes.
     hvector<pyramid_part_ring, PYRAMID_RING_COUNT> part_rings;
+    // stepped_ramp_offsets[kind*6+row] — sprite xy (x_with_ramp unused until walk).
+    pyramid_ramp_offsets_t stepped_ramp_offsets{};
+    // stepped_ramp_shift[18] — draw shift by (ramp_image - ramps_base).
+    std::array<vec2i, 18> stepped_ramp_shift{};
 };
 ANK_CONFIG_STRUCT(pyramid_engine_config_t,
     blocks_per_layer, block_ticks_a, block_ticks_b, casing_ticks, part_grid_offsets, part_kinds,
-    neighbour_offsets, ramp_base, ramp_offsets, part_rings)
+    neighbour_offsets, ramp_base, ramp_offsets, part_rings, stepped_ramp_offsets, stepped_ramp_shift)
 
 extern pyramid_engine_config_t pyramid_engine_config;
 
-// OG pyramid_ramp_table row — carpenter ramp schedule for one 2×2 part.
+// pyramid_ramp_table row — carpenter ramp schedule for one 2×2 part.
 struct pyramid_ramp_spec_t {
     uint8_t part = 0;
     uint8_t ramp1_height = 0;

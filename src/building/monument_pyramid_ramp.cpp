@@ -337,6 +337,23 @@ static int pyramid_ramp_sprite_for(building &part, const pyramid_part_state &ps,
     }
 }
 
+static vec2i pyramid_ramp_stepped_shift(building &part, int image_id) {
+    building *head = part.main();
+    const e_pyramid_style style = head ? g_monument_pyramid_engine.style_of(head) : PYRAMID_STYLE_NONE;
+    if (style != PYRAMID_STYLE_STEPPED) {
+        return {};
+    }
+    const int base = building_static_params::get(part.type).first_img("ramps");
+    if (base <= 0) {
+        return {};
+    }
+    const int index = image_id - base;
+    if (index < 0 || index >= (int)pyramid_engine_config.stepped_ramp_shift.size()) {
+        return {};
+    }
+    return pyramid_engine_config.stepped_ramp_shift[index];
+}
+
 static void pyramid_ramp_draw_sprites(painter &ctx, building &part, vec2i part_anchor_px, color mask) {
     auto *ps = pyramid_part_state_get(part.id);
     if (!ps || ps->ramp_image_id == 0) {
@@ -347,15 +364,21 @@ static void pyramid_ramp_draw_sprites(painter &ctx, building &part, vec2i part_a
     // ert_drawtile_full applies size-based Y shift and breaks ramp_base/offsets.
     mask = mask ? mask : 0xffffffff;
     if (ps->ramp1_height) {
+        const int sprite = pyramid_ramp_sprite_for(part, *ps, ps->ramp1_height);
+        const int image_id = (int)ps->ramp_image_id + sprite;
         auto &cmd = ImageDraw::create_subcommand(ctx, render_command_t::ert_generic);
-        cmd.image_id = (int)ps->ramp_image_id + pyramid_ramp_sprite_for(part, *ps, ps->ramp1_height);
-        cmd.pixel = part_anchor_px + vec2i{ps->ramp_image_x1, ps->ramp_image_y1};
+        cmd.image_id = image_id;
+        cmd.pixel = part_anchor_px + vec2i{ps->ramp_image_x1, ps->ramp_image_y1}
+            + pyramid_ramp_stepped_shift(part, image_id);
         cmd.mask = mask;
     }
     if (ps->ramp2_height) {
+        const int sprite = pyramid_ramp_sprite_for(part, *ps, ps->ramp2_height);
+        const int image_id = (int)ps->ramp_image_id + sprite;
         auto &cmd = ImageDraw::create_subcommand(ctx, render_command_t::ert_generic);
-        cmd.image_id = (int)ps->ramp_image_id + pyramid_ramp_sprite_for(part, *ps, ps->ramp2_height);
-        cmd.pixel = part_anchor_px + vec2i{ps->ramp_image_x2, ps->ramp_image_y2};
+        cmd.image_id = image_id;
+        cmd.pixel = part_anchor_px + vec2i{ps->ramp_image_x2, ps->ramp_image_y2}
+            + pyramid_ramp_stepped_shift(part, image_id);
         cmd.mask = mask;
     }
 }

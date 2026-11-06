@@ -119,6 +119,18 @@ building_small_stepped_pyramid {
     wall_type : BUILDING_SMALL_STEPPED_PYRAMID_WALL
     cone_type : BUILDING_SMALL_STEPPED_PYRAMID_CONE
     filler_type : BUILDING_SMALL_STEPPED_PYRAMID
+    part_count : 16
+    block_total : 120
+    // OG pyramid_ramp_table (8×8) — linked_part used for stepped dual sprites.
+    ramps [
+      { part: 13, ramp1_height: 1 }
+      { part: 14, ramp1_height: 2, ramp1_linked_part: 15 }
+      { part: 11, ramp1_height: 3 }
+      { part: 9, ramp1_height: 4, ramp1_linked_part: 7 }
+      { part: 6, ramp1_height: 5 }
+      { part: 5, ramp1_height: 6 }
+    ]
+    pyramide_type : PYRAMID_STYLE_STEPPED
   }
 
   // Parts are 2?2 blocks on the init_tiles grid ? without building_size they stay
@@ -311,6 +323,24 @@ building_small_stepped_pyramid {
     wall_type : BUILDING_MEDIUM_STEPPED_PYRAMID_WALL
     cone_type : BUILDING_MEDIUM_STEPPED_PYRAMID_CONE
     filler_type : BUILDING_MEDIUM_STEPPED_PYRAMID
+    part_count : 36
+    block_total : 336
+    // OG pyramid_ramp_table (12×12).
+    ramps [
+      { part: 31, ramp1_height: 1 }
+      { part: 32, ramp1_height: 2 }
+      { part: 33, ramp1_height: 3 }
+      { part: 34, ramp1_height: 4, ramp1_linked_part: 35 }
+      { part: 29, ramp1_height: 5 }
+      { part: 27, ramp1_height: 6 }
+      { part: 9, ramp1_height: 7, ramp1_linked_part: 7 }
+      { part: 6, ramp1_height: 8 }
+      { part: 5, ramp1_height: 9 }
+      { part: 8, ramp1_height: 10 }
+      { part: 10, ramp1_height: 11, ramp1_linked_part: 12 }
+      { part: 13, ramp1_height: 12 }
+    ]
+    pyramide_type : PYRAMID_STYLE_STEPPED
   }
 
   building_medium_stepped_pyramid_corner = building_medium_stepped_pyramid
@@ -600,6 +630,37 @@ building_small_stepped_pyramid {
     wall_type : BUILDING_LARGE_STEPPED_PYRAMID_WALL
     cone_type : BUILDING_LARGE_STEPPED_PYRAMID_CONE
     filler_type : BUILDING_LARGE_STEPPED_PYRAMID
+    // Remake large stepped is 20×20 (= OG size 3), not 16×16.
+    part_count : 100
+    block_total : 1320
+    // OG pyramid_ramp_table (20×20).
+    ramps [
+      { part: 91, ramp1_height: 1 }
+      { part: 92, ramp1_height: 2 }
+      { part: 93, ramp1_height: 3 }
+      { part: 94, ramp1_height: 4 }
+      { part: 95, ramp1_height: 5 }
+      { part: 96, ramp1_height: 6 }
+      { part: 62, ramp1_height: 7, ramp1_linked_part: 63 }
+      { part: 55, ramp1_height: 8 }
+      { part: 53, ramp1_height: 9 }
+      { part: 51, ramp1_height: 10 }
+      { part: 49, ramp1_height: 11 }
+      { part: 47, ramp1_height: 12 }
+      { part: 20, ramp1_height: 13 }
+      { part: 19, ramp1_height: 14 }
+      { part: 18, ramp1_height: 15 }
+      { part: 17, ramp1_height: 16, ramp1_linked_part: 16 }
+      { part: 22, ramp1_height: 17 }
+      { part: 24, ramp1_height: 18 }
+      { part: 10, ramp1_height: 19, ramp1_linked_part: 12 }
+      { part: 13, ramp1_height: 20 }
+      { part: 14, ramp1_height: 21 }
+      { part: 11, ramp1_height: 22 }
+      { part: 9, ramp1_height: 23, ramp1_linked_part: 7 }
+      { part: 6, ramp1_height: 24 }
+    ]
+    pyramide_type : PYRAMID_STYLE_STEPPED
   }
 
   building_large_stepped_pyramid_corner = building_large_stepped_pyramid
@@ -888,6 +949,36 @@ building_small_stepped_pyramid {
     wall_type : BUILDING_LARGE_STEPPED_PYRAMID_WALL
     cone_type : BUILDING_LARGE_STEPPED_PYRAMID_CONE
     filler_type : BUILDING_LARGE_STEPPED_PYRAMID
+    part_count : 100
+    block_total : 1320
+    // OG pyramid_ramp_table (20×20) — same schedule as large stepped.
+    ramps [
+      { part: 91, ramp1_height: 1 }
+      { part: 92, ramp1_height: 2 }
+      { part: 93, ramp1_height: 3 }
+      { part: 94, ramp1_height: 4 }
+      { part: 95, ramp1_height: 5 }
+      { part: 96, ramp1_height: 6 }
+      { part: 62, ramp1_height: 7, ramp1_linked_part: 63 }
+      { part: 55, ramp1_height: 8 }
+      { part: 53, ramp1_height: 9 }
+      { part: 51, ramp1_height: 10 }
+      { part: 49, ramp1_height: 11 }
+      { part: 47, ramp1_height: 12 }
+      { part: 20, ramp1_height: 13 }
+      { part: 19, ramp1_height: 14 }
+      { part: 18, ramp1_height: 15 }
+      { part: 17, ramp1_height: 16, ramp1_linked_part: 16 }
+      { part: 22, ramp1_height: 17 }
+      { part: 24, ramp1_height: 18 }
+      { part: 10, ramp1_height: 19, ramp1_linked_part: 12 }
+      { part: 13, ramp1_height: 20 }
+      { part: 14, ramp1_height: 21 }
+      { part: 11, ramp1_height: 22 }
+      { part: 9, ramp1_height: 23, ramp1_linked_part: 7 }
+      { part: 6, ramp1_height: 24 }
+    ]
+    pyramide_type : PYRAMID_STYLE_STEPPED
   }
 
 
@@ -1176,6 +1267,36 @@ building_small_stepped_pyramid {
     wall_type : BUILDING_LARGE_STEPPED_PYRAMID_WALL
     cone_type : BUILDING_LARGE_STEPPED_PYRAMID_CONE
     filler_type : BUILDING_GRAND_STEPPED_PYRAMID_COMPLEX
+    part_count : 100
+    block_total : 1320
+    // OG pyramid_ramp_table (20×20) — same schedule as large stepped.
+    ramps [
+      { part: 91, ramp1_height: 1 }
+      { part: 92, ramp1_height: 2 }
+      { part: 93, ramp1_height: 3 }
+      { part: 94, ramp1_height: 4 }
+      { part: 95, ramp1_height: 5 }
+      { part: 96, ramp1_height: 6 }
+      { part: 62, ramp1_height: 7, ramp1_linked_part: 63 }
+      { part: 55, ramp1_height: 8 }
+      { part: 53, ramp1_height: 9 }
+      { part: 51, ramp1_height: 10 }
+      { part: 49, ramp1_height: 11 }
+      { part: 47, ramp1_height: 12 }
+      { part: 20, ramp1_height: 13 }
+      { part: 19, ramp1_height: 14 }
+      { part: 18, ramp1_height: 15 }
+      { part: 17, ramp1_height: 16, ramp1_linked_part: 16 }
+      { part: 22, ramp1_height: 17 }
+      { part: 24, ramp1_height: 18 }
+      { part: 10, ramp1_height: 19, ramp1_linked_part: 12 }
+      { part: 13, ramp1_height: 20 }
+      { part: 14, ramp1_height: 21 }
+      { part: 11, ramp1_height: 22 }
+      { part: 9, ramp1_height: 23, ramp1_linked_part: 7 }
+      { part: 6, ramp1_height: 24 }
+    ]
+    pyramide_type : PYRAMID_STYLE_STEPPED
   }
 
 
