@@ -25,6 +25,7 @@
 #include "figuretype/figure_physician.h"
 #include "figuretype/figure_water_carrier.h"
 #include "figuretype/figure_war_ship.h"
+#include "figuretype/figure_transport_ship.h"
 #include "figuretype/figure_worker.h"
 #include "city/city_floods.h"
 #include "grid/terrain.h"
@@ -150,6 +151,10 @@ void js_register_game_constants(js_State* J) {
     _R(ACTION_20_WARSHIP_DOCKED)
     _R(ACTION_23_WARSHIP_PATROLLING)
     _R(ACTION_24_WARSHIP_ATTACKING_SHIP)
+    _R(ACTION_211_TRANSPORT_SHIP_WAITING)
+    _R(ACTION_212_TRANSPORT_SHIP_GOING_TO_WHARF)
+    _R(ACTION_213_TRANSPORT_SHIP_DOCKED)
+    _R(ACTION_214_TRANSPORT_SHIP_SAILING)
 
     _R(FLOOD_STATE_IMMINENT)
     _R(FLOOD_STATE_FLOODING)

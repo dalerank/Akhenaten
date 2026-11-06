@@ -125,6 +125,7 @@ import ui_raw_material_info_window
 import ui_mortuary_info_window
 import ui_health_info_window
 import ui_warshipwharf_info_window
+import ui_transport_wharf_info_window
 import ui_fishing_wharf_info_window
 import ui_shipyard_info_window
 import ui_tax_collector_window

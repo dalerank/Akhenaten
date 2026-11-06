@@ -94,6 +94,7 @@
 #include "figuretype/figure_war_ship.h"
 #include "figuretype/figure_soldier.h"
 #include "building/building_transport_wharf.h"
+#include "building/building_warship_wharf.h"
 #include "figure/combat.h"
 #include "city/city_animals.h"
 #include "graphics/color.h"
@@ -2697,6 +2698,102 @@ static void __test_fishing_wharf_set_fish_caught(int bid, int value) {
     wharf->runtime_data().fish_caught = (uint8_t)value;
 }
 ANK_FUNCTION_2(__test_fishing_wharf_set_fish_caught);
+
+static void __test_transport_wharf_spawn_figure(int bid) {
+    building *b = building_get(bid);
+    auto *wharf = (b && b->is_valid()) ? b->dcast_transport_wharf() : nullptr;
+    if (!wharf) {
+        return;
+    }
+    b->has_road_access = true;
+    if (!b->road_access.valid()) {
+        b->road_access = b->tile;
+    }
+    if (b->road_network_id <= 0) {
+        b->road_network_id = 1;
+    }
+    if (b->distance_from_entry <= 0) {
+        b->distance_from_entry = 1;
+    }
+    wharf->spawn_figure();
+}
+ANK_FUNCTION_1(__test_transport_wharf_spawn_figure);
+
+static void __test_transport_wharf_update_month(int bid) {
+    building *b = building_get(bid);
+    auto *wharf = (b && b->is_valid()) ? b->dcast_transport_wharf() : nullptr;
+    if (!wharf) {
+        return;
+    }
+    wharf->update_month();
+}
+ANK_FUNCTION_1(__test_transport_wharf_update_month);
+
+static void __test_building_set_houses_covered(int bid, int covered) {
+    building *b = building_get(bid);
+    if (b) {
+        b->houses_covered = (short)std::max(0, covered);
+    }
+}
+ANK_FUNCTION_2(__test_building_set_houses_covered);
+
+static void __test_building_set_open_water_access(int bid, int value) {
+    building *b = building_get(bid);
+    if (b) {
+        b->has_open_water_access = value != 0;
+    }
+}
+ANK_FUNCTION_2(__test_building_set_open_water_access);
+
+static int __test_transport_ships_requested() {
+    return g_city.buildings.transport_ships_requested;
+}
+ANK_FUNCTION(__test_transport_ships_requested);
+
+static void __test_transport_ships_requested_set(int value) {
+    g_city.buildings.transport_ships_requested = (int8_t)value;
+}
+ANK_FUNCTION_1(__test_transport_ships_requested_set);
+
+static void __test_warship_wharf_spawn_figure(int bid) {
+    building *b = building_get(bid);
+    auto *wharf = (b && b->is_valid()) ? b->dcast_warship_wharf() : nullptr;
+    if (!wharf) {
+        return;
+    }
+    b->has_road_access = true;
+    if (!b->road_access.valid()) {
+        b->road_access = b->tile;
+    }
+    if (b->road_network_id <= 0) {
+        b->road_network_id = 1;
+    }
+    if (b->distance_from_entry <= 0) {
+        b->distance_from_entry = 1;
+    }
+    wharf->spawn_figure();
+}
+ANK_FUNCTION_1(__test_warship_wharf_spawn_figure);
+
+static void __test_warship_wharf_update_month(int bid) {
+    building *b = building_get(bid);
+    auto *wharf = (b && b->is_valid()) ? b->dcast_warship_wharf() : nullptr;
+    if (!wharf) {
+        return;
+    }
+    wharf->update_month();
+}
+ANK_FUNCTION_1(__test_warship_wharf_update_month);
+
+static int __test_warships_requested() {
+    return g_city.buildings.warships_requested;
+}
+ANK_FUNCTION(__test_warships_requested);
+
+static void __test_warships_requested_set(int value) {
+    g_city.buildings.warships_requested = (int8_t)value;
+}
+ANK_FUNCTION_1(__test_warships_requested_set);
 
 static int __test_hunting_lodge_active_hunters(building *b) {
     if (!b) {

@@ -24,7 +24,8 @@ building_warship_wharf = {
     shoreline : true
   }
   labor_category : LABOR_CATEGORY_MILITARY,
-  min_houses_coverage : 100
+  // OG spawn_wharf: generate_labor_seeker when houses_covered < 51.
+  min_houses_coverage : 50
   cost: [ 120, 150, 200, 300, 400 ]
   desirability : { value:[-4], step:[1], step_size:[1], range: [4] }
   laborers:[15], fire_risk:[1], damage_risk: [1]

@@ -19,12 +19,14 @@ building_transport_wharf = {
     relative_orientation: 1
   }
   meta : { text_id: 174, help_link:"message_building_transport_wharf" }
+  info_sound : "Wavs/shipyrd_r.wav"
   needs : {
     water_access : true,
     shoreline : true
   }
   labor_category : LABOR_CATEGORY_MILITARY,
-  min_houses_coverage : 100
+  // OG spawn_wharf: generate_labor_seeker when houses_covered < 51.
+  min_houses_coverage : 50
   cost: [40, 70, 100, 150, 300 ]
   desirability : { value:[-8], step:[2], step_size:[2], range: [4] }
   laborers:[5], fire_risk:[1], damage_risk: [1]
@@ -32,7 +34,11 @@ building_transport_wharf = {
 
 [es=(building_transport_wharf, update_graphic)]
 function building_transport_wharf_update_graphic(ev) {
-    building_wharf_update_graphic_moored(city.get_building(ev.bid), false)
+    var building = city.get_building(ev.bid)
+    var boat = building.get_figure(BUILDING_SLOT_BOAT)
+    var moored = boat.valid && (boat.action_state == ACTION_211_TRANSPORT_SHIP_WAITING
+        || boat.action_state == ACTION_213_TRANSPORT_SHIP_DOCKED)
+    building_wharf_update_graphic_moored(building, moored)
 }
 
 [es=(building_transport_wharf, highlight_waypoints)]

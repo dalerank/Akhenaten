@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Transport Wharf — Akhenaten Wiki</title>
+  <link rel="stylesheet" href="../../../style.css" />
+  <style>
+    .bld-header-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+      align-items: start;
+      margin-bottom: 2rem;
+    }
+    .bld-header-right { display: flex; flex-direction: column; gap: 1rem; }
+    .bld-infobox { background: var(--surface); border: 1px solid var(--border); border-radius: 4px; padding: 0.9rem 1.1rem; }
+    .bld-infobox h4 { margin: 0 0 0.6rem; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--gold); }
+    .bld-infobox dl { display: grid; grid-template-columns: auto 1fr; gap: 0.2rem 1rem; margin: 0; }
+    .bld-infobox dt { color: var(--text-muted); font-size: 0.8rem; white-space: nowrap; padding-top: 0.1rem; }
+    .bld-infobox dd { margin: 0; font-size: 0.85rem; color: var(--text); }
+    .bld-infobox .sep { grid-column: 1/-1; border: none; border-top: 1px solid var(--border); margin: 0.4rem 0; }
+    .bld-stat-row { display: flex; gap: 1rem; flex-wrap: wrap; }
+    .bld-stat { text-align: center; }
+    .bld-stat .val { font-size: 1.3rem; font-weight: 700; color: var(--gold); display: block; }
+    .bld-stat .lbl { font-size: 0.7rem; color: var(--text-muted); }
+    .des-neg { color: #d07070; }
+    .chain-box {
+      background: var(--surface); border: 1px solid var(--border); border-radius: 4px;
+      padding: 0.8rem 1.1rem; margin: 1rem 0; display: flex; align-items: center;
+      gap: 0.7rem; font-size: 0.88rem; flex-wrap: wrap;
+    }
+    .chain-box .step { background: rgba(201,168,76,0.08); border: 1px solid rgba(201,168,76,0.25); border-radius: 3px; padding: 0.3rem 0.7rem; color: var(--text); white-space: nowrap; }
+    .chain-box .step.hub { background: rgba(201,168,76,0.18); border-color: rgba(201,168,76,0.5); font-weight: 700; color: var(--gold); }
+    .chain-box .arrow { color: var(--gold); font-size: 1.1rem; }
+    .walker-card { display: inline-flex; align-items: center; gap: 0.75rem; background: var(--surface); border: 1px solid var(--border); border-radius: 4px; padding: 0.6rem 0.9rem; margin: 0.75rem 0; }
+    .walker-card-info { font-size: 0.82rem; }
+    .walker-card-info strong { display: block; color: var(--gold); margin-bottom: 0.15rem; }
+    .walker-card-info span { color: var(--text-muted); }
+    .compare-table { width: 100%; border-collapse: collapse; margin: 0.75rem 0; font-size: 0.85rem; }
+    .compare-table th, .compare-table td { padding: 0.35rem 0.7rem; text-align: left; border-bottom: 1px solid var(--border); }
+    .compare-table th { color: var(--text-muted); font-weight: normal; }
+    .compare-table td:first-child { color: var(--text-muted); white-space: nowrap; }
+    .ok { color: #7ec87e; } .no { color: #d07070; }
+    details { background: var(--surface); border: 1px solid var(--border); border-radius: 4px; margin-bottom: 0.75rem; }
+    summary { padding: 0.7rem 1rem; cursor: pointer; font-size: 0.875rem; font-weight: 600; color: var(--text); list-style: none; display: flex; align-items: center; gap: 0.6rem; user-select: none; }
+    summary::-webkit-details-marker { display: none; }
+    summary::before { content: "▶"; font-size: 0.6rem; color: var(--gold); transition: transform 0.15s; flex-shrink: 0; }
+    details[open] > summary::before { transform: rotate(90deg); }
+    details[open] > summary { border-bottom: 1px solid var(--border); }
+    .details-body { padding: 1rem 1.1rem; font-size: 0.85rem; line-height: 1.6; }
+    .details-body pre { background: #0a0905; border: 1px solid var(--border); border-radius: 3px; padding: 0.75rem 1rem; overflow-x: auto; font-size: 0.78rem; line-height: 1.55; margin: 0.6rem 0; }
+    .kw { color: #c9a84c; } .num { color: #9ecbff; } .str { color: #7ec87e; } .cmt { color: #5a5650; font-style: italic; } .fn { color: #8aabdc; } .ev { color: #d0a0e0; }
+    .file-ref { display: inline-block; font-family: 'Consolas','Courier New',monospace; font-size: 0.78rem; background: rgba(201,168,76,0.07); border: 1px solid rgba(201,168,76,0.2); border-radius: 2px; padding: 0.05rem 0.45rem; color: var(--gold); margin: 0 0.1rem; }
+    .msg-table { width: 100%; border-collapse: collapse; margin-top: 0.5rem; }
+    .msg-table th, .msg-table td { padding: 0.3rem 0.6rem; text-align: left; border-bottom: 1px solid var(--border); font-size: 0.8rem; }
+    .msg-table th { color: var(--text-muted); font-weight: normal; }
+    .bld-nav { display: flex; justify-content: space-between; margin-top: 2.5rem; padding-top: 1rem; border-top: 1px solid var(--border); font-size: 0.85rem; }
+    .bld-nav a { color: var(--gold); }
+    .dev-section { margin-top: 2.5rem; }
+    .dev-section h2 { color: var(--text-muted); font-size: 1rem; letter-spacing: 0.04em; text-transform: uppercase; border-color: rgba(255,255,255,0.08); }
+  </style>
+</head>
+<body>
+  <header>
+    <nav>
+      <a href="../../../index.html" class="nav-logo">Akhenaten</a>
+      <ul>
+        <li><a href="../../../about.html">About</a></li>
+        <li><a href="../../../devblog.html">Devblog</a></li>
+        <li><a href="../../index.html" class="active">Wiki</a></li>
+        <li><a href="../../../screenshots.html">Screenshots</a></li>
+        <li><a href="../../../downloads.html">Downloads</a></li>
+        <li><a href="../../../contributors.html">Contributors</a></li>
+        <li><a href="../../../contact.html">Join us</a></li>
+        <li><a href="../../../reportbug.html">Report Bug</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main class="wiki-layout">
+    <aside class="wiki-sidebar">
+      <div class="wiki-sidebar-section">
+        <div class="wiki-sidebar-title"><a href="index.html">← All Buildings</a></div>
+      </div>
+      <div class="wiki-sidebar-section">
+        <div class="wiki-sidebar-title">Military — Naval</div>
+        <ul>
+          <li><a href="transport-wharf.html" class="active">Transport Wharf</a></li>
+          <li><a href="index.html#military">Warship Wharf</a></li>
+          <li><a href="index.html#military">Shipwright</a></li>
+        </ul>
+      </div>
+      <div class="wiki-sidebar-section">
+        <div class="wiki-sidebar-title">On this page</div>
+        <ul>
+          <li><a href="#overview">Overview</a></li>
+          <li><a href="#mechanics">Mechanics</a></li>
+          <li><a href="#vs-warship">vs. Warship Wharf</a></li>
+          <li><a href="#placement">Placement</a></li>
+          <li><a href="#tips">Tips</a></li>
+          <li><a href="#dev">Developer reference</a></li>
+        </ul>
+      </div>
+    </aside>
+
+    <div class="wiki-content">
+      <div class="wiki-breadcrumb">
+        <a href="../../index.html">Wiki</a> /
+        <a href="../index.html">Player Guide</a> /
+        <a href="index.html">Buildings</a> /
+        Transport Wharf
+      </div>
+
+      <h1>Transport Wharf</h1>
+
+      <div class="bld-header-grid">
+        <div class="bld-header-right">
+          <div>
+            <p>The <strong>Transport Wharf</strong> berths a <strong>transport ship</strong> used to ferry army companies across navigable water. A newly built, staffed wharf orders a ship from a <strong>Shipwright</strong>; once the ship is delivered it docks at the wharf and waits for embarkation orders from the Military advisor.</p>
+            <p>Unlike fishing wharves or warship wharves, a Transport Wharf does not produce resources or fight — its only job is to house one transport ship and keep it reachable from the river. The building needs road access, labor, and a straight stretch of coastline with clear water approaches so ships can navigate in and out.</p>
+            <p>Citizens dislike living next to naval yards: the wharf carries a noticeable negative desirability. Keep it away from housing you want to evolve.</p>
+          </div>
+          <div class="bld-infobox">
+            <h4>Stats</h4>
+            <div class="bld-stat-row" style="margin-bottom:0.9rem">
+              <div class="bld-stat"><span class="val">2×2</span><span class="lbl">Size</span></div>
+              <div class="bld-stat"><span class="val">5</span><span class="lbl">Workers</span></div>
+              <div class="bld-stat"><span class="val des-neg">−8</span><span class="lbl">Desirability</span></div>
+            </div>
+            <hr class="sep" />
+            <dl>
+              <dt>Cost (Normal)</dt>
+              <dd>100 Db</dd>
+              <dt>Cost by difficulty</dt>
+              <dd style="font-size:0.78rem;color:var(--text-muted)">
+                VE 40 · Easy 70 · <strong style="color:var(--text)">Normal 100</strong> · Hard 150 · VH 300
+              </dd>
+              <dt>Labor category</dt>
+              <dd>Military</dd>
+              <dt>Fire / damage risk</dt>
+              <dd>Low</dd>
+              <dt>Placement</dt>
+              <dd>Shoreline + open water access</dd>
+              <dt>Ship</dt>
+              <dd>1 × Transport Ship</dd>
+              <dt>Advisor</dt>
+              <dd>Military</dd>
+            </dl>
+          </div>
+        </div>
+      </div>
+
+      <div class="chain-box">
+        <span class="step hub">Transport Wharf</span>
+        <span class="arrow">→</span>
+        <span class="step">Orders ship (monthly)</span>
+        <span class="arrow">→</span>
+        <span class="step">Shipwright builds Transport Ship</span>
+        <span class="arrow">→</span>
+        <span class="step">Ship docks / waits at wharf</span>
+        <span class="arrow">→</span>
+        <span class="step">Loads troops · sails · unloads</span>
+      </div>
+
+      <h2 id="overview">Overview</h2>
+      <p>Egyptian armies moved along the Nile as readily as on land. Transport ships let companies cross water that would otherwise force a long march around, or reach landing sites on the far bank during campaigns. In Pharaoh this is modelled as a dedicated naval berth: one wharf, one ship, controlled through the Military advisor alongside forts and warships.</p>
+      <p>The Transport Wharf unlocks alongside other naval buildings on missions that need river crossings — for example Meidum and Buhen. It is smaller and cheaper than a Warship Wharf, needs fewer workers, and does not require timber at the wharf itself (the Shipwright consumes timber when building the hull).</p>
+
+      <h2 id="mechanics">Mechanics</h2>
+
+      <h3>Ship order</h3>
+      <p>Each month, a staffed Transport Wharf with open water access and <em>no</em> live boat in its boat slot raises a city-wide transport-ship request. The Shipwright polls those requests and builds a transport hull when timber and labor allow. When the finished ship is created it is linked to the wharf (<code>BUILDING_SLOT_BOAT</code>) and sails to the docking points.</p>
+      <p>If the ship figure dies or is no longer a transport ship, the wharf clears the slot and will request a replacement on a later month.</p>
+
+      <div class="walker-card">
+        <div class="walker-card-info">
+          <strong>Transport Ship</strong>
+          <span>Naval figure · berths at this wharf · carries one company of troops<br>
+          Actions: Waiting (211) · Going to wharf (212) · Docked (213) · Sailing (214)</span>
+        </div>
+      </div>
+
+      <h3>Labor &amp; coverage</h3>
+      <p>The wharf belongs to the <strong>Military</strong> labor category and needs <strong>5 workers</strong>. Like other service buildings it sends a labor seeker when nearby house coverage is below the threshold (<code>min_houses_coverage: 50</code> — matching original Pharaoh, which generates a seeker when <code>houses_covered &lt; 51</code>). Without road access the seeker cannot spawn and the wharf will not stay staffed.</p>
+
+      <h3>Moored look</h3>
+      <p>While a transport ship is waiting or docked at the wharf, the building switches to the moored “wait” ambient animations for its facing. When the ship is away (sailing or en route), the working water animations play instead.</p>
+
+      <h3>Info window</h3>
+      <p>Right-clicking the wharf opens the Military advisor as the first linked advisor. The description comes from language text group <strong>174</strong> (entry 1) when the building has road access; otherwise the generic “no road access” string is shown.</p>
+
+      <h2 id="vs-warship">vs. Warship Wharf</h2>
+      <table class="compare-table">
+        <thead>
+          <tr><th></th><th>Transport Wharf</th><th>Warship Wharf</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Size</td><td>2×2</td><td>3×3</td></tr>
+          <tr><td>Workers</td><td>5</td><td>15</td></tr>
+          <tr><td>Cost (Normal)</td><td>100 Db</td><td>200 Db</td></tr>
+          <tr><td>Desirability</td><td class="des-neg">−8</td><td class="des-neg">−4</td></tr>
+          <tr><td>Ship type</td><td>Transport ship (troop ferry)</td><td>Warship (combat)</td></tr>
+          <tr><td>Shipwright request</td><td>Transport hull</td><td>Warship hull</td></tr>
+          <tr><td>Combat</td><td class="no">No</td><td class="ok">Yes</td></tr>
+          <tr><td>Shoreline</td><td class="ok">Required</td><td class="ok">Required</td></tr>
+        </tbody>
+      </table>
+      <p>Build Transport Wharves when you need to move companies; build Warship Wharves when you need to fight on the water. Both share the same Shipwright pipeline and the same shoreline placement rules.</p>
+
+      <h2 id="placement">Placement</h2>
+      <p>The planner requires <strong>shoreline</strong> and <strong>water access</strong>. Put the wharf on a <strong>straight</strong> stretch of coast so docking points stay clear — awkward bends and blocked channels stop ships from reaching the berth. Orientation is relative to the water edge.</p>
+      <p><strong>Road access</strong> is mandatory for labor. Connect the wharf to the city road network, but keep a buffer from housing because of the −8 desirability. Pair it with a Shipwright that has timber (and preferably its own road connection to the same labor pool).</p>
+      <p>When selected, the game highlights the two water-access / docking tiles in green so you can verify navigability.</p>
+
+      <h2 id="tips">Tips</h2>
+      <ul>
+        <li>One wharf = one ship. Need two companies on the water at once? Build two Transport Wharves (and enough Shipwright capacity).</li>
+        <li>If a wharf stays empty, check staffing, open water access, Shipwright timber, and whether another request is already queued.</li>
+        <li>Use the Military advisor to embark/disembark companies and to issue sail orders — the wharf itself only berths the ship.</li>
+        <li>On long Nile maps (e.g. Buhen), place wharves near both the garrison and the expected landing zone so ferry trips stay short.</li>
+        <li>Demolishing or undoing a wharf clears its boat link; any orphaned ship will need a new home wharf.</li>
+      </ul>
+
+      <div class="dev-section">
+        <h2 id="dev">Developer reference</h2>
+        <p style="color:var(--text-muted);font-size:0.85rem">All paths relative to the repository root. Logic mirrors original Pharaoh <code>spawn_wharf</code> / shipwright request counters.</p>
+
+        <details>
+          <summary>Building config — <code>src/scripts/building/transport_wharf.js</code></summary>
+          <div class="details-body">
+            <p>Definition lives in <span class="file-ref">src/scripts/building/transport_wharf.js</span> (lines 1–49).</p>
+            <pre><code><span class="kw">building_transport_wharf</span> = {
+  <span class="kw">animations</span> : {
+    <span class="kw">preview</span> : { pack:PACK_TERRAIN, id:<span class="num">17</span> },
+    <span class="kw">base</span>    : { pack:PACK_TERRAIN, id:<span class="num">17</span> },
+    <span class="kw">work_*</span> / <span class="kw">wait_*</span>  <span class="cmt">// ambient water / moored sprites by facing</span>
+  },
+  <span class="kw">building_size</span> : <span class="num">2</span>,
+  <span class="kw">planner_update_rule</span> : { relative_orientation: <span class="num">1</span> },
+  <span class="kw">meta</span> : { text_id: <span class="num">174</span>, help_link:<span class="str">"message_building_transport_wharf"</span> },
+  <span class="kw">needs</span> : { water_access : <span class="kw">true</span>, shoreline : <span class="kw">true</span> },
+  <span class="kw">labor_category</span> : LABOR_CATEGORY_MILITARY,
+  <span class="cmt">// OG spawn_wharf: generate_labor_seeker when houses_covered &lt; 51</span>
+  <span class="kw">min_houses_coverage</span> : <span class="num">50</span>,
+  <span class="kw">cost</span>: [ <span class="num">40</span>, <span class="num">70</span>, <span class="num">100</span>, <span class="num">150</span>, <span class="num">300</span> ],
+  <span class="kw">desirability</span> : { value:[<span class="num">-8</span>], step:[<span class="num">2</span>], step_size:[<span class="num">2</span>], range: [<span class="num">4</span>] },
+  <span class="kw">laborers</span>:[<span class="num">5</span>], <span class="kw">fire_risk</span>:[<span class="num">1</span>], <span class="kw">damage_risk</span>: [<span class="num">1</span>]
+}</code></pre>
+            <p><code>update_graphic</code> calls <code>building_wharf_update_graphic_moored</code> when the boat is in <code>ACTION_211_TRANSPORT_SHIP_WAITING</code> or <code>ACTION_213_TRANSPORT_SHIP_DOCKED</code>. <code>highlight_waypoints</code> paints both water-access tiles green.</p>
+          </div>
+        </details>
+
+        <details>
+          <summary>Behavior — <code>src/building/building_transport_wharf.cpp</code></summary>
+          <div class="details-body">
+            <p>C++ class <code>building_transport_wharf</code> (lines 1–55) extends <code>building_wharf</code>:</p>
+            <ul style="font-size:0.82rem;line-height:1.9;padding-left:1.2rem">
+              <li><code>clear_invalid_boat</code> — drops <code>BUILDING_SLOT_BOAT</code> if the figure is dead or not <code>FIGURE_TRANSPORT_SHIP</code></li>
+              <li><code>spawn_figure</code> — labor problem check, clear stale boat, labor seeker via <code>min_houses_coverage</code></li>
+              <li><code>update_day</code> — base wharf day tick + clear invalid boat</li>
+              <li><code>update_month</code> — if staffed + open water + no valid boat → <code>g_city.buildings.request_transport_ship()</code>; refresh docking points</li>
+              <li><code>on_undo</code> — clears the boat slot</li>
+            </ul>
+            <p>Headers: <span class="file-ref">src/building/building_transport_wharf.h</span>. Shared wharf helpers: <span class="file-ref">src/building/building_wharf.cpp</span>.</p>
+          </div>
+        </details>
+
+        <details>
+          <summary>Transport ship — <code>src/figuretype/figure_transport_ship.*</code></summary>
+          <div class="details-body">
+            <p>Figure implementation: <span class="file-ref">src/figuretype/figure_transport_ship.cpp</span> (~1242 lines), <span class="file-ref">src/figuretype/figure_transport_ship.h</span>, JS meta <span class="file-ref">src/scripts/figure/transport_ship.js</span>.</p>
+            <p>Action constants (also exported to JS in <span class="file-ref">src/js/js_constants.cpp</span>):</p>
+            <pre><code>ACTION_211_TRANSPORT_SHIP_WAITING
+ACTION_212_TRANSPORT_SHIP_GOING_TO_WHARF
+ACTION_213_TRANSPORT_SHIP_DOCKED
+ACTION_214_TRANSPORT_SHIP_SAILING</code></pre>
+            <p>Integral coverage: <span class="file-ref">tests/261_transport_wharf_og.js</span>.</p>
+          </div>
+        </details>
+
+        <details>
+          <summary>Info window — <code>src/scripts/ui_transport_wharf_info_window.js</code></summary>
+          <div class="details-body">
+            <p>Imported from <span class="file-ref">src/scripts/ui.js</span>. Layout inherits <code>building_info_window</code>; first advisor is <code>ADVISOR_MILITARY</code>.</p>
+            <pre><code>[<span class="kw">es</span>=<span class="ev">building_info_window</span>]
+<span class="kw">transport_wharf_info_window</span> {
+    first_advisor    : ADVISOR_MILITARY
+    related_buildings [BUILDING_TRANSPORT_WHARF]
+    ui : baseui(building_info_window, {
+        background   : outer_panel({size: [<span class="num">29</span>, <span class="num">16</span>]}),
+    })
+}
+
+<span class="cmt">// init: lang group meta_text_id (174) entry 1, or #building_no_road_access</span>
+window.warning_text.text = __loc(reason)
+building_info_window_setup_advisors(window)</code></pre>
+          </div>
+        </details>
+
+        <details>
+          <summary>Game messages — <code>src/scripts/game_messages_en.js</code></summary>
+          <div class="details-body">
+            <table class="msg-table">
+              <thead><tr><th>Key</th><th>ID</th><th>Line</th><th>When shown</th></tr></thead>
+              <tbody>
+                <tr>
+                  <td><code>message_building_transport_wharf</code></td>
+                  <td>357</td>
+                  <td>4057</td>
+                  <td>Help panel (<code>help_link</code>). Covers Shipwright order, road/labor/coastline requirements, desirability, and links to transport-ship / military history entries.</td>
+                </tr>
+              </tbody>
+            </table>
+            <p style="margin-top:0.6rem">Building name / status strings: text group <strong>174</strong> (<code>text_id: 174</code>). Entry <strong>0</strong> is the building name; entry <strong>1</strong> is the info-window description.</p>
+          </div>
+        </details>
+
+      </div><!-- .dev-section -->
+
+      <div class="bld-nav">
+        <a href="index.html">← All Buildings</a>
+        <span style="color:var(--text-muted)">Military — Naval</span>
+        <a href="index.html#military">Warship Wharf →</a>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <p>Akhenaten is an open-source, non-commercial project. All rights to Pharaoh, its mechanics and setting belong to their respective copyright owners.</p>
+    <p><a href="https://github.com/dalerank/Akhenaten" target="_blank">github.com/dalerank/Akhenaten</a></p>
+  </footer>
+  <script src="../../../lightbox.js"></script>
+</body>
+</html>
