@@ -17,13 +17,6 @@ REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_carpenter);
 const figure_carpenter_action_tokens_t ANK_CONFIG_ENUM(figure_carpenter_action_tokens)
 
 namespace {
-constexpr int k_max_roam_ticks = 512;
-constexpr int k_ghost_ticks = 10;
-constexpr int k_task_search_base = 30;
-constexpr int k_task_search_rand = 30;
-constexpr int k_guild_road_radius = 2;
-constexpr int k_mausoleum_head_start = 10;
-constexpr int k_climb_ticks = 30;
 constexpr int k_pyramid_ramp_work_ticks = 30;
 
 int work_ticks_for(const figure_carpenter::static_params &params, building *worked, bool serving_statue) {
