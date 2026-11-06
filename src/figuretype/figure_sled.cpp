@@ -12,22 +12,29 @@ REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_sled_puller);
 void figure_sled::figure_action() {
     OZZY_PROFILER_FUNCTION();
     if (base.leading_figure_id > 0) {
-        figure* leader = figure_get(base.leading_figure_id);
-        if (leader->type == FIGURE_SLED_PULLER && leader->state == FIGURE_STATE_ALIVE) {
-            follow_ticks(1);
-        } else {
-            building *dest = destination();
-            auto monument = (dest && dest->id) ? dest->dcast_monument() : nullptr;
-            if (monument) {
-                grid_area area = monument->get_area();
-                if (map_tile_is_inside_area(tile(), area.tmin(), area.tmax())) {
-                    do_deliver(ACTION_11_SLED_RETURNING_EMPTY);
-                }
-            }
-            building_monument_remove_delivery(id());
-            poof();
+        // OG laborer train: members stay in ACTION_8 and follow via follow_closely.
+        if (action_state() == ACTION_8_SLED_TRAIN_FOLLOW) {
+            pyramid_figure_train_follow(id(), 1);
             return;
         }
+
+        figure *leader = figure_get(base.leading_figure_id);
+        if (leader && leader->type == FIGURE_SLED_PULLER && leader->state == FIGURE_STATE_ALIVE) {
+            follow_ticks(1);
+            return;
+        }
+
+        building *dest = destination();
+        auto monument = (dest && dest->id) ? dest->dcast_monument() : nullptr;
+        if (monument) {
+            grid_area area = monument->get_area();
+            if (map_tile_is_inside_area(tile(), area.tmin(), area.tmax())) {
+                do_deliver(ACTION_11_SLED_RETURNING_EMPTY);
+            }
+        }
+        building_monument_remove_delivery(id());
+        poof();
+        return;
     }
 }
 
@@ -72,19 +79,24 @@ void figure_sled::do_deliver(int action_done) {
 
 void figure_sled_puller::figure_action() {
     OZZY_PROFILER_FUNCTION();
+    if (action_state() == ACTION_8_SLED_TRAIN_FOLLOW) {
+        pyramid_figure_train_follow(id(), 0);
+        return;
+    }
+
     if (base.leading_figure_id > 0) {
         --base.wait_ticks;
         if (base.wait_ticks > 0) {
             return;
         }
 
-        figure* leader = figure_get(base.leading_figure_id);
-        if (leader->type == FIGURE_SLED_PULLER && leader->state == FIGURE_STATE_ALIVE) {
+        figure *leader = figure_get(base.leading_figure_id);
+        if (leader && leader->type == FIGURE_SLED_PULLER && leader->state == FIGURE_STATE_ALIVE) {
             follow_ticks(1);
-        } else {
-            poof();
             return;
         }
+        poof();
+        return;
     }
 
     switch (action_state()) {
@@ -108,7 +120,6 @@ void figure_sled_puller::figure_action() {
         break;
 
     case ACTION_52_SLED_PULLER_AT_DELIVERY_BUILDING:
-        //cartpusher_do_deliver(true, ACTION_11_RETURNING_EMPTY);
         base.wait_ticks = 25;
         advance_action(ACTION_54_SLED_PULLER_WAITING_FOR_DESTROY);
         break;

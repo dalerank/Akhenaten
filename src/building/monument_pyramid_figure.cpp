@@ -1,6 +1,7 @@
 #include "monument_pyramid_figure.h"
 
 #include "building/monument_mastaba.h"
+#include "building/monument_mastaba_engine.h"
 #include "building/monument_pyramid.h"
 #include "building/monument_pyramid_engine.h"
 #include "building/monuments.h"
@@ -9,6 +10,7 @@
 #include "figure/figure.h"
 #include "figuretype/figure_bricklayer.h"
 #include "figuretype/figure_carpenter.h"
+#include "figuretype/figure_sled.h"
 #include "figuretype/figure_stonemason.h"
 #include "figuretype/figure_worker.h"
 #include "graphics/view/view.h"
@@ -447,6 +449,12 @@ pyramid_figure_work_t *monument_pyramid_figure::work_data(figure *f) const {
     if (auto *w = f->dcast_worker()) {
         return &w->runtime_data().climb;
     }
+    if (auto *sl = smart_cast<figure_sled>(f)) {
+        return &sl->runtime_data().climb;
+    }
+    if (auto *sp = smart_cast<figure_sled_puller>(f)) {
+        return &sp->runtime_data().climb;
+    }
     return nullptr;
 }
 
@@ -466,6 +474,12 @@ uint8_t &monument_pyramid_figure::walk_mode(figure *f) const {
     }
     if (auto *w = f->dcast_worker()) {
         return w->runtime_data().walk_mode;
+    }
+    if (auto *sl = smart_cast<figure_sled>(f)) {
+        return sl->runtime_data().walk_mode;
+    }
+    if (auto *sp = smart_cast<figure_sled_puller>(f)) {
+        return sp->runtime_data().walk_mode;
     }
     return dummy;
 }
@@ -1347,5 +1361,141 @@ void monument_pyramid_figure::follow_closely(figure_id fid, figure_id leader_id,
     }
     if (follow_step_reaches_leader(fid, f, leader, climb_step_n, distance)) {
         take_leader_walk(fid, f, leader, distance);
+    }
+}
+
+figure_id monument_pyramid_figure::find_train_leader(figure_id fid, int *position) const {
+    figure *f = figure_get(fid);
+    if (!f || !position) {
+        return 0;
+    }
+    figure_id id = f->leading_figure_id;
+    *position = 1;
+    for (int i = 0; i < LABORER_TRAIN_MAX_LINKS; ++i) {
+        figure *link = figure_get(id);
+        if (!link || !link->is_alive()) {
+            return 0;
+        }
+        if (link->type == FIGURE_LABORER) {
+            return id;
+        }
+        (*position)++;
+        id = link->leading_figure_id;
+    }
+    return 0;
+}
+
+namespace {
+bool laborer_pulls_train(int action) {
+    switch (action) {
+    case ACTION_16_WORKER_TO_YARD:
+    case ACTION_17_WORKER_TO_MASON:
+    case ACTION_19_WORKER_CLIMB_RAMP:
+    case ACTION_20_WORKER_TO_MASON_ON_LAYER:
+    case ACTION_21_WORKER_WALK_TO_MASON:
+    case ACTION_18_WORKER_DELIVER_BLOCK:
+        return true;
+    default:
+        return false;
+    }
+}
+
+bool front_keeps_pulling(const figure *f, int /*is_sled*/) {
+    figure *front = figure_get(f->leading_figure_id);
+    if (!front || !front->is_alive()) {
+        return false;
+    }
+    if (front->type == FIGURE_LABORER) {
+        return laborer_pulls_train(front->action_state);
+    }
+    return front->type == FIGURE_SLED_PULLER && front->action_state == ACTION_8_SLED_TRAIN_FOLLOW;
+}
+} // namespace
+
+void monument_pyramid_figure::train_follow(figure_id fid, int is_sled) {
+    figure *f = figure_get(fid);
+    if (!f) {
+        return;
+    }
+    int position = 0;
+    figure_id leader_id = find_train_leader(fid, &position);
+    figure *leader = figure_get(leader_id);
+    if (!leader || !leader->is_alive()) {
+        f->poof();
+        return;
+    }
+    if (f->action_state != ACTION_8_SLED_TRAIN_FOLLOW) {
+        f->poof();
+        return;
+    }
+
+    f->set_flag(e_figure_flag_invisible, false);
+    f->use_cross_country = false;
+    if (!front_keeps_pulling(f, is_sled)) {
+        f->poof();
+        return;
+    }
+
+    int max_spacing = is_sled ? LABORER_SLED_SPACING : LABORER_PULLER_SPACING;
+    int spacing = max_spacing;
+    if (leader->action_state == ACTION_18_WORKER_DELIVER_BLOCK) {
+        const int sled_extra = is_sled ? (LABORER_SLED_SPACING - LABORER_PULLER_SPACING) : 0;
+        spacing = (LABORER_PULLER_SPACING * position) - leader->wait_ticks + sled_extra;
+        if (spacing < 1) {
+            spacing = 1;
+        } else if (spacing > max_spacing) {
+            spacing = max_spacing;
+        }
+    }
+    follow_closely(fid, f->leading_figure_id, 1, spacing);
+}
+
+void monument_pyramid_figure::spawn_sled_train(figure_id laborer_fid, building *monument) {
+    figure *laborer = figure_get(laborer_fid);
+    if (!laborer || !monument) {
+        return;
+    }
+
+    figure_id previous_id = laborer_fid;
+    int side = 0;
+    for (int i = 0; i < LABORER_SLED_PULLERS; ++i) {
+        figure *puller = figure_create(FIGURE_SLED_PULLER, laborer->tile, laborer->direction);
+        if (!puller || !puller->id) {
+            return;
+        }
+        puller->action_state = ACTION_8_SLED_TRAIN_FOLLOW;
+        puller->leading_figure_id = (int16_t)previous_id;
+        puller->set_home(0);
+        puller->wait_ticks = 0;
+        puller->roam_length = 0;
+        if (auto *sp = smart_cast<figure_sled_puller>(puller)) {
+            sp->runtime_data().walk_mode = PYRAMID_WALK_NONE;
+        }
+        // OG: resource_id toggles side for puller sprite; remake keeps 0/1 in resource_id.
+        puller->resource_id = (e_resource)side;
+        side = 1 - side;
+        previous_id = puller->id;
+    }
+
+    figure *sled = figure_create(FIGURE_SLED, laborer->tile, laborer->direction);
+    if (!sled || !sled->id) {
+        return;
+    }
+    sled->action_state = ACTION_8_SLED_TRAIN_FOLLOW;
+    sled->leading_figure_id = (int16_t)previous_id;
+    sled->set_home(0);
+    sled->wait_ticks = 0;
+    sled->roam_length = 0;
+    sled->set_destination(monument);
+    if (auto *sl = smart_cast<figure_sled>(sled)) {
+        sl->runtime_data().walk_mode = PYRAMID_WALK_NONE;
+        int amount = monument_engine_config.default_bricks_per_block;
+        if (auto *mon = monument->dcast_monument()) {
+            amount = mon->phase_bricks_per_block(mon->phase());
+            if (amount <= 0) {
+                amount = monument_engine_config.default_bricks_per_block;
+            }
+        }
+        sl->load_resource(RESOURCE_BRICKS, amount);
     }
 }

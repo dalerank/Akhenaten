@@ -6,6 +6,7 @@ class figure_cartpusher;
 class figure_storageyard_cart;
 class figure_trade_ship;
 class figure_sled;
+class figure_sled_puller;
 class figure_musician;
 class figure_dancer;
 class figure_labor_seeker;

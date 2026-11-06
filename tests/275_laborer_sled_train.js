@@ -1,0 +1,106 @@
+// Laborer brick delivery: spawn OG sled train (5 pullers + sled) linked via leading_figure_id;
+// train members stay in ACTION_8 and follow_closely while laborer pulls.
+
+function run_test() {
+    __log_info_native('[test:275] laborer sled train spawn + follow_closely')
+    test_ensure_city_session('data/default.map')
+
+    if (!__scenario_building_allowed(BUILDING_SMALL_MUDBRICK_PYRAMID)) {
+        __scenario_building_allow(BUILDING_SMALL_MUDBRICK_PYRAMID, true)
+    }
+    if (!__scenario_building_allowed(BUILDING_WORK_CAMP)) {
+        __scenario_building_allow(BUILDING_WORK_CAMP, true)
+    }
+    if (!__scenario_building_allowed(BUILDING_BRICKLAYERS_GUILD)) {
+        __scenario_building_allow(BUILDING_BRICKLAYERS_GUILD, true)
+    }
+
+    __test_set_treasury(500000)
+
+    var cx = (__scenario_map.width / 2) | 0
+    var cy = (__scenario_map.height / 2) | 0
+    var bid = 0
+    var candidates = [
+        {x: cx - 4, y: cy - 4}, {x: cx, y: cy}, {x: 40, y: 40}, {x: 30, y: 30}
+    ]
+    for (var i = 0; i < candidates.length && !bid; i++) {
+        bid = test_building_place(BUILDING_SMALL_MUDBRICK_PYRAMID, candidates[i].x, candidates[i].y)
+    }
+    if (!bid) {
+        __log_info_native('[test:275] failed to place mudbrick pyramid')
+        __test_signal_ready()
+        return
+    }
+
+    __test_monument_set_phase(bid, 2)
+    __pyramid_start_block_phase(bid)
+
+    var tile = __building_tile(bid)
+    var camp = test_building_place(BUILDING_WORK_CAMP, tile.x + 14, tile.y)
+    if (!camp) {
+        camp = test_building_place(BUILDING_WORK_CAMP, -1, -1)
+    }
+    if (!camp) {
+        __log_info_native('[test:275] failed to place work camp')
+        __test_signal_ready()
+        return
+    }
+
+    var guild = test_building_place(BUILDING_BRICKLAYERS_GUILD, tile.x + 16, tile.y)
+    if (!guild) {
+        guild = test_building_place(BUILDING_BRICKLAYERS_GUILD, -1, -1)
+    }
+    if (!guild) {
+        __log_info_native('[test:275] failed to place bricklayers guild')
+        __test_signal_ready()
+        return
+    }
+
+    var bl = __test_figure_create(FIGURE_BRICKLAYER, tile.x, tile.y + 3)
+    __test_figure_set_home(bl, guild)
+    city.get_building(bid).add_workers(bl)
+    var part = __pyramid_claim_bricklayer_task(bl)
+    if (!part) {
+        __log_info_native('[test:275] bricklayer claim failed')
+        __log_marker('sled_train_spawn_fail:claim')
+        __test_signal_ready()
+        return
+    }
+    // Literal 8 = ACTION_8_BRICKLAYER_WAIT_FOR_BLOCK.
+    __test_figure_set_action(bl, 8)
+
+    var fid = __test_figure_create(FIGURE_LABORER, tile.x, tile.y + 3)
+    // figure_before_action poofs workers whose home building slot 0 lacks them.
+    __test_figure_set_home_slot(fid, camp)
+    city.get_building(bid).add_workers(fid)
+    __worker_assign_brick_delivery(fid, bid, bl)
+
+    var n = __pyramid_spawn_sled_train(fid, bid)
+    if (n < 6) {
+        __log_info_native('[test:275] spawn_sled_train expected 6 figures, got ' + n)
+        __log_marker('sled_train_spawn_fail:' + n)
+        __test_signal_ready()
+        return
+    }
+    __log_marker('sled_train_spawn_ok:' + n)
+
+    for (var t = 0; t < 5; t++) {
+        __test_figures_update()
+    }
+
+    var following = __pyramid_count_sled_train_followers(fid)
+    if (following < 6) {
+        __log_info_native('[test:275] train followers still in ACTION_8 expected >=6 got ' + following)
+        __log_marker('sled_train_follow_fail:' + following)
+        __test_signal_ready()
+        return
+    }
+    __log_marker('sled_train_follow_ok:' + following)
+
+    __test_signal_ready()
+}
+
+function check_valid() {
+    return __test_find_inlog('[test-marker] sled_train_spawn_ok:')
+        && __test_find_inlog('[test-marker] sled_train_follow_ok:')
+}

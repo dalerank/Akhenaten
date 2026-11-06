@@ -15,6 +15,10 @@ enum e_pyramid_figure_limits {
     PYRAMID_LABORER_NEAR_TILES = 7,
     PYRAMID_NO_FRONTIER_INDEX = 999,
     LABORER_TRAIN_CATCH_UP_TICKS = 8,
+    LABORER_SLED_PULLERS = 5,
+    LABORER_TRAIN_MAX_LINKS = 8,
+    LABORER_SLED_SPACING = 12,
+    LABORER_PULLER_SPACING = 7,
 };
 
 struct pyramid_figure_work_t {
@@ -39,6 +43,9 @@ public:
     int laborer_can_enter_ramp(figure_id fid) const;
     void laborer_pair_with_mason(figure_id fid);
     void follow_closely(figure_id fid, figure_id leader_id, int climb_step_n, int distance);
+    figure_id find_train_leader(figure_id fid, int *position) const;
+    void train_follow(figure_id fid, int is_sled);
+    void spawn_sled_train(figure_id laborer_fid, building *monument);
 
     building_id find_mason_waiting_for_block(building *head, int clear_partner);
     building_id next_on_ring(building_id part_id) const;
@@ -113,6 +120,15 @@ inline void pyramid_laborer_pair_with_mason(figure_id fid) {
 }
 inline void pyramid_figure_follow_closely(figure_id fid, figure_id leader_id, int climb_step_n, int distance) {
     g_monument_pyramid_figure.follow_closely(fid, leader_id, climb_step_n, distance);
+}
+inline figure_id pyramid_figure_find_train_leader(figure_id fid, int *position) {
+    return g_monument_pyramid_figure.find_train_leader(fid, position);
+}
+inline void pyramid_figure_train_follow(figure_id fid, int is_sled) {
+    g_monument_pyramid_figure.train_follow(fid, is_sled);
+}
+inline void pyramid_figure_spawn_sled_train(figure_id laborer_fid, building *monument) {
+    g_monument_pyramid_figure.spawn_sled_train(laborer_fid, monument);
 }
 inline pyramid_figure_work_t *pyramid_figure_work_data(figure *f) {
     return g_monument_pyramid_figure.work_data(f);
