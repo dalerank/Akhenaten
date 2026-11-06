@@ -838,26 +838,28 @@ void building_mastaba::bind_dynamic(io_buffer *iob, size_t version) {
         iob->bind(BIND_SIGNATURE_UINT8, &monumentd.resources_pct[i]);
     }
 
-    if (version >= 191) {
-        auto &main = monumentd.og_main;
-        iob->bind_u8((uint8_t &)main.style);
-        iob->bind_u8(main.size_variant);
-        iob->bind_u16(main.remaining_blocks);
-        iob->bind_u8(main.block_phase_active);
-        iob->bind____skip(1);
+    auto &main = monumentd.og_main;
+    iob->bind_u8((uint8_t &)main.style);
+    iob->bind_u8(main.size_variant);
+    iob->bind_u16(main.remaining_blocks);
+    iob->bind_u8(main.block_phase_active);
+    iob->bind_u8(main.force_show_ramps);
 
-        auto &part = monumentd.og_part;
-        iob->bind_u8(part.size_variant);
-        iob->bind_u8(part.stage);
-        iob->bind_u8(part.blocks);
-        iob->bind_u8(part.layer);
-        iob->bind_u8(part.target_layers);
-        iob->bind_u8(part.subtype);
-        iob->bind_u16(part.worker_figure_id);
-    } else {
-        monumentd.og_main = {};
-        monumentd.og_part = {};
-    }
+    auto &part = monumentd.og_part;
+    iob->bind_u8(part.size_variant);
+    iob->bind_u8(part.stage);
+    iob->bind_u8(part.blocks);
+    iob->bind_u8(part.layer);
+    iob->bind_u8(part.target_layers);
+    iob->bind_u8(part.subtype);
+    iob->bind_u16(part.worker_figure_id);
+    iob->bind_u8(part.ramp1_height);
+    iob->bind_u8(part.ramp2_height);
+    iob->bind_u32(part.ramp_image_id);
+    iob->bind_i16(part.ramp_image_x1);
+    iob->bind_i16(part.ramp_image_y1);
+    iob->bind_i16(part.ramp_image_x2);
+    iob->bind_i16(part.ramp_image_y2);
 }
 
 bool building_mastaba::get_route_citizen_land_type(int grid_offset, int &land_result) const {

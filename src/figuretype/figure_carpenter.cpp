@@ -3,6 +3,10 @@
 #include "building/building_guild_carpenters.h"
 #include "building/building_statue.h"
 #include "building/monument_obelisk.h"
+#include "building/monument_mastaba_engine.h"
+#include "building/monument_pyramid.h"
+#include "building/monument_pyramid_engine.h"
+#include "building/monument_pyramid_ramp.h"
 #include "building/monuments.h"
 #include "core/random.h"
 #include "game/simulation_time.h"
@@ -21,6 +25,7 @@ constexpr int k_task_search_rand = 30;
 constexpr int k_guild_road_radius = 2;
 constexpr int k_mausoleum_head_start = 10;
 constexpr int k_climb_ticks = 30;
+constexpr int k_pyramid_ramp_work_ticks = 30;
 }
 
 void figure_carpenter::assign_monument_task(building *monument) {
@@ -30,6 +35,7 @@ void figure_carpenter::assign_monument_task(building *monument) {
 
     set_destination(monument);
     runtime_data().destination_bid = monument->id;
+    runtime_data().ramp_part_bid = 0;
     runtime_data().serving_statue = 0;
 
     auto *mm = monument->dcast_monument();
@@ -164,6 +170,14 @@ void figure_carpenter::figure_action() {
         base.wait_ticks++;
         if (base.wait_ticks > k_climb_ticks) {
             base.wait_ticks = 0;
+            // Claim a ramp part before work ticks (OG pyramid_find_ramp_task).
+            if (b_dest && b_dest->dcast_pyramid()) {
+                rd.ramp_part_bid = pyramid_engine_find_ramp_part(b_dest, id());
+                if (!rd.ramp_part_bid) {
+                    advance_action(ACTION_3_CARPENTER_RETURN);
+                    break;
+                }
+            }
             advance_action(ACTION_2_CARPENTER_WORK);
         }
         break;
@@ -183,6 +197,29 @@ void figure_carpenter::figure_action() {
         if (auto *obelisk = worked->dcast_obelisk()) {
             base.set_flag(e_figure_flag_invisible);
             obelisk->set_carpenter_works(id());
+        }
+
+        // OG pyramid_carpenter_work_tick: 30 ticks then build_ramp on claimed part.
+        if (worked->dcast_pyramid() && rd.ramp_part_bid) {
+            auto *ps = pyramid_part_state_get(rd.ramp_part_bid);
+            if (!ps || pyramid_engine_part_needs_ramp(rd.ramp_part_bid) == PYRAMID_RAMP_NONE
+                || (ps->worker_figure_id != id() && pyramid_engine_part_has_active_worker(rd.ramp_part_bid))) {
+                if (ps && ps->worker_figure_id == id()) {
+                    ps->worker_figure_id = 0;
+                }
+                rd.ramp_part_bid = 0;
+                advance_action(ACTION_3_CARPENTER_RETURN);
+                break;
+            }
+            base.wait_ticks++;
+            if (base.wait_ticks < k_pyramid_ramp_work_ticks) {
+                break;
+            }
+            pyramid_engine_build_ramp(rd.ramp_part_bid);
+            ps->worker_figure_id = 0;
+            rd.ramp_part_bid = 0;
+            advance_action(ACTION_3_CARPENTER_RETURN);
+            break;
         }
 
         base.wait_ticks++;
@@ -219,6 +256,7 @@ void figure_carpenter::figure_action() {
             }
             set_destination(nullptr);
             rd.destination_bid = 0;
+            rd.ramp_part_bid = 0;
             rd.serving_statue = 0;
             base.wait_ticks = k_mausoleum_head_start;
             advance_action(ACTION_0_CARPENTER_ROAM);
@@ -249,7 +287,17 @@ void figure_carpenter::on_destroy() {
 
     base.set_flag(e_figure_flag_invisible, false);
 
-    building *b_dest = building_get(runtime_data().destination_bid);
+    auto &rd = runtime_data();
+    if (rd.ramp_part_bid) {
+        if (auto *ps = pyramid_part_state_get(rd.ramp_part_bid)) {
+            if (ps->worker_figure_id == base.id) {
+                ps->worker_figure_id = 0;
+            }
+        }
+        rd.ramp_part_bid = 0;
+    }
+
+    building *b_dest = building_get(rd.destination_bid);
     if (!b_dest || !b_dest->id) {
         b_dest = destination();
     }

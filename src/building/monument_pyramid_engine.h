@@ -3,39 +3,132 @@
 #include "building/building.h"
 #include "building/monuments.h"
 #include "core/archive.h"
+#include "core/hvector.h"
 #include "core/svector.h"
+#include "core/vec2i.h"
 #include "figure/figure.h"
 #include "grid/point.h"
 
-constexpr int PYRAMID_PARTS_CAPACITY = 144;
-constexpr int PYRAMID_SIZE_COUNT = 5;
+#include <array>
+#include <cstdint>
+
+enum {
+    PYRAMID_PARTS_CAPACITY = 144,
+    PYRAMID_SIZE_COUNT = 5,
+    PYRAMID_RAMP_KIND_COUNT = 8,
+    PYRAMID_RAMP_OFFSET_ROWS = 6,
+    PYRAMID_RAMP_BLOCKS_PER_LAYER = 6,
+};
+
+enum e_pyramid_part_kind : int {
+    PYRAMID_PART_CORNER_TOP = 0,
+    PYRAMID_PART_CORNER_LEFT = 1,
+    PYRAMID_PART_CORNER_BOTTOM = 2,
+    PYRAMID_PART_CORNER_RIGHT = 3,
+    PYRAMID_PART_EDGE_TOP_LEFT = 4,
+    PYRAMID_PART_EDGE_BOTTOM_LEFT = 5,
+    PYRAMID_PART_EDGE_BOTTOM_RIGHT = 6,
+    PYRAMID_PART_EDGE_TOP_RIGHT = 7,
+    PYRAMID_PART_INNER = 8,
+    PYRAMID_PART_KIND_MAX,
+};
+
+struct pyramid_ramp_offsets_t {
+    std::array<vec2i, PYRAMID_RAMP_OFFSET_ROWS> PYRAMID_PART_CORNER_TOP{};
+    std::array<vec2i, PYRAMID_RAMP_OFFSET_ROWS> PYRAMID_PART_CORNER_LEFT{};
+    std::array<vec2i, PYRAMID_RAMP_OFFSET_ROWS> PYRAMID_PART_CORNER_BOTTOM{};
+    std::array<vec2i, PYRAMID_RAMP_OFFSET_ROWS> PYRAMID_PART_CORNER_RIGHT{};
+    std::array<vec2i, PYRAMID_RAMP_OFFSET_ROWS> PYRAMID_PART_EDGE_TOP_LEFT{};
+    std::array<vec2i, PYRAMID_RAMP_OFFSET_ROWS> PYRAMID_PART_EDGE_BOTTOM_LEFT{};
+    std::array<vec2i, PYRAMID_RAMP_OFFSET_ROWS> PYRAMID_PART_EDGE_BOTTOM_RIGHT{};
+    std::array<vec2i, PYRAMID_RAMP_OFFSET_ROWS> PYRAMID_PART_EDGE_TOP_RIGHT{};
+    std::array<vec2i, PYRAMID_RAMP_OFFSET_ROWS> PYRAMID_PART_INNER{};
+
+    const std::array<vec2i, PYRAMID_RAMP_OFFSET_ROWS> &operator[](int kind) const {
+        const std::array<vec2i, PYRAMID_RAMP_OFFSET_ROWS> *rows[PYRAMID_PART_KIND_MAX] = {
+            &PYRAMID_PART_CORNER_TOP,
+            &PYRAMID_PART_CORNER_LEFT,
+            &PYRAMID_PART_CORNER_BOTTOM,
+            &PYRAMID_PART_CORNER_RIGHT,
+            &PYRAMID_PART_EDGE_TOP_LEFT,
+            &PYRAMID_PART_EDGE_BOTTOM_LEFT,
+            &PYRAMID_PART_EDGE_BOTTOM_RIGHT,
+            &PYRAMID_PART_EDGE_TOP_RIGHT,
+            &PYRAMID_PART_INNER,
+        };
+        if (kind < 0) {
+            kind = 0;
+        }
+        if (kind >= PYRAMID_PART_KIND_MAX) {
+            kind = PYRAMID_PART_KIND_MAX - 1;
+        }
+        return *rows[kind];
+    }
+};
+ANK_CONFIG_STRUCT(pyramid_ramp_offsets_t,
+    PYRAMID_PART_CORNER_TOP, PYRAMID_PART_CORNER_LEFT, PYRAMID_PART_CORNER_BOTTOM, PYRAMID_PART_CORNER_RIGHT,
+    PYRAMID_PART_EDGE_TOP_LEFT, PYRAMID_PART_EDGE_BOTTOM_LEFT, PYRAMID_PART_EDGE_BOTTOM_RIGHT, PYRAMID_PART_EDGE_TOP_RIGHT,
+    PYRAMID_PART_INNER)
 
 struct pyramid_engine_config_t {
     int blocks_per_layer = 6;
     int block_ticks_a = 41;
     int block_ticks_b = 69;
     int casing_ticks = 50;
+    // pyramid_part_grid_offsets — grid deltas from main (GRID_LENGTH=228).
+    std::array<int32_t, PYRAMID_PARTS_CAPACITY> part_grid_offsets{};
+
+    std::array<int, PYRAMID_SIZE_COUNT * PYRAMID_PARTS_CAPACITY> part_kinds{};
+
+    // OG pyramid_neighbour_offsets[view][3] — flat view*3+slot; ramp-link uses slot 0/1.
+    std::array<int32_t, 12> neighbour_offsets{};
+
+    // pyramid_ramp_base — pixel base shift per part kind before ramp_offsets row.
+    std::array<vec2i, PYRAMID_RAMP_KIND_COUNT> ramp_base{};
+    // pyramid_ramp_offsets[kind][row] — pixel step by height within a layer.
+    pyramid_ramp_offsets_t ramp_offsets{};
 };
 ANK_CONFIG_STRUCT(pyramid_engine_config_t,
-    blocks_per_layer, block_ticks_a, block_ticks_b, casing_ticks)
-
-// OG pyramid_block_total @ 0x005F5C40 / pyramid_part_count @ 0x0056F7D8
-inline constexpr int k_pyramid_block_totals[PYRAMID_SIZE_COUNT] = {216, 552, 1104, 1920, 3048};
-inline constexpr int k_pyramid_part_counts[PYRAMID_SIZE_COUNT] = {16, 36, 64, 100, 144};
+    blocks_per_layer, block_ticks_a, block_ticks_b, casing_ticks, part_grid_offsets, part_kinds,
+    neighbour_offsets, ramp_base, ramp_offsets)
 
 extern pyramid_engine_config_t pyramid_engine_config;
+
+// OG pyramid_ramp_table row — carpenter ramp schedule for one 2×2 part.
+struct pyramid_ramp_spec_t {
+    uint8_t part = 0;
+    uint8_t ramp1_height = 0;
+    uint8_t ramp2_height = 0;
+    uint8_t ramp1_linked_part = 0;
+    uint8_t ramp2_linked_part = 0;
+};
+ANK_CONFIG_STRUCT(pyramid_ramp_spec_t, part, ramp1_height, ramp2_height, ramp1_linked_part, ramp2_linked_part)
 
 class monument_pyramid_engine {
 public:
     building *chain_head(building *any_part) const;
     void collect_parts(building *any_part, svector<building *, PYRAMID_PARTS_CAPACITY> &out) const;
     int size_variant(building *main) const;
-    int block_total(int size_variant) const;
+    int part_count(building *main) const;
+    int block_total(building *main) const;
     bool is_mudbrick(building *b) const;
-    // True when building config sets pyramide_type (OG block engine, not remake).
     bool uses_block_engine(building *b) const;
     e_pyramid_style style_of(building *b) const;
     bool block_phase_active(building *main) const;
+
+    const std::array<int32_t, PYRAMID_PARTS_CAPACITY> &part_grid_offsets() const;
+    const vec2i &ramp_offset_at(int kind, int row) const;
+    const hvector<pyramid_ramp_spec_t, 48> &ramp_specs_for(building *head) const;
+
+    void offset_to_xy(int off, int &dx, int &dy) const;
+    void size_norm_origin(int part_count, int &min_dx, int &min_dy) const;
+    int part_height(const pyramid_part_state &p) const;
+    int rotated_kind(int kind, int view) const;
+    int geometric_kind(tile2i nw, vec2i footprint, tile2i part_tile) const;
+    // OG layout kind for subtype (inner-ring edges stay EDGE_*, not INNER).
+    int layout_kind(building *head, int subtype) const;
+    int ramp_base_image(building &part, int kind, e_pyramid_style style) const;
+    void set_ramp_offsets(pyramid_part_state &ps, int kind, e_pyramid_style style) const;
 
     void find_frontier(building *main, svector<building_id, PYRAMID_PARTS_CAPACITY> &frontier);
     void place_block(building_id part_id, figure_id fid);
@@ -45,7 +138,6 @@ public:
 private:
     bool is_mudbrick_type(e_building_type t) const;
     bool uses_block_engine_type(e_building_type t) const;
-    int part_height(const pyramid_part_state &p) const;
     int layer_capacity() const;
     void add_block(pyramid_part_state &p) const;
     int frontier_order(const pyramid_part_state &part, const pyramid_part_state &best) const;
@@ -69,8 +161,5 @@ void pyramid_engine_find_frontier(building *main, svector<building_id, PYRAMID_P
 
 building_id pyramid_engine_find_mason_waiting_for_block(building *main);
 void pyramid_engine_laborer_deliver_block(figure_id mason_fid);
-
-// Ramp gate stub: always 0 until carpenter thresholds are ported.
-int pyramid_engine_part_needs_ramp(building_id part_id);
 
 tile2i pyramid_engine_entry_tile(building *main);

@@ -35,6 +35,7 @@
 #include "building/monument_pyramid.h"
 #include "building/monument_mastaba_engine.h"
 #include "building/monument_pyramid_engine.h"
+#include "building/monument_pyramid_ramp.h"
 #include "building/monument_royal_tomb.h"
 #include "building/monument_obelisk.h"
 #include "figuretype/figure_worker.h"
@@ -3655,6 +3656,16 @@ static void __pyramid_start_block_phase(int bid) {
     mastaba_engine_start_block_phase(head);
 }
 ANK_FUNCTION_1(__pyramid_start_block_phase);
+
+static void __pyramid_force_show_ramps(int bid, int enable) {
+    building *b = building_get(bid);
+    building *head = b ? b->main() : nullptr;
+    if (!head) {
+        return;
+    }
+    pyramid_engine_set_force_show_ramps(head, enable != 0);
+}
+ANK_FUNCTION_2(__pyramid_force_show_ramps);
 
 static void __pyramid_laborer_wake_mason(int mason_fid) {
     pyramid_engine_laborer_deliver_block((figure_id)mason_fid);

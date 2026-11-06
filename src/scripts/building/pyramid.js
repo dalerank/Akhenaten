@@ -12,6 +12,7 @@ building_small_stepped_pyramid {
       clear_land { id:2, offset:12 }
       image_stick { path:"stepped_pyramid/pyramid_phase_one_00021" }
       empty_land {path:"stepped_pyramid/stepped_pyramid_00109"}
+      ramps {path:"stepped_pyramid/stepped_pyramid_00110"}
       ditches_phase_1 { path:"stepped_pyramid/pyramid_phase_one_00022" }
       ditches_phase_2 { path:"stepped_pyramid/pyramid_phase_one_00031" }
       ditches_phase_3 { path:"stepped_pyramid/pyramid_phase_one_00040" }
@@ -125,6 +126,7 @@ building_small_stepped_pyramid {
       clear_land { id:2, offset:12 }
       image_stick { path:"stepped_pyramid/pyramid_phase_one_00021" }
       empty_land {path:"stepped_pyramid/stepped_pyramid_00109"}
+      ramps {path:"stepped_pyramid/stepped_pyramid_00110"}
       ditches_phase_1 { path:"stepped_pyramid/pyramid_phase_one_00022" }
       ditches_phase_2 { path:"stepped_pyramid/pyramid_phase_one_00031" }
       ditches_phase_3 { path:"stepped_pyramid/pyramid_phase_one_00040" }
@@ -299,6 +301,7 @@ building_small_stepped_pyramid {
       clear_land { id:2, offset:12 }
       image_stick { path:"stepped_pyramid/pyramid_phase_one_00021" }
       empty_land {path:"stepped_pyramid/stepped_pyramid_00109"}
+      ramps {path:"stepped_pyramid/stepped_pyramid_00110"}
       ditches_phase_1 { path:"stepped_pyramid/pyramid_phase_one_00022" }
       ditches_phase_2 { path:"stepped_pyramid/pyramid_phase_one_00031" }
       ditches_phase_3 { path:"stepped_pyramid/pyramid_phase_one_00040" }
@@ -559,6 +562,7 @@ building_small_stepped_pyramid {
       clear_land { id:2, offset:12 }
       image_stick { path:"stepped_pyramid/pyramid_phase_one_00021" }
       empty_land {path:"stepped_pyramid/stepped_pyramid_00109"}
+      ramps {path:"stepped_pyramid/stepped_pyramid_00110"}
       ditches_phase_1 { path:"stepped_pyramid/pyramid_phase_one_00022" }
       ditches_phase_2 { path:"stepped_pyramid/pyramid_phase_one_00031" }
       ditches_phase_3 { path:"stepped_pyramid/pyramid_phase_one_00040" }
@@ -815,6 +819,7 @@ building_small_stepped_pyramid {
       clear_land { id:2, offset:12 }
       image_stick { path:"stepped_pyramid/pyramid_phase_one_00021" }
       empty_land {path:"stepped_pyramid/stepped_pyramid_00109"}
+      ramps {path:"stepped_pyramid/stepped_pyramid_00110"}
       ditches_phase_1 { path:"stepped_pyramid/pyramid_phase_one_00022" }
       ditches_phase_2 { path:"stepped_pyramid/pyramid_phase_one_00031" }
       ditches_phase_3 { path:"stepped_pyramid/pyramid_phase_one_00040" }
@@ -1076,6 +1081,7 @@ building_small_stepped_pyramid {
       clear_land { id:2, offset:12 }
       image_stick { path:"bent_pyramid/pyramid_phase_one_00021" }
       empty_land {path:"bent_pyramid/Bent_pyramid_00109"}
+      ramps {path:"bent_pyramid/Bent_pyramid_00110"}
       ditches_phase_1 { path:"bent_pyramid/pyramid_phase_one_00022" }
       ditches_phase_2 { path:"bent_pyramid/pyramid_phase_one_00031" }
       ditches_phase_3 { path:"bent_pyramid/pyramid_phase_one_00040" }
@@ -1127,6 +1133,7 @@ building_small_stepped_pyramid {
       clear_land { id:2, offset:12 }
       image_stick { path:"bent_pyramid/pyramid_phase_one_00021" }
       empty_land {path:"bent_pyramid/Bent_pyramid_00109"}
+      ramps {path:"bent_pyramid/Bent_pyramid_00110"}
       ditches_phase_1 { path:"bent_pyramid/pyramid_phase_one_00022" }
       ditches_phase_2 { path:"bent_pyramid/pyramid_phase_one_00031" }
       ditches_phase_3 { path:"bent_pyramid/pyramid_phase_one_00040" }
@@ -1304,6 +1311,7 @@ building_small_stepped_pyramid {
       clear_land { id:2, offset:12 }
       image_stick { path:"Pyramid/pyramid_phase_one_00021" }
       empty_land {path:"Pyramid/Pyramid_00109"}
+      ramps {path:"Pyramid/Pyramid_00110"}
       ditches_phase_1 { path:"Pyramid/pyramid_phase_one_00022" }
       ditches_phase_2 { path:"Pyramid/pyramid_phase_one_00031" }
       ditches_phase_3 { path:"Pyramid/pyramid_phase_one_00040" }
@@ -1337,6 +1345,17 @@ building_small_stepped_pyramid {
     wall_type : BUILDING_SMALL_PYRAMID_WALL
     cone_type : BUILDING_SMALL_PYRAMID_CONE
     filler_type : BUILDING_SMALL_PYRAMID
+    part_count : 16
+    block_total : 216
+    // OG pyramid_ramp_table (8×8).
+    ramps [
+      { part: 13, ramp1_height: 1 }
+      { part: 14, ramp1_height: 2, ramp1_linked_part: 15 }
+      { part: 11, ramp1_height: 3 }
+      { part: 9, ramp1_height: 4, ramp1_linked_part: 7 }
+      { part: 6, ramp1_height: 5 }
+      { part: 5, ramp1_height: 6 }
+    ]
     pyramide_type : PYRAMID_STYLE_TRUE
   }
 
@@ -1361,6 +1380,7 @@ building_small_stepped_pyramid {
       clear_land { id:2, offset:12 }
       image_stick { path:"mudbrick_pyramid/pyramid_phase_one_00021" }
       empty_land {path:"mudbrick_pyramid/mudbrick_pyramid_00109"}
+      ramps {path:"mudbrick_pyramid/mudbrick_pyramid_00110"}
       ditches_phase_1 { path:"mudbrick_pyramid/pyramid_phase_one_00022" }
       ditches_phase_2 { path:"mudbrick_pyramid/pyramid_phase_one_00031" }
       ditches_phase_3 { path:"mudbrick_pyramid/pyramid_phase_one_00040" }
@@ -1394,6 +1414,17 @@ building_small_stepped_pyramid {
     wall_type : BUILDING_SMALL_MUDBRICK_PYRAMID_WALL
     cone_type : BUILDING_SMALL_MUDBRICK_PYRAMID_CONE
     filler_type : BUILDING_SMALL_MUDBRICK_PYRAMID
+    part_count : 16
+    block_total : 216
+    // OG pyramid_ramp_table (8×8).
+    ramps [
+      { part: 13, ramp1_height: 1 }
+      { part: 14, ramp1_height: 2, ramp1_linked_part: 15 }
+      { part: 11, ramp1_height: 3 }
+      { part: 9, ramp1_height: 4, ramp1_linked_part: 7 }
+      { part: 6, ramp1_height: 5 }
+      { part: 5, ramp1_height: 6 }
+    ]
     pyramide_type : PYRAMID_STYLE_MUDBRICK
   }
 
@@ -1418,6 +1449,7 @@ building_small_stepped_pyramid {
       clear_land { id:2, offset:12 }
       image_stick { path:"mudbrick_pyramid/pyramid_phase_one_00021" }
       empty_land {path:"mudbrick_pyramid/mudbrick_pyramid_00109"}
+      ramps {path:"mudbrick_pyramid/mudbrick_pyramid_00110"}
       ditches_phase_1 { path:"mudbrick_pyramid/pyramid_phase_one_00022" }
       ditches_phase_2 { path:"mudbrick_pyramid/pyramid_phase_one_00031" }
       ditches_phase_3 { path:"mudbrick_pyramid/pyramid_phase_one_00040" }
@@ -1565,6 +1597,23 @@ building_small_stepped_pyramid {
     wall_type : BUILDING_MEDIUM_MUDBRICK_PYRAMID_WALL
     cone_type : BUILDING_MEDIUM_MUDBRICK_PYRAMID_CONE
     filler_type : BUILDING_MEDIUM_MUDBRICK_PYRAMID
+    part_count : 36
+    block_total : 552
+    // OG pyramid_ramp_table (12×12).
+    ramps [
+      { part: 31, ramp1_height: 1 }
+      { part: 32, ramp1_height: 2 }
+      { part: 33, ramp1_height: 3 }
+      { part: 34, ramp1_height: 4, ramp1_linked_part: 35 }
+      { part: 29, ramp1_height: 5 }
+      { part: 27, ramp1_height: 6 }
+      { part: 9, ramp1_height: 7, ramp1_linked_part: 7 }
+      { part: 6, ramp1_height: 8 }
+      { part: 5, ramp1_height: 9 }
+      { part: 8, ramp1_height: 10 }
+      { part: 10, ramp1_height: 11, ramp1_linked_part: 12 }
+      { part: 13, ramp1_height: 12 }
+    ]
     pyramide_type : PYRAMID_STYLE_MUDBRICK
   }
 
@@ -1589,6 +1638,7 @@ building_small_stepped_pyramid {
       clear_land { id:2, offset:12 }
       image_stick { path:"mudbrick_pyramid/pyramid_phase_one_00021" }
       empty_land {path:"mudbrick_pyramid/mudbrick_pyramid_00109"}
+      ramps {path:"mudbrick_pyramid/mudbrick_pyramid_00110"}
       ditches_phase_1 { path:"mudbrick_pyramid/pyramid_phase_one_00022" }
       ditches_phase_2 { path:"mudbrick_pyramid/pyramid_phase_one_00031" }
       ditches_phase_3 { path:"mudbrick_pyramid/pyramid_phase_one_00040" }
@@ -1736,6 +1786,29 @@ building_small_stepped_pyramid {
     wall_type : BUILDING_LARGE_MUDBRICK_PYRAMID_WALL
     cone_type : BUILDING_LARGE_MUDBRICK_PYRAMID_CONE
     filler_type : BUILDING_LARGE_MUDBRICK_PYRAMID
+    part_count : 64
+    block_total : 1104
+    // OG pyramid_ramp_table (16×16).
+    ramps [
+      { part: 57, ramp1_height: 1 }
+      { part: 58, ramp1_height: 2 }
+      { part: 59, ramp1_height: 3 }
+      { part: 60, ramp1_height: 4 }
+      { part: 61, ramp1_height: 5 }
+      { part: 62, ramp1_height: 6 }
+      { part: 29, ramp1_height: 7 }
+      { part: 27, ramp1_height: 8 }
+      { part: 25, ramp1_height: 9 }
+      { part: 23, ramp1_height: 10, ramp1_linked_part: 21 }
+      { part: 20, ramp1_height: 11 }
+      { part: 19, ramp1_height: 12 }
+      { part: 5, ramp1_height: 13, ramp1_linked_part: 4 }
+      { part: 8, ramp1_height: 14 }
+      { part: 10, ramp1_height: 15 }
+      { part: 13, ramp1_height: 16 }
+      { part: 14, ramp1_height: 17, ramp1_linked_part: 15 }
+      { part: 11, ramp1_height: 18 }
+    ]
     pyramide_type : PYRAMID_STYLE_MUDBRICK
   }
 
@@ -1759,6 +1832,7 @@ building_small_stepped_pyramid {
       clear_land { id:2, offset:12 }
       image_stick { path:"mudbrick_pyramid/pyramid_phase_one_00021" }
       empty_land {path:"mudbrick_pyramid/mudbrick_pyramid_00109"}
+      ramps {path:"mudbrick_pyramid/mudbrick_pyramid_00110"}
       ditches_phase_1 { path:"mudbrick_pyramid/pyramid_phase_one_00022" }
       ditches_phase_2 { path:"mudbrick_pyramid/pyramid_phase_one_00031" }
       ditches_phase_3 { path:"mudbrick_pyramid/pyramid_phase_one_00040" }
@@ -1802,6 +1876,35 @@ building_small_stepped_pyramid {
     wall_type : BUILDING_LARGE_MUDBRICK_PYRAMID_WALL
     cone_type : BUILDING_LARGE_MUDBRICK_PYRAMID_CONE
     filler_type : BUILDING_MUDBRICK_PYRAMID_COMPLEX
+    part_count : 100
+    block_total : 1920
+    // OG pyramid_ramp_table (20×20 complex).
+    ramps [
+      { part: 91, ramp1_height: 1 }
+      { part: 92, ramp1_height: 2 }
+      { part: 93, ramp1_height: 3 }
+      { part: 94, ramp1_height: 4 }
+      { part: 95, ramp1_height: 5 }
+      { part: 96, ramp1_height: 6 }
+      { part: 62, ramp1_height: 7, ramp1_linked_part: 63 }
+      { part: 55, ramp1_height: 8 }
+      { part: 53, ramp1_height: 9 }
+      { part: 51, ramp1_height: 10 }
+      { part: 49, ramp1_height: 11 }
+      { part: 47, ramp1_height: 12 }
+      { part: 20, ramp1_height: 13 }
+      { part: 19, ramp1_height: 14 }
+      { part: 18, ramp1_height: 15 }
+      { part: 17, ramp1_height: 16, ramp1_linked_part: 16 }
+      { part: 22, ramp1_height: 17 }
+      { part: 24, ramp1_height: 18 }
+      { part: 10, ramp1_height: 19, ramp1_linked_part: 12 }
+      { part: 13, ramp1_height: 20 }
+      { part: 14, ramp1_height: 21 }
+      { part: 11, ramp1_height: 22 }
+      { part: 9, ramp1_height: 23, ramp1_linked_part: 7 }
+      { part: 6, ramp1_height: 24 }
+    ]
     pyramide_type : PYRAMID_STYLE_MUDBRICK
   }
 
@@ -1821,6 +1924,7 @@ building_small_stepped_pyramid {
       clear_land { id:2, offset:12 }
       image_stick { path:"mudbrick_pyramid/pyramid_phase_one_00021" }
       empty_land {path:"mudbrick_pyramid/mudbrick_pyramid_00109"}
+      ramps {path:"mudbrick_pyramid/mudbrick_pyramid_00110"}
       ditches_phase_1 { path:"mudbrick_pyramid/pyramid_phase_one_00022" }
       ditches_phase_2 { path:"mudbrick_pyramid/pyramid_phase_one_00031" }
       ditches_phase_3 { path:"mudbrick_pyramid/pyramid_phase_one_00040" }
@@ -1857,6 +1961,35 @@ building_small_stepped_pyramid {
     wall_type : BUILDING_LARGE_MUDBRICK_PYRAMID_WALL
     cone_type : BUILDING_LARGE_MUDBRICK_PYRAMID_CONE
     filler_type : BUILDING_GRAND_MUDBRICK_PYRAMID_COMPLEX
+    part_count : 100
+    block_total : 1920
+    // OG size-4 schedule needs 24×24; remake grand is still 20×20 → complex table.
+    ramps [
+      { part: 91, ramp1_height: 1 }
+      { part: 92, ramp1_height: 2 }
+      { part: 93, ramp1_height: 3 }
+      { part: 94, ramp1_height: 4 }
+      { part: 95, ramp1_height: 5 }
+      { part: 96, ramp1_height: 6 }
+      { part: 62, ramp1_height: 7, ramp1_linked_part: 63 }
+      { part: 55, ramp1_height: 8 }
+      { part: 53, ramp1_height: 9 }
+      { part: 51, ramp1_height: 10 }
+      { part: 49, ramp1_height: 11 }
+      { part: 47, ramp1_height: 12 }
+      { part: 20, ramp1_height: 13 }
+      { part: 19, ramp1_height: 14 }
+      { part: 18, ramp1_height: 15 }
+      { part: 17, ramp1_height: 16, ramp1_linked_part: 16 }
+      { part: 22, ramp1_height: 17 }
+      { part: 24, ramp1_height: 18 }
+      { part: 10, ramp1_height: 19, ramp1_linked_part: 12 }
+      { part: 13, ramp1_height: 20 }
+      { part: 14, ramp1_height: 21 }
+      { part: 11, ramp1_height: 22 }
+      { part: 9, ramp1_height: 23, ramp1_linked_part: 7 }
+      { part: 6, ramp1_height: 24 }
+    ]
     pyramide_type : PYRAMID_STYLE_MUDBRICK
   }
 
@@ -1919,6 +2052,7 @@ building_small_stepped_pyramid {
       clear_land { id:2, offset:12 }
       image_stick { path:"Pyramid/pyramid_phase_one_00021" }
       empty_land {path:"Pyramid/Pyramid_00109"}
+      ramps {path:"Pyramid/Pyramid_00110"}
       ditches_phase_1 { path:"Pyramid/pyramid_phase_one_00022" }
       ditches_phase_2 { path:"Pyramid/pyramid_phase_one_00031" }
       ditches_phase_3 { path:"Pyramid/pyramid_phase_one_00040" }
@@ -2067,6 +2201,23 @@ building_small_stepped_pyramid {
     wall_type : BUILDING_MEDIUM_PYRAMID_WALL
     cone_type : BUILDING_MEDIUM_PYRAMID_CONE
     filler_type : BUILDING_MEDIUM_PYRAMID
+    part_count : 36
+    block_total : 552
+    // OG pyramid_ramp_table (12×12).
+    ramps [
+      { part: 31, ramp1_height: 1 }
+      { part: 32, ramp1_height: 2 }
+      { part: 33, ramp1_height: 3 }
+      { part: 34, ramp1_height: 4, ramp1_linked_part: 35 }
+      { part: 29, ramp1_height: 5 }
+      { part: 27, ramp1_height: 6 }
+      { part: 9, ramp1_height: 7, ramp1_linked_part: 7 }
+      { part: 6, ramp1_height: 8 }
+      { part: 5, ramp1_height: 9 }
+      { part: 8, ramp1_height: 10 }
+      { part: 10, ramp1_height: 11, ramp1_linked_part: 12 }
+      { part: 13, ramp1_height: 12 }
+    ]
     pyramide_type : PYRAMID_STYLE_TRUE
   }
 
@@ -2089,6 +2240,7 @@ building_small_stepped_pyramid {
       clear_land { id:2, offset:12 }
       image_stick { path:"Pyramid/pyramid_phase_one_00021" }
       empty_land {path:"Pyramid/Pyramid_00109"}
+      ramps {path:"Pyramid/Pyramid_00110"}
       ditches_phase_1 { path:"Pyramid/pyramid_phase_one_00022" }
       ditches_phase_2 { path:"Pyramid/pyramid_phase_one_00031" }
       ditches_phase_3 { path:"Pyramid/pyramid_phase_one_00040" }
@@ -2331,6 +2483,29 @@ building_small_stepped_pyramid {
     wall_type : BUILDING_LARGE_PYRAMID_WALL
     cone_type : BUILDING_LARGE_PYRAMID_CONE
     filler_type : BUILDING_LARGE_PYRAMID
+    part_count : 64
+    block_total : 1104
+    // OG pyramid_ramp_table (16×16).
+    ramps [
+      { part: 57, ramp1_height: 1 }
+      { part: 58, ramp1_height: 2 }
+      { part: 59, ramp1_height: 3 }
+      { part: 60, ramp1_height: 4 }
+      { part: 61, ramp1_height: 5 }
+      { part: 62, ramp1_height: 6 }
+      { part: 29, ramp1_height: 7 }
+      { part: 27, ramp1_height: 8 }
+      { part: 25, ramp1_height: 9 }
+      { part: 23, ramp1_height: 10, ramp1_linked_part: 21 }
+      { part: 20, ramp1_height: 11 }
+      { part: 19, ramp1_height: 12 }
+      { part: 5, ramp1_height: 13, ramp1_linked_part: 4 }
+      { part: 8, ramp1_height: 14 }
+      { part: 10, ramp1_height: 15 }
+      { part: 13, ramp1_height: 16 }
+      { part: 14, ramp1_height: 17, ramp1_linked_part: 15 }
+      { part: 11, ramp1_height: 18 }
+    ]
     pyramide_type : PYRAMID_STYLE_TRUE
   }
 
@@ -2356,6 +2531,7 @@ building_small_stepped_pyramid {
       clear_land { id:2, offset:12 }
       image_stick { path:"Pyramid/pyramid_phase_one_00021" }
       empty_land {path:"Pyramid/Pyramid_00109"}
+      ramps {path:"Pyramid/Pyramid_00110"}
       ditches_phase_1 { path:"Pyramid/pyramid_phase_one_00022" }
       ditches_phase_2 { path:"Pyramid/pyramid_phase_one_00031" }
       ditches_phase_3 { path:"Pyramid/pyramid_phase_one_00040" }
@@ -2600,6 +2776,35 @@ building_small_stepped_pyramid {
     wall_type : BUILDING_LARGE_PYRAMID_WALL
     cone_type : BUILDING_LARGE_PYRAMID_CONE
     filler_type : BUILDING_PYRAMID_COMPLEX
+    part_count : 100
+    block_total : 1920
+    // OG pyramid_ramp_table (20×20 complex).
+    ramps [
+      { part: 91, ramp1_height: 1 }
+      { part: 92, ramp1_height: 2 }
+      { part: 93, ramp1_height: 3 }
+      { part: 94, ramp1_height: 4 }
+      { part: 95, ramp1_height: 5 }
+      { part: 96, ramp1_height: 6 }
+      { part: 62, ramp1_height: 7, ramp1_linked_part: 63 }
+      { part: 55, ramp1_height: 8 }
+      { part: 53, ramp1_height: 9 }
+      { part: 51, ramp1_height: 10 }
+      { part: 49, ramp1_height: 11 }
+      { part: 47, ramp1_height: 12 }
+      { part: 20, ramp1_height: 13 }
+      { part: 19, ramp1_height: 14 }
+      { part: 18, ramp1_height: 15 }
+      { part: 17, ramp1_height: 16, ramp1_linked_part: 16 }
+      { part: 22, ramp1_height: 17 }
+      { part: 24, ramp1_height: 18 }
+      { part: 10, ramp1_height: 19, ramp1_linked_part: 12 }
+      { part: 13, ramp1_height: 20 }
+      { part: 14, ramp1_height: 21 }
+      { part: 11, ramp1_height: 22 }
+      { part: 9, ramp1_height: 23, ramp1_linked_part: 7 }
+      { part: 6, ramp1_height: 24 }
+    ]
     pyramide_type : PYRAMID_STYLE_TRUE
   }
 
@@ -2621,6 +2826,7 @@ building_small_stepped_pyramid {
       clear_land { id:2, offset:12 }
       image_stick { path:"Pyramid/pyramid_phase_one_00021" }
       empty_land {path:"Pyramid/Pyramid_00109"}
+      ramps {path:"Pyramid/Pyramid_00110"}
       ditches_phase_1 { path:"Pyramid/pyramid_phase_one_00022" }
       ditches_phase_2 { path:"Pyramid/pyramid_phase_one_00031" }
       ditches_phase_3 { path:"Pyramid/pyramid_phase_one_00040" }
@@ -2864,6 +3070,35 @@ building_small_stepped_pyramid {
     wall_type : BUILDING_LARGE_PYRAMID_WALL
     cone_type : BUILDING_LARGE_PYRAMID_CONE
     filler_type : BUILDING_GRAND_PYRAMID_COMPLEX
+    part_count : 100
+    block_total : 1920
+    // OG size-4 schedule needs 24×24; remake grand is still 20×20 → complex table.
+    ramps [
+      { part: 91, ramp1_height: 1 }
+      { part: 92, ramp1_height: 2 }
+      { part: 93, ramp1_height: 3 }
+      { part: 94, ramp1_height: 4 }
+      { part: 95, ramp1_height: 5 }
+      { part: 96, ramp1_height: 6 }
+      { part: 62, ramp1_height: 7, ramp1_linked_part: 63 }
+      { part: 55, ramp1_height: 8 }
+      { part: 53, ramp1_height: 9 }
+      { part: 51, ramp1_height: 10 }
+      { part: 49, ramp1_height: 11 }
+      { part: 47, ramp1_height: 12 }
+      { part: 20, ramp1_height: 13 }
+      { part: 19, ramp1_height: 14 }
+      { part: 18, ramp1_height: 15 }
+      { part: 17, ramp1_height: 16, ramp1_linked_part: 16 }
+      { part: 22, ramp1_height: 17 }
+      { part: 24, ramp1_height: 18 }
+      { part: 10, ramp1_height: 19, ramp1_linked_part: 12 }
+      { part: 13, ramp1_height: 20 }
+      { part: 14, ramp1_height: 21 }
+      { part: 11, ramp1_height: 22 }
+      { part: 9, ramp1_height: 23, ramp1_linked_part: 7 }
+      { part: 6, ramp1_height: 24 }
+    ]
     pyramide_type : PYRAMID_STYLE_TRUE
   }
 

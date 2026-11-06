@@ -24,6 +24,7 @@ public:
     struct runtime_data_t {
         short idle_wait_count;
         building_id destination_bid;
+        building_id ramp_part_bid;
         uint8_t serving_statue;
     } FIGURE_RUNTIME_DATA_T;
 
