@@ -105,4 +105,9 @@ terrain = {
     basin_adjacent_id: function(tile) {
         return __map_basin_adjacent_id(tile)
     }
+
+    // OG building_dock_is_connected_to_open_water
+    is_connected_to_open_water: function(tile) {
+        return __map_tile_is_connected_to_open_water(tile)
+    }
 }

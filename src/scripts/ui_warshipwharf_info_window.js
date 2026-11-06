@@ -1,13 +1,13 @@
 log_info("akhenaten: ui_warshipwharf_info_window.js loaded")
 
+// OG window_building_draw_warship_wharf / draw_wharf: road check + description (lang 175 id 1) + workers.
+
 [es=building_info_window]
 warshipwharf_info_window {
     first_advisor    : ADVISOR_MILITARY
     related_buildings [BUILDING_WARSHIP_WHARF]
     ui : baseui(building_info_window, {
         background   : outer_panel({size: [29, 16]}),
-        resource_img : resource_icon({pos: [32, 56], resource: RESOURCE_TIMBER}),
-        storage_desc : text({pos: [60, 60], size: [px(27), 20], font: FONT_NORMAL_BLACK_ON_LIGHT}),
     })
 }
 
@@ -15,26 +15,12 @@ warshipwharf_info_window {
 function warshipwharf_info_window_on_init(window) {
     var b = city.get_building(window.bid)
     var gid = b.meta_text_id
-    var reason = { group: gid, id: 0 }
+    var reason = { group: gid, id: 1 }
 
     if (!b.has_road_access) {
         reason = { key: "#building_no_road_access" }
-    } else if (!b.has_figure(BUILDING_SLOT_BOAT)) {
-        reason = { group: gid, id: 2 }
-    } else {
-        var boat = b.get_figure(BUILDING_SLOT_BOAT)
-        switch (boat.action_state) {
-        case ACTION_8_WARSHIP_WAITING:
-        case ACTION_20_WARSHIP_DOCKED: reason.id = 2; break
-        case ACTION_9_WARSHIP_STRAIGHT:
-        case ACTION_10_WARSHIP_HUNTING:
-        case ACTION_23_WARSHIP_PATROLLING:
-        case ACTION_24_WARSHIP_ATTACKING_SHIP: reason.id = 3; break
-        default: reason.id = 8; break
-        }
     }
 
     window.warning_text.text = __loc(reason)
-    window.storage_desc.text = _format("Stored weapons {0}", b.stored_resource(RESOURCE_TIMBER))
     building_info_window_setup_advisors(window)
 }

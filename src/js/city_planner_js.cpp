@@ -1,23 +1,23 @@
 #include "js_game.h"
 
 #include "building/building.h"
+#include "building/building_dock.h"
 #include "building/construction/build_planner.h"
+#include "building/construction/routed.h"
 #include "core/calc.h"
+#include "core/profiler.h"
 #include "game/game.h"
 #include "game/undo.h"
 #include "graphics/graphics.h"
 #include "graphics/image.h"
 #include "graphics/view/view.h"
-#include "grid/image.h"
-#include "grid/building_tiles.h"
-#include "grid/orientation.h"
 #include "grid/building.h"
-#include "grid/terrain.h"
-#include "grid/routing/routing.h"
+#include "grid/building_tiles.h"
 #include "grid/figure.h"
-#include "building/construction/routed.h"
 #include "grid/image.h"
-#include "core/profiler.h"
+#include "grid/orientation.h"
+#include "grid/routing/routing.h"
+#include "grid/terrain.h"
 #include "mujs/mujs.h"
 
 ANK_GLOBAL_OBJECT(g_city_planner, __city_planner,
@@ -220,6 +220,11 @@ bool __map_terrain_is_adjacent_to_wall(tile2i tile, int size) {
     return map_terrain_is_adjacent_to_wall(tile.x(), tile.y(), size);
 }
 ANK_FUNCTION_2(__map_terrain_is_adjacent_to_wall);
+
+bool __map_tile_is_connected_to_open_water(tile2i tile) {
+    return map_tile_is_connected_to_open_water(tile);
+}
+ANK_FUNCTION_1(__map_tile_is_connected_to_open_water);
 
 tile2i __map_tile_shift_offset(tile2i tile, int offset) {
     return tile.shifted(offset);

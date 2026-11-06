@@ -127,6 +127,7 @@ function test_building_place(type, x, y) {
 }
 
 // Synthetic shoreline: land row at cy - 1, water patch below (see tests/17, tests/19).
+// Sets river entry into the patch so OG open-water checks (warship/dock) can pass.
 function test_prepare_shoreline_patch(cx, cy, water_width, water_height) {
     var x0 = cx - ((water_width / 2) | 0)
     for (var dy = 0; dy < water_height; dy++) {
@@ -135,6 +136,7 @@ function test_prepare_shoreline_patch(cx, cy, water_width, water_height) {
             terrain.set_water({ x: x0 + dx, y: cy + dy })
         }
     }
+    __test_set_scenario_river_points(cx, cy, cx, cy + water_height - 1)
     __map_water_cache_river_tiles()
     __map_water_rebuild_shores()
     __test_map_routing_update_water()
