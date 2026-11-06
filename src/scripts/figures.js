@@ -350,15 +350,39 @@ figure_hippo = {
 		swim : { pack:PACK_SPR_AMBIENT, id:25, max_frames:8 }
 		swim_attack : { pack:PACK_SPR_AMBIENT, id:26, max_frames:8 }
 		swim_idle : { pack:PACK_SPR_AMBIENT, id:27, max_frames:8 }
-		eating : { pack:PACK_SPR_AMBIENT, id:28, max_frames:8 }
-		dance : { pack:PACK_SPR_AMBIENT, id:29, max_frames:8 }
+		eating : { pack:PACK_SPR_AMBIENT, id:28, max_frames:8 } // OG HIPPO_REST
+		dancer : { pack:PACK_SPR_AMBIENT, id:29, max_frames:8 } // OG HIPPO_ANIMATE_IN_WATER
+		bubbles : { pack:PACK_SPR_AMBIENT, id:11, max_frames:23, duration:1, loop:false }
 		big_image : { pack:PACK_UNLOADED, id:25, offset:FIGURE_HIPPO }
 	}
 
-	category: figure_category_animal
+	category: figure_category_hostile
 	max_damage: 250
 	attack_value: 12
 	terrain_usage : TERRAIN_USAGE_AMPHIBIA
+	speed_mult: 1
+	// animal_rules predator + hippo-specific + climate central_predator_0.
+	rest_base_ticks: 250
+	rest_random_ticks: 100
+	no_tile_wait_ticks: 100
+	dying_ticks: 500
+	hunt_delay: 90
+	hunt_radius: 4
+	chase_ticks_per_ring: 18
+	animate_ticks: 20
+	after_hunt_ticks: 200
+	// OG animal_choices {water, rest, animate, charge}.
+	choice_idle: [50, 50, 0, 0]
+	choice_in_water: [75, 5, 20, 0]
+	choice_animating: [90, 1, 9, 0]
+	choice_other: [29, 70, 0, 1]
+	forbidden_prey: [
+		FIGURE_TRADE_SHIP, FIGURE_FERRY_BOAT,
+		FIGURE_TRANSPORT_SHIP, FIGURE_WARSHIP, FIGURE_SHIPWRECK,
+		FIGURE_ENEMY_TRANSPORT, FIGURE_ENEMY_WARSHIP,
+		FIGURE_ENEMY_EGYPTIAN_TRANSPORT_SHIP, FIGURE_ENEMY_EGYPTIAN_WAR_SHIP,
+		FIGURE_EGYPTIAN_WARSHIP, FIGURE_EGYPTIAN_TRANSPORT
+	]
 }
 
 // OG animals.c hunter_spear_action (FIG_HUNTER_SPEAR = 74).
