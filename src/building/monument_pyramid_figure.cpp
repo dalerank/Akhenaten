@@ -1491,13 +1491,6 @@ void monument_pyramid_figure::spawn_sled_train(figure_id laborer_fid, building *
     sled->set_destination(monument);
     if (auto *sl = smart_cast<figure_sled>(sled)) {
         sl->runtime_data().walk_mode = PYRAMID_WALK_NONE;
-        int amount = monument_engine_config.default_bricks_per_block;
-        if (auto *mon = monument->dcast_monument()) {
-            amount = mon->phase_bricks_per_block(mon->phase());
-            if (amount <= 0) {
-                amount = monument_engine_config.default_bricks_per_block;
-            }
-        }
-        sl->load_resource(RESOURCE_BRICKS, amount);
+        sl->load_resource(laborer->resource_id, laborer->resource_amount_full);
     }
 }

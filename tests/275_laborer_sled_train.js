@@ -56,6 +56,17 @@ function run_test() {
         return
     }
 
+    // OG assign_pyramid: a block fetch needs a yard holding a full 400 load.
+    __scenario_building_allow(BUILDING_STORAGE_YARD, true)
+    var yard = __test_building_create(BUILDING_STORAGE_YARD, tile.x + 12, tile.y + 4)
+    if (!yard) {
+        __log_info_native('[test:275] failed to create storage yard')
+        __test_signal_ready()
+        return
+    }
+    city.get_building(yard).has_road_access = true
+    __test_storage_yard_add_resource(yard, RESOURCE_BRICKS, 400)
+
     var bl = __test_figure_create(FIGURE_BRICKLAYER, tile.x, tile.y + 3)
     __test_figure_set_home(bl, guild)
     city.get_building(bid).add_workers(bl)

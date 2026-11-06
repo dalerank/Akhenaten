@@ -149,7 +149,9 @@ static void __worker_assign_brick_delivery(int fid, int monument_bid, int mason_
     if (!worker || !mon) {
         return;
     }
-    worker->assign_brick_delivery(mon->main() ? mon->main() : mon, (figure_id)mason_fid);
+    if (!worker->assign_brick_delivery(mon->main() ? mon->main() : mon, (figure_id)mason_fid)) {
+        f->poof();
+    }
 }
 ANK_FUNCTION_3(__worker_assign_brick_delivery)
 

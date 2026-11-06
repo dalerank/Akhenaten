@@ -41,7 +41,7 @@ public:
     virtual void poof() override;
 
     tile2i monumen_tile4work(building *b);
-    void assign_brick_delivery(building *monument, figure_id mason_fid);
+    bool assign_brick_delivery(building* monument, figure_id mason_fid);
 
 private:
     bool uses_ramp_climb(building *monument) const;

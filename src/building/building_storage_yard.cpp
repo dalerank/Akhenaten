@@ -243,6 +243,45 @@ bool building_storage_yard::draw_ornaments_and_animations_height(painter &ctx, v
     return true;
 }
 
+building_id building_storage_yard_for_getting(building* src, e_resource resource, bool full_only, tile2i& dst) {
+    if (!src || g_city.resource.is_stockpiled(resource)) {
+        return 0;
+    }
+    int min_dist = 10000;
+    building_storage_yard* best = nullptr;
+    for (int i = 1; i < MAX_BUILDINGS; i++) {
+        building_storage_yard* yard = building_get(i)->dcast_storage_yard();
+        if (!yard || !yard->is_valid() || yard->id() == src->id) {
+            continue;
+        }
+        if (src->road_network_id && yard->base.road_network_id != src->road_network_id) {
+            continue;
+        }
+        const int amount = yard->amount(resource);
+        if (amount <= 0 || (full_only && amount < 400) || (!full_only && yard->is_gettable(resource))) {
+            continue;
+        }
+        const int dist = calc_distance_with_penalty(yard->tile(), src->tile, src->distance_from_entry,
+          yard->base.distance_from_entry);
+        if (dist < min_dist) {
+            min_dist = dist;
+            best = yard;
+        }
+    }
+    if (!best) {
+        return 0;
+    }
+    if (best->base.has_road_access == 1) {
+        map_point_store_result(best->tile(), dst);
+    } else {
+        dst = map_has_road_access_rotation(best->base.orientation, best->tile(), 3);
+        if (!dst.valid()) {
+            return 0;
+        }
+    }
+    return best->id();
+}
+
 building_id building_storage_yard_for_storing(tile2i tile, e_resource resource, int distance_from_entry, int road_network_id, int* understaffed, tile2i &dst) {
     int min_dist = 10000;
     int min_building_id = 0;

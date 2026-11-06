@@ -761,6 +761,23 @@ building_id pyramid_engine_find_mason_waiting_for_block(building *main) {
     return 0;
 }
 
+e_resource pyramid_engine_block_material(building_id part_id) {
+    building* part = building_get(part_id);
+    building* head = (part && part->id) ? g_monument_pyramid_engine.chain_head(part) : nullptr;
+    auto* ps = pyramid_part_state_get(part_id);
+    if (!head || !ps) {
+        return RESOURCE_NONE;
+    }
+    if (mastaba_engine_is(head)) {
+        return RESOURCE_BRICKS;
+    }
+    const e_pyramid_style style = g_monument_pyramid_engine.style_of(head);
+    if (g_monument_pyramid_engine.needs_main_material(*ps, style)) {
+        return g_monument_pyramid_engine.is_mudbrick(head) ? RESOURCE_BRICKS : RESOURCE_STONE;
+    }
+    return style == PYRAMID_STYLE_STEPPED ? RESOURCE_STONE : RESOURCE_LIMESTONE;
+}
+
 void pyramid_engine_laborer_deliver_block(figure_id mason_fid) {
     figure *mason = figure_get(mason_fid);
     if (!mason) {
