@@ -1,5 +1,5 @@
-// Large Stepped Pyramid (20x20) — place via planner, verify linked parts
-// (10x10 blocks = 100 tiles), walk a few construction phases, capture a screenshot.
+// Large Stepped Pyramid (16x16) — place via planner, verify linked parts
+// (8x8 blocks = 64 tiles), walk a few construction phases, capture a screenshot.
 // Asserts placement / parts / build-phase progression. Marble polish is true-pyramid
 // only, not stepped.
 
@@ -14,13 +14,12 @@ function run_test() {
     // Fund the treasury so placing doesn't trigger the "Out of money" popup.
     __test_set_treasury(500000)
 
-    // Footprint is 20x20 — place near the map centre so the whole pyramid fits,
-    // origin = centre - (10, 10).
+    // Footprint is 16x16 — place near the map centre so the whole pyramid fits.
     var cx = (__scenario_map.width / 2) | 0
     var cy = (__scenario_map.height / 2) | 0
     var bid = 0
     var candidates = [
-        {x: cx - 10, y: cy - 10}, {x: cx, y: cy}, {x: 40, y: 40}, {x: 30, y: 30}, {x: 60, y: 40}
+        {x: cx - 8, y: cy - 8}, {x: cx, y: cy}, {x: 40, y: 40}, {x: 30, y: 30}, {x: 60, y: 40}
     ]
     for (var i = 0; i < candidates.length && !bid; i++) {
         bid = test_building_place(BUILDING_LARGE_STEPPED_PYRAMID, candidates[i].x, candidates[i].y)
@@ -37,16 +36,15 @@ function run_test() {
     var tile = __building_tile(bid)
     __log_marker('large_stepped_placed_ok:' + bid + ':' + tile.x + ',' + tile.y)
 
-    // Collect linked part building ids. 20x20 -> 10x10 blocks of 2x2 = 100 tiles total.
+    // Collect linked part building ids. 16x16 -> 8x8 blocks of 2x2 = 64 tiles total.
     var parts = [bid]
     var cur = city.get_building(bid)
     while (cur && cur.next_part_building_id > 0 && parts.length < 256) {
         parts.push(cur.next_part_building_id)
         cur = city.get_building(cur.next_part_building_id)
     }
-    // 20x20 -> 10x10 blocks = 100 tiles. Forward traversal from main reaches all of
-    // them only when main is the list head (orientation-dependent), so assert linkage
-    // (>1 part) and log the exact count for diagnostics rather than hardcoding 100.
+    // Forward traversal from main reaches all parts only when main is the list head
+    // (orientation-dependent), so assert linkage (>1 part) and log the count.
     if (parts.length > 1) {
         __log_marker('large_stepped_parts_ok:' + parts.length)
     } else {

@@ -1,4 +1,4 @@
-// Second-tier pipeline: place Large Stepped Pyramid (20x20), walk through
+// Second-tier pipeline: place Large Stepped Pyramid (16x16), walk through
 // layer-0 bricks and into layer-1 (phase 17 = full second tier), screenshot.
 //
 // Zoom convention: higher percentage = farther out (25 close-up … 250 far).
@@ -16,7 +16,7 @@ function run_test() {
     }
     __test_set_treasury(500000)
 
-    var foot = 20
+    var foot = 16
     var cx = ((__scenario_map.width - foot) / 2) | 0
     var cy = ((__scenario_map.height - foot) / 2) | 0
 

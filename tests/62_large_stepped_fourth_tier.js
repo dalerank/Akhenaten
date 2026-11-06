@@ -15,7 +15,7 @@ function run_test() {
     }
     __test_set_treasury(500000)
 
-    var foot = 20
+    var foot = 16
     var cx = ((__scenario_map.width - foot) / 2) | 0
     var cy = ((__scenario_map.height - foot) / 2) | 0
 

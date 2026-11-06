@@ -15,7 +15,7 @@ function run_test() {
     }
     __test_set_treasury(500000)
 
-    var foot = 20
+    var foot = 16
     var cx = ((__scenario_map.width - foot) / 2) | 0
     var cy = ((__scenario_map.height - foot) / 2) | 0
 
@@ -53,7 +53,7 @@ function run_test() {
         __log_marker('fifth_tier_phase_ok:35')
     }
 
-    var apex = city.get_building_at(tile.x + 8, tile.y + 8)
+    var apex = city.get_building_at(tile.x + 6, tile.y + 6)
     if (apex && apex.id) {
         __log_marker('fifth_tier_apex_ok:' + apex.id)
     } else {

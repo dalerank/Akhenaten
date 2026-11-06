@@ -198,9 +198,8 @@ public:
     BUILDING_METAINFO(BUILDING_MEDIUM_STEPPED_PYRAMID_WALL, building_medium_stepped_pyramid_wall, building_medium_stepped_pyramid)
 };
 
-// Large stepped pyramid (20×20, id 250). Same shared stepped machinery as small/medium,
-// only the footprint (init_tiles) and phase schedule differ. Limestone casing polish is
-// true/mudbrick only, not stepped.
+// Large stepped pyramid (16×16, id 250 — OG size 2). Complex/grand are 20×20.
+// Limestone casing polish is true/mudbrick only, not stepped.
 class building_large_stepped_pyramid : public building_stepped_pyramid {
 public:
     BUILDING_METAINFO(BUILDING_LARGE_STEPPED_PYRAMID, building_large_stepped_pyramid, building_stepped_pyramid)

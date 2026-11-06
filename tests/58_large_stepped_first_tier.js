@@ -1,4 +1,4 @@
-// First-tier pipeline: place Large Stepped Pyramid (20x20), verify the part
+// First-tier pipeline: place Large Stepped Pyramid (16x16), verify the part
 // ring (corners/walls/fillers), walk foundation → first brick tier + ramp climb
 // (phase 13 = SE turn + east-face ascent), then take end screenshots.
 //
@@ -21,7 +21,7 @@ function run_test() {
     var cy = (__scenario_map.height / 2) | 0
     var bid = 0
     var candidates = [
-        {x: cx - 10, y: cy - 10}, {x: cx, y: cy}, {x: 40, y: 40}, {x: 30, y: 30}, {x: 60, y: 40}
+        {x: cx - 8, y: cy - 8}, {x: cx, y: cy}, {x: 40, y: 40}, {x: 30, y: 30}, {x: 60, y: 40}
     ]
     for (var i = 0; i < candidates.length && !bid; i++) {
         bid = test_building_place(BUILDING_LARGE_STEPPED_PYRAMID, candidates[i].x, candidates[i].y)
@@ -72,7 +72,8 @@ function run_test() {
     }
 
     __log_marker('first_tier_parts:' + parts + ':mainish=' + n_mainish + ':corner=' + n_corner + ':wall=' + n_wall + ':other=' + n_other)
-    if (parts == 100 && n_corner == 3 && n_wall == 32 && n_mainish == 65 && n_other == 0) {
+    // 16×16 → 8×8 parts of 2×2 = 64; walls (8-2)*4 = 24; 3 corners + mainish fillers.
+    if (parts == 64 && n_corner == 3 && n_wall == 24 && n_mainish == 37 && n_other == 0) {
         __log_marker('first_tier_layout_ok')
     } else {
         __log_info_native('[test:58] unexpected layout parts=' + parts + ' corner=' + n_corner + ' wall=' + n_wall + ' mainish=' + n_mainish)
@@ -81,9 +82,9 @@ function run_test() {
 
     var corners = [
         {x: tile.x, y: tile.y},
-        {x: tile.x + 18, y: tile.y},
-        {x: tile.x, y: tile.y + 18},
-        {x: tile.x + 18, y: tile.y + 18}
+        {x: tile.x + 14, y: tile.y},
+        {x: tile.x, y: tile.y + 14},
+        {x: tile.x + 14, y: tile.y + 14}
     ]
     var corners_ok = true
     for (var c = 0; c < corners.length; c++) {

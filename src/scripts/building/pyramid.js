@@ -347,9 +347,8 @@ building_small_stepped_pyramid {
   building_medium_stepped_pyramid_wall = building_medium_stepped_pyramid
   building_medium_stepped_pyramid_cone = building_medium_stepped_pyramid
 
-  // Large stepped pyramid (20x20, id 250). Same PACK_STEPPED_PYRAMID render pipeline as
-  // small/medium; only footprint (init_tiles) differs. Stairs: ascending ramp from
-  // enter_offset up the south face to the tier-1 ledge (one layer ? TILE_HEIGHT*3 = 90px).
+  // Large stepped pyramid (OG size 2 = 16x16, id 250).
+  // Complex/grand stay 20x20. Matches mudbrick large footprint.
   building_large_stepped_pyramid {
     animations {
       _pack { pack:PACK_STEPPED_PYRAMID }
@@ -370,11 +369,6 @@ building_small_stepped_pyramid {
       ground_phase_0 { path:"stepped_pyramid/pyramid_phase_one_00013" }
       basement { path:"stepped_pyramid/pyramid_phase_one_00058" }
       enter { path:"pharaoh_general/plazatiles_00064"}
-      stair_0_2 { path:"stepped_pyramid/stepped_pyramid_00112" }
-      stair_0_4 { path:"stepped_pyramid/stepped_pyramid_00110" }
-      stair_0_4_corner { path:"stepped_pyramid/stepped_pyramid_00122" }
-      stair_0_5 { path:"stepped_pyramid/stepped_pyramid_00114" }
-      stair_0_6 { path:"stepped_pyramid/stepped_pyramid_00115" }
     }
     build_menu_text : "Large Stepped Pyramid"
     building_size : 2
@@ -382,22 +376,20 @@ building_small_stepped_pyramid {
     fire_proof :  true
     damage_proof : true
     meta { text_id:178, help_link:"message_building_stepped_pyramid" }
-    init_tiles [20, 20]
+    init_tiles [16, 16]
 
-    enter_offset : [2, 20]
+    enter_offset : [2, 16]
 
-    // OG pyramid_entry_points size 3 (20x20)
+    // OG pyramid_entry_points size 2 (16x16)
     entry_points [
-      {part:91, height:1}, {part:92, height:2}, {part:93, height:3}, {part:94, height:4},
-      {part:95, height:5}, {part:96, height:6}, {part:62, height:7}, {part:63, height:7},
-      {part:55, height:8}, {part:53, height:9}, {part:51, height:10}, {part:49, height:11},
-      {part:47, height:12}, {part:45, height:12}, {part:43, height:12}, {part:42, height:12},
-      {part:20, height:13}, {part:19, height:14}, {part:18, height:15}, {part:17, height:16},
-      {part:16, height:16}, {part:22, height:17}, {part:24, height:18}, {part:10, height:19},
-      {part:12, height:19}, {part:13, height:20}, {part:14, height:21}, {part:15, height:21},
-      {part:11, height:22}, {part:9, height:23}, {part:7, height:23}, {part:6, height:24},
-      {part:0, height:25}, {part:2, height:26}, {part:3, height:27}, {part:1, height:28},
-      {part:3, height:29}, {part:1, height:30}
+      {part:57, height:1}, {part:58, height:2}, {part:59, height:3}, {part:60, height:4},
+      {part:61, height:5}, {part:62, height:6}, {part:63, height:6}, {part:55, height:6},
+      {part:29, height:7}, {part:27, height:8}, {part:25, height:9}, {part:23, height:10},
+      {part:21, height:10}, {part:20, height:11}, {part:19, height:12}, {part:5, height:13},
+      {part:4, height:13}, {part:8, height:14}, {part:10, height:15}, {part:12, height:15},
+      {part:13, height:16}, {part:14, height:17}, {part:15, height:17}, {part:11, height:18},
+      {part:1, height:19}, {part:0, height:20}, {part:2, height:21}, {part:3, height:22},
+      {part:1, height:23}, {part:0, height:24}
     ]
     // OG part_pair_table for this size
     part_pairs [
@@ -406,219 +398,7 @@ building_small_stepped_pyramid {
       {first:23, second:25}, {first:26, second:28}, {first:27, second:29}, {first:30, second:31}, {first:32, second:33}, {first:34, second:35},
       {first:36, second:37}, {first:38, second:39}, {first:40, second:41}, {first:42, second:43}, {first:44, second:46}, {first:45, second:47},
       {first:48, second:50}, {first:49, second:51}, {first:52, second:54}, {first:53, second:55}, {first:56, second:57}, {first:58, second:59},
-      {first:60, second:61}, {first:62, second:63}, {first:64, second:65}, {first:66, second:67}, {first:68, second:69}, {first:70, second:71},
-      {first:72, second:73}, {first:74, second:76}, {first:75, second:77}, {first:78, second:80}, {first:79, second:81}, {first:82, second:84},
-      {first:83, second:85}, {first:86, second:88}, {first:87, second:89}, {first:90, second:91}, {first:92, second:93}, {first:94, second:95},
-      {first:96, second:97}, {first:98, second:99}
-    ]
-
-
-    // 20×20 multi-tier L-ramp (south → SE → east climb, then upper ledges).
-    // Keep in sync with building_stepped_pyramid_complex. Optional: L4 stairs / eye-tune offsets.
-    stairs [
-      {
-        phase : 7
-        part : [4, 18]
-        tex { path:"stepped_pyramid/stepped_pyramid_00110" }
-        offset : [-20, 20]
-      }
-
-      {
-        phase : 8
-        part : [6, 18]
-        tex { path:"stepped_pyramid/stepped_pyramid_00111" }
-        offset : [-25, 20]
-      }
-
-      {
-        phase : 9
-        part : [8, 18]
-        tex { path:"stepped_pyramid/stepped_pyramid_00112" }
-        offset : [-20, 20]
-      }
-
-      {
-        phase : 10
-        part : [12, 18]
-        tex { path:"stepped_pyramid/stepped_pyramid_00110" }
-        offset : [0, -40]
-      }
-
-      {
-        phase : 11
-        part : [14, 18]
-        tex { path:"stepped_pyramid/stepped_pyramid_00111" }
-        offset : [-5, -40]
-      }
-
-      {
-        phase : 12
-        part : [16, 18]
-        tex { path:"stepped_pyramid/stepped_pyramid_00112" }
-        offset : [-5, -45]
-      }
-
-      {
-        phase : 13
-        part : [18, 14]
-        tex { path:"stepped_pyramid/stepped_pyramid_00113" }
-        offset : [10, -100]
-      }
-
-      {
-        phase : 14
-        part : [18, 12]
-        tex { path:"stepped_pyramid/stepped_pyramid_00114" }
-        offset : [0, -100]
-      }
-
-      {
-        phase : 15
-        part : [18, 10]
-        tex { path:"stepped_pyramid/stepped_pyramid_00115" }
-        offset : [-5, -100]
-      }
-
-      {
-        phase : 16
-        part : [18, 8]
-        tex { path:"stepped_pyramid/stepped_pyramid_00113" }
-        offset : [0, -170]
-      }
-
-      {
-        phase : 17
-        part : [18, 6]
-        tex { path:"stepped_pyramid/stepped_pyramid_00114" }
-        offset : [0, -170]
-      }
-
-      {
-        phase : 18
-        part : [18, 4]
-        tex { path:"stepped_pyramid/stepped_pyramid_00125" }
-        offset : [-5, -170]
-      }
-
-      {
-        phase : 19
-        part : [12, 16]
-        tex { path:"stepped_pyramid/stepped_pyramid_00110" }
-        offset : [15, -200]
-      }
-
-      {
-        phase : 20
-        part : [14, 16]
-        tex { path:"stepped_pyramid/stepped_pyramid_00111" }
-        offset : [10, -200]
-      }
-
-      {
-        phase : 20
-        part : [16, 16]
-        tex { path:"stepped_pyramid/stepped_pyramid_00123" }
-        offset : [15, -205]
-      }
-
-      {
-        phase : 21
-        part : [16, 14]
-        tex { path:"stepped_pyramid/stepped_pyramid_00115" }
-        offset : [20, -200]
-      }
-
-      {
-        phase : 22
-        part : [14, 10]
-        tex { path:"stepped_pyramid/stepped_pyramid_00113" }
-        offset : [20, -210]
-      }
-
-      {
-        phase : 23
-        part : [14, 8]
-        tex { path:"stepped_pyramid/stepped_pyramid_00114" }
-        offset : [20, -210]
-      }
-
-      // --- Layer 2 (third tier): L2 south y=14 (begin+4, size 12); SE [14,14].
-      {
-        phase : 24
-        part : [14, 6]
-        tex { path:"stepped_pyramid/stepped_pyramid_00115" }
-        offset : [15, -210]
-      }
-
-      {
-        phase : 24
-        part : [14, 4]
-        tex { path:"stepped_pyramid/stepped_pyramid_00127" }
-        offset : [10, -220]
-      }
-
-      {
-        phase : 25
-        part : [8, 14]
-        tex { path:"stepped_pyramid/stepped_pyramid_00110" }
-        offset : [0, -300]
-      }
-
-      {
-        phase : 26
-        part : [10, 14]
-        tex { path:"stepped_pyramid/stepped_pyramid_00111" }
-        offset : [0, -300]
-      }
-
-      {
-        phase : 27
-        part : [12, 14]
-        tex { path:"stepped_pyramid/stepped_pyramid_00112" }
-        offset : [0, -300]
-      }
-
-      {
-        phase : 28
-        part : [12, 10]
-        tex { path:"stepped_pyramid/stepped_pyramid_00113" }
-        offset : [20, -300]
-      }
-
-      {
-        phase : 29
-        part : [12, 8]
-        tex { path:"stepped_pyramid/stepped_pyramid_00114" }
-        offset : [15, -300]
-      }
-
-      {
-        phase : 30
-        part : [12, 6]
-        tex { path:"stepped_pyramid/stepped_pyramid_00127" }
-        offset : [15, -300]
-      }
-
-      {
-        phase : 31
-        part : [10, 12]
-        tex { path:"stepped_pyramid/stepped_pyramid_00110" }
-        offset : [0, -390]
-      }
-
-      {
-        phase : 32
-        part : [12, 12]
-        tex { path:"stepped_pyramid/stepped_pyramid_00122" }
-        offset : [0, -400]
-      }
-
-      {
-        phase : 33
-        part : [10, 12]
-        tex { path:"stepped_pyramid/stepped_pyramid_00114" }
-        offset : [0, -400]
-      }
+      {first:60, second:61}, {first:62, second:63}
     ]
 
     flags {
@@ -630,35 +410,28 @@ building_small_stepped_pyramid {
     wall_type : BUILDING_LARGE_STEPPED_PYRAMID_WALL
     cone_type : BUILDING_LARGE_STEPPED_PYRAMID_CONE
     filler_type : BUILDING_LARGE_STEPPED_PYRAMID
-    // Remake large stepped is 20×20 (= OG size 3), not 16×16.
-    part_count : 100
-    block_total : 1320
-    // OG pyramid_ramp_table (20×20).
+    part_count : 64
+    block_total : 720
+    // OG pyramid_ramp_table (16x16).
     ramps [
-      { part: 91, ramp1_height: 1 }
-      { part: 92, ramp1_height: 2 }
-      { part: 93, ramp1_height: 3 }
-      { part: 94, ramp1_height: 4 }
-      { part: 95, ramp1_height: 5 }
-      { part: 96, ramp1_height: 6 }
-      { part: 62, ramp1_height: 7, ramp1_linked_part: 63 }
-      { part: 55, ramp1_height: 8 }
-      { part: 53, ramp1_height: 9 }
-      { part: 51, ramp1_height: 10 }
-      { part: 49, ramp1_height: 11 }
-      { part: 47, ramp1_height: 12 }
-      { part: 20, ramp1_height: 13 }
-      { part: 19, ramp1_height: 14 }
-      { part: 18, ramp1_height: 15 }
-      { part: 17, ramp1_height: 16, ramp1_linked_part: 16 }
-      { part: 22, ramp1_height: 17 }
-      { part: 24, ramp1_height: 18 }
-      { part: 10, ramp1_height: 19, ramp1_linked_part: 12 }
-      { part: 13, ramp1_height: 20 }
-      { part: 14, ramp1_height: 21 }
-      { part: 11, ramp1_height: 22 }
-      { part: 9, ramp1_height: 23, ramp1_linked_part: 7 }
-      { part: 6, ramp1_height: 24 }
+      { part: 57, ramp1_height: 1 }
+      { part: 58, ramp1_height: 2 }
+      { part: 59, ramp1_height: 3 }
+      { part: 60, ramp1_height: 4 }
+      { part: 61, ramp1_height: 5 }
+      { part: 62, ramp1_height: 6 }
+      { part: 29, ramp1_height: 7 }
+      { part: 27, ramp1_height: 8 }
+      { part: 25, ramp1_height: 9 }
+      { part: 23, ramp1_height: 10, ramp1_linked_part: 21 }
+      { part: 20, ramp1_height: 11 }
+      { part: 19, ramp1_height: 12 }
+      { part: 5, ramp1_height: 13, ramp1_linked_part: 4 }
+      { part: 8, ramp1_height: 14 }
+      { part: 10, ramp1_height: 15 }
+      { part: 13, ramp1_height: 16 }
+      { part: 14, ramp1_height: 17, ramp1_linked_part: 15 }
+      { part: 11, ramp1_height: 18 }
     ]
     pyramide_type : PYRAMID_STYLE_STEPPED
   }
@@ -667,8 +440,7 @@ building_small_stepped_pyramid {
   building_large_stepped_pyramid_wall = building_large_stepped_pyramid
   building_large_stepped_pyramid_cone = building_large_stepped_pyramid
 
-  // Complex = plain 20x20 (same as large; causeway/temples not yet built).
-  // Keep stairs/animations in sync with building_large_stepped_pyramid (titles differ).
+  // Complex = 20x20 on-land + causeway (OG size 3). Large is 16x16.
   building_stepped_pyramid_complex {
     animations {
       _pack { pack:PACK_STEPPED_PYRAMID }

@@ -1,5 +1,5 @@
 // Layer-2 focus: verify the FIRST STONE STAGE of the Large Stepped Pyramid
-// (20x20) renders correctly. That is the bottom brick layer (layer 0) laid across
+// (16x16) renders correctly. That is the bottom brick layer (layer 0) laid across
 // the full footprint during phases 6..11 — corner sprites at the 4 corners, wall
 // sprites along the 4 edges, floor sprites in the interior, growing course 0 -> 5.
 //
@@ -16,12 +16,12 @@ function run_test() {
     }
     __test_set_treasury(500000)
 
-    // Footprint 20x20 — place centred so the whole ring is on screen.
+    // Footprint 16x16 — place centred so the whole ring is on screen.
     var cx = (__scenario_map.width / 2) | 0
     var cy = (__scenario_map.height / 2) | 0
     var bid = 0
     var candidates = [
-        {x: cx - 10, y: cy - 10}, {x: cx, y: cy}, {x: 40, y: 40}, {x: 30, y: 30}, {x: 60, y: 40}
+        {x: cx - 8, y: cy - 8}, {x: cx, y: cy}, {x: 40, y: 40}, {x: 30, y: 30}, {x: 60, y: 40}
     ]
     for (var i = 0; i < candidates.length && !bid; i++) {
         bid = test_building_place(BUILDING_LARGE_STEPPED_PYRAMID, candidates[i].x, candidates[i].y)
