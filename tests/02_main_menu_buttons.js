@@ -4,8 +4,9 @@
 
 var BUTTONS = [
     { name: "select_player", i: 1, window_id: "window_player_selection" },
-    { name: "show_records",  i: 2, window_id: "records_window" },
-    { name: "show_mods",     i: 4, window_id: "mods_window" },
+    { name: "free_play",     i: 2, window_id: "window_scenario_selection_free_play" },
+    { name: "show_records",  i: 3, window_id: "records_window" },
+    { name: "show_mods",     i: 5, window_id: "mods_window" },
 ];
 
 function button_click_pos(i) {

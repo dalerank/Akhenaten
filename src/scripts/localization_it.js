@@ -409,6 +409,7 @@ localization_it = [
   {key:"#TR_ADVISOR_TOTAL_POPULATION", text:"residenti in totale"}
   {key:"#main_menu_mods", text:"Mod"}
   {key:"#main_menu_editor", text:"Editor"}
+  {key:"#main_menu_free_play", text:"Gioco libero"}
   {key:"#advisor_imperial_political_overseer_for", text:"Supervisore politico di"}
   {key:"#warship_moving_to_position", text:"In movimento verso la posizione"}
   {key:"#warship_moving_to_position_text", text:"La nave sta raggiungendo la posizione che hai indicato e vi resterà finché non le darai altri ordini."}

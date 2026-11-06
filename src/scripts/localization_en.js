@@ -457,6 +457,7 @@ localization_en = [
 
   {key: "#main_menu_mods", text:"Mods"}
   {key: "#main_menu_editor", text:"Editor"}
+  {key: "#main_menu_free_play", text:"Free play"}
   // strings that used to be hard-coded in ui_*.js
   {key:"#advisor_imperial_political_overseer_for", text:"Political overseer for"}
   {key:"#warship_moving_to_position", text:"Moving to position"}

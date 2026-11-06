@@ -136,6 +136,7 @@ const mission_step_t* get_scenario_step_data(int scenario_id);
 
 int get_scenario_campaign_id(int scenario_id);
 int get_first_mission_in_campaign(int campaign_id);
+int game_campaign_count();
 
 bool game_scenario_beaten(int scenario_id);
 

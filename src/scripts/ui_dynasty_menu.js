@@ -22,10 +22,12 @@ function dynasty_menu_btn_explore() {
     window_scenario_selection_campaign.period_selected = 0
     window_scenario_selection_campaign.active_tab = 0
     window_scenario_selection.individual_missions = false
+    window_scenario_selection.free_play = false
     window_show_by_id("window_scenario_selection_campaign")
 }
 
 function dynasty_menu_btn_custom() {
+    window_scenario_selection.free_play = false
     scenario.scmode = e_scenario_custom_map
     window_show_by_id("window_scenario_selection_custom")
 }
