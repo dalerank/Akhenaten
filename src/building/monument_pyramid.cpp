@@ -1120,7 +1120,8 @@ bool building_pyramid::need_bricklayers() {
             return ms->remaining_blocks > 0 && need_workers();
         }
     }
-    if (pyramid_params().pyramide_type == PYRAMID_STYLE_TRUE) {
+    if (pyramid_params().pyramide_type == PYRAMID_STYLE_TRUE
+        || pyramid_params().pyramide_type == PYRAMID_STYLE_STEPPED) {
         return false;
     }
     return building_monument::need_bricklayers();
@@ -2477,6 +2478,9 @@ void building_small_stepped_pyramid::update_day() {
     if (is_finished()) {
         return;
     }
+    if (run_block_day()) {
+        return;
+    }
 
     building_stepped_pyramid::update_day(current_params().init_tiles);
 }
@@ -2719,6 +2723,9 @@ void building_medium_stepped_pyramid::update_day() {
     if (is_finished()) {
         return;
     }
+    if (run_block_day()) {
+        return;
+    }
 
     building_stepped_pyramid::update_day(current_params().init_tiles);
 }
@@ -2759,6 +2766,9 @@ void building_large_stepped_pyramid::update_day() {
     if (is_finished()) {
         return;
     }
+    if (run_block_day()) {
+        return;
+    }
 
     building_stepped_pyramid::update_day(current_params().init_tiles);
 }
@@ -2796,6 +2806,9 @@ void building_stepped_pyramid_complex::update_day() {
     building_impl::update_day();
 
     if (is_finished()) {
+        return;
+    }
+    if (run_block_day()) {
         return;
     }
 
@@ -2839,6 +2852,9 @@ void building_grand_stepped_pyramid_complex::update_day() {
     building_impl::update_day();
 
     if (is_finished()) {
+        return;
+    }
+    if (run_block_day()) {
         return;
     }
 

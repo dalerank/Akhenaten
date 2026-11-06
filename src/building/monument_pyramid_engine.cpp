@@ -200,9 +200,10 @@ void monument_pyramid_engine::set_ramp_offsets(pyramid_part_state &ps, int kind,
             return;
         }
         if (style == PYRAMID_STYLE_STEPPED) {
-            // stepped_ramp_offsets not fully ported — fall back to shared table.
+            // OG: row = ((height-1)%6 >= 3 ? 3 : 0) + kind*6 — only low/high shelf.
             const int r = ((height - 1) % layer >= 3 ? 3 : 0);
-            const auto &off = ramp_offset_at(kind, r);
+            const int k = std::clamp(kind, 0, PYRAMID_PART_KIND_MAX - 1);
+            const auto &off = pyramid_engine_config.stepped_ramp_offsets[k][r];
             ox = (int16_t)off.x;
             oy = (int16_t)off.y;
             return;

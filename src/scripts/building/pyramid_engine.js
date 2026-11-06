@@ -96,7 +96,7 @@ pyramid_engine_config {
         {x: 0, y: 0}
     ]
 
-    // OG pyramid_ramp_offsets[kind][row] — keyed by e_pyramid_part_kind.
+    // pyramid_ramp_offsets[kind][row] — keyed by e_pyramid_part_kind.
     ramp_offsets: {
         PYRAMID_PART_CORNER_TOP:        [ {x: 0, y: -42}, {x: 0, y: -47}, {x: 0, y: -52}, {x: 0, y: -57}, {x: 0, y: -62}, {x: 0, y: -67} ]
         PYRAMID_PART_CORNER_LEFT:       [ {x: -49, y: -18}, {x: -29, y: -32}, {x: -9, y: -47}, {x: 13, y: -63}, {x: 33, y: -77}, {x: 52, y: -92} ]
@@ -108,4 +108,24 @@ pyramid_engine_config {
         PYRAMID_PART_EDGE_TOP_RIGHT:    [ {x: 26, y: -30}, {x: 15, y: -39}, {x: 4, y: -48}, {x: -7, y: -58}, {x: -18, y: -69}, {x: -27, y: -79} ]
         PYRAMID_PART_INNER:             [ {x: 0, y: -17}, {x: 0, y: -32}, {x: 0, y: -47}, {x: 0, y: -62}, {x: 0, y: -77}, {x: 0, y: -92} ]
     }
+
+    // stepped_ramp_offsets — sprite xy only (with_ramp pairs are for walk).
+    stepped_ramp_offsets: {
+        PYRAMID_PART_CORNER_TOP:        [ {x: 0, y: -42}, {x: 0, y: -47}, {x: 0, y: -52}, {x: 0, y: -57}, {x: 0, y: -62}, {x: 0, y: -67} ]
+        PYRAMID_PART_CORNER_LEFT:       [ {x: -49, y: -18}, {x: -29, y: -32}, {x: -9, y: -47}, {x: 13, y: -63}, {x: 33, y: -77}, {x: 52, y: -92} ]
+        PYRAMID_PART_CORNER_BOTTOM:     [ {x: 0, y: 10}, {x: 0, y: -18}, {x: 0, y: -43}, {x: 0, y: -68}, {x: 0, y: -94}, {x: 0, y: -118} ]
+        PYRAMID_PART_CORNER_RIGHT:      [ {x: 51, y: -18}, {x: 30, y: -32}, {x: 10, y: -47}, {x: -12, y: -62}, {x: -32, y: -77}, {x: -52, y: -92} ]
+        PYRAMID_PART_EDGE_TOP_LEFT:     [ {x: -22, y: -31}, {x: -12, y: -41}, {x: 0, y: -51}, {x: 11, y: -61}, {x: 18, y: -70}, {x: 29, y: -80} ]
+        PYRAMID_PART_EDGE_BOTTOM_LEFT:  [ {x: -28, y: -5}, {x: -13, y: -35}, {x: -9, y: -53}, {x: 4, y: -66}, {x: 19, y: -96}, {x: 23, y: -114} ]
+        PYRAMID_PART_EDGE_BOTTOM_RIGHT: [ {x: 28, y: -6}, {x: 12, y: -37}, {x: 10, y: -53}, {x: -4, y: -66}, {x: -20, y: -97}, {x: -22, y: -113} ]
+        PYRAMID_PART_EDGE_TOP_RIGHT:    [ {x: 26, y: -30}, {x: 15, y: -39}, {x: 4, y: -48}, {x: -7, y: -58}, {x: -18, y: -69}, {x: -27, y: -79} ]
+        PYRAMID_PART_INNER:             [ {x: 0, y: -17}, {x: 0, y: -32}, {x: 0, y: -47}, {x: 0, y: -62}, {x: 0, y: -77}, {x: 0, y: -92} ]
+    }
+
+    // OG stepped_ramp_shift[18] — index = (ramp_image_id + sprite) - first_img("ramps").
+    stepped_ramp_shift: [
+        {x: -16, y: 36}, {x: -20, y: 18}, {x: -16, y: 0}, {x: 3, y: 20}, {x: -1, y: 2}, {x: -5, y: -15},
+        {x: -8, y: 10}, {x: 2, y: 6}, {x: -8, y: 10}, {x: -8, y: -10}, {x: -47, y: 3}, {x: -43, y: -15},
+        {x: -15, y: 20}, {x: -11, y: 2}, {x: -24, y: 11}, {x: -26, y: 7}, {x: 6, y: 11}, {x: 0, y: -10}
+    ]
 }
