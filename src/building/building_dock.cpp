@@ -36,6 +36,7 @@
 
 BUILDING_RUNTIME_DATA_IMPL(building_dock)
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_dock);
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_dock_up);
 
 void building_dock::on_create(int orientation) {
     base.orientation = orientation;
@@ -408,7 +409,7 @@ int fill_og_dock_slots(int16_t slots[OG_DOCK_SLOTS]) {
     int slot = 0;
     int staffed = 0;
     for (auto &b : city_buildings()) {
-        if (!b.is_valid() || b.type != BUILDING_DOCK) {
+        if (!b.is_valid() || !building_type_is_dock(b.type)) {
             continue;
         }
         if (slot >= OG_DOCK_SLOTS) {
@@ -425,10 +426,7 @@ int fill_og_dock_slots(int16_t slots[OG_DOCK_SLOTS]) {
 
 void clear_ship_dock_reservations(int ship_id, building_dock *keep) {
     for (auto &b : city_buildings()) {
-        if (!b.is_valid() || b.type != BUILDING_DOCK) {
-            continue;
-        }
-        building_dock *dock = b.dcast_dock();
+        building_dock *dock = b.is_valid() ? b.dcast_dock() : nullptr;
         if (dock && dock != keep && dock->runtime_data().trade_ship == ship_id) {
             dock->runtime_data().trade_ship = 0;
         }
@@ -526,10 +524,7 @@ building_dest map_get_free_destination_dock_smart(int ship_id) {
     const tile2i ship_tile = ship->tile();
 
     for (auto &b : city_buildings()) {
-        if (!b.is_valid() || b.type != BUILDING_DOCK) {
-            continue;
-        }
-        building_dock *dock = b.dcast_dock();
+        building_dock *dock = b.is_valid() ? b.dcast_dock() : nullptr;
         if (!dock || !dock->num_workers()) {
             continue;
         }
@@ -588,10 +583,7 @@ building_dest map_get_queue_destination_dock_smart(int ship_id) {
     tile2i best_reid_tile = tile2i::invalid;
 
     for (auto &b : city_buildings()) {
-        if (!b.is_valid() || b.type != BUILDING_DOCK) {
-            continue;
-        }
-        building_dock *dock = b.dcast_dock();
+        building_dock *dock = b.is_valid() ? b.dcast_dock() : nullptr;
         if (!dock || !dock->num_workers()) {
             continue;
         }
@@ -682,10 +674,7 @@ building_dest map_get_better_free_destination_dock(int ship_id, int min_exclusiv
     const tile2i ship_tile = ship->tile();
 
     for (auto &b : city_buildings()) {
-        if (!b.is_valid() || b.type != BUILDING_DOCK) {
-            continue;
-        }
-        building_dock *dock = b.dcast_dock();
+        building_dock *dock = b.is_valid() ? b.dcast_dock() : nullptr;
         if (!dock || !dock->num_workers()) {
             continue;
         }

@@ -660,7 +660,7 @@ void building::destroy_on_fire_impl(bool plagued) {
     clear_related_data();
 
     int waterside_building = 0;
-    if (type == BUILDING_DOCK || type == BUILDING_FISHING_WHARF || type == BUILDING_SHIPWRIGHT) {
+    if (type == BUILDING_DOCK || type == BUILDING_DOCK_UP || type == BUILDING_FISHING_WHARF || type == BUILDING_SHIPWRIGHT) {
         waterside_building = 1;
     }
 

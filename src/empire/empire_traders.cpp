@@ -252,21 +252,25 @@ void empire_traders_manager::purge_dead() {
     }
 
     int freed_dock = 0;
-    for (building_id bid : g_city.buildings.track_buildings(BUILDING_DOCK)) {
-        building_dock* dock = building_get(bid)->dcast_dock();
-        if (!dock) {
-            continue;
+    auto free_stale_dock_ships = [&](e_building_type dock_type) {
+        for (building_id bid : g_city.buildings.track_buildings(dock_type)) {
+            building_dock* dock = building_get(bid)->dcast_dock();
+            if (!dock) {
+                continue;
+            }
+            auto& d = dock->runtime_data();
+            if (d.trade_ship == 0) {
+                continue;
+            }
+            figure* f = figure_get(d.trade_ship);
+            if (!f || f->state == FIGURE_STATE_NONE || f->type != FIGURE_TRADE_SHIP) {
+                d.trade_ship = 0;
+                ++freed_dock;
+            }
         }
-        auto& d = dock->runtime_data();
-        if (d.trade_ship == 0) {
-            continue;
-        }
-        figure* f = figure_get(d.trade_ship);
-        if (!f || f->state == FIGURE_STATE_NONE || f->type != FIGURE_TRADE_SHIP) {
-            d.trade_ship = 0;
-            ++freed_dock;
-        }
-    }
+    };
+    free_stale_dock_ships(BUILDING_DOCK);
+    free_stale_dock_ships(BUILDING_DOCK_UP);
 
     int freed_city = 0;
     for (auto& city : g_empire.get_cities()) {

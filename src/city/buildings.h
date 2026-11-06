@@ -87,7 +87,10 @@ struct city_buildings_t {
     void request_warship_ship() { ++warships_requested; }
     void request_transport_ship() { ++transport_ships_requested; }
 
-    bool has_working_dock() const { return !tracked_buildings().at(BUILDING_DOCK).empty(); }
+    bool has_working_dock() const {
+        return !tracked_buildings().at(BUILDING_DOCK).empty()
+            || !tracked_buildings().at(BUILDING_DOCK_UP).empty();
+    }
     bool has_working_shipyard() const { return !tracked_buildings().at(BUILDING_SHIPWRIGHT).empty(); }
 
     void increase_count(e_building_type type, bool active);

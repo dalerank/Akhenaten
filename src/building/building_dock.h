@@ -63,6 +63,16 @@ public:
 
 ANK_CONFIG_PROPERTY(building_dock::runtime_data_t, has_fish, num_ships, trade_ship)
 
+// OG BUILD_DOCK2: same logic as BUILDING_DOCK, different terrain sprites (PACK_TERRAIN 27).
+class building_dock_up : public building_dock {
+public:
+    BUILDING_METAINFO(BUILDING_DOCK_UP, building_dock_up, building_dock)
+};
+
+inline bool building_type_is_dock(e_building_type t) {
+    return t == BUILDING_DOCK || t == BUILDING_DOCK_UP;
+}
+
 building_dest map_get_free_destination_dock(int ship_id);
 /** Free pier with score strictly greater than min_exclusive_score; no reservation change if none. */
 building_dest map_get_better_free_destination_dock(int ship_id, int min_exclusive_score);

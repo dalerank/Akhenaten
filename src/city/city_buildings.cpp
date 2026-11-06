@@ -137,6 +137,7 @@ bool building_is_manageable_industry(const building &b) {
     case BUILDING_GRANARY:
     case BUILDING_FOOD_MILL:
     case BUILDING_DOCK:
+    case BUILDING_DOCK_UP:
         return false;
     default:
         break;

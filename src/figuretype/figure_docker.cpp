@@ -511,11 +511,6 @@ void figure_docker::figure_action() {
         return;
     }
 
-    if (b->type != BUILDING_DOCK && b->type != BUILDING_FISHING_WHARF) {
-        poof();
-        return;
-    }
-
     building_dock *dock_b = b->dcast_dock();
     if (!dock_b) {
         poof();

@@ -2,7 +2,7 @@ log_info("akhenaten: ui_dock_info_window.js loaded")
 
 [es=building_info_window]
 info_window_dock {
-    related_buildings [BUILDING_DOCK]
+    related_buildings [BUILDING_DOCK, BUILDING_DOCK_UP]
     ui : baseui(building_info_window, {
         background   : outer_panel({size: [29, 16]}),
         orders       : button({margin:{left:100, bottom:-40}, size:[270, 25], text:"${98.5}", onclick_event: "open_orders_window" }),
