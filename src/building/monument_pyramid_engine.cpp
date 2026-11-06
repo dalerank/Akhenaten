@@ -2,6 +2,7 @@
 
 #include "building/monument_mastaba_engine.h"
 #include "building/monument_pyramid.h"
+#include "building/monument_pyramid_figure.h"
 #include "building/monument_pyramid_ramp.h"
 #include "building/monuments.h"
 #include "city/city_buildings.h"
@@ -580,6 +581,8 @@ void monument_pyramid_engine::place_block(building_id part_id, figure_id fid) {
     }
     uint8_t &walk = bl ? bl->runtime_data().walk_mode : sm->runtime_data().walk_mode;
     const short return_home = bl ? (short)ACTION_3_BRICKLAYER_RETURN_HOME : (short)ACTION_6_MASON_RETURN_HOME;
+    const short next_action = sm ? (short)ACTION_20_MASON_NEXT_CASING : return_home;
+    const short climb_action = sm ? (short)ACTION_18_MASON_WALK_TO_PART : (short)ACTION_7_BRICKLAYER_WALK_TO_PART;
 
     building *part = building_get(part_id);
     building *head = chain_head(part);
@@ -591,8 +594,17 @@ void monument_pyramid_engine::place_block(building_id part_id, figure_id fid) {
     }
 
     if (ps->worker_figure_id != fid && pyramid_engine_part_has_active_worker(part_id)) {
-        f->advance_action(return_home);
-        walk = PYRAMID_WALK_NONE;
+        if (next_action == return_home) {
+            f->advance_action(return_home);
+            walk = PYRAMID_WALK_NONE;
+        } else if (ps->stage != PYRAMID_STAGE_CASING) {
+            pyramid_figure_find_next_part(fid, 1, return_home, next_action, climb_action);
+        } else {
+            f->advance_action(next_action);
+            auto* work = g_monument_pyramid_figure.work_data(f);
+            pyramid_figure_set_walk_target(fid, g_monument_pyramid_figure.next_on_ring(work->part), work->height,
+              false);
+        }
         return;
     }
 
@@ -607,8 +619,24 @@ void monument_pyramid_engine::place_block(building_id part_id, figure_id fid) {
     f->wait_ticks = 0;
     apply_block_placed(head, *ms, *ps);
 
-    f->advance_action(return_home);
-    walk = PYRAMID_WALK_NONE;
+    if (ms->style == PYRAMID_STYLE_STEPPED && ms->remaining_blocks == 0) {
+        if (!ms->force_show_ramps) {
+            pyramid_engine_clear_all_ramps(head);
+        }
+        return;
+    }
+    auto* main_ps = pyramid_part_state_get(head->id);
+    if (ps->stage == PYRAMID_STAGE_CASING && main_ps && main_ps->stage >= PYRAMID_STAGE_CASING) {
+        f->advance_action(next_action);
+        if (next_action == return_home) {
+            walk = PYRAMID_WALK_NONE;
+            return;
+        }
+        auto* work = g_monument_pyramid_figure.work_data(f);
+        pyramid_figure_set_walk_target(fid, g_monument_pyramid_figure.next_on_ring(work->part), work->height, true);
+        return;
+    }
+    pyramid_figure_find_next_part(fid, 0, return_home, next_action, climb_action);
 }
 
 void pyramid_engine_place_block(building_id part_id, figure_id fid) {
