@@ -394,7 +394,8 @@ int mastaba_engine_try_assign_bricklayer(building *main, figure_id fid) {
         rd.destination_bid = head->id;
         rd.part_bid = part_id;
         rd.serving_statue = 0;
-        rd.walk_mode = PYRAMID_WALK_ACTIVE;
+        // Non-NONE so WAIT_FOR_BLOCK keeps the claim (same as mudbrick pyramid).
+        rd.walk_mode = PYRAMID_WALK_ON_LAYER;
 
         f->set_destination(head);
         f->destination_tile = mon->access_point();

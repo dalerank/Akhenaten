@@ -1,5 +1,6 @@
 #pragma once
 
+#include "building/monument_pyramid_figure.h"
 #include "figure/figure.h"
 
 enum e_stonemason_action : uint16_t {
@@ -19,9 +20,17 @@ enum e_stonemason_action : uint16_t {
     ACTION_13_MASON_WORK_STATUE_GROUND = 13,
     ACTION_14_MASON_WORK_STATUE_WALL = 14,
 
-    ACTION_15_MASON_MAX
+    // OG pyramid climb / casing path (bricklayer-analogue).
+    ACTION_16_MASON_CLIMB_RAMP = 16,
+    ACTION_17_MASON_FIND_PART = 17,
+    ACTION_18_MASON_WALK_TO_PART = 18,
+    ACTION_19_MASON_WAIT_FOR_BLOCK = 19,
+    ACTION_20_MASON_NEXT_CASING = 20,
+    ACTION_21_MASON_PYRAMID_WORK = 21,
+
+    ACTION_22_MASON_MAX
 };
-using figure_stonemason_action_tokens_t = token_holder<e_stonemason_action, ACTION_0_MASON_CREATED, ACTION_15_MASON_MAX>;
+using figure_stonemason_action_tokens_t = token_holder<e_stonemason_action, ACTION_0_MASON_CREATED, ACTION_22_MASON_MAX>;
 extern const figure_stonemason_action_tokens_t figure_stonemason_action_tokens;
 
 class figure_stonemason : public figure_impl {
@@ -33,6 +42,9 @@ public:
     struct runtime_data_t {
         short idle_wait_count;
         building_id destination_bid;
+        building_id part_bid;
+        uint8_t walk_mode;
+        pyramid_figure_work_t climb;
     } FIGURE_RUNTIME_DATA_T;
 
     virtual void on_create() override {}

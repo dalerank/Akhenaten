@@ -36,8 +36,11 @@
 #include "building/monument_mastaba_engine.h"
 #include "building/monument_pyramid_engine.h"
 #include "building/monument_pyramid_ramp.h"
+#include "building/monument_pyramid_figure.h"
 #include "building/monument_royal_tomb.h"
 #include "building/monument_obelisk.h"
+#include "figuretype/figure_bricklayer.h"
+#include "figuretype/figure_carpenter.h"
 #include "figuretype/figure_worker.h"
 #include "building/building_road.h"
 #include "building/monuments.h"
@@ -3774,6 +3777,40 @@ static int __pyramid_claim_bricklayer_task(int fid) {
     return building_monument_find_bricklayer_task((figure_id)fid);
 }
 ANK_FUNCTION_1(__pyramid_claim_bricklayer_task);
+
+// Snap bricklayer/carpenter to monument access_point, start_climb, enter CLIMB_RAMP.
+static int __pyramid_figure_begin_climb(int fid) {
+    figure *f = figure_get(fid);
+    if (!f || !f->is_alive()) {
+        return 0;
+    }
+    building *dest = f->destination();
+    auto *mon = dest ? dest->dcast_monument() : nullptr;
+    if (!mon) {
+        return 0;
+    }
+    const tile2i at = mon->access_point();
+    if (at.valid()) {
+        f->map_figure_remove();
+        f->tile = at;
+        f->destination_tile = at;
+        f->map_figure_add();
+    }
+    pyramid_figure_start_climb((figure_id)fid);
+    if (f->type == FIGURE_BRICKLAYER) {
+        f->advance_action(ACTION_4_BRICKLAYER_CLIMB_RAMP);
+    } else if (f->type == FIGURE_CARPENTER) {
+        f->advance_action(ACTION_4_CARPENTER_CLIMB_RAMP);
+    } else if (f->type == FIGURE_STONEMASON) {
+        f->advance_action(ACTION_16_MASON_CLIMB_RAMP);
+    } else if (f->type == FIGURE_LABORER) {
+        f->advance_action(ACTION_19_WORKER_CLIMB_RAMP);
+    } else {
+        return 0;
+    }
+    return 1;
+}
+ANK_FUNCTION_1(__pyramid_figure_begin_climb);
 
 static int __test_royal_tomb_lamp_stock(int bid) {
     building *b = building_get(bid);

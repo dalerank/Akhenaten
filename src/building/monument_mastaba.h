@@ -59,10 +59,14 @@ public:
         vec2i init_tiles;
         // Construction phases live here (parts resolve to main type via get_params).
         monument construction;
-        // OG block-engine geometry for this mastaba size.
+        // block-engine geometry for this mastaba size.
         uint8_t part_count = 0;
         uint8_t brick_layers = 0;
         uint8_t entry_part = 0;
+        // mastaba_entry.entry_points for this size.
+        hvector<pyramid_entry_point, 16> entry_points;
+        // mastaba_part_pair_table for this size.
+        hvector<pyramid_paired_parts, 20> part_pairs;
 
         void finalize_construction(e_building_type btype);
     };
@@ -118,7 +122,7 @@ public:
 };
 ANK_CONFIG_STRUCT(building_small_mastaba::static_params,
     init_tiles, config_north, config_east, config_south, config_west, construction,
-    part_count, brick_layers, entry_part);
+    part_count, brick_layers, entry_part, entry_points, part_pairs);
 
 class building_small_mastaba_part_side : public building_small_mastaba {
 public:
@@ -146,7 +150,7 @@ public:
 };
 ANK_CONFIG_STRUCT(building_medium_mastaba::static_params,
     init_tiles, config_north, config_east, config_south, config_west, construction,
-    part_count, brick_layers, entry_part);
+    part_count, brick_layers, entry_part, entry_points, part_pairs);
 
 class building_medium_mastaba_part_side : public building_medium_mastaba {
 public:
@@ -174,7 +178,7 @@ public:
 };
 ANK_CONFIG_STRUCT(building_large_mastaba::static_params,
     init_tiles, config_north, config_east, config_south, config_west, construction,
-    part_count, brick_layers, entry_part);
+    part_count, brick_layers, entry_part, entry_points, part_pairs);
 
 class building_large_mastaba_part_side : public building_large_mastaba {
 public:

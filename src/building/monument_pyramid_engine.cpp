@@ -9,6 +9,7 @@
 #include "figure/figure.h"
 #include "figuretype/figure_bricklayer.h"
 #include "figuretype/figure_carpenter.h"
+#include "figuretype/figure_stonemason.h"
 #include "grid/grid.h"
 #include "js/js_game.h"
 
@@ -511,7 +512,21 @@ bool pyramid_engine_part_has_active_worker(building_id part_id) {
             return false;
         }
     }
-    // Stonemason casing workers accepted once wired.
+    if (f->type == FIGURE_STONEMASON) {
+        switch (f->action_state) {
+        case ACTION_1_MASON_GOING:
+        case ACTION_16_MASON_CLIMB_RAMP:
+        case ACTION_17_MASON_FIND_PART:
+        case ACTION_18_MASON_WALK_TO_PART:
+        case ACTION_19_MASON_WAIT_FOR_BLOCK:
+        case ACTION_20_MASON_NEXT_CASING:
+        case ACTION_21_MASON_PYRAMID_WORK:
+            return true;
+        default:
+            ps->worker_figure_id = 0;
+            return false;
+        }
+    }
     ps->worker_figure_id = 0;
     return false;
 }
@@ -535,23 +550,25 @@ void monument_pyramid_engine::place_block(building_id part_id, figure_id fid) {
         return;
     }
     auto *bl = f->dcast_bricklayer();
-    if (!bl) {
+    auto *sm = f->dcast_stonemason();
+    if (!bl && !sm) {
         return;
     }
-    auto &rd = bl->runtime_data();
+    uint8_t &walk = bl ? bl->runtime_data().walk_mode : sm->runtime_data().walk_mode;
+    const short return_home = bl ? (short)ACTION_3_BRICKLAYER_RETURN_HOME : (short)ACTION_6_MASON_RETURN_HOME;
 
     building *part = building_get(part_id);
     building *head = chain_head(part);
     auto *ms = pyramid_main_state_get(head ? head->id : 0);
     if (!ms || ms->remaining_blocks < 1) {
-        f->advance_action(ACTION_3_BRICKLAYER_RETURN_HOME);
-        rd.walk_mode = PYRAMID_WALK_NONE;
+        f->advance_action(return_home);
+        walk = PYRAMID_WALK_NONE;
         return;
     }
 
     if (ps->worker_figure_id != fid && pyramid_engine_part_has_active_worker(part_id)) {
-        f->advance_action(ACTION_3_BRICKLAYER_RETURN_HOME);
-        rd.walk_mode = PYRAMID_WALK_NONE;
+        f->advance_action(return_home);
+        walk = PYRAMID_WALK_NONE;
         return;
     }
 
@@ -566,8 +583,8 @@ void monument_pyramid_engine::place_block(building_id part_id, figure_id fid) {
     f->wait_ticks = 0;
     apply_block_placed(head, *ms, *ps);
 
-    f->advance_action(ACTION_3_BRICKLAYER_RETURN_HOME);
-    rd.walk_mode = PYRAMID_WALK_NONE;
+    f->advance_action(return_home);
+    walk = PYRAMID_WALK_NONE;
 }
 
 void pyramid_engine_place_block(building_id part_id, figure_id fid) {
@@ -683,7 +700,9 @@ int pyramid_engine_try_assign_bricklayer(building *main, figure_id fid) {
         rd.destination_bid = head->id;
         rd.part_bid = part_id;
         rd.serving_statue = 0;
-        rd.walk_mode = PYRAMID_WALK_ACTIVE;
+        // Non-NONE so WAIT_FOR_BLOCK (and early-assign tests) keep the claim;
+        // climb/find_next_part will set START / ON_LAYER as they run.
+        rd.walk_mode = PYRAMID_WALK_ON_LAYER;
 
         f->set_destination(head);
         f->destination_tile = mon->access_point();
@@ -705,8 +724,13 @@ building_id pyramid_engine_find_mason_waiting_for_block(building *main) {
             continue;
         }
         figure *f = figure_get(ps->worker_figure_id);
-        if (f && f->is_alive() && f->type == FIGURE_BRICKLAYER
-            && f->action_state == ACTION_8_BRICKLAYER_WAIT_FOR_BLOCK) {
+        if (!f || !f->is_alive()) {
+            continue;
+        }
+        if (f->type == FIGURE_BRICKLAYER && f->action_state == ACTION_8_BRICKLAYER_WAIT_FOR_BLOCK) {
+            return ps->worker_figure_id;
+        }
+        if (f->type == FIGURE_STONEMASON && f->action_state == ACTION_19_MASON_WAIT_FOR_BLOCK) {
             return ps->worker_figure_id;
         }
     }
@@ -715,14 +739,18 @@ building_id pyramid_engine_find_mason_waiting_for_block(building *main) {
 
 void pyramid_engine_laborer_deliver_block(figure_id mason_fid) {
     figure *mason = figure_get(mason_fid);
-    if (!mason || mason->type != FIGURE_BRICKLAYER) {
+    if (!mason) {
         return;
     }
-    if (mason->action_state != ACTION_8_BRICKLAYER_WAIT_FOR_BLOCK) {
+    if (mason->type == FIGURE_BRICKLAYER && mason->action_state == ACTION_8_BRICKLAYER_WAIT_FOR_BLOCK) {
+        mason->wait_ticks = 0;
+        mason->advance_action(ACTION_2_BRICKLAYER_WORK);
         return;
     }
-    mason->wait_ticks = 0;
-    mason->advance_action(ACTION_2_BRICKLAYER_WORK);
+    if (mason->type == FIGURE_STONEMASON && mason->action_state == ACTION_19_MASON_WAIT_FOR_BLOCK) {
+        mason->wait_ticks = 0;
+        mason->advance_action(ACTION_21_MASON_PYRAMID_WORK);
+    }
 }
 
 tile2i pyramid_engine_entry_tile(building *main) {

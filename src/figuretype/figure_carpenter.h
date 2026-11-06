@@ -1,5 +1,6 @@
 #pragma once
 
+#include "building/monument_pyramid_figure.h"
 #include "figure/figure.h"
 
 enum e_carpenter_action : uint16_t {
@@ -38,6 +39,8 @@ public:
         building_id destination_bid;
         building_id ramp_part_bid;
         uint8_t serving_statue;
+        uint8_t walk_mode;
+        pyramid_figure_work_t climb;
     } FIGURE_RUNTIME_DATA_T;
 
     virtual void on_create() override {}

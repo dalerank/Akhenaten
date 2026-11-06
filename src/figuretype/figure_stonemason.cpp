@@ -2,9 +2,11 @@
 
 #include "building/monument_mastaba.h"
 #include "building/monument_pyramid.h"
+#include "building/monument_pyramid_engine.h"
 #include "building/monument_obelisk.h"
 #include "building/building_statue.h"
 #include "building/monuments.h"
+#include "building/monument_pyramid_figure.h"
 #include "game/simulation_time.h"
 #include "grid/terrain.h"
 #include "grid/grid.h"
@@ -59,15 +61,93 @@ void figure_stonemason::figure_action() {
 
     case ACTION_1_MASON_GOING: {
         const bool to_obelisk = b_dest->dcast_obelisk() != nullptr;
+        const bool to_og_pyramid = b_dest->dcast_pyramid()
+            && g_monument_pyramid_engine.uses_block_engine(b_dest);
         const short arrived = to_obelisk
             ? (short)ACTION_9_MASON_WORK_OBELISK
-            : (short)ACTION_7_MASON_LOOKING_FOR_WORK_TILE;
+            : (to_og_pyramid ? (short)ACTION_16_MASON_CLIMB_RAMP : (short)ACTION_7_MASON_LOOKING_FOR_WORK_TILE);
         if (do_goto(base.destination_tile, terrain_usage, arrived, ACTION_10_MASON_DESTROY)) {
             base.wait_ticks = 0;
             if (to_obelisk) {
                 // Obelisk is impassable — stand at access_point; building draws work anim.
                 base.set_flag(e_figure_flag_invisible);
+            } else if (to_og_pyramid) {
+                // OG: pyramid_figure_start_climb then walk_on_ramp each tick.
+                pyramid_figure_start_climb(id());
             }
+        }
+        break;
+    }
+
+    case ACTION_16_MASON_CLIMB_RAMP: {
+        base.terrain_usage = TERRAIN_USAGE_ANY;
+        base.outside_road_ticks = 0;
+        pyramid_figure_walk_on_ramp(id(), 0, ACTION_6_MASON_RETURN_HOME, ACTION_17_MASON_FIND_PART);
+        break;
+    }
+
+    case ACTION_17_MASON_FIND_PART: {
+        base.terrain_usage = TERRAIN_USAGE_ANY;
+        base.outside_road_ticks = 0;
+        pyramid_figure_find_next_part(id(), 1, ACTION_6_MASON_RETURN_HOME, ACTION_20_MASON_NEXT_CASING,
+            ACTION_18_MASON_WALK_TO_PART);
+        route_remove();
+        break;
+    }
+
+    case ACTION_18_MASON_WALK_TO_PART: {
+        base.terrain_usage = TERRAIN_USAGE_ANY;
+        base.outside_road_ticks = 0;
+        auto &rd = runtime_data();
+        if (rd.walk_mode != PYRAMID_WALK_NONE) {
+            if (!pyramid_figure_climb_step(id(), 1)) {
+                break;
+            }
+            pyramid_figure_snap_to_part(id());
+            auto *ps = pyramid_part_state_get(rd.part_bid ? rd.part_bid : pyramid_figure_work_part_bid(&base));
+            base.wait_ticks = 0;
+            if (ps && ps->stage == PYRAMID_STAGE_MAIN_MATERIAL) {
+                advance_action(ACTION_19_MASON_WAIT_FOR_BLOCK);
+            } else {
+                advance_action(ACTION_21_MASON_PYRAMID_WORK);
+            }
+        }
+        break;
+    }
+
+    case ACTION_20_MASON_NEXT_CASING: {
+        base.terrain_usage = TERRAIN_USAGE_ANY;
+        base.outside_road_ticks = 0;
+        pyramid_stonemason_arrive_part(id());
+        break;
+    }
+
+    case ACTION_19_MASON_WAIT_FOR_BLOCK: {
+        base.terrain_usage = TERRAIN_USAGE_ANY;
+        base.outside_road_ticks = 0;
+        auto &rd = runtime_data();
+        if (rd.walk_mode == PYRAMID_WALK_NONE) {
+            advance_action(ACTION_6_MASON_RETURN_HOME);
+            break;
+        }
+        auto *ps = pyramid_part_state_get(rd.part_bid);
+        if (!ps || ps->worker_figure_id != id()) {
+            advance_action(ACTION_6_MASON_RETURN_HOME);
+            rd.walk_mode = PYRAMID_WALK_NONE;
+        }
+        break;
+    }
+
+    case ACTION_21_MASON_PYRAMID_WORK: {
+        base.terrain_usage = TERRAIN_USAGE_ANY;
+        base.outside_road_ticks = 0;
+        auto &rd = runtime_data();
+        building_id part_id = rd.part_bid ? rd.part_bid : pyramid_figure_work_part_bid(&base);
+        // Casing ticks via shared place_block path when wired; otherwise linger then home.
+        if (part_id && g_monument_pyramid_engine.uses_block_engine(b_dest)) {
+            pyramid_engine_place_block(part_id, id());
+        } else {
+            advance_action(ACTION_6_MASON_RETURN_HOME);
         }
         break;
     }
@@ -266,6 +346,20 @@ void figure_stonemason::update_animation() {
 
     case ACTION_6_MASON_RETURN_HOME:
         image_set_animation(animkeys().walk);
+        break;
+
+    case ACTION_16_MASON_CLIMB_RAMP:
+    case ACTION_18_MASON_WALK_TO_PART:
+    case ACTION_20_MASON_NEXT_CASING:
+        image_set_animation(animkeys().walk);
+        break;
+
+    case ACTION_19_MASON_WAIT_FOR_BLOCK:
+        image_set_animation(animkeys().work_ground);
+        break;
+
+    case ACTION_21_MASON_PYRAMID_WORK:
+        image_set_animation(animkeys().work_wall);
         break;
     }
 }

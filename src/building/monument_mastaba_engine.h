@@ -9,7 +9,10 @@
 
 enum e_pyramid_walk_mode : uint8_t {
     PYRAMID_WALK_NONE = 0,
-    PYRAMID_WALK_ACTIVE = 1,
+    PYRAMID_WALK_START = 1,
+    PYRAMID_WALK_ALONG_X = 2,
+    PYRAMID_WALK_ALONG_Y = 3,
+    PYRAMID_WALK_ON_LAYER = 4,
 };
 
 // Compile-time part-list capacity (must cover largest mastaba / future pyramid).

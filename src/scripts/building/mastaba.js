@@ -16,6 +16,16 @@ building_small_mastaba {
     part_count : 10
     brick_layers : 6
     entry_part : 8
+    // OG mastaba_entry.entry_points size 0
+    entry_points [
+      {part:8, height:1}, {part:8, height:2}, {part:8, height:3},
+      {part:8, height:4}, {part:8, height:5}, {part:8, height:6}
+    ]
+    // OG part_pair_table for this size
+    part_pairs [
+      {first:1, second:2}, {first:3, second:4}, {first:0, second:5}, {first:6, second:7}, {first:8, second:9}
+    ]
+
     info_title_id[198, 18]
     fire_proof :  true
     damage_proof : true
@@ -102,6 +112,17 @@ building_small_mastaba {
     part_count : 21
     brick_layers : 6
     entry_part : 19
+    // OG mastaba_entry.entry_points size 1
+    entry_points [
+      {part:19, height:1}, {part:19, height:2}, {part:19, height:3},
+      {part:19, height:4}, {part:19, height:5}, {part:19, height:6}
+    ]
+    // OG part_pair_table for this size
+    part_pairs [
+      {first:11, second:12}, {first:13, second:10}, {first:1, second:2}, {first:3, second:4}, {first:15, second:14}, {first:0, second:5},
+      {first:6, second:7}, {first:8, second:9}, {first:17, second:16}, {first:19, second:20}
+    ]
+
     info_title_id [198, 19]
     fire_proof :  true
     damage_proof : true
@@ -192,6 +213,19 @@ building_small_mastaba {
     part_count : 36
     brick_layers : 12
     entry_part : 33
+    // OG mastaba_entry.entry_points size 2
+    entry_points [
+      {part:33, height:1}, {part:33, height:2}, {part:33, height:3}, {part:33, height:4},
+      {part:33, height:5}, {part:33, height:6}, {part:18, height:7}, {part:18, height:8},
+      {part:18, height:9}, {part:18, height:10}, {part:18, height:11}, {part:18, height:12}
+    ]
+    // OG part_pair_table for this size
+    part_pairs [
+      {first:21, second:22}, {first:23, second:24}, {first:25, second:10}, {first:11, second:12}, {first:26, second:13}, {first:1, second:2},
+      {first:27, second:14}, {first:3, second:4}, {first:28, second:15}, {first:0, second:5}, {first:29, second:16}, {first:6, second:7},
+      {first:30, second:17}, {first:8, second:9}, {first:31, second:18}, {first:19, second:20}, {first:32, second:33}, {first:34, second:35},
+    ]
+
     info_title_id [198, 20]
     fire_proof :  true
     damage_proof : true

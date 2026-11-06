@@ -1,7 +1,7 @@
 # Build unshield as a separate ExternalProject (InstallShield CAB extractor).
 # Used when Installer/*.exe is not Inno Setup (e.g. Sierra/InstallShield Pharaoh demo).
 # Source: sibling ../unshield or UNSHIELD_SOURCE_DIR.
-# Deps (zlib): system packages via find_package.
+# Deps (zlib): prefer project-built zlib when available.
 
 include(ExternalProject)
 

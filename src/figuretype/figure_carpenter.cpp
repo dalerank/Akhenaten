@@ -6,6 +6,7 @@
 #include "building/monument_mastaba_engine.h"
 #include "building/monument_pyramid.h"
 #include "building/monument_pyramid_engine.h"
+#include "building/monument_pyramid_figure.h"
 #include "building/monument_pyramid_ramp.h"
 #include "building/monuments.h"
 #include "core/random.h"
@@ -172,6 +173,7 @@ void figure_carpenter::figure_action() {
             if (rd.serving_statue) {
                 advance_action(ACTION_2_CARPENTER_WORK);
             } else if (b_dest->dcast_pyramid()) {
+                pyramid_figure_start_climb(id());
                 advance_action(ACTION_4_CARPENTER_CLIMB_RAMP);
             } else if (b_dest->dcast_monument()) {
                 advance_action(ACTION_2_CARPENTER_WORK);
@@ -183,19 +185,14 @@ void figure_carpenter::figure_action() {
     }
 
     case ACTION_4_CARPENTER_CLIMB_RAMP: {
-        // OG pyramid_figure_walk_on_ramp stand-in: fixed climb then work.
-        base.wait_ticks++;
-        if (base.wait_ticks > params.climb_ticks) {
-            base.wait_ticks = 0;
-            // Claim a ramp part before work ticks (OG pyramid_find_ramp_task).
-            if (b_dest && b_dest->dcast_pyramid()) {
-                rd.ramp_part_bid = pyramid_engine_find_ramp_part(b_dest, id());
-                if (!rd.ramp_part_bid) {
-                    advance_action(ACTION_3_CARPENTER_RETURN);
-                    break;
-                }
+        base.terrain_usage = TERRAIN_USAGE_ANY;
+        base.outside_road_ticks = 0;
+        pyramid_figure_walk_on_ramp(id(), 0, ACTION_3_CARPENTER_RETURN, ACTION_2_CARPENTER_WORK);
+        if (action_state() == ACTION_2_CARPENTER_WORK && b_dest && b_dest->dcast_pyramid()) {
+            rd.ramp_part_bid = pyramid_engine_find_ramp_part(b_dest, id());
+            if (!rd.ramp_part_bid) {
+                advance_action(ACTION_3_CARPENTER_RETURN);
             }
-            advance_action(ACTION_2_CARPENTER_WORK);
         }
         break;
     }

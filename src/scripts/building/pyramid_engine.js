@@ -107,5 +107,15 @@ pyramid_engine_config {
         PYRAMID_PART_EDGE_BOTTOM_RIGHT: [ {x: 28, y: -6}, {x: 18, y: -26}, {x: 9, y: -47}, {x: -4, y: -66}, {x: -15, y: -86}, {x: -27, y: -105} ]
         PYRAMID_PART_EDGE_TOP_RIGHT:    [ {x: 26, y: -30}, {x: 15, y: -39}, {x: 4, y: -48}, {x: -7, y: -58}, {x: -18, y: -69}, {x: -27, y: -79} ]
         PYRAMID_PART_INNER:             [ {x: 0, y: -17}, {x: 0, y: -32}, {x: 0, y: -47}, {x: 0, y: -62}, {x: 0, y: -77}, {x: 0, y: -92} ]
-    }
+    },
+
+    // pyramid_part_rings[6] — next_on_ring perimeter walk (shared by all sizes).
+    part_rings: [
+        { down_first: 0, down_last: 1, up_first: 2, up_last: 3 },
+        { down_first: 4, down_last: 7, up_first: 12, up_last: 15 },
+        { down_first: 16, down_last: 21, up_first: 30, up_last: 35 },
+        { down_first: 36, down_last: 43, up_first: 56, up_last: 63 },
+        { down_first: 64, down_last: 73, up_first: 90, up_last: 99 },
+        { down_first: 100, down_last: 111, up_first: 132, up_last: 143 }
+    ]
 }

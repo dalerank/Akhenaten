@@ -85,6 +85,20 @@ struct pyramid_main_state {
     uint8_t force_show_ramps = 0;
 };
 
+// OG pyramid_entry_points / mastaba_entry hop: layout subtype + climb height.
+struct pyramid_entry_point {
+    int16_t part = -1;
+    int16_t height = -1;
+};
+ANK_CONFIG_STRUCT(pyramid_entry_point, part, height)
+
+// pyramid_part_pair_table / mastaba_part_pair_table row — subtypes worked as one block.
+struct pyramid_paired_parts {
+    int16_t first = -1;
+    int16_t second = -1;
+};
+ANK_CONFIG_STRUCT(pyramid_paired_parts, first, second)
+
 class building_monument : public building_impl {
 public:
     using inherited = building_impl;

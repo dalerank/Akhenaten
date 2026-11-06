@@ -41,6 +41,20 @@ building_small_stepped_pyramid {
 
     enter_offset : [1, 8]
 
+    // OG pyramid_entry_points size 0 (8x8)
+    entry_points [
+      {part:13, height:1}, {part:14, height:2}, {part:15, height:2}, {part:11, height:3},
+      {part:9, height:4}, {part:7, height:4}, {part:6, height:5}, {part:5, height:6},
+      {part:0, height:7}, {part:2, height:8}, {part:3, height:9}, {part:1, height:10},
+      {part:0, height:11}, {part:2, height:12}
+    ]
+    // OG part_pair_table for this size
+    part_pairs [
+      {first:0, second:1}, {first:2, second:3}, {first:4, second:5}, {first:6, second:7}, {first:8, second:10}, {first:9, second:11},
+      {first:12, second:13}, {first:14, second:15}
+    ]
+
+
     // 8×8 parts on even grid (south y=6, east x=6). Tier-0 south→SE→east, then
     // tier-1 ledge (side 4). Pixel offsets tuned from medium, shortened path.
     stairs [
@@ -149,6 +163,23 @@ building_small_stepped_pyramid {
     init_tiles [12, 12]
 
     enter_offset : [2, 12]
+
+    // OG pyramid_entry_points size 1 (12x12)
+    entry_points [
+      {part:31, height:1}, {part:32, height:2}, {part:33, height:3}, {part:34, height:4},
+      {part:35, height:4}, {part:29, height:5}, {part:27, height:6}, {part:9, height:7},
+      {part:7, height:7}, {part:6, height:8}, {part:5, height:9}, {part:4, height:9},
+      {part:8, height:10}, {part:10, height:11}, {part:12, height:11}, {part:13, height:12},
+      {part:3, height:13}, {part:1, height:14}, {part:0, height:15}, {part:2, height:16},
+      {part:3, height:17}, {part:1, height:18}
+    ]
+    // OG part_pair_table for this size
+    part_pairs [
+      {first:0, second:1}, {first:2, second:3}, {first:4, second:5}, {first:6, second:7}, {first:8, second:10}, {first:9, second:11},
+      {first:12, second:13}, {first:14, second:15}, {first:16, second:17}, {first:18, second:19}, {first:20, second:21}, {first:22, second:24},
+      {first:23, second:25}, {first:26, second:28}, {first:27, second:29}, {first:30, second:31}, {first:32, second:33}, {first:34, second:35},
+    ]
+
 
     stairs [
       {
@@ -324,6 +355,33 @@ building_small_stepped_pyramid {
     init_tiles [20, 20]
 
     enter_offset : [2, 20]
+
+    // OG pyramid_entry_points size 3 (20x20)
+    entry_points [
+      {part:91, height:1}, {part:92, height:2}, {part:93, height:3}, {part:94, height:4},
+      {part:95, height:5}, {part:96, height:6}, {part:62, height:7}, {part:63, height:7},
+      {part:55, height:8}, {part:53, height:9}, {part:51, height:10}, {part:49, height:11},
+      {part:47, height:12}, {part:45, height:12}, {part:43, height:12}, {part:42, height:12},
+      {part:20, height:13}, {part:19, height:14}, {part:18, height:15}, {part:17, height:16},
+      {part:16, height:16}, {part:22, height:17}, {part:24, height:18}, {part:10, height:19},
+      {part:12, height:19}, {part:13, height:20}, {part:14, height:21}, {part:15, height:21},
+      {part:11, height:22}, {part:9, height:23}, {part:7, height:23}, {part:6, height:24},
+      {part:0, height:25}, {part:2, height:26}, {part:3, height:27}, {part:1, height:28},
+      {part:3, height:29}, {part:1, height:30}
+    ]
+    // OG part_pair_table for this size
+    part_pairs [
+      {first:0, second:1}, {first:2, second:3}, {first:4, second:5}, {first:6, second:7}, {first:8, second:10}, {first:9, second:11},
+      {first:12, second:13}, {first:14, second:15}, {first:16, second:17}, {first:18, second:19}, {first:20, second:21}, {first:22, second:24},
+      {first:23, second:25}, {first:26, second:28}, {first:27, second:29}, {first:30, second:31}, {first:32, second:33}, {first:34, second:35},
+      {first:36, second:37}, {first:38, second:39}, {first:40, second:41}, {first:42, second:43}, {first:44, second:46}, {first:45, second:47},
+      {first:48, second:50}, {first:49, second:51}, {first:52, second:54}, {first:53, second:55}, {first:56, second:57}, {first:58, second:59},
+      {first:60, second:61}, {first:62, second:63}, {first:64, second:65}, {first:66, second:67}, {first:68, second:69}, {first:70, second:71},
+      {first:72, second:73}, {first:74, second:76}, {first:75, second:77}, {first:78, second:80}, {first:79, second:81}, {first:82, second:84},
+      {first:83, second:85}, {first:86, second:88}, {first:87, second:89}, {first:90, second:91}, {first:92, second:93}, {first:94, second:95},
+      {first:96, second:97}, {first:98, second:99}
+    ]
+
 
     // 20×20 multi-tier L-ramp (south → SE → east climb, then upper ledges).
     // Keep in sync with building_stepped_pyramid_complex. Optional: L4 stairs / eye-tune offsets.
@@ -586,6 +644,33 @@ building_small_stepped_pyramid {
 
     enter_offset : [2, 20]
 
+    // OG pyramid_entry_points size 3 (20x20)
+    entry_points [
+      {part:91, height:1}, {part:92, height:2}, {part:93, height:3}, {part:94, height:4},
+      {part:95, height:5}, {part:96, height:6}, {part:62, height:7}, {part:63, height:7},
+      {part:55, height:8}, {part:53, height:9}, {part:51, height:10}, {part:49, height:11},
+      {part:47, height:12}, {part:45, height:12}, {part:43, height:12}, {part:42, height:12},
+      {part:20, height:13}, {part:19, height:14}, {part:18, height:15}, {part:17, height:16},
+      {part:16, height:16}, {part:22, height:17}, {part:24, height:18}, {part:10, height:19},
+      {part:12, height:19}, {part:13, height:20}, {part:14, height:21}, {part:15, height:21},
+      {part:11, height:22}, {part:9, height:23}, {part:7, height:23}, {part:6, height:24},
+      {part:0, height:25}, {part:2, height:26}, {part:3, height:27}, {part:1, height:28},
+      {part:3, height:29}, {part:1, height:30}
+    ]
+    // OG part_pair_table for this size
+    part_pairs [
+      {first:0, second:1}, {first:2, second:3}, {first:4, second:5}, {first:6, second:7}, {first:8, second:10}, {first:9, second:11},
+      {first:12, second:13}, {first:14, second:15}, {first:16, second:17}, {first:18, second:19}, {first:20, second:21}, {first:22, second:24},
+      {first:23, second:25}, {first:26, second:28}, {first:27, second:29}, {first:30, second:31}, {first:32, second:33}, {first:34, second:35},
+      {first:36, second:37}, {first:38, second:39}, {first:40, second:41}, {first:42, second:43}, {first:44, second:46}, {first:45, second:47},
+      {first:48, second:50}, {first:49, second:51}, {first:52, second:54}, {first:53, second:55}, {first:56, second:57}, {first:58, second:59},
+      {first:60, second:61}, {first:62, second:63}, {first:64, second:65}, {first:66, second:67}, {first:68, second:69}, {first:70, second:71},
+      {first:72, second:73}, {first:74, second:76}, {first:75, second:77}, {first:78, second:80}, {first:79, second:81}, {first:82, second:84},
+      {first:83, second:85}, {first:86, second:88}, {first:87, second:89}, {first:90, second:91}, {first:92, second:93}, {first:94, second:95},
+      {first:96, second:97}, {first:98, second:99}
+    ]
+
+
     // Same 20×20 multi-tier stairs as building_large_stepped_pyramid — keep in sync.
     stairs [
       {
@@ -842,6 +927,37 @@ building_small_stepped_pyramid {
     init_tiles [20, 20]
 
     enter_offset : [2, 20]
+
+    // OG pyramid_entry_points size 4 (grand)
+    entry_points [
+      {part:133, height:1}, {part:134, height:2}, {part:135, height:3}, {part:136, height:4},
+      {part:137, height:5}, {part:138, height:6}, {part:96, height:7}, {part:97, height:8},
+      {part:98, height:9}, {part:99, height:9}, {part:89, height:10}, {part:87, height:11},
+      {part:85, height:12}, {part:51, height:13}, {part:49, height:14}, {part:47, height:15},
+      {part:45, height:16}, {part:43, height:16}, {part:42, height:17}, {part:41, height:18},
+      {part:19, height:19}, {part:18, height:20}, {part:17, height:21}, {part:16, height:21},
+      {part:22, height:22}, {part:24, height:23}, {part:26, height:24}, {part:28, height:24},
+      {part:30, height:24}, {part:31, height:24}, {part:13, height:25}, {part:14, height:26},
+      {part:15, height:26}, {part:11, height:27}, {part:9, height:28}, {part:7, height:28},
+      {part:6, height:29}, {part:5, height:30}, {part:0, height:31}, {part:2, height:32},
+      {part:3, height:33}, {part:1, height:34}, {part:3, height:35}, {part:1, height:36}
+    ]
+    // OG part_pair_table for this size
+    part_pairs [
+      {first:0, second:1}, {first:2, second:3}, {first:4, second:5}, {first:6, second:7}, {first:8, second:10}, {first:9, second:11},
+      {first:12, second:13}, {first:14, second:15}, {first:16, second:17}, {first:18, second:19}, {first:20, second:21}, {first:22, second:24},
+      {first:23, second:25}, {first:26, second:28}, {first:27, second:29}, {first:30, second:31}, {first:32, second:33}, {first:34, second:35},
+      {first:36, second:37}, {first:38, second:39}, {first:40, second:41}, {first:42, second:43}, {first:44, second:46}, {first:45, second:47},
+      {first:48, second:50}, {first:49, second:51}, {first:52, second:54}, {first:53, second:55}, {first:56, second:57}, {first:58, second:59},
+      {first:60, second:61}, {first:62, second:63}, {first:64, second:65}, {first:66, second:67}, {first:68, second:69}, {first:70, second:71},
+      {first:72, second:73}, {first:74, second:76}, {first:75, second:77}, {first:78, second:80}, {first:79, second:81}, {first:82, second:84},
+      {first:83, second:85}, {first:86, second:88}, {first:87, second:89}, {first:90, second:91}, {first:92, second:93}, {first:94, second:95},
+      {first:96, second:97}, {first:98, second:99}, {first:100, second:101}, {first:102, second:103}, {first:104, second:105}, {first:106, second:107},
+      {first:108, second:109}, {first:110, second:111}, {first:112, second:114}, {first:113, second:115}, {first:116, second:118}, {first:117, second:119},
+      {first:120, second:122}, {first:121, second:123}, {first:124, second:126}, {first:125, second:127}, {first:128, second:130}, {first:129, second:131},
+      {first:132, second:133}, {first:134, second:135}, {first:136, second:137}, {first:138, second:139}, {first:140, second:141}, {first:142, second:143},
+    ]
+
 
     // Same 20×20 multi-tier stairs as building_large_stepped_pyramid — keep in sync.
     stairs [
@@ -1104,6 +1220,20 @@ building_small_stepped_pyramid {
     }
 
     enter_offset : [1, 8]
+
+    // OG pyramid_entry_points size 0 (8x8)
+    entry_points [
+      {part:13, height:1}, {part:14, height:2}, {part:15, height:2}, {part:11, height:3},
+      {part:9, height:4}, {part:7, height:4}, {part:6, height:5}, {part:5, height:6},
+      {part:0, height:7}, {part:2, height:8}, {part:3, height:9}, {part:1, height:10},
+      {part:0, height:11}, {part:2, height:12}
+    ]
+    // OG part_pair_table for this size
+    part_pairs [
+      {first:0, second:1}, {first:2, second:3}, {first:4, second:5}, {first:6, second:7}, {first:8, second:10}, {first:9, second:11},
+      {first:12, second:13}, {first:14, second:15}
+    ]
+
     stair_0_0_offset : [2, 8]
     stair_0_1_offset : [4, 8]
     stair_0_4_offset : [6, 8]
@@ -1156,6 +1286,23 @@ building_small_stepped_pyramid {
     init_tiles [12, 12]
 
     enter_offset : [2, 12]
+
+    // OG pyramid_entry_points size 1 (12x12)
+    entry_points [
+      {part:31, height:1}, {part:32, height:2}, {part:33, height:3}, {part:34, height:4},
+      {part:35, height:4}, {part:29, height:5}, {part:27, height:6}, {part:9, height:7},
+      {part:7, height:7}, {part:6, height:8}, {part:5, height:9}, {part:4, height:9},
+      {part:8, height:10}, {part:10, height:11}, {part:12, height:11}, {part:13, height:12},
+      {part:3, height:13}, {part:1, height:14}, {part:0, height:15}, {part:2, height:16},
+      {part:3, height:17}, {part:1, height:18}
+    ]
+    // OG part_pair_table for this size
+    part_pairs [
+      {first:0, second:1}, {first:2, second:3}, {first:4, second:5}, {first:6, second:7}, {first:8, second:10}, {first:9, second:11},
+      {first:12, second:13}, {first:14, second:15}, {first:16, second:17}, {first:18, second:19}, {first:20, second:21}, {first:22, second:24},
+      {first:23, second:25}, {first:26, second:28}, {first:27, second:29}, {first:30, second:31}, {first:32, second:33}, {first:34, second:35},
+    ]
+
 
     stairs [
       {
@@ -1334,6 +1481,20 @@ building_small_stepped_pyramid {
     }
 
     enter_offset : [1, 8]
+
+    // OG pyramid_entry_points size 0 (8x8)
+    entry_points [
+      {part:13, height:1}, {part:14, height:2}, {part:15, height:2}, {part:11, height:3},
+      {part:9, height:4}, {part:7, height:4}, {part:6, height:5}, {part:5, height:6},
+      {part:0, height:7}, {part:2, height:8}, {part:3, height:9}, {part:1, height:10},
+      {part:0, height:11}, {part:2, height:12}
+    ]
+    // OG part_pair_table for this size
+    part_pairs [
+      {first:0, second:1}, {first:2, second:3}, {first:4, second:5}, {first:6, second:7}, {first:8, second:10}, {first:9, second:11},
+      {first:12, second:13}, {first:14, second:15}
+    ]
+
     stair_0_0_offset : [2, 8]
     stair_0_1_offset : [4, 8]
     stair_0_4_offset : [6, 8]
@@ -1403,6 +1564,20 @@ building_small_stepped_pyramid {
     }
 
     enter_offset : [1, 8]
+
+    // OG pyramid_entry_points size 0 (8x8)
+    entry_points [
+      {part:13, height:1}, {part:14, height:2}, {part:15, height:2}, {part:11, height:3},
+      {part:9, height:4}, {part:7, height:4}, {part:6, height:5}, {part:5, height:6},
+      {part:0, height:7}, {part:2, height:8}, {part:3, height:9}, {part:1, height:10},
+      {part:0, height:11}, {part:2, height:12}
+    ]
+    // OG part_pair_table for this size
+    part_pairs [
+      {first:0, second:1}, {first:2, second:3}, {first:4, second:5}, {first:6, second:7}, {first:8, second:10}, {first:9, second:11},
+      {first:12, second:13}, {first:14, second:15}
+    ]
+
     stair_0_0_offset : [2, 8]
     stair_0_1_offset : [4, 8]
     stair_0_4_offset : [6, 8]
@@ -1472,6 +1647,23 @@ building_small_stepped_pyramid {
     }
 
     enter_offset : [2, 12]
+
+    // OG pyramid_entry_points size 1 (12x12)
+    entry_points [
+      {part:31, height:1}, {part:32, height:2}, {part:33, height:3}, {part:34, height:4},
+      {part:35, height:4}, {part:29, height:5}, {part:27, height:6}, {part:9, height:7},
+      {part:7, height:7}, {part:6, height:8}, {part:5, height:9}, {part:4, height:9},
+      {part:8, height:10}, {part:10, height:11}, {part:12, height:11}, {part:13, height:12},
+      {part:3, height:13}, {part:1, height:14}, {part:0, height:15}, {part:2, height:16},
+      {part:3, height:17}, {part:1, height:18}
+    ]
+    // OG part_pair_table for this size
+    part_pairs [
+      {first:0, second:1}, {first:2, second:3}, {first:4, second:5}, {first:6, second:7}, {first:8, second:10}, {first:9, second:11},
+      {first:12, second:13}, {first:14, second:15}, {first:16, second:17}, {first:18, second:19}, {first:20, second:21}, {first:22, second:24},
+      {first:23, second:25}, {first:26, second:28}, {first:27, second:29}, {first:30, second:31}, {first:32, second:33}, {first:34, second:35},
+    ]
+
     stairs [
       {
         phase : 7
@@ -1661,6 +1853,28 @@ building_small_stepped_pyramid {
     }
 
     enter_offset : [2, 16]
+
+    // OG pyramid_entry_points size 2 (16x16)
+    entry_points [
+      {part:57, height:1}, {part:58, height:2}, {part:59, height:3}, {part:60, height:4},
+      {part:61, height:5}, {part:62, height:6}, {part:63, height:6}, {part:55, height:6},
+      {part:29, height:7}, {part:27, height:8}, {part:25, height:9}, {part:23, height:10},
+      {part:21, height:10}, {part:20, height:11}, {part:19, height:12}, {part:5, height:13},
+      {part:4, height:13}, {part:8, height:14}, {part:10, height:15}, {part:12, height:15},
+      {part:13, height:16}, {part:14, height:17}, {part:15, height:17}, {part:11, height:18},
+      {part:1, height:19}, {part:0, height:20}, {part:2, height:21}, {part:3, height:22},
+      {part:1, height:23}, {part:0, height:24}
+    ]
+    // OG part_pair_table for this size
+    part_pairs [
+      {first:0, second:1}, {first:2, second:3}, {first:4, second:5}, {first:6, second:7}, {first:8, second:10}, {first:9, second:11},
+      {first:12, second:13}, {first:14, second:15}, {first:16, second:17}, {first:18, second:19}, {first:20, second:21}, {first:22, second:24},
+      {first:23, second:25}, {first:26, second:28}, {first:27, second:29}, {first:30, second:31}, {first:32, second:33}, {first:34, second:35},
+      {first:36, second:37}, {first:38, second:39}, {first:40, second:41}, {first:42, second:43}, {first:44, second:46}, {first:45, second:47},
+      {first:48, second:50}, {first:49, second:51}, {first:52, second:54}, {first:53, second:55}, {first:56, second:57}, {first:58, second:59},
+      {first:60, second:61}, {first:62, second:63}
+    ]
+
     stairs [
       {
         phase : 7
@@ -1857,6 +2071,33 @@ building_small_stepped_pyramid {
     }
 
     enter_offset : [2, 20]
+
+    // OG pyramid_entry_points size 3 (20x20)
+    entry_points [
+      {part:91, height:1}, {part:92, height:2}, {part:93, height:3}, {part:94, height:4},
+      {part:95, height:5}, {part:96, height:6}, {part:62, height:7}, {part:63, height:7},
+      {part:55, height:8}, {part:53, height:9}, {part:51, height:10}, {part:49, height:11},
+      {part:47, height:12}, {part:45, height:12}, {part:43, height:12}, {part:42, height:12},
+      {part:20, height:13}, {part:19, height:14}, {part:18, height:15}, {part:17, height:16},
+      {part:16, height:16}, {part:22, height:17}, {part:24, height:18}, {part:10, height:19},
+      {part:12, height:19}, {part:13, height:20}, {part:14, height:21}, {part:15, height:21},
+      {part:11, height:22}, {part:9, height:23}, {part:7, height:23}, {part:6, height:24},
+      {part:0, height:25}, {part:2, height:26}, {part:3, height:27}, {part:1, height:28},
+      {part:3, height:29}, {part:1, height:30}
+    ]
+    // OG part_pair_table for this size
+    part_pairs [
+      {first:0, second:1}, {first:2, second:3}, {first:4, second:5}, {first:6, second:7}, {first:8, second:10}, {first:9, second:11},
+      {first:12, second:13}, {first:14, second:15}, {first:16, second:17}, {first:18, second:19}, {first:20, second:21}, {first:22, second:24},
+      {first:23, second:25}, {first:26, second:28}, {first:27, second:29}, {first:30, second:31}, {first:32, second:33}, {first:34, second:35},
+      {first:36, second:37}, {first:38, second:39}, {first:40, second:41}, {first:42, second:43}, {first:44, second:46}, {first:45, second:47},
+      {first:48, second:50}, {first:49, second:51}, {first:52, second:54}, {first:53, second:55}, {first:56, second:57}, {first:58, second:59},
+      {first:60, second:61}, {first:62, second:63}, {first:64, second:65}, {first:66, second:67}, {first:68, second:69}, {first:70, second:71},
+      {first:72, second:73}, {first:74, second:76}, {first:75, second:77}, {first:78, second:80}, {first:79, second:81}, {first:82, second:84},
+      {first:83, second:85}, {first:86, second:88}, {first:87, second:89}, {first:90, second:91}, {first:92, second:93}, {first:94, second:95},
+      {first:96, second:97}, {first:98, second:99}
+    ]
+
     stairs [
       { phase : 7, part : [4, 18], tex { path:"mudbrick_pyramid/mudbrick_pyramid_00112" }, offset : [-20, 20] }
       { phase : 8, part : [6, 18], tex { path:"mudbrick_pyramid/mudbrick_pyramid_00113" }, offset : [-25, 20] }
@@ -1948,6 +2189,37 @@ building_small_stepped_pyramid {
     }
 
     enter_offset : [2, 20]
+
+    // OG pyramid_entry_points size 4 (grand)
+    entry_points [
+      {part:133, height:1}, {part:134, height:2}, {part:135, height:3}, {part:136, height:4},
+      {part:137, height:5}, {part:138, height:6}, {part:96, height:7}, {part:97, height:8},
+      {part:98, height:9}, {part:99, height:9}, {part:89, height:10}, {part:87, height:11},
+      {part:85, height:12}, {part:51, height:13}, {part:49, height:14}, {part:47, height:15},
+      {part:45, height:16}, {part:43, height:16}, {part:42, height:17}, {part:41, height:18},
+      {part:19, height:19}, {part:18, height:20}, {part:17, height:21}, {part:16, height:21},
+      {part:22, height:22}, {part:24, height:23}, {part:26, height:24}, {part:28, height:24},
+      {part:30, height:24}, {part:31, height:24}, {part:13, height:25}, {part:14, height:26},
+      {part:15, height:26}, {part:11, height:27}, {part:9, height:28}, {part:7, height:28},
+      {part:6, height:29}, {part:5, height:30}, {part:0, height:31}, {part:2, height:32},
+      {part:3, height:33}, {part:1, height:34}, {part:3, height:35}, {part:1, height:36}
+    ]
+    // OG part_pair_table for this size
+    part_pairs [
+      {first:0, second:1}, {first:2, second:3}, {first:4, second:5}, {first:6, second:7}, {first:8, second:10}, {first:9, second:11},
+      {first:12, second:13}, {first:14, second:15}, {first:16, second:17}, {first:18, second:19}, {first:20, second:21}, {first:22, second:24},
+      {first:23, second:25}, {first:26, second:28}, {first:27, second:29}, {first:30, second:31}, {first:32, second:33}, {first:34, second:35},
+      {first:36, second:37}, {first:38, second:39}, {first:40, second:41}, {first:42, second:43}, {first:44, second:46}, {first:45, second:47},
+      {first:48, second:50}, {first:49, second:51}, {first:52, second:54}, {first:53, second:55}, {first:56, second:57}, {first:58, second:59},
+      {first:60, second:61}, {first:62, second:63}, {first:64, second:65}, {first:66, second:67}, {first:68, second:69}, {first:70, second:71},
+      {first:72, second:73}, {first:74, second:76}, {first:75, second:77}, {first:78, second:80}, {first:79, second:81}, {first:82, second:84},
+      {first:83, second:85}, {first:86, second:88}, {first:87, second:89}, {first:90, second:91}, {first:92, second:93}, {first:94, second:95},
+      {first:96, second:97}, {first:98, second:99}, {first:100, second:101}, {first:102, second:103}, {first:104, second:105}, {first:106, second:107},
+      {first:108, second:109}, {first:110, second:111}, {first:112, second:114}, {first:113, second:115}, {first:116, second:118}, {first:117, second:119},
+      {first:120, second:122}, {first:121, second:123}, {first:124, second:126}, {first:125, second:127}, {first:128, second:130}, {first:129, second:131},
+      {first:132, second:133}, {first:134, second:135}, {first:136, second:137}, {first:138, second:139}, {first:140, second:141}, {first:142, second:143},
+    ]
+
     stairs [
       { phase : 7, part : [4, 18], tex { path:"mudbrick_pyramid/mudbrick_pyramid_00112" }, offset : [-20, 20] }
       { phase : 10, part : [12, 18], tex { path:"mudbrick_pyramid/mudbrick_pyramid_00112" }, offset : [0, -40] }
@@ -2075,6 +2347,23 @@ building_small_stepped_pyramid {
     }
 
     enter_offset : [2, 12]
+
+    // OG pyramid_entry_points size 1 (12x12)
+    entry_points [
+      {part:31, height:1}, {part:32, height:2}, {part:33, height:3}, {part:34, height:4},
+      {part:35, height:4}, {part:29, height:5}, {part:27, height:6}, {part:9, height:7},
+      {part:7, height:7}, {part:6, height:8}, {part:5, height:9}, {part:4, height:9},
+      {part:8, height:10}, {part:10, height:11}, {part:12, height:11}, {part:13, height:12},
+      {part:3, height:13}, {part:1, height:14}, {part:0, height:15}, {part:2, height:16},
+      {part:3, height:17}, {part:1, height:18}
+    ]
+    // OG part_pair_table for this size
+    part_pairs [
+      {first:0, second:1}, {first:2, second:3}, {first:4, second:5}, {first:6, second:7}, {first:8, second:10}, {first:9, second:11},
+      {first:12, second:13}, {first:14, second:15}, {first:16, second:17}, {first:18, second:19}, {first:20, second:21}, {first:22, second:24},
+      {first:23, second:25}, {first:26, second:28}, {first:27, second:29}, {first:30, second:31}, {first:32, second:33}, {first:34, second:35},
+    ]
+
     stairs [
       {
         phase : 7
@@ -2263,6 +2552,33 @@ building_small_stepped_pyramid {
     init_tiles [20, 20]
 
     enter_offset : [2, 20]
+
+    // OG pyramid_entry_points size 3 (20x20)
+    entry_points [
+      {part:91, height:1}, {part:92, height:2}, {part:93, height:3}, {part:94, height:4},
+      {part:95, height:5}, {part:96, height:6}, {part:62, height:7}, {part:63, height:7},
+      {part:55, height:8}, {part:53, height:9}, {part:51, height:10}, {part:49, height:11},
+      {part:47, height:12}, {part:45, height:12}, {part:43, height:12}, {part:42, height:12},
+      {part:20, height:13}, {part:19, height:14}, {part:18, height:15}, {part:17, height:16},
+      {part:16, height:16}, {part:22, height:17}, {part:24, height:18}, {part:10, height:19},
+      {part:12, height:19}, {part:13, height:20}, {part:14, height:21}, {part:15, height:21},
+      {part:11, height:22}, {part:9, height:23}, {part:7, height:23}, {part:6, height:24},
+      {part:0, height:25}, {part:2, height:26}, {part:3, height:27}, {part:1, height:28},
+      {part:3, height:29}, {part:1, height:30}
+    ]
+    // OG part_pair_table for this size
+    part_pairs [
+      {first:0, second:1}, {first:2, second:3}, {first:4, second:5}, {first:6, second:7}, {first:8, second:10}, {first:9, second:11},
+      {first:12, second:13}, {first:14, second:15}, {first:16, second:17}, {first:18, second:19}, {first:20, second:21}, {first:22, second:24},
+      {first:23, second:25}, {first:26, second:28}, {first:27, second:29}, {first:30, second:31}, {first:32, second:33}, {first:34, second:35},
+      {first:36, second:37}, {first:38, second:39}, {first:40, second:41}, {first:42, second:43}, {first:44, second:46}, {first:45, second:47},
+      {first:48, second:50}, {first:49, second:51}, {first:52, second:54}, {first:53, second:55}, {first:56, second:57}, {first:58, second:59},
+      {first:60, second:61}, {first:62, second:63}, {first:64, second:65}, {first:66, second:67}, {first:68, second:69}, {first:70, second:71},
+      {first:72, second:73}, {first:74, second:76}, {first:75, second:77}, {first:78, second:80}, {first:79, second:81}, {first:82, second:84},
+      {first:83, second:85}, {first:86, second:88}, {first:87, second:89}, {first:90, second:91}, {first:92, second:93}, {first:94, second:95},
+      {first:96, second:97}, {first:98, second:99}
+    ]
+
 
     // Medium-style L-ramp: short approach on south from enter, SE corner, then
     // climb the east face (decreasing y) up to the tier-1 ledge. Sprites 00114+
@@ -2557,6 +2873,33 @@ building_small_stepped_pyramid {
 
     enter_offset : [2, 20]
 
+    // OG pyramid_entry_points size 3 (20x20)
+    entry_points [
+      {part:91, height:1}, {part:92, height:2}, {part:93, height:3}, {part:94, height:4},
+      {part:95, height:5}, {part:96, height:6}, {part:62, height:7}, {part:63, height:7},
+      {part:55, height:8}, {part:53, height:9}, {part:51, height:10}, {part:49, height:11},
+      {part:47, height:12}, {part:45, height:12}, {part:43, height:12}, {part:42, height:12},
+      {part:20, height:13}, {part:19, height:14}, {part:18, height:15}, {part:17, height:16},
+      {part:16, height:16}, {part:22, height:17}, {part:24, height:18}, {part:10, height:19},
+      {part:12, height:19}, {part:13, height:20}, {part:14, height:21}, {part:15, height:21},
+      {part:11, height:22}, {part:9, height:23}, {part:7, height:23}, {part:6, height:24},
+      {part:0, height:25}, {part:2, height:26}, {part:3, height:27}, {part:1, height:28},
+      {part:3, height:29}, {part:1, height:30}
+    ]
+    // OG part_pair_table for this size
+    part_pairs [
+      {first:0, second:1}, {first:2, second:3}, {first:4, second:5}, {first:6, second:7}, {first:8, second:10}, {first:9, second:11},
+      {first:12, second:13}, {first:14, second:15}, {first:16, second:17}, {first:18, second:19}, {first:20, second:21}, {first:22, second:24},
+      {first:23, second:25}, {first:26, second:28}, {first:27, second:29}, {first:30, second:31}, {first:32, second:33}, {first:34, second:35},
+      {first:36, second:37}, {first:38, second:39}, {first:40, second:41}, {first:42, second:43}, {first:44, second:46}, {first:45, second:47},
+      {first:48, second:50}, {first:49, second:51}, {first:52, second:54}, {first:53, second:55}, {first:56, second:57}, {first:58, second:59},
+      {first:60, second:61}, {first:62, second:63}, {first:64, second:65}, {first:66, second:67}, {first:68, second:69}, {first:70, second:71},
+      {first:72, second:73}, {first:74, second:76}, {first:75, second:77}, {first:78, second:80}, {first:79, second:81}, {first:82, second:84},
+      {first:83, second:85}, {first:86, second:88}, {first:87, second:89}, {first:90, second:91}, {first:92, second:93}, {first:94, second:95},
+      {first:96, second:97}, {first:98, second:99}
+    ]
+
+
     // Medium-style L-ramp: short approach on south from enter, SE corner, then
     // climb the east face (decreasing y) up to the tier-1 ledge. Sprites 00114+
     // are the ascending ramp pieces; offset.y rises ~+28 ? -110 (? one tier).
@@ -2850,6 +3193,37 @@ building_small_stepped_pyramid {
     init_tiles [20, 20]
 
     enter_offset : [2, 20]
+
+    // OG pyramid_entry_points size 4 (grand)
+    entry_points [
+      {part:133, height:1}, {part:134, height:2}, {part:135, height:3}, {part:136, height:4},
+      {part:137, height:5}, {part:138, height:6}, {part:96, height:7}, {part:97, height:8},
+      {part:98, height:9}, {part:99, height:9}, {part:89, height:10}, {part:87, height:11},
+      {part:85, height:12}, {part:51, height:13}, {part:49, height:14}, {part:47, height:15},
+      {part:45, height:16}, {part:43, height:16}, {part:42, height:17}, {part:41, height:18},
+      {part:19, height:19}, {part:18, height:20}, {part:17, height:21}, {part:16, height:21},
+      {part:22, height:22}, {part:24, height:23}, {part:26, height:24}, {part:28, height:24},
+      {part:30, height:24}, {part:31, height:24}, {part:13, height:25}, {part:14, height:26},
+      {part:15, height:26}, {part:11, height:27}, {part:9, height:28}, {part:7, height:28},
+      {part:6, height:29}, {part:5, height:30}, {part:0, height:31}, {part:2, height:32},
+      {part:3, height:33}, {part:1, height:34}, {part:3, height:35}, {part:1, height:36}
+    ]
+    // OG part_pair_table for this size
+    part_pairs [
+      {first:0, second:1}, {first:2, second:3}, {first:4, second:5}, {first:6, second:7}, {first:8, second:10}, {first:9, second:11},
+      {first:12, second:13}, {first:14, second:15}, {first:16, second:17}, {first:18, second:19}, {first:20, second:21}, {first:22, second:24},
+      {first:23, second:25}, {first:26, second:28}, {first:27, second:29}, {first:30, second:31}, {first:32, second:33}, {first:34, second:35},
+      {first:36, second:37}, {first:38, second:39}, {first:40, second:41}, {first:42, second:43}, {first:44, second:46}, {first:45, second:47},
+      {first:48, second:50}, {first:49, second:51}, {first:52, second:54}, {first:53, second:55}, {first:56, second:57}, {first:58, second:59},
+      {first:60, second:61}, {first:62, second:63}, {first:64, second:65}, {first:66, second:67}, {first:68, second:69}, {first:70, second:71},
+      {first:72, second:73}, {first:74, second:76}, {first:75, second:77}, {first:78, second:80}, {first:79, second:81}, {first:82, second:84},
+      {first:83, second:85}, {first:86, second:88}, {first:87, second:89}, {first:90, second:91}, {first:92, second:93}, {first:94, second:95},
+      {first:96, second:97}, {first:98, second:99}, {first:100, second:101}, {first:102, second:103}, {first:104, second:105}, {first:106, second:107},
+      {first:108, second:109}, {first:110, second:111}, {first:112, second:114}, {first:113, second:115}, {first:116, second:118}, {first:117, second:119},
+      {first:120, second:122}, {first:121, second:123}, {first:124, second:126}, {first:125, second:127}, {first:128, second:130}, {first:129, second:131},
+      {first:132, second:133}, {first:134, second:135}, {first:136, second:137}, {first:138, second:139}, {first:140, second:141}, {first:142, second:143},
+    ]
+
 
     // Medium-style L-ramp: short approach on south from enter, SE corner, then
     // climb the east face (decreasing y) up to the tier-1 ledge. Sprites 00114+

@@ -7,8 +7,11 @@
 #include "grid/building.h"
 #include "building/monument_mastaba_engine.h"
 #include "building/monument_pyramid_engine.h"
+#include "building/monument_pyramid_figure.h"
 #include "building/monument_sun_temple.h"
+#include "building/monuments.h"
 #include "figuretype/figure_bricklayer.h"
+#include "figuretype/figure_stonemason.h"
 #include "city/city.h"
 #include "city/city_floods.h"
 #include "city/city_health.h"
@@ -19,6 +22,32 @@
 #include "js/js_game.h"
 
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_worker);
+
+bool figure_worker::uses_ramp_climb(building *monument) const {
+    building *head = monument ? (monument->main() ? monument->main() : monument) : nullptr;
+    if (!head) {
+        return false;
+    }
+    return mastaba_engine_is(head)
+        || (g_monument_pyramid_engine.uses_block_engine(head) && !mastaba_engine_is(head));
+}
+
+tile2i figure_worker::ramp_entry_tile(building *monument) const {
+    building *head = monument ? (monument->main() ? monument->main() : monument) : nullptr;
+    if (!head) {
+        return tile2i::invalid;
+    }
+    if (mastaba_engine_is(head)) {
+        tile2i t = mastaba_engine_entry_tile(head);
+        if (t.valid()) {
+            return t;
+        }
+    }
+    if (auto *mon = head->dcast_monument()) {
+        return mon->access_point();
+    }
+    return head->tile;
+}
 
 static void worker_handoff_path_to_camp(figure &f) {
     if (!f.trail_path_id) {
@@ -83,8 +112,13 @@ void figure_worker::assign_brick_delivery(building *monument, figure_id mason_fi
     auto &rd = runtime_data();
     rd.mason_fid = mason_fid;
     rd.delivering_block = 1;
+    rd.walk_mode = PYRAMID_WALK_NONE;
     set_destination(monument);
     base.wait_ticks = 0;
+    base.leading_figure_id = (int16_t)mason_fid;
+    if (figure *mason = figure_get(mason_fid)) {
+        mason->leading_figure_id = (int16_t)id();
+    }
 
     tile2i yard_tile;
     int understaffed = 0;
@@ -96,10 +130,15 @@ void figure_worker::assign_brick_delivery(building *monument, figure_id mason_fi
         return;
     }
 
-    // No yard: go straight to waiting bricklayer (tests / understocked cities).
+    // No yard: go straight to waiting mason (tests / understocked cities).
     figure *mason = figure_get(mason_fid);
     if (mason && mason->is_alive()) {
-        base.destination_tile = mason->tile;
+        if (uses_ramp_climb(monument)) {
+            tile2i entry = ramp_entry_tile(monument);
+            base.destination_tile = entry.valid() ? entry : mason->tile;
+        } else {
+            base.destination_tile = mason->tile;
+        }
         advance_action(ACTION_17_WORKER_TO_MASON);
     } else {
         advance_action(ACTION_13_WORKER_BACK_FROM_WORKS);
@@ -231,7 +270,12 @@ void figure_worker::figure_action() {
             }
             figure *mason = figure_get(rd.mason_fid);
             if (mason && mason->is_alive()) {
-                base.destination_tile = mason->tile;
+                if (uses_ramp_climb(b_dest)) {
+                    tile2i entry = ramp_entry_tile(b_dest);
+                    base.destination_tile = entry.valid() ? entry : mason->tile;
+                } else {
+                    base.destination_tile = mason->tile;
+                }
                 advance_action(ACTION_17_WORKER_TO_MASON);
             } else {
                 set_destination(home());
@@ -240,16 +284,107 @@ void figure_worker::figure_action() {
         }
         break;
 
-    case ACTION_17_WORKER_TO_MASON:
+    case ACTION_17_WORKER_TO_MASON: {
+        const bool climb = rd.delivering_block && uses_ramp_climb(b_dest);
+        // OG SLED_AT_RAMP: while still routed to the entry, yield if another laborer is equally near.
+        if (climb && base.routing_path_id > 0 && !pyramid_laborer_can_enter_ramp(id())) {
+            break;
+        }
         if (do_goto(base.destination_tile, TERRAIN_USAGE_ANY, -1, ACTION_13_WORKER_BACK_FROM_WORKS)) {
-            advance_action(ACTION_18_WORKER_DELIVER_BLOCK);
-        } else {
+            if (climb) {
+                pyramid_laborer_pair_with_mason(id());
+                pyramid_figure_start_climb(id());
+                advance_action(ACTION_19_WORKER_CLIMB_RAMP);
+            } else {
+                advance_action(ACTION_18_WORKER_DELIVER_BLOCK);
+            }
+        } else if (!climb) {
             figure *mason = figure_get(rd.mason_fid);
             if (mason && mason->is_alive()) {
                 base.destination_tile = mason->tile;
             }
         }
         break;
+    }
+
+    case ACTION_19_WORKER_CLIMB_RAMP: {
+        base.terrain_usage = TERRAIN_USAGE_ANY;
+        base.outside_road_ticks = 0;
+        figure_id mason_id = base.leading_figure_id ? (figure_id)base.leading_figure_id : rd.mason_fid;
+        building_id mason_part = 0;
+        if (figure *mason = figure_get(mason_id)) {
+            mason_part = pyramid_figure_work_part_bid(mason);
+            if (!mason_part) {
+                mason_part = map_building_at(mason->tile);
+            }
+        }
+        if (!mason_part || (!pyramid_engine_part_has_active_worker(mason_part) && !mastaba_engine_part_has_active_worker(mason_part))) {
+            building *head = b_dest ? (b_dest->main() ? b_dest->main() : b_dest) : nullptr;
+            figure_id new_mason = head
+                ? g_monument_pyramid_figure.find_mason_waiting_for_block(head, 1)
+                : 0;
+            if (new_mason) {
+                base.leading_figure_id = (int16_t)new_mason;
+                rd.mason_fid = new_mason;
+                if (figure *m = figure_get(new_mason)) {
+                    m->leading_figure_id = (int16_t)id();
+                }
+            } else {
+                auto *ms = head ? pyramid_main_state_get(head->id) : nullptr;
+                if (ms && ms->remaining_blocks != 0) {
+                    break;
+                }
+                rd.walk_mode = PYRAMID_WALK_NONE;
+                set_destination(home());
+                advance_action(ACTION_13_WORKER_BACK_FROM_WORKS);
+                break;
+            }
+        }
+        pyramid_figure_walk_on_ramp(id(), 2, ACTION_13_WORKER_BACK_FROM_WORKS, ACTION_20_WORKER_TO_MASON_ON_LAYER);
+        if (action_state() == ACTION_13_WORKER_BACK_FROM_WORKS) {
+            rd.walk_mode = PYRAMID_WALK_NONE;
+            set_destination(home());
+        }
+        break;
+    }
+
+    case ACTION_20_WORKER_TO_MASON_ON_LAYER: {
+        base.terrain_usage = TERRAIN_USAGE_ANY;
+        base.outside_road_ticks = 0;
+        figure_id mason_id = base.leading_figure_id ? (figure_id)base.leading_figure_id : rd.mason_fid;
+        figure *mason = figure_get(mason_id);
+        building_id part_id = mason ? map_building_at(mason->tile) : 0;
+        if (!part_id && mason) {
+            part_id = pyramid_figure_work_part_bid(mason);
+        }
+        auto *work = pyramid_figure_work_data(&base);
+        if (part_id && (b_dest->dcast_pyramid() || mastaba_engine_is(b_dest))) {
+            pyramid_figure_set_walk_target(id(), part_id, work ? work->height : 0, false);
+            advance_action(ACTION_21_WORKER_WALK_TO_MASON);
+        } else {
+            rd.walk_mode = PYRAMID_WALK_NONE;
+            set_destination(home());
+            advance_action(ACTION_13_WORKER_BACK_FROM_WORKS);
+        }
+        break;
+    }
+
+    case ACTION_21_WORKER_WALK_TO_MASON: {
+        base.terrain_usage = TERRAIN_USAGE_ANY;
+        base.outside_road_ticks = 0;
+        if (pyramid_figure_climb_step(id(), 1)) {
+            figure_id mason_id = base.leading_figure_id ? (figure_id)base.leading_figure_id : rd.mason_fid;
+            pyramid_engine_laborer_deliver_block(mason_id);
+            mastaba_engine_laborer_deliver_block(mason_id);
+            rd.delivering_block = 0;
+            rd.mason_fid = 0;
+            rd.walk_mode = PYRAMID_WALK_NONE;
+            base.leading_figure_id = 0;
+            set_destination(home());
+            advance_action(ACTION_13_WORKER_BACK_FROM_WORKS);
+        }
+        break;
+    }
 
     case ACTION_18_WORKER_DELIVER_BLOCK:
         // Mastaba and mudbrick bricklayers share wait-for-block wake.
@@ -257,6 +392,8 @@ void figure_worker::figure_action() {
         mastaba_engine_laborer_deliver_block(rd.mason_fid);
         rd.delivering_block = 0;
         rd.mason_fid = 0;
+        rd.walk_mode = PYRAMID_WALK_NONE;
+        base.leading_figure_id = 0;
         set_destination(home());
         advance_action(ACTION_13_WORKER_BACK_FROM_WORKS);
         break;
@@ -290,6 +427,9 @@ void figure_worker::update_animation() {
     case ACTION_13_WORKER_BACK_FROM_WORKS:
     case ACTION_16_WORKER_TO_YARD:
     case ACTION_17_WORKER_TO_MASON:
+    case ACTION_19_WORKER_CLIMB_RAMP:
+    case ACTION_20_WORKER_TO_MASON_ON_LAYER:
+    case ACTION_21_WORKER_WALK_TO_MASON:
         image_set_animation(animkeys().walk);
         break;
     }

@@ -12,13 +12,24 @@
 #include <array>
 #include <cstdint>
 
-enum {
+enum e_pyramid_limits {
     PYRAMID_PARTS_CAPACITY = 144,
     PYRAMID_SIZE_COUNT = 5,
+    PYRAMID_VIEW_COUNT = 4,
+    PYRAMID_RING_COUNT = 6,
     PYRAMID_RAMP_KIND_COUNT = 8,
     PYRAMID_RAMP_OFFSET_ROWS = 6,
     PYRAMID_RAMP_BLOCKS_PER_LAYER = 6,
 };
+
+// OG pyramid_part_ring — subtype ranges walked by next_on_ring (casing perimeter).
+struct pyramid_part_ring {
+    int16_t down_first = 0;
+    int16_t down_last = 0;
+    int16_t up_first = 0;
+    int16_t up_last = 0;
+};
+ANK_CONFIG_STRUCT(pyramid_part_ring, down_first, down_last, up_first, up_last)
 
 enum e_pyramid_part_kind : int {
     PYRAMID_PART_CORNER_TOP = 0,
@@ -87,10 +98,12 @@ struct pyramid_engine_config_t {
     std::array<vec2i, PYRAMID_RAMP_KIND_COUNT> ramp_base{};
     // pyramid_ramp_offsets[kind][row] — pixel step by height within a layer.
     pyramid_ramp_offsets_t ramp_offsets{};
+    // OG pyramid_part_rings[6] — shared across all pyramid sizes.
+    hvector<pyramid_part_ring, PYRAMID_RING_COUNT> part_rings;
 };
 ANK_CONFIG_STRUCT(pyramid_engine_config_t,
     blocks_per_layer, block_ticks_a, block_ticks_b, casing_ticks, part_grid_offsets, part_kinds,
-    neighbour_offsets, ramp_base, ramp_offsets)
+    neighbour_offsets, ramp_base, ramp_offsets, part_rings)
 
 extern pyramid_engine_config_t pyramid_engine_config;
 
@@ -161,5 +174,8 @@ void pyramid_engine_find_frontier(building *main, svector<building_id, PYRAMID_P
 
 building_id pyramid_engine_find_mason_waiting_for_block(building *main);
 void pyramid_engine_laborer_deliver_block(figure_id mason_fid);
+
+// Ramp gate stub: always 0 until carpenter thresholds are ported.
+int pyramid_engine_part_needs_ramp(building_id part_id);
 
 tile2i pyramid_engine_entry_tile(building *main);

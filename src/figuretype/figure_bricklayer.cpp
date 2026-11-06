@@ -3,6 +3,7 @@
 #include "building/building_bricklayers_guild.h"
 #include "building/building_statue.h"
 #include "building/monument_mastaba_engine.h"
+#include "building/monument_pyramid_figure.h"
 #include "building/monuments.h"
 #include "core/random.h"
 #include "game/simulation_time.h"
@@ -150,7 +151,8 @@ void figure_bricklayer::figure_action() {
             if (rd.serving_statue) {
                 advance_action(ACTION_2_BRICKLAYER_WORK);
             } else if (b_dest->dcast_monument()) {
-                rd.walk_mode = PYRAMID_WALK_ACTIVE;
+                // OG: pyramid_figure_start_climb then walk_on_ramp each tick.
+                pyramid_figure_start_climb(id());
                 advance_action(ACTION_4_BRICKLAYER_CLIMB_RAMP);
             } else {
                 advance_action(ACTION_3_BRICKLAYER_RETURN_HOME);
@@ -162,31 +164,38 @@ void figure_bricklayer::figure_action() {
     case ACTION_4_BRICKLAYER_CLIMB_RAMP: {
         base.terrain_usage = TERRAIN_USAGE_ANY;
         base.outside_road_ticks = 0;
-        if (++base.wait_ticks > params.climb_ticks) {
-            base.wait_ticks = 0;
-            advance_action(ACTION_5_BRICKLAYER_FIND_PART);
-        }
+        // mode 0 → FIND_PART (OG bricklayer); mastaba uses the same climb table.
+        pyramid_figure_walk_on_ramp(id(), 0, ACTION_3_BRICKLAYER_RETURN_HOME, ACTION_5_BRICKLAYER_FIND_PART);
         break;
     }
 
     case ACTION_5_BRICKLAYER_FIND_PART: {
         base.terrain_usage = TERRAIN_USAGE_ANY;
         base.outside_road_ticks = 0;
-        building *part = building_get(rd.part_bid);
-        if (!part || !part->id || !pyramid_part_state_get(rd.part_bid)) {
-            advance_action(ACTION_3_BRICKLAYER_RETURN_HOME);
-            rd.walk_mode = PYRAMID_WALK_NONE;
-            break;
-        }
-        base.destination_tile = part->tile;
+        // pyramid_figure_find_next_part(set_height=1) — claim frontier + walk to part.
+        pyramid_figure_find_next_part(id(), 1, ACTION_3_BRICKLAYER_RETURN_HOME, ACTION_3_BRICKLAYER_RETURN_HOME,
+            ACTION_7_BRICKLAYER_WALK_TO_PART);
         route_remove();
-        advance_action(ACTION_7_BRICKLAYER_WALK_TO_PART);
         break;
     }
 
     case ACTION_7_BRICKLAYER_WALK_TO_PART: {
         base.terrain_usage = TERRAIN_USAGE_ANY;
         base.outside_road_ticks = 0;
+        if (rd.walk_mode != PYRAMID_WALK_NONE) {
+            if (!pyramid_figure_climb_step(id(), 1)) {
+                break;
+            }
+            pyramid_figure_snap_to_part(id());
+            auto *ps = pyramid_part_state_get(rd.part_bid);
+            base.wait_ticks = 0;
+            if (ps && ps->stage == PYRAMID_STAGE_MAIN_MATERIAL) {
+                advance_action(ACTION_8_BRICKLAYER_WAIT_FOR_BLOCK);
+            } else {
+                advance_action(ACTION_2_BRICKLAYER_WORK);
+            }
+            break;
+        }
         if (do_goto(base.destination_tile, TERRAIN_USAGE_ANY, -1, ACTION_3_BRICKLAYER_RETURN_HOME)) {
             auto *ps = pyramid_part_state_get(rd.part_bid);
             base.wait_ticks = 0;
