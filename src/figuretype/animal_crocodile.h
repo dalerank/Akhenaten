@@ -16,11 +16,6 @@ enum e_crocodile_action : uint16_t {
     ACTION_21_CROCODILE_CHASE = 21,
     ACTION_23_CROCODILE_RETURN_TO_HERD = 23,
     ACTION_24_CROCODILE_SPAWNED = 24,
-
-    // Aliases kept for older remake call sites / docs.
-    ACTION_8_RECALCULATE = ACTION_8_CROCODILE_CHOOSE,
-    ACTION_10_CROCODILE_MOVING = ACTION_10_CROCODILE_MOVE,
-    ACTION_19_CROCODILE_IDLE = ACTION_19_CROCODILE_GO_TO_WATER,
 };
 
 class figure_crocodile : public figure_animal {

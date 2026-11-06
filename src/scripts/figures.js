@@ -138,18 +138,32 @@ figure_hyena {
 		attack { id:162, max_frames:6 }
 		death { id:163, max_frames:8, duration:3, loop:false }
 		idle { id:164, max_frames:6 }
-		eating { id:165, max_frames:6 }
+		eating { id:165, max_frames:6 } // OG HYENA_REST
 		big_image { pack:PACK_UNLOADED, id:25, offset:FIGURE_HYENA }
 	}
 
-	category: figure_category_animal
+	category: figure_category_hostile
 	max_damage: 100
 	attack_value: 6
 	missile_defense_value: 0
 	terrain_usage : TERRAIN_USAGE_ANIMAL
-	max_hungry : 30
-	max_hunting_distance : 12
-	chase_speed_mult : 2
+	speed_mult: 1
+	// wild_predators hyena + climate desert_predator_0 hunt.
+	rest_base_ticks: 150
+	rest_random_ticks: 100
+	no_tile_wait_ticks: 100
+	dying_ticks: 500
+	hunt_delay: 16
+	hunt_radius: 10
+	chase_ticks_per_ring: 18
+	prowl_speed_factor: 2
+	forbidden_prey: [
+		FIGURE_TRADE_SHIP, FIGURE_FERRY_BOAT,
+		FIGURE_TRANSPORT_SHIP, FIGURE_WARSHIP, FIGURE_SHIPWRECK,
+		FIGURE_ENEMY_TRANSPORT, FIGURE_ENEMY_WARSHIP,
+		FIGURE_ENEMY_EGYPTIAN_TRANSPORT_SHIP, FIGURE_ENEMY_EGYPTIAN_WAR_SHIP,
+		FIGURE_EGYPTIAN_WARSHIP, FIGURE_EGYPTIAN_TRANSPORT
+	]
 }
 
 figure_asp {
