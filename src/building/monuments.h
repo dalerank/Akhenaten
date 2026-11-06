@@ -43,8 +43,9 @@ enum e_pyramid_style : uint8_t {
     PYRAMID_STYLE_NONE = 0,
     PYRAMID_STYLE_MASTABA = 1,
     PYRAMID_STYLE_MUDBRICK = 2,
-    PYRAMID_STYLE_TRUE = 3, // OG style 4; shares mudbrick block totals @ 0x005F5C40
-    // STEPPED / BENT share the square engine later (own totals).
+    PYRAMID_STYLE_TRUE = 3, // true style shares mudbrick block totals
+    PYRAMID_STYLE_STEPPED = 4,
+    PYRAMID_STYLE_BENT = 5,
     PYRAMID_STYLE_COUNT,
 };
 
@@ -59,8 +60,20 @@ struct pyramid_part_state {
     uint8_t blocks = 0;
     uint8_t layer = 0;
     uint8_t target_layers = 0;
-    uint8_t subtype = 0;
+    uint8_t subtype = 0; // layout index (pyramid_part_grid_offsets)
     uint16_t worker_figure_id = 0;
+    // carpenter ramps (save v192+).
+    uint8_t ramp1_height = 0;
+    uint8_t ramp2_height = 0;
+    uint32_t ramp_image_id = 0;
+    int16_t ramp_image_x1 = 0;
+    int16_t ramp_image_y1 = 0;
+    int16_t ramp_image_x2 = 0;
+    int16_t ramp_image_y2 = 0;
+    // Frame-local: ramp-link (draw this part's ramps on a closer neighbor).
+    building_id ramp_link_part_id = 0;
+    int32_t ramp_link_draw_x = 0;
+    int32_t ramp_link_draw_y = 0;
 };
 
 struct pyramid_main_state {
@@ -68,6 +81,8 @@ struct pyramid_main_state {
     uint8_t size_variant = 0;
     uint16_t remaining_blocks = 0;
     uint8_t block_phase_active = 0;
+    // Debug: keep carpenter ramp sprites visible (finish does not clear).
+    uint8_t force_show_ramps = 0;
 };
 
 class building_monument : public building_impl {

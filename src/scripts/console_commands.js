@@ -96,6 +96,21 @@ function console_command_monument_up(args) {
 	}
 }
 
+// Debug: force carpenter ramp sprites on all unfinished block-engine pyramids.
+// Arg 0/omit = on, "0"/"off" = clear.
+[console_command=pyramid_show_ramps]
+function console_command_pyramid_show_ramps(args) {
+	var raw = (args && args[0] != null) ? String(args[0]) : "1"
+	var enable = !(raw === "0" || raw === "off" || raw === "false")
+	for (var i = 1; i <= MAX_BUILDINGS; i++) {
+		var m = city.get_monument(i)
+		if (!m || m.prev_part_building_id) {
+			continue
+		}
+		__pyramid_force_show_ramps(m.id, enable ? 1 : 0)
+	}
+}
+
 [console_command=add_pottery]
 function console_command_add_pottery(args) {
 	var amount = parseInt((args && args[0]) || "100", 10)

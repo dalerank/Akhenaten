@@ -40,6 +40,7 @@
 #include "building/monument_mastaba.h"
 #include "building/monument_mastaba_engine.h"
 #include "building/monument_pyramid_engine.h"
+#include "building/monument_pyramid_ramp.h"
 #include "graphics/image_groups.h"
 
 #include <numeric>
@@ -1009,7 +1010,7 @@ void building_stepped_pyramid::sync_visuals() {
     if (!ms || ms->style == PYRAMID_STYLE_NONE || ms->style == PYRAMID_STYLE_MASTABA) {
         return;
     }
-    const int total = g_monument_pyramid_engine.block_total(ms->size_variant);
+    const int total = g_monument_pyramid_engine.block_total(&base);
     const int done = total - (int)ms->remaining_blocks;
     sync_footprint_layers(done, total);
 }
@@ -1055,6 +1056,10 @@ bool building_pyramid::run_block_day() {
 }
 
 void building_pyramid::finish_block_construction() {
+    auto *ms = pyramid_main_state_get(id());
+    if (!ms || !ms->force_show_ramps) {
+        pyramid_engine_clear_all_ramps(&base);
+    }
     building_impl *part = this;
     while (part) {
         if (auto *m = part->dcast_monument()) {
@@ -1071,7 +1076,7 @@ void building_stepped_pyramid::finish_block_construction() {
 
     // Rings should already be raised during sync_visuals; ensure full stack.
     auto *ms = pyramid_main_state_get(id());
-    const int total = ms ? g_monument_pyramid_engine.block_total(ms->size_variant) : 0;
+    const int total = ms ? g_monument_pyramid_engine.block_total(&base) : 0;
     if (total > 0) {
         sync_footprint_layers(total, total);
     }
@@ -1137,6 +1142,29 @@ bool building_pyramid::need_stonemason() {
         return need_workers();
     }
     return building_monument::need_stonemason();
+}
+
+bool building_pyramid::need_carpenter() {
+    if (pyramid_params().pyramide_type == PYRAMID_STYLE_NONE) {
+        return building_monument::need_carpenter();
+    }
+    if (is_finished() || !is_main()) {
+        return false;
+    }
+    if (!pyramid_engine_has_ramp_work(&base)) {
+        return false;
+    }
+    if (!has_free_worker_slot()) {
+        return false;
+    }
+    auto &d = runtime_data();
+    for (auto &wid : d.workers) {
+        figure *f = wid > 0 ? figure_get(wid) : nullptr;
+        if (f && f->type == FIGURE_CARPENTER) {
+            return false;
+        }
+    }
+    return true;
 }
 
 int building_pyramid::try_assign_bricklayer(figure_id fid) {
@@ -2035,7 +2063,7 @@ void building_stepped_pyramid::draw_ornaments_and_animations_stairs_impl(painter
         return;
     }
     // Remake stairs[] are decorative phase sprites — OG square engine uses carpenter
-    // ramps (still stubbed). Drawing them on the complex SE edge looks serrated.
+    // ramps (monument_pyramid_ramp). Drawing them on the complex SE edge looks serrated.
     if (pyramid_params().pyramide_type != PYRAMID_STYLE_NONE) {
         return;
     }
@@ -2164,7 +2192,7 @@ bool building_stepped_pyramid::draw_completed_height_ornaments(painter &ctx, vec
         building *head = base.main();
         auto *ms = pyramid_main_state_get(head ? head->id : 0);
         if (ms && ms->style != PYRAMID_STYLE_NONE && ms->style != PYRAMID_STYLE_MASTABA) {
-            const int total = g_monument_pyramid_engine.block_total(ms->size_variant);
+            const int total = g_monument_pyramid_engine.block_total(&base);
             if (polished) {
                 if (!is_finished() && ms->block_phase_active && ms->remaining_blocks > 0) {
                     const int done = total - (int)ms->remaining_blocks;
@@ -2235,6 +2263,12 @@ bool building_stepped_pyramid::draw_completed_height_ornaments(painter &ctx, vec
     command.mask = color_mask;
 
     fill_tiles_height(ctx, anchor, img);
+    pyramid_engine_update_part_ramp_image(base.id);
+    // pyramid_part_draw: draw_x = x + tile_half_width+1, draw_y = y - tile_half_height - layer.
+    // Akhenaten tile pixel + layer lift maps to (x, y - layer); add the half-tile shift so
+    // ramp_base/ramp_offsets land on the same origin image_draw used.
+    const vec2i ramp_origin = pixel + vec2i{HALF_TILE_WIDTH_PIXELS + 1, -HALF_TILE_HEIGHT_PIXELS};
+    pyramid_ramp_draw_part(ctx, base, ramp_origin, color_mask);
     return true;
 }
 

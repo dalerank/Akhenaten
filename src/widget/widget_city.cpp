@@ -14,6 +14,7 @@
 #include "building/building_bridge.h"
 #include "building/building_temple_complex.h"
 #include "building/construction/build_planner.h"
+#include "building/monument_pyramid_ramp.h"
 #include "city/city_finance.h"
 #include "city/city_warnings.h"
 #include "city/object_info.h"
@@ -517,6 +518,8 @@ void screen_city_t::draw_without_overlay(painter &ctx, int selected_figure_id) {
     // PHASE 4: Draw height-based elements (buildings, decorations, and figures)
     // This includes buildings with height, animated decorations, and all figures (people, animals, etc.)
     // These are drawn after flat terrain so they appear on top
+    // Pyramid carpenter ramps: resolve OG ramp-link before parallel row blocks.
+    pyramid_ramp_prepare_frame_links();
     if (num_blocks <= 1) {
         g_camera.foreach_valid_map_tile(ctx,
             [this] (vec2i pixel, tile2i tile, painter& ctx) { draw_isometric_nonterrain_height(pixel, tile, ctx); },

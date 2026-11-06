@@ -2,11 +2,14 @@
 
 #include "building/monument_mastaba_engine.h"
 #include "building/monument_pyramid.h"
+#include "building/monument_pyramid_ramp.h"
 #include "building/monuments.h"
 #include "city/city_buildings.h"
 #include "city/city_figures.h"
 #include "figure/figure.h"
 #include "figuretype/figure_bricklayer.h"
+#include "figuretype/figure_carpenter.h"
+#include "grid/grid.h"
 #include "js/js_game.h"
 
 #include <algorithm>
@@ -50,9 +53,169 @@ int monument_pyramid_engine::size_variant(building *main) const {
     return 0;
 }
 
-int monument_pyramid_engine::block_total(int size_variant) const {
-    size_variant = std::clamp(size_variant, 0, PYRAMID_SIZE_COUNT - 1);
-    return k_pyramid_block_totals[size_variant];
+int monument_pyramid_engine::part_count(building *main) const {
+    building *head = chain_head(main);
+    if (!head) {
+        return 0;
+    }
+    if (auto *pyr = head->dcast_pyramid()) {
+        return (int)pyr->pyramid_params().part_count;
+    }
+    return 0;
+}
+
+int monument_pyramid_engine::block_total(building *main) const {
+    building *head = chain_head(main);
+    if (!head) {
+        return 0;
+    }
+    if (auto *pyr = head->dcast_pyramid()) {
+        return (int)pyr->pyramid_params().block_total;
+    }
+    return 0;
+}
+
+const std::array<int32_t, PYRAMID_PARTS_CAPACITY> &monument_pyramid_engine::part_grid_offsets() const {
+    return pyramid_engine_config.part_grid_offsets;
+}
+
+const vec2i &monument_pyramid_engine::ramp_offset_at(int kind, int row) const {
+    row = std::clamp(row, 0, PYRAMID_RAMP_OFFSET_ROWS - 1);
+    return pyramid_engine_config.ramp_offsets[kind][row];
+}
+
+const hvector<pyramid_ramp_spec_t, 48> &monument_pyramid_engine::ramp_specs_for(building *head) const {
+    static const hvector<pyramid_ramp_spec_t, 48> k_empty;
+    building_pyramid *pyr = head ? head->dcast_pyramid() : nullptr;
+    return pyr ? pyr->pyramid_params().ramps : k_empty;
+}
+
+void monument_pyramid_engine::offset_to_xy(int off, int &dx, int &dy) const {
+    // Match OG signed grid split for negative offsets.
+    dy = off / GRID_LENGTH;
+    dx = off - dy * GRID_LENGTH;
+    if (dx < -GRID_LENGTH / 2) {
+        dx += GRID_LENGTH;
+        dy -= 1;
+    } else if (dx > GRID_LENGTH / 2) {
+        dx -= GRID_LENGTH;
+        dy += 1;
+    }
+}
+
+void monument_pyramid_engine::size_norm_origin(int part_count, int &min_dx, int &min_dy) const {
+    const int n = std::clamp(part_count, 0, (int)PYRAMID_PARTS_CAPACITY);
+    const auto &offsets = part_grid_offsets();
+    min_dx = 0;
+    min_dy = 0;
+    for (int i = 0; i < n; ++i) {
+        int dx = 0, dy = 0;
+        offset_to_xy(offsets[i], dx, dy);
+        min_dx = std::min(min_dx, dx);
+        min_dy = std::min(min_dy, dy);
+    }
+}
+
+int monument_pyramid_engine::rotated_kind(int kind, int view) const {
+    view &= 3;
+    if (kind < PYRAMID_PART_EDGE_TOP_LEFT) {
+        kind += view;
+        if (kind > PYRAMID_PART_CORNER_RIGHT) {
+            kind -= 4;
+        }
+    } else if (kind < PYRAMID_PART_INNER) {
+        kind += view;
+        if (kind > PYRAMID_PART_EDGE_TOP_RIGHT) {
+            kind -= 4;
+        }
+    }
+    return kind;
+}
+
+int monument_pyramid_engine::geometric_kind(tile2i nw, vec2i footprint, tile2i part_tile) const {
+    const int max_x = nw.x() + footprint.x - 2;
+    const int max_y = nw.y() + footprint.y - 2;
+    const bool at_min_x = part_tile.x() <= nw.x();
+    const bool at_min_y = part_tile.y() <= nw.y();
+    const bool at_max_x = part_tile.x() >= max_x;
+    const bool at_max_y = part_tile.y() >= max_y;
+    if (at_min_x && at_min_y) return PYRAMID_PART_CORNER_TOP;
+    if (at_min_x && at_max_y) return PYRAMID_PART_CORNER_LEFT;
+    if (at_max_x && at_max_y) return PYRAMID_PART_CORNER_BOTTOM;
+    if (at_max_x && at_min_y) return PYRAMID_PART_CORNER_RIGHT;
+    if (at_min_x) return PYRAMID_PART_EDGE_TOP_LEFT;
+    if (at_max_y) return PYRAMID_PART_EDGE_BOTTOM_LEFT;
+    if (at_max_x) return PYRAMID_PART_EDGE_BOTTOM_RIGHT;
+    if (at_min_y) return PYRAMID_PART_EDGE_TOP_RIGHT;
+    return PYRAMID_PART_INNER;
+}
+
+int monument_pyramid_engine::layout_kind(building *head, int subtype) const {
+    const int size = std::clamp(size_variant(head), 0, PYRAMID_SIZE_COUNT - 1);
+    const int n = std::clamp(part_count(head), 0, (int)PYRAMID_PARTS_CAPACITY);
+    if (subtype < 0 || subtype >= n) {
+        return PYRAMID_PART_INNER;
+    }
+    const int kind = pyramid_engine_config.part_kinds[size * PYRAMID_PARTS_CAPACITY + subtype];
+    if (kind < 0 || kind >= PYRAMID_PART_KIND_MAX) {
+        return PYRAMID_PART_INNER;
+    }
+    return kind;
+}
+
+int monument_pyramid_engine::ramp_base_image(building &part, int kind, e_pyramid_style style) const {
+    building *head = part.main();
+    e_building_type t = head ? head->type : part.type;
+    const auto &params = building_static_params::get(t);
+    // PYRAMID_IMAGE_RAMP_BOTTOM_LEFT = group+109 → pack file *_00110 (wooden ramp).
+    // empty_land (*_00109) is gravel / TOP_INNER — not a ramp sprite.
+    int base = params.first_img("ramps");
+    if (base <= 0) {
+        // Legacy: empty_land was mistakenly used as ramp base (off-by-one).
+        const int empty = params.first_img("empty_land");
+        base = empty > 0 ? empty + 1 : 0;
+    }
+    if (base <= 0) {
+        return 0;
+    }
+    if (kind == PYRAMID_PART_EDGE_BOTTOM_LEFT) {
+        return base;
+    }
+    if (kind == PYRAMID_PART_EDGE_BOTTOM_RIGHT) {
+        return base + (style == PYRAMID_STYLE_STEPPED ? 3 : 1);
+    }
+    if (style == PYRAMID_STYLE_STEPPED) {
+        if (kind == PYRAMID_PART_CORNER_LEFT) return base + 6;
+        if (kind == PYRAMID_PART_CORNER_BOTTOM) return base + 10;
+        if (kind == PYRAMID_PART_CORNER_RIGHT) return base + 14;
+    }
+    return 0;
+}
+
+void monument_pyramid_engine::set_ramp_offsets(pyramid_part_state &ps, int kind, e_pyramid_style style) const {
+    const int layer = std::max(1, pyramid_engine_config.blocks_per_layer);
+    auto apply = [&](uint8_t height, int16_t &ox, int16_t &oy) {
+        if (!height) {
+            ox = oy = 0;
+            return;
+        }
+        if (style == PYRAMID_STYLE_STEPPED) {
+            // stepped_ramp_offsets not fully ported — fall back to shared table.
+            const int r = ((height - 1) % layer >= 3 ? 3 : 0);
+            const auto &off = ramp_offset_at(kind, r);
+            ox = (int16_t)off.x;
+            oy = (int16_t)off.y;
+            return;
+        }
+        const int row = (height - 1) % layer;
+        const int k = std::clamp(kind, 0, PYRAMID_RAMP_KIND_COUNT - 1);
+        const auto &base = pyramid_engine_config.ramp_base[k];
+        const auto &off = ramp_offset_at(k, row);
+        ox = (int16_t)(base.x + off.x);
+        oy = (int16_t)(base.y + off.y);
+    };
+    apply(ps.ramp1_height, ps.ramp_image_x1, ps.ramp_image_y1);
+    apply(ps.ramp2_height, ps.ramp_image_x2, ps.ramp_image_y2);
 }
 
 bool monument_pyramid_engine::is_mudbrick_type(e_building_type t) const {
@@ -132,10 +295,10 @@ void pyramid_engine_init(building *main) {
 
     const e_pyramid_style style = engine.style_of(head);
     const int size_variant = engine.size_variant(head);
+    const int expect = engine.part_count(head);
     svector<building *, PYRAMID_PARTS_CAPACITY> parts;
     engine.collect_parts(head, parts);
-    const int expect = k_pyramid_part_counts[size_variant];
-    const int n_parts = std::min((int)parts.size(), expect);
+    const int n_parts = std::min((int)parts.size(), expect > 0 ? expect : (int)parts.size());
     if (n_parts <= 0) {
         return;
     }
@@ -143,14 +306,19 @@ void pyramid_engine_init(building *main) {
     pyramid_main_state &ms = g_monument_mastaba_engine.ensure_main(head->id);
     ms.style = style;
     ms.size_variant = (uint8_t)size_variant;
-    ms.remaining_blocks = (uint16_t)engine.block_total(size_variant);
+    ms.remaining_blocks = (uint16_t)engine.block_total(head);
     ms.block_phase_active = 0;
 
+    tile2i nw = head->tile;
+    if (auto *pyr = head->dcast_pyramid()) {
+        nw = pyr->footprint_nw();
+    }
     for (int i = 0; i < n_parts; i++) {
         pyramid_part_state &ps = g_monument_mastaba_engine.ensure_part(parts[i]->id);
         ps = {};
         ps.size_variant = (uint8_t)size_variant;
-        ps.subtype = (uint8_t)i;
+        const int og = pyramid_ramp_og_subtype(expect > 0 ? expect : n_parts, nw, parts[i]->tile);
+        ps.subtype = (uint8_t)(og >= 0 ? og : i);
         ps.target_layers = square_target_layers_for_part(head, parts[i], size_variant);
         ps.stage = PYRAMID_STAGE_MAIN_MATERIAL;
         ps.worker_figure_id = 0;
@@ -187,8 +355,9 @@ void pyramid_engine_start_block_phase(building *main) {
             ps->layer = 0;
             ps->worker_figure_id = 0;
         }
+        pyramid_engine_clear_part_ramps(p->id);
     }
-    ms->remaining_blocks = (uint16_t)g_monument_pyramid_engine.block_total(ms->size_variant);
+    ms->remaining_blocks = (uint16_t)g_monument_pyramid_engine.block_total(head);
     ms->block_phase_active = 1;
 }
 
@@ -226,6 +395,13 @@ void monument_pyramid_engine::add_block(pyramid_part_state &p) const {
         }
     } else if (p.blocks > 0) {
         p.blocks--;
+        // OG casing: drop ramp segments taller than remaining blocks.
+        if (p.ramp1_height > p.blocks) {
+            p.ramp1_height = 0;
+        }
+        if (p.ramp2_height > p.blocks) {
+            p.ramp2_height = 0;
+        }
     }
 }
 
@@ -300,11 +476,6 @@ void pyramid_engine_find_frontier(building *main, svector<building_id, PYRAMID_P
     g_monument_pyramid_engine.find_frontier(main, frontier);
 }
 
-int pyramid_engine_part_needs_ramp(building_id /*part_id*/) {
-    // Carpenter ramp thresholds deferred; allow block assignment.
-    return 0;
-}
-
 bool pyramid_engine_part_has_active_worker(building_id part_id) {
     auto *ps = pyramid_part_state_get(part_id);
     if (!ps || !ps->worker_figure_id) {
@@ -323,6 +494,17 @@ bool pyramid_engine_part_has_active_worker(building_id part_id) {
         case ACTION_7_BRICKLAYER_WALK_TO_PART:
         case ACTION_2_BRICKLAYER_WORK:
         case ACTION_8_BRICKLAYER_WAIT_FOR_BLOCK:
+            return true;
+        default:
+            ps->worker_figure_id = 0;
+            return false;
+        }
+    }
+    if (f->type == FIGURE_CARPENTER) {
+        switch (f->action_state) {
+        case ACTION_1_CARPENTER_GO_TO_SITE:
+        case ACTION_4_CARPENTER_CLIMB_RAMP:
+        case ACTION_2_CARPENTER_WORK:
             return true;
         default:
             ps->worker_figure_id = 0;
@@ -441,8 +623,13 @@ int monument_pyramid_engine::boost_blocks(building *main, int max_count) {
         if (!ps) {
             break;
         }
+        const building_id part_id = frontier[0];
         ps->worker_figure_id = 0;
         apply_block_placed(head, *ms, *ps);
+        // OG god-speed: build ramp immediately when the frontier part crosses a threshold.
+        if (pyramid_engine_part_needs_ramp(part_id) != PYRAMID_RAMP_NONE) {
+            pyramid_engine_build_ramp(part_id);
+        }
         placed++;
     }
     return placed;

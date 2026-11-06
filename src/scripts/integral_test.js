@@ -504,6 +504,10 @@ function test_mudbrick_pyramid_og_complete(opts) {
     }
     __log_marker(marker + '_init_ok:' + total)
 
+    // Show carpenter ramp sprites for the whole unfinished block phase.
+    __pyramid_force_show_ramps(bid, 1)
+    __log_marker(marker + '_ramps_force_on')
+
     var steps = nlayers * 6
     var blocks_per_step = (total / steps) | 0
     if (blocks_per_step < 1) {
@@ -542,6 +546,19 @@ function test_mudbrick_pyramid_og_complete(opts) {
         __log_marker(marker + '_remaining_fail:' + rem)
     }
 
+    // Still unfinished here — capture ramps if Pharaoh art is loaded.
+    if (__test_building_current_image(bid) > 0) {
+        __test_camera_center_building(bid)
+        __test_process_events()
+        __test_pump_frames(4)
+        __game_save_screenshot(SCREENSHOT_FULL_CITY)
+        __test_pump_frames(2)
+        __log_marker(marker + '_ramps_screenshot_ok')
+    } else {
+        __log_marker(marker + '_ramps_screenshot_skipped:no_resource')
+    }
+
+    // Keep force_show_ramps on through finish so sprites stay for --integraltest-keep.
     if (sleep_ms > 0) {
         __test_sleep_ms(sleep_ms)
     }
@@ -566,5 +583,8 @@ function test_mudbrick_pyramid_og_complete_valid(marker, total) {
     return __test_find_inlog('[test-marker] ' + marker + '_init_ok:' + total)
         && __test_find_inlog('[test-marker] ' + marker + '_boost_ok:' + total)
         && __test_find_inlog('[test-marker] ' + marker + '_remaining_ok:0')
+        && __test_find_inlog('[test-marker] ' + marker + '_ramps_force_on')
+        && (__test_find_inlog('[test-marker] ' + marker + '_ramps_screenshot_ok')
+            || __test_find_inlog('[test-marker] ' + marker + '_ramps_screenshot_skipped:no_resource'))
         && __test_find_inlog('[test-marker] ' + marker + '_finished_ok')
 }
