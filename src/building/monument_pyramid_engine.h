@@ -179,7 +179,6 @@ void pyramid_engine_find_frontier(building *main, svector<building_id, PYRAMID_P
 building_id pyramid_engine_find_mason_waiting_for_block(building *main);
 void pyramid_engine_laborer_deliver_block(figure_id mason_fid);
 
-// Ramp gate stub: always 0 until carpenter thresholds are ported.
 int pyramid_engine_part_needs_ramp(building_id part_id);
 
 tile2i pyramid_engine_entry_tile(building *main);
