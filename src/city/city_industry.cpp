@@ -182,7 +182,7 @@ void building_industry_update_farms(void) {
             // advance production
             auto &d = b.dcast_farm()->runtime_data();
             if (d.labor_days_left > 0 && !cursed) {
-                b.progress += progress_step;
+                b.progress += std::max(1, progress_step);
             }
             // update labor state
             if (d.labor_state == LABOR_STATE_JUST_ENTERED) {
@@ -199,7 +199,7 @@ void building_industry_update_farms(void) {
         } else { // meadow farms
             // advance production
             if (b.num_workers > 0 && !cursed) {
-                b.progress += progress_step * ((float)b.num_workers / 10.0f);
+                b.progress += std::max(1, (int)(progress_step * ((float)b.num_workers / 10.0f)));
             }
         }
 
