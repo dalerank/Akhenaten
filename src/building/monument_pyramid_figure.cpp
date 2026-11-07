@@ -1067,9 +1067,9 @@ building_id monument_pyramid_figure::find_mason_waiting_for_block(building *main
             figure *lab = figure_get(laborer_id);
             if (lab) {
                 const int st = lab->action_state;
-                if (st == ACTION_19_WORKER_CLIMB_RAMP || st == ACTION_20_WORKER_TO_MASON_ON_LAYER
-                    || st == ACTION_21_WORKER_WALK_TO_MASON || st == ACTION_17_WORKER_TO_MASON
-                    || st == ACTION_18_WORKER_DELIVER_BLOCK) {
+                if (st == ACTION_18_LABORER_CLIMB_RAMP || st == ACTION_19_LABORER_TO_MASON
+                    || st == ACTION_20_LABORER_WALK_TO_MASON || st == ACTION_17_LABORER_TO_PYRAMID
+                    || st == ACTION_29_LABORER_DELIVERED || st == ACTION_30_LABORER_SLED_AT_RAMP) {
                     laborer_on_way = 1;
                 }
             }
@@ -1127,7 +1127,7 @@ int monument_pyramid_figure::laborer_can_enter_ramp(figure_id fid) const {
             continue;
         }
         const figure *laborer = figure_get(laborer_id);
-        if (laborer && laborer->type == FIGURE_LABORER && laborer->action_state == ACTION_17_WORKER_TO_MASON
+        if (laborer && laborer->type == FIGURE_LABORER && laborer->action_state == ACTION_17_LABORER_TO_PYRAMID
             && laborer->routing_path_id > 0
             && std::abs(laborer->routing_path_length - laborer->routing_path_current_tile - remaining) < PYRAMID_LABORER_NEAR_TILES) {
             return 0;
@@ -1247,7 +1247,7 @@ void monument_pyramid_figure::laborer_pair_with_mason(figure_id fid) {
                 continue;
             } else {
                 const int st = other_laborer->action_state;
-                if (st != ACTION_16_WORKER_TO_YARD && st != ACTION_17_WORKER_TO_MASON) {
+                if (st != ACTION_15_LABORER_TO_STORAGE_YARD && st != ACTION_17_LABORER_TO_PYRAMID) {
                     continue;
                 }
             }
@@ -1390,12 +1390,14 @@ figure_id monument_pyramid_figure::find_train_leader(figure_id fid, int *positio
 namespace {
 bool laborer_pulls_train(int action) {
     switch (action) {
-    case ACTION_16_WORKER_TO_YARD:
-    case ACTION_17_WORKER_TO_MASON:
-    case ACTION_19_WORKER_CLIMB_RAMP:
-    case ACTION_20_WORKER_TO_MASON_ON_LAYER:
-    case ACTION_21_WORKER_WALK_TO_MASON:
-    case ACTION_18_WORKER_DELIVER_BLOCK:
+    case ACTION_15_LABORER_TO_STORAGE_YARD:
+    case ACTION_16_LABORER_AT_STORAGE_YARD:
+    case ACTION_17_LABORER_TO_PYRAMID:
+    case ACTION_18_LABORER_CLIMB_RAMP:
+    case ACTION_19_LABORER_TO_MASON:
+    case ACTION_20_LABORER_WALK_TO_MASON:
+    case ACTION_29_LABORER_DELIVERED:
+    case ACTION_30_LABORER_SLED_AT_RAMP:
         return true;
     default:
         return false;
@@ -1440,7 +1442,7 @@ void monument_pyramid_figure::train_follow(figure_id fid, int is_sled) {
 
     int max_spacing = is_sled ? LABORER_SLED_SPACING : LABORER_PULLER_SPACING;
     int spacing = max_spacing;
-    if (leader->action_state == ACTION_18_WORKER_DELIVER_BLOCK) {
+    if (leader->action_state == ACTION_29_LABORER_DELIVERED) {
         const int sled_extra = is_sled ? (LABORER_SLED_SPACING - LABORER_PULLER_SPACING) : 0;
         spacing = (LABORER_PULLER_SPACING * position) - leader->wait_ticks + sled_extra;
         if (spacing < 1) {
