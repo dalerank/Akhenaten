@@ -14,6 +14,8 @@
 
 constexpr short MAX_PROGRESS_RAW = 200;
 constexpr short MAX_PROGRESS_WORKSHOP = 400;
+constexpr short OG_INPUT_LOAD = 100;
+constexpr short OG_CART_LOAD = 100;
 BUILDING_RUNTIME_DATA_IMPL(building_industry)
 
 void building_industry::produce_uptick_per_day() {
@@ -72,6 +74,33 @@ void building_industry::bind_dynamic(io_buffer *iob, size_t version) {
     iob->bind(BIND_SIGNATURE_UINT8, &tmp); // reserved for extended figure type
 }
 
+bool building_industry::og_cycle() const {
+    return current_params().flags.og_production_cycle;
+}
+
+short building_industry::og_progress_max() const {
+    return (base.input.resource != RESOURCE_NONE) ? MAX_PROGRESS_WORKSHOP : MAX_PROGRESS_RAW;
+}
+
+bool building_industry::og_has_inputs() const {
+    if (base.input.resource != RESOURCE_NONE && base.stored_amount(base.input.resource) < OG_INPUT_LOAD) {
+        return false;
+    }
+    if (base.input.resource_second != RESOURCE_NONE && base.stored_amount(base.input.resource_second) < OG_INPUT_LOAD) {
+        return false;
+    }
+    return true;
+}
+
+void building_industry::og_start_new_production() {
+    base.progress = 0;
+    for (e_resource r : {base.input.resource, base.input.resource_second}) {
+        if (r != RESOURCE_NONE && base.stored_amount(r) >= OG_INPUT_LOAD) {
+            consume_resource(r, OG_INPUT_LOAD);
+        }
+    }
+}
+
 void building_industry::update_animation() {
     building_impl::update_animation();
     if (g_city.resource.is_mothballed(base.output.resource)) {
@@ -99,7 +128,11 @@ void building_industry::update_production() {
 
     // d.has_raw_materials = false;
 
-    if (base.progress == 0) {
+    if (og_cycle()) {
+        if (!og_has_inputs()) {
+            return;
+        }
+    } else if (base.progress == 0) {
         return;
     }
 
@@ -143,6 +176,10 @@ void building_industry::update_production() {
 
 void building_industry::on_create(int orientation) {
     building_impl::on_create(orientation);
+
+    if (og_cycle()) {
+        base.progress_max = og_progress_max();
+    }
 
     if (base.progress_max <= 0) {
         const uint16_t maxp = base.is_workshop() ? MAX_PROGRESS_WORKSHOP : MAX_PROGRESS_RAW;
@@ -196,6 +233,22 @@ void building_industry::spawn_figure() {
         return;
     }
 
+    if (og_cycle()) {
+        const bool legacy_stock = base.stored_amount(base.output.resource) >= OG_CART_LOAD;
+        if (!legacy_stock && base.progress < base.progress_max) {
+            return;
+        }
+        if (legacy_stock) {
+            consume_resource(base.output.resource, OG_CART_LOAD);
+        } else {
+            og_start_new_production();
+        }
+        create_cartpusher(base.output.resource, OG_CART_LOAD, (e_figure_action)ACTION_20_CARTPUSHER_INITIAL,
+          BUILDING_SLOT_CARTPUSHER);
+        produced_resources(base.output.resource, OG_CART_LOAD);
+        return;
+    }
+
     const uint16_t stored_output = base.stored_amount(base.output.resource);
     const uint16_t load_to_cart = ready_production();
     if (stored_output >= load_to_cart) {
@@ -220,6 +273,11 @@ void building_industry::update_count() const {
 void building_industry::update_day() {
     building_impl::update_day();
     if (base.is_harverster()) {
+        return;
+    }
+
+    if (og_cycle()) {
+        base.progress_max = og_progress_max();
         return;
     }
 

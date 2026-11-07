@@ -42,6 +42,7 @@ building_cattle_ranch {
   flags {
     is_food: true
     work_anim: true
+    og_production_cycle: true
   }
 }
 
