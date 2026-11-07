@@ -129,6 +129,26 @@ tile2i figure_worker::monumen_tile4work(building *b) {
 
 namespace {
 
+// OG laborer_farm_work_waiting: floodplain farm has an open worker request.
+bool laborer_farm_work_waiting() {
+    if (!g_floods.state_is(FLOOD_STATE_FARMABLE)) {
+        return false;
+    }
+    for (auto &b : city_buildings()) {
+        if (!b.is_valid() || !b.is_floodplain_farm()) {
+            continue;
+        }
+        if (b.state == BUILDING_STATE_MOTHBALLED) {
+            continue;
+        }
+        auto *farm = b.dcast_farm();
+        if (farm && farm->requested_workers()) {
+            return true;
+        }
+    }
+    return false;
+}
+
 building_id laborer_yard_for_getting(building *near, e_resource resource, int min_amount, tile2i &dst) {
     dst = tile2i::invalid;
     if (!near || resource == RESOURCE_NONE || min_amount <= 0) {
@@ -576,6 +596,7 @@ void figure_worker::figure_action() {
         break;
 
     case ACTION_21_LABORER_TO_LEVEL_TILE:
+        // OG: cross-country to claimed level tile.
         base.use_cross_country = true;
         base.set_flag(e_figure_flag_invisible, false);
         if (!base.destination_tile.valid()) {
@@ -598,6 +619,11 @@ void figure_worker::figure_action() {
             } else {
                 map_monuments_set_progress(tile(), progress + 1);
             }
+            break;
+        }
+        // OG: prefer floodplain farm work over another level tile.
+        if (laborer_farm_work_waiting()) {
+            enter_idle_pool();
             break;
         }
         rd.level_tiles_done++;
@@ -667,17 +693,42 @@ void figure_worker::figure_action() {
             tile2i entry = ramp_entry_tile(b_dest);
             base.destination_tile = entry.valid() ? entry : mason->tile;
             pyramid_figure_spawn_sled_train(id(), b_dest);
+            base.wait_ticks = 0;
+            advance_action(ACTION_30_LABORER_SLED_AT_RAMP);
         } else {
             base.destination_tile = mason->tile;
+            base.wait_ticks = 0;
+            advance_action(ACTION_17_LABORER_TO_PYRAMID);
         }
-        base.wait_ticks = 0;
-        advance_action(ACTION_17_LABORER_TO_PYRAMID);
         break;
     }
 
+    case ACTION_30_LABORER_SLED_AT_RAMP: {
+        // OG: wait for route / yield at entry, then become TO_PYRAMID.
+        if (!laborer_partner_part(id(), rd.mason_fid)) {
+            enter_idle_pool();
+            break;
+        }
+        if (base.routing_path_id <= 0) {
+            base.wait_ticks++;
+            const int retry = (int)current_params().ramp_route_retry_ticks;
+            const int give_up = (int)current_params().ramp_route_give_up_ticks;
+            if (retry > 0 && base.wait_ticks % retry == 0) {
+                if (base.wait_ticks >= give_up) {
+                    enter_idle_pool();
+                    break;
+                }
+                base.figure_route_add();
+            }
+        }
+        if (!pyramid_laborer_can_enter_ramp(id())) {
+            break;
+        }
+        advance_action(ACTION_17_LABORER_TO_PYRAMID);
+        [[fallthrough]];
+    }
     case ACTION_17_LABORER_TO_PYRAMID: {
         const bool climb = rd.delivering_block && uses_ramp_climb(b_dest);
-        // OG SLED_AT_RAMP: while still routed to the entry, yield if another laborer is equally near.
         if (climb && base.routing_path_id > 0 && !pyramid_laborer_can_enter_ramp(id())) {
             break;
         }
@@ -727,16 +778,16 @@ void figure_worker::figure_action() {
                 if (ms && ms->remaining_blocks != 0) {
                     break;
                 }
+                // OG climb_ramp give-up → IDLE (reuse pool), not return/poof.
                 rd.walk_mode = PYRAMID_WALK_NONE;
-                set_destination(home());
-                advance_action(ACTION_13_LABORER_RETURNING);
+                enter_idle_pool();
                 break;
             }
         }
-        pyramid_figure_walk_on_ramp(id(), 2, ACTION_13_LABORER_RETURNING, ACTION_19_LABORER_TO_MASON);
-        if (action_state() == ACTION_13_LABORER_RETURNING) {
+        pyramid_figure_walk_on_ramp(id(), 2, ACTION_8_LABORER_IDLE, ACTION_19_LABORER_TO_MASON);
+        if (action_state() == ACTION_8_LABORER_IDLE) {
             rd.walk_mode = PYRAMID_WALK_NONE;
-            set_destination(home());
+            enter_idle_pool();
         }
         break;
     }
@@ -756,8 +807,7 @@ void figure_worker::figure_action() {
             advance_action(ACTION_20_LABORER_WALK_TO_MASON);
         } else {
             rd.walk_mode = PYRAMID_WALK_NONE;
-            set_destination(home());
-            advance_action(ACTION_13_LABORER_RETURNING);
+            enter_idle_pool();
         }
         break;
     }
