@@ -58,6 +58,34 @@ public:
     figure_worker(figure *f) : figure_impl(f) {}
     virtual figure_worker *dcast_worker() override { return this; }
 
+    // OG laborer_rules[] (laborer.h / laborer.c defaults).
+    struct static_params : public figure_static_params {
+        uint16_t load;
+        uint16_t yard_wait_ticks;
+        uint16_t ramp_route_retry_ticks;
+        uint16_t ramp_route_give_up_ticks;
+        uint16_t delivered_wait_ticks;
+        uint16_t ferry_wait_ticks;
+        uint16_t max_roam_ticks;
+        uint16_t farm_walk_ticks;
+        uint8_t home_road_radius;
+        uint8_t max_out;
+        uint8_t labor_seeker_houses;
+        uint8_t spawn_delay_full;
+        uint8_t spawn_delay_75_percent;
+        uint8_t spawn_delay_50_percent;
+        uint8_t spawn_delay_25_percent;
+        uint8_t spawn_delay_low;
+        uint8_t farm_search_distance;
+        uint8_t farm_busy_labor_days;
+        uint8_t farm_labor_days;
+        uint8_t camp_labor_days;
+        uint8_t level_tiles_in_a_row;
+        uint8_t monument_work_searches;
+
+        void archive_init();
+    } FIGURE_STATIC_DATA_T;
+
     struct runtime_data_t {
         figure_id mason_fid;
         uint8_t delivering_block;
@@ -78,3 +106,12 @@ private:
     bool uses_ramp_climb(building *monument) const;
     tile2i ramp_entry_tile(building *monument) const;
 };
+
+ANK_CONFIG_STRUCT(figure_worker::static_params,
+    load, yard_wait_ticks, ramp_route_retry_ticks, ramp_route_give_up_ticks,
+    delivered_wait_ticks, ferry_wait_ticks, max_roam_ticks, farm_walk_ticks,
+    home_road_radius, max_out, labor_seeker_houses,
+    spawn_delay_full, spawn_delay_75_percent, spawn_delay_50_percent,
+    spawn_delay_25_percent, spawn_delay_low,
+    farm_search_distance, farm_busy_labor_days, farm_labor_days, camp_labor_days,
+    level_tiles_in_a_row, monument_work_searches)

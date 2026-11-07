@@ -85,6 +85,7 @@ const xstring id_anim_t::ground_phase_0 = "ground_phase_0";
 const xstring id_anim_t::enter = "enter";
 const xstring id_anim_t::cart = "cart";
 const xstring id_anim_t::flat = "flat";
+const xstring id_anim_t::pulling = "pulling";
 
 const id_anim_t &animkeys() {
     return g_animkeys;

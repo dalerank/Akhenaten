@@ -24,6 +24,16 @@
 
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_worker);
 
+void figure_worker::static_params::archive_init() {
+    verify_no_crash(load > 0);
+    verify_no_crash(yard_wait_ticks > 0);
+    verify_no_crash(delivered_wait_ticks > 0);
+    verify_no_crash(max_roam_ticks > 0);
+    verify_no_crash(max_out > 0);
+    verify_no_crash(farm_labor_days > 0);
+    verify_no_crash(level_tiles_in_a_row > 0);
+}
+
 bool figure_worker::uses_ramp_climb(building *monument) const {
     building *head = monument ? (monument->main() ? monument->main() : monument) : nullptr;
     if (!head) {
@@ -149,7 +159,7 @@ void figure_worker::assign_brick_delivery(building *monument, figure_id mason_fi
 
 void figure_worker::figure_action() {
     base.use_cross_country = false;
-    base.max_roam_length = 384;
+    base.max_roam_length = (int)current_params().max_roam_ticks;
     int progress = 0;
     building *bhome = home();
     building *b_dest = destination();
@@ -206,7 +216,7 @@ void figure_worker::figure_action() {
                 d.work_camp_id = bhome->id;
                 d.worker_id = 0;
                 d.labor_state = LABOR_STATE_JUST_ENTERED;
-                d.labor_days_left = 96;
+                d.labor_days_left = current_params().farm_labor_days;
                 poof();
             } else if (b_dest->is_monument()) {
                 tile2i tile_need_leveling = monumen_tile4work(b_dest);
@@ -415,16 +425,23 @@ void figure_worker::update_animation() {
 
     switch (action_state()) {
     case ACTION_22_LABORER_LEVEL_WORK:
-    case ACTION_29_LABORER_DELIVERED:
         image_set_animation(animkeys().work);
         break;
 
-    case ACTION_13_LABORER_RETURNING:
     case ACTION_15_LABORER_TO_STORAGE_YARD:
+    case ACTION_16_LABORER_AT_STORAGE_YARD:
     case ACTION_17_LABORER_TO_PYRAMID:
     case ACTION_18_LABORER_CLIMB_RAMP:
     case ACTION_19_LABORER_TO_MASON:
     case ACTION_20_LABORER_WALK_TO_MASON:
+    case ACTION_29_LABORER_DELIVERED:
+    case ACTION_30_LABORER_SLED_AT_RAMP:
+        image_set_animation(animkeys().pulling);
+        break;
+
+    case ACTION_13_LABORER_RETURNING:
+    case ACTION_9_LABORER_GOING_OUT:
+    case ACTION_10_LABORER_TO_FARM:
         image_set_animation(animkeys().walk);
         break;
     }
