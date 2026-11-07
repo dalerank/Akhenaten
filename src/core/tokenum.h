@@ -233,7 +233,7 @@ struct token_holder {
 
     template<typename e_enum_type, uint32_t... Indices>
     constexpr tokens make_tokens_helper(std::integer_sequence<uint32_t, Indices...>) {
-        tokens ts = { make_name<e_enum_type, (e_enum_type)Indices>()... };
+        tokens ts = { make_name<e_enum_type, (e_enum_type)(Indices + static_cast<uint32_t>(begin))>()... };
         ts[N] = {0, 0};
         return ts;
     }
