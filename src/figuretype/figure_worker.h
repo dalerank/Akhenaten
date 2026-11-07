@@ -91,6 +91,8 @@ public:
         uint8_t delivering_block;
         uint8_t walk_mode;
         uint8_t level_tiles_done;
+        uint8_t site_state;
+        uint8_t monument_searches;
         building_id yard_bid;
         pyramid_figure_work_t climb;
     } FIGURE_RUNTIME_DATA_T;
@@ -115,6 +117,8 @@ private:
     bool assign_farm_task(building *farm);
     bool assign_monument_task(building *monument, figure_id mason_fid);
     e_resource block_material_for(building *monument, figure_id mason_fid) const;
+    void monument_site_work_tick(building *monument);
+    void sled_to_monument_tick(building *monument);
     void enter_idle_pool();
     void finish_block_delivery();
 };

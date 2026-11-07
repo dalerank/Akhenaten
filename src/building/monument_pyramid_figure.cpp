@@ -1398,6 +1398,11 @@ bool laborer_pulls_train(int action) {
     case ACTION_20_LABORER_WALK_TO_MASON:
     case ACTION_29_LABORER_DELIVERED:
     case ACTION_30_LABORER_SLED_AT_RAMP:
+    case ACTION_23_LABORER_SLED_TO_SUN_TEMPLE:
+    case ACTION_26_LABORER_SLED_TO_MAUSOLEUM:
+    case ACTION_31_LABORER_SLED_TO_LIBRARY:
+    case ACTION_34_LABORER_SLED_TO_CAESAREUM:
+    case ACTION_35_LABORER_SLED_TO_LIGHTHOUSE:
         return true;
     default:
         return false;
@@ -1500,6 +1505,11 @@ void monument_pyramid_figure::spawn_sled_train(figure_id laborer_fid, building *
                 amount = monument_engine_config.default_bricks_per_block;
             }
         }
-        sl->load_resource(RESOURCE_BRICKS, amount);
+        const bool laborer_loaded = laborer->resource_id != RESOURCE_NONE && laborer->resource_amount_full > 0;
+        if (laborer_loaded && !monument->dcast_pyramid() && !mastaba_engine_is(monument)) {
+            sl->load_resource(laborer->resource_id, laborer->resource_amount_full);
+        } else {
+            sl->load_resource(RESOURCE_BRICKS, amount);
+        }
     }
 }

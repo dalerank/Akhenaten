@@ -10,6 +10,10 @@
 #include "building/monument_mastaba_engine.h"
 #include "building/monument_pyramid_engine.h"
 #include "building/monument_pyramid_figure.h"
+#include "building/monument_alexandria_library.h"
+#include "building/monument_caesareum.h"
+#include "building/monument_mausoleum.h"
+#include "building/monument_pharos_lighthouse.h"
 #include "building/monument_sun_temple.h"
 #include "building/monuments.h"
 #include "figuretype/figure_bricklayer.h"
@@ -236,12 +240,71 @@ building_id laborer_partner_part(figure_id laborer_fid, figure_id mason_fid) {
     return map_building_at(mason->tile);
 }
 
+bool laborer_is_cleopatra_monument(building *b) {
+    return b
+        && (b->dcast_sun_temple() || b->dcast_mausoleum() || b->dcast_alexandria_library()
+            || b->dcast_caesareum() || b->dcast_pharos_lighthouse());
+}
+
+struct laborer_site_actions {
+    short sled;
+    short to_site;
+    short site_work;
+};
+
+laborer_site_actions laborer_cleopatra_actions(building *head) {
+    if (head->dcast_sun_temple()) {
+        return {ACTION_23_LABORER_SLED_TO_SUN_TEMPLE, ACTION_24_LABORER_TO_SUN_TEMPLE, ACTION_25_LABORER_SUN_TEMPLE_WORK};
+    }
+    if (head->dcast_mausoleum()) {
+        return {ACTION_26_LABORER_SLED_TO_MAUSOLEUM, ACTION_27_LABORER_TO_MAUSOLEUM, ACTION_28_LABORER_MAUSOLEUM_WORK};
+    }
+    if (head->dcast_alexandria_library()) {
+        return {ACTION_31_LABORER_SLED_TO_LIBRARY, ACTION_32_LABORER_TO_LIBRARY, ACTION_33_LABORER_LIBRARY_WORK};
+    }
+    if (head->dcast_caesareum()) {
+        return {ACTION_34_LABORER_SLED_TO_CAESAREUM, -1, -1};
+    }
+    return {ACTION_35_LABORER_SLED_TO_LIGHTHOUSE, -1, -1};
+}
+
+tile2i laborer_monument_road_tile(building *head) {
+    if (head->road_access.valid()) {
+        return head->road_access;
+    }
+    if (auto *mon = head->dcast_monument()) {
+        return mon->access_point();
+    }
+    return head->tile;
+}
+
+figure_id laborer_cleopatra_mason_waiting(building *head) {
+    auto *mon = head->dcast_monument();
+    if (!mon) {
+        return 0;
+    }
+    for (auto wid : mon->runtime_data().workers) {
+        figure *f = wid ? figure_get(wid) : nullptr;
+        if (!f || !f->is_alive() || f->type != FIGURE_STONEMASON) {
+            continue;
+        }
+        if (f->action_state == ACTION_19_MASON_WAIT_FOR_BLOCK && f->leading_figure_id == 0) {
+            return wid;
+        }
+    }
+    return 0;
+}
+
 } // namespace
 
 e_resource figure_worker::block_material_for(building *monument, figure_id mason_fid) const {
     building *head = monument ? (monument->main() ? monument->main() : monument) : nullptr;
     if (!head) {
         return RESOURCE_BRICKS;
+    }
+
+    if (laborer_is_cleopatra_monument(head)) {
+        return (head->dcast_sun_temple() || head->dcast_mausoleum()) ? RESOURCE_SANDSTONE : RESOURCE_MARBLE;
     }
 
     e_pyramid_style style = g_monument_pyramid_engine.style_of(head);
@@ -281,6 +344,8 @@ void figure_worker::enter_idle_pool() {
     rd.mason_fid = 0;
     rd.walk_mode = PYRAMID_WALK_NONE;
     rd.level_tiles_done = 0;
+    rd.site_state = 0;
+    rd.monument_searches = 0;
     rd.yard_bid = 0;
     base.leading_figure_id = 0;
     base.resource_amount_full = 0;
@@ -380,6 +445,28 @@ bool figure_worker::assign_monument_task(building *monument, figure_id mason_fid
     if (level_tile == tile2i{-1, -1}) {
         return false;
     }
+
+    if (laborer_is_cleopatra_monument(head)) {
+        const short to_site = laborer_cleopatra_actions(head).to_site;
+        if (to_site >= 0) {
+            const tile2i road = laborer_monument_road_tile(head);
+            if (!road.valid()) {
+                return false;
+            }
+            mon->add_workers(id());
+            set_destination(head);
+            base.destination_tile = road;
+            base.roam_length = 0;
+            auto &rd = runtime_data();
+            rd.level_tiles_done = 0;
+            rd.monument_searches = 0;
+            rd.site_state = 0;
+            base.set_flag(e_figure_flag_invisible, false);
+            advance_action(to_site);
+            return true;
+        }
+    }
+
     mon->add_workers(id());
     map_monuments_set_progress(level_tile, 1);
     set_destination(head);
@@ -432,7 +519,8 @@ void figure_worker::find_work() {
             if (!b.is_valid() || !b.is_monument() || !b.is_main()) {
                 continue;
             }
-            if (!b.dcast_pyramid() && !mastaba_engine_is(&b)) {
+            const bool cleopatra = laborer_is_cleopatra_monument(&b);
+            if (!b.dcast_pyramid() && !mastaba_engine_is(&b) && !cleopatra) {
                 continue;
             }
             auto *mon = b.dcast_monument();
@@ -446,6 +534,9 @@ void figure_worker::find_work() {
                 if (mon->need_workers() && monumen_tile4work(&b) != tile2i{-1, -1}) {
                     has_work = true;
                 }
+            } else if (cleopatra) {
+                mason_id = laborer_cleopatra_mason_waiting(&b);
+                has_work = mason_id != 0;
             } else {
                 mason_id = g_monument_pyramid_figure.find_mason_waiting_for_block(&b, 0);
                 has_work = mason_id != 0;
@@ -478,6 +569,100 @@ void figure_worker::find_work() {
 
     if (!assign_monument_task(best, best_mason)) {
         poof();
+    }
+}
+
+void figure_worker::sled_to_monument_tick(building *monument) {
+    auto &rd = runtime_data();
+    base.set_flag(e_figure_flag_invisible, false);
+    if (!do_goto(base.destination_tile, TERRAIN_USAGE_PREFER_ROADS, -1, ACTION_8_LABORER_IDLE)) {
+        if (base.action_state == ACTION_8_LABORER_IDLE) {
+            enter_idle_pool();
+        }
+        return;
+    }
+
+    building *head = monument->main() ? monument->main() : monument;
+    figure *mason = rd.mason_fid ? figure_get(rd.mason_fid) : nullptr;
+    const bool mason_waiting = mason && mason->is_alive() && mason->type == FIGURE_STONEMASON
+        && mason->action_state == ACTION_19_MASON_WAIT_FOR_BLOCK && mason->leading_figure_id == id();
+    if (mason_waiting) {
+        mason->leading_figure_id = 0;
+        mason->wait_ticks = 0;
+        mason->action_state = ACTION_21_MASON_PYRAMID_WORK;
+    } else if (auto *mon = head->dcast_monument()) {
+        mon->deliver_resource((e_resource)base.collecting_item_id, base.resource_amount_full);
+    }
+
+    rd.delivering_block = 0;
+    rd.mason_fid = 0;
+    rd.yard_bid = 0;
+    base.leading_figure_id = 0;
+    base.resource_amount_full = 0;
+    base.collecting_item_id = RESOURCE_NONE;
+    base.resource_id = RESOURCE_NONE;
+    base.wait_ticks = 0;
+    advance_action(ACTION_29_LABORER_DELIVERED);
+}
+
+void figure_worker::monument_site_work_tick(building *monument) {
+    auto &rd = runtime_data();
+    base.set_flag(e_figure_flag_invisible, false);
+    building *head = monument->main() ? monument->main() : monument;
+    auto *mon = head->dcast_monument();
+    if (!mon || mon->is_finished() || mon->phase() >= 2) {
+        enter_idle_pool();
+        return;
+    }
+    if (laborer_farm_work_waiting()) {
+        enter_idle_pool();
+        return;
+    }
+
+    enum { SITE_SEARCH = 0, SITE_WALK = 1, SITE_LEVEL = 2 };
+    if (rd.site_state == SITE_WALK) {
+        base.use_cross_country = true;
+        base.set_cross_country_destination(base.destination_tile);
+        if (base.move_ticks_cross_country(1)) {
+            rd.site_state = SITE_LEVEL;
+            base.direction = 0;
+        }
+        return;
+    }
+
+    if (rd.site_state == SITE_LEVEL) {
+        const int progress = map_monuments_get_progress(tile());
+        if (progress < 200) {
+            mon->set_tile_progress(tile(), progress + 1);
+            return;
+        }
+        rd.site_state = SITE_SEARCH;
+        rd.level_tiles_done++;
+        if (rd.level_tiles_done >= current_params().level_tiles_in_a_row) {
+            enter_idle_pool();
+            return;
+        }
+    }
+
+    base.wait_ticks++;
+    if (base.wait_ticks <= (int)current_params().yard_wait_ticks) {
+        base.animctx.frame = 0;
+        return;
+    }
+    base.wait_ticks = 0;
+
+    const tile2i next = monumen_tile4work(head);
+    if (next != tile2i{-1, -1}) {
+        map_monuments_set_progress(next, 1);
+        base.destination_tile = next;
+        rd.monument_searches = 0;
+        rd.site_state = SITE_WALK;
+        return;
+    }
+
+    rd.monument_searches++;
+    if (rd.monument_searches >= current_params().monument_work_searches) {
+        enter_idle_pool();
     }
 }
 
@@ -643,6 +828,34 @@ void figure_worker::figure_action() {
         enter_idle_pool();
         break;
 
+    case ACTION_24_LABORER_TO_SUN_TEMPLE:
+    case ACTION_27_LABORER_TO_MAUSOLEUM:
+    case ACTION_32_LABORER_TO_LIBRARY:
+        base.set_flag(e_figure_flag_invisible, false);
+        if (do_goto(base.destination_tile, TERRAIN_USAGE_PREFER_ROADS, -1, ACTION_8_LABORER_IDLE)) {
+            rd.site_state = 0;
+            rd.monument_searches = 0;
+            base.wait_ticks = 0;
+            advance_action(laborer_cleopatra_actions(b_dest->main() ? b_dest->main() : b_dest).site_work);
+        } else if (base.action_state == ACTION_8_LABORER_IDLE) {
+            enter_idle_pool();
+        }
+        break;
+
+    case ACTION_25_LABORER_SUN_TEMPLE_WORK:
+    case ACTION_28_LABORER_MAUSOLEUM_WORK:
+    case ACTION_33_LABORER_LIBRARY_WORK:
+        monument_site_work_tick(b_dest);
+        break;
+
+    case ACTION_23_LABORER_SLED_TO_SUN_TEMPLE:
+    case ACTION_26_LABORER_SLED_TO_MAUSOLEUM:
+    case ACTION_31_LABORER_SLED_TO_LIBRARY:
+    case ACTION_34_LABORER_SLED_TO_CAESAREUM:
+    case ACTION_35_LABORER_SLED_TO_LIGHTHOUSE:
+        sled_to_monument_tick(b_dest);
+        break;
+
     case ACTION_15_LABORER_TO_STORAGE_YARD:
         base.set_flag(e_figure_flag_invisible, false);
         if (!laborer_partner_part(id(), rd.mason_fid)) {
@@ -664,7 +877,8 @@ void figure_worker::figure_action() {
             break;
         }
         const bool mason_active = pyramid_engine_part_has_active_worker(part_id)
-            || mastaba_engine_part_has_active_worker(part_id);
+            || mastaba_engine_part_has_active_worker(part_id)
+            || (mason->is_alive() && laborer_is_cleopatra_monument(b_dest ? b_dest->main() : nullptr));
         if (!mason_active) {
             poof();
             break;
@@ -689,7 +903,20 @@ void figure_worker::figure_action() {
             break;
         }
 
-        if (uses_ramp_climb(b_dest)) {
+        building *site_head = b_dest ? (b_dest->main() ? b_dest->main() : b_dest) : nullptr;
+        if (laborer_is_cleopatra_monument(site_head)) {
+            const tile2i road = laborer_monument_road_tile(site_head);
+            if (!road.valid()) {
+                yard->add_resource(resource, load, true);
+                enter_idle_pool();
+                break;
+            }
+            base.destination_tile = road;
+            pyramid_figure_spawn_sled_train(id(), site_head);
+            base.wait_ticks = 0;
+            base.roam_length = 0;
+            advance_action(laborer_cleopatra_actions(site_head).sled);
+        } else if (uses_ramp_climb(b_dest)) {
             tile2i entry = ramp_entry_tile(b_dest);
             base.destination_tile = entry.valid() ? entry : mason->tile;
             pyramid_figure_spawn_sled_train(id(), b_dest);
@@ -948,9 +1175,17 @@ void figure_worker::update_animation() {
 
     switch (action_state()) {
     case ACTION_22_LABORER_LEVEL_WORK:
+    case ACTION_25_LABORER_SUN_TEMPLE_WORK:
+    case ACTION_28_LABORER_MAUSOLEUM_WORK:
+    case ACTION_33_LABORER_LIBRARY_WORK:
         image_set_animation(animkeys().work);
         break;
 
+    case ACTION_23_LABORER_SLED_TO_SUN_TEMPLE:
+    case ACTION_26_LABORER_SLED_TO_MAUSOLEUM:
+    case ACTION_31_LABORER_SLED_TO_LIBRARY:
+    case ACTION_34_LABORER_SLED_TO_CAESAREUM:
+    case ACTION_35_LABORER_SLED_TO_LIGHTHOUSE:
     case ACTION_15_LABORER_TO_STORAGE_YARD:
     case ACTION_16_LABORER_AT_STORAGE_YARD:
     case ACTION_17_LABORER_TO_PYRAMID:
@@ -966,6 +1201,9 @@ void figure_worker::update_animation() {
     case ACTION_13_LABORER_RETURNING:
     case ACTION_9_LABORER_GOING_OUT:
     case ACTION_10_LABORER_TO_FARM:
+    case ACTION_24_LABORER_TO_SUN_TEMPLE:
+    case ACTION_27_LABORER_TO_MAUSOLEUM:
+    case ACTION_32_LABORER_TO_LIBRARY:
         image_set_animation(animkeys().walk);
         break;
     }
