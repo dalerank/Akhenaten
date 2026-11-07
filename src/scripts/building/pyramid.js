@@ -1324,6 +1324,7 @@ building_small_stepped_pyramid {
     filler_type : BUILDING_SMALL_PYRAMID
     part_count : 16
     block_total : 216
+    casing_total : 96
     // OG pyramid_ramp_table (8×8).
     ramps [
       { part: 13, ramp1_height: 1 }
@@ -1407,6 +1408,7 @@ building_small_stepped_pyramid {
     filler_type : BUILDING_SMALL_MUDBRICK_PYRAMID
     part_count : 16
     block_total : 216
+    casing_total : 96
     // OG pyramid_ramp_table (8×8).
     ramps [
       { part: 13, ramp1_height: 1 }
@@ -1607,6 +1609,7 @@ building_small_stepped_pyramid {
     filler_type : BUILDING_MEDIUM_MUDBRICK_PYRAMID
     part_count : 36
     block_total : 552
+    casing_total : 216
     // OG pyramid_ramp_table (12×12).
     ramps [
       { part: 31, ramp1_height: 1 }
@@ -1818,6 +1821,7 @@ building_small_stepped_pyramid {
     filler_type : BUILDING_LARGE_MUDBRICK_PYRAMID
     part_count : 64
     block_total : 1104
+    casing_total : 384
     // OG pyramid_ramp_table (16×16).
     ramps [
       { part: 57, ramp1_height: 1 }
@@ -1935,6 +1939,7 @@ building_small_stepped_pyramid {
     filler_type : BUILDING_MUDBRICK_PYRAMID_COMPLEX
     part_count : 100
     block_total : 1920
+    casing_total : 600
     // OG pyramid_ramp_table (20×20 complex).
     ramps [
       { part: 91, ramp1_height: 1 }
@@ -2051,6 +2056,7 @@ building_small_stepped_pyramid {
     filler_type : BUILDING_GRAND_MUDBRICK_PYRAMID_COMPLEX
     part_count : 100
     block_total : 1920
+    casing_total : 600
     // OG size-4 schedule needs 24×24; remake grand is still 20×20 → complex table.
     ramps [
       { part: 91, ramp1_height: 1 }
@@ -2308,6 +2314,7 @@ building_small_stepped_pyramid {
     filler_type : BUILDING_MEDIUM_PYRAMID
     part_count : 36
     block_total : 552
+    casing_total : 216
     // OG pyramid_ramp_table (12×12).
     ramps [
       { part: 31, ramp1_height: 1 }
@@ -2365,22 +2372,20 @@ building_small_stepped_pyramid {
     fire_proof :  true
     damage_proof : true
     meta { text_id:178, help_link:"message_true_pyramid" }
-    init_tiles [20, 20]
+    init_tiles [16, 16]
 
-    enter_offset : [2, 20]
+    enter_offset : [2, 16]
 
-    // OG pyramid_entry_points size 3 (20x20)
+    // OG pyramid_entry_points size 2 (16x16)
     entry_points [
-      {part:91, height:1}, {part:92, height:2}, {part:93, height:3}, {part:94, height:4},
-      {part:95, height:5}, {part:96, height:6}, {part:62, height:7}, {part:63, height:7},
-      {part:55, height:8}, {part:53, height:9}, {part:51, height:10}, {part:49, height:11},
-      {part:47, height:12}, {part:45, height:12}, {part:43, height:12}, {part:42, height:12},
-      {part:20, height:13}, {part:19, height:14}, {part:18, height:15}, {part:17, height:16},
-      {part:16, height:16}, {part:22, height:17}, {part:24, height:18}, {part:10, height:19},
-      {part:12, height:19}, {part:13, height:20}, {part:14, height:21}, {part:15, height:21},
-      {part:11, height:22}, {part:9, height:23}, {part:7, height:23}, {part:6, height:24},
-      {part:0, height:25}, {part:2, height:26}, {part:3, height:27}, {part:1, height:28},
-      {part:3, height:29}, {part:1, height:30}
+      {part:57, height:1}, {part:58, height:2}, {part:59, height:3}, {part:60, height:4},
+      {part:61, height:5}, {part:62, height:6}, {part:63, height:6}, {part:55, height:6},
+      {part:29, height:7}, {part:27, height:8}, {part:25, height:9}, {part:23, height:10},
+      {part:21, height:10}, {part:20, height:11}, {part:19, height:12}, {part:5, height:13},
+      {part:4, height:13}, {part:8, height:14}, {part:10, height:15}, {part:12, height:15},
+      {part:13, height:16}, {part:14, height:17}, {part:15, height:17}, {part:11, height:18},
+      {part:1, height:19}, {part:0, height:20}, {part:2, height:21}, {part:3, height:22},
+      {part:1, height:23}, {part:0, height:24}
     ]
     // OG part_pair_table for this size
     part_pairs [
@@ -2389,220 +2394,126 @@ building_small_stepped_pyramid {
       {first:23, second:25}, {first:26, second:28}, {first:27, second:29}, {first:30, second:31}, {first:32, second:33}, {first:34, second:35},
       {first:36, second:37}, {first:38, second:39}, {first:40, second:41}, {first:42, second:43}, {first:44, second:46}, {first:45, second:47},
       {first:48, second:50}, {first:49, second:51}, {first:52, second:54}, {first:53, second:55}, {first:56, second:57}, {first:58, second:59},
-      {first:60, second:61}, {first:62, second:63}, {first:64, second:65}, {first:66, second:67}, {first:68, second:69}, {first:70, second:71},
-      {first:72, second:73}, {first:74, second:76}, {first:75, second:77}, {first:78, second:80}, {first:79, second:81}, {first:82, second:84},
-      {first:83, second:85}, {first:86, second:88}, {first:87, second:89}, {first:90, second:91}, {first:92, second:93}, {first:94, second:95},
-      {first:96, second:97}, {first:98, second:99}
+      {first:60, second:61}, {first:62, second:63}
     ]
-
-
-    // Medium-style L-ramp: short approach on south from enter, SE corner, then
-    // climb the east face (decreasing y) up to the tier-1 ledge. Sprites 00114+
-    // are the ascending ramp pieces; offset.y rises ~+28 ? -110 (? one tier).
     stairs [
       {
         phase : 7
-        part : [4, 18]
-        tex { path:"Pyramid/Pyramid_00110" }
-        offset : [-20, 20]
+        part : [2, 14]
+        tex { path:"Pyramid/Pyramid_00112" }
+        offset : [-15, 25]
       }
 
       {
         phase : 8
-        part : [6, 18]
-        tex { path:"Pyramid/Pyramid_00111" }
-        offset : [-25, 20]
+        part : [4, 14]
+        tex { path:"Pyramid/Pyramid_00113" }
+        offset : [-15, 25]
       }
 
       {
         phase : 9
-        part : [8, 18]
+        part : [6, 14]
         tex { path:"Pyramid/Pyramid_00112" }
-        offset : [-20, 20]
+        offset : [-15, 25]
       }
 
       {
         phase : 10
-        part : [12, 18]
-        tex { path:"Pyramid/Pyramid_00110" }
-        offset : [0, -40]
+        part : [10, 14]
+        tex { path:"Pyramid/Pyramid_00112" }
+        offset : [15, -35]
+      }
+
+      {
+        phase : 10
+        part : [14, 14]
+        tex { path:"Pyramid/Pyramid_00122" }
+        offset : [15, -40]
       }
 
       {
         phase : 11
-        part : [14, 18]
-        tex { path:"Pyramid/Pyramid_00111" }
-        offset : [-5, -40]
+        part : [14, 12]
+        tex { path:"Pyramid/Pyramid_00114" }
+        offset : [25, -30]
       }
 
       {
         phase : 12
-        part : [16, 18]
-        tex { path:"Pyramid/Pyramid_00112" }
-        offset : [-5, -45]
+        part : [14, 10]
+        tex { path:"Pyramid/Pyramid_00115" }
+        offset : [20, -30]
       }
 
       {
         phase : 13
-        part : [18, 14]
+        part : [14, 6]
         tex { path:"Pyramid/Pyramid_00113" }
-        offset : [10, -100]
+        offset : [0, -90]
       }
 
       {
-        phase : 14
-        part : [18, 12]
-        tex { path:"Pyramid/Pyramid_00114" }
-        offset : [0, -100]
-      }
-
-      {
-        phase : 15
-        part : [18, 10]
-        tex { path:"Pyramid/Pyramid_00115" }
-        offset : [-5, -100]
+        phase : 13
+        part : [14, 2]
+        tex { path:"Pyramid/Pyramid_00124" }
+        offset : [0, -95]
       }
 
       {
         phase : 16
-        part : [18, 8]
-        tex { path:"Pyramid/Pyramid_00113" }
-        offset : [0, -170]
+        part : [6, 12]
+        tex { path:"Pyramid/Pyramid_00118" }
+        offset : [-28, -155]
       }
 
       {
         phase : 17
-        part : [18, 6]
-        tex { path:"Pyramid/Pyramid_00114" }
-        offset : [0, -170]
+        part : [8, 12]
+        tex { path:"Pyramid/Pyramid_00113" }
+        offset : [-48, -158]
       }
 
       {
         phase : 18
-        part : [18, 4]
-        tex { path:"Pyramid/Pyramid_00125" }
-        offset : [-5, -170]
+        part : [12, 12]
+        tex { path:"Pyramid/Pyramid_00112" }
+        offset : [-48, -158]
       }
 
       {
         phase : 19
-        part : [12, 16]
-        tex { path:"Pyramid/Pyramid_00110" }
-        offset : [15, -200]
+        part : [12, 10]
+        tex { path:"Pyramid/Pyramid_00113" }
+        offset : [0, -180]
       }
 
       {
         phase : 20
-        part : [14, 16]
-        tex { path:"Pyramid/Pyramid_00111" }
-        offset : [10, -200]
-      }
-
-      {
-        phase : 20
-        part : [16, 16]
-        tex { path:"Pyramid/Pyramid_00123" }
-        offset : [15, -205]
+        part : [12, 6]
+        tex { path:"Pyramid/Pyramid_00124" }
+        offset : [0, -180]
       }
 
       {
         phase : 21
-        part : [16, 14]
-        tex { path:"Pyramid/Pyramid_00115" }
-        offset : [20, -200]
+        part : [6, 10]
+        tex { path:"Pyramid/Pyramid_00119" }
+        offset : [-20, -175]
+      }
+
+      {
+        phase : 21
+        part : [8, 10]
+        tex { path:"Pyramid/Pyramid_00112" }
+        offset : [-40, -175]
       }
 
       {
         phase : 22
-        part : [14, 10]
+        part : [8, 6]
         tex { path:"Pyramid/Pyramid_00113" }
-        offset : [20, -210]
-      }
-
-      {
-        phase : 23
-        part : [14, 8]
-        tex { path:"Pyramid/Pyramid_00114" }
-        offset : [20, -210]
-      }
-
-      // --- Layer 2 (third tier): L2 south y=14 (begin+4, size 12) ? SE [14,14].
-      // Offsets ~two tiers up (? -180..-270).
-      {
-        phase : 24
-        part : [14, 6]
-        tex { path:"Pyramid/Pyramid_00115" }
-        offset : [15, -210]
-      }
-
-      {
-        phase : 24
-        part : [14, 4]
-        tex { path:"Pyramid/Pyramid_00127" }
-        offset : [10, -220]
-      }
-
-      {
-        phase : 25
-        part : [8, 14]
-        tex { path:"Pyramid/Pyramid_00110" }
-        offset : [0, -300]
-      }
-
-      {
-        phase : 26
-        part : [10, 14]
-        tex { path:"Pyramid/Pyramid_00111" }
-        offset : [0, -300]
-      }
-
-      {
-        phase : 27
-        part : [12, 14]
-        tex { path:"Pyramid/Pyramid_00112" }
-        offset : [0, -300]
-      }
-
-      {
-        phase : 28
-        part : [12, 10]
-        tex { path:"Pyramid/Pyramid_00113" }
-        offset : [20, -300]
-      }
-
-      {
-        phase : 29
-        part : [12, 8]
-        tex { path:"Pyramid/Pyramid_00114" }
-        offset : [15, -300]
-      }
-
-      {
-        phase : 30
-        part : [12, 6]
-        tex { path:"Pyramid/Pyramid_00127" }
-        offset : [15, -300]
-      }
-
-      {
-        phase : 31
-        part : [10, 12]
-        tex { path:"Pyramid/Pyramid_00110" }
-        offset : [0, -390]
-      }
-
-      {
-        phase : 32
-        part : [12, 12]
-        tex { path:"Pyramid/Pyramid_00122" }
-        offset : [0, -400]
-      }
-
-      {
-        phase : 33
-        part : [10, 12]
-        tex { path:"Pyramid/Pyramid_00114" }
-        offset : [0, -400]
+        offset : [10, -200]
       }
     ]
 
@@ -2617,6 +2528,7 @@ building_small_stepped_pyramid {
     filler_type : BUILDING_LARGE_PYRAMID
     part_count : 64
     block_total : 1104
+    casing_total : 384
     // OG pyramid_ramp_table (16×16).
     ramps [
       { part: 57, ramp1_height: 1 }
@@ -2937,6 +2849,7 @@ building_small_stepped_pyramid {
     filler_type : BUILDING_PYRAMID_COMPLEX
     part_count : 100
     block_total : 1920
+    casing_total : 600
     // OG pyramid_ramp_table (20×20 complex).
     ramps [
       { part: 91, ramp1_height: 1 }
@@ -3262,6 +3175,7 @@ building_small_stepped_pyramid {
     filler_type : BUILDING_GRAND_PYRAMID_COMPLEX
     part_count : 100
     block_total : 1920
+    casing_total : 600
     // OG size-4 schedule needs 24×24; remake grand is still 20×20 → complex table.
     ramps [
       { part: 91, ramp1_height: 1 }

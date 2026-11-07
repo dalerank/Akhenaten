@@ -246,13 +246,6 @@ void city_buildings_t::reload_objects() {
     });
 }
 
-void city_buildings_t::register_temple_complex_type(e_building_type type) {
-    if (std::find(temple_complex_type_list.begin(), temple_complex_type_list.end(), type) != temple_complex_type_list.end()) {
-        return;
-    }
-    temple_complex_type_list.push_back(type);
-}
-
 building_id city_buildings_t::temple_complex_id(e_building_type type) {
     const auto &complexes = tracked_buildings().at(type);
     for (building_id id : complexes) {
@@ -265,7 +258,7 @@ building_id city_buildings_t::temple_complex_id(e_building_type type) {
 }
 
 building_id city_buildings_t::temple_complex_id() {
-    for (const e_building_type type : temple_complex_type_list) {
+    for (const e_building_type type : temple_complex_types()) {
         const building_id id = temple_complex_id(type);
         if (id) {
             return id;
@@ -287,7 +280,14 @@ bool city_buildings_t::has_mansion() const {
 }
 
 span_const<e_building_type> city_buildings_t::temple_complex_types() {
-    return make_span(temple_complex_type_list);
+    static svector<e_building_type, 16> types;
+    types.clear();
+    for (int t = BUILDING_NONE + 1; t < BUILDING_MAX && types.size() < types.capacity(); ++t) {
+        if (building_static_params::get((e_building_type)t).flags.is_temple_complex) {
+            types.push_back((e_building_type)t);
+        }
+    }
+    return make_span(types);
 }
 
 void city_buildings_t::update_month() {

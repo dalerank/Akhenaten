@@ -87,4 +87,6 @@ ANK_CONFIG_STRUCT(building_storage_yard::static_params,
 
 building_storage_yard *storage_yard_cast(building *b);
 
-building_id building_storage_yard_for_storing(tile2i tile, e_resource resource, int distance_from_entry, int road_network_id, int *understaffed, tile2i &dst);
+building_id building_storage_yard_for_storing(tile2i tile, e_resource resource, int distance_from_entry,
+  int road_network_id, int* understaffed, tile2i& dst);
+building_id building_storage_yard_for_getting(building* src, e_resource resource, bool full_only, tile2i& dst);

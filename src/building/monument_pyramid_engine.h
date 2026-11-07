@@ -187,6 +187,7 @@ int pyramid_engine_boost_blocks(building *main, int max_count);
 void pyramid_engine_find_frontier(building *main, svector<building_id, PYRAMID_PARTS_CAPACITY> &frontier);
 
 building_id pyramid_engine_find_mason_waiting_for_block(building *main);
+e_resource pyramid_engine_block_material(building_id part_id);
 void pyramid_engine_laborer_deliver_block(figure_id mason_fid);
 
 int pyramid_engine_part_needs_ramp(building_id part_id);

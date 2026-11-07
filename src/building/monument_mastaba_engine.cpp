@@ -2,6 +2,7 @@
 
 #include "building/monument_mastaba.h"
 #include "building/monument_pyramid_engine.h"
+#include "building/monument_pyramid_figure.h"
 #include "building/monuments.h"
 #include "city/city_buildings.h"
 #include "city/city_figures.h"
@@ -134,10 +135,10 @@ static int __pyramid_find_mason_waiting(int bid) {
     if (!head) {
         return 0;
     }
-    if (g_monument_pyramid_engine.is_mudbrick(head)) {
-        return pyramid_engine_find_mason_waiting_for_block(head);
+    if (mastaba_engine_is(head)) {
+        return mastaba_engine_find_mason_waiting_for_block(head);
     }
-    return mastaba_engine_find_mason_waiting_for_block(head);
+    return g_monument_pyramid_figure.find_mason_waiting_for_block(head, 0);
 }
 ANK_FUNCTION_1(__pyramid_find_mason_waiting)
 
@@ -148,7 +149,9 @@ static void __worker_assign_brick_delivery(int fid, int monument_bid, int mason_
     if (!worker || !mon) {
         return;
     }
-    worker->assign_brick_delivery(mon->main() ? mon->main() : mon, (figure_id)mason_fid);
+    if (!worker->assign_brick_delivery(mon->main() ? mon->main() : mon, (figure_id)mason_fid)) {
+        f->poof();
+    }
 }
 ANK_FUNCTION_3(__worker_assign_brick_delivery)
 
@@ -510,6 +513,7 @@ int monument_mastaba_engine::boost_blocks(building *main, int max_count) {
     while (placed < limit && ms->remaining_blocks > 0) {
         svector<building_id, MASTABA_PARTS_CAPACITY> frontier;
         find_frontier(head, frontier);
+        g_monument_pyramid_figure.sort_frontier(frontier.data(), (int)frontier.size());
         if (frontier.empty()) {
             break;
         }

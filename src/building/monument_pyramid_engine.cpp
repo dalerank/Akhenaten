@@ -2,6 +2,7 @@
 
 #include "building/monument_mastaba_engine.h"
 #include "building/monument_pyramid.h"
+#include "building/monument_pyramid_figure.h"
 #include "building/monument_pyramid_ramp.h"
 #include "building/monuments.h"
 #include "city/city_buildings.h"
@@ -482,9 +483,6 @@ void monument_pyramid_engine::find_frontier(building *main, svector<building_id,
             // No casing in block_total — skip saturated main (remaining burn finishes).
             continue;
         }
-        if (pyramid_engine_part_needs_ramp(p->id) != 0) {
-            continue;
-        }
         int order = best ? frontier_order(*ps, *pyramid_part_state_get(best)) : -1;
         if (order > 0) {
             continue;
@@ -580,6 +578,8 @@ void monument_pyramid_engine::place_block(building_id part_id, figure_id fid) {
     }
     uint8_t &walk = bl ? bl->runtime_data().walk_mode : sm->runtime_data().walk_mode;
     const short return_home = bl ? (short)ACTION_3_BRICKLAYER_RETURN_HOME : (short)ACTION_6_MASON_RETURN_HOME;
+    const short next_action = sm ? (short)ACTION_20_MASON_NEXT_CASING : return_home;
+    const short climb_action = sm ? (short)ACTION_18_MASON_WALK_TO_PART : (short)ACTION_7_BRICKLAYER_WALK_TO_PART;
 
     building *part = building_get(part_id);
     building *head = chain_head(part);
@@ -591,8 +591,17 @@ void monument_pyramid_engine::place_block(building_id part_id, figure_id fid) {
     }
 
     if (ps->worker_figure_id != fid && pyramid_engine_part_has_active_worker(part_id)) {
-        f->advance_action(return_home);
-        walk = PYRAMID_WALK_NONE;
+        if (next_action == return_home) {
+            f->advance_action(return_home);
+            walk = PYRAMID_WALK_NONE;
+        } else if (ps->stage != PYRAMID_STAGE_CASING) {
+            pyramid_figure_find_next_part(fid, 1, return_home, next_action, climb_action);
+        } else {
+            f->advance_action(next_action);
+            auto* work = g_monument_pyramid_figure.work_data(f);
+            pyramid_figure_set_walk_target(fid, g_monument_pyramid_figure.next_on_ring(work->part), work->height,
+              false);
+        }
         return;
     }
 
@@ -607,8 +616,24 @@ void monument_pyramid_engine::place_block(building_id part_id, figure_id fid) {
     f->wait_ticks = 0;
     apply_block_placed(head, *ms, *ps);
 
-    f->advance_action(return_home);
-    walk = PYRAMID_WALK_NONE;
+    if (ms->style == PYRAMID_STYLE_STEPPED && ms->remaining_blocks == 0) {
+        if (!ms->force_show_ramps) {
+            pyramid_engine_clear_all_ramps(head);
+        }
+        return;
+    }
+    auto* main_ps = pyramid_part_state_get(head->id);
+    if (ps->stage == PYRAMID_STAGE_CASING && main_ps && main_ps->stage >= PYRAMID_STAGE_CASING) {
+        f->advance_action(next_action);
+        if (next_action == return_home) {
+            walk = PYRAMID_WALK_NONE;
+            return;
+        }
+        auto* work = g_monument_pyramid_figure.work_data(f);
+        pyramid_figure_set_walk_target(fid, g_monument_pyramid_figure.next_on_ring(work->part), work->height, true);
+        return;
+    }
+    pyramid_figure_find_next_part(fid, 0, return_home, next_action, climb_action);
 }
 
 void pyramid_engine_place_block(building_id part_id, figure_id fid) {
@@ -647,6 +672,7 @@ int monument_pyramid_engine::boost_blocks(building *main, int max_count) {
     while (placed < limit && ms->remaining_blocks > 0) {
         svector<building_id, PYRAMID_PARTS_CAPACITY> frontier;
         find_frontier(head, frontier);
+        g_monument_pyramid_figure.sort_frontier(frontier.data(), (int)frontier.size());
         if (frontier.empty()) {
             // Remake part target_layers can saturate before OG block_total —
             // still burn remaining so sync_footprint_layers / finish can complete.
@@ -704,7 +730,7 @@ int pyramid_engine_try_assign_bricklayer(building *main, figure_id fid) {
     pyramid_engine_find_frontier(head, frontier);
     for (building_id part_id : frontier) {
         auto *ps = pyramid_part_state_get(part_id);
-        if (!ps) {
+        if (!ps || pyramid_engine_part_needs_ramp(part_id) != PYRAMID_RAMP_NONE) {
             continue;
         }
         if (!g_monument_pyramid_engine.needs_main_material(*ps, ms->style)) {
@@ -761,20 +787,37 @@ building_id pyramid_engine_find_mason_waiting_for_block(building *main) {
     return 0;
 }
 
+e_resource pyramid_engine_block_material(building_id part_id) {
+    building* part = building_get(part_id);
+    building* head = (part && part->id) ? g_monument_pyramid_engine.chain_head(part) : nullptr;
+    auto* ps = pyramid_part_state_get(part_id);
+    if (!head || !ps) {
+        return RESOURCE_NONE;
+    }
+    if (mastaba_engine_is(head)) {
+        return RESOURCE_BRICKS;
+    }
+    const e_pyramid_style style = g_monument_pyramid_engine.style_of(head);
+    if (g_monument_pyramid_engine.needs_main_material(*ps, style)) {
+        return g_monument_pyramid_engine.is_mudbrick(head) ? RESOURCE_BRICKS : RESOURCE_STONE;
+    }
+    return style == PYRAMID_STYLE_STEPPED ? RESOURCE_STONE : RESOURCE_LIMESTONE;
+}
+
 void pyramid_engine_laborer_deliver_block(figure_id mason_fid) {
     figure *mason = figure_get(mason_fid);
     if (!mason) {
         return;
     }
     if (mason->type == FIGURE_BRICKLAYER && mason->action_state == ACTION_8_BRICKLAYER_WAIT_FOR_BLOCK) {
-        mason->wait_ticks = 0;
         mason->advance_action(ACTION_2_BRICKLAYER_WORK);
+    } else if (mason->type == FIGURE_STONEMASON && mason->action_state == ACTION_19_MASON_WAIT_FOR_BLOCK) {
+        mason->advance_action(ACTION_21_MASON_PYRAMID_WORK);
+    } else {
         return;
     }
-    if (mason->type == FIGURE_STONEMASON && mason->action_state == ACTION_19_MASON_WAIT_FOR_BLOCK) {
-        mason->wait_ticks = 0;
-        mason->advance_action(ACTION_21_MASON_PYRAMID_WORK);
-    }
+    mason->wait_ticks = 0;
+    g_monument_pyramid_figure.wake_pair_mason(mason_fid);
 }
 
 tile2i pyramid_engine_entry_tile(building *main) {

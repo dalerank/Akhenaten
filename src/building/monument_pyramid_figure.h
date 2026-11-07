@@ -48,6 +48,8 @@ public:
     void spawn_sled_train(figure_id laborer_fid, building *monument);
 
     building_id find_mason_waiting_for_block(building *head, int clear_partner);
+    void sort_frontier(building_id* parts, int count) const;
+    void wake_pair_mason(figure_id mason_fid);
     building_id next_on_ring(building_id part_id) const;
 
     pyramid_figure_work_t *work_data(figure *f) const;
@@ -70,6 +72,7 @@ private:
     int rotated_tile_kind(building *part) const;
     void neighbour_part_tile(int grid_offset, int rotation, building *head, int *x, int *y) const;
     const pyramid_paired_parts *pair_table_for(building *head, int &count) const;
+    building_id part_pair(building* head, building_id part_id) const;
     building_id frontier_pair_part(building_id part_id, const svector<building_id, PYRAMID_PARTS_CAPACITY> &frontier,
         uint8_t *is_first) const;
     int pair_waiting_mason(building_id part_id, const svector<building_id, PYRAMID_PARTS_CAPACITY> &frontier) const;

@@ -67,7 +67,6 @@ events::typed_queue g_city_events;
 
 ANK_DECLARE_CONFIG_ITERATOR(config_reload_city);
 void config_reload_city() {
-    g_city.buildings.clear_temple_complex_types();
     g_city.reload_system(g_city.animals);
 }
 

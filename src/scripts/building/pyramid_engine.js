@@ -4,7 +4,7 @@ pyramid_engine_config {
     blocks_per_layer: 6
     block_ticks_a: 41
     block_ticks_b: 69
-    casing_ticks: 50
+    casing_ticks: 40
 
     // pyramid_part_grid_offsets — subtype i → grid delta from main (GRID_LENGTH=228).
     // grid[i] = dx + dy * 228 for part (dx,dy) in the concentric 2×2 ring layout.
