@@ -1,6 +1,6 @@
 // Large mudbrick (brick-core) pyramid — 16×16 place, height→polish→finish.
 // Height courses through 35; polish 36–39 (4 layers); terminal 40;
-// finish = set_phase(phases_total). Congrats key: mudbrick_pyramid_congratulations.
+// finish = set_phase(phases_total); block-engine finish lives in the OG complete tests.
 
 function find_large_mudbrick_pyramid_main() {
     for (var bi = 1; bi < 500; bi++) {
@@ -141,54 +141,8 @@ function run_test() {
         }
     }
 
-    // Natural finish: 35→36 clears; 39→40 keeps; 40→FINISHED
-    __test_monument_set_phase(bid, 35)
-    var prog35 = __test_monument_min_progress(bid)
-    __test_building_update_day(bid)
-    var ph36 = __test_monument_phase(bid)
-    var prog36 = __test_monument_min_progress(bid)
-    if (ph36 == 36 && prog35 >= 200 && prog36 == 0) {
-        __log_marker('mudbrick_pyramid_large_polish_clear_ok')
-    } else {
-        __log_info_native('[test:125] polish clear want phase=36 progress=0 got ph=' + ph36
-            + ' prog35=' + prog35 + ' prog36=' + prog36)
-        __log_marker('mudbrick_pyramid_large_polish_clear_fail')
-    }
-
-    __test_monument_set_phase(bid, 39)
-    var prog39 = __test_monument_min_progress(bid)
-    __test_building_update_day(bid)
-    var ph40 = __test_monument_phase(bid)
-    var prog40 = __test_monument_min_progress(bid)
-    if (ph40 == 40 && prog39 >= 200 && prog40 >= 200) {
-        __log_marker('mudbrick_pyramid_large_terminal_keep_ok')
-    } else {
-        __log_info_native('[test:125] terminal keep want phase=40 progress>=200 got ph=' + ph40
-            + ' prog39=' + prog39 + ' prog40=' + prog40)
-        __log_marker('mudbrick_pyramid_large_terminal_keep_fail')
-    }
-
-    function find_msg_key(key) {
-        var n = __city_message_count()
-        for (var i = n - 1; i >= 0; i--) {
-            if (__lang_get_message_id(__city_message_mm_text_id(i)) == key) {
-                return i
-            }
-        }
-        return -1
-    }
-
-    var before = __city_message_count()
-    __test_building_update_day(bid)
-    var ph_fin = __test_monument_phase(bid)
-    var msg = find_msg_key('mudbrick_pyramid_congratulations')
-    if ((ph_fin == -1 || ph_fin == 255) && msg >= 0) {
-        __log_marker('mudbrick_pyramid_large_congrats_ok')
-    } else {
-        __log_info_native('[test:125] congrats want finished+msg got ph=' + ph_fin
-            + ' msg=' + msg + ' before_msgs=' + before)
-        __log_marker('mudbrick_pyramid_large_congrats_fail')
-    }
+    // Remake polish day-tick finish retired — OG square block engine owns phase>=2
+    // (see tests/264_mudbrick_large_pyramid_og_complete.js).
 
     __log_info_native('[test:125] done')
     __test_signal_ready()
@@ -199,10 +153,7 @@ function check_valid() {
         'mudbrick_pyramid_large_placed_ok',
         'mudbrick_pyramid_large_schedule_ok',
         'mudbrick_pyramid_large_phases_ok',
-        'mudbrick_pyramid_large_polish_no_lime_ok',
-        'mudbrick_pyramid_large_polish_clear_ok',
-        'mudbrick_pyramid_large_terminal_keep_ok',
-        'mudbrick_pyramid_large_congrats_ok'
+        'mudbrick_pyramid_large_polish_no_lime_ok'
     ]
     for (var i = 0; i < required.length; i++) {
         if (!__test_find_inlog(required[i])) {
@@ -212,10 +163,7 @@ function check_valid() {
     }
     if (__test_find_inlog('mudbrick_pyramid_large_phases_fail')
         || __test_find_inlog('mudbrick_pyramid_large_polish_pct_fail')
-        || __test_find_inlog('mudbrick_pyramid_large_saveload_fail')
-        || __test_find_inlog('mudbrick_pyramid_large_polish_clear_fail')
-        || __test_find_inlog('mudbrick_pyramid_large_terminal_keep_fail')
-        || __test_find_inlog('mudbrick_pyramid_large_congrats_fail')) {
+        || __test_find_inlog('mudbrick_pyramid_large_saveload_fail')) {
         return false
     }
     if (!__test_find_inlog('mudbrick_pyramid_large_saveload_skipped')
