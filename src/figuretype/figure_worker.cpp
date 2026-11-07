@@ -245,41 +245,51 @@ void figure_worker::figure_action() {
 
     case ACTION_16_WORKER_TO_YARD:
         if (do_goto(base.destination_tile, TERRAIN_USAGE_ROADS, -1, ACTION_13_WORKER_BACK_FROM_WORKS)) {
-            // OG take_load: a full sled load or nothing; a short yard gets its stock back.
-            const int load = 400;
-            int taken = 0;
-            int yard_bid = map_building_at(base.destination_tile);
-            building *yb = yard_bid ? building_get(yard_bid) : nullptr;
-            if (auto *yard = storage_yard_cast(yb ? yb->main() : nullptr)) {
-                const int missing = yard->remove_resource(base.resource_id, load);
-                if (missing == 0) {
-                    taken = load;
-                } else if (missing < load) {
-                    yard->add_resource(base.resource_id, load - missing, true);
-                }
-            }
-            base.resource_amount_full = (uint16_t)taken;
-            figure *mason = figure_get(rd.mason_fid);
-            if (!taken) {
-                base.resource_id = RESOURCE_NONE;
-                set_destination(home());
-                advance_action(ACTION_13_WORKER_BACK_FROM_WORKS);
-            } else if (mason && mason->is_alive()) {
-                if (uses_ramp_climb(b_dest)) {
-                    tile2i entry = ramp_entry_tile(b_dest);
-                    base.destination_tile = entry.valid() ? entry : mason->tile;
-                    // OG at_storage_yard: spawn 5 pullers + sled chained to this laborer.
-                    pyramid_figure_spawn_sled_train(id(), b_dest);
-                } else {
-                    base.destination_tile = mason->tile;
-                }
-                advance_action(ACTION_17_WORKER_TO_MASON);
-            } else {
-                set_destination(home());
-                advance_action(ACTION_13_WORKER_BACK_FROM_WORKS);
-            }
+            base.wait_ticks = 0;
+            advance_action(ACTION_23_WORKER_AT_YARD);
         }
         break;
+
+    case ACTION_23_WORKER_AT_YARD: {
+        if (++base.wait_ticks <= WORKER_YARD_WAIT_TICKS) {
+            break;
+        }
+        base.wait_ticks = 0;
+        // OG take_load: a full sled load or nothing; a short yard gets its stock back.
+        const int load = 400;
+        int taken = 0;
+        int yard_bid = map_building_at(base.destination_tile);
+        building* yb = yard_bid ? building_get(yard_bid) : nullptr;
+        if (auto* yard = storage_yard_cast(yb ? yb->main() : nullptr)) {
+            const int missing = yard->remove_resource(base.resource_id, load);
+            if (missing == 0) {
+                taken = load;
+            } else if (missing < load) {
+                yard->add_resource(base.resource_id, load - missing, true);
+            }
+        }
+        base.resource_amount_full = (uint16_t)taken;
+        figure* mason = figure_get(rd.mason_fid);
+        if (!taken) {
+            base.resource_id = RESOURCE_NONE;
+            set_destination(home());
+            advance_action(ACTION_13_WORKER_BACK_FROM_WORKS);
+        } else if (mason && mason->is_alive()) {
+            if (uses_ramp_climb(b_dest)) {
+                tile2i entry = ramp_entry_tile(b_dest);
+                base.destination_tile = entry.valid() ? entry : mason->tile;
+                // OG at_storage_yard: spawn 5 pullers + sled chained to this laborer.
+                pyramid_figure_spawn_sled_train(id(), b_dest);
+            } else {
+                base.destination_tile = mason->tile;
+            }
+            advance_action(ACTION_17_WORKER_TO_MASON);
+        } else {
+            set_destination(home());
+            advance_action(ACTION_13_WORKER_BACK_FROM_WORKS);
+        }
+        break;
+    }
 
     case ACTION_17_WORKER_TO_MASON: {
         const bool climb = rd.delivering_block && uses_ramp_climb(b_dest);
@@ -375,10 +385,9 @@ void figure_worker::figure_action() {
             mastaba_engine_laborer_deliver_block(mason_id);
             rd.delivering_block = 0;
             rd.mason_fid = 0;
-            rd.walk_mode = PYRAMID_WALK_NONE;
             base.leading_figure_id = 0;
-            set_destination(home());
-            advance_action(ACTION_13_WORKER_BACK_FROM_WORKS);
+            base.wait_ticks = 0;
+            advance_action(ACTION_22_WORKER_DELIVERED);
         }
         break;
     }
@@ -389,10 +398,20 @@ void figure_worker::figure_action() {
         mastaba_engine_laborer_deliver_block(rd.mason_fid);
         rd.delivering_block = 0;
         rd.mason_fid = 0;
-        rd.walk_mode = PYRAMID_WALK_NONE;
         base.leading_figure_id = 0;
-        set_destination(home());
-        advance_action(ACTION_13_WORKER_BACK_FROM_WORKS);
+        base.wait_ticks = 0;
+        advance_action(ACTION_22_WORKER_DELIVERED);
+        break;
+
+    case ACTION_22_WORKER_DELIVERED:
+        base.terrain_usage = TERRAIN_USAGE_ANY;
+        base.outside_road_ticks = 0;
+        if (++base.wait_ticks > WORKER_DELIVERED_WAIT_TICKS) {
+            base.wait_ticks = 0;
+            rd.walk_mode = PYRAMID_WALK_NONE;
+            set_destination(home());
+            advance_action(ACTION_13_WORKER_BACK_FROM_WORKS);
+        }
         break;
 
     case ACTION_13_WORKER_BACK_FROM_WORKS:

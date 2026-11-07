@@ -1234,7 +1234,7 @@ building_id monument_pyramid_figure::find_mason_waiting_for_block(building* main
                 const int st = lab->action_state;
                 if (st == ACTION_19_WORKER_CLIMB_RAMP || st == ACTION_20_WORKER_TO_MASON_ON_LAYER
                     || st == ACTION_21_WORKER_WALK_TO_MASON || st == ACTION_17_WORKER_TO_MASON
-                    || st == ACTION_18_WORKER_DELIVER_BLOCK) {
+                    || st == ACTION_18_WORKER_DELIVER_BLOCK || st == ACTION_22_WORKER_DELIVERED) {
                     laborer_on_way = 1;
                 }
             }

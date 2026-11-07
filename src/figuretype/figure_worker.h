@@ -18,6 +18,13 @@ enum e_worker_action {
     ACTION_19_WORKER_CLIMB_RAMP = 19,
     ACTION_20_WORKER_TO_MASON_ON_LAYER = 20,
     ACTION_21_WORKER_WALK_TO_MASON = 21,
+    ACTION_22_WORKER_DELIVERED = 22,
+    ACTION_23_WORKER_AT_YARD = 23,
+};
+
+enum e_worker_timing {
+    WORKER_YARD_WAIT_TICKS = 4,
+    WORKER_DELIVERED_WAIT_TICKS = 42,
 };
 
 class figure_worker : public figure_impl {
