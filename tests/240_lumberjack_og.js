@@ -53,6 +53,8 @@ function run_test() {
         return test240_fail('tree tile missing')
     }
 
+    // OG spawn gate uses the daily city flag (refreshed with tree growth), not a per-tick BFS.
+    __map_trees_set_reachable(false)
     if (wood_cutter_can_spawn_lumberjack(b)) {
         return test240_fail('OG spawn should block on ungrown tree')
     }
@@ -73,6 +75,7 @@ function run_test() {
 
     __test_map_set_vegetation_growth(spots.tx, spots.ty, 255)
     __test_map_routing_update_land()
+    __map_trees_set_reachable(true)
     if (!b.citizen_found_timber()) {
         return test240_fail('citizen_found_timber should be true for grown tree')
     }
