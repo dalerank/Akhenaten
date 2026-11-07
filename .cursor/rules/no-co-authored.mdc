@@ -5,17 +5,22 @@ alwaysApply: true
 
 # No Co-Authored-By / AI attribution
 
-Never add AI or tool attribution to git commits or pull requests.
+Never add AI or tool attribution to git commits or pull requests. This is a hard project rule — not optional.
 
 ## Forbidden
 
-- `Co-Authored-By:` trailers (Cursor, Claude, Codex, Copilot, or any other)
+- `Co-Authored-By:` / `Co-authored-by:` trailers (Cursor, Claude, Codex, Copilot, or any other)
 - "Generated with …", "Made with …", or similar attribution lines in commit messages or PR bodies
+- Leaving an injected trailer in place because "the hook added it"
 
 ## Required
 
 - Commit and PR text must contain only the human-facing summary of the change
-- If a hook or tool injects `Co-Authored-By` / attribution, remove it before finishing (amend only when amend rules allow; otherwise rewrite the local commit message)
+- After every `git commit` / `git commit --amend`, read `git log -1 --format=%B` and confirm there is **no** `Co-authored-by` line
+- If a hook, IDE, or tool injects attribution: strip it before finishing
+  - Prefer rewriting the local commit message (`commit-tree` + `update-ref`, or equivalent) so the trailer never remains
+  - Do **not** use `--no-verify` unless the user explicitly asks
+- For **local-only** commits (not pushed to `origin`): if any already contain `Co-authored-by`, rewrite that range and remove the trailer before finishing the task
 
 ```text
 # ❌ BAD
