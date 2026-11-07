@@ -46,7 +46,7 @@ void figure_carpenter::assign_monument_task(building *monument) {
     }
 
     set_destination(monument);
-    auto &rd = runtime_data();
+    auto& rd = runtime_data();
     rd.destination_bid = monument->id;
     rd.ramp_part_bid = 0;
     rd.serving_statue = 0;
@@ -200,7 +200,7 @@ void figure_carpenter::figure_action() {
         const int climb_mode = rd.ramp_part_bid ? 1 : 0;
         pyramid_figure_walk_on_ramp(id(), climb_mode, ACTION_3_CARPENTER_RETURN, ACTION_2_CARPENTER_WORK);
         if (action_state() == ACTION_3_CARPENTER_RETURN && rd.ramp_part_bid) {
-            if (auto *ps = pyramid_part_state_get(rd.ramp_part_bid)) {
+            if (auto* ps = pyramid_part_state_get(rd.ramp_part_bid)) {
                 if (ps->worker_figure_id == id()) {
                     ps->worker_figure_id = 0;
                 }
