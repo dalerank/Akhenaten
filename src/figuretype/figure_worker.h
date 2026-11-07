@@ -94,6 +94,7 @@ public:
         uint8_t site_state;
         uint8_t monument_searches;
         building_id yard_bid;
+        building_id tomb_bid;
         pyramid_figure_work_t climb;
     } FIGURE_RUNTIME_DATA_T;
 
@@ -119,6 +120,9 @@ private:
     e_resource block_material_for(building *monument, figure_id mason_fid) const;
     void monument_site_work_tick(building *monument);
     void sled_to_monument_tick(building *monument);
+    bool assign_lamp_delivery(building *tomb);
+    void at_storage_yard_lamps();
+    void sled_to_tomb_tick(building *tomb);
     void enter_idle_pool();
     void finish_block_delivery();
 };

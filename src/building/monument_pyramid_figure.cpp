@@ -1403,6 +1403,7 @@ bool laborer_pulls_train(int action) {
     case ACTION_31_LABORER_SLED_TO_LIBRARY:
     case ACTION_34_LABORER_SLED_TO_CAESAREUM:
     case ACTION_35_LABORER_SLED_TO_LIGHTHOUSE:
+    case ACTION_36_LABORER_SLED_TO_TOMB:
         return true;
     default:
         return false;
@@ -1511,5 +1512,27 @@ void monument_pyramid_figure::spawn_sled_train(figure_id laborer_fid, building *
         } else {
             sl->load_resource(RESOURCE_BRICKS, amount);
         }
+    }
+}
+
+void monument_pyramid_figure::spawn_single_sled(figure_id laborer_fid, building *monument) {
+    figure *laborer = figure_get(laborer_fid);
+    if (!laborer || !monument) {
+        return;
+    }
+
+    figure *sled = figure_create(FIGURE_SLED, laborer->tile, laborer->direction);
+    if (!sled || !sled->id) {
+        return;
+    }
+    sled->action_state = ACTION_8_SLED_TRAIN_FOLLOW;
+    sled->leading_figure_id = (int16_t)laborer_fid;
+    sled->set_home(0);
+    sled->wait_ticks = 0;
+    sled->roam_length = 0;
+    sled->set_destination(monument);
+    if (auto *sl = smart_cast<figure_sled>(sled)) {
+        sl->runtime_data().walk_mode = PYRAMID_WALK_NONE;
+        sl->load_resource(laborer->resource_id, laborer->resource_amount_full);
     }
 }
