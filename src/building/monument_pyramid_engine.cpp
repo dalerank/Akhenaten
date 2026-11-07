@@ -812,14 +812,14 @@ void pyramid_engine_laborer_deliver_block(figure_id mason_fid) {
         return;
     }
     if (mason->type == FIGURE_BRICKLAYER && mason->action_state == ACTION_8_BRICKLAYER_WAIT_FOR_BLOCK) {
-        mason->wait_ticks = 0;
         mason->advance_action(ACTION_2_BRICKLAYER_WORK);
+    } else if (mason->type == FIGURE_STONEMASON && mason->action_state == ACTION_19_MASON_WAIT_FOR_BLOCK) {
+        mason->advance_action(ACTION_21_MASON_PYRAMID_WORK);
+    } else {
         return;
     }
-    if (mason->type == FIGURE_STONEMASON && mason->action_state == ACTION_19_MASON_WAIT_FOR_BLOCK) {
-        mason->wait_ticks = 0;
-        mason->advance_action(ACTION_21_MASON_PYRAMID_WORK);
-    }
+    mason->wait_ticks = 0;
+    g_monument_pyramid_figure.wake_pair_mason(mason_fid);
 }
 
 tile2i pyramid_engine_entry_tile(building *main) {

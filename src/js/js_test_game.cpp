@@ -3814,6 +3814,46 @@ static int __test_pyramid_park_waiting_mason(int bid, int fid) {
 }
 ANK_FUNCTION_2(__test_pyramid_park_waiting_mason);
 
+static int __test_pyramid_park_pair_masons(int bid, int fid_a, int fid_b) {
+    building* b = building_get(bid);
+    building* head = b ? b->main() : nullptr;
+    auto* pyr = head ? head->dcast_pyramid() : nullptr;
+    figure* fa = figure_get(fid_a);
+    figure* fb = figure_get(fid_b);
+    if (!pyr || !fa || !fb) {
+        return 0;
+    }
+    svector<building_id, PYRAMID_PARTS_CAPACITY> frontier;
+    pyramid_engine_find_frontier(head, frontier);
+    for (const auto& pair : pyr->pyramid_params().part_pairs) {
+        building_id first = 0;
+        building_id second = 0;
+        for (building_id id : frontier) {
+            auto* ps = pyramid_part_state_get(id);
+            if (ps && ps->subtype == pair.first) {
+                first = id;
+            }
+            if (ps && ps->subtype == pair.second) {
+                second = id;
+            }
+        }
+        if (!first || !second) {
+            continue;
+        }
+        pyramid_part_state_get(first)->worker_figure_id = (figure_id)fid_a;
+        pyramid_part_state_get(second)->worker_figure_id = (figure_id)fid_b;
+        g_monument_pyramid_figure.set_work_part_bid(fa, first);
+        g_monument_pyramid_figure.set_work_part_bid(fb, second);
+        g_monument_pyramid_figure.walk_mode(fa) = PYRAMID_WALK_ON_LAYER;
+        g_monument_pyramid_figure.walk_mode(fb) = PYRAMID_WALK_ON_LAYER;
+        fa->action_state = ACTION_8_BRICKLAYER_WAIT_FOR_BLOCK;
+        fb->action_state = ACTION_8_BRICKLAYER_WAIT_FOR_BLOCK;
+        return first;
+    }
+    return 0;
+}
+ANK_FUNCTION_3(__test_pyramid_park_pair_masons);
+
 static int __pyramid_spawn_sled_train(int laborer_fid, int monument_bid) {
     figure *laborer = figure_get(laborer_fid);
     building *mon = building_get(monument_bid);

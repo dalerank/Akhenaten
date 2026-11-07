@@ -48,6 +48,7 @@ public:
     void spawn_sled_train(figure_id laborer_fid, building *monument);
 
     building_id find_mason_waiting_for_block(building *head, int clear_partner);
+    void wake_pair_mason(figure_id mason_fid);
     building_id next_on_ring(building_id part_id) const;
 
     pyramid_figure_work_t *work_data(figure *f) const;

@@ -1024,12 +1024,7 @@ void monument_pyramid_figure::stonemason_arrive_part(figure_id fid) {
     }
 }
 
-building_id monument_pyramid_figure::find_mason_waiting_for_block(building *main, int clear_partner) {
-    building *head = chain_head_for(main);
-    if (!head) {
-        return 0;
-    }
-    svector<building_id, PYRAMID_PARTS_CAPACITY> frontier;
+static void collect_frontier(building* head, svector<building_id, PYRAMID_PARTS_CAPACITY>& frontier) {
     if (g_monument_pyramid_engine.uses_block_engine(head) && !mastaba_engine_is(head)) {
         pyramid_engine_find_frontier(head, frontier);
     } else if (mastaba_engine_is(head)) {
@@ -1039,6 +1034,44 @@ building_id monument_pyramid_figure::find_mason_waiting_for_block(building *main
             frontier.push_back(id);
         }
     }
+}
+
+void monument_pyramid_figure::wake_pair_mason(figure_id mason_fid) {
+    figure* mason = figure_get(mason_fid);
+    if (!mason) {
+        return;
+    }
+    building_id part_id = work_part_bid(mason);
+    if (!part_id) {
+        part_id = map_building_at(mason->destination_tile);
+    }
+    building* part = building_get(part_id);
+    building* head = (part && part->id) ? chain_head_for(part) : nullptr;
+    if (!head) {
+        return;
+    }
+    svector<building_id, PYRAMID_PARTS_CAPACITY> frontier;
+    collect_frontier(head, frontier);
+    const int pair_fid = pair_waiting_mason(part_id, frontier);
+    figure* pair = pair_fid > 0 ? figure_get(pair_fid) : nullptr;
+    if (!pair) {
+        return;
+    }
+    if (pair->type == FIGURE_BRICKLAYER) {
+        pair->advance_action(ACTION_2_BRICKLAYER_WORK);
+    } else if (pair->type == FIGURE_STONEMASON) {
+        pair->advance_action(ACTION_21_MASON_PYRAMID_WORK);
+    }
+    pair->wait_ticks = 0;
+}
+
+building_id monument_pyramid_figure::find_mason_waiting_for_block(building* main, int clear_partner) {
+    building* head = chain_head_for(main);
+    if (!head) {
+        return 0;
+    }
+    svector<building_id, PYRAMID_PARTS_CAPACITY> frontier;
+    collect_frontier(head, frontier);
     for (building_id id : frontier) {
         uint8_t is_first = 0;
         if (frontier_pair_part(id, frontier, &is_first) && is_first) {
