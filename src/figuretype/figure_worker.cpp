@@ -5,6 +5,7 @@
 #include "building/building_storage_yard.h"
 #include "building/monument_mastaba.h"
 #include "grid/building.h"
+#include "grid/road_access.h"
 #include "building/monument_mastaba_engine.h"
 #include "building/monument_pyramid_engine.h"
 #include "building/monument_pyramid_figure.h"
@@ -15,6 +16,7 @@
 #include "figuretype/figure_stonemason.h"
 #include "building/building_impl.h"
 #include "city/city.h"
+#include "city/city_buildings.h"
 #include "city/city_figures.h"
 #include "city/city_floods.h"
 #include "city/city_health.h"
@@ -161,6 +163,145 @@ void figure_worker::assign_brick_delivery(building *monument, figure_id mason_fi
     }
 }
 
+bool figure_worker::assign_farm_task(building *farm) {
+    if (!farm || !farm->is_valid()) {
+        return false;
+    }
+    const int radius = (int)current_params().home_road_radius;
+    tile2i road = map_closest_road_within_radius(farm->tile, farm->size, radius);
+    if (!road.valid()) {
+        return false;
+    }
+    if (auto *impl = farm->dcast()) {
+        impl->add_workers(id());
+    }
+    set_destination(farm);
+    base.destination_tile = road;
+    base.roam_length = 0;
+    base.set_flag(e_figure_flag_invisible, false);
+    advance_action(ACTION_10_LABORER_TO_FARM);
+    return true;
+}
+
+bool figure_worker::assign_monument_task(building *monument, figure_id mason_fid) {
+    if (!monument || !monument->is_valid()) {
+        return false;
+    }
+    building *head = monument->main() ? monument->main() : monument;
+    auto *mon = head->dcast_monument();
+    if (!mon) {
+        return false;
+    }
+
+    if (mason_fid) {
+        base.set_flag(e_figure_flag_invisible, false);
+        assign_brick_delivery(head, mason_fid);
+        return true;
+    }
+
+    tile2i level_tile = monumen_tile4work(head);
+    if (level_tile == tile2i{-1, -1}) {
+        return false;
+    }
+    mon->add_workers(id());
+    set_destination(head);
+    base.roam_length = 0;
+    base.set_flag(e_figure_flag_invisible, false);
+    // Reuse TO_FARM arrival: when dest is a monument it claims a level tile.
+    advance_action(ACTION_10_LABORER_TO_FARM);
+    return true;
+}
+
+void figure_worker::find_work() {
+    const auto &p = current_params();
+    building *best = nullptr;
+    figure_id best_mason = 0;
+    int best_distance = 0x7fffffff;
+
+    if (g_floods.state_is(FLOOD_STATE_FARMABLE)) {
+        for (auto &b : city_buildings()) {
+            if (!b.is_valid() || !b.is_floodplain_farm()) {
+                continue;
+            }
+            if (!b.has_road_access || b.distance_from_entry == 0) {
+                continue;
+            }
+            if (b.state == BUILDING_STATE_MOTHBALLED) {
+                continue;
+            }
+            auto *farm = b.dcast_farm();
+            if (!farm || !farm->requested_workers()) {
+                continue;
+            }
+            int distance = calc_maximum_distance(tile(), b.tile);
+            if (distance > (int)p.farm_search_distance) {
+                continue;
+            }
+            distance += farm->runtime_data().labor_days_left;
+            if (distance >= best_distance) {
+                continue;
+            }
+            best_distance = distance;
+            best = &b;
+            best_mason = 0;
+        }
+    }
+
+    if (!best) {
+        best_distance = 0x7fffffff;
+        for (auto &b : city_buildings()) {
+            if (!b.is_valid() || !b.is_monument() || !b.is_main()) {
+                continue;
+            }
+            if (!b.dcast_pyramid() && !mastaba_engine_is(&b)) {
+                continue;
+            }
+            auto *mon = b.dcast_monument();
+            if (!mon || mon->is_finished()) {
+                continue;
+            }
+
+            figure_id mason_id = 0;
+            bool has_work = false;
+            if (mon->phase() < 2) {
+                if (mon->need_workers() && monumen_tile4work(&b) != tile2i{-1, -1}) {
+                    has_work = true;
+                }
+            } else {
+                mason_id = g_monument_pyramid_figure.find_mason_waiting_for_block(&b, 0);
+                has_work = mason_id != 0;
+            }
+            if (!has_work) {
+                continue;
+            }
+
+            int distance = calc_maximum_distance(tile(), b.tile);
+            if (distance >= best_distance) {
+                continue;
+            }
+            best_distance = distance;
+            best = &b;
+            best_mason = mason_id;
+        }
+    }
+
+    if (!best) {
+        poof();
+        return;
+    }
+
+    if (best->is_floodplain_farm()) {
+        if (!assign_farm_task(best)) {
+            poof();
+        }
+        return;
+    }
+
+    if (!assign_monument_task(best, best_mason)) {
+        poof();
+    }
+}
+
 void figure_worker::figure_action() {
     base.use_cross_country = false;
     base.max_roam_length = (int)current_params().max_roam_ticks;
@@ -170,17 +311,19 @@ void figure_worker::figure_action() {
     e_terrain_usage terrain_usage = TERRAIN_USAGE_ROADS;
     bool stop_at_road = true;
     auto &rd = runtime_data();
+    const int action = base.action_state;
 
     if (!bhome || !bhome->is_valid()) {
         poof();
         return;
     }
 
-    if (rd.delivering_block) {
-        // Brick-delivery path tolerates a missing destination during return.
-    } else if (!b_dest || !b_dest->is_valid()) {
-        poof();
-        return;
+    // IDLE / GOING_OUT have no work destination yet; brick delivery may briefly lack one.
+    if (action != ACTION_8_LABORER_IDLE && action != ACTION_9_LABORER_GOING_OUT && !rd.delivering_block) {
+        if (!b_dest || !b_dest->is_valid()) {
+            poof();
+            return;
+        }
     }
 
     figure_id dest_fid = 0;
@@ -195,15 +338,46 @@ void figure_worker::figure_action() {
     }
 
     switch (base.action_state) {
+    case ACTION_8_LABORER_IDLE: {
+        base.set_flag(e_figure_flag_invisible, true);
+        base.leading_figure_id = 0;
+        base.animctx.frame = 0;
+        base.wait_ticks--;
+        if (base.wait_ticks > 0) {
+            break;
+        }
+        const int radius = (int)current_params().home_road_radius;
+        tile2i road = map_closest_road_within_radius(bhome->tile, bhome->size, radius);
+        if (!road.valid()) {
+            poof();
+            break;
+        }
+        advance_action(ACTION_9_LABORER_GOING_OUT);
+        base.set_cross_country_destination(road);
+        base.roam_length = 0;
+        break;
+    }
+
     case ACTION_9_LABORER_GOING_OUT:
         if (rd.delivering_block) {
             break;
         }
-        if (dest_fid && dest_fid != id()) {
-            set_destination(home());
-            advance_action(ACTION_13_LABORER_RETURNING);
-        } else {
-            advance_action(ACTION_10_LABORER_TO_FARM);
+        // Enhanced destination-at-spawn: destination already assigned → go work.
+        if (b_dest && b_dest->is_valid() && b_dest != bhome
+            && (b_dest->is_floodplain_farm() || b_dest->is_monument())) {
+            base.set_flag(e_figure_flag_invisible, false);
+            if (dest_fid && dest_fid != id()) {
+                set_destination(home());
+                advance_action(ACTION_13_LABORER_RETURNING);
+            } else {
+                advance_action(ACTION_10_LABORER_TO_FARM);
+            }
+            break;
+        }
+        base.use_cross_country = true;
+        base.set_flag(e_figure_flag_invisible, true);
+        if (base.move_ticks_cross_country(1)) {
+            find_work();
         }
         break;
 
@@ -214,13 +388,13 @@ void figure_worker::figure_action() {
     case ACTION_10_LABORER_TO_FARM:
         if (do_gotobuilding(destination(), stop_at_road, terrain_usage, ACTION_10_LABORER_TO_FARM, ACTION_14_LABORER_ROUTE_LOST)) {
             worker_handoff_path_to_camp(base);
-                if (b_dest->is_floodplain_farm()) {
+            if (b_dest->is_floodplain_farm()) {
                 auto &d = b_dest->dcast_farm()->runtime_data();
                 if (game_features::gameplay_change_work_camp_distance_scaled_farm_workers.to_bool()) {
                     b_dest->num_workers = std::clamp<int>((1.f - bhome->tile.dist(b_dest->tile) / 20.f) * 12, 2, 10);
                 } else {
                     // OG: full model laborers for the farm type.
-                    b_dest->num_workers = b_dest->max_workers > 0 ? b_dest->max_workers : b_dest->params().laborers;
+                    b_dest->num_workers = b_dest->max_workers;
                 }
                 d.work_camp_id = bhome->id;
                 d.worker_id = 0;
@@ -542,6 +716,7 @@ void figure_worker::update_animation() {
         image_set_animation(animkeys().pulling);
         break;
 
+    case ACTION_8_LABORER_IDLE:
     case ACTION_13_LABORER_RETURNING:
     case ACTION_9_LABORER_GOING_OUT:
     case ACTION_10_LABORER_TO_FARM:

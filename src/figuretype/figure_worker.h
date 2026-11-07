@@ -101,10 +101,13 @@ public:
 
     tile2i monumen_tile4work(building *b);
     void assign_brick_delivery(building *monument, figure_id mason_fid);
+    void find_work();
 
 private:
     bool uses_ramp_climb(building *monument) const;
     tile2i ramp_entry_tile(building *monument) const;
+    bool assign_farm_task(building *farm);
+    bool assign_monument_task(building *monument, figure_id mason_fid);
 };
 
 ANK_CONFIG_STRUCT(figure_worker::static_params,
