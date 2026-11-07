@@ -31,6 +31,11 @@ public:
     virtual void production_started() { /*do nothing*/ }
     virtual void production_finished();
 
+    bool og_cycle() const;
+    short og_progress_max() const;
+    bool og_has_inputs() const;
+    void og_start_new_production();
+
     virtual void bind_dynamic(io_buffer *iob, size_t version) override;
     virtual void on_create(int orientation) override;
     virtual int stored_amount(e_resource) const override;
