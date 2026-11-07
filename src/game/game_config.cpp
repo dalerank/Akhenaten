@@ -122,6 +122,8 @@ namespace game_features {
     game_feature gameplay_change_cart_speed_depends_quntity{ "gameplay_change_cart_speed_depends_quntity", "#TR_CONFIG_CART_SPEED_DEPENDS_QUANTITY", false, false };
     game_feature gameplay_change_citizen_road_offset{ "gameplay_change_citizen_road_offset", "#TR_CONFIG_CH_CITIZEN_ROAD_OFFSET", false, false };
     game_feature gameplay_change_work_camp_one_worker_per_month{ "gameplay_change_work_camp_one_worker_per_month", "#TR_CONFIG_CH_WORK_CAMP_ONE_WORKER_PER_MONTH", false, false };
+    game_feature gameplay_change_work_camp_destination_at_spawn{ "gameplay_change_work_camp_destination_at_spawn", "#TR_CONFIG_CH_WORK_CAMP_DESTINATION_AT_SPAWN", false, false };
+    game_feature gameplay_change_work_camp_distance_scaled_farm_workers{ "gameplay_change_work_camp_distance_scaled_farm_workers", "#TR_CONFIG_CH_WORK_CAMP_DISTANCE_SCALED_FARM_WORKERS", false, false };
     game_feature gameplay_change_fire_risk_clay_pit_reduced{ "gameplay_change_fire_risk_clay_pit_reduced", "#TR_CONFIG_CH_CLAY_PIT_FIRE_RISK_REDUCED", false, false };
     game_feature gameplay_change_goldmine_reduced_production{ "gameplay_change_goldmine_reduced_production", "#TR_CONFIG_GOLDMINE_REDUCED_PRODUCTION", false, false };
     game_feature gameplay_change_new_tax_collection_system{ "gameplay_change_new_tax_collection_system", "#TR_CONFIG_NEW_TAX_COLLECTION_SYSTEM", false, false };

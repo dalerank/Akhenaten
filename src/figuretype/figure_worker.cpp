@@ -13,12 +13,16 @@
 #include "figuretype/figure_bricklayer.h"
 #include "figuretype/figure_sled.h"
 #include "figuretype/figure_stonemason.h"
+#include "building/building_impl.h"
 #include "city/city.h"
+#include "city/city_figures.h"
 #include "city/city_floods.h"
 #include "city/city_health.h"
 #include "city/city_labor.h"
 #include "city/city_recorded_paths.h"
 #include "city/ratings.h"
+#include "core/calc.h"
+#include "game/game_config.h"
 #include "graphics/image_groups.h"
 #include "js/js_game.h"
 
@@ -210,9 +214,14 @@ void figure_worker::figure_action() {
     case ACTION_10_LABORER_TO_FARM:
         if (do_gotobuilding(destination(), stop_at_road, terrain_usage, ACTION_10_LABORER_TO_FARM, ACTION_14_LABORER_ROUTE_LOST)) {
             worker_handoff_path_to_camp(base);
-            if (b_dest->is_floodplain_farm()) {
+                if (b_dest->is_floodplain_farm()) {
                 auto &d = b_dest->dcast_farm()->runtime_data();
-                b_dest->num_workers = std::clamp<int>((1.f - bhome->tile.dist(b_dest->tile) / 20.f) * 12, 2, 10);
+                if (game_features::gameplay_change_work_camp_distance_scaled_farm_workers.to_bool()) {
+                    b_dest->num_workers = std::clamp<int>((1.f - bhome->tile.dist(b_dest->tile) / 20.f) * 12, 2, 10);
+                } else {
+                    // OG: full model laborers for the farm type.
+                    b_dest->num_workers = b_dest->max_workers > 0 ? b_dest->max_workers : b_dest->params().laborers;
+                }
                 d.work_camp_id = bhome->id;
                 d.worker_id = 0;
                 d.labor_state = LABOR_STATE_JUST_ENTERED;
@@ -415,10 +424,104 @@ void figure_worker::figure_action() {
 
 void figure_worker::figure_before_action() {
     building *b = home();
-    if (b->state != BUILDING_STATE_VALID || !b->has_figure(0, id())) {
+    // OG: laborers keep working while the home work camp is valid (not tied to a single figure slot).
+    if (!b || b->state != BUILDING_STATE_VALID || b->type != BUILDING_WORK_CAMP) {
         poof();
     }
 }
+
+namespace {
+
+int count_camp_laborers(building_id camp_id) {
+    int n = 0;
+    for (figure *f : map_figures()) {
+        if (!f || !f->is_alive() || f->type != FIGURE_LABORER) {
+            continue;
+        }
+        if (f->home_building_id == camp_id) {
+            n++;
+        }
+    }
+    return n;
+}
+
+int og_spawn_delay_for_pct(int pct) {
+    const auto &p = figure_worker::current_params();
+    if (pct >= 100) {
+        return p.spawn_delay_full;
+    }
+    if (pct >= 75) {
+        return p.spawn_delay_75_percent;
+    }
+    if (pct >= 50) {
+        return p.spawn_delay_50_percent;
+    }
+    if (pct >= 25) {
+        return p.spawn_delay_25_percent;
+    }
+    if (pct >= 1) {
+        return p.spawn_delay_low;
+    }
+    return -1;
+}
+
+} // namespace
+
+// OG building_work_camp_spawn_figure: IDLE laborer, max_out, staffing delay.
+static int __work_camp_spawn_laborer_og(int bid) {
+    building *b = building_get(bid);
+    if (!b || !b->is_valid() || b->type != BUILDING_WORK_CAMP) {
+        return 0;
+    }
+    auto *impl = b->dcast();
+    if (!impl) {
+        return 0;
+    }
+
+    impl->check_labor_problem();
+    if (!impl->has_road_access()) {
+        return 0;
+    }
+
+    const auto &p = figure_worker::current_params();
+    if (b->houses_covered <= (int)p.labor_seeker_houses) {
+        impl->common_spawn_labor_seeker((int)p.labor_seeker_houses);
+    }
+
+    if (game_features::gameplay_change_work_camp_one_worker_per_month.to_bool()
+        && b->spawned_worker_this_month) {
+        return 0;
+    }
+
+    const int pct = impl->worker_percentage();
+    const int delay = og_spawn_delay_for_pct(pct);
+    if (delay < 0) {
+        return 0;
+    }
+    if (count_camp_laborers(bid) >= (int)p.max_out) {
+        return 0;
+    }
+
+    b->figure_spawn_delay++;
+    if (b->figure_spawn_delay <= delay) {
+        return 0;
+    }
+    b->figure_spawn_delay = 0;
+
+    tile2i spawn_tile = b->road_access.valid() ? b->road_access : b->tile;
+    figure *f = figure_create(FIGURE_LABORER, spawn_tile, DIR_0_TOP_RIGHT);
+    if (!f) {
+        return 0;
+    }
+    f->action_state = ACTION_8_LABORER_IDLE;
+    f->set_home(bid);
+    if (!b->has_figure(BUILDING_SLOT_SERVICE)) {
+        b->set_figure(BUILDING_SLOT_SERVICE, f);
+    }
+    b->spawned_worker_this_month = 1;
+    return f->id;
+}
+ANK_FUNCTION_1(__work_camp_spawn_laborer_og)
 
 void figure_worker::update_animation() {
     figure_impl::update_animation();

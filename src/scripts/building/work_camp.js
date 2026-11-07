@@ -109,19 +109,8 @@ building_work_camp.nearest_waiting_bricklayer_monument = function(building) {
     return result
 }
 
-[es=(building_work_camp, spawn_figure)]
-function building_work_camp_spawn_figure(ev) {
-    var building = city.get_building(ev.bid)
-    var min_coverage = building.params.min_houses_coverage
-
-    if (!building.common_spawn_figure_trigger(min_coverage, BUILDING_SLOT_SERVICE)) {
-        return
-    }
-
-    if (game_features.gameplay_change_work_camp_one_worker_per_month && building.spawned_worker_this_month) {
-        return
-    }
-
+// Enhanced: pre-assign destination at spawn (Akhenaten remake path).
+building_work_camp.spawn_with_destination = function(building) {
     var dest_id = building_work_camp.nearest_eligible_farm(building)
     if (!dest_id) {
         dest_id = building_work_camp.nearest_eligible_monument(building)
@@ -139,7 +128,7 @@ function building_work_camp_spawn_figure(ev) {
         return
     }
 
-    var figure_id = building.create_figure_with_destination(FIGURE_LABORER, dest_id, ACTION_9_WORKER_CREATED, BUILDING_SLOT_SERVICE)
+    var figure_id = building.create_figure_with_destination(FIGURE_LABORER, dest_id, ACTION_9_LABORER_GOING_OUT, BUILDING_SLOT_SERVICE)
     if (!figure_id) {
         return
     }
@@ -150,6 +139,27 @@ function building_work_camp_spawn_figure(ev) {
     if (brick_task && brick_task.mason_fid) {
         __worker_assign_brick_delivery(figure_id, dest_id, brick_task.mason_fid)
     }
+}
+
+[es=(building_work_camp, spawn_figure)]
+function building_work_camp_spawn_figure(ev) {
+    var building = city.get_building(ev.bid)
+
+    // Enhanced: destination-at-spawn remake path.
+    if (game_features.gameplay_change_work_camp_destination_at_spawn) {
+        var min_coverage = building.params.min_houses_coverage
+        if (!building.common_spawn_figure_trigger(min_coverage, BUILDING_SLOT_SERVICE)) {
+            return
+        }
+        if (game_features.gameplay_change_work_camp_one_worker_per_month && building.spawned_worker_this_month) {
+            return
+        }
+        building_work_camp.spawn_with_destination(building)
+        return
+    }
+
+    // OG: spawn IDLE laborer (find_work later); max_out + staffing delay in native helper.
+    __work_camp_spawn_laborer_og(ev.bid)
 }
 
 [es=(building_work_camp, update_month)]
