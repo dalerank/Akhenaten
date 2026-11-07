@@ -4040,7 +4040,7 @@ static int __pyramid_figure_begin_climb(int fid) {
     } else if (f->type == FIGURE_STONEMASON) {
         f->advance_action(ACTION_16_MASON_CLIMB_RAMP);
     } else if (f->type == FIGURE_LABORER) {
-        f->advance_action(ACTION_19_WORKER_CLIMB_RAMP);
+        f->advance_action(ACTION_18_LABORER_CLIMB_RAMP);
     } else {
         return 0;
     }

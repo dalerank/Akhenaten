@@ -154,6 +154,8 @@ game_features {
     @gameopt_display_size {}
     @gameplay_change_multiple_temple_complexes {}
     @gameplay_change_work_camp_one_worker_per_month {}
+    @gameplay_change_work_camp_destination_at_spawn {}
+    @gameplay_change_work_camp_distance_scaled_farm_workers {}
     @gameplay_change_empire_map_runs_simulation {}
     @gameplay_pause_sim_while_building {}
     @gameplay_fix_editor_events {}

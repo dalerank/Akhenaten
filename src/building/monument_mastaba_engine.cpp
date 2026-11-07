@@ -149,7 +149,7 @@ static void __worker_assign_brick_delivery(int fid, int monument_bid, int mason_
     if (!worker || !mon) {
         return;
     }
-    if (!worker->assign_brick_delivery(mon->main() ? mon->main() : mon, (figure_id)mason_fid)) {
+    if (!worker->assign_block_delivery(mon->main() ? mon->main() : mon, (figure_id)mason_fid)) {
         f->poof();
     }
 }

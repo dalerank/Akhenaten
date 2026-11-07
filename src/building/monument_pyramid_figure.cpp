@@ -1232,9 +1232,9 @@ building_id monument_pyramid_figure::find_mason_waiting_for_block(building* main
             figure *lab = figure_get(laborer_id);
             if (lab) {
                 const int st = lab->action_state;
-                if (st == ACTION_19_WORKER_CLIMB_RAMP || st == ACTION_20_WORKER_TO_MASON_ON_LAYER
-                    || st == ACTION_21_WORKER_WALK_TO_MASON || st == ACTION_17_WORKER_TO_MASON
-                    || st == ACTION_18_WORKER_DELIVER_BLOCK || st == ACTION_22_WORKER_DELIVERED) {
+                if (st == ACTION_18_LABORER_CLIMB_RAMP || st == ACTION_19_LABORER_TO_MASON
+                    || st == ACTION_20_LABORER_WALK_TO_MASON || st == ACTION_17_LABORER_TO_PYRAMID
+                    || st == ACTION_29_LABORER_DELIVERED || st == ACTION_30_LABORER_SLED_AT_RAMP) {
                     laborer_on_way = 1;
                 }
             }
@@ -1292,7 +1292,7 @@ int monument_pyramid_figure::laborer_can_enter_ramp(figure_id fid) const {
             continue;
         }
         const figure *laborer = figure_get(laborer_id);
-        if (laborer && laborer->type == FIGURE_LABORER && laborer->action_state == ACTION_17_WORKER_TO_MASON
+        if (laborer && laborer->type == FIGURE_LABORER && laborer->action_state == ACTION_17_LABORER_TO_PYRAMID
             && laborer->routing_path_id > 0
             && std::abs(laborer->routing_path_length - laborer->routing_path_current_tile - remaining) < PYRAMID_LABORER_NEAR_TILES) {
             return 0;
@@ -1413,7 +1413,7 @@ void monument_pyramid_figure::laborer_pair_with_mason(figure_id fid) {
                 continue;
             } else {
                 const int st = other_laborer->action_state;
-                if (st != ACTION_16_WORKER_TO_YARD && st != ACTION_17_WORKER_TO_MASON) {
+                if (st != ACTION_15_LABORER_TO_STORAGE_YARD && st != ACTION_17_LABORER_TO_PYRAMID) {
                     continue;
                 }
             }
@@ -1556,12 +1556,20 @@ figure_id monument_pyramid_figure::find_train_leader(figure_id fid, int *positio
 namespace {
 bool laborer_pulls_train(int action) {
     switch (action) {
-    case ACTION_16_WORKER_TO_YARD:
-    case ACTION_17_WORKER_TO_MASON:
-    case ACTION_19_WORKER_CLIMB_RAMP:
-    case ACTION_20_WORKER_TO_MASON_ON_LAYER:
-    case ACTION_21_WORKER_WALK_TO_MASON:
-    case ACTION_18_WORKER_DELIVER_BLOCK:
+    case ACTION_15_LABORER_TO_STORAGE_YARD:
+    case ACTION_16_LABORER_AT_STORAGE_YARD:
+    case ACTION_17_LABORER_TO_PYRAMID:
+    case ACTION_18_LABORER_CLIMB_RAMP:
+    case ACTION_19_LABORER_TO_MASON:
+    case ACTION_20_LABORER_WALK_TO_MASON:
+    case ACTION_29_LABORER_DELIVERED:
+    case ACTION_30_LABORER_SLED_AT_RAMP:
+    case ACTION_23_LABORER_SLED_TO_SUN_TEMPLE:
+    case ACTION_26_LABORER_SLED_TO_MAUSOLEUM:
+    case ACTION_31_LABORER_SLED_TO_LIBRARY:
+    case ACTION_34_LABORER_SLED_TO_CAESAREUM:
+    case ACTION_35_LABORER_SLED_TO_LIGHTHOUSE:
+    case ACTION_36_LABORER_SLED_TO_TOMB:
         return true;
     default:
         return false;
@@ -1606,7 +1614,7 @@ void monument_pyramid_figure::train_follow(figure_id fid, int is_sled) {
 
     int max_spacing = is_sled ? LABORER_SLED_SPACING : LABORER_PULLER_SPACING;
     int spacing = max_spacing;
-    if (leader->action_state == ACTION_18_WORKER_DELIVER_BLOCK) {
+    if (leader->action_state == ACTION_29_LABORER_DELIVERED) {
         const int sled_extra = is_sled ? (LABORER_SLED_SPACING - LABORER_PULLER_SPACING) : 0;
         spacing = (LABORER_PULLER_SPACING * position) - leader->wait_ticks + sled_extra;
         if (spacing < 1) {
@@ -1651,6 +1659,40 @@ void monument_pyramid_figure::spawn_sled_train(figure_id laborer_fid, building *
     }
     sled->action_state = ACTION_8_SLED_TRAIN_FOLLOW;
     sled->leading_figure_id = (int16_t)previous_id;
+    sled->set_home(0);
+    sled->wait_ticks = 0;
+    sled->roam_length = 0;
+    sled->set_destination(monument);
+    if (auto *sl = smart_cast<figure_sled>(sled)) {
+        sl->runtime_data().walk_mode = PYRAMID_WALK_NONE;
+        int amount = monument_engine_config.default_bricks_per_block;
+        if (auto *mon = monument->dcast_monument()) {
+            amount = mon->phase_bricks_per_block(mon->phase());
+            if (amount <= 0) {
+                amount = monument_engine_config.default_bricks_per_block;
+            }
+        }
+        const bool laborer_loaded = laborer->resource_id != RESOURCE_NONE && laborer->resource_amount_full > 0;
+        if (laborer_loaded && !monument->dcast_pyramid() && !mastaba_engine_is(monument)) {
+            sl->load_resource(laborer->resource_id, laborer->resource_amount_full);
+        } else {
+            sl->load_resource(RESOURCE_BRICKS, amount);
+        }
+    }
+}
+
+void monument_pyramid_figure::spawn_single_sled(figure_id laborer_fid, building *monument) {
+    figure *laborer = figure_get(laborer_fid);
+    if (!laborer || !monument) {
+        return;
+    }
+
+    figure *sled = figure_create(FIGURE_SLED, laborer->tile, laborer->direction);
+    if (!sled || !sled->id) {
+        return;
+    }
+    sled->action_state = ACTION_8_SLED_TRAIN_FOLLOW;
+    sled->leading_figure_id = (int16_t)laborer_fid;
     sled->set_home(0);
     sled->wait_ticks = 0;
     sled->roam_length = 0;

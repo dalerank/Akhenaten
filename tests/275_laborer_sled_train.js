@@ -14,6 +14,9 @@ function run_test() {
     if (!__scenario_building_allowed(BUILDING_BRICKLAYERS_GUILD)) {
         __scenario_building_allow(BUILDING_BRICKLAYERS_GUILD, true)
     }
+    if (!__scenario_building_allowed(BUILDING_STORAGE_YARD)) {
+        __scenario_building_allow(BUILDING_STORAGE_YARD, true)
+    }
 
     __test_set_treasury(500000)
 
@@ -80,11 +83,29 @@ function run_test() {
     // Literal 8 = ACTION_8_BRICKLAYER_WAIT_FOR_BLOCK.
     __test_figure_set_action(bl, 8)
 
+    var sy = test_building_place(BUILDING_STORAGE_YARD, tile.x + 18, tile.y)
+    if (!sy) {
+        sy = test_building_place(BUILDING_STORAGE_YARD, -1, -1)
+    }
+    if (!sy || !__test_storage_yard_add_resource(sy, RESOURCE_BRICKS, 400)) {
+        __log_info_native('[test:275] failed to stock storage yard with bricks')
+        __log_marker('sled_train_spawn_fail:yard')
+        __test_signal_ready()
+        return
+    }
+
     var fid = __test_figure_create(FIGURE_LABORER, tile.x, tile.y + 3)
     // figure_before_action poofs workers whose home building slot 0 lacks them.
     __test_figure_set_home_slot(fid, camp)
     city.get_building(bid).add_workers(fid)
     __worker_assign_brick_delivery(fid, bid, bl)
+    // ACTION_15 TO_STORAGE_YARD keeps train followers pulling.
+    if (__test_figure_get_action(fid) != 15) {
+        __log_info_native('[test:275] assign_block_delivery did not enter TO_STORAGE_YARD')
+        __log_marker('sled_train_spawn_fail:assign')
+        __test_signal_ready()
+        return
+    }
 
     var n = __pyramid_spawn_sled_train(fid, bid)
     if (n < 6) {

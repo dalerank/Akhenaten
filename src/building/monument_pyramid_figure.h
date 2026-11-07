@@ -46,6 +46,7 @@ public:
     figure_id find_train_leader(figure_id fid, int *position) const;
     void train_follow(figure_id fid, int is_sled);
     void spawn_sled_train(figure_id laborer_fid, building *monument);
+    void spawn_single_sled(figure_id laborer_fid, building *monument);
 
     building_id find_mason_waiting_for_block(building *head, int clear_partner);
     void sort_frontier(building_id* parts, int count) const;
@@ -132,6 +133,9 @@ inline void pyramid_figure_train_follow(figure_id fid, int is_sled) {
 }
 inline void pyramid_figure_spawn_sled_train(figure_id laborer_fid, building *monument) {
     g_monument_pyramid_figure.spawn_sled_train(laborer_fid, monument);
+}
+inline void pyramid_figure_spawn_single_sled(figure_id laborer_fid, building *monument) {
+    g_monument_pyramid_figure.spawn_single_sled(laborer_fid, monument);
 }
 inline pyramid_figure_work_t *pyramid_figure_work_data(figure *f) {
     return g_monument_pyramid_figure.work_data(f);

@@ -6,6 +6,7 @@ figure_worker {
 		walk { pack:PACK_SPR_MAIN, id:116, max_frames:12 }
 		death { pack:PACK_SPR_MAIN, id:117, max_frames:8, loop:false }
 		work { pack:PACK_SPR_MAIN, id:118, max_frames:12 }
+		pulling { pack:PACK_SPR_MAIN, id:160, max_frames:12 } // OG IMAGE_GROUP_FIGURE_LABORER_PULLING
 	}
 
 	sounds {
@@ -26,6 +27,29 @@ figure_worker {
 	category: figure_category_citizen
 	max_damage : 10
 	record_path : true
+	// OG laborer_rules defaults (laborer.c).
+	load: 400
+	yard_wait_ticks: 4
+	ramp_route_retry_ticks: 30
+	ramp_route_give_up_ticks: 120
+	delivered_wait_ticks: 42
+	ferry_wait_ticks: 100
+	max_roam_ticks: 512
+	farm_walk_ticks: 3200
+	home_road_radius: 2
+	max_out: 4
+	labor_seeker_houses: 50
+	spawn_delay_full: 3
+	spawn_delay_75_percent: 7
+	spawn_delay_50_percent: 15
+	spawn_delay_25_percent: 29
+	spawn_delay_low: 47
+	farm_search_distance: 40
+	farm_busy_labor_days: 48
+	farm_labor_days: 96
+	camp_labor_days: 32
+	level_tiles_in_a_row: 4
+	monument_work_searches: 4
 }
 
 function figure_worker_gods_are_angry() {
