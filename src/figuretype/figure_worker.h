@@ -90,6 +90,8 @@ public:
         figure_id mason_fid;
         uint8_t delivering_block;
         uint8_t walk_mode;
+        uint8_t level_tiles_done;
+        building_id yard_bid;
         pyramid_figure_work_t climb;
     } FIGURE_RUNTIME_DATA_T;
 
@@ -100,7 +102,11 @@ public:
     virtual void poof() override;
 
     tile2i monumen_tile4work(building *b);
-    void assign_brick_delivery(building *monument, figure_id mason_fid);
+    // OG assign_pyramid block haul: style material → yard → mason.
+    bool assign_block_delivery(building *monument, figure_id mason_fid);
+    void assign_brick_delivery(building *monument, figure_id mason_fid) {
+        assign_block_delivery(monument, mason_fid);
+    }
     void find_work();
 
 private:
@@ -108,6 +114,9 @@ private:
     tile2i ramp_entry_tile(building *monument) const;
     bool assign_farm_task(building *farm);
     bool assign_monument_task(building *monument, figure_id mason_fid);
+    e_resource block_material_for(building *monument, figure_id mason_fid) const;
+    void enter_idle_pool();
+    void finish_block_delivery();
 };
 
 ANK_CONFIG_STRUCT(figure_worker::static_params,
