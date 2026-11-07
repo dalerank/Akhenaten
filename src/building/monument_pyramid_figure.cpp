@@ -18,6 +18,7 @@
 #include "grid/grid.h"
 #include "grid/terrain.h"
 
+#include <algorithm>
 #include <cmath>
 
 monument_pyramid_figure g_monument_pyramid_figure;
@@ -168,6 +169,136 @@ const pyramid_paired_parts *monument_pyramid_figure::pair_table_for(building *he
         return count > 0 ? tbl.data() : nullptr;
     }
     return nullptr;
+}
+
+building_id monument_pyramid_figure::part_pair(building* head, building_id part_id) const {
+    auto* ps = pyramid_part_state_get(part_id);
+    int count = 0;
+    const pyramid_paired_parts* table = pair_table_for(head, count);
+    if (!ps || !table) {
+        return 0;
+    }
+    for (int i = 0; i < count; ++i) {
+        if (table[i].second == (int16_t)ps->subtype) {
+            return part_id_by_subtype(head, table[i].first);
+        }
+        if (table[i].first == (int16_t)ps->subtype) {
+            return part_id_by_subtype(head, table[i].second);
+        }
+    }
+    return 0;
+}
+
+template <typename Compare>
+static void og_qsort(building_id* base, int count, Compare compare) {
+    enum { QSORT_STACK = 30, QSORT_CUTOFF = 8 };
+    if (count < 2) {
+        return;
+    }
+    building_id* stack_lo[QSORT_STACK];
+    building_id* stack_hi[QSORT_STACK];
+    int depth = 0;
+    building_id* lo = base;
+    building_id* hi = base + count - 1;
+    for (;;) {
+        const int num = (int)(hi - lo) + 1;
+        if (num <= QSORT_CUTOFF) {
+            while (hi > lo) {
+                building_id* maxp = lo;
+                for (building_id* p = lo + 1; p <= hi; ++p) {
+                    if (compare(*p, *maxp) > 0) {
+                        maxp = p;
+                    }
+                }
+                std::swap(*maxp, *hi);
+                --hi;
+            }
+        } else {
+            std::swap(lo[num >> 1], *lo);
+            building_id* loguy = lo;
+            building_id* higuy = hi + 1;
+            for (;;) {
+                do {
+                    ++loguy;
+                } while (loguy <= hi && compare(*loguy, *lo) <= 0);
+                do {
+                    --higuy;
+                } while (higuy > lo && compare(*higuy, *lo) >= 0);
+                if (higuy < loguy) {
+                    break;
+                }
+                std::swap(*loguy, *higuy);
+            }
+            std::swap(*lo, *higuy);
+            if ((higuy - lo) - 1 < hi - loguy) {
+                if (loguy < hi) {
+                    stack_lo[depth] = loguy;
+                    stack_hi[depth] = hi;
+                    depth++;
+                }
+                if (lo + 1 < higuy) {
+                    hi = higuy - 1;
+                    continue;
+                }
+            } else {
+                if (lo + 1 < higuy) {
+                    stack_lo[depth] = lo;
+                    stack_hi[depth] = higuy - 1;
+                    depth++;
+                }
+                if (loguy < hi) {
+                    lo = loguy;
+                    continue;
+                }
+            }
+        }
+        if (--depth < 0) {
+            return;
+        }
+        lo = stack_lo[depth];
+        hi = stack_hi[depth];
+    }
+}
+
+void monument_pyramid_figure::sort_frontier(building_id* parts, int count) const {
+    if (count < 2) {
+        return;
+    }
+    building* first = building_get(parts[0]);
+    building* head = first ? chain_head_for(first) : nullptr;
+    if (!head) {
+        return;
+    }
+    const int height = part_height_of(parts[0]);
+    int entry_count = 0;
+    const pyramid_entry_point* entries = entry_points_for(head, entry_count);
+    building_id origin_id = parts[0];
+    for (int i = 0; entries && i < entry_count; ++i) {
+        origin_id = part_id_by_subtype(head, entries[i].part);
+        if (entries[i].height >= height) {
+            break;
+        }
+    }
+    building* origin = building_get(origin_id);
+    if (!origin || !origin->id) {
+        origin = first;
+    }
+    const int ox = origin->tile.x();
+    const int oy = origin->tile.y();
+    auto distance = [&](building_id id) {
+        building* b = building_get(id);
+        const int dx = ox - b->tile.x();
+        const int dy = oy - b->tile.y();
+        int d = dy * dy + dx * dx;
+        if (building_id pair = part_pair(head, id)) {
+            building* p = building_get(pair);
+            const int pdx = ox - p->tile.x();
+            const int pdy = oy - p->tile.y();
+            d = std::max(d, pdy * pdy + pdx * pdx);
+        }
+        return d;
+    };
+    og_qsort(parts, count, [&](building_id a, building_id b) { return distance(b) - distance(a); });
 }
 
 building_id monument_pyramid_figure::frontier_pair_part(building_id part_id,
@@ -1072,6 +1203,7 @@ building_id monument_pyramid_figure::find_mason_waiting_for_block(building* main
     }
     svector<building_id, PYRAMID_PARTS_CAPACITY> frontier;
     collect_frontier(head, frontier);
+    sort_frontier(frontier.data(), (int)frontier.size());
     for (building_id id : frontier) {
         uint8_t is_first = 0;
         if (frontier_pair_part(id, frontier, &is_first) && is_first) {
@@ -1231,6 +1363,7 @@ void monument_pyramid_figure::laborer_pair_with_mason(figure_id fid) {
             frontier.push_back(id);
         }
     }
+    sort_frontier(frontier.data(), (int)frontier.size());
     int mason_index = 0;
     for (; mason_index < (int)frontier.size(); ++mason_index) {
         if (frontier[mason_index] == mason_part_id) {

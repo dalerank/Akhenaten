@@ -513,6 +513,7 @@ int monument_mastaba_engine::boost_blocks(building *main, int max_count) {
     while (placed < limit && ms->remaining_blocks > 0) {
         svector<building_id, MASTABA_PARTS_CAPACITY> frontier;
         find_frontier(head, frontier);
+        g_monument_pyramid_figure.sort_frontier(frontier.data(), (int)frontier.size());
         if (frontier.empty()) {
             break;
         }

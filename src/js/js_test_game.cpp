@@ -3880,6 +3880,84 @@ static int __test_pyramid_casing_part(int bid, int fid) {
 }
 ANK_FUNCTION_2(__test_pyramid_casing_part);
 
+static int __test_pyramid_boost_until_ramp(int bid) {
+    building* b = building_get(bid);
+    building* head = b ? b->main() : nullptr;
+    if (!head) {
+        return 0;
+    }
+    svector<building*, PYRAMID_PARTS_CAPACITY> parts;
+    g_monument_pyramid_engine.collect_parts(head, parts);
+    for (int step = 0; step < 4000; ++step) {
+        svector<uint8_t, PYRAMID_PARTS_CAPACITY> before;
+        for (building* p : parts) {
+            auto* ps = pyramid_part_state_get(p->id);
+            before.push_back(ps ? (uint8_t)(ps->ramp1_height + ps->ramp2_height) : 0);
+        }
+        if (pyramid_engine_boost_blocks(head, 1) == 0) {
+            return 0;
+        }
+        for (int i = 0; i < (int)parts.size(); ++i) {
+            auto* ps = pyramid_part_state_get(parts[i]->id);
+            if (!ps || (uint8_t)(ps->ramp1_height + ps->ramp2_height) == before[i]) {
+                continue;
+            }
+            if (ps->ramp2_height) {
+                ps->ramp2_height = 0;
+            } else {
+                ps->ramp1_height = 0;
+            }
+            pyramid_engine_update_part_ramp_image(parts[i]->id);
+            return parts[i]->id;
+        }
+    }
+    return 0;
+}
+ANK_FUNCTION_1(__test_pyramid_boost_until_ramp);
+
+static int __test_pyramid_level_layer(int part_id) {
+    auto* ref = pyramid_part_state_get(part_id);
+    building* part = building_get(part_id);
+    building* head = part ? part->main() : nullptr;
+    if (!ref || !head) {
+        return 0;
+    }
+    svector<building*, PYRAMID_PARTS_CAPACITY> parts;
+    g_monument_pyramid_engine.collect_parts(head, parts);
+    int changed = 0;
+    for (building* p : parts) {
+        auto* ps = pyramid_part_state_get(p->id);
+        if (ps && ps->stage == ref->stage && ps->layer == ref->layer && ps->blocks < ref->blocks) {
+            ps->blocks = ref->blocks;
+            changed++;
+        }
+    }
+    return changed;
+}
+ANK_FUNCTION_1(__test_pyramid_level_layer);
+
+static int __test_pyramid_frontier_index(int bid, int part_id) {
+    building* b = building_get(bid);
+    building* head = b ? b->main() : nullptr;
+    if (!head) {
+        return -1;
+    }
+    svector<building_id, PYRAMID_PARTS_CAPACITY> frontier;
+    pyramid_engine_find_frontier(head, frontier);
+    for (int i = 0; i < (int)frontier.size(); ++i) {
+        if (frontier[i] == part_id) {
+            return i;
+        }
+    }
+    return -1;
+}
+ANK_FUNCTION_2(__test_pyramid_frontier_index);
+
+static int __test_pyramid_part_needs_ramp(int part_id) {
+    return pyramid_engine_part_needs_ramp((building_id)part_id);
+}
+ANK_FUNCTION_1(__test_pyramid_part_needs_ramp);
+
 static int __pyramid_spawn_sled_train(int laborer_fid, int monument_bid) {
     figure *laborer = figure_get(laborer_fid);
     building *mon = building_get(monument_bid);

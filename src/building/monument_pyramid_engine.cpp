@@ -483,9 +483,6 @@ void monument_pyramid_engine::find_frontier(building *main, svector<building_id,
             // No casing in block_total — skip saturated main (remaining burn finishes).
             continue;
         }
-        if (pyramid_engine_part_needs_ramp(p->id) != 0) {
-            continue;
-        }
         int order = best ? frontier_order(*ps, *pyramid_part_state_get(best)) : -1;
         if (order > 0) {
             continue;
@@ -675,6 +672,7 @@ int monument_pyramid_engine::boost_blocks(building *main, int max_count) {
     while (placed < limit && ms->remaining_blocks > 0) {
         svector<building_id, PYRAMID_PARTS_CAPACITY> frontier;
         find_frontier(head, frontier);
+        g_monument_pyramid_figure.sort_frontier(frontier.data(), (int)frontier.size());
         if (frontier.empty()) {
             // Remake part target_layers can saturate before OG block_total —
             // still burn remaining so sync_footprint_layers / finish can complete.
@@ -732,7 +730,7 @@ int pyramid_engine_try_assign_bricklayer(building *main, figure_id fid) {
     pyramid_engine_find_frontier(head, frontier);
     for (building_id part_id : frontier) {
         auto *ps = pyramid_part_state_get(part_id);
-        if (!ps) {
+        if (!ps || pyramid_engine_part_needs_ramp(part_id) != PYRAMID_RAMP_NONE) {
             continue;
         }
         if (!g_monument_pyramid_engine.needs_main_material(*ps, ms->style)) {
