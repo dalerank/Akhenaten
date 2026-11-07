@@ -72,6 +72,7 @@ protected:
     bool run_block_day();
     // Remake layer/part types + map tiles, then MONUMENT_FINISHED.
     virtual void finish_block_construction();
+    void post_completion_message();
 };
 
 class building_stepped_pyramid : public building_pyramid {

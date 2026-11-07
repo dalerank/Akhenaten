@@ -1098,6 +1098,22 @@ void building_pyramid::finish_block_construction() {
         }
         part = part->has_next() ? part->next() : nullptr;
     }
+    post_completion_message();
+}
+
+void building_pyramid::post_completion_message() {
+    const e_pyramid_style style = pyramid_params().pyramide_type;
+    pcstr congrats = "stepped_pyramid_congratulations";
+    if (style == PYRAMID_STYLE_MUDBRICK) {
+        congrats = "mudbrick_pyramid_congratulations";
+    } else if (style == PYRAMID_STYLE_TRUE) {
+        congrats = "pyramid_congratulations";
+    } else if (style == PYRAMID_STYLE_BENT) {
+        congrats = "bent_pyramid_congratulations";
+    }
+    city_message& message
+      = city_message_post_with_popup_delay(MESSAGE_CAT_MONUMENTS, true, congrats, type(), tile().grid_offset());
+    message.hide_img = true;
 }
 
 void building_stepped_pyramid::finish_block_construction() {
@@ -2396,26 +2412,7 @@ void building_stepped_pyramid::update_day(const vec2i tiles_size) {
         // `phase() >= phases()` head-check never saw a live phase==size and
         // congrats never fired on natural completion. Post them here once.
         if (finishing) {
-            // Use schedule btype (shared by corner/wall parts), not the part's
-            // building type — orientation can make a corner the is_main() head.
-            const e_building_type mon_type = config().btype;
-            const bool is_bent = (mon_type == BUILDING_SMALL_BENT_PYRAMID
-                || mon_type == BUILDING_MEDIUM_BENT_PYRAMID);
-            const bool is_mudbrick = (mon_type == BUILDING_SMALL_MUDBRICK_PYRAMID
-                || mon_type == BUILDING_MEDIUM_MUDBRICK_PYRAMID
-                || mon_type == BUILDING_LARGE_MUDBRICK_PYRAMID
-                || mon_type == BUILDING_MUDBRICK_PYRAMID_COMPLEX
-                || mon_type == BUILDING_GRAND_MUDBRICK_PYRAMID_COMPLEX);
-            const bool is_true = (mon_type == BUILDING_SMALL_PYRAMID
-                || mon_type == BUILDING_MEDIUM_PYRAMID
-                || mon_type == BUILDING_LARGE_PYRAMID
-                || mon_type == BUILDING_PYRAMID_COMPLEX
-                || mon_type == BUILDING_GRAND_PYRAMID_COMPLEX);
-            pcstr congrats = is_mudbrick ? "mudbrick_pyramid_congratulations"
-                : (is_true ? "pyramid_congratulations"
-                : (is_bent ? "bent_pyramid_congratulations" : "stepped_pyramid_congratulations"));
-            city_message &message = city_message_post_with_popup_delay(MESSAGE_CAT_MONUMENTS, true, congrats, type(), tile().grid_offset());
-            message.hide_img = true;
+            post_completion_message();
             return;
         }
     }

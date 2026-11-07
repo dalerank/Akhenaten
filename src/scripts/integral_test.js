@@ -575,6 +575,20 @@ function test_mudbrick_pyramid_og_complete(opts) {
         __log_marker(marker + '_finished_fail:' + ph)
     }
 
+    // OG monuments_check_completion: one completion popup per pyramid.
+    var congrats = 0
+    for (var mi = 0; mi < __city_message_count(); mi++) {
+        var key = __lang_get_message_id(__city_message_mm_text_id(mi))
+        if (key && key.indexOf('pyramid_congratulations') >= 0) {
+            congrats++
+        }
+    }
+    if (congrats == 1) {
+        __log_marker(marker + '_congrats_ok')
+    } else {
+        __log_marker(marker + '_congrats_fail:' + congrats)
+    }
+
     __test_signal_ready()
     return bid
 }
@@ -587,4 +601,5 @@ function test_mudbrick_pyramid_og_complete_valid(marker, total) {
         && (__test_find_inlog('[test-marker] ' + marker + '_ramps_screenshot_ok')
             || __test_find_inlog('[test-marker] ' + marker + '_ramps_screenshot_skipped:no_resource'))
         && __test_find_inlog('[test-marker] ' + marker + '_finished_ok')
+        && __test_find_inlog('[test-marker] ' + marker + '_congrats_ok')
 }
