@@ -15,9 +15,11 @@
 #include "building/monument_mausoleum.h"
 #include "building/monument_pharos_lighthouse.h"
 #include "building/monument_royal_tomb.h"
+#include "building/building_ferry.h"
 #include "building/monument_sun_temple.h"
 #include "building/monuments.h"
 #include "figuretype/figure_bricklayer.h"
+#include "figuretype/figure_cartpusher.h"
 #include "figuretype/figure_sled.h"
 #include "figuretype/figure_stonemason.h"
 #include "building/building_impl.h"
@@ -784,13 +786,26 @@ void figure_worker::figure_action() {
     auto &rd = runtime_data();
     const int action = base.action_state;
 
+    if (base.in_attack()) {
+        base.figure_combat_handle_attack();
+        return;
+    }
+
+    if (action == FIGURE_ACTION_149_CORPSE) {
+        rd.tomb_bid = 0;
+        base.figure_combat_handle_corpse();
+        return;
+    }
+
     if (!bhome || !bhome->is_valid()) {
         poof();
         return;
     }
 
-    // IDLE / GOING_OUT have no work destination yet; brick delivery may briefly lack one.
-    if (action != ACTION_8_LABORER_IDLE && action != ACTION_9_LABORER_GOING_OUT && !rd.delivering_block) {
+    // IDLE / GOING_OUT / ferry have no work destination yet; brick delivery may briefly lack one.
+    if (action != ACTION_8_LABORER_IDLE && action != ACTION_9_LABORER_GOING_OUT
+        && action != ACTION_6_CARTPUSHER_ON_FERRY && action != ACTION_7_CARTPUSHER_WAIT_FOR_FERRY
+        && !rd.delivering_block) {
         if (!b_dest || !b_dest->is_valid()) {
             poof();
             return;
@@ -809,6 +824,24 @@ void figure_worker::figure_action() {
     }
 
     switch (base.action_state) {
+    case ACTION_6_CARTPUSHER_ON_FERRY:
+        // OG FIGURE_ACTION_ON_FERRY: hide while aboard.
+        base.set_flag(e_figure_flag_invisible, true);
+        break;
+
+    case ACTION_7_CARTPUSHER_WAIT_FOR_FERRY:
+        // OG: wait ferry_wait_ticks, then IDLE if not still queued.
+        base.animctx.frame = 0;
+        base.wait_ticks++;
+        if (base.wait_ticks > (int)current_params().ferry_wait_ticks) {
+            base.wait_ticks = 0;
+            if (!figure_is_queued_for_ferry(id())) {
+                base.set_flag(e_figure_flag_invisible, false);
+                enter_idle_pool();
+            }
+        }
+        break;
+
     case ACTION_8_LABORER_IDLE: {
         base.set_flag(e_figure_flag_invisible, true);
         base.leading_figure_id = 0;
@@ -1185,6 +1218,9 @@ void figure_worker::figure_action() {
 }
 
 void figure_worker::figure_before_action() {
+    if (action_state() == FIGURE_ACTION_149_CORPSE || base.in_attack()) {
+        return;
+    }
     building *b = home();
     // OG: laborers keep working while the home work camp is valid (not tied to a single figure slot).
     if (!b || b->state != BUILDING_STATE_VALID || b->type != BUILDING_WORK_CAMP) {
@@ -1313,6 +1349,12 @@ void figure_worker::update_animation() {
         image_set_animation(animkeys().pulling);
         break;
 
+    case FIGURE_ACTION_149_CORPSE:
+        image_set_animation(animkeys().death);
+        break;
+
+    case ACTION_6_CARTPUSHER_ON_FERRY:
+    case ACTION_7_CARTPUSHER_WAIT_FOR_FERRY:
     case ACTION_8_LABORER_IDLE:
     case ACTION_13_LABORER_RETURNING:
     case ACTION_9_LABORER_GOING_OUT:
