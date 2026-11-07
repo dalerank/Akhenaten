@@ -45,7 +45,7 @@ void building_reed_gatherer::spawn_figure() {
     if (base.figure_spawn_delay > spawn_delay) {
         base.figure_spawn_delay = 0;
 
-        if (can_spawn_gatherer(runtime_data().max_gatheres, 50)) {
+        if (can_spawn_gatherer(runtime_data().max_gatheres, figure_reed_gatherer::current_params().max_amount)) {
             auto f = create_figure_generic(FIGURE_REED_GATHERER, ACTION_8_REED_GATHERER_RECALCULATE, BUILDING_SLOT_SERVICE, DIR_4_BOTTOM_LEFT);
             random_generate_next();
             f->wait_ticks = random_short() % 30; // ok

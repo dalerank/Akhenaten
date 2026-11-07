@@ -27,7 +27,9 @@ figure_reed_gatherer {
 	category: figure_category_citizen
 	max_damage: 10
 	terrain_usage : TERRAIN_USAGE_ANY,
-	max_amount : 25,
+	can_cross_ferry: true
+	boards_ferry: true
+	max_amount : 50,
 }
 
 function figure_reed_gatherer_gods_are_angry() {
