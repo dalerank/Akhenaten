@@ -3752,6 +3752,12 @@ static int __pyramid_remaining_blocks(int bid) {
 }
 ANK_FUNCTION_1(__pyramid_remaining_blocks);
 
+static int __pyramid_casing_total(int bid) {
+    building* b = building_get(bid);
+    return b ? g_monument_pyramid_engine.casing_total(b) : -1;
+}
+ANK_FUNCTION_1(__pyramid_casing_total);
+
 static void __pyramid_start_block_phase(int bid) {
     building *b = building_get(bid);
     building *head = b ? b->main() : nullptr;

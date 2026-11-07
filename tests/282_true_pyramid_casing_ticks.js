@@ -1,4 +1,4 @@
-// OG casing: a stonemason lays a casing block on a true pyramid in pyramid_casing_ticks (40) ticks.
+// OG casing: a stonemason lays a casing block on a true pyramid in pyramid_casing_ticks (40) ticks; casing_total is parts * 6.
 
 function run_test() {
     __log_info_native('[test:282] true pyramid casing block ticks')
@@ -53,10 +53,11 @@ function run_test() {
         __test_figures_update()
         ticks++
     }
-    if (ticks == 40) {
+    var casing = __pyramid_casing_total(bid)
+    if (ticks == 40 && casing == 96) {
         __log_marker('casing_ticks_ok:' + ticks)
     } else {
-        __log_marker('casing_ticks_fail:' + ticks + ':' + __figure_get_action_state(fid))
+        __log_marker('casing_ticks_fail:' + ticks + ':' + casing + ':' + __figure_get_action_state(fid))
     }
     __test_signal_ready()
 }
