@@ -111,13 +111,13 @@ public:
         assign_block_delivery(monument, mason_fid);
     }
     void find_work();
+    e_resource block_material_for(building *monument, figure_id mason_fid) const;
 
 private:
     bool uses_ramp_climb(building *monument) const;
     tile2i ramp_entry_tile(building *monument) const;
     bool assign_farm_task(building *farm);
     bool assign_monument_task(building *monument, figure_id mason_fid);
-    e_resource block_material_for(building *monument, figure_id mason_fid) const;
     void monument_site_work_tick(building *monument);
     void sled_to_monument_tick(building *monument);
     bool assign_lamp_delivery(building *tomb);

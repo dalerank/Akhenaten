@@ -802,9 +802,10 @@ void figure_worker::figure_action() {
         return;
     }
 
-    // IDLE / GOING_OUT / ferry have no work destination yet; brick delivery may briefly lack one.
+    // IDLE / GOING_OUT / ferry / DELIVERED reuse have no work destination; haul may briefly lack one.
     if (action != ACTION_8_LABORER_IDLE && action != ACTION_9_LABORER_GOING_OUT
         && action != ACTION_6_CARTPUSHER_ON_FERRY && action != ACTION_7_CARTPUSHER_WAIT_FOR_FERRY
+        && action != ACTION_29_LABORER_DELIVERED
         && !rd.delivering_block) {
         if (!b_dest || !b_dest->is_valid()) {
             poof();
@@ -1320,6 +1321,50 @@ static int __work_camp_spawn_laborer_og(int bid) {
     return f->id;
 }
 ANK_FUNCTION_1(__work_camp_spawn_laborer_og)
+
+// Test helper: apply OG farm-arrival staffing without pathing.
+static int __worker_force_farm_arrival(int fid, int farm_bid) {
+    figure *f = figure_get(fid);
+    auto *worker = f ? f->dcast_worker() : nullptr;
+    building *farm = building_get(farm_bid);
+    building *camp = f ? f->home() : nullptr;
+    if (!worker || !farm || !farm->is_floodplain_farm() || !camp) {
+        return 0;
+    }
+    f->set_destination(farm);
+    auto &d = farm->dcast_farm()->runtime_data();
+    if (game_features::gameplay_change_work_camp_distance_scaled_farm_workers.to_bool()) {
+        farm->num_workers = std::clamp<int>((1.f - camp->tile.dist(farm->tile) / 20.f) * 12, 2, 10);
+    } else {
+        farm->num_workers = farm->max_workers;
+    }
+    d.work_camp_id = camp->id;
+    d.worker_id = 0;
+    d.labor_state = LABOR_STATE_JUST_ENTERED;
+    d.labor_days_left = figure_worker::current_params().farm_labor_days;
+    worker->poof();
+    return farm->num_workers;
+}
+ANK_FUNCTION_2(__worker_force_farm_arrival)
+
+static int __worker_block_material_for(int monument_bid, int mason_fid) {
+    building *mon = building_get(monument_bid);
+    if (!mon) {
+        return (int)RESOURCE_NONE;
+    }
+    figure *tmp = figure_create(FIGURE_LABORER, mon->tile, DIR_0_TOP_RIGHT);
+    auto *worker = tmp ? tmp->dcast_worker() : nullptr;
+    if (!worker) {
+        if (tmp) {
+            tmp->poof();
+        }
+        return (int)RESOURCE_NONE;
+    }
+    const int resource = (int)worker->block_material_for(mon, (figure_id)mason_fid);
+    worker->poof();
+    return resource;
+}
+ANK_FUNCTION_2(__worker_block_material_for)
 
 void figure_worker::update_animation() {
     figure_impl::update_animation();
