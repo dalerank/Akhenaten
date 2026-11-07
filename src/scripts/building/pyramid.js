@@ -1324,6 +1324,7 @@ building_small_stepped_pyramid {
     filler_type : BUILDING_SMALL_PYRAMID
     part_count : 16
     block_total : 216
+    casing_total : 96
     // OG pyramid_ramp_table (8×8).
     ramps [
       { part: 13, ramp1_height: 1 }
@@ -1407,6 +1408,7 @@ building_small_stepped_pyramid {
     filler_type : BUILDING_SMALL_MUDBRICK_PYRAMID
     part_count : 16
     block_total : 216
+    casing_total : 96
     // OG pyramid_ramp_table (8×8).
     ramps [
       { part: 13, ramp1_height: 1 }
@@ -1607,6 +1609,7 @@ building_small_stepped_pyramid {
     filler_type : BUILDING_MEDIUM_MUDBRICK_PYRAMID
     part_count : 36
     block_total : 552
+    casing_total : 216
     // OG pyramid_ramp_table (12×12).
     ramps [
       { part: 31, ramp1_height: 1 }
@@ -1818,6 +1821,7 @@ building_small_stepped_pyramid {
     filler_type : BUILDING_LARGE_MUDBRICK_PYRAMID
     part_count : 64
     block_total : 1104
+    casing_total : 384
     // OG pyramid_ramp_table (16×16).
     ramps [
       { part: 57, ramp1_height: 1 }
@@ -1935,6 +1939,7 @@ building_small_stepped_pyramid {
     filler_type : BUILDING_MUDBRICK_PYRAMID_COMPLEX
     part_count : 100
     block_total : 1920
+    casing_total : 600
     // OG pyramid_ramp_table (20×20 complex).
     ramps [
       { part: 91, ramp1_height: 1 }
@@ -2051,6 +2056,7 @@ building_small_stepped_pyramid {
     filler_type : BUILDING_GRAND_MUDBRICK_PYRAMID_COMPLEX
     part_count : 100
     block_total : 1920
+    casing_total : 600
     // OG size-4 schedule needs 24×24; remake grand is still 20×20 → complex table.
     ramps [
       { part: 91, ramp1_height: 1 }
@@ -2308,6 +2314,7 @@ building_small_stepped_pyramid {
     filler_type : BUILDING_MEDIUM_PYRAMID
     part_count : 36
     block_total : 552
+    casing_total : 216
     // OG pyramid_ramp_table (12×12).
     ramps [
       { part: 31, ramp1_height: 1 }
@@ -2521,6 +2528,7 @@ building_small_stepped_pyramid {
     filler_type : BUILDING_LARGE_PYRAMID
     part_count : 64
     block_total : 1104
+    casing_total : 384
     // OG pyramid_ramp_table (16×16).
     ramps [
       { part: 57, ramp1_height: 1 }
@@ -2841,6 +2849,7 @@ building_small_stepped_pyramid {
     filler_type : BUILDING_PYRAMID_COMPLEX
     part_count : 100
     block_total : 1920
+    casing_total : 600
     // OG pyramid_ramp_table (20×20 complex).
     ramps [
       { part: 91, ramp1_height: 1 }
@@ -3166,6 +3175,7 @@ building_small_stepped_pyramid {
     filler_type : BUILDING_GRAND_PYRAMID_COMPLEX
     part_count : 100
     block_total : 1920
+    casing_total : 600
     // OG size-4 schedule needs 24×24; remake grand is still 20×20 → complex table.
     ramps [
       { part: 91, ramp1_height: 1 }

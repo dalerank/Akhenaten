@@ -3854,6 +3854,26 @@ static int __test_pyramid_park_pair_masons(int bid, int fid_a, int fid_b) {
 }
 ANK_FUNCTION_3(__test_pyramid_park_pair_masons);
 
+static int __test_pyramid_casing_part(int bid, int fid) {
+    building* b = building_get(bid);
+    building* head = b ? b->main() : nullptr;
+    figure* f = figure_get(fid);
+    auto* ps = head ? pyramid_part_state_get(head->id) : nullptr;
+    if (!ps || !f) {
+        return 0;
+    }
+    ps->stage = PYRAMID_STAGE_CASING;
+    ps->blocks = 6;
+    ps->worker_figure_id = (figure_id)fid;
+    f->set_destination(head);
+    f->destination_tile = head->tile;
+    f->terrain_usage = TERRAIN_USAGE_ANY;
+    g_monument_pyramid_figure.set_work_part_bid(f, head->id);
+    g_monument_pyramid_figure.walk_mode(f) = PYRAMID_WALK_ON_LAYER;
+    return head->id;
+}
+ANK_FUNCTION_2(__test_pyramid_casing_part);
+
 static int __pyramid_spawn_sled_train(int laborer_fid, int monument_bid) {
     figure *laborer = figure_get(laborer_fid);
     building *mon = building_get(monument_bid);
