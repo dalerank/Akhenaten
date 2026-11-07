@@ -151,15 +151,18 @@ void building_industry_update_farms(void) {
             return;
         }
 
-        if (b.curse_days_left) { // TODO
-            b.curse_days_left--;
-        }
-
         if (b.blessing_days_left) {
             b.blessing_days_left--;
         }
 
         bool is_floodplain = b.is_floodplain_farm();
+        // OG produce(): the curse counts down only on a staffed day, and that day does not grow.
+        const bool staffed = is_floodplain ? (farm->runtime_data().labor_days_left > 0) : (b.num_workers > 0);
+        bool cursed = false;
+        if (staffed && b.curse_days_left) {
+            b.curse_days_left--;
+            cursed = true;
+        }
         int fert = map_get_fertility_for_farm(b.tile.grid_offset());
         // Truncate base first (OG / remake meadow parity). Basin bonus applied after.
         int progress_step = (int)((float)fert * get_farm_produce_uptick_per_day(b)); // 0.16f
@@ -178,8 +181,8 @@ void building_industry_update_farms(void) {
         if (is_floodplain) { // floodplain farms
             // advance production
             auto &d = b.dcast_farm()->runtime_data();
-            if (d.labor_days_left > 0) {
-                b.progress += progress_step;
+            if (d.labor_days_left > 0 && !cursed) {
+                b.progress += std::max(1, progress_step);
             }
             // update labor state
             if (d.labor_state == LABOR_STATE_JUST_ENTERED) {
@@ -195,8 +198,8 @@ void building_industry_update_farms(void) {
             }
         } else { // meadow farms
             // advance production
-            if (b.num_workers > 0) {
-                b.progress += progress_step * ((float)b.num_workers / 10.0f);
+            if (b.num_workers > 0 && !cursed) {
+                b.progress += std::max(1, (int)(progress_step * ((float)b.num_workers / 10.0f)));
             }
         }
 
