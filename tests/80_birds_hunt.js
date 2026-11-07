@@ -62,10 +62,17 @@ function run_test() {
         test_figure_set_speed(ostrich, 0)
         test_figure_set_speed(antelope, 0)
         test_figure_set_speed(bird, 0)
-        __test_pump_frames(30)
-
-        var ha = __figure_is_valid(hunter) ? __figure_get_action_state(hunter) : -1
-        var target = __figure_is_valid(hunter) ? __figure_get_target_figure_id(hunter) : 0
+        // The shot state lasts a few ticks: sample every frame, not every 30.
+        var ha = -1
+        var target = 0
+        for (var f = 0; f < 30; f++) {
+            __test_pump_frames(1)
+            ha = __figure_is_valid(hunter) ? __figure_get_action_state(hunter) : -1
+            target = __figure_is_valid(hunter) ? __figure_get_target_figure_id(hunter) : 0
+            if (ha == ACTION_15_OSTRICH_HUNTER_HUNT || target == ostrich || target == antelope) {
+                break
+            }
+        }
 
         if (target == ostrich || target == antelope) {
             __log_info_native('[test:80] FAIL: hunter targeted wrong prey: ' + target)
