@@ -55,3 +55,20 @@ function building_cattle_ranch_on_update_animation(ev) {
         b.play_animation = false
     }
 }
+
+[es=(building_cattle_ranch, on_place_checks)]
+function building_cattle_ranch_on_place_checks(ev) {
+    var grain = city.resources.grain
+    var straw = city.resources.straw
+    if (grain.count_active_industry > 0 || straw.yards_stored > 0) {
+        return
+    }
+    city.warnings.show("#building_needs_straw")
+    if (grain.can_produce) {
+        city.warnings.show("#build_grain_farm")
+    } else if (straw.can_import) {
+        city.warnings.show_if_not(straw.trade_status == TRADE_STATUS_IMPORT, "#overseer_of_commerce_to_import")
+    } else if (straw.could_import) {
+        city.warnings.show("#setup_trade_route_to_import")
+    }
+}
