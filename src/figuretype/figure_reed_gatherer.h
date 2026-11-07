@@ -23,5 +23,6 @@ public:
     virtual void figure_before_action() override;
     virtual void figure_action() override;
     virtual void update_animation() override;
+    virtual short ferry_reroute_action() const override { return ACTION_8_REED_GATHERER_RECALCULATE; }
 };
 ANK_CONFIG_STRUCT(figure_reed_gatherer::static_params, max_amount)

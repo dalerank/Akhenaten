@@ -1,5 +1,7 @@
 #include "figure_reed_gatherer.h"
 
+#include "building/building_ferry.h"
+#include "figuretype/figure_cartpusher.h"
 #include "graphics/image_groups.h"
 #include "grid/vegetation.h"
 #include "game/game_config.h"
@@ -17,6 +19,22 @@ void figure_reed_gatherer::figure_before_action() {
 
 void figure_reed_gatherer::figure_action() {
     switch (action_state()) {
+    case ACTION_6_CARTPUSHER_ON_FERRY:
+        base.set_flag(e_figure_flag_invisible, true);
+        break;
+
+    case ACTION_7_CARTPUSHER_WAIT_FOR_FERRY:
+        base.animctx.frame = 0;
+        base.wait_ticks++;
+        if (base.wait_ticks > 100) {
+            base.wait_ticks = 0;
+            if (!figure_is_queued_for_ferry(id())) {
+                base.set_flag(e_figure_flag_invisible, false);
+                advance_action(ACTION_8_REED_GATHERER_RECALCULATE);
+            }
+        }
+        break;
+
     case ACTION_8_REED_GATHERER_RECALCULATE:
     case ACTION_14_REED_GATHERER_CREATED: // spawning
         base.animctx.frame = 0;
