@@ -26,64 +26,6 @@ static building_dock *dock_this(js_State *J) {
     return dock_from_bid(dock_this_id(J));
 }
 
-/** Test/helper: unweighted any-match count for up to 3 partner goods (0 = unused). */
-static void __test_fill_resource_list(resource_list &out, int r0, int r1, int r2) {
-    const int rs[3] = { r0, r1, r2 };
-    for (int r : rs) {
-        if (r > RESOURCE_NONE && r < RESOURCES_MAX) {
-            out[(e_resource)r] = 1;
-        }
-    }
-}
-
-int __test_dock_match_score(int bid, int r0, int r1, int r2) {
-    auto b = dock_from_bid(bid);
-    if (!b) {
-        return -1;
-    }
-    resource_list active;
-    __test_fill_resource_list(active, r0, r1, r2);
-    resource_list empty;
-    return b->count_matching_goods(active, empty);
-}
-ANK_FUNCTION_4(__test_dock_match_score)
-
-bool __test_dock_any_match(int bid, int r0, int r1, int r2) {
-    return __test_dock_match_score(bid, r0, r1, r2) > 0;
-}
-ANK_FUNCTION_4(__test_dock_any_match)
-
-/** Test: weighted score — imports ×2, exports ×1 (up to 3 each; 0 = unused). */
-int __test_dock_trade_score(int bid, int i0, int i1, int i2, int e0, int e1, int e2) {
-    auto b = dock_from_bid(bid);
-    if (!b) {
-        return -1;
-    }
-    resource_list imports;
-    resource_list exports;
-    __test_fill_resource_list(imports, i0, i1, i2);
-    __test_fill_resource_list(exports, e0, e1, e2);
-    return b->trade_match_score(imports, exports);
-}
-ANK_FUNCTION_7(__test_dock_trade_score)
-
-int __test_dock_yard_proximity(int bid) {
-    auto b = dock_from_bid(bid);
-    return b ? b->yard_proximity_cost() : -1;
-}
-ANK_FUNCTION_1(__test_dock_yard_proximity)
-
-int __test_dock_match_score_for_ship(int bid, int ship_id) {
-    auto b = dock_from_bid(bid);
-    return b ? b->match_score_for_ship(ship_id) : -1;
-}
-ANK_FUNCTION_2(__test_dock_match_score_for_ship)
-
-int __test_map_get_free_dock(int ship_id) {
-    return map_get_free_destination_dock(ship_id).bid;
-}
-ANK_FUNCTION_1(__test_map_get_free_dock)
-
 /* ---- Dock JS object (inherits Building.prototype) ---- */
 
 static js_Object *g_dock_proto = nullptr;

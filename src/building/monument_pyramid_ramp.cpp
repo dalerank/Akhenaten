@@ -12,6 +12,7 @@
 #include "graphics/view/view.h"
 #include "grid/building.h"
 #include "grid/grid.h"
+#include "js/js_game.h"
 
 #include <algorithm>
 #include <cstring>
@@ -255,6 +256,16 @@ void pyramid_engine_set_force_show_ramps(building *main, bool enable) {
         }
     }
 }
+
+static void __pyramid_force_show_ramps(int bid, int enable) {
+    building* b = building_get(bid);
+    building* head = b ? b->main() : nullptr;
+    if (!head) {
+        return;
+    }
+    pyramid_engine_set_force_show_ramps(head, enable != 0);
+}
+ANK_FUNCTION_2(__pyramid_force_show_ramps);
 
 void pyramid_engine_build_ramp(building_id part_id) {
     building *part = building_get(part_id);

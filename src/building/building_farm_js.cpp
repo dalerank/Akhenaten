@@ -87,32 +87,6 @@ int __building_farm_expected_produce(int bid) {
 }
 ANK_FUNCTION_1(__building_farm_expected_produce)
 
-void __test_set_osiris_double_farm_yield(int active) {
-    g_city.religion.osiris_double_farm_yield_days = active ? 1 : 0;
-    g_city.religion.osiris_double_farm_yield_used = false;
-}
-ANK_FUNCTION_1(__test_set_osiris_double_farm_yield)
-
-void __test_farm_harvest_and_clear_osiris(int bid) {
-    building *b = building_get(bid);
-    building_farm *farm = b ? b->dcast_farm() : nullptr;
-    if (!farm) {
-        return;
-    }
-    b->has_road_access = true;
-    farm->spawn_figure_harvests();
-    if (g_city.religion.osiris_double_farm_yield_used) {
-        g_city.religion.osiris_double_farm_yield_days = 0;
-        g_city.religion.osiris_double_farm_yield_used = false;
-    }
-}
-ANK_FUNCTION_1(__test_farm_harvest_and_clear_osiris)
-
-int __test_farm_food_warning() {
-    return building_farm::food_warning();
-}
-ANK_FUNCTION(__test_farm_food_warning)
-
 int __building_farm_cart_resource(int bid, int slot) {
     building *b = building_get(bid);
     if (!b) {

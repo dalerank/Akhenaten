@@ -60,4 +60,3 @@ import player
 import mods
 import empire_map
 import building_menu_ctrl
-import integral_test

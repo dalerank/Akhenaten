@@ -359,6 +359,9 @@ namespace config {
     using jsfunc_iterator_function_cb = void(js_State *);
     using FunctionIterator = FuncLinkedList<jsfunc_iterator_function_cb *, ConfigTag>;
 
+    struct TestConfigTag {};
+    using TestFunctionIterator = FuncLinkedList<jsfunc_iterator_function_cb*, TestConfigTag>;
+
     struct ESIteratorEntry {
         xstring es_type;
         void (*regnew)(pcstr name);
@@ -390,9 +393,18 @@ namespace config {
 #define ANK_REGISTER_MODIFIER_ITERATOR(modifier_key, func) \
     static config::ModifierIteratorEntry ANK_CONFIG_CC1(mod_iter_entry, __LINE__)(#modifier_key, func);
 
-#define ANK_DECLARE_JSFUNCTION_ITERATOR(func) void func(js_State*); \
-    namespace config {int ANK_CONFIG_PULL_VAR_NAME(func) = 1;} \
-    static config::FunctionIterator ANK_CONFIG_CC1(func_handler, __LINE__)(func)
+// Test-binding TUs (src/js/test/) define this to config::TestFunctionIterator before any include,
+// so their natives are registered only under --integraltests.
+#ifndef ANK_JS_FUNCTION_REGISTRY
+#define ANK_JS_FUNCTION_REGISTRY config::FunctionIterator
+#endif
+
+#define ANK_DECLARE_JSFUNCTION_ITERATOR(func)                                    \
+    void func(js_State*);                                                        \
+    namespace config {                                                           \
+        int ANK_CONFIG_PULL_VAR_NAME(func) = 1;                                  \
+    }                                                                            \
+    static ANK_JS_FUNCTION_REGISTRY ANK_CONFIG_CC1(func_handler, __LINE__)(func)
 
 template<typename Func>
 struct js_function_traits;

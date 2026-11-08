@@ -263,7 +263,13 @@ After each test script loads, the driver calls `js_vm_sync({})` so any top-level
 - Basenames starting with `_` are skipped by the driver (e.g. old shared snippets under `tests/`). Prefer adding helpers to `integral_test.js` instead.
 - The name in log lines is the **full path** returned by the VFS iterator, e.g. `tests/11_work_camp_map_placement.js` → `[test:tests/11_work_camp_map_placement.js] PASS`.
 
-## C++ test bindings (`js_test_game.cpp`)
+## C++ test bindings (`src/js/test/`)
+
+Test-only natives live in `src/js/test/js_test_<domain>.cpp` (runner, city, map, buildings, figures,
+economy, monuments, military, water, animals, editor). Each file includes `js/test/js_test_common.h`
+**first**: that routes its `ANK_FUNCTION*` registrations to `config::TestFunctionIterator`, which is
+registered only under `--integraltests` (`src/scripts/integral_test.js` is imported only then too).
+A new test binding goes into the matching domain file; a new domain file needs a CMake reconfigure.
 
 | Function | Returns | Purpose |
 |----------|---------|---------|

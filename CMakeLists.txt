@@ -798,6 +798,7 @@ file(GLOB IO_IMAGEPAKS_FILES ${PROJECT_SOURCE_DIR}/src/io/imagepaks/*.cpp)
 file(GLOB IO_PLAYERDATA_FILES ${PROJECT_SOURCE_DIR}/src/io/playerdata/*.cpp)
 file(GLOB RESOURCE_FILES ${PROJECT_SOURCE_DIR}/src/resource/*.cpp)
 file(GLOB JS_FILES ${PROJECT_SOURCE_DIR}/src/js/*.cpp)
+file(GLOB JS_TEST_FILES ${PROJECT_SOURCE_DIR}/src/js/test/*.cpp)
 file(GLOB SCRIPTS_FILES ${PROJECT_SOURCE_DIR}/src/scripts/*.cpp)
 file(GLOB LZMA_FILES ${PROJECT_SOURCE_DIR}/src/lzma/*.c)
 file(GLOB BZIP_FILES ${PROJECT_SOURCE_DIR}/src/bzip/*.c)
@@ -918,6 +919,7 @@ if(MSVC)
     source_group("graphics" FILES ${GRAPHICS_FILES})
     source_group("fontgen" FILE ${GRAPHICS_FONTGEN_FILES})
     source_group("js" FILES ${JS_FILES})
+    source_group("js/test" FILES ${JS_TEST_FILES})
     source_group("lzma" FILES ${LZMA_FILES})
     source_group("bzip" FILES ${BZIP_FILES})
     source_group("lame" FILES ${LAME_FILES})
@@ -977,6 +979,7 @@ set(SOURCE_FILES
     ${TRACY_FILES}
     ${RESOURCE_FILES}
     ${JS_FILES}
+    ${JS_TEST_FILES}
     ${SCRIPTS_FILES}
     ${LZMA_FILES}
     ${BZIP_FILES}

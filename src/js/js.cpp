@@ -1038,6 +1038,11 @@ void js_reset_vm_state() {
     js_register_menu(vm.J);
 
     int ok = js_vm_load_file_and_exec(":modules.js");
+    // integral_test.js calls __test_* natives, which exist only under --integraltests;
+    // MuJS rejects calls to unregistered __ functions at compile time.
+    if (g_args.is_integral_tests()) {
+        js_game_import(vm.J, "integral_test");
+    }
     if (ok) {
         int stack_top = vm.J->gettop();
         if (stack_top > 0) {
