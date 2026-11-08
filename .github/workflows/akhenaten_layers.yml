@@ -1,0 +1,19 @@
+name: Akhenaten layer check
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+
+permissions:
+  contents: read
+
+jobs:
+  layers:
+    name: run on linux
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v6
+    - name: check include layers
+      run: python3 tools/check_layers.py

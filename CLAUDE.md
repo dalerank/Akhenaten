@@ -115,6 +115,14 @@ Version matters: the CI job installs `clang-format-20`, and `.clang-format` is w
 An older local clang-format (e.g. the 19.x bundled with Visual Studio) produces a diff CI rejects —
 check `clang-format --version` before formatting.
 
+### Include layers
+
+`python3 tools/check_layers.py` (CI gate `akhenaten_layers.yml`) enforces the include direction
+core < grid < sim < presentation < app (directory → layer map in the script): a file may include
+headers of its own layer or lower. Known violations live in `tools/layers_baseline.txt`; only new ones
+fail. When you remove a violation, delete its baseline line (or run `--update` after a cleanup);
+never add lines to silence a new one. `--summary` prints counts per layer pair.
+
 ### Comments
 
 Do **not** sprinkle comments everywhere. Prefer clear names and structure over narration.
