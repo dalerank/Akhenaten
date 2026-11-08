@@ -44,17 +44,35 @@
 #undef main
 #endif
 
-static bool file_contains_marker(pcstr path, pcstr marker, const size_t marker_len) {
+static std::streamoff g_test_log_start = 0;
+
+static std::streamoff log_file_size(pcstr path) {
+    std::ifstream in(path, std::ios::binary | std::ios::ate);
+    return in ? (std::streamoff)in.tellg() : 0;
+}
+
+void test_log_mark_test_start() {
+    logs::flush();
+    g_test_log_start = log_file_size(logs::output_path());
+}
+
+static bool file_contains_marker(pcstr path, pcstr marker, const size_t marker_len, std::streamoff start) {
     std::ifstream in(path, std::ios::binary);
     if (!in) {
         return false;
     }
 
+    // A log shorter than the mark was restarted during this test: all of it is ours.
+    if (start > log_file_size(path)) {
+        start = 0;
+    }
+    in.seekg(start);
+
     std::string chunk;
     chunk.reserve(8192 + marker_len);
     std::string tail;
     char buf[8192];
-    bool strip_bom = true;
+    bool strip_bom = (start == 0);
 
     while (in) {
         in.read(buf, sizeof(buf));
@@ -96,7 +114,7 @@ bool test_log_contains(pcstr marker) {
     logs::flush();
 
     const size_t marker_len = std::strlen(marker);
-    return file_contains_marker(logs::output_path(), marker, marker_len);
+    return file_contains_marker(logs::output_path(), marker, marker_len, g_test_log_start);
 }
 
 static bool __test_find_inlog(pcstr marker) {

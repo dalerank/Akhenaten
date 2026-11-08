@@ -10,7 +10,10 @@
 
 extern bool g_test_signal_ready;
 
+// Searches the log from the last test_log_mark_test_start(), so one test's markers or errors
+// cannot pass or fail a later test.
 [[nodiscard]] bool test_log_contains(const char *marker);
+void test_log_mark_test_start();
 
 // Drop city/editor session + scenario events and return to main menu so the next
 // test's test_ensure_city_session() reloads a fresh map.

@@ -1,7 +1,10 @@
 #include "settings_vars.h"
 
-#include <unordered_map>
+#include <algorithm>
+#include <cstring>
 #include <optional>
+#include <unordered_map>
+#include <vector>
 
 #include "content/vfs.h"
 #include "core/log.h"
@@ -173,46 +176,57 @@ std::string settings_vars_t::save() const {
 	std::string result;
 	result.reserve(1024);
 
-	for (const auto& [key, value] : impl().get_variants()) {
-		result += key.c_str();
-		result += "=";
+    // Sorted so the saved bytes do not depend on hash-map iteration order.
+    std::vector<const settings_vars_impl_t::variants_map_t::value_type*> entries;
+    entries.reserve(impl().get_variants().size());
+    for (const auto& entry : impl().get_variants()) {
+        entries.push_back(&entry);
+    }
+    std::sort(entries.begin(), entries.end(),
+      [](auto a, auto b) { return strcmp(a->first.c_str(), b->first.c_str()) < 0; });
 
-		switch (value.index()) {
-		case setting_bool: {
-				result += "b:";
-				result += std::get<bool>(value) ? "1" : "0";
-				break;
-			}
-		case setting_float: {
-				result += "f:";
-				result += std::to_string(std::get<float>(value));
-				break;
-			}
-		case setting_vec2i: {
-				const vec2i& v = std::get<vec2i>(value);
-				result += "v:";
-				result += std::to_string(v.x);
-				result += ",";
-				result += std::to_string(v.y);
-				break;
-			}
-		case setting_string: {
-				const xstring& s = std::get<xstring>(value);
-				result += "s:";
-				for (size_t i = 0; i < s.size(); ++i) {
-					char c = s.c_str()[i];
-					if (c == '\\' || c == '\n' || c == '=') {
-						result += '\\';
-					}
-					result += c;
-				}
-				break;
-			}
-		}
-		result += "\n";
-	}
-	
-	return result;
+    for (const auto* entry : entries) {
+        const auto& key = entry->first;
+        const auto& value = entry->second;
+        result += key.c_str();
+        result += "=";
+
+        switch (value.index()) {
+        case setting_bool: {
+            result += "b:";
+            result += std::get<bool>(value) ? "1" : "0";
+            break;
+        }
+        case setting_float: {
+            result += "f:";
+            result += std::to_string(std::get<float>(value));
+            break;
+        }
+        case setting_vec2i: {
+            const vec2i& v = std::get<vec2i>(value);
+            result += "v:";
+            result += std::to_string(v.x);
+            result += ",";
+            result += std::to_string(v.y);
+            break;
+        }
+        case setting_string: {
+            const xstring& s = std::get<xstring>(value);
+            result += "s:";
+            for (size_t i = 0; i < s.size(); ++i) {
+                char c = s.c_str()[i];
+                if (c == '\\' || c == '\n' || c == '=') {
+                    result += '\\';
+                }
+                result += c;
+            }
+            break;
+        }
+        }
+        result += "\n";
+    }
+
+    return result;
 }
 
 void settings_vars_t::load(const std::string& data) {

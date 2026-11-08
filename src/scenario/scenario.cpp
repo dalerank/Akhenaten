@@ -13,8 +13,11 @@
 #include "game/game.h"
 #include "game/mission.h"
 #include "dev/debug.h"
+#include "core/log.h"
 
 #include "js/js_game.h"
+
+#include <cstring>
 
 scenario_data_t g_scenario;
 std::unordered_set<custom_mission_config> ANK_VARIABLE(custom_missions);
@@ -201,11 +204,19 @@ void scenario_data_t::bind_data(io_buffer *iob, size_t version, size_t size) {
     char data[2000] = { 0 };
     if (iob->is_read_access()) {
         iob->bind(BIND_SIGNATURE_RAW, &data, sizeof(data));
-        vars.load(data);
+        // A damaged save may leave the chunk without a terminator.
+        vars.load(std::string(data, strnlen(data, sizeof(data))));
     } else {
         std::string save_data = vars.save();
-        assert(save_data.size() < sizeof(data));
-        memcpy(data, save_data.data(), save_data.size() + 1);
+        if (save_data.size() >= sizeof(data)) {
+            // Keep whole "key=value\n" lines only, so the truncated text still loads.
+            const size_t last_newline = save_data.rfind('\n', sizeof(data) - 2);
+            const size_t keep = (last_newline == std::string::npos) ? 0 : last_newline + 1;
+            logs::error("scenario vars: %u bytes do not fit the %u-byte save chunk, saving the first %u",
+              (unsigned)save_data.size(), (unsigned)sizeof(data), (unsigned)keep);
+            save_data.resize(keep);
+        }
+        memcpy(data, save_data.data(), save_data.size());
         iob->bind(BIND_SIGNATURE_RAW, &data, sizeof(data));
     }
 }

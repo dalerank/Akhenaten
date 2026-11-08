@@ -391,6 +391,12 @@ bool call_global_void(js_State *J, const char *name) {
     return ok != 0;
 }
 
+// Global function declarations are non-configurable, so they cannot be deleted; overwrite instead.
+static void clear_global(js_State* J, const char* name) {
+    js_pushnull(J);
+    js_setglobal(J, name);
+}
+
 int run_js_tests() {
     constexpr int kMaxFramesPerTest = 600; // ~10s at 60fps
 
@@ -410,11 +416,14 @@ int run_js_tests() {
         return 0;
     }
 
+    const game_features::snapshot_t features_at_start = game_features::snapshot();
+
     int passed = 0;
     int failed = 0;
     for (const auto &name : files) {
         logs::info("[integraltests] >> %s", name.c_str());
         logs::flush();
+        test_log_mark_test_start();
 
         // Fresh map/UI for every test — leftover city/editor/events otherwise bleed.
         test_reset_session_between_tests();
@@ -422,7 +431,11 @@ int run_js_tests() {
         g_app.quit = false;
         SDL_FlushEvent(SDL_USEREVENT);
 
+        game_features::restore(features_at_start);
         game_features::gameopt_ironwill.set(false);
+        // Otherwise a test without run_test()/check_valid() would run the previous test's.
+        clear_global(J, "run_test");
+        clear_global(J, "check_valid");
         const int stale = js_vm_force_idle_stack();
         if (stale > 0) {
             logs::info("[test:%s] cleared %d stale MuJS stack slot(s) before test", name.c_str(), stale);

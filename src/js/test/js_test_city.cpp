@@ -251,3 +251,8 @@ static int __test_god_coverage_total(int god) {
     return g_city.religion.god_coverage_total((e_god)god, p.shrine_type, p.temple_type, p.complex_type);
 }
 ANK_FUNCTION_1(__test_god_coverage_total);
+
+static void __test_scenario_var_set_string(pcstr name, pcstr value) {
+    g_scenario.vars.set_string(name, value);
+}
+ANK_FUNCTION_2(__test_scenario_var_set_string);

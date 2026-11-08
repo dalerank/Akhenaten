@@ -9,6 +9,7 @@
 #include "city/constants.h"
 #include <array>
 #include <utility>
+#include <vector>
 
 namespace game_features {
     using cli_overrides_t = hvector<std::pair<xstring, xstring>, 32>;
@@ -249,4 +250,9 @@ namespace game_features {
     void save();
     globals_settings_t &settings();
     void apply_cli_overrides(const cli_overrides_t &overrides);
+
+    // Values of all registered features, in registration order (integral tests restore them between tests).
+    using snapshot_t = std::vector<setting_variant>;
+    snapshot_t snapshot();
+    void restore(const snapshot_t& values);
 }

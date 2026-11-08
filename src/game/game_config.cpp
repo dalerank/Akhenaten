@@ -265,6 +265,25 @@ game_features::game_feature::game_feature(const xstring &n, const xstring &t, se
     _settings.set(name, defaultv);
 }
 
+game_features::snapshot_t game_features::snapshot() {
+    snapshot_t values;
+    values.reserve(_features.size());
+    for (auto* feature : _features) {
+        values.push_back(_settings.get(feature->name));
+    }
+    return values;
+}
+
+void game_features::restore(const snapshot_t& values) {
+    const size_t n = std::min<size_t>(values.size(), _features.size());
+    for (size_t i = 0; i < n; ++i) {
+        game_feature* feature = _features[i];
+        if (_settings.get(feature->name) != values[i]) {
+            _settings.set(feature->name, values[i]);
+        }
+    }
+}
+
 bool game_features::game_feature::to_bool() const {
     return _settings.get_bool(name);
 }
