@@ -68,6 +68,7 @@ file(GLOB IO_IMAGEPAKS_FILES ${SRC_ROOT}/io/imagepaks/*.cpp)
 file(GLOB IO_PLAYERDATA_FILES ${SRC_ROOT}/io/playerdata/*.cpp)
 file(GLOB RESOURCE_FILES ${SRC_ROOT}/resource/*.cpp)
 file(GLOB JS_FILES ${SRC_ROOT}/js/*.cpp)
+file(GLOB JS_TEST_FILES ${SRC_ROOT}/js/test/*.cpp)
 file(GLOB SCRIPTS_FILES ${SRC_ROOT}/scripts/*.cpp)
 file(GLOB NET_FILES ${SRC_ROOT}/net/*.cpp)
 file(GLOB LZMA_FILES ${SRC_ROOT}/lzma/*.c)
@@ -139,6 +140,7 @@ set(SOURCE_FILES
     ${IO_PLAYERDATA_FILES}
     ${RESOURCE_FILES}
     ${JS_FILES}
+    ${JS_TEST_FILES}
     ${SCRIPTS_FILES}
     ${NET_FILES}
     ${LZMA_FILES}
