@@ -33,8 +33,10 @@
 #include "city/city_resource.h"
 #include "city/ratings.h"
 #include "core/calc.h"
+#include "core/svector.h"
 #include "game/game_config.h"
 #include "graphics/image_groups.h"
+#include "grid/routing/routing.h"
 #include "js/js_game.h"
 
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_worker);
@@ -577,39 +579,71 @@ void figure_worker::find_work() {
     const auto &p = current_params();
     building *best = nullptr;
     figure_id best_mason = 0;
-    int best_distance = 0x7fffffff;
 
+    // OG: skip farms with no citizen road/garden path to road_access; retry so a nearer
+    // unreachable farm does not kill the laborer (fall through to monuments if none left).
     if (g_floods.state_is(FLOOD_STATE_FARMABLE)) {
-        for (auto &b : city_buildings()) {
-            if (!b.is_valid() || !b.is_floodplain_farm()) {
+        svector<building_id, 500> unreachable_farms;
+        for (;;) {
+            best = nullptr;
+            int best_distance = 0x7fffffff;
+            for (auto &b : city_buildings()) {
+                if (!b.is_valid() || !b.is_floodplain_farm()) {
+                    continue;
+                }
+                if (!b.has_road_access || b.distance_from_entry == 0) {
+                    continue;
+                }
+                if (b.state == BUILDING_STATE_MOTHBALLED) {
+                    continue;
+                }
+                auto *farm = b.dcast_farm();
+                if (!farm || !farm->requested_workers()) {
+                    continue;
+                }
+                bool marked = false;
+                for (building_id id : unreachable_farms) {
+                    if (id == b.id) {
+                        marked = true;
+                        break;
+                    }
+                }
+                if (marked) {
+                    continue;
+                }
+                int distance = calc_maximum_distance(tile(), b.tile);
+                if (distance > (int)p.farm_search_distance) {
+                    continue;
+                }
+                distance += farm->runtime_data().labor_days_left;
+                if (distance >= best_distance) {
+                    continue;
+                }
+                best_distance = distance;
+                best = &b;
+            }
+
+            if (!best) {
+                break;
+            }
+
+            const tile2i access = best->road_access;
+            if (!map_routing_citizen_can_travel_over_road_garden(tile().x(), tile().y(), access.x(), access.y())) {
+                if (unreachable_farms.full()) {
+                    best = nullptr;
+                    break;
+                }
+                unreachable_farms.push_back(best->id);
+                best = nullptr;
                 continue;
             }
-            if (!b.has_road_access || b.distance_from_entry == 0) {
-                continue;
-            }
-            if (b.state == BUILDING_STATE_MOTHBALLED) {
-                continue;
-            }
-            auto *farm = b.dcast_farm();
-            if (!farm || !farm->requested_workers()) {
-                continue;
-            }
-            int distance = calc_maximum_distance(tile(), b.tile);
-            if (distance > (int)p.farm_search_distance) {
-                continue;
-            }
-            distance += farm->runtime_data().labor_days_left;
-            if (distance >= best_distance) {
-                continue;
-            }
-            best_distance = distance;
-            best = &b;
             best_mason = 0;
+            break;
         }
     }
 
     if (!best) {
-        best_distance = 0x7fffffff;
+        int best_distance = 0x7fffffff;
         for (auto &b : city_buildings()) {
             if (!b.is_valid() || !b.is_monument() || !b.is_main()) {
                 continue;
@@ -1346,6 +1380,22 @@ static int __worker_force_farm_arrival(int fid, int farm_bid) {
     return farm->num_workers;
 }
 ANK_FUNCTION_2(__worker_force_farm_arrival)
+
+// Test helper: run OG find_work; return destination building id (0 if poofed / none).
+static int __worker_find_work(int fid) {
+    figure *f = figure_get(fid);
+    auto *worker = f ? f->dcast_worker() : nullptr;
+    if (!worker || !f->is_alive()) {
+        return 0;
+    }
+    worker->find_work();
+    if (!f->is_alive()) {
+        return 0;
+    }
+    building *dest = f->destination();
+    return dest ? dest->id : 0;
+}
+ANK_FUNCTION_1(__worker_find_work)
 
 static int __worker_block_material_for(int monument_bid, int mason_fid) {
     building *mon = building_get(monument_bid);
