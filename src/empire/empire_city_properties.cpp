@@ -5,6 +5,7 @@
 #include "imgui_internal.h"
 #include "empire/empire_map.h"
 #include "empire/empire.h"
+#include "graphics/elements/ui.h"
 
 ANK_REGISTER_PROPS_ITERATOR(config_load_selected_empire_city_properties);
 ANK_REGISTER_PROPS_ITERATOR(config_load_all_empire_city_properties);

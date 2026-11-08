@@ -2,6 +2,7 @@
 
 #include "empire/empire.h"
 #include "city/city.h"
+#include "graphics/elements/ui.h"
 
 city_resource_handle city_resource_barley{ RESOURCE_BARLEY };
 city_resource_handle city_resource_gems{ RESOURCE_GEMS };

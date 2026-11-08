@@ -18,6 +18,7 @@
 
 #include <cmath>
 #include <cctype>
+#include "scenario/scenario.h"
 
 floods_t g_floods;
 

@@ -15,6 +15,7 @@
 #include "game/resource.h"
 #include "grid/routing/queue.h"
 #include "js/js_game.h"
+#include "scenario/scenario.h"
 
 tile_cache marshland_tiles_cache;
 grid_xx g_terrain_vegetation_growth(FS_UINT8);

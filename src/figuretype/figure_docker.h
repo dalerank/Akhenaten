@@ -3,6 +3,7 @@
 #include "figuretype/figure_cartpusher.h"
 #include "empire/empire_city.h"
 #include "empire/trader_handler.h"
+#include "building/building.h"
 
 class building_dock;
 class building_storage_yard;

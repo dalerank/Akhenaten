@@ -20,6 +20,8 @@
 #include "js/js_game.h"
 #include "scenario/scenario.h"
 #include <algorithm>
+#include "city/object_info.h"
+#include "graphics/elements/lang_text.h"
 
 const e_fishing_boat_action_tokens_t ANK_CONFIG_ENUM(e_fishing_boat_action_tokens)
 

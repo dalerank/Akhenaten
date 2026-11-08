@@ -3,8 +3,6 @@
 #include "grid/point.h"
 #include "scenario.h"
 
-const map_data_t* scenario_map_data();
-
 int scenario_map_size();
 
 void scenario_map_init_entry_exit();

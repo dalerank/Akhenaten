@@ -98,6 +98,8 @@
 #include "dev/debug.h"
 #include "window/popup_dialog.h"
 
+#include "scenario/map.h"
+
 #include <cassert>
 #include <cstdlib>
 #include <cstring>

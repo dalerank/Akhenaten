@@ -61,6 +61,7 @@
 #include <core/string.h>
 #include <string.h>
 #include <time.h>
+#include "scenario/map.h"
 
 city_t g_city;
 events::typed_queue g_city_events;

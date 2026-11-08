@@ -10,6 +10,7 @@
 #include "graphics/graphics.h"
 #include "graphics/image.h"
 #include "city/city_buildings.h"
+#include "graphics/elements/ui.h"
 
 city_overlay_routing g_city_overlay_routing;
 

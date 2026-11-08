@@ -1,6 +1,8 @@
 #include "figure_standart_bearer.h"
 
 #include "js/js_game.h"
+#include "graphics/image.h"
+#include "graphics/painter.h"
 
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_standard_bearer);
 

@@ -50,6 +50,7 @@
 
 #include "dev/perfmon_nanoprofiler.h"
 #include "graphics/graphics.h"
+#include "graphics/elements/lang_text.h"
 
 static_assert(SDL_VERSION_ATLEAST(2, 0, 17));
 #define URL_PATCHES "https://github.com/dalerank/akhenaten/wiki/Patches"

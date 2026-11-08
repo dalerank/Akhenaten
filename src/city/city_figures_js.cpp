@@ -20,6 +20,7 @@
 #include "core/log.h"
 #include "core/object_property.h"
 #include "core/profiler.h"
+#include "city/object_info.h"
 
 std::optional<bvariant> __city_get_figures_property(pcstr property) {
     return archive_helper::get(g_city.figures, property, true);

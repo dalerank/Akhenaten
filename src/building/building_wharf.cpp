@@ -2,6 +2,9 @@
 
 #include "grid/water.h"
 #include "grid/building.h"
+#include "graphics/graphics.h"
+#include "graphics/view/view.h"
+#include "graphics/image.h"
 
 BUILDING_RUNTIME_DATA_IMPL(building_wharf)
 

@@ -8,6 +8,8 @@
 #include "dev/debug.h"
 
 #include <functional>
+#include "core/settings_vars.h"
+#include "game/simulation_time.h"
 
 void bind_debug_command(pcstr cmd, console_command_fn f);
 void run_debug_command(pcstr line);

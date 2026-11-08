@@ -2,6 +2,7 @@
 
 #include "js/js_struct.h"
 #include "js/js.h"
+#include "js/js_game.h"
 
 namespace js_emit_detail {
     template<typename T> inline constexpr bool always_false_v = false;

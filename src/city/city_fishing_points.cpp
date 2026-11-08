@@ -12,6 +12,7 @@
 #include <algorithm>
 #include <random>
 #include <time.h>
+#include "core/calc.h"
 
 void city_fishing_points_t::create() {
     scenario_map_foreach_fishing_point([] (tile2i tile) {

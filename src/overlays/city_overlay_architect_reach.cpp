@@ -16,6 +16,7 @@
 #include "window/window_info.h"
 
 #include <algorithm>
+#include "city/object_info.h"
 
 city_overlay_architect_reach g_city_overlay_architect_reach;
 

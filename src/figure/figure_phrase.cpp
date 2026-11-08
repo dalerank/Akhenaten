@@ -13,6 +13,7 @@
 #include "sound/sound.h"
 
 #include <filesystem>
+#include "graphics/elements/lang_text.h"
 
 ANK_SCRIPT_EVENT(event_synthesize_figure_phrase, id, path, text)
 

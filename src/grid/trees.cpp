@@ -16,6 +16,7 @@
 #include "grid/tiles.h"
 #include "tile_cache.h"
 #include "vegetation.h"
+#include "scenario/scenario.h"
 
 tile_cache trees_tiles_cache;
 

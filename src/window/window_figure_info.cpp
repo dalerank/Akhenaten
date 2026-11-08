@@ -9,6 +9,7 @@
 #include "js/js_struct.h"
 #include "graphics/elements/ui_js.h"
 #include "window/figure_info_thumbnails.h"
+#include "window/building/common.h"
 
 struct figure_info_window_init { int figure_id; };
 ANK_REGISTER_STRUCT_WRITER(figure_info_window_init, figure_id);

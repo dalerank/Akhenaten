@@ -5,6 +5,7 @@
 #include "imgui.h"
 #include "imgui_internal.h"
 #include "game/game.h"
+#include "scenario/scenario.h"
 
 void game_debug_show_properties_object(pcstr prefix, event_ph_t &e) {
     ImGui::PushID(0x80000000 | e.event_id);

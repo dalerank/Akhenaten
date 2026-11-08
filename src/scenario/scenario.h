@@ -7,6 +7,7 @@
 #include "core/custom_span.hpp"
 #include "core/xstring.h"
 #include "scenario_event_manager.h"
+#include "grid/map_geometry.h"
 #include "grid/point.h"
 #include "scenario/types.h"
 #include "scenario/scenario_difficulty.h"
@@ -131,13 +132,6 @@ struct std::hash<custom_mission_config> {
     std::size_t operator()(const custom_mission_config& k) const noexcept { return k.mission_id; }
 };
 int get_custom_mission_id(xstring name);
-
-struct map_data_t {
-    int width = -1;
-    int height = -1;
-    int start_offset = -1;
-    int border_size = -1;
-};
 
 struct request_t {
     int year;

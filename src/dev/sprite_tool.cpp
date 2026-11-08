@@ -4,6 +4,7 @@
 #include "graphics/imagepak_holder.h"
 
 #include "dev/debug.h"
+#include "graphics/screen.h"
 
 ANK_REGISTER_PROPS_ITERATOR(dev_sprite_tool);
 

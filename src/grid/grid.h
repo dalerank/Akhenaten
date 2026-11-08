@@ -6,7 +6,7 @@
 #include "core/hvector.h"
 #include "grid_area.h"
 #include "point.h"
-#include "scenario/map.h"
+#include "map_geometry.h"
 #include "core/core_utility.h"
 
 #include <utility>

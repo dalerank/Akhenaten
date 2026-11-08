@@ -18,6 +18,8 @@
 #include "figuretype/figure_deliveryboy.h"
 
 #include <cstring>
+#include "city/object_info.h"
+#include "graphics/elements/lang_text.h"
 
 namespace {
 

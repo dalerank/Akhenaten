@@ -9,6 +9,7 @@
 #include <memory>
 #include <vector>
 #include <unordered_map>
+#include "graphics/elements/ui.h"
 
 static char g_preview_text[256] = "AbcdefABCDEF";
 static bool g_show_atlas = false;

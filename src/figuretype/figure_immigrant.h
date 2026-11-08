@@ -1,6 +1,7 @@
 #pragma once
 
 #include "figure/figure.h"
+#include "building/building.h"
 
 struct event_create_immigrant {
     building_id bid;

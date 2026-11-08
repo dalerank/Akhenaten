@@ -1,6 +1,7 @@
 #pragma once
 
 #include "figure/figure.h"
+#include "building/building.h"
 
 struct event_create_homeless { tile2i tile; int num_people; pcstr location; };
 

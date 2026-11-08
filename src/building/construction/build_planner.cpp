@@ -62,6 +62,7 @@
 #include "city/city.h"
 #include "js/js_game.h"
 #include "core/profiler.h"
+#include "scenario/scenario.h"
 
 class build_planner_clear_land : public building_impl {
 public:

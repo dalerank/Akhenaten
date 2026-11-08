@@ -13,6 +13,7 @@
 #include "widget/city/tile_draw.h"
 #include "building/building_house.h"
 #include "widget/widget_city.h"
+#include "graphics/elements/ui.h"
 
 static int terrain_on_water_overlay(void) {
     return TERRAIN_TREE | TERRAIN_ROCK | TERRAIN_WATER | TERRAIN_SHRUB | TERRAIN_GARDEN | TERRAIN_ROAD

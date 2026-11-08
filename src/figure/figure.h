@@ -14,7 +14,6 @@
 #include "grid/routing/routing_fwd.h"
 #include "graphics/image_desc.h"
 #include "io/io_buffer.h"
-#include "window/building/common.h"
 #include "figure_phrase.h"
 #include "core/tokenum.h"
 #include "graphics/animation.h"

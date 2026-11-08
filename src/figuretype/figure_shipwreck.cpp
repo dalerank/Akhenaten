@@ -7,6 +7,8 @@
 #include "game/game.h"
 #include "js/js_game.h"
 #include "window/building/figures.h"
+#include "city/object_info.h"
+#include "graphics/elements/lang_text.h"
 
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_shipwreck);
 
