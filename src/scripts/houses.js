@@ -33,7 +33,7 @@ building_house_crude_hut {
 
   desirability { value[-2], step[1], step_size[1], range[3] }
   crime { value[5], step[1], step_size[-1], range[4] }
-  labor_caegory : LABOR_CATEGORY_HOUSE
+  labor_category : LABOR_CATEGORY_HOUSE
 
   laborers[0]
   cost [ 5, 10, 20, 40, 50 ]
@@ -107,7 +107,7 @@ building_house_sturdy_hut {
   desirability { value[-2], step[1], step_size[1], range[3] }
   crime { value[4], step[1], step_size[-1], range[4] }
 
-  labor_caegory : LABOR_CATEGORY_HOUSE
+  labor_category : LABOR_CATEGORY_HOUSE
   fire_risk[3]
   damage_risk[0]
 
@@ -175,7 +175,7 @@ building_house_meager_shanty {
 
   desirability { value[-2], step[1], step_size[1], range[2] }
   crime { value[3], step[1], step_size[-1], range[4] }
-  labor_caegory : LABOR_CATEGORY_HOUSE
+  labor_category : LABOR_CATEGORY_HOUSE
   fire_risk[20]
   damage_risk[0]
 
@@ -244,7 +244,7 @@ building_house_common_shanty {
 
   desirability { value[-2], step[1], step_size[1], range[2] }
   crime { value[2], step[1], step_size[-1], range[4] }
-  labor_caegory : LABOR_CATEGORY_HOUSE
+  labor_category : LABOR_CATEGORY_HOUSE
   fire_risk[4]
   damage_risk[4]
 
@@ -317,7 +317,7 @@ building_house_rough_cottage {
 
   desirability { value[-2], step[1], step_size[1], range[2] }
   crime { value[1], step[1], step_size[-1], range[4] }
-  labor_caegory : LABOR_CATEGORY_HOUSE
+  labor_category : LABOR_CATEGORY_HOUSE
   fire_risk[5]
   damage_risk[3]
 
@@ -385,7 +385,7 @@ building_house_ordinary_cottage {
 
   desirability { value[-2], step[1], step_size[1], range[2] }
   crime { value[0], step[1], step_size[-1], range[4] }
-  labor_caegory : LABOR_CATEGORY_HOUSE
+  labor_category : LABOR_CATEGORY_HOUSE
   fire_risk[4]
   damage_risk[0]
 
@@ -455,7 +455,7 @@ building_house_modest_homestead {
   }
 
   desirability { value[-1], step[1], step_size[1], range[1] }
-  labor_caegory : LABOR_CATEGORY_HOUSE
+  labor_category : LABOR_CATEGORY_HOUSE
   fire_risk[4]
   damage_risk[4]
 
@@ -522,7 +522,7 @@ building_house_spacious_homestead {
   }
 
   desirability { value[-1], step[1], step_size[1], range[1] }
-  labor_caegory : LABOR_CATEGORY_HOUSE
+  labor_category : LABOR_CATEGORY_HOUSE
   fire_risk[4]
   damage_risk[4]
 
@@ -589,7 +589,7 @@ building_house_modest_apartment {
   }
 
   desirability { value[0], step[0], step_size[0], range[0] }
-  labor_caegory : LABOR_CATEGORY_HOUSE
+  labor_category : LABOR_CATEGORY_HOUSE
   fire_risk[4]
   damage_risk[5]
 
@@ -656,7 +656,7 @@ building_house_spacious_apartment {
   }
 
   desirability { value[0], step[0], step_size[0], range[0] }
-  labor_caegory : LABOR_CATEGORY_HOUSE
+  labor_category : LABOR_CATEGORY_HOUSE
   fire_risk[4]
   damage_risk[5]
 
@@ -723,7 +723,7 @@ building_house_common_residence {
   }
 
   desirability { value[0], step[0], step_size[0], range[0] }
-  labor_caegory : LABOR_CATEGORY_HOUSE
+  labor_category : LABOR_CATEGORY_HOUSE
   fire_risk[4]
   damage_risk[4]
 
@@ -790,7 +790,7 @@ building_house_spacious_residence {
   }
 
   desirability { value[0], step[0], step_size[0], range[0] }
-  labor_caegory : LABOR_CATEGORY_HOUSE
+  labor_category : LABOR_CATEGORY_HOUSE
   fire_risk[4]
   damage_risk[4]
 
@@ -857,7 +857,7 @@ building_house_elegant_residence {
   }
 
   desirability { value[1], step[2], step_size[-1], range[2] }
-  labor_caegory : LABOR_CATEGORY_HOUSE
+  labor_category : LABOR_CATEGORY_HOUSE
   fire_risk[3]
   damage_risk[5]
 
@@ -924,7 +924,7 @@ building_house_fancy_residence {
   }
 
   desirability { value[2], step[1], step_size[-1], range[2] }
-  labor_caegory : LABOR_CATEGORY_HOUSE
+  labor_category : LABOR_CATEGORY_HOUSE
   fire_risk[3]
   damage_risk[5]
 
@@ -985,7 +985,7 @@ building_house_common_manor {
     _1 { pack: PACK_GENERAL, id: 33, offset:0 }
   }
   desirability { value[3], step[1], step_size[-1], range[3] }
-  labor_caegory : LABOR_CATEGORY_HOUSE
+  labor_category : LABOR_CATEGORY_HOUSE
   fire_risk[2]
   damage_risk[6]
 
@@ -1045,7 +1045,7 @@ building_house_spacious_manor {
     _1 { pack: PACK_GENERAL, id: 33, offset:1 }
   }
   desirability { value[3], step[1], step_size[-1], range[3] }
-  labor_caegory : LABOR_CATEGORY_HOUSE
+  labor_category : LABOR_CATEGORY_HOUSE
   fire_risk[2]
   damage_risk[6]
 
@@ -1106,7 +1106,7 @@ building_house_elegant_manor {
   }
 
   desirability { value[4], step[2], step_size[-1], range[6] }
-  labor_caegory : LABOR_CATEGORY_HOUSE
+  labor_category : LABOR_CATEGORY_HOUSE
   fire_risk[2]
   damage_risk[6]
 
@@ -1167,7 +1167,7 @@ building_house_stately_manor {
   }
 
   desirability { value[4], step[2], step_size[-1], range[6] }
-  labor_caegory : LABOR_CATEGORY_HOUSE
+  labor_category : LABOR_CATEGORY_HOUSE
   fire_risk[2]
   damage_risk[6]
 
@@ -1228,7 +1228,7 @@ building_house_modest_estate {
   }
 
   desirability { value[5], step[2], step_size[-1], range[6] }
-  labor_caegory : LABOR_CATEGORY_HOUSE
+  labor_category : LABOR_CATEGORY_HOUSE
   fire_risk[2]
   damage_risk[6]
 
