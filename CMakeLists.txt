@@ -242,6 +242,12 @@ if(NOT WIN_EMSCRIPTEN AND NOT MACOS_X64_BUILD)
     set(BUILD_SHARED_LIBS OFF CACHE BOOL "" FORCE)
     set(BUILD_CURL_EXE OFF CACHE BOOL "" FORCE)
     set(BUILD_TESTING OFF CACHE BOOL "" FORCE)
+    # curl 8.23 defaults these ON: ~100 example projects, man pages and install targets.
+    set(BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
+    set(BUILD_LIBCURL_DOCS OFF CACHE BOOL "" FORCE)
+    set(BUILD_MISC_DOCS OFF CACHE BOOL "" FORCE)
+    set(ENABLE_CURL_MANUAL OFF CACHE BOOL "" FORCE)
+    set(CURL_DISABLE_INSTALL ON CACHE BOOL "" FORCE)
     set(CURL_DISABLE_LDAP ON CACHE BOOL "" FORCE)
     set(CURL_DISABLE_LDAPS ON CACHE BOOL "" FORCE)
     set(CURL_DISABLE_TELNET ON CACHE BOOL "" FORCE)
@@ -268,7 +274,13 @@ if(NOT WIN_EMSCRIPTEN AND NOT MACOS_X64_BUILD)
     set(CURL_CA_BUNDLE "auto" CACHE STRING "Use system default CA bundle" FORCE)
     set(CURL_CA_PATH "auto" CACHE STRING "" FORCE)
 
+    # curl adds curl-ca-bundle / curl-ca-firefox / curl-lint / curl-optiontable whenever it finds
+    # Perl; no option for that. The normal variable shadows a PERL_EXECUTABLE already in the cache.
+    set(CMAKE_DISABLE_FIND_PACKAGE_Perl ON)
+    set(PERL_EXECUTABLE "")
     FetchContent_MakeAvailable(curl)
+    unset(PERL_EXECUTABLE)
+    unset(CMAKE_DISABLE_FIND_PACKAGE_Perl)
 
     add_definitions(-DGAME_HAVE_CURL)
 endif()
