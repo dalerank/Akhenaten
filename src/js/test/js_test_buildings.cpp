@@ -50,6 +50,14 @@ int __building_static_base_img(int type) {
 }
 ANK_FUNCTION_1(__building_static_base_img);
 
+int __building_static_labor_category(int type) {
+    if (type <= BUILDING_NONE || type >= BUILDING_MAX) {
+        return LABOR_CATEGORY_INVALID;
+    }
+    return building_static_params::get((e_building_type)type).labor_category;
+}
+ANK_FUNCTION_1(__building_static_labor_category);
+
 static int __test_building_create(int type, int x, int y) {
     if (type <= BUILDING_NONE || type >= BUILDING_MAX) {
         return 0;
