@@ -167,6 +167,8 @@ ANK_REGISTER_BOOL_ARGUMENT_HANDLER("--save_debug_texture", "save_debug_texture",
 ANK_REGISTER_BOOL_ARGUMENT_HANDLER("--unpack_scripts", "unpack_scripts", true, "unpack embedded scripts to user directory");
 ANK_REGISTER_BOOL_ARGUMENT_HANDLER("--log-resources", "log_resources", true, "log resource loading (textures, image packs, etc.)");
 ANK_REGISTER_BOOL_ARGUMENT_HANDLER("--log-sound", "log_sound", true, "log sound file loading (city sounds, speech, music, effects)");
+ANK_REGISTER_BOOL_ARGUMENT_HANDLER("--log-config-keys", "log_config_keys", true,
+  "warn about config keys nothing reads and non-zero C++ defaults that a missing key resets to 0");
 ANK_REGISTER_BOOL_ARGUMENT_HANDLER("--discord-log", "discord_log", true, "enable Discord RPC verbose logging");
 ANK_REGISTER_BOOL_ARGUMENT_HANDLER("--no-resource", "no_resource", true, "run without Pharaoh data files (skips campaign.txt; DATA_DIR is optional VFS base path)");
 ANK_REGISTER_BOOL_ARGUMENT_HANDLER("--nodatacheck", "no_data_check", true, "skip Pharaoh/Cleopatra install validation at startup (allow any data_directory)");

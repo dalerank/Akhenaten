@@ -743,6 +743,7 @@ bool js_vm_sync(const xstring &mission_id) {
     }
 
     config::refresh(vm.J);
+    archive_check::flush();
 
     if (vm.J) {
         const int top = vm.J->gettop();

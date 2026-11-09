@@ -746,7 +746,9 @@ struct g_archive_section {
 #define ANK_CONFIG_STRUCT_PASTE63(func, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20, v21, v22, v23, v24, v25, v26, v27, v28, v29, v30, v31, v32, v33, v34, v35, v36, v37, v38, v39, v40, v41, v42, v43, v44, v45, v46, v47, v48, v49, v50, v51, v52, v53, v54, v55, v56, v57, v58, v59, v60, v61, v62) ANK_CONFIG_STRUCT_PASTE2(func, v1) ANK_CONFIG_STRUCT_PASTE62(func, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20, v21, v22, v23, v24, v25, v26, v27, v28, v29, v30, v31, v32, v33, v34, v35, v36, v37, v38, v39, v40, v41, v42, v43, v44, v45, v46, v47, v48, v49, v50, v51, v52, v53, v54, v55, v56, v57, v58, v59, v60, v61, v62)
 #define ANK_CONFIG_STRUCT_PASTE64(func, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20, v21, v22, v23, v24, v25, v26, v27, v28, v29, v30, v31, v32, v33, v34, v35, v36, v37, v38, v39, v40, v41, v42, v43, v44, v45, v46, v47, v48, v49, v50, v51, v52, v53, v54, v55, v56, v57, v58, v59, v60, v61, v62, v63) ANK_CONFIG_STRUCT_PASTE2(func, v1) ANK_CONFIG_STRUCT_PASTE63(func, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20, v21, v22, v23, v24, v25, v26, v27, v28, v29, v30, v31, v32, v33, v34, v35, v36, v37, v38, v39, v40, v41, v42, v43, v44, v45, v46, v47, v48, v49, v50, v51, v52, v53, v54, v55, v56, v57, v58, v59, v60, v61, v62, v63)
 
-#define ANK_CONFIG_STRUCT_FROM(v1) js_j.r(#v1, js_t.v1);
+#define ANK_CONFIG_STRUCT_FROM(v1)                         \
+    archive_check::before_field(js_j.state, #v1, js_t.v1); \
+    js_j.r(#v1, js_t.v1);
 #define ANK_PROPERTY_FROM(v1) if (name == #v1) { return std::make_optional<bvariant>(bvariant(data.v1)); }
 #define ANK_PROPERTY_SET(v1) if (name == #v1) { data.v1 = archive_helper::coerce<std::decay_t<decltype(data.v1)>>(value); return true; }
 #define ANK_PROPERTY_NAME(v1) out.push_back(#v1);
@@ -841,18 +843,80 @@ template<typename Type> inline void call_init_if_exists_impl(Type &js_t, std::tr
 template<typename Type> inline void call_init_if_exists_impl(Type &js_t, std::false_type) { /*nothing to do, class has no load function*/ }
 template<typename Type> inline void call_init_if_exists(Type &js_t) { call_init_if_exists_impl(js_t, std::bool_constant<class_has_init_function_v<Type>>{}); }
 
+// Strict config checks: they only report, reading behaviour is unchanged.
+// A value of the wrong type is always reported; with --log-config-keys also keys of a config
+// object nothing read, and non-zero C++ defaults that a missing key resets to zero.
+namespace archive_check {
+    extern bool report_keys;
+
+    // A JS error longjmps past destructors, so each frame/root remembers its depth and
+    // truncates to it instead of popping whatever is on top.
+    struct frame {
+        frame(pcstr type_name, void* js_state);
+        ~frame();
+        frame(const frame&) = delete;
+        frame& operator=(const frame&) = delete;
+        size_t depth;
+    };
+
+    struct root {
+        explicit root(pcstr name);
+        ~root();
+        root(const root&) = delete;
+        root& operator=(const root&) = delete;
+        size_t depth;
+    };
+
+    void note_key(pcstr key);
+    // Reports keys of the config objects read since the last flush that no reader consumed.
+    void flush();
+    bool first_read(const void* field_addr);
+    bool key_missing(void* js_state, pcstr key);
+    void zeroed_default(pcstr field, const std::string& value, const void* addr);
+    void wrong_type(pcstr key, pcstr expected);
+
+    template <typename T>
+    inline void before_field(void* js_state, pcstr field, const T& v) {
+        if (!report_keys || !first_read(&v)) {
+            return;
+        }
+        std::string value;
+        if constexpr (std::is_enum_v<T>) {
+            if ((int64_t)v != 0)
+                value = std::to_string((int64_t)v);
+        } else if constexpr (std::is_same_v<T, bool>) {
+            if (v)
+                value = "true";
+        } else if constexpr (std::is_arithmetic_v<T>) {
+            if (v != T{})
+                value = std::to_string(v);
+        } else if constexpr (std::is_same_v<T, xstring>) {
+            if (!v.empty())
+                value = v.c_str();
+        }
+        if (!value.empty() && key_missing(js_state, field)) {
+            zeroed_default(field, value, &v);
+        }
+    }
+} // namespace archive_check
+
 // ANK_CONFIG_STRUCT / ANK_CONFIG_PROPERTY open `namespace archive_helper` and specialize
 // ::archive_helper::{reader,get,set,...}. Use them only at global (or named) namespace scope —
 // never inside an anonymous namespace (MSVC: C2988 / nested archive_helper).
-#define ANK_CONFIG_STRUCT(Type, ...)                                                              \
-namespace archive_helper {                                                                        \
-    template<> constexpr bool class_has_archive_reader<Type>() { return true; }                   \
-    template<> inline void reader<Type>(archive js_j, Type& js_t) {                               \
-        call_unload_if_exists(js_t);                                                              \
-        ANK_CONFIG_STRUCT_EXPAND(ANK_CONFIG_STRUCT_PASTE(ANK_CONFIG_STRUCT_FROM, __VA_ARGS__));   \
-        call_load_if_exists(js_j, js_t);                                                          \
-    }                                                                                             \
-}
+#define ANK_CONFIG_STRUCT(Type, ...)                                                                \
+    namespace archive_helper {                                                                      \
+        template <>                                                                                 \
+        constexpr bool class_has_archive_reader<Type>() {                                           \
+            return true;                                                                            \
+        }                                                                                           \
+        template <>                                                                                 \
+        inline void reader<Type>(archive js_j, Type& js_t) {                                        \
+            archive_check::frame js_check(#Type, js_j.state);                                       \
+            call_unload_if_exists(js_t);                                                            \
+            ANK_CONFIG_STRUCT_EXPAND(ANK_CONFIG_STRUCT_PASTE(ANK_CONFIG_STRUCT_FROM, __VA_ARGS__)); \
+            call_load_if_exists(js_j, js_t);                                                        \
+        }                                                                                           \
+    }
 
 // See note on ANK_CONFIG_STRUCT above (global scope only).
 #define ANK_CONFIG_PROPERTY(Type, ...)                                                            \
@@ -1079,5 +1143,6 @@ inline bool g_archive::r(pcstr name, T &obj) {
         return true;
     }
 
+    archive_check::root config_root(name);
     return r_section(name, [&] (archive arch) { arch.r(obj); });
 }

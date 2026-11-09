@@ -51,6 +51,7 @@
 #include "dev/perfmon_nanoprofiler.h"
 #include "graphics/graphics.h"
 #include "graphics/elements/lang_text.h"
+#include "core/archive.h"
 
 static_assert(SDL_VERSION_ATLEAST(2, 0, 17));
 #define URL_PATCHES "https://github.com/dalerank/akhenaten/wiki/Patches"
@@ -650,6 +651,7 @@ static int handle_unpack_scripts() {
 
 int main(int argc, char** argv) {
     g_args.parse(argc, argv);
+    archive_check::report_keys = g_args.is("log_config_keys", false);
 
     if (g_args.no_mouse() || g_args.is_integral_tests()) {
         g_scroll.set_mouse_input(false);

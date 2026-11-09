@@ -83,6 +83,8 @@ Sources are collected via `file(GLOB ...)` with **no `CONFIGURE_DEPENDS`**, so a
 --log-js-handlers     log when JS event handlers are registered
 --log-resources       log resource loading (textures, image packs)
 --log-sound           log which sound files the game tries to load
+--log-config-keys     warn about config keys nothing reads and non-zero C++ defaults a missing key resets to 0
+                      (a value of the wrong type is always reported as "[config] ... expected number")
 --discord-log         verbose Discord RPC logging
 --nocrashdlg          suppress crash dialog
 --fulldmp             create full crash dump
