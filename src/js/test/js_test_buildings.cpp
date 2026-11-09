@@ -58,6 +58,14 @@ int __building_static_labor_category(int type) {
 }
 ANK_FUNCTION_1(__building_static_labor_category);
 
+int __building_static_guild_worker_terrain(int type) {
+    if (type <= BUILDING_NONE || type >= BUILDING_MAX) {
+        return -1;
+    }
+    return building_static_params::get((e_building_type)type).guild_worker_terrain;
+}
+ANK_FUNCTION_1(__building_static_guild_worker_terrain);
+
 static int __test_building_create(int type, int x, int y) {
     if (type <= BUILDING_NONE || type >= BUILDING_MAX) {
         return 0;
