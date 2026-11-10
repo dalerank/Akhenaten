@@ -5,25 +5,47 @@
 #include "core/svector.h"
 #include "core/vec2i.h"
 
+#include <unordered_map>
+
 class figure;
 
-// sphinx work spot: a stage's spot is worked down by one carpenter or stonemason.
 struct sphinx_spot_def {
     uint8_t stage = 0;
     e_figure_type figure = FIGURE_NONE;
     uint16_t work = 0;
-    uint8_t script = 0;
+    xstring script;
 };
 ANK_CONFIG_STRUCT(sphinx_spot_def, stage, figure, work, script)
 
-// OG monument_anim_images run used by a work-spot sequence: frames of an animation, `step` apart.
 struct sphinx_worker_image {
-    xstring anim;
+    xstring key; // set by the config map reader
+    int pack = 0;
+    int id = 0;
     uint8_t offset = 0;
     uint8_t frames = 1;
     uint8_t step = 1;
 };
-ANK_CONFIG_STRUCT(sphinx_worker_image, anim, offset, frames, step)
+ANK_CONFIG_STRUCT(sphinx_worker_image, pack, id, offset, frames, step)
+
+// Choices are {x: sequence, y: 1 = play reversed}.
+struct sphinx_anim_sequence {
+    vec2i from; // view N
+    vec2i to;
+    xstring anim;
+    int16_t frames = 0;
+    svector<vec2i, 4> next; // empty = the following sequence (wraps to 0)
+    svector<vec2i, 4> back; // empty = stop
+    bool stop = false;
+};
+ANK_CONFIG_STRUCT(sphinx_anim_sequence, from, to, anim, frames, next, back, stop)
+
+struct sphinx_anim_script {
+    xstring key;             // set by the config map reader
+    bool unmirrored = false; // OG gives E/W the same x as N/S
+    svector<vec2i, 4> entry; // empty = sequence 0
+    svector<sphinx_anim_sequence, 24> sequences;
+};
+ANK_CONFIG_STRUCT(sphinx_anim_script, unmirrored, entry, sequences)
 
 // Three 6x6 records chained main -> b -> c along map +x. The stage lives in the main record's phase
 // (1..15, then finished); each record keeps the work state of its own 8 spots.
@@ -47,8 +69,9 @@ public:
 
     struct base_params {
         svector<sphinx_spot_def, 24> spots;
-        // Indexed by the OG ANIM_IMAGES_* id that sphinx_anim::sequence::images refers to.
-        svector<sphinx_worker_image, 16> worker_images;
+        std::unordered_map<xstring, sphinx_worker_image> worker_images;
+        vec2i anim_offset;
+        std::unordered_map<xstring, sphinx_anim_script> anim_scripts;
     };
 
     struct static_params : public base_params, public building_static_params {
@@ -102,7 +125,7 @@ public:
     int spot_attached(int spot) const;
     int spot_work_left(int spot) const;
     void reset_spots();
-    // Jump to a stage: spots of earlier stages are done, the rest start over (tests, console).
+    // Spots of earlier stages are done, the rest start over.
     void set_stage(int stage);
     void work_percentages(int& carpenter_pct, int& mason_pct) const;
     bool is_carving_done() const { return stage() >= STAGE_COMPLETE; }
@@ -118,5 +141,5 @@ private:
     void refresh_part_images();
     void animate_spots();
 };
-ANK_CONFIG_STRUCT(building_sphinx::static_params, spots, worker_images)
+ANK_CONFIG_STRUCT(building_sphinx::static_params, spots, worker_images, anim_offset, anim_scripts)
 ANK_CONFIG_PROPERTY(building_sphinx::runtime_data_t, variant)

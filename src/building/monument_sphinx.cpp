@@ -1,5 +1,4 @@
 #include "monument_sphinx.h"
-#include "monument_sphinx_anim_data.h"
 
 #include "building/monuments.h"
 #include "city/city.h"
@@ -112,7 +111,6 @@ namespace {
         return map_terrain_is(tile, TERRAIN_NOT_CLEAR | TERRAIN_FLOODPLAIN) || map_has_figure_at(tile);
     }
 
-    // Blocked flags per footprint tile of the three parts (map coordinates, origin = first part).
     bool collect_site(tile2i origin, std::array<blocked_tile_vec, building_sphinx::PARTS>& parts) {
         bool blocked = false;
         for (int p = 0; p < building_sphinx::PARTS; ++p) {
@@ -159,64 +157,61 @@ namespace {
     std::array<spot_anim, building_sphinx::PARTS * building_sphinx::SPOTS_PER_PART> g_spot_anims;
     int g_spot_anim_tick = -1;
 
-    bool pick_choice(const sphinx_anim::script& sc, int transition, spot_anim& a) {
-        const auto& t = sc.transitions[transition];
-        int count = 0;
-        while (count < 4 && t.next[count].sequence >= 0) {
-            count++;
-        }
-        if (count == 0) {
+    const sphinx_anim_script* anim_script(const xstring& name) {
+        const auto& scripts = sphinx_params().anim_scripts;
+        auto it = scripts.find(name);
+        return it != scripts.end() ? &it->second : nullptr;
+    }
+
+    bool pick_choice(const sphinx_anim_script& sc, const svector<vec2i, 4>& choices, spot_anim& a) {
+        if (choices.empty()) {
             return false;
         }
-        const auto& c = t.next[rand() % count];
-        if (c.sequence < 0 || c.sequence >= sc.sequence_count) {
+        const vec2i c = choices[rand() % choices.size()];
+        if (c.x < 0 || c.x >= (int)sc.sequences.size()) {
             return false;
         }
-        a.sequence = c.sequence;
-        a.reverse = c.reverse;
-        a.frame = c.reverse ? sc.sequences[c.sequence].last_frame : 0;
+        a.sequence = (int8_t)c.x;
+        a.reverse = (int8_t)c.y;
+        a.frame = c.y ? sc.sequences[c.x].frames : 0;
         return true;
     }
 
-    void start_spot_anim(int script, spot_anim& a) {
+    void start_spot_anim(const xstring& script, spot_anim& a) {
         a.sequence = -1;
         a.active = false;
-        if (script < 0 || script >= (int)std::size(sphinx_anim::scripts)) {
+        const sphinx_anim_script* sc = anim_script(script);
+        if (!sc) {
             return;
         }
-        const auto& sc = sphinx_anim::scripts[script];
-        for (int t = 0; t < sc.transition_count; ++t) {
-            if (sc.transitions[t].sequence < 0) {
-                a.active = pick_choice(sc, t, a);
-                return;
-            }
-        }
+        static const svector<vec2i, 4> first = {vec2i{0, 0}};
+        a.active = pick_choice(*sc, sc->entry.empty() ? first : sc->entry, a);
     }
 
-    void step_spot_anim(int script, spot_anim& a) {
-        if (!a.active || script < 0 || script >= (int)std::size(sphinx_anim::scripts)) {
+    void step_spot_anim(const xstring& script, spot_anim& a) {
+        const sphinx_anim_script* sc = anim_script(script);
+        if (!a.active || !sc) {
             return;
         }
-        const auto& sc = sphinx_anim::scripts[script];
-        if (a.sequence < 0 || a.sequence >= sc.sequence_count) {
+        if (a.sequence < 0 || a.sequence >= (int)sc->sequences.size()) {
             a.active = false;
             return;
         }
+        const auto& seq = sc->sequences[a.sequence];
         a.frame += a.reverse ? -1 : 1;
-        const int last = sc.sequences[a.sequence].last_frame;
-        if (a.frame >= 0 && a.frame <= last) {
+        if (a.frame >= 0 && a.frame <= seq.frames) {
             return;
         }
-        for (int t = 0; t < sc.transition_count; ++t) {
-            const auto& tr = sc.transitions[t];
-            if (tr.sequence == a.sequence && tr.reverse == a.reverse) {
-                if (pick_choice(sc, t, a)) {
-                    return;
-                }
-                break;
-            }
+        if (a.reverse) {
+            a.active = pick_choice(*sc, seq.back, a);
+        } else if (seq.stop) {
+            a.active = false;
+        } else if (seq.next.empty()) {
+            const svector<vec2i, 4> following = {vec2i{(a.sequence + 1) % (int)sc->sequences.size(), 0}};
+            a.active = pick_choice(*sc, following, a);
+        } else {
+            a.active = pick_choice(*sc, seq.next, a);
         }
-        a.active = false;
     }
 } // namespace
 
@@ -715,28 +710,28 @@ bool building_sphinx::draw_ornaments_and_animations_height(painter& ctx, vec2i p
     }
     for (int i = 0; i < (int)spots.size() && i < (int)g_spot_anims.size(); ++i) {
         const auto& a = g_spot_anims[i];
-        const int script = spots[i].script;
-        if (!a.active || script < 0 || script >= (int)std::size(sphinx_anim::scripts)) {
+        const sphinx_anim_script* sc = anim_script(spots[i].script);
+        if (!a.active || !sc || a.sequence < 0 || a.sequence >= (int)sc->sequences.size()) {
             continue;
         }
-        const auto& sc = sphinx_anim::scripts[script];
-        if (a.sequence < 0 || a.sequence >= sc.sequence_count) {
-            continue;
-        }
-        const auto& seq = sc.sequences[a.sequence];
+        const auto& seq = sc->sequences[a.sequence];
         const auto& images = sphinx_params().worker_images;
-        if (seq.images < 0 || seq.images >= (int)images.size() || seq.last_frame <= 0) {
+        auto img_it = images.find(seq.anim);
+        if (img_it == images.end() || seq.frames <= 0) {
             continue;
         }
-        const auto& img = images[seq.images];
-        const int base_img = current_params().first_img(img.anim);
+        const auto& img = img_it->second;
+        const int base_img = image_id_from_group(img.pack, img.id);
         if (base_img <= 0) {
             continue;
         }
-        const auto& from = sphinx_anim::positions[seq.from * 4 + view];
-        const auto& to = sphinx_anim::positions[seq.to * 4 + view];
-        const int x = (to.x - from.x) * a.frame / seq.last_frame + sphinx_anim::x_offset + from.x;
-        const int y = (to.y - from.y) * a.frame / seq.last_frame + sphinx_anim::y_offset + from.y;
+        const bool mirror = (view == 1 || view == 3) && !sc->unmirrored;
+        const auto view_point = [mirror](vec2i p) { return mirror ? vec2i{-p.x, p.y} : p; };
+        const vec2i from = view_point(seq.from);
+        const vec2i to = view_point(seq.to);
+        const vec2i offset = sphinx_params().anim_offset;
+        const int x = (to.x - from.x) * a.frame / seq.frames + offset.x + from.x;
+        const int y = (to.y - from.y) * a.frame / seq.frames + offset.y + from.y;
 
         const int image_id = base_img + img.offset + (a.frame % std::max<int>(1, img.frames)) * img.step;
         const image_t* image = image_get(image_id);

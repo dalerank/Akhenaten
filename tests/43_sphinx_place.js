@@ -128,13 +128,6 @@ function run_test() {
                 }
             }
         }
-        var params = city.get_building_params_by_type(BUILDING_SPHINX)
-        var keys = ['worker_carpenter_walk', 'worker_carpenter_work', 'worker_mason_walk', 'worker_mason_work', 'worker_mason_block']
-        for (var w2 = 0; w2 < keys.length; w2++) {
-            if (!(params.first_img(keys[w2]) > 0)) {
-                return t43_fail('worker sprite ' + keys[w2] + ' does not resolve')
-            }
-        }
         __log_marker('t43_art_ok')
     } else {
         __log_marker('t43_art_skipped')
