@@ -199,9 +199,7 @@ building *building_create(e_building_type type, tile2i tile, int orientation) {
         return &g_all_buildings[0];
     }
 
-    b->clear_impl();
-
-    memset(b->runtime_data, 0, sizeof(b->runtime_data));
+    b->reset_slot(b->id);
     b->initialize(type, tile, orientation);
 
     events::emit(event_building_create{ b->id });
@@ -253,16 +251,13 @@ building *building_exists_at(tile2i tile) {
 void building_clear_all() {
     pyramid_engine_clear_all();
     for (int i = 0; i < MAX_BUILDINGS; i++) {
-        memset(&g_all_buildings[i], 0, sizeof(building));
-        g_all_buildings[i].id = i;
+        g_all_buildings[i].reset_slot(i);
     }
 }
 
 static void building_delete_UNSAFE(building *b) {
     b->clear_related_data();
-    int id = b->id;
-    memset(b, 0, sizeof(building));
-    b->id = id;
+    b->reset_slot(b->id);
 }
 
 building_id building_closest_route(building &home, std::function<bool(building &)> pred, std::function<int(building &)> fweight) {

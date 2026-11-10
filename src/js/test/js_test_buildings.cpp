@@ -135,6 +135,23 @@ static int __test_building_destroy_by_enemy(int bid) {
 }
 ANK_FUNCTION_1(__test_building_destroy_by_enemy);
 
+// Free a slot the way the game does: 0 = destroy_by_poof (slot just marked unused),
+// 1 = deleted by the player and removed by building_update_state.
+static int __test_building_release_slot(int bid, int via_delete) {
+    building* b = building_get(bid);
+    if (!b || !b->is_valid()) {
+        return 0;
+    }
+    if (via_delete) {
+        b->state = BUILDING_STATE_DELETED_BY_PLAYER;
+        building_update_state();
+    } else {
+        b->dcast()->destroy_by_poof(false);
+    }
+    return b->state == BUILDING_STATE_UNUSED ? 1 : 0;
+}
+ANK_FUNCTION_2(__test_building_release_slot);
+
 static int __test_destroy_buildings_of_type(int type) {
     if (type <= BUILDING_NONE || type >= BUILDING_MAX) {
         return 0;

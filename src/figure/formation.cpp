@@ -162,6 +162,10 @@ formation *formation_get_free(int start_index) {
 }
 
 formation* formation_get(int formation_id) {
+    verify_no_crash(formation_id >= 0 && formation_id < MAX_FORMATIONS);
+    if (formation_id < 0 || formation_id >= MAX_FORMATIONS) {
+        return &g_formations.formations[0];
+    }
     return &g_formations.formations[formation_id];
 }
 

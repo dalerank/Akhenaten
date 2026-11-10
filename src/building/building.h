@@ -312,6 +312,9 @@ public:
 
     void clear_related_data();
     void clear_impl();
+    // Fresh record for slot `slot_id`: every member back to its constructed default (no stale
+    // fields from the slot's previous building, road_access invalid).
+    void reset_slot(building_id slot_id);
     void reset_impl();
     void setup_static_flags();
     void initialize(e_building_type type, tile2i tile, int orientation);
