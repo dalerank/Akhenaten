@@ -315,13 +315,15 @@ scenario_request scenario_request_get(const event_ph_t &event) {
 }
 
 void scenario_request_set_state(const scenario_request &request, e_event_state new_state) {
-    event_ph_t *event = g_scenario.events.at(request.event_id);
-    event->event_state = new_state;
+    if (event_ph_t* event = g_scenario.events.at(request.event_id)) {
+        event->event_state = new_state;
+    }
 }
 
 void scenario_request_set_active(const scenario_request &request, bool active) {
-    event_ph_t &event = *g_scenario.events.at(request.event_id);
-    event.is_active = active;
+    if (event_ph_t* event = g_scenario.events.at(request.event_id)) {
+        event->is_active = active;
+    }
 }
 
 std::vector<scenario_request> scenario_get_visible_requests() {

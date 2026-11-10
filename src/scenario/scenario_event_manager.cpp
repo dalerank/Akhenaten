@@ -576,13 +576,19 @@ bool event_manager_t::create(const event_ph_t* master, const event_ph_t* parent,
     return true;
 }
 
+// Out-of-range ids return nullptr: the list is a fixed-capacity svector, so indexing past size()
+// reads stale events left by an earlier mission instead of failing.
 const event_ph_t* event_manager_t::at(int id) const {
-    assert(id >= 0 && id < g_scenario_events.event_list.size());
+    if (id < 0 || id >= (int)g_scenario_events.event_list.size()) {
+        return nullptr;
+    }
     return &g_scenario_events.event_list[id];
 }
 
 event_ph_t* event_manager_t::at(int id) {
-    assert(id >= 0 && id < g_scenario_events.event_list.size());
+    if (id < 0 || id >= (int)g_scenario_events.event_list.size()) {
+        return nullptr;
+    }
     return &g_scenario_events.event_list[id];
 }
 

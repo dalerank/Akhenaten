@@ -31,10 +31,7 @@ bool figure_is_alive_soldier(int figure_id) {
 
 bool event_request_is_sea(int event_id) {
     const event_ph_t *ev = g_scenario.events.at(event_id);
-    if (!ev) {
-        return false;
-    }
-    if (ev->city_id > 0) {
+    if (ev && ev->city_id > 0) {
         empire_city *city = g_empire.city(ev->city_id);
         if (city) {
             return city->is_sea_trade;

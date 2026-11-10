@@ -244,8 +244,8 @@ static void fill_from_event(city_message &msg, const event_ph_t *event, int pare
         msg.req_months_left = event->months_initial;
     }
 
-    if (parent_event_id >= 0) {
-        const event_ph_t *parent_event = g_scenario.events.at(parent_event_id);
+    const event_ph_t* parent_event = parent_event_id >= 0 ? g_scenario.events.at(parent_event_id) : nullptr;
+    if (parent_event) {
         msg.req_resource_past = parent_event->item.value;
         msg.req_amount_past = parent_event->amount.value;
         msg.req_city_past = parent_event->location_fields[0] - 1;
