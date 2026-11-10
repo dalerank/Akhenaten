@@ -39,4 +39,5 @@
 //  190 akhenaten: bazaar second_trader_id (OG fancy second market trader)
 //  191 akhenaten: mastaba OG block-engine fields on monument runtime (og_main/og_part)
 //  192 akhenaten: pyramid OG block-engine fields on monument runtime (og_main/og_part)
-constexpr uint32_t latest_save_version = 192;
+//  193 akhenaten: sphinx work spots (work + figure) on each sphinx part runtime
+constexpr uint32_t latest_save_version = 193;

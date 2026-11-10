@@ -3,6 +3,7 @@
 #include "building/building_guild_carpenters.h"
 #include "building/building_statue.h"
 #include "building/monument_obelisk.h"
+#include "building/monument_sphinx.h"
 #include "building/monument_mastaba_engine.h"
 #include "building/monument_pyramid.h"
 #include "building/monument_pyramid_engine.h"
@@ -223,6 +224,15 @@ void figure_carpenter::figure_action() {
 
         if (!bhome->is_valid()) {
             poof();
+            break;
+        }
+
+        if (auto *sphinx = worked->dcast_sphinx()) {
+            base.set_flag(e_figure_flag_invisible);
+            if (sphinx->work_tick(base)) {
+                base.set_flag(e_figure_flag_invisible, false);
+                advance_action(ACTION_3_CARPENTER_RETURN);
+            }
             break;
         }
 

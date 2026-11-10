@@ -4,6 +4,7 @@
 #include "building/monument_pyramid.h"
 #include "building/monument_pyramid_engine.h"
 #include "building/monument_obelisk.h"
+#include "building/monument_sphinx.h"
 #include "building/building_statue.h"
 #include "building/monuments.h"
 #include "building/monument_pyramid_figure.h"
@@ -60,7 +61,7 @@ void figure_stonemason::figure_action() {
         break;
 
     case ACTION_1_MASON_GOING: {
-        const bool to_obelisk = b_dest->dcast_obelisk() != nullptr;
+        const bool to_obelisk = b_dest->dcast_obelisk() != nullptr || b_dest->dcast_sphinx() != nullptr;
         const bool to_og_pyramid = b_dest->dcast_pyramid()
             && g_monument_pyramid_engine.uses_block_engine(b_dest);
         const short arrived = to_obelisk
@@ -194,6 +195,14 @@ void figure_stonemason::figure_action() {
         building *worked = building_get(runtime_data().destination_bid);
         if (!worked || !worked->id) {
             worked = destination();
+        }
+        if (auto *sphinx = worked ? worked->dcast_sphinx() : nullptr) {
+            base.set_flag(e_figure_flag_invisible);
+            if (sphinx->work_tick(base)) {
+                base.set_flag(e_figure_flag_invisible, false);
+                advance_action(ACTION_6_MASON_RETURN_HOME);
+            }
+            break;
         }
         auto *obelisk = worked ? worked->dcast_obelisk() : nullptr;
         if (!obelisk) {

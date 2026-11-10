@@ -6404,6 +6404,14 @@ game_messages_en {
             text: "Masons have completed their finishing touches on the gleaming outer casing of fine limestone, and the Brick Pyramid is finally done!"
         }
     }
+    sphinx_congratulations {
+        id: 532,
+        size [30, 18]
+        title { text: "Sphinx finished!" }
+        content {
+            text: "At long last the masons have finished carving the mighty Sphinx.  This monument will watch over Egypt for all the ages."
+        }
+    }
     message_dike_breach {
         id: 524,
         type: 2,

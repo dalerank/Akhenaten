@@ -1,4 +1,5 @@
-// Artisans' Guild (AG6): place Sphinx at phase 6, stock paint+clay, spawn FIGURE_TOMB_ARTISAN;
+// Artisans' Guild (AG6): with gameplay_sphinx_artisans the carved Sphinx waits for artisans (painting
+// stage); stock paint+clay, spawn FIGURE_TOMB_ARTISAN;
 // no spawn without paint or without clay.
 // Markers:
 //   [test-marker] artisans_sphinx_phase6_ok
@@ -49,10 +50,10 @@ function test70_place_sphinx_phase6() {
         return 0
     }
 
-    __test_monument_set_phase(bid, 6)
+    __test_sphinx_set_stage(bid, 16)
     __test_pump_frames(2)
-    if (__test_monument_phase(bid) != 6) {
-        __log_info_native('[test:70] expected sphinx phase 6, got ' + __test_monument_phase(bid))
+    if (__test_monument_phase(bid) != 16) {
+        __log_info_native('[test:70] expected sphinx painting stage 16, got ' + __test_monument_phase(bid))
         return 0
     }
     return bid
@@ -60,6 +61,7 @@ function test70_place_sphinx_phase6() {
 
 function run_test() {
     __log_info_native('[test:70] artisans guild spawn / no-resource')
+    game_features.set('gameplay_sphinx_artisans', true)
     test_reload_city_session('data/default.map')
     __test_set_treasury(500000)
     game.paused = false
@@ -178,6 +180,7 @@ function run_test() {
 }
 
 function check_valid() {
+    game_features.set('gameplay_sphinx_artisans', false)
     if (!__test70_guild_bid) {
         __log_info_native('[test:70] no guild id from run_test')
         return false

@@ -2,106 +2,112 @@
 
 #include "building/monuments.h"
 #include "city/city.h"
-#include "city/city_resource.h"
-#include "game/game.h"
+#include "figure/figure.h"
 #include "game/resource.h"
+#include "graphics/elements/ui.h"
+#include "grid/terrain.h"
 #include "window/building/common.h"
 #include "window/window_building_info.h"
 
 struct info_window_sphinx : building_info_window_t<info_window_sphinx> {
-    virtual void init(object_info &c) override;
-    virtual bool check(object_info &c) override {
-        return !!smart_cast<building_sphinx>(c.building_get());
-    }
+    virtual void init(object_info& c) override;
+    virtual bool check(object_info& c) override { return !!smart_cast<building_sphinx>(c.building_get()); }
 };
 
 info_window_sphinx sphinx_infow;
 
-void info_window_sphinx::init(object_info &c) {
+namespace {
+    constexpr int k_lang_monuments = 178;
+
+    bool figure_heading_to_sphinx(e_figure_type type) {
+        for (int i = 1; i < MAX_FIGURES; ++i) {
+            figure* f = figure_get(i);
+            if (!f || !f->is_alive() || f->type != type) {
+                continue;
+            }
+            building* dest = f->destination();
+            if (dest && dest->type == BUILDING_SPHINX) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    // OG window_building_draw_sphinx status line, first match wins.
+    textid sphinx_status(const building_sphinx& s) {
+        if (!map_terrain_is(s.access_point(), TERRAIN_ROAD)) {
+            return {k_lang_monuments, 149};
+        }
+        if (!g_city.buildings.count_active(BUILDING_STONEMASONS_GUILD)) {
+            return {k_lang_monuments, 14};
+        }
+        if (!g_city.buildings.count_active(BUILDING_CARPENTERS_GUILD)) {
+            return {k_lang_monuments, 16};
+        }
+        if (s.has_free_spot(FIGURE_STONEMASON) && !figure_heading_to_sphinx(FIGURE_STONEMASON)) {
+            return {k_lang_monuments, 18};
+        }
+        if (s.has_free_spot(FIGURE_CARPENTER) && !figure_heading_to_sphinx(FIGURE_CARPENTER)) {
+            return {k_lang_monuments, 20};
+        }
+        const int stage = s.stage();
+        if (stage < 7) {
+            return {k_lang_monuments, 45};
+        }
+        if (stage < 13) {
+            return {k_lang_monuments, 46};
+        }
+        return {k_lang_monuments, 47};
+    }
+
+    xstring percent_line(int label_id, int pct) {
+        bstring128 line;
+        line.printf("%s %d%% %s", ui::str(k_lang_monuments, label_id), pct, ui::str(k_lang_monuments, 0));
+        return xstring(line.c_str());
+    }
+} // namespace
+
+void info_window_sphinx::init(object_info& c) {
     building_info_window::init(c);
 
-    auto sphinx = c.building_get()->dcast_monument();
+    auto* sphinx = smart_cast<building_sphinx>(c.building_get());
     if (!sphinx) {
         return;
     }
+    sphinx = sphinx->main_sphinx();
 
-    auto &d = sphinx->runtime_data();
+    ui["paint_icon"].set_enabled(false);
+    ui["clay_icon"].set_enabled(false);
+    ui["paint_text"] = "";
+    ui["clay_text"] = "";
 
-    if (sphinx->is_unfinished()) {
-        textid reason = {199, 39}; // need carpenters, stonemasons, …
+    if (sphinx->is_finished()) {
+        ui["warning_text"] = textid{k_lang_monuments, 48};
+        ui["carpentry_text"] = "";
+        ui["masonry_text"] = "";
+        return;
+    }
 
-        int workers_num = 0;
-        for (auto &wid : d.workers) {
-            workers_num += wid > 0 ? 1 : 0;
-        }
-
-        int work_camps = g_city.buildings.count_active(BUILDING_WORK_CAMP);
-        int carpenters = g_city.buildings.count_active(BUILDING_CARPENTERS_GUILD);
-        int stonemasons = g_city.buildings.count_active(BUILDING_STONEMASONS_GUILD);
-
-        if (!work_camps) {
-            reason = {178, 13};
-        } else if (workers_num > 0) {
-            reason = {178, 45}; // masons creating rough shape (approx)
-        } else if (!carpenters && sphinx->needs_resource(RESOURCE_TIMBER) > 0) {
-            reason = {199, 39};
-        } else if (!stonemasons && sphinx->need_stonemason()) {
-            reason = {199, 39};
-        } else if (d.phase >= 6) {
-            reason = {178, 47}; // finishing and painting
-        } else {
-            reason = {178, 46};
-        }
-
-        ui["warning_text"] = reason;
-
-        int min_pct = 100;
-        bool any_resource = false;
-        for (int ri = (int)RESOURCES_MIN; ri <= (int)RESOURCES_MAX; ++ri) {
-            auto r = (e_resource)ri;
-            if (sphinx->needs_resource(r) <= 0) {
-                continue;
-            }
-            any_resource = true;
-            min_pct = std::min(min_pct, (int)d.resources_pct[r]);
-        }
-        if (!any_resource) {
-            min_pct = 100;
-        }
-
-        bstring64 progress_str;
-        progress_str.printf("%d / %d    %d%%", (int)d.phase, sphinx->phases(), min_pct);
-        ui["progress_text"] = progress_str;
-
-        auto fill_resource_slot = [&](e_resource r, pcstr icon_key, pcstr text_key) {
-            int needed = sphinx->needs_resource(r);
-            if (needed <= 0) {
-                ui[text_key] = "";
-                ui[icon_key].set_enabled(false);
-                return;
-            }
+    if (sphinx->is_carving_done()) {
+        // Enhanced painting stage: artisans bring paint and clay.
+        ui["warning_text"] = textid{k_lang_monuments, 47};
+        ui["carpentry_text"] = "";
+        ui["masonry_text"] = "";
+        auto fill = [&](e_resource r, pcstr icon_key, pcstr text_key) {
             ui[icon_key].set_enabled(true);
-            int delivered = std::min(needed * d.resources_pct[r] / 100, needed);
-            bstring64 s;
-            s.printf("%d / %d", delivered, needed);
+            bstring32 s;
+            s.printf("%d%%", sphinx->resource_pct(r));
             ui[text_key] = s;
         };
-        fill_resource_slot(RESOURCE_TIMBER, "timber_icon", "timber_text");
-        fill_resource_slot(RESOURCE_PAINT, "paint_icon", "paint_text");
-        fill_resource_slot(RESOURCE_CLAY, "clay_icon", "clay_text");
-
-        bstring32 workers_str;
-        workers_str.printf("%d / %d", workers_num, (int)d.workers.size());
-        ui["workers_text"] = workers_str;
-    } else {
-        ui["warning_text"] = textid{199, 42}; // sphinx complete
-        ui["progress_text"] = "";
-        ui["timber_text"] = "";
-        ui["paint_text"] = "";
-        ui["clay_text"] = "";
-        ui["workers_text"] = "";
-        ui["timber_icon"].set_enabled(false);
-        ui["paint_icon"].set_enabled(false);
-        ui["clay_icon"].set_enabled(false);
+        fill(RESOURCE_PAINT, "paint_icon", "paint_text");
+        fill(RESOURCE_CLAY, "clay_icon", "clay_text");
+        return;
     }
+
+    ui["warning_text"] = sphinx_status(*sphinx);
+    int carpenter_pct = 0;
+    int mason_pct = 0;
+    sphinx->work_percentages(carpenter_pct, mason_pct);
+    ui["carpentry_text"] = percent_line(49, carpenter_pct);
+    ui["masonry_text"] = percent_line(50, mason_pct);
 }

@@ -6300,6 +6300,14 @@ game_messages_ru_f {
             text: "Каменотёсы закончили последние штрихи на сверкающих облицовочных плитах из прекрасного известняка, и кирпичная пирамида наконец завершена!"
         }
     }
+    sphinx_congratulations {
+        id: 532,
+        size [30, 18]
+        title { text: "Cфинкc пocтpoeн!" }
+        content {
+            text: "Нaкoнeц кaмнeтecы извaяли oгpoмнeйшeгo Cфинкca. Этoт пaмятник бyдeт cтoять вeчнo."
+        }
+    }
     message_dike_breach {
         id: 524,
         type: 2,

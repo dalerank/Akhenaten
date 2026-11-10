@@ -12,6 +12,7 @@
 #include "building/monument_pyramid_figure.h"
 #include "building/monument_pyramid_ramp.h"
 #include "building/monument_royal_tomb.h"
+#include "building/monument_sphinx.h"
 #include "building/monuments.h"
 #include "city/city_buildings.h"
 #include "city/city_figures.h"
@@ -731,3 +732,45 @@ static int __test_monument_add_burial_stock(int bid, int resource, int amount) {
     return added;
 }
 ANK_FUNCTION_3(__test_monument_add_burial_stock);
+
+static building_sphinx *test_sphinx(int bid) {
+    building *b = building_get(bid);
+    auto *s = b ? b->dcast_sphinx() : nullptr;
+    return s ? s->main_sphinx() : nullptr;
+}
+
+static int __test_sphinx_stage(int bid) {
+    auto *s = test_sphinx(bid);
+    return s ? s->stage() : -1;
+}
+ANK_FUNCTION_1(__test_sphinx_stage);
+
+static void __test_sphinx_set_stage(int bid, int stage) {
+    if (auto *s = test_sphinx(bid)) {
+        s->set_stage(stage);
+    }
+}
+ANK_FUNCTION_2(__test_sphinx_set_stage);
+
+static int __test_sphinx_spot_work(int bid, int spot) {
+    auto *s = test_sphinx(bid);
+    return s ? s->spot_work_left(spot) : -1;
+}
+ANK_FUNCTION_2(__test_sphinx_spot_work);
+
+static int __test_sphinx_has_spot(int bid, int figure_type) {
+    auto *s = test_sphinx(bid);
+    return (s && s->has_free_spot((e_figure_type)figure_type)) ? 1 : 0;
+}
+ANK_FUNCTION_2(__test_sphinx_has_spot);
+
+// One OG work tick by figure fid; returns 1 when the figure would leave the site.
+static int __test_sphinx_work(int bid, int fid) {
+    auto *s = test_sphinx(bid);
+    figure *f = fid > 0 ? figure_get(fid) : nullptr;
+    if (!s || !f) {
+        return -1;
+    }
+    return s->work_tick(*f) ? 1 : 0;
+}
+ANK_FUNCTION_2(__test_sphinx_work);

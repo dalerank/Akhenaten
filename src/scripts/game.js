@@ -148,6 +148,7 @@ game_features {
     @gameplay_enhanced_local_cults {}
     @gameplay_juggler_school_one_walker {}
     @gameplay_chariots_workshop_needs_weapons {}
+    @gameplay_sphinx_artisans {}
     @gameplay_city_flotsam_enabled {}
     @gameplay_change_fixed_workers {}
     @gameplay_fixed_worker_percent {}

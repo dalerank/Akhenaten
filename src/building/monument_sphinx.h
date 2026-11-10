@@ -2,52 +2,121 @@
 
 #include "building/monuments.h"
 #include "building/building.h"
+#include "core/svector.h"
 #include "core/vec2i.h"
 
+class figure;
+
+// sphinx work spot: a stage's spot is worked down by one carpenter or stonemason.
+struct sphinx_spot_def {
+    uint8_t stage = 0;
+    e_figure_type figure = FIGURE_NONE;
+    uint16_t work = 0;
+    uint8_t script = 0;
+};
+ANK_CONFIG_STRUCT(sphinx_spot_def, stage, figure, work, script)
+
+// OG monument_anim_images run used by a work-spot sequence: frames of an animation, `step` apart.
+struct sphinx_worker_image {
+    xstring anim;
+    uint8_t offset = 0;
+    uint8_t frames = 1;
+    uint8_t step = 1;
+};
+ANK_CONFIG_STRUCT(sphinx_worker_image, anim, offset, frames, step)
+
+// Three 6x6 records chained main -> b -> c along map +x. The stage lives in the main record's phase
+// (1..15, then finished); each record keeps the work state of its own 8 spots.
 class building_sphinx : public building_monument {
 public:
     BUILDING_METAINFO(BUILDING_SPHINX, building_sphinx, building_monument)
-    virtual building_sphinx *dcast_sphinx() override { return this; }
+    virtual building_sphinx* dcast_sphinx() override { return this; }
+
+    static constexpr int PARTS = 3;
+    static constexpr int PART_SIZE = 6;
+    static constexpr int SPOTS_PER_PART = 8;
+    static constexpr int STAGE_FIRST = 1;
+    static constexpr int STAGE_COMPLETE = 16;
+    // Enhanced: artisans paint the carved sphinx before it counts as finished.
+    static constexpr int STAGE_PAINTING = 16;
+
+    struct runtime_data_t : building_monument::runtime_data_t {
+        std::array<uint16_t, SPOTS_PER_PART> spot_work;
+        std::array<uint16_t, SPOTS_PER_PART> spot_figure;
+    } BUILDING_RUNTIME_DATA_T;
 
     struct base_params {
-        vec2i init_tiles; // full footprint, e.g. {6, 18}
-        // Part b/c tile offsets from main for placement rotation 0..3
-        svector<vec2i, 4> part_b_offset;
-        svector<vec2i, 4> part_c_offset;
+        svector<sphinx_spot_def, 24> spots;
+        // Indexed by the OG ANIM_IMAGES_* id that sphinx_anim::sequence::images refers to.
+        svector<sphinx_worker_image, 16> worker_images;
     };
 
     struct static_params : public base_params, public building_static_params {
+        void archive_load(archive arch);
     } BUILDING_STATIC_DATA_T;
 
     struct preview : building_planer_renderer {
-        virtual void setup_preview_graphics(build_planner &planer) const override;
-        virtual void ghost_preview(build_planner &planer, painter &ctx, tile2i start, tile2i end, vec2i pixel) const override;
-        virtual void ghost_blocked(build_planner &planer, painter &ctx, tile2i start,
-          tile2i end, vec2i pixel, bool fully_blocked) const override;
-        virtual bool ghost_allow_tile(build_planner &planer, tile2i tile) const override;
-        virtual uint32_t ghost_ignore_terrain(build_planner &planer, tile2i tile) const override;
-        virtual int can_place(build_planner &planer, tile2i start, tile2i end, int state) const override;
+        virtual void setup_preview_graphics(build_planner& planer) const override;
+        virtual void ghost_preview(build_planner& planer, painter& ctx, tile2i start, tile2i end,
+          vec2i pixel) const override;
+        virtual void ghost_blocked(build_planner& planer, painter& ctx, tile2i start, tile2i end, vec2i pixel,
+          bool fully_blocked) const override;
+        virtual bool ghost_allow_tile(build_planner& planer, tile2i tile) const override;
+        virtual uint32_t ghost_ignore_terrain(build_planner& planer, tile2i tile) const override;
+        virtual int can_place(build_planner& planer, tile2i start, tile2i end, int state) const override;
     };
 
     virtual void on_place_update_tiles(int orientation, int variant) override;
+    virtual void on_post_load() override;
     virtual void on_destroy() override;
     virtual void update_day() override;
     virtual void update_map_orientation(int map_orientation) override;
     virtual int building_image_get() const override;
-    virtual bool draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) override;
+    virtual bool draw_ornaments_and_animations_height(painter& ctx, vec2i point, tile2i tile,
+      color color_mask) override;
     virtual bool need_stonemason() override;
+    virtual bool need_carpenter() override;
     virtual bool need_artisan() override;
     virtual bool need_workers() const override;
     virtual bool needs_resources() const override;
+    virtual bool accepts_yard_delivery(e_resource resource) const override;
     virtual void add_workers(figure_id fid) override;
     virtual void remove_worker(figure_id fid) override;
-    virtual const monument &config() const override;
+    virtual const monument& config() const override;
     virtual tile2i center_point() const override;
     virtual tile2i access_point() const override;
     virtual grid_area get_area() const override;
-    virtual void bind_dynamic(io_buffer *iob, size_t version) override;
+    virtual void bind_dynamic(io_buffer* iob, size_t version) override;
 
-    int art_stage() const;
-    xstring anim_key_for(int stage, int part, int orient_idx) const;
+    // 1..16; 16 = all carving done (finished, or awaiting Enhanced painting).
+    int stage() const;
+    int part_index() const { return runtime_data().variant; }
+    building_sphinx* main_sphinx();
+    const building_sphinx* main_sphinx() const;
+    building_sphinx* part(int index);
+    const building_sphinx* part(int index) const;
+
+    // Returns true when the figure is done here and should go home.
+    bool work_tick(figure& f);
+    bool has_free_spot(e_figure_type type) const;
+    int spot_attached(int spot) const;
+    int spot_work_left(int spot) const;
+    void reset_spots();
+    // Jump to a stage: spots of earlier stages are done, the rest start over (tests, console).
+    void set_stage(int stage);
+    void work_percentages(int& carpenter_pct, int& mason_pct) const;
+    bool is_carving_done() const { return stage() >= STAGE_COMPLETE; }
+
+    static int pack_stage(int part_letter, int stage);
+    static int view_part_letter(int part, int view);
+
+private:
+    int find_free_spot(e_figure_type type) const;
+    void set_spot(int spot, uint16_t work, uint16_t fid);
+    void scrub_spots();
+    void advance_stage();
+    void refresh_part_images();
+    void animate_spots();
 };
-ANK_CONFIG_STRUCT(building_sphinx::static_params, init_tiles, part_b_offset, part_c_offset)
+ANK_CONFIG_STRUCT(building_sphinx::static_params, spots, worker_images)
+ANK_CONFIG_PROPERTY(building_sphinx::runtime_data_t, variant)

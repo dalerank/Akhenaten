@@ -6400,6 +6400,14 @@ game_messages_hu {
                     text: "A kőművesek befejezték a ragyogó, finom mészkőből készült külső burkolat utolsó simításait, és a téglapiramis végre elkészült!"
                 }
             }
+            sphinx_congratulations {
+                id: 532,
+                size [30, 18]
+                title { text: "Sfinksz elkészült!" }
+                content {
+                    text: "Végre a kőművesek befejezték a hatalmas Szfinx kifaragását. Ez az emlékmű az idők végezetéig őrzi majd Egyiptomot."
+                }
+            }
             message_dike_breach {
                 id: 524,
                 type: 2,

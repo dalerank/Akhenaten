@@ -6404,6 +6404,14 @@ game_messages_it {
             text: "Masons have completed their finishing touches on the gleaming outer casing of fine limestone, and the Brick Pyramid is finally done!"
         }
     }
+    sphinx_congratulations {
+        id: 532,
+        size [30, 18]
+        title { text: "Sfinge terminata!" }
+        content {
+            text: "Finalmente gli scalpellini hanno finito di scolpire la possente sfinge. Questo monumento sorveglierà l'Egitto per i secoli a venire."
+        }
+    }
     message_dike_breach {
         id: 524,
         type: 2,

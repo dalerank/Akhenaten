@@ -6265,4 +6265,12 @@ game_messages_de {
             text: "Steinmetze haben ihre letzten Feinarbeiten an der glänzenden Außenverkleidung aus feinem Kalkstein vollendet, und die Ziegelpyramide ist endlich fertig!"
         }
     }
+    sphinx_congratulations {
+        id: 532,
+        size [30, 18]
+        title { text: "Sphinx fertiggestellt!" }
+        content {
+            text: "Endlich haben die Steinmetze die mächtige Sphinx fertig gemeißelt. Dieses Monument wird über Ägypten für alle Zeitalter wachen."
+        }
+    }
 }
