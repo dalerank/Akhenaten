@@ -228,6 +228,11 @@ building_id laborer_partner_part(figure_id laborer_fid, figure_id mason_fid) {
     if (mason->leading_figure_id != laborer_fid) {
         return 0;
     }
+    // OG figure_laborer_partner_still_working: the part at the mason's destination, i.e. the one it
+    // claimed. A bricklayer's destination_bid is the monument head, which has no worker of its own.
+    if (building_id claimed = pyramid_figure_work_part_bid(mason)) {
+        return claimed;
+    }
     if (auto *bl = mason->dcast_bricklayer()) {
         if (bl->runtime_data().destination_bid) {
             return bl->runtime_data().destination_bid;

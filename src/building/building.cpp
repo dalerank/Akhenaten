@@ -104,6 +104,8 @@ void building::initialize(e_building_type _tp, tile2i _tl, int orientation) {
     state = BUILDING_STATE_CREATED;
     size = props.building_size;
     distance_from_entry = 0;
+    // Slots are reused without clearing: a stale road_access sends walkers to the old (or 0,0) tile.
+    road_access = tile2i::invalid;
 
     map_random_7bit = map_random_get(tile.grid_offset()) & 0x7f;
     figure_roam_direction = map_random_7bit & 6;

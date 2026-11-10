@@ -74,10 +74,10 @@ function run_test() {
     for (var t = 0; t < 60 && loaded < 0; t++) {
         __test_figures_update()
         var a = __figure_get_action_state(fid)
-        if (a == 23 && at_yard < 0) {
+        if (a == 16 && at_yard < 0) { // ACTION_16_LABORER_AT_STORAGE_YARD
             at_yard = t
         }
-        if (a == 17) {
+        if (at_yard >= 0 && (a == 30 || a == 17)) { // loaded: SLED_AT_RAMP or TO_PYRAMID
             loaded = t
         }
     }
@@ -88,12 +88,12 @@ function run_test() {
     city.get_building(bid).add_workers(lab)
     __test_storage_yard_add_resource(yard, RESOURCE_BRICKS, 400)
     __worker_assign_brick_delivery(lab, bid, bl)
-    __test_figure_set_action(lab, 22)
+    __test_figure_set_action(lab, 29) // ACTION_29_LABORER_DELIVERED
     __test_figure_set_wait_ticks(lab, 0)
     var delivered = -1
     for (var d = 1; d <= 60 && delivered < 0; d++) {
         __test_figures_update()
-        if (__figure_get_action_state(lab) != 22) {
+        if (__figure_get_action_state(lab) != 29) {
             delivered = d
         }
     }
