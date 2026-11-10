@@ -186,6 +186,16 @@ void __building_consume_resource(js_State* J) {
     js_helpers::js_push_void(J);
 }
 
+void __building_set_second_material(js_State* J) {
+    const int bid = building_this_id(J);
+    const int resource = J->to<int>(1);
+    building* b = building_get(bid);
+    if (b && b->is_valid()) {
+        b->input.resource_second = (e_resource)resource;
+    }
+    js_helpers::js_push_void(J);
+}
+
 void __building_store_resource(js_State* J) {
     const int bid = building_this_id(J);
     const int resource = J->to<int>(1);
@@ -698,6 +708,7 @@ void js_register_building(js_State *J) {
     jsB_propf(J, js_intern("Building.prototype.stored_resource"), __building_stored_resource, 1);
     jsB_propf(J, js_intern("Building.prototype.consume_resource"), __building_consume_resource, 2);
     jsB_propf(J, js_intern("Building.prototype.store_resource"), __building_store_resource, 2);
+    jsB_propf(J, js_intern("Building.prototype.set_second_material"), __building_set_second_material, 1);
     jsB_propf(J, js_intern("Building.prototype.set_animation"), __building_set_animation, 1);
     jsB_propf(J, js_intern("Building.prototype.set_slot_animation"), __building_set_slot_animation, 2);
     jsB_propf(J, js_intern("Building.prototype.add_overlay"), __building_add_overlay, 1);

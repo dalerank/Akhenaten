@@ -15,12 +15,15 @@
 #include <string.h>
 #include <array>
 
-#define MAX_CHANNELS 70
+// OG savegame city_sounds chunk holds 70 channels (8960 bytes); later channels are runtime-only.
+#define SAVED_CHANNELS              70
+#define MAX_CHANNELS                ((int)std::tuple_size<decltype(city_sounds_t::channels)>::value)
 #define HEALTH_CITY_VIEWS_THRESHOLD 500
-#define HEALTH_CITY_DELAY_MILLIS 90000
+#define HEALTH_CITY_DELAY_MILLIS    90000
 
 city_sounds_t g_city_sounds;
 const e_sound_channel_city_tokens_t ANK_CONFIG_ENUM(e_sound_channel_city_tokens);
+static_assert(SOUND_CHANNEL_CITY_COUNT - SOUND_CHANNEL_CITY_START <= MAX_CHANNELS, "city_sounds_t::channels too small");
 
 const city_sounds_t &sound_city_channels() {
     return g_city_sounds;
@@ -292,7 +295,7 @@ void sound_city_play() {
 
 io_buffer* iob_city_sounds = new io_buffer([](io_buffer* iob, size_t version) {
     auto &channels = g_city_sounds.channels;
-    for (int i = 0; i < MAX_CHANNELS; i++) {
+    for (int i = 0; i < SAVED_CHANNELS; i++) {
         city_sound_channel* ch = &channels[i];
         iob->bind(BIND_SIGNATURE_INT32, &ch->available);
         iob->bind(BIND_SIGNATURE_INT32, &ch->total_views);

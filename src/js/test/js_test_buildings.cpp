@@ -30,6 +30,7 @@
 #include "grid/road_access.h"
 #include "grid/routing/routing.h"
 #include "scenario/scenario.h"
+#include "sound/sound_city.h"
 
 #include <algorithm>
 #include <vector>
@@ -65,6 +66,33 @@ int __building_static_guild_worker_terrain(int type) {
     return building_static_params::get((e_building_type)type).guild_worker_terrain;
 }
 ANK_FUNCTION_1(__building_static_guild_worker_terrain);
+
+int __test_sound_city_mark_building(int bid, int views) {
+    building* b = building_get(bid);
+    if (!b || !b->is_valid()) {
+        return 0;
+    }
+    for (int i = 0; i < views; ++i) {
+        sound_city_mark_building_view(b, SOUND_DIRECTION_CENTER);
+    }
+    return b->dcast()->sound_channel();
+}
+ANK_FUNCTION_2(__test_sound_city_mark_building);
+
+int __test_sound_city_channel_views(int channel) {
+    const auto& channels = sound_city_channels().channels;
+    const int slot = channel - SOUND_CHANNEL_CITY_START;
+    if (slot < 0 || slot >= (int)channels.size()) {
+        return -1;
+    }
+    return channels[slot].total_views;
+}
+ANK_FUNCTION_1(__test_sound_city_channel_views);
+
+void __test_sound_city_decay_views() {
+    sound_city_decay_views();
+}
+ANK_FUNCTION(__test_sound_city_decay_views);
 
 static int __test_building_create(int type, int x, int y) {
     if (type <= BUILDING_NONE || type >= BUILDING_MAX) {

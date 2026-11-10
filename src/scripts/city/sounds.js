@@ -31,6 +31,7 @@ city_sounds = [
   {c: SOUND_CHANNEL_CITY_BREWERY_WORKSHOP, p: "Wavs/brewery.wav"},
   {c: SOUND_CHANNEL_CITY_WEAVER_WORKSHOP, p: "Wavs/weaver.wav"},
   {c: SOUND_CHANNEL_CITY_JEWELS_WORKSHOP, p: "Wavs/jewelry.wav"},
+  {c: SOUND_CHANNEL_CITY_CHARIOTS_WORKSHOP, p: "Wavs/chariot.wav"},
   {c: SOUND_CHANNEL_CITY_ROCK,          p: "Ambient/ROCK.MP3"},
   {c: SOUND_CHANNEL_CITY_SHIPYARD,      p: "Wavs/SHIPYRD.WAV"},
   {c: SOUND_CHANNEL_CITY_SHRINE_BAST,   p: "Wavs/SHR_BAST.WAV"},

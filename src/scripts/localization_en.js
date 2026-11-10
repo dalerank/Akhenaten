@@ -257,6 +257,7 @@ localization_en = [
   {key:"#brewery_needs_water", text:"This brewery needs water before it can brew beer"}
   {key:"#TR_CONFIG_CARTPUSHERS_YIELD_BY_ID", text:"Cartpushers yield goods by worker ID"}
   {key:"#TR_CONFIG_REBALANCE_WORKSHOP_OUTPUT", text:"Workshop output scales with difficulty"}
+  {key:"#TR_CONFIG_CHARIOTS_WORKSHOP_NEEDS_WEAPONS", text:"Chariots workshop also needs weapons (OG uses timber only)"}
   {key:"#TR_CONFIG_PREVENT_DELETE_NEAR_BURNING_RUINS", text:"Prevent deleting buildings near burning ruins"}
   {key:"#TR_CONFIG_DISABLE_NILOMETER_POPUPS", text:"Disable nilometer flood prediction pop-ups"}
   {key:"#TR_CONFIG_ENHANCED_NILOMETER", text:"Enhanced: nilometer HUD (flood quality, phase, floodplain info)"}

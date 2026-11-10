@@ -189,6 +189,7 @@ namespace game_features {
     extern game_feature gameplay_prevent_delete_near_burning_ruins;
     extern game_feature gameplay_change_cartpushers_yield_by_id;
     extern game_feature gameplay_rebalance_workshop_output;
+    extern game_feature gameplay_chariots_workshop_needs_weapons;
     extern game_feature gameopt_monthly_autosave;
     extern game_feature gameopt_ironwill;
     extern game_feature gameopt_unlock_all_campaigns;

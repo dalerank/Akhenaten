@@ -171,6 +171,7 @@ namespace game_features {
     game_feature gameplay_prevent_delete_near_burning_ruins{ "gameplay_prevent_delete_near_burning_ruins", "#TR_CONFIG_PREVENT_DELETE_NEAR_BURNING_RUINS", false, false };
     game_feature gameplay_change_cartpushers_yield_by_id{ "gameplay_change_cartpushers_yield_by_id", "#TR_CONFIG_CARTPUSHERS_YIELD_BY_ID", false, false };
     game_feature gameplay_rebalance_workshop_output{ "gameplay_rebalance_workshop_output", "#TR_CONFIG_REBALANCE_WORKSHOP_OUTPUT", false, false };
+    game_feature gameplay_chariots_workshop_needs_weapons{ "gameplay_chariots_workshop_needs_weapons", "#TR_CONFIG_CHARIOTS_WORKSHOP_NEEDS_WEAPONS", false, false };
     game_feature gameopt_monthly_autosave{ "gameopt_monthly_autosave", "", true, true };
     game_feature gameopt_ironwill{ "gameopt_ironwill", "#TR_CONFIG_IRONWILL", false, false };
     game_feature gameopt_unlock_all_campaigns{ "gameopt_unlock_all_campaigns", "#TR_CONFIG_UNLOCK_ALL_CAMPAIGNS", false, false };

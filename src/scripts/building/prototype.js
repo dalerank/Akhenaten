@@ -20,6 +20,7 @@ Building.property.is_output_resourece_mothballed = { get: function() { return __
 Building.property.stored_clay = { get: function() { return this.stored_resource(RESOURCE_CLAY) } }
 Building.property.stored_straw = { get: function() { return this.stored_resource(RESOURCE_STRAW) } }
 Building.property.first_material_stored = { get: function() { return __building_first_material_stored(this.id) } }
+Building.property.second_material = { }
 
 Building.property.curse_days_left = { }
 Building.property.common_health = { }
