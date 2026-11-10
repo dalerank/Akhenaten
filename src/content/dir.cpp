@@ -241,6 +241,14 @@ vfs::path vfs::path::resolve() {
         return std::filesystem::absolute(from_pwd.c_str()).string().c_str();
     }
 
+#if defined(GAME_PLATFORM_BROWSER)
+    // Engine data embedded at link time (--embed-file), outside the IDBFS game dir.
+    vfs::path from_engine("/engine/", filepath);
+    if (std::filesystem::exists(from_engine.c_str())) {
+        return from_engine;
+    }
+#endif
+
     // Not found anywhere (new file) — return game-dir path so writes go to the right place.
     return from_content;
 #else

@@ -9,7 +9,7 @@ option(OPTION_ENABLE_TRACY "Enable Tracy profiler support" ON)
 option(OPTION_STEAMDECK "Force Steam Deck platform defaults (GAME_PLATFORM_STEAMDECK)" OFF)
 # Download prebuilt innoextract host tool (not linked into the game).
 # Desktop platforms that can spawn helpers and unpack Windows/GOG Inno Setup .exe files.
-if((WIN32 OR UNIX) AND NOT ANDROID AND NOT EMSCRIPTEN)
+if((WIN32 OR UNIX) AND NOT ANDROID AND NOT EMSCRIPTEN AND NOT CMAKE_BUILD_PLATFORM STREQUAL "win_emscripten")
     option(OPTION_ENABLE_INNOEXTRACT "Download innoextract helper for GOG/Inno Setup installers" ON)
 else()
     option(OPTION_ENABLE_INNOEXTRACT "Download innoextract helper for GOG/Inno Setup installers" OFF)
@@ -59,6 +59,24 @@ endif()
 
 set(GAME akhenaten)
 project(${GAME} C CXX)
+
+# Nested dependency builds do not inherit emcmake's toolchain; on Windows they would
+# otherwise fall back to the Visual Studio generator and build native libs.
+# The wrapper relaxes find-root to BOTH so harfbuzz can find our freetype outside the sysroot.
+if(WIN_EMSCRIPTEN AND DEFINED CMAKE_TOOLCHAIN_FILE)
+    set(NESTED_EMSCRIPTEN_TOOLCHAIN "${CMAKE_BINARY_DIR}/nested_emscripten_toolchain.cmake")
+    file(WRITE "${NESTED_EMSCRIPTEN_TOOLCHAIN}"
+        "set(CMAKE_FIND_ROOT_PATH_MODE_LIBRARY BOTH)\n"
+        "set(CMAKE_FIND_ROOT_PATH_MODE_INCLUDE BOTH)\n"
+        "set(CMAKE_FIND_ROOT_PATH_MODE_PACKAGE BOTH)\n"
+        "include(\"${CMAKE_TOOLCHAIN_FILE}\")\n")
+    # zlib 1.3.1 declares libz.a twice, which Ninja rejects: a caller may preset
+    # CMAKE_GENERATOR in the environment (e.g. "NMake Makefiles") for nested builds only.
+    if(NOT DEFINED ENV{CMAKE_GENERATOR})
+        set(ENV{CMAKE_GENERATOR} "${CMAKE_GENERATOR}")
+    endif()
+    set(ENV{CMAKE_TOOLCHAIN_FILE} "${NESTED_EMSCRIPTEN_TOOLCHAIN}")
+endif()
 message("C++ compiler is ${CMAKE_CXX_COMPILER_ID}" )
 
 set(GAME_ARCH_64 TRUE)
@@ -1370,6 +1388,9 @@ if(WIN_EMSCRIPTEN)
                             ${HARFBUZZ_LIBRARY}
                             ${ZLIB_LIBRARY}
                             akhenaten::rc)
+    # Mission scripts load data/maps/*.map; the launcher only uploads the Pharaoh install
+    # into the IDBFS-mounted HOME, so ship the maps inside the module (see vfs::path::resolve).
+    target_link_options(${GAME} PRIVATE "SHELL:--embed-file ${CMAKE_SOURCE_DIR}/data/maps@/engine/data/maps")
 else()
     target_link_libraries (${GAME}
                             ${SDL2_LIBRARY}
