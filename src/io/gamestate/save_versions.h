@@ -41,4 +41,5 @@
 //  192 akhenaten: pyramid OG block-engine fields on monument runtime (og_main/og_part)
 //  193 akhenaten: sphinx work spots (work + figure) on each sphinx part runtime
 //  194 akhenaten: bookmarks in the OG layout (int32 grid offset + reserved int32)
-constexpr uint32_t latest_save_version = 194;
+//  195 akhenaten: shipyard saves the ship under repair (repair_fid)
+constexpr uint32_t latest_save_version = 195;

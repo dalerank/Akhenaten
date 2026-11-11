@@ -356,9 +356,13 @@ void building_shipyard::bind_dynamic(io_buffer *iob, size_t version) {
     iob->bind(BIND_SIGNATURE_UINT8, &d.reparing);
     iob->bind(BIND_SIGNATURE_INT32, &base.tiles[0]);
     iob->bind(BIND_SIGNATURE_INT32, &base.tiles[1]);
-    // repair_fid / queue_slot are not saved; on_post_load rebuilds them from the docked ships.
-    if (iob->is_read_access()) {
+    if (version >= 195) {
+        iob->bind_u16(d.repair_fid);
+    } else if (iob->is_read_access()) {
         d.repair_fid = 0;
+    }
+    // The waiting queue is not saved; on_post_load rebuilds it from the docked ships.
+    if (iob->is_read_access()) {
         d.queue_slot = 0;
     }
 }
@@ -409,10 +413,17 @@ void building_shipyard::on_post_load() {
         building_shipyard_repair_queue_add(id());
     }
 
-    // The ship under repair is not recorded separately; the first queued ship (by id) takes that place.
+    if (d.repair_fid != 0) {
+        figure* repaired = figure_get(d.repair_fid);
+        if (!figure_alive_for_repair(repaired) || repaired->destination_building_id != id()) {
+            d.repair_fid = 0;
+        }
+    }
+
+    // Saves before v195 do not record the ship under repair; the first queued ship (by id) takes that place.
     for (int i = 1; i < MAX_FIGURES; i++) {
         figure* f = figure_get(i);
-        if (!figure_alive_for_repair(f) || f->destination_building_id != id()) {
+        if (!figure_alive_for_repair(f) || f->destination_building_id != id() || f->id == d.repair_fid) {
             continue;
         }
         const bool queued
