@@ -22,6 +22,7 @@
 #include "scenario/scenario.h"
 #include "empire/empire_city.h"
 #include "empire/empire.h"
+#include "io/chunk_serializer.h"
 #include "io/io_buffer.h"
 #include "empire/trade_route.h"
 #include "building/building_granary.h"
@@ -1431,8 +1432,23 @@ io_buffer* iob_city_graph_order = new io_buffer([](io_buffer* iob, size_t versio
 io_buffer *iob_city_bookmarks = new io_buffer([] (io_buffer *iob, size_t version) {
     auto &data = g_city;
     static_assert(data.bookmarks.MAX_BOOKMARKS == 4);
+    // OG layout: {int32 grid_offset, int32 unused} per bookmark; OG keeps the second at -1.
+    // Our .svx before v194 kept 4 tiles instead.
+    const bool og_layout = g_chunk_io.get_file_format() != FILE_FORMAT_SAVE_FILE_EXT || version >= 194;
     for (int i = 0; i < data.bookmarks.MAX_BOOKMARKS; i++) {
-        iob->bind_tile(data.bookmarks.points[i]);
+        tile2i& point = data.bookmarks.points[i];
+        if (!og_layout) {
+            iob->bind_tile(point);
+            continue;
+        }
+
+        int32_t offset = point.valid() ? point.grid_offset() : -1;
+        int32_t unused = -1;
+        iob->bind(BIND_SIGNATURE_INT32, &offset);
+        iob->bind(BIND_SIGNATURE_INT32, &unused);
+        if (iob->is_read_access()) {
+            point = offset >= 0 ? tile2i(offset) : tile2i::invalid;
+        }
     }
 });
 

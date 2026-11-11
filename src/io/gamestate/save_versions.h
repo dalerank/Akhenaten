@@ -40,4 +40,5 @@
 //  191 akhenaten: mastaba OG block-engine fields on monument runtime (og_main/og_part)
 //  192 akhenaten: pyramid OG block-engine fields on monument runtime (og_main/og_part)
 //  193 akhenaten: sphinx work spots (work + figure) on each sphinx part runtime
-constexpr uint32_t latest_save_version = 193;
+//  194 akhenaten: bookmarks in the OG layout (int32 grid offset + reserved int32)
+constexpr uint32_t latest_save_version = 194;
