@@ -7,7 +7,7 @@
 
 enum { SYSTEM_NONE = 0, SYSTEM_UP = 1, SYSTEM_DOWN = 2, SYSTEM_DOUBLE_CLICK = 4 };
 
-#define DOUBLE_CLICK_TIME 500
+constexpr int DOUBLE_CLICK_TIME = 500;
 
 mouse g_mouse;
 static mouse dialog;
