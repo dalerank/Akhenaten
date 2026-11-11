@@ -40,9 +40,6 @@ void sound_city_init() {
     auto &channels = g_city_sounds.channels;
     g_city_sounds.last_update_time = time_get_millis();
     memset(channels.data(), 0, channels.size() * sizeof(city_sound_channel));
-    for (int i = 0; i < MAX_CHANNELS; i++) {
-        channels[i].last_played_time = g_city_sounds.last_update_time;
-    }
 
     int i = SOUND_CHANNEL_CITY_START;
     for (auto &channel: channels) {
@@ -293,25 +290,51 @@ void sound_city_play() {
     channels[max_sound_id].times_played++;
 }
 
-io_buffer* iob_city_sounds = new io_buffer([](io_buffer* iob, size_t version) {
-    auto &channels = g_city_sounds.channels;
-    for (int i = 0; i < SAVED_CHANNELS; i++) {
-        city_sound_channel* ch = &channels[i];
-        iob->bind(BIND_SIGNATURE_INT32, &ch->available);
-        iob->bind(BIND_SIGNATURE_INT32, &ch->total_views);
-        iob->bind(BIND_SIGNATURE_INT32, &ch->views_threshold);
-        for (int d = 0; d < 5; d++) {
-            iob->bind(BIND_SIGNATURE_INT32, &ch->direction_views[d]);
-        }
-        iob->bind____skip(4); // current channel
-        iob->bind____skip(4); // num channels
-        iob->bind(BIND_SIGNATURE_INT32, &ch->channel);
-        iob->bind____skip(28);
-        iob->bind(BIND_SIGNATURE_INT32, &ch->in_use);
-        iob->bind(BIND_SIGNATURE_INT32, &ch->times_played);
-        iob->bind(BIND_SIGNATURE_UINT32, &ch->last_played_time);
-        iob->bind(BIND_SIGNATURE_UINT32, &ch->delay_millis);
-        iob->bind(BIND_SIGNATURE_INT32, &ch->should_play);
-        iob->bind____skip(36);
+// OG city_sound_types.h: one 128-byte record per slot, 70 slots.
+struct og_city_sound_slot {
+    int32_t available;
+    int32_t total_views;
+    int32_t views_threshold;
+    int32_t direction_views[5];
+    int32_t current_channel;
+    int32_t num_channels;
+    int32_t channels[8];
+    int32_t in_use;
+    int32_t times_played;
+    uint32_t last_played_time;
+    uint32_t delay_millis;
+    int32_t should_play;
+    int32_t unused[9];
+};
+static_assert(sizeof(og_city_sound_slot) == 128, "OG city_sound_channel is a 128-byte savegame record");
+
+// OG city_view.c city_sound_channel_ids: the sample bound to each set-up slot (1..63); slot 0 stays empty.
+// clang-format off
+static const int32_t og_city_sound_channel_ids[64] = {
+    0,   30,  34,  38,  42,  46,  50,  51,  52,  53,  54,  55,  56,  57,  58,  62,
+    63,  64,  65,  66,  67,  68,  69,  70,  74,  78,  79,  80,  81,  82,  83,  87,
+    89,  91,  93,  95,  97,  98,  99,  100, 101, 102, 106, 110, 111, 112, 113, 114,
+    115, 116, 117, 118, 119, 120, 121, 122, 123, 124, 125, 126, 127, 128, 132, 133,
+};
+// clang-format on
+
+// Loading always rebuilds the city sounds with sound_city_init() (as OG game_file.c does), so the chunk is
+// written as OG's sound_city_init() leaves it, minus the wall-clock last_played_time: the view counters
+// depend on what was drawn and the clock on when, and neither may make save -> load -> save differ.
+static void og_city_sounds_image(std::array<og_city_sound_slot, SAVED_CHANNELS>& slots) {
+    memset(slots.data(), 0, sizeof(og_city_sound_slot) * slots.size());
+    for (int i = 1; i < (int)std::size(og_city_sound_channel_ids); i++) {
+        og_city_sound_slot& slot = slots[i];
+        slot.views_threshold = 200;
+        slot.num_channels = 1;
+        slot.channels[0] = og_city_sound_channel_ids[i];
+        slot.in_use = 1;
+        slot.delay_millis = 30000;
     }
+}
+
+io_buffer* iob_city_sounds = new io_buffer([](io_buffer* iob, size_t version) {
+    static std::array<og_city_sound_slot, SAVED_CHANNELS> slots;
+    og_city_sounds_image(slots);
+    iob->bind(BIND_SIGNATURE_RAW, slots.data(), sizeof(og_city_sound_slot) * slots.size());
 });

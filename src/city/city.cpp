@@ -1278,20 +1278,12 @@ io_buffer* iob_city_data = new io_buffer([](io_buffer* iob, size_t version) {
     iob->bind(BIND_SIGNATURE_UINT8, &data.unused.unknown_458e);
     iob->bind(BIND_SIGNATURE_UINT8, &data.military.total_soldiers);
     iob->bind(BIND_SIGNATURE_INT8, &data.buildings.triumphal_obelisk_placed);
-    iob->bind(BIND_SIGNATURE_INT8, &data.sound.die_citizen);
-    iob->bind(BIND_SIGNATURE_INT8, &data.sound.die_soldier);
-    iob->bind(BIND_SIGNATURE_INT8, &data.sound.shoot_arrow);
+    // The Caesar III sound counters (data.sound) only pace sound effects; they stay runtime state and their
+    // bytes are written as zeros, as OG writes its reserved_47/48/49 here.
+    iob->bind____skip(3);
     iob->bind(BIND_SIGNATURE_INT32, &data.buildings.trade_center_building_id);
     iob->bind(BIND_SIGNATURE_INT32, &data.figures.soldiers);
-    iob->bind(BIND_SIGNATURE_INT8, &data.sound.hit_soldier);
-    iob->bind(BIND_SIGNATURE_INT8, &data.sound.hit_spear);
-    iob->bind(BIND_SIGNATURE_INT8, &data.sound.hit_club);
-    iob->bind(BIND_SIGNATURE_INT8, &data.sound.march_enemy);
-    iob->bind(BIND_SIGNATURE_INT8, &data.sound.march_horse);
-    iob->bind(BIND_SIGNATURE_INT8, &data.sound.hit_elephant);
-    iob->bind(BIND_SIGNATURE_INT8, &data.sound.hit_axe);
-    iob->bind(BIND_SIGNATURE_INT8, &data.sound.hit_wolf);
-    iob->bind(BIND_SIGNATURE_INT8, &data.sound.march_wolf);
+    iob->bind____skip(9);
     iob->bind____skip(10);
     iob->bind(BIND_SIGNATURE_INT8, &data.sentiment.include_huts);
     iob->bind(BIND_SIGNATURE_INT32, &data.kingdome.invasion.count);
