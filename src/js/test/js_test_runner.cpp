@@ -9,6 +9,7 @@
 #include "core/app.h"
 #include "core/bstring.h"
 #include "core/crc32.h"
+#include "core/system_time.h"
 #include "core/log.h"
 #include "core/xstring.h"
 #include "editor/editor.h"
@@ -25,13 +26,16 @@
 #include "graphics/view/view.h"
 #include "graphics/view/zoom.h"
 #include "grid/grid.h"
+#include "grid/building.h"
 #include "grid/road_access.h"
+#include "grid/sprite.h"
 #include "grid/routing/routing.h"
 #include "input/hotkey.h"
 #include "io/chunk_serializer.h"
 #include "io/gamestate/boilerplate.h"
 #include "io/gamestate/file_schemas.h"
 #include "platform/integral_tests.h"
+#include "platform/renderer.h"
 #include "scenario/scenario.h"
 #include "sound/sound.h"
 #include "widget/debug_console.h"
@@ -480,6 +484,27 @@ static int __test_run_ticks(int n) {
 }
 ANK_FUNCTION_1(__test_run_ticks);
 
+// The draw half of a frame without game.update(): no tick and no per-frame anti_scum roll, so
+// whatever changes in the saved state between two hashes was written by the drawing. Every
+// animation timer fires, so each frame is one animation step regardless of wall-clock time, and
+// the clock moves far enough for a running figure follow to take its snapshot every frame.
+static void __test_draw_frames(int n) {
+    n = std::clamp(n, 0, 240);
+    static time_millis clock = 0;
+    for (int i = 0; i < n && !g_app.quit; ++i) {
+        clock = std::max<time_millis>(SDL_GetTicks(), clock + 1000);
+        time_set_millis(clock);
+        for (auto& timer : game.animation_timers) {
+            timer.should_update = true;
+        }
+        game.frame_begin();
+        game.frame_pre_present();
+        platform_renderer_render();
+        game.frame_end();
+    }
+}
+ANK_FUNCTION_1(__test_draw_frames);
+
 // Water animation advances from the renderer (widget_city), so the frame a tile shows depends on
 // what was drawn, not on the simulation. Collapse each animation cycle onto its first frame.
 static void state_hash_normalise_water(std::vector<uint8_t>& raw) {
@@ -507,12 +532,27 @@ static void state_hash_normalise_water(std::vector<uint8_t>& raw) {
     }
 }
 
+// The old building animation keeps its frame in the sprite grid and steps it from the draw, as OG
+// does, so a drawn city legitimately differs there. Bridges keep their piece ids in the same grid.
+static void state_hash_normalise_building_frames(std::vector<uint8_t>& raw) {
+    for (int off = 0; off < (int)raw.size() && off < GRID_SIZE_TOTAL; ++off) {
+        const int bid = map_building_at(off);
+        if (!bid) {
+            continue;
+        }
+        const building* b = building_get(bid);
+        if (b && b->type != BUILDING_LOW_BRIDGE && b->type != BUILDING_UNUSED_SHIP_BRIDGE_83) {
+            raw[off] = 0;
+        }
+    }
+}
+
 // Record 0 is the null building/figure that OG and we both use as scratch.
 static void state_hash_zero_record0(std::vector<uint8_t>& raw, size_t record_size) {
     std::fill(raw.begin(), raw.begin() + std::min(record_size, raw.size()), 0);
 }
 
-static pcstr __test_state_hash() {
+static pcstr state_hash(bool normalise_building_frames) {
     static std::string result;
     result.clear();
 
@@ -528,6 +568,8 @@ static pcstr __test_state_hash() {
     for (chunk_snapshot& chunk : chunks) {
         if (chunk.name == "image_grid") {
             state_hash_normalise_water(chunk.raw);
+        } else if (chunk.name == "sprite_grid" && normalise_building_frames) {
+            state_hash_normalise_building_frames(chunk.raw);
         } else if (chunk.name == "buildings") {
             state_hash_zero_record0(chunk.raw, 264);
         } else if (chunk.name == "figures") {
@@ -551,7 +593,33 @@ static pcstr __test_state_hash() {
     result = std::string("total=") + hex + entries;
     return result.c_str();
 }
+
+static pcstr __test_state_hash() {
+    return state_hash(false);
+}
 ANK_FUNCTION(__test_state_hash);
+
+// For comparing a drawn run with a headless one: building animation frames are left out.
+static pcstr __test_state_hash_drawn() {
+    return state_hash(true);
+}
+ANK_FUNCTION(__test_state_hash_drawn);
+
+// Highest old-style animation frame over the building's tiles, or -1 for an invalid building.
+static int __test_building_sprite_frame(int bid) {
+    building* b = building_get(bid);
+    if (!b || !b->is_valid()) {
+        return -1;
+    }
+    int frame = 0;
+    for (int dy = 0; dy < b->size; ++dy) {
+        for (int dx = 0; dx < b->size; ++dx) {
+            frame = std::max(frame, map_sprite_animation_at(b->tile.shifted(dx, dy).grid_offset()) & 0x7f);
+        }
+    }
+    return frame;
+}
+ANK_FUNCTION_1(__test_building_sprite_frame);
 
 // Compares two chunk lists written through the same schema; logs every differing chunk and
 // returns their names joined by ',' (empty when identical).
