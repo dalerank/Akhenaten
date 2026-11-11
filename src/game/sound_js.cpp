@@ -60,9 +60,9 @@ static void sound_channel_proto_filename(js_State *J) {
 }
 
 static void sound_channel_proto_toString(js_State *J) {
-    char buf[64];
-    snprintf(buf, sizeof buf, "SoundChannel(%d)", sound_channel_this_index(J));
-    J->pushstring(buf);
+    bstring64 buf;
+    buf.printf("SoundChannel(%d)", sound_channel_this_index(J));
+    J->pushstring(buf.c_str());
 }
 
 static void jsB_new_SoundChannel(js_State *J) {
