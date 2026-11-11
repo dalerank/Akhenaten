@@ -29,6 +29,7 @@
 #include "input/hotkey.h"
 #include "io/chunk_serializer.h"
 #include "io/gamestate/boilerplate.h"
+#include "io/gamestate/boilerplate_detail.h"
 #include "io/gamestate/file_schemas.h"
 #include "platform/integral_tests.h"
 #include "scenario/scenario.h"
@@ -39,6 +40,7 @@
 #include <SDL.h>
 #include <algorithm>
 #include <cstring>
+#include <filesystem>
 #include <fstream>
 #include <string>
 
@@ -551,3 +553,195 @@ static pcstr __test_state_hash() {
     return result.c_str();
 }
 ANK_FUNCTION(__test_state_hash);
+
+// Compares two chunk lists written through the same schema; logs every differing chunk and
+// returns their names joined by ',' (empty when identical).
+static std::string chunk_snapshots_diff(const chunk_snapshots& expected, const chunk_snapshots& actual, pcstr tag) {
+    std::string diffs;
+    auto add = [&diffs](const std::string& name) { diffs += diffs.empty() ? name : "," + name; };
+
+    if (expected.size() != actual.size()) {
+        logs::info("[roundtrip] %s chunk count %d != %d", tag, (int)expected.size(), (int)actual.size());
+        add("chunk_count");
+    }
+
+    const size_t n = std::min(expected.size(), actual.size());
+    for (size_t i = 0; i < n; ++i) {
+        const chunk_snapshot& a = expected[i];
+        const chunk_snapshot& b = actual[i];
+        if (a.name != b.name) {
+            logs::info("[roundtrip] %s chunk %d name %s != %s", tag, (int)i, a.name.c_str(), b.name.c_str());
+            add(a.name);
+            continue;
+        }
+
+        if (a.raw.size() != b.raw.size()) {
+            logs::info("[roundtrip] %s diff %s size %d != %d", tag, a.name.c_str(), (int)a.raw.size(),
+              (int)b.raw.size());
+            add(a.name);
+            continue;
+        }
+
+        // Record-array chunks: report "record.offset" instead of a flat offset.
+        int record_size = 0;
+        if (a.name == "buildings") {
+            record_size = 264;
+        } else if (a.name == "figures") {
+            record_size = 388;
+        }
+
+        int count = 0;
+        std::string samples;
+        for (size_t off = 0; off < a.raw.size(); ++off) {
+            if (a.raw[off] != b.raw[off]) {
+                if (count < 12) {
+                    char buf[48];
+                    if (record_size > 0) {
+                        const int rec = (int)(off / record_size);
+                        const int type
+                          = a.name == "buildings" ? (int)building_get(rec)->type : (int)figure_get(rec)->type;
+                        snprintf(buf, sizeof(buf), " %d(t%d).%d:%02x->%02x", rec, type, (int)(off % record_size),
+                          a.raw[off], b.raw[off]);
+                    } else {
+                        snprintf(buf, sizeof(buf), " %d:%02x->%02x", (int)off, a.raw[off], b.raw[off]);
+                    }
+                    samples += buf;
+                }
+                ++count;
+            }
+        }
+
+        if (count > 0) {
+            logs::info("[roundtrip] %s diff %s size=%d bytes=%d%s", tag, a.name.c_str(), (int)a.raw.size(), count,
+              samples.c_str());
+            add(a.name);
+        }
+    }
+
+    return diffs;
+}
+
+// Our save -> load -> our save again; returns the chunks that changed, "" when none, "error:..." on failure.
+static std::string save_roundtrip(pcstr filename) {
+    chunk_snapshots before;
+    if (!g_chunk_io.write_to_memory(FILE_FORMAT_SAVE_FILE_EXT, save_data_version(), file_schema, before)) {
+        return "error:write_before";
+    }
+
+    if (!GamestateIO::write_savegame(filename)) {
+        return "error:write_file";
+    }
+
+    const bool loaded = GamestateIO::load_savegame(filename);
+    GamestateIO::delete_savegame(filename);
+    if (!loaded) {
+        return "error:load_file";
+    }
+
+    chunk_snapshots after;
+    if (!g_chunk_io.write_to_memory(FILE_FORMAT_SAVE_FILE_EXT, save_data_version(), file_schema, after)) {
+        return "error:write_after";
+    }
+
+    // Route counters (junk8 bytes 12..27): loading routes the kingdom-access check, and OG counts
+    // that route too (game_file.c:755), so a load always bumps them.
+    for (chunk_snapshots* snap : {&before, &after}) {
+        for (chunk_snapshot& chunk : *snap) {
+            if (chunk.name == "junk8" && chunk.raw.size() >= 28) {
+                std::fill(chunk.raw.begin() + 12, chunk.raw.begin() + 28, 0);
+            }
+        }
+    }
+
+    return chunk_snapshots_diff(before, after, filename);
+}
+
+static pcstr __test_save_roundtrip(pcstr filename) {
+    static std::string result;
+    result = save_roundtrip(filename);
+    return result.c_str();
+}
+ANK_FUNCTION_1(__test_save_roundtrip);
+
+// Loads an original .sav and writes it back through the same schema and version: what we write
+// differs from the file bytes only where a bind loses or reinterprets a field. Compared right after
+// the binds read, before post_load recalculates anything.
+static std::string og_save_fidelity(const std::string& path) {
+    GamestateLoadDetail::pre_load();
+    auto reader = vfs::file_open(vfs::path(path.c_str()));
+    if (
+      !g_chunk_io.unserialize(reader, 0, FILE_FORMAT_SAVE_FILE, GamestateLoadDetail::read_file_version, file_schema)) {
+        return "error:load";
+    }
+
+    const int version = g_chunk_io.get_file_version();
+    chunk_snapshots file;
+    g_chunk_io.snapshot_chunks(file);
+
+    chunk_snapshots ours;
+    if (!g_chunk_io.write_to_memory(FILE_FORMAT_SAVE_FILE, version, file_schema, ours)) {
+        return "error:write";
+    }
+
+    const std::string tag = "og v" + std::to_string(version);
+    const std::string diffs = chunk_snapshots_diff(file, ours, tag.c_str());
+
+    game.session.last_loaded = e_session_save;
+    game.session.last_loaded_mission = path.c_str();
+    GamestateLoadDetail::post_load();
+    GamestateIO::start_loaded_file();
+    return diffs;
+}
+
+// Every Save/<player>/*.sav of the Pharaoh install except the family.sav dynasty stubs: OG bytes
+// against our .sav writer, then the loaded city through an .svx round trip.
+// Returns "skip" without a Save folder, else "<checked>;|<path>=<chunks>|svx <path>=<chunks>..." for differences.
+static pcstr __test_og_save_corpus() {
+    static std::string result;
+    namespace fs = std::filesystem;
+
+    const fs::path root(vfs::content_path(vfs::SAVE_FOLDER).c_str());
+    std::error_code ec;
+    if (!fs::is_directory(root, ec)) {
+        result = "skip";
+        return result.c_str();
+    }
+
+    std::vector<std::string> files;
+    for (const auto& player : fs::directory_iterator(root, ec)) {
+        if (!player.is_directory()) {
+            continue;
+        }
+        for (const auto& e : fs::directory_iterator(player.path(), ec)) {
+            const std::string name = e.path().filename().string();
+            if (!e.is_regular_file() || e.path().extension() != ".sav" || name == "family.sav") {
+                continue;
+            }
+            files.push_back(e.path().generic_string());
+        }
+    }
+    std::sort(files.begin(), files.end());
+
+    std::string diffs;
+    for (const std::string& f : files) {
+        const std::string d = og_save_fidelity(f);
+        logs::info("[roundtrip] og %s: %s", f.c_str(), d.empty() ? "identical" : d.c_str());
+        if (!d.empty()) {
+            diffs += "|" + f + "=" + d;
+        }
+        if (d.rfind("error:", 0) == 0) {
+            continue;
+        }
+
+        // The same city through our own format: OG saves carry far more state than a test city.
+        const std::string svx = save_roundtrip("test_og_roundtrip.svx");
+        logs::info("[roundtrip] og->svx %s: %s", f.c_str(), svx.empty() ? "identical" : svx.c_str());
+        if (!svx.empty()) {
+            diffs += "|svx " + f + "=" + svx;
+        }
+    }
+
+    result = std::to_string(files.size()) + ";" + diffs;
+    return result.c_str();
+}
+ANK_FUNCTION(__test_og_save_corpus);
