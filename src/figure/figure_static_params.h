@@ -37,6 +37,8 @@ struct figure_static_params {
     bool can_cross_ferry;
     bool boards_ferry; // wait for / ride ferry boat (carts); immigrants walk the lane
     e_overlay overlay = OVERLAY_NONE;
+    // OG scenario_climate.c climate_animals[].max_figures: a herd point spawns this many, no roll.
+    uint8_t herd_size = 0;
 
     static void set(e_figure_type, const figure_static_params &);
     static const figure_static_params &get(e_figure_type);
@@ -46,11 +48,10 @@ struct figure_static_params {
 
     inline int first_img(const xstring &anim_key) const { return animations[anim_key].first_img(); }
 };
-ANK_CONFIG_STRUCT(figure_static_params, terrain_usage,  animations, sounds,
-    max_roam_length, speed_mult, meta, permission, is_enemy, is_soldier, use_cart,
-    category, max_damage, attack_value, defense_value, missile_defense_value,
-    missile_attack_value, missile_delay, missile_range, corpse_time_delay,
-    render_on_flat_tiles, record_path, can_cross_ferry, boards_ferry, overlay)
+ANK_CONFIG_STRUCT(figure_static_params, terrain_usage, animations, sounds, max_roam_length, speed_mult, meta,
+  permission, is_enemy, is_soldier, use_cart, category, max_damage, attack_value, defense_value, missile_defense_value,
+  missile_attack_value, missile_delay, missile_range, corpse_time_delay, render_on_flat_tiles, record_path,
+  can_cross_ferry, boards_ferry, overlay, herd_size)
 
 ANK_CONFIG_PROPERTY(figure_static_params,
     terrain_usage, max_roam_length, speed_mult, permission, is_enemy, is_soldier, use_cart,

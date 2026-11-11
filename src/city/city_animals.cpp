@@ -90,29 +90,6 @@ int herd_impassable_mask(e_figure_type herd_type) {
     }
 }
 
-// OG scenario_climate.c climate_animals[].max_figures: the herd is created full, no roll.
-int climate_herd_count(e_figure_type type) {
-    switch (type) {
-    case FIGURE_BIRDS:
-    case FIGURE_ANTELOPE:
-    case FIGURE_OSTRICH:
-    case FIGURE_HYENA:
-        return 7;
-    case FIGURE_ASP:
-        return 6;
-    case FIGURE_LION:
-        return 4;
-    case FIGURE_HIPPO:
-        return 3;
-    case FIGURE_SCORPION:
-        return 2;
-    case FIGURE_CROCODILE:
-        return 1;
-    default:
-        return 7;
-    }
-}
-
 bool figure_is_prey(e_figure_type type) {
     return type == FIGURE_OSTRICH || type == FIGURE_ANTELOPE || type == FIGURE_BIRDS;
 }
@@ -239,7 +216,7 @@ void city_animals_t::create_herds() {
             if (type == FIGURE_NONE) {
                 continue;
             }
-            const int count = hp.count > 0 ? hp.count : climate_herd_count(type);
+            const int count = hp.count > 0 ? hp.count : figure_static_params::get(type).herd_size;
             formation *m = create_herd(hp.tile, type, count);
             if (m && m->id > 0 && hp.radius > 0) {
                 m->reseach_radius = hp.radius;

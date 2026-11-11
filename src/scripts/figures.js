@@ -108,6 +108,7 @@ figure_festival_guy {
 }
 
 figure_ostrich {
+	herd_size : 7
 	animations {
 		_pack { pack:PACK_SPR_MAIN }
 		walk { id:156, max_frames:12 }
@@ -132,6 +133,7 @@ figure_ostrich {
 }
 
 figure_hyena {
+	herd_size : 7
 	animations {
 		_pack { pack:PACK_SPR_MAIN }
 		walk { id:161, max_frames:12 }
@@ -167,6 +169,7 @@ figure_hyena {
 }
 
 figure_asp {
+	herd_size : 6
 	animations {
 		walk { pack:PACK_EXPANSION_SPR, id:0, max_frames:12 }
 		attack { pack:PACK_EXPANSION_SPR, id:1, max_frames:12 }
@@ -186,6 +189,7 @@ figure_asp {
 }
 
 figure_lion {
+	herd_size : 4
 	animations {
 		walk { pack:PACK_EXPANSION_SPR, id:5, max_frames:11 }
 		attack { pack:PACK_EXPANSION_SPR, id:6, max_frames:11 }
@@ -205,6 +209,7 @@ figure_lion {
 }
 
 figure_scorpion {
+	herd_size : 2
 	animations {
 		walk { pack:PACK_EXPANSION_SPR, id:10, max_frames:12 }
 		attack { pack:PACK_EXPANSION_SPR, id:11, max_frames:6 }
@@ -224,6 +229,7 @@ figure_scorpion {
 }
 
 figure_antelope {
+	herd_size : 7
 	// OG ANTELOPE…FLEE (SprAmbient 30–35); flee uses run; rest=idle, graze=eating.
 	animations {
 		_pack { pack:PACK_SPR_AMBIENT }
@@ -283,6 +289,7 @@ figure_ballista {
 }
 
 figure_birds = {
+	herd_size : 7
 	// OG IMAGE_GROUP_FIGURE_BIRDS/_DEATH (SprMain 114/115); flock is non-directional (frame>>1).
 	animations : {
 		walk : { pack:PACK_SPR_MAIN, id:114, max_frames:25, loop:true }
@@ -303,6 +310,7 @@ figure_birds = {
 }
 
 figure_crocodile = {
+  herd_size : 1
   animations : {
 		walk : { pack:PACK_SPR_MAIN, id:23, max_frames:12 }
 		death : { pack:PACK_SPR_MAIN, id:24, max_frames:8, duration:3, loop:false }
@@ -342,6 +350,7 @@ figure_crocodile = {
 }
 
 figure_hippo = {
+  herd_size : 3
   animations : {
 		walk : { pack:PACK_SPR_AMBIENT, id:22, max_frames:12 }
 		idle : { pack:PACK_SPR_AMBIENT, id:22, max_frames:1 }
