@@ -1230,10 +1230,8 @@ static void bind_event_ph(io_buffer *iob, event_ph_t &event) {
     iob->bind(BIND_SIGNATURE_INT8, &event.event_trigger_type);
     iob->bind____skip(1);
     iob->bind_u16(event.tag_id); // original unk07; JS mission requests key off this
-    iob->bind_u8(event.months_initial);
-    iob->bind____skip(1);
-    iob->bind_u8(event.quest_months_left);
-    iob->bind____skip(1);
+    iob->bind(BIND_SIGNATURE_INT16, &event.months_initial);
+    iob->bind(BIND_SIGNATURE_INT16, &event.quest_months_left);
     iob->bind(BIND_SIGNATURE_INT8, &event.event_state);
     iob->bind(BIND_SIGNATURE_INT8, &event.is_overdue);
     iob->bind(BIND_SIGNATURE_INT8, &event.is_active);

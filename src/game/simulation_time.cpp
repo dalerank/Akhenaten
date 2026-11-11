@@ -69,13 +69,10 @@ void simulation_time_t::advance_year() {
 
 io_buffer* iob_game_time = new io_buffer([](io_buffer* iob, size_t version) {
     auto &data = game.simtime;
-    iob->bind(BIND_SIGNATURE_INT8, &data.tick);
-    iob->bind____skip(3);
-    iob->bind(BIND_SIGNATURE_INT16, &data.day);
-    iob->bind____skip(2);
-    iob->bind(BIND_SIGNATURE_INT16, &data.month);
-    iob->bind____skip(2);
-    iob->bind(BIND_SIGNATURE_INT16, &data.year);
-    iob->bind____skip(2);
+    // OG stores all of these as int32; BC years are negative and need the sign-extension bytes.
+    iob->bind(BIND_SIGNATURE_INT32, &data.tick);
+    iob->bind(BIND_SIGNATURE_INT32, &data.day);
+    iob->bind(BIND_SIGNATURE_INT32, &data.month);
+    iob->bind(BIND_SIGNATURE_INT32, &data.year);
     iob->bind(BIND_SIGNATURE_INT32, &data.total_days);
 });
