@@ -567,7 +567,7 @@ namespace {
             return false;
         }
 
-        const std::vector<xstring>& entries = archive.entries();
+        const std::vector<xstring>& entries = archive.names();
         std::vector<std::string> names(entries.size());
         for (size_t i = 0; i < entries.size(); ++i) {
             pcstr name = entries[i].c_str();

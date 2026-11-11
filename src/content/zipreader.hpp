@@ -126,6 +126,8 @@ namespace vfs {
 
         //! returns the list of files
         const std::vector<xstring> &entries() const;
+        //! the same entries as written in the archive, not lowercased
+        const std::vector<xstring>& names() const { return _names; }
         const vfs::path &filepath() const { return _filepath; }
 
         bool isGzip() const;
@@ -147,6 +149,7 @@ namespace vfs {
         vfs::path _filepath;
         std::vector<SZipFileEntry> _files;
         std::vector<xstring> _entries;
+        std::vector<xstring> _names;
         reader _data;
 
         bool _isGZip;

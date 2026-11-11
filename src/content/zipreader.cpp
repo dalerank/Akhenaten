@@ -127,6 +127,7 @@ namespace vfs {
 
         // now we've filled all the fields, this is just a standard deflate block
         _entries.push_back(ZipFileName.c_str());
+        _names.push_back(ZipFileName.c_str());
         _files.push_back(entry);
         return true;
     }
@@ -205,6 +206,7 @@ namespace vfs {
         // move forward length of data
         _data->advance(entry.header.DataDescriptor.CompressedSize);
 
+        _names.push_back(entry_name.c_str());
         _entries.push_back(entry_name.tolower().c_str());
         _files.push_back(entry);
 
@@ -228,14 +230,16 @@ namespace vfs {
         }
 
         const long pos = _data->tell();
+        const size_t scanned = _files.size();
         _data->seek(entry.RelativeOffsetOfLocalHeader);
         scanZipHeader(true);
         _data->seek(pos + entry.FilenameLength + entry.ExtraFieldLength + entry.FileCommentLength);
-        _files.push_back({});
-        _files.back().header.DataDescriptor.CompressedSize = entry.CompressedSize;
-        _files.back().header.DataDescriptor.UncompressedSize = entry.UncompressedSize;
-        _files.back().header.DataDescriptor.CRC32 = entry.CRC32;
-        _entries.push_back({});
+        // a streamed archive (bit 3) leaves the sizes of the local header at 0: the central directory has them
+        if (_files.size() == scanned + 1) {
+            _files.back().header.DataDescriptor.CompressedSize = entry.CompressedSize;
+            _files.back().header.DataDescriptor.UncompressedSize = entry.UncompressedSize;
+            _files.back().header.DataDescriptor.CRC32 = entry.CRC32;
+        }
         return true;
     }
 
