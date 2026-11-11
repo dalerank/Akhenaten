@@ -1,8 +1,10 @@
 // #634 follow-up: city tracks play once and the player moves on by itself.
 // music_next_track() (what the player calls once the post-tune delay after a
-// finished track has elapsed) must pick a different track, follow the
-// music.txt main/alternate order when the mission has a playlist, keep the
-// track across population changes, and stop when music is disabled.
+// finished track has elapsed) must pick a different track from the population
+// pools, follow OG's music.txt state machine when the mission has a playlist
+// (M tracks in file order within the population range, a random A track only
+// after an M track that an AMBIENT line follows; OG music.c), and stop when
+// music is disabled.
 
 var __test188_ok = false
 
@@ -72,53 +74,24 @@ function test188_playlist_advance() {
     __game_sound.music_stop()
     __game_sound.music_update(1)
 
-    var allowed = MAINS_LOW.concat(ALTS)
-    var prev = __test_music_current_track()
-    if (!test188_contains(allowed, prev)) {
-        return test188_fail('forced update picked ' + prev + ', not a mission 5 track for pop 200')
+    // OG order for pop 200: advent, A, sps, A, sthA (no AMBIENT after sthA), then the range wraps.
+    if (__test_music_current_track() != MAINS_LOW[0]) {
+        return test188_fail('forced update picked ' + __test_music_current_track() + ', expected ' + MAINS_LOW[0])
     }
-
-    var last_main = ''
-    if (test188_contains(MAINS_LOW, prev)) {
-        last_main = prev
-    }
-
-    for (var i = 0; i < 12; ++i) {
+    var expected = ['A', MAINS_LOW[1], 'A', MAINS_LOW[2], MAINS_LOW[0], 'A', MAINS_LOW[1], 'A', MAINS_LOW[2], MAINS_LOW[0], 'A', MAINS_LOW[1]]
+    for (var i = 0; i < expected.length; ++i) {
         __test_music_next_track()
         var cur = __test_music_current_track()
-        if (!test188_contains(allowed, cur)) {
-            return test188_fail('advance #' + i + ' picked ' + cur + ', not a mission 5 track for pop 200')
+        var ok = expected[i] == 'A' ? test188_contains(ALTS, cur) : cur == expected[i]
+        if (!ok) {
+            return test188_fail('advance #' + i + ' picked ' + cur + ', expected ' + (expected[i] == 'A' ? 'an A track' : expected[i]))
         }
-        if (cur == prev) {
-            return test188_fail('advance #' + i + ' repeated track ' + cur)
-        }
-
-        var prev_main = test188_contains(MAINS_LOW, prev)
-        var cur_main = test188_contains(MAINS_LOW, cur)
-        if (prev_main == cur_main) {
-            return test188_fail('advance #' + i + ' did not alternate main/alternate: ' + prev + ' -> ' + cur)
-        }
-
-        if (cur_main) {
-            var expected = last_main ? MAINS_LOW[(MAINS_LOW.indexOf(last_main) + 1) % MAINS_LOW.length] : MAINS_LOW[0]
-            if (cur != expected) {
-                return test188_fail('advance #' + i + ' main track ' + cur + ', expected ' + expected + ' after ' + last_main)
-            }
-            last_main = cur
-        }
-        prev = cur
     }
 
-    // Leaving the population range does not cut the running track ...
+    // The population change applies on the next M track: OG reselects the range only before playing one.
     __test_set_city_population(1000)
-    for (var j = 0; j < 12; ++j) {
-        __game_sound.music_update(0)
-    }
-    if (__test_music_current_track() != prev) {
-        return test188_fail('population change cut track ' + prev + ' -> ' + __test_music_current_track())
-    }
 
-    // ... but the next pick uses the new range.
+    // The next picks use the new range.
     var seen_mid = false
     for (var k = 0; k < 6; ++k) {
         __test_music_next_track()

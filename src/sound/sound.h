@@ -65,6 +65,7 @@ public:
     void music_update(bool forces);
     void music_next_track();
     void music_frame();
+    void music_city_frame();
     int music_load_playlist_text(std::string_view text);
     int music_playlist_size() const;
     void play_editor();
@@ -97,6 +98,9 @@ private:
     void set_channel_panning(int channel, int left, int right);
     bool play_file_on_channel(pcstr filename, int channel, int volume_pct);
     void stop_channel(int channel);
+    void og_music_update(int mission);
+    void music_fade_out();
+    void fade_out_music(int ms);
     void free_custom_audio_stream();
     bool create_custom_audio_stream(uint16_t src_format, uint8_t src_channels, int src_rate, uint16_t dst_format,
       uint8_t dst_channels, int dst_rate);

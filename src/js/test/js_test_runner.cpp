@@ -263,6 +263,11 @@ int __test_sound_play_effect(int effect) {
 }
 ANK_FUNCTION_1(__test_sound_play_effect);
 
+void __test_music_frame() {
+    g_sound.music_frame();
+}
+ANK_FUNCTION(__test_music_frame);
+
 void __test_set_campaign_scenario_id(int id) {
     g_scenario.campaign_scenario_id = id;
     g_scenario.scmode = e_scenario_normal;

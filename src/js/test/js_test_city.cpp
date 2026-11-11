@@ -59,6 +59,11 @@ void __test_set_city_population(int amount) {
 }
 ANK_FUNCTION_1(__test_set_city_population);
 
+void __test_set_city_enemies(int count) {
+    g_city.figures.enemies = (int16_t)count;
+}
+ANK_FUNCTION_1(__test_set_city_enemies);
+
 int __test_request_cleared_seq() {
     return scenario_request_last_cleared().seq;
 }

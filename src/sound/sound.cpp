@@ -642,6 +642,13 @@ void sound_manager_t::stop_music() {
     _music_player->current_music_data.reset();
 }
 
+void sound_manager_t::fade_out_music(int ms) {
+    if (!initialized || !_music_player->music) {
+        return;
+    }
+    Mix_FadeOutMusic(ms);
+}
+
 void sound_manager_t::stop_channel(int channel) {
     if (!initialized) {
         return;

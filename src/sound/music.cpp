@@ -2,6 +2,8 @@
 
 #include "city/city.h"
 #include "city/city_population.h"
+#include "figure/figure.h"
+#include "graphics/window.h"
 #include "content/vfs.h"
 #include "core/profiler.h"
 #include "game/game_config.h"
@@ -15,17 +17,27 @@
 #include "js/js_game.h"
 
 #include "dev/debug.h"
+#include <algorithm>
 #include <random>
 #include <string_view>
 #include <vector>
 
-struct music_data_t {
-    int next_check = 0;
+// OG music_types.h music_state_kind
+enum e_og_music_state {
+    OG_MUSIC_STATE_PLAY_TRACK = 0,
+    OG_MUSIC_STATE_PLAY_AMBIENT = 1,
+    OG_MUSIC_STATE_START_TIMER = 2,
+    OG_MUSIC_STATE_WAIT_TRACK_END = 3,
+};
 
+// OG run.c run_rule
+constexpr int og_invasion_music_enemies = 16;
+constexpr int og_invasion_music_warships = 5;
+
+struct music_data_t {
     xstring current_track;
     xstring menu_track;
-    xstring combat_long;
-    xstring combat_short;
+    xstring battle_track;
 
     // Vanilla playlist (music.txt in the game folder) and the delay used when a
     // track comes from the population pools instead.
@@ -42,9 +54,9 @@ struct music_data_t {
         svector<xstring, 8> tracks;
     };
 
-    // One line of music.txt: "<file> <M|A> <mission> <post-tune delay sec> <min pop> <max pop>".
-    // M tracks are the mission's main tunes and play in file order, A tracks are
-    // alternates that fill the gaps between them.
+    // One line of music.txt: "<file> <M|A> <mission> <duration sec> <min pop> <max pop>".
+    // M tracks play in file order within the population range; an "AMBIENT" line after an M track makes a
+    // random A (ambient) track follow it (OG music.c).
     struct playlist_rule {
         xstring key;
         bool main;
@@ -58,11 +70,26 @@ struct music_data_t {
     svector<pop_soundtrack, 16> music_populations;
 
     std::vector<playlist_rule> playlist;
+    // (mission, M track index) pairs: OG ambient_after_track[index] = 1.
+    std::vector<std::pair<int, int>> ambient_marks;
     bool playlist_loaded = false;
-    xstring last_main; // last M track played, so the next one continues the sequence
 
-    // City tracks play once; after they end the player waits the post-tune
-    // delay and then starts the next one.
+    // OG music_state playback fields, for missions that music.txt lists.
+    struct og_state_t {
+        int range_first = 0;
+        int range_last = 0;
+        int previous_range_first = 0;
+        int next_track = 0;
+        int state = OG_MUSIC_STATE_PLAY_TRACK;
+        time_millis wait_start = 0;
+        int track_duration_ms = 0;
+        bool track_finished = false;
+        bool selected = false; // OG sound_init does select_by_population(force) once
+    } og;
+    bool invasion_music_request = false;
+    int plays = 0;
+
+    // Maps music.txt does not list: population pools, each track plays once, then the post-tune delay.
     bool track_once = false;
     time_millis finished_at = 0;
     int post_delay_ms = 0;
@@ -75,7 +102,7 @@ struct music_data_t {
 };
 ANK_CONFIG_STRUCT(music_data_t::soundtrack, key, file)
 ANK_CONFIG_STRUCT(music_data_t::pop_soundtrack, pop, tracks)
-ANK_CONFIG_STRUCT(music_data_t, menu_track, combat_long, combat_short, playlist_file, post_tune_delay_sec, soundtracks,
+ANK_CONFIG_STRUCT(music_data_t, menu_track, battle_track, playlist_file, post_tune_delay_sec, soundtracks,
   music_populations)
 
 music_data_t ANK_VARIABLE(music);
@@ -100,9 +127,11 @@ void sound_manager_t::play_track(const xstring track, bool loop) {
         return;
     }
 
-    int volume = calc_bound(game_features::gameopt_sound_music_volume.to_int(), 0, 100);
+    if (g_sound.log_events()) {
+        logs::info("[sound] music %s %s%s", track.c_str(), it->file.c_str(), loop ? " loop" : "");
+    }
 
-    volume = volume * 0.4;
+    const int volume = calc_bound(game_features::gameopt_sound_music_volume.to_int(), 0, 100);
     vfs::path corrected_filename = it->file.c_str();
     if (strncmp(it->file.c_str(), vfs::content_audio, strlen(vfs::content_audio)) != 0) {
         corrected_filename = vfs::path(vfs::content_audio, it->file.c_str());
@@ -112,6 +141,7 @@ void sound_manager_t::play_track(const xstring track, bool loop) {
 
     music.current_track = track;
     music.track_once = played && !loop;
+    ++music.plays;
 }
 
 void sound_manager_t::play_intro() {
@@ -168,7 +198,10 @@ static std::string_view music_trim(std::string_view s) {
 
 int sound_manager_t::music_load_playlist_text(std::string_view text) {
     music.playlist.clear();
+    music.ambient_marks.clear();
     music.playlist_loaded = true;
+    music.og = {};
+    int last_mission = 0;
 
     while (!text.empty()) {
         const size_t eol = text.find('\n');
@@ -180,10 +213,13 @@ int sound_manager_t::music_load_playlist_text(std::string_view text) {
             continue;
         }
 
-        // "AMBIENT" lines mark a stretch of city ambience after the previous tune.
-        // The city sound channels already provide that, so the line only counts as
-        // part of the post-tune delay.
-        if (music_iequals(line.substr(0, 7), "AMBIENT")) {
+        // OG: ambient_after_track[track_count] = 1 for the mission of the last track line.
+        if (line.substr(0, line.find_first_of(" \t,")) == "AMBIENT") {
+            int tracks = 0;
+            for (const auto& r : music.playlist) {
+                tracks += (r.main && r.mission == last_mission) ? 1 : 0;
+            }
+            music.ambient_marks.push_back({last_mission, tracks});
             continue;
         }
 
@@ -199,6 +235,7 @@ int sound_manager_t::music_load_playlist_text(std::string_view text) {
             continue;
         }
 
+        last_mission = std::atoi(std::string(fields[2]).c_str());
         const char type = (char)std::toupper((unsigned char)fields[1].front());
         if (type != 'M' && type != 'A') {
             continue;
@@ -268,16 +305,6 @@ static bool music_playlist_has_mission(int mission) {
     return false;
 }
 
-static bool music_playlist_has_track(int mission, const xstring& key) {
-    for (const auto& r : music.playlist) {
-        if (r.mission == mission && r.key == key) {
-            return true;
-        }
-    }
-
-    return false;
-}
-
 static const svector<xstring, 8>& music_city_tracks(int population) {
     static const svector<xstring, 8> no_tracks{};
     if (music.music_populations.empty()) {
@@ -311,111 +338,126 @@ static xstring music_random_city_track(const svector<xstring, 8>& pool, const xs
     return candidates[music.random_index((int)candidates.size())];
 }
 
-static const music_data_t::playlist_rule* music_random_rule(
-  const std::vector<const music_data_t::playlist_rule*>& rules, const xstring& exclude) {
-    std::vector<const music_data_t::playlist_rule*> candidates;
-    for (const auto* r : rules) {
-        if (r->key != exclude) {
-            candidates.push_back(r);
-        }
-    }
-
-    if (candidates.empty()) {
-        return rules.empty() ? nullptr : rules.front();
-    }
-
-    return candidates[music.random_index((int)candidates.size())];
-}
-
-// Picks the next city track for the current population. `random` re-rolls like
-// the original game does on mission start / save load; otherwise the playlist
-// alternates between the mission's main tunes (in file order) and a random
-// alternate tune.
-static music_pick music_choose_city_track(bool random) {
-    const int population = g_city.population.current;
-    const int mission = music_current_mission();
-
-    std::vector<const music_data_t::playlist_rule*> mains;
-    std::vector<const music_data_t::playlist_rule*> alts;
-    for (const auto& r : music.playlist) {
-        if (r.mission != mission || population < r.min_pop || population > r.max_pop) {
-            continue;
-        }
-        (r.main ? mains : alts).push_back(&r);
-    }
-
-    if (mains.empty() && alts.empty()) {
-        music_pick pick;
-        pick.key = music_random_city_track(music_city_tracks(population), music.current_track);
-        pick.delay_sec = music.post_tune_delay_sec;
-        return pick;
-    }
-
-    auto next_main = [&](const xstring& after) -> const music_data_t::playlist_rule* {
-        if (mains.empty()) {
-            return nullptr;
-        }
-        for (size_t i = 0; i < mains.size(); ++i) {
-            if (mains[i]->key == after) {
-                return mains[(i + 1) % mains.size()];
-            }
-        }
-        return mains.front();
-    };
-
-    const music_data_t::playlist_rule* chosen = nullptr;
-    const bool current_is_main
-      = std::any_of(mains.begin(), mains.end(), [](auto* r) { return r->key == music.current_track; });
-    const bool current_is_alt
-      = std::any_of(alts.begin(), alts.end(), [](auto* r) { return r->key == music.current_track; });
-
-    if (random || (!current_is_main && !current_is_alt)) {
-        std::vector<const music_data_t::playlist_rule*> all(mains);
-        all.insert(all.end(), alts.begin(), alts.end());
-        chosen = music_random_rule(all, music.current_track);
-    } else if (current_is_main) {
-        chosen = alts.empty() ? next_main(music.current_track) : music_random_rule(alts, music.current_track);
-    } else {
-        chosen = mains.empty() ? music_random_rule(alts, music.current_track) : next_main(music.last_main);
-    }
-
+// Maps music.txt does not list: a random track of the population pool, another than the current one.
+static music_pick music_choose_pool_track() {
     music_pick pick;
-    if (chosen) {
-        pick.key = chosen->key;
-        pick.delay_sec = chosen->delay_sec;
-    }
+    pick.key = music_random_city_track(music_city_tracks(g_city.population.current), music.current_track);
+    pick.delay_sec = music.post_tune_delay_sec;
     return pick;
 }
 
-// True when the current track still belongs to the city music for this map, so
-// a regular update should let it keep playing.
-static bool music_city_track_fits() {
-    const int mission = music_current_mission();
-    if (music_playlist_has_mission(mission)) {
-        return music_playlist_has_track(mission, music.current_track);
-    }
-
+static bool music_pool_track_fits() {
     const auto& pool = music_city_tracks(g_city.population.current);
     return std::find(pool.begin(), pool.end(), music.current_track) != pool.end();
 }
 
-static void music_note_main(const xstring& key) {
-    const int mission = music_current_mission();
+using music_rules = std::vector<const music_data_t::playlist_rule*>;
+
+static void music_mission_tracks(int mission, music_rules& tracks, music_rules& ambient) {
     for (const auto& r : music.playlist) {
-        if (r.mission == mission && r.main && r.key == key) {
-            music.last_main = key;
+        if (r.mission == mission) {
+            (r.main ? tracks : ambient).push_back(&r);
+        }
+    }
+}
+
+static bool music_ambient_after(int mission, int track) {
+    const auto mark = std::make_pair(mission, track);
+    return std::find(music.ambient_marks.begin(), music.ambient_marks.end(), mark) != music.ambient_marks.end();
+}
+
+static bool music_track_holds(const music_data_t::playlist_rule* track, int population) {
+    return track->min_pop <= population && population <= track->max_pop;
+}
+
+// OG music.c sound_music_select_by_population.
+static void og_music_select_by_population(const music_rules& tracks, bool force) {
+    auto& og = music.og;
+    const int population = g_city.population.current;
+    const int count = (int)tracks.size();
+    const bool holds = og.next_track < count && music_track_holds(tracks[og.next_track], population);
+    if (!holds || force) {
+        int first = 0;
+        while (first < count && !music_track_holds(tracks[first], population)) {
+            first++;
+        }
+        int end = first;
+        while (end < count && population >= tracks[end]->min_pop) {
+            end++;
+        }
+        og.range_first = first;
+        og.range_last = end - 1;
+    }
+
+    if (og.next_track < og.range_first || og.range_last < og.next_track) {
+        og.next_track = og.range_first;
+    }
+
+    if (og.range_first != og.previous_range_first) {
+        og.previous_range_first = og.range_first;
+        if (!og.track_finished) {
+            og.state = OG_MUSIC_STATE_PLAY_AMBIENT;
+        }
+    }
+}
+
+// OG music.c sound_music_update, called while no music plays. The ambient pick uses the music generator where
+// OG draws crt_rand (play_random_ambient).
+void sound_manager_t::og_music_update(int mission) {
+    auto& og = music.og;
+    music_rules tracks;
+    music_rules ambient;
+    music_mission_tracks(mission, tracks, ambient);
+
+    if (!og.selected) {
+        og.selected = true;
+        og_music_select_by_population(tracks, true);
+    }
+    if (og.state == OG_MUSIC_STATE_PLAY_TRACK) {
+        og_music_select_by_population(tracks, false);
+    }
+
+    switch (og.state) {
+    case OG_MUSIC_STATE_PLAY_TRACK: {
+        if (og.next_track >= (int)tracks.size()) {
             return;
         }
+        const music_data_t::playlist_rule* track = tracks[og.next_track];
+        play_track(track->key, false);
+        og.track_duration_ms = track->delay_sec * 1000;
+        og.track_finished = false;
+        og.next_track++;
+        og.state
+          = music_ambient_after(mission, og.next_track) ? OG_MUSIC_STATE_PLAY_AMBIENT : OG_MUSIC_STATE_START_TIMER;
+        return;
+    }
+
+    case OG_MUSIC_STATE_PLAY_AMBIENT:
+        if (!ambient.empty()) {
+            play_track(ambient[music.random_index((int)ambient.size())]->key, false);
+        }
+        og.state = OG_MUSIC_STATE_START_TIMER;
+        return;
+
+    case OG_MUSIC_STATE_START_TIMER:
+        og.state = OG_MUSIC_STATE_WAIT_TRACK_END;
+        og.wait_start = time_get_millis();
+        return;
+
+    case OG_MUSIC_STATE_WAIT_TRACK_END:
+        if (og.wait_start + (time_millis)og.track_duration_ms < time_get_millis()) {
+            if (og.range_last < og.next_track) {
+                og.next_track = og.range_first;
+            }
+            og.state = OG_MUSIC_STATE_PLAY_TRACK;
+            og.track_finished = true;
+        }
+        return;
     }
 }
 
 void sound_manager_t::music_update(bool force) {
     OZZY_PROFILER_FUNCTION();
-    if (music.next_check && !force) {
-        --music.next_check;
-        return;
-    }
-
     if (!game_features::gameopt_sound_music_enabled) {
         return;
     }
@@ -424,37 +466,31 @@ void sound_manager_t::music_update(bool force) {
         music_load_playlist();
     }
 
-    xstring track;
-    bool loop = true;
-    int delay_sec = 0;
-    int total_enemies = g_city.figures.total_invading_enemies();
-
-    if (total_enemies >= 32) {
-        track = music.combat_long;
-    } else if (total_enemies > 0) {
-        track = music.combat_short;
-    } else {
-        // Regular updates keep the current track while it still fits the map's
-        // city music. A forced update (mission start, save load) re-rolls a
-        // different random track like the original game does.
-        if (!force && music_city_track_fits()) {
-            return;
-        }
-
-        const music_pick pick = music_choose_city_track(force);
-        track = pick.key;
-        delay_sec = pick.delay_sec;
-        loop = false;
-    }
-
-    if (track.empty() || track == music.current_track) {
+    if (music.invasion_music_request) {
         return;
     }
 
-    play_track(track, loop);
-    music.post_delay_ms = delay_sec * 1000;
-    music_note_main(track);
-    music.next_check = 10;
+    const int mission = music_current_mission();
+    if (music_playlist_has_mission(mission)) {
+        if (!music_playing()) {
+            og_music_update(mission);
+        }
+        return;
+    }
+
+    // Regular updates keep the current track while it still fits the population pool. A forced update
+    // (mission start, save load) re-rolls a different random track.
+    if (!force && music_pool_track_fits()) {
+        return;
+    }
+
+    const music_pick pick = music_choose_pool_track();
+    if (pick.key.empty() || pick.key == music.current_track) {
+        return;
+    }
+
+    play_track(pick.key, false);
+    music.post_delay_ms = pick.delay_sec * 1000;
 }
 
 void sound_manager_t::music_next_track() {
@@ -467,25 +503,94 @@ void sound_manager_t::music_next_track() {
         music_load_playlist();
     }
 
-    const music_pick pick = music_choose_city_track(false);
+    const int mission = music_current_mission();
+    if (music_playlist_has_mission(mission)) {
+        // Steps the OG state machine to its next stream as if each one had ended and the wait had elapsed.
+        const int plays = music.plays;
+        for (int step = 0; step < 8 && music.plays == plays; step++) {
+            if (music.og.state == OG_MUSIC_STATE_WAIT_TRACK_END) {
+                music.og.wait_start = time_get_millis() - (time_millis)music.og.track_duration_ms - 1;
+            }
+            og_music_update(mission);
+        }
+        return;
+    }
+
+    const music_pick pick = music_choose_pool_track();
     if (pick.key.empty()) {
         return;
     }
 
     play_track(pick.key, false);
     music.post_delay_ms = pick.delay_sec * 1000;
-    music_note_main(pick.key);
 }
 
+// OG figure_count_traders counts the enemy warships alive.
+static int music_enemy_warships() {
+    int count = 0;
+    for (int i = 1; i < MAX_FIGURES; i++) {
+        const figure* f = figure_get(i);
+        if (!f) {
+            return 0; // no city loaded yet
+        }
+        const bool warship = f->type == FIGURE_ENEMY_WARSHIP || f->type == FIGURE_ENEMY_EGYPTIAN_WAR_SHIP;
+        if (warship && f->state != FIGURE_STATE_NONE) {
+            count++;
+        }
+    }
+    return count;
+}
+
+void sound_manager_t::music_fade_out() {
+    if (g_sound.log_events()) {
+        logs::info("[sound] music fade %s", music.current_track.c_str());
+    }
+    if (!music_playing()) {
+        return;
+    }
+    // OG sound_stream_fade_down: 5 volume steps every 20 ms.
+    const int volume = calc_bound(game_features::gameopt_sound_music_volume.to_int(), 0, 100);
+    fade_out_music(std::max(20, volume / 5 * 20));
+}
+
+// OG run.c game_run_update_music_and_ambient, once a frame: the battle music starts at 16 enemies or 5 enemy
+// warships and fades once both are below; otherwise the city music runs in the city window while nothing plays.
 void sound_manager_t::music_frame() {
+    if (g_city.figures.enemies < og_invasion_music_enemies && music_enemy_warships() < og_invasion_music_warships) {
+        if (music.invasion_music_request) {
+            music_fade_out();
+            music.invasion_music_request = false;
+        }
+        if (!music_playing() && g_window_manager.window_is("window_city")) {
+            music_city_frame();
+        }
+    } else if (!music.invasion_music_request && !!game_features::gameopt_sound_music_enabled) {
+        play_track(music.battle_track, true);
+        music.invasion_music_request = true;
+    }
+}
+
+void sound_manager_t::music_city_frame() {
+    if (!game_features::gameopt_sound_music_enabled) {
+        return;
+    }
+
+    if (!music.playlist_loaded) {
+        music_load_playlist();
+    }
+
+    const int mission = music_current_mission();
+    if (music_playlist_has_mission(mission)) {
+        og_music_update(mission);
+        return;
+    }
+
     if (!music.track_once) {
+        music_update(false);
         return;
     }
 
     if (!music.finished_at) {
-        if (music_playing()) {
-            return;
-        }
         music.finished_at = time_get_millis();
         return;
     }
@@ -514,7 +619,7 @@ const xstring& sound_manager_t::music_current_track() const {
 void sound_manager_t::music_stop() {
     stop_music();
     music.current_track = "";
-    music.next_check = 0;
     music.track_once = false;
     music.finished_at = 0;
+    music.invasion_music_request = false;
 }

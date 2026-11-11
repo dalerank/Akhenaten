@@ -219,7 +219,6 @@ void game_t::advance_day() {
     g_city.victory.victory_check();
     g_city.avg_coverage.update();
 
-    g_sound.music_update(false);
     widget_minimap_invalidate();
 
     events::emit(event_advance_day::from_simtime(game.simtime));

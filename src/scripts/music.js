@@ -2,20 +2,20 @@ log_info("akhenaten: music started")
 
 music = {
 	menu_track: "setup"
-	combat_long: "combat_long"
-	combat_short: "combat_short"
+	battle_track: "battle"
 
-	// Vanilla playlist from the game folder: per-mission main (M) and alternate
-	// (A) tunes with a post-tune delay and population range. Maps without an
-	// entry fall back to music_populations below.
+	// Vanilla playlist from the game folder, played as OG music.c does: per
+	// mission the M tunes in order within their population range, a random A
+	// (ambient) tune after each M tune an AMBIENT line follows, and a wait of the
+	// M tune's duration before the next one. Maps without an entry fall back to
+	// music_populations below.
 	playlist_file: "music.txt"
 	post_tune_delay_sec: 20
 
 	soundtracks : [
 		{ key: "none", file:"" },
 		{ key: "setup", file:"AUDIO/Music/Setup.mp3" },
-		{ key: "combat_short", file:"AUDIO/Music/Battle.mp3" },
-		{ key: "combat_long", file:"AUDIO/Music/Battle.mp3" },
+		{ key: "battle", file:"AUDIO/Music/Battle.mp3" },
 		{ key: "city_0", file:"AUDIO/Music/Agbj.mp3" },
 		{ key: "city_1", file:"AUDIO/Music/SPS.mp3" },
 		{ key: "city_2", file:"AUDIO/Music/sthA.mp3" },
