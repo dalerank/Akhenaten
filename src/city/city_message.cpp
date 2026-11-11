@@ -206,7 +206,7 @@ int message_manager_t::alloc_message(xstring template_id) {
     current_message_id = id;
 
     city_message &msg = messages[id];
-    memset(&msg, 0, sizeof(city_message));
+    msg = city_message{};
     // Non-event list UI treats unset eventmsg ids as "no eventmsg".
     msg.eventmsg_body_id = -1;
     msg.eventmsg_title_id = -1;
