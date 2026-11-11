@@ -67,9 +67,9 @@ static void scenario_request_get_event_id(js_State* J) {
 }
 
 static void scenario_request_proto_toString(js_State *J) {
-    char buf[96];
-    snprintf(buf, sizeof buf, "ScenarioRequest(%d)", scenario_request_this_index(J));
-    J->pushstring(buf);
+    bstring<96> buf;
+    buf.printf("ScenarioRequest(%d)", scenario_request_this_index(J));
+    J->pushstring(buf.c_str());
 }
 
 static void jsB_new_ScenarioRequest(js_State *J) {

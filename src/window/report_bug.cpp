@@ -276,9 +276,9 @@ static void report_bug_post_now() {
 
         if (http_code < 200 || http_code >= 300) {
             logs::error("report_bug: HTTP %ld", http_code);
-            char buf[64];
-            snprintf(buf, sizeof(buf), "HTTP error %ld", http_code);
-            report_bug_finish(0, xstring(buf));
+            bstring64 buf;
+            buf.printf("HTTP error %ld", http_code);
+            report_bug_finish(0, xstring(buf.c_str()));
             return;
         }
 
