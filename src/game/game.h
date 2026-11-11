@@ -73,6 +73,9 @@ struct game_t {
     void set_fullscreen(bool v);
     void set_cli_fullscreen(bool v) { cli_fullscreen = v; }
     bool animation = false;
+    // A second city draw in the same frame (figure snapshot) shows the scene but must not step
+    // animations or count sound views again.
+    bool redraw_read_only = false;
     bool debug_console = false;
     bool debug_properties = false;
     bool debug_terrain_paint = false;

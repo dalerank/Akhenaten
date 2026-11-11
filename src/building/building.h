@@ -488,6 +488,9 @@ inline bool building_type_none_of(building &b, const std::initializer_list<e_bui
 
 void add_building(building *b, int orientation, int variant);
 
+// Stores the sprite-grid animation frames queued by this frame's city draw (main thread only).
+void building_animation_frames_apply();
+
 namespace buildings {
     template<typename T>
     building_impl *model_t<T>::create(e_building_type e, building &b) {

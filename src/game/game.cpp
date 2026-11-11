@@ -101,7 +101,7 @@ void game_t::animation_timers_update() {
 }
 
 bool game_t::animation_should_advance(uint32_t speed) {
-    if (!animation || paused) {
+    if (!animation || paused || redraw_read_only) {
         return false;
     }
 

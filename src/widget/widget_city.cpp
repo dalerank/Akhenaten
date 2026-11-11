@@ -79,6 +79,7 @@
 #include <algorithm>
 #include <array>
 #include <atomic>
+#include <utility>
 
 struct city_view_postrender_ev {
     int reserved = 0;
@@ -442,8 +443,10 @@ void screen_city_t::draw_isometric_mark_sound(int building_id, int grid_offset, 
             color_mask = COLOR_MASK_RED;
         }
 
-        sound_city_mark_building_view(b, direction);
-    } else {
+        if (!game.redraw_read_only) {
+            sound_city_mark_building_view(b, direction);
+        }
+    } else if (!game.redraw_read_only) {
         int terrain = map_terrain_get(grid_offset);
         sound_city_mark_terrain_view(terrain, grid_offset, direction);
     }
@@ -1120,6 +1123,7 @@ void screen_city_t::draw(painter &ctx) {
     } else {
         draw_without_overlay(ctx, 0);
     }
+    building_animation_frames_apply();
 
     graphics_reset_clip_rectangle();
     set_render_scale(ctx, 1.0f);
@@ -1130,6 +1134,7 @@ void screen_city_t::draw(painter &ctx) {
 // a different city than the main view.
 void screen_city_t::draw_for_figure(painter &ctx, int figure_id) {
     set_city_clip_rectangle(ctx);
+    const bool was_read_only = std::exchange(game.redraw_read_only, true);
 
     city_planner_frame_update(figure_id);
     if (g_city.overlay()) {
@@ -1138,6 +1143,7 @@ void screen_city_t::draw_for_figure(painter &ctx, int figure_id) {
         draw_without_overlay(ctx, figure_id);
     }
 
+    game.redraw_read_only = was_read_only;
     graphics_reset_clip_rectangle();
 }
 
