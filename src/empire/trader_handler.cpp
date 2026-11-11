@@ -226,23 +226,22 @@ io_buffer* iob_empire_traders = new io_buffer([](io_buffer* iob, size_t version)
         iob->bind_bool(t.is_active);
         iob->bind_bool(t.is_ship);
 
-        for (int r = 0; r < RESOURCES_MAX; r++) {
-            t.bought_resources[r] *= 0.01;
-            t.sold_resources[r] *= 0.01;
-        }
+        // Stored on disk in loads (1 byte), kept in memory in amount units (x100).
+        auto bind_loads = [iob](uint16_t& amount) {
+            uint8_t loads = (uint8_t)(amount / 100);
+            iob->bind_u8(loads);
+            if (iob->is_read_access()) {
+                amount = loads * 100;
+            }
+        };
 
         iob->bind_u8(t.movement_delay_max);
         for (int r = 1; r < RESOURCES_MAX; r++)
-            iob->bind_u8((uint8_t&)t.bought_resources[r]);
+            bind_loads(t.bought_resources[r]);
 
         iob->bind____skip(1);
         for (int r = 1; r < RESOURCES_MAX; r++)
-            iob->bind_u8((uint8_t &)t.sold_resources[r]);
-
-        for (int r = 0; r < RESOURCES_MAX; r++) {
-            t.bought_resources[r] *= 100;
-            t.sold_resources[r] *= 100;
-        }
+            bind_loads(t.sold_resources[r]);
 
         iob->bind_u16(t.bought_value);
         iob->bind_u8(t.destination_city_id);

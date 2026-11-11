@@ -50,6 +50,20 @@ static int __test_figure_create(int type, int x, int y) {
 }
 ANK_FUNCTION_3(__test_figure_create);
 
+static int __test_figure_draw_mode(int fid) {
+    figure* f = figure_get(fid);
+    return (f && f->id > 0) ? (int)f->draw_mode : -1;
+}
+ANK_FUNCTION_1(__test_figure_draw_mode);
+
+static void __test_figure_set_draw_mode(int fid, int mode) {
+    figure* f = figure_get(fid);
+    if (f && f->id > 0) {
+        f->draw_mode = (uint8_t)mode;
+    }
+}
+ANK_FUNCTION_2(__test_figure_set_draw_mode);
+
 static void __test_figure_set_home(int fid, int bid) {
     figure* f = figure_get(fid);
     building* b = building_get(bid);

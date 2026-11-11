@@ -836,7 +836,6 @@ void empire_t::fix_trade_routes() {
 io_buffer* iob_empire_map_objects = new io_buffer([](io_buffer* iob, size_t version) {
     logs::info("iob_empire_map_objects");
     auto& objects = g_empire_objects;
-    int last_object_was_used = 1;
     for (int i = 0; i < MAX_OBJECTS; i++) {
         full_empire_object* full = &objects[i];
         empire_object* obj = &full->obj;
@@ -884,14 +883,6 @@ io_buffer* iob_empire_map_objects = new io_buffer([](io_buffer* iob, size_t vers
         } else {
             for (int r = 0; r < RESOURCES_MAX; r++) {
                 iob->bind(BIND_SIGNATURE_UINT8, &full->trade_demand[r]);
-            }
-        }
-
-        if (iob->is_read_access()) {
-            if (last_object_was_used) {
-                last_object_was_used = full->in_use;
-            } else {
-                full->in_use = 0;
             }
         }
     }

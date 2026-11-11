@@ -284,6 +284,45 @@ static int __test_empire_trader_buy_room_at(int resource, int amount) {
 }
 ANK_FUNCTION_2(__test_empire_trader_buy_room_at);
 
+// Active trader with the given per-resource bought/sold amounts; returns its handle or -1.
+static int __test_empire_trader_create_with(int resource, int bought, int sold) {
+    empire_trader_handle h = empire_create_trader();
+    if (!h.valid()) {
+        return -1;
+    }
+    auto& t = g_empire_traders.traders[h.handle];
+    const e_resource r = (e_resource)std::clamp(resource, 0, (int)RESOURCES_MAX - 1);
+    t.bought_resources[r] = (uint16_t)std::max(0, bought);
+    t.sold_resources[r] = (uint16_t)std::max(0, sold);
+    return h.handle;
+}
+ANK_FUNCTION_3(__test_empire_trader_create_with);
+
+static int __test_empire_trader_bought_at(int handle, int resource) {
+    if (handle < 0 || handle >= (int)g_empire_traders.traders.size()) {
+        return -1;
+    }
+    const e_resource r = (e_resource)std::clamp(resource, 0, (int)RESOURCES_MAX - 1);
+    return g_empire_traders.traders[handle].bought_resources[r];
+}
+ANK_FUNCTION_2(__test_empire_trader_bought_at);
+
+static int __test_empire_trader_sold_at(int handle, int resource) {
+    if (handle < 0 || handle >= (int)g_empire_traders.traders.size()) {
+        return -1;
+    }
+    const e_resource r = (e_resource)std::clamp(resource, 0, (int)RESOURCES_MAX - 1);
+    return g_empire_traders.traders[handle].sold_resources[r];
+}
+ANK_FUNCTION_2(__test_empire_trader_sold_at);
+
+static void __test_empire_trader_release(int handle) {
+    if (handle >= 0 && handle < (int)g_empire_traders.traders.size()) {
+        g_empire_traders.traders[handle].is_active = false;
+    }
+}
+ANK_FUNCTION_1(__test_empire_trader_release);
+
 // Attach FIGURE_MARKET_BUYER to a bazaar slot and run before_action.
 // Returns figure id if still alive, else 0.
 static int __test_bazaar_attach_buyer(int bid, int slot, int collecting_item) {

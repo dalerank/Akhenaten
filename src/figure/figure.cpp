@@ -1076,9 +1076,10 @@ void figure::bind(io_buffer* iob) {
 
     iob->bind____skip(2);
 
-    draw_mode = 0;
     // Runtime-only trail (persisted in recorded_paths building rings); clear stale ids on load.
+    // draw_mode is a debug overlay toggle; OG stores unrelated data in that byte.
     if (iob->is_read_access()) {
+        f->draw_mode = 0;
         f->trail_path_id = 0;
     }
 }

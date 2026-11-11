@@ -356,11 +356,10 @@ void building_shipyard::bind_dynamic(io_buffer *iob, size_t version) {
     iob->bind(BIND_SIGNATURE_UINT8, &d.reparing);
     iob->bind(BIND_SIGNATURE_INT32, &base.tiles[0]);
     iob->bind(BIND_SIGNATURE_INT32, &base.tiles[1]);
-    // repair_fid / queue_slot are runtime-only; queue_slot reassigned in on_post_load.
+    // repair_fid / queue_slot are not saved; on_post_load rebuilds them from the docked ships.
     if (iob->is_read_access()) {
         d.repair_fid = 0;
         d.queue_slot = 0;
-        d.reparing = false;
     }
 }
 
@@ -405,8 +404,34 @@ void building_shipyard::on_destroy() {
 
 void building_shipyard::on_post_load() {
     building_impl::on_post_load();
-    if (runtime_data().queue_slot == 0) {
+    auto& d = runtime_data();
+    if (d.queue_slot == 0) {
         building_shipyard_repair_queue_add(id());
+    }
+
+    // The ship under repair is not recorded separately; the first queued ship (by id) takes that place.
+    for (int i = 1; i < MAX_FIGURES; i++) {
+        figure* f = figure_get(i);
+        if (!figure_alive_for_repair(f) || f->destination_building_id != id()) {
+            continue;
+        }
+        const bool queued
+          = (f->type == FIGURE_WARSHIP && f->action_state == ACTION_15_WARSHIP_QUEUED_AT_DOCK)
+            || (f->type == FIGURE_TRANSPORT_SHIP && f->action_state == ACTION_217_TRANSPORT_SHIP_QUEUED_AT_SHIPWRIGHT);
+        if (!queued) {
+            continue;
+        }
+        if (d.reparing && d.repair_fid == 0) {
+            d.repair_fid = f->id;
+        } else if (d.queue_slot != 0) {
+            auto& q = g_shipyard_repair_queues[d.queue_slot - 1].waiting;
+            if (!q.full()) {
+                q.push_back(f->id);
+            }
+        }
+    }
+    if (d.reparing && d.repair_fid == 0) {
+        d.reparing = false;
     }
 }
 
