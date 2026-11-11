@@ -29,7 +29,6 @@
 #include "input/hotkey.h"
 #include "io/chunk_serializer.h"
 #include "io/gamestate/boilerplate.h"
-#include "io/gamestate/boilerplate_detail.h"
 #include "io/gamestate/file_schemas.h"
 #include "platform/integral_tests.h"
 #include "scenario/scenario.h"
@@ -40,7 +39,6 @@
 #include <SDL.h>
 #include <algorithm>
 #include <cstring>
-#include <filesystem>
 #include <fstream>
 #include <string>
 
@@ -662,68 +660,3 @@ static pcstr __test_save_roundtrip(pcstr filename) {
     return result.c_str();
 }
 ANK_FUNCTION_1(__test_save_roundtrip);
-
-// Loads an original .sav from an absolute path the way GamestateIO::load_savegame does.
-static bool og_save_load(const std::string& path) {
-    GamestateLoadDetail::pre_load();
-    auto reader = vfs::file_open(vfs::path(path.c_str()));
-    if (
-      !g_chunk_io.unserialize(reader, 0, FILE_FORMAT_SAVE_FILE, GamestateLoadDetail::read_file_version, file_schema)) {
-        return false;
-    }
-
-    game.session.last_loaded = e_session_save;
-    game.session.last_loaded_mission = path.c_str();
-    GamestateLoadDetail::post_load();
-    GamestateIO::start_loaded_file();
-    return true;
-}
-
-// Every Save/<player>/*.sav of the Pharaoh install except the family.sav dynasty stubs: load it, then
-// run the city through an .svx round trip. OG saves carry far more state than a test city.
-// Returns "skip" without a Save folder, else "<checked>;|<path>=<chunks or error:load>..." for failures.
-static pcstr __test_og_save_corpus() {
-    static std::string result;
-    namespace fs = std::filesystem;
-
-    const fs::path root(vfs::content_path(vfs::SAVE_FOLDER).c_str());
-    std::error_code ec;
-    if (!fs::is_directory(root, ec)) {
-        result = "skip";
-        return result.c_str();
-    }
-
-    std::vector<std::string> files;
-    for (const auto& player : fs::directory_iterator(root, ec)) {
-        if (!player.is_directory()) {
-            continue;
-        }
-        for (const auto& e : fs::directory_iterator(player.path(), ec)) {
-            const std::string name = e.path().filename().string();
-            if (!e.is_regular_file() || e.path().extension() != ".sav" || name == "family.sav") {
-                continue;
-            }
-            files.push_back(e.path().generic_string());
-        }
-    }
-    std::sort(files.begin(), files.end());
-
-    std::string diffs;
-    for (const std::string& f : files) {
-        if (!og_save_load(f)) {
-            logs::info("[roundtrip] og %s: load failed", f.c_str());
-            diffs += "|" + f + "=error:load";
-            continue;
-        }
-
-        const std::string svx = save_roundtrip("test_og_roundtrip.svx");
-        logs::info("[roundtrip] og->svx %s: %s", f.c_str(), svx.empty() ? "identical" : svx.c_str());
-        if (!svx.empty()) {
-            diffs += "|" + f + "=" + svx;
-        }
-    }
-
-    result = std::to_string(files.size()) + ";" + diffs;
-    return result.c_str();
-}
-ANK_FUNCTION(__test_og_save_corpus);

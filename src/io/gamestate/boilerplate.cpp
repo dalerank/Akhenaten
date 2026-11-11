@@ -250,6 +250,13 @@ bool GamestateIO::load_mission(const int scenario_id, bool start_immediately) {
 }
 
 bool GamestateIO::load_savegame(pcstr filename_short, bool start_immediately) {
+    // Original .sav records do not match our layout (e.g. the building header, merged houses) and
+    // need a converter; until it exists they are refused instead of loaded half right.
+    if (get_format_from_file(filename_short) == FILE_FORMAT_SAVE_FILE) {
+        logs::error("Load game: original .sav saves are not supported yet (%s)", filename_short);
+        return false;
+    }
+
     // concatenate string
     bstring256 full = fullpath_saves(filename_short).resolve();
 

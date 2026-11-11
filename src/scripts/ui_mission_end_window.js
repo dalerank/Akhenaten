@@ -190,7 +190,7 @@ function mission_end_replay_mission() {
     __ui_city_planner_reset()
     var is_custom = scenario.scmode != e_scenario_normal
     if (is_custom) {
-        __game_load_savegame("autosave_replay.sav")
+        __game_load_savegame("autosave_replay.svx")
         ui.window_city_show()
     } else {
         widget_top_menu_clear_state()

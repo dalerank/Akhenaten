@@ -239,12 +239,9 @@ void player_profile_t::find_last_autosave() {
     }
 
     const vfs::path dir = folder();
-    for (pcstr filename : {"/autosave_replay.svx", "/autosave_replay.sav"}) {
-        const vfs::path candidate(dir.c_str(), filename);
-        if (vfs::file_exists(candidate)) {
-            last_autosave_path = candidate;
-            return;
-        }
+    const vfs::path candidate(dir.c_str(), "/autosave_replay.svx");
+    if (vfs::file_exists(candidate)) {
+        last_autosave_path = candidate;
     }
 }
 
