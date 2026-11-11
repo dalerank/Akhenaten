@@ -22,7 +22,7 @@ public:
         uint8_t spot_pause_ticks;
     } FIGURE_RUNTIME_DATA_T;
 
-    void og_spot_tick();
+    void spot_tick();
 
     virtual void figure_action() override;
     virtual void update_animation() override;

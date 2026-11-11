@@ -25,7 +25,7 @@ declare_console_command_p(addfishpoints) {
 
 // OG boats.c figure_fishing_spot_action. Its frame/pause counters drive nothing visible here (the art runs on
 // animctx), but every animating tick advances both the LFSR and the crt stream, so they must keep running.
-void figure_fishing_point::og_spot_tick() {
+void figure_fishing_point::spot_tick() {
     auto& d = runtime_data();
     if (d.spot_frame < FISHING_SPOT_FRAMES) {
         d.spot_frame++;
@@ -42,7 +42,7 @@ void figure_fishing_point::og_spot_tick() {
 }
 
 void figure_fishing_point::figure_action() {
-    og_spot_tick();
+    spot_tick();
 
     base.terrain_usage = TERRAIN_USAGE_ANY;
     base.use_cross_country = true;

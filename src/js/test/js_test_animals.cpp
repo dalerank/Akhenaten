@@ -424,7 +424,7 @@ static int __test_fishing_spot_og_tick(int fid) {
     if (!spot) {
         return 0;
     }
-    spot->og_spot_tick();
+    spot->spot_tick();
     return 1;
 }
 ANK_FUNCTION_1(__test_fishing_spot_og_tick);
