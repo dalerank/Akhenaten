@@ -9,7 +9,7 @@
 #include "graphics/window.h"
 #include "input/input.h"
 
-#define MAX_ITEMS_PER_LIST 20
+constexpr int MAX_ITEMS_PER_LIST = 20;
 
 enum E_MODE {
     MODE_TEXT,
