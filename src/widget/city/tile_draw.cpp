@@ -111,6 +111,12 @@ void local_render_context_t::init() {
     image_id_water_last = 5 + image_id_water_first;
     image_id_deepwater_first = image_id_from_group(GROUP_TERRAIN_DEEPWATER);
     image_id_deepwater_last = 89 + image_id_deepwater_first;
+
+    // Without art both groups resolve to 0 and the ranges would cover ids 0..89, so the draw
+    // would "animate" the map-edge markers and any other low id in the saved image grid.
+    if (image_id_water_first <= 0 || image_id_deepwater_first <= 0) {
+        advance_water_animation = 0;
+    }
 }
 
 bool drawing_building_as_deleted(building* b) {
