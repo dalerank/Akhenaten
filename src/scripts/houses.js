@@ -16,7 +16,7 @@ building_house_crude_hut {
 
   evolve_to : BUILDING_HOUSE_STURDY_HUT
   merge_before_evolve : true
-  can_devolve : false
+  skip_devolve_delay : true
 
   variants {
     _1 { pack: PACK_GENERAL, id: 26, offset:0 }

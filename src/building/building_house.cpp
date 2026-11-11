@@ -1277,7 +1277,7 @@ bool building_house::evolve(house_demands *demands) {
     }
 
     const e_house_progress status = check_evolve_status(demands);
-    if (params.can_devolve && has_devolve_delay(status)) {
+    if (!params.skip_devolve_delay && has_devolve_delay(status)) {
         return false;
     }
 

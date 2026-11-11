@@ -34,7 +34,9 @@ public:
         e_building_type evolve_to = BUILDING_NONE;
         e_building_type devolve_to = BUILDING_NONE;
         bool merge_before_evolve = false;
-        bool can_devolve = true; // false for the bottom tier, which must not even count the delay
+        // Defaults to false so a config entry without the key keeps the OG devolve delay; only the bottom tier skips
+        // it.
+        bool skip_devolve_delay = false;
     };
 
     // Persistent state for a single house instance.
@@ -200,9 +202,8 @@ public:
     } BUILDING_STATIC_DATA_T;
 
 };
-ANK_CONFIG_STRUCT(building_house_crude_hut::static_params,
-    model, can_merge, variants, variants_merged, variants_merged_inside,
-    evolve_to, devolve_to, merge_before_evolve, can_devolve)
+ANK_CONFIG_STRUCT(building_house_crude_hut::static_params, model, can_merge, variants, variants_merged,
+  variants_merged_inside, evolve_to, devolve_to, merge_before_evolve, skip_devolve_delay)
 
 /**
  * Second housing tier - sturdy hut.
@@ -228,9 +229,8 @@ public:
     } BUILDING_STATIC_DATA_T;
 
 };
-ANK_CONFIG_STRUCT(building_house_sturdy_hut::static_params,
-    model, can_merge, variants, variants_merged, variants_merged_inside,
-    evolve_to, devolve_to, merge_before_evolve, can_devolve)
+ANK_CONFIG_STRUCT(building_house_sturdy_hut::static_params, model, can_merge, variants, variants_merged,
+  variants_merged_inside, evolve_to, devolve_to, merge_before_evolve, skip_devolve_delay)
 
 /**
  * Third housing tier - meager shanty.
@@ -257,9 +257,8 @@ public:
     } BUILDING_STATIC_DATA_T;
 
 };
-ANK_CONFIG_STRUCT(building_house_meager_shanty::static_params,
-    model, can_merge, variants, variants_merged, variants_merged_inside,
-    evolve_to, devolve_to, merge_before_evolve, can_devolve)
+ANK_CONFIG_STRUCT(building_house_meager_shanty::static_params, model, can_merge, variants, variants_merged,
+  variants_merged_inside, evolve_to, devolve_to, merge_before_evolve, skip_devolve_delay)
 
 /**
  * Fourth housing tier - common shanty.
@@ -285,9 +284,8 @@ public:
     } BUILDING_STATIC_DATA_T;
 
 };
-ANK_CONFIG_STRUCT(building_house_common_shanty::static_params,
-    model, can_merge, variants, variants_merged, variants_merged_inside,
-    evolve_to, devolve_to, merge_before_evolve, can_devolve)
+ANK_CONFIG_STRUCT(building_house_common_shanty::static_params, model, can_merge, variants, variants_merged,
+  variants_merged_inside, evolve_to, devolve_to, merge_before_evolve, skip_devolve_delay)
 
 /**
  * Fifth housing tier - rough cottage.
@@ -314,9 +312,8 @@ public:
     } BUILDING_STATIC_DATA_T;
 
 };
-ANK_CONFIG_STRUCT(building_house_rough_cottage::static_params,
-    model, can_merge, variants, variants_merged, variants_merged_inside,
-    evolve_to, devolve_to, merge_before_evolve, can_devolve)
+ANK_CONFIG_STRUCT(building_house_rough_cottage::static_params, model, can_merge, variants, variants_merged,
+  variants_merged_inside, evolve_to, devolve_to, merge_before_evolve, skip_devolve_delay)
 
 /**
  * Sixth housing tier - ordinary cottage.
@@ -342,9 +339,8 @@ public:
     } BUILDING_STATIC_DATA_T;
 
 };
-ANK_CONFIG_STRUCT(building_house_ordinary_cottage::static_params,
-    model, can_merge, variants, variants_merged, variants_merged_inside,
-    evolve_to, devolve_to, merge_before_evolve, can_devolve)
+ANK_CONFIG_STRUCT(building_house_ordinary_cottage::static_params, model, can_merge, variants, variants_merged,
+  variants_merged_inside, evolve_to, devolve_to, merge_before_evolve, skip_devolve_delay)
 
 /**
  * Seventh housing tier - modest homestead.
@@ -370,9 +366,8 @@ public:
     } BUILDING_STATIC_DATA_T;
 
 };
-ANK_CONFIG_STRUCT(building_house_modest_homestead::static_params,
-    model, can_merge, variants, variants_merged, variants_merged_inside,
-    evolve_to, devolve_to, merge_before_evolve, can_devolve)
+ANK_CONFIG_STRUCT(building_house_modest_homestead::static_params, model, can_merge, variants, variants_merged,
+  variants_merged_inside, evolve_to, devolve_to, merge_before_evolve, skip_devolve_delay)
 
 /**
  * Eighth housing tier - spacious homestead.
@@ -398,9 +393,8 @@ public:
     } BUILDING_STATIC_DATA_T;
 
 };
-ANK_CONFIG_STRUCT(building_house_spacious_homestead::static_params,
-    model, can_merge, variants, variants_merged, variants_merged_inside,
-    evolve_to, devolve_to, merge_before_evolve, can_devolve)
+ANK_CONFIG_STRUCT(building_house_spacious_homestead::static_params, model, can_merge, variants, variants_merged,
+  variants_merged_inside, evolve_to, devolve_to, merge_before_evolve, skip_devolve_delay)
 
 /**
  * Ninth housing tier - modest apartment.
@@ -426,9 +420,8 @@ public:
     } BUILDING_STATIC_DATA_T;
 
 };
-ANK_CONFIG_STRUCT(building_house_modest_apartment::static_params,
-    model, can_merge, variants, variants_merged, variants_merged_inside,
-    evolve_to, devolve_to, merge_before_evolve, can_devolve)
+ANK_CONFIG_STRUCT(building_house_modest_apartment::static_params, model, can_merge, variants, variants_merged,
+  variants_merged_inside, evolve_to, devolve_to, merge_before_evolve, skip_devolve_delay)
 
 /**
  * Tenth housing tier - spacious apartment.
@@ -457,9 +450,8 @@ public:
     virtual bool evolve_expand() override;
     void expand_to_common_residence();
 };
-ANK_CONFIG_STRUCT(building_house_spacious_apartment::static_params,
-    model, can_merge, variants, variants_merged, variants_merged_inside,
-    evolve_to, devolve_to, merge_before_evolve, can_devolve)
+ANK_CONFIG_STRUCT(building_house_spacious_apartment::static_params, model, can_merge, variants, variants_merged,
+  variants_merged_inside, evolve_to, devolve_to, merge_before_evolve, skip_devolve_delay)
 
 /**
  * Eleventh housing tier - common residence.
@@ -488,9 +480,8 @@ public:
 
     virtual void devolve_special() override;
 };
-ANK_CONFIG_STRUCT(building_house_common_residence::static_params,
-    model, can_merge, variants, variants_merged, variants_merged_inside,
-    evolve_to, devolve_to, merge_before_evolve, can_devolve)
+ANK_CONFIG_STRUCT(building_house_common_residence::static_params, model, can_merge, variants, variants_merged,
+  variants_merged_inside, evolve_to, devolve_to, merge_before_evolve, skip_devolve_delay)
 
 /**
  * Twelfth housing tier - spacious residence.
@@ -517,9 +508,8 @@ public:
     } BUILDING_STATIC_DATA_T;
 
 };
-ANK_CONFIG_STRUCT(building_house_spacious_residence::static_params,
-    model, can_merge, variants, variants_merged, variants_merged_inside,
-    evolve_to, devolve_to, merge_before_evolve, can_devolve)
+ANK_CONFIG_STRUCT(building_house_spacious_residence::static_params, model, can_merge, variants, variants_merged,
+  variants_merged_inside, evolve_to, devolve_to, merge_before_evolve, skip_devolve_delay)
 
 /**
  * Thirteenth housing tier - elegant residence.
@@ -546,9 +536,8 @@ public:
     } BUILDING_STATIC_DATA_T;
 
 };
-ANK_CONFIG_STRUCT(building_house_elegant_residence::static_params,
-    model, can_merge, variants, variants_merged, variants_merged_inside,
-    evolve_to, devolve_to, merge_before_evolve, can_devolve)
+ANK_CONFIG_STRUCT(building_house_elegant_residence::static_params, model, can_merge, variants, variants_merged,
+  variants_merged_inside, evolve_to, devolve_to, merge_before_evolve, skip_devolve_delay)
 
 /**
  * Fourteenth housing tier - fancy residence.
@@ -578,9 +567,8 @@ public:
     virtual bool evolve_expand() override;
     void expand_to_common_manor();
 };
-ANK_CONFIG_STRUCT(building_house_fancy_residence::static_params,
-    model, can_merge, variants, variants_merged, variants_merged_inside,
-    evolve_to, devolve_to, merge_before_evolve, can_devolve)
+ANK_CONFIG_STRUCT(building_house_fancy_residence::static_params, model, can_merge, variants, variants_merged,
+  variants_merged_inside, evolve_to, devolve_to, merge_before_evolve, skip_devolve_delay)
 
 /**
  * Fifteenth housing tier - common manor (beginning of nobility level).
@@ -612,9 +600,8 @@ public:
     virtual void update_month() override;
     void devolve_to_fancy_residence();
 };
-ANK_CONFIG_STRUCT(building_house_common_manor::static_params,
-    model, can_merge, variants, variants_merged, variants_merged_inside,
-    evolve_to, devolve_to, merge_before_evolve, can_devolve)
+ANK_CONFIG_STRUCT(building_house_common_manor::static_params, model, can_merge, variants, variants_merged,
+  variants_merged_inside, evolve_to, devolve_to, merge_before_evolve, skip_devolve_delay)
 
 /**
  * Sixteenth housing tier - spacious manor.
@@ -644,9 +631,8 @@ public:
 
     virtual void update_month() override;
 };
-ANK_CONFIG_STRUCT(building_house_spacious_manor::static_params,
-    model, can_merge, variants, variants_merged, variants_merged_inside,
-    evolve_to, devolve_to, merge_before_evolve, can_devolve)
+ANK_CONFIG_STRUCT(building_house_spacious_manor::static_params, model, can_merge, variants, variants_merged,
+  variants_merged_inside, evolve_to, devolve_to, merge_before_evolve, skip_devolve_delay)
 
 /**
  * Seventeenth housing tier - elegant manor.
@@ -676,9 +662,8 @@ public:
 
     virtual void update_month() override;
 };
-ANK_CONFIG_STRUCT(building_house_elegant_manor::static_params,
-    model, can_merge, variants, variants_merged, variants_merged_inside,
-    evolve_to, devolve_to, merge_before_evolve, can_devolve)
+ANK_CONFIG_STRUCT(building_house_elegant_manor::static_params, model, can_merge, variants, variants_merged,
+  variants_merged_inside, evolve_to, devolve_to, merge_before_evolve, skip_devolve_delay)
 
 /**
  * Eighteenth housing tier - stately manor.
@@ -711,9 +696,8 @@ public:
     virtual void update_month() override;
     void expand_to_modest_estate();
 };
-ANK_CONFIG_STRUCT(building_house_stately_manor::static_params,
-    model, can_merge, variants, variants_merged, variants_merged_inside,
-    evolve_to, devolve_to, merge_before_evolve, can_devolve)
+ANK_CONFIG_STRUCT(building_house_stately_manor::static_params, model, can_merge, variants, variants_merged,
+  variants_merged_inside, evolve_to, devolve_to, merge_before_evolve, skip_devolve_delay)
 
 /**
  * Nineteenth housing tier - modest estate (highest nobility level).
@@ -746,9 +730,8 @@ public:
     virtual void update_month() override;
     void devolve_to_statel_manor();
 };
-ANK_CONFIG_STRUCT(building_house_modest_estate::static_params,
-    model, can_merge, variants, variants_merged, variants_merged_inside,
-    evolve_to, devolve_to, merge_before_evolve, can_devolve)
+ANK_CONFIG_STRUCT(building_house_modest_estate::static_params, model, can_merge, variants, variants_merged,
+  variants_merged_inside, evolve_to, devolve_to, merge_before_evolve, skip_devolve_delay)
 
 /**
  * Twentieth housing tier - palatial estate (maximum housing level).
@@ -780,9 +763,8 @@ public:
     virtual e_house_progress check_evolve_status(house_demands *demands) override;
     virtual void update_month() override;
 };
-ANK_CONFIG_STRUCT(building_house_palatial_estate::static_params,
-    model, can_merge, variants, variants_merged, variants_merged_inside,
-    evolve_to, devolve_to, merge_before_evolve, can_devolve)
+ANK_CONFIG_STRUCT(building_house_palatial_estate::static_params, model, can_merge, variants, variants_merged,
+  variants_merged_inside, evolve_to, devolve_to, merge_before_evolve, skip_devolve_delay)
 
 // ----------------------------------------------------------------------
 // Helpers that iterate over all valid houses. They are used by various

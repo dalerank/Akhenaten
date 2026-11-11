@@ -651,6 +651,33 @@ static int __test_house_change_to(int bid, int type) {
 }
 ANK_FUNCTION_2(__test_house_change_to);
 
+// One day of house evolution for a single house, as city_t::house_process_evolve runs it; returns the new type.
+static int __test_house_evolve_day(int bid) {
+    building* b = building_get(bid);
+    auto* house = b ? b->dcast_house() : nullptr;
+    if (!house) {
+        return -1;
+    }
+    g_city.houses_reset_demands();
+    const e_building_type save_type = house->type();
+    house->evolve(&g_city.houses);
+    if (house->type() != save_type) {
+        house->base.clear_impl();
+    }
+    return b->type;
+}
+ANK_FUNCTION_1(__test_house_evolve_day);
+
+static int __test_house_evolve_status(int bid) {
+    building* b = building_get(bid);
+    auto* house = b ? b->dcast_house() : nullptr;
+    if (!house) {
+        return -100;
+    }
+    g_city.houses_reset_demands();
+    return house->check_evolve_status(&g_city.houses);
+}
+ANK_FUNCTION_1(__test_house_evolve_status);
 
 static xstring __test_house_image_key(int bid) {
     building* b = building_get(bid);
