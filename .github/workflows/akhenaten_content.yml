@@ -27,12 +27,12 @@ jobs:
         mkdir build/data
         mkdir artifacts
         cd build
-        cmake -DCMAKE_BUILD_TYPE=RelWithDebInfo ..
+        cmake -DCMAKE_BUILD_TYPE=RelWithDebInfo -DAKHENATEN_UPDATER=OFF ..
         cd ..
         cmake --build ./build --target akhenaten
         cp ./build/akhenaten ./artifacts/akhenaten.linux
-        wget -O windows_build.zip "https://nightly.link/dalerank/Akhenaten/workflows/akhenaten_windows/master/windows_build.zip"
-        wget -O macos_build.zip "https://nightly.link/dalerank/Akhenaten/workflows/akhenaten_mac_arm/master/macos_arm_build.zip"
+        wget -O windows_build.zip "https://nightly.link/dalerank/Akhenaten/workflows/akhenaten_windows/master/windows_itch_build.zip"
+        wget -O macos_build.zip "https://nightly.link/dalerank/Akhenaten/workflows/akhenaten_mac_arm/master/macos_arm_itch_build.zip"
         unzip windows_build.zip -d artifacts
     - name: Bundle innoextract into itch packages
       run: |

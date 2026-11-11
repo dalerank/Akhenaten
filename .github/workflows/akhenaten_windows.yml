@@ -53,3 +53,17 @@ jobs:
       with:
         name: windows_build
         path: bin_x64
+    # itch.io updates the game itself: its package (akhenaten_content.yml) gets a build without the updater.
+    - name: build-itch-package
+      if: github.event_name == 'push'
+      run: |
+        cmake --preset win-relwithdebinfo -DAKHENATEN_UPDATER=OFF
+        cmake --build --preset win-relwithdebinfo --target akhenaten -j $env:NUMBER_OF_PROCESSORS
+        Copy-Item -Recurse ./bin_x64 ./bin_x64_itch
+        copy ./build/RelWithDebInfo/akhenaten.exe ./bin_x64_itch/akhenaten.exe
+        copy ./build/RelWithDebInfo/akhenaten.pdb ./bin_x64_itch/akhenaten.pdb
+    - uses: actions/upload-artifact@v6
+      if: github.event_name == 'push'
+      with:
+        name: windows_itch_build
+        path: bin_x64_itch

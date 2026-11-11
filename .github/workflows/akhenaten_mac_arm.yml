@@ -67,3 +67,18 @@ jobs:
       with:
         name: macos_arm_build
         path: macos_build
+
+    # itch.io updates the game itself: its package (akhenaten_content.yml) gets a build without the updater.
+    - name: build-itch-package
+      if: github.event_name == 'push'
+      run: |
+        cmake -B build -DAKHENATEN_UPDATER=OFF
+        cmake --build --preset macos-clang-relwithdebinfo-make-arm64 -- -j$(sysctl -n hw.ncpu)
+        cmake --build --preset macos-clang-relwithdebinfo-make-arm64 --target install/local
+        cp -R ./macos_build ./macos_itch_build
+        cp ./build/install/akhenaten.app/Contents/MacOS/akhenaten ./macos_itch_build/akhenaten.app/Contents/MacOS/akhenaten
+    - uses: actions/upload-artifact@v6
+      if: github.event_name == 'push'
+      with:
+        name: macos_arm_itch_build
+        path: macos_itch_build
