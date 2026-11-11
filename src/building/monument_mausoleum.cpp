@@ -145,13 +145,110 @@ bool walk_parts(building_mausoleum *main, F &&fn) {
 
 } // namespace
 
+void mausoleum_part_desc::pack_kind() {
+    static const uint32_t block_bit[4] = {
+        MAUSOLEUM_KIND_BLOCK_0, MAUSOLEUM_KIND_BLOCK_1, MAUSOLEUM_KIND_BLOCK_2, MAUSOLEUM_KIND_BLOCK_3
+    };
+    static const uint32_t pair_bit[4] = {
+        MAUSOLEUM_KIND_PAIR_0, MAUSOLEUM_KIND_PAIR_1, MAUSOLEUM_KIND_PAIR_2, MAUSOLEUM_KIND_PAIR_3
+    };
+
+    uint32_t word = kind & MAUSOLEUM_KIND_MASK;
+    if (walkway) {
+        word |= MAUSOLEUM_KIND_WALKWAY;
+    }
+    if (block >= 0 && block < MAUSOLEUM_BLOCKS) {
+        word |= block_bit[block];
+    }
+    if (pair >= 0 && pair < MAUSOLEUM_BLOCKS) {
+        word |= pair_bit[pair];
+    }
+    kind = word;
+}
+
+namespace {
+
+void push_fence_part(svector<mausoleum_part_desc, MAUSOLEUM_PARTS> &parts, int x, int y, const mausoleum_fence_token &tok) {
+    mausoleum_part_desc p;
+    p.offset = {x, y};
+    p.size = 1;
+    p.kind = (uint32_t)tok.kind;
+    p.walkway = tok.walkway;
+    parts.push_back(p);
+}
+
+} // namespace
+
 void building_mausoleum::static_params::archive_load(archive /*arch*/) {
     parts.clear();
-    for (const auto &p : blocks) {
+    for (auto &p : blocks) {
+        p.pack_kind();
         parts.push_back(p);
     }
-    for (const auto &p : fence) {
-        parts.push_back(p);
+
+    const mausoleum_fence_token *grid[MAUSOLEUM_BOX_DEPTH][MAUSOLEUM_BOX_WIDTH] = {};
+    const int rows = std::min((int)fence_map.size(), (int)MAUSOLEUM_BOX_DEPTH);
+    for (int y = 0; y < rows; ++y) {
+        const char *s = fence_map[y].c_str();
+        int x = 0;
+        while (*s && x < MAUSOLEUM_BOX_WIDTH) {
+            while (*s == ' ' || *s == '\t') {
+                ++s;
+            }
+            if (!*s) {
+                break;
+            }
+            const char *start = s;
+            while (*s && *s != ' ' && *s != '\t') {
+                ++s;
+            }
+            bstring32 key;
+            key.ncat(start, (size_t)(s - start));
+            const xstring glyph(key.c_str());
+            for (const auto &tok : fence_tokens) {
+                if (tok.token == glyph && tok.kind >= 0) {
+                    grid[y][x] = &tok;
+                    break;
+                }
+            }
+            ++x;
+        }
+    }
+
+    for (int y = 0; y < MAUSOLEUM_BOX_DEPTH; ++y) {
+        for (int x = 0; x < MAUSOLEUM_BOX_WIDTH; ++x) {
+            const mausoleum_fence_token *tok = grid[y][x];
+            if (!tok) {
+                continue;
+            }
+            if (tok->pair_dy != 0) {
+                const int py = y + tok->pair_dy;
+                if (py >= 0 && py < MAUSOLEUM_BOX_DEPTH && grid[py][x]) {
+                    push_fence_part(parts, x, y, *tok);
+                    push_fence_part(parts, x, py, *grid[py][x]);
+                    grid[y][x] = nullptr;
+                    grid[py][x] = nullptr;
+                    continue;
+                }
+            }
+            push_fence_part(parts, x, y, *tok);
+            grid[y][x] = nullptr;
+        }
+    }
+
+    for (const auto &link : fence_links) {
+        for (auto &p : parts) {
+            if (p.offset == link.offset) {
+                p.block = link.block;
+                p.pair = link.pair;
+                break;
+            }
+        }
+    }
+    for (auto &p : parts) {
+        if (p.size == 1) {
+            p.pack_kind();
+        }
     }
 
     g_monument_mausoleum.btype = BUILDING_MAUSOLEUM;

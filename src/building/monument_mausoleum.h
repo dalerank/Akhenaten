@@ -85,9 +85,32 @@ struct mausoleum_part_desc {
     xstring hint;
     vec2i offset;
     uint8_t size = 1;
+    // JS writes the base kind (0..13) plus optional walkway/block/pair; pack_kind packs the OG word.
     uint32_t kind = 0;
+    bool walkway = false;
+    int16_t block = -1;
+    int16_t pair = -1;
+
+    void pack_kind();
 };
-ANK_CONFIG_STRUCT(mausoleum_part_desc, hint, offset, size, kind)
+ANK_CONFIG_STRUCT(mausoleum_part_desc, hint, offset, size, kind, walkway, block, pair)
+
+// Legend entry for one fence_map glyph. Unknown glyphs are skipped (e.g. '#' sandstone).
+struct mausoleum_fence_token {
+    xstring token;
+    int16_t kind = -1;
+    bool walkway = false;
+    int16_t pair_dy = 0; // if set, also emit (x, y+pair_dy) as the next part
+};
+ANK_CONFIG_STRUCT(mausoleum_fence_token, token, kind, walkway, pair_dy)
+
+// Masonry-link overlay for fence_map tiles (block/pair bits the ASCII cannot carry alone).
+struct mausoleum_fence_link {
+    vec2i offset;
+    int16_t block = -1;
+    int16_t pair = -1;
+};
+ANK_CONFIG_STRUCT(mausoleum_fence_link, offset, block, pair)
 
 class building_mausoleum : public building_monument {
 public:
@@ -104,8 +127,10 @@ public:
     struct base_params {
         svector<monument_phase_resource, 4> placement_resources;
         svector<mausoleum_part_desc, MAUSOLEUM_BLOCKS> blocks;
-        svector<mausoleum_part_desc, MAUSOLEUM_FENCE_PARTS> fence;
-        svector<mausoleum_part_desc, MAUSOLEUM_PARTS> parts; // blocks + fence, filled in archive_load
+        svector<mausoleum_fence_token, 16> fence_tokens;
+        svector<xstring, MAUSOLEUM_BOX_DEPTH> fence_map;
+        svector<mausoleum_fence_link, 32> fence_links;
+        svector<mausoleum_part_desc, MAUSOLEUM_PARTS> parts; // blocks + expanded fence_map
         xstring leveled;
         xstring unbuilt;
     };
@@ -193,5 +218,5 @@ private:
     static bool area_blocked_at(tile2i origin, vec2i extent);
 };
 
-ANK_CONFIG_STRUCT(building_mausoleum::static_params, placement_resources, blocks, fence, leveled, unbuilt)
+ANK_CONFIG_STRUCT(building_mausoleum::static_params, placement_resources, blocks, fence_tokens, fence_map, fence_links, leveled, unbuilt)
 ANK_CONFIG_PROPERTY(building_mausoleum::runtime_data_t, variant)
