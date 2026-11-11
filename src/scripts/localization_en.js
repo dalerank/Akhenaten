@@ -216,6 +216,7 @@ localization_en = [
   {key:"#TR_CONFIG_MULTIPLE_GATHERERS", text:"Multiple gatherers"}
   {key:"#TR_CONFIG_WOOD_CUTTER_SINGLE_GATHERER", text:"Wood cutters: one lumberjack + any-tree spawn gate (remake; original 1/2/3 by staffing, grown trees only)"}
   {key:"#TR_CONFIG_FIREMAN_RETURNING", text:"Fireman returning after fight fire"}
+  {key:"#TR_CONFIG_FISHING_POINTS_MONTHLY_RESPAWN", text:"Fishing spots respawn every month"}
   {key:"#TR_CONFIG_ARCHITECT_PATROL_MOST_DAMAGED", text:"Architects path to most damaged buildings"}
   {key:"#TR_CONFIG_OG_ARCHITECT", text:"Original Pharaoh architect (subtract damage, repair walls)"}
   {key:"#TR_CONFIG_OG_FIREMAN", text:"Original Pharaoh fireman (subtract fire risk, detect fires farther)"}

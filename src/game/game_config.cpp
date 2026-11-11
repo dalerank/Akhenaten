@@ -113,6 +113,8 @@ namespace game_features {
     game_feature gameplay_change_multiple_gatherers{ "gameplay_change_multiple_gatherers", "#TR_CONFIG_MULTIPLE_GATHERERS", false, false };
     game_feature gameplay_change_wood_cutter_single_gatherer{ "gameplay_change_wood_cutter_single_gatherer", "#TR_CONFIG_WOOD_CUTTER_SINGLE_GATHERER", false, false };
     game_feature gameplay_change_fireman_returning{ "gameplay_change_fireman_returning", "#TR_CONFIG_FIREMAN_RETURNING", false, false };
+    game_feature gameplay_change_fishing_points_monthly_respawn{
+      "gameplay_change_fishing_points_monthly_respawn", "#TR_CONFIG_FISHING_POINTS_MONTHLY_RESPAWN", false, false};
     game_feature gameplay_change_architect_patrol_most_damaged{ "gameplay_change_architect_patrol_most_damaged", "#TR_CONFIG_ARCHITECT_PATROL_MOST_DAMAGED", false, false };
     game_feature gameplay_og_architect{ "gameplay_og_architect", "#TR_CONFIG_OG_ARCHITECT", false, true };
     game_feature gameplay_og_fireman{ "gameplay_og_fireman", "#TR_CONFIG_OG_FIREMAN", false, true };

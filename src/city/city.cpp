@@ -150,7 +150,8 @@ void city_t::update_month(simulation_time_t simtime) {
     festival.advance_month();
     buildings.update_month();
 
-    if (can_produce_resource(RESOURCE_FISH)) {
+    // OG creates the fishing spots once at scenario start; respawning them every month is an Enhanced change.
+    if (game_features::gameplay_change_fishing_points_monthly_respawn.to_bool() && can_produce_resource(RESOURCE_FISH)) {
         fishing_points.update_month();
     }
 

@@ -19,6 +19,7 @@
 #include "city/city_message.h"
 #include "core/random.h"
 #include "core/xstring.h"
+#include "game/game.h"
 #include "figure/figure_impl.h"
 #include "figuretype/animal_asp.h"
 #include "figuretype/animal_lion.h"
@@ -287,3 +288,8 @@ static void __test_scenario_var_set_string(pcstr name, pcstr value) {
     g_scenario.vars.set_string(name, value);
 }
 ANK_FUNCTION_2(__test_scenario_var_set_string);
+
+static void __test_city_update_month() {
+    g_city.update_month(game.simtime);
+}
+ANK_FUNCTION(__test_city_update_month);
