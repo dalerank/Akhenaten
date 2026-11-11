@@ -129,8 +129,8 @@ void figure_fireman::extinguish_fire() {
     building* burn = destination();
     int distance = calc_maximum_distance(tile(), burn->tile);
     const bool is_valid = (burn->state == BUILDING_STATE_VALID || burn->state == BUILDING_STATE_MOTHBALLED) && burn->type == BUILDING_BURNING_RUIN;
-    if (is_valid && distance < 2 && burn->fire_duration > 0) {
-        burn->fire_duration--;
+    if (is_valid && distance < 2) {
+        burn->dcast_burning_ruin()->extinguish();
         g_sound.play_effect(SOUND_EFFECT_FIRE_SPLASH);
     } else {
         base.wait_ticks = 1;

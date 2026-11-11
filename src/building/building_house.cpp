@@ -357,14 +357,22 @@ void building_house::change_to(building &b, e_building_type new_type, bool force
 
     const auto &variants_data = house->is_merged() ? house_params.variants_merged.data : house_params.variants.data;
     if (!variants_data.empty()) {
-        const size_t n = variants_data.size();
-        const size_t start = rand() % n;
+        // OG variant index follows config order (_1, _2, ...); unordered_map iteration order is arbitrary.
+        std::vector<const std::pair<const xstring, animation_t>*> ordered;
+        ordered.reserve(variants_data.size());
+        for (const auto& variant : variants_data) {
+            ordered.push_back(&variant);
+        }
+        std::sort(ordered.begin(), ordered.end(),
+          [](auto lhs, auto rhs) { return strcmp(lhs->first.c_str(), rhs->first.c_str()) < 0; });
+
+        const size_t n = ordered.size();
+        const size_t start = map_random_get(b.tile) % n;
         for (size_t i = 0; i < n; i++) {
-            auto anim_it = variants_data.begin();
-            std::advance(anim_it, (start + i) % n);
-            const int candidate = anim_it->second.first_img();
+            const auto& variant = *ordered[(start + i) % n];
+            const int candidate = variant.second.first_img();
             if (candidate > 0 || i == n - 1) {
-                d.image_key = anim_it->first;
+                d.image_key = variant.first;
                 image_id = candidate;
                 break;
             }

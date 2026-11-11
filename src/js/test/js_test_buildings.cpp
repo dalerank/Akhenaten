@@ -583,3 +583,85 @@ static int __test_building_recorded_path_at(int bid, int index) {
     return g_recorded_paths.building_path_at(main ? main->id : bid, index);
 }
 ANK_FUNCTION_2(__test_building_recorded_path_at);
+
+#include "building/building_burning_ruin.h"
+#include "grid/random.h"
+
+static int __test_map_random_at(int x, int y) {
+    return map_random_get(tile2i(x, y));
+}
+ANK_FUNCTION_2(__test_map_random_at);
+
+static int __test_burning_ruin_create(int x, int y) {
+    building* b = building_create(BUILDING_BURNING_RUIN, tile2i(x, y), 0);
+    return (b && b->id > 0) ? b->id : 0;
+}
+ANK_FUNCTION_2(__test_burning_ruin_create);
+
+static int __test_burning_ruin_update(int bid) {
+    building* b = building_get(bid);
+    auto* ruin = b ? b->dcast_burning_ruin() : nullptr;
+    return ruin ? (ruin->update() ? 1 : 0) : -1;
+}
+ANK_FUNCTION_1(__test_burning_ruin_update);
+
+static int __test_building_fire_duration(int bid) {
+    building* b = building_get(bid);
+    return b ? b->fire_duration : -1000;
+}
+ANK_FUNCTION_1(__test_building_fire_duration);
+
+#include "figuretype/figure_fireman.h"
+
+// One ACTION_5_FIREMAN_AT_FIRE tick from a fireman standing next to the ruin; returns the ruin's fire_duration.
+static int __test_fireman_extinguish_tick(int ruin_id) {
+    building* ruin = building_get(ruin_id);
+    if (!ruin || !ruin->dcast_burning_ruin()) {
+        return -1000;
+    }
+
+    figure* f = figure_create(FIGURE_FIREMAN, ruin->tile.shifted(1, 0), DIR_0_TOP_RIGHT);
+    figure_fireman* fireman = f ? f->dcast<figure_fireman>() : nullptr;
+    if (!fireman) {
+        return -1000;
+    }
+
+    f->action_state = ACTION_5_FIREMAN_AT_FIRE;
+    f->wait_ticks = 50;
+    f->set_destination(ruin_id);
+    fireman->extinguish_fire();
+    f->poof();
+    return ruin->fire_duration;
+}
+ANK_FUNCTION_1(__test_fireman_extinguish_tick);
+
+static int __test_building_is_rubble(int bid) {
+    building* b = building_get(bid);
+    return (b && b->state == BUILDING_STATE_RUBBLE) ? 1 : 0;
+}
+ANK_FUNCTION_1(__test_building_is_rubble);
+
+static int __test_house_change_to(int bid, int type) {
+    building* b = building_get(bid);
+    if (!b || !b->dcast_house()) {
+        return 0;
+    }
+    building_house::change_to(*b, (e_building_type)type, true);
+    return 1;
+}
+ANK_FUNCTION_2(__test_house_change_to);
+
+
+static xstring __test_house_image_key(int bid) {
+    building* b = building_get(bid);
+    auto* house = b ? b->dcast_house() : nullptr;
+    return house ? house->runtime_data().image_key : xstring{};
+}
+ANK_FUNCTION_1(__test_house_image_key);
+
+static int __test_house_image_id(int bid) {
+    building* b = building_get(bid);
+    auto* house = b ? b->dcast_house() : nullptr;
+    return house ? house->runtime_data().image_id : 0;
+}
+ANK_FUNCTION_1(__test_house_image_id);
