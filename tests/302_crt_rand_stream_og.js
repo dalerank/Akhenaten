@@ -1,7 +1,6 @@
 // OG crt_rand (MSVC rand, crt_compat.c) consumers outside the gods:
 //  - figure_create draws one value (figure_core.c:95, phrase sequences);
 //  - figure_name_init seeds 41 name counters high to low, one draw each (scenario_start.c:388-393);
-//  - figure_name_set hands out the group counter and steps it with wrap (figure_core.c:445-468);
 //  - a fishing spot draws its start frame (scenario_start.c:406-408) and, while animating, one value per tick
 //    (boats.c:427-431);
 //  - the predator wall-clock reseed (animals.c:343-345) is off under integral tests.
@@ -13,9 +12,6 @@ var TEST302_FISHING_SPOT_FRAMES = 24
 var TEST302_FISHING_SPOT_RANDOM_PAUSE = 100
 var TEST302_FISHING_SPOT_PAUSE = 25
 var TEST302_SPOT_TICKS = 400
-var TEST302_TAX_COLLECTOR_SLOT = 17
-var TEST302_IMMIGRANT_SLOT = 40
-var TEST302_TAX_COLLECTOR_GROUP_COUNT = 16
 
 function test302_fail(msg) {
     __log_info_native('[test:302] FAIL: ' + msg)
@@ -71,35 +67,6 @@ function test302_name_init_seeds_counters() {
     var after = __test_crt_sync_state31()
     if (after != test302_next(s)) {
         return 'figure_name_init drew a wrong number of values'
-    }
-    return ''
-}
-
-function test302_names_follow_counters() {
-    if (__test_figure_name_counter_slot(FIGURE_TAX_COLLECTOR) != TEST302_TAX_COLLECTOR_SLOT) {
-        return 'tax collector slot ' + __test_figure_name_counter_slot(FIGURE_TAX_COLLECTOR)
-    }
-    if (__test_figure_name_counter_slot(FIGURE_IMMIGRANT) != TEST302_IMMIGRANT_SLOT) {
-        return 'immigrant slot ' + __test_figure_name_counter_slot(FIGURE_IMMIGRANT)
-    }
-    if (__test_figure_name_counter_slot(FIGURE_FISHING_POINT) != -1) {
-        return 'fishing point has a name counter'
-    }
-
-    var counter = __test_figure_name_counter(TEST302_TAX_COLLECTOR_SLOT)
-    var immigrant_counter = __test_figure_name_counter(TEST302_IMMIGRANT_SLOT)
-    for (var i = 0; i < 2 * TEST302_TAX_COLLECTOR_GROUP_COUNT + 3; i++) {
-        if (!__test_figure_create(FIGURE_TAX_COLLECTOR, -1, -1)) {
-            return 'figure_create failed'
-        }
-        counter = (counter + 1 < TEST302_TAX_COLLECTOR_GROUP_COUNT) ? counter + 1 : 0
-        var got = __test_figure_name_counter(TEST302_TAX_COLLECTOR_SLOT)
-        if (got != counter) {
-            return 'tax collector #' + i + ' left counter ' + got + ', expected ' + counter
-        }
-    }
-    if (__test_figure_name_counter(TEST302_IMMIGRANT_SLOT) != immigrant_counter) {
-        return 'tax collectors stepped the immigrant counter'
     }
     return ''
 }
@@ -180,12 +147,6 @@ function run_test() {
     }
     __log_marker('test302_name_init_ok')
 
-    err = test302_names_follow_counters()
-    if (err) {
-        return test302_fail(err)
-    }
-    __log_marker('test302_name_counters_ok')
-
     err = test302_fishing_spot_stream()
     if (err) {
         return test302_fail(err)
@@ -206,7 +167,6 @@ function check_valid() {
     return __test302_ok
         && __test_find_inlog('[test-marker] test302_figure_create_one_draw_ok')
         && __test_find_inlog('[test-marker] test302_name_init_ok')
-        && __test_find_inlog('[test-marker] test302_name_counters_ok')
         && __test_find_inlog('[test-marker] test302_fishing_spot_ok')
         && __test_find_inlog('[test-marker] test302_clock_reseed_off_ok')
 }

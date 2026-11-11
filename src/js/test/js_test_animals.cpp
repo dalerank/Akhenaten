@@ -392,11 +392,6 @@ static int __test_figure_name_counter(int slot) {
 }
 ANK_FUNCTION_1(__test_figure_name_counter);
 
-static int __test_figure_name_counter_slot(int type) {
-    return figure_name_counter_slot(type);
-}
-ANK_FUNCTION_1(__test_figure_name_counter_slot);
-
 static int __test_fishing_spot_create(int x, int y) {
     figure* f = figure_fishing_point::create(tile2i(x, y));
     return (f && f->id > 0 && f->type == FIGURE_FISHING_POINT) ? f->id : 0;

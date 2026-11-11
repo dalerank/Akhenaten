@@ -18,4 +18,3 @@ bstring32 figure_name_get(int type);
 
 // OG name counter table (41 slots); -1 for an out-of-range slot or a type without an OG name group.
 int figure_name_counter(int slot);
-int figure_name_counter_slot(int type);
