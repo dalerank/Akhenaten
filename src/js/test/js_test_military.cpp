@@ -1136,11 +1136,6 @@ ANK_FUNCTION(__test_seth_sink_all_ships);
 
 #include "core/random.h"
 
-void __test_rng_set(int iv1, int iv2) {
-    random_TEMP_SET_DEBUG((uint32_t)iv1, (uint32_t)iv2);
-}
-ANK_FUNCTION_2(__test_rng_set);
-
 int __test_rng_byte() {
     return random_byte();
 }

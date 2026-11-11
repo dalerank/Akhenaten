@@ -49,7 +49,7 @@ function test300_land_case(slots) {
         valid[slots[i]] = true
     }
     for (var iv1 = 0; iv1 < 128; iv1++) {
-        __test_rng_set(iv1 + 0x1000, 0x2345)
+        __test_random_set_state(iv1 + 0x1000, 0x2345)
         var before = __test_rng_short()
         var got = __test_invasion_land_point_index()
         var expected = test300_expected_land(valid, iv1)
@@ -81,7 +81,7 @@ function run_test() {
     __test_invasion_sea_point_set(6, 22, 20)
     var sea_expected = [3, 3, 3, 3, 6, 6, 6, 3]
     for (var s = 0; s < 8; s++) {
-        __test_rng_set(0x1234 + s, 0x5678)
+        __test_random_set_state(0x1234 + s, 0x5678)
         var sea_before = __test_rng_short()
         var sea_got = __test_invasion_sea_point_index(s)
         if (sea_got != sea_expected[s]) {
@@ -94,7 +94,7 @@ function run_test() {
     __log_marker('test300_sea_point_ok')
 
     __test_invasion_points_clear()
-    __test_rng_set(0x1357, 0x2468)
+    __test_random_set_state(0x1357, 0x2468)
     if (__test_invasion_landing_index() != -1 || __test_rng_short() != 0x1357) {
         return test300_fail('landing roll without disembark points must return -1 and keep the RNG')
     }
@@ -105,7 +105,7 @@ function run_test() {
     var valid_slots = [0, 2, 3]
     for (var k = 0; k < 64; k++) {
         var seed = 0x10001 + k * 7919
-        __test_rng_set(seed, 0x2468)
+        __test_random_set_state(seed, 0x2468)
         var next = test300_next_iv1(seed)
         var landing_expected = valid_slots[(next & 0x7fff) % 3]
         var landing_got = __test_invasion_landing_index()
@@ -121,9 +121,9 @@ function run_test() {
     __test_invasion_points_clear()
     var off0 = __test_invasion_land_point_place_open(0)
     var off1 = __test_invasion_land_point_place_open(1)
-    __test_rng_set(0x1001, 0x2468)
+    __test_random_set_state(0x1001, 0x2468)
     var spawn1 = __test_start_land_invasion(ENEMY_0_BARBARIAN, 8)
-    __test_rng_set(0x1000, 0x2468)
+    __test_random_set_state(0x1000, 0x2468)
     var spawn0 = __test_start_land_invasion(ENEMY_0_BARBARIAN, 8)
     if (spawn1 != off1 || spawn0 != off0) {
         return test300_fail('land invasion spawn: expected ' + off1 + '/' + off0 + ' got ' + spawn1 + '/' + spawn0)
