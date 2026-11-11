@@ -139,7 +139,9 @@ void empire_t::load_mission_metadata(const mission_id_t &missionid, bool preserv
                 continue;
             }
             cities[i].is_open = saved_open[i] != 0;
-            if (full_empire_object *full = ref_full_object(cities[i].empire_object_id)) {
+            // Maps store "open" as any non-zero byte (0xff in OG maps); keep it unless openness changed.
+            full_empire_object* full = ref_full_object(cities[i].empire_object_id);
+            if (full && (full->trade_route_open != 0) != (saved_open[i] != 0)) {
                 full->trade_route_open = saved_open[i];
             }
         }
@@ -539,7 +541,8 @@ io_buffer* iob_empire_cities = new io_buffer([](io_buffer* iob, size_t version) 
         iob->bind_u8(city.ship_movement_delay_max);
         iob->bind____skip(7);
 
-        if (iob->is_read_access()) {
+        // An unused slot keeps its zeros, so loading does not change what the next save writes.
+        if (iob->is_read_access() && city.in_use) {
             city.check_attributes();
         }
     }
