@@ -17,6 +17,7 @@
 #include "building/monument_royal_tomb.h"
 #include "city/city.h"
 #include "city/city_message.h"
+#include "core/random.h"
 #include "core/xstring.h"
 #include "figure/figure_impl.h"
 #include "figuretype/animal_asp.h"
@@ -208,6 +209,36 @@ static void __test_kingdom_set_rating(int value) {
     g_city.kingdome.rating = (uint8_t)std::clamp(value, 0, 100);
 }
 ANK_FUNCTION_1(__test_kingdom_set_rating);
+
+// Draws one crt rand() and returns the low 31 bits of the new state: output bits 16..30, peek gives bits 0..15.
+// Bit 31 never reaches a later output, so JS can predict every following roll from this.
+static int __test_crt_sync_state31() {
+    const int high = anti_scum_random_15bit();
+    const int low = anti_scum_random_15bit(false);
+    return (high << 16) | low;
+}
+ANK_FUNCTION(__test_crt_sync_state31);
+
+static void __test_crt_srand(int seed) {
+    anti_scum_srand((uint32_t)seed);
+}
+ANK_FUNCTION_1(__test_crt_srand);
+
+static int __test_ra_harsh_trade_months() {
+    return g_city.religion.ra_harshly_reduced_trading_months_left;
+}
+ANK_FUNCTION(__test_ra_harsh_trade_months);
+
+static int __test_ra_no_traders_months() {
+    return g_city.religion.ra_no_traders_months_left;
+}
+ANK_FUNCTION(__test_ra_no_traders_months);
+
+static void __test_ra_clear_curse_months() {
+    g_city.religion.ra_harshly_reduced_trading_months_left = 0;
+    g_city.religion.ra_no_traders_months_left = 0;
+}
+ANK_FUNCTION(__test_ra_clear_curse_months);
 
 static void __test_house_calculate_culture_aggregates() {
     g_city.house_service_calculate_culture_aggregates();
