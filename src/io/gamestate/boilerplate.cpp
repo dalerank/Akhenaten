@@ -380,8 +380,10 @@ void GamestateIO::start_loaded_file() {
 
     g_camera.init();
     map_orientation_update_buildings();
-    map_terrain_init_outside_map();
+    // Corners first: the off-map ring mirrors them, and mirroring corners a later load has already cleared
+    // would give that load a different ring.
     map_normalize_outside_diamond_all();
+    map_terrain_init_outside_map();
 
     // river / garden tiles refresh
     build_terrain_caches();
