@@ -185,7 +185,8 @@ ANK_REGISTER_BOOL_ARGUMENT_HANDLER("--integraltest-keep", "integraltest_keep", t
 ANK_REGISTER_BOOL_ARGUMENT_HANDLER("--editor", "editor", true, "start in scenario editor (dev-only; blank map, bypasses main menu)");
 
 ANK_REGISTER_STRING_ARGUMENT_HANDLER("--render", "renderer", "Option --render must be opengl,direct3d", "--render RENDERER", "use specific renderer");
-ANK_REGISTER_STRING_ARGUMENT_HANDLER("--mods", "mods_directory", "Option --mods folder should exist", "--mods PATH", "set mods data directory path");
+ANK_REGISTER_STRING_ARGUMENT_HANDLER("--mods", "mods_directory", "Option --mods must be followed by a folder path",
+  "--mods PATH", "mods folder instead of <data>/mods");
 ANK_REGISTER_STRING_ARGUMENT_HANDLER("--mixed", "scripts_directory", MIXED_MODE_ERROR_MESSAGE, "--mixed PATH", "hot reload scripts from disk");
 ANK_REGISTER_STRING_ARGUMENT_HANDLER("--language", "language", "Option --language must be followed by a language code (e.g., ru, en, fr)", "--language CODE", "set game language (e.g., ru, en, fr, de, it, sp, po, pr, sw, tc, sc, kr)");
 ANK_REGISTER_STRING_ARGUMENT_HANDLER("--font", "custom_font", "Option --font must be followed by a font file path", "--font PATH", "use custom TTF font file (overrides font from localization.js)");

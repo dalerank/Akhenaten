@@ -63,11 +63,16 @@ struct mods_mananger {
 
 extern mods_mananger g_mods;
 
+struct mods_options {
+    vfs::path directory; // empty: "mods" under the Pharaoh data directory
+};
+
 vfs::path mods_get_path(xstring hash);
 bool mods_get_enabled(xstring hash);
 void mods_set_enabled(xstring hash, bool enabled);
 void mods_toggle(xstring hash);
-void mods_init();
+void mods_init(const mods_options& opts);
+vfs::path mods_directory();
 const mod_info& mods_find(xstring hash);
 void mods_remount();
 void mods_save();

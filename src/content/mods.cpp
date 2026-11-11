@@ -13,6 +13,7 @@
 #include "content/vfs.h"
 #include "game/game.h"
 
+#include <algorithm>
 #include <cstring>
 #include <fstream>
 #include <filesystem>
@@ -23,6 +24,29 @@
 
 mods_mananger g_mods;
 mods_config ANK_VARIABLE_N(g_mods_config, "mods");
+
+namespace {
+    vfs::path g_mods_directory_override;
+
+    // Relative --mods paths are taken from the working directory, not from the data directory.
+    std::vector<std::string> mods_list_override_dir(const vfs::path& dir) {
+        std::vector<std::string> files;
+        std::error_code ec;
+        for (const auto& e : std::filesystem::directory_iterator(dir.c_str(), ec)) {
+            if (e.is_regular_file(ec) && vfs::file_has_extension(e.path().filename().string().c_str(), "sgx")) {
+                files.push_back(e.path().filename().string());
+            }
+        }
+        std::sort(files.begin(), files.end(), [](const std::string& a, const std::string& b) {
+            return string_compare_case_insensitive(a.c_str(), b.c_str()) < 0;
+        });
+        return files;
+    }
+} // namespace
+
+vfs::path mods_directory() {
+    return g_mods_directory_override.empty() ? vfs::path("mods") : g_mods_directory_override;
+}
 
 mod_info& mods_add_remote_file(xstring name, xstring uri) {
     auto it = g_mods.list.find(name);
@@ -163,7 +187,7 @@ void mods_download_mod_async(xstring name) {
             return;
         }
 
-        std::filesystem::path mods_dir = std::filesystem::path(base_path) / "mods";
+        std::filesystem::path mods_dir = mods_directory().resolve().c_str();
         std::filesystem::create_directories(mods_dir);
 
         // Create filename with .sgx extension
@@ -235,7 +259,7 @@ void mods_download_mod_async(xstring name) {
         // Update mod info
         mod.downloaded = true;
         mod.download_progress = 100;
-        mod.path.printf("mods/%s", filename.c_str());
+        mod.path = vfs::path(mods_directory(), "/", filename.c_str());
 
         // Initialize mod metadata (similar to mods_init)
         mod.useridx = imagepak::get_max_useridx() + 1;
@@ -324,43 +348,51 @@ void mods_remount() {
     mods_save();
 }
 
-void mods_init() {
+void mods_init(const mods_options& opts) {
     g_mods.list.clear();
 
-    auto append_mods = [](pcstr dir, const dir_listing* files) {
-        for (int i = 0; i < files->num_files; ++i) {
-            bstring128 mod_name_short(files->files[i]);
-            mod_name_short.replace_str(".sgx", "");
-            mod_name_short.replace_str(dir, "");
+    g_mods_directory_override.clear();
+    if (!opts.directory.empty()) {
+        std::error_code ec;
+        g_mods_directory_override = std::filesystem::absolute(opts.directory.c_str(), ec).generic_string();
+        logs::info("[mods] directory %s", g_mods_directory_override.c_str());
+    }
+    const vfs::path dir = mods_directory();
 
-            xstring mod_name(mod_name_short.c_str());
-            auto it = g_mods.list.find(mod_name);
-            if (it == g_mods.list.end()) {
-                mod_info& mod = g_mods.list[mod_name];
-                mod.path.printf("mods/%s", files->files[i]);
-                mod.name = mod_name;
-                mod.downloaded = true;
-                mod.useridx = imagepak::get_max_useridx() + 1;
-                mod.start_index = imagepak::get_maxseen_imgid() + 1;
-                mod.entries_num = imagepak::get_entries_num(mod.path.c_str());
+    auto append_mod = [&dir](pcstr file) {
+        bstring128 mod_name_short(file);
+        mod_name_short.replace_str(".sgx", "");
 
-                imagepak::useridx_update(mod.useridx);
-                imagepak::update_max_imgid(mod.start_index + mod.entries_num);
-
-                vfs::path full_path = mod.path.resolve();
-                if (full_path.empty()) {
-                    continue;
-                }
-
-                mod.fill_entries();
-            } else {
-                logs::warn("WARN! Duplicate mod %s", mod_name.c_str());
-            }
+        xstring mod_name(mod_name_short.c_str());
+        if (g_mods.list.find(mod_name) != g_mods.list.end()) {
+            logs::warn("WARN! Duplicate mod %s", mod_name.c_str());
+            return;
         }
+
+        mod_info& mod = g_mods.list[mod_name];
+        mod.path = vfs::path(dir, "/", file);
+        mod.name = mod_name;
+        mod.downloaded = true;
+        mod.useridx = imagepak::get_max_useridx() + 1;
+        mod.start_index = imagepak::get_maxseen_imgid() + 1;
+        mod.entries_num = imagepak::get_entries_num(mod.path.c_str());
+
+        imagepak::useridx_update(mod.useridx);
+        imagepak::update_max_imgid(mod.start_index + mod.entries_num);
+
+        mod.fill_entries();
     };
 
-    const dir_listing* sgx_files = vfs::dir_find_files_with_extension("mods", "sgx");
-    append_mods("mods/", sgx_files);
+    if (g_mods_directory_override.empty()) {
+        const dir_listing* sgx_files = vfs::dir_find_files_with_extension("mods", "sgx");
+        for (int i = 0; i < sgx_files->num_files; ++i) {
+            append_mod(sgx_files->files[i]);
+        }
+    } else {
+        for (const auto& file : mods_list_override_dir(dir)) {
+            append_mod(file.c_str());
+        }
+    }
     mods_refresh_from_config();
 }
 
