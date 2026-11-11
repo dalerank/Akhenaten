@@ -206,6 +206,12 @@ static bool pre_init(const xstring& custom_data_dir) {
         return true;
     }
 
+    // Hermetic: no fallback to the exe dir or the user pref, and no message box a headless runner would hang on.
+    if (g_args.is_integral_tests()) {
+        logs::error("[integraltests] data directory %s is not usable", custom_data_dir.c_str());
+        exit(2);
+    }
+
     if (pre_init_dir_attempt(".", "Attempting to load game from working directory %s")) {
         return true;
     }

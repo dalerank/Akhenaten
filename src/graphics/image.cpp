@@ -6,6 +6,7 @@
 #include "graphics/imagepak_holder.h"
 #include "graphics/residency_atlas.h"
 #include "content/dir.h"
+#include "content/content.h"
 #include "core/svector.h"
 #include "core/log.h"
 #include "core/profiler.h"
@@ -110,6 +111,17 @@ bool image_pak_is_loaded(int pak_id) {
 
 bool image_pak_is_loaded(const xstring &name) {
     return image_pak_is_loaded(image_find_pak_id_by_name(name));
+}
+
+int image_paks_loaded_count() {
+    if (!g_image_data) {
+        return 0;
+    }
+    int count = 0;
+    for (size_t i = 0; i < g_image_data->pak_list.size(); ++i) {
+        count += image_pak_is_loaded(static_cast<int>(i)) ? 1 : 0;
+    }
+    return count;
 }
 
 bool image_ensure_pak_loaded(int pak_id) {
@@ -334,6 +346,8 @@ bool image_load_paks() {
     }
 
     data.allow_updata_on_load = false;
+    logs::info("[resources] data_dir=%s paks_loaded=%d pharaoh_art=%d", vfs::platform_file_manager_get_base_path(),
+      image_paks_loaded_count(), image_pak_is_loaded(PACK_SPR_MAIN) ? 1 : 0);
 
     if (!data.fonts_loaded) {
         font_enable_sg3_fallback();

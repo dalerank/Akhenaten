@@ -332,7 +332,8 @@ void Arguments::parse(int argc, char** argv) {
     }
 
     args_["data_directory"] = bvariant(data_dir);
-    const bool file_exists = arguments::load(*this);
+    // akhenaten.cfg usually holds the developer's Steam data dir; tests take theirs only from the command line.
+    const bool file_exists = integraltests_mode ? false : arguments::load(*this);
     args_["config_file_exists"] = bvariant(file_exists);
 
     if (platform.is_emscripten()) {
@@ -498,6 +499,7 @@ void Arguments::parse_cli_(int argc, char** argv) {
         } else {
             // TODO: ???? check that there are no other arguments after
             args_["data_directory"] = bvariant(xstring(argv[i]));
+            args_["data_directory_cli"] = bvariant(true);
         }
     }
 }
