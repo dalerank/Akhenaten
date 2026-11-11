@@ -414,13 +414,17 @@ static const letter_code HIGH_TO_UTF8_CYRILLIC[HIGH_CHAR_COUNT] = {
   {0xff, 2, {0xd1, 0x8f}},
 };
 
-static struct {
+struct encoding_data_t {
     const letter_code* to_utf8_table;
     from_utf8_lookup from_utf8_table[HIGH_CHAR_COUNT];
     from_utf8_lookup from_utf8_decomposed_table[HIGH_CHAR_COUNT];
     int utf8_table_size;
     int decomposed_table_size;
-} data;
+
+    void reset() { *this = {}; }
+};
+
+static encoding_data_t g_encoding_data;
 
 static uint32_t calculate_utf8_value(const uint8_t* bytes, int length) {
     uint32_t value = 0;
@@ -446,6 +450,7 @@ static int compare_utf8_lookup(const void* a, const void* b) {
 }
 
 static void build_reverse_lookup_table(void) {
+    auto& data = g_encoding_data;
     if (!data.to_utf8_table) {
         data.utf8_table_size = 0;
         return;
@@ -460,6 +465,7 @@ static void build_reverse_lookup_table(void) {
 }
 
 static void build_decomposed_lookup_table(void) {
+    auto& data = g_encoding_data;
     if (!data.to_utf8_table) {
         data.decomposed_table_size = 0;
         return;
@@ -479,6 +485,7 @@ static void build_decomposed_lookup_table(void) {
 }
 
 static const letter_code* get_letter_code_for_internal(uint8_t c) {
+    auto& data = g_encoding_data;
     if (c < 0x80 || !data.to_utf8_table)
         return NULL;
 
@@ -518,6 +525,7 @@ static const letter_code* search_utf8_table(const from_utf8_lookup* key, const f
 }
 
 static const letter_code* get_letter_code_for_utf8(const char* c, int* num_bytes, int* is_accent) {
+    auto& data = g_encoding_data;
     static letter_code single_char = {0, 1};
     from_utf8_lookup key = {0, NULL};
     if (is_accent)
@@ -556,6 +564,7 @@ static const letter_code* get_letter_code_for_utf8(const char* c, int* num_bytes
 }
 
 static const letter_code* get_letter_code_for_combining_utf8(const char* prev_char, const char* combining_char) {
+    auto& data = g_encoding_data;
     int prev_bytes, comb_bytes;
     uint32_t prev_code = get_utf8_code(prev_char, &prev_bytes);
     uint32_t code = get_utf8_code(combining_char, &comb_bytes);
@@ -576,6 +585,7 @@ static const letter_code* get_letter_code_for_combining_utf8(const char* prev_ch
 }
 
 int encoding_is_multibyte(void) {
+    auto& data = g_encoding_data;
     return !data.to_utf8_table;
 }
 
@@ -631,6 +641,7 @@ void encoding_to_utf8(const uint8_t* input, char* output, int output_length, int
 }
 
 void encoding_from_utf8(const char* input, uint8_t* output, int output_length) {
+    auto& data = g_encoding_data;
     if (!data.to_utf8_table) {
         //if (data.encoding == ENCODING_KOREAN) {
         //    encoding_korean_from_utf8(input, output, output_length);
