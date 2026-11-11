@@ -280,7 +280,7 @@ void map_building_tile_clear_at(int grid_offset, int building_type) {
     } else if (map_terrain_is(grid_offset, TERRAIN_WATER)) {
         clear_building_water_terrain(grid_offset);
     } else {
-        map_image_set(grid_offset, image_id_from_group(GROUP_TERRAIN_UGLY_GRASS) + (map_random_get(grid_offset) & 7));
+        map_image_set(grid_offset, image_id_from_group(GROUP_TERRAIN_UGLY_GRASS, (map_random_get(grid_offset) & 7)));
         map_terrain_remove(grid_offset, TERRAIN_CLEARABLE - TERRAIN_ROAD);
     }
 }
@@ -315,7 +315,8 @@ void map_building_tiles_set_rubble(int building_id, tile2i tile, int size) {
             } else {
                 map_terrain_remove(grid_offset, TERRAIN_CLEARABLE);
                 map_terrain_add(grid_offset, TERRAIN_RUBBLE);
-                map_image_set(grid_offset, image_id_from_group(GROUP_TERRAIN_RUBBLE) + (map_random_get(grid_offset) & 7));
+                map_image_set(grid_offset,
+                  image_id_from_group(GROUP_TERRAIN_RUBBLE, (map_random_get(grid_offset) & 7)));
             }
         }
     }

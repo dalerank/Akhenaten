@@ -19,5 +19,5 @@ int image_desc::tid() const {
         }
     }
 
-    return image_id_from_group(pack, id) + offset;
+    return image_offset(image_id_from_group(pack, id), offset);
 }

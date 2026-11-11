@@ -151,6 +151,7 @@ void image_recreate_all_textures();
 
 int image_id_resource_icon(int resource);
 int image_id_from_group(int collection, int group);
+int image_id_from_group(int collection, int group, int offset);
 
 image_desc image_desc_from_name(const xstring &name);
 

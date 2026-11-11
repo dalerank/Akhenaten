@@ -368,10 +368,13 @@ void building_house::change_to(building &b, e_building_type new_type, bool force
 
         const size_t n = ordered.size();
         const size_t start = map_random_get(b.tile) % n;
+        // Without art no variant has an image: keep the random pick so the key does not depend on data.
+        d.image_key = ordered[start]->first;
+        image_id = ordered[start]->second.first_img();
         for (size_t i = 0; i < n; i++) {
             const auto& variant = *ordered[(start + i) % n];
             const int candidate = variant.second.first_img();
-            if (candidate > 0 || i == n - 1) {
+            if (candidate > 0) {
                 d.image_key = variant.first;
                 image_id = candidate;
                 break;
@@ -1233,7 +1236,9 @@ void building_house::on_post_load() {
     map_building_tiles_add(id(), tile(), size(), imgid, TERRAIN_BUILDING);
 
     const auto &house_params = get_house_params(base.type);
-    if (d.image_key.empty()) {
+    // Without art imgid and every variant are IMAGE_ID_MISSING: leave the key empty rather than guess.
+    const bool has_art = imgid > 0;
+    if (d.image_key.empty() && has_art) {
         const auto &variants = house_params.variants.data;
         auto it = std::find_if(variants.begin(), variants.end(), [imgid] (auto &i) { return i.second.first_img() == imgid; });
         if (it != variants.end()) {
@@ -1241,7 +1246,7 @@ void building_house::on_post_load() {
         }
     }
 
-    if (d.image_key.empty()) {
+    if (d.image_key.empty() && has_art) {
         const auto &variants_merged = house_params.variants_merged.data;
         auto it = std::find_if(variants_merged.begin(), variants_merged.end(), [imgid] (auto &i) { return i.second.first_img() == imgid; });
         if (it != variants_merged.end()) {

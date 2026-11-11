@@ -396,15 +396,20 @@ static imagepak* pak_from_collection_id(int collection) {
 int image_id_from_group(int collection, int group) {
     imagepak* pak = pak_from_collection_id(collection);
     if (pak == nullptr) {
-        return -1;
+        return IMAGE_ID_MISSING;
     }
 
     int result = pak->get_global_image_index(group);
     if (result < 0) {
         logs::error("image_id_from_group: group %d not found in pack %d (pack has %d groups)", 
                     group, collection, pak->image_ids().size());
+        return IMAGE_ID_MISSING;
     }
     return result;
+}
+
+int image_id_from_group(int collection, int group, int offset) {
+    return image_offset(image_id_from_group(collection, group), offset);
 }
 
 image_desc image_desc_from_name(const xstring &name) {
@@ -423,7 +428,7 @@ image_desc image_desc_from_name(const xstring &name) {
 }
 
 const image_t *image_get(image_desc desc) {
-    int id = image_id_from_group(desc.pack, desc.id) + desc.offset;
+    const int id = image_offset(image_id_from_group(desc.pack, desc.id), desc.offset);
     return image_get(id);
 }
 
@@ -467,7 +472,10 @@ const image_t *image_get(int pak, int id, int offset) {
     }
 
     auto &pakref = data.pak_list[pak];
-    int img_id = pakref.handle->get_global_image_index(id) + offset;
+    const int img_id = image_offset(pakref.handle->get_global_image_index(id), offset);
+    if (img_id < 0) {
+        return nullptr;
+    }
     return pakref.handle->get_image(img_id, true);
 }
 

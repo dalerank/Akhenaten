@@ -94,17 +94,17 @@ void map_natives_init() {
                 map_image_set(grid_offset, native_image);
             } else if (image_id == image_hut + 1) {
                 type = BUILDING_UNUSED_NATIVE_HUT_88;
-                map_image_set(grid_offset, native_image + 1);
+                map_image_set(grid_offset, image_offset(native_image, 1));
             } else if (image_id == image_meeting) {
                 type = BUILDING_UNUSED_NATIVE_MEETING_89;
-                map_image_set(grid_offset, native_image + 2);
-                map_image_set(grid_offset + GRID_OFFSET(1, 0), native_image + 2);
-                map_image_set(grid_offset + GRID_OFFSET(0, 1), native_image + 2);
-                map_image_set(grid_offset + GRID_OFFSET(1, 1), native_image + 2);
+                map_image_set(grid_offset, image_offset(native_image, 2));
+                map_image_set(grid_offset + GRID_OFFSET(1, 0), image_offset(native_image, 2));
+                map_image_set(grid_offset + GRID_OFFSET(0, 1), image_offset(native_image, 2));
+                map_image_set(grid_offset + GRID_OFFSET(1, 1), image_offset(native_image, 2));
             } else if (image_id == image_crops) {
                 type = BUILDING_UNUSED_NATIVE_CROPS_93;
                 int img_id = building_static_params::get(BUILDING_BARLEY_FARM).first_img(animkeys().farmland);
-                map_image_set(grid_offset, img_id + random_bit);
+                map_image_set(grid_offset, image_offset(img_id, random_bit));
             } else { // unknown building
                 map_building_tiles_remove(0, tile2i(x, y));
                 continue;
@@ -156,13 +156,13 @@ void map_natives_init_editor(void) {
                 map_image_set(grid_offset, native_image);
             } else if (image_id == image_hut + 1) {
                 type = BUILDING_UNUSED_NATIVE_HUT_88;
-                map_image_set(grid_offset, native_image + 1);
+                map_image_set(grid_offset, image_offset(native_image, 1));
             } else if (image_id == image_meeting) {
                 type = BUILDING_UNUSED_NATIVE_MEETING_89;
-                map_image_set(grid_offset, native_image + 2);
-                map_image_set(grid_offset + GRID_OFFSET(1, 0), native_image + 2);
-                map_image_set(grid_offset + GRID_OFFSET(0, 1), native_image + 2);
-                map_image_set(grid_offset + GRID_OFFSET(1, 1), native_image + 2);
+                map_image_set(grid_offset, image_offset(native_image, 2));
+                map_image_set(grid_offset + GRID_OFFSET(1, 0), image_offset(native_image, 2));
+                map_image_set(grid_offset + GRID_OFFSET(0, 1), image_offset(native_image, 2));
+                map_image_set(grid_offset + GRID_OFFSET(1, 1), image_offset(native_image, 2));
             } else if (image_id == image_crops) {
                 type = BUILDING_UNUSED_NATIVE_CROPS_93;
                 map_image_set(grid_offset, image_id_from_group(GROUP_EDITOR_BUILDING_CROPS));
