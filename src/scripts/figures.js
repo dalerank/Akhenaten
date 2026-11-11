@@ -76,6 +76,7 @@ import figure.worker
 import figure.zookeeper
 
 figure_festival_guy {
+  trips : 10
   overlay : OVERLAY_RELIGION
 	animations {
 		juggler_walk { pack:PACK_SPR_MAIN, id:130, max_frames:12 }

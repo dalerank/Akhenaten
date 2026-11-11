@@ -1,7 +1,6 @@
-#include "figure/figure.h"
+#pragma once
 
-// OG walkers.c walker_rules[WALKER_RULE_FESTIVAL_TRIPS]
-constexpr int8_t FESTIVAL_GUY_TRIPS = 10;
+#include "figure/figure.h"
 
 enum e_festival_guy_action {
     ACTION_10_FESTIVAL_GUY_CREATED = 10,
@@ -14,6 +13,10 @@ class figure_festival_guy : public figure_impl {
 public:
     FIGURE_METAINFO(FIGURE_FESTIVAL_GUY, figure_festival_guy)
     figure_festival_guy(figure* f) : figure_impl(f) {}
+
+    struct static_params : public figure_static_params {
+        int8_t trips; // OG walkers.c walker_rules[WALKER_RULE_FESTIVAL_TRIPS]
+    } FIGURE_STATIC_DATA_T;
     virtual figure_festival_guy* dcast_festival_guy() override { return this; }
 
     struct runtime_data_t {
@@ -25,3 +28,4 @@ public:
     virtual void before_poof() override;
     virtual void update_animation() override;
 };
+ANK_CONFIG_STRUCT(figure_festival_guy::static_params, trips)
