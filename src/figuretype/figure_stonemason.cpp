@@ -5,6 +5,7 @@
 #include "building/monument_pyramid_engine.h"
 #include "building/monument_obelisk.h"
 #include "building/monument_sphinx.h"
+#include "building/monument_sun_temple.h"
 #include "building/building_statue.h"
 #include "building/monuments.h"
 #include "building/monument_pyramid_figure.h"
@@ -61,12 +62,18 @@ void figure_stonemason::figure_action() {
         break;
 
     case ACTION_1_MASON_GOING: {
-        const bool to_obelisk = b_dest->dcast_obelisk() != nullptr || b_dest->dcast_sphinx() != nullptr;
+        auto *sun = b_dest->dcast_sun_temple();
+        const bool to_obelisk = b_dest->dcast_obelisk() != nullptr || b_dest->dcast_sphinx() != nullptr
+            || (sun && sun->part_index() == 0);
         const bool to_og_pyramid = b_dest->dcast_pyramid()
             && g_monument_pyramid_engine.uses_block_engine(b_dest);
-        const short arrived = to_obelisk
+        short arrived = to_obelisk
             ? (short)ACTION_9_MASON_WORK_OBELISK
             : (to_og_pyramid ? (short)ACTION_16_MASON_CLIMB_RAMP : (short)ACTION_7_MASON_LOOKING_FOR_WORK_TILE);
+        // OG: side parts wait for a sandstone sled before working.
+        if (sun && sun->part_index() != 0) {
+            arrived = ACTION_19_MASON_WAIT_FOR_BLOCK;
+        }
         if (do_goto(base.destination_tile, terrain_usage, arrived, ACTION_10_MASON_DESTROY)) {
             base.wait_ticks = 0;
             if (to_obelisk) {
@@ -126,6 +133,13 @@ void figure_stonemason::figure_action() {
     case ACTION_19_MASON_WAIT_FOR_BLOCK: {
         base.terrain_usage = TERRAIN_USAGE_ANY;
         base.outside_road_ticks = 0;
+        // OG sun temple: linger until a laborer sandstone sled wakes us to WORK.
+        if (auto *sun = b_dest->dcast_sun_temple()) {
+            if (sun->runtime_data().og_part.worker_figure_id != id()) {
+                advance_action(ACTION_6_MASON_RETURN_HOME);
+            }
+            break;
+        }
         auto &rd = runtime_data();
         if (rd.walk_mode == PYRAMID_WALK_NONE) {
             advance_action(ACTION_6_MASON_RETURN_HOME);
@@ -200,6 +214,17 @@ void figure_stonemason::figure_action() {
             base.set_flag(e_figure_flag_invisible);
             if (sphinx->work_tick(base)) {
                 base.set_flag(e_figure_flag_invisible, false);
+                advance_action(ACTION_6_MASON_RETURN_HOME);
+            }
+            break;
+        }
+        if (auto *sun = worked ? worked->dcast_sun_temple() : nullptr) {
+            base.set_flag(e_figure_flag_invisible);
+            if (sun->work_tick(base)) {
+                base.set_flag(e_figure_flag_invisible, false);
+                if (auto *mon = worked->dcast_monument()) {
+                    mon->remove_worker(id());
+                }
                 advance_action(ACTION_6_MASON_RETURN_HOME);
             }
             break;

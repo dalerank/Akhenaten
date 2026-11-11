@@ -539,6 +539,34 @@ bool figure_worker::assign_monument_task(building *monument, figure_id mason_fid
         return false;
     }
 
+    // OG sun temple: assign via part kind / work_flags (may be a side part, not main).
+    if (head->dcast_sun_temple()) {
+        if (mason_fid) {
+            // Sandstone sled for a mason waiting on a specific part.
+            building *part = monument;
+            if (auto *sun = part->dcast_sun_temple()) {
+                if (sun->check_work_for_figure(id(), true)) {
+                    return true;
+                }
+            }
+            return assign_block_delivery(head, mason_fid);
+        }
+        const int bid = building_sun_temple::find_work_for_figure(id());
+        if (!bid) {
+            return false;
+        }
+        building *part = building_get(bid);
+        if (part) {
+            set_destination(part);
+        }
+        auto &rd = runtime_data();
+        rd.level_tiles_done = 0;
+        rd.monument_searches = 0;
+        rd.site_state = 0;
+        base.set_flag(e_figure_flag_invisible, false);
+        return true;
+    }
+
     if (mason_fid) {
         return assign_block_delivery(head, mason_fid);
     }
@@ -671,6 +699,8 @@ void figure_worker::find_work() {
                 has_work = royal_tomb->lamp_stock_room() >= load
                     && !laborer_lamps_hauler_to(b.id, id())
                     && laborer_yard_for_getting(&b, RESOURCE_LAMPS, load, yard_tile) != 0;
+            } else if (b.dcast_sun_temple()) {
+                has_work = mon->need_workers();
             } else if (mon->phase() < 2) {
                 if (mon->need_workers() && monumen_tile4work(&b) != tile2i{-1, -1}) {
                     has_work = true;
@@ -737,7 +767,10 @@ void figure_worker::sled_to_monument_tick(building *monument) {
     if (mason_waiting) {
         mason->leading_figure_id = 0;
         mason->wait_ticks = 0;
-        mason->action_state = ACTION_21_MASON_PYRAMID_WORK;
+        // OG sun temple: wake mason into work_tick (not pyramid place_block).
+        mason->action_state = head->dcast_sun_temple()
+            ? (short)ACTION_9_MASON_WORK_OBELISK
+            : (short)ACTION_21_MASON_PYRAMID_WORK;
     } else if (auto *mon = head->dcast_monument()) {
         mon->deliver_resource((e_resource)base.collecting_item_id, base.resource_amount_full);
     }
@@ -757,6 +790,24 @@ void figure_worker::monument_site_work_tick(building *monument) {
     auto &rd = runtime_data();
     base.set_flag(e_figure_flag_invisible, false);
     building *head = monument->main() ? monument->main() : monument;
+    // OG sun temple: 50-tick part work on the destination part (not tile leveling).
+    if (auto *sun = monument->dcast_sun_temple()) {
+        if (sun->work_tick(base)) {
+            if (auto *mon = sun->dcast_monument()) {
+                mon->remove_worker(id());
+            }
+            // Retry another part a few times (OG monument_work retry_count).
+            rd.monument_searches++;
+            if (rd.monument_searches < (int)current_params().monument_work_searches
+                && building_sun_temple::find_work_for_figure(id())) {
+                rd.site_state = 0;
+                base.wait_ticks = 0;
+                return;
+            }
+            enter_idle_pool();
+        }
+        return;
+    }
     auto *mon = head->dcast_monument();
     if (!mon || mon->is_finished() || mon->phase() >= 2) {
         enter_idle_pool();

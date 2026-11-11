@@ -13,6 +13,7 @@
 #include "building/monument_pyramid_ramp.h"
 #include "building/monument_royal_tomb.h"
 #include "building/monument_sphinx.h"
+#include "building/monument_sun_temple.h"
 #include "building/monuments.h"
 #include "city/city_buildings.h"
 #include "city/city_figures.h"
@@ -774,3 +775,62 @@ static int __test_sphinx_work(int bid, int fid) {
     return s->work_tick(*f) ? 1 : 0;
 }
 ANK_FUNCTION_2(__test_sphinx_work);
+
+static building_sun_temple *test_sun_temple(int bid) {
+    building *b = building_get(bid);
+    auto *s = b ? b->dcast_sun_temple() : nullptr;
+    return s ? s->main_sun_temple() : nullptr;
+}
+
+static int __test_sun_temple_part_count(int bid) {
+    auto *s = test_sun_temple(bid);
+    if (!s) {
+        return -1;
+    }
+    int n = 0;
+    for (building *p = &s->base; p; p = p->has_next() ? p->next() : nullptr) {
+        n++;
+    }
+    return n;
+}
+ANK_FUNCTION_1(__test_sun_temple_part_count);
+
+static int __test_sun_temple_stage(int bid) {
+    auto *s = test_sun_temple(bid);
+    return s ? s->part_stage() : -1;
+}
+ANK_FUNCTION_1(__test_sun_temple_stage);
+
+static int __test_sun_temple_progress(int bid) {
+    auto *s = test_sun_temple(bid);
+    return s ? s->get_progress(nullptr) : -1;
+}
+ANK_FUNCTION_1(__test_sun_temple_progress);
+
+static int __test_sun_temple_has_spot(int bid, int figure_type) {
+    auto *s = test_sun_temple(bid);
+    return (s && s->has_free_spot((e_figure_type)figure_type)) ? 1 : 0;
+}
+ANK_FUNCTION_2(__test_sun_temple_has_spot);
+
+static int __test_sun_temple_spot_work(int bid, int spot) {
+    auto *s = test_sun_temple(bid);
+    return s ? s->spot_work_left(spot) : -1;
+}
+ANK_FUNCTION_2(__test_sun_temple_spot_work);
+
+static int __test_sun_temple_spot_figure(int bid, int spot) {
+    auto *s = test_sun_temple(bid);
+    return s ? s->spot_attached(spot) : -1;
+}
+ANK_FUNCTION_2(__test_sun_temple_spot_figure);
+
+static int __test_sun_temple_work(int bid, int fid) {
+    auto *s = test_sun_temple(bid);
+    figure *f = fid > 0 ? figure_get(fid) : nullptr;
+    if (!s || !f) {
+        return -1;
+    }
+    return s->work_tick(*f) ? 1 : 0;
+}
+ANK_FUNCTION_2(__test_sun_temple_work);
