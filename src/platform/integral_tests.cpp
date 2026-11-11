@@ -354,19 +354,38 @@ hvector<xstring, 16> list_test_files() {
         return found_tests;
     }
 
+    // Tests whose name starts with NAME ("99_tmp" -> every 99_tmp_*, "06" -> 06_* but not 106_*);
+    // only when none does, every test whose name contains NAME.
+    auto stem_of = [](const xstring& p) {
+        std::string stem = p.c_str();
+        const size_t slash = stem.find_last_of("/\\");
+        if (slash != std::string::npos) {
+            stem = stem.substr(slash + 1);
+        }
+        const size_t dot = stem.rfind('.');
+        if (dot != std::string::npos) {
+            stem = stem.substr(0, dot);
+        }
+        std::transform(stem.begin(), stem.end(), stem.begin(), [](unsigned char c) { return (char)std::tolower(c); });
+        return stem;
+    };
+
+    hvector<xstring, 16> by_prefix;
+    hvector<xstring, 16> by_substring;
     for (const auto& p : found_tests) {
-        vfs::path strp = p.c_str();
-        const bool found = strp.strstr(only.c_str()) != nullptr;
-        if (found) {
-            const xstring stem = p; // copy before clear() invalidates `p`
-            found_tests.clear();
-            found_tests.push_back(stem);
-            break;
+        const std::string stem = stem_of(p);
+        if (stem.rfind(only.c_str(), 0) == 0) {
+            by_prefix.push_back(p);
+        } else if (stem.find(only.c_str()) != std::string::npos) {
+            by_substring.push_back(p);
         }
     }
 
-    if (!found_tests.empty()) {
-        return found_tests;
+    if (!by_prefix.empty()) {
+        return by_prefix;
+    }
+    if (!by_substring.empty()) {
+        return by_substring;
     }
 
     logs::error("[integraltests] cant find '%s' in tests", only.c_str());

@@ -74,7 +74,7 @@ Sources are collected via `file(GLOB ...)` with **no `CONFIGURE_DEPENDS`**, so a
 --mixed PATH          hot-reload JS scripts from disk (dev mode)
 --unpack_scripts      extract embedded JS to user directory
 --integraltests       run the built-in integral test suite and exit (see "Testing" below)
---integraltest-only NAME  with --integraltests, run only tests whose filename contains NAME
+--integraltest-only NAME  with --integraltests, run only tests whose filename starts with NAME (else: contains NAME)
 --integraltest-keep   with --integraltests, keep the window open after the suite (inspect final state)
 --editor              start in the scenario editor (dev-only; blank map, bypasses main menu)
 --load-map PATH       load a .map straight into the city, bypassing the main menu
@@ -172,7 +172,8 @@ Run the whole suite (the invocation CI uses):
 ```
 build/RelWithDebInfo/akhenaten.exe --integraltests --no-logo --no-resource --nosound --window --size 800x600
 ```
-Run one test — match is a case-insensitive substring of the filename stem:
+Run one test — the tests whose filename stem starts with NAME (case-insensitive; `06` runs `06_*` but not
+`106_*`); when no stem starts with NAME, every stem that contains it:
 ```
 build/RelWithDebInfo/akhenaten.exe --integraltests --integraltest-only 06 --no-logo --no-resource --nosound --window --size 800x600
 ```
