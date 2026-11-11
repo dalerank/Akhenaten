@@ -426,22 +426,41 @@ static void setup() {
 
     image_data_init();                                           // image paks structures init
 
-    // Integral tests run the embedded scripts (plus --mixed): a Scripts/ folder left by --unpack_scripts
-    // in the data dir or the working dir must not change what the suite tests.
-    const bool user_script_folders = !g_args.is_integral_tests();
+    // Script folders, first match wins: --mixed, then Scripts/ in the data dir and in the working dir,
+    // then the embedded scripts. A Scripts/ folder counts only when --unpack_scripts wrote it for this
+    // very build: an old unpack would otherwise shadow newer embedded scripts forever.
+    // Integral tests use only --mixed and the embedded scripts.
+    js_vm_add_scripts_folder(g_args.get_scripts_directory().c_str());
+
+    auto add_unpacked_scripts_folder = [](const vfs::path& folder) {
+        if (g_args.is_integral_tests()) {
+            return;
+        }
+        if (platform.is_android()) {
+            js_vm_add_scripts_folder(folder);
+            return;
+        }
+        if (!vfs::is_directory(folder.c_str())) {
+            return;
+        }
+        xstring version;
+        if (vfs::scripts_folder_matches_build(folder.c_str(), version)) {
+            js_vm_add_scripts_folder(folder);
+            logs::info("[scripts] using unpacked scripts in %s", folder.c_str());
+            return;
+        }
+        logs::warn("[scripts] ignoring %s: unpacked by %s, this is %s; run --unpack_scripts again or use --mixed",
+          folder.c_str(), version.empty() ? "an unknown version" : version.c_str(), get_version().c_str());
+    };
 
     vfs::path scripts_base_path(vfs::SCRIPTS_FOLDER);
     if (!platform.is_android()) {
         pcstr base_path = vfs::platform_file_manager_get_base_path();
         scripts_base_path = vfs::path(base_path, "/", vfs::SCRIPTS_FOLDER);
     }
-    if (user_script_folders) {
-        js_vm_add_scripts_folder(scripts_base_path); // setup script engine data scripts folder
-    }
-
-    js_vm_add_scripts_folder(g_args.get_scripts_directory().c_str()); // setup script engine user folder
-    if (!platform.is_android() && user_script_folders) {
-        js_vm_add_scripts_folder(vfs::SCRIPTS_FOLDER);                    // setup script engine additional folder
+    add_unpacked_scripts_folder(scripts_base_path);
+    if (!platform.is_android()) {
+        add_unpacked_scripts_folder(vfs::SCRIPTS_FOLDER);
     }
 
     platform.append_startup_log("Startup: js_vm_setup");

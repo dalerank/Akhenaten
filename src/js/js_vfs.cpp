@@ -3,6 +3,7 @@
 #include "cmrc/cmrc.hpp"
 #include "js/js_game.h"
 #include "core/log.h"
+#include "platform/version.hpp"
 #include <iostream>
 #include <fstream>
 #include <filesystem>
@@ -14,6 +15,7 @@ namespace fs = std::filesystem;
 namespace vfs {
 
     constexpr pcstr internal_scripts_path = "src/scripts/";
+    constexpr pcstr unpacked_version_file = "akhenaten_scripts_version.txt";
 
     namespace {
         std::pair<void *, uint32_t> open_embedded_file(pcstr prefix, pcstr path) {
@@ -105,12 +107,30 @@ namespace vfs {
 
         vfs::unpack_directory(filesystem, scripts_path, output_dir, files_unpacked, files_failed);
 
+        std::ofstream stamp(output_dir / unpacked_version_file, std::ios::binary | std::ios::trunc);
+        stamp << get_version().c_str();
+        if (!stamp) {
+            logs::error("Failed to write %s; the unpacked scripts will be ignored", unpacked_version_file);
+        }
+
         logs::info("=== Unpack complete! ===");
         logs::info("Files unpacked: %d", files_unpacked);
         logs::info("Files failed: %d", files_failed);
         logs::info("Location: %s", output_dir.string().c_str());
 
         return xstring(output_dir.string().c_str());
+    }
+
+    bool scripts_folder_matches_build(pcstr dir, xstring& found_version) {
+        found_version = {};
+        std::ifstream stamp(fs::path(dir) / unpacked_version_file, std::ios::binary);
+        if (!stamp) {
+            return false;
+        }
+        std::string version;
+        std::getline(stamp, version);
+        found_version = version.c_str();
+        return found_version == get_version();
     }
 }
 

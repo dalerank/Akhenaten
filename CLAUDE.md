@@ -73,8 +73,11 @@ Sources are collected via `file(GLOB ...)` with **no `CONFIGURE_DEPENDS`**, so a
 --mods PATH           mods folder instead of <data>/mods (relative to the working directory);
                       with --integraltests the only mod source (default tests/fixtures/mods),
                       the user's enabled list and <data>/Scripts, ./Scripts are ignored
---mixed PATH          hot-reload JS scripts from disk (dev mode)
---unpack_scripts      extract embedded JS to user directory
+--mixed PATH          hot-reload JS scripts from PATH (dev mode); PATH is searched before every other
+                      script folder (mods still come first)
+--unpack_scripts      extract embedded JS to <data>/Scripts with akhenaten_scripts_version.txt; a Scripts/
+                      folder (in <data> or the working dir) is used only while that stamp matches the
+                      running build, otherwise it is ignored with a "[scripts] ignoring" log line
 --integraltests       run the built-in integral test suite and exit (see "Testing" below)
 --integraltest-only NAME  with --integraltests, run only tests whose filename starts with NAME (else: contains NAME)
 --integraltest-keep   with --integraltests, keep the window open after the suite (inspect final state)
