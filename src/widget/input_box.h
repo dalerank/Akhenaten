@@ -4,7 +4,7 @@
 #include "graphics/font.h"
 #include "input/mouse.h"
 
-#define INPUT_BOX_BLOCK_SIZE 16
+constexpr int INPUT_BOX_BLOCK_SIZE = 16;
 
 struct input_box {
     int x;
