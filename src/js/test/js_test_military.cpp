@@ -1233,7 +1233,8 @@ static int __test_formation_wait_ticks(int formation_id) {
 }
 ANK_FUNCTION_1(__test_formation_wait_ticks);
 
-// "invasion_id,battalion_index,destination_building_id,dest_x,dest_y,wait_ticks,ticks_without_target" or "".
+// "invasion_id,battalion_index,destination_building_id,dest_x,dest_y,wait_ticks,ticks_without_target,orientation"
+// or "".
 static pcstr __test_enemy_formation_state(int formation_id) {
     static char out[128];
     out[0] = 0;
@@ -1241,8 +1242,9 @@ static pcstr __test_enemy_formation_state(int formation_id) {
     if (!m || !m->in_use || m->is_herd || m->own_batalion) {
         return out;
     }
-    snprintf(out, sizeof(out), "%d,%d,%d,%d,%d,%d,%d", m->invasion_id, m->enemy_batalion_index,
-      m->destination_building_id, m->destination.x(), m->destination.y(), m->wait_ticks, m->ticks_without_target);
+    snprintf(out, sizeof(out), "%d,%d,%d,%d,%d,%d,%d,%d", m->invasion_id, m->enemy_batalion_index,
+      m->destination_building_id, m->destination.x(), m->destination.y(), m->wait_ticks, m->ticks_without_target,
+      m->orientation);
     return out;
 }
 ANK_FUNCTION_1(__test_enemy_formation_state);

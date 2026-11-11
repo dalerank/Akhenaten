@@ -2,6 +2,7 @@
 
 #include "building/destruction.h"
 #include "city/city.h"
+#include "city/city_buildings.h"
 #include "city/city_figures.h"
 #include "city/city_warnings.h"
 #include "game/game_events.h"
@@ -816,6 +817,20 @@ tile2i scenario_start_sea_invasion_impl(invasion_opts_t &opts) {
     return seq > 0 ? sea_spawn : tile2i::invalid;
 }
 
+// OG invasion_orientation (invasion.c:74): the army faces into the map from the edge it enters by.
+static int invasion_orientation(tile2i tile) {
+    if (tile.y() == 0) {
+        return DIR_4_BOTTOM_LEFT;
+    }
+    if (tile.y() >= g_scenario.map.height - 1) {
+        return DIR_0_TOP_RIGHT;
+    }
+    if (tile.x() == 0) {
+        return DIR_2_BOTTOM_RIGHT;
+    }
+    return (tile.x() < g_scenario.map.width - 1) ? DIR_4_BOTTOM_LEFT : DIR_6_TOP_LEFT;
+}
+
 tile2i scenario_start_invasion_impl(invasion_opts_t &opts) {
     if (invasion_should_use_sea(opts)) {
         return scenario_start_sea_invasion_impl(opts);
@@ -852,12 +867,12 @@ tile2i scenario_start_invasion_impl(invasion_opts_t &opts) {
     determine_formations(num_type2, &formations_per_type[1], soldiers_per_formation[1]);
     determine_formations(num_type3, &formations_per_type[2], soldiers_per_formation[2]);
 
-    // determine invasion point
+    // determine invasion point: an explicit JS tile wins; OG scenario_invasion_start (invasion.c:303) sends the
+    // Persians through the map entry and everyone else through a land invasion point.
     tile2i invasion_tile;
     if (opts.invasion_point.valid()) {
-        // Explicit JS/pak loc wins (incl. Egyptian — map entry only when tile unset).
         invasion_tile = opts.invasion_point;
-    } else if (opts.enemy_type == ENEMY_3_EGYPTIAN) {
+    } else if (opts.enemy_type == ENEMY_9_PERSIAN) {
         invasion_tile = scenario_map_entry();
     } else {
         auto &lands = g_scenario.invasion_points_land;
@@ -874,42 +889,15 @@ tile2i scenario_start_invasion_impl(invasion_opts_t &opts) {
         invasion_tile = scenario_map_exit();
     }
 
-    // determine orientation
-    int orientation = DIR_4_BOTTOM_LEFT;
-    
-    // check terrain — try entry / a few edge candidates if the primary tile is blocked
-    auto tile_ok = [] (tile2i t) {
-        if (!t.valid()) {
-            return false;
-        }
-        if (map_terrain_is(t, TERRAIN_ELEVATION | TERRAIN_ROCK | TERRAIN_TREE)) {
-            return false;
-        }
-        if (map_terrain_is(t, TERRAIN_WATER) && !map_terrain_is(t, TERRAIN_ROAD)) {
-            return false;
-        }
-        return true;
-    };
-
-    if (!tile_ok(invasion_tile)) {
-        tile2i candidates[] = {
-            scenario_map_entry(),
-            scenario_map_exit(),
-            tile2i(1, g_scenario.map.height / 2),
-            tile2i(g_scenario.map.width - 2, g_scenario.map.height / 2),
-            tile2i(g_scenario.map.width / 2, 1),
-            tile2i(g_scenario.map.width / 2, g_scenario.map.height - 2),
-        };
-        invasion_tile = tile2i::invalid;
-        for (tile2i c : candidates) {
-            if (tile_ok(c)) {
-                invasion_tile = c;
-                break;
-            }
-        }
+    if (!invasion_tile.valid()) {
+        return tile2i::invalid;
     }
 
-    if (!invasion_tile.valid()) {
+    const int orientation = invasion_orientation(invasion_tile);
+
+    // OG invasion_land_blocked (invasion.c:259): a tree, rock or cliff at the point cancels the invasion.
+    if (map_terrain_is(invasion_tile, TERRAIN_ELEVATION | TERRAIN_ROCK | TERRAIN_TREE)) {
+        logs::warn("scenario_invasion: invasion point %d,%d is blocked", invasion_tile.x(), invasion_tile.y());
         return tile2i::invalid;
     }
 
@@ -918,8 +906,8 @@ tile2i scenario_start_invasion_impl(invasion_opts_t &opts) {
             return tile2i::invalid;
         }
     } else if (map_terrain_is(invasion_tile, TERRAIN_BUILDING | TERRAIN_CANAL | TERRAIN_GATEHOUSE | TERRAIN_WALL)) {
-        building *b = building_get(invasion_tile.grid_offset());
-        if (b->id) {
+        building* b = building_at(invasion_tile);
+        if (b && b->id) {
             g_city.maintenance.destroy_by_enemy(b);
         }
     }
