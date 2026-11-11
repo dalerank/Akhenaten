@@ -109,11 +109,13 @@ static int image_y_offset_default(const uint8_t *c, int image_height, int line_h
         offset = 0;
     }
 
-    if ((*c < 0x80 || *c == 0xE7) && !g_font_data.use_utf_font) {
+    // UTF-8 lead bytes of Latin-1 letters (U+0080..U+00FF) sit on the same baseline as ASCII in the bitmap font.
+    const bool latin1_lead = (*c == 0xC2 || *c == 0xC3);
+    if ((*c < 0x80 || *c == 0xE7 || latin1_lead) && !g_font_data.use_utf_font) {
         offset = 0;
     }
 
-    if ((*c > 0x80) || g_font_data.use_utf_font) {
+    if ((*c > 0x80 && !latin1_lead) || g_font_data.use_utf_font) {
         offset = -line_height;
     }
 
@@ -318,7 +320,8 @@ void font_atlas_regenerate() {
         }
     });
 
-    g_font_data.use_utf_font = (locale_short != "en") || g_font_data.force_utf_font;
+    const bool uses_bitmap_font = (locale_short == "en") || (locale_short == "sp");
+    g_font_data.use_utf_font = !uses_bitmap_font || g_font_data.force_utf_font;
     if (!g_args.get_custom_font().empty() && !g_font_data.use_utf_font) {
         g_font_data.use_utf_font = true;
     }
