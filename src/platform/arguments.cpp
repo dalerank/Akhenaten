@@ -169,6 +169,11 @@ ANK_REGISTER_BOOL_ARGUMENT_HANDLER("--log-resources", "log_resources", true, "lo
 ANK_REGISTER_BOOL_ARGUMENT_HANDLER("--log-sound", "log_sound", true, "log sound file loading (city sounds, speech, music, effects)");
 ANK_REGISTER_BOOL_ARGUMENT_HANDLER("--log-config-keys", "log_config_keys", true,
   "warn about config keys nothing reads and non-zero C++ defaults that a missing key resets to 0");
+ANK_REGISTER_BOOL_ARGUMENT_HANDLER("--config-keys-update", "config_keys_update", true,
+  "with --config-keys-baseline, rewrite the baseline from this run instead of checking it");
+ANK_REGISTER_STRING_ARGUMENT_HANDLER("--config-keys-baseline", "config_keys_baseline",
+  "Option --config-keys-baseline must be followed by a file path", "--config-keys-baseline PATH",
+  "with --integraltests, fail on config key issues not listed in PATH (implies --log-config-keys)");
 ANK_REGISTER_BOOL_ARGUMENT_HANDLER("--discord-log", "discord_log", true, "enable Discord RPC verbose logging");
 ANK_REGISTER_BOOL_ARGUMENT_HANDLER("--no-resource", "no_resource", true, "run without Pharaoh data files (skips campaign.txt; DATA_DIR is optional VFS base path)");
 ANK_REGISTER_BOOL_ARGUMENT_HANDLER("--nodatacheck", "no_data_check", true, "skip Pharaoh/Cleopatra install validation at startup (allow any data_directory)");

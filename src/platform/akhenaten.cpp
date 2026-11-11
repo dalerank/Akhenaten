@@ -651,7 +651,7 @@ static int handle_unpack_scripts() {
 
 int main(int argc, char** argv) {
     g_args.parse(argc, argv);
-    archive_check::report_keys = g_args.is("log_config_keys", false);
+    archive_check::report_keys = g_args.is("log_config_keys", false) || !g_args.get_str("config_keys_baseline").empty();
 
     if (g_args.no_mouse() || g_args.is_integral_tests()) {
         g_scroll.set_mouse_input(false);

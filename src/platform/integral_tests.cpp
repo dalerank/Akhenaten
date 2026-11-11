@@ -622,6 +622,11 @@ int run_integral_tests() {
     run_integral_tests_impl();
     int js_rc = run_js_tests();
 
+    const xstring& baseline = g_args.get_str("config_keys_baseline");
+    if (!baseline.empty()) {
+        failure_count += archive_check::check_baseline(baseline.c_str(), g_args.is("config_keys_update", false));
+    }
+
     if (failure_count == 0 && js_rc == 0) {
         logs::info("[integraltests] all checks passed");
         return 0;

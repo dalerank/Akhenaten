@@ -874,6 +874,9 @@ namespace archive_check {
     bool key_missing(void* js_state, pcstr key);
     void zeroed_default(pcstr field, const std::string& value, const void* addr);
     void wrong_type(pcstr key, pcstr expected);
+    // Compares the issues collected so far with a baseline file (or rewrites it with update);
+    // returns the number of new issues plus wrong-typed values.
+    int check_baseline(pcstr path, bool update);
 
     template <typename T>
     inline void before_field(void* js_state, pcstr field, const T& v) {

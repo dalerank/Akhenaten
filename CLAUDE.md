@@ -85,6 +85,8 @@ Sources are collected via `file(GLOB ...)` with **no `CONFIGURE_DEPENDS`**, so a
 --log-sound           log which sound files the game tries to load
 --log-config-keys     warn about config keys nothing reads and non-zero C++ defaults a missing key resets to 0
                       (a value of the wrong type is always reported as "[config] ... expected number")
+--config-keys-baseline PATH  with --integraltests, fail on config key issues not listed in PATH (implies --log-config-keys)
+--config-keys-update  with --config-keys-baseline, rewrite PATH from this run instead of checking it
 --discord-log         verbose Discord RPC logging
 --nocrashdlg          suppress crash dialog
 --fulldmp             create full crash dump
@@ -125,6 +127,11 @@ headers of its own layer or lower. Known violations live in `tools/layers_baseli
 fail. When you remove a violation, delete its baseline line (or run `--update` after a cleanup);
 never add lines to silence a new one. `--summary` prints counts per layer pair.
 
+`--integraltests --config-keys-baseline tools/config_keys_baseline.txt` (what the integral-test CI job runs)
+fails the suite on C++ defaults zeroed by a missing config key and on unknown keys that the baseline does not
+list (`[config-keys]` lines in the log); a wrong-typed value always fails. Add `--config-keys-update` to rewrite
+the baseline after a cleanup; never add lines to silence a new issue.
+
 ### Comments
 
 Do **not** sprinkle comments everywhere. Prefer clear names and structure over narration.
@@ -156,7 +163,7 @@ leave useful existing comments alone.
 
 ## Testing — integral tests
 
-`tests/*.js` is the integral test suite (219 files). It is a CI gate
+`tests/*.js` is the integral test suite (377 files). It is a CI gate
 (`.github/workflows/akhenaten_integral_tests.yml`); a red run blocks the PR.
 **This is the default way to verify a change.**
 
