@@ -13,6 +13,7 @@
 #include "platform/arguments.h"
 #include "platform/platform.h"
 
+#include <algorithm>
 #include <atomic>
 #include <ctime>
 #include <cstdio>
@@ -296,6 +297,111 @@ bool updater::has_program(const std::vector<std::string>& entries, pcstr program
     return false;
 }
 
+std::string updater::to_utf8(const std::filesystem::path& path) {
+    return path.u8string();
+}
+
+static fs::path aside_of(const fs::path& target) {
+    fs::path aside = target;
+    aside += ".old";
+    return aside;
+}
+
+static void roll_back(const std::vector<updater_moved_file>& done) {
+    std::error_code ec;
+    for (auto it = done.rbegin(); it != done.rend(); ++it) {
+        fs::remove(it->target, ec);
+        if (it->had_old) {
+            fs::rename(it->aside, it->target, ec);
+        }
+    }
+}
+
+// Renames every file of from that exists under to aside (*.old) and moves the new one in; the running program can be
+// renamed but not overwritten on Windows, and keeps its old inode on Linux and macOS. On failure all is rolled back.
+bool updater::swap_in(const fs::path& from, const fs::path& to, std::vector<updater_moved_file>& done) {
+    std::error_code ec;
+    std::vector<fs::path> files;
+    for (auto it = fs::recursive_directory_iterator(from, ec); !ec && it != fs::recursive_directory_iterator();
+      it.increment(ec)) {
+        if (it->is_regular_file(ec)) {
+            files.push_back(it->path());
+        }
+    }
+    if (ec) {
+        logs::error("[updater] cannot list %s: %s", to_utf8(from).c_str(), ec.message().c_str());
+        return false;
+    }
+    std::sort(files.begin(), files.end());
+    for (const fs::path& source : files) {
+        const fs::path target = to / fs::relative(source, from, ec);
+        const fs::path aside = aside_of(target);
+        fs::create_directories(target.parent_path(), ec);
+        const bool had_old = fs::exists(target, ec);
+        if (had_old) {
+            fs::remove(aside, ec);
+            fs::rename(target, aside, ec);
+            if (ec) {
+                logs::error("[updater] cannot move %s aside: %s", to_utf8(target).c_str(), ec.message().c_str());
+                roll_back(done);
+                return false;
+            }
+        }
+        fs::rename(source, target, ec);
+        if (ec) {
+            logs::error("[updater] cannot put %s in place: %s", to_utf8(target).c_str(), ec.message().c_str());
+            if (had_old) {
+                fs::rename(aside, target, ec);
+            }
+            roll_back(done);
+            return false;
+        }
+        done.push_back({target, aside, had_old});
+    }
+    return true;
+}
+
+void updater::drop_asides(const std::vector<updater_moved_file>& done, const fs::path& old_bundle,
+  const fs::path& leftovers_list) {
+    std::error_code ec;
+    std::vector<std::string> left;
+    for (const updater_moved_file& file : done) {
+        if (file.had_old && !fs::remove(file.aside, ec)) {
+            left.push_back(to_utf8(file.aside));
+        }
+    }
+    if (!old_bundle.empty()) {
+        fs::remove_all(old_bundle, ec);
+        if (fs::exists(old_bundle, ec)) {
+            left.push_back(to_utf8(old_bundle));
+        }
+    }
+    if (!left.empty()) {
+        std::ofstream list(leftovers_list, std::ios::app);
+        for (const std::string& path : left) {
+            list << path << "\n";
+        }
+    }
+}
+
+// The files the last install could not delete (the running program on Windows, loaded libraries).
+void updater::remove_leftovers(const fs::path& leftovers_list) {
+    std::error_code ec;
+    {
+        std::ifstream list(leftovers_list);
+        std::string line;
+        while (list && std::getline(list, line)) {
+            if (!line.empty() && line.back() == '\r') {
+                line.pop_back();
+            }
+            if (!line.empty()) {
+                fs::remove_all(fs::u8path(line), ec);
+            }
+        }
+    }
+    fs::remove(leftovers_list, ec);
+}
+
 #if !defined(GAME_UPDATER_ACTIVE)
 
 void app_updater_start(int, char**) {
@@ -339,8 +445,11 @@ namespace {
 
     updater_data_t g_updater;
 
-    std::string to_utf8(const fs::path& path) {
-        return path.u8string();
+
+    using updater::to_utf8;
+
+    fs::path leftovers_list() {
+        return g_updater.install_dir / "update_old.txt";
     }
 
     void notify(e_updater_state state) {
@@ -421,25 +530,6 @@ namespace {
         fs::remove(probe, ec);
         fs::remove(g_updater.work_dir, ec);
         return true;
-    }
-
-    fs::path leftovers_list() {
-        return g_updater.install_dir / "update_old.txt";
-    }
-
-    // The files the last install could not delete (the running program on Windows, loaded libraries).
-    void remove_leftovers() {
-        std::error_code ec;
-        {
-            std::ifstream list(leftovers_list());
-            std::string line;
-            while (list && std::getline(list, line)) {
-                if (!line.empty()) {
-                    fs::remove_all(fs::u8path(line), ec);
-                }
-            }
-        }
-        fs::remove(leftovers_list(), ec);
     }
 
     bool write_file(const fs::path& path, const void* data, size_t size) {
@@ -574,91 +664,6 @@ namespace {
         }
     }
 
-    struct moved_file {
-        fs::path target;
-        fs::path aside;
-        bool had_old;
-    };
-
-    fs::path aside_of(const fs::path& target) {
-        fs::path aside = target;
-        aside += ".old";
-        return aside;
-    }
-
-    // Renames every file of from that exists under to aside (*.old) and moves the new one in; the running program can
-    // be renamed but not overwritten on Windows, and keeps its old inode on Linux and macOS.
-    bool swap_files(const fs::path& from, const fs::path& to, std::vector<moved_file>& done) {
-        std::error_code ec;
-        std::vector<fs::path> files;
-        for (auto it = fs::recursive_directory_iterator(from, ec); !ec && it != fs::recursive_directory_iterator();
-          it.increment(ec)) {
-            if (it->is_regular_file(ec)) {
-                files.push_back(it->path());
-            }
-        }
-        if (ec) {
-            logs::error("[updater] cannot list %s: %s", to_utf8(from).c_str(), ec.message().c_str());
-            return false;
-        }
-        for (const fs::path& source : files) {
-            const fs::path target = to / fs::relative(source, from, ec);
-            const fs::path aside = aside_of(target);
-            fs::create_directories(target.parent_path(), ec);
-            const bool had_old = fs::exists(target, ec);
-            if (had_old) {
-                fs::remove(aside, ec);
-                fs::rename(target, aside, ec);
-                if (ec) {
-                    logs::error("[updater] cannot move %s aside: %s", to_utf8(target).c_str(), ec.message().c_str());
-                    return false;
-                }
-            }
-            fs::rename(source, target, ec);
-            if (ec) {
-                logs::error("[updater] cannot put %s in place: %s", to_utf8(target).c_str(), ec.message().c_str());
-                if (had_old) {
-                    fs::rename(aside, target, ec);
-                }
-                return false;
-            }
-            done.push_back({target, aside, had_old});
-        }
-        return true;
-    }
-
-    void roll_back(const std::vector<moved_file>& done) {
-        std::error_code ec;
-        for (auto it = done.rbegin(); it != done.rend(); ++it) {
-            fs::remove(it->target, ec);
-            if (it->had_old) {
-                fs::rename(it->aside, it->target, ec);
-            }
-        }
-    }
-
-    void drop_asides(const std::vector<moved_file>& done, const fs::path& old_bundle) {
-        std::error_code ec;
-        std::vector<std::string> left;
-        for (const moved_file& file : done) {
-            if (file.had_old && !fs::remove(file.aside, ec)) {
-                left.push_back(to_utf8(file.aside));
-            }
-        }
-        if (!old_bundle.empty()) {
-            fs::remove_all(old_bundle, ec);
-            if (fs::exists(old_bundle, ec)) {
-                left.push_back(to_utf8(old_bundle));
-            }
-        }
-        if (!left.empty()) {
-            std::ofstream list(leftovers_list(), std::ios::app);
-            for (const std::string& path : left) {
-                list << path << "\n";
-            }
-        }
-    }
-
 #if defined(GAME_PLATFORM_MACOSX)
     void clear_quarantine(const fs::path& root) {
         static const char attribute[] = "com.apple.quarantine";
@@ -679,7 +684,7 @@ namespace {
 
     bool install() {
         std::error_code ec;
-        std::vector<moved_file> done;
+        std::vector<updater_moved_file> done;
         fs::path old_bundle;
         if (!g_updater.bundle.empty()) {
             const fs::path staged_bundle = g_updater.staging_dir / "akhenaten.app";
@@ -698,8 +703,7 @@ namespace {
                 return false;
             }
         }
-        if (!swap_files(g_updater.staging_dir, g_updater.install_dir, done)) {
-            roll_back(done);
+        if (!updater::swap_in(g_updater.staging_dir, g_updater.install_dir, done)) {
             if (!old_bundle.empty()) {
                 fs::remove_all(g_updater.bundle, ec);
                 fs::rename(old_bundle, g_updater.bundle, ec);
@@ -708,7 +712,7 @@ namespace {
             logs::error("[updater] the update is rolled back");
             return false;
         }
-        drop_asides(done, old_bundle);
+        updater::drop_asides(done, old_bundle, leftovers_list());
 #if defined(GAME_PLATFORM_MACOSX)
         clear_quarantine(g_updater.bundle);
 #endif
@@ -717,10 +721,20 @@ namespace {
         return true;
     }
 
+    // The update puts the program under its packaged name, which a renamed copy of the game does not have.
+    fs::path installed_program() {
+        std::error_code ec;
+        const fs::path packaged = g_updater.install_dir / fs::u8path(g_updater.asset.program);
+        return (g_updater.bundle.empty() && fs::exists(packaged, ec)) ? packaged : g_updater.program;
+    }
+
     void relaunch() {
+        logs::info("[updater] restarting %s in %s", to_utf8(installed_program()).c_str(),
+          to_utf8(g_updater.start_dir).c_str());
+        logs::flush();
 #if defined(GAME_PLATFORM_WIN)
         std::wstring command = GetCommandLineW();
-        const std::wstring program = g_updater.program.wstring();
+        const std::wstring program = installed_program().wstring();
         const std::wstring dir = g_updater.start_dir.wstring();
         STARTUPINFOW startup{};
         startup.cb = sizeof(startup);
@@ -734,7 +748,7 @@ namespace {
         CloseHandle(process.hProcess);
 #else
         std::vector<std::string> args = g_updater.argv;
-        std::string path = g_updater.program.string();
+        std::string path = installed_program().string();
 #if defined(GAME_PLATFORM_MACOSX)
         // "open -n" starts the bundle through LaunchServices as Finder would, as the old akhenaten-updater did.
         if (!g_updater.bundle.empty()) {
@@ -788,7 +802,7 @@ void app_updater_start(int argc, char** argv) {
         g_updater.argv.push_back(argv[i] ? argv[i] : "");
     }
 
-    remove_leftovers();
+    updater::remove_leftovers(leftovers_list());
     fs::remove_all(g_updater.work_dir, ec);
 
     std::string why;

@@ -3,6 +3,7 @@
 #include "core/bstring.h"
 
 #include <cstdint>
+#include <filesystem>
 #include <string>
 #include <vector>
 
@@ -61,6 +62,12 @@ struct updater_remote_build {
     int64_t created = 0;
 };
 
+struct updater_moved_file {
+    std::filesystem::path target;
+    std::filesystem::path aside;
+    bool had_old;
+};
+
 namespace updater {
     e_updater_state next_state(e_updater_state state, e_updater_event event);
     e_updater_button button_action(e_updater_state state);
@@ -74,6 +81,12 @@ namespace updater {
     bool is_newer(const updater_remote_build& remote, pcstr local_sha, int64_t local_time);
     bool safe_entry_path(pcstr name, std::string& out);
     bool has_program(const std::vector<std::string>& entries, pcstr program);
+    std::string to_utf8(const std::filesystem::path& path);
+    bool swap_in(const std::filesystem::path& from, const std::filesystem::path& to,
+      std::vector<updater_moved_file>& done);
+    void drop_asides(const std::vector<updater_moved_file>& done, const std::filesystem::path& old_bundle,
+      const std::filesystem::path& leftovers_list);
+    void remove_leftovers(const std::filesystem::path& leftovers_list);
 } // namespace updater
 
 void app_updater_start(int argc, char** argv);
