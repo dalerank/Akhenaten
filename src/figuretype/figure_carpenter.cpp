@@ -4,6 +4,7 @@
 #include "building/building_statue.h"
 #include "building/monument_obelisk.h"
 #include "building/monument_sphinx.h"
+#include "building/monument_sun_temple.h"
 #include "building/monument_mastaba_engine.h"
 #include "building/monument_pyramid.h"
 #include "building/monument_pyramid_engine.h"
@@ -231,6 +232,18 @@ void figure_carpenter::figure_action() {
             base.set_flag(e_figure_flag_invisible);
             if (sphinx->work_tick(base)) {
                 base.set_flag(e_figure_flag_invisible, false);
+                advance_action(ACTION_3_CARPENTER_RETURN);
+            }
+            break;
+        }
+
+        if (auto *sun = worked->dcast_sun_temple()) {
+            base.set_flag(e_figure_flag_invisible);
+            if (sun->work_tick(base)) {
+                base.set_flag(e_figure_flag_invisible, false);
+                if (auto *mon = worked->dcast_monument()) {
+                    mon->remove_worker(id());
+                }
                 advance_action(ACTION_3_CARPENTER_RETURN);
             }
             break;
