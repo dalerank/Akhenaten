@@ -52,7 +52,7 @@ bool is_allowed_getting_source(building &b) {
 
 void building_food_mill::on_create(int orientation) {
     runtime_data().resource_stored[RESOURCE_NONE] = (short)current_params().max_capacity_stored;
-    base.storage_id = building_storage_create(BUILDING_FOOD_MILL);
+    base.storage_id = building_storage_create(BUILDING_FOOD_MILL, base.id);
 }
 
 void building_food_mill::on_place_update_tiles(int orientation, int variant) {

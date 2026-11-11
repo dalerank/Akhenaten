@@ -984,7 +984,7 @@ void building_storage_yard::on_place_update_tiles(int orientation, int variant) 
     int global_rotation = building_rotation_global_rotation();
     int corner = building_rotation_get_corner(2 * global_rotation);
 
-    base.storage_id = building_storage_create(BUILDING_STORAGE_YARD);
+    base.storage_id = building_storage_create(BUILDING_STORAGE_YARD, base.id);
     base.prev_part_building_id = 0;
 
     tile2i shifted_tile = tile().shifted(offset[corner]);

@@ -62,7 +62,7 @@ constexpr int BUILDING_STORAGE_EMPTY_ALL_BACKUP_CHUNK_SIZE =
     BUILDING_STORAGE_EMPTY_ALL_BACKUP_SLOTS * RESOURCES_MAX * 2;
 
 void building_storage_clear_all();
-int building_storage_create(int building_type);
+int building_storage_create(int building_type, int building_id);
 
 int building_storage_restore(int storage_id);
 void building_storage_delete(int storage_id);

@@ -58,7 +58,7 @@ void building_storage_reset_building_ids(void) {
             if (b->storage_id) {
                 if (g_storages[b->storage_id].building_id) {
                     // storage is already connected to a building: corrupt, create new
-                    b->storage_id = building_storage_create(b->type);
+                    b->storage_id = building_storage_create(b->type, i);
                 } else {
                     g_storages[b->storage_id].building_id = i;
                 }
@@ -67,12 +67,13 @@ void building_storage_reset_building_ids(void) {
     }
 }
 
-int building_storage_create(int building_type) {
+int building_storage_create(int building_type, int building_id) {
     for (int i = 1; i < MAX_STORAGES; i++) {
         if (!g_storages[i].in_use) {
             memset(&g_storages[i], 0, sizeof(g_storages[i]));
             memset(&g_empty_all_backups[i], 0, sizeof(g_empty_all_backups[i]));
             g_storages[i].in_use = 1;
+            g_storages[i].building_id = building_id;
 
             // default settings for Pharaoh
             for (int r = 0; r < 36; r++) {
