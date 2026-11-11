@@ -426,15 +426,21 @@ static void setup() {
 
     image_data_init();                                           // image paks structures init
 
+    // Integral tests run the embedded scripts (plus --mixed): a Scripts/ folder left by --unpack_scripts
+    // in the data dir or the working dir must not change what the suite tests.
+    const bool user_script_folders = !g_args.is_integral_tests();
+
     vfs::path scripts_base_path(vfs::SCRIPTS_FOLDER);
     if (!platform.is_android()) {
         pcstr base_path = vfs::platform_file_manager_get_base_path();
         scripts_base_path = vfs::path(base_path, "/", vfs::SCRIPTS_FOLDER);
     }
-    js_vm_add_scripts_folder(scripts_base_path); // setup script engine data scripts folder
+    if (user_script_folders) {
+        js_vm_add_scripts_folder(scripts_base_path); // setup script engine data scripts folder
+    }
 
     js_vm_add_scripts_folder(g_args.get_scripts_directory().c_str()); // setup script engine user folder
-    if (!platform.is_android()) {
+    if (!platform.is_android() && user_script_folders) {
         js_vm_add_scripts_folder(vfs::SCRIPTS_FOLDER);                    // setup script engine additional folder
     }
 

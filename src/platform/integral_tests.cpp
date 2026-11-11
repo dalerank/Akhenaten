@@ -420,8 +420,7 @@ static void clear_global(js_State* J, const char* name) {
 int run_js_tests() {
     constexpr int kMaxFramesPerTest = 600; // ~10s at 60fps
 
-    js_State *J = js_vm_state();
-    if (!J) {
+    if (!js_vm_state()) {
         logs::error("[integraltests] JS VM not initialized");
         return 1;
     }
@@ -455,6 +454,8 @@ int run_js_tests() {
 
         game_features::restore(features_at_start);
         game_features::gameopt_ironwill.set(false);
+        // A test may rebuild the VM (disabling a mod does), which frees the previous js_State.
+        js_State* J = js_vm_state();
         // Otherwise a test without run_test()/check_valid() would run the previous test's.
         clear_global(J, "run_test");
         clear_global(J, "check_valid");
@@ -476,6 +477,7 @@ int run_js_tests() {
         js_vm_sync({}); // run include() queued while loading the test script
         pop_to(J, load_baseline); // discard top-level result residue
         logs::info("[test:%s] script loaded", name.c_str());
+        const uint32_t vm_generation = js_vm_generation();
 
         // run_test
         if (!js_vm_global_is_callable(J, "run_test")) {
@@ -545,6 +547,17 @@ int run_js_tests() {
               name.c_str());
             ++failed;
             continue;
+        }
+
+        if (js_vm_generation() != vm_generation) {
+            // The rebuilt VM no longer has this test's globals; load the file again for check_valid().
+            J = js_vm_state();
+            logs::info("[test:%s] VM was rebuilt during the test, reloading the script", name.c_str());
+            js_vm_reset_error();
+            const int reload_baseline = J->gettop();
+            js_vm_load_file_and_exec(name.c_str());
+            js_vm_sync({});
+            pop_to(J, reload_baseline);
         }
 
         // check_valid -> bool

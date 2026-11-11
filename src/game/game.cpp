@@ -412,7 +412,7 @@ bool game_init(game_opts opts) {
         return false;
     }
 
-    mods_init({g_args.get_mods_directory().c_str()});
+    mods_init({g_args.get_mods_directory().c_str(), g_args.is_integral_tests()});
     mods_load();
     mods_remount();
 

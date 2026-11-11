@@ -27,22 +27,89 @@ mods_config ANK_VARIABLE_N(g_mods_config, "mods");
 
 namespace {
     vfs::path g_mods_directory_override;
+    bool g_mods_isolated = false;
+
+    struct mod_dir_entry {
+        std::string name;
+        bool folder;
+    };
+
+    void sort_entries(std::vector<mod_dir_entry>& entries) {
+        std::sort(entries.begin(), entries.end(), [](const mod_dir_entry& a, const mod_dir_entry& b) {
+            return string_compare_case_insensitive(a.name.c_str(), b.name.c_str()) < 0;
+        });
+    }
 
     // Relative --mods paths are taken from the working directory, not from the data directory.
-    std::vector<std::string> mods_list_override_dir(const vfs::path& dir) {
-        std::vector<std::string> files;
+    std::vector<mod_dir_entry> mods_list_override_dir(const vfs::path& dir) {
+        std::vector<mod_dir_entry> entries;
         std::error_code ec;
         for (const auto& e : std::filesystem::directory_iterator(dir.c_str(), ec)) {
-            if (e.is_regular_file(ec) && vfs::file_has_extension(e.path().filename().string().c_str(), "sgx")) {
-                files.push_back(e.path().filename().string());
+            const std::string name = e.path().filename().string();
+            if (e.is_directory(ec)) {
+                entries.push_back({name, true});
+            } else if (e.is_regular_file(ec) && vfs::file_has_extension(name.c_str(), "sgx")) {
+                entries.push_back({name, false});
             }
         }
-        std::sort(files.begin(), files.end(), [](const std::string& a, const std::string& b) {
-            return string_compare_case_insensitive(a.c_str(), b.c_str()) < 0;
-        });
-        return files;
+        sort_entries(entries);
+        return entries;
+    }
+
+    std::vector<mod_dir_entry> mods_list_data_dir() {
+        std::vector<mod_dir_entry> entries;
+        const dir_listing* sgx_files = vfs::dir_find_files_with_extension("mods", "sgx");
+        for (int i = 0; i < sgx_files->num_files; ++i) {
+            entries.push_back({sgx_files->files[i], false});
+        }
+        const dir_listing* folders = vfs::dir_find_all_subdirectories("mods");
+        for (int i = 0; i < folders->num_files; ++i) {
+            if (strcmp(folders->files[i], ".") != 0 && strcmp(folders->files[i], "..") != 0) {
+                entries.push_back({folders->files[i], true});
+            }
+        }
+        sort_entries(entries);
+        return entries;
+    }
+
+    const xstring* find_entry_nocase(const hvector<xstring, 32>& entries, pcstr name) {
+        for (const auto& e : entries) {
+            if (string_compare_case_insensitive(e.c_str(), name) == 0) {
+                return &e;
+            }
+        }
+        return nullptr;
+    }
+
+    // A mod file that shares its path with a built-in script is queued under the built-in's key,
+    // so a later `import` of that path does not run it a second time.
+    void mods_queue_scripts(const mod_info& mod) {
+        for (const auto& s : mod.scripts) {
+            bstring256 builtin(":", s.c_str());
+            if (vfs::internal_file_open(builtin.c_str()).first) {
+                js_vm_reload_file(builtin.c_str());
+            } else {
+                js_vm_reload_file(s.c_str());
+            }
+        }
     }
 } // namespace
+
+const xstring* mod_info::find_script(pcstr name) const {
+    return find_entry_nocase(scripts, name);
+}
+
+const xstring* mod_info::find_sound(pcstr name) const {
+    return find_entry_nocase(sounds, name);
+}
+
+void mods_queue_enabled_scripts() {
+    for (const auto& it : g_mods.list) {
+        if (it.second.enabled && it.second.mounted) {
+            mods_queue_scripts(it.second);
+        }
+    }
+}
 
 vfs::path mods_directory() {
     return g_mods_directory_override.empty() ? vfs::path("mods") : g_mods_directory_override;
@@ -294,55 +361,62 @@ void mods_toggle(xstring name) {
 }
 
 void mods_remount() {
+    bool reset_vm = false;
     for (auto& it : g_mods.list) {
         if (!it.second.downloaded) {
             continue;
         }
 
-        if (it.second.enabled) {
-            const bool already_mounted = vfs::is_pack_mounted(it.second.path);
-            vfs::mount_pack(it.second.path);
+        mod_info& mod = it.second;
+        if (mod.enabled) {
+            if (!mod.folder) {
+                vfs::mount_pack(mod.path);
 
-            auto& modpack = g_image_data->pak_list[it.second.useridx];
-            if (!modpack.handle) {
-                modpack.entries_num = it.second.entries_num;
-                modpack.index = it.second.start_index;
-                modpack.id = it.second.useridx;
-                modpack.name = it.second.name;
-                modpack.delayed = true;
-                modpack.custom = true;
+                auto& modpack = g_image_data->pak_list[mod.useridx];
+                if (!modpack.handle) {
+                    modpack.entries_num = mod.entries_num;
+                    modpack.index = mod.start_index;
+                    modpack.id = mod.useridx;
+                    modpack.name = mod.name;
+                    modpack.delayed = true;
+                    modpack.custom = true;
+                }
             }
 
-            if (!already_mounted) {
-                it.second.fill_entries();
-                for (const auto& s : it.second.scripts) {
-                    js_vm_reload_file(s.c_str());
-                }
+            if (!mod.mounted) {
+                mod.mounted = true;
+                mod.fill_entries();
+                mods_queue_scripts(mod);
             }
         } else {
-            const bool was_mounted = vfs::is_pack_mounted(it.second.path);
-            vfs::umount_pack(it.second.path);
+            if (!mod.folder) {
+                vfs::umount_pack(mod.path);
 
-            auto& modpack = g_image_data->pak_list[it.second.useridx];
-            if (modpack.handle) {
-                image_invalidate_pak_cache(it.second.useridx);
-                delete modpack.handle;
-                modpack.handle = nullptr;
-                modpack.load_status = IMAGEPAK_LOAD_IDLE;
+                auto& modpack = g_image_data->pak_list[mod.useridx];
+                if (modpack.handle) {
+                    image_invalidate_pak_cache(mod.useridx);
+                    delete modpack.handle;
+                    modpack.handle = nullptr;
+                    modpack.load_status = IMAGEPAK_LOAD_IDLE;
 
-                modpack.entries_num = 0;
-                modpack.index = 0;
-                modpack.id = 0;
-                modpack.delayed = true;
-                modpack.name = xstring();
-            }
-
-            if (was_mounted) {
-                for (const auto& s : it.second.scripts) {
-                    js_vm_reload_file(s.c_str());
+                    modpack.entries_num = 0;
+                    modpack.index = 0;
+                    modpack.id = 0;
+                    modpack.delayed = true;
+                    modpack.name = xstring();
                 }
             }
+
+            if (mod.mounted) {
+                mod.mounted = false;
+                // Scripts cannot be unloaded one by one: rebuild the VM without this mod.
+                reset_vm |= !mod.scripts.empty();
+            }
         }
+    }
+
+    if (reset_vm) {
+        js_vm_request_reset();
     }
 
     mods_save();
@@ -351,17 +425,30 @@ void mods_remount() {
 void mods_init(const mods_options& opts) {
     g_mods.list.clear();
 
+    g_mods_isolated = opts.isolated;
     g_mods_directory_override.clear();
-    if (!opts.directory.empty()) {
+    vfs::path requested = opts.directory;
+    if (requested.empty() && opts.isolated) {
+        for (pcstr fixture : {"tests/fixtures/mods", "../tests/fixtures/mods"}) {
+            if (vfs::is_directory(fixture)) {
+                requested = fixture;
+                break;
+            }
+        }
+    }
+    if (!requested.empty()) {
         std::error_code ec;
-        g_mods_directory_override = std::filesystem::absolute(opts.directory.c_str(), ec).generic_string();
+        g_mods_directory_override = std::filesystem::absolute(requested.c_str(), ec).generic_string();
         logs::info("[mods] directory %s", g_mods_directory_override.c_str());
     }
     const vfs::path dir = mods_directory();
 
-    auto append_mod = [&dir](pcstr file) {
+    auto append_mod = [&dir](const mod_dir_entry& entry) {
+        pcstr file = entry.name.c_str();
         bstring128 mod_name_short(file);
-        mod_name_short.replace_str(".sgx", "");
+        if (!entry.folder) {
+            mod_name_short.replace_str(".sgx", "");
+        }
 
         xstring mod_name(mod_name_short.c_str());
         if (g_mods.list.find(mod_name) != g_mods.list.end()) {
@@ -373,6 +460,14 @@ void mods_init(const mods_options& opts) {
         mod.path = vfs::path(dir, "/", file);
         mod.name = mod_name;
         mod.downloaded = true;
+        mod.folder = entry.folder;
+        if (mod.folder) {
+            // Plain files are opened through the OS, so the path must not stay relative to the data dir.
+            mod.path = mod.path.resolve();
+            mod.fill_entries();
+            return;
+        }
+
         mod.useridx = imagepak::get_max_useridx() + 1;
         mod.start_index = imagepak::get_maxseen_imgid() + 1;
         mod.entries_num = imagepak::get_entries_num(mod.path.c_str());
@@ -383,15 +478,14 @@ void mods_init(const mods_options& opts) {
         mod.fill_entries();
     };
 
-    if (g_mods_directory_override.empty()) {
-        const dir_listing* sgx_files = vfs::dir_find_files_with_extension("mods", "sgx");
-        for (int i = 0; i < sgx_files->num_files; ++i) {
-            append_mod(sgx_files->files[i]);
-        }
-    } else {
-        for (const auto& file : mods_list_override_dir(dir)) {
-            append_mod(file.c_str());
-        }
+    std::vector<mod_dir_entry> entries;
+    if (!g_mods_directory_override.empty()) {
+        entries = mods_list_override_dir(dir);
+    } else if (!opts.isolated) {
+        entries = mods_list_data_dir();
+    }
+    for (const auto& entry : entries) {
+        append_mod(entry);
     }
     mods_refresh_from_config();
 }
@@ -422,6 +516,13 @@ vfs::path mods_exist_audio(pcstr wav_path) {
     vfs::path found;
     for (const auto &it : g_mods.list) {
         if (!it.second.enabled || !it.second.downloaded) {
+            continue;
+        }
+
+        if (it.second.folder) {
+            if (const xstring* entry = it.second.find_sound(wav_path)) {
+                found = vfs::path(it.second.path.c_str(), "/", entry->c_str());
+            }
             continue;
         }
 
@@ -459,14 +560,15 @@ mod_reader mods_find_script(pcstr script_path, bool find_in_enabled) {
             continue;
         }
 
-        if (!it.second.script_exist(script_path)) {
+        const xstring* entry = it.second.find_script(script_path);
+        if (!entry) {
             continue;
         }
 
-        vfs::path mod_script_path(it.second.path.c_str(), "/", script_path);
+        vfs::path mod_script_path(it.second.path.c_str(), "/", entry->c_str());
         vfs::reader reader = vfs::file_open(mod_script_path, "rt");
         if (reader) {
-            return {mod_script_path.c_str(), reader};
+            return {mod_script_path.c_str(), reader, it.first};
         }
     }
 
@@ -474,6 +576,10 @@ mod_reader mods_find_script(pcstr script_path, bool find_in_enabled) {
 }
 
 void mods_save() {
+    if (g_mods_isolated) {
+        return;
+    }
+
     std::string enabled_mods;
     for (const auto& it : g_mods.list) {
         if (it.second.enabled) {
@@ -486,14 +592,20 @@ void mods_save() {
 }
 
 void mods_load() {
+    if (g_mods_isolated) {
+        return;
+    }
+
     xstring enabled_mods = game_features::gameopt_enabled_mods.to_string();
 
     svector<bstring64, 128> mod_names;
     string_to_array_t(mod_names, enabled_mods.c_str(), ',');
 
-    // Restore enabled status for each mod
     for (const auto& name : mod_names) {
-        mods_set_enabled(name.c_str(), true);
+        auto it = g_mods.list.find(xstring(name.c_str()));
+        if (it != g_mods.list.end()) {
+            it->second.enabled = true;
+        }
     }
 }
 
@@ -512,7 +624,32 @@ void mods_refresh_available_list() {
     mods_remount();
 }
 
+static bool is_sound_file(pcstr name) {
+    return vfs::file_has_extension(name, "wav") || vfs::file_has_extension(name, "mp3")
+           || vfs::file_has_extension(name, "ogg");
+}
+
 void mod_info::fill_entries() {
+    if (folder) {
+        scripts.clear();
+        sounds.clear();
+        std::error_code ec;
+        const std::filesystem::path root(path.c_str());
+        for (auto it = std::filesystem::recursive_directory_iterator(root, ec);
+          !ec && it != std::filesystem::recursive_directory_iterator(); it.increment(ec)) {
+            if (!it->is_regular_file(ec)) {
+                continue;
+            }
+            const std::string rel = std::filesystem::relative(it->path(), root, ec).generic_string();
+            if (vfs::file_has_extension(rel.c_str(), "js")) {
+                scripts.push_back(xstring(rel.c_str()));
+            } else if (is_sound_file(rel.c_str())) {
+                sounds.push_back(xstring(rel.c_str()));
+            }
+        }
+        return;
+    }
+
     vfs::ZipArchive archive(path.c_str());
     if (archive.isValid()) {
         const auto& entries = archive.entries();

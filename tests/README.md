@@ -206,6 +206,7 @@ See **IT1** in `REMAKE_TODO.md` / `REMAKE_NOTES.md` §4.
 | `170_iunet_request_outcomes.js` | B13a: Iunet meat/pottery late→hittite×10 once; ok leaf; limestone refuse→egypt×24 ≠ favour |
 | `184_request_saveload.js` | Pharaoh request `.svx` round-trip: tag/state/months/faction; fulfill after load keeps `event_request_cleared.tag_id` |
 | `176_north_dahshur_henna_raid.js` | B12/B13d: North Dahshur henna refuse/late→Hyksos×12; on-time fulfill no raid |
+| `330_mods_fixture.js` | Folder mod `fixtures/mods/akh_test_mod`: config + script override applied on enable, gone after disable (VM rebuild) |
 
 Farm **placement** tests (34/35) cover `can_place` / terrain rules; **37** covers preview image helpers.
 When adding more preview draw coverage, follow JS draw conventions in
@@ -383,3 +384,4 @@ When adding a test that asserts a window transition, add the matching `__log_mar
 - One process, sequential. Tests share global state (session, map, buildings). Later tests may need `test_reload_city_session` if an earlier test left buildings on the map (see 10 → 11).
 - The log file is truncated on each process start. Under `--integraltests` it is written to `platform.user_directory()` (e.g. `%APPDATA%\Akhenaten` on Windows); `__test_find_inlog` reads `logs::output_path()`.
 - The driver expects `--no-logo --no-resource` for a hermetic run; CI sets `SDL_VIDEODRIVER=dummy` for headless runs.
+- Mods come only from `--mods PATH` (default `tests/fixtures/mods`); the user's enabled-mods list and `Scripts/` folders are ignored, and nothing is written back to the config. A test that disables a mod rebuilds the VM; the driver then reloads the test file before `check_valid()`, so keep state for `check_valid()` in the log or in C++, not in JS globals.

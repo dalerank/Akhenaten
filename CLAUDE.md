@@ -70,7 +70,9 @@ Sources are collected via `file(GLOB ...)` with **no `CONFIGURE_DEPENDS`**, so a
 --noconfig-window     skip configuration dialog on startup (even without akhenaten.cfg)
 --og                  force original Pharaoh behavior (disable all Enhanced / gameplay-change features)
 --enhanced            enable all Enhanced / gameplay-change features (overrides --og if both are set)
---mods PATH           mods folder instead of <data>/mods (relative to the working directory)
+--mods PATH           mods folder instead of <data>/mods (relative to the working directory);
+                      with --integraltests the only mod source (default tests/fixtures/mods),
+                      the user's enabled list and <data>/Scripts, ./Scripts are ignored
 --mixed PATH          hot-reload JS scripts from disk (dev mode)
 --unpack_scripts      extract embedded JS to user directory
 --integraltests       run the built-in integral test suite and exit (see "Testing" below)

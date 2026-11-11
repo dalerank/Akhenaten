@@ -37,16 +37,11 @@ struct mod_info : public mod_entry {
     uint8_t download_progress = 0;
     bool downloaded = false;
     bool enabled = false;
+    bool folder = false; // a plain directory instead of an .sgx archive
+    bool mounted = false;
 
-    bool script_exist(const xstring& name) const {
-        auto it = std::find(scripts.begin(), scripts.end(), name);
-        return (it != scripts.end());
-    }
-
-    bool audio_exist(const xstring &name) const {
-        auto it = std::find(sounds.begin(), sounds.end(), name);
-        return (it != sounds.end());
-    }
+    const xstring* find_script(pcstr name) const;
+    const xstring* find_sound(pcstr name) const;
 
     void fill_entries();
 };
@@ -54,6 +49,7 @@ struct mod_info : public mod_entry {
 struct mod_reader {
     xstring path;
     vfs::reader reader;
+    xstring mod;
 };
 
 struct mods_mananger {
@@ -65,6 +61,9 @@ extern mods_mananger g_mods;
 
 struct mods_options {
     vfs::path directory; // empty: "mods" under the Pharaoh data directory
+    // --integraltests: mods only from `directory` (default tests/fixtures/mods), none enabled
+    // from the user's config, and the enabled list is never written back.
+    bool isolated = false;
 };
 
 vfs::path mods_get_path(xstring hash);
@@ -73,6 +72,8 @@ void mods_set_enabled(xstring hash, bool enabled);
 void mods_toggle(xstring hash);
 void mods_init(const mods_options& opts);
 vfs::path mods_directory();
+// Queues the scripts of every mounted mod; js_vm_sync calls it after a VM reset.
+void mods_queue_enabled_scripts();
 const mod_info& mods_find(xstring hash);
 void mods_remount();
 void mods_save();
