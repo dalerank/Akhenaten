@@ -2,9 +2,11 @@
 
 #include "building/building_road.h"
 #include "city/city.h"
+#include "city/city_figures.h"
 #include "city/city_malaria_risk.h"
 #include "city/city_recorded_paths.h"
 #include "grid/building.h"
+#include "grid/figure.h"
 #include "grid/gems.h"
 #include "grid/golden.h"
 #include "grid/granite.h"
@@ -181,3 +183,25 @@ static int __test_recorded_path_used(int path_id) {
     return g_recorded_paths.slots[path_id].used ? 1 : 0;
 }
 ANK_FUNCTION_1(__test_recorded_path_used);
+
+// Unlinks the figure from the figure grid first, so the stray tile leaves no dangling grid entry.
+static void __test_figure_set_tile_raw(int fid, int x, int y) {
+    figure* f = figure_get(fid);
+    if (!f || f->id <= 0) {
+        return;
+    }
+    f->map_figure_remove();
+    f->tile = tile2i(x, y);
+}
+ANK_FUNCTION_3(__test_figure_set_tile_raw);
+
+static void __test_map_figure_sort_by_y() {
+    map_figure_sort_by_y();
+}
+ANK_FUNCTION(__test_map_figure_sort_by_y);
+
+static int __test_figure_tile_x(int fid) {
+    figure* f = figure_get(fid);
+    return (f && f->id > 0) ? f->tile.x() : -1;
+}
+ANK_FUNCTION_1(__test_figure_tile_x);

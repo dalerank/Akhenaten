@@ -30,11 +30,8 @@ void map_figure_sort_by_y() {
             continue;
         }
 
+        // Removed by city_figures_t::update; the sort must not touch simulation state.
         if (f->tile.x() >= GRID_LENGTH || f->tile.y() > GRID_LENGTH) {
-            f->tile = {-1, -1};
-            f->main_cached_pos = {-1, -1};
-            f->cart_cached_pos = {-1, -1};
-            f->poof();
             continue;
         }
 

@@ -77,6 +77,8 @@
 #include "js/js_struct.h"
 
 #include <algorithm>
+#include <array>
+#include <atomic>
 
 struct city_view_postrender_ev {
     int reserved = 0;
@@ -84,6 +86,35 @@ struct city_view_postrender_ev {
 ANK_REGISTER_STRUCT_WRITER(city_view_postrender_ev, reserved)
 
 screen_city_t g_screen_city;
+
+// Flat-pass workers draw the advanced water frame but must not write the image grid;
+// the main thread stores the queued frames once the workers have joined.
+struct water_frame_queue_t {
+    struct entry {
+        int grid_offset;
+        int image_id;
+    };
+    std::array<entry, GRID_SIZE_TOTAL> entries;
+    std::atomic<int> count{0};
+
+    void clear() { count.store(0, std::memory_order_relaxed); }
+
+    void push(int grid_offset, int image_id) {
+        const int index = count.fetch_add(1, std::memory_order_relaxed);
+        if (index < (int)entries.size()) {
+            entries[index] = {grid_offset, image_id};
+        }
+    }
+
+    void apply() {
+        const int n = std::min(count.load(std::memory_order_relaxed), (int)entries.size());
+        for (int i = 0; i < n; i++) {
+            map_image_set(entries[i].grid_offset, entries[i].image_id);
+        }
+        clear();
+    }
+};
+static water_frame_queue_t g_water_frame_queue;
 
 void set_city_clip_rectangle(painter &ctx) {
     OZZY_PROFILER_FUNCTION();
@@ -117,6 +148,15 @@ static tile2i city_planner_cursor_tile_from_mouse() {
         return tile2i::invalid;
     }
     return g_screen_city.update_city_view_coords({m.x, m.y});
+}
+
+// Runs before any render command of the frame, so the city draw only reads planner state.
+// An isolated-figure snapshot without overlay never drew the planner, so it skips the update too.
+static void city_planner_frame_update(int selected_figure_id) {
+    if (selected_figure_id && !g_city.overlay()) {
+        return;
+    }
+    g_city_planner.update(city_planner_cursor_tile_from_mouse());
 }
 
 tile2i screen_city_t::update_city_view_coords(vec2i pixel) {
@@ -474,6 +514,7 @@ void screen_city_t::draw_without_overlay(painter &ctx, int selected_figure_id) {
             [this](vec2i pixel, tile2i tile, painter& ctx) { draw_figures_on_flat_tiles(pixel, tile, ctx); },
             draw_ornaments_flat
         );
+        g_water_frame_queue.apply();
         g_camera.foreach_valid_map_tile(ctx,
             [this](vec2i pixel, tile2i tile, painter& ctx) { draw_isometric_terrain_height(pixel, tile, ctx); }
         );
@@ -500,10 +541,28 @@ void screen_city_t::draw_without_overlay(painter &ctx, int selected_figure_id) {
                     [this](vec2i pixel, tile2i tile, painter& ctx) { draw_figures_on_flat_tiles(pixel, tile, ctx); },
                     draw_ornaments_flat
                 );
+            }));
+        }
+
+        for (auto& f : futures) {
+            f.wait();
+        }
+        futures.clear();
+
+        // The height pass reads these tiles back, as it did when the flat pass wrote in place.
+        g_water_frame_queue.apply();
+
+        for (size_t blk = 0; blk < num_blocks; blk++) {
+            const int y_start = block_start(blk);
+            const int y_end = block_start(blk + 1);
+            futures.push_back(game.mt.submit_task([this, &ctx, y_start, y_end, blk]() {
+                painter worker_ctx = ctx;
+                worker_ctx.command_buffer = &ImageDraw::parallel_block_commands(blk);
+                worker_ctx.subcommand_buffer = &ImageDraw::parallel_block_subcommands(blk);
                 g_camera.foreach_valid_map_tile_rows(worker_ctx, y_start, y_end,
                     [this](vec2i pixel, tile2i tile, painter& ctx) { draw_isometric_terrain_height(pixel, tile, ctx); }
                 );
-                }));
+            }));
         }
 
         for (auto &f : futures) {
@@ -565,7 +624,6 @@ void screen_city_t::draw_without_overlay(painter &ctx, int selected_figure_id) {
     // Draw the city planner overlay (construction previews, ghost buildings) if no figure is selected
     // When a figure is selected, we skip the planner drawing to avoid visual clutter
     if (!selected_figure_id) {
-        g_city_planner.update(city_planner_cursor_tile_from_mouse());
         g_city_planner.draw(ctx);
     }
 
@@ -699,7 +757,8 @@ void screen_city_t::draw_isometric_flat(vec2i pixel, tile2i tile, painter &ctx) 
 
     draw_isometric_mark_sound(building_id, tile.grid_offset(), color_mask, direction);
 
-    int image_id = map_image_at(tile);
+    const int stored_image_id = map_image_at(tile);
+    int image_id = stored_image_id;
     if (render_ctx.advance_water_animation) {
         if (image_id >= render_ctx.image_id_water_first && image_id <= render_ctx.image_id_water_last) {
             image_id++; // wrong, but eh
@@ -715,7 +774,9 @@ void screen_city_t::draw_isometric_flat(vec2i pixel, tile2i tile, painter &ctx) 
                 image_id -= 90;
             }
         }
-        map_image_set(tile, image_id);
+        if (image_id != stored_image_id) {
+            g_water_frame_queue.push(tile.grid_offset(), image_id);
+        }
     }
 
     if (map_property_is_constructing(tile)) {
@@ -1016,7 +1077,6 @@ void screen_city_t::draw_with_overlay(painter &ctx, int selected_figure_id) {
 
     ImageDraw::apply_render_commands(ctx, "draw_ornaments_figures_overlay");
 
-    g_city_planner.update(city_planner_cursor_tile_from_mouse());
     g_city_planner.draw(ctx);
 
     draw_building_road_access_marker(ctx);
@@ -1046,6 +1106,7 @@ void screen_city_t::draw(painter &ctx) {
     set_render_scale(ctx, g_zoom.get_scale());
     set_city_clip_rectangle(ctx);
 
+    city_planner_frame_update(0);
     if (g_city.overlay()) {
         draw_with_overlay(ctx, 0);
     } else {
@@ -1062,6 +1123,7 @@ void screen_city_t::draw(painter &ctx) {
 void screen_city_t::draw_for_figure(painter &ctx, int figure_id) {
     set_city_clip_rectangle(ctx);
 
+    city_planner_frame_update(figure_id);
     if (g_city.overlay()) {
         draw_with_overlay(ctx, figure_id);
     } else {

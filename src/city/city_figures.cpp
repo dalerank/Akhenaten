@@ -81,6 +81,13 @@ void city_figures_t::update() {
     //g_city.entertainment.hippodrome_has_race = false;
 
     for (auto &figure: map_figures()) {
+        // Stray tile from a bad save or a broken move: used to be dropped by the draw sort.
+        if (figure->tile.x() >= GRID_LENGTH || figure->tile.y() > GRID_LENGTH) {
+            figure->tile = {-1, -1};
+            figure->main_cached_pos = {-1, -1};
+            figure->cart_cached_pos = {-1, -1};
+            figure->poof();
+        }
         figure->action_perform();
     }
 }
