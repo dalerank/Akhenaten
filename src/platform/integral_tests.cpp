@@ -7,6 +7,7 @@
 #include "core/archive.h"
 #include "core/bstring.h"
 #include "core/log.h"
+#include "core/random.h"
 #include "core/variant.h"
 #include "core/vec2i.h"
 #include "core/xvalue.h"
@@ -427,6 +428,8 @@ int run_js_tests() {
 
         // Fresh map/UI for every test — leftover city/editor/events otherwise bleed.
         test_reset_session_between_tests();
+        // crt_rand is not part of the session reset, so without this a test inherits the previous one's stream.
+        anti_scum_srand(1);
 
         g_app.quit = false;
         SDL_FlushEvent(SDL_USEREVENT);

@@ -252,6 +252,43 @@ bool ChunkSerializer::serialize(pcstr filename, int offset, e_file_format format
     return true;
 }
 
+void ChunkSerializer::snapshot_chunks(chunk_snapshots& out) const {
+    out.clear();
+    for (int i = 0; i < alloc_index; ++i) {
+        const file_chunk_t& chunk = file_chunks.at(i);
+        if (!chunk.VALID || chunk.buf == nullptr) {
+            continue;
+        }
+        const uint8_t* raw = chunk.buf->get_data();
+        out.push_back({chunk.name, std::vector<uint8_t>(raw, raw + chunk.buf->size())});
+    }
+}
+
+bool ChunkSerializer::write_to_memory(e_file_format format, const int version,
+  void (*init_schema)(e_file_format _format, const int _version), chunk_snapshots& out) {
+    out.clear();
+    clear();
+    file_format = format;
+    file_version = version;
+    file_sectioned = (file_format == FILE_FORMAT_SAVE_FILE_EXT);
+
+    if (init_schema == nullptr) {
+        logs::error("Unable to write state to memory, provided schema is invalid.");
+        clear();
+        return false;
+    }
+
+    init_schema(file_format, file_version);
+    for (int i = 0; i < num_chunks(); ++i) {
+        if (file_chunks.at(i).VALID) {
+            file_chunks.at(i).iob->write();
+        }
+    }
+
+    snapshot_chunks(out);
+    return true;
+}
+
 bool ChunkSerializer::build_svx_section_payload(const file_chunk_t* chunk, int index, pcstr debug_path,
                                               svx::prefixed_payload* out, uint32_t* out_raw_size, uint32_t* out_crc) {
     if (!chunk->VALID) {

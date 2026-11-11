@@ -7,6 +7,7 @@
 #include "city/object_info.h"
 #include "core/app.h"
 #include "core/bstring.h"
+#include "core/crc32.h"
 #include "core/log.h"
 #include "core/xstring.h"
 #include "editor/editor.h"
@@ -19,13 +20,16 @@
 #include "game/game.h"
 #include "game/game_events.h"
 #include "graphics/image.h"
+#include "graphics/image_groups.h"
 #include "graphics/view/view.h"
 #include "graphics/view/zoom.h"
 #include "grid/grid.h"
 #include "grid/road_access.h"
 #include "grid/routing/routing.h"
 #include "input/hotkey.h"
+#include "io/chunk_serializer.h"
 #include "io/gamestate/boilerplate.h"
+#include "io/gamestate/file_schemas.h"
 #include "platform/integral_tests.h"
 #include "scenario/scenario.h"
 #include "sound/sound.h"
@@ -459,3 +463,91 @@ static bool __test_ironwill_exempt(pcstr filename_short) {
     return autosave_module_t::is_ironwill_exempt_save(filename_short);
 }
 ANK_FUNCTION_1(__test_ironwill_exempt);
+
+// Headless: no frame pump, no rendering, no per-frame anti_scum roll — only what game_t::update does per tick.
+static int __test_run_ticks(int n) {
+    if (!game.session.active || editor_is_active()) {
+        logs::error("[test] __test_run_ticks: no active city session");
+        return 0;
+    }
+    n = std::clamp(n, 0, 100000);
+    for (int i = 0; i < n; ++i) {
+        game.update_tick(game.simtime.tick);
+        events::process();
+    }
+    return n;
+}
+ANK_FUNCTION_1(__test_run_ticks);
+
+// Water animation advances from the renderer (widget_city), so the frame a tile shows depends on
+// what was drawn, not on the simulation. Collapse each animation cycle onto its first frame.
+static void state_hash_normalise_water(std::vector<uint8_t>& raw) {
+    const int water_first = image_id_from_group(GROUP_TERRAIN_WATER);
+    const int deepwater_first = image_id_from_group(GROUP_TERRAIN_DEEPWATER);
+    // Without art the groups resolve to 0, which would collide with the map-edge markers 1..5.
+    const bool has_water = water_first > 0;
+    const bool has_deepwater = deepwater_first > 0;
+    if (!has_water && !has_deepwater) {
+        return;
+    }
+
+    const uint32_t water_last = water_first + 5;
+    const uint32_t deepwater_last = deepwater_first + 89;
+    for (size_t off = 0; off + sizeof(uint32_t) <= raw.size(); off += sizeof(uint32_t)) {
+        uint32_t id;
+        memcpy(&id, &raw[off], sizeof(id));
+        if (has_water && id >= (uint32_t)water_first && id <= water_last) {
+            id = water_first;
+        } else if (has_deepwater && id >= (uint32_t)deepwater_first && id <= deepwater_last) {
+            // deepwater steps +15 per frame over 90 ids: a cycle is a residue class mod 15
+            id = deepwater_first + (id - deepwater_first) % 15;
+        }
+        memcpy(&raw[off], &id, sizeof(id));
+    }
+}
+
+// Record 0 is the null building/figure that OG and we both use as scratch.
+static void state_hash_zero_record0(std::vector<uint8_t>& raw, size_t record_size) {
+    std::fill(raw.begin(), raw.begin() + std::min(record_size, raw.size()), 0);
+}
+
+static pcstr __test_state_hash() {
+    static std::string result;
+    result.clear();
+
+    chunk_snapshots chunks;
+    if (!g_chunk_io.write_to_memory(FILE_FORMAT_SAVE_FILE_EXT, save_data_version(), file_schema, chunks)) {
+        logs::error("[state-hash] write_to_memory failed");
+        return result.c_str();
+    }
+
+    std::vector<uint32_t> crcs;
+    std::string entries;
+    crcs.reserve(chunks.size());
+    for (chunk_snapshot& chunk : chunks) {
+        if (chunk.name == "image_grid") {
+            state_hash_normalise_water(chunk.raw);
+        } else if (chunk.name == "buildings") {
+            state_hash_zero_record0(chunk.raw, 264);
+        } else if (chunk.name == "figures") {
+            state_hash_zero_record0(chunk.raw, 388);
+        }
+
+        const uint32_t crc = crc32(chunk.raw.data(), (uint32_t)chunk.raw.size());
+        crcs.push_back(crc);
+        logs::info("[state-hash] %s %08x", chunk.name.c_str(), crc);
+
+        char hex[16];
+        snprintf(hex, sizeof(hex), "%08x", crc);
+        entries += ";" + chunk.name + "=" + hex;
+    }
+
+    const uint32_t total = crc32(crcs.data(), (uint32_t)(crcs.size() * sizeof(uint32_t)));
+    logs::info("[state-hash] total %08x chunks=%d", total, (int)chunks.size());
+
+    char hex[16];
+    snprintf(hex, sizeof(hex), "%08x", total);
+    result = std::string("total=") + hex + entries;
+    return result.c_str();
+}
+ANK_FUNCTION(__test_state_hash);
