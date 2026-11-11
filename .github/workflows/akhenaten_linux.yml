@@ -23,10 +23,8 @@ jobs:
         mkdir linux_build
         mkdir linux_build/data
         cmake --preset linux-gcc-release-make
-        cmake --build --preset linux-gcc-release-make --target akhenaten akhenaten-updater -- -j$(nproc)
+        cmake --build --preset linux-gcc-release-make --target akhenaten -- -j$(nproc)
         cp ./build/akhenaten ./linux_build/akhenaten.linux
-        cp ./build/akhenaten-updater ./linux_build/akhenaten-updater
-        chmod +x ./linux_build/akhenaten-updater
         if [ -f ./build/tools/innoextract/bin/innoextract ]; then
           cp ./build/tools/innoextract/bin/innoextract ./linux_build/innoextract
           chmod +x ./linux_build/innoextract

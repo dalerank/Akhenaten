@@ -335,9 +335,6 @@ core/app.cpp -> input/mouse.h
 core/app.cpp -> platform/screen.h
 core/app.cpp -> scenario/scenario.h
 core/app.cpp -> window/popup_dialog.h
-core/app_updater.cpp -> content/zipreader.hpp
-core/app_updater.cpp -> game/game.h
-core/app_updater.cpp -> net/http_client.h
 core/archive.cpp -> graphics/animation.h
 core/archive.cpp -> graphics/image_desc.h
 core/archive.h -> graphics/image_desc.h

@@ -870,6 +870,34 @@ add_definitions(-DGAME_BUILD_NUMBER=${GAME_BUILD_NUMBER})
 add_definitions(-DGAME_BUILD_DATE=\"${GAME_BUILD_DATE}\")
 add_definitions(-DGAME_BUILD_TIME=\"${GAME_BUILD_TIME}\")
 
+# The game's own update (src/platform/app_updater.cpp): on by default in the CI's builds only, whose artifacts
+# nightly.link serves, so a build of one's own is never replaced by them. The commit and its time decide whether the
+# newest master build is newer than this one.
+if(DEFINED ENV{GITHUB_ACTIONS})
+    set(updater_default ON)
+else()
+    set(updater_default OFF)
+endif()
+option(AKHENATEN_UPDATER "The game updates itself from the nightly.link master builds (Windows, Linux, macOS)" ${updater_default})
+set(GAME_BUILD_COMMIT "")
+set(GAME_BUILD_COMMIT_TIME 0)
+execute_process(COMMAND git rev-parse HEAD WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}"
+    OUTPUT_VARIABLE git_commit OUTPUT_STRIP_TRAILING_WHITESPACE ERROR_QUIET RESULT_VARIABLE git_result)
+if(git_result EQUAL 0 AND git_commit MATCHES "^[0-9a-f]+$")
+    set(GAME_BUILD_COMMIT ${git_commit})
+endif()
+execute_process(COMMAND git log -1 --format=%ct HEAD WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}"
+    OUTPUT_VARIABLE git_commit_time OUTPUT_STRIP_TRAILING_WHITESPACE ERROR_QUIET RESULT_VARIABLE git_result)
+if(git_result EQUAL 0 AND git_commit_time MATCHES "^[0-9]+$")
+    set(GAME_BUILD_COMMIT_TIME ${git_commit_time})
+endif()
+message(STATUS "AKHENATEN_UPDATER=${AKHENATEN_UPDATER}, commit ${GAME_BUILD_COMMIT} (${GAME_BUILD_COMMIT_TIME})")
+set(updater_definitions "GAME_BUILD_COMMIT=\"${GAME_BUILD_COMMIT}\";GAME_BUILD_COMMIT_TIME=${GAME_BUILD_COMMIT_TIME}LL")
+if(AKHENATEN_UPDATER)
+    list(APPEND updater_definitions GAME_UPDATER)
+endif()
+set_source_files_properties("${PROJECT_SOURCE_DIR}/src/platform/app_updater.cpp" PROPERTIES COMPILE_DEFINITIONS "${updater_definitions}")
+
 set(BUILD_INFO_DIR "${CMAKE_BINARY_DIR}")
 file(MAKE_DIRECTORY "${BUILD_INFO_DIR}")
 file(WRITE
@@ -1061,22 +1089,6 @@ if(WIN32 AND NOT WIN_EMSCRIPTEN)
     )
 endif()
 
-# Standalone in-place update helper (desktop only). Game downloads/extracts, then
-# launches this binary and exits so files can be overwritten.
-if(NOT PLATFORM_ANDROID AND NOT WIN_EMSCRIPTEN AND NOT EMSCRIPTEN)
-    add_executable(akhenaten-updater "${PROJECT_SOURCE_DIR}/tools/akhenaten-updater/main.cpp")
-    set_target_properties(akhenaten-updater PROPERTIES
-        CXX_STANDARD 17
-        CXX_STANDARD_REQUIRED ON
-        OUTPUT_NAME "akhenaten-updater"
-    )
-    if(MSVC)
-        # No console flash when launched from the game with CREATE_NO_WINDOW.
-        target_compile_definitions(akhenaten-updater PRIVATE _CRT_SECURE_NO_WARNINGS)
-    endif()
-    add_dependencies(${GAME} akhenaten-updater)
-endif()
-
 if(OPTION_ENABLE_INNOEXTRACT)
     include(BuildInnoextract)
     akhenaten_copy_innoextract()
@@ -1245,22 +1257,13 @@ if(APPLE)
         COMMAND chmod +x "${MACOS_DIR}/launch.sh"
         VERBATIM
     )
-    if(TARGET akhenaten-updater)
-        add_custom_command(TARGET ${GAME} POST_BUILD
-            COMMAND ${CMAKE_COMMAND} -E copy
-                    "$<TARGET_FILE:akhenaten-updater>"
-                    "${MACOS_DIR}/akhenaten-updater"
-            COMMAND chmod +x "${MACOS_DIR}/akhenaten-updater"
-            VERBATIM
-        )
-    endif()
 endif()
 
 #
 # Apple specific End
 #
 
-# Copy buildnumber.txt beside binary; ship akhenaten-updater next to the game.
+# Copy buildnumber.txt beside binary.
 
 set(BUILD_NUMBER_SRC "${CMAKE_BINARY_DIR}/buildnumber.txt")
 
@@ -1281,15 +1284,6 @@ if(UNIX AND NOT APPLE)
                 "${BUILD_NUMBER_SRC}"
                 "${UNIX_DIR}/buildnumber.txt"
     )
-    if(TARGET akhenaten-updater)
-        add_custom_command(TARGET ${GAME} POST_BUILD
-            COMMAND ${CMAKE_COMMAND} -E copy
-                    "$<TARGET_FILE:akhenaten-updater>"
-                    "${UNIX_DIR}/akhenaten-updater"
-            COMMAND chmod +x "${UNIX_DIR}/akhenaten-updater"
-            VERBATIM
-        )
-    endif()
 endif()
 
 if(WIN32)
@@ -1299,13 +1293,6 @@ if(WIN32)
                 "${BUILD_NUMBER_SRC}"
                 "${WIN32_DIR}/buildnumber.txt"
     )
-    if(TARGET akhenaten-updater)
-        add_custom_command(TARGET ${GAME} POST_BUILD
-            COMMAND ${CMAKE_COMMAND} -E copy
-                    "$<TARGET_FILE:akhenaten-updater>"
-                    "$<TARGET_FILE_DIR:${GAME}>/akhenaten-updater.exe"
-        )
-    endif()
 endif()
 
 target_include_directories(${GAME} PRIVATE ${FREETYPE_INCLUDE_DIRS})
@@ -1453,9 +1440,6 @@ endif()
 
 if(NOT APPLE)
     install(TARGETS ${GAME} RUNTIME DESTINATION bin)
-    if(TARGET akhenaten-updater)
-        install(TARGETS akhenaten-updater RUNTIME DESTINATION bin)
-    endif()
 endif()
 
 if(UNIX AND NOT APPLE)
@@ -1479,9 +1463,6 @@ if (MSVC)
         "$<TARGET_PDB_FILE:${GAME}>"
         "${CMAKE_SOURCE_DIR}/ext/bugtrap/BugTrap-x64.dll"
     )
-    if(TARGET akhenaten-updater)
-        list(APPEND BINARY_FILES "$<TARGET_FILE:akhenaten-updater>")
-    endif()
     add_custom_command(
         TARGET ${GAME}
         POST_BUILD

@@ -35,6 +35,7 @@ localization_en = [
   {key:"#TR_CONFIG_HEADER_BUILDING_CHANGES", text:"Building changes"}
   {key:"#TR_CONFIG_HEADER_RESOURCE_CHANGES", text:"Resource changes"}
   {key:"#TR_CONFIG_SHOW_INTRO_VIDEO", text:"Play intro videos"}
+  {key:"#TR_CONFIG_AUTO_UPDATE", text:"Download new builds automatically"}
   {key:"#TR_CONFIG_HIDE_NEW_GAME_TOP_MENU", text:"Hide top menu new game button"}
   {key:"#TR_CONFIG_SAVE_YEAR_KINGDOME_RATING", text:"Save kingdom rating on yearly update"}
   {key:"#TR_CONFIG_SIDEBAR_INFO", text:"Extra information in the control panel"}
@@ -467,13 +468,13 @@ localization_en = [
   {key:"#warship_moving_to_position", text:"Moving to position"}
   {key:"#warship_moving_to_position_text", text:"The ship is sailing to the position you designated and will hold there until ordered otherwise."}
   {key:"#main_menu_update_downloading", text:"Downloading update..."}
-  {key:"#main_menu_update_opening_page", text:"Opening download page..."}
   {key:"#main_menu_update_now", text:"update now"}
   {key:"#main_menu_update_later", text:"later"}
+  {key:"#main_menu_update_restart", text:"restart now"}
+  {key:"#main_menu_update_ready", text:"The update is installed when the game closes."}
+  {key:"#main_menu_update_failed", text:"The update could not be downloaded, see the log."}
+  {key:"#main_menu_new_build_date", text:"New build from ${date}"}
   {key:"#main_menu_loading_commits", text:"Loading recent commits..."}
-  {key:"#main_menu_new_build", text:"New build: ${commit} (you have ${local})"}
-  {key:"#main_menu_updated", text:"Updated"}
-  {key:"#main_menu_build_up_to_date", text:"Build ${build} (up to date)"}
   {key:"#message_dialog_distant_battle", text:"Distant Battle"}
   {key:"#mods_window_title", text:"Mods"}
   {key:"#mods_window_unpack_scripts", text:"Unpack scripts"}

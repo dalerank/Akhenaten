@@ -65,6 +65,7 @@ Sources are collected via `file(GLOB ...)` with **no `CONFIGURE_DEPENDS`**, so a
 --nodatacheck         skip Pharaoh/Cleopatra install validation at startup
 --no-logo             skip the logo screen, go straight to the main menu
 --nointro             skip the intro video on startup
+--no-update           do not check for or download a newer build (the updater exists only in CI builds)
 --nomouse             disable mouse-driven input (edge/drag camera scrolling) — for tests/screenshots
 --config              show configuration dialog on startup
 --noconfig-window     skip configuration dialog on startup (even without akhenaten.cfg)

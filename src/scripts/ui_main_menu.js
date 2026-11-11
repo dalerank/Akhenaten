@@ -1,16 +1,19 @@
 log_info("akhenaten: main menu started")
 
-function main_menu_local_build_number() {
-	var v = game.version
-	var marker = " b"
-	var i = v.indexOf(marker)
-	if (i < 0) {
-		return 0
-	}
-	return parseInt(v.substring(i + marker.length)) || 0
-}
+// mirrors e_updater_state (src/platform/app_updater.h)
+var UPDATER_OFF = 0
+var UPDATER_CHECKING = 1
+var UPDATER_NO_ANSWER = 2
+var UPDATER_UP_TO_DATE = 3
+var UPDATER_AVAILABLE = 4
+var UPDATER_DOWNLOADING = 5
+var UPDATER_READY = 6
+var UPDATER_FAILED = 7
+
+var main_menu_update_dismissed = false
 
 function main_menu_dismiss_update(window) {
+	main_menu_update_dismissed = true
 	window.update_panel.enabled = false
 	window.update_game.enabled = false
 	window.new_version.enabled = false
@@ -19,18 +22,36 @@ function main_menu_dismiss_update(window) {
 	window.update_status.enabled = false
 }
 
-function main_menu_update_now(window) {
-	if (window.update_game.readonly) {
+function main_menu_show_update_state(window, state) {
+	if (main_menu_update_dismissed) {
 		return
 	}
-	if (__platform_can_auto_update()) {
-		window.update_status.text = "#main_menu_update_downloading"
-	} else {
-		window.update_status.text = "#main_menu_update_opening_page"
+	if (state != UPDATER_AVAILABLE && state != UPDATER_DOWNLOADING && state != UPDATER_READY && state != UPDATER_FAILED) {
+		return
 	}
-	window.update_status.enabled = true
-	// Empty URL → C++ picks the platform nightly artifact (Win/Linux/macOS).
-	__game_download_latest_version("")
+	window.update_panel.enabled = true
+	window.update_game.enabled = true
+	window.update_game.readonly = false
+	window.update_game.text = (state == UPDATER_READY) ? "#main_menu_update_restart" : "#main_menu_update_now"
+	window.update_later.enabled = true
+	window.new_version.enabled = true
+	window.new_version.text = _eformat(__loc("#main_menu_new_build_date"), { date: __updater_remote_date() })
+	window.recent_commits.enabled = true
+
+	var status = ""
+	if (state == UPDATER_DOWNLOADING) {
+		status = "#main_menu_update_downloading"
+	} else if (state == UPDATER_READY) {
+		status = "#main_menu_update_ready"
+	} else if (state == UPDATER_FAILED) {
+		status = "#main_menu_update_failed"
+	}
+	window.update_status.text = status
+	window.update_status.enabled = status != ""
+}
+
+function main_menu_update_now(window) {
+	__updater_apply()
 }
 
 [es=window]
@@ -194,10 +215,10 @@ function main_menu_on_init(window) {
 		}
 	}
 
-	if (!game.is_integral_tests && github_is_active()) {
+	if (!game.is_integral_tests && github_is_active() && __updater_state() != UPDATER_OFF) {
 		github_get_recent_commits_async("dalerank", "Akhenaten")
-		github_get_total_commits_async("dalerank", "Akhenaten")
 	}
+	main_menu_show_update_state(window, __updater_state())
 }
 
 [es=(window_main_menu, update_recent_commits)]
@@ -206,40 +227,14 @@ function main_menu_on_update_recent_commits(window) {
 	window.recent_commits.enabled = true
 }
 
-[es=(window_main_menu, update_version)]
-function main_menu_on_update_version(window) {
-	log_info("main_menu_download_version: " + window.current_commit)
-	if (window.current_commit <= 1)
-		return
-
-	var local_build = main_menu_local_build_number()
-	var update_available = window.current_commit > local_build
-
-	if (update_available && game_features.gameopt_last_game_version == window.current_commit)
-		return
-
-	window.update_panel.enabled = true
-	window.new_version.enabled = true
-	window.update_game.enabled = true
-	window.recent_commits.enabled = true
-
-	if (update_available) {
-		window.update_game.readonly = false
-		window.update_game.text = "#main_menu_update_now"
-		window.update_later.enabled = true
-		window.new_version.text = _eformat(__loc("#main_menu_new_build"), { commit: window.current_commit, local: local_build })
-		game_features.gameopt_last_game_version = window.current_commit
-	} else {
-		window.update_game.readonly = true
-		window.update_game.text = "#main_menu_updated"
-		window.update_later.enabled = false
-		window.new_version.text = _eformat(__loc("#main_menu_build_up_to_date"), { build: local_build })
-	}
+[es=(window_main_menu, update_state)]
+function main_menu_on_update_state(window) {
+	main_menu_show_update_state(window, window.updater_state)
 }
 
-[es=event_github_totals_commits_loaded]
-function main_menu_download_version(ev) {
-	emit window_main_menu.update_version{ current_commit: ev.current_commit }
+[es=event_updater_state_changed]
+function main_menu_on_updater_state_changed(ev) {
+	emit window_main_menu.update_state{ updater_state: ev.state }
 }
 
 [es=event_github_recent_commits_loaded]

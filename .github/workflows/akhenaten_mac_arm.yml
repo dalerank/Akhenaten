@@ -38,12 +38,6 @@ jobs:
         cmake --build --preset macos-clang-relwithdebinfo-make-arm64 --target install/local
         mkdir macos_build
         cp -R ./build/install/akhenaten.app ./macos_build/akhenaten.app
-        if [ -f ./build/akhenaten-updater ]; then
-          cp ./build/akhenaten-updater ./macos_build/akhenaten.app/Contents/MacOS/akhenaten-updater
-          cp ./build/akhenaten-updater ./macos_build/akhenaten-updater
-          chmod +x ./macos_build/akhenaten.app/Contents/MacOS/akhenaten-updater \
-                   ./macos_build/akhenaten-updater
-        fi
         # Ship innoextract where SDL_GetBasePath() looks (Resources) and next to the binary.
         INNO_SRC=""
         if [ -f ./build/tools/innoextract/bin/innoextract ]; then

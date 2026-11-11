@@ -155,6 +155,8 @@ ANK_REGISTER_BOOL_ARGUMENT_HANDLER("--window", "window", true, "enable window mo
 ANK_REGISTER_BOOL_ARGUMENT_HANDLER("--nosound", "sound", false, "disable audio: skip sound manager init and audio file probing at startup");
 ANK_REGISTER_BOOL_ARGUMENT_HANDLER("--no-logo", "no_logo", true, "skip logo screen; go straight to main menu");
 ANK_REGISTER_BOOL_ARGUMENT_HANDLER("--nointro", "nointro", true, "skip the intro video on startup");
+ANK_REGISTER_BOOL_ARGUMENT_HANDLER("--no-update", "no_update", true,
+  "do not check for or download a newer build (CI builds only)");
 ANK_REGISTER_BOOL_ARGUMENT_HANDLER("--nomouse", "nomouse", true, "disable mouse-driven input (e.g. edge/drag camera scrolling); useful for tests/screenshots");
 ANK_REGISTER_BOOL_ARGUMENT_HANDLER("--logjsfiles", "logjsfiles", true, "print logs which files open with js");
 ANK_REGISTER_BOOL_ARGUMENT_HANDLER("--log-js-handlers", "log_js_handlers", true, "print logs when JavaScript event handlers are registered");

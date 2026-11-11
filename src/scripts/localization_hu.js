@@ -432,13 +432,9 @@ localization_hu = [
   {key:"#warship_moving_to_position", text:"Elfoglalja a kijelölt pozíciót"}
   {key:"#warship_moving_to_position_text", text:"A hajó a kijelölt pozíció felé hajózik, és ott marad, amíg más parancsot nem kap."}
   {key:"#main_menu_update_downloading", text:"Frissítés letöltése..."}
-  {key:"#main_menu_update_opening_page", text:"Letöltési oldal megnyitása..."}
   {key:"#main_menu_update_now", text:"frissítés most"}
   {key:"#main_menu_update_later", text:"később"}
   {key:"#main_menu_loading_commits", text:"Legutóbbi módosítások betöltése..."}
-  {key:"#main_menu_new_build", text:"Új build: ${commit} (a jelenlegi: ${local})"}
-  {key:"#main_menu_updated", text:"Frissítve"}
-  {key:"#main_menu_build_up_to_date", text:"Build: ${build} (naprakész)"}
   {key:"#message_dialog_distant_battle", text:"Távoli csata"}
   {key:"#mods_window_title", text:"Modok"}
   {key:"#mods_window_unpack_scripts", text:"Parancsfájlok kicsomagolása"}

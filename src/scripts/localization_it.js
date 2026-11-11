@@ -414,13 +414,9 @@ localization_it = [
   {key:"#warship_moving_to_position", text:"In movimento verso la posizione"}
   {key:"#warship_moving_to_position_text", text:"La nave sta raggiungendo la posizione che hai indicato e vi resterà finché non le darai altri ordini."}
   {key:"#main_menu_update_downloading", text:"Scarico l'aggiornamento..."}
-  {key:"#main_menu_update_opening_page", text:"Apro la pagina di scaricamento..."}
   {key:"#main_menu_update_now", text:"aggiorna ora"}
   {key:"#main_menu_update_later", text:"più tardi"}
   {key:"#main_menu_loading_commits", text:"Carico le ultime modifiche..."}
-  {key:"#main_menu_new_build", text:"Nuova versione: ${commit} (hai la ${local})"}
-  {key:"#main_menu_updated", text:"Aggiornato"}
-  {key:"#main_menu_build_up_to_date", text:"Versione ${build} (aggiornata)"}
   {key:"#message_dialog_distant_battle", text:"Battaglia lontana"}
   {key:"#mods_window_title", text:"Mod"}
   {key:"#mods_window_unpack_scripts", text:"Estrai gli script"}

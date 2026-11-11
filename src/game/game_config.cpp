@@ -152,6 +152,7 @@ namespace game_features {
     game_feature gameopt_last_save_filename{ "gameopt_last_save_filename", "", "", "" };
     game_feature gameopt_enabled_mods{ "gameopt_enabled_mods", "", "", "" };
     game_feature gameopt_last_game_version{ "gameopt_last_game_version", "", "", "" };
+    game_feature gameopt_auto_update{"gameopt_auto_update", "#TR_CONFIG_AUTO_UPDATE", true, true};
     game_feature gameopt_scroll_speed{ "gameopt_scroll_speed", "", 70.0f, 70.0f };
     game_feature gameopt_middle_mouse_camera_pan{ "gameopt_middle_mouse_camera_pan", "", true, true };
     game_feature gameopt_middle_mouse_pan_speed{ "gameopt_middle_mouse_pan_speed", "", 100.0f, 100.0f };

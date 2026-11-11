@@ -28,10 +28,9 @@ jobs:
     - name: build-project
       run: |
         cmake --preset win-relwithdebinfo
-        cmake --build --preset win-relwithdebinfo --target akhenaten akhenaten-updater -j $env:NUMBER_OF_PROCESSORS
+        cmake --build --preset win-relwithdebinfo --target akhenaten -j $env:NUMBER_OF_PROCESSORS
         copy ./build/RelWithDebInfo/akhenaten.exe ./bin_x64/akhenaten.exe
         copy ./build/RelWithDebInfo/akhenaten.pdb ./bin_x64/akhenaten.pdb
-        copy ./build/RelWithDebInfo/akhenaten-updater.exe ./bin_x64/akhenaten-updater.exe
         if (Test-Path ./build/RelWithDebInfo/innoextract.exe) {
           copy ./build/RelWithDebInfo/innoextract.exe ./bin_x64/innoextract.exe
         } elseif (Test-Path ./build/tools/innoextract/bin/innoextract.exe) {

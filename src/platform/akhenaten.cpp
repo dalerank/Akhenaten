@@ -13,6 +13,7 @@
 #include "content/vfs.h"
 #include "io/gamefiles/lang.h"
 #include "game/game_config.h"
+#include "platform/app_updater.h"
 #include "platform/arguments.h"
 #include "platform/integral_tests.h"
 #include "content/content.h"
@@ -721,6 +722,8 @@ int main(int argc, char** argv) {
         logs::info("[integraltests] keep: suite finished (rc=%d), leaving window open", integral_rc);
     }
 
+    app_updater_start(argc, argv);
+
     bool ok = platform.run_main_loop(
           []() { g_app.pump_one_frame(); },
           []() { return !g_app.quit; });
@@ -728,6 +731,7 @@ int main(int argc, char** argv) {
     game_imgui_overlay_destroy();
 
     teardown();
+    app_updater_finish();
 
     return g_args.is_integral_tests() ? integral_rc : EXIT_SUCCESS;
 }
