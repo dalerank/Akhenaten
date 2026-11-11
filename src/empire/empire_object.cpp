@@ -26,9 +26,9 @@
 #include <cstdlib>
 #include <cmath>
 
-#define MAX_OBJECTS 200
-#define MAX_ROUTES 20
-#define EMPIRE_REGION_NAME_SCAN 128
+constexpr int MAX_OBJECTS = 200;
+constexpr int MAX_ROUTES = 20;
+constexpr int EMPIRE_REGION_NAME_SCAN = 128;
 
 const e_empire_object_tokens_t ANK_CONFIG_ENUM(e_empire_object_tokens);
 

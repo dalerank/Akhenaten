@@ -25,8 +25,8 @@ struct empire_object {
 };
 ANK_CONFIG_PROPERTY(empire_object, id, type, pos, image_id, expanded_pos, expanded_image_id, distant_battle_travel_months)
 
-#define EMPIRE_OBJ_MAX_SOLD_RESOURCES 14
-#define EMPIRE_OBJ_MAX_BOUGHT_RESOURCES 8
+constexpr int EMPIRE_OBJ_MAX_SOLD_RESOURCES = 14;
+constexpr int EMPIRE_OBJ_MAX_BOUGHT_RESOURCES = 8;
 
 struct full_empire_object {
     int in_use; // this can be 2, so it's an int!
