@@ -820,6 +820,12 @@ void building_bazaar::on_create(int orientation) {
     }
     d.min_variety = 1;
 
+    sync_inventory_types();
+}
+
+// The food slots follow the city's allowed foods, which update_month recomputes.
+void building_bazaar::sync_inventory_types() {
+    auto& d = runtime_data();
     d.inventory[INVENTORY_FOOD1].type = g_city.allowed_foods(INVENTORY_FOOD1);
     d.inventory[INVENTORY_FOOD2].type = g_city.allowed_foods(INVENTORY_FOOD2);
     d.inventory[INVENTORY_FOOD3].type = g_city.allowed_foods(INVENTORY_FOOD3);
@@ -830,18 +836,16 @@ void building_bazaar::on_create(int orientation) {
     d.inventory[INVENTORY_GOOD4].type = RESOURCE_BEER;
 }
 
+void building_bazaar::update_month() {
+    building_impl::update_month();
+    sync_inventory_types();
+}
+
 void building_bazaar::on_post_load() {
     building_impl::on_post_load();
 
     auto &d = runtime_data();
-    d.inventory[INVENTORY_FOOD1].type = g_city.allowed_foods(INVENTORY_FOOD1);
-    d.inventory[INVENTORY_FOOD2].type = g_city.allowed_foods(INVENTORY_FOOD2);
-    d.inventory[INVENTORY_FOOD3].type = g_city.allowed_foods(INVENTORY_FOOD3);
-    d.inventory[INVENTORY_FOOD4].type = g_city.allowed_foods(INVENTORY_FOOD4);
-    d.inventory[INVENTORY_GOOD1].type = RESOURCE_POTTERY;
-    d.inventory[INVENTORY_GOOD2].type = RESOURCE_LUXURY_GOODS;
-    d.inventory[INVENTORY_GOOD3].type = RESOURCE_LINEN;
-    d.inventory[INVENTORY_GOOD4].type = RESOURCE_BEER;
+    sync_inventory_types();
 
     if (d.desired_variety < 1) {
         d.desired_variety = current_params().food_variety_target;
