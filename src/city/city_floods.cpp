@@ -5,6 +5,8 @@
 #include "core/calc.h"
 #include "core/profiler.h"
 #include "core/random.h"
+#include "core/svector.h"
+#include "js/js_game.h"
 #include "grid/basin.h"
 #include "grid/floodplain.h"
 #include "grid/tiles.h"
@@ -298,28 +300,19 @@ void floods_t::cycle_states_recalc() {
     flood_progress_target = std::clamp(flood_progress_target, 0, 30);
 }
 
-// OG floods.c floodplain_settings_randomize_next_quality: {weight, delta}, weights sum to 100.
+struct flood_quality_step_t {
+    int weight;
+    int delta;
+};
+ANK_CONFIG_STRUCT(flood_quality_step_t, weight, delta)
+svector<flood_quality_step_t, 16> ANK_VARIABLE(flood_quality_steps);
+
+// OG floods.c floodplain_settings_randomize_next_quality; the steps table lives in city/floods.js.
 static int flood_randomized_quality(int quality) {
-    static constexpr struct {
-        int weight;
-        int delta;
-    } steps[] = {
-      {2, 100},
-      {3, 80},
-      {5, 60},
-      {10, 40},
-      {15, 20},
-      {30, 0},
-      {15, -20},
-      {10, -40},
-      {5, -60},
-      {3, -80},
-      {2, -100},
-    };
     random_generate_next();
     const int roll = random_short() % 99 + 1;
     int sum = 0;
-    for (const auto& step : steps) {
+    for (const auto& step : flood_quality_steps) {
         sum += step.weight;
         if (roll < sum) {
             return calc_bound(quality + step.delta, 0, 100);

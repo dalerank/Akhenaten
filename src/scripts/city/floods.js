@@ -1,5 +1,20 @@
 log_info("akhenaten: city floods started")
 
+// OG floods.c floodplain_settings_randomize_next_quality: {weight, delta}, weights sum to 100.
+flood_quality_steps = [
+    {weight: 2, delta: 100}
+    {weight: 3, delta: 80}
+    {weight: 5, delta: 60}
+    {weight: 10, delta: 40}
+    {weight: 15, delta: 20}
+    {weight: 30, delta: 0}
+    {weight: 15, delta: -20}
+    {weight: 10, delta: -40}
+    {weight: 5, delta: -60}
+    {weight: 3, delta: -80}
+    {weight: 2, delta: -100}
+]
+
 city.floods = extend(__city_floods, {
     state_is: function(state) {
         return this.state == state
