@@ -18,9 +18,47 @@ imagepaks = [
   {id: PACK_LIB_EXTRA, name:"LibExtra", index:24000, delayed:true, system:false}, // 24000 --> 24000 + 201 + 27
   {id: PACK_LIB_EXTRA_2, name:"LibExtra2", index:24230, delayed:true, system:false}, // 24230 --> 24230 + 201 + 27
   {id: PACK_LIB_MAUS_CARRYOVER, name:"MausCarryover", index:24460, delayed:true, system:false}, // 24460 --> 24460 + 201 + 9
-  {id: PACK_LIB_MAUSOLEUM_0, name:"mausoleum0_extra", index:24690, delayed:true, system:false}, // 24690 --> 24690 + 201 + 16
-  {id: PACK_LIB_MAUSOLEUM_1, name:"mausoleum1_extra", index:24910, delayed:true, system:false}, // 24910 --> 24910 + 201 + 16
-  {id: PACK_LIB_MAUSOLEUM_2, name:"mausoleum2_extra", index:25130, delayed:true, system:false}, // 25130 --> 25130 + 201 + 16
+  // Ground/fence extras (16 frames). Compact + high indices — avoid mastaba@25000 overlap.
+  {id: PACK_LIB_MAUSOLEUM_0, name:"mausoleum0_extra", index:52072, delayed:true, system:false, compact:true}, // 16
+  {id: PACK_LIB_MAUSOLEUM_1, name:"mausoleum1_extra", index:52088, delayed:true, system:false, compact:true}, // 16
+  {id: PACK_LIB_MAUSOLEUM_2, name:"mausoleum2_extra", index:52104, delayed:true, system:false, compact:true}, // 16
+  // OG block stage packs maus{skin}_{1..3}{a..d}: 2 camera frames each. Before sphinx@53000.
+  {id: PACK_MAUS0_1A, name:"maus0_1a", index:52000, delayed:true, system:false, compact:true},
+  {id: PACK_MAUS0_1B, name:"maus0_1b", index:52002, delayed:true, system:false, compact:true},
+  {id: PACK_MAUS0_1C, name:"maus0_1c", index:52004, delayed:true, system:false, compact:true},
+  {id: PACK_MAUS0_1D, name:"maus0_1d", index:52006, delayed:true, system:false, compact:true},
+  {id: PACK_MAUS0_2A, name:"maus0_2a", index:52008, delayed:true, system:false, compact:true},
+  {id: PACK_MAUS0_2B, name:"maus0_2b", index:52010, delayed:true, system:false, compact:true},
+  {id: PACK_MAUS0_2C, name:"maus0_2c", index:52012, delayed:true, system:false, compact:true},
+  {id: PACK_MAUS0_2D, name:"maus0_2d", index:52014, delayed:true, system:false, compact:true},
+  {id: PACK_MAUS0_3A, name:"maus0_3a", index:52016, delayed:true, system:false, compact:true},
+  {id: PACK_MAUS0_3B, name:"maus0_3b", index:52018, delayed:true, system:false, compact:true},
+  {id: PACK_MAUS0_3C, name:"maus0_3c", index:52020, delayed:true, system:false, compact:true},
+  {id: PACK_MAUS0_3D, name:"maus0_3d", index:52022, delayed:true, system:false, compact:true},
+  {id: PACK_MAUS1_1A, name:"maus1_1a", index:52024, delayed:true, system:false, compact:true},
+  {id: PACK_MAUS1_1B, name:"maus1_1b", index:52026, delayed:true, system:false, compact:true},
+  {id: PACK_MAUS1_1C, name:"maus1_1c", index:52028, delayed:true, system:false, compact:true},
+  {id: PACK_MAUS1_1D, name:"maus1_1d", index:52030, delayed:true, system:false, compact:true},
+  {id: PACK_MAUS1_2A, name:"maus1_2a", index:52032, delayed:true, system:false, compact:true},
+  {id: PACK_MAUS1_2B, name:"maus1_2b", index:52034, delayed:true, system:false, compact:true},
+  {id: PACK_MAUS1_2C, name:"maus1_2c", index:52036, delayed:true, system:false, compact:true},
+  {id: PACK_MAUS1_2D, name:"maus1_2d", index:52038, delayed:true, system:false, compact:true},
+  {id: PACK_MAUS1_3A, name:"maus1_3a", index:52040, delayed:true, system:false, compact:true},
+  {id: PACK_MAUS1_3B, name:"maus1_3b", index:52042, delayed:true, system:false, compact:true},
+  {id: PACK_MAUS1_3C, name:"maus1_3c", index:52044, delayed:true, system:false, compact:true},
+  {id: PACK_MAUS1_3D, name:"maus1_3d", index:52046, delayed:true, system:false, compact:true},
+  {id: PACK_MAUS2_1A, name:"maus2_1a", index:52048, delayed:true, system:false, compact:true},
+  {id: PACK_MAUS2_1B, name:"maus2_1b", index:52050, delayed:true, system:false, compact:true},
+  {id: PACK_MAUS2_1C, name:"maus2_1c", index:52052, delayed:true, system:false, compact:true},
+  {id: PACK_MAUS2_1D, name:"maus2_1d", index:52054, delayed:true, system:false, compact:true},
+  {id: PACK_MAUS2_2A, name:"maus2_2a", index:52056, delayed:true, system:false, compact:true},
+  {id: PACK_MAUS2_2B, name:"maus2_2b", index:52058, delayed:true, system:false, compact:true},
+  {id: PACK_MAUS2_2C, name:"maus2_2c", index:52060, delayed:true, system:false, compact:true},
+  {id: PACK_MAUS2_2D, name:"maus2_2d", index:52062, delayed:true, system:false, compact:true},
+  {id: PACK_MAUS2_3A, name:"maus2_3a", index:52064, delayed:true, system:false, compact:true},
+  {id: PACK_MAUS2_3B, name:"maus2_3b", index:52066, delayed:true, system:false, compact:true},
+  {id: PACK_MAUS2_3C, name:"maus2_3c", index:52068, delayed:true, system:false, compact:true},
+  {id: PACK_MAUS2_3D, name:"maus2_3d", index:52070, delayed:true, system:false, compact:true},
   {id: PACK_PYRAMID, name:"Pyramid", index:34000, delayed:true, system:false}, // 34000 --> 34000 + 201 + 228
   {id: PACK_BENT_PYRAMID, name:"bent_pyramid", index:34450, delayed:true, system:false}, // 34250 --> 34250 + 201 + 228
   {id: PACK_MUDBRICK_PYRAMID, name:"mudbrick_pyramid", index:34900, delayed:true, system:false}, // 34900 --> 34900 + 201 + 228

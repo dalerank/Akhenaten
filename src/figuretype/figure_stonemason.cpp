@@ -6,6 +6,7 @@
 #include "building/monument_obelisk.h"
 #include "building/monument_sphinx.h"
 #include "building/monument_sun_temple.h"
+#include "building/monument_mausoleum.h"
 #include "building/building_statue.h"
 #include "building/monuments.h"
 #include "building/monument_pyramid_figure.h"
@@ -42,6 +43,12 @@ void figure_stonemason::figure_action() {
         break;
 
     case ACTION_0_MASON_CREATED: {
+            if (b_dest->dcast_mausoleum()) {
+                if (!building_mausoleum::find_work_for_figure(id())) {
+                    advance_action(ACTION_6_MASON_RETURN_HOME);
+                }
+                break;
+            }
             // Prefer monument access_point (enter_offset); fall back to access_tile.
             if (auto *mon = b_dest->dcast_monument()) {
                 base.destination_tile = mon->access_point();
@@ -71,7 +78,7 @@ void figure_stonemason::figure_action() {
             ? (short)ACTION_9_MASON_WORK_OBELISK
             : (to_og_pyramid ? (short)ACTION_16_MASON_CLIMB_RAMP : (short)ACTION_7_MASON_LOOKING_FOR_WORK_TILE);
         // OG: side parts wait for a sandstone sled before working.
-        if (sun && sun->part_index() != 0) {
+        if ((sun && sun->part_index() != 0) || b_dest->dcast_mausoleum()) {
             arrived = ACTION_19_MASON_WAIT_FOR_BLOCK;
         }
         if (do_goto(base.destination_tile, terrain_usage, arrived, ACTION_10_MASON_DESTROY)) {
@@ -136,6 +143,12 @@ void figure_stonemason::figure_action() {
         // OG sun temple: linger until a laborer sandstone sled wakes us to WORK.
         if (auto *sun = b_dest->dcast_sun_temple()) {
             if (sun->runtime_data().og_part.worker_figure_id != id()) {
+                advance_action(ACTION_6_MASON_RETURN_HOME);
+            }
+            break;
+        }
+        if (auto *maus = b_dest->dcast_mausoleum()) {
+            if (maus->runtime_data().og_part.worker_figure_id != id()) {
                 advance_action(ACTION_6_MASON_RETURN_HOME);
             }
             break;
@@ -206,6 +219,15 @@ void figure_stonemason::figure_action() {
         break;
 
     case ACTION_9_MASON_WORK_OBELISK: {
+        if (auto *maus = b_dest->dcast_mausoleum()) {
+            base.set_flag(e_figure_flag_invisible);
+            if (maus->work_tick(base)) {
+                base.set_flag(e_figure_flag_invisible, false);
+                maus->remove_worker(id());
+                advance_action(ACTION_6_MASON_RETURN_HOME);
+            }
+            break;
+        }
         building *worked = building_get(runtime_data().destination_bid);
         if (!worked || !worked->id) {
             worked = destination();

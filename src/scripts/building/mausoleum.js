@@ -2,44 +2,244 @@ log_info("akhenaten: building mausoleum started")
 
 building_mausoleum {
     animations {
-      // MVP: extras packs have 2 groups only; stage .sg3 follow-up after pack build.
-      // Keys: s{a|b|c}{1|2}_v{0|1|2} — stage × camera × art skin.
-      // sb* reuse sa* groups until stage packs exist (avoids "group 3 not found").
-      sa1_v0 { pack:PACK_LIB_MAUSOLEUM_0, id:1 }
-      sa2_v0 { pack:PACK_LIB_MAUSOLEUM_0, id:2 }
-      sb1_v0 { pack:PACK_LIB_MAUSOLEUM_0, id:1 }
-      sb2_v0 { pack:PACK_LIB_MAUSOLEUM_0, id:2 }
-      sc1_v0 { pack:PACK_LIB_MAUS_CARRYOVER, id:1 }
-      sc2_v0 { pack:PACK_LIB_MAUS_CARRYOVER, id:2 }
-
-      sa1_v1 { pack:PACK_LIB_MAUSOLEUM_1, id:1 }
-      sa2_v1 { pack:PACK_LIB_MAUSOLEUM_1, id:2 }
-      sb1_v1 { pack:PACK_LIB_MAUSOLEUM_1, id:1 }
-      sb2_v1 { pack:PACK_LIB_MAUSOLEUM_1, id:2 }
-      sc1_v1 { pack:PACK_LIB_MAUS_CARRYOVER, id:1 }
-      sc2_v1 { pack:PACK_LIB_MAUS_CARRYOVER, id:2 }
-
-      sa1_v2 { pack:PACK_LIB_MAUSOLEUM_2, id:1 }
-      sa2_v2 { pack:PACK_LIB_MAUSOLEUM_2, id:2 }
-      sb1_v2 { pack:PACK_LIB_MAUSOLEUM_2, id:1 }
-      sb2_v2 { pack:PACK_LIB_MAUSOLEUM_2, id:2 }
-      sc1_v2 { pack:PACK_LIB_MAUS_CARRYOVER, id:1 }
-      sc2_v2 { pack:PACK_LIB_MAUS_CARRYOVER, id:2 }
-
-      // Short aliases / ghost fallback (skin 0)
-      sa1 { pack:PACK_LIB_MAUSOLEUM_0, id:1 }
-      preview { pack:PACK_LIB_MAUS_CARRYOVER, id:1 }
+      // Block packs: m{skin}_{stage}{a-d}{view}. OG view bit picks offset 0/1.
+      // Ground: mausoleum*_extra compact ids 1..16 = OG IMAGE_GROUP_MAUSOLEUM_GROUND+0..15.
+      m0_1a1 { pack:PACK_MAUS0_1A, id:1 }
+      m0_1a2 { pack:PACK_MAUS0_1A, id:1, offset:1 }
+      m0_1b1 { pack:PACK_MAUS0_1B, id:1 }
+      m0_1b2 { pack:PACK_MAUS0_1B, id:1, offset:1 }
+      m0_1c1 { pack:PACK_MAUS0_1C, id:1 }
+      m0_1c2 { pack:PACK_MAUS0_1C, id:1, offset:1 }
+      m0_1d1 { pack:PACK_MAUS0_1D, id:1 }
+      m0_1d2 { pack:PACK_MAUS0_1D, id:1, offset:1 }
+      m0_2a1 { pack:PACK_MAUS0_2A, id:1 }
+      m0_2a2 { pack:PACK_MAUS0_2A, id:1, offset:1 }
+      m0_2b1 { pack:PACK_MAUS0_2B, id:1 }
+      m0_2b2 { pack:PACK_MAUS0_2B, id:1, offset:1 }
+      m0_2c1 { pack:PACK_MAUS0_2C, id:1 }
+      m0_2c2 { pack:PACK_MAUS0_2C, id:1, offset:1 }
+      m0_2d1 { pack:PACK_MAUS0_2D, id:1 }
+      m0_2d2 { pack:PACK_MAUS0_2D, id:1, offset:1 }
+      m0_3a1 { pack:PACK_MAUS0_3A, id:1 }
+      m0_3a2 { pack:PACK_MAUS0_3A, id:1, offset:1 }
+      m0_3b1 { pack:PACK_MAUS0_3B, id:1 }
+      m0_3b2 { pack:PACK_MAUS0_3B, id:1, offset:1 }
+      m0_3c1 { pack:PACK_MAUS0_3C, id:1 }
+      m0_3c2 { pack:PACK_MAUS0_3C, id:1, offset:1 }
+      m0_3d1 { pack:PACK_MAUS0_3D, id:1 }
+      m0_3d2 { pack:PACK_MAUS0_3D, id:1, offset:1 }
+      m1_1a1 { pack:PACK_MAUS1_1A, id:1 }
+      m1_1a2 { pack:PACK_MAUS1_1A, id:1, offset:1 }
+      m1_1b1 { pack:PACK_MAUS1_1B, id:1 }
+      m1_1b2 { pack:PACK_MAUS1_1B, id:1, offset:1 }
+      m1_1c1 { pack:PACK_MAUS1_1C, id:1 }
+      m1_1c2 { pack:PACK_MAUS1_1C, id:1, offset:1 }
+      m1_1d1 { pack:PACK_MAUS1_1D, id:1 }
+      m1_1d2 { pack:PACK_MAUS1_1D, id:1, offset:1 }
+      m1_2a1 { pack:PACK_MAUS1_2A, id:1 }
+      m1_2a2 { pack:PACK_MAUS1_2A, id:1, offset:1 }
+      m1_2b1 { pack:PACK_MAUS1_2B, id:1 }
+      m1_2b2 { pack:PACK_MAUS1_2B, id:1, offset:1 }
+      m1_2c1 { pack:PACK_MAUS1_2C, id:1 }
+      m1_2c2 { pack:PACK_MAUS1_2C, id:1, offset:1 }
+      m1_2d1 { pack:PACK_MAUS1_2D, id:1 }
+      m1_2d2 { pack:PACK_MAUS1_2D, id:1, offset:1 }
+      m1_3a1 { pack:PACK_MAUS1_3A, id:1 }
+      m1_3a2 { pack:PACK_MAUS1_3A, id:1, offset:1 }
+      m1_3b1 { pack:PACK_MAUS1_3B, id:1 }
+      m1_3b2 { pack:PACK_MAUS1_3B, id:1, offset:1 }
+      m1_3c1 { pack:PACK_MAUS1_3C, id:1 }
+      m1_3c2 { pack:PACK_MAUS1_3C, id:1, offset:1 }
+      m1_3d1 { pack:PACK_MAUS1_3D, id:1 }
+      m1_3d2 { pack:PACK_MAUS1_3D, id:1, offset:1 }
+      m2_1a1 { pack:PACK_MAUS2_1A, id:1 }
+      m2_1a2 { pack:PACK_MAUS2_1A, id:1, offset:1 }
+      m2_1b1 { pack:PACK_MAUS2_1B, id:1 }
+      m2_1b2 { pack:PACK_MAUS2_1B, id:1, offset:1 }
+      m2_1c1 { pack:PACK_MAUS2_1C, id:1 }
+      m2_1c2 { pack:PACK_MAUS2_1C, id:1, offset:1 }
+      m2_1d1 { pack:PACK_MAUS2_1D, id:1 }
+      m2_1d2 { pack:PACK_MAUS2_1D, id:1, offset:1 }
+      m2_2a1 { pack:PACK_MAUS2_2A, id:1 }
+      m2_2a2 { pack:PACK_MAUS2_2A, id:1, offset:1 }
+      m2_2b1 { pack:PACK_MAUS2_2B, id:1 }
+      m2_2b2 { pack:PACK_MAUS2_2B, id:1, offset:1 }
+      m2_2c1 { pack:PACK_MAUS2_2C, id:1 }
+      m2_2c2 { pack:PACK_MAUS2_2C, id:1, offset:1 }
+      m2_2d1 { pack:PACK_MAUS2_2D, id:1 }
+      m2_2d2 { pack:PACK_MAUS2_2D, id:1, offset:1 }
+      m2_3a1 { pack:PACK_MAUS2_3A, id:1 }
+      m2_3a2 { pack:PACK_MAUS2_3A, id:1, offset:1 }
+      m2_3b1 { pack:PACK_MAUS2_3B, id:1 }
+      m2_3b2 { pack:PACK_MAUS2_3B, id:1, offset:1 }
+      m2_3c1 { pack:PACK_MAUS2_3C, id:1 }
+      m2_3c2 { pack:PACK_MAUS2_3C, id:1, offset:1 }
+      m2_3d1 { pack:PACK_MAUS2_3D, id:1 }
+      m2_3d2 { pack:PACK_MAUS2_3D, id:1, offset:1 }
+      preview { pack:PACK_MAUS0_3A, id:1 }
+      // Fence / plaza (identical across skins — skin 0 pack).
+      g0 { pack:PACK_LIB_MAUSOLEUM_0, id:1 }
+      g1 { pack:PACK_LIB_MAUSOLEUM_0, id:1, offset:1 }
+      g2 { pack:PACK_LIB_MAUSOLEUM_0, id:1, offset:2 }
+      g3 { pack:PACK_LIB_MAUSOLEUM_0, id:1, offset:3 }
+      g4 { pack:PACK_LIB_MAUSOLEUM_0, id:1, offset:4 }
+      g5 { pack:PACK_LIB_MAUSOLEUM_0, id:1, offset:5 }
+      g6 { pack:PACK_LIB_MAUSOLEUM_0, id:1, offset:6 }
+      g7 { pack:PACK_LIB_MAUSOLEUM_0, id:1, offset:7 }
+      g8 { pack:PACK_LIB_MAUSOLEUM_0, id:1, offset:8 }
+      g9 { pack:PACK_LIB_MAUSOLEUM_0, id:1, offset:9 }
+      g10 { pack:PACK_LIB_MAUSOLEUM_0, id:1, offset:10 }
+      g11 { pack:PACK_LIB_MAUSOLEUM_0, id:1, offset:11 }
+      g12 { pack:PACK_LIB_MAUSOLEUM_0, id:1, offset:12 }
+      g13 { pack:PACK_LIB_MAUSOLEUM_0, id:1, offset:13 }
+      g14 { pack:PACK_LIB_MAUSOLEUM_0, id:1, offset:14 }
+      g15 { pack:PACK_LIB_MAUSOLEUM_0, id:1, offset:15 }
+      walkway { pack:PACK_PYRAMID, id:8 }
+      walkway_alex { pack:PACK_LIB_MAUS_CARRYOVER, id:5 }
+      leveled { pack:PACK_TERRAIN, id:10 }
     }
-    // Heaven 8×22 clear land (swap on odd rotation).
     building_size : 22
-    init_tiles [8, 22]
-    art_stages : 3
-    // Place 240 (gate); finish ~220 → 110+110. Timber provisional (ramp).
-    sandstone_loads [ 110, 110 ]
-    timber_loads [ 100 ]
+    leveled : "leveled"
+    unbuilt : "walkway"
     placement_resources [
         { resource: RESOURCE_SANDSTONE, count: 240 }
     ]
+    // --- GENERATED by tools/mausoleum_from_og.py, do not edit by hand ---
+    // OG mausoleum_part_descs[116] split into blocks[4] + fence[112].
+    // archive_load concatenates them back into parts[] (OG order: blocks then fence).
+    //
+    //   x: 0         5         10        15        20
+    // y0:  . . 8 8 . . 8 8 . . 8 8 . . 8 8 . . 6 7 6 W
+    // y1:  . . p . 5 5 p . 5 5 p . 5 5 p . 5 5 . a a a
+    // y2:  . . ###0### ###1### ###2### ###3### . a a a
+    // y3:  . . ###0### ###1### ###2### ###3### ##### .
+    // y4:  . . ###0### ###1### ###2### ###3### ##### .   <- entry at (22,4)
+    // y5:  . . ###0### ###1### ###2### ###3### . b b b
+    // y6:  . . p . 5 5 p . 5 5 p . 5 5 p . 5 5 . b b b
+    // y7:  W . 9 9 . . 9 9 . . 9 9 . . 9 9 . . 6 7 6 W
+    //
+    // blocks = 4x4 sandstone; fence = leveled ground / walkway / approach.
+    blocks [
+      { hint: "#0 sandstone block 0", offset: [2, 2], size: 4, kind: 0 }
+      { hint: "#1 sandstone block 1", offset: [6, 2], size: 4, kind: 1 }
+      { hint: "#2 sandstone block 2", offset: [10, 2], size: 4, kind: 2 }
+      { hint: "#3 sandstone block 3", offset: [14, 2], size: 4, kind: 3 }
+    ]
+    fence [
+      { hint: "#4 ground flat (g0) [walkway]", offset: [0, 0], size: 1, kind: 65540 }
+      { hint: "#5 ground flat (g0)", offset: [1, 0], size: 1, kind: 4 }
+      { hint: "#6 ground flat (g0)", offset: [0, 1], size: 1, kind: 4 }
+      { hint: "#7 ground flat (g0)", offset: [1, 1], size: 1, kind: 4 }
+      { hint: "#8 ground flat (g0)", offset: [0, 2], size: 1, kind: 4 }
+      { hint: "#9 ground flat (g0)", offset: [1, 2], size: 1, kind: 4 }
+      { hint: "#10 ground flat (g0)", offset: [0, 3], size: 1, kind: 4 }
+      { hint: "#11 ground flat (g0)", offset: [1, 3], size: 1, kind: 4 }
+      { hint: "#12 ground flat (g0)", offset: [0, 4], size: 1, kind: 4 }
+      { hint: "#13 ground flat (g0)", offset: [1, 4], size: 1, kind: 4 }
+      { hint: "#14 ground flat (g0)", offset: [0, 5], size: 1, kind: 4 }
+      { hint: "#15 ground flat (g0)", offset: [1, 5], size: 1, kind: 4 }
+      { hint: "#16 ground flat (g0)", offset: [0, 6], size: 1, kind: 4 }
+      { hint: "#17 ground flat (g0)", offset: [1, 6], size: 1, kind: 4 }
+      { hint: "#18 ground flat (g0) [walkway]", offset: [0, 7], size: 1, kind: 65540 }
+      { hint: "#19 ground flat (g0)", offset: [1, 7], size: 1, kind: 4 }
+      { hint: "#20 ground flat (g0) [block0+pair0]", offset: [2, 1], size: 1, kind: 4356 }
+      { hint: "#21 ground flat (g0)", offset: [3, 1], size: 1, kind: 4 }
+      { hint: "#22 ground flat (g0) [block0+pair2]", offset: [2, 6], size: 1, kind: 16644 }
+      { hint: "#23 ground flat (g0)", offset: [3, 6], size: 1, kind: 4 }
+      { hint: "#24 ground flat (g0) [block1+pair0]", offset: [6, 1], size: 1, kind: 4612 }
+      { hint: "#25 ground flat (g0)", offset: [7, 1], size: 1, kind: 4 }
+      { hint: "#26 ground flat (g0) [block1+pair2]", offset: [6, 6], size: 1, kind: 16900 }
+      { hint: "#27 ground flat (g0)", offset: [7, 6], size: 1, kind: 4 }
+      { hint: "#28 ground flat (g0) [block2+pair0]", offset: [10, 1], size: 1, kind: 5124 }
+      { hint: "#29 ground flat (g0)", offset: [11, 1], size: 1, kind: 4 }
+      { hint: "#30 ground flat (g0) [block2+pair2]", offset: [10, 6], size: 1, kind: 17412 }
+      { hint: "#31 ground flat (g0)", offset: [11, 6], size: 1, kind: 4 }
+      { hint: "#32 ground flat (g0) [block3+pair0]", offset: [14, 1], size: 1, kind: 6148 }
+      { hint: "#33 ground flat (g0)", offset: [15, 1], size: 1, kind: 4 }
+      { hint: "#34 ground flat (g0) [block3+pair2]", offset: [14, 6], size: 1, kind: 18436 }
+      { hint: "#35 ground flat (g0)", offset: [15, 6], size: 1, kind: 4 }
+      { hint: "#36 ground flat (g0)", offset: [18, 1], size: 1, kind: 4 }
+      { hint: "#37 ground flat (g0)", offset: [18, 2], size: 1, kind: 4 }
+      { hint: "#38 ground flat (g0)", offset: [18, 5], size: 1, kind: 4 }
+      { hint: "#39 ground flat (g0)", offset: [18, 6], size: 1, kind: 4 }
+      { hint: "#40 ground mid (g1)", offset: [4, 0], size: 1, kind: 5 }
+      { hint: "#41 ground mid (g1)", offset: [5, 0], size: 1, kind: 5 }
+      { hint: "#42 ground mid (g1)", offset: [4, 1], size: 1, kind: 5 }
+      { hint: "#43 ground mid (g1) [block0+pair1]", offset: [5, 1], size: 1, kind: 8453 }
+      { hint: "#44 ground mid (g1)", offset: [4, 6], size: 1, kind: 5 }
+      { hint: "#45 ground mid (g1) [block0+pair3]", offset: [5, 6], size: 1, kind: 33029 }
+      { hint: "#46 ground mid (g1)", offset: [4, 7], size: 1, kind: 5 }
+      { hint: "#47 ground mid (g1)", offset: [5, 7], size: 1, kind: 5 }
+      { hint: "#48 ground mid (g1)", offset: [8, 0], size: 1, kind: 5 }
+      { hint: "#49 ground mid (g1)", offset: [9, 0], size: 1, kind: 5 }
+      { hint: "#50 ground mid (g1)", offset: [8, 1], size: 1, kind: 5 }
+      { hint: "#51 ground mid (g1) [block1+pair1]", offset: [9, 1], size: 1, kind: 8709 }
+      { hint: "#52 ground mid (g1)", offset: [8, 6], size: 1, kind: 5 }
+      { hint: "#53 ground mid (g1) [block1+pair3]", offset: [9, 6], size: 1, kind: 33285 }
+      { hint: "#54 ground mid (g1)", offset: [8, 7], size: 1, kind: 5 }
+      { hint: "#55 ground mid (g1)", offset: [9, 7], size: 1, kind: 5 }
+      { hint: "#56 ground mid (g1)", offset: [12, 0], size: 1, kind: 5 }
+      { hint: "#57 ground mid (g1)", offset: [13, 0], size: 1, kind: 5 }
+      { hint: "#58 ground mid (g1)", offset: [12, 1], size: 1, kind: 5 }
+      { hint: "#59 ground mid (g1) [block2+pair1]", offset: [13, 1], size: 1, kind: 9221 }
+      { hint: "#60 ground mid (g1)", offset: [12, 6], size: 1, kind: 5 }
+      { hint: "#61 ground mid (g1) [block2+pair3]", offset: [13, 6], size: 1, kind: 33797 }
+      { hint: "#62 ground mid (g1)", offset: [12, 7], size: 1, kind: 5 }
+      { hint: "#63 ground mid (g1)", offset: [13, 7], size: 1, kind: 5 }
+      { hint: "#64 ground mid (g1)", offset: [16, 0], size: 1, kind: 5 }
+      { hint: "#65 ground mid (g1)", offset: [17, 0], size: 1, kind: 5 }
+      { hint: "#66 ground mid (g1)", offset: [16, 1], size: 1, kind: 5 }
+      { hint: "#67 ground mid (g1) [block3+pair1]", offset: [17, 1], size: 1, kind: 10245 }
+      { hint: "#68 ground mid (g1)", offset: [16, 6], size: 1, kind: 5 }
+      { hint: "#69 ground mid (g1) [block3+pair3]", offset: [17, 6], size: 1, kind: 34821 }
+      { hint: "#70 ground mid (g1)", offset: [16, 7], size: 1, kind: 5 }
+      { hint: "#71 ground mid (g1)", offset: [17, 7], size: 1, kind: 5 }
+      { hint: "#72 ground mid (g1)", offset: [18, 3], size: 1, kind: 5 }
+      { hint: "#73 ground mid (g1)", offset: [19, 3], size: 1, kind: 5 }
+      { hint: "#74 ground mid (g1)", offset: [20, 3], size: 1, kind: 5 }
+      { hint: "#75 ground mid (g1)", offset: [21, 3], size: 1, kind: 5 }
+      { hint: "#76 ground mid (g1)", offset: [18, 4], size: 1, kind: 5 }
+      { hint: "#77 ground mid (g1)", offset: [19, 4], size: 1, kind: 5 }
+      { hint: "#78 ground mid (g1)", offset: [20, 4], size: 1, kind: 5 }
+      { hint: "#79 ground mid (g1)", offset: [21, 4], size: 1, kind: 5 }
+      { hint: "#80 approach upper outer", offset: [19, 1], size: 1, kind: 10 }
+      { hint: "#81 approach upper inner", offset: [19, 2], size: 1, kind: 11 }
+      { hint: "#82 approach upper outer", offset: [20, 1], size: 1, kind: 10 }
+      { hint: "#83 approach upper inner", offset: [20, 2], size: 1, kind: 11 }
+      { hint: "#84 approach upper outer", offset: [21, 1], size: 1, kind: 10 }
+      { hint: "#85 approach upper inner", offset: [21, 2], size: 1, kind: 11 }
+      { hint: "#86 approach lower outer", offset: [19, 5], size: 1, kind: 12 }
+      { hint: "#87 approach lower inner", offset: [19, 6], size: 1, kind: 13 }
+      { hint: "#88 approach lower outer", offset: [20, 5], size: 1, kind: 12 }
+      { hint: "#89 approach lower inner", offset: [20, 6], size: 1, kind: 13 }
+      { hint: "#90 approach lower outer", offset: [21, 5], size: 1, kind: 12 }
+      { hint: "#91 approach lower inner", offset: [21, 6], size: 1, kind: 13 }
+      { hint: "#92 ground edge north (g4+rot)", offset: [2, 0], size: 1, kind: 8 }
+      { hint: "#93 ground edge north (g4+rot)", offset: [3, 0], size: 1, kind: 8 }
+      { hint: "#94 ground edge north (g4+rot)", offset: [6, 0], size: 1, kind: 8 }
+      { hint: "#95 ground edge north (g4+rot)", offset: [7, 0], size: 1, kind: 8 }
+      { hint: "#96 ground edge north (g4+rot)", offset: [10, 0], size: 1, kind: 8 }
+      { hint: "#97 ground edge north (g4+rot)", offset: [11, 0], size: 1, kind: 8 }
+      { hint: "#98 ground edge north (g4+rot)", offset: [14, 0], size: 1, kind: 8 }
+      { hint: "#99 ground edge north (g4+rot)", offset: [15, 0], size: 1, kind: 8 }
+      { hint: "#100 ground edge south (g4+opp)", offset: [2, 7], size: 1, kind: 9 }
+      { hint: "#101 ground edge south (g4+opp)", offset: [3, 7], size: 1, kind: 9 }
+      { hint: "#102 ground edge south (g4+opp)", offset: [6, 7], size: 1, kind: 9 }
+      { hint: "#103 ground edge south (g4+opp)", offset: [7, 7], size: 1, kind: 9 }
+      { hint: "#104 ground edge south (g4+opp)", offset: [10, 7], size: 1, kind: 9 }
+      { hint: "#105 ground edge south (g4+opp)", offset: [11, 7], size: 1, kind: 9 }
+      { hint: "#106 ground edge south (g4+opp)", offset: [14, 7], size: 1, kind: 9 }
+      { hint: "#107 ground edge south (g4+opp)", offset: [15, 7], size: 1, kind: 9 }
+      { hint: "#108 ground corner-ish (g2)", offset: [18, 0], size: 1, kind: 6 }
+      { hint: "#109 ground corner-ish (g2)", offset: [20, 0], size: 1, kind: 6 }
+      { hint: "#110 ground corner-ish (g2)", offset: [18, 7], size: 1, kind: 6 }
+      { hint: "#111 ground corner-ish (g2)", offset: [20, 7], size: 1, kind: 6 }
+      { hint: "#112 ground corner-ish (g3)", offset: [19, 0], size: 1, kind: 7 }
+      { hint: "#113 ground corner-ish (g3) [walkway]", offset: [21, 0], size: 1, kind: 65543 }
+      { hint: "#114 ground corner-ish (g3)", offset: [19, 7], size: 1, kind: 7 }
+      { hint: "#115 ground corner-ish (g3) [walkway]", offset: [21, 7], size: 1, kind: 65543 }
+    ]
+    // --- END GENERATED ---
     fire_proof : true
     damage_proof : true
     info_title_id [198, 25]
@@ -50,7 +250,6 @@ building_mausoleum {
     flags {
         is_monument: true
         non_deletable: true
-        allow_rotate: true
     }
 }
 

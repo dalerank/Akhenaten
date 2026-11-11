@@ -567,6 +567,25 @@ bool figure_worker::assign_monument_task(building *monument, figure_id mason_fid
         return true;
     }
 
+    if (head->dcast_mausoleum()) {
+        if (mason_fid) {
+            return assign_block_delivery(head, mason_fid);
+        }
+        const int bid = building_mausoleum::find_work_for_figure(id());
+        if (!bid) {
+            return false;
+        }
+        if (building *part = building_get(bid)) {
+            set_destination(part);
+        }
+        auto &rd = runtime_data();
+        rd.level_tiles_done = 0;
+        rd.monument_searches = 0;
+        rd.site_state = 0;
+        base.set_flag(e_figure_flag_invisible, false);
+        return true;
+    }
+
     if (mason_fid) {
         return assign_block_delivery(head, mason_fid);
     }
@@ -701,6 +720,9 @@ void figure_worker::find_work() {
                     && laborer_yard_for_getting(&b, RESOURCE_LAMPS, load, yard_tile) != 0;
             } else if (b.dcast_sun_temple()) {
                 has_work = mon->need_workers();
+            } else if (b.dcast_mausoleum()) {
+                mason_id = laborer_cleopatra_mason_waiting(&b);
+                has_work = mason_id != 0 || mon->need_workers();
             } else if (mon->phase() < 2) {
                 if (mon->need_workers() && monumen_tile4work(&b) != tile2i{-1, -1}) {
                     has_work = true;
@@ -768,7 +790,7 @@ void figure_worker::sled_to_monument_tick(building *monument) {
         mason->leading_figure_id = 0;
         mason->wait_ticks = 0;
         // OG sun temple: wake mason into work_tick (not pyramid place_block).
-        mason->action_state = head->dcast_sun_temple()
+        mason->action_state = (head->dcast_sun_temple() || head->dcast_mausoleum())
             ? (short)ACTION_9_MASON_WORK_OBELISK
             : (short)ACTION_21_MASON_PYRAMID_WORK;
     } else if (auto *mon = head->dcast_monument()) {
@@ -800,6 +822,20 @@ void figure_worker::monument_site_work_tick(building *monument) {
             rd.monument_searches++;
             if (rd.monument_searches < (int)current_params().monument_work_searches
                 && building_sun_temple::find_work_for_figure(id())) {
+                rd.site_state = 0;
+                base.wait_ticks = 0;
+                return;
+            }
+            enter_idle_pool();
+        }
+        return;
+    }
+    if (auto *maus = monument->dcast_mausoleum()) {
+        if (maus->work_tick(base)) {
+            maus->remove_worker(id());
+            rd.monument_searches++;
+            if (rd.monument_searches < (int)current_params().monument_work_searches
+                && building_mausoleum::find_work_for_figure(id())) {
                 rd.site_state = 0;
                 base.wait_ticks = 0;
                 return;
