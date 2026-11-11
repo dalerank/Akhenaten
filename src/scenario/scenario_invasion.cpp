@@ -464,6 +464,55 @@ static void determine_formations(int num_soldiers, int* num_formations, int sold
     }
 }
 
+int scenario_invasion_land_point_index() {
+    auto& lands = g_scenario.invasion_points_land;
+    auto slot_valid = [&lands](int i) { return i < (int)lands.size() && lands[i].valid(); };
+    const int points = (int)std::count_if(lands.begin(), lands.end(), [](const tile2i& p) { return p.valid(); });
+
+    const int r = random_byte();
+    int index = (points <= 2) ? (r & 1) : (points <= 4) ? (r & 3) : (r & 7);
+    for (int tries = 0; tries < MAX_INVASION_POINTS_LAND; tries++) {
+        if (slot_valid(index)) {
+            break;
+        }
+        if (++index >= MAX_INVASION_POINTS_LAND) {
+            index = 0;
+        }
+    }
+    return index;
+}
+
+int scenario_invasion_sea_point_index(int start) {
+    auto& seas = g_scenario.invasion_points_sea;
+    int index = std::clamp(start, 0, MAX_INVASION_POINTS_SEA - 1);
+    for (int tries = 0; tries < MAX_INVASION_POINTS_SEA; tries++) {
+        if (index < (int)seas.size() && seas[index].valid()) {
+            break;
+        }
+        if (++index >= MAX_INVASION_POINTS_SEA) {
+            index = 0;
+        }
+    }
+    return index;
+}
+
+int scenario_invasion_landing_index() {
+    auto& dis = g_scenario.disembark_points;
+    const int landings = (int)std::count_if(dis.begin(), dis.end(), [](const tile2i& p) { return p.valid(); });
+    if (landings <= 0) {
+        return -1;
+    }
+
+    random_generate_next();
+    int nth = random_short() % landings;
+    for (int i = 0; i < (int)dis.size(); i++) {
+        if (dis[i].valid() && nth-- == 0) {
+            return i;
+        }
+    }
+    return -1;
+}
+
 namespace {
 
 bool invasion_point_is_sea(tile2i point) {
@@ -490,24 +539,23 @@ bool invasion_should_use_sea(const invasion_opts_t &opts) {
 
 tile2i pick_sea_spawn_tile(const invasion_opts_t &opts) {
     auto &seas = g_scenario.invasion_points_sea;
-    if (opts.sea_point_index >= 0 && opts.sea_point_index < (int)seas.size()) {
-        tile2i t = seas[opts.sea_point_index];
-        if (t.valid() && map_terrain_is(t, TERRAIN_WATER | TERRAIN_DEEPWATER)) {
+    auto sea_slot = [&seas](int i) { return (i >= 0 && i < (int)seas.size()) ? seas[i] : tile2i::invalid; };
+    auto is_water = [](tile2i t) { return t.valid() && map_terrain_is(t, TERRAIN_WATER | TERRAIN_DEEPWATER); };
+
+    if (opts.sea_point_index >= 0 && opts.sea_point_index < MAX_INVASION_POINTS_SEA) {
+        tile2i t = sea_slot(scenario_invasion_sea_point_index(opts.sea_point_index));
+        if (is_water(t)) {
             return t;
         }
     }
 
-    if (opts.invasion_point.valid()
-        && map_terrain_is(opts.invasion_point, TERRAIN_WATER | TERRAIN_DEEPWATER)) {
+    if (is_water(opts.invasion_point)) {
         return opts.invasion_point;
     }
 
-    svector<tile2i, 8> points;
-    std::copy_if(seas.begin(), seas.end(), std::back_inserter(points), [](auto &p) {
-        return p.valid() && map_terrain_is(p, TERRAIN_WATER | TERRAIN_DEEPWATER);
-    });
-    if (!points.empty()) {
-        return points.at(rand() % points.size());
+    tile2i first = sea_slot(scenario_invasion_sea_point_index(0));
+    if (is_water(first)) {
+        return first;
     }
 
     // Fallback: first water tile on the map.
@@ -543,6 +591,14 @@ tile2i water_adjacent_to(tile2i land) {
 
 tile2i pick_landing_water_tile(tile2i sea_spawn) {
     auto &dis = g_scenario.disembark_points;
+    const int rolled = scenario_invasion_landing_index();
+    if (rolled >= 0 && enemy_transport_land_ok(dis[rolled])) {
+        tile2i water = water_adjacent_to(dis[rolled]);
+        if (water.valid()) {
+            return water;
+        }
+    }
+
     for (const auto &land : dis) {
         if (!enemy_transport_land_ok(land)) {
             continue;
@@ -805,13 +861,12 @@ tile2i scenario_start_invasion_impl(invasion_opts_t &opts) {
         invasion_tile = scenario_map_entry();
     } else {
         auto &lands = g_scenario.invasion_points_land;
-        svector<tile2i, 8> points;
-        std::copy_if(lands.begin(), lands.end(), std::back_inserter(points), [] (auto &p) { return p.valid(); });
-        if (points.empty()) {
+        const int index = scenario_invasion_land_point_index();
+        if (index < (int)lands.size() && lands[index].valid()) {
+            invasion_tile = lands[index];
+        } else {
             logs::warn("scenario_invasion: no valid land invasion points, falling back to map exit");
             invasion_tile = tile2i::invalid;
-        } else {
-            invasion_tile = points.at(rand() % points.size());
         }
     }
 

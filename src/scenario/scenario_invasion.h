@@ -163,6 +163,13 @@ int map_invasion_point(tile2i point);
 tile2i scenario_start_invasion_impl(invasion_opts_t &opts);
 tile2i scenario_start_sea_invasion_impl(invasion_opts_t &opts);
 
+// OG invasion_land_point(INVASION_POINT_RANDOM): masks the current random1_7bit without advancing the RNG.
+int scenario_invasion_land_point_index();
+// OG invasion_sea_point: deterministic forward scan over invasion_points_sea, wrapping.
+int scenario_invasion_sea_point_index(int start);
+// OG invasion_start_sea landing roll; -1 (and no RNG step) when there are no disembark points.
+int scenario_invasion_landing_index();
+
 // Force bind/history outcome for a spawn seq (auto-resolve, cheats, etc.).
 // COMPLETED → on_completed_tag; DEFEAT → on_defeat_tag; NONE → clear bind, no tags.
 void invasion_force_outcome(uint16_t seq, e_invasion_outcome outcome);

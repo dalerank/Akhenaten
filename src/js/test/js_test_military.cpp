@@ -1133,3 +1133,86 @@ void __test_seth_sink_all_ships() {
     god_seth.sink_all_ships();
 }
 ANK_FUNCTION(__test_seth_sink_all_ships);
+
+#include "core/random.h"
+
+void __test_rng_set(int iv1, int iv2) {
+    random_TEMP_SET_DEBUG((uint32_t)iv1, (uint32_t)iv2);
+}
+ANK_FUNCTION_2(__test_rng_set);
+
+int __test_rng_byte() {
+    return random_byte();
+}
+ANK_FUNCTION(__test_rng_byte);
+
+int __test_rng_short() {
+    return random_short();
+}
+ANK_FUNCTION(__test_rng_short);
+
+void __test_invasion_points_clear() {
+    g_scenario.invasion_points_land.assign(MAX_INVASION_POINTS_LAND, tile2i::invalid);
+    g_scenario.invasion_points_sea.assign(MAX_INVASION_POINTS_SEA, tile2i::invalid);
+    g_scenario.disembark_points.clear();
+}
+ANK_FUNCTION(__test_invasion_points_clear);
+
+void __test_invasion_land_point_set(int index, int x, int y) {
+    if (index >= 0 && index < MAX_INVASION_POINTS_LAND) {
+        g_scenario.invasion_points_land[index] = tile2i(x, y);
+    }
+}
+ANK_FUNCTION_3(__test_invasion_land_point_set);
+
+void __test_invasion_sea_point_set(int index, int x, int y) {
+    if (index >= 0 && index < MAX_INVASION_POINTS_SEA) {
+        g_scenario.invasion_points_sea[index] = tile2i(x, y);
+    }
+}
+ANK_FUNCTION_3(__test_invasion_sea_point_set);
+
+void __test_disembark_point_add(int x, int y) {
+    g_scenario.disembark_points.push_back(tile2i(x, y));
+}
+ANK_FUNCTION_2(__test_disembark_point_add);
+
+int __test_invasion_land_point_index() {
+    return scenario_invasion_land_point_index();
+}
+ANK_FUNCTION(__test_invasion_land_point_index);
+
+int __test_invasion_sea_point_index(int start) {
+    return scenario_invasion_sea_point_index(start);
+}
+ANK_FUNCTION_1(__test_invasion_sea_point_index);
+
+int __test_invasion_landing_index() {
+    return scenario_invasion_landing_index();
+}
+ANK_FUNCTION(__test_invasion_landing_index);
+
+// Puts land invasion slot `index` on a cleared tile; returns its grid offset.
+int __test_invasion_land_point_place_open(int index) {
+    if (index < 0 || index >= MAX_INVASION_POINTS_LAND) {
+        return -1;
+    }
+    tile2i t(3 + 4 * index, g_scenario.map.height / 2 + 8);
+    map_terrain_remove(t, TERRAIN_ELEVATION | TERRAIN_ROCK | TERRAIN_TREE | TERRAIN_WATER);
+    g_scenario.invasion_points_land[index] = t;
+    return t.grid_offset();
+}
+ANK_FUNCTION_1(__test_invasion_land_point_place_open);
+
+int __test_start_land_invasion(int enemy_type, int size) {
+    invasion_opts_t opts;
+    opts.mode = ATTACK_TYPE_ENEMIES;
+    opts.enemy_type = (e_enemy_type)enemy_type;
+    opts.size = size > 0 ? size : 8;
+    opts.invasion_point = tile2i::invalid;
+    opts.attack_type = FORMATION_ATTACK_RANDOM;
+    opts.kind = INVASION_KIND_FOREIGN;
+    tile2i tile = scenario_start_invasion_impl(opts);
+    return tile.valid() ? tile.grid_offset() : -1;
+}
+ANK_FUNCTION_2(__test_start_land_invasion);
