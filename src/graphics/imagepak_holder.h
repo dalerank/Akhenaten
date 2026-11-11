@@ -31,7 +31,7 @@ ANK_CONFIG_STRUCT(imagepak_handle, name, id, index, entries_num, system, custom,
 
 template<>
 struct stable_array_max_elements<imagepak_handle> {
-    enum { max_elements = 128 };
+    enum { max_elements = 192 };
 };
 
 template<>

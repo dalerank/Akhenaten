@@ -6,6 +6,7 @@
 #include "building/construction_blessing.h"
 #include "building/monument_mastaba.h"
 #include "building/monument_mastaba_engine.h"
+#include "building/monument_mausoleum.h"
 #include "building/monument_obelisk.h"
 #include "building/monument_pyramid.h"
 #include "building/monument_pyramid_engine.h"
@@ -834,3 +835,96 @@ static int __test_sun_temple_work(int bid, int fid) {
     return s->work_tick(*f) ? 1 : 0;
 }
 ANK_FUNCTION_2(__test_sun_temple_work);
+
+static building_mausoleum *test_mausoleum(int bid) {
+    building *b = building_get(bid);
+    auto *m = b ? b->dcast_mausoleum() : nullptr;
+    return m ? m->main_mausoleum() : nullptr;
+}
+
+static int __test_mausoleum_part_count(int bid) {
+    auto *m = test_mausoleum(bid);
+    if (!m) {
+        return -1;
+    }
+    int n = 0;
+    for (building *p = &m->base; p; p = p->has_next() ? p->next() : nullptr) {
+        n++;
+    }
+    return n;
+}
+ANK_FUNCTION_1(__test_mausoleum_part_count);
+
+static int __test_mausoleum_part_id(int bid, int index) {
+    auto *m = test_mausoleum(bid);
+    auto *p = m ? m->part(index) : nullptr;
+    return p ? p->id() : 0;
+}
+ANK_FUNCTION_2(__test_mausoleum_part_id);
+
+static int __test_mausoleum_part_kind(int part_bid) {
+    building *b = building_get(part_bid);
+    auto *p = b ? b->dcast_mausoleum() : nullptr;
+    return p ? (int)p->part_kind_word() : -1;
+}
+ANK_FUNCTION_1(__test_mausoleum_part_kind);
+
+static int __test_mausoleum_part_stage(int part_bid) {
+    building *b = building_get(part_bid);
+    auto *p = b ? b->dcast_mausoleum() : nullptr;
+    return p ? (int)p->part_stage() : -1;
+}
+ANK_FUNCTION_1(__test_mausoleum_part_stage);
+
+static int __test_mausoleum_part_worker(int part_bid) {
+    building *b = building_get(part_bid);
+    auto *p = b ? b->dcast_mausoleum() : nullptr;
+    return p ? (int)p->runtime_data().og_part.worker_figure_id : -1;
+}
+ANK_FUNCTION_1(__test_mausoleum_part_worker);
+
+static int __test_mausoleum_work_flags(int bid) {
+    auto *m = test_mausoleum(bid);
+    return m ? (int)m->work_flags() : -1;
+}
+ANK_FUNCTION_1(__test_mausoleum_work_flags);
+
+static int __test_mausoleum_progress(int bid) {
+    auto *m = test_mausoleum(bid);
+    return m ? m->get_progress(nullptr) : -1;
+}
+ANK_FUNCTION_1(__test_mausoleum_progress);
+
+static int __test_mausoleum_access_x(int bid) {
+    auto *m = test_mausoleum(bid);
+    return m ? m->access_point().x() : -1;
+}
+ANK_FUNCTION_1(__test_mausoleum_access_x);
+
+static int __test_mausoleum_access_y(int bid) {
+    auto *m = test_mausoleum(bid);
+    return m ? m->access_point().y() : -1;
+}
+ANK_FUNCTION_1(__test_mausoleum_access_y);
+
+static int __test_mausoleum_has_work(int bid, int figure_type) {
+    auto *m = test_mausoleum(bid);
+    return (m && m->has_work_for((e_figure_type)figure_type)) ? 1 : 0;
+}
+ANK_FUNCTION_2(__test_mausoleum_has_work);
+
+static int __test_mausoleum_find_work(int fid) {
+    return building_mausoleum::find_work_for_figure(fid);
+}
+ANK_FUNCTION_1(__test_mausoleum_find_work);
+
+static int __test_mausoleum_work(int part_bid, int fid) {
+    building *b = building_get(part_bid);
+    auto *p = b ? b->dcast_mausoleum() : nullptr;
+    figure *f = fid > 0 ? figure_get(fid) : nullptr;
+    if (!p || !f) {
+        return -1;
+    }
+    return p->work_tick(*f) ? 1 : 0;
+}
+ANK_FUNCTION_2(__test_mausoleum_work);
