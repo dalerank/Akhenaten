@@ -43,6 +43,7 @@
 
 #include <SDL.h>
 #include <algorithm>
+#include <cstdlib>
 #include <cstring>
 #include <fstream>
 #include <string>
@@ -735,3 +736,31 @@ static pcstr __test_save_roundtrip(pcstr filename) {
     return result.c_str();
 }
 ANK_FUNCTION_1(__test_save_roundtrip);
+
+// Some simulation code still draws from libc rand() (figure names, houses, festivals); a test that
+// compares two runs must start both from the same libc state.
+static void __test_libc_srand(int seed) {
+    srand((unsigned)seed);
+}
+ANK_FUNCTION_1(__test_libc_srand);
+
+// Keeps the serialized state; __test_state_diff logs every byte that changed since (by chunk and,
+// for buildings/figures, by record) and returns the differing chunk names joined by ','.
+static chunk_snapshots g_state_mark;
+
+static bool __test_state_mark() {
+    return g_chunk_io.write_to_memory(FILE_FORMAT_SAVE_FILE_EXT, save_data_version(), file_schema, g_state_mark);
+}
+ANK_FUNCTION(__test_state_mark);
+
+static pcstr __test_state_diff(pcstr tag) {
+    static std::string result;
+    chunk_snapshots now;
+    if (!g_chunk_io.write_to_memory(FILE_FORMAT_SAVE_FILE_EXT, save_data_version(), file_schema, now)) {
+        result = "write_failed";
+        return result.c_str();
+    }
+    result = chunk_snapshots_diff(g_state_mark, now, tag);
+    return result.c_str();
+}
+ANK_FUNCTION_1(__test_state_diff);

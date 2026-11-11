@@ -41,6 +41,7 @@ function t361_diff(a, b) {
 
 function t361_setup() {
     __test_crt_srand(1)
+    __test_libc_srand(1)
     if (!test_reload_city_session('data/default.map')) {
         return null
     }
@@ -106,9 +107,10 @@ function t361_run(drawn) {
     }
     var out = { anim_step: -1 }
     if (drawn) {
-        __figure_follow_start(s.seeker)
         // Figures that have not ticked yet: only a drawing would give them a sprite.
+        __test_state_mark()
         __test_draw_frames(__t361_frames)
+        __test_state_diff('t361_setup_draw')
     }
     out.start = t361_parse(__test_state_hash_drawn())
     for (var t = 0; t < __t361_ticks; t += __t361_step) {

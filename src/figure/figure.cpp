@@ -725,12 +725,6 @@ void figure::draw(painter &ctx, int highlight) {
         return;
     }
 
-    // This is to update the sprite's direction when rotating the city view.
-    // Unfortunately, because the only thing we have at the time of file loading is
-    // the raw sprite image id, it doesn't work if we haven't performed at least a
-    // single frame of figure action after loading a file (i.e. if paused instantly)
-    figure_image_update(true);
-
     if (cart_image_id) {
         switch (type) {
         case FIGURE_MAP_FLAG:

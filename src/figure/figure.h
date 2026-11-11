@@ -331,6 +331,7 @@ public:
     void image_set_animation(int collection, int group, int offset = 0, int max_frames = 12, int duration = 1, bool loop = true);
     void set_force_valid_animation(bool enabled);
     void figure_image_update(bool refresh_only);
+    void refresh_image_for_orientation();
     int figure_image_corpse_offset();
     int figure_image_missile_launcher_offset();
     int figure_image_direction();
@@ -452,6 +453,10 @@ struct fproperty {
 figure *figure_create(e_figure_type type, tile2i tile, int dir);
 int figure_movement_can_launch_cross_country_missile(tile2i src, tile2i dst);
 void figure_create_explosion_cloud(tile2i tile, int size);
+
+// OG picks the new view direction up on each figure's next tick; this redoes it at once, so a
+// paused city rotates its walkers too while drawing only reads the sprite ids.
+void figures_refresh_images_for_orientation();
 
 template <typename dest_type>
 inline dest_type *smart_cast(figure *f) {
