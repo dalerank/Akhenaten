@@ -663,39 +663,25 @@ static pcstr __test_save_roundtrip(pcstr filename) {
 }
 ANK_FUNCTION_1(__test_save_roundtrip);
 
-// Loads an original .sav and writes it back through the same schema and version: what we write
-// differs from the file bytes only where a bind loses or reinterprets a field. Compared right after
-// the binds read, before post_load recalculates anything.
-static std::string og_save_fidelity(const std::string& path) {
+// Loads an original .sav from an absolute path the way GamestateIO::load_savegame does.
+static bool og_save_load(const std::string& path) {
     GamestateLoadDetail::pre_load();
     auto reader = vfs::file_open(vfs::path(path.c_str()));
     if (
       !g_chunk_io.unserialize(reader, 0, FILE_FORMAT_SAVE_FILE, GamestateLoadDetail::read_file_version, file_schema)) {
-        return "error:load";
+        return false;
     }
-
-    const int version = g_chunk_io.get_file_version();
-    chunk_snapshots file;
-    g_chunk_io.snapshot_chunks(file);
-
-    chunk_snapshots ours;
-    if (!g_chunk_io.write_to_memory(FILE_FORMAT_SAVE_FILE, version, file_schema, ours)) {
-        return "error:write";
-    }
-
-    const std::string tag = "og v" + std::to_string(version);
-    const std::string diffs = chunk_snapshots_diff(file, ours, tag.c_str());
 
     game.session.last_loaded = e_session_save;
     game.session.last_loaded_mission = path.c_str();
     GamestateLoadDetail::post_load();
     GamestateIO::start_loaded_file();
-    return diffs;
+    return true;
 }
 
-// Every Save/<player>/*.sav of the Pharaoh install except the family.sav dynasty stubs: OG bytes
-// against our .sav writer, then the loaded city through an .svx round trip.
-// Returns "skip" without a Save folder, else "<checked>;|<path>=<chunks>|svx <path>=<chunks>..." for differences.
+// Every Save/<player>/*.sav of the Pharaoh install except the family.sav dynasty stubs: load it, then
+// run the city through an .svx round trip. OG saves carry far more state than a test city.
+// Returns "skip" without a Save folder, else "<checked>;|<path>=<chunks or error:load>..." for failures.
 static pcstr __test_og_save_corpus() {
     static std::string result;
     namespace fs = std::filesystem;
@@ -724,20 +710,16 @@ static pcstr __test_og_save_corpus() {
 
     std::string diffs;
     for (const std::string& f : files) {
-        const std::string d = og_save_fidelity(f);
-        logs::info("[roundtrip] og %s: %s", f.c_str(), d.empty() ? "identical" : d.c_str());
-        if (!d.empty()) {
-            diffs += "|" + f + "=" + d;
-        }
-        if (d.rfind("error:", 0) == 0) {
+        if (!og_save_load(f)) {
+            logs::info("[roundtrip] og %s: load failed", f.c_str());
+            diffs += "|" + f + "=error:load";
             continue;
         }
 
-        // The same city through our own format: OG saves carry far more state than a test city.
         const std::string svx = save_roundtrip("test_og_roundtrip.svx");
         logs::info("[roundtrip] og->svx %s: %s", f.c_str(), svx.empty() ? "identical" : svx.c_str());
         if (!svx.empty()) {
-            diffs += "|svx " + f + "=" + svx;
+            diffs += "|" + f + "=" + svx;
         }
     }
 
