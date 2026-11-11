@@ -615,13 +615,17 @@ static void set_legion_max_figures(void) {
     }
 }
 
-void formation_update_all() {
+// OG runs this twice a day (tick.c: tick 5 with the deployed-morale check, tick 29 without it).
+void formation_update_all(bool skip_morale) {
     OZZY_PROFILER_FUNCTION();
 
     g_formations.calculate_batalion_totals();
     g_formations.calculate_figures();
     update_directions();
     formation_batalion_decrease_damage();
+    if (!skip_morale) {
+        formation_update_monthly_morale_deployed();
+    }
 
     set_legion_max_figures();
     g_formations.batalions_update();

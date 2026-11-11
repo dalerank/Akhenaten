@@ -239,5 +239,5 @@ int formation_add_figure(int formation_id, int figure_id, int deployed, int dama
 
 void formation_move_herds_away(tile2i tile);
 
-void formation_update_all();
+void formation_update_all(bool skip_morale);
 int formation_rioter_get_target_building(int* x_tile, int* y_tile);

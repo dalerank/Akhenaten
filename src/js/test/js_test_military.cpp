@@ -1211,3 +1211,21 @@ int __test_start_land_invasion(int enemy_type, int size) {
     return tile.valid() ? tile.grid_offset() : -1;
 }
 ANK_FUNCTION_2(__test_start_land_invasion);
+
+// First enemy (non-herd, non-player) formation in use, or 0.
+static int __test_first_enemy_formation() {
+    for (int i = 1; i < MAX_FORMATIONS; i++) {
+        formation* m = formation_get(i);
+        if (m && m->in_use && !m->is_herd && !m->own_batalion) {
+            return i;
+        }
+    }
+    return 0;
+}
+ANK_FUNCTION(__test_first_enemy_formation);
+
+static int __test_formation_wait_ticks(int formation_id) {
+    formation* m = formation_get(formation_id);
+    return m ? m->wait_ticks : -1;
+}
+ANK_FUNCTION_1(__test_formation_wait_ticks);

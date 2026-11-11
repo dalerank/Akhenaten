@@ -158,8 +158,6 @@ void city_t::update_month(simulation_time_t simtime) {
     ratings_update(/*yearly_update*/false);
     kingdome.advance_month();
 
-    formation_update_monthly_morale_deployed();
-
     // Remake-only monthly tomb-robber threat (OG spawns from house crime).
     if (game_features::gameplay_change_tomb_robber_remake.to_bool()) {
         figure_tomb_robber::try_spawn(/*force_gates=*/false);
@@ -250,6 +248,7 @@ void city_t::update_tick(int simtick) {
         break;
     case 5:
         g_irrigation_value.update();
+        formation_update_all(/*skip_morale*/ false);
         break;
     case 6:
         map_natives_check_land();
@@ -310,7 +309,7 @@ void city_t::update_tick(int simtick) {
         buildings.update_religion_supply_houses();
         break;
     case 29:
-        formation_update_all();
+        formation_update_all(/*skip_morale*/ true);
         break;
     case 30:
         g_crime.update();
