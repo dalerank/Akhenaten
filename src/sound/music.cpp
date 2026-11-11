@@ -7,7 +7,6 @@
 #include "game/game_config.h"
 #include "core/calc.h"
 #include "core/buffer.h"
-#include "core/random.h"
 #include "core/system_time.h"
 #include "content/dir.h"
 #include "io/io.h"
@@ -16,6 +15,7 @@
 #include "js/js_game.h"
 
 #include "dev/debug.h"
+#include <random>
 #include <string_view>
 #include <vector>
 
@@ -66,6 +66,12 @@ struct music_data_t {
     bool track_once = false;
     time_millis finished_at = 0;
     int post_delay_ms = 0;
+
+    // Cosmetic: never the simulation LFSR, crt_rand or libc rand(), so the simulation does not depend on
+    // music settings, the wall clock or --nosound.
+    std::minstd_rand rng{std::random_device{}()};
+
+    int random_index(int count) { return std::uniform_int_distribution<int>(0, count - 1)(rng); }
 };
 ANK_CONFIG_STRUCT(music_data_t::soundtrack, key, file)
 ANK_CONFIG_STRUCT(music_data_t::pop_soundtrack, pop, tracks)
@@ -273,6 +279,11 @@ static bool music_playlist_has_track(int mission, const xstring& key) {
 }
 
 static const svector<xstring, 8>& music_city_tracks(int population) {
+    static const svector<xstring, 8> no_tracks{};
+    if (music.music_populations.empty()) {
+        return no_tracks;
+    }
+
     const music_data_t::pop_soundtrack* tier = &music.music_populations.front();
 
     for (const auto& p : music.music_populations) {
@@ -297,7 +308,7 @@ static xstring music_random_city_track(const svector<xstring, 8>& pool, const xs
         return pool.empty() ? xstring() : pool.front();
     }
 
-    return candidates[random_int_between(0, (int)candidates.size())];
+    return candidates[music.random_index((int)candidates.size())];
 }
 
 static const music_data_t::playlist_rule* music_random_rule(
@@ -313,7 +324,7 @@ static const music_data_t::playlist_rule* music_random_rule(
         return rules.empty() ? nullptr : rules.front();
     }
 
-    return candidates[random_int_between(0, (int)candidates.size())];
+    return candidates[music.random_index((int)candidates.size())];
 }
 
 // Picks the next city track for the current population. `random` re-rolls like
