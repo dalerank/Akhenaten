@@ -72,7 +72,13 @@ public:
     void music_stop();
     const xstring& music_current_track() const;
     void play_track(const xstring track, bool loop = true);
-    void play_effect(int effect);
+    int play_effect(int effect);
+    // "[sound] ..." log lines of what plays, for --log-sound and the integral tests (no audio hardware needed).
+    bool log_events() const;
+    bool data_available() const;
+    void set_og_effect_file(int id, xstring file);
+    void set_og_figure_effect_file(int sound, int variant, xstring file);
+    void clear_og_effect_files();
     void stop_city_channels();
 
 public:
@@ -107,11 +113,21 @@ private:
     void poll_pending_chunks();
     bool put_custom_audio_stream(uint8_t *audio_data, int len);
 
+    struct og_sample_t {
+        xstring file;
+        vfs::path resolved;
+        bool probed = false;
+    };
+    const vfs::path& og_sample_path(og_sample_t& sample);
+    int pick_effect_channel(const vfs::path& filename);
+
 private:
     bool initialized = false;
     music_player_t *_music_player = nullptr;
     std::array<channel_t, SOUND_CHANNEL_MAX> _channels;
     std::array<vfs::path, SOUND_CHANNEL_MAX> _channels_info;
+    std::array<og_sample_t, OG_SOUND_EFFECT_COUNT> _og_effects;
+    std::array<og_sample_t, OG_FIGURE_SOUND_COUNT * OG_FIGURE_SOUND_VARIANTS> _og_figure_effects;
 };
 
 extern sound_manager_t g_sound;

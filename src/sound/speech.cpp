@@ -7,7 +7,6 @@
 #include "content/dir.h"
 #include "content/mods.h"
 #include "content/vfs.h"
-#include "platform/arguments.h"
 #include "sound/channel.h"
 
 #include <cctype>
@@ -115,7 +114,7 @@ bool sound_manager_t::speech_file_exist(xstring filename, vfs::path &fs_path) {
 
 bool sound_manager_t::speech_play_file(xstring filename, int volume) {
     // Without a mixer (--nosound) or data (--no-resource) the file probe is wasted and only spams warnings.
-    if (!initialized || g_args.no_resource()) {
+    if (!initialized || !data_available()) {
         return false;
     }
 

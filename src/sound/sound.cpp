@@ -947,14 +947,177 @@ void sound_manager_t::update_channel(int channel, vfs::path filename) {
     }
 }
 
-void sound_manager_t::play_effect(int effect) {
+struct og_effect_ref {
+    int effect = -1;
+    int figure = -1;
+    int variant = 0;
+};
+
+static og_effect_ref og_effect(int effect) {
+    return {effect, -1, 0};
+}
+static og_effect_ref og_figure(int figure, int variant) {
+    return {-1, figure, variant};
+}
+
+// Caesar III effect -> the OG effect or figure sound (sound_play.h, military.c, enemy.c) for the same event.
+// Effects OG has no sound for stay silent (marching and the OG march counters play nothing, enemy.c:302).
+static og_effect_ref og_effect_for(int effect) {
+    if (effect >= SOUND_EFFECT_SOLDIER_DIE && effect < SOUND_EFFECT_SOLDIER_DIE + 4) {
+        return og_figure(OG_FIGURE_SOUND_CITIZEN + (effect - SOUND_EFFECT_SOLDIER_DIE), OG_FIGURE_SOUND_VARIANT_DIE);
+    }
+    if (effect >= SOUND_EFFECT_CITIZEN_DIE && effect < SOUND_EFFECT_CITIZEN_DIE + 4) {
+        return og_figure(OG_FIGURE_SOUND_CITIZEN + 4 + (effect - SOUND_EFFECT_CITIZEN_DIE),
+          OG_FIGURE_SOUND_VARIANT_DIE);
+    }
+
+    switch (effect) {
+    case SOUND_EFFECT_ICON:
+        return og_effect(OG_SOUND_EFFECT_BUTTON);
+    case SOUND_EFFECT_SIDEBAR:
+        return og_effect(OG_SOUND_EFFECT_SIDEBAR);
+    case SOUND_EFFECT_BUILD:
+        return og_effect(OG_SOUND_EFFECT_BUILD);
+    case SOUND_EFFECT_EXPLOSION:
+        return og_effect(OG_SOUND_EFFECT_BUILDING_DESTROYED);
+    // OG message.c plays the one message sound for urgent messages too.
+    case SOUND_EFFECT_FANFARE:
+    case SOUND_EFFECT_FANFARE_URGENT:
+        return og_effect(OG_SOUND_EFFECT_MESSAGE);
+    case SOUND_EFFECT_FIRE_SPLASH:
+        return og_effect(OG_SOUND_EFFECT_FIRE_SPLASH);
+
+    case SOUND_EFFECT_ARROW:
+    case SOUND_EFFECT_LIGHT_SWORD:
+        return og_figure(OG_FIGURE_SOUND_ARCHER, OG_FIGURE_SOUND_VARIANT_HIT);
+    case SOUND_EFFECT_SWORD:
+    case SOUND_EFFECT_SPEAR:
+        return og_figure(OG_FIGURE_SOUND_INFANTRY, OG_FIGURE_SOUND_VARIANT_HIT);
+    case SOUND_EFFECT_SWORD_SWING:
+        return og_figure(OG_FIGURE_SOUND_CHARIOT, OG_FIGURE_SOUND_VARIANT_HIT);
+    case SOUND_EFFECT_HORSE2:
+        return og_figure(OG_FIGURE_SOUND_CHARIOT, OG_FIGURE_SOUND_VARIANT_DIE);
+    case SOUND_EFFECT_AXE:
+    case SOUND_EFFECT_CLUB:
+        return og_figure(OG_FIGURE_SOUND_SWORD, OG_FIGURE_SOUND_VARIANT_HIT);
+    case SOUND_EFFECT_JAVELIN:
+        return og_figure(OG_FIGURE_SOUND_SHIP, OG_FIGURE_SOUND_VARIANT_HIT);
+    case SOUND_EFFECT_LION_ATTACK:
+        return og_figure(OG_FIGURE_SOUND_LION, OG_FIGURE_SOUND_VARIANT_HIT);
+    case SOUND_EFFECT_LION_DIE:
+        return og_figure(OG_FIGURE_SOUND_LION, OG_FIGURE_SOUND_VARIANT_DIE);
+    case SOUND_EFFECT_OSTRICH_DIE:
+        return og_figure(OG_FIGURE_SOUND_OSTRICH, OG_FIGURE_SOUND_VARIANT_DIE);
+    case SOUND_EFFECT_SHEEP_DIE:
+        return og_figure(OG_FIGURE_SOUND_BIRDS, OG_FIGURE_SOUND_VARIANT_DIE);
+    case SOUND_EFFECT_ZEBRA_DIE:
+        return og_figure(OG_FIGURE_SOUND_ANTELOPE, OG_FIGURE_SOUND_VARIANT_DIE);
+    }
+    return {};
+}
+
+void ANK_REGISTER_CONFIG_ITERATOR(config_load_sound_effects) {
+    g_sound.clear_og_effect_files();
+    g_config_arch.r_array("sound_effects",
+      [](archive arch) { g_sound.set_og_effect_file(arch.r_int("id"), arch.r_string("p")); });
+    g_config_arch.r_array("sound_figure_effects",
+      [](archive arch) { g_sound.set_og_figure_effect_file(arch.r_int("t"), arch.r_int("v"), arch.r_string("p")); });
+}
+
+bool sound_manager_t::log_events() const {
+    return g_args.is_integral_tests() || g_args.is_log_sound();
+}
+
+bool sound_manager_t::data_available() const {
+    return !g_args.no_resource();
+}
+
+void sound_manager_t::clear_og_effect_files() {
+    _og_effects.fill({});
+    _og_figure_effects.fill({});
+}
+
+void sound_manager_t::set_og_effect_file(int id, xstring file) {
+    if (id >= 0 && id < (int)_og_effects.size()) {
+        _og_effects[id] = {file, {}, false};
+    }
+}
+
+void sound_manager_t::set_og_figure_effect_file(int sound, int variant, xstring file) {
+    if (sound >= 0 && sound < OG_FIGURE_SOUND_COUNT && variant >= 0 && variant < OG_FIGURE_SOUND_VARIANTS) {
+        _og_figure_effects[sound * OG_FIGURE_SOUND_VARIANTS + variant] = {file, {}, false};
+    }
+}
+
+// Probed once, like OG binding its wavs at start-up (effect.c); a missing file stays silent (-1 in OG).
+const vfs::path& sound_manager_t::og_sample_path(og_sample_t& sample) {
+    if (!sample.probed) {
+        sample.probed = true;
+        if (initialized && data_available() && !sample.file.empty()) {
+            vfs::path audio_path("AUDIO/", sample.file.c_str());
+            if (vfs::file_exists(audio_path)) {
+                sample.resolved = vfs::content_path(audio_path);
+            }
+        }
+    }
+    return sample.resolved;
+}
+
+// Miles plays a sample on any free handle; a channel that already holds the file saves a reload.
+int sound_manager_t::pick_effect_channel(const vfs::path& filename) {
+    int free_channel = -1;
+    for (int c = SOUND_CHANNEL_EFFECTS_MIN; c <= SOUND_CHANNEL_EFFECTS_MAX; c++) {
+        if (is_channel_playing(c)) {
+            continue;
+        }
+        if (!filename.empty() && _channels[c].filename == filename) {
+            return c;
+        }
+        if (free_channel < 0) {
+            free_channel = c;
+        }
+    }
+    return free_channel;
+}
+
+int sound_manager_t::play_effect(int effect) {
     if (!game_features::gameopt_sound_effects_enabled.to_bool()) {
-        return;
+        return -1;
     }
 
-    if (is_channel_playing(effect)) {
-        return;
+    const og_effect_ref ref = og_effect_for(effect);
+    og_sample_t* sample = nullptr;
+    if (ref.effect >= 0 && ref.effect < (int)_og_effects.size()) {
+        sample = &_og_effects[ref.effect];
+    } else if (ref.figure >= 0 && ref.figure < OG_FIGURE_SOUND_COUNT) {
+        sample = &_og_figure_effects[ref.figure * OG_FIGURE_SOUND_VARIANTS + ref.variant];
     }
 
-    play_channel(effect, calc_bound(game_features::gameopt_sound_effects_volume.to_int(), 0, 100));
+    const bool log = log_events();
+    if (!sample || sample->file.empty()) {
+        if (log) {
+            logs::info("[sound] effect %d -> silent", effect);
+        }
+        return -1;
+    }
+
+    const vfs::path& path = og_sample_path(*sample);
+    const int channel = pick_effect_channel(path);
+    if (log) {
+        if (ref.effect >= 0) {
+            logs::info("[sound] effect %d -> og effect %d %s channel %d", effect, ref.effect, sample->file.c_str(),
+              channel);
+        } else {
+            logs::info("[sound] effect %d -> og figure %d.%d %s channel %d", effect, ref.figure, ref.variant,
+              sample->file.c_str(), channel);
+        }
+    }
+
+    if (!initialized || path.empty() || channel < 0) {
+        return channel;
+    }
+
+    init_channel(channel, path);
+    play_channel(channel, calc_bound(game_features::gameopt_sound_effects_volume.to_int(), 0, 100));
+    return channel;
 }

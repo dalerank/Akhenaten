@@ -45,3 +45,34 @@ enum e_sound_effect {
 
     SOUND_EFFECT_FLOODED = 46,
 };
+
+// OG sound_play.h / effect.c ids. e_sound_effect above is the Caesar III list the call sites still use;
+// play_effect maps it onto these.
+enum e_og_sound_effect {
+    OG_SOUND_EFFECT_BUTTON = 0,
+    OG_SOUND_EFFECT_CLEAR_LAND = 2,
+    OG_SOUND_EFFECT_SIDEBAR = 6,
+    OG_SOUND_EFFECT_BUILD = 7,
+    OG_SOUND_EFFECT_MESSAGE = 9,
+    OG_SOUND_EFFECT_BUILDING_DESTROYED = 17,
+    OG_SOUND_EFFECT_FIRE_SPLASH = 18,
+    OG_SOUND_EFFECT_COUNT = 19,
+};
+
+enum e_og_figure_sound {
+    OG_FIGURE_SOUND_LION = 1,
+    OG_FIGURE_SOUND_OSTRICH = 4,
+    OG_FIGURE_SOUND_ANTELOPE = 5,
+    OG_FIGURE_SOUND_BIRDS = 8,
+    OG_FIGURE_SOUND_ARCHER = 11,
+    OG_FIGURE_SOUND_INFANTRY = 12,
+    OG_FIGURE_SOUND_CHARIOT = 13,
+    OG_FIGURE_SOUND_SHIP = 17,
+    OG_FIGURE_SOUND_SWORD = 19, // sword_atk.wav
+    OG_FIGURE_SOUND_CITIZEN = 21,
+    OG_FIGURE_SOUND_COUNT = 33,
+
+    OG_FIGURE_SOUND_VARIANTS = 5,
+    OG_FIGURE_SOUND_VARIANT_HIT = 2,
+    OG_FIGURE_SOUND_VARIANT_DIE = 3,
+};
