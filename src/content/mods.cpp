@@ -3,6 +3,7 @@
 #include "content/content.h"
 #include "content/reader.h"
 #include "content/zipreader.hpp"
+#include "graphics/image.h"
 #include "graphics/imagepak_holder.h"
 #include "core/log.h"
 #include "core/string.h"
@@ -300,7 +301,10 @@ void mods_remount() {
 
             auto& modpack = g_image_data->pak_list[it.second.useridx];
             if (modpack.handle) {
+                image_invalidate_pak_cache(it.second.useridx);
                 delete modpack.handle;
+                modpack.handle = nullptr;
+                modpack.load_status = IMAGEPAK_LOAD_IDLE;
 
                 modpack.entries_num = 0;
                 modpack.index = 0;
