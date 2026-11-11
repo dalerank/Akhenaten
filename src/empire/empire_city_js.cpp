@@ -63,9 +63,9 @@ static void empire_object_proto___property_getter(js_State* J) {
 }
 
 static void empire_object_proto_toString(js_State* J) {
-    char buf[64];
-    snprintf(buf, sizeof buf, "EmpireObject(%d)", empire_object_this_slot(J));
-    J->pushstring(buf);
+    bstring64 buf;
+    buf.printf("EmpireObject(%d)", empire_object_this_slot(J));
+    J->pushstring(buf.c_str());
 }
 
 static void js_push_empire_object(js_State* J, int slot) {
@@ -100,9 +100,9 @@ static void empire_city_map_proto___property_getter(js_State* J) {
 
 static void empire_city_map_proto_toString(js_State* J) {
     const int id = empire_city_this_id(J);
-    char buf[64];
-    snprintf(buf, sizeof buf, "EmpireCityMap(%d)", id);
-    J->pushstring(buf);
+    bstring64 buf;
+    buf.printf("EmpireCityMap(%d)", id);
+    J->pushstring(buf.c_str());
 }
 
 static void js_push_empire_city_object(js_State* J, int id, js_Object* proto) {
@@ -160,9 +160,9 @@ static void empire_city_proto_trade_route_traded(js_State* J) {
 }
 
 static void empire_city_proto_toString(js_State* J) {
-    char buf[64];
-    snprintf(buf, sizeof buf, "EmpireCity(%d)", empire_city_this_id(J));
-    J->pushstring(buf);
+    bstring64 buf;
+    buf.printf("EmpireCity(%d)", empire_city_this_id(J));
+    J->pushstring(buf.c_str());
 }
 
 static void jsB_new_EmpireCity(js_State* J) {
@@ -256,9 +256,9 @@ static void empire_trader_proto_faces_left(js_State* J) {
 }
 
 static void empire_trader_proto_toString(js_State* J) {
-    char buf[64];
-    snprintf(buf, sizeof buf, "EmpireTrader(%d)", empire_trader_this_index(J));
-    J->pushstring(buf);
+    bstring64 buf;
+    buf.printf("EmpireTrader(%d)", empire_trader_this_index(J));
+    J->pushstring(buf.c_str());
 }
 
 static void js_push_empire_trader(js_State* J, int index) {
@@ -312,9 +312,9 @@ static void invasion_warning_proto_pos(js_State* J) {
 }
 
 static void invasion_warning_proto_toString(js_State* J) {
-    char buf[64];
-    snprintf(buf, sizeof buf, "InvasionWarning(%d)", invasion_warning_this_index(J));
-    J->pushstring(buf);
+    bstring64 buf;
+    buf.printf("InvasionWarning(%d)", invasion_warning_this_index(J));
+    J->pushstring(buf.c_str());
 }
 
 static void js_push_invasion_warning(js_State* J, int index) {
