@@ -113,7 +113,7 @@ int input_box_handle_mouse(const mouse* m, const input_box* box) {
         g_keyboard.start_capture(
           box->text, box->max_length, box->allow_punctuation, text_width, box->font, box->multiline);
         if (box->host_input) {
-            ui::set_active_text_input(static_cast<ui::einput*>(box->host_input));
+            ui::set_active_text_input(box->host_input);
         }
         g_keyboard.show_virtual(box->text, box->max_length);
     } else {

@@ -4,6 +4,10 @@
 #include "graphics/font.h"
 #include "input/mouse.h"
 
+namespace ui {
+    struct einput;
+}
+
 constexpr int INPUT_BOX_BLOCK_SIZE = 16;
 
 struct input_box {
@@ -16,7 +20,7 @@ struct input_box {
     int multiline;
     int allow_punctuation;
     /** Owning ui::einput* while focused (for keyboard routing). */
-    void* host_input;
+    ui::einput* host_input;
     // private vars
     uint8_t* text;
 };
