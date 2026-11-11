@@ -60,6 +60,9 @@ struct screen_city_t {
     void draw_figures_on_flat_tiles(vec2i pixel, tile2i tile, painter &ctx);
     void draw_figures_overlay(vec2i pixel, tile2i tile, painter &ctx);
     void draw_isometric_flat(vec2i pixel, tile2i tile, painter &ctx);
+    // Stores the water frames the flat pass queued; call after every flat pass, before the height pass.
+    void apply_water_frames();
+    int pending_water_frames() const;
     void draw_isometric_terrain_height(vec2i pixel, tile2i tile, painter &ctx);
     void draw_isometric_nonterrain_height(vec2i pixel, tile2i tile, painter &ctx);
     void draw_isometric_nonterrain_height(vec2i pixel, tile2i tile, color mask, painter &ctx);

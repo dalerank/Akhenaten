@@ -1,5 +1,10 @@
 #include "js/test/js_test_common.h"
 
+#include "widget/widget_city.h"
+#include "grid/image.h"
+#include "graphics/image_groups.h"
+#include "graphics/image.h"
+
 #include "building/building_delivery_path.h"
 #include "content/vfs.h"
 #include "core/log.h"
@@ -468,3 +473,24 @@ int __test_editor_map_generate() {
     return ok ? 1 : 0;
 }
 ANK_FUNCTION(__test_editor_map_generate);
+
+static int __test_pending_water_frames() {
+    return g_screen_city.pending_water_frames();
+}
+ANK_FUNCTION(__test_pending_water_frames);
+
+// Gives a tile the first water frame; returns its image id, or 0 without Pharaoh art.
+static int __test_set_water_image(int x, int y) {
+    const int image_id = image_id_from_group(GROUP_TERRAIN_WATER);
+    if (image_id <= 0) {
+        return 0;
+    }
+    map_image_set(tile2i(x, y), image_id);
+    return image_id;
+}
+ANK_FUNCTION_2(__test_set_water_image);
+
+static int __test_map_image_at(int x, int y) {
+    return map_image_at(tile2i(x, y));
+}
+ANK_FUNCTION_2(__test_map_image_at);

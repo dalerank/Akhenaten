@@ -116,6 +116,14 @@ struct water_frame_queue_t {
 };
 static water_frame_queue_t g_water_frame_queue;
 
+void screen_city_t::apply_water_frames() {
+    g_water_frame_queue.apply();
+}
+
+int screen_city_t::pending_water_frames() const {
+    return g_water_frame_queue.count.load(std::memory_order_relaxed);
+}
+
 void set_city_clip_rectangle(painter &ctx) {
     OZZY_PROFILER_FUNCTION();
     vec2i view_pos = g_camera.offset;
