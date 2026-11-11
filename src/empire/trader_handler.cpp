@@ -113,7 +113,7 @@ empire_trader_handle empire_create_trader() {
     }
 
     auto& trader = *it;
-    memset(&trader, 0, sizeof(trader));
+    trader = empire_trader{};
     trader.is_active = true;
     return empire_trader_handle{ (uint8_t)std::distance(traders.begin(), it) };
 }

@@ -303,7 +303,7 @@ empire_trader* empire_traders_manager::get_free_trader() {
         return nullptr;
     }
 
-    memset(&*it, 0, sizeof(empire_trader));
+    *it = empire_trader{};
     it->id = std::distance(traders.begin(), it);
     return &*it;
 }
