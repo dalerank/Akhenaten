@@ -95,6 +95,54 @@ namespace {
     }
 } // namespace
 
+static bool mods_id_less(const xstring& a, const xstring& b) {
+    const int c = string_compare_case_insensitive(a.c_str(), b.c_str());
+    return c != 0 ? c < 0 : strcmp(a.c_str(), b.c_str()) < 0;
+}
+
+mod_info* mods_mananger::find(xstring id) const {
+    for (const auto& m : list) {
+        if (m->name == id) {
+            return m.get();
+        }
+    }
+    return nullptr;
+}
+
+mod_info& mods_mananger::add(xstring id) {
+    if (mod_info* existing = find(id)) {
+        return *existing;
+    }
+    auto pos = std::upper_bound(list.begin(), list.end(), id,
+      [](const xstring& v, const std::unique_ptr<mod_info>& m) { return mods_id_less(v, m->name); });
+    auto it = list.insert(pos, std::make_unique<mod_info>());
+    (*it)->name = id;
+    return **it;
+}
+
+static void mods_log_conflicts() {
+    auto report = [](const mod_info& winner, const hvector<xstring, 32>& entries, auto find) {
+        for (const auto& e : entries) {
+            for (const auto& other : g_mods.list) {
+                if (other.get() == &winner) {
+                    break;
+                }
+                if (other->enabled && other->mounted && (other.get()->*find)(e.c_str())) {
+                    logs::warn("[mods] conflict %s: %s overrides %s", e.c_str(), winner.name.c_str(),
+                      other->name.c_str());
+                }
+            }
+        }
+    };
+
+    for (const auto& m : g_mods.list) {
+        if (m->enabled && m->mounted) {
+            report(*m, m->scripts, &mod_info::find_script);
+            report(*m, m->sounds, &mod_info::find_sound);
+        }
+    }
+}
+
 const xstring* mod_info::find_script(pcstr name) const {
     return find_entry_nocase(scripts, name);
 }
@@ -105,8 +153,8 @@ const xstring* mod_info::find_sound(pcstr name) const {
 
 void mods_queue_enabled_scripts() {
     for (const auto& it : g_mods.list) {
-        if (it.second.enabled && it.second.mounted) {
-            mods_queue_scripts(it.second);
+        if (it->enabled && it->mounted) {
+            mods_queue_scripts(*it);
         }
     }
 }
@@ -116,13 +164,13 @@ vfs::path mods_directory() {
 }
 
 mod_info& mods_add_remote_file(xstring name, xstring uri) {
-    auto it = g_mods.list.find(name);
+    mod_info* it = g_mods.find(name);
 
-    if (it != g_mods.list.end()) {
-        return it->second;
+    if (it) {
+        return *it;
     }
 
-    auto& new_mod = g_mods.list[name];
+    auto& new_mod = g_mods.add(name);
     new_mod.path = "";
     new_mod.downloaded = false;
     new_mod.url = uri;
@@ -132,27 +180,27 @@ mod_info& mods_add_remote_file(xstring name, xstring uri) {
 }
 
 vfs::path mods_get_path(xstring name) {
-    auto it = g_mods.list.find(name);
-    if (it == g_mods.list.end()) {
+    mod_info* it = g_mods.find(name);
+    if (!it) {
         return "";
     }
-    return it->second.path.c_str();
+    return it->path.c_str();
 }
 
 bool mods_get_enabled(xstring name) {
-    auto it = g_mods.list.find(name);
-    if (it == g_mods.list.end()) {
+    mod_info* it = g_mods.find(name);
+    if (!it) {
         return false;
     }
-    return it->second.enabled;
+    return it->enabled;
 }
 
 void mods_set_enabled(xstring name, bool enabled) {
-    auto it = g_mods.list.find(name);
-    if (it == g_mods.list.end()) {
+    mod_info* it = g_mods.find(name);
+    if (!it) {
         return;
     }
-    it->second.enabled = enabled;
+    it->enabled = enabled;
     mods_save();
 }
 
@@ -212,13 +260,13 @@ void mods_download_info_async() {
 }
 
 void mods_download_mod_async(xstring name) {
-    auto it = g_mods.list.find(name);
-    if (it == g_mods.list.end()) {
+    mod_info* it = g_mods.find(name);
+    if (!it) {
         logs::error("Mod not found: %s", name.c_str());
         return;
     }
 
-    mod_info& mod = it->second;
+    mod_info& mod = *it;
 
     if (mod.downloaded) {
         logs::warn("Mod already downloaded: %s", name.c_str());
@@ -238,12 +286,12 @@ void mods_download_mod_async(xstring name) {
 #ifdef GAME_HAVE_CURL
     // Start download in background thread
     game.mt.detach_task([name]() {
-        auto it = g_mods.list.find(name);
-        if (it == g_mods.list.end()) {
+        mod_info* it = g_mods.find(name);
+        if (!it) {
             return;
         }
 
-        mod_info& mod = it->second;
+        mod_info& mod = *it;
         mod.download_progress = 1; // Start downloading
 
         // Get base path and create Mods directory
@@ -351,23 +399,23 @@ void mods_download_mod_async(xstring name) {
 }
 
 void mods_toggle(xstring name) {
-    auto it = g_mods.list.find(name);
-    if (it == g_mods.list.end()) {
+    mod_info* it = g_mods.find(name);
+    if (!it) {
         return;
     }
 
-    it->second.enabled = !it->second.enabled;
+    it->enabled = !it->enabled;
     mods_save();
 }
 
 void mods_remount() {
     bool reset_vm = false;
     for (auto& it : g_mods.list) {
-        if (!it.second.downloaded) {
+        if (!it->downloaded) {
             continue;
         }
 
-        mod_info& mod = it.second;
+        mod_info& mod = *it;
         if (mod.enabled) {
             if (!mod.folder) {
                 vfs::mount_pack(mod.path);
@@ -419,6 +467,7 @@ void mods_remount() {
         js_vm_request_reset();
     }
 
+    mods_log_conflicts();
     mods_save();
 }
 
@@ -451,12 +500,12 @@ void mods_init(const mods_options& opts) {
         }
 
         xstring mod_name(mod_name_short.c_str());
-        if (g_mods.list.find(mod_name) != g_mods.list.end()) {
-            logs::warn("WARN! Duplicate mod %s", mod_name.c_str());
+        if (g_mods.find(mod_name)) {
+            logs::warn("[mods] duplicate id %s: %s ignored", mod_name.c_str(), file);
             return;
         }
 
-        mod_info& mod = g_mods.list[mod_name];
+        mod_info& mod = g_mods.add(mod_name);
         mod.path = vfs::path(dir, "/", file);
         mod.name = mod_name;
         mod.downloaded = true;
@@ -491,9 +540,9 @@ void mods_init(const mods_options& opts) {
 }
 
 const mod_info& mods_find(xstring hash) {
-    auto it = g_mods.list.find(hash);
-    if (it != g_mods.list.end()) {
-        return it->second;
+    mod_info* it = g_mods.find(hash);
+    if (it) {
+        return *it;
     }
 
     static mod_info dummy;
@@ -515,18 +564,18 @@ vfs::path mods_exist_audio(pcstr wav_path) {
 
     vfs::path found;
     for (const auto &it : g_mods.list) {
-        if (!it.second.enabled || !it.second.downloaded) {
+        if (!it->enabled || !it->downloaded) {
             continue;
         }
 
-        if (it.second.folder) {
-            if (const xstring* entry = it.second.find_sound(wav_path)) {
-                found = vfs::path(it.second.path.c_str(), "/", entry->c_str());
+        if (it->folder) {
+            if (const xstring* entry = it->find_sound(wav_path)) {
+                found = vfs::path(it->path.c_str(), "/", entry->c_str());
             }
             continue;
         }
 
-        vfs::path exact(it.second.path.c_str(), "/", wav_path);
+        vfs::path exact(it->path.c_str(), "/", wav_path);
         vfs::path resolved;
         if (vfs::mounted_entry_resolve(exact, resolved)) {
             found = resolved;
@@ -555,20 +604,21 @@ mod_reader mods_find_script(pcstr script_path, bool find_in_enabled) {
         return {};
     }
 
-    for (const auto& it : g_mods.list) {
-        if (!it.second.enabled) {
+    for (auto rit = g_mods.list.rbegin(); rit != g_mods.list.rend(); ++rit) {
+        const auto& it = *rit;
+        if (!it->enabled) {
             continue;
         }
 
-        const xstring* entry = it.second.find_script(script_path);
+        const xstring* entry = it->find_script(script_path);
         if (!entry) {
             continue;
         }
 
-        vfs::path mod_script_path(it.second.path.c_str(), "/", entry->c_str());
+        vfs::path mod_script_path(it->path.c_str(), "/", entry->c_str());
         vfs::reader reader = vfs::file_open(mod_script_path, "rt");
         if (reader) {
-            return {mod_script_path.c_str(), reader, it.first};
+            return {mod_script_path.c_str(), reader, it->name};
         }
     }
 
@@ -582,8 +632,8 @@ void mods_save() {
 
     std::string enabled_mods;
     for (const auto& it : g_mods.list) {
-        if (it.second.enabled) {
-            enabled_mods.append(it.first.c_str());
+        if (it->enabled) {
+            enabled_mods.append(it->name.c_str());
             enabled_mods.append(",");
         }
     }
@@ -602,9 +652,9 @@ void mods_load() {
     string_to_array_t(mod_names, enabled_mods.c_str(), ',');
 
     for (const auto& name : mod_names) {
-        auto it = g_mods.list.find(xstring(name.c_str()));
-        if (it != g_mods.list.end()) {
-            it->second.enabled = true;
+        mod_info* it = g_mods.find(xstring(name.c_str()));
+        if (it) {
+            it->enabled = true;
         }
     }
 }

@@ -9,7 +9,8 @@ int __mods_count() { return (int)g_mods.list.size(); } ANK_FUNCTION(__mods_count
 pcstr __mods_name(int index) {
     int i = 0;
     for (auto& p : g_mods.list) {
-        if (i == index) return p.second.name.c_str();
+        if (i == index)
+            return p->name.c_str();
         ++i;
     }
     return "";

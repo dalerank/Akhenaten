@@ -34,6 +34,7 @@
           <li><a href="#what">What a mod is</a></li>
           <li><a href="#where">Where mods live</a></li>
           <li><a href="#contents">What a mod can change</a></li>
+          <li><a href="#order">Order and conflicts</a></li>
         </ul>
       </div>
     </aside>
@@ -44,7 +45,7 @@
       <p class="section-intro">A short note on how the mod system works today. The code is <code>src/content/mods.{h,cpp}</code>; the built-in catalog of downloadable mods is <code>src/scripts/mods.js</code>.</p>
 
       <h2 id="what">What a mod is</h2>
-      <p>A mod is a zip archive with the <code>.sgx</code> extension. Its id is the file name without the extension. A mod has no manifest: the description, version and author shown in the Mods window come from the catalog in <code>mods.js</code>, if the id is listed there.</p>
+      <p>A mod is a zip archive with the <code>.sgx</code> extension, or a plain folder with the same layout. Its id is the file name without the extension (or the folder name). A folder mod can carry scripts and sounds, not an image pack. A mod has no manifest: the description, version and author shown in the Mods window come from the catalog in <code>mods.js</code>, if the id is listed there.</p>
 
       <h2 id="where">Where mods live</h2>
       <ul class="wiki-list">
@@ -59,6 +60,9 @@
         <li><strong>Sounds.</strong> <code>*.wav</code>, <code>*.mp3</code>, <code>*.ogg</code> with the same path as a speech file replace it.</li>
         <li><strong>Images.</strong> An image pack named after the mod (<code>&lt;id&gt;.js</code> inside the archive describes its groups).</li>
       </ul>
+      <h2 id="order">Order and conflicts</h2>
+      <p>Mods are sorted by id (case-insensitive) and applied in that order. When two enabled mods ship the same file, the mod whose id sorts later wins, whichever was enabled first; the log shows <code>[mods] conflict &lt;path&gt;: &lt;winner&gt; overrides &lt;loser&gt;</code>. To make a mod win, give it an id that sorts later. Switching a mod off rebuilds the script VM without it.</p>
+
       <p>Replacing a config object in a script replaces it whole: fields the mod leaves out become zero. To change one field, assign it, e.g. <code>building_well.max_service = 2</code>, in a new file of the mod.</p>
     </div>
   </main>

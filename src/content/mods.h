@@ -4,7 +4,8 @@
 
 #include "core/xstring.h"
 #include "content/dir.h"
-#include "core/flat_map.h"
+#include <memory>
+#include <vector>
 #include "content/vfs.h"
 #include "core/hvector.h"
 #include "core/archive.h"
@@ -52,9 +53,21 @@ struct mod_reader {
     xstring mod;
 };
 
+// Mod order and conflicts
+// -----------------------
+// Mods are kept sorted by id (file or folder name, case-insensitive). That is the order in which
+// they are mounted, get image pack slots and run their scripts, and it is the only conflict rule:
+// when two enabled mods provide the same file (script or sound), the one later in id order wins
+// (e.g. `b_mod/speech.js` over `a_mod/speech.js`); a mod file always wins over the built-in one.
+// mods_remount logs every such clash as "[mods] conflict <path>: <winner> overrides <loser>".
+// Image packs never clash: each mod's pack is named after its id.
 struct mods_mananger {
-    flat_map<xstring, mod_info, 32> list;
+    // unique_ptr keeps mod_info addresses stable while the list grows.
+    std::vector<std::unique_ptr<mod_info>> list;
     bool inupdate = false;
+
+    mod_info* find(xstring id) const;
+    mod_info& add(xstring id);
 };
 
 extern mods_mananger g_mods;

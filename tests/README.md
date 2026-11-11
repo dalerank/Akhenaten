@@ -207,6 +207,7 @@ See **IT1** in `REMAKE_TODO.md` / `REMAKE_NOTES.md` §4.
 | `184_request_saveload.js` | Pharaoh request `.svx` round-trip: tag/state/months/faction; fulfill after load keeps `event_request_cleared.tag_id` |
 | `176_north_dahshur_henna_raid.js` | B12/B13d: North Dahshur henna refuse/late→Hyksos×12; on-time fulfill no raid |
 | `330_mods_fixture.js` | Folder mod `fixtures/mods/akh_test_mod`: config + script override applied on enable, gone after disable (VM rebuild) |
+| `331_mods_order.js` | Two mods with the same `speech.js`: the later id (`akh_test_mod_b`) wins regardless of enable order; clash logged |
 
 Farm **placement** tests (34/35) cover `can_place` / terrain rules; **37** covers preview image helpers.
 When adding more preview draw coverage, follow JS draw conventions in
