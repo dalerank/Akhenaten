@@ -298,6 +298,36 @@ void floods_t::cycle_states_recalc() {
     flood_progress_target = std::clamp(flood_progress_target, 0, 30);
 }
 
+// OG floods.c floodplain_settings_randomize_next_quality: {weight, delta}, weights sum to 100.
+static int flood_randomized_quality(int quality) {
+    static constexpr struct {
+        int weight;
+        int delta;
+    } steps[] = {
+      {2, 100},
+      {3, 80},
+      {5, 60},
+      {10, 40},
+      {15, 20},
+      {30, 0},
+      {15, -20},
+      {10, -40},
+      {5, -60},
+      {3, -80},
+      {2, -100},
+    };
+    random_generate_next();
+    const int roll = random_short() % 99 + 1;
+    int sum = 0;
+    for (const auto& step : steps) {
+        sum += step.weight;
+        if (roll < sum) {
+            return calc_bound(quality + step.delta, 0, 100);
+        }
+    }
+    return calc_bound(quality, 0, 100);
+}
+
 void floods_t::update_next_flood_params() {
     season = season_initial;     // reset to initial
     duration = duration_initial; // reset to initial
@@ -305,10 +335,7 @@ void floods_t::update_next_flood_params() {
     quality_last = quality_current;
 
     quality_current = quality_next;
-    // calculate the next flood quality
-    int quality_randm = (rand() % 100) + 20;
-    quality_next += quality_randm;
-    quality_next = quality_next % 100;
+    quality_next = flood_randomized_quality(quality_initial);
 }
 
 void floods_t::post_flood_prediction_message() {

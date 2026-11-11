@@ -330,3 +330,32 @@ int __test_map_get_free_dock(int ship_id) {
     return map_get_free_destination_dock(ship_id).bid;
 }
 ANK_FUNCTION_1(__test_map_get_free_dock)
+
+#include "city/city_floods.h"
+#include "core/random.h"
+
+static void __test_random_set_state(int iv1, int iv2) {
+    random_TEMP_SET_DEBUG((uint32_t)iv1, (uint32_t)iv2);
+}
+ANK_FUNCTION_2(__test_random_set_state);
+
+static int __test_random_iv1() {
+    return (int)random_data_struct()->iv1;
+}
+ANK_FUNCTION(__test_random_iv1);
+
+static void __test_floods_set_quality(int initial, int next) {
+    g_floods.quality_initial = initial;
+    g_floods.quality_next = next;
+}
+ANK_FUNCTION_2(__test_floods_set_quality);
+
+static int __test_floods_quality_next() {
+    return g_floods.quality_next;
+}
+ANK_FUNCTION(__test_floods_quality_next);
+
+static void __test_floods_update_next_params() {
+    g_floods.update_next_flood_params();
+}
+ANK_FUNCTION(__test_floods_update_next_params);
