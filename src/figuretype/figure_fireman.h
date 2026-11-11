@@ -28,6 +28,11 @@ public:
         int risk_reduction_amount;   // OG (--og / gameplay_og_fireman): absolute subtract per pass
     } FIGURE_STATIC_DATA_T;
 
+    struct runtime_data_t {
+        // ticks at the fire; OG stays at least one full fight_fire animation (walkers.c:919)
+        int16_t extinguish_ticks;
+    } FIGURE_RUNTIME_DATA_T;
+
     virtual figure_fireman *dcast_fireman() override { return this; }
 
     virtual void on_create() override;

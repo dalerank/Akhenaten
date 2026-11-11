@@ -62,6 +62,7 @@ void figure_fireman::figure_action() { // doubles as fireman! not as policeman!!
     case ACTION_4_FIREMAN_GOING_TO_FIRE:
         if (do_goto(base.destination_tile, TERRAIN_USAGE_PREFER_ROADS, ACTION_5_FIREMAN_AT_FIRE)) {
             base.wait_ticks = 50;
+            runtime_data().extinguish_ticks = 0;
         }
 
         if (base.direction == DIR_FIGURE_REROUTE) {
@@ -75,6 +76,7 @@ void figure_fireman::figure_action() { // doubles as fireman! not as policeman!!
                 clear_ruin_destination();
                 base.set_destination(next_tile_b);
                 advance_action(ACTION_5_FIREMAN_AT_FIRE);
+                runtime_data().extinguish_ticks = 0;
             }
 
             if (!next_b || next_b->state == BUILDING_STATE_UNUSED || next_b->type != BUILDING_BURNING_RUIN) {
@@ -139,16 +141,23 @@ void figure_fireman::extinguish_fire() {
     base.attack_direction = calc_general_direction(tile(), burn->tile);
     base.attack_direction = base.attack_direction % 8;
 
+    // OG leaves only when the wait is over and a whole fight_fire animation has played, even if the
+    // ruin went out earlier (walkers.c:919, the counter grows once per tick at 983).
+    auto& d = runtime_data();
     base.wait_ticks--;
-    if (base.wait_ticks <= 0) {
-        base.wait_ticks_missile = 20;
-        advance_action(ACTION_3_FIREMAN_RETURNING);
+    const bool animation_done = d.extinguish_ticks >= anim(animkeys().fight_fire).max_frames;
+    if (base.wait_ticks > 0 || !animation_done) {
+        d.extinguish_ticks++;
+        return;
+    }
 
-        if (!game_features::gameplay_change_fireman_returning) {
-            if (!fight_fire()) {
-                assert(false);
-                poof();
-            }
+    base.wait_ticks_missile = 20;
+    advance_action(ACTION_3_FIREMAN_RETURNING);
+
+    if (!game_features::gameplay_change_fireman_returning) {
+        if (!fight_fire()) {
+            assert(false);
+            poof();
         }
     }
 }

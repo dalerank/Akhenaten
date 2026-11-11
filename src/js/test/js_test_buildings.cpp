@@ -635,6 +635,34 @@ static int __test_fireman_extinguish_tick(int ruin_id) {
 }
 ANK_FUNCTION_1(__test_fireman_extinguish_tick);
 
+// Calls extinguish_fire on a fresh fireman standing `distance` tiles from the ruin until he leaves the fire.
+static int __test_fireman_ticks_at_fire(int ruin_id, int distance) {
+    building* ruin = building_get(ruin_id);
+    if (!ruin || !ruin->dcast_burning_ruin()) {
+        return -1000;
+    }
+
+    figure* f = figure_create(FIGURE_FIREMAN, ruin->tile.shifted(distance, 0), DIR_0_TOP_RIGHT);
+    figure_fireman* fireman = f ? f->dcast<figure_fireman>() : nullptr;
+    if (!fireman) {
+        return -1000;
+    }
+
+    f->action_state = ACTION_5_FIREMAN_AT_FIRE;
+    f->wait_ticks = 50;
+    f->set_destination(ruin_id);
+    fireman->runtime_data().extinguish_ticks = 0;
+
+    int ticks = 0;
+    while (f->action_state == ACTION_5_FIREMAN_AT_FIRE && ticks < 1000) {
+        fireman->extinguish_fire();
+        ++ticks;
+    }
+    f->poof();
+    return ticks;
+}
+ANK_FUNCTION_2(__test_fireman_ticks_at_fire);
+
 static int __test_building_is_rubble(int bid) {
     building* b = building_get(bid);
     return (b && b->state == BUILDING_STATE_RUBBLE) ? 1 : 0;
