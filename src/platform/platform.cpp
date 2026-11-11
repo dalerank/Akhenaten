@@ -2,6 +2,7 @@
 #include "platform/screen.h"
 #include "js/js_game.h"
 #include "core/bstring.h"
+#include "platform/arguments.h"
 
 #include <SDL.h>
 
@@ -95,7 +96,12 @@ pcstr platform_t::user_directory() {
         return udirectory.c_str();
     }
 
-    platform_resolve_user_directory(udirectory);
+    const xstring& override_dir = g_args.get_str("user_dir");
+    if (!override_dir.empty()) {
+        udirectory = override_dir.c_str();
+    } else {
+        platform_resolve_user_directory(udirectory);
+    }
 
     std::error_code ec;
     std::filesystem::create_directories(udirectory.c_str(), ec);

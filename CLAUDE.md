@@ -87,6 +87,7 @@ Sources are collected via `file(GLOB ...)` with **no `CONFIGURE_DEPENDS`**, so a
                       (a value of the wrong type is always reported as "[config] ... expected number")
 --config-keys-baseline PATH  with --integraltests, fail on config key issues not listed in PATH (implies --log-config-keys)
 --config-keys-update  with --config-keys-baseline, rewrite PATH from this run instead of checking it
+--user-dir PATH       use PATH instead of the per-user app folder (integral-test log, options) — for parallel runs
 --discord-log         verbose Discord RPC logging
 --nocrashdlg          suppress crash dialog
 --fulldmp             create full crash dump
@@ -180,6 +181,8 @@ Exit code is `0` only when every test passed.
 Results go to the log, **not** to stdout:
 - Windows: `%APPDATA%/Akhenaten/akhenaten-log.txt`
 - Linux: `${XDG_DATA_HOME:-~/.local/share}/Akhenaten/akhenaten-log.txt`
+- with `--user-dir PATH`: `PATH/akhenaten-log.txt`. The default log is shared by every exe, so two suites
+  running at once (e.g. from two worktrees) overwrite each other's results — give each its own `--user-dir`.
 
 Grep it for `\[test:.*\] (PASS|FAIL)` per test and `\[integraltests\] N passed, M failed`
 for the summary.

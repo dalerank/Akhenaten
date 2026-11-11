@@ -174,6 +174,9 @@ ANK_REGISTER_BOOL_ARGUMENT_HANDLER("--config-keys-update", "config_keys_update",
 ANK_REGISTER_STRING_ARGUMENT_HANDLER("--config-keys-baseline", "config_keys_baseline",
   "Option --config-keys-baseline must be followed by a file path", "--config-keys-baseline PATH",
   "with --integraltests, fail on config key issues not listed in PATH (implies --log-config-keys)");
+ANK_REGISTER_STRING_ARGUMENT_HANDLER("--user-dir", "user_dir", "Option --user-dir must be followed by a directory path",
+  "--user-dir PATH",
+  "use PATH instead of the per-user app folder (test log, options); lets several runs go in parallel");
 ANK_REGISTER_BOOL_ARGUMENT_HANDLER("--discord-log", "discord_log", true, "enable Discord RPC verbose logging");
 ANK_REGISTER_BOOL_ARGUMENT_HANDLER("--no-resource", "no_resource", true, "run without Pharaoh data files (skips campaign.txt; DATA_DIR is optional VFS base path)");
 ANK_REGISTER_BOOL_ARGUMENT_HANDLER("--nodatacheck", "no_data_check", true, "skip Pharaoh/Cleopatra install validation at startup (allow any data_directory)");
