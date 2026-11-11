@@ -152,7 +152,10 @@ void empire_t::load_mission_metadata(const mission_id_t &missionid, bool preserv
 
         if (full_empire_object *full = ref_full_object(city.empire_object_id)) {
             if (full->obj.type == EMPIRE_OBJECT_CITY) {
-                full->in_use = 1;
+                // OG keeps the stored value: objects from the empire file carry in_use 2.
+                if (!full->in_use) {
+                    full->in_use = 1;
+                }
                 full->city_name_id = city.name_id;
                 full->city_type = city.type;
             }

@@ -16,6 +16,7 @@ enum e_routed_mode {
 
 using e_routed_mode_tokens_t = token_holder<e_routed_mode, ROUTED_BUILDING_ROAD, ROUTED_BUILDING_MAX>;
 
+void map_routing_stats_clear();
 void map_routing_calculate_distances(tile2i tile);
 void map_routing_calculate_distances_water_boat(tile2i tile);
 void map_routing_calculate_distances_deepwater(tile2i tile);

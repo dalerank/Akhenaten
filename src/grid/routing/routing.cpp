@@ -87,6 +87,10 @@ void callback_calc_distance(int next_offset, int dist) {
         enqueue(next_offset, dist);
 }
 
+void map_routing_stats_clear() {
+    g_routing_stats = {};
+}
+
 void map_routing_calculate_distances(tile2i tile) {
     ++g_routing_stats.total_routes_calculated;
     route_queue(tile.grid_offset(), -1, callback_calc_distance);
