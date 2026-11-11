@@ -26,57 +26,36 @@
 #include "grid/road_access.h"
 #include "scenario/invasion_auto_resolve.h"
 
-using stage_attack_weight = std::array<int16_t, BUILDING_MAX>;
-using stage_attack_rules = svector<uint16_t, BUILDING_MAX>;
+// OG enemy_attack_priority / enemy_attack_fallback (figure_data.c:499-511): building types by priority,
+// the first type in a list wins, distance only breaks ties within one type.
+using stage_attack_rules = svector<uint16_t, 100>;
 
 struct enemy_attack_priority_t {
     stage_attack_rules food_chain;
     stage_attack_rules gold_stores;
     stage_attack_rules best_buildings;
     stage_attack_rules troops;
-    stage_attack_rules simple;
-    stage_attack_rules random;
+    stage_attack_rules fallback;
 
-    stage_attack_weight food_chain_w;
-    stage_attack_weight gold_stores_w;
-    stage_attack_weight best_buildings_w;
-    stage_attack_weight troops_w;
-    stage_attack_weight simple_w;
-    stage_attack_weight random_w;
-
-    struct attack_pairs {
-        stage_attack_rules *rules;
-        stage_attack_weight *weights;
-    };
-
-    std::array<attack_pairs, FORMATION_ATTACK_MAX> data = { {
-        {&food_chain, &food_chain_w},
-        {&gold_stores, &gold_stores_w},
-        {&best_buildings, &best_buildings_w},
-        {&troops, &troops_w},
-        {&simple, &simple_w},
-        {&random, &random_w }
-    } };
-
-    const stage_attack_weight &get_weights(e_formation_attack_type rule) {
-        return *data[rule].weights;
+    const stage_attack_rules& get(int kind) const {
+        switch (kind) {
+        case FORMATION_ATTACK_FOOD_CHAIN:
+            return food_chain;
+        case FORMATION_ATTACK_GOLD_STORES:
+            return gold_stores;
+        case FORMATION_ATTACK_BEST_BUILDINGS:
+            return best_buildings;
+        case FORMATION_ATTACK_TROOPS:
+            return troops;
+        default:
+            return fallback;
+        }
     }
 };
-ANK_CONFIG_STRUCT(enemy_attack_priority_t,
-    food_chain, gold_stores, best_buildings, troops, simple)
+ANK_CONFIG_STRUCT(enemy_attack_priority_t, food_chain, gold_stores, best_buildings, troops, fallback)
 
 struct enemy_attack_rules_t {
     enemy_attack_priority_t priority;
-
-    void archive_load(archive arch) {
-        for (auto &it : priority.data) {
-            std::fill(it.weights->begin(), it.weights->end(), 0);
-            for (int i = 0; i < it.rules->size(); i++) {
-                uint16_t btype = it.rules->at(i);
-                it.weights->at(btype) = (it.rules->size() - i) + 1;
-            }
-        }
-    }
 };
 ANK_CONFIG_STRUCT(enemy_attack_rules_t, priority)
 
@@ -230,96 +209,63 @@ static const vec2i LAYOUT_ORIENTATION_OFFSETS[13][4][40]= {
      }
 };
 
-static void set_enemy_target_building(formation* m, attacked_buildings& attackd_buildings) {
-    if (m->destination_building_id > 0) {
-        building *current_target = building_get(m->destination_building_id);
-        if (current_target && current_target->state == BUILDING_STATE_VALID) {
-            building_id main_bid = current_target->main()->id;
-            attackd_buildings.insert({ main_bid, true });
-            return;
+// OG find_target_building (formation_enemy.c:185): reachable buildings without soldiers on them; a type earlier
+// in the list wins, the closer building wins within the same type.
+static void find_target_building(const formation* m, const stage_attack_rules& list, int& best_index,
+  int& best_distance, building_id& best_id) {
+    for (auto b = building_begin(); b != building_end(); ++b) {
+        if (b->state != BUILDING_STATE_VALID || map_soldier_strength_get(b->tile) != 0
+            || map_routing_distance(b->tile) <= 0) {
+            continue;
         }
-        m->destination_building_id = 0;
-    }
-
-    e_formation_attack_type attack = m->attack_type;
-    if (attack == FORMATION_ATTACK_RANDOM) {
-        attack = (e_formation_attack_type)(random_byte() % FORMATION_ATTACK_RANDOM);
-    }
-
-    auto is_building_attacked = [&] (building* b) -> bool {
-        if (!b) return false;
-        building_id main_bid = b->main()->id;
-        auto it = attackd_buildings.find(main_bid);
-        return (it != attackd_buildings.end());
-    };
-
-    auto get_best_target = [&] (const stage_attack_weight& weights) {
-        building *best_building = nullptr;
-        int max_score = -9999;
-        for (auto b = building_begin(); b != building_end(); ++b) {
-            if (b->state != BUILDING_STATE_VALID || map_soldier_strength_get(b->tile)) {
+        for (int i = 0; i <= best_index && i < (int)list.size(); i++) {
+            if (b->type != list[i]) {
                 continue;
             }
-
-            // Skip buildings that are already being attacked by other formations
-            if (is_building_attacked(b)) {
-                continue;
+            const int distance = calc_maximum_distance(m->home, b->tile);
+            if (i < best_index) {
+                best_index = i;
+                best_distance = distance;
+                best_id = b->id;
+            } else if (distance < best_distance) {
+                best_distance = distance;
+                best_id = b->id;
             }
-
-            const int weight = weights[b->type];
-            if (weight > 0) {
-                int distance = calc_maximum_distance(m->home, b->tile);
-                int score = weight - distance;
-                if (score > max_score) {
-                    best_building = b;
-                    max_score = score;
-                }
-            }
+            break;
         }
+    }
+}
 
-        return best_building;
-    };
+// OG formation_enemy_set_target_building (formation_enemy.c:215). RANDOM draws crt_rand on every call.
+static bool set_enemy_target_building(formation* m) {
+    int kind = m->attack_type;
+    if (kind == FORMATION_ATTACK_RANDOM) {
+        kind = anti_scum_random_15bit() & 3;
+    }
 
-    auto get_closes_buildings = [&] () {
-        building *best_building = nullptr;
-        int min_distance = 9999;
-        for (auto b = building_begin(); b != building_end(); ++b) {
-            if (b->state != BUILDING_STATE_VALID || map_soldier_strength_get(b->tile)) {
-                continue;
-            }
-
-            // Skip buildings that are already being attacked by other formations
-            if (is_building_attacked(b)) {
-                continue;
-            }
-
-            int distance = calc_maximum_distance(m->home, b->tile);
-            if (distance < min_distance) {
-                best_building = b;
-                min_distance = distance;
-            }
+    constexpr int list_length = 100;
+    int best_index = list_length;
+    int best_distance = 10000;
+    building_id best_id = 0;
+    // Fill the distance grid from the formation; tile2i(-2, -2) would be a real tile and stop the search there.
+    map_routing_noncitizen_can_travel_through_everything(m->home, tile2i::invalid);
+    find_target_building(m, enemy_attack_rules.priority.get(kind), best_index, best_distance, best_id);
+    if (best_id <= 0) {
+        find_target_building(m, enemy_attack_rules.priority.fallback, best_index, best_distance, best_id);
+        if (best_id <= 0) {
+            return false;
         }
-
-        return best_building;
-    };
-
-    const auto &formation_attack_weights = enemy_attack_rules.priority.get_weights(attack);
-    building* best_building = get_best_target(formation_attack_weights);
-
-    if (!best_building) {
-        // no target buildings left: take common attack priority
-        best_building = get_best_target(enemy_attack_rules.priority.simple_w);
     }
 
-    if (!best_building) {
-        // no target building left: take closest for attack
-        best_building = get_closes_buildings();
+    building* b = building_get(best_id);
+    if (b->type != BUILDING_STORAGE_YARD && b->type != BUILDING_STORAGE_YARD_UP) {
+        m->set_destination_building(b->tile, best_id);
+        return true;
     }
-
-    if (best_building) {
-        attackd_buildings.insert({ best_building->id, true });
-        m->set_destination_building(best_building->tile, best_building->id);
-    }
+    // OG aims at the yard's first room, one tile right of the yard (id + 1 there).
+    const building_id room = b->next_part_building_id > 0 ? b->next_part_building_id : best_id;
+    m->set_destination_building(b->tile.shifted(1, 0), room);
+    return true;
 }
 
 static void set_native_target_building(formation* m) {
@@ -574,7 +520,7 @@ static void update_enemy_movement(formation* m, int target_found) {
 
 // OG formation_enemy_update for one enemy formation (formation.c:539-619). target_found lives across the loop
 // like the OG local: the first formation of each invasion sets it, the others reuse it.
-void formations_t::update_enemy_formation(formation* m, int* target_found, attacked_buildings& attackd_buildings) {
+void formations_t::update_enemy_formation(formation* m, int* target_found) {
     enemy_army* army = enemy_army_get_editable(m->invasion_id);
     if (enemy_army_is_stronger_than_batalions()) {
         army->ignore_pharaoh_soldiers = true;
@@ -664,8 +610,7 @@ void formations_t::update_enemy_formation(formation* m, int* target_found, attac
             if (army->ignore_pharaoh_soldiers) {
                 *target_found = ENEMY_TARGET_NONE;
             }
-            set_enemy_target_building(m, attackd_buildings);
-            if (m->destination_building_id > 0) {
+            if (set_enemy_target_building(m)) {
                 m->ticks_without_target = 0;
             } else if (++m->ticks_without_target > ENEMY_FORMATION_MAX_TICKS_WITHOUT_TARGET) {
                 m->months_low_morale = 1;
@@ -689,23 +634,6 @@ void formations_t::enemy_update() {
         g_enemy_army_in_city.calculate_kingdome_influence();
         g_enemy_armies.clear_formations();
 
-        attacked_buildings attackd_buildings;
-        for (int i = 1; i < MAX_FORMATIONS; i++) {
-            formation *m = formation_get(i);
-            if (m->in_use && !m->is_herd && !m->own_batalion && m->destination_building_id > 0) {
-                building *target = building_get(m->destination_building_id);
-                if (target && target->state == BUILDING_STATE_VALID) {
-                    building_id bid = target->main()->id;
-                    auto result = attackd_buildings.insert({ bid, true });
-                    if (!result.second) {
-                        m->destination_building_id = 0;
-                    }
-                } else {
-                    m->destination_building_id = 0;
-                }
-            }
-        }
-
         int target_found = ENEMY_TARGET_NONE;
         for (int i = 1; i < MAX_FORMATIONS; i++) {
             formation *m = formation_get(i);
@@ -713,7 +641,7 @@ void formations_t::enemy_update() {
                 if (g_invasion_auto_resolve.is_formation_frozen(m)) {
                     continue;
                 }
-                update_enemy_formation(m, &target_found, attackd_buildings);
+                update_enemy_formation(m, &target_found);
             }
         }
     }

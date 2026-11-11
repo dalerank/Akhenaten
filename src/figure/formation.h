@@ -180,7 +180,7 @@ struct formations_t {
     int dispatch_batalion_to_distant_battle(formation *m);
     void batalions_update();
 
-    void update_enemy_formation(formation* m, int* target_found, attacked_buildings& attackd_buildings);
+    void update_enemy_formation(formation* m, int* target_found);
 
     void enemy_update();
 };
