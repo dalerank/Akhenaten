@@ -153,10 +153,41 @@ const xstring* mod_info::find_sound(pcstr name) const {
 
 void mods_queue_enabled_scripts() {
     for (const auto& it : g_mods.list) {
-        if (it->enabled && it->mounted) {
+        if (it->enabled && it->mounted && !it->broken) {
             mods_queue_scripts(*it);
         }
     }
+}
+
+xstring mods_owner_of_script(pcstr text) {
+    if (!text || !*text) {
+        return {};
+    }
+    for (const auto& m : g_mods.list) {
+        if (!m->mounted || m->path.empty()) {
+            continue;
+        }
+        const size_t len = strlen(m->path.c_str());
+        // "<mod path>/" so that mods/a is not taken for mods/a_b.
+        for (pcstr p = strstr(text, m->path.c_str()); p; p = strstr(p + 1, m->path.c_str())) {
+            if (p[len] == '/') {
+                return m->name;
+            }
+        }
+    }
+    return {};
+}
+
+bool mods_mark_broken(xstring id, pcstr reason) {
+    mod_info* mod = g_mods.find(id);
+    if (!mod || mod->broken) {
+        return false;
+    }
+    mod->broken = true;
+    logs::error("[mods] %s is broken (%s); its scripts stay unloaded until it is switched off and on", id.c_str(),
+      reason ? reason : "script error");
+    js_vm_request_reset();
+    return true;
 }
 
 vfs::path mods_directory() {
@@ -433,6 +464,7 @@ void mods_remount() {
 
             if (!mod.mounted) {
                 mod.mounted = true;
+                mod.broken = false;
                 mod.fill_entries();
                 mods_queue_scripts(mod);
             }
@@ -564,7 +596,7 @@ vfs::path mods_exist_audio(pcstr wav_path) {
 
     vfs::path found;
     for (const auto &it : g_mods.list) {
-        if (!it->enabled || !it->downloaded) {
+        if (!it->enabled || !it->downloaded || it->broken) {
             continue;
         }
 
@@ -606,7 +638,7 @@ mod_reader mods_find_script(pcstr script_path, bool find_in_enabled) {
 
     for (auto rit = g_mods.list.rbegin(); rit != g_mods.list.rend(); ++rit) {
         const auto& it = *rit;
-        if (!it->enabled) {
+        if (!it->enabled || it->broken) {
             continue;
         }
 

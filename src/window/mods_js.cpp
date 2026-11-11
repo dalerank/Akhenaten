@@ -23,6 +23,10 @@ pcstr __mods_display_name(pcstr mod_id) { return mods_find(mod_id).name.c_str();
 bool __mods_downloaded(pcstr mod_id) { return mods_find(mod_id).downloaded; } ANK_FUNCTION_1(__mods_downloaded)
 int __mods_download_progress(pcstr mod_id) { return mods_find(mod_id).download_progress; } ANK_FUNCTION_1(__mods_download_progress)
 bool __mods_enabled(pcstr mod_id) { return mods_find(mod_id).enabled; } ANK_FUNCTION_1(__mods_enabled)
+bool __mods_broken(pcstr mod_id) {
+    return mods_find(mod_id).broken;
+}
+ANK_FUNCTION_1(__mods_broken)
 
 void __mods_download_mod_async(pcstr mod_id) { mods_download_mod_async(mod_id); } ANK_FUNCTION_1(__mods_download_mod_async)
 void __mods_download_info_async() { mods_download_info_async(); } ANK_FUNCTION(__mods_download_info_async)

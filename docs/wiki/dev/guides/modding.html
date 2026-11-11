@@ -62,6 +62,7 @@
       </ul>
       <h2 id="order">Order and conflicts</h2>
       <p>Mods are sorted by id (case-insensitive) and applied in that order. When two enabled mods ship the same file, the mod whose id sorts later wins, whichever was enabled first; the log shows <code>[mods] conflict &lt;path&gt;: &lt;winner&gt; overrides &lt;loser&gt;</code>. To make a mod win, give it an id that sorts later. Switching a mod off rebuilds the script VM without it.</p>
+      <p>If a mod's script fails to parse or throws (while loading or later, from one of its handlers), the mod is marked broken: the Mods window shows <code>[ERR]</code>, the log has <code>[mods] &lt;id&gt; is broken</code>, and the script VM is rebuilt without it. The rest of the game's scripts keep running. Switch the mod off and on again to retry it.</p>
 
       <p>Replacing a config object in a script replaces it whole: fields the mod leaves out become zero. To change one field, assign it, e.g. <code>building_well.max_service = 2</code>, in a new file of the mod.</p>
     </div>

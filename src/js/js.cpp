@@ -344,6 +344,26 @@ int js_vm_trypcall_keep_result(js_State *J, int params) {
         js_vm_dump_stack(J);
 
         vm.error_str = error_msg_copy;
+
+        // An error thrown from a mod's code drops that mod (VM rebuild without it) instead of
+        // stopping every JS call until the next rebuild.
+        xstring owner = mods_owner_of_script(error_msg->value.c_str());
+        if (owner.empty() && J->isobject(-1) && J->hasproperty(-1, property_stackTrace)) {
+            J->getproperty(-1, property_stackTrace);
+            if (J->isstring(-1)) {
+                owner = mods_owner_of_script(js_tostring(J, -1)->value.c_str());
+            }
+            js_pop(J, 1);
+        }
+        if (!owner.empty()) {
+            bstring256 reason;
+            pcstr msg = error_msg->value.c_str();
+            pcstr eol = strchr(msg, '\n');
+            reason.printf("%.*s", eol ? (int)(eol - msg) : (int)strlen(msg), msg);
+            mods_mark_broken(owner, reason.c_str());
+            vm.have_error = 0;
+        }
+
         js_pop(J, 1);
         return 0;
     }
@@ -537,6 +557,7 @@ int js_vm_load_file_and_exec(pcstr path) {
             int error = js_ploadstring(vm.J, r.path.c_str(), data.c_str());
             if (error) {
                 js_vm_log_script_parse_or_compile_failure(vm.J, r.path.c_str());
+                mods_mark_broken(r.mod, r.path.c_str());
 #if defined(GAME_PLATFORM_ANDROID)
                 startup_log("js parse failed", r.path.c_str());
 #endif
@@ -549,6 +570,9 @@ int js_vm_load_file_and_exec(pcstr path) {
             js_getglobal(vm.J, "");
             int ok = js_vm_trypcall(vm.J, 0);
             if (!ok) {
+                mods_mark_broken(r.mod, r.path.c_str());
+                // The mod is dropped on the next rebuild; the rest of the queue still has to run.
+                js_vm_reset_error();
                 logs::error("Fatal error on call base after load %s", r.path.c_str());
                 if (vm.error_str.len() > 0) {
                     logs::error("Error details: %s", vm.error_str.c_str());

@@ -40,6 +40,8 @@ struct mod_info : public mod_entry {
     bool enabled = false;
     bool folder = false; // a plain directory instead of an .sgx archive
     bool mounted = false;
+    // A script of this mod threw or failed to parse; it stays out of the VM until switched off and on.
+    bool broken = false;
 
     const xstring* find_script(pcstr name) const;
     const xstring* find_sound(pcstr name) const;
@@ -85,8 +87,12 @@ void mods_set_enabled(xstring hash, bool enabled);
 void mods_toggle(xstring hash);
 void mods_init(const mods_options& opts);
 vfs::path mods_directory();
-// Queues the scripts of every mounted mod; js_vm_sync calls it after a VM reset.
+// Queues the scripts of every mounted, working mod; js_vm_sync calls it after a VM reset.
 void mods_queue_enabled_scripts();
+// Id of the mounted mod whose file path appears in `text` (a script name, error or stack trace).
+xstring mods_owner_of_script(pcstr text);
+// Marks the mod broken and asks for a VM rebuild without it. False if it was already broken.
+bool mods_mark_broken(xstring id, pcstr reason);
 const mod_info& mods_find(xstring hash);
 void mods_remount();
 void mods_save();
