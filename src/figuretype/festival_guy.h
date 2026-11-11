@@ -1,5 +1,8 @@
 #include "figure/figure.h"
 
+// OG walkers.c walker_rules[WALKER_RULE_FESTIVAL_TRIPS]
+constexpr int8_t FESTIVAL_GUY_TRIPS = 10;
+
 enum e_festival_guy_action {
     ACTION_10_FESTIVAL_GUY_CREATED = 10,
     ACTION_11_FESTIVAL_GUY_GOTO_SQUARE = 11,

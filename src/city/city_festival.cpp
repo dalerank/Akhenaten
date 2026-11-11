@@ -52,10 +52,10 @@ void city_festival_t::execute_festival() {
                 f->set_home(b);
                 f->set_destination(square);
                 f->destination_tile = tile_on_square;
-                f->wait_ticks = rand() % 10;
+                f->wait_ticks = 0;
 
                 auto fguy = f->dcast_festival_guy();
-                fguy->runtime_data().festival_remaining_dances = rand() % 10;
+                fguy->runtime_data().festival_remaining_dances = FESTIVAL_GUY_TRIPS;
             }
             break;
         }

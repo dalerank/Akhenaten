@@ -87,12 +87,13 @@ static void destroy_copper_mine() {
         return;
     }
 
-    building_id bid = building_id_random(BUILDING_COPPER_MINE);
-    auto b = building_get(bid);
-    b->destroy_by_collapse();
-    if (b) {
-        messages::popup("message_copper_mine_collaped", 0, b->tile.grid_offset());
+    building* b = building_first(BUILDING_COPPER_MINE);
+    if (!b) {
+        return;
     }
+
+    b->destroy_by_collapse();
+    messages::popup("message_copper_mine_collaped", 0, b->tile.grid_offset());
 }
 
 static void destroy_clay_pit(void) {
@@ -100,12 +101,13 @@ static void destroy_clay_pit(void) {
         return;
     }
 
-    building_id bid = building_id_random(BUILDING_CLAY_PIT);
-    auto b = building_get(bid);
-    b->destroy_by_flooded();
-    if (b) {
-        messages::popup("message_tutorial_flooded_clay_pit", 0, b->tile.grid_offset());
+    building* b = building_first(BUILDING_CLAY_PIT);
+    if (!b) {
+        return;
     }
+
+    b->destroy_by_flooded();
+    messages::popup("message_tutorial_flooded_clay_pit", 0, b->tile.grid_offset());
 }
 
 void event_manager_t::process_random_events() {
