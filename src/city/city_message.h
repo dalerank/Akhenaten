@@ -144,8 +144,8 @@ struct city_message {
     pcstr src_location = nullptr;
 };
 
-#define MAX_MESSAGES 1000
-#define MAX_MESSAGES_QUEUE 20
+constexpr int MAX_MESSAGES = 1000;
+constexpr int MAX_MESSAGES_QUEUE = 20;
 
 struct messages {
     enum {
