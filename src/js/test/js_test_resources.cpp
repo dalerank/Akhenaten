@@ -84,3 +84,40 @@ static void __test_gardens_update_all() {
     map_tiles_gardens_update_all();
 }
 ANK_FUNCTION(__test_gardens_update_all);
+
+static int test_pak_id(pcstr name) {
+    const xstring key = xstring(name).tolower();
+    for (size_t i = 0; i < g_image_data->pak_list.size(); ++i) {
+        if (g_image_data->pak_list[i].name == key) {
+            return static_cast<int>(i);
+        }
+    }
+    return -1;
+}
+
+static bool __test_image_exists(int id) {
+    return image_get(id) != nullptr;
+}
+ANK_FUNCTION_1(__test_image_exists);
+
+static bool __test_image_cached(int id) {
+    return id >= 0 && static_cast<size_t>(id) < g_image_data->image_cache.size()
+           && g_image_data->image_cache[id] != nullptr;
+}
+ANK_FUNCTION_1(__test_image_cached);
+
+static int __test_pak_first_image(pcstr name) {
+    const int pak_id = test_pak_id(name);
+    return pak_id < 0 ? -1 : g_image_data->pak_list[pak_id].index;
+}
+ANK_FUNCTION_1(__test_pak_first_image);
+
+static void __test_image_unload_pak(pcstr name) {
+    image_unload_pak(test_pak_id(name));
+}
+ANK_FUNCTION_1(__test_image_unload_pak);
+
+static int __test_image_id_from_group(int pack, int group, int offset) {
+    return image_id_from_group(pack, group, offset);
+}
+ANK_FUNCTION_3(__test_image_id_from_group);

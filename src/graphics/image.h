@@ -147,6 +147,8 @@ int image_paks_loaded_count();
 bool image_ensure_pak_loaded(int pak_id);
 void image_paks_pump();
 void image_invalidate_pak_cache(int pak_id);
+// The only way to drop a pack: clears its image cache range, deletes the handle and resets the status.
+void image_unload_pak(int pak_id);
 void image_recreate_all_textures();
 
 int image_id_resource_icon(int resource);

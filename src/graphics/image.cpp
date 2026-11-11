@@ -75,6 +75,25 @@ static void image_dequeue_pak(int pak_id) {
     }
 }
 
+void image_unload_pak(int pak_id) {
+    if (!g_image_data || pak_id < 0 || pak_id >= static_cast<int>(g_image_data->pak_list.size())) {
+        return;
+    }
+
+    // Before delete: the cache range comes from the live handle.
+    image_invalidate_pak_cache(pak_id);
+    auto& pak = g_image_data->pak_list[pak_id];
+    delete pak.handle;
+    pak.handle = nullptr;
+    pak.load_status = IMAGEPAK_LOAD_IDLE;
+    image_dequeue_pak(pak_id);
+}
+
+static void image_fail_pak(int pak_id) {
+    image_unload_pak(pak_id);
+    g_image_data->pak_list[pak_id].load_status = IMAGEPAK_LOAD_FAILED;
+}
+
 static int image_find_pak_id_by_name(const xstring &name) {
     if (!g_image_data || name.empty()) {
         return -1;
@@ -150,9 +169,7 @@ bool image_ensure_pak_loaded(int pak_id) {
 
     if (pak.handle != nullptr) {
         if (!image_pak_load_succeeded(pak.handle)) {
-            delete pak.handle;
-            pak.handle = nullptr;
-            pak.load_status = IMAGEPAK_LOAD_FAILED;
+            image_fail_pak(pak_id);
             return false;
         }
         if (pak.entries_num == 0) {
@@ -169,17 +186,15 @@ bool image_ensure_pak_loaded(int pak_id) {
         logs::info("VFS: pak-queue: sync load id=%d name=%s", pak_id, pak.name.c_str());
     }
 
-    pak.load_status = IMAGEPAK_LOAD_LOADING;
     const Uint32 t0 = SDL_GetTicks();
 
-    delete pak.handle;
+    image_unload_pak(pak_id);
+    pak.load_status = IMAGEPAK_LOAD_LOADING;
     pak.handle = new imagepak(static_cast<uint8_t>(pak_id), pak.name, pak.index, pak.system, false, pak.custom, pak.compact);
 
     if (!image_pak_load_succeeded(pak.handle)) {
         logs::warn("VFS: pak-queue: fail id=%d name=%s", pak_id, pak.name.c_str());
-        delete pak.handle;
-        pak.handle = nullptr;
-        pak.load_status = IMAGEPAK_LOAD_FAILED;
+        image_fail_pak(pak_id);
         return false;
     }
 
@@ -284,9 +299,7 @@ bool image_load_paks() {
         if (image_pak_load_succeeded(fontpack.handle)) {
             fontpack.load_status = IMAGEPAK_LOAD_LOADED;
         } else {
-            delete fontpack.handle;
-            fontpack.handle = nullptr;
-            fontpack.load_status = IMAGEPAK_LOAD_FAILED;
+            image_fail_pak(PACK_FONT);
         }
     } else {
         fontpack.load_status = IMAGEPAK_LOAD_LOADED;
@@ -320,15 +333,13 @@ bool image_load_paks() {
             continue;
         }
 
-        delete imgpak.handle;
+        image_unload_pak(pakidx);
         imgpak.handle = new imagepak(pakidx, imgpak.name, imgpak.index, imgpak.system, false, imgpak.custom, imgpak.compact);
         if (image_pak_load_succeeded(imgpak.handle)) {
             imgpak.entries_num = imgpak.handle->get_entry_count();
             imgpak.load_status = IMAGEPAK_LOAD_LOADED;
         } else {
-            delete imgpak.handle;
-            imgpak.handle = nullptr;
-            imgpak.load_status = IMAGEPAK_LOAD_FAILED;
+            image_fail_pak(pakidx);
         }
 
         if (g_args.is_log_resources()) {
@@ -563,10 +574,6 @@ const image_t* image_get(int id) {
         }
     }
 
-    // default (failure)
-    if (data.pak_list[PACK_GENERAL].handle) {
-        data.image_cache[id] = data.pak_list[PACK_GENERAL].handle->get_image(98);
-    }
     return nullptr;
 }
 
