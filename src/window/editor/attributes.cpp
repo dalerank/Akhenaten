@@ -68,13 +68,18 @@ static arrow_button image_arrows[] = {
 
 static input_box scenario_description_input = {92, 40, 19, 2, FONT_NORMAL_WHITE_ON_DARK};
 
-static struct {
+struct editor_attributes_data_t {
     int is_paused;
     bstring64 subtitle;
     int focus_button_id;
-} data;
+
+    void reset() { *this = {}; }
+};
+
+static editor_attributes_data_t g_editor_attributes_data;
 
 static void start(void) {
+    auto& data = g_editor_attributes_data;
     if (data.is_paused)
         input_box_resume(&scenario_description_input);
     else {
@@ -84,6 +89,7 @@ static void start(void) {
 }
 
 static void stop(int paused) {
+    auto& data = g_editor_attributes_data;
     if (paused)
         input_box_pause(&scenario_description_input);
     else {
@@ -98,6 +104,7 @@ static void draw_background(int) {
 }
 
 static void draw_foreground(int) {
+    auto& data = g_editor_attributes_data;
     painter ctx = game.painter();
     graphics_set_to_dialog();
     outer_panel_draw(vec2i{ 0, 28 }, 30, 28);
@@ -169,6 +176,7 @@ static void draw_foreground(int) {
 }
 
 static void handle_input(const mouse* m, const hotkeys* h) {
+    auto& data = g_editor_attributes_data;
     const mouse* m_dialog = mouse_in_dialog(m);
     if (input_box_handle_mouse(m_dialog, &scenario_description_input)
         || generic_buttons_handle_mouse(m_dialog, {0, 0}, buttons, 11, &data.focus_button_id, nullptr)

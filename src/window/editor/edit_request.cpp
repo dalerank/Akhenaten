@@ -33,13 +33,18 @@ static generic_button buttons[] = {{30, 152, 60, 25, button_year, button_none},
                                    {10, 234, 250, 25, button_delete, button_none},
                                    {300, 234, 100, 25, button_save, button_none}};
 
-static struct {
+struct edit_request_data_t {
     int id;
     editor_request request;
     int focus_button_id;
-} data;
+
+    void reset() { *this = {}; }
+};
+
+static edit_request_data_t g_edit_request_data;
 
 static void init(int id) {
+    auto& data = g_edit_request_data;
     data.id = id;
     scenario_editor_request_get(id, &data.request);
 }
@@ -49,6 +54,7 @@ static void draw_background(int) {
 }
 
 static void draw_foreground(int) {
+    auto& data = g_edit_request_data;
     graphics_set_to_dialog();
 
     outer_panel_draw(vec2i{0, 100}, 38, 11);
@@ -83,6 +89,7 @@ static void draw_foreground(int) {
 }
 
 static void handle_input(const mouse* m, const hotkeys* h) {
+    auto& data = g_edit_request_data;
     if (generic_buttons_handle_mouse(mouse_in_dialog(m), {0, 0}, buttons, 7, &data.focus_button_id, nullptr))
         return;
     if (input_go_back_requested(m, h))
@@ -90,6 +97,7 @@ static void handle_input(const mouse* m, const hotkeys* h) {
 }
 
 static void set_year(int value) {
+    auto& data = g_edit_request_data;
     data.request.year = value;
 }
 
@@ -98,10 +106,12 @@ static void button_year(int param1, int param2) {
 }
 
 static void set_amount(int value) {
+    auto& data = g_edit_request_data;
     data.request.amount = value;
 }
 
 static void button_amount(int param1, int param2) {
+    auto& data = g_edit_request_data;
     int max_amount = 999;
     int max_digits = 3;
     if (data.request.resource == RESOURCE_DEBEN) {
@@ -113,6 +123,7 @@ static void button_amount(int param1, int param2) {
 }
 
 static void set_resource(int resource) {
+    auto& data = g_edit_request_data;
     data.request.resource = (e_resource)resource;
     if (data.request.amount > 999)
         data.request.amount = 999;
@@ -123,6 +134,7 @@ static void button_resource(int param1, int param2) {
 }
 
 static void set_deadline_years(int value) {
+    auto& data = g_edit_request_data;
     data.request.deadline_years = value;
 }
 
@@ -132,6 +144,7 @@ static void button_deadline_years(int param1, int param2) {
 }
 
 static void set_kingdom(int value) {
+    auto& data = g_edit_request_data;
     data.request.kingdom = value;
 }
 
@@ -140,11 +153,13 @@ static void button_kingdom(int param1, int param2) {
 }
 
 static void button_delete(int param1, int param2) {
+    auto& data = g_edit_request_data;
     scenario_editor_request_delete(data.id);
     window_editor_requests_show();
 }
 
 static void button_save(int param1, int param2) {
+    auto& data = g_edit_request_data;
     scenario_editor_request_save(data.id, &data.request);
     window_editor_requests_show();
 }

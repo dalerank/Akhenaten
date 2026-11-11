@@ -40,14 +40,18 @@ static generic_button buttons[] = {{30, 152, 60, 25, button_year, button_none},
 static pcstr UNKNOWN = "???";
 static uint8_t route_display_names[MAX_ROUTES][NAME_LENGTH];
 
-static struct {
+struct edit_demand_change_data_t {
     int id;
     editor_demand_change demand_change;
     int focus_button_id;
     int route_ids[MAX_ROUTES];
     std::array<xstring, MAX_ROUTES> route_names;
     int num_routes;
-} data;
+
+    void reset() { *this = {}; }
+};
+
+static edit_demand_change_data_t g_edit_demand_change_data;
 
 static void create_display_name(int route_id, pcstr city_name) {
     pstr dst = (pstr)route_display_names[route_id];
@@ -59,6 +63,7 @@ static void create_display_name(int route_id, pcstr city_name) {
 }
 
 static void init(int id) {
+    auto& data = g_edit_demand_change_data;
     data.id = id;
     scenario_editor_demand_change_get(id, &data.demand_change);
 
@@ -83,6 +88,7 @@ static void draw_background(int) {
 }
 
 static void draw_foreground(int) {
+    auto& data = g_edit_demand_change_data;
     graphics_set_to_dialog();
 
     outer_panel_draw(vec2i{0, 100}, 40, 11);
@@ -113,6 +119,7 @@ static void draw_foreground(int) {
 }
 
 static void handle_input(const mouse* m, const hotkeys* h) {
+    auto& data = g_edit_demand_change_data;
     if (generic_buttons_handle_mouse(mouse_in_dialog(m), {0, 0}, buttons, 6, &data.focus_button_id, nullptr))
         return;
     if (input_go_back_requested(m, h))
@@ -120,6 +127,7 @@ static void handle_input(const mouse* m, const hotkeys* h) {
 }
 
 static void set_year(int value) {
+    auto& data = g_edit_demand_change_data;
     data.demand_change.year = value;
 }
 
@@ -128,6 +136,7 @@ static void button_year(int param1, int param2) {
 }
 
 static void set_resource(int value) {
+    auto& data = g_edit_demand_change_data;
     data.demand_change.resource = value;
 }
 
@@ -136,23 +145,28 @@ static void button_resource(int param1, int param2) {
 }
 
 static void set_route_id(int index) {
+    auto& data = g_edit_demand_change_data;
     data.demand_change.route_id = data.route_ids[index];
 }
 
 static void button_route(int param1, int param2) {
+    auto& data = g_edit_demand_change_data;
     window_select_list_show_text(g_screen.dialog_offset.x + 200, g_screen.dialog_offset.y + 50, make_span(data.route_names), set_route_id);
 }
 
 static void button_toggle_rise(int param1, int param2) {
+    auto& data = g_edit_demand_change_data;
     data.demand_change.is_rise = !data.demand_change.is_rise;
 }
 
 static void button_delete(int param1, int param2) {
+    auto& data = g_edit_demand_change_data;
     scenario_editor_demand_change_delete(data.id);
     window_editor_demand_changes_show();
 }
 
 static void button_save(int param1, int param2) {
+    auto& data = g_edit_demand_change_data;
     scenario_editor_demand_change_save(data.id, &data.demand_change);
     window_editor_demand_changes_show();
 }

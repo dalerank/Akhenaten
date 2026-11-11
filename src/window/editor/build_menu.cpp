@@ -59,13 +59,17 @@ static const int MENU_TYPES[MENU_NUM_ITEMS][MAX_ITEMS_PER_MENU] = {
   {23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, -1},
 };
 
-static struct {
+struct editor_build_menu_data_t {
     int selected_submenu;
     int num_items;
     int y_offset;
 
     int focus_button_id;
-} data;
+
+    void reset() { *this = {}; }
+};
+
+static editor_build_menu_data_t g_editor_build_menu_data;
 
 static int count_items(int submenu) {
     int count = 0;
@@ -76,6 +80,7 @@ static int count_items(int submenu) {
 }
 
 static void init(int submenu) {
+    auto& data = g_editor_build_menu_data;
     data.selected_submenu = submenu;
     data.num_items = count_items(submenu);
     data.y_offset = Y_MENU_OFFSETS[data.num_items];
@@ -92,6 +97,7 @@ static int get_sidebar_x_offset(void) {
 }
 
 static void draw_menu_buttons(void) {
+    auto& data = g_editor_build_menu_data;
     int x_offset = get_sidebar_x_offset();
     for (int i = 0; i < data.num_items; i++) {
         small_panel_draw({ x_offset - 170, data.y_offset + 110 + 24 * i }, 10, data.focus_button_id == i + 1 ? 1 : 2);
@@ -105,6 +111,7 @@ static void draw_foreground(int) {
 }
 
 static int handle_build_submenu(const mouse* m) {
+    auto& data = g_editor_build_menu_data;
     return generic_buttons_handle_mouse(m, {get_sidebar_x_offset() - 170, data.y_offset + 110}, build_menu_buttons, data.num_items, &data.focus_button_id, nullptr);
 }
 
@@ -117,6 +124,7 @@ static void handle_input(const mouse* m, const hotkeys* h) {
 }
 
 static void button_menu_item(int index, int param2) {
+    auto& data = g_editor_build_menu_data;
     widget_map_editor_clear_current_tile();
 
     switch (data.selected_submenu) {
