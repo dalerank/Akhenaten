@@ -511,6 +511,13 @@ int run_js_tests() {
             continue;
         }
 
+        if (test_log_contains("[stub-record]")) {
+            logs::error("[test:%s] FAIL: record 0 of buildings or figures was written (see [stub-record])",
+              name.c_str());
+            ++failed;
+            continue;
+        }
+
         // check_valid -> bool
         if (!js_vm_global_is_callable(J, "check_valid")) {
             logs::error("[test:%s] FAIL: missing check_valid()", name.c_str());

@@ -33,6 +33,11 @@ building *building_exists_at(int grid_offset);
 building *building_exists_at(tile2i point);
 
 void building_clear_all();
+
+// Integral tests only: record 0 of buildings and figures is the shared fallback for invalid ids and is
+// saved, so nothing may write to it except the OG scratch use (see stub_records_guard_check).
+void stub_records_guard_reset();
+void stub_records_guard_check(pcstr phase);
 void building_update_state();
 building_id building_closest_route(building &home, std::function<bool(building &)> pred, std::function<int (building &)> fweight = [] (auto &) { return 0; });
 

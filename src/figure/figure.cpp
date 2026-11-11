@@ -948,7 +948,7 @@ void figure::draw_tooltip(tooltip_context *c) const {
 
 void figure::bind(io_buffer* iob) {
     figure* f = this;
-    int tmpe;
+    int tmpe = 0;
     iob->bind(BIND_SIGNATURE_UINT8, &f->alternative_location_index);
     iob->bind(BIND_SIGNATURE_UINT8, &tmpe);
     iob->bind____skip(1); // iob->bind(BIND_SIGNATURE_UINT8, &f->is_enemy_image);

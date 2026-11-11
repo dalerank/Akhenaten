@@ -7,6 +7,7 @@
 #include "core/random.h"
 #include "core/profiler.h"
 #include "core/log.h"
+#include "city/city_buildings.h"
 #include "grid/vegetation.h"
 #include "grid/trees.h"
 #include "grid/canals.h"
@@ -119,6 +120,11 @@ void game_t::update_tick(int simtick) {
         return;
     }
 
+    static const bool guard_stub_records = g_args.is_integral_tests();
+    if (guard_stub_records) {
+        stub_records_guard_check("between ticks");
+    }
+
     g_city.population.housing_type_counts_update();
     random_generate_next();
     game_undo_reduce_time_available();
@@ -136,6 +142,10 @@ void game_t::update_tick(int simtick) {
     g_city.figures.update();
 
     g_scenario.update();
+
+    if (guard_stub_records) {
+        stub_records_guard_check("during tick");
+    }
 }
 
 void game_t::advance_year() {

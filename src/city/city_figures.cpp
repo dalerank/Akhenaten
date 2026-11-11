@@ -6,6 +6,8 @@
 #include "figure/figure_names.h"
 #include "core/custom_span.hpp"
 #include "core/random.h"
+#include "city/city_buildings.h"
+#include "grid/grid.h"
 
 struct figure_data_t {
     //int created_sequence;
@@ -172,6 +174,7 @@ figure *figure_create(e_figure_type type, tile2i tile, int dir) {
 }
 
 void figure_clear_all() {
+    stub_records_guard_reset();
     if (!g_figure_data.initialized) {
         return;
     }
@@ -185,7 +188,10 @@ void figure_clear_all() {
     }
 }
 
-io_buffer *iob_figures = new io_buffer([] (io_buffer *iob, size_t version) {
+io_buffer* iob_figures = new io_buffer([](io_buffer* iob, size_t version) {
+    if (iob->is_read_access()) {
+        stub_records_guard_reset();
+    }
     g_figure_data.init();
     for (int i = 0; i < MAX_FIGURES; i++) {
         figure_get(i)->bind(iob); // doing this because some members are PRIVATE.
