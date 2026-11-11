@@ -13,13 +13,18 @@
 
 #include <functional>
 
-static struct {
+struct victory_video_data_t {
     int width;
     int height;
     std::function<void()> callback;
-} data;
+
+    void reset() { *this = {}; }
+};
+
+static victory_video_data_t g_victory_video_data;
 
 static int init(const char* filename, int width, int height, std::function<void()> callback) {
+    auto& data = g_victory_video_data;
     if (video_start(filename)) {
         data.width = width;
         data.height = height;
@@ -35,10 +40,12 @@ static void draw_background(int) {
 }
 
 static void draw_foreground(int) {
+    auto& data = g_victory_video_data;
     video_draw((screen_width() - data.width) / 2, (screen_height() - data.height) / 2);
 }
 
 static void handle_input(const mouse* m, const hotkeys* h) {
+    auto& data = g_victory_video_data;
     if (m->left.went_up || m->right.went_up || video_is_finished()) {
         video_stop();
         if (data.callback) {

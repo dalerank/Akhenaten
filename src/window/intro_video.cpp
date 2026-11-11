@@ -11,11 +11,15 @@
 #include "sound/sound.h"
 #include "window/autoconfig_window.h"
 
-static struct {
+struct intro_video_data_t {
     int width;
     int height;
     int video_started;
-} data;
+
+    void reset() { *this = {}; }
+};
+
+static intro_video_data_t g_intro_video_data;
 
 // Original/Steam use BINKS/; some GOG layouts ship the same files under Video/.
 static const char* PH_INTRO_CANDIDATES[] = {
@@ -28,6 +32,7 @@ static const char* PH_INTRO_CANDIDATES[] = {
 };
 
 static int start_intro_video(void) {
+    auto& data = g_intro_video_data;
     const int candidates = (int)(sizeof(PH_INTRO_CANDIDATES) / sizeof(PH_INTRO_CANDIDATES[0]));
     for (int i = 0; i < candidates; i++) {
         const char* path = PH_INTRO_CANDIDATES[i];
@@ -54,9 +59,8 @@ static int start_intro_video(void) {
 }
 
 static int init(void) {
-    data.width = 0;
-    data.height = 0;
-    data.video_started = 0;
+    auto& data = g_intro_video_data;
+    data.reset();
     return 1;
 }
 
@@ -66,6 +70,7 @@ static void show_logo(void) {
 }
 
 static int ensure_video_started(void) {
+    auto& data = g_intro_video_data;
     if (data.video_started) {
         return 1;
     }
@@ -89,6 +94,7 @@ static void draw_foreground(int) {
 }
 
 static void handle_input(const mouse* m, const hotkeys* h) {
+    auto& data = g_intro_video_data;
     if (!data.video_started && !ensure_video_started()) {
         return;
     }
