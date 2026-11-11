@@ -6,7 +6,7 @@
 
 #define INPUT_BOX_BLOCK_SIZE 16
 
-typedef struct {
+struct input_box {
     int x;
     int y;
     int width_blocks;
@@ -19,7 +19,7 @@ typedef struct {
     void* host_input;
     // private vars
     uint8_t* text;
-} input_box;
+};
 
 void input_box_start(input_box* box, uint8_t* text, int length, int allow_punctuation);
 void input_box_pause(input_box* box);
