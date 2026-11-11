@@ -1,5 +1,6 @@
 #include "js/test/js_test_common.h"
 
+#include "content/zipreader.hpp"
 #include "core/xstring.h"
 #include "platform/app_updater.h"
 
@@ -196,3 +197,53 @@ static void __test_updater_remove_leftovers(pcstr leftovers) {
     }
 }
 ANK_FUNCTION_1(__test_updater_remove_leftovers);
+
+static bool __test_updater_write_hex(pcstr path, pcstr hex) {
+    fs::path target;
+    if (!updater_in_scratch(path, target) || !hex) {
+        return false;
+    }
+    std::string bytes;
+    for (size_t i = 0; hex[i] && hex[i + 1]; i += 2) {
+        const char pair[3] = {hex[i], hex[i + 1], 0};
+        bytes.push_back((char)std::strtol(pair, nullptr, 16));
+    }
+    std::error_code ec;
+    fs::create_directories(target.parent_path(), ec);
+    std::ofstream file(target, std::ios::binary | std::ios::trunc);
+    file.write(bytes.data(), (std::streamsize)bytes.size());
+    return (bool)file;
+}
+ANK_FUNCTION_2(__test_updater_write_hex);
+
+// the archive's entry names as the updater reads them, separated by "|"
+static xstring __test_updater_zip_names(pcstr path) {
+    fs::path target;
+    if (!updater_in_scratch(path, target)) {
+        return xstring("!");
+    }
+    vfs::ZipArchive archive(vfs::path(updater::to_utf8(target).c_str()));
+    std::string all;
+    for (const xstring& name : archive.names()) {
+        all += (all.empty() ? "" : "|") + std::string(name.c_str());
+    }
+    return xstring(all.c_str());
+}
+ANK_FUNCTION_1(__test_updater_zip_names);
+
+static xstring __test_updater_zip_read(pcstr path, int index) {
+    fs::path target;
+    if (!updater_in_scratch(path, target)) {
+        return xstring("!");
+    }
+    vfs::ZipArchive archive(vfs::path(updater::to_utf8(target).c_str()));
+    if (index < 0 || index >= (int)archive.names().size()) {
+        return xstring("!");
+    }
+    vfs::reader file = archive.createAndOpenFile((unsigned int)index, "rb");
+    if (!file) {
+        return xstring("!unreadable");
+    }
+    return xstring(std::string((const char*)file->data(), (size_t)file->size()).c_str());
+}
+ANK_FUNCTION_2(__test_updater_zip_read);
