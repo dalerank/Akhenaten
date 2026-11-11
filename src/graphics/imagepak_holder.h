@@ -5,6 +5,9 @@
 #include "core/archive.h"
 #include "core/hvector.h"
 
+#include <mutex>
+#include <thread>
+
 enum e_imagepak_load_status : uint8_t {
     IMAGEPAK_LOAD_IDLE = 0,
     IMAGEPAK_LOAD_QUEUED,
@@ -53,6 +56,12 @@ struct imagepak_holder_t {
     stable_array<imagepak_handle> pak_list;
     std::vector<const image_t *> image_cache;
     hvector<int, 32> load_queue;
+
+    // Packs load only on the main thread (SDL textures, unsynchronized pak_list); render workers
+    // that hit an unloaded pack leave the id here and draw without it until the main thread loads it.
+    std::thread::id main_thread;
+    std::mutex worker_requests_mutex;
+    hvector<int, 32> worker_requests;
 };
 
 void image_data_init();

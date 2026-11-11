@@ -22,4 +22,5 @@ void ANK_REGISTER_CONFIG_ITERATOR(config_load_imagepaks_config) {
 
 void image_data_init() {
     g_image_data = new imagepak_holder_t;
+    g_image_data->main_thread = std::this_thread::get_id();
 }

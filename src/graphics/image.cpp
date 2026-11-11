@@ -167,6 +167,15 @@ bool image_ensure_pak_loaded(int pak_id) {
         return false;
     }
 
+    if (std::this_thread::get_id() != g_image_data->main_thread) {
+        std::scoped_lock lock(g_image_data->worker_requests_mutex);
+        auto& requests = g_image_data->worker_requests;
+        if (std::find(requests.begin(), requests.end(), pak_id) == requests.end()) {
+            requests.push_back(pak_id);
+        }
+        return false;
+    }
+
     if (pak.handle != nullptr) {
         if (!image_pak_load_succeeded(pak.handle)) {
             image_fail_pak(pak_id);
@@ -255,6 +264,18 @@ bool image_request_pak(const xstring &name) {
 void image_paks_pump() {
     if (!g_image_data || !g_image_data->common_inited) {
         return;
+    }
+
+    hvector<int, 32> worker_requests;
+    {
+        std::scoped_lock lock(g_image_data->worker_requests_mutex);
+        worker_requests = g_image_data->worker_requests;
+        g_image_data->worker_requests.clear();
+    }
+    // Already visible on screen: load all of them now instead of one per frame.
+    for (const int pak_id : worker_requests) {
+        logs::info("VFS: pak-queue: load for render id=%d", pak_id);
+        image_ensure_pak_loaded(pak_id);
     }
 
     auto &queue = g_image_data->load_queue;

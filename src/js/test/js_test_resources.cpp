@@ -14,9 +14,11 @@
 #include "platform/arguments.h"
 #include "platform/platform.h"
 
+#include <algorithm>
 #include <cstdio>
 #include <filesystem>
 #include <string>
+#include <thread>
 
 #if defined(_WIN32)
 #ifndef NOMINMAX
@@ -121,3 +123,25 @@ static int __test_image_id_from_group(int pack, int group, int offset) {
     return image_id_from_group(pack, group, offset);
 }
 ANK_FUNCTION_3(__test_image_id_from_group);
+
+// Loads a pack the way a render worker would: must only queue the request, never load off the main thread.
+static bool __test_pak_ensure_from_worker(pcstr name) {
+    const int pak_id = test_pak_id(name);
+    if (pak_id < 0) {
+        return false;
+    }
+    image_unload_pak(pak_id);
+    bool worker_result = true;
+    std::thread worker([&] { worker_result = image_ensure_pak_loaded(pak_id); });
+    worker.join();
+
+    const auto& pak = g_image_data->pak_list[pak_id];
+    bool queued = false;
+    {
+        std::scoped_lock lock(g_image_data->worker_requests_mutex);
+        const auto& requests = g_image_data->worker_requests;
+        queued = std::find(requests.begin(), requests.end(), pak_id) != requests.end();
+    }
+    return !worker_result && pak.handle == nullptr && pak.load_status == IMAGEPAK_LOAD_IDLE && queued;
+}
+ANK_FUNCTION_1(__test_pak_ensure_from_worker);
