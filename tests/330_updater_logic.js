@@ -32,7 +32,7 @@ var updater_test_failures = 0
 
 function updater_expect(what, got, want) {
     if (got !== want) {
-        __log_info_native('[test:313] ' + what + ': got "' + got + '", want "' + want + '"')
+        __log_info_native('[test:330] ' + what + ': got "' + got + '", want "' + want + '"')
         updater_test_failures++
         return false
     }
@@ -57,7 +57,7 @@ var UPDATER_TEST_RUN = '{\n  "total_count": 1199,\n  "workflow_runs": [\n    {\n
     + '    }\n  ]\n}\n'
 
 function run_test() {
-    __log_info_native('[test:313] updater offline logic')
+    __log_info_native('[test:330] updater offline logic')
 
     if (__updater_state() == UPDATER_OFF) {
         __log_marker('updater_off_in_tests')
@@ -166,7 +166,7 @@ function check_valid() {
     for (var i = 0; i < markers.length; i++) {
         var marker = '[test-marker] ' + markers[i]
         if (!__test_find_inlog(marker)) {
-            __log_info_native('[test:313] missing marker: ' + marker)
+            __log_info_native('[test:330] missing marker: ' + marker)
             return false
         }
     }

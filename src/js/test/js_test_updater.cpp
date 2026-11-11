@@ -4,6 +4,9 @@
 #include "platform/app_updater.h"
 
 #include <cstdlib>
+#include <filesystem>
+#include <fstream>
+#include <iterator>
 #include <string>
 
 static int64_t parse_int64(pcstr text) {
@@ -105,3 +108,91 @@ static int __test_updater_button(int state) {
     return updater::button_action((e_updater_state)state);
 }
 ANK_FUNCTION_1(__test_updater_button);
+
+namespace fs = std::filesystem;
+
+// The swap tests work only under this folder, never in the game's own.
+static fs::path updater_scratch_root() {
+    std::error_code ec;
+    return fs::temp_directory_path(ec) / "akhenaten-updater-test";
+}
+
+static bool updater_in_scratch(pcstr path, fs::path& out) {
+    if (!path || !*path) {
+        return false;
+    }
+    out = fs::u8path(path).lexically_normal();
+    const std::string root = updater::to_utf8(updater_scratch_root().lexically_normal());
+    const std::string full = updater::to_utf8(out);
+    return full.size() > root.size() && full.compare(0, root.size(), root) == 0;
+}
+
+static xstring __test_updater_scratch() {
+    std::error_code ec;
+    const fs::path root = updater_scratch_root();
+    fs::remove_all(root, ec);
+    fs::create_directories(root, ec);
+    return xstring(root.generic_u8string().c_str());
+}
+ANK_FUNCTION(__test_updater_scratch);
+
+static bool __test_updater_write(pcstr path, pcstr text) {
+    fs::path target;
+    if (!updater_in_scratch(path, target)) {
+        return false;
+    }
+    std::error_code ec;
+    fs::create_directories(target.parent_path(), ec);
+    std::ofstream file(target, std::ios::binary | std::ios::trunc);
+    file << (text ? text : "");
+    return (bool)file;
+}
+ANK_FUNCTION_2(__test_updater_write);
+
+// the file's text, "!missing" when there is none
+static xstring __test_updater_read(pcstr path) {
+    fs::path target;
+    std::error_code ec;
+    if (!updater_in_scratch(path, target) || !fs::is_regular_file(target, ec)) {
+        return xstring("!missing");
+    }
+    std::ifstream file(target, std::ios::binary);
+    std::string text((std::istreambuf_iterator<char>(file)), std::istreambuf_iterator<char>());
+    return xstring(text.c_str());
+}
+ANK_FUNCTION_1(__test_updater_read);
+
+static bool __test_updater_exists(pcstr path) {
+    fs::path target;
+    std::error_code ec;
+    return updater_in_scratch(path, target) && fs::exists(target, ec);
+}
+ANK_FUNCTION_1(__test_updater_exists);
+
+static std::vector<updater_moved_file> g_test_updater_moved;
+
+static bool __test_updater_swap(pcstr staging, pcstr install) {
+    fs::path from, to;
+    g_test_updater_moved.clear();
+    if (!updater_in_scratch(staging, from) || !updater_in_scratch(install, to)) {
+        return false;
+    }
+    return updater::swap_in(from, to, g_test_updater_moved);
+}
+ANK_FUNCTION_2(__test_updater_swap);
+
+static void __test_updater_drop_asides(pcstr leftovers) {
+    fs::path list;
+    if (updater_in_scratch(leftovers, list)) {
+        updater::drop_asides(g_test_updater_moved, fs::path(), list);
+    }
+}
+ANK_FUNCTION_1(__test_updater_drop_asides);
+
+static void __test_updater_remove_leftovers(pcstr leftovers) {
+    fs::path list;
+    if (updater_in_scratch(leftovers, list)) {
+        updater::remove_leftovers(list);
+    }
+}
+ANK_FUNCTION_1(__test_updater_remove_leftovers);
