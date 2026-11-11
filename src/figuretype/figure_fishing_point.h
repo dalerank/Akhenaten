@@ -16,7 +16,13 @@ public:
         short offset;
         short max_step;
         short current_step;
+        // OG boats.c figure_fishing_spot_action counters: animation_frame, spot_wait_ticks, wait_ticks.
+        uint8_t spot_frame;
+        uint8_t spot_wait_ticks;
+        uint8_t spot_pause_ticks;
     } FIGURE_RUNTIME_DATA_T;
+
+    void og_spot_tick();
 
     virtual void figure_action() override;
     virtual void update_animation() override;

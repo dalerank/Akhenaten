@@ -41,6 +41,10 @@ bool random_bool_lerp_scalar_int(int minimum, int maximum, int v);
 
 uint16_t anti_scum_random_15bit(bool update = true);
 bool anti_scum_random_bool();
+void anti_scum_srand(uint32_t seed);
+// OG animals.c reseeds crt_rand from the wall clock; integral tests turn this off so runs stay reproducible.
+void anti_scum_reseed_from_clock(uint32_t millis);
+void anti_scum_set_clock_reseed(bool enabled);
 
 int random_int();
 int random_int_between(int min, int max);

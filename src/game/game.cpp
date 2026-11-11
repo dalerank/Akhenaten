@@ -376,6 +376,7 @@ bool game_t::check_valid() {
     }
     logs::switch_output(log_directory.c_str());
     locale_determine_language();
+    anti_scum_set_clock_reseed(!g_args.is_integral_tests());
 
     game_features::load(g_args.features_profile(), g_args.get_game_config_cli_overrides());
 

@@ -10,14 +10,17 @@
 #include "city/city_figures.h"
 #include "city/object_info.h"
 #include "core/bstring.h"
+#include "core/random.h"
 #include "core/xstring.h"
 #include "empire/trader_handler.h"
 #include "figure/figure.h"
 #include "figure/figure_impl.h"
+#include "figure/figure_names.h"
 #include "figure/formation.h"
 #include "figuretype/animal_asp.h"
 #include "figuretype/animal_lion.h"
 #include "figuretype/animal_scorpion.h"
+#include "figuretype/figure_fishing_point.h"
 #include "figuretype/figure_frog.h"
 #include "figuretype/figure_hunter.h"
 #include "figuretype/figure_locust.h"
@@ -373,3 +376,55 @@ static int __test_hunting_lodge_spawn_figure(int bid) {
     return __test_hunting_lodge_active_hunters(b) - before;
 }
 ANK_FUNCTION_1(__test_hunting_lodge_spawn_figure);
+
+static void __test_crt_reseed_from_clock(int millis) {
+    anti_scum_reseed_from_clock((uint32_t)millis);
+}
+ANK_FUNCTION_1(__test_crt_reseed_from_clock);
+
+static void __test_figure_name_init() {
+    figure_name_init();
+}
+ANK_FUNCTION(__test_figure_name_init);
+
+static int __test_figure_name_counter(int slot) {
+    return figure_name_counter(slot);
+}
+ANK_FUNCTION_1(__test_figure_name_counter);
+
+static int __test_figure_name_counter_slot(int type) {
+    return figure_name_counter_slot(type);
+}
+ANK_FUNCTION_1(__test_figure_name_counter_slot);
+
+static int __test_fishing_spot_create(int x, int y) {
+    figure* f = figure_fishing_point::create(tile2i(x, y));
+    return (f && f->id > 0 && f->type == FIGURE_FISHING_POINT) ? f->id : 0;
+}
+ANK_FUNCTION_2(__test_fishing_spot_create);
+
+static figure_fishing_point* test_fishing_spot(int fid) {
+    figure* f = figure_get(fid);
+    return (f && f->id > 0 && f->is_alive()) ? f->dcast<figure_fishing_point>() : nullptr;
+}
+
+// frame | spot_wait_ticks << 8 | pause_ticks << 16, or -1 for a figure that is not a live fishing spot.
+static int __test_fishing_spot_state(int fid) {
+    auto* spot = test_fishing_spot(fid);
+    if (!spot) {
+        return -1;
+    }
+    const auto& d = spot->runtime_data();
+    return d.spot_frame | (d.spot_wait_ticks << 8) | (d.spot_pause_ticks << 16);
+}
+ANK_FUNCTION_1(__test_fishing_spot_state);
+
+static int __test_fishing_spot_og_tick(int fid) {
+    auto* spot = test_fishing_spot(fid);
+    if (!spot) {
+        return 0;
+    }
+    spot->og_spot_tick();
+    return 1;
+}
+ANK_FUNCTION_1(__test_fishing_spot_og_tick);

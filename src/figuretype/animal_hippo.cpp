@@ -66,7 +66,7 @@ int figure_hippo::prey_on_tile(tile2i tile) const {
 }
 
 void figure_hippo::reseed_crt_rand() {
-    srand((unsigned)time_get_millis());
+    anti_scum_reseed_from_clock(time_get_millis());
 }
 
 void figure_hippo::static_params::archive_init() {

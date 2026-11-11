@@ -165,6 +165,8 @@ figure *figure_create(e_figure_type type, tile2i tile, int dir) {
     f->progress_on_tile = 8;
     f->progress_inside = 0;
     f->progress_inside_speed = 0;
+    // OG figure_create draws one crt_rand for the phrase sequences; gods/floods share that stream.
+    anti_scum_random_15bit();
     f->name = figure_name_get(type);
     f->map_figure_add();
 

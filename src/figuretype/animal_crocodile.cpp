@@ -57,7 +57,7 @@ int figure_crocodile::prey_on_tile(tile2i tile) const {
 }
 
 void figure_crocodile::reseed_crt_rand() {
-    srand((unsigned)time_get_millis());
+    anti_scum_reseed_from_clock(time_get_millis());
 }
 
 void figure_crocodile::static_params::archive_init() {
