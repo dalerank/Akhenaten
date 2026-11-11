@@ -304,9 +304,10 @@ static int __test_enemy_chariot_refresh_cart(int fid) {
     if (!f || !f->is_alive() || !f->dcast()) {
         return 0;
     }
-    // Chariot update_animation sets OG cart trailer (pulls_cart).
+    // Chariot update_animation sets OG cart trailer (pulls_cart). The cart sprite id needs the
+    // Pharaoh data; tests check it separately.
     f->dcast()->update_animation();
-    return (f->use_cart && f->cart_image_id > 0) ? 1 : 0;
+    return f->use_cart ? 1 : 0;
 }
 ANK_FUNCTION_1(__test_enemy_chariot_refresh_cart);
 

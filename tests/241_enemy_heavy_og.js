@@ -41,8 +41,13 @@ function run_test() {
     if (!__test_enemy_chariot_refresh_cart(chariot)) {
         return test241_fail('chariot cart refresh failed')
     }
-    if (__test_figure_cart_image_id(chariot) <= 0) {
-        return test241_fail('OG pulls_cart: cart_image_id should be set')
+    // Without Pharaoh data (CI) neither the chariot nor its cart has a sprite.
+    if (__test_figure_main_image_id(chariot) > 0) {
+        if (__test_figure_cart_image_id(chariot) <= 0) {
+            return test241_fail('OG pulls_cart: cart_image_id should be set')
+        }
+    } else {
+        __log_marker('enemy_heavy_cart_art_skipped:no_resource')
     }
     __log_marker('enemy_heavy_cart_ok')
 
