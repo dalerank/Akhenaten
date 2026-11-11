@@ -470,6 +470,8 @@ void game_t::update() {
     int num_ticks = get_elapsed_ticks();
     for (int i = 0; i < num_ticks; i++) {
         update_tick(simtime.tick);
+        // Above 100% speed one frame runs several ticks; handlers must see the tick that emitted the event.
+        events::process();
     }
 
     if (g_window_manager.window_is("window_city")) {
