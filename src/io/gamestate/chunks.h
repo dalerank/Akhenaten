@@ -143,5 +143,6 @@ extern io_buffer *iob_monuments_progress_grid;
 extern io_buffer *iob_campaign_carry_troops;
 extern io_buffer *iob_campaign_carry_monuments;
 extern io_buffer *iob_labor_storage_priority;
+extern io_buffer* iob_mods; // content/mods.cpp
 extern io_buffer *iob_enhanced_religion;
 extern io_buffer *iob_recorded_paths;

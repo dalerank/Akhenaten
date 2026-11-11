@@ -173,4 +173,8 @@ void file_schema_svx(const int file_version) {
         // 512*515 + 4000*4*2 = 263680 + 32000 = 295680
         g_chunk_io.push_chunk(295680, true, "recorded_paths", iob_recorded_paths);
     }
+    if (file_version > 197) {
+        // count + reserved + 32 * (id[48] + version[16]) = 2052
+        g_chunk_io.push_chunk(2052, false, "mods", iob_mods);
+    }
 }

@@ -209,6 +209,7 @@ See **IT1** in `REMAKE_TODO.md` / `REMAKE_NOTES.md` §4.
 | `330_mods_fixture.js` | Folder mod `fixtures/mods/akh_test_mod`: config + script override applied on enable, gone after disable (VM rebuild) |
 | `331_mods_order.js` | Two mods with the same `speech.js`: the later id (`akh_test_mod_b`) wins regardless of enable order; clash logged |
 | `332_mods_broken.js` | Mod whose script throws is reported broken; the next mod queued in the same sync still runs |
+| `333_mods_saveload.js` | `.svx` chunk `mods`: loading a save made with another mod set logs the mismatch and leaves mods as they are |
 
 Farm **placement** tests (34/35) cover `can_place` / terrain rules; **37** covers preview image helpers.
 When adding more preview draw coverage, follow JS draw conventions in

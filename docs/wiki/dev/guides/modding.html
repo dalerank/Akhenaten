@@ -35,6 +35,7 @@
           <li><a href="#where">Where mods live</a></li>
           <li><a href="#contents">What a mod can change</a></li>
           <li><a href="#order">Order and conflicts</a></li>
+          <li><a href="#saves">Mods and saves</a></li>
         </ul>
       </div>
     </aside>
@@ -63,6 +64,9 @@
       <h2 id="order">Order and conflicts</h2>
       <p>Mods are sorted by id (case-insensitive) and applied in that order. When two enabled mods ship the same file, the mod whose id sorts later wins, whichever was enabled first; the log shows <code>[mods] conflict &lt;path&gt;: &lt;winner&gt; overrides &lt;loser&gt;</code>. To make a mod win, give it an id that sorts later. Switching a mod off rebuilds the script VM without it.</p>
       <p>If a mod's script fails to parse or throws (while loading or later, from one of its handlers), the mod is marked broken: the Mods window shows <code>[ERR]</code>, the log has <code>[mods] &lt;id&gt; is broken</code>, and the script VM is rebuilt without it. The rest of the game's scripts keep running. Switch the mod off and on again to retry it.</p>
+
+      <h2 id="saves">Mods and saves</h2>
+      <p>A save (save version 198 and later) records the ids and catalog versions of the mods that were active. Loading it with a different set logs <code>[mods] the save was made with mods: …; enabled now: …</code> and shows a warning; the load itself never switches mods on or off.</p>
 
       <p>Replacing a config object in a script replaces it whole: fields the mod leaves out become zero. To change one field, assign it, e.g. <code>building_well.max_service = 2</code>, in a new file of the mod.</p>
     </div>

@@ -12,6 +12,9 @@
 #include "core/settings_vars.h"
 #include "content/vfs.h"
 #include "game/game.h"
+#include "graphics/elements/lang_text.h"
+#include "io/io_buffer.h"
+#include "window/popup_dialog.h"
 
 #include <algorithm>
 #include <cstring>
@@ -150,6 +153,86 @@ const xstring* mod_info::find_script(pcstr name) const {
 const xstring* mod_info::find_sound(pcstr name) const {
     return find_entry_nocase(sounds, name);
 }
+
+namespace {
+    constexpr int MODS_CHUNK_MAX = 32;
+
+    struct saved_mod {
+        xstring id;
+        xstring version;
+        bool operator==(const saved_mod& o) const { return id == o.id && version == o.version; }
+    };
+
+    std::vector<saved_mod> mods_active_list() {
+        std::vector<saved_mod> active;
+        for (const auto& m : g_mods.list) {
+            if (m->enabled && m->mounted && !m->broken) {
+                active.push_back({m->name, m->version});
+            }
+        }
+        return active;
+    }
+
+    std::string mods_describe(const std::vector<saved_mod>& list) {
+        if (list.empty()) {
+            return "none";
+        }
+        std::string text;
+        for (const auto& m : list) {
+            if (!text.empty()) {
+                text += ", ";
+            }
+            text += m.id.c_str();
+            if (!m.version.empty()) {
+                text += " ";
+                text += m.version.c_str();
+            }
+        }
+        return text;
+    }
+
+    // The load does not switch mods on or off: which set is right is the player's call.
+    void mods_check_save(const std::vector<saved_mod>& saved) {
+        const std::vector<saved_mod> active = mods_active_list();
+        if (saved == active) {
+            return;
+        }
+        const std::string text
+          = "the save was made with mods: " + mods_describe(saved) + "; enabled now: " + mods_describe(active);
+        logs::warn("[mods] %s", text.c_str());
+        if (g_mods_isolated) {
+            return;
+        }
+        const xstring body = (text + ".\nThe game may play differently than when it was saved.").c_str();
+        game.add_frame_end_event(
+          [body] { popup_dialog::show_ok(lang_text_from_key("#popup_dialog_save_mods_differ"), body); });
+    }
+} // namespace
+
+io_buffer* iob_mods = new io_buffer(
+  [](io_buffer* iob, size_t version) {
+      (void)version;
+      std::vector<saved_mod> list;
+      if (!iob->is_read_access()) {
+          list = mods_active_list();
+      }
+      uint16_t count = (uint16_t)std::min<size_t>(list.size(), MODS_CHUNK_MAX);
+      uint16_t reserved = 0;
+      iob->bind(BIND_SIGNATURE_UINT16, &count);
+      iob->bind(BIND_SIGNATURE_UINT16, &reserved);
+      list.resize(MODS_CHUNK_MAX);
+      for (auto& m : list) {
+          iob->bind_xstr<48>(m.id);
+          iob->bind_xstr<16>(m.version);
+      }
+      if (iob->is_read_access()) {
+          list.resize(std::min<int>(count, MODS_CHUNK_MAX));
+          mods_check_save(list);
+      }
+  },
+  [](size_t) {
+      // Saves before version 198 have no record of their mods: nothing to compare.
+  });
 
 void mods_queue_enabled_scripts() {
     for (const auto& it : g_mods.list) {

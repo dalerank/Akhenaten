@@ -43,4 +43,6 @@
 //  194 akhenaten: bookmarks in the OG layout (int32 grid offset + reserved int32)
 //  195 akhenaten: shipyard saves the ship under repair (repair_fid)
 //  196 akhenaten: compact pyramid/mastaba runtime (resources on the main part only, no ramp draw cache)
-constexpr uint32_t latest_save_version = 196;
+//  197 akhenaten: (unused)
+//  198 akhenaten: "mods" chunk — ids + versions of the mods enabled when the game was saved
+constexpr uint32_t latest_save_version = 198;
