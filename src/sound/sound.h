@@ -8,6 +8,7 @@
 #include "sound/channel.h"
 #include "sound/effect.h"
 #include <array>
+#include <future>
 #include <string_view>
 #include <stdint.h>
 
@@ -24,7 +25,13 @@ public:
         int right_pan = 0;
         int volume = 0;
         void* chunk = nullptr;
+        // Mirrors Mix_Playing, refreshed on the main thread each frame.
         bool playing = false;
+
+        // The file is decoded on a worker; the main thread picks it up in begin_frame.
+        std::future<vfs::reader> pending;
+        bool play_requested = false;
+        bool panned = false;
     };
 
     struct speech_t {
@@ -75,7 +82,6 @@ public:
     speech_t speech;
 
 private:
-    static void channel_finished_cb(int channel);
     void init_channel(int index, vfs::path filename);
     void allocate_channels();
     void open();
@@ -86,21 +92,23 @@ private:
     bool play_file_on_channel(pcstr filename, int channel, int volume_pct);
     void stop_channel(int channel);
     void free_custom_audio_stream();
-    bool create_custom_audio_stream(uint16_t src_format, uint8_t src_channels, int src_rate, uint16_t dst_format, uint8_t dst_channels, int dst_rate);
-    bool init_audio_with_timeout(const char *driver_name, int timeout_ms = 2000);
+    bool create_custom_audio_stream(uint16_t src_format, uint8_t src_channels, int src_rate, uint16_t dst_format,
+      uint8_t dst_channels, int dst_rate);
     int get_custom_audio_stream(uint8_t *dst, int len);
     static void custom_music_callback(void *dummy, uint8_t *stream, int len);
     vfs::path speech_filename(xstring filename);
     bool speech_try_rel(pcstr rel, vfs::path &fs_path);
     static bool speech_ieq_prefix(pcstr path, pcstr prefix);
     vfs::path speech_normalize_rel(pcstr filename) const;
-    bool load_channel(channel_t *channel);
-    void *load_chunk(pcstr filename);
-    vfs::reader load_cached_chunk(vfs::path filename);
+    void* load_chunk(pcstr filename, bool cache);
+    void* chunk_from_reader(const vfs::reader& r);
+    void start_channel(int channel);
+    void request_channel(int channel);
+    void poll_pending_chunks();
     bool put_custom_audio_stream(uint8_t *audio_data, int len);
 
 private:
-    bool initialized;
+    bool initialized = false;
     music_player_t *_music_player = nullptr;
     std::array<channel_t, SOUND_CHANNEL_MAX> _channels;
     std::array<vfs::path, SOUND_CHANNEL_MAX> _channels_info;

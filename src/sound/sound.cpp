@@ -71,7 +71,9 @@ struct music_player_t {
     uint32_t custom_stream_bytes_per_second = 0;
     Mix_Music* music;
     vfs::reader current_music_data;
+    int custom_music_underrun_logs = 0;
 
+    // Main thread only.
     std::map<std::string, vfs::reader> cached_chunks;
 };
 
@@ -81,10 +83,10 @@ struct music_format {
 };
 
 sound_manager_t g_sound;
-static int s_custom_music_underrun_logs = 0;
 
-static int percentage_to_volume(int percentage) {
-    return percentage * SDL_MIX_MAXVOLUME / 100;
+// OG hands the 0..100 volume setting straight to Miles, whose scale is 0..127 (miles_sdl.c to_mixer_volume).
+static int settings_volume_to_mixer(int volume) {
+    return calc_bound(volume, 0, 127) * MIX_MAX_VOLUME / 127;
 }
 
 Mix_MusicType get_music_type(pcstr filename) {
@@ -148,64 +150,75 @@ void sound_manager_t::shutdown() {
     _music_player = nullptr;
 }
 
-vfs::reader sound_manager_t::load_cached_chunk(vfs::path filename) {
-    auto it = _music_player->cached_chunks.insert({filename.c_str(), vfs::reader()});
-
-    if (!it.second) {
-        return it.first->second;
-    }
-
+// Touches no shared state, so it may run on a worker thread.
+static vfs::reader read_chunk_file(vfs::path filename) {
     vfs::path converted_wav(filename);
     auto format = get_format_from_file(filename);
     if (format == FILE_FORMAT_MP3) {
         converted_wav.change_extension("wav");
         if (vfs::file_exists(converted_wav)) {
-            it.first->second = vfs::file_open(converted_wav);
-            return it.first->second;
+            return vfs::file_open(converted_wav);
         }
 #if defined(GAME_PLATFORM_ANDROID)
         // Prefer raw MP3 bytes — Mix_LoadWAV decodes when MIX_INIT_MP3 (minimp3) is on.
-        it.first->second = vfs::file_open(filename);
-        if (it.first->second) {
-            return it.first->second;
+        vfs::reader raw = vfs::file_open(filename);
+        if (raw) {
+            return raw;
         }
 #endif
         lame_helper helper;
-        it.first->second = helper.decode(filename);
-        return it.first->second;
+        return helper.decode(filename);
     }
 
-    it.first->second = vfs::file_open(converted_wav);
-    return it.first->second;
+    return vfs::file_open(converted_wav);
 }
 
-void* sound_manager_t::load_chunk(pcstr filename) {
+static bool is_chunk_format(pcstr filename) {
+    auto format = get_format_from_file(filename);
+    return format == FILE_FORMAT_MP3 || format == FILE_FORMAT_WAV;
+}
+
+void* sound_manager_t::chunk_from_reader(const vfs::reader& r) {
+    if (!r) {
+        return nullptr;
+    }
+    // Mix_LoadWAV_RW copies the samples, so the reader may go away afterwards.
+    SDL_RWops* sdl_fp = SDL_RWFromConstMem(r->data(), r->size());
+    return Mix_LoadWAV_RW(sdl_fp, SDL_TRUE);
+}
+
+void* sound_manager_t::load_chunk(pcstr filename, bool cache) {
     if (filename && *filename) {
         if (g_args.is_log_sound()) {
             logs::info("Sound: load chunk %s", filename);
         }
 
-        auto format = get_format_from_file(filename);
-        if (format == FILE_FORMAT_MP3 || format == FILE_FORMAT_WAV) {
-            vfs::reader r = load_cached_chunk(filename);
-
-            if (r) {
-                SDL_RWops* sdl_fp = SDL_RWFromConstMem(r->data(), r->size());
-                Mix_Chunk* chunk = Mix_LoadWAV_RW(sdl_fp, SDL_FALSE);
-                if (chunk) {
-                    return chunk;
+        if (is_chunk_format(filename)) {
+            vfs::reader r;
+            auto it = _music_player->cached_chunks.find(filename);
+            if (it != _music_player->cached_chunks.end()) {
+                r = it->second;
+            } else {
+                r = read_chunk_file(filename);
+                if (cache) {
+                    _music_player->cached_chunks[filename] = r;
                 }
+            }
+
+            if (Mix_Chunk* chunk = (Mix_Chunk*)chunk_from_reader(r)) {
+                return chunk;
             }
 
 #if defined(GAME_PLATFORM_ANDROID)
             // Cached raw MP3 but Mix_LoadWAV failed (old mixer without MP3) — lame→WAV.
-            if (format == FILE_FORMAT_MP3) {
+            if (get_format_from_file(filename) == FILE_FORMAT_MP3) {
                 lame_helper helper;
                 r = helper.decode(filename);
                 if (r) {
-                    _music_player->cached_chunks[filename] = r;
-                    SDL_RWops* sdl_fp = SDL_RWFromConstMem(r->data(), r->size());
-                    return Mix_LoadWAV_RW(sdl_fp, SDL_FALSE);
+                    if (cache) {
+                        _music_player->cached_chunks[filename] = r;
+                    }
+                    return chunk_from_reader(r);
                 }
             }
 #endif
@@ -229,16 +242,41 @@ void* sound_manager_t::load_chunk(pcstr filename) {
     return NULL;
 }
 
-bool sound_manager_t::load_channel(sound_manager_t::channel_t* channel) {
-    if (!channel->chunk && !channel->filename.empty()) {
-        channel->chunk = load_chunk(channel->filename);
+void sound_manager_t::start_channel(int channel) {
+    channel_t& ch = _channels[channel];
+    ch.play_requested = false;
+    if (!ch.chunk) {
+        return;
     }
 
-    return !!channel->chunk;
+    if (ch.panned) {
+        set_channel_panning(channel, ch.left_pan, ch.right_pan);
+    } else {
+        Mix_SetPanning(channel, 255, 255);
+    }
+    set_channel_volume(channel, ch.volume);
+
+    if (Mix_PlayChannelTimed(channel, (Mix_Chunk*)ch.chunk, 0, -1) >= 0) {
+        ch.playing = true;
+    }
 }
 
-void sound_manager_t::channel_finished_cb(int channel) {
-    g_sound._channels[channel].playing = false;
+void sound_manager_t::poll_pending_chunks() {
+    for (int i = 0, size = (int)_channels.size(); i < size; i++) {
+        channel_t& ch = _channels[i];
+        if (!ch.pending.valid() || ch.pending.wait_for(std::chrono::seconds(0)) != std::future_status::ready) {
+            continue;
+        }
+
+        vfs::reader r = ch.pending.get();
+        _music_player->cached_chunks[ch.filename.c_str()] = r;
+        if (!ch.chunk) {
+            ch.chunk = chunk_from_reader(r);
+        }
+        if (ch.play_requested) {
+            start_channel(i);
+        }
+    }
 }
 
 void sound_manager_t::begin_frame() {
@@ -246,17 +284,25 @@ void sound_manager_t::begin_frame() {
         return;
     }
 
-    const auto city_volume = calc_bound(game_features::gameopt_sound_city_volume.to_int(), 0, 100);
-    set_volume(SOUND_CHANNEL_CITY_MIN, SOUND_CHANNEL_CITY_MAX, city_volume);
+    if (initialized) {
+        poll_pending_chunks();
 
-    const auto effects_volume = calc_bound(game_features::gameopt_sound_effects_volume.to_int(), 0, 100);
-    set_volume(SOUND_CHANNEL_EFFECTS_MIN, SOUND_CHANNEL_EFFECTS_MAX, effects_volume);
+        for (int i = 0, size = (int)_channels.size(); i < size; i++) {
+            _channels[i].playing = _channels[i].chunk && Mix_Playing(i);
+        }
 
-    const auto music_volume = calc_bound(game_features::gameopt_sound_music_volume.to_int(), 0, 100);
-    Mix_VolumeMusic(music_volume);
+        const auto city_volume = calc_bound(game_features::gameopt_sound_city_volume.to_int(), 0, 100);
+        set_volume(SOUND_CHANNEL_CITY_MIN, SOUND_CHANNEL_CITY_MAX, city_volume);
 
-    const auto speech_volume = calc_bound(game_features::gameopt_sound_speech_volume.to_int(), 0, 100);
-    set_channel_volume(SOUND_CHANNEL_SPEECH, speech_volume);
+        const auto effects_volume = calc_bound(game_features::gameopt_sound_effects_volume.to_int(), 0, 100);
+        set_volume(SOUND_CHANNEL_EFFECTS_MIN, SOUND_CHANNEL_EFFECTS_MAX, effects_volume);
+
+        const auto music_volume = calc_bound(game_features::gameopt_sound_music_volume.to_int(), 0, 100);
+        Mix_VolumeMusic(settings_volume_to_mixer(music_volume));
+
+        const auto speech_volume = calc_bound(game_features::gameopt_sound_speech_volume.to_int(), 0, 100);
+        set_channel_volume(SOUND_CHANNEL_SPEECH, speech_volume);
+    }
 
     music_frame();
 }
@@ -274,27 +320,22 @@ void sound_manager_t::init_channels() {
     for (auto &ch: _channels) {
         ch.chunk = 0;
     }
-
-    Mix_ChannelFinished(channel_finished_cb);
 }
 
 void sound_manager_t::init_channel(int index, vfs::path filename) {
-    _channels[index].chunk = nullptr;
-    _channels[index].filename = filename;
-}
-
-bool sound_manager_t::init_audio_with_timeout(const char *driver_name, int timeout_ms) {
-    auto future = std::async(std::launch::async, [driver_name] () {
-        return SDL_AudioInit(driver_name) == 0
-            && Mix_OpenAudio(AUDIO_RATE, AUDIO_FORMAT, AUDIO_CHANNELS, AUDIO_BUFFERS) == 0;
-    });
-
-    if (future.wait_for(std::chrono::milliseconds(timeout_ms)) == std::future_status::timeout) {
-        SDL_Log("Audio initialization timeout - no audio device available?");
-        return false;
+    channel_t& ch = _channels[index];
+    if (ch.filename == filename) {
+        return;
     }
 
-    return future.get();
+    if (initialized && ch.chunk) {
+        Mix_HaltChannel(index);
+        Mix_FreeChunk((Mix_Chunk*)ch.chunk);
+    }
+    ch.chunk = nullptr;
+    ch.play_requested = false;
+    ch.pending = {};
+    ch.filename = filename;
 }
 
 void sound_manager_t::allocate_channels() {
@@ -330,7 +371,9 @@ void sound_manager_t::open() {
             continue;
         }
 
-        const bool ok = init_audio_with_timeout(driver_name, 1000);
+        // The former std::async "timeout" blocked in the future's destructor anyway; open on this thread.
+        const bool ok = SDL_AudioInit(driver_name) == 0
+                        && Mix_OpenAudio(AUDIO_RATE, AUDIO_FORMAT, AUDIO_CHANNELS, AUDIO_BUFFERS) == 0;
         if (ok) {
             logs::info("Using audio driver: %s", driver_name);
             init_channels();
@@ -421,7 +464,11 @@ void sound_manager_t::unload_formats() {
 }
 
 bool sound_manager_t::is_channel_playing(int channel) {
-    return _channels[channel].chunk && Mix_Playing(channel);
+    if (!initialized) {
+        return false;
+    }
+    const channel_t& ch = _channels[channel];
+    return ch.play_requested || (ch.chunk && Mix_Playing(channel));
 }
 
 void sound_manager_t::set_channel_panning(int channel, int left, int right) {
@@ -429,11 +476,11 @@ void sound_manager_t::set_channel_panning(int channel, int left, int right) {
 }
 
 void sound_manager_t::set_channel_volume(int channel, int volume_pct) {
-    const int vol = percentage_to_volume(volume_pct);
-    Mix_Volume(channel, vol);
-    if (_channels[channel].chunk) {
-        Mix_VolumeChunk((Mix_Chunk*)_channels[channel].chunk, vol);
+    if (!initialized) {
+        return;
     }
+    // Channel volume only: also scaling the chunk would apply the setting twice.
+    Mix_Volume(channel, settings_volume_to_mixer(volume_pct));
 }
 
 bool sound_manager_t::play_file_on_channel(pcstr filename, int channel, int volume_pct) {
@@ -442,7 +489,7 @@ bool sound_manager_t::play_file_on_channel(pcstr filename, int channel, int volu
     }
 
     stop_channel(channel);
-    _channels[channel].chunk = load_chunk(filename);
+    _channels[channel].chunk = load_chunk(filename, false);
     if (!_channels[channel].chunk) {
         return false;
     }
@@ -527,10 +574,33 @@ bool sound_manager_t::play_music(pcstr filename, int volume_pct, bool loop) {
             _music_player->current_music_data.reset();
             logs::warn("Error playing music file '%s'. Reason: %s", filename, Mix_GetError());
         } else {
-            Mix_VolumeMusic(volume_pct);
+            Mix_VolumeMusic(settings_volume_to_mixer(volume_pct));
         }
     }
     return !!_music_player->music;
+}
+
+// Runs on the main thread only. A missing chunk is decoded on a worker (pure file work); the
+// Mix_* calls, the cache and the channel state stay here, picked up in poll_pending_chunks().
+void sound_manager_t::request_channel(int channel) {
+    channel_t& ch = _channels[channel];
+    if (!ch.chunk && !ch.filename.empty()) {
+        auto it = _music_player->cached_chunks.find(ch.filename.c_str());
+        if (it != _music_player->cached_chunks.end()) {
+            ch.chunk = chunk_from_reader(it->second);
+        } else if (is_chunk_format(ch.filename)) {
+            ch.play_requested = true;
+            if (!ch.pending.valid()) {
+                vfs::path filename = ch.filename;
+                ch.pending = game.mt.submit_task([filename] { return read_chunk_file(filename); });
+            }
+            return;
+        } else {
+            ch.chunk = load_chunk(ch.filename, true);
+        }
+    }
+
+    start_channel(channel);
 }
 
 void sound_manager_t::play_channel(int channel, int volume_pct) {
@@ -538,17 +608,10 @@ void sound_manager_t::play_channel(int channel, int volume_pct) {
         return;
     }
 
-    game.mt.detach_task([this, channel, volume_pct] () {
-        channel_t &ch = _channels[channel];
-        if (!load_channel(&ch)) {
-            return;
-        }
-
-        ch.playing = true;
-        set_channel_volume(channel, volume_pct * 0.4);
-
-        Mix_PlayChannelTimed(channel, (Mix_Chunk*)ch.chunk, 0, -1);
-    });
+    channel_t& ch = _channels[channel];
+    ch.volume = volume_pct;
+    ch.panned = false;
+    request_channel(channel);
 }
 
 void sound_manager_t::play_channel_panned(int channel, int volume_pct, int left_pct, int right_pct) {
@@ -556,22 +619,12 @@ void sound_manager_t::play_channel_panned(int channel, int volume_pct, int left_
         return;
     }
 
-    game.mt.detach_task([this, channel, volume_pct, left_pct, right_pct] () {
-        channel_t &ch = _channels[channel];
-        if (!load_channel(&ch)) {
-            return;
-        }
-
-        ch.left_pan = left_pct * 255 / 100;
-        ch.right_pan = right_pct * 255 / 100;
-        ch.volume = volume_pct;
-        ch.playing = true;
-
-        set_channel_panning(channel, ch.left_pan, ch.right_pan);
-        set_channel_volume(channel, ch.volume);
-
-        Mix_PlayChannelTimed(channel, (Mix_Chunk *)ch.chunk, 0, -1);
-    });
+    channel_t& ch = _channels[channel];
+    ch.left_pan = left_pct * 255 / 100;
+    ch.right_pan = right_pct * 255 / 100;
+    ch.volume = volume_pct;
+    ch.panned = true;
+    request_channel(channel);
 }
 
 void sound_manager_t::stop_music() {
@@ -595,13 +648,16 @@ void sound_manager_t::stop_channel(int channel) {
     }
 
     channel_t* ch = &_channels[channel];
+    ch->play_requested = false;
     if (!ch->chunk) {
         return;
     }
 
+    // Mix_HaltChannel returns only after the mixer has let go of the chunk.
     Mix_HaltChannel(channel);
     Mix_FreeChunk((Mix_Chunk*)ch->chunk);
     ch->chunk = 0;
+    ch->playing = false;
 }
 
 void sound_manager_t::stop_city_channels() {
@@ -643,7 +699,7 @@ bool sound_manager_t::create_custom_audio_stream(uint16_t src_format, uint8_t sr
     _music_player->custom_stream_bytes_written = 0;
     _music_player->custom_stream_bytes_read = 0;
     _music_player->custom_stream_bytes_per_second = dst_rate * dst_channels * (SDL_AUDIO_BITSIZE(dst_format) / 8);
-    s_custom_music_underrun_logs = 0;
+    _music_player->custom_music_underrun_logs = 0;
 
 #ifdef USE_SDL_AUDIOSTREAM
     if (_music_player->use_audiostream) {
@@ -793,13 +849,13 @@ void sound_manager_t::custom_music_callback(void* dummy, Uint8* stream, int len)
     int bytes_copied = g_sound.get_custom_audio_stream(stream, len);
 
     if (bytes_copied < len) {
-        if (s_custom_music_underrun_logs < 20) {
+        if (g_sound._music_player->custom_music_underrun_logs < 20) {
             logs::warn("BIK audio underrun: requested=%d copied=%d buffered_us=%llu played_us=%llu",
                 len,
                 bytes_copied,
                 (unsigned long long)g_sound.custom_music_buffered_micros(),
                 (unsigned long long)g_sound.custom_music_playback_micros());
-            ++s_custom_music_underrun_logs;
+            ++g_sound._music_player->custom_music_underrun_logs;
         }
         // end of stream, write silence
         memset(&stream[bytes_copied], 0, len - bytes_copied);
@@ -847,7 +903,7 @@ void sound_manager_t::write_custom_music_data(void* audio_data, int len) {
         return;
     memset(mix_buffer, (_music_player->format == AUDIO_U8) ? 128 : 0, len);
     SDL_MixAudioFormat(mix_buffer, (uint8_t*)audio_data, _music_player->format, len,
-        percentage_to_volume(calc_bound(game_features::gameopt_sound_effects_volume.to_int(), 0, 100)));
+      settings_volume_to_mixer(calc_bound(game_features::gameopt_sound_effects_volume.to_int(), 0, 100)));
 
     put_custom_audio_stream(mix_buffer, len);
     free(mix_buffer);
