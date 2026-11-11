@@ -11,6 +11,8 @@ var UPDATER_READY = 6
 var UPDATER_FAILED = 7
 
 var main_menu_update_dismissed = false
+// The answer re-inits the window, so asking again from init would loop.
+var main_menu_commits_requested = false
 
 function main_menu_dismiss_update(window) {
 	main_menu_update_dismissed = true
@@ -215,7 +217,8 @@ function main_menu_on_init(window) {
 		}
 	}
 
-	if (!game.is_integral_tests && github_is_active() && __updater_state() != UPDATER_OFF) {
+	if (!main_menu_commits_requested && !game.is_integral_tests && github_is_active() && __updater_state() != UPDATER_OFF) {
+		main_menu_commits_requested = true
 		github_get_recent_commits_async("dalerank", "Akhenaten")
 	}
 	main_menu_show_update_state(window, __updater_state())
