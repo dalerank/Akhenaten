@@ -4,6 +4,7 @@
 #include "city/city.h"
 #include "city/buildings.h"
 #include "js/js_game.h"
+#include "game/game.h"
 
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_festival_guy);
 
@@ -68,7 +69,7 @@ void figure_festival_guy::figure_action() {
 
     case ACTION_11_FESTIVAL_GUY_GOTO_SQUARE:
         if (do_goto(base.destination_tile, TERRAIN_USAGE_ANY, ACTION_12_FESTIVAL_GUY_DANCE)) {
-            base.wait_ticks = rand() % 20;
+            base.wait_ticks = random_hash(game.simtime.absolute_tick(), id(), RANDOM_SALT_FESTIVAL_DANCE) % 20;
         }
         break;
 

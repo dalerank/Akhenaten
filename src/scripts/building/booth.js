@@ -64,7 +64,7 @@ function building_booth_update_month(ev) {
     if (!b) {
         return
     }
-    b.play_index = Math.floor(Math.random() * 10)
+    b.play_index = __random_hash(__game_absolute_day(), ev.bid, 0x1003 /*RANDOM_SALT_BOOTH_PLAY*/) % 10
 }
 
 [es=(building_booth, draw_usable_paths)]

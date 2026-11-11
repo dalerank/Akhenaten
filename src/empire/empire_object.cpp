@@ -2,6 +2,7 @@
 
 #include "core/calc.h"
 #include "core/log.h"
+#include "core/random.h"
 #include "core/string.h"
 #include "core/svector.h"
 #include "empire/empire.h"
@@ -984,7 +985,9 @@ void map_route_object::improve_route() {
                     const float dy = (float)(b.y - a.y);
                     const float px = -dy / dist;
                     const float py = dx / dist;
-                    const float t = ((rand() % 2001) - 1000) / 1000.f; // [-1, 1]
+                    const uint32_t h
+                      = random_hash((a.x << 16) ^ a.y, (b.x << 16) ^ b.y, RANDOM_SALT_EMPIRE_ROUTE_JITTER);
+                    const float t = ((int)(h % 2001) - 1000) / 1000.f; // [-1, 1]
                     const float amount = t * max_deviation * std::min(1.f, dist / 200.f);
                     mid_point.x += (int)(px * amount);
                     mid_point.y += (int)(py * amount);
@@ -1013,7 +1016,10 @@ void map_route_object::improve_route() {
         }
 
         // Pick a random index between 1 and size-2
-        int index_to_remove = 1 + (rand() % (temp_points.size() - 2));
+        const vec2i first = temp_points.front().p;
+        const uint32_t h
+          = random_hash((first.x << 16) ^ first.y, (uint32_t)temp_points.size(), RANDOM_SALT_EMPIRE_ROUTE_REMOVE);
+        int index_to_remove = 1 + (h % (temp_points.size() - 2));
         temp_points.erase(temp_points.begin() + index_to_remove);
     }
 

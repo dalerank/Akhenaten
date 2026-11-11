@@ -73,13 +73,13 @@ void map_grid_fill(grid_xx& grid, int64_t value);
 void map_grid_clear(grid_xx& grid);
 void map_grid_copy(grid_xx& src, grid_xx& dst);
 
-template<typename T>
-tile2i map_random_choose(T &arr, tile2i avoid) {
+template <typename T>
+tile2i map_random_choose(T& arr, tile2i avoid, uint32_t rnd) {
     if (arr.empty()) {
         return tile2i::invalid;
     }
 
-    auto idx = rand() % arr.size();
+    auto idx = rnd % arr.size();
     if (arr[idx] != avoid) {
         return arr[idx];
     }

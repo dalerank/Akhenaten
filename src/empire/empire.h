@@ -68,16 +68,7 @@ public:
         }
     }
 
-    int random_city() {
-        svector<empire_city*, 32> valid_cities;
-        select_cities(valid_cities, [] (empire_city *c) { return c->in_use; });
-
-        if (valid_cities.empty()) {
-            return -1;
-        }
-
-        return valid_cities[rand() % valid_cities.size()]->name_id;
-    }
+    int random_city();
 
     inline trade_route &get_route(int route_id) {
         route_id = std::max(route_id, 0);

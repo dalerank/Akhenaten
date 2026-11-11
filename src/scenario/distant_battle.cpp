@@ -7,6 +7,7 @@
 #include "city/military.h"
 #include "city/ratings.h"
 #include "core/calc.h"
+#include "core/random.h"
 #include "empire/empire_city.h"
 #include "empire/empire_object.h"
 #include "empire/type.h"
@@ -498,7 +499,9 @@ void distant_battles_t::fight_distant_battle() {
             if (!request_linked) {
                 const auto city = g_empire.city(battle.city);
                 if (city && city->get_empire_object()) {
-                    uint16_t rtag = rand() % 0xffff;
+                    uint16_t rtag
+                      = random_hash(game.simtime.absolute_day(true), battle.city, RANDOM_SALT_DISTANT_BATTLE_TAG)
+                        % 0xffff;
                     g_scenario.events.win_distant_battle(rtag, city->name_str.c_str(), city->get_empire_object()->pos);
                     g_scenario.events.execute_event(rtag);
                 }

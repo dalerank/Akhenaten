@@ -49,3 +49,31 @@ void anti_scum_set_clock_reseed(bool enabled);
 int random_int();
 int random_int_between(int min, int max);
 double random_fractional();
+
+enum e_random_hash_salt : uint32_t {
+    RANDOM_SALT_FESTIVAL_DANCE = 0x1001,
+    RANDOM_SALT_PAVILION_PLAY = 0x1002,
+    RANDOM_SALT_BOOTH_PLAY = 0x1003,
+    RANDOM_SALT_STATUE_OFFSET = 0x1004,
+    RANDOM_SALT_ANIMAL_HUNGRY = 0x1005,
+    RANDOM_SALT_EMPIRE_ROUTE_JITTER = 0x1006,
+    RANDOM_SALT_EMPIRE_ROUTE_REMOVE = 0x1007,
+    RANDOM_SALT_EMPIRE_TRADER_DELAY = 0x1008,
+    RANDOM_SALT_EMPIRE_CITY = 0x1009,
+    RANDOM_SALT_KINGDOME_TRADER_CAPACITY = 0x100a,
+    RANDOM_SALT_HUNTER_LOOK = 0x100b,
+    RANDOM_SALT_DISTANT_BATTLE_TAG = 0x100c,
+};
+
+// Stateless mix for non-OG sim choices: must not touch the LFSR or the crt (anti_scum) stream.
+inline uint32_t random_hash(uint32_t a, uint32_t b, uint32_t c) {
+    uint32_t h = a * 0x9E3779B1u;
+    h ^= b + 0x85EBCA77u + (h << 6) + (h >> 2);
+    h ^= c + 0xC2B2AE3Du + (h << 6) + (h >> 2);
+    h ^= h >> 16;
+    h *= 0x85EBCA6Bu;
+    h ^= h >> 13;
+    h *= 0xC2B2AE35u;
+    h ^= h >> 16;
+    return h;
+}

@@ -18,6 +18,8 @@
 #include "io/gamefiles/lang.h"
 #include "game/game_config.h"
 #include "core/log.h"
+#include "core/random.h"
+#include "game/game.h"
 #include "content/vfs.h"
 #include <string>
 
@@ -594,4 +596,17 @@ declare_console_command_p(list_cities) {
                        city->can_trade() ? "Yes" : "No");
         }
     }
+}
+
+int empire_t::random_city() {
+    svector<empire_city*, 32> valid_cities;
+    select_cities(valid_cities, [](empire_city* c) { return c->in_use; });
+
+    if (valid_cities.empty()) {
+        return -1;
+    }
+
+    const uint32_t h
+      = random_hash(game.simtime.absolute_day(true), (uint32_t)valid_cities.size(), RANDOM_SALT_EMPIRE_CITY);
+    return valid_cities[h % valid_cities.size()]->name_id;
 }
