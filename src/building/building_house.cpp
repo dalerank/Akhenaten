@@ -150,7 +150,7 @@ void building_house::bind_dynamic(io_buffer *iob, size_t version) {
         iob->bind(BIND_SIGNATURE_UINT16, &d.foods[i]);
     }
 
-    uint16_t tmp;
+    uint16_t tmp = 0;
     iob->bind(BIND_SIGNATURE_UINT16, &tmp);
     iob->bind(BIND_SIGNATURE_UINT16, &tmp);
     iob->bind(BIND_SIGNATURE_UINT16, &tmp);

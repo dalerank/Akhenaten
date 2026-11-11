@@ -1060,7 +1060,7 @@ void building_bazaar::bind_dynamic(io_buffer *iob, size_t version) {
     iob->bind(BIND_SIGNATURE_INT16, &d.linen_demand);
     iob->bind(BIND_SIGNATURE_INT16, &d.beer_demand);
 
-    uint16_t tmp;
+    uint16_t tmp = 0;
     for (int i = 0; i < INVENTORY_MAX; i++) {
         iob->bind(BIND_SIGNATURE_UINT8, &d.inventory[i].type);
         iob->bind(BIND_SIGNATURE_UINT8, &tmp);

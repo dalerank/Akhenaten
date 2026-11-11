@@ -721,7 +721,7 @@ io_buffer* iob_formations = new io_buffer([](io_buffer* iob, size_t version) {
 
 io_buffer* iob_formations_info = new io_buffer([](io_buffer* iob, size_t version) {
     auto &data = g_formations.formations;
-    int tmp;
+    int tmp = 0;
     iob->bind(BIND_SIGNATURE_INT32, &tmp);
     iob->bind(BIND_SIGNATURE_INT32, &tmp);
     iob->bind(BIND_SIGNATURE_INT32, &tmp);

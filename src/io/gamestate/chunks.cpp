@@ -4,7 +4,9 @@
 #include "io/chunk_serializer.h"
 #include "platform/platform.h"
 
+#include <algorithm>
 #include <cstring>
+#include <iterator>
 
 static int file_version;
 io_buffer* iob_file_version = new io_buffer([](io_buffer* iob, size_t version) {
@@ -226,7 +228,7 @@ struct {
             //            int unk04b;
             //            int unk04c;
             int unk05;
-        } fields[50];
+        } fields[74];
     } chunks[10];
 } bizarre;
 
@@ -238,9 +240,9 @@ static void record_bizarre_fields(io_buffer* iob, int i) {
         fwrite(temp_string, strlen(temp_string), 1, bizarre.debug_file);
     }
 
-    int fields_num = iob->get_size() / 24;
+    int fields_num = std::min<int>(iob->get_size() / 24, (int)std::size(chunk->fields));
     for (int j = 0; j < fields_num; ++j) {
-        auto field = chunk->fields[j];
+        auto& field = chunk->fields[j];
 
         iob->bind(BIND_SIGNATURE_UINT32, &field.unk00);
         iob->bind(BIND_SIGNATURE_UINT32, &field.unk01);
