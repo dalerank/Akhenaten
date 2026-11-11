@@ -841,10 +841,6 @@ io/gamestate/boilerplate_detail.cpp -> widget/widget_figure_follow.h
 io/gamestate/file_schemas.h -> content/file_formats.h
 io/io.cpp -> content/zipreader.hpp
 io/io.h -> content/dir.h
-io/mods/mods.cpp -> graphics/boilerplate.h
-io/mods/mods.cpp -> graphics/color.h
-io/mods/mods.h -> graphics/image.h
-io/mods/png_read.h -> graphics/color.h
 overlays/city_overlay.cpp -> dev/debug.h
 resource/icons.cpp -> platform/renderer.h
 resource/icons.cpp -> platform/screen.h
