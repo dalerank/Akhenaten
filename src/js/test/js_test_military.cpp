@@ -1,5 +1,8 @@
 #include "js/test/js_test_common.h"
 
+#include <cstdio>
+#include <string>
+
 #include "building/building.h"
 #include "building/building_barracks.h"
 #include "building/building_delivery_path.h"
@@ -1229,3 +1232,39 @@ static int __test_formation_wait_ticks(int formation_id) {
     return m ? m->wait_ticks : -1;
 }
 ANK_FUNCTION_1(__test_formation_wait_ticks);
+
+// "invasion_id,battalion_index,destination_building_id,dest_x,dest_y,wait_ticks,ticks_without_target" or "".
+static pcstr __test_enemy_formation_state(int formation_id) {
+    static char out[128];
+    out[0] = 0;
+    formation* m = formation_get(formation_id);
+    if (!m || !m->in_use || m->is_herd || m->own_batalion) {
+        return out;
+    }
+    snprintf(out, sizeof(out), "%d,%d,%d,%d,%d,%d,%d", m->invasion_id, m->enemy_batalion_index,
+      m->destination_building_id, m->destination.x(), m->destination.y(), m->wait_ticks, m->ticks_without_target);
+    return out;
+}
+ANK_FUNCTION_1(__test_enemy_formation_state);
+
+// Ids of all enemy formations in use, comma separated.
+static pcstr __test_enemy_formations() {
+    static std::string out;
+    out.clear();
+    for (int i = 1; i < MAX_FORMATIONS; i++) {
+        formation* m = formation_get(i);
+        if (m && m->in_use && !m->is_herd && !m->own_batalion) {
+            out += (out.empty() ? "" : ",") + std::to_string(i);
+        }
+    }
+    return out.c_str();
+}
+ANK_FUNCTION(__test_enemy_formations);
+
+// Runs the enemy part of the formation update once (OG formation_enemy_update).
+static void __test_enemy_formations_update() {
+    g_formations.calculate_batalion_totals();
+    g_formations.calculate_figures();
+    g_formations.enemy_update();
+}
+ANK_FUNCTION(__test_enemy_formations_update);

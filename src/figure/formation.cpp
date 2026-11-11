@@ -153,6 +153,8 @@ int formation_create_enemy(e_figure_type figure_type, tile2i tile, e_formation_l
     f->enemy_type = enemy_type;
     f->invasion_id = invasion_id;
     f->invasion_sequence = invasion_sequence;
+    f->enemy_state = {};
+    f->ticks_without_target = 0;
     return formation_id;
 }
 
@@ -532,8 +534,9 @@ void formations_t::calculate_figures() {
                     if (figure_id && figure_get(figure_id)->direction != DIR_8_NONE)
                         m->is_halted = 0;
                 }
+                // OG formation.c:333: a chariot formation counts half again
                 int total_strength = m->num_figures;
-                if (m->figure_type == FIGURE_STANDARD_BEARER)
+                if (m->figure_type == FIGURE_FCHARIOTEER)
                     total_strength += m->num_figures / 2;
 
                 enemy_army_totals_add_batalion_formation(total_strength);
@@ -676,14 +679,10 @@ io_buffer* iob_formations = new io_buffer([](io_buffer* iob, size_t version) {
         iob->bind____skip(1);
         iob->bind_u16(f->experience);
         iob->bind(BIND_SIGNATURE_INT16, &f->wait_ticks); // --> 8 --> 0 ??????
-        iob->bind____skip(4);
-        //            iob->bind(BIND_SIGNATURE_INT16, &f->enemy_state.duration_advance);
-        //            iob->bind(BIND_SIGNATURE_INT16, &f->enemy_state.duration_regroup);
-        //            iob->bind(BIND_SIGNATURE_INT16, &f->enemy_state.duration_halt);
-        //            iob->bind(BIND_SIGNATURE_INT16, &f->enemy_legion_index);
-        f->enemy_state.duration_advance = 0;
-        f->enemy_state.duration_regroup = 0;
-        f->enemy_state.duration_halt = 0;
+        // The enemy march cycle (OG regroup/advance/halt ticks) lives in bytes older saves always wrote as
+        // zero; the battalion index is recomputed on every enemy update.
+        iob->bind(BIND_SIGNATURE_INT16, &f->enemy_state.duration_halt);
+        iob->bind(BIND_SIGNATURE_INT16, &f->enemy_state.duration_advance);
         f->enemy_batalion_index = 0;
 
         iob->bind(BIND_SIGNATURE_UINT8, &f->is_halted);
@@ -709,7 +708,9 @@ io_buffer* iob_formations = new io_buffer([](io_buffer* iob, size_t version) {
         iob->bind(BIND_SIGNATURE_UINT8, &f->herd_spawn_delay); // --> 4
         iob->bind(BIND_SIGNATURE_UINT8, &f->herd_direction);           // 6
         iob->bind(BIND_SIGNATURE_UINT8, &f->failed_creation_count);           // 6
-        iob->bind____skip(5);
+        iob->bind(BIND_SIGNATURE_INT16, &f->enemy_state.duration_regroup);
+        iob->bind(BIND_SIGNATURE_UINT8, &f->ticks_without_target);
+        iob->bind____skip(2);
         iob->bind____skip(17);
         iob->bind(BIND_SIGNATURE_INT16, &f->invasion_sequence);
 
