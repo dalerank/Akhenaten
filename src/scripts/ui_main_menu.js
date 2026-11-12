@@ -1,21 +1,7 @@
 log_info("akhenaten: main menu started")
 
-// mirrors e_updater_state (src/platform/app_updater.h)
-var UPDATER_OFF = 0
-var UPDATER_CHECKING = 1
-var UPDATER_NO_ANSWER = 2
-var UPDATER_UP_TO_DATE = 3
-var UPDATER_AVAILABLE = 4
-var UPDATER_DOWNLOADING = 5
-var UPDATER_READY = 6
-var UPDATER_FAILED = 7
-
-var main_menu_update_dismissed = false
-// The answer re-inits the window, so asking again from init would loop.
-var main_menu_commits_requested = false
-
 function main_menu_dismiss_update(window) {
-	main_menu_update_dismissed = true
+	game.main_menu_update_dismissed = true
 	window.update_panel.enabled = false
 	window.update_game.enabled = false
 	window.new_version.enabled = false
@@ -25,7 +11,7 @@ function main_menu_dismiss_update(window) {
 }
 
 function main_menu_show_update_state(window, state) {
-	if (main_menu_update_dismissed) {
+	if (game.main_menu_update_dismissed) {
 		return
 	}
 	if (state != UPDATER_AVAILABLE && state != UPDATER_DOWNLOADING && state != UPDATER_READY && state != UPDATER_FAILED) {
@@ -217,8 +203,8 @@ function main_menu_on_init(window) {
 		}
 	}
 
-	if (!main_menu_commits_requested && !game.is_integral_tests && github_is_active() && __updater_state() != UPDATER_OFF) {
-		main_menu_commits_requested = true
+	if (!game.main_menu_commits_requested && !game.is_integral_tests && github_is_active() && __updater_state() != UPDATER_OFF) {
+		game.main_menu_commits_requested = true
 		github_get_recent_commits_async("dalerank", "Akhenaten")
 	}
 	main_menu_show_update_state(window, __updater_state())

@@ -10,24 +10,6 @@
 //   [test-marker] updater_paths_ok
 //   [test-marker] updater_states_ok
 
-// e_updater_event, e_updater_button, e_updater_platform (src/platform/app_updater.h)
-var EV_START = 0
-var EV_NO_ANSWER = 1
-var EV_SAME_BUILD = 2
-var EV_NEWER_BUILD = 3
-var EV_DOWNLOAD = 4
-var EV_DOWNLOAD_OK = 5
-var EV_DOWNLOAD_FAILED = 6
-var BUTTON_NONE = 0
-var BUTTON_RESTART = 1
-var BUTTON_DOWNLOAD_THEN_RESTART = 2
-var BUTTON_RESTART_WHEN_READY = 3
-var PLATFORM_NONE = 0
-var PLATFORM_WINDOWS = 1
-var PLATFORM_LINUX = 2
-var PLATFORM_MACOS_ARM = 3
-var PLATFORM_MACOS_X64 = 4
-
 var updater_test_failures = 0
 
 function updater_expect(what, got, want) {
@@ -91,20 +73,20 @@ function run_test() {
     })
 
     updater_check('updater_assets_ok', function () {
-        updater_expect('windows', __test_updater_asset(PLATFORM_WINDOWS), 'akhenaten_windows|windows_build|akhenaten.exe')
-        updater_expect('linux', __test_updater_asset(PLATFORM_LINUX), 'akhenaten_linux|linux_build|akhenaten.linux')
-        updater_expect('mac arm', __test_updater_asset(PLATFORM_MACOS_ARM),
+        updater_expect('windows', __test_updater_asset(UPDATER_PLATFORM_WINDOWS), 'akhenaten_windows|windows_build|akhenaten.exe')
+        updater_expect('linux', __test_updater_asset(UPDATER_PLATFORM_LINUX), 'akhenaten_linux|linux_build|akhenaten.linux')
+        updater_expect('mac arm', __test_updater_asset(UPDATER_PLATFORM_MACOS_ARM),
             'akhenaten_mac_arm|macos_arm_build|akhenaten.app/Contents/MacOS/akhenaten')
-        updater_expect('mac x64', __test_updater_asset(PLATFORM_MACOS_X64),
+        updater_expect('mac x64', __test_updater_asset(UPDATER_PLATFORM_MACOS_X64),
             'akhenaten_mac_x64|macos_x64_build|akhenaten.app/Contents/MacOS/akhenaten')
-        updater_expect('none', __test_updater_asset(PLATFORM_NONE), '!')
-        updater_expect('runs url', __test_updater_runs_url(PLATFORM_WINDOWS),
+        updater_expect('none', __test_updater_asset(UPDATER_PLATFORM_NONE), '!')
+        updater_expect('runs url', __test_updater_runs_url(UPDATER_PLATFORM_WINDOWS),
             'https://api.github.com/repos/dalerank/Akhenaten/actions/workflows/akhenaten_windows.yml/runs'
             + '?branch=master&event=push&status=success&per_page=1')
-        updater_expect('download url', __test_updater_download_url(PLATFORM_LINUX, '42909862239'),
+        updater_expect('download url', __test_updater_download_url(UPDATER_PLATFORM_LINUX, '42909862239'),
             'https://nightly.link/dalerank/Akhenaten/actions/runs/42909862239/linux_build.zip')
         var current = __test_updater_current_platform()
-        updater_expect('current platform has builds', current == PLATFORM_NONE || __test_updater_asset(current) != '!', true)
+        updater_expect('current platform has builds', current == UPDATER_PLATFORM_NONE || __test_updater_asset(current) != '!', true)
     })
 
     updater_check('updater_paths_ok', function () {
@@ -128,26 +110,26 @@ function run_test() {
 
     updater_check('updater_states_ok', function () {
         var next = __test_updater_next_state
-        updater_expect('start', next(UPDATER_OFF, EV_START), UPDATER_CHECKING)
-        updater_expect('off ignores answers', next(UPDATER_OFF, EV_NEWER_BUILD), UPDATER_OFF)
-        updater_expect('no answer', next(UPDATER_CHECKING, EV_NO_ANSWER), UPDATER_NO_ANSWER)
-        updater_expect('same build', next(UPDATER_CHECKING, EV_SAME_BUILD), UPDATER_UP_TO_DATE)
-        updater_expect('newer build', next(UPDATER_CHECKING, EV_NEWER_BUILD), UPDATER_AVAILABLE)
-        updater_expect('no download while checking', next(UPDATER_CHECKING, EV_DOWNLOAD), UPDATER_CHECKING)
-        updater_expect('download', next(UPDATER_AVAILABLE, EV_DOWNLOAD), UPDATER_DOWNLOADING)
-        updater_expect('one download at a time', next(UPDATER_DOWNLOADING, EV_DOWNLOAD), UPDATER_DOWNLOADING)
-        updater_expect('downloaded', next(UPDATER_DOWNLOADING, EV_DOWNLOAD_OK), UPDATER_READY)
-        updater_expect('download failed', next(UPDATER_DOWNLOADING, EV_DOWNLOAD_FAILED), UPDATER_FAILED)
-        updater_expect('retry', next(UPDATER_FAILED, EV_DOWNLOAD), UPDATER_DOWNLOADING)
-        updater_expect('ready stays', next(UPDATER_READY, EV_DOWNLOAD), UPDATER_READY)
-        updater_expect('up to date stays', next(UPDATER_UP_TO_DATE, EV_DOWNLOAD), UPDATER_UP_TO_DATE)
+        updater_expect('start', next(UPDATER_OFF, UPDATER_EV_START), UPDATER_CHECKING)
+        updater_expect('off ignores answers', next(UPDATER_OFF, UPDATER_EV_NEWER_BUILD), UPDATER_OFF)
+        updater_expect('no answer', next(UPDATER_CHECKING, UPDATER_EV_NO_ANSWER), UPDATER_NO_ANSWER)
+        updater_expect('same build', next(UPDATER_CHECKING, UPDATER_EV_SAME_BUILD), UPDATER_UP_TO_DATE)
+        updater_expect('newer build', next(UPDATER_CHECKING, UPDATER_EV_NEWER_BUILD), UPDATER_AVAILABLE)
+        updater_expect('no download while checking', next(UPDATER_CHECKING, UPDATER_EV_DOWNLOAD), UPDATER_CHECKING)
+        updater_expect('download', next(UPDATER_AVAILABLE, UPDATER_EV_DOWNLOAD), UPDATER_DOWNLOADING)
+        updater_expect('one download at a time', next(UPDATER_DOWNLOADING, UPDATER_EV_DOWNLOAD), UPDATER_DOWNLOADING)
+        updater_expect('downloaded', next(UPDATER_DOWNLOADING, UPDATER_EV_DOWNLOAD_OK), UPDATER_READY)
+        updater_expect('download failed', next(UPDATER_DOWNLOADING, UPDATER_EV_DOWNLOAD_FAILED), UPDATER_FAILED)
+        updater_expect('retry', next(UPDATER_FAILED, UPDATER_EV_DOWNLOAD), UPDATER_DOWNLOADING)
+        updater_expect('ready stays', next(UPDATER_READY, UPDATER_EV_DOWNLOAD), UPDATER_READY)
+        updater_expect('up to date stays', next(UPDATER_UP_TO_DATE, UPDATER_EV_DOWNLOAD), UPDATER_UP_TO_DATE)
 
-        updater_expect('button ready', __test_updater_button(UPDATER_READY), BUTTON_RESTART)
-        updater_expect('button available', __test_updater_button(UPDATER_AVAILABLE), BUTTON_DOWNLOAD_THEN_RESTART)
-        updater_expect('button failed', __test_updater_button(UPDATER_FAILED), BUTTON_DOWNLOAD_THEN_RESTART)
-        updater_expect('button downloading', __test_updater_button(UPDATER_DOWNLOADING), BUTTON_RESTART_WHEN_READY)
-        updater_expect('button up to date', __test_updater_button(UPDATER_UP_TO_DATE), BUTTON_NONE)
-        updater_expect('button off', __test_updater_button(UPDATER_OFF), BUTTON_NONE)
+        updater_expect('button ready', __test_updater_button(UPDATER_READY), UPDATER_BUTTON_RESTART)
+        updater_expect('button available', __test_updater_button(UPDATER_AVAILABLE), UPDATER_BUTTON_DOWNLOAD_THEN_RESTART)
+        updater_expect('button failed', __test_updater_button(UPDATER_FAILED), UPDATER_BUTTON_DOWNLOAD_THEN_RESTART)
+        updater_expect('button downloading', __test_updater_button(UPDATER_DOWNLOADING), UPDATER_BUTTON_RESTART_WHEN_READY)
+        updater_expect('button up to date', __test_updater_button(UPDATER_UP_TO_DATE), UPDATER_BUTTON_NONE)
+        updater_expect('button off', __test_updater_button(UPDATER_OFF), UPDATER_BUTTON_NONE)
     })
 
     __test_signal_ready()

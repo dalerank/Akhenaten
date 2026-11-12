@@ -55,6 +55,12 @@ ANK_SCRIPT_EVENT(event_updater_state_changed, state)
 
 static constexpr pcstr updater_repo = "dalerank/Akhenaten";
 
+// The UPDATER_* names reach the scripts from here (ui_main_menu.js, tests).
+const e_updater_state_tokens_t ANK_CONFIG_ENUM(e_updater_state_tokens);
+const e_updater_event_tokens_t ANK_CONFIG_ENUM(e_updater_event_tokens);
+const e_updater_button_tokens_t ANK_CONFIG_ENUM(e_updater_button_tokens);
+const e_updater_platform_tokens_t ANK_CONFIG_ENUM(e_updater_platform_tokens);
+
 e_updater_state updater::next_state(e_updater_state state, e_updater_event event) {
     switch (state) {
     case UPDATER_OFF:

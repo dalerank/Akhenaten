@@ -10,6 +10,10 @@ game = extend(__game, {
     mission_briefing_scenario_id : 0
     mission_briefing_is_review : false
 
+    main_menu_update_dismissed : false
+    // The recent-commits answer re-inits the main menu, so asking again from its init would loop.
+    main_menu_commits_requested : false
+
     simtime: __game_simtime
 
     @absolute_day { get: __game_absolute_day }

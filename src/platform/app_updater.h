@@ -1,6 +1,7 @@
 #pragma once
 
 #include "core/bstring.h"
+#include "core/tokenum.h"
 
 #include <cstdint>
 #include <filesystem>
@@ -22,7 +23,9 @@ enum e_updater_state {
     UPDATER_DOWNLOADING,
     UPDATER_READY,
     UPDATER_FAILED,
+    UPDATER_STATE_COUNT
 };
+using e_updater_state_tokens_t = token_holder<e_updater_state, UPDATER_OFF, UPDATER_STATE_COUNT>;
 
 enum e_updater_event {
     UPDATER_EV_START,
@@ -32,14 +35,18 @@ enum e_updater_event {
     UPDATER_EV_DOWNLOAD,
     UPDATER_EV_DOWNLOAD_OK,
     UPDATER_EV_DOWNLOAD_FAILED,
+    UPDATER_EV_COUNT
 };
+using e_updater_event_tokens_t = token_holder<e_updater_event, UPDATER_EV_START, UPDATER_EV_COUNT>;
 
 enum e_updater_button {
     UPDATER_BUTTON_NONE,
     UPDATER_BUTTON_RESTART,
     UPDATER_BUTTON_DOWNLOAD_THEN_RESTART,
     UPDATER_BUTTON_RESTART_WHEN_READY,
+    UPDATER_BUTTON_COUNT
 };
+using e_updater_button_tokens_t = token_holder<e_updater_button, UPDATER_BUTTON_NONE, UPDATER_BUTTON_COUNT>;
 
 enum e_updater_platform {
     UPDATER_PLATFORM_NONE,
@@ -47,7 +54,9 @@ enum e_updater_platform {
     UPDATER_PLATFORM_LINUX,
     UPDATER_PLATFORM_MACOS_ARM,
     UPDATER_PLATFORM_MACOS_X64,
+    UPDATER_PLATFORM_COUNT
 };
+using e_updater_platform_tokens_t = token_holder<e_updater_platform, UPDATER_PLATFORM_NONE, UPDATER_PLATFORM_COUNT>;
 
 struct updater_asset {
     pcstr workflow = nullptr;
