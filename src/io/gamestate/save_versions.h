@@ -45,6 +45,6 @@
 //  196 akhenaten: compact pyramid/mastaba runtime (resources on the main part only, no ramp draw cache)
 //  197 akhenaten: (unused)
 //  198 akhenaten: "mods" chunk — ids + versions of the mods enabled when the game was saved
-//  199 reserved (city-chunk realignment)
+//  199 akhenaten: city_data chunk in the OG city_player layout
 //  200 akhenaten: cloud positions in their own "clouds" chunk; building_list_small bytes 0..63 written as zero
 constexpr uint32_t latest_save_version = 200;

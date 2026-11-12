@@ -4,6 +4,7 @@
 #include "building/building_delivery_path.h"
 #include "building/monument_pyramid.h"
 #include "building/monuments.h"
+#include "city/city.h"
 #include "city/object_info.h"
 #include "content/mods.h"
 #include "core/app.h"
@@ -769,3 +770,41 @@ static pcstr __test_state_diff(pcstr tag) {
     return result.c_str();
 }
 ANK_FUNCTION_1(__test_state_diff);
+
+// Puts distinct values into fields whose OG offsets test 343 checks in a freshly written city_data chunk.
+void __test_city_data_set_probe() {
+    g_city.finance.treasury.value = 0x1234567;
+    g_city.buildings.distribution_center_building_id = 0x2345;
+    g_city.buildings.trade_center_building_id = 0x3456;
+    g_city.figures.soldiers = 0x4567;
+    g_city.sound.march_enemy = 0x55;
+    g_city.sentiment.include_huts = true;
+    g_city.population.highest_ever = 0x6789;
+    g_city.ratings.prosperity_max = 0x42;
+}
+ANK_FUNCTION(__test_city_data_set_probe);
+
+// Little-endian value of `size` bytes at `offset` of the city_player record (the second half of city_data)
+// in a city_data chunk written now; -1 when the chunk is missing.
+int __test_city_data_record_value(int offset, int size) {
+    chunk_snapshots chunks;
+    if (!g_chunk_io.write_to_memory(FILE_FORMAT_SAVE_FILE_EXT, save_data_version(), file_schema, chunks)) {
+        return -1;
+    }
+    for (const chunk_snapshot& chunk : chunks) {
+        if (chunk.name != "city_data") {
+            continue;
+        }
+        const size_t at = 18904 + (size_t)offset;
+        if (offset < 0 || size < 1 || size > 4 || at + size > chunk.raw.size()) {
+            return -1;
+        }
+        uint32_t v = 0;
+        for (int i = size - 1; i >= 0; --i) {
+            v = (v << 8) | chunk.raw[at + i];
+        }
+        return (int)v;
+    }
+    return -1;
+}
+ANK_FUNCTION_2(__test_city_data_record_value);
