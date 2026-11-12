@@ -629,10 +629,7 @@ void mods_remount() {
 
                 auto& modpack = g_image_data->pak_list[mod.useridx];
                 if (modpack.handle) {
-                    image_invalidate_pak_cache(mod.useridx);
-                    delete modpack.handle;
-                    modpack.handle = nullptr;
-                    modpack.load_status = IMAGEPAK_LOAD_IDLE;
+                    image_unload_pak(mod.useridx);
 
                     modpack.entries_num = 0;
                     modpack.index = 0;
