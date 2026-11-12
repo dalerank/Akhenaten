@@ -1059,6 +1059,9 @@ if(WIN32 AND NOT WIN_EMSCRIPTEN)
         @ONLY
     )
     target_sources(${GAME} PRIVATE "${CMAKE_SOURCE_DIR}/res/akhenaten.rc")
+    if(MSVC)
+        target_sources(${GAME} PRIVATE "${CMAKE_SOURCE_DIR}/res/akhenaten.manifest")
+    endif()
     set_source_files_properties("${CMAKE_SOURCE_DIR}/res/akhenaten.rc" PROPERTIES
         INCLUDE_DIRECTORIES "${CMAKE_BINARY_DIR}"
     )

@@ -145,3 +145,73 @@ static bool __test_pak_ensure_from_worker(pcstr name) {
     return !worker_result && pak.handle == nullptr && pak.load_status == IMAGEPAK_LOAD_IDLE && queued;
 }
 ANK_FUNCTION_1(__test_pak_ensure_from_worker);
+
+// An independent view of a UTF-8 path: on Windows through the wide API, so a narrow call that went
+// through the ANSI code page (instead of UTF-8) shows up as a missing file.
+static std::filesystem::path test_native_path(pcstr utf8) {
+#if defined(_WIN32)
+    const int n = MultiByteToWideChar(CP_UTF8, 0, utf8, -1, nullptr, 0);
+    std::wstring wide(n > 0 ? n - 1 : 0, L' ');
+    if (n > 1) {
+        MultiByteToWideChar(CP_UTF8, 0, utf8, -1, wide.data(), n);
+    }
+    return std::filesystem::path(wide);
+#else
+    return std::filesystem::path(utf8);
+#endif
+}
+
+// Cyrillic "test" / "file.txt" in UTF-8.
+static bool __test_vfs_utf8_roundtrip() {
+    const vfs::path dir(platform.user_directory(), "/utf8_probe_\xD1\x82\xD0\xB5\xD1\x81\xD1\x82");
+    const vfs::path file(dir, "/\xD1\x84\xD0\xB0\xD0\xB9\xD0\xBB.txt");
+    std::error_code ec;
+    std::filesystem::create_directories(test_native_path(dir.c_str()), ec);
+
+    FILE* f = vfs::file_open_os(file, "wb");
+    if (!f) {
+        return false;
+    }
+    std::fputs("ok", f);
+    std::fclose(f);
+
+    const bool native_exists = std::filesystem::exists(test_native_path(file.c_str()), ec);
+    const bool vfs_exists = vfs::file_exists(file);
+    std::filesystem::remove_all(test_native_path(dir.c_str()), ec);
+    return native_exists && vfs_exists;
+}
+ANK_FUNCTION(__test_vfs_utf8_roundtrip);
+
+// A file on disk as "Data/SprMain.SG3" must be found when the game asks for "data/sprmain.sg3".
+static bool __test_vfs_case_probe() {
+    namespace fs = std::filesystem;
+    std::error_code ec;
+    const xstring saved_base = vfs::platform_file_manager_get_base_path();
+    const vfs::path root(platform.user_directory(), "/case_probe");
+    fs::remove_all(root.c_str(), ec);
+    fs::create_directories(fs::path(root.c_str()) / "Data" / "Sub", ec);
+    {
+        FILE* f = std::fopen((fs::path(root.c_str()) / "Data" / "Sub" / "SprMain.SG3").string().c_str(), "wb");
+        if (f) {
+            std::fclose(f);
+        }
+    }
+
+    vfs::platform_file_manager_set_base_path(root.c_str());
+    const vfs::path found = vfs::content_path("data/sub/sprmain.sg3");
+    const vfs::path missing = vfs::content_path("data/sub/nothing.sg3");
+    const bool ok = fs::exists(found.c_str(), ec) && !fs::exists(missing.c_str(), ec);
+
+    vfs::platform_file_manager_set_base_path(saved_base.c_str());
+    vfs::content_cache_paths();
+    fs::remove_all(root.c_str(), ec);
+    return ok;
+}
+ANK_FUNCTION(__test_vfs_case_probe);
+
+static int __test_vfs_path_len(int n) {
+    const std::string s(n, 'a');
+    const vfs::path p(s.c_str());
+    return (int)p.len();
+}
+ANK_FUNCTION_1(__test_vfs_path_len);

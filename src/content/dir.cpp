@@ -10,7 +10,10 @@
 #include <string.h>
 #include <filesystem>
 #include <SDL.h>
+#include <algorithm>
 #include <map>
+#include <set>
+#include <string>
 
 namespace fs = std::filesystem;
 
@@ -19,7 +22,6 @@ namespace fs = std::filesystem;
 struct dir_data_t {
     dir_listing listing;
     int max_files;
-    char* cased_filename;
 };
 
 dir_data_t g_dir_data;
@@ -32,6 +34,7 @@ struct path_uri {
 };
 
 std::map<size_t, path_uri> path_cache;
+std::set<size_t> path_missing;
 
 vfs::path content_internal_path(pcstr path) {
     pcstr dir = platform_file_manager_get_base_path();
@@ -159,22 +162,57 @@ std::vector<path> dir_find_all_subdirectories(vfs::path dir, bool) {
     return folders;
 }
 
-static int compare_case(pcstr filename) {
-    auto &data = g_dir_data;
+void content_clear_path_cache() {
+    path_cache.clear();
+    path_missing.clear();
+}
 
-    if (string_compare_case_insensitive(filename, data.cased_filename) == 0) {
-        strcpy(data.cased_filename, filename);
-        return LIST_MATCH;
+#if !defined(GAME_PLATFORM_WIN) && !defined(GAME_PLATFORM_ANDROID)
+// Case-sensitive file systems: Pharaoh installs mix "Data"/"data", "SprMain.sg3"/"SPRMAIN.SG3", and the
+// game asks for one fixed spelling. Correct every component under the base dir, not just the files of
+// the folders content_cache_paths() pre-lists.
+static bool correct_case_on_disk(pcstr relative, vfs::path& out) {
+    std::error_code ec;
+    fs::path cur(platform_file_manager_get_base_path());
+    if (cur.empty()) {
+        cur = ".";
     }
-    return LIST_NO_MATCH;
-}
 
-static int correct_case(pcstr dir, char *filename, int type) {
-    auto &data = g_dir_data;
+    std::string rel(relative);
+    std::replace(rel.begin(), rel.end(), '\\', '/');
+    size_t pos = 0;
+    while (pos <= rel.size()) {
+        const size_t slash = rel.find('/', pos);
+        const std::string part = rel.substr(pos, slash == std::string::npos ? std::string::npos : slash - pos);
+        pos = (slash == std::string::npos) ? rel.size() + 1 : slash + 1;
+        if (part.empty() || part == ".") {
+            continue;
+        }
 
-    data.cased_filename = filename;
-    return platform_file_manager_list_directory_contents(dir, type, 0, compare_case) == LIST_MATCH;
+        fs::path exact = cur / part;
+        if (fs::exists(exact, ec)) {
+            cur = exact;
+            continue;
+        }
+
+        bool found = false;
+        for (const auto& entry : fs::directory_iterator(cur, ec)) {
+            const std::string name = entry.path().filename().string();
+            if (string_compare_case_insensitive(name.c_str(), part.c_str()) == 0) {
+                cur = entry.path();
+                found = true;
+                break;
+            }
+        }
+        if (!found) {
+            return false;
+        }
+    }
+
+    out = cur.string().c_str();
+    return true;
 }
+#endif
 
 vfs::path content_path(pcstr path) {
     vfs::path uri_path = content_internal_path(path);
@@ -187,6 +225,24 @@ vfs::path content_path(pcstr path) {
             return it->second.original;
         }
     }
+
+#if !defined(GAME_PLATFORM_WIN) && !defined(GAME_PLATFORM_ANDROID)
+    std::error_code ec;
+    if (fs::exists(orig_path.c_str(), ec) || path_missing.count(lhash)) {
+        return orig_path;
+    }
+
+    vfs::path corrected;
+    if (correct_case_on_disk(path, corrected)) {
+        path_uri uri;
+        uri.original = corrected;
+        uri.lowered = lower;
+        path_cache.insert({lhash, uri});
+        return corrected;
+    }
+    // A file created later gets this spelling, which the exists() check above finds first.
+    path_missing.insert(lhash);
+#endif
 
     return orig_path;
 }
