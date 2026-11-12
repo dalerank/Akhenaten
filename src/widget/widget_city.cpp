@@ -146,8 +146,13 @@ void screen_city_t::update_zoom_level(painter &ctx) {
 void screen_city_t::scroll_map(const mouse* m) {
     vec2i delta = g_scroll.get_delta(m, scroll_t::CITY);
     if (delta.x || delta.y) {
+        const screen_tile before = g_camera.tile_internal;
         g_camera.scroll(delta.x, delta.y);
-        sound_city_decay_views();
+        // OG halves the views once per scrolled tile (city_view.c); pixel scrolling would halve them every
+        // frame and keep the city silent while the camera moves.
+        if (g_camera.tile_internal != before) {
+            sound_city_decay_views();
+        }
     }
 }
 

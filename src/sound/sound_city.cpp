@@ -18,8 +18,6 @@
 // OG savegame city_sounds chunk holds 70 channels (8960 bytes); later channels are runtime-only.
 #define SAVED_CHANNELS              70
 #define MAX_CHANNELS                ((int)std::tuple_size<decltype(city_sounds_t::channels)>::value)
-#define HEALTH_CITY_VIEWS_THRESHOLD 500
-#define HEALTH_CITY_DELAY_MILLIS    90000
 
 city_sounds_t g_city_sounds;
 const e_sound_channel_city_tokens_t ANK_CONFIG_ENUM(e_sound_channel_city_tokens);
@@ -29,11 +27,10 @@ const city_sounds_t &sound_city_channels() {
     return g_city_sounds;
 }
 
-static bool is_health_city_channel(int channel) {
-    return channel == SOUND_CHANNEL_CITY_APOTHECARY
-        || channel == SOUND_CHANNEL_CITY_PHYSICIAN
-        || channel == SOUND_CHANNEL_CITY_MORTUARY
-        || channel == SOUND_CHANNEL_CITY_DENTIST;
+// OG city_view.c is_silent_venue: quiet while enemies are in the city or when unstaffed.
+static bool is_silent_venue(e_building_type type) {
+    return type == BUILDING_BANDSTAND || type == BUILDING_BOOTH || type == BUILDING_SENET_HOUSE
+           || type == BUILDING_PAVILLION || type == BUILDING_ZOO;
 }
 
 void sound_city_init() {
@@ -44,8 +41,8 @@ void sound_city_init() {
     int i = SOUND_CHANNEL_CITY_START;
     for (auto &channel: channels) {
         channel.in_use = 1;
-        channel.views_threshold = is_health_city_channel(i) ? HEALTH_CITY_VIEWS_THRESHOLD : 200;
-        channel.delay_millis = is_health_city_channel(i) ? HEALTH_CITY_DELAY_MILLIS : 30000;
+        channel.views_threshold = 200;
+        channel.delay_millis = 30000;
         channel.last_played_time = 35000;
         channel.channel = i++;
     }
@@ -149,7 +146,7 @@ void sound_city_mark_building_view(building* b, int direction) {
     OZZY_PROFILER_FUNCTION()
 
     auto &channels = g_city_sounds.channels;
-    if (b->state == BUILDING_STATE_UNUSED) {
+    if (b->state != BUILDING_STATE_VALID) {
         return;
     }
 
@@ -161,15 +158,7 @@ void sound_city_mark_building_view(building* b, int direction) {
     }
 
     int channel = system_channel_index - SOUND_CHANNEL_CITY_START;
-    if (type == BUILDING_BOOTH || type == BUILDING_BANDSTAND || type == BUILDING_CONSERVATORY || type == BUILDING_SENET_HOUSE) {
-        // entertainment is shut off when caesar invades
-        if (b->num_workers <= 0 || g_city.figures.kingdome_soldiers > 0) {
-            return;
-        }
-    }
-
-    if (is_health_city_channel(system_channel_index)
-        && (b->num_workers <= 0 || g_city.health.value >= 40)) {
+    if (is_silent_venue(type) && (g_city.figures.enemies > 0 || b->num_workers < 1)) {
         return;
     }
 
@@ -225,18 +214,12 @@ static void sound_city_play_channel(int channel, int direction) {
 void sound_city_play() {
     auto &channels = g_city_sounds.channels;
     time_millis now = time_get_millis();
-    for (int i = 1; i < MAX_CHANNELS; i++) {
+    for (int i = 0; i < MAX_CHANNELS; i++) {
         channels[i].should_play = 0;
         if (channels[i].available) {
             channels[i].available = 0;
-            const int views_threshold = is_health_city_channel(channels[i].channel)
-                ? HEALTH_CITY_VIEWS_THRESHOLD
-                : channels[i].views_threshold;
-            const time_millis delay_millis = is_health_city_channel(channels[i].channel)
-                ? HEALTH_CITY_DELAY_MILLIS
-                : channels[i].delay_millis;
-            if (channels[i].total_views >= views_threshold) {
-                if (now - channels[i].last_played_time >= delay_millis)
+            if (channels[i].total_views >= channels[i].views_threshold) {
+                if (now - channels[i].last_played_time >= channels[i].delay_millis)
                     channels[i].should_play = 1;
             }
         } else {
@@ -253,8 +236,8 @@ void sound_city_play() {
     }
 
     time_millis max_delay = 0;
-    int max_sound_id = 0;
-    for (int i = 1; i < MAX_CHANNELS; i++) {
+    int max_sound_id = -1;
+    for (int i = 0; i < MAX_CHANNELS; i++) {
         if (channels[i].should_play) {
             if (now - channels[i].last_played_time > max_delay) {
                 max_delay = now - channels[i].last_played_time;
@@ -263,7 +246,7 @@ void sound_city_play() {
         }
     }
 
-    if (!max_sound_id) {
+    if (max_sound_id < 0) {
         return;
     }
 
