@@ -8,6 +8,7 @@
 
 #include <cassert>
 #include <cinttypes>
+#include <filesystem>
 #include <string.h>
 
 #include "SDL.h"
@@ -177,6 +178,15 @@ bool ChunkSerializer::serialize(pcstr filename, int offset, e_file_format format
     // Android SAF paths are not real filesystem paths — POSIX rename() cannot publish .tmp → final.
     const bool atomic_write = !platform.is_android() && (file_offset == 0);
     const vfs::path write_path = atomic_write ? vfs::path(fs_path.c_str(), ".tmp") : fs_path;
+
+    if (!platform.is_android()) {
+        // A fresh data or user dir has no Maps/ or Save/<player>/ yet.
+        std::error_code ec;
+        const std::filesystem::path parent = std::filesystem::path(write_path.c_str()).parent_path();
+        if (!parent.empty()) {
+            std::filesystem::create_directories(parent, ec);
+        }
+    }
 
     FILE* fp = vfs::file_open_os(write_path, "wb");
     if (!fp) {

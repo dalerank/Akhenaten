@@ -399,8 +399,13 @@ bool game_t::check_valid() {
 }
 
 bool game_init(game_opts opts) {
-    vfs::create_folders(vfs::SAVE_FOLDER);
-    vfs::create_folders(vfs::MAPS_FOLDER);
+    // In the data dir, where saves and maps are read from, not in the working directory.
+    auto data_folder = [](pcstr folder) {
+        pcstr base = vfs::platform_file_manager_get_base_path();
+        return (base && *base) ? vfs::path(base, "/", folder) : vfs::path(folder);
+    };
+    vfs::create_folders(data_folder(vfs::SAVE_FOLDER));
+    vfs::create_folders(data_folder(vfs::MAPS_FOLDER));
 
     if (!image_load_paks()) {
         logs::error("unable to load main graphics");
