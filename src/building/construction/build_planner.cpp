@@ -1594,7 +1594,8 @@ bool build_planner::place() {
     }
 
     total_cost = placement_cost;
-    if (total_cost == 0) {
+    // Free buildings (OG cost 0: sphinx, royal tombs) still placed something on the default path.
+    if (total_cost == 0 && params.get_cost() != 0) {
         return false;
     }
 
