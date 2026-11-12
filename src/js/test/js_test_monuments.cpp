@@ -4,6 +4,7 @@
 #include "building/building_delivery_path.h"
 #include "building/building_storage_yard.h"
 #include "building/construction_blessing.h"
+#include "building/monument_caesareum.h"
 #include "building/monument_mastaba.h"
 #include "building/monument_mastaba_engine.h"
 #include "building/monument_mausoleum.h"
@@ -836,6 +837,96 @@ static int __test_sphinx_work(int bid, int fid) {
     return s->work_tick(*f) ? 1 : 0;
 }
 ANK_FUNCTION_2(__test_sphinx_work);
+
+static building_caesareum *test_caesareum(int bid) {
+    building *b = building_get(bid);
+    auto *c = b ? b->dcast_caesareum() : nullptr;
+    return c ? c->main_caesareum() : nullptr;
+}
+
+static int __test_caesareum_stage(int bid) {
+    auto *c = test_caesareum(bid);
+    return c ? c->stage() : -1;
+}
+ANK_FUNCTION_1(__test_caesareum_stage);
+
+static void __test_caesareum_set_stage(int bid, int stage) {
+    if (auto *c = test_caesareum(bid)) {
+        c->set_stage(stage);
+    }
+}
+ANK_FUNCTION_2(__test_caesareum_set_stage);
+
+static int __test_caesareum_spot_work(int bid, int spot) {
+    auto *c = test_caesareum(bid);
+    return c ? c->spot_work_left(spot) : -1;
+}
+ANK_FUNCTION_2(__test_caesareum_spot_work);
+
+static int __test_caesareum_has_spot(int bid, int figure_type) {
+    auto *c = test_caesareum(bid);
+    return (c && c->has_free_spot((e_figure_type)figure_type)) ? 1 : 0;
+}
+ANK_FUNCTION_2(__test_caesareum_has_spot);
+
+// One OG work tick by figure fid; returns 1 when the figure would leave the site.
+static int __test_caesareum_work(int bid, int fid) {
+    auto *c = test_caesareum(bid);
+    figure *f = fid > 0 ? figure_get(fid) : nullptr;
+    if (!c || !f) {
+        return -1;
+    }
+    return c->work_tick(*f) ? 1 : 0;
+}
+ANK_FUNCTION_2(__test_caesareum_work);
+
+static int __test_caesareum_progress(int bid) {
+    auto *c = test_caesareum(bid);
+    return c ? c->get_progress(nullptr) : -1;
+}
+ANK_FUNCTION_1(__test_caesareum_progress);
+
+static int __test_caesareum_material(int bid) {
+    auto *c = test_caesareum(bid);
+    if (!c) {
+        return -1;
+    }
+    caesareum_progress p;
+    c->get_progress(&p);
+    return p.material;
+}
+ANK_FUNCTION_1(__test_caesareum_material);
+
+static int __test_caesareum_block_resource(int bid) {
+    auto *c = test_caesareum(bid);
+    return c ? (int)c->block_resource() : -1;
+}
+ANK_FUNCTION_1(__test_caesareum_block_resource);
+
+static int __test_caesareum_sled_arrived(int bid) {
+    auto *c = test_caesareum(bid);
+    return (c && c->sled_arrived()) ? 1 : 0;
+}
+ANK_FUNCTION_1(__test_caesareum_sled_arrived);
+
+static int __test_caesareum_claim(int bid, int fid) {
+    auto *c = test_caesareum(bid);
+    figure *f = fid > 0 ? figure_get(fid) : nullptr;
+    return (c && f && c->claim_worker(*f)) ? 1 : 0;
+}
+ANK_FUNCTION_2(__test_caesareum_claim);
+
+static int __test_caesareum_worker(int bid) {
+    auto *c = test_caesareum(bid);
+    return c ? (int)c->worker_figure_id() : -1;
+}
+ANK_FUNCTION_1(__test_caesareum_worker);
+
+static int __test_caesareum_access(int bid) {
+    auto *c = test_caesareum(bid);
+    return c ? c->access_point().grid_offset() : -1;
+}
+ANK_FUNCTION_1(__test_caesareum_access);
 
 static building_sun_temple *test_sun_temple(int bid) {
     building *b = building_get(bid);

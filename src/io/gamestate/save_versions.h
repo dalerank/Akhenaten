@@ -47,4 +47,5 @@
 //  198 akhenaten: "mods" chunk — ids + versions of the mods enabled when the game was saved
 //  199 akhenaten: city_data chunk in the OG city_player layout
 //  200 akhenaten: cloud positions in their own "clouds" chunk; building_list_small bytes 0..63 written as zero
-constexpr uint32_t latest_save_version = 200;
+//  201 akhenaten: caesareum work spots (work + figure) on each of its 9 parts, sled count on the main part
+constexpr uint32_t latest_save_version = 201;

@@ -244,6 +244,14 @@ void city_maintenance_t::check_kingdome_access() {
                 apply_building_road_access(b,
                     resolve_building_road_access(b.tile, b.type, b.size, 0, variant, road_access_resolve_mode::Commit));
             }
+        } else if (b.type == BUILDING_CAESAREUM) {
+            // OG caesareum_get_work_tile: every part's road access is the main part's work tile.
+            building_road_access_result r;
+            if (auto *mon = b.dcast_monument()) {
+                r.tile = mon->access_point();
+                r.valid = true;
+            }
+            apply_building_road_access(b, r);
         } else if (b.type == BUILDING_ABU_SIMBEL) {
             // Rectangular 9×21 (or rotated): square size would miss entrance-side roads.
             vec2i ft{9, 21};

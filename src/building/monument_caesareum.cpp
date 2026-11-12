@@ -1,21 +1,19 @@
 #include "monument_caesareum.h"
 
 #include "building/monuments.h"
+#include "city/city.h"
 #include "city/city_buildings.h"
-#include "city/city_figures.h"
-#include "city/city_warnings.h"
+#include "city/city_message.h"
 #include "construction/build_planner.h"
 #include "figure/figure.h"
+#include "figuretype/figure_carpenter.h"
+#include "figuretype/figure_stonemason.h"
+#include "game/undo.h"
 #include "graphics/color.h"
 #include "graphics/view/lookup.h"
 #include "graphics/view/view.h"
-#include "grid/building.h"
 #include "grid/building_tiles.h"
-#include "grid/figure.h"
 #include "grid/grid.h"
-#include "grid/image.h"
-#include "grid/property.h"
-#include "grid/road_access.h"
 #include "grid/terrain.h"
 #include "io/io_buffer.h"
 #include "js/js_game.h"
@@ -23,453 +21,611 @@
 #include <algorithm>
 
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_caesareum);
-
-static monument g_monument_caesareum{BUILDING_CAESAREUM};
+BUILDING_RUNTIME_DATA_IMPL(building_caesareum)
 
 namespace {
+    enum : uint32_t {
+        SPOT_WORK_UNSET = 0xFFFF,
+        // OG BUILDING_MAP_EDGE_MARGIN for site buildings.
+        MAP_EDGE_MARGIN = 3,
+        // OG TERRAIN_BLOCKS_MONUMENT: everything but shrub, groundwater, meadow and the well/irrigation ranges.
+        TERRAIN_BLOCKS_MONUMENT = 0xFEFFD76F,
+    };
 
-bool tile_not_clear(tile2i t) {
-    return map_terrain_is(t, TERRAIN_NOT_CLEAR)
-        || (map_terrain_count_directly_adjacent_with_type(t, TERRAIN_FLOODPLAIN) > 0)
-        || (map_terrain_count_diagonally_adjacent_with_type(t, TERRAIN_FLOODPLAIN) > 0)
-        || map_has_figure_at(t);
-}
-
-bool area_blocked(tile2i origin, int w, int h) {
-    if (w < 1 || h < 1) {
-        return true;
-    }
-    for (int dy = 0; dy < h; dy++) {
-        for (int dx = 0; dx < w; dx++) {
-            tile2i t = origin.shifted(dx, dy);
-            if (!map_grid_is_inside(t, 1) || tile_not_clear(t)) {
-                return true;
+    struct monument_caesareum_cfg : public monument {
+        monument_caesareum_cfg() : monument{BUILDING_CAESAREUM} {
+            for (uint8_t i = 0; i < building_caesareum::STAGE_COMPLETE; ++i) {
+                phases.push_back({i, monument_phase_resource{ARCHITECTS, 1}});
             }
         }
-    }
-    return false;
-}
+    } g_monument_caesareum;
 
-void draw_area_mask(painter &ctx, tile2i origin, int w, int h, bool force_red) {
-    for (int dy = 0; dy < h; dy++) {
-        for (int dx = 0; dx < w; dx++) {
-            tile2i t = origin.shifted(dx, dy);
-            vec2i pixel = g_camera.lookup_tile_to_pixel(t);
-            const bool bad = force_red || !map_grid_is_inside(t, 1) || tile_not_clear(t);
-            build_planner::draw_flat_tile(ctx, pixel, bad ? COLOR_MASK_RED_30 : COLOR_MASK_GREEN_30);
+    const building_caesareum::base_params &caesareum_params() {
+        return (const building_caesareum::base_params &)building_caesareum::current_params();
+    }
+
+    int camera_view() {
+        return (g_camera.orientation / 2) & 3;
+    }
+
+    tile2i part_offset(int part) {
+        return tile2i(building_caesareum::PART_SIZE * (part / 3), building_caesareum::PART_SIZE * (part % 3));
+    }
+
+    tile2i origin_from_center(tile2i center) {
+        return center.shifted(-building_caesareum::SITE_HALF, -building_caesareum::SITE_HALF);
+    }
+
+    bool site_tile_blocked(tile2i tile) {
+        const auto *map = scenario_map_data();
+        if (tile.x() < MAP_EDGE_MARGIN || tile.y() < MAP_EDGE_MARGIN || tile.x() >= map->width - MAP_EDGE_MARGIN
+            || tile.y() >= map->height - MAP_EDGE_MARGIN) {
+            return true;
         }
+        return map_terrain_is(tile, TERRAIN_BLOCKS_MONUMENT);
     }
-}
 
-void caesareum_add_rect_tiles(int building_id, tile2i tile, int w, int h, int image_id) {
-    if (w < 1 || h < 1) {
-        return;
-    }
-    for (int dy = 0; dy < h; dy++) {
-        for (int dx = 0; dx < w; dx++) {
-            tile2i t = tile.shifted(dx, dy);
-            if (!map_grid_is_inside(t, 1)) {
-                continue;
+    bool collect_site(tile2i origin, std::array<blocked_tile_vec, building_caesareum::PARTS> &parts) {
+        bool blocked = false;
+        for (int p = 0; p < building_caesareum::PARTS; ++p) {
+            const tile2i off = part_offset(p);
+            tile2i po = origin.shifted(off.x(), off.y());
+            for (int dy = 0; dy < building_caesareum::PART_SIZE; ++dy) {
+                for (int dx = 0; dx < building_caesareum::PART_SIZE; ++dx) {
+                    const tile2i t = po.shifted(dx, dy);
+                    const bool b = site_tile_blocked(t);
+                    parts[p].push_back({t, b});
+                    blocked |= b;
+                }
             }
-            const int grid_offset = t.grid_offset();
-            map_terrain_remove(grid_offset, TERRAIN_CLEARABLE);
-            map_terrain_add(grid_offset, TERRAIN_BUILDING);
-            map_building_set(grid_offset, building_id);
-            map_property_clear_constructing(grid_offset);
-            map_property_set_multi_tile_size(grid_offset, 1);
-            map_image_set(grid_offset, (dx == 0 && dy == 0) ? image_id : 0);
-            map_property_set_multi_tile_xy(grid_offset, dx, dy, dx == 0 && dy == 0);
         }
+        return blocked;
     }
-    map_property_mark_draw_tile(tile.grid_offset());
-}
 
-uint16_t load_at(const svector<uint16_t, 8> &loads, int index) {
-    if (index >= 0 && index < (int)loads.size()) {
-        return loads[index];
+    bool site_contains(tile2i origin, tile2i tile) {
+        const int dx = tile.x() - origin.x();
+        const int dy = tile.y() - origin.y();
+        return dx >= 0 && dy >= 0 && dx < building_caesareum::SITE_SIZE && dy < building_caesareum::SITE_SIZE;
     }
-    return 0;
-}
 
-// Dead/poofed figures can leave stale ids in workers[] if on_destroy was skipped.
-bool worker_slot_occupied(uint16_t wid) {
-    if (wid == 0) {
-        return false;
-    }
-    figure *f = figure_get(wid);
-    return f && f->is_alive();
-}
-
-void scrub_dead_workers(std::array<uint16_t, 5> &workers) {
-    for (auto &wid : workers) {
-        if (wid && !worker_slot_occupied(wid)) {
-            wid = 0;
+    // OG monument_spot_animate detaches a spot once its figure changes action; only working figures hold one.
+    bool figure_still_working(uint16_t fid) {
+        if (!fid) {
+            return false;
         }
+        figure *f = figure_get(fid);
+        if (!f || !f->is_alive()) {
+            return false;
+        }
+        building *dest = f->destination();
+        if (!dest || dest->type != BUILDING_CAESAREUM) {
+            return false;
+        }
+        return (f->type == FIGURE_STONEMASON && f->action_state == ACTION_9_MASON_WORK_OBELISK)
+               || (f->type == FIGURE_CARPENTER && f->action_state == ACTION_2_CARPENTER_WORK);
     }
-}
 
+    bool any_caesareum_placed() {
+        return g_city.buildings.count_total(BUILDING_CAESAREUM) > 0;
+    }
 } // namespace
 
-void building_caesareum::static_params::rebuild_construction() {
-    monument &m = g_monument_caesareum;
-    m.btype = BUILDING_CAESAREUM;
-    m.phases.clear();
-
-    // 0–1: Work Camp clearing / leveling (help + foreman 122).
-    m.phases.push_back({0, monument_phase_resource{ARCHITECTS, 1}});
-    m.phases.push_back({1, monument_phase_resource{ARCHITECTS, 1}});
-
-    // Heaven: marble 152, granite 8; timber provisional until CZ0.2 (defaults in base_params / JS).
-    const uint16_t marble_a = load_at(marble_loads, 0);
-    const uint16_t marble_b = load_at(marble_loads, 1);
-    const uint16_t marble_c = load_at(marble_loads, 2);
-    const uint16_t timber_a = load_at(timber_loads, 0);
-    const uint16_t timber_b = load_at(timber_loads, 1);
-    const uint16_t granite = load_at(granite_loads, 0);
-
-    // 2: foundation / temple (123–124) — marble + scaffold timber
-    m.phases.push_back({2, monument_phase_resource{ARCHITECTS, 1}, {RESOURCE_MARBLE, marble_a}, {RESOURCE_TIMBER, timber_a}});
-    // 3: patio (125)
-    m.phases.push_back({3, monument_phase_resource{ARCHITECTS, 1}, {RESOURCE_MARBLE, marble_b}});
-    // 4: portico / roof / entrance (126–129)
-    m.phases.push_back({4, monument_phase_resource{ARCHITECTS, 1}, {RESOURCE_MARBLE, marble_c}, {RESOURCE_TIMBER, timber_b}});
-    // 5: granite obelisks (130)
-    m.phases.push_back({5, monument_phase_resource{ARCHITECTS, 1}, {RESOURCE_GRANITE, granite}});
-    // 6: finish sentinel
-    m.phases.push_back({6, monument_phase_resource{RESOURCE_NONE, 0}});
-}
-
 void building_caesareum::static_params::archive_load(archive /*arch*/) {
-    rebuild_construction();
 }
 
 const monument &building_caesareum::config() const {
     return g_monument_caesareum;
 }
 
-bool building_caesareum::has_unfinished_caesareum() {
-    return building_monument_has_unfinished({BUILDING_CAESAREUM});
+// OG caesareum_get_image: the part images rotate with the camera view.
+int building_caesareum::view_part(int part, int view) {
+    static const int table[4][PARTS] = {
+        {0, 1, 2, 3, 4, 5, 6, 7, 8},
+        {2, 5, 8, 1, 4, 7, 0, 3, 6},
+        {8, 7, 6, 5, 4, 3, 2, 1, 0},
+        {6, 3, 0, 7, 4, 1, 8, 5, 2},
+    };
+    return table[view & 3][std::clamp(part, 0, PARTS - 1)];
 }
 
-vec2i building_caesareum::footprint_size() const {
-    const auto &bp = current_params();
-    vec2i ft = bp.init_tiles;
-    if (ft.x <= 0 || ft.y <= 0) {
-        ft = {15, 15};
-    }
-    return ft;
+building_caesareum *building_caesareum::main_caesareum() {
+    building_impl *m = main();
+    auto *c = m ? m->dcast_caesareum() : nullptr;
+    return c ? c : this;
 }
 
-int building_caesareum::art_stage() const {
-    const auto &bp = current_params();
-    const int max_stage = bp.art_stages > 0 ? bp.art_stages : 4;
-    const int p = runtime_data().phase;
-    // PACK sa..sd: only FINISHED uses finish pack (obelisks). In-progress portico stays on sc.
-    if (p == MONUMENT_FINISHED) {
-        return max_stage;
-    }
-    if (p <= 1) {
-        return 1; // clear / early
-    }
-    if (p == 2) {
-        return std::min(2, max_stage); // temple
-    }
-    if (p == 3) {
-        return std::min(3, max_stage); // patio
-    }
-    // phases 4–5 (portico + granite work): not finished art yet
-    return std::min(3, max_stage);
+const building_caesareum *building_caesareum::main_caesareum() const {
+    return const_cast<building_caesareum *>(this)->main_caesareum();
 }
 
-xstring building_caesareum::anim_key_for(int stage) const {
-    const auto &bp = current_params();
-    const int max_stage = bp.art_stages > 0 ? bp.art_stages : 4;
-    if (stage < 1) {
-        stage = 1;
+building_caesareum *building_caesareum::part(int index) {
+    building_caesareum *p = main_caesareum();
+    for (int i = 0; p && i < index; ++i) {
+        p = p->has_next() ? p->next()->dcast_caesareum() : nullptr;
     }
-    if (stage > max_stage) {
-        stage = max_stage;
-    }
-    bstring32 key;
-    key.printf("s%c", 'a' + (stage - 1));
-    return xstring(key.c_str());
+    return p;
 }
 
-bool building_caesareum::needs_resources() const {
-    if (is_finished()) {
-        return false;
+const building_caesareum *building_caesareum::part(int index) const {
+    return const_cast<building_caesareum *>(this)->part(index);
+}
+
+int building_caesareum::stage() const {
+    const int p = main_caesareum()->runtime_data().phase;
+    if (p == MONUMENT_FINISHED || p >= STAGE_COMPLETE) {
+        return STAGE_COMPLETE;
     }
-    auto &d = runtime_data();
-    for (e_resource r = RESOURCES_MIN; r < RESOURCES_MAX; ++r) {
-        if (needs_resource(r) <= 0) {
+    return std::max(p, 0);
+}
+
+int building_caesareum::spot_attached(int spot) const {
+    const building_caesareum *p = part(spot / SPOTS_PER_PART);
+    return p ? p->runtime_data().spot_figure[spot % SPOTS_PER_PART] : 0;
+}
+
+int building_caesareum::spot_work_left(int spot) const {
+    const building_caesareum *p = part(spot / SPOTS_PER_PART);
+    return p ? p->runtime_data().spot_work[spot % SPOTS_PER_PART] : 0;
+}
+
+void building_caesareum::set_spot(int spot, uint16_t work, uint16_t fid) {
+    building_caesareum *p = part(spot / SPOTS_PER_PART);
+    if (!p) {
+        return;
+    }
+    p->runtime_data().spot_work[spot % SPOTS_PER_PART] = work;
+    p->runtime_data().spot_figure[spot % SPOTS_PER_PART] = fid;
+}
+
+void building_caesareum::reset_spots() {
+    const auto &spots = caesareum_params().spots;
+    for (int i = 0; i < PARTS * SPOTS_PER_PART; ++i) {
+        const uint16_t work = i < (int)spots.size() ? spots[i].work : 0;
+        set_spot(i, work, 0);
+    }
+}
+
+int building_caesareum::find_free_spot(e_figure_type type) const {
+    const auto &spots = caesareum_params().spots;
+    const int s = stage();
+    for (int i = 0; i < (int)spots.size(); ++i) {
+        const auto &def = spots[i];
+        if (def.stage != s || def.figure != type || spot_work_left(i) <= 0) {
             continue;
         }
-        if (d.resources_pct[r] < 100) {
-            return true;
+        if (!figure_still_working(spot_attached(i))) {
+            return i;
         }
     }
+    return -1;
+}
+
+bool building_caesareum::has_free_spot(e_figure_type type) const {
+    return !main_caesareum()->is_finished() && find_free_spot(type) >= 0;
+}
+
+figure_id building_caesareum::worker_figure_id() const {
+    return main_caesareum()->runtime_data().workers[0];
+}
+
+// OG caesareum_part_has_active_worker: a stale slot is cleared as a side effect.
+bool building_caesareum::part_has_active_worker() const {
+    auto &workers = const_cast<building_caesareum *>(main_caesareum())->runtime_data().workers;
+    const figure_id wid = workers[0];
+    if (!wid) {
+        return false;
+    }
+    figure *f = figure_get(wid);
+    if (f && f->is_alive()) {
+        const int action = f->action_state;
+        switch (f->type) {
+        case FIGURE_CARPENTER:
+            if (action == ACTION_1_CARPENTER_GO_TO_SITE || action == ACTION_2_CARPENTER_WORK) {
+                return true;
+            }
+            break;
+        case FIGURE_STONEMASON:
+            if (action == ACTION_0_MASON_CREATED || action == ACTION_1_MASON_GOING
+                || action == ACTION_9_MASON_WORK_OBELISK || action == ACTION_19_MASON_WAIT_FOR_BLOCK) {
+                return true;
+            }
+            break;
+        default:
+            break;
+        }
+    }
+    workers[0] = 0;
     return false;
 }
 
-bool building_caesareum::need_stonemason() {
-    if (is_finished()) {
+bool building_caesareum::claim_worker(figure &f) {
+    building_caesareum *m = main_caesareum();
+    if (m->is_finished()) {
         return false;
     }
-    scrub_dead_workers(runtime_data().workers);
-    const int p = runtime_data().phase;
-    // GIF: scaffold + marble work overlap on temple/portico — allow mason alongside carpenter.
-    if (p < 2 || p > 5) {
+    if (m->runtime_data().workers[0] == f.id) {
+        return true;
+    }
+    if (part_has_active_worker() || !has_free_spot(f.type)) {
         return false;
     }
-    if (!need_workers()) {
-        return false;
-    }
-    for (auto wid : runtime_data().workers) {
-        figure *f = wid > 0 ? figure_get(wid) : nullptr;
-        if (f && f->is_alive() && f->type == FIGURE_STONEMASON) {
-            return false;
-        }
-    }
+    m->runtime_data().workers[0] = f.id;
+    f.roam_length = 0;
+    f.wait_ticks = 0;
     return true;
 }
 
+bool building_caesareum::need_stonemason() {
+    return is_main() && !is_finished() && !part_has_active_worker() && has_free_spot(FIGURE_STONEMASON);
+}
+
+bool building_caesareum::need_carpenter() {
+    return is_main() && !is_finished() && !part_has_active_worker() && has_free_spot(FIGURE_CARPENTER);
+}
+
 bool building_caesareum::need_workers() const {
-    if (is_finished()) {
-        return false;
-    }
-    for (auto wid : runtime_data().workers) {
-        if (!worker_slot_occupied(wid)) {
-            return true;
-        }
-    }
+    return false;
+}
+
+bool building_caesareum::needs_resources() const {
+    return false;
+}
+
+bool building_caesareum::accepts_yard_delivery(e_resource /*resource*/) const {
     return false;
 }
 
 void building_caesareum::add_workers(figure_id fid) {
-    auto &d = runtime_data();
-    scrub_dead_workers(d.workers);
-    for (auto &wid : d.workers) {
-        if (wid == 0) {
-            wid = fid;
-            return;
-        }
+    figure *f = fid ? figure_get(fid) : nullptr;
+    if (f) {
+        claim_worker(*f);
     }
 }
 
 void building_caesareum::remove_worker(figure_id fid) {
-    auto &d = runtime_data();
-    for (auto &wid : d.workers) {
-        if (wid == fid) {
-            wid = 0;
-            return;
+    auto &workers = main_caesareum()->runtime_data().workers;
+    if (workers[0] == fid) {
+        workers[0] = 0;
+    }
+}
+
+// OG caesareum_figure_work_tick_spot: one work unit per tick at the figure's spot of the current stage.
+bool building_caesareum::work_tick(figure &f) {
+    building_caesareum *m = main_caesareum();
+    if (m != this) {
+        return m->work_tick(f);
+    }
+    if (is_finished()) {
+        return true;
+    }
+
+    const auto &spots = caesareum_params().spots;
+    const int s = stage();
+    const int count = (int)spots.size();
+    int index = -1;
+    // OG looks for the figure's own spot only from the index equal to the stage on.
+    for (int i = s; i < count; ++i) {
+        if (spot_attached(i) == f.id) {
+            if (spots[i].stage != s) {
+                return true;
+            }
+            index = i;
+            break;
+        }
+    }
+    if (index < 0) {
+        index = find_free_spot(f.type);
+        if (index < 0) {
+            return true;
+        }
+    }
+
+    const int left = std::max(0, spot_work_left(index) - 1);
+    set_spot(index, (uint16_t)left, f.id);
+    if (left > 0) {
+        return false;
+    }
+
+    set_spot(index, 0, 0);
+    bool stage_done = true;
+    for (int i = 0; i < count; ++i) {
+        if (spots[i].stage == s && spot_work_left(i) > 0) {
+            stage_done = false;
+            break;
+        }
+    }
+    if (stage_done) {
+        advance_stage();
+    }
+    runtime_data().workers[0] = 0;
+    return true;
+}
+
+bool building_caesareum::sled_arrived() {
+    auto &d = main_caesareum()->runtime_data();
+    d.sleds++;
+    if (d.sleds >= SLEDS_PER_STAGE) {
+        d.sleds = 0;
+        return true;
+    }
+    return false;
+}
+
+e_resource building_caesareum::block_resource() const {
+    return stage() == STAGE_GRANITE ? RESOURCE_GRANITE : RESOURCE_MARBLE;
+}
+
+void building_caesareum::advance_stage() {
+    const int s = stage();
+    if (s >= STAGE_COMPLETE) {
+        return;
+    }
+    const int next = s + 1;
+    for (int i = 0; i < PARTS; ++i) {
+        if (building_caesareum *p = part(i)) {
+            p->set_phase(next >= STAGE_COMPLETE ? MONUMENT_FINISHED : next);
+        }
+    }
+    refresh_part_images();
+    if (next >= STAGE_COMPLETE) {
+        messages::popup("caesareum_congratulations", 0, tile().grid_offset());
+    }
+}
+
+void building_caesareum::set_stage(int target) {
+    building_caesareum *m = main_caesareum();
+    if (m != this) {
+        m->set_stage(target);
+        return;
+    }
+    target = std::clamp(target, 0, (int)STAGE_COMPLETE);
+    for (int i = 0; i < PARTS; ++i) {
+        if (building_caesareum *p = part(i)) {
+            p->set_phase(target >= STAGE_COMPLETE ? MONUMENT_FINISHED : target);
+        }
+    }
+    reset_spots();
+    const auto &spots = caesareum_params().spots;
+    for (int i = 0; i < (int)spots.size(); ++i) {
+        if (spots[i].stage < target) {
+            set_spot(i, 0, 0);
+        }
+    }
+    runtime_data().sleds = 0;
+    refresh_part_images();
+}
+
+// OG caesareum_get_progress.
+int building_caesareum::get_progress(caesareum_progress *out) const {
+    const building_caesareum *m = main_caesareum();
+    const int s = stage();
+    const int percent = (s >= STAGE_COMPLETE) ? 100 : (s * 5) + 5;
+    caesareum_progress p;
+    p.stage = s;
+    p.percent = percent;
+    if (m->part_has_active_worker()) {
+        figure *f = figure_get(m->worker_figure_id());
+        if (f->type == FIGURE_CARPENTER) {
+            p.carpenters = 1;
+        } else if (f->type == FIGURE_STONEMASON) {
+            p.stonemasons = 1;
+            p.stonemasons_waiting = f->action_state == ACTION_19_MASON_WAIT_FOR_BLOCK ? 1 : 0;
+        }
+    }
+    p.material = std::max(0, (MATERIAL_LOADS - SLEDS_PER_STAGE * s) * MATERIAL_PER_LOAD);
+    if (out) {
+        *out = p;
+    }
+    return percent;
+}
+
+void building_caesareum::refresh_part_images() {
+    for (int i = 0; i < PARTS; ++i) {
+        if (building_caesareum *p = part(i)) {
+            map_building_tiles_add(p->id(), p->tile(), PART_SIZE, p->building_image_get(), TERRAIN_BUILDING);
         }
     }
 }
 
 int building_caesareum::building_image_get() const {
-    const xstring key = anim_key_for(art_stage());
-    const auto &params = current_params();
-    int img = params.first_img(key);
-    if (img > 0) {
-        return img;
+    const auto &params = building_static_params::get(BUILDING_CAESAREUM);
+    bstring32 key;
+    key.printf("s%d", stage() + 1);
+    const int img = params.first_img(xstring(key.c_str()));
+    if (img <= 0) {
+        return params.first_img("preview");
     }
-    return params.first_img("preview");
+    return img + view_part(part_index(), camera_view());
 }
 
 void building_caesareum::preview::setup_preview_graphics(build_planner &planer) const {
-    const auto &bp = building_caesareum::current_params();
-    const vec2i init_tiles = bp.init_tiles.x > 0 ? bp.init_tiles : vec2i{15, 15};
-    planer.init_tiles(init_tiles.x, init_tiles.y);
+    planer.init_tiles(SITE_SIZE, SITE_SIZE);
+    planer.pivot = {SITE_HALF, SITE_HALF};
 }
 
-int building_caesareum::preview::can_place(build_planner &p, tile2i /*tile*/, tile2i end, int state) const {
+int building_caesareum::preview::construction_place(build_planner &planer, tile2i /*start*/, tile2i end,
+  int orientation, int variant) const {
+    planer.last_created_building = nullptr;
+    building *b = building_create(planer.build_type, origin_from_center(end), orientation);
+    game_undo_add_building(b);
+    if (b->id <= 0) {
+        return 0;
+    }
+    add_building(b, orientation, variant);
+    planer.last_created_building = b;
+    return 1;
+}
+
+// OG caesareum_draw_placement: the bare footprint, each tile green or red.
+void building_caesareum::preview::ghost_preview(build_planner &planer, painter &ctx, tile2i /*start*/, tile2i end,
+  vec2i /*pixel*/) const {
+    std::array<blocked_tile_vec, PARTS> parts;
+    collect_site(origin_from_center(end), parts);
+    for (const auto &p : parts) {
+        planer.draw_partially_blocked(ctx, false, p);
+    }
+}
+
+void building_caesareum::preview::ghost_blocked(build_planner &planer, painter &ctx, tile2i start, tile2i end,
+  vec2i pixel, bool /*fully_blocked*/) const {
+    ghost_preview(planer, ctx, start, end, pixel);
+}
+
+bool building_caesareum::preview::ghost_allow_tile(build_planner &planer, tile2i tile) const {
+    if (!site_contains(origin_from_center(planer.end), tile)) {
+        return true;
+    }
+    return !site_tile_blocked(tile);
+}
+
+uint32_t building_caesareum::preview::ghost_ignore_terrain(build_planner &planer, tile2i tile) const {
+    return site_contains(origin_from_center(planer.end), tile) ? TERRAIN_NOT_CLEAR : 0;
+}
+
+int building_caesareum::preview::can_place(build_planner &planer, tile2i /*start*/, tile2i end, int state) const {
     if (state != CAN_PLACE && state != CAN_NOT_BUT_GREEN) {
         return state;
     }
-    if (has_unfinished_caesareum()) {
-        p.set_warning("#one_caesareum_only");
+    std::array<blocked_tile_vec, PARTS> parts;
+    if (collect_site(origin_from_center(end), parts)) {
+        planer.set_warning("#must_build_on_cleared_land");
         return CAN_NOT_PLACE;
     }
-    const auto &bp = building_caesareum::current_params();
-    const vec2i ft = bp.init_tiles.x > 0 ? bp.init_tiles : vec2i{15, 15};
-    if (area_blocked(end, ft.x, ft.y)) {
+    if (any_caesareum_placed()) {
+        planer.set_warning("#one_caesareum_only");
         return CAN_NOT_PLACE;
+    }
+    if (state == CAN_NOT_BUT_GREEN) {
+        planer.set_warning("");
     }
     return CAN_PLACE;
 }
 
-int building_caesareum::preview::finalize_check(build_planner &p, tile2i tile, tile2i end, int state) const {
-    state = building_planer_renderer::finalize_check(p, tile, end, state);
-    if (state != CAN_PLACE) {
-        return state;
-    }
-    if (has_unfinished_caesareum()) {
-        p.set_warning("#one_caesareum_only");
-        g_warning_manager.show("#one_caesareum_only");
-        return CAN_NOT_PLACE;
-    }
-    return can_place(p, tile, end, CAN_PLACE);
-}
+void building_caesareum::create_parts(bool undo) {
+    base.prev_part_building_id = 0;
+    base.size = PART_SIZE;
+    runtime_data().variant = 0;
+    runtime_data().sleds = 0;
 
-void building_caesareum::preview::ghost_preview(build_planner &planer, painter &ctx, tile2i /*start*/, tile2i end, vec2i pixel) const {
-    // Do not use blocked_tile_vec (cap 36) for 15×15.
-    const auto &params = building_static_params::get(planer.build_type);
-    const auto &bp = building_caesareum::current_params();
-    const vec2i ft = bp.init_tiles.x > 0 ? bp.init_tiles : vec2i{15, 15};
-    const bool blocked = has_unfinished_caesareum() || area_blocked(end, ft.x, ft.y);
-
-    if (blocked) {
-        draw_area_mask(ctx, end, ft.x, ft.y, true);
-        return;
+    building *prev = &base;
+    for (int p = 1; p < PARTS; ++p) {
+        const tile2i off = part_offset(p);
+        building *b = building_create(BUILDING_CAESAREUM, tile().shifted(off.x(), off.y()), base.orientation);
+        if (undo) {
+            game_undo_add_building(b);
+        }
+        if (auto *c = b->dcast_caesareum()) {
+            c->runtime_data().variant = (uint8_t)p;
+            c->runtime_data().phase = runtime_data().phase;
+        }
+        b->prev_part_building_id = prev->id;
+        b->next_part_building_id = 0;
+        prev->next_part_building_id = b->id;
+        prev = b;
     }
-
-    const int preview = params.first_img("preview");
-    const int img = params.first_img("sa");
-    planer.draw_building_ghost(ctx, img > 0 ? img : preview, pixel);
 }
 
 void building_caesareum::on_place_update_tiles(int orientation, int /*variant*/) {
     base.orientation = orientation;
-    const vec2i ft = footprint_size();
-    base.size = (uint8_t)std::max({ft.x, ft.y, 1});
-    caesareum_add_rect_tiles(id(), tile(), ft.x, ft.y, building_image_get());
-    // Clear leftover leveling progress from prior monuments on these tiles.
-    // Do this only on place — not in add_rect_tiles (orientation refresh would wipe mid-clear).
-    for (int dy = 0; dy < ft.y; dy++) {
-        for (int dx = 0; dx < ft.x; dx++) {
-            map_monuments_set_progress(tile().shifted(dx, dy), 0);
-        }
-    }
+    runtime_data().phase = 0;
+    create_parts(true);
+    reset_spots();
+    refresh_part_images();
 }
 
-void building_caesareum::on_place_checks() {
-    construction_warnings warnings;
-    const vec2i ft = footprint_size();
-    int min_value = 12;
-    int min_go = tile().grid_offset();
-    const bool has_road = map_road_find_minimum_tile_xy(tile(), ft.x, ft.y, &min_value, &min_go) && min_value < 12;
-    warnings.add_if(!has_road, "#needs_road_access");
+void building_caesareum::on_post_load() {
+    building_monument::on_post_load();
+    if (!is_main()) {
+        return;
+    }
+
+    if (!has_next()) {
+        // Saves before v201 kept the caesareum as one 15x15 record; split it and start over unless finished.
+        if (!is_finished()) {
+            runtime_data().phase = 0;
+        }
+        create_parts(false);
+    }
+
+    bool unset = false;
+    for (int i = 0; i < PARTS * SPOTS_PER_PART; ++i) {
+        unset |= spot_work_left(i) == SPOT_WORK_UNSET;
+    }
+    if (unset) {
+        // Saves before v201 have no spot state: spots of past stages are done, the rest start over.
+        set_stage(stage());
+        return;
+    }
+    refresh_part_images();
 }
 
 void building_caesareum::on_destroy() {
     building_monument_remove_all_deliveries(id());
-    const vec2i ft = footprint_size();
-    for (int dy = 0; dy < ft.y; dy++) {
-        for (int dx = 0; dx < ft.x; dx++) {
-            tile2i t = tile().shifted(dx, dy);
-            if (!map_grid_is_inside(t, 1)) {
-                continue;
-            }
-            map_monuments_set_progress(t, 0);
-            if (map_building_at(t) == id()) {
-                map_building_tile_clear_at(t.grid_offset(), type());
-            }
-        }
-    }
 }
 
-void building_caesareum::on_phase_changed(int old_phase, int current) {
-    const vec2i ft = footprint_size();
-    caesareum_add_rect_tiles(id(), tile(), ft.x, ft.y, building_image_get());
-
-    if (current != MONUMENT_FINISHED) {
-        auto &d = runtime_data();
-        for (e_resource resource = RESOURCE_NONE; resource < RESOURCES_MAX; ++resource) {
-            d.resources_pct[resource] = 0;
-        }
-    }
-
-    // Leave leveling: poof WC laborers once.
-    if (old_phase < 2 && current >= 2) {
-        auto &d = runtime_data();
-        for (auto &wid : d.workers) {
-            if (wid) {
-                figure *f = figure_get(wid);
-                if (f && f->is_alive()) {
-                    f->poof();
-                }
-                wid = 0;
-            }
-        }
-    }
+void building_caesareum::on_phase_changed(int /*old_phase*/, int /*current*/) {
 }
 
 void building_caesareum::update_day() {
     building_impl::update_day();
-    if (is_finished()) {
-        return;
-    }
-
-    auto &d = runtime_data();
-    scrub_dead_workers(d.workers);
-    if (d.phase < 2) {
-        const vec2i ft = footprint_size();
-        grid_tiles tiles = map_grid_get_tiles(tile(), tile().shifted(ft.x - 1, ft.y - 1));
-        tile2i tile2works = map_grid_area_first(tiles, [](tile2i t) {
-            return map_monuments_get_progress(t) < 200;
-        });
-        const bool all_tiles_finished = (tile2works == tile2i{-1, -1});
-        if (all_tiles_finished) {
-            map_grid_area_foreach(tiles, [](tile2i t) { map_monuments_set_progress(t, 0); });
-            set_phase(d.phase + 1);
-        }
-        return;
-    }
-
-    if (!needs_resources() && d.phase >= 2 && d.phase <= 5) {
-        bool has_mason = false;
-        for (auto wid : d.workers) {
-            figure *f = wid > 0 ? figure_get(wid) : nullptr;
-            if (f && f->is_alive() && f->type == FIGURE_STONEMASON) {
-                has_mason = true;
-                break;
-            }
-        }
-        if (!has_mason) {
-            return;
-        }
-    }
-
-    progress();
 }
 
+// Rotation only reaches the main record (map_orientation_update_buildings), so it redraws all parts.
 void building_caesareum::update_map_orientation(int /*map_orientation*/) {
-    const vec2i ft = footprint_size();
-    caesareum_add_rect_tiles(id(), tile(), ft.x, ft.y, building_image_get());
-}
-
-tile2i building_caesareum::center_point() const {
-    const vec2i ft = footprint_size();
-    return tile().shifted(ft.x / 2, ft.y / 2);
-}
-
-tile2i building_caesareum::access_point() const {
-    const vec2i ft = footprint_size();
-    // South edge mid — typical entrance orientation for clear-land monuments.
-    return tile().shifted(ft.x / 2, ft.y - 1);
+    main_caesareum()->refresh_part_images();
 }
 
 grid_area building_caesareum::get_area() const {
-    const vec2i ft = footprint_size();
-    tile2i start = tile();
-    tile2i end = start.shifted(ft.x - 1, ft.y - 1);
-    return {start, end};
+    tile2i start = main_caesareum()->tile();
+    return {start, start.shifted(SITE_SIZE - 1, SITE_SIZE - 1)};
 }
 
-void building_caesareum::bind_dynamic(io_buffer *iob, size_t /*version*/) {
-    auto &monumentd = runtime_data();
+tile2i building_caesareum::center_point() const {
+    return main_caesareum()->tile().shifted(SITE_HALF, SITE_HALF);
+}
 
-    iob->bind____skip(38);
+// OG caesareum_get_work_tile: the entrance faces the camera, so the work tile turns with the view.
+tile2i building_caesareum::access_point() const {
+    tile2i t = main_caesareum()->tile();
+    switch (camera_view()) {
+    case 1:
+        return t.shifted(-1, 8);
+    case 2:
+        return t.shifted(6, -1);
+    case 3:
+        return t.shifted(15, 6);
+    default:
+        return t.shifted(8, 15);
+    }
+}
+
+void building_caesareum::bind_dynamic(io_buffer *iob, size_t version) {
+    auto &d = runtime_data();
+
+    // v201+: the 3 spots of this part (work, figure) and the sled count take 13 of the formerly skipped 38 bytes.
+    if (version > 200) {
+        for (int i = 0; i < SPOTS_PER_PART; i++) {
+            iob->bind(BIND_SIGNATURE_UINT16, &d.spot_work[i]);
+            iob->bind(BIND_SIGNATURE_UINT16, &d.spot_figure[i]);
+        }
+        iob->bind(BIND_SIGNATURE_UINT8, &d.sleds);
+        iob->bind____skip(25);
+    } else {
+        iob->bind____skip(38);
+        d.spot_work.fill(SPOT_WORK_UNSET);
+        d.spot_figure.fill(0);
+        d.sleds = 0;
+    }
     iob->bind(BIND_SIGNATURE_UINT8, &base.orientation);
     for (int i = 0; i < 5; i++) {
-        iob->bind(BIND_SIGNATURE_UINT16, &monumentd.workers[i]);
+        iob->bind(BIND_SIGNATURE_UINT16, &d.workers[i]);
     }
-    iob->bind(BIND_SIGNATURE_UINT8, &monumentd.phase);
-    iob->bind(BIND_SIGNATURE_UINT8, &monumentd.funeral_done);
-    iob->bind(BIND_SIGNATURE_UINT8, &monumentd.preexisting);
-    iob->bind(BIND_SIGNATURE_UINT8, &monumentd.variant);
+    iob->bind(BIND_SIGNATURE_UINT8, &d.phase);
+    iob->bind(BIND_SIGNATURE_UINT8, &d.funeral_done);
+    iob->bind(BIND_SIGNATURE_UINT8, &d.preexisting);
+    iob->bind(BIND_SIGNATURE_UINT8, &d.variant);
 
     for (int i = 0; i < RESOURCES_MAX; i++) {
-        iob->bind(BIND_SIGNATURE_UINT8, &monumentd.resources_pct[i]);
+        iob->bind(BIND_SIGNATURE_UINT8, &d.resources_pct[i]);
     }
 }

@@ -807,6 +807,7 @@ tile2i building::access_tile() {
         return main()->tile.shifted(0, 22);
 
     case BUILDING_SPHINX:
+    case BUILDING_CAESAREUM:
         if (auto *m = dcast_monument()) {
             return m->access_point();
         }

@@ -66,10 +66,27 @@ imagepaks = [
   // AbuSimbel.sg3: 201 SYSTEM + 70 layers (backing/2statue/midcut/stairs/cliffs/scaffold).
   // Keep system slots (no compact) — JS uses group ids 1..16 (see abu_simbel.js).
   {id: PACK_ABUSIMBEL, name:"AbuSimbel", index:35850, delayed:true, system:false}, // 35850 --> 35850 + 201 + 70
-  {id: PACK_CAESAREUM_1, name:"caesareum1", index:36150, delayed:true, system:false}, // 36150 --> 36150 + 201 + 9
-  {id: PACK_CAESAREUM_2, name:"caesareum2", index:36360, delayed:true, system:false}, // 36360 --> 36360 + 201 + 9
-  {id: PACK_CAESAREUM_3, name:"caesareum3", index:36570, delayed:true, system:false}, // 36570 --> 36570 + 201 + 9
-  {id: PACK_CAESAREUM_4, name:"caesareum4", index:36780, delayed:true, system:false}, // 36780 --> 36780 + 201 + 9
+  // caesareum1..20: one pack per OG stage (0..18, 19 = complete), 9 part images each (compact).
+  {id: PACK_CAESAREUM_1, name:"caesareum1", index:36150, delayed:true, system:false, compact:true},
+  {id: PACK_CAESAREUM_2, name:"caesareum2", index:36159, delayed:true, system:false, compact:true},
+  {id: PACK_CAESAREUM_3, name:"caesareum3", index:36168, delayed:true, system:false, compact:true},
+  {id: PACK_CAESAREUM_4, name:"caesareum4", index:36177, delayed:true, system:false, compact:true},
+  {id: PACK_CAESAREUM_5, name:"caesareum5", index:36186, delayed:true, system:false, compact:true},
+  {id: PACK_CAESAREUM_6, name:"caesareum6", index:36195, delayed:true, system:false, compact:true},
+  {id: PACK_CAESAREUM_7, name:"caesareum7", index:36204, delayed:true, system:false, compact:true},
+  {id: PACK_CAESAREUM_8, name:"caesareum8", index:36213, delayed:true, system:false, compact:true},
+  {id: PACK_CAESAREUM_9, name:"caesareum9", index:36222, delayed:true, system:false, compact:true},
+  {id: PACK_CAESAREUM_10, name:"caesareum10", index:36231, delayed:true, system:false, compact:true},
+  {id: PACK_CAESAREUM_11, name:"caesareum11", index:36240, delayed:true, system:false, compact:true},
+  {id: PACK_CAESAREUM_12, name:"caesareum12", index:36249, delayed:true, system:false, compact:true},
+  {id: PACK_CAESAREUM_13, name:"caesareum13", index:36258, delayed:true, system:false, compact:true},
+  {id: PACK_CAESAREUM_14, name:"caesareum14", index:36267, delayed:true, system:false, compact:true},
+  {id: PACK_CAESAREUM_15, name:"caesareum15", index:36276, delayed:true, system:false, compact:true},
+  {id: PACK_CAESAREUM_16, name:"caesareum16", index:36285, delayed:true, system:false, compact:true},
+  {id: PACK_CAESAREUM_17, name:"caesareum17", index:36294, delayed:true, system:false, compact:true},
+  {id: PACK_CAESAREUM_18, name:"caesareum18", index:36303, delayed:true, system:false, compact:true},
+  {id: PACK_CAESAREUM_19, name:"caesareum19", index:36312, delayed:true, system:false, compact:true},
+  {id: PACK_CAESAREUM_20, name:"caesareum20", index:36321, delayed:true, system:false, compact:true},
   // LibMaina1..a5 — after Caesareum, before Assyrian@37000 (compact: 2 imgs each).
   {id: PACK_LIB_MAIN_1, name:"LibMaina1", index:36990, delayed:true, system:false, compact:true}, // 2
   {id: PACK_LIB_MAIN_2, name:"LibMaina2", index:36992, delayed:true, system:false, compact:true},
