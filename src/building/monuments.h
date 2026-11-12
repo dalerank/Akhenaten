@@ -198,6 +198,10 @@ public:
     int burial_stock_total() const;
     int add_burial_stock(e_resource r, int n);
     bool take_burial_stock(e_resource r, int n);
+
+    // Save v196+ layout of the OG block-engine monuments (pyramids, mastabas).
+    // alt_image_base: first image alt_image is chosen from (0 when the type has none).
+    void bind_block_engine_state(io_buffer* iob, int alt_image_base);
 };
 
 // City required/dispatched stay UI/win SoT; tomb burial_stock is the steal ledger.

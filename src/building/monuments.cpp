@@ -905,6 +905,90 @@ bool building_monument::take_burial_stock(e_resource r, int n) {
     return true;
 }
 
+// Mostly zero per-resource bytes: a presence bit per resource, then the present values only.
+static void bind_sparse_resource_bytes(io_buffer* iob, uint8_t (&values)[RESOURCES_MAX]) {
+    uint8_t present[(RESOURCES_MAX + 7) / 8] = {};
+    if (!iob->is_read_access()) {
+        for (int r = 0; r < RESOURCES_MAX; ++r) {
+            if (values[r]) {
+                present[r / 8] |= (uint8_t)(1 << (r % 8));
+            }
+        }
+    }
+    for (auto& bits : present) {
+        iob->bind_u8(bits);
+    }
+    for (int r = 0; r < RESOURCES_MAX; ++r) {
+        if (present[r / 8] & (1 << (r % 8))) {
+            iob->bind_u8(values[r]);
+        } else {
+            values[r] = 0;
+        }
+    }
+}
+
+void building_monument::bind_block_engine_state(io_buffer* iob, int alt_image_base) {
+    auto& d = runtime_data();
+
+    iob->bind_u8(base.orientation);
+    iob->bind_i8(d.phase);
+    iob->bind_u8(d.layer);
+    iob->bind_u8(d.stair_index);
+    iob->bind_u8(d.variant);
+    iob->bind_u8(d.funeral_done);
+    iob->bind_u8(d.preexisting);
+    iob->bind_u8(d.causeway_length);
+    iob->bind_u8(d.causeway_dir);
+    for (auto& w : d.workers) {
+        iob->bind_u16(w);
+    }
+
+    // 0 = none, else 1 + offset from alt_image_base: the save does not depend on image pack ids.
+    uint8_t alt_image_slot = 0;
+    if (!iob->is_read_access() && d.alt_image > 0 && alt_image_base > 0) {
+        const int offset = (int)d.alt_image - alt_image_base;
+        alt_image_slot = (offset >= 0 && offset < 255) ? (uint8_t)(offset + 1) : 0;
+    }
+    iob->bind_u8(alt_image_slot);
+    if (iob->is_read_access()) {
+        d.alt_image = (alt_image_slot && alt_image_base > 0) ? (uint16_t)(alt_image_base + alt_image_slot - 1) : 0;
+    }
+
+    // Deliveries, burial goods and the block count live on the chain head only.
+    if (base.is_main()) {
+        bind_sparse_resource_bytes(iob, d.resources_pct);
+        bind_sparse_resource_bytes(iob, d.burial_stock);
+
+        auto& main = d.og_main;
+        iob->bind_u8((uint8_t&)main.style);
+        iob->bind_u8(main.size_variant);
+        iob->bind_u16(main.remaining_blocks);
+        iob->bind_u8(main.block_phase_active);
+        iob->bind_u8(main.force_show_ramps);
+    } else if (iob->is_read_access()) {
+        std::fill(std::begin(d.resources_pct), std::end(d.resources_pct), 0);
+        std::fill(std::begin(d.burial_stock), std::end(d.burial_stock), 0);
+        d.og_main = {};
+    }
+
+    // The ramp sprite and its offsets are a draw cache (they follow the camera rotation), not saved.
+    auto& part = d.og_part;
+    iob->bind_u8(part.size_variant);
+    iob->bind_u8(part.stage);
+    iob->bind_u8(part.blocks);
+    iob->bind_u8(part.layer);
+    iob->bind_u8(part.target_layers);
+    iob->bind_u8(part.subtype);
+    iob->bind_u16(part.worker_figure_id);
+    iob->bind_u8(part.ramp1_height);
+    iob->bind_u8(part.ramp2_height);
+    if (iob->is_read_access()) {
+        part.ramp_image_id = 0;
+        part.ramp_image_x1 = part.ramp_image_y1 = 0;
+        part.ramp_image_x2 = part.ramp_image_y2 = 0;
+    }
+}
+
 building *burial_provisions_pick_dispatch_tomb() {
     building *best = nullptr;
     int best_stock = 0x7fffffff;

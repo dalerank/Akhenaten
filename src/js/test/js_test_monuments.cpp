@@ -515,6 +515,66 @@ static int __test_pyramid_part_needs_ramp(int part_id) {
 }
 ANK_FUNCTION_1(__test_pyramid_part_needs_ramp);
 
+// Saved block-engine state of one monument part:
+// "subtype,stage,blocks,layer,target_layers,worker,ramp1,ramp2,size_variant,alt_image,phase,stair,workers0,
+//  stone_pct,bricks_pct,pottery_stock,remaining_blocks" or "".
+static pcstr __test_monument_part_state(int part_id) {
+    static bstring256 out;
+    out.clear();
+    building* b = building_get(part_id);
+    auto* mon = b ? b->dcast_monument() : nullptr;
+    if (!mon) {
+        return out.c_str();
+    }
+    const auto& d = mon->runtime_data();
+    const auto& p = d.og_part;
+    out.printf("%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d", p.subtype, p.stage, p.blocks, p.layer,
+      p.target_layers, p.worker_figure_id, p.ramp1_height, p.ramp2_height, p.size_variant, d.alt_image, d.phase,
+      d.stair_index, d.workers[0], d.resources_pct[RESOURCE_STONE], d.resources_pct[RESOURCE_BRICKS],
+      d.burial_stock[RESOURCE_POTTERY], d.og_main.remaining_blocks);
+    return out.c_str();
+}
+ANK_FUNCTION_1(__test_monument_part_state);
+
+// Writes recognisable values into every saved block-engine field of a part, so a lost byte shows after load.
+static void __test_monument_part_fill(int part_id, int seed) {
+    building* b = building_get(part_id);
+    auto* mon = b ? b->dcast_monument() : nullptr;
+    if (!mon) {
+        return;
+    }
+    auto& p = mon->runtime_data().og_part;
+    p.subtype = (uint8_t)(seed % 40);
+    p.blocks = (uint8_t)(seed % 7 + 1);
+    p.layer = (uint8_t)(seed % 5);
+    p.target_layers = (uint8_t)(seed % 5 + 1);
+    p.worker_figure_id = (uint16_t)(300 + seed);
+    p.ramp1_height = (uint8_t)(seed % 6 + 1);
+    p.ramp2_height = (uint8_t)(seed % 4 + 2);
+    mon->runtime_data().workers[0] = (uint16_t)(500 + seed);
+    if (b->is_main()) {
+        auto& d = mon->runtime_data();
+        d.resources_pct[RESOURCE_STONE] = (uint8_t)(seed % 90 + 5);
+        d.resources_pct[RESOURCE_BRICKS] = 100;
+        d.burial_stock[RESOURCE_POTTERY] = (uint8_t)(seed % 50 + 3);
+    }
+}
+ANK_FUNCTION_2(__test_monument_part_fill);
+
+// Building ids of the whole part chain, head first, comma separated.
+static pcstr __test_monument_parts(int bid) {
+    static bstring1024 out;
+    out.clear();
+    building* b = building_get(bid);
+    building* part = b ? b->main() : nullptr;
+    for (int guard = 0; part && part->id && guard < 400; ++guard) {
+        out.append_fmt(out.empty() ? "%d" : ",%d", part->id);
+        part = part->has_next() ? part->next() : nullptr;
+    }
+    return out.c_str();
+}
+ANK_FUNCTION_1(__test_monument_parts);
+
 static int __pyramid_spawn_sled_train(int laborer_fid, int monument_bid) {
     figure* laborer = figure_get(laborer_fid);
     building* mon = building_get(monument_bid);

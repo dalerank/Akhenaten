@@ -819,6 +819,11 @@ bool building_mastaba::force_draw_flat_tile(painter &ctx, tile2i tile, vec2i pix
 }
 
 void building_mastaba::bind_dynamic(io_buffer *iob, size_t version) {
+    if (version >= 196) {
+        bind_block_engine_state(iob, 0);
+        return;
+    }
+
     auto &monumentd = runtime_data();
 
     for (int i = 0; i < RESOURCES_MAX; i++) {
