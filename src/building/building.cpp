@@ -424,9 +424,6 @@ building_impl *building::dcast() {
     return _ptr;
 }
 
-building::building() {
-}
-
 const building* building::main() const {
     OZZY_PROFILER_SECTION(_, "building_main")
 
@@ -471,8 +468,9 @@ bool building::is_main() {
 
 void building::reset_slot(building_id slot_id) {
     this->~building();
-    // Members without an initializer were zero in the OG records; the constructor fills the rest.
-    memset((void*)this, 0, sizeof(building));
+    // Members without an initializer were zero in the OG records. Value-initialization zeroes them
+    // before the constructor runs; a memset between the destructor and placement new is a store to
+    // dead storage, which GCC's lifetime DSE drops (stale next_part_building_id etc. survived).
     new (this) building();
     id = slot_id;
 }

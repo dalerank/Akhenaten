@@ -271,7 +271,8 @@ public:
     alignas(runtime_data_align) char runtime_data[186] = { 0 };
     bool play_animation = false;
 
-    building();
+    // Defaulted on first declaration, so `new (p) building()` value-initializes (zeroes) — reset_slot relies on it.
+    building() = default;
     building* main();
     const building* main() const;
     inline building *next() { return building_get(next_part_building_id); }
