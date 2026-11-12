@@ -329,6 +329,9 @@ e_resource figure_worker::block_material_for(building *monument, figure_id mason
         return RESOURCE_BRICKS;
     }
 
+    if (auto *cae = head->dcast_caesareum()) {
+        return cae->block_resource();
+    }
     if (laborer_is_cleopatra_monument(head)) {
         return (head->dcast_sun_temple() || head->dcast_mausoleum()) ? RESOURCE_SANDSTONE : RESOURCE_MARBLE;
     }
@@ -723,6 +726,9 @@ void figure_worker::find_work() {
             } else if (b.dcast_mausoleum()) {
                 mason_id = laborer_cleopatra_mason_waiting(&b);
                 has_work = mason_id != 0 || mon->need_workers();
+            } else if (b.dcast_caesareum()) {
+                mason_id = laborer_cleopatra_mason_waiting(&b);
+                has_work = mason_id != 0;
             } else if (mon->phase() < 2) {
                 if (mon->need_workers() && monumen_tile4work(&b) != tile2i{-1, -1}) {
                     has_work = true;
@@ -786,11 +792,15 @@ void figure_worker::sled_to_monument_tick(building *monument) {
     figure *mason = rd.mason_fid ? figure_get(rd.mason_fid) : nullptr;
     const bool mason_waiting = mason && mason->is_alive() && mason->type == FIGURE_STONEMASON
         && mason->action_state == ACTION_19_MASON_WAIT_FOR_BLOCK && mason->leading_figure_id == id();
-    if (mason_waiting) {
+    auto *cae = head->dcast_caesareum();
+    if (mason_waiting && cae && !cae->sled_arrived()) {
+        // OG sled_to_counted_monument: the mason needs two sleds per stage; the next laborer may come.
+        mason->leading_figure_id = 0;
+    } else if (mason_waiting) {
         mason->leading_figure_id = 0;
         mason->wait_ticks = 0;
         // OG sun temple: wake mason into work_tick (not pyramid place_block).
-        mason->action_state = (head->dcast_sun_temple() || head->dcast_mausoleum())
+        mason->action_state = (head->dcast_sun_temple() || head->dcast_mausoleum() || cae)
             ? (short)ACTION_9_MASON_WORK_OBELISK
             : (short)ACTION_21_MASON_PYRAMID_WORK;
     } else if (auto *mon = head->dcast_monument()) {

@@ -1,5 +1,6 @@
 #include "figure_stonemason.h"
 
+#include "building/monument_caesareum.h"
 #include "building/monument_mastaba.h"
 #include "building/monument_pyramid.h"
 #include "building/monument_pyramid_engine.h"
@@ -49,6 +50,12 @@ void figure_stonemason::figure_action() {
                 }
                 break;
             }
+            if (auto *cae = b_dest->dcast_caesareum()) {
+                if (!cae->claim_worker(base)) {
+                    advance_action(ACTION_6_MASON_RETURN_HOME);
+                    break;
+                }
+            }
             // Prefer monument access_point (enter_offset); fall back to access_tile.
             if (auto *mon = b_dest->dcast_monument()) {
                 base.destination_tile = mon->access_point();
@@ -78,7 +85,7 @@ void figure_stonemason::figure_action() {
             ? (short)ACTION_9_MASON_WORK_OBELISK
             : (to_og_pyramid ? (short)ACTION_16_MASON_CLIMB_RAMP : (short)ACTION_7_MASON_LOOKING_FOR_WORK_TILE);
         // OG: side parts wait for a sandstone sled before working.
-        if ((sun && sun->part_index() != 0) || b_dest->dcast_mausoleum()) {
+        if ((sun && sun->part_index() != 0) || b_dest->dcast_mausoleum() || b_dest->dcast_caesareum()) {
             arrived = ACTION_19_MASON_WAIT_FOR_BLOCK;
         }
         if (do_goto(base.destination_tile, terrain_usage, arrived, ACTION_10_MASON_DESTROY)) {
@@ -149,6 +156,12 @@ void figure_stonemason::figure_action() {
         }
         if (auto *maus = b_dest->dcast_mausoleum()) {
             if (maus->runtime_data().og_part.worker_figure_id != id()) {
+                advance_action(ACTION_6_MASON_RETURN_HOME);
+            }
+            break;
+        }
+        if (auto *cae = b_dest->dcast_caesareum()) {
+            if (cae->worker_figure_id() != id()) {
                 advance_action(ACTION_6_MASON_RETURN_HOME);
             }
             break;
@@ -235,6 +248,14 @@ void figure_stonemason::figure_action() {
         if (auto *sphinx = worked ? worked->dcast_sphinx() : nullptr) {
             base.set_flag(e_figure_flag_invisible);
             if (sphinx->work_tick(base)) {
+                base.set_flag(e_figure_flag_invisible, false);
+                advance_action(ACTION_6_MASON_RETURN_HOME);
+            }
+            break;
+        }
+        if (auto *cae = worked ? worked->dcast_caesareum() : nullptr) {
+            base.set_flag(e_figure_flag_invisible);
+            if (cae->work_tick(base)) {
                 base.set_flag(e_figure_flag_invisible, false);
                 advance_action(ACTION_6_MASON_RETURN_HOME);
             }

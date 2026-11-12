@@ -2,6 +2,7 @@
 
 #include "building/building_guild_carpenters.h"
 #include "building/building_statue.h"
+#include "building/monument_caesareum.h"
 #include "building/monument_obelisk.h"
 #include "building/monument_sphinx.h"
 #include "building/monument_sun_temple.h"
@@ -241,6 +242,15 @@ void figure_carpenter::figure_action() {
         if (auto *sphinx = worked->dcast_sphinx()) {
             base.set_flag(e_figure_flag_invisible);
             if (sphinx->work_tick(base)) {
+                base.set_flag(e_figure_flag_invisible, false);
+                advance_action(ACTION_3_CARPENTER_RETURN);
+            }
+            break;
+        }
+
+        if (auto *cae = worked->dcast_caesareum()) {
+            base.set_flag(e_figure_flag_invisible);
+            if (cae->work_tick(base)) {
                 base.set_flag(e_figure_flag_invisible, false);
                 advance_action(ACTION_3_CARPENTER_RETURN);
             }
