@@ -1,5 +1,6 @@
 #include "figure_tomb_artisan.h"
 
+#include "building/monument_royal_tomb.h"
 #include "building/monuments.h"
 #include "game/resource.h"
 #include "game/simulation_time.h"
@@ -52,6 +53,16 @@ void figure_tomb_artisan::figure_action() {
         break;
 
     case ACTION_14_TOMB_ARTISAN_WORK: {
+        if (auto* tomb = b_dest->dcast_royal_tomb()) {
+            base.set_flag(e_figure_flag_invisible);
+            if (tomb->work_tick(base)) {
+                base.set_flag(e_figure_flag_invisible, false);
+                tomb->remove_worker(id());
+                advance_action(
+                  (bhome && bhome->is_valid()) ? ACTION_16_TOMB_ARTISAN_RETURN_HOME : ACTION_20_TOMB_ARTISAN_DESTROY);
+            }
+            break;
+        }
         // Guild consumed 100 clay+paint at spawn — credit monument once for this trip.
         // If the tomb phase advanced after delivery, this load is spent: go home for a refill.
         auto &rd = runtime_data();
@@ -89,6 +100,7 @@ void figure_tomb_artisan::figure_action() {
     }
 
     case ACTION_16_TOMB_ARTISAN_RETURN_HOME:
+        base.set_flag(e_figure_flag_invisible, false);
         if (!bhome || !bhome->is_valid()) {
             poof();
             break;

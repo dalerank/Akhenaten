@@ -5,6 +5,7 @@
 #include "building/monument_pyramid.h"
 #include "building/monument_pyramid_engine.h"
 #include "building/monument_obelisk.h"
+#include "building/monument_royal_tomb.h"
 #include "building/monument_sphinx.h"
 #include "building/monument_sun_temple.h"
 #include "building/monument_mausoleum.h"
@@ -78,7 +79,7 @@ void figure_stonemason::figure_action() {
     case ACTION_1_MASON_GOING: {
         auto *sun = b_dest->dcast_sun_temple();
         const bool to_obelisk = b_dest->dcast_obelisk() != nullptr || b_dest->dcast_sphinx() != nullptr
-            || (sun && sun->part_index() == 0);
+                                || b_dest->dcast_royal_tomb() != nullptr || (sun && sun->part_index() == 0);
         const bool to_og_pyramid = b_dest->dcast_pyramid()
             && g_monument_pyramid_engine.uses_block_engine(b_dest);
         short arrived = to_obelisk
@@ -244,6 +245,15 @@ void figure_stonemason::figure_action() {
         building *worked = building_get(runtime_data().destination_bid);
         if (!worked || !worked->id) {
             worked = destination();
+        }
+        if (auto* tomb = worked ? worked->dcast_royal_tomb() : nullptr) {
+            base.set_flag(e_figure_flag_invisible);
+            if (tomb->work_tick(base)) {
+                base.set_flag(e_figure_flag_invisible, false);
+                tomb->remove_worker(id());
+                advance_action(ACTION_6_MASON_RETURN_HOME);
+            }
+            break;
         }
         if (auto *sphinx = worked ? worked->dcast_sphinx() : nullptr) {
             base.set_flag(e_figure_flag_invisible);

@@ -9,4 +9,5 @@ public:
     virtual void spawn_figure() override;
     bool can_spawn_tomb_artisan();
     bool has_paint_and_clay() const;
+    bool spawn_royal_tomb_artisan();
 };

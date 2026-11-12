@@ -500,9 +500,8 @@ void figure_worker::at_storage_yard_lamps() {
 void figure_worker::sled_to_tomb_tick(building *tomb) {
     base.set_flag(e_figure_flag_invisible, false);
     if (do_goto(base.destination_tile, TERRAIN_USAGE_PREFER_ROADS, -1, ACTION_8_LABORER_IDLE)) {
-        building *head = tomb->main() ? tomb->main() : tomb;
-        if (auto *mon = head->dcast_monument()) {
-            mon->deliver_resource(RESOURCE_LAMPS, base.resource_amount_full);
+        if (auto* rt = tomb->dcast_royal_tomb()) {
+            rt->add_lamp_stock(base.resource_amount_full);
         }
         poof();
         return;
@@ -718,9 +717,8 @@ void figure_worker::find_work() {
             if (royal_tomb) {
                 const int load = (int)p.load;
                 tile2i yard_tile;
-                has_work = royal_tomb->lamp_stock_room() >= load
-                    && !laborer_lamps_hauler_to(b.id, id())
-                    && laborer_yard_for_getting(&b, RESOURCE_LAMPS, load, yard_tile) != 0;
+                has_work = royal_tomb->wants_lamps() && !laborer_lamps_hauler_to(b.id, id())
+                           && laborer_yard_for_getting(&b, RESOURCE_LAMPS, load, yard_tile) != 0;
             } else if (b.dcast_sun_temple()) {
                 has_work = mon->need_workers();
             } else if (b.dcast_mausoleum()) {

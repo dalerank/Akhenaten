@@ -120,7 +120,7 @@ public:
         uint8_t preexisting;   // sealed carry-over tomb (no steal)
         uint8_t causeway_length; // complex only: land tiles along strip (save v182+)
         uint8_t causeway_dir;    // 0=N 1=E 2=S 3=W
-        uint16_t lamp_stock;     // royal tomb working stock (≤700); unused elsewhere
+        uint16_t lamp_stock;     // royal tomb lamp stock (main part); unused elsewhere
         // Burial goods loads at this tomb (BP1 ledger). Fits former bind____skip(36).
         uint8_t burial_stock[RESOURCES_MAX];
         // Ephemeral (not saved): working figure id set each tick; cleared daily.

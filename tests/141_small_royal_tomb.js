@@ -1,4 +1,4 @@
-﻿// C10 RT2: Small royal tomb — reject clear land; place cliff bulk 11x20 + 1x1 entrance;
+﻿// C10 RT2: Small royal tomb — reject clear land; place the OG part layout on Valley cliff;
 // finish → monument rating (weight 4 → trunc(2.25*4+4.5)=13).
 
 function run_test() {
@@ -13,15 +13,10 @@ function run_test() {
 
     var cx = 40
     var cy = 40
-    var w = 11
-    var h = 20
 
+    // OG Valley cliff: rock + rock-near-monument under the parts, clear land at the entrance.
     function paint_cliff_site(ox, oy) {
-        for (var dy = 0; dy < h; dy++) {
-            for (var dx = 0; dx < w; dx++) {
-                terrain.add({ x: ox + dx, y: oy + dy }, TERRAIN_ELEVATION)
-            }
-        }
+        __test_royal_tomb_paint_site(BUILDING_SMALL_ROYAL_TOMB, ox, oy)
     }
 
     var rejected = test_building_place(BUILDING_SMALL_ROYAL_TOMB, cx, cy)

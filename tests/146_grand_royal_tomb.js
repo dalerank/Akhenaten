@@ -1,4 +1,4 @@
-// C10 RT3: Grand royal tomb — cliff bulk 23x29 + 1x1 entrance; finish → rating weight 18.
+// C10 RT3: Grand royal tomb — OG part layout on Valley cliff; finish → rating weight 18.
 
 function run_test() {
     __log_info_native('[test:146] grand royal tomb cliff place + finish rating')
@@ -17,15 +17,10 @@ function run_test() {
 
     var cx = 40
     var cy = 40
-    var w = 23
-    var h = 29
 
+    // OG Valley cliff: rock + rock-near-monument under the parts, clear land at the entrance.
     function paint_cliff_site(ox, oy) {
-        for (var dy = 0; dy < h; dy++) {
-            for (var dx = 0; dx < w; dx++) {
-                terrain.add({ x: ox + dx, y: oy + dy }, TERRAIN_ELEVATION)
-            }
-        }
+        __test_royal_tomb_paint_site(BUILDING_GRAND_ROYAL_TOMB, ox, oy)
     }
 
     var rejected = test_building_place(BTYPE, cx, cy)

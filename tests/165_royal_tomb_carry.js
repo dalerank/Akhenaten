@@ -15,12 +15,8 @@ function find_preexisting_small_royal() {
     return 0
 }
 
-function paint_cliff_site(cx, cy, w, h) {
-    for (var dy = 0; dy < h; dy++) {
-        for (var dx = 0; dx < w; dx++) {
-            terrain.add({ x: cx + dx, y: cy + dy }, TERRAIN_ELEVATION)
-        }
-    }
+function paint_cliff_site(cx, cy) {
+    __test_royal_tomb_paint_site(BUILDING_SMALL_ROYAL_TOMB, cx, cy)
 }
 
 function run_test() {
@@ -32,10 +28,9 @@ function run_test() {
         __scenario_building_allow(BUILDING_SMALL_ROYAL_TOMB, true)
     }
 
-    // Heaven Small bulk 11×20; entrance needs clear row at y=cy+20.
     var cx = 40
     var cy = 40
-    paint_cliff_site(cx, cy, 11, 20)
+    paint_cliff_site(cx, cy)
 
     __campaign_carry_clear()
     // Bad preferred tile (1,1) → cliff scan fallback.

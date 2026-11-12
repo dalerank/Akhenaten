@@ -38,6 +38,7 @@
 #include "grid/grid.h"
 #include "grid/road_access.h"
 #include "grid/routing/routing.h"
+#include "grid/terrain.h"
 #include "scenario/scenario.h"
 
 #include <algorithm>
@@ -644,54 +645,221 @@ static int __pyramid_figure_begin_climb(int fid) {
 }
 ANK_FUNCTION_1(__pyramid_figure_begin_climb);
 
-static int __test_royal_tomb_lamp_stock(int bid) {
+static building_royal_tomb* test_royal_tomb_main(int bid) {
     building* b = building_get(bid);
     building* head = b ? b->main() : nullptr;
-    auto* tomb = head ? head->dcast_royal_tomb() : nullptr;
+    return head ? head->dcast_royal_tomb() : nullptr;
+}
+
+static building_royal_tomb* test_royal_tomb_part(int bid, int index) {
+    auto* tomb = test_royal_tomb_main(bid);
+    return tomb ? tomb->part(index) : nullptr;
+}
+
+static int __test_royal_tomb_lamp_stock(int bid) {
+    auto* tomb = test_royal_tomb_main(bid);
     return tomb ? tomb->lamp_stock() : -1;
 }
 ANK_FUNCTION_1(__test_royal_tomb_lamp_stock);
 
-static int __test_royal_tomb_lamp_stock_room(int bid) {
-    building* b = building_get(bid);
-    building* head = b ? b->main() : nullptr;
-    auto* tomb = head ? head->dcast_royal_tomb() : nullptr;
-    return tomb ? tomb->lamp_stock_room() : -1;
+static int __test_royal_tomb_set_lamp_stock(int bid, int amount) {
+    auto* tomb = test_royal_tomb_main(bid);
+    if (!tomb) {
+        return 0;
+    }
+    tomb->runtime_data().lamp_stock = (uint16_t)std::max(0, amount);
+    tomb->refresh_part_images();
+    return 1;
 }
-ANK_FUNCTION_1(__test_royal_tomb_lamp_stock_room);
+ANK_FUNCTION_2(__test_royal_tomb_set_lamp_stock);
 
-// Attach a living guild walker to a royal tomb worker slot (bypasses pathing).
-// Returns figure id, or 0 on failure.
+// OG Valley terrain for a tomb whose placement click is (x, y): rock + rock-near-monument under
+// every part, clear land under the entrance and around it.
+static int __test_royal_tomb_paint_site(int type, int x, int y) {
+    if (!building_royal_tomb::is_royal_tomb_type((e_building_type)type)) {
+        return 0;
+    }
+    const auto& l = building_royal_tomb::layout_of((e_building_type)type);
+    tile2i origin(x, y);
+    for (int i = 0; i < l.part_count; ++i) {
+        const auto& p = l.parts[i];
+        for (int dy = 0; dy < p.size; ++dy) {
+            for (int dx = 0; dx < p.size; ++dx) {
+                tile2i t = origin.shifted(p.dx + dx, p.dy + dy);
+                map_terrain_set(t.grid_offset(), i == l.last_part ? 0 : (TERRAIN_ROCK | TERRAIN_UNK_08));
+            }
+        }
+    }
+    const auto& e = l.parts[l.last_part];
+    tile2i entrance = origin.shifted(e.dx, e.dy);
+    for (vec2i n : {vec2i{0, -1}, vec2i{0, 1}, vec2i{-1, 0}, vec2i{1, 0}}) {
+        tile2i t = entrance.shifted(n.x, n.y);
+        if (!map_terrain_is(t, TERRAIN_UNK_08)) {
+            map_terrain_set(t.grid_offset(), 0);
+        }
+    }
+    return 1;
+}
+ANK_FUNCTION_3(__test_royal_tomb_paint_site);
+
+static int __test_royal_tomb_can_place(int type, int x, int y) {
+    return building_royal_tomb::can_place_at((e_building_type)type, tile2i(x, y)) ? 1 : 0;
+}
+ANK_FUNCTION_3(__test_royal_tomb_can_place);
+
+static int __test_royal_tomb_part_count(int bid) {
+    auto* tomb = test_royal_tomb_main(bid);
+    if (!tomb) {
+        return 0;
+    }
+    int n = 0;
+    for (building* b = &tomb->base; b; b = b->has_next() ? b->next() : nullptr) {
+        n++;
+    }
+    return n;
+}
+ANK_FUNCTION_1(__test_royal_tomb_part_count);
+
+static int __test_royal_tomb_chambers(int bid) {
+    auto* tomb = test_royal_tomb_main(bid);
+    return tomb ? tomb->layout().chambers : 0;
+}
+ANK_FUNCTION_1(__test_royal_tomb_chambers);
+
+static int __test_royal_tomb_part_stage(int bid, int index) {
+    auto* p = test_royal_tomb_part(bid, index);
+    return p ? p->stage() : -1;
+}
+ANK_FUNCTION_2(__test_royal_tomb_part_stage);
+
+static int __test_royal_tomb_part_can_take(int bid, int index) {
+    auto* p = test_royal_tomb_part(bid, index);
+    return p ? p->runtime_data().can_take_workers : -1;
+}
+ANK_FUNCTION_2(__test_royal_tomb_part_can_take);
+
+// Work left in the part's current stage.
+static int __test_royal_tomb_part_work(int bid, int index) {
+    auto* p = test_royal_tomb_part(bid, index);
+    if (!p) {
+        return -1;
+    }
+    const int s = p->stage();
+    return (s >= 1 && s <= 3) ? p->runtime_data().remaining_work[s - 1] : 0;
+}
+ANK_FUNCTION_2(__test_royal_tomb_part_work);
+
+static int __test_royal_tomb_part_worker(int bid, int index) {
+    auto* p = test_royal_tomb_part(bid, index);
+    return p ? p->runtime_data().worker_figure_id : -1;
+}
+ANK_FUNCTION_2(__test_royal_tomb_part_worker);
+
+static int __test_royal_tomb_part_tile_x(int bid, int index) {
+    auto* p = test_royal_tomb_part(bid, index);
+    return p ? p->tile().x() : -1;
+}
+ANK_FUNCTION_2(__test_royal_tomb_part_tile_x);
+
+static int __test_royal_tomb_part_tile_y(int bid, int index) {
+    auto* p = test_royal_tomb_part(bid, index);
+    return p ? p->tile().y() : -1;
+}
+ANK_FUNCTION_2(__test_royal_tomb_part_tile_y);
+
+static int __test_royal_tomb_progress(int bid) {
+    auto* tomb = test_royal_tomb_main(bid);
+    return tomb ? tomb->progress_percent() : -1;
+}
+ANK_FUNCTION_1(__test_royal_tomb_progress);
+
+static int __test_royal_tomb_wants_lamps(int bid) {
+    auto* tomb = test_royal_tomb_main(bid);
+    return tomb && tomb->wants_lamps() ? 1 : 0;
+}
+ANK_FUNCTION_1(__test_royal_tomb_wants_lamps);
+
+static int __test_royal_tomb_sealed(int bid) {
+    auto* tomb = test_royal_tomb_main(bid);
+    return tomb && tomb->is_sealed() ? 1 : 0;
+}
+ANK_FUNCTION_1(__test_royal_tomb_sealed);
+
+static int __test_royal_tomb_idle(int bid) {
+    auto* tomb = test_royal_tomb_main(bid);
+    return tomb && tomb->is_idle() ? 1 : 0;
+}
+ANK_FUNCTION_1(__test_royal_tomb_idle);
+
+static int __test_royal_tomb_part_image(int bid, int index) {
+    auto* p = test_royal_tomb_part(bid, index);
+    return p ? p->building_image_get() : -1;
+}
+ANK_FUNCTION_2(__test_royal_tomb_part_image);
+
+// The part a guild worker of this type would be sent to (probe, nothing assigned), -1 if none.
+static int __test_royal_tomb_find_work(int figure_type, int only_stage) {
+    auto* p = building_royal_tomb::find_work((e_figure_type)figure_type, 0, false, only_stage);
+    return p ? p->part_index() : -1;
+}
+ANK_FUNCTION_2(__test_royal_tomb_find_work);
+
+// Dispatch a guild worker the way the guild does (it costs the tomb 100 lamps) and put it straight
+// into its work action at the tomb entrance. Returns the figure id, 0 if no part took it.
 static int __test_royal_tomb_attach_worker(int bid, int figure_type) {
-    building* b = building_get(bid);
-    building* head = b ? b->main() : nullptr;
-    auto* tomb = head ? head->dcast_royal_tomb() : nullptr;
+    auto* tomb = test_royal_tomb_main(bid);
     if (!tomb || figure_type <= 0) {
         return 0;
     }
-    if (!tomb->need_workers()) {
-        return 0;
-    }
-
     const tile2i at = tomb->access_point();
     figure* f = figure_create((e_figure_type)figure_type, at, DIR_0_TOP_RIGHT);
     if (!f || !f->id || !f->is_alive()) {
         return 0;
     }
+    f->set_destination(&tomb->base);
+    tomb->add_workers(f->id);
+    building* part = building_get(f->destination_building_id);
+    auto* pt = part ? part->dcast_royal_tomb() : nullptr;
+    if (!pt || pt->runtime_data().worker_figure_id != f->id) {
+        f->poof();
+        return 0;
+    }
     if (figure_type == FIGURE_STONEMASON) {
-        f->action_state = ACTION_4_MASON_WORK_GROUND;
+        f->action_state = ACTION_9_MASON_WORK_OBELISK;
+        if (auto* mason = smart_cast<figure_stonemason>(f)) {
+            mason->runtime_data().destination_bid = part->id;
+        }
     } else if (figure_type == FIGURE_TOMB_ARTISAN) {
         f->action_state = ACTION_14_TOMB_ARTISAN_WORK;
         if (auto* impl = static_cast<figure_tomb_artisan*>(f->dcast())) {
-            impl->runtime_data().destination_bid = head->id;
+            impl->runtime_data().destination_bid = part->id;
         }
     }
-    f->set_destination(head);
     f->destination_tile = at;
-    tomb->add_workers(f->id);
     return f->id;
 }
 ANK_FUNCTION_2(__test_royal_tomb_attach_worker);
+
+// Run the figure's work ticks at its royal tomb part; returns the tick on which it was done (it is
+// then sent home), or -1 when it still works after max_ticks.
+static int __test_royal_tomb_work(int fid, int max_ticks) {
+    figure* f = figure_get(fid);
+    building* part = f ? building_get(f->destination_building_id) : nullptr;
+    auto* tomb = part ? part->dcast_royal_tomb() : nullptr;
+    if (!tomb) {
+        return -2;
+    }
+    for (int i = 1; i <= max_ticks; ++i) {
+        if (tomb->work_tick(*f)) {
+            tomb->remove_worker(fid);
+            f->action_state
+              = (f->type == FIGURE_STONEMASON) ? ACTION_6_MASON_RETURN_HOME : ACTION_16_TOMB_ARTISAN_RETURN_HOME;
+            return i;
+        }
+    }
+    return -1;
+}
+ANK_FUNCTION_2(__test_royal_tomb_work);
 
 // Minimum map_monuments progress across the monument chain (all parts).
 static int __test_monument_min_progress(int bid) {

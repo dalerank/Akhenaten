@@ -1,5 +1,6 @@
 #include "building_artisans_guild.h"
 
+#include "building/monument_royal_tomb.h"
 #include "building/monuments.h"
 #include "city/city.h"
 #include "core/random.h"
@@ -46,10 +47,6 @@ void building_artisans_guild::spawn_figure() {
         return;
     }
 
-    if (!has_paint_and_clay()) {
-        return;
-    }
-
     int spawn_delay = figure_spawn_timer();
     if (spawn_delay == -1) {
         return;
@@ -61,7 +58,10 @@ void building_artisans_guild::spawn_figure() {
     }
 
     base.figure_spawn_delay = 0;
-    if (!can_spawn_tomb_artisan()) {
+    if (spawn_royal_tomb_artisan()) {
+        return;
+    }
+    if (!has_paint_and_clay() || !can_spawn_tomb_artisan()) {
         return;
     }
 
@@ -107,4 +107,37 @@ void building_artisans_guild::spawn_figure() {
 
     monument->dcast()->add_workers(f->id);
     f->wait_ticks = random_short() % 30;
+}
+
+// OG building_artisans_guild_spawn_figure: a royal tomb chamber at stage 2 takes a load of clay,
+// one at stage 3 a load of paint.
+bool building_artisans_guild::spawn_royal_tomb_artisan() {
+    if (get_figures_number(FIGURE_TOMB_ARTISAN) >= current_params().max_walkers) {
+        return false;
+    }
+    e_resource material = RESOURCE_NONE;
+    if (stored_amount(RESOURCE_CLAY) >= 100 && building_royal_tomb::find_work(FIGURE_TOMB_ARTISAN, 0, false, 2)) {
+        material = RESOURCE_CLAY;
+    } else if (
+      stored_amount(RESOURCE_PAINT) >= 100 && building_royal_tomb::find_work(FIGURE_TOMB_ARTISAN, 0, false, 3)) {
+        material = RESOURCE_PAINT;
+    }
+    if (material == RESOURCE_NONE) {
+        return false;
+    }
+    const int stage = (material == RESOURCE_CLAY) ? 2 : 3;
+    building_royal_tomb* part = building_royal_tomb::find_work(FIGURE_TOMB_ARTISAN, 0, false, stage);
+    auto* f = create_figure_with_destination(FIGURE_TOMB_ARTISAN, &part->base,
+      (e_figure_action)ACTION_10_TOMB_ARTISAN_CREATED, BUILDING_SLOT_SERVICE);
+    if (!f || !f->id) {
+        return false;
+    }
+    part->check_work_for_figure(FIGURE_TOMB_ARTISAN, f->id, true);
+    consume_resource(material, 100);
+    f->terrain_usage = TERRAIN_USAGE_PREFER_ROADS;
+    if (auto* impl = f->dcast()) {
+        static_cast<figure_tomb_artisan*>(impl)->runtime_data().destination_bid = part->id();
+    }
+    f->wait_ticks = random_short() % 30;
+    return true;
 }

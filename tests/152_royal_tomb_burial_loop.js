@@ -11,11 +11,7 @@ function place_finished_small_royal() {
     }
     var cx = 40
     var cy = 40
-    for (var dy = 0; dy < 20; dy++) {
-        for (var dx = 0; dx < 11; dx++) {
-            terrain.add({ x: cx + dx, y: cy + dy }, TERRAIN_ELEVATION)
-        }
-    }
+    __test_royal_tomb_paint_site(BUILDING_SMALL_ROYAL_TOMB, cx, cy)
     var bid = test_building_place(BUILDING_SMALL_ROYAL_TOMB, cx, cy)
     if (!bid) {
         return 0
