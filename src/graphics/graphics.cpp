@@ -309,7 +309,8 @@ void ImageDraw::apply_render_commands(painter& ctx, std::string_view p) {
                 if (run_end != seg_end)
                     pq.push(i);
             }
-            vec = std::move(g_render_draw_temp_commands);
+            // swap, not move: both buffers keep their capacity for the next phase.
+            vec.swap(g_render_draw_temp_commands);
         }
     }
 
