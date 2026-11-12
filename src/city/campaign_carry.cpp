@@ -1,6 +1,7 @@
 #include "city/campaign_carry.h"
 
 #include "building/building.h"
+#include "building/monument_pharos_lighthouse.h"
 #include "building/monument_royal_tomb.h"
 #include "building/monuments.h"
 #include "city/city.h"
@@ -411,20 +412,6 @@ bool carry_tile_not_clear(tile2i t) {
         || map_building_at(t);
 }
 
-bool carry_tile_not_rock(tile2i t) {
-    if (!map_terrain_is(t, TERRAIN_ROCK)) {
-        return true;
-    }
-    if (map_terrain_is(t, TERRAIN_WATER | TERRAIN_BUILDING | TERRAIN_ELEVATION | TERRAIN_ACCESS_RAMP
-                           | TERRAIN_TREE | TERRAIN_SHRUB | TERRAIN_GARDEN | TERRAIN_ROAD | TERRAIN_CANAL)) {
-        return true;
-    }
-    if (map_has_figure_at(t) || map_building_at(t)) {
-        return true;
-    }
-    return false;
-}
-
 bool carry_royal_tomb_area_ok(e_building_type type, tile2i origin, int /*orientation*/) {
     return building_royal_tomb::can_place_at(type, origin);
 }
@@ -433,14 +420,13 @@ bool carry_area_ok(e_building_type type, tile2i origin, int w, int h) {
     if (w < 1 || h < 1 || !origin.valid()) {
         return false;
     }
-    const bool need_rock = (type == BUILDING_PHAROS_LIGHTHOUSE);
     for (int dy = 0; dy < h; dy++) {
         for (int dx = 0; dx < w; dx++) {
             tile2i t = origin.shifted(dx, dy);
             if (!map_grid_is_inside(t, 1)) {
                 return false;
             }
-            if (need_rock ? carry_tile_not_rock(t) : carry_tile_not_clear(t)) {
+            if (carry_tile_not_clear(t)) {
                 return false;
             }
         }
@@ -451,6 +437,9 @@ bool carry_area_ok(e_building_type type, tile2i origin, int w, int h) {
 bool carry_footprint_ok(e_building_type type, tile2i tile, int orientation) {
     if (campaign_carry_is_royal_tomb(type)) {
         return carry_royal_tomb_area_ok(type, tile, orientation);
+    }
+    if (type == BUILDING_PHAROS_LIGHTHOUSE) {
+        return building_pharos_lighthouse::site_fits(tile);
     }
     const vec2i ft = carry_monument_footprint(type, orientation);
     return carry_area_ok(type, tile, ft.x, ft.y);
@@ -487,11 +476,7 @@ bool carry_find_place_tile(e_building_type type, uint8_t &orientation, tile2i pr
         for (int y = 0; y <= map_h - ft.y; y++) {
             for (int x = 0; x <= map_w - ft.x; x++) {
                 tile2i t(x, y);
-                if (campaign_carry_is_royal_tomb(type)) {
-                    if (!carry_royal_tomb_area_ok(type, t, o)) {
-                        continue;
-                    }
-                } else if (!carry_area_ok(type, t, ft.x, ft.y)) {
+                if (!carry_footprint_ok(type, t, o)) {
                     continue;
                 }
                 orientation = o;

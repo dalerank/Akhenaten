@@ -1,159 +1,98 @@
 #include "monument_pharos_lighthouse.h"
 
 #include "building/monuments.h"
+#include "city/city.h"
 #include "city/city_buildings.h"
-#include "city/city_figures.h"
+#include "city/city_message.h"
 #include "city/city_warnings.h"
 #include "construction/build_planner.h"
 #include "figure/figure.h"
-#include "graphics/color.h"
+#include "figuretype/figure_carpenter.h"
+#include "figuretype/figure_cartpusher.h"
+#include "figuretype/figure_stonemason.h"
+#include "figuretype/figure_worker.h"
+#include "game/resource.h"
+#include "game/undo.h"
 #include "graphics/view/lookup.h"
 #include "graphics/view/view.h"
 #include "grid/building.h"
 #include "grid/building_tiles.h"
-#include "grid/figure.h"
 #include "grid/grid.h"
-#include "grid/image.h"
-#include "grid/property.h"
-#include "grid/road_access.h"
 #include "grid/terrain.h"
 #include "io/io_buffer.h"
 #include "js/js_game.h"
+#include "scenario/scenario.h"
 
 #include <algorithm>
 
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_pharos_lighthouse);
-
-static monument g_monument_pharos_lighthouse{BUILDING_PHAROS_LIGHTHOUSE};
+BUILDING_RUNTIME_DATA_IMPL(building_pharos_lighthouse)
 
 namespace {
+    enum {
+        MAP_EDGE_MARGIN = 3,
+    };
 
-// Rock footprint: every tile must be rock; reject water / building / figures / elevation.
-bool tile_not_rock(tile2i t) {
-    if (!map_terrain_is(t, TERRAIN_ROCK)) {
-        return true;
-    }
-    if (map_terrain_is(t, TERRAIN_WATER | TERRAIN_BUILDING | TERRAIN_ELEVATION | TERRAIN_ACCESS_RAMP
-            | TERRAIN_TREE | TERRAIN_SHRUB | TERRAIN_GARDEN | TERRAIN_ROAD | TERRAIN_CANAL)) {
-        return true;
-    }
-    if (map_has_figure_at(t)) {
-        return true;
-    }
-    return false;
-}
+    constexpr uint32_t k_blocks_monument = 0xFEFFD76Fu & ~(uint32_t)TERRAIN_PLANER_FUTURE;
 
-bool area_not_all_rock(tile2i origin, int w, int h) {
-    if (w < 1 || h < 1) {
-        return true;
-    }
-    for (int dy = 0; dy < h; dy++) {
-        for (int dx = 0; dx < w; dx++) {
-            tile2i t = origin.shifted(dx, dy);
-            if (!map_grid_is_inside(t, 1) || tile_not_rock(t)) {
-                return true;
+    const vec2i k_land_part_offset = {2, 6};
+
+    struct monument_pharos_lighthouse_cfg : public monument {
+        monument_pharos_lighthouse_cfg() : monument{BUILDING_PHAROS_LIGHTHOUSE} {
+            for (uint8_t i = 0; i < building_pharos_lighthouse::STAGE_COMPLETE; ++i) {
+                phases.push_back({i, monument_phase_resource{ARCHITECTS, 1}});
             }
         }
-    }
-    return false;
-}
+    } g_monument_pharos_lighthouse;
 
-void draw_rock_area_mask(painter &ctx, tile2i origin, int w, int h, bool force_red) {
-    for (int dy = 0; dy < h; dy++) {
-        for (int dx = 0; dx < w; dx++) {
-            tile2i t = origin.shifted(dx, dy);
-            vec2i pixel = g_camera.lookup_tile_to_pixel(t);
-            const bool bad = force_red || !map_grid_is_inside(t, 1) || tile_not_rock(t);
-            build_planner::draw_flat_tile(ctx, pixel, bad ? COLOR_MASK_RED_30 : COLOR_MASK_GREEN_30);
-        }
+    int camera_view() {
+        return (g_camera.orientation / 2) & 3;
     }
-}
 
-void pharos_add_rect_tiles(int building_id, tile2i tile, int w, int h, int image_id) {
-    if (w < 1 || h < 1) {
-        return;
-    }
-    for (int dy = 0; dy < h; dy++) {
-        for (int dx = 0; dx < w; dx++) {
-            tile2i t = tile.shifted(dx, dy);
-            if (!map_grid_is_inside(t, 1)) {
-                continue;
+    void collect_site(tile2i tower, blocked_tile_vec& tiles, blocked_tile& land) {
+        for (int dy = 0; dy < building_pharos_lighthouse::TOWER_SIZE; ++dy) {
+            for (int dx = 0; dx < building_pharos_lighthouse::TOWER_SIZE; ++dx) {
+                const tile2i t = tower.shifted(dx, dy);
+                tiles.push_back({t, !building_pharos_lighthouse::site_tile_free(t, true)});
             }
-            const int grid_offset = t.grid_offset();
-            // Rock is not CLEARABLE — strip it explicitly so the footprint becomes BUILDING.
-            map_terrain_remove(grid_offset, TERRAIN_CLEARABLE | TERRAIN_ROCK);
-            map_terrain_add(grid_offset, TERRAIN_BUILDING);
-            map_building_set(grid_offset, building_id);
-            map_property_clear_constructing(grid_offset);
-            map_property_set_multi_tile_size(grid_offset, 1);
-            map_image_set(grid_offset, (dx == 0 && dy == 0) ? image_id : 0);
-            map_property_set_multi_tile_xy(grid_offset, dx, dy, dx == 0 && dy == 0);
+        }
+        const tile2i land_tile = building_pharos_lighthouse::land_part_tile(tower);
+        land = {land_tile, !building_pharos_lighthouse::site_tile_free(land_tile, false)};
+    }
+
+    void draw_site(painter& ctx, tile2i tower, bool fully_blocked) {
+        blocked_tile_vec tiles;
+        blocked_tile land;
+        collect_site(tower, tiles, land);
+        build_planner::draw_partially_blocked(ctx, fully_blocked, tiles);
+        blocked_tile_vec land_only;
+        land_only.push_back(land);
+        build_planner::draw_partially_blocked(ctx, fully_blocked, land_only);
+    }
+
+    bool laborer_fetching_for(const figure* laborer, figure_id mason_id) {
+        if (!laborer || !laborer->is_alive() || laborer->type != FIGURE_LABORER
+            || laborer->leading_figure_id != mason_id) {
+            return false;
+        }
+        switch (laborer->action_state) {
+        case ACTION_6_CARTPUSHER_ON_FERRY:
+        case ACTION_7_CARTPUSHER_WAIT_FOR_FERRY:
+        case ACTION_15_LABORER_TO_STORAGE_YARD:
+        case ACTION_16_LABORER_AT_STORAGE_YARD:
+        case ACTION_35_LABORER_SLED_TO_LIGHTHOUSE:
+            return true;
+        default:
+            return false;
         }
     }
-    map_property_mark_draw_tile(tile.grid_offset());
-}
-
-uint16_t load_at(const svector<uint16_t, 8> &loads, int index) {
-    if (index >= 0 && index < (int)loads.size()) {
-        return loads[index];
-    }
-    return 0;
-}
-
-bool worker_slot_occupied(uint16_t wid) {
-    if (wid == 0) {
-        return false;
-    }
-    figure *f = figure_get(wid);
-    return f && f->is_alive();
-}
-
-void scrub_dead_workers(std::array<uint16_t, 5> &workers) {
-    for (auto &wid : workers) {
-        if (wid && !worker_slot_occupied(wid)) {
-            wid = 0;
-        }
-    }
-}
-
 } // namespace
 
-void building_pharos_lighthouse::static_params::rebuild_construction() {
-    monument &m = g_monument_pharos_lighthouse;
-    m.btype = BUILDING_PHAROS_LIGHTHOUSE;
-    m.phases.clear();
-
-    // 0–1: Work Camp clearing rock island pad (foreman 132).
-    m.phases.push_back({0, monument_phase_resource{ARCHITECTS, 1}});
-    m.phases.push_back({1, monument_phase_resource{ARCHITECTS, 1}});
-
-    const uint16_t marble_a = load_at(marble_loads, 0);
-    const uint16_t marble_b = load_at(marble_loads, 1);
-    const uint16_t marble_c = load_at(marble_loads, 2);
-    const uint16_t marble_d = load_at(marble_loads, 3);
-    const uint16_t marble_e = load_at(marble_loads, 4);
-    const uint16_t timber_foundation = load_at(timber_loads, 0);
-    const uint16_t timber_tier1 = load_at(timber_loads, 1);
-    const uint16_t timber_octagon = load_at(timber_loads, 2);
-
-    // 2: foundation (133) — marble + early scaffold
-    m.phases.push_back({2, monument_phase_resource{ARCHITECTS, 1}, {RESOURCE_MARBLE, marble_a}, {RESOURCE_TIMBER, timber_foundation}});
-    // 3: parquet floor (134)
-    m.phases.push_back({3, monument_phase_resource{ARCHITECTS, 1}, {RESOURCE_MARBLE, marble_b}});
-    // 4: first (square) tier (135)
-    m.phases.push_back({4, monument_phase_resource{ARCHITECTS, 1}, {RESOURCE_MARBLE, marble_c}, {RESOURCE_TIMBER, timber_tier1}});
-    // 5: octagonal tier (136)
-    m.phases.push_back({5, monument_phase_resource{ARCHITECTS, 1}, {RESOURCE_MARBLE, marble_d}, {RESOURCE_TIMBER, timber_octagon}});
-    // 6: cupola (137)
-    m.phases.push_back({6, monument_phase_resource{ARCHITECTS, 1}, {RESOURCE_MARBLE, marble_e}});
-    // 7: scaffolding removed (138–139) — carpenters (no timber consume; need_carpenter override)
-    m.phases.push_back({7, monument_phase_resource{ARCHITECTS, 1}});
-    // 8: finish sentinel
-    m.phases.push_back({8, monument_phase_resource{RESOURCE_NONE, 0}});
+void building_pharos_lighthouse::static_params::archive_load(archive /*arch*/) {
 }
 
-void building_pharos_lighthouse::static_params::archive_load(archive /*arch*/) {
-    rebuild_construction();
+const building_pharos_lighthouse::base_params& building_pharos_lighthouse::lighthouse_params() {
+    return (const base_params&)current_params();
 }
 
 const monument &building_pharos_lighthouse::config() const {
@@ -161,263 +100,422 @@ const monument &building_pharos_lighthouse::config() const {
 }
 
 bool building_pharos_lighthouse::has_unfinished_pharos_lighthouse() {
-    return building_monument_has_unfinished({BUILDING_PHAROS_LIGHTHOUSE});
+    return building_monument_has_unfinished({BUILDING_PHAROS_LIGHTHOUSE}, true);
 }
 
-vec2i building_pharos_lighthouse::footprint_size() const {
-    const auto &bp = current_params();
-    vec2i ft = bp.init_tiles;
-    if (ft.x <= 0 || ft.y <= 0) {
-        ft = {6, 6};
-    }
-    return ft;
+tile2i building_pharos_lighthouse::land_part_tile(tile2i tower) {
+    return tower.shifted(k_land_part_offset.x, k_land_part_offset.y);
 }
 
-int building_pharos_lighthouse::art_stage() const {
-    const auto &bp = current_params();
-    const int max_stage = bp.art_stages > 0 ? bp.art_stages : 9;
-    const int p = runtime_data().phase;
-    if (p == MONUMENT_FINISHED) {
-        return max_stage; // LtHouse9
-    }
-    if (p <= 1) {
-        return 1;
-    }
-    if (p >= 7) {
-        return std::min(7, max_stage); // scaffold off → LtHouse7
-    }
-    // phases 2–6 → art 2–6
-    return std::min(p, max_stage);
-}
-
-xstring building_pharos_lighthouse::anim_key_for(int stage) const {
-    const auto &bp = current_params();
-    const int max_stage = bp.art_stages > 0 ? bp.art_stages : 9;
-    if (stage < 1) {
-        stage = 1;
-    }
-    if (stage > max_stage) {
-        stage = max_stage;
-    }
-    bstring32 key;
-    key.printf("s%c", 'a' + (stage - 1));
-    return xstring(key.c_str());
-}
-
-bool building_pharos_lighthouse::needs_resources() const {
-    if (is_finished()) {
+bool building_pharos_lighthouse::site_tile_free(tile2i tile, bool tower) {
+    const auto* map = scenario_map_data();
+    if (tile.x() < MAP_EDGE_MARGIN || tile.y() < MAP_EDGE_MARGIN || tile.x() >= map->width - MAP_EDGE_MARGIN
+        || tile.y() >= map->height - MAP_EDGE_MARGIN) {
         return false;
     }
-    auto &d = runtime_data();
-    for (e_resource r = RESOURCES_MIN; r < RESOURCES_MAX; ++r) {
-        if (needs_resource(r) <= 0) {
-            continue;
+    if (map_building_at(tile)) {
+        return false;
+    }
+    const uint32_t terrain = map_terrain_get(tile.grid_offset()) & k_blocks_monument;
+    return tower ? terrain == TERRAIN_ROCK : terrain == 0;
+}
+
+bool building_pharos_lighthouse::site_fits(tile2i tower) {
+    blocked_tile_vec tiles;
+    blocked_tile land;
+    collect_site(tower, tiles, land);
+    return !land.blocked && std::none_of(tiles.begin(), tiles.end(), [](const auto& t) { return t.blocked; });
+}
+
+building_pharos_lighthouse* building_pharos_lighthouse::main_lighthouse() {
+    building_impl* m = main();
+    auto* l = m ? m->dcast_pharos_lighthouse() : nullptr;
+    return l ? l : this;
+}
+
+const building_pharos_lighthouse* building_pharos_lighthouse::main_lighthouse() const {
+    return const_cast<building_pharos_lighthouse*>(this)->main_lighthouse();
+}
+
+int building_pharos_lighthouse::stage() const {
+    const int p = main_lighthouse()->runtime_data().phase;
+    if (p == MONUMENT_FINISHED || p >= STAGE_COMPLETE) {
+        return STAGE_COMPLETE;
+    }
+    return std::max(p, 0);
+}
+
+int building_pharos_lighthouse::spot_index(e_figure_type type) const {
+    if (type == FIGURE_STONEMASON) {
+        return SPOT_MASON;
+    }
+    if (type == FIGURE_CARPENTER) {
+        return SPOT_CARPENTER;
+    }
+    return -1;
+}
+
+int building_pharos_lighthouse::spot_work_left(e_figure_type type) const {
+    const int i = spot_index(type);
+    return i < 0 ? 0 : main_lighthouse()->runtime_data().spot_work[i];
+}
+
+void building_pharos_lighthouse::reset_spots() {
+    auto& d = main_lighthouse()->runtime_data();
+    d.spot_work.fill(0);
+    const int s = stage();
+    for (const auto& def : lighthouse_params().spots) {
+        const int i = spot_index(def.figure);
+        if (def.stage == s && i >= 0) {
+            d.spot_work[i] = def.work;
         }
-        if (d.resources_pct[r] < 100) {
+    }
+}
+
+figure_id building_pharos_lighthouse::worker_figure_id() const {
+    return main_lighthouse()->runtime_data().worker_fid;
+}
+
+bool building_pharos_lighthouse::part_has_active_worker() const {
+    auto& d = const_cast<building_pharos_lighthouse*>(main_lighthouse())->runtime_data();
+    if (!d.worker_fid) {
+        return false;
+    }
+    figure* f = figure_get(d.worker_fid);
+    if (f && f->is_alive()) {
+        const int action = f->action_state;
+        if (f->type == FIGURE_STONEMASON
+            && (action == ACTION_0_MASON_CREATED || action == ACTION_1_MASON_GOING
+                || action == ACTION_9_MASON_WORK_OBELISK || action == ACTION_19_MASON_WAIT_FOR_BLOCK)) {
+            return true;
+        }
+        if (f->type == FIGURE_CARPENTER
+            && (action == ACTION_1_CARPENTER_GO_TO_SITE || action == ACTION_2_CARPENTER_WORK)) {
             return true;
         }
     }
+    d.worker_fid = 0;
     return false;
 }
 
-bool building_pharos_lighthouse::need_stonemason() {
-    if (is_finished()) {
+bool building_pharos_lighthouse::has_free_spot(e_figure_type type) const {
+    if (stage() >= STAGE_COMPLETE || spot_work_left(type) <= 0) {
         return false;
     }
-    scrub_dead_workers(runtime_data().workers);
-    const int p = runtime_data().phase;
-    // Mason work: foundation through cupola (2–6). Phase 7 = carpenter scaffold teardown.
-    if (p < 2 || p > 6) {
-        return false;
-    }
-    if (!need_workers()) {
-        return false;
-    }
-    for (auto wid : runtime_data().workers) {
-        figure *f = wid > 0 ? figure_get(wid) : nullptr;
-        if (f && f->is_alive() && f->type == FIGURE_STONEMASON) {
-            return false;
-        }
+    if (part_has_active_worker()) {
+        const figure* f = figure_get(worker_figure_id());
+        const bool working
+          = f->action_state
+            == (f->type == FIGURE_STONEMASON ? (int)ACTION_9_MASON_WORK_OBELISK : (int)ACTION_2_CARPENTER_WORK);
+        return f->type != type || !working;
     }
     return true;
 }
 
-bool building_pharos_lighthouse::need_carpenter() {
-    if (is_finished()) {
+figure_id building_pharos_lighthouse::mason_waiting_for_block() const {
+    if (!part_has_active_worker()) {
+        return 0;
+    }
+    figure* mason = figure_get(worker_figure_id());
+    if (mason->type != FIGURE_STONEMASON || mason->action_state != ACTION_19_MASON_WAIT_FOR_BLOCK) {
+        return 0;
+    }
+    if (mason->leading_figure_id) {
+        if (laborer_fetching_for(figure_get(mason->leading_figure_id), mason->id)) {
+            return 0;
+        }
+        mason->leading_figure_id = 0;
+    }
+    return mason->id;
+}
+
+bool building_pharos_lighthouse::sled_arrived(figure& mason) {
+    auto& d = main_lighthouse()->runtime_data();
+    if (mason.type != FIGURE_STONEMASON || mason.action_state != ACTION_19_MASON_WAIT_FOR_BLOCK) {
         return false;
     }
-    scrub_dead_workers(runtime_data().workers);
-    const int p = runtime_data().phase;
-    // Timber phases use base logic; phase 7 teardown needs a carpenter with no timber consume.
-    if (p == 7) {
-        if (!need_workers()) {
-            return false;
-        }
-        for (auto wid : runtime_data().workers) {
-            figure *f = wid > 0 ? figure_get(wid) : nullptr;
-            if (f && f->is_alive() && f->type == FIGURE_CARPENTER) {
-                return false;
-            }
-        }
+    mason.leading_figure_id = 0;
+    if (++d.sleds < SLEDS_PER_BLOCK) {
+        return false;
+    }
+    d.sleds = 0;
+    mason.action_state = ACTION_9_MASON_WORK_OBELISK;
+    mason.wait_ticks = 0;
+    return true;
+}
+
+bool building_pharos_lighthouse::work_tick(figure& f) {
+    building_pharos_lighthouse* m = main_lighthouse();
+    if (m != this) {
+        return m->work_tick(f);
+    }
+    const int i = spot_index(f.type);
+    auto& d = runtime_data();
+    if (i < 0 || stage() >= STAGE_COMPLETE || d.spot_work[i] == 0) {
         return true;
     }
-    return building_monument::need_carpenter();
+    if (--d.spot_work[i] > 0) {
+        return false;
+    }
+    if (d.worker_fid == f.id) {
+        d.worker_fid = 0;
+    }
+    if (d.spot_work[SPOT_MASON] == 0 && d.spot_work[SPOT_CARPENTER] == 0) {
+        advance_stage();
+    }
+    return true;
+}
+
+void building_pharos_lighthouse::advance_stage() {
+    const int next = stage() + 1;
+    if (next > STAGE_COMPLETE) {
+        return;
+    }
+    set_phase(next >= STAGE_COMPLETE ? MONUMENT_FINISHED : next);
+    reset_spots();
+    if (next >= STAGE_COMPLETE) {
+        messages::popup("lighthouse_congratulations", 0, tile().grid_offset());
+    }
+}
+
+void building_pharos_lighthouse::set_stage(int target) {
+    building_pharos_lighthouse* m = main_lighthouse();
+    if (m != this) {
+        m->set_stage(target);
+        return;
+    }
+    target = std::clamp(target, 0, (int)STAGE_COMPLETE);
+    set_phase(target >= STAGE_COMPLETE ? MONUMENT_FINISHED : target);
+    runtime_data().sleds = 0;
+    reset_spots();
+}
+
+void building_pharos_lighthouse::set_phase(int phase) {
+    building_monument::set_phase(phase);
+    if (has_next()) {
+        if (auto* land = next()->dcast_pharos_lighthouse()) {
+            land->runtime_data().phase = runtime_data().phase;
+        }
+    }
+}
+
+void building_pharos_lighthouse::on_phase_changed(int /*old_phase*/, int current) {
+    if (is_main()) {
+        refresh_tower_tiles();
+        update_animation();
+    }
+    if (current != MONUMENT_FINISHED) {
+        auto& d = runtime_data();
+        std::fill(std::begin(d.resources_pct), std::end(d.resources_pct), 0);
+    }
+}
+
+int building_pharos_lighthouse::get_progress(progress_info* out) const {
+    const int s = stage();
+    progress_info info;
+    info.stage = s;
+    info.percent = (s >= STAGE_COMPLETE) ? 100 : (s + 1) * 10;
+    if (part_has_active_worker()) {
+        const figure* f = figure_get(worker_figure_id());
+        if (f->type == FIGURE_CARPENTER) {
+            info.carpenters = 1;
+        } else if (f->type == FIGURE_STONEMASON) {
+            info.stonemasons = 1;
+            info.stonemasons_waiting = f->action_state == ACTION_19_MASON_WAIT_FOR_BLOCK ? 1 : 0;
+        }
+    }
+    info.material = std::max(0, (STAGE_COMPLETE - s) * SLEDS_PER_BLOCK * MATERIAL_PER_LOAD);
+    info.material_total = STAGE_COMPLETE * SLEDS_PER_BLOCK * MATERIAL_PER_LOAD;
+    if (out) {
+        *out = info;
+    }
+    return info.percent;
+}
+
+bool building_pharos_lighthouse::needs_resources() const {
+    return false;
+}
+
+bool building_pharos_lighthouse::need_stonemason() {
+    return is_main() && !is_finished() && !part_has_active_worker() && has_free_spot(FIGURE_STONEMASON);
+}
+
+bool building_pharos_lighthouse::need_carpenter() {
+    return is_main() && !is_finished() && !part_has_active_worker() && has_free_spot(FIGURE_CARPENTER);
 }
 
 bool building_pharos_lighthouse::need_workers() const {
-    if (is_finished()) {
-        return false;
-    }
-    for (auto wid : runtime_data().workers) {
-        if (!worker_slot_occupied(wid)) {
-            return true;
-        }
-    }
     return false;
 }
 
 void building_pharos_lighthouse::add_workers(figure_id fid) {
-    auto &d = runtime_data();
-    scrub_dead_workers(d.workers);
-    for (auto &wid : d.workers) {
-        if (wid == 0) {
-            wid = fid;
-            return;
-        }
+    building_pharos_lighthouse* m = main_lighthouse();
+    figure* f = figure_get(fid);
+    if (!f || (f->type != FIGURE_STONEMASON && f->type != FIGURE_CARPENTER)) {
+        return;
     }
+    if (m->part_has_active_worker() || m->spot_work_left(f->type) <= 0 || m->is_finished()) {
+        return;
+    }
+    m->runtime_data().worker_fid = fid;
 }
 
 void building_pharos_lighthouse::remove_worker(figure_id fid) {
-    auto &d = runtime_data();
-    for (auto &wid : d.workers) {
-        if (wid == fid) {
-            wid = 0;
-            return;
-        }
+    auto& d = main_lighthouse()->runtime_data();
+    if (d.worker_fid == fid) {
+        d.worker_fid = 0;
     }
 }
 
 int building_pharos_lighthouse::building_image_get() const {
-    const xstring key = anim_key_for(art_stage());
-    const auto &params = current_params();
-    int img = params.first_img(key);
-    if (img > 0) {
-        return img;
+    if (is_land_part()) {
+        return 0;
     }
-    return params.first_img("preview");
+    bstring32 key;
+    key.printf("s%d", stage() + 1);
+    const auto &params = current_params();
+    const int img = params.first_img(xstring(key.c_str()));
+    return img > 0 ? img : params.first_img("preview");
+}
+
+void building_pharos_lighthouse::refresh_tower_tiles() {
+    map_building_tiles_add(id(), tile(), TOWER_SIZE, building_image_get(), TERRAIN_BUILDING);
+    for (int dy = 0; dy < TOWER_SIZE; ++dy) {
+        for (int dx = 0; dx < TOWER_SIZE; ++dx) {
+            map_terrain_remove(tile().shifted(dx, dy).grid_offset(), TERRAIN_ROCK);
+        }
+    }
 }
 
 void building_pharos_lighthouse::preview::setup_preview_graphics(build_planner &planer) const {
-    const auto &bp = building_pharos_lighthouse::current_params();
-    const vec2i init_tiles = bp.init_tiles.x > 0 ? bp.init_tiles : vec2i{6, 6};
-    planer.init_tiles(init_tiles.x, init_tiles.y);
+    planer.init_tiles(1, 1);
 }
 
 uint32_t building_pharos_lighthouse::preview::ghost_ignore_terrain(build_planner & /*p*/, tile2i /*tile*/) const {
-    return TERRAIN_ROCK;
+    return TERRAIN_NOT_CLEAR;
 }
 
-int building_pharos_lighthouse::preview::can_place(build_planner &p, tile2i /*tile*/, tile2i end, int state) const {
+int building_pharos_lighthouse::preview::can_place(build_planner& /*p*/, tile2i /*tile*/, tile2i end, int state) const {
     if (state != CAN_PLACE && state != CAN_NOT_BUT_GREEN) {
         return state;
     }
-    if (has_unfinished_pharos_lighthouse()) {
-        p.set_warning("#one_pharos_only");
-        return CAN_NOT_PLACE;
-    }
-    const auto &bp = building_pharos_lighthouse::current_params();
-    const vec2i ft = bp.init_tiles.x > 0 ? bp.init_tiles : vec2i{6, 6};
-    if (area_not_all_rock(end, ft.x, ft.y)) {
-        // CAN_NOT_BUT_GREEN → ghost_preview shows per-tile rock mask (help: all green).
+    if (!site_fits(end) || has_unfinished_pharos_lighthouse()) {
         return CAN_NOT_BUT_GREEN;
     }
     return CAN_PLACE;
 }
 
-int building_pharos_lighthouse::preview::finalize_check(build_planner &p, tile2i tile, tile2i end, int state) const {
-    state = building_planer_renderer::finalize_check(p, tile, end, state);
-    if (state != CAN_PLACE) {
+int building_pharos_lighthouse::preview::finalize_check(build_planner& p, tile2i /*tile*/, tile2i end,
+  int state) const {
+    if (state != CAN_PLACE && state != CAN_NOT_BUT_GREEN) {
         return state;
+    }
+    if (!site_fits(end)) {
+        g_warning_manager.show("#must_be_over_rocks");
+        p.set_warning("#entrance_on_clear_land");
+        return CAN_NOT_PLACE;
     }
     if (has_unfinished_pharos_lighthouse()) {
         p.set_warning("#one_pharos_only");
-        g_warning_manager.show("#one_pharos_only");
         return CAN_NOT_PLACE;
     }
-    return can_place(p, tile, end, CAN_PLACE);
+    return CAN_PLACE;
 }
 
-void building_pharos_lighthouse::preview::ghost_preview(build_planner &planer, painter &ctx, tile2i /*start*/, tile2i end, vec2i pixel) const {
-    const auto &params = building_static_params::get(planer.build_type);
-    const auto &bp = building_pharos_lighthouse::current_params();
-    const vec2i ft = bp.init_tiles.x > 0 ? bp.init_tiles : vec2i{6, 6};
-
-    if (has_unfinished_pharos_lighthouse()) {
-        draw_rock_area_mask(ctx, end, ft.x, ft.y, true);
-        return;
+int building_pharos_lighthouse::preview::construction_place(build_planner& planer, tile2i /*tile*/, tile2i end,
+  int orientation, int variant) const {
+    planer.last_created_building = nullptr;
+    building* b = building_create(BUILDING_PHAROS_LIGHTHOUSE, end, orientation);
+    game_undo_add_building(b);
+    if (b->id <= 0) {
+        return 0;
     }
-    if (area_not_all_rock(end, ft.x, ft.y)) {
-        draw_rock_area_mask(ctx, end, ft.x, ft.y, false);
-        return;
-    }
+    add_building(b, orientation, variant);
+    planer.last_created_building = b;
+    return 1;
+}
 
-    const int preview = params.first_img("preview");
-    const int img = params.first_img("sa");
-    planer.draw_building_ghost(ctx, img > 0 ? img : preview, pixel);
+void building_pharos_lighthouse::preview::ghost_preview(build_planner& /*planer*/, painter& ctx, tile2i /*start*/,
+  tile2i end, vec2i /*pixel*/) const {
+    draw_site(ctx, end, false);
+}
+
+void building_pharos_lighthouse::preview::ghost_blocked(build_planner& /*planer*/, painter& ctx, tile2i /*start*/,
+  tile2i end, vec2i /*pixel*/, bool fully_blocked) const {
+    draw_site(ctx, end, fully_blocked);
 }
 
 void building_pharos_lighthouse::on_place_update_tiles(int orientation, int /*variant*/) {
     base.orientation = orientation;
-    const vec2i ft = footprint_size();
-    base.size = (uint8_t)std::max({ft.x, ft.y, 1});
-    pharos_add_rect_tiles(id(), tile(), ft.x, ft.y, building_image_get());
-    for (int dy = 0; dy < ft.y; dy++) {
-        for (int dx = 0; dx < ft.x; dx++) {
-            map_monuments_set_progress(tile().shifted(dx, dy), 0);
-        }
+    base.size = TOWER_SIZE;
+    base.prev_part_building_id = 0;
+    auto& d = runtime_data();
+    d.phase = 0;
+    d.worker_fid = 0;
+    d.sleds = 0;
+    reset_spots();
+    refresh_tower_tiles();
+
+    const tile2i land_tile = land_part_tile(tile());
+    building* land = building_create(BUILDING_PHAROS_LIGHTHOUSE, land_tile, orientation);
+    if (!land || land->id <= 0) {
+        base.next_part_building_id = 0;
+        return;
     }
+    game_undo_add_building(land);
+    land->size = 1;
+    land->prev_part_building_id = id();
+    land->next_part_building_id = 0;
+    base.next_part_building_id = land->id;
+    if (auto* lp = land->dcast_pharos_lighthouse()) {
+        auto& ld = lp->runtime_data();
+        ld.phase = 0;
+        ld.worker_fid = 0;
+        ld.sleds = 0;
+        ld.spot_work.fill(0);
+    }
+    map_building_set(land_tile.grid_offset(), land->id);
 }
 
 xstring building_pharos_lighthouse::demolish_blocked_message() const {
     return "#pharos_not_demolishable";
 }
 
-void building_pharos_lighthouse::on_destroy() {
-    const vec2i ft = footprint_size();
-    for (int dy = 0; dy < ft.y; dy++) {
-        for (int dx = 0; dx < ft.x; dx++) {
-            tile2i t = tile().shifted(dx, dy);
-            if (!map_grid_is_inside(t, 1)) {
-                continue;
-            }
-            map_monuments_set_progress(t, 0);
-            if (map_building_at(t) == id()) {
-                map_building_tile_clear_at(t.grid_offset(), type());
+void building_pharos_lighthouse::on_post_load() {
+    building_monument::on_post_load();
+    if (is_land_part()) {
+        return;
+    }
+    auto& d = runtime_data();
+    if (d.phase != MONUMENT_FINISHED && d.spot_work[SPOT_MASON] == 0 && d.spot_work[SPOT_CARPENTER] == 0) {
+        d.phase = (int8_t)std::clamp(d.phase - 1, 0, (int)STAGE_COMPLETE - 1);
+        d.worker_fid = 0;
+        d.sleds = 0;
+        reset_spots();
+        if (has_next()) {
+            if (auto* land = next()->dcast_pharos_lighthouse()) {
+                land->runtime_data().phase = d.phase;
+                land->runtime_data().spot_work.fill(0);
             }
         }
     }
+    refresh_tower_tiles();
+    update_animation();
 }
 
-void building_pharos_lighthouse::on_phase_changed(int old_phase, int current) {
-    const vec2i ft = footprint_size();
-    pharos_add_rect_tiles(id(), tile(), ft.x, ft.y, building_image_get());
-
-    if (current != MONUMENT_FINISHED) {
-        auto &d = runtime_data();
-        for (e_resource resource = RESOURCE_NONE; resource < RESOURCES_MAX; ++resource) {
-            d.resources_pct[resource] = 0;
+void building_pharos_lighthouse::on_destroy() {
+    if (is_land_part()) {
+        const tile2i t = tile();
+        if (map_building_at(t) == id()) {
+            map_building_set(t.grid_offset(), 0);
         }
+        return;
     }
-
-    if (old_phase < 2 && current >= 2) {
-        auto &d = runtime_data();
-        for (auto &wid : d.workers) {
-            if (wid) {
-                figure *f = figure_get(wid);
-                if (f && f->is_alive()) {
-                    f->poof();
-                }
-                wid = 0;
+    for (int dy = 0; dy < TOWER_SIZE; ++dy) {
+        for (int dx = 0; dx < TOWER_SIZE; ++dx) {
+            const tile2i t = tile().shifted(dx, dy);
+            if (map_grid_is_inside(t, 1) && map_building_at(t) == id()) {
+                map_terrain_add(t.grid_offset(), TERRAIN_ROCK);
             }
         }
     }
@@ -425,94 +523,61 @@ void building_pharos_lighthouse::on_phase_changed(int old_phase, int current) {
 
 void building_pharos_lighthouse::update_day() {
     building_impl::update_day();
-    if (is_finished()) {
-        return;
+    if (is_main() && !is_finished()) {
+        part_has_active_worker();
     }
+}
 
-    auto &d = runtime_data();
-    scrub_dead_workers(d.workers);
-    if (d.phase < 2) {
-        const vec2i ft = footprint_size();
-        grid_tiles tiles = map_grid_get_tiles(tile(), tile().shifted(ft.x - 1, ft.y - 1));
-        tile2i tile2works = map_grid_area_first(tiles, [](tile2i t) {
-            return map_monuments_get_progress(t) < 200;
-        });
-        const bool all_tiles_finished = (tile2works == tile2i{-1, -1});
-        if (all_tiles_finished) {
-            map_grid_area_foreach(tiles, [](tile2i t) { map_monuments_set_progress(t, 0); });
-            set_phase(d.phase + 1);
-        }
-        return;
-    }
-
-    if (!needs_resources() && d.phase >= 2 && d.phase <= 6) {
-        bool has_mason = false;
-        for (auto wid : d.workers) {
-            figure *f = wid > 0 ? figure_get(wid) : nullptr;
-            if (f && f->is_alive() && f->type == FIGURE_STONEMASON) {
-                has_mason = true;
-                break;
-            }
-        }
-        if (!has_mason) {
-            return;
-        }
-    }
-
-    // Scaffold teardown (7): carpenters, not masons.
-    if (!needs_resources() && d.phase == 7) {
-        bool has_carpenter = false;
-        for (auto wid : d.workers) {
-            figure *f = wid > 0 ? figure_get(wid) : nullptr;
-            if (f && f->is_alive() && f->type == FIGURE_CARPENTER) {
-                has_carpenter = true;
-                break;
-            }
-        }
-        if (!has_carpenter) {
-            return;
-        }
-    }
-
-    progress();
+void building_pharos_lighthouse::update_animation() {
+    base.play_animation = !is_land_part() && is_finished();
 }
 
 void building_pharos_lighthouse::update_map_orientation(int /*map_orientation*/) {
-    const vec2i ft = footprint_size();
-    pharos_add_rect_tiles(id(), tile(), ft.x, ft.y, building_image_get());
+    if (is_main()) {
+        refresh_tower_tiles();
+    }
+}
+
+bool building_pharos_lighthouse::draw_ornaments_and_animations_height(painter& ctx, vec2i point, tile2i tile,
+  color color_mask) {
+    if (is_land_part()) {
+        return false;
+    }
+    return building_monument::draw_ornaments_and_animations_height(ctx, point, tile, color_mask);
 }
 
 tile2i building_pharos_lighthouse::center_point() const {
-    const vec2i ft = footprint_size();
-    return tile().shifted(ft.x / 2, ft.y / 2);
+    tile2i t = main_lighthouse()->tile();
+    return t.shifted(TOWER_SIZE / 2, TOWER_SIZE / 2);
 }
 
 tile2i building_pharos_lighthouse::access_point() const {
-    const vec2i ft = footprint_size();
-    return tile().shifted(ft.x / 2, ft.y - 1);
+    return land_part_tile(main_lighthouse()->tile());
 }
 
 grid_area building_pharos_lighthouse::get_area() const {
-    const vec2i ft = footprint_size();
-    tile2i start = tile();
-    tile2i end = start.shifted(ft.x - 1, ft.y - 1);
-    return {start, end};
+    tile2i start = main_lighthouse()->tile();
+    return {start, start.shifted(TOWER_SIZE - 1, TOWER_SIZE - 1)};
 }
 
-void building_pharos_lighthouse::bind_dynamic(io_buffer *iob, size_t /*version*/) {
-    auto &monumentd = runtime_data();
+void building_pharos_lighthouse::bind_dynamic(io_buffer* iob, size_t /*version*/) {
+    auto& d = runtime_data();
 
-    iob->bind____skip(38);
+    iob->bind(BIND_SIGNATURE_UINT16, &d.spot_work[SPOT_MASON]);
+    iob->bind(BIND_SIGNATURE_UINT16, &d.spot_work[SPOT_CARPENTER]);
+    iob->bind(BIND_SIGNATURE_UINT16, &d.worker_fid);
+    iob->bind(BIND_SIGNATURE_UINT8, &d.sleds);
+    iob->bind____skip(31);
     iob->bind(BIND_SIGNATURE_UINT8, &base.orientation);
     for (int i = 0; i < 5; i++) {
-        iob->bind(BIND_SIGNATURE_UINT16, &monumentd.workers[i]);
+        iob->bind(BIND_SIGNATURE_UINT16, &d.workers[i]);
     }
-    iob->bind(BIND_SIGNATURE_UINT8, &monumentd.phase);
-    iob->bind(BIND_SIGNATURE_UINT8, &monumentd.funeral_done);
-    iob->bind(BIND_SIGNATURE_UINT8, &monumentd.preexisting);
-    iob->bind(BIND_SIGNATURE_UINT8, &monumentd.variant);
+    iob->bind(BIND_SIGNATURE_UINT8, &d.phase);
+    iob->bind(BIND_SIGNATURE_UINT8, &d.funeral_done);
+    iob->bind(BIND_SIGNATURE_UINT8, &d.preexisting);
+    iob->bind(BIND_SIGNATURE_UINT8, &d.variant);
 
     for (int i = 0; i < RESOURCES_MAX; i++) {
-        iob->bind(BIND_SIGNATURE_UINT8, &monumentd.resources_pct[i]);
+        iob->bind(BIND_SIGNATURE_UINT8, &d.resources_pct[i]);
     }
 }

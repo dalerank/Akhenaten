@@ -236,7 +236,6 @@ building/monument_mausoleum.cpp -> graphics/view/view.h
 building/monument_obelisk.cpp -> graphics/graphics.h
 building/monument_obelisk.cpp -> graphics/image.h
 building/monument_obelisk.h -> graphics/image_desc.h
-building/monument_pharos_lighthouse.cpp -> graphics/color.h
 building/monument_pharos_lighthouse.cpp -> graphics/view/lookup.h
 building/monument_pharos_lighthouse.cpp -> graphics/view/view.h
 building/monument_pyramid.cpp -> dev/debug.h

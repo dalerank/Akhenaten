@@ -279,6 +279,9 @@ laborer_site_actions laborer_cleopatra_actions(building *head) {
 }
 
 tile2i laborer_monument_road_tile(building *head) {
+    if (auto* lighthouse = head->dcast_pharos_lighthouse()) {
+        return lighthouse->access_point();
+    }
     if (head->road_access.valid()) {
         return head->road_access;
     }
@@ -862,6 +865,9 @@ void figure_worker::find_work() {
             } else if (b.dcast_caesareum()) {
                 mason_id = laborer_cleopatra_mason_waiting(&b);
                 has_work = mason_id != 0;
+            } else if (auto* lighthouse = b.dcast_pharos_lighthouse()) {
+                mason_id = lighthouse->mason_waiting_for_block();
+                has_work = mason_id != 0;
             } else if (mon->phase() < 2) {
                 if (mon->need_workers() && monumen_tile4work(&b) != tile2i{-1, -1}) {
                     has_work = true;
@@ -932,7 +938,11 @@ void figure_worker::sled_to_monument_tick(building *monument) {
     figure *mason = rd.mason_fid ? figure_get(rd.mason_fid) : nullptr;
     const bool mason_waiting = mason && mason->is_alive() && mason->type == FIGURE_STONEMASON
         && mason->action_state == ACTION_19_MASON_WAIT_FOR_BLOCK && mason->leading_figure_id == id();
-    if (auto *lib = head->dcast_alexandria_library()) {
+    if (auto* lighthouse = head->dcast_pharos_lighthouse()) {
+        if (mason && mason->is_alive()) {
+            lighthouse->sled_arrived(*mason);
+        }
+    } else if (auto* lib = head->dcast_alexandria_library()) {
         // OG sled_to_counted_monument: only count while mason WAIT_FOR_BLOCK.
         if (mason_waiting) {
             mason->leading_figure_id = 0;

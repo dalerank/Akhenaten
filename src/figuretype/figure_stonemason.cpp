@@ -6,6 +6,7 @@
 #include "building/monument_pyramid_engine.h"
 #include "building/monument_obelisk.h"
 #include "building/monument_abu_simbel.h"
+#include "building/monument_pharos_lighthouse.h"
 #include "building/monument_royal_tomb.h"
 #include "building/monument_sphinx.h"
 #include "building/monument_sun_temple.h"
@@ -89,8 +90,8 @@ void figure_stonemason::figure_action() {
         short arrived = to_obelisk
             ? (short)ACTION_9_MASON_WORK_OBELISK
             : (to_og_pyramid ? (short)ACTION_16_MASON_CLIMB_RAMP : (short)ACTION_7_MASON_LOOKING_FOR_WORK_TILE);
-        // OG: side parts / library mason wait for a material sled before working.
-        if ((sun && sun->part_index() != 0) || library || b_dest->dcast_mausoleum() || b_dest->dcast_caesareum()) {
+        if ((sun && sun->part_index() != 0) || library || b_dest->dcast_mausoleum() || b_dest->dcast_caesareum()
+            || b_dest->dcast_pharos_lighthouse()) {
             arrived = ACTION_19_MASON_WAIT_FOR_BLOCK;
         }
         if (do_goto(base.destination_tile, terrain_usage, arrived, ACTION_10_MASON_DESTROY)) {
@@ -161,6 +162,12 @@ void figure_stonemason::figure_action() {
         }
         if (auto *maus = b_dest->dcast_mausoleum()) {
             if (maus->runtime_data().og_part.worker_figure_id != id()) {
+                advance_action(ACTION_6_MASON_RETURN_HOME);
+            }
+            break;
+        }
+        if (auto* lighthouse = b_dest->dcast_pharos_lighthouse()) {
+            if (lighthouse->worker_figure_id() != id()) {
                 advance_action(ACTION_6_MASON_RETURN_HOME);
             }
             break;
@@ -279,6 +286,16 @@ void figure_stonemason::figure_action() {
             if (abu->work_tick(base)) {
                 base.set_flag(e_figure_flag_invisible, false);
                 abu->remove_worker(id());
+                advance_action(ACTION_6_MASON_RETURN_HOME);
+            }
+            break;
+        }
+
+        if (auto* lighthouse = worked ? worked->dcast_pharos_lighthouse() : nullptr) {
+            base.set_flag(e_figure_flag_invisible);
+            if (lighthouse->work_tick(base)) {
+                base.set_flag(e_figure_flag_invisible, false);
+                lighthouse->remove_worker(id());
                 advance_action(ACTION_6_MASON_RETURN_HOME);
             }
             break;
