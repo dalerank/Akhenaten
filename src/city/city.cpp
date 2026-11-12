@@ -55,7 +55,6 @@
 #include "graphics/elements/lang_text.h"
 #include "empire/empire_traders.h"
 #include "scenario/criteria.h"
-#include "widget/city/clouds.h"
 #include "city/city_religion_osiris.h"
 #include "scenario/distant_battle.h"
 
@@ -1452,13 +1451,10 @@ io_buffer *iob_city_bookmarks = new io_buffer([] (io_buffer *iob, size_t version
     }
 });
 
-io_buffer *iob_city_utilities_data = new io_buffer([] (io_buffer *iob, size_t version) {
-    for (int i = 0; i < 16; ++i) {
-        vec2i dummy;
-        const bool is_valid = (i < g_clouds.clouds.size());
-        vec2i &ref = is_valid ? g_clouds.clouds[i].pos : dummy;
-        iob->bind_vec2i_compat(ref); // 4bytes
-    } // 64 bytes at all
+// The first 64 bytes held the 16 cloud positions. Clouds move every drawn frame, so the saved
+// state depended on what was drawn; they are no longer saved and these bytes are written as zero.
+io_buffer* iob_city_utilities_data = new io_buffer([](io_buffer* iob, size_t version) {
+    iob->bind____skip(64);
     iob->bind____skip(36);
     iob->bind____skip(900);
 });

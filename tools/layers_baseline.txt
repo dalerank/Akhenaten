@@ -285,7 +285,6 @@ city/city.cpp -> graphics/image_groups.h
 city/city.cpp -> graphics/view/lookup.h
 city/city.cpp -> graphics/view/view.h
 city/city.cpp -> overlays/city_overlay.h
-city/city.cpp -> widget/city/clouds.h
 city/city_animals.cpp -> dev/debug.h
 city/city_festival.cpp -> graphics/image_groups.h
 city/city_floods.cpp -> dev/debug.h

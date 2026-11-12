@@ -3,7 +3,6 @@
 #include "core/app.h"
 #include "core/calc.h"
 #include "core/profiler.h"
-#include "core/random.h"
 #include "core/speed.h"
 #include "dev/debug.h"
 #include "game/game.h"
@@ -19,6 +18,8 @@
 
 #include <algorithm>
 #include <cmath>
+#include <ctime>
+#include <random>
 
 clouds_t g_clouds;
 
@@ -33,15 +34,36 @@ void ANK_REGISTER_CONFIG_ITERATOR(config_load_clouds_config) {
 
 constexpr float PI = 3.14159265358979323846;
 
+namespace {
+    // Clouds change every drawn frame. libc rand() still feeds the simulation, so they must neither
+    // draw from it nor reseed it (random_int() calls srand(time) once a second).
+    std::minstd_rand& clouds_rng() {
+        static std::minstd_rand rng((unsigned)std::time(nullptr));
+        return rng;
+    }
+
+    int clouds_random_between(const int min, const int max) {
+        const int diff = max - min;
+        return diff > 0 ? min + (int)(clouds_rng()() % (unsigned)diff) : min;
+    }
+
+    double clouds_random_fractional() {
+        auto& rng = clouds_rng();
+        return double(rng() - rng.min()) / double(rng.max() - rng.min());
+    }
+} // namespace
+
 static int random_from_min_to_range(int min, int range) {
-    return min + random_int_between(0, range);
+    return min + clouds_random_between(0, range);
 }
 
 void clouds_t::position_ellipse(ellipse &e, const int cloud_width, const int cloud_height) {
-    const double angle = random_fractional() * PI * 2;
+    const double angle = clouds_random_fractional() * PI * 2;
 
-    e.pos.x = static_cast<int>(static_cast<float>(config.cloud_width) / 2 + random_fractional() * cloud_width * cos(angle));
-    e.pos.y = static_cast<int>(static_cast<float>(config.cloud_height) / 2 + random_fractional() * cloud_height * sin(angle));
+    e.pos.x = static_cast<int>(
+      static_cast<float>(config.cloud_width) / 2 + clouds_random_fractional() * cloud_width * cos(angle));
+    e.pos.y = static_cast<int>(
+      static_cast<float>(config.cloud_height) / 2 + clouds_random_fractional() * cloud_height * sin(angle));
 
     e.width = random_from_min_to_range(static_cast<int>(config.cloud_width * config.cloud_size_ratio / 2), static_cast<int>(config.cloud_width * config.cloud_size_ratio));
     e.height = random_from_min_to_range(static_cast<int>(config.cloud_height * config.cloud_size_ratio / 2), static_cast<int>(config.cloud_height * config.cloud_size_ratio));
@@ -161,12 +183,12 @@ void clouds_t::generate_cloud(cloud_t &cloud) {
     img->atlas.p_atlas->texture = g_render.get_custom_texture(CUSTOM_IMAGE_CLOUDS);
 
     cloud.pos = {0, 0};
-    cloud.scale_x = 1 / static_cast<float>((1.5 - random_fractional()) / config.cloud_scale);
-    cloud.scale_y = 1 / static_cast<float>((1.5 - random_fractional()) / config.cloud_scale);
+    cloud.scale_x = 1 / static_cast<float>((1.5 - clouds_random_fractional()) / config.cloud_scale);
+    cloud.scale_y = 1 / static_cast<float>((1.5 - clouds_random_fractional()) / config.cloud_scale);
     const int scaled_width = static_cast<int>(config.cloud_width * cloud.scale_x);
     const int scaled_height = static_cast<int>(config.cloud_height * cloud.scale_y);
     cloud.side = static_cast<int>(sqrt(scaled_width * scaled_width + scaled_height * scaled_height));
-    cloud.angle = random_int_between(0, 360);
+    cloud.angle = clouds_random_between(0, 360);
     cloud.status = e_cloud_status_created;
 }
 
@@ -188,15 +210,15 @@ bool clouds_t::cloud_intersects(const cloud_t &cloud) {
 void clouds_t::position_cloud(cloud_t &cloud, const vec2i offset, const vec2i view_size) {
     const int margin = std::max(cloud.side, 1);
     cloud.pos = {
-        offset.x + view_size.x + random_int_between(0, margin),
-        offset.y + random_int_between(-margin / 2, view_size.y),
+      offset.x + view_size.x + clouds_random_between(0, margin),
+      offset.y + clouds_random_between(-margin / 2, view_size.y),
     };
 
     if (!cloud_intersects(cloud)) {
         cloud.status = e_cloud_status_moving;
         speed_clear(cloud.speed.x);
         speed_clear(cloud.speed.y);
-        movement_timeout = random_int_between(config.cloud_min_creation_timeout, config.cloud_max_creation_timeout);
+        movement_timeout = clouds_random_between(config.cloud_min_creation_timeout, config.cloud_max_creation_timeout);
     }
 }
 
