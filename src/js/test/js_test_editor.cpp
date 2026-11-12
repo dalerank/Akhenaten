@@ -435,9 +435,9 @@ int __test_editor_win_criteria_meta() {
 }
 ANK_FUNCTION(__test_editor_win_criteria_meta);
 
-// Procedural editor map: generate medium landscape and require water + road tiles + entry point.
-int __test_editor_map_generate() {
-    game_file_editor_generate_scenario(2); // medium 80x80
+// Procedural editor map from a fixed seed: medium landscape with water, a road and entry/exit points.
+static bool editor_generated_map_valid(uint32_t seed, bool log_failure) {
+    game_file_editor_generate_scenario_seeded(2, seed); // medium 80x80
 
     const int mw = g_scenario.map.width;
     const int mh = g_scenario.map.height;
@@ -464,15 +464,39 @@ int __test_editor_map_generate() {
 
     const bool entry_ok = g_scenario.entry_point.x() >= 0 && g_scenario.exit_point.x() >= 0;
     const bool ok = water > 0 && road > 0 && entry_ok;
-    if (!ok) {
-        logs::info(
-          "[test:173] step=generate_sparse water=%d road=%d meadow=%d trees=%d rocks=%d entry=%d,%d exit=%d,%d", water,
-          road, meadow, trees, rocks, g_scenario.entry_point.x(), g_scenario.entry_point.y(), g_scenario.exit_point.x(),
-          g_scenario.exit_point.y());
+    if (!ok && log_failure) {
+        logs::info("[test:173] seed=%u water=%d road=%d meadow=%d trees=%d rocks=%d entry=%d,%d exit=%d,%d", seed,
+          water, road, meadow, trees, rocks, g_scenario.entry_point.x(), g_scenario.entry_point.y(),
+          g_scenario.exit_point.x(), g_scenario.exit_point.y());
     }
-    return ok ? 1 : 0;
+    return ok;
 }
-ANK_FUNCTION(__test_editor_map_generate);
+
+// Terrain hash of the current map, to check that a seed always gives the same map.
+static int editor_map_terrain_hash() {
+    uint32_t h = 2166136261u;
+    for (int y = 0; y < g_scenario.map.height; y++) {
+        for (int x = 0; x < g_scenario.map.width; x++) {
+            h = (h ^ (uint32_t)map_terrain_get(MAP_OFFSET(x, y))) * 16777619u;
+        }
+    }
+    return (int)(h & 0x7FFFFFFF);
+}
+
+int __test_editor_map_generate(int seed) {
+    return editor_generated_map_valid((uint32_t)seed, true) ? editor_map_terrain_hash() : 0;
+}
+ANK_FUNCTION_1(__test_editor_map_generate);
+
+// Number of seeds in [first, first + count) that give a map without water, road or entry/exit.
+int __test_editor_map_generate_invalid_count(int first, int count) {
+    int invalid = 0;
+    for (int i = 0; i < count; i++) {
+        invalid += editor_generated_map_valid((uint32_t)(first + i), true) ? 0 : 1;
+    }
+    return invalid;
+}
+ANK_FUNCTION_2(__test_editor_map_generate_invalid_count);
 
 static int __test_pending_water_frames() {
     return g_screen_city.pending_water_frames();

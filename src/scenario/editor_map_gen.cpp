@@ -1,5 +1,6 @@
 #include "editor_map_gen.h"
 
+#include "core/random.h"
 #include "grid/elevation.h"
 #include "grid/grid.h"
 #include "grid/terrain.h"
@@ -9,8 +10,8 @@
 
 #include <algorithm>
 #include <cmath>
+#include <cstdint>
 #include <cstdlib>
-#include <ctime>
 #include <queue>
 #include <utility>
 #include <vector>
@@ -29,22 +30,34 @@ enum TerrainType {
     shallowMountain = 8,
 };
 
+// Own xorshift32 instead of std::rand: same map for the same seed on every platform and run.
 class GenRandom {
 public:
-    GenRandom() {
-        std::srand(static_cast<unsigned>(std::time(nullptr)));
-    }
+    void seed(uint32_t value) { state_ = value ? value : 0x9E3779B9u; }
 
     int to_int(int minimum, int maximum) {
         if (maximum <= minimum)
             return minimum;
-        return minimum + (std::rand() % (maximum - minimum + 1));
+        return minimum + static_cast<int>(next() % static_cast<uint32_t>(maximum - minimum + 1));
     }
 
     float to_float(float minimum, float maximum) {
-        return minimum + static_cast<float>(std::rand()) / (static_cast<float>(RAND_MAX) / (maximum - minimum));
+        const float unit = static_cast<float>(next() >> 8) / 16777216.f;
+        return minimum + unit * (maximum - minimum);
     }
+
+private:
+    uint32_t next() {
+        state_ ^= state_ << 13;
+        state_ ^= state_ >> 17;
+        state_ ^= state_ << 5;
+        return state_;
+    }
+
+    uint32_t state_ = 0x9E3779B9u;
 };
+
+GenRandom g_rng;
 
 class MidpointDisplacement {
 public:
@@ -71,27 +84,27 @@ public:
 
         for (int i = 0; i < width_; i += 2 * step) {
             for (int j = 0; j < height_; j += 2 * step) {
-                heightmap[idx(i, j)] = random_.to_float(0, 2 * h);
+                heightmap[idx(i, j)] = g_rng.to_float(0, 2 * h);
             }
         }
 
         for (int i = 0; i < width_; i++) {
-            heightmap[idx(i, 0)] = random_.to_float(-3, -2);
-            heightmap[idx(i, height_ - 1)] = random_.to_float(-2, -1);
+            heightmap[idx(i, 0)] = g_rng.to_float(-3, -2);
+            heightmap[idx(i, height_ - 1)] = g_rng.to_float(-2, -1);
         }
         for (int i = 0; i < height_; i++) {
-            heightmap[idx(0, i)] = random_.to_float(-3, -2);
-            heightmap[idx(width_ - 1, i)] = random_.to_float(-3, -2);
+            heightmap[idx(0, i)] = g_rng.to_float(-3, -2);
+            heightmap[idx(width_ - 1, i)] = g_rng.to_float(-3, -2);
         }
 
-        heightmap[idx((width_ - 1) / 2, (height_ - 1) / 2)] = (2 * h) + random_.to_float(1, 5);
+        heightmap[idx((width_ - 1) / 2, (height_ - 1) / 2)] = (2 * h) + g_rng.to_float(1, 5);
 
         while (step > 0) {
             for (int x = step; x < width_; x += 2 * step) {
                 for (int y = step; y < height_; y += 2 * step) {
                     const float sum = heightmap[idx(x - step, y - step)] + heightmap[idx(x - step, y + step)]
                                     + heightmap[idx(x + step, y - step)] + heightmap[idx(x + step, y + step)];
-                    heightmap[idx(x, y)] = sum / 4.f + random_.to_float(-h, h);
+                    heightmap[idx(x, y)] = sum / 4.f + g_rng.to_float(-h, h);
                 }
             }
 
@@ -115,7 +128,7 @@ public:
                         sum += heightmap[idx(x, y + step)];
                         count++;
                     }
-                    heightmap[idx(x, y)] = count > 0 ? sum / count + random_.to_float(-h, h) : 0.f;
+                    heightmap[idx(x, y)] = count > 0 ? sum / count + g_rng.to_float(-h, h) : 0.f;
                 }
             }
             h /= smoothness_;
@@ -165,10 +178,7 @@ private:
     float terrain_square_;
     int width_ = 0;
     int height_ = 0;
-    GenRandom random_;
 };
-
-GenRandom g_rng;
 
 int map_w() {
     return g_scenario.map.width;
@@ -489,6 +499,36 @@ bool side_tile(int side, int t, int &x, int &y) {
     return is_walkable_for_road(x, y);
 }
 
+bool is_not_border_water(int x, int y) {
+    return in_bounds(x, y) && !is_water(x, y);
+}
+
+bool is_any_tile(int x, int y) {
+    return in_bounds(x, y);
+}
+
+// Rocks, hills or a river can cut every walkable route between the map edges. A map always needs a road
+// from entry to exit, so join two opposite edge tiles through rock (cleared below) and, if water still
+// separates them, through water (turned into land).
+bool carve_road_path(std::vector<std::pair<int, int>>& path) {
+    const int mw = map_w();
+    const int mh = map_h();
+    const int sx = 0;
+    const int sy = mh / 2;
+    const int gx = mw - 1;
+    const int gy = mh / 2;
+    if (!bfs_path(sx, sy, gx, gy, is_not_border_water, path) && !bfs_path(sx, sy, gx, gy, is_any_tile, path)) {
+        return false;
+    }
+
+    for (const auto& p : path) {
+        const int off = offset_xy(p.first, p.second);
+        map_terrain_set(off, TERRAIN_NONE);
+        map_elevation_set(off, 0);
+    }
+    return true;
+}
+
 void create_road_and_points() {
     const int mw = map_w();
     const int mh = map_h();
@@ -553,6 +593,10 @@ void create_road_and_points() {
         }
     }
 
+    if (!have_path) {
+        have_path = carve_road_path(path);
+    }
+
     if (have_path) {
         for (const auto &p : path) {
             const int off = offset_xy(p.first, p.second);
@@ -588,9 +632,17 @@ void create_road_and_points() {
 } // namespace
 
 void editor_map_generate(float smooth, float terrain_sq) {
+    // From the game's RNG state (not advanced), never the wall clock.
+    const random_data_t* rnd = random_data_struct();
+    editor_map_generate_seeded(rnd->iv1 ^ (rnd->iv2 * 0x9E3779B1u), smooth, terrain_sq);
+}
+
+void editor_map_generate_seeded(uint32_t seed, float smooth, float terrain_sq) {
     const int size = scenario_map_size();
     if (size <= 0)
         return;
+
+    g_rng.seed(seed);
 
     MidpointDisplacement diamond(n2size_for_map(size), 8, 8, smooth, terrain_sq);
     const std::vector<int> gen = diamond.map();

@@ -141,12 +141,24 @@ void game_file_editor_create_scenario(int size) {
     prepare_map_for_editing();
 }
 
-void game_file_editor_generate_scenario(int size) {
+static void generate_scenario(int size, const uint32_t* seed) {
     game_file_editor_clear_data();
     create_blank_map(size);
-    editor_map_generate();
+    if (seed) {
+        editor_map_generate_seeded(*seed);
+    } else {
+        editor_map_generate();
+    }
     prepare_map_for_editing();
     g_scenario.is_saved = 0;
+}
+
+void game_file_editor_generate_scenario(int size) {
+    generate_scenario(size, nullptr);
+}
+
+void game_file_editor_generate_scenario_seeded(int size, uint32_t seed) {
+    generate_scenario(size, &seed);
 }
 
 static bool path_looks_absolute(const char *path) {
