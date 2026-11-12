@@ -9,6 +9,7 @@
 #include "building/monument_mastaba_engine.h"
 #include "building/monument_mausoleum.h"
 #include "building/monument_obelisk.h"
+#include "building/monument_pharos_lighthouse.h"
 #include "building/monument_pyramid.h"
 #include "building/monument_pyramid_engine.h"
 #include "building/monument_pyramid_figure.h"
@@ -1184,6 +1185,81 @@ static int __test_abu_simbel_access_y(int bid) {
     return a ? a->access_point().y() : -1;
 }
 ANK_FUNCTION_1(__test_abu_simbel_access_y);
+
+static building_pharos_lighthouse* test_lighthouse(int bid) {
+    building* b = building_get(bid);
+    auto* l = b ? b->dcast_pharos_lighthouse() : nullptr;
+    return l ? l->main_lighthouse() : nullptr;
+}
+
+static int __test_lighthouse_stage(int bid) {
+    auto* l = test_lighthouse(bid);
+    return l ? l->stage() : -1;
+}
+ANK_FUNCTION_1(__test_lighthouse_stage);
+
+static void __test_lighthouse_set_stage(int bid, int stage) {
+    if (auto* l = test_lighthouse(bid)) {
+        l->set_stage(stage);
+    }
+}
+ANK_FUNCTION_2(__test_lighthouse_set_stage);
+
+static int __test_lighthouse_spot_work(int bid, int figure_type) {
+    auto* l = test_lighthouse(bid);
+    return l ? l->spot_work_left((e_figure_type)figure_type) : -1;
+}
+ANK_FUNCTION_2(__test_lighthouse_spot_work);
+
+static int __test_lighthouse_worker(int bid) {
+    auto* l = test_lighthouse(bid);
+    return (l && l->part_has_active_worker()) ? l->worker_figure_id() : 0;
+}
+ANK_FUNCTION_1(__test_lighthouse_worker);
+
+static int __test_lighthouse_percent(int bid) {
+    auto* l = test_lighthouse(bid);
+    return l ? l->get_progress(nullptr) : -1;
+}
+ANK_FUNCTION_1(__test_lighthouse_percent);
+
+static int __test_lighthouse_site_fits(int x, int y) {
+    return building_pharos_lighthouse::site_fits(tile2i(x, y)) ? 1 : 0;
+}
+ANK_FUNCTION_2(__test_lighthouse_site_fits);
+
+static int __test_lighthouse_assign(int bid, int fid) {
+    auto* l = test_lighthouse(bid);
+    if (!l) {
+        return 0;
+    }
+    l->add_workers(fid);
+    return l->worker_figure_id() == fid ? 1 : 0;
+}
+ANK_FUNCTION_2(__test_lighthouse_assign);
+
+static int __test_lighthouse_mason_waiting(int bid) {
+    auto* l = test_lighthouse(bid);
+    return l ? l->mason_waiting_for_block() : 0;
+}
+ANK_FUNCTION_1(__test_lighthouse_mason_waiting);
+
+static int __test_lighthouse_sled(int bid, int mason_fid) {
+    auto* l = test_lighthouse(bid);
+    figure* f = mason_fid > 0 ? figure_get(mason_fid) : nullptr;
+    return (l && f && l->sled_arrived(*f)) ? 1 : 0;
+}
+ANK_FUNCTION_2(__test_lighthouse_sled);
+
+static int __test_lighthouse_work(int bid, int fid) {
+    auto* l = test_lighthouse(bid);
+    figure* f = fid > 0 ? figure_get(fid) : nullptr;
+    if (!l || !f) {
+        return -1;
+    }
+    return l->work_tick(*f) ? 1 : 0;
+}
+ANK_FUNCTION_2(__test_lighthouse_work);
 
 static building_sun_temple *test_sun_temple(int bid) {
     building *b = building_get(bid);
