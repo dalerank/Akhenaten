@@ -59,6 +59,18 @@ city_sounds = [
   {c: SOUND_CHANNEL_CITY_LETTUCE_FARM,  p: "Wavs/lettucefarm.wav"},
 ]
 
+// Enhanced city ambience (gameplay_enhanced_city_ambient): the samples above become positional voices.
+city_ambient = {
+  max_voices: 4       // samples playing at once, loudest first
+  min_gain_pct: 5     // quieter candidates are dropped
+  crossfade_ms: 600   // fade time when a voice joins or leaves
+  duck_pct: 35        // level while the camera moves
+  duck_ms: 300
+  gap_min_ms: 400     // random pause before a voice replays its sample
+  gap_max_ms: 2500
+  full_tiles: 16      // drawn tiles of a sample at which its gain is no longer reduced
+}
+
 // OG effect.c effect_binds: OG effect id -> wav. Several ids share a file, as in OG.
 sound_effects = [
   {id: 0, p: "Wavs/button.wav"},

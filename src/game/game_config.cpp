@@ -212,6 +212,8 @@ namespace game_features {
     game_feature gameplay_enhanced_labor_category_split{ "gameplay_enhanced_labor_category_split", "#TR_CONFIG_LABOR_CATEGORY_SPLIT", false, false };
     game_feature gameplay_enhanced_walker_spawn_boost{ "gameplay_enhanced_walker_spawn_boost", "#TR_CONFIG_WALKER_SPAWN_BOOST", false, false };
     game_feature gameplay_enhanced_walker_move_boost{ "gameplay_enhanced_walker_move_boost", "#TR_CONFIG_WALKER_MOVE_BOOST", false, false };
+    game_feature gameplay_enhanced_city_ambient{
+      "gameplay_enhanced_city_ambient", "#TR_CONFIG_CITY_AMBIENT", false, false};
     game_feature gameplay_enhanced_festival_calendar{ "gameplay_enhanced_festival_calendar", "#TR_CONFIG_FESTIVAL_CALENDAR", false, false };
     game_feature gameplay_enhanced_local_cults{ "gameplay_enhanced_local_cults", "#TR_CONFIG_LOCAL_CULTS", false, false };
     game_feature graphics_atlas_render{ "graphics_atlas_render", "", true, true };

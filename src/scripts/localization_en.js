@@ -124,6 +124,7 @@ localization_en = [
   {key:"#TR_CONFIG_LABOR_CATEGORY_SPLIT", text:"Enhanced: split Storage yards/docks from Industry in the labor advisor"}
   {key:"#TR_CONFIG_WALKER_SPAWN_BOOST", text:"Enhanced: faster service walker respawn (understaffed less harsh)"}
   {key:"#TR_CONFIG_WALKER_MOVE_BOOST", text:"Enhanced: faster citizen walkers / shorter cart wait"}
+  {key:"#TR_CONFIG_CITY_AMBIENT", text:"Enhanced: positional city ambience (nearby buildings, crossfades)"}
   {key:"#TR_CONFIG_FESTIVAL_CALENDAR", text:"Enhanced: seasonal calendar rites (extra festival themes)"}
   {key:"#TR_CONFIG_LOCAL_CULTS", text:"Enhanced: local cults via temple complex altar/oracle"}
   {key:"#local_cult_anubis", text:"Anubis"}

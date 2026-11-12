@@ -36,6 +36,7 @@
 #include "platform/renderer.h"
 #include "scenario/scenario.h"
 #include "sound/sound.h"
+#include "sound/sound_city.h"
 #include "widget/debug_console.h"
 #include "window/window_info.h"
 
@@ -262,6 +263,11 @@ int __test_sound_play_effect(int effect) {
     return g_sound.play_effect(effect);
 }
 ANK_FUNCTION_1(__test_sound_play_effect);
+
+pcstr __test_sound_ambient_summary() {
+    return sound_city_ambient_summary();
+}
+ANK_FUNCTION(__test_sound_ambient_summary);
 
 void __test_music_frame() {
     g_sound.music_frame();

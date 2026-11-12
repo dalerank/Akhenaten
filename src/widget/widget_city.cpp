@@ -440,7 +440,8 @@ void screen_city_t::draw_figures_overlay(vec2i pixel, tile2i tile, painter &ctx)
     }
 }
 
-void screen_city_t::draw_isometric_mark_sound(int building_id, int grid_offset, color &color_mask, int direction) {
+void screen_city_t::draw_isometric_mark_sound(int building_id, int grid_offset, color& color_mask, int direction,
+  vec2i pixel) {
     OZZY_PROFILER_FUNCTION()
     if (building_id) {
         building *b = building_get(building_id);
@@ -450,6 +451,11 @@ void screen_city_t::draw_isometric_mark_sound(int building_id, int grid_offset, 
 
         if (!game.redraw_read_only) {
             sound_city_mark_building_view(b, direction);
+            if (!!game_features::gameplay_enhanced_city_ambient) {
+                if (const int channel = sound_city_building_channel(b)) {
+                    sound_city_ambient_note(channel, pixel);
+                }
+            }
         }
     } else if (!game.redraw_read_only) {
         int terrain = map_terrain_get(grid_offset);
@@ -771,7 +777,7 @@ void screen_city_t::draw_isometric_flat(vec2i pixel, tile2i tile, painter &ctx) 
         direction = SOUND_DIRECTION_RIGHT;
     }
 
-    draw_isometric_mark_sound(building_id, tile.grid_offset(), color_mask, direction);
+    draw_isometric_mark_sound(building_id, tile.grid_offset(), color_mask, direction, pixel);
 
     const int stored_image_id = map_image_at(tile);
     int image_id = stored_image_id;

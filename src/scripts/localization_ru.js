@@ -110,6 +110,7 @@ localization_ru = [
     { key:"#TR_CONFIG_LABOR_CATEGORY_SPLIT", text:"Enhanced: склады и доки отдельно от индустрии в советнике по труду"}
     { key:"#TR_CONFIG_WALKER_SPAWN_BOOST", text:"Enhanced: чаще выпускать служебных walkers (недокомплект менее жёсткий)"}
     { key:"#TR_CONFIG_WALKER_MOVE_BOOST", text:"Enhanced: быстрее граждане / короче ожидание телеги"}
+    { key:"#TR_CONFIG_CITY_AMBIENT", text:"Enhanced: объёмный звук города (ближние здания, плавные переходы)"}
     { key:"#TR_CONFIG_FESTIVAL_CALENDAR", text:"Enhanced: сезонные календарные обряды (темы фестивалей)"}
     { key:"#TR_CONFIG_LOCAL_CULTS", text:"Enhanced: локальные культы через алтарь/оракул комплекса"}
     { key:"#labor_category_storage", text:"Склады и снабжение"}

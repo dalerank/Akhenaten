@@ -69,7 +69,7 @@ struct screen_city_t {
     void draw_postrender_building_effects(vec2i pixel, tile2i tile, painter &ctx);
     void draw_building_road_access_marker(painter &ctx);
     void draw_recorded_delivery_paths(painter &ctx);
-    void draw_isometric_mark_sound(int building_id, int grid_offset, color &color_mask, int direction);
+    void draw_isometric_mark_sound(int building_id, int grid_offset, color& color_mask, int direction, vec2i pixel);
     void draw_tooltip(tooltip_context* c);
     void debug_draw_figures(painter &ctx);
     void draw_current_select_tile(painter &ctx);

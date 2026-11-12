@@ -291,8 +291,11 @@ void sound_manager_t::begin_frame() {
             _channels[i].playing = _channels[i].chunk && Mix_Playing(i);
         }
 
-        const auto city_volume = calc_bound(game_features::gameopt_sound_city_volume.to_int(), 0, 100);
-        set_volume(SOUND_CHANNEL_CITY_MIN, SOUND_CHANNEL_CITY_MAX, city_volume);
+        // The enhanced city ambience sets each voice's volume itself (sound_city_play).
+        if (!game_features::gameplay_enhanced_city_ambient) {
+            const auto city_volume = calc_bound(game_features::gameopt_sound_city_volume.to_int(), 0, 100);
+            set_volume(SOUND_CHANNEL_CITY_MIN, SOUND_CHANNEL_CITY_MAX, city_volume);
+        }
 
         const auto effects_volume = calc_bound(game_features::gameopt_sound_effects_volume.to_int(), 0, 100);
         set_volume(SOUND_CHANNEL_EFFECTS_MIN, SOUND_CHANNEL_EFFECTS_MAX, effects_volume);
@@ -473,6 +476,13 @@ bool sound_manager_t::is_channel_playing(int channel) {
 
 void sound_manager_t::set_channel_panning(int channel, int left, int right) {
     Mix_SetPanning(channel, left, right);
+}
+
+void sound_manager_t::set_channel_pan(int channel, int left_pct, int right_pct) {
+    if (!initialized) {
+        return;
+    }
+    set_channel_panning(channel, calc_bound(left_pct, 0, 100) * 255 / 100, calc_bound(right_pct, 0, 100) * 255 / 100);
 }
 
 void sound_manager_t::set_channel_volume(int channel, int volume_pct) {
@@ -665,6 +675,12 @@ void sound_manager_t::stop_channel(int channel) {
     Mix_FreeChunk((Mix_Chunk*)ch->chunk);
     ch->chunk = 0;
     ch->playing = false;
+}
+
+void sound_manager_t::stop_city_channel(int channel) {
+    if (channel >= SOUND_CHANNEL_CITY_MIN && channel <= SOUND_CHANNEL_CITY_MAX) {
+        stop_channel(channel);
+    }
 }
 
 void sound_manager_t::stop_city_channels() {

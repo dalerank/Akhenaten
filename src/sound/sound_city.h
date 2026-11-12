@@ -3,6 +3,7 @@
 #include "core/system_time.h"
 #include "sound/channel.h"
 #include "core/tokenum.h"
+#include "core/vec2i.h"
 
 #include <array>
 
@@ -119,3 +120,10 @@ void sound_city_mark_building_view(building* b, int direction);
 void sound_city_mark_terrain_view(int terrain, int grid_offset, int direction);
 void sound_city_decay_views();
 void sound_city_play();
+
+// Enhanced city ambience (gameplay_enhanced_city_ambient). The city renderer reports each drawn tile of a
+// sounding building with its pixel; the audio side reads nothing of the simulation or the save.
+int sound_city_building_channel(building* b);
+void sound_city_ambient_note(int channel, vec2i pixel);
+void sound_city_ambient_reset();
+const char* sound_city_ambient_summary();

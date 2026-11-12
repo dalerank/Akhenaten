@@ -230,6 +230,7 @@ namespace game_features {
     extern game_feature gameplay_enhanced_labor_category_split;
     extern game_feature gameplay_enhanced_walker_spawn_boost;
     extern game_feature gameplay_enhanced_walker_move_boost;
+    extern game_feature gameplay_enhanced_city_ambient;
     extern game_feature gameplay_enhanced_festival_calendar;
     extern game_feature gameplay_enhanced_local_cults;
     extern game_feature graphics_atlas_render;

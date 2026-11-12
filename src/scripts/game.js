@@ -146,6 +146,7 @@ game_features {
     @gameplay_enhanced_walker_spawn_boost {}
     @gameplay_enhanced_walker_move_boost {}
     @gameplay_enhanced_festival_calendar {}
+    @gameplay_enhanced_city_ambient {}
     @gameplay_enhanced_local_cults {}
     @gameplay_juggler_school_one_walker {}
     @gameplay_chariots_workshop_needs_weapons {}

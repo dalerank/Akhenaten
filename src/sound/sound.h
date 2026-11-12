@@ -47,6 +47,7 @@ public:
     bool speech_play_file(xstring filename, int volume);
     bool speech_file_exist(xstring filename, vfs::path &fs_path);
     void set_channel_volume(int channel, int volume_pct);
+    void set_channel_pan(int channel, int left_pct, int right_pct);
     bool is_channel_playing(int channel);
     void play_channel(int channel, int volume_pct);
     void play_channel_panned(int channel, int volume_pct, int left_pct, int right_pct);
@@ -81,6 +82,7 @@ public:
     void set_og_figure_effect_file(int sound, int variant, xstring file);
     void clear_og_effect_files();
     void stop_city_channels();
+    void stop_city_channel(int channel);
 
 public:
     void on_sound_effect(event_sound_effect);
