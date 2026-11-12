@@ -59,6 +59,7 @@ city_sounds = [
   {c: SOUND_CHANNEL_CITY_LETTUCE_FARM,  p: "Wavs/lettucefarm.wav"},
   {c: SOUND_CHANNEL_CITY_ZOO,           p: "Wavs/zoo_r.wav"},
   {c: SOUND_CHANNEL_CITY_LAMP_WORKSHOP, p: "Wavs/lampmaker_r.wav"},
+  {c: SOUND_CHANNEL_CITY_PAINT_WORKSHOP, p: "Wavs/paintmaker_r.wav"},
 ]
 
 // Enhanced city ambience (gameplay_enhanced_city_ambient): the samples above become positional voices.
