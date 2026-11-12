@@ -634,7 +634,7 @@ generic_button& ui::button(pcstr label, vec2i pos, vec2i size, fonts_vec fonts, 
           Mask{darkened ? 0xffe0e0e0u : 0xffffffffu});
     } else if (hasbody) {
         if (thinborder) {
-            push(cmd_t::draw_rect, Pos{offset + pos}, Size{size}, TextColor{0xff00000});
+            push(cmd_t::draw_rect, Pos{offset + pos}, Size{size}, TextColor{0xff000000});
         } else {
             push(cmd_t::button_border, Pos{offset + pos}, Size{size},
               ImgFlagsTag{((gbutton.hovered && !darkened) ? ImgFlag_Alpha : ImgFlag_None)});
