@@ -50,15 +50,20 @@ building_paint_workshop {
 [es=(building_paint_workshop, on_place_checks)]
 function building_paint_workshop_on_place_checks(ev) {
     var henna = city.resources.henna
-    var has_supply = (henna.count_active_industry > 0) || (henna.yards_stored > 0)
+    var paint = city.resources.paint
+    var has_supply = (henna.count_active_industry > 0) || (paint.yards_stored > 0) || (henna.yards_stored > 0)
     if (has_supply) {
         return
     }
 
     city.warnings.show("#building_needs_henna")
-    city.warnings.show_if_not(henna.can_produce, "#build_henna_farm")
-    city.warnings.show_if_not(henna.can_import, "#import_henna_trade_route")
-    city.warnings.show_if_not(henna.trade_status == TRADE_STATUS_IMPORT, "#import_henna_overseer")
+    if (henna.can_produce) {
+        city.warnings.show("#build_henna_farm")
+    } else if (!henna.can_import) {
+        city.warnings.show("#import_henna_trade_route")
+    } else if (henna.trade_status != TRADE_STATUS_IMPORT && henna.trade_status != TRADE_STATUS_IMPORT_AS_NEEDED) {
+        city.warnings.show("#import_henna_overseer")
+    }
 }
 
 [es=(building_paint_workshop, update_animation)]
