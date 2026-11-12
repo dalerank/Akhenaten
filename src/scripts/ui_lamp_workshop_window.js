@@ -17,6 +17,15 @@ info_window_lamp_workshop {
     })
 }
 
+// OG window_building_worker_percentage_text with the full staff text 6.
+function info_window_lamp_workshop_staff_text(pct) {
+    if (pct >= 100) return 6
+    if (pct >= 75) return 7
+    if (pct >= 50) return 8
+    if (pct >= 25) return 9
+    return 10
+}
+
 [es=(info_window_lamp_workshop, init)]
 function info_window_lamp_workshop_on_init(window) {
     var b = city.get_building(window.bid)
@@ -35,12 +44,12 @@ function info_window_lamp_workshop_on_init(window) {
         reason.id = 4
     } else if (b.num_workers <= 0) {
         reason.id = 5
-    } else if (oil < 100) {
+    } else if (oil < 1) {
         reason.id = 11
-    } else if (pottery < 100) {
+    } else if (pottery < 1) {
         reason.id = 12
     } else {
-        reason.id = Math.approximate_value(b.worker_percentage / 100.0, [10, 9, 8, 7, 6])
+        reason.id = info_window_lamp_workshop_staff_text(b.worker_percentage)
     }
     window.warning_text.text = __loc(reason)
     window.resource_stored.text = __loc(b.meta_text_id, 13) + " " + workshop_format_stored_amount(oil)
