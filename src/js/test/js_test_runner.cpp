@@ -5,6 +5,7 @@
 #include "building/monument_pyramid.h"
 #include "building/monuments.h"
 #include "city/object_info.h"
+#include "content/mods.h"
 #include "core/app.h"
 #include "core/bstring.h"
 #include "core/crc32.h"
@@ -653,6 +654,12 @@ static std::string save_roundtrip(pcstr filename) {
 
     return chunk_snapshots_diff(before, after, filename);
 }
+
+// The "Yes" of the save-mods popup, which tests never show.
+static bool __test_mods_apply_saved() {
+    return mods_apply_saved_mods();
+}
+ANK_FUNCTION(__test_mods_apply_saved);
 
 static pcstr __test_save_roundtrip(pcstr filename) {
     static std::string result;

@@ -93,6 +93,9 @@ void mods_queue_enabled_scripts();
 xstring mods_owner_of_script(pcstr text);
 // Marks the mod broken and asks for a VM rebuild without it. False if it was already broken.
 bool mods_mark_broken(xstring id, pcstr reason);
+// After loading a save made with other mods: enable exactly the save's installed mods and load the
+// save again. False when the last load had no mismatch.
+bool mods_apply_saved_mods();
 const mod_info& mods_find(xstring hash);
 void mods_remount();
 void mods_save();

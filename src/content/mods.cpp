@@ -13,6 +13,7 @@
 #include "content/vfs.h"
 #include "game/game.h"
 #include "graphics/elements/lang_text.h"
+#include "io/gamestate/boilerplate.h"
 #include "io/io_buffer.h"
 #include "window/popup_dialog.h"
 
@@ -160,7 +161,11 @@ namespace {
     struct saved_mod {
         xstring id;
         xstring version;
-        bool operator==(const saved_mod& o) const { return id == o.id && version == o.version; }
+        // An empty string read back from a save is not the same xstring as a default-constructed one.
+        static bool same(const xstring& a, const xstring& b) {
+            return strcmp(a.empty() ? "" : a.c_str(), b.empty() ? "" : b.c_str()) == 0;
+        }
+        bool operator==(const saved_mod& o) const { return same(id, o.id) && same(version, o.version); }
     };
 
     std::vector<saved_mod> mods_active_list() {
@@ -192,22 +197,87 @@ namespace {
     }
 
     // The load does not switch mods on or off: which set is right is the player's call.
+    // Mods of the last loaded save when they differ from the enabled ones; consumed by
+    // mods_apply_saved_mods.
+    std::vector<saved_mod> g_save_mods_pending;
+    bool g_save_mods_differ = false;
+
+    bool mods_saved_contains(const std::vector<saved_mod>& saved, xstring id) {
+        return std::any_of(saved.begin(), saved.end(), [id](const saved_mod& m) { return m.id == id; });
+    }
+
+    std::vector<saved_mod> mods_missing(const std::vector<saved_mod>& saved) {
+        std::vector<saved_mod> missing;
+        for (const auto& m : saved) {
+            const mod_info* mod = g_mods.find(m.id);
+            if (!mod || !mod->downloaded) {
+                missing.push_back(m);
+            }
+        }
+        return missing;
+    }
+
+    // Nothing changes unless the player accepts: "No" keeps the current mods and the loaded game.
     void mods_check_save(const std::vector<saved_mod>& saved) {
         const std::vector<saved_mod> active = mods_active_list();
-        if (saved == active) {
+        g_save_mods_differ = !(saved == active);
+        g_save_mods_pending = g_save_mods_differ ? saved : std::vector<saved_mod>{};
+        if (!g_save_mods_differ) {
+            if (!saved.empty()) {
+                logs::info("[mods] the save's mods match the enabled ones: %s", mods_describe(saved).c_str());
+            }
             return;
         }
-        const std::string text
+
+        const std::vector<saved_mod> missing = mods_missing(saved);
+        std::string text
           = "the save was made with mods: " + mods_describe(saved) + "; enabled now: " + mods_describe(active);
+        if (!missing.empty()) {
+            text += "; not installed: " + mods_describe(missing);
+        }
         logs::warn("[mods] %s", text.c_str());
         if (g_mods_isolated) {
             return;
         }
-        const xstring body = (text + ".\nThe game may play differently than when it was saved.").c_str();
-        game.add_frame_end_event(
-          [body] { popup_dialog::show_ok(lang_text_from_key("#popup_dialog_save_mods_differ"), body); });
+
+        const xstring body = (text
+                              + ".\nThe game may play differently than when it was saved."
+                                "\nSwitch to the save's mods and load it again? (No keeps the current mods.)")
+                               .c_str();
+        game.add_frame_end_event([body] {
+            popup_dialog::show(xstring(lang_text_from_key("#popup_dialog_save_mods_differ")), body, e_popup_btns_yesno,
+              [](bool accepted) {
+                  if (accepted) {
+                      mods_apply_saved_mods();
+                  }
+              });
+        });
     }
 } // namespace
+
+bool mods_apply_saved_mods() {
+    if (!g_save_mods_differ) {
+        return false;
+    }
+    g_save_mods_differ = false;
+
+    const std::vector<saved_mod> saved = std::move(g_save_mods_pending);
+    g_save_mods_pending.clear();
+    for (auto& m : g_mods.list) {
+        if (m->downloaded) {
+            m->enabled = mods_saved_contains(saved, m->name);
+        }
+    }
+    mods_remount();
+
+    const xstring save = game.session.last_loaded_mission;
+    logs::info("[mods] switched to the save's mods (%s), reloading %s", mods_describe(saved).c_str(), save.c_str());
+    // Frame end events run before js_vm_frame_end, and one queued from a callback runs a frame
+    // later: the double hop loads the save after the scripts of the new mod set are in.
+    game.add_frame_end_event(
+      [save] { game.add_frame_end_event([save] { GamestateIO::load_savegame(save.c_str()); }); });
+    return true;
+}
 
 io_buffer* iob_mods = new io_buffer(
   [](io_buffer* iob, size_t version) {
@@ -232,6 +302,8 @@ io_buffer* iob_mods = new io_buffer(
   },
   [](size_t) {
       // Saves before version 198 have no record of their mods: nothing to compare.
+      g_save_mods_differ = false;
+      g_save_mods_pending.clear();
   });
 
 void mods_queue_enabled_scripts() {
