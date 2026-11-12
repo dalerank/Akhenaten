@@ -1,6 +1,7 @@
 #include "arguments.h"
 
 #include "platform/platform.h"
+#include "platform/innoextract_util.h"
 #include "core/app.h"
 #include "core/bstring.h"
 #include "core/log.h"
@@ -319,15 +320,10 @@ void Arguments::parse(int argc, char** argv) {
     });
 
     if (!integraltests_mode) {
-        vfs::path steam_path = platform.get_steam_path();
-        if (!steam_path.empty()) {
-            vfs::path pharaoh_steam_path(steam_path, "/steamapps/common/Pharaoh + Cleopatra/");
-            vfs::path pharaoh_exe_path(pharaoh_steam_path, "Pharaoh.exe");
-            bool binary_exist = std::filesystem::exists(pharaoh_exe_path.c_str());
-            if (binary_exist) {
-                logs::info("Steam pharaoh path: %s", pharaoh_steam_path.c_str());
-                data_dir = pharaoh_steam_path.c_str();
-            }
+        const xstring steam_dir = innoextract::find_steam_pharaoh_dir();
+        if (!steam_dir.empty()) {
+            logs::info("Steam pharaoh path: %s", steam_dir.c_str());
+            data_dir = steam_dir;
         }
     }
 

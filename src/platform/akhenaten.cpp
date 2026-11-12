@@ -296,14 +296,11 @@ static void setup() {
         if (!innoextract::has_required_game_files(g_args.get_data_directory().c_str())) {
             // Prefer Steam Cleopatra only when the configured path has no usable Pharaoh data.
             if (!innoextract::has_pharaoh_data(g_args.get_data_directory().c_str())) {
-                vfs::path steam_path = platform.get_steam_path();
-                if (!steam_path.empty()) {
-                    vfs::path steam_data(steam_path, "/steamapps/common/Pharaoh + Cleopatra/");
-                    if (innoextract::has_required_game_files(steam_data.c_str())) {
-                        g_args.set_data_directory(steam_data.c_str());
-                        arguments::store(g_args);
-                        logs::info("Using Steam Pharaoh data at %s", steam_data.c_str());
-                    }
+                const xstring steam_data = innoextract::find_steam_pharaoh_dir();
+                if (!steam_data.empty() && innoextract::has_required_game_files(steam_data.c_str())) {
+                    g_args.set_data_directory(steam_data.c_str());
+                    arguments::store(g_args);
+                    logs::info("Using Steam Pharaoh data at %s", steam_data.c_str());
                 }
             }
         }

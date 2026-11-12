@@ -19,17 +19,6 @@
 
 #include "platform/renderer.h"
 
-// These functions are actually related to the imagepak class I/O, but it made slightly more
-// sense to me to have here as "core" image struct/class & game graphics related functions.
-bool set_pak_in_collection(int pak_id, imagepak** pak, std::vector<imagepak*>* collection) {
-    if (pak_id >= collection->size()) {
-        return false;
-    }
-
-    *pak = collection->at(pak_id);
-    return true;
-}
-
 int image_copy_to_atlas(const image_t &img) {
     int pixels_count = 0;
     atlas_data_t *p_atlas = img.atlas.p_atlas;
@@ -611,18 +600,6 @@ const image_t* image_letter(int letter_id) {
     }
 
     return nullptr;
-}
-
-const image_t* image_get_enemy(int type, int id) {
-    auto& data = *g_image_data;
-    if (type < 0 || type >= static_cast<int>(data.pak_list.size())) {
-        return nullptr;
-    }
-    if (!image_ensure_pak_loaded(type)) {
-        return nullptr;
-    }
-    auto *handle = data.pak_list[type].handle;
-    return handle ? handle->get_image(id) : nullptr;
 }
 
 int image_t::isometric_size() const {

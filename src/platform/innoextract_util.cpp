@@ -774,6 +774,15 @@ bool has_pharaoh_data(pcstr dir) {
     return !find_campaign_dir(fs::path(dir)).empty();
 }
 
+xstring find_steam_pharaoh_dir() {
+    pcstr steam_path = platform.get_steam_path();
+    if (!steam_path || !*steam_path) {
+        return {};
+    }
+    const xstring dir = (fs::path(steam_path) / "steamapps/common/Pharaoh + Cleopatra/").generic_string().c_str();
+    return has_pharaoh_data(dir.c_str()) ? dir : xstring{};
+}
+
 pcstr settings_t::required_game_files_help() const {
     return "Akhenaten needs original Pharaoh game files (campaign.txt).\n"
            "A full Pharaoh + Cleopatra install is recommended.\n"

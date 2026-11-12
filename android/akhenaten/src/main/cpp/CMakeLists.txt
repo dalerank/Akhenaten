@@ -61,11 +61,8 @@ file(GLOB EDITOR_FILES ${SRC_ROOT}/editor/*.cpp)
 file(GLOB TRANSLATION_FILES ${SRC_ROOT}/translation/*.cpp)
 file(GLOB GRAPHICS_FILES ${SRC_ROOT}/graphics/*.cpp)
 file(GLOB IO_FILES ${SRC_ROOT}/io/*.cpp)
-file(GLOB IO_CONFIG_FILES ${SRC_ROOT}/io/config/*.cpp)
 file(GLOB IO_GAMEFILES_FILES ${SRC_ROOT}/io/gamefiles/*.cpp)
 file(GLOB IO_GAMESTATE_FILES ${SRC_ROOT}/io/gamestate/*.cpp)
-file(GLOB IO_IMAGEPAKS_FILES ${SRC_ROOT}/io/imagepaks/*.cpp)
-file(GLOB IO_PLAYERDATA_FILES ${SRC_ROOT}/io/playerdata/*.cpp)
 file(GLOB RESOURCE_FILES ${SRC_ROOT}/resource/*.cpp)
 file(GLOB JS_FILES ${SRC_ROOT}/js/*.cpp)
 file(GLOB JS_TEST_FILES ${SRC_ROOT}/js/test/*.cpp)
@@ -133,11 +130,8 @@ set(SOURCE_FILES
     ${EDITOR_FILES}
     ${TRANSLATION_FILES}
     ${IO_FILES}
-    ${IO_CONFIG_FILES}
     ${IO_GAMEFILES_FILES}
     ${IO_GAMESTATE_FILES}
-    ${IO_IMAGEPAKS_FILES}
-    ${IO_PLAYERDATA_FILES}
     ${RESOURCE_FILES}
     ${JS_FILES}
     ${JS_TEST_FILES}

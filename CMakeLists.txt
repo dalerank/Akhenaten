@@ -821,11 +821,8 @@ set(IMGUI_FILES
 )
 file(GLOB GRAPHICS_FILES ${PROJECT_SOURCE_DIR}/src/graphics/*.cpp)
 file(GLOB IO_FILES ${PROJECT_SOURCE_DIR}/src/io/*.cpp)
-file(GLOB IO_CONFIG_FILES ${PROJECT_SOURCE_DIR}/src/io/config/*.cpp)
 file(GLOB IO_GAMEFILES_FILES ${PROJECT_SOURCE_DIR}/src/io/gamefiles/*.cpp)
 file(GLOB IO_GAMESTATE_FILES ${PROJECT_SOURCE_DIR}/src/io/gamestate/*.cpp)
-file(GLOB IO_IMAGEPAKS_FILES ${PROJECT_SOURCE_DIR}/src/io/imagepaks/*.cpp)
-file(GLOB IO_PLAYERDATA_FILES ${PROJECT_SOURCE_DIR}/src/io/playerdata/*.cpp)
 file(GLOB RESOURCE_FILES ${PROJECT_SOURCE_DIR}/src/resource/*.cpp)
 file(GLOB JS_FILES ${PROJECT_SOURCE_DIR}/src/js/*.cpp)
 file(GLOB JS_TEST_FILES ${PROJECT_SOURCE_DIR}/src/js/test/*.cpp)
@@ -967,11 +964,8 @@ set(SOURCE_FILES
     ${CORE_FILES} ${CORE_HEADERS}
     ${NET_FILES}
     ${IO_FILES} ${IO_HEADERS}
-    ${IO_CONFIG_FILES}
     ${IO_GAMEFILES_FILES}
     ${IO_GAMESTATE_FILES}
-    ${IO_IMAGEPAKS_FILES}
-    ${IO_PLAYERDATA_FILES}
     ${BUILDING_FILES}
     ${CITY_FILES}
     ${EMPIRE_FILES}

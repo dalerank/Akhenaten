@@ -247,7 +247,7 @@ src/
 ├── widget/       persistent HUD (sidebar, top menu, minimap)
 ├── scenario/     mission config, events, requests, win criteria
 ├── editor/       scenario editor
-├── io/           save/load (chunk schema), mods, localization
+├── io/           save/load (chunk schema), localization
 ├── game/         game state, main loop, resource enums
 ├── config/       game settings and config-archive readers
 ├── content/      content/asset registration and loading

@@ -163,7 +163,6 @@ const image_t *image_get(image_desc desc);
 const image_t *image_get(const xstring &name);
 
 const image_t *image_letter(int letter_id);
-const image_t *image_get_enemy(int type, int id);
 const image_t *image_next_close_get(image_desc desc, bool &last, int &last_index);
 
 inline int image_safe_width(const image_t *img) { return img ? img->width : 0; }
