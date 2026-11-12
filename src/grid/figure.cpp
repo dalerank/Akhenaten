@@ -13,6 +13,7 @@
 static grid_xx grid_figures(FS_UINT16);
 
 svector<figure_draw, 5000> g_figures_y_sort;
+static uint32_t g_figures_y_sort_generation = 0;
 
 bool map_has_figure_at(int grid_offset) {
     return map_grid_is_valid_offset(grid_offset) && map_grid_get(grid_figures, grid_offset) > 0;
@@ -25,6 +26,7 @@ int map_figure_id_get(int grid_offset) {
 void map_figure_sort_by_y() {
     OZZY_PROFILER_FUNCTION();
     g_figures_y_sort.clear();
+    ++g_figures_y_sort_generation;
     for (figure *f : map_figures()) {
         if (f->state == FIGURE_STATE_NONE) {
             continue;
@@ -81,23 +83,23 @@ xspan<figure_draw> map_figures_in_row(tile2i tile) {
         return {};
     }
 
-    auto begin = std::lower_bound(g_figures_y_sort.begin(), g_figures_y_sort.end(), pixel_begin.y, [](const auto &f, int y) {
-        return f.fpos.y < y;
-    });
-
-    if (begin == g_figures_y_sort.end()) {
-        return {};
+    // Every tile of a screen row asks for the same y band: search it once per row and worker.
+    struct row_band {
+        uint32_t generation = 0;
+        int y = 0;
+        figure_draw* begin = nullptr;
+        figure_draw* end = nullptr;
+    };
+    thread_local row_band band;
+    if (band.generation != g_figures_y_sort_generation || band.y != pixel_begin.y || !band.begin) {
+        const auto by_y = [](const auto& f, int y) { return f.fpos.y < y; };
+        band.begin = std::lower_bound(g_figures_y_sort.begin(), g_figures_y_sort.end(), pixel_begin.y, by_y);
+        band.end = std::lower_bound(band.begin, g_figures_y_sort.end(), pixel_end.y, by_y);
+        band.generation = g_figures_y_sort_generation;
+        band.y = pixel_begin.y;
     }
 
-    auto end = std::lower_bound(g_figures_y_sort.begin(), g_figures_y_sort.end(), pixel_end.y, [](const auto &f, int y) {
-        return f.fpos.y < y;
-    });
-
-    if (end == g_figures_y_sort.end()) {
-        xspan<figure_draw>(begin, g_figures_y_sort.end());
-    }
-
-    return xspan<figure_draw>(begin, end);
+    return xspan<figure_draw>(band.begin, band.end);
 }
 
 void map_figure_set(int grid_offset, int id) {
