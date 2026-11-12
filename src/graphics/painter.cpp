@@ -22,7 +22,7 @@ void painter::draw(SDL_Texture *texture, vec2i pos, vec2i offset, vec2i size, co
     if (!use_grayscale) {
         draw_impl(texture, pos, offset, size, color, scale_x, scale_y, angle, flags, force_linear);
     } else {
-        draw_grayscale(texture, pos, offset, size, scale_x, scale_y, angle, !!(flags & ImgFlag_Alpha), force_linear);
+        draw_grayscale(texture, pos, offset, size, scale_x, scale_y, angle, flags & ~ImgFlag_Grayscale, force_linear);
     }
 
     const bool debug = !!(flags & ImgFlag_Debug);
@@ -433,6 +433,13 @@ SDL_Texture* painter::convertToGrayscale(SDL_Texture *tx, vec2i offset, vec2i si
         return nullptr;
     }
 
+    // Declared after the deleter, so it runs first: the target is restored before ren_tex dies.
+    struct RenTargetRestore {
+        SDL_Renderer* renderer;
+        SDL_Texture* target;
+        ~RenTargetRestore() { SDL_SetRenderTarget(renderer, target); }
+    } _renTargetRestore{this->renderer, old_target};
+
     SDL_SetRenderDrawColor(this->renderer, 0x00, 0x00, 0x00, 0x00);
     SDL_RenderClear(this->renderer);
 
@@ -468,8 +475,6 @@ SDL_Texture* painter::convertToGrayscale(SDL_Texture *tx, vec2i offset, vec2i si
 
     gray_tx.first->second = gray_tx_ptr;
     SDL_FreeSurface(surface);
-
-    SDL_SetRenderTarget(this->renderer, old_target);
 
     return gray_tx_ptr;
 }
