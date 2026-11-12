@@ -10,13 +10,12 @@ building_paint_workshop {
   }
   overlay_anims {
     henna {
-      pos:[65, 3]
-      pack:PACK_GENERAL
-      id:207
+      pos:[45, 25]
+      pack:PACK_EXPANSION
+      id:30
       resource: RESOURCE_HENNA
-      stack: true
-      step: [5, -5]
-      max_count: 8
+      stack: false
+      max_count: 1
       default_active: true
     }
   }
@@ -26,12 +25,10 @@ building_paint_workshop {
   output {
     resource : RESOURCE_PAINT
   }
-  progress_max : 400
-  production_rate : 20
-  production_rate_dcy : [100, 80, 70, 60, 50]
+  min_houses_coverage : 50
   labor_category : LABOR_CATEGORY_INDUSTRY_COMMERCE
   building_size : 2
-  cost [ 20, 30, 50, 100, 150 ]
+  cost [ 20, 80, 100, 120, 150 ]
   desirability { value[-4], step[1], step_size[1], range[4] }
   laborers [12]
   fire_risk [3]
@@ -44,6 +41,7 @@ building_paint_workshop {
     is_workshop: true
     is_industry: true
     work_anim: true
+    og_production_cycle: true
   }
 }
 
@@ -69,13 +67,7 @@ function building_paint_workshop_on_place_checks(ev) {
 [es=(building_paint_workshop, update_animation)]
 function building_paint_workshop_on_update_animation(ev) {
     var b = city.get_building(ev.bid)
-    if (!b.play_animation) {
-        return
-    }
-    if (__building_industry_progress_pct(b.id) != 0) {
-        return
-    }
-    if (b.stored_resource(RESOURCE_HENNA) < 100) {
+    if (b.play_animation && b.stored_resource(RESOURCE_HENNA) <= 0) {
         b.play_animation = false
     }
 }
