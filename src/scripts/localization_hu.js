@@ -803,6 +803,7 @@ localization_hu = [
   {key: "#building_needs_game_meat", group:19, id:235}
   {key: "#build_hunting_lodge", group:19, id:236}
   {key: "#build_hunting_lodge_or_import", group:19, id:237}
+  {key: "#game_meat_import_trade_route", group:19, id:238}
   {key: "#monument_needs_copper", group:19, id:239}
   {key: "#monument_needs_marble", group:19, id:240}
   {key: "#one_library_only", group:19, id:241}

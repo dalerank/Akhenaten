@@ -89,6 +89,7 @@ enum e_sound_channel_city {
     SOUND_CHANNEL_CITY_WEAVER_WORKSHOP,
     SOUND_CHANNEL_CITY_JEWELS_WORKSHOP,
     SOUND_CHANNEL_CITY_CHARIOTS_WORKSHOP,
+    SOUND_CHANNEL_CITY_ZOO,
 
     SOUND_CHANNEL_CITY_COUNT,
 };
@@ -116,6 +117,7 @@ struct city_sounds_t {
 void sound_city_init();
 void sound_city_stop();
 const city_sounds_t &sound_city_channels();
+void sound_city_add_channel(int system_channel_index, int direction);
 void sound_city_mark_building_view(building* b, int direction);
 void sound_city_mark_terrain_view(int terrain, int grid_offset, int direction);
 void sound_city_decay_views();

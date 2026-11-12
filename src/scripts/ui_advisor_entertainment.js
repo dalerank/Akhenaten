@@ -10,6 +10,10 @@ function advisor_entertainment_advice_index() {
 	}
 	var vns = city.entertainment.venue_needing_shows
 	if (vns) {
+		// entertainment_advice_text folds zoo (5) into the senet sentence (group 58 id 14).
+		if (vns > 4) {
+			vns = 4
+		}
 		return 3 + vns
 	}
 	return 2

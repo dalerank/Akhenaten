@@ -117,8 +117,17 @@ int building_type_to_channel(building *b) {
     return b->dcast()->sound_channel();
 }
 
+void sound_city_add_channel(int system_channel_index, int direction) {
+    if (!system_channel_index) {
+        return;
+    }
+    auto &slot = g_city_sounds.channels[system_channel_index - SOUND_CHANNEL_CITY_START];
+    slot.available = 1;
+    ++slot.total_views;
+    ++slot.direction_views[direction];
+}
+
 void sound_city_mark_terrain_view(int terrain, int grid_offset, int direction) {
-    auto &channels = g_city_sounds.channels;
     int system_channel_index = 0;
     if (terrain & TERRAIN_TREE) {
         system_channel_index = SOUND_CHANNEL_CITY_TREE;
@@ -140,14 +149,7 @@ void sound_city_mark_terrain_view(int terrain, int grid_offset, int direction) {
         system_channel_index = SOUND_CHANNEL_CITY_MARSHLAND;
     }
 
-    if (!system_channel_index) {
-        return;
-    }
-
-    int channel = system_channel_index - SOUND_CHANNEL_CITY_START;
-    channels[channel].available = 1;
-    ++channels[channel].total_views;
-    ++channels[channel].direction_views[direction];
+    sound_city_add_channel(system_channel_index, direction);
 }
 
 int sound_city_building_channel(building* b) {
@@ -166,16 +168,14 @@ int sound_city_building_channel(building* b) {
 void sound_city_mark_building_view(building* b, int direction) {
     OZZY_PROFILER_FUNCTION()
 
-    auto& channels = g_city_sounds.channels;
-    const int system_channel_index = sound_city_building_channel(b);
-    if (!system_channel_index) {
-        return;
+    if (b->state == BUILDING_STATE_VALID) {
+        if (building_impl *impl = b->dcast()) {
+            impl->add_ambient_sound(direction);
+        }
     }
 
-    int channel = system_channel_index - SOUND_CHANNEL_CITY_START;
-    channels[channel].available = 1;
-    ++channels[channel].total_views;
-    ++channels[channel].direction_views[direction];
+    const int system_channel_index = sound_city_building_channel(b);
+    sound_city_add_channel(system_channel_index, direction);
 }
 
 void sound_city_decay_views(void) {

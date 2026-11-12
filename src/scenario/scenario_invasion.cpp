@@ -430,6 +430,30 @@ bool scenario_invasion_exists_upcoming() {
     return false;
 }
 
+bool __construction_no_troops_for_defense() {
+    bool running = false;
+    for (const auto &b : g_invasions.binds) {
+        if (b.in_use) {
+            running = true;
+            break;
+        }
+    }
+    if (!running && g_city.kingdome.invasion.duration_day_countdown > 0) {
+        running = true;
+    }
+    if (!running || formation_get_num_forts() > 0) {
+        return false;
+    }
+    int warships = 0;
+    figure_valid_do([&] (figure &f) {
+        if (f.type == FIGURE_WARSHIP && !f.is_enemy()) {
+            warships++;
+        }
+    });
+    return warships == 0;
+}
+ANK_FUNCTION(__construction_no_troops_for_defense)
+
 std::optional<bvariant> __invasion_warning_get_property(int index, pcstr property) {
     if (index < 0 || index >= (int)g_invasions.warnings.size()) {
         return {};

@@ -159,9 +159,14 @@ void city_t::house_service_calculate_culture_aggregates() {
         const int senet_value = housed.senet_player;
         housed.entertainment += (senet_value * 10) / model.entertainment_senet_divider;
 
-        // Zoo points match senet (+40 at full coverage with divider 25).
-        const int zoo_value = housed.zookeeper;
-        housed.entertainment += (zoo_value * 10) / model.entertainment_senet_divider;
+        // any zoo visit adds 40 while the house is still at or below 60, otherwise the visit fills entertainment to 100.
+        if (housed.zookeeper) {
+            if (housed.entertainment <= 60) {
+                housed.entertainment += 40;
+            } else {
+                housed.entertainment = 100;
+            }
+        }
 
         housed.entertainment = std::min<int>(housed.entertainment, 100);
 

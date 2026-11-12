@@ -3,13 +3,13 @@
 //   [test-marker] test_building_placed:type_<BUILDING_ZOO>:...
 //   [test-marker] zoo_stocked_ok
 //   [test-marker] zoo_spawn_ok
-//   [test-marker] zoo_animals_present_ok
+//   [test-marker] zoo_no_show_ok
 //   [test-marker] zoo_no_spawn_without_stock
 
 var __test65_bid = null
 var __test65_stock_ok = false
 var __test65_spawn_ok = false
-var __test65_animals_ok = false
+var __test65_no_show_ok = false
 var __test65_no_spawn_ok = false
 
 function test65_keep_staffed(bid) {
@@ -84,10 +84,15 @@ function run_test() {
 
     city.figures.remove_figures(FIGURE_ZOOKEEPER)
     test65_keep_staffed(bid)
+    b.figure_spawn_delay = 0
+
+    var straw_before = b.stored_resource(RESOURCE_STRAW)
+    var meat_before = b.stored_resource(RESOURCE_GAMEMEAT)
 
     var spawned = false
     var i
-    for (i = 0; i < 400; i++) {
+    // OG delay at full staff is 7 days (50 ticks); one trip pays walker_cost of each input.
+    for (i = 0; i < 700; i++) {
         test65_keep_staffed(bid)
         __test_pump_frames(1)
         if (__test_count_figures(FIGURE_ZOOKEEPER) > 0) {
@@ -107,19 +112,30 @@ function run_test() {
         __test_signal_ready()
         return
     }
+    var cost = building_zoo_feed_cost()
+    var straw_after = b.stored_resource(RESOURCE_STRAW)
+    var meat_after = b.stored_resource(RESOURCE_GAMEMEAT)
+    if (straw_after != straw_before - cost || meat_after != meat_before - cost) {
+        __log_info_native('[test:65] feed consume mismatch'
+            + ' cost=' + cost
+            + ' straw ' + straw_before + '->' + straw_after
+            + ' meat ' + meat_before + '->' + meat_after)
+        __test_signal_ready()
+        return
+    }
     __log_marker('zoo_spawn_ok')
     __test65_spawn_ok = true
 
-    // Feed consume sets animals-present timer (juggler_visited reused).
+    // Roaming keepers never start a show. Culture counts every staffed zoo as a no-show.
     var zoo = city.get_entertainment_building(bid)
-    if (!zoo || !(zoo.juggler_visited > 0)) {
-        __log_info_native('[test:65] expected animals-present timer after spawn'
+    if (!zoo || zoo.juggler_visited != 0) {
+        __log_info_native('[test:65] expected no show timer after spawn'
             + ' juggler_visited=' + (zoo ? zoo.juggler_visited : -1))
         __test_signal_ready()
         return
     }
-    __log_marker('zoo_animals_present_ok')
-    __test65_animals_ok = true
+    __log_marker('zoo_no_show_ok')
+    __test65_no_show_ok = true
 
     // Drain stock and confirm no new spawn once stock is empty.
     city.figures.remove_figures(FIGURE_ZOOKEEPER)
@@ -162,10 +178,10 @@ function check_valid() {
 
     return __test65_stock_ok
         && __test65_spawn_ok
-        && __test65_animals_ok
+        && __test65_no_show_ok
         && __test65_no_spawn_ok
         && __test_find_inlog('[test-marker] zoo_stocked_ok')
         && __test_find_inlog('[test-marker] zoo_spawn_ok')
-        && __test_find_inlog('[test-marker] zoo_animals_present_ok')
+        && __test_find_inlog('[test-marker] zoo_no_show_ok')
         && __test_find_inlog('[test-marker] zoo_no_spawn_without_stock')
 }

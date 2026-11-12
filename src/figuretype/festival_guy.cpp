@@ -42,6 +42,7 @@ void figure_festival_guy::update_animation() {
         break;
 
     case BUILDING_JUGGLER_SCHOOL:
+    case BUILDING_ZOO:
         animkey = "juggler_walk";
         break;
     case BUILDING_CONSERVATORY:

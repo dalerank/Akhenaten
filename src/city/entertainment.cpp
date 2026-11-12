@@ -83,7 +83,12 @@ void city_entertainment_t::calculate_shows() {
     }
 
     if (senet_house_no_shows_weighted > worst_shows) {
+        worst_shows = senet_house_no_shows_weighted;
         venue_needing_shows = 4;
+    }
+
+    if (zoo_no_shows_weighted > worst_shows) {
+        venue_needing_shows = 5;
     }
 }
 
