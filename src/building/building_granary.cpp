@@ -681,6 +681,10 @@ void building_granary::update_graphic() {
     building_impl::update_graphic();
 }
 
+void building_granary::update_sprite_anims() {
+    register_sprite_anim(anim("work"));
+}
+
 bool building_granary::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color mask) {
     draw_stores(point, mask, ctx);
     building_draw_normal_anim(ctx, point + vec2i{114, 2}, &base, tile, anim("work"), mask);

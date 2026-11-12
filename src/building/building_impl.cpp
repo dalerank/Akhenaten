@@ -646,6 +646,8 @@ void building_impl::highlight_waypoints() { // highlight the 4 routing tiles for
 }
 
 void building_impl::on_tick(bool refresh_only) {
+    tick_sprite_anims(refresh_only);
+
     if (base.anim.valid()) {
         base.anim.update(refresh_only);
     }

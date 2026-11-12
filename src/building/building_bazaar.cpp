@@ -1047,10 +1047,17 @@ void building_bazaar::spawn_figure() {
     }
 }
 
-bool building_bazaar::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {
+const animation_t& building_bazaar::work_anim() const {
     const xstring &animkey = base.get_flag(e_building_fancy) ? animkeys().base_work : animkeys().fancy_work;
-    const animation_t &ranim = anim(animkey);
-    building_draw_normal_anim(ctx, point, &base, tile, ranim, color_mask);
+    return anim(animkey);
+}
+
+void building_bazaar::update_sprite_anims() {
+    register_sprite_anim(work_anim());
+}
+
+bool building_bazaar::draw_ornaments_and_animations_height(painter& ctx, vec2i point, tile2i tile, color color_mask) {
+    building_draw_normal_anim(ctx, point, &base, tile, work_anim(), color_mask);
 
     return true;
 }

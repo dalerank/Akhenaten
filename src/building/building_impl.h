@@ -143,6 +143,13 @@ public:
     virtual void destroy_by_poof(bool clouds);
     virtual void highlight_waypoints();
     virtual void on_tick(bool refresh_only);
+    // Registers, every tick, the sprites whose own animation the draw shows (building_draw_normal_anim).
+    virtual void update_sprite_anims();
+    void register_sprite_anim(int sprite_id, int max_frames, int duration);
+    void register_sprite_anim(const animation_t& anim) {
+        register_sprite_anim(anim.first_img(), anim.max_frames, anim.duration);
+    }
+    void tick_sprite_anims(bool refresh_only);
 
     virtual resource_vec required_resources() const;
     virtual bool required_resource(e_resource) const;

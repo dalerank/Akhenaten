@@ -1123,7 +1123,6 @@ void screen_city_t::draw(painter &ctx) {
     } else {
         draw_without_overlay(ctx, 0);
     }
-    building_animation_frames_apply();
 
     graphics_reset_clip_rectangle();
     set_render_scale(ctx, 1.0f);

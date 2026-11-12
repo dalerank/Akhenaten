@@ -54,6 +54,7 @@ public:
     virtual void spawn_figure() override;
     virtual void update_graphic() override;
     virtual bool draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color mask) override;
+    virtual void update_sprite_anims() override;
     virtual void update_day() override;
     virtual void bind_dynamic(io_buffer *iob, size_t version) override;
 

@@ -1,25 +1,24 @@
 // Drawing must not change simulation state: the same city run for the same ticks headless and with
 // frames drawn between the ticks (incl. the figure-follow snapshot redraw) must hash the same, chunk
 // by chunk, and no drawn frame may change a saved byte. A differing chunk is logged by name - that
-// is the finding. The old building animation
-// frame in the sprite grid is stepped by the draw as in OG and is left out of the hash; instead one
-// drawn frame with a follow snapshot must step it exactly once.
+// is the finding. Building sprite animations tick with the simulation: a drawn frame must not step
+// a bazaar's animation, a tick must.
 
-var __t361_ok = false
-var __t361_ticks = 300
-var __t361_step = 5
-var __t361_frames = 2
+var __t386_ok = false
+var __t386_ticks = 300
+var __t386_step = 5
+var __t386_frames = 2
 // Written by the draw but owned by other work in progress (sound view counters, audit item 5):
 // logged, not failed, until that lands. Remove a name here once its chunk matches.
-var __t361_known = { city_sounds: true }
-var __t361_draw_diffs = {}
+var __t386_known = { city_sounds: true }
+var __t386_draw_diffs = {}
 
-function t361_fail(msg) {
-    __log_info_native('[test:361] FAIL: ' + msg)
+function t386_fail(msg) {
+    __log_info_native('[test:386] FAIL: ' + msg)
     __test_signal_ready()
 }
 
-function t361_parse(hash) {
+function t386_parse(hash) {
     var out = {}
     var parts = hash.split(';')
     for (var i = 0; i < parts.length; i++) {
@@ -31,7 +30,7 @@ function t361_parse(hash) {
     return out
 }
 
-function t361_diff(a, b) {
+function t386_diff(a, b) {
     var names = []
     for (var k in a) {
         if (k != 'total' && a[k] != b[k]) {
@@ -41,7 +40,7 @@ function t361_diff(a, b) {
     return names
 }
 
-function t361_setup() {
+function t386_setup() {
     __test_crt_srand(1)
     __test_libc_srand(1)
     if (!test_reload_city_session('data/default.map')) {
@@ -59,7 +58,7 @@ function t361_setup() {
             shops.push(bid)
         }
     }
-    t361_staff(shops)
+    t386_staff(shops)
     var seeker = __test_figure_create(FIGURE_LABOR_SEEKER, cx, cy)
     var other = __test_figure_create(FIGURE_LABOR_SEEKER, cx + 2, cy + 1)
     if (!seeker || !other) {
@@ -76,70 +75,75 @@ function t361_setup() {
 }
 
 // No population: the labour update would empty the bazaar, and an unstaffed one does not animate.
-function t361_staff(shops) {
+function t386_staff(shops) {
     for (var i = 0; i < shops.length; i++) {
         __test_building_set_workers(shops[i], 20)
     }
 }
 
-// Returns the frame step of the first animating bazaar over one drawn frame with a snapshot, or -1.
-function t361_anim_step(shops) {
+// Over one drawn frame with a follow snapshot, then over ticks with no drawing: the bazaar's frame
+// must not move in the first and must move in the second. Returns null when nothing animates.
+function t386_anim_steps(shops) {
     for (var i = 0; i < shops.length; i++) {
         var tile = __building_tile(shops[i])
         var watcher = __test_figure_create(FIGURE_LABOR_SEEKER, tile.x, tile.y)
         if (!watcher || !__figure_follow_start(watcher)) {
-            __log_info_native('[test:361] no figure to follow at shop ' + shops[i])
+            __log_info_native('[test:386] no figure to follow at shop ' + shops[i])
             continue
         }
         var before = __test_building_sprite_frame(shops[i])
-        __test_draw_frames(1)
-        var after = __test_building_sprite_frame(shops[i])
-        if (before > 0 || after > 0) {
-            __log_info_native('[test:361] shop ' + shops[i] + ' frame ' + before + ' -> ' + after)
-            return after >= before ? after - before : 1
+        if (before <= 0) {
+            continue
         }
+        __test_draw_frames(1)
+        var drawn = __test_building_sprite_frame(shops[i])
+        t386_staff(shops)
+        __test_run_ticks(1)
+        var ticked = __test_building_sprite_frame(shops[i])
+        __log_info_native('[test:386] shop ' + shops[i] + ' frame ' + before + ' drawn ' + drawn + ' ticked ' + ticked)
+        return { drawn: drawn != before, ticked: ticked != drawn }
     }
-    return -1
+    return null
 }
 
 // Draws n frames and records every chunk that the drawing alone changed.
-function t361_draw(n) {
+function t386_draw(n) {
     __test_state_mark()
     __test_draw_frames(n)
-    var changed = __test_state_diff('t361_draw')
+    var changed = __test_state_diff('t386_draw')
     if (!changed) {
         return
     }
     var names = changed.split(',')
     for (var i = 0; i < names.length; i++) {
-        __t361_draw_diffs[names[i]] = true
+        __t386_draw_diffs[names[i]] = true
     }
 }
 
-function t361_run(drawn) {
-    var s = t361_setup()
+function t386_run(drawn) {
+    var s = t386_setup()
     if (!s) {
         return null
     }
-    var out = { anim_step: -1 }
+    var out = { anim: null }
     if (drawn) {
         // Figures that have not ticked yet: only a drawing would give them a sprite.
-        t361_draw(__t361_frames)
+        t386_draw(__t386_frames)
     }
-    for (var t = 0; t < __t361_ticks; t += __t361_step) {
-        for (var k = 0; k < __t361_step; k++) {
-            t361_staff(s.shops)
+    for (var t = 0; t < __t386_ticks; t += __t386_step) {
+        for (var k = 0; k < __t386_step; k++) {
+            t386_staff(s.shops)
             if (__test_run_ticks(1) != 1) {
                 return null
             }
         }
         if (drawn) {
-            t361_draw(__t361_frames)
+            t386_draw(__t386_frames)
         }
     }
-    out.end = t361_parse(__test_state_hash_drawn())
+    out.end = t386_parse(__test_state_hash())
     if (drawn) {
-        out.anim_step = t361_anim_step(s.shops)
+        out.anim = t386_anim_steps(s.shops)
         if (__figure_follow_enabled()) {
             __figure_follow_stop()
         }
@@ -147,18 +151,18 @@ function t361_run(drawn) {
     return out
 }
 
-function t361_report(label, a, b) {
+function t386_report(label, a, b) {
     if (a.total == b.total) {
         return []
     }
-    var names = t361_diff(a, b)
+    var names = t386_diff(a, b)
     var unexpected = []
     for (var i = 0; i < names.length; i++) {
-        var known = __t361_known[names[i]] === true
-        __log_info_native('[test:361] ' + label + ' chunk differs' + (known ? ' (known)' : '') + ': '
+        var known = __t386_known[names[i]] === true
+        __log_info_native('[test:386] ' + label + ' chunk differs' + (known ? ' (known)' : '') + ': '
             + names[i] + ' ' + a[names[i]] + ' ' + b[names[i]])
         if (known) {
-            __log_marker('t361_known_differs:' + label + ':' + names[i])
+            __log_marker('t386_known_differs:' + label + ':' + names[i])
         } else {
             unexpected.push(names[i])
         }
@@ -167,43 +171,43 @@ function t361_report(label, a, b) {
 }
 
 function run_test() {
-    __log_info_native('[test:361] drawn frames vs headless ticks state hash')
+    __log_info_native('[test:386] drawn frames vs headless ticks state hash')
 
-    var headless = t361_run(false)
+    var headless = t386_run(false)
     if (!headless) {
-        return t361_fail('headless pass setup')
+        return t386_fail('headless pass setup')
     }
-    var drawn = t361_run(true)
+    var drawn = t386_run(true)
     if (!drawn) {
-        return t361_fail('drawn pass setup')
+        return t386_fail('drawn pass setup')
     }
 
-    __log_info_native('[test:361] end ' + headless.end.total + ' ' + drawn.end.total + ' anim_step ' + drawn.anim_step)
+    __log_info_native('[test:386] end ' + headless.end.total + ' ' + drawn.end.total)
     var draw_diff = []
-    for (var k in __t361_draw_diffs) {
-        if (__t361_known[k] === true) {
-            __log_marker('t361_known_differs:draw:' + k)
+    for (var k in __t386_draw_diffs) {
+        if (__t386_known[k] === true) {
+            __log_marker('t386_known_differs:draw:' + k)
         } else {
             draw_diff.push(k)
         }
     }
-    var end_diff = t361_report('end', headless.end, drawn.end)
+    var end_diff = t386_report('end', headless.end, drawn.end)
     if (draw_diff.length || end_diff.length) {
-        __log_marker('t361_differs:draw=' + draw_diff.join(',') + ':end=' + end_diff.join(','))
-        return t361_fail('drawing changed ' + draw_diff.length + '+' + end_diff.length + ' chunks')
+        __log_marker('t386_differs:draw=' + draw_diff.join(',') + ':end=' + end_diff.join(','))
+        return t386_fail('drawing changed ' + draw_diff.length + '+' + end_diff.length + ' chunks')
     }
-    if (drawn.anim_step < 0) {
-        __log_marker('t361_anim_step_skipped:no_animation')
-    } else if (drawn.anim_step != 1) {
-        __log_marker('t361_anim_step_wrong:' + drawn.anim_step)
-        return t361_fail('one drawn frame stepped the building animation ' + drawn.anim_step + ' times')
+    if (!drawn.anim) {
+        __log_marker('t386_anim_skipped:no_animation')
+    } else if (drawn.anim.drawn || !drawn.anim.ticked) {
+        __log_marker('t386_anim_wrong:drawn=' + drawn.anim.drawn + ':ticked=' + drawn.anim.ticked)
+        return t386_fail('the bazaar animation must step with ticks only')
     }
 
-    __log_marker('t361_render_headless_equal')
-    __t361_ok = true
+    __log_marker('t386_render_headless_equal')
+    __t386_ok = true
     __test_signal_ready()
 }
 
 function check_valid() {
-    return __t361_ok && __test_find_inlog('[test-marker] t361_render_headless_equal')
+    return __t386_ok && __test_find_inlog('[test-marker] t386_render_headless_equal')
 }

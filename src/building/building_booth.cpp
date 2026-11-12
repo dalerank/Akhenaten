@@ -84,6 +84,10 @@ void building_booth::spawn_figure() {
     }
 }
 
+void building_booth::update_sprite_anims() {
+    register_sprite_anim(anim(animkeys().juggler));
+}
+
 bool building_booth::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color mask) {
     int color_mask = 0;
     if (drawing_building_as_deleted(&base) || map_property_is_deleted(tile)) {

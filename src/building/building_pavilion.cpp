@@ -142,6 +142,13 @@ void building_pavilion::on_place_checks() {
     warnings.add_if(!has_musician, "#build_conservatory");
 }
 
+void building_pavilion::update_sprite_anims() {
+    register_sprite_anim(anim(animkeys().dancer));
+    register_sprite_anim(anim(animkeys().musician_sn));
+    register_sprite_anim(anim(animkeys().musician_we));
+    register_sprite_anim(anim(animkeys().juggler));
+}
+
 bool building_pavilion::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {
     auto &d = runtime_data();
     if (d.dancer_visited && map_image_at(tile) == current_params().dancer_tile) {

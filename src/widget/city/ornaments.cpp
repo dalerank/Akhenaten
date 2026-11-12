@@ -21,29 +21,34 @@
 #include "grid/random.h"
 #include "grid/terrain.h"
 #include "core/profiler.h"
+#include <algorithm>
 #include <cmath>
 
 void building_draw_normal_anim(painter &ctx, vec2i pixel, building *b, tile2i tile, const animation_t &anim, int color_mask) {
     if (anim.pack > 0 && anim.id > 0) {
         const int anim_id = anim.first_img();
-        building_draw_normal_anim(ctx, pixel + anim.pos, b, tile, anim_id, color_mask, 0, anim.max_frames, anim.duration);
+        building_draw_normal_anim(ctx, pixel + anim.pos, b, tile, anim_id, color_mask);
     }
 }
 
-void building_draw_normal_anim(painter &ctx, vec2i pos, building* b, tile2i tile, int sprite_id, int color_mask, int base_id, int max_frames, int duration) {
-    if (!sprite_id) {
+// Only reads: the frame is the one the building's tick stepped (building_impl::tick_sprite_anims).
+void building_draw_normal_anim(painter& ctx, vec2i pos, building* b, tile2i tile, int sprite_id, int color_mask,
+  int base_id) {
+    if (!sprite_id || !b->play_animation) {
         return;
     }
 
-    int grid_offset = tile.grid_offset();
+    const animation_context* sprite_anim = b->sprite_anim(sprite_id);
+    if (!sprite_anim) {
+        return;
+    }
+
     if (!base_id) {
-        base_id = map_image_at(grid_offset);
+        base_id = map_image_at(tile.grid_offset());
     }
 
-    int animation_offset = b->animation_offset(base_id, grid_offset, max_frames, duration);
-    if (animation_offset == 0) {
-        return;
-    }
+    const int frame = std::min<int>(sprite_anim->current_frame(), sprite_anim->max_frames - 1);
+    const int animation_offset = sprite_anim->offset + frame;
 
     if (base_id == sprite_id) {
         auto& command = ImageDraw::create_subcommand(ctx, render_command_t::ert_ornament);
