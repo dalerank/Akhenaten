@@ -115,8 +115,17 @@ int building_type_to_channel(building *b) {
     return b->dcast()->sound_channel();
 }
 
+void sound_city_add_channel(int system_channel_index, int direction) {
+    if (!system_channel_index) {
+        return;
+    }
+    auto &slot = g_city_sounds.channels[system_channel_index - SOUND_CHANNEL_CITY_START];
+    slot.available = 1;
+    ++slot.total_views;
+    ++slot.direction_views[direction];
+}
+
 void sound_city_mark_terrain_view(int terrain, int grid_offset, int direction) {
-    auto &channels = g_city_sounds.channels;
     int system_channel_index = 0;
     if (terrain & TERRAIN_TREE) {
         system_channel_index = SOUND_CHANNEL_CITY_TREE;
@@ -138,20 +147,12 @@ void sound_city_mark_terrain_view(int terrain, int grid_offset, int direction) {
         system_channel_index = SOUND_CHANNEL_CITY_MARSHLAND;
     }
 
-    if (!system_channel_index) {
-        return;
-    }
-
-    int channel = system_channel_index - SOUND_CHANNEL_CITY_START;
-    channels[channel].available = 1;
-    ++channels[channel].total_views;
-    ++channels[channel].direction_views[direction];
+    sound_city_add_channel(system_channel_index, direction);
 }
 
 void sound_city_mark_building_view(building* b, int direction) {
     OZZY_PROFILER_FUNCTION()
 
-    auto &channels = g_city_sounds.channels;
     if (b->state == BUILDING_STATE_UNUSED) {
         return;
     }
@@ -163,8 +164,8 @@ void sound_city_mark_building_view(building* b, int direction) {
         return;
     }
 
-    int channel = system_channel_index - SOUND_CHANNEL_CITY_START;
-    if (type == BUILDING_BOOTH || type == BUILDING_BANDSTAND || type == BUILDING_CONSERVATORY || type == BUILDING_SENET_HOUSE) {
+    b->dcast()->add_ambient_sound(direction);
+    if (type == BUILDING_BOOTH || type == BUILDING_BANDSTAND || type == BUILDING_CONSERVATORY || type == BUILDING_SENET_HOUSE || type == BUILDING_ZOO) {
         // entertainment is shut off when caesar invades
         if (b->num_workers <= 0 || g_city.figures.kingdome_soldiers > 0) {
             return;
@@ -176,9 +177,7 @@ void sound_city_mark_building_view(building* b, int direction) {
         return;
     }
 
-    channels[channel].available = 1;
-    ++channels[channel].total_views;
-    ++channels[channel].direction_views[direction];
+    sound_city_add_channel(system_channel_index, direction);
 }
 
 void sound_city_decay_views(void) {

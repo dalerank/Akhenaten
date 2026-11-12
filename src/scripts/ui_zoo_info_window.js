@@ -32,19 +32,17 @@ function info_window_zoo_on_init(window) {
     return
   }
 
-  // Animals present (juggler_visited) wins over empty-feed warnings so a just-fed zoo
-  // is not shown as "needs meat" while cages are still occupied.
   var reason = "#zoo_info_empty_cages"
   if (b.has_road_access == false) {
     reason = "#building_no_road_access"
   } else if (b.num_workers <= 0) {
     reason = "#zoo_info_no_workers"
-  } else if (zoo.juggler_visited) {
-    reason = "#zoo_info_ok"
   } else if (b.stored_resource(RESOURCE_GAMEMEAT) <= 0) {
     reason = "#zoo_info_needs_meat"
   } else if (b.stored_resource(RESOURCE_STRAW) <= 0) {
     reason = "#zoo_info_needs_straw"
+  } else {
+    reason = "#zoo_info_ok"
   }
   window.warning_text.text = __loc(reason)
 

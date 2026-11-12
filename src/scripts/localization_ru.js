@@ -1515,6 +1515,7 @@ localization_ru = [
     { key: "#zoo_info_game_meat", text: "Дичь:" }
     { key: "#zoo_info_straw", text: "Солома:" }
     { key: "#building_needs_game_meat", text: "Этому зданию нужна дичь" }
+    { key: "#game_meat_import_trade_route", text: "Постройте охотничий домик или импортируйте дичь." }
 
     // pavilion overlay
     { key: "#pavilion_access_none", text: "У этого дома нет доступа к танцевальной сцене" }
