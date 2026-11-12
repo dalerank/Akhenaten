@@ -2,11 +2,67 @@
 
 #include "building/monuments.h"
 #include "city/city.h"
+#include "city/city_floods.h"
+#include "city/city_resource.h"
 #include "game/resource.h"
 #include "window/building/common.h"
 #include "window/window_building_info.h"
 
-#include <algorithm>
+namespace {
+
+    bool built(e_building_type type) {
+        return g_city.buildings.count_total(type) > 0;
+    }
+
+    bool working(e_building_type type) {
+        return g_city.buildings.count_active(type) > 0;
+    }
+
+    textid no_peasants_text() {
+        const int s = g_floods.state;
+        if (s == FLOOD_STATE_IMMINENT || s == FLOOD_STATE_FLOODING || s == FLOOD_STATE_INUNDATED) {
+            return {178, 51};
+        }
+        return {178, 17};
+    }
+
+    textid lighthouse_text(const building_pharos_lighthouse& lh, const building_pharos_lighthouse::progress_info& p) {
+        if (p.stage >= building_pharos_lighthouse::STAGE_COMPLETE) {
+            return {178, 140};
+        }
+        const int marble_needed = p.stonemasons_waiting * building_pharos_lighthouse::MATERIAL_PER_LOAD;
+        const bool marble_short = marble_needed > g_city.resource.yards_stored(RESOURCE_MARBLE)
+                                  || (marble_needed > 0 && g_city.resource.is_stockpiled(RESOURCE_MARBLE));
+        if (p.stonemasons_waiting && marble_short && p.material) {
+            return g_city.resource.is_stockpiled(RESOURCE_MARBLE) ? textid{178, 101} : textid{178, 26};
+        }
+        if (lh.has_free_spot(FIGURE_STONEMASON)) {
+            if (!built(BUILDING_WORK_CAMP)) {
+                return {178, 13};
+            }
+            if (!working(BUILDING_WORK_CAMP)) {
+                return no_peasants_text();
+            }
+            if (!built(BUILDING_STONEMASONS_GUILD)) {
+                return {178, 14};
+            }
+            if (!working(BUILDING_STONEMASONS_GUILD) && p.stonemasons == 0) {
+                return {178, 18};
+            }
+        }
+        if (lh.has_free_spot(FIGURE_CARPENTER)) {
+            if (!built(BUILDING_CARPENTERS_GUILD)) {
+                return {178, 16};
+            }
+            if (!working(BUILDING_CARPENTERS_GUILD) && p.carpenters == 0) {
+                return {178, 20};
+            }
+        }
+        const auto& texts = lh.lighthouse_params().stage_texts;
+        return {178, p.stage < (int)texts.size() ? texts[p.stage] : (uint16_t)0};
+    }
+
+} // namespace
 
 struct info_window_pharos_lighthouse : building_info_window_t<info_window_pharos_lighthouse> {
     virtual void init(object_info &c) override;
@@ -20,91 +76,32 @@ info_window_pharos_lighthouse pharos_lighthouse_infow;
 void info_window_pharos_lighthouse::init(object_info &c) {
     building_info_window::init(c);
 
-    auto *st = c.building_get()->dcast_monument();
-    if (!st) {
+    auto* part = c.building_get()->dcast_pharos_lighthouse();
+    if (!part) {
         return;
     }
+    const auto* lh = part->main_lighthouse();
+    building_pharos_lighthouse::progress_info p;
+    lh->get_progress(&p);
 
-    auto &d = st->runtime_data();
-
-    if (st->is_unfinished()) {
-        textid reason = {178, 132};
-        int work_camps = g_city.buildings.count_active(BUILDING_WORK_CAMP);
-        int carpenters = g_city.buildings.count_active(BUILDING_CARPENTERS_GUILD);
-        int stonemasons = g_city.buildings.count_active(BUILDING_STONEMASONS_GUILD);
-
-        auto still_needs = [&](e_resource r) {
-            return st->needs_resource(r) > 0 && d.resources_pct[r] < 100;
-        };
-
-        if (d.phase < 2 && work_camps == 0) {
-            reason = {199, 67}; // not begun
-        } else if (d.phase < 2) {
-            reason = {178, 132}; // clearing the land
-        } else if (still_needs(RESOURCE_TIMBER) && carpenters == 0) {
-            reason = {178, 16};
-        } else if (still_needs(RESOURCE_MARBLE) && !stonemasons) {
-            reason = {178, 14};
-        } else if (d.phase == 2) {
-            reason = stonemasons ? textid{178, 133} : textid{178, 14};
-        } else if (d.phase == 3) {
-            reason = stonemasons ? textid{178, 134} : textid{178, 14};
-        } else if (d.phase == 4) {
-            reason = stonemasons ? textid{178, 135} : textid{178, 14};
-        } else if (d.phase == 5) {
-            reason = stonemasons ? textid{178, 136} : textid{178, 14};
-        } else if (d.phase == 6) {
-            reason = stonemasons ? textid{178, 137} : textid{178, 14};
-        } else if (d.phase == 7) {
-            reason = carpenters ? textid{178, 138} : textid{178, 16};
-        } else {
-            reason = {178, 139};
-        }
-
-        ui["warning_text"] = reason;
-
-        int min_pct = 100;
-        bool any_resource = false;
-        for (int ri = (int)RESOURCES_MIN; ri < (int)RESOURCES_MAX; ++ri) {
-            auto r = (e_resource)ri;
-            if (st->needs_resource(r) <= 0) {
-                continue;
-            }
-            any_resource = true;
-            min_pct = std::min(min_pct, (int)d.resources_pct[r]);
-        }
-        if (!any_resource) {
-            const int art_phases = std::max(1, st->phases() - 1);
-            min_pct = std::min(99, (d.phase * 100) / art_phases);
-        }
-
-        bstring64 progress_str;
-        progress_str.printf("%d%%", min_pct);
-        ui["progress_text"] = textid{199, 69};
-        ui["progress_pct"] = progress_str;
-
-        auto fill_resource_slot = [&](e_resource r, pcstr icon_key, pcstr text_key) {
-            int needed = st->needs_resource(r);
-            if (needed <= 0) {
-                ui[text_key] = "";
-                ui[icon_key].set_enabled(false);
-                return;
-            }
-            ui[icon_key].set_enabled(true);
-            int delivered = std::min(needed * d.resources_pct[r] / 100, needed);
-            bstring64 s;
-            s.printf("%d / %d", delivered, needed);
-            ui[text_key] = s;
-        };
-        fill_resource_slot(RESOURCE_MARBLE, "marble_icon", "marble_text");
-        fill_resource_slot(RESOURCE_TIMBER, "timber_icon", "timber_text");
-    } else {
-        ui["warning_text"] = textid{178, 140};
+    ui["warning_text"] = lighthouse_text(*lh, p);
+    ui["timber_text"] = "";
+    ui["timber_icon"].set_enabled(false);
+    if (p.percent >= 100) {
         ui["progress_text"] = textid{199, 70};
         ui["progress_pct"] = "";
         ui["marble_text"] = "";
-        ui["timber_text"] = "";
         ui["marble_icon"].set_enabled(false);
-        ui["timber_icon"].set_enabled(false);
+        return;
     }
+
+    bstring64 progress_str;
+    progress_str.printf("%d%%", p.percent);
+    ui["progress_text"] = textid{199, 69};
+    ui["progress_pct"] = progress_str;
+
+    ui["marble_icon"].set_enabled(true);
+    bstring64 s;
+    s.printf("%d / %d", (p.material_total - p.material) / 100, p.material_total / 100);
+    ui["marble_text"] = s;
 }
