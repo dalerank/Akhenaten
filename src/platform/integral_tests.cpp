@@ -533,6 +533,13 @@ int run_js_tests() {
             continue;
         }
 
+        if (test_log_contains("[record-overflow]")) {
+            logs::error("[test:%s] FAIL: a building record overflowed its save slot (see [record-overflow])",
+              name.c_str());
+            ++failed;
+            continue;
+        }
+
         if (test_log_contains("[stub-record]")) {
             logs::error("[test:%s] FAIL: record 0 of buildings or figures was written (see [stub-record])",
               name.c_str());
