@@ -3,8 +3,8 @@
 // Markers:
 //   [test-marker] mods_broken_ok
 
-function t332_fail(msg) {
-    __log_info_native('[test:332] FAIL: ' + msg)
+function t372_fail(msg) {
+    __log_info_native('[test:372] FAIL: ' + msg)
 }
 
 function run_test() {
@@ -14,14 +14,14 @@ function run_test() {
     __test_pump_frames(3)
 
     if (!__test_find_inlog('[test-marker] akh_test_broken_mod start')) {
-        t332_fail('broken mod did not run')
+        t372_fail('broken mod did not run')
     } else if (!mods.broken('akh_test_broken_mod')) {
-        t332_fail('broken mod not reported')
+        t372_fail('broken mod not reported')
     } else if (mods.broken('akh_test_mod')) {
-        t332_fail('working mod reported broken')
+        t372_fail('working mod reported broken')
     } else if (__js_global('akh_test_mod_speech') !== 'mod'
                || city.get_building_params_by_type(BUILDING_WELL).max_service != 777) {
-        t332_fail('scripts after the failing one did not run')
+        t372_fail('scripts after the failing one did not run')
     } else {
         __log_marker('mods_broken_ok')
     }

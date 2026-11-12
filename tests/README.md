@@ -206,10 +206,10 @@ See **IT1** in `REMAKE_TODO.md` / `REMAKE_NOTES.md` §4.
 | `170_iunet_request_outcomes.js` | B13a: Iunet meat/pottery late→hittite×10 once; ok leaf; limestone refuse→egypt×24 ≠ favour |
 | `184_request_saveload.js` | Pharaoh request `.svx` round-trip: tag/state/months/faction; fulfill after load keeps `event_request_cleared.tag_id` |
 | `176_north_dahshur_henna_raid.js` | B12/B13d: North Dahshur henna refuse/late→Hyksos×12; on-time fulfill no raid |
-| `330_mods_fixture.js` | Folder mod `fixtures/mods/akh_test_mod`: config + script override applied on enable, gone after disable (VM rebuild) |
-| `331_mods_order.js` | Two mods with the same `speech.js`: the later id (`akh_test_mod_b`) wins regardless of enable order; clash logged |
-| `332_mods_broken.js` | Mod whose script throws is reported broken; the next mod queued in the same sync still runs |
-| `333_mods_saveload.js` | `.svx` chunk `mods`: loading a save made with another mod set logs the mismatch and leaves mods as they are |
+| `370_mods_fixture.js` | Folder mod `fixtures/mods/akh_test_mod`: config + script override applied on enable, gone after disable (VM rebuild) |
+| `371_mods_order.js` | Two mods with the same `speech.js`: the later id (`akh_test_mod_b`) wins regardless of enable order; clash logged |
+| `372_mods_broken.js` | Mod whose script throws is reported broken; the next mod queued in the same sync still runs |
+| `373_mods_saveload.js` | `.svx` chunk `mods`: loading a save made with another mod set logs the mismatch and leaves mods as they are |
 
 Farm **placement** tests (34/35) cover `can_place` / terrain rules; **37** covers preview image helpers.
 When adding more preview draw coverage, follow JS draw conventions in

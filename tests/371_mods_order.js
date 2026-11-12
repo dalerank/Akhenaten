@@ -3,11 +3,11 @@
 // Markers:
 //   [test-marker] mods_order_ok
 
-function t331_fail(msg) {
-    __log_info_native('[test:331] FAIL: ' + msg)
+function t371_fail(msg) {
+    __log_info_native('[test:371] FAIL: ' + msg)
 }
 
-function t331_enable(id) {
+function t371_enable(id) {
     if (!mods.enabled(id)) {
         mods.toggle(id)
     }
@@ -17,16 +17,16 @@ function t331_enable(id) {
 
 function run_test() {
     // Enable the winner first: the order must not depend on toggle history.
-    t331_enable('akh_test_mod_b')
-    t331_enable('akh_test_mod')
+    t371_enable('akh_test_mod_b')
+    t371_enable('akh_test_mod')
 
     var speech = __js_global('akh_test_mod_speech')
     if (!mods.enabled('akh_test_mod') || !mods.enabled('akh_test_mod_b')) {
-        t331_fail('mods not enabled')
+        t371_fail('mods not enabled')
     } else if (speech !== 'mod_b') {
-        t331_fail('speech.js from the wrong mod: ' + speech)
+        t371_fail('speech.js from the wrong mod: ' + speech)
     } else if (!__test_find_inlog('[mods] conflict speech.js: akh_test_mod_b overrides akh_test_mod')) {
-        t331_fail('conflict not logged')
+        t371_fail('conflict not logged')
     } else {
         __log_marker('mods_order_ok')
     }

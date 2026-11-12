@@ -9,13 +9,13 @@
 //   [test-marker] mods_fixture_listed
 //   [test-marker] mods_fixture_overrides_ok
 
-var t330_mod = 'akh_test_mod'
+var t370_mod = 'akh_test_mod'
 
-function t330_fail(msg) {
-    __log_info_native('[test:330] FAIL: ' + msg)
+function t370_fail(msg) {
+    __log_info_native('[test:370] FAIL: ' + msg)
 }
 
-function t330_listed(id) {
+function t370_listed(id) {
     for (var i = 0; i < mods.count(); i++) {
         if (mods.name(i) == id) {
             return true
@@ -24,42 +24,42 @@ function t330_listed(id) {
     return false
 }
 
-function t330_well_max_service() {
+function t370_well_max_service() {
     return city.get_building_params_by_type(BUILDING_WELL).max_service
 }
 
 function run_test() {
-    if (!t330_listed(t330_mod)) {
-        t330_fail('fixture mod is not listed')
+    if (!t370_listed(t370_mod)) {
+        t370_fail('fixture mod is not listed')
         __test_signal_ready()
         return
     }
     __log_marker('mods_fixture_listed')
 
-    if (mods.enabled(t330_mod)) {
-        t330_fail('fixture mod is enabled before the test enabled it')
+    if (mods.enabled(t370_mod)) {
+        t370_fail('fixture mod is enabled before the test enabled it')
     }
 
-    var before = t330_well_max_service()
-    mods.toggle(t330_mod)
+    var before = t370_well_max_service()
+    mods.toggle(t370_mod)
     mods.remount()
     __test_pump_frames(3)
 
-    var after = t330_well_max_service()
-    if (!mods.enabled(t330_mod)) {
-        t330_fail('mod not enabled after toggle')
+    var after = t370_well_max_service()
+    if (!mods.enabled(t370_mod)) {
+        t370_fail('mod not enabled after toggle')
     } else if (!__test_find_inlog('[test-marker] akh_test_mod loaded')) {
-        t330_fail('mod script did not run')
+        t370_fail('mod script did not run')
     } else if (after != 777) {
-        t330_fail('config override not applied: max_service ' + before + ' -> ' + after)
+        t370_fail('config override not applied: max_service ' + before + ' -> ' + after)
     } else if (__js_global('akh_test_mod_speech') !== 'mod'
                || !__test_find_inlog('[test-marker] akh_test_mod speech.js override')) {
-        t330_fail('speech.js override did not run')
+        t370_fail('speech.js override did not run')
     } else {
         __log_marker('mods_fixture_overrides_ok')
     }
 
-    mods.toggle(t330_mod)
+    mods.toggle(t370_mod)
     mods.remount()
     __test_signal_ready()
 }
@@ -69,12 +69,12 @@ function check_valid() {
         || !__test_find_inlog('[test-marker] mods_fixture_overrides_ok')) {
         return false
     }
-    if (mods.enabled(t330_mod)) {
-        t330_fail('mod still enabled after the second toggle')
+    if (mods.enabled(t370_mod)) {
+        t370_fail('mod still enabled after the second toggle')
         return false
     }
-    if (t330_well_max_service() == 777 || __js_global('akh_test_mod_speech') !== undefined) {
-        t330_fail('mod overrides survived disabling: max_service ' + t330_well_max_service())
+    if (t370_well_max_service() == 777 || __js_global('akh_test_mod_speech') !== undefined) {
+        t370_fail('mod overrides survived disabling: max_service ' + t370_well_max_service())
         return false
     }
     return true
