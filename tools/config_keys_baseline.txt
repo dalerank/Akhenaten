@@ -346,17 +346,6 @@ unknown | labor_priority_window:ui::widget.category
 unknown | loc_textid.lang
 unknown | message_list_window:ui::widget.read_icon
 unknown | minimap_window:ui::widget.terrain_dark_read
-unknown | mods:mods_config.count
-unknown | mods:mods_config.display_name
-unknown | mods:mods_config.download_info_async
-unknown | mods:mods_config.download_mod_async
-unknown | mods:mods_config.download_progress
-unknown | mods:mods_config.downloaded
-unknown | mods:mods_config.enabled
-unknown | mods:mods_config.inupdate
-unknown | mods:mods_config.name
-unknown | mods:mods_config.remount
-unknown | mods:mods_config.toggle
 unknown | mods_window:ui::widget.refresh_mods_text
 unknown | mods_window:ui::widget.refresh_mods_text_dots
 unknown | overlay_menu_widget:ui::widget.button_menu_item

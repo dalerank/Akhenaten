@@ -27,7 +27,7 @@
 #endif
 
 mods_mananger g_mods;
-mods_config ANK_VARIABLE_N(g_mods_config, "mods");
+mods_config ANK_VARIABLE_N(g_mods_config, "mods_config");
 
 namespace {
     vfs::path g_mods_directory_override;
