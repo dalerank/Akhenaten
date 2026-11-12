@@ -106,26 +106,24 @@
       <p id="overview">
         The <strong>Caesareum</strong> is Alexandria’s seaside temple complex: a central marble temple,
         paved patio, surrounding portico, and two granite obelisks at the entrance.
-        Build on <strong>clear land</strong> (15×15). Guilds:
-        <strong>Work Camp</strong> (clear + haul), <strong>Stonemasons</strong>, and
-        <strong>Carpenters</strong> (scaffolding). <strong>Not</strong> Artisans; materials are
-        <strong>marble</strong>, <strong>timber</strong>, and late <strong>granite</strong> — not sandstone.
-        The entrance obelisks are part of the finished monument art, not separate Obelisk buildings.
+        It is built from nine 5×5 sections in a 15×15 square centred on the tile you click.
+        <strong>Stonemasons</strong> lay white marble that <strong>Work Camp</strong> peasants haul from a
+        Storage Yard; <strong>Carpenters</strong> raise scaffolding; the last stage needs granite.
       </p>
 
       <div class="bld-infobox">
         <h4>Quick facts</h4>
         <div class="bld-stat-row">
           <div class="bld-stat"><span class="val">15×15</span><span class="lbl">Footprint</span></div>
-          <div class="bld-stat"><span class="val">152</span><span class="lbl">Marble</span></div>
+          <div class="bld-stat"><span class="val">144</span><span class="lbl">Marble</span></div>
           <div class="bld-stat"><span class="val">8</span><span class="lbl">Granite</span></div>
-          <div class="bld-stat"><span class="val">8</span><span class="lbl">Monument wt.</span></div>
+          <div class="bld-stat"><span class="val">19</span><span class="lbl">Stages</span></div>
         </div>
         <dl>
-          <dt>Cost (Normal)</dt>
-          <dd>8&nbsp;000 Db (VE 5k · Easy 6.5k · Hard 11k · VH 16k)</dd>
+          <dt>Cost</dt>
+          <dd>Free (as in the original game)</dd>
           <dt>Guilds</dt>
-          <dd>Work Camp · Carpenters (scaffold) · Stonemasons</dd>
+          <dd>Work Camp (hauling) · Stonemasons · Carpenters</dd>
           <dt>Type id</dt>
           <dd><code>BUILDING_CAESAREUM</code> (=227)</dd>
         </dl>
@@ -133,18 +131,21 @@
 
       <h2 id="placement">Placement</h2>
       <ul>
-        <li>Entire footprint must be clear land (all green). No cliffs/rocks (unlike Pharos / Abu Simbel).</li>
-        <li>Only one unfinished Caesareum at a time (<code>#one_caesareum_only</code>).</li>
-        <li>Marble is not a place-gate; peasants haul it once ≥4 blocks sit in a single Storage Yard.</li>
+        <li>The whole 15×15 square must be free: shrubs, meadow and groundwater are fine; trees, roads,
+          buildings, water, rocks and floodplain are not. Keep 3 tiles from the map edge.</li>
+        <li>Only one Caesareum per city (<code>#one_caesareum_only</code>).</li>
+        <li>Placing it warns when no marble is stored, or when no granite is quarried or stored.</li>
       </ul>
 
       <h2 id="construction">Construction</h2>
       <ul>
-        <li>Work Camp peasants clear/level the site, then haul white marble (import).</li>
-        <li>Stonemasons build central temple → patio floor → portico columns/roofs.</li>
-        <li>Carpenters raise timber scaffolding during temple and portico phases.</li>
-        <li>Late phase: granite for the two entrance obelisks (quarry or import).</li>
-        <li>Visual order (GIF 20 frames): clear → temple (+scaffold) → patio → portico → gardens/obelisks.</li>
+        <li>19 stages (0–18). Each stage has one stonemason task; stages 2–6 and 9–11 also have a carpenter
+          task. Only one worker is on site at a time; the stage ends when all its tasks are done.</li>
+        <li>An arriving stonemason waits at the entrance until peasants bring two sleds of marble
+          (granite in stage 18), 4 blocks per sled, then works his task.</li>
+        <li>The entrance (and the work tile) faces the camera, so it moves when you rotate the view.</li>
+        <li>Each stage shows its own art (<code>caesareum1</code>…<code>caesareum20</code>);
+          progress is 5% per stage.</li>
       </ul>
 
       <h2 id="missions">Missions</h2>
@@ -163,8 +164,8 @@
               <li><span class="file-ref">src/scripts/building/caesareum.js</span></li>
               <li><span class="file-ref">src/window/window_caesareum_info.cpp</span></li>
               <li><span class="file-ref">src/scripts/city/monuments.js</span> — <code>MONUMENT_WEIGHTS[CAESAREUM]=8</code></li>
+              <li>OG reference: tutankhamun <code>building/caesareum.c</code>, <code>monument_spot_data.c</code> (27 work spots)</li>
               <li><span class="file-ref">tests/119_caesareum_place.js</span></li>
-              <li>Art dump: <span class="file-ref">tools/caesareum_stages/</span> (WebP 20f)</li>
               <li>Help / history message ids: <strong>490</strong> / <strong>482</strong>; foreman gr178:122–131</li>
               <li>Congrats message id: <strong>526</strong> (<code>caesareum_congratulations</code>)</li>
             </ul>
