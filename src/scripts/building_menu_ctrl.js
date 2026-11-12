@@ -1,22 +1,27 @@
 log_info("akhenaten: building menu ctrl started")
 
+// The caches are first filled from the sidebar draw, which runs in the frame arena (memory=frame): an object
+// created there must not be stored in this global, so they are created here once and only refilled.
 var building_menu_ctrl = {
     enabled: {}
     visible: {}
     count_cache: {}
-    submenu_ids: null
+    submenu_ids: {}
+    submenu_ids_ready: false
 }
 
 building_menu_ctrl.invalidate_counts = function() {
-    building_menu_ctrl.count_cache = {}
+    for (var key in building_menu_ctrl.count_cache) {
+        delete building_menu_ctrl.count_cache[key]
+    }
 }
 
 building_menu_ctrl.is_submenu = function(type) {
-    if (!building_menu_ctrl.submenu_ids) {
-        building_menu_ctrl.submenu_ids = {}
+    if (!building_menu_ctrl.submenu_ids_ready) {
         for (var i = 0; i < building_menu.length; i++) {
             building_menu_ctrl.submenu_ids[building_menu[i].id] = true
         }
+        building_menu_ctrl.submenu_ids_ready = true
     }
     return !!building_menu_ctrl.submenu_ids[type]
 }
