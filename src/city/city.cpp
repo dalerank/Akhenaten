@@ -1451,8 +1451,8 @@ io_buffer *iob_city_bookmarks = new io_buffer([] (io_buffer *iob, size_t version
     }
 });
 
-// The first 64 bytes held the 16 cloud positions. Clouds move every drawn frame, so the saved
-// state depended on what was drawn; they are no longer saved and these bytes are written as zero.
+// The first 64 bytes held the 16 cloud positions; they live in the "clouds" chunk now (v200) and
+// these bytes are written as zero.
 io_buffer* iob_city_utilities_data = new io_buffer([](io_buffer* iob, size_t version) {
     iob->bind____skip(64);
     iob->bind____skip(36);

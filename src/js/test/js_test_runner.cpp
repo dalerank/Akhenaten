@@ -539,6 +539,9 @@ static void state_hash_zero_record0(std::vector<uint8_t>& raw, size_t record_siz
 static void state_hash_normalise(chunk_snapshot& chunk) {
     if (chunk.name == "image_grid") {
         state_hash_normalise_water(chunk.raw);
+    } else if (chunk.name == "clouds") {
+        // Cosmetic (Enhanced): the clouds move every drawn frame by design and nothing simulates on them.
+        std::fill(chunk.raw.begin(), chunk.raw.end(), 0);
     } else if (chunk.name == "buildings") {
         state_hash_zero_record0(chunk.raw, 264);
     } else if (chunk.name == "figures") {

@@ -146,3 +146,4 @@ extern io_buffer *iob_labor_storage_priority;
 extern io_buffer* iob_mods; // content/mods.cpp
 extern io_buffer *iob_enhanced_religion;
 extern io_buffer *iob_recorded_paths;
+extern io_buffer* iob_clouds;

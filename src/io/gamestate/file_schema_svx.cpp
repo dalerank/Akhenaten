@@ -177,4 +177,9 @@ void file_schema_svx(const int file_version) {
         // count + reserved + 32 * (id[48] + version[16]) = 2052
         g_chunk_io.push_chunk(2052, false, "mods", iob_mods);
     }
+    // Sectioned saves before 200 lack it and get the defaulter; the positional layout must not grow.
+    if (file_version > 199 || g_chunk_io.is_sectioned()) {
+        // count + 16 x (int32 x, int32 y) = 132
+        g_chunk_io.push_chunk(132, false, "clouds", iob_clouds);
+    }
 }
