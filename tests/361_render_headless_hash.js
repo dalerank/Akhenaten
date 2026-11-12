@@ -1,6 +1,7 @@
 // Drawing must not change simulation state: the same city run for the same ticks headless and with
 // frames drawn between the ticks (incl. the figure-follow snapshot redraw) must hash the same, chunk
-// by chunk. A differing chunk is logged by name - that is the finding. The old building animation
+// by chunk, and no drawn frame may change a saved byte. A differing chunk is logged by name - that
+// is the finding. The old building animation
 // frame in the sprite grid is stepped by the draw as in OG and is left out of the hash; instead one
 // drawn frame with a follow snapshot must step it exactly once.
 
@@ -11,6 +12,7 @@ var __t361_frames = 2
 // Written by the draw but owned by other work in progress (sound view counters, audit item 5):
 // logged, not failed, until that lands. Remove a name here once its chunk matches.
 var __t361_known = { city_sounds: true }
+var __t361_draw_diffs = {}
 
 function t361_fail(msg) {
     __log_info_native('[test:361] FAIL: ' + msg)
@@ -100,6 +102,20 @@ function t361_anim_step(shops) {
     return -1
 }
 
+// Draws n frames and records every chunk that the drawing alone changed.
+function t361_draw(n) {
+    __test_state_mark()
+    __test_draw_frames(n)
+    var changed = __test_state_diff('t361_draw')
+    if (!changed) {
+        return
+    }
+    var names = changed.split(',')
+    for (var i = 0; i < names.length; i++) {
+        __t361_draw_diffs[names[i]] = true
+    }
+}
+
 function t361_run(drawn) {
     var s = t361_setup()
     if (!s) {
@@ -108,11 +124,8 @@ function t361_run(drawn) {
     var out = { anim_step: -1 }
     if (drawn) {
         // Figures that have not ticked yet: only a drawing would give them a sprite.
-        __test_state_mark()
-        __test_draw_frames(__t361_frames)
-        __test_state_diff('t361_setup_draw')
+        t361_draw(__t361_frames)
     }
-    out.start = t361_parse(__test_state_hash_drawn())
     for (var t = 0; t < __t361_ticks; t += __t361_step) {
         for (var k = 0; k < __t361_step; k++) {
             t361_staff(s.shops)
@@ -121,7 +134,7 @@ function t361_run(drawn) {
             }
         }
         if (drawn) {
-            __test_draw_frames(__t361_frames)
+            t361_draw(__t361_frames)
         }
     }
     out.end = t361_parse(__test_state_hash_drawn())
@@ -165,13 +178,19 @@ function run_test() {
         return t361_fail('drawn pass setup')
     }
 
-    __log_info_native('[test:361] start ' + headless.start.total + ' ' + drawn.start.total
-        + ' end ' + headless.end.total + ' ' + drawn.end.total + ' anim_step ' + drawn.anim_step)
-    var start_diff = t361_report('start', headless.start, drawn.start)
+    __log_info_native('[test:361] end ' + headless.end.total + ' ' + drawn.end.total + ' anim_step ' + drawn.anim_step)
+    var draw_diff = []
+    for (var k in __t361_draw_diffs) {
+        if (__t361_known[k] === true) {
+            __log_marker('t361_known_differs:draw:' + k)
+        } else {
+            draw_diff.push(k)
+        }
+    }
     var end_diff = t361_report('end', headless.end, drawn.end)
-    if (start_diff.length || end_diff.length) {
-        __log_marker('t361_differs:start=' + start_diff.join(',') + ':end=' + end_diff.join(','))
-        return t361_fail('drawing changed ' + start_diff.length + '+' + end_diff.length + ' chunks')
+    if (draw_diff.length || end_diff.length) {
+        __log_marker('t361_differs:draw=' + draw_diff.join(',') + ':end=' + end_diff.join(','))
+        return t361_fail('drawing changed ' + draw_diff.length + '+' + end_diff.length + ' chunks')
     }
     if (drawn.anim_step < 0) {
         __log_marker('t361_anim_step_skipped:no_animation')

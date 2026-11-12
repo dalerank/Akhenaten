@@ -553,6 +553,18 @@ static void state_hash_zero_record0(std::vector<uint8_t>& raw, size_t record_siz
     std::fill(raw.begin(), raw.begin() + std::min(record_size, raw.size()), 0);
 }
 
+static void state_hash_normalise(chunk_snapshot& chunk, bool normalise_building_frames) {
+    if (chunk.name == "image_grid") {
+        state_hash_normalise_water(chunk.raw);
+    } else if (chunk.name == "sprite_grid" && normalise_building_frames) {
+        state_hash_normalise_building_frames(chunk.raw);
+    } else if (chunk.name == "buildings") {
+        state_hash_zero_record0(chunk.raw, 264);
+    } else if (chunk.name == "figures") {
+        state_hash_zero_record0(chunk.raw, 388);
+    }
+}
+
 static pcstr state_hash(bool normalise_building_frames) {
     static std::string result;
     result.clear();
@@ -567,15 +579,7 @@ static pcstr state_hash(bool normalise_building_frames) {
     std::string entries;
     crcs.reserve(chunks.size());
     for (chunk_snapshot& chunk : chunks) {
-        if (chunk.name == "image_grid") {
-            state_hash_normalise_water(chunk.raw);
-        } else if (chunk.name == "sprite_grid" && normalise_building_frames) {
-            state_hash_normalise_building_frames(chunk.raw);
-        } else if (chunk.name == "buildings") {
-            state_hash_zero_record0(chunk.raw, 264);
-        } else if (chunk.name == "figures") {
-            state_hash_zero_record0(chunk.raw, 388);
-        }
+        state_hash_normalise(chunk, normalise_building_frames);
 
         const uint32_t crc = crc32(chunk.raw.data(), (uint32_t)chunk.raw.size());
         crcs.push_back(crc);
@@ -744,19 +748,30 @@ static void __test_libc_srand(int seed) {
 }
 ANK_FUNCTION_1(__test_libc_srand);
 
-// Keeps the serialized state; __test_state_diff logs every byte that changed since (by chunk and,
-// for buildings/figures, by record) and returns the differing chunk names joined by ','.
+// Keeps the serialized state, normalised as __test_state_hash_drawn does; __test_state_diff logs
+// every byte that changed since (by chunk and, for buildings/figures, by record) and returns the
+// differing chunk names joined by ','.
 static chunk_snapshots g_state_mark;
 
+static bool state_snapshot_drawn(chunk_snapshots& out) {
+    if (!g_chunk_io.write_to_memory(FILE_FORMAT_SAVE_FILE_EXT, save_data_version(), file_schema, out)) {
+        return false;
+    }
+    for (chunk_snapshot& chunk : out) {
+        state_hash_normalise(chunk, true);
+    }
+    return true;
+}
+
 static bool __test_state_mark() {
-    return g_chunk_io.write_to_memory(FILE_FORMAT_SAVE_FILE_EXT, save_data_version(), file_schema, g_state_mark);
+    return state_snapshot_drawn(g_state_mark);
 }
 ANK_FUNCTION(__test_state_mark);
 
 static pcstr __test_state_diff(pcstr tag) {
     static std::string result;
     chunk_snapshots now;
-    if (!g_chunk_io.write_to_memory(FILE_FORMAT_SAVE_FILE_EXT, save_data_version(), file_schema, now)) {
+    if (!state_snapshot_drawn(now)) {
         result = "write_failed";
         return result.c_str();
     }
