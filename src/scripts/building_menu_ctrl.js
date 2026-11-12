@@ -180,6 +180,11 @@ building_menu_ctrl.disable_resources = function() {
     disable_if(BUILDING_SANDSTONE_QUARRY, RESOURCE_SANDSTONE)
     disable_if(BUILDING_COPPER_MINE, RESOURCE_COPPER)
     disable_if(BUILDING_GEMSTONE_MINE, RESOURCE_GEMS)
+
+    var henna_can_be_had = __city_can_produce_resource(RESOURCE_HENNA) || __city_resource_can_import(RESOURCE_HENNA, false)
+    if (!henna_can_be_had && !__city_can_produce_resource(RESOURCE_PAINT)) {
+        building_menu_ctrl.use_building(BUILDING_PAINT_WORKSHOP, false)
+    }
 }
 
 building_menu_ctrl.enable_correct_palace_tier = function() {
