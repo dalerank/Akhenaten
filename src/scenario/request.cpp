@@ -18,11 +18,17 @@
 #include "city/legion_requests.h"
 #include "figure/formation.h"
 #include "event_phrases.h"
+#include "core/log.h"
 
 #include <algorithm>
 
 namespace {
 request_cleared_snapshot_t g_last_request_cleared;
+
+// OG scenario_events.c scenario_event_rules.
+constexpr int REQUEST_REMINDER_MONTHS = 6;
+constexpr int REQUEST_OVERDUE_MONTHS = 24;
+constexpr int REQUEST_IGNORED_KINGDOM_PENALTY = 3;
 } // namespace
 
 void scenario_request_emit_cleared(const event_ph_t &event, bool fulfilled) {
@@ -54,137 +60,121 @@ void scenario_request_init() {
     //}
 }
 
-void scenario_request_activate(event_ph_t &event) {
-    // the event is coming, but hasn't fired yet. this is always a slave / proper event object.
-    // the "facade" event is taken care of the VIA_EVENT check from above - it will never fire.
+static int request_pharaoh_shift(const event_ph_t& event) {
+    return event.sender_faction == EVENT_FACTION_REQUEST_FROM_CITY ? 1 : 0;
+}
+
+static void request_post(const event_ph_t& event, int caller_event_id, int body_p) {
+    const int shift = request_pharaoh_shift(event);
+    city_message_post_full(true, "message_template_request", &event, caller_event_id,
+      PHRASE_general_request_title_P + shift, body_p + shift, PHRASE_general_request_no_reason_P_A + shift * 3,
+      event.event_id, 0);
+}
+
+static bool request_can_comply(const event_ph_t& event) {
+    if (event.item.value == RESOURCE_DEBEN) {
+        return g_city.finance.treasury >= event.amount.value;
+    }
+    return g_city.resource.stored((e_resource)event.item.value) >= event.amount.value * 100;
+}
+
+// OG scenario_events.c request_start.
+void scenario_request_activate(event_ph_t& event) {
     if (event.is_active) {
         return;
     }
-
-    event.quest_months_left = event.months_initial;
     event.is_active = true;
     event.is_overdue = false;
-    event.can_comply_dialog_shown = false;
+    event.event_state = e_event_state_in_progress;
+    event.can_comply_dialog_shown = request_can_comply(event);
+    event.quest_months_left = event.months_initial;
+    event.appear_dialgow_shown = true;
+    request_post(event, event.parent_id, PHRASE_general_request_initial_announcement_P);
 }
 
-void scenario_request_handle(event_ph_t &event, int caller_event_id, e_event_action &next_action) {
-    if (!event.is_active) {
+// OG scenario_events.c request_check_compliance.
+static void request_check_compliance(event_ph_t& event) {
+    if (event.can_comply_dialog_shown || !request_can_comply(event)) {
         return;
     }
+    event.can_comply_dialog_shown = true;
+    const scenario_request request = scenario_request_get(event);
+    // Popup Messages "Compliance" (remake option): goods/deben go out at once with a banner.
+    if (popup_messages_want_banner(POPUP_MSG_COMPLIANCE) && event.item.value != RESOURCE_TROOPS
+        && scenario_request_dispatch_event(event.event_id)) {
+        g_warning_manager.show_message_banner(lang_text_from_key("#goods_auto_dispatched"));
+        return;
+    }
+    const bool deben = event.item.value == RESOURCE_DEBEN;
+    city_message& message = g_message_manager.post_common(true,
+      deben ? "message_compliance_now_possible" : "message_storage_yards_ready_to_fulfill_request", event.event_id, 0,
+      GOD_UNKNOWN, 0);
+    message.req_amount = request.resource_amount();
+    message.req_resource = request.resource;
+    message.req_months_left = request.months_to_comply;
+}
 
-    // advance time
+// OG scenario_events.c request_dispatched: the goods arrive after the delivery months.
+static void request_dispatched(event_ph_t& event) {
     if (event.quest_months_left > 0) {
         event.quest_months_left--;
     }
-
-    scenario_request request = scenario_request_get(event);
-    if (request.event_id < 0) {
+    if (event.quest_months_left > 0) {
         return;
     }
+    const bool on_time = event.event_state == e_event_state_dispatched || event.event_state == e_event_state_finished;
+    event.event_state = e_event_state_received;
+    event.is_active = false;
+    if (on_time) {
+        g_scenario.events.process_event(event.on_completed_action, true, EVENT_ACTION_COMPLETED, event.event_id);
+    } else {
+        g_scenario.events.process_event(event.on_too_late_action, true, EVENT_ACTION_TOOLATE, event.event_id);
+    }
+    scenario_request_emit_cleared(event, true);
+    logs::info("[request] arrived event=%d on_time=%d", event.event_id, on_time ? 1 : 0);
+}
 
-    // handle request event immediately after activation!
-    next_action = EVENT_ACTION_NONE;
-    int pharaoh_alt_shift = (event.sender_faction == EVENT_FACTION_REQUEST_FROM_CITY ? 1 : 0);
-    switch (event.event_state) {
-    case e_event_state_finished:
-        messages::popup("message_request_received", event.event_id, 0);
-        if (!event.is_overdue) {
-            g_city.kingdome.increase_success_request(3);
-        }
-        event.event_state = e_event_state_received;
-        event.is_active = false;
-        if (event.on_completed_action >= 0) {
-            g_scenario.events.process_event(event.on_completed_action, true, EVENT_ACTION_COMPLETED, event.event_id);
-        }
-        scenario_request_emit_cleared(event, true);
-        break;
-
-    case e_event_state_finished_late:
-        // Overdue-grace fulfill uses this path: was_overdue stays true for JS facts.
-        messages::popup("message_request_received_late", event.event_id, 0);
-        g_city.kingdome.increase_success_request(1);
-        event.event_state = e_event_state_received;
-        event.is_active = false;
-        if (event.on_too_late_action >= 0) {
-            g_scenario.events.process_event(event.on_too_late_action, true, EVENT_ACTION_TOOLATE, event.event_id);
-        }
-        scenario_request_emit_cleared(event, true);
-        break;
-
-    case e_event_state_initial:
-        event.event_state = e_event_state_in_progress;
-        // go to show message
-
-    case e_event_state_in_progress:
-        if (!event.can_comply_dialog_shown && g_city.resource.stored(request.resource) >= request.resource_amount()) {
-            event.can_comply_dialog_shown = true;
-            // OG Popup Messages: selected Compliance → auto-dispatch goods/deben + banner (I6).
-            // Troop requests still need a manual advisor confirm (distant battle side-effects).
-            if (popup_messages_want_banner(POPUP_MSG_COMPLIANCE)
-                && request.resource != RESOURCE_TROOPS
-                && scenario_request_dispatch_event(event.event_id)) {
-                g_warning_manager.show_message_banner(lang_text_from_key("#goods_auto_dispatched"));
-                break;
-            }
-            city_message &message = g_message_manager.post_common(true, "message_storage_yards_ready_to_fulfill_request", event.event_id, 0, GOD_UNKNOWN, 0);
-            message.req_amount = request.resource_amount();
-            message.req_resource = request.resource;
-            message.req_months_left = request.months_to_comply;
-        } else if (!event.appear_dialgow_shown) {
-            // initial quest message
-            event.appear_dialgow_shown = true;
-            city_message_post_full(true, "message_template_request", &event, caller_event_id,
-                                   PHRASE_general_request_title_P + pharaoh_alt_shift,
-                                   PHRASE_general_request_initial_announcement_P + pharaoh_alt_shift,
-                                   PHRASE_general_request_no_reason_P_A + pharaoh_alt_shift * 3,
-                                   event.event_id, 0);
-
-        } 
-        
-        if (event.quest_months_left == 6) {
-            // reminder of 6 months left
-            city_message_post_full(true, "message_template_request", &event, caller_event_id,
-                                   PHRASE_general_request_title_P + pharaoh_alt_shift,
-                                   PHRASE_general_request_reminder_P + pharaoh_alt_shift,
-                                   PHRASE_general_request_no_reason_P_A + pharaoh_alt_shift * 3,
-                                   event.event_id, 0);
-
-        } else if (event.quest_months_left == 0) {
-            g_city.kingdome.reduce_missed_request(3);
+// OG scenario_events.c request_active.
+static void request_active(event_ph_t& event, int caller_event_id) {
+    const int months = event.quest_months_left - 1;
+    event.quest_months_left = (uint8_t)std::max(months, 0);
+    if (event.event_state == e_event_state_in_progress || event.event_state == e_event_state_initial) {
+        if (months == REQUEST_REMINDER_MONTHS) {
+            request_post(event, caller_event_id, PHRASE_general_request_reminder_P);
+        } else if (months <= 0) {
+            event.quest_months_left = REQUEST_OVERDUE_MONTHS;
             event.event_state = e_event_state_overdue;
             event.is_overdue = true;
-            event.quest_months_left = 24; // hardcoded
-
-            // reprimand message
-            city_message_post_full(true, "message_template_request", &event, caller_event_id,
-                                   PHRASE_general_request_title_P + pharaoh_alt_shift,
-                                   PHRASE_general_request_overdue_P + pharaoh_alt_shift,
-                                   PHRASE_general_request_no_reason_P_A + pharaoh_alt_shift * 3,
-                                   event.event_id,
-                                   0);
+            request_post(event, caller_event_id, PHRASE_general_request_overdue_P);
+            g_city.kingdome.reduce_missed_request(REQUEST_IGNORED_KINGDOM_PENALTY);
+            logs::info("[request] overdue event=%d", event.event_id);
         }
-        break;
+    } else if (event.event_state == e_event_state_overdue && months <= 0) {
+        event.event_state = e_event_state_failed;
+        event.is_active = false;
+        g_scenario.events.process_event(event.on_refusal_action, true, EVENT_ACTION_REFUSED, event.event_id);
+        scenario_request_emit_cleared(event, false);
+        logs::info("[request] ignored event=%d", event.event_id);
+        return;
+    }
+    request_check_compliance(event);
+}
 
-    case e_event_state_overdue:
-        if (event.quest_months_left == 6) {
-            // angry reminder of 6 months left?
-            //                        city_message_post_full(true, MESSAGE_TEMPLATE_REQUEST, id,
-            //                        caller_event_id,
-            //                                               PHRASE_general_request_title_P + faction_mod,
-            //                                               PHRASE_general_request_warning_P + faction_mod,
-            //                                               PHRASE_general_request_no_reason_P_A + faction_mod
-            //                                               * 3, id, 0);
-        } else if (event.quest_months_left == 0) {
-            g_city.kingdome.reduce_missed_request(2);
-            event.event_state = e_event_state_failed;
-            event.is_active = false;
-            next_action = EVENT_ACTION_REFUSED;
-            if (event.on_refusal_action >= 0) {
-                g_scenario.events.process_event(event.on_refusal_action, true, EVENT_ACTION_REFUSED, event.event_id);
-            }
-            scenario_request_emit_cleared(event, false);
-        }
+// OG scenario_events.c scenario_event_process_request, for a request that has started.
+void scenario_request_handle(event_ph_t& event, int caller_event_id, e_event_action& next_action) {
+    next_action = EVENT_ACTION_NONE;
+    switch (event.event_state) {
+    case e_event_state_dispatched:
+    case e_event_state_dispatched_late:
+    case e_event_state_finished: // pre-OG saves: dispatched, arrives now
+    case e_event_state_finished_late:
+        request_dispatched(event);
+        return;
+    default:
         break;
+    }
+    if (event.is_active) {
+        request_active(event, caller_event_id);
     }
 }
 
@@ -256,27 +246,25 @@ void scenario_request_dispatch(int id) {
         return;
     }
 
-    // Overdue-grace fulfill is late (on_too_late), not ok (on_completed).
-    e_event_state new_state;
-    if (ev->is_overdue) {
-        new_state = e_event_state_finished_late;
-    } else if (request.months_to_comply > 0) {
-        new_state = e_event_state_finished;
-    } else {
-        new_state = e_event_state_finished_late;
-    }
-
-    scenario_request_set_state(request, new_state);
-
-    if (request.resource == RESOURCE_DEBEN) {
-        events::emit(event_finance_request{ efinance_request_kigdome, request.amount });
-    } else if (request.resource == RESOURCE_TROOPS) {
+    if (request.resource == RESOURCE_TROOPS) {
+        ev->event_state = ev->is_overdue ? e_event_state_finished_late : e_event_state_finished;
+        ev->quest_months_left = 1;
         g_city.population.remove_for_troop_request(request.amount);
-        events::emit(event_storageyards_remove_resource{ RESOURCE_WEAPONS, request.amount });
-    } else {
-        int amount = request.resource_amount();
-        events::emit(event_city_remove_resource{ request.resource, amount });
+        events::emit(event_storageyards_remove_resource{RESOURCE_WEAPONS, request.amount});
+        return;
     }
+
+    // OG requests.c scenario_request_dispatch: the goods leave now and arrive in 1..4 months.
+    ev->event_state = ev->is_overdue ? e_event_state_dispatched_late : e_event_state_dispatched;
+    random_generate_next();
+    ev->quest_months_left = (uint8_t)((random_short() & 3) + 1);
+    if (request.resource == RESOURCE_DEBEN) {
+        events::emit(event_finance_request{efinance_request_kigdome, request.amount});
+    } else {
+        events::emit(event_city_remove_resource{request.resource, request.resource_amount()});
+    }
+    logs::info("[request] dispatched event=%d months=%d late=%d", ev->event_id, ev->quest_months_left,
+      ev->is_overdue ? 1 : 0);
 }
 
 bool scenario_request_dispatch_event(int event_id) {

@@ -170,19 +170,16 @@ void __test_request_force_refuse_now(int tag) {
 }
 ANK_FUNCTION_1(__test_request_force_refuse_now);
 
-// Tag-targeted fulfill (visible-index dispatch is ambiguous when a mission has many requests).
+// Tag-targeted fulfill (visible-index dispatch is ambiguous when a mission has many requests):
+// the dispatched goods arrive at once.
 void __test_request_force_fulfill(int tag, int as_late) {
     event_ph_t* e = __test_find_request_by_tag(tag);
     if (!e || !e->is_active) {
         return;
     }
-    if (as_late) {
-        e->is_overdue = true;
-        e->event_state = e_event_state_finished_late;
-    } else {
-        e->is_overdue = false;
-        e->event_state = e_event_state_finished;
-    }
+    e->is_overdue = as_late != 0;
+    e->event_state = as_late ? e_event_state_dispatched_late : e_event_state_dispatched;
+    e->quest_months_left = 1;
     g_scenario.events.process_active_request(e->event_id);
 }
 ANK_FUNCTION_2(__test_request_force_fulfill);

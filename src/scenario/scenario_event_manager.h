@@ -57,6 +57,9 @@ enum e_event_state : uint8_t {
     e_event_state_failed = 5,
     e_event_state_received = 6,
     e_event_state_already_fired = 7,
+    // Requests after the dispatch (OG REQUEST_STATE_DISPATCHED / _DISPATCHED_LATE): on the way.
+    e_event_state_dispatched = 8,
+    e_event_state_dispatched_late = 9,
     e_event_state_max
 };
 using e_event_state_tokens_t = token_holder<e_event_state, e_event_state_initial, e_event_state_max>;

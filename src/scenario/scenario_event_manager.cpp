@@ -519,7 +519,6 @@ void event_manager_t::execute_event(int tag) {
     }
 
     process_event(it->event_id, false, -1);
-    process_active_request(it->event_id);
 }
 
 void event_manager_t::set_request_location_fields(int tag, int16_t l1, int16_t l2, int16_t l3, int16_t l4) {
