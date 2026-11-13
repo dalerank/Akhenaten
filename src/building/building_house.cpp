@@ -215,16 +215,6 @@ void building_house::bind_dynamic(io_buffer *iob, size_t version) {
     iob->bind_u8(d.tax_bonus);
 }
 
-int building_house::get_fire_risk(int value) const {
-    if (house_population() <= 0) {
-        if (house_level() == HOUSE_CRUDE_HUT || runtime_data().frog_infest_days > 0) {
-            return 0;
-        }
-    }
-
-    return value;
-}
-
 void building_house::highlight_waypoints() {
     // nothing
 }

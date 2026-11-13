@@ -611,6 +611,11 @@ static int __test_building_fire_duration(int bid) {
 }
 ANK_FUNCTION_1(__test_building_fire_duration);
 
+static void __test_city_check_building_destroying() {
+    g_city.maintenance.check_building_destroying();
+}
+ANK_FUNCTION(__test_city_check_building_destroying);
+
 #include "figuretype/figure_fireman.h"
 
 // One ACTION_5_FIREMAN_AT_FIRE tick from a fireman standing next to the ruin; returns the ruin's fire_duration.

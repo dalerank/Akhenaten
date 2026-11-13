@@ -128,44 +128,103 @@ void city_maintenance_t::update_fire_direction() {
     fire_spread_direction = random_byte() & 7;
 }
 
+namespace {
+
+    constexpr int BUILDING_RISK_MAX = 1000;
+    constexpr int FIRE_RISK_DAY_MASK = 7;
+    constexpr int FIRE_RISK_FACTORS = 5;
+    constexpr int DESERT_FIRE_RISK_BONUS = 3;
+    constexpr int BURNING_DAMAGE_FACTOR = 10;
+
+    // A per-difficulty table already holds the value for the current difficulty; scaling it
+    // again would apply the difficulty twice.
+    int scaled_risk_increment(const int8_dcy& param, int value) {
+        return param.value.size() > 1 ? value : difficulty_multiply_risk(value);
+    }
+
+    bool is_checked_for_fire(const building& b) {
+        if (b.type == BUILDING_BURNING_RUIN || b.type == BUILDING_STORAGE_ROOM || b.fire_duration != 0) {
+            return false;
+        }
+        return b.prev_part_building_id == 0;
+    }
+
+    void add_damage_risk(building& b) {
+        if (!b.damage_proof) {
+            const int damage = scaled_risk_increment(b.params().damage_risk, b.collapse_risk_increase);
+            // Unreachable while is_checked_for_fire skips burning buildings; OG add_damage_risk has it too.
+            const int burning = (b.fire_duration != 0) ? damage * BURNING_DAMAGE_FACTOR : 0;
+            b.collapse_risk += damage + burning;
+        }
+
+        const bool hut = b.type == BUILDING_HOUSE_CRUDE_HUT || b.type == BUILDING_HOUSE_STURDY_HUT;
+        if (hut || map_terrain_is(b.tile, TERRAIN_FLOODPLAIN)) {
+            b.collapse_risk = 0;
+        }
+    }
+
+    void add_fire_risk(building& b, int factor) {
+        const int model_fire = b.fire_proof ? 0 : b.fire_risk_increase;
+        const int increment = scaled_risk_increment(b.params().fire_risk, b.dcast()->get_fire_risk(model_fire));
+
+        if (b.is_house()) {
+            auto house = b.dcast_house();
+            if (!house || house->house_population() <= 0) {
+                b.fire_risk = 0;
+            } else {
+                b.fire_risk += increment * factor;
+            }
+            return;
+        }
+
+        if (model_fire == 0) {
+            b.fire_risk = 0;
+            return;
+        }
+
+        if (g_scenario.climate == CLIMATE_DESERT) {
+            b.fire_risk += DESERT_FIRE_RISK_BONUS;
+        }
+        b.fire_risk += increment * factor;
+    }
+
+} // namespace
+
 void city_maintenance_t::check_building_destroying() {
     OZZY_PROFILER_FUNCTION();
 
     int recalculate_terrain = 0;
     random_generate_next();
-    int random_global = random_byte() & 7;
+    const int random_day = random_data_struct()->random1_3bit;
 
-    buildings_valid_do([&] (building &b) {
-        /////// COLLAPSE
-        if (!b.damage_proof) {
-            int damage_risk_increase = b.collapse_risk_increase;
-            damage_risk_increase = difficulty_multiply_risk(b.collapse_risk_increase);
-            b.collapse_risk += damage_risk_increase;
-        }
-
+    buildings_valid_do([&](building& b) {
         if (b.structure_damage > 1000) {
             destroy_by_enemy(&b);
             recalculate_terrain = 1;
             return;
         }
 
-        if (b.collapse_risk > 1000) {
+        if (!is_checked_for_fire(b)) {
+            return;
+        }
+
+        add_damage_risk(b);
+        if (b.collapse_risk >= BUILDING_RISK_MAX) {
             collapse_building(&b);
             recalculate_terrain = 1;
             return;
         }
 
-        /////// FIRE
-        int random_building = (b.id + map_random_get(b.tile)) & 7;
-        if (!b.fire_proof && random_building == random_global) {
-            int fire_risk_increase = b.fire_risk_increase;
-            fire_risk_increase = b.dcast()->get_fire_risk(fire_risk_increase);
-            fire_risk_increase = difficulty_multiply_risk(fire_risk_increase);
-
-            b.fire_risk += fire_risk_increase;
+        // OG draws the factor for every surviving building, also on days it does not burn.
+        random_generate_next();
+        const int factor = (random_short() % FIRE_RISK_FACTORS) + 1;
+        const int random_building = (b.id + map_random_get(b.tile)) & FIRE_RISK_DAY_MASK;
+        if (random_building != random_day) {
+            return;
         }
 
-        if (b.fire_risk > 1000) {
+        add_fire_risk(b, factor);
+        if (b.fire_risk >= BUILDING_RISK_MAX) {
             b.destroy_by_fire();
             recalculate_terrain = 1;
         }

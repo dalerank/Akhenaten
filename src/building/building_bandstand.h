@@ -21,7 +21,6 @@ public:
     virtual void on_place_update_tiles(int orientation, int variant) override;
     virtual void update_map_orientation(int map_orientation) override;
     virtual void spawn_figure() override;
-    virtual int get_fire_risk(int value) const override { return value / 10; }
     virtual e_sound_channel_city sound_channel() const override { return SOUND_CHANNEL_CITY_BANDSTAND; }
     virtual bool force_draw_flat_tile(painter &ctx, tile2i tile, vec2i pixel, color mask) override;
     virtual bool force_draw_height_tile(painter &ctx, tile2i tile, vec2i pixel, color mask) override;

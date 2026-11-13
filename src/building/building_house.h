@@ -124,7 +124,6 @@ public:
     // Devolving where a type change is not enough: splitting a footprint back apart, or dropping
     // through a tier that has no 1:1 predecessor.
     virtual void devolve_special() {}
-    virtual int get_fire_risk(int value) const override;
     virtual void highlight_waypoints() override;
     virtual void spawn_figure() override;
     virtual bool draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) override;

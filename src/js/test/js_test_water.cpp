@@ -344,6 +344,21 @@ static int __test_random_iv1() {
 }
 ANK_FUNCTION(__test_random_iv1);
 
+static void __test_random_generate_next() {
+    random_generate_next();
+}
+ANK_FUNCTION(__test_random_generate_next);
+
+static int __test_random_1_3bit() {
+    return random_data_struct()->random1_3bit;
+}
+ANK_FUNCTION(__test_random_1_3bit);
+
+static int __test_random_1_15bit() {
+    return random_data_struct()->random1_15bit;
+}
+ANK_FUNCTION(__test_random_1_15bit);
+
 static void __test_floods_set_quality(int initial, int next) {
     g_floods.quality_initial = initial;
     g_floods.quality_next = next;
