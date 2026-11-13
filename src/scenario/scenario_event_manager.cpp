@@ -150,18 +150,11 @@ void event_ph_t::archive_load(archive arch) {
 void event_manager_t::load_mission_metadata(const mission_id_t &missionid) {
     auto &sc_events = g_scenario_events;
 
-    // Map/pak already loaded events via unserialize. Decide whether to keep or replace.
+    // Events come only from the mission script; whatever the map/pak loaded is dropped.
     bool enable_scenario_events = false;
-    bool keep_pak_events = false;
     g_config_arch.r_section(missionid, [&] (archive arch) {
         enable_scenario_events = arch.r_bool("enable_scenario_events", false);
-        keep_pak_events = arch.r_bool("keep_pak_events", false);
     });
-
-    // Temporary skeletons may set keep_pak_events to retain the map event graph.
-    if (keep_pak_events) {
-        return;
-    }
 
     sc_events.event_list.clear();
     sc_events.event_list.push_back({}); // empty header for old-engine compatibility
@@ -173,6 +166,7 @@ void event_manager_t::load_mission_metadata(const mission_id_t &missionid) {
         arch.r("events", sc_events.event_list);
         for (int i = 0; i < sc_events.event_list.size(); ++i) {
             sc_events.event_list[i].event_id = i;
+            sc_events.event_list[i].parent_id = -1;
         }
 
         // first element should contain number of all elements
@@ -300,6 +294,34 @@ void event_manager_t::create_chain_event(int tag, e_event_type type, int amount,
     event.on_defeat_action = -1;
     event.reasons = { 0xffff, 0xffff, 0xffff, 0xffff };
     g_scenario_events.event_list.front().num_total_header = g_scenario_events.event_list.size();
+}
+
+int event_manager_t::create_invasion(const invasion_event_desc &desc) {
+    if (events_count() >= MAX_EVENTS) {
+        return -1;
+    }
+    auto &event = g_scenario_events.event_list.emplace_back();
+    const int event_id = g_scenario_events.event_list.size() - 1;
+    memset(&event, 0, sizeof(event_ph_t));
+    event.type = EVENT_TYPE_INVASION;
+    event.event_id = event_id;
+    event.tag_id = desc.tag;
+    event.event_trigger_type = desc.trigger;
+    event.time.year = desc.year;
+    event.time.month = desc.month;
+    event.item = {(int16_t)desc.invader, (int16_t)desc.invader, -1, -1};
+    event.amount = {(int16_t)desc.amount, (int16_t)desc.amount, -1, -1};
+    event.months_initial = desc.months_initial;
+    event.location_fields = {(int16_t)desc.route, (int16_t)desc.route, -1, -1};
+    event.invasion_attack_target = desc.attack_target;
+    event.parent_id = -1;
+    event.on_completed_action = -1;
+    event.on_refusal_action = -1;
+    event.on_too_late_action = -1;
+    event.on_defeat_action = -1;
+    event.reasons = {0xffff, 0xffff, 0xffff, 0xffff};
+    g_scenario_events.event_list.front().num_total_header = g_scenario_events.event_list.size();
+    return event_id;
 }
 
 static event_ph_t *find_event_by_tag(int tag) {
@@ -565,6 +587,20 @@ bool event_manager_t::create(const event_ph_t* master, const event_ph_t* parent,
     child->event_trigger_type = trigger_type;
 
     update_randomized_values(*child);
+    child->parent_id = parent->event_id;
+    child->invasion_warnings_shown = 0;
+
+    if (og_invasions && child->type == EVENT_TYPE_INVASION) {
+        // OG scenario_event_chain: a child's delay (months, in time.year) counts from the current month.
+        // Read from the template: update_randomized_values treats time as {year, month, ...} value/fixed/min/max.
+        const int delay = master->time.year;
+        const game_date_t now = game.simtime.date();
+        const int month_abs = now.year * 12 + now.month + delay;
+        child->time.year = month_abs / 12;
+        child->time.month = month_abs % 12;
+        child->quest_months_left = delay;
+        return true;
+    }
 
     // calculate date of activation
     int month_abs_parent = parent->time.year * 12 + parent->time.month; // field is YEARS in parent
@@ -786,11 +822,20 @@ void event_manager_t::process_event(int id, bool via_event_trigger, int chain_ac
 
         if (event.type == EVENT_TYPE_REQUEST) {
             create(&event, at(caller_event_id), EVENT_TRIGGER_ACTIVATED_8);
-        } else {
-            create(&event, at(caller_event_id), EVENT_TRIGGER_ACTIVATED_12);
+        } else if (create(&event, at(caller_event_id), EVENT_TRIGGER_ACTIVATED_12)
+                   && og_invasions && event.type == EVENT_TYPE_INVASION) {
+            event_ph_t &child = g_scenario_events.event_list.back();
+            if (child.quest_months_left == 0) {
+                // OG scenario_event_chain: an undelayed invasion child is processed at once.
+                process_invasion(child);
+            }
         }
         // Clone-on-fire: keep the ONLY_VIA master as a reusable template (Iunet 1011 etc.).
         return;
+    }
+
+    if (og_invasions && event.type == EVENT_TYPE_INVASION) {
+        return; // process_invasions() runs these every month
     }
 
     // check if the trigger time has come, if not return.
@@ -1181,6 +1226,254 @@ void event_manager_t::process_event(int id, bool via_event_trigger, int chain_ac
     }
 }
 
+namespace {
+
+// OG scenario_rules.c invasion_warnings: [0] = the announcement in the event's own month,
+// then the reminders at 24 / 12 / 6 / 1 months before the attack.
+struct invasion_warning_rule {
+    int months_left;
+    xstring message[EVENT_INVADER_MAX - EVENT_INVADER_ENEMY];
+};
+
+const invasion_warning_rule *invasion_warning_rules() {
+    static const invasion_warning_rule rules[] = {
+        {0, {"message_invasion_enemy_far", "message_invasion_egypt_far", "message_enemies_at_the_door", "message_invasion_enemy_far"}},
+        {24, {"message_invasion_enemy_far", "message_invasion_egypt_far", "message_enemies_at_the_door", "message_invasion_enemy_far"}},
+        {12, {"message_wrath_of_the_emperor", "message_invasion_egypt_mid", "message_enemies_closing", "message_wrath_of_the_emperor"}},
+        {6, {"message_invasion_enemy_near", "message_invasion_egypt_near", "message_distant_battle", "message_invasion_enemy_near"}},
+        {1, {"message_invasion_enemy_near", "message_invasion_egypt_near", "message_distant_battle", "message_invasion_enemy_near"}},
+    };
+    return rules;
+}
+constexpr int invasion_warning_count = 5;
+constexpr int invasion_bribe_kingdom = 15;
+
+struct invasion_phrase_set {
+    int title;
+    int warning[invasion_warning_count];
+    int alert;
+    int text;
+    int text_by_favour;
+};
+
+const invasion_phrase_set &invasion_phrases(int invader) {
+    static const invasion_phrase_set enemy = {
+        PHRASE_foreign_army_attacks_you_title,
+        {PHRASE_foreign_army_attacks_you_initial_announcement, PHRASE_foreign_army_attacks_you_2year_reminder,
+         PHRASE_foreign_army_attacks_you_1year_reminder, PHRASE_foreign_army_attacks_you_6month_warning,
+         PHRASE_foreign_army_attacks_you_1month_Warning},
+        PHRASE_foreign_army_attacks_you_city_attacked_alert,
+        PHRASE_foreign_army_attacks_you_no_reason_A,
+        PHRASE_foreign_army_attacks_you_no_reason_A};
+    static const invasion_phrase_set egypt = {
+        PHRASE_eg_city_attacks_you_title,
+        {PHRASE_eg_city_attacks_you_initial_announcement, PHRASE_eg_city_attacks_you_2year_reminder,
+         PHRASE_eg_city_attacks_you_1year_reminder, PHRASE_eg_city_attacks_you_6month_warning,
+         PHRASE_eg_city_attacks_you_1month_warning},
+        PHRASE_eg_city_attacks_you_city_attacked_alert,
+        PHRASE_eg_city_attacks_you_no_reason_A,
+        PHRASE_eg_city_attacks_you_because_of_low_kingdom};
+    static const invasion_phrase_set pharaoh = {
+        PHRASE_pharaoh_attacks_you_title,
+        {PHRASE_pharaoh_attacks_you_initial_announcement, PHRASE_pharaoh_attacks_you_2year_reminder,
+         PHRASE_pharaoh_attacks_you_1year_reminder, PHRASE_pharaoh_attacks_you_6month_warning,
+         PHRASE_pharaoh_attacks_you_1month_warning},
+        PHRASE_pharaoh_attacks_you_city_attacked_alert,
+        PHRASE_pharaoh_attacks_you_no_reason_A,
+        PHRASE_pharaoh_attacks_you_because_of_low_kingdom};
+    static const invasion_phrase_set bedouin = {
+        PHRASE_bedouin_attacks_you_title,
+        {PHRASE_bedouin_attacks_you_initial_announcement, PHRASE_bedouin_attacks_you_2year_reminder,
+         PHRASE_bedouin_attacks_you_1year_reminder, PHRASE_bedouin_attacks_you_6month_warning,
+         PHRASE_bedouin_attacks_you_1month_warning},
+        PHRASE_bedouin_attacks_you_city_attacked_alert,
+        PHRASE_bedouin_attacks_you_no_reason_A,
+        PHRASE_bedouin_attacks_you_no_reason_A};
+    switch (invader) {
+    case EVENT_INVADER_EGYPT: return egypt;
+    case EVENT_INVADER_PHARAOH: return pharaoh;
+    case EVENT_INVADER_BEDUINS: return bedouin;
+    default: return enemy;
+    }
+}
+
+int months_since_event_date(const event_ph_t &e) {
+    const game_date_t now = game.simtime.date();
+    return (now.year - e.time.year) * 12 + now.month - e.time.month;
+}
+
+bool invasion_fired(const event_ph_t &e) {
+    return e.event_state == e_event_state_already_fired;
+}
+
+// OG event_helpers.c scenario_event_is_running: chain templates and favour masters never run on the calendar.
+bool invasion_is_running(const event_ph_t &e) {
+    switch (e.event_trigger_type) {
+    case EVENT_TRIGGER_ONLY_VIA_EVENT:
+    case EVENT_TRIGGER_BY_FAVOUR:
+    case EVENT_TRIGGER_BY_FAVOUR_IN_USE:
+        return false;
+    default:
+        break;
+    }
+    const int months = months_since_event_date(e);
+    return months >= 0 && months <= e.months_initial;
+}
+
+bool invasion_parent_by_favour(const event_ph_t &e) {
+    const event_ph_t *parent = g_scenario.events.at(e.parent_id);
+    if (!parent || parent == &e) {
+        return false;
+    }
+    return parent->event_trigger_type == EVENT_TRIGGER_BY_FAVOUR
+        || parent->event_trigger_type == EVENT_TRIGGER_BY_FAVOUR_IN_USE;
+}
+
+// OG scenario_events.c invasion_warning_for: a reminder by months left, else the announcement in the event's month.
+int invasion_warning_for(const event_ph_t &e, int months_left) {
+    const invasion_warning_rule *rules = invasion_warning_rules();
+    for (int w = 1; w < invasion_warning_count; w++) {
+        if (rules[w].months_left == months_left) {
+            return w;
+        }
+    }
+    if (months_since_event_date(e) != 0 || months_left <= 1) {
+        return -1;
+    }
+    return 0;
+}
+
+bool invasion_has_formation(int event_id) {
+    for (int i = 1; i < MAX_FORMATIONS; i++) {
+        const formation *m = formation_get(i);
+        if (m->in_use && !m->own_batalion && !m->is_herd && m->invasion_id == event_id) {
+            return true;
+        }
+    }
+    return false;
+}
+
+// OG invasion.c invasion_land_point / invasion_sea_point: route 1..8 = land point, 9..16 = sea point, 0 = random land.
+void invasion_set_entry(invasion_opts_t &opts, int route, bool bedouin) {
+    if (route >= MAX_INVASION_POINTS_LAND + 1 && !bedouin) {
+        opts.via_sea = true;
+        opts.sea_point_index = (int8_t)(route - MAX_INVASION_POINTS_LAND - 1);
+        return;
+    }
+    if (route <= 0) {
+        return; // random land point inside scenario_invasion_start
+    }
+    const auto &lands = g_scenario.invasion_points_land;
+    int index = std::min(route - 1, MAX_INVASION_POINTS_LAND - 1);
+    for (int tries = 0; tries < MAX_INVASION_POINTS_LAND; tries++) {
+        if (index < (int)lands.size() && lands[index].valid()) {
+            opts.invasion_point = lands[index];
+            return;
+        }
+        if (++index >= MAX_INVASION_POINTS_LAND) {
+            index = 0;
+        }
+    }
+}
+
+} // namespace
+
+// OG scenario_events.c invasion_attack.
+static void invasion_attack(event_ph_t &e) {
+    const invasion_phrase_set &phrases = invasion_phrases(e.item.value);
+    const bool bedouin = e.item.value == EVENT_INVADER_BEDUINS;
+
+    invasion_opts_t opts;
+    opts.mode = ATTACK_TYPE_ENEMIES;
+    switch (e.item.value) {
+    case EVENT_INVADER_ENEMY: opts.enemy_type = g_scenario.enemy_id; break;
+    case EVENT_INVADER_EGYPT:
+    case EVENT_INVADER_PHARAOH: opts.enemy_type = ENEMY_3_EGYPTIAN; break;
+    default: opts.enemy_type = ENEMY_0_BARBARIAN; break;
+    }
+    opts.size = e.amount.value;
+    opts.invasion_id = e.event_id;
+    opts.attack_type = formation_attack_from_event_target(e.invasion_attack_target);
+    opts.announce = false;
+    invasion_set_entry(opts, e.location_fields[0], bedouin);
+
+    e.is_active = true;
+    const int seq = scenario_invasion_start(opts);
+    e.event_state = e_event_state_already_fired;
+    logs::info("[invasion-event] attack event=%d invader=%d size=%d route=%d seq=%d", e.event_id, e.item.value,
+               e.amount.value, e.location_fields[0], seq);
+    if (seq) {
+        city_message_post_full(true, "message_attack_alert", &e, e.parent_id, phrases.title, phrases.alert,
+                               phrases.text, seq, 0);
+    } else {
+        e.is_active = false;
+    }
+    g_scenario.events.process_event(e.on_completed_action, true, EVENT_ACTION_COMPLETED, e.event_id);
+}
+
+// OG scenario_events.c scenario_event_process_invasion.
+void event_manager_t::process_invasion(event_ph_t &e) {
+    if (invasion_fired(e) || !invasion_is_running(e)) {
+        return;
+    }
+
+    if (invasion_parent_by_favour(e) && g_city.kingdome.rating >= invasion_bribe_kingdom) {
+        messages::popup("message_attack_called_off", 0, 0);
+        e.is_active = false;
+        e.event_state = e_event_state_already_fired;
+        logs::info("[invasion-event] called off event=%d rating=%d", e.event_id, g_city.kingdome.rating);
+        return;
+    }
+
+    const int months_left = e.months_initial - months_since_event_date(e);
+    if (months_left == 0) {
+        invasion_attack(e);
+        return;
+    }
+
+    const int w = invasion_warning_for(e, months_left);
+    if (w < 0) {
+        return;
+    }
+    const uint8_t shown = (uint8_t)(1 << w);
+    if (e.invasion_warnings_shown & shown) {
+        return;
+    }
+    e.invasion_warnings_shown |= shown;
+
+    const int invader = std::clamp<int>(e.item.value, EVENT_INVADER_ENEMY, EVENT_INVADER_BEDUINS);
+    const invasion_phrase_set &phrases = invasion_phrases(invader);
+    const bool popup = months_since_event_date(e) == 0;
+    const int text = invasion_parent_by_favour(e) ? phrases.text_by_favour : phrases.text;
+    city_message_post_full(popup, invasion_warning_rules()[w].message[invader - EVENT_INVADER_ENEMY], &e, e.parent_id,
+                           phrases.title, phrases.warning[w], text, e.event_id, 0);
+    logs::info("[invasion-event] warning event=%d months_left=%d slot=%d", e.event_id, months_left, w);
+}
+
+void event_manager_t::process_invasions() {
+    if (!og_invasions) {
+        return;
+    }
+    for (int i = 0; i < events_count(); i++) {
+        event_ph_t &e = g_scenario_events.event_list[i];
+        if (e.type != EVENT_TYPE_INVASION) {
+            continue;
+        }
+        // OG formation.c: the event stops being active once its last enemy formation is gone.
+        if (e.is_active && invasion_fired(e) && !invasion_has_formation(e.event_id)) {
+            e.is_active = false;
+        }
+        process_invasion(e);
+        // OG event_manager.c scenario_events_rearm: a recurring invasion comes back the same years later.
+        if (e.event_trigger_type == EVENT_TRIGGER_RECURRING && invasion_fired(e) && !e.is_active) {
+            e.event_state = e_event_state_initial;
+            e.invasion_warnings_shown = 0;
+            e.parent_id = -1;
+            e.time.year += game.simtime.years_since_start();
+        }
+    }
+}
+
 void event_manager_t::process_events() {
     auto& data = g_scenario_events;
 
@@ -1236,7 +1529,7 @@ static void bind_event_ph(io_buffer *iob, event_ph_t &event) {
     iob->bind(BIND_SIGNATURE_INT8, &event.is_overdue);
     iob->bind(BIND_SIGNATURE_INT8, &event.is_active);
     iob->bind(BIND_SIGNATURE_INT8, &event.can_comply_dialog_shown);
-    iob->bind(BIND_SIGNATURE_INT16, &event.__unk11);
+    iob->bind(BIND_SIGNATURE_INT16, &event.parent_id);
     iob->bind(BIND_SIGNATURE_INT8, &event.festival_deity);
     iob->bind(BIND_SIGNATURE_INT8, &event.reserved_unk12);
     iob->bind(BIND_SIGNATURE_INT8, &event.invasion_attack_target);
@@ -1246,7 +1539,7 @@ static void bind_event_ph(io_buffer *iob, event_ph_t &event) {
     iob->bind(BIND_SIGNATURE_INT16, &event.on_too_late_action);
     iob->bind(BIND_SIGNATURE_INT16, &event.on_defeat_action);
     iob->bind(BIND_SIGNATURE_INT8, &event.sender_faction);
-    iob->bind____skip(1); // iob->bind(BIND_SIGNATURE_INT8, &event.__unk13_i8);
+    iob->bind(BIND_SIGNATURE_UINT8, &event.invasion_warnings_shown);
     iob->bind(BIND_SIGNATURE_INT16, &event.route_fields[0]);
     iob->bind(BIND_SIGNATURE_INT16, &event.route_fields[1]);
     iob->bind(BIND_SIGNATURE_INT16, &event.route_fields[2]);

@@ -177,6 +177,8 @@ void game_t::advance_month() {
     random_generate_next();                  // TODO: find out the source / reason for this
     g_empire.update_month();
     g_scenario.events.process_random_events();
+    // OG tick.c advance_month: invasions are processed before the other events.
+    g_scenario.events.process_invasions();
     g_scenario.events.process_events();
     g_invasions.process_bind_resolutions();
     // Julius: monthly — warning months_to_go tick + timed map invasions (KNGDOME/enemy/uprising).

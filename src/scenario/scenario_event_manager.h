@@ -183,7 +183,7 @@ struct event_ph_t {
     bool is_active;
     bool can_comply_dialog_shown;
     bool appear_dialgow_shown;
-    int16_t __unk11;
+    int16_t parent_id;
     int8_t festival_deity;
     int8_t reserved_unk12;
     int8_t invasion_attack_target;
@@ -193,6 +193,7 @@ struct event_ph_t {
     int16_t on_too_late_action;
     int16_t on_defeat_action;
     int8_t sender_faction;
+    uint8_t invasion_warnings_shown; // bit w = OG invasion_warnings[w] already posted
     int32_t param1;
     int16_t route_fields[4];
     int8_t subtype;
@@ -229,6 +230,12 @@ struct event_manager_t {
     void process_event_distant_battle(const event_ph_t &event, bool via_event_trigger, int chain_action_parent, int caller_event_id, int caller_event_var);
     void process_events();
     void process_random_events();
+    void process_invasions();
+    void process_invasion(event_ph_t &event);
+
+    // Mission flag og_invasions: EVENT_TYPE_INVASION events run the OG monthly warning/attack cycle.
+    // Missions without it still raise their invasions from JS.
+    bool og_invasions = false;
     event_ph_t *create(const event_ph_t *parent);
     bool create(const event_ph_t *master, const event_ph_t *parent, e_event_trigger_type trigger_type);
     bool is_valid_event_index(int id);
@@ -242,6 +249,19 @@ struct event_manager_t {
     void create_pharaoh_gift(int tag, e_resource r, int amount);
     void create_foreign_army_attack_warning(int tag, int8_t sender_faction, int months_initial = 0,
                                             int invader = 0);
+    // EVENT_TYPE_INVASION created at run time; same fields as a mission events[] entry. Returns the event id.
+    struct invasion_event_desc {
+        int tag = 0;
+        e_event_trigger_type trigger = EVENT_TRIGGER_ONCE;
+        int year = 0;  // years since start; for ONLY_VIA templates the delay in months
+        int month = 0;
+        int invader = EVENT_INVADER_ENEMY;
+        int amount = 0;
+        int months_initial = 0;
+        int route = 0;
+        int8_t attack_target = EVENT_ATTACK_TARGET_RANDOM;
+    };
+    int create_invasion(const invasion_event_desc &desc);
     void create_distant_battle(int tag, pcstr city, vec2i pos);
     void win_distant_battle(int tag, pcstr city, vec2i pos);
     void create_chain_event(int tag, e_event_type type, int amount, e_resource resource = RESOURCE_NONE,

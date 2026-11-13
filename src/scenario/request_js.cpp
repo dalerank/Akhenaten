@@ -7,6 +7,7 @@
 #include "empire/empire.h"
 #include "core/variant.h"
 #include "core/profiler.h"
+#include "game/game.h"
 
 #include <algorithm>
 
@@ -137,6 +138,32 @@ void ANK_FUNCTION_UNIFIED(__city_create_chain_event)(const bvariant_map &args) {
         city_id,
         trigger
     );
+}
+
+// city.create_invasion: keys as in a mission events[] invasion entry. `delay` (months from now) replaces
+// year/month; for a chain template (trigger ONLY_VIA) it is the delay after the parent fires.
+int ANK_FUNCTION_UNIFIED(__city_create_invasion)(const bvariant_map &args) {
+    event_manager_t::invasion_event_desc desc;
+    desc.tag = args.i32("tag_id", 0);
+    desc.trigger = (e_event_trigger_type)args.i32("trigger", EVENT_TRIGGER_ONCE);
+    desc.invader = args.i32("invader", EVENT_INVADER_ENEMY);
+    desc.amount = args.i32("amount", 0);
+    desc.months_initial = args.i32("months_initial", 0);
+    desc.route = args.i32("route", 0);
+    desc.attack_target = (int8_t)args.i32("attack_target", EVENT_ATTACK_TARGET_RANDOM);
+
+    const int delay = args.i32("delay", -1);
+    if (desc.trigger == EVENT_TRIGGER_ONLY_VIA_EVENT) {
+        desc.year = std::max(delay, 0);
+    } else if (delay >= 0) {
+        const int month_abs = game.simtime.years_since_start() * 12 + game.simtime.month + delay;
+        desc.year = month_abs / 12;
+        desc.month = month_abs % 12;
+    } else {
+        desc.year = args.i32("year", game.simtime.years_since_start());
+        desc.month = args.i32("month", game.simtime.month);
+    }
+    return g_scenario.events.create_invasion(desc);
 }
 
 void __city_request_set_completed_action(int master_tag, int slave_tag) {

@@ -63,6 +63,8 @@ struct invasion_opts_t {
     // invasion_point in invasion_points_sea / water — never auto land-empty→sea.
     bool via_sea = false;
     int8_t sea_point_index = -1; // -1 = pick random valid sea point
+    // false: the caller posts the attack message (OG event path posts message 133 with event phrases).
+    bool announce = true;
 };
 
 // Map pak/JS invasion_attack_target (EVENT_ATTACK_TARGET_*) → formation attack_type.

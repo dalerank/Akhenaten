@@ -1142,7 +1142,9 @@ int scenario_invasion_start(invasion_opts_t opts) {
     case ATTACK_TYPE_ENEMIES: {
         tile2i invasion_tile = scenario_start_invasion_impl(opts);
         if (invasion_tile.valid()) {
-            if (opts.enemy_type == ENEMY_3_EGYPTIAN || opts.kind == INVASION_KIND_KINGDOME) {
+            if (!opts.announce) {
+                // the caller posts its own attack message
+            } else if (opts.enemy_type == ENEMY_3_EGYPTIAN || opts.kind == INVASION_KIND_KINGDOME) {
                 emit_local_invasion_attack_message("message_legion_attacks",
                     data.last_internal_invasion_id, invasion_tile.grid_offset());
             } else {

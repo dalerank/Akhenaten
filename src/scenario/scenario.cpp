@@ -120,6 +120,7 @@ void scenario_data_t::load_metadata(const mission_id_t &missionid, bool is_new_m
             carry_troops_mask |= troop_carry_mask_parse_name(name.c_str());
         }
         carry_monuments = arch.r_bool("carry_monuments");
+        events.og_invasions = arch.r_bool("og_invasions", false);
         reset_personal_savings = arch.r_bool("reset_personal_savings");
         if (is_new_mission && reset_personal_savings) {
             g_city.kingdome.campaign_carry_personal_savings = 0;

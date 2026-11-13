@@ -456,6 +456,17 @@ city.create_chain_event = function(obj) {
     }
 }
 
+// OG invasion event (needs og_invasions in the mission): { tag_id, invader, amount, months_initial,
+// route, attack_target, year+month | delay, trigger }. Warnings, attack and chains follow the OG cycle.
+city.create_invasion = function(obj) {
+    var event_id = __city_create_invasion(obj)
+    return {
+        tag_id: obj.tag_id
+        event_id: event_id
+        set_completed_action_tag: function(slave_tag) { __city_request_set_completed_action(this.tag_id, slave_tag) }
+    }
+}
+
 city.create_pharaoh_gift = function(obj) {
     __city_create_pharaoh_gift(obj)
     return {

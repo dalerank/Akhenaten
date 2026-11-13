@@ -1469,6 +1469,50 @@ game_messages_en {
         content { text: "xxxx see eventmsg.txt" }
     }
 
+    // OG Pharaoh_MM.eng invasion warning shells: title and text come from the event phrases.
+    message_invasion_enemy_near {
+        id: 113
+        type: 2
+        size [30, 20]
+        urgent: 1
+        video { text: "@12" }
+    }
+
+    message_invasion_enemy_far {
+        id: 119
+        type: 2
+        size [30, 20]
+        video { text: "@12" }
+    }
+
+    message_invasion_egypt_near {
+        id: 127
+        type: 2
+        size [30, 20]
+        video { text: "@11" }
+    }
+
+    message_invasion_egypt_mid {
+        id: 128
+        type: 2
+        size [30, 20]
+        video { text: "@11" }
+    }
+
+    message_invasion_egypt_far {
+        id: 129
+        type: 2
+        size [30, 20]
+        video { text: "@11" }
+    }
+
+    message_attack_alert {
+        id: 133
+        type: 2
+        message_type: 7
+        size [30, 20]
+    }
+
     message_template_request {
         id: 130,
         type: 2

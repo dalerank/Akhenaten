@@ -1270,3 +1270,75 @@ static void __test_enemy_formations_update() {
     g_formations.enemy_update();
 }
 ANK_FUNCTION(__test_enemy_formations_update);
+
+#include "game/game.h"
+#include "scenario/scenario_event_manager.h"
+
+static void __test_og_invasions_set(int on) {
+    g_scenario.events.og_invasions = on != 0;
+}
+ANK_FUNCTION_1(__test_og_invasions_set);
+
+static void __test_simtime_set(int years_since_start, int month) {
+    game.simtime.year = g_scenario.start_year + years_since_start;
+    game.simtime.month = month;
+}
+ANK_FUNCTION_2(__test_simtime_set);
+
+// Calendar EVENT_TYPE_INVASION as a mission's events[] entry would load it; returns its event id.
+static int __test_invasion_event_add(int year, int month, int invader, int amount, int months_initial, int route) {
+    event_ph_t *e = g_scenario.events.create(nullptr);
+    if (!e) {
+        return -1;
+    }
+    const int id = e->event_id;
+    memset(e, 0, sizeof(event_ph_t));
+    e->event_id = id;
+    e->type = EVENT_TYPE_INVASION;
+    e->time.year = year;
+    e->time.month = month;
+    e->item.value = invader;
+    e->amount.value = amount;
+    e->months_initial = months_initial;
+    e->location_fields = {(int16_t)route, -1, -1, -1};
+    e->event_trigger_type = EVENT_TRIGGER_ONCE;
+    e->parent_id = -1;
+    e->on_completed_action = -1;
+    e->on_refusal_action = -1;
+    e->on_too_late_action = -1;
+    e->on_defeat_action = -1;
+    e->invasion_attack_target = EVENT_ATTACK_TARGET_RANDOM;
+    return id;
+}
+ANK_FUNCTION_6(__test_invasion_event_add);
+
+static void __test_event_set_trigger(int id, int trigger) {
+    if (event_ph_t *e = g_scenario.events.at(id)) {
+        e->event_trigger_type = (e_event_trigger_type)trigger;
+    }
+}
+ANK_FUNCTION_2(__test_event_set_trigger);
+
+static void __test_event_set_parent(int id, int parent_id) {
+    if (event_ph_t *e = g_scenario.events.at(id)) {
+        e->parent_id = parent_id;
+    }
+}
+ANK_FUNCTION_2(__test_event_set_parent);
+
+static int __test_invasion_event_warnings(int id) {
+    const event_ph_t *e = g_scenario.events.at(id);
+    return e ? e->invasion_warnings_shown : -1;
+}
+ANK_FUNCTION_1(__test_invasion_event_warnings);
+
+static int __test_invasion_event_fired(int id) {
+    const event_ph_t *e = g_scenario.events.at(id);
+    return (e && e->event_state == e_event_state_already_fired) ? 1 : 0;
+}
+ANK_FUNCTION_1(__test_invasion_event_fired);
+
+static void __test_process_invasions() {
+    g_scenario.events.process_invasions();
+}
+ANK_FUNCTION(__test_process_invasions);
