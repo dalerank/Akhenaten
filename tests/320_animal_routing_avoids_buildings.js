@@ -1,5 +1,5 @@
-// Animals and hunters route like OG can_enter_animal: over the citizen land grid, so an ordinary
-// building is not walkable for them (on the noncitizen grid it is a "break through" tile for enemies).
+// Animals and hunters walk only the open tiles of the noncitizen grid: an ordinary building there is a
+// "break through" tile for enemies, and an animal routed onto it gets stuck against the building.
 
 var __test320_ok = false
 

@@ -547,13 +547,11 @@ bool map_routing_citizen_can_travel_over_road_garden(int src_x, int src_y, int d
     return map_grid_get(routing_distance, dst_offset) != 0;
 }
 
-// OG can_enter_animal (routing_land.c:43) walks the citizen grid, not the noncitizen one where
-// most buildings are "break through" tiles for enemies.
 static void callback_travel_animal(int next_offset, int dist) {
-    if (map_terrain_is(next_offset, TERRAIN_FERRY_ROUTE)) {
+    if (has_fighting_enemy(next_offset)) {
         return;
     }
-    if (map_grid_get(routing_land_citizen, next_offset) >= CITIZEN_0_ROAD) {
+    if (map_routing_animal_passable(next_offset)) {
         enqueue(next_offset, dist);
     }
 }

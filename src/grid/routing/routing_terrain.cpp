@@ -592,6 +592,13 @@ void map_routing_update_all() {
 
 /////////////
 
+// Animals walk the noncitizen grid but only its open tiles: buildings there are "break through" tiles
+// for enemies (NONCITIZEN_1_BUILDING), and walls, gatehouses and forts stop animals as well.
+bool map_routing_animal_passable(int grid_offset) {
+    const int value = map_grid_get(routing_land_noncitizen, grid_offset);
+    return value == NONCITIZEN_0_PASSABLE || value == NONCITIZEN_2_CLEARABLE;
+}
+
 bool map_routing_passable_by_usage(int terrain_usage, int grid_offset) {
     switch (terrain_usage) {
     case TERRAIN_USAGE_ANY:
@@ -605,7 +612,7 @@ bool map_routing_passable_by_usage(int terrain_usage, int grid_offset) {
     case TERRAIN_USAGE_WALLS:
         return map_grid_get(routing_tiles_walls, grid_offset) == WALL_0_PASSABLE;
     case TERRAIN_USAGE_ANIMAL:
-        return map_grid_get(routing_land_citizen, grid_offset) >= CITIZEN_0_ROAD && !map_terrain_is(grid_offset, TERRAIN_FERRY_ROUTE);
+        return map_routing_animal_passable(grid_offset);
     case TERRAIN_USAGE_AMPHIBIA:
         return map_grid_get(routing_land_amphibia, grid_offset) >= AMPHIBIA_0_PASSABLE;
     }
