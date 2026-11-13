@@ -95,6 +95,12 @@ function advisor_population_print_society_info(window) {
 	])
 }
 
+// OG draw_migration_panel: people the food supply feeds, then the food/migration outlook.
+function advisor_population_food_supply_line() {
+	var food = __population_advisor_food()
+	return __loc(55, 34) + " " + food.people + " " + __loc(55, 35) + " " + __loc(55, food.text)
+}
+
 function advisor_population_print_history_info(window) {
 	var line1
 	if (scenario.kingdom_supplies_grain) {
@@ -152,5 +158,5 @@ function advisor_population_print_history_info(window) {
 		line3 = __loc(55, 24) + ", " + String(newcomers) + tail
 	}
 
-	advisor_population_info_panel_fill_list(window, [line1, line2, line3])
+	advisor_population_info_panel_fill_list(window, [advisor_population_food_supply_line(), line1, line2, line3])
 }

@@ -3,6 +3,17 @@
 #include "city/city.h"
 #include "city/city_food_supply.h"
 #include "core/xstring.h"
+#include "window/advisor/advisor_comments.h"
+
+void __test_advisor_state_set(pcstr name, int value) {
+    advisor_city_state_override(xstring(name), value);
+}
+ANK_FUNCTION_2(__test_advisor_state_set)
+
+void __test_advisor_state_clear() {
+    advisor_city_state_clear_override();
+}
+ANK_FUNCTION(__test_advisor_state_clear)
 
 int __test_food_supply_percentage_of(int floodplain, int meadow, int ranch, int hunting, int fishing, int imports,
   int consumption) {

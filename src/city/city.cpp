@@ -1173,7 +1173,10 @@ static void city_data_bind_og_layout(io_buffer* iob) {
     iob->bind(BIND_SIGNATURE_UINT8, &data.mission.victory_message_shown);
     iob->bind____skip(15);
     iob->bind(BIND_SIGNATURE_INT32, &data.figures.attacking_natives);
-    iob->bind____skip(64);
+    iob->bind____skip(52);
+    iob->bind(BIND_SIGNATURE_INT32, &data.finance.crimes_this_month);
+    iob->bind(BIND_SIGNATURE_INT32, &data.finance.gold_stolen_this_month);
+    iob->bind____skip(4);
     iob->bind(BIND_SIGNATURE_INT32, &data.food_supply.hunting_lodges_working);
     iob->bind(BIND_SIGNATURE_INT32, &data.food_supply.game_meat_last_month);
     iob->bind(BIND_SIGNATURE_INT32, &data.food_supply.game_meat_this_month);

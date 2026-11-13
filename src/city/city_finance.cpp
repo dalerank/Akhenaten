@@ -112,6 +112,8 @@ bool city_finance_t::is_out_of_money() const{
 void city_finance_t::process_stolen(int stolen) {
     treasury -= stolen;
     this_year.expenses.stolen += stolen;
+    crimes_this_month++;
+    gold_stolen_this_month += stolen;
 }
 
 void city_finance_t::update_interest() {
@@ -407,6 +409,8 @@ static void reset_taxes() {
 }
 
 void city_finance_t::advance_month() {
+    crimes_this_month = 0;
+    gold_stolen_this_month = 0;
     collect_monthly_taxes();
     pay_monthly_wages();
     pay_monthly_interest();

@@ -141,6 +141,8 @@ struct city_finance_t {
     uint8_t tribute_not_paid_total_years;
     int32_t wage_rate_paid_this_year;
     int32_t wage_rate_paid_last_year;
+    int32_t crimes_this_month;
+    int32_t gold_stolen_this_month;
 
     void init();
     bool is_out_of_money() const;

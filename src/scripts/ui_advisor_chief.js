@@ -1,5 +1,72 @@
 log_info("akhenaten: ui advisor chief started")
 
+// OG window/advisor_comments.c advisor_comment_rules.
+advisor_comment_rules {
+	sentiment_low : 50
+	sentiment_fair : 100
+	migration_max_armed_figures : 3
+	migration_newcomers_strong : 5
+	migration_percentage_strong : 80
+	employment_balanced_unemployment : 5
+	employment_balanced_workers_needed : 5
+	unemployment_urgent : 17
+	unemployment_serious : 10
+	unemployment_important : 5
+	labor_shortage_urgent : 20
+	labor_shortage_serious : 10
+	food_stocks_low_percent : 50
+	food_supply_plenty_percent : 150
+	food_supply_enough_percent : 110
+	food_supply_barely_enough_percent : 95
+	food_supply_slightly_short_percent : 85
+	food_supply_short_percent : 70
+	angry_god_mood : 40
+	very_angry_god_mood : 20
+	happy_god_mood : 60
+	thefts_many : 10
+	thefts_several : 5
+	thefts_some : 2
+	requests_counted : 5
+	requests_some_max : 2
+	requests_several_max : 4
+}
+
+// OG window/advisor/chief.c row thresholds.
+chief_advisor_rules {
+	sentiment_white_from : 30
+	sentiment_green_from : 50
+	sentiment_cause_below : 50
+	migration_max_armed_figures : 3
+	migration_newcomers_strong : 5
+	migration_percentage_strong : 80
+	unemployment_urgent : 18
+	unemployment_serious : 11
+	unemployment_important : 6
+	unemployment_tolerable : 1
+	workers_needed_urgent : 21
+	workers_needed_serious : 11
+	workers_needed_important : 6
+	employment_balanced_below : 6
+	food_stocks_low_percent : 50
+	food_supply_plenty_percent : 150
+	food_supply_enough_percent : 110
+	food_supply_barely_enough_percent : 95
+	food_supply_slightly_short_percent : 85
+	food_supply_short_percent : 70
+	health_white_from : 20
+	health_green_from : 30
+	angry_god_mood : 30
+	very_angry_god_mood : 20
+	happy_god_mood : 70
+	thefts_many : 10
+	thefts_several : 5
+	thefts_some : 2
+	requests_counted : 5
+	requests_some_max : 2
+	requests_several_max : 4
+	flood_quality_step : 20
+}
+
 [es=advisor_window]
 advisor_chief_window {
 	advisor: ADVISOR_CHIEF
@@ -28,6 +95,7 @@ advisor_chief_window {
 					onrender_item: advisor_chief_report_on_render_item
 				})
 
+				click_hint    : text({ pos:[60, 406], text:{group:61, id:218}, font: FONT_NORMAL_BLACK_ON_LIGHT }),
 				button_help   : help_button({}),
 			}
 		})
@@ -74,24 +142,15 @@ function advisor_chief_report_body_max_chars() {
 	return Math.max(24, (wrapPx / 7) | 0)
 }
 
-function advisor_chief_push_wrapped_section_rows(bodyText, sectionTitle, font) {
+function advisor_chief_push_wrapped_section_rows(bodyText, sectionTitle, font, topic) {
 	advisor_chief_window._chief_report_rows.push({
 		title: sectionTitle
 		body: ""
 		font: font
 		bullet: true
+		topic: topic
 	})
-
-	var lines = advisor_chief_wrap_lines(bodyText, advisor_chief_report_body_max_chars())
-	var li
-	for (li = 0; li < lines.length; li++) {
-		advisor_chief_window._chief_report_rows.push({
-			title: ""
-			body: lines[li]
-			font: font
-			bullet: false
-		})
-	}
+	advisor_chief_push_body_rows(bodyText, font, topic)
 }
 
 function advisor_chief_report_on_render_item(p) {
@@ -100,7 +159,6 @@ function advisor_chief_report_on_render_item(p) {
 	var row = rows[p.user_data]
 
 	var wrapPx = Math.max(120, p.sizex - 42)
-	var maxChars = Math.max(24, (wrapPx / 7) | 0)
 
 	if (row.title && row.title.length) {
 		var img = get_image({ pack: PACK_GENERAL, id: 158 })
@@ -111,332 +169,13 @@ function advisor_chief_report_on_render_item(p) {
 	if (row.body && row.body.length) {
 		ui.label(row.body, [p.x + 35, p.y + 3], row.font, UiFlags_None, wrapPx)
 	}
-}
 
-function advisor_chief_window_update_sentiment(window) {
-	var sentiment = city.sentiment.value
-	var text_id
-	var font
-	if (sentiment <= 0) {
-		text_id = 20
-		font = FONT_NORMAL_YELLOW
-	} else if (sentiment >= 100) {
-		text_id = 31
-		font = FONT_NORMAL_BLACK_ON_DARK
-	} else {
-		text_id = 32 + ((sentiment / 10) | 0)
-		font = FONT_NORMAL_BLACK_ON_DARK
+	if (p.hover) {
+		ui.border({ x: p.x + 4, y: p.y }, { x: p.sizex - 8, y: p.sizey }, 0, COLOR_TOOLTIP_BORDER, UiFlags_None)
 	}
-	advisor_chief_push_wrapped_section_rows(__loc(61, text_id), __loc("#chief_adv_sentiment"), font)
 }
 
-function advisor_chief_window_update_migration(window) {
-	var invaders = __city_figures_total_invading_enemies()
-	var newcomers = city.migration.newcomers
-	var pct = city.migration.percentage
-	var cause = city.migration.no_immigration_cause
-
-	var text_id
-	var font
-	if (invaders > 3) {
-		text_id = 43
-		font = FONT_NORMAL_BLACK_ON_DARK
-	} else if (newcomers >= 5) {
-		text_id = 44
-		font = FONT_NORMAL_BLACK_ON_DARK
-	} else if (__city_migration_no_room_for_immigrants()) {
-		text_id = 45
-		font = FONT_NORMAL_YELLOW
-	} else if (pct >= 80) {
-		text_id = 44
-		font = FONT_NORMAL_BLACK_ON_DARK
-	} else {
-		text_id = 43
-		font = FONT_NORMAL_BLACK_ON_DARK
-		switch (cause) {
-			case NO_IMMIGRATION_LOW_WAGES: text_id = 46; break
-			case NO_IMMIGRATION_NO_JOBS: text_id = 47; break
-			case NO_IMMIGRATION_NO_FOOD: text_id = 48; break
-			case NO_IMMIGRATION_HIGH_TAXES: text_id = 49; break
-			case NO_IMMIGRATION_MANY_TENTS: text_id = 50; break
-			case NO_IMMIGRATION_LOW_MOOD: text_id = 51; break
-			default: text_id = 59; break
-		}
-	}
-
-	advisor_chief_push_wrapped_section_rows(__loc(61, text_id), __loc("#chief_adv_migration"), font)
-}
-
-function advisor_chief_window_update_workers(window) {
-	var lab = city.labor
-	var pct_unemployment = lab.unemployment_percentage
-	var needed_workers = lab.workers_needed
-	var workers_unemployed = lab.workers_unemployed
-	var text_id
-	var text
-	var font
-	if (pct_unemployment > 0) {
-		if (pct_unemployment > 10) {
-			text_id = 76
-			font = FONT_NORMAL_YELLOW
-		} else if (pct_unemployment > 5) {
-			text_id = 77
-			font = FONT_NORMAL_YELLOW
-		} else if (pct_unemployment > 2) {
-			text_id = 78
-			font = FONT_NORMAL_YELLOW
-		} else {
-			text_id = 79
-			font = FONT_NORMAL_BLACK_ON_DARK
-		}
-		var unemployed_num = workers_unemployed - needed_workers
-		text = __loc(61, text_id) + " " + pct_unemployment + "(" + unemployed_num + ")"
-	} else if (needed_workers > 0) {
-		if (needed_workers > 75) {
-			text_id = 80
-			font = FONT_NORMAL_YELLOW
-		} else if (needed_workers > 50) {
-			text_id = 81
-			font = FONT_NORMAL_YELLOW
-		} else if (needed_workers > 25) {
-			text_id = 82
-			font = FONT_NORMAL_YELLOW
-		} else {
-			text_id = 83
-			font = FONT_NORMAL_BLACK_ON_DARK
-		}
-		text = __loc(61, text_id) + " " + needed_workers
-	} else {
-		text = __loc(61, 84)
-		font = FONT_NORMAL_BLACK_ON_DARK
-	}
-	advisor_chief_push_wrapped_section_rows(text, __loc("#chief_adv_workers"), font)
-}
-
-function advisor_chief_window_update_housing(window) {
-	var cap = city.open_housing_capacity()
-	var text
-	var font
-	if (cap <= 0) {
-		text = __loc("#TR_ADVISOR_HOUSING_NO_ROOM")
-		font = FONT_NORMAL_YELLOW
-	} else {
-		text = __loc("#TR_ADVISOR_HOUSING_ROOM") + " " + String(cap)
-		font = FONT_NORMAL_BLACK_ON_DARK
-	}
-	advisor_chief_push_wrapped_section_rows(text, __loc("#TR_HEADER_HOUSING"), font)
-}
-
-/** Group 61 ids 39–42 are not education in this fork; texts use Overseer of Learning strings (group 57). */
-function advisor_chief_window_update_education(window) {
-	var edu = city.houses.education
-	var tid57
-	var font
-	if (edu === 1) {
-		tid57 = 19
-		font = FONT_NORMAL_YELLOW
-	} else if (edu === 2) {
-		tid57 = 21
-		font = FONT_NORMAL_YELLOW
-	} else if (edu === 3) {
-		tid57 = 23
-		font = FONT_NORMAL_YELLOW
-	} else {
-		tid57 = 25
-		font = FONT_NORMAL_BLACK_ON_DARK
-	}
-	advisor_chief_push_wrapped_section_rows(__loc(57, tid57), __loc(14, 5), font)
-}
-
-/** Group 61 ids 43–45 are not entertainment here; uses Overseer of Diversions strings (group 58). */
-function advisor_chief_window_update_entertainment(window) {
-	var ent = city.houses.entertainment
-	var tid58
-	var font
-	if (ent === 1) {
-		tid58 = 10
-		font = FONT_NORMAL_YELLOW
-	} else if (ent === 2) {
-		tid58 = 11
-		font = FONT_NORMAL_YELLOW
-	} else {
-		tid58 = (city.avg_coverage.average_entertainment === 0) ? 7 : 8
-		font = FONT_NORMAL_BLACK_ON_DARK
-	}
-	advisor_chief_push_wrapped_section_rows(__loc(58, tid58), __loc(14, 3), font)
-}
-
-function advisor_chief_window_update_foodstocks(window) {
-	var text
-	var font
-	if (scenario.kingdom_supplies_grain) {
-		text = __loc(61, 26)
-		font = FONT_NORMAL_BLACK_ON_DARK
-	} else {
-		var months = __city_resource_food_supply_months()
-		if (months > 0) {
-			text = __loc(61, 98) + " " + months
-			font = FONT_NORMAL_BLACK_ON_DARK
-		} else {
-			text = __loc(61, 95)
-			font = FONT_NORMAL_YELLOW
-		}
-	}
-	advisor_chief_push_wrapped_section_rows(text, __loc("#chief_adv_foodstocks"), font)
-}
-
-function advisor_chief_window_update_foodconsumption(window) {
-	var text_id
-	var font
-	if (scenario.kingdom_supplies_grain) {
-		text_id = 26
-		font = FONT_NORMAL_BLACK_ON_DARK
-	} else {
-		var pct = city.resources.food_percentage_produced
-		if (pct > 150) {
-			text_id = 13
-			font = FONT_NORMAL_BLACK_ON_DARK
-		} else if (pct > 105) {
-			text_id = 14
-			font = FONT_NORMAL_BLACK_ON_DARK
-		} else if (pct > 95) {
-			text_id = 15
-			font = FONT_NORMAL_BLACK_ON_DARK
-		} else if (pct > 75) {
-			text_id = 16
-			font = FONT_NORMAL_YELLOW
-		} else if (pct > 30) {
-			text_id = 17
-			font = FONT_NORMAL_YELLOW
-		} else {
-			text_id = 18
-			font = FONT_NORMAL_YELLOW
-		}
-	}
-	advisor_chief_push_wrapped_section_rows(__loc(61, text_id), __loc("#chief_adv_foodconsumption"), font)
-}
-
-function advisor_chief_window_update_health(window) {
-	var health_rate = city.health_rating
-	var font = (health_rate >= 40) ? FONT_NORMAL_BLACK_ON_DARK : FONT_NORMAL_YELLOW
-	advisor_chief_push_wrapped_section_rows(__loc(61, 103 + ((health_rate / 10) | 0)), __loc("#chief_adv_health"), font)
-}
-
-function advisor_chief_window_update_religion(window) {
-	var r = city.houses.religion
-	var text_id
-	var font
-	if (r === 1) {
-		text_id = 46
-		font = FONT_NORMAL_YELLOW
-	} else if (r === 2) {
-		text_id = 47
-		font = FONT_NORMAL_YELLOW
-	} else if (r === 3) {
-		text_id = 48
-		font = FONT_NORMAL_YELLOW
-	} else {
-		text_id = 49
-		font = FONT_NORMAL_BLACK_ON_DARK
-	}
-	advisor_chief_push_wrapped_section_rows(__loc(61, text_id), __loc("#chief_adv_religion"), font)
-}
-
-function advisor_chief_window_update_finance(window) {
-	var treasury = city.finance.treasury
-	var balance_last_year = city.finance.last_year.balance
-	var text
-	var font
-	if (treasury > balance_last_year) {
-		text = __loc(61, 152) + " " + (treasury - balance_last_year)
-		font = FONT_NORMAL_BLACK_ON_DARK
-	} else if (treasury < balance_last_year) {
-		text = __loc(61, 154) + " " + (balance_last_year - treasury)
-		font = FONT_NORMAL_YELLOW
-	} else if (city.taxes.percentage_taxed_people < 75) {
-		text = __loc(61, 151)
-		font = FONT_NORMAL_BLACK_ON_DARK
-	} else {
-		text = __loc(61, 153)
-		font = FONT_NORMAL_BLACK_ON_DARK
-	}
-	advisor_chief_push_wrapped_section_rows(text, __loc("#chief_adv_finance"), font)
-}
-
-function advisor_chief_window_update_crime(window) {
-	var criminals = city.sentiment.criminals
-	var stolen = city.finance.this_year.expenses.stolen
-	var text
-	var font
-	if (criminals > 10) {
-		text = __loc(61, 159) + " " + stolen + " " + __loc(61, 164)
-		font = FONT_NORMAL_YELLOW
-	} else if (criminals > 7) {
-		text = __loc(61, 160) + " " + stolen + " " + __loc(61, 164)
-		font = FONT_NORMAL_YELLOW
-	} else if (criminals > 5) {
-		text = __loc(61, 161) + " " + stolen + " " + __loc(61, 164)
-		font = FONT_NORMAL_YELLOW
-	} else if (criminals > 2) {
-		text = __loc(61, 162) + " " + stolen + " " + __loc(61, 164)
-		font = FONT_NORMAL_BLACK_ON_DARK
-	} else {
-		text = __loc(61, 163)
-		font = FONT_NORMAL_BLACK_ON_DARK
-	}
-	advisor_chief_push_wrapped_section_rows(text, __loc("#chief_adv_crime"), font)
-}
-
-function advisor_chief_window_update_military(window) {
-	var fig = city.figures
-	var text_id
-	var font
-	if (fig.kingdome_soldiers) {
-		text_id = 170
-		font = FONT_NORMAL_YELLOW
-	} else if (fig.enemies) {
-		text_id = 170
-		font = FONT_NORMAL_YELLOW
-	} else if (__scenario_invasion_exists_upcoming()) {
-		text_id = 170
-		font = FONT_NORMAL_YELLOW
-	} else if (__distant_battle_kingdome_army_is_traveling()) {
-		text_id = 170
-		font = FONT_NORMAL_BLACK_ON_DARK
-	} else if (__distant_battle_months_until_battle() > 0) {
-		text_id = 170
-		font = FONT_NORMAL_YELLOW
-	} else if (fig.soldiers > 0) {
-		text_id = 177
-		font = FONT_NORMAL_BLACK_ON_DARK
-	} else {
-		text_id = 171
-		font = FONT_NORMAL_BLACK_ON_DARK
-	}
-	advisor_chief_push_wrapped_section_rows(__loc(61, text_id), __loc("#chief_adv_military"), font)
-}
-
-function advisor_chief_window_update_kingdom(window) {
-	var requests = __scenario_requests_active_count()
-	var text_id
-	var font
-	if (requests === 0) {
-		text_id = 187
-		font = FONT_NORMAL_BLACK_ON_DARK
-	} else if (requests === 1) {
-		text_id = 186
-		font = FONT_NORMAL_WHITE_ON_DARK
-	} else if (requests === 2) {
-		text_id = 185
-		font = FONT_NORMAL_YELLOW
-	} else {
-		text_id = 184
-		font = FONT_NORMAL_YELLOW
-	}
-	advisor_chief_push_wrapped_section_rows(__loc(61, text_id), __loc("#chief_adv_kingdom"), font)
-}
-
-function advisor_chief_push_body_rows(bodyText, font) {
+function advisor_chief_push_body_rows(bodyText, font, topic) {
 	var lines = advisor_chief_wrap_lines(bodyText, advisor_chief_report_body_max_chars())
 	var li
 	for (li = 0; li < lines.length; li++) {
@@ -445,43 +184,64 @@ function advisor_chief_push_body_rows(bodyText, font) {
 			body: lines[li]
 			font: font
 			bullet: false
+			topic: topic
 		})
 	}
 }
 
-function advisor_chief_window_update_nilometr(window) {
-	if (!floods_ui_should_show()) {
+// OG chief.c fonts: red / white / green on the dark panel.
+function advisor_chief_tone_font(tone) {
+	if (tone === ADVISOR_TONE_RED) {
+		return FONT_NORMAL_YELLOW
+	}
+	if (tone === ADVISOR_TONE_WHITE) {
+		return FONT_NORMAL_WHITE_ON_DARK
+	}
+	return FONT_NORMAL_BLACK_ON_DARK
+}
+
+function advisor_chief_row_text(row) {
+	var text = __loc(61, row.text)
+	if (row.cause_text >= 0) {
+		text += " " + __loc(61, row.cause_text)
+	}
+	if (row.number_kind === CHIEF_NUMBER_PERCENT) {
+		text += " " + row.number + "%"
+	} else if (row.number_kind !== CHIEF_NUMBER_NONE) {
+		text += " " + row.number
+	}
+	if (row.suffix_group >= 0) {
+		text += " " + __loc(row.suffix_group, row.suffix_text)
+	}
+	return text
+}
+
+function advisor_chief_window_push_topic(topic) {
+	var row = __chief_advisor_row(topic)
+	var font = advisor_chief_tone_font(row.tone)
+	advisor_chief_push_wrapped_section_rows(advisor_chief_row_text(row), __loc(61, topic + 1), font, topic)
+	if (row.second_text >= 0) {
+		advisor_chief_push_body_rows(__loc(61, row.second_text), FONT_NORMAL_BLACK_ON_DARK, topic)
+	}
+}
+
+function advisor_chief_window_push_nilometer() {
+	if (scenario.hide_nilometer) {
 		return
 	}
-
-	var flood_quality = city.floods.expected_quality()
-	var text = floods_ui_format_next_line(flood_quality)
-	var font = floods_ui_quality_font(flood_quality)
-	advisor_chief_push_wrapped_section_rows(text, __loc("#chief_adv_nilometr"), font)
-
-	if (!!game_features.gameui_enhanced_nilometer) {
-		advisor_chief_push_body_rows(floods_ui_format_phase(), FONT_NORMAL_BLACK_ON_DARK)
-		advisor_chief_push_body_rows(floods_ui_format_last_line(), FONT_NORMAL_BLACK_ON_DARK)
+	advisor_chief_window_push_topic(ADVISOR_COMMENT_NILOMETER)
+	if (!!game_features.gameui_enhanced_nilometer && floods_ui_should_show()) {
+		advisor_chief_push_body_rows(floods_ui_format_phase(), FONT_NORMAL_BLACK_ON_DARK, ADVISOR_COMMENT_NILOMETER)
+		advisor_chief_push_body_rows(floods_ui_format_last_line(), FONT_NORMAL_BLACK_ON_DARK, ADVISOR_COMMENT_NILOMETER)
 	}
 }
 
 function advisor_chief_window_fill_report_rows(window) {
 	advisor_chief_window._chief_report_rows = []
-	advisor_chief_window_update_sentiment(window)
-	advisor_chief_window_update_migration(window)
-	advisor_chief_window_update_workers(window)
-	advisor_chief_window_update_housing(window)
-	advisor_chief_window_update_education(window)
-	advisor_chief_window_update_entertainment(window)
-	advisor_chief_window_update_foodstocks(window)
-	advisor_chief_window_update_foodconsumption(window)
-	advisor_chief_window_update_health(window)
-	advisor_chief_window_update_religion(window)
-	advisor_chief_window_update_finance(window)
-	advisor_chief_window_update_crime(window)
-	advisor_chief_window_update_military(window)
-	advisor_chief_window_update_kingdom(window)
-	advisor_chief_window_update_nilometr(window)
+	for (var topic = ADVISOR_COMMENT_SENTIMENT; topic < ADVISOR_COMMENT_NILOMETER; topic++) {
+		advisor_chief_window_push_topic(topic)
+	}
+	advisor_chief_window_push_nilometer()
 
 	window.chief_report_list.clear()
 	for (var i = 0; i < advisor_chief_window._chief_report_rows.length; i++) {
