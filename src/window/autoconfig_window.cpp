@@ -93,6 +93,7 @@ void autoconfig_window::archive_load(archive arch) {
     help_id = arch.r_string("help_id");
     allow_rmb_goback = arch.r_bool("allow_rmb_goback");
     draw_underlying = arch.r_bool("draw_underlying", false);
+    defer_relayout = arch.r_bool("defer_relayout", false);
 }
 
 void autoconfig_window::go_back() {
@@ -180,6 +181,11 @@ void autoconfig_window::init() {
 static autoconfig_window* get_window_current(xstring name) {
     auto it = autoconfig_registry().find(name);
     return (it != autoconfig_registry().end()) ? it->second : nullptr;
+}
+
+bool autoconfig_window::defers_relayout(xstring section) {
+    const autoconfig_window *w = get_window_current(section);
+    return w && w->defer_relayout;
 }
 
 // A script window's pos is computed once from the screen size; this lets an open window follow a resize.
