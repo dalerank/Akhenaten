@@ -131,8 +131,8 @@ struct city_message {
 
     int eventmsg_phrase_id;
     int req_city_past;
-    int unk_09;
-    uint8_t unk_10;
+    int delivered_amount;
+    uint8_t gift_buttons;
     bool hide_img;
 
     int req_amount_past;
@@ -224,7 +224,14 @@ void city_message_apply_sound_interval(int category);
 void city_message_show_from_archive(int message_index);
 int city_message_find_index_by_sequence(int sequence);
 
-void city_message_post_full(bool use_popup, xstring template_id, const event_ph_t* event, int parent_event_id, int title_id, int body_id, int phrase_id, int param1, int param2, e_popup_message_category popup_cat = POPUP_MSG_NONE);
+// OG city_message phrases[EVENT_PHRASE_DELIVERED_AMOUNT] / [EVENT_PHRASE_BUTTONS] (gift replies).
+struct city_message_gift {
+    int delivered_amount = 0;
+    uint8_t buttons = 0;
+};
+void city_message_post_full(bool use_popup, xstring template_id, const event_ph_t* event, int parent_event_id,
+  int title_id, int body_id, int phrase_id, int param1, int param2, e_popup_message_category popup_cat = POPUP_MSG_NONE,
+  city_message_gift gift = {});
 
 city_message &city_message_post_with_popup_delay(e_mesage_category category, bool use_popup, xstring message, int param1, short param2);
 void city_message_post_with_message_delay(e_mesage_category category, int use_popup, xstring message_type, int delay);

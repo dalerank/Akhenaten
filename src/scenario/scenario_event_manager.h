@@ -140,6 +140,27 @@ enum e_event_var : uint8_t {
     EVENT_VAR_AUTO = 6, // (automatically set)
 };
 
+// OG scenario_internal.h gift_state, kept in event_state of EVENT_TYPE_GIFT_FROM_PHARAOH.
+enum e_gift_state : uint8_t {
+    GIFT_STATE_NEW = 0,
+    GIFT_STATE_OFFERED = 1,
+    GIFT_STATE_OFFER_AGAIN = 2,
+    GIFT_STATE_OFFERED_AGAIN = 3,
+    GIFT_STATE_OFFER_LAST = 4,
+    GIFT_STATE_OFFERED_LAST = 5,
+    GIFT_STATE_ACCEPTED = 6,
+    GIFT_STATE_REFUSED = 7,
+    GIFT_STATE_TOO_LATE = 8,
+    GIFT_STATE_DONE = 9,
+};
+
+// OG gift_button_flag: the replies a gift message offers.
+enum e_gift_button : uint8_t {
+    GIFT_BUTTON_REFUSE = 1,
+    GIFT_BUTTON_LATER = 2,
+    GIFT_BUTTON_ACCEPT = 4,
+};
+
 enum e_event_action : int8_t {
     EVENT_ACTION_NONE = -1,
     EVENT_ACTION_COMPLETED = 0,
@@ -239,6 +260,10 @@ struct event_manager_t {
 
     void execute_event(int tag);
     void process_active_request(int id);
+    void process_gift(event_ph_t& event);
+    // OG gift_buttons.c: the reply to a gift message; false when the gift no longer takes it.
+    bool gift_reply(int event_id, e_gift_button button);
+
     void process_event(int id, bool via_event_trigger, int chain_action_parent, int caller_event_id = -1, int caller_event_var = EVENT_VAR_AUTO);
     void process_event_city_under_siege(const event_ph_t &event, bool via_event_trigger, int chain_action_parent, int caller_event_id, int caller_event_var);
     void process_event_distant_battle(const event_ph_t &event, bool via_event_trigger, int chain_action_parent, int caller_event_id, int caller_event_var);

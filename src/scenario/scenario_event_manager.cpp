@@ -2,6 +2,8 @@
 
 #include "building/building.h"
 #include "building/building_house.h"
+#include "building/building_granary.h"
+#include "building/building_storage_yard.h"
 #include "building/building_type.h"
 #include "city/city_buildings.h"
 #include "city/city_finance.h"
@@ -46,6 +48,7 @@
 #include "core/svector.h"
 
 #include <algorithm>
+#include <climits>
 #include <cmath>
 #include <cstdlib>
 #include <vector>
@@ -224,6 +227,12 @@ void event_manager_t::create_pharaoh_gift(int tag, e_resource r, int amount) {
     event.tag_id = tag;
     event.location_fields = { -1, -1, -1, -1 };
     event.event_id = event_id;
+    event.parent_id = -1;
+    event.on_completed_action = -1;
+    event.on_refusal_action = -1;
+    event.on_too_late_action = -1;
+    event.on_defeat_action = -1;
+    event.reasons = {0xffff, 0xffff, 0xffff, 0xffff};
     g_scenario_events.event_list.front().num_total_header = g_scenario_events.event_list.size();
 }
 
@@ -902,6 +911,191 @@ void event_manager_t::process_event_city_under_siege(const event_ph_t& event, bo
         event.event_id, cityid);
 }
 
+// OG building_storage.c building_storage_store_anywhere: yards and, for food, granaries take up to
+// what their settings accept. With count_only nothing is stored. Amounts in units (100 = 1 load).
+static int gift_store_anywhere(e_resource resource, int amount, bool count_only) {
+    int placed = 0;
+    auto offer = [&](building_storage* s, int space) {
+        if (amount - placed <= 0 || space <= 0) {
+            return;
+        }
+        const int put = std::min(space, amount - placed);
+        if (count_only) {
+            placed += put;
+            return;
+        }
+        const int rest = s->add_resource(resource, put, false);
+        if (rest >= 0) {
+            placed += put - rest;
+        }
+    };
+    buildings_valid_do([&](building& b) {
+        if (!b.has_road_access || b.num_workers <= 0) {
+            return;
+        }
+        if (building_storage_yard* yard = b.dcast_storage_yard()) {
+            const int target = yard->accepting_amount(resource) - yard->amount(resource);
+            offer(yard, std::min(target, yard->freespace(resource)));
+        } else if (building_granary* granary = b.dcast_granary()) {
+            if (resource_is_food(resource)) {
+                const int target = granary->accepting_amount(resource) - granary->amount(resource);
+                offer(granary, std::min(target, granary->freespace()));
+            }
+        }
+    });
+    return placed;
+}
+
+// OG scenario_events.c gift_room: in loads; a money gift always fits.
+static int gift_room(const event_ph_t& e) {
+    if (e.item.value == RESOURCE_DEBEN) {
+        return e.amount.value;
+    }
+    return gift_store_anywhere((e_resource)e.item.value, INT_MAX / 2, true) / 100;
+}
+
+static void gift_post(event_ph_t& e, int body_p, int body_c, city_message_gift gift) {
+    const bool pharaoh = e.sender_faction != 0;
+    city_message_post_full(true, "message_template_gift", &e, e.parent_id,
+      pharaoh ? PHRASE_gift_title_P : PHRASE_gift_title_C, pharaoh ? body_p : body_c,
+      pharaoh ? PHRASE_gift_no_reason_P_A : PHRASE_gift_no_reason_C_A, e.event_id, 0, POPUP_MSG_NONE, gift);
+}
+
+// OG scenario_events.c gift_offer / gift_phrase: the buttons depend on how much of the gift fits.
+static void gift_offer(event_ph_t& e, int room, bool last, e_gift_state offered, e_gift_state not_offered) {
+    const int amount = e.amount.value;
+    city_message_gift gift;
+    int body_p;
+    int body_c;
+    if (room >= amount) {
+        gift.buttons = GIFT_BUTTON_ACCEPT | GIFT_BUTTON_REFUSE;
+        const bool deben = e.item.value == RESOURCE_DEBEN;
+        body_p = deben ? PHRASE_gift_cash_granted_P : PHRASE_gift_granted_P;
+        body_c = deben ? PHRASE_gift_cash_granted_C : PHRASE_gift_granted_C;
+    } else if (amount / 2 <= room) {
+        gift.buttons = GIFT_BUTTON_ACCEPT | GIFT_BUTTON_LATER | GIFT_BUTTON_REFUSE;
+        body_p = last ? PHRASE_gift_last_chance_P : PHRASE_gift_partial_space_P;
+        body_c = last ? PHRASE_gift_last_chance_C : PHRASE_gift_partial_space_C;
+    } else {
+        body_p = last ? PHRASE_gift_forfeited_P : PHRASE_gift_insufficient_space_P;
+        body_c = last ? PHRASE_gift_forfeited_C : PHRASE_gift_insufficient_space_C;
+    }
+    gift_post(e, body_p, body_c, gift);
+    e.event_state = (e_event_state)(gift.buttons ? offered : not_offered);
+    logs::info("[gift] offer event=%d buttons=%d state=%d room=%d amount=%d", e.event_id, gift.buttons,
+      (int)e.event_state, room, amount);
+}
+
+// OG scenario_events.c gift_finish.
+static void gift_finish(event_ph_t& e) {
+    city_message_gift gift;
+    switch ((e_gift_state)e.event_state) {
+    case GIFT_STATE_ACCEPTED:
+        if (e.item.value == RESOURCE_DEBEN) {
+            gift.delivered_amount = e.amount.value;
+            g_city.finance.treasury += e.amount.value;
+            g_city.finance.this_year.income.donated += e.amount.value;
+            gift_post(e, PHRASE_gift_cash_accepted_P, PHRASE_gift_cash_accepted_C, gift);
+        } else {
+            const int stored = gift_store_anywhere((e_resource)e.item.value, e.amount.value * 100, false);
+            gift.delivered_amount = stored / 100;
+            gift_post(e, PHRASE_gift_accepted_P, PHRASE_gift_accepted_C, gift);
+        }
+        logs::info("[gift] accepted event=%d delivered=%d", e.event_id, gift.delivered_amount);
+        g_scenario.events.process_event(e.on_completed_action, true, EVENT_ACTION_COMPLETED, e.event_id);
+        break;
+
+    case GIFT_STATE_REFUSED:
+        gift_post(e, PHRASE_gift_refused_P, PHRASE_gift_refused_C, gift);
+        logs::info("[gift] refused event=%d", e.event_id);
+        g_scenario.events.process_event(e.on_refusal_action, true, EVENT_ACTION_REFUSED, e.event_id);
+        break;
+
+    case GIFT_STATE_TOO_LATE:
+        gift_post(e, PHRASE_gift_forfeited_P, PHRASE_gift_forfeited_C, gift);
+        logs::info("[gift] too late event=%d", e.event_id);
+        g_scenario.events.process_event(e.on_too_late_action, true, EVENT_ACTION_TOOLATE, e.event_id);
+        break;
+
+    default:
+        break;
+    }
+    e.event_state = (e_event_state)GIFT_STATE_DONE;
+    e.is_active = false;
+}
+
+// OG scenario_events.c scenario_event_process_gift_from_pharaoh after the first offer.
+void event_manager_t::process_gift(event_ph_t& e) {
+    const e_gift_state state = (e_gift_state)e.event_state;
+    if (state == GIFT_STATE_DONE) {
+        return;
+    }
+    if (state == GIFT_STATE_ACCEPTED || state == GIFT_STATE_REFUSED || state == GIFT_STATE_TOO_LATE) {
+        gift_finish(e);
+        return;
+    }
+    if (!e.is_active) {
+        return;
+    }
+    if (e.quest_months_left > 0) {
+        e.quest_months_left--;
+    }
+    if (e.quest_months_left > 0) {
+        return;
+    }
+    const int room = gift_room(e);
+    if (state == GIFT_STATE_OFFER_AGAIN) {
+        gift_offer(e, room, false, GIFT_STATE_OFFERED_AGAIN, GIFT_STATE_OFFER_LAST);
+    } else if (state == GIFT_STATE_OFFER_LAST) {
+        gift_offer(e, room, true, GIFT_STATE_OFFERED_LAST, GIFT_STATE_TOO_LATE);
+    }
+}
+
+static void gift_start(event_ph_t& e) {
+    e.is_active = true;
+    e.event_state = (e_event_state)GIFT_STATE_NEW;
+    const int amount = e.amount.value;
+    const int room = gift_room(e);
+    if (amount > room && amount / 2 > room) {
+        e.quest_months_left = 1;
+    }
+    gift_offer(e, room, false, GIFT_STATE_OFFERED, GIFT_STATE_OFFER_AGAIN);
+}
+
+bool event_manager_t::gift_reply(int event_id, e_gift_button button) {
+    event_ph_t* e = at(event_id);
+    if (!e || e->type != EVENT_TYPE_GIFT_FROM_PHARAOH || !e->is_active) {
+        return false;
+    }
+    const e_gift_state state = (e_gift_state)e->event_state;
+    if (state != GIFT_STATE_OFFERED && state != GIFT_STATE_OFFERED_AGAIN && state != GIFT_STATE_OFFERED_LAST) {
+        return false;
+    }
+    switch (button) {
+    case GIFT_BUTTON_ACCEPT:
+        e->event_state = (e_event_state)GIFT_STATE_ACCEPTED;
+        process_gift(*e);
+        break;
+    case GIFT_BUTTON_REFUSE:
+        e->event_state = (e_event_state)GIFT_STATE_REFUSED;
+        process_gift(*e);
+        break;
+    case GIFT_BUTTON_LATER:
+        if (state == GIFT_STATE_OFFERED) {
+            e->event_state = (e_event_state)GIFT_STATE_OFFER_AGAIN;
+            e->quest_months_left = 1;
+        } else if (state == GIFT_STATE_OFFERED_AGAIN) {
+            e->event_state = (e_event_state)GIFT_STATE_OFFER_LAST;
+            e->quest_months_left = 1;
+        } else {
+            e->event_state = (e_event_state)GIFT_STATE_TOO_LATE;
+            process_gift(*e);
+        }
+        break;
+    }
+    return true;
+}
+
 void event_manager_t::process_event(int id, bool via_event_trigger, int chain_action_parent, int caller_event_id, int caller_event_var) {
     if (id < 0) {
         return;
@@ -1323,12 +1517,9 @@ void event_manager_t::process_event(int id, bool via_event_trigger, int chain_ac
         break;
 
     case EVENT_TYPE_GIFT_FROM_PHARAOH:
-        if (event.item.value != RESOURCE_NONE && event.amount.value > 0) {
-            events::emit(event_storageyards_add_resource{ (e_resource)event.item.value, event.amount.value * 100 });
-        }
-        city_message_post_full(true, "message_template_general", &event, caller_event_id,
-            PHRASE_rating_change_title_I, PHRASE_rating_change_initial_announcement_I, PHRASE_rating_change_reason_I_A,
-            id, 0);
+        gift_start(event);
+        // Outcomes fire from the reply (gift_finish), not now.
+        chain_action_next = EVENT_ACTION_NONE;
         break;
     }
 
@@ -1618,14 +1809,18 @@ void event_manager_t::update_tick() {
 void event_manager_t::process_events() {
     auto& data = g_scenario_events;
 
-    // main event update loop/fire events
-    for (int i = 0; i < events_count(); i++) {
-        process_event(i, false, -1);
+    // OG runs each event's processor once a month: what is already running goes first, so an
+    // event started this month waits for the next one.
+    const int running = events_count();
+    for (int i = 0; i < running; i++) {
+        process_active_request(i);
+        if (data.event_list[i].type == EVENT_TYPE_GIFT_FROM_PHARAOH) {
+            process_gift(data.event_list[i]);
+        }
     }
 
-    // update active srequests
     for (int i = 0; i < events_count(); i++) {
-        process_active_request(i);
+        process_event(i, false, -1);
     }
 
     // secondly, update random value fields for recurring events

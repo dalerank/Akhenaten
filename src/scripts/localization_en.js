@@ -2154,6 +2154,9 @@ localization_en = [
   { key: "#magistrate_i_am_overwhelmed", text: "I can barely manage my caseload, yet the streets are still unsafe." }
 
   { key: "#goto_site_of_event", text: "Go to site of event" }
+  { key: "#gift_refuse", text: "Refuse" }
+  { key: "#gift_later", text: "Later" }
+  { key: "#gift_accept", text: "Accept" }
   { key: "#hold_festival_to", text: "Hold festival to" }
   { key: "#god_osiris", text: "Osiris" }
   { key: "#god_ra", text: "Ra" }

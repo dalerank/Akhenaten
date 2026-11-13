@@ -1532,6 +1532,17 @@ game_messages_en {
         content { text: "" }
     }
 
+    // OG MESSAGE_TEMPLATE_GIFT: title and text come from the gift phrases; the dialog shows the
+    // message's reply buttons (accept / later / refuse).
+    message_template_gift {
+        id: 132
+        type: 2
+        message_type: 2
+        size [30, 20]
+        title { text: "" }
+        content { text: "" }
+    }
+
     // OG MESSAGE_EARTHQUAKE: title and text come from the event phrases, param2 is the first tile.
     message_earthquake {
         id: 261

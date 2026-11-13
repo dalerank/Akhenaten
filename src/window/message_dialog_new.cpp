@@ -571,6 +571,39 @@ void ui::message_dialog_base::setup_help_id(xstring helpid) {
     help_id = helpid;
 }
 
+namespace ui {
+    // OG window_data.c gift buttons: refuse / later / accept, each only when the gift message offers it.
+    struct message_dialog_gift : public message_dialog_base {
+        message_dialog_gift() : message_dialog_base("message_dialog_window_gift") {}
+
+        virtual void init_data(xstring text_id, int message_id, void (*background_callback)(void)) override {
+            message_dialog_base::init_data(text_id, message_id, background_callback);
+            const uint8_t buttons = message_id >= 0 ? city_message_get(message_id).gift_buttons : 0;
+            setup_button("button_refuse", buttons, GIFT_BUTTON_REFUSE);
+            setup_button("button_later", buttons, GIFT_BUTTON_LATER);
+            setup_button("button_accept", buttons, GIFT_BUTTON_ACCEPT);
+        }
+
+        void setup_button(pcstr name, uint8_t buttons, e_gift_button button) {
+            ui[name].enabled = (buttons & button) != 0;
+            ui[name].onclick([this, button] { reply(button); });
+        }
+
+        void reply(e_gift_button button) {
+            if (message_id < 0) {
+                return;
+            }
+            city_message& msg = g_message_manager.messages[message_id];
+
+            const int event_id = msg.param1;
+            msg.gift_buttons = 0;
+            g_scenario.events.gift_reply(event_id, button);
+            button_close();
+        }
+    };
+} // namespace ui
+
+ui::message_dialog_gift message_dialog_gift_window;
 ui::message_dialog_general message_dialog_general_window;
 ui::message_dialog_disaster message_dialog_disaster_window;
 ui::message_dialog_imperial message_dialog_imperial_window;
@@ -592,7 +625,11 @@ static ui::message_dialog_base* create_message_dialog(xstring text_id, int messa
             return &message_dialog_god_window;
         }
     }
-    
+
+    if (text_id == "message_template_gift") {
+        return &message_dialog_gift_window;
+    }
+
     ui::message_dialog_base *window;
     switch (msg.message_type) {
         case MESSAGE_TYPE_GENERAL:

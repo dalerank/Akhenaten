@@ -420,3 +420,12 @@ static int __test_map_image(int x, int y) {
 }
 ANK_FUNCTION_2(__test_map_image);
 
+static int __test_gift_reply(int event_id, int button) {
+    return g_scenario.events.gift_reply(event_id, (e_gift_button)button) ? 1 : 0;
+}
+ANK_FUNCTION_2(__test_gift_reply);
+
+static int __test_treasury() {
+    return g_city.finance.treasury.value;
+}
+ANK_FUNCTION(__test_treasury);
