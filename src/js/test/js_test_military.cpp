@@ -1342,3 +1342,51 @@ static void __test_process_invasions() {
     g_scenario.events.process_invasions();
 }
 ANK_FUNCTION(__test_process_invasions);
+
+// A land company of `soldier_count` infantry at the map centre, in empire service; returns its formation id.
+static int __test_land_company_create(int soldier_count) {
+    const tile2i tile(g_scenario.map.width / 2, g_scenario.map.height / 2);
+    formation* m = formation_get_free(1);
+    if (!m || !m->id) {
+        return 0;
+    }
+    g_formations.clear(m->id);
+    m->faction_id = 1;
+    m->in_use = 1;
+    m->own_batalion = true;
+    m->figure_type = FIGURE_INFANTRY;
+    m->layout = FORMATION_DOUBLE_LINE_1;
+    m->morale = 50;
+    m->is_at_fort = 1;
+    m->batalion_id = m->id;
+    m->max_figures = 16;
+    m->tile = tile;
+    m->standard_tile = tile;
+    m->home = tile;
+    m->empire_service = 1;
+    m->request_event_id = -1;
+    for (int i = 0; i < soldier_count; i++) {
+        figure* s = figure_create(FIGURE_INFANTRY, tile, DIR_0_TOP_RIGHT);
+        if (!s) {
+            continue;
+        }
+        s->faction_id = 1;
+        s->formation_id = m->id;
+        s->index_in_formation = (uint8_t)formation_add_figure(m->id, s->id, 1, 0, s->max_damage());
+        s->action_state = ACTION_4_SOLDIER_AT_STANDARD;
+        s->formation_at_rest = 1;
+    }
+    return m->num_figures > 0 ? m->id : 0;
+}
+ANK_FUNCTION_1(__test_land_company_create);
+
+static int __test_formation_num_figures(int formation_id) {
+    formation* m = formation_get(formation_id);
+    return (m && m->in_use) ? m->num_figures : -1;
+}
+ANK_FUNCTION_1(__test_formation_num_figures);
+
+static void __test_set_seth_protect_troops(int months) {
+    g_city.religion.seth_protect_player_troops_months = (uint8_t)months;
+}
+ANK_FUNCTION_1(__test_set_seth_protect_troops);

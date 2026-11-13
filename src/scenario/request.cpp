@@ -18,9 +18,15 @@
 #include "city/legion_requests.h"
 #include "figure/formation.h"
 #include "event_phrases.h"
+#include "core/calc.h"
 #include "core/log.h"
+#include "empire/empire.h"
+#include "empire/empire_city.h"
+#include "empire/empire_object.h"
+#include "game/game.h"
 
 #include <algorithm>
+#include <climits>
 
 namespace {
 request_cleared_snapshot_t g_last_request_cleared;
@@ -29,6 +35,27 @@ request_cleared_snapshot_t g_last_request_cleared;
 constexpr int REQUEST_REMINDER_MONTHS = 6;
 constexpr int REQUEST_OVERDUE_MONTHS = 24;
 constexpr int REQUEST_IGNORED_KINGDOM_PENALTY = 3;
+constexpr int REQUEST_TROOPS_MONTHS_DEFAULT = 12;
+constexpr int TROOPS_RETURN_EARLY_MONTHS = 2;
+constexpr int EVENT_TRAVEL_MONTHS_DEFAULT = 12;
+constexpr int EVENT_MONTHS_MARGIN_MIN = 4;
+constexpr int EVENT_MONTHS_MARGIN_CHOICES = 5;
+constexpr int ROUTE_TRAVEL_DIVISOR = 400;
+
+// OG scenario_rules.c troops_loss_brackets: the losses by the strength left over, in percent.
+struct troops_loss_bracket {
+    int below_percent;
+    int losses;
+};
+constexpr troops_loss_bracket troops_loss_brackets[] = {
+  {10, 70},
+  {25, 50},
+  {50, 25},
+  {75, 15},
+  {100, 10},
+  {150, 5},
+  {INT_MAX, 0},
+};
 } // namespace
 
 void scenario_request_emit_cleared(const event_ph_t &event, bool fulfilled) {
@@ -78,11 +105,18 @@ static bool request_can_comply(const event_ph_t& event) {
     return g_city.resource.stored((e_resource)event.item.value) >= event.amount.value * 100;
 }
 
+static void troops_request_start(event_ph_t& e);
+
 // OG scenario_events.c request_start.
 void scenario_request_activate(event_ph_t& event) {
     if (event.is_active) {
         return;
     }
+    if (event.item.value == RESOURCE_TROOPS) {
+        troops_request_start(event);
+        return;
+    }
+
     event.is_active = true;
     event.is_overdue = false;
     event.event_state = e_event_state_in_progress;
@@ -160,9 +194,188 @@ static void request_active(event_ph_t& event, int caller_event_id) {
     request_check_compliance(event);
 }
 
+// OG event_helpers.c scenario_event_travel_months: the route of the request city.
+static int request_travel_months(const event_ph_t& e) {
+    empire_city* city = e.city_id >= 0 ? g_empire.city(e.city_id) : nullptr;
+    if (!city || !city->in_use || city->route_id <= 0) {
+        return 0;
+    }
+    const map_route_object& route = g_empire.get_route_object(city->route_id);
+    if (!route.in_use || route.num_points <= 1) {
+        return 0;
+    }
+    // OG empire_route_travel_months: path_length * step / 400, at least 1; step is the route header byte.
+    const int step = route.unk_header[0];
+    if (step <= 0) {
+        return 0;
+    }
+    return std::max(1, route.path_length * step / ROUTE_TRAVEL_DIVISOR);
+}
+
+static int request_travel_months_or_default(const event_ph_t& e) {
+    const int travel = request_travel_months(e);
+    return travel > 0 ? travel : EVENT_TRAVEL_MONTHS_DEFAULT;
+}
+
+// OG event_helpers.c scenario_event_months_left: months to the deadline by the calendar.
+static int request_months_to_deadline(const event_ph_t& e) {
+    const game_date_t now = game.simtime.date();
+    return e.months_initial + (e.time.year - now.year) * 12 + e.time.month - now.month;
+}
+
+static int troops_losses_by_surplus(int percent) {
+    for (const troops_loss_bracket& b : troops_loss_brackets) {
+        if (percent < b.below_percent) {
+            return b.losses;
+        }
+    }
+    return 0;
+}
+
+// OG requests.c scenario_troops_request_dispatched: the legions win when strong enough or under the
+// blessing of Seth; their losses fall with the strength they have to spare.
+static bool troops_request_won(const event_ph_t& e) {
+    const int strength = formation_request_strength(e.event_id, nullptr, nullptr);
+    const int needed = e.amount.value;
+    uint8_t& seth = g_city.religion.seth_protect_player_troops_months;
+    if (strength < needed && seth == 0) {
+        formation_legions_request_losses(REQUEST_LOSSES_ALL, e.event_id);
+        logs::info("[request] troops lost event=%d strength=%d needed=%d", e.event_id, strength, needed);
+        return false;
+    }
+    if (seth != 0) {
+        seth = 0;
+        formation_legions_request_losses(0, e.event_id);
+        logs::info("[request] troops won by Seth event=%d", e.event_id);
+        return true;
+    }
+    const int percent = calc_percentage(strength - needed, strength);
+    const int losses = troops_losses_by_surplus(percent);
+    formation_legions_request_losses(losses, e.event_id);
+    logs::info("[request] troops won event=%d strength=%d needed=%d losses=%d", e.event_id, strength, needed, losses);
+    return true;
+}
+
+static void troops_request_finish(event_ph_t& e) {
+    e.event_state = e_event_state_received;
+    e.is_active = false;
+}
+
+// OG scenario_events.c troops_request_months_up: the deadline has come.
+static void troops_request_months_up(event_ph_t& e) {
+    if (e.event_state == e_event_state_in_progress || e.event_state == e_event_state_initial) {
+        troops_request_finish(e);
+        g_scenario.events.process_event(e.on_refusal_action, true, EVENT_ACTION_REFUSED, e.event_id);
+        scenario_request_emit_cleared(e, false);
+        return;
+    }
+    if (e.event_state != e_event_state_troops_away) {
+        troops_request_finish(e);
+        return;
+    }
+    int left;
+    if (e.quest_months_left > TROOPS_RETURN_EARLY_MONTHS) {
+        e.is_overdue = true;
+        e.event_state = e_event_state_troops_return_too_late;
+        left = request_travel_months(e) - e.quest_months_left;
+        g_scenario.events.process_event(e.on_too_late_action, true, EVENT_ACTION_TOOLATE, e.event_id);
+        scenario_request_emit_cleared(e, true);
+    } else if (troops_request_won(e)) {
+        e.event_state = e_event_state_troops_return;
+        left = request_travel_months(e);
+        g_scenario.events.process_event(e.on_completed_action, true, EVENT_ACTION_COMPLETED, e.event_id);
+        scenario_request_emit_cleared(e, true);
+    } else {
+        troops_request_finish(e);
+        g_scenario.events.process_event(e.on_defeat_action, true, EVENT_ACTION_DEFEAT, e.event_id);
+        scenario_request_emit_cleared(e, false);
+        return;
+    }
+    e.quest_months_left = (uint8_t)std::clamp(left, 1, 255);
+}
+
+static void troops_request_post(const event_ph_t& e, int phrase_offset) {
+    const bool city_asks = e.subtype == EVENT_SUBTYPE_CITY_ASKS_FOR_TROOPS;
+    const int base = city_asks ? PHRASE_egyptian_city_attacked_title_P : PHRASE_distant_battle_title_P;
+    const int shift = request_pharaoh_shift(e);
+    const int reason = city_asks ? PHRASE_egyptian_city_attacked_no_reason_P_A : PHRASE_distant_battle_no_reason_P_A;
+    city_message_post_full(true, city_asks ? "message_trade_city_under_siege" : "message_distant_battle_request", &e,
+      e.parent_id, base + shift, base + phrase_offset + shift, reason + shift, e.event_id, 0);
+}
+
+// OG scenario_events.c troops_request_waiting: the reminders before the troops must leave.
+static void troops_request_waiting(event_ph_t& e, int months) {
+    const int ahead = months - request_travel_months_or_default(e);
+    if (ahead == e.data.request.months_margin) {
+        troops_request_post(e, 4);
+    } else if (ahead == e.coin) {
+        troops_request_post(e, 6);
+    }
+}
+
+// OG scenario_events.c troops_request_returning.
+static void troops_request_returning(event_ph_t& e) {
+    if (e.quest_months_left > 0) {
+        e.quest_months_left--;
+    }
+    if (e.quest_months_left >= 1) {
+        return;
+    }
+    const bool won = e.event_state == e_event_state_troops_return;
+    messages::popup(won ? "message_troops_return_victorious" : "message_troops_return_failed", 0, 0);
+    formation_legions_return_from_request(e.event_id);
+    troops_request_finish(e);
+    logs::info("[request] troops back event=%d won=%d", e.event_id, won ? 1 : 0);
+}
+
+// OG scenario_events.c scenario_event_process_troops_request.
+static void troops_request_process(event_ph_t& e) {
+    const int months = request_months_to_deadline(e);
+    if (months == 0) {
+        troops_request_months_up(e);
+        return;
+    }
+    switch (e.event_state) {
+    case e_event_state_initial:
+    case e_event_state_in_progress:
+        troops_request_waiting(e, months);
+        break;
+    case e_event_state_troops_away:
+        e.quest_months_left = (uint8_t)std::max(e.quest_months_left - 1, 1);
+        break;
+    case e_event_state_troops_return:
+    case e_event_state_troops_return_too_late:
+        troops_request_returning(e);
+        break;
+    default:
+        break;
+    }
+}
+
+// OG scenario_events.c troops_request_waiting, first month: the announcement.
+static void troops_request_start(event_ph_t& e) {
+    e.is_active = true;
+    e.is_overdue = false;
+    e.event_state = e_event_state_in_progress;
+    e.time.year = (int16_t)game.simtime.years_since_start();
+    e.time.month = (int16_t)game.simtime.month;
+    e.quest_months_left = e.months_initial;
+    e.appear_dialgow_shown = true;
+    random_generate_next();
+    e.data.request.months_margin
+      = (uint8_t)(((uint16_t)random_short() & 0x7FFF) % EVENT_MONTHS_MARGIN_CHOICES + EVENT_MONTHS_MARGIN_MIN);
+    random_generate_next();
+    e.coin = (uint8_t)(random_short() & 1);
+    troops_request_post(e, 2);
+}
+
 // OG scenario_events.c scenario_event_process_request, for a request that has started.
 void scenario_request_handle(event_ph_t& event, int caller_event_id, e_event_action& next_action) {
     next_action = EVENT_ACTION_NONE;
+    if (event.item.value == RESOURCE_TROOPS) {
+        troops_request_process(event);
+        return;
+    }
     switch (event.event_state) {
     case e_event_state_dispatched:
     case e_event_state_dispatched_late:
@@ -189,68 +402,14 @@ void scenario_request_dispatch(int id) {
         return;
     }
 
-    // Troop asks with a defeat chain: defer ok/defeat to distant-battle resolution.
-    // Requests without on_defeat_action keep the old immediate finished → completed path
-    // (Selima and earlier missions).
-    if (request.resource == RESOURCE_TROOPS && ev->on_defeat_action >= 0) {
-        g_city.population.remove_for_troop_request(request.amount);
-        events::emit(event_storageyards_remove_resource{ RESOURCE_WEAPONS, request.amount });
-
-        ev->is_active = false; // hide from advisor; awaiting fight_distant_battle
-
-        const int enemy_strength = std::min(255, std::max(1, request.amount));
-        g_distant_battle.init_distant_battle(enemy_strength);
-        if (ev->city_id > 0) {
-            g_distant_battle.battle.city = (uint8_t)ev->city_id;
-        } else {
-            g_distant_battle.determine_distant_battle_city();
-        }
-        g_distant_battle.source_request_event_id = (int16_t)ev->event_id;
-        // OG legion_requests: sea (aboard transport / warship) or land (exit) by route kind.
-        formation_legions_dispatch_to_request(ev->event_id);
-
-        int warships = 0;
-        int legions = 0;
-        int strength = formation_request_strength(ev->event_id, &warships, &legions);
-        if (strength > 255) {
-            strength = 255;
-        }
-
-        int num_soldiers = 0;
-        bool any_on_ship = false;
-        for (int i = 1; i < MAX_FORMATIONS; i++) {
-            formation *m = formation_get(i);
-            if (!m || !m->in_use || !m->own_batalion || m->request_event_id != ev->event_id) {
-                continue;
-            }
-            num_soldiers += m->num_figures;
-            if (formation_legion_is_on_ship(i)) {
-                any_on_ship = true;
-            }
-        }
-
-        if (strength > 0) {
-            g_distant_battle.dispatch_to_distant_battle(strength, (uint8_t)std::min(255, num_soldiers));
-            // Sea request: troops stay aboard — do not wait for land exit join.
-            if (any_on_ship) {
-                g_distant_battle.dispatched_army.await_soldiers = 0;
-            }
-        } else {
-            g_distant_battle.battle.egyptian_strength = 0;
-        }
-
-        g_distant_battle.battle.months_until_battle = 1;
-        if (g_distant_battle.battle.egyptian_months_to_travel_forth > 0) {
-            g_distant_battle.battle.egyptian_months_to_travel_forth = 1;
-        }
-        return;
-    }
-
+    // OG requests.c scenario_request_dispatch: legions march off and are away for the travel months.
     if (request.resource == RESOURCE_TROOPS) {
-        ev->event_state = ev->is_overdue ? e_event_state_finished_late : e_event_state_finished;
-        ev->quest_months_left = 1;
-        g_city.population.remove_for_troop_request(request.amount);
-        events::emit(event_storageyards_remove_resource{RESOURCE_WEAPONS, request.amount});
+        ev->event_state = e_event_state_troops_away;
+        const int travel = request_travel_months(*ev);
+        ev->quest_months_left = (uint8_t)(travel > 0 ? travel : REQUEST_TROOPS_MONTHS_DEFAULT);
+        formation_legions_dispatch_to_request(ev->event_id);
+        logs::info("[request] troops dispatched event=%d strength=%d months=%d", ev->event_id,
+          formation_request_strength(ev->event_id, nullptr, nullptr), ev->quest_months_left);
         return;
     }
 

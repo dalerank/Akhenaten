@@ -60,6 +60,10 @@ enum e_event_state : uint8_t {
     // Requests after the dispatch (OG REQUEST_STATE_DISPATCHED / _DISPATCHED_LATE): on the way.
     e_event_state_dispatched = 8,
     e_event_state_dispatched_late = 9,
+    // Troop requests (OG REQUEST_STATE_RECEIVED / TROOPS_RETURN / TROOPS_RETURN_TOO_LATE).
+    e_event_state_troops_away = 10,
+    e_event_state_troops_return = 11,
+    e_event_state_troops_return_too_late = 12,
     e_event_state_max
 };
 using e_event_state_tokens_t = token_holder<e_event_state, e_event_state_initial, e_event_state_max>;
@@ -225,7 +229,8 @@ struct event_ph_t {
             int16_t total;
         } sweep; // blood river: OG map_sweep_countdown / map_sweep_total
         struct {
-            int32_t kingdom; // editor request slot
+            int32_t kingdom;       // editor request slot
+            uint8_t months_margin; // troop request: OG months_margin (its slot 0x61 holds city_id here)
         } request;
     } data;
     int16_t earthquake_step;
@@ -236,7 +241,8 @@ struct event_ph_t {
     int16_t route_fields[4];
     int8_t subtype;
     int8_t city_id;
-    int16_t __unk16;
+    uint8_t coin; // troop request: which month the last reminder comes
+    uint8_t parent_city;
     image_desc image;
     int8_t on_completed_msgAlt;
     int8_t on_refusal_msgAlt;

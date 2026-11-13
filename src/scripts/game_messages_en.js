@@ -1543,6 +1543,26 @@ game_messages_en {
         content { text: "" }
     }
 
+    // OG MESSAGE_TRADE_CITY_UNDER_SIEGE / MESSAGE_DISTANT_BATTLE_REQUEST: troop requests, a city asks
+    // for help or Pharaoh calls the legions to a distant battle; texts from the event phrases.
+    message_trade_city_under_siege {
+        id: 266
+        type: 2
+        message_type: 2
+        size [30, 20]
+        title { text: "" }
+        content { text: "" }
+    }
+
+    message_distant_battle_request {
+        id: 272
+        type: 2
+        message_type: 2
+        size [30, 20]
+        title { text: "" }
+        content { text: "" }
+    }
+
     // OG MESSAGE_EARTHQUAKE: title and text come from the event phrases, param2 is the first tile.
     message_earthquake {
         id: 261

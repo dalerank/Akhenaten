@@ -1886,7 +1886,8 @@ static void bind_event_ph(io_buffer *iob, event_ph_t &event) {
     iob->bind(BIND_SIGNATURE_INT16, &event.route_fields[3]);
     iob->bind(BIND_SIGNATURE_INT8, &event.subtype);
     iob->bind(BIND_SIGNATURE_INT8, &event.city_id);
-    iob->bind(BIND_SIGNATURE_INT16, &event.__unk16);
+    iob->bind(BIND_SIGNATURE_UINT8, &event.coin);
+    iob->bind(BIND_SIGNATURE_UINT8, &event.parent_city);
     iob->bind(BIND_SIGNATURE_INT16, &event.image.pack);
     iob->bind(BIND_SIGNATURE_INT16, &event.image.id);
     iob->bind(BIND_SIGNATURE_INT16, &event.image.offset);
