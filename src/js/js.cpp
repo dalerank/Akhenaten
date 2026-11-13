@@ -26,6 +26,10 @@
 #include "dev/debug.h"
 #if defined(GAME_PLATFORM_ANDROID)
 #include "graphics/elements/lang_text.h"
+
+#include <algorithm>
+#include <string>
+#include <vector>
 #endif
 
 #include "js/js_debugger.h"
@@ -811,6 +815,22 @@ void js_vm_request_reset() {
 
 uint32_t js_vm_generation() {
     return vm.generation;
+}
+
+void js_vm_reload_ui_layouts() {
+    std::vector<std::string> files;
+    for (const auto &key : vm.loaded_files) {
+        const size_t slash = key.find_last_of("/\\:");
+        const size_t name_start = (slash == std::string::npos) ? 0 : slash + 1;
+        if (key.compare(name_start, 3, "ui_") == 0) {
+            files.push_back(key);
+        }
+    }
+    // loaded_files is unordered; keep reloads deterministic.
+    std::sort(files.begin(), files.end());
+    for (const auto &file : files) {
+        js_vm_queue_file(file.c_str(), true);
+    }
 }
 
 int js_vm_exec_function_args(pcstr funcname, const char *szTypes, ...) {

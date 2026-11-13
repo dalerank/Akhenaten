@@ -8,6 +8,7 @@
 #include "graphics/image.h"
 #include "graphics/screen.h"
 #include "game/game_config.h"
+#include "js/js.h"
 #include "arguments.h"
 #include "platform/android/android.h"
 #include "platform/platform.h"
@@ -221,7 +222,11 @@ bool platform_screen_t::resize(int pixel_width, int pixel_height, int save) {
     }
 
     if (platform_renderer_create_render_texture(logical_width, logical_height)) {
+        const bool changed = (logical_width != screen_width() || logical_height != screen_height());
         g_screen.set_resolution(logical_width, logical_height);
+        if (changed) {
+            js_vm_reload_ui_layouts();
+        }
         return true;
     }
 
@@ -272,6 +277,12 @@ void platform_screen_t::set_fullscreen_resolution(vec2i resolution) {
     if (is_window_fullscreen()) {
         refresh_render_size();
     }
+}
+
+// SDL does not give a window created fullscreen a border or resize frame when it leaves fullscreen.
+void platform_screen_t::restore_window_decorations() {
+    SDL_SetWindowBordered(as_sdl_window(window), SDL_TRUE);
+    SDL_SetWindowResizable(as_sdl_window(window), SDL_TRUE);
 }
 
 // Startup reads fullscreen from the cfg's window_mode, not gameopt_fullscreen: keep both in step.
@@ -360,10 +371,10 @@ void platform_screen_t::set_windowed() {
     // gameopt_display_size is window pixels (same units as the video-mode list).
     auto wsize = game_features::gameopt_display_size.to_vec2i();
     SDL_SetWindowFullscreen(as_sdl_window(window), 0);
+    restore_window_decorations();
     SDL_SetWindowSize(as_sdl_window(window), wsize.x, wsize.y);
-    if (centered) {
-        center_window();
-    }
+    // A window created fullscreen has no windowed position to return to.
+    center_window();
     if (SDL_GetWindowGrab(as_sdl_window(window)) == SDL_TRUE) {
         SDL_SetWindowGrab(as_sdl_window(window), SDL_FALSE);
     }
@@ -377,8 +388,9 @@ void platform_screen_t::set_window_size(int pixel_width, int pixel_height) {
         return;
     }
     // Arguments are window pixels from the video-mode list — do not multiply by display scale.
-    if (game.is_fullscreen()) {
+    if (is_window_fullscreen()) {
         SDL_SetWindowFullscreen(as_sdl_window(window), 0);
+        restore_window_decorations();
     } else {
         SDL_GetWindowPosition(as_sdl_window(window), &pos.x, &pos.y);
     }
