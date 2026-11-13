@@ -280,12 +280,47 @@ void building_house::consume_food_weekly() {
     es(__func__);
 }
 
-void building_house::consume_goods_weekly() {
+// OG house_evolve.c house_consume_goods (days 0 and 7): a house bigger than 1x1 uses 4x the model's amounts, and
+// eats a quarter of that per call. An amount that is not a multiple of 4 eats 0 or 1, by its remainder and the day.
+void building_house::consume_goods(int day) {
     if (!hsize()) {
         return;
     }
 
-    es(__func__);
+    const model_house& m = model();
+    const int mul = (base.size > 1) ? 4 : 1;
+    int by_remainder[4] = {0, 0, 0, 0};
+    switch (day % 4) {
+    case 0:
+        by_remainder[1] = 1;
+        by_remainder[2] = 1;
+        break;
+    case 1:
+    case 3:
+        by_remainder[3] = 1;
+        break;
+    case 2:
+        by_remainder[2] = 1;
+        by_remainder[3] = 1;
+        break;
+    }
+
+    auto consume = [&](int slot, int value, e_resource resource) {
+        const int remainder = value % 4;
+        const int amount = (remainder == 0) ? value / 4 : by_remainder[std::max(remainder, 0)];
+        if (amount <= 0) {
+            return;
+        }
+        uint16_t& stock = runtime_data().inventory[slot];
+        const int spent = std::min<int>(amount, stock);
+        stock = (uint16_t)(stock - spent);
+        g_city.resource.res_this_month.consumed[resource] += (uint16_t)spent;
+    };
+
+    consume(INVENTORY_GOOD4, m.beer * mul, RESOURCE_BEER);
+    consume(INVENTORY_GOOD1, m.pottery * mul, RESOURCE_POTTERY);
+    consume(INVENTORY_GOOD3, m.linen * mul, RESOURCE_LINEN);
+    consume(INVENTORY_GOOD2, m.jewelry * mul, RESOURCE_LUXURY_GOODS);
 }
 
 template<bool use_offset>

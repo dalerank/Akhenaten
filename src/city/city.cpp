@@ -133,7 +133,6 @@ void city_t::update_day(simulation_time_t simtime) {
 
 void city_t::update_week(simulation_time_t simtime) {
     resource.consume_food_weekly(simtime);
-    resource.consume_goods_weekly(simtime);
     industry.update_nearby_houses_weekly();
 }
 

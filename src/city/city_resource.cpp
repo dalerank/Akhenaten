@@ -424,12 +424,6 @@ void city_resources_t::calculate_food_stocks_and_supply_wheat() {
     }
 }
 
-void city_resources_t::consume_goods_weekly(const simulation_time_t& t) {
-    buildings_house_do([&] (building_house *house) {
-        house->consume_goods_weekly();
-    });
-}
-
 // Remake model (scripts/building/house.js): the model's percentage, twice a month.
 void city_resources_t::consume_food_weekly(const simulation_time_t& t) {
     if (!game_features::gameplay_change_food_consumption_remake.to_bool()) {

@@ -24,6 +24,7 @@
 #include "figure/formation.h"
 #include "figuretype/figure_cartpusher.h"
 #include "figuretype/figure_plagued_citizen.h"
+#include "game/game.h"
 #include "game/game_events.h"
 #include "game/resource.h"
 #include "graphics/image.h"
@@ -735,6 +736,26 @@ static int __test_house_has_requirements(int bid, int for_upgrade) {
     return result;
 }
 ANK_FUNCTION_2(__test_house_has_requirements);
+
+static int __test_house_consume_goods(int bid, int day) {
+    building* b = building_get(bid);
+    auto* house = b ? b->dcast_house() : nullptr;
+    if (!house) {
+        return 0;
+    }
+    house->consume_goods(day);
+    return 1;
+}
+ANK_FUNCTION_2(__test_house_consume_goods);
+
+// The daily evolve-and-consume pass of every house, as if it ran on `day` of the month.
+static void __test_city_house_process_evolve_on_day(int day) {
+    const int saved_day = game.simtime.day;
+    game.simtime.day = day;
+    g_city.house_process_evolve();
+    game.simtime.day = saved_day;
+}
+ANK_FUNCTION_1(__test_city_house_process_evolve_on_day);
 
 static xstring __test_house_image_key(int bid) {
     building* b = building_get(bid);

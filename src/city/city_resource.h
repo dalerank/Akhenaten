@@ -81,7 +81,6 @@ struct city_resources_t {
     void consume_food_weekly(const simulation_time_t& t);
     void consume_food_monthly();
     int food_consumption_percentage() const;
-    void consume_goods_weekly(const simulation_time_t& t);
     void toggle_mothballed(e_resource resource);
     bool is_mothballed(e_resource resource);
     void toggle_stockpiled(e_resource resource);

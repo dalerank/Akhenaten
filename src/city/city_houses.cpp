@@ -121,12 +121,20 @@ void city_t::house_process_evolve() {
     g_city.houses_reset_demands();
     house_demands &demands = g_city.houses;
     bool has_expanded = false;
-    buildings_house_do([&] (building_house *house) {
+    const int day = game.simtime.day;
+    buildings_house_do([&](building_house* house) {
+        building& b = house->base;
         e_building_type save_type = house->type();
         has_expanded |= house->evolve(&demands);
-        e_building_type new_type = house->type();
-        if (new_type != save_type) {
-            house->base.clear_impl();
+        if (b.type != save_type) {
+            b.clear_impl();
+        }
+
+        // OG building_house_process_evolve_and_consume_goods: goods are eaten right after the evolve, days 0 and 7.
+        if ((day == 0 || day == 7) && b.state == BUILDING_STATE_VALID) {
+            if (auto* consumer = b.dcast_house()) {
+                consumer->consume_goods(day);
+            }
         }
     });
 
