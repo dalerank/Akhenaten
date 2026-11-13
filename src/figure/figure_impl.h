@@ -123,6 +123,7 @@ public:
     ALLOW_SMART_CAST_FIGURE_I(bricklayer)
     ALLOW_SMART_CAST_FIGURE_I(hunter)
     ALLOW_SMART_CAST_FIGURE_I(tomb_robber)
+    ALLOW_SMART_CAST_FIGURE_I(tomb_artisan)
 
     building *home();
     e_figure_type type() const;
@@ -232,6 +233,7 @@ GENERATE_SMART_CAST_FIGURE(market_buyer)
 GENERATE_SMART_CAST_FIGURE(bricklayer)
 GENERATE_SMART_CAST_FIGURE(hunter)
 GENERATE_SMART_CAST_FIGURE(tomb_robber)
+GENERATE_SMART_CAST_FIGURE(tomb_artisan)
 
 namespace figures {
 

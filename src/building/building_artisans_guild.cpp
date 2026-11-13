@@ -3,37 +3,59 @@
 #include "building/monument_royal_tomb.h"
 #include "building/monuments.h"
 #include "city/city.h"
-#include "core/random.h"
 #include "figure/figure.h"
-#include "figuretype/figure_tomb_artisan.h" // ACTION_10_TOMB_ARTISAN_CREATED
+#include "figuretype/figure_tomb_artisan.h"
 #include "game/resource.h"
 #include "js/js_game.h"
 
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_artisans_guild);
 
-bool building_artisans_guild::has_paint_and_clay() const {
-    return stored_amount(RESOURCE_PAINT) >= 100 && stored_amount(RESOURCE_CLAY) >= 100;
-}
-
-bool building_artisans_guild::can_spawn_tomb_artisan() {
-    if (get_figures_number(FIGURE_TOMB_ARTISAN) >= current_params().max_walkers) {
-        return false;
+building* building_artisans_guild::find_monument_task(e_resource material) {
+    // OG find_tomb_artisan_task: clay (the guild's second_input_stock, OG "paint task") is chamber
+    // stage 2, paint (loads_stored, OG "lamp task") is stage 3.
+    const int stage = (material == RESOURCE_CLAY) ? 2 : (material == RESOURCE_PAINT) ? 3 : -1;
+    if (stage < 0) {
+        return nullptr;
     }
-
-    building *monument = buildings_valid_first([&](building &b) {
+    if (building_royal_tomb* part = building_royal_tomb::find_work(FIGURE_TOMB_ARTISAN, 0, false, stage)) {
+        return &part->base;
+    }
+    // Not OG: the Enhanced sphinx painting stage also takes artisans.
+    return buildings_valid_first([&](building& b) {
         if (!b.is_main() || !b.is_monument()) {
             return false;
         }
-
         auto *m = b.dcast_monument();
-        if (!m || !m->is_unfinished()) {
-            return false;
-        }
-
-        return m->need_artisan();
+        return m && m->is_unfinished() && m->need_artisan_with(material);
     });
+}
 
-    return monument != nullptr;
+int building_artisans_guild::max_active_artisans() const {
+    const int pct = worker_percentage();
+    if (pct >= 100) {
+        return 4;
+    }
+    if (pct >= 75) {
+        return 3;
+    }
+    if (pct >= 50) {
+        return 2;
+    }
+    if (pct >= 25) {
+        return 1;
+    }
+    return 0;
+}
+
+bool building_artisans_guild::can_spawn_tomb_artisan() const {
+    return get_figures_number(FIGURE_TOMB_ARTISAN) < max_active_artisans();
+}
+
+void building_artisans_guild::update_animation() {
+    building_guild::update_animation();
+    // OG animation_offset: a workshop-like guild animates only with paint (its first input) in stock.
+    base.play_animation = base.play_animation && stored_amount(RESOURCE_PAINT) > 0;
+    es(__func__);
 }
 
 void building_artisans_guild::spawn_figure() {
@@ -42,102 +64,47 @@ void building_artisans_guild::spawn_figure() {
         return;
     }
 
-    common_spawn_labor_seeker(current_params().min_houses_coverage);
-    if (base.worker_percentage() < 50) {
+    const auto& params = current_params();
+    common_spawn_labor_seeker(params.min_houses_coverage);
+
+    if (!can_spawn_tomb_artisan()) {
         return;
     }
-
-    int spawn_delay = figure_spawn_timer();
-    if (spawn_delay == -1) {
-        return;
-    }
-
-    base.figure_spawn_delay++;
-    if (base.figure_spawn_delay < spawn_delay) {
-        return;
-    }
-
     base.figure_spawn_delay = 0;
-    if (spawn_royal_tomb_artisan()) {
-        return;
-    }
-    if (!has_paint_and_clay() || !can_spawn_tomb_artisan()) {
-        return;
-    }
 
-    building *monument = buildings_valid_first([&](building &b) {
-        if (!b.is_main() || !b.is_monument()) {
-            return false;
-        }
-
-        auto *m = b.dcast_monument();
-        if (!m || !m->is_unfinished()) {
-            return false;
-        }
-
-        return m->need_artisan();
-    });
-
-    if (!monument) {
-        return;
-    }
-
-    auto *f = create_figure_with_destination(FIGURE_TOMB_ARTISAN, monument,
-                                                 (e_figure_action)ACTION_10_TOMB_ARTISAN_CREATED, BUILDING_SLOT_SERVICE);
-    if (!f || !f->id) {
-        return;
-    }
-
-    // Artisan carries a load of paint+clay from the guild to the tomb.
-    consume_resource(RESOURCE_PAINT, 100);
-    consume_resource(RESOURCE_CLAY, 100);
-
-    // Set destination_tile before figures.update(): TERRAIN_USAGE_ROADS poofs walkers
-    // that are off-road with an empty destination_tile (action_perform runs that check
-    // before figure_action, so ACTION_10 would be too late).
-    auto *mm = monument->dcast_monument();
-    f->destination_tile = mm ? mm->access_point() : monument->access_tile();
-    f->terrain_usage = TERRAIN_USAGE_PREFER_ROADS;
-
-    // Before first figure_action — if the walker poofs before ACTION_10, on_destroy
-    // still clears the monument worker slot filled below.
-    if (auto *impl = f->dcast()) {
-        static_cast<figure_tomb_artisan *>(impl)->runtime_data().destination_bid = monument->id;
-    }
-
-    monument->dcast()->add_workers(f->id);
-    f->wait_ticks = random_short() % 30;
-}
-
-// OG building_artisans_guild_spawn_figure: a royal tomb chamber at stage 2 takes a load of clay,
-// one at stage 3 a load of paint.
-bool building_artisans_guild::spawn_royal_tomb_artisan() {
-    if (get_figures_number(FIGURE_TOMB_ARTISAN) >= current_params().max_walkers) {
-        return false;
-    }
+    // OG building_artisans_guild_spawn_figure: a clay task first, then a paint task; each trip takes
+    // one load of that material. OG spawns an invisible corpse when neither is possible — nothing
+    // visible comes of it, so no figure is made here.
+    const int load = params.material_load;
     e_resource material = RESOURCE_NONE;
-    if (stored_amount(RESOURCE_CLAY) >= 100 && building_royal_tomb::find_work(FIGURE_TOMB_ARTISAN, 0, false, 2)) {
-        material = RESOURCE_CLAY;
-    } else if (
-      stored_amount(RESOURCE_PAINT) >= 100 && building_royal_tomb::find_work(FIGURE_TOMB_ARTISAN, 0, false, 3)) {
-        material = RESOURCE_PAINT;
+    building* site = nullptr;
+    for (e_resource r : {RESOURCE_CLAY, RESOURCE_PAINT}) {
+        if (stored_amount(r) < load) {
+            continue;
+        }
+        site = find_monument_task(r);
+        if (site) {
+            material = r;
+            break;
+        }
     }
-    if (material == RESOURCE_NONE) {
-        return false;
+    if (!site) {
+        return;
     }
-    const int stage = (material == RESOURCE_CLAY) ? 2 : 3;
-    building_royal_tomb* part = building_royal_tomb::find_work(FIGURE_TOMB_ARTISAN, 0, false, stage);
-    auto* f = create_figure_with_destination(FIGURE_TOMB_ARTISAN, &part->base,
-      (e_figure_action)ACTION_10_TOMB_ARTISAN_CREATED, BUILDING_SLOT_SERVICE);
-    if (!f || !f->id) {
-        return false;
+
+    figure* f = create_figure_generic(FIGURE_TOMB_ARTISAN, (e_figure_action)ACTION_12_TOMB_ARTISAN_ROAM,
+      BUILDING_SLOT_SERVICE, DIR_4_BOTTOM_LEFT);
+    auto* artisan = smart_cast<figure_tomb_artisan>(f);
+    if (!artisan) {
+        return;
     }
-    part->check_work_for_figure(FIGURE_TOMB_ARTISAN, f->id, true);
-    consume_resource(material, 100);
-    f->terrain_usage = TERRAIN_USAGE_PREFER_ROADS;
-    if (auto* impl = f->dcast()) {
-        static_cast<figure_tomb_artisan*>(impl)->runtime_data().destination_bid = part->id();
+
+    f->roam_length = 0;
+    f->wait_ticks = 0;
+    base.progress = 0;
+    if (!artisan->assign_task(site, material)) {
+        f->poof();
+        return;
     }
-    f->wait_ticks = random_short() % 30;
-    return true;
+    consume_resource(material, (int16_t)load);
 }

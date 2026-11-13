@@ -181,7 +181,7 @@ See **IT1** in `REMAKE_TODO.md` / `REMAKE_NOTES.md` §4.
 | `59_autosave_slots.js` | Autosave slot filename format + pick missing/oldest (`__test_autosave_*`; AS4) |
 | `64_trader_capacity.js` | Trade capacity: OG roll to 800 (`uint16` random), flag 1600, buy gate, `has_traded_max(cap)` (TC*) |
 | `65_zoo_place.js` | Cleopatra Zoo: place 6×6, stock straw+gamemeat, spawn `FIGURE_ZOOKEEPER`, animals-present timer, no spawn without stock (Z5) |
-| `70_artisans_guild.js` | Artisans' Guild: Sphinx phase 6 + stock paint/clay → spawn `FIGURE_TOMB_ARTISAN`; no spawn without paint/clay (AG6) |
+| `70_artisans_guild.js` | Artisans guild (OG): clay trip before paint, one 100-load per trip, no stock no artisan, staffing caps 1-4 artisans, animation needs paint |
 | `141_small_royal_tomb.js` | C10: Small royal tomb cliff place + finish rating W=4 |
 | `143_medium_royal_tomb.js` | C10: Medium royal tomb cliff place + finish rating W=8 |
 | `145_large_royal_tomb.js` | C10: Large royal tomb cliff place + finish rating W=13 |

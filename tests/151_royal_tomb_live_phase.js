@@ -1,7 +1,7 @@
 // OG royal tomb chamber stages (royal_tomb_part_advance_stage): a chamber is cut by stonemasons
 // (stage 1) and finished by tomb artisans (stages 2 and 3), each stage taking the part's work in
-// ticks; reaching stage 3 opens the chamber's neighbours. All chambers done = 100%, the tomb is
-// finished and saves/loads unchanged.
+// ticks; reaching stage 3 opens the chamber's neighbours. The first chamber's artisans come from an
+// artisans guild. All chambers done = 100%, the tomb is finished and saves/loads unchanged.
 
 function t151_fail(msg) {
     __log_info_native('[test:151] ' + msg)
@@ -33,6 +33,39 @@ function t151_send(bid, type, stage) {
     return part
 }
 
+// OG building_artisans_guild_spawn_figure: with a load of clay and of paint in stock the guild
+// sends a clay artisan to a stage 2 chamber and a paint artisan to a stage 3 one.
+function t151_guild_send(bid, guild, material, stage) {
+    var g = city.get_building(guild)
+    g.num_workers = g.max_workers
+    g.consume_resource(RESOURCE_CLAY, g.stored_resource(RESOURCE_CLAY) - 100)
+    g.consume_resource(RESOURCE_PAINT, g.stored_resource(RESOURCE_PAINT) - 100)
+    __test_building_spawn_figure(guild)
+    // The helper forces road access; this guild has no road, and a load would recompute it.
+    city.get_building(guild).has_road_access = false
+    var f = city.get_building(guild).get_figure(BUILDING_SLOT_SERVICE)
+    var fid = (f && f.valid && f.type == FIGURE_TOMB_ARTISAN) ? f.id : 0
+    if (!fid) {
+        return -1
+    }
+    var other = material == RESOURCE_CLAY ? RESOURCE_PAINT : RESOURCE_CLAY
+    g = city.get_building(guild)
+    if (__test_figure_resource(fid) != material || g.stored_resource(material) != 0 || g.stored_resource(other) != 100) {
+        __log_info_native('[test:151] guild sent res=' + __test_figure_resource(fid) + ' want ' + material
+            + ' stock=' + g.stored_resource(material) + '/' + g.stored_resource(other))
+        return -5
+    }
+    if (__test_royal_tomb_part_stage(bid, 0) != stage || __test_royal_tomb_part_worker(bid, 0) != fid) {
+        return -2
+    }
+    var ticks = __test_royal_tomb_work(fid, 5000)
+    if (ticks != T151_WORK[0]) {
+        __log_info_native('[test:151] guild artisan stage ' + stage + ' ticks ' + ticks + ' want ' + T151_WORK[0])
+        return -3
+    }
+    return 0
+}
+
 function run_test() {
     __log_info_native('[test:151] royal tomb chamber stages')
     test_reload_city_session('data/default.map')
@@ -60,17 +93,34 @@ function run_test() {
     if (__test_royal_tomb_find_work(FIGURE_STONEMASON, -1) != -1) {
         return t151_fail('no chamber should want a stonemason before chamber 0 reaches stage 3')
     }
-    if (t151_send(bid, FIGURE_TOMB_ARTISAN, 2) != 0 || __test_royal_tomb_part_stage(bid, 0) != 3) {
-        return t151_fail('artisan stage 2')
+    if (!__scenario_building_allowed(BUILDING_ARTISANS_GUILD)) {
+        __scenario_building_allow(BUILDING_ARTISANS_GUILD, true)
     }
+    var tombs = [BUILDING_SMALL_ROYAL_TOMB, BUILDING_MEDIUM_ROYAL_TOMB, BUILDING_LARGE_ROYAL_TOMB, BUILDING_GRAND_ROYAL_TOMB]
+    for (var i = 0; i < tombs.length; i++) {
+        // OG TERRAIN_USAGE_ROADS_OR_MONUMENT for a guild worker going to a royal tomb.
+        if (__building_static_guild_worker_terrain(tombs[i]) != TERRAIN_USAGE_ANY) {
+            return t151_fail('guild_worker_terrain of tomb type ' + tombs[i])
+        }
+    }
+    var guild = test_building_place(BUILDING_ARTISANS_GUILD, -1, -1)
+    if (!guild) {
+        return t151_fail('artisans guild place failed')
+    }
+    var sent = t151_guild_send(bid, guild, RESOURCE_CLAY, 2)
+    if (sent != 0 || __test_royal_tomb_part_stage(bid, 0) != 3) {
+        return t151_fail('clay artisan stage 2: ' + sent)
+    }
+    __log_marker('rt_stage_guild_clay_ok')
     if (__test_royal_tomb_part_stage(bid, 1) != 1 || __test_royal_tomb_part_can_take(bid, 1) != 1) {
         return t151_fail('stage 3 should open neighbour 1, stage=' + __test_royal_tomb_part_stage(bid, 1))
     }
     __log_marker('rt_stage_neighbour_open_ok')
-    if (t151_send(bid, FIGURE_TOMB_ARTISAN, 3) != 0 || __test_royal_tomb_part_stage(bid, 0) != 4
-        || __test_royal_tomb_part_can_take(bid, 0) != 0) {
-        return t151_fail('artisan stage 3')
+    sent = t151_guild_send(bid, guild, RESOURCE_PAINT, 3)
+    if (sent != 0 || __test_royal_tomb_part_stage(bid, 0) != 4 || __test_royal_tomb_part_can_take(bid, 0) != 0) {
+        return t151_fail('paint artisan stage 3: ' + sent)
     }
+    __log_marker('rt_stage_guild_paint_ok')
     if (__test_royal_tomb_progress(bid) != 13) {
         return t151_fail('progress after one chamber ' + __test_royal_tomb_progress(bid) + ' want 13')
     }
@@ -119,7 +169,7 @@ function run_test() {
 }
 
 function check_valid() {
-    var required = ['rt_stage_initial_ok', 'rt_stage_neighbour_open_ok', 'rt_stage_chamber_done_ok',
+    var required = ['rt_stage_initial_ok', 'rt_stage_guild_clay_ok', 'rt_stage_neighbour_open_ok', 'rt_stage_guild_paint_ok', 'rt_stage_chamber_done_ok',
         'rt_stage_all_chambers_ok', 'rt_stage_finished_ok', 'rt_stage_saveload_ok', 'rt_stage_ok']
     if (__test_find_inlog('[test-marker] rt_stage_fail')) {
         return false

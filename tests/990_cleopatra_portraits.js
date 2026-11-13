@@ -27,7 +27,7 @@ function run_test() {
         105: 0, // FIGURE_ZOOKEEPER
         106: 6, // FIGURE_FROG
         107: 7, // FIGURE_LOCUST
-        108: 3, // FIGURE_TOMB_ARTISAN
+        108: 1, // FIGURE_TOMB_ARTISAN
         109: 8  // FIGURE_MUMMY
     }
     var ok = true

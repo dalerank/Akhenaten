@@ -702,6 +702,10 @@ bool building_monument::need_artisan() {
     return false;
 }
 
+bool building_monument::need_artisan_with(e_resource material) {
+    return need_artisan() && needs_resource(material) > 0 && resource_pct(material) < 100;
+}
+
 bool building_monument::need_carpenter() {
     auto &d = runtime_data();
     if (d.phase == MONUMENT_FINISHED) {

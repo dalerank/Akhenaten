@@ -155,13 +155,14 @@ building_artisans_guild = {
     resource : RESOURCE_PAINT
     resource_second : RESOURCE_CLAY
   }
-  min_houses_coverage : 100
+  min_houses_coverage : 50
   meta : { text_id: 312, help_link:"message_construction_guilds" }
   building_size: 2
   cost: [ 30, 50, 80, 100, 150 ]
   desirability : { value:[-6], step:[1], step_size:[1], range: [4] }
   laborers:[15], fire_risk:[2], damage_risk: [2]
-  max_walkers : 1
+  max_walkers : 4
+  material_load : 100
   info_sound : "Wavs/eng_r.wav"
   info_advisors [ADVISOR_LABOR]
   flags {

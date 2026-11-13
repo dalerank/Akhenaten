@@ -183,6 +183,8 @@ public:
     virtual int try_assign_bricklayer(figure_id /*fid*/) { return 0; }
     virtual void place_bricklayer_block(figure_id /*fid*/) {}
     virtual bool need_artisan();
+    // OG artisans guild: a trip carries one load of clay (tomb plaster stage) or of paint (painting stage).
+    virtual bool need_artisan_with(e_resource material);
     virtual bool accepts_yard_delivery(e_resource /*resource*/) const { return true; }
     virtual bool is_unfinished() const;
     virtual bool is_finished() const;

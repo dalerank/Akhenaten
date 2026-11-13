@@ -15,6 +15,7 @@ building_small_royal_tomb {
     meta { text_id: 178, help_link:"message_building_royal_burial_tomb" }
     info_sound : "Wavs/rock3.wav"
     cost [ 0, 0, 0, 0, 0 ]
+    guild_worker_terrain: TERRAIN_USAGE_ANY
     flags {
         is_monument: true
         non_deletable: true
@@ -33,6 +34,7 @@ building_medium_royal_tomb {
     meta { text_id: 178, help_link:"message_building_royal_burial_tomb" }
     info_sound : "Wavs/rock3.wav"
     cost [ 0, 0, 0, 0, 0 ]
+    guild_worker_terrain: TERRAIN_USAGE_ANY
     flags {
         is_monument: true
         non_deletable: true
@@ -51,6 +53,7 @@ building_large_royal_tomb {
     meta { text_id: 178, help_link:"message_building_royal_burial_tomb" }
     info_sound : "Wavs/rock3.wav"
     cost [ 0, 0, 0, 0, 0 ]
+    guild_worker_terrain: TERRAIN_USAGE_ANY
     flags {
         is_monument: true
         non_deletable: true
@@ -69,6 +72,7 @@ building_grand_royal_tomb {
     meta { text_id: 178, help_link:"message_building_royal_burial_tomb" }
     info_sound : "Wavs/rock3.wav"
     cost [ 0, 0, 0, 0, 0 ]
+    guild_worker_terrain: TERRAIN_USAGE_ANY
     flags {
         is_monument: true
         non_deletable: true
