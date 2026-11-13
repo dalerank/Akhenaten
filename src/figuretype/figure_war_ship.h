@@ -101,7 +101,7 @@ public:
         uint8_t secondary_action;
         uint8_t ship_move_mode;
         uint8_t ram_cooldown;
-        uint8_t answers_requests = 1;
+        uint8_t answers_requests = 0;
         int8_t crew_fatigue = 0;
         uint8_t fatigue_tick = 0;
     } FIGURE_RUNTIME_DATA_T;

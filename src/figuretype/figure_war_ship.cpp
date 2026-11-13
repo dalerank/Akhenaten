@@ -142,7 +142,7 @@ void figure_warship::on_create() {
     d.ship_move_mode = WARSHIP_MOVE_FULL_SPEED;
     d.ram_cooldown = 0;
     d.request_event_id = -1;
-    d.answers_requests = 1;
+    d.answers_requests = 0;
     d.crew_fatigue = 0;
     d.fatigue_tick = 0;
     advance_action(ACTION_8_WARSHIP_WAITING);
