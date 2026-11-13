@@ -48,6 +48,7 @@ public:
         uint16_t highest_population;
         uint16_t unreachable_ticks;
         uint32_t last_update_day;
+        int32_t tax_income;
         building_id tax_collector_id;
         uint16_t population;
         uint8_t is_merged;
@@ -165,14 +166,11 @@ public:
     static void create_vacant_lot(tile2i tile, int image_id);
     static const model_house &get_model(int level);
 };
-ANK_CONFIG_PROPERTY(building_house::runtime_data_t,
-    population, tax_coverage, tax_bonus, house_happiness,
-    entertainment, water_supply, bazaar_access, education, school, library, academy,
-    magistrate, num_gods, shrine_access, dentist, apothecary, health, mortuary, physician,
-    booth_juggler, bandstand_juggler, senet_player, zookeeper, criminal_active,
-    no_space_to_expand, fancy_bazaar_access, worst_desirability_building_id,
-    frog_infest_days, evolve_text, unreachable_ticks, days_without_food,
-    num_foods, hsize)
+ANK_CONFIG_PROPERTY(building_house::runtime_data_t, population, tax_coverage, tax_bonus, house_happiness, entertainment,
+  water_supply, bazaar_access, education, school, library, academy, magistrate, num_gods, shrine_access, dentist,
+  apothecary, health, mortuary, physician, booth_juggler, bandstand_juggler, senet_player, zookeeper, criminal_active,
+  no_space_to_expand, fancy_bazaar_access, worst_desirability_building_id, frog_infest_days, evolve_text,
+  unreachable_ticks, days_without_food, num_foods, hsize, tax_income)
 
 // --- Individual housing tiers -------------------------------------------------
 // some info shared with vacant lot, so this is unique twice-config class

@@ -50,7 +50,6 @@ mission19 { // Bahariya Oasis — The Western Desert
 	initial_funds [15000, 10000, 7500, 5000, 4000]
 	rescue_loans [5000, 3300, 2500, 1700, 1300]
 	debt_interest [10, 15, 20, 25, 30]
-	house_tax_multipliers [300, 200, 150, 100, 75]
 
 	env {
 		has_animals : true

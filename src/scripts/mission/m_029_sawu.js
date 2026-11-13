@@ -37,7 +37,6 @@ mission29 { // Sawu (Mersa Gawasis) — Shores of the Red Sea; briefing key = me
 	initial_funds [16000, 10600, 8000, 5400, 4200]
 	rescue_loans [6000, 4000, 3000, 2000, 1500]
 	debt_interest [10, 15, 20, 25, 30]
-	house_tax_multipliers [300, 200, 150, 100, 75]
 
 	env {
 		has_animals : true

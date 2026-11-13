@@ -31,7 +31,6 @@ mission45 { // Pi-Yer — The Sea People Land
 	initial_funds [20160, 13400, 10080, 6750, 5340]
 	rescue_loans [6000, 4000, 3000, 2000, 1600]
 	debt_interest [4, 5, 7, 9, 11]
-	house_tax_multipliers [300, 200, 150, 100, 75]
 
 	env {
 		has_animals : true

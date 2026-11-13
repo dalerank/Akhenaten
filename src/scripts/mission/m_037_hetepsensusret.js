@@ -22,7 +22,6 @@ mission37 { // Hetepsensusret (Kahun) — The Glory of Pharaoh
 	initial_funds [4000, 2660, 2000, 1340, 1060]
 	rescue_loans [6000, 4000, 3000, 2000, 1590]
 	debt_interest [10, 15, 20, 25, 30]
-	house_tax_multipliers [300, 200, 150, 100, 75]
 
 	env {
 		// pak animals=0; enable so prey update after create_herds (hunting lodge).

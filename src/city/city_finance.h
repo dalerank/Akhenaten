@@ -3,6 +3,7 @@
 #include <cstdint>
 
 #include "core/archive.h"
+#include "game/difficulty.h"
 
 class building_house;
 
@@ -106,6 +107,16 @@ struct palace_treasury_shares_t {
 ANK_CONFIG_STRUCT(palace_treasury_shares_t, tax_collector_weight, courthouse_weight, palace_weight)
 extern palace_treasury_shares_t palace_treasury_shares;
 
+// tax_percentage: per difficulty, the percent of the taxed amount the city keeps (OG
+// difficulty_tax_percentages); a mission may override it. house_tax_income_unit: a house's yearly tax
+// income is kept in 1/unit deben (OG HOUSE_TAX_INCOME_UNIT).
+struct finance_tax_rules_t {
+    int_dcy tax_percentage;
+    int house_tax_income_unit;
+};
+ANK_CONFIG_STRUCT(finance_tax_rules_t, tax_percentage, house_tax_income_unit)
+extern finance_tax_rules_t finance_tax_rules;
+
 struct city_finance_t {
     struct treasury_t {
         int value;
@@ -137,6 +148,9 @@ struct city_finance_t {
     void estimate_wages();
     void collect_monthly_taxes();
     int house_monthly_tax_units(building_house *house) const;
+    int apply_tax_rate(int amount) const;
+    int house_tax_income(int units) const;
+    int house_tax_units_from_income(int tax_income) const;
     void advance_month();
     void pay_monthly_wages();
     void pay_monthly_interest();

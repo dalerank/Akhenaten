@@ -26,7 +26,6 @@ mission129 { // Bridges.map
 	initial_funds [15000, 10000, 7500, 5000, 4000]
 	rescue_loans [0, 0, 0, 0, 0]
 	debt_interest [1, 3, 5, 8, 10]
-	house_tax_multipliers [300, 200, 150, 100, 75]
 
 	env {
 		has_animals : true

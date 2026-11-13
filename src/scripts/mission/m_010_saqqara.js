@@ -48,7 +48,6 @@ mission10 { // Saqqara â€” The First Pyramid
 	initial_funds [24000, 16000, 12000, 8000, 6400]
 	rescue_loans [10400, 7000, 5200, 3500, 2800]
 	debt_interest [4, 6, 8, 10, 12]
-	house_tax_multipliers [300, 200, 150, 100, 75]
 
 	init_resources : {
 		bricks: { type:RESOURCE_BRICKS, allow: true},

@@ -6,6 +6,13 @@ palace_treasury_shares {
   palace_weight : 50
 }
 
+// tax_percentage: percent of the taxed amount the city keeps, per difficulty (OG 50 on all; a mission
+// may override it). house_tax_income_unit: house tax income is kept in 1/unit deben (OG 10000).
+finance_tax_rules {
+  tax_percentage [50, 50, 50, 50, 50]
+  house_tax_income_unit : 10000
+}
+
 function city_finance_clamp_tax_percentage(v) {
     if (v < 0) return 0
     if (v > 25) return 25

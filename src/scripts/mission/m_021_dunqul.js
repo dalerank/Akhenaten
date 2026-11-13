@@ -55,7 +55,6 @@ mission21 { // Dunqul Oasis — The Kushite Threat
 	initial_funds [12000, 8000, 6000, 4000, 3000]
 	rescue_loans [3000, 2000, 1500, 1000, 800]
 	debt_interest [5, 10, 15, 20, 25]
-	house_tax_multipliers [300, 200, 150, 100, 75]
 
 	env {
 		has_animals : true

@@ -31,7 +31,6 @@ mission16 { // Iunet (Dendera) — The Defense of Egypt
 	initial_funds [20000, 13300, 10000, 6700, 5300]
 	rescue_loans [5000, 3300, 2500, 1700, 1300]
 	debt_interest [4, 6, 8, 10, 12]
-	house_tax_multipliers [300, 200, 150, 100, 75]
 
 	init_resources : {
 		bricks: { type:RESOURCE_BRICKS, allow: true},

@@ -28,7 +28,6 @@ mission128 { // Alexandria.map — An Alexandrian Affair
 	initial_funds [24000, 16000, 12000, 8000, 6400]
 	rescue_loans [12000, 8000, 6000, 4000, 3200]
 	debt_interest [1, 3, 5, 8, 10]
-	house_tax_multipliers [300, 200, 150, 100, 75]
 
 	env {
 		has_animals : true

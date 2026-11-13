@@ -25,7 +25,6 @@ mission51 { // Cleopatra's Alexandria - The Legacy of a Queen
 	initial_funds [112000, 74670, 56000, 37520, 29680]
 	rescue_loans [8000, 5330, 4000, 2680, 2120]
 	debt_interest [4, 5, 7, 9, 11]
-	house_tax_multipliers [300, 200, 150, 100, 75]
 
 	env {
 		has_animals : true

@@ -17,7 +17,6 @@ mission39 { // Tut in the Valley — Death of Tutankhamun
 	initial_funds [17000, 11330, 8500, 5670, 4505]
 	rescue_loans [6000, 4000, 3000, 2000, 1590]
 	debt_interest [8, 10, 12, 14, 16]
-	house_tax_multipliers [300, 200, 150, 100, 75]
 
 	env {
 		has_animals : true

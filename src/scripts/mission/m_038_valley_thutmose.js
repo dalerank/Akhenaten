@@ -16,7 +16,6 @@ mission38 { // Thutmose in the Valley — The First Tomb
 	initial_funds [16000, 10670, 8000, 5360, 4240]
 	rescue_loans [5000, 3330, 2500, 1670, 1325]
 	debt_interest [5, 7, 9, 11, 13]
-	house_tax_multipliers [300, 200, 150, 100, 75]
 
 	env {
 		has_animals : true

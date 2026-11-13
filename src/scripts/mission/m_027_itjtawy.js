@@ -71,7 +71,6 @@ mission27 { // Itjtawy - A New Capital is Founded
 	initial_funds [16000, 10600, 8000, 5400, 4200]
 	rescue_loans [6000, 4000, 3000, 2000, 1500]
 	debt_interest [4, 6, 8, 10, 12]
-	house_tax_multipliers [300, 200, 150, 100, 75]
 
 	env {
 		has_animals : true

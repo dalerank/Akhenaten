@@ -32,7 +32,6 @@ mission17 { // On (Heliopolis) — Ivory from the East
 	initial_funds [12000, 8000, 6000, 4000, 3200]
 	rescue_loans [6000, 4000, 3000, 2000, 1600]
 	debt_interest [10, 15, 20, 25, 30]
-	house_tax_multipliers [300, 200, 150, 100, 75]
 
 	init_resources : {
 		bricks: { type:RESOURCE_BRICKS, allow: true},

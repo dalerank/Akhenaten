@@ -150,9 +150,10 @@ void building_house::bind_dynamic(io_buffer *iob, size_t version) {
         iob->bind(BIND_SIGNATURE_UINT16, &d.foods[i]);
     }
 
+    // OG house tax income (1/10000 deben) in 4 of the 6 bytes that were padding; older saves hold 0 here.
+    int32_t og_tax_income = d.tax_income;
+    iob->bind_i32(og_tax_income);
     uint16_t tmp = 0;
-    iob->bind(BIND_SIGNATURE_UINT16, &tmp);
-    iob->bind(BIND_SIGNATURE_UINT16, &tmp);
     iob->bind(BIND_SIGNATURE_UINT16, &tmp);
     iob->bind_u16(d.image_id);
 
@@ -198,8 +199,13 @@ void building_house::bind_dynamic(io_buffer *iob, size_t version) {
     iob->bind_u16(d.population);
     iob->bind_u8(d.tax_coverage);
     iob->bind_u16((uint16_t&)d.tax_collector_id);
-    //
-    iob->bind_i16(base.tax_income_or_storage);
+    // Legacy tax units (people * model tax) for saves without the OG int32 above.
+    int16_t legacy_tax_units
+      = (int16_t)std::min<int>(g_city.finance.house_tax_units_from_income(d.tax_income), INT16_MAX);
+    iob->bind_i16(legacy_tax_units);
+    if (iob->is_read_access()) {
+        d.tax_income = og_tax_income ? og_tax_income : g_city.finance.house_tax_income(legacy_tax_units);
+    }
     iob->bind_u8(d.days_without_food);
     iob->bind_u8(d.hsize);
     iob->bind_u16(d.unreachable_ticks);

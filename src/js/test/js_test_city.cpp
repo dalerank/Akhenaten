@@ -426,3 +426,44 @@ static int __test_treasury() {
     return g_city.finance.treasury.value;
 }
 ANK_FUNCTION(__test_treasury);
+
+static int __test_house_tax_units(int bid) {
+    auto* house = building_get(bid)->dcast_house();
+    return house ? g_city.finance.house_monthly_tax_units(house) : -1;
+}
+ANK_FUNCTION_1(__test_house_tax_units);
+
+// The house model of the current difficulty.
+static int __test_house_model_value(int bid, pcstr field) {
+    auto* house = building_get(bid)->dcast_house();
+    if (!house) {
+        return -1;
+    }
+    const xstring name(field);
+    if (name == "prosperity")
+        return house->model().prosperity;
+    if (name == "tax_multiplier")
+        return house->model().tax_multiplier;
+    logs::error("[test] __test_house_model_value: unknown field %s", field);
+    return -1;
+}
+ANK_FUNCTION_2(__test_house_model_value);
+
+// Sets a per-difficulty scenario meta table to five copies of value; a negative value clears it.
+static void __test_scenario_meta_tax(pcstr field, int value) {
+    const xstring name(field);
+    int_dcy* table = nullptr;
+    if (name == "tax_percentage")
+        table = &g_scenario.meta.tax_percentage;
+    else if (name == "house_tax_multipliers")
+        table = &g_scenario.meta.house_tax_multipliers;
+    if (!table) {
+        logs::error("[test] __test_scenario_meta_tax: unknown field %s", field);
+        return;
+    }
+    table->value.clear();
+    for (int i = 0; value >= 0 && i < 5; ++i) {
+        table->value.push_back(value);
+    }
+}
+ANK_FUNCTION_2(__test_scenario_meta_tax);

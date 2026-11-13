@@ -30,7 +30,6 @@ mission31 { // Bubastis — The City of Bast
 	initial_funds [20000, 13300, 10000, 6700, 5300]
 	rescue_loans [0, 0, 0, 0, 0]
 	debt_interest [10, 15, 20, 25, 30]
-	house_tax_multipliers [300, 200, 150, 100, 75]
 
 	env {
 		// pak animals=0; enable so prey/herd update after create_herds (hunting lodge).

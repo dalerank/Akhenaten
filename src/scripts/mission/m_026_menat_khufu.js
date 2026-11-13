@@ -29,7 +29,6 @@ mission26 { // Menat Khufu (Beni Hasan) — Reunification
 	initial_funds [20000, 13300, 10000, 6700, 5300]
 	rescue_loans [5000, 3300, 2500, 1700, 1300]
 	debt_interest [10, 15, 20, 25, 30]
-	house_tax_multipliers [300, 200, 150, 100, 75]
 
 	env {
 		has_animals : true

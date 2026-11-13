@@ -346,7 +346,8 @@ struct scenario_data_t {
         bool hide_won_screen;
         int_dcy initial_funds;
         int_dcy rescue_loans;
-        int_dcy house_tax_multipliers;
+        int_dcy tax_percentage;
+        int_dcy house_tax_multipliers; // obsolete: warned about and ignored
         int_dcy debt_interest;
     } meta;
 
@@ -361,8 +362,8 @@ struct scenario_data_t {
 
     int startup_funds() const;
     int rescue_loan() const;
-    int house_tax_multiplier(int v) const;
     int debt_interest() const; // annual % for current difficulty
+    int city_tax_percentage() const;
 
     void load_metadata(const mission_id_t &missionid, bool is_new_mission);
     void bind_data(io_buffer *iob, size_t version, size_t size);
@@ -388,7 +389,8 @@ struct scenario_data_t {
         return is_scenario_id(make_span(values));
     }
 };
-ANK_CONFIG_STRUCT(scenario_data_t::meta_t, start_message, hide_won_screen, initial_funds, rescue_loans, house_tax_multipliers, debt_interest)
+ANK_CONFIG_STRUCT(scenario_data_t::meta_t, start_message, hide_won_screen, initial_funds, rescue_loans, tax_percentage,
+  house_tax_multipliers, debt_interest)
 ANK_CONFIG_STRUCT(scenario_data_t::env_t, flotsam_enabled, has_animals, gods_least_mood, hide_nilometer, marshland_grow, tree_grow)
 ANK_CONFIG_STRUCT(scenario_data_t::sounds_t, briefing, victory)
 ANK_CONFIG_STRUCT(scenario_data_t::win_criterias_t, population, culture, prosperity, monuments, kingdom, housing_count, housing_level, time_limit, survival_time, milestone25_year, milestone50_year, milestone75_year, next_mission)

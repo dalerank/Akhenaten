@@ -25,7 +25,6 @@ mission50 { // Maritis - Caesar and Cleopatra
 	initial_funds [22000, 14670, 11000, 7370, 5830]
 	rescue_loans [3000, 2000, 1500, 1005, 795]
 	debt_interest [4, 5, 7, 9, 11]
-	house_tax_multipliers [300, 200, 150, 100, 75]
 
 	env {
 		has_animals : true

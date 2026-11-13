@@ -16,7 +16,6 @@ mission44 {
 	initial_funds [30040, 20030, 15020, 10010, 7960]
 	rescue_loans [6000, 4000, 3000, 2000, 1590]
 	debt_interest [4, 6, 8, 10, 12]
-	house_tax_multipliers [300, 200, 150, 100, 75]
 
 	env {
 		has_animals : true

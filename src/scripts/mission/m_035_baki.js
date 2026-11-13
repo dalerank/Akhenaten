@@ -20,7 +20,6 @@ mission35 { // Baki (Kuban) — The Glory of Egypt
 	initial_funds [14000, 9300, 7000, 4700, 3700]
 	rescue_loans [5000, 3300, 2500, 1700, 1300]
 	debt_interest [10, 15, 20, 25, 30]
-	house_tax_multipliers [300, 200, 150, 100, 75]
 
 	env {
 		// pak animals=0; enable so prey update after create_herds (hunting lodge).

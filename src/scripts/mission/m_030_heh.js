@@ -36,7 +36,6 @@ mission30 { // Heh (Semna) — The Gauntlet
 	initial_funds [11000, 7300, 5500, 3700, 2900]
 	rescue_loans [0, 0, 0, 0, 0]
 	debt_interest [10, 15, 20, 25, 30]
-	house_tax_multipliers [300, 200, 150, 100, 75]
 
 	env {
 		has_animals : true

@@ -12,7 +12,6 @@ mission48 { // Alexandria - Alexander the Great
 	initial_funds [25960, 17310, 12980, 8700, 6880]
 	rescue_loans [10000, 6670, 5000, 3350, 2650]
 	debt_interest [2, 3, 5, 7, 9]
-	house_tax_multipliers [300, 200, 150, 100, 75]
 
 	env {
 		has_animals : true

@@ -76,15 +76,6 @@ int scenario_data_t::rescue_loan() const {
     return difficulty.loan_money(finance.rescue_loan);
 }
 
-int scenario_data_t::house_tax_multiplier(int v) const {
-    const int multiplier = meta.house_tax_multipliers.get();
-    if (multiplier > 0) {
-        return calc_adjust_with_percentage<int>(v, multiplier);
-    }
-
-    return difficulty.house_tax_multiplier(v);
-}
-
 int scenario_data_t::debt_interest() const {
     const int rate = meta.debt_interest.get();
     if (rate > 0) {
@@ -96,9 +87,27 @@ int scenario_data_t::debt_interest() const {
     return 10;
 }
 
+// Percent of the taxed amount the city keeps: the mission's tax_percentage, else the system table.
+int scenario_data_t::city_tax_percentage() const {
+    if (!meta.tax_percentage.value.empty()) {
+        return meta.tax_percentage.get();
+    }
+    return finance_tax_rules.tax_percentage.get();
+}
+
 void scenario_data_t::load_metadata(const mission_id_t &missionid, bool is_new_mission) {
-    g_config_arch.r_section(missionid, [this, is_new_mission] (archive arch) {
+    g_config_arch.r_section(missionid, [this, is_new_mission](archive arch) {
+        meta.tax_percentage.value.clear();
+        meta.house_tax_multipliers.value.clear();
         arch.r(meta);
+        if (!meta.house_tax_multipliers.value.empty()) {
+            static bool warned = false;
+            if (!warned) {
+                warned = true;
+                logs::warn("[scenario] house_tax_multipliers is obsolete and ignored; use tax_percentage (percent the "
+                           "city keeps, OG 50)");
+            }
+        }
         arch.r("env", env);
 
         int rank = std::min(arch.r_int("player_rank", -1), 10);

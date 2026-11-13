@@ -30,7 +30,6 @@ mission52 { // Actium - Antony and Cleopatra
 	initial_funds [14000, 9330, 7000, 4690, 3710]
 	rescue_loans [4000, 2670, 2000, 1340, 1060]
 	debt_interest [0, 1, 3, 5, 7]
-	house_tax_multipliers [300, 200, 150, 100, 75]
 
 	env {
 		has_animals : true

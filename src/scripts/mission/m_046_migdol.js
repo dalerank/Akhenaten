@@ -26,7 +26,6 @@ mission46 { // Migdol - Repel the Assyrians
 	initial_funds [30004, 20003, 15002, 10001, 7951]
 	rescue_loans [5000, 3330, 2500, 1670, 1325]
 	debt_interest [4, 5, 7, 9, 11]
-	house_tax_multipliers [300, 200, 150, 100, 75]
 
 	env {
 		has_animals : true

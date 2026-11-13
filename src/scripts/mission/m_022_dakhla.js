@@ -54,7 +54,6 @@ mission22 { // Dakhla Oasis — The Caravan Trail
 	initial_funds [12000, 8000, 6000, 4000, 3000]
 	rescue_loans [5000, 3300, 2500, 1700, 1300]
 	debt_interest [0, 4, 8, 12, 16]
-	house_tax_multipliers [300, 200, 150, 100, 75]
 
 	env {
 		has_animals : true

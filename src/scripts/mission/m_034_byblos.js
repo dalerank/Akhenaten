@@ -27,7 +27,6 @@ mission34 { // Byblos — Expansion and Conquest
 	initial_funds [90000, 60000, 45000, 30000, 24000]
 	rescue_loans [10000, 6700, 5000, 3300, 2700]
 	debt_interest [10, 15, 20, 25, 30]
-	house_tax_multipliers [300, 200, 150, 100, 75]
 
 	env {
 		has_animals : true

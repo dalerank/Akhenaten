@@ -54,7 +54,6 @@ mission24 { // Waset (Thebes) — Civil War
 	initial_funds [18000, 12000, 9000, 6000, 4500]
 	rescue_loans [8000, 5300, 4000, 2700, 2000]
 	debt_interest [10, 15, 20, 25, 30]
-	house_tax_multipliers [300, 200, 150, 100, 75]
 
 	env {
 		has_animals : true

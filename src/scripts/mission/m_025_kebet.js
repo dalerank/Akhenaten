@@ -45,7 +45,6 @@ mission25 { // Kebet (Coptos) — Reunification; briefing key = coptos
 	initial_funds [40000, 26600, 20000, 13400, 10600]
 	rescue_loans [7000, 4700, 3500, 2300, 1800]
 	debt_interest [10, 15, 20, 25, 30]
-	house_tax_multipliers [300, 200, 150, 100, 75]
 
 	env {
 		has_animals : true

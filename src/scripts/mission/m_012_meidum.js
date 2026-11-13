@@ -61,7 +61,6 @@ mission12 { // Meidum
 	initial_funds [20000, 13300, 10000, 6700, 5300]
 	rescue_loans [6000, 4000, 3000, 2000, 1600]
 	debt_interest [4, 6, 8, 10, 12]
-	house_tax_multipliers [300, 200, 150, 100, 75]
 
 	init_resources : {
 		bricks: { type:RESOURCE_BRICKS, allow: true},

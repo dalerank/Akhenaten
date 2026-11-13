@@ -45,7 +45,6 @@ mission33 { // Sauty (Lykopolis) — Egypt Reclaimed
 	initial_funds [18000, 12000, 9000, 6000, 4800]
 	rescue_loans [0, 0, 0, 0, 0]
 	debt_interest [10, 15, 20, 25, 30]
-	house_tax_multipliers [300, 200, 150, 100, 75]
 
 	env {
 		has_animals : true

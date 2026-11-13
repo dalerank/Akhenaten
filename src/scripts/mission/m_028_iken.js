@@ -37,7 +37,6 @@ mission28 { // Iken (Mirgissa) — Into Nubia; briefing key = mirgissa
 	initial_funds [14000, 9300, 7000, 4700, 3700]
 	rescue_loans [6000, 4000, 3000, 2000, 1600]
 	debt_interest [0, 0, 0, 0, 0]
-	house_tax_multipliers [300, 200, 150, 100, 75]
 
 	env {
 		has_animals : true

@@ -27,7 +27,6 @@ mission47 { // Tanis - Rebirth of a Navy
 	initial_funds [16000, 10670, 8000, 5360, 4240]
 	rescue_loans [4000, 2670, 2000, 1340, 1060]
 	debt_interest [5, 6, 8, 10, 12]
-	house_tax_multipliers [300, 200, 150, 100, 75]
 
 	env {
 		has_animals : true

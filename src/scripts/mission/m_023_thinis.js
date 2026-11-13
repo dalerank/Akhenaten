@@ -59,7 +59,6 @@ mission23 { // Thinis — Civil War FIP; != mission1 Dawn
 	initial_funds [26700, 17800, 13350, 8900, 7080]
 	rescue_loans [8400, 5600, 4200, 2800, 2200]
 	debt_interest [10, 15, 20, 25, 30]
-	house_tax_multipliers [300, 200, 150, 100, 75]
 
 	env {
 		has_animals : true

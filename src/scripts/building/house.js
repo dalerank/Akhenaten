@@ -6,6 +6,7 @@ House.property.population = { }
 House.property.tax_coverage = { }
 House.property.tax_bonus = { }
 House.property.tax_income_or_storage = { }
+House.property.tax_income = { }
 House.property.house_happiness = { }
 House.property.current_desirability = { }
 House.property.has_water_access = { }

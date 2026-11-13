@@ -26,7 +26,6 @@ mission49 { // Ptolemy's Alexandria - A Beacon of Light
 	initial_funds [60000, 40000, 30000, 20100, 15900]
 	rescue_loans [10000, 6670, 5000, 3350, 2650]
 	debt_interest [3, 4, 6, 8, 10]
-	house_tax_multipliers [300, 200, 150, 100, 75]
 
 	env {
 		has_animals : true
