@@ -1,6 +1,6 @@
 log_info("akhenaten: mission 48 alexandria_1 started")
 
-// Monument: Mausoleum only (gr198:25). W=5 → trunc(2.25*5+4.5)=15 ≥ goal 14.
+// Monument: Mausoleum only (gr198:25). Weight 5 → trunc(6.32·√5+0.5)=14 = goal; burial goods all below one divisor.
 mission48 { // Alexandria - Alexander the Great
 	map_file : "data/maps/m_048_alexandria_1.map"
 	start_message : "message_mission_alexandria_2"

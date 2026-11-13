@@ -3,7 +3,7 @@ log_info("akhenaten: mission 21 dunqul started")
 // Empire / events aligned with original campaign scenario 21 (2026-07-26 dump).
 // Empire id=0. Enemy ENEMY_4_HITTITE (scenario); beduin raids (Libyan sprites); favour Pharaoh×66.
 // Gods: Ra, Ptah, Seth. Funds Normal 6000 / loan 1500 / debt 15. Rank 8.
-// Win: pop 3500 / culture 20 / prosperity 20 / monuments TEMP 9 (pak 6 small obelisk) / kingdom 80 / housing 14.
+// Win: pop 3500 / culture 20 / prosperity 20 / monuments 6 (pak; small obelisk) / kingdom 80 / housing 14.
 // Burial empty. Climate desert.
 // Trade: Buhen(5) Byblos(4) Henen-nesw(10) Kerma(8) Men-nefer(7) On(2) Selima(6).
 // Display: Djedu(1) Iunet(3) Nekhen(9) Saqqara(11) Dakhla(14). Kharga stub route 13.
@@ -91,12 +91,12 @@ mission21 { // Dunqul Oasis — The Kushite Threat
 		BUILDING_TEMPLE_COMPLEX_RA, BUILDING_TEMPLE_COMPLEX_PTAH, BUILDING_TEMPLE_COMPLEX_SETH,
 	]
 
-	// Monuments TEMP 9 (pak raw 6; one small obelisk → formula 9, same as Buhen).
+	// Monuments 6 = pak; one small obelisk, OG weight 1 → trunc(6.32·√1+0.5)=6.
 	win_criteria {
 		population    {enabled : true, goal : 3500 }
 		culture       {enabled : true, goal : 20 }
 		prosperity    {enabled : true, goal : 20 }
-		monuments     {enabled : true, goal : 9 }
+		monuments     {enabled : true, goal : 6 }
 		kingdom       {enabled : true, goal : 80 }
 		housing_level {enabled : true, goal : 14 }
 	}

@@ -1,4 +1,4 @@
-// C10 RT3: Grand royal tomb — OG part layout on Valley cliff; finish → rating weight 18.
+// C10 RT3: Grand royal tomb — OG part layout on Valley cliff; finish → rating (OG weight 48 → 44).
 
 function run_test() {
     __log_info_native('[test:146] grand royal tomb cliff place + finish rating')
@@ -87,11 +87,12 @@ function run_test() {
     }
     __log_marker('grand_royal_tomb_finished_ok')
 
+    test_monument_slots([BUILDING_GRAND_ROYAL_TOMB])
     city_update_monthly_monument_rating({})
     var rating_done = city.rating.monument | 0
-    // weight 18 → trunc(2.25*18+4.5)=45
-    if (rating_done < 45) {
-        __log_info_native('[test:146] finished rating want >=45 got ' + rating_done)
+    // OG weight 48 → trunc(6.32*sqrt(48)+0.5)=44
+    if (rating_done < 44) {
+        __log_info_native('[test:146] finished rating want >=44 got ' + rating_done)
         __log_marker('grand_royal_tomb_rating_fail:' + rating_done)
         __test_signal_ready()
         return

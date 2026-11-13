@@ -5,8 +5,8 @@ log_info("akhenaten: mission 41 sumur started")
 // Scenario enemy ENEMY_2_CANAANITE (briefing = Hittites — pak id wins).
 // Gods: Ra(2), Ptah(1). MM subtitle: Lands of the Levant. Start year -1300.
 // Funds Normal 5565 / loan 1500 / debt_interest 9. Rank 6 (pak).
-// Win: pop 3000 / culture 35 / prosperity 40 / monuments TEMP 9 (pak raw 6;
-//   first=22 Small Obelisk → formula 2.25×2+4.5=9) / kingdom 90 / housing level 14.
+// Win: pop 3000 / culture 35 / prosperity 40 / monuments 6 (pak;
+//   first=22 Small Obelisk, OG weight 1 → trunc(6.32·√1+0.5)=6) / kingdom 90 / housing level 14.
 // Climate northern; map_background empire pack id 21.
 // Full empire redefine (hide_pak_*) + JS event graph. SKIP empty map_obj idx=6.
 // Chain-only invasion i=11 (after LOST Qadesh) → JS chain via event_request_cleared.
@@ -74,7 +74,7 @@ mission41 { // Sumur — Lands of the Levant
 		population    {enabled : true, goal : 3000 }
 		culture       {enabled : true, goal : 35 }
 		prosperity    {enabled : true, goal : 40 }
-		monuments     {enabled : true, goal : 9 }
+		monuments     {enabled : true, goal : 6 }
 		kingdom       {enabled : true, goal : 90 }
 		housing_level {enabled : true, goal : 14 }
 	}

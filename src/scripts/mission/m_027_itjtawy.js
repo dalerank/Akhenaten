@@ -9,8 +9,8 @@ log_info("akhenaten: mission 27 itjtawy started")
 // Convergence: Kebet (25) and Menat Khufu (26) both funnel into this scenario. No
 // next_mission here - a choice[] host to Iken (28, already scripted) / Sawu (29, not yet;
 // its button stays hidden until that mission is scripted).
-// Win: pop 7500 / culture 60 / prosperity 60 / monuments 33 (Sphinx 1 + Medium mudbrick 8
-//   + Small mudbrick 4 → trunc(2.25·13+4.5)=33) / kingdom 85 / housing_count 6 +
+// Win: pop 7500 / culture 60 / prosperity 60 / monuments 33 (Sphinx 10 + Medium mudbrick 12
+//   + Small mudbrick 4 + burial 1 → trunc(6.32·√27+0.5)=33) / kingdom 85 / housing_count 6 +
 //   housing_level 17 (six BUILDING_HOUSE_STATELY_MANOR).
 // Burial: pak burial_count=5 - grainx10 potteryx25 beerx12 luxury_goodsx12 papyrusx15.
 // Trade: Buhen(7 sea) Byblos(2) Dakhla Oasis(9) Men-nefer(6) Menat Khufu(4).
@@ -110,7 +110,7 @@ mission27 { // Itjtawy - A New Capital is Founded
 		BUILDING_SCRIBAL_SCHOOL, BUILDING_LIBRARY,
 	]
 
-	// Monuments 33 = Sphinx(1) + Medium mudbrick(8) + Small mudbrick(4).
+	// Monuments 33 = Sphinx (10) + Medium mudbrick (12) + Small mudbrick (4) + burial pottery 25/16 (1).
 	win_criteria {
 		population    {enabled : true, goal : 7500 }
 		culture       {enabled : true, goal : 60 }

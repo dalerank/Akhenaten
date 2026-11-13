@@ -1,5 +1,5 @@
 // Large mastaba — place all 4 orientations (36 parts), mid-phase save/load,
-// bricks, finish, monument rating (weight 3 → 11).
+// bricks, finish, monument rating (OG weight 11 → 21).
 
 function count_parts_from(bid) {
     var parts = [bid]
@@ -237,10 +237,11 @@ function run_test() {
     var fin_phase = __test_monument_phase(bid)
     __log_marker(fin_phase == -1 ? 'large_mastaba_finished_ok' : ('large_mastaba_finished_fail:' + fin_phase))
 
+    test_monument_slots([BUILDING_LARGE_MASTABA])
     city_update_monthly_monument_rating({})
     var rating = city.rating.monument | 0
-    if (rating < 11) {
-        __log_info_native('[test:128] rating want >=11 got ' + rating)
+    if (rating < 21) {
+        __log_info_native('[test:128] rating want >=21 got ' + rating)
         __log_marker('large_mastaba_rating_fail:' + rating)
     } else {
         __log_marker('large_mastaba_rating_ok:' + rating)

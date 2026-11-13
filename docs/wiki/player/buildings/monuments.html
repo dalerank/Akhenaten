@@ -313,22 +313,22 @@
             <tr>
               <td><a href="abu-simbel.html">Abu Simbel</a> <span class="tag-cleo">Cleo</span></td>
               <td class="bld-note">9×21</td>
-              <td class="bld-note">Bulk in cliffs, entrance on clear land; four colossi; Stonemasons + Carpenters (+ timber); weight 44</td>
+              <td class="bld-note">Bulk in cliffs, entrance on clear land; four colossi; Stonemasons + Carpenters (+ timber); weight 48</td>
             </tr>
             <tr>
               <td><a href="alexandria-library.html">Great Library of Alexandria</a> <span class="tag-cleo">Cleo</span></td>
               <td class="bld-note">13×14</td>
-              <td class="bld-note">Marble + timber + copper; WC + Carpenters + Stonemasons; weight 6</td>
+              <td class="bld-note">Marble + timber + copper; WC + Carpenters + Stonemasons; weight 12</td>
             </tr>
             <tr>
               <td><a href="pharos-lighthouse.html">Pharos Lighthouse</a> <span class="tag-cleo">Cleo</span></td>
               <td class="bld-note">6×6</td>
-              <td class="bld-note">Rocky island only; marble ~108 + timber; WC + Carpenters + Stonemasons; weight 5; not demolishable</td>
+              <td class="bld-note">Rocky island only; marble ~108 + timber; WC + Carpenters + Stonemasons; weight 8; not demolishable</td>
             </tr>
             <tr>
               <td><a href="caesareum.html">Caesareum</a> <span class="tag-cleo">Cleo</span></td>
               <td class="bld-note">15×15</td>
-              <td class="bld-note">Clear land, free; 19 stages; marble 144 + granite 8 (obelisks); WC + Carpenters + Stonemasons; weight 8</td>
+              <td class="bld-note">Clear land, free; 19 stages; marble 144 + granite 8 (obelisks); WC + Carpenters + Stonemasons; weight 10</td>
             </tr>
           </tbody>
         </table>
@@ -337,11 +337,21 @@
       <h2 id="rating">Monument rating</h2>
       <p>
         Finished (and partially built) monuments contribute to the city’s <strong>Monuments</strong> rating.
-        In Akhenaten the score is approximate and additive: each monument type has a weight in
-        <span class="file-ref">src/scripts/city/monuments.js</span>, then
-        <code>rating ≈ 2.25 × Σ(weight × progress) + 4.5</code>. Exact original per-monument points are still a
-        pending weight recalibration. Examples with current weights: one finished small mastaba → 9; three → 18;
-        one medium stepped pyramid → 40.
+        Akhenaten uses the original formula from <span class="file-ref">src/scripts/city/monuments.js</span>:
+        only the monuments the scenario asks for count — each of its up to three monument slots takes the first
+        matching monument built in this city (one carried over from an earlier mission takes none) — and each adds
+        <code>trunc(weight × progress% / 100)</code> points; each required burial provision adds
+        <code>trunc(dispatched / divisor)</code> (divisor 32 for grain, game meat, gems, timber and the stones;
+        16 for weapons, pottery, beer, linen, luxury goods, papyrus and chariots), and
+        <code>rating = trunc(6.32 × √points + 0.5)</code>, one less while a slot monument is unfinished, clamped to 0–100.
+        The square root means each extra monument adds less than the one before.
+      </p>
+      <p>
+        Weights: mastaba S/M/L 2 / 3 / 11; stepped pyramid S/M/L 3 / 9 / 20, complex 36, grand complex 60;
+        mudbrick and true pyramid S/M/L 4 / 12 / 26, complex 48, grand complex 80; bent pyramid S/M 4 / 10;
+        Sphinx 10; obelisk small 1 / large 3; Sun Temple 4; Mausoleum 5; royal tomb S/M/L/G 4 / 12 / 26 / 48;
+        Abu Simbel 48; Pharos 8; Library 12; Caesareum 10.
+        Examples: one finished small mastaba → 9; three → 15; one medium stepped pyramid → 19.
       </p>
 
       <h2 id="tips">Tips</h2>

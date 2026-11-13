@@ -250,7 +250,7 @@
 
       <h2 id="overview">Overview</h2>
       <p>Obelisks are single buildings (no linked parts). Granite amount required to place comes from each building’s JS <code>placement_resources</code> — currently <strong>100</strong> for small and <strong>200</strong> for large. Storage Yards that hold that granite must have workers (<code>num_workers &gt; 0</code>); empty yards do not count toward the pre-stock check, and granite is removed only from staffed yards on place.</p>
-      <p>Under the current additive rating formula, one finished small obelisk (weight 2) yields monument rating <strong>9</strong> — the goal used on <a href="../missions/buhen.html">Buhen</a>.</p>
+      <p>Under the original rating formula, one finished small obelisk (weight 1) yields monument rating <code>trunc(6.32·√1+0.5)</code> = <strong>6</strong> — the goal used on <a href="../missions/buhen.html">Buhen</a>; a large obelisk (weight 3) alone yields 11.</p>
 
       <div class="note-box">
         <strong>Akhenaten status:</strong> place, granite pre-stock / consume, only-one unfinished rule, art stages, info window, menu, and Buhen buildings list are in.
@@ -359,7 +359,7 @@
               <li>Help dialog: <code>message_building_obelisk</code> id <strong>372</strong></li>
               <li>Monument weights in
                 <span class="file-ref">src/scripts/city/monuments.js</span>:
-                small = <strong>2</strong>, large = <strong>4</strong> (large draft until weight recalibration)</li>
+                small = <strong>1</strong>, large = <strong>3</strong> (original values)</li>
             </ul>
           </div>
         </details>

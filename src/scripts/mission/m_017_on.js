@@ -7,7 +7,7 @@ log_info("akhenaten: mission 17 on started")
 // Men-nefer route 7 has no pak polyline → 2-pt stub + deviation.
 // Perfect flood y4m7+ recurring ok→ gamemeat×9 chain request.
 // Limestone×25/36mo recurring y3m5+; refuse→KR−18→LOST_TRADE Kyrene (display foreign).
-// Monuments 18 = 3 small mastabas (2.25*6+4.5=18).
+// Monuments 18 = 3 small mastabas (6) + burial limestone 32/32, granite 32/32 (2) → trunc(6.32·√8+0.5)=18.
 //
 // Tag_id scheme:
 //   1000 + i               chain-only ONLY_VIA_EVENT leaves / chain requests
@@ -75,7 +75,7 @@ mission17 { // On (Heliopolis) — Ivory from the East
 	]
 
 	// Goals verified vs pak: pop 4000, culture 40, prosperity 35, monuments 18, kingdom 60,
-	// housing_level 10. Monuments 18 = 3 small mastabas under additive formula.
+	// housing_level 10. Monuments 18 = 3 small mastabas (6) + burial goods (2).
 	win_criteria {
 		population    {enabled : true, goal : 4000 }
 		culture       {enabled : true, goal : 40 }

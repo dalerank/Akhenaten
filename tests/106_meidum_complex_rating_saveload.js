@@ -32,7 +32,7 @@ function allow_pyramids() {
 }
 
 function run_test() {
-    __log_info_native('[test:106] Meidum rating 76 + complex mid-phase saveload')
+    __log_info_native('[test:106] Meidum rating 39 + complex mid-phase saveload')
 
     // --- 1) Rating on clean map ---
     test_ensure_city_session('data/default.map')
@@ -45,15 +45,16 @@ function run_test() {
         __test_signal_ready(); return
     }
     __test_monument_set_phase(complex, -1)
+    test_monument_slots([BUILDING_STEPPED_PYRAMID_COMPLEX, BUILDING_SMALL_STEPPED_PYRAMID])
     city_update_monthly_monument_rating({})
     var alone = city.rating.monument | 0
-    // trunc(2.25*24+4.5)=58
-    if (alone != 58) {
-        __log_info_native('[test:106] complex alone want 58 got ' + alone + ' n=' + __city_monuments_list_refresh())
+    // OG stepped complex weight 36: trunc(6.32*sqrt(36)+0.5)=38
+    if (alone != 38) {
+        __log_info_native('[test:106] complex alone want 38 got ' + alone + ' n=' + __city_monuments_list_refresh())
         __log_marker('meidum_alone_fail:' + alone)
         __test_signal_ready(); return
     }
-    __log_marker('meidum_alone_ok:58')
+    __log_marker('meidum_alone_ok:38')
 
     var small = place_pyramid(BUILDING_SMALL_STEPPED_PYRAMID, [{x: 20, y: 20}, {x: 25, y: 25}, {x: 30, y: 20}])
     if (!small) {
@@ -61,16 +62,17 @@ function run_test() {
         __test_signal_ready(); return
     }
     __test_monument_set_phase(small, -1)
+    test_monument_slots([BUILDING_STEPPED_PYRAMID_COMPLEX, BUILDING_SMALL_STEPPED_PYRAMID])
     city_update_monthly_monument_rating({})
     var rating = city.rating.monument | 0
-    if (rating != 76) {
-        __log_info_native('[test:106] both want 76 got ' + rating)
+    if (rating != 39) {
+        __log_info_native('[test:106] both want 39 got ' + rating)
         __log_marker('meidum_rating_fail:' + rating)
         __test_signal_ready(); return
     }
     __log_marker('complex_finish_ok')
-    __log_marker('meidum_rating_ok:76')
-    __log_marker('meidum_goal_constant_ok:76')
+    __log_marker('meidum_rating_ok:39')
+    __log_marker('meidum_goal_constant_ok:39')
 
     // --- 2) Mid-phase save/load ---
     test_reload_city_session('data/default.map')

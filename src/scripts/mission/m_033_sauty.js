@@ -2,7 +2,7 @@ log_info("akhenaten: mission 33 sauty started")
 
 // Empire id=21. HYKSOS (pak BARBARIAN ignored). Gods Osiris×2, Ra, Seth.
 // Funds Normal 9000 / loan 0 / debt 20. Rank 10.
-// Win: pop 6500 / culture 70 / prosperity 75 / monuments 40 (3× Medium Mudbrick W=8 → 58) / kingdom 60 / housing 14.
+// Win: pop 6500 / culture 70 / prosperity 75 / monuments 40 (3× Medium Mudbrick 36 + burial 4 → trunc(6.32·√40+0.5)=40) / kingdom 60 / housing 14.
 // Burial: pottery 32, linen 16, luxury 16, chariots 8.
 // SKIP empty map_obj idx=7. Routes 1–10 copy. loan=0 → rescue_loans all 0.
 // Calendar: i=0 FELL remap Heh (dump Pwenet); i=1 FELL remap Iken (dump Itjtawy) → pom chain;

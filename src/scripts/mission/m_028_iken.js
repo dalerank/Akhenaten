@@ -76,7 +76,7 @@ mission28 { // Iken (Mirgissa) — Into Nubia; briefing key = mirgissa
 		BUILDING_SCRIBAL_SCHOOL, BUILDING_LIBRARY,
 	]
 
-	// Large Obelisk weight 4 → rating 13.5 ≥ pak goal 11 — keep 11.
+	// Monuments 11 = pak: Large Obelisk (3) → trunc(6.32·√3+0.5)=11.
 	win_criteria {
 		population    {enabled : true, goal : 6000 }
 		culture       {enabled : true, goal : 45 }

@@ -2,8 +2,8 @@ log_info("akhenaten: mission 34 byblos started")
 
 // Empire id=33. Climate desert (pak). Enemy ENEMY_2_CANAANITE (briefing Hittite ignored).
 // Gods Bast×2, Ptah, Seth. Funds Normal 45000 / loan 5000 / debt 20. Rank 10.
-// Win: pop 6000 / culture 60 / prosperity 40 / monuments 14 (Large+2×Small obelisk
-//   W=4+2+2=8 → trunc(2.25·8+4.5)=22 ≥ 14 keep pak) / kingdom 75 / housing 10.
+// Win: pop 6000 / culture 60 / prosperity 40 / monuments 14 (Large+2×Small obelisk 3+1+1
+//   → trunc(6.32·√5+0.5)=14 = pak) / kingdom 75 / housing 10.
 // Burial empty. SKIP empty map_obj idx=9. Routes 1–10 copy (5/6/8 display-only orphans).
 // No warship requests in pak (briefing-only navy buildings). No Sea People events.
 // Favour egypt×161 → chain×128. Tag_id: 1000+i leaves; 2000+i once; 3000+i recurring.

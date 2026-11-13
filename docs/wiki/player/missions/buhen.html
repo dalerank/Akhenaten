@@ -167,13 +167,13 @@
         <li><span class="obj-label">Population</span><span class="obj-value">3 000 citizens</span></li>
         <li><span class="obj-label">Culture rating</span><span class="obj-value">25</span></li>
         <li><span class="obj-label">Prosperity rating</span><span class="obj-value">25</span></li>
-        <li><span class="obj-label">Monument rating</span><span class="obj-value">9 — one <a href="../buildings/obelisk.html">small granite obelisk</a></span></li>
+        <li><span class="obj-label">Monument rating</span><span class="obj-value">6 — one <a href="../buildings/obelisk.html">small granite obelisk</a></span></li>
         <li><span class="obj-label">Kingdom rating</span><span class="obj-value">75 — the toughest requirement here</span></li>
         <li><span class="obj-label">Housing level</span><span class="obj-value">10</span></li>
       </ul>
-      <p>All goals match original campaign scenario 13 except the monument rating, which is a temporary stand-in — see the deviation note below.</p>
+      <p>All goals match original campaign scenario 13.</p>
       <div class="deviation-note">
-        <strong>Temporary deviation from the original:</strong> the pak's raw monument goal is <strong>6</strong>, but one finished small obelisk (weight 2) already produces rating 9 under the current additive formula in <code>city/monuments.js</code> (<code>2.25 × 2 + 4.5 = 9</code>). The goal is set to 9 to match what the building actually yields; it reverts to 6 once per-type weights are recalibrated against the original point table (pending weight recalibration).
+        <strong>Matches the original:</strong> monument goal <strong>6</strong>. One finished small obelisk (weight 1) gives <code>trunc(6.32 × √1 + 0.5) = 6</code> under the original formula in <code>city/monuments.js</code>; Buhen has no burial provisions.
       </div>
 
       <h2 id="events">Scripted events</h2>
@@ -227,7 +227,7 @@
       <h3>Phase 2 — A veteran army</h3>
       <p>Build a Recruiter, Weaponsmith, and a Military Academy, then raise infantry and archer companies and run them through the academy — trained veterans matter against the Kushite raids, which grow from size 8 in year 6 to size 36 by year 20. Keep a standing garrison at all times behind the mud fortifications; the raids never really stop, and a Transport Wharf helps shuttle troops along the Nile.</p>
       <h3>Phase 3 — The obelisk and the kingdom rating</h3>
-      <p>There is no granite this far south — import it from Abu until you have 100 blocks in a staffed Storage Yard, then place the <a href="../buildings/obelisk.html">small obelisk</a> for 9 monument points. The real challenge is kingdom rating 75: answer every limestone and beer request, keep the year-4 troop levy (and its recurring 400-troop follow-ups) fulfilled, and watch for the granite demand spikes at years 5 and 10.</p>
+      <p>There is no granite this far south — import it from Abu until you have 100 blocks in a staffed Storage Yard, then place the <a href="../buildings/obelisk.html">small obelisk</a> for monument rating 6. The real challenge is kingdom rating 75: answer every limestone and beer request, keep the year-4 troop levy (and its recurring 400-troop follow-ups) fulfilled, and watch for the granite demand spikes at years 5 and 10.</p>
       <h3>Tips</h3>
       <ul>
         <li>Fulfilling the year-4 troops request starts a self-renewing 400-troop tribute loop — keep succeeding and it keeps paying kingdom rating; fail it and Dahshur's status, kingdom rating, and copper/gem prices crash together.</li>
@@ -276,12 +276,12 @@
   <span class="kw">debt_interest</span> [<span class="num">10</span>, <span class="num">15</span>, <span class="num">20</span>, <span class="num">25</span>, <span class="num">30</span>]
 
   <span class="cmt">// Gods fixed to Ptah + Seth per pak (GOD_PTAH:1, GOD_SETH:2) — Osiris/Ra removed</span>
-  <span class="cmt">// pop 3000, culture 25, prosperity 25, monuments 9 (pak raw 6 → formula), kingdom 75, housing 10</span>
+  <span class="cmt">// pop 3000, culture 25, prosperity 25, monuments 6 (pak; small obelisk weight 1), kingdom 75, housing 10</span>
   <span class="kw">win_criteria</span> {
     <span class="kw">population</span>    { enabled : <span class="num">true</span>, goal : <span class="num">3000</span> }
     <span class="kw">culture</span>       { enabled : <span class="num">true</span>, goal : <span class="num">25</span> }
     <span class="kw">prosperity</span>    { enabled : <span class="num">true</span>, goal : <span class="num">25</span> }
-    <span class="kw">monuments</span>     { enabled : <span class="num">true</span>, goal : <span class="num">9</span> }
+    <span class="kw">monuments</span>     { enabled : <span class="num">true</span>, goal : <span class="num">6</span> }
     <span class="kw">kingdom</span>       { enabled : <span class="num">true</span>, goal : <span class="num">75</span> }
     <span class="kw">housing_level</span> { enabled : <span class="num">true</span>, goal : <span class="num">10</span> }
   }
@@ -348,7 +348,7 @@
           <summary>Known deviations from the original (tracked)</summary>
           <div class="details-body">
             <ul>
-              <li><strong>Monuments:</strong> pak raw goal is 6; TEMP goal is 9 — one finished small obelisk (weight 2) already produces rating 9 under the additive formula (<code>2.25×2+4.5</code>) in <span class="file-ref">src/scripts/city/monuments.js</span>. Reverts to 6 once per-type weights are recalibrated against the original point table (pending weight recalibration).</li>
+              <li><strong>Monuments:</strong> goal 6 = pak; one finished small obelisk (weight 1) → <code>trunc(6.32·√1+0.5)=6</code> in <span class="file-ref">src/scripts/city/monuments.js</span>.</li>
               <li><strong>Invasion points omitted:</strong> pak <code>inv_land_count</code> / <code>inv_sea_count</code> are both 0 — the engine falls back to the map exit tile for every Kushite raid (<code>scenario_start_invasion_impl</code>).</li>
               <li><strong>Troops request (OG):</strong> dispatched empire-service companies are away for the route travel months (12 without a route); at the deadline they win when their strength covers the amount (losses by <code>troops_loss_brackets</code>, none under Seth’s blessing) and fire the ok chain, else they are lost and fire the defeat chain (i=36→47); still more than 2 months away they come back too late (late chain). Never sent → refuse chain. Winners return after the travel months. Source: <code>src/scenario/request.cpp</code> <code>troops_request_process</code>; test <code>tests/474_troops_request_og.js</code>.</li>
               <li><strong>Troops MESSAGE / CITY_STATUS subtypes:</strong> i=33 MESSAGE subtype 0 = city saved (already handled). i=34/36 CITY_STATUS subtype 0 = Egyptian city falls — engine now closes trade, marks the city foreign-occupied, and posts the falls message (was a silent no-op / AUD1).</li>

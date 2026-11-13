@@ -1,5 +1,5 @@
 ﻿// C10 RT2: Small royal tomb — reject clear land; place the OG part layout on Valley cliff;
-// finish → monument rating (weight 4 → trunc(2.25*4+4.5)=13).
+// finish → monument rating (OG weight 4 → trunc(6.32*sqrt(4)+0.5)=13).
 
 function run_test() {
     __log_info_native('[test:141] small royal tomb cliff place + finish rating')
@@ -84,6 +84,7 @@ function run_test() {
     }
     __log_marker('royal_tomb_finished_ok')
 
+    test_monument_slots([BUILDING_SMALL_ROYAL_TOMB])
     city_update_monthly_monument_rating({})
     var rating_done = city.rating.monument | 0
     // weight 4 → trunc(13)

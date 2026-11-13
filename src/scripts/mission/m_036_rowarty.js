@@ -2,7 +2,7 @@ log_info("akhenaten: mission 36 rowarty started")
 
 // Empire id=35. Enemy ASSYRIAN (pak; briefing Sea People = flavor). Gods Osiris/Ptah/Seth×2.
 // Funds 10000/5000/20. Rank 10. Win pop 7000 / C65 / Pr50 / M29 / K80 / house 10.
-// Monuments 26/4/3 = Mausoleum skin1 + Medium + Small Mudbrick (W=5+8+4 ≥29).
+// Monuments 26/4/3 = Mausoleum skin1 + Medium + Small Mudbrick (5+12+4 → trunc(6.32·√21+0.5)=29).
 // Briefing «pair of mausoleums + brick» = flavor; keep as-pak (Hetep pattern).
 // Burial pottery×12 beer×12 linen×8 luxury×4. next_mission -1 (no Hetep/Cleo).
 // SKIP map_obj idx=12. Routes 1–8 copy. Mycenae route 5.
@@ -63,7 +63,7 @@ mission36 { // Rowarty (Avaris) — The Sea People
 		BUILDING_SCRIBAL_SCHOOL, BUILDING_LIBRARY, BUILDING_ZOO,
 	]
 
-	// Soft goal 29; engine weights Mausoleum+Med+Small mudbrick W=5+8+4 → rating ≥29.
+	// Goal 29 = pak: Mausoleum+Med+Small mudbrick (5+12+4) → 29; burial goods all below one divisor.
 	win_criteria {
 		population    {enabled : true, goal : 7000 }
 		culture       {enabled : true, goal : 65 }

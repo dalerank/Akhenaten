@@ -7,7 +7,7 @@ log_info("akhenaten: mission 51 alexandria_3 started")
 // Win: pop 10000 / culture 80 / prosperity 70 / monuments 24 /
 //      kingdom 80 / housing 6x lv19 / time_limit OFF (milestones 5/10/15).
 // Monuments: first=30 Caesareum, second=27 Mausoleum (gr198 skin 2).
-// Rating: Caesareum W=8 + Mausoleum W=5 → trunc(2.25*13+4.5)=33 ≥ goal 24.
+// Rating: Caesareum 10 + Mausoleum 5 → trunc(6.32·√15+0.5)=24 = goal; burial goods all below one divisor.
 // Burial: weapons4 linen4 gems5 luxury7 papyrus2. Gods: Ra(2) Ptah(1) Bast(1).
 // Rome sells weapons; Enkomi marble+timber. Orphans Migdol/Buhen/Kyrene → route 0.
 // SKIP empty map_obj idx=8. Chain invasion x1 (i=39). next_mission 52 (Actium §13.15).

@@ -321,7 +321,7 @@
         </li>
         <li>
           <span class="obj-label">Monument rating</span>
-          <span class="obj-value">76 — complete <strong>both</strong> the small stepped pyramid and the stepped pyramid complex</span>
+          <span class="obj-value">39 — complete <strong>both</strong> the small stepped pyramid and the stepped pyramid complex</span>
         </li>
         <li>
           <span class="obj-label">Kingdom rating</span>
@@ -332,9 +332,9 @@
           <span class="obj-value">11</span>
         </li>
       </ul>
-      <p>Population, culture, prosperity, kingdom, and housing match original campaign scenario 12. The monument rating uses the reimplementation additive scale: original campaign goal was 39, which is incompatible with the additive formula — see the deviation note.</p>
+      <p>All goals match original campaign scenario 12.</p>
       <div class="deviation-note">
-        <strong>Deviation from the original monument number:</strong> the original requires a small stepped pyramid <em>plus a stepped pyramid complex</em> at monument rating <strong>39</strong>. With the additive formula <code>2.25·Σ+4.5</code> (clamped to 100) and weights small=8 / on-land complex=24, finished both yield <strong>76</strong>. Weight 44 would saturate the 100-cap from the complex alone. Causeway water-gate (Slice A) is enforced; temples/full W=44 still open. Pak-39 needs a pak-compatible formula fork.
+        <strong>Matches the original:</strong> a small stepped pyramid <em>plus a stepped pyramid complex</em> at monument rating <strong>39</strong>. Original weights small=3 / complex=36 give <code>trunc(6.32·√39+0.5) = 39</code> once both are finished. The complex counts its full weight while on-land; the causeway water-gate (Slice A) is enforced, temples still open.
       </div>
 
       <!-- ─── Scripted events ───────────────────────────────── -->
@@ -454,12 +454,12 @@
   <span class="kw">initial_funds</span> [<span class="num">20000</span>, <span class="num">13300</span>, <span class="num">10000</span>, <span class="num">6700</span>, <span class="num">5300</span>]
   <span class="kw">debt_interest</span> [<span class="num">4</span>, <span class="num">6</span>, <span class="num">8</span>, <span class="num">10</span>, <span class="num">12</span>]
 
-  <span class="cmt">// Monuments goal 76 = trunc(2.25*(8+24)+4.5); pak was 39.</span>
+  <span class="cmt">// Monuments goal 39 = pak: trunc(6.32·√(3+36)+0.5).</span>
   <span class="kw">win_criteria</span> {
     <span class="kw">population</span>    { enabled : <span class="num">true</span>, goal : <span class="num">3000</span> }
     <span class="kw">culture</span>       { enabled : <span class="num">true</span>, goal : <span class="num">25</span> }
     <span class="kw">prosperity</span>    { enabled : <span class="num">true</span>, goal : <span class="num">25</span> }
-    <span class="kw">monuments</span>     { enabled : <span class="num">true</span>, goal : <span class="num">76</span> }
+    <span class="kw">monuments</span>     { enabled : <span class="num">true</span>, goal : <span class="num">39</span> }
     <span class="kw">kingdom</span>       { enabled : <span class="num">true</span>, goal : <span class="num">40</span> }
     <span class="kw">housing_level</span> { enabled : <span class="num">true</span>, goal : <span class="num">11</span> }
   }
@@ -471,7 +471,7 @@
   <span class="cmt">// Saqqara/Serabit Khadim land, Men-nefer display-only Pharaoh route)</span>
   <span class="kw">hide_pak_cities</span> : <span class="num">true</span>
 }</code></pre>
-            <p>The monument goal of <strong>76</strong> is the rating from small (8) + on-land complex (24) → <code>trunc(2.25 × 32 + 4.5) = 76</code> (see <span class="file-ref">src/scripts/city/monuments.js</span>). Pak original was 39; restoring it needs a pak-compatible formula fork. Causeway placement for the complex is still open. All other goals (pop 3000, culture 25, prosperity 25, kingdom 40, housing level 11) and the funds/debt-interest ladders match pak exactly. Trade: Abu / Behdet / Nekhen (sea, 650–1050 Db), Saqqara / Serabit Khadim (land, 200–350 Db) — all start closed. Men-nefer is a display-only Pharaoh route (no goods). Display: Byblos, Kerma, Kyrene, Selima Oasis.</p>
+            <p>The monument goal of <strong>39</strong> matches pak: small stepped (3) + stepped complex (36) → <code>trunc(6.32 × √39 + 0.5) = 39</code> (see <span class="file-ref">src/scripts/city/monuments.js</span>). Causeway placement for the complex is still open. All other goals (pop 3000, culture 25, prosperity 25, kingdom 40, housing level 11) and the funds/debt-interest ladders match pak exactly. Trade: Abu / Behdet / Nekhen (sea, 650–1050 Db), Saqqara / Serabit Khadim (land, 200–350 Db) — all start closed. Men-nefer is a display-only Pharaoh route (no goods). Display: Byblos, Kerma, Kyrene, Selima Oasis.</p>
           </div>
         </details>
 
@@ -538,7 +538,7 @@
           <summary>Known deviations from the original (tracked)</summary>
           <div class="details-body">
             <ul>
-              <li><strong>Monument goal:</strong> original pak is 39 (small + stepped pyramid complex). Reimpl uses the additive formula → goal <strong>76</strong> (<code>trunc(2.25·(8+24)+4.5)</code>); on-land complex weight=24 (same as large) because rating is clamped to 100 and weight 44 would saturate alone. Causeway open. Pak-39 needs a pak-compatible formula fork.</li>
+              <li><strong>Monument goal:</strong> 39 = pak (small + stepped pyramid complex, weights 3 + 36 → <code>trunc(6.32·√39+0.5)</code>); the complex counts its full weight while on-land. Causeway open.</li>
               <li><strong>Invasions and Pharaoh's favour</strong> are proxied in JS (<code>city.start_foreign_army_invasion</code>, <code>mission_pharaoh_favour_invasion_tick</code>) rather than the native <code>EVENT_TYPE_INVASION</code> — same pattern as Saqqara and Serabit Khadim, pending the B2-migrate step. Favour drops a Pharaoh-aligned army of 25, chaining to a second wave of 60 if the kingdom rating stays low.</li>
               <li><strong>Skipped pak junk:</strong> empire route 47 (orphan, no city references it) and map object index 7 (an empty stub at position 0,0) are omitted. Pak events with <code>years_since_start &gt;= 98</code> (a failed flood, a reeds request, a wage change, and a papyrus request with its gift chain) are dead data past any realistic playthrough length and are not wired.</li>
               <li><strong>Orphan chain-only leaves</strong> with no inbound reference (pak i=46 KR+7, i=58 papyrus price-decrease) are left out of the script — nothing in the fired schedule ever routes to them.</li>

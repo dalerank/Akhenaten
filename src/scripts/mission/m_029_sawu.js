@@ -76,14 +76,14 @@ mission29 { // Sawu (Mersa Gawasis) — Shores of the Red Sea; briefing key = me
 		BUILDING_MAUSOLEUM, BUILDING_SMALL_MUDBRICK_PYRAMID,
 	]
 
-	// Monuments: Mausoleum (W=5) + Small Mudbrick (W=4) → trunc(2.25·9+4.5)=24 ≥ goal 20.
-	// pak goal 21 = soft weight calib (same pattern as Heh pak 15 → goal 11).
+	// Monuments: Mausoleum (5) + Small Mudbrick (4) + burial linen 16/16, papyrus 16/16 (2) → trunc(6.32·√11+0.5)=21.
+	// = pak goal 21; without the burial goods the monuments alone give 19.
 	// pak housing count enabled with goal 0 (no-op) -> only housing_level is kept.
 	win_criteria {
 		population    {enabled : true, goal : 8000 }
 		culture       {enabled : true, goal : 65 }
 		prosperity    {enabled : true, goal : 65 }
-		monuments     {enabled : true, goal : 20 }
+		monuments     {enabled : true, goal : 21 }
 		kingdom       {enabled : true, goal : 75 }
 		housing_level {enabled : true, goal : 17 }
 	}

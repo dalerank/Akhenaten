@@ -167,13 +167,13 @@
         <li><span class="obj-label">Population</span><span class="obj-value">3 000 citizens</span></li>
         <li><span class="obj-label">Culture rating</span><span class="obj-value">20</span></li>
         <li><span class="obj-label">Prosperity rating</span><span class="obj-value">30</span></li>
-        <li><span class="obj-label">Monument rating</span><span class="obj-value">32 (large true pyramid, weight 13)</span></li>
+        <li><span class="obj-label">Monument rating</span><span class="obj-value">32 (large true pyramid, weight 26)</span></li>
         <li><span class="obj-label">Kingdom rating</span><span class="obj-value">55</span></li>
         <li><span class="obj-label">Housing level</span><span class="obj-value">10</span></li>
       </ul>
       <div class="deviation-note">
-        Monument goal matches pak (<strong>32</strong>). Large true pyramid weight 13 →
-        <code>trunc(2.25·13+4.5)=33</code> (≥32; weight 12 truncated to 31 and missed the goal).
+        Monument goal matches pak (<strong>32</strong>). Large true pyramid weight 26 →
+        <code>trunc(6.32·√26+0.5)=32</code>.
         Small/medium true and stepped remain available as extras.
       </div>
 
@@ -244,7 +244,7 @@
   <span class="kw">initial_funds</span> [<span class="num">20000</span>, <span class="num">13300</span>, <span class="num">10000</span>, <span class="num">6700</span>, <span class="num">5300</span>]
   <span class="kw">debt_interest</span> [<span class="num">10</span>, <span class="num">15</span>, <span class="num">20</span>, <span class="num">25</span>, <span class="num">30</span>]
 
-  <span class="cmt">// pop 3000, culture 20, prosperity 30, monuments 32 (large true W=13 → trunc 33), kingdom 55, housing 10</span>
+  <span class="cmt">// pop 3000, culture 20, prosperity 30, monuments 32 (large true weight 26 → 32), kingdom 55, housing 10</span>
   <span class="kw">win_criteria</span> { … }
 }</code></pre>
             <p>Empire id <strong>14</strong> via <code>empire.set_id(14)</code>. Choice → Iunet/On (scripts exist; empire redefine still pending for 16/17).</p>
@@ -284,7 +284,7 @@
           <div class="details-body">
             <ul>
               <li><strong>Monuments 32</strong> (pak) — large true ✅
-                (<code>monument_pyramid.*</code> / tests 108–110); weight 13 → trunc 33 ≥ 32.
+                (<code>monument_pyramid.*</code> / tests 108–110); weight 26 → <code>trunc(6.32·√26+0.5)=32</code>.
                 Stepped S/M still on the build list as extras.
                 </li>
               <li><strong>Clay floods i=0/1</strong> — pak year=24 reinterpreted as annual y1m0+; amount=8 = 8% of clay pits per wave (×2 waves).</li>

@@ -3,7 +3,7 @@ log_info("akhenaten: mission 22 dakhla started")
 // Empire / events aligned with original campaign scenario 22 (2026-07-26 dump).
 // Empire id=1. Enemy ENEMY_6_KUSHITE. Favour Pharaoh×90.
 // Gods: Ra, Ptah, Bast. Funds Normal 6000 / loan 2500 / debt 8. Rank 8.
-// Win: pop 5000 / culture 50 / prosperity 45 / monuments TEMP 9 (pak 6 small obelisk) / kingdom 65 / housing 11.
+// Win: pop 5000 / culture 50 / prosperity 45 / monuments 6 (pak; small obelisk) / kingdom 65 / housing 11.
 // Burial empty. Climate desert.
 // Trade: Nekhen(9) On(2) Saqqara(8) Selima(6). Display Buhen/Byblos/Djedu/Dunqul/Henen/Iunet/Kharga(stub12)/Men-nefer.
 // Triage: SKIP empty map_obj idx=9; omit river/disembark/inv points (pak 0).
@@ -90,12 +90,12 @@ mission22 { // Dakhla Oasis — The Caravan Trail
 		BUILDING_TEMPLE_COMPLEX_RA, BUILDING_TEMPLE_COMPLEX_PTAH, BUILDING_TEMPLE_COMPLEX_BAST,
 	]
 
-	// Monuments TEMP 9 (pak raw 6; one small obelisk → formula 9, same as Buhen).
+	// Monuments 6 = pak; one small obelisk, OG weight 1 → trunc(6.32·√1+0.5)=6.
 	win_criteria {
 		population    {enabled : true, goal : 5000 }
 		culture       {enabled : true, goal : 50 }
 		prosperity    {enabled : true, goal : 45 }
-		monuments     {enabled : true, goal : 9 }
+		monuments     {enabled : true, goal : 6 }
 		kingdom       {enabled : true, goal : 65 }
 		housing_level {enabled : true, goal : 11 }
 	}

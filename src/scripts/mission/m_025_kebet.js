@@ -6,7 +6,7 @@ log_info("akhenaten: mission 25 kebet started")
 // Gods: Osiris (patron x2), Ra, Seth. Funds Normal 20000 / loan 3500 / debt 20. Rank 9.
 // Win: pop 7000 / culture 40 / prosperity 45 / monuments 14 / kingdom 85 / housing 13.
 // Monuments: Large Obelisk (gr198 23) + Small Obelisk x2 (22/22) — all three implemented,
-// so the pak goal 14 is kept as-is (Large 4 + Small 2 -> 2.25*6+4.5 = 18 >= 14).
+// pak goal 14 = Large 3 + Small 1 + Small 1 → trunc(6.32·√5+0.5)=14.
 // Burial: pak burial_count=0 — no provisions block (nothing to hide).
 // Trade: Waset(1, open at start) Kharga(4) Buhen(6 sea).
 // Display: Byblos(2) Kerma(3 sea) Men-nefer(5 sea) Dakhla(7) Khmun(8 sea) Thinis(9 sea)

@@ -3,8 +3,8 @@ log_info("akhenaten: mission 26 menat khufu started")
 // Empire / events aligned with original campaign scenario 26 (2026-07-26 dump).
 // Empire id=1. Scenario enemy ENEMY_6_KUSHITE. Favour invasions invader=pharaoh(3) → ENEMY_3_EGYPTIAN.
 // Gods: Osiris(2), Ra(1), Bast(1) — no JS override. Funds Normal 10000 / loan 2500 / debt 20. Rank 9.
-// Win: pop 7000 / culture 60 / prosperity 50 / monuments 21 (2×small obelisk 2+2 + Small
-//   mudbrick 4 → trunc(2.25·8+4.5)=22 ≥ pak 21) / kingdom 75 / housing 10.
+// Win: pop 7000 / culture 60 / prosperity 50 / monuments 21 (2×small obelisk 1+1 + Small mudbrick 4
+//   + burial goods 5 → trunc(6.32·√11+0.5)=21 = pak) / kingdom 75 / housing 10.
 // Monuments pak: first=22 Small Obelisk ×2, third=3 Small Mudbrick Pyramid.
 // Burial: pottery×8 beer×32 linen×32 papyrus×8 granite×32. Climate northern (map).
 // Trade: Waset(1 sea) Men-nefer(2 sea) Dakhla(3). Display: Buhen Byblos Dunqul Henen-nesw Jericho Kebet Kerma Kharga.
@@ -67,7 +67,7 @@ mission26 { // Menat Khufu (Beni Hasan) — Reunification
 		BUILDING_SCRIBAL_SCHOOL, BUILDING_LIBRARY,
 	]
 
-	// Monuments 21: 2×Small Obelisk(2) + Small mudbrick(4) → trunc(22.5)=22 ≥ 21.
+	// Monuments 21: 2×Small Obelisk (1+1) + Small mudbrick (4) + burial beer 32/16, linen 32/16, granite 32/32 (5) → trunc(6.32·√11+0.5)=21.
 	win_criteria {
 		population    {enabled : true, goal : 7000 }
 		culture       {enabled : true, goal : 60 }

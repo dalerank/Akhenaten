@@ -166,12 +166,12 @@
         <li><span class="obj-label">Population</span><span class="obj-value">3 500 citizens</span></li>
         <li><span class="obj-label">Culture rating</span><span class="obj-value">not required</span></li>
         <li><span class="obj-label">Prosperity rating</span><span class="obj-value">25</span></li>
-        <li><span class="obj-label">Monument rating</span><span class="obj-value">21 — complete the Medium Bent Pyramid</span></li>
+        <li><span class="obj-label">Monument rating</span><span class="obj-value">21 — complete the Medium Bent Pyramid and send its granite</span></li>
         <li><span class="obj-label">Kingdom rating</span><span class="obj-value">50</span></li>
         <li><span class="obj-label">Housing level</span><span class="obj-value">19</span></li>
       </ul>
       <div class="deviation-note">
-        <strong>Note:</strong> the Medium Bent Pyramid uses the original <code>bent_pyramid</code> art pack. A finished medium bent (weight 8) gives rating 22 under the additive formula — enough for the pak goal of 21. Per-type monument weights are still placeholders pending weight recalibration.
+        <strong>Note:</strong> the Medium Bent Pyramid uses the original <code>bent_pyramid</code> art pack. A finished medium bent (weight 10) gives <code>trunc(6.32·√10+0.5) = 20</code> under the original formula; the burial provisions (granite ×32, one point) bring it to <code>trunc(6.32·√11+0.5) = 21</code>, the pak goal.
       </div>
 
       <h2 id="events">Scripted events</h2>
@@ -282,7 +282,7 @@
           <summary>Known deviations from the original (tracked)</summary>
           <div class="details-body">
             <ul>
-              <li><strong>Monument weights:</strong> goal 21 is the pak raw value; finished medium bent → rating 22 under the additive formula. Per-type weights will be recalibrated later.</li>
+              <li><strong>Monument weights:</strong> goal 21 is the pak raw value; finished medium bent (weight 10) → 20, plus granite burial 32/32 (one point) → 21. <code>burial_provisions</code> in <code>m_014_south_dahshur.js</code> states the pak granite ×32 explicitly.</li>
               <li><strong>Clay floods i=0/1/12/13 skipped:</strong> all year=24 editor junk.</li>
               <li><strong>Route 5 (Men-nefer):</strong> pak has no polyline — 2-point stub + deviation from Dahshur to Men-nefer.</li>
               <li><strong>map_obj idx=10</strong> empty stub skipped.</li>

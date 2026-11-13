@@ -2,7 +2,7 @@ log_info("akhenaten: mission 35 baki started")
 
 // Empire id=1. HITTITE (pak). Gods Ra×2, Osiris, Ptah, Seth.
 // Funds 7000/2500/20. Rank 10.
-// Win: pop 10000 / culture 70 / prosperity 70 / monuments 35 (Mausoleum+Med+Small mudbrick W=5+8+4→42) / kingdom 85 / housing 19.
+// Win: pop 10000 / culture 70 / prosperity 70 / monuments 35 (Mausoleum+Med+Small mudbrick 5+12+4 + burial 10 → 35) / kingdom 85 / housing 19.
 // Burial ×5 all 32. SKIP map_obj idx=11. Orphan routes 25/26.
 // Truncate i=18→0. Remap i=1 ok=85. Favour egypt 60→5→15→20→20.
 // Inv: land×1 + sea×1 packed → loc2=sea[0] via_sea (E3c); loc3/4/8 OOB navy→sea0.
@@ -61,7 +61,7 @@ mission35 { // Baki (Kuban) — The Glory of Egypt
 		BUILDING_SCRIBAL_SCHOOL, BUILDING_LIBRARY, BUILDING_ZOO,
 	]
 
-	// Soft goal 35; engine weights Mausoleum+Med+Small mudbrick W=5+8+4 → ~42.
+	// Goal 35 = pak: Mausoleum+Med+Small mudbrick (5+12+4) + burial 5×32/16 (10) → trunc(6.32·√31+0.5)=35.
 	win_criteria {
 		population    {enabled : true, goal : 10000 }
 		culture       {enabled : true, goal : 70 }

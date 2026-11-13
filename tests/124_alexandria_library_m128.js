@@ -93,11 +93,12 @@ function run_test() {
     }
     __log_marker('alex_m128_finished_ok')
 
+    test_monument_slots([BUILDING_ALEXANDRIA_LIBRARY])
     city_update_monthly_monument_rating({})
     var rating_done = city.rating.monument | 0
-    // weight 6 → trunc(2.25*6+4.5)=18
-    if (rating_done < 15) {
-        __log_info_native('[test:124] finished rating want >=15 got ' + rating_done)
+    // OG weight 12 → trunc(6.32*sqrt(12)+0.5)=22
+    if (rating_done < 22) {
+        __log_info_native('[test:124] finished rating want >=22 got ' + rating_done)
         __log_marker('alex_m128_rating_fail:' + rating_done)
         __test_signal_ready()
         return

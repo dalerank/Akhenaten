@@ -9,7 +9,7 @@ log_info("akhenaten: mission 18 rostja started")
 // NEW_TRADE i=20 copy Men-nefer; i=32/42/43 Nekhen→remap Iunet (route 3).
 // EVENT_TYPE_INVASION chain leaves no-op → JS via event_request_cleared:
 // gems crisis refuse/late → Hyksos×11; troops refuse/defeat → Hyksos×9 → re-arm ×47.
-// Monuments goal 53 (Sphinx + complex + medium true pyramid).
+// Monuments goal 53 (Sphinx 10 + complex 48 + medium true pyramid 12 → trunc(6.32·√70+0.5)=53).
 //
 // Tag_id scheme:
 //   1000 + i               chain-only ONLY_VIA_EVENT leaves / chain requests

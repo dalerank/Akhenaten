@@ -2,8 +2,8 @@ log_info("akhenaten: mission 32 khmun started")
 
 // Empire id=21. Hyksos reclaim (ENEMY_5_HYKSOS; pak enemy_id BARBARIAN ignored). Gods Ra×2, Ptah, Seth.
 // Funds Normal 9000 / loan 3500 / debt 20. Rank 10.
-// Win: pop 6000 / culture 55 / prosperity 50 / monuments TEMP 0 (pak 18; small mudbrick W=4 → 13.5 under F3) / kingdom 75 / housing 14.
-// Monuments pak first=3 Small Mudbrick — building allowed; restore goal 18 after F3 weight calibrate.
+// Win: pop 6000 / culture 55 / prosperity 50 / monuments 18 (pak; small mudbrick weight 4 + burial goods 4 → trunc(6.32·√8+0.5)=18) / kingdom 75 / housing 14.
+// Monuments pak first=3 Small Mudbrick — building allowed.
 // Burial ×5: weapons 5, beer 20, linen 32, luxury 20, papyrus 10.
 // SKIP empty map_obj idx=9. Orphan routes 5/10 — empire display only.
 // i=0/1 CITY_STATUS subtype0 loc=7/8 → FELL Heh/Iken (Nubian beat); trade opens via cost_to_open.
@@ -85,12 +85,12 @@ mission32 { // Khmun (Hermopolis) — Egypt Reclaimed
 		BUILDING_SCRIBAL_SCHOOL, BUILDING_LIBRARY,
 	]
 
-	// Small mudbrick W=4 → trunc(2.25·4+4.5)=13; pak 18 = soft weight calib.
+	// Small mudbrick (4) + burial beer 20/16, linen 32/16, luxury 20/16 (4) → trunc(6.32·√8+0.5)=18 = pak.
 	win_criteria {
 		population    {enabled : true, goal : 6000 }
 		culture       {enabled : true, goal : 55 }
 		prosperity    {enabled : true, goal : 50 }
-		monuments     {enabled : true, goal : 13 }
+		monuments     {enabled : true, goal : 18 }
 		kingdom       {enabled : true, goal : 75 }
 		housing_level {enabled : true, goal : 14 }
 	}

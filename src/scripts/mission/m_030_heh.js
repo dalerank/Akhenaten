@@ -77,7 +77,7 @@ mission30 { // Heh (Semna) — The Gauntlet
 		BUILDING_MAUSOLEUM,
 	]
 
-	// Monuments goal 15 = pak; Mausoleum W=5 → trunc(2.25*5+4.5)=15.
+	// Monuments goal 15 = pak; Mausoleum (5) + burial weapons 16/16 (1) → trunc(6.32·√6+0.5)=15.
 	win_criteria {
 		population    {enabled : true, goal : 6000 }
 		culture       {enabled : true, goal : 50 }

@@ -58,13 +58,13 @@ mission13 { // Buhen — Expansion to Nubia
 	]
 
 	// Goals aligned with original campaign scenario 13: pop 1/3000, culture 1/25, prosperity
-	// 1/25, monuments TEMP 9 (pak raw 6; one small obelisk → formula 9, see header),
+	// 1/25, monuments 1/6 (pak; one small obelisk, OG weight 1 → 6),
 	// kingdom 1/75, housing_level 1/10 (housing count goal 0 ignored).
 	win_criteria {
 		population    {enabled : true, goal : 3000 }
 		culture       {enabled : true, goal : 25 }
 		prosperity    {enabled : true, goal : 25 }
-		monuments     {enabled : true, goal : 9 }
+		monuments     {enabled : true, goal : 6 }
 		kingdom       {enabled : true, goal : 75 }
 		housing_level {enabled : true, goal : 10 }
 	}

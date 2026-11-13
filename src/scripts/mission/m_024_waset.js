@@ -92,7 +92,7 @@ mission24 { // Waset (Thebes) — Civil War
 		BUILDING_SCRIBAL_SCHOOL, BUILDING_LIBRARY,
 	]
 
-	// Monuments goal 20 (pak threshold; ST weight 4 + small pyramid 8 → 31≥20).
+	// Monuments goal 20 = pak: Sun Temple (4) + small pyramid (4) + burial weapons 16/16, pottery 16/16 (2) → trunc(6.32·√10+0.5)=20.
 	win_criteria {
 		population    {enabled : true, goal : 6000 }
 		culture       {enabled : true, goal : 55 }

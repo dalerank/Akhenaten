@@ -77,7 +77,7 @@
         <br /><strong>Briefing vs pak:</strong> MM text says «pair of mausoleums + brick pyramid». Pak monuments are <strong>Mausoleum skin 1</strong> (gr198:26) + Medium Mudbrick (4) + Small Mudbrick (3) — keep as-pak.
         <br /><strong>Enemy:</strong> scenario <code>ENEMY_1_ASSYRIAN</code> (pak). Briefing «Sea People» = flavor (Baki/Hetep pattern). Optional Sea People art remap → E3d.
         <br /><strong>Navy:</strong> calendar raids use <code>via_sea</code> for loc≥9 (sea points 0–7). Troops×70 refuse/late/defeat → enemy×72 (JS proxy via <code>event_request_cleared</code>).
-        <br /><strong>Monuments 29:</strong> W=5+8+4 → rating ≥ pak 29 (keep pak goal).
+        <br /><strong>Monuments 29:</strong> weights 5+12+4 → <code>trunc(6.32·√21+0.5)=29</code> = pak.
         <br /><strong>Soft:</strong> SKIP map_obj idx=12; orphan routes 6/7 kept; favour egypt×30×4; truncate junk late≥50 on non-request.
       </div>
 

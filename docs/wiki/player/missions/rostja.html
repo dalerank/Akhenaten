@@ -170,10 +170,9 @@
         <li><span class="obj-label">Housing level</span><span class="obj-value">10</span></li>
       </ul>
       <div class="deviation-note">
-        Monument goal matches pak (<strong>53</strong>). On-land pyramid complex weight 13
-        (causeway water-gate: Slice A; full W=44 after temples).
-        (= large true) + medium 16 + Sphinx 1 → <code>trunc(2.25·30+4.5)=72</code> when all three
-        are finished (above 53). Causeway/temples still pending for full complex weight 44.
+        Monument goal matches pak (<strong>53</strong>). Pyramid complex 48 (counted while on-land;
+        causeway water-gate: Slice A) + medium true 12 + Sphinx 10 → <code>trunc(6.32·√70+0.5)=53</code>
+        when all three are finished. Burial loads are all below one divisor. Temples still pending.
       </div>
 
       <h2 id="events">Scripted events</h2>
@@ -239,7 +238,7 @@
   <span class="kw">player_rank</span> : <span class="num">6</span>
   <span class="kw">choice</span> [ { <span class="kw">id</span> : <span class="num">19</span> }, { <span class="kw">id</span> : <span class="num">20</span> } ]
   <span class="cmt">// funds Normal 10000 / loan 5000 / debt 20%</span>
-  <span class="cmt">// monuments 53 (complex W=13 + medium + Sphinx), kingdom 50, housing_level 10</span>
+  <span class="cmt">// monuments 53 (complex 48 + medium 12 + Sphinx 10), kingdom 50, housing_level 10</span>
   <span class="cmt">// empire.set_id(18); ENEMY_5_HYKSOS</span>
 }</code></pre>
             <p>Empire id <strong>18</strong> via <code>empire.set_id(18)</code>. Full <code>hide_pak_*</code> redefine.</p>
@@ -267,7 +266,7 @@
             </table>
             <ul style="margin-top:0.75rem">
               <li><strong>Monuments 53</strong> (pak) — complex + medium true + Sphinx ✅
-                (on-land complex W=13; causeway/full W=44 still open).</li>
+                (weights 48 + 12 + 10 → 53; causeway temples still open).</li>
               <li><strong>Burial provisions</strong> (JS): beer×6, gems×6, luxury×3, timber×18, granite×12 — <code>hide_pak_burial</code> + <code>burial_provisions</code>.</li>
               <li><strong>NEW_TRADE Nekhen</strong> (i=32/42/43) remapped → <strong>Iunet</strong> (route 3).</li>
               <li><strong>Orphan routes 5/6/25</strong> skipped; empty map_obj idx=6 skipped.</li>

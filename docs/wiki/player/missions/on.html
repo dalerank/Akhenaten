@@ -171,7 +171,7 @@
         <li><span class="obj-label">Housing level</span><span class="obj-value">10</span></li>
       </ul>
       <div class="deviation-note">
-        <strong>Matches the original:</strong> monument goal 18 — three small mastabas under the additive rating formula (<code>2.25·Σ+4.5</code>, weight 2 each → <code>2.25·6+4.5 = 18</code>, in <code>city/monuments.js</code>). After construction, dispatch burial provisions via the Overseer of Monuments: linen / luxury goods / timber ×8 and limestone / granite ×32 (from JS <code>burial_provisions</code>; win waits until these are sent). When a mastaba is finished and those provisions are complete, a one-shot <strong>funeral walker</strong> procession walks to that tomb.
+        <strong>Matches the original:</strong> monument goal 18 — three small mastabas (weight 2 each) plus the limestone and granite burial loads (32/32 each, one point apiece) under the original rating formula (<code>trunc(6.32·√points+0.5)</code> → <code>trunc(6.32·√8+0.5) = 18</code>, in <code>city/monuments.js</code>). After construction, dispatch burial provisions via the Overseer of Monuments: linen / luxury goods / timber ×8 and limestone / granite ×32 (from JS <code>burial_provisions</code>; win waits until these are sent). When a mastaba is finished and those provisions are complete, a one-shot <strong>funeral walker</strong> procession walks to that tomb.
       </div>
 
       <h2 id="events">Scripted events</h2>

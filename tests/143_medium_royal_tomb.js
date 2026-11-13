@@ -1,4 +1,4 @@
-// C10 RT3: Medium royal tomb — OG part layout on Valley cliff; finish → rating weight 8.
+// C10 RT3: Medium royal tomb — OG part layout on Valley cliff; finish → rating (OG weight 12 → 22).
 
 function run_test() {
     __log_info_native('[test:143] medium royal tomb cliff place + finish rating')
@@ -82,9 +82,10 @@ function run_test() {
     }
     __log_marker('med_royal_tomb_finished_ok')
 
+    test_monument_slots([BUILDING_MEDIUM_ROYAL_TOMB])
     city_update_monthly_monument_rating({})
     var rating_done = city.rating.monument | 0
-    // weight 8 → trunc(2.25*8+4.5)=22
+    // OG weight 12 → trunc(6.32*sqrt(12)+0.5)=22
     if (rating_done < 22) {
         __log_info_native('[test:143] finished rating want >=22 got ' + rating_done)
         __log_marker('med_royal_tomb_rating_fail:' + rating_done)

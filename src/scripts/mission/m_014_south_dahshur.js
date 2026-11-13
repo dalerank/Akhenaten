@@ -9,7 +9,7 @@ log_info("akhenaten: mission 14 south dahshur started")
 // Triage: SKIP clay floods i=0/1/12/13 (all year=24 editor junk); SKIP map_obj idx=10
 // (empty stub). Route 5 (Men-nefer display) has no pak polyline → 2-pt stub + deviation.
 // Oil ladder i=2→…→i=8 is chain-only after the y1m6 root (amounts 500→8000).
-// Monuments goal 21 matches pak; medium bent pyramid weight 8 → rating 22 (≥21).
+// Monuments goal 21 matches pak: medium bent pyramid (10) + granite burial 32/32 (1) → trunc(6.32·√11+0.5)=21.
 //
 // Tag_id scheme:
 //   1000 + i               chain-only ONLY_VIA_EVENT leaves / chain requests
@@ -73,7 +73,7 @@ mission14 { // South Dahshur — Snofru's Bent Pyramid
 
 	// Goals aligned with original campaign scenario 14: pop 1/3500, culture 0/15 (disabled),
 	// prosperity 1/25, monuments 1/21, kingdom 1/50, housing_level 1/19 (count goal 0 ignored).
-	// Medium bent pyramid (weight 8) → 2.25*8+4.5 = 22 under additive formula — meets 21.
+	// Medium bent pyramid (10) + granite burial 32/32 (1) → trunc(6.32·√11+0.5)=21.
 	win_criteria {
 		population    {enabled : true, goal : 3500 }
 		culture       {enabled : false }
@@ -93,6 +93,12 @@ mission14 { // South Dahshur — Snofru's Bent Pyramid
 	invasion_points_sea [ [28, 17] ]
 
 	enable_scenario_events : true
+
+	// pak burial_provisions (scenario 14).
+	hide_pak_burial : true
+	burial_provisions [
+		{ resource: RESOURCE_GRANITE, required: 32 }
+	]
 
 	// Empire from original campaign scenario 14 (empire id=13) — full map objects.
 	map_background : {pack:PACK_EMPIRE, id:1}

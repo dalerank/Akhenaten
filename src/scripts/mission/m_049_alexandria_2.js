@@ -7,7 +7,7 @@ log_info("akhenaten: mission 49 alexandria_2 started")
 // Win: pop 7000 / culture 75 / prosperity 75 / monuments 28 /
 //      kingdom 75 / housing 6x lv16 / time_limit OFF (milestones 6/12/18).
 // Monuments: first=29 Library, second=28 Pharos (gr198).
-// Rating: Library W=6 + Pharos W=5 → trunc(2.25*11+4.5)=29 ≥ goal 28.
+// Rating: Library 12 + Pharos 8 → trunc(6.32·√20+0.5)=28 = goal.
 // Burial: none. Gods: Ra(2) Ptah(1) Bast(1).
 // Enkomi sells marble (briefing OK). Orphan routes Knossos/Migdol/Waset -> route 0.
 // SKIP empty map_obj idx=8. Invasions: 0. next_mission 50 (Maritis → Notes §13.13).

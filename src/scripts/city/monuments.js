@@ -1,72 +1,88 @@
 log_info("akhenaten: city_monuments.js started")
 
-var MONUMENT_WEIGHTS = {}
-MONUMENT_WEIGHTS[BUILDING_PYRAMID]                        = 44
-MONUMENT_WEIGHTS[BUILDING_STEPPED_PYRAMID_COMPLEX]        = 24  // on-land (= large); +causeway → recalibrate toward 44
-MONUMENT_WEIGHTS[BUILDING_GRAND_STEPPED_PYRAMID_COMPLEX]  = 44
-// True complex on-land shares large weight until causeway (W=44 saturates clamp).
-MONUMENT_WEIGHTS[BUILDING_PYRAMID_COMPLEX]                = 13
-MONUMENT_WEIGHTS[BUILDING_GRAND_PYRAMID_COMPLEX]          = 44
-MONUMENT_WEIGHTS[BUILDING_SMALL_MASTABA]                  = 2
-MONUMENT_WEIGHTS[BUILDING_MEDIUM_MASTABA]                 = 2
-MONUMENT_WEIGHTS[BUILDING_LARGE_MASTABA]                  = 3
-// Stepped pyramids: heavier than mastaba (2), lighter than true pyramid complex (44).
-MONUMENT_WEIGHTS[BUILDING_SMALL_STEPPED_PYRAMID]           = 8
-MONUMENT_WEIGHTS[BUILDING_MEDIUM_STEPPED_PYRAMID]         = 16
-MONUMENT_WEIGHTS[BUILDING_LARGE_STEPPED_PYRAMID]          = 24
-// Rating is clamped to 100 (city/monuments.js). Weight 44 for stepped complex alone
-// already saturates (2.25*44+4.5 > 100), so on-land complex shares large's 24 until
-// causeway/temples land or the whole table is recalibrated.
-// Bent pyramids (placeholder weights, like the others).
-// A finished medium bent gives 2.25*8+4.5 = 22, which satisfies mission 14's
-// original monument goal of 21 (Snofru's bent pyramid at South Dahshur).
-MONUMENT_WEIGHTS[BUILDING_SMALL_BENT_PYRAMID]             = 4
-MONUMENT_WEIGHTS[BUILDING_MEDIUM_BENT_PYRAMID]            = 8
-// Mudbrick (brick-core) pyramids — S=4 (not 8) so Itjtawy Sphinx+S+M → rating 33.
-MONUMENT_WEIGHTS[BUILDING_SMALL_MUDBRICK_PYRAMID]         = 4
-MONUMENT_WEIGHTS[BUILDING_MEDIUM_MUDBRICK_PYRAMID]        = 8
-// Large mudbrick 16×16: continue half-stepped series (S/M/L stepped 8/16/24 → 4/8/12).
-MONUMENT_WEIGHTS[BUILDING_LARGE_MUDBRICK_PYRAMID]         = 12
-// Complex on-land shares large weight (44 would saturate alone); grand keeps 44.
-MONUMENT_WEIGHTS[BUILDING_MUDBRICK_PYRAMID_COMPLEX]       = 12
-MONUMENT_WEIGHTS[BUILDING_GRAND_MUDBRICK_PYRAMID_COMPLEX] = 44
-// True (smooth) pyramids.
-MONUMENT_WEIGHTS[BUILDING_SMALL_PYRAMID]                  = 8
-MONUMENT_WEIGHTS[BUILDING_MEDIUM_PYRAMID]                 = 16
-MONUMENT_WEIGHTS[BUILDING_LARGE_PYRAMID]                  = 13
-MONUMENT_WEIGHTS[BUILDING_SPHINX]                         = 1
-MONUMENT_WEIGHTS[BUILDING_SMALL_OBELISK]                  = 2
-MONUMENT_WEIGHTS[BUILDING_LARGE_OBELISK]                  = 4
-MONUMENT_WEIGHTS[BUILDING_SUN_TEMPLE]                     = 4
-// OG RawNumber 5 (Heaven chart). trunc(2.25·5+4.5)=15 ≥ Alex₁ goal 14; Heh pak 15.
-MONUMENT_WEIGHTS[BUILDING_MAUSOLEUM]                      = 5
-// Mission 49 goal 28 needs Σw ≥ 11 (trunc(2.25·Σ+4.5)). Library alone must not
-// saturate: W=6 → 18. Pair with Pharos W=5 (PL3) → 29 ≥ 28.
-MONUMENT_WEIGHTS[BUILDING_ALEXANDRIA_LIBRARY]             = 6
-MONUMENT_WEIGHTS[BUILDING_CAESAREUM]                      = 8  // mission 51: +Mausoleum 5 → rating 33 ≥ goal 24
-MONUMENT_WEIGHTS[BUILDING_PHAROS_LIGHTHOUSE]              = 5  // PL3; pair Library 6 → rating 29 ≥ goal 28
-MONUMENT_WEIGHTS[BUILDING_SMALL_ROYAL_TOMB]               = 4  // m38 goal 13
-MONUMENT_WEIGHTS[BUILDING_ABU_SIMBEL]                     = 44
-MONUMENT_WEIGHTS[BUILDING_MEDIUM_ROYAL_TOMB]              = 8  // m39 goal 22
-MONUMENT_WEIGHTS[BUILDING_LARGE_ROYAL_TOMB]               = 13 // m40 goal 33 = trunc(2.25*13+4.5)
-MONUMENT_WEIGHTS[BUILDING_GRAND_ROYAL_TOMB]               = 18 // m44 goal 45
+// OG monument_defs (monument_object_data.c): the weight of each monument definition, by def id. A scenario
+// names its monuments by def id in __scenario_monuments.first/second/third.
+var MONUMENT_DEF_WEIGHTS = [
+	0,
+	4, 10,                 // 1-2 bent pyramid small, medium
+	4, 12, 26, 48, 80,     // 3-7 mudbrick pyramid small, medium, large, complex, grand complex
+	3, 9, 20, 36, 60,      // 8-12 stepped pyramid
+	4, 12, 26, 48, 80,     // 13-17 true pyramid
+	2, 3, 11,              // 18-20 mastaba small, medium, large
+	10,                    // 21 Sphinx
+	1, 3,                  // 22-23 obelisk small, large
+	4,                     // 24 Sun Temple
+	5, 5, 5,               // 25-27 Mausoleum by scenario size
+	8, 12, 10,             // 28-30 Pharos lighthouse, Alexandria library, Caesareum
+	5, 5,                  // 31-32 Colossi, Temple of Luxor
+	4, 12, 26, 48,         // 33-36 royal tomb small, medium, large, grand
+	48,                    // 37 Abu Simbel
+]
 
-// Monument rating is APPROXIMATE and additive, not concave. The original Pharaoh
-// aggregates monument points roughly linearly across the built monuments; the old
-// concave `6.32*sqrt(sum)+0.5` under-counted multiple monuments (3 small mastabas
-// gave 15 instead of the original 18). These constants reproduce the known anchor
-// points with the current weights:
-//   1 small mastaba   (sum 2)  -> 2.25*2 +4.5 = 9   (missions 4/13/16, and On x1)
-//   3 small mastabas  (sum 6)  -> 2.25*6 +4.5 = 18  (mission 17 On)
-//   1 medium stepped  (sum 16) -> 2.25*16+4.5 = 40  (>= Saqqara verified goal 19)
-//   1 small stepped   (sum 8)  -> 2.25*8 +4.5 = 22.5 → trunc 22
-//   Meidum S+complex  (8+24)   -> trunc(2.25*32+4.5)=76 (F3a; complex on-land = large)
-//   Bent medium       (sum 8)  -> 22 ≥ m14 goal 21
-// Exact per-type OG points still need a .pak dump (F3 calibration). Until then
-// weights stay placeholders except mission-tuned Cleopatra/Meidum entries above;
-// TEMP goals in m_0xx derive from these constants.
-var MONUMENT_RATING_MULT = 2.25
-var MONUMENT_RATING_OFFSET = 4.5
+// OG monument_get_def_id: the def ids a building type can register as.
+var MONUMENT_DEF_IDS = {}
+MONUMENT_DEF_IDS[BUILDING_SMALL_BENT_PYRAMID]             = [1]
+MONUMENT_DEF_IDS[BUILDING_MEDIUM_BENT_PYRAMID]            = [2]
+MONUMENT_DEF_IDS[BUILDING_SMALL_MUDBRICK_PYRAMID]         = [3]
+MONUMENT_DEF_IDS[BUILDING_MEDIUM_MUDBRICK_PYRAMID]        = [4]
+MONUMENT_DEF_IDS[BUILDING_LARGE_MUDBRICK_PYRAMID]         = [5]
+MONUMENT_DEF_IDS[BUILDING_MUDBRICK_PYRAMID_COMPLEX]       = [6]
+MONUMENT_DEF_IDS[BUILDING_GRAND_MUDBRICK_PYRAMID_COMPLEX] = [7]
+MONUMENT_DEF_IDS[BUILDING_SMALL_STEPPED_PYRAMID]          = [8]
+MONUMENT_DEF_IDS[BUILDING_MEDIUM_STEPPED_PYRAMID]         = [9]
+MONUMENT_DEF_IDS[BUILDING_LARGE_STEPPED_PYRAMID]          = [10]
+MONUMENT_DEF_IDS[BUILDING_STEPPED_PYRAMID_COMPLEX]        = [11]
+MONUMENT_DEF_IDS[BUILDING_GRAND_STEPPED_PYRAMID_COMPLEX]  = [12]
+MONUMENT_DEF_IDS[BUILDING_SMALL_PYRAMID]                  = [13]
+MONUMENT_DEF_IDS[BUILDING_MEDIUM_PYRAMID]                 = [14]
+MONUMENT_DEF_IDS[BUILDING_LARGE_PYRAMID]                  = [15]
+MONUMENT_DEF_IDS[BUILDING_PYRAMID_COMPLEX]                = [16]
+MONUMENT_DEF_IDS[BUILDING_GRAND_PYRAMID_COMPLEX]          = [17]
+MONUMENT_DEF_IDS[BUILDING_SMALL_MASTABA]                  = [18]
+MONUMENT_DEF_IDS[BUILDING_MEDIUM_MASTABA]                 = [19]
+MONUMENT_DEF_IDS[BUILDING_LARGE_MASTABA]                  = [20]
+MONUMENT_DEF_IDS[BUILDING_SPHINX]                         = [21]
+MONUMENT_DEF_IDS[BUILDING_SMALL_OBELISK]                  = [22]
+MONUMENT_DEF_IDS[BUILDING_LARGE_OBELISK]                  = [23]
+MONUMENT_DEF_IDS[BUILDING_SUN_TEMPLE]                     = [24]
+MONUMENT_DEF_IDS[BUILDING_MAUSOLEUM]                      = [25, 26, 27]
+MONUMENT_DEF_IDS[BUILDING_PHAROS_LIGHTHOUSE]              = [28]
+MONUMENT_DEF_IDS[BUILDING_ALEXANDRIA_LIBRARY]             = [29]
+MONUMENT_DEF_IDS[BUILDING_CAESAREUM]                      = [30]
+MONUMENT_DEF_IDS[BUILDING_COLOSSI]                        = [31]
+MONUMENT_DEF_IDS[BUILDING_TEMPLE_OF_LUXOR]                = [32]
+MONUMENT_DEF_IDS[BUILDING_SMALL_ROYAL_TOMB]               = [33]
+MONUMENT_DEF_IDS[BUILDING_MEDIUM_ROYAL_TOMB]              = [34]
+MONUMENT_DEF_IDS[BUILDING_LARGE_ROYAL_TOMB]               = [35]
+MONUMENT_DEF_IDS[BUILDING_GRAND_ROYAL_TOMB]               = [36]
+MONUMENT_DEF_IDS[BUILDING_ABU_SIMBEL]                     = [37]
+
+// The weight of a building type (its first def id).
+var MONUMENT_WEIGHTS = {}
+for (var monument_type in MONUMENT_DEF_IDS) {
+	MONUMENT_WEIGHTS[monument_type] = MONUMENT_DEF_WEIGHTS[MONUMENT_DEF_IDS[monument_type][0]]
+}
+
+// OG city_burial_goal_divisor: every 32 loads of a material or 16 of goods sent to the tombs add a point.
+var BURIAL_GOAL_DIVISORS = {}
+BURIAL_GOAL_DIVISORS[RESOURCE_GRAIN]        = 32
+BURIAL_GOAL_DIVISORS[RESOURCE_GAMEMEAT]     = 32
+BURIAL_GOAL_DIVISORS[RESOURCE_GEMS]         = 32
+BURIAL_GOAL_DIVISORS[RESOURCE_TIMBER]       = 32
+BURIAL_GOAL_DIVISORS[RESOURCE_STONE]        = 32
+BURIAL_GOAL_DIVISORS[RESOURCE_LIMESTONE]    = 32
+BURIAL_GOAL_DIVISORS[RESOURCE_GRANITE]      = 32
+BURIAL_GOAL_DIVISORS[RESOURCE_SANDSTONE]    = 32
+BURIAL_GOAL_DIVISORS[RESOURCE_WEAPONS]      = 16
+BURIAL_GOAL_DIVISORS[RESOURCE_POTTERY]      = 16
+BURIAL_GOAL_DIVISORS[RESOURCE_BEER]         = 16
+BURIAL_GOAL_DIVISORS[RESOURCE_LINEN]        = 16
+BURIAL_GOAL_DIVISORS[RESOURCE_LUXURY_GOODS] = 16
+BURIAL_GOAL_DIVISORS[RESOURCE_PAPYRUS]      = 16
+BURIAL_GOAL_DIVISORS[RESOURCE_CHARIOTS]     = 16
+
+var MONUMENT_RATING_FACTOR = 6.32
+var MONUMENT_RATING_ROUNDING = 0.5
 
 function monument_weight_btype(list_head_bid) {
 	var cur = city.get_building(list_head_bid)
@@ -74,7 +90,7 @@ function monument_weight_btype(list_head_bid) {
 	while (cur && guard < 256) {
 		guard++
 		var t = cur.type
-		if (typeof MONUMENT_WEIGHTS[t] !== 'undefined') {
+		if (typeof MONUMENT_DEF_IDS[t] !== 'undefined') {
 			return t
 		}
 		if (!cur.next_part_building_id) {
@@ -85,61 +101,104 @@ function monument_weight_btype(list_head_bid) {
 	return __building_type(list_head_bid)
 }
 
-[es=event_advance_month]
-function city_update_monthly_monument_rating(ev) {
-	var n = __city_monuments_list_refresh()
-	if (n == 0) {
-		__city_ratings_set_monument(0)
-		return
-	}
+function monument_scenario_slot_defs() {
+	return [__scenario_monuments.first | 0, __scenario_monuments.second | 0, __scenario_monuments.third | 0]
+}
 
-	var sum = 0
+// OG monument_register: each scenario slot takes the first built monument (lowest building id, in place of
+// OG's build order) whose def id matches; a building takes one slot. Monuments carried over from an earlier
+// mission are not built here and take no slot.
+function city_monument_slot_buildings() {
+	var defs = monument_scenario_slot_defs()
+	var slots = [0, 0, 0]
+	var n = __city_monuments_list_refresh()
 	for (var i = 0; i < n; i++) {
 		var bid = __city_monuments_list_id_at(i)
-		if (!bid) {
+		var monument = bid ? city.get_monument(bid) : null
+		if (!monument || monument.is_preexisting()) {
 			continue
 		}
-		var bt = monument_weight_btype(bid)
-		var w = MONUMENT_WEIGHTS[bt]
-		if (!w) {
+		var ids = MONUMENT_DEF_IDS[monument_weight_btype(bid)]
+		if (!ids) {
 			continue
 		}
-		var monument = city.get_monument(bid)
+		for (var slot = 0; slot < 3; slot++) {
+			if (!slots[slot] && defs[slot] && ids.indexOf(defs[slot]) >= 0) {
+				slots[slot] = bid
+				break
+			}
+		}
+	}
+	return slots
+}
+
+function monument_progress_pct(monument) {
+	var phase = monument.phase()
+	if (phase == -1) {
+		return 100
+	}
+	var phases = monument.phases_total()
+	if (phases <= 0) {
+		return 0
+	}
+	var progress = (((phase - 1) * 100 + monument.material_pct_min()) / phases) | 0
+	if (progress < 0) {
+		return 0
+	}
+	return (progress > 100) ? 100 : progress
+}
+
+function monument_burial_points() {
+	var points = 0
+	var n = __scenario_burial_provisions_count()
+	for (var i = 0; i < n; i++) {
+		var res = __scenario_burial_provisions_resource_at(i)
+		var divisor = BURIAL_GOAL_DIVISORS[res]
+		if (!divisor || !__scenario_burial_provisions_required(res)) {
+			continue
+		}
+		points += (__scenario_burial_provisions_dispatched(res) / divisor) | 0
+	}
+	return points
+}
+
+// OG city_ratings_calculate_monument: 6.32 * sqrt(points) + 0.5, one less while a monument is unfinished;
+// points = weight * progress% of each monument plus the burial goods share.
+function monument_rating_from_points(points, unfinished) {
+	var rating = Math.sqrt(points) * MONUMENT_RATING_FACTOR + MONUMENT_RATING_ROUNDING
+	if (unfinished) {
+		rating = Math.max(rating - 1.0, 0.0)
+	}
+	rating = rating | 0
+	return (rating > 100) ? 100 : rating
+}
+
+function city_monument_rating() {
+	var defs = monument_scenario_slot_defs()
+	if (!defs[0] && !defs[1] && !defs[2]) {
+		return 0
+	}
+
+	var points = 0
+	var unfinished = false
+	var slots = city_monument_slot_buildings()
+	for (var slot = 0; slot < 3; slot++) {
+		var monument = slots[slot] ? city.get_monument(slots[slot]) : null
 		if (!monument) {
 			continue
 		}
-		var phase = monument.phase()
-		var phases = monument.phases_total()
-		var mat = monument.material_pct_min()
-
-		var progress = 0
-		if (phase == -1) {
-			progress = 100
-		} else if (phases > 0) {
-			progress = ((phase - 1) * 100 + mat) / phases
-			if (progress < 0) {
-				progress = 0
-			}
-			if (progress > 100) {
-				progress = 100
-			}
+		var progress = monument_progress_pct(monument)
+		if (progress < 100) {
+			unfinished = true
 		}
+		points += ((MONUMENT_DEF_WEIGHTS[defs[slot]] * progress) / 100) | 0
+	}
+	points += monument_burial_points()
 
-		sum += (w * progress) / 100
-	}
+	return monument_rating_from_points(points, unfinished)
+}
 
-	// Additive: base offset for having any monument at all, plus a linear term.
-	// No monument progress -> rating 0 (avoid the offset leaking in on an
-	// unbuilt/zero-progress foundation).
-	var rating = 0
-	if (sum > 0) {
-		rating = MONUMENT_RATING_MULT * sum + MONUMENT_RATING_OFFSET
-	}
-	if (rating < 0) {
-		rating = 0
-	}
-	if (rating > 100) {
-		rating = 100
-	}
-	__city_ratings_set_monument(rating | 0)
+[es=event_advance_month]
+function city_update_monthly_monument_rating(ev) {
+	__city_ratings_set_monument(city_monument_rating())
 }

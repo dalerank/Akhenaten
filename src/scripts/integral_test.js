@@ -85,6 +85,18 @@ function test_find_buildable_tile(type) {
     return best
 }
 
+// The monument rating counts the scenario's monument slots only (OG monument_register): gives the slots the
+// def ids of these building types, in order.
+function test_monument_slots(types) {
+    var defs = [0, 0, 0]
+    for (var i = 0; i < types.length && i < 3; i++) {
+        defs[i] = MONUMENT_DEF_IDS[types[i]][0]
+    }
+    __scenario_monuments.first = defs[0]
+    __scenario_monuments.second = defs[1]
+    __scenario_monuments.third = defs[2]
+}
+
 function test_building_place(type, x, y) {
     var place = null
     if (x >= 0 && y >= 0) {
