@@ -135,6 +135,7 @@ advisor_religion_window = {
 					draw_scrollbar_always: false
 					draw_paneling: false
 					onrender_item: advisor_religion_gods_list_on_render_item
+					onclick_event: "god_click"
 				})
 
 				advice_text : { type : "text", pos: [60, 273], wrap:512, font : FONT_NORMAL_BLACK_ON_LIGHT, multiline:true },
@@ -149,6 +150,16 @@ advisor_religion_window = {
 			}
 		})
 	})
+}
+
+// OG window_go_god_description: the god's description (religion advisor texts 32..36) over the advisor.
+[es=(advisor_religion_window, god_click)]
+function advisor_religion_window_on_god_click(p) {
+	var g = gods[p.user_data]
+	if (!g) {
+		return
+	}
+	advisor_comment_window_show(59, 32 + g.type, GOD_DESCRIPTION_PANEL_BLOCKS, ADVISOR_NONE)
 }
 
 [es=(advisor_religion_window, hold_festival_btn)]

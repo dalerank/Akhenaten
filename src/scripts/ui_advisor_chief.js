@@ -93,6 +93,7 @@ advisor_chief_window {
 					draw_scrollbar_always: false
 					draw_paneling: true
 					onrender_item: advisor_chief_report_on_render_item
+					onclick_event: "row_click"
 				})
 
 				click_hint    : text({ pos:[60, 406], text:{group:61, id:218}, font: FONT_NORMAL_BLACK_ON_LIGHT }),
@@ -249,8 +250,77 @@ function advisor_chief_window_fill_report_rows(window) {
 	}
 }
 
+function advisor_chief_open_comment(topic) {
+	if (!__chief_advisor_row_opens_comment(topic)) {
+		return false
+	}
+	var comment = __advisor_comment(topic)
+	if (comment.text < 0) {
+		return false
+	}
+	advisor_comment_window_show(61, comment.text, ADVISOR_COMMENT_PANEL_BLOCKS, comment.advisor)
+	return true
+}
+
+[es=(advisor_chief_window, row_click)]
+function advisor_chief_window_on_row_click(p) {
+	var rows = advisor_chief_window._chief_report_rows
+	if (rows === undefined || rows[p.user_data] === undefined) {
+		return
+	}
+	advisor_chief_open_comment(rows[p.user_data].topic)
+}
+
 [es=(advisor_chief_window, init)]
 function advisor_chief_window_on_init(window) {
 	advisor_chief_window_fill_report_rows(window)
 	advisors_toolbar_refresh(window, ADVISOR_CHIEF)
+}
+
+var ADVISOR_COMMENT_PANEL_BLOCKS = 11
+var GOD_DESCRIPTION_PANEL_BLOCKS = 13
+
+// OG windows 0x4F (chief advisor comment) and 0x50 (god description): a text panel over the advisor,
+// right click returns; the comment offers a button to the advisor it refers to.
+var advisor_comment_state = { text_group: 61, text_id: -1, panel_blocks: 11, advisor: 0 }
+
+function advisor_comment_window_show(group, text_id, blocks, advisor) {
+	advisor_comment_state.text_group = group
+	advisor_comment_state.text_id = text_id
+	advisor_comment_state.panel_blocks = blocks
+	advisor_comment_state.advisor = advisor
+	__log_info_native("[advisor-comment] show group=" + group + " text=" + text_id + " advisor=" + advisor)
+	emit event_show_window { id: "advisor_comment_window" }
+}
+
+[es=modal_window]
+advisor_comment_window {
+	pos: [(sw(0) - px(40)) / 2, (sh(0) - px(30)) / 2]
+	draw_underlying: true
+	allow_rmb_goback: true
+
+	ui: {
+		background  : outer_panel({ pos:[16, 144], size:[38, 11] })
+		text        : text({ pos:[32, 160], wrap:576, font: FONT_NORMAL_BLACK_ON_LIGHT, multiline:true })
+		hint        : text({ pos:[16, 296], size:[608, 20], text:{group:13, id:1}, font: FONT_NORMAL_BLACK_ON_LIGHT, align:"center" })
+		advisor_btn : image_button({ pos:[32, 272], size:[28, 28], pack:PACK_GENERAL, id:106, onclick_event:"go_advisor", enabled:false })
+	}
+}
+
+[es=(advisor_comment_window, init)]
+function advisor_comment_window_init(window) {
+	var blocks = advisor_comment_state.panel_blocks
+	window.background.size = { x: 38, y: blocks }
+	window.hint.pos = { x: 16, y: 144 + blocks * 16 - 24 }
+	window.text.text = __loc(advisor_comment_state.text_group, advisor_comment_state.text_id)
+	var advisor = advisor_comment_state.advisor
+	var show = advisor != ADVISOR_NONE && city.is_advisor_available(advisor)
+	building_info_window_set_advisor_button(window.advisor_btn, advisor, show)
+}
+
+[es=(advisor_comment_window, go_advisor)]
+function advisor_comment_window_go_advisor(window) {
+	var advisor = advisor_comment_state.advisor
+	window_go_back()
+	window_advisors_show_advisor(advisor)
 }
