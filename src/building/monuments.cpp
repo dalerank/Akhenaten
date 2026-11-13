@@ -320,6 +320,23 @@ int building_monument::needs_resource(e_resource resource, int phase) const {
     return (r_it != ph.resources.end() ? r_it->count : 0);
 }
 
+int building_monument::remaining_resource_need(e_resource resource) const {
+    const auto& d = runtime_data();
+    if (d.phase < 0) {
+        return 0;
+    }
+
+    int total = 0;
+    for (int ph = d.phase, num = phases(); ph < num; ++ph) {
+        int need = needs_resource(resource, ph);
+        if (ph == d.phase) {
+            need -= need * (int)d.resources_pct[resource] / 100;
+        }
+        total += need;
+    }
+    return total;
+}
+
 void building_monument::on_phase_changed(int old, int current) {
     if (current >= 2) {
         map_building_tiles_add(id(), tile(), size(), this->building_image_get(), TERRAIN_BUILDING);

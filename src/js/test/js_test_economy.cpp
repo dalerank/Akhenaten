@@ -24,9 +24,11 @@
 #include "city/city_buildings.h"
 #include "city/city_figures.h"
 #include "city/city_industry.h"
+#include "city/city_trade.h"
 #include "city/object_info.h"
 #include "core/bstring.h"
 #include "core/xstring.h"
+#include "empire/empire.h"
 #include "empire/empire_traders.h"
 #include "empire/trader_handler.h"
 #include "figure/figure.h"
@@ -92,6 +94,66 @@ static void __test_city_set_trade(int resource, int status, int trading_amount) 
     g_city.resource.trading_amount[resource] = (int16_t)trading_amount;
 }
 ANK_FUNCTION_3(__test_city_set_trade);
+
+static void __test_trade_update_export_keep() {
+    city_trade_update_export_keep();
+}
+ANK_FUNCTION(__test_trade_update_export_keep);
+
+// What the trade checks read as stored in yards, without placing a connected yard.
+static void __test_city_set_yards_stored(int resource, int amount) {
+    if (resource > RESOURCE_NONE && resource < RESOURCES_MAX) {
+        g_city.resource.stored_in_storages[resource] = (uint16_t)amount;
+    }
+}
+ANK_FUNCTION_2(__test_city_set_yards_stored);
+
+static int __test_trade_export_keep(int resource) {
+    return city_trade_export_keep((e_resource)resource);
+}
+ANK_FUNCTION_1(__test_trade_export_keep);
+
+static bool __test_empire_can_export_to(int city_id, int resource) {
+    if (!g_empire.city(city_id) || resource <= RESOURCE_NONE || resource >= RESOURCES_MAX) {
+        return false;
+    }
+    return g_empire.can_export_resource_to_city(city_id, (e_resource)resource);
+}
+ANK_FUNCTION_2(__test_empire_can_export_to);
+
+static bool __test_empire_can_import_from(int city_id, int resource) {
+    if (!g_empire.city(city_id) || resource <= RESOURCE_NONE || resource >= RESOURCES_MAX) {
+        return false;
+    }
+    return g_empire.can_import_resource_from_city(city_id, (e_resource)resource);
+}
+ANK_FUNCTION_2(__test_empire_can_import_from);
+
+static int __test_empire_import_stock_limit(int resource) {
+    if (resource <= RESOURCE_NONE || resource >= RESOURCES_MAX) {
+        return 0;
+    }
+    return g_empire.import_stock_limit((e_resource)resource);
+}
+ANK_FUNCTION_1(__test_empire_import_stock_limit);
+
+// Makes city_id trade only `resource` (buys and sells) with the given route limit; -1 when the slot is unused.
+static int __test_empire_city_trade_only(int city_id, int resource, int limit) {
+    empire_city* city = g_empire.city(city_id);
+    if (!city || !city->in_use || resource <= RESOURCE_NONE || resource >= RESOURCES_MAX) {
+        return -1;
+    }
+    city->clear_trade_resources();
+    city->buys_resource[resource] = true;
+    city->sells_resource[resource] = true;
+    trade_route& route = city->get_route();
+    for (e_resource r = RESOURCES_MIN; r < RESOURCES_MAX; ++r) {
+        route.init(r, 0);
+    }
+    route.init((e_resource)resource, limit);
+    return city->route_id;
+}
+ANK_FUNCTION_3(__test_empire_city_trade_only);
 
 static int __test_cartpusher_destination_wait_threshold() {
     return figure_cartpusher::destination_wait_threshold();

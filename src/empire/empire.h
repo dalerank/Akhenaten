@@ -5,8 +5,46 @@
 #include "core/custom_span.hpp"
 #include "trade_route.h"
 #include "core/svector.h"
+#include "building/building_type.h"
 
 struct mission_id_t;
+
+// OG trade_recommends.txt: what the city keeps of the advisor's goods before it exports, by population.
+struct trade_recommend_row {
+    int32_t population_below = 0; // 0 = no upper bound (last row)
+    int32_t food = 0;
+    int32_t pottery = 0;
+    int32_t beer = 0;
+    int32_t linen = 0;
+    int32_t papyrus = 0;
+    int32_t luxury_goods = 0;
+};
+ANK_CONFIG_STRUCT(trade_recommend_row, population_below, food, pottery, beer, linen, papyrus, luxury_goods)
+
+// OG monument_unplaced_needs by the scenario's monument id; building tells a placed slot from an unplaced one.
+struct trade_monument_unplaced_need {
+    int32_t monument = 0;
+    e_building_type building = BUILDING_NONE;
+    e_resource resource = RESOURCE_NONE;
+    int32_t amount = 0;
+    int32_t limestone = 0;
+};
+ANK_CONFIG_STRUCT(trade_monument_unplaced_need, monument, building, resource, amount, limestone)
+
+struct empire_trade_rules_t {
+    int32_t keep_workshop_amount = 200;
+    int32_t keep_monument_amount = 500;
+    int32_t keep_other_amount = 1000;
+    int32_t stock_cap_small = 10000;
+    int32_t stock_cap_default = 15000;
+    int32_t stock_cap_large = 30000;
+    svector<trade_recommend_row, 8> recommends;
+    svector<trade_monument_unplaced_need, 40> monument_unplaced_needs;
+};
+ANK_CONFIG_STRUCT(empire_trade_rules_t, keep_workshop_amount, keep_monument_amount, keep_other_amount, stock_cap_small,
+  stock_cap_default, stock_cap_large, recommends, monument_unplaced_needs)
+
+extern empire_trade_rules_t empire_trade_rules;
 
 class empire_t {
 public:

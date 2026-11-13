@@ -141,6 +141,8 @@ public:
     virtual bool deliver_resource(e_resource resource, int amount);
     virtual int needs_resource(e_resource resource, int phase) const;
     virtual int needs_resource(e_resource resource) const;
+    // Material still to deliver until the monument is finished (OG monuments_unplaced_resource_need, placed slot).
+    int remaining_resource_need(e_resource resource) const;
     virtual bool needs_resources() const;
     virtual int progress();
     virtual void set_phase(int phase);

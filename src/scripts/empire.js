@@ -51,6 +51,53 @@ empire_city_images {
     foreign           : {path:"pharaoh_general/empire_bits_00066"}
 }
 
+// OG empire_trade_rules + trade_recommends.txt: how much the city keeps before it exports a surplus,
+// and the stock IMPORT_AS_NEEDED imports up to. Recomputed once a day.
+empire_trade_rules {
+    keep_workshop_amount : 200
+    keep_monument_amount : 500
+    keep_other_amount : 1000
+    stock_cap_small : 10000
+    stock_cap_default : 15000
+    stock_cap_large : 30000
+
+    recommends [
+        { population_below: 1000, food: 600,  pottery: 400,  beer: 400,  linen: 400,  papyrus: 300,  luxury_goods: 200 }
+        { population_below: 2500, food: 1200, pottery: 800,  beer: 800,  linen: 800,  papyrus: 600,  luxury_goods: 400 }
+        { population_below: 5000, food: 2400, pottery: 1600, beer: 1600, linen: 1600, papyrus: 1200, luxury_goods: 800 }
+        { population_below: 0,    food: 4000, pottery: 3000, beer: 3000, linen: 3000, papyrus: 2000, luxury_goods: 1500 }
+    ]
+
+    monument_unplaced_needs [
+        { monument: 1,  building: BUILDING_SMALL_BENT_PYRAMID,              resource: RESOURCE_STONE,     amount: 4800,   limestone: 19200 }
+        { monument: 2,  building: BUILDING_MEDIUM_BENT_PYRAMID,             resource: RESOURCE_STONE,     amount: 21600,  limestone: 43200 }
+        { monument: 3,  building: BUILDING_SMALL_MUDBRICK_PYRAMID,          resource: RESOURCE_BRICKS,    amount: 4800,   limestone: 19200 }
+        { monument: 4,  building: BUILDING_MEDIUM_MUDBRICK_PYRAMID,         resource: RESOURCE_BRICKS,    amount: 21600,  limestone: 43200 }
+        { monument: 5,  building: BUILDING_LARGE_MUDBRICK_PYRAMID,          resource: RESOURCE_BRICKS,    amount: 67200,  limestone: 76800 }
+        { monument: 6,  building: BUILDING_MUDBRICK_PYRAMID_COMPLEX,        resource: RESOURCE_BRICKS,    amount: 144000, limestone: 120000 }
+        { monument: 7,  building: BUILDING_GRAND_MUDBRICK_PYRAMID_COMPLEX,  resource: RESOURCE_BRICKS,    amount: 264000, limestone: 160000 }
+        { monument: 8,  building: BUILDING_SMALL_STEPPED_PYRAMID,           resource: RESOURCE_STONE,     amount: 4800,   limestone: 0 }
+        { monument: 9,  building: BUILDING_MEDIUM_STEPPED_PYRAMID,          resource: RESOURCE_STONE,     amount: 21600,  limestone: 0 }
+        { monument: 10, building: BUILDING_LARGE_STEPPED_PYRAMID,           resource: RESOURCE_STONE,     amount: 67200,  limestone: 0 }
+        { monument: 11, building: BUILDING_STEPPED_PYRAMID_COMPLEX,         resource: RESOURCE_STONE,     amount: 144000, limestone: 0 }
+        { monument: 12, building: BUILDING_GRAND_STEPPED_PYRAMID_COMPLEX,   resource: RESOURCE_STONE,     amount: 264000, limestone: 0 }
+        { monument: 13, building: BUILDING_SMALL_PYRAMID,                   resource: RESOURCE_STONE,     amount: 4800,   limestone: 19200 }
+        { monument: 14, building: BUILDING_MEDIUM_PYRAMID,                  resource: RESOURCE_STONE,     amount: 21600,  limestone: 43200 }
+        { monument: 15, building: BUILDING_LARGE_PYRAMID,                   resource: RESOURCE_STONE,     amount: 67200,  limestone: 76800 }
+        { monument: 16, building: BUILDING_PYRAMID_COMPLEX,                 resource: RESOURCE_STONE,     amount: 144000, limestone: 120000 }
+        { monument: 17, building: BUILDING_GRAND_PYRAMID_COMPLEX,           resource: RESOURCE_STONE,     amount: 264000, limestone: 160000 }
+        { monument: 18, building: BUILDING_SMALL_MASTABA,                   resource: RESOURCE_BRICKS,    amount: 10800,  limestone: 0 }
+        { monument: 19, building: BUILDING_MEDIUM_MASTABA,                  resource: RESOURCE_BRICKS,    amount: 24000,  limestone: 0 }
+        { monument: 20, building: BUILDING_LARGE_MASTABA,                   resource: RESOURCE_BRICKS,    amount: 42000,  limestone: 0 }
+        { monument: 22, building: BUILDING_SMALL_OBELISK,                   resource: RESOURCE_GRANITE,   amount: 10000,  limestone: 0 }
+        { monument: 23, building: BUILDING_LARGE_OBELISK,                   resource: RESOURCE_GRANITE,   amount: 20000,  limestone: 0 }
+        { monument: 24, building: BUILDING_SUN_TEMPLE,                      resource: RESOURCE_SANDSTONE, amount: 38000,  limestone: 0 }
+        { monument: 25, building: BUILDING_MAUSOLEUM,                       resource: RESOURCE_SANDSTONE, amount: 49600,  limestone: 0 }
+        { monument: 26, building: BUILDING_MAUSOLEUM,                       resource: RESOURCE_SANDSTONE, amount: 49600,  limestone: 0 }
+        { monument: 27, building: BUILDING_MAUSOLEUM,                       resource: RESOURCE_SANDSTONE, amount: 49600,  limestone: 0 }
+    ]
+}
+
 empire_traders {
     ship_movement_delay [2, 5]
     land_movement_delay [1, 4]

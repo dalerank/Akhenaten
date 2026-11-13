@@ -7,6 +7,7 @@
 #include "city/buildings.h"
 #include "city/city_message.h"
 #include "city/city.h"
+#include "city/city_trade.h"
 #include "city/city_resource_handle.h"
 #include "city/city_population.h"
 #include "scenario/map.h"
@@ -28,6 +29,7 @@
 
 //empire_t ANK_VARIABLE_N(g_empire, "empire");
 empire_t g_empire;
+empire_trade_rules_t ANK_VARIABLE(empire_trade_rules);
 
 #ifndef _WIN32
 #define stricmp strcasecmp
@@ -328,46 +330,6 @@ void empire_t::generate_traders() {
     }
 }
 
-int get_max_raw_stock_for_population(e_resource resource) {
-    int finished_good = RESOURCE_NONE;
-    switch (resource) {
-    case RESOURCE_CLAY: finished_good = RESOURCE_POTTERY; break;
-    case RESOURCE_GEMS: finished_good = RESOURCE_LUXURY_GOODS; break;
-    case RESOURCE_STRAW: finished_good = RESOURCE_OIL; break;
-    case RESOURCE_BARLEY: finished_good = RESOURCE_BEER; break;
-    case RESOURCE_FLAX: finished_good = RESOURCE_LINEN; break;
-    case RESOURCE_COPPER: finished_good = RESOURCE_WEAPONS; break;
-    }
-
-    int max_in_stock = 0;
-    if (finished_good) {
-        max_in_stock = 200 + 200 * g_city.buildings.count_industry_active(resource);
-    }
-
-    return max_in_stock;
-}
-
-int get_max_food_stock_for_population(e_resource resource) {
-    const int city_population = g_city.population.current;
-
-    switch (resource) {
-    case RESOURCE_GRAIN:
-    case RESOURCE_MEAT:
-    case RESOURCE_LETTUCE:
-    case RESOURCE_GAMEMEAT:
-    case RESOURCE_POTTERY:
-    case RESOURCE_LUXURY_GOODS:
-    case RESOURCE_OIL:
-    case RESOURCE_BEER:
-        return std::max(100, (city_population / 100) * 100);
-
-    default:
-        verify_no_crash(false);
-    }
-
-    return 0;
-}
-
 resource_list empire_t::importable_resources_from_city(int city_id) {
     resource_list result;
     for (const auto &r: resource_list::all) {
@@ -399,20 +361,25 @@ bool empire_t::can_export_resource_to_city(int city_id, e_resource resource) {
     }
 
     city_resource_handle hresource{ resource };
-    if (g_city.resource.yards_stored(resource) <= hresource.trading_amount()) {
-        // stocks too low
+    const int stored = g_city.resource.yards_stored(resource);
+    switch (hresource.trade_status()) {
+    case TRADE_STATUS_EXPORT:
+        if (stored <= hresource.trading_amount()) {
+            return false;
+        }
+        break;
+
+    case TRADE_STATUS_EXPORT_SURPLUS:
+        if (stored <= city_trade_export_keep(resource)) {
+            return false;
+        }
+        break;
+
+    default:
         return false;
     }
 
-    if (city_id == 0 || city->buys_resource[resource]) {
-        int status = hresource.trade_status();
-        switch (status) {
-        case TRADE_STATUS_EXPORT: return true;
-        case TRADE_STATUS_EXPORT_SURPLUS: return city_resource_trade_surplus(resource);
-        }
-    }
-
-    return false;
+    return city_id == 0 || city->buys_resource[resource];
 }
 
 bool empire_t::can_import_resource_from_city(int city_id, e_resource resource) {
@@ -443,62 +410,12 @@ bool empire_t::can_import_resource_from_city(int city_id, e_resource resource) {
 
 int empire_t::import_stock_limit(e_resource resource) {
     city_resource_handle hresource{ resource };
-    const int city_population = g_city.population.current;
-    int max_in_stock = 0;
-
     if (hresource.trade_status() == TRADE_STATUS_IMPORT_AS_NEEDED) {
-        switch (resource) {
-            // food and finished materials
-        case RESOURCE_GRAIN:
-        case RESOURCE_MEAT:
-        case RESOURCE_LETTUCE:
-        case RESOURCE_GAMEMEAT:
-        case RESOURCE_OIL:
-        case RESOURCE_BEER:
-            max_in_stock = get_max_food_stock_for_population(resource);
-            break;
-
-        case RESOURCE_MARBLE:
-        case RESOURCE_WEAPONS:
-            max_in_stock = 10;
-            break;
-
-        case RESOURCE_CLAY:
-        case RESOURCE_STRAW: 
-        case RESOURCE_BARLEY:
-        case RESOURCE_COPPER:
-        case RESOURCE_FLAX:
-            max_in_stock = get_max_raw_stock_for_population(resource);
-            break;
-
-        case RESOURCE_TIMBER:
-            max_in_stock = g_city.buildings.count_active(BUILDING_SHIPWRIGHT) * 200;
-            break;
-
-        case RESOURCE_BRICKS:
-            max_in_stock = std::max(100, (city_population / 100) * 100);
-            break;
-
-        case RESOURCE_POTTERY:
-        case RESOURCE_LUXURY_GOODS:
-            max_in_stock = std::max(100, (city_population / 100) * 50);
-            break;
-
-        case RESOURCE_PAPYRUS:
-            max_in_stock = std::max(100, g_city.buildings.count_active({ BUILDING_SCRIBAL_SCHOOL, BUILDING_LIBRARY }) * 100);
-            break;
-
-        default:
-            max_in_stock = 100;
-            break;
-        }
-    } else {
-        max_in_stock = hresource.trading_amount();
+        return city_trade_export_keep(resource);
     }
 
-    return max_in_stock;
+    return hresource.trading_amount();
 }
-
 
 io_buffer* iob_empire_cities = new io_buffer([](io_buffer* iob, size_t version) {
     // v178+: Cleopatra name ids 61+ need array slots. Older files keep classic 61.

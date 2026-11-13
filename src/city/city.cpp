@@ -264,6 +264,9 @@ void city_t::update_tick(int simtick) {
     case 10:
         g_desirability.update();
         break;
+    case 11:
+        city_trade_update_export_keep();
+        break;
     case 12:
         house_service_decay_houses_covered();
         break;
@@ -2064,6 +2067,7 @@ void city_t::on_post_load() {
     buildings.on_post_load();
     figures.on_post_load();
     kingdome.on_post_load();
+    city_trade_update_export_keep();
 }
 
 void city_t::figures_update_day() {
