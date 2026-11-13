@@ -151,7 +151,6 @@ localization_de = [
   {key:"#TR_CONFIG_FARM_MEADOW_HARVEST_RETRY", text:"Wiesenfarmen ernten auch am Tag 1 (Remake; Original nur Tag 0)"}
   {key:"#TR_CONFIG_DELIVER_ONLY_TO_ACCEPTING_GRANARIES", text:"Nahrung wird nicht an abholende Kornkammern geliefert"}
   {key:"#TR_CONFIG_ALL_HOUSES_MERGE", text:"Alle Häuser verschmelzen"}
-  {key:"#TR_CONFIG_WINE_COUNTS_IF_OPEN_TRADE_ROUTE", text:"Offene Handelsroute zählt als Bereitstellung verschiedener Weintypen"}
   {key:"#TR_CONFIG_RANDOM_COLLAPSES_TAKE_MONEY", text:"Zufällig einstürzende Tongruben und Eisenminen nehmen stattdessen etwas Geld"}
   {key:"#TR_CONFIG_DISASTER_EVENTS_USE_AMOUNT", text:"Tongrubenflut / Goldminen-Einsturz zerstören amount Gebäude aus dem Event"}
   {key:"#TR_CONFIG_MULTIPLE_BARRACKS", text:"Bau mehrerer Kasernen erlauben."}

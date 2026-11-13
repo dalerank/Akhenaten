@@ -156,7 +156,6 @@ localization_fr = [
   { key:"#TR_CONFIG_FARMS_DELIVER_CLOSE", text:"Fermes et Quais ne livrent plus qu'aux grenier à proximité"},
   { key:"#TR_CONFIG_DELIVER_ONLY_TO_ACCEPTING_GRANARIES", text:"La nourriture n'est pas livrée depuis/vers les greniers"},
   { key:"#TR_CONFIG_ALL_HOUSES_MERGE", text:"Toutes les maisons fusionnent"},
-  { key:"#TR_CONFIG_WINE_COUNTS_IF_OPEN_TRADE_ROUTE", text:"Ouvre des routes commerciales qui founissent différents types de vins"},
   { key:"#TR_CONFIG_RANDOM_COLLAPSES_TAKE_MONEY", text:"Les mines coûtent de l'argent au lieu d'être détruites."},
   { key:"#TR_CONFIG_MULTIPLE_BARRACKS", text:"Autorise la construction de plusieurs casernes."},
   { key:"#TR_CONFIG_NOT_ACCEPTING_WAREHOUSES", text:"Les entrepôts n'acceptent rien une fois construits"},

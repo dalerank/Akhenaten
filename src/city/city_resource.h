@@ -27,7 +27,7 @@ struct city_resources_t {
     bool mothballed[RESOURCES_MAX];
     int16_t unk_00[RESOURCES_MAX];
 
-    uint8_t beer_types_available;
+    int32_t luxury_goods_kinds;
     svector<uint16_t, RESOURCES_FOODS_MAX> food_types_available;
     svector<uint16_t, RESOURCES_FOODS_MAX> food_types_eaten;
     uint8_t food_types_eaten_max_value = 0;
@@ -93,7 +93,6 @@ struct city_resources_t {
 };
 
 
-int city_resource_multiple_wine_available();
 int city_resource_food_supply_months();
 int city_resource_operating_granaries();
 

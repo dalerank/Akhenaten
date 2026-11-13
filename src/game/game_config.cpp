@@ -108,8 +108,8 @@ namespace game_features {
     game_feature gameplay_change_farm_meadow_harvest_retry{ "gameplay_change_farm_meadow_harvest_retry", "#TR_CONFIG_FARM_MEADOW_HARVEST_RETRY", false, false };
     game_feature gameplay_change_industry_nearby_houses{ "gameplay_change_industry_nearby_houses", "#TR_CONFIG_INDUSTRY_NEARBY_HOUSES", false, false };
     game_feature gameplay_change_only_deliver_to_accepting_granaries{ "gameplay_change_only_deliver_to_accepting_granaries", "#TR_CONFIG_DELIVER_ONLY_TO_ACCEPTING_GRANARIES", false, false };
-    game_feature gameplay_change_all_houses_merge{ "gameplay_change_all_houses_merge", "#TR_CONFIG_ALL_HOUSES_MERGE", false, false };
-    game_feature gameplay_change_beer_open_trade_route_counts{ "gameplay_change_beer_open_trade_route_counts", "#TR_CONFIG_WINE_COUNTS_IF_OPEN_TRADE_ROUTE", false, false };
+    game_feature gameplay_change_all_houses_merge{
+      "gameplay_change_all_houses_merge", "#TR_CONFIG_ALL_HOUSES_MERGE", false, false};
     game_feature gameplay_change_random_mine_or_pit_collapses_take_money{ "gameplay_change_random_mine_or_pit_collapses_take_money", "#TR_CONFIG_RANDOM_COLLAPSES_TAKE_MONEY", false, false };
     game_feature gameplay_change_multiple_barracks{ "gameplay_change_multiple_barracks", "#TR_CONFIG_MULTIPLE_BARRACKS", false, false };
     game_feature gameplay_change_warehouses_dont_accept{ "gameplay_change_warehouses_dont_accept", "#TR_CONFIG_NOT_ACCEPTING_WAREHOUSES", false, false };

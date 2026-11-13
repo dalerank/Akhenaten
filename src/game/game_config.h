@@ -118,7 +118,6 @@ namespace game_features {
     extern game_feature gameplay_change_industry_nearby_houses;
     extern game_feature gameplay_change_only_deliver_to_accepting_granaries;
     extern game_feature gameplay_change_all_houses_merge;
-    extern game_feature gameplay_change_beer_open_trade_route_counts;
     extern game_feature gameplay_change_random_mine_or_pit_collapses_take_money;
     extern game_feature gameplay_change_multiple_barracks;
     extern game_feature gameplay_change_warehouses_dont_accept;

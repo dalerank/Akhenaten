@@ -10,10 +10,12 @@
 #include <algorithm>
 
 const e_empire_city_tokens_t ANK_CONFIG_ENUM(e_empire_city_tokens);
+const e_luxury_kind_tokens_t ANK_CONFIG_ENUM(e_luxury_kind_tokens);
 empire_city_options_t ANK_VARIABLE(empire_city_options);
 empire_city_images_t ANK_VARIABLE(empire_city_images);
 empire_city_type_changes_t ANK_VARIABLE(empire_city_conquest);
 empire_city_type_changes_t ANK_VARIABLE(empire_city_fall_to_enemy);
+empire_city_cultures_t ANK_VARIABLE(empire_city_cultures);
 
 image_desc empire_city_images_t::for_type(e_empire_city type, bool expanded) const {
     image_desc desc;

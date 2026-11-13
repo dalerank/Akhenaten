@@ -50,6 +50,28 @@ ANK_CONFIG_STRUCT(empire_city_type_changes_t, types)
 extern empire_city_type_changes_t empire_city_conquest;
 extern empire_city_type_changes_t empire_city_fall_to_enemy;
 
+// What a foreign city sells as luxury goods. OG keeps the resource-name text id (group 23, 38 + 2 * kind).
+enum e_luxury_kind : uint8_t {
+    LUXURY_JEWELRY = 0,
+    LUXURY_WINE,
+    LUXURY_IVORY,
+    LUXURY_EBONY,
+    LUXURY_INCENSE,
+    LUXURY_OLIVE_OIL,
+    LUXURY_LEOPARD_SKINS,
+    LUXURY_PERFUME,
+    LUXURY_KIND_MAX
+};
+using e_luxury_kind_tokens_t = token_holder<e_luxury_kind, LUXURY_JEWELRY, LUXURY_KIND_MAX>;
+
+// OG empire_culture_table (luxury_kind only): one entry per city name id; configured in empire.js.
+struct empire_city_cultures_t {
+    svector<uint8_t, 66> luxury_kind;
+};
+ANK_CONFIG_STRUCT(empire_city_cultures_t, luxury_kind)
+
+extern empire_city_cultures_t empire_city_cultures;
+
 struct empire_city {
     enum {
         check_open_route = 1

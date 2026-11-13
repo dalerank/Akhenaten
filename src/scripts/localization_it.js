@@ -175,7 +175,6 @@ localization_it = [
   {key:"#TR_CONFIG_FARM_MEADOW_HARVEST_RETRY", text:"Fattorie di prato raccolgono anche il giorno 1 (remake; originale solo giorno 0)"}
   {key:"#TR_CONFIG_DELIVER_ONLY_TO_ACCEPTING_GRANARIES", text:"Il cibo non viene consegnato ai granai in raccolta"}
   {key:"#TR_CONFIG_ALL_HOUSES_MERGE", text:"Tutte le case si uniscono"}
-  {key:"#TR_CONFIG_WINE_COUNTS_IF_OPEN_TRADE_ROUTE", text:"Una via commerciale aperta conta come un tipo di vino diverso"}
   {key:"#TR_CONFIG_RANDOM_COLLAPSES_TAKE_MONEY", text:"Le cave d'argilla e le miniere di ferro, invece di crollare a caso, costano denaro"}
   {key:"#TR_CONFIG_DISASTER_EVENTS_USE_AMOUNT", text:"Alluvione dell'argilla / crollo dell'oro distruggono la quantità di costruzioni indicata dall'evento"}
   {key:"#TR_CONFIG_MULTIPLE_BARRACKS", text:"Consenti la costruzione di più caserme."}

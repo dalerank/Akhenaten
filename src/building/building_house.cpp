@@ -578,6 +578,15 @@ e_house_progress building_house::check_requirements(house_demands* demands) {
     return status;
 }
 
+// OG house_good_requirement: the model's goods amounts are for houses bigger than 1x1; a 1x1 house needs a quarter,
+// rounded, but at least one.
+static int house_good_requirement(int value, int size) {
+    if (size == 1 && value > 0) {
+        return std::max((value + 2) / 4, 1);
+    }
+    return value;
+}
+
 e_house_progress building_house::has_required_goods_and_services(int for_upgrade, house_demands* demands) {
     int level = house_level();
     if (for_upgrade) {
@@ -691,21 +700,25 @@ e_house_progress building_house::has_required_goods_and_services(int for_upgrade
         return e_house_none;
     }
 
-    // goods
-    if (d.inventory[INVENTORY_GOOD1] < model.pottery)
+    const int size = base.size;
+    if (d.inventory[INVENTORY_GOOD1] < house_good_requirement(model.pottery, size)) {
         return e_house_none;
+    }
 
-    if (d.inventory[INVENTORY_GOOD3] < model.linen)
+    if (house_good_requirement(model.beer, size) != 0 && d.inventory[INVENTORY_GOOD4] <= 0) {
         return e_house_none;
+    }
 
-    if (d.inventory[INVENTORY_GOOD2] < model.jewelry)
+    if (d.inventory[INVENTORY_GOOD3] < house_good_requirement(model.linen, size)) {
         return e_house_none;
+    }
 
-    int beer = model.beer;
-    if (beer && d.inventory[INVENTORY_GOOD4] <= 0)
+    const int jewelry = house_good_requirement(model.jewelry, size);
+    if (d.inventory[INVENTORY_GOOD2] < jewelry) {
         return e_house_none;
+    }
 
-    if (beer > 1 && !city_resource_multiple_wine_available()) {
+    if (jewelry >= 2 && g_city.resource.luxury_goods_kinds < 2) {
         ++demands->missing.second_luxury;
         return e_house_none;
     }

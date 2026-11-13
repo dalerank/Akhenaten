@@ -184,7 +184,6 @@ localization_hu = [
   {key:"#TR_CONFIG_FARM_MEADOW_HARVEST_RETRY", text:"Réti farmok 1. napon is aratnak (remake; eredeti: csak 0. nap)"}
   {key:"#TR_CONFIG_DELIVER_ONLY_TO_ACCEPTING_GRANARIES", text:"Az élelem nem kerül beszállító magtárakba"}
   {key:"#TR_CONFIG_ALL_HOUSES_MERGE", text:"Minden ház összevonható"}
-  {key:"#TR_CONFIG_WINE_COUNTS_IF_OPEN_TRADE_ROUTE", text:"A megnyitott kereskedelmi útvonal külön borfajtának számít"}
   {key:"#TR_CONFIG_RANDOM_COLLAPSES_TAKE_MONEY", text:"A véletlen bányaomlások pénzveszteséget okoznak"}
   {key:"#TR_CONFIG_DISASTER_EVENTS_USE_AMOUNT", text:"Agyagárvíz / aranybánya-omlás az esemény amount épületét rombolja"}
   {key:"#TR_CONFIG_MULTIPLE_BARRACKS", text:"Több laktanya építésének engedélyezése"}

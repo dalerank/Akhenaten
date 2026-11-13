@@ -70,10 +70,6 @@ const resource_list &city_resources_t::available_market_goods() {
     return g_available_data.market_goods;
 }
 
-int city_resource_multiple_wine_available() {
-    return g_city.resource.beer_types_available >= 2;
-}
-
 int city_resource_food_supply_months() {
     return g_city.resource.food_supply_months;
 }

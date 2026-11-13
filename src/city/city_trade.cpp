@@ -19,11 +19,7 @@ void city_t::trade_update() {
 
     trade.num_sea_routes = 0;
     trade.num_land_routes = 0;
-    // Wine types
-    resource.beer_types_available = buildings.count_industry_total(RESOURCE_BEER) > 0 ? 1 : 0;
-    if (resource.trade_status[RESOURCE_BEER] == TRADE_STATUS_IMPORT || !!game_features::gameplay_change_beer_open_trade_route_counts) {
-        resource.beer_types_available += g_empire.count_beer_sources();
-    }
+    resource.luxury_goods_kinds = g_empire.count_luxury_goods_kinds();
 
     // Update trade problems
     if (trade.land_trade_problem_duration > 0) {

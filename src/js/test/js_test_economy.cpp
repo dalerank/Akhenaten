@@ -201,6 +201,34 @@ static int __test_empire_set_max_traders_per_city(int count) {
 }
 ANK_FUNCTION_1(__test_empire_set_max_traders_per_city);
 
+static void __test_empire_close_cities() {
+    for (auto& city : g_empire.get_cities()) {
+        city.is_open = false;
+    }
+}
+ANK_FUNCTION(__test_empire_close_cities);
+
+// Makes empire city `slot` an open luxury seller with the culture of `name_id`, on `route_id` with a limit.
+static void __test_empire_city_luxury_source(int slot, int name_id, int route_id) {
+    empire_city* city = g_empire.city(slot);
+    if (!city || route_id < 0 || route_id >= empire_t::MAX_ROUTES) {
+        return;
+    }
+    city->in_use = 1;
+    city->is_open = true;
+    city->name_id = (uint8_t)name_id;
+    city->route_id = route_id;
+    city->sells_resource[RESOURCE_LUXURY_GOODS] = true;
+    g_empire.get_route(route_id).set_limit(RESOURCE_LUXURY_GOODS, 1500);
+}
+ANK_FUNCTION_3(__test_empire_city_luxury_source);
+
+static int __test_city_update_luxury_goods_kinds() {
+    g_city.resource.luxury_goods_kinds = g_empire.count_luxury_goods_kinds();
+    return g_city.resource.luxury_goods_kinds;
+}
+ANK_FUNCTION(__test_city_update_luxury_goods_kinds);
+
 static int __test_cartpusher_destination_wait_threshold() {
     return figure_cartpusher::destination_wait_threshold();
 }

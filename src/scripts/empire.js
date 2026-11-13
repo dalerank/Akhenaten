@@ -131,6 +131,79 @@ empire_markers_rules {
     pick_distance : 30
 }
 
+// OG empire_culture_table: what each city sells as luxury goods, one line per city name id (group 195).
+// Houses that need a second luxury good count the different kinds of the open cities they import from.
+empire_city_cultures {
+    luxury_kind [
+        LUXURY_JEWELRY,       //  0 Abu
+        LUXURY_JEWELRY,       //  1 Abedju
+        LUXURY_WINE,          //  2 Bahariya Oasis
+        LUXURY_JEWELRY,       //  3 Baki
+        LUXURY_JEWELRY,       //  4 Behdet
+        LUXURY_JEWELRY,       //  5 Bubastis
+        LUXURY_JEWELRY,       //  6 Buhen
+        LUXURY_IVORY,         //  7 Byblos
+        LUXURY_JEWELRY,       //  8 Dahshur
+        LUXURY_EBONY,         //  9 Dakhla Oasis
+        LUXURY_JEWELRY,       // 10 Djedu
+        LUXURY_INCENSE,       // 11 Dunqul Oasis
+        LUXURY_OLIVE_OIL,     // 12 Enkomi
+        LUXURY_LEOPARD_SKINS, // 13 Farafra Oasis
+        LUXURY_INCENSE,       // 14 Gaza
+        LUXURY_JEWELRY,       // 15 Heh
+        LUXURY_JEWELRY,       // 16 Henen-nesw
+        LUXURY_JEWELRY,       // 17 Hetepsenusret
+        LUXURY_EBONY,         // 18 Iken
+        LUXURY_JEWELRY,       // 19 Itjtawy
+        LUXURY_JEWELRY,       // 20 Iunet
+        LUXURY_INCENSE,       // 21 Jericho
+        LUXURY_JEWELRY,       // 22 Kebet
+        LUXURY_EBONY,         // 23 Kerma
+        LUXURY_IVORY,         // 24 Kharga Oasis
+        LUXURY_JEWELRY,       // 25 Khmun
+        LUXURY_OLIVE_OIL,     // 26 Knossos
+        LUXURY_WINE,          // 27 Kyrene
+        LUXURY_JEWELRY,       // 28 Meidum
+        LUXURY_JEWELRY,       // 29 Men-nefer
+        LUXURY_JEWELRY,       // 30 Menat Khufu
+        LUXURY_WINE,          // 31 Mycenae
+        LUXURY_JEWELRY,       // 32 Nekhen
+        LUXURY_JEWELRY,       // 33 Nubt
+        LUXURY_JEWELRY,       // 34 On
+        LUXURY_JEWELRY,       // 35 Perwadjyt
+        LUXURY_INCENSE,       // 36 Pwenet
+        LUXURY_IVORY,         // 37 Qadesh
+        LUXURY_JEWELRY,       // 38 Rostja
+        LUXURY_JEWELRY,       // 39 Rowarty
+        LUXURY_JEWELRY,       // 40 Saqqara
+        LUXURY_JEWELRY,       // 41 Sauty
+        LUXURY_JEWELRY,       // 42 Sawu
+        LUXURY_EBONY,         // 43 Selima Oasis
+        LUXURY_INCENSE,       // 44 Serabit Khadim
+        LUXURY_IVORY,         // 45 Shaat
+        LUXURY_PERFUME,       // 46 Sharuhen
+        LUXURY_JEWELRY,       // 47 Thinis
+        LUXURY_PERFUME,       // 48 Timna
+        LUXURY_JEWELRY,       // 49 Toshka
+        LUXURY_INCENSE,       // 50 Tyre
+        LUXURY_JEWELRY,       // 51 Waset
+        LUXURY_PERFUME,       // 52 Migdol
+        LUXURY_WINE,          // 53 Alexandria
+        LUXURY_INCENSE,       // 54 Sumur
+        LUXURY_JEWELRY,       // 55 Deir el-Medina
+        LUXURY_JEWELRY,       // 56 Abu Simbel
+        LUXURY_OLIVE_OIL,     // 57 Actium
+        LUXURY_WINE,          // 58 Rome
+        LUXURY_JEWELRY,       // 59 Tanis
+        LUXURY_JEWELRY,       // 60 Pi-Yer
+        LUXURY_EBONY,         // 61 Siwi Oasis
+        LUXURY_JEWELRY,       // 62 Maritis
+        LUXURY_JEWELRY,       // 63 Piramesse
+        LUXURY_WINE,          // 64 Athens
+        LUXURY_WINE           // 65 Cleoantonopolis
+    ]
+}
+
 empire_traders {
     ship_movement_delay [2, 5]
     land_movement_delay [1, 4]

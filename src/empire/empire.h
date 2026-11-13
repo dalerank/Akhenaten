@@ -75,7 +75,7 @@ public:
     int trade_route_for_city(int city_id);
     void reset_yearly_trade_amounts();
     int get_city_for_object(int empire_object_id) const;
-    int count_beer_sources();
+    int count_luxury_goods_kinds();
     void expand();
     int get_city_vulnerable();
     void end_siege(int city_id);

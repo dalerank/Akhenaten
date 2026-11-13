@@ -947,7 +947,7 @@ static void city_data_bind_og_layout(io_buffer* iob) {
     iob->bind(BIND_SIGNATURE_INT32, &data.kingdome.invasion.size);
     iob->bind(BIND_SIGNATURE_UINT16, &data.kingdome.invasion.soldiers_killed);
     iob->bind(BIND_SIGNATURE_UINT8, &data.military.infantry_batalions);
-    iob->bind(BIND_SIGNATURE_UINT8, &data.resource.beer_types_available);
+    iob->bind____skip(1);
     iob->bind(BIND_SIGNATURE_INT8, &god_osiris.sank_ships);
     iob->bind(BIND_SIGNATURE_UINT8, &data.migration.percentage_by_sentiment);
     iob->bind____skip(2);
@@ -1161,7 +1161,7 @@ static void city_data_bind_og_layout(io_buffer* iob) {
     iob->bind____skip(16);
     iob->bind(BIND_SIGNATURE_INT32, &data.population.highest_ever);
     iob->bind(BIND_SIGNATURE_INT32, &data.finance.estimated_wages);
-    iob->bind____skip(4);
+    iob->bind(BIND_SIGNATURE_INT32, &data.resource.luxury_goods_kinds);
     iob->bind(BIND_SIGNATURE_UINT8, &data.ratings.prosperity_max);
     iob->bind____skip(3);
     for (int i = 0; i < 10; i++) {
@@ -1818,7 +1818,7 @@ io_buffer* iob_city_data = new io_buffer([](io_buffer* iob, size_t version) {
     iob->bind____skip(3);
     iob->bind(BIND_SIGNATURE_INT32, &data.population.highest_ever);
     iob->bind____skip(4);
-    iob->bind(BIND_SIGNATURE_UINT8, &data.resource.beer_types_available);
+    iob->bind____skip(1);
     iob->bind____skip(3);
     iob->bind(BIND_SIGNATURE_UINT8, &data.ratings.prosperity_max);
     iob->bind____skip(3);

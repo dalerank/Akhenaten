@@ -249,14 +249,35 @@ void empire_t::expand() {
     }
 }
 
-int empire_t::count_beer_sources() {
-    int sources = 0;
-    for (const auto &city: cities) {
-        if (city.in_use && city.is_open && city.sells_resource[RESOURCE_BEER]) {
-            sources++;
+// OG empire_count_luxury_goods_kinds + empire_city_generate_trader: a city with a luxury workshop has the first
+// kind; every open city that sells luxury goods on a route with a limit adds its culture's kind while the city
+// imports them.
+int empire_t::count_luxury_goods_kinds() {
+    int kinds[LUXURY_KIND_MAX] = {};
+    kinds[LUXURY_JEWELRY] = g_city.buildings.count_industry_total(RESOURCE_LUXURY_GOODS) > 0;
+
+    const e_trade_status status = g_city.resource.trade_status[RESOURCE_LUXURY_GOODS];
+    const bool imports = (status == TRADE_STATUS_IMPORT || status == TRADE_STATUS_IMPORT_AS_NEEDED);
+    for (int id = 1; imports && id < MAX_CITIES; id++) {
+        const empire_city& city = cities[id];
+        if (!city.in_use || !city.is_open || !city.sells_resource[RESOURCE_LUXURY_GOODS]) {
+            continue;
+        }
+        if (get_route(city.route_id).limit(RESOURCE_LUXURY_GOODS) <= 0) {
+            continue;
+        }
+        const auto& table = empire_city_cultures.luxury_kind;
+        const int kind = (city.name_id < table.size()) ? table[city.name_id] : LUXURY_JEWELRY;
+        if (kind < LUXURY_KIND_MAX) {
+            kinds[kind]++;
         }
     }
-    return sources;
+
+    int count = 0;
+    for (int kind : kinds) {
+        count += (kind != 0) ? 1 : 0;
+    }
+    return count;
 }
 
 int empire_t::trade_route_for_city(int city_id) {
