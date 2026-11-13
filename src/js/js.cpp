@@ -24,14 +24,15 @@
 #include "game/mission.h"
 #include "game/game.h"
 #include "dev/debug.h"
+#include "input/mouse.h"
+#include "window/autoconfig_window.h"
 #if defined(GAME_PLATFORM_ANDROID)
 #include "graphics/elements/lang_text.h"
-#include "input/mouse.h"
+#endif
 
 #include <algorithm>
 #include <string>
 #include <vector>
-#endif
 
 #include "js/js_debugger.h"
 #include "js/js_self_tests.h"
@@ -782,8 +783,8 @@ void js_vm_request_ui_relayout() {
 
 // Reloading re-creates every script window, including the one on screen. Wait until the size has
 // settled and no button is held: the interface-scale arrows repeat while pressed and resize on each
-// step, and a window rebuilt mid-press loses its state. The display options window is where the
-// size is being edited, so its own reload (which would also reset its saved scale) waits until it closes.
+// step, and a window rebuilt mid-press loses its state. Windows that hold unsaved edits while the size
+// changes (display options, game options) set defer_relayout and keep themselves centred meanwhile.
 static bool ui_relayout_ready() {
     constexpr time_millis settle_ms = 300;
     if (!g_ui_relayout.pending || time_get_millis() - g_ui_relayout.requested_at < settle_ms) {
@@ -793,7 +794,7 @@ static bool ui_relayout_ready() {
     if (m.left.is_down || m.right.is_down || m.middle.is_down) {
         return false;
     }
-    return window_get_id() != xstring("display_options_window");
+    return !autoconfig_window::defers_relayout(window_get_id());
 }
 
 static void js_vm_reload_ui_layouts() {
