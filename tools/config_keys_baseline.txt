@@ -398,8 +398,6 @@ unknown | scenario_data_t::meta_t.reset_personal_savings
 unknown | scenario_data_t::meta_t.river_entry_point
 unknown | scenario_data_t::meta_t.river_exit_point
 unknown | scenario_data_t::meta_t.routes
-unknown | scenario_data_t::meta_t.selection_subtitle
-unknown | scenario_data_t::meta_t.selection_text
 unknown | scenario_data_t::meta_t.selection_title
 unknown | scenario_data_t::meta_t.sounds
 unknown | scenario_data_t::meta_t.stages
@@ -488,4 +486,3 @@ zeroed | imagepak_handle.delayed
 zeroed | lang_message.key
 zeroed | loc_textid.group
 zeroed | loc_textid.id
-zeroed | win_criteria_t.goal
