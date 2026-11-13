@@ -37,7 +37,7 @@ building_granary {
         base { pack:PACK_GENERAL, id:99 },
         fancy { pack:PACK_GENERAL, id:99, offset:1 },
         work { pack:PACK_SPR_AMBIENT, id:47, max_frames:23 },
-        resources {pack:PACK_GENERAL, id:99, offset:2},
+        resources {pack:PACK_GENERAL, id:99, offset:3},
         minimap {pack:PACK_GENERAL, id:149, offset:160},
     }
 
