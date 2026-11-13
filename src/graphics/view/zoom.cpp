@@ -52,7 +52,12 @@ void zoom_t::handle_mouse(const mouse* m) {
         return;
     }
 
-    if (m->middle.went_up && input_offset == vec2i{m->x, m->y}) {
+    if (m->middle.went_down) {
+        middle_down_pos = {m->x, m->y};
+    }
+
+    // Middle button also pans the camera: only a release where it was pressed is a click.
+    if (m->middle.went_up && middle_down_pos == vec2i{m->x, m->y}) {
         target = zoom_default;
     }
 

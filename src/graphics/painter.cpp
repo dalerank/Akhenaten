@@ -327,6 +327,8 @@ void painter::draw_impl(SDL_Texture *texture, vec2i pos, vec2i offset, vec2i siz
             }
 
             const bool mirrored = !!(flags & ImgFlag_Mirrored);
+            const SDL_FRect full_dst = screen_coords;
+            const SDL_Rect full_src = texture_coords;
             float src_x = (float)texture_coords.x;
             float src_y = (float)texture_coords.y;
             float src_w = (float)texture_coords.w;
@@ -376,6 +378,17 @@ void painter::draw_impl(SDL_Texture *texture, vec2i pos, vec2i offset, vec2i siz
                 || screen_coords.w < 0.5f || screen_coords.h < 0.5f) {
                 return;
             }
+
+            // Re-place dst from the rounded src: rounding shifts the src by up to half a texel, which
+            // at zoom-in is several pixels and opens a gap along the row of tiles crossing the clip edge.
+            // The overhang this leaves past the clip edge is cut by the renderer's clip rect.
+            const float kx = full_dst.w / (float)full_src.w;
+            const float ky = full_dst.h / (float)full_src.h;
+            const float lead_x = (float)(texture_coords.x - full_src.x) * kx;
+            screen_coords.w = (float)texture_coords.w * kx;
+            screen_coords.h = (float)texture_coords.h * ky;
+            screen_coords.x = mirrored ? full_dst.x + full_dst.w - lead_x - screen_coords.w : full_dst.x + lead_x;
+            screen_coords.y = full_dst.y + (float)(texture_coords.y - full_src.y) * ky;
         }
     }
 
