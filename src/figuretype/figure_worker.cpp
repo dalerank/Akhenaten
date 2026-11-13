@@ -333,7 +333,13 @@ e_resource figure_worker::block_material_for(building *monument, figure_id mason
         return cae->block_resource();
     }
     if (laborer_is_cleopatra_monument(head)) {
-        return (head->dcast_sun_temple() || head->dcast_mausoleum()) ? RESOURCE_SANDSTONE : RESOURCE_MARBLE;
+        if (head->dcast_sun_temple() || head->dcast_mausoleum()) {
+            return RESOURCE_SANDSTONE;
+        }
+        if (auto *lib = head->dcast_alexandria_library()) {
+            return building_alexandria_library::material_for_stage(lib->main_library()->part_stage());
+        }
+        return RESOURCE_MARBLE;
     }
 
     e_pyramid_style style = g_monument_pyramid_engine.style_of(head);
@@ -588,6 +594,32 @@ bool figure_worker::assign_monument_task(building *monument, figure_id mason_fid
         return true;
     }
 
+    if (head->dcast_alexandria_library()) {
+        if (mason_fid) {
+            building *part = monument;
+            if (auto *lib = part->dcast_alexandria_library()) {
+                if (lib->check_work_for_figure(id(), true)) {
+                    return true;
+                }
+            }
+            return assign_block_delivery(head, mason_fid);
+        }
+        const int bid = building_alexandria_library::find_work_for_figure(id());
+        if (!bid) {
+            return false;
+        }
+        building *part = building_get(bid);
+        if (part) {
+            set_destination(part);
+        }
+        auto &rd = runtime_data();
+        rd.level_tiles_done = 0;
+        rd.monument_searches = 0;
+        rd.site_state = 0;
+        base.set_flag(e_figure_flag_invisible, false);
+        return true;
+    }
+
     if (mason_fid) {
         return assign_block_delivery(head, mason_fid);
     }
@@ -719,7 +751,7 @@ void figure_worker::find_work() {
                 tile2i yard_tile;
                 has_work = royal_tomb->wants_lamps() && !laborer_lamps_hauler_to(b.id, id())
                            && laborer_yard_for_getting(&b, RESOURCE_LAMPS, load, yard_tile) != 0;
-            } else if (b.dcast_sun_temple()) {
+            } else if (b.dcast_sun_temple() || b.dcast_alexandria_library()) {
                 has_work = mon->need_workers();
             } else if (b.dcast_mausoleum()) {
                 mason_id = laborer_cleopatra_mason_waiting(&b);
@@ -790,19 +822,28 @@ void figure_worker::sled_to_monument_tick(building *monument) {
     figure *mason = rd.mason_fid ? figure_get(rd.mason_fid) : nullptr;
     const bool mason_waiting = mason && mason->is_alive() && mason->type == FIGURE_STONEMASON
         && mason->action_state == ACTION_19_MASON_WAIT_FOR_BLOCK && mason->leading_figure_id == id();
-    auto *cae = head->dcast_caesareum();
-    if (mason_waiting && cae && !cae->sled_arrived()) {
-        // OG sled_to_counted_monument: the mason needs two sleds per stage; the next laborer may come.
-        mason->leading_figure_id = 0;
-    } else if (mason_waiting) {
-        mason->leading_figure_id = 0;
-        mason->wait_ticks = 0;
-        // OG sun temple: wake mason into work_tick (not pyramid place_block).
-        mason->action_state = (head->dcast_sun_temple() || head->dcast_mausoleum() || cae)
-            ? (short)ACTION_9_MASON_WORK_OBELISK
-            : (short)ACTION_21_MASON_PYRAMID_WORK;
-    } else if (auto *mon = head->dcast_monument()) {
-        mon->deliver_resource((e_resource)base.collecting_item_id, base.resource_amount_full);
+    if (auto *lib = head->dcast_alexandria_library()) {
+        // OG sled_to_counted_monument: only count while mason WAIT_FOR_BLOCK.
+        if (mason_waiting) {
+            mason->leading_figure_id = 0;
+            mason->wait_ticks = 0;
+            lib->on_material_delivered();
+        }
+    } else {
+        auto *cae = head->dcast_caesareum();
+        if (mason_waiting && cae && !cae->sled_arrived()) {
+            // OG sled_to_counted_monument: the mason needs two sleds per stage; the next laborer may come.
+            mason->leading_figure_id = 0;
+        } else if (mason_waiting) {
+            mason->leading_figure_id = 0;
+            mason->wait_ticks = 0;
+            // OG sun temple: wake mason into work_tick (not pyramid place_block).
+            mason->action_state = (head->dcast_sun_temple() || head->dcast_mausoleum() || cae)
+                ? (short)ACTION_9_MASON_WORK_OBELISK
+                : (short)ACTION_21_MASON_PYRAMID_WORK;
+        } else if (auto *mon = head->dcast_monument()) {
+            mon->deliver_resource((e_resource)base.collecting_item_id, base.resource_amount_full);
+        }
     }
 
     rd.delivering_block = 0;
@@ -820,7 +861,7 @@ void figure_worker::monument_site_work_tick(building *monument) {
     auto &rd = runtime_data();
     base.set_flag(e_figure_flag_invisible, false);
     building *head = monument->main() ? monument->main() : monument;
-    // OG sun temple: 50-tick part work on the destination part (not tile leveling).
+    // OG sun temple / library: timed part work on the destination part (not tile leveling).
     if (auto *sun = monument->dcast_sun_temple()) {
         if (sun->work_tick(base)) {
             if (auto *mon = sun->dcast_monument()) {
@@ -844,6 +885,22 @@ void figure_worker::monument_site_work_tick(building *monument) {
             rd.monument_searches++;
             if (rd.monument_searches < (int)current_params().monument_work_searches
                 && building_mausoleum::find_work_for_figure(id())) {
+                rd.site_state = 0;
+                base.wait_ticks = 0;
+                return;
+            }
+            enter_idle_pool();
+        }
+        return;
+    }
+    if (auto *library = monument->dcast_alexandria_library()) {
+        if (library->work_tick(base)) {
+            if (auto *mon = library->dcast_monument()) {
+                mon->remove_worker(id());
+            }
+            rd.monument_searches++;
+            if (rd.monument_searches < (int)current_params().monument_work_searches
+                && building_alexandria_library::find_work_for_figure(id())) {
                 rd.site_state = 0;
                 base.wait_ticks = 0;
                 return;

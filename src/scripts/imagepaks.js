@@ -93,6 +93,17 @@ imagepaks = [
   {id: PACK_LIB_MAIN_3, name:"LibMaina3", index:36994, delayed:true, system:false, compact:true},
   {id: PACK_LIB_MAIN_4, name:"LibMaina4", index:36996, delayed:true, system:false, compact:true},
   {id: PACK_LIB_MAIN_5, name:"LibMaina5", index:36998, delayed:true, system:false, compact:true},
+  // LibMainb1..b5 / LibMainc1..c5 (compact: 2 imgs each) — before LtHouse@50900.
+  {id: PACK_LIB_MAIN_B1, name:"LibMainb1", index:50880, delayed:true, system:false, compact:true},
+  {id: PACK_LIB_MAIN_B2, name:"LibMainb2", index:50882, delayed:true, system:false, compact:true},
+  {id: PACK_LIB_MAIN_B3, name:"LibMainb3", index:50884, delayed:true, system:false, compact:true},
+  {id: PACK_LIB_MAIN_B4, name:"LibMainb4", index:50886, delayed:true, system:false, compact:true},
+  {id: PACK_LIB_MAIN_B5, name:"LibMainb5", index:50888, delayed:true, system:false, compact:true},
+  {id: PACK_LIB_MAIN_C1, name:"LibMainc1", index:50890, delayed:true, system:false, compact:true},
+  {id: PACK_LIB_MAIN_C2, name:"LibMainc2", index:50892, delayed:true, system:false, compact:true},
+  {id: PACK_LIB_MAIN_C3, name:"LibMainc3", index:50894, delayed:true, system:false, compact:true},
+  {id: PACK_LIB_MAIN_C4, name:"LibMainc4", index:50896, delayed:true, system:false, compact:true},
+  {id: PACK_LIB_MAIN_C5, name:"LibMainc5", index:50898, delayed:true, system:false, compact:true},
   // LtHouse1..9 stages (1 img); LtHouse10 beacon anim (11). Before obelisk@51000.
   {id: PACK_LTHOUSE_1, name:"LtHouse1", index:50900, delayed:true, system:false, compact:true},
   {id: PACK_LTHOUSE_2, name:"LtHouse2", index:50901, delayed:true, system:false, compact:true},

@@ -16,6 +16,7 @@
 #include "building/monument_royal_tomb.h"
 #include "building/monument_sphinx.h"
 #include "building/monument_sun_temple.h"
+#include "building/monument_alexandria_library.h"
 #include "building/monuments.h"
 #include "city/city_buildings.h"
 #include "city/city_figures.h"
@@ -1247,3 +1248,111 @@ static int __test_mausoleum_work(int part_bid, int fid) {
     return p->work_tick(*f) ? 1 : 0;
 }
 ANK_FUNCTION_2(__test_mausoleum_work);
+
+static building_alexandria_library *test_alexandria_library(int bid) {
+    building *b = building_get(bid);
+    auto *s = b ? b->dcast_alexandria_library() : nullptr;
+    return s ? s->main_library() : nullptr;
+}
+
+static int __test_alexandria_library_part_count(int bid) {
+    auto *s = test_alexandria_library(bid);
+    if (!s) {
+        return -1;
+    }
+    int n = 0;
+    for (building *p = &s->base; p; p = p->has_next() ? p->next() : nullptr) {
+        n++;
+    }
+    return n;
+}
+ANK_FUNCTION_1(__test_alexandria_library_part_count);
+
+static int __test_alexandria_library_stage(int bid) {
+    auto *s = test_alexandria_library(bid);
+    return s ? s->part_stage() : -1;
+}
+ANK_FUNCTION_1(__test_alexandria_library_stage);
+
+static int __test_alexandria_library_progress(int bid) {
+    auto *s = test_alexandria_library(bid);
+    return s ? s->get_progress(nullptr) : -1;
+}
+ANK_FUNCTION_1(__test_alexandria_library_progress);
+
+static int __test_alexandria_library_work(int bid, int fid) {
+    building *b = building_get(bid);
+    auto *part = b ? b->dcast_alexandria_library() : nullptr;
+    figure *f = fid > 0 ? figure_get(fid) : nullptr;
+    if (!part || !f) {
+        return -1;
+    }
+    f->destination_building_id = bid;
+    return part->work_tick(*f) ? 1 : 0;
+}
+ANK_FUNCTION_2(__test_alexandria_library_work);
+
+static void __test_alexandria_library_finish(int bid) {
+    auto *s = test_alexandria_library(bid);
+    if (!s) {
+        return;
+    }
+    for (int i = 0; i < building_alexandria_library::parts_count(); ++i) {
+        if (auto *p = s->part(i)) {
+            p->set_phase(MONUMENT_FINISHED);
+        }
+    }
+    s->refresh_part_images();
+}
+ANK_FUNCTION_1(__test_alexandria_library_finish);
+
+static int __test_alexandria_library_part_stage(int bid, int part_index) {
+    auto *s = test_alexandria_library(bid);
+    if (!s) {
+        return -1;
+    }
+    auto *p = s->part(part_index);
+    return p ? p->part_stage() : -1;
+}
+ANK_FUNCTION_2(__test_alexandria_library_part_stage);
+
+static int __test_alexandria_library_part_id(int bid, int part_index) {
+    auto *s = test_alexandria_library(bid);
+    if (!s) {
+        return 0;
+    }
+    auto *p = s->part(part_index);
+    return p ? p->id() : 0;
+}
+ANK_FUNCTION_2(__test_alexandria_library_part_id);
+
+static void __test_alexandria_library_set_part_stage(int bid, int part_index, int stage) {
+    auto *s = test_alexandria_library(bid);
+    if (!s) {
+        return;
+    }
+    if (auto *p = s->part(part_index)) {
+        p->set_phase(stage);
+        s->refresh_part_images();
+    }
+}
+ANK_FUNCTION_3(__test_alexandria_library_set_part_stage);
+
+static int __test_alexandria_library_check_work(int bid, int fid, int assign) {
+    auto *s = test_alexandria_library(bid);
+    figure *f = fid > 0 ? figure_get(fid) : nullptr;
+    if (!s || !f) {
+        return 0;
+    }
+    return s->main_library()->check_work_for_figure(fid, assign != 0) ? 1 : 0;
+}
+ANK_FUNCTION_3(__test_alexandria_library_check_work);
+
+static void __test_alexandria_library_deliver_material(int bid) {
+    auto *s = test_alexandria_library(bid);
+    if (!s) {
+        return;
+    }
+    s->main_library()->on_material_delivered();
+}
+ANK_FUNCTION_1(__test_alexandria_library_deliver_material);

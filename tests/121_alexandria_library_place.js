@@ -43,14 +43,21 @@ function run_test() {
     }
     __log_marker('alex_library_reject_second_ok')
 
-    // Engine: phases 0–7 + sentinel 8 → size 9; set_phase(9) → FINISHED
-    __test_monument_set_phase(bid, 9)
+    var parts = __test_alexandria_library_part_count(bid)
+    if (parts != 25) {
+        __log_info_native('[test:121] expected 25 parts, got ' + parts)
+        __test_signal_ready()
+        return
+    }
+    __log_marker('alex_library_25_parts')
+
+    __test_alexandria_library_finish(bid)
     __test_process_events()
     __test_pump_frames(2)
 
     var ph = __test_monument_phase(bid)
     if (ph != 255 && ph != -1) {
-        __log_info_native('[test:121] not finished after set_phase(9) ph=' + ph)
+        __log_info_native('[test:121] not finished after finish helper ph=' + ph)
         __test_signal_ready()
         return
     }
@@ -76,6 +83,7 @@ function check_valid() {
     var required = [
         'alex_library_placed_ok',
         'alex_library_reject_second_ok',
+        'alex_library_25_parts',
         'alex_library_finished_ok',
         'alex_library_rating_ok',
         'alex_library_ok'

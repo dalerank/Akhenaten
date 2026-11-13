@@ -81,14 +81,13 @@ function run_test() {
     }
     __log_marker('alex_m128_placed_ok:' + bid)
 
-    // Engine: phases 0–7 + sentinel 8 → size 9; set_phase(9) → FINISHED
-    __test_monument_set_phase(bid, 9)
+    __test_alexandria_library_finish(bid)
     __test_process_events()
     __test_pump_frames(2)
 
     var ph = __test_monument_phase(bid)
     if (ph != 255 && ph != -1) {
-        __log_info_native('[test:124] not finished after set_phase(9) ph=' + ph)
+        __log_info_native('[test:124] not finished after finish helper ph=' + ph)
         __test_signal_ready()
         return
     }

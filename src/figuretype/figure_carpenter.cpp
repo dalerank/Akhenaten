@@ -6,6 +6,7 @@
 #include "building/monument_obelisk.h"
 #include "building/monument_sphinx.h"
 #include "building/monument_sun_temple.h"
+#include "building/monument_alexandria_library.h"
 #include "building/monument_mausoleum.h"
 #include "building/monument_mastaba_engine.h"
 #include "building/monument_pyramid.h"
@@ -280,6 +281,18 @@ void figure_carpenter::figure_action() {
                 rd.serving_statue = 0;
                 base.wait_ticks = params.mausoleum_head_start;
                 advance_action(ACTION_0_CARPENTER_ROAM);
+            }
+            break;
+        }
+
+        if (auto *library = worked->dcast_alexandria_library()) {
+            base.set_flag(e_figure_flag_invisible);
+            if (library->work_tick(base)) {
+                base.set_flag(e_figure_flag_invisible, false);
+                if (auto *mon = worked->dcast_monument()) {
+                    mon->remove_worker(id());
+                }
+                advance_action(ACTION_3_CARPENTER_RETURN);
             }
             break;
         }
