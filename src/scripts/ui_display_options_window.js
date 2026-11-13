@@ -146,6 +146,7 @@ function display_options_window_go_back(window) {
 display_options_window {
     allow_rmb_goback : false
     draw_underlying: true
+    defer_relayout : true
     pos : display_options_window_centered_pos()
 
     orig_scale : 100

@@ -18,6 +18,7 @@ localization_fr = [
   { key:"#TR_BUTTON_CANCEL", text:"Annuler"},
   { key:"#TR_BUTTON_RESET_DEFAULTS", text:"Réinitialiser"},
   { key:"#TR_BUTTON_CONFIGURE_HOTKEYS", text:"Contrôles du clavier"},
+  { key:"#display_options_title", text:"Options d'affichage"},
   { key:"#TR_BUTTON_NEXT",text: "+"},
   { key:"#TR_BUTTON_PREV",text: "-"},
   { key:"#TR_CONFIG_TITLE", text:"Options de configuration d'Ozzy"},
