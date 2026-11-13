@@ -182,6 +182,14 @@ static autoconfig_window* get_window_current(xstring name) {
     return (it != autoconfig_registry().end()) ? it->second : nullptr;
 }
 
+// A script window's pos is computed once from the screen size; this lets an open window follow a resize.
+static void __window_set_pos(xstring section, int x, int y) {
+    if (autoconfig_window *w = get_window_current(section)) {
+        w->pos = {x, y};
+    }
+}
+ANK_FUNCTION_3(__window_set_pos)
+
 void autoconfig_window::show(xstring section) {
     auto it = autoconfig_registry().find(section);
     if (it == autoconfig_registry().end()) {

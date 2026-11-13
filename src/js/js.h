@@ -18,8 +18,8 @@ js_State *js_vm_state();
 int js_vm_exec_function_args(pcstr funcname, const char *szTypes, ...);
 int js_vm_exec_function(pcstr funcname);
 void js_vm_reload_file(pcstr path);
-/** Re-run every loaded ui_*.js at the next frame end: window layouts read the screen size when their script runs. */
-void js_vm_reload_ui_layouts();
+/** Re-run every loaded ui_*.js once the screen size settles: window layouts read it when their script runs. */
+void js_vm_request_ui_relayout();
 int js_vm_load_file_and_exec(pcstr path);
 
 void js_vm_add_scripts_folder(vfs::path folder);
