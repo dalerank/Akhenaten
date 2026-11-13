@@ -184,42 +184,43 @@ window_scenario_selection_campaign {
     active_tab : 0
     allow_rmb_goback : true
 
-    pos [(sw(0) - 1024) / 2, (sh(0) - 768) / 2]
+    // Coordinates are in the 1024x768 Explore History picture; see history_scale() in ui_scenario_selection.js.
+    pos : history_window_pos()
     ui {
-        background : dummy({ size[64, 48] })
+        background : dummy({ size: history_size(64, 48) })
 
         img_history : background({ pack:PACK_UNLOADED, id:33, offset:0 })
 
-        campaign_hover_thumb : image_queue({ pos[270, 200], size[256, 152], fit:true, fade_ms:280, pack:PACK_UNLOADED, id:28, offset:0 })
+        // Period thumbnails are 181x140, the opening of the portrait frame.
+        campaign_hover_thumb : image_queue({ pos: history_pos(270, 200), size: history_size(181, 140), fit:true, upscale:true, fade_ms:280, pack:PACK_UNLOADED, id:28, offset:0 })
 
-        // Button block below portrait (thumb bottom ~352), with clear gap under the frame.
-        tab_individual : large_button({ pos[210, 370], size[144, 24], text[294, 38], font:FONT_NORMAL_BLACK_ON_LIGHT })
-        tab_campaigns  : large_button({ pos[362, 370], size[144, 24], text[294, 39], font:FONT_NORMAL_BLACK_ON_LIGHT })
+        tab_individual : large_button({ pos: history_slot_pos(210, 370, 0, 24), size: [history_button_w(144), 24], text[294, 38], font:FONT_NORMAL_BLACK_ON_LIGHT })
+        tab_campaigns  : large_button({ pos: history_slot_pos(362, 370, 0, 24), size: [history_button_w(144), 24], text[294, 39], font:FONT_NORMAL_BLACK_ON_LIGHT })
 
         // Original Explore History: Pharaoh section (2-col), then Cleopatra section (2-col) below.
-        hdr_pharaoh : text({ pos[210, 420], size[144, 18], text[294, 41], font:FONT_NORMAL_BLACK_ON_LIGHT })
-        camp_0 : large_button({ pos[210, 445], size[144, 25], text[294, 0], font:FONT_NORMAL_BLACK_ON_LIGHT, param1: 0, onclick_event: "select_period", onhover_event: "hover_period", onunhover_event: "unhover_period" })
-        camp_1 : large_button({ pos[210, 475], size[144, 25], text[294, 4], font:FONT_NORMAL_BLACK_ON_LIGHT, param1: 1, onclick_event: "select_period", onhover_event: "hover_period", onunhover_event: "unhover_period" })
-        camp_2 : large_button({ pos[362, 415], size[144, 25], text[294, 8], font:FONT_NORMAL_BLACK_ON_LIGHT, param1: 2, onclick_event: "select_period", onhover_event: "hover_period", onunhover_event: "unhover_period" })
-        camp_3 : large_button({ pos[362, 445], size[144, 25], text[294, 12], font:FONT_NORMAL_BLACK_ON_LIGHT, param1: 3, onclick_event: "select_period", onhover_event: "hover_period", onunhover_event: "unhover_period" })
-        camp_4 : large_button({ pos[362, 475], size[144, 25], text[294, 16], font:FONT_NORMAL_BLACK_ON_LIGHT, param1: 4, onclick_event: "select_period", onhover_event: "hover_period", onunhover_event: "unhover_period" })
+        hdr_pharaoh : text({ pos: history_slot_pos(210, 420, 0, 18), size: [history_px(144), 18], text[294, 41], font:FONT_NORMAL_BLACK_ON_LIGHT })
+        camp_0 : large_button({ pos: history_slot_pos(210, 445, 0, 25), size: [history_button_w(144), 25], text[294, 0], font:FONT_NORMAL_BLACK_ON_LIGHT, param1: 0, onclick_event: "select_period", onhover_event: "hover_period", onunhover_event: "unhover_period" })
+        camp_1 : large_button({ pos: history_slot_pos(210, 475, 0, 25), size: [history_button_w(144), 25], text[294, 4], font:FONT_NORMAL_BLACK_ON_LIGHT, param1: 1, onclick_event: "select_period", onhover_event: "hover_period", onunhover_event: "unhover_period" })
+        camp_2 : large_button({ pos: history_slot_pos(362, 415, 0, 25), size: [history_button_w(144), 25], text[294, 8], font:FONT_NORMAL_BLACK_ON_LIGHT, param1: 2, onclick_event: "select_period", onhover_event: "hover_period", onunhover_event: "unhover_period" })
+        camp_3 : large_button({ pos: history_slot_pos(362, 445, 0, 25), size: [history_button_w(144), 25], text[294, 12], font:FONT_NORMAL_BLACK_ON_LIGHT, param1: 3, onclick_event: "select_period", onhover_event: "hover_period", onunhover_event: "unhover_period" })
+        camp_4 : large_button({ pos: history_slot_pos(362, 475, 0, 25), size: [history_button_w(144), 25], text[294, 16], font:FONT_NORMAL_BLACK_ON_LIGHT, param1: 4, onclick_event: "select_period", onhover_event: "hover_period", onunhover_event: "unhover_period" })
 
-        hdr_cleopatra : text({ pos[210, 515], size[144, 18], text[294, 42], font:FONT_NORMAL_BLACK_ON_LIGHT })
-        camp_5 : large_button({ pos[210, 530], size[144, 25], text[294, 20], font:FONT_NORMAL_BLACK_ON_LIGHT, param1: 5, onclick_event: "select_period", onhover_event: "hover_period", onunhover_event: "unhover_period" })
-        camp_6 : large_button({ pos[210, 560], size[144, 25], text[294, 24], font:FONT_NORMAL_BLACK_ON_LIGHT, param1: 6, onclick_event: "select_period", onhover_event: "hover_period", onunhover_event: "unhover_period" })
-        camp_7 : large_button({ pos[362, 530], size[144, 25], text[294, 28], font:FONT_NORMAL_BLACK_ON_LIGHT, param1: 7, onclick_event: "select_period", onhover_event: "hover_period", onunhover_event: "unhover_period" })
-        camp_8 : large_button({ pos[362, 560], size[144, 25], text[294, 32], font:FONT_NORMAL_BLACK_ON_LIGHT, param1: 8, onclick_event: "select_period", onhover_event: "hover_period", onunhover_event: "unhover_period" })
+        hdr_cleopatra : text({ pos: history_slot_pos(210, 515, 0, 18), size: [history_px(144), 18], text[294, 42], font:FONT_NORMAL_BLACK_ON_LIGHT })
+        camp_5 : large_button({ pos: history_slot_pos(210, 530, 0, 25), size: [history_button_w(144), 25], text[294, 20], font:FONT_NORMAL_BLACK_ON_LIGHT, param1: 5, onclick_event: "select_period", onhover_event: "hover_period", onunhover_event: "unhover_period" })
+        camp_6 : large_button({ pos: history_slot_pos(210, 560, 0, 25), size: [history_button_w(144), 25], text[294, 24], font:FONT_NORMAL_BLACK_ON_LIGHT, param1: 6, onclick_event: "select_period", onhover_event: "hover_period", onunhover_event: "unhover_period" })
+        camp_7 : large_button({ pos: history_slot_pos(362, 530, 0, 25), size: [history_button_w(144), 25], text[294, 28], font:FONT_NORMAL_BLACK_ON_LIGHT, param1: 7, onclick_event: "select_period", onhover_event: "hover_period", onunhover_event: "unhover_period" })
+        camp_8 : large_button({ pos: history_slot_pos(362, 560, 0, 25), size: [history_button_w(144), 25], text[294, 32], font:FONT_NORMAL_BLACK_ON_LIGHT, param1: 8, onclick_event: "select_period", onhover_event: "hover_period", onunhover_event: "unhover_period" })
 
-        campaign_hover_subtitle : text_center({ pos[545, 208], size[265, 22], align:"center", font:FONT_LARGE_BLACK_ON_DARK })
-        campaign_hover_body : text({ pos[545, 250], size[265, 200], wrap:px(16), font:FONT_NORMAL_BLACK_ON_DARK, multiline:true, clip_area:true })
+        campaign_hover_subtitle : text_center({ pos: history_slot_pos(545, 208, 0, 22), size: [history_px(265), 22], align:"center", font:FONT_LARGE_BLACK_ON_DARK })
+        campaign_hover_body : text({ pos: history_pos(545, 250), size: history_size(265, 200), wrap: history_px(256), font:FONT_NORMAL_BLACK_ON_DARK, multiline:true, clip_area:true })
 
         // Exit / Play along the bottom edge of the dialog.
-        btn_exit : image_button({ pos[215, 590], size[31, 20], pack:PACK_GENERAL, id:90, offset:8 })
-        lbl_exit : text({ pos[250, 592], text[44, 217], font:FONT_NORMAL_BLACK_ON_LIGHT })
-        btn_exit_hit : button({ pos[215, 605], size[110, 30], text:"", hbody:false, border:false })
+        btn_exit : image_button({ pos: history_slot_pos(215, 590, 31, 20), size[31, 20], pack:PACK_GENERAL, id:90, offset:8 })
+        lbl_exit : text({ pos: history_label_pos(215, 590, 31, 20, 35, 592), text[44, 217], font:FONT_NORMAL_BLACK_ON_LIGHT })
+        btn_exit_hit : button({ pos: history_pos(215, 585), size: history_size(110, 30), text:"", hbody:false, border:false })
 
-        lbl_play : text({ pos[735, 590], text[294, 37], font:FONT_NORMAL_BLACK_ON_LIGHT })
-        btn_play : image_button({ pos[780, 585], size[27, 27], pack:PACK_GENERAL, id:193, offset:4 })
+        lbl_play : text({ pos: history_label_pos(780, 585, 27, 27, -45, 590), text[294, 37], font:FONT_NORMAL_BLACK_ON_LIGHT })
+        btn_play : image_button({ pos: history_slot_pos(780, 585, 27, 27), size[27, 27], pack:PACK_GENERAL, id:193, offset:4 })
     }
 }
 

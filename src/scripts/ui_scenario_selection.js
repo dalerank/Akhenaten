@@ -1,5 +1,29 @@
 log_info("akhenaten: scenario selection window")
 
+// Explore History art (PACK_UNLOADED 33) is a 1024x768 picture that graphics_draw_background scales to
+// cover the screen. Layouts below are written in that picture's pixels and mapped onto the scaled art,
+// so controls stay on the frames and panels at any resolution. Chrome that cannot grow (button art,
+// single text lines, icons) keeps its size and is centred in its scaled slot.
+function history_scale() { return Math.max(sw(0) / 1024, sh(0) / 768) }
+function history_window_pos() {
+    var k = history_scale()
+    return [Math.floor((sw(0) - Math.floor(1024 * k)) / 2), Math.floor((sh(0) - Math.floor(768 * k)) / 2)]
+}
+function history_pos(x, y) { var k = history_scale(); return [Math.round(x * k), Math.round(y * k)] }
+function history_size(w, h) { var k = history_scale(); return [Math.round(w * k), Math.round(h * k)] }
+function history_px(v) { return Math.round(v * history_scale()) }
+// large_button art is drawn in 16px blocks; a wider box leaves its border hanging past the body.
+function history_button_w(w) { return Math.floor(history_px(w) / 16) * 16 }
+// A label kept at its original distance dx from a fixed-size icon, so the pair does not drift apart.
+function history_label_pos(icon_x, icon_y, icon_w, icon_h, dx, label_y) {
+    return [history_slot_pos(icon_x, icon_y, icon_w, icon_h)[0] + dx, history_slot_pos(0, label_y, 0, 16)[1]]
+}
+// fixed_w / fixed_h: the element's unscaled size along that axis, or 0 when it scales with the art.
+function history_slot_pos(x, y, fixed_w, fixed_h) {
+    var k = history_scale()
+    return [Math.round(x * k + (fixed_w * k - fixed_w) / 2), Math.round(y * k + (fixed_h * k - fixed_h) / 2)]
+}
+
 function scenario_selection_add_campaign_missions(list, campaign_id, MAX_MANUAL_ENTRIES) {
     var first_sid = -1
     for (var i = 0; i < MAX_MANUAL_ENTRIES; i++) {
@@ -353,49 +377,49 @@ window_scenario_selection {
     campaign_sub_dialog : -1
     individual_missions : false
     free_play : false
-    pos [(sw(0) - 1024) / 2, (sh(0) - 768) / 2]
+    pos : history_window_pos()
 
     ui {
-        background             : dummy({ size[64, 48] })
+        background             : dummy({ size: history_size(64, 48) })
         img_background         : background({ pack:PACK_UNLOADED, id:33, offset:0 })
 
-        debug_file_schema      : text({ pos[265, 170], size[160, 20], text:"", font:FONT_NORMAL_BLACK_ON_DARK })
-        scenario_minimap       : dummy({ pos[270, 200], size[180, 142], ondraw_event: "draw_minimap" })
+        debug_file_schema      : text({ pos: history_slot_pos(265, 170, 0, 20), size: [history_px(160), 20], text:"", font:FONT_NORMAL_BLACK_ON_DARK })
+        scenario_minimap       : dummy({ pos: history_pos(270, 200), size: history_size(180, 142), ondraw_event: "draw_minimap" })
 
         scenario_map_list      : scrollable_list({
-            pos[210, 360]
-            size[16, 15]
+            pos: history_pos(210, 360)
+            size: history_size(16, 15)
             dir:"Maps/"
             file_ext:"map"
             use_file_finder:true
-            view_items:14
+            view_items: Math.floor(14 * history_scale())
             scrollbar_margin_x:10
             draw_scrollbar_always:false
             onclick_event: "click_item"
         })
 
-        btn_scores             : large_button({ pos[550, 542], size[240, 30], text[44, 221], body:2, font:FONT_NORMAL_BLACK_ON_DARK, onclick_event: "show_scores" })
-        btn_start              : image_button({ pos[780, 582], size[27, 27], pack:PACK_GENERAL, id:193, offset:4 })
+        btn_scores             : large_button({ pos: history_slot_pos(550, 542, 0, 30), size: [history_button_w(240), 30], text[44, 221], body:2, font:FONT_NORMAL_BLACK_ON_DARK, onclick_event: "show_scores" })
+        btn_start              : image_button({ pos: history_slot_pos(780, 582, 27, 27), size[27, 27], pack:PACK_GENERAL, id:193, offset:4 })
 
-        side_hdr_period        : text_center({ pos[545, 165], size[265, 20], align:"center", text:"", font:FONT_NORMAL_BLACK_ON_LIGHT })
-        side_mission_title     : text_center({ pos[545, 192], size[265, 36], align:"center", text:"", font:FONT_LARGE_BLACK_ON_DARK, clip_area:true })
-        side_subtitle          : text_center({ pos[545, 220], size[265, 20], align:"center", text:"", font:FONT_NORMAL_WHITE_ON_DARK })
-        side_year              : text_center({ pos[545, 245], size[265, 17], align:"center", text:"", font:FONT_NORMAL_BLACK_ON_DARK })
+        side_hdr_period        : text_center({ pos: history_slot_pos(545, 165, 0, 20), size: [history_px(265), 20], align:"center", text:"", font:FONT_NORMAL_BLACK_ON_LIGHT })
+        side_mission_title     : text_center({ pos: history_slot_pos(545, 192, 0, 36), size: [history_px(265), 36], align:"center", text:"", font:FONT_LARGE_BLACK_ON_DARK, clip_area:true })
+        side_subtitle          : text_center({ pos: history_slot_pos(545, 220, 0, 20), size: [history_px(265), 20], align:"center", text:"", font:FONT_NORMAL_WHITE_ON_DARK })
+        side_year              : text_center({ pos: history_slot_pos(545, 245, 0, 17), size: [history_px(265), 17], align:"center", text:"", font:FONT_NORMAL_BLACK_ON_DARK })
 
-        side_scores_intro      : text({ pos[545, 280], size[265, 100], wrap:px(16), text:"", font:FONT_NORMAL_BLACK_ON_DARK, multiline:true, clip_area:true })
-        side_scores_body       : text({ pos[545, 280], size[265, 130], wrap:px(16), text:"", font:FONT_NORMAL_BLACK_ON_DARK, multiline:true, clip_area:true })
+        side_scores_intro      : text({ pos: history_pos(545, 280), size: history_size(265, 100), wrap: history_px(256), text:"", font:FONT_NORMAL_BLACK_ON_DARK, multiline:true, clip_area:true })
+        side_scores_body       : text({ pos: history_pos(545, 280), size: history_size(265, 130), wrap: history_px(256), text:"", font:FONT_NORMAL_BLACK_ON_DARK, multiline:true, clip_area:true })
 
-        info_hdr_mission       : text_center({ pos[545, 272], size[265, 17], align:"center", text[44, 10], font:FONT_NORMAL_WHITE_ON_DARK })
-        info_line_climate      : text({ pos[545, 292], size[265, 17], font:FONT_NORMAL_BLACK_ON_DARK })
-        info_line_mapsize      : text({ pos[545, 312], size[265, 17], font:FONT_NORMAL_BLACK_ON_DARK })
-        info_line_invasion     : text({ pos[545, 332], size[265, 17], font:FONT_NORMAL_BLACK_ON_DARK })
-        info_line_start_region : text({ pos[545, 352], size[265, 17], text[2, 6], font:FONT_NORMAL_BLACK_ON_DARK })
+        info_hdr_mission       : text_center({ pos: history_slot_pos(545, 272, 0, 17), size: [history_px(265), 17], align:"center", text[44, 10], font:FONT_NORMAL_WHITE_ON_DARK })
+        info_line_climate      : text({ pos: history_slot_pos(545, 292, 0, 17), size: [history_px(265), 17], font:FONT_NORMAL_BLACK_ON_DARK })
+        info_line_mapsize      : text({ pos: history_slot_pos(545, 312, 0, 17), size: [history_px(265), 17], font:FONT_NORMAL_BLACK_ON_DARK })
+        info_line_invasion     : text({ pos: history_slot_pos(545, 332, 0, 17), size: [history_px(265), 17], font:FONT_NORMAL_BLACK_ON_DARK })
+        info_line_start_region : text({ pos: history_slot_pos(545, 352, 0, 17), size: [history_px(265), 17], text[2, 6], font:FONT_NORMAL_BLACK_ON_DARK })
 
-        info_hdr_goals         : text_center({ pos[545, 377], size[265, 17], align:"center", text[44, 127], font:FONT_NORMAL_WHITE_ON_DARK })
-        info_goals_body        : text({ pos[545, 404], size[265, 130], wrap:px(16), font:FONT_NORMAL_BLACK_ON_DARK, multiline:true, clip_area:true })
-        info_time_limit        : text({ pos[545, 484], size[265, 17], font:FONT_NORMAL_YELLOW })
+        info_hdr_goals         : text_center({ pos: history_slot_pos(545, 377, 0, 17), size: [history_px(265), 17], align:"center", text[44, 127], font:FONT_NORMAL_WHITE_ON_DARK })
+        info_goals_body        : text({ pos: history_pos(545, 404), size: history_size(265, 130), wrap: history_px(256), font:FONT_NORMAL_BLACK_ON_DARK, multiline:true, clip_area:true })
+        info_time_limit        : text({ pos: history_slot_pos(545, 484, 0, 17), size: [history_px(265), 17], font:FONT_NORMAL_YELLOW })
 
-        info_hdr_monuments     : text_center({ pos[545, 477], size[265, 17], align:"center", text[41, 48], font:FONT_NORMAL_WHITE_ON_DARK })
-        info_monuments_body    : text({ pos[545, 494], size[265, 51], wrap:px(16), font:FONT_NORMAL_BLACK_ON_DARK, multiline:true, clip_area:true })
+        info_hdr_monuments     : text_center({ pos: history_slot_pos(545, 477, 0, 17), size: [history_px(265), 17], align:"center", text[41, 48], font:FONT_NORMAL_WHITE_ON_DARK })
+        info_monuments_body    : text({ pos: history_pos(545, 494), size: history_size(265, 51), wrap: history_px(256), font:FONT_NORMAL_BLACK_ON_DARK, multiline:true, clip_area:true })
     }
 }
