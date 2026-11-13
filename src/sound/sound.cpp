@@ -1087,20 +1087,23 @@ const vfs::path& sound_manager_t::og_sample_path(og_sample_t& sample) {
 }
 
 // Miles plays a sample on any free handle; a channel that already holds the file saves a reload.
+// OG gives every effect one fixed channel (sound_play.c:46): playing it again restarts that channel,
+// so a burst of collapses is one explosion, not a stack of them.
 int sound_manager_t::pick_effect_channel(const vfs::path& filename) {
-    int free_channel = -1;
-    for (int c = SOUND_CHANNEL_EFFECTS_MIN; c <= SOUND_CHANNEL_EFFECTS_MAX; c++) {
-        if (is_channel_playing(c)) {
-            continue;
-        }
-        if (!filename.empty() && _channels[c].filename == filename) {
-            return c;
-        }
-        if (free_channel < 0) {
-            free_channel = c;
+    if (!filename.empty()) {
+        for (int c = SOUND_CHANNEL_EFFECTS_MIN; c <= SOUND_CHANNEL_EFFECTS_MAX; c++) {
+            if (_channels[c].filename == filename) {
+                return c;
+            }
         }
     }
-    return free_channel;
+
+    for (int c = SOUND_CHANNEL_EFFECTS_MIN; c <= SOUND_CHANNEL_EFFECTS_MAX; c++) {
+        if (!is_channel_playing(c)) {
+            return c;
+        }
+    }
+    return -1;
 }
 
 int sound_manager_t::play_effect(int effect) {
