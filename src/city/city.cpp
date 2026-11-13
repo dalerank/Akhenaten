@@ -359,14 +359,14 @@ void city_t::update_tick(int simtick) {
     case 45:
         figures_generate_criminals();
         break;
+    case 46:
+        building_update_malaria_risk();
+        break;
     case 48:
         house_decay_tax_coverage();
         break;
     case 49:
         avg_coverage.update();
-        break;
-    case 50:
-        building_update_malaria_risk();
         break;
     }
 }
