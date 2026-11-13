@@ -157,7 +157,7 @@ localization_de = [
   {key:"#TR_CONFIG_MULTIPLE_BARRACKS", text:"Bau mehrerer Kasernen erlauben."}
   {key:"#TR_CONFIG_NOT_ACCEPTING_WAREHOUSES", text:"Lagerhäuser nehmen beim Bau nichts an"}
   {key:"#TR_CONFIG_HOUSES_DONT_EXPAND_INTO_GARDENS", text:"Häuser dehnen sich nicht in Gärten aus"}
-  {key:"#TR_CONFIG_FIX_IRRIGATION_RANGE", text:"Bewässerungsreichweite beheben"}
+  {key:"#TR_CONFIG_IRRIGATION_RANGE_5X5", text:"Farmen aus 5x5-Bereich bewässert"}
   {key:"#TR_CONFIG_FIX_FARM_PRODUCING", text:"Farmproduktion beheben"}
   {key:"#TR_CONFIG_CAMERA_KEEP_INERTIA", text:"Kamera behält Trägheit bei"}
   {key:"#TR_CONFIG_UNDERSTAFFED_ACCEPT_GOODS", text:"Unterbesetzte nehmen Waren an"}

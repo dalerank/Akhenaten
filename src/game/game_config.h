@@ -120,7 +120,7 @@ namespace game_features {
     extern game_feature gameplay_change_multiple_barracks;
     extern game_feature gameplay_change_warehouses_dont_accept;
     extern game_feature gameplay_change_houses_dont_expand_into_gardens;
-    extern game_feature gameplay_fix_irrigation_range;
+    extern game_feature gameplay_change_irrigation_range_5x5;
     extern game_feature gameplay_fix_farm_produce_quantity;
     extern game_feature gameui_keep_camera_inertia;
     extern game_feature gameplay_change_understaffed_accept_goods;

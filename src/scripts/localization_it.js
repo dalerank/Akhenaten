@@ -181,7 +181,7 @@ localization_it = [
   {key:"#TR_CONFIG_MULTIPLE_BARRACKS", text:"Consenti la costruzione di più caserme."}
   {key:"#TR_CONFIG_NOT_ACCEPTING_WAREHOUSES", text:"I depositi non accettano nulla appena costruiti"}
   {key:"#TR_CONFIG_HOUSES_DONT_EXPAND_INTO_GARDENS", text:"Le case non si espandono sui giardini"}
-  {key:"#TR_CONFIG_FIX_IRRIGATION_RANGE", text:"Correggi il raggio d'irrigazione"}
+  {key:"#TR_CONFIG_IRRIGATION_RANGE_5X5", text:"Fattorie irrigate da un'area 5x5"}
   {key:"#TR_CONFIG_FIX_FARM_PRODUCING", text:"Correggi la produzione delle fattorie"}
   {key:"#TR_CONFIG_EMPIRE_MAP_RUNS_SIMULATION", text:"Continua la simulazione della città con la mappa dell'impero aperta"}
   {key:"#TR_CONFIG_CAMERA_KEEP_INERTIA", text:"Inerzia della telecamera"}

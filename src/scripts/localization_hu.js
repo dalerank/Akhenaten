@@ -190,7 +190,7 @@ localization_hu = [
   {key:"#TR_CONFIG_MULTIPLE_BARRACKS", text:"Több laktanya építésének engedélyezése"}
   {key:"#TR_CONFIG_NOT_ACCEPTING_WAREHOUSES", text:"Az új raktárak kezdetben semmit sem fogadnak"}
   {key:"#TR_CONFIG_HOUSES_DONT_EXPAND_INTO_GARDENS", text:"A házak nem terjeszkednek a kertekre"}
-  {key:"#TR_CONFIG_FIX_IRRIGATION_RANGE", text:"Öntözési hatótáv javítása"}
+  {key:"#TR_CONFIG_IRRIGATION_RANGE_5X5", text:"Farmok öntözése 5x5-ös területről"}
   {key:"#TR_CONFIG_FIX_FARM_PRODUCING", text:"Farmtermelés javítása"}
   {key:"#TR_CONFIG_EMPIRE_MAP_RUNS_SIMULATION", text:"A város szimulációja a birodalmi térképen is fut"}
   {key:"#TR_CONFIG_CAMERA_KEEP_INERTIA", text:"A kamera megtartja a tehetetlenségét"}

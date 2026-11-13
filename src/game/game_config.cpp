@@ -103,7 +103,8 @@ namespace game_features {
     game_feature gameplay_change_multiple_barracks{ "gameplay_change_multiple_barracks", "#TR_CONFIG_MULTIPLE_BARRACKS", false, false };
     game_feature gameplay_change_warehouses_dont_accept{ "gameplay_change_warehouses_dont_accept", "#TR_CONFIG_NOT_ACCEPTING_WAREHOUSES", false, false };
     game_feature gameplay_change_houses_dont_expand_into_gardens{ "gameplay_change_houses_dont_expand_into_gardens", "#TR_CONFIG_HOUSES_DONT_EXPAND_INTO_GARDENS", false, false };
-    game_feature gameplay_fix_irrigation_range{ "gameplay_fix_irrigation_range", "#TR_CONFIG_FIX_IRRIGATION_RANGE", false, false };
+    game_feature gameplay_change_irrigation_range_5x5{
+      "gameplay_change_irrigation_range_5x5", "#TR_CONFIG_IRRIGATION_RANGE_5X5", false, false};
     game_feature gameplay_fix_farm_produce_quantity{ "gameplay_fix_farm_produce_quantity", "#TR_CONFIG_FIX_FARM_PRODUCING", false, false };
     game_feature gameui_keep_camera_inertia{ "gameui_keep_camera_inertia", "#TR_CONFIG_CAMERA_KEEP_INERTIA", false, false };
     game_feature gameplay_change_understaffed_accept_goods{ "gameplay_change_understaffed_accept_goods", "#TR_CONFIG_UNDERSTAFFED_ACCEPT_GOODS", false, false };

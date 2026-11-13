@@ -207,7 +207,7 @@ localization_en = [
   {key:"#TR_CONFIG_MULTIPLE_BARRACKS", text:"Allow building multiple barracks."}
   {key:"#TR_CONFIG_NOT_ACCEPTING_WAREHOUSES", text:"Warehouses don't accept anything when built"}
   {key:"#TR_CONFIG_HOUSES_DONT_EXPAND_INTO_GARDENS", text:"Houses don't expand into gardens"}
-  {key:"#TR_CONFIG_FIX_IRRIGATION_RANGE", text:"Fix irrigation range"}
+  {key:"#TR_CONFIG_IRRIGATION_RANGE_5X5", text:"Farms irrigated from a 5x5 area"}
   {key:"#TR_CONFIG_FIX_FARM_PRODUCING", text:"Fix farm producing"}
   {key:"#TR_CONFIG_EMPIRE_MAP_RUNS_SIMULATION", text:"Run city simulation while empire map is open"}
   {key:"#TR_CONFIG_CAMERA_KEEP_INERTIA", text:"Camera keep inertia"}

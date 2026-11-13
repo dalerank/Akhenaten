@@ -559,11 +559,12 @@ void map_update_area_fertility(int x, int y, int size, int delta) {
     });
 }
 
+// OG building_farm water access: any IRRIGATION_RANGE tile under the 3x3 footprint.
 bool map_is_irrigated_for_farm(tile2i tile) {
-    if (!!game_features::gameplay_fix_irrigation_range) {
-        return map_terrain_exists_tile_in_area_with_type(tile, 3, TERRAIN_IRRIGATION_RANGE);
+    if (!!game_features::gameplay_change_irrigation_range_5x5) {
+        return map_terrain_exists_tile_in_radius_with_type(tile, 1, 2, TERRAIN_IRRIGATION_RANGE);
     }
-    return map_terrain_exists_tile_in_radius_with_type(tile, 1, 2, TERRAIN_IRRIGATION_RANGE);
+    return map_terrain_exists_tile_in_area_with_type(tile, 3, TERRAIN_IRRIGATION_RANGE);
 }
 
 uint8_t map_get_fertility_for_farm(int grid_offset) {
