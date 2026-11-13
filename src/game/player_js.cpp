@@ -77,9 +77,39 @@ bool __highscore_nonempty(int rank) {
 }
 ANK_FUNCTION_1(__highscore_nonempty)
 
+int __highscores_record_mission(int scenario_id, int months, int score, int monuments) {
+    mission_result_t result = city_make_mission_result(scenario_id);
+    result.completion_months = (uint32_t)months;
+    return g_highscores.record_mission(result, score, monuments);
+}
+ANK_FUNCTION_4(__highscores_record_mission)
+
+int __highscores_last_result() {
+    return g_highscores.last_result;
+}
+ANK_FUNCTION(__highscores_last_result)
+
+pcstr __highscores_previous_name() {
+    return g_highscores.previous_name.c_str();
+}
+ANK_FUNCTION(__highscores_previous_name)
+
+pcstr __highscores_path() {
+    static vfs::path path;
+    path = g_highscores.file_path();
+    return path.c_str();
+}
+ANK_FUNCTION(__highscores_path)
+
+pcstr __highscore_player_name(int rank) {
+    const player_record& record = g_highscores.get(rank);
+    return record.nonempty ? (pcstr)record.player_name : "";
+}
+ANK_FUNCTION_1(__highscore_player_name)
+
 int __highscore_score(int rank) {
     const player_record& record = g_highscores.get(rank);
-    return record.nonempty ? (int)record.calc_score() : 0;
+    return record.nonempty ? (int32_t)record.score : 0;
 }
 ANK_FUNCTION_1(__highscore_score)
 
@@ -97,5 +127,7 @@ HIGHSCORE_FIELD_GETTER(__highscore_kingdom, rating_kingdom)
 HIGHSCORE_FIELD_GETTER(__highscore_population, final_population)
 HIGHSCORE_FIELD_GETTER(__highscore_funds, final_funds)
 HIGHSCORE_FIELD_GETTER(__highscore_months, completion_months)
+HIGHSCORE_FIELD_GETTER(__highscore_difficulty, difficulty)
+HIGHSCORE_FIELD_GETTER(__highscore_monuments, monuments)
 
 #undef HIGHSCORE_FIELD_GETTER

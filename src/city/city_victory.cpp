@@ -206,3 +206,15 @@ void city_victory_t::lower_difficulty() {
     game.difficulty.set((e_difficulty)value);
 }
 
+// OG city_victory_score (monument_city.c); OG has no guard against the first month (months 0).
+int city_victory_score(int months, int monument_weight) {
+    const double m = std::max(months, 1);
+    const double weight = monument_weight;
+    const int ratings = g_city.kingdome.rating + g_city.ratings.prosperity + g_city.ratings.culture;
+    const double rating_part = (double)ratings * ((double)g_city.population.current * 0.002);
+    const double monument_part = (weight / (m * m * 0.00015625)) * (weight * 20.0);
+    double score = monument_part + rating_part;
+    score = score + (double)(int)g_city.finance.treasury / (m * 0.03333333333333333);
+    score = score * (((double)game_difficulty() + 1.0) * 0.3333333333333333);
+    return (int)(int64_t)score;
+}

@@ -215,3 +215,34 @@ static int __test_vfs_path_len(int n) {
     return (int)p.len();
 }
 ANK_FUNCTION_1(__test_vfs_path_len);
+
+int __test_file_size(pcstr path) {
+    std::error_code ec;
+    const auto size = std::filesystem::file_size(path, ec);
+    return ec ? -1 : (int)size;
+}
+ANK_FUNCTION_1(__test_file_size);
+
+// A little-endian int32 at offset of the file at path, 0 when it cannot be read.
+int __test_file_read_i32(pcstr path, int offset) {
+    FILE* fp = fopen(path, "rb");
+    if (!fp) {
+        return 0;
+    }
+    uint8_t bytes[4] = {};
+    const bool ok = fseek(fp, offset, SEEK_SET) == 0 && fread(bytes, 1, 4, fp) == 4;
+    fclose(fp);
+    return ok ? (int)(bytes[0] | (bytes[1] << 8) | (bytes[2] << 16) | ((uint32_t)bytes[3] << 24)) : 0;
+}
+ANK_FUNCTION_2(__test_file_read_i32);
+
+bool __test_file_remove(pcstr path) {
+    std::error_code ec;
+    return std::filesystem::remove(path, ec);
+}
+ANK_FUNCTION_1(__test_file_remove);
+
+pcstr __test_user_dir() {
+    return platform.user_directory();
+}
+ANK_FUNCTION(__test_user_dir);

@@ -488,5 +488,10 @@ int __city_victory_end_year() {
 }
 ANK_FUNCTION(__city_victory_end_year)
 
+int __city_victory_score(int months, int monument_weight) {
+    return city_victory_score(months, monument_weight);
+}
+ANK_FUNCTION_2(__city_victory_score)
+
 void js_register_city_objects(js_State *J) {
 }

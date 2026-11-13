@@ -53,3 +53,4 @@ struct city_victory_t : public game_system {
 
 int city_victory_end_year();
 int city_count_houses_at_least(int min_level);
+int city_victory_score(int months, int monument_weight);

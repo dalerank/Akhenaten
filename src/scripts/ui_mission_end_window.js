@@ -62,25 +62,54 @@ var DEFEAT_OPTIONS_NEW_GAME = 1
 var DEFEAT_OPTIONS_REPLAY = 2
 var DEFEAT_OPTIONS_LOWER_DIFFICULTY = 3
 
+// OG high score results (window/high_scores.c) and their texts in group 148.
+var HIGH_SCORE_RESULT_TEXTS = [0, 10, 11, 12, 13, 14, 16]
+var HIGH_SCORE_RESULT_OTHER_KEPT = 4
+var HIGH_SCORE_RESULT_OTHER_BEATEN = 5
+
+var mission_end_highscore = { result: 0, previous_name: "" }
+
+// OG: the months since the start year plus the month of the year.
 function mission_won_completion_months() {
     var years = game.simtime.year - scenario.start_year
     if (years < 0) {
-        years = 0
+        years = -years
     }
-    return years * 12 + game.simtime.month + 1
+    return years * 12 + game.simtime.month
 }
 
-function mission_won_calc_score(funds, population, culture, prosperity, kingdom, months, difficulty) {
-    if (months < 1) {
-        months = 1
+function mission_won_summary() {
+    var months = mission_won_completion_months()
+    var monuments = city_finished_slot_monuments()
+    return {
+        months: months,
+        monuments: monuments.count,
+        score: __city_victory_score(months, monuments.weight)
     }
-    var score = (difficulty + 1.0) / 3.0
-        * ((funds / (months / 30.0))
-           + population * 0.002 * (culture + prosperity + kingdom))
-    if (score < 0) {
-        score = 0
+}
+
+// OG highscore_record_mission: a campaign victory is written to highscore.jas when new or beaten.
+function mission_end_record_highscore() {
+    mission_end_highscore = { result: 0, previous_name: "" }
+    if (scenario.scmode != e_scenario_normal) {
+        return
     }
-    return score | 0
+    var summary = mission_won_summary()
+    mission_end_highscore.result = __highscores_record_mission(scenario.campaign_scenario_id, summary.months,
+        summary.score, summary.monuments)
+    mission_end_highscore.previous_name = __highscores_previous_name()
+}
+
+function mission_won_highscore_text() {
+    var result = mission_end_highscore.result
+    if (result <= 0 || result >= HIGH_SCORE_RESULT_TEXTS.length) {
+        return ""
+    }
+    var text = __loc(148, HIGH_SCORE_RESULT_TEXTS[result])
+    if (result == HIGH_SCORE_RESULT_OTHER_KEPT || result == HIGH_SCORE_RESULT_OTHER_BEATEN) {
+        text = text.replace("[player_name]", mission_end_highscore.previous_name)
+    }
+    return text
 }
 
 function mission_won_difficulty_label(diff) {
@@ -113,20 +142,6 @@ function mission_won_erected_monuments_text() {
     return names.join("\n")
 }
 
-function mission_won_compare_text(scenario_id, new_score) {
-    if (!__game_mission_scenario_beaten(scenario_id)) {
-        return ""
-    }
-    var prev_score = __game_player_scenario_record_score(scenario_id)
-    if (new_score > prev_score) {
-        return __loc(148, 12)
-    }
-    if (new_score < prev_score) {
-        return __loc(148, 11)
-    }
-    return ""
-}
-
 [es=(window_mission_won, init)]
 function window_mission_won_on_init(window) {
     __log_marker("window_show:window_mission_won")
@@ -152,9 +167,10 @@ function window_mission_won_on_init(window) {
     var kingdom = city.rating.kingdom
     var funds = city.finance.treasury
     var population = city.population
-    var months = mission_won_completion_months()
+    var summary = mission_won_summary()
+    var months = summary.months
     var difficulty = game.difficulty
-    var score = mission_won_calc_score(funds, population, culture, prosperity, kingdom, months, difficulty)
+    var score = summary.score
 
     // Win-screen labels match the original dialog (no "was"); group 298 is for score panels.
     window.culture_line.text = __loc("#mission_won_culture_rating") + " " + String(culture)
@@ -168,7 +184,7 @@ function window_mission_won_on_init(window) {
     window.months_line.text = __loc(148, 7) + " " + String(months) + " " + __loc(148, 15)
     window.difficulty_line.text = __loc(148, 8) + " " + mission_won_difficulty_label(difficulty)
     window.score_line.text = __loc(148, 9) + " " + String(score)
-    window.compare_line.text = mission_won_compare_text(scenario.campaign_scenario_id, score)
+    window.compare_line.text = mission_won_highscore_text()
 }
 
 [es=(window_mission_won, go_back)]
@@ -320,6 +336,7 @@ function mission_end_after_video() {
 }
 
 function mission_end_open_won_dialog() {
+    mission_end_record_highscore()
     emit event_show_window { id: "window_mission_won" }
 }
 

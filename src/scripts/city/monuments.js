@@ -202,3 +202,19 @@ function city_monument_rating() {
 function city_update_monthly_monument_rating(ev) {
 	__city_ratings_set_monument(city_monument_rating())
 }
+
+// OG victory_count_finished_monuments / city_victory_score: the finished slot monuments, their count and weight.
+function city_finished_slot_monuments() {
+	var defs = monument_scenario_slot_defs()
+	var slots = city_monument_slot_buildings()
+	var result = { count: 0, weight: 0 }
+	for (var slot = 0; slot < 3; slot++) {
+		var monument = slots[slot] ? city.get_monument(slots[slot]) : null
+		if (!monument || monument_progress_pct(monument) < 100) {
+			continue
+		}
+		result.count++
+		result.weight += MONUMENT_DEF_WEIGHTS[defs[slot]]
+	}
+	return result
+}

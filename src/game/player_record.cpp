@@ -4,8 +4,8 @@
 #include "core/string.h"
 
 uint32_t player_record::calc_score() const {
-    // I have *NO CLUE* how the unk09 value works. It's just black magic.
-    // In missions where it's zero, the formula checks out correctly.
+    // OG city_victory_score adds weight^2 * 20 / (months^2 / 6400) for the weight of the finished slot monuments,
+    // which the record does not keep (it stores their count), so this matches only records without monuments.
     constexpr double unkn = 0.0;
 
     if (completion_months == 0) {
@@ -30,7 +30,7 @@ void player_record::assign(const mission_result_t& result) {
     final_funds = result.final_funds;
     completion_months = result.completion_months;
     difficulty = result.difficulty;
-    unk09 = 0;
+    monuments = 0;
 
     pcstr name = result.player_name.empty() ? "unknown" : result.player_name.c_str();
     string_copy((const uint8_t*)name, player_name, MAX_PLAYER_NAME);
@@ -49,7 +49,7 @@ void player_record::read(buffer& buf) {
     final_funds = buf.read_u32();
     completion_months = buf.read_u32();
     difficulty = buf.read_u32();
-    unk09 = buf.read_u32();
+    monuments = buf.read_u32();
     nonempty = !!buf.read_u32();
 
     player_name[MAX_PLAYER_NAME - 1] = 0;
@@ -66,7 +66,7 @@ void player_record::write(buffer& buf) const {
     buf.write_u32(final_funds);
     buf.write_u32(completion_months);
     buf.write_u32(difficulty);
-    buf.write_u32(unk09);
+    buf.write_u32(monuments);
     buf.write_u32(nonempty ? 1 : 0);
 }
 
