@@ -1,10 +1,9 @@
 // Save fidelity:
 // 1) a running city written as .svx, loaded back and written again must give the same chunks;
-//    differing chunks are logged as "[roundtrip] ... diff <chunk>" with the first differing offsets;
-// 2) original .sav saves are refused until the OG save converter exists.
+//    differing chunks are logged as "[roundtrip] ... diff <chunk>" with the first differing offsets.
+// Original .sav loading is covered by tests/49*_og_save_*.js.
 // Markers:
 //   [test-marker] save_roundtrip_ok
-//   [test-marker] og_sav_refused_ok
 
 var __t309_ticks = 2000
 
@@ -49,18 +48,10 @@ function run_test() {
         __log_marker('save_roundtrip_ok')
     }
 
-    if (__game_load_savegame('test_309_original.sav')) {
-        t309_fail('an original .sav was loaded')
-    } else if (__test_find_inlog('original .sav saves are not supported yet (test_309_original.sav)')) {
-        __log_marker('og_sav_refused_ok')
-    } else {
-        t309_fail('.sav load failed without the refusal message')
-    }
-
     test_reload_city_session('data/default.map')
     __test_signal_ready()
 }
 
 function check_valid() {
-    return __test_find_inlog('save_roundtrip_ok') && __test_find_inlog('og_sav_refused_ok')
+    return __test_find_inlog('save_roundtrip_ok')
 }
