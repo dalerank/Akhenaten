@@ -1007,6 +1007,22 @@ static int __test_set_allowed_food(int food_index, int resource) {
 }
 ANK_FUNCTION_2(__test_set_allowed_food);
 
+// The month's and the week's food consumption, each a no-op unless its model is the active one.
+static void __test_city_consume_food_monthly() {
+    g_city.resource.consume_food_monthly();
+}
+ANK_FUNCTION(__test_city_consume_food_monthly);
+
+static void __test_city_consume_food_weekly() {
+    g_city.resource.consume_food_weekly(game.simtime);
+}
+ANK_FUNCTION(__test_city_consume_food_weekly);
+
+static int __test_city_food_consumption_percentage() {
+    return g_city.resource.food_consumption_percentage();
+}
+ANK_FUNCTION(__test_city_food_consumption_percentage);
+
 static int __test_city_recalc_granary_stored(int resource) {
     g_city.resource.calculate_available_food();
     return (int)g_city.resource.granary_stored((e_resource)resource);

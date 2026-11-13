@@ -141,6 +141,7 @@ void city_t::update_month(simulation_time_t simtime) {
     migration.update_month();
     health.update_month();
     finance.advance_month();
+    resource.consume_food_monthly();
     resource.advance_month();
     food_supply.advance_month();
     update_allowed_foods();

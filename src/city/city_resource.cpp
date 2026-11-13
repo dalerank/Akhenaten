@@ -8,6 +8,7 @@
 #include "building/building_food_mill.h"
 #include "building/building_bazaar.h"
 #include "building/building_house.h"
+#include "building/building_temple_complex.h"
 #include "city/city.h"
 #include "city/city_warnings.h"
 #include "graphics/window.h"
@@ -16,6 +17,7 @@
 #include "empire/empire.h"
 #include "grid/road_access.h"
 #include "scenario/scenario.h"
+#include "game/game_config.h"
 #include "game/game_events.h"
 
 struct available_data_t {
@@ -428,7 +430,12 @@ void city_resources_t::consume_goods_weekly(const simulation_time_t& t) {
     });
 }
 
+// Remake model (scripts/building/house.js): the model's percentage, twice a month.
 void city_resources_t::consume_food_weekly(const simulation_time_t& t) {
+    if (!game_features::gameplay_change_food_consumption_remake.to_bool()) {
+        return;
+    }
+
     calculate_available_food();
 
     for (int i = 0; i < RESOURCES_FOODS_MAX; i++) {
@@ -442,6 +449,93 @@ void city_resources_t::consume_food_weekly(const simulation_time_t& t) {
         const uint8_t num_foods = house->runtime_data().num_foods;
         if (num_foods > food_types_eaten_max_value) {
             food_types_eaten_max_value = num_foods;
+        }
+    });
+}
+
+// OG temple_complex.c city_food_consumption_percentage.
+int city_resources_t::food_consumption_percentage() const {
+    enum { FOOD_CONSUMPTION_PERCENTAGE = 25, TEMPLE_COMPLEX_FOOD_CONSUMPTION_PERCENTAGE = 20 };
+    if (g_city.buildings.temple_complex_id(BUILDING_TEMPLE_COMPLEX_BAST)) {
+        return TEMPLE_COMPLEX_FOOD_CONSUMPTION_PERCENTAGE;
+    }
+
+    const building_id osiris_id = g_city.buildings.temple_complex_id(BUILDING_TEMPLE_COMPLEX_OSIRIS);
+    building* osiris = osiris_id ? building_get(osiris_id) : nullptr;
+    auto* complex = osiris ? osiris->dcast_temple_complex() : nullptr;
+    if (complex && complex->has_upgrade(etc_upgrade_altar)) {
+        return TEMPLE_COMPLEX_FOOD_CONSUMPTION_PERCENTAGE;
+    }
+
+    return FOOD_CONSUMPTION_PERCENTAGE;
+}
+
+// OG city/resources.c city_resource_consume_food: once a month every house eats the percentage of its people,
+// split over the food kinds its level needs, from the first city foods it has in stock. A kind it has less of
+// than its share is emptied and still counts as eaten (and as the full share consumed).
+void city_resources_t::consume_food_monthly() {
+    OZZY_PROFILER_FUNCTION();
+    if (game_features::gameplay_change_food_consumption_remake.to_bool()) {
+        return;
+    }
+
+    calculate_available_food();
+
+    for (int i = 0; i < RESOURCES_FOODS_MAX; i++) {
+        food_types_eaten[i] = 0;
+    }
+    food_types_eaten_max_value = 1;
+
+    const int percentage = food_consumption_percentage();
+    buildings_house_do([&](building_house* house) {
+        auto& d = house->runtime_data();
+        if (!d.hsize) {
+            return;
+        }
+
+        const int types = house->model().food_types;
+        int amount = calc_adjust_with_percentage<int>(house->house_population(), percentage);
+        if (types > 1) {
+            amount /= types;
+        }
+
+        d.num_foods = 0;
+        if (g_scenario.kingdom_supplies_grain) {
+            d.foods[0] = (uint16_t)amount;
+            d.num_foods = 1;
+            return;
+        }
+
+        if (types <= 0) {
+            return;
+        }
+
+        for (int i = INVENTORY_MIN_FOOD; i < INVENTORY_MAX_FOOD; i++) {
+            const e_resource food = g_city.allowed_foods(i);
+            if (food == RESOURCE_NONE) {
+                continue;
+            }
+
+            uint16_t& stock = d.foods[i];
+            bool eaten = false;
+            if (stock >= amount) {
+                stock = (uint16_t)(stock - amount);
+                eaten = true;
+            } else if (stock != 0) {
+                stock = 0;
+                eaten = true;
+            }
+
+            if (eaten) {
+                res_this_month.consumed[food] += (uint16_t)amount;
+                food_types_eaten[food] = 1;
+                d.num_foods++;
+            }
+
+            food_types_eaten_max_value = std::max<uint8_t>(food_types_eaten_max_value, d.num_foods);
+            if (d.num_foods >= types) {
+                break;
+            }
         }
     });
 }

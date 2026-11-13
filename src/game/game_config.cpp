@@ -129,6 +129,8 @@ namespace game_features {
       "gameplay_change_fishing_points_monthly_respawn", "#TR_CONFIG_FISHING_POINTS_MONTHLY_RESPAWN", false, false};
     game_feature gameplay_change_house_evolve_delay{
       "gameplay_change_house_evolve_delay", "#TR_CONFIG_HOUSE_EVOLVE_DELAY", false, false};
+    game_feature gameplay_change_food_consumption_remake{
+      "gameplay_change_food_consumption_remake", "#TR_CONFIG_FOOD_CONSUMPTION_REMAKE", false, false};
     game_feature gameplay_change_architect_patrol_most_damaged{ "gameplay_change_architect_patrol_most_damaged", "#TR_CONFIG_ARCHITECT_PATROL_MOST_DAMAGED", false, false };
     game_feature gameplay_og_architect{ "gameplay_og_architect", "#TR_CONFIG_OG_ARCHITECT", false, true };
     game_feature gameplay_og_fireman{ "gameplay_og_fireman", "#TR_CONFIG_OG_FIREMAN", false, true };
