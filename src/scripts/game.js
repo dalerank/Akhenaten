@@ -173,6 +173,7 @@ game_features {
     @gameplay_change_industry_nearby_houses {}
     @gameplay_change_jeweler_nearby_discount {}
     @gameopt_display_size {}
+    @gameopt_fullscreen_resolution {}
     @gameplay_change_multiple_temple_complexes {}
     @gameplay_change_work_camp_one_worker_per_month {}
     @gameplay_change_work_camp_destination_at_spawn {}

@@ -25,7 +25,7 @@ function display_options_mode_size_for_label(label) {
 }
 
 function display_options_window_size_label() {
-    var sz = __display_options_get_window_size()
+    var sz = __display_options_get_resolution()
     return sz.x + " x " + sz.y
 }
 
@@ -91,18 +91,27 @@ function display_options_window_resolution_selected(window) {
 function display_options_window_es_apply_resolution(window) {
     var w = display_options_window
     var scale_changed = (__display_options_get_scale() != w.orig_scale)
+    var resolution_applied = false
     if (w.resolution_changed && !__platform_is_android() && !__game_is_fullscreen_only()) {
         var label = window.resolutions.selected_text(0)
         var sz = display_options_mode_size_for_label(label)
-        if (sz.x > 0 && sz.y > 0) {
-            emit event_display_options_apply_resolution{ w: sz.x, h: sz.y }
+        var current = __display_options_get_resolution()
+        if (sz.x > 0 && sz.y > 0 && (sz.x != current.x || sz.y != current.y)) {
+            resolution_applied = true
+            // Fullscreen stays at the desktop size and renders at the chosen resolution, stretched.
+            if (__display_options_is_fullscreen()) {
+                __display_options_set_fullscreen_resolution(sz.x, sz.y)
+            } else {
+                emit event_display_options_apply_resolution{ w: sz.x, h: sz.y }
+            }
         }
     }
     w.orig_scale = __display_options_get_scale()
     w.resolution_changed = 0
     __display_options_save()
     window_go_back()
-    if (scale_changed) {
+    // The city view relayouts live; full-screen menus keep the layout computed at startup.
+    if (scale_changed || resolution_applied) {
         ui.show_ok("#display_options_restart_required")
     }
 }
