@@ -52,6 +52,7 @@ private:
     void set_scale_percentage(int new_scale, int pixel_width, int pixel_height);
     void refresh_render_size();
     void store_window_mode(bool fullscreen);
+    void restore_window_decorations();
 };
 
 extern platform_screen_t g_platform_screen;
