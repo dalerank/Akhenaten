@@ -2,7 +2,7 @@ log_info("akhenaten: ui_mansion_window.js loaded")
 
 [es=building_info_window]
 info_window_mansion {
-    first_advisor : ADVISOR_IMPERIAL,
+    first_advisor : ADVISOR_KINGDOM,
     related_buildings [BUILDING_PERSONAL_MANSION, BUILDING_FAMILY_MANSION, BUILDING_DYNASTY_MANSION]
     ui {
         background    : outer_panel({size[29, 20]}),

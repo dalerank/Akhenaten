@@ -30,11 +30,7 @@ function building_info_window_set_advisor_button(btn, advisor, show) {
     if (!show) {
         return
     }
-    var frame = (advisor - 1) * 3
-    if (frame <= 0) {
-        return
-    }
-    var portrait = get_image({pack:PACK_GENERAL, id:106, offset:frame})
+    var portrait = advisor_portrait_image(advisor)
     btn.image = portrait ? portrait.tid : 0
 }
 

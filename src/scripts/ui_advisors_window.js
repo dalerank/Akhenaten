@@ -4,7 +4,7 @@ function advisor_autoconfig_section(advisor) {
     switch (advisor) {
         case ADVISOR_LABOR: return "advisor_labors_window"
         case ADVISOR_MILITARY: return "advisor_military_window"
-        case ADVISOR_IMPERIAL: return "advisor_imperial_window"
+        case ADVISOR_KINGDOM: return "advisor_imperial_window"
         case ADVISOR_RATINGS: return "advisor_ratings_window"
         case ADVISOR_TRADE: return "advisor_trade_window"
         case ADVISOR_POPULATION: return "advisor_population_window"
@@ -18,6 +18,33 @@ function advisor_autoconfig_section(advisor) {
         case ADVISOR_HOUSING: return "advisor_housing_window"
         default: return null
     }
+}
+
+// The OG portrait strip has no fleet picture: the fleet advisor uses the military one.
+var advisor_portraits = [
+    { advisor: ADVISOR_LABOR, image: { pack:PACK_GENERAL, id:106, offset:0 } },
+    { advisor: ADVISOR_MILITARY, image: { pack:PACK_GENERAL, id:106, offset:3 } },
+    { advisor: ADVISOR_FLEET, image: { pack:PACK_GENERAL, id:106, offset:3 } },
+    { advisor: ADVISOR_KINGDOM, image: { pack:PACK_GENERAL, id:106, offset:6 } },
+    { advisor: ADVISOR_RATINGS, image: { pack:PACK_GENERAL, id:106, offset:9 } },
+    { advisor: ADVISOR_TRADE, image: { pack:PACK_GENERAL, id:106, offset:12 } },
+    { advisor: ADVISOR_POPULATION, image: { pack:PACK_GENERAL, id:106, offset:15 } },
+    { advisor: ADVISOR_HEALTH, image: { pack:PACK_GENERAL, id:106, offset:18 } },
+    { advisor: ADVISOR_EDUCATION, image: { pack:PACK_GENERAL, id:106, offset:21 } },
+    { advisor: ADVISOR_ENTERTAINMENT, image: { pack:PACK_GENERAL, id:106, offset:24 } },
+    { advisor: ADVISOR_RELIGION, image: { pack:PACK_GENERAL, id:106, offset:27 } },
+    { advisor: ADVISOR_FINANCIAL, image: { pack:PACK_GENERAL, id:106, offset:30 } },
+    { advisor: ADVISOR_CHIEF, image: { pack:PACK_GENERAL, id:106, offset:33 } },
+    { advisor: ADVISOR_MONUMENTS, image: { pack:PACK_GENERAL, id:106, offset:36 } }
+]
+
+function advisor_portrait_image(advisor) {
+    for (var i = 0; i < advisor_portraits.length; i++) {
+        if (advisor_portraits[i].advisor == advisor) {
+            return get_image(advisor_portraits[i].image)
+        }
+    }
+    return null
 }
 
 function window_advisors_show() {
@@ -51,7 +78,7 @@ advisor_window_base {
         advisors_strip    : image({ pack:PACK_GENERAL, id:160, pos:[sw(-640)/2, sh(400)/2] })
         labor_btn         : image_button({ pos:[sw(-640)/2 + 12, sh(418)/2], size:[33, 32], pack:PACK_GENERAL, id:159, offset:0, tooltip:[68, 71], param1: ADVISOR_LABOR, onclick_event: "show_advisor" })
         military_btn      : image_button({ pos:[sw(-640)/2 + 52, sh(418)/2], size:[39, 32], pack:PACK_GENERAL, id:159, offset:4, tooltip:[68, 72], param1: ADVISOR_MILITARY, onclick_event: "show_advisor" })
-        imperial_btn      : image_button({ pos:[sw(-640)/2 + 96, sh(418)/2], size:[34, 32], pack:PACK_GENERAL, id:159, offset:8, tooltip:[68, 73], param1: ADVISOR_IMPERIAL, onclick_event: "show_advisor" })
+        imperial_btn      : image_button({ pos:[sw(-640)/2 + 96, sh(418)/2], size:[34, 32], pack:PACK_GENERAL, id:159, offset:8, tooltip:[68, 73], param1: ADVISOR_KINGDOM, onclick_event: "show_advisor" })
         ratings_btn       : image_button({ pos:[sw(-640)/2 + 135, sh(418)/2], size:[38, 32], pack:PACK_GENERAL, id:159, offset:12, tooltip:[68, 74], param1: ADVISOR_RATINGS, onclick_event: "show_advisor" })
         trade_btn         : image_button({ pos:[sw(-640)/2 + 178, sh(418)/2], size:[46, 32], pack:PACK_GENERAL, id:159, offset:16, tooltip:[68, 75], param1: ADVISOR_TRADE, onclick_event: "show_advisor" })
         population_btn    : image_button({ pos:[sw(-640)/2 + 229, sh(418)/2], size:[48, 32], pack:PACK_GENERAL, id:159, offset:20, tooltip:[68, 76], param1: ADVISOR_POPULATION, onclick_event: "show_advisor" })
@@ -93,7 +120,7 @@ function advisors_toolbar_refresh(window, advisor) {
 
     window.labor_btn.selected = (ADVISOR_LABOR == advisor)
     window.military_btn.selected = (ADVISOR_MILITARY == advisor)
-    window.imperial_btn.selected = (ADVISOR_IMPERIAL == advisor)
+    window.imperial_btn.selected = (ADVISOR_KINGDOM == advisor)
     window.ratings_btn.selected = (ADVISOR_RATINGS == advisor)
     window.trade_btn.selected = (ADVISOR_TRADE == advisor)
     window.population_btn.selected = (ADVISOR_POPULATION == advisor)
@@ -107,7 +134,7 @@ function advisors_toolbar_refresh(window, advisor) {
 
     window.labor_btn.readonly = !city.is_advisor_available(ADVISOR_LABOR)
     window.military_btn.readonly = !city.is_advisor_available(ADVISOR_MILITARY)
-    window.imperial_btn.readonly = !city.is_advisor_available(ADVISOR_IMPERIAL)
+    window.imperial_btn.readonly = !city.is_advisor_available(ADVISOR_KINGDOM)
     window.ratings_btn.readonly = !city.is_advisor_available(ADVISOR_RATINGS)
     window.trade_btn.readonly = !city.is_advisor_available(ADVISOR_TRADE)
     window.population_btn.readonly = !city.is_advisor_available(ADVISOR_POPULATION)

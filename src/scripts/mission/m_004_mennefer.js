@@ -270,7 +270,7 @@ function mission4_on_start(ev) {
 	}
 
 	city.set_advisor_available(ADVISOR_LABOR, 1)
-	city.set_advisor_available(ADVISOR_IMPERIAL, 1)
+	city.set_advisor_available(ADVISOR_KINGDOM, 1)
 	city.set_advisor_available(ADVISOR_RATINGS, 1)
 	city.set_advisor_available(ADVISOR_POPULATION, 1)
 	city.set_advisor_available(ADVISOR_HEALTH, 1)

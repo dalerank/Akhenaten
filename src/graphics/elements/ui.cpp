@@ -940,11 +940,6 @@ void ui::icon(vec2i pos, e_resource res, UiFlags flags) {
     }
 }
 
-void ui::icon(vec2i pos, e_advisor adv) {
-    const vec2i offset = g_state.offset();
-    push(cmd_t::image, Pos{offset + pos}, ImageId{advisor_icons.tid() + (adv - 1)});
-}
-
 arrow_button& ui::arw_button(vec2i pos, bool down, bool tiny, UiFlags_ flags, int* external_repeats) {
     const vec2i offset = g_state.offset();
     const mouse& m = mouse::get();

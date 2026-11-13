@@ -247,7 +247,6 @@ namespace ui {
     void border(vec2i pos, vec2i size, int type, color c, UiFlags flags);
     void rect(vec2i pos, vec2i size, int fill, int color, UiFlags flags);
     void icon(vec2i pos, e_resource img, UiFlags flags = UiFlags_None);
-    void icon(vec2i pos, e_advisor advisor);
     int button_hover(const mouse* m);
 
     inline fonts_vec fonts_def() {
