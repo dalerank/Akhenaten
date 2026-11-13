@@ -1532,6 +1532,17 @@ game_messages_en {
         content { text: "" }
     }
 
+    // OG MESSAGE_EARTHQUAKE: title and text come from the event phrases, param2 is the first tile.
+    message_earthquake {
+        id: 261
+        type: 2
+        message_type: 1
+        size [30, 20]
+        urgent: 1
+        title { text: "" }
+        content { text: "" }
+    }
+
     message_wrath_of_bast_3 {
         id: 134,
         type: 2,

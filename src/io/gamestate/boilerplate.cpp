@@ -372,7 +372,6 @@ void GamestateIO::start_loaded_file() {
         g_empire_traders.init();
 
         // set up events
-        scenario_earthquake_init();
         scenario_revolt_init();
         scenario_kingdome_change_init();
         scenario_criteria_init_max_year();

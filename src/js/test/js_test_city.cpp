@@ -46,6 +46,10 @@
 #include "scenario/request.h"
 #include "scenario/scenario.h"
 #include "scenario/scenario_event_manager.h"
+#include "scenario/earthquake.h"
+#include "grid/grid.h"
+#include "grid/image.h"
+#include "grid/terrain.h"
 
 
 #include <algorithm>
@@ -365,4 +369,54 @@ static int __test_building_malaria_risk(int bid) {
 }
 ANK_FUNCTION_1(__test_building_malaria_risk);
 
+static void __test_set_earthquake_point(int x, int y) {
+    g_scenario.earthquake_point = (x < 0 || y < 0) ? tile2i::invalid : tile2i(x, y);
+}
+ANK_FUNCTION_2(__test_set_earthquake_point);
+
+static void __test_earthquake_tick(int n) {
+    for (int i = 0; i < n; i++) {
+        scenario_earthquake_process();
+    }
+}
+ANK_FUNCTION_1(__test_earthquake_tick);
+
+static int __test_event_state(int event_id) {
+    const event_ph_t* e = g_scenario.events.at(event_id);
+    return e ? (int)e->event_state : -1;
+}
+ANK_FUNCTION_1(__test_event_state);
+
+// Front i of an earthquake event as x * 1000 + y.
+static int __test_earthquake_front(int event_id, int i) {
+    const event_ph_t* e = g_scenario.events.at(event_id);
+    if (!e || i < 0 || i > 3) {
+        return -1;
+    }
+    return e->data.earthquake.locations[2 * i] * 1000 + e->data.earthquake.locations[2 * i + 1];
+}
+ANK_FUNCTION_2(__test_earthquake_front);
+
+static int __test_earthquake_duration(int event_id) {
+    const event_ph_t* e = g_scenario.events.at(event_id);
+    return e ? e->data.earthquake.duration : -1;
+}
+ANK_FUNCTION_1(__test_earthquake_duration);
+
+static int __test_earthquake_tile_free(int x, int y) {
+    return map_terrain_is(MAP_OFFSET(x, y), TERRAIN_ELEVATION | TERRAIN_ROCK | TERRAIN_WATER) ? 0 : 1;
+}
+ANK_FUNCTION_2(__test_earthquake_tile_free);
+
+// Makes a tile meadow with a stale image id, to see whether a refresh redraws it.
+static void __test_map_set_meadow(int x, int y, int image_id) {
+    map_terrain_add(MAP_OFFSET(x, y), TERRAIN_MEADOW);
+    map_image_set(MAP_OFFSET(x, y), image_id);
+}
+ANK_FUNCTION_3(__test_map_set_meadow);
+
+static int __test_map_image(int x, int y) {
+    return map_image_at(MAP_OFFSET(x, y));
+}
+ANK_FUNCTION_2(__test_map_image);
 

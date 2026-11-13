@@ -12,6 +12,7 @@ enum e_event_type : uint8_t {
 
     EVENT_TYPE_REQUEST = 1,
     EVENT_TYPE_INVASION = 2,
+    EVENT_TYPE_EARTHQUAKE = 3,
 
     EVENT_TYPE_SEA_TRADE_PROBLEM = 6,
     EVENT_TYPE_LAND_TRADE_PROBLEM = 7,
@@ -223,7 +224,7 @@ struct event_ph_t {
 
     void set_param(pcstr name, int param);
 
-    game_date_t date() { return {time.year, time.month}; }
+    game_date_t date() const { return {time.year, time.month}; }
     void archive_load(archive arch);
 };
 ANK_CONFIG_STRUCT(event_ph_t, type, time, item, amount, tag_id, months_initial, location_fields, reasons,

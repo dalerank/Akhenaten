@@ -142,6 +142,10 @@ void event_ph_t::set_param(pcstr name, int param) {
     if (pname == "subtype") { subtype = (int8_t)param; return; }
     if (pname == "year") { time.year = (int16_t)param; return; }
     if (pname == "month") { time.month = (int16_t)param; return; }
+    if (pname == "delay" && type == EVENT_TYPE_EARTHQUAKE) {
+        data.earthquake.delay = (int16_t)param;
+        return;
+    }
 }
 
 void event_ph_t::archive_load(archive arch) {
@@ -149,6 +153,9 @@ void event_ph_t::archive_load(archive arch) {
     const e_resource resource = arch.r_type<e_resource>("resource");
     if (resource != RESOURCE_NONE) {
         item.value = resource;
+    }
+    if (type == EVENT_TYPE_EARTHQUAKE) {
+        data.earthquake.delay = (int16_t)arch.r_int("delay", 0);
     }
 }
 
@@ -595,7 +602,7 @@ bool event_manager_t::create(const event_ph_t* master, const event_ph_t* parent,
     child->parent_id = parent->event_id;
     child->invasion_warnings_shown = 0;
 
-    if (og_invasions && child->type == EVENT_TYPE_INVASION) {
+    if ((og_invasions && child->type == EVENT_TYPE_INVASION) || child->type == EVENT_TYPE_EARTHQUAKE) {
         // OG scenario_event_chain: a child's delay (months, in time.year) counts from the current month.
         // Read from the template: update_randomized_values treats time as {year, month, ...} value/fixed/min/max.
         const int delay = master->time.year;
@@ -953,6 +960,9 @@ void event_manager_t::process_event(int id, bool via_event_trigger, int chain_ac
 
     if (og_invasions && event.type == EVENT_TYPE_INVASION) {
         return; // process_invasions() runs these every month
+    }
+    if (event.type == EVENT_TYPE_EARTHQUAKE) {
+        return; // scenario_earthquake_process() runs these every tick
     }
 
     // check if the trigger time has come, if not return.
