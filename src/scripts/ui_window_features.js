@@ -263,7 +263,8 @@ function window_features_btn_next(p1, p2) {
 
 [es=window]
 window_features {
-    pos: [(sw(0) - px(40))/2, (sh(0) - px(30))/2]
+    pos: window_features_centered_pos()
+    defer_relayout : true
     default_font : FONT_NORMAL_BLACK_ON_LIGHT
     pages : []
     page : 0
@@ -272,7 +273,7 @@ window_features {
 
     ui : {
         background_image: background({pack:PACK_UNLOADED, id:8})
-        background    : outer_panel({size: [40, 30] })
+        background    : outer_panel({size: [40, 33] })
 
         title         : text({pos:[0, 16], size:[px(40), 20], align:"center", font:FONT_LARGE_BLACK_ON_LIGHT})
 
@@ -312,6 +313,10 @@ window_features {
         btn_hotkeys   : button({pos:[90,  436], size:[150, 30], text:"#TR_BUTTON_CONFIGURE_HOTKEYS"})
         btn_close     : button({pos:[410, 436], size:[100, 30], text:"#TR_BUTTON_CANCEL"})
         btn_save      : button({pos:[520, 436], size:[100, 30], text:"#TR_BUTTON_OK"})
+
+        // Own row below the page buttons, so they show on every features page.
+        btn_display   : button({pos:[115, 474], size:[200, 30], text:"#display_options_title"})
+        btn_sound     : button({pos:[325, 474], size:[200, 30], text:[46, 0]})
     }
 }
 
@@ -347,6 +352,16 @@ function window_features_on_bfeature13(window) { window_features_toggle_slot(13)
 [es=(window_features, btn_defaults)]
 function window_features_on_btn_defaults(window) {
     window_features_btn_defaults()
+}
+
+[es=(window_features, btn_display)]
+function window_features_on_btn_display(window) {
+    window_show_by_id("display_options_window")
+}
+
+[es=(window_features, btn_sound)]
+function window_features_on_btn_sound(window) {
+    emit event_show_window{ id: "sound_options_window" }
 }
 
 [es=(window_features, btn_hotkeys)]
@@ -385,8 +400,15 @@ function window_features_on_init(window) {
 
 // ---- Draw ----
 
+function window_features_centered_pos() {
+    return [(sw(0) - px(40)) / 2, (sh(0) - px(33)) / 2]
+}
+
 [es=(window_features, ui_draw_foreground)]
 function window_features_draw(window) {
+    // defer_relayout: follow screen-size changes (e.g. from display options) without a reload.
+    var p = window_features_centered_pos()
+    __window_set_pos("window_features", p[0], p[1])
     var cur = window_features.pages[window_features.page]
     window.title.text = cur.title
     if (window_features.needs_rebuild) {

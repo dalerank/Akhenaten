@@ -8,6 +8,7 @@
 #include "graphics/image.h"
 #include "graphics/screen.h"
 #include "game/game_config.h"
+#include "js/js.h"
 #include "arguments.h"
 #include "platform/android/android.h"
 #include "platform/platform.h"
@@ -194,6 +195,16 @@ void platform_screen_t::destroy() {
 }
 
 bool platform_screen_t::resize(int pixel_width, int pixel_height, int save) {
+    // Leaving fullscreen, the OS can restore the old windowed rect after our SDL_SetWindowSize;
+    // put the requested size back instead of adopting (and saving) the restored one.
+    if (windowed_target.x > 0 && SDL_GetTicks() < windowed_target_until && !is_window_fullscreen()) {
+        if (pixel_width != windowed_target.x || pixel_height != windowed_target.y) {
+            SDL_SetWindowSize(as_sdl_window(window), windowed_target.x, windowed_target.y);
+            center_window();
+            return true;
+        }
+    }
+
 #if defined(GAME_PLATFORM_ANDROID)
     constexpr int k_min_logical_w = 800;
     constexpr int k_min_logical_h = 600;
@@ -210,16 +221,24 @@ bool platform_screen_t::resize(int pixel_width, int pixel_height, int save) {
     set_scale_percentage(SDL_min(requested, max_fit_scale), pixel_width, pixel_height);
 #endif
 
-    int logical_width = scale_pixels_to_logical(pixel_width);
-    int logical_height = scale_pixels_to_logical(pixel_height);
+    const vec2i base = render_base_size(pixel_width, pixel_height);
+    int logical_width = scale_pixels_to_logical(base.x);
+    int logical_height = scale_pixels_to_logical(base.y);
 
-    if (save) {
+    // gameopt_display_size is the windowed size; a fullscreen window is the desktop size.
+    if (save && !is_window_fullscreen()) {
         // Store window pixels (matches video-mode list), not logical size.
         game_features::gameopt_display_size.set({pixel_width, pixel_height});
     }
 
     if (platform_renderer_create_render_texture(logical_width, logical_height)) {
+        // The first size (at startup, before any script ran) is not a change to re-layout for.
+        const bool had_size = screen_width() > 0 && screen_height() > 0;
+        const bool changed = had_size && (logical_width != screen_width() || logical_height != screen_height());
         g_screen.set_resolution(logical_width, logical_height);
+        if (changed) {
+            js_vm_request_ui_relayout();
+        }
         return true;
     }
 
@@ -233,6 +252,62 @@ vec2i platform_screen_t::get_window_size() const {
         SDL_GetWindowSize(as_sdl_window(window), &width, &height);
     }
     return {width, height};
+}
+
+bool platform_screen_t::is_window_fullscreen() const {
+    return window && (SDL_GetWindowFlags(as_sdl_window(window)) & SDL_WINDOW_FULLSCREEN);
+}
+
+vec2i platform_screen_t::render_base_size(int pixel_width, int pixel_height) const {
+    if (is_window_fullscreen()) {
+        const vec2i resolution = game_features::gameopt_fullscreen_resolution.to_vec2i();
+        if (resolution.x > 0 && resolution.y > 0) {
+            return resolution;
+        }
+    }
+    return {pixel_width, pixel_height};
+}
+
+// SDL_RenderSetLogicalSize stretches the render texture to the window and letterboxes it,
+// and maps mouse events back to logical coordinates, so only the texture size changes here.
+void platform_screen_t::refresh_render_size() {
+    const vec2i wsize = get_window_size();
+    if (wsize.x > 0 && wsize.y > 0) {
+        resize(wsize.x, wsize.y, 0);
+    }
+}
+
+void platform_screen_t::set_fullscreen_resolution(vec2i resolution) {
+    if (window) {
+        SDL_DisplayMode desktop;
+        if (SDL_GetDesktopDisplayMode(SDL_GetWindowDisplayIndex(as_sdl_window(window)), &desktop) == 0
+            && resolution.x == desktop.w && resolution.y == desktop.h) {
+            resolution = {0, 0};
+        }
+    }
+    game_features::gameopt_fullscreen_resolution.set(resolution);
+    if (is_window_fullscreen()) {
+        refresh_render_size();
+    }
+}
+
+void platform_screen_t::hold_windowed_size(vec2i size) {
+    constexpr Uint32 hold_ms = 1000;
+    windowed_target = size;
+    windowed_target_until = SDL_GetTicks() + hold_ms;
+}
+
+// SDL does not give a window created fullscreen a border or resize frame when it leaves fullscreen.
+void platform_screen_t::restore_window_decorations() {
+    SDL_SetWindowBordered(as_sdl_window(window), SDL_TRUE);
+    SDL_SetWindowResizable(as_sdl_window(window), SDL_TRUE);
+}
+
+// Startup reads fullscreen from the cfg's window_mode, not gameopt_fullscreen: keep both in step.
+void platform_screen_t::store_window_mode(bool fullscreen) {
+    g_args.set_window_mode(!fullscreen);
+    game.set_cli_fullscreen(fullscreen);
+    arguments::store(g_args);
 }
 
 int platform_screen_t::scale_display(int display_scale_percentage) {
@@ -303,7 +378,8 @@ void platform_screen_t::set_fullscreen() {
     }
 
     game.set_fullscreen(true);
-    game_features::gameopt_display_size.set({mode.w, mode.h});
+    store_window_mode(true);
+    refresh_render_size();
 }
 
 void platform_screen_t::set_windowed() {
@@ -313,14 +389,17 @@ void platform_screen_t::set_windowed() {
     // gameopt_display_size is window pixels (same units as the video-mode list).
     auto wsize = game_features::gameopt_display_size.to_vec2i();
     SDL_SetWindowFullscreen(as_sdl_window(window), 0);
+    restore_window_decorations();
+    hold_windowed_size(wsize);
     SDL_SetWindowSize(as_sdl_window(window), wsize.x, wsize.y);
-    if (centered) {
-        center_window();
-    }
+    // A window created fullscreen has no windowed position to return to.
+    center_window();
     if (SDL_GetWindowGrab(as_sdl_window(window)) == SDL_TRUE) {
         SDL_SetWindowGrab(as_sdl_window(window), SDL_FALSE);
     }
     game.set_fullscreen(false);
+    store_window_mode(false);
+    refresh_render_size();
 }
 
 void platform_screen_t::set_window_size(int pixel_width, int pixel_height) {
@@ -328,8 +407,10 @@ void platform_screen_t::set_window_size(int pixel_width, int pixel_height) {
         return;
     }
     // Arguments are window pixels from the video-mode list — do not multiply by display scale.
-    if (game.is_fullscreen()) {
+    if (is_window_fullscreen()) {
         SDL_SetWindowFullscreen(as_sdl_window(window), 0);
+        restore_window_decorations();
+        hold_windowed_size({pixel_width, pixel_height});
     } else {
         SDL_GetWindowPosition(as_sdl_window(window), &pos.x, &pos.y);
     }
@@ -346,6 +427,8 @@ void platform_screen_t::set_window_size(int pixel_width, int pixel_height) {
     }
     game.set_fullscreen(false);
     game_features::gameopt_display_size.set({pixel_width, pixel_height});
+    g_args.set_window_size({pixel_width, pixel_height});
+    store_window_mode(false);
     // Refresh logical for current scale (SIZE_CHANGED ignored above; may not fire if size unchanged).
     resize(pixel_width, pixel_height, 1);
     ignore_size_changed = false;
@@ -366,7 +449,8 @@ void platform_screen_t::recreate_texture() {
     if (game.is_fullscreen() && platform_renderer_lost_render_texture()) {
         SDL_DisplayMode mode;
         SDL_GetWindowDisplayMode(as_sdl_window(window), &mode);
-        g_screen.set_resolution(scale_pixels_to_logical(mode.w), scale_pixels_to_logical(mode.h));
+        const vec2i base = render_base_size(mode.w, mode.h);
+        g_screen.set_resolution(scale_pixels_to_logical(base.x), scale_pixels_to_logical(base.y));
         platform_renderer_create_render_texture(screen_width(), screen_height());
     }
 #endif
@@ -379,7 +463,12 @@ void platform_screen_t::show_error_message_box(const char* title, const char* me
 void platform_screen_t::warp_mouse(int* x, int* y) {
     *x = calc_bound(*x, 0, screen_width() - 1);
     *y = calc_bound(*y, 0, screen_height() - 1);
-    SDL_WarpMouseInWindow(as_sdl_window(window), scale_logical_to_pixels(*x), scale_logical_to_pixels(*y));
+    // Same mapping SDL_RenderSetLogicalSize uses: uniform scale, letterbox centred in the window.
+    const vec2i wsize = get_window_size();
+    const float s = SDL_min((float)wsize.x / screen_width(), (float)wsize.y / screen_height());
+    const float ox = (wsize.x - screen_width() * s) * 0.5f;
+    const float oy = (wsize.y - screen_height() * s) * 0.5f;
+    SDL_WarpMouseInWindow(as_sdl_window(window), (int)(ox + *x * s), (int)(oy + *y * s));
 }
 
 vec2i platform_screen_t::get_max_resolution() {

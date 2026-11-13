@@ -33,6 +33,9 @@ struct autoconfig_window : public ui::widget {
     bool _is_inited = false;
     bool allow_rmb_goback = false;
     bool draw_underlying = false;
+    // While on screen, screen-size changes do not re-run the ui_* scripts (which would rebuild this
+    // window and drop its unsaved state); the window keeps itself centred instead.
+    bool defer_relayout = false;
     xstring help_id;
 
     struct deferred_event {
@@ -43,6 +46,7 @@ struct autoconfig_window : public ui::widget {
 
     static void before_mission_start();
     static void refresh_all();
+    static bool defers_relayout(xstring section);
     static void show(xstring section);
     static autoconfig_window* find(xstring section);
     static void unregister_section(xstring section);

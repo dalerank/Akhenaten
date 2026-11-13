@@ -350,8 +350,10 @@ void globals_settings_t::load_global(pcstr name) {
 			break;
 
 		case archive::e_variant_type::vt_object:
-		{
-
+		// vec2i settings are saved as { x, y } objects (see w_property for setting_vec2i), and
+		// to_variant reports those as plain objects.
+		if (type(key) == setting_vec2i) {
+			set(key, vec2i{arch.r_int("x"), arch.r_int("y")});
 		}
 		break;
 		}

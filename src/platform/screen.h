@@ -4,6 +4,8 @@
 #include "core/vec2i.h"
 #include "core/xstring.h"
 
+#include <cstdint>
+
 struct platform_screen_t {
     vec2i pos;
     int centered = 0;
@@ -38,11 +40,25 @@ struct platform_screen_t {
     bool ignore_window_size_changed() const { return ignore_size_changed; }
     vec2i get_window_size() const;
 
+    bool is_window_fullscreen() const;
+    // Fullscreen render resolution (0x0 = desktop). Takes effect immediately when fullscreen.
+    void set_fullscreen_resolution(vec2i resolution);
+    // Resolution the game renders at before the interface scale: the fullscreen resolution when
+    // fullscreen and one is set, otherwise the window's pixel size.
+    vec2i render_base_size(int pixel_width, int pixel_height) const;
+
 private:
     void* window = nullptr;
     bool ignore_size_changed = false;
+    // Windowed size requested when leaving fullscreen, held briefly against the OS restoring the old one.
+    vec2i windowed_target = {0, 0};
+    uint32_t windowed_target_until = 0;
 
     void set_scale_percentage(int new_scale, int pixel_width, int pixel_height);
+    void refresh_render_size();
+    void store_window_mode(bool fullscreen);
+    void restore_window_decorations();
+    void hold_windowed_size(vec2i size);
 };
 
 extern platform_screen_t g_platform_screen;

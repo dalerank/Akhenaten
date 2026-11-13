@@ -181,7 +181,7 @@ void application_t::subscribe_events() {
     });
 
     events::subscribe_permanent([] (event_app_toggle_fullscreen ev) {
-        app_fullscreen(!game.is_fullscreen(false));
+        app_fullscreen(!g_platform_screen.is_window_fullscreen());
     });
 
     events::subscribe_permanent([] (event_app_screenshot ev) {
