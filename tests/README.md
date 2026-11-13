@@ -211,6 +211,7 @@ See **IT1** in `REMAKE_TODO.md` / `REMAKE_NOTES.md` §4.
 | `372_mods_broken.js` | Mod whose script throws is reported broken; the next mod queued in the same sync still runs |
 | `373_mods_saveload.js` | `.svx` chunk `mods`: loading a save made with another mod set logs the mismatch and leaves mods as they are; `__test_mods_apply_saved` (the popup's Yes) enables the saved mods and reloads |
 | `421_artisans_guild_og.js` | Artisans guild (OG): needs-clay-and-paint placement warning (gone with clay+paint in a yard), info state line 312.2/8/9/3, 15/20 workers by difficulty |
+| `483_zoom_wheel_returns_to_default.js` | Zoom: wheel steps stay on the 100% + k*step grid after hitting zoom_min, so scrolling back returns to exactly 100% (stepped and smooth modes) |
 
 Farm **placement** tests (34/35) cover `can_place` / terrain rules; **37** covers preview image helpers.
 When adding more preview draw coverage, follow JS draw conventions in

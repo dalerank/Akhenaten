@@ -62,18 +62,14 @@ void zoom_t::handle_mouse(const mouse* m) {
     }
 
     if (m->scrolled != SCROLL_NONE) {
-        if (!game_features::gameui_smooth_zoom) {
-            // Fixed step zoom: round to nearest step
-            float step = zoom_speed;
-            float current = target;
-            float new_target = current + (m->scrolled == SCROLL_DOWN ? step : -step);
-            // Round to nearest step
-            new_target = std::round(new_target / step) * step;
-            target = std::clamp(new_target, zoom_min, zoom_max);
-        } else {
-            target += (m->scrolled == SCROLL_DOWN) ? zoom_speed : -zoom_speed;
-            target = std::clamp(target, zoom_min, zoom_max);
-        }
+        // Keep wheel steps on the grid zoom_default + k * zoom_speed (clamped only at the limits), in both
+        // stepped and smooth modes. Otherwise a clamp at zoom_min/zoom_max shifts every later step and the
+        // wheel can never return to exactly 100%: any other value takes the downscaled draw path, which
+        // shows tile seams and edge bleeding.
+        const float step = zoom_speed;
+        const float stepped = target + (m->scrolled == SCROLL_DOWN ? step : -step);
+        const float snapped = zoom_default + std::round((stepped - zoom_default) / step) * step;
+        target = std::clamp(snapped, zoom_min, zoom_max);
     }
 
     input_offset = {m->x, m->y};
