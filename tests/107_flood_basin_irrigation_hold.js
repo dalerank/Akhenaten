@@ -1,4 +1,6 @@
-// Flood basins (Enhanced) on the OG canal model: irrigation stamps stay inside the basin.
+// Flood basins (Enhanced) on the OG canal model: a canal in a sealed basin holds its water for a
+// while after the supply stops (outside, and with the flag off, it dries at once as in OG), and
+// irrigation stamps stay inside the basin.
 // Marker: [test-marker] test_basin_irrigation_hold:...
 
 var __test107_result = null
@@ -50,6 +52,54 @@ function run_test() {
         test107_fail('outside_false_basin')
         return
     }
+
+    // Hold: both canals filled once, then left without a source.
+    terrain.add(inside, TERRAIN_CANAL)
+    terrain.add(outside, TERRAIN_CANAL)
+    __buildings_update_water_lifts_cycle()
+    __map_canal_fill_from_offset(inside)
+    __map_canal_fill_from_offset(outside)
+    __buildings_update_water_lifts_cycle()
+    if (__map_canal_at(outside) !== 0) {
+        test107_fail('outside_not_dry:' + __map_canal_at(outside))
+        return
+    }
+    if (__map_canal_at(inside) <= 0) {
+        test107_fail('inside_not_held')
+        return
+    }
+    if (!terrain.is(inside, TERRAIN_IRRIGATION_RANGE)) {
+        test107_fail('held_canal_no_irrigation')
+        return
+    }
+    for (var i = 0; i < 3; i++) {
+        __buildings_update_water_lifts_cycle()
+    }
+    var held_after_4 = __map_canal_at(inside)
+    if (held_after_4 <= 0) {
+        test107_fail('inside_hold_too_short')
+        return
+    }
+    for (var j = 0; j < 8; j++) {
+        __buildings_update_water_lifts_cycle()
+    }
+    if (__map_canal_at(inside) !== 0) {
+        test107_fail('inside_never_dries:' + __map_canal_at(inside))
+        return
+    }
+
+    // Flag OFF: pure OG, the basin canal dries on the next update.
+    game_features.set('gameplay_enhanced_flood_basins', false)
+    __buildings_update_water_lifts_cycle()
+    __map_canal_fill_from_offset(inside)
+    __buildings_update_water_lifts_cycle()
+    if (__map_canal_at(inside) !== 0) {
+        test107_fail('flag_off_inside_held:' + __map_canal_at(inside))
+        return
+    }
+    game_features.set('gameplay_enhanced_flood_basins', true)
+    terrain.remove(inside, TERRAIN_CANAL)
+    terrain.remove(outside, TERRAIN_CANAL)
 
     // OG fill stamps the canal tiles it walks onto, not its start: start one tile in from near_wall.
     var near_wall = { x: x0 + 1, y: cy }
@@ -109,8 +159,8 @@ function run_test() {
         return
     }
 
-    __log_marker('test_basin_irrigation_hold:clipped')
-    __test107_result = { ok: true }
+    __log_marker('test_basin_irrigation_hold:held=' + held_after_4)
+    __test107_result = { ok: true, held: held_after_4 }
     game_features.set('gameplay_enhanced_flood_basins', __test107_feat_prev)
     __log_info_native('[test:107] PASS')
     __test_signal_ready()

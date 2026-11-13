@@ -11,7 +11,7 @@
 #include <algorithm>
 
 static void fill_canal_at(int /*is_flooding*/, int grid_offset, int /*row*/) {
-    if (map_terrain_is(grid_offset, TERRAIN_CANAL) && !map_canal_at(grid_offset)) {
+    if (map_terrain_is(grid_offset, TERRAIN_CANAL) && !map_canal_is_filled(grid_offset)) {
         map_canal_fill_from_offset(tile2i(grid_offset));
     }
 }

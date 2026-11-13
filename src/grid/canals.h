@@ -20,6 +20,9 @@ void map_canal_restore(void);
 // OG map_water_supply_set_all_canals_to_no_water, plus the IRRIGATION_RANGE clear that precedes it.
 void map_canals_reset_water_supply();
 void map_canal_fill_from_offset(tile2i tile);
+bool map_canal_is_filled(int grid_offset);
+// Reset the flood-basin hold parity (call after load / new city).
+void canals_reset_hold_phase();
 // Basin-aware IRRIGATION_RANGE stamp (plain radius when flood basins off).
 void map_add_irrigation_range(tile2i tile, int size, int radius);
 // Clear IRRIGATION_RANGE and re-stamp from wet canals (no water decay). Flag toggle.

@@ -395,6 +395,7 @@ void GamestateIO::start_loaded_file() {
     // river / garden tiles refresh
     build_terrain_caches();
     map_basin_rebuild();
+    canals_reset_hold_phase();
 
     // routing
     map_routing_update_all();

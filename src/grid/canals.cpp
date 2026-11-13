@@ -22,6 +22,7 @@
 #include "game/game.h"
 #include "game/game_config.h"
 
+#include <algorithm>
 #include <array>
 #include <cstdint>
 #include <vector>
@@ -43,10 +44,34 @@ void map_add_irrigation_range(tile2i tile, int size, int radius) {
     });
 }
 
+namespace {
+
+    // Enhanced flood basins: a canal in a sealed basin keeps its water for a while after the supply stops,
+    // losing one level every other water update (the old river level 5 at half rate, ~10 days).
+    constexpr int BASIN_CANAL_HOLD_LEVEL = 5;
+
+    // Seeded from total_days so a load does not reset the hold parity; the subpass covers several
+    // updates on one day (tests). Reset on load, or an in-process load of the same day keeps a stale subpass.
+    uint32_t s_hold_prev_total_days = UINT32_MAX;
+    unsigned s_hold_subpass = 0;
+
+} // namespace
+
 static int canals_include_construction = 0;
 
 grid_xx canals_grid(FS_UINT8);
 grid_xx canals_grid_backup(FS_UINT8);
+// Filled by this water update. OG uses the canal value itself; a held basin canal is wet but not yet filled.
+grid_xx canals_filled_grid(FS_UINT8);
+
+void canals_reset_hold_phase() {
+    s_hold_prev_total_days = UINT32_MAX;
+    s_hold_subpass = 0;
+}
+
+bool map_canal_is_filled(int grid_offset) {
+    return map_grid_get(canals_filled_grid, grid_offset) != 0;
+}
 
 int map_canal_at(int grid_offset) {
     return map_grid_get(canals_grid, grid_offset);
@@ -85,23 +110,47 @@ static bool canal_image_follows_water(int grid_offset) {
     return building_id == 0 || building_get(building_id)->type == BUILDING_ROADBLOCK;
 }
 
+static bool basin_hold_pass_now() {
+    const uint32_t total_days = game.simtime.total_days;
+    if (total_days != s_hold_prev_total_days) {
+        s_hold_prev_total_days = total_days;
+        s_hold_subpass = 0;
+    }
+    const unsigned pass = total_days + s_hold_subpass++;
+    return (pass & 1u) == 0u;
+}
+
 void map_canals_reset_water_supply() {
     OZZY_PROFILER_FUNCTION();
     map_terrain_remove_all(TERRAIN_IRRIGATION_RANGE);
+    map_grid_clear(canals_filled_grid);
+
+    const bool basins = game_features::gameplay_enhanced_flood_basins.to_bool();
+    const bool hold_pass = basins && basin_hold_pass_now();
 
     const int image_without_water
       = building_irrigation_ditch::images().begin + building_irrigation_ditch::image_set::IMAGE_FULL_OFFSET;
     int grid_offset = scenario_map_data()->start_offset;
     for (int y = 0; y < scenario_map_data()->height; y++, grid_offset += scenario_map_data()->border_size) {
         for (int x = 0; x < scenario_map_data()->width; x++, grid_offset++) {
-            if (!map_terrain_is(grid_offset, TERRAIN_CANAL) || map_terrain_is(grid_offset, TERRAIN_WATER)) {
+            if (!map_terrain_is(grid_offset, TERRAIN_CANAL)) {
                 continue;
             }
-            if (!canal_image_follows_water(grid_offset)) {
+            if (map_terrain_is(grid_offset, TERRAIN_WATER) || !canal_image_follows_water(grid_offset)) {
+                map_grid_set(canals_filled_grid, grid_offset, map_canal_at(grid_offset) ? 1 : 0);
                 continue;
             }
 
-            map_canal_set(grid_offset, 0);
+            int level = 0;
+            if (basins && map_basin_is_sealed_at(grid_offset)) {
+                level = std::min(map_canal_at(grid_offset), BASIN_CANAL_HOLD_LEVEL);
+                level = std::max(level - (hold_pass ? 1 : 0), 0);
+            }
+            map_canal_set(grid_offset, level);
+            if (level > 0) {
+                map_add_irrigation_range(tile2i(grid_offset), 1, 2);
+                continue;
+            }
             const int image_id = map_image_at(grid_offset);
             if (image_id < image_without_water) {
                 map_image_set(grid_offset, image_id + building_irrigation_ditch::image_set::IMAGE_FULL_OFFSET);
@@ -120,6 +169,7 @@ void map_canal_fill_from_offset(tile2i tile) {
       = building_irrigation_ditch::images().begin + building_irrigation_ditch::image_set::IMAGE_FULL_OFFSET;
     const std::array<int, 4> cardinal_delta
       = {GRID_OFFSET(0, -1), GRID_OFFSET(1, 0), GRID_OFFSET(0, 1), GRID_OFFSET(-1, 0)};
+    const bool basins = game_features::gameplay_enhanced_flood_basins.to_bool();
     std::vector<int> queue;
     size_t queue_head = 0;
     int grid_offset = tile.grid_offset();
@@ -129,7 +179,9 @@ void map_canal_fill_from_offset(tile2i tile) {
             return;
         }
 
-        map_canal_set(grid_offset, 1);
+        const bool held = basins && map_basin_is_sealed_at(grid_offset);
+        map_canal_set(grid_offset, held ? BASIN_CANAL_HOLD_LEVEL : 1);
+        map_grid_set(canals_filled_grid, grid_offset, 1);
         map_tiles_set_canal_image(grid_offset);
         const int image_id = map_image_at(grid_offset);
         if (image_id >= image_without_water) {
@@ -145,7 +197,7 @@ void map_canal_fill_from_offset(tile2i tile) {
                 if (!neighbour->has_water_access) {
                     neighbour->has_water_access = 2;
                 }
-            } else if (map_terrain_is(new_offset, TERRAIN_CANAL) && !map_canal_at(new_offset)) {
+            } else if (map_terrain_is(new_offset, TERRAIN_CANAL) && !map_canal_is_filled(new_offset)) {
                 map_add_irrigation_range(tile2i(new_offset), 1, 2);
                 if (next_offset == -1) {
                     next_offset = new_offset;
