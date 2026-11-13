@@ -127,7 +127,7 @@ struct archive {
     inline void r(pcstr name, std::unordered_set<T> &v) {
         v.clear();
         this->r_array(name, [&] (archive arch) {
-            T itemv;
+            T itemv{};
             arch.r(itemv);
             v.insert(itemv);
         });
@@ -146,7 +146,7 @@ struct archive {
     template<typename N, typename T>
     inline bool insert(pcstr name, std::unordered_map<N, T> &v) {
         this->r_objects(name, [&] (pcstr key, archive arch) {
-            T itemv; arch.r(itemv);
+            T itemv{}; arch.r(itemv);
             v.insert({ key, itemv });
         });
         return true;
@@ -458,7 +458,7 @@ struct g_archive : public archive {
     inline bool r(pcstr name, std::unordered_set<T>& v) {
         v.clear();
         this->r_array(name, [&] (archive arch) {
-            T itemv; arch.r(itemv);
+            T itemv{}; arch.r(itemv);
             v.insert(itemv);
         });
         return true;
@@ -467,7 +467,7 @@ struct g_archive : public archive {
     template<typename T>
     inline bool insert(pcstr name, std::unordered_set<T> &v) {
         this->r_array(name, [&] (archive arch) {
-            T itemv; arch.r(itemv);
+            T itemv{}; arch.r(itemv);
             v.insert(itemv);
         });
         return true;
@@ -480,7 +480,7 @@ struct g_archive : public archive {
         getglobal(name);
         if (isarray(-1)) {
             r_array_impl([&] (void* arch_state) {
-                T itemv;
+                T itemv{};
                 archive arch(arch_state);
                 arch.r(itemv);
                 v[itemv.key] = itemv;
@@ -507,7 +507,7 @@ struct g_archive : public archive {
         getglobal(name);
         if (isarray(-1)) {
             r_array_impl([&] (void* arch_state) {
-                T itemv;
+                T itemv{};
                 archive arch(arch_state);
                 arch.r(itemv);
                 verify_no_crash(!itemv.key.empty());
