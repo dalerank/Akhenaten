@@ -24,9 +24,9 @@ building_well {
   animations {
     preview { pack: PACK_GENERAL, id:23, max_frames:1 }
     base { pack: PACK_GENERAL, id:23, max_frames:1 }
-    base_work { pack: PACK_GENERAL, id:23, max_frames:1 }
+    base_work { pos[26, 11], pack: PACK_GENERAL, id:23, offset:1, max_frames:1 }
     fancy { pack: PACK_GENERAL, id:23, offset:2, max_frames:1 }
-    fancy_work { pack: PACK_GENERAL, id:23, offset:3, max_frames:1 }
+    fancy_work { pos[27, 11], pack: PACK_GENERAL, id:23, offset:3, max_frames:1 }
     minimap {pack:PACK_GENERAL, id:151},
   }
 
@@ -115,7 +115,7 @@ function building_well_update_month(ev) {
         return
     }
     // OG: fancy image when desirability at the well tile >= 30.
-    var tile_des = __desirability_at_tile(well.tile.x(), well.tile.y())
+    var tile_des = __desirability_at_tile(well.tile.x, well.tile.y)
     var is_fancy = tile_des >= building_well.desirability_fancy
     well.set_fancy(is_fancy)
     var animkey = is_fancy ? "fancy" : "base"
