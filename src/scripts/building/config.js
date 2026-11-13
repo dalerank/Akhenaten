@@ -149,8 +149,30 @@ building_artisans_guild = {
     base : { pack:PACK_EXPANSION, id:31 },
     work : { pos : [75, -14], pack:PACK_EXPANSION, id:31, offset:1, max_frames:12, duration:4 },
   }
+  // OG draw_workshop_raw_material_storage: one pile frame per 100 above the first load, at most 4.
+  // Image groups 476 (clay) and 744 (artisans stock).
+  overlay_anims {
+    clay {
+      pos:[1, 7]
+      pack:PACK_GENERAL
+      id:207
+      resource: RESOURCE_CLAY
+      stack: false
+      max_count: 4
+      default_active: true
+    }
+    paint {
+      pos:[46, 12]
+      pack:PACK_EXPANSION
+      id:34
+      resource: RESOURCE_PAINT
+      stack: false
+      max_count: 4
+      default_active: true
+    }
+  }
 
-  labor_category : LABOR_CATEGORY_INFRASTRUCTURE
+  labor_category : LABOR_CATEGORY_INDUSTRY_COMMERCE
   input : {
     resource : RESOURCE_PAINT
     resource_second : RESOURCE_CLAY
@@ -158,17 +180,70 @@ building_artisans_guild = {
   min_houses_coverage : 50
   meta : { text_id: 312, help_link:"message_construction_guilds" }
   building_size: 2
-  cost: [ 30, 50, 80, 100, 150 ]
+  // Pharaoh_Model_*.txt row 231: des -6/1/1/4, 15 workers on very easy, 20 otherwise.
+  cost: [ 30, 120, 150, 180, 225 ]
   desirability : { value:[-6], step:[1], step_size:[1], range: [4] }
-  laborers:[15], fire_risk:[2], damage_risk: [2]
+  laborers:[15, 20, 20, 20, 20], fire_risk:[2, 8, 10, 12, 15], damage_risk: [2, 8, 10, 12, 15]
   max_walkers : 4
   material_load : 100
-  info_sound : "Wavs/eng_r.wav"
-  info_advisors [ADVISOR_LABOR]
+  info_sound : "Wavs/artisans_r.wav"
+  sound_channel : SOUND_CHANNEL_CITY_ARTISANS_GUILD
   flags {
     is_guild: true
     is_industry: true
     work_anim: true
+  }
+}
+
+function building_artisans_guild_has_material(res) {
+  return res.count_active_industry > 0 || res.city_stored > 0
+}
+
+function building_artisans_guild_hint_import(res, no_route, not_imported) {
+  if (!res.can_import) {
+    city.warnings.show(no_route)
+  } else if (res.trade_status != TRADE_STATUS_IMPORT && res.trade_status != TRADE_STATUS_IMPORT_AS_NEEDED) {
+    city.warnings.show(not_imported)
+  }
+}
+
+// OG construction_warning_check_artisans.
+[es=(building_artisans_guild, on_place_checks)]
+function building_artisans_guild_on_place_checks(ev) {
+  if (game.editor_is_active()) {
+    return
+  }
+  var clay = city.resources.clay
+  var paint = city.resources.paint
+  var henna = city.resources.henna
+  if (building_artisans_guild_has_material(clay) && building_artisans_guild_has_material(paint)) {
+    return
+  }
+  city.warnings.show("#building_needs_clay_and_paint")
+  if (!building_artisans_guild_has_material(clay)) {
+    if (clay.can_produce) {
+      city.warnings.show("#build_clay_pit")
+    } else {
+      building_artisans_guild_hint_import(clay, "#import_clay_trade_route", "#import_clay_overseer")
+    }
+  }
+  if (building_artisans_guild_has_material(paint)) {
+    return
+  }
+  if ((henna.can_produce || henna.could_import) && paint.count_total_industry == 0) {
+    if (!paint.could_import) {
+      city.warnings.show("#build_paint_maker")
+      return
+    }
+    building_artisans_guild_hint_import(paint, "#build_paint_maker_or_import", "#paint_import_overseer")
+    return
+  }
+  if (henna.could_import && paint.count_total_industry != 0) {
+    building_artisans_guild_hint_import(henna, "#import_henna_trade_route", "#import_henna_overseer")
+    return
+  }
+  if (paint.could_import) {
+    building_artisans_guild_hint_import(paint, "#setup_trade_route_to_import", "#overseer_of_commerce_to_import")
   }
 }
 

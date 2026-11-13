@@ -876,6 +876,7 @@ localization_en = [
   {key: "#building_needs_oil", group:19, id:263}
   {key: "#building_needs_pottery", group:19, id:264}
   {key: "#build_paint_maker_or_import", group:19, id:265}
+  {key: "#paint_import_overseer", group:19, id:266}
   {key: "#build_paint_maker", group:19, id:267}
   {key: "#building_needs_clay_and_paint", group:19, id:268}
   {key: "#employees_needed", group:19, id:269}

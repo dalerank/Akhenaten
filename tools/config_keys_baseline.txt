@@ -42,7 +42,6 @@ unknown | building_academy:building_static_params.type
 unknown | building_apothecary:building_static_params.spawn_delays
 unknown | building_apothecary:building_static_params.type
 unknown | building_architect_post:building_static_params.type
-unknown | building_artisans_guild:building_static_params.info_advisors
 unknown | building_booth:building_static_params.preview_booth_offsets
 unknown | building_brewery:building_static_params.info_advisors
 unknown | building_brick_tower:building_flags_rule.is_tower
