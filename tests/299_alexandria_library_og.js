@@ -148,10 +148,12 @@ function run_test() {
     }
     __log_marker('t299_finished')
 
+    test_monument_slots([BUILDING_ALEXANDRIA_LIBRARY])
     city_update_monthly_monument_rating({})
     var rating_done = city.rating.monument | 0
-    if (rating_done < 15) {
-        return t299_fail('rating want >=15 got ' + rating_done)
+    // OG weight 12 → trunc(6.32*sqrt(12)+0.5)=22
+    if (rating_done < 22) {
+        return t299_fail('rating want >=22 got ' + rating_done)
     }
     __log_marker('t299_rating_ok')
 
