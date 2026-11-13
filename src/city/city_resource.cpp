@@ -393,7 +393,7 @@ void city_resources_t::calculate_available_food() {
         food_types_available[i] = granary_food_stored[i] > 0 ? 1 : 0;
     }
 
-    food_needed_per_month = calc_adjust_with_percentage(g_city.population.current, 50);
+    food_needed_per_month = calc_adjust_with_percentage(g_city.population.current, food_consumption_percentage());
     if (food_needed_per_month > 0) {
         food_supply_months = granary_total_stored / food_needed_per_month;
     } else {
