@@ -1427,7 +1427,10 @@ void ui::eimg_queue::draw_one(image_desc desc, color mask) const {
     const image_t* img = (fit && size.x > 0 && size.y > 0) ? image_get(tid) : nullptr;
     float draw_scale = 1.f;
     if (fit && img && img->width > 0 && img->height > 0) {
-        draw_scale = std::min({(float)size.x / img->width, (float)size.y / img->height, 1.f});
+        draw_scale = std::min((float)size.x / img->width, (float)size.y / img->height);
+        if (!upscale) {
+            draw_scale = std::min(draw_scale, 1.f);
+        }
     }
 
     ui::push(cmd_t::image,
@@ -1463,6 +1466,7 @@ void ui::eimg_queue::load(archive arch, element* parent, items& elems) {
     showing.id = arch.r_int("id");
     showing.offset = arch.r_int("offset");
     fit = arch.r_bool("fit");
+    upscale = arch.r_bool("upscale");
     coalesce = arch.r_bool("coalesce", true);
     fade_ms = arch.r_int("fade_ms", 280);
 }

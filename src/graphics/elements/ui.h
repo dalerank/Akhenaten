@@ -621,6 +621,7 @@ namespace ui {
         svector<image_desc, MAX_QUEUE> pending;
         bool fading = false;
         bool fit = false;
+        bool upscale = false; // with fit: also enlarge images smaller than the box
         // When true (default), a new enqueue replaces pending targets so hover stays snappy.
         bool coalesce = true;
         int fade_ms = 280;
