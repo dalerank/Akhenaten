@@ -93,6 +93,11 @@ std::optional<bvariant> __city_get_rating_property(pcstr property) {
 }
 ANK_FUNCTION_1(__city_get_rating_property)
 
+void __city_rating_update_prosperity_explanation() {
+    g_city.update_prosperity_explanation();
+}
+ANK_FUNCTION(__city_rating_update_prosperity_explanation)
+
 std::optional<bvariant> __city_get_avg_coverage_property(pcstr property) {
     return archive_helper::get(g_city.avg_coverage, property, true);
 }

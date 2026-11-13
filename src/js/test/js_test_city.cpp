@@ -427,6 +427,61 @@ static int __test_treasury() {
 }
 ANK_FUNCTION(__test_treasury);
 
+static void __test_simtime_set_month(int month) {
+    game.simtime.month = std::clamp(month, 0, 11);
+}
+ANK_FUNCTION_1(__test_simtime_set_month);
+
+static void __test_city_ratings_update(int is_yearly_update) {
+    g_city.ratings_update(is_yearly_update != 0);
+}
+ANK_FUNCTION_1(__test_city_ratings_update);
+
+static void __test_city_ra_yearly_favour() {
+    g_city.ra_temple_complex_yearly_favour();
+}
+ANK_FUNCTION(__test_city_ra_yearly_favour);
+
+static void __test_city_update_prosperity() {
+    g_city.update_prosperity_rating();
+}
+ANK_FUNCTION(__test_city_update_prosperity);
+
+static void __test_city_update_culture() {
+    g_city.ratings.update_culture_rating();
+}
+ANK_FUNCTION(__test_city_update_culture);
+
+static void __test_coverage_set(pcstr field, int value) {
+    auto& c = g_city.coverage;
+    const xstring name(field);
+    if (name == "booth")
+        c.booth = value;
+    else if (name == "bandstand")
+        c.bandstand = value;
+    else if (name == "pavilion")
+        c.pavilion = value;
+    else if (name == "senet_house")
+        c.senet_house = value;
+    else if (name == "zoo")
+        c.zoo = value;
+    else if (name == "school")
+        c.school = value;
+    else if (name == "library")
+        c.library = value;
+    else if (name == "religion")
+        g_city.religion.coverage_common = (uint8_t)value;
+    else if (name == "dentist")
+        c.dentist = (uint8_t)value;
+    else if (name == "physician")
+        c.physician = (uint8_t)value;
+    else if (name == "mortuary")
+        c.mortuary = (uint8_t)value;
+    else
+        logs::error("[test] __test_coverage_set: unknown field %s", field);
+}
+ANK_FUNCTION_2(__test_coverage_set);
+
 static int __test_house_tax_units(int bid) {
     auto* house = building_get(bid)->dcast_house();
     return house ? g_city.finance.house_monthly_tax_units(house) : -1;
@@ -467,3 +522,57 @@ static void __test_scenario_meta_tax(pcstr field, int value) {
     }
 }
 ANK_FUNCTION_2(__test_scenario_meta_tax);
+
+static void __test_ratings_set(int culture, int prosperity, int prosperity_max) {
+    g_city.ratings.culture = culture;
+    g_city.ratings.prosperity = prosperity;
+    g_city.ratings.prosperity_max = prosperity_max;
+}
+ANK_FUNCTION_3(__test_ratings_set);
+
+// Last year's finance and the other inputs the OG prosperity change reads.
+static void __test_finance_last_year_set(pcstr field, int value) {
+    auto& f = g_city.finance;
+    const xstring name(field);
+    if (name == "taxes")
+        f.last_year.income.taxes = value;
+    else if (name == "exports")
+        f.last_year.income.exports = value;
+    else if (name == "donated")
+        f.last_year.income.donated = value;
+    else if (name == "gold_delivered")
+        f.last_year.income.gold_delivered = value;
+    else if (name == "imports")
+        f.last_year.expenses.imports = value;
+    else if (name == "wages")
+        f.last_year.expenses.wages = value;
+    else if (name == "construction")
+        f.last_year.expenses.construction = value;
+    else if (name == "construction_this_year")
+        f.this_year.expenses.construction = value;
+    else if (name == "interest")
+        f.last_year.expenses.interest = value;
+    else if (name == "salary")
+        f.last_year.expenses.mayour_salary = value;
+    else if (name == "income_total")
+        f.last_year.income.total = value;
+    else if (name == "expenses_total")
+        f.last_year.expenses.total = value;
+    else if (name == "wage_rate_paid_last_year")
+        f.wage_rate_paid_last_year = value;
+    else if (name == "wages_kingdome")
+        f.wages_kingdome = (int8_t)value;
+    else if (name == "tribute_not_paid_last_year")
+        f.tribute_not_paid_last_year = !!value;
+    else if (name == "tribute_not_paid_total_years")
+        f.tribute_not_paid_total_years = (uint8_t)value;
+    else if (name == "workers_needed")
+        g_city.labor.workers_needed = value;
+    else if (name == "unemployment_percentage")
+        g_city.labor.unemployment_percentage = (int8_t)value;
+    else if (name == "senet_house_plays")
+        g_city.entertainment.senet_house_plays = value;
+    else
+        logs::error("[test] __test_finance_last_year_set: unknown field %s", field);
+}
+ANK_FUNCTION_2(__test_finance_last_year_set);

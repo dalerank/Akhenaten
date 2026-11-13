@@ -172,18 +172,22 @@ void city_t::init_custom_map() {
     finance.last_year.balance = finance.treasury;
 }
 
-bool city_t::has_made_money() {
-    const int treasury_this_year = finance.last_year.expenses.construction + finance.treasury;
-    const int treasury_last_year = ratings.prosperity_treasury_last_year;
-    return (treasury_this_year > treasury_last_year);
-}
-
 void city_t::ratings_update(bool is_yearly_update) {
     ratings.update_culture_rating();
+    if (is_yearly_update) {
+        kingdome.advance_year();
+    }
     calculate_max_prosperity();
 
-    if (is_yearly_update) {
+    if (is_prosperity_update_month(game.simtime.month)) {
         update_prosperity_rating();
+    }
+}
+
+// OG temple_complex_ra_kingdom_bonus, right after the yearly ratings.
+void city_t::ra_temple_complex_yearly_favour() {
+    if (buildings.temple_complex_id(BUILDING_TEMPLE_COMPLEX_RA)) {
+        kingdome.change(kingdome_relation_t::params().ra_complex_yearly_bonus);
     }
 }
 
@@ -958,12 +962,8 @@ static void city_data_bind_og_layout(io_buffer* iob) {
     iob->bind(BIND_SIGNATURE_INT32, &data.ratings.monument);
     iob->bind(BIND_SIGNATURE_INT32, &data.kingdome.rating);
     iob->bind____skip(8);
-    iob->bind(BIND_SIGNATURE_INT32, &data.ratings.prosperity_treasury_last_year);
-    iob->bind(BIND_SIGNATURE_INT32, &data.ratings.culture_points.entertainment);
-    iob->bind(BIND_SIGNATURE_INT32, &data.ratings.culture_points.religion);
-    iob->bind(BIND_SIGNATURE_INT32, &data.ratings.culture_points.school);
-    iob->bind(BIND_SIGNATURE_INT32, &data.ratings.culture_points.library);
-    iob->bind(BIND_SIGNATURE_INT32, &data.ratings.culture_points.academy);
+    iob->bind(BIND_SIGNATURE_INT32, &data.ratings.prosperity_trend);
+    iob->bind____skip(20);
     iob->bind(BIND_SIGNATURE_INT32, &data.ratings.monument_num_criminals);
     iob->bind(BIND_SIGNATURE_INT32, &data.ratings.monument_num_rioters);
     iob->bind(BIND_SIGNATURE_INT32, &data.houses.missing.fountain);
@@ -1485,12 +1485,8 @@ io_buffer* iob_city_data = new io_buffer([](io_buffer* iob, size_t version) {
     iob->bind(BIND_SIGNATURE_INT32, &data.ratings.monument);
     iob->bind(BIND_SIGNATURE_INT32, &data.kingdome.rating);
     iob->bind____skip(8);
-    iob->bind(BIND_SIGNATURE_INT32, &data.ratings.prosperity_treasury_last_year);
-    iob->bind(BIND_SIGNATURE_INT32, &data.ratings.culture_points.entertainment);
-    iob->bind(BIND_SIGNATURE_INT32, &data.ratings.culture_points.religion);
-    iob->bind(BIND_SIGNATURE_INT32, &data.ratings.culture_points.school);
-    iob->bind(BIND_SIGNATURE_INT32, &data.ratings.culture_points.library);
-    iob->bind(BIND_SIGNATURE_INT32, &data.ratings.culture_points.academy);
+    iob->bind____skip(4);
+    iob->bind____skip(20);
     iob->bind(BIND_SIGNATURE_INT32, &data.ratings.monument_num_criminals);
     iob->bind(BIND_SIGNATURE_INT32, &data.ratings.monument_num_rioters);
     iob->bind(BIND_SIGNATURE_INT32, &data.houses.missing.fountain);

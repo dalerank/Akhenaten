@@ -100,6 +100,10 @@ struct kingdome_relation_t : city_component_t<kingdome_relation_t> {
         int8_t first_debt_penalty;
         int8_t second_debt_penalty;
         int8_t last_debt_rating_cap;
+        int8_t yearly_decay;
+        int8_t yearly_decay_from_mission;
+        int8_t yearly_profit_bonus;
+        int8_t ra_complex_yearly_bonus;
     };
 
     static const static_params &params();
@@ -107,16 +111,8 @@ struct kingdome_relation_t : city_component_t<kingdome_relation_t> {
 ANK_CONFIG_PROPERTY(kingdome_relation_t, salary_rank, player_rank, kingdom_change, kingdom_salary_penalty,
                     kingdom_milestone_penalty, kingdom_ignored_request_penalty)
 
-ANK_CONFIG_STRUCT(kingdome_relation_t::static_params,
-                  salary_ranks,
-                  gift_relation_change_first,
-                  gift_relation_change_second,
-                  gift_relation_change_third,
-                  gift_relation_change_last,
-                  months_since_gift_locker,
-                  tribute_not_paid_years_penalty,
-                  player_salary_above_king_penalty,
-                  player_salary_less_king_promotion,
-                  first_debt_penalty,
-                  second_debt_penalty,
-                  last_debt_rating_cap)
+ANK_CONFIG_STRUCT(kingdome_relation_t::static_params, salary_ranks, gift_relation_change_first,
+  gift_relation_change_second, gift_relation_change_third, gift_relation_change_last, months_since_gift_locker,
+  tribute_not_paid_years_penalty, player_salary_above_king_penalty, player_salary_less_king_promotion,
+  first_debt_penalty, second_debt_penalty, last_debt_rating_cap, yearly_decay, yearly_decay_from_mission,
+  yearly_profit_bonus, ra_complex_yearly_bonus)

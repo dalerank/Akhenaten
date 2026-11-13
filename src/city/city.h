@@ -195,10 +195,12 @@ struct city_t {
     bool figures_has_security_breach();
     void figures_generate_criminals();
 
-    bool has_made_money();
+    void update_prosperity_explanation();
+    bool is_prosperity_update_month(int month) const;
     void update_prosperity_rating();
     void calculate_max_prosperity();
     void ratings_update(bool is_yearly_update);
+    void ra_temple_complex_yearly_favour();
 
     bool determine_granary_get_foods(resource_list &foods, int road_network);
 

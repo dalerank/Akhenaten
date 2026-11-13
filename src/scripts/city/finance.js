@@ -71,13 +71,6 @@ function make_finance_expenses(current) {
 city.finance = extend(__city_finance, {
     @is_out_of_money { get: __city_finance_is_out_of_money }
 
-    @has_made_money {
-        get: function() {
-            var treasury_this_year = city.finance.last_year.expenses.construction + city.finance.treasury
-            return treasury_this_year > city.rating.prosperity_treasury_last_year
-        }
-    }
-
     this_year : make_finance_year(true)
     last_year : make_finance_year(false)
 })

@@ -307,11 +307,6 @@ bool scenario_data_t::is_scenario_id(xspan<int> missions) {
     return false;
 }
 
-int scenario_data_t::is_before_mission(int mission) {
-    const bool is_custom_map = (mode() != e_scenario_normal);
-    return !is_custom_map && campaign_mission_rank < mission;
-}
-
 void scenario_set_name(pcstr name) {
     g_scenario.scenario_name = (name && *name) ? name : "";
 }

@@ -80,7 +80,15 @@ function advisor_ratings_select_prosperity(window) {
 	var expl = city.rating.get_prosperity_explanation()
 	advisor_ratings_select_button(window, window.rating_prosperity)
 	window.advice_header.text = __loc(53, 2)
-	window.advice_text.text = (city.rating.prosperity <= 90) ? __loc(53, 23 + expl) : __loc(53, 66)
+	if (city.rating.prosperity > 90) {
+		window.advice_text.text = __loc(53, 66)
+		return
+	}
+	var text = __loc(53, 20 + expl.trend)
+	if (expl.reason) {
+		text = text + " " + __loc(53, 20 + expl.reason)
+	}
+	window.advice_text.text = text
 }
 
 [es=(advisor_ratings_window, select_monument)]

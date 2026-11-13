@@ -295,24 +295,33 @@ void kingdome_relation_t::advance_month() {
     rating = calc_bound(rating, 0, (rating_cap == 0 ? 100 : rating_cap));
 }
 
+// OG update_kingdom_yearly; the monthly part (gift timer, clamp) already ran in advance_month.
 void kingdome_relation_t::advance_year() {
-    advance_month();
+    if (g_scenario.is_open_play) {
+        rating = 50;
+        return;
+    }
 
     kingdom_salary_penalty = 0;
     kingdom_milestone_penalty = 0;
     kingdom_ignored_request_penalty = 0;
 
+    int r = rating;
     const bool can_update_rating = !game_features::gameplay_save_year_kingdome_rating;
-    if (can_update_rating && g_scenario.is_before_mission(3)) {
-        rating -= 2;
+    const bool is_custom_map = (g_scenario.mode() != e_scenario_normal);
+    if (can_update_rating && (is_custom_map || g_scenario.campaign_scenario_id >= params().yearly_decay_from_mission)) {
+        r += params().yearly_decay;
     }
 
-    // tribute penalty
-    const auto &tribute_penalties = params().tribute_not_paid_years_penalty;
-    if (g_city.finance.tribute_not_paid_last_year) {
-        int years_missed = std::clamp<int>(g_city.finance.tribute_not_paid_total_years, 0, tribute_penalties.size() - 1);
-        int penalty = tribute_penalties[years_missed];
-        change(penalty);
+    const auto& finance = g_city.finance;
+    if (!finance.tribute_not_paid_last_year) {
+        if (finance.last_year.expenses.total < finance.last_year.income.total) {
+            r += params().yearly_profit_bonus;
+        }
+    } else {
+        const auto& tribute_penalties = params().tribute_not_paid_years_penalty;
+        int years_missed = std::clamp<int>(finance.tribute_not_paid_total_years, 0, tribute_penalties.size() - 1);
+        r += tribute_penalties[years_missed];
     }
 
     // rank salary
@@ -320,14 +329,14 @@ void kingdome_relation_t::advance_year() {
     if (g_city.kingdome.player_rank != 0) {
         if (salary_delta > 0) {
             // salary too high
-            rating -= salary_delta;
+            r -= salary_delta;
             kingdom_salary_penalty = salary_delta + params().player_salary_above_king_penalty;
         } else if (salary_delta < 0) {
             // salary lower than rank
-            rating += params().player_salary_less_king_promotion;
+            r += params().player_salary_less_king_promotion;
         }
     } else if (salary_delta > 0) {
-        rating -= salary_delta;
+        r -= salary_delta;
         kingdom_salary_penalty = salary_delta;
     }
 
@@ -353,7 +362,7 @@ void kingdome_relation_t::advance_year() {
         if (winning_monuments() && ratings.monument < calc_adjust_with_percentage(winning_monuments(), milestone_pct)) {
             bonus = 0;
         }
-        if (winning_kingdom() && rating < calc_adjust_with_percentage(winning_kingdom(), milestone_pct)) {
+        if (winning_kingdom() && r < calc_adjust_with_percentage(winning_kingdom(), milestone_pct)) {
             bonus = 0;
         }
         if (winning_population() && g_city.population.current < calc_adjust_with_percentage(winning_population(), milestone_pct)) {
@@ -361,21 +370,22 @@ void kingdome_relation_t::advance_year() {
         }
 
         if (bonus) {
-            rating += 5;
+            r += 5;
         } else {
-            rating -= 2;
+            r -= 2;
             kingdom_milestone_penalty = 2;
         }
     }
 
-    if (rating < rating_last_year) {
+    if (r < rating_last_year) {
         kingdom_change = e_rating_dropping;
-    } else if (rating == rating_last_year) {
+    } else if (r == rating_last_year) {
         kingdom_change = e_rating_stalling;
     } else {
         kingdom_change = e_rating_rising;
     }
 
+    rating = (uint8_t)calc_bound(r, 0, (rating_cap == 0 ? 100 : rating_cap));
     rating_last_year = rating;
 }
 
