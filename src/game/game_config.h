@@ -206,6 +206,7 @@ namespace game_features {
     extern game_feature gameopt_fullscreen;
     extern game_feature gameopt_difficulty;
     extern game_feature gameopt_display_size;
+    extern game_feature gameopt_fullscreen_resolution;
     extern game_feature gameopt_disable_victory;
     extern game_feature gameopt_player_name;
     extern game_feature gameplay_change_empire_map_runs_simulation;

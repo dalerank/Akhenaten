@@ -416,6 +416,8 @@ static void setup() {
     }
 
     game.set_cli_fullscreen(g_args.is_fullscreen());
+    // The window was created from the cfg/CLI mode; keep the in-game flag in step with it.
+    game.set_fullscreen(g_args.is_fullscreen());
     if (g_args.has_window_pos()) {
         const auto& pos = g_args.get_window_pos();
         g_platform_screen.move(pos.x, pos.y);
