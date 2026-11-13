@@ -444,11 +444,20 @@ void city_animals_t::update_herd_formation(formation *m) {
         }
     }
 
-    if (can_spawn_ostrich(m) && allow_span_ostrich()) {
-        if (m->failed_creation_count > 10) {
-            m->home = random_around_point(m->home, m->home, /*step*/4, /*bias*/8, /*max_dist*/32);
+    // OG herds never move their home (herds.c). Saves made while it drifted can hold a home off the map,
+    // which sends the whole herd to the map corner: put it back on a living animal of the herd.
+    if (!map_grid_inside_map_area(m->home.grid_offset(), 1)) {
+        for (auto f : m->valid_figures()) {
+            if (map_grid_inside_map_area(f->tile.grid_offset(), 1)) {
+                m->home = f->tile;
+                m->tile = f->tile;
+                formation_set_destination(m, f->tile);
+                break;
+            }
         }
+    }
 
+    if (can_spawn_ostrich(m) && allow_span_ostrich()) {
         const int impassable = herd_impassable_mask(m->figure_type);
         bool is_passible = !map_terrain_is(m->tile, impassable);
         bool valid_tile = m->tile.valid();
