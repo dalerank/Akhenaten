@@ -1,5 +1,6 @@
 // Well update_animation (JS in well.js):
 // play_animation follows necessity_status vs WELL_NECESSARY.
+// update_month sets is_fancy from tile desirability without throwing.
 
 var __test195_ok = false
 
@@ -43,6 +44,22 @@ function run_test() {
     }
     __log_marker('test195_animation_matches_necessity')
 
+    try {
+        building_well_update_month(ev)
+    } catch (e) {
+        __log_info_native('[test:195] FAIL: update_month threw ' + e)
+        __test_signal_ready()
+        return
+    }
+    well = city.get_well(bid)
+    var expect_fancy = __desirability_at_tile(well.tile.x, well.tile.y) >= building_well.desirability_fancy
+    if (!!well.is_fancy != expect_fancy) {
+        __log_info_native('[test:195] FAIL: is_fancy=' + well.is_fancy + ' expect=' + expect_fancy)
+        __test_signal_ready()
+        return
+    }
+    __log_marker('test195_update_month_ok')
+
     __test195_ok = true
     __test_signal_ready()
 }
@@ -50,4 +67,5 @@ function run_test() {
 function check_valid() {
     return __test195_ok
         && __test_find_inlog('[test-marker] test195_animation_matches_necessity')
+        && __test_find_inlog('[test-marker] test195_update_month_ok')
 }

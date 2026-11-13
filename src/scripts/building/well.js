@@ -115,7 +115,7 @@ function building_well_update_month(ev) {
         return
     }
     // OG: fancy image when desirability at the well tile >= 30.
-    var tile_des = __desirability_at_tile(well.tile.x(), well.tile.y())
+    var tile_des = __desirability_at_tile(well.tile.x, well.tile.y)
     var is_fancy = tile_des >= building_well.desirability_fancy
     well.set_fancy(is_fancy)
     var animkey = is_fancy ? "fancy" : "base"
