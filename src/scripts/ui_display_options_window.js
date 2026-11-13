@@ -90,14 +90,11 @@ function display_options_window_resolution_selected(window) {
 [es=(display_options_window, apply_resolution)]
 function display_options_window_es_apply_resolution(window) {
     var w = display_options_window
-    var scale_changed = (__display_options_get_scale() != w.orig_scale)
-    var resolution_applied = false
     if (w.resolution_changed && !__platform_is_android() && !__game_is_fullscreen_only()) {
         var label = window.resolutions.selected_text(0)
         var sz = display_options_mode_size_for_label(label)
         var current = __display_options_get_resolution()
         if (sz.x > 0 && sz.y > 0 && (sz.x != current.x || sz.y != current.y)) {
-            resolution_applied = true
             // Fullscreen stays at the desktop size and renders at the chosen resolution, stretched.
             if (__display_options_is_fullscreen()) {
                 __display_options_set_fullscreen_resolution(sz.x, sz.y)
@@ -109,11 +106,8 @@ function display_options_window_es_apply_resolution(window) {
     w.orig_scale = __display_options_get_scale()
     w.resolution_changed = 0
     __display_options_save()
+    // No restart needed: a new screen size re-runs the ui_* scripts, so menus re-layout live.
     window_go_back()
-    // The city view relayouts live; full-screen menus keep the layout computed at startup.
-    if (scale_changed || resolution_applied) {
-        ui.show_ok("#display_options_restart_required")
-    }
 }
 
 [es=(display_options_window, arrow_scale_down)]
