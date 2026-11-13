@@ -71,6 +71,7 @@ import ui_messages_window
 import ui_house_window
 import ui_advisor_labor
 import ui_advisor_military
+import ui_advisor_fleet
 import ui_advisor_ratings
 import ui_advisor_monuments
 import ui_labor_priority_window

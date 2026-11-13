@@ -4,6 +4,7 @@ function advisor_autoconfig_section(advisor) {
     switch (advisor) {
         case ADVISOR_LABOR: return "advisor_labors_window"
         case ADVISOR_MILITARY: return "advisor_military_window"
+        case ADVISOR_FLEET: return "advisor_fleet_window"
         case ADVISOR_KINGDOM: return "advisor_imperial_window"
         case ADVISOR_RATINGS: return "advisor_ratings_window"
         case ADVISOR_TRADE: return "advisor_trade_window"
@@ -119,7 +120,7 @@ function advisors_toolbar_refresh(window, advisor) {
     game.last_advisor = advisor
 
     window.labor_btn.selected = (ADVISOR_LABOR == advisor)
-    window.military_btn.selected = (ADVISOR_MILITARY == advisor)
+    window.military_btn.selected = (ADVISOR_MILITARY == advisor || ADVISOR_FLEET == advisor)
     window.imperial_btn.selected = (ADVISOR_KINGDOM == advisor)
     window.ratings_btn.selected = (ADVISOR_RATINGS == advisor)
     window.trade_btn.selected = (ADVISOR_TRADE == advisor)
