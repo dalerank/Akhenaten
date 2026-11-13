@@ -24,7 +24,10 @@ jobs:
                Add fitting EXISTING labels with `gh issue edit --add-label` (never create or remove labels;
                issue templates may already have set some). Look for duplicates with `gh search issues`;
                if one is clearly the same, add the `duplicate` label and link it in a comment.
-            2. Bug report without a savegame or akhenaten.ini attached: ask for them in one short comment.
+            2. Bug report without a savegame or the log attached: ask for them in one short comment. The log is
+               akhenaten-log.txt (Windows %APPDATA%/Akhenaten, Linux ~/.local/share/Akhenaten). For install or
+               startup problems also ask for akhenaten.cfg (data_directory; Windows %APPDATA%/akhenaten.cfg,
+               Linux ~/.config/akhenaten/akhenaten.cfg). There is no akhenaten.ini.
             3. A common question (building, Pharaoh data files / install path, command-line options,
                mods, log location, savegame compatibility) whose answer is in README.md, CLAUDE.md,
                CONTRIBUTING.md or docs/wiki: post a short answer and cite the file.
