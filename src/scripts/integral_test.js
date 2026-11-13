@@ -97,6 +97,39 @@ function test_monument_slots(types) {
     __scenario_monuments.third = defs[2]
 }
 
+var TEST_WIN_CRITERIA_GOALS = ['population', 'culture', 'prosperity', 'monuments', 'kingdom', 'housing_count', 'housing_level']
+var TEST_WIN_CRITERIA_TIMES = ['time_limit', 'survival_time']
+
+function test_win_criteria_snapshot() {
+    var wc = __win_criteria
+    var snap = {}
+    for (var i = 0; i < TEST_WIN_CRITERIA_GOALS.length; i++) {
+        var g = TEST_WIN_CRITERIA_GOALS[i]
+        snap[g] = { enabled: wc[g].enabled, goal: wc[g].goal }
+    }
+    for (var j = 0; j < TEST_WIN_CRITERIA_TIMES.length; j++) {
+        var t = TEST_WIN_CRITERIA_TIMES[j]
+        snap[t] = { enabled: wc[t].enabled, years: wc[t].years }
+    }
+    return snap
+}
+
+// Restores a test_win_criteria_snapshot and the scenario end year it gives.
+function test_win_criteria_restore(snap) {
+    var wc = __win_criteria
+    for (var i = 0; i < TEST_WIN_CRITERIA_GOALS.length; i++) {
+        var g = TEST_WIN_CRITERIA_GOALS[i]
+        wc[g].enabled = snap[g].enabled
+        wc[g].goal = snap[g].goal
+    }
+    for (var j = 0; j < TEST_WIN_CRITERIA_TIMES.length; j++) {
+        var t = TEST_WIN_CRITERIA_TIMES[j]
+        wc[t].enabled = snap[t].enabled
+        wc[t].years = snap[t].years
+    }
+    __test_scenario_init_max_year()
+}
+
 function test_building_place(type, x, y) {
     var place = null
     if (x >= 0 && y >= 0) {

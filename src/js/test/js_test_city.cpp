@@ -43,6 +43,7 @@
 #include "figuretype/figure_transport_ship.h"
 #include "figuretype/figure_war_ship.h"
 #include "figuretype/figure_worker.h"
+#include "scenario/criteria.h"
 #include "scenario/request.h"
 #include "scenario/scenario.h"
 #include "scenario/scenario_event_manager.h"
@@ -576,3 +577,8 @@ static void __test_finance_last_year_set(pcstr field, int value) {
         logs::error("[test] __test_finance_last_year_set: unknown field %s", field);
 }
 ANK_FUNCTION_2(__test_finance_last_year_set);
+
+void __test_scenario_init_max_year() {
+    scenario_criteria_init_max_year();
+}
+ANK_FUNCTION(__test_scenario_init_max_year);

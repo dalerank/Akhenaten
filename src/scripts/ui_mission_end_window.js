@@ -52,9 +52,15 @@ window_mission_lost {
         title               : text({pos:[0, 32], text:{group:62, id:1}, font: FONT_LARGE_BLACK_ON_LIGHT, align:"center", size:[px(32), 20] })
         warning_text        : text({pos:[32, 72], text:{group:62, id:16}, wrap:px(32), font: FONT_NORMAL_BLACK_ON_LIGHT, multiline:true })
 
-        replay_mission      : button({margin:{centerx:-135, bottom:-40}, size:[270, 25], text:"#replay_mission", onclick_event: "replay_mission" })
+        lower_difficulty    : button({pos:[32, 215], size:[px(9), 20], text:{group:62, id:40}, onclick_event: "lower_difficulty" })
+        new_game            : button({pos:[64, 215], size:[px(26), 20], text:{group:62, id:6}, onclick_event: "new_game" })
+        replay_mission      : button({pos:[352, 215], size:[px(9), 20], text:{group:62, id:37}, onclick_event: "replay_mission" })
     }
 }
+
+var DEFEAT_OPTIONS_NEW_GAME = 1
+var DEFEAT_OPTIONS_REPLAY = 2
+var DEFEAT_OPTIONS_LOWER_DIFFICULTY = 3
 
 function mission_won_completion_months() {
     var years = game.simtime.year - scenario.start_year
@@ -179,6 +185,42 @@ function window_mission_lost_on_init(window) {
     __game_sound.music_stop()
     __game_sound.speech_stop()
     __game_sound.speech_play("Wavs/FANFARE2.WAV")
+
+    var options = city.victory.defeat_options()
+    var lower = options == DEFEAT_OPTIONS_LOWER_DIFFICULTY
+    window.title.text = __loc(62, lower ? 38 : 1)
+    window.warning_text.text = __loc(62, lower ? 39 : 16)
+
+    window.lower_difficulty.enabled = lower
+    window.replay_mission.enabled = options != DEFEAT_OPTIONS_NEW_GAME
+    if (options == DEFEAT_OPTIONS_NEW_GAME) {
+        window.new_game.pos = { x: 64, y: 215 }
+        window.new_game.size = [px(26), 20]
+    } else {
+        window.new_game.pos = { x: lower ? 208 : 64, y: 215 }
+        window.new_game.size = [px(9), 20]
+        window.replay_mission.pos = { x: lower ? 384 : 352, y: 215 }
+    }
+    __log_marker("mission_lost_options:" + options)
+}
+
+// OG defeat_button_easier: one difficulty lower, at most Easy, and the city goes on.
+[es=(window_mission_lost, lower_difficulty)]
+function window_mission_lost_on_lower_difficulty(window) {
+    city.victory.lower_difficulty()
+    __log_marker("mission_lost_lower_difficulty:" + game.difficulty)
+    ui.window_city_show()
+}
+
+// OG defeat_button_menu: back to the main menu.
+[es=(window_mission_lost, new_game)]
+function window_mission_lost_on_new_game(window) {
+    scenario.has_won = 0
+    scenario.continue_months_left = 0
+    scenario.continue_months_chosen = 0
+    __game_undo_disable()
+    widget_top_menu_clear_state()
+    emit event_show_main_menu{ play_intro: true }
 }
 
 [es=(window_mission_lost, replay_mission)]

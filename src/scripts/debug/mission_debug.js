@@ -68,7 +68,7 @@ function mission_debug_draw_properties_victory_status(ev) {
     }
 
     if (__win_criteria.time_limit.enabled) {
-        var years_left = __scenario_criteria_max_year() - game.simtime.year
+        var years_left = __city_victory_end_year() - game.simtime.year
         imgui.property_input("time_limit: " + years_left + " years left", years_left > 0)
     }
 
