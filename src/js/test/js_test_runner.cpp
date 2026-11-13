@@ -161,6 +161,18 @@ static void push_mouse_motion(int x, int y) {
     SDL_PushEvent(&e);
 }
 
+// One wheel notch at (x, y): dy > 0 scrolls up (zoom in), dy < 0 down (zoom out).
+static void __test_mouse_wheel(int x, int y, int dy) {
+    push_mouse_motion(x, y);
+    SDL_Event e{};
+    e.type = SDL_MOUSEWHEEL;
+    e.wheel.which = 0;
+    e.wheel.y = dy;
+    SDL_PushEvent(&e);
+    test_pump(2);
+}
+ANK_FUNCTION_3(__test_mouse_wheel);
+
 static void push_mouse_button(Uint32 type, Uint8 button, int x, int y) {
     SDL_Event e{};
     e.type = type;
