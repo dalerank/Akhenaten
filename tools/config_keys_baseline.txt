@@ -1,24 +1,10 @@
 # Known config key issues (category | context.key) from a full integral suite run with
 # --no-resource. Regenerate with --integraltests --config-keys-baseline PATH --config-keys-update.
 # Remove lines as issues get fixed; never add lines by hand to silence a new one.
-unknown | advisor_chief_window:ui::widget.advisor
-unknown | advisor_education_window:ui::widget.advisor
-unknown | advisor_entertainment_window:ui::widget.advisor
-unknown | advisor_financial_window:ui::widget.advisor
-unknown | advisor_health_window:ui::widget.advisor
-unknown | advisor_housing_window:ui::widget.advisor
-unknown | advisor_imperial_window:ui::widget.advisor
-unknown | advisor_labors_window:ui::widget.advisor
-unknown | advisor_military_window:ui::widget.advisor
-unknown | advisor_monuments_window:ui::widget.advisor
 unknown | advisor_population_window:ui::widget._info_panel_full_lines
 unknown | advisor_population_window:ui::widget._info_panel_lines
-unknown | advisor_population_window:ui::widget.advisor
 unknown | advisor_population_window:ui::widget.graph_order
-unknown | advisor_ratings_window:ui::widget.advisor
-unknown | advisor_religion_window:ui::widget.advisor
 unknown | advisor_religion_window:ui::widget.needs_sync
-unknown | advisor_trade_window:ui::widget.advisor
 unknown | build_menu_widget:ui::widget.btn_item_h
 unknown | build_menu_widget:ui::widget.btn_text_w_offset
 unknown | build_menu_widget:ui::widget.btn_w_add
