@@ -127,6 +127,7 @@ game_features {
     @gameplay_change_irrigation_range_5x5 {}
     @gameplay_fishing_wharf_spawn_boats {}
     @gameplay_change_fishing_points_monthly_respawn {}
+    @gameplay_change_house_evolve_delay {}
     @gameplay_change_market_distribute_remake {}
     @gameplay_change_library_service_cap {}
     @gameplay_change_dentist_service_cap {}

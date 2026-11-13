@@ -331,11 +331,13 @@ static void split_size2(building* b, e_building_type new_type);
 void building_house::change_to(building &b, e_building_type new_type, bool force) {
     auto &d = *(building_house::runtime_data_t*)b.runtime_data;
 
-    const int house_update_delay = std::min(house_up_delay(), 7);
-    const int absolute_day = game.simtime.absolute_day(true);
-    const bool can_update = (absolute_day - d.last_update_day < house_update_delay);
-    if (!force && (house_update_delay > 0 && (new_type > b.type) && can_update)) {
-        return;
+    // OG has no delay between two evolutions; the 7-day one is a remake change.
+    if (!force && new_type > b.type && game_features::gameplay_change_house_evolve_delay.to_bool()) {
+        const int house_update_delay = std::min(house_up_delay(), 7);
+        const int absolute_day = game.simtime.absolute_day(true);
+        if (house_update_delay > 0 && absolute_day - d.last_update_day < house_update_delay) {
+            return;
+        }
     }
 
     const bool target_is_1x1_tier = (new_type >= BUILDING_HOUSE_CRUDE_HUT && new_type <= BUILDING_HOUSE_SPACIOUS_APARTMENT);
