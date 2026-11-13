@@ -144,7 +144,7 @@ building_config.add({
     // number of gods required (0–5)
     education:            [  0,   0,   0,   0,   0],
     // education level required (0–3)
-    physician:            [  0,   0,   0,   0,   0],
+    courthouse:           [  0,   0,   0,   0,   0],
     dentist:              [  0,   0,   0,   0,   0],
     health:               [  0,   0,   0,   0,   0],
 
@@ -222,23 +222,23 @@ building_config.add({
             <tr><td><code>religion</code></td><td><code>int[5]</code></td><td>Number of distinct gods required (0–5).</td></tr>
             <tr><td><code>education</code></td><td><code>int[5]</code></td><td>Education score required (0–3).</td></tr>
             <tr><td><code>health</code></td><td><code>int[5]</code></td><td>Health score required (0–2).</td></tr>
-            <tr><td><code>physician</code></td><td><code>int[5]</code></td><td>1 = physician walker coverage required.</td></tr>
+            <tr><td><code>courthouse</code></td><td><code>int[5]</code></td><td>1 = magistrate (courthouse) walker coverage required (OG model column <code>courthouse</code>).</td></tr>
             <tr><td><code>dentist</code></td><td><code>int[5]</code></td><td>1 = dentist walker coverage required.</td></tr>
             <tr><td><code>entertainment</code></td><td><code>int[5]</code></td><td>Entertainment score threshold (0–100).</td></tr>
             <tr><td><code>entertainment_juggler_divider</code></td><td><code>int[5]</code></td><td>Juggler contribution divisor. Higher = less score from jugglers.</td></tr>
             <tr><td><code>entertainment_musician_divider</code></td><td><code>int[5]</code></td><td>Musician contribution divisor.</td></tr>
             <tr><td><code>entertainment_dancer_divider</code></td><td><code>int[5]</code></td><td>Dancer contribution divisor.</td></tr>
             <tr><td><code>entertainment_senet_divider</code></td><td><code>int[5]</code></td><td>Senet player contribution divisor.</td></tr>
-            <tr><td><code>pottery</code></td><td><code>int[5]</code></td><td>1 = pottery required in inventory.</td></tr>
+            <tr><td><code>pottery</code></td><td><code>int[5]</code></td><td>Pottery required in inventory. Amounts are for houses bigger than 1×1; a 1×1 house needs (value+2)/4, at least 1.</td></tr>
             <tr><td><code>beer</code></td><td><code>int[5]</code></td><td>1 = beer required.</td></tr>
             <tr><td><code>linen</code></td><td><code>int[5]</code></td><td>1 = linen required.</td></tr>
-            <tr><td><code>jewelry</code></td><td><code>int[5]</code></td><td>1 = jewelry required (luxury good).</td></tr>
+            <tr><td><code>jewelry</code></td><td><code>int[5]</code></td><td>Jewelry required (luxury good). When the size-scaled need is 2 or more the city must also have two luxury kinds (cultures in <code>empire_city_cultures</code>, <code>scripts/empire.js</code>).</td></tr>
             <tr><td><code>fire_risk</code></td><td><code>int[5]</code></td><td>Monthly probability of a fire starting (0–100). Peaks at tier 6, then falls.</td></tr>
             <tr><td><code>damage_risk</code></td><td><code>int[5]</code></td><td>Monthly probability of structural damage.</td></tr>
             <tr><td><code>disease_risk</code></td><td><code>int[5]</code></td><td>Monthly probability of a disease outbreak.</td></tr>
             <tr><td><code>malaria_risk</code></td><td><code>int[5]</code></td><td>Monthly probability of malaria — higher near floodplains.</td></tr>
             <tr><td><code>crime_risk</code></td><td><code>int[5]</code></td><td>Monthly probability of criminal activity spawning.</td></tr>
-            <tr><td><code>food_consumption_percentage</code></td><td><code>int[5]</code></td><td>Fraction of max population worth of food consumed per month (%).</td></tr>
+            <tr><td><code>food_consumption_percentage</code></td><td><code>int[5]</code></td><td>Remake food model only (<code>gameplay_change_food_consumption_remake</code>): % of the population eaten, twice a month. The default OG model eats 25% of the population once a month (20% with a Bast complex or an Osiris complex with its altar).</td></tr>
             <tr><td><code>food_storage_multiplier</code></td><td><code>int[5]</code></td><td>How many months of food stock the house holds.</td></tr>
             <tr><td><code>devolve_delay</code></td><td><code>int[5]</code></td><td>Months of consecutive failed requirements before devolution applies.</td></tr>
             <tr><td><code>unreachable_ticks_devolve_threshold</code></td><td><code>int[5]</code></td><td>Ticks with no road-walker access before forced devolution.</td></tr>
