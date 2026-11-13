@@ -8,10 +8,10 @@ on:
 
 jobs:
   claude:
-    # Only repository members may start it: it runs with the API key.
+    # Only members and contributors with a merged commit may start it: it runs with the API key.
     if: >-
       contains(github.event.comment.body, '@claude') &&
-      contains(fromJSON('["OWNER","MEMBER","COLLABORATOR"]'), github.event.comment.author_association)
+      contains(fromJSON('["OWNER","MEMBER","COLLABORATOR","CONTRIBUTOR"]'), github.event.comment.author_association)
     runs-on: ubuntu-latest
     permissions:
       contents: read
