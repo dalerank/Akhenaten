@@ -10,6 +10,7 @@
 #include "building/building_house.h"
 #include "building/building_brewery.h"
 #include "game/game_config.h"
+#include "scenario/scenario.h"
 #include "js/js_game.h"
 
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_water_carrier);
@@ -54,7 +55,8 @@ int figure_water_carrier::provide_service() {
     int houses_serviced = figure_provide_service(tile(), &base, [] (building *b, figure *f) {
         auto house = b->dcast_house();
 
-        if (house) {
+        // OG service.c: the river of blood gives no water coverage while it sweeps.
+        if (house && !g_scenario.events.blood_river_sweep_active()) {
             auto &housed = house->runtime_data();
             housed.water_supply = MAX_COVERAGE;
         }

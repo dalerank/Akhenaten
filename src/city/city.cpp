@@ -150,7 +150,8 @@ void city_t::update_month(simulation_time_t simtime) {
     buildings.update_month();
 
     // OG creates the fishing spots once at scenario start; respawning them every month is an Enhanced change.
-    if (game_features::gameplay_change_fishing_points_monthly_respawn.to_bool() && can_produce_resource(RESOURCE_FISH)) {
+    if (game_features::gameplay_change_fishing_points_monthly_respawn.to_bool() && can_produce_resource(RESOURCE_FISH)
+        && !g_scenario.events.blood_river_sweep_active()) {
         fishing_points.update_month();
     }
 

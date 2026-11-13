@@ -471,6 +471,7 @@ io_buffer* iob_scenario_map_name = new io_buffer([](io_buffer* iob, size_t versi
 
 void scenario_data_t::update() {
     scenario_earthquake_process();
+    events.update_tick();
     //scenario_slave_revolt_process();
     scenario_kingdome_change_process();
 }

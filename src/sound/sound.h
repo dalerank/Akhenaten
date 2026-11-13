@@ -3,6 +3,7 @@
 #include "core/xstring.h"
 #include "core/svector.h"
 #include "core/custom_span.hpp"
+#include "game/game_events.h"
 #include "content/dir.h"
 #include "content/vfs.h"
 #include "sound/channel.h"
@@ -15,7 +16,7 @@
 struct music_player_t;
 
 struct event_sound_effect { int effect; };
-struct event_sound_track { xstring track; };
+
 
 class sound_manager_t {
 public:

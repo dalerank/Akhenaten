@@ -1,7 +1,13 @@
 #pragma once 
 
 #include "core/eventbus.h"
+#include "core/xstring.h"
 #include "game/game_events_history.h"
+
+// Plays a music/ambient track by its music.js key.
+struct event_sound_track {
+    xstring track;
+};
 
 extern events::typed_queue g_city_events;
 extern events::typed_queue g_permanent_events;

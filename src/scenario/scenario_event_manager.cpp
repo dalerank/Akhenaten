@@ -1,6 +1,7 @@
 #include "scenario_event_manager.h"
 
 #include "building/building.h"
+#include "building/building_house.h"
 #include "building/building_type.h"
 #include "city/city_buildings.h"
 #include "city/city_finance.h"
@@ -39,11 +40,15 @@
 #include "figuretype/figure_locust.h"
 #include "figuretype/figure_frog.h"
 #include "figuretype/figure_tomb_robber.h"
+#include "figuretype/figure_fishing_boat.h"
+#include "grid/terrain.h"
 #include "game/game_config.h"
 #include "core/svector.h"
 
 #include <algorithm>
+#include <cmath>
 #include <cstdlib>
+#include <vector>
 
 constexpr int MAX_EVENTS = 150;
 constexpr int NUM_AUTO_PHRASE_VARIANTS = 54;
@@ -403,7 +408,7 @@ static void editor_fill_from_event(const event_ph_t &e, editor_request *out) {
     out->resource = (e_resource)e.item.value;
     out->amount = e.amount.value;
     out->deadline_years = e.months_initial > 0 ? (e.months_initial + 11) / 12 : 0;
-    out->kingdom = e.param1;
+    out->kingdom = e.data.request.kingdom;
 }
 
 static void editor_apply_to_event(event_ph_t &e, const editor_request *in, int event_id, int tag_id) {
@@ -424,7 +429,7 @@ static void editor_apply_to_event(event_ph_t &e, const editor_request *in, int e
         months = 255;
     }
     e.months_initial = (uint8_t)months;
-    e.param1 = in->kingdom;
+    e.data.request.kingdom = in->kingdom;
     e.event_trigger_type = EVENT_TRIGGER_ONCE;
     e.sender_faction = EVENT_FACTION_REQUEST_FROM_PHARAOH;
     e.location_fields = { -1, -1, -1, -1 };
@@ -719,7 +724,119 @@ static building *destroy_disaster_buildings(e_building_type type, int amount, e_
     return first;
 }
 
-void event_manager_t::process_event_distant_battle(const event_ph_t &event, bool via_event_trigger, int chain_action_parent, int caller_event_id, int caller_event_var) {
+// OG city_disasters.c rules.
+constexpr int DISASTER_HAPPINESS_LOSS = 15;
+constexpr int DISASTER_TICKS_PER_AMOUNT = 816;
+constexpr int HAILSTORM_ACTION_CREATED = 8;
+constexpr int HAILSTORM_CHANCE_CREATED = 25;
+constexpr int HAILSTORM_CHANCE_FIGHTER = 50;
+constexpr int HAILSTORM_CHANCE_OTHER = 75;
+constexpr int BLOOD_RIVER_MIN_AMOUNT = 3;
+constexpr int BLOOD_RIVER_MAX_AMOUNT = 9;
+constexpr int BLOOD_RIVER_RISK = 5000;
+constexpr int BLOOD_RIVER_WATER_SUPPLY_PER_DISTANCE = 3;
+
+static bool hailstorm_hits_as_fighter(figure* f) {
+    if (f->is_soldier() || f->is_enemy() || f->is_boat()) {
+        return true;
+    }
+    return f->type == FIGURE_CROCODILE || f->type == FIGURE_HYENA || f->type == FIGURE_HIPPO;
+}
+
+// OG city_disasters.c city_hailstorm_start: every figure dies on a roll of 0..99 <= its chance.
+static void city_hailstorm_start() {
+    int killed = 0;
+    for (int id = 1; id < MAX_FIGURES; id++) {
+        figure* f = figure_get(id);
+        if (!f->is_valid()) {
+            continue;
+        }
+        random_generate_next();
+        const int roll = (uint16_t)random_short() % 100;
+        int chance = HAILSTORM_CHANCE_OTHER;
+        if (f->action_state == HAILSTORM_ACTION_CREATED) {
+            chance = HAILSTORM_CHANCE_CREATED;
+        } else if (hailstorm_hits_as_fighter(f)) {
+            chance = HAILSTORM_CHANCE_FIGHTER;
+        }
+        if (roll <= chance && f->is_alive()) {
+            f->kill();
+            killed++;
+        }
+    }
+    events::emit(event_sound_track{"plague_hailstorm"});
+    g_city.change_happiness(-DISASTER_HAPPINESS_LOSS);
+    logs::info("[disaster] hailstorm killed=%d", killed);
+}
+
+static int nearest_water_distance(tile2i t, const std::vector<tile2i>& water, int limit) {
+    int best = limit;
+    for (const tile2i& w : water) {
+        const int dx = t.x() - w.x();
+        const int dy = t.y() - w.y();
+        const int d = (int)std::sqrt((double)(dx * dx + dy * dy));
+        best = std::min(best, d);
+    }
+    return best;
+}
+
+// OG city_disasters.c city_blood_river_start. The sweep countdown lives in the event's data slot.
+static void city_blood_river_start(event_ph_t& event) {
+    const int amount = std::clamp<int>(event.amount.value, BLOOD_RIVER_MIN_AMOUNT, BLOOD_RIVER_MAX_AMOUNT);
+    const int limit = std::max(g_scenario.map.width, g_scenario.map.height);
+    std::vector<tile2i> water;
+    for (int y = 0; y < g_scenario.map.height; y++) {
+        for (int x = 0; x < g_scenario.map.width; x++) {
+            tile2i t(x, y);
+            if (map_terrain_is(t, TERRAIN_WATER)) {
+                water.push_back(t);
+            }
+        }
+    }
+    buildings_house_do([&](building_house* house) {
+        if (!house->hsize()) {
+            return;
+        }
+        const int distance = nearest_water_distance(house->tile(), water, limit);
+        const int risk = BLOOD_RIVER_RISK / (distance + 1);
+        house->base.malaria_risk = (uint8_t)std::min<int>(255, house->base.malaria_risk + risk);
+        auto& housed = house->runtime_data();
+        const int water_supply_cap = distance * BLOOD_RIVER_WATER_SUPPLY_PER_DISTANCE;
+        if (water_supply_cap < housed.water_supply) {
+            housed.water_supply = (uint8_t)water_supply_cap;
+        }
+    });
+    for (int id = 1; id < MAX_FIGURES; id++) {
+        figure* f = figure_get(id);
+        if (!f->is_valid() || f->type != FIGURE_FISHING_BOAT) {
+            continue;
+        }
+        if (
+          f->action_state == ACTION_1_FISHING_BOAT_GOING_TO_FISH || f->action_state == ACTION_2_FISHING_BOAT_FISHING) {
+            f->wait_ticks = 0;
+            f->advance_action(ACTION_5_FISHING_BOAT_RETURNING_WITH_FISH);
+            f->destination_tile = f->source_tile;
+            f->route_remove();
+        }
+    }
+    g_city.fishing_points.clear();
+    event.data.sweep.total = (int16_t)(amount * DISASTER_TICKS_PER_AMOUNT);
+    event.data.sweep.countdown = event.data.sweep.total;
+    g_city.change_happiness(-DISASTER_HAPPINESS_LOSS);
+    logs::info("[disaster] blood river amount=%d sweep=%d", amount, event.data.sweep.countdown);
+}
+
+bool event_manager_t::blood_river_sweep_active() const {
+    for (const event_ph_t& e : g_scenario_events.event_list) {
+        if (e.type == EVENT_TYPE_BLOOD_RIVER && e.data.sweep.countdown > 0) {
+            return true;
+        }
+    }
+    return false;
+}
+
+void event_manager_t::process_event_distant_battle(const event_ph_t& event, bool via_event_trigger,
+  int chain_action_parent, int caller_event_id, int caller_event_var) {
     const int template_str = event.reasons[0];
     const int reason = event.reasons[1];
     city_message_post_full(true, "message_distant_battle", &event, caller_event_id,
@@ -1186,7 +1303,13 @@ void event_manager_t::process_event(int id, bool via_event_trigger, int chain_ac
         break;
     }
     case EVENT_TYPE_HAILSTORM:
+        messages::popup("message_hailstorm", 0, 0);
+        city_hailstorm_start();
+        break;
+
     case EVENT_TYPE_BLOOD_RIVER:
+        city_blood_river_start(event);
+        messages::popup("message_river_of_blood", 0, 0);
         break;
 
     case EVENT_TYPE_GIFT_FROM_PHARAOH:
@@ -1474,6 +1597,14 @@ void event_manager_t::process_invasions() {
     }
 }
 
+void event_manager_t::update_tick() {
+    for (event_ph_t& e : g_scenario_events.event_list) {
+        if (e.type == EVENT_TYPE_BLOOD_RIVER && e.data.sweep.countdown > 0 && --e.data.sweep.countdown == 0) {
+            g_city.fishing_points.create();
+        }
+    }
+}
+
 void event_manager_t::process_events() {
     auto& data = g_scenario_events;
 
@@ -1534,8 +1665,13 @@ static void bind_event_ph(io_buffer *iob, event_ph_t &event) {
     iob->bind(BIND_SIGNATURE_INT8, &event.reserved_unk12);
     iob->bind(BIND_SIGNATURE_INT8, &event.invasion_attack_target);
     iob->bind_bool(event.appear_dialgow_shown);
-    iob->bind____skip(20); // ???
-    iob->bind(BIND_SIGNATURE_INT32, &event.param1);
+    iob->bind(BIND_SIGNATURE_INT16, &event.data.earthquake.duration);
+    iob->bind(BIND_SIGNATURE_INT16, &event.data.earthquake.delay);
+    iob->bind(BIND_SIGNATURE_INT16, &event.data.earthquake.ticks);
+    for (int16_t& l : event.data.earthquake.locations) {
+        iob->bind(BIND_SIGNATURE_INT16, &l);
+    }
+    iob->bind(BIND_SIGNATURE_INT16, &event.earthquake_step);
     iob->bind(BIND_SIGNATURE_INT16, &event.on_too_late_action);
     iob->bind(BIND_SIGNATURE_INT16, &event.on_defeat_action);
     iob->bind(BIND_SIGNATURE_INT8, &event.sender_faction);

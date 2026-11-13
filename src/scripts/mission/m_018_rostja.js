@@ -566,7 +566,8 @@ function mission18_ensure_pharaoh_gift_leaves() {
 
 // Troops chain: ok→31 KR+3→32 NEW_TRADE Iunet; late→33 SEA→34 troops×47 (first re-arm only).
 // Refuse/defeat → JS Hyksos×9 + unique KR−2 + fresh re-arm tag (unique tags remain hygiene; B14 allows shared).
-// 1035: silent defeat-deferral stub (on_defeat_action >= 0); HAILSTORM is a no-op handler.
+// 1035: the on_defeat leaf, pak i=35 (the Hyksos×9 invasion). It stays inert without og_invasions;
+// the raid itself comes from JS on the cleared request.
 function mission18_ensure_troops_chain_leaves() {
 	if (mission.troops_chain_leaves_wired) {
 		return
@@ -576,7 +577,7 @@ function mission18_ensure_troops_chain_leaves() {
 	mission18_make_leaf(1032, EVENT_TYPE_CITY_STATUS_CHANGE, undefined, 7, 2,
 		EVENT_SUBTYPE_NEW_TRADE_ROUTE, "Iunet")
 	var sea = mission18_make_leaf(1033, EVENT_TYPE_SEA_TRADE_PROBLEM, undefined, 5, 2)
-	mission18_make_leaf(1035, EVENT_TYPE_HAILSTORM, undefined, 0, 2)
+	mission18_make_leaf(1035, EVENT_TYPE_INVASION, undefined, 0, 2)
 	var troops2 = city.create_good_request({
 		tag_id: 1034, resource: RESOURCE_TROOPS, amount: 47, months_initial: 8, subtype: 1,
 		trigger: EVENT_TRIGGER_ONLY_VIA_EVENT, city: "Men-nefer"
@@ -910,7 +911,7 @@ function mission18_event_i30_troops(ev) {
 	mission.event30_troops_done = true
 	mission18_ensure_troops_chain_leaves()
 	log_info("akhenaten: mission 18 rostja troops×40", {ev:ev})
-	// refuse_tag 0: KR from cleared (unique). defeat_tag 1035: defer-to-battle gate only.
+	// refuse_tag 0: KR from cleared (unique). defeat_tag 1035: inert pak invasion leaf.
 	mission18_fire_request(2030, RESOURCE_TROOPS, 40, 12, 1031, 0, 1033, 1, 0, 1035, "Men-nefer")
 }
 

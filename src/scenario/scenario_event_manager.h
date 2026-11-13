@@ -187,14 +187,27 @@ struct event_ph_t {
     int8_t festival_deity;
     int8_t reserved_unk12;
     int8_t invasion_attack_target;
-    // ...
-    // ...
-    // ...
+    // OG scenario_event.data: 22 bytes, read by type.
+    union {
+        struct {
+            int16_t duration;
+            int16_t delay;
+            int16_t ticks;
+            std::array<int16_t, 8> locations; // 4 fronts, x/y
+        } earthquake;
+        struct {
+            int16_t countdown;
+            int16_t total;
+        } sweep; // blood river: OG map_sweep_countdown / map_sweep_total
+        struct {
+            int32_t kingdom; // editor request slot
+        } request;
+    } data;
+    int16_t earthquake_step;
     int16_t on_too_late_action;
     int16_t on_defeat_action;
     int8_t sender_faction;
     uint8_t invasion_warnings_shown; // bit w = OG invasion_warnings[w] already posted
-    int32_t param1;
     int16_t route_fields[4];
     int8_t subtype;
     int8_t city_id;
@@ -232,6 +245,9 @@ struct event_manager_t {
     void process_random_events();
     void process_invasions();
     void process_invasion(event_ph_t &event);
+    // Per sim tick: the blood river sweep (earthquakes: scenario_earthquake_process).
+    void update_tick();
+    bool blood_river_sweep_active() const;
 
     // Mission flag og_invasions: EVENT_TYPE_INVASION events run the OG monthly warning/attack cycle.
     // Missions without it still raise their invasions from JS.

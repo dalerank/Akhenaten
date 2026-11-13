@@ -47,6 +47,7 @@
 #include "scenario/scenario.h"
 #include "scenario/scenario_event_manager.h"
 
+
 #include <algorithm>
 
 void __test_set_treasury(int amount) {
@@ -298,3 +299,70 @@ static void __test_city_update_month() {
     g_city.update_month(game.simtime);
 }
 ANK_FUNCTION(__test_city_update_month);
+
+static int __test_event_id_by_tag(int tag) {
+    for (int i = 0; i < g_scenario.events.events_count(); i++) {
+        if (g_scenario.events.at(i)->tag_id == tag) {
+            return i;
+        }
+    }
+    return -1;
+}
+ANK_FUNCTION_1(__test_event_id_by_tag);
+
+static int __test_event_sweep_countdown(int event_id) {
+    const event_ph_t* e = g_scenario.events.at(event_id);
+    return e ? e->data.sweep.countdown : -1;
+}
+ANK_FUNCTION_1(__test_event_sweep_countdown);
+
+static void __test_scenario_events_tick(int n) {
+    for (int i = 0; i < n; i++) {
+        g_scenario.events.update_tick();
+    }
+}
+ANK_FUNCTION_1(__test_scenario_events_tick);
+
+static int __test_blood_river_sweep_active() {
+    return g_scenario.events.blood_river_sweep_active() ? 1 : 0;
+}
+ANK_FUNCTION(__test_blood_river_sweep_active);
+
+static building_house* test_house(int bid) {
+    building* b = building_get(bid);
+    return (b && b->is_valid()) ? b->dcast_house() : nullptr;
+}
+
+static int __test_house_water_supply(int bid) {
+    building_house* h = test_house(bid);
+    return h ? h->runtime_data().water_supply : -1;
+}
+ANK_FUNCTION_1(__test_house_water_supply);
+
+static void __test_house_set_water_supply(int bid, int v) {
+    if (building_house* h = test_house(bid)) {
+        h->runtime_data().water_supply = (uint8_t)v;
+    }
+}
+ANK_FUNCTION_2(__test_house_set_water_supply);
+
+static int __test_house_happiness(int bid) {
+    building_house* h = test_house(bid);
+    return h ? h->runtime_data().house_happiness : -1;
+}
+ANK_FUNCTION_1(__test_house_happiness);
+
+static void __test_house_set_happiness(int bid, int v) {
+    if (building_house* h = test_house(bid)) {
+        h->runtime_data().house_happiness = (uint8_t)v;
+    }
+}
+ANK_FUNCTION_2(__test_house_set_happiness);
+
+static int __test_building_malaria_risk(int bid) {
+    building* b = building_get(bid);
+    return b ? b->malaria_risk : -1;
+}
+ANK_FUNCTION_1(__test_building_malaria_risk);
+
+
