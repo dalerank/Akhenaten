@@ -209,6 +209,7 @@ function house_determine_evolve_text(house) {
     if (house.inv(2) < model.linen) return set("#run_out_of_linen")
     if (house.inv(3) < model.beer) return set("#run_out_of_beer")
     if (house.inv(1) < model.jewelry) return set("#run_out_of_jewelry")
+    if (model.jewelry >= 2 && city.resources.luxury_goods_kinds < 2) return set("#run_out_of_second_luxury")
 
     if (level >= 19) return set("#dwellers_palace_are_pinnacle")
 
@@ -270,6 +271,7 @@ function house_determine_evolve_text(house) {
     }
     if (house.inv(2) < nextModel.linen) return set("#cannot_evolve_needs_linen")
     if (house.inv(1) < nextModel.jewelry) return set("#cannot_evolve_needs_jewlery")
+    if (nextModel.jewelry >= 2 && city.resources.luxury_goods_kinds < 2) return set("#cannot_evolve_needs_second_luxury")
     if (house.inv(3) < nextModel.beer) return set("#cannot_evolve_needs_beer")
 
     set("#house_upgrade_inprogress")

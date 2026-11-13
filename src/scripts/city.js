@@ -145,6 +145,7 @@ city {
         @available_foods { get: __city_resources_available_foods }
         @food_produced_last_month { get: __city_resource_food_produced_last_month }
         @food_consumed_last_month { get: __city_resource_food_consumed_last_month }
+        @luxury_goods_kinds { get: __city_resource_luxury_goods_kinds }
         @food_percentage_produced {
             get: function () {
                 return Math.calc_percentage(__city_resource_food_produced_last_month(), __city_resource_food_consumed_last_month())

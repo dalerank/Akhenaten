@@ -243,6 +243,11 @@ int __city_resource_food_needed_per_month() {
 }
 ANK_FUNCTION(__city_resource_food_needed_per_month)
 
+int __city_resource_luxury_goods_kinds() {
+    return g_city.resource.luxury_goods_kinds;
+}
+ANK_FUNCTION(__city_resource_luxury_goods_kinds)
+
 int __city_resource_food_produced_last_month() {
     return g_city.resource.food_produced_last_month();
 }

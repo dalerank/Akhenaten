@@ -1267,6 +1267,9 @@ localization_en = [
   {key: "#cannot_evolve_needs_linen", text:"This house cannot evolve. It needs supplies of linen provided to it by its local Bazaar before a wealthier class of citizen will move in."}
   {key: "#cannot_evolve_needs_beer", text:"This house cannot evolve. It needs supplies of beer provided to it by its local Bazaar before a wealthier class of citizen will move in."}
   {key: "#cannot_evolve_needs_jewlery", text:"This house cannot evolve. Before a wealthier class of citizen will move in, the local Bazaar must supply this dwelling with luxury goods, like"}
+  {key: "#cannot_evolve_needs_second_luxury", text:"In order to evolve, a Bazaar must provide this house with a second type of luxury good, like"}
+  {key: "#run_out_of_jewelry", text:"This house will devolve soon. The idle scribes who live here need a Bazaar to provide luxury goods, like"}
+  {key: "#run_out_of_second_luxury", text:"This house will devolve soon, as its discerning residents want a second type of luxury good, like"}
   {key: "#trader_from", text:"from"}
   {key: "#trader_capacity", text:"Capacity"}
   {key: "#trader_buys", text:"Buys"}
