@@ -155,7 +155,6 @@ void city_t::update_month(simulation_time_t simtime) {
         fishing_points.update_month();
     }
 
-    ratings_update(/*yearly_update*/false);
     kingdome.advance_month();
 
     // Remake-only monthly tomb-robber threat (OG spawns from house crime).

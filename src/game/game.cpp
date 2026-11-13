@@ -192,8 +192,11 @@ void game_t::advance_month() {
     map_routing_update_land_citizen();
     //    city_message_sort_and_compact();
 
+    // OG advance_month: the yearly update recomputes the ratings, so December does not also run the monthly one.
     if (simtime.advance_month()) {
         advance_year();
+    } else {
+        g_city.ratings_update(/*yearly_update*/false);
     }
 
     g_city.finance.update_estimate_taxes();
