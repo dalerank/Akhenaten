@@ -92,8 +92,8 @@ function run_test() {
 
     city.get_building(bid).houses_covered = 100
     __test_city_industry_update_production()
-    if (__building_industry_progress(bid) != 5) {
-        test259_fail('with houses_covered expected progress 5 got ' + __building_industry_progress(bid))
+    if (__building_industry_progress(bid) != 9) {
+        test259_fail('with houses_covered expected progress 9 got ' + __building_industry_progress(bid))
         return
     }
 

@@ -56,3 +56,12 @@ function industry_mine_deplete_production(b, get_ore, deplete_ore) {
         deplete_ore(best_tile, delta)
     }
 }
+
+// OG building_industry.c: raw sites add num_workers per day. The remake rate divides it.
+function industry_raw_site_uptick(b, remake_divisor) {
+    if (!game_features.get('gameplay_change_industry_remake_rates')) {
+        return b.num_workers
+    }
+    var production = Math.floor(b.num_workers / remake_divisor)
+    return production < 1 ? 1 : production
+}

@@ -1,6 +1,6 @@
 // Quarry deposit beside rock, same halo as map_*_init (radius 2, value 65000).
-// 8 workers -> uptick max(1, workers/2) = 4. update_day starts progress at 1,
-// then 8 production ticks add 32 and deplete the footprint by 32.
+// 8 workers -> OG uptick num_workers = 8. update_day starts progress at 1,
+// then 8 production ticks add 64 and deplete the footprint by 64.
 // Markers:
 //   [test-marker] quarry_production_ok
 
@@ -90,22 +90,22 @@ function run_test() {
     }
 
     var failed = false
-    if (__building_industry_progress(sandstone) != 33 || test210_footprint_sum(cx, cy, __map_get_sandstone) != sand_before - 32) {
+    if (__building_industry_progress(sandstone) != 65 || test210_footprint_sum(cx, cy, __map_get_sandstone) != sand_before - 64) {
         __log_info_native('[test:210] sandstone progress=' + __building_industry_progress(sandstone)
             + ' deposit=' + test210_footprint_sum(cx, cy, __map_get_sandstone) + ' before=' + sand_before)
         failed = true
     }
-    if (__building_industry_progress(stone) != 33 || test210_footprint_sum(cx + 8, cy, __map_get_stone) != stone_before - 32) {
+    if (__building_industry_progress(stone) != 65 || test210_footprint_sum(cx + 8, cy, __map_get_stone) != stone_before - 64) {
         __log_info_native('[test:210] stone progress=' + __building_industry_progress(stone)
             + ' deposit=' + test210_footprint_sum(cx + 8, cy, __map_get_stone) + ' before=' + stone_before)
         failed = true
     }
-    if (__building_industry_progress(limestone) != 33 || test210_footprint_sum(cx, cy + 8, __map_get_limestone) != lime_before - 32) {
+    if (__building_industry_progress(limestone) != 65 || test210_footprint_sum(cx, cy + 8, __map_get_limestone) != lime_before - 64) {
         __log_info_native('[test:210] limestone progress=' + __building_industry_progress(limestone)
             + ' deposit=' + test210_footprint_sum(cx, cy + 8, __map_get_limestone) + ' before=' + lime_before)
         failed = true
     }
-    if (__building_industry_progress(granite) != 33 || test210_footprint_sum(cx + 8, cy + 8, __map_get_granite) != granite_before - 32) {
+    if (__building_industry_progress(granite) != 65 || test210_footprint_sum(cx + 8, cy + 8, __map_get_granite) != granite_before - 64) {
         __log_info_native('[test:210] granite progress=' + __building_industry_progress(granite)
             + ' deposit=' + test210_footprint_sum(cx + 8, cy + 8, __map_get_granite) + ' before=' + granite_before)
         failed = true

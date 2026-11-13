@@ -110,6 +110,7 @@ game_features {
     @gameopt_clouds_speed {}
     @gameplay_change_random_mine_or_pit_collapses_take_money {}
     @gameplay_change_goldmine_reduced_production {}
+    @gameplay_change_industry_remake_rates {}
     @gameplay_change_disaster_events_use_amount {}
     @gameplay_change_trader_capacity_1600 {}
     @gameplay_change_trader_per_good_1600 {}

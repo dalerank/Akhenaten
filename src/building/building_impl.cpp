@@ -260,6 +260,10 @@ int building_impl::ready_production() const {
     if (!!game_features::gameplay_rebalance_workshop_output && !p.production_rate_dcy.value.empty()) {
         return p.production_rate_dcy.get();
     }
+    // OG spawn_industry: every finished cycle ships one 100-unit load, whatever the building.
+    if (!game_features::gameplay_change_industry_remake_rates) {
+        return 100;
+    }
     return p.production_rate;
 }
 

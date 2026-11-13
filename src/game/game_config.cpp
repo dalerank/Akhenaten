@@ -128,6 +128,8 @@ namespace game_features {
     game_feature gameplay_change_work_camp_distance_scaled_farm_workers{ "gameplay_change_work_camp_distance_scaled_farm_workers", "#TR_CONFIG_CH_WORK_CAMP_DISTANCE_SCALED_FARM_WORKERS", false, false };
     game_feature gameplay_change_fire_risk_clay_pit_reduced{ "gameplay_change_fire_risk_clay_pit_reduced", "#TR_CONFIG_CH_CLAY_PIT_FIRE_RISK_REDUCED", false, false };
     game_feature gameplay_change_goldmine_reduced_production{ "gameplay_change_goldmine_reduced_production", "#TR_CONFIG_GOLDMINE_REDUCED_PRODUCTION", false, false };
+    game_feature gameplay_change_industry_remake_rates{
+      "gameplay_change_industry_remake_rates", "#TR_CONFIG_INDUSTRY_REMAKE_RATES", false, false};
     game_feature gameplay_change_new_tax_collection_system{ "gameplay_change_new_tax_collection_system", "#TR_CONFIG_NEW_TAX_COLLECTION_SYSTEM", false, false };
     game_feature gameplay_change_small_hut_not_create_emigrant{ "gameplay_change_small_hut_not_create_emigrant", "#TR_CONFIG_SMALL_HUT_NOT_CREATE_EMIGRANT", false, false };
     game_feature gameplay_change_delivery_boy_goes_to_market_alone{ "gameplay_change_delivery_boy_goes_to_market_alone", "#TR_CONFIG_DELIVERY_BOY_GOES_TO_MARKET_ALONE", false, false };

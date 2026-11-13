@@ -144,6 +144,7 @@ namespace game_features {
     extern game_feature gameplay_change_work_camp_distance_scaled_farm_workers;
     extern game_feature gameplay_change_fire_risk_clay_pit_reduced;
     extern game_feature gameplay_change_goldmine_reduced_production;
+    extern game_feature gameplay_change_industry_remake_rates;
     extern game_feature gameplay_change_new_tax_collection_system;
     extern game_feature gameplay_change_small_hut_not_create_emigrant;
     extern game_feature gameplay_change_delivery_boy_goes_to_market_alone;
