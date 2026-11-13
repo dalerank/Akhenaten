@@ -195,6 +195,16 @@ void platform_screen_t::destroy() {
 }
 
 bool platform_screen_t::resize(int pixel_width, int pixel_height, int save) {
+    // Leaving fullscreen, the OS can restore the old windowed rect after our SDL_SetWindowSize;
+    // put the requested size back instead of adopting (and saving) the restored one.
+    if (windowed_target.x > 0 && SDL_GetTicks() < windowed_target_until && !is_window_fullscreen()) {
+        if (pixel_width != windowed_target.x || pixel_height != windowed_target.y) {
+            SDL_SetWindowSize(as_sdl_window(window), windowed_target.x, windowed_target.y);
+            center_window();
+            return true;
+        }
+    }
+
 #if defined(GAME_PLATFORM_ANDROID)
     constexpr int k_min_logical_w = 800;
     constexpr int k_min_logical_h = 600;
@@ -279,6 +289,12 @@ void platform_screen_t::set_fullscreen_resolution(vec2i resolution) {
     if (is_window_fullscreen()) {
         refresh_render_size();
     }
+}
+
+void platform_screen_t::hold_windowed_size(vec2i size) {
+    constexpr Uint32 hold_ms = 1000;
+    windowed_target = size;
+    windowed_target_until = SDL_GetTicks() + hold_ms;
 }
 
 // SDL does not give a window created fullscreen a border or resize frame when it leaves fullscreen.
@@ -374,6 +390,7 @@ void platform_screen_t::set_windowed() {
     auto wsize = game_features::gameopt_display_size.to_vec2i();
     SDL_SetWindowFullscreen(as_sdl_window(window), 0);
     restore_window_decorations();
+    hold_windowed_size(wsize);
     SDL_SetWindowSize(as_sdl_window(window), wsize.x, wsize.y);
     // A window created fullscreen has no windowed position to return to.
     center_window();
@@ -393,6 +410,7 @@ void platform_screen_t::set_window_size(int pixel_width, int pixel_height) {
     if (is_window_fullscreen()) {
         SDL_SetWindowFullscreen(as_sdl_window(window), 0);
         restore_window_decorations();
+        hold_windowed_size({pixel_width, pixel_height});
     } else {
         SDL_GetWindowPosition(as_sdl_window(window), &pos.x, &pos.y);
     }

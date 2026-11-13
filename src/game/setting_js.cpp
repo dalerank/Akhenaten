@@ -1,6 +1,7 @@
 #include "city/constants.h"
 #include "js/js_game.h"
 #include "game/game.h"
+#include "game/game_config.h"
 #include "platform/renderer.h"
 #include "platform/screen.h"
 #include "platform/arguments.h"
@@ -104,6 +105,13 @@ void __display_options_set_fullscreen_resolution(int width, int height) {
     g_platform_screen.set_fullscreen_resolution({width, height});
 }
 ANK_FUNCTION_2(__display_options_set_fullscreen_resolution)
+
+// The windowed size to use next time the game is windowed, without resizing anything now.
+void __display_options_set_window_size_setting(int width, int height) {
+    game_features::gameopt_display_size.set(vec2i{width, height});
+    g_args.set_window_size({width, height});
+}
+ANK_FUNCTION_2(__display_options_set_window_size_setting)
 
 xstring __display_options_video_driver_caption() {
     return get_video_driver();
