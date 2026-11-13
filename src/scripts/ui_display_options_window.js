@@ -47,8 +47,13 @@ function display_options_window_init(window) {
     var fullscreen_only = __game_is_fullscreen_only()
     var w = display_options_window
 
+    // Everything Cancel puts back. Window mode and resolution apply live, so they are recorded too.
     w.orig_scale = __display_options_get_scale()
-    w.resolution_changed = 0
+    w.orig_fullscreen = __display_options_is_fullscreen()
+    var fs_res = game_features.gameopt_fullscreen_resolution
+    var win_size = game_features.gameopt_display_size
+    w.orig_fullscreen_res = { x: fs_res.x, y: fs_res.y }
+    w.orig_window_size = { x: win_size.x, y: win_size.y }
 
     window.resolutions.enabled = !android && !fullscreen_only
     window.btnfullscreen.enabled = !fullscreen_only
@@ -82,37 +87,49 @@ function display_options_window_es_draw(window) {
     // own ui_* reload waits until it closes: re-centre it every frame instead.
     var p = display_options_window_centered_pos()
     __window_set_pos("display_options_window", p[0], p[1])
+    // The window stays open across a mode switch, which lands a few frames after the click.
+    if (window.btnfullscreen.enabled) {
+        window.btnfullscreen.text = __loc(42, __display_options_is_fullscreen() ? 2 : 1)
+    }
 }
 
+// Window mode and resolution apply at once and keep this window open; OK and Cancel only settle the
+// interface scale (Cancel restores the scale the window was opened with).
 [es=(display_options_window, toggle_fullscreen)]
 function display_options_window_toggle_fullscreen() {
     emit event_app_toggle_fullscreen{ value: 0 }
-    window_go_back()
+}
+
+function display_options_apply_selected_resolution(window) {
+    if (__platform_is_android() || __game_is_fullscreen_only()) {
+        return
+    }
+    var sz = display_options_mode_size_for_label(window.resolutions.selected_text(0))
+    if (sz.x <= 0 || sz.y <= 0) {
+        return
+    }
+    // One resolution for both modes: fullscreen renders at it, stretched to the desktop;
+    // windowed opens a window of that size. Dragging the window edge only changes the window.
+    __display_options_set_fullscreen_resolution(sz.x, sz.y)
+    if (__display_options_is_fullscreen()) {
+        __display_options_set_window_size_setting(sz.x, sz.y)
+    } else {
+        var current = __display_options_get_resolution()
+        if (sz.x != current.x || sz.y != current.y) {
+            emit event_display_options_apply_resolution{ w: sz.x, h: sz.y }
+        }
+    }
+    __display_options_save()
 }
 
 [es=(display_options_window, resolution_selected)]
 function display_options_window_resolution_selected(window) {
-    display_options_window.resolution_changed = 1
+    display_options_apply_selected_resolution(window)
 }
 
 [es=(display_options_window, apply_resolution)]
 function display_options_window_es_apply_resolution(window) {
-    var w = display_options_window
-    if (w.resolution_changed && !__platform_is_android() && !__game_is_fullscreen_only()) {
-        var label = window.resolutions.selected_text(0)
-        var sz = display_options_mode_size_for_label(label)
-        var current = __display_options_get_resolution()
-        if (sz.x > 0 && sz.y > 0 && (sz.x != current.x || sz.y != current.y)) {
-            // Fullscreen stays at the desktop size and renders at the chosen resolution, stretched.
-            if (__display_options_is_fullscreen()) {
-                __display_options_set_fullscreen_resolution(sz.x, sz.y)
-            } else {
-                emit event_display_options_apply_resolution{ w: sz.x, h: sz.y }
-            }
-        }
-    }
-    w.orig_scale = __display_options_get_scale()
-    w.resolution_changed = 0
+    display_options_window.orig_scale = __display_options_get_scale()
     __display_options_save()
     // No restart needed: a new screen size re-runs the ui_* scripts, so menus re-layout live.
     window_go_back()
@@ -138,7 +155,19 @@ function display_options_window_go_back(window) {
     if (w.orig_scale != __display_options_get_scale()) {
         display_options_apply_scale(w.orig_scale)
     }
-    w.resolution_changed = 0
+
+    // Restore both saved sizes first: switching mode below reads them.
+    __display_options_set_fullscreen_resolution(w.orig_fullscreen_res.x, w.orig_fullscreen_res.y)
+    __display_options_set_window_size_setting(w.orig_window_size.x, w.orig_window_size.y)
+    if (__display_options_is_fullscreen() != w.orig_fullscreen) {
+        emit event_app_toggle_fullscreen{ value: 0 }
+    } else if (!w.orig_fullscreen) {
+        var current = __display_options_get_window_size()
+        if (current.x != w.orig_window_size.x || current.y != w.orig_window_size.y) {
+            emit event_display_options_apply_resolution{ w: w.orig_window_size.x, h: w.orig_window_size.y }
+        }
+    }
+    __display_options_save()
     window_go_back()
 }
 
@@ -150,7 +179,9 @@ display_options_window {
     pos : display_options_window_centered_pos()
 
     orig_scale : 100
-    resolution_changed : 0
+    orig_fullscreen : false
+    orig_fullscreen_res : { x: 0, y: 0 }
+    orig_window_size : { x: 0, y: 0 }
     scale_step : 5
     scale_min : 50
     scale_max : 300
