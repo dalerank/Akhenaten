@@ -222,10 +222,12 @@ bool platform_screen_t::resize(int pixel_width, int pixel_height, int save) {
     }
 
     if (platform_renderer_create_render_texture(logical_width, logical_height)) {
-        const bool changed = (logical_width != screen_width() || logical_height != screen_height());
+        // The first size (at startup, before any script ran) is not a change to re-layout for.
+        const bool had_size = screen_width() > 0 && screen_height() > 0;
+        const bool changed = had_size && (logical_width != screen_width() || logical_height != screen_height());
         g_screen.set_resolution(logical_width, logical_height);
         if (changed) {
-            js_vm_reload_ui_layouts();
+            js_vm_request_ui_relayout();
         }
         return true;
     }
