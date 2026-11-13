@@ -299,10 +299,7 @@ void city_t::update_tick(int simtick) {
         labor.update();
         break;
     case 27:
-        buildings.update_canals_from_water_lifts();
-        map_update_canals();
-        buildings.pump_water_lifts_iterative();
-        buildings.stamp_water_lift_irrigation();
+        buildings.update_water_supply();
         break;
     case 28:
         buildings.update_religion_supply_houses();

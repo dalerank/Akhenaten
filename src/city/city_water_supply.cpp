@@ -5,11 +5,37 @@
 #include "grid/terrain.h"
 #include "grid/canals.h"
 #include "building/building_water_lift.h"
+#include "city/city_floods.h"
+#include "grid/floodplain.h"
 
-void city_buildings_t::update_canals_from_water_lifts() {
+#include <algorithm>
+
+static void fill_canal_at(int /*is_flooding*/, int grid_offset, int /*row*/) {
+    if (map_terrain_is(grid_offset, TERRAIN_CANAL) && !map_canal_at(grid_offset)) {
+        map_canal_fill_from_offset(tile2i(grid_offset));
+    }
+}
+
+// OG floods_fill_canals. OG flood list L is floodplain row 29 - L here; progress 30 (no flood) falls back
+// to the shore row, so a canal on the shore row is wet all year.
+static void fill_canals_from_flood() {
+    const int progress = std::clamp(g_floods.flood_progress, 0, MAX_FLOODPLAIN_ROWS);
+    const int front_list = std::min(progress, MAX_FLOODPLAIN_ROWS - 1);
+    foreach_floodplain_row(0, MAX_FLOODPLAIN_ROWS - 1 - front_list, fill_canal_at);
+    for (int i = 1; i <= 2; i++) {
+        if (progress + i >= MAX_FLOODPLAIN_ROWS) {
+            continue;
+        }
+        foreach_floodplain_row(0, MAX_FLOODPLAIN_ROWS - 1 - (progress + i), fill_canal_at);
+    }
+}
+
+// OG map_water_supply_update_reservoir_fountain, canal and lift half; every canal is recomputed from dry.
+void city_buildings_t::update_water_supply() {
     OZZY_PROFILER_FUNCTION();
 
-    // OG: each lift starts at has_water 2 (river intake) or 0.
+    map_canals_reset_water_supply();
+
     buildings_valid_do<building_water_lift>([](building_water_lift *lift) {
         lift->update_inout_tiles();
         const auto &d = lift->runtime_data();
@@ -18,7 +44,9 @@ void city_buildings_t::update_canals_from_water_lifts() {
         lift->base.has_water_access = river ? 2 : 0;
     });
 
+    fill_canals_from_flood();
     pump_water_lifts_iterative();
+    stamp_water_lift_irrigation();
 }
 
 void city_buildings_t::pump_water_lifts_iterative() {
@@ -38,13 +66,8 @@ void city_buildings_t::pump_water_lifts_iterative() {
             changed = true;
 
             const auto &d = lift->runtime_data();
-            const int fill_level = lift->current_params().canal_fill_water_level;
-            if (map_terrain_is(d.output_tiles[0], TERRAIN_CANAL)) {
-                map_canal_fill_from_offset(tile2i(d.output_tiles[0]), fill_level);
-            }
-            if (map_terrain_is(d.output_tiles[1], TERRAIN_CANAL)) {
-                map_canal_fill_from_offset(tile2i(d.output_tiles[1]), fill_level);
-            }
+            map_canal_fill_from_offset(tile2i(d.output_tiles[0]));
+            map_canal_fill_from_offset(tile2i(d.output_tiles[1]));
         });
     }
 }

@@ -22,17 +22,9 @@
 #include "game/game.h"
 #include "game/game_config.h"
 
+#include <array>
 #include <cstdint>
-
-namespace {
-
-// Half-rate decay bookkeeping. Seeded from saved total_days; subpass allows multiple
-// decrease calls on the same calendar day (tests). Must reset on load — otherwise
-// an in-process load of the same total_days keeps a stale subpass and skews hold.
-uint32_t s_decay_prev_total_days = UINT32_MAX;
-unsigned s_decay_subpass = 0;
-
-} // namespace
+#include <vector>
 
 // When flood basins are on, do not stamp irrigation across a dike wall:
 // only tiles that share the canal's basin_id (0 = outside / unsealed).
@@ -51,19 +43,7 @@ void map_add_irrigation_range(tile2i tile, int size, int radius) {
     });
 }
 
-void canals_reset_decay_phase() {
-    s_decay_prev_total_days = UINT32_MAX;
-    s_decay_subpass = 0;
-}
-
 static int canals_include_construction = 0;
-
-struct water_supply_queue_tile {
-    tile2i tile;
-    int water;
-};
-
-std::vector<tile2i> *river_access_canal_offsets = nullptr;
 
 grid_xx canals_grid(FS_UINT8);
 grid_xx canals_grid_backup(FS_UINT8);
@@ -78,17 +58,6 @@ void map_canal_set(int grid_offset, int value) {
 
 void map_canal_remove(int grid_offset) {
     map_grid_set(canals_grid, grid_offset, 0);
-    if (map_grid_get(canals_grid, grid_offset + GRID_OFFSET(0, -1)) == 5)
-        map_grid_set(canals_grid, grid_offset + GRID_OFFSET(0, -1), 1);
-
-    if (map_grid_get(canals_grid, grid_offset + GRID_OFFSET(1, 0)) == 6)
-        map_grid_set(canals_grid, grid_offset + GRID_OFFSET(1, 0), 2);
-
-    if (map_grid_get(canals_grid, grid_offset + GRID_OFFSET(0, 1)) == 5)
-        map_grid_set(canals_grid, grid_offset + GRID_OFFSET(0, 1), 3);
-
-    if (map_grid_get(canals_grid, grid_offset + GRID_OFFSET(-1, 0)) == 6)
-        map_grid_set(canals_grid, grid_offset + GRID_OFFSET(-1, 0), 4);
 }
 
 void map_canal_clear() {
@@ -111,125 +80,92 @@ io_buffer *iob_aqueduct_backup_grid = new io_buffer([] (io_buffer *iob, size_t v
     iob->bind(BIND_SIGNATURE_GRID, &canals_grid_backup);
 });
 
-void canals_decrease_water_level() {
-    // reset river access counters
-    if (!river_access_canal_offsets) {
-        river_access_canal_offsets = new std::vector<tile2i>;
-        river_access_canal_offsets->reserve(300);
-    }
+static bool canal_image_follows_water(int grid_offset) {
+    const int building_id = map_building_at(grid_offset);
+    return building_id == 0 || building_get(building_id)->type == BUILDING_ROADBLOCK;
+}
 
-    river_access_canal_offsets->clear();
+void map_canals_reset_water_supply() {
+    OZZY_PROFILER_FUNCTION();
+    map_terrain_remove_all(TERRAIN_IRRIGATION_RANGE);
 
-    // Sealed-basin canals decay at half rate (skip every other pass).
-    // Phase is seeded from saved total_days so load does not reset hold parity;
-    // subpass covers multiple decrease calls on the same day (tests / tooling).
-    const uint32_t total_days = game.simtime.total_days;
-    if (total_days != s_decay_prev_total_days) {
-        s_decay_prev_total_days = total_days;
-        s_decay_subpass = 0;
-    }
-    const unsigned decay_pass = total_days + s_decay_subpass++;
-    const bool basin_hold_pass = game_features::gameplay_enhanced_flood_basins.to_bool()
-        && ((decay_pass & 1u) == 0u);
-
-    int image_canal_set_begin = building_irrigation_ditch::images().begin; // 119 C3
-    int image_without_water = image_canal_set_begin + building_irrigation_ditch::image_set::IMAGE_FULL_OFFSET;
+    const int image_without_water
+      = building_irrigation_ditch::images().begin + building_irrigation_ditch::image_set::IMAGE_FULL_OFFSET;
     int grid_offset = scenario_map_data()->start_offset;
     for (int y = 0; y < scenario_map_data()->height; y++, grid_offset += scenario_map_data()->border_size) {
         for (int x = 0; x < scenario_map_data()->width; x++, grid_offset++) {
-            const bool is_canal = map_terrain_is(grid_offset, TERRAIN_CANAL) && !map_terrain_is(grid_offset, TERRAIN_WATER);
-            if (!is_canal) {
+            if (!map_terrain_is(grid_offset, TERRAIN_CANAL) || map_terrain_is(grid_offset, TERRAIN_WATER)) {
+                continue;
+            }
+            if (!canal_image_follows_water(grid_offset)) {
                 continue;
             }
 
-            int drop = 1;
-            if (basin_hold_pass && map_basin_is_sealed_at(grid_offset)) {
-                drop = 0;
-            }
-            int level = std::max(map_canal_at(grid_offset) - drop, 0);
-            map_canal_set(grid_offset, level);
-            int image_id = map_image_at(grid_offset);
-            if (level <= 0 && image_id < image_without_water) {
+            map_canal_set(grid_offset, 0);
+            const int image_id = map_image_at(grid_offset);
+            if (image_id < image_without_water) {
                 map_image_set(grid_offset, image_id + building_irrigation_ditch::image_set::IMAGE_FULL_OFFSET);
             }
-
-            // check if canal has river access
-            if (map_terrain_count_directly_adjacent_with_type(grid_offset, TERRAIN_WATER) > 0) {
-                river_access_canal_offsets->push_back(tile2i(grid_offset));
-            }
         }
     }
 }
 
-void map_canal_fill_from_offset(tile2i tile, int water) {
-    if (!map_terrain_is(tile, TERRAIN_CANAL) || map_terrain_is(tile, TERRAIN_WATER)) {
+// OG map_water_supply_fill_canals_from_offset: unlimited BFS, the first new neighbour is walked next, the others queue.
+void map_canal_fill_from_offset(tile2i tile) {
+    if (!map_terrain_is(tile, TERRAIN_CANAL)) {
         return;
     }
 
-    hvector<water_supply_queue_tile, 64> g_water_supply_queue;
-    int image_canal_set_begin = building_irrigation_ditch::images().begin; // 119 C3
-    int image_without_water = image_canal_set_begin + building_irrigation_ditch::image_set::IMAGE_FULL_OFFSET;
-    g_water_supply_queue.push_back({ tile, water });
+    const int image_without_water
+      = building_irrigation_ditch::images().begin + building_irrigation_ditch::image_set::IMAGE_FULL_OFFSET;
+    const std::array<int, 4> cardinal_delta
+      = {GRID_OFFSET(0, -1), GRID_OFFSET(1, 0), GRID_OFFSET(0, 1), GRID_OFFSET(-1, 0)};
+    std::vector<int> queue;
+    size_t queue_head = 0;
+    int grid_offset = tile.grid_offset();
+    for (;;) {
+        // OG spins on a water tile until its guard runs out: the rest of this fill is dropped.
+        if (map_terrain_is(grid_offset, TERRAIN_WATER)) {
+            return;
+        }
 
-    std::array<vec2i, 4> adjacent_offsets = { vec2i(0, 1), vec2i(1, 0), vec2i(0, -1), vec2i(-1, 0) };
-    while (g_water_supply_queue.size() > 0) {
-        auto wtile = g_water_supply_queue.back();
-        g_water_supply_queue.pop_back();
-
-        map_tiles_set_canal_image(wtile.tile.grid_offset());
-        map_canal_set(wtile.tile, wtile.water);
-
-        int image_id = map_image_at(wtile.tile);
+        map_canal_set(grid_offset, 1);
+        map_tiles_set_canal_image(grid_offset);
+        const int image_id = map_image_at(grid_offset);
         if (image_id >= image_without_water) {
-            map_image_set(wtile.tile, image_id - building_irrigation_ditch::image_set::IMAGE_FULL_OFFSET);
+            map_image_set(grid_offset, image_id - building_irrigation_ditch::image_set::IMAGE_FULL_OFFSET);
         }
 
-        map_add_irrigation_range(wtile.tile, 1, 2);
-
-        for (const auto it : adjacent_offsets) {
-            tile2i new_offset = wtile.tile.shifted(it);
-
-            // OG fill_canals: a dry water lift next to a wet canal gets has_water=2.
-            if (const int building_id = map_building_at(new_offset); building_id) {
-                building *b = building_get(building_id);
-                if (b->type == BUILDING_WATER_LIFT && !b->has_water_access) {
-                    b->has_water_access = 2;
+        int next_offset = -1;
+        for (const int delta : cardinal_delta) {
+            const int new_offset = grid_offset + delta;
+            const int building_id = map_building_at(new_offset);
+            building* neighbour = building_id ? building_get(building_id) : nullptr;
+            if (neighbour && neighbour->type == BUILDING_WATER_LIFT) {
+                if (!neighbour->has_water_access) {
+                    neighbour->has_water_access = 2;
                 }
-                continue;
-            }
-
-            if (!map_terrain_is(new_offset, TERRAIN_CANAL)) {
-                continue;
-            }
-
-            int cwater = map_canal_at(new_offset);
-            if (cwater >= wtile.water) {
-                continue;
-            }
-
-            int min_recipient = (wtile.water >= 6) ? 0 : 3;
-            if (cwater >= min_recipient) {
-                g_water_supply_queue.push_back({ new_offset, std::max(0, wtile.water - 3) });
+            } else if (map_terrain_is(new_offset, TERRAIN_CANAL) && !map_canal_at(new_offset)) {
+                map_add_irrigation_range(tile2i(new_offset), 1, 2);
+                if (next_offset == -1) {
+                    next_offset = new_offset;
+                } else {
+                    queue.push_back(new_offset);
+                }
             }
         }
+
+        if (next_offset == -1) {
+            if (queue_head == queue.size()) {
+                return;
+            }
+            next_offset = queue[queue_head++];
+        }
+        grid_offset = next_offset;
     }
 }
 
-
-void map_update_canals_from_river() {
-    if (!river_access_canal_offsets) {
-        return;
-    }
-
-    for (const auto &tile: *river_access_canal_offsets) {
-        map_canal_fill_from_offset(tile, 5);
-    }
-}
-
-// Farms read TERRAIN_IRRIGATION_RANGE (cleared each canal update), not canal
-// water bytes. Re-stamp from every wet canal so residual water (half-rate sealed
-// hold, lift-fed networks after the pre-update fill, river leftovers) still
-// irrigates. Clipped to same basin_id so radius-2 does not leak across a dike.
+// Clipped to same basin_id so radius-2 does not leak across a dike.
 static void map_stamp_irrigation_from_wet_canals() {
     int grid_offset = scenario_map_data()->start_offset;
     for (int y = 0; y < scenario_map_data()->height; y++, grid_offset += scenario_map_data()->border_size) {
@@ -248,19 +184,6 @@ static void map_stamp_irrigation_from_wet_canals() {
 void map_irrigation_restamp_from_wet_canals() {
     OZZY_PROFILER_FUNCTION();
     map_terrain_remove_all(TERRAIN_IRRIGATION_RANGE);
-    map_stamp_irrigation_from_wet_canals();
-}
-
-void map_update_canals() {
-    OZZY_PROFILER_FUNCTION();
-    // first, reset all canals
-    map_terrain_remove_all(TERRAIN_IRRIGATION_RANGE);
-    canals_decrease_water_level();
-
-    // fill canals!
-    map_update_canals_from_river();
-    // River fill already stamps as it goes; this covers sealed hold + lift-fed
-    // canals filled just before this update (their fill stamps were cleared above).
     map_stamp_irrigation_from_wet_canals();
 }
 

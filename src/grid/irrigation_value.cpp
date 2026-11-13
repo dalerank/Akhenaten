@@ -159,18 +159,16 @@ void irrigation_value_t::update_canals() {
             if (!map_terrain_is(grid_offset, TERRAIN_CANAL)) {
                 continue;
             }
-            
-            // Check if canal has water
-            int canal_water = map_canal_at(grid_offset);
-            if (canal_water <= 0) {
+
+            if (map_canal_at(grid_offset) <= 0) {
                 continue;
             }
-            
-            // Canal with water spreads irrigation value
-            // Base value based on water level multiplied by config value
-            int base_value = canal_water * multiplier;
-            int range = canal_water; // Range equals water level
-            
+
+            // Canals carry no water level (OG: wet or dry); a wet one spreads like a lift, over the OG radius 2.
+            constexpr int wet_canal_level = 16;
+            constexpr int range = 2;
+            const int base_value = wet_canal_level * multiplier;
+
             tile2i tile(grid_offset);
             add_irrigation(tile, 1, base_value, range);
         }

@@ -8,16 +8,16 @@ public:
 
     struct static_params : public building_static_params {
         uint8_t irrigation_radius;
-        uint8_t canal_fill_water_level;
         uint8_t base_irrigation_value;
     } BUILDING_STATIC_DATA_T;
 
     struct runtime_data_t {
-        int16_t input_tiles[2];
-        int16_t output_tiles[2];
+        int32_t input_tiles[2];
+        int32_t output_tiles[2];
         int8_t tick;
     } BUILDING_RUNTIME_DATA_T;
 
+    virtual building_water_lift* dcast_water_lift() override { return this; }
     virtual void on_create(int orientation) override;
     virtual void on_place_update_tiles(int orientation, int variant) override;
     virtual void on_post_load() override;
@@ -37,4 +37,4 @@ public:
 };
 
 ANK_CONFIG_PROPERTY(building_water_lift::runtime_data_t, tick)
-ANK_CONFIG_STRUCT(building_water_lift::static_params, irrigation_radius, canal_fill_water_level, base_irrigation_value)
+ANK_CONFIG_STRUCT(building_water_lift::static_params, irrigation_radius, base_irrigation_value)

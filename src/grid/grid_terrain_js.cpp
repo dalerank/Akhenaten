@@ -293,27 +293,14 @@ void __map_canal_set(tile2i tile, int level) {
 }
 ANK_FUNCTION_2(__map_canal_set);
 
-void __map_canals_decrease_water_level() {
-    canals_decrease_water_level();
+void __map_canal_fill_from_offset(tile2i tile) {
+    map_canal_fill_from_offset(tile);
 }
-ANK_FUNCTION(__map_canals_decrease_water_level);
+ANK_FUNCTION_1(__map_canal_fill_from_offset);
 
-void __map_update_canals() {
-    map_update_canals();
-}
-ANK_FUNCTION(__map_update_canals);
-
-void __map_canal_fill_from_offset(tile2i tile, int water) {
-    map_canal_fill_from_offset(tile, water);
-}
-ANK_FUNCTION_2(__map_canal_fill_from_offset);
-
-// Full OG-style water-lift supply tick (city case 27 canal half).
+// City case 27: canals from dry, flood front, staffed lifts, lift irrigation.
 void __buildings_update_water_lifts_cycle() {
-    g_city.buildings.update_canals_from_water_lifts();
-    map_update_canals();
-    g_city.buildings.pump_water_lifts_iterative();
-    g_city.buildings.stamp_water_lift_irrigation();
+    g_city.buildings.update_water_supply();
 }
 ANK_FUNCTION(__buildings_update_water_lifts_cycle);
 

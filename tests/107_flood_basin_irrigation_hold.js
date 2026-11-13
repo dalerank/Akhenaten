@@ -1,4 +1,4 @@
-// Sealed flood basin halves canal water decay.
+// Flood basins (Enhanced) on the OG canal model: irrigation stamps stay inside the basin.
 // Marker: [test-marker] test_basin_irrigation_hold:...
 
 var __test107_result = null
@@ -51,80 +51,17 @@ function run_test() {
         return
     }
 
-    // Isolated canals (no river adjacency assumed on synthetic FP patch).
-    terrain.add(inside, TERRAIN_CANAL)
-    terrain.add(outside, TERRAIN_CANAL)
-    __map_canal_set(inside, 10)
-    __map_canal_set(outside, 10)
-
-    var passes = 6
-    for (var i = 0; i < passes; i++) {
-        __map_canals_decrease_water_level()
-    }
-
-    var level_in = __map_canal_at(inside)
-    var level_out = __map_canal_at(outside)
-    // Outside: -1 per pass → 10-6=4. Inside half-rate → ~10-3=7.
-    if (level_out !== 10 - passes) {
-        test107_fail('outside_decay:' + level_out + '!=' + (10 - passes))
-        return
-    }
-    if (level_in <= level_out) {
-        test107_fail('inside_not_held:in=' + level_in + ':out=' + level_out)
-        return
-    }
-    if (level_in < 10 - ((passes + 1) / 2 | 0)) {
-        test107_fail('inside_hold_too_weak:in=' + level_in)
-        return
-    }
-
-    // Farm-facing effect: IRRIGATION_RANGE is cleared each canal update and must be
-    // re-stamped from residual wet canals (half-rate alone is invisible to farms).
-    __map_canal_set(inside, 3)
-    __map_canal_set(outside, 0)
-    __map_update_canals()
-    // update_canals decreases once more; sealed wet should still stamp irrigation.
-    if (__map_canal_at(inside) <= 0) {
-        test107_fail('inside_dried_before_stamp')
-        return
-    }
-    if (!terrain.is(inside, TERRAIN_IRRIGATION_RANGE)) {
-        test107_fail('inside_no_irrigation_stamp')
-        return
-    }
-    if (terrain.is(outside, TERRAIN_IRRIGATION_RANGE)) {
-        test107_fail('outside_false_irrigation_stamp')
-        return
-    }
-
-    // Unsealed wet canal (lift/residual path) must also restamp after the clear —
-    // sealed-only stamp left lift-fed outside networks dry for farms.
-    __map_canal_set(outside, 4)
-    __map_canal_set(inside, 0)
-    __map_update_canals()
-    if (__map_canal_at(outside) <= 0) {
-        test107_fail('outside_dried_before_unsealed_stamp')
-        return
-    }
-    if (!terrain.is(outside, TERRAIN_IRRIGATION_RANGE)) {
-        test107_fail('outside_unsealed_no_irrigation_stamp')
-        return
-    }
-    if (terrain.is(inside, TERRAIN_IRRIGATION_RANGE)) {
-        test107_fail('inside_false_stamp_from_outside')
-        return
-    }
-
-    // Radius-2 must not leak irrigation across the dike crest.
+    // OG fill stamps the canal tiles it walks onto, not its start: start one tile in from near_wall.
     var near_wall = { x: x0 + 1, y: cy }
+    var feed = { x: x0 + 2, y: cy }
     var across_wall = { x: x0 - 1, y: cy }
     terrain.add(near_wall, TERRAIN_CANAL)
-    __map_canal_set(near_wall, 5)
-    __map_canal_set(outside, 0)
-    __map_canal_set(inside, 0)
-    __map_update_canals()
+    terrain.add(feed, TERRAIN_CANAL)
+
+    __buildings_update_water_lifts_cycle()
+    __map_canal_fill_from_offset(feed)
     if (__map_canal_at(near_wall) <= 0) {
-        test107_fail('near_wall_dried_before_stamp')
+        test107_fail('near_wall_not_filled')
         return
     }
     if (!terrain.is(near_wall, TERRAIN_IRRIGATION_RANGE)) {
@@ -136,7 +73,6 @@ function run_test() {
         return
     }
 
-    // Overlay irrigation_value must also respect basin walls (case 5 ring spread).
     __irrigation_value_update()
     if (__irrigation_value_get(near_wall) <= 0) {
         test107_fail('near_wall_no_irrigation_value')
@@ -147,16 +83,16 @@ function run_test() {
         return
     }
 
-    // Topology change must restamp immediately: flag OFF stamps unclipped across the
-    // wall line; flag ON rebuilds basins and must clear the stale outside stamp.
+    // Flag OFF stamps unclipped (OG); flag ON rebuilds basins and restamps clipped.
     game_features.set('gameplay_enhanced_flood_basins', false)
-    __map_canal_set(near_wall, 5)
-    __map_canal_set(across_wall, 0)
-    __map_canal_set(inside, 0)
-    __map_canal_set(outside, 0)
-    __map_update_canals()
+    __buildings_update_water_lifts_cycle()
+    __map_canal_fill_from_offset(feed)
     if (!terrain.is(across_wall, TERRAIN_IRRIGATION_RANGE)) {
         test107_fail('flag_off_expected_across_stamp')
+        return
+    }
+    if (terrain.basin_id(inside) !== 0) {
+        test107_fail('flag_off_basin_id_stale:' + terrain.basin_id(inside))
         return
     }
     game_features.set('gameplay_enhanced_flood_basins', true)
@@ -173,26 +109,10 @@ function run_test() {
         return
     }
 
-    // Flag OFF → rebuild clears basin ids and restamps irrigation (no extra decay).
-    __map_canal_set(inside, 8)
-    __map_canal_set(outside, 8)
-    game_features.set('gameplay_enhanced_flood_basins', false)
-    if (terrain.basin_id(inside) !== 0) {
-        test107_fail('flag_off_basin_id_stale:' + terrain.basin_id(inside))
-        return
-    }
-    for (var j = 0; j < 4; j++) {
-        __map_canals_decrease_water_level()
-    }
-    if (__map_canal_at(inside) !== __map_canal_at(outside)) {
-        test107_fail('flag_off_unequal:in=' + __map_canal_at(inside) + ':out=' + __map_canal_at(outside))
-        return
-    }
-
-    __log_marker('test_basin_irrigation_hold:in=' + level_in + ':out=' + level_out)
-    __test107_result = { ok: true, level_in: level_in, level_out: level_out }
+    __log_marker('test_basin_irrigation_hold:clipped')
+    __test107_result = { ok: true }
     game_features.set('gameplay_enhanced_flood_basins', __test107_feat_prev)
-    __log_info_native('[test:107] PASS in=' + level_in + ' > out=' + level_out)
+    __log_info_native('[test:107] PASS')
     __test_signal_ready()
 }
 
@@ -202,5 +122,5 @@ function check_valid() {
             ? __test107_result.reason : 'no_result'))
         return false
     }
-    return true
+    return __test_find_inlog('[test-marker] test_basin_irrigation_hold:')
 }
