@@ -722,6 +722,20 @@ static int __test_house_evolve_status(int bid) {
 }
 ANK_FUNCTION_1(__test_house_evolve_status);
 
+// has_required_goods_and_services on fresh demand counters, then the advisor demands from them (city.houses.*).
+static int __test_house_has_requirements(int bid, int for_upgrade) {
+    building* b = building_get(bid);
+    auto* house = b ? b->dcast_house() : nullptr;
+    if (!house) {
+        return -100;
+    }
+    g_city.houses_reset_demands();
+    const int result = house->has_required_goods_and_services(for_upgrade, &g_city.houses);
+    g_city.houses_calculate_culture_demands();
+    return result;
+}
+ANK_FUNCTION_2(__test_house_has_requirements);
+
 static xstring __test_house_image_key(int bid) {
     building* b = building_get(bid);
     auto* house = b ? b->dcast_house() : nullptr;

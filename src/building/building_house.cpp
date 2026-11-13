@@ -641,42 +641,45 @@ e_house_progress building_house::has_required_goods_and_services(int for_upgrade
     } else if (religion > 0)
         ++demands->requiring.religion;
 
-    // dentist
     int dentist = model.dentist;
     if (d.dentist < dentist) {
         ++demands->missing.dentist;
         return e_house_none;
     }
-
     if (dentist == 1) {
         ++demands->requiring.dentist;
     }
 
-    // physician
-    int physician_required = model.physician;
-    if (d.physician < physician_required) {
-        ++demands->missing.physician;
-        return e_house_none;
-    }
-    if (physician_required == 1) {
-        ++demands->requiring.physician;
-    }
-
-    // health
-    int health_need = model.health;
-    if (d.health < health_need) {
-        if (health_need < 2)
-            ++demands->missing.dentist;
-        else {
-            ++demands->missing.physician;
+    // OG house_evolve_checks.c: the model's "courthouse" column is checked against magistrate access.
+    int courthouse = model.courthouse;
+    if (d.magistrate < courthouse) {
+        if (d.magistrate != 0) {
+            ++demands->missing.courthouse;
+        } else {
+            ++demands->missing.any_courthouse;
         }
         return e_house_none;
     }
-    if (health_need >= 1) {
-        ++demands->requiring.physician;
+    if (courthouse == 2) {
+        ++demands->requiring.courthouse;
+        ++demands->requiring.more_courthouse;
+    } else if (courthouse == 1) {
+        ++demands->requiring.courthouse;
     }
 
-    // food types
+    int health_need = model.health;
+    if (d.health < health_need) {
+        if (health_need >= 2) {
+            ++demands->missing.more_health;
+        } else {
+            ++demands->missing.health;
+        }
+        return e_house_none;
+    }
+    if (health_need > 0) {
+        ++demands->requiring.health;
+    }
+
     int foodtypes_required = model.food_types;
     int foodtypes_available = 0;
     for (int i = INVENTORY_MIN_FOOD; i < INVENTORY_MAX_FOOD; i++) {
@@ -703,7 +706,7 @@ e_house_progress building_house::has_required_goods_and_services(int for_upgrade
         return e_house_none;
 
     if (beer > 1 && !city_resource_multiple_wine_available()) {
-        ++demands->missing.second_wine;
+        ++demands->missing.second_luxury;
         return e_house_none;
     }
 

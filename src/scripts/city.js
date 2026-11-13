@@ -87,9 +87,9 @@ city {
             @school {}
             @library {}
             @dentist {}
-            @physician {}
-            @water_supply {}
-            @magistrate {}
+            @courthouse {}
+            @more_courthouse {}
+            @health {}
             @religion {}
         }
 
@@ -97,6 +97,12 @@ city {
             __property_getter: __city_get_house_demands_missing_property
             @entertainment {}
             @more_entertainment {}
+            @dentist {}
+            @courthouse {}
+            @any_courthouse {}
+            @health {}
+            @more_health {}
+            @second_luxury {}
         }
     }
 
@@ -388,7 +394,7 @@ city.get_house_model = function(level) {
         @education { }
         @health { }
         @dentist { }
-        @physician { }
+        @courthouse { }
         @fancy_bazaar { }
     }
 }

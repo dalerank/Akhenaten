@@ -143,7 +143,6 @@ function house_determine_evolve_text(house) {
     var dentist = house.dentist
     var health = house.health
     var mortuary = house.mortuary
-    var physician = house.physician
     var worstDesBid = house.worst_desirability_building_id
     var fancyBazaarAccess = house.fancy_bazaar_access
     var noSpaceToExpand = house.no_space_to_expand
@@ -187,8 +186,7 @@ function house_determine_evolve_text(house) {
         }
         if (eduReq == 3) return set("#lost_access_to_higher_education")
     }
-    // magistrate (model.physician)
-    if (magistrate < model.physician) return set("#no_access_to_magistrates")
+    if (magistrate < model.courthouse) return set("#no_access_to_magistrates")
     // pottery (inv 0)
     if (house.inv(0) < model.pottery) return set("#run_out_of_pottery")
     // religion
@@ -254,8 +252,7 @@ function house_determine_evolve_text(house) {
             if (library) return set("#cannot_evolve_needs_library_education")
         }
     }
-    // physician (next)
-    if (physician < nextModel.physician) return set("#cannot_evolve_needs_physician")
+    if (magistrate < nextModel.courthouse) return set("#cannot_evolve_needs_magistrate")
     // pottery, religion, dentist, health, linen, jewelry, beer (next)
     if (house.inv(0) < nextModel.pottery) return set("#cannot_evolve_needs_pottery")
     religion = nextModel.religion

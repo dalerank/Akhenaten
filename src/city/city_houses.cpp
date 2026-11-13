@@ -39,26 +39,26 @@ void city_t::house_service_update_health() {
 }
 
 void city_t::houses_calculate_culture_demands(void) {
-    // health
+    // OG finance_estimates.c: the health advisor's demand (1 courthouse, 2 dentist, 3 health, 4 no courthouse at all).
     houses.health = 0;
     int max = 0;
-    if (houses.missing.water_supply > max) {
-        houses.health = 1;
-        max = houses.missing.water_supply;
+    if (houses.missing.courthouse > 0 || houses.missing.any_courthouse > 0) {
+        if (houses.missing.courthouse < houses.missing.any_courthouse) {
+            houses.health = 4;
+            max = houses.missing.any_courthouse;
+        } else {
+            houses.health = 1;
+            max = houses.missing.courthouse;
+        }
     }
 
-    if (houses.missing.apothecary > max) {
+    if (max < houses.missing.dentist) {
         houses.health = 2;
-        max = houses.missing.apothecary;
-    }
-
-    if (houses.missing.dentist > max) {
-        houses.health = 3;
         max = houses.missing.dentist;
     }
 
-    if (houses.missing.physician > max) {
-        houses.health = 4;
+    if (max < houses.missing.health) {
+        houses.health = 3;
     }
 
     // education

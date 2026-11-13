@@ -666,18 +666,20 @@ void city_t::houses_reset_demands() {
     houses.missing.religion = 0;
     houses.missing.second_religion = 0;
     houses.missing.third_religion = 0;
-    houses.missing.apothecary = 0;
     houses.missing.dentist = 0;
-    houses.missing.mortuary = 0;
-    houses.missing.physician = 0;
+    houses.missing.courthouse = 0;
+    houses.missing.any_courthouse = 0;
+    houses.missing.health = 0;
+    houses.missing.more_health = 0;
     houses.missing.food = 0;
-    // NB: second_wine purposely not cleared
+    // OG city_houses_reset_demands leaves houses_missing_second_luxury alone too.
 
     houses.requiring.school = 0;
     houses.requiring.library = 0;
     houses.requiring.dentist = 0;
-    houses.requiring.physician = 0;
-    houses.requiring.water_supply = 0;
+    houses.requiring.courthouse = 0;
+    houses.requiring.more_courthouse = 0;
+    houses.requiring.health = 0;
     houses.requiring.religion = 0;
 }
 
@@ -983,18 +985,18 @@ static void city_data_bind_og_layout(io_buffer* iob) {
     iob->bind(BIND_SIGNATURE_INT32, &data.houses.requiring.school);
     iob->bind(BIND_SIGNATURE_INT32, &data.houses.requiring.library);
     iob->bind____skip(4);
-    iob->bind(BIND_SIGNATURE_INT32, &data.houses.missing.apothecary);
     iob->bind(BIND_SIGNATURE_INT32, &data.houses.missing.dentist);
+    iob->bind(BIND_SIGNATURE_INT32, &data.houses.missing.courthouse);
     iob->bind(BIND_SIGNATURE_INT32, &data.houses.missing.food);
     for (int i = 0; i < 2; i++) {
         iob->bind(BIND_SIGNATURE_INT32, &data.unused.unknown_4294[i]);
     }
     iob->bind____skip(4);
-    iob->bind(BIND_SIGNATURE_INT32, &data.houses.missing.mortuary);
-    iob->bind(BIND_SIGNATURE_INT32, &data.houses.missing.physician);
+    iob->bind(BIND_SIGNATURE_INT32, &data.houses.missing.health);
+    iob->bind(BIND_SIGNATURE_INT32, &data.houses.missing.more_health);
     iob->bind(BIND_SIGNATURE_INT32, &data.houses.requiring.dentist);
-    iob->bind(BIND_SIGNATURE_INT32, &data.houses.requiring.water_supply);
-    iob->bind(BIND_SIGNATURE_INT32, &data.houses.requiring.physician);
+    iob->bind(BIND_SIGNATURE_INT32, &data.houses.requiring.courthouse);
+    iob->bind(BIND_SIGNATURE_INT32, &data.houses.requiring.health);
     iob->bind(BIND_SIGNATURE_INT32, &data.houses.missing.religion);
     iob->bind(BIND_SIGNATURE_INT32, &data.houses.missing.second_religion);
     iob->bind(BIND_SIGNATURE_INT32, &data.houses.missing.third_religion);
@@ -1166,7 +1168,7 @@ static void city_data_bind_og_layout(io_buffer* iob) {
         iob->bind(BIND_SIGNATURE_INT32, &data.map.largest_road_networks[i].id); // ????
         iob->bind(BIND_SIGNATURE_INT32, &data.map.largest_road_networks[i].size);
     }
-    iob->bind(BIND_SIGNATURE_INT32, &data.houses.missing.second_wine);
+    iob->bind(BIND_SIGNATURE_INT32, &data.houses.missing.second_luxury);
     iob->bind____skip(4);
     iob->bind(BIND_SIGNATURE_UINT8, &data.entertainment.senet_house_has_plays);
     iob->bind____skip(6);
@@ -1180,7 +1182,10 @@ static void city_data_bind_og_layout(io_buffer* iob) {
     iob->bind(BIND_SIGNATURE_UINT8, &data.mission.victory_message_shown);
     iob->bind____skip(15);
     iob->bind(BIND_SIGNATURE_INT32, &data.figures.attacking_natives);
-    iob->bind____skip(52);
+    iob->bind____skip(28);
+    iob->bind(BIND_SIGNATURE_INT32, &data.houses.requiring.more_courthouse);
+    iob->bind(BIND_SIGNATURE_INT32, &data.houses.missing.any_courthouse);
+    iob->bind____skip(16);
     iob->bind(BIND_SIGNATURE_INT32, &data.finance.crimes_this_month);
     iob->bind(BIND_SIGNATURE_INT32, &data.finance.gold_stolen_this_month);
     iob->bind____skip(4);
@@ -1516,8 +1521,8 @@ io_buffer* iob_city_data = new io_buffer([](io_buffer* iob, size_t version) {
     iob->bind(BIND_SIGNATURE_INT32, &data.houses.requiring.school);
     iob->bind(BIND_SIGNATURE_INT32, &data.houses.requiring.library);
     iob->bind(BIND_SIGNATURE_INT32, &data.unused.unknown_4284);
-    iob->bind(BIND_SIGNATURE_INT32, &data.houses.missing.apothecary);
     iob->bind(BIND_SIGNATURE_INT32, &data.houses.missing.dentist);
+    iob->bind(BIND_SIGNATURE_INT32, &data.houses.missing.courthouse);
     iob->bind(BIND_SIGNATURE_INT32, &data.houses.missing.food);
 
     for (int i = 0; i < 2; i++) {
@@ -1525,11 +1530,11 @@ io_buffer* iob_city_data = new io_buffer([](io_buffer* iob, size_t version) {
     }
 
     iob->bind____skip(4); // was senet_house_placed
-    iob->bind(BIND_SIGNATURE_INT32, &data.houses.missing.mortuary);
-    iob->bind(BIND_SIGNATURE_INT32, &data.houses.missing.physician);
+    iob->bind(BIND_SIGNATURE_INT32, &data.houses.missing.health);
+    iob->bind(BIND_SIGNATURE_INT32, &data.houses.missing.more_health);
     iob->bind(BIND_SIGNATURE_INT32, &data.houses.requiring.dentist);
-    iob->bind(BIND_SIGNATURE_INT32, &data.houses.requiring.water_supply);
-    iob->bind(BIND_SIGNATURE_INT32, &data.houses.requiring.physician);
+    iob->bind(BIND_SIGNATURE_INT32, &data.houses.requiring.courthouse);
+    iob->bind(BIND_SIGNATURE_INT32, &data.houses.requiring.health);
     iob->bind(BIND_SIGNATURE_INT32, &data.houses.missing.religion);
     iob->bind(BIND_SIGNATURE_INT32, &data.houses.missing.second_religion);
     iob->bind(BIND_SIGNATURE_INT32, &data.houses.missing.third_religion);
@@ -1821,7 +1826,7 @@ io_buffer* iob_city_data = new io_buffer([](io_buffer* iob, size_t version) {
         iob->bind(BIND_SIGNATURE_INT32, &data.map.largest_road_networks[i].id); // ????
         iob->bind(BIND_SIGNATURE_INT32, &data.map.largest_road_networks[i].size);
     }
-    iob->bind(BIND_SIGNATURE_INT32, &data.houses.missing.second_wine);
+    iob->bind(BIND_SIGNATURE_INT32, &data.houses.missing.second_luxury);
     iob->bind(BIND_SIGNATURE_INT8, &god_osiris.sank_ships);
     iob->bind____skip(3);
     iob->bind(BIND_SIGNATURE_UINT8, &data.entertainment.senet_house_has_plays);

@@ -16,7 +16,7 @@ struct model_house {
     int8_dcy education;            /**< Education required: 1 = school or library, 2 = school and library, 3 = school, library and academy */
     int8_dcy food;                 /**< Food required (boolean) */
     int8_dcy dentist;              /**< dentist required (boolean) */
-    int8_dcy physician;            /**< physician required (boolean) */
+    int8_dcy courthouse;           /**< Magistrate access required: OG model column "courthouse" */
     int8_dcy health;               /**< Health required: 1 = dentist or physician, 2 = dentist and physician, 3 = dentist, physician and mortuary */
     int8_dcy food_types;           /**< Number of food types required */
     int8_dcy food_consumption_percentage; /**< Percentage of food consumption */
@@ -49,21 +49,13 @@ struct model_house {
     int8_dcy unreachable_ticks_block_evolve_threshold;  /**< Number of unreachable ticks that blocks evolution (0 = any unreachable blocks) */
     int8_dcy days_without_food_devolve_threshold;  /**< Number of days without food before house devolves (only for houses that require food) */
 };
-ANK_CONFIG_STRUCT(model_house, devolve_desirability,
-    evolve_desirability, entertainment, water, religion,
-    education, food, dentist, physician, health,
-    food_types, food_consumption_percentage,
-    pottery, linen, jewelry, beer, food_storage_multiplier,
-    crime_risk, crime_risk_base,
-    prosperity, max_people, tax_multiplier, malaria_risk, disease_risk,
-    fancy_bazaar, devolve_delay,
-    entertainment_juggler_divider, entertainment_musician_divider,
-    entertainment_dancer_divider, entertainment_senet_divider,
-    unreachable_ticks_devolve_threshold, unreachable_ticks_block_evolve_threshold,
-    days_without_food_devolve_threshold)
+ANK_CONFIG_STRUCT(model_house, devolve_desirability, evolve_desirability, entertainment, water, religion, education,
+  food, dentist, courthouse, health, food_types, food_consumption_percentage, pottery, linen, jewelry, beer,
+  food_storage_multiplier, crime_risk, crime_risk_base, prosperity, max_people, tax_multiplier, malaria_risk,
+  disease_risk, fancy_bazaar, devolve_delay, entertainment_juggler_divider, entertainment_musician_divider,
+  entertainment_dancer_divider, entertainment_senet_divider, unreachable_ticks_devolve_threshold,
+  unreachable_ticks_block_evolve_threshold, days_without_food_devolve_threshold)
 
-ANK_CONFIG_PROPERTY(model_house,
-    devolve_desirability, evolve_desirability, entertainment, water, food_types,
-    food_consumption_percentage,
-    pottery, linen, jewelry, beer, religion, education, health, dentist, physician,
-    fancy_bazaar)
+ANK_CONFIG_PROPERTY(model_house, devolve_desirability, evolve_desirability, entertainment, water, food_types,
+  food_consumption_percentage, pottery, linen, jewelry, beer, religion, education, health, dentist, courthouse,
+  fancy_bazaar)
