@@ -199,8 +199,6 @@ building/building_water_lift.cpp -> graphics/elements/ui.h
 building/building_wharf.cpp -> graphics/graphics.h
 building/building_wharf.cpp -> graphics/image.h
 building/building_wharf.cpp -> graphics/view/view.h
-building/building_zoo.cpp -> graphics/graphics.h
-building/building_zoo.cpp -> window/popup_dialog.h
 building/construction/build_planner.cpp -> editor/tool.h
 building/construction/build_planner.cpp -> graphics/graphics.h
 building/construction/build_planner.cpp -> graphics/image.h

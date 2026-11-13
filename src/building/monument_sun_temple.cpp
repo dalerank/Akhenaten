@@ -19,7 +19,6 @@
 #include "graphics/color.h"
 #include "graphics/graphics.h"
 #include "graphics/image.h"
-#include "graphics/image_desc.h"
 #include "graphics/view/lookup.h"
 #include "graphics/view/view.h"
 #include "grid/building.h"
