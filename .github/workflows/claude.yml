@@ -8,10 +8,10 @@ on:
 
 jobs:
   claude:
-    # Only members and contributors with a merged commit may start it: it runs with the API key.
+    # Only users with write access may start it: the Claude app token is issued only to them.
     if: >-
       contains(github.event.comment.body, '@claude') &&
-      contains(fromJSON('["OWNER","MEMBER","COLLABORATOR","CONTRIBUTOR"]'), github.event.comment.author_association)
+      contains(fromJSON('["OWNER","MEMBER","COLLABORATOR"]'), github.event.comment.author_association)
     runs-on: ubuntu-latest
     permissions:
       contents: read

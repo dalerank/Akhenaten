@@ -25,6 +25,11 @@ jobs:
       - uses: anthropics/claude-code-action@v1
         with:
           anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+          # The Claude app token is only issued when the triggering user has write access; issues and PRs
+          # here come from outside users, so run with the job token. Safe only because this job's tools
+          # and permissions are narrow (see allowedTools and the permissions block).
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          allowed_non_write_users: "*"
           prompt: |
             Review PR #${{ github.event.pull_request.number }} in ${{ github.repository }}.
             The checked-out tree is the base branch; read the change with `gh pr diff` and `gh pr view`.
