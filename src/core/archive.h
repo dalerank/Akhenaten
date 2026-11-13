@@ -1081,7 +1081,7 @@ inline bool archive::r_stable_array_impl(pcstr name, T &arr) {
             for (int i = 0; i < length; ++i) {
                 getindex(-1, i);
                 if (isobject(-1)) {
-                    value_type item;
+                    value_type item = value_type();
                     archive_helper::reader(*this, item);
                     arr[std::hash<value_type>()(item)] = item;
                 }
@@ -1117,7 +1117,7 @@ inline bool archive::r_vector_impl(pcstr name, T &v, int max_size) {
                 v.push_back(static_cast<value_type>(item));
             } else {
                 if (isobject(-1)) {
-                    value_type item;
+                    value_type item = value_type();
                     archive_helper::reader(archive(state), item);
                     v.push_back(std::move(item));
                 }
