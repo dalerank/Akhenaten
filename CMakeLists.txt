@@ -823,6 +823,7 @@ file(GLOB GRAPHICS_FILES ${PROJECT_SOURCE_DIR}/src/graphics/*.cpp)
 file(GLOB IO_FILES ${PROJECT_SOURCE_DIR}/src/io/*.cpp)
 file(GLOB IO_GAMEFILES_FILES ${PROJECT_SOURCE_DIR}/src/io/gamefiles/*.cpp)
 file(GLOB IO_GAMESTATE_FILES ${PROJECT_SOURCE_DIR}/src/io/gamestate/*.cpp)
+file(GLOB IO_OG_SAVE_FILES ${PROJECT_SOURCE_DIR}/src/io/og_save/*.cpp)
 file(GLOB RESOURCE_FILES ${PROJECT_SOURCE_DIR}/src/resource/*.cpp)
 file(GLOB JS_FILES ${PROJECT_SOURCE_DIR}/src/js/*.cpp)
 file(GLOB JS_TEST_FILES ${PROJECT_SOURCE_DIR}/src/js/test/*.cpp)
@@ -994,6 +995,7 @@ set(SOURCE_FILES
     ${IO_FILES} ${IO_HEADERS}
     ${IO_GAMEFILES_FILES}
     ${IO_GAMESTATE_FILES}
+    ${IO_OG_SAVE_FILES}
     ${BUILDING_FILES}
     ${CITY_FILES}
     ${EMPIRE_FILES}

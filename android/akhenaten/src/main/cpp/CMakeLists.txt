@@ -63,6 +63,7 @@ file(GLOB GRAPHICS_FILES ${SRC_ROOT}/graphics/*.cpp)
 file(GLOB IO_FILES ${SRC_ROOT}/io/*.cpp)
 file(GLOB IO_GAMEFILES_FILES ${SRC_ROOT}/io/gamefiles/*.cpp)
 file(GLOB IO_GAMESTATE_FILES ${SRC_ROOT}/io/gamestate/*.cpp)
+file(GLOB IO_OG_SAVE_FILES ${SRC_ROOT}/io/og_save/*.cpp)
 file(GLOB RESOURCE_FILES ${SRC_ROOT}/resource/*.cpp)
 file(GLOB JS_FILES ${SRC_ROOT}/js/*.cpp)
 file(GLOB JS_TEST_FILES ${SRC_ROOT}/js/test/*.cpp)
@@ -132,6 +133,7 @@ set(SOURCE_FILES
     ${IO_FILES}
     ${IO_GAMEFILES_FILES}
     ${IO_GAMESTATE_FILES}
+    ${IO_OG_SAVE_FILES}
     ${RESOURCE_FILES}
     ${JS_FILES}
     ${JS_TEST_FILES}
