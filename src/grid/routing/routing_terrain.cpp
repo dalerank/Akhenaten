@@ -605,7 +605,7 @@ bool map_routing_passable_by_usage(int terrain_usage, int grid_offset) {
     case TERRAIN_USAGE_WALLS:
         return map_grid_get(routing_tiles_walls, grid_offset) == WALL_0_PASSABLE;
     case TERRAIN_USAGE_ANIMAL:
-        return map_grid_get(routing_land_noncitizen, grid_offset) >= NONCITIZEN_0_PASSABLE;
+        return map_grid_get(routing_land_citizen, grid_offset) >= CITIZEN_0_ROAD && !map_terrain_is(grid_offset, TERRAIN_FERRY_ROUTE);
     case TERRAIN_USAGE_AMPHIBIA:
         return map_grid_get(routing_land_amphibia, grid_offset) >= AMPHIBIA_0_PASSABLE;
     }
