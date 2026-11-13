@@ -160,7 +160,7 @@ void figure::figure_route_add() {
             break;
 
         case TERRAIN_USAGE_ANIMAL:
-            can_travel = map_routing_noncitizen_can_travel_over_land(tile, destination_tile, -1, 5000);
+            can_travel = map_routing_animal_can_travel(tile, destination_tile);
             break;
 
         case TERRAIN_USAGE_AMPHIBIA:

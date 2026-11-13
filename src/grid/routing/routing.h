@@ -45,6 +45,7 @@ bool map_routing_citizen_can_travel_over_road(tile2i src, tile2i dst, bool allow
 bool map_routing_citizen_can_travel_over_road_garden(int src_x, int src_y, int dst_x, int dst_y);
 bool map_routing_can_travel_over_walls(int src_x, int src_y, int dst_x, int dst_y);
 
+bool map_routing_animal_can_travel(tile2i src, tile2i dst);
 bool map_routing_noncitizen_can_travel_over_land(tile2i src, tile2i dst, int only_through_building_id, int max_tiles);
 bool map_routing_noncitizen_can_travel_through_everything(tile2i src, tile2i dst);
 bool map_routing_amphibia_can_travel_over_land_water(tile2i src, tile2i dst, int only_through_building_id, int max_tiles);

@@ -111,7 +111,7 @@ bool herd_can_travel_to(tile2i src, tile2i dst, e_figure_type herd_type) {
     case FIGURE_HIPPO:
         return map_routing_amphibia_can_travel_over_land_water(src, dst, -1, 2000);
     default:
-        return map_routing_noncitizen_can_travel_over_land(src, dst, -1, 2000);
+        return map_routing_animal_can_travel(src, dst);
     }
 }
 

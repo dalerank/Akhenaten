@@ -17,6 +17,7 @@
 #include "grid/property.h"
 #include "grid/road_access.h"
 #include "grid/road_network.h"
+#include "grid/routing/routing.h"
 #include "grid/routing/routing_terrain.h"
 #include "grid/sandstone.h"
 #include "grid/stone.h"
@@ -205,3 +206,8 @@ static int __test_figure_tile_x(int fid) {
     return (f && f->id > 0) ? f->tile.x() : -1;
 }
 ANK_FUNCTION_1(__test_figure_tile_x);
+
+static bool __test_animal_can_travel(int sx, int sy, int dx, int dy) {
+    return map_routing_animal_can_travel(tile2i(sx, sy), tile2i(dx, dy));
+}
+ANK_FUNCTION_4(__test_animal_can_travel);
