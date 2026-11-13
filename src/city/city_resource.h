@@ -75,8 +75,7 @@ struct city_resources_t {
     void calculate_stocks();
     const resource_list &available();
     const resource_list &available_foods();
-    const resource_list &available_market_goods();
-    int food_percentage_produced();
+    const resource_list& available_market_goods();
     void calculate_available_food();
     void calculate_food_stocks_and_supply_wheat();
     void consume_food_weekly(const simulation_time_t& t);

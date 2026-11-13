@@ -77,9 +77,6 @@ int city_resource_multiple_wine_available() {
 int city_resource_food_supply_months() {
     return g_city.resource.food_supply_months;
 }
-int city_resources_t::food_percentage_produced() {
-    return calc_percentage(food_produced_last_month(), food_consumed_last_month());
-}
 
 int city_resource_operating_granaries() {
     return g_city.resource.granaries.operating;

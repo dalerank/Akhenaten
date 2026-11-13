@@ -16,6 +16,7 @@
 #include "city/city_animals.h"
 #include "city/military.h"
 #include "city/city_resource.h"
+#include "city/city_food_supply.h"
 #include "city/city_monuments.h"
 #include "city/city_fishing_points.h"
 #include "city/map.h"
@@ -53,6 +54,7 @@ struct city_t {
 
     city_finance_t finance;
     city_resources_t resource;
+    city_food_supply_t food_supply;
     city_taxes_t taxes;
 
     city_labor_t labor;

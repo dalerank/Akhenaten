@@ -98,6 +98,7 @@ void city_t::init() {
     figure_clear_all();
     maintenance.init();
     resource.init();
+    food_supply.init();
     g_warning_manager.clear_all();
     sentiment.init();
     finance.init();
@@ -141,6 +142,7 @@ void city_t::update_month(simulation_time_t simtime) {
     health.update_month();
     finance.advance_month();
     resource.advance_month();
+    food_supply.advance_month();
     update_allowed_foods();
 
     population.record_monthly();
@@ -1171,7 +1173,14 @@ static void city_data_bind_og_layout(io_buffer* iob) {
     iob->bind(BIND_SIGNATURE_UINT8, &data.mission.victory_message_shown);
     iob->bind____skip(15);
     iob->bind(BIND_SIGNATURE_INT32, &data.figures.attacking_natives);
-    iob->bind____skip(116);
+    iob->bind____skip(64);
+    iob->bind(BIND_SIGNATURE_INT32, &data.food_supply.hunting_lodges_working);
+    iob->bind(BIND_SIGNATURE_INT32, &data.food_supply.game_meat_last_month);
+    iob->bind(BIND_SIGNATURE_INT32, &data.food_supply.game_meat_this_month);
+    iob->bind(BIND_SIGNATURE_INT32, &data.food_supply.fishing_wharfs_working);
+    iob->bind(BIND_SIGNATURE_INT32, &data.food_supply.fish_last_month);
+    iob->bind(BIND_SIGNATURE_INT32, &data.food_supply.fish_this_month);
+    iob->bind____skip(28);
     iob->bind(BIND_SIGNATURE_UINT32, data.buildings.festival_square);
     iob->bind____skip(16);
     iob->bind(BIND_SIGNATURE_UINT8, &data.religion.ra_no_traders_months_left);
