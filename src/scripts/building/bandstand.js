@@ -28,6 +28,33 @@ building_bandstand {
   flags {
     is_entertainment: true
   }
+
+  place_dir : [
+    { items: [
+      {type: BUILDING_GARDENS, offset:[2, 1]},
+      {type: BUILDING_BOOTH, offset:[2, 0]},
+      {type: BUILDING_BANDSTAND, offset:[0, 0], main:true},
+      {type: BUILDING_BANDSTAND, offset:[0, 1], main:false}
+    ]},
+    { items: [
+      {type: BUILDING_GARDENS, offset:[1, 2]},
+      {type: BUILDING_BOOTH, offset:[2, 2]},
+      {type: BUILDING_BANDSTAND, offset:[1, 0], main:true},
+      {type: BUILDING_BANDSTAND, offset:[2, 0], main:false}
+    ]},
+    { items: [
+      {type: BUILDING_GARDENS, offset:[2, 1]},
+      {type: BUILDING_BOOTH, offset:[2, 2]},
+      {type: BUILDING_BANDSTAND, offset:[0, 1], main:true},
+      {type: BUILDING_BANDSTAND, offset:[0, 2], main:false}
+    ]},
+    { items: [
+      {type: BUILDING_GARDENS, offset:[1, 2]},
+      {type: BUILDING_BOOTH, offset:[0, 2]},
+      {type: BUILDING_BANDSTAND, offset:[1, 0], main:true},
+      {type: BUILDING_BANDSTAND, offset:[0, 0], main:false}
+    ]}
+  ]
 }
 
 [es=(building_bandstand, ghost_allow_tile)]

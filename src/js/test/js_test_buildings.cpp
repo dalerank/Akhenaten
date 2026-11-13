@@ -2,6 +2,7 @@
 
 #include "building/building.h"
 #include "building/building_delivery_path.h"
+#include "building/building_entertainment.h"
 #include "building/building_house.h"
 #include "building/building_mansion.h"
 #include "building/building_static_params.h"
@@ -124,6 +125,15 @@ static int __test_building_create(int type, int x, int y) {
     return b->id;
 }
 ANK_FUNCTION_3(__test_building_create);
+
+static bool __test_entertainment_set(int bid, pcstr property, int value) {
+    building_entertainment* ent = building_get(bid)->dcast_entertainment();
+    if (!ent) {
+        return false;
+    }
+    return archive_helper::set(ent->runtime_data(), property, bvariant(int32_t(value)), true);
+}
+ANK_FUNCTION_3(__test_entertainment_set);
 
 static int __test_building_destroy_by_enemy(int bid) {
     building* b = building_get(bid);

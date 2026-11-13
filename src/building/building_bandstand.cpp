@@ -106,6 +106,15 @@ void building_bandstand::on_place(int orientation, int variant) {
     building_impl::on_place(orientation, variant);
 }
 
+void building_bandstand::on_post_load() {
+    auto& d = runtime_data();
+    if (!d.latched_venue_main_grid_offset || !d.latched_venue_add_grid_offset) {
+        latch_stand_offsets(current_params().place_dir[base.orientation % 4]);
+    }
+
+    building_entertainment::on_post_load();
+}
+
 void building_bandstand::on_place_update_tiles(int /*orientation*/, int /*variant*/) {
     int size = current_params().building_size;
     int image_id = anim(animkeys().square).first_img();
@@ -116,35 +125,7 @@ void building_bandstand::on_place_update_tiles(int /*orientation*/, int /*varian
     base.orientation = map_orientation / 2;
 
     map_add_venue_plaza_tiles(id(), size, tile(), image_id, false);
-    switch (base.orientation) {
-    case 0:
-        place_latch_on_venue(BUILDING_GARDENS, 2, 1, 0);
-        place_latch_on_venue(BUILDING_BOOTH, 2, 0, 0);
-        place_latch_on_venue(BUILDING_BANDSTAND, 0, 0, 0, true);
-        place_latch_on_venue(BUILDING_BANDSTAND, 0, 1, 0, false);
-        break;
-
-    case 1:
-        place_latch_on_venue(BUILDING_GARDENS, 1, 2, 0);
-        place_latch_on_venue(BUILDING_BOOTH, 2, 2, 0);
-        place_latch_on_venue(BUILDING_BANDSTAND, 1, 0, 1, true);
-        place_latch_on_venue(BUILDING_BANDSTAND, 2, 0, 1, false);
-        break;
-
-    case 2:
-        place_latch_on_venue(BUILDING_GARDENS, 2, 1, 0);
-        place_latch_on_venue(BUILDING_BOOTH, 2, 2, 0);
-        place_latch_on_venue(BUILDING_BANDSTAND, 0, 1, 2, true);
-        place_latch_on_venue(BUILDING_BANDSTAND, 0, 2, 2, false);
-        break;
-
-    case 3:
-        place_latch_on_venue(BUILDING_GARDENS, 1, 2, 0);
-        place_latch_on_venue(BUILDING_BOOTH, 0, 2, 0);
-        place_latch_on_venue(BUILDING_BANDSTAND, 1, 0, 3, true);
-        place_latch_on_venue(BUILDING_BANDSTAND, 0, 0, 3, false);
-        break;
-    }
+    place_venue_items(current_params().place_dir[base.orientation % 4], base.orientation);
 }
 
 void building_bandstand::update_map_orientation(int map_orientation) {
