@@ -297,8 +297,6 @@ mission39 { // Tut in the Valley — Death of Tutankhamun
 				cost_to_open : 370
 				is_sea_trade : true
 				type : EMPIRE_CITY_EGYPTIAN_TRADING
-				max_traders : 1
-				trade_limits : default_trade_limits
 				sells [
 					RESOURCE_GRAIN,
 					RESOURCE_WEAPONS,
@@ -362,8 +360,6 @@ mission39 { // Tut in the Valley — Death of Tutankhamun
 				cost_to_open : 245
 				is_sea_trade : false
 				type : EMPIRE_CITY_FOREIGN_TRADING
-				max_traders : 1
-				trade_limits : default_trade_limits
 				sells [
 					RESOURCE_LUXURY_GOODS,
 					RESOURCE_OIL
@@ -398,8 +394,6 @@ mission39 { // Tut in the Valley — Death of Tutankhamun
 				cost_to_open : 80
 				is_sea_trade : true
 				type : EMPIRE_CITY_EGYPTIAN_TRADING
-				max_traders : 1
-				trade_limits : default_trade_limits
 				sells [
 					RESOURCE_BARLEY,
 					RESOURCE_LINEN
@@ -453,8 +447,6 @@ mission39 { // Tut in the Valley — Death of Tutankhamun
 				cost_to_open : 335
 				is_sea_trade : true
 				type : EMPIRE_CITY_EGYPTIAN_TRADING
-				max_traders : 1
-				trade_limits : default_trade_limits
 				sells [ RESOURCE_LUXURY_GOODS ]
 				buys [
 					RESOURCE_BEER,

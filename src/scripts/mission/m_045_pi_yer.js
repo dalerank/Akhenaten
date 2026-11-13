@@ -113,8 +113,6 @@ mission45 { // Pi-Yer — The Sea People Land
 			cost_to_open : 970
 			is_sea_trade : true
 			type : EMPIRE_CITY_FOREIGN_TRADING
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_FISH, RESOURCE_LUXURY_GOODS, RESOURCE_TIMBER, RESOURCE_COPPER ]
 			buys [ RESOURCE_CHICKPEAS, RESOURCE_FIGS, RESOURCE_BEER ]
 			route_limits [
@@ -136,8 +134,6 @@ mission45 { // Pi-Yer — The Sea People Land
 			cost_to_open : 880
 			is_sea_trade : true
 			type : EMPIRE_CITY_FOREIGN_TRADING
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_LUXURY_GOODS, RESOURCE_TIMBER, RESOURCE_COPPER ]
 			buys [ RESOURCE_FIGS ]
 			route_limits [
@@ -156,8 +152,6 @@ mission45 { // Pi-Yer — The Sea People Land
 			cost_to_open : 810
 			is_sea_trade : true
 			type : EMPIRE_CITY_FOREIGN_TRADING
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_LUXURY_GOODS, RESOURCE_TIMBER ]
 			buys [ RESOURCE_GRAIN, RESOURCE_LINEN ]
 			route_limits [
@@ -176,8 +170,6 @@ mission45 { // Pi-Yer — The Sea People Land
 			cost_to_open : 150
 			is_sea_trade : true
 			type : EMPIRE_CITY_EGYPTIAN_TRADING
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_GRAIN, RESOURCE_CHICKPEAS, RESOURCE_POTTERY ]
 			buys [ RESOURCE_BARLEY, RESOURCE_BEER, RESOURCE_LUXURY_GOODS, RESOURCE_PAPYRUS ]
 			route_limits [
@@ -199,8 +191,6 @@ mission45 { // Pi-Yer — The Sea People Land
 			cost_to_open : 215
 			is_sea_trade : false
 			type : EMPIRE_CITY_FOREIGN_TRADING
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_GRAIN, RESOURCE_FIGS, RESOURCE_BRICKS ]
 			buys [ RESOURCE_FISH, RESOURCE_LUXURY_GOODS ]
 			route_limits [
@@ -220,8 +210,6 @@ mission45 { // Pi-Yer — The Sea People Land
 			cost_to_open : 440
 			is_sea_trade : false
 			type : EMPIRE_CITY_FOREIGN_TRADING
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_FIGS, RESOURCE_BARLEY ]
 			buys [ RESOURCE_BRICKS, RESOURCE_COPPER ]
 			route_limits [
@@ -240,8 +228,6 @@ mission45 { // Pi-Yer — The Sea People Land
 			cost_to_open : 475
 			is_sea_trade : false
 			type : EMPIRE_CITY_FOREIGN_TRADING
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_FIGS, RESOURCE_LUXURY_GOODS ]
 			buys [ RESOURCE_POTTERY, RESOURCE_TIMBER ]
 			route_limits [
@@ -260,8 +246,6 @@ mission45 { // Pi-Yer — The Sea People Land
 			cost_to_open : 950
 			is_sea_trade : true
 			type : EMPIRE_CITY_EGYPTIAN_TRADING
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_CLAY, RESOURCE_BARLEY ]
 			buys [ RESOURCE_FIGS, RESOURCE_POTTERY ]
 			route_limits [
@@ -280,8 +264,6 @@ mission45 { // Pi-Yer — The Sea People Land
 			cost_to_open : 590
 			is_sea_trade : true
 			type : EMPIRE_CITY_FOREIGN_TRADING
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_FISH, RESOURCE_CLAY, RESOURCE_LUXURY_GOODS ]
 			buys [ RESOURCE_CHICKPEAS, RESOURCE_STRAW, RESOURCE_COPPER ]
 			route_limits [

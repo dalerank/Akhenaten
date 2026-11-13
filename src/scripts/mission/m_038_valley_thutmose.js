@@ -424,8 +424,6 @@ mission38 { // Thutmose in the Valley — The First Tomb
 				cost_to_open : 825
 				is_sea_trade : true
 				type : EMPIRE_CITY_EGYPTIAN_TRADING
-				max_traders : 1
-				trade_limits : default_trade_limits
 				sells [
 					RESOURCE_STRAW,
 					RESOURCE_PAPYRUS
@@ -452,8 +450,6 @@ mission38 { // Thutmose in the Valley — The First Tomb
 				cost_to_open : 940
 				is_sea_trade : true
 				type : EMPIRE_CITY_FOREIGN_TRADING
-				max_traders : 1
-				trade_limits : default_trade_limits
 				sells [ RESOURCE_LUXURY_GOODS ]
 				buys [
 					RESOURCE_LINEN,
@@ -474,8 +470,6 @@ mission38 { // Thutmose in the Valley — The First Tomb
 				cost_to_open : 940
 				is_sea_trade : true
 				type : EMPIRE_CITY_PHARAOH_TRADING
-				max_traders : 1
-				trade_limits : default_trade_limits
 				sells [
 					RESOURCE_GRAIN,
 					RESOURCE_MEAT,
@@ -515,8 +509,6 @@ mission38 { // Thutmose in the Valley — The First Tomb
 				cost_to_open : 525
 				is_sea_trade : false
 				type : EMPIRE_CITY_FOREIGN_TRADING
-				max_traders : 1
-				trade_limits : default_trade_limits
 				sells [
 					RESOURCE_GEMS,
 					RESOURCE_LUXURY_GOODS
@@ -557,8 +549,6 @@ mission38 { // Thutmose in the Valley — The First Tomb
 				cost_to_open : 80
 				is_sea_trade : true
 				type : EMPIRE_CITY_EGYPTIAN_TRADING
-				max_traders : 1
-				trade_limits : default_trade_limits
 				sells [
 					RESOURCE_MEAT,
 					RESOURCE_BARLEY
@@ -592,8 +582,6 @@ mission38 { // Thutmose in the Valley — The First Tomb
 				cost_to_open : 1700
 				is_sea_trade : true
 				type : EMPIRE_CITY_FOREIGN_TRADING
-				max_traders : 1
-				trade_limits : default_trade_limits
 				sells [ RESOURCE_OIL ]
 				buys [
 					RESOURCE_LINEN,

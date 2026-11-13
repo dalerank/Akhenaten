@@ -134,8 +134,6 @@ mission32 { // Khmun (Hermopolis) — Egypt Reclaimed
 			cost_to_open : 450
 			is_sea_trade : true
 			type : EMPIRE_CITY_EGYPTIAN_TRADING
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_MEAT, RESOURCE_STRAW, RESOURCE_POTTERY, RESOURCE_LINEN, RESOURCE_PAPYRUS, RESOURCE_LIMESTONE ]
 			buys [ RESOURCE_BEER ]
 			route_limits [
@@ -156,8 +154,6 @@ mission32 { // Khmun (Hermopolis) — Egypt Reclaimed
 			cost_to_open : 1250
 			is_sea_trade : true
 			type : EMPIRE_CITY_FOREIGN_TRADING
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_LUXURY_GOODS, RESOURCE_TIMBER, RESOURCE_COPPER ]
 			route_limits [
 				{ resource: RESOURCE_LUXURY_GOODS, limit: 2500 }
@@ -174,8 +170,6 @@ mission32 { // Khmun (Hermopolis) — Egypt Reclaimed
 			cost_to_open : 1250
 			is_sea_trade : false
 			type : EMPIRE_CITY_FOREIGN_TRADING
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_LUXURY_GOODS ]
 			route_limits [
 				{ resource: RESOURCE_LUXURY_GOODS, limit: 2500 }
@@ -190,8 +184,6 @@ mission32 { // Khmun (Hermopolis) — Egypt Reclaimed
 			cost_to_open : 500
 			is_sea_trade : false
 			type : EMPIRE_CITY_FOREIGN_TRADING
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_CLAY, RESOURCE_BARLEY, RESOURCE_COPPER ]
 			route_limits [
 				{ resource: RESOURCE_CLAY, limit: 2500 }
@@ -208,8 +200,6 @@ mission32 { // Khmun (Hermopolis) — Egypt Reclaimed
 			cost_to_open : 400
 			is_sea_trade : false
 			type : EMPIRE_CITY_EGYPTIAN_TRADING
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_POTTERY, RESOURCE_PAPYRUS ]
 			buys [ RESOURCE_BRICKS, RESOURCE_BARLEY, RESOURCE_BEER, RESOURCE_LUXURY_GOODS ]
 			route_limits [

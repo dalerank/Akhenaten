@@ -113,8 +113,6 @@ mission41 { // Sumur — Lands of the Levant
 			cost_to_open : 850
 			is_sea_trade : true
 			type : EMPIRE_CITY_EGYPTIAN_TRADING
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_GRAIN, RESOURCE_CHICKPEAS, RESOURCE_POTTERY, RESOURCE_FLAX, RESOURCE_PAPYRUS ]
 			buys [ RESOURCE_WEAPONS, RESOURCE_LUXURY_GOODS, RESOURCE_TIMBER, RESOURCE_OIL ]
 			route_limits [
@@ -138,8 +136,6 @@ mission41 { // Sumur — Lands of the Levant
 			cost_to_open : 625
 			is_sea_trade : true
 			type : EMPIRE_CITY_EGYPTIAN_TRADING
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_LETTUCE, RESOURCE_POTTERY, RESOURCE_BEER, RESOURCE_LINEN ]
 			buys [ RESOURCE_GEMS, RESOURCE_TIMBER, RESOURCE_COPPER ]
 			route_limits [
@@ -161,8 +157,6 @@ mission41 { // Sumur — Lands of the Levant
 			cost_to_open : 1600
 			is_sea_trade : true
 			type : EMPIRE_CITY_PHARAOH_TRADING
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_GRAIN, RESOURCE_FLAX, RESOURCE_GRANITE ]
 			buys [ RESOURCE_WEAPONS, RESOURCE_TIMBER, RESOURCE_OIL ]
 			route_limits [
@@ -183,8 +177,6 @@ mission41 { // Sumur — Lands of the Levant
 			cost_to_open : 450
 			is_sea_trade : false
 			type : EMPIRE_CITY_FOREIGN_TRADING
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_GEMS, RESOURCE_COPPER ]
 			buys [ RESOURCE_CHICKPEAS, RESOURCE_LINEN, RESOURCE_TIMBER ]
 			route_limits [
@@ -204,8 +196,6 @@ mission41 { // Sumur — Lands of the Levant
 			cost_to_open : 210
 			is_sea_trade : false
 			type : EMPIRE_CITY_FOREIGN_TRADING
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_LUXURY_GOODS, RESOURCE_OIL ]
 			buys [ RESOURCE_LINEN ]
 			route_limits [
@@ -223,8 +213,6 @@ mission41 { // Sumur — Lands of the Levant
 			cost_to_open : 65
 			is_sea_trade : false
 			type : EMPIRE_CITY_FOREIGN_TRADING
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_LUXURY_GOODS, RESOURCE_OIL ]
 			buys [ RESOURCE_LINEN, RESOURCE_PAPYRUS ]
 			route_limits [
@@ -243,8 +231,6 @@ mission41 { // Sumur — Lands of the Levant
 			cost_to_open : 185
 			is_sea_trade : true
 			type : EMPIRE_CITY_FOREIGN_TRADING
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_TIMBER, RESOURCE_COPPER, RESOURCE_OIL ]
 			buys [ RESOURCE_LINEN, RESOURCE_GRANITE ]
 			route_limits [

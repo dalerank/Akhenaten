@@ -541,8 +541,6 @@ mission43 {
 			cost_to_open : 1300
 			is_sea_trade : true
 			type : EMPIRE_CITY_EGYPTIAN_TRADING
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_MEAT, RESOURCE_CHICKPEAS, RESOURCE_BEER, RESOURCE_TIMBER ]
 			buys [ RESOURCE_BARLEY, RESOURCE_LUXURY_GOODS, RESOURCE_SANDSTONE ]
 			route_limits [
@@ -564,8 +562,6 @@ mission43 {
 			cost_to_open : 650
 			is_sea_trade : true
 			type : EMPIRE_CITY_EGYPTIAN_TRADING
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_CHICKPEAS, RESOURCE_STRAW, RESOURCE_POTTERY, RESOURCE_FLAX, RESOURCE_LINEN ]
 			buys [ RESOURCE_LUXURY_GOODS ]
 			route_limits [
@@ -586,8 +582,6 @@ mission43 {
 			cost_to_open : 2000
 			is_sea_trade : true
 			type : EMPIRE_CITY_EGYPTIAN_TRADING
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_GEMS, RESOURCE_LUXURY_GOODS, RESOURCE_TIMBER ]
 			buys [ RESOURCE_CHICKPEAS, RESOURCE_FIGS, RESOURCE_LINEN ]
 			route_limits [
@@ -608,8 +602,6 @@ mission43 {
 			cost_to_open : 140
 			is_sea_trade : true
 			type : EMPIRE_CITY_EGYPTIAN_TRADING
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_GEMS ]
 			buys [ RESOURCE_MEAT, RESOURCE_CHICKPEAS, RESOURCE_POTTERY, RESOURCE_LINEN ]
 			route_limits [
@@ -629,8 +621,6 @@ mission43 {
 			cost_to_open : 400
 			is_sea_trade : true
 			type : EMPIRE_CITY_EGYPTIAN_TRADING
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_LUXURY_GOODS ]
 			buys [ RESOURCE_FIGS, RESOURCE_LINEN ]
 			route_limits [
@@ -648,8 +638,6 @@ mission43 {
 			cost_to_open : 400
 			is_sea_trade : false
 			type : EMPIRE_CITY_FOREIGN_TRADING
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_GEMS, RESOURCE_COPPER ]
 			buys [ RESOURCE_BEER, RESOURCE_LINEN ]
 			route_limits [

@@ -1234,8 +1234,6 @@ mission37 { // Hetepsensusret (Kahun) — The Glory of Pharaoh
 			cost_to_open : 1000
 			is_sea_trade : false
 			type : EMPIRE_CITY_FOREIGN_TRADING
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_GEMS, RESOURCE_COPPER, RESOURCE_SANDSTONE ]
 			route_limits [
 				{ resource: RESOURCE_GEMS, limit: 1500 }
@@ -1252,8 +1250,6 @@ mission37 { // Hetepsensusret (Kahun) — The Glory of Pharaoh
 			cost_to_open : 650
 			is_sea_trade : false
 			type : EMPIRE_CITY_FOREIGN_TRADING
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_BRICKS, RESOURCE_TIMBER ]
 			buys [ RESOURCE_MEAT, RESOURCE_LINEN, RESOURCE_LUXURY_GOODS, RESOURCE_PAPYRUS, RESOURCE_GRANITE ]
 			route_limits [

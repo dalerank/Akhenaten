@@ -107,8 +107,6 @@ mission5 { // Timna
 			cost_to_open : 1020
 			is_sea_trade : false
 			type : EMPIRE_CITY_EGYPTIAN_TRADING
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_CLAY, RESOURCE_POTTERY, RESOURCE_BEER, RESOURCE_FLAX, RESOURCE_LINEN ]
 			buys [ RESOURCE_PAPYRUS ]
 			route_limits [
@@ -130,8 +128,6 @@ mission5 { // Timna
 			cost_to_open : 850
 			is_sea_trade : false
 			type : EMPIRE_CITY_EGYPTIAN_TRADING
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_GAMEMEAT ]
 			route_limits [
 				{ resource: RESOURCE_GAMEMEAT, limit: 4000 }
@@ -147,8 +143,6 @@ mission5 { // Timna
 			cost_to_open : 800
 			is_sea_trade : false
 			type : EMPIRE_CITY_EGYPTIAN_TRADING
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_CHICKPEAS, RESOURCE_POTTERY, RESOURCE_BEER ]
 			buys [ RESOURCE_COPPER ]
 			route_limits [
@@ -169,8 +163,6 @@ mission5 { // Timna
 			is_sea_trade : false
 			trade : false
 			type : EMPIRE_CITY_PHARAOH
-			max_traders : 1
-			trade_limits : default_trade_limits
 			// Unlocked via CITY_STATUS_CHANGE (NEW_TRADE_ROUTE) after gems/weapons request success.
 			sells [ RESOURCE_CHICKPEAS, RESOURCE_POTTERY, RESOURCE_PAPYRUS ]
 			buys [ RESOURCE_LETTUCE, RESOURCE_BRICKS, RESOURCE_BARLEY, RESOURCE_BEER, RESOURCE_LUXURY_GOODS ]

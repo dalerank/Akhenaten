@@ -809,8 +809,6 @@ mission51 { // Cleopatra's Alexandria - The Legacy of a Queen
 			cost_to_open : 235
 			is_sea_trade : false
 			type : EMPIRE_CITY_FOREIGN_TRADING
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_GAMEMEAT ]
 			buys [ RESOURCE_FISH, RESOURCE_LINEN ]
 			route_limits [
@@ -828,8 +826,6 @@ mission51 { // Cleopatra's Alexandria - The Legacy of a Queen
 			cost_to_open : 670
 			is_sea_trade : true
 			type : EMPIRE_CITY_FOREIGN_TRADING
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_TIMBER, RESOURCE_MARBLE ]
 			buys [ RESOURCE_GRAIN, RESOURCE_BEER, RESOURCE_LINEN ]
 			route_limits [
@@ -849,8 +845,6 @@ mission51 { // Cleopatra's Alexandria - The Legacy of a Queen
 			cost_to_open : 620
 			is_sea_trade : true
 			type : EMPIRE_CITY_FOREIGN_TRADING
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_LUXURY_GOODS, RESOURCE_TIMBER ]
 			buys [ RESOURCE_LINEN, RESOURCE_PAPYRUS ]
 			route_limits [
@@ -869,8 +863,6 @@ mission51 { // Cleopatra's Alexandria - The Legacy of a Queen
 			cost_to_open : 990
 			is_sea_trade : true
 			type : EMPIRE_CITY_EGYPTIAN_TRADING
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_CHICKPEAS, RESOURCE_BARLEY, RESOURCE_FLAX, RESOURCE_LINEN, RESOURCE_SANDSTONE ]
 			buys [ RESOURCE_LUXURY_GOODS, RESOURCE_TIMBER ]
 			route_limits [
@@ -892,8 +884,6 @@ mission51 { // Cleopatra's Alexandria - The Legacy of a Queen
 			cost_to_open : 430
 			is_sea_trade : true
 			type : EMPIRE_CITY_FOREIGN_TRADING
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_FISH, RESOURCE_POTTERY ]
 			buys [ RESOURCE_GRAIN, RESOURCE_BEER, RESOURCE_LUXURY_GOODS, RESOURCE_PAPYRUS ]
 			route_limits [
@@ -922,8 +912,6 @@ mission51 { // Cleopatra's Alexandria - The Legacy of a Queen
 			cost_to_open : 150
 			is_sea_trade : false
 			type : EMPIRE_CITY_EGYPTIAN_TRADING
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_GRAIN, RESOURCE_POTTERY, RESOURCE_BARLEY, RESOURCE_PAPYRUS ]
 			buys [ RESOURCE_LUXURY_GOODS, RESOURCE_TIMBER ]
 			route_limits [
@@ -944,8 +932,6 @@ mission51 { // Cleopatra's Alexandria - The Legacy of a Queen
 			cost_to_open : 700
 			is_sea_trade : true
 			type : EMPIRE_CITY_FOREIGN_TRADING
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_POTTERY, RESOURCE_LUXURY_GOODS ]
 			buys [ RESOURCE_GRAIN, RESOURCE_BARLEY, RESOURCE_GEMS, RESOURCE_MARBLE ]
 			route_limits [
@@ -966,8 +952,6 @@ mission51 { // Cleopatra's Alexandria - The Legacy of a Queen
 			cost_to_open : 1500
 			is_sea_trade : true
 			type : EMPIRE_CITY_FOREIGN_TRADING
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_GEMS, RESOURCE_LUXURY_GOODS, RESOURCE_COPPER ]
 			buys [ RESOURCE_LINEN, RESOURCE_PAPYRUS ]
 			route_limits [
@@ -987,8 +971,6 @@ mission51 { // Cleopatra's Alexandria - The Legacy of a Queen
 			cost_to_open : 750
 			is_sea_trade : true
 			type : EMPIRE_CITY_FOREIGN_TRADING
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_LINEN, RESOURCE_LUXURY_GOODS, RESOURCE_TIMBER ]
 			buys [ RESOURCE_GRAIN, RESOURCE_STRAW ]
 			route_limits [
@@ -1050,8 +1032,6 @@ mission51 { // Cleopatra's Alexandria - The Legacy of a Queen
 			cost_to_open : 515
 			is_sea_trade : false
 			type : EMPIRE_CITY_FOREIGN_TRADING
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_GEMS, RESOURCE_COPPER ]
 			buys [ RESOURCE_STRAW, RESOURCE_LINEN ]
 			route_limits [
@@ -1087,8 +1067,6 @@ mission51 { // Cleopatra's Alexandria - The Legacy of a Queen
 			cost_to_open : 820
 			is_sea_trade : true
 			type : EMPIRE_CITY_FOREIGN_TRADING
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_WEAPONS ]
 			buys [ RESOURCE_GRAIN, RESOURCE_BARLEY, RESOURCE_LUXURY_GOODS ]
 			route_limits [

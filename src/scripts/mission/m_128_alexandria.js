@@ -123,8 +123,6 @@ mission128 { // Alexandria.map — An Alexandrian Affair
 			cost_to_open : 760
 			is_sea_trade : true
 			type : EMPIRE_CITY_FOREIGN_TRADING
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_POTTERY, RESOURCE_LUXURY_GOODS ]
 			buys []
 			route_limits [
@@ -142,8 +140,6 @@ mission128 { // Alexandria.map — An Alexandrian Affair
 			cost_to_open : 525
 			is_sea_trade : true
 			type : EMPIRE_CITY_FOREIGN_TRADING
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_FISH, RESOURCE_POTTERY, RESOURCE_LUXURY_GOODS ]
 			buys []
 			route_limits [
@@ -162,8 +158,6 @@ mission128 { // Alexandria.map — An Alexandrian Affair
 			cost_to_open : 805
 			is_sea_trade : true
 			type : EMPIRE_CITY_FOREIGN_TRADING
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_POMEGRANATES, RESOURCE_FISH, RESOURCE_COPPER ]
 			buys [ RESOURCE_BEER ]
 			route_limits [
@@ -183,8 +177,6 @@ mission128 { // Alexandria.map — An Alexandrian Affair
 			cost_to_open : 440
 			is_sea_trade : true
 			type : EMPIRE_CITY_FOREIGN_TRADING
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_WEAPONS, RESOURCE_POTTERY, RESOURCE_LUXURY_GOODS ]
 			buys []
 			route_limits [
@@ -203,8 +195,6 @@ mission128 { // Alexandria.map — An Alexandrian Affair
 			cost_to_open : 135
 			is_sea_trade : false
 			type : EMPIRE_CITY_EGYPTIAN_TRADING
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_GEMS, RESOURCE_STONE ]
 			buys [ RESOURCE_LIMESTONE ]
 			route_limits [
@@ -223,8 +213,6 @@ mission128 { // Alexandria.map — An Alexandrian Affair
 			cost_to_open : 185
 			is_sea_trade : true
 			type : EMPIRE_CITY_EGYPTIAN_TRADING
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_POTTERY, RESOURCE_PAPYRUS ]
 			buys [ RESOURCE_BRICKS, RESOURCE_BARLEY, RESOURCE_BEER, RESOURCE_LUXURY_GOODS ]
 			route_limits [
@@ -246,8 +234,6 @@ mission128 { // Alexandria.map — An Alexandrian Affair
 			cost_to_open : 280
 			is_sea_trade : true
 			type : EMPIRE_CITY_EGYPTIAN_TRADING
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_MEAT, RESOURCE_POTTERY, RESOURCE_FLAX, RESOURCE_PAPYRUS ]
 			buys [ RESOURCE_BEER, RESOURCE_LUXURY_GOODS, RESOURCE_GRANITE ]
 			route_limits [
@@ -270,8 +256,6 @@ mission128 { // Alexandria.map — An Alexandrian Affair
 			cost_to_open : 330
 			is_sea_trade : true
 			type : EMPIRE_CITY_EGYPTIAN_TRADING
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_MEAT, RESOURCE_BRICKS, RESOURCE_POTTERY, RESOURCE_BEER, RESOURCE_FLAX, RESOURCE_PAPYRUS ]
 			buys [ RESOURCE_GEMS, RESOURCE_COPPER, RESOURCE_SANDSTONE ]
 			route_limits [
@@ -296,8 +280,6 @@ mission128 { // Alexandria.map — An Alexandrian Affair
 			cost_to_open : 325
 			is_sea_trade : true
 			type : EMPIRE_CITY_EGYPTIAN_TRADING
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_GRAIN, RESOURCE_CLAY, RESOURCE_POTTERY, RESOURCE_TIMBER, RESOURCE_REEDS, RESOURCE_PAPYRUS, RESOURCE_STONE ]
 			buys [ RESOURCE_BARLEY, RESOURCE_BEER, RESOURCE_LINEN, RESOURCE_LIMESTONE ]
 			route_limits [
@@ -324,8 +306,6 @@ mission128 { // Alexandria.map — An Alexandrian Affair
 			cost_to_open : 465
 			is_sea_trade : true
 			type : EMPIRE_CITY_EGYPTIAN_TRADING
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_STONE ]
 			buys [ RESOURCE_BRICKS, RESOURCE_LIMESTONE, RESOURCE_GRANITE ]
 			route_limits [
@@ -345,8 +325,6 @@ mission128 { // Alexandria.map — An Alexandrian Affair
 			cost_to_open : 445
 			is_sea_trade : false
 			type : EMPIRE_CITY_EGYPTIAN_TRADING
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_TIMBER, RESOURCE_SANDSTONE ]
 			buys []
 			route_limits [
@@ -364,8 +342,6 @@ mission128 { // Alexandria.map — An Alexandrian Affair
 			cost_to_open : 875
 			is_sea_trade : true
 			type : EMPIRE_CITY_EGYPTIAN_TRADING
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_MEAT, RESOURCE_CLAY, RESOURCE_POTTERY, RESOURCE_LIMESTONE, RESOURCE_GRANITE, RESOURCE_COPPER ]
 			buys [ RESOURCE_STRAW ]
 			route_limits [
@@ -388,8 +364,6 @@ mission128 { // Alexandria.map — An Alexandrian Affair
 			cost_to_open : 1255
 			is_sea_trade : false
 			type : EMPIRE_CITY_FOREIGN_TRADING
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_LUXURY_GOODS ]
 			buys []
 			route_limits [
@@ -408,8 +382,6 @@ mission128 { // Alexandria.map — An Alexandrian Affair
 			cost_to_open : 1000
 			is_sea_trade : true
 			type : EMPIRE_CITY_FOREIGN_TRADING
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_LUXURY_GOODS, RESOURCE_TIMBER, RESOURCE_COPPER ]
 			buys [ RESOURCE_LINEN, RESOURCE_PAPYRUS ]
 			route_limits [
@@ -432,8 +404,6 @@ mission128 { // Alexandria.map — An Alexandrian Affair
 			cost_to_open : 900
 			is_sea_trade : true
 			type : EMPIRE_CITY_EGYPTIAN_TRADING
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_STRAW, RESOURCE_LUXURY_GOODS, RESOURCE_TIMBER ]
 			buys [ RESOURCE_LINEN, RESOURCE_GEMS ]
 			route_limits [

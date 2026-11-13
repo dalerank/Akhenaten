@@ -118,8 +118,6 @@ mission26 { // Menat Khufu (Beni Hasan) — Reunification
 				cost_to_open : 600
 				is_sea_trade : true
 				type : EMPIRE_CITY_PHARAOH_TRADING
-				max_traders : 1
-				trade_limits : default_trade_limits
 				sells [ RESOURCE_CLAY, RESOURCE_POTTERY, RESOURCE_LINEN, RESOURCE_STONE, RESOURCE_LIMESTONE, RESOURCE_GRANITE, RESOURCE_COPPER ]
 				route_limits [
 					{ resource: RESOURCE_CLAY, limit: 2500 }
@@ -140,8 +138,6 @@ mission26 { // Menat Khufu (Beni Hasan) — Reunification
 				cost_to_open : 400
 				is_sea_trade : true
 				type : EMPIRE_CITY_EGYPTIAN_TRADING
-				max_traders : 1
-				trade_limits : default_trade_limits
 				sells [ RESOURCE_CHICKPEAS, RESOURCE_POTTERY, RESOURCE_PAPYRUS ]
 				buys [ RESOURCE_LETTUCE, RESOURCE_BRICKS, RESOURCE_BARLEY, RESOURCE_BEER, RESOURCE_LUXURY_GOODS ]
 				route_limits [
@@ -165,8 +161,6 @@ mission26 { // Menat Khufu (Beni Hasan) — Reunification
 				cost_to_open : 400
 				is_sea_trade : false
 				type : EMPIRE_CITY_EGYPTIAN_TRADING
-				max_traders : 1
-				trade_limits : default_trade_limits
 				sells [ RESOURCE_BRICKS, RESOURCE_TIMBER ]
 				buys [ RESOURCE_MEAT, RESOURCE_LINEN, RESOURCE_LUXURY_GOODS, RESOURCE_PAPYRUS, RESOURCE_GRANITE ]
 				route_limits [

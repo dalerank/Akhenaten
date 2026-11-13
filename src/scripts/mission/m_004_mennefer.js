@@ -74,8 +74,6 @@ mission4 {
 			cost_to_open : 300
 			is_sea_trade : false
 			type : EMPIRE_CITY_EGYPTIAN_TRADING
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_FIGS, RESOURCE_CLAY, RESOURCE_BRICKS, RESOURCE_POTTERY, RESOURCE_REEDS ]
 			route_limits [
 				{ resource: RESOURCE_FIGS, limit: 4000 }
@@ -95,8 +93,6 @@ mission4 {
 			cost_to_open : 550
 			is_sea_trade : false
 			type : EMPIRE_CITY_EGYPTIAN_TRADING
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_CLAY, RESOURCE_POTTERY, RESOURCE_BEER ]
 			buys [ RESOURCE_PAPYRUS ]
 			route_limits [

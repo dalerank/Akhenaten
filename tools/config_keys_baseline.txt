@@ -480,7 +480,6 @@ zeroed | building_mine_copper:building_overlay_anim.max_count
 zeroed | building_mine_gems:building_overlay_anim.max_count
 zeroed | building_wood_cutter:building_overlay_anim.max_count
 zeroed | empire_city.is_sea_trade
-zeroed | empire_city.max_traders
 zeroed | figure_persian_spearman:figure_enemy_spearman::static_params.missile_type
 zeroed | imagepak_handle.delayed
 zeroed | lang_message.key

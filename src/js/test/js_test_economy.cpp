@@ -155,6 +155,52 @@ static int __test_empire_city_trade_only(int city_id, int resource, int limit) {
 }
 ANK_FUNCTION_3(__test_empire_city_trade_only);
 
+static bool __test_empire_city_add_trade(int city_id, int resource, int limit) {
+    empire_city* city = g_empire.city(city_id);
+    if (!city || !city->in_use || resource <= RESOURCE_NONE || resource >= RESOURCES_MAX) {
+        return false;
+    }
+    city->buys_resource[resource] = true;
+    city->get_route().init((e_resource)resource, limit);
+    return true;
+}
+ANK_FUNCTION_3(__test_empire_city_add_trade);
+
+static int __test_empire_city_trader_size(int city_id) {
+    empire_city* city = g_empire.city(city_id);
+    return city ? city->trader_size() : -1;
+}
+ANK_FUNCTION_1(__test_empire_city_trader_size);
+
+static int __test_empire_city_free_trader_slot(int city_id) {
+    empire_city* city = g_empire.city(city_id);
+    return city ? city->free_trader_slot() : -1;
+}
+ANK_FUNCTION_1(__test_empire_city_free_trader_slot);
+
+// Marks trader slots as taken (fid != 0) without spawning figures.
+static void __test_empire_city_set_trader_figure(int city_id, int slot, int fid) {
+    empire_city* city = g_empire.city(city_id);
+    if (city && slot >= 0 && slot < (int)std::size(city->trader_figure_ids)) {
+        city->trader_figure_ids[slot] = fid;
+    }
+}
+ANK_FUNCTION_3(__test_empire_city_set_trader_figure);
+
+static void __test_empire_city_set_trader_blocked(int city_id, int blocked) {
+    if (empire_city* city = g_empire.city(city_id)) {
+        city->trader_blocked = blocked;
+    }
+}
+ANK_FUNCTION_2(__test_empire_city_set_trader_blocked);
+
+static int __test_empire_set_max_traders_per_city(int count) {
+    const int prev = empire_trade_rules.max_traders_per_city;
+    empire_trade_rules.max_traders_per_city = count;
+    return prev;
+}
+ANK_FUNCTION_1(__test_empire_set_max_traders_per_city);
+
 static int __test_cartpusher_destination_wait_threshold() {
     return figure_cartpusher::destination_wait_threshold();
 }

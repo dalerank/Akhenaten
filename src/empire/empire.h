@@ -32,6 +32,10 @@ struct trade_monument_unplaced_need {
 ANK_CONFIG_STRUCT(trade_monument_unplaced_need, monument, building, resource, amount, limestone)
 
 struct empire_trade_rules_t {
+    // OG trader_size: up to this many traders per city at once, fewer on small routes.
+    int32_t max_traders_per_city = 3;
+    int32_t trader_limit_small = 1500;
+    int32_t trader_limit_medium = 2500;
     int32_t keep_workshop_amount = 200;
     int32_t keep_monument_amount = 500;
     int32_t keep_other_amount = 1000;
@@ -41,8 +45,9 @@ struct empire_trade_rules_t {
     svector<trade_recommend_row, 8> recommends;
     svector<trade_monument_unplaced_need, 40> monument_unplaced_needs;
 };
-ANK_CONFIG_STRUCT(empire_trade_rules_t, keep_workshop_amount, keep_monument_amount, keep_other_amount, stock_cap_small,
-  stock_cap_default, stock_cap_large, recommends, monument_unplaced_needs)
+ANK_CONFIG_STRUCT(empire_trade_rules_t, max_traders_per_city, trader_limit_small, trader_limit_medium,
+  keep_workshop_amount, keep_monument_amount, keep_other_amount, stock_cap_small, stock_cap_default, stock_cap_large,
+  recommends, monument_unplaced_needs)
 
 extern empire_trade_rules_t empire_trade_rules;
 

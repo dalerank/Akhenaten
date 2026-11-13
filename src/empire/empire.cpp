@@ -426,7 +426,8 @@ io_buffer* iob_empire_cities = new io_buffer([](io_buffer* iob, size_t version) 
         empire_city& city = g_empire.get_cities()[i];
         city.lookup_id = i;
         iob->bind_u8(city.in_use);
-        iob->bind_u8(city.max_traders);
+        uint8_t reserved = 0;
+        iob->bind_u8(reserved);
         iob->bind_u8((uint8_t&)city.type);
 
         iob->bind(BIND_SIGNATURE_UINT8, &city.name_id);
@@ -444,7 +445,7 @@ io_buffer* iob_empire_cities = new io_buffer([](io_buffer* iob, size_t version) 
         iob->bind_i16(city.cost_to_open);
         iob->bind(BIND_SIGNATURE_INT16, &city.ph_unk01);
         iob->bind(BIND_SIGNATURE_INT16, &city.trader_entry_delay);
-        iob->bind(BIND_SIGNATURE_INT16, &city.ph_unk02);
+        iob->bind(BIND_SIGNATURE_INT16, &city.trader_blocked);
         iob->bind(BIND_SIGNATURE_INT16, &city.empire_object_id);
         iob->bind(BIND_SIGNATURE_UINT8, &city.is_sea_trade);
         iob->bind_u8(city.months_under_siege);
@@ -457,11 +458,6 @@ io_buffer* iob_empire_cities = new io_buffer([](io_buffer* iob, size_t version) 
         iob->bind_u8(city.ship_movement_delay_min);
         iob->bind_u8(city.ship_movement_delay_max);
         iob->bind____skip(7);
-
-        // An unused slot keeps its zeros, so loading does not change what the next save writes.
-        if (iob->is_read_access() && city.in_use) {
-            city.check_attributes();
-        }
     }
 });
 

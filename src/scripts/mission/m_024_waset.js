@@ -142,8 +142,6 @@ mission24 { // Waset (Thebes) — Civil War
 				cost_to_open : 800
 				is_sea_trade : false
 				type : EMPIRE_CITY_EGYPTIAN_TRADING
-				max_traders : 1
-				trade_limits : default_trade_limits
 				sells [ RESOURCE_BRICKS, RESOURCE_TIMBER ]
 				buys [ RESOURCE_MEAT, RESOURCE_LINEN, RESOURCE_LUXURY_GOODS, RESOURCE_PAPYRUS, RESOURCE_GRANITE ]
 				route_limits [
@@ -165,8 +163,6 @@ mission24 { // Waset (Thebes) — Civil War
 				cost_to_open : 375
 				is_sea_trade : false
 				type : EMPIRE_CITY_EGYPTIAN_TRADING
-				max_traders : 1
-				trade_limits : default_trade_limits
 				sells [ RESOURCE_CHICKPEAS, RESOURCE_POTTERY, RESOURCE_BEER ]
 				buys [ RESOURCE_COPPER ]
 				route_limits [
@@ -185,8 +181,6 @@ mission24 { // Waset (Thebes) — Civil War
 				cost_to_open : 400
 				is_sea_trade : false
 				type : EMPIRE_CITY_EGYPTIAN_TRADING
-				max_traders : 1
-				trade_limits : default_trade_limits
 				sells [ RESOURCE_GEMS, RESOURCE_TIMBER, RESOURCE_GRANITE, RESOURCE_SANDSTONE ]
 				buys [ RESOURCE_CLAY, RESOURCE_POTTERY, RESOURCE_BEER, RESOURCE_REEDS, RESOURCE_PAPYRUS ]
 				route_limits [
@@ -211,8 +205,6 @@ mission24 { // Waset (Thebes) — Civil War
 				cost_to_open : 1250
 				is_sea_trade : true
 				type : EMPIRE_CITY_EGYPTIAN_TRADING
-				max_traders : 1
-				trade_limits : default_trade_limits
 				sells [ RESOURCE_POTTERY, RESOURCE_PAPYRUS ]
 				buys [ RESOURCE_LETTUCE, RESOURCE_BRICKS, RESOURCE_BARLEY, RESOURCE_BEER, RESOURCE_LUXURY_GOODS ]
 				route_limits [
@@ -235,8 +227,6 @@ mission24 { // Waset (Thebes) — Civil War
 				cost_to_open : 700
 				is_sea_trade : true
 				type : EMPIRE_CITY_EGYPTIAN_TRADING
-				max_traders : 1
-				trade_limits : default_trade_limits
 				sells [ RESOURCE_LINEN, RESOURCE_STONE ]
 				buys [ RESOURCE_POTTERY, RESOURCE_TIMBER, RESOURCE_PAPYRUS ]
 				route_limits [
@@ -270,8 +260,6 @@ mission24 { // Waset (Thebes) — Civil War
 				is_sea_trade : false
 				trade : false
 				type : EMPIRE_CITY_FOREIGN
-				max_traders : 1
-				trade_limits : default_trade_limits
 				sells [ RESOURCE_LUXURY_GOODS ]
 				buys [ RESOURCE_LINEN, RESOURCE_LUXURY_GOODS ]
 				route_limits [

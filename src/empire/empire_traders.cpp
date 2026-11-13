@@ -162,8 +162,8 @@ void empire_traders_manager::create_trader(int trade_route_id, int destination_c
             traders_on_route++;
         }
     }
-    
-    if (traders_on_route >= 2) {
+
+    if (traders_on_route >= empire_trade_rules.max_traders_per_city) {
         return;
     }
 

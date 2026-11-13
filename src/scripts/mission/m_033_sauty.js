@@ -130,8 +130,6 @@ mission33 { // Sauty (Lykopolis) — Egypt Reclaimed
 			cost_to_open : 450
 			is_sea_trade : true
 			type : EMPIRE_CITY_EGYPTIAN_TRADING
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_MEAT, RESOURCE_POTTERY, RESOURCE_LINEN, RESOURCE_TIMBER, RESOURCE_PAPYRUS ]
 			buys [ RESOURCE_BEER, RESOURCE_LUXURY_GOODS, RESOURCE_GRANITE ]
 			route_limits [
@@ -151,8 +149,6 @@ mission33 { // Sauty (Lykopolis) — Egypt Reclaimed
 			cost_to_open : 425
 			is_sea_trade : true
 			type : EMPIRE_CITY_EGYPTIAN_TRADING
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_MEAT, RESOURCE_STRAW, RESOURCE_BRICKS, RESOURCE_POTTERY, RESOURCE_LINEN, RESOURCE_PAPYRUS ]
 			buys [ RESOURCE_BEER ]
 			route_limits [
@@ -172,8 +168,6 @@ mission33 { // Sauty (Lykopolis) — Egypt Reclaimed
 			cost_to_open : 350
 			is_sea_trade : true
 			type : EMPIRE_CITY_EGYPTIAN_TRADING
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_CHICKPEAS, RESOURCE_POTTERY, RESOURCE_PAPYRUS ]
 			buys [ RESOURCE_LETTUCE, RESOURCE_BRICKS, RESOURCE_BARLEY, RESOURCE_BEER, RESOURCE_LUXURY_GOODS ]
 			route_limits [
@@ -194,8 +188,6 @@ mission33 { // Sauty (Lykopolis) — Egypt Reclaimed
 			cost_to_open : 150
 			is_sea_trade : false
 			type : EMPIRE_CITY_EGYPTIAN_TRADING
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_BARLEY, RESOURCE_BEER, RESOURCE_STONE ]
 			buys [ RESOURCE_BRICKS, RESOURCE_LIMESTONE, RESOURCE_GRANITE ]
 			route_limits [

@@ -110,8 +110,6 @@ mission34 { // Byblos — Expansion and Conquest
 			cost_to_open : 1600
 			is_sea_trade : true
 			type : EMPIRE_CITY_EGYPTIAN_TRADING
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_GRAIN, RESOURCE_STRAW, RESOURCE_FLAX, RESOURCE_LINEN, RESOURCE_GEMS, RESOURCE_GRANITE, RESOURCE_SANDSTONE ]
 			buys [ RESOURCE_CLAY, RESOURCE_POTTERY, RESOURCE_REEDS, RESOURCE_PAPYRUS ]
 			route_limits [
@@ -137,8 +135,6 @@ mission34 { // Byblos — Expansion and Conquest
 			cost_to_open : 200
 			trade : false
 			type : EMPIRE_CITY_FOREIGN
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_LUXURY_GOODS, RESOURCE_TIMBER, RESOURCE_COPPER ]
 			buys [ RESOURCE_LINEN, RESOURCE_PAPYRUS ]
 			route_limits [
@@ -157,8 +153,6 @@ mission34 { // Byblos — Expansion and Conquest
 			is_open : false
 			trade : false
 			type : EMPIRE_CITY_FOREIGN
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_WEAPONS, RESOURCE_TIMBER ]
 			buys [ RESOURCE_BEER, RESOURCE_LINEN ]
 			route_limits [
@@ -177,8 +171,6 @@ mission34 { // Byblos — Expansion and Conquest
 			cost_to_open : 1750
 			trade : false
 			type : EMPIRE_CITY_FOREIGN
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_GEMS, RESOURCE_GOLD ]
 			buys [ RESOURCE_POTTERY, RESOURCE_BEER, RESOURCE_LINEN ]
 			route_limits [
@@ -198,8 +190,6 @@ mission34 { // Byblos — Expansion and Conquest
 			cost_to_open : 1825
 			trade : false
 			type : EMPIRE_CITY_FOREIGN
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_GEMS, RESOURCE_GOLD ]
 			buys [ RESOURCE_POTTERY, RESOURCE_BEER ]
 			route_limits [
@@ -257,8 +247,6 @@ mission34 { // Byblos — Expansion and Conquest
 			is_sea_trade : true
 			trade : false
 			type : EMPIRE_CITY_EGYPTIAN
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_POTTERY, RESOURCE_PAPYRUS ]
 			buys [ RESOURCE_LETTUCE, RESOURCE_BRICKS, RESOURCE_BARLEY, RESOURCE_BEER, RESOURCE_LUXURY_GOODS ]
 			route_limits [
@@ -281,8 +269,6 @@ mission34 { // Byblos — Expansion and Conquest
 			is_sea_trade : true
 			trade : false
 			type : EMPIRE_CITY_EGYPTIAN
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_BRICKS, RESOURCE_POTTERY, RESOURCE_BARLEY, RESOURCE_BEER, RESOURCE_LINEN, RESOURCE_PAPYRUS ]
 			buys [ RESOURCE_GEMS, RESOURCE_COPPER, RESOURCE_SANDSTONE ]
 			route_limits [

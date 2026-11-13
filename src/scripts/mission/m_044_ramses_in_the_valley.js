@@ -561,8 +561,6 @@ mission44 {
 			cost_to_open : 585
 			is_sea_trade : false
 			type : EMPIRE_CITY_FOREIGN_TRADING
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_LUXURY_GOODS ]
 			buys [ RESOURCE_POTTERY, RESOURCE_LINEN ]
 			route_limits [
@@ -580,8 +578,6 @@ mission44 {
 			cost_to_open : 1780
 			is_sea_trade : true
 			type : EMPIRE_CITY_FOREIGN_TRADING
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_OIL ]
 			buys [ RESOURCE_BEER, RESOURCE_LUXURY_GOODS ]
 			route_limits [
@@ -599,8 +595,6 @@ mission44 {
 			cost_to_open : 250
 			is_sea_trade : false
 			type : EMPIRE_CITY_FOREIGN_TRADING
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_FIGS, RESOURCE_HENNA ]
 			buys [ RESOURCE_GRAIN, RESOURCE_BRICKS ]
 			route_limits [
@@ -619,8 +613,6 @@ mission44 {
 			cost_to_open : 525
 			is_sea_trade : false
 			type : EMPIRE_CITY_FOREIGN_TRADING
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_FIGS, RESOURCE_HENNA ]
 			buys [ RESOURCE_STRAW, RESOURCE_BRICKS, RESOURCE_POTTERY ]
 			route_limits [
@@ -640,8 +632,6 @@ mission44 {
 			cost_to_open : 1700
 			is_sea_trade : true
 			type : EMPIRE_CITY_EGYPTIAN_TRADING
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_LINEN, RESOURCE_TIMBER, RESOURCE_OIL ]
 			buys [ RESOURCE_LAMPS ]
 			route_limits [
@@ -660,8 +650,6 @@ mission44 {
 			cost_to_open : 940
 			is_sea_trade : true
 			type : EMPIRE_CITY_PHARAOH_TRADING
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_LETTUCE, RESOURCE_WEAPONS, RESOURCE_LINEN, RESOURCE_PAPYRUS, RESOURCE_CHARIOTS ]
 			buys [ RESOURCE_BEER, RESOURCE_OIL, RESOURCE_PAINT ]
 			route_limits [
@@ -684,8 +672,6 @@ mission44 {
 			cost_to_open : 890
 			is_sea_trade : false
 			type : EMPIRE_CITY_FOREIGN_TRADING
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_COPPER, RESOURCE_OIL ]
 			buys [ RESOURCE_GRAIN, RESOURCE_BEER ]
 			route_limits [

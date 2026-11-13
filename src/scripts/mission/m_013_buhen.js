@@ -103,8 +103,6 @@ mission13 { // Buhen — Expansion to Nubia
 			cost_to_open : 600
 			is_sea_trade : false
 			type : EMPIRE_CITY_EGYPTIAN_TRADING
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_GRAIN, RESOURCE_STRAW, RESOURCE_FLAX, RESOURCE_LINEN, RESOURCE_GEMS, RESOURCE_GRANITE ]
 			buys [ RESOURCE_POTTERY, RESOURCE_PAPYRUS ]
 			route_limits [
@@ -128,8 +126,6 @@ mission13 { // Buhen — Expansion to Nubia
 			cost_to_open : 300
 			is_sea_trade : false
 			type : EMPIRE_CITY_EGYPTIAN_TRADING
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_LUXURY_GOODS, RESOURCE_TIMBER ]
 			buys [ RESOURCE_POTTERY, RESOURCE_BEER, RESOURCE_LINEN, RESOURCE_PAPYRUS, RESOURCE_COPPER ]
 			route_limits [
@@ -152,8 +148,6 @@ mission13 { // Buhen — Expansion to Nubia
 			cost_to_open : 900
 			is_sea_trade : true
 			type : EMPIRE_CITY_EGYPTIAN_TRADING
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_GRAIN, RESOURCE_CLAY, RESOURCE_POTTERY, RESOURCE_TIMBER, RESOURCE_REEDS, RESOURCE_PAPYRUS ]
 			buys [ RESOURCE_BARLEY, RESOURCE_BEER, RESOURCE_LINEN ]
 			route_limits [
@@ -178,8 +172,6 @@ mission13 { // Buhen — Expansion to Nubia
 			cost_to_open : 800
 			is_sea_trade : true
 			type : EMPIRE_CITY_PHARAOH_TRADING
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_CHICKPEAS, RESOURCE_POTTERY, RESOURCE_PAPYRUS ]
 			buys [ RESOURCE_BRICKS, RESOURCE_BARLEY, RESOURCE_BEER ]
 			route_limits [
@@ -201,8 +193,6 @@ mission13 { // Buhen — Expansion to Nubia
 			cost_to_open : 1580
 			is_sea_trade : true
 			type : EMPIRE_CITY_FOREIGN_TRADING
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_FISH, RESOURCE_COPPER ]
 			buys [ RESOURCE_BEER ]
 			route_limits [
@@ -222,8 +212,6 @@ mission13 { // Buhen — Expansion to Nubia
 			cost_to_open : 1250
 			is_sea_trade : false
 			type : EMPIRE_CITY_EGYPTIAN_TRADING
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_GEMS, RESOURCE_LUXURY_GOODS, RESOURCE_COPPER ]
 			route_limits [
 				{ resource: RESOURCE_GEMS, limit: 2500 }

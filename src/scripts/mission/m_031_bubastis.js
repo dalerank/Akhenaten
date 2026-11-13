@@ -125,8 +125,6 @@ mission31 { // Bubastis — The City of Bast
 			cost_to_open : 1750
 			is_sea_trade : true
 			type : EMPIRE_CITY_EGYPTIAN_TRADING
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_GEMS, RESOURCE_LUXURY_GOODS ]
 			buys [ RESOURCE_WEAPONS, RESOURCE_POTTERY, RESOURCE_BEER, RESOURCE_LINEN, RESOURCE_TIMBER, RESOURCE_PAPYRUS, RESOURCE_COPPER ]
 			route_limits [
@@ -148,8 +146,6 @@ mission31 { // Bubastis — The City of Bast
 			cost_to_open : 1750
 			is_sea_trade : true
 			type : EMPIRE_CITY_EGYPTIAN_TRADING
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_BEER ]
 			buys [ RESOURCE_WEAPONS, RESOURCE_TIMBER, RESOURCE_COPPER ]
 			route_limits [
@@ -167,8 +163,6 @@ mission31 { // Bubastis — The City of Bast
 			cost_to_open : 1500
 			is_sea_trade : false
 			type : EMPIRE_CITY_FOREIGN_TRADING
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_LUXURY_GOODS ]
 			route_limits [
 				{ resource: RESOURCE_LUXURY_GOODS, limit: 1500 }
@@ -183,8 +177,6 @@ mission31 { // Bubastis — The City of Bast
 			cost_to_open : 500
 			is_sea_trade : false
 			type : EMPIRE_CITY_EGYPTIAN_TRADING
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_POTTERY, RESOURCE_GRANITE, RESOURCE_COPPER ]
 			route_limits [
 				{ resource: RESOURCE_GRANITE, limit: 1500 }
@@ -200,8 +192,6 @@ mission31 { // Bubastis — The City of Bast
 			cost_to_open : 800
 			is_sea_trade : false
 			type : EMPIRE_CITY_EGYPTIAN_TRADING
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_CLAY, RESOURCE_POTTERY, RESOURCE_STONE, RESOURCE_LIMESTONE, RESOURCE_GRANITE, RESOURCE_COPPER ]
 			route_limits [
 				{ resource: RESOURCE_GRANITE, limit: 1500 }
@@ -228,8 +218,6 @@ mission31 { // Bubastis — The City of Bast
 			is_sea_trade : true
 			trade : false
 			type : EMPIRE_CITY_FOREIGN_TRADING
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_CLAY, RESOURCE_COPPER ]
 			buys [ RESOURCE_LINEN, RESOURCE_PAPYRUS, RESOURCE_TIMBER ]
 			route_limits [
@@ -267,8 +255,6 @@ mission31 { // Bubastis — The City of Bast
 			is_sea_trade : true
 			trade : false
 			type : EMPIRE_CITY_FOREIGN_TRADING
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_LUXURY_GOODS ]
 			buys [ RESOURCE_LINEN, RESOURCE_LUXURY_GOODS, RESOURCE_BEER, RESOURCE_TIMBER, RESOURCE_GRANITE ]
 			route_limits [

@@ -375,40 +375,7 @@ bool city_t::generate_trader_from(empire_city &city) {
         return false;
     }
 
-    auto &trade_route = city.get_route();
-    int max_trade_limit = 0;
-    for (const auto &r: resource_list::all) {
-        if (city.buys_resource[r.type] || city.sells_resource[r.type]) {
-            const int trade_limit = trade_route.limit(r.type);
-            max_trade_limit = std::max(max_trade_limit, trade_limit);
-        }
-    }
-
-    if (max_trade_limit == 0) {
-        return false;
-    }
-
-    int allow_traders = 1;
-    if (!city.trade_limits.empty()) {
-        auto it = std::lower_bound(std::begin(city.trade_limits), std::end(city.trade_limits), max_trade_limit);
-        allow_traders = std::distance(city.trade_limits.begin(), it);
-    }
-
-    if (allow_traders <= 0) {
-        return false;
-    }
-
-    // Find first available trader slot
-    int8_t trades_in_city = 0;
-    for (int i = 0; i < allow_traders; i++) {
-        trades_in_city += city.trader_figure_ids[i] != 0 ? 1 : 0;
-    }
-
-    if (city.max_traders == 0) {
-        return false;
-    }
-
-    if (trades_in_city >= city.max_traders) {
+    if (city.free_trader_slot() < 0) {
         return false;
     }
 

@@ -54,6 +54,11 @@ empire_city_images {
 // OG empire_trade_rules + trade_recommends.txt: how much the city keeps before it exports a surplus,
 // and the stock IMPORT_AS_NEEDED imports up to. Recomputed once a day.
 empire_trade_rules {
+    // Traders a city may have in ours at once (OG 3); a route with small limits sends fewer.
+    max_traders_per_city : 3
+    trader_limit_small : 1500
+    trader_limit_medium : 2500
+
     keep_workshop_amount : 200
     keep_monument_amount : 500
     keep_other_amount : 1000

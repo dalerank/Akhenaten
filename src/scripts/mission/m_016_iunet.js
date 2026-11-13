@@ -119,8 +119,6 @@ mission16 { // Iunet (Dendera) — The Defense of Egypt
 			cost_to_open : 480
 			is_sea_trade : false
 			type : EMPIRE_CITY_EGYPTIAN_TRADING
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_BARLEY, RESOURCE_BEER ]
 			buys [ RESOURCE_TIMBER, RESOURCE_GRANITE, RESOURCE_COPPER ]
 			route_limits [
@@ -141,8 +139,6 @@ mission16 { // Iunet (Dendera) — The Defense of Egypt
 			cost_to_open : 820
 			is_sea_trade : false
 			type : EMPIRE_CITY_EGYPTIAN_TRADING
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_LUXURY_GOODS, RESOURCE_TIMBER ]
 			buys [ RESOURCE_CLAY, RESOURCE_POTTERY, RESOURCE_BEER, RESOURCE_LINEN, RESOURCE_PAPYRUS, RESOURCE_COPPER ]
 			route_limits [
@@ -166,8 +162,6 @@ mission16 { // Iunet (Dendera) — The Defense of Egypt
 			cost_to_open : 870
 			is_sea_trade : true
 			type : EMPIRE_CITY_FOREIGN_TRADING
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_LUXURY_GOODS ]
 			buys [ RESOURCE_LINEN, RESOURCE_LUXURY_GOODS ]
 			route_limits [
@@ -187,8 +181,6 @@ mission16 { // Iunet (Dendera) — The Defense of Egypt
 			is_sea_trade : true
 			trade : false
 			type : EMPIRE_CITY_EGYPTIAN
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_STRAW, RESOURCE_CHICKPEAS ]
 			buys [ RESOURCE_GRANITE, RESOURCE_POTTERY, RESOURCE_LUXURY_GOODS ]
 			route_limits [
@@ -209,8 +201,6 @@ mission16 { // Iunet (Dendera) — The Defense of Egypt
 			cost_to_open : 620
 			is_sea_trade : true
 			type : EMPIRE_CITY_EGYPTIAN_TRADING
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_STRAW, RESOURCE_BARLEY, RESOURCE_BEER, RESOURCE_LIMESTONE ]
 			buys [ RESOURCE_BRICKS, RESOURCE_GEMS, RESOURCE_STONE, RESOURCE_GRANITE ]
 			route_limits [
@@ -236,8 +226,6 @@ mission16 { // Iunet (Dendera) — The Defense of Egypt
 			is_sea_trade : true
 			trade : false
 			type : EMPIRE_CITY_PHARAOH
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_STRAW, RESOURCE_BEER ]
 			buys [ RESOURCE_GRANITE, RESOURCE_GOLD, RESOURCE_POTTERY ]
 			route_limits [
@@ -258,8 +246,6 @@ mission16 { // Iunet (Dendera) — The Defense of Egypt
 			cost_to_open : 1400
 			is_sea_trade : true
 			type : EMPIRE_CITY_FOREIGN_TRADING
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_LUXURY_GOODS, RESOURCE_TIMBER, RESOURCE_COPPER ]
 			buys [ RESOURCE_GEMS ]
 			route_limits [

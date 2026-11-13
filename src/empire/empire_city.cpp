@@ -68,6 +68,7 @@ void empire_city::remove_trader(int figure_id) {
         if (trader_figure_ids[i] == figure_id)
             trader_figure_ids[i] = 0;
     }
+    trader_blocked = 0;
 }
 
 bool empire_city::can_trade() const {
@@ -164,7 +165,42 @@ int empire_city::get_free_slot(int max_traders) const {
 }
 
 int empire_city::get_free_slot() const {
-    return get_free_slot(max_traders);
+    return get_free_slot((int)std::size(trader_figure_ids));
+}
+
+// OG trader_size: the route limits of the goods traded, averaged and rounded up.
+int empire_city::trader_size() const {
+    const trade_route& route = get_route();
+    int resources = 0;
+    int size = 0;
+    for (e_resource r = RESOURCES_MIN; r < RESOURCES_MAX; ++r) {
+        if (!(buys_resource[r] || sells_resource[r]) || route.limit(r) <= 0) {
+            continue;
+        }
+        ++resources;
+        const int limit = route.limit(r, trade_route::e_limit_base_only);
+        if (limit > empire_trade_rules.trader_limit_medium) {
+            size += 3;
+        } else if (limit > empire_trade_rules.trader_limit_small) {
+            size += 2;
+        } else if (limit > 0) {
+            size += 1;
+        }
+    }
+    if (resources > 1) {
+        size = (size + resources - 1) / resources;
+    }
+    return size;
+}
+
+// OG free_trader_slot, with trader_size capped by the empire config instead of a fixed 3.
+int empire_city::free_trader_slot() const {
+    const int size = trader_size();
+    if (size <= 0 || trader_blocked != 0) {
+        return -1;
+    }
+    const int cap = std::clamp<int>(empire_trade_rules.max_traders_per_city, 0, (int)std::size(trader_figure_ids));
+    return get_free_slot(std::min(size, cap));
 }
 
 void empire_city::archive_load(archive arch) {
@@ -217,12 +253,6 @@ void empire_city::archive_load(archive arch) {
     } else {
         set_trade_enabled(false);
     }
-
-    check_attributes();
-}
-
-void empire_city::check_attributes() {
-    max_traders = std::max<uint8_t>(1u, max_traders);
 }
 
 bstring32 empire_city::get_display_name(int nid) {

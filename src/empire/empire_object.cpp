@@ -313,7 +313,6 @@ void empire_t::load_empire_cities(archive arch, bool preserve_runtime) {
 
         sync_city_object_size(full, city->type);
         city->name_str = empire_city::get_display_name(city->name_id);
-        city->check_attributes();
 
         if (city->can_trade()) {
             g_empire.set_trade_route_type(city->route_id, city->is_sea_trade);
@@ -624,7 +623,7 @@ void empire_t::init_cities() {
         city->trader_figure_ids[1] = 0;
         city->trader_figure_ids[2] = 0;
         city->empire_object_id = i;
-        city->max_traders = 1;
+        city->trader_blocked = 0;
     }
 }
 

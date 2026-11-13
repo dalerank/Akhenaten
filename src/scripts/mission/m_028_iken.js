@@ -119,8 +119,6 @@ mission28 { // Iken (Mirgissa) — Into Nubia; briefing key = mirgissa
 				cost_to_open : 100
 				is_sea_trade : true
 				type : EMPIRE_CITY_EGYPTIAN_TRADING
-				max_traders : 1
-				trade_limits : default_trade_limits
 				sells [ RESOURCE_BARLEY, RESOURCE_BEER ]
 				buys [ RESOURCE_TIMBER, RESOURCE_GRANITE, RESOURCE_COPPER ]
 				route_limits [
@@ -141,8 +139,6 @@ mission28 { // Iken (Mirgissa) — Into Nubia; briefing key = mirgissa
 				cost_to_open : 685
 				is_sea_trade : false
 				type : EMPIRE_CITY_EGYPTIAN_TRADING
-				max_traders : 1
-				trade_limits : default_trade_limits
 				sells [ RESOURCE_BRICKS, RESOURCE_TIMBER ]
 				buys [ RESOURCE_MEAT, RESOURCE_LINEN, RESOURCE_LUXURY_GOODS, RESOURCE_PAPYRUS, RESOURCE_GRANITE ]
 				route_limits [
@@ -165,8 +161,6 @@ mission28 { // Iken (Mirgissa) — Into Nubia; briefing key = mirgissa
 				cost_to_open : 815
 				is_sea_trade : false
 				type : EMPIRE_CITY_EGYPTIAN_TRADING
-				max_traders : 1
-				trade_limits : default_trade_limits
 				sells [ RESOURCE_CLAY, RESOURCE_TIMBER ]
 				route_limits [
 					{ resource: RESOURCE_CLAY, limit: 2500 }
@@ -183,8 +177,6 @@ mission28 { // Iken (Mirgissa) — Into Nubia; briefing key = mirgissa
 				cost_to_open : 675
 				is_sea_trade : true
 				type : EMPIRE_CITY_EGYPTIAN_TRADING
-				max_traders : 1
-				trade_limits : default_trade_limits
 				sells [ RESOURCE_CLAY, RESOURCE_POTTERY, RESOURCE_GRANITE, RESOURCE_COPPER ]
 				route_limits [
 					{ resource: RESOURCE_CLAY, limit: 1500 }
@@ -203,8 +195,6 @@ mission28 { // Iken (Mirgissa) — Into Nubia; briefing key = mirgissa
 				cost_to_open : 1335
 				is_sea_trade : true
 				type : EMPIRE_CITY_EGYPTIAN_TRADING
-				max_traders : 1
-				trade_limits : default_trade_limits
 				sells [ RESOURCE_CHICKPEAS, RESOURCE_POTTERY, RESOURCE_PAPYRUS ]
 				buys [ RESOURCE_LETTUCE, RESOURCE_BRICKS, RESOURCE_BARLEY, RESOURCE_BEER, RESOURCE_LUXURY_GOODS ]
 				route_limits [
@@ -231,8 +221,6 @@ mission28 { // Iken (Mirgissa) — Into Nubia; briefing key = mirgissa
 				is_sea_trade : false
 				trade : false
 				type : EMPIRE_CITY_FOREIGN
-				max_traders : 1
-				trade_limits : default_trade_limits
 				sells [ RESOURCE_TIMBER ]
 				buys [ RESOURCE_LINEN, RESOURCE_LUXURY_GOODS, RESOURCE_PAPYRUS ]
 				route_limits [
@@ -254,8 +242,6 @@ mission28 { // Iken (Mirgissa) — Into Nubia; briefing key = mirgissa
 				is_sea_trade : false
 				trade : false
 				type : EMPIRE_CITY_FOREIGN
-				max_traders : 1
-				trade_limits : default_trade_limits
 				sells [ RESOURCE_LUXURY_GOODS ]
 				buys [ RESOURCE_LINEN, RESOURCE_LUXURY_GOODS ]
 				route_limits [
@@ -291,8 +277,6 @@ mission28 { // Iken (Mirgissa) — Into Nubia; briefing key = mirgissa
 				cost_to_open : 890
 				is_sea_trade : true
 				type : EMPIRE_CITY_EGYPTIAN_TRADING
-				max_traders : 1
-				trade_limits : default_trade_limits
 				sells [ RESOURCE_LUXURY_GOODS, RESOURCE_COPPER ]
 				buys [ RESOURCE_POTTERY, RESOURCE_BEER, RESOURCE_LINEN, RESOURCE_WEAPONS ]
 				route_limits [
@@ -314,8 +298,6 @@ mission28 { // Iken (Mirgissa) — Into Nubia; briefing key = mirgissa
 				cost_to_open : 570
 				is_sea_trade : true
 				type : EMPIRE_CITY_EGYPTIAN_TRADING
-				max_traders : 1
-				trade_limits : default_trade_limits
 				sells [ RESOURCE_POTTERY, RESOURCE_BEER, RESOURCE_LINEN ]
 				buys [ RESOURCE_FIGS, RESOURCE_BARLEY, RESOURCE_FLAX, RESOURCE_GAMEMEAT ]
 				route_limits [

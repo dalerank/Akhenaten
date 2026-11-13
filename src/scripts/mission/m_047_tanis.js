@@ -445,8 +445,6 @@ mission47 { // Tanis - Rebirth of a Navy
 			cost_to_open : 800
 			is_sea_trade : true
 			type : EMPIRE_CITY_FOREIGN_TRADING
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_FISH, RESOURCE_TIMBER, RESOURCE_COPPER ]
 			buys [ RESOURCE_POMEGRANATES, RESOURCE_BEER ]
 			route_limits [
@@ -466,8 +464,6 @@ mission47 { // Tanis - Rebirth of a Navy
 			cost_to_open : 150
 			is_sea_trade : false
 			type : EMPIRE_CITY_PHARAOH_TRADING
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_CHICKPEAS, RESOURCE_BARLEY ]
 			buys [ RESOURCE_POTTERY, RESOURCE_BEER, RESOURCE_TIMBER, RESOURCE_PAPYRUS ]
 			route_limits [
@@ -488,8 +484,6 @@ mission47 { // Tanis - Rebirth of a Navy
 			cost_to_open : 1000
 			is_sea_trade : true
 			type : EMPIRE_CITY_FOREIGN_TRADING
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_WEAPONS, RESOURCE_POTTERY, RESOURCE_LUXURY_GOODS ]
 			buys [ RESOURCE_POMEGRANATES, RESOURCE_PAPYRUS ]
 			route_limits [

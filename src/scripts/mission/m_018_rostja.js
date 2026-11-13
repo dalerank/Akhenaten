@@ -145,8 +145,6 @@ mission18 { // Rostja (Giza) — The Great Pyramid and Sphinx
 			cost_to_open : 500
 			is_sea_trade : true
 			type : EMPIRE_CITY_EGYPTIAN_TRADING
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_MEAT, RESOURCE_CLAY, RESOURCE_REEDS, RESOURCE_LIMESTONE ]
 			buys [ RESOURCE_BEER, RESOURCE_LINEN, RESOURCE_GEMS, RESOURCE_LUXURY_GOODS, RESOURCE_TIMBER, RESOURCE_GRANITE ]
 			route_limits [
@@ -172,8 +170,6 @@ mission18 { // Rostja (Giza) — The Great Pyramid and Sphinx
 			cost_to_open : 1250
 			is_sea_trade : true
 			type : EMPIRE_CITY_FOREIGN_TRADING
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_LUXURY_GOODS, RESOURCE_TIMBER, RESOURCE_COPPER ]
 			buys [ RESOURCE_GEMS, RESOURCE_LUXURY_GOODS ]
 			route_limits [
@@ -195,8 +191,6 @@ mission18 { // Rostja (Giza) — The Great Pyramid and Sphinx
 			is_sea_trade : true
 			trade : false
 			type : EMPIRE_CITY_EGYPTIAN
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_MEAT, RESOURCE_CLAY, RESOURCE_POTTERY, RESOURCE_LIMESTONE, RESOURCE_GRANITE, RESOURCE_COPPER ]
 			buys [ RESOURCE_STRAW ]
 			route_limits [
@@ -233,8 +227,6 @@ mission18 { // Rostja (Giza) — The Great Pyramid and Sphinx
 			is_sea_trade : false
 			trade : false
 			type : EMPIRE_CITY_PHARAOH
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_STONE, RESOURCE_BEER ]
 			buys [ RESOURCE_POTTERY, RESOURCE_PAPYRUS, RESOURCE_LUXURY_GOODS ]
 			route_limits [

@@ -128,8 +128,6 @@ mission17 { // On (Heliopolis) — Ivory from the East
 			cost_to_open : 1500
 			is_sea_trade : true
 			type : EMPIRE_CITY_EGYPTIAN_TRADING
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_MEAT, RESOURCE_CLAY, RESOURCE_POTTERY, RESOURCE_LIMESTONE, RESOURCE_GRANITE, RESOURCE_COPPER ]
 			buys [ RESOURCE_STRAW ]
 			route_limits [
@@ -151,8 +149,6 @@ mission17 { // On (Heliopolis) — Ivory from the East
 			cost_to_open : 400
 			is_sea_trade : true
 			type : EMPIRE_CITY_EGYPTIAN_TRADING
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_LUXURY_GOODS, RESOURCE_STONE ]
 			buys [ RESOURCE_CLAY, RESOURCE_BRICKS, RESOURCE_POTTERY, RESOURCE_TIMBER, RESOURCE_REEDS, RESOURCE_PAPYRUS, RESOURCE_LIMESTONE ]
 			route_limits [
@@ -177,8 +173,6 @@ mission17 { // On (Heliopolis) — Ivory from the East
 			cost_to_open : 200
 			is_sea_trade : true
 			type : EMPIRE_CITY_EGYPTIAN_TRADING
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_STRAW, RESOURCE_BARLEY, RESOURCE_BEER, RESOURCE_STONE ]
 			buys [ RESOURCE_BRICKS, RESOURCE_GEMS, RESOURCE_LIMESTONE, RESOURCE_GRANITE ]
 			route_limits [
@@ -200,8 +194,6 @@ mission17 { // On (Heliopolis) — Ivory from the East
 			cost_to_open : 450
 			is_sea_trade : true
 			type : EMPIRE_CITY_EGYPTIAN_TRADING
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_GRAIN, RESOURCE_CLAY, RESOURCE_POTTERY, RESOURCE_TIMBER, RESOURCE_REEDS, RESOURCE_PAPYRUS, RESOURCE_STONE ]
 			buys [ RESOURCE_BARLEY, RESOURCE_BEER, RESOURCE_LINEN, RESOURCE_LIMESTONE ]
 			route_limits [

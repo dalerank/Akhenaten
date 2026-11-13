@@ -129,8 +129,6 @@ mission21 { // Dunqul Oasis — The Kushite Threat
 				cost_to_open : 200
 				is_sea_trade : false
 				type : EMPIRE_CITY_EGYPTIAN_TRADING
-				max_traders : 1
-				trade_limits : default_trade_limits
 				sells [ RESOURCE_BARLEY, RESOURCE_BEER ]
 				buys [ RESOURCE_TIMBER, RESOURCE_GRANITE, RESOURCE_COPPER ]
 				route_limits [
@@ -151,8 +149,6 @@ mission21 { // Dunqul Oasis — The Kushite Threat
 				cost_to_open : 1500
 				is_sea_trade : false
 				type : EMPIRE_CITY_FOREIGN_TRADING
-				max_traders : 1
-				trade_limits : default_trade_limits
 				sells [ RESOURCE_TIMBER, RESOURCE_COPPER ]
 				buys [ RESOURCE_GEMS, RESOURCE_LUXURY_GOODS ]
 				route_limits [
@@ -172,8 +168,6 @@ mission21 { // Dunqul Oasis — The Kushite Threat
 				cost_to_open : 805
 				is_sea_trade : false
 				type : EMPIRE_CITY_EGYPTIAN_TRADING
-				max_traders : 1
-				trade_limits : default_trade_limits
 				sells [ RESOURCE_FIGS, RESOURCE_CLAY, RESOURCE_BEER, RESOURCE_FLAX ]
 				route_limits [
 					{ resource: RESOURCE_FIGS, limit: 2500 }
@@ -192,8 +186,6 @@ mission21 { // Dunqul Oasis — The Kushite Threat
 				cost_to_open : 375
 				is_sea_trade : false
 				type : EMPIRE_CITY_FOREIGN_TRADING
-				max_traders : 1
-				trade_limits : default_trade_limits
 				sells [ RESOURCE_LUXURY_GOODS ]
 				buys [ RESOURCE_LINEN ]
 				route_limits [
@@ -211,8 +203,6 @@ mission21 { // Dunqul Oasis — The Kushite Threat
 				cost_to_open : 870
 				is_sea_trade : false
 				type : EMPIRE_CITY_PHARAOH_TRADING
-				max_traders : 1
-				trade_limits : default_trade_limits
 				sells [ RESOURCE_CHICKPEAS, RESOURCE_POTTERY, RESOURCE_PAPYRUS ]
 				buys [ RESOURCE_BRICKS, RESOURCE_BARLEY, RESOURCE_BEER, RESOURCE_LUXURY_GOODS ]
 				route_limits [
@@ -235,8 +225,6 @@ mission21 { // Dunqul Oasis — The Kushite Threat
 				cost_to_open : 960
 				is_sea_trade : false
 				type : EMPIRE_CITY_EGYPTIAN_TRADING
-				max_traders : 1
-				trade_limits : default_trade_limits
 				sells [ RESOURCE_CLAY, RESOURCE_REEDS, RESOURCE_LIMESTONE ]
 				buys [ RESOURCE_BEER, RESOURCE_LINEN, RESOURCE_GEMS, RESOURCE_LUXURY_GOODS, RESOURCE_TIMBER, RESOURCE_GRANITE ]
 				route_limits [
@@ -261,8 +249,6 @@ mission21 { // Dunqul Oasis — The Kushite Threat
 				cost_to_open : 375
 				is_sea_trade : false
 				type : EMPIRE_CITY_FOREIGN_TRADING
-				max_traders : 1
-				trade_limits : default_trade_limits
 				sells [ RESOURCE_LUXURY_GOODS, RESOURCE_TIMBER ]
 				buys [ RESOURCE_CLAY, RESOURCE_POTTERY, RESOURCE_BEER, RESOURCE_LINEN, RESOURCE_PAPYRUS, RESOURCE_COPPER ]
 				route_limits [

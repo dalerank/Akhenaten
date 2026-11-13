@@ -143,8 +143,6 @@ mission23 { // Thinis — Civil War FIP; != mission1 Dawn
 			cost_to_open : 240
 			is_sea_trade : false
 			type : EMPIRE_CITY_EGYPTIAN_TRADING
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_CLAY, RESOURCE_POTTERY, RESOURCE_STONE, RESOURCE_LIMESTONE, RESOURCE_GRANITE, RESOURCE_COPPER ]
 			route_limits [
 				{ resource: RESOURCE_CLAY, limit: 4000 }
@@ -165,8 +163,6 @@ mission23 { // Thinis — Civil War FIP; != mission1 Dawn
 			cost_to_open : 840
 			is_sea_trade : true
 			type : EMPIRE_CITY_EGYPTIAN_TRADING
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_CHICKPEAS, RESOURCE_POTTERY, RESOURCE_PAPYRUS ]
 			buys [ RESOURCE_LETTUCE, RESOURCE_BRICKS, RESOURCE_BARLEY, RESOURCE_BEER, RESOURCE_LUXURY_GOODS ]
 			route_limits [
@@ -190,8 +186,6 @@ mission23 { // Thinis — Civil War FIP; != mission1 Dawn
 			cost_to_open : 475
 			is_sea_trade : false
 			type : EMPIRE_CITY_EGYPTIAN_TRADING
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_GAMEMEAT, RESOURCE_GEMS, RESOURCE_TIMBER, RESOURCE_GRANITE, RESOURCE_SANDSTONE ]
 			buys [ RESOURCE_CLAY, RESOURCE_POTTERY, RESOURCE_BEER, RESOURCE_REEDS, RESOURCE_PAPYRUS ]
 			route_limits [
@@ -217,8 +211,6 @@ mission23 { // Thinis — Civil War FIP; != mission1 Dawn
 			cost_to_open : 580
 			is_sea_trade : true
 			type : EMPIRE_CITY_EGYPTIAN_TRADING
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_FIGS, RESOURCE_CLAY, RESOURCE_BEER, RESOURCE_FLAX ]
 			route_limits [
 				{ resource: RESOURCE_FIGS, limit: 4000 }
@@ -237,8 +229,6 @@ mission23 { // Thinis — Civil War FIP; != mission1 Dawn
 			cost_to_open : 280
 			is_sea_trade : false
 			type : EMPIRE_CITY_EGYPTIAN_TRADING
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_POTTERY, RESOURCE_BEER, RESOURCE_FLAX, RESOURCE_LINEN ]
 			buys [ RESOURCE_PAPYRUS ]
 			route_limits [
@@ -259,8 +249,6 @@ mission23 { // Thinis — Civil War FIP; != mission1 Dawn
 			cost_to_open : 140
 			is_sea_trade : false
 			type : EMPIRE_CITY_EGYPTIAN_TRADING
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_POMEGRANATES ]
 			buys [ RESOURCE_CHICKPEAS ]
 			route_limits [
@@ -278,8 +266,6 @@ mission23 { // Thinis — Civil War FIP; != mission1 Dawn
 			cost_to_open : 180
 			is_sea_trade : false
 			type : EMPIRE_CITY_EGYPTIAN_TRADING
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_LINEN, RESOURCE_STONE ]
 			buys [ RESOURCE_POTTERY, RESOURCE_TIMBER, RESOURCE_PAPYRUS ]
 			route_limits [
