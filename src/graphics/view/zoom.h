@@ -16,6 +16,7 @@ struct zoom_t {
     float delta;
     float zoom_speed = 25.0f;
     vec2i input_offset;
+    vec2i middle_down_pos;
 
     struct {
         bool active;
