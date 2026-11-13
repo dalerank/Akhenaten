@@ -192,6 +192,8 @@ namespace game_features {
     game_feature gameopt_fullscreen{ "gameopt_fullscreen", "", true, true };
     game_feature gameopt_difficulty{ "gameopt_difficulty", "", 2.0f, 2.0f };
     game_feature gameopt_display_size{"gameopt_display_size", "", vec2i(1280, 800), vec2i(1280, 800)};
+    // Render resolution while fullscreen (stretched to the desktop); 0x0 renders at the desktop size.
+    game_feature gameopt_fullscreen_resolution{"gameopt_fullscreen_resolution", "", vec2i(0, 0), vec2i(0, 0)};
     game_feature gameopt_disable_victory{ "gameopt_disable_victory", "", false, false };
     game_feature gameopt_player_name{"gameopt_player_name", "", "", ""};
     game_feature gameplay_change_empire_map_runs_simulation{ "gameplay_change_empire_map_runs_simulation", "#TR_CONFIG_EMPIRE_MAP_RUNS_SIMULATION", false, false };
