@@ -1,8 +1,7 @@
 log_info("akhenaten: file dialog load (script UI) started")
 
 var FILE_DIALOG_LOAD_ERROR_FLASH_MS = 500
-// Original .sav saves cannot be loaded until the OG save converter exists.
-var FILE_DIALOG_LOAD_EXTS = ["svx"]
+var FILE_DIALOG_LOAD_EXTS = ["sav", "svx"]
 
 function file_dialog_load_resolve_initial() {
     var last = game.get_last_loaded_file(FILE_TYPE_SAVED_GAME)

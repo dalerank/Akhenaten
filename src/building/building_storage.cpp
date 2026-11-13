@@ -32,6 +32,15 @@ static empty_all_backup_slot_t g_empty_all_backups[BUILDING_STORAGE_EMPTY_ALL_BA
 static_assert(sizeof(g_empty_all_backups) == BUILDING_STORAGE_EMPTY_ALL_BACKUP_CHUNK_SIZE,
               "empty-all backup blob size");
 
+void building_storage_set(int storage_id, int building_id, bool in_use, const storage_t &storage) {
+    if (storage_id < 0 || storage_id >= MAX_STORAGES) {
+        return;
+    }
+    g_storages[storage_id].building_id = building_id;
+    g_storages[storage_id].in_use = in_use;
+    g_storages[storage_id].storage = storage;
+}
+
 static void building_storage_clear_empty_all_backup(int storage_id) {
     if (storage_id <= 0 || storage_id >= MAX_STORAGES) {
         return;

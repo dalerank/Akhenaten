@@ -68,6 +68,8 @@ int building_storage_restore(int storage_id);
 void building_storage_delete(int storage_id);
 
 const storage_t* building_storage_get(int storage_id);
+// Fills a storage record as a converted save holds it (OG save converter).
+void building_storage_set(int storage_id, int building_id, bool in_use, const storage_t &storage);
 
 void building_storage_cycle_resource_state(int storage_id, int resource_id, bool backwards);
 
