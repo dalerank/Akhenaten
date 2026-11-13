@@ -362,7 +362,7 @@ void city_finance_t::pay_monthly_wages() {
     treasury -= treasury_pay;
     wages_so_far += monthly_wages;
     wages_grain_deben_so_far += grain_deben_paid;
-    wage_rate_paid_this_year += monthly_wages;
+    wage_rate_paid_this_year += wages;
 }
 
 void city_finance_t::pay_monthly_interest() {
