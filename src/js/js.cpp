@@ -26,6 +26,7 @@
 #include "dev/debug.h"
 #if defined(GAME_PLATFORM_ANDROID)
 #include "graphics/elements/lang_text.h"
+#include "input/mouse.h"
 
 #include <algorithm>
 #include <string>
@@ -817,7 +818,33 @@ uint32_t js_vm_generation() {
     return vm.generation;
 }
 
-void js_vm_reload_ui_layouts() {
+static struct {
+    bool pending = false;
+    time_millis requested_at = 0;
+} g_ui_relayout;
+
+void js_vm_request_ui_relayout() {
+    g_ui_relayout.pending = true;
+    g_ui_relayout.requested_at = time_get_millis();
+}
+
+// Reloading re-creates every script window, including the one on screen. Wait until the size has
+// settled and no button is held: the interface-scale arrows repeat while pressed and resize on each
+// step, and a window rebuilt mid-press loses its state. The display options window is where the
+// size is being edited, so its own reload (which would also reset its saved scale) waits until it closes.
+static bool ui_relayout_ready() {
+    constexpr time_millis settle_ms = 300;
+    if (!g_ui_relayout.pending || time_get_millis() - g_ui_relayout.requested_at < settle_ms) {
+        return false;
+    }
+    const mouse &m = mouse::get();
+    if (m.left.is_down || m.right.is_down || m.middle.is_down) {
+        return false;
+    }
+    return window_get_id() != xstring("display_options_window");
+}
+
+static void js_vm_reload_ui_layouts() {
     std::vector<std::string> files;
     for (const auto &key : vm.loaded_files) {
         const size_t slash = key.find_last_of("/\\:");
@@ -1144,6 +1171,10 @@ void js_vm_frame_begin() {
 }
 
 void js_vm_frame_end() {
+    if (ui_relayout_ready()) {
+        g_ui_relayout.pending = false;
+        js_vm_reload_ui_layouts();
+    }
     mission_id_t missionid(g_scenario.campaign_scenario_id);
     if (js_vm_sync(missionid.value())) {
         game.reload_objects();

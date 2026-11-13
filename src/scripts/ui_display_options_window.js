@@ -71,9 +71,17 @@ function display_options_window_init(window) {
     }
 }
 
+function display_options_window_centered_pos() {
+    return [(sw(0) - px(24)) / 2, (sh(0) - px(21)) / 2]
+}
+
 [es=(display_options_window, ui_draw_foreground)]
 function display_options_window_es_draw(window) {
     window.scale_pct.text = String(__display_options_get_scale()) + "%"
+    // The scale arrows and fullscreen toggle resize the screen while this window is open, and its
+    // own ui_* reload waits until it closes: re-centre it every frame instead.
+    var p = display_options_window_centered_pos()
+    __window_set_pos("display_options_window", p[0], p[1])
 }
 
 [es=(display_options_window, toggle_fullscreen)]
@@ -138,7 +146,7 @@ function display_options_window_go_back(window) {
 display_options_window {
     allow_rmb_goback : false
     draw_underlying: true
-    pos [(sw(0) - px(24))/2, (sh(0) - px(21))/2]
+    pos : display_options_window_centered_pos()
 
     orig_scale : 100
     resolution_changed : 0
