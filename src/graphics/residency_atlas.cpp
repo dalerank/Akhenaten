@@ -1,5 +1,7 @@
 #include "graphics/residency_atlas.h"
 
+#include "graphics/render_stats.h"
+
 #include "platform/renderer.h"
 #include "game/game.h"
 #include "game/game_config.h"
@@ -252,6 +254,7 @@ void flush_pending() {
     if (g_pending.empty()) {
         return;
     }
+    render_stats::note_break();
     SDL_Renderer *r = g_render.renderer();
     draw_blend_guard blend_guard(r);
     SDL_Texture *prev = SDL_GetRenderTarget(r);

@@ -4,6 +4,7 @@
 #include "core/profiler.h"
 #include "graphics/graphics.h"
 #include "graphics/image.h"
+#include "graphics/render_stats.h"
 #include "graphics/residency_atlas.h"
 #include "platform/renderer.h"
 
@@ -285,7 +286,8 @@ void painter::draw_impl(SDL_Texture *texture, vec2i pos, vec2i offset, vec2i siz
     SDL_SetTextureAlphaMod(draw_tex, (color & COLOR_CHANNEL_ALPHA) >> COLOR_BITSHIFT_ALPHA);
 
     const bool alpha = !!(flags & ImgFlag_Alpha);
-    SDL_SetTextureBlendMode(draw_tex, alpha ? SDL_BLENDMODE_BLEND : (SDL_BlendMode)g_render.premult_alpha());
+    const SDL_BlendMode blend = alpha ? SDL_BLENDMODE_BLEND : (SDL_BlendMode)g_render.premult_alpha();
+    SDL_SetTextureBlendMode(draw_tex, blend);
 
     // uncomment here if you want save something from atlases
     int k = 0;
@@ -392,6 +394,7 @@ void painter::draw_impl(SDL_Texture *texture, vec2i pos, vec2i offset, vec2i siz
         }
     }
 
+    render_stats::note_draw(draw_tex, (int)blend, resident);
     if (!!(flags & ImgFlag_Mirrored)) {
         SDL_RenderCopyExF(this->renderer, draw_tex, &texture_coords, &screen_coords, angle, nullptr, SDL_FLIP_HORIZONTAL);
     } else {

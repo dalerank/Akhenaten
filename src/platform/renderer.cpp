@@ -8,6 +8,7 @@
 #include "platform/screen.h"
 #include "platform/cursor.h"
 #include "graphics/image_groups.h"
+#include "graphics/render_stats.h"
 #include "graphics/residency_atlas.h"
 #include "graphics/view/view.h"
 #include "game/game.h"
@@ -139,6 +140,7 @@ bool graphics_renderer_interface::save_screen_buffer(painter &ctx, color* pixels
 
 void graphics_renderer_interface::draw_line(vec2i start, vec2i end, color color) {
     auto &data = g_renderer_data;
+    render_stats::note_break();
     SDL_SetRenderDrawColor(data.renderer,
                            (color & COLOR_CHANNEL_RED) >> COLOR_BITSHIFT_RED,
                            (color & COLOR_CHANNEL_GREEN) >> COLOR_BITSHIFT_GREEN,
@@ -149,6 +151,7 @@ void graphics_renderer_interface::draw_line(vec2i start, vec2i end, color color)
 
 void graphics_renderer_interface::draw_pixel(vec2i pixel, color color) {
     auto &data = g_renderer_data;
+    render_stats::note_break();
     SDL_SetRenderDrawColor(data.renderer,
                            (color & COLOR_CHANNEL_RED) >> COLOR_BITSHIFT_RED,
                            (color & COLOR_CHANNEL_GREEN) >> COLOR_BITSHIFT_GREEN,
@@ -158,6 +161,7 @@ void graphics_renderer_interface::draw_pixel(vec2i pixel, color color) {
 }
 void graphics_renderer_interface::draw_rect(vec2i start, vec2i size, color color) {
     auto &data = g_renderer_data;
+    render_stats::note_break();
     SDL_SetRenderDrawColor(data.renderer,
                            (color & COLOR_CHANNEL_RED) >> COLOR_BITSHIFT_RED,
                            (color & COLOR_CHANNEL_GREEN) >> COLOR_BITSHIFT_GREEN,
@@ -169,6 +173,7 @@ void graphics_renderer_interface::draw_rect(vec2i start, vec2i size, color color
 
 void graphics_renderer_interface::fill_rect(vec2i start, vec2i size, color color) {
     auto &data = g_renderer_data;
+    render_stats::note_break();
     SDL_SetRenderDrawColor(data.renderer,
                            (color & COLOR_CHANNEL_RED) >> COLOR_BITSHIFT_RED,
                            (color & COLOR_CHANNEL_GREEN) >> COLOR_BITSHIFT_GREEN,
@@ -186,18 +191,21 @@ void graphics_renderer_interface::clear_screen(void) {
 
 void graphics_renderer_interface::set_viewport(int x, int y, int width, int height) {
     auto &data = g_renderer_data;
+    render_stats::note_break();
     SDL_Rect viewport = {x, y, width, height};
     SDL_RenderSetViewport(data.renderer, &viewport);
 }
 
 void graphics_renderer_interface::reset_viewport(void) {
     auto &data = g_renderer_data;
+    render_stats::note_break();
     SDL_RenderSetViewport(data.renderer, NULL);
     SDL_RenderSetClipRect(data.renderer, NULL);
 }
 
 void graphics_renderer_interface::set_clip_rectangle(vec2i pos, int width, int height) {
     auto &data = g_renderer_data;
+    render_stats::note_break();
     SDL_Rect clip = {pos.x, pos.y, width, height};
     SDL_RenderSetClipRect(data.renderer, &clip);
 }
@@ -224,6 +232,7 @@ rect graphics_renderer_interface::clip_rectangle() {
 
 void graphics_renderer_interface::reset_clip_rectangle(void) {
     auto &data = g_renderer_data;
+    render_stats::note_break();
     SDL_RenderSetClipRect(data.renderer, NULL);
 }
 
@@ -534,6 +543,7 @@ int graphics_renderer_interface::ensure_saved_texture(int texture_id, int width,
 
 bool graphics_renderer_interface::begin_saved_texture_target(int texture_id) {
     auto &data = g_renderer_data;
+    render_stats::note_break();
     if (data.saved_texture_target.active) {
         return false;
     }
@@ -563,6 +573,7 @@ bool graphics_renderer_interface::begin_saved_texture_target(int texture_id) {
 
 void graphics_renderer_interface::end_saved_texture_target() {
     auto &data = g_renderer_data;
+    render_stats::note_break();
     if (!data.saved_texture_target.active) {
         return;
     }
@@ -587,6 +598,7 @@ void graphics_renderer_interface::delete_saved_texture(int image_id) {
 
 void graphics_renderer_interface::draw_saved_texture_to_screen(int texture_id, int x, int y, int width, int height) {
     auto &data = g_renderer_data;
+    render_stats::note_break();
     buffer_texture* texture_info = get_saved_texture_info(texture_id);
     if (!texture_info) {
         return;
@@ -714,6 +726,7 @@ static void set_texture_color_and_scale_mode(SDL_Texture *texture, color color, 
 
 void graphics_renderer_interface::draw_texture_advanced(const image_t *img, float x, float y, color color, float scale_x, float scale_y, double angle, int disable_coord_scaling) {
     auto &data = g_renderer_data;
+    render_stats::note_break();
     if (!img->atlas.p_atlas) {
         return;
     }

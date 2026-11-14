@@ -27,6 +27,7 @@
 #include "widget/debug_console.h"
 #include "graphics/imagepak_holder.h"
 #include "graphics/image.h"
+#include "graphics/render_stats.h"
 #include "graphics/residency_atlas.h"
 #include "sound/sound.h"
 #include "scenario/scenario.h"
@@ -515,6 +516,7 @@ static void run_and_draw() {
         NANO_PROFILE_SCOPE("_Frame");
 
         OZZY_PROFILER_BEGIN_FRAME();
+        render_stats::frame_begin();
         js_vm_frame_begin();
         reset_frame_string_allocator();
 
@@ -543,6 +545,7 @@ static void run_and_draw() {
             game.city_sounds_frame_begin();
             game.handle_input_frame();
         }
+        render_stats::frame_draw_done();
         Uint32 time_after_draw = SDL_GetTicks();
 
         game.frame_phase_ms((double)(time_between_run_and_draw - time_before_run),
@@ -582,6 +585,7 @@ static void run_and_draw() {
             game.frame_pre_present();
             platform_renderer_render();
         }
+        render_stats::frame_end();
 
         game.frame_end();
     }
