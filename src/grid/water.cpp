@@ -594,6 +594,54 @@ bool map_find_nearest_free_land_tile(tile2i &tile) {
 
 namespace {
 
+bool water_tile_free(tile2i t) {
+    return map_water_grid(t.grid_offset()) >= 0 && !map_has_figure_at(t);
+}
+
+} // namespace
+
+bool map_water_find_free_tile(tile2i &tile) {
+    if (water_tile_free(tile)) {
+        return true;
+    }
+
+    const int map_w = scenario_map_data()->width;
+    const int map_h = scenario_map_data()->height;
+    auto first_free = [](int x0, int x1, int y0, int y1, tile2i &out) {
+        for (int y = y0; y <= y1; y++) {
+            for (int x = x0; x <= x1; x++) {
+                if (water_tile_free(tile2i(x, y))) {
+                    out = tile2i(x, y);
+                    return true;
+                }
+            }
+        }
+        return false;
+    };
+
+    for (int radius = 1; radius <= MAP_WATER_FREE_TILE_MAX_RADIUS; radius++) {
+        const int x_lo = tile.x() - radius;
+        const int x_hi = tile.x() + radius;
+        const int y_lo = tile.y() - radius;
+        const int y_hi = tile.y() + radius;
+        const int x_start = std::max(x_lo, 0);
+        const int x_end = std::min(x_hi, map_w - 1);
+        const int y_start = std::max(y_lo, 0);
+        const int y_end = std::min(y_hi, map_h - 1);
+        tile2i found;
+        if ((y_lo >= 0 && first_free(x_start, x_end, y_start, y_start, found))
+            || (y_hi < map_h && first_free(x_start, x_end, y_end, y_end, found))
+            || (x_lo >= 0 && first_free(x_start, x_start, y_start, y_end, found))
+            || (x_hi < map_w && first_free(x_end, x_end, y_start, y_end, found))) {
+            tile = found;
+            return true;
+        }
+    }
+    return false;
+}
+
+namespace {
+
 bool open_reached_water(tile2i t) {
     if (!t.valid() || !map_terrain_is(t, TERRAIN_WATER | TERRAIN_DEEPWATER)) {
         return false;

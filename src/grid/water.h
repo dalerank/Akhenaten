@@ -56,6 +56,10 @@ bool map_water_can_spawn_boat(tile2i tile, int size, tile2i &boat_tile);
 int map_water_landing_point(tile2i landing, tile2i ship, tile2i &out);
 bool map_find_nearest_free_land_tile(tile2i &tile);
 
+enum { MAP_WATER_FREE_TILE_MAX_RADIUS = 227 };
+// OG map_water_find_free_tile: nearest boat-routable water tile without a figure, ring by ring.
+bool map_water_find_free_tile(tile2i &tile);
+
 bool map_water_tile_next_to(tile2i building_tile, int size, tile2i &out);
 int map_water_farthest_on_line(tile2i from, tile2i to, tile2i &out);
 void map_water_recompute_depth_region(tile2i tmin, tile2i tmax);
