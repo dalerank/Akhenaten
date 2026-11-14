@@ -96,7 +96,6 @@ private:
     void action_go_to_landing();
     void action_go_away();
     void unload(tile2i land);
-    figure_id find_closest_player_ship(int size) const;
 };
 
 // Leaf: OG figure_properties for the nation's ENEMY_MODEL_TRANSPORT_SHIP row (max_damage, missile_defense,
@@ -134,6 +133,11 @@ FIGURE_ENEMY_TRANSPORT_LEAF(FIGURE_ENEMY_SEAPEOPLE_TRANSPORT_SHIP, figure_seapeo
 #undef FIGURE_ENEMY_TRANSPORT_LEAF
 
 e_figure_type enemy_transport_type_for(e_enemy_type enemy);
+
+// OG ship_find_ship_at: the first player transport, warship or fishing boat on the tile other than `self`.
+figure_id enemy_ship_player_ship_at(tile2i tile, figure_id self);
+// OG ship_find_closest(any = 1): the nearest of those ships in the size x size square around `center`.
+figure_id enemy_ship_closest_player_ship(tile2i center, figure_id self, int size);
 
 // OG event_manager.c invasion_has_transport_ship: an enemy transport of the invasion is still on the map.
 bool enemy_transport_of_invasion_exists(int invasion_id);

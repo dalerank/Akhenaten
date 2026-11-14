@@ -37,13 +37,45 @@ REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_phoenician_transport_ship)
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_roman_transport_ship)
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_seapeople_transport_ship)
 
-namespace {
-
-    bool is_player_ship(const figure* f) {
-        return f->type == FIGURE_TRANSPORT_SHIP || f->type == FIGURE_WARSHIP || f->type == FIGURE_FISHING_BOAT;
+figure_id enemy_ship_player_ship_at(tile2i tile, figure_id self) {
+    for (figure_id fid = map_figure_id_get(tile); fid > 0;) {
+        figure* f = figure_get(fid);
+        if (fid != self
+            && (f->type == FIGURE_TRANSPORT_SHIP || f->type == FIGURE_WARSHIP || f->type == FIGURE_FISHING_BOAT)) {
+            return fid;
+        }
+        fid = (f->next_figure != fid) ? f->next_figure : 0;
     }
+    return 0;
+}
 
-} // namespace
+figure_id enemy_ship_closest_player_ship(tile2i center, figure_id self, int size) {
+    figure_id best_id = 0;
+    int best_distance = 500000;
+    const int x0 = center.x() - size / 2;
+    const int y0 = center.y() - size / 2;
+    for (int y = y0; y < y0 + size; y++) {
+        for (int x = x0; x < x0 + size; x++) {
+            const tile2i t(x, y);
+            if (!t.valid()) {
+                continue;
+            }
+            const figure_id fid = enemy_ship_player_ship_at(t, self);
+            if (!fid) {
+                continue;
+            }
+            const figure* f = figure_get(fid);
+            const int dx = f->tile.x() - center.x();
+            const int dy = f->tile.y() - center.y();
+            const int distance = dx * dx + dy * dy;
+            if (distance < best_distance) {
+                best_id = fid;
+                best_distance = distance;
+            }
+        }
+    }
+    return best_id;
+}
 
 e_figure_type enemy_transport_type_for(e_enemy_type enemy) {
     switch (enemy) {
@@ -163,36 +195,6 @@ void figure_enemy_transport::action_move() {
     }
 }
 
-figure_id figure_enemy_transport::find_closest_player_ship(int size) const {
-    figure_id best_id = 0;
-    int best_distance = 500000;
-    const int x0 = base.tile.x() - size / 2;
-    const int y0 = base.tile.y() - size / 2;
-    for (int y = y0; y < y0 + size; y++) {
-        for (int x = x0; x < x0 + size; x++) {
-            const tile2i t(x, y);
-            if (!t.valid()) {
-                continue;
-            }
-            for (figure_id fid = map_figure_id_get(t); fid > 0;) {
-                figure* f = figure_get(fid);
-                if (fid != base.id && is_player_ship(f)) {
-                    const int dx = f->tile.x() - base.tile.x();
-                    const int dy = f->tile.y() - base.tile.y();
-                    const int distance = dx * dx + dy * dy;
-                    if (distance < best_distance) {
-                        best_id = fid;
-                        best_distance = distance;
-                    }
-                    break;
-                }
-                fid = (f->next_figure != fid) ? f->next_figure : 0;
-            }
-        }
-    }
-    return best_id;
-}
-
 void figure_enemy_transport::action_evade() {
     auto &d = runtime_data();
     const auto& rules = enemy_transport_rules;
@@ -212,7 +214,7 @@ void figure_enemy_transport::action_evade() {
         return;
     }
     base.wait_ticks = 0;
-    figure* enemy = figure_get(find_closest_player_ship(rules.evade_range));
+    figure* enemy = figure_get(enemy_ship_closest_player_ship(base.tile, base.id, rules.evade_range));
     if (!enemy || !enemy->id) {
         return;
     }
