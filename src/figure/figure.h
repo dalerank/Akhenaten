@@ -261,8 +261,7 @@ public:
     bool is_fighting_friendly();
     bool is_fighting_enemy();
     e_minimap_figure_color get_figure_color();
-    const figure_static_params &params() const;
-    const animation_t &anim(const xstring &key);
+    const figure_static_params& params() const;
 
     void kill();
 

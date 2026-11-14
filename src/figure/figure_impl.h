@@ -35,7 +35,7 @@ public:
     virtual void draw_main_sprite(painter &ctx, vec2i pixel, int highlight);
     virtual void before_poof();
     virtual void poof();
-    virtual e_overlay get_overlay() const { return current_params().overlay; }
+    virtual e_overlay get_overlay() const { return params().overlay; }
     virtual figure_sound_t get_sound_reaction(xstring key) const;
     virtual sound_key phrase_key() const { return "empty"; }
     virtual sound_key default_phrase_key() const;
@@ -63,7 +63,7 @@ public:
     virtual void set_cart_offset(int direction) const;
     virtual void main_image_update();
     virtual e_minimap_figure_color minimap_color() const { return FIGURE_COLOR_NONE; }
-    virtual const animations_t &anim() const { return current_params().animations; }
+    virtual const animations_t& anim() const { return params().animations; }
     virtual void kill();
     virtual void on_action_changed(int saved_action) {}
     virtual void on_config_reload() {}
@@ -180,8 +180,7 @@ public:
     struct static_params : figure_static_params {};
     const static_params &current_params() const;
     static_params &current_params();
-    const static_params &params() const;
-    static_params &params();
+    virtual const static_params& params() const;
 
     void set_sled_offset(int direction);
 

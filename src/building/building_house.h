@@ -170,7 +170,8 @@ ANK_CONFIG_PROPERTY(building_house::runtime_data_t, population, tax_coverage, ta
   water_supply, bazaar_access, education, school, library, academy, magistrate, num_gods, shrine_access, dentist,
   apothecary, health, mortuary, physician, booth_juggler, bandstand_juggler, senet_player, zookeeper, criminal_active,
   no_space_to_expand, fancy_bazaar_access, worst_desirability_building_id, frog_infest_days, evolve_text,
-  unreachable_ticks, days_without_food, num_foods, hsize, tax_income)
+  unreachable_ticks, days_without_food, num_foods, hsize, tax_income, temple_osiris, temple_ra, temple_ptah,
+  temple_seth, temple_bast)
 
 // --- Individual housing tiers -------------------------------------------------
 // some info shared with vacant lot, so this is unique twice-config class

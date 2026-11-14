@@ -633,10 +633,6 @@ bool figure::has_cart() const {
     return (use_cart && cart_image_id != 0);
 }
 
-const animation_t &figure::anim(const xstring &key) {
-    return params().animations[key];
-}
-
 vec2i figure::adjust_pixel_offset(const vec2i pixel) {
     // determining x/y offset on tile
     vec2i offset(0, 0);

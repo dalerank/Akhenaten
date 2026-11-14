@@ -542,9 +542,6 @@ figuretype/figure_native.cpp -> graphics/animkeys.h
 figuretype/figure_native_trader.cpp -> graphics/image.h
 figuretype/figure_native_trader.cpp -> graphics/image_groups.h
 figuretype/figure_native_trader.cpp -> widget/debug_console.h
-figuretype/figure_priest.cpp -> graphics/animation.h
-figuretype/figure_priest.cpp -> graphics/image.h
-figuretype/figure_priest.cpp -> graphics/image_groups.h
 figuretype/figure_reed_gatherer.cpp -> graphics/image_groups.h
 figuretype/figure_shipwreck.cpp -> graphics/animkeys.h
 figuretype/figure_shipwreck.cpp -> graphics/elements/lang_text.h

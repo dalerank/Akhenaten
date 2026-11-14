@@ -457,7 +457,7 @@ const building *figure_impl::home() const {
 }
 
 const animation_t &figure_impl::anim(const xstring &anim_key) const {
-    return base.anim(anim_key);
+    return anim()[anim_key];
 }
 
 animation_context &figure_impl::animation() {
@@ -640,8 +640,4 @@ figure_impl::static_params &figure_impl::current_params() {
 
 const figure_impl::static_params &figure_impl::params() const {
     return (const static_params &)figure_static_params::get(type());
-}
-
-figure_impl::static_params &figure_impl::params() {
-    return (static_params &)figure_static_params::get(type());
 }
