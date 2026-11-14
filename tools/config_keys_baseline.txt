@@ -317,9 +317,6 @@ unknown | file_dialog_save:ui::widget.show_filename
 unknown | file_dialog_save:ui::widget.show_filename_applied
 unknown | file_dialog_save_scenario:ui::widget.show_filename
 unknown | file_dialog_save_scenario:ui::widget.show_filename_applied
-unknown | game_language.font
-unknown | game_language.font_configs
-unknown | game_language.symbols
 unknown | gift_to_kingdome_window:ui::widget.selected_size
 unknown | granary_orders_window:ui::widget.granary
 unknown | hold_festival_window:ui::widget.needs_sync

@@ -5,6 +5,7 @@ game_languages = [
     lang:"en", caption:"English", key:"english",
     base_table:"localization_base_en", table:"localization_en", message_table:"eventmsg_en", game_messages:"game_messages_en"
     symbols:"A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z,a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r,s,t,u,v,w,x,y,z"
+    is_bitmap_font:true
     font:"data/neucha.ttf"
     font_configs [
       { type: FONT_SMALL_PLAIN, size:12, color:0xffffffff, bold:false, line_height:12, letter_spacing:1 },
@@ -185,6 +186,7 @@ game_languages = [
     lang:"sp", caption:"Spanish", key:"spanish",
     base_table:"localization_base_sp", table:"localization_sp", message_table:"eventmsg_sp", game_messages:"game_messages_sp"
     symbols:"A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z,a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r,s,t,u,v,w,x,y,z"
+    is_bitmap_font:true
     font:"data/neucha.ttf"
     font_configs [
       { type: FONT_SMALL_PLAIN, size:12, color:0xffffffff, bold:false, line_height:12, letter_spacing:1 },
