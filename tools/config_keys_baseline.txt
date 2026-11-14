@@ -325,8 +325,6 @@ unknown | granary_orders_window:ui::widget.granary
 unknown | hold_festival_window:ui::widget.needs_sync
 unknown | hold_festival_window:ui::widget.on_close_cb
 unknown | hold_festival_window:ui::widget.show
-unknown | invasions:invasion_data_t.get_warning
-unknown | invasions:invasion_data_t.warning_slots
 unknown | labor_priority_window:ui::widget.category
 unknown | loc_textid.lang
 unknown | message_list_window:ui::widget.read_icon

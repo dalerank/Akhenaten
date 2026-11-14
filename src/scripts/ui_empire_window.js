@@ -23,15 +23,6 @@ empire_window {
     closed_trade_route_hl : {pack:PACK_GENERAL, id:149, offset:211}
     open_trade_route : {pack:PACK_GENERAL, id:149, offset:201}
     open_trade_route_hl : {pack:PACK_GENERAL, id:149, offset:186}
-    // OG IMAGE_GROUP_EMPIRE_MARKER_LAND / _SEA (447 / 448).
-    marker_land : {pack:PACK_GENERAL, id:178}
-    marker_sea : {pack:PACK_GENERAL, id:179}
-    // OG window_empire_draw_event_tooltip: the text under the map for a clicked marker.
-    marker_tooltips : [
-        { kind: EMPIRE_MARKER_INVASION, group: 47, id: 15 }
-        { kind: EMPIRE_MARKER_TROOPS_AWAY, group: 47, id: 16 }
-        { kind: EMPIRE_MARKER_TROOPS_RETURN, group: 47, id: 17 }
-    ]
 
     // Matches scroll_t::drag_source
     drag_source_touch : 0

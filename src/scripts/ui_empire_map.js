@@ -307,11 +307,23 @@ function empire_window_draw_map_objects(ev) {
     }
 }
 
+var empire_window_markers = {
+    // OG IMAGE_GROUP_EMPIRE_MARKER_LAND / _SEA (447 / 448).
+    land : {pack:PACK_GENERAL, id:178}
+    sea : {pack:PACK_GENERAL, id:179}
+    // OG window_empire_draw_event_tooltip: the text under the map for a clicked marker.
+    tooltips : [
+        { kind: EMPIRE_MARKER_INVASION, group: 47, id: 15 }
+        { kind: EMPIRE_MARKER_TROOPS_AWAY, group: 47, id: 16 }
+        { kind: EMPIRE_MARKER_TROOPS_RETURN, group: 47, id: 17 }
+    ]
+}
+
 function empire_window_draw_event_markers(ev) {
     empire.update_markers()
     var scale = empire_window_map_scale()
-    var land = get_image(empire_window.marker_land)
-    var sea = get_image(empire_window.marker_sea)
+    var land = get_image(empire_window_markers.land)
+    var sea = get_image(empire_window_markers.sea)
     var count = empire.marker_count
     for (var i = 0; i < count; i++) {
         var m = empire.get_marker(i)
@@ -330,7 +342,7 @@ function empire_window_draw_marker_tooltip() {
     if (kind < 0 || !sb.ready) {
         return
     }
-    var tooltips = empire_window.marker_tooltips
+    var tooltips = empire_window_markers.tooltips
     for (var i = 0; i < tooltips.length; i++) {
         if (tooltips[i].kind == kind) {
             var ox = ((sb.min_pos.x + sb.max_pos.x - 240) / 2) | 0
