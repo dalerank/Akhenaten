@@ -24,39 +24,36 @@
 #include "empire/empire_city.h"
 #include "empire/empire_object.h"
 #include "game/game.h"
+#include "js/js_game.h"
 
 #include <algorithm>
-#include <climits>
 
 namespace {
 request_cleared_snapshot_t g_last_request_cleared;
-
-// OG scenario_events.c scenario_event_rules.
-constexpr int REQUEST_REMINDER_MONTHS = 6;
-constexpr int REQUEST_OVERDUE_MONTHS = 24;
-constexpr int REQUEST_IGNORED_KINGDOM_PENALTY = 3;
-constexpr int REQUEST_TROOPS_MONTHS_DEFAULT = 12;
-constexpr int TROOPS_RETURN_EARLY_MONTHS = 2;
-constexpr int EVENT_TRAVEL_MONTHS_DEFAULT = 12;
-constexpr int EVENT_MONTHS_MARGIN_MIN = 4;
-constexpr int EVENT_MONTHS_MARGIN_CHOICES = 5;
-constexpr int ROUTE_TRAVEL_DIVISOR = 400;
+} // namespace
 
 // OG scenario_rules.c troops_loss_brackets: the losses by the strength left over, in percent.
-struct troops_loss_bracket {
+struct troops_loss_bracket_t {
     int below_percent;
     int losses;
 };
-constexpr troops_loss_bracket troops_loss_brackets[] = {
-  {10, 70},
-  {25, 50},
-  {50, 25},
-  {75, 15},
-  {100, 10},
-  {150, 5},
-  {INT_MAX, 0},
+ANK_CONFIG_STRUCT(troops_loss_bracket_t, below_percent, losses)
+
+// OG scenario_events.c scenario_event_rules.
+struct scenario_request_rules_t {
+    int reminder_months;
+    int overdue_months;
+    int ignored_kingdom_penalty;
+    int troops_months_default;
+    int troops_return_early_months;
+    int travel_months_default;
+    int months_margin_min;
+    int months_margin_choices;
+    svector<troops_loss_bracket_t, 8> troops_loss;
 };
-} // namespace
+ANK_CONFIG_STRUCT(scenario_request_rules_t, reminder_months, overdue_months, ignored_kingdom_penalty, troops_months_default,
+    troops_return_early_months, travel_months_default, months_margin_min, months_margin_choices, troops_loss)
+scenario_request_rules_t ANK_VARIABLE(scenario_request_rules);
 
 void scenario_request_emit_cleared(const event_ph_t &event, bool fulfilled) {
     const int tag_id = (int)event.tag_id;
@@ -173,14 +170,14 @@ static void request_active(event_ph_t& event, int caller_event_id) {
     const int months = event.quest_months_left - 1;
     event.quest_months_left = (uint8_t)std::max(months, 0);
     if (event.event_state == e_event_state_in_progress || event.event_state == e_event_state_initial) {
-        if (months == REQUEST_REMINDER_MONTHS) {
+        if (months == scenario_request_rules.reminder_months) {
             request_post(event, caller_event_id, PHRASE_general_request_reminder_P);
         } else if (months <= 0) {
-            event.quest_months_left = REQUEST_OVERDUE_MONTHS;
+            event.quest_months_left = scenario_request_rules.overdue_months;
             event.event_state = e_event_state_overdue;
             event.is_overdue = true;
             request_post(event, caller_event_id, PHRASE_general_request_overdue_P);
-            g_city.kingdome.reduce_missed_request(REQUEST_IGNORED_KINGDOM_PENALTY);
+            g_city.kingdome.reduce_missed_request(scenario_request_rules.ignored_kingdom_penalty);
             logs::info("[request] overdue event=%d", event.event_id);
         }
     } else if (event.event_state == e_event_state_overdue && months <= 0) {
@@ -194,27 +191,31 @@ static void request_active(event_ph_t& event, int caller_event_id) {
     request_check_compliance(event);
 }
 
-// OG event_helpers.c scenario_event_travel_months: the route of the request city.
-static int request_travel_months(const event_ph_t& e) {
+int scenario_request_route(const event_ph_t& e) {
     empire_city* city = e.city_id >= 0 ? g_empire.city(e.city_id) : nullptr;
     if (!city || !city->in_use || city->route_id <= 0) {
-        return 0;
+        return -1;
     }
     const map_route_object& route = g_empire.get_route_object(city->route_id);
     if (!route.in_use || route.num_points <= 1) {
+        return -1;
+    }
+    return city->route_id;
+}
+
+// OG event_helpers.c scenario_event_travel_months: the route of the request city.
+int scenario_request_travel_months(const event_ph_t& e) {
+    const int route_id = scenario_request_route(e);
+    if (route_id < 0) {
         return 0;
     }
-    // OG empire_route_travel_months: path_length * step / 400, at least 1; step is the route header byte.
-    const int step = route.unk_header[0];
-    if (step <= 0) {
-        return 0;
-    }
-    return std::max(1, route.path_length * step / ROUTE_TRAVEL_DIVISOR);
+    const map_route_object& route = g_empire.get_route_object(route_id);
+    return route.step() > 0 ? route.travel_months() : 0;
 }
 
 static int request_travel_months_or_default(const event_ph_t& e) {
-    const int travel = request_travel_months(e);
-    return travel > 0 ? travel : EVENT_TRAVEL_MONTHS_DEFAULT;
+    const int travel = scenario_request_travel_months(e);
+    return travel > 0 ? travel : scenario_request_rules.travel_months_default;
 }
 
 // OG event_helpers.c scenario_event_months_left: months to the deadline by the calendar.
@@ -224,7 +225,7 @@ static int request_months_to_deadline(const event_ph_t& e) {
 }
 
 static int troops_losses_by_surplus(int percent) {
-    for (const troops_loss_bracket& b : troops_loss_brackets) {
+    for (const troops_loss_bracket_t& b : scenario_request_rules.troops_loss) {
         if (percent < b.below_percent) {
             return b.losses;
         }
@@ -274,15 +275,15 @@ static void troops_request_months_up(event_ph_t& e) {
         return;
     }
     int left;
-    if (e.quest_months_left > TROOPS_RETURN_EARLY_MONTHS) {
+    if (e.quest_months_left > scenario_request_rules.troops_return_early_months) {
         e.is_overdue = true;
         e.event_state = e_event_state_troops_return_too_late;
-        left = request_travel_months(e) - e.quest_months_left;
+        left = scenario_request_travel_months(e) - e.quest_months_left;
         g_scenario.events.process_event(e.on_too_late_action, true, EVENT_ACTION_TOOLATE, e.event_id);
         scenario_request_emit_cleared(e, true);
     } else if (troops_request_won(e)) {
         e.event_state = e_event_state_troops_return;
-        left = request_travel_months(e);
+        left = scenario_request_travel_months(e);
         g_scenario.events.process_event(e.on_completed_action, true, EVENT_ACTION_COMPLETED, e.event_id);
         scenario_request_emit_cleared(e, true);
     } else {
@@ -363,7 +364,7 @@ static void troops_request_start(event_ph_t& e) {
     e.appear_dialgow_shown = true;
     random_generate_next();
     e.data.request.months_margin
-      = (uint8_t)(((uint16_t)random_short() & 0x7FFF) % EVENT_MONTHS_MARGIN_CHOICES + EVENT_MONTHS_MARGIN_MIN);
+      = (uint8_t)(((uint16_t)random_short() & 0x7FFF) % scenario_request_rules.months_margin_choices + scenario_request_rules.months_margin_min);
     random_generate_next();
     e.coin = (uint8_t)(random_short() & 1);
     troops_request_post(e, 2);
@@ -405,8 +406,8 @@ void scenario_request_dispatch(int id) {
     // OG requests.c scenario_request_dispatch: legions march off and are away for the travel months.
     if (request.resource == RESOURCE_TROOPS) {
         ev->event_state = e_event_state_troops_away;
-        const int travel = request_travel_months(*ev);
-        ev->quest_months_left = (uint8_t)(travel > 0 ? travel : REQUEST_TROOPS_MONTHS_DEFAULT);
+        const int travel = scenario_request_travel_months(*ev);
+        ev->quest_months_left = (uint8_t)(travel > 0 ? travel : scenario_request_rules.troops_months_default);
         formation_legions_dispatch_to_request(ev->event_id);
         logs::info("[request] troops dispatched event=%d strength=%d months=%d", ev->event_id,
           formation_request_strength(ev->event_id, nullptr, nullptr), ev->quest_months_left);

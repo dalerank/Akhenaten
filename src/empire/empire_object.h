@@ -62,6 +62,10 @@ struct map_route_object {
     int path_length;
     int deviation;
 
-    int calc_length();
+    // OG empire_file.c route path: points every `step` pixels along the way points; path_length counts them.
+    int step() const { return unk_header[0] & 0xff; }
+    int calc_length() const;
+    vec2i path_point(int index) const;
+    int travel_months() const;
     void improve_route();
 };

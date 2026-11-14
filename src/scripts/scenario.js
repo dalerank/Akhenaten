@@ -73,3 +73,25 @@ scenario = extend(__scenario, {
     @population_goal: { get: function() { return scenario_win_criteria_goal(__win_criteria.population); } }
     @is_custom: { get: function() { return __scenario.scmode != e_scenario_normal; } }
 })
+
+// OG scenario_events.c scenario_event_rules and scenario_rules.c troops_loss_brackets: request reminder and overdue
+// months, the kingdom penalty for an ignored request, default travel months, the random event months margin, and the
+// troop losses by the strength left over (percent below which the bracket applies; past the last one nobody is lost).
+scenario_request_rules {
+    reminder_months : 6
+    overdue_months : 24
+    ignored_kingdom_penalty : 3
+    troops_months_default : 12
+    troops_return_early_months : 2
+    travel_months_default : 12
+    months_margin_min : 4
+    months_margin_choices : 5
+    troops_loss : [
+        { below_percent : 10, losses : 70 },
+        { below_percent : 25, losses : 50 },
+        { below_percent : 50, losses : 25 },
+        { below_percent : 75, losses : 15 },
+        { below_percent : 100, losses : 10 },
+        { below_percent : 150, losses : 5 }
+    ]
+}

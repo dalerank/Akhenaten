@@ -138,7 +138,7 @@ public:
     const empire_object *get_battle_icon(int path_id, int year);
     int get_max_invasion_path();
 
-    int get_closest_object(vec2i pos) const;
+    int get_closest_object(vec2i pos, int* distance = nullptr) const;
     void object_set_expanded(int object_id, e_empire_city new_city_type);
     bool city_buys_resource(int object_id, e_resource resource, bool from_raw_object);
     bool city_sells_resource(int object_id, e_resource resource, bool from_raw_object);
