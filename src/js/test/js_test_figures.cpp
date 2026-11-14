@@ -10,6 +10,7 @@
 #include "figure/figure.h"
 #include "figure/figure_impl.h"
 #include "figure/formation.h"
+#include "figuretype/figure_festival_priest.h"
 #include "figuretype/figure_funeral_walker.h"
 #include "figuretype/figure_immigrant.h"
 #include "figuretype/figure_mummy.h"
@@ -594,3 +595,27 @@ static int __test_figure_get_leading(int fid) {
     return f ? (int)f->leading_figure_id : -1;
 }
 ANK_FUNCTION_1(__test_figure_get_leading);
+
+static void __test_festival_execute() {
+    g_city.festival.execute_festival();
+}
+ANK_FUNCTION(__test_festival_execute);
+
+static void __test_festival_spawn_celebrants(int size) {
+    figure_festival_priest::spawn_celebrants(size);
+}
+ANK_FUNCTION_1(__test_festival_spawn_celebrants);
+
+static int __test_festival_priest_trips(int fid) {
+    figure* f = figure_get(fid);
+    auto* priest = (f && f->is_alive()) ? f->dcast_festival_priest() : nullptr;
+    return priest ? priest->runtime_data().trips : -100;
+}
+ANK_FUNCTION_1(__test_festival_priest_trips);
+
+static int __test_festival_priest_look(int fid) {
+    figure* f = figure_get(fid);
+    auto* priest = (f && f->is_alive()) ? f->dcast_festival_priest() : nullptr;
+    return priest ? (int)priest->look() : -1;
+}
+ANK_FUNCTION_1(__test_festival_priest_look);

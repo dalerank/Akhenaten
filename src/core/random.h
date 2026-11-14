@@ -51,7 +51,6 @@ int random_int_between(int min, int max);
 double random_fractional();
 
 enum e_random_hash_salt : uint32_t {
-    RANDOM_SALT_FESTIVAL_DANCE = 0x1001,
     RANDOM_SALT_PAVILION_PLAY = 0x1002,
     RANDOM_SALT_BOOTH_PLAY = 0x1003,
     RANDOM_SALT_STATUE_OFFSET = 0x1004,

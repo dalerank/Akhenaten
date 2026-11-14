@@ -17,6 +17,7 @@
 #include "figuretype/figure_carpenter.h"
 #include "figuretype/figure_cartpusher.h"
 #include "figuretype/figure_docker.h"
+#include "figuretype/figure_festival_priest.h"
 #include "figuretype/figure_fireman.h"
 #include "figuretype/figure_fishing_boat.h"
 #include "figuretype/figure_hunter.h"
@@ -102,25 +103,10 @@ namespace {
         return f.home_building_id ? building_get(f.home_building_id) : nullptr;
     }
 
-    // OG keeps the walker a festival priest stands for in resource_id; the remake knows it by the home building.
+    // OG keeps the walker a festival priest stands for in resource_id.
     e_figure_type festival_walker(const figure& f) {
-        const building* home = home_of(f);
-        if (!home) {
-            return FIGURE_NONE;
-        }
-        if (temple_god(home) >= 0) {
-            return FIGURE_PRIEST;
-        }
-        switch (home->type) {
-        case BUILDING_JUGGLER_SCHOOL:
-            return FIGURE_JUGGLER;
-        case BUILDING_CONSERVATORY:
-            return FIGURE_MUSICIAN;
-        case BUILDING_DANCE_SCHOOL:
-            return FIGURE_DANCER;
-        default:
-            return FIGURE_NONE;
-        }
+        const auto* priest = f.dcast<figure_festival_priest>();
+        return priest ? priest->look() : FIGURE_NONE;
     }
 
     e_figure_type speech_type(const figure& f) {
