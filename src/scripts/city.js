@@ -457,7 +457,7 @@ city.create_chain_event = function(obj) {
 }
 
 // OG invasion event (needs og_invasions in the mission): { tag_id, invader, amount, months_initial,
-// route, attack_target, year+month | delay, trigger }. Warnings, attack and chains follow the OG cycle.
+// route, empire_route, attack_target, year+month | delay, trigger }. Warnings, attack and chains follow the OG cycle.
 city.create_invasion = function(obj) {
     var event_id = __city_create_invasion(obj)
     return {

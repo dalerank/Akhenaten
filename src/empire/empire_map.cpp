@@ -5,6 +5,7 @@
 #include "core/calc.h"
 #include "core/log.h"
 #include "empire/empire.h"
+#include "empire/empire_markers.h"
 #include "empire/empire_object.h"
 #include "empire/empire_traders.h"
 #include "empire/trade_route.h"
@@ -12,6 +13,7 @@
 #include "type.h"
 
 #include "io/io_buffer.h"
+#include <climits>
 #include <string.h>
 
 empire_map_t g_empire_map;
@@ -93,13 +95,19 @@ int empire_map_t::selected_object() {
 
 void empire_map_t::clear_selected_object() {
     selected_obj = 0;
+    g_empire_markers.clear_selection();
 }
 
 void empire_map_t::select_object(vec2i pos) {
     int map_x = pos.x + scroll_x;
     int map_y = pos.y + scroll_y;
 
-    selected_obj = g_empire.get_closest_object(vec2i(map_x, map_y));
+    int distance = 0;
+    selected_obj = g_empire.get_closest_object(vec2i(map_x, map_y), &distance);
+    // OG empire_map_object_at_mouse: an event marker nearer than the object takes the click.
+    if (g_empire_markers.select(vec2i(map_x, map_y), selected_obj ? distance : INT_MAX)) {
+        selected_obj = 0;
+    }
 }
 
 io_buffer* iob_empire_map_params = new io_buffer([](io_buffer* iob, size_t version) {

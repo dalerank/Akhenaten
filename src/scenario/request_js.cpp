@@ -150,6 +150,7 @@ int ANK_FUNCTION_UNIFIED(__city_create_invasion)(const bvariant_map &args) {
     desc.amount = args.i32("amount", 0);
     desc.months_initial = args.i32("months_initial", 0);
     desc.route = args.i32("route", 0);
+    desc.empire_route = args.i32("empire_route", 0);
     desc.attack_target = (int8_t)args.i32("attack_target", EVENT_ATTACK_TARGET_RANDOM);
 
     const int delay = args.i32("delay", -1);

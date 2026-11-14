@@ -458,14 +458,6 @@ bool __construction_no_troops_for_defense() {
 }
 ANK_FUNCTION(__construction_no_troops_for_defense)
 
-std::optional<bvariant> __invasion_warning_get_property(int index, pcstr property) {
-    if (index < 0 || index >= (int)g_invasions.warnings.size()) {
-        return {};
-    }
-    return archive_helper::get(g_invasions.warnings[index], property, true);
-}
-ANK_FUNCTION_2(__invasion_warning_get_property)
-
 int scenario_invasion_count() {
     int num_invasions = 0;
     for (int i = 0; i < MAX_INVASIONS; i++) {

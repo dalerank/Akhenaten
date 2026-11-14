@@ -43,7 +43,6 @@ struct invasion_warning_t {
     int months_to_go;
     int invasion_id;
 };
-ANK_CONFIG_PROPERTY(invasion_warning_t, in_use, handled, pos, image_id)
 
 struct invasion_opts_t {
     e_attack_faction mode = ATTACK_TYPE_ENEMIES;

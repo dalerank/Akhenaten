@@ -218,7 +218,6 @@ void js_register_empire_city_proto(js_State* J) {
 }
 
 static js_Object* g_empire_trader_proto = nullptr;
-static js_Object* g_invasion_warning_proto = nullptr;
 
 static void proto_set_readonly(js_State* J) {
     (void)J;
@@ -289,58 +288,4 @@ void js_register_empire_trader_proto(js_State* J) {
     jsB_propf(J, js_intern("EmpireTrader.prototype.toString"), empire_trader_proto_toString, 0);
     J->newcconstructor(jsB_new_EmpireTrader, jsB_new_EmpireTrader, js_intern("EmpireTrader"), 1);
     js_defglobal(J, js_intern("EmpireTrader"), JS_DONTENUM);
-}
-
-static int invasion_warning_this_index(js_State* J) {
-    J->getproperty(J->toobject(0), js_intern("id"));
-    const int id = (int)js_tointeger(J, -1);
-    js_pop(J, 1);
-    return id;
-}
-
-static invasion_warning_t* invasion_warning_this_ptr(js_State* J) {
-    const int index = invasion_warning_this_index(J);
-    if (index < 0 || index >= (int)g_invasions.warnings.size()) {
-        return nullptr;
-    }
-    return &g_invasions.warnings[index];
-}
-
-static void invasion_warning_proto_pos(js_State* J) {
-    invasion_warning_t* w = invasion_warning_this_ptr(J);
-    J->push<vec2i>(w ? w->pos : vec2i{});
-}
-
-static void invasion_warning_proto_toString(js_State* J) {
-    bstring64 buf;
-    buf.printf("InvasionWarning(%d)", invasion_warning_this_index(J));
-    J->pushstring(buf.c_str());
-}
-
-static void js_push_invasion_warning(js_State* J, int index) {
-    invasion_warning_t* w = nullptr;
-    if (index >= 0 && index < (int)g_invasions.warnings.size()) {
-        w = &g_invasions.warnings[index];
-    }
-    js_pushobject(J, jsV_newobject(J, JS_COBJECT, g_invasion_warning_proto));
-    js_pushnumber(J, (double)index);
-    js_setproperty(J, -2, js_intern("id"));
-    J->set_cobj_ptr(w);
-}
-
-static void jsB_new_InvasionWarning(js_State* J) {
-    const int index = J->gettop() > 1 ? (int)js_tointeger(J, 1) : 0;
-    js_push_invasion_warning(J, index);
-}
-
-void js_register_invasion_warning_proto(js_State* J) {
-    g_invasion_warning_proto = jsV_newobject(J, JS_COBJECT, J->Object_prototype);
-    js_pushobject(J, g_invasion_warning_proto);
-    JS_REGISTER_BOUND_OFFSET_MEMBER_LIT(J, invasion_warning_t, in_use);
-    JS_REGISTER_BOUND_OFFSET_MEMBER_LIT(J, invasion_warning_t, handled);
-    JS_REGISTER_BOUND_OFFSET_MEMBER_LIT(J, invasion_warning_t, image_id);
-    proto_def_readonly(J, invasion_warning_proto_pos, "pos");
-    jsB_propf(J, js_intern("InvasionWarning.prototype.toString"), invasion_warning_proto_toString, 0);
-    J->newcconstructor(jsB_new_InvasionWarning, jsB_new_InvasionWarning, js_intern("InvasionWarning"), 1);
-    js_defglobal(J, js_intern("InvasionWarning"), JS_DONTENUM);
 }

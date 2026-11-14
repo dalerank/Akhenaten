@@ -307,18 +307,36 @@ function empire_window_draw_map_objects(ev) {
     }
 }
 
-function empire_window_draw_invasion_warnings(ev) {
+function empire_window_draw_event_markers(ev) {
+    empire.update_markers()
     var scale = empire_window_map_scale()
-    for (var i = 0; i < invasions.warning_slots; i++) {
-        var w = invasions.get_warning(i)
-        if (!w.in_use || !w.handled) {
-            continue
-        }
-        var img = get_image({ tid: w.image_id })
+    var land = get_image(empire_window.marker_land)
+    var sea = get_image(empire_window.marker_sea)
+    var count = empire.marker_count
+    for (var i = 0; i < count; i++) {
+        var m = empire.get_marker(i)
+        var img = m.by_sea ? sea : land
         if (!img) {
             continue
         }
-        ui.image_scaled(img, empire_window_map_point(ev.draw_offset, w.pos), scale)
+        ui.image_scaled(img, empire_window_map_point(ev.draw_offset, m.pos), scale)
+        __empire_marker_set_size(i, { x: img.width, y: img.height })
+    }
+}
+
+function empire_window_draw_marker_tooltip() {
+    var kind = empire.selected_marker_kind
+    var sb = empire_window.screen_bounds
+    if (kind < 0 || !sb.ready) {
+        return
+    }
+    var tooltips = empire_window.marker_tooltips
+    for (var i = 0; i < tooltips.length; i++) {
+        if (tooltips[i].kind == kind) {
+            var ox = ((sb.min_pos.x + sb.max_pos.x - 240) / 2) | 0
+            __lang_text_draw_multiline(tooltips[i].group, tooltips[i].id, ox, sb.max_pos.y - 68, 240, FONT_NORMAL_BLACK_ON_LIGHT)
+            return
+        }
     }
 }
 
@@ -455,10 +473,10 @@ function empire_window_draw_map(window) {
 
     empire_window_draw_map_begin(payload)
     empire_window_draw_map_objects(payload)
-    empire_window_draw_invasion_warnings(payload)
     empire_window_draw_traders(payload)
     empire_window_draw_distant_battle_path(payload)
     empire_window_draw_deferred_trade_route(payload)
+    empire_window_draw_event_markers(payload)
 
     var wpos = window.pos || { x: 0, y: 0 }
     ui.begin_widget(wpos)

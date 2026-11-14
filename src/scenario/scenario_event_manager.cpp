@@ -335,6 +335,7 @@ int event_manager_t::create_invasion(const invasion_event_desc &desc) {
     event.amount = {(int16_t)desc.amount, (int16_t)desc.amount, -1, -1};
     event.months_initial = desc.months_initial;
     event.location_fields = {(int16_t)desc.route, (int16_t)desc.route, -1, -1};
+    event.route_fields = {(int16_t)desc.empire_route, (int16_t)desc.empire_route, -1, -1};
     event.invasion_attack_target = desc.attack_target;
     event.parent_id = -1;
     event.on_completed_action = -1;
@@ -572,7 +573,7 @@ static void update_randomized_values(event_ph_t &event) {
     randomize_event_fields((int16_t*)&event.amount, &seed);
     randomize_event_fields((int16_t*)&event.time, &seed);
     randomize_event_fields(event.location_fields.data(), &seed);
-    randomize_event_fields(event.route_fields, &seed);
+    randomize_event_fields(event.route_fields.data(), &seed);
 
     // some other unknown stuff also happens here.........
     random_generate_next();
@@ -1635,20 +1636,6 @@ bool invasion_fired(const event_ph_t &e) {
     return e.event_state == e_event_state_already_fired;
 }
 
-// OG event_helpers.c scenario_event_is_running: chain templates and favour masters never run on the calendar.
-bool invasion_is_running(const event_ph_t &e) {
-    switch (e.event_trigger_type) {
-    case EVENT_TRIGGER_ONLY_VIA_EVENT:
-    case EVENT_TRIGGER_BY_FAVOUR:
-    case EVENT_TRIGGER_BY_FAVOUR_IN_USE:
-        return false;
-    default:
-        break;
-    }
-    const int months = months_since_event_date(e);
-    return months >= 0 && months <= e.months_initial;
-}
-
 bool invasion_parent_by_favour(const event_ph_t &e) {
     const event_ph_t *parent = g_scenario.events.at(e.parent_id);
     if (!parent || parent == &e) {
@@ -1707,6 +1694,25 @@ void invasion_set_entry(invasion_opts_t &opts, int route, bool bedouin) {
 
 } // namespace
 
+// OG event_helpers.c scenario_event_is_running: chain templates and favour masters never run on the calendar.
+bool scenario_invasion_is_running(const event_ph_t& e) {
+    switch (e.event_trigger_type) {
+    case EVENT_TRIGGER_ONLY_VIA_EVENT:
+    case EVENT_TRIGGER_BY_FAVOUR:
+    case EVENT_TRIGGER_BY_FAVOUR_IN_USE:
+        return false;
+    default:
+        break;
+    }
+    const int months = months_since_event_date(e);
+    return months >= 0 && months <= e.months_initial;
+}
+
+// OG event_helpers.c scenario_event_months_left.
+int scenario_invasion_months_left(const event_ph_t& e) {
+    return e.months_initial - months_since_event_date(e);
+}
+
 // OG scenario_events.c invasion_attack.
 static void invasion_attack(event_ph_t &e) {
     const invasion_phrase_set &phrases = invasion_phrases(e.item.value);
@@ -1742,7 +1748,7 @@ static void invasion_attack(event_ph_t &e) {
 
 // OG scenario_events.c scenario_event_process_invasion.
 void event_manager_t::process_invasion(event_ph_t &e) {
-    if (invasion_fired(e) || !invasion_is_running(e)) {
+    if (invasion_fired(e) || !scenario_invasion_is_running(e)) {
         return;
     }
 
@@ -1754,7 +1760,7 @@ void event_manager_t::process_invasion(event_ph_t &e) {
         return;
     }
 
-    const int months_left = e.months_initial - months_since_event_date(e);
+    const int months_left = scenario_invasion_months_left(e);
     if (months_left == 0) {
         invasion_attack(e);
         return;

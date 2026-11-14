@@ -239,7 +239,7 @@ struct event_ph_t {
     int16_t on_defeat_action;
     int8_t sender_faction;
     uint8_t invasion_warnings_shown; // bit w = OG invasion_warnings[w] already posted
-    int16_t route_fields[4];
+    std::array<int16_t, 4> route_fields;
     int8_t subtype;
     int8_t city_id;
     uint8_t coin; // troop request: which month the last reminder comes
@@ -258,9 +258,13 @@ struct event_ph_t {
     game_date_t date() const { return {time.year, time.month}; }
     void archive_load(archive arch);
 };
-ANK_CONFIG_STRUCT(event_ph_t, type, time, item, amount, tag_id, months_initial, location_fields, reasons,
-                   sender_faction, event_trigger_type, on_completed_action, on_refusal_action, on_too_late_action,
-                   on_defeat_action, subtype, city_id, invasion_attack_target)
+ANK_CONFIG_STRUCT(event_ph_t, type, time, item, amount, tag_id, months_initial, location_fields, route_fields, reasons,
+  sender_faction, event_trigger_type, on_completed_action, on_refusal_action, on_too_late_action, on_defeat_action,
+  subtype, city_id, invasion_attack_target)
+
+// OG event_helpers.c scenario_event_is_running / scenario_event_months_left for an invasion event.
+bool scenario_invasion_is_running(const event_ph_t& e);
+int scenario_invasion_months_left(const event_ph_t& e);
 
 struct mission_id_t;
 struct event_manager_t {
@@ -313,6 +317,7 @@ struct event_manager_t {
         int amount = 0;
         int months_initial = 0;
         int route = 0;
+        int empire_route = 0; // OG scenario_event.invasion: the route its marker walks on the empire map
         int8_t attack_target = EVENT_ATTACK_TARGET_RANDOM;
     };
     int create_invasion(const invasion_event_desc &desc);
