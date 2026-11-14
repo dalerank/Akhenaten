@@ -104,26 +104,23 @@
       <h1>Abu Simbel <span class="tag-cleo">Cleo</span></h1>
 
       <p id="overview">
-        <strong>Abu Simbel</strong> is the Cleopatra cliff-carved monument of four seated colossi.
-        The bulk of the footprint sits on elevation (cliffs); a 3×3 entrance juts onto clear land.
-        Construction uses <strong>timber</strong> scaffolding with <strong>Carpenters</strong>, then
-        <strong>Stonemasons</strong> carve top-down. There is no Work Camp, no Artisans guild, and no stone delivery onto the monument — the cliff is the stone.
-        Do not confuse with unused enum <code>BUILDING_COLOSSI</code> (=270) — that is only an editor/win label, not this building.
+        <strong>Abu Simbel</strong> is the Cleopatra monument cut into a cliff: sixteen records laid out exactly as in the
+        original game, fixed in map space (it does not rotate). Only <strong>Carpenters</strong> and <strong>Stonemasons</strong>
+        work on it; there is no Work Camp, no material delivery and no cost &mdash; the cliff is the stone.
+        Do not confuse with unused enum <code>BUILDING_COLOSSI</code> (=270) &mdash; that is only an editor/win label, not this building.
       </p>
 
       <div class="bld-infobox">
         <h4>Quick facts</h4>
         <div class="bld-stat-row">
-          <div class="bld-stat"><span class="val">9×21</span><span class="lbl">Cliff bulk</span></div>
-          <div class="bld-stat"><span class="val">+3×3</span><span class="lbl">Entrance</span></div>
-          <div class="bld-stat"><span class="val">44</span><span class="lbl">Monument wt.</span></div>
-          <div class="bld-stat"><span class="val">Timber</span><span class="lbl">Resource</span></div>
+          <div class="bld-stat"><span class="val">12&times;21</span><span class="lbl">Footprint</span></div>
+          <div class="bld-stat"><span class="val">16</span><span class="lbl">Records</span></div>
+          <div class="bld-stat"><span class="val">56</span><span class="lbl">Stages</span></div>
+          <div class="bld-stat"><span class="val">0</span><span class="lbl">Cost</span></div>
         </div>
         <dl>
-          <dt>Cost (Normal)</dt>
-          <dd>8&nbsp;000 Db (VE 5k · Easy 6.5k · Hard 11k · VH 16k)</dd>
           <dt>Guilds</dt>
-          <dd>Carpenters (scaffold) · Stonemasons (carve)</dd>
+          <dd>Carpenters (stages 0&ndash;11 scaffolding, and some later ones) &middot; Stonemasons (carving)</dd>
           <dt>Type id</dt>
           <dd><code>BUILDING_ABU_SIMBEL</code> (=230)</dd>
         </dl>
@@ -131,19 +128,22 @@
 
       <h2 id="placement">Placement</h2>
       <ul>
-        <li>Bulk tiles must sit on <strong>elevation / access ramp</strong> (cliffs). Use Hide Cliffs (<kbd>H</kbd>) to inspect.</li>
-        <li>The centered 3×3 entrance <strong>protrudes past</strong> the far depth edge onto clear land (total depth 24 at rot 0/2).</li>
-        <li>Only one Abu Simbel on the map (finished still blocks a second).</li>
-        <li>Cannot be demolished (clear land is blocked; shows a warning).</li>
-        <li>Stone in storage is <strong>not</strong> required to place (unlike Sun Temple sandstone).</li>
+        <li>The clicked tile is the layout origin in every camera view. Every record but the 3&times;3 entrance must lie on the
+          editor's <strong>monument rock</strong> (the cliffs painted for Abu Simbel and the royal tombs); plain rock does not do.</li>
+        <li>The entrance (east of the facade, x+4..x+6) must be open ground; all tiles keep 3 tiles from the map edge.</li>
+        <li>The ghost shows every tile green or red. A failed placement shows <em>must be over cliffs</em> and <em>entrance on clear land</em>.</li>
+        <li>No second Abu Simbel while one is unfinished.</li>
+        <li>Workers go to the staging tile in front of the entrance (main record +6,&minus;8); that tile is also its road access.</li>
       </ul>
 
       <h2 id="construction">Construction</h2>
       <ul>
-        <li>Early phases: deliver timber and raise scaffolding (carpenters).</li>
-        <li>Later phases: mason-only carve; paint is baked into finished art (no Artisans).</li>
-        <li>Art layers from <code>AbuSimbel.sg3</code>: progressive <code>2statue</code> façade, midcut niche, scaffold overlays, entrance stairs.</li>
-        <li>Exact timber loads per phase are still provisional (Heaven chart only marks wood = Y; no counts in pack/exe).</li>
+        <li>56 stages, one work spot each; a worker does 1 work per tick (170&ndash;1550 per stage).</li>
+        <li>Only one worker at a time; the guild sends the next one once he has left.</li>
+        <li>Each finished stage either raises/clears a scaffold flag (not drawn, as in the original) or moves the art of one
+          record (the two statue blocks, the two facade blocks beside the door, or the entrance stairs).</li>
+        <li>The info window gives the original status line (blocked staging area, missing or idle guild, &ldquo;workers are
+          busy&rdquo;) and the percentage complete.</li>
       </ul>
 
       <h2 id="missions">Missions</h2>
@@ -162,7 +162,7 @@
               <li><span class="file-ref">src/scripts/building/abu_simbel.js</span></li>
               <li><span class="file-ref">src/window/window_abu_simbel_info.cpp</span></li>
               <li><span class="file-ref">src/scripts/city/monuments.js</span> — <code>MONUMENT_WEIGHTS[ABU_SIMBEL]=48</code></li>
-              <li><span class="file-ref">tests/118_abu_simbel_place.js</span></li>
+              <li><span class="file-ref">tests/118_abu_simbel_place.js</span>, <span class="file-ref">tests/391_abu_simbel_og_work.js</span>, <span class="file-ref">tests/392_abu_simbel_mission_site.js</span></li>
               <li>Help / history message ids: <strong>492</strong> / <strong>493</strong></li>
             </ul>
           </div>
