@@ -6,6 +6,7 @@
 #include "graphics/image.h"
 #include "graphics/render_stats.h"
 #include "graphics/residency_atlas.h"
+#include "graphics/texture_alpha.h"
 #include "platform/renderer.h"
 
 #include <cmath>
@@ -279,14 +280,25 @@ void painter::draw_impl(SDL_Texture *texture, vec2i pos, vec2i offset, vec2i siz
         g_render.set_texture_scale_mode(texture, overall_scale_factor, force_linear);
     }
 
-    SDL_SetTextureColorMod(draw_tex,
-                           (color & COLOR_CHANNEL_RED) >> COLOR_BITSHIFT_RED,
-                           (color & COLOR_CHANNEL_GREEN) >> COLOR_BITSHIFT_GREEN,
-                           (color & COLOR_CHANNEL_BLUE) >> COLOR_BITSHIFT_BLUE);
-    SDL_SetTextureAlphaMod(draw_tex, (color & COLOR_CHANNEL_ALPHA) >> COLOR_BITSHIFT_ALPHA);
+    int mod_r = (color & COLOR_CHANNEL_RED) >> COLOR_BITSHIFT_RED;
+    int mod_g = (color & COLOR_CHANNEL_GREEN) >> COLOR_BITSHIFT_GREEN;
+    int mod_b = (color & COLOR_CHANNEL_BLUE) >> COLOR_BITSHIFT_BLUE;
+    const int mod_a = (color & COLOR_CHANNEL_ALPHA) >> COLOR_BITSHIFT_ALPHA;
 
+    // Faded draws stay in the premultiplied blend mode by scaling the tint with the alpha, so a
+    // run of sprites never switches blend mode (which ends an SDL batch). Only PNG textures with
+    // straight alpha keep the plain blend.
     const bool alpha = !!(flags & ImgFlag_Alpha);
-    const SDL_BlendMode blend = alpha ? SDL_BLENDMODE_BLEND : (SDL_BlendMode)g_render.premult_alpha();
+    const bool straight = alpha && texture_alpha::is_straight(texture);
+    if (alpha && !straight) {
+        mod_r = (mod_r * mod_a + 127) / 255;
+        mod_g = (mod_g * mod_a + 127) / 255;
+        mod_b = (mod_b * mod_a + 127) / 255;
+    }
+    SDL_SetTextureColorMod(draw_tex, (Uint8)mod_r, (Uint8)mod_g, (Uint8)mod_b);
+    SDL_SetTextureAlphaMod(draw_tex, (Uint8)mod_a);
+
+    const SDL_BlendMode blend = straight ? SDL_BLENDMODE_BLEND : (SDL_BlendMode)g_render.premult_alpha();
     SDL_SetTextureBlendMode(draw_tex, blend);
 
     // uncomment here if you want save something from atlases
@@ -488,6 +500,9 @@ SDL_Texture* painter::convertToGrayscale(SDL_Texture *tx, vec2i offset, vec2i si
     }
 
     SDL_Texture *gray_tx_ptr = SDL_CreateTextureFromSurface(this->renderer, surface);
+    if (texture_alpha::is_straight(tx)) {
+        texture_alpha::mark_straight(gray_tx_ptr);
+    }
 
     gray_tx.first->second = gray_tx_ptr;
     SDL_FreeSurface(surface);

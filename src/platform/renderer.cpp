@@ -10,6 +10,7 @@
 #include "graphics/image_groups.h"
 #include "graphics/render_stats.h"
 #include "graphics/residency_atlas.h"
+#include "graphics/texture_alpha.h"
 #include "graphics/view/view.h"
 #include "game/game.h"
 #include "input/cursor.h"
@@ -917,6 +918,7 @@ SDL_Texture* graphics_renderer_interface::create_texture_from_png_buffer(void *b
         txsize.x = loadedSurface->w;
         txsize.y = loadedSurface->h;
         SDL_SetTextureBlendMode(texture, SDL_BLENDMODE_BLEND);
+        texture_alpha::mark_straight(texture);
         SDL_FreeSurface( loadedSurface );
         return texture;
     }
