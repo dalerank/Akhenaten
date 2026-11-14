@@ -104,6 +104,7 @@
           <summary>Mission script</summary>
           <div class="details-body">
             <p><span class="file-ref">src/scripts/mission/m_029_sawu.js</span> · import in <span class="file-ref">src/scripts/missions.js</span></p>
+            <p>Sea raids carry the OG warship count (pak <code>phrase_var</code>) as <code>warships</code>: Libyan i=24 ×5, i=26 ×8, recurring i=28 ×9 &mdash; 2 warships each (loc 9 &rarr; sea[0]). <code>mission29_libyan_raid</code>.</p>
             <p>Favour army: <code>events[]</code> pak i=32→33→34 (<code>EVENT_TRIGGER_BY_FAVOUR</code> master, <code>ONLY_VIA_EVENT</code> chain), sent by <code>event_manager_t::update_kingdom_favour</code> (OG <code>city/kingdom.c</code> <code>city_emperor_update</code>); no mission JS.</p>
             <p>Empire id <strong>1</strong> (pak). Map <span class="file-ref">data/maps/m_029_sawu.map</span>. Rank 10. Scenario enemy <code>ENEMY_7_LIBIAN</code>; favour <code>ENEMY_3_EGYPTIAN</code>. Dump 2026-07-27.</p>
             <p><code>choice[]</code> → Heh/Bubastis (g144 61/62/63). SKIP: empty map_obj idx=11; orphan MESSAGE i=14/20/29–31; orphan routes 20–22. Sea inv <code>[74,16]</code> packed loc2 → <code>via_sea</code> (E3c).</p>

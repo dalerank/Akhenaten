@@ -653,20 +653,28 @@ function mission28_beduin_raid(invasion_id, size, loc, attack_target) {
 	})
 }
 
-function mission28_hittite_raid(invasion_id, size, loc, attack_target) {
-	var tile = mission28_loc_tile(loc === undefined ? 0 : loc)
-	log_info("akhenaten: mission 28 hittite raid id=" + invasion_id + " size=" + size
-		+ " loc=" + loc + " tile=" + tile[0] + "," + tile[1])
-	__image_request_pak(PACK_ENEMY_HITTITE)
-	city.start_foreign_army_invasion({
+// OG scenario_invasion_start: loc 9+ sails from sea point loc - 9 with the event's phrase_var warships.
+function mission28_hittite_raid(invasion_id, size, loc, attack_target, warships) {
+	var opts = {
 		invasion_id: invasion_id,
 		enemy: ENEMY_4_HITTITE,
 		size: size,
-		tilex: tile[0],
-		tiley: tile[1],
 		want_destroy_buildings: size,
 		invasion_attack_target: attack_target === undefined ? EVENT_ATTACK_TARGET_RANDOM : attack_target
-	})
+	}
+	if (loc >= 9) {
+		opts.via_sea = 1
+		opts.sea_point = loc - 9
+		opts.warships = warships || 0
+	} else {
+		var tile = mission28_loc_tile(loc === undefined ? 0 : loc)
+		opts.tilex = tile[0]
+		opts.tiley = tile[1]
+	}
+	log_info("akhenaten: mission 28 hittite raid id=" + invasion_id + " size=" + size + " loc=" + loc
+		+ " warships=" + (opts.warships || 0))
+	__image_request_pak(PACK_ENEMY_HITTITE)
+	city.start_foreign_army_invasion(opts)
 }
 
 function mission28_start_copper_ladder() {
@@ -674,7 +682,7 @@ function mission28_start_copper_ladder() {
 	mission.copper_ladder_active = true
 	mission.copper_ladder_step = 0
 	mission.copper_ladder_enemies_seen = false
-	mission28_hittite_raid(18, 32, 9, EVENT_ATTACK_TARGET_RANDOM)
+	mission28_hittite_raid(18, 32, 9, EVENT_ATTACK_TARGET_RANDOM, 5)
 }
 
 function mission28_ensure_shared_leaves() {
@@ -827,7 +835,7 @@ function mission28_timed_invasions(ev) {
 	}
 	if (!mission.event7_enemy_done && ev.years_since_start == 10 && ev.month == 7) {
 		mission.event7_enemy_done = true
-		mission28_hittite_raid(7, 12, 9, EVENT_ATTACK_TARGET_RANDOM)
+		mission28_hittite_raid(7, 12, 9, EVENT_ATTACK_TARGET_RANDOM, 2)
 		return
 	}
 	if (!mission.event36_beduin_done && ev.years_since_start == 12 && ev.month == 9) {
@@ -900,7 +908,7 @@ function mission28_copper_ladder_poll(ev) {
 	} else if (step == 2) {
 		mission28_hittite_raid(21, 72, 3, EVENT_ATTACK_TARGET_TROOPS)
 	} else if (step == 3) {
-		mission28_hittite_raid(22, 24, 9, EVENT_ATTACK_TARGET_FOOD)
+		mission28_hittite_raid(22, 24, 9, EVENT_ATTACK_TARGET_FOOD, 6)
 	} else if (step == 4) {
 		mission28_hittite_raid(23, 96, 3, EVENT_ATTACK_TARGET_RANDOM)
 	} else {

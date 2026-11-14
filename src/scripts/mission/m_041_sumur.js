@@ -100,6 +100,7 @@ mission41 { // Sumur — Lands of the Levant
 			amount { value : 23, min : 19, max : 28 }
 			months_initial : 10
 			location_fields [ 9, 9, -1, -1 ]
+			warships : 3
 			event_trigger_type : EVENT_TRIGGER_BY_FAVOUR
 			tag_id : 7030
 			on_completed_action : -1

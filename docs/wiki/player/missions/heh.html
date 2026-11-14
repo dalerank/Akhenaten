@@ -101,6 +101,7 @@
           <summary>Mission script</summary>
           <div class="details-body">
             <p><span class="file-ref">src/scripts/mission/m_030_heh.js</span> · import in <span class="file-ref">src/scripts/missions.js</span></p>
+            <p>OG sends a pak invasion with loc 9+ by sea from sea point loc&nbsp;&minus;&nbsp;9, with the event&rsquo;s <code>phrase_var</code> warships; the JS raid passes them as <code>via_sea</code> / <code>sea_point</code> / <code>warships</code>: Kushite i=18 ×16 / 2 warships (loc 10 &rarr; sea[1]), i=20 ×38 / 6, i=21 ×40 / 4, i=23 ×20 / 2, i=24 ×60 / 6, i=30 ×72 / 6, i=31 ×72 / 7 (loc 9 &rarr; sea[0]). <code>mission30_apply_invasion_loc</code>.</p>
             <p>Empire id <strong>20</strong> (pak). Map <span class="file-ref">data/maps/m_030_heh.map</span>. Rank 10. Scenario enemy <code>ENEMY_6_KUSHITE</code>; favour via <code>ENEMY_3_EGYPTIAN</code>. Dump 2026-07-26.</p>
             <p><code>choice[]</code> → Khmun/Sauty (g144 64/65/66); sibling Bubastis. SKIP: empty map_obj idx=9. Soft: sea invasion points. Monuments pak 15 = Mausoleum (5) + burial weapons (1) → <code>trunc(6.32·√6+0.5)</code>.</p>
           </div>

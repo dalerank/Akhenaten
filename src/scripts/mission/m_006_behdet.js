@@ -388,13 +388,15 @@ function mission6_fire_request(tag, resource, amount, months, ok_tag, fail_tag, 
 	return ok_ev
 }
 
-function mission6_kushite_raid(invasion_id, size, on_completed_tag) {
+// pak loc=9: OG sea invasion from sea point 0 with the event's phrase_var warships.
+function mission6_kushite_raid(invasion_id, size, warships, on_completed_tag) {
 	var opts = {
 		invasion_id: invasion_id,
 		enemy: ENEMY_6_KUSHITE,
 		size: size,
-		tilex: -1,
-		tiley: -1,
+		via_sea: 1,
+		sea_point: 0,
+		warships: warships,
 		want_destroy_buildings: size,
 		invasion_attack_target: EVENT_ATTACK_TARGET_RANDOM // pak attack=4
 	}
@@ -545,7 +547,7 @@ function mission6_kushite_invasion_1(ev) {
 	if (ev.years_since_start < 5 || (ev.years_since_start == 5 && ev.month < 1)) { return }
 	mission.kushite_invasion_1 = true
 	log_info("akhenaten: mission 6 behdet kushite invasion 1 size=5", {ev:ev})
-	mission6_kushite_raid(0, 5)
+	mission6_kushite_raid(0, 5, 2)
 }
 
 [es=event_advance_month, mission=mission6]
@@ -555,7 +557,7 @@ function mission6_kushite_invasion_2(ev) {
 	mission.kushite_invasion_2 = true
 	log_info("akhenaten: mission 6 behdet kushite invasion 2 size=16", {ev:ev})
 	city.create_chain_event({ tag_id: 701, type: EVENT_TYPE_REPUTATION_INCREASE, amount: 8 })
-	mission6_kushite_raid(1, 16, 701)
+	mission6_kushite_raid(1, 16, 3, 701)
 }
 
 [es=event_advance_month, mission=mission6]
@@ -564,5 +566,5 @@ function mission6_kushite_invasion_3(ev) {
 	if (ev.years_since_start < 19 || (ev.years_since_start == 19 && ev.month < 4)) { return }
 	mission.kushite_invasion_3 = true
 	log_info("akhenaten: mission 6 behdet kushite invasion 3 size=4", {ev:ev})
-	mission6_kushite_raid(2, 4)
+	mission6_kushite_raid(2, 4, 2)
 }

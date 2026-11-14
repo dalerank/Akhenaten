@@ -634,7 +634,8 @@ function mission52_sea(i) {
 	return pts[i]
 }
 
-function mission52_enemy_raid(invasion_id, size, sea_point, on_completed_tag) {
+// warships: the event's `warships` (pak phrase_var).
+function mission52_enemy_raid(invasion_id, size, sea_point, on_completed_tag, warships) {
 	var sea = mission52_sea(sea_point === undefined ? 0 : sea_point)
 	__image_request_pak(PACK_ENEMY_PERSIAN)
 	var opts = {
@@ -646,6 +647,7 @@ function mission52_enemy_raid(invasion_id, size, sea_point, on_completed_tag) {
 		invasion_attack_target: EVENT_ATTACK_TARGET_TROOPS,
 		via_sea: 1,
 		sea_point: sea_point === undefined ? 0 : sea_point,
+		warships: warships || 0,
 		tilex: sea[0],
 		tiley: sea[1]
 	}
@@ -684,7 +686,7 @@ function mission52_calendar_invasions(ev) {
 		mission.inv12_active = true
 		mission.inv12_enemies_seen = false
 		log_info("akhenaten: mission 52 sea invasion ×19 (i=12)")
-		mission52_enemy_raid(12, 19, 0)
+		mission52_enemy_raid(12, 19, 0, undefined, 5)
 	}
 
 	if (mission.inv12_active && !mission.inv17_done) {
@@ -698,6 +700,6 @@ function mission52_calendar_invasions(ev) {
 		mission.inv12_active = false
 		mission.inv17_done = true
 		log_info("akhenaten: mission 52 sea invasion ×40 (i=17) → chain tag 18")
-		mission52_enemy_raid(17, 40, 0, 18)
+		mission52_enemy_raid(17, 40, 0, 18, 4)
 	}
 }

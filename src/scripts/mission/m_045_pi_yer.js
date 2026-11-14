@@ -640,8 +640,10 @@ function mission45_ensure_chain_leaves() {
 	mission45_make_leaf(1009, EVENT_TYPE_INVASION, undefined, 13, 2)
 }
 
-function mission45_assyrian_raid(invasion_id, size, attack_target, on_completed_tag) {
-	log_info("akhenaten: mission 45 assyrian raid size=" + size + " id=" + invasion_id)
+// loc: pak invasion point; 9 = OG sea point 0, sailing with the event's phrase_var warships.
+function mission45_assyrian_raid(invasion_id, size, attack_target, on_completed_tag, loc, warships) {
+	log_info("akhenaten: mission 45 assyrian raid size=" + size + " id=" + invasion_id
+		+ " loc=" + loc + " warships=" + (warships || 0))
 	__image_request_pak(PACK_ENEMY_ASSYRIAN)
 	var opts = {
 		invasion_id: invasion_id,
@@ -651,6 +653,11 @@ function mission45_assyrian_raid(invasion_id, size, attack_target, on_completed_
 		tiley: -1,
 		want_destroy_buildings: size,
 		invasion_attack_target: attack_target
+	}
+	if (loc >= 9) {
+		opts.via_sea = 1
+		opts.sea_point = loc - 9
+		opts.warships = warships || 0
 	}
 	if (on_completed_tag) {
 		// Creates invasion bind so wipe/auto-resolve writes history.outcome for this seq.
@@ -975,7 +982,7 @@ function mission45_on_request_cleared(ev) {
 			&& !mission.inv_copper_wave1_done) {
 		mission.inv_copper_wave1_done = true
 		mission.inv_copper_wave1_abs = -1
-		mission.inv_copper_wave1_seq = mission45_assyrian_raid(4, 17, EVENT_ATTACK_TARGET_BEST_BUILDINGS, 1009)
+		mission.inv_copper_wave1_seq = mission45_assyrian_raid(4, 17, EVENT_ATTACK_TARGET_BEST_BUILDINGS, 1009, 9, 3)
 		log_info("akhenaten: mission 45 assyrian×17 after copper/weapons chain", {
 			ev:ev, outcome:outcome, seq:mission.inv_copper_wave1_seq
 		})
@@ -992,6 +999,6 @@ function mission45_on_request_cleared(ev) {
 	if (ev.tag_id == 2037 && outcome == "refuse" && !mission.inv_bricks_done) {
 		mission.inv_bricks_done = true
 		log_info("akhenaten: mission 45 assyrian×27 after bricks refuse", {ev:ev})
-		mission45_assyrian_raid(39, 27, EVENT_ATTACK_TARGET_RANDOM)
+		mission45_assyrian_raid(39, 27, EVENT_ATTACK_TARGET_RANDOM, undefined, 9, 3)
 	}
 }

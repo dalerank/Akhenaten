@@ -192,7 +192,7 @@
       <h3>Phase 2 — Mastaba and exports</h3>
       <p>Granite quarry + gold mines; small mastaba rating 9. Pottery industry before y5.</p>
       <h3>Phase 3 — Defense</h3>
-      <p>Hittite waves at y4 / y5m10 / y8 / y16. Keep walls, academy, and companies. Sea invasion points exist (naval landings still land-proxied).</p>
+      <p>Hittite waves at y4 / y5m10 / y8 / y16. Keep walls, academy, and companies. Every Hittite wave comes by river from sea point <code>[79,49]</code> with warships; a lone warship sails in at y2m7.</p>
       <h3>Tips</h3>
       <ul>
         <li>Do not let kingdom rating hit zero — favour chain is four waves.</li>
@@ -250,11 +250,11 @@
             <ul>
               <li><strong>Briefing “Kushite”</strong> vs pak <strong>Hittite</strong> enemy — pak wins.</li>
               <li><strong>NEW_TRADE i=1/6</strong> — pak city=Iunet + ok=999/99 junk; remapped to Men-nefer (fish ok) / Abu (meat ok) with filled sells/buys.</li>
-              <li><strong>Invasion i=3 amount=0</strong> skipped.</li>
+              <li><strong>Invasion i=3 amount=0</strong> is OG&rsquo;s warship-only raid: 1 Hittite warship at y2m7, no soldiers (<code>mission16_event_i3_warships</code>).</li>
               <li><strong>Egypt×24 on limestone refuse</strong> / <strong>Hittite×10 on meat|pottery late</strong> — JS via <code>event_request_cleared</code>; <code>EVENT_TYPE_INVASION</code> chain child still no-op. Smoke: <code>tests/170_iunet_request_outcomes.js</code> (B13a).</li>
               <li><strong>Shared leaf 1011</strong> (pottery ok KR+10 ≡ Hittite×48 wipe) re-fires — engine clone-on-fire (B14). Smoke: <code>tests/177_shared_leaf_refire.js</code>.</li>
               <li><strong>Orphan route 15</strong> / empty map_obj idx=9 skipped; Saqqara/Nekhen route 5/8 have no polyline.</li>
-              <li><strong>Naval landings</strong> still land-army proxy.</li>
+              <li><strong>Sea invasions</strong> &mdash; OG sends a pak invasion with loc 9+ by sea from sea point loc&nbsp;&minus;&nbsp;9, with the event&rsquo;s <code>phrase_var</code> warships; the JS raid passes them as <code>via_sea</code> / <code>sea_point</code> / <code>warships</code>: Hittite i=3 ×0 / 1 warship, i=8 ×10 / 2, i=12 ×20 / 4, i=13 ×32 / 5, i=17 ×48 / 8 (loc 9 &rarr; sea[0]); Egypt i=16 ×24 / 6 (loc 10 &rarr; sea[1]).</li>
               <li><strong>Favour</strong> — Kingdom army: at Kingdom rating 0 the engine sends the <code>EVENT_TRIGGER_BY_FAVOUR</code> invasion from <code>events[]</code> (<code>update_kingdom_favour</code>, <code>src/scenario/scenario_event_manager.cpp</code>): warnings for its <code>months_initial</code>, then the attack; its <code>on_completed_action</code> chain joins at the attack. Called off if the rating reaches 15 before it attacks; it can come again 12 months later. Chain pak i=19→20→21→22 (15 → 45 → 30 → 30); the three follow-up armies land when the first attacks.</li>
             </ul>
           </div>

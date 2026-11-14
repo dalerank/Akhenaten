@@ -683,7 +683,14 @@ function mission30_fire_request(tag, resource, amount, months, ok_tag, refuse_ta
 // pak location_fields = 1-based packed (land first, then sea). MAX editor slots 8+.
 // land[0]=[80,123] land[1]=[112,71]; sea[0]=[127,84] sea[1]=[95,4].
 // loc3/4 = sea → via_sea. OOB navy → sea0.
-function mission30_apply_invasion_loc(opts, loc) {
+// loc 9+ = OG sea point loc - 9 (scenario_invasion_start), carrying the event's phrase_var warships.
+function mission30_apply_invasion_loc(opts, loc, warships) {
+	if (loc >= 9) {
+		opts.via_sea = 1
+		opts.sea_point = loc - 9
+		opts.warships = warships || 0
+		return true
+	}
 	if (loc == 1) {
 		opts.tilex = 80
 		opts.tiley = 123
@@ -715,7 +722,7 @@ function mission30_apply_invasion_loc(opts, loc) {
 	return true
 }
 
-function mission30_kushite_raid(invasion_id, size, loc, on_completed_tag) {
+function mission30_kushite_raid(invasion_id, size, loc, on_completed_tag, warships) {
 	if (loc === undefined) {
 		loc = 9
 	}
@@ -728,9 +735,10 @@ function mission30_kushite_raid(invasion_id, size, loc, on_completed_tag) {
 		invasion_attack_target: EVENT_ATTACK_TARGET_RANDOM,
 		on_completed_tag: on_completed_tag
 	}
-	var via_sea = mission30_apply_invasion_loc(opts, loc)
+	var via_sea = mission30_apply_invasion_loc(opts, loc, warships)
 	log_info("akhenaten: mission 30 kushite raid id=" + invasion_id + " size=" + size
-		+ " loc=" + loc + " sea=" + via_sea + " tile=" + opts.tilex + "," + opts.tiley)
+		+ " loc=" + loc + " sea=" + via_sea + " warships=" + (opts.warships || 0)
+		+ " tile=" + opts.tilex + "," + opts.tiley)
 	return city.start_foreign_army_invasion(opts)
 }
 
@@ -879,17 +887,17 @@ function mission30_requests_and_events(ev) {
 	if (!mission.event18_invasion_done && ev.years_since_start == 6 && ev.month == 11) {
 		mission.event18_invasion_done = true
 		log_info("akhenaten: mission 30 kushite×16 (i=18)")
-		mission30_kushite_raid(18, 16, 10)
+		mission30_kushite_raid(18, 16, 10, undefined, 2)
 	}
 	if (!mission.event20_invasion_done && ev.years_since_start == 8 && ev.month == 4) {
 		mission.event20_invasion_done = true
 		log_info("akhenaten: mission 30 kushite×38 (i=20)")
-		mission30_kushite_raid(20, 38, 9)
+		mission30_kushite_raid(20, 38, 9, undefined, 6)
 	}
 	if (!mission.event21_invasion_done && ev.years_since_start == 10 && ev.month == 0) {
 		mission.event21_invasion_done = true
 		log_info("akhenaten: mission 30 kushite×40 (i=21)")
-		mission30_kushite_raid(21, 40, 9)
+		mission30_kushite_raid(21, 40, 9, undefined, 4)
 	}
 	if (!mission.event22_invasion_done && ev.years_since_start == 12 && ev.month == 6) {
 		mission.event22_invasion_done = true
@@ -899,7 +907,7 @@ function mission30_requests_and_events(ev) {
 	if (!mission.event24_invasion_done && ev.years_since_start == 16 && ev.month == 0) {
 		mission.event24_invasion_done = true
 		log_info("akhenaten: mission 30 kushite×60 (i=24)")
-		mission30_kushite_raid(24, 60, 9)
+		mission30_kushite_raid(24, 60, 9, undefined, 6)
 	}
 	if (!mission.event25_invasion_done && ev.years_since_start == 19 && ev.month == 6) {
 		mission.event25_invasion_done = true
@@ -927,12 +935,12 @@ function mission30_requests_and_events(ev) {
 	if (!mission.event30_invasion_done && ev.years_since_start == 50 && ev.month == 7) {
 		mission.event30_invasion_done = true
 		log_info("akhenaten: mission 30 kushite×72 (i=30)")
-		mission30_kushite_raid(30, 72, 9)
+		mission30_kushite_raid(30, 72, 9, undefined, 6)
 	}
 	if (!mission.event31_invasion_done && ev.years_since_start == 60 && ev.month == 10) {
 		mission.event31_invasion_done = true
 		log_info("akhenaten: mission 30 kushite×72 (i=31)")
-		mission30_kushite_raid(31, 72, 9)
+		mission30_kushite_raid(31, 72, 9, undefined, 7)
 	}
 	// pak i=32 chickpeas×13 /12mo y10m6
 	if (!mission.event32_chickpeas_done && ev.years_since_start == 10 && ev.month == 6) {
@@ -953,7 +961,7 @@ function mission30_update_day(ev) {
 		} else if (city.num_enemy_formations == 0) {
 			mission.event23_invasion_done = true
 			log_info("akhenaten: mission 30 kushite×20 chain (i=23)")
-			mission30_kushite_raid(23, 20, 9)
+			mission30_kushite_raid(23, 20, 9, undefined, 2)
 		}
 	}
 }

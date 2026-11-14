@@ -581,9 +581,9 @@ function mission23_fire_request(tag, resource, amount, months, ok_tag, fail_tag,
 	return request
 }
 
-// pak location_fields after randomize = 1-based land invasion point index.
-// Map: land[0]=[10,22] land[1]=[54,212]; sea unused (all invasions subtype=0).
-// Missing/OOB → -1 (engine entry fallback).
+// pak location_fields after randomize = 1-based land invasion point index; 9+ = sea point (loc - 9).
+// Map: land[0]=[10,22] land[1]=[54,212]; sea[0]=[103,91] sea[1]=[59,123].
+// Missing/OOB land → -1 (engine entry fallback).
 function mission23_loc_tile(loc) {
 	if (loc == 1) {
 		return [10, 22]
@@ -594,36 +594,45 @@ function mission23_loc_tile(loc) {
 	return [-1, -1]
 }
 
-function mission23_egypt_raid(invasion_id, size, attack_target, on_completed_tag, loc) {
+// OG scenario_invasion_start: loc 9+ sails from sea point loc - 9 with the event's phrase_var warships.
+function mission23_apply_loc(opts, loc, warships) {
+	if (loc >= 9) {
+		opts.via_sea = 1
+		opts.sea_point = loc - 9
+		opts.warships = warships || 0
+		return
+	}
 	var tile = mission23_loc_tile(loc === undefined ? 0 : loc)
+	opts.tilex = tile[0]
+	opts.tiley = tile[1]
+}
+
+function mission23_egypt_raid(invasion_id, size, attack_target, on_completed_tag, loc, warships) {
 	__image_request_pak(PACK_ENEMY_EGYPTIAN)
 	var opts = {
 		invasion_id: invasion_id,
 		enemy: ENEMY_3_EGYPTIAN,
 		size: size,
-		tilex: tile[0],
-		tiley: tile[1],
 		want_destroy_buildings: size,
 		invasion_attack_target: attack_target !== undefined ? attack_target : EVENT_ATTACK_TARGET_RANDOM
 	}
+	mission23_apply_loc(opts, loc, warships)
 	if (on_completed_tag) {
 		opts.on_completed_tag = on_completed_tag
 	}
 	city.start_foreign_army_invasion(opts)
 }
 
-function mission23_kushite_raid(invasion_id, size, on_completed_tag, loc) {
-	var tile = mission23_loc_tile(loc === undefined ? 0 : loc)
+function mission23_kushite_raid(invasion_id, size, on_completed_tag, loc, warships) {
 	__image_request_pak(PACK_ENEMY_KUSHITE)
 	var opts = {
 		invasion_id: invasion_id,
 		enemy: ENEMY_6_KUSHITE,
 		size: size,
-		tilex: tile[0],
-		tiley: tile[1],
 		want_destroy_buildings: size,
 		invasion_attack_target: EVENT_ATTACK_TARGET_RANDOM
 	}
+	mission23_apply_loc(opts, loc, warships)
 	if (on_completed_tag) {
 		opts.on_completed_tag = on_completed_tag
 	}
@@ -635,7 +644,7 @@ function mission23_start_enemy29_then_egypt33() {
 	mission.await_egypt33_after_enemy29 = true
 	mission.enemy29_enemies_seen = false
 	log_info("akhenaten: mission 23 enemy x29 (then egypt x33 after wipe)")
-	mission23_kushite_raid(38, 29, undefined, 10) // pak loc=10 OOB
+	mission23_kushite_raid(38, 29, undefined, 10, 2) // pak loc=10 → sea[1], 2 warships
 }
 
 // pak i=40 wipe → i=42 copper×30 (fire after wipe; re-arm uses new tag).
@@ -643,7 +652,7 @@ function mission23_start_egypt72_then_copper() {
 	mission.await_copper_after_egypt72 = true
 	mission.egypt72_enemies_seen = false
 	log_info("akhenaten: mission 23 egypt x72 (then copper x30 after wipe)")
-	mission23_egypt_raid(40, 72, undefined, undefined, 10) // pak loc=10 OOB
+	mission23_egypt_raid(40, 72, undefined, undefined, 10, 4) // pak loc=10 → sea[1], 4 warships
 }
 
 // pak i=10 / i=17 → i=19: leaf 1019 arms egypt×38; spawn on next month tick (not on oil/pottery cleared).
@@ -695,7 +704,7 @@ function mission23_start_henna60_refuse_chain() {
 	mission.henna60_chain = "await_enemy48_after_egypt72"
 	mission.henna60_enemies_seen = false
 	log_info("akhenaten: mission 23 egypt x72 after henna60 refuse")
-	mission23_egypt_raid(51, 72, undefined, undefined, 9) // pak i=51 loc=9 OOB
+	mission23_egypt_raid(51, 72, undefined, undefined, 9, 5) // pak i=51 loc=9 → sea[0], 5 warships
 }
 
 // Month tick: resolve wipe → next chain step.
@@ -717,7 +726,7 @@ function mission23_invasion_chain_tick() {
 		mission.enemy29_enemies_seen = false
 		mission.egypt33_done = true
 		log_info("akhenaten: mission 23 egypt x33 after enemy x29 wipe")
-		mission23_egypt_raid(43, 33, undefined, 1044, 9) // pak i=43 loc=9 OOB
+		mission23_egypt_raid(43, 33, undefined, 1044, 9, 4) // pak i=43 loc=9 → sea[0], 4 warships
 		return
 	}
 
@@ -747,7 +756,7 @@ function mission23_invasion_chain_tick() {
 		mission.henna60_chain = "await_kr_unlock_after_enemy48"
 		mission.enemy48_a_done = true
 		log_info("akhenaten: mission 23 enemy x48 after egypt x32 wipe")
-		mission23_kushite_raid(48, 48, undefined, 10) // pak i=48 loc=10 OOB
+		mission23_kushite_raid(48, 48, undefined, 10, 3) // pak i=48 loc=10 → sea[1], 3 warships
 		return
 	}
 
@@ -779,7 +788,7 @@ function mission23_invasion_chain_tick() {
 		mission.henna60_chain = "await_kr_after_enemy48b"
 		mission.enemy48_b_done = true
 		log_info("akhenaten: mission 23 enemy x48 after henna refuse egypt x72 wipe")
-		mission23_kushite_raid(52, 48, undefined, 13) // pak i=52 loc=13 OOB
+		mission23_kushite_raid(52, 48, undefined, 13, 3) // pak i=52 loc=13 → sea[4] (empty, next valid), 3 warships
 		return
 	}
 
@@ -1002,7 +1011,7 @@ function mission23_on_request_cleared(ev) {
 		} else if (outcome == "late") {
 			mission.egypt33_done = true
 			log_info("akhenaten: mission 23 egypt x33 after copper late")
-			mission23_egypt_raid(43, 33, undefined, 1044, 9) // pak i=43 loc=9 OOB
+			mission23_egypt_raid(43, 33, undefined, 1044, 9, 4) // pak i=43 loc=9 → sea[0], 4 warships
 		}
 	}
 
@@ -1052,7 +1061,7 @@ function mission23_calendar(ev) {
 	if (!mission.enemy24_done && ev.years_since_start == 7 && ev.month == 0) {
 		mission.enemy24_done = true
 		log_info("akhenaten: mission 23 kushite x24")
-		mission23_kushite_raid(20, 24, 1028, 10) // pak i=20 loc=10 OOB
+		mission23_kushite_raid(20, 24, 1028, 10, 1) // pak i=20 loc=10 → sea[1], 1 warship
 	}
 	if (!mission.henna120_done && ev.years_since_start == 1 && ev.month == 7) {
 		mission.henna120_done = true

@@ -602,8 +602,9 @@ function mission7_kushite_invasion_1(ev) {
 		invasion_id: 0,
 		enemy: ENEMY_6_KUSHITE,
 		size: 3,
-		tilex: -1,
-		tiley: -1,
+		via_sea: 1, // pak loc=9 â†’ sea point 0
+		sea_point: 0,
+		warships: 1,
 		want_destroy_buildings: 3,
 		invasion_attack_target: EVENT_ATTACK_TARGET_RANDOM // pak attack=4
 	})

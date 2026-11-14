@@ -102,7 +102,7 @@
             <p>Favour army: <code>events[]</code> pak i=41→43→44 (<code>EVENT_TRIGGER_BY_FAVOUR</code> master, <code>ONLY_VIA_EVENT</code> chain), sent by <code>event_manager_t::update_kingdom_favour</code> (OG <code>city/kingdom.c</code> <code>city_emperor_update</code>); no mission JS.</p>
             <p>Empire id <strong>1</strong>. Map <span class="file-ref">data/maps/m_024_waset.map</span>. Rank 8.</p>
             <p>Scenario enemy <code>ENEMY_6_KUSHITE</code>; invasions <code>ENEMY_3_EGYPTIAN</code> (JS chain proxy on oil refuse).</p>
-            <p>Oil refuse i=7 egypt×6 is pak <code>subtype=3</code> (Is Naval) → <code>via_sea</code> at sea point <code>[63,37]</code>; i=21 egypt×4 is land (<code>subtype=0</code>, map entry).</p>
+            <p>Oil refuse raids i=7 egypt×6 and i=21 egypt×4 are loc 9: OG sends a pak invasion with loc 9+ by sea from sea point loc&nbsp;&minus;&nbsp;9, with the event&rsquo;s <code>phrase_var</code> warships; the JS raid passes them as <code>via_sea</code> / <code>sea_point</code> / <code>warships</code>: 1 warship each, from <code>[63,37]</code> (OG ignores the editor <code>subtype</code>). Favour chain i=44 egypt×40 carries <code>warships : 9</code>.</p>
             <p>SKIP: empty map_obj idx=6; orphan route 19. Kerma remapped to polyline route <strong>23</strong>.</p>
             <p>i=42 y3m1 NEW_TRADE → <strong>Kerma</strong> (pak city=Kharga + loc=23); Kerma starts display-only (<code>trade:false</code>), unlock opens luxury/linen.</p>
             <p>Dump date 2026-07-26. </p>

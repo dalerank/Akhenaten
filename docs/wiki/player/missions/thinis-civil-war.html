@@ -99,6 +99,7 @@
           <summary>Mission script</summary>
           <div class="details-body">
             <p><span class="file-ref">src/scripts/mission/m_023_thinis.js</span> · import in <span class="file-ref">src/scripts/missions.js</span></p>
+            <p>OG sends a pak invasion with loc 9+ by sea from sea point loc&nbsp;&minus;&nbsp;9, with the event&rsquo;s <code>phrase_var</code> warships; the JS raid passes them as <code>via_sea</code> / <code>sea_point</code> / <code>warships</code>: Kushite i=20 ×24 / 1 warship, i=38 ×29 / 2, i=48 ×48 / 3 (loc 10 &rarr; sea[1]), i=52 ×48 / 3 (loc 13, empty slot &rarr; next sea point); Egypt i=40 ×72 / 4 (loc 10), i=43 ×33 / 4, i=51 ×72 / 5 (loc 9 &rarr; sea[0]). <code>mission23_apply_loc</code>.</p>
             <p>Favour army: <code>events[]</code> pak i=62→63 (<code>EVENT_TRIGGER_BY_FAVOUR</code> master, <code>ONLY_VIA_EVENT</code> chain), sent by <code>event_manager_t::update_kingdom_favour</code> (OG <code>city/kingdom.c</code> <code>city_emperor_update</code>); no mission JS.</p>
             <p>Empire id <strong>23</strong> (pak). Map <span class="file-ref">data/maps/m_023_thinis.map</span>. Rank 9. Scenario enemy <code>ENEMY_6_KUSHITE</code>; Egyptian armies via <code>ENEMY_3_EGYPTIAN</code>. Dump 2026-07-26.</p>
             <p>SKIP: empty map_obj idx=8; orphan routes 12/13/14. Protect: Osiris complex + mansions omitted from allow-list (non-rebuildable). Oil LOST/NEW cascade full (egypt×38 via JS chain).</p>

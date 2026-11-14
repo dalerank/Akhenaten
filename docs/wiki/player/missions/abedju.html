@@ -362,6 +362,7 @@
           <summary>Mission script — <code>src/scripts/mission/m_007_abydos.js</code></summary>
           <div class="details-body">
             <p>Imported by <span class="file-ref">src/scripts/missions.js</span>. Full empire redefine: <code>hide_pak_cities</code> / <code>hide_pak_routes</code> / <code>hide_pak_objects</code>, <code>map_background</code>, empire id <strong>0</strong>, cities with <code>pos</code>/<code>idx</code>, sea+land <code>empire_routes</code>, region texts, mastaba ornament.</p>
+            <p>OG sends a pak invasion with loc 9+ by sea from sea point loc&nbsp;&minus;&nbsp;9, with the event&rsquo;s <code>phrase_var</code> warships; the JS raid passes them as <code>via_sea</code> / <code>sea_point</code> / <code>warships</code>: Kushite i=13 ×3 with 1 warship (loc 9 &rarr; <code>[127,59]</code>). <code>mission7_kushite_invasion_1</code>.</p>
             <pre><code><span class="kw">win_criteria</span> {
   <span class="kw">population</span> <span class="num">2500</span> · <span class="kw">culture</span> <span class="num">25</span> · <span class="kw">prosperity</span> <span class="num">25</span>
   <span class="kw">monuments</span> <span class="num">17</span> · <span class="kw">kingdom</span> <span class="num">60</span> · <span class="kw">housing_level</span> <span class="num">10</span>

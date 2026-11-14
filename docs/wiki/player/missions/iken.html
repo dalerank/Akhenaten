@@ -102,6 +102,7 @@
           <summary>Mission script</summary>
           <div class="details-body">
             <p><span class="file-ref">src/scripts/mission/m_028_iken.js</span> · import in <span class="file-ref">src/scripts/missions.js</span></p>
+            <p>OG sends a pak invasion with loc 9+ by sea from sea point loc&nbsp;&minus;&nbsp;9, with the event&rsquo;s <code>phrase_var</code> warships; the JS raid passes them as <code>via_sea</code> / <code>sea_point</code> / <code>warships</code>: Hittite i=7 ×12 / 2 warships, i=18 ×32 / 5, i=22 ×24 / 6 (loc 9 &rarr; sea[0]). <code>mission28_hittite_raid</code>.</p>
             <p>Favour army: <code>events[]</code> pak i=27→28→29 (<code>EVENT_TRIGGER_BY_FAVOUR</code> master, <code>ONLY_VIA_EVENT</code> chain), sent by <code>event_manager_t::update_kingdom_favour</code> (OG <code>city/kingdom.c</code> <code>city_emperor_update</code>); no mission JS.</p>
             <p>Empire id <strong>13</strong> (pak). Map <span class="file-ref">data/maps/m_028_iken.map</span>. Rank 10. Scenario enemy <code>ENEMY_4_HITTITE</code>; beduin <code>ENEMY_7_LIBIAN</code>; favour/oil <code>ENEMY_3_EGYPTIAN</code>. Dump 2026-07-26.</p>
             <p><code>choice[]</code> → Heh/Bubastis (g144 61/62/63). SKIP: empty map_obj idx=10. Soft polish only.</p>

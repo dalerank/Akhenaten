@@ -108,6 +108,7 @@
           <summary>Mission script</summary>
           <div class="details-body">
             <p><span class="file-ref">src/scripts/mission/m_034_byblos.js</span></p>
+            <p>OG sends a pak invasion with loc 9+ by sea from sea point loc&nbsp;&minus;&nbsp;9, with the event&rsquo;s <code>phrase_var</code> warships; the JS raid passes them as <code>via_sea</code> / <code>sea_point</code> / <code>warships</code>: recurring Canaanite i=29 ×125 (loc 11 &rarr; sea[2]) and i=37 ×141 (loc 12 &rarr; sea[3]), 12 warships each. Favour event i=38 carries <code>warships : 9</code>. <code>mission34_enemy_raid</code>.</p>
             <p><span class="file-ref">data/maps/m_034_byblos.map</span></p>
             <p><code>next_mission : 36</code>. Empire id 33 · SKIP map_obj idx=9. Dump 2026-08-01.</p>
             <p>Kingdom army: at Kingdom rating 0 the engine sends the <code>EVENT_TRIGGER_BY_FAVOUR</code> invasion from <code>events[]</code> (<code>update_kingdom_favour</code>, <code>src/scenario/scenario_event_manager.cpp</code>): warnings for its <code>months_initial</code>, then the attack; its <code>on_completed_action</code> chain joins at the attack. Called off if the rating reaches 15 before it attacks; it can come again 12 months later. pak i=38 Egypt ×161 (128–176 roll) and i=46 ×128 are both BY_FAVOUR; as in the original only the first one (i=38) is ever sent.</p>

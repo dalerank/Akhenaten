@@ -734,7 +734,8 @@ function mission29_apply_invasion_loc(opts, loc, prefer_sea) {
 }
 
 // pak beduins(4) and the scenario enemy(1) both resolve to ENEMY_7_LIBIAN in this scenario.
-function mission29_libyan_raid(invasion_id, size, loc, attack_target) {
+// warships: the OG event's phrase_var, sent with a sea invasion.
+function mission29_libyan_raid(invasion_id, size, loc, attack_target, warships) {
 	if (loc === undefined) {
 		loc = 9
 	}
@@ -746,8 +747,12 @@ function mission29_libyan_raid(invasion_id, size, loc, attack_target) {
 		invasion_attack_target: attack_target === undefined ? EVENT_ATTACK_TARGET_RANDOM : attack_target
 	}
 	var via_sea = mission29_apply_invasion_loc(opts, loc, true)
+	if (via_sea) {
+		opts.warships = warships || 0
+	}
 	log_info("akhenaten: mission 29 libyan raid id=" + invasion_id + " size=" + size
-		+ " loc=" + loc + " sea=" + via_sea + " tile=" + opts.tilex + "," + opts.tiley)
+		+ " loc=" + loc + " sea=" + via_sea + " warships=" + (opts.warships || 0)
+		+ " tile=" + opts.tilex + "," + opts.tiley)
 	__image_request_pak(PACK_ENEMY_LIBIAN)
 	return city.start_foreign_army_invasion(opts)
 }
@@ -857,7 +862,7 @@ function mission29_timed_invasions(ev) {
 	if (!mission.event24_invasion_done && ev.years_since_start == 12 && ev.month == 0) {
 		mission.event24_invasion_done = true
 		log_info("akhenaten: mission 29 enemy×5 (i=24)")
-		mission29_libyan_raid(24, 5, 9, EVENT_ATTACK_TARGET_TROOPS)
+		mission29_libyan_raid(24, 5, 9, EVENT_ATTACK_TARGET_TROOPS, 2)
 		return
 	}
 	// pak i=25: beduin×8 y20m0 loc=1 attack=4.
@@ -871,7 +876,7 @@ function mission29_timed_invasions(ev) {
 	if (!mission.event26_invasion_done && ev.years_since_start == 23 && ev.month == 11) {
 		mission.event26_invasion_done = true
 		log_info("akhenaten: mission 29 enemy×8 (i=26)")
-		mission29_libyan_raid(26, 8, 9, EVENT_ATTACK_TARGET_FOOD)
+		mission29_libyan_raid(26, 8, 9, EVENT_ATTACK_TARGET_FOOD, 2)
 		return
 	}
 	// pak i=27: beduin×9 recurring from y30m0; months=8 → every 8 calendar months.
@@ -897,6 +902,6 @@ function mission29_timed_invasions(ev) {
 		}
 		mission.event28_invasion_last_abs = abs
 		log_info("akhenaten: mission 29 enemy×9 recurring (i=28) abs=" + abs)
-		mission29_libyan_raid(28, 9, 9, EVENT_ATTACK_TARGET_TROOPS)
+		mission29_libyan_raid(28, 9, 9, EVENT_ATTACK_TARGET_TROOPS, 2)
 	}
 }

@@ -1504,7 +1504,8 @@ function mission36_attack_target(attack) {
 	return EVENT_ATTACK_TARGET_RANDOM
 }
 
-function mission36_enemy_raid(invasion_id, size, loc, attack, on_completed_tag) {
+// warships: the event's `warships` (pak phrase_var), sent with a sea invasion.
+function mission36_enemy_raid(invasion_id, size, loc, attack, on_completed_tag, warships) {
 	var via_sea = loc >= 9
 	var opts = {
 		mode: ATTACK_TYPE_ENEMIES,
@@ -1517,6 +1518,7 @@ function mission36_enemy_raid(invasion_id, size, loc, attack, on_completed_tag) 
 	if (via_sea) {
 		opts.via_sea = 1
 		opts.sea_point = loc - 9
+		opts.warships = warships || 0
 		var sea = mission36_sea(loc - 9)
 		opts.tilex = sea[0]
 		opts.tiley = sea[1]
@@ -1529,7 +1531,7 @@ function mission36_enemy_raid(invasion_id, size, loc, attack, on_completed_tag) 
 		opts.on_completed_tag = on_completed_tag
 	}
 	log_info("akhenaten: mission 36 raid id=" + invasion_id + " size=" + size
-		+ " loc=" + loc + " sea=" + via_sea)
+		+ " loc=" + loc + " sea=" + via_sea + " warships=" + (opts.warships || 0))
 	__image_request_pak(PACK_ENEMY_ASSYRIAN)
 	return city.start_foreign_army_invasion(opts)
 }
@@ -1559,7 +1561,7 @@ function mission36_calendar_invasions(ev) {
 	// pak i=8 y2m8 enemy×38 loc9 sea → ok henna×42 (i=6, ONLY_VIA)
 	if (!mission.inv8_done && ev.years_since_start == 2 && ev.month == 8) {
 		mission.inv8_done = true
-		mission36_enemy_raid(8, 38, 9, 1, 6)
+		mission36_enemy_raid(8, 38, 9, 1, 6, 5)
 	}
 	// pak i=6 y8m3 henna×42 if raid wipe did not already unlock it.
 	if (!mission.henna6_fired && ev.years_since_start == 8 && ev.month == 3) {
@@ -1570,23 +1572,23 @@ function mission36_calendar_invasions(ev) {
 	// pak i=0 y3m1 enemy×20 loc11 sea
 	if (!mission.inv0_done && ev.years_since_start == 3 && ev.month == 1) {
 		mission.inv0_done = true
-		mission36_enemy_raid(0, 20, 11, 0)
+		mission36_enemy_raid(0, 20, 11, 0, undefined, 2)
 	}
 	// pak i=1 y5m8 enemy×35 loc11 sea attack random
 	if (!mission.inv1_done && ev.years_since_start == 5 && ev.month == 8) {
 		mission.inv1_done = true
-		mission36_enemy_raid(1, 35, 11, 4)
+		mission36_enemy_raid(1, 35, 11, 4, undefined, 6)
 	}
 	// pak i=5 y7m1 enemy×44 loc10 sea
 	if (!mission.inv5_done && ev.years_since_start == 7 && ev.month == 1) {
 		mission.inv5_done = true
-		mission36_enemy_raid(5, 44, 10, 0)
+		mission36_enemy_raid(5, 44, 10, 0, undefined, 8)
 	}
 	// pak i=11 y45m10+ recurring enemy×56 loc12 sea
 	if (ev.years_since_start >= 45 && ev.month == 10
 			&& mission.inv11_last_year != ev.years_since_start) {
 		mission.inv11_last_year = ev.years_since_start
-		mission36_enemy_raid(11, 56, 12, 4)
+		mission36_enemy_raid(11, 56, 12, 4, undefined, 6)
 	}
 }
 
@@ -1600,7 +1602,7 @@ function mission36_troops70_invasion_proxy(ev) {
 	if (outcome == "ok") { return }
 	mission.inv56_done = true
 	log_info("akhenaten: mission 36 troops×70 fail → enemy×72 (i=56)")
-	mission36_enemy_raid(56, 72, 10, 4)
+	mission36_enemy_raid(56, 72, 10, 4, undefined, 12)
 }
 
 // Mark henna unlocked when invasion wipe fires chain tag 6 (so calendar does not re-fire).

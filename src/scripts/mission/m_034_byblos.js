@@ -96,6 +96,7 @@ mission34 { // Byblos — Expansion and Conquest
 			amount { value : 161, min : 128, max : 176 }
 			months_initial : 12
 			location_fields [ 9, 9, -1, -1 ]
+			warships : 9
 			event_trigger_type : EVENT_TRIGGER_BY_FAVOUR
 			tag_id : 7038
 			on_completed_action : -1
@@ -583,19 +584,27 @@ function mission34_attack_target(attack) {
 	return EVENT_ATTACK_TARGET_RANDOM
 }
 
-function mission34_enemy_raid(invasion_id, size, loc, attack) {
-	var tile = mission34_loc_tile(loc)
-	__image_request_pak(PACK_ENEMY_CANAANITE)
-	city.start_foreign_army_invasion({
+// OG scenario_invasion_start: loc 9+ sails from sea point loc - 9 with the event's phrase_var warships.
+function mission34_enemy_raid(invasion_id, size, loc, attack, warships) {
+	var opts = {
 		mode: ATTACK_TYPE_ENEMIES,
 		enemy: ENEMY_2_CANAANITE,
 		size: size,
 		invasion_id: invasion_id,
-		tilex: tile[0],
-		tiley: tile[1],
 		want_destroy_buildings: 0,
 		invasion_attack_target: mission34_attack_target(attack)
-	})
+	}
+	if (loc >= 9) {
+		opts.via_sea = 1
+		opts.sea_point = loc - 9
+		opts.warships = warships || 0
+	} else {
+		var tile = mission34_loc_tile(loc)
+		opts.tilex = tile[0]
+		opts.tiley = tile[1]
+	}
+	__image_request_pak(PACK_ENEMY_CANAANITE)
+	city.start_foreign_army_invasion(opts)
 }
 
 function mission34_beduin_raid(invasion_id, size, loc) {
@@ -829,12 +838,12 @@ function mission34_requests_and_events(ev) {
 		}
 	}
 
-	// i29 canaanite×125 / 6mo from y16m0 (loc 11 → entry fallback)
+	// i29 canaanite×125 / 6mo from y16m0 (loc 11 → sea[2], 12 warships)
 	if (abs >= 16 * 12 + 0 && (abs - (16 * 12 + 0)) % 6 == 0 && mission.event29_invasion_last_abs != abs) {
 		if (city.num_enemy_formations == 0) {
 			mission.event29_invasion_last_abs = abs
 			log_info("akhenaten: mission 34 canaanite×125 recurring (i=29) abs=" + abs)
-			mission34_enemy_raid(3029, 125, 11, 4)
+			mission34_enemy_raid(3029, 125, 11, 4, 12)
 		}
 	}
 
@@ -852,12 +861,12 @@ function mission34_requests_and_events(ev) {
 		mission34_fire_simple_event(3032 + ev.years_since_start, EVENT_TYPE_PRICE_INCREASE, RESOURCE_WEAPONS, 24, "Abu")
 	}
 
-	// i37 canaanite×141 / 6mo from y28m8
+	// i37 canaanite×141 / 6mo from y28m8 (loc 12 → sea[3], 12 warships)
 	if (abs >= 28 * 12 + 8 && (abs - (28 * 12 + 8)) % 6 == 0 && mission.event37_invasion_last_abs != abs) {
 		if (city.num_enemy_formations == 0) {
 			mission.event37_invasion_last_abs = abs
 			log_info("akhenaten: mission 34 canaanite×141 recurring (i=37) abs=" + abs)
-			mission34_enemy_raid(3037, 141, 12, 0)
+			mission34_enemy_raid(3037, 141, 12, 0, 12)
 		}
 	}
 }
