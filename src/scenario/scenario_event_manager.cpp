@@ -1475,7 +1475,7 @@ void event_manager_t::process_event(int id, bool via_event_trigger, int chain_ac
             break;
 
         case EVENT_SUBTYPE_MSG_DISTANT_BATTLE_LOST:
-            city_message_post_full(true, "message_template_distant_battle_lost", &event, caller_event_id,
+            city_message_post_full(true, "message_template_general", &event, caller_event_id,
                                    PHRASE_battle_lost_title, PHRASE_battle_lost_initial_announcement,
                                    message_phrase(PHRASE_battle_lost_reason_A), id, 0);
             break;

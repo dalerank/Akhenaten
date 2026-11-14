@@ -1563,6 +1563,27 @@ game_messages_en {
         content { text: "" }
     }
 
+    // OG MESSAGE_CITY_SAVED (MM 262) / MESSAGE_DISTANT_BATTLE_WON (MM 263): texts from the event phrases.
+    message_template_city_saved {
+        id: 262
+        type: 2
+        message_type: 2
+        size [30, 20]
+        video { text: "@1" }
+        title { text: "" }
+        content { text: "" }
+    }
+
+    message_template_distant_battle_won {
+        id: 263
+        type: 2
+        message_type: 2
+        size [30, 20]
+        video { text: "@2" }
+        title { text: "" }
+        content { text: "" }
+    }
+
     // OG MESSAGE_CITY_CONQUERED (MM 339): a foreign city conquered by Egypt; texts from the event phrases.
     message_template_foreign_city_conquered {
         id: 339
