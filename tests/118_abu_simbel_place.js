@@ -1,142 +1,131 @@
-// Abu Simbel — composite 9×21 (OG/Heaven); cliff bulk + clear entrance; finish → rating.
+// OG Abu Simbel placement: 16 records fixed in map space around the clicked tile, every part but the
+// entrance on monument rock (editor cliffs), no cost, staging tile in front of the entrance, one
+// unfinished at a time, cliff restored under the rock parts when it goes away.
 
-function run_test() {
-    __log_info_native('[test:118] abu simbel cliff place + finish rating')
-    test_reload_city_session('data/default.map')
+var T118_PARTS = [
+    [1, 7, 3], [1, -11, 3], [-5, 4, 3], [-5, 1, 3], [-5, -2, 3], [-5, -5, 3], [-5, -8, 3], [-2, 7, 3],
+    [-2, -11, 3], [-5, 7, 3], [-5, -11, 3], [-2, -2, 3], [1, -2, 3], [4, -2, 3], [-2, 1, 6], [-2, -8, 6]
+]
 
-    if (!__scenario_building_allowed(BUILDING_ABU_SIMBEL)) {
-        __scenario_building_allow(BUILDING_ABU_SIMBEL, true)
-    }
+function t118_fail(msg) {
+    __log_info_native('[test:118] FAIL: ' + msg)
+    __test_signal_ready()
+}
 
-    __test_set_treasury(500000)
-
-    var cx = 50
-    var cy = 50
-    // Heaven bulk 9×21: cliff under X0..5 except entrance column; midcut_front clear.
-    // Wide plateau so default elevation edges sit far from the niche (GIF-style).
-    var w = 9
-    var h = 21
-    var plateau_pad = 12
-
-    function paint_cliff_site(ox, oy) {
-        for (var dy = -plateau_pad; dy < h + plateau_pad; dy++) {
-            for (var dx = -plateau_pad; dx < 6 + plateau_pad; dx++) {
-                // Entrance column X6..8 stays clear inside the footprint.
-                if (dx >= 6 && dx <= 8 && dy >= 0 && dy < h) {
-                    continue
-                }
-                terrain.add({ x: ox + dx, y: oy + dy }, TERRAIN_ELEVATION)
+// The rock block x -5..3, y -11..9 around the origin; the entrance (x 4..6, y -2..0) stays open ground.
+function t118_paint_site(ox, oy) {
+    for (var dy = -13; dy <= 11; dy++) {
+        for (var dx = -7; dx <= 8; dx++) {
+            var t = { x: ox + dx, y: oy + dy }
+            terrain.remove(t, TERRAIN_NOT_CLEAR | TERRAIN_FLOODPLAIN | TERRAIN_ROCK_NEAR_MONUMENT)
+            if (dx >= -5 && dx <= 3 && dy >= -11 && dy <= 9) {
+                terrain.add(t, TERRAIN_ROCK | TERRAIN_ROCK_NEAR_MONUMENT)
             }
         }
     }
+}
 
-    // Reject on clear land (no cliffs).
-    var rejected = test_building_place(BUILDING_ABU_SIMBEL, cx, cy)
-    if (rejected) {
-        __log_info_native('[test:118] unexpected place without cliffs bid=' + rejected)
-        __test_signal_ready()
-        return
+function run_test() {
+    __log_info_native('[test:118] OG abu simbel placement')
+    test_reload_city_session('data/default.map')
+    if (!__scenario_building_allowed(BUILDING_ABU_SIMBEL)) {
+        __scenario_building_allow(BUILDING_ABU_SIMBEL, true)
     }
-    __log_marker('abu_simbel_reject_no_cliff_ok')
+    __test_set_treasury(5000)
 
-    paint_cliff_site(cx, cy)
-    __log_marker('abu_simbel_cliff_painted')
+    var ox = (__scenario_map.width / 2) | 0
+    var oy = (__scenario_map.height / 2) | 0
 
-    var bid = test_building_place(BUILDING_ABU_SIMBEL, cx, cy)
+    if (test_building_place(BUILDING_ABU_SIMBEL, ox, oy)) {
+        return t118_fail('placed without cliffs')
+    }
+    __log_marker('t118_reject_no_cliff')
+
+    // Plain rock (not the editor's monument rock) does not take it either.
+    t118_paint_site(ox, oy)
+    for (var dy = -11; dy <= 9; dy++) {
+        terrain.remove({ x: ox - 5, y: oy + dy }, TERRAIN_ROCK_NEAR_MONUMENT)
+    }
+    if (__test_abu_simbel_site_fits(ox, oy)) {
+        return t118_fail('fits on plain rock')
+    }
+    t118_paint_site(ox, oy)
+    // The entrance must be open ground.
+    terrain.add({ x: ox + 5, y: oy - 1 }, TERRAIN_ROCK | TERRAIN_ROCK_NEAR_MONUMENT)
+    if (__test_abu_simbel_site_fits(ox, oy)) {
+        return t118_fail('fits with rock under the entrance')
+    }
+    t118_paint_site(ox, oy)
+    if (!__test_abu_simbel_site_fits(ox, oy) || __test_abu_simbel_site_fits(ox + 1, oy)) {
+        return t118_fail('site check: here ' + __test_abu_simbel_site_fits(ox, oy) + ' shifted ' + __test_abu_simbel_site_fits(ox + 1, oy))
+    }
+    __log_marker('t118_site_rules')
+
+    var bid = test_building_place(BUILDING_ABU_SIMBEL, ox, oy)
     if (!bid) {
-        __log_info_native('[test:118] failed to place BUILDING_ABU_SIMBEL on cliffs')
-        __test_signal_ready()
-        return
+        return t118_fail('place failed on the painted site')
+    }
+    if (city.finance.treasury != 5000) {
+        return t118_fail('OG Abu Simbel is free, treasury ' + city.finance.treasury)
     }
 
-    __test_process_events()
-    __test_pump_frames(2)
-
-    var b = city.get_building(bid)
-    if (!b || b.type != BUILDING_ABU_SIMBEL) {
-        __log_info_native('[test:118] placed building type mismatch')
-        __test_signal_ready()
-        return
+    var parts = [bid]
+    var cur = city.get_building(bid)
+    while (cur && cur.next_part_building_id > 0 && parts.length < 20) {
+        parts.push(cur.next_part_building_id)
+        cur = city.get_building(cur.next_part_building_id)
     }
-    __log_marker('abu_simbel_placed_ok:' + bid)
-
-    // Second (while unfinished) must be rejected — only one ever.
-    paint_cliff_site(cx + 20, cy)
-    var second = test_building_place(BUILDING_ABU_SIMBEL, cx + 20, cy)
-    if (second) {
-        __log_info_native('[test:118] unexpected second unfinished place bid=' + second)
-        __test_signal_ready()
-        return
+    if (parts.length != 16) {
+        return t118_fail('expected 16 parts, got ' + parts.length)
     }
-    __log_marker('abu_simbel_reject_second_ok')
-
-    // Walk progressive art stages (10 GIF milestones); screenshot each.
-    __test_camera_center_building(bid)
-    __test_process_events()
-    __test_pump_frames(2)
-    for (var stage = 1; stage <= 10; stage++) {
-        __test_monument_set_phase(bid, stage - 1)
-        __test_process_events()
-        __test_pump_frames(4)
-        var stage_name = (stage < 10) ? ('abu_simbel_stage_0' + stage) : ('abu_simbel_stage_' + stage)
-        __game_save_screenshot_as(SCREENSHOT_DISPLAY, stage_name)
-        __log_marker('abu_simbel_art_stage:' + stage)
+    for (var p = 0; p < 16; p++) {
+        var tp = __building_tile(parts[p])
+        var want = T118_PARTS[p]
+        if (tp.x != ox + want[0] || tp.y != oy + want[1] || city.get_building(parts[p]).size != want[2]) {
+            return t118_fail('part ' + p + ' at ' + tp.x + ',' + tp.y + ' size ' + city.get_building(parts[p]).size)
+        }
     }
-    __log_marker('abu_simbel_art_screenshot_ok')
+    __log_marker('t118_layout_ok')
 
-    // 10 art stages + terminal → phases().size()==11; set_phase(11) → FINISHED
-    __test_monument_set_phase(bid, 11)
-    __test_process_events()
-    __test_pump_frames(4)
-    __game_save_screenshot_as(SCREENSHOT_DISPLAY, 'abu_simbel_stage_finish')
-
-    var ph = __test_monument_phase(bid)
-    if (ph != 255 && ph != -1) {
-        __log_info_native('[test:118] not finished after set_phase(11) ph=' + ph)
-        __test_signal_ready()
-        return
+    if (terrain.is({ x: ox - 5, y: oy - 11 }, TERRAIN_ROCK) || !terrain.is({ x: ox - 5, y: oy - 11 }, TERRAIN_BUILDING)) {
+        return t118_fail('rock must give way to the building')
     }
-    __log_marker('abu_simbel_finished_ok')
+    if (__test_abu_simbel_access_x(bid) != ox + 7 || __test_abu_simbel_access_y(bid) != oy - 1) {
+        return t118_fail('staging tile ' + __test_abu_simbel_access_x(bid) + ',' + __test_abu_simbel_access_y(bid))
+    }
+    if (__test_abu_simbel_stage(bid) != 0 || __test_abu_simbel_progress(bid) != 0) {
+        return t118_fail('initial stage ' + __test_abu_simbel_stage(bid))
+    }
+    __log_marker('t118_placed_ok')
+
+    t118_paint_site(ox + 25, oy)
+    if (!__test_abu_simbel_site_fits(ox + 25, oy) || test_building_place(BUILDING_ABU_SIMBEL, ox + 25, oy)) {
+        return t118_fail('second unfinished Abu Simbel placed')
+    }
+    __log_marker('t118_one_unfinished')
+
+    __test_abu_simbel_set_stage(bid, 56)
+    if (__test_monument_phase(bid) != -1 || __test_abu_simbel_progress(bid) != 100) {
+        return t118_fail('stage 56 must finish it, phase ' + __test_monument_phase(bid))
+    }
+    __log_marker('t118_finished_ok')
 
     test_monument_slots([BUILDING_ABU_SIMBEL])
     city_update_monthly_monument_rating({})
     var rating_done = city.rating.monument | 0
     if (rating_done < 44) {
-        __log_info_native('[test:118] finished rating want >=44 got ' + rating_done)
-        __log_marker('abu_simbel_rating_fail:' + rating_done)
-        __test_signal_ready()
-        return
+        return t118_fail('finished rating want >=44 got ' + rating_done)
     }
-    __log_marker('abu_simbel_rating_ok:' + rating_done)
 
-    paint_cliff_site(cx + 20, cy)
-    var third = test_building_place(BUILDING_ABU_SIMBEL, cx + 20, cy)
-    if (third) {
-        __log_info_native('[test:118] unexpected place after finish bid=' + third)
-        __test_signal_ready()
-        return
-    }
-    __log_marker('abu_simbel_reject_after_finish_ok')
-
-    __log_info_native('[test:118] PASS')
-    __log_marker('abu_simbel_ok')
+    __log_marker('t118_ok')
     __test_signal_ready()
 }
 
 function check_valid() {
-    var required = [
-        'abu_simbel_reject_no_cliff_ok',
-        'abu_simbel_placed_ok',
-        'abu_simbel_reject_second_ok',
-        'abu_simbel_art_screenshot_ok',
-        'abu_simbel_finished_ok',
-        'abu_simbel_rating_ok',
-        'abu_simbel_reject_after_finish_ok',
-        'abu_simbel_ok'
-    ]
+    var required = ['t118_reject_no_cliff', 't118_site_rules', 't118_layout_ok', 't118_placed_ok',
+        't118_one_unfinished', 't118_finished_ok', 't118_ok']
     for (var i = 0; i < required.length; i++) {
-        if (!__test_find_inlog('[test-marker] ' + required[i])
-            && !__test_find_inlog(required[i])) {
+        if (!__test_find_inlog('[test-marker] ' + required[i])) {
             __log_info_native('[test:118] missing marker ' + required[i])
             return false
         }

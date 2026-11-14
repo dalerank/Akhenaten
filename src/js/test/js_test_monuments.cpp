@@ -14,6 +14,7 @@
 #include "building/monument_pyramid_figure.h"
 #include "building/monument_pyramid_ramp.h"
 #include "building/monument_royal_tomb.h"
+#include "building/monument_abu_simbel.h"
 #include "building/monument_sphinx.h"
 #include "building/monument_sun_temple.h"
 #include "building/monument_alexandria_library.h"
@@ -1095,6 +1096,80 @@ static int __test_caesareum_access(int bid) {
     return c ? c->access_point().grid_offset() : -1;
 }
 ANK_FUNCTION_1(__test_caesareum_access);
+
+static building_abu_simbel* test_abu_simbel(int bid) {
+    building* b = building_get(bid);
+    auto* a = b ? b->dcast_abu_simbel() : nullptr;
+    return a ? a->main_abu_simbel() : nullptr;
+}
+
+static int __test_abu_simbel_stage(int bid) {
+    auto* a = test_abu_simbel(bid);
+    return a ? a->stage() : -1;
+}
+ANK_FUNCTION_1(__test_abu_simbel_stage);
+
+static void __test_abu_simbel_set_stage(int bid, int stage) {
+    if (auto* a = test_abu_simbel(bid)) {
+        a->set_stage(stage);
+    }
+}
+ANK_FUNCTION_2(__test_abu_simbel_set_stage);
+
+static int __test_abu_simbel_spot_work(int bid) {
+    auto* a = test_abu_simbel(bid);
+    return a ? a->spot_work_left() : -1;
+}
+ANK_FUNCTION_1(__test_abu_simbel_spot_work);
+
+static int __test_abu_simbel_has_spot(int bid, int figure_type) {
+    auto* a = test_abu_simbel(bid);
+    return (a && a->has_free_spot((e_figure_type)figure_type)) ? 1 : 0;
+}
+ANK_FUNCTION_2(__test_abu_simbel_has_spot);
+
+static int __test_abu_simbel_needs(int bid, int figure_type) {
+    auto* a = test_abu_simbel(bid);
+    if (!a) {
+        return -1;
+    }
+    return (figure_type == FIGURE_STONEMASON ? a->need_stonemason() : a->need_carpenter()) ? 1 : 0;
+}
+ANK_FUNCTION_2(__test_abu_simbel_needs);
+
+static int __test_abu_simbel_progress(int bid) {
+    auto* a = test_abu_simbel(bid);
+    return a ? a->progress_percent() : -1;
+}
+ANK_FUNCTION_1(__test_abu_simbel_progress);
+
+static int __test_abu_simbel_site_fits(int x, int y) {
+    return building_abu_simbel::site_fits(tile2i(x, y)) ? 1 : 0;
+}
+ANK_FUNCTION_2(__test_abu_simbel_site_fits);
+
+// One OG work tick by figure fid; returns 1 when the figure would leave the site.
+static int __test_abu_simbel_work(int bid, int fid) {
+    auto* a = test_abu_simbel(bid);
+    figure* f = fid > 0 ? figure_get(fid) : nullptr;
+    if (!a || !f) {
+        return -1;
+    }
+    return a->work_tick(*f) ? 1 : 0;
+}
+ANK_FUNCTION_2(__test_abu_simbel_work);
+
+static int __test_abu_simbel_access_x(int bid) {
+    auto* a = test_abu_simbel(bid);
+    return a ? a->access_point().x() : -1;
+}
+ANK_FUNCTION_1(__test_abu_simbel_access_x);
+
+static int __test_abu_simbel_access_y(int bid) {
+    auto* a = test_abu_simbel(bid);
+    return a ? a->access_point().y() : -1;
+}
+ANK_FUNCTION_1(__test_abu_simbel_access_y);
 
 static building_sun_temple *test_sun_temple(int bid) {
     building *b = building_get(bid);
