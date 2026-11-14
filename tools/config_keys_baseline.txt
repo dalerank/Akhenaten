@@ -162,7 +162,6 @@ unknown | clouds_config:clouds_t::config_t.cloud_max_creation_timeout
 unknown | clouds_config:clouds_t::config_t.cloud_min_creation_timeout
 unknown | clouds_config:clouds_t::config_t.pause_min_frames
 unknown | display_options_window:ui::widget.orig_scale
-unknown | display_options_window:ui::widget.resolution_changed
 unknown | display_options_window:ui::widget.scale_max
 unknown | display_options_window:ui::widget.scale_min
 unknown | display_options_window:ui::widget.scale_step

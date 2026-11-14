@@ -41,19 +41,24 @@ function display_options_sync_resolution_selection(window) {
     window.resolutions.select_item(display_options_window_size_label())
 }
 
+// Window mode and sizes when the window opened; Cancel restores them (they apply live).
+var display_options_snapshot = { fullscreen: false, fullscreen_res: { x: 0, y: 0 }, window_size: { x: 0, y: 0 } }
+
 [es=(display_options_window, init)]
 function display_options_window_init(window) {
     var android = __platform_is_android()
     var fullscreen_only = __game_is_fullscreen_only()
     var w = display_options_window
 
-    // Everything Cancel puts back. Window mode and resolution apply live, so they are recorded too.
+    // Everything Cancel puts back.
     w.orig_scale = __display_options_get_scale()
-    w.orig_fullscreen = __display_options_is_fullscreen()
     var fs_res = game_features.gameopt_fullscreen_resolution
     var win_size = game_features.gameopt_display_size
-    w.orig_fullscreen_res = { x: fs_res.x, y: fs_res.y }
-    w.orig_window_size = { x: win_size.x, y: win_size.y }
+    display_options_snapshot = {
+        fullscreen: __display_options_is_fullscreen(),
+        fullscreen_res: { x: fs_res.x, y: fs_res.y },
+        window_size: { x: win_size.x, y: win_size.y }
+    }
 
     window.resolutions.enabled = !android && !fullscreen_only
     window.btnfullscreen.enabled = !fullscreen_only
@@ -157,14 +162,15 @@ function display_options_window_go_back(window) {
     }
 
     // Restore both saved sizes first: switching mode below reads them.
-    __display_options_set_fullscreen_resolution(w.orig_fullscreen_res.x, w.orig_fullscreen_res.y)
-    __display_options_set_window_size_setting(w.orig_window_size.x, w.orig_window_size.y)
-    if (__display_options_is_fullscreen() != w.orig_fullscreen) {
+    var snap = display_options_snapshot
+    __display_options_set_fullscreen_resolution(snap.fullscreen_res.x, snap.fullscreen_res.y)
+    __display_options_set_window_size_setting(snap.window_size.x, snap.window_size.y)
+    if (__display_options_is_fullscreen() != snap.fullscreen) {
         emit event_app_toggle_fullscreen{ value: 0 }
-    } else if (!w.orig_fullscreen) {
+    } else if (!snap.fullscreen) {
         var current = __display_options_get_window_size()
-        if (current.x != w.orig_window_size.x || current.y != w.orig_window_size.y) {
-            emit event_display_options_apply_resolution{ w: w.orig_window_size.x, h: w.orig_window_size.y }
+        if (current.x != snap.window_size.x || current.y != snap.window_size.y) {
+            emit event_display_options_apply_resolution{ w: snap.window_size.x, h: snap.window_size.y }
         }
     }
     __display_options_save()
@@ -179,9 +185,6 @@ display_options_window {
     pos : display_options_window_centered_pos()
 
     orig_scale : 100
-    orig_fullscreen : false
-    orig_fullscreen_res : { x: 0, y: 0 }
-    orig_window_size : { x: 0, y: 0 }
     scale_step : 5
     scale_min : 50
     scale_max : 300
