@@ -231,11 +231,7 @@ namespace game_features {
       "gameplay_enhanced_city_ambient", "#TR_CONFIG_CITY_AMBIENT", false, false};
     game_feature gameplay_enhanced_festival_calendar{ "gameplay_enhanced_festival_calendar", "#TR_CONFIG_FESTIVAL_CALENDAR", false, false };
     game_feature gameplay_enhanced_local_cults{ "gameplay_enhanced_local_cults", "#TR_CONFIG_LOCAL_CULTS", false, false };
-#if defined(__ANDROID__) || defined(__EMSCRIPTEN__) || defined(__SWITCH__) || defined(__vita__)
-    game_feature graphics_atlas_render{"graphics_atlas_render", "", false, false};
-#else
     game_feature graphics_atlas_render{ "graphics_atlas_render", "", true, true };
-#endif
     game_feature graphics_atlas_max_sprite_width{ "graphics_atlas_max_sprite_width", "", 512.0f, 512.0f };
     game_feature graphics_atlas_page_size{ "graphics_atlas_page_size", "", 8192.0f, 8192.0f };
 
