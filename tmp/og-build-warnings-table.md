@@ -17,16 +17,18 @@ OG rules that hold for the whole pass:
 - "imported" = trade status import or import-as-needed; "can import" = an open trading city sells it;
   "could import" (OG `..._potentially`) = a trading city sells it, open or not.
 
-Status before T9: **same** / **differs** / **missing**. The "after" column is the target of `fix/build-warnings-og`.
+Status before T9: **same** / **differs** / **missing**. The "after" column is the state on `fix/build-warnings-og`: the checks live in
+`src/building/construction/construction_warnings.cpp`, the tables in `src/scripts/building/construction_warnings.js`
+(`construction_warning_rules`).
 
 ## General checks
 
 | # | OG id (our key) | OG text | OG condition | Buildings | ak before T9 | Status | After |
 |---|---|---|---|---|---|---|---|
-| 1 | 11 `#needs_road_access` | Needs road access | `cw.c:81-141` no adjacent road; storage yard also passes on its 3×3 area; temple complexes never warn; shrines use #2; only while problem messages < 3 | every site building except the exempt list `cw.c:87-118` (statues, well, forts, gatehouses, triumphal arch, crude hut, altar/oracle, pyramid, sphinx, caesareum, library, abu simbel, lighthouse, mausoleum, obelisks, sun temple, royal tombs) | `building_impl.cpp:93` (exempt list = `road_access.cpp:586` flags: house, wall, monument, beautification + granary, dock, ferry, gatehouses); `build_planner.cpp:1131` warns for temple complexes; `building_storage_yard.cpp:998` (3×3 only); `monument_abu_simbel.cpp:693`, `monument_alexandria_library.cpp:1196`, `monument_mausoleum.cpp:1120`, `monument_pharos_lighthouse.cpp:381` warn | differs: exempt list (granary/dock/ferry/statues-as-beautification), temple complex and 4 Ptolemaic monuments warn, no problem-message gate | same: `construction_warnings.cpp` + `construction_warnings.road_access_exempt` |
-| 2 | 207 `#shrines_near_road_required` | Shrines must be within two spaces of a road | `cw.c:132-138` no adjacent road and no road on the 8-tile cross (±1, ±2 on each axis) `road_access.c:166` | 5 shrines | `shrine_*.js:26` road within square radius 2 (diagonals count) | differs: diagonals | same: cross pattern in C++, shrines listed in `shrine_types` |
+| 1 | 11 `#needs_road_access` | Needs road access | `cw.c:81-141` no adjacent road; storage yard also passes on its 3×3 area; temple complexes never warn; shrines use #2; only while problem messages < 3 | every site building except the exempt list `cw.c:87-118` (statues, well, forts, gatehouses, triumphal arch, crude hut, altar/oracle, pyramid, sphinx, caesareum, library, abu simbel, lighthouse, mausoleum, obelisks, sun temple, royal tombs) | `building_impl.cpp:93` (exempt list = `road_access.cpp:586` flags: house, wall, monument, beautification + granary, dock, ferry, gatehouses); `build_planner.cpp:1131` warns for temple complexes; `building_storage_yard.cpp:998` (3×3 only); `monument_abu_simbel.cpp:693`, `monument_alexandria_library.cpp:1196`, `monument_mausoleum.cpp:1120`, `monument_pharos_lighthouse.cpp:381` warn | differs: exempt list (granary/dock/ferry/statues-as-beautification), temple complex and 4 Ptolemaic monuments warn, no problem-message gate | same: `road_access_exempt`, `road_access_area` (storage yard 3×3); OG drag-tool types (roads, walls, ditches, dike, plaza, gardens, bridges, festival square) are in the exempt list too |
+| 2 | 207 `#shrines_near_road_required` | Shrines must be within two spaces of a road | `cw.c:132-138` no adjacent road and no road on the 8-tile cross (±1, ±2 on each axis) `road_access.c:166` | 5 shrines | `shrine_*.js:26` road within square radius 2 (diagonals count) | differs: diagonals | same: cross pattern in C++, `shrines` |
 | 3 | 17 `#city_needs_more_workers` | Your city needs more workers | `cw.c:144` **gated**; model laborers > 0; workers needed ≥ 10; not the well | site buildings with laborers, water lift | `building_impl.cpp:97` | differs: not gated, venues warn too | same |
-| 4 | 104 `#no_troops_for_defense` | — | `cw.c:173-224` an invasion is running, no legions and no warships | temples, temple complexes, shrines, bandstand, booth, senet house, pavilion, conservatory, dance school, juggler school, police, mansions, architect, tax collector, roadblock, firehouse, courthouse, palaces, zoo | `zoo.js:80` only (and the zoo stops there) | missing (all but the zoo); zoo differs | same: `construction_warnings.defense_types` |
+| 4 | 104 `#no_troops_for_defense` | — | `cw.c:173-224` an invasion is running, no legions and no warships | temples, temple complexes, shrines, bandstand, booth, senet house, pavilion, conservatory, dance school, juggler school, police, mansions, architect, tax collector, roadblock, firehouse, courthouse, palaces, zoo | `zoo.js:80` only (and the zoo stops there) | missing (all but the zoo); zoo differs | same: `defense`; zoo no longer stops there |
 
 ## House plots
 
@@ -41,18 +43,18 @@ Status before T9: **same** / **differs** / **missing**. The "after" column is th
 
 | # | OG id (our key) | OG text | OG condition | Buildings | ak before T9 | Status | After |
 |---|---|---|---|---|---|---|---|
-| 9 | 19 `#build_bazaars_to_distribute_food` | Build Bazaars to distribute the food stored here | `cw.c:226` **gated**; no active bazaar | granary | `granary.js:79` | differs: not gated | same: `construction_warnings.requires_building` |
+| 9 | 19 `#build_bazaars_to_distribute_food` | Build Bazaars to distribute the food stored here | `cw.c:226` **gated**; no active bazaar | granary | `granary.js:79` | differs: not gated | same: `requires_building` |
 | 10 | 44 `#build_juggling_school` | Build a Juggling School to send performers here | `cw.c:233` unreachable (venues skip `run_warnings`) | booth | `booth.js:42`, `bandstand.js:44`, `building_pavilion.cpp:132` (active count) | differs: OG never shows it | not shown |
 | 11 | 45 `#build_conservatory` | Build a Conservatory to have musicians here | `cw.c:240` unreachable | bandstand | `bandstand.js:44`, `building_pavilion.cpp:132` | differs | not shown |
 | 12 | 46 `#build_dance_school` | Build a Dance School | `cw.c:247` unreachable | pavilion | `building_pavilion.cpp:132` | differs | not shown |
-| 13 | 208 `#build_jugglers_school` | Build a Juggler's School to provide performers for this venue | `cw.c:754` no juggler school built (total) | booth, bandstand, pavilion | — | missing | same: `construction_warnings.venue_schools` |
+| 13 | 208 `#build_jugglers_school` | Build a Juggler's School to provide performers for this venue | `cw.c:754` no juggler school built (total) | booth, bandstand, pavilion | — | missing | same: `venue_schools` |
 | 14 | 209 `#venue_build_conservatory` | Build a Conservatory to supply musicians for this venue | `cw.c:760` no conservatory (total) | bandstand, pavilion | — (no key) | missing | same |
 | 15 | 210 `#venue_build_dance_school` | Build a Dance School to train dancers for this venue | `cw.c:763` no dance school (total) | pavilion | — (no key) | missing | same |
 | 16 | 42 `#needs_recruiter_to_conscript` | Needs a working Recruiter to conscript soldiers | `cw.c:254` **gated**; no active recruiter | 3 forts | `building_fort.cpp:162` | differs: not gated | same: `requires_building` |
 | 17 | 43 `#soldiers_need_supplies_of_weapons` | Some soldiers will need supplies of weapons | `cw.c:263` **gated**; no weapons in storage yards | recruiter | `recruiter.js:28` | differs: not gated | same: `requires_stock` |
 | 18 | 41 `#must_be_next_to_wall_for_patrol` | Must be next to a Wall to send out a patrol | `cw.c:270` **gated**; no wall on the ring around the tower | 3 towers | `building_tower.cpp:30` shows `#warning_shipwright_needed` when the tower *is* next to a wall | differs (inverted, wrong key) | same: `wall_patrol_types` |
 | 19 | 38 `#needs_access_to_water_lift` | Needs access to a full Water Lift | `cw.c:278` well origin without groundwater — unreachable, `construction_place.c:1050` refuses the well first | well | `well.js:58`, `water_supply.js:46` `#needs_groundwater` after placement — also unreachable (planner refuses, `build_planner.cpp:690`) | same (dead in both) | dead JS removed |
-| — | (ak only) `#warning_shipwright_needed` | — | — | gatehouses (`gatehouse_common.js:212`, shown when next to a wall) | not OG | removed |
+| — | (ak only) `#warning_shipwright_needed` | — | — | gatehouses (`gatehouse_common.js:212`, shown when next to a wall) | not OG | — | removed |
 
 ## Raw material of a workshop (`hint_raw_material`)
 
@@ -62,7 +64,7 @@ storage yards → warn "needs X", then one of: build the producer (city can prod
 
 | # | OG ids (our keys) | Building | OG | ak before T9 | Status | After |
 |---|---|---|---|---|---|---|
-| 20 | 27 `#needs_barley`, 34 `#build_barley_farm`, 31, 32 | brewery | `cw.c:307` | `workshop.js:51` no beer-stock check; route only if a closed city sells it | differs | same: `construction_warnings.raw_materials` |
+| 20 | 27 `#needs_barley`, 34 `#build_barley_farm`, 31, 32 | brewery | `cw.c:307` | `workshop.js:51` no beer-stock check; route only if a closed city sells it | differs | same: `raw_materials` |
 | 21 | 28 `#building_needs_flax`, 35 `#build_flax_farm`, 31, 32 | weaver | `cw.c:312` | `weaver.js:44` all three hints at once, no linen-stock check | differs | same |
 | 22 | 30 `#needs_gems`, 37 `#build_gem_mine`, 31, 32 | jeweler | `cw.c:317` | `workshop.js:143` all hints at once, no product check | differs | same |
 | 23 | 29 `#building_needs_clay`, 36 `#build_clay_pit`, 31, 32 | potter | `cw.c:322` | `pottery.js:58` route only if a closed city sells it | differs | same |
@@ -88,7 +90,7 @@ With both missing the hints use the resource-specific texts (lamps swap the oil 
 
 | # | OG ids (our keys) | Building | OG | ak before T9 | Status | After |
 |---|---|---|---|---|---|---|
-| 34 | 145 `#building_needs_clay_and_straw`, 29, 82, 36, 83, 146/147 clay, 148/149 straw, 31, 32 | brickworks | `cw.c:367` | — | missing | same: `construction_warnings.two_inputs` |
+| 34 | 145 `#building_needs_clay_and_straw`, 29, 82, 36, 83, 146/147 clay, 148/149 straw, 31, 32 | brickworks | `cw.c:367` | — | missing | same: `two_inputs` |
 | 35 | 253 `#building_needs_oil_and_pottery`, 263 `#building_needs_oil`, 264 `#building_needs_pottery`, 254 `#build_potter`, 255-258, 31, 32 | lamp maker | `cw.c:403` | `lamp_workshop.js:82` | same | same (moved to the table) |
 | 36 | 150 `#monument_needs_stone_and_limestone`, 151-157 | bent and true pyramids | `cw.c:631,693` | — | missing | same |
 | 37 | 159 `#monument_needs_bricks_and_limestone`, 158, 160-163, 152-156 | mud-brick pyramids | `cw.c:631,697` | — | missing | same |
@@ -102,7 +104,7 @@ import texts; else the generic import texts for X when it could be imported.
 
 | # | OG ids (our keys) | Building | OG | ak before T9 | Status | After |
 |---|---|---|---|---|---|---|
-| 38 | 137 `#building_needs_beer`, 138 `#build_brewery`, 191 `#build_brewery_or_import_beer`, 192 `#build_brewery_or_import_beer_route`, 168/169 barley | senet house | `cw.c:447` | `senet_house.js:53` all hints at once, keys `#need_beer`/`#need_brewery`/`#build_senet_master` (ak only) | differs | same: `construction_warnings.finished_goods` |
+| 38 | 137 `#building_needs_beer`, 138 `#build_brewery`, 191 `#build_brewery_or_import_beer`, 192 `#build_brewery_or_import_beer_route`, 168/169 barley | senet house | `cw.c:447` | `senet_house.js:53` all hints at once, keys `#need_beer`/`#need_brewery`/`#build_senet_master` (ak only) | differs | same: `finished_goods`; ak-only `#build_senet_master`, `#need_beer`, `#need_brewery` removed |
 | 39 | 139 `#needs_papyrus`, 140 `#build_papyrus_maker`, 193 `#build_papyrus_maker_or_import`, 194 `#build_papyrus_maker_or_import_route`, 170/171 reeds (only "import", not "import as needed", counts) | scribal school, library | `cw.c:502` | `scribal_school.js:48` all hints at once; library — | differs / missing | same |
 | 40 | 141 `#building_needs_linen`, 142 `#build_weaver`, 195 `#build_weaver_or_import_linen`, 196 `#build_weaver_or_import_linen_route`, 174/175 flax | mortuary | `cw.c:534` | `mortuary.js:86` all hints at once | differs | same |
 | 41 | 270 `#building_needs_clay_and_paint`, 36, 146/147, 269 `#build_paint_maker`, 267/268, 263/264 | artisans guild | `cw.c:576` | `config.js:211` | same | same (JS) |
@@ -141,12 +143,22 @@ sandstone refusal (`monument_mausoleum.cpp:1030`) showed a fort text.
 ## Counts (before T9)
 
 42 OG rows: same 6 (#8, #19, #25, #33, #35, #41), differs 21, missing 15.
-After T9 all 42 rows follow OG; see "Remaining" for what is still approximate.
+After T9: 42 of 42 rows follow the OG condition and texts (#10-#12 are correctly never shown, #19 stays dead);
+see "Remaining" for what is still approximate. Covered by integral tests 540 (road access, statue exemption, booth,
+pavilion, granary, recruiter, house plots) and 541 (weaver, product stock, carpenters, brickworks, mortuary, senet,
+library), plus the existing 186 (shrines), 258 (pottery), 285 (cattle), 357 (lamps), 388 (paint), 421 (artisans).
 
 ## Remaining
 
 - #5 food supply uses food produced last month; OG estimates the supply from working producers (`food_supply.c:36`),
   which is task T1 (`city/city_food_supply.cpp`). Switch once T1 lands.
-- `can_produce` of products (only pottery for the lamp maker) is "our city sells it", not the OG chain.
+- `can_produce` of products (pottery for the lamp maker, bricks for mastabas and mud-brick pyramids) is "our city
+  sells it", not the OG chain `empire.c:183`.
+- #6 "first mission" = normal campaign mode with `campaign_scenario_id == 0` (OG `mission_id != 0`).
+- #1 problem-message gate uses `city_message_problem_area_count()`, which ak refreshes when the problem button is used.
 - `can_import` ignores the route limit.
+- ak-only hints kept: weaponsmith copper, industry office papyrus, wharf shipwright, mastaba / stepped pyramid
+  groundwater, brewery water (gameplay option).
+- The editor never runs these checks (it places through `construction_place`, not `construction_finalize`), so the
+  OG editor guard needs no counterpart.
 - ak keeps the warning list newest-first and drops the oldest when full; OG drops new warnings when its slots are full.
