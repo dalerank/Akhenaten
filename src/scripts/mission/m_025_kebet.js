@@ -16,10 +16,9 @@ log_info("akhenaten: mission 25 kebet started")
 // to keep the unlock playable (same treatment as Kerma in mission 24).
 // DEMAND_* / CITY_STATUS events address the trade route via loc (1=Waset .. 9=Thinis);
 // their `city` field is editor junk (often points at Kebet itself).
-// Triage SKIP: i=28 invasion amount=0 (orphan chain child of i=27).
+// i=27 ok→i=28: OG's warship-only sea raid (0 soldiers, 5 warships from sea[0]).
 // Invasion loc = 1-based land point index; the map only has land[0]=[15,43], so loc 2/3/4
-// fall back to -1 (Egyptian spawns at the map entry point). Sea point [71,43] is water and
-// no pak invasion is naval here, so it stays unused.
+// fall back to -1 (Egyptian spawns at the map entry point). loc 9 = sea point [71,43].
 //
 // Tag_id scheme:
 //   1000 + i               chain-only leaves / chain requests
@@ -468,6 +467,8 @@ mission25 { // Kebet (Coptos) — Reunification; briefing key = coptos
 		event25_invasion_done : false
 		event26_invasion_done : false
 		event27_invasion_done : false
+		event27_enemies_seen : false
+		event28_warships_done : false
 
 		henna_raid_done : false
 		henna_raid_wave2_done : false
@@ -564,7 +565,7 @@ function mission25_fire_request(tag, resource, amount, months, ok_tag, fail_tag,
 
 // pak location_fields after randomize = 1-based land invasion point index (MAX 8).
 // Map 25 only has land[0]=[15,43]; loc 2/3/4 have no point -> -1 (Egyptian falls back
-// to the map entry point). Sea point [71,43] is water and unused (no naval pak invasion).
+// to the map entry point). loc 9+ is a sea point (see mission25_egypt_raid).
 function mission25_loc_tile(loc) {
 	if (loc == 1) {
 		return [15, 43]
@@ -572,20 +573,28 @@ function mission25_loc_tile(loc) {
 	return [-1, -1]
 }
 
-function mission25_egypt_raid(invasion_id, size, attack_target, loc) {
-	var tile = mission25_loc_tile(loc === undefined ? 0 : loc)
-	log_info("akhenaten: mission 25 egypt raid id=" + invasion_id + " size=" + size
-		+ " loc=" + loc + " tile=" + tile[0] + "," + tile[1])
-	__image_request_pak(PACK_ENEMY_EGYPTIAN)
-	city.start_foreign_army_invasion({
+// OG scenario_invasion_start: loc 9+ sails from sea point loc - 9 with the event's phrase_var warships.
+function mission25_egypt_raid(invasion_id, size, attack_target, loc, warships) {
+	var opts = {
 		invasion_id: invasion_id,
 		enemy: ENEMY_3_EGYPTIAN,
 		size: size,
-		tilex: tile[0],
-		tiley: tile[1],
 		want_destroy_buildings: size,
 		invasion_attack_target: attack_target
-	})
+	}
+	if (loc >= 9) {
+		opts.via_sea = 1
+		opts.sea_point = loc - 9
+		opts.warships = warships || 0
+	} else {
+		var tile = mission25_loc_tile(loc === undefined ? 0 : loc)
+		opts.tilex = tile[0]
+		opts.tiley = tile[1]
+	}
+	log_info("akhenaten: mission 25 egypt raid id=" + invasion_id + " size=" + size + " loc=" + loc
+		+ " warships=" + (opts.warships || 0))
+	__image_request_pak(PACK_ENEMY_EGYPTIAN)
+	city.start_foreign_army_invasion(opts)
 }
 
 function mission25_ensure_flood_leaves() {
@@ -779,7 +788,7 @@ function mission25_requests_and_events(ev) {
 	}
 }
 
-// pak i=24/25/26/27: timed Khmun-loyalist egypt raids. i=27 ok→i=28 is SKIPped (amount=0).
+// pak i=24/25/26/27: timed Khmun-loyalist egypt raids. i=27 ok→i=28 (see below).
 [es=event_advance_month, mission=mission25]
 function mission25_timed_invasions(ev) {
 	if (!mission.event24_invasion_done && ev.years_since_start == 2 && ev.month == 4) {
@@ -801,6 +810,23 @@ function mission25_timed_invasions(ev) {
 		mission.event27_invasion_done = true
 		mission25_egypt_raid(27, 70, EVENT_ATTACK_TARGET_RANDOM, 2)
 	}
+}
+
+// pak i=27 ok→i=28: once the egypt×70 raid is wiped, 5 Egyptian warships sail in from sea[0], no soldiers.
+[es=event_advance_month, mission=mission25]
+function mission25_warships_after_event27(ev) {
+	if (!mission.event27_invasion_done || mission.event28_warships_done) {
+		return
+	}
+	if (city.num_enemy_formations > 0) {
+		mission.event27_enemies_seen = true
+		return
+	}
+	if (!mission.event27_enemies_seen) {
+		return
+	}
+	mission.event28_warships_done = true
+	mission25_egypt_raid(28, 0, EVENT_ATTACK_TARGET_FOOD, 9, 5)
 }
 
 // Chain invasions from JS after a request refuse (EVENT_TYPE_INVASION is a no-op).

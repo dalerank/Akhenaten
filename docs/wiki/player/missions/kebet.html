@@ -102,7 +102,8 @@
             <p><span class="file-ref">src/scripts/mission/m_025_kebet.js</span> · import in <span class="file-ref">src/scripts/missions.js</span></p>
             <p>Favour army: <code>events[]</code> pak i=29→30 (<code>EVENT_TRIGGER_BY_FAVOUR</code> master, <code>ONLY_VIA_EVENT</code> chain), sent by <code>event_manager_t::update_kingdom_favour</code> (OG <code>city/kingdom.c</code> <code>city_emperor_update</code>); no mission JS.</p>
             <p>Empire id <strong>24</strong> (pak). Map <span class="file-ref">data/maps/m_025_kebet.map</span>. Rank 9. Scenario enemy <code>ENEMY_6_KUSHITE</code>; invasions / favour via <code>ENEMY_3_EGYPTIAN</code>. Dump 2026-07-26.</p>
-            <p><code>next_mission : 27</code> (funnel with Menat → <a href="itjtawy.html">Itjtawy</a>). SKIP: empty map_obj idx=11; invasion i=28 amount=0.</p>
+            <p><code>next_mission : 27</code> (funnel with Menat → <a href="itjtawy.html">Itjtawy</a>). SKIP: empty map_obj idx=11.</p>
+            <p>i=27 egypt×70 ok&rarr;i=28: once the raid is wiped, 5 Egyptian warships sail in from sea point <code>[71,43]</code> without soldiers (pak i=28 amount 0, loc 9, <code>phrase_var</code> 5). <code>mission25_warships_after_event27</code>.</p>
           </div>
         </details>
         <details>
