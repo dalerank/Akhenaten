@@ -39,6 +39,7 @@
 #include "sound/sound.h"
 #include "sound/sound_city.h"
 #include "widget/debug_console.h"
+#include "window/autoconfig_window.h"
 #include "window/window_info.h"
 
 #include <SDL.h>
@@ -332,6 +333,21 @@ pcstr __test_info_ui_text(pcstr element_id) {
     return buf.c_str();
 }
 ANK_FUNCTION_1(__test_info_ui_text);
+
+pcstr __test_window_list_draw_text(pcstr window_id, pcstr element_id, int index) {
+    static bstring256 buf;
+    buf = "";
+    autoconfig_window* w = autoconfig_window::find(window_id);
+    if (!w || !w->contains(element_id)) {
+        return buf.c_str();
+    }
+    ui::escrollable_list* list = (*w)[element_id].dcast_scrollable_list();
+    if (list && list->get_panel()) {
+        buf = list->get_panel()->get_entry_draw_text(index);
+    }
+    return buf.c_str();
+}
+ANK_FUNCTION_3(__test_window_list_draw_text);
 
 int __test_info_ui_image(pcstr element_id) {
     auto& context = common_info_window::get_object_info();

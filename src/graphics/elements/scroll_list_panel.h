@@ -70,6 +70,7 @@ public:
     int items_count();
     const xstring get_entry_text_by_idx(int index, int filename_syntax);
     const xstring get_selected_entry_text(int filename_syntax);
+    bstring256 get_entry_draw_text(int index);
     int get_entry_idx(pcstr button_text);
     bool has_entry(const char* button_text);
     void set_custom_render_func(custom_text_render_func f) {
