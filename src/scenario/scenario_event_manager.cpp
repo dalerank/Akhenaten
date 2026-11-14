@@ -55,6 +55,10 @@
 #include <vector>
 
 constexpr int MAX_EVENTS = 150;
+
+static bool is_favour_trigger(e_event_trigger_type t) {
+    return t == EVENT_TRIGGER_BY_FAVOUR || t == EVENT_TRIGGER_BY_FAVOUR_IN_USE;
+}
 constexpr int NUM_AUTO_PHRASE_VARIANTS = 54;
 
 const e_event_type_tokens_t ANK_CONFIG_ENUM(e_event_type_tokens);
@@ -151,6 +155,13 @@ void event_ph_t::set_param(pcstr name, int param) {
         data.earthquake.delay = (int16_t)param;
         return;
     }
+}
+
+// OG scenario value: a fixed value, or with min/max a new roll for each chained copy (randomize_event_fields).
+void event_ph_value::archive_load(archive arch) {
+    f_min = (int16_t)arch.r_int("min", -1);
+    f_max = (int16_t)arch.r_int("max", -1);
+    f_fixed = (f_min >= 0 && f_max >= 0) ? -1 : value;
 }
 
 void event_ph_t::archive_load(archive arch) {
@@ -616,7 +627,7 @@ bool event_manager_t::create(const event_ph_t* master, const event_ph_t* parent,
     child->parent_id = parent->event_id;
     child->invasion_warnings_shown = 0;
 
-    if ((og_invasions && child->type == EVENT_TYPE_INVASION) || child->type == EVENT_TYPE_EARTHQUAKE) {
+    if ((child->type == EVENT_TYPE_INVASION && invasion_runs_og(*child)) || child->type == EVENT_TYPE_EARTHQUAKE) {
         // OG scenario_event_chain: a child's delay (months, in time.year) counts from the current month.
         // Read from the template: update_randomized_values treats time as {year, month, ...} value/fixed/min/max.
         const int delay = master->time.year;
@@ -1145,10 +1156,9 @@ void event_manager_t::process_event(int id, bool via_event_trigger, int chain_ac
 
         if (event.type == EVENT_TYPE_REQUEST) {
             create(&event, at(caller_event_id), EVENT_TRIGGER_ACTIVATED_8);
-        } else if (create(&event, at(caller_event_id), EVENT_TRIGGER_ACTIVATED_12)
-                   && og_invasions && event.type == EVENT_TYPE_INVASION) {
+        } else if (create(&event, at(caller_event_id), EVENT_TRIGGER_ACTIVATED_12)) {
             event_ph_t &child = g_scenario_events.event_list.back();
-            if (child.quest_months_left == 0) {
+            if (child.type == EVENT_TYPE_INVASION && invasion_runs_og(child) && child.quest_months_left == 0) {
                 // OG scenario_event_chain: an undelayed invasion child is processed at once.
                 process_invasion(child);
             }
@@ -1157,7 +1167,7 @@ void event_manager_t::process_event(int id, bool via_event_trigger, int chain_ac
         return;
     }
 
-    if (og_invasions && event.type == EVENT_TYPE_INVASION) {
+    if (event.type == EVENT_TYPE_INVASION && invasion_runs_og(event)) {
         return; // process_invasions() runs these every month
     }
     if (event.type == EVENT_TYPE_EARTHQUAKE) {
@@ -1636,8 +1646,7 @@ bool invasion_parent_by_favour(const event_ph_t &e) {
     if (!parent || parent == &e) {
         return false;
     }
-    return parent->event_trigger_type == EVENT_TRIGGER_BY_FAVOUR
-        || parent->event_trigger_type == EVENT_TRIGGER_BY_FAVOUR_IN_USE;
+    return is_favour_trigger(parent->event_trigger_type);
 }
 
 // OG scenario_events.c invasion_warning_for: a reminder by months left, else the announcement in the event's month.
@@ -1818,13 +1827,55 @@ bool event_manager_t::favour_invasion_fired() const {
     return false;
 }
 
-void event_manager_t::process_invasions() {
-    if (!og_invasions) {
+bool event_manager_t::invasion_runs_og(const event_ph_t& e) {
+    if (og_invasions) {
+        return true;
+    }
+    const event_ph_t* p = &e;
+    for (int depth = 0; p && depth < MAX_EVENTS; depth++) {
+        if (is_favour_trigger(p->event_trigger_type)) {
+            return true;
+        }
+        if (p->parent_id == p->event_id) {
+            break;
+        }
+        p = at(p->parent_id);
+    }
+    return false;
+}
+
+void event_manager_t::update_kingdom_favour() {
+    if (g_city.kingdome.rating != 0) {
         return;
     }
+    auto& events = g_scenario_events.event_list;
+    auto master = std::find_if(events.begin(), events.end(),
+      [](const event_ph_t& e) { return e.type == EVENT_TYPE_INVASION && is_favour_trigger(e.event_trigger_type); });
+    if (master == events.end() || master->event_trigger_type == EVENT_TRIGGER_BY_FAVOUR_IN_USE) {
+        return;
+    }
+
+    const int master_id = master->event_id;
+    master->time.year = 0;
+    master->time.unk02 = -1;
+    master->time.unk03 = -1;
+    if (create(&*master, &*master, EVENT_TRIGGER_ACTIVATED_12)) {
+        event_ph_t& child = events.back();
+        logs::info("[invasion-event] favour army event=%d from=%d amount=%d", child.event_id, master_id,
+          child.amount.value);
+        process_invasion(child);
+    }
+
+    event_ph_t& spent = events[master_id];
+    spent.is_active = false;
+    spent.event_trigger_type = EVENT_TRIGGER_BY_FAVOUR_IN_USE;
+    spent.time.month = 12;
+}
+
+void event_manager_t::process_invasions() {
     for (int i = 0; i < events_count(); i++) {
         event_ph_t &e = g_scenario_events.event_list[i];
-        if (e.type != EVENT_TYPE_INVASION) {
+        if (e.type != EVENT_TYPE_INVASION || !invasion_runs_og(e)) {
             continue;
         }
         // OG formation.c: the event stops being active once its last enemy formation is gone; a sea invasion has
@@ -1874,6 +1925,20 @@ void event_manager_t::process_events() {
         event_ph_t &event = data.event_list[i];
         if (event.event_trigger_type == EVENT_TRIGGER_RECURRING) {
             update_randomized_values(event);
+        }
+    }
+
+    // OG event_manager.c scenario_events_rearm: a spent favour event can be sent again after its 12 months.
+    for (event_ph_t& event : data.event_list) {
+        if (event.event_trigger_type != EVENT_TRIGGER_BY_FAVOUR_IN_USE || event.is_active) {
+            continue;
+        }
+        if (--event.time.month <= 0) {
+            event.event_trigger_type = EVENT_TRIGGER_BY_FAVOUR;
+            event.event_state = e_event_state_initial;
+            event.invasion_warnings_shown = 0;
+            event.parent_id = -1;
+            event.time.month = 0;
         }
     }
 }

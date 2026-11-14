@@ -182,6 +182,8 @@ struct event_ph_value {
     int16_t f_fixed;
     int16_t f_min;
     int16_t f_max;
+
+    void archive_load(archive arch);
 };
 ANK_CONFIG_STRUCT(event_ph_value, value)
 
@@ -285,6 +287,10 @@ struct event_manager_t {
     void process_random_events();
     void process_invasions();
     void process_invasion(event_ph_t &event);
+    // OG city/kingdom.c city_emperor_update, tick 4 of each day: at Kingdom rating 0 the first
+    // favour invasion is sent now and rests 12 months.
+    void update_kingdom_favour();
+    bool invasion_runs_og(const event_ph_t& e);
     // Per sim tick: the blood river sweep (earthquakes: scenario_earthquake_process).
     void update_tick();
     bool blood_river_sweep_active() const;
@@ -292,7 +298,7 @@ struct event_manager_t {
     bool favour_invasion_fired() const;
 
     // Mission flag og_invasions: EVENT_TYPE_INVASION events run the OG monthly warning/attack cycle.
-    // Missions without it still raise their invasions from JS.
+    // Missions without it still raise their invasions from JS; a favour invasion and its chain run the OG cycle anyway.
     bool og_invasions = false;
     event_ph_t *create(const event_ph_t *parent);
     bool create(const event_ph_t *master, const event_ph_t *parent, e_event_trigger_type trigger_type);

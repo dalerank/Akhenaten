@@ -1292,6 +1292,7 @@ ANK_FUNCTION(__test_enemy_formations_update);
 
 #include "game/game.h"
 #include "scenario/scenario_event_manager.h"
+#include "scenario/event_phrases.h"
 
 static void __test_og_invasions_set(int on) {
     g_scenario.events.og_invasions = on != 0;
@@ -1316,8 +1317,8 @@ static int __test_invasion_event_add(int year, int month, int invader, int amoun
     e->type = EVENT_TYPE_INVASION;
     e->time.year = year;
     e->time.month = month;
-    e->item.value = invader;
-    e->amount.value = amount;
+    e->item = {(int16_t)invader, (int16_t)invader, -1, -1};
+    e->amount = {(int16_t)amount, (int16_t)amount, -1, -1};
     e->months_initial = months_initial;
     e->location_fields = {(int16_t)route, -1, -1, -1};
     e->event_trigger_type = EVENT_TRIGGER_ONCE;
@@ -1361,6 +1362,40 @@ static void __test_process_invasions() {
     g_scenario.events.process_invasions();
 }
 ANK_FUNCTION(__test_process_invasions);
+
+static void __test_kingdom_favour_update() {
+    g_scenario.events.update_kingdom_favour();
+}
+ANK_FUNCTION(__test_kingdom_favour_update);
+
+static int __test_events_count() {
+    return g_scenario.events.events_count();
+}
+ANK_FUNCTION(__test_events_count);
+
+static int __test_event_trigger(int id) {
+    const event_ph_t* e = g_scenario.events.at(id);
+    return e ? (int)e->event_trigger_type : -1;
+}
+ANK_FUNCTION_1(__test_event_trigger);
+
+static int __test_event_parent(int id) {
+    const event_ph_t* e = g_scenario.events.at(id);
+    return e ? e->parent_id : -2;
+}
+ANK_FUNCTION_1(__test_event_parent);
+
+static int __test_invasion_event_amount(int id) {
+    const event_ph_t* e = g_scenario.events.at(id);
+    return e ? e->amount.value : -1;
+}
+ANK_FUNCTION_1(__test_invasion_event_amount);
+
+static int __test_invasion_low_kingdom_phrase(int invader) {
+    return invader == EVENT_INVADER_PHARAOH ? PHRASE_pharaoh_attacks_you_because_of_low_kingdom
+                                            : PHRASE_eg_city_attacks_you_because_of_low_kingdom;
+}
+ANK_FUNCTION_1(__test_invasion_low_kingdom_phrase);
 
 // A land company of `soldier_count` infantry at the map centre, in empire service; returns its formation id.
 static int __test_land_company_create(int soldier_count) {

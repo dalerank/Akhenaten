@@ -177,7 +177,7 @@ void kingdome_relation_t::process_invasion() {
         }
     } else if (invasion.days_until_invasion != 0) {
         // Drop Caesar-3 auto-wrath countdown. Pharaoh sends a low-KR army only via
-        // mission favour scripts / map KNGDOME events (Men-nefer has neither).
+        // favour events (update_kingdom_favour) / map KNGDOME events (Men-nefer has neither).
         invasion.days_until_invasion = 0;
         invasion.warnings_given = 0;
     }
@@ -186,6 +186,7 @@ void kingdome_relation_t::process_invasion() {
 void kingdome_relation_t::update() {
     OZZY_PROFILER_FUNCTION();
     update_debt_state();
+    g_scenario.events.update_kingdom_favour();
     process_invasion();
     events::emit(event_kingdome_update_gifts{ (int)personal_savings });
 }
