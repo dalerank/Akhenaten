@@ -38,7 +38,8 @@ int food_supply_percentage(const food_supply_sources& s, const city_food_supply_
     return (supply * 100) / std::max(1, s.consumption_percentage);
 }
 
-static int food_supply_consumption_percentage() {
+// OG temple_complex.c city_food_consumption_percentage.
+int city_food_consumption_percentage() {
     const auto& rules = city_food_supply_rules;
     building* complex = building_get(g_city.buildings.temple_complex_id());
     if (!complex || !complex->is_valid()) {
@@ -141,7 +142,7 @@ food_supply_sources city_food_supply_t::gather() const {
     });
 
     s.import_food = food_supply_imports();
-    s.consumption_percentage = food_supply_consumption_percentage();
+    s.consumption_percentage = city_food_consumption_percentage();
     return s;
 }
 

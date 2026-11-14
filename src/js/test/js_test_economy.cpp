@@ -23,6 +23,7 @@
 #include "city/city.h"
 #include "city/city_buildings.h"
 #include "city/city_figures.h"
+#include "city/city_food_supply.h"
 #include "city/city_industry.h"
 #include "city/city_trade.h"
 #include "city/object_info.h"
@@ -1019,7 +1020,7 @@ static void __test_city_consume_food_weekly() {
 ANK_FUNCTION(__test_city_consume_food_weekly);
 
 static int __test_city_food_consumption_percentage() {
-    return g_city.resource.food_consumption_percentage();
+    return city_food_consumption_percentage();
 }
 ANK_FUNCTION(__test_city_food_consumption_percentage);
 

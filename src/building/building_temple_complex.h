@@ -124,7 +124,8 @@ public:
     BUILDING_METAINFO(BUILDING_TEMPLE_COMPLEX_BAST, building_temple_complex_bast, building_temple_complex)
 
     struct static_params : public base_params_t, public building_static_params {
-        // Remake food model only (OG eats 20% instead of 25% with a Bast complex, see food_consumption_percentage).
+        // Remake food model only (OG eats 20% instead of 25% with a Bast complex, see
+        // city_food_consumption_percentage).
         int food_consumption_pct = 100;
         // OG: entertainers / educators / health last longer — skip those decays every other month.
         int service_decay_skip_odd_months = 0;

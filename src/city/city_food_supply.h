@@ -43,6 +43,7 @@ struct food_supply_sources {
 };
 
 int food_supply_percentage(const food_supply_sources& sources, const city_food_supply_rules_t& rules);
+int city_food_consumption_percentage();
 int food_supply_farm_expected_produce(int fertility, int laborers, bool blessed, const city_food_supply_rules_t& rules);
 
 struct city_food_supply_t {

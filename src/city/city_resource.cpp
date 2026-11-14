@@ -8,8 +8,8 @@
 #include "building/building_food_mill.h"
 #include "building/building_bazaar.h"
 #include "building/building_house.h"
-#include "building/building_temple_complex.h"
 #include "city/city.h"
+#include "city/city_food_supply.h"
 #include "city/city_warnings.h"
 #include "graphics/window.h"
 #include "core/calc.h"
@@ -393,7 +393,7 @@ void city_resources_t::calculate_available_food() {
         food_types_available[i] = granary_food_stored[i] > 0 ? 1 : 0;
     }
 
-    food_needed_per_month = calc_adjust_with_percentage(g_city.population.current, food_consumption_percentage());
+    food_needed_per_month = calc_adjust_with_percentage(g_city.population.current, city_food_consumption_percentage());
     if (food_needed_per_month > 0) {
         food_supply_months = granary_total_stored / food_needed_per_month;
     } else {
@@ -447,23 +447,6 @@ void city_resources_t::consume_food_weekly(const simulation_time_t& t) {
     });
 }
 
-// OG temple_complex.c city_food_consumption_percentage.
-int city_resources_t::food_consumption_percentage() const {
-    enum { FOOD_CONSUMPTION_PERCENTAGE = 25, TEMPLE_COMPLEX_FOOD_CONSUMPTION_PERCENTAGE = 20 };
-    if (g_city.buildings.temple_complex_id(BUILDING_TEMPLE_COMPLEX_BAST)) {
-        return TEMPLE_COMPLEX_FOOD_CONSUMPTION_PERCENTAGE;
-    }
-
-    const building_id osiris_id = g_city.buildings.temple_complex_id(BUILDING_TEMPLE_COMPLEX_OSIRIS);
-    building* osiris = osiris_id ? building_get(osiris_id) : nullptr;
-    auto* complex = osiris ? osiris->dcast_temple_complex() : nullptr;
-    if (complex && complex->has_upgrade(etc_upgrade_altar)) {
-        return TEMPLE_COMPLEX_FOOD_CONSUMPTION_PERCENTAGE;
-    }
-
-    return FOOD_CONSUMPTION_PERCENTAGE;
-}
-
 // OG city/resources.c city_resource_consume_food: once a month every house eats the percentage of its people,
 // split over the food kinds its level needs, from the first city foods it has in stock. A kind it has less of
 // than its share is emptied and still counts as eaten (and as the full share consumed).
@@ -480,7 +463,7 @@ void city_resources_t::consume_food_monthly() {
     }
     food_types_eaten_max_value = 1;
 
-    const int percentage = food_consumption_percentage();
+    const int percentage = city_food_consumption_percentage();
     buildings_house_do([&](building_house* house) {
         auto& d = house->runtime_data();
         if (!d.hsize) {
