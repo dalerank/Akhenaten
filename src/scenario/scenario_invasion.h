@@ -62,6 +62,8 @@ struct invasion_opts_t {
     // invasion_point in invasion_points_sea / water — never auto land-empty→sea.
     bool via_sea = false;
     int8_t sea_point_index = -1; // -1 = pick random valid sea point
+    // OG invasion_start_sea: warships launched before the transports (event phrase_var, cheat size / 4).
+    int warships = 0;
     // false: the caller posts the attack message (OG event path posts message 133 with event phrases).
     bool announce = true;
 };

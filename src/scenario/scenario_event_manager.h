@@ -214,7 +214,7 @@ struct event_ph_t {
     bool can_comply_dialog_shown;
     bool appear_dialgow_shown;
     int16_t parent_id;
-    int8_t festival_deity;
+    int8_t phrase_var; // OG phrase_var: the warships of a sea invasion (mission key `warships`)
     int8_t reserved_unk12;
     int8_t invasion_attack_target;
     // OG scenario_event.data: 22 bytes, read by type.

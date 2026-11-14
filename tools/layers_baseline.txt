@@ -480,9 +480,7 @@ figuretype/figure_enemy_transport.cpp -> dev/debug.h
 figuretype/figure_enemy_transport.cpp -> input/mouse.h
 figuretype/figure_enemy_transport.cpp -> widget/widget_city.h
 figuretype/figure_enemy_warship.cpp -> dev/debug.h
-figuretype/figure_enemy_warship.cpp -> graphics/image_desc.h
 figuretype/figure_enemy_warship.cpp -> input/mouse.h
-figuretype/figure_enemy_warship.cpp -> sound/effect.h
 figuretype/figure_enemy_warship.cpp -> sound/sound.h
 figuretype/figure_enemy_warship.cpp -> widget/widget_city.h
 figuretype/figure_entertainer.cpp -> graphics/image.h

@@ -162,6 +162,9 @@ void event_ph_t::archive_load(archive arch) {
     if (type == EVENT_TYPE_EARTHQUAKE) {
         data.earthquake.delay = (int16_t)arch.r_int("delay", 0);
     }
+    if (type == EVENT_TYPE_INVASION) {
+        phrase_var = (int8_t)arch.r_int("warships", 0);
+    }
 }
 
 void event_manager_t::load_mission_metadata(const mission_id_t &missionid) {
@@ -1721,6 +1724,7 @@ static void invasion_attack(event_ph_t &e) {
     opts.size = e.amount.value;
     opts.invasion_id = e.event_id;
     opts.attack_type = formation_attack_from_event_target(e.invasion_attack_target);
+    opts.warships = e.phrase_var;
     opts.announce = false;
     invasion_set_entry(opts, e.location_fields[0], bedouin);
 
@@ -1908,7 +1912,7 @@ static void bind_event_ph(io_buffer *iob, event_ph_t &event) {
     iob->bind(BIND_SIGNATURE_INT8, &event.is_active);
     iob->bind(BIND_SIGNATURE_INT8, &event.can_comply_dialog_shown);
     iob->bind(BIND_SIGNATURE_INT16, &event.parent_id);
-    iob->bind(BIND_SIGNATURE_INT8, &event.festival_deity);
+    iob->bind(BIND_SIGNATURE_INT8, &event.phrase_var);
     iob->bind(BIND_SIGNATURE_INT8, &event.reserved_unk12);
     iob->bind(BIND_SIGNATURE_INT8, &event.invasion_attack_target);
     iob->bind_bool(event.appear_dialgow_shown);

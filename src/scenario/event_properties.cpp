@@ -45,7 +45,7 @@ void game_debug_show_properties_object(pcstr prefix, event_ph_t &e) {
         game_debug_show_property("is_overdue", e.is_overdue);
         game_debug_show_property("is_active", e.is_active);
         game_debug_show_property("can_comply_dialog_shown", e.can_comply_dialog_shown);
-        game_debug_show_property("festival_deity", e.festival_deity);
+        game_debug_show_property("phrase_var", e.phrase_var);
         game_debug_show_property("on_too_late_action", e.on_too_late_action);
         game_debug_show_property("on_defeat_action", e.on_defeat_action);
         game_debug_show_property("sender_faction", e.sender_faction);

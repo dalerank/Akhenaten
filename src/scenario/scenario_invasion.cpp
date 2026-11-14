@@ -73,6 +73,7 @@ declare_console_command_p(start_invasion) {
     opts.invasion_id = 23;
     opts.want_destroy = args.next_int(0);
     opts.via_sea = args.next_int(0) != 0;
+    opts.warships = opts.size / 4;
     opts.kind = (opts.enemy_type == ENEMY_3_EGYPTIAN) ? INVASION_KIND_PHARAOH : INVASION_KIND_FOREIGN;
 
     scenario_invasion_start(opts);
@@ -639,10 +640,6 @@ invasion_army_spawn_t scenario_invasion_spawn_army(const invasion_opts_t& opts, 
 // landing rolled for the invasion; the soldiers are created when a transport lands (figure_enemy_transport::unload).
 tile2i scenario_start_sea_invasion_impl(invasion_opts_t& opts) {
     auto& data = g_invasions;
-    if (opts.size <= 0) {
-        return tile2i::invalid;
-    }
-
     opts.size = std::min<int>(opts.size, data.max_invasion_amount);
 
     data.last_internal_invasion_id++;
@@ -657,33 +654,29 @@ tile2i scenario_start_sea_invasion_impl(invasion_opts_t& opts) {
     }
     const int orientation = invasion_orientation(sea_spawn);
 
-    // Escort: max(1, ceil(formations / 3)) warships at the sea spawn.
-    int num_type1, num_type2, num_type3;
-    invasion_type_counts(opts, opts.size, &num_type1, &num_type2, &num_type3);
-    int formations[3] = {};
-    int unused_sizes[3][4] = {};
-    determine_formations(num_type1, &formations[0], unused_sizes[0]);
-    determine_formations(num_type2, &formations[1], unused_sizes[1]);
-    determine_formations(num_type3, &formations[2], unused_sizes[2]);
-    const int total_formations = formations[0] + formations[1] + formations[2];
+    const bool egyptian = opts.enemy_type == ENEMY_3_EGYPTIAN;
     const e_figure_type warship_type = enemy_warship_type_for(opts.enemy_type);
-    const int escort = total_formations > 0 ? std::max(1, (total_formations + 2) / 3) : 0;
-    for (int e = 0; e < escort; e++) {
+    const auto& warship_rules = enemy_warship_rules;
+    for (int i = 0; i < opts.warships; i++) {
         tile2i ship_tile = sea_spawn;
-        map_water_find_free_tile(ship_tile);
-        figure* w = figure_create(warship_type, ship_tile, orientation);
-        if (!w || !w->is_valid()) {
-            continue;
+        if (!egyptian) {
+            map_water_find_free_tile(ship_tile);
         }
-        w->faction_id = 0;
-        w->name = figure_name_get(warship_type);
-        if (auto *warship = smart_cast<figure_enemy_warship>(w)) {
-            warship->set_invasion_sequence(data.last_internal_invasion_id);
+        figure* ship = figure_create(warship_type, ship_tile, orientation);
+        auto* warship = ship ? smart_cast<figure_enemy_warship>(ship) : nullptr;
+        if (!warship) {
+            logs::warn("scenario_sea_invasion: failed to create warship %d", i);
+            break;
         }
+        warship->launch(i * warship_rules.launch_wait_step + warship_rules.launch_first_wait,
+          data.last_internal_invasion_id);
     }
 
     const int rolled = scenario_invasion_landing_index();
     const tile2i landing = rolled >= 0 ? g_scenario.disembark_points[rolled] : tile2i(0, 0);
+    if (opts.size <= 0) {
+        return sea_spawn;
+    }
 
     const e_figure_type transport_type = enemy_transport_type_for(opts.enemy_type);
     const auto& rules = enemy_transport_rules;

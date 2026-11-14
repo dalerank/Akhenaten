@@ -108,6 +108,7 @@ public:
 
     int8_t missile_attack_value() const { return current_params().missile_attack_value; }
     int16_t missile_delay() const { return current_params().missile_delay; }
+    int request_event_id() const { return runtime_data().request_event_id; }
 
     virtual void on_create() override;
     virtual void on_destroy() override;

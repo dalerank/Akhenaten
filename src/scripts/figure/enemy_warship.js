@@ -61,16 +61,17 @@ function figure_enemy_warship_city_phrase_key() {
 function figure_enemy_warship_phrase_key(f) {
 	var state = f.action_state
 	switch (state) {
-	case ACTION_3_ENEMY_WARSHIP_ATTACK:
+	case ACTION_9_ENEMY_WARSHIP_RAMMING:
+	case ACTION_10_ENEMY_WARSHIP_ATTACKING:
 		return "enemy_warship_attacking"
-	case ACTION_2_ENEMY_WARSHIP_PURSUING:
+	case ACTION_17_ENEMY_WARSHIP_PATROLLING:
 		if (Math.random() < 0.5) {
 			return "enemy_warship_pursuing"
 		}
 		break
-	case ACTION_0_ENEMY_WARSHIP_CREATED:
+	case ACTION_8_ENEMY_WARSHIP_WAITING:
 		return "enemy_warship_created"
-	case ACTION_1_ENEMY_WARSHIP_IDLE:
+	case ACTION_18_ENEMY_WARSHIP_LEAVING:
 		return "enemy_warship_idle"
 	}
 
