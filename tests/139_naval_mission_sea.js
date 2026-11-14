@@ -9,12 +9,11 @@
 function run_test() {
     __log_info_native('[test:139] naval mission via_sea (Rowarty + Actium + Baki/Heh/Sawu)')
 
+    // Warships come only from the invasion's OG warship count, which these raid helpers do not pass.
     function expect_fleet(label, marker) {
         var transports = __test_count_enemy_transports()
-        var warships = __test_count_enemy_warships()
-        if (transports < 1 || warships < 1) {
-            __log_info_native('[test:139] ' + label + ' fleet incomplete: transports='
-                + transports + ' warships=' + warships)
+        if (transports < 1) {
+            __log_info_native('[test:139] ' + label + ' fleet incomplete: transports=' + transports)
             return false
         }
         __log_marker(marker)

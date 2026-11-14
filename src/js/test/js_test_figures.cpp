@@ -271,6 +271,25 @@ static tile2i __figure_get_destination_tile(int fid) {
 }
 ANK_FUNCTION_1(__figure_get_destination_tile);
 
+static void __test_figure_set_destination(int fid, int x, int y) {
+    figure* f = figure_get(fid);
+    if (!f || !f->is_alive()) {
+        return;
+    }
+    f->destination_tile = tile2i(x, y);
+    f->route_remove();
+}
+ANK_FUNCTION_3(__test_figure_set_destination);
+
+static void __test_figure_set_direction(int fid, int dir) {
+    figure* f = figure_get(fid);
+    if (f && f->is_alive()) {
+        f->direction = (uint8_t)dir;
+        f->previous_tile_direction = (uint8_t)dir;
+    }
+}
+ANK_FUNCTION_2(__test_figure_set_direction);
+
 static int __test_figure_is_alive(int fid) {
     figure* f = figure_get(fid);
     return (f && f->is_alive()) ? 1 : 0;

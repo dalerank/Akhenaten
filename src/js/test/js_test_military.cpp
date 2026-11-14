@@ -1080,7 +1080,7 @@ int __test_count_visible_enemy_soldiers() {
 }
 ANK_FUNCTION(__test_count_visible_enemy_soldiers);
 
-int __test_start_sea_invasion(int enemy_type, int size) {
+int __test_start_sea_invasion(int enemy_type, int size, int warships) {
     int cx = 0;
     int cy = 0;
     tile2i water = test_find_or_make_water_strip(&cx, &cy);
@@ -1097,10 +1097,11 @@ int __test_start_sea_invasion(int enemy_type, int size) {
     opts.invasion_id = 23;
     opts.attack_type = FORMATION_ATTACK_RANDOM;
     opts.kind = INVASION_KIND_FOREIGN;
+    opts.warships = warships;
     tile2i tile = scenario_start_invasion_impl(opts);
     return tile.valid() ? 1 : 0;
 }
-ANK_FUNCTION_2(__test_start_sea_invasion);
+ANK_FUNCTION_3(__test_start_sea_invasion);
 
 // Sea invasion through sea point 0 and the disembark points already set (invasion id 23); 1 on success.
 int __test_sea_invasion_start(int enemy_type, int size) {
