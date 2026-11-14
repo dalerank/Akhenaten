@@ -83,21 +83,6 @@ void building_impl::on_destroy() {
 }
 
 void building_impl::on_place_checks() {
-    switch (type()) {
-    case BUILDING_NONE:
-    case BUILDING_CLEAR_LAND:
-        return;
-    }
-
-    construction_warnings warnings;
-    if (building_type_hover_road_access(type())) {
-        warnings.add_if(!map_has_road_access(tile(), size()), "#needs_road_access");
-    }
-
-    if (base.max_workers > 0) {
-        warnings.add_if(g_city.labor.workers_needed >= 10, "#city_needs_more_workers");
-    }
-
     es(__func__);
 }
 

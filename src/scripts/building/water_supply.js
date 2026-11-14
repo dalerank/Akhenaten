@@ -43,13 +43,6 @@ function building_water_supply_spawn_figure(ev) {
     building.common_spawn_roamer(FIGURE_WATER_CARRIER, building_water_supply.min_houses_coverage, ACTION_72_WATER_CARRIER_ROAMING)
 }
 
-[es=(building_water_supply, on_place_checks)]
-function building_water_supply_on_place_checks(ev) {
-    var b = city.get_building(ev.bid)
-    var has_groundwater = terrain.is(b.tile, TERRAIN_GROUNDWATER)
-    city.warnings.show_if_not(has_groundwater, "#needs_groundwater")
-}
-
 [es=(building_water_supply, update_month)]
 function building_water_supply_update_month(ev) {
     var building = city.get_building(ev.bid)

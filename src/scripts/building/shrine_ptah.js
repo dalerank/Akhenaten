@@ -22,10 +22,3 @@ building_shrine_ptah {
       no_road_access: true
     }
 }
-
-[es=(building_shrine_ptah, on_place_checks)]
-function building_shrine_ptah_on_place_checks(ev) {
-    var b = city.get_building(ev.bid)
-    var has_road = __map_road_within_radius(b.tile, b.size, 2)
-    city.warnings.show_if_not(has_road, "#shrines_near_road_required")
-}

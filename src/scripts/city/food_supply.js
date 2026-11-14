@@ -21,6 +21,4 @@ city_food_supply_rules {
     food_per_cart : 100
     consumption_percentage : 25
     blessed_consumption_percentage : 20
-    hut_warning_min_population : 300
-    hut_warning_min_food_percent : 96
 }

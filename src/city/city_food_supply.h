@@ -24,13 +24,11 @@ struct city_food_supply_rules_t {
     int food_per_cart = 100;
     int consumption_percentage = 25;
     int blessed_consumption_percentage = 20;
-    int hut_warning_min_population = 300;
-    int hut_warning_min_food_percent = 96;
 };
 ANK_CONFIG_STRUCT(city_food_supply_rules_t, food_farms, farm_produce_per_worker_pct, farm_fertility_max,
   farm_produce_scale, floodplain_farm_food_factor, meadow_farm_food_factor, harvest_food_divisor, ranch_food_factor,
   ranch_food_divisor, ranch_food_percentage, import_amount_per_load, months_per_year, food_per_cart,
-  consumption_percentage, blessed_consumption_percentage, hut_warning_min_population, hut_warning_min_food_percent)
+  consumption_percentage, blessed_consumption_percentage)
 
 extern city_food_supply_rules_t city_food_supply_rules;
 

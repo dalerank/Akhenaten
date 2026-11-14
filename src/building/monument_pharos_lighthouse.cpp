@@ -378,15 +378,6 @@ void building_pharos_lighthouse::on_place_update_tiles(int orientation, int /*va
     }
 }
 
-void building_pharos_lighthouse::on_place_checks() {
-    construction_warnings warnings;
-    const vec2i ft = footprint_size();
-    int min_value = 12;
-    int min_go = tile().grid_offset();
-    const bool has_road = map_road_find_minimum_tile_xy(tile(), ft.x, ft.y, &min_value, &min_go) && min_value < 12;
-    warnings.add_if(!has_road, "#needs_road_access");
-}
-
 xstring building_pharos_lighthouse::demolish_blocked_message() const {
     return "#pharos_not_demolishable";
 }

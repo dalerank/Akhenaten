@@ -149,7 +149,6 @@ public:
 
     virtual void on_place(int orientation, int variant) override;
     virtual void on_place_update_tiles(int orientation, int variant) override;
-    virtual void on_place_checks() override;
     virtual void on_destroy() override;
     virtual void set_phase(int phase) override;
     virtual void on_phase_changed(int old_phase, int current) override;

@@ -995,13 +995,6 @@ void building_storage_yard::on_place_update_tiles(int orientation, int variant) 
     prev->next_part_building_id = 0;
 }
 
-void building_storage_yard::on_place_checks() {
-    construction_warnings warnings;
-
-    const bool has_road_access = map_has_road_access(tile(), 3);
-    warnings.add_if(!has_road_access, "#needs_road_access");
-}
-
 void building_storage_yard::spawn_figure() {
     check_labor_problem();
     if (!base.has_road_access) {

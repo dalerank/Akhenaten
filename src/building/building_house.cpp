@@ -1252,21 +1252,6 @@ void building_house::on_post_load() {
     }
 }
 
-void building_house::on_place_checks() {
-    if (type() != BUILDING_HOUSE_VACANT_LOT) {
-        return;
-    }
-
-    construction_warnings warnings;
-    // OG construction_warning_check_house_food: food supply percentage against last month's consumption.
-    const auto& rules = city_food_supply_rules;
-    if (g_city.population.current >= rules.hut_warning_min_population && !g_scenario.kingdom_supplies_grain) {
-        const int produced
-          = calc_percentage<int>(g_city.food_supply.percentage(), g_city.resource.food_consumed_last_month());
-        warnings.add_if(produced < rules.hut_warning_min_food_percent, "#people_eating_more_than_produced");
-    }
-}
-
 e_house_progress building_house::check_evolve_status(house_demands *demands) {
     return check_requirements(demands);
 }

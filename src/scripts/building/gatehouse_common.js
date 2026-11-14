@@ -208,14 +208,3 @@ function building_gatehouse_ghost_preview(ev) {
         city_planner.draw_ghost(side_pixel, cover_id)
     }
 }
-
-function building_gatehouse_on_place_checks(ev, size) {
-    var main_id = __building_main_id(ev.bid)
-    var b = city.get_building(main_id)
-    if (!b) {
-        return
-    }
-    var check_size = size || b.params.building_size
-    var near_walls = !__map_terrain_is_adjacent_to_wall(b.tile, check_size)
-    city.warnings.show_if_not(near_walls, "#warning_shipwright_needed")
-}

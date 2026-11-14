@@ -46,7 +46,6 @@ public:
     virtual void on_create(int orientation) override;
     virtual void on_post_load() override;
     virtual void on_place_update_tiles(int orientation, int variant) override;
-    virtual void on_place_checks() override;
     virtual void spawn_figure() override;
     virtual e_sound_channel_city sound_channel() const override { return SOUND_CHANNEL_CITY_STORAGE_YARD; }
 

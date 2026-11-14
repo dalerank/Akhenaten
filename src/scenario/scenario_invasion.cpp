@@ -440,7 +440,7 @@ int city_own_warships() {
     return warships;
 }
 
-bool __construction_no_troops_for_defense() {
+bool scenario_invasion_city_undefended() {
     bool running = false;
     for (const auto &b : g_invasions.binds) {
         if (b.in_use) {
@@ -456,7 +456,6 @@ bool __construction_no_troops_for_defense() {
     }
     return city_own_warships() == 0;
 }
-ANK_FUNCTION(__construction_no_troops_for_defense)
 
 int scenario_invasion_count() {
     int num_invasions = 0;

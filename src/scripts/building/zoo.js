@@ -76,14 +76,9 @@ function building_zoo_on_place_checks(ev) {
   if (game.editor_is_active()) {
     return
   }
-  // A running invasion with no legions and no warships is the only warning this placement shows.
-  if (__construction_no_troops_for_defense()) {
-    city.warnings.show("#no_troops_for_defense")
-    return
-  }
-  // construction_warning_check_zoo. City stock of game meat, or any hunting lodge, ends the check.
+  // construction_warning_check_zoo. Game meat in the yards, or any hunting lodge, ends the check.
   var meat = city.resources.gamemeat
-  if (meat.city_stored > 0) {
+  if (meat.yards_stored > 0) {
     return
   }
   city.warnings.show("#building_needs_game_meat")
@@ -102,7 +97,7 @@ function building_zoo_on_place_checks(ev) {
   }
   var grain = city.resources.grain
   var straw = city.resources.straw
-  if (grain.count_active_industry > 0 || straw.city_stored > 0) {
+  if (grain.count_active_industry > 0 || straw.yards_stored > 0) {
     return
   }
   city.warnings.show("#building_needs_straw")

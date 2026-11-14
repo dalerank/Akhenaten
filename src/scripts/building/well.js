@@ -55,13 +55,6 @@ building_well {
   }
 }
 
-[es=(building_well, on_place_checks)]
-function building_well_on_place_checks(ev) {
-    var b = city.get_building(ev.bid)
-    var has_groundwater = terrain.is(b.tile, TERRAIN_GROUNDWATER)
-    city.warnings.show_if_not(has_groundwater, "#needs_groundwater")
-}
-
 [es=(building_well, update_day)]
 function building_well_update_day(ev) {
     var well = city.get_well(ev.bid)

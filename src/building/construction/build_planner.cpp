@@ -37,6 +37,7 @@
 #include "game/game_events.h"
 #include "city/city_resource.h"
 #include "city/city_warnings.h"
+#include "building/construction/construction_warnings.h"
 #include "clear.h"
 #include "figure/formation_batalion.h"
 #include "game/undo.h"
@@ -263,7 +264,7 @@ int build_planner::place_houses(bool measure_only, int x_start, int y_start, int
     }
 
     if (!measure_only) {
-        //building_construction_warning_check_food_stocks(BUILDING_HOUSE_VACANT_LOT);
+        construction_warnings_check_house_plots();
         if (needs_road_warning) {
             events::emit(event_city_warning{ "#plots_too_far_from_road" });
         }
@@ -1130,25 +1131,14 @@ void build_planner::construction_update(tile2i tile) {
     total_cost = current_cost;
 }
 
-void build_planner::check_road_access(building *b, tile2i tile, int size, int orientation) {
-    if (!b->is_temple_complex()) {
+void build_planner::checks_generic_rules(building* b) {
+    if (!b || !b->is_valid()) {
         return;
     }
 
-    const bool has_road = map_has_road_access_temple_complex(tile, orientation, true, nullptr);
-    if (!has_road) {
-        events::emit(event_construction_warning{ "#needs_road_access" });
-    }
-}
-
-void build_planner::checks_generic_rules(building *b, tile2i tile, int size, int orientation) {
-    if (!b) {
-        return;
-    }
-
-    e_building_type type = b->type;
-    check_road_access(b, tile, size, orientation);
+    construction_warnings_check_site(*b);
     b->dcast()->on_place_checks();
+    construction_warnings_check_road_access(*b);
 }
 
 void build_planner::construction_finalize() { // confirm final placement
@@ -1189,9 +1179,7 @@ void build_planner::construction_finalize() { // confirm final placement
     logs::info("[build-btn] finalize place() OK type=%d cost=%d end=%d(%d,%d)", (int)build_type, total_cost,
                end.grid_offset(), end.x(), end.y());
 
-    // final generic building warnings - these are in another file
-    // TODO: bring these warnings over.
-    checks_generic_rules(last_created_building, end, size.x, relative_orientation);
+    checks_generic_rules(last_created_building);
     bool should_recalc_ferry_routes = params.needs.shoreline;
 
     setup_building_variant(end, build_type);
@@ -1530,6 +1518,7 @@ bool build_planner::place() {
     const auto &params = building_static_params::get(build_type);
     const auto &preview = building_planer_renderer::get(build_type);
     int placement_cost = params.get_cost();
+    last_created_building = nullptr;
 
     switch (build_type) {
     case BUILDING_CLEAR_LAND: {

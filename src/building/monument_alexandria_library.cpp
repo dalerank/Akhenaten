@@ -1193,17 +1193,6 @@ void building_alexandria_library::on_place_update_tiles(int /*orientation*/, int
     refresh_part_images();
 }
 
-void building_alexandria_library::on_place_checks() {
-    construction_warnings warnings;
-    grid_area area = get_area();
-    int min_value = 12;
-    int min_go = tile().grid_offset();
-    const int w = area.tmax().x() - area.tmin().x() + 1;
-    const int h = area.tmax().y() - area.tmin().y() + 1;
-    const bool has_road = map_road_find_minimum_tile_xy(area.tmin(), w, h, &min_value, &min_go) && min_value < 12;
-    warnings.add_if(!has_road, "#needs_road_access");
-}
-
 void building_alexandria_library::on_post_load() {
     building_monument::on_post_load();
     if (!is_main()) {

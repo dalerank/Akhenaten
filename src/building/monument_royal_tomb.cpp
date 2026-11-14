@@ -684,9 +684,6 @@ void building_royal_tomb::on_place_update_tiles(int /*orientation*/, int /*varia
     place_parts();
 }
 
-void building_royal_tomb::on_place_checks() {
-}
-
 void building_royal_tomb::on_phase_changed(int, int) {
 }
 

@@ -15,7 +15,6 @@ public:
         virtual int construction_place(build_planner &planer, tile2i start, tile2i end, int orientation, int variant) const override;
     };
 
-    virtual void on_place_checks() override;
 
     static int place_wall(bool measure_only, tile2i start, tile2i end, e_building_type wall_type = BUILDING_MUD_WALL);
     static bool set_wall(tile2i tile, e_building_type wall_type, bool write_material);
@@ -39,8 +38,6 @@ public:
         virtual int construction_update(build_planner &p, tile2i start, tile2i end) const override;
         virtual int construction_place(build_planner &planer, tile2i start, tile2i end, int orientation, int variant) const override;
     };
-
-    virtual void on_place_checks() override;
 };
 
 class building_wall : public building_impl {
@@ -52,6 +49,4 @@ public:
         virtual int construction_update(build_planner &p, tile2i start, tile2i end) const override;
         virtual int construction_place(build_planner &planer, tile2i start, tile2i end, int orientation, int variant) const override;
     };
-
-    virtual void on_place_checks() override;
 };

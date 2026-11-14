@@ -92,8 +92,7 @@ class build_planner {
     void update_special_case_orientations_check();
     void update_unique_only_one_check();
     void dispatch_warnings();
-    void checks_generic_rules(building *b, tile2i tile, int size, int orientation);
-    void check_road_access(building *b, tile2i tile, int size, int orientation);
+    void checks_generic_rules(building* b);
 
     void update_coord_caches();
     void draw_graphics(painter &ctx);
