@@ -3,6 +3,7 @@ log_info("akhenaten: figures info started")
 import figure.prototype
 import figure.figure_params
 import figure.phrase
+import figure.phrase_speech
 import figure.festival_guy
 import figure.ostrich_hunter
 import figure.antelope_hunter

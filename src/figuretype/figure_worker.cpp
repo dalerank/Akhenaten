@@ -323,6 +323,10 @@ figure_id laborer_cleopatra_mason_waiting(building *head) {
 
 } // namespace
 
+bool figure_worker::farm_work_waiting() {
+    return laborer_farm_work_waiting();
+}
+
 e_resource figure_worker::block_material_for(building *monument, figure_id mason_fid) const {
     building *head = monument ? (monument->main() ? monument->main() : monument) : nullptr;
     if (!head) {

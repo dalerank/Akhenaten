@@ -69,6 +69,10 @@ namespace game_features {
     game_feature gameplay_change_robber_remake{ "gameplay_change_robber_remake", "#TR_CONFIG_ROBBER_REMAKE", false, false };
     // Remake tomb robber: monthly/sentiment spawn, flee/arrest, fixed −10/−25. OG: house crime, wait 40, 2× walk, difficulty kingdom hit, die.
     game_feature gameplay_change_tomb_robber_remake{ "gameplay_change_tomb_robber_remake", "#TR_CONFIG_TOMB_ROBBER_REMAKE", false, false };
+    // Remake walker phrases: per-walker script heuristics, also for walkers OG keeps silent. OG: city problems by
+    // weight.
+    game_feature gameplay_change_walker_phrases_remake{
+      "gameplay_change_walker_phrases_remake", "#TR_CONFIG_WALKER_PHRASES_REMAKE", false, false};
     // Remake protestor: hunt noble walkers / manor-estate houses. OG: stand still then vanish.
     game_feature gameplay_change_protestor_hunt_nobles{ "gameplay_change_protestor_hunt_nobles", "#TR_CONFIG_PROTESTOR_HUNT_NOBLES", false, false };
     // Remake fishing boat: worker-scaled fish time, half load, sticky spot, soft lose-home. OG: 200 ticks, 100 fish, tile sidestep, sink.

@@ -173,6 +173,9 @@ public:
     uint8_t collecting_item_id; // NOT a resource ID for cartpushers! IS a resource ID for warehousemen
     xstring phrase_key;
     xstring phrase_sound;
+    uint8_t phrase_sequence;
+    int8_t phrase_id;
+    uint8_t phrase_group; // e_advisor of the phrase subject (OG phrase group)
     figure_id target_figure_id;
     short targeted_by_figure_id;
     uint8_t num_attackers;

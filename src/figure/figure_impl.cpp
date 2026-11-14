@@ -39,6 +39,11 @@ void figure_impl::es(pcstr es_name) const {
 }
 
 void figure_impl::setup_phrase() {
+    if (figure_phrase_is_og(base.type)) {
+        figure_phrase_determine(base);
+        figure_phrase_apply(base);
+        return;
+    }
     base.phrase_key = "waiting_for_phrase";
     base.phrase_sound = {};
     es(__func__);

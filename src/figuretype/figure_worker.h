@@ -58,6 +58,8 @@ public:
     figure_worker(figure *f) : figure_impl(f) {}
     virtual figure_worker *dcast_worker() override { return this; }
 
+    static bool farm_work_waiting();
+
     // OG laborer_rules[] (laborer.h / laborer.c defaults).
     struct static_params : public figure_static_params {
         uint16_t load;

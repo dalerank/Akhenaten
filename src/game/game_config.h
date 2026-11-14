@@ -88,6 +88,7 @@ namespace game_features {
     extern game_feature gameplay_change_follower_runaway;
     extern game_feature gameplay_change_robber_remake;
     extern game_feature gameplay_change_tomb_robber_remake;
+    extern game_feature gameplay_change_walker_phrases_remake;
     extern game_feature gameplay_change_protestor_hunt_nobles;
     extern game_feature gameplay_change_fishing_boat_remake;
     extern game_feature gameplay_change_bazaar_multi_buyers;
