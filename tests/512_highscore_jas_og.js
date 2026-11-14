@@ -37,7 +37,8 @@ function run_test() {
     t512 = { name: city.kingdome.player_name }
 
     var path = __highscores_path()
-    if (path != __test_user_dir() + '/highscore.jas') {
+    var user_dir = __test_user_dir().replace(/[\/\\]+$/, '')
+    if (path != user_dir + '/highscore.jas') {
         return test512_fail('path ' + path + ' is not in the user dir ' + __test_user_dir())
     }
     __test_file_remove(path)
