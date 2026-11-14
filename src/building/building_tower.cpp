@@ -27,14 +27,6 @@ void building_tower::on_create(int orientation) {
     building_mud_wall::update_area_walls(tile(), 5);
 }
 
-void building_tower::on_place_checks() {
-    building_impl::on_place_checks();
-
-    construction_warnings warnings;
-    const bool near_walls = !map_terrain_is_adjacent_to_wall(tilex(), tiley(), size());
-    warnings.add_if(!near_walls, "#warning_shipwright_needed");
-}
-
 void building_tower::spawn_figure() {
     check_labor_problem();
     tile2i road = map_get_road_access_tile(tile(), base.size);

@@ -8,7 +8,6 @@ public:
     virtual building_tower* dcast_tower() override { return this; }
 
     virtual void on_create(int orientation) override;
-    virtual void on_place_checks() override;
     //virtual void on_place(int orientation, int variant) override;
     virtual void spawn_figure() override;
 };

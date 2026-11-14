@@ -34,7 +34,6 @@ public:
     virtual void on_post_load() override;
     virtual void update_month() override;
     virtual void on_place_update_tiles(int orientation, int variant) override;
-    virtual void on_place_checks() override;
     virtual building_pavilion *dcast_pavilion() override { return this; }
     virtual e_sound_channel_city sound_channel() const override { return SOUND_CHANNEL_CITY_PAVILION; }
     virtual bool draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) override;

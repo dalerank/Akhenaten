@@ -125,19 +125,6 @@ void building_pavilion::on_place_update_tiles(int /*orientation*/, int /*variant
     place_venue_items(current_params().place_dir[map_orientation], map_orientation / 2);
 }
 
-void building_pavilion::on_place_checks() {
-    building_impl::on_place_checks();
-
-    construction_warnings warnings;
-    const bool has_dance_school = g_city.buildings.count_active(BUILDING_DANCE_SCHOOL) > 0;
-    const bool has_jugglers = g_city.buildings.count_active(BUILDING_JUGGLER_SCHOOL) > 0;
-    const bool has_musician = g_city.buildings.count_active(BUILDING_CONSERVATORY) > 0;
-
-    warnings.add_if(!has_dance_school, "#build_dance_school");
-    warnings.add_if(!has_jugglers, "#build_juggling_school");
-    warnings.add_if(!has_musician, "#build_conservatory");
-}
-
 void building_pavilion::update_sprite_anims() {
     register_sprite_anim(anim(animkeys().dancer));
     register_sprite_anim(anim(animkeys().musician_sn));

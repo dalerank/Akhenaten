@@ -12,6 +12,7 @@ construction_warning_rules {
   shrine_road_access: "#shrines_near_road_required"
   workers: "#city_needs_more_workers"
   no_troops: "#no_troops_for_defense"
+  wall_patrol: "#must_be_next_to_wall_for_patrol"
   eating_more_than_produced: "#people_eating_more_than_produced"
   too_few_jobs: "#too_few_jobs_for_population"
   low_food: "#low_food_levels"
@@ -63,5 +64,28 @@ construction_warning_rules {
     BUILDING_TAX_COLLECTOR, BUILDING_ROADBLOCK, BUILDING_FIREHOUSE, BUILDING_COURTHOUSE,
     BUILDING_VILLAGE_PALACE, BUILDING_TOWN_PALACE, BUILDING_VILLAGE_PALACE_UP, BUILDING_TOWN_PALACE_UP,
     BUILDING_CITY_PALACE, BUILDING_ZOO
+  ]
+
+  wall_patrol_types [BUILDING_MUD_TOWER, BUILDING_BRICK_TOWER, BUILDING_TOWER]
+
+  requires_building [
+    { building: BUILDING_GRANARY, needs: BUILDING_BAZAAR, warning: "#build_bazaars_to_distribute_food" }
+    { building: BUILDING_FORT_CHARIOTEERS, needs: BUILDING_RECRUITER, warning: "#needs_recruiter_to_conscript" }
+    { building: BUILDING_FORT_ARCHERS, needs: BUILDING_RECRUITER, warning: "#needs_recruiter_to_conscript" }
+    { building: BUILDING_FORT_INFANTRY, needs: BUILDING_RECRUITER, warning: "#needs_recruiter_to_conscript" }
+  ]
+
+  requires_stock [
+    { building: BUILDING_RECRUITER, resource: RESOURCE_WEAPONS, warning: "#soldiers_need_supplies_of_weapons" }
+  ]
+
+  // Venues are placed by the intersection tool: they get only these hints.
+  venue_schools [
+    { building: BUILDING_BOOTH, school: BUILDING_JUGGLER_SCHOOL, warning: "#build_jugglers_school" }
+    { building: BUILDING_BANDSTAND, school: BUILDING_JUGGLER_SCHOOL, warning: "#build_jugglers_school" }
+    { building: BUILDING_BANDSTAND, school: BUILDING_CONSERVATORY, warning: "#venue_build_conservatory" }
+    { building: BUILDING_PAVILLION, school: BUILDING_JUGGLER_SCHOOL, warning: "#build_jugglers_school" }
+    { building: BUILDING_PAVILLION, school: BUILDING_CONSERVATORY, warning: "#venue_build_conservatory" }
+    { building: BUILDING_PAVILLION, school: BUILDING_DANCE_SCHOOL, warning: "#venue_build_dance_school" }
   ]
 }

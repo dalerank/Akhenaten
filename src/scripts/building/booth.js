@@ -40,12 +40,6 @@ function building_booth_setup_preview_graphics(ev) {
     city_planner.init_tiles(size, size)
 }
 
-[es=(building_booth, on_place_checks)]
-function building_booth_on_place_checks(ev) {
-    var has_juggler_school = city.count_active_buildings(BUILDING_JUGGLER_SCHOOL) > 0
-    city.warnings.show_if_not(has_juggler_school, "#build_juggling_school")
-}
-
 [es=(building_booth, update_day)]
 function building_booth_update_day(ev) {
     var b = city.get_entertainment_building(ev.bid)
