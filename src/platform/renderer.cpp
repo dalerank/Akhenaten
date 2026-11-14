@@ -1096,31 +1096,164 @@ void platform_render_create_context() {
     }
 }
 
+enum e_render_backend {
+    RENDER_BACKEND_SDL_DEFAULT,
+    RENDER_BACKEND_DIRECT3D11,
+    RENDER_BACKEND_OPENGL,
+    RENDER_BACKEND_DIRECT3D,
+    RENDER_BACKEND_SOFTWARE,
+};
+
+enum e_render_backend_limits {
+    RENDER_BACKEND_MIN_TEXTURE_SIZE = 2048,
+    RENDER_BACKEND_PROBE_TARGET_SIZE = 64,
+};
+
+static pcstr render_backend_name(e_render_backend backend) {
+    switch (backend) {
+    case RENDER_BACKEND_DIRECT3D11:
+        return "direct3d11";
+    case RENDER_BACKEND_OPENGL:
+        return "opengl";
+    case RENDER_BACKEND_DIRECT3D:
+        return "direct3d";
+    case RENDER_BACKEND_SOFTWARE:
+        return "software";
+    case RENDER_BACKEND_SDL_DEFAULT:
+        break;
+    }
+    return "";
+}
+
+// Tried in order after the user's choice. On Windows direct3d11 is as fast as opengl on a full city and keeps that
+// speed when sprites switch textures (atlas off), where opengl slows down; SDL's own pick there is direct3d (D3D9).
+// Elsewhere SDL's pick is kept.
+static const e_render_backend k_render_backend_chain[] = {
+#if defined(GAME_PLATFORM_WIN)
+  RENDER_BACKEND_DIRECT3D11,
+  RENDER_BACKEND_OPENGL,
+  RENDER_BACKEND_DIRECT3D,
+#else
+  RENDER_BACKEND_SDL_DEFAULT,
+#endif
+  RENDER_BACKEND_SOFTWARE,
+};
+
+svector<xstring, 8> render_backend_order(const xstring& requested, const svector<xstring, 8>& available) {
+    svector<xstring, 8> order;
+    auto add = [&](const xstring& name) {
+        const bool listed = name.empty() || std::find(available.begin(), available.end(), name) != available.end();
+        if (listed && std::find(order.begin(), order.end(), name) == order.end()) {
+            order.push_back(name);
+        }
+    };
+
+    if (!requested.empty()) {
+        add(requested);
+    }
+    for (const e_render_backend backend : k_render_backend_chain) {
+        add(render_backend_name(backend));
+    }
+    return order;
+}
+
+xstring platform_render_preferred_backend(const xstring& requested) {
+    const auto order = render_backend_order(requested, get_video_drivers(false));
+    return order.empty() ? xstring() : order.front();
+}
+
+static bool renderer_usable(SDL_Renderer* renderer, bstring256& problem) {
+    SDL_RendererInfo info;
+    if (SDL_GetRendererInfo(renderer, &info) != 0) {
+        problem = SDL_GetError();
+        return false;
+    }
+    if (!(info.flags & SDL_RENDERER_TARGETTEXTURE)) {
+        problem = "no render target support";
+        return false;
+    }
+    const bool limited = info.max_texture_width > 0 && info.max_texture_height > 0;
+    if (limited
+        && (info.max_texture_width < RENDER_BACKEND_MIN_TEXTURE_SIZE
+            || info.max_texture_height < RENDER_BACKEND_MIN_TEXTURE_SIZE)) {
+        problem.printf("max texture size %dx%d", info.max_texture_width, info.max_texture_height);
+        return false;
+    }
+
+    SDL_Texture* probe = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_ABGR8888, SDL_TEXTUREACCESS_TARGET,
+      RENDER_BACKEND_PROBE_TARGET_SIZE, RENDER_BACKEND_PROBE_TARGET_SIZE);
+    const bool ok = probe && SDL_SetRenderTarget(renderer, probe) == 0;
+    if (!ok) {
+        problem.printf("render target: %s", SDL_GetError());
+    }
+    SDL_SetRenderTarget(renderer, nullptr);
+    if (probe) {
+        SDL_DestroyTexture(probe);
+    }
+    return ok;
+}
+
+static SDL_Renderer* create_renderer(SDL_Window* window, const xstring& requested, const svector<xstring, 8>& drivers) {
+    bstring512 failed;
+    if (!requested.empty() && std::find(drivers.begin(), drivers.end(), requested) == drivers.end()) {
+        logs::warn("Renderer %s failed: not available in this build", requested.c_str());
+        failed = requested.c_str();
+    }
+
+    for (const xstring& name : render_backend_order(requested, drivers)) {
+        const auto it = std::find(drivers.begin(), drivers.end(), name);
+        const int index = it != drivers.end() ? (int)std::distance(drivers.begin(), it) : -1;
+        const bool software = (name == render_backend_name(RENDER_BACKEND_SOFTWARE));
+        const pcstr label = name.empty() ? "(SDL default)" : name.c_str();
+
+        platform_render_setup_options(name);
+        SDL_Renderer* renderer = SDL_CreateRenderer(window, index,
+          SDL_RENDERER_PRESENTVSYNC | (software ? SDL_RENDERER_SOFTWARE : SDL_RENDERER_ACCELERATED));
+        bstring256 problem;
+        if (!renderer) {
+            problem = SDL_GetError();
+        } else if (!renderer_usable(renderer, problem)) {
+            SDL_DestroyRenderer(renderer);
+            renderer = nullptr;
+        }
+
+        if (!renderer) {
+            logs::warn("Renderer %s failed: %s", label, problem.c_str());
+            if (!failed.empty()) {
+                failed.append(", ");
+            }
+            failed.append(label);
+            continue;
+        }
+
+        SDL_RendererInfo info;
+        SDL_GetRendererInfo(renderer, &info);
+        if (!failed.empty()) {
+            logs::info("Renderer: %s (fallback after %s failed)", info.name, failed.c_str());
+        } else {
+            logs::info("Renderer: %s (%s)", info.name, requested.empty() ? "default" : "user choice");
+        }
+        return renderer;
+    }
+    return nullptr;
+}
+
 int platform_renderer_init(SDL_Window* window, xstring renderer) {
     auto &data = g_renderer_data;
 
     auto drivers = get_video_drivers(true);
     data.window = window;
 
-    auto driver_it = std::find(drivers.begin(), drivers.end(), renderer);
-    int driver_index = driver_it != drivers.end() ? std::distance(drivers.begin(), driver_it) : -1;
-
-    logs::info("Creating renderer");
-    data.renderer = SDL_CreateRenderer(window, driver_index, SDL_RENDERER_PRESENTVSYNC | SDL_RENDERER_ACCELERATED);
+    data.renderer = create_renderer(window, renderer, drivers);
     if (!data.renderer) {
-        logs::info("Unable to create renderer, trying software renderer: %s", SDL_GetError());
-        data.renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_SOFTWARE);
-        if (!data.renderer) {
-            logs::error("Unable to create renderer: %s", SDL_GetError());
-            return 0;
-        }
+        logs::error("Unable to create renderer: %s", SDL_GetError());
+        return 0;
     }
 
     platform_render_save_options();
 
     SDL_RendererInfo info;
     SDL_GetRendererInfo(data.renderer, &info);
-    logs::info("Loaded renderer: %s", info.name);
 
     platform_render_create_context();
 

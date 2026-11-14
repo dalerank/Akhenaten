@@ -147,8 +147,9 @@ int platform_screen_t::create(const xstring& title, const xstring& renderer, boo
         flags |= SDL_WINDOW_FULLSCREEN_DESKTOP;
     }
 
-    platform_render_setup_options(renderer);
-    if (!renderer.empty() && renderer == "opengl") {
+    const xstring preferred = platform_render_preferred_backend(renderer);
+    platform_render_setup_options(preferred);
+    if (preferred == "opengl") {
         flags |= SDL_WINDOW_OPENGL;
     }
     window = SDL_CreateWindow(title.c_str(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, wsize.x, wsize.y, flags);

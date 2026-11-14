@@ -13,6 +13,7 @@
 #include "grid/tiles.h"
 #include "platform/arguments.h"
 #include "platform/platform.h"
+#include "platform/renderer.h"
 
 #include <SDL.h>
 
@@ -256,3 +257,24 @@ static void __test_render_device_reset() {
     SDL_PushEvent(&ev);
 }
 ANK_FUNCTION(__test_render_device_reset);
+
+// Renderer try order for a request and a comma-separated driver list, joined by ','; "-" stands for SDL's own pick.
+static xstring __test_render_backend_order(pcstr requested, pcstr available) {
+    svector<xstring, 8> drivers;
+    std::string list = available ? available : "";
+    for (size_t start = 0; start < list.size();) {
+        const size_t end = std::min(list.find(',', start), list.size());
+        if (end > start) {
+            drivers.push_back(xstring(list.substr(start, end - start).c_str()));
+        }
+        start = end + 1;
+    }
+
+    std::string out;
+    for (const xstring& name : render_backend_order(xstring(requested ? requested : ""), drivers)) {
+        out += out.empty() ? "" : ",";
+        out += name.empty() ? "-" : name.c_str();
+    }
+    return xstring(out.c_str());
+}
+ANK_FUNCTION_2(__test_render_backend_order);
