@@ -36,6 +36,23 @@ function figure_info_window_on_window_info_background(window) {
     figure_info_window_update_toolbar(window, f)
     figure_info_window_sync_tab_selection(window)
     figure_info_check_phrase(window)
+    figure_info_window_update_phrase_buttons(window, f)
+}
+
+var figure_info_phrase_changed = false
+
+// OG building_info.c: "tell me more" while another city problem weighs in, and the advisor of the phrase.
+function figure_info_window_update_phrase_buttons(window, f) {
+    if (!f.valid) {
+        return
+    }
+    if (figure_info_phrase_changed) {
+        figure_info_phrase_changed = false
+        window.phrase.text = __figure_phrase_text(f.id)
+    }
+    window.tell_more.enabled = __figure_phrase_has_other_problem(f.id)
+    var advisor = __figure_phrase_advisor(f.id)
+    building_info_window_set_advisor_button(window.phrase_advisor, advisor, advisor && city.is_advisor_available(advisor))
 }
 
 function figure_info_window_update_toolbar(window, f) {
@@ -121,6 +138,9 @@ figure_info_window {
         show_path      : button({margin{right:-64, bottom:-40}, size[23, 23], onclick_event: "show_path"})
         show_overlay   : button({margin{right:-90, bottom:-40}, size[23, 23], onclick_event: "show_overlay"})
         show_follow    : button({margin{right:-116, bottom:-40}, size[23, 23], text:"F", tooltip:"#follow_walker", onclick_event: "show_follow"})
+
+        tell_more      : button({pos [285, 195], size [150, 25], text:[18, 7], font:FONT_NORMAL_BLACK_ON_DARK, onclick_event:"tell_more", enabled:false})
+        phrase_advisor : image_button({margin:{left:40, bottom:-40}, size[28, 28], pack:PACK_GENERAL, id:106, onclick_event:"phrase_advisor", enabled:false })
     }
 }
 
@@ -146,6 +166,20 @@ function figure_info_window_on_show_path(window) {
 [es=(figure_info_window, show_overlay)]
 function figure_info_window_on_show_overlay(window) {
     figure_info_window_toggle_overlay(__object_info_figure_id())
+}
+
+[es=(figure_info_window, tell_more)]
+function figure_info_window_on_tell_more(window) {
+    __figure_phrase_next_problem(__object_info_figure_id())
+    figure_info_phrase_changed = true
+}
+
+[es=(figure_info_window, phrase_advisor)]
+function figure_info_window_on_phrase_advisor(window) {
+    var advisor = __figure_phrase_advisor(__object_info_figure_id())
+    if (advisor && city.is_advisor_available(advisor)) {
+        window_advisors_show_advisor(advisor)
+    }
 }
 
 [es=(figure_info_window, show_follow)]
