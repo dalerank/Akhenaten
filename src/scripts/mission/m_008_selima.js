@@ -642,7 +642,7 @@ function mission8_ensure_troops_request_4(as_chain_child) {
 	var ok_msg = city.create_chain_event({
 		tag_id: 410,
 		type: EVENT_TYPE_MESSAGE,
-		subtype: 1, // EVENT_SUBTYPE_FOREIGN_CITY_CONQUERED
+		subtype: EVENT_SUBTYPE_MSG_BATTLE_WON,
 		city: "Men-nefer",
 		amount: 5
 	})

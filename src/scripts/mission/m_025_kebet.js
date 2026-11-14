@@ -639,7 +639,7 @@ function mission25_ensure_henna_leaves() {
 	}
 	mission.henna_leaves_wired = true
 	var message = mission25_make_leaf(1018, EVENT_TYPE_MESSAGE, undefined, 8, 2,
-		EVENT_SUBTYPE_FOREIGN_CITY_CONQUERED, "Henen-nesw")
+		EVENT_SUBTYPE_MSG_BATTLE_WON, "Henen-nesw")
 	var conquered = mission25_make_leaf(1016, EVENT_TYPE_CITY_STATUS_CHANGE, undefined, 5, 2,
 		EVENT_SUBTYPE_FOREIGN_CITY_CONQUERED, "Khmun")
 	mission25_make_leaf(1021, EVENT_TYPE_CITY_STATUS_CHANGE, undefined, 5, 2,

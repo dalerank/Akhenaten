@@ -453,7 +453,7 @@ function mission9_selima_secured_trade(ev) {
 	status.execute()
 }
 
-// pak: year=7 month=1 MESSAGE FOREIGN_CITY_CONQUERED city=Nubt → DEMAND linen amount=9
+// pak: year=7 month=1 MESSAGE BATTLE_WON city=Nubt → DEMAND linen amount=9
 [es=event_advance_month, mission=mission9]
 function mission9_nubt_conquered_linen_demand(ev) {
 	if (mission.nubt_conquered_msg_done) {
@@ -467,7 +467,7 @@ function mission9_nubt_conquered_linen_demand(ev) {
 	var msg = city.create_chain_event({
 		tag_id: 700,
 		type: EVENT_TYPE_MESSAGE,
-		subtype: 1, // EVENT_SUBTYPE_FOREIGN_CITY_CONQUERED
+		subtype: EVENT_SUBTYPE_MSG_BATTLE_WON,
 		city: "Nubt",
 		amount: 9,
 		trigger: EVENT_TRIGGER_ONCE

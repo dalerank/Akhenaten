@@ -3,6 +3,7 @@
 //   2 battle lost and 3 acknowledgement -> MESSAGE_TEMPLATE_GENERAL (131); every template must exist,
 //   or the message is dropped.
 // Markers:
+//   [test-marker] event_messages_og_battle_won_ok
 //   [test-marker] event_messages_og_templates_ok
 
 function test496_fail(msg) {
@@ -33,9 +34,21 @@ function test496_check(what, got, template, title, body, phrase) {
     return true
 }
 
+// MESSAGE subtype 1 is OG EVENT_MESSAGE_BATTLE_WON; the city-status name for 1 stays an alias.
+function test496_subtype_names() {
+    if (EVENT_SUBTYPE_MSG_BATTLE_WON !== 1 || EVENT_SUBTYPE_FOREIGN_CITY_CONQUERED !== 1) {
+        test496_fail('subtype 1 names: battle_won=' + EVENT_SUBTYPE_MSG_BATTLE_WON
+            + ' conquered=' + EVENT_SUBTYPE_FOREIGN_CITY_CONQUERED)
+        return
+    }
+    __log_marker('event_messages_og_battle_won_ok')
+}
+
 function test496_templates() {
     var ok = test496_check('city saved', test496_post(49601, EVENT_SUBTYPE_MSG_CITY_SAVED), 'message_template_city_saved',
             PHRASE_eg_city_saved_title, PHRASE_eg_city_saved_initial_announcement)
+        && test496_check('battle won', test496_post(49604, EVENT_SUBTYPE_MSG_BATTLE_WON), 'message_template_distant_battle_won',
+            PHRASE_battle_won_title, PHRASE_battle_won_initial_announcement)
         && test496_check('battle lost', test496_post(49602, EVENT_SUBTYPE_MSG_DISTANT_BATTLE_LOST), 'message_template_general',
             PHRASE_battle_lost_title, PHRASE_battle_lost_initial_announcement)
         && test496_check('acknowledgement', test496_post(49603, EVENT_SUBTYPE_MSG_ACKNOWLEDGEMENT), 'message_template_general',
@@ -48,12 +61,13 @@ function test496_templates() {
 function run_test() {
     __log_info_native('[test:496] OG event messages')
     test_reload_city_session('data/default.map')
+    test496_subtype_names()
     test496_templates()
     __test_signal_ready()
 }
 
 function check_valid() {
-    var markers = ['event_messages_og_templates_ok']
+    var markers = ['event_messages_og_battle_won_ok', 'event_messages_og_templates_ok']
     for (var i = 0; i < markers.length; i++) {
         if (!__test_find_inlog('[test-marker] ' + markers[i])) {
             __log_info_native('[test:496] missing marker: ' + markers[i])

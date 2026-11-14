@@ -639,7 +639,7 @@ function mission35_ensure_heh_gems_leaves() {
 	var kr10 = mission35_make_leaf(1012, EVENT_TYPE_REPUTATION_INCREASE, undefined, 10, 2)
 	var henna24 = mission35_make_chain_request(1013, RESOURCE_HENNA, 24, 9, 2, "Gaza")
 	var msg_conquered = mission35_make_leaf(1014, EVENT_TYPE_MESSAGE, undefined, 6, 2,
-		EVENT_SUBTYPE_FOREIGN_CITY_CONQUERED, "Kerma")
+		EVENT_SUBTYPE_MSG_BATTLE_WON, "Kerma")
 	var conquered_itj = mission35_make_leaf(1015, EVENT_TYPE_CITY_STATUS_CHANGE, undefined, 5, 2,
 		EVENT_SUBTYPE_FOREIGN_CITY_CONQUERED, "Itjtawy")
 	var trade_itj = mission35_make_leaf(1016, EVENT_TYPE_CITY_STATUS_CHANGE, undefined, 8, 2,

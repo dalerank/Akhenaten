@@ -73,6 +73,7 @@ static config::EnumIterator ANK_CONFIG_CC1(config_handler, __LINE__)(register_ev
 void register_event_subtype_aliases(config::type_enum) {
     js_register_token(EVENT_SUBTYPE_CITY_FELL_TO_ENEMY, "EVENT_SUBTYPE_CITY_FELL_TO_ENEMY");
     js_register_token(EVENT_SUBTYPE_GENERIC_REQUEST, "EVENT_SUBTYPE_GENERIC_REQUEST");
+    js_register_token(EVENT_SUBTYPE_FOREIGN_CITY_CONQUERED, "EVENT_SUBTYPE_FOREIGN_CITY_CONQUERED");
     js_register_token(EVENT_SUBTYPE_CITY_ASKS_FOR_TROOPS, "EVENT_SUBTYPE_CITY_ASKS_FOR_TROOPS");
     js_register_token(EVENT_SUBTYPE_DISTANT_BATTLE, "EVENT_SUBTYPE_DISTANT_BATTLE");
     js_register_token(EVENT_SUBTYPE_NEW_TRADE_ROUTE, "EVENT_SUBTYPE_NEW_TRADE_ROUTE");
@@ -1468,10 +1469,10 @@ void event_manager_t::process_event(int id, bool via_event_trigger, int chain_ac
                                    message_phrase(PHRASE_eg_city_saved_reason_A), id, 0);
             break;
 
-        case EVENT_SUBTYPE_FOREIGN_CITY_CONQUERED:
-            city_message_post_full(true, "message_template_foreign_city_conquered", &event, caller_event_id,
-                                   PHRASE_foreign_city_conquered_title, PHRASE_foreign_city_conquered_initial_announcement,
-                                   message_phrase(PHRASE_foreign_city_conquered_reason_A), id, 0);
+        case EVENT_SUBTYPE_MSG_BATTLE_WON:
+            city_message_post_full(true, "message_template_distant_battle_won", &event, caller_event_id,
+              PHRASE_battle_won_title, PHRASE_battle_won_initial_announcement,
+              message_phrase(PHRASE_battle_won_reason_A), id, 0);
             break;
 
         case EVENT_SUBTYPE_MSG_DISTANT_BATTLE_LOST:

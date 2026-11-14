@@ -444,7 +444,7 @@ function mission42_ensure_chain_leaves() {
 	mission42_make_leaf(1007, EVENT_TYPE_GIFT_FROM_PHARAOH, RESOURCE_POTTERY, 5, 12)
 
 	var msg_won = mission42_make_leaf(1011, EVENT_TYPE_MESSAGE, undefined, 8, 12,
-		EVENT_SUBTYPE_FOREIGN_CITY_CONQUERED, "Jericho")
+		EVENT_SUBTYPE_MSG_BATTLE_WON, "Jericho")
 	msg_won.set_completed_action_tag(1016)
 	mission42_make_leaf(1016, EVENT_TYPE_REPUTATION_INCREASE, undefined, 3, 12)
 

@@ -73,10 +73,11 @@ extern const e_event_state_tokens_t e_event_state_tokens;
 // exposes the *first* name at each value to JS; other aliases are registered
 // separately in scenario_event_manager.cpp.
 enum e_event_subtype : uint8_t {
-    EVENT_SUBTYPE_MSG_CITY_SAVED = 0,       // MESSAGE (JS primary for 0)
-    EVENT_SUBTYPE_CITY_FELL_TO_ENEMY = 0,   // CITY_STATUS
-    EVENT_SUBTYPE_GENERIC_REQUEST = 0,      // REQUEST
-    EVENT_SUBTYPE_FOREIGN_CITY_CONQUERED = 1,
+    EVENT_SUBTYPE_MSG_CITY_SAVED = 0,         // MESSAGE (JS primary for 0)
+    EVENT_SUBTYPE_CITY_FELL_TO_ENEMY = 0,     // CITY_STATUS
+    EVENT_SUBTYPE_GENERIC_REQUEST = 0,        // REQUEST
+    EVENT_SUBTYPE_MSG_BATTLE_WON = 1,         // MESSAGE (JS primary for 1)
+    EVENT_SUBTYPE_FOREIGN_CITY_CONQUERED = 1, // CITY_STATUS
     EVENT_SUBTYPE_CITY_ASKS_FOR_TROOPS = 1,
     EVENT_SUBTYPE_MSG_DISTANT_BATTLE_LOST = 2,
     EVENT_SUBTYPE_DISTANT_BATTLE = 2,
