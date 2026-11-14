@@ -71,7 +71,6 @@ building/building_farm.cpp -> graphics/view/view.h
 building/building_farm.cpp -> sound/sound_building.h
 building/building_farm.cpp -> widget/city/building_ghost.h
 building/building_farm.cpp -> window/building/common.h
-building/building_ferry.cpp -> graphics/animkeys.h
 building/building_ferry.cpp -> graphics/image.h
 building/building_ferry.cpp -> graphics/view/view.h
 building/building_fishing_wharf.cpp -> dev/debug.h

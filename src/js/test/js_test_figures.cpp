@@ -542,6 +542,15 @@ static void __test_figure_update_animation(int fid) {
 }
 ANK_FUNCTION_1(__test_figure_update_animation);
 
+static void __test_figure_refresh_image(int fid) {
+    figure* f = figure_get(fid);
+    if (!f || !f->is_alive()) {
+        return;
+    }
+    f->figure_image_update(true);
+}
+ANK_FUNCTION_1(__test_figure_refresh_image);
+
 static int __test_figure_carrying_amount(int fid) {
     figure* f = figure_get(fid);
     return f ? f->get_carrying_amount() : -1;

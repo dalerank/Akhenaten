@@ -881,7 +881,7 @@ void screen_city_t::draw_isometric_nonterrain_height(vec2i pixel, tile2i tile, p
         bool force_draw_tile = false;
         if (building_id > 0 && tile_building) {
             building_impl *b = tile_building->dcast();
-            // Flat view: keep force_draw_height (ferry top).
+            // Flat view: keep force_draw_height.
             // Booth/bandstand no-op under flatten; skip force_draw_top (iso top bleed).
             force_draw_tile = b->force_draw_height_tile(ctx, tile, pixel, color_mask);
             if (!flatten) {
