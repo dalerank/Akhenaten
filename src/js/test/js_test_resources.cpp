@@ -14,6 +14,8 @@
 #include "platform/arguments.h"
 #include "platform/platform.h"
 
+#include <SDL.h>
+
 #include <algorithm>
 #include <cstdio>
 #include <filesystem>
@@ -246,3 +248,11 @@ pcstr __test_user_dir() {
     return platform.user_directory();
 }
 ANK_FUNCTION(__test_user_dir);
+
+// Queues the event SDL sends after a lost device; the next frame takes the renderer's recovery path.
+static void __test_render_device_reset() {
+    SDL_Event ev{};
+    ev.type = SDL_RENDER_DEVICE_RESET;
+    SDL_PushEvent(&ev);
+}
+ANK_FUNCTION(__test_render_device_reset);
