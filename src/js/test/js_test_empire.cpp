@@ -1,6 +1,7 @@
 #include "js/test/js_test_common.h"
 
 #include "empire/empire.h"
+#include "empire/empire_city.h"
 #include "empire/empire_markers.h"
 #include "empire/empire_object.h"
 
@@ -24,6 +25,16 @@ static bool __test_empire_route_set(int route_id, int route_type, vec2i a, vec2i
     return true;
 }
 ANK_FUNCTION_5(__test_empire_route_set);
+
+static bool __test_empire_city_set_route(int city_id, int route_id) {
+    empire_city* city = g_empire.city(city_id);
+    if (!city || !city->in_use) {
+        return false;
+    }
+    city->route_id = route_id;
+    return true;
+}
+ANK_FUNCTION_2(__test_empire_city_set_route);
 
 static int __test_empire_route_path_length(int route_id) {
     return g_empire.get_route_object(route_id).path_length;

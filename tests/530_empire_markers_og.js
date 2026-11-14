@@ -18,11 +18,11 @@ function test530_fail(msg) {
     __log_info_native('[test:530] FAIL: ' + msg)
 }
 
+// A trading city, put on route 19 for the troops; the invasion walks route 18.
 function test530_find_city() {
     for (var id = 1; id < 80; id++) {
-        var route = __test_empire_city_trade_only(id, RESOURCE_POTTERY, 1500)
-        if (route > 0 && route < 50) {
-            return { id: id, route: route }
+        if (__test_empire_city_trade_only(id, RESOURCE_POTTERY, 1500) >= 0 && __test_empire_city_set_route(id, 19)) {
+            return { id: id, route: 19 }
         }
     }
     return null
@@ -103,7 +103,7 @@ function test530_invasion(ours, route_id) {
 
     __test_og_invasions_set(1)
     var inv = city.create_invasion({ tag_id: 53001, invader: EVENT_INVADER_ENEMY, amount: 10, months_initial: 12,
-        route: 1, empire_route: route_id, year: 1, month: 0 })
+        route: 1, empire_route: route_id, year: 1, month: 0 }).event_id
 
     var steps = [
         // month, anim, x: 7 months left is beyond the 6 travel months
@@ -239,13 +239,13 @@ function run_test() {
     test_reload_city_session('data/default.map')
     var c = test530_find_city()
     if (!c) {
-        test530_fail('no empire city with a route')
+        test530_fail('no empire city')
         __test_signal_ready()
         return
     }
     var ours = empire.ourcity.pos || { x: 100, y: 100 }
     __log_info_native('[test:530] city=' + c.id + ' route=' + c.route + ' ours=' + ours.x + ',' + ours.y)
-    test530_invasion(ours, c.route == 19 ? 18 : 19)
+    test530_invasion(ours, 18)
     test530_troops(ours, c)
     __test_signal_ready()
 }
