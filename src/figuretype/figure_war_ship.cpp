@@ -72,33 +72,6 @@ bool usable_water(tile2i tile) {
         && !map_terrain_is(tile, TERRAIN_BUILDING);
 }
 
-// OG ship_pick_escape_point: farthest boat-routable water on (dir-1, dir, dir+1) rays.
-tile2i pick_escape_tile(tile2i from, int direction, int distance) {
-    if (direction < 0 || direction > 7) {
-        direction = DIR_0_TOP_RIGHT;
-    }
-    if (distance <= 0) {
-        distance = 10;
-    }
-    tile2i best = from;
-    int best_d2 = -1;
-    for (int delta = -1; delta <= 1; ++delta) {
-        const int d = (direction + delta + 8) % 8;
-        const tile2i unit = tile_ahead(tile2i(0, 0), d);
-        tile2i toward(from.x() + unit.x() * distance, from.y() + unit.y() * distance);
-        tile2i cand;
-        const int d2 = map_water_farthest_on_line(from, toward, cand);
-        if (d2 < 0 || cand == from) {
-            continue;
-        }
-        if (d2 >= best_d2) {
-            best_d2 = d2;
-            best = cand;
-        }
-    }
-    return best;
-}
-
 int clamp_dir8(int dir) {
     if (dir > DIR_7_TOP) {
         return DIR_7_TOP;
@@ -476,7 +449,7 @@ void figure_warship::evade() {
     if (dir > DIR_7_TOP) {
         dir = DIR_0_TOP_RIGHT;
     }
-    tile2i escape = pick_escape_tile(base.tile, dir, p.escape_distance);
+    tile2i escape = map_water_escape_tile(base.tile, dir, p.escape_distance);
     if (escape == base.tile) {
         return;
     }

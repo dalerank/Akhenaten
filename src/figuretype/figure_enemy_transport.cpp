@@ -193,25 +193,6 @@ figure_id figure_enemy_transport::find_closest_player_ship(int size) const {
     return best_id;
 }
 
-tile2i figure_enemy_transport::pick_escape_point(const enemy_ship_escape_move_t& m) const {
-    tile2i from = base.tile;
-    tile2i best_tile = from;
-    tile2i out;
-    int best = map_water_farthest_on_line(from, from.shifted(m.dx1, m.dy1), out);
-    best_tile = out;
-    int d = map_water_farthest_on_line(from, from.shifted(m.dx2, m.dy2), out);
-    if (best <= d) {
-        best_tile = out;
-        best = d;
-    }
-    d = map_water_farthest_on_line(from, from.shifted(m.dx3, m.dy3), out);
-    if (best <= d) {
-        best_tile = out;
-    }
-    map_water_find_free_tile(best_tile);
-    return best_tile;
-}
-
 void figure_enemy_transport::action_evade() {
     auto &d = runtime_data();
     const auto& rules = enemy_transport_rules;
@@ -239,10 +220,9 @@ void figure_enemy_transport::action_evade() {
     if (dir > DIR_6_TOP_LEFT) {
         dir = DIR_7_TOP;
     }
-    if (dir >= (int)rules.escape_moves.size()) {
-        return;
-    }
-    base.destination_tile = pick_escape_point(rules.escape_moves[dir]);
+    tile2i escape = map_water_escape_tile(base.tile, dir, rules.escape_distance);
+    map_water_find_free_tile(escape);
+    base.destination_tile = escape;
     route_remove();
     d.secondary_action = ENEMY_TRANSPORT_SECONDARY_FOLLOW_TARGET;
 }

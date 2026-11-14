@@ -142,17 +142,7 @@ enemy_transport_rules {
     damaged_percent : 15
     reroute_ticks : 99
     sinking_ticks : 32
-    // OG ship_escape_moves, one row per direction away from the enemy ship (0 = top-right .. 7 = top).
-    escape_moves : [
-        { dx1:0, dy1:-10, dx2:10, dy2:-10, dx3:-10, dy3:-10 }
-        { dx1:0, dy1:-10, dx2:10, dy2:-10, dx3:10, dy3:0 }
-        { dx1:10, dy1:-10, dx2:10, dy2:0, dx3:10, dy3:10 }
-        { dx1:10, dy1:0, dx2:10, dy2:10, dx3:0, dy3:10 }
-        { dx1:10, dy1:10, dx2:0, dy2:10, dx3:-10, dy3:10 }
-        { dx1:0, dy1:10, dx2:-10, dy2:0, dx3:-10, dy3:10 }
-        { dx1:-10, dy1:0, dx2:-10, dy2:10, dx3:-10, dy3:-10 }
-        { dx1:-10, dy1:0, dx2:-10, dy2:-10, dx3:0, dy3:-10 }
-    ]
+    escape_distance : 10
 }
 
 // Generic enemy transport (FIGURE_ENEMY_TRANSPORT = 92). Fallback when a nation

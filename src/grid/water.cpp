@@ -791,3 +791,30 @@ bool map_water_tile_next_to(tile2i building_tile, int size, tile2i &out) {
     }
     return false;
 }
+
+tile2i map_water_escape_tile(tile2i from, int direction, int distance) {
+    static const int dir_dx[8] = {0, 1, 1, 1, 0, -1, -1, -1};
+    static const int dir_dy[8] = {-1, -1, 0, 1, 1, 1, 0, -1};
+    if (direction < 0 || direction > 7) {
+        direction = 0;
+    }
+    if (distance <= 0) {
+        distance = 10;
+    }
+    tile2i best = from;
+    int best_d2 = -1;
+    for (int delta = -1; delta <= 1; ++delta) {
+        const int d = (direction + delta + 8) % 8;
+        const tile2i toward(from.x() + dir_dx[d] * distance, from.y() + dir_dy[d] * distance);
+        tile2i cand;
+        const int d2 = map_water_farthest_on_line(from, toward, cand);
+        if (d2 < 0 || cand == from) {
+            continue;
+        }
+        if (d2 >= best_d2) {
+            best_d2 = d2;
+            best = cand;
+        }
+    }
+    return best;
+}

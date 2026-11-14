@@ -62,4 +62,6 @@ bool map_water_find_free_tile(tile2i &tile);
 
 bool map_water_tile_next_to(tile2i building_tile, int size, tile2i &out);
 int map_water_farthest_on_line(tile2i from, tile2i to, tile2i &out);
+// OG ship_pick_escape_point: farthest boat-routable water on the (dir-1, dir, dir+1) rays of `distance` tiles.
+tile2i map_water_escape_tile(tile2i from, int direction, int distance);
 void map_water_recompute_depth_region(tile2i tmin, tile2i tmax);

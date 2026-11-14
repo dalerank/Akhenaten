@@ -28,16 +28,6 @@ enum e_enemy_transport_secondary : uint8_t {
     ENEMY_TRANSPORT_SECONDARY_WAITING = 16,
 };
 
-struct enemy_ship_escape_move_t {
-    int8_t dx1;
-    int8_t dy1;
-    int8_t dx2;
-    int8_t dy2;
-    int8_t dx3;
-    int8_t dy3;
-};
-ANK_CONFIG_STRUCT(enemy_ship_escape_move_t, dx1, dy1, dx2, dy2, dx3, dy3)
-
 struct enemy_transport_rules_t {
     int16_t soldiers_per_ship;
     int16_t launch_first_wait;
@@ -49,10 +39,10 @@ struct enemy_transport_rules_t {
     int16_t damaged_percent;
     int16_t reroute_ticks;
     int16_t sinking_ticks;
-    svector<enemy_ship_escape_move_t, 8> escape_moves;
+    int16_t escape_distance;
 };
 ANK_CONFIG_STRUCT(enemy_transport_rules_t, soldiers_per_ship, launch_first_wait, launch_wait_step, landing_wait,
-  evade_wait, evade_ticks, evade_range, damaged_percent, reroute_ticks, sinking_ticks, escape_moves)
+  evade_wait, evade_ticks, evade_range, damaged_percent, reroute_ticks, sinking_ticks, escape_distance)
 
 extern enemy_transport_rules_t enemy_transport_rules;
 
@@ -107,7 +97,6 @@ private:
     void action_go_away();
     void unload(tile2i land);
     figure_id find_closest_player_ship(int size) const;
-    tile2i pick_escape_point(const enemy_ship_escape_move_t& m) const;
 };
 
 // Leaf: OG figure_properties for the nation's ENEMY_MODEL_TRANSPORT_SHIP row (max_damage, missile_defense,
