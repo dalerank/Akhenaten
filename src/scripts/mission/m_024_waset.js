@@ -10,7 +10,8 @@ log_info("akhenaten: mission 24 waset started")
 // Kerma: display foreign route 23 (pak 19→23); unlocked y3m1 via i=42 NEW_TRADE (pak city=Kharga+loc23).
 // Triage: SKIP empty map_obj idx=6; SKIP orphan route 19.
 // Events: fish/granite recurring; oil extortion + egypt chain refuse; troops ladders; failed flood;
-// favour 66@loc1→40@loc2→40@loc9. Invasion loc 1-based land point (only land[0]=[23,48] exists).
+// favour 66@loc1→40@loc2→40@loc9: events[] BY_FAVOUR, sent by the engine at Kingdom rating 0.
+// Invasion loc 1-based land point (only land[0]=[23,48] exists).
 // i=7 subtype=3 = Is Naval (editor); via_sea sea[0]=[63,37] + transports (E3c).
 //
 // Tag_id scheme:
@@ -119,6 +120,54 @@ mission24 { // Waset (Thebes) — Civil War
 	]
 
 	enable_scenario_events : true
+
+	events [
+		{ // pak i=41
+			type : EVENT_TYPE_INVASION
+			time { year : 0, month : 0 }
+			item { value : EVENT_INVADER_EGYPT }
+			amount { value : 66, min : 60, max : 90 }
+			months_initial : 9
+			location_fields [ 1, 1, -1, -1 ]
+			event_trigger_type : EVENT_TRIGGER_BY_FAVOUR
+			tag_id : 7041
+			on_completed_action : 1
+			on_refusal_action : -1
+			on_too_late_action : -1
+			on_defeat_action : -1
+			invasion_attack_target : EVENT_ATTACK_TARGET_RANDOM
+		}
+		{ // pak i=43
+			type : EVENT_TYPE_INVASION
+			time { year : 0, month : 0 }
+			item { value : EVENT_INVADER_EGYPT }
+			amount { value : 40 }
+			months_initial : 0
+			location_fields [ 2, 2, -1, -1 ]
+			event_trigger_type : EVENT_TRIGGER_ONLY_VIA_EVENT
+			tag_id : 7043
+			on_completed_action : 2
+			on_refusal_action : -1
+			on_too_late_action : -1
+			on_defeat_action : -1
+			invasion_attack_target : EVENT_ATTACK_TARGET_RANDOM
+		}
+		{ // pak i=44
+			type : EVENT_TYPE_INVASION
+			time { year : 0, month : 0 }
+			item { value : EVENT_INVADER_EGYPT }
+			amount { value : 40 }
+			months_initial : 0
+			location_fields [ 9, 9, -1, -1 ]
+			event_trigger_type : EVENT_TRIGGER_ONLY_VIA_EVENT
+			tag_id : 7044
+			on_completed_action : -1
+			on_refusal_action : -1
+			on_too_late_action : -1
+			on_defeat_action : -1
+			invasion_attack_target : EVENT_ATTACK_TARGET_RANDOM
+		}
+	]
 
 	map_background : {pack:PACK_EMPIRE, id:1}
 	hide_pak_cities : true
@@ -441,11 +490,6 @@ mission24 { // Waset (Thebes) — Civil War
 		granite_recurring_was_busy : false
 		granite_recurring_idle_since_abs : -1
 
-		pharaoh_favour_invasion_done : false
-		pharaoh_favour_wave2_done : false
-		pharaoh_favour_wave3_done : false
-		pharaoh_favour_wave2_enemies_seen : false
-		pharaoh_favour_wave3_enemies_seen : false
 
 		start_message_shown : false
 	}
@@ -654,24 +698,6 @@ function mission24_ensure_granite_leaves() {
 	mission24_make_leaf(1040, EVENT_TYPE_REPUTATION_INCREASE, undefined, 7, 2)
 }
 
-function mission24_favour_wave(size, invasion_id, loc) {
-	var tile = mission24_loc_tile(loc === undefined ? 9 : loc)
-	log_info("akhenaten: mission 24 waset favour wave size=" + size + " kr=" + city.rating_kingdom
-		+ " loc=" + loc + " tile=" + tile[0] + "," + tile[1])
-	__image_request_pak(PACK_ENEMY_EGYPTIAN)
-	city.start_foreign_army_invasion({
-		mode: ATTACK_TYPE_ENEMIES,
-		enemy: ENEMY_3_EGYPTIAN,
-		kind: INVASION_KIND_KINGDOME,
-		size: size,
-		invasion_id: invasion_id,
-		tilex: tile[0],
-		tiley: tile[1],
-		want_destroy_buildings: 0,
-		invasion_attack_target: EVENT_ATTACK_TARGET_RANDOM
-	})
-}
-
 [es=event_mission_start, mission=mission24]
 function mission24_on_start(ev) {
 	__image_request_pak(PACK_ENEMY_KUSHITE)
@@ -812,45 +838,4 @@ function mission24_on_request_cleared(ev) {
 		log_info("akhenaten: mission 24 egypt×4 after oil×238 refuse (i=21)", {ev:ev})
 		mission24_egypt_raid(21, 4, EVENT_ATTACK_TARGET_VAULTS, 9)
 	}
-}
-
-// pak i=41→43→44: favour egypt×66 loc=1 →×40 loc=2 →×40 loc=9 (attack=RANDOM).
-[es=event_advance_month, mission=mission24]
-function mission24_pharaoh_favour_invasion(ev) {
-	if (mission.pharaoh_favour_wave2_done && !mission.pharaoh_favour_wave3_done) {
-		if (city.num_enemy_formations > 0) {
-			mission.pharaoh_favour_wave3_enemies_seen = true
-			return
-		}
-		if (!mission.pharaoh_favour_wave3_enemies_seen) {
-			return
-		}
-		mission.pharaoh_favour_wave3_done = true
-		mission24_favour_wave(40, 44, 9)
-		return
-	}
-
-	if (mission.pharaoh_favour_invasion_done && !mission.pharaoh_favour_wave2_done) {
-		if (city.num_enemy_formations > 0) {
-			mission.pharaoh_favour_wave2_enemies_seen = true
-			return
-		}
-		if (!mission.pharaoh_favour_wave2_enemies_seen) {
-			return
-		}
-		mission.pharaoh_favour_wave2_done = true
-		mission24_favour_wave(40, 43, 2)
-		return
-	}
-
-	if (mission.pharaoh_favour_invasion_done) {
-		return
-	}
-	if (city.rating_kingdom > 0) {
-		return
-	}
-	mission.pharaoh_favour_invasion_done = true
-	mission.pharaoh_favour_wave2_enemies_seen = false
-	mission.pharaoh_favour_wave3_enemies_seen = false
-	mission24_favour_wave(66, 41, 1)
 }

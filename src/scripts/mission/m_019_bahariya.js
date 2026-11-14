@@ -99,6 +99,24 @@ mission19 { // Bahariya Oasis — The Western Desert
 
 	enable_scenario_events : true
 
+	events [
+		{ // pak i=25
+			type : EVENT_TYPE_INVASION
+			time { year : 0, month : 0 }
+			item { value : EVENT_INVADER_PHARAOH }
+			amount { value : 76, min : 60, max : 80 }
+			months_initial : 2
+			location_fields [ 1, -1, 1, 8 ]
+			event_trigger_type : EVENT_TRIGGER_BY_FAVOUR
+			tag_id : 7025
+			on_completed_action : -1
+			on_refusal_action : -1
+			on_too_late_action : -1
+			on_defeat_action : -1
+			invasion_attack_target : EVENT_ATTACK_TARGET_RANDOM
+		}
+	]
+
 	map_background : {pack:PACK_EMPIRE, id:1}
 	hide_pak_cities : true
 cities [
@@ -418,7 +436,6 @@ cities [
 		event24_enemy_last_year : -1
 
 		gift_sandstone_wired : false
-		pharaoh_favour_invasion_done : false
 		start_message_shown : false
 	}
 }
@@ -621,6 +638,4 @@ function mission19_economy_and_invasions(ev) {
 		mission.event24_enemy_last_year = ev.years_since_start
 		mission19_enemy_raid(600 + ev.years_since_start, 64, EVENT_ATTACK_TARGET_RANDOM)
 	}
-
-	mission_pharaoh_favour_invasion_tick(mission, 76)
 }

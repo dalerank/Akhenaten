@@ -819,7 +819,6 @@ mission43 {
 
 	vars {
 		start_message_shown : false
-		pharaoh_favour_invasion_done : false
 		inv20_done : false
 		inv20_seq : 0
 		inv20_chain_done : false
@@ -831,6 +830,7 @@ mission43 {
 function mission43_on_start(ev) {
 	log_info("mission43: on_start", {ev:ev})
 	__image_request_pak(PACK_ENEMY_KUSHITE)
+	__image_request_pak(PACK_ENEMY_EGYPTIAN)
 	scenario.start_year = -1270
 	scenario.climate = 2
 	__scenario_monuments.first = 37
@@ -911,30 +911,6 @@ function mission43_fire_inv20_win_chain() {
 	troops.set_completed_action_tag(1023)
 	troops.set_refusal_action_tag(1007)
 	troops.execute()
-}
-
-[es=event_advance_month, mission=mission43]
-function mission43_pharaoh_favour_invasion(ev) {
-	if (mission.pharaoh_favour_invasion_done) {
-		return
-	}
-	if (city.rating_kingdom > 0) {
-		return
-	}
-	mission.pharaoh_favour_invasion_done = true
-	log_info("akhenaten: mission 43 pharaoh favour invasion size=15 kr=" + city.rating_kingdom)
-	__image_request_pak(PACK_ENEMY_EGYPTIAN)
-	city.start_foreign_army_invasion({
-		mode: ATTACK_TYPE_ENEMIES,
-		enemy: ENEMY_3_EGYPTIAN,
-		kind: INVASION_KIND_KINGDOME,
-		size: 15,
-		invasion_id: 26,
-		tilex: -1,
-		tiley: -1,
-		want_destroy_buildings: 0,
-		invasion_attack_target: EVENT_ATTACK_TARGET_FOOD
-	})
 }
 
 [es=event_advance_month, mission=mission43]

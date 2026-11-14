@@ -106,6 +106,39 @@ mission30 { // Heh (Semna) — The Gauntlet
 
 	enable_scenario_events : true
 
+	events [
+		{ // pak i=35
+			type : EVENT_TYPE_INVASION
+			time { year : 0, month : 0 }
+			item { value : EVENT_INVADER_EGYPT }
+			amount { value : 60 }
+			months_initial : 9
+			location_fields [ 4, -1, 4, 5 ]
+			event_trigger_type : EVENT_TRIGGER_BY_FAVOUR
+			tag_id : 7035
+			on_completed_action : 1
+			on_refusal_action : -1
+			on_too_late_action : -1
+			on_defeat_action : -1
+			invasion_attack_target : EVENT_ATTACK_TARGET_RANDOM
+		}
+		{ // pak i=36
+			type : EVENT_TYPE_INVASION
+			time { year : 0, month : 0 }
+			item { value : EVENT_INVADER_EGYPT }
+			amount { value : 60 }
+			months_initial : 0
+			location_fields [ 6, 6, -1, -1 ]
+			event_trigger_type : EVENT_TRIGGER_ONLY_VIA_EVENT
+			tag_id : 7036
+			on_completed_action : -1
+			on_refusal_action : -1
+			on_too_late_action : -1
+			on_defeat_action : -1
+			invasion_attack_target : EVENT_ATTACK_TARGET_RANDOM
+		}
+	]
+
 	map_background : {pack:PACK_EMPIRE, id:20}
 	hide_pak_cities : true
 	cities [
@@ -554,9 +587,6 @@ mission30 { // Heh (Semna) — The Gauntlet
 		event32_chickpeas_done : false
 		event37_demand_done : false
 
-		pharaoh_favour_invasion_done : false
-		pharaoh_favour_wave2_done : false
-		pharaoh_favour_enemies_seen : false
 
 		start_message_shown : false
 	}
@@ -652,8 +682,8 @@ function mission30_fire_request(tag, resource, amount, months, ok_tag, refuse_ta
 
 // pak location_fields = 1-based packed (land first, then sea). MAX editor slots 8+.
 // land[0]=[80,123] land[1]=[112,71]; sea[0]=[127,84] sea[1]=[95,4].
-// loc3/4 = sea → via_sea. OOB navy (prefer_sea) → sea0. Egyptian OOB → map entry.
-function mission30_apply_invasion_loc(opts, loc, prefer_sea) {
+// loc3/4 = sea → via_sea. OOB navy → sea0.
+function mission30_apply_invasion_loc(opts, loc) {
 	if (loc == 1) {
 		opts.tilex = 80
 		opts.tiley = 123
@@ -678,16 +708,11 @@ function mission30_apply_invasion_loc(opts, loc, prefer_sea) {
 		opts.tiley = 4
 		return true
 	}
-	if (prefer_sea) {
-		opts.via_sea = 1
-		opts.sea_point = 0
-		opts.tilex = 127
-		opts.tiley = 84
-		return true
-	}
-	opts.tilex = -1
-	opts.tiley = -1
-	return false
+	opts.via_sea = 1
+	opts.sea_point = 0
+	opts.tilex = 127
+	opts.tiley = 84
+	return true
 }
 
 function mission30_kushite_raid(invasion_id, size, loc, on_completed_tag) {
@@ -703,29 +728,8 @@ function mission30_kushite_raid(invasion_id, size, loc, on_completed_tag) {
 		invasion_attack_target: EVENT_ATTACK_TARGET_RANDOM,
 		on_completed_tag: on_completed_tag
 	}
-	var via_sea = mission30_apply_invasion_loc(opts, loc, true)
+	var via_sea = mission30_apply_invasion_loc(opts, loc)
 	log_info("akhenaten: mission 30 kushite raid id=" + invasion_id + " size=" + size
-		+ " loc=" + loc + " sea=" + via_sea + " tile=" + opts.tilex + "," + opts.tiley)
-	return city.start_foreign_army_invasion(opts)
-}
-
-function mission30_pharaoh_raid(invasion_id, size, loc, on_completed_tag) {
-	if (loc === undefined) {
-		loc = 4
-	}
-	var opts = {
-		enemy: ENEMY_3_EGYPTIAN,
-		kind: INVASION_KIND_KINGDOME,
-		amount: size,
-		size: size,
-		invasion_id: invasion_id,
-		want_destroy_buildings: 0,
-		invasion_attack_target: EVENT_ATTACK_TARGET_RANDOM,
-		on_completed_tag: on_completed_tag
-	}
-	// Sea locs (3/4) still via_sea; OOB without prefer_sea → map entry.
-	var via_sea = mission30_apply_invasion_loc(opts, loc, false)
-	log_info("akhenaten: mission 30 pharaoh raid id=" + invasion_id + " size=" + size
 		+ " loc=" + loc + " sea=" + via_sea + " tile=" + opts.tilex + "," + opts.tiley)
 	return city.start_foreign_army_invasion(opts)
 }
@@ -950,24 +954,6 @@ function mission30_update_day(ev) {
 			mission.event23_invasion_done = true
 			log_info("akhenaten: mission 30 kushite×20 chain (i=23)")
 			mission30_kushite_raid(23, 20, 9)
-		}
-	}
-
-	// Favour egypt×60→×60 (pak i=35/36) — loc 4 / 6 via loc_tile
-	if (!mission.pharaoh_favour_invasion_done && city.rating_kingdom < 30) {
-		mission.pharaoh_favour_invasion_done = true
-		log_info("akhenaten: mission 30 favour egypt×60 (i=35)")
-		mission30_pharaoh_raid(35, 60, 4)
-	}
-	if (mission.pharaoh_favour_invasion_done && !mission.pharaoh_favour_wave2_done) {
-		if (!mission.pharaoh_favour_enemies_seen) {
-			if (city.num_enemy_formations > 0) {
-				mission.pharaoh_favour_enemies_seen = true
-			}
-		} else if (city.num_enemy_formations == 0) {
-			mission.pharaoh_favour_wave2_done = true
-			log_info("akhenaten: mission 30 favour egypt×60 wave2 (i=36)")
-			mission30_pharaoh_raid(36, 60, 6)
 		}
 	}
 }

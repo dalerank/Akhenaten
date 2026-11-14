@@ -5,6 +5,25 @@ log_info("akhenaten: mission 6 behdet started")
 mission6 { // Behdet — The Royal Navy
 	map_file : "data/maps/m_006_behdet.map"
 
+	enable_scenario_events : true
+	events [
+		{ // pak i=19
+			type : EVENT_TYPE_INVASION
+			time { year : 0, month : 0 }
+			item { value : EVENT_INVADER_PHARAOH }
+			amount { value : 45 }
+			months_initial : 11
+			location_fields [ 7, -1, 1, 8 ]
+			event_trigger_type : EVENT_TRIGGER_BY_FAVOUR
+			tag_id : 7019
+			on_completed_action : -1
+			on_refusal_action : -1
+			on_too_late_action : -1
+			on_defeat_action : -1
+			invasion_attack_target : EVENT_ATTACK_TARGET_RANDOM
+		}
+	]
+
 	// Map points from data/maps/m_006_behdet.map.
 	fishing_points [ [73, 38], [89, 61] ]
 
@@ -351,7 +370,6 @@ mission6 { // Behdet — The Royal Navy
 		kushite_invasion_1 : false
 		kushite_invasion_2 : false
 		kushite_invasion_3 : false
-		pharaoh_favour_invasion_done : false
 		start_message_shown : false
 	}
 }
@@ -389,6 +407,7 @@ function mission6_kushite_raid(invasion_id, size, on_completed_tag) {
 [es=event_mission_start, mission=mission6]
 function mission6_on_start(ev) {
 	__image_request_pak(PACK_ENEMY_KUSHITE)
+	__image_request_pak(PACK_ENEMY_EGYPTIAN)
 	mission_show_start_message(mission, "message_soldiers_and_forts")
 	empire.set_id(1)
 	empire.set_expanded(false)
@@ -546,9 +565,4 @@ function mission6_kushite_invasion_3(ev) {
 	mission.kushite_invasion_3 = true
 	log_info("akhenaten: mission 6 behdet kushite invasion 3 size=4", {ev:ev})
 	mission6_kushite_raid(2, 4)
-}
-
-[es=event_advance_month, mission=mission6]
-function mission6_pharaoh_favour_invasion(ev) {
-	mission_pharaoh_favour_invasion_tick(mission, 45)
 }

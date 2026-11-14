@@ -339,7 +339,7 @@
 
       <!-- ─── Scripted events ───────────────────────────────── -->
       <h2 id="events">Scripted events</h2>
-      <p>Full empire redefine + event schedule verified against original campaign scenario 12 (2026-07-25 dump). Empire id <strong>1</strong>. Scenario enemy is <strong>Hyksos</strong> (<code>ENEMY_5_HYKSOS</code>) — not Libyan. Favour-KR Pharaoh army size <strong>25</strong>, chaining to a second wave of <strong>60</strong> if unresolved. Timed raids and favour are proxied in JS until B2-migrate.</p>
+      <p>Full empire redefine + event schedule verified against original campaign scenario 12 (2026-07-25 dump). Empire id <strong>1</strong>. Scenario enemy is <strong>Hyksos</strong> (<code>ENEMY_5_HYKSOS</code>) — not Libyan. Favour-KR Pharaoh army size <strong>25</strong>, with a chained second wave of <strong>60</strong> (<code>BY_FAVOUR</code> events in <code>events[]</code>, pak i=71→72). At Kingdom rating 0 the engine sends the <code>BY_FAVOUR</code> invasion from <code>events[]</code> (OG <code>city/kingdom.c</code>): warnings over its <code>months_initial</code>, then the attack; the chained wave attacks together with it. It is called off if the rating reaches 15 before the attack, and can come again 12 months later. Timed raids are still proxied in JS until B2-migrate.</p>
 
       <div class="tutorial-step">
         <span class="step-tag">Year 3 · month 4</span>
@@ -355,7 +355,7 @@
       </div>
       <div class="tutorial-step">
         <span class="step-tag">Year 7+ · month 6</span>
-        <span><strong>Hyksos raid</strong>, size <strong>17</strong>, recurring roughly yearly for as long as no enemy formation remains on the map. Pharaoh's favour separately drops an army of 25 (chaining to 60) if the kingdom rating collapses.</span>
+        <span><strong>Hyksos raid</strong>, size <strong>17</strong>, recurring roughly yearly for as long as no enemy formation remains on the map. Pharaoh's favour separately sends an army of 25 (with a chained 60) if the kingdom rating hits 0.</span>
       </div>
       <div class="tutorial-step">
         <span class="step-tag">Year 8+ · month 1</span>
@@ -389,7 +389,7 @@
       <p>Lay out the small stepped pyramid and the stepped pyramid complex early — they take years to finish. Stone Quarries plus a Work Camp and the Stonemasons' Guild drive construction; the Carpenters' and Bricklayers' Guilds are needed for the early phases. Keep a dedicated Storage Yard for plain stone next to the sites. Mastabas for the nobles can be added alongside — they contribute a little to the monument rating but are not required for the goal. The complex needs a clear causeway path to water (temples not built yet).</p>
 
       <h3>Phase 3 — Defense against the Hyksos</h3>
-      <p>Starting around year 7, Hyksos raiders (not Libyans) land near the pak invasion point at roughly tile [114, 79] and return each year once the previous force is cleared. Build a Recruiter and Weaponsmith in advance and keep one company of infantry and one of archers ready; a Transport Wharf and warships help intercept along the river. Pharaoh's favour can also drop a Pharaoh-aligned army of 25 (chaining to 60) if the kingdom rating collapses, so a healthy KR is part of your defense plan too.</p>
+      <p>Starting around year 7, Hyksos raiders (not Libyans) land near the pak invasion point at roughly tile [114, 79] and return each year once the previous force is cleared. Build a Recruiter and Weaponsmith in advance and keep one company of infantry and one of archers ready; a Transport Wharf and warships help intercept along the river. Pharaoh's favour can also send a Pharaoh-aligned army of 25 (with a chained 60) if the kingdom rating hits 0, so a healthy KR is part of your defense plan too.</p>
 
       <h3>Phase 4 — Culture and prosperity</h3>
       <p>Culture 25 needs schools, libraries, temples, and entertainment coverage; prosperity 25 needs housing beyond the basic levels — import gems from Serabit Khadim, craft jewelry, and let the luxury goods raise home values. Hold festivals for Osiris and Ptah to keep the gods content while the pyramids consume the city's labor.</p>
@@ -502,8 +502,8 @@
               </li>
               <li>
                 <span class="ev-name">Hyksos raid + Pharaoh favour</span>
-                <span class="ev-desc">Recurring size-17 Hyksos raid from y7m6+, gated on <code>city.num_enemy_formations == 0</code> so it re-arms once the map is clear; a monthly favour tick drops a size-25 Pharaoh army when kingdom rating bottoms out, chaining to a size-60 second wave.</span>
-                <span class="ev-fn">mission12_event_i70_hyksos_invasion_recurring / mission12_pharaoh_favour_invasion</span>
+                <span class="ev-desc">Recurring size-17 Hyksos raid from y7m6+, gated on <code>city.num_enemy_formations == 0</code> so it re-arms once the map is clear; the size-25 Pharaoh favour army and its size-60 chained wave are <code>events[]</code> entries the engine sends at Kingdom rating 0.</span>
+                <span class="ev-fn">mission12_event_i70_hyksos_invasion_recurring</span>
               </li>
             </ul>
           </div>
@@ -539,7 +539,7 @@
           <div class="details-body">
             <ul>
               <li><strong>Monument goal:</strong> 39 = pak (small + stepped pyramid complex, weights 3 + 36 → <code>trunc(6.32·√39+0.5)</code>); the complex counts its full weight while on-land. Causeway open.</li>
-              <li><strong>Invasions and Pharaoh's favour</strong> are proxied in JS (<code>city.start_foreign_army_invasion</code>, <code>mission_pharaoh_favour_invasion_tick</code>) rather than the native <code>EVENT_TYPE_INVASION</code> — same pattern as Saqqara and Serabit Khadim, pending the B2-migrate step. Favour drops a Pharaoh-aligned army of 25, chaining to a second wave of 60 if the kingdom rating stays low.</li>
+              <li><strong>Invasions</strong> are proxied in JS (<code>city.start_foreign_army_invasion</code>) rather than the native <code>EVENT_TYPE_INVASION</code>, pending the B2-migrate step. <strong>Pharaoh's favour</strong> is native: <code>events[]</code> pak i=71 (<code>BY_FAVOUR</code>, 25) → i=72 (60), sent by <code>event_manager_t::update_kingdom_favour</code> at Kingdom rating 0.</li>
               <li><strong>Skipped pak junk:</strong> empire route 47 (orphan, no city references it) and map object index 7 (an empty stub at position 0,0) are omitted. Pak events with <code>years_since_start &gt;= 98</code> (a failed flood, a reeds request, a wage change, and a papyrus request with its gift chain) are dead data past any realistic playthrough length and are not wired.</li>
               <li><strong>Orphan chain-only leaves</strong> with no inbound reference (pak i=46 KR+7, i=58 papyrus price-decrease) are left out of the script — nothing in the fired schedule ever routes to them.</li>
             </ul>

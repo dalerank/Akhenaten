@@ -88,6 +88,39 @@ mission34 { // Byblos — Expansion and Conquest
 
 	enable_scenario_events : true
 
+	events [
+		{ // pak i=38
+			type : EVENT_TYPE_INVASION
+			time { year : 0, month : 0 }
+			item { value : EVENT_INVADER_EGYPT }
+			amount { value : 161, min : 128, max : 176 }
+			months_initial : 12
+			location_fields [ 9, 9, -1, -1 ]
+			event_trigger_type : EVENT_TRIGGER_BY_FAVOUR
+			tag_id : 7038
+			on_completed_action : -1
+			on_refusal_action : -1
+			on_too_late_action : -1
+			on_defeat_action : -1
+			invasion_attack_target : EVENT_ATTACK_TARGET_BEST_BUILDINGS
+		}
+		{ // pak i=46
+			type : EVENT_TYPE_INVASION
+			time { year : 0, month : 0 }
+			item { value : EVENT_INVADER_EGYPT }
+			amount { value : 128, min : 128, max : 176 }
+			months_initial : 18
+			location_fields [ 5, -1, 1, 8 ]
+			event_trigger_type : EVENT_TRIGGER_BY_FAVOUR
+			tag_id : 7046
+			on_completed_action : -1
+			on_refusal_action : -1
+			on_too_late_action : -1
+			on_defeat_action : -1
+			invasion_attack_target : EVENT_ATTACK_TARGET_RANDOM
+		}
+	]
+
 	map_background : {pack:PACK_EMPIRE, id:33}
 	hide_pak_cities : true
 	cities [
@@ -473,11 +506,6 @@ mission34 { // Byblos — Expansion and Conquest
 
 		kr39_once_done : false
 
-		pharaoh_favour_invasion_done : false
-		pharaoh_favour_chain_done : false
-		pharaoh_favour_enemies_seen : false
-		pharaoh_favour_wave_next : -1
-		pharaoh_favour_wave_seq : 0
 		start_message_shown : false
 	}
 }
@@ -832,8 +860,6 @@ function mission34_requests_and_events(ev) {
 			mission34_enemy_raid(3037, 141, 12, 0)
 		}
 	}
-
-	mission_pharaoh_favour_invasion_tick(mission, 161, 128)
 }
 
 [es=event_request_cleared, mission=mission34]

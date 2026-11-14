@@ -189,7 +189,6 @@ function mission_request_outcome(ev) {
 	return "ok"
 }
 
-import mission.mission_favour_events
 import mission.m_000_nubt
 import mission.m_001_thinis
 import mission.m_002_perwadjyt

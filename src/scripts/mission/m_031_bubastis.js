@@ -103,6 +103,54 @@ mission31 { // Bubastis — The City of Bast
 
 	enable_scenario_events : true
 
+	events [
+		{ // pak i=17
+			type : EVENT_TYPE_INVASION
+			time { year : 0, month : 0 }
+			item { value : EVENT_INVADER_EGYPT }
+			amount { value : 50 }
+			months_initial : 5
+			location_fields [ 1, 1, -1, -1 ]
+			event_trigger_type : EVENT_TRIGGER_BY_FAVOUR
+			tag_id : 7017
+			on_completed_action : 1
+			on_refusal_action : -1
+			on_too_late_action : -1
+			on_defeat_action : -1
+			invasion_attack_target : EVENT_ATTACK_TARGET_FOOD
+		}
+		{ // pak i=18
+			type : EVENT_TYPE_INVASION
+			time { year : 0, month : 0 }
+			item { value : EVENT_INVADER_EGYPT }
+			amount { value : 50 }
+			months_initial : 0
+			location_fields [ 2, 2, -1, -1 ]
+			event_trigger_type : EVENT_TRIGGER_ONLY_VIA_EVENT
+			tag_id : 7018
+			on_completed_action : 2
+			on_refusal_action : -1
+			on_too_late_action : -1
+			on_defeat_action : -1
+			invasion_attack_target : EVENT_ATTACK_TARGET_RANDOM
+		}
+		{ // pak i=19
+			type : EVENT_TYPE_INVASION
+			time { year : 0, month : 0 }
+			item { value : EVENT_INVADER_EGYPT }
+			amount { value : 20 }
+			months_initial : 0
+			location_fields [ 3, 3, -1, -1 ]
+			event_trigger_type : EVENT_TRIGGER_ONLY_VIA_EVENT
+			tag_id : 7019
+			on_completed_action : -1
+			on_refusal_action : -1
+			on_too_late_action : -1
+			on_defeat_action : -1
+			invasion_attack_target : EVENT_ATTACK_TARGET_RANDOM
+		}
+	]
+
 	map_background : {pack:PACK_EMPIRE, id:1}
 	hide_pak_cities : true
 	cities [
@@ -416,13 +464,6 @@ mission31 { // Bubastis — The City of Bast
 		event9_weapons_done : false
 		event13_fish_armed : false
 		gaza_trade_done : false
-		pharaoh_favour_invasion_done : false
-		pharaoh_favour_wave2_done : false
-		pharaoh_favour_wave3_done : false
-		pharaoh_favour_enemies_seen : false
-		pharaoh_favour_enemies_seen2 : false
-		pharaoh_favour_wave1_abs : -1
-		pharaoh_favour_wave2_abs : -1
 		timber_recurring_was_busy : false
 		timber_recurring_idle_since_abs : -1
 		fish_recurring_was_busy : false
@@ -484,40 +525,6 @@ function mission31_fire_simple_event(tag, type, resource, amount, city_name, sub
 	var ev = city.create_chain_event(opts)
 	ev.event_is_active = true
 	return ev
-}
-
-// pak location_fields = 1-based land invasion index (MAX 8).
-// inv_land/sea empty; favour i=17/18/19 use loc 1/2/3 — distinct landfalls via
-// entry / disembark[2] / exit (Egyptian unset → map entry).
-function mission31_loc_tile(loc) {
-	if (loc == 1) {
-		return [129, 80] // entry_point (east)
-	}
-	if (loc == 2) {
-		return [51, 72] // disembark sparse i=2
-	}
-	if (loc == 3) {
-		return [81, 128] // exit_point
-	}
-	return [-1, -1]
-}
-
-function mission31_egypt_raid(invasion_id, size, attack_target, loc) {
-	var tile = mission31_loc_tile(loc === undefined ? 0 : loc)
-	log_info("akhenaten: mission 31 egypt raid id=" + invasion_id + " size=" + size
-		+ " loc=" + loc + " tile=" + tile[0] + "," + tile[1])
-	__image_request_pak(PACK_ENEMY_EGYPTIAN)
-	city.start_foreign_army_invasion({
-		invasion_id: invasion_id,
-		enemy: ENEMY_3_EGYPTIAN,
-		kind: INVASION_KIND_KINGDOME,
-		size: size,
-		amount: size,
-		tilex: tile[0],
-		tiley: tile[1],
-		want_destroy_buildings: 0,
-		invasion_attack_target: attack_target === undefined ? EVENT_ATTACK_TARGET_RANDOM : attack_target
-	})
 }
 
 function mission31_ensure_shared_leaves() {
@@ -635,48 +642,5 @@ function mission31_requests_and_events(ev) {
 		log_info("akhenaten: mission 31 NEW_TRADE Gaza (warship wharves)")
 		mission31_fire_simple_event(2020, EVENT_TYPE_CITY_STATUS_CHANGE, undefined, 1, "Gaza",
 			EVENT_SUBTYPE_NEW_TRADE_ROUTE)
-	}
-
-	// pak i=17-19: favour egypt×50 → ×50 → ×20; loc 1 / 2 / 3 (KR < 30 like Heh)
-	// Timeout 3 months if spawn fails (enemies never seen) so chain does not stall.
-	if (!mission.pharaoh_favour_invasion_done && city.rating_kingdom < 30) {
-		mission.pharaoh_favour_invasion_done = true
-		mission.pharaoh_favour_wave1_abs = abs
-		log_info("akhenaten: mission 31 favour egypt x50")
-		mission31_egypt_raid(17, 50, EVENT_ATTACK_TARGET_RANDOM, 1)
-	}
-	if (mission.pharaoh_favour_invasion_done && !mission.pharaoh_favour_wave2_done) {
-		if (!mission.pharaoh_favour_enemies_seen) {
-			if (city.num_enemy_formations > 0) {
-				mission.pharaoh_favour_enemies_seen = true
-			} else if (mission.pharaoh_favour_wave1_abs >= 0
-					&& abs - mission.pharaoh_favour_wave1_abs >= 3) {
-				mission.pharaoh_favour_wave2_done = true
-				mission.pharaoh_favour_wave2_abs = abs
-				log_info("akhenaten: mission 31 favour egypt x50 wave2 (spawn timeout)")
-				mission31_egypt_raid(18, 50, EVENT_ATTACK_TARGET_FOOD, 2)
-			}
-		} else if (city.num_enemy_formations == 0) {
-			mission.pharaoh_favour_wave2_done = true
-			mission.pharaoh_favour_wave2_abs = abs
-			log_info("akhenaten: mission 31 favour egypt x50 wave2")
-			mission31_egypt_raid(18, 50, EVENT_ATTACK_TARGET_FOOD, 2)
-		}
-	}
-	if (mission.pharaoh_favour_wave2_done && !mission.pharaoh_favour_wave3_done) {
-		if (!mission.pharaoh_favour_enemies_seen2) {
-			if (city.num_enemy_formations > 0) {
-				mission.pharaoh_favour_enemies_seen2 = true
-			} else if (mission.pharaoh_favour_wave2_abs >= 0
-					&& abs - mission.pharaoh_favour_wave2_abs >= 3) {
-				mission.pharaoh_favour_wave3_done = true
-				log_info("akhenaten: mission 31 favour egypt x20 wave3 (spawn timeout)")
-				mission31_egypt_raid(19, 20, EVENT_ATTACK_TARGET_FOOD, 3)
-			}
-		} else if (city.num_enemy_formations == 0) {
-			mission.pharaoh_favour_wave3_done = true
-			log_info("akhenaten: mission 31 favour egypt x20 wave3")
-			mission31_egypt_raid(19, 20, EVENT_ATTACK_TARGET_FOOD, 3)
-		}
 	}
 }

@@ -122,6 +122,54 @@ mission18 { // Rostja (Giza) — The Great Pyramid and Sphinx
 
 	enable_scenario_events : true
 
+	events [
+		{ // pak i=18
+			type : EVENT_TYPE_INVASION
+			time { year : 0, month : 0 }
+			item { value : EVENT_INVADER_PHARAOH }
+			amount { value : 50 }
+			months_initial : 9
+			location_fields [ 1, 1, -1, -1 ]
+			event_trigger_type : EVENT_TRIGGER_BY_FAVOUR
+			tag_id : 7018
+			on_completed_action : 1
+			on_refusal_action : -1
+			on_too_late_action : -1
+			on_defeat_action : -1
+			invasion_attack_target : EVENT_ATTACK_TARGET_RANDOM
+		}
+		{ // pak i=40
+			type : EVENT_TYPE_INVASION
+			time { year : 0, month : 0 }
+			item { value : EVENT_INVADER_PHARAOH }
+			amount { value : 20 }
+			months_initial : 0
+			location_fields [ 3, 3, -1, -1 ]
+			event_trigger_type : EVENT_TRIGGER_ONLY_VIA_EVENT
+			tag_id : 7040
+			on_completed_action : 2
+			on_refusal_action : -1
+			on_too_late_action : -1
+			on_defeat_action : -1
+			invasion_attack_target : EVENT_ATTACK_TARGET_RANDOM
+		}
+		{ // pak i=41
+			type : EVENT_TYPE_INVASION
+			time { year : 0, month : 0 }
+			item { value : EVENT_INVADER_PHARAOH }
+			amount { value : 50 }
+			months_initial : 0
+			location_fields [ 8, 8, -1, -1 ]
+			event_trigger_type : EVENT_TRIGGER_ONLY_VIA_EVENT
+			tag_id : 7041
+			on_completed_action : -1
+			on_refusal_action : -1
+			on_too_late_action : -1
+			on_defeat_action : -1
+			invasion_attack_target : EVENT_ATTACK_TARGET_RANDOM
+		}
+	]
+
 	map_background : {pack:PACK_EMPIRE, id:1}
 	hide_pak_cities : true
 	cities [
@@ -415,17 +463,6 @@ mission18 { // Rostja (Giza) — The Great Pyramid and Sphinx
 		troops_rearm_seq : 0
 		troops_kr_seq : 0
 
-		pharaoh_favour_invasion_done : false
-		pharaoh_favour_chain_done : false
-		pharaoh_favour_enemies_seen : false
-		pharaoh_favour_wave_next : -1
-		pharaoh_favour_wave_seq : 0
-		// Legacy mid-save (pre-B7 local poll):
-		pharaoh_favour_wave2_done : false
-		pharaoh_favour_wave3_done : false
-		pharaoh_favour_wave2_enemies_seen : false
-		pharaoh_favour_wave3_enemies_seen : false
-
 		start_message_shown : false
 	}
 }
@@ -618,7 +655,7 @@ function mission18_troops_refuse_raid(tag) {
 	mission.troops_rearm_seq = (mission.troops_rearm_seq | 0) + 1
 	var rearm_tag = 4100 + mission.troops_rearm_seq
 	mission18_create_troops_rearm_request(rearm_tag)
-	// High band: avoid colliding with calendar Hyksos (0 / 3+year%20) and favour (24+).
+	// High band: avoid colliding with calendar Hyksos (0 / 3+year%20).
 	var invasion_id = 60 + (mission.troops_rearm_seq % 20)
 	log_info("akhenaten: mission 18 rostja hyksos×9 after troops refuse/defeat tag=" + tag + " rearm=" + rearm_tag)
 	mission18_hyksos_raid(invasion_id, 9, EVENT_ATTACK_TARGET_FOOD, rearm_tag)
@@ -1028,10 +1065,4 @@ function mission18_event_i43_new_trade_route(ev) {
 		city: "Iunet",
 		trigger: EVENT_TRIGGER_ONCE
 	}).execute()
-}
-
-// pak i=18→40→41: favour Pharaoh 50→20→50.
-[es=event_advance_month, mission=mission18]
-function mission18_pharaoh_favour_invasion(ev) {
-	mission_pharaoh_favour_invasion_tick(mission, [50, 20, 50])
 }

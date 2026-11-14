@@ -108,6 +108,54 @@ mission29 { // Sawu (Mersa Gawasis) — Shores of the Red Sea; briefing key = me
 
 	enable_scenario_events : true
 
+	events [
+		{ // pak i=32
+			type : EVENT_TYPE_INVASION
+			time { year : 0, month : 0 }
+			item { value : EVENT_INVADER_EGYPT }
+			amount { value : 40 }
+			months_initial : 6
+			location_fields [ 5, -1, 1, 8 ]
+			event_trigger_type : EVENT_TRIGGER_BY_FAVOUR
+			tag_id : 7032
+			on_completed_action : 1
+			on_refusal_action : -1
+			on_too_late_action : -1
+			on_defeat_action : -1
+			invasion_attack_target : EVENT_ATTACK_TARGET_RANDOM
+		}
+		{ // pak i=33
+			type : EVENT_TYPE_INVASION
+			time { year : 0, month : 0 }
+			item { value : EVENT_INVADER_EGYPT }
+			amount { value : 40 }
+			months_initial : 0
+			location_fields [ 3, 3, -1, -1 ]
+			event_trigger_type : EVENT_TRIGGER_ONLY_VIA_EVENT
+			tag_id : 7033
+			on_completed_action : 2
+			on_refusal_action : -1
+			on_too_late_action : -1
+			on_defeat_action : -1
+			invasion_attack_target : EVENT_ATTACK_TARGET_RANDOM
+		}
+		{ // pak i=34
+			type : EVENT_TYPE_INVASION
+			time { year : 0, month : 0 }
+			item { value : EVENT_INVADER_EGYPT }
+			amount { value : 40 }
+			months_initial : 0
+			location_fields [ 8, 8, -1, -1 ]
+			event_trigger_type : EVENT_TRIGGER_ONLY_VIA_EVENT
+			tag_id : 7034
+			on_completed_action : -1
+			on_refusal_action : -1
+			on_too_late_action : -1
+			on_defeat_action : -1
+			invasion_attack_target : EVENT_ATTACK_TARGET_RANDOM
+		}
+	]
+
 	map_background : {pack:PACK_EMPIRE, id:1}
 	hide_pak_cities : true
 	cities [
@@ -524,10 +572,6 @@ mission29 { // Sawu (Mersa Gawasis) — Shores of the Red Sea; briefing key = me
 		event27_invasion_last_abs : -1
 		event28_invasion_last_abs : -1
 
-		pharaoh_favour_invasion_done : false
-		pharaoh_favour_wave2_done : false
-		pharaoh_favour_wave3_done : false
-		pharaoh_favour_enemies_seen : false
 
 		start_message_shown : false
 	}
@@ -663,7 +707,7 @@ function mission29_ensure_all_leaves() {
 
 // pak location_fields = 1-based packed (land first, then sea).
 // land[0]=[13,100] → loc1; sea[0]=[74,16] → loc2.
-// Libyan OOB navy (3/5/8/9) → via_sea sea0. Egyptian favour OOB → map entry.
+// Libyan OOB navy (3/5/8/9) → via_sea sea0.
 function mission29_apply_invasion_loc(opts, loc, prefer_sea) {
 	if (loc == 1) {
 		opts.tilex = 13
@@ -705,27 +749,6 @@ function mission29_libyan_raid(invasion_id, size, loc, attack_target) {
 	log_info("akhenaten: mission 29 libyan raid id=" + invasion_id + " size=" + size
 		+ " loc=" + loc + " sea=" + via_sea + " tile=" + opts.tilex + "," + opts.tiley)
 	__image_request_pak(PACK_ENEMY_LIBIAN)
-	return city.start_foreign_army_invasion(opts)
-}
-
-function mission29_favour_wave(size, invasion_id, loc, attack_target) {
-	if (loc === undefined) {
-		loc = 1
-	}
-	var opts = {
-		mode: ATTACK_TYPE_ENEMIES,
-		enemy: ENEMY_3_EGYPTIAN,
-		kind: INVASION_KIND_KINGDOME,
-		size: size,
-		invasion_id: invasion_id,
-		want_destroy_buildings: 0,
-		invasion_attack_target: attack_target === undefined ? EVENT_ATTACK_TARGET_RANDOM : attack_target
-	}
-	var via_sea = mission29_apply_invasion_loc(opts, loc, false)
-	log_info("akhenaten: mission 29 favour wave size=" + size + " kr=" + city.rating_kingdom
-		+ " id=" + invasion_id + " loc=" + loc + " sea=" + via_sea
-		+ " tile=" + opts.tilex + "," + opts.tiley)
-	__image_request_pak(PACK_ENEMY_EGYPTIAN)
 	return city.start_foreign_army_invasion(opts)
 }
 
@@ -876,37 +899,4 @@ function mission29_timed_invasions(ev) {
 		log_info("akhenaten: mission 29 enemy×9 recurring (i=28) abs=" + abs)
 		mission29_libyan_raid(28, 9, 9, EVENT_ATTACK_TARGET_TROOPS)
 	}
-}
-
-// pak i=32 -> i=33 -> i=34: by_favour egypt×40 loc=5, then ×40 loc=3, then ×40 loc=8.
-[es=event_advance_month, mission=mission29]
-function mission29_pharaoh_favour_invasion(ev) {
-	if (mission.pharaoh_favour_invasion_done && !mission.pharaoh_favour_wave3_done) {
-		if (city.num_enemy_formations > 0) {
-			mission.pharaoh_favour_enemies_seen = true
-			return
-		}
-		if (!mission.pharaoh_favour_enemies_seen) {
-			return
-		}
-		mission.pharaoh_favour_enemies_seen = false
-		if (!mission.pharaoh_favour_wave2_done) {
-			mission.pharaoh_favour_wave2_done = true
-			mission29_favour_wave(40, 33, 3, EVENT_ATTACK_TARGET_RANDOM)
-			return
-		}
-		mission.pharaoh_favour_wave3_done = true
-		mission29_favour_wave(40, 34, 8, EVENT_ATTACK_TARGET_RANDOM)
-		return
-	}
-	if (mission.pharaoh_favour_invasion_done) {
-		return
-	}
-	if (city.rating_kingdom > 0) {
-		return
-	}
-	mission.pharaoh_favour_invasion_done = true
-	mission.pharaoh_favour_enemies_seen = false
-	log_info("akhenaten: mission 29 favour egypt×40 (i=32)")
-	mission29_favour_wave(40, 32, 5, EVENT_ATTACK_TARGET_RANDOM)
 }

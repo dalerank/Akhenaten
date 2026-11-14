@@ -96,6 +96,69 @@ mission16 { // Iunet (Dendera) — The Defense of Egypt
 
 	enable_scenario_events : true
 
+	events [
+		{ // pak i=19
+			type : EVENT_TYPE_INVASION
+			time { year : 0, month : 0 }
+			item { value : EVENT_INVADER_PHARAOH }
+			amount { value : 15 }
+			months_initial : 9
+			location_fields [ 1, 1, -1, -1 ]
+			event_trigger_type : EVENT_TRIGGER_BY_FAVOUR
+			tag_id : 7019
+			on_completed_action : 1
+			on_refusal_action : -1
+			on_too_late_action : -1
+			on_defeat_action : -1
+			invasion_attack_target : EVENT_ATTACK_TARGET_FOOD
+		}
+		{ // pak i=20
+			type : EVENT_TYPE_INVASION
+			time { year : 0, month : 0 }
+			item { value : EVENT_INVADER_PHARAOH }
+			amount { value : 45 }
+			months_initial : 0
+			location_fields [ 2, 2, -1, -1 ]
+			event_trigger_type : EVENT_TRIGGER_ONLY_VIA_EVENT
+			tag_id : 7020
+			on_completed_action : 2
+			on_refusal_action : -1
+			on_too_late_action : -1
+			on_defeat_action : -1
+			invasion_attack_target : EVENT_ATTACK_TARGET_RANDOM
+		}
+		{ // pak i=21
+			type : EVENT_TYPE_INVASION
+			time { year : 0, month : 0 }
+			item { value : EVENT_INVADER_PHARAOH }
+			amount { value : 30 }
+			months_initial : 0
+			location_fields [ 8, 8, -1, -1 ]
+			event_trigger_type : EVENT_TRIGGER_ONLY_VIA_EVENT
+			tag_id : 7021
+			on_completed_action : 3
+			on_refusal_action : -1
+			on_too_late_action : -1
+			on_defeat_action : -1
+			invasion_attack_target : EVENT_ATTACK_TARGET_RANDOM
+		}
+		{ // pak i=22
+			type : EVENT_TYPE_INVASION
+			time { year : 0, month : 0 }
+			item { value : EVENT_INVADER_PHARAOH }
+			amount { value : 30 }
+			months_initial : 0
+			location_fields [ 7, 7, -1, -1 ]
+			event_trigger_type : EVENT_TRIGGER_ONLY_VIA_EVENT
+			tag_id : 7022
+			on_completed_action : -1
+			on_refusal_action : -1
+			on_too_late_action : -1
+			on_defeat_action : -1
+			invasion_attack_target : EVENT_ATTACK_TARGET_RANDOM
+		}
+	]
+
 	map_background : {pack:PACK_EMPIRE, id:1}
 	hide_pak_cities : true
 	cities [
@@ -428,18 +491,6 @@ mission16 { // Iunet (Dendera) — The Defense of Egypt
 		event17_hittite_done : false
 		limestone_egypt_done : false
 
-		pharaoh_favour_invasion_done : false
-		pharaoh_favour_chain_done : false
-		pharaoh_favour_enemies_seen : false
-		pharaoh_favour_wave_next : -1
-		pharaoh_favour_wave_seq : 0
-		pharaoh_favour_wave2_done : false
-		pharaoh_favour_wave3_done : false
-		pharaoh_favour_wave4_done : false
-		pharaoh_favour_wave2_enemies_seen : false
-		pharaoh_favour_wave3_enemies_seen : false
-		pharaoh_favour_wave4_enemies_seen : false
-
 		start_message_shown : false
 	}
 }
@@ -756,10 +807,4 @@ function mission16_event_i17_hittite(ev) {
 	mission16_ensure_pottery_leaves()
 	log_info("akhenaten: mission 16 iunet hittite×48", {ev:ev})
 	mission16_hittite_raid(3, 48, EVENT_ATTACK_TARGET_FOOD, 1011, 1002)
-}
-
-// pak i=19→20→21→22: favour 15→45→30→30.
-[es=event_advance_month, mission=mission16]
-function mission16_pharaoh_favour_invasion(ev) {
-	mission_pharaoh_favour_invasion_tick(mission, [15, 45, 30, 30])
 }

@@ -302,7 +302,7 @@
       <p>Goals match original campaign scenario 5. Culture and monument ratings are off — the pressure is on population, prosperity, and kingdom favour through copper, gems, deben, and weapons shipments.</p>
 
       <h2 id="events">Scripted events</h2>
-      <p>Schedule verified against original campaign scenario 5. Scenario <code>enemy_id</code> is <strong>Libyan</strong> (<code>ENEMY_7_LIBIAN</code>); invasion event fields label Bedouins. Favour-KR Pharaoh army (size 45) is handled by the shared helper.</p>
+      <p>Schedule verified against original campaign scenario 5. Scenario <code>enemy_id</code> is <strong>Libyan</strong> (<code>ENEMY_7_LIBIAN</code>); invasion event fields label Bedouins. Favour-KR Pharaoh army (size 45, warning 12 months) is the <code>BY_FAVOUR</code> event in <code>events[]</code> (pak i=13).</p>
 
       <div class="tutorial-step">
         <span class="step-tag">Year 0 · month 8</span>
@@ -334,7 +334,7 @@
       </div>
       <div class="tutorial-step">
         <span class="step-tag">Favour KR</span>
-        <span>If kingdom rating collapses, Pharaoh's punishment army (size <strong>45</strong>) via <code>mission_pharaoh_favour_invasion_tick</code>.</span>
+        <span>If kingdom rating collapses, Pharaoh's punishment army (size <strong>45</strong>). At Kingdom rating 0 the engine sends the <code>BY_FAVOUR</code> invasion from <code>events[]</code> (OG <code>city/kingdom.c</code>): warnings over its <code>months_initial</code>, then the attack. It is called off if the rating reaches 15 before the attack, and can come again 12 months later.</span>
       </div>
 
       <h2 id="strategy">Strategy</h2>
@@ -424,27 +424,27 @@
             <ul class="event-list">
               <li>
                 <span class="ev-name">event_mission_start</span>
-                <span class="ev-line">~299</span>
+                <span class="ev-line">~386</span>
                 <span class="ev-desc">Military history message; <code>empire.set_id(1)</code> / <code>set_expanded(false)</code>; empire map + advisors; loads <code>PACK_ENEMY_LIBIAN</code>.</span>
                 <span class="ev-fn">mission5_on_start</span>
               </li>
               <li>
                 <span class="ev-name">event_advance_month</span>
-                <span class="ev-line">~312–361</span>
+                <span class="ev-line">~400–472</span>
                 <span class="ev-desc">Pharaoh requests: copper 5@y0m8/9mo → gems 15@y2m4/12mo (ok→open Men-nefer) → deben 885@y2m8/12mo (ok→chickpeas gift ×16) → weapons 11@y7m3/12mo (ok→open Men-nefer again).</span>
                 <span class="ev-fn">mission5_pharaoh_request_*</span>
               </li>
               <li>
                 <span class="ev-name">event_advance_month</span>
-                <span class="ev-line">~366–391</span>
+                <span class="ev-line">~475–500</span>
                 <span class="ev-desc">Libyan raids sizes 9 / 16 / 24 at y2m7, y3m9, y5.</span>
                 <span class="ev-fn">mission5_libyan_invasion_*</span>
               </li>
               <li>
-                <span class="ev-name">event_advance_month</span>
-                <span class="ev-line">~393</span>
-                <span class="ev-desc">Favour-KR Pharaoh army size 45.</span>
-                <span class="ev-fn">mission5_pharaoh_favour_invasion</span>
+                <span class="ev-name">events[] (engine)</span>
+                <span class="ev-line">~10</span>
+                <span class="ev-desc">Favour-KR Pharaoh army size 45: <code>BY_FAVOUR</code> event sent by the engine at Kingdom rating 0.</span>
+                <span class="ev-fn">event_manager_t::update_kingdom_favour</span>
               </li>
             </ul>
           </div>

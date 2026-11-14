@@ -1,10 +1,29 @@
 log_info("akhenaten: mission 5 timna started")
 
 // Trade / requests / invasions aligned with original campaign scenario 5 (2026-07-24 dump).
-// Stub events/attacks/trade_routes removed — they were never wired (enable_scenario_events:false).
+// Stub events/attacks/trade_routes removed — they were never wired. events[] holds only the favour chain.
 
 mission5 { // Timna
 	map_file : "data/maps/m_005_timna.map"
+
+	enable_scenario_events : true
+	events [
+		{ // pak i=13
+			type : EVENT_TYPE_INVASION
+			time { year : 0, month : 0 }
+			item { value : EVENT_INVADER_PHARAOH }
+			amount { value : 45 }
+			months_initial : 12
+			location_fields [ 3, -1, 1, 4 ]
+			event_trigger_type : EVENT_TRIGGER_BY_FAVOUR
+			tag_id : 7013
+			on_completed_action : -1
+			on_refusal_action : -1
+			on_too_late_action : -1
+			on_defeat_action : -1
+			invasion_attack_target : EVENT_ATTACK_TARGET_RANDOM
+		}
+	]
 
 	// Map points from data/maps/m_005_timna.map.
 	herd_points_prey [ [82, 96] ]
@@ -288,7 +307,6 @@ mission5 { // Timna
 		libyan_invasion_1 : false
 		libyan_invasion_2 : false
 		libyan_invasion_3 : false
-		pharaoh_favour_invasion_done : false
 		start_message_shown : false
 	}
 
@@ -367,6 +385,7 @@ function mission5_libyan_raid(invasion_id, size) {
 [es=event_mission_start, mission=mission5]
 function mission5_on_start(ev) {
 	__image_request_pak(PACK_ENEMY_LIBIAN)
+	__image_request_pak(PACK_ENEMY_EGYPTIAN)
 	mission_show_start_message(mission, "message_history_military")
 	empire.set_id(1)
 	empire.set_expanded(false)
@@ -477,9 +496,4 @@ function mission5_libyan_invasion_3(ev) {
 	mission.libyan_invasion_3 = true
 	log_info("akhenaten: mission 5 timna libyan invasion 3 size=24", {ev:ev})
 	mission5_libyan_raid(2, 24)
-}
-
-[es=event_advance_month, mission=mission5]
-function mission5_pharaoh_favour_invasion(ev) {
-	mission_pharaoh_favour_invasion_tick(mission, 45)
 }

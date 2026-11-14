@@ -94,7 +94,7 @@
       </div>
 
       <h2 id="events">Scripted events (summary)</h2>
-      <p>Early meat and pottery requests (famine / legitimacy theme), then bricks and limestone construction requests. Pottery success opens Kerma trade. Refuse paths can spawn Egyptian raids (JS chain). Recurring linen, land-trade problems, wage shifts, and contaminated water. Favour Pharaoh army ×50→×50 when kingdom rating collapses. Deep nested grain/pomegranate chains from the pak are simplified to KR leaves (Menat-style).</p>
+      <p>Early meat and pottery requests (famine / legitimacy theme), then bricks and limestone construction requests. Pottery success opens Kerma trade. Refuse paths can spawn Egyptian raids (JS chain). Recurring linen, land-trade problems, wage shifts, and contaminated water. Favour Egyptian army ×50→×50 (no invasion points: it enters at the map exit). It is the OG kingdom army: when the kingdom rating falls to <strong>0</strong>, the engine sends the first favour invasion — announcement and reminders first, the attack 6 months later; chained waves follow as soon as the previous wave attacks. It is called off if the rating climbs back to <strong>15</strong> before it attacks, and can come again 12 months later while the rating stays at 0. Deep nested grain/pomegranate chains from the pak are simplified to KR leaves (Menat-style).</p>
 
       <div class="dev-section">
         <h2 id="dev">Developer reference</h2>
@@ -102,6 +102,7 @@
           <summary>Mission script</summary>
           <div class="details-body">
             <p><span class="file-ref">src/scripts/mission/m_027_itjtawy.js</span> · import in <span class="file-ref">src/scripts/missions.js</span></p>
+            <p>Favour army: <code>events[]</code> pak i=118→119 (<code>EVENT_TRIGGER_BY_FAVOUR</code> master, <code>ONLY_VIA_EVENT</code> chain), sent by <code>event_manager_t::update_kingdom_favour</code> (OG <code>city/kingdom.c</code> <code>city_emperor_update</code>); no mission JS.</p>
             <p>Empire id <strong>1</strong> (pak). Map <span class="file-ref">data/maps/m_027_itjtawy.map</span>. Rank 10. Scenario enemy <code>ENEMY_7_LIBIAN</code>; favour / refuse waves via <code>ENEMY_3_EGYPTIAN</code>. Dump 2026-07-26.</p>
             <p><code>choice_title [144, 58]</code> → Iken (28) / Sawu (29). No <code>next_mission</code>. SKIP: empty map_obj idx=8; clay flood i=81 (y31073 junk); orphan KR/MSG leaves.</p>
           </div>

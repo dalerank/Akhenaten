@@ -871,7 +871,6 @@ mission44 {
 
 	vars {
 		start_message_shown : false
-		pharaoh_favour_invasion_done : false
 	}
 }
 
@@ -879,6 +878,7 @@ mission44 {
 function mission44_on_start(ev) {
 	log_info("mission44: on_start", {ev:ev})
 	__image_request_pak(PACK_ENEMY_KUSHITE)
+	__image_request_pak(PACK_ENEMY_EGYPTIAN)
 	scenario.start_year = -1250
 	scenario.climate = 2
 	__scenario_monuments.first = 36
@@ -894,26 +894,3 @@ function mission44_on_start(ev) {
 	}
 }
 
-[es=event_advance_month, mission=mission44]
-function mission44_pharaoh_favour_invasion(ev) {
-	if (mission.pharaoh_favour_invasion_done) {
-		return
-	}
-	if (city.rating_kingdom > 0) {
-		return
-	}
-	mission.pharaoh_favour_invasion_done = true
-	log_info("akhenaten: mission 44 pharaoh favour invasion size=27 kr=" + city.rating_kingdom)
-	__image_request_pak(PACK_ENEMY_EGYPTIAN)
-	city.start_foreign_army_invasion({
-		mode: ATTACK_TYPE_ENEMIES,
-		enemy: ENEMY_3_EGYPTIAN,
-		kind: INVASION_KIND_KINGDOME,
-		size: 27,
-		invasion_id: 8,
-		tilex: -1,
-		tiley: -1,
-		want_destroy_buildings: 0,
-		invasion_attack_target: EVENT_ATTACK_TARGET_TROOPS
-	})
-}

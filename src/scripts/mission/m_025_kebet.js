@@ -104,6 +104,39 @@ mission25 { // Kebet (Coptos) — Reunification; briefing key = coptos
 
 	enable_scenario_events : true
 
+	events [
+		{ // pak i=29
+			type : EVENT_TYPE_INVASION
+			time { year : 0, month : 0 }
+			item { value : EVENT_INVADER_PHARAOH }
+			amount { value : 60 }
+			months_initial : 9
+			location_fields [ 2, 2, -1, -1 ]
+			event_trigger_type : EVENT_TRIGGER_BY_FAVOUR
+			tag_id : 7029
+			on_completed_action : 1
+			on_refusal_action : -1
+			on_too_late_action : -1
+			on_defeat_action : -1
+			invasion_attack_target : EVENT_ATTACK_TARGET_RANDOM
+		}
+		{ // pak i=30
+			type : EVENT_TYPE_INVASION
+			time { year : 0, month : 0 }
+			item { value : EVENT_INVADER_PHARAOH }
+			amount { value : 60 }
+			months_initial : 0
+			location_fields [ 4, 4, -1, -1 ]
+			event_trigger_type : EVENT_TRIGGER_ONLY_VIA_EVENT
+			tag_id : 7030
+			on_completed_action : -1
+			on_refusal_action : -1
+			on_too_late_action : -1
+			on_defeat_action : -1
+			invasion_attack_target : EVENT_ATTACK_TARGET_RANDOM
+		}
+	]
+
 	map_background : {pack:PACK_EMPIRE, id:1}
 	hide_pak_cities : true
 	cities [
@@ -440,9 +473,6 @@ mission25 { // Kebet (Coptos) — Reunification; briefing key = coptos
 		henna_raid_wave2_done : false
 		henna_raid_enemies_seen : false
 
-		pharaoh_favour_invasion_done : false
-		pharaoh_favour_wave2_done : false
-		pharaoh_favour_enemies_seen : false
 
 		start_message_shown : false
 	}
@@ -555,24 +585,6 @@ function mission25_egypt_raid(invasion_id, size, attack_target, loc) {
 		tiley: tile[1],
 		want_destroy_buildings: size,
 		invasion_attack_target: attack_target
-	})
-}
-
-function mission25_favour_wave(size, invasion_id, loc) {
-	var tile = mission25_loc_tile(loc === undefined ? 0 : loc)
-	log_info("akhenaten: mission 25 kebet favour wave size=" + size + " kr=" + city.rating_kingdom
-		+ " loc=" + loc + " tile=" + tile[0] + "," + tile[1])
-	__image_request_pak(PACK_ENEMY_EGYPTIAN)
-	city.start_foreign_army_invasion({
-		mode: ATTACK_TYPE_ENEMIES,
-		enemy: ENEMY_3_EGYPTIAN,
-		kind: INVASION_KIND_KINGDOME,
-		size: size,
-		invasion_id: invasion_id,
-		tilex: tile[0],
-		tiley: tile[1],
-		want_destroy_buildings: 0,
-		invasion_attack_target: EVENT_ATTACK_TARGET_RANDOM
 	})
 }
 
@@ -825,31 +837,4 @@ function mission25_henna_raid_second_wave(ev) {
 	}
 	mission.henna_raid_wave2_done = true
 	mission25_egypt_raid(20, 60, EVENT_ATTACK_TARGET_BEST_BUILDINGS, 8)
-}
-
-// pak i=29→30: favour pharaoh×60 loc=2 → chain ×60 loc=4 (attack=RANDOM).
-[es=event_advance_month, mission=mission25]
-function mission25_pharaoh_favour_invasion(ev) {
-	if (mission.pharaoh_favour_invasion_done && !mission.pharaoh_favour_wave2_done) {
-		if (city.num_enemy_formations > 0) {
-			mission.pharaoh_favour_enemies_seen = true
-			return
-		}
-		if (!mission.pharaoh_favour_enemies_seen) {
-			return
-		}
-		mission.pharaoh_favour_wave2_done = true
-		mission25_favour_wave(60, 30, 4)
-		return
-	}
-
-	if (mission.pharaoh_favour_invasion_done) {
-		return
-	}
-	if (city.rating_kingdom > 0) {
-		return
-	}
-	mission.pharaoh_favour_invasion_done = true
-	mission.pharaoh_favour_enemies_seen = false
-	mission25_favour_wave(60, 29, 2)
 }

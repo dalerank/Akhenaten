@@ -106,6 +106,24 @@ mission21 { // Dunqul Oasis — The Kushite Threat
 
 	enable_scenario_events : true
 
+	events [
+		{ // pak i=19
+			type : EVENT_TYPE_INVASION
+			time { year : 0, month : 0 }
+			item { value : EVENT_INVADER_PHARAOH }
+			amount { value : 66, min : 60, max : 80 }
+			months_initial : 9
+			location_fields [ 3, -1, 1, 8 ]
+			event_trigger_type : EVENT_TRIGGER_BY_FAVOUR
+			tag_id : 7019
+			on_completed_action : -1
+			on_refusal_action : -1
+			on_too_late_action : -1
+			on_defeat_action : -1
+			invasion_attack_target : EVENT_ATTACK_TARGET_RANDOM
+		}
+	]
+
 	map_background : {pack:PACK_EMPIRE, id:1}
 	hide_pak_cities : true
 	cities [
@@ -520,7 +538,6 @@ mission21 { // Dunqul Oasis — The Kushite Threat
 		gamemeat_recurring_idle_since_abs : -1
 		granite_recurring_was_busy : false
 		granite_recurring_idle_since_abs : -1
-		pharaoh_favour_invasion_done : false
 		start_message_shown : false
 	}
 }
@@ -790,10 +807,5 @@ function mission21_on_request_cleared(ev) {
 	if ((tag >= 3000 && tag < 3100) || (tag >= 3400 && tag < 3500)) {
 		mission21_apply_shared_request_outcome(outcome)
 	}
-}
-
-[es=event_advance_month, mission=mission21]
-function mission21_pharaoh_favour_invasion(ev) {
-	mission_pharaoh_favour_invasion_tick(mission, 66)
 }
 

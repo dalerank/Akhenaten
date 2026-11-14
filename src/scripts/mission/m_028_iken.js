@@ -96,6 +96,54 @@ mission28 { // Iken (Mirgissa) — Into Nubia; briefing key = mirgissa
 
 	enable_scenario_events : true
 
+	events [
+		{ // pak i=27
+			type : EVENT_TYPE_INVASION
+			time { year : 0, month : 0 }
+			item { value : EVENT_INVADER_EGYPT }
+			amount { value : 40 }
+			months_initial : 6
+			location_fields [ 1, 1, -1, -1 ]
+			event_trigger_type : EVENT_TRIGGER_BY_FAVOUR
+			tag_id : 7027
+			on_completed_action : 1
+			on_refusal_action : -1
+			on_too_late_action : -1
+			on_defeat_action : -1
+			invasion_attack_target : EVENT_ATTACK_TARGET_RANDOM
+		}
+		{ // pak i=28
+			type : EVENT_TYPE_INVASION
+			time { year : 0, month : 0 }
+			item { value : EVENT_INVADER_EGYPT }
+			amount { value : 40 }
+			months_initial : 0
+			location_fields [ 2, 2, -1, -1 ]
+			event_trigger_type : EVENT_TRIGGER_ONLY_VIA_EVENT
+			tag_id : 7028
+			on_completed_action : 2
+			on_refusal_action : -1
+			on_too_late_action : -1
+			on_defeat_action : -1
+			invasion_attack_target : EVENT_ATTACK_TARGET_RANDOM
+		}
+		{ // pak i=29
+			type : EVENT_TYPE_INVASION
+			time { year : 0, month : 0 }
+			item { value : EVENT_INVADER_EGYPT }
+			amount { value : 40 }
+			months_initial : 0
+			location_fields [ 8, 8, -1, -1 ]
+			event_trigger_type : EVENT_TRIGGER_ONLY_VIA_EVENT
+			tag_id : 7029
+			on_completed_action : -1
+			on_refusal_action : -1
+			on_too_late_action : -1
+			on_defeat_action : -1
+			invasion_attack_target : EVENT_ATTACK_TARGET_FOOD
+		}
+	]
+
 	map_background : {pack:PACK_EMPIRE, id:1}
 	hide_pak_cities : true
 	cities [
@@ -495,10 +543,6 @@ mission28 { // Iken (Mirgissa) — Into Nubia; briefing key = mirgissa
 		linen_recurring_was_busy : false
 		linen_recurring_idle_since_abs : -1
 
-		pharaoh_favour_invasion_done : false
-		pharaoh_favour_wave2_done : false
-		pharaoh_favour_wave3_done : false
-		pharaoh_favour_enemies_seen : false
 
 		start_message_shown : false
 	}
@@ -621,24 +665,6 @@ function mission28_hittite_raid(invasion_id, size, loc, attack_target) {
 		tilex: tile[0],
 		tiley: tile[1],
 		want_destroy_buildings: size,
-		invasion_attack_target: attack_target === undefined ? EVENT_ATTACK_TARGET_RANDOM : attack_target
-	})
-}
-
-function mission28_favour_wave(size, invasion_id, loc, attack_target) {
-	var tile = mission28_loc_tile(loc === undefined ? 1 : loc)
-	log_info("akhenaten: mission 28 favour wave size=" + size + " kr=" + city.rating_kingdom
-		+ " loc=" + loc + " tile=" + tile[0] + "," + tile[1])
-	__image_request_pak(PACK_ENEMY_EGYPTIAN)
-	city.start_foreign_army_invasion({
-		mode: ATTACK_TYPE_ENEMIES,
-		enemy: ENEMY_3_EGYPTIAN,
-		kind: INVASION_KIND_KINGDOME,
-		size: size,
-		invasion_id: invasion_id,
-		tilex: tile[0],
-		tiley: tile[1],
-		want_destroy_buildings: 0,
 		invasion_attack_target: attack_target === undefined ? EVENT_ATTACK_TARGET_RANDOM : attack_target
 	})
 }
@@ -882,38 +908,4 @@ function mission28_copper_ladder_poll(ev) {
 		log_info("akhenaten: mission 28 copper ladder complete → KR+25 (i=25)")
 		__city_event_fire_chain(1025)
 	}
-}
-
-// pak i=27→28→29: favour egypt×40 loc=1 → ×40 loc=2 → ×40 loc=8.
-[es=event_advance_month, mission=mission28]
-function mission28_pharaoh_favour_invasion(ev) {
-	if (mission.pharaoh_favour_invasion_done && !mission.pharaoh_favour_wave3_done) {
-		if (city.num_enemy_formations > 0) {
-			mission.pharaoh_favour_enemies_seen = true
-			return
-		}
-		if (!mission.pharaoh_favour_enemies_seen) {
-			return
-		}
-		mission.pharaoh_favour_enemies_seen = false
-		if (!mission.pharaoh_favour_wave2_done) {
-			mission.pharaoh_favour_wave2_done = true
-			mission28_favour_wave(40, 28, 2, EVENT_ATTACK_TARGET_RANDOM)
-			return
-		}
-		mission.pharaoh_favour_wave3_done = true
-		// pak i=29 attack=0 FOOD
-		mission28_favour_wave(40, 29, 8, EVENT_ATTACK_TARGET_FOOD)
-		return
-	}
-	if (mission.pharaoh_favour_invasion_done) {
-		return
-	}
-	if (city.rating_kingdom > 0) {
-		return
-	}
-	mission.pharaoh_favour_invasion_done = true
-	mission.pharaoh_favour_enemies_seen = false
-	log_info("akhenaten: mission 28 favour egypt×40 (i=27)")
-	mission28_favour_wave(40, 27, 1, EVENT_ATTACK_TARGET_RANDOM)
 }

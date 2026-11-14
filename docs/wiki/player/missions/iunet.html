@@ -183,7 +183,7 @@
       <div class="tutorial-step"><span class="step-tag">Year 8</span><span>Hittite size <strong>32</strong>.</span></div>
       <div class="tutorial-step"><span class="step-tag">Year 10 · month 5</span><span><strong>Limestone ×15</strong> → ok meat gift ×15; refuse KR−40 then <strong>Egyptian army ×24</strong>.</span></div>
       <div class="tutorial-step"><span class="step-tag">Year 16 · month 10</span><span>Hittite size <strong>48</strong> → wipe KR+10 / flee KR−10.</span></div>
-      <div class="tutorial-step"><span class="step-tag">Favour collapse</span><span>Pharaoh army 15 → 45 → 30 → 30.</span></div>
+      <div class="tutorial-step"><span class="step-tag">Favour collapse</span><span>At rating 0: Pharaoh army 15, then 45 → 30 → 30 with it.</span></div>
 
       <h2 id="strategy">Strategy</h2>
       <p>Population 4 000, housing 16, and escalating Hittite pressure around a single mastaba. Open Dahshur for straw; Byblos for luxury/timber.</p>
@@ -226,7 +226,7 @@
               <li><span class="ev-name">event_mission_start</span><span class="ev-desc"><code>empire.set_id(1)</code>; Hittite; wire KR leaves.</span><span class="ev-fn">mission16_on_start</span></li>
               <li><span class="ev-name">Requests</span><span class="ev-desc">fish×4 y1; meat×2 y3m2 (late→hittite×10); pottery×15 y5m2; limestone×15 y10m5.</span><span class="ev-fn">mission16_event_i0/i4/i10/i14_*</span></li>
               <li><span class="ev-name">Request cleared</span><span class="ev-desc">limestone refuse→egypt×24; meat/pottery late→hittite×10 (<code>event_request_cleared</code>).</span><span class="ev-fn">mission16_on_request_cleared</span></li>
-              <li><span class="ev-name">Hittite + clay + favour</span><span class="ev-desc">size 10/20/32/48 (×48 bind KR±10); clay 7% y4m1; favour 15→45→30→30.</span><span class="ev-fn">mission16_event_i8/i12/i13/i17 / favour</span></li>
+              <li><span class="ev-name">Hittite + clay + favour</span><span class="ev-desc">size 10/20/32/48 (×48 bind KR±10); clay 7% y4m1; favour 15→45→30→30.</span><span class="ev-fn">mission16_event_i8/i12/i13/i17 / events[] favour</span></li>
             </ul>
           </div>
         </details>
@@ -255,7 +255,7 @@
               <li><strong>Shared leaf 1011</strong> (pottery ok KR+10 ≡ Hittite×48 wipe) re-fires — engine clone-on-fire (B14). Smoke: <code>tests/177_shared_leaf_refire.js</code>.</li>
               <li><strong>Orphan route 15</strong> / empty map_obj idx=9 skipped; Saqqara/Nekhen route 5/8 have no polyline.</li>
               <li><strong>Naval landings</strong> still land-army proxy.</li>
-              <li><strong>Favour invasions</strong> JS-proxied (B2 calendar native cancelled).</li>
+              <li><strong>Favour</strong> — Kingdom army: at Kingdom rating 0 the engine sends the <code>EVENT_TRIGGER_BY_FAVOUR</code> invasion from <code>events[]</code> (<code>update_kingdom_favour</code>, <code>src/scenario/scenario_event_manager.cpp</code>): warnings for its <code>months_initial</code>, then the attack; its <code>on_completed_action</code> chain joins at the attack. Called off if the rating reaches 15 before it attacks; it can come again 12 months later. Chain pak i=19→20→21→22 (15 → 45 → 30 → 30); the three follow-up armies land when the first attacks.</li>
             </ul>
           </div>
         </details>

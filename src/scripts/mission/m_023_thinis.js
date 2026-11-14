@@ -121,6 +121,39 @@ mission23 { // Thinis — Civil War FIP; != mission1 Dawn
 
 	enable_scenario_events : true
 
+	events [
+		{ // pak i=62
+			type : EVENT_TYPE_INVASION
+			time { year : 0, month : 0 }
+			item { value : EVENT_INVADER_EGYPT }
+			amount { value : 50 }
+			months_initial : 9
+			location_fields [ 2, 2, -1, -1 ]
+			event_trigger_type : EVENT_TRIGGER_BY_FAVOUR
+			tag_id : 7062
+			on_completed_action : 1
+			on_refusal_action : -1
+			on_too_late_action : -1
+			on_defeat_action : -1
+			invasion_attack_target : EVENT_ATTACK_TARGET_RANDOM
+		}
+		{ // pak i=63
+			type : EVENT_TYPE_INVASION
+			time { year : 0, month : 0 }
+			item { value : EVENT_INVADER_EGYPT }
+			amount { value : 50 }
+			months_initial : 0
+			location_fields [ 3, 3, -1, -1 ]
+			event_trigger_type : EVENT_TRIGGER_ONLY_VIA_EVENT
+			tag_id : 7063
+			on_completed_action : -1
+			on_refusal_action : -1
+			on_too_late_action : -1
+			on_defeat_action : -1
+			invasion_attack_target : EVENT_ATTACK_TARGET_RANDOM
+		}
+	]
+
 	hide_pak_cities : true
 	cities [
 		{
@@ -488,9 +521,6 @@ mission23 { // Thinis — Civil War FIP; != mission1 Dawn
 		henna60_enemies_seen : false
 		troops_recurring_unlocked : false
 		recurring_enemy_last_year : -1
-		pharaoh_favour_invasion_done : false
-		pharaoh_favour_chain_done : false
-		pharaoh_favour_enemies_seen : false
 	}
 }
 
@@ -1076,57 +1106,4 @@ function mission23_calendar(ev) {
 		log_info("akhenaten: mission 23 recurring kushite x21")
 		mission23_kushite_raid(61, 21, undefined, 3) // pak i=61 loc=3 OOB (only land 1–2)
 	}
-}
-
-// pak i=62 favour egypt×50 loc=2 → i=63 chain×50 loc=3 (want_destroy=0 like shared favour helper).
-[es=event_advance_month, mission=mission23]
-function mission23_favour(ev) {
-	if (mission.pharaoh_favour_invasion_done && !mission.pharaoh_favour_chain_done) {
-		if (city.num_enemy_formations > 0) {
-			mission.pharaoh_favour_enemies_seen = true
-			return
-		}
-		if (!mission.pharaoh_favour_enemies_seen) {
-			return
-		}
-		mission.pharaoh_favour_chain_done = true
-		log_info("akhenaten: mission 23 pharaoh favour chain x50")
-		var tile2 = mission23_loc_tile(3)
-		__image_request_pak(PACK_ENEMY_EGYPTIAN)
-		city.start_foreign_army_invasion({
-			mode: ATTACK_TYPE_ENEMIES,
-			enemy: ENEMY_3_EGYPTIAN,
-			kind: INVASION_KIND_KINGDOME,
-			size: 50,
-			invasion_id: 25,
-			tilex: tile2[0],
-			tiley: tile2[1],
-			want_destroy_buildings: 0,
-			invasion_attack_target: EVENT_ATTACK_TARGET_RANDOM
-		})
-		return
-	}
-	if (mission.pharaoh_favour_invasion_done) {
-		return
-	}
-	if (city.rating_kingdom > 0) {
-		return
-	}
-	mission.pharaoh_favour_invasion_done = true
-	mission.pharaoh_favour_enemies_seen = false
-	mission.pharaoh_favour_chain_done = false
-	log_info("akhenaten: mission 23 pharaoh favour x50")
-	var tile = mission23_loc_tile(2)
-	__image_request_pak(PACK_ENEMY_EGYPTIAN)
-	city.start_foreign_army_invasion({
-		mode: ATTACK_TYPE_ENEMIES,
-		enemy: ENEMY_3_EGYPTIAN,
-		kind: INVASION_KIND_KINGDOME,
-		size: 50,
-		invasion_id: 24,
-		tilex: tile[0],
-		tiley: tile[1],
-		want_destroy_buildings: 0,
-		invasion_attack_target: EVENT_ATTACK_TARGET_RANDOM
-	})
 }

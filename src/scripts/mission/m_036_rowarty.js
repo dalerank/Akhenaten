@@ -6,7 +6,7 @@ log_info("akhenaten: mission 36 rowarty started")
 // Briefing «pair of mausoleums + brick» = flavor; keep as-pak (Hetep pattern).
 // Burial pottery×12 beer×12 linen×8 luxury×4. next_mission -1 (no Hetep/Cleo).
 // SKIP map_obj idx=12. Routes 1–8 copy. Mycenae route 5.
-// Invasions: events[] no-op -> JS calendar + favour egypt x30 x3 + enemy x30 (i=60); sea loc>=9 via_sea.
+// Invasions: events[] no-op -> JS calendar; favour i=58..61 run in the engine (BY_FAVOUR at Kingdom rating 0); sea loc>=9 via_sea.
 // Henna i=6 ONLY_VIA (raid wipe unlock + calendar y8m3). Troops fail→i=56 via request_cleared.
 // Dump 2026-08-01. events[] engine + JS invasion poll.
 
@@ -1478,11 +1478,6 @@ mission36 { // Rowarty (Avaris) — The Sea People
 		inv5_done : false
 		inv8_done : false
 		inv11_last_year : -1
-		pharaoh_favour_invasion_done : false
-		pharaoh_favour_wave2_done : false
-		pharaoh_favour_wave3_done : false
-		pharaoh_favour_wave4_done : false
-		pharaoh_favour_enemies_seen : false
 		inv56_done : false
 		henna6_fired : false
 	}
@@ -1539,24 +1534,6 @@ function mission36_enemy_raid(invasion_id, size, loc, attack, on_completed_tag) 
 	return city.start_foreign_army_invasion(opts)
 }
 
-function mission36_favour_wave(size, invasion_id, loc) {
-	var land = mission36_land(loc - 1)
-	log_info("akhenaten: mission 36 favour wave size=" + size + " kr=" + city.rating_kingdom
-		+ " id=" + invasion_id + " loc=" + loc)
-	__image_request_pak(PACK_ENEMY_EGYPTIAN)
-	city.start_foreign_army_invasion({
-		mode: ATTACK_TYPE_ENEMIES,
-		enemy: ENEMY_3_EGYPTIAN,
-		kind: INVASION_KIND_KINGDOME,
-		size: size,
-		invasion_id: invasion_id,
-		tilex: land[0],
-		tiley: land[1],
-		want_destroy_buildings: 0,
-		invasion_attack_target: EVENT_ATTACK_TARGET_RANDOM
-	})
-}
-
 [es=event_mission_start, mission=mission36]
 function mission36_on_start(ev) {
 	__image_request_pak(PACK_ENEMY_ASSYRIAN)
@@ -1611,45 +1588,6 @@ function mission36_calendar_invasions(ev) {
 		mission.inv11_last_year = ev.years_since_start
 		mission36_enemy_raid(11, 56, 12, 4)
 	}
-}
-
-// pak i=58→59→60→61: favour egypt×30 loc1 → egypt×30 loc3 → enemy×30 loc5 → egypt×30 loc7.
-[es=event_advance_month, mission=mission36]
-function mission36_pharaoh_favour_invasion(ev) {
-	if (mission.pharaoh_favour_invasion_done && !mission.pharaoh_favour_wave4_done) {
-		if (city.num_enemy_formations > 0) {
-			mission.pharaoh_favour_enemies_seen = true
-			return
-		}
-		if (!mission.pharaoh_favour_enemies_seen) {
-			return
-		}
-		mission.pharaoh_favour_enemies_seen = false
-		if (!mission.pharaoh_favour_wave2_done) {
-			mission.pharaoh_favour_wave2_done = true
-			mission36_favour_wave(30, 59, 3)
-			return
-		}
-		if (!mission.pharaoh_favour_wave3_done) {
-			mission.pharaoh_favour_wave3_done = true
-			// pak i=60 item=1 enemy (not egypt)
-			mission36_enemy_raid(60, 30, 5, 4)
-			return
-		}
-		mission.pharaoh_favour_wave4_done = true
-		mission36_favour_wave(30, 61, 7)
-		return
-	}
-	if (mission.pharaoh_favour_invasion_done) {
-		return
-	}
-	if (city.rating_kingdom > 0) {
-		return
-	}
-	mission.pharaoh_favour_invasion_done = true
-	mission.pharaoh_favour_enemies_seen = false
-	log_info("akhenaten: mission 36 favour egypt×30 (i=58)")
-	mission36_favour_wave(30, 58, 1)
 }
 
 // pak i=54 troops×70 refuse/late/defeat → i=56 enemy×72 loc10 sea (events[] invasion no-op).

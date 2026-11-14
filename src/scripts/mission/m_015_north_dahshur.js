@@ -95,6 +95,24 @@ mission15 { // North Dahshur — The True Pyramid
 
 	enable_scenario_events : true
 
+	events [
+		{ // pak i=31
+			type : EVENT_TYPE_INVASION
+			time { year : 0, month : 0 }
+			item { value : EVENT_INVADER_PHARAOH }
+			amount { value : 75, min : 60, max : 80 }
+			months_initial : 2
+			location_fields [ 4, -1, 1, 8 ]
+			event_trigger_type : EVENT_TRIGGER_BY_FAVOUR
+			tag_id : 7031
+			on_completed_action : -1
+			on_refusal_action : -1
+			on_too_late_action : -1
+			on_defeat_action : -1
+			invasion_attack_target : EVENT_ATTACK_TARGET_RANDOM
+		}
+	]
+
 	map_background : {pack:PACK_EMPIRE, id:1}
 	hide_pak_cities : true
 	cities [
@@ -406,9 +424,6 @@ mission15 { // North Dahshur — The True Pyramid
 		henna_recurring_was_busy : false
 		henna_recurring_idle_since_abs : -1
 
-		pharaoh_favour_invasion_done : false
-		pharaoh_favour_enemies_seen : false
-		pharaoh_favour_chain_done : false
 
 		start_message_shown : false
 	}
@@ -768,10 +783,4 @@ function mission15_on_request_cleared(ev) {
 	}
 	log_info("akhenaten: mission 15 henna " + outcome + " → hyksos×12 tag=" + ev.tag_id, {ev:ev})
 	mission15_hyksos_raid(30, 12, EVENT_ATTACK_TARGET_FOOD)
-}
-
-// Favour: pak i=31 size=75 by_favour (no chain child).
-[es=event_advance_month, mission=mission15]
-function mission15_pharaoh_favour_invasion(ev) {
-	mission_pharaoh_favour_invasion_tick(mission, 75)
 }

@@ -1,7 +1,7 @@
 log_info("akhenaten: mission 9 abu started")
 
 // Empire / requests / events aligned with original campaign scenario 9 (2026-07-25 dump).
-// Favour: pak i=15 by_favour 40 FOOD → i=18×20 RANDOM → i=19×20 RANDOM (helper + bind wipe).
+// Favour: pak i=15 by_favour 40 FOOD → i=18×20 RANDOM → i=19×20 RANDOM (events[] BY_FAVOUR, sent by the engine at Kingdom rating 0).
 // pak CITY_STATUS subtype=1 Selima (FOREIGN_CITY_CONQUERED) ok→NEW_TRADE city=5=Kyrene.
 
 mission9 { // Abu — The Nubian Border
@@ -72,6 +72,54 @@ mission9 { // Abu — The Nubian Border
 	invasion_points_sea [ [32, 39] ]
 
 	enable_scenario_events : true
+
+	events [
+		{ // pak i=15
+			type : EVENT_TYPE_INVASION
+			time { year : 0, month : 0 }
+			item { value : EVENT_INVADER_PHARAOH }
+			amount { value : 40 }
+			months_initial : 9
+			location_fields [ 1, 1, -1, -1 ]
+			event_trigger_type : EVENT_TRIGGER_BY_FAVOUR
+			tag_id : 7015
+			on_completed_action : 1
+			on_refusal_action : -1
+			on_too_late_action : -1
+			on_defeat_action : -1
+			invasion_attack_target : EVENT_ATTACK_TARGET_FOOD
+		}
+		{ // pak i=18
+			type : EVENT_TYPE_INVASION
+			time { year : 0, month : 0 }
+			item { value : EVENT_INVADER_PHARAOH }
+			amount { value : 20 }
+			months_initial : 0
+			location_fields [ 2, 2, -1, -1 ]
+			event_trigger_type : EVENT_TRIGGER_ONLY_VIA_EVENT
+			tag_id : 7018
+			on_completed_action : 2
+			on_refusal_action : -1
+			on_too_late_action : -1
+			on_defeat_action : -1
+			invasion_attack_target : EVENT_ATTACK_TARGET_RANDOM
+		}
+		{ // pak i=19
+			type : EVENT_TYPE_INVASION
+			time { year : 0, month : 0 }
+			item { value : EVENT_INVADER_PHARAOH }
+			amount { value : 20 }
+			months_initial : 0
+			location_fields [ 1, -1, 1, 8 ]
+			event_trigger_type : EVENT_TRIGGER_ONLY_VIA_EVENT
+			tag_id : 7019
+			on_completed_action : -1
+			on_refusal_action : -1
+			on_too_late_action : -1
+			on_defeat_action : -1
+			invasion_attack_target : EVENT_ATTACK_TARGET_RANDOM
+		}
+	]
 
 	// Empire from original campaign scenario 9 (empire id=1) — full map objects.
 	map_background : {pack:PACK_EMPIRE, id:1}
@@ -330,11 +378,6 @@ mission9 { // Abu — The Nubian Border
 		selima_trade_unlock_done : false
 		contaminated_water_done : false
 		sea_trade_problem_done : false
-		pharaoh_favour_invasion_done : false
-		pharaoh_favour_enemies_seen : false
-		pharaoh_favour_chain_done : false
-		pharaoh_favour_wave_next : -1
-		pharaoh_favour_wave_seq : 0
 		start_message_shown : false
 	}
 }
@@ -545,16 +588,4 @@ function mission9_gems_demand_increase(ev) {
 		amount: 7,
 		trigger: EVENT_TRIGGER_ONCE
 	}).execute()
-}
-
-// pak i=15/18/19: by_favour 40 FOOD → 20 RANDOM → 20 RANDOM (bind wipe advances waves).
-[es=event_advance_month, mission=mission9]
-function mission9_pharaoh_favour_invasion(ev) {
-	mission_pharaoh_favour_invasion_tick(mission, [40, 20, 20], {
-		targets: [
-			EVENT_ATTACK_TARGET_FOOD,
-			EVENT_ATTACK_TARGET_RANDOM,
-			EVENT_ATTACK_TARGET_RANDOM
-		]
-	})
 }

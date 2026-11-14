@@ -92,7 +92,7 @@
       </ul>
 
       <h2 id="events">Scripted events (summary)</h2>
-      <p>Food-request ladder (figs → fish → figs) plus weapons and henna asks. Timed Egyptian loyalist invasions (17 / 33 / 55 / 70). Henna refuse → egypt ×60 wipe chain (JS). Favour Pharaoh army ×60→×60. Failed / perfect floods with demand and price side effects. NEW_TRADE unlocks Men-nefer / Khmun mid-game.</p>
+      <p>Food-request ladder (figs → fish → figs) plus weapons and henna asks. Timed Egyptian loyalist invasions (17 / 33 / 55 / 70). Henna refuse → egypt ×60 wipe chain (JS). Favour Pharaoh army ×60→×60 (land points 2 → 4). It is the OG kingdom army: when the kingdom rating falls to <strong>0</strong>, the engine sends the first favour invasion — announcement and reminders first, the attack 9 months later; chained waves follow as soon as the previous wave attacks. It is called off if the rating climbs back to <strong>15</strong> before it attacks, and can come again 12 months later while the rating stays at 0. Failed / perfect floods with demand and price side effects. NEW_TRADE unlocks Men-nefer / Khmun mid-game.</p>
 
       <div class="dev-section">
         <h2 id="dev">Developer reference</h2>
@@ -100,6 +100,7 @@
           <summary>Mission script</summary>
           <div class="details-body">
             <p><span class="file-ref">src/scripts/mission/m_025_kebet.js</span> · import in <span class="file-ref">src/scripts/missions.js</span></p>
+            <p>Favour army: <code>events[]</code> pak i=29→30 (<code>EVENT_TRIGGER_BY_FAVOUR</code> master, <code>ONLY_VIA_EVENT</code> chain), sent by <code>event_manager_t::update_kingdom_favour</code> (OG <code>city/kingdom.c</code> <code>city_emperor_update</code>); no mission JS.</p>
             <p>Empire id <strong>24</strong> (pak). Map <span class="file-ref">data/maps/m_025_kebet.map</span>. Rank 9. Scenario enemy <code>ENEMY_6_KUSHITE</code>; invasions / favour via <code>ENEMY_3_EGYPTIAN</code>. Dump 2026-07-26.</p>
             <p><code>next_mission : 27</code> (funnel with Menat → <a href="itjtawy.html">Itjtawy</a>). SKIP: empty map_obj idx=11; invasion i=28 amount=0.</p>
           </div>

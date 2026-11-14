@@ -112,6 +112,39 @@ mission32 { // Khmun (Hermopolis) — Egypt Reclaimed
 
 	enable_scenario_events : true
 
+	events [
+		{ // pak i=20
+			type : EVENT_TYPE_INVASION
+			time { year : 0, month : 0 }
+			item { value : EVENT_INVADER_EGYPT }
+			amount { value : 70 }
+			months_initial : 5
+			location_fields [ 1, 1, -1, -1 ]
+			event_trigger_type : EVENT_TRIGGER_BY_FAVOUR
+			tag_id : 7020
+			on_completed_action : 1
+			on_refusal_action : -1
+			on_too_late_action : -1
+			on_defeat_action : -1
+			invasion_attack_target : EVENT_ATTACK_TARGET_RANDOM
+		}
+		{ // pak i=22
+			type : EVENT_TYPE_INVASION
+			time { year : 0, month : 0 }
+			item { value : EVENT_INVADER_EGYPT }
+			amount { value : 35 }
+			months_initial : 0
+			location_fields [ 1, -1, 1, 8 ]
+			event_trigger_type : EVENT_TRIGGER_ONLY_VIA_EVENT
+			tag_id : 7022
+			on_completed_action : -1
+			on_refusal_action : -1
+			on_too_late_action : -1
+			on_defeat_action : -1
+			invasion_attack_target : EVENT_ATTACK_TARGET_RANDOM
+		}
+	]
+
 	map_background : {pack:PACK_EMPIRE, id:21}
 	hide_pak_cities : true
 	cities [
@@ -446,11 +479,6 @@ mission32 { // Khmun (Hermopolis) — Egypt Reclaimed
 		inv_loop_done : false
 		pending_inv13 : false
 		pending_inv4_after_demand : false
-		pharaoh_favour_invasion_done : false
-		pharaoh_favour_chain_done : false
-		pharaoh_favour_enemies_seen : false
-		pharaoh_favour_wave_next : -1
-		pharaoh_favour_wave_seq : 0
 		start_message_shown : false
 	}
 }
@@ -645,8 +673,6 @@ function mission32_requests_and_events(ev) {
 		mission32_fire_simple_event(2023, EVENT_TYPE_CITY_STATUS_CHANGE, undefined, 7, "Kerma",
 			EVENT_SUBTYPE_NEW_TRADE_ROUTE)
 	}
-
-	mission_pharaoh_favour_invasion_tick(mission, 70, 35)
 }
 
 [es=event_request_cleared, mission=mission32]

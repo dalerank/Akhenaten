@@ -177,7 +177,7 @@
       </div>
 
       <h2 id="events">Scripted events</h2>
-      <p>Full empire redefine + event schedule verified against original campaign scenario 13 (2026-07-26 dump). Empire id <strong>13</strong>. Scenario enemy is <strong>Kushite</strong> (<code>ENEMY_6_KUSHITE</code>) — not Nubian, despite the briefing text. Pharaoh's favour chains <strong>three</strong> waves if kingdom rating collapses: size <strong>22 → 21 → 28</strong>. Timed raids and favour are proxied in JS until B2-migrate.</p>
+      <p>Full empire redefine + event schedule verified against original campaign scenario 13 (2026-07-26 dump). Empire id <strong>13</strong>. Scenario enemy is <strong>Kushite</strong> (<code>ENEMY_6_KUSHITE</code>) — not Nubian, despite the briefing text. Pharaoh's favour chains <strong>three</strong> waves if kingdom rating hits 0: size <strong>22 → 21 → 28</strong> (<code>BY_FAVOUR</code> events in <code>events[]</code>, pak i=48→49→50). At Kingdom rating 0 the engine sends the <code>BY_FAVOUR</code> invasion from <code>events[]</code> (OG <code>city/kingdom.c</code>): warnings over its <code>months_initial</code>, then the attack; the chained waves attack together with it. It is called off if the rating reaches 15 before the attack, and can come again 12 months later. Timed raids are still proxied in JS until B2-migrate.</p>
 
       <div class="tutorial-step">
         <span class="step-tag">Year 1 · month 6</span>
@@ -217,7 +217,7 @@
       </div>
       <div class="tutorial-step">
         <span class="step-tag">Kingdom rating collapse</span>
-        <span>If kingdom rating bottoms out at zero, Pharaoh's favour sends a punitive army of <strong>22</strong>, chaining to <strong>21</strong> and then <strong>28</strong> if each wave isn't cleared before the next one triggers.</span>
+        <span>If kingdom rating bottoms out at zero, Pharaoh's favour sends a punitive army of <strong>22</strong>, with chained waves of <strong>21</strong> and <strong>28</strong> attacking at other entry points at the same time.</span>
       </div>
 
       <h2 id="strategy">Strategy</h2>
@@ -286,7 +286,7 @@
     <span class="kw">housing_level</span> { enabled : <span class="num">true</span>, goal : <span class="num">10</span> }
   }
 }</code></pre>
-            <p>There is no <code>choice[]</code>: Buhen and South Dahshur are the two arms of a fork the player picks at the end of mission 11/12; both set <code>next_mission : 15</code>. Empire id is set to <strong>13</strong> via <code>empire.set_id(13)</code> in <code>mission13_on_start</code> (<span class="file-ref">m_013_buhen.js:629</span>) together with a full <code>hide_pak_*</code> cities/routes/ornaments/texts redefine (six openable trading partners — Men-nefer, Selima Oasis, Abu, Meidum, Enkomi, Serabit Khadim — plus seven display-only cities).</p>
+            <p>There is no <code>choice[]</code>: Buhen and South Dahshur are the two arms of a fork the player picks at the end of mission 11/12; both set <code>next_mission : 15</code>. Empire id is set to <strong>13</strong> via <code>empire.set_id(13)</code> in <code>mission13_on_start</code> (<span class="file-ref">m_013_buhen.js:630</span>) together with a full <code>hide_pak_*</code> cities/routes/ornaments/texts redefine (six openable trading partners — Men-nefer, Selima Oasis, Abu, Meidum, Enkomi, Serabit Khadim — plus seven display-only cities).</p>
           </div>
         </details>
 
@@ -297,33 +297,33 @@
             <ul class="event-list">
               <li>
                 <span class="ev-name">event_mission_start</span>
-                <span class="ev-line">line 620</span>
+                <span class="ev-line">line 630</span>
                 <span class="ev-desc">Start message; <code>empire.set_id(13)</code>; <code>city.set_scenario_enemy_id(ENEMY_6_KUSHITE)</code>; advisors up to Diplomacy; wires every dormant chain leaf up front.</span>
                 <span class="ev-fn">mission13_on_start</span>
               </li>
               <li>
                 <span class="ev-name">Shared helper builders</span>
-                <span class="ev-line">lines 537–603</span>
+                <span class="ev-line">lines 544–616</span>
                 <span class="ev-desc">Dormant <code>ONLY_VIA_EVENT</code> chain leaves reused by most requests: the three shared KR leaves (+6 / −8 / −4), the granite gift chain kicked off by the year-7 beer festival, and the troops chain kicked off by the year-4 troops request (message → KR+30 → 400-troop re-arm, or refuse/late → status/KR/price cascade).</span>
                 <span class="ev-fn">mission13_ensure_shared_kr_leaves / mission13_ensure_granite_gift_leaves / mission13_ensure_troops_chain_leaves</span>
               </li>
               <li>
                 <span class="ev-name">Once calendar roots</span>
-                <span class="ev-line">lines 654–853</span>
+                <span class="ev-line">lines 664–867</span>
                 <span class="ev-desc">Limestone ladder y1m6 / y3m2 / y4m10 / y7m2 / y9m11 / y11m7; troops y4m7; granite demand y5m1 / y10m0; oil y6m1; beer festival y7m4 (granite gift chain).</span>
                 <span class="ev-fn">mission13_event_i&lt;n&gt;_*</span>
               </li>
               <li>
                 <span class="ev-name">Recurring calendar roots</span>
-                <span class="ev-line">lines 668 / 943</span>
+                <span class="ev-line">lines 678 / 954</span>
                 <span class="ev-desc">Beer y2m9+, idle-gated so a fresh request never stacks on an unresolved one; clay pit floods every year from y1m0, hitting up to 8 working pits per year.</span>
                 <span class="ev-fn">mission13_event_i3_beer_recurring / mission13_clay_pit_flood_recurring</span>
               </li>
               <li>
-                <span class="ev-name">Kushite raids + Pharaoh favour</span>
-                <span class="ev-line">lines 758–937 / 969</span>
-                <span class="ev-desc">Eight one-shot <code>ENEMY_6_KUSHITE</code> invasions (size 8→36, years 6–20, attack targets vary); a monthly favour tick drops a size-22 Pharaoh army when kingdom rating bottoms out, chaining to size-21 then size-28 waves — the pak's three-wave <code>by_favour</code> chain, mirrored locally since the shared favour helper only supports a single chained wave.</span>
-                <span class="ev-fn">mission13_event_i&lt;n&gt;_kushite_invasion / mission13_pharaoh_favour_invasion</span>
+                <span class="ev-name">Kushite raids; Pharaoh favour</span>
+                <span class="ev-line">lines 769–950 / ~82 (events[])</span>
+                <span class="ev-desc">Eight one-shot <code>ENEMY_6_KUSHITE</code> invasions (size 8→36, years 6–20, attack targets vary); the pak's three-wave <code>BY_FAVOUR</code> chain (22 → 21 → 28) is in <code>events[]</code> and sent by the engine at Kingdom rating 0.</span>
+                <span class="ev-fn">mission13_event_i&lt;n&gt;_kushite_invasion</span>
               </li>
             </ul>
           </div>
@@ -354,7 +354,7 @@
               <li><strong>Troops MESSAGE / CITY_STATUS subtypes:</strong> i=33 MESSAGE subtype 0 = city saved (already handled). i=34/36 CITY_STATUS subtype 0 = Egyptian city falls — as in OG the city turns foreign (a trading one stays trading, the route stays open) and the "city falls" message (MM 338) is posted; a city that is not Egyptian is left alone.</li>
               <li><strong>Empire routes 8/9/10 skipped:</strong> the pak polylines exist but no map object references them — orphan data, the same pattern seen in earlier missions.</li>
               <li><strong>Oil×2000:</strong> the year-6 request amount is unusually large but matches the pak value exactly — not a transcription error.</li>
-              <li><strong>Invasions and Pharaoh's favour</strong> are proxied in JS (<code>city.start_foreign_army_invasion</code>) rather than the native <code>EVENT_TYPE_INVASION</code> — same pattern as every mission before B2-migrate.</li>
+              <li><strong>Invasions</strong> are proxied in JS (<code>city.start_foreign_army_invasion</code>) rather than the native <code>EVENT_TYPE_INVASION</code> — same pattern as every mission before B2-migrate. <strong>Pharaoh's favour</strong> is native (<code>events[]</code>, <code>event_manager_t::update_kingdom_favour</code>).</li>
               <li><strong>Next mission 15</strong> (North Dahshur) is scripted (<code>m_015_north_dahshur.js</code>); both Buhen and South Dahshur set <code>next_mission : 15</code>.</li>
             </ul>
           </div>

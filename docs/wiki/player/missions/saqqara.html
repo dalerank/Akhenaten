@@ -294,7 +294,7 @@
       <p>Goals match original campaign scenario 10. Culture is disabled; the stepped pyramid dominates.</p>
 
       <h2 id="events">Scripted events</h2>
-      <p>Verified against pak scenario 10 (2026-07-25 dump). No land/sea invasion spawn points on the map. Favour-KR Pharaoh army size <strong>69</strong> (attack random, no chain) via <code>mission_pharaoh_favour_invasion_tick</code>.</p>
+      <p>Verified against pak scenario 10 (2026-07-25 dump). No land/sea invasion spawn points on the map. Favour-KR Pharaoh army size <strong>69</strong> (attack random, no chain), <code>BY_FAVOUR</code> event in <code>events[]</code> (pak i=30). At Kingdom rating 0 the engine sends the <code>BY_FAVOUR</code> invasion from <code>events[]</code> (OG <code>city/kingdom.c</code>): warnings over its <code>months_initial</code>, then the attack. It is called off if the rating reaches 15 before the attack, and can come again 12 months later.</p>
 
       <div class="tutorial-step">
         <span class="step-tag">Year 1 · month 11</span>
@@ -354,7 +354,7 @@
       </div>
       <div class="tutorial-step">
         <span class="step-tag">Favour KR</span>
-        <span>Pharaoh punishment army size <strong>69</strong>.</span>
+        <span>Pharaoh punishment army size <strong>69</strong> (rolled 45–70 when sent).</span>
       </div>
       <p style="color:var(--text-muted);font-size:0.85rem">Skipped: orphan chain_only PRICE/DEMAND leaves (broken 663/664). Late requests keep pak amounts; broken defeat links omitted.</p>
 
@@ -411,8 +411,8 @@
               <li>
                 <span class="ev-name">event_advance_month</span>
                 <span class="ev-line">invasions</span>
-                <span class="ev-desc">Favour size 69, attack RANDOM, no chain.</span>
-                <span class="ev-fn">mission10_pharaoh_favour_invasion</span>
+                <span class="ev-desc">Favour size 69, attack RANDOM, no chain — <code>events[]</code>, sent by the engine at Kingdom rating 0.</span>
+                <span class="ev-fn">event_manager_t::update_kingdom_favour</span>
               </li>
             </ul>
           </div>

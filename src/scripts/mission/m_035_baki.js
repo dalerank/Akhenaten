@@ -4,7 +4,7 @@ log_info("akhenaten: mission 35 baki started")
 // Funds 7000/2500/20. Rank 10.
 // Win: pop 10000 / culture 70 / prosperity 70 / monuments 35 (Mausoleum+Med+Small mudbrick 5+12+4 + burial 10 → 35) / kingdom 85 / housing 19.
 // Burial ×5 all 32. SKIP map_obj idx=11. Orphan routes 25/26.
-// Truncate i=18→0. Remap i=1 ok=85. Favour egypt 60→5→15→20→20.
+// Truncate i=18→0. Remap i=1 ok=85. Favour egypt 60→5→15→20→20: events[] BY_FAVOUR, sent by the engine at Kingdom rating 0.
 // Inv: land×1 + sea×1 packed → loc2=sea[0] via_sea (E3c); loc3/4/8 OOB navy→sea0.
 // Tag_id: 1000+i leaves; 2000+i roots; 3000+i*100+year recurring.
 
@@ -97,6 +97,84 @@ mission35 { // Baki (Kuban) — The Glory of Egypt
 	]
 
 	enable_scenario_events : true
+
+	events [
+		{ // pak i=23
+			type : EVENT_TYPE_INVASION
+			time { year : 0, month : 0 }
+			item { value : EVENT_INVADER_EGYPT }
+			amount { value : 60 }
+			months_initial : 5
+			location_fields [ 1, 1, -1, -1 ]
+			event_trigger_type : EVENT_TRIGGER_BY_FAVOUR
+			tag_id : 7023
+			on_completed_action : 1
+			on_refusal_action : -1
+			on_too_late_action : -1
+			on_defeat_action : -1
+			invasion_attack_target : EVENT_ATTACK_TARGET_RANDOM
+		}
+		{ // pak i=27
+			type : EVENT_TYPE_INVASION
+			time { year : 0, month : 0 }
+			item { value : EVENT_INVADER_EGYPT }
+			amount { value : 5 }
+			months_initial : 0
+			location_fields [ 2, 2, -1, -1 ]
+			event_trigger_type : EVENT_TRIGGER_ONLY_VIA_EVENT
+			tag_id : 7027
+			on_completed_action : 2
+			on_refusal_action : -1
+			on_too_late_action : -1
+			on_defeat_action : -1
+			invasion_attack_target : EVENT_ATTACK_TARGET_RANDOM
+		}
+		{ // pak i=28
+			type : EVENT_TYPE_INVASION
+			time { year : 0, month : 0 }
+			item { value : EVENT_INVADER_EGYPT }
+			amount { value : 15 }
+			months_initial : 0
+			location_fields [ 3, 3, -1, -1 ]
+			event_trigger_type : EVENT_TRIGGER_ONLY_VIA_EVENT
+			tag_id : 7028
+			on_completed_action : 3
+			on_refusal_action : -1
+			on_too_late_action : -1
+			on_defeat_action : -1
+			invasion_attack_target : EVENT_ATTACK_TARGET_RANDOM
+		}
+		{ // pak i=29
+			type : EVENT_TYPE_INVASION
+			time { year : 0, month : 0 }
+			item { value : EVENT_INVADER_EGYPT }
+			amount { value : 20 }
+			months_initial : 0
+			location_fields [ 4, 4, -1, -1 ]
+			event_trigger_type : EVENT_TRIGGER_ONLY_VIA_EVENT
+			tag_id : 7029
+			on_completed_action : 4
+			on_refusal_action : -1
+			on_too_late_action : -1
+			on_defeat_action : -1
+			invasion_attack_target : EVENT_ATTACK_TARGET_RANDOM
+		}
+		{ // pak i=30
+			type : EVENT_TYPE_INVASION
+			time { year : 0, month : 0 }
+			item { value : EVENT_INVADER_EGYPT }
+			amount { value : 20 }
+			months_initial : 0
+			location_fields [ 8, 8, -1, -1 ]
+			event_trigger_type : EVENT_TRIGGER_ONLY_VIA_EVENT
+			tag_id : 7030
+			on_completed_action : -1
+			on_refusal_action : -1
+			on_too_late_action : -1
+			on_defeat_action : -1
+			invasion_attack_target : EVENT_ATTACK_TARGET_RANDOM
+		}
+	]
 
 	map_background : {pack:PACK_EMPIRE, id:1}
 	hide_pak_cities : true
@@ -502,12 +580,6 @@ mission35 { // Baki (Kuban) — The Glory of Egypt
 		gems_recurring_was_busy : false
 		gems_recurring_idle_since_abs : -1
 
-		pharaoh_favour_invasion_done : false
-		pharaoh_favour_wave2_done : false
-		pharaoh_favour_wave3_done : false
-		pharaoh_favour_wave4_done : false
-		pharaoh_favour_wave5_done : false
-		pharaoh_favour_enemies_seen : false
 
 		start_message_shown : false
 	}
@@ -667,38 +739,6 @@ function mission35_ensure_all_leaves() {
 	mission35_ensure_heh_gems_leaves()
 }
 
-// pak location_fields = 1-based packed (land first, then sea).
-// land[0]=[187,137] → loc1; sea[0]=[75,198] → loc2. Loc 3/4/8 = OOB navy → sea0.
-function mission35_favour_wave(size, invasion_id, loc) {
-	if (loc === undefined) {
-		loc = 1
-	}
-	var opts = {
-		mode: ATTACK_TYPE_ENEMIES,
-		enemy: ENEMY_3_EGYPTIAN,
-		kind: INVASION_KIND_KINGDOME,
-		size: size,
-		invasion_id: invasion_id,
-		want_destroy_buildings: 0,
-		invasion_attack_target: EVENT_ATTACK_TARGET_RANDOM
-	}
-	var via_sea = loc != 1
-	if (via_sea) {
-		opts.via_sea = 1
-		opts.sea_point = 0
-		opts.tilex = 75
-		opts.tiley = 198
-	} else {
-		opts.tilex = 187
-		opts.tiley = 137
-	}
-	log_info("akhenaten: mission 35 favour wave size=" + size + " kr=" + city.rating_kingdom
-		+ " id=" + invasion_id + " loc=" + loc + " sea=" + via_sea
-		+ " tile=" + opts.tilex + "," + opts.tiley)
-	__image_request_pak(PACK_ENEMY_EGYPTIAN)
-	return city.start_foreign_army_invasion(opts)
-}
-
 [es=event_mission_start, mission=mission35]
 function mission35_on_start(ev) {
 	__image_request_pak(PACK_ENEMY_HITTITE)
@@ -779,47 +819,4 @@ function mission35_requests_and_events(ev) {
 		mission35_fire_request(3000 + 22 * 100 + ev.years_since_start,
 			RESOURCE_GEMS, 20, 10, 1024, 1026, 1025, 0, "Heh")
 	}
-}
-
-// pak i=23→27→28→29→30: by_favour egypt×60 loc1, then ×5×15×20×20 at loc 2/3/4/8.
-[es=event_advance_month, mission=mission35]
-function mission35_pharaoh_favour_invasion(ev) {
-	if (mission.pharaoh_favour_invasion_done && !mission.pharaoh_favour_wave5_done) {
-		if (city.num_enemy_formations > 0) {
-			mission.pharaoh_favour_enemies_seen = true
-			return
-		}
-		if (!mission.pharaoh_favour_enemies_seen) {
-			return
-		}
-		mission.pharaoh_favour_enemies_seen = false
-		if (!mission.pharaoh_favour_wave2_done) {
-			mission.pharaoh_favour_wave2_done = true
-			mission35_favour_wave(5, 27, 2)
-			return
-		}
-		if (!mission.pharaoh_favour_wave3_done) {
-			mission.pharaoh_favour_wave3_done = true
-			mission35_favour_wave(15, 28, 3)
-			return
-		}
-		if (!mission.pharaoh_favour_wave4_done) {
-			mission.pharaoh_favour_wave4_done = true
-			mission35_favour_wave(20, 29, 4)
-			return
-		}
-		mission.pharaoh_favour_wave5_done = true
-		mission35_favour_wave(20, 30, 8)
-		return
-	}
-	if (mission.pharaoh_favour_invasion_done) {
-		return
-	}
-	if (city.rating_kingdom > 0) {
-		return
-	}
-	mission.pharaoh_favour_invasion_done = true
-	mission.pharaoh_favour_enemies_seen = false
-	log_info("akhenaten: mission 35 favour egypt×60 (i=23)")
-	mission35_favour_wave(60, 23, 1)
 }

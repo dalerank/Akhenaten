@@ -187,7 +187,7 @@
       <div class="tutorial-step"><span class="step-tag">Years 11–24</span><span>Sea trade storm; wage −2; stone/limestone/timber price &amp; demand shifts.</span></div>
       <div class="tutorial-step"><span class="step-tag">Year 26 · month 10+</span><span><strong>Hyksos ×10</strong> recurring.</span></div>
       <div class="tutorial-step"><span class="step-tag">Year 35+</span><span>Timber ×10 recurring; limestone gift; late game-meat / gems asks.</span></div>
-      <div class="tutorial-step"><span class="step-tag">Favour collapse</span><span>Pharaoh army 50 → 20 → 50.</span></div>
+      <div class="tutorial-step"><span class="step-tag">Favour collapse</span><span>At rating 0: Pharaoh army 50, then 20 → 50 with it.</span></div>
 
       <h2 id="strategy">Strategy</h2>
       <p>Rostja is a monument grind with Hyksos pressure and a gems/timber import economy. Keep kingdom rating above zero — favour is three waves (50/20/50).</p>
@@ -250,7 +250,7 @@
             <ul class="event-list">
               <li><span class="ev-name">event_mission_start</span><span class="ev-desc"><code>empire.set_id(18)</code>; wire shared / gems / troops leaves.</span><span class="ev-fn">mission18_on_start</span></li>
               <li><span class="ev-name">Gems ladder / crisis</span><span class="ev-desc">gems×10 y2m5 → Men-nefer; gems×13 y7 → Hyksos×11 on refuse.</span><span class="ev-fn">mission18_event_i19 / i27</span></li>
-              <li><span class="ev-name">Troops / Hyksos / favour</span><span class="ev-desc">troops×40 y8m3; Hyksos×6 / ×10 rec; favour 50→20→50.</span><span class="ev-fn">mission18_event_i30 / i26 / i37 / favour</span></li>
+              <li><span class="ev-name">Troops / Hyksos / favour</span><span class="ev-desc">troops×40 y8m3; Hyksos×6 / ×10 rec; favour 50→20→50.</span><span class="ev-fn">mission18_event_i30 / i26 / i37 / events[] favour</span></li>
             </ul>
           </div>
         </details>
@@ -274,7 +274,7 @@
               <li><strong>Troops refuse/defeat</strong> → JS Hyksos×9 (FOOD) + unique KR−2 + fresh re-arm tag via <code>event_request_cleared</code> (pak i=35 INVASION no-op; defeat also emits cleared).</li>
               <li><strong>Gems crisis refuse/late</strong> → JS Hyksos×11 via <code>event_request_cleared</code> (leaf 1029 still applies KR−1).</li>
               <li><strong>Shared ONLY_VIA burn (B14)</strong> — troops refuse loop uses unique KR/re-arm tags (Dunqul-style); SEA leaf 1033 still burns after first late.</li>
-              <li><strong>Favour</strong> JS-proxied via <code>mission_pharaoh_favour_invasion_tick([50,20,50])</code> (B7).</li>
+              <li><strong>Favour</strong> — Kingdom army: at Kingdom rating 0 the engine sends the <code>EVENT_TRIGGER_BY_FAVOUR</code> invasion from <code>events[]</code> (<code>update_kingdom_favour</code>, <code>src/scenario/scenario_event_manager.cpp</code>): warnings for its <code>months_initial</code>, then the attack; its <code>on_completed_action</code> chain joins at the attack. Called off if the rating reaches 15 before it attacks; it can come again 12 months later. Chain pak i=18→40→41 (50 → 20 → 50).</li>
               <li><strong>Choice 19/20</strong> (Bahariya / Djedu) — see D6 / mission scripts.</li>
             </ul>
           </div>

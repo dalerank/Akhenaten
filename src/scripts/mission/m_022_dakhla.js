@@ -105,6 +105,24 @@ mission22 { // Dakhla Oasis — The Caravan Trail
 
 	enable_scenario_events : true
 
+	events [
+		{ // pak i=56
+			type : EVENT_TYPE_INVASION
+			time { year : 0, month : 0 }
+			item { value : EVENT_INVADER_PHARAOH }
+			amount { value : 90 }
+			months_initial : 9
+			location_fields [ 4, -1, 1, 8 ]
+			event_trigger_type : EVENT_TRIGGER_BY_FAVOUR
+			tag_id : 7056
+			on_completed_action : -1
+			on_refusal_action : -1
+			on_too_late_action : -1
+			on_defeat_action : -1
+			invasion_attack_target : EVENT_ATTACK_TARGET_RANDOM
+		}
+	]
+
 	map_background : {pack:PACK_EMPIRE, id:1}
 	hide_pak_cities : true
 	cities [
@@ -493,7 +511,6 @@ mission22 { // Dakhla Oasis — The Caravan Trail
 		luxury_recurring_idle_since_abs : -1
 		pottery_recurring_was_busy : false
 		pottery_recurring_idle_since_abs : -1
-		pharaoh_favour_invasion_done : false
 		start_message_shown : false
 	}
 }
@@ -927,11 +944,5 @@ function mission22_on_request_cleared(ev) {
 	if (early_once[tag] || (tag >= 7900 && tag < 8000)) {
 		mission22_apply_early_kr(outcome)
 	}
-}
-
-[es=event_advance_month, mission=mission22]
-function mission22_pharaoh_favour_invasion(ev) {
-	// pak i=56: favour Pharaoh ×90 (no chain).
-	mission_pharaoh_favour_invasion_tick(mission, 90)
 }
 

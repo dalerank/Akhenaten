@@ -93,7 +93,7 @@
       </ul>
 
       <h2 id="events">Scripted events (summary)</h2>
-      <p>Troop requests to northern cities; henna ask → conquer <strong>Baki</strong> → NEW_TRADE sandstone (and Sawu). Timed Kushite invasions: packed sea locs 3/4 + OOB navy → <code>via_sea</code> (E3c). Favour Pharaoh army ×60→×60. Chickpeas request. Fort cluster between the cataracts is gameplay, not a rating.</p>
+      <p>Troop requests to northern cities; henna ask → conquer <strong>Baki</strong> → NEW_TRADE sandstone (and Sawu). Timed Kushite invasions: packed sea locs 3/4 + OOB navy → <code>via_sea</code> (E3c). Favour Egypt army ×60→×60 (pak i=35→36) is an <code>events[]</code> BY_FAVOUR chain: at Kingdom rating 0 the engine sends it (<code>event_manager_t::update_kingdom_favour</code>, OG <code>city/kingdom.c</code> <code>city_emperor_update</code>): warnings, then the attack; chained waves attack with it; called off if the rating reaches 15 first; it can come again 12 months later. Chickpeas request. Fort cluster between the cataracts is gameplay, not a rating.</p>
 
       <div class="dev-section">
         <h2 id="dev">Developer reference</h2>

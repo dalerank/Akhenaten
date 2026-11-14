@@ -105,6 +105,84 @@ mission17 { // On (Heliopolis) — Ivory from the East
 
 	enable_scenario_events : true
 
+	events [
+		{ // pak i=15
+			type : EVENT_TYPE_INVASION
+			time { year : 0, month : 0 }
+			item { value : EVENT_INVADER_PHARAOH }
+			amount { value : 20 }
+			months_initial : 9
+			location_fields [ 1, 1, -1, -1 ]
+			event_trigger_type : EVENT_TRIGGER_BY_FAVOUR
+			tag_id : 7015
+			on_completed_action : 1
+			on_refusal_action : -1
+			on_too_late_action : -1
+			on_defeat_action : -1
+			invasion_attack_target : EVENT_ATTACK_TARGET_RANDOM
+		}
+		{ // pak i=16
+			type : EVENT_TYPE_INVASION
+			time { year : 0, month : 0 }
+			item { value : EVENT_INVADER_PHARAOH }
+			amount { value : 20 }
+			months_initial : 0
+			location_fields [ 2, 2, -1, -1 ]
+			event_trigger_type : EVENT_TRIGGER_ONLY_VIA_EVENT
+			tag_id : 7016
+			on_completed_action : 2
+			on_refusal_action : -1
+			on_too_late_action : -1
+			on_defeat_action : -1
+			invasion_attack_target : EVENT_ATTACK_TARGET_RANDOM
+		}
+		{ // pak i=17
+			type : EVENT_TYPE_INVASION
+			time { year : 0, month : 0 }
+			item { value : EVENT_INVADER_PHARAOH }
+			amount { value : 20 }
+			months_initial : 0
+			location_fields [ 3, 3, -1, -1 ]
+			event_trigger_type : EVENT_TRIGGER_ONLY_VIA_EVENT
+			tag_id : 7017
+			on_completed_action : 3
+			on_refusal_action : -1
+			on_too_late_action : -1
+			on_defeat_action : -1
+			invasion_attack_target : EVENT_ATTACK_TARGET_RANDOM
+		}
+		{ // pak i=18
+			type : EVENT_TYPE_INVASION
+			time { year : 0, month : 0 }
+			item { value : EVENT_INVADER_PHARAOH }
+			amount { value : 20 }
+			months_initial : 0
+			location_fields [ 4, 4, -1, -1 ]
+			event_trigger_type : EVENT_TRIGGER_ONLY_VIA_EVENT
+			tag_id : 7018
+			on_completed_action : 4
+			on_refusal_action : -1
+			on_too_late_action : -1
+			on_defeat_action : -1
+			invasion_attack_target : EVENT_ATTACK_TARGET_RANDOM
+		}
+		{ // pak i=19
+			type : EVENT_TYPE_INVASION
+			time { year : 0, month : 0 }
+			item { value : EVENT_INVADER_PHARAOH }
+			amount { value : 20 }
+			months_initial : 0
+			location_fields [ 5, 5, -1, -1 ]
+			event_trigger_type : EVENT_TRIGGER_ONLY_VIA_EVENT
+			tag_id : 7019
+			on_completed_action : -1
+			on_refusal_action : -1
+			on_too_late_action : -1
+			on_defeat_action : -1
+			invasion_attack_target : EVENT_ATTACK_TARGET_FOOD
+		}
+	]
+
 	map_background : {pack:PACK_EMPIRE, id:1}
 	hide_pak_cities : true
 	cities [
@@ -380,20 +458,6 @@ mission17 { // On (Heliopolis) — Ivory from the East
 
 		event1_perfect_flood_last_year : -1
 
-		pharaoh_favour_invasion_done : false
-		pharaoh_favour_chain_done : false
-		pharaoh_favour_enemies_seen : false
-		pharaoh_favour_wave_next : -1
-		pharaoh_favour_wave_seq : 0
-		pharaoh_favour_wave2_done : false
-		pharaoh_favour_wave3_done : false
-		pharaoh_favour_wave4_done : false
-		pharaoh_favour_wave5_done : false
-		pharaoh_favour_wave2_enemies_seen : false
-		pharaoh_favour_wave3_enemies_seen : false
-		pharaoh_favour_wave4_enemies_seen : false
-		pharaoh_favour_wave5_enemies_seen : false
-
 		start_message_shown : false
 	}
 }
@@ -607,12 +671,4 @@ function mission17_event_i5_limestone_recurring(ev) {
 	mission17_ensure_limestone_leaves()
 	log_info("akhenaten: mission 17 on limestone×25 recurring y" + ev.years_since_start, {ev:ev})
 	mission17_fire_request(3000 + 5 * 100 + ev.years_since_start, RESOURCE_LIMESTONE, 25, 36, 1009, 1007, 1008, 4, 0)
-}
-
-// pak i=15→16→17→18→19: favour 20×5; last wave attack=FOOD.
-[es=event_advance_month, mission=mission17]
-function mission17_pharaoh_favour_invasion(ev) {
-	var on_targets = []
-	on_targets[4] = EVENT_ATTACK_TARGET_FOOD
-	mission_pharaoh_favour_invasion_tick(mission, [20, 20, 20, 20, 20], { targets: on_targets })
 }

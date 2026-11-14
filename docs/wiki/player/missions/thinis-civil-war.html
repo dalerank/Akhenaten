@@ -91,7 +91,7 @@
       </div>
 
       <h2 id="events">Scripted events (summary)</h2>
-      <p>Gifts (copper / beer); gamemeat; oil → dual LOST cascades (ok: Waset/Men-nefer/Dunqul → pottery×23 → NEW×3; refuse: Henen-nesw/Sauty/Khmun) → egypt×38 → pottery×39; henna tribute / later henna; Khmun siege → troops ×48; timed + recurring Kushite raids; Egyptian chain invasions on request outcomes; favour Pharaoh ×50.</p>
+      <p>Gifts (copper / beer); gamemeat; oil → dual LOST cascades (ok: Waset/Men-nefer/Dunqul → pottery×23 → NEW×3; refuse: Henen-nesw/Sauty/Khmun) → egypt×38 → pottery×39; henna tribute / later henna; Khmun siege → troops ×48; timed + recurring Kushite raids; Egyptian chain invasions on request outcomes; favour Egyptian army ×50 → ×50 (land points 2 → 3). It is the OG kingdom army: when the kingdom rating falls to <strong>0</strong>, the engine sends the first favour invasion — announcement and reminders first, the attack 9 months later; chained waves follow as soon as the previous wave attacks. It is called off if the rating climbs back to <strong>15</strong> before it attacks, and can come again 12 months later while the rating stays at 0.</p>
 
       <div class="dev-section">
         <h2 id="dev">Developer reference</h2>
@@ -99,6 +99,7 @@
           <summary>Mission script</summary>
           <div class="details-body">
             <p><span class="file-ref">src/scripts/mission/m_023_thinis.js</span> · import in <span class="file-ref">src/scripts/missions.js</span></p>
+            <p>Favour army: <code>events[]</code> pak i=62→63 (<code>EVENT_TRIGGER_BY_FAVOUR</code> master, <code>ONLY_VIA_EVENT</code> chain), sent by <code>event_manager_t::update_kingdom_favour</code> (OG <code>city/kingdom.c</code> <code>city_emperor_update</code>); no mission JS.</p>
             <p>Empire id <strong>23</strong> (pak). Map <span class="file-ref">data/maps/m_023_thinis.map</span>. Rank 9. Scenario enemy <code>ENEMY_6_KUSHITE</code>; Egyptian armies via <code>ENEMY_3_EGYPTIAN</code>. Dump 2026-07-26.</p>
             <p>SKIP: empty map_obj idx=8; orphan routes 12/13/14. Protect: Osiris complex + mansions omitted from allow-list (non-rebuildable). Oil LOST/NEW cascade full (egypt×38 via JS chain).</p>
           </div>

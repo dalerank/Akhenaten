@@ -9,8 +9,8 @@ log_info("akhenaten: mission 26 menat khufu started")
 // Burial: pottery×8 beer×32 linen×32 papyrus×8 granite×32. Climate northern (map).
 // Trade: Waset(1 sea) Men-nefer(2 sea) Dakhla(3). Display: Buhen Byblos Dunqul Henen-nesw Jericho Kebet Kerma Kharga.
 // Triage: SKIP empty map_obj idx=11; SKIP orphan msgs i=1,4,8,11,14,17,21,24,27,30,33,36; SKIP DEMAND chain_only i=6.
-// No pak inv_land/sea — omit invasion_points_*; favour tile entry fallback.
-// Events: food requests (pomegranates/figs); linen DEMAND +7 Dakhla y12m0; favour egypt×40→×40.
+// No pak inv_land/sea — omit invasion_points_*; the favour army (events[]) falls back to the map exit.
+// Events: food requests (pomegranates/figs); linen DEMAND +7 Dakhla y12m0; favour pharaoh×40→×40 (events[] BY_FAVOUR, sent by the engine at Kingdom rating 0).
 //
 // Tag_id scheme:
 //   1000 + i               chain-only leaves
@@ -94,6 +94,39 @@ mission26 { // Menat Khufu (Beni Hasan) — Reunification
 	]
 
 	enable_scenario_events : true
+
+	events [
+		{ // pak i=38
+			type : EVENT_TYPE_INVASION
+			time { year : 0, month : 0 }
+			item { value : EVENT_INVADER_PHARAOH }
+			amount { value : 40 }
+			months_initial : 9
+			location_fields [ 1, 1, -1, -1 ]
+			event_trigger_type : EVENT_TRIGGER_BY_FAVOUR
+			tag_id : 7038
+			on_completed_action : 1
+			on_refusal_action : -1
+			on_too_late_action : -1
+			on_defeat_action : -1
+			invasion_attack_target : EVENT_ATTACK_TARGET_RANDOM
+		}
+		{ // pak i=39
+			type : EVENT_TYPE_INVASION
+			time { year : 0, month : 0 }
+			item { value : EVENT_INVADER_PHARAOH }
+			amount { value : 40 }
+			months_initial : 0
+			location_fields [ 1, 1, -1, -1 ]
+			event_trigger_type : EVENT_TRIGGER_ONLY_VIA_EVENT
+			tag_id : 7039
+			on_completed_action : -1
+			on_refusal_action : -1
+			on_too_late_action : -1
+			on_defeat_action : -1
+			invasion_attack_target : EVENT_ATTACK_TARGET_RANDOM
+		}
+	]
 
 	map_background : {pack:PACK_EMPIRE, id:1}
 	hide_pak_cities : true
@@ -341,9 +374,6 @@ mission26 { // Menat Khufu (Beni Hasan) — Reunification
 		event40_figs_done : false
 		event41_pome_done : false
 
-		pharaoh_favour_invasion_done : false
-		pharaoh_favour_wave2_done : false
-		pharaoh_favour_wave2_enemies_seen : false
 
 		start_message_shown : false
 	}
@@ -482,24 +512,6 @@ function mission26_ensure_all_leaves() {
 	mission26_ensure_pome_i32_leaves()
 }
 
-// No pak inv_land/sea points — Egyptian favour uses map entry fallback (tile −1,−1).
-function mission26_favour_wave(size, invasion_id) {
-	log_info("akhenaten: mission 26 menat khufu favour wave size=" + size + " kr=" + city.rating_kingdom
-		+ " id=" + invasion_id)
-	__image_request_pak(PACK_ENEMY_EGYPTIAN)
-	city.start_foreign_army_invasion({
-		mode: ATTACK_TYPE_ENEMIES,
-		enemy: ENEMY_3_EGYPTIAN,
-		kind: INVASION_KIND_KINGDOME,
-		size: size,
-		invasion_id: invasion_id,
-		tilex: -1,
-		tiley: -1,
-		want_destroy_buildings: 0,
-		invasion_attack_target: EVENT_ATTACK_TARGET_RANDOM
-	})
-}
-
 [es=event_mission_start, mission=mission26]
 function mission26_on_start(ev) {
 	__image_request_pak(PACK_ENEMY_KUSHITE)
@@ -578,31 +590,4 @@ function mission26_requests_and_events(ev) {
 		log_info("akhenaten: mission 26 pomegranates×24 (i=32)")
 		mission26_fire_request(2032, RESOURCE_POMEGRANATES, 24, 24, 1034, 1035, 1037, 5, 1, "Jericho")
 	}
-}
-
-// pak i=38→39: by_favour egypt/pharaoh ×40 → after wipe ×40 (attack=4 RANDOM). No refuse-chain invasions.
-[es=event_advance_month, mission=mission26]
-function mission26_pharaoh_favour_invasion(ev) {
-	if (mission.pharaoh_favour_invasion_done && !mission.pharaoh_favour_wave2_done) {
-		if (city.num_enemy_formations > 0) {
-			mission.pharaoh_favour_wave2_enemies_seen = true
-			return
-		}
-		if (!mission.pharaoh_favour_wave2_enemies_seen) {
-			return
-		}
-		mission.pharaoh_favour_wave2_done = true
-		mission26_favour_wave(40, 39)
-		return
-	}
-
-	if (mission.pharaoh_favour_invasion_done) {
-		return
-	}
-	if (city.rating_kingdom > 0) {
-		return
-	}
-	mission.pharaoh_favour_invasion_done = true
-	mission.pharaoh_favour_wave2_enemies_seen = false
-	mission26_favour_wave(40, 38)
 }

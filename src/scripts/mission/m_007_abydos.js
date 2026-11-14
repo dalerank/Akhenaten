@@ -5,6 +5,40 @@ log_info("akhenaten: mission 7 abydos started")
 mission7 { // Abydos / Abedju — The Challenge of the Sea
 	map_file : "data/maps/m_007_abydos.map"
 
+	enable_scenario_events : true
+	events [
+		{ // pak i=19
+			type : EVENT_TYPE_INVASION
+			time { year : 0, month : 0 }
+			item { value : EVENT_INVADER_PHARAOH }
+			amount { value : 40 }
+			months_initial : 10
+			location_fields [ 1, 1, -1, -1 ]
+			event_trigger_type : EVENT_TRIGGER_BY_FAVOUR
+			tag_id : 7019
+			on_completed_action : 1
+			on_refusal_action : -1
+			on_too_late_action : -1
+			on_defeat_action : -1
+			invasion_attack_target : EVENT_ATTACK_TARGET_RANDOM
+		}
+		{ // pak i=20
+			type : EVENT_TYPE_INVASION
+			time { year : 0, month : 0 }
+			item { value : EVENT_INVADER_PHARAOH }
+			amount { value : 40 }
+			months_initial : 0
+			location_fields [ 2, 2, -1, -1 ]
+			event_trigger_type : EVENT_TRIGGER_ONLY_VIA_EVENT
+			tag_id : 7020
+			on_completed_action : -1
+			on_refusal_action : -1
+			on_too_late_action : -1
+			on_defeat_action : -1
+			invasion_attack_target : EVENT_ATTACK_TARGET_RANDOM
+		}
+	]
+
 	// Map points from data/maps/m_007_abydos.map.
 	herd_points_predator [ [88, 57], [74, 71], [92, 35] ]
 	fishing_points [ [95, 66], [76, 65], [110, 71] ]
@@ -381,11 +415,6 @@ mission7 { // Abydos / Abedju — The Challenge of the Sea
 		fish_demand_decreased : false
 		contaminated_water_2 : false
 		kushite_invasion_1 : false
-		pharaoh_favour_invasion_done : false
-		pharaoh_favour_enemies_seen : false
-		pharaoh_favour_chain_done : false
-		pharaoh_favour_wave_next : -1
-		pharaoh_favour_wave_seq : 0
 		start_message_shown : false
 	}
 }
@@ -407,6 +436,7 @@ function mission7_fire_request(tag, resource, amount, months, ok_tag, fail_tag, 
 [es=event_mission_start, mission=mission7]
 function mission7_on_start(ev) {
 	__image_request_pak(PACK_ENEMY_KUSHITE)
+	__image_request_pak(PACK_ENEMY_EGYPTIAN)
 	mission_show_start_message(mission, "message_soldiers_and_forts")
 	empire.set_id(0)
 	empire.set_expanded(false)
@@ -632,10 +662,4 @@ function mission7_contaminated_water_2(ev) {
 		amount: 2,
 		trigger: EVENT_TRIGGER_ONCE
 	}).execute()
-}
-
-[es=event_advance_month, mission=mission7]
-function mission7_pharaoh_favour_invasion(ev) {
-	// pak: by_favour amount=40 → ok→chain_only Pharaoh army amount=40
-	mission_pharaoh_favour_invasion_tick(mission, 40, 40)
 }

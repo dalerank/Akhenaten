@@ -1,7 +1,7 @@
 log_info("akhenaten: mission 11 serabit khadim started")
 
 // Empire / requests / invasions aligned with original campaign scenario 11 (2026-07-25 dump).
-// Favour Pharaoh army size=51 (by_favour, attack=RANDOM) via mission_pharaoh_favour_invasion_tick.
+// Favour Pharaoh army size=51 (attack=RANDOM): events[] BY_FAVOUR, sent by the engine at Kingdom rating 0.
 // Triage: skip year=100 CLAY_PIT_FLOOD junk; skip broken ok→99 after KR+6;
 // omit invasion/disembark (pak count 0); routes 3/5/9/11 orphan skip.
 // Clay floods i=16–20: copy (+ BUILDING_CLAY_PIT).
@@ -93,6 +93,24 @@ mission11 { // Serabit Khadim — The Bedouin of the East
 	exit_point [83, 84]
 
 	enable_scenario_events : true
+
+	events [
+		{ // pak i=31
+			type : EVENT_TYPE_INVASION
+			time { year : 0, month : 0 }
+			item { value : EVENT_INVADER_PHARAOH }
+			amount { value : 51, min : 45, max : 80 }
+			months_initial : 8
+			location_fields [ 2, -1, 1, 8 ]
+			event_trigger_type : EVENT_TRIGGER_BY_FAVOUR
+			tag_id : 7031
+			on_completed_action : -1
+			on_refusal_action : -1
+			on_too_late_action : -1
+			on_defeat_action : -1
+			invasion_attack_target : EVENT_ATTACK_TARGET_RANDOM
+		}
+	]
 
 	// Empire from original campaign scenario 11 (empire id=8) — full map objects.
 	map_background : {pack:PACK_EMPIRE, id:1}
@@ -368,9 +386,6 @@ mission11 { // Serabit Khadim — The Bedouin of the East
 		libyan_invasion_5 : false
 		libyan_invasion_6 : false
 		libyan_invasion_7 : false
-		pharaoh_favour_invasion_done : false
-		pharaoh_favour_enemies_seen : false
-		pharaoh_favour_chain_done : false
 		start_message_shown : false
 	}
 }
@@ -770,10 +785,4 @@ function mission11_libyan_invasion_7(ev) {
 	mission.libyan_invasion_7 = true
 	log_info("akhenaten: mission 11 libyan invasion 7 size=32 attack=BEST_BUILDINGS", {ev:ev})
 	mission11_libyan_raid(6, 32, EVENT_ATTACK_TARGET_BEST_BUILDINGS)
-}
-
-// pak i=31: by_favour amount=51 invader=pharaoh attack=RANDOM(4) ok=-1
-[es=event_advance_month, mission=mission11]
-function mission11_pharaoh_favour_invasion(ev) {
-	mission_pharaoh_favour_invasion_tick(mission, 51)
 }

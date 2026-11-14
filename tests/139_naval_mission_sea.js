@@ -2,12 +2,11 @@
 // Markers:
 //   [test-marker] rowarty_sea_invasion_ok
 //   [test-marker] actium_sea_invasion_ok
-//   [test-marker] baki_sea_invasion_ok
 //   [test-marker] heh_sea_invasion_ok
 //   [test-marker] sawu_sea_invasion_ok
 
 function run_test() {
-    __log_info_native('[test:139] naval mission via_sea (Rowarty + Actium + Baki/Heh/Sawu)')
+    __log_info_native('[test:139] naval mission via_sea (Rowarty + Actium + Heh/Sawu)')
 
     // Warships come only from the invasion's OG warship count, which these raid helpers do not pass.
     function expect_fleet(label, marker) {
@@ -46,19 +45,6 @@ function run_test() {
         return
     }
 
-    // --- E3c: Baki favour loc2 = packed sea[0] ---
-    __game_load_mission(35, 1)
-    if (typeof mission35_favour_wave !== 'function') {
-        __log_info_native('[test:139] mission35_favour_wave missing after load')
-        __test_signal_ready()
-        return
-    }
-    mission35_favour_wave(8, 992, 2)
-    if (!expect_fleet('baki', 'baki_sea_invasion_ok')) {
-        __test_signal_ready()
-        return
-    }
-
     // --- E3c: Heh kushite loc3 = packed sea[0] ---
     __game_load_mission(30, 1)
     if (typeof mission30_kushite_raid !== 'function') {
@@ -92,7 +78,6 @@ function check_valid() {
     var markers = [
         'rowarty_sea_invasion_ok',
         'actium_sea_invasion_ok',
-        'baki_sea_invasion_ok',
         'heh_sea_invasion_ok',
         'sawu_sea_invasion_ok'
     ]

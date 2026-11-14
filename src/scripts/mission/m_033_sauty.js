@@ -109,6 +109,39 @@ mission33 { // Sauty (Lykopolis) — Egypt Reclaimed
 
 	enable_scenario_events : true
 
+	events [
+		{ // pak i=46
+			type : EVENT_TYPE_INVASION
+			time { year : 0, month : 0 }
+			item { value : EVENT_INVADER_EGYPT }
+			amount { value : 50 }
+			months_initial : 9
+			location_fields [ 1, 1, -1, -1 ]
+			event_trigger_type : EVENT_TRIGGER_BY_FAVOUR
+			tag_id : 7046
+			on_completed_action : 1
+			on_refusal_action : -1
+			on_too_late_action : -1
+			on_defeat_action : -1
+			invasion_attack_target : EVENT_ATTACK_TARGET_RANDOM
+		}
+		{ // pak i=47
+			type : EVENT_TYPE_INVASION
+			time { year : 0, month : 0 }
+			item { value : EVENT_INVADER_EGYPT }
+			amount { value : 50 }
+			months_initial : 0
+			location_fields [ 2, 2, -1, -1 ]
+			event_trigger_type : EVENT_TRIGGER_ONLY_VIA_EVENT
+			tag_id : 7047
+			on_completed_action : -1
+			on_refusal_action : -1
+			on_too_late_action : -1
+			on_defeat_action : -1
+			invasion_attack_target : EVENT_ATTACK_TARGET_RANDOM
+		}
+	]
+
 	map_background : {pack:PACK_EMPIRE, id:21}
 	hide_pak_cities : true
 	cities [
@@ -403,11 +436,6 @@ mission33 { // Sauty (Lykopolis) — Egypt Reclaimed
 		pom_bounce_done : false
 		henna24_bounce_done : false
 		henna48_bounce_done : false
-		pharaoh_favour_invasion_done : false
-		pharaoh_favour_chain_done : false
-		pharaoh_favour_enemies_seen : false
-		pharaoh_favour_wave_next : -1
-		pharaoh_favour_wave_seq : 0
 		start_message_shown : false
 	}
 }
@@ -725,8 +753,6 @@ function mission33_requests_and_events(ev) {
 		log_info("akhenaten: mission 33 oil×1000 Men-nefer (i=10)")
 		mission33_fire_request(2010, RESOURCE_OIL, 1000, 6, 1011, 1015, 1015, 6, "Men-nefer", 1015)
 	}
-
-	mission_pharaoh_favour_invasion_tick(mission, 50, 50)
 }
 
 [es=event_request_cleared, mission=mission33]

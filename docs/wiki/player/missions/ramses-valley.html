@@ -81,7 +81,7 @@
 
       <div class="deviation-note">
         <strong>Full redefine (2026-07-31):</strong> <code>hide_pak_*</code> empire + JS event graph
-        (dump <span class="file-ref">tmp/mission44_pak.txt</span>). Favour pharaoh×27 TROOPS via JS.
+        (dump <span class="file-ref">tmp/mission44_pak.txt</span>). Favour pharaoh×27 TROOPS: <code>events[]</code> BY_FAVOUR pak i=8, at Kingdom rating 0 the engine sends it (<code>event_manager_t::update_kingdom_favour</code>, OG <code>city/kingdom.c</code> <code>city_emperor_update</code>): warnings, then the attack; chained waves attack with it; called off if the rating reaches 15 first; it can come again 12 months later.
         Monument goal <strong>45</strong> (Grand Royal Tomb 48 + burial linen 16/16, luxury 20/16 (2) → <code>trunc(6.32·√50+0.5)=45</code>). Soft: lamp/paint playtest.
       </div>
 

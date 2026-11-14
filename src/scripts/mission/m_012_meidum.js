@@ -1,8 +1,7 @@
 log_info("akhenaten: mission 12 meidum started")
 
 // Empire / requests / events aligned with original campaign scenario 12 (2026-07-25 dump).
-// Favour Pharaoh army size=25 (by_favour) → chain size=60; proxied in JS until B2
-// (mission_pharaoh_favour_invasion_tick, same pattern as Saqqara/Serabit).
+// Favour Pharaoh army size=25 → chain size=60: events[] BY_FAVOUR, sent by the engine at Kingdom rating 0.
 // Enemy is ENEMY_5_HYKSOS (pak_enemy_id=5) — NOT Libyan. Recurring raid y7m6 size=17.
 // Invasion points: land [114,79] sea [31,7] (pak; previous placeholder values were wrong).
 // Triage: SKIP route 47 (type=0, no city, orphan); SKIP map_obj idx=7 (empty stub, pos 0,0).
@@ -122,6 +121,39 @@ mission12 { // Meidum
 	invasion_points_sea [ [31, 7] ]
 
 	enable_scenario_events : true
+
+	events [
+		{ // pak i=71
+			type : EVENT_TYPE_INVASION
+			time { year : 0, month : 0 }
+			item { value : EVENT_INVADER_PHARAOH }
+			amount { value : 25 }
+			months_initial : 9
+			location_fields [ 1, 1, -1, -1 ]
+			event_trigger_type : EVENT_TRIGGER_BY_FAVOUR
+			tag_id : 7071
+			on_completed_action : 1
+			on_refusal_action : -1
+			on_too_late_action : -1
+			on_defeat_action : -1
+			invasion_attack_target : EVENT_ATTACK_TARGET_RANDOM
+		}
+		{ // pak i=72
+			type : EVENT_TYPE_INVASION
+			time { year : 0, month : 0 }
+			item { value : EVENT_INVADER_PHARAOH }
+			amount { value : 60 }
+			months_initial : 0
+			location_fields [ 2, 2, -1, -1 ]
+			event_trigger_type : EVENT_TRIGGER_ONLY_VIA_EVENT
+			tag_id : 7072
+			on_completed_action : -1
+			on_refusal_action : -1
+			on_too_late_action : -1
+			on_defeat_action : -1
+			invasion_attack_target : EVENT_ATTACK_TARGET_RANDOM
+		}
+	]
 
 	// Empire from original campaign scenario 12 (empire id=1) — full map objects.
 	map_background : {pack:PACK_EMPIRE, id:1}
@@ -457,11 +489,6 @@ mission12 { // Meidum
 
 		hyksos_invasion_count : 0
 
-		pharaoh_favour_invasion_done : false
-		pharaoh_favour_enemies_seen : false
-		pharaoh_favour_chain_done : false
-		pharaoh_favour_wave_next : -1
-		pharaoh_favour_wave_seq : 0
 
 		start_message_shown : false
 	}
@@ -634,6 +661,7 @@ function mission12_hyksos_raid(invasion_id, size) {
 [es=event_mission_start, mission=mission12]
 function mission12_on_start(ev) {
 	__image_request_pak(PACK_ENEMY_HYKSOS)
+	__image_request_pak(PACK_ENEMY_EGYPTIAN)
 	__image_request_pak(PACK_MASTABA)
 	__image_request_pak(PACK_STEPPED_PYRAMID)
 	mission_show_start_message(mission, "message_mission_meidum")
@@ -1247,10 +1275,4 @@ function mission12_event_i70_hyksos_invasion_recurring(ev) {
 	mission.hyksos_invasion_count = mission.hyksos_invasion_count + 1
 	log_info("akhenaten: mission 12 meidum i70 hyksos invasion size=17 y" + ev.years_since_start, {ev:ev})
 	mission12_hyksos_raid(mission.hyksos_invasion_count, 17)
-}
-
-// pak i=71/72: by_favour Pharaoh army size=25 → ok chains to a size=60 second wave.
-[es=event_advance_month, mission=mission12]
-function mission12_pharaoh_favour_invasion(ev) {
-	mission_pharaoh_favour_invasion_tick(mission, 25, 60)
 }

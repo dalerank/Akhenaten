@@ -1,10 +1,10 @@
 log_info("akhenaten: mission 14 south dahshur started")
 
 // Empire / requests / events aligned with original campaign scenario 14 (2026-07-26 dump).
-// Favour Pharaoh army size=49 (by_favour) → chain size=21; proxied via
-// mission_pharaoh_favour_invasion_tick until B2-migrate. No timed enemy raids in pak.
-// Scenario enemy is ENEMY_5_HYKSOS (pak_enemy_id=5) — used if invasions spawn; favour
-// waves still use ENEMY_3_EGYPTIAN via the shared helper.
+// Favour Pharaoh army size=49 → chain size=21: events[] BY_FAVOUR, sent by the engine at
+// Kingdom rating 0. No timed enemy raids in pak.
+// Scenario enemy is ENEMY_5_HYKSOS (pak_enemy_id=5) — used if invasions spawn; the
+// favour Pharaoh army is ENEMY_3_EGYPTIAN.
 // Empire id=13 (same pak empire as Buhen fork partner).
 // Triage: SKIP clay floods i=0/1/12/13 (all year=24 editor junk); SKIP map_obj idx=10
 // (empty stub). Route 5 (Men-nefer display) has no pak polyline → 2-pt stub + deviation.
@@ -93,6 +93,39 @@ mission14 { // South Dahshur — Snofru's Bent Pyramid
 	invasion_points_sea [ [28, 17] ]
 
 	enable_scenario_events : true
+
+	events [
+		{ // pak i=37
+			type : EVENT_TYPE_INVASION
+			time { year : 0, month : 0 }
+			item { value : EVENT_INVADER_PHARAOH }
+			amount { value : 49, min : 40, max : 50 }
+			months_initial : 6
+			location_fields [ 1, 1, -1, -1 ]
+			event_trigger_type : EVENT_TRIGGER_BY_FAVOUR
+			tag_id : 7037
+			on_completed_action : 1
+			on_refusal_action : -1
+			on_too_late_action : -1
+			on_defeat_action : -1
+			invasion_attack_target : EVENT_ATTACK_TARGET_RANDOM
+		}
+		{ // pak i=38
+			type : EVENT_TYPE_INVASION
+			time { year : 0, month : 0 }
+			item { value : EVENT_INVADER_PHARAOH }
+			amount { value : 21, min : 20, max : 30 }
+			months_initial : 0
+			location_fields [ 9, 9, -1, -1 ]
+			event_trigger_type : EVENT_TRIGGER_ONLY_VIA_EVENT
+			tag_id : 7038
+			on_completed_action : -1
+			on_refusal_action : -1
+			on_too_late_action : -1
+			on_defeat_action : -1
+			invasion_attack_target : EVENT_ATTACK_TARGET_RANDOM
+		}
+	]
 
 	// pak burial_provisions (scenario 14).
 	hide_pak_burial : true
@@ -377,11 +410,6 @@ mission14 { // South Dahshur — Snofru's Bent Pyramid
 		grain_recurring_was_busy : false
 		grain_recurring_idle_since_abs : -1
 
-		pharaoh_favour_invasion_done : false
-		pharaoh_favour_enemies_seen : false
-		pharaoh_favour_chain_done : false
-		pharaoh_favour_wave_next : -1
-		pharaoh_favour_wave_seq : 0
 
 		start_message_shown : false
 	}
@@ -643,10 +671,4 @@ function mission14_event_i11_wage_decrease(ev) {
 	}
 	mission.event11_wage_decrease_last_year = ev.years_since_start
 	mission14_fire_simple_event(3000 + 11 * 100 + ev.years_since_start, EVENT_TYPE_WAGE_DECREASE, undefined, 1)
-}
-
-// Favour: pak i=37 size=49 by_favour → chain i=38 size=21 (attack=RANDOM).
-[es=event_advance_month, mission=mission14]
-function mission14_pharaoh_favour_invasion(ev) {
-	mission_pharaoh_favour_invasion_tick(mission, 49, 21)
 }

@@ -93,7 +93,7 @@
       </ul>
 
       <h2 id="events">Scripted events (summary)</h2>
-      <p>Troops×32 → Itjtawy (y5): ok → NEW_TRADE Kerma; refuse → troops×48; late/defeat → troops×16 Heh → troops×8 ladder; refuse of ×48 → MESSAGE (Iken). Timber×24 / fish×12 recurring; weapons×8. Demand leaves: beer / luxury / granite (pak item ids). Favour Egypt ×50→×50→×20. Gaza TEMP via warship wharves.</p>
+      <p>Troops×32 → Itjtawy (y5): ok → NEW_TRADE Kerma; refuse → troops×48; late/defeat → troops×16 Heh → troops×8 ladder; refuse of ×48 → MESSAGE (Iken). Timber×24 / fish×12 recurring; weapons×8. Demand leaves: beer / luxury / granite (pak item ids). Favour Egypt ×50→×50→×20 (pak i=17→18→19) is an <code>events[]</code> BY_FAVOUR chain: at Kingdom rating 0 the engine sends it (<code>event_manager_t::update_kingdom_favour</code>, OG <code>city/kingdom.c</code> <code>city_emperor_update</code>): warnings, then the attack; chained waves attack with it; called off if the rating reaches 15 first; it can come again 12 months later. Gaza TEMP via warship wharves.</p>
 
       <div class="dev-section">
         <h2 id="dev">Developer reference</h2>

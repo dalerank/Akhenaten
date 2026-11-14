@@ -79,6 +79,54 @@ mission13 { // Buhen — Expansion to Nubia
 
 	enable_scenario_events : true
 
+	events [
+		{ // pak i=48
+			type : EVENT_TYPE_INVASION
+			time { year : 0, month : 0 }
+			item { value : EVENT_INVADER_PHARAOH }
+			amount { value : 22, min : 20, max : 30 }
+			months_initial : 9
+			location_fields [ 1, 1, -1, -1 ]
+			event_trigger_type : EVENT_TRIGGER_BY_FAVOUR
+			tag_id : 7048
+			on_completed_action : 1
+			on_refusal_action : -1
+			on_too_late_action : -1
+			on_defeat_action : -1
+			invasion_attack_target : EVENT_ATTACK_TARGET_RANDOM
+		}
+		{ // pak i=49
+			type : EVENT_TYPE_INVASION
+			time { year : 0, month : 0 }
+			item { value : EVENT_INVADER_PHARAOH }
+			amount { value : 21, min : 20, max : 30 }
+			months_initial : 0
+			location_fields [ 2, 2, -1, -1 ]
+			event_trigger_type : EVENT_TRIGGER_ONLY_VIA_EVENT
+			tag_id : 7049
+			on_completed_action : 2
+			on_refusal_action : -1
+			on_too_late_action : -1
+			on_defeat_action : -1
+			invasion_attack_target : EVENT_ATTACK_TARGET_RANDOM
+		}
+		{ // pak i=50
+			type : EVENT_TYPE_INVASION
+			time { year : 0, month : 0 }
+			item { value : EVENT_INVADER_PHARAOH }
+			amount { value : 28, min : 20, max : 30 }
+			months_initial : 0
+			location_fields [ 3, 3, -1, -1 ]
+			event_trigger_type : EVENT_TRIGGER_ONLY_VIA_EVENT
+			tag_id : 7050
+			on_completed_action : -1
+			on_refusal_action : -1
+			on_too_late_action : -1
+			on_defeat_action : -1
+			invasion_attack_target : EVENT_ATTACK_TARGET_RANDOM
+		}
+	]
+
 	// Empire from original campaign scenario 13 (empire id=13) — full map objects.
 	map_background : {pack:PACK_EMPIRE, id:1}
 	hide_pak_cities : true
@@ -422,15 +470,6 @@ mission13 { // Buhen — Expansion to Nubia
 		clay_pit_flood_last_year : -1
 
 		// Favour Pharaoh invasion — three waves (pak i=48→49→50: 22→21→28).
-		pharaoh_favour_invasion_done : false
-		pharaoh_favour_chain_done : false
-		pharaoh_favour_enemies_seen : false
-		pharaoh_favour_wave_next : -1
-		pharaoh_favour_wave_seq : 0
-		pharaoh_favour_wave2_enemies_seen : false
-		pharaoh_favour_wave2_done : false
-		pharaoh_favour_wave3_enemies_seen : false
-		pharaoh_favour_wave3_done : false
 
 		start_message_shown : false
 	}
@@ -931,10 +970,4 @@ function mission13_clay_pit_flood_recurring(ev) {
 			trigger: EVENT_TRIGGER_ONCE
 		}).execute()
 	}
-}
-
-// pak i=48/49/50: by_favour Pharaoh army size=22 → 21 → 28.
-[es=event_advance_month, mission=mission13]
-function mission13_pharaoh_favour_invasion(ev) {
-	mission_pharaoh_favour_invasion_tick(mission, [22, 21, 28])
 }

@@ -100,7 +100,7 @@
 
       <h2 id="events">Scripted events (summary)</h2>
       <p>Henna ladder (y4 / y7 / y8 / y13) with conquer / sea-trade / troops×83 branch; timber + chariots unlocks;
-        Canaanite raids + Beduin×96; favour Egypt ×161 → ×128. Win → <a href="rowarty.html">Rowarty</a> (36).</p>
+        Canaanite raids + Beduin×96; favour Egypt ×161 (the second favour army ×128 never comes, as in the original). Win → <a href="rowarty.html">Rowarty</a> (36).</p>
 
       <div class="dev-section">
         <h2 id="dev">Developer reference</h2>
@@ -110,6 +110,7 @@
             <p><span class="file-ref">src/scripts/mission/m_034_byblos.js</span></p>
             <p><span class="file-ref">data/maps/m_034_byblos.map</span></p>
             <p><code>next_mission : 36</code>. Empire id 33 · SKIP map_obj idx=9. Dump 2026-08-01.</p>
+            <p>Kingdom army: at Kingdom rating 0 the engine sends the <code>EVENT_TRIGGER_BY_FAVOUR</code> invasion from <code>events[]</code> (<code>update_kingdom_favour</code>, <code>src/scenario/scenario_event_manager.cpp</code>): warnings for its <code>months_initial</code>, then the attack; its <code>on_completed_action</code> chain joins at the attack. Called off if the rating reaches 15 before it attacks; it can come again 12 months later. pak i=38 Egypt ×161 (128–176 roll) and i=46 ×128 are both BY_FAVOUR; as in the original only the first one (i=38) is ever sent.</p>
           </div>
         </details>
         <details>
