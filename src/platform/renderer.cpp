@@ -1329,7 +1329,9 @@ void graphics_renderer_interface::apply_filter() {
     }
 
     if (!error) {
-        SDL_GL_MakeCurrent(data.window, data.main_gl_context);
+        if (data.main_gl_context) {
+            SDL_GL_MakeCurrent(data.window, data.main_gl_context);
+        }
         platform_render_proceed_filter(w, h, format, data.filter_source_pixels, data.filter_output_pixels);
 
         // Copy filtered pixels back to filter_texture if it exists
