@@ -1,6 +1,7 @@
 #include "chunks.h"
 
 #include "boilerplate.h"
+#include "city/city.h"
 #include "io/chunk_serializer.h"
 #include "platform/platform.h"
 
@@ -85,7 +86,12 @@ io_buffer* iob_chunks_schema = new io_buffer([](io_buffer* iob, size_t version) 
     }
 });
 
-io_buffer* iob_junk7a = new io_buffer(default_bind);
+// OG: saved_reserved_1, empire locked, 4 figure name counters, city_frogs_countdown, pyramid_speedup_countdown.
+io_buffer* iob_junk7a = new io_buffer([](io_buffer* iob, size_t version) {
+    iob->bind____skip(24);
+    iob->bind(BIND_SIGNATURE_INT32, &g_city.plagues.frogs_countdown);
+    iob->bind____skip(4);
+});
 io_buffer* iob_junk7b = new io_buffer(default_bind);
 
 io_buffer* iob_junk9a = new io_buffer(default_bind);

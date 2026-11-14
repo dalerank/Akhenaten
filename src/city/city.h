@@ -101,9 +101,10 @@ struct city_t {
         bool reeds_reachable = false;
     } vegetation;
 
-    // OG city_locusts_countdown (-1 = waiting for the flood).
+    // OG city_locusts_countdown (-1 = waiting for the flood), city_frogs_countdown.
     struct {
         int32_t locusts_countdown;
+        int32_t frogs_countdown;
     } plagues;
 
     struct {

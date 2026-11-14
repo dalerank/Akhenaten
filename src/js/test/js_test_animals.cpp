@@ -83,51 +83,14 @@ static void __test_locust_update_month(int month) {
 }
 ANK_FUNCTION_1(__test_locust_update_month);
 
-static int __test_plagues_locusts_countdown() {
-    return g_city.plagues.locusts_countdown;
-}
-ANK_FUNCTION(__test_plagues_locusts_countdown);
-
-static void __test_plagues_set_locusts_countdown(int v) {
-    g_city.plagues.locusts_countdown = v;
-}
-ANK_FUNCTION_1(__test_plagues_set_locusts_countdown);
-
-static void __test_plagues_tick(int n) {
-    for (int i = 0; i < n; i++) {
-        g_city.update_tick(0);
-    }
-}
-ANK_FUNCTION_1(__test_plagues_tick);
-
-static int __test_floods_season() {
-    return g_floods.season;
-}
-ANK_FUNCTION(__test_floods_season);
-
-static int __test_frog_spawn_swarm(int count) {
-    return figure_frog::spawn_swarm(count);
-}
-ANK_FUNCTION_1(__test_frog_spawn_swarm);
-
-static int __test_frog_set_days(int fid, int days) {
+static int __test_frog_house(int fid) {
     figure* f = figure_get(fid);
     if (!f || !f->is_alive() || f->type != FIGURE_FROG) {
         return 0;
     }
-    figure_frog(f).runtime_data().days_left = (uint16_t)std::max(0, days);
-    return 1;
+    return figure_frog(f).runtime_data().house_id;
 }
-ANK_FUNCTION_2(__test_frog_set_days);
-
-static int __test_frog_get_days(int fid) {
-    figure* f = figure_get(fid);
-    if (!f || !f->is_alive() || f->type != FIGURE_FROG) {
-        return -1;
-    }
-    return figure_frog(f).runtime_data().days_left;
-}
-ANK_FUNCTION_1(__test_frog_get_days);
+ANK_FUNCTION_1(__test_frog_house);
 
 static int __test_frog_infest_house(int bid) {
     building* b = building_get(bid);
@@ -142,6 +105,33 @@ static int __test_frog_infest_house(int bid) {
     return house->runtime_data().frog_infest_days > 0 ? 1 : 0;
 }
 ANK_FUNCTION_1(__test_frog_infest_house);
+
+static int __test_plagues_locusts_countdown() {
+    return g_city.plagues.locusts_countdown;
+}
+ANK_FUNCTION(__test_plagues_locusts_countdown);
+
+static void __test_plagues_set_locusts_countdown(int v) {
+    g_city.plagues.locusts_countdown = v;
+}
+ANK_FUNCTION_1(__test_plagues_set_locusts_countdown);
+
+static int __test_plagues_frogs_countdown() {
+    return g_city.plagues.frogs_countdown;
+}
+ANK_FUNCTION(__test_plagues_frogs_countdown);
+
+static void __test_plagues_tick(int n) {
+    for (int i = 0; i < n; i++) {
+        g_city.update_tick(0);
+    }
+}
+ANK_FUNCTION_1(__test_plagues_tick);
+
+static int __test_floods_season() {
+    return g_floods.season;
+}
+ANK_FUNCTION(__test_floods_season);
 
 static int __test_lion_setup_curse_raid(int fid, int days) {
     figure* f = figure_get(fid);

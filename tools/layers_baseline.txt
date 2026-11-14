@@ -508,7 +508,6 @@ figuretype/figure_fishing_boat.cpp -> window/building/figures.h
 figuretype/figure_fishing_point.cpp -> dev/debug.h
 figuretype/figure_flotsam.cpp -> graphics/animkeys.h
 figuretype/figure_frog.cpp -> dev/debug.h
-figuretype/figure_frog.cpp -> sound/sound.h
 figuretype/figure_homeless.cpp -> dev/debug.h
 figuretype/figure_homeless.cpp -> graphics/view/lookup.h
 figuretype/figure_hunter.cpp -> graphics/animkeys.h

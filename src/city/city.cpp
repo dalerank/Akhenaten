@@ -378,6 +378,9 @@ void city_t::update_tick(int simtick) {
     if (plagues.locusts_countdown > 0) {
         plagues.locusts_countdown--;
     }
+    if (plagues.frogs_countdown > 0) {
+        plagues.frogs_countdown--;
+    }
 }
 
 bool city_t::generate_trader_from(empire_city &city) {

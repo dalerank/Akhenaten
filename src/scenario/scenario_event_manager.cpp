@@ -1505,12 +1505,11 @@ void event_manager_t::process_event(int id, bool via_event_trigger, int chain_ac
         figure_tomb_robber::spawn_wave(n);
         break;
     }
-    case EVENT_TYPE_FROGS: {
-        const int n = event.amount.value > 0 ? event.amount.value : 0;
-        figure_frog::apply_plague(n);
+    case EVENT_TYPE_FROGS:
+        figure_frog::start_plague(event.amount.value);
         messages::popup("message_plague_of_frogs", 0, 0);
         break;
-    }
+
     case EVENT_TYPE_HAILSTORM:
         messages::popup("message_hailstorm", 0, 0);
         city_hailstorm_start();

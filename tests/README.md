@@ -163,7 +163,7 @@ See **IT1** in `REMAKE_TODO.md` / `REMAKE_NOTES.md` §4.
 | `112_true_pyramid_complex_place.js` | C3c true pyramid complex (20×20 on-land): same large polish schedule, parts/phases |
 | `133_pyramid_complex_causeway.js` | Complex causeway: grand east-only (south reject), plain south place+claim, demolish clears strip |
 | `134_grand_stepped_place.js` | C1c grand stepped 252: south reject, east place+claim, type/parts/schedule |
-| `113_frog_plague.js` | CF1 Frog: register/anim walk+idle; Ptah/EVENT/cheat swarm; happiness; house infest + lockout; saveload; timer poof |
+| `113_frog_plague.js` | CF1 Frog: register/anim walk+idle; Ptah/EVENT/cheat start the OG countdown; happiness; house infest + lockout; saveload |
 | `115_bridge_menu_smoke.js` | BR2: Perwadjyt Low Bridge locked→`use_building` unlock; Bridges.map day-0 ON (else Nekhen hermetic fallback). Editor-flag table: [`docs/bridge_editor_allow_triage.md`](../docs/bridge_editor_allow_triage.md) |
 | `116_canal_shore_refresh.js` | IR3a: adding WATER next to existing canal restamps neighbor canal image |
 | `77_brick_wall_placement.js` | Brick wall L-drag; material; clear+undo; mud↔brick overwrite no-op |
@@ -316,7 +316,9 @@ A new test binding goes into the matching domain file; a new domain file needs a
 | `__test_figure_kill(fid)` | undefined | Kill live figure (reset wait_ticks) |
 | `__test_locust_farm(fid)` | building id | Farm a locust flies to |
 | `__test_locust_update_month(month)` | undefined | OG `city_locusts_update` for the advanced month |
+| `__test_frog_house(fid)` | building id | House a frog walks to |
 | `__test_plagues_locusts_countdown()` / `__test_plagues_set_locusts_countdown(v)` | ticks | OG `city_locusts_countdown` (-1 = waits for the flood) |
+| `__test_plagues_frogs_countdown()` | ticks | OG `city_frogs_countdown` |
 | `__test_plagues_tick(n)` | undefined | Run n city ticks of the plague countdowns |
 | `__test_floods_season()` | season | `g_floods.season` (flood month = season / 30) |
 | `__test_locust_cloud_variant(fid)` | 0..4 | CF2: SprMain2 group variant |

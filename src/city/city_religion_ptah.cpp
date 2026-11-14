@@ -56,7 +56,7 @@ bool god_ptah_t::perform_industry_destruction() {
 }
 
 void god_ptah_t::perform_frogs() {
-    figure_frog::apply_plague();
+    figure_frog::start_plague(figure_frog::current_params().ptah_curse_amount);
 }
 
 bool god_ptah_t::perform_scorpions() {

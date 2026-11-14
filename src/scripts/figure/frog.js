@@ -27,14 +27,17 @@ figure_frog {
 	category: figure_category_inactive
 	max_damage: 20
 	attack_value: 0
-	terrain_usage: TERRAIN_USAGE_ANIMAL
-	max_roam_length: 480
+	terrain_usage: TERRAIN_USAGE_AMPHIBIA
 
-	default_swarm: 10
-	max_amount: 24
-	plague_days: 80
-	house_infest_days: 80
-	happiness_hit: -10
+	// OG city_disasters.h, animals_wild.c, god_rules.json ptah_frogs.
+	house_chance: 50
+	people_percent: 65
+	max_start_delay: 150
+	road_radius: 2
+	move_chance: 50
+	ticks_per_amount: 816
+	happiness_loss: 15
+	ptah_curse_amount: 6
 }
 
 function figure_frog_phrase_keys() {
