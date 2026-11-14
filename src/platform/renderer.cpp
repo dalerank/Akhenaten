@@ -1200,6 +1200,10 @@ static SDL_Renderer* create_renderer(SDL_Window* window, const xstring& requeste
         failed = requested.c_str();
     }
 
+    // SDL drops command batching for a renderer picked by index, so every copy would flush on its own (about twice
+    // the frame time on a full city). Native GPU work (filters) calls SDL_RenderFlush first.
+    SDL_SetHint(SDL_HINT_RENDER_BATCHING, "1");
+
     for (const xstring& name : render_backend_order(requested, drivers)) {
         const auto it = std::find(drivers.begin(), drivers.end(), name);
         const int index = it != drivers.end() ? (int)std::distance(drivers.begin(), it) : -1;

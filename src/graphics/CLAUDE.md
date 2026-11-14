@@ -61,6 +61,9 @@ so consecutive draws share one texture.
   to the original texture, so correctness never depends on the atlas.
 - Anything that reloads or frees image paks must `invalidate()` / `forget_source()`, or
   the page keeps stale rects.
+- SDL queues draws only with `SDL_HINT_RENDER_BATCHING`, which it drops for a renderer chosen by name;
+  `platform/renderer.cpp` sets it. Of the queued copies only the opengl backend merges same-texture runs;
+  direct3d / direct3d11 / direct3d12 still issue one draw per copy from a single vertex upload.
 - Stats are exposed through `dev/perfmon.cpp` (fill %, pack+blit ms); `dump()` writes the page.
 - `render_stats` (console, perfmon) counts sprite draws, texture/blend switches and estimated
   batches per frame, plus draw/present ms.
