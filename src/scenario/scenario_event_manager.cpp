@@ -1779,6 +1779,26 @@ void event_manager_t::process_invasion(event_ph_t &e) {
     logs::info("[invasion-event] warning event=%d months_left=%d slot=%d", e.event_id, months_left, w);
 }
 
+bool event_manager_t::any_invasion_running() const {
+    for (const event_ph_t& e : g_scenario_events.event_list) {
+        if (e.type == EVENT_TYPE_INVASION && invasion_is_running(e)) {
+            return true;
+        }
+    }
+    return false;
+}
+
+// OG figure_phrase_city_weights: the first invasion triggered by favour, once fired.
+bool event_manager_t::favour_invasion_fired() const {
+    for (const event_ph_t& e : g_scenario_events.event_list) {
+        const int flags = e.event_trigger_type;
+        if (e.type == EVENT_TYPE_INVASION && (flags & EVENT_TRIGGER_BY_FAVOUR)) {
+            return (flags & EVENT_TRIGGER_ALREADY_FIRED) != 0;
+        }
+    }
+    return false;
+}
+
 void event_manager_t::process_invasions() {
     if (!og_invasions) {
         return;

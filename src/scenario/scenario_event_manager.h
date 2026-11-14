@@ -284,6 +284,8 @@ struct event_manager_t {
     // Per sim tick: the blood river sweep (earthquakes: scenario_earthquake_process).
     void update_tick();
     bool blood_river_sweep_active() const;
+    bool any_invasion_running() const;
+    bool favour_invasion_fired() const;
 
     // Mission flag og_invasions: EVENT_TYPE_INVASION events run the OG monthly warning/attack cycle.
     // Missions without it still raise their invasions from JS.

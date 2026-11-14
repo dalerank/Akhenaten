@@ -430,6 +430,16 @@ bool scenario_invasion_exists_upcoming() {
     return false;
 }
 
+int city_own_warships() {
+    int warships = 0;
+    figure_valid_do([&](figure& f) {
+        if (f.type == FIGURE_WARSHIP && !f.is_enemy()) {
+            warships++;
+        }
+    });
+    return warships;
+}
+
 bool __construction_no_troops_for_defense() {
     bool running = false;
     for (const auto &b : g_invasions.binds) {
@@ -444,13 +454,7 @@ bool __construction_no_troops_for_defense() {
     if (!running || formation_get_num_forts() > 0) {
         return false;
     }
-    int warships = 0;
-    figure_valid_do([&] (figure &f) {
-        if (f.type == FIGURE_WARSHIP && !f.is_enemy()) {
-            warships++;
-        }
-    });
-    return warships == 0;
+    return city_own_warships() == 0;
 }
 ANK_FUNCTION(__construction_no_troops_for_defense)
 

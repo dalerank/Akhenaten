@@ -12,3 +12,4 @@ import city.warnings
 import city.labor
 import city.sounds
 import city.victory
+import city.problems

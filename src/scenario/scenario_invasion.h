@@ -148,6 +148,7 @@ extern const int LOCAL_UPRISING_NUM_ENEMIES[20];
 
 
 bool scenario_invasion_exists_upcoming();
+int city_own_warships();
 
 int scenario_invasion_count();
 
