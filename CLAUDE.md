@@ -204,6 +204,9 @@ A test file defines two globals and is discovered automatically by living in `te
 - `check_valid()` — returns truthy on success; usually asserts via
   `__test_find_inlog('[test-marker] …')` against markers the game logs
 
+A regression test must be seen failing on the old code before the fix (or say why it cannot be); a test that
+passes on both says nothing about the bug.
+
 `tests/*.js` load from disk, so a new or edited test needs **no rebuild** — unlike
 `src/scripts/*.js`, which are embedded at build time.
 
