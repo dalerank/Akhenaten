@@ -41,13 +41,14 @@ struct empire_city_type_change {
 };
 ANK_CONFIG_STRUCT(empire_city_type_change, from, to)
 
-// OG city_status_new_type for CITY_STATUS_CONQUERED: the types a foreign city takes when Egypt conquers it.
-struct empire_city_conquest_t {
+// OG city_status_new_type rows of one city-status subtype; a city whose type has no row is left alone.
+struct empire_city_type_changes_t {
     svector<empire_city_type_change, 4> types;
 };
-ANK_CONFIG_STRUCT(empire_city_conquest_t, types)
+ANK_CONFIG_STRUCT(empire_city_type_changes_t, types)
 
-extern empire_city_conquest_t empire_city_conquest;
+extern empire_city_type_changes_t empire_city_conquest;
+extern empire_city_type_changes_t empire_city_fall_to_enemy;
 
 struct empire_city {
     enum {
@@ -80,7 +81,7 @@ struct empire_city {
     void remove_trader(int figure_id);
     bool can_trade() const;
     void set_trade_enabled(bool enabled);
-    bool conquer();
+    bool change_type(const empire_city_type_changes_t& changes);
     void clear_trade_resources();
 
     bool shows_as_trade_city_on_map() const;

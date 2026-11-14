@@ -1584,6 +1584,17 @@ game_messages_en {
         content { text: "" }
     }
 
+    // OG MESSAGE_CITY_FELL_TO_ENEMY (MM 338): an Egyptian city taken by the enemy; texts from the event phrases.
+    message_template_city_fell_to_enemy {
+        id: 338
+        type: 2
+        message_type: 2
+        size [30, 20]
+        video { text: "@8" }
+        title { text: "" }
+        content { text: "" }
+    }
+
     // OG MESSAGE_CITY_CONQUERED (MM 339): a foreign city conquered by Egypt; texts from the event phrases.
     message_template_foreign_city_conquered {
         id: 339

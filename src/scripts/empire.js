@@ -51,12 +51,21 @@ empire_city_images {
     foreign           : {path:"pharaoh_general/empire_bits_00066"}
 }
 
-// OG city_status_new_type, CITY_STATUS_CONQUERED: a foreign city conquered by Egypt becomes Egyptian;
-// a city of any other type is left alone.
+// OG city_status_new_type: the type a city takes on a city-status event; a city of any other type is
+// left alone and no message is posted.
+// CITY_STATUS_CONQUERED: a foreign city conquered by Egypt becomes Egyptian.
 empire_city_conquest {
     types [
         { from: EMPIRE_CITY_FOREIGN_TRADING, to: EMPIRE_CITY_EGYPTIAN_TRADING }
         { from: EMPIRE_CITY_FOREIGN, to: EMPIRE_CITY_EGYPTIAN }
+    ]
+}
+
+// CITY_STATUS_FELL_TO_ENEMY: an Egyptian city taken by the enemy becomes foreign.
+empire_city_fall_to_enemy {
+    types [
+        { from: EMPIRE_CITY_EGYPTIAN_TRADING, to: EMPIRE_CITY_FOREIGN_TRADING }
+        { from: EMPIRE_CITY_EGYPTIAN, to: EMPIRE_CITY_FOREIGN }
     ]
 }
 

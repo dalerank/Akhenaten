@@ -1390,22 +1390,22 @@ void event_manager_t::process_event(int id, bool via_event_trigger, int chain_ac
             switch (event.subtype) {
             case EVENT_SUBTYPE_CITY_FELL_TO_ENEMY:
                 // Pak CITY_STATUS subtype=0 — Egyptian city falls (Buhen troops refuse/defeat
-                // chains i=34 Dahshur / i=36 Enkomi). Close trade like a lost route and mark
-                // the city foreign-occupied (same type flip as distant_battle::set_city_foreign).
-                city->is_open = false;
-                if (full_empire_object *full = g_empire.ref_full_object(city->empire_object_id)) {
-                    full->trade_route_open = 0;
+                // chains i=34 Dahshur / i=36 Enkomi). OG keeps the route open: only the type changes.
+                if (!city->change_type(empire_city_fall_to_enemy)) {
+                    break;
                 }
-                city->set_foreign();
-                city_message_post_full(true, "message_template_general", &event, caller_event_id,
-                    PHRASE_eg_city_falls_title, PHRASE_eg_city_falls_initial_announcement,
-                    PHRASE_eg_city_falls_reason_A, id, city->name_id);
+                if (full_empire_object* full = g_empire.ref_full_object(city->empire_object_id)) {
+                    full->city_type = city->type;
+                }
+                city_message_post_full(true, "message_template_city_fell_to_enemy", &event, caller_event_id,
+                  PHRASE_eg_city_falls_title, PHRASE_eg_city_falls_initial_announcement, PHRASE_eg_city_falls_reason_A,
+                  id, city->name_id);
                 break;
 
             case EVENT_SUBTYPE_FOREIGN_CITY_CONQUERED:
                 // Pak uses CITY_STATUS subtype=1 as "foreign city conquered" (e.g. Abu y6 Selima).
                 // OG: a city that is not foreign is left alone and nothing is posted.
-                if (!city->conquer()) {
+                if (!city->change_type(empire_city_conquest)) {
                     break;
                 }
                 if (full_empire_object* full = g_empire.ref_full_object(city->empire_object_id)) {

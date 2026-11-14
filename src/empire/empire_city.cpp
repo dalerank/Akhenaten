@@ -12,7 +12,8 @@
 const e_empire_city_tokens_t ANK_CONFIG_ENUM(e_empire_city_tokens);
 empire_city_options_t ANK_VARIABLE(empire_city_options);
 empire_city_images_t ANK_VARIABLE(empire_city_images);
-empire_city_conquest_t ANK_VARIABLE(empire_city_conquest);
+empire_city_type_changes_t ANK_VARIABLE(empire_city_conquest);
+empire_city_type_changes_t ANK_VARIABLE(empire_city_fall_to_enemy);
 
 image_desc empire_city_images_t::for_type(e_empire_city type, bool expanded) const {
     image_desc desc;
@@ -204,8 +205,8 @@ int empire_city::free_trader_slot() const {
     return get_free_slot(std::min(size, cap));
 }
 
-bool empire_city::conquer() {
-    for (const empire_city_type_change& change : empire_city_conquest.types) {
+bool empire_city::change_type(const empire_city_type_changes_t& changes) {
+    for (const empire_city_type_change& change : changes.types) {
         if (change.from == type) {
             type = change.to;
             return true;
