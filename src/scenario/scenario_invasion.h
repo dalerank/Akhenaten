@@ -166,6 +166,17 @@ int map_invasion_point(tile2i point);
 tile2i scenario_start_invasion_impl(invasion_opts_t &opts);
 tile2i scenario_start_sea_invasion_impl(invasion_opts_t &opts);
 
+struct invasion_army_spawn_t {
+    int formations = 0;
+    int last_wait_ticks = 0;
+};
+// OG invasion.c scenario_invasion_start / enemy_ships.c enemy_transport_unload: `size` soldiers split over the
+// three type groups, up to three formations each, at `tile`; last_wait_ticks is the wait after the last one.
+invasion_army_spawn_t scenario_invasion_spawn_army(const invasion_opts_t& opts, int size, tile2i tile, int orientation,
+  int invasion_sequence);
+// OG invasion.c scenario_invasion_landing_message: the alert when a transport of an invasion event lands.
+void scenario_invasion_landing_message(int invasion_id, tile2i tile, int invasion_sequence);
+
 // OG invasion_land_point(INVASION_POINT_RANDOM): masks the current random1_7bit without advancing the RNG.
 int scenario_invasion_land_point_index();
 // OG invasion_sea_point: deterministic forward scan over invasion_points_sea, wrapping.

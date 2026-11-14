@@ -313,7 +313,7 @@ void invasion_data_t::process_bind_resolutions() {
             }
         }
 
-        if (this_wave > 0) {
+        if (this_wave > 0 || enemy_transport_of_invasion_loaded(b.invasion_id)) {
             b.enemies_seen = true;
             continue;
         }
@@ -557,284 +557,20 @@ bool invasion_should_use_sea(const invasion_opts_t &opts) {
     return invasion_point_is_sea(opts.invasion_point);
 }
 
-tile2i pick_sea_spawn_tile(const invasion_opts_t &opts) {
-    auto &seas = g_scenario.invasion_points_sea;
-    auto sea_slot = [&seas](int i) { return (i >= 0 && i < (int)seas.size()) ? seas[i] : tile2i::invalid; };
-    auto is_water = [](tile2i t) { return t.valid() && map_terrain_is(t, TERRAIN_WATER | TERRAIN_DEEPWATER); };
-
-    if (opts.sea_point_index >= 0 && opts.sea_point_index < MAX_INVASION_POINTS_SEA) {
-        tile2i t = sea_slot(scenario_invasion_sea_point_index(opts.sea_point_index));
-        if (is_water(t)) {
-            return t;
-        }
-    }
-
-    if (is_water(opts.invasion_point)) {
+// OG invasion_start_sea: the sea invasion point, the map exit when that slot is empty.
+tile2i invasion_sea_spawn_tile(const invasion_opts_t& opts) {
+    if (invasion_point_is_sea(opts.invasion_point)) {
         return opts.invasion_point;
     }
-
-    tile2i first = sea_slot(scenario_invasion_sea_point_index(0));
-    if (is_water(first)) {
-        return first;
+    auto& seas = g_scenario.invasion_points_sea;
+    const int index = scenario_invasion_sea_point_index(std::max<int>(opts.sea_point_index, 0));
+    if (index < (int)seas.size() && seas[index].valid()) {
+        return seas[index];
     }
-
-    // Fallback: first water tile on the map.
-    const int w = g_scenario.map.width;
-    const int h = g_scenario.map.height;
-    for (int y = 0; y < h; y++) {
-        for (int x = 0; x < w; x++) {
-            tile2i t(x, y);
-            if (map_terrain_is(t, TERRAIN_WATER | TERRAIN_DEEPWATER)
-                && !map_terrain_is(t, TERRAIN_BUILDING)) {
-                return t;
-            }
-        }
-    }
-    return tile2i::invalid;
-}
-
-tile2i water_adjacent_to(tile2i land) {
-    if (!land.valid()) {
-        return tile2i::invalid;
-    }
-    static const vec2i dirs[] = {
-        {0, 1}, {1, 1}, {1, 0}, {1, -1}, {0, -1}, {-1, -1}, {-1, 0}, {-1, 1}
-    };
-    for (const vec2i &dir : dirs) {
-        tile2i w = land.shifted(dir);
-        if (w.valid() && map_terrain_is(w, TERRAIN_WATER | TERRAIN_DEEPWATER)) {
-            return w;
-        }
-    }
-    return tile2i::invalid;
-}
-
-tile2i pick_landing_water_tile(tile2i sea_spawn) {
-    auto &dis = g_scenario.disembark_points;
-    const int rolled = scenario_invasion_landing_index();
-    if (rolled >= 0 && enemy_transport_land_ok(dis[rolled])) {
-        tile2i water = water_adjacent_to(dis[rolled]);
-        if (water.valid()) {
-            return water;
-        }
-    }
-
-    for (const auto &land : dis) {
-        if (!enemy_transport_land_ok(land)) {
-            continue;
-        }
-        tile2i water = water_adjacent_to(land);
-        if (water.valid()) {
-            return water;
-        }
-    }
-
-    // No disembark points — find any shore water near the spawn.
-    static const vec2i dirs[] = {
-        {0, 1}, {1, 1}, {1, 0}, {1, -1}, {0, -1}, {-1, -1}, {-1, 0}, {-1, 1}
-    };
-    for (int radius = 1; radius <= 40; radius++) {
-        for (int dy = -radius; dy <= radius; dy++) {
-            for (int dx = -radius; dx <= radius; dx++) {
-                if (std::abs(dx) != radius && std::abs(dy) != radius) {
-                    continue;
-                }
-                tile2i water = sea_spawn.shifted(dx, dy);
-                if (!water.valid() || !map_terrain_is(water, TERRAIN_WATER | TERRAIN_DEEPWATER)) {
-                    continue;
-                }
-                for (const vec2i &dir : dirs) {
-                    tile2i land = water.shifted(dir);
-                    if (enemy_transport_land_ok(land)) {
-                        return water;
-                    }
-                }
-            }
-        }
-    }
-    return tile2i::invalid;
+    return scenario_map_exit();
 }
 
 } // namespace
-
-static void sea_invasion_abort_formation(int formation_id) {
-    if (formation_id <= 0) {
-        return;
-    }
-    for (figure *f : map_figures()) {
-        if (f && f->is_alive() && f->formation_id == formation_id) {
-            f->set_flag(e_figure_flag_invisible, false);
-            f->kill();
-        }
-    }
-    formation *m = formation_get(formation_id);
-    if (m && m->in_use) {
-        m->num_figures = 0;
-        for (int fi = 0; fi < formation::max_figures_count; fi++) {
-            m->figures[fi] = 0;
-        }
-        m->in_use = false;
-    }
-}
-
-tile2i scenario_start_sea_invasion_impl(invasion_opts_t &opts) {
-    auto &data = g_invasions;
-    if (opts.size <= 0) {
-        return tile2i::invalid;
-    }
-
-    opts.size = std::clamp<int>(difficulty_adjust_enemies(opts.size), data.min_invasion_amount, data.max_invasion_amount);
-
-    data.last_internal_invasion_id++;
-    if (data.last_internal_invasion_id > 32000) {
-        data.last_internal_invasion_id = 1;
-    }
-
-    tile2i sea_spawn = pick_sea_spawn_tile(opts);
-    if (!sea_spawn.valid()) {
-        logs::warn("scenario_sea_invasion: no valid sea spawn tile");
-        return tile2i::invalid;
-    }
-
-    tile2i landing_water = pick_landing_water_tile(sea_spawn);
-    if (!landing_water.valid()) {
-        logs::warn("scenario_sea_invasion: no landing water near disembark points");
-        return tile2i::invalid;
-    }
-
-    int formations_per_type[3];
-    int soldiers_per_formation[3][4];
-
-    int num_type1, num_type2, num_type3;
-    invasion_type_counts(opts, opts.size, &num_type1, &num_type2, &num_type3);
-
-    for (int t = 0; t < 3; t++) {
-        formations_per_type[t] = 0;
-        for (int f = 0; f < 4; f++) {
-            soldiers_per_formation[t][f] = 0;
-        }
-    }
-
-    determine_formations(num_type1, &formations_per_type[0], soldiers_per_formation[0]);
-    determine_formations(num_type2, &formations_per_type[1], soldiers_per_formation[1]);
-    determine_formations(num_type3, &formations_per_type[2], soldiers_per_formation[2]);
-
-    const int orientation = DIR_4_BOTTOM_LEFT;
-    const e_figure_type transport_type = enemy_transport_type_for(opts.enemy_type);
-    const e_figure_type warship_type = enemy_warship_type_for(opts.enemy_type);
-
-    int total_formations = 0;
-    int seq = 0;
-
-    for (int type = 0; type < 3; type++) {
-        if (formations_per_type[type] <= 0) {
-            continue;
-        }
-
-        e_figure_type figure_type = invasion_spawn_figure_type(opts, type);
-        if (figure_type == FIGURE_NONE) {
-            logs::error("No figure type for %s enemy", e_enemy_type_tokens.name(opts.enemy_type));
-            continue;
-        }
-
-        for (int i = 0; i < formations_per_type[type]; i++) {
-            int formation_id = formation_create_enemy(figure_type,
-                                                      landing_water,
-                                                      g_enemy_properties[opts.enemy_type]->layout,
-                                                      orientation,
-                                                      opts.enemy_type,
-                                                      opts.attack_type,
-                                                      opts.invasion_id,
-                                                      data.last_internal_invasion_id);
-            if (formation_id <= 0) {
-                continue;
-            }
-
-            for (int fig = 0; fig < soldiers_per_formation[type][i]; fig++) {
-                figure *f = figure_create(figure_type, sea_spawn, orientation);
-                if (!f || !f->is_valid()) {
-                    logs::warn("scenario_sea_invasion: figure pool exhausted while spawning soldiers");
-                    sea_invasion_abort_formation(formation_id);
-                    formation_id = 0;
-                    break;
-                }
-                f->faction_id = 0;
-                f->action_state = ACTION_152_ENEMY_WAITING;
-                f->wait_ticks = 30000;
-                f->formation_id = formation_id;
-                f->index_in_formation = (uint8_t)fig;
-                f->formation_at_rest = 1;
-                f->allow_move_type = EMOVE_AMPHIBIAN;
-                f->name = figure_name_get(figure_type);
-                f->set_flag(e_figure_flag_invisible);
-            }
-            if (formation_id <= 0) {
-                continue;
-            }
-
-            figure *ship = figure_create(transport_type, sea_spawn, orientation);
-            if (!ship || !ship->is_valid()) {
-                logs::warn("scenario_sea_invasion: failed to create transport for formation %d", formation_id);
-                sea_invasion_abort_formation(formation_id);
-                continue;
-            }
-            ship->faction_id = 0;
-
-            auto *transport = smart_cast<figure_enemy_transport>(ship);
-            if (!transport) {
-                logs::warn("scenario_sea_invasion: transport type missing enemy_transport impl");
-                ship->dcast()->kill();
-                sea_invasion_abort_formation(formation_id);
-                continue;
-            }
-            transport->set_invasion_sequence(data.last_internal_invasion_id);
-
-            if (!transport->load_formation(formation_id)) {
-                logs::warn("scenario_sea_invasion: failed to load formation %d onto transport", formation_id);
-                sea_invasion_abort_formation(formation_id);
-                ship->dcast()->kill();
-                continue;
-            }
-            if (!transport->sail_to_landing(landing_water)) {
-                logs::warn("scenario_sea_invasion: landing water has no unloadable shore");
-                sea_invasion_abort_formation(formation_id);
-                ship->dcast()->kill();
-                continue;
-            }
-            total_formations++;
-            seq++;
-        }
-    }
-
-    // Escort: max(1, ceil(formations / 3)) warships at the sea spawn.
-    int escort = total_formations > 0 ? std::max(1, (total_formations + 2) / 3) : 0;
-    for (int e = 0; e < escort; e++) {
-        figure *w = figure_create(warship_type, sea_spawn, orientation);
-        if (!w || !w->is_valid()) {
-            continue;
-        }
-        w->faction_id = 0;
-        w->name = figure_name_get(warship_type);
-        if (auto *warship = smart_cast<figure_enemy_warship>(w)) {
-            warship->set_invasion_sequence(data.last_internal_invasion_id);
-        }
-    }
-
-    if (opts.invasion_id > 0
-        && opts.invasion_id < enemy_armies_t::MAX_ENEMY_ARMIES
-        && seq > 0) {
-        enemy_army *army = enemy_army_get_editable((uint8_t)opts.invasion_id);
-        army->buildings_to_destroy = opts.want_destroy;
-        army->buildings_destroyed = 0;
-    }
-
-    if (seq > 0 && sea_spawn.valid()) {
-        g_invasions.record_spawn(opts, sea_spawn, opts.size);
-        g_invasion_auto_resolve.maybe_enqueue(opts, (uint16_t)data.last_internal_invasion_id);
-    }
-
-    return seq > 0 ? sea_spawn : tile2i::invalid;
-}
 
 // OG invasion_orientation (invasion.c:74): the army faces into the map from the edge it enters by.
 static int invasion_orientation(tile2i tile) {
@@ -850,6 +586,138 @@ static int invasion_orientation(tile2i tile) {
     return (tile.x() < g_scenario.map.width - 1) ? DIR_4_BOTTOM_LEFT : DIR_6_TOP_LEFT;
 }
 
+invasion_army_spawn_t scenario_invasion_spawn_army(const invasion_opts_t& opts, int size, tile2i tile, int orientation,
+  int invasion_sequence) {
+    int formations_per_type[3] = {};
+    int soldiers_per_formation[3][4] = {};
+    int num_type1, num_type2, num_type3;
+    invasion_type_counts(opts, size, &num_type1, &num_type2, &num_type3);
+    determine_formations(num_type1, &formations_per_type[0], soldiers_per_formation[0]);
+    determine_formations(num_type2, &formations_per_type[1], soldiers_per_formation[1]);
+    determine_formations(num_type3, &formations_per_type[2], soldiers_per_formation[2]);
+
+    invasion_army_spawn_t army;
+    for (int type = 0; type < 3; type++) {
+        if (formations_per_type[type] <= 0) {
+            continue;
+        }
+
+        e_figure_type figure_type = invasion_spawn_figure_type(opts, type);
+        if (figure_type == FIGURE_NONE) {
+            logs::error("No figure type for %s enemy", e_enemy_type_tokens.name(opts.enemy_type));
+            continue;
+        }
+
+        for (int i = 0; i < formations_per_type[type]; i++) {
+            int formation_id = formation_create_enemy(figure_type, tile, g_enemy_properties[opts.enemy_type]->layout,
+              orientation, opts.enemy_type, opts.attack_type, opts.invasion_id, invasion_sequence);
+            if (formation_id <= 0) {
+                continue;
+            }
+
+            const int soldiers = soldiers_per_formation[type][i];
+            for (int fig = 0; fig < soldiers; fig++) {
+                figure* f = figure_create(figure_type, tile, orientation);
+                f->faction_id = 0;
+                if (auto* enemy = f->dcast_enemy()) {
+                    f->action_state = enemy->enemy_initial_action();
+                } else {
+                    f->action_state = ACTION_151_ENEMY_INITIAL;
+                }
+                f->wait_ticks = 200 * army.formations + 10 * fig + 10;
+                f->formation_id = formation_id;
+                f->name = figure_name_get(figure_type);
+            }
+            army.formations++;
+            army.last_wait_ticks = 200 * army.formations + 10 * soldiers + 10;
+        }
+    }
+    return army;
+}
+
+// OG invasion.c invasion_start_sea: warships first, then one transport per 16 soldiers, all sailing to the one
+// landing rolled for the invasion; the soldiers are created when a transport lands (figure_enemy_transport::unload).
+tile2i scenario_start_sea_invasion_impl(invasion_opts_t& opts) {
+    auto& data = g_invasions;
+    if (opts.size <= 0) {
+        return tile2i::invalid;
+    }
+
+    opts.size = std::min<int>(opts.size, data.max_invasion_amount);
+
+    data.last_internal_invasion_id++;
+    if (data.last_internal_invasion_id > 32000) {
+        data.last_internal_invasion_id = 1;
+    }
+
+    const tile2i sea_spawn = invasion_sea_spawn_tile(opts);
+    if (!sea_spawn.valid()) {
+        logs::warn("scenario_sea_invasion: no valid sea spawn tile");
+        return tile2i::invalid;
+    }
+    const int orientation = invasion_orientation(sea_spawn);
+
+    // Escort: max(1, ceil(formations / 3)) warships at the sea spawn.
+    int num_type1, num_type2, num_type3;
+    invasion_type_counts(opts, opts.size, &num_type1, &num_type2, &num_type3);
+    int formations[3] = {};
+    int unused_sizes[3][4] = {};
+    determine_formations(num_type1, &formations[0], unused_sizes[0]);
+    determine_formations(num_type2, &formations[1], unused_sizes[1]);
+    determine_formations(num_type3, &formations[2], unused_sizes[2]);
+    const int total_formations = formations[0] + formations[1] + formations[2];
+    const e_figure_type warship_type = enemy_warship_type_for(opts.enemy_type);
+    const int escort = total_formations > 0 ? std::max(1, (total_formations + 2) / 3) : 0;
+    for (int e = 0; e < escort; e++) {
+        tile2i ship_tile = sea_spawn;
+        map_water_find_free_tile(ship_tile);
+        figure* w = figure_create(warship_type, ship_tile, orientation);
+        if (!w || !w->is_valid()) {
+            continue;
+        }
+        w->faction_id = 0;
+        w->name = figure_name_get(warship_type);
+        if (auto *warship = smart_cast<figure_enemy_warship>(w)) {
+            warship->set_invasion_sequence(data.last_internal_invasion_id);
+        }
+    }
+
+    const int rolled = scenario_invasion_landing_index();
+    const tile2i landing = rolled >= 0 ? g_scenario.disembark_points[rolled] : tile2i(0, 0);
+
+    const e_figure_type transport_type = enemy_transport_type_for(opts.enemy_type);
+    const auto& rules = enemy_transport_rules;
+    int ships = 0;
+    for (int size = opts.size; size > 0; ships++) {
+        const int soldiers = std::min<int>(size, rules.soldiers_per_ship);
+        size -= soldiers;
+        tile2i ship_tile = sea_spawn;
+        map_water_find_free_tile(ship_tile);
+        figure* ship = figure_create(transport_type, ship_tile, orientation);
+        auto* transport = ship ? smart_cast<figure_enemy_transport>(ship) : nullptr;
+        if (!transport) {
+            logs::warn("scenario_sea_invasion: failed to create transport %d", ships);
+            break;
+        }
+        transport->launch(opts, soldiers, landing, ships * rules.launch_wait_step + rules.launch_first_wait,
+          data.last_internal_invasion_id);
+    }
+
+    if (ships <= 0) {
+        return tile2i::invalid;
+    }
+
+    if (opts.invasion_id > 0 && opts.invasion_id < enemy_armies_t::MAX_ENEMY_ARMIES) {
+        enemy_army* army = enemy_army_get_editable((uint8_t)opts.invasion_id);
+        army->buildings_to_destroy = opts.want_destroy;
+        army->buildings_destroyed = 0;
+    }
+
+    g_invasions.record_spawn(opts, sea_spawn, opts.size);
+    g_invasion_auto_resolve.maybe_enqueue(opts, (uint16_t)data.last_internal_invasion_id);
+    return sea_spawn;
+}
+
 tile2i scenario_start_invasion_impl(invasion_opts_t &opts) {
     if (invasion_should_use_sea(opts)) {
         return scenario_start_sea_invasion_impl(opts);
@@ -860,31 +728,12 @@ tile2i scenario_start_invasion_impl(invasion_opts_t &opts) {
         return tile2i::invalid;
     }
 
-    int formations_per_type[3];
-    int soldiers_per_formation[3][4];
-
     opts.size = std::clamp<int>(difficulty_adjust_enemies(opts.size), data.min_invasion_amount, data.max_invasion_amount);
 
     data.last_internal_invasion_id++;
     if (data.last_internal_invasion_id > 32000) {
         data.last_internal_invasion_id = 1;
     }
-
-    // calculate soldiers per type
-    int num_type1, num_type2, num_type3;
-    invasion_type_counts(opts, opts.size, &num_type1, &num_type2, &num_type3);
-
-    for (int t = 0; t < 3; t++) {
-        formations_per_type[t] = 0;
-        for (int f = 0; f < 4; f++) {
-            soldiers_per_formation[t][f] = 0;
-        }
-    }
-
-    // calculate number of formations
-    determine_formations(num_type1, &formations_per_type[0], soldiers_per_formation[0]);
-    determine_formations(num_type2, &formations_per_type[1], soldiers_per_formation[1]);
-    determine_formations(num_type3, &formations_per_type[2], soldiers_per_formation[2]);
 
     // determine invasion point: an explicit JS tile wins; OG scenario_invasion_start (invasion.c:303) sends the
     // Persians through the map entry and everyone else through a land invasion point.
@@ -931,62 +780,21 @@ tile2i scenario_start_invasion_impl(invasion_opts_t &opts) {
         }
     }
 
-    // spawn the lot!
-    int seq = 0;
-    for (int type = 0; type < 3; type++) {
-        if (formations_per_type[type] <= 0) {
-            continue;
-        }
-
-        e_figure_type figure_type = invasion_spawn_figure_type(opts, type);
-        if (figure_type == FIGURE_NONE) {
-            logs::error("No figure type for %s enemy", e_enemy_type_tokens.name(opts.enemy_type));
-            continue;
-        }
-
-        for (int i = 0; i < formations_per_type[type]; i++) {
-            int formation_id = formation_create_enemy(figure_type,
-                                                      invasion_tile,
-                                                      g_enemy_properties[opts.enemy_type]->layout,
-                                                      orientation,
-                                                      opts.enemy_type,
-                                                      opts.attack_type,
-                                                      opts.invasion_id,
-                                                      data.last_internal_invasion_id);
-            if (formation_id <= 0) {
-                continue;
-            }
-
-            for (int fig = 0; fig < soldiers_per_formation[type][i]; fig++) {
-                figure* f = figure_create(figure_type, invasion_tile, orientation);
-                f->faction_id = 0;
-                if (auto *enemy = f->dcast_enemy()) {
-                    f->action_state = enemy->enemy_initial_action();
-                } else {
-                    f->action_state = ACTION_151_ENEMY_INITIAL;
-                }
-                f->wait_ticks = 200 * seq + 10 * fig + 10;
-                f->formation_id = formation_id;
-                f->name = figure_name_get(figure_type);
-            }
-            seq++;
-        }
-    }
+    const invasion_army_spawn_t army
+      = scenario_invasion_spawn_army(opts, opts.size, invasion_tile, orientation, data.last_internal_invasion_id);
 
     // Apply destroy-goal to the army slot (JS want_destroy_buildings).
     // Without this, enemy_army_achieved_destroy_goal never returns true.
-    if (opts.invasion_id > 0
-        && opts.invasion_id < enemy_armies_t::MAX_ENEMY_ARMIES
-        && seq > 0) {
-        enemy_army *army = enemy_army_get_editable((uint8_t)opts.invasion_id);
-        army->buildings_to_destroy = opts.want_destroy;
-        army->buildings_destroyed = 0;
+    if (opts.invasion_id > 0 && opts.invasion_id < enemy_armies_t::MAX_ENEMY_ARMIES && army.formations > 0) {
+        enemy_army* enemy = enemy_army_get_editable((uint8_t)opts.invasion_id);
+        enemy->buildings_to_destroy = opts.want_destroy;
+        enemy->buildings_destroyed = 0;
     }
 
     // Match sea path: no formations ⇒ invalid. Callers (begin_favour_army / messages)
     // key off tile.valid(); a bare tile with seq==0 would arm favour_only at duration=192
     // with zero soldiers and never clean up (duration never ticks without troops).
-    if (seq <= 0) {
+    if (army.formations <= 0) {
         return tile2i::invalid;
     }
 

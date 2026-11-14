@@ -38,6 +38,7 @@
 #include "graphics/elements/lang_text.h"
 #include "figure/enemy_army.h"
 #include "figure/formation.h"
+#include "figuretype/figure_enemy_transport.h"
 #include "figuretype/figure_mummy.h"
 #include "figuretype/figure_locust.h"
 #include "figuretype/figure_frog.h"
@@ -1582,41 +1583,34 @@ struct invasion_phrase_set {
     int alert;
     int text;
     int text_by_favour;
+    int landed; // OG scenario_invasion_landing_message; 0: no message
 };
 
 const invasion_phrase_set &invasion_phrases(int invader) {
-    static const invasion_phrase_set enemy = {
-        PHRASE_foreign_army_attacks_you_title,
-        {PHRASE_foreign_army_attacks_you_initial_announcement, PHRASE_foreign_army_attacks_you_2year_reminder,
-         PHRASE_foreign_army_attacks_you_1year_reminder, PHRASE_foreign_army_attacks_you_6month_warning,
-         PHRASE_foreign_army_attacks_you_1month_Warning},
-        PHRASE_foreign_army_attacks_you_city_attacked_alert,
-        PHRASE_foreign_army_attacks_you_no_reason_A,
-        PHRASE_foreign_army_attacks_you_no_reason_A};
-    static const invasion_phrase_set egypt = {
-        PHRASE_eg_city_attacks_you_title,
-        {PHRASE_eg_city_attacks_you_initial_announcement, PHRASE_eg_city_attacks_you_2year_reminder,
-         PHRASE_eg_city_attacks_you_1year_reminder, PHRASE_eg_city_attacks_you_6month_warning,
-         PHRASE_eg_city_attacks_you_1month_warning},
-        PHRASE_eg_city_attacks_you_city_attacked_alert,
-        PHRASE_eg_city_attacks_you_no_reason_A,
-        PHRASE_eg_city_attacks_you_because_of_low_kingdom};
-    static const invasion_phrase_set pharaoh = {
-        PHRASE_pharaoh_attacks_you_title,
-        {PHRASE_pharaoh_attacks_you_initial_announcement, PHRASE_pharaoh_attacks_you_2year_reminder,
-         PHRASE_pharaoh_attacks_you_1year_reminder, PHRASE_pharaoh_attacks_you_6month_warning,
-         PHRASE_pharaoh_attacks_you_1month_warning},
-        PHRASE_pharaoh_attacks_you_city_attacked_alert,
-        PHRASE_pharaoh_attacks_you_no_reason_A,
-        PHRASE_pharaoh_attacks_you_because_of_low_kingdom};
-    static const invasion_phrase_set bedouin = {
-        PHRASE_bedouin_attacks_you_title,
-        {PHRASE_bedouin_attacks_you_initial_announcement, PHRASE_bedouin_attacks_you_2year_reminder,
-         PHRASE_bedouin_attacks_you_1year_reminder, PHRASE_bedouin_attacks_you_6month_warning,
-         PHRASE_bedouin_attacks_you_1month_warning},
-        PHRASE_bedouin_attacks_you_city_attacked_alert,
-        PHRASE_bedouin_attacks_you_no_reason_A,
-        PHRASE_bedouin_attacks_you_no_reason_A};
+    static const invasion_phrase_set enemy = {PHRASE_foreign_army_attacks_you_title,
+      {PHRASE_foreign_army_attacks_you_initial_announcement, PHRASE_foreign_army_attacks_you_2year_reminder,
+        PHRASE_foreign_army_attacks_you_1year_reminder, PHRASE_foreign_army_attacks_you_6month_warning,
+        PHRASE_foreign_army_attacks_you_1month_Warning},
+      PHRASE_foreign_army_attacks_you_city_attacked_alert, PHRASE_foreign_army_attacks_you_no_reason_A,
+      PHRASE_foreign_army_attacks_you_no_reason_A, PHRASE_foreign_army_attacks_you_disembarked_alert};
+    static const invasion_phrase_set egypt = {PHRASE_eg_city_attacks_you_title,
+      {PHRASE_eg_city_attacks_you_initial_announcement, PHRASE_eg_city_attacks_you_2year_reminder,
+        PHRASE_eg_city_attacks_you_1year_reminder, PHRASE_eg_city_attacks_you_6month_warning,
+        PHRASE_eg_city_attacks_you_1month_warning},
+      PHRASE_eg_city_attacks_you_city_attacked_alert, PHRASE_eg_city_attacks_you_no_reason_A,
+      PHRASE_eg_city_attacks_you_because_of_low_kingdom, PHRASE_eg_city_attacks_you_disembarked_alert};
+    static const invasion_phrase_set pharaoh = {PHRASE_pharaoh_attacks_you_title,
+      {PHRASE_pharaoh_attacks_you_initial_announcement, PHRASE_pharaoh_attacks_you_2year_reminder,
+        PHRASE_pharaoh_attacks_you_1year_reminder, PHRASE_pharaoh_attacks_you_6month_warning,
+        PHRASE_pharaoh_attacks_you_1month_warning},
+      PHRASE_pharaoh_attacks_you_city_attacked_alert, PHRASE_pharaoh_attacks_you_no_reason_A,
+      PHRASE_pharaoh_attacks_you_because_of_low_kingdom, 0};
+    static const invasion_phrase_set bedouin = {PHRASE_bedouin_attacks_you_title,
+      {PHRASE_bedouin_attacks_you_initial_announcement, PHRASE_bedouin_attacks_you_2year_reminder,
+        PHRASE_bedouin_attacks_you_1year_reminder, PHRASE_bedouin_attacks_you_6month_warning,
+        PHRASE_bedouin_attacks_you_1month_warning},
+      PHRASE_bedouin_attacks_you_city_attacked_alert, PHRASE_bedouin_attacks_you_no_reason_A,
+      PHRASE_bedouin_attacks_you_no_reason_A, PHRASE_bedouin_attacks_you_disembarked_alert};
     switch (invader) {
     case EVENT_INVADER_EGYPT: return egypt;
     case EVENT_INVADER_PHARAOH: return pharaoh;
@@ -1744,6 +1738,23 @@ static void invasion_attack(event_ph_t &e) {
     g_scenario.events.process_event(e.on_completed_action, true, EVENT_ACTION_COMPLETED, e.event_id);
 }
 
+void scenario_invasion_landing_message(int invasion_id, tile2i tile, int invasion_sequence) {
+    if (invasion_id < 0 || !g_scenario.events.is_valid_event_index(invasion_id)) {
+        return;
+    }
+    const event_ph_t* e = g_scenario.events.at(invasion_id);
+    if (!e || e->type != EVENT_TYPE_INVASION) {
+        return;
+    }
+    const invasion_phrase_set& phrases = invasion_phrases(e->item.value);
+    if (!phrases.landed) {
+        return;
+    }
+    const int text = invasion_parent_by_favour(*e) ? phrases.text_by_favour : phrases.text;
+    city_message_post_full(true, "message_attack_alert", e, e->parent_id, phrases.title, phrases.landed, text,
+      invasion_sequence, tile.grid_offset());
+}
+
 // OG scenario_events.c scenario_event_process_invasion.
 void event_manager_t::process_invasion(event_ph_t &e) {
     if (invasion_fired(e) || !scenario_invasion_is_running(e)) {
@@ -1812,8 +1823,10 @@ void event_manager_t::process_invasions() {
         if (e.type != EVENT_TYPE_INVASION) {
             continue;
         }
-        // OG formation.c: the event stops being active once its last enemy formation is gone.
-        if (e.is_active && invasion_fired(e) && !invasion_has_formation(e.event_id)) {
+        // OG formation.c: the event stops being active once its last enemy formation is gone; a sea invasion has
+        // none until its transports land.
+        if (e.is_active && invasion_fired(e) && !invasion_has_formation(e.event_id)
+            && !enemy_transport_of_invasion_exists(e.event_id)) {
             e.is_active = false;
         }
         process_invasion(e);

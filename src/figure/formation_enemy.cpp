@@ -12,7 +12,6 @@
 #include "figuretype/figure_soldier.h"
 #include "figure/formation_layout.h"
 #include "figuretype/figure_enemy.h"
-#include "figuretype/figure_enemy_transport.h"
 #include "city/city_figures.h"
 #include "figure/route.h"
 #include "grid/figure.h"
@@ -527,19 +526,6 @@ void formations_t::update_enemy_formation(formation* m, int* target_found) {
     }
 
     if (army->buildings_to_destroy > 0 && army->buildings_destroyed >= army->buildings_to_destroy) {
-        // Still embarked: dismiss cargo instead of leave_city (glue would undo ACTION_156).
-        if (m->is_halted) {
-            for (figure *ship : map_figures()) {
-                auto *t = smart_cast<figure_enemy_transport>(ship);
-                if (t && t->is_alive() && t->transported_formation() == m->id) {
-                    t->dismiss_cargo();
-                    // Withdraw empty hull — do not leave an idle enemy transport.
-                    t->poof();
-                }
-            }
-            return;
-        }
-
         for (figure_id fid : m->figures) {
             figure_enemy *f = figure_get(fid)->dcast_enemy();
             if (f && f->is_alive()) {
@@ -547,11 +533,6 @@ void formations_t::update_enemy_formation(formation* m, int* target_found) {
                 f->route_remove();
             }
         }
-        return;
-    }
-
-    // Halted while embarked on an enemy transport — do not pick targets or march.
-    if (m->is_halted) {
         return;
     }
 

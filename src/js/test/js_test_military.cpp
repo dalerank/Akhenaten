@@ -41,6 +41,7 @@
 #include "grid/grid.h"
 #include "grid/road_access.h"
 #include "grid/routing/routing.h"
+#include "grid/routing/routing_terrain.h"
 #include "grid/terrain.h"
 #include "grid/water.h"
 #include "scenario/distant_battle.h"
@@ -684,93 +685,106 @@ int __test_spawn_warship_on_water() {
 }
 ANK_FUNCTION(__test_spawn_warship_on_water);
 
-// Spawn enemy transport with N soldiers loaded and sailing to a nearby shore.
-// Returns transport figure id, or 0 on failure.
+// Launches an enemy transport on the test water strip carrying `soldier_count` soldiers to the shore above it
+// (invasion id 23); returns its figure id, or 0.
 int __test_enemy_transport_spawn_loaded(int enemy_type, int soldier_count) {
     int cx = 0;
     int cy = 0;
     tile2i water = test_find_or_make_water_strip(&cx, &cy);
-    tile2i landing = tile2i(cx, cy);
-    tile2i shore(cx, cy - 1);
-
-    e_enemy_type enemy = (e_enemy_type)enemy_type;
-    e_figure_type ship_type = enemy_transport_type_for(enemy);
-    e_figure_type soldier_type = FIGURE_ENEMY_HITTITE_SPEARMAN;
-    const enemy_properties_t& props = g_invasions.get_prop(enemy);
-    if (props.figure_types[0] != FIGURE_NONE) {
-        soldier_type = props.figure_types[0];
-    }
-
-    if (soldier_count < 1) {
-        soldier_count = 1;
-    }
-    if (soldier_count > 8) {
-        soldier_count = 8;
-    }
-
-    int formation_id = formation_create_enemy(soldier_type, shore, FORMATION_ENEMY_MOB, DIR_0_TOP_RIGHT, enemy,
-      FORMATION_ATTACK_RANDOM, 23, 1);
-    if (formation_id <= 0) {
-        return 0;
-    }
-
-    for (int i = 0; i < soldier_count; i++) {
-        figure* s = figure_create(soldier_type, water, DIR_0_TOP_RIGHT);
-        if (!s || !s->is_valid()) {
-            continue;
-        }
-        s->faction_id = 0;
-        s->formation_id = formation_id;
-        s->index_in_formation = (uint8_t)i;
-        s->action_state = ACTION_152_ENEMY_WAITING;
-        s->wait_ticks = 30000;
-        s->formation_at_rest = 1;
-        s->allow_move_type = EMOVE_AMPHIBIAN;
-        s->set_flag(e_figure_flag_invisible);
-    }
-
-    auto abort_test_formation = [formation_id]() {
-        for (figure* f : map_figures()) {
-            if (f && f->is_alive() && f->formation_id == formation_id) {
-                f->set_flag(e_figure_flag_invisible, false);
-                f->kill();
-            }
-        }
-        formation* m = formation_get(formation_id);
-        if (m && m->in_use) {
-            m->num_figures = 0;
-            for (int fi = 0; fi < formation::max_figures_count; fi++) {
-                m->figures[fi] = 0;
-            }
-            m->in_use = false;
-        }
-    };
-
-    figure* ship = figure_create(ship_type, water, DIR_0_TOP_RIGHT);
-    if (!ship || !ship->is_valid()) {
-        abort_test_formation();
-        return 0;
-    }
-
-    auto* transport = smart_cast<figure_enemy_transport>(ship);
+    const e_enemy_type enemy = (e_enemy_type)enemy_type;
+    figure* ship = figure_create(enemy_transport_type_for(enemy), water, DIR_0_TOP_RIGHT);
+    auto* transport = ship ? smart_cast<figure_enemy_transport>(ship) : nullptr;
     if (!transport) {
-        ship->kill();
-        abort_test_formation();
         return 0;
     }
-    if (!transport->load_formation(formation_id)) {
-        ship->kill();
-        abort_test_formation();
-        return 0;
+    invasion_opts_t opts;
+    opts.enemy_type = enemy;
+    opts.invasion_id = 23;
+    opts.attack_type = FORMATION_ATTACK_RANDOM;
+    if (++g_invasions.last_internal_invasion_id > 32000) {
+        g_invasions.last_internal_invasion_id = 1;
     }
-    if (!transport->sail_to_landing(landing)) {
-        ship->kill();
-        abort_test_formation();
-        return 0;
-    }
+    transport->launch(opts, std::max(soldier_count, 1), tile2i(cx, cy - 1), 1, g_invasions.last_internal_invasion_id);
     return ship->id;
 }
 ANK_FUNCTION_2(__test_enemy_transport_spawn_loaded);
+
+static figure_enemy_transport* test_enemy_transport(int fid) {
+    figure* f = figure_get(fid);
+    return (f && f->is_valid()) ? smart_cast<figure_enemy_transport>(f) : nullptr;
+}
+
+static int __test_enemy_transport_soldiers(int fid) {
+    auto* t = test_enemy_transport(fid);
+    return t ? t->soldiers() : -1;
+}
+ANK_FUNCTION_1(__test_enemy_transport_soldiers);
+
+static int __test_enemy_transport_landing_x(int fid) {
+    auto* t = test_enemy_transport(fid);
+    return t ? t->landing().x() : -1;
+}
+ANK_FUNCTION_1(__test_enemy_transport_landing_x);
+
+static int __test_enemy_transport_landing_y(int fid) {
+    auto* t = test_enemy_transport(fid);
+    return t ? t->landing().y() : -1;
+}
+ANK_FUNCTION_1(__test_enemy_transport_landing_y);
+
+static int __test_enemy_transport_invasion_seq(int fid) {
+    auto* t = test_enemy_transport(fid);
+    return t ? t->invasion_sequence() : -1;
+}
+ANK_FUNCTION_1(__test_enemy_transport_invasion_seq);
+
+// Ids of all living enemy transports, comma separated, in figure id order.
+static pcstr __test_enemy_transports() {
+    static std::string out;
+    out.clear();
+    for (figure* f : map_figures()) {
+        if (f && f->is_alive() && smart_cast<figure_enemy_transport>(f)) {
+            out += (out.empty() ? "" : ",") + std::to_string(f->id);
+        }
+    }
+    return out.c_str();
+}
+ANK_FUNCTION(__test_enemy_transports);
+
+// Open water over [x0, x0+w) x [y0, y0+h) with a clear land row above it.
+static void __test_make_lake(int x0, int y0, int w, int h) {
+    for (int x = x0; x < x0 + w; x++) {
+        map_terrain_set(tile2i(x, y0 - 1).grid_offset(), 0);
+        for (int y = y0; y < y0 + h; y++) {
+            map_terrain_set(tile2i(x, y).grid_offset(), TERRAIN_WATER);
+        }
+    }
+    map_water_rebuild_shores();
+    map_routing_update_land();
+    map_routing_update_water();
+}
+ANK_FUNCTION_4(__test_make_lake);
+
+static int __test_figure_tile_y(int fid) {
+    figure* f = figure_get(fid);
+    return (f && f->id > 0) ? f->tile.y() : -1;
+}
+ANK_FUNCTION_1(__test_figure_tile_y);
+
+static int __test_warship_find_enemy(int fid, int range) {
+    figure* f = figure_get(fid);
+    auto* warship = f ? smart_cast<figure_warship>(f) : nullptr;
+    return warship ? warship->find_enemy_at(f->tile, range) : 0;
+}
+ANK_FUNCTION_2(__test_warship_find_enemy);
+
+static void __test_warship_ram(int fid) {
+    figure* f = figure_get(fid);
+    if (auto* warship = f ? smart_cast<figure_warship>(f) : nullptr) {
+        warship->ram();
+    }
+}
+ANK_FUNCTION_1(__test_warship_ram);
 
 int __test_enemy_transport_has_troops(int fid) {
     figure* f = figure_get(fid);
@@ -1087,6 +1101,20 @@ int __test_start_sea_invasion(int enemy_type, int size) {
     return tile.valid() ? 1 : 0;
 }
 ANK_FUNCTION_2(__test_start_sea_invasion);
+
+// Sea invasion through sea point 0 and the disembark points already set (invasion id 23); 1 on success.
+int __test_sea_invasion_start(int enemy_type, int size) {
+    invasion_opts_t opts;
+    opts.mode = ATTACK_TYPE_ENEMIES;
+    opts.enemy_type = (e_enemy_type)enemy_type;
+    opts.size = size;
+    opts.via_sea = true;
+    opts.sea_point_index = 0;
+    opts.invasion_id = 23;
+    opts.attack_type = FORMATION_ATTACK_RANDOM;
+    return scenario_start_invasion_impl(opts).valid() ? 1 : 0;
+}
+ANK_FUNCTION_2(__test_sea_invasion_start);
 
 int __test_count_enemy_transports() {
     int count = 0;
