@@ -52,13 +52,18 @@ void figure_water_carrier::figure_action() {
 }
 
 int figure_water_carrier::provide_service() {
-    int houses_serviced = figure_provide_service(tile(), &base, [] (building *b, figure *f) {
-        auto house = b->dcast_house();
+    // OG service.c service_provide_water_coverage: nothing while the river of blood sweeps; otherwise every inhabited
+    // house tile in range gets the water access and counts as serviced.
+    if (g_scenario.events.blood_river_sweep_active()) {
+        return 0;
+    }
 
-        // OG service.c: the river of blood gives no water coverage while it sweeps.
-        if (house && !g_scenario.events.blood_river_sweep_active()) {
-            auto &housed = house->runtime_data();
-            housed.water_supply = MAX_COVERAGE;
+    int houses_serviced = 0;
+    figure_provide_service(tile(), &base, [&] (building *b, figure *f) {
+        auto house = b->dcast_house();
+        if (house && house->house_population() > 0) {
+            house->runtime_data().water_supply = MAX_COVERAGE;
+            houses_serviced++;
         }
 
         if (!!game_features::gameplay_brewery_requires_water) {

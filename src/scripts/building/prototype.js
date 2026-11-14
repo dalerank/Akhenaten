@@ -75,8 +75,10 @@ Building.prototype.get_figure = function(index) { return city.get_figure(__build
 Building.prototype.draw_usable_paths = function() { __building_draw_usable_paths(this.id) }
 Building.prototype.water_access_tile = function(index) { return __building_water_access_tile(this.id, index) }
 Building.prototype.water_output_tile = function(index) { return __building_water_output_tile(this.id, index) }
-Building.prototype.spawn_delay_by_workers = function(delays) {
-    var pct = this.worker_percentage
+Building.prototype.spawn_delay_by_workers = function(delays, pct) {
+    if (pct === undefined) {
+        pct = this.worker_percentage
+    }
     if (pct >= 100) return delays[0]
     if (pct >= 75) return delays[1]
     if (pct >= 50) return delays[2]
@@ -92,12 +94,17 @@ Building.prototype.spawn_service_walker = function(params, figure_type, action) 
 
     this.common_spawn_labor_seeker(params.min_houses_coverage)
 
-    if (this.worker_percentage <= 0) {
+    // OG spawn_water_supply halves the share of workers on low desirability; a share of 0 sends nobody.
+    var pct = this.worker_percentage
+    if (params.workers_halved) {
+        pct = (pct / 2) | 0
+    }
+    if (pct <= 0) {
         return
     }
 
     this.figure_spawn_delay = (this.figure_spawn_delay + 1) & 0xff
-    if (this.figure_spawn_delay <= this.spawn_delay_by_workers(params.spawn_delays)) {
+    if (this.figure_spawn_delay <= this.spawn_delay_by_workers(params.spawn_delays, pct)) {
         return
     }
 
