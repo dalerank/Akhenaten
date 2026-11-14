@@ -138,4 +138,47 @@ construction_warning_rules {
       warning: "#monument_needs_granite", import_res: RESOURCE_GRANITE
       no_route: "#setup_trade_route_to_import", not_imported: "#overseer_of_commerce_to_import" }
   ]
+
+  // With both inputs missing the hints name the resource (the lamp maker swaps the oil and pottery texts).
+  two_inputs [
+    { buildings: [BUILDING_BRICKS_WORKSHOP], product: RESOURCE_BRICKS, warning: "#building_needs_clay_and_straw"
+      first: { industry: RESOURCE_CLAY, stock: RESOURCE_CLAY, warning: "#building_needs_clay"
+               produce: RESOURCE_CLAY, build: "#build_clay_pit", import_res: RESOURCE_CLAY
+               no_route: "#setup_trade_route_to_import", not_imported: "#overseer_of_commerce_to_import"
+               both_no_route: "#import_clay_trade_route", both_not_imported: "#import_clay_overseer" }
+      second: { industry: RESOURCE_GRAIN, stock: RESOURCE_STRAW, warning: "#building_needs_straw"
+                produce: RESOURCE_GRAIN, build: "#build_grain_farm", import_res: RESOURCE_STRAW
+                no_route: "#setup_trade_route_to_import", not_imported: "#overseer_of_commerce_to_import"
+                both_no_route: "#import_straw_trade_route", both_not_imported: "#import_straw_overseer" } }
+    { buildings: [BUILDING_LAMP_WORKSHOP], product: RESOURCE_LAMPS, warning: "#building_needs_oil_and_pottery"
+      first: { industry: RESOURCE_OIL, stock: RESOURCE_OIL, warning: "#building_needs_oil", import_res: RESOURCE_OIL
+               no_route: "#setup_trade_route_to_import", not_imported: "#overseer_of_commerce_to_import"
+               both_no_route: "#import_oil_overseer", both_not_imported: "#import_oil_trade_route" }
+      second: { industry: RESOURCE_POTTERY, stock: RESOURCE_POTTERY, warning: "#building_needs_pottery"
+                produce: RESOURCE_POTTERY, build: "#build_potter", import_res: RESOURCE_POTTERY
+                no_route: "#setup_trade_route_to_import", not_imported: "#overseer_of_commerce_to_import"
+                both_no_route: "#import_pottery_overseer", both_not_imported: "#import_pottery_trade_route" } }
+    { buildings: [BUILDING_SMALL_BENT_PYRAMID, BUILDING_MEDIUM_BENT_PYRAMID, BUILDING_SMALL_PYRAMID,
+                  BUILDING_MEDIUM_PYRAMID, BUILDING_LARGE_PYRAMID, BUILDING_PYRAMID_COMPLEX, BUILDING_GRAND_PYRAMID_COMPLEX]
+      warning: "#monument_needs_stone_and_limestone"
+      first: { industry: RESOURCE_STONE, stock: RESOURCE_STONE, warning: "#monument_needs_plain_stone"
+               produce: RESOURCE_STONE, build: "#build_stone_quarry", import_res: RESOURCE_STONE
+               no_route: "#setup_trade_route_to_import", not_imported: "#overseer_of_commerce_to_import"
+               both_no_route: "#import_stone_trade_route", both_not_imported: "#import_stone_overseer" }
+      second: { industry: RESOURCE_LIMESTONE, stock: RESOURCE_LIMESTONE, warning: "#monument_needs_limestone"
+                produce: RESOURCE_LIMESTONE, build: "#build_limestone_quarry", import_res: RESOURCE_LIMESTONE
+                no_route: "#setup_trade_route_to_import", not_imported: "#overseer_of_commerce_to_import"
+                both_no_route: "#import_limestone_trade_route", both_not_imported: "#import_limestone_overseer" } }
+    { buildings: [BUILDING_SMALL_MUDBRICK_PYRAMID, BUILDING_MEDIUM_MUDBRICK_PYRAMID, BUILDING_LARGE_MUDBRICK_PYRAMID,
+                  BUILDING_MUDBRICK_PYRAMID_COMPLEX, BUILDING_GRAND_MUDBRICK_PYRAMID_COMPLEX]
+      warning: "#monument_needs_bricks_and_limestone"
+      first: { industry: RESOURCE_BRICKS, stock: RESOURCE_BRICKS, warning: "#monument_needs_bricks"
+               produce: RESOURCE_BRICKS, build: "#build_brickworks", import_res: RESOURCE_BRICKS
+               no_route: "#setup_trade_route_to_import", not_imported: "#overseer_of_commerce_to_import"
+               both_no_route: "#import_bricks_trade_route", both_not_imported: "#import_bricks_overseer" }
+      second: { industry: RESOURCE_LIMESTONE, stock: RESOURCE_LIMESTONE, warning: "#monument_needs_limestone"
+                produce: RESOURCE_LIMESTONE, build: "#build_limestone_quarry", import_res: RESOURCE_LIMESTONE
+                no_route: "#setup_trade_route_to_import", not_imported: "#overseer_of_commerce_to_import"
+                both_no_route: "#import_limestone_trade_route", both_not_imported: "#import_limestone_overseer" } }
+  ]
 }

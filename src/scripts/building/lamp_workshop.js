@@ -56,67 +56,6 @@ building_lamp_workshop {
   }
 }
 
-function building_lamp_workshop_imported(res) {
-    return res.trade_status == TRADE_STATUS_IMPORT || res.trade_status == TRADE_STATUS_IMPORT_AS_NEEDED
-}
-
-function building_lamp_workshop_hint_import(res, no_route, not_imported) {
-    if (!res.can_import) {
-        city.warnings.show(no_route)
-    } else if (!building_lamp_workshop_imported(res)) {
-        city.warnings.show(not_imported)
-    }
-}
-
-function building_lamp_workshop_hint_pottery(no_route, not_imported) {
-    var pottery = city.resources.pottery
-    if (pottery.can_produce) {
-        city.warnings.show("#build_potter")
-        return
-    }
-    building_lamp_workshop_hint_import(pottery, no_route, not_imported)
-}
-
-// construction_warning_check_lamps. With both inputs missing OG swaps the oil hints:
-// no trade route shows the overseer text and a route without import shows the trade route text.
-[es=(building_lamp_workshop, on_place_checks)]
-function building_lamp_workshop_on_place_checks(ev) {
-    if (game.editor_is_active()) {
-        return
-    }
-    var oil = city.resources.oil
-    var pottery = city.resources.pottery
-    var oil_active = oil.count_active_industry
-    var pottery_active = pottery.count_active_industry
-    if (oil_active > 0 && pottery_active > 0) {
-        return
-    }
-    if (city.resources.lamps.yards_stored > 0) {
-        return
-    }
-    var oil_stock = oil.yards_stored
-    var pottery_stock = pottery.yards_stored
-    if (oil_stock > 0 && pottery_stock > 0) {
-        return
-    }
-    if (oil_active <= 0 && oil_stock <= 0) {
-        if (pottery_active <= 0 && pottery_stock <= 0) {
-            city.warnings.show("#building_needs_oil_and_pottery")
-            building_lamp_workshop_hint_import(oil, "#import_oil_overseer", "#import_oil_trade_route")
-            building_lamp_workshop_hint_pottery("#import_pottery_overseer", "#import_pottery_trade_route")
-            return
-        }
-        city.warnings.show("#building_needs_oil")
-        building_lamp_workshop_hint_import(oil, "#setup_trade_route_to_import", "#overseer_of_commerce_to_import")
-        return
-    }
-    if (pottery_active > 0 || pottery_stock > 0) {
-        return
-    }
-    city.warnings.show("#building_needs_pottery")
-    building_lamp_workshop_hint_pottery("#setup_trade_route_to_import", "#overseer_of_commerce_to_import")
-}
-
 // OG building_animation_offset: the lamp maker animates while staffed with any oil and any pottery in stock.
 [es=(building_lamp_workshop, update_animation)]
 function building_lamp_workshop_on_update_animation(ev) {
