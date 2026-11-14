@@ -2,11 +2,13 @@
 //   an Egyptian city becomes foreign (a trading one stays trading, its route stays open) and
 //   MESSAGE_CITY_FELL_TO_ENEMY (338) is posted with phrases 126 / 127 (eg_city_falls title, announcement);
 //   a city of any other type is left alone and nothing is posted.
+// Every city-status message without a parent phrase uses its subtype's no_reason_A (129 + 4 * subtype).
 // Abu (mission 9): Abedju is Egyptian trading, Nubt is Egyptian, Byblos is foreign.
 // Markers:
 //   [test-marker] city_fell_trading_ok
 //   [test-marker] city_fell_egyptian_ok
 //   [test-marker] city_fell_not_egyptian_ok
+//   [test-marker] city_status_phrases_ok
 
 function test497_fail(msg) {
     __log_info_native('[test:497] FAIL: ' + msg)
@@ -36,6 +38,7 @@ function test497_last_is_fall(count_before) {
     return __city_message_mm_text_id(last) == __lang_get_message_uid('message_template_city_fell_to_enemy')
         && __city_message_eventmsg_title_id(last) == PHRASE_eg_city_falls_title
         && __city_message_eventmsg_body_id(last) == PHRASE_eg_city_falls_initial_announcement
+        && __test_last_message_eventmsg_phrase_id() == PHRASE_eg_city_falls_no_reason_A
 }
 
 function test497_describe(name, count_before) {
@@ -97,17 +100,37 @@ function test497_not_egyptian() {
     __log_marker('city_fell_not_egyptian_ok')
 }
 
+// Route opened (subtype 2) and route closed (subtype 3) on Timna, an Egyptian trading city.
+function test497_phrases() {
+    var name = 'Timna'
+    var want = [[EVENT_SUBTYPE_NEW_TRADE_ROUTE, PHRASE_route_opened_title, PHRASE_route_opened_no_reason_A],
+        [EVENT_SUBTYPE_LOST_TRADE_ROUTE, PHRASE_route_closed_title, PHRASE_route_closed_no_reason_A]]
+    for (var i = 0; i < want.length; i++) {
+        var before = __city_message_count()
+        test497_event(49731 + i, want[i][0], name)
+        var last = __city_message_count() - 1
+        if (last != before || __city_message_eventmsg_title_id(last) != want[i][1]
+            || __test_last_message_eventmsg_phrase_id() != want[i][2]) {
+            test497_fail('phrases subtype ' + want[i][0] + ': ' + test497_describe(name, before) + ' want title='
+                + want[i][1] + ' phrase=' + want[i][2])
+            return
+        }
+    }
+    __log_marker('city_status_phrases_ok')
+}
+
 function run_test() {
     __log_info_native('[test:497] OG city fell to enemy')
     __game_load_mission(9, 1)
     test497_trading()
     test497_egyptian()
     test497_not_egyptian()
+    test497_phrases()
     __test_signal_ready()
 }
 
 function check_valid() {
-    var markers = ['city_fell_trading_ok', 'city_fell_egyptian_ok', 'city_fell_not_egyptian_ok']
+    var markers = ['city_fell_trading_ok', 'city_fell_egyptian_ok', 'city_fell_not_egyptian_ok', 'city_status_phrases_ok']
     for (var i = 0; i < markers.length; i++) {
         if (!__test_find_inlog('[test-marker] ' + markers[i])) {
             __log_info_native('[test:497] missing marker: ' + markers[i])

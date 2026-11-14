@@ -1398,8 +1398,8 @@ void event_manager_t::process_event(int id, bool via_event_trigger, int chain_ac
                     full->city_type = city->type;
                 }
                 city_message_post_full(true, "message_template_city_fell_to_enemy", &event, caller_event_id,
-                  PHRASE_eg_city_falls_title, PHRASE_eg_city_falls_initial_announcement, PHRASE_eg_city_falls_reason_A,
-                  id, city->name_id);
+                  PHRASE_eg_city_falls_title, PHRASE_eg_city_falls_initial_announcement,
+                  PHRASE_eg_city_falls_no_reason_A, id, city->name_id);
                 break;
 
             case EVENT_SUBTYPE_FOREIGN_CITY_CONQUERED:
@@ -1425,8 +1425,8 @@ void event_manager_t::process_event(int id, bool via_event_trigger, int chain_ac
                     full->city_type = city->type;
                 }
                 city_message_post_full(true, "message_template_general", &event, caller_event_id,
-                    PHRASE_route_opened_title, PHRASE_route_opened_initial_announcement, PHRASE_route_opened_reason_A,
-                    id, city->name_id);
+                  PHRASE_route_opened_title, PHRASE_route_opened_initial_announcement, PHRASE_route_opened_no_reason_A,
+                  id, city->name_id);
                 break;
 
             case EVENT_SUBTYPE_LOST_TRADE_ROUTE:
@@ -1436,8 +1436,8 @@ void event_manager_t::process_event(int id, bool via_event_trigger, int chain_ac
                     full->trade_route_open = 0;
                 }
                 city_message_post_full(true, "message_template_general", &event, caller_event_id,
-                    PHRASE_route_closed_title, PHRASE_route_closed_initial_announcement, PHRASE_route_closed_reason_A,
-                    id, city->name_id);
+                  PHRASE_route_closed_title, PHRASE_route_closed_initial_announcement, PHRASE_route_closed_no_reason_A,
+                  id, city->name_id);
                 break;
 
             case EVENT_SUBTYPE_CITY_UNDER_SIEGE:
@@ -1453,7 +1453,7 @@ void event_manager_t::process_event(int id, bool via_event_trigger, int chain_ac
         break;
 
     case EVENT_TYPE_MESSAGE: {
-        // Prefer event.reasons[] (pak / JS); fall back to the subtype's default phrase.
+        // Prefer event.reasons[] (pak / JS); else OG subtype no_reason_A (phrase 149 + 4 * subtype).
         auto message_phrase = [&](uint16_t fallback) -> int {
             const uint16_t r = event.rand_reason();
             return (r != 0xffff) ? (int)r : (int)fallback;
@@ -1465,20 +1465,19 @@ void event_manager_t::process_event(int id, bool via_event_trigger, int chain_ac
 
         case EVENT_SUBTYPE_MSG_CITY_SAVED:
             city_message_post_full(true, "message_template_city_saved", &event, caller_event_id,
-                                   PHRASE_eg_city_saved_title, PHRASE_eg_city_saved_initial_announcement,
-                                   message_phrase(PHRASE_eg_city_saved_reason_A), id, 0);
+              PHRASE_eg_city_saved_title, PHRASE_eg_city_saved_initial_announcement,
+              message_phrase(PHRASE_eg_city_saved_no_reason_A), id, 0);
             break;
 
         case EVENT_SUBTYPE_MSG_BATTLE_WON:
             city_message_post_full(true, "message_template_distant_battle_won", &event, caller_event_id,
               PHRASE_battle_won_title, PHRASE_battle_won_initial_announcement,
-              message_phrase(PHRASE_battle_won_reason_A), id, 0);
+              message_phrase(PHRASE_battle_won_no_reason_A), id, 0);
             break;
 
         case EVENT_SUBTYPE_MSG_DISTANT_BATTLE_LOST:
-            city_message_post_full(true, "message_template_general", &event, caller_event_id,
-                                   PHRASE_battle_lost_title, PHRASE_battle_lost_initial_announcement,
-                                   message_phrase(PHRASE_battle_lost_reason_A), id, 0);
+            city_message_post_full(true, "message_template_general", &event, caller_event_id, PHRASE_battle_lost_title,
+              PHRASE_battle_lost_initial_announcement, message_phrase(PHRASE_battle_lost_no_reason_A), id, 0);
             break;
 
         case EVENT_SUBTYPE_MSG_ACKNOWLEDGEMENT:

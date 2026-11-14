@@ -1,7 +1,7 @@
 // EVENT_TYPE_MESSAGE vs OG scenario_events.c:219-251 (event_message_type, scenario_event_process_message):
 //   subtype 0 city saved -> MESSAGE_CITY_SAVED (262), 1 battle won -> MESSAGE_DISTANT_BATTLE_WON (263),
 //   2 battle lost and 3 acknowledgement -> MESSAGE_TEMPLATE_GENERAL (131); every template must exist,
-//   or the message is dropped.
+//   or the message is dropped. Without reasons the text is the subtype's no_reason_A (149 + 4 * subtype).
 // Markers:
 //   [test-marker] event_messages_og_battle_won_ok
 //   [test-marker] event_messages_og_templates_ok
@@ -46,13 +46,14 @@ function test496_subtype_names() {
 
 function test496_templates() {
     var ok = test496_check('city saved', test496_post(49601, EVENT_SUBTYPE_MSG_CITY_SAVED), 'message_template_city_saved',
-            PHRASE_eg_city_saved_title, PHRASE_eg_city_saved_initial_announcement)
+            PHRASE_eg_city_saved_title, PHRASE_eg_city_saved_initial_announcement, PHRASE_eg_city_saved_no_reason_A)
         && test496_check('battle won', test496_post(49604, EVENT_SUBTYPE_MSG_BATTLE_WON), 'message_template_distant_battle_won',
-            PHRASE_battle_won_title, PHRASE_battle_won_initial_announcement)
+            PHRASE_battle_won_title, PHRASE_battle_won_initial_announcement, PHRASE_battle_won_no_reason_A)
         && test496_check('battle lost', test496_post(49602, EVENT_SUBTYPE_MSG_DISTANT_BATTLE_LOST), 'message_template_general',
-            PHRASE_battle_lost_title, PHRASE_battle_lost_initial_announcement)
+            PHRASE_battle_lost_title, PHRASE_battle_lost_initial_announcement, PHRASE_battle_lost_no_reason_A)
         && test496_check('acknowledgement', test496_post(49603, EVENT_SUBTYPE_MSG_ACKNOWLEDGEMENT), 'message_template_general',
-            PHRASE_acknowledgement_title, PHRASE_acknowledgement_initial_announcement)
+            PHRASE_acknowledgement_title, PHRASE_acknowledgement_initial_announcement,
+            PHRASE_acknowledgement_no_reason_A)
     if (ok) {
         __log_marker('event_messages_og_templates_ok')
     }
