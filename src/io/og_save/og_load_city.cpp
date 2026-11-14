@@ -75,13 +75,13 @@ namespace og {
         g_city.map.entry_point = tile2i(p.entry_point_x, p.entry_point_y);
         g_city.map.exit_point = tile2i(p.exit_point_x, p.exit_point_y);
         for (int i = 0; i < 36; i++) {
-            assign(g_city.resource.trade_status[i + 1], p.trade_status[1 + i]);
+            assign(g_city.resource.trade_status[i], p.trade_status[i]);
         }
         for (int i = 0; i < 36; i++) {
-            assign(g_city.resource.trading_amount[i + 1], p.trading_amount[1 + i]);
+            assign(g_city.resource.trading_amount[i], p.trading_amount[i]);
         }
         for (int i = 0; i < 36; i++) {
-            assign(g_city.resource.mothballed[i + 1], p.mothballed[1 + i]);
+            assign(g_city.resource.mothballed[i], p.mothballed[i]);
         }
         for (int i = 0; i < 36; i++) {
             assign(g_city.resource.stockpiled[i], p.stockpiled[i]);
