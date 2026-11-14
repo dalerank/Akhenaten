@@ -29,7 +29,7 @@ class figure_fireman;
 class figure_missile;
 class figure_emigrant;
 class figure_homeless;
-class figure_festival_guy;
+class figure_festival_priest;
 class figure_ostrich;
 class figure_antelope;
 class figure_hippo;

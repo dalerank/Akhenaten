@@ -1054,7 +1054,7 @@ localization_hu = [
   {key: "#figure_constable", group:64, id:88 }
   {key: "#figure_magistrate", group:64, id:89 }
   {key: "#figure_reed_gatherer", group:64, id:90 }
-  {key: "#figure_festival_guy", group:64, id:91 }
+  {key: "#figure_festival_priest", group:64, id:91 }
   {key: "#figure_enemy_transport", group:64, id:92 }
   {key: "#figure_enemy_warship", group:64, id:93 }
   {key: "#figure_funeral_walker", text: "Temetési menet" }

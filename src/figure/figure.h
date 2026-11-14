@@ -210,7 +210,7 @@ public:
     ALLOW_SMART_CAST_FIGURE(immigrant)
     ALLOW_SMART_CAST_FIGURE(emigrant)
     ALLOW_SMART_CAST_FIGURE(homeless)
-    ALLOW_SMART_CAST_FIGURE(festival_guy)
+    ALLOW_SMART_CAST_FIGURE(festival_priest)
     ALLOW_SMART_CAST_FIGURE(enemy_spearman)
     ALLOW_SMART_CAST_FIGURE(ostrich)
     ALLOW_SMART_CAST_FIGURE(hippo)

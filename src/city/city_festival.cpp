@@ -11,7 +11,7 @@
 #include "core/random.h"
 #include "figure/figure.h"
 #include "game/game_config.h"
-#include "figuretype/festival_guy.h"
+#include "figuretype/figure_festival_priest.h"
 #include "graphics/image_groups.h"
 #include "core/tokenum.h"
 #include "game/local_cults.h"
@@ -45,7 +45,7 @@ void city_festival_t::execute_festival() {
         case BUILDING_JUGGLER_SCHOOL:
         case BUILDING_CONSERVATORY:
         case BUILDING_DANCE_SCHOOL: {
-                figure* f = b->dcast()->create_figure_generic(FIGURE_FESTIVAL_GUY, (e_figure_action)ACTION_10_FESTIVAL_GUY_CREATED, BUILDING_SLOT_PRIEST, DIR_4_BOTTOM_LEFT);
+                figure* f = b->dcast()->create_figure_generic(FIGURE_FESTIVAL_PRIEST, (e_figure_action)ACTION_10_FESTIVAL_PRIEST_CREATED, BUILDING_SLOT_PRIEST, DIR_4_BOTTOM_LEFT);
 
                 tile2i tile_on_square = square_pos.shifted(rand() % square->size, rand() % square->size);
                 f->tile = b->road_access;
@@ -54,8 +54,8 @@ void city_festival_t::execute_festival() {
                 f->destination_tile = tile_on_square;
                 f->wait_ticks = 0;
 
-                auto fguy = f->dcast_festival_guy();
-                fguy->runtime_data().festival_remaining_dances = figure_festival_guy::current_params().trips;
+                auto fguy = f->dcast_festival_priest();
+                fguy->runtime_data().festival_remaining_dances = figure_festival_priest::current_params().trips;
             }
             break;
         }

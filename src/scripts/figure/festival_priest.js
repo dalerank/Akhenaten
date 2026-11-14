@@ -1,7 +1,7 @@
-log_info("akhenaten: figure festival_guy started")
+log_info("akhenaten: figure festival_priest started")
 
-[es=(figure_festival_guy, setup_phrase)]
-function figure_festival_guy_setup_phrase(ev) {
+[es=(figure_festival_priest, setup_phrase)]
+function figure_festival_priest_setup_phrase(ev) {
     var f = city.get_figure(ev.fid)
     if (!f || !f.valid) {
         return

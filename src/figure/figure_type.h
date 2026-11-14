@@ -60,9 +60,9 @@ enum e_figure_type : uint16_t {
     FIGURE_ARCHITECT = 8,
     FIGURE_STORAGEYARD_CART = 9,
     FIGURE_FIREMAN = 10,
-    FIGURE_ARCHER = 11,       // OG FIG_LEG_MISS
-    FIGURE_INFANTRY = 12,     // OG FIG_LEG_AUX (melee)
-    FIGURE_FCHARIOTEER = 13,  // OG FIG_LEG_HEAVY (chariot)
+    FIGURE_ARCHER = 11,      // OG FIG_LEG_MISS
+    FIGURE_INFANTRY = 12,    // OG FIG_LEG_AUX (melee)
+    FIGURE_FCHARIOTEER = 13, // OG FIG_LEG_HEAVY (chariot)
 
     FIGURE_STANDARD_BEARER = 14,
     FIGURE_JUGGLER = 15,
@@ -85,7 +85,7 @@ enum e_figure_type : uint16_t {
     FIGURE_PHYSICIAN = 32,
     FIGURE_HERBALIST = 33, // OG APOTHECARY
     FIGURE_EMBALMER = 34,
-    FIGURE_WORKER = 35, // dead enum; live work-camp walker = FIGURE_LABORER / figure_worker
+    FIGURE_WORKER = 35,   // dead enum; live work-camp walker = FIGURE_LABORER / figure_worker
     FIGURE_MAP_FLAG = 36, // editor flags — legacy action.cpp case; optional METAINFO wrap
     FIGURE_FLOTSAM = 37,
     FIGURE_DOCKER = 38,
@@ -113,9 +113,9 @@ enum e_figure_type : uint16_t {
     FIGURE_JAVELIN = 60,
     FIGURE_BOLT = 61,
     FIGURE_BALLISTA = 62,
-    FIGURE_CREATURE = 63, // Caesar leftover — won't implement
+    FIGURE_CREATURE = 63,   // Caesar leftover — won't implement
     FIGURE_MISSIONARY = 64, // Caesar leftover (natives UNUSED) — won't implement
-    FIGURE_SEAGULLS = 65, // OG fishing-point ghost stub (create_flotsam); ≠ JUMPING_FISH 95
+    FIGURE_SEAGULLS = 65,   // OG fishing-point ghost stub (create_flotsam); ≠ JUMPING_FISH 95
     FIGURE_DELIVERY_BOY = 66,
     FIGURE_SHIPWRECK = 67,
     FIGURE_BIRDS = 68,
@@ -141,7 +141,7 @@ enum e_figure_type : uint16_t {
     FIGURE_CONSTABLE = 88,
     FIGURE_MAGISTRATE = 89,
     FIGURE_REED_GATHERER = 90,
-    FIGURE_FESTIVAL_GUY = 91,
+    FIGURE_FESTIVAL_PRIEST = 91,
     FIGURE_ENEMY_TRANSPORT = 92,
     FIGURE_ENEMY_WARSHIP = 93,
     FIGURE_FUNERAL_WALKER = 94,
@@ -149,8 +149,8 @@ enum e_figure_type : uint16_t {
     FIGURE_SLED_PULLER = 96,
     FIGURE_SHOWMAN = 97, // named lang slot only; no OG walker — won't implement
     FIGURE_PLAGUED_CITIZEN = 98,
-    FIGURE_BEDOUIN_INFANTRY = 99, // lang/Ambient only; Bedouin raids → ENEMY_7_LIBIAN — won't implement
-    FIGURE_EGYPTIAN_WARSHIP = 100, // unused lang slot; ≠ WARSHIP(78), ≠ ENEMY_EGYPTIAN_WAR_SHIP(141)
+    FIGURE_BEDOUIN_INFANTRY = 99,    // lang/Ambient only; Bedouin raids → ENEMY_7_LIBIAN — won't implement
+    FIGURE_EGYPTIAN_WARSHIP = 100,   // unused lang slot; ≠ WARSHIP(78), ≠ ENEMY_EGYPTIAN_WAR_SHIP(141)
     FIGURE_EGYPTIAN_TRANSPORT = 101, // unused lang slot; ≠ TRANSPORT_SHIP(77), ≠ enemy transport 51
     FIGURE_ASP = 102,
     FIGURE_LION = 103,

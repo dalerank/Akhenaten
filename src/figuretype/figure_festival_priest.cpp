@@ -1,4 +1,4 @@
-#include "figuretype/festival_guy.h"
+#include "figuretype/figure_festival_priest.h"
 
 #include "core/random.h"
 #include "city/city.h"
@@ -6,9 +6,9 @@
 #include "js/js_game.h"
 #include "game/game.h"
 
-REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_festival_guy);
+REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_festival_priest);
 
-void figure_festival_guy::update_animation() {
+void figure_festival_priest::update_animation() {
     building* temple = home();
     if (!temple->is_valid()) {
         return;
@@ -59,33 +59,33 @@ void figure_festival_guy::update_animation() {
     image_set_animation(animkey);
 }
 
-void figure_festival_guy::figure_action() {
+void figure_festival_priest::figure_action() {
     switch (action_state()) {
-    case ACTION_10_FESTIVAL_GUY_CREATED:
+    case ACTION_10_FESTIVAL_PRIEST_CREATED:
         base.animctx.frame = 0;
         if (--base.wait_ticks <= 0) {
-            advance_action(ACTION_11_FESTIVAL_GUY_GOTO_SQUARE);
+            advance_action(ACTION_11_FESTIVAL_PRIEST_GOTO_SQUARE);
         }
         break;
 
-    case ACTION_11_FESTIVAL_GUY_GOTO_SQUARE:
-        if (do_goto(base.destination_tile, TERRAIN_USAGE_ANY, ACTION_12_FESTIVAL_GUY_DANCE)) {
+    case ACTION_11_FESTIVAL_PRIEST_GOTO_SQUARE:
+        if (do_goto(base.destination_tile, TERRAIN_USAGE_ANY, ACTION_12_FESTIVAL_PRIEST_DANCE)) {
             base.wait_ticks = random_hash(game.simtime.absolute_tick(), id(), RANDOM_SALT_FESTIVAL_DANCE) % 20;
         }
         break;
 
-    case ACTION_12_FESTIVAL_GUY_DANCE:
+    case ACTION_12_FESTIVAL_PRIEST_DANCE:
         if (--base.wait_ticks <= 0) {
-            advance_action(ACTION_13_FESTIVAL_GUY_GOTO_HOME);
+            advance_action(ACTION_13_FESTIVAL_PRIEST_GOTO_HOME);
         }
         break;
 
-    case ACTION_13_FESTIVAL_GUY_GOTO_HOME:
+    case ACTION_13_FESTIVAL_PRIEST_GOTO_HOME:
         do_gotobuilding(home());
         break;
     }
 }
 
-void figure_festival_guy::before_poof() {
+void figure_festival_priest::before_poof() {
     ; //
 }

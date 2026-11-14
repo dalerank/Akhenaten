@@ -246,7 +246,7 @@ unknown | figure_egyptian_transport_ship:figure_static_params.max_amount
 unknown | figure_egyptian_war_ship:figure_static_params.max_amount
 unknown | figure_enemy_transport_generic:figure_static_params.max_amount
 unknown | figure_enemy_warship_generic:figure_static_params.max_amount
-unknown | figure_festival_guy:figure_static_params.max_amount
+unknown | figure_festival_priest:figure_static_params.max_amount
 unknown | figure_funeral_walker:figure_static_params.max_amount
 unknown | figure_hittite_archer:figure_static_params.max_amount
 unknown | figure_hittite_chariot:figure_static_params.max_amount

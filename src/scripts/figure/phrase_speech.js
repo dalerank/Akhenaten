@@ -1,7 +1,7 @@
 log_info("akhenaten: figure phrase speech started")
 
 // OG figure_speech_sounds (figure_phrase.c, figure_speech_sounds.json): the speech id of each figure type's
-// phrases. -3: by the god of the priest's temple (230 + god), -4: by the walker the festival guy stands for.
+// phrases. -3: by the god of the priest's temple (230 + god), -4: by the walker the festival priest stands for.
 // OG has one hunter type whose speech follows the climate's prey; the remake splits it by prey.
 figure_speech_sounds = [
     { type: FIGURE_IMMIGRANT, speech: 202 }
@@ -51,7 +51,7 @@ figure_speech_sounds = [
     { type: FIGURE_CONSTABLE, speech: 244 }
     { type: FIGURE_MAGISTRATE, speech: 246 }
     { type: FIGURE_REED_GATHERER, speech: 215 }
-    { type: FIGURE_FESTIVAL_GUY, speech: -4 }
+    { type: FIGURE_FESTIVAL_PRIEST, speech: -4 }
     { type: FIGURE_SLED_PULLER, speech: 212 }
     { type: FIGURE_PLAGUED_CITIZEN, speech: 206 }
     { type: FIGURE_ZOOKEEPER, speech: 309 }

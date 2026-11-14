@@ -102,7 +102,7 @@ namespace {
         return f.home_building_id ? building_get(f.home_building_id) : nullptr;
     }
 
-    // OG keeps the walker a festival guy stands for in resource_id; the remake knows it by the home building.
+    // OG keeps the walker a festival priest stands for in resource_id; the remake knows it by the home building.
     e_figure_type festival_walker(const figure& f) {
         const building* home = home_of(f);
         if (!home) {
@@ -124,7 +124,7 @@ namespace {
     }
 
     e_figure_type speech_type(const figure& f) {
-        return (f.type == FIGURE_FESTIVAL_GUY) ? festival_walker(f) : f.type;
+        return (f.type == FIGURE_FESTIVAL_PRIEST) ? festival_walker(f) : f.type;
     }
 
     const svector<xstring, 20>* speech_files(int speech) {
@@ -636,7 +636,7 @@ namespace {
             }
             break;
 
-        case FIGURE_FESTIVAL_GUY:
+        case FIGURE_FESTIVAL_PRIEST:
             st.say(ADVISOR_RELIGION, 10);
             break;
 

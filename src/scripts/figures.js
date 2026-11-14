@@ -4,7 +4,7 @@ import figure.prototype
 import figure.figure_params
 import figure.phrase
 import figure.phrase_speech
-import figure.festival_guy
+import figure.festival_priest
 import figure.ostrich_hunter
 import figure.antelope_hunter
 import figure.birds_hunter
@@ -76,7 +76,7 @@ import figure.water_carrier
 import figure.worker
 import figure.zookeeper
 
-figure_festival_guy {
+figure_festival_priest {
   trips : 10
   overlay : OVERLAY_RELIGION
 	animations {
@@ -88,7 +88,7 @@ figure_festival_guy {
 		priest_ptah_walk {pack:PACK_SPR_MAIN, id:187, max_frames:12}
 		priest_seth_walk {pack:PACK_SPR_MAIN, id:193, max_frames:12}
 		priest_bast_walk {pack:PACK_SPR_MAIN, id:208, max_frames:12}
-		big_image { pack:PACK_UNLOADED, id:25, offset:FIGURE_FESTIVAL_GUY }
+		big_image { pack:PACK_UNLOADED, id:25, offset:FIGURE_FESTIVAL_PRIEST }
 	}
 
 	sounds {
