@@ -45,7 +45,7 @@ namespace {
 
     // OG TERRAIN_BLOCKS_MONUMENT; 0x20000000 is OG TERRAIN_ROCK_NEAR_MONUMENT (the Valley cliffs).
     constexpr uint32_t k_blocks_monument = 0xFEFFD76F;
-    constexpr uint32_t k_rock_near_monument = TERRAIN_UNK_08;
+    constexpr uint32_t k_rock_near_monument = TERRAIN_ROCK_NEAR_MONUMENT;
     constexpr uint32_t k_tomb_rock = TERRAIN_ROCK | k_rock_near_monument;
 
     constexpr int k_spots_per_table = 3;

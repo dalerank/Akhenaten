@@ -4,6 +4,7 @@
 #include "building/building_statue.h"
 #include "building/monument_caesareum.h"
 #include "building/monument_obelisk.h"
+#include "building/monument_abu_simbel.h"
 #include "building/monument_sphinx.h"
 #include "building/monument_sun_temple.h"
 #include "building/monument_alexandria_library.h"
@@ -244,6 +245,16 @@ void figure_carpenter::figure_action() {
             base.set_flag(e_figure_flag_invisible);
             if (sphinx->work_tick(base)) {
                 base.set_flag(e_figure_flag_invisible, false);
+                advance_action(ACTION_3_CARPENTER_RETURN);
+            }
+            break;
+        }
+
+        if (auto* abu = worked->dcast_abu_simbel()) {
+            base.set_flag(e_figure_flag_invisible);
+            if (abu->work_tick(base)) {
+                base.set_flag(e_figure_flag_invisible, false);
+                abu->remove_worker(id());
                 advance_action(ACTION_3_CARPENTER_RETURN);
             }
             break;

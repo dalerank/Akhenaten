@@ -702,7 +702,7 @@ static int __test_royal_tomb_paint_site(int type, int x, int y) {
         for (int dy = 0; dy < p.size; ++dy) {
             for (int dx = 0; dx < p.size; ++dx) {
                 tile2i t = origin.shifted(p.dx + dx, p.dy + dy);
-                map_terrain_set(t.grid_offset(), i == l.last_part ? 0 : (TERRAIN_ROCK | TERRAIN_UNK_08));
+                map_terrain_set(t.grid_offset(), i == l.last_part ? 0 : (TERRAIN_ROCK | TERRAIN_ROCK_NEAR_MONUMENT));
             }
         }
     }
@@ -710,7 +710,7 @@ static int __test_royal_tomb_paint_site(int type, int x, int y) {
     tile2i entrance = origin.shifted(e.dx, e.dy);
     for (vec2i n : {vec2i{0, -1}, vec2i{0, 1}, vec2i{-1, 0}, vec2i{1, 0}}) {
         tile2i t = entrance.shifted(n.x, n.y);
-        if (!map_terrain_is(t, TERRAIN_UNK_08)) {
+        if (!map_terrain_is(t, TERRAIN_ROCK_NEAR_MONUMENT)) {
             map_terrain_set(t.grid_offset(), 0);
         }
     }

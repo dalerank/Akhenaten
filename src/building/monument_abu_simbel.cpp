@@ -1,13 +1,12 @@
 #include "monument_abu_simbel.h"
 
 #include "building/monuments.h"
-#include "building/rotation.h"
 #include "city/city.h"
 #include "city/city_message.h"
-#include "city/city_warnings.h"
 #include "construction/build_planner.h"
-#include "core/direction.h"
 #include "figure/figure.h"
+#include "figuretype/figure_carpenter.h"
+#include "figuretype/figure_stonemason.h"
 #include "game/undo.h"
 #include "graphics/color.h"
 #include "graphics/graphics.h"
@@ -16,11 +15,7 @@
 #include "graphics/view/view.h"
 #include "grid/building.h"
 #include "grid/building_tiles.h"
-#include "grid/figure.h"
 #include "grid/grid.h"
-#include "grid/image.h"
-#include "grid/property.h"
-#include "grid/road_access.h"
 #include "grid/terrain.h"
 #include "io/io_buffer.h"
 #include "js/js_game.h"
@@ -28,679 +23,433 @@
 #include <algorithm>
 
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_abu_simbel);
+BUILDING_RUNTIME_DATA_IMPL(building_abu_simbel)
 
-static monument g_monument_abu_simbel{BUILDING_ABU_SIMBEL};
+namespace {
+    enum {
+        // OG map_grid_is_inside_size(..., 3) in monument_object_can_place.
+        MAP_EDGE_MARGIN = 3,
+    };
 
-static constexpr uint32_t k_cliff_terrain = TERRAIN_ELEVATION | TERRAIN_ACCESS_RAMP;
+    constexpr uint32_t k_monument_rock = TERRAIN_ROCK | TERRAIN_ROCK_NEAR_MONUMENT;
+    // OG TERRAIN_BLOCKS_MONUMENT (0xFEFFD76F) without the planner bit Akhenaten keeps in OG's TERRAIN_MONUMENT.
+    constexpr uint32_t k_blocks_monument = 0xFEFFD76Fu & ~(uint32_t)TERRAIN_PLANER_FUTURE;
 
-struct abu_part_def {
-    building_abu_simbel::part_variant variant;
-    int ox; // NW in rot0 footprint
-    int oy;
-    int size;
-    bool needs_cliff;
-};
+    struct monument_abu_simbel_cfg : public monument {
+        monument_abu_simbel_cfg() : monument{BUILDING_ABU_SIMBEL} {
+            for (uint8_t i = 0; i < building_abu_simbel::STAGE_COMPLETE; ++i) {
+                phases.push_back({i, monument_phase_resource{ARCHITECTS, 1}});
+            }
+        }
+    } g_monument_abu_simbel;
 
-// Rot0 / Heaven 9×21: façade along +Y; near-cliffs at X3 form the side-wall lips.
-// Center column Y9–11: midcut_back (X0) + midcut_depth (X3) + midcut_front (X6).
-static const abu_part_def k_parts[building_abu_simbel::PART_COUNT] = {
-    {building_abu_simbel::PART_CLIFF_L_FAR, 0, 0, 3, true},
-    {building_abu_simbel::PART_CLIFF_L_NEAR, 3, 0, 3, true},
-    {building_abu_simbel::PART_STATUE_L, 0, 3, 6, true},
-    {building_abu_simbel::PART_MIDCUT_BACK, 0, 9, 3, true},
-    {building_abu_simbel::PART_MIDCUT_DEPTH, 3, 9, 3, true},
-    {building_abu_simbel::PART_MIDCUT_FRONT, 6, 9, 3, false},
-    {building_abu_simbel::PART_STATUE_R, 0, 12, 6, true},
-    {building_abu_simbel::PART_CLIFF_R_FAR, 0, 18, 3, true},
-    {building_abu_simbel::PART_CLIFF_R_NEAR, 3, 18, 3, true},
-};
+    const building_abu_simbel::base_params& abu_params() {
+        return (const building_abu_simbel::base_params&)building_abu_simbel::current_params();
+    }
 
-void building_abu_simbel::static_params::rebuild_construction() {
-    monument &m = g_monument_abu_simbel;
-    m.btype = BUILDING_ABU_SIMBEL;
-    m.phases.clear();
+    abu_simbel_part_def part_def(int part) {
+        const auto& parts = abu_params().parts;
+        return (part >= 0 && part < (int)parts.size()) ? parts[part] : abu_simbel_part_def{};
+    }
 
-    const int stages = art_stages > 0 ? art_stages : 10;
-    for (int i = 0; i < stages; ++i) {
-        const uint16_t timber = (i < (int)timber_loads.size()) ? timber_loads[i] : 0;
-        if (timber > 0) {
-            m.phases.push_back({(uint8_t)i, monument_phase_resource{ARCHITECTS, 1}, {RESOURCE_TIMBER, timber}});
-        } else {
-            m.phases.push_back({(uint8_t)i, monument_phase_resource{ARCHITECTS, 1}});
+    const abu_simbel_stage_def* stage_def(int stage) {
+        const auto& stages = abu_params().stages;
+        return (stage >= 0 && stage < (int)stages.size()) ? &stages[stage] : nullptr;
+    }
+
+    uint16_t stage_work(int stage) {
+        const abu_simbel_stage_def* def = stage_def(stage);
+        return def ? def->work : 0;
+    }
+
+    // Replays the stage table: the art stage a part has reached once `stage` stages are done.
+    int part_art_stage(int part, int stage) {
+        int art = 0;
+        const auto& stages = abu_params().stages;
+        for (int i = 0; i < stage && i < (int)stages.size(); ++i) {
+            if (stages[i].built_part == 0 && stages[i].part == part) {
+                art = stages[i].part_stage;
+            }
+        }
+        return art;
+    }
+
+    int camera_view() {
+        return (g_camera.orientation / 2) & 3;
+    }
+
+    bool tile_fits(tile2i t, int kind) {
+        const auto* map = scenario_map_data();
+        if (t.x() < MAP_EDGE_MARGIN || t.y() < MAP_EDGE_MARGIN || t.x() >= map->width - MAP_EDGE_MARGIN
+            || t.y() >= map->height - MAP_EDGE_MARGIN) {
+            return false;
+        }
+        const uint32_t terrain = (uint32_t)map_terrain_get(t) & k_blocks_monument;
+        if (kind == building_abu_simbel::KIND_ON_OPEN_GROUND) {
+            return terrain == 0;
+        }
+        return terrain == k_monument_rock;
+    }
+
+    bool tile_near_edge(tile2i t) {
+        const auto* map = scenario_map_data();
+        return t.x() < MAP_EDGE_MARGIN || t.y() < MAP_EDGE_MARGIN || t.x() >= map->width - MAP_EDGE_MARGIN
+               || t.y() >= map->height - MAP_EDGE_MARGIN;
+    }
+
+    template <typename F>
+    void for_each_site_tile(tile2i origin, F f) {
+        const auto& parts = abu_params().parts;
+        for (int p = 0; p < (int)parts.size(); ++p) {
+            tile2i po = origin.shifted(parts[p].dx, parts[p].dy);
+            for (int dy = 0; dy < parts[p].size; ++dy) {
+                for (int dx = 0; dx < parts[p].size; ++dx) {
+                    f(po.shifted(dx, dy), (int)parts[p].kind);
+                }
+            }
         }
     }
-    m.phases.push_back({(uint8_t)stages, monument_phase_resource{RESOURCE_NONE, 0}});
-}
+
+    void draw_placement(painter& ctx, tile2i origin) {
+        for_each_site_tile(origin, [&](tile2i t, int kind) {
+            if (tile_near_edge(t)) {
+                return;
+            }
+            const color mask = tile_fits(t, kind) ? COLOR_MASK_GREEN_30 : COLOR_MASK_RED_30;
+            build_planner::draw_flat_tile(ctx, g_camera.lookup_tile_to_pixel(t), mask);
+        });
+    }
+
+    bool is_working_action(const figure& f) {
+        if (f.type == FIGURE_STONEMASON) {
+            return f.action_state == ACTION_9_MASON_WORK_OBELISK;
+        }
+        if (f.type == FIGURE_CARPENTER) {
+            return f.action_state == ACTION_2_CARPENTER_WORK;
+        }
+        return false;
+    }
+
+    bool is_heading_or_working(const figure& f) {
+        if (f.type == FIGURE_STONEMASON) {
+            return f.action_state == ACTION_0_MASON_CREATED || f.action_state == ACTION_1_MASON_GOING
+                   || f.action_state == ACTION_9_MASON_WORK_OBELISK;
+        }
+        if (f.type == FIGURE_CARPENTER) {
+            return f.action_state == ACTION_1_CARPENTER_GO_TO_SITE || f.action_state == ACTION_2_CARPENTER_WORK;
+        }
+        return false;
+    }
+
+    figure* abu_simbel_figure(uint16_t fid) {
+        figure* f = fid ? figure_get(fid) : nullptr;
+        if (!f || !f->is_alive()) {
+            return nullptr;
+        }
+        building* dest = f->destination();
+        return (dest && dest->type == BUILDING_ABU_SIMBEL) ? f : nullptr;
+    }
+
+    // OG monument_spot_animate: a spot lets go of its figure once the figure stops working.
+    bool spot_still_held(uint16_t fid) {
+        figure* f = abu_simbel_figure(fid);
+        return f && is_working_action(*f);
+    }
+} // namespace
 
 void building_abu_simbel::static_params::archive_load(archive /*arch*/) {
-    rebuild_construction();
 }
 
-const monument &building_abu_simbel::config() const {
+const monument& building_abu_simbel::config() const {
     return g_monument_abu_simbel;
 }
 
-static vec2i abu_oriented_wh(vec2i size, int rotation) {
-    if (size.x <= 0 || size.y <= 0) {
-        size = {9, 21};
+building_abu_simbel* building_abu_simbel::main_abu_simbel() {
+    building_impl* m = main();
+    auto* a = m ? m->dcast_abu_simbel() : nullptr;
+    return a ? a : this;
+}
+
+const building_abu_simbel* building_abu_simbel::main_abu_simbel() const {
+    return const_cast<building_abu_simbel*>(this)->main_abu_simbel();
+}
+
+int building_abu_simbel::part_kind() const {
+    return part_def(part_index()).kind;
+}
+
+int building_abu_simbel::stage() const {
+    const int p = main_abu_simbel()->runtime_data().phase;
+    if (p == MONUMENT_FINISHED || p >= STAGE_COMPLETE) {
+        return STAGE_COMPLETE;
     }
-    rotation %= 4;
-    if (rotation == 1 || rotation == 3) {
-        return {size.y, size.x};
-    }
-    return size;
+    return std::max(p, 0);
 }
 
-static vec2i abu_rotate_part_nw(int ox, int oy, int part_size, int rotation, int w, int h) {
-    rotation %= 4;
-    if (rotation < 0) {
-        rotation += 4;
-    }
-    switch (rotation) {
-    case 1:
-        return {h - oy - part_size, ox};
-    case 2:
-        return {w - ox - part_size, h - oy - part_size};
-    case 3:
-        return {oy, w - ox - part_size};
-    default:
-        return {ox, oy};
-    }
+int building_abu_simbel::progress_percent() const {
+    const int s = stage();
+    return s >= STAGE_COMPLETE ? 100 : s * 100 / STAGE_COMPLETE;
 }
 
-static vec2i abu_footprint(int rotation) {
-    const auto &bp = building_abu_simbel::current_params();
-    vec2i init = bp.init_tiles;
-    if (init.x <= 0 || init.y <= 0) {
-        init = {9, 21};
-    }
-    return abu_oriented_wh(init, rotation);
+bool building_abu_simbel::site_fits(tile2i origin) {
+    bool fits = !abu_params().parts.empty();
+    for_each_site_tile(origin, [&](tile2i t, int kind) { fits = fits && tile_fits(t, kind); });
+    return fits;
 }
 
-static tile2i abu_part_tile(tile2i origin, const abu_part_def &def, int rotation) {
-    const auto &bp = building_abu_simbel::current_params();
-    vec2i init = bp.init_tiles.x > 0 ? bp.init_tiles : vec2i{9, 21};
-    const vec2i nw = abu_rotate_part_nw(def.ox, def.oy, def.size, rotation, init.x, init.y);
-    return origin.shifted(nw.x, nw.y);
+bool building_abu_simbel::spot_free() const {
+    const auto& d = main_abu_simbel()->runtime_data();
+    return stage() < STAGE_COMPLETE && d.spot_work > 0 && !spot_still_held(d.spot_figure);
 }
 
-static bool abu_tile_is_cliff(tile2i t) {
-    return map_terrain_is(t, k_cliff_terrain);
+bool building_abu_simbel::has_free_spot(e_figure_type type) const {
+    const abu_simbel_stage_def* def = stage_def(stage());
+    return def && def->figure == type && spot_free();
 }
 
-static bool abu_area_ok(tile2i origin, const abu_part_def &def, int rotation, bool *missing_cliff, bool *bad_clear) {
-    tile2i t0 = abu_part_tile(origin, def, rotation);
-    for (int dy = 0; dy < def.size; dy++) {
-        for (int dx = 0; dx < def.size; dx++) {
-            tile2i t = t0.shifted(dx, dy);
-            if (!map_grid_is_inside(t, 1)) {
-                if (def.needs_cliff) {
-                    *missing_cliff = true;
-                } else {
-                    *bad_clear = true;
-                }
-                continue;
-            }
-            if (def.needs_cliff) {
-                if (!abu_tile_is_cliff(t) || map_terrain_is(t, TERRAIN_NOT_CLEAR & ~k_cliff_terrain)) {
-                    *missing_cliff = true;
-                }
-            } else if (map_terrain_is(t, TERRAIN_NOT_CLEAR)) {
-                *bad_clear = true;
-            }
-            if (map_has_figure_at(t)) {
-                if (def.needs_cliff) {
-                    *missing_cliff = true;
-                } else {
-                    *bad_clear = true;
-                }
-            }
-        }
-    }
-    return !(*missing_cliff) && !(*bad_clear);
-}
-
-static int abu_validate_site(tile2i origin, int rotation, xstring *warning_out) {
-    bool missing_cliff = false;
-    bool bad_clear = false;
-    for (const auto &def : k_parts) {
-        abu_area_ok(origin, def, rotation, &missing_cliff, &bad_clear);
-    }
-    if (missing_cliff) {
-        if (warning_out) {
-            *warning_out = "#must_be_over_cliffs";
-        }
-        return CAN_NOT_PLACE;
-    }
-    if (bad_clear) {
-        if (warning_out) {
-            *warning_out = "#entrance_on_clear_land";
-        }
-        return CAN_NOT_PLACE;
-    }
-    return CAN_PLACE;
-}
-
-static const abu_part_def *abu_def_for(int variant) {
-    for (const auto &def : k_parts) {
-        if ((int)def.variant == variant) {
-            return &def;
-        }
-    }
-    return &k_parts[0];
-}
-
-static bool abu_local_in_part(int dx, int dy, const abu_part_def &def, int rotation, int w0, int h0) {
-    const vec2i nw = abu_rotate_part_nw(def.ox, def.oy, def.size, rotation, w0, h0);
-    return dx >= nw.x && dy >= nw.y && dx < nw.x + def.size && dy < nw.y + def.size;
-}
-
-static const abu_part_def *abu_part_at_local(int dx, int dy, int rotation) {
-    const auto &bp = building_abu_simbel::current_params();
-    const vec2i init = bp.init_tiles.x > 0 ? bp.init_tiles : vec2i{9, 21};
-    for (const auto &def : k_parts) {
-        if (abu_local_in_part(dx, dy, def, rotation, init.x, init.y)) {
-            return &def;
-        }
-    }
-    return nullptr;
-}
-
-bool building_abu_simbel::has_abu_simbel_on_map() {
-    for (building *b = building_begin(); b != building_end(); ++b) {
-        if (b && b->is_valid() && b->type == BUILDING_ABU_SIMBEL) {
-            return true;
-        }
-    }
-    return false;
-}
-
-vec2i building_abu_simbel::footprint_size() const {
-    return abu_footprint(base.orientation % 4);
-}
-
-int building_abu_simbel::part_size() const {
-    return abu_def_for(runtime_data().variant)->size;
-}
-
-bool building_abu_simbel::part_needs_cliff() const {
-    return abu_def_for(runtime_data().variant)->needs_cliff;
-}
-
-int building_abu_simbel::art_stage() const {
-    const auto &bp = current_params();
-    const int max_stage = bp.art_stages > 0 ? bp.art_stages : 10;
-    const int p = runtime_data().phase;
-    if (p == MONUMENT_FINISHED || p >= max_stage) {
-        return max_stage;
-    }
-    if (p < 1) {
-        return 1;
-    }
-    return std::min(p + 1, max_stage);
-}
-
-int building_abu_simbel::art_orient_pair() const {
-    return (g_camera.orientation / 2) % 2;
-}
-
-bool building_abu_simbel::needs_resources() const {
-    if (is_finished()) {
-        return false;
-    }
-    auto &d = runtime_data();
-    for (e_resource r = RESOURCES_MIN; r < RESOURCES_MAX; ++r) {
-        if (needs_resource(r) <= 0) {
-            continue;
-        }
-        if (d.resources_pct[r] < 100) {
-            return true;
-        }
-    }
-    return false;
-}
-
-bool building_abu_simbel::need_carpenter_phase() const {
-    return !is_finished() && needs_resource(RESOURCE_TIMBER) > 0;
-}
-
-bool building_abu_simbel::has_stonemason_worker() const {
-    for (auto wid : runtime_data().workers) {
-        figure *f = wid > 0 ? figure_get(wid) : nullptr;
-        if (f && f->is_alive() && f->type == FIGURE_STONEMASON) {
-            return true;
-        }
-    }
-    return false;
-}
-
-bool building_abu_simbel::has_carpenter_worker() const {
-    for (auto wid : runtime_data().workers) {
-        figure *f = wid > 0 ? figure_get(wid) : nullptr;
-        if (f && f->is_alive() && f->type == FIGURE_CARPENTER) {
-            return true;
-        }
-    }
-    return false;
+// OG abu_simbel_part_has_active_worker: one worker at a time, from dispatch until he leaves the site.
+bool building_abu_simbel::has_active_worker() const {
+    figure* f = abu_simbel_figure(main_abu_simbel()->runtime_data().workers[0]);
+    return f && is_heading_or_working(*f);
 }
 
 bool building_abu_simbel::need_stonemason() {
-    if (!is_main() || is_finished() || need_carpenter_phase()) {
-        return false;
-    }
-    if (!need_workers()) {
-        return false;
-    }
-    return !has_stonemason_worker();
+    return is_main() && !is_finished() && !has_active_worker() && has_free_spot(FIGURE_STONEMASON);
+}
+
+bool building_abu_simbel::need_carpenter() {
+    return is_main() && !is_finished() && !has_active_worker() && has_free_spot(FIGURE_CARPENTER);
 }
 
 bool building_abu_simbel::need_workers() const {
-    if (!is_main() || is_finished()) {
-        return false;
-    }
-    for (auto wid : runtime_data().workers) {
-        if (!wid) {
-            return true;
-        }
-        figure *f = figure_get(wid);
-        if (!f || !f->is_alive()) {
-            return true;
-        }
-    }
+    return false;
+}
+
+bool building_abu_simbel::needs_resources() const {
     return false;
 }
 
 void building_abu_simbel::add_workers(figure_id fid) {
-    if (!is_main()) {
-        return;
-    }
-    auto &d = runtime_data();
-    for (auto &wid : d.workers) {
-        if (wid == 0) {
-            wid = fid;
-            return;
-        }
-        figure *f = figure_get(wid);
-        if (!f || !f->is_alive()) {
-            wid = fid;
-            return;
-        }
-    }
+    main_abu_simbel()->runtime_data().workers[0] = fid;
 }
 
 void building_abu_simbel::remove_worker(figure_id fid) {
-    auto &d = runtime_data();
-    for (auto &wid : d.workers) {
-        if (wid == fid) {
-            wid = 0;
-            return;
-        }
+    auto& workers = main_abu_simbel()->runtime_data().workers;
+    if (workers[0] == fid) {
+        workers[0] = 0;
     }
 }
 
-int building_abu_simbel::building_image_get() const {
-    const auto &params = current_params();
-    const int part = runtime_data().variant;
-    const int stage = art_stage();
-    const int cam = art_orient_pair();
+// OG abu_simbel_figure_work_tick_spot: one work per tick at the single spot of the current stage.
+bool building_abu_simbel::work_tick(figure& f) {
+    building_abu_simbel* m = main_abu_simbel();
+    if (m != this) {
+        return m->work_tick(f);
+    }
+    if (is_finished()) {
+        return true;
+    }
 
-    auto first = [&](const char *key) { return params.first_img(key); };
+    auto& d = runtime_data();
+    const bool attached = d.spot_figure == f.id && d.spot_work > 0;
+    if (!attached) {
+        if (!has_free_spot(f.type)) {
+            return true;
+        }
+        d.spot_figure = f.id;
+    }
 
-    switch (part) {
-    case PART_CLIFF_L_FAR:
-        return first("cliff_l_far");
-    case PART_CLIFF_L_NEAR:
-        return first("cliff_l_near");
-    case PART_CLIFF_R_FAR:
-        return first("cliff_r_far");
-    case PART_CLIFF_R_NEAR:
-        return first("cliff_r_near");
-    case PART_MIDCUT_BACK:
-    case PART_MIDCUT_DEPTH: {
-        const int base_img = first("midcut_back");
-        if (base_img <= 0) {
-            return 0;
-        }
-        const int mid_progress = std::min(std::max(stage - 1, 0), 6);
-        return base_img + mid_progress * 2 + cam;
-    }
-    case PART_MIDCUT_FRONT: {
-        const int base_img = first("midcut_front");
-        if (base_img <= 0) {
-            return 0;
-        }
-        const int mid_progress = std::min(std::max(stage - 1, 0), 6);
-        return base_img + mid_progress * 2 + cam;
-    }
-    case PART_STATUE_L:
-    case PART_STATUE_R: {
-        bstring32 key;
-        if (is_finished()) {
-            key.printf("finish%d", cam + 1);
-        } else {
-            key.printf("s%c%d", 'a' + (stage - 1), cam + 1);
-        }
-        int img = first(key.c_str());
-        if (img > 0) {
-            return img;
-        }
-        img = first("preview");
-        return img > 0 ? img : first("sa1");
-    }
-    default:
-        return first("preview");
-    }
-}
-
-void building_abu_simbel::refresh_part_tiles() {
-    const int size = part_size();
-    const int img = building_image_get();
-    if (size > 0 && img > 0) {
-        map_building_tiles_add(id(), tile(), size, img, TERRAIN_BUILDING);
-    }
-}
-
-bool building_abu_simbel::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {
-    // Height pass uses the camera draw-tile, not necessarily NW.
-    if (!map_property_is_draw_tile(tile.grid_offset())) {
+    d.spot_work--;
+    if (d.spot_work > 0) {
         return false;
     }
-
-    const int part = runtime_data().variant;
-    const bool is_statue = (part == PART_STATUE_L || part == PART_STATUE_R);
-    const bool is_front = (part == PART_MIDCUT_FRONT);
-    if (!is_statue && !is_front) {
-        return false;
-    }
-
-    const auto &params = current_params();
-    const int stage = art_stage();
-
-    auto draw_layer = [&](int image_id, vec2i pixel) {
-        if (image_id <= 0) {
-            return;
-        }
-        const image_t *img = image_get(image_id);
-        if (!img) {
-            return;
-        }
-        const auto rtype = (img->isometric_top_height > 0) ? render_command_t::ert_drawtile_full
-                                                           : render_command_t::ert_drawtile;
-        auto &command = ImageDraw::create_command(ctx, rtype);
-        command.image_id = image_id;
-        command.pixel = pixel;
-        command.mask = color_mask;
-    };
-
-    if (is_statue && !is_finished() && stage >= 2 && stage <= 8) {
-        const char *scaffold_keys[] = {"scaffold_a", "scaffold_b", "scaffold_c", "scaffold_d"};
-        const int n_scaf = (stage <= 4) ? 2 : 4;
-        for (int i = 0; i < n_scaf; ++i) {
-            const int scaf = params.first_img(scaffold_keys[i]);
-            if (scaf > 0) {
-                draw_layer(scaf, point + vec2i{8 + i * 12, -48});
-            }
-        }
-    }
-
-    if (is_front) {
-        const int stairs_base = params.first_img("stairs");
-        if (stairs_base > 0) {
-            const int stairs_off = is_finished() ? 5 : std::min(std::max(stage - 1, 0), 5);
-            draw_layer(stairs_base + stairs_off, point);
-        }
-    }
-
+    advance_stage();
     return true;
 }
 
-void building_abu_simbel::preview::setup_preview_graphics(build_planner &planer) const {
-    const int rot = building_rotation_global_rotation() % 4;
-    const vec2i ft = abu_footprint(rot);
-    planer.init_tiles(ft.x, ft.y);
+// OG abu_simbel_advance_stage. The scaffold flags it toggles are never drawn by the original.
+void building_abu_simbel::advance_stage() {
+    const int s = stage();
+    if (s >= STAGE_COMPLETE) {
+        return;
+    }
+    set_stage(s + 1);
+    if (is_finished()) {
+        messages::popup("abu_simbel_congratulations", 0, tile().grid_offset());
+    }
 }
 
-uint32_t building_abu_simbel::preview::ghost_ignore_terrain(build_planner &p, tile2i tile) const {
-    const int rot = building_rotation_global_rotation() % 4;
-    const vec2i ft = abu_footprint(rot);
-    const int dx = tile.x() - p.end.x();
-    const int dy = tile.y() - p.end.y();
-    if (dx < 0 || dy < 0 || dx >= ft.x || dy >= ft.y) {
-        return 0;
+void building_abu_simbel::set_stage(int target) {
+    building_abu_simbel* m = main_abu_simbel();
+    if (m != this) {
+        m->set_stage(target);
+        return;
     }
-    const abu_part_def *def = abu_part_at_local(dx, dy, rot);
-    if (!def) {
-        // Niche gap / unused AABB pads — ignore all so they do not block place.
-        return TERRAIN_NOT_CLEAR;
+    target = std::clamp(target, 0, (int)STAGE_COMPLETE);
+    for (building* p = &base; p; p = p->has_next() ? p->next() : nullptr) {
+        if (auto* part = p->dcast_abu_simbel()) {
+            part->set_phase(target);
+        }
     }
-    if (def->needs_cliff) {
-        return k_cliff_terrain;
+    auto& d = runtime_data();
+    d.spot_work = stage_work(target);
+    d.spot_figure = 0;
+    refresh_part_images();
+}
+
+void building_abu_simbel::refresh_part_images() {
+    for (building* p = &main_abu_simbel()->base; p; p = p->has_next() ? p->next() : nullptr) {
+        if (auto* part = p->dcast_abu_simbel()) {
+            map_building_tiles_add(p->id, p->tile, p->size, part->building_image_get(), TERRAIN_BUILDING);
+        }
+    }
+}
+
+// OG abu_simbel_part_image: the art of a record by its kind and the camera view (part_art in abu_simbel.js).
+int building_abu_simbel::building_image_get() const {
+    const int view = camera_view();
+    const int kind = part_kind();
+    for (const auto& a : abu_params().part_art) {
+        if (a.kind != kind || a.view != view) {
+            continue;
+        }
+        const int first = current_params().first_img(a.image);
+        if (first <= 0) {
+            return 0;
+        }
+        return first + a.offset + (a.staged ? part_art_stage(part_index(), stage()) * 2 : 0);
     }
     return 0;
 }
 
-bool building_abu_simbel::preview::ghost_allow_tile(build_planner &p, tile2i tile) const {
-    const int rot = building_rotation_global_rotation() % 4;
-    const vec2i ft = abu_footprint(rot);
-    const int dx = tile.x() - p.end.x();
-    const int dy = tile.y() - p.end.y();
-    if (dx >= 0 && dy >= 0 && dx < ft.x && dy < ft.y && !abu_part_at_local(dx, dy, rot)) {
-        return true;
-    }
-    return building_planer_renderer::ghost_allow_tile(p, tile);
+void building_abu_simbel::preview::setup_preview_graphics(build_planner& planer) const {
+    planer.init_tiles(1, 1);
 }
 
-int building_abu_simbel::preview::construction_place(build_planner &planer, tile2i /*tile*/, tile2i end, int orientation,
-                                                     int variant) const {
-    // Default construction_place shifts by building_size (3); use full footprint AABB.
-    const int rot = building_rotation_global_rotation() % 4;
-    const vec2i ft = abu_footprint(rot);
-    switch (g_camera.orientation) {
-    case DIR_2_BOTTOM_RIGHT:
-        end = end.shifted(-ft.x + 1, 0);
-        break;
-    case DIR_4_BOTTOM_LEFT:
-        end = end.shifted(-ft.x + 1, -ft.y + 1);
-        break;
-    case DIR_6_TOP_LEFT:
-        end = end.shifted(0, -ft.y + 1);
-        break;
-    default:
-        break;
-    }
+uint32_t building_abu_simbel::preview::ghost_ignore_terrain(build_planner& /*p*/, tile2i /*tile*/) const {
+    return TERRAIN_ALL;
+}
 
-    planer.last_created_building = nullptr;
-    building *b = building_create(planer.build_type, end, orientation);
-    game_undo_add_building(b);
-    if (!b || b->id <= 0) {
-        return 0;
-    }
-
-    add_building(b, orientation, variant);
-    // Tear-down in on_place_update_tiles leaves DELETED — treat as failed place.
-    if (b->state == BUILDING_STATE_DELETED_BY_GAME) {
-        planer.last_created_building = nullptr;
-        return 0;
-    }
-
-    planer.last_created_building = b;
-    return 1;
+bool building_abu_simbel::preview::ghost_allow_tile(build_planner& /*p*/, tile2i /*tile*/) const {
+    return true;
 }
 
 int building_abu_simbel::preview::can_place(build_planner &p, tile2i /*tile*/, tile2i end, int state) const {
     if (state != CAN_PLACE && state != CAN_NOT_BUT_GREEN) {
         return state;
     }
-    if (has_abu_simbel_on_map()) {
-        p.set_warning("#only_one_building_of_this_type");
+    // OG check_monument_object_site: both warnings when the site does not fit.
+    if (!site_fits(end)) {
+        p.set_warning("#must_be_over_cliffs");
+        p.set_extra_warning("#entrance_on_clear_land");
         return CAN_NOT_PLACE;
     }
-    const int rot = building_rotation_global_rotation() % 4;
-    xstring warn;
-    const int cliff_state = abu_validate_site(end, rot, &warn);
-    if (cliff_state != CAN_PLACE) {
-        if (!warn.empty()) {
-            p.set_warning(warn);
-        }
+    if (building_monument_has_unfinished({BUILDING_ABU_SIMBEL}, true, true)) {
+        p.set_warning("#only_one_building_of_this_type");
         return CAN_NOT_PLACE;
     }
     if (state == CAN_NOT_BUT_GREEN) {
-        return state;
+        p.set_warning("");
     }
     return CAN_PLACE;
 }
 
-int building_abu_simbel::preview::finalize_check(build_planner &p, tile2i tile, tile2i end, int state) const {
-    state = building_planer_renderer::finalize_check(p, tile, end, state);
-    if (state != CAN_PLACE) {
-        return state;
-    }
-    if (has_abu_simbel_on_map()) {
-        p.set_warning("#only_one_building_of_this_type");
-        g_warning_manager.show("#only_one_building_of_this_type");
-        return CAN_NOT_PLACE;
-    }
-    const int rot = building_rotation_global_rotation() % 4;
-    xstring warn;
-    const int cliff_state = abu_validate_site(end, rot, &warn);
-    if (cliff_state != CAN_PLACE) {
-        if (!warn.empty()) {
-            p.set_warning(warn);
-            g_warning_manager.show(warn.c_str());
-        }
-        return CAN_NOT_PLACE;
-    }
-    return CAN_PLACE;
+void building_abu_simbel::preview::ghost_preview(build_planner& /*planer*/, painter& ctx, tile2i /*start*/, tile2i end,
+  vec2i /*pixel*/) const {
+    draw_placement(ctx, end);
 }
 
-void building_abu_simbel::preview::ghost_preview(build_planner &planer, painter &ctx, tile2i /*start*/, tile2i end,
-                                                 vec2i /*pixel*/) const {
-    const auto &params = building_static_params::get(planer.build_type);
-    const int rot = building_rotation_global_rotation() % 4;
-    const vec2i ft = abu_footprint(rot);
+void building_abu_simbel::preview::ghost_blocked(build_planner& /*planer*/, painter& ctx, tile2i /*start*/, tile2i end,
+  vec2i /*pixel*/, bool /*fully_blocked*/) const {
+    draw_placement(ctx, end);
+}
 
-    const bool force_red = has_abu_simbel_on_map();
-    xstring warn;
-    const bool site_bad = force_red || abu_validate_site(end, rot, &warn) != CAN_PLACE;
-
-    if (site_bad) {
-        for (int dy = 0; dy < ft.y; dy++) {
-            for (int dx = 0; dx < ft.x; dx++) {
-                if (!abu_part_at_local(dx, dy, rot)) {
-                    continue;
-                }
-                tile2i t = end.shifted(dx, dy);
-                vec2i px = g_camera.lookup_tile_to_pixel(t);
-                build_planner::draw_flat_tile(ctx, px, COLOR_MASK_RED_30);
-            }
-        }
-        return;
+// OG building property size 1: the clicked tile is the layout origin in every view.
+int building_abu_simbel::preview::construction_place(build_planner& planer, tile2i /*tile*/, tile2i end,
+  int /*orientation*/, int variant) const {
+    const abu_simbel_part_def p0 = part_def(0);
+    planer.last_created_building = nullptr;
+    building* b = building_create(planer.build_type, end.shifted(p0.dx, p0.dy), 0);
+    game_undo_add_building(b);
+    if (!b || b->id <= 0) {
+        return 0;
     }
-
-    for (const auto &def : k_parts) {
-        tile2i t0 = abu_part_tile(end, def, rot);
-        int img = 0;
-        switch (def.variant) {
-        case PART_CLIFF_L_FAR:
-            img = params.first_img("cliff_l_far");
-            break;
-        case PART_CLIFF_L_NEAR:
-            img = params.first_img("cliff_l_near");
-            break;
-        case PART_CLIFF_R_FAR:
-            img = params.first_img("cliff_r_far");
-            break;
-        case PART_CLIFF_R_NEAR:
-            img = params.first_img("cliff_r_near");
-            break;
-        case PART_MIDCUT_BACK:
-        case PART_MIDCUT_DEPTH:
-            img = params.first_img("midcut_back");
-            break;
-        case PART_MIDCUT_FRONT:
-            img = params.first_img("midcut_front");
-            break;
-        case PART_STATUE_L:
-        case PART_STATUE_R:
-            img = params.first_img("sa1");
-            break;
-        default:
-            break;
-        }
-        if (img <= 0) {
-            img = params.first_img("preview");
-        }
-        planer.draw_building_ghost(ctx, img, g_camera.lookup_tile_to_pixel(t0));
-    }
+    add_building(b, 0, variant);
+    planer.last_created_building = b;
+    return 1;
 }
 
 void building_abu_simbel::on_place_update_tiles(int /*orientation*/, int /*variant*/) {
-    // Linked parts are created with building_create (no add_building) — only the
-    // planner main should spawn the chain.
-    if (base.prev_part_building_id > 0 || runtime_data().variant != 0) {
-        refresh_part_tiles();
-        return;
-    }
+    const auto& params = current_params();
+    const abu_simbel_part_def p0 = part_def(0);
+    tile2i origin = tile().shifted(-p0.dx, -p0.dy);
 
     base.prev_part_building_id = 0;
-    runtime_data().variant = PART_CLIFF_L_FAR;
-    const int rotation = building_rotation_global_rotation() % 4;
-    base.orientation = (uint8_t)rotation;
-    base.size = (uint8_t)k_parts[0].size;
-
-    refresh_part_tiles();
-    map_monuments_set_progress(tile(), 0);
+    base.orientation = 0;
+    base.size = p0.size;
+    runtime_data().variant = 0;
+    runtime_data().phase = 0;
 
     building *prev = &base;
-    for (int i = 1; i < PART_COUNT; ++i) {
-        const abu_part_def &def = k_parts[i];
-        tile2i part_tile = abu_part_tile(tile(), def, rotation);
-        building *part = building_create(BUILDING_ABU_SIMBEL, part_tile, 0);
-        if (!part || part->id <= 0) {
-            // Tear down everything claimed so far.
-            for (building *p = &base; p;) {
-                building *n = p->has_next() ? p->next() : nullptr;
-                map_building_tiles_remove(p->id, p->tile);
-                p->state = BUILDING_STATE_DELETED_BY_GAME;
-                p = n;
-            }
-            return;
+    for (int i = 1; i < (int)abu_params().parts.size(); ++i) {
+        const abu_simbel_part_def def = part_def(i);
+        building* b = building_create(BUILDING_ABU_SIMBEL, origin.shifted(def.dx, def.dy), 0);
+        game_undo_add_building(b);
+        b->size = def.size;
+        b->fire_proof = params.fire_proof;
+        b->damage_proof = params.damage_proof;
+        if (auto* part = b->dcast_abu_simbel()) {
+            part->runtime_data().variant = (uint8_t)i;
+            part->runtime_data().phase = 0;
         }
-        game_undo_add_building(part);
-
-        auto *ap = part->dcast_abu_simbel();
-        if (ap) {
-            ap->runtime_data().variant = def.variant;
-            ap->runtime_data().phase = runtime_data().phase;
-            part->orientation = (uint8_t)rotation;
-            part->size = (uint8_t)def.size;
-            ap->refresh_part_tiles();
-        }
-
-        part->prev_part_building_id = prev->id;
-        prev->next_part_building_id = part->id;
-        part->next_part_building_id = 0;
-        prev = part;
-
-        for (int dy = 0; dy < def.size; dy++) {
-            for (int dx = 0; dx < def.size; dx++) {
-                map_monuments_set_progress(part_tile.shifted(dx, dy), 0);
-            }
-        }
+        b->prev_part_building_id = prev->id;
+        b->next_part_building_id = 0;
+        prev->next_part_building_id = b->id;
+        prev = b;
     }
+
+    // OG map_building_tiles_add keeps no rock bits under a building.
+    for_each_site_tile(origin, [](tile2i t, int) { map_terrain_remove(t.grid_offset(), k_monument_rock); });
+
+    auto& d = runtime_data();
+    d.workers.fill(0);
+    d.spot_work = stage_work(0);
+    d.spot_figure = 0;
+    refresh_part_images();
+}
+
+void building_abu_simbel::on_post_load() {
+    building_monument::on_post_load();
+    if (!is_main()) {
+        return;
+    }
+    auto& d = runtime_data();
+    // Every stage has work at its spot, so none left on an unfinished main record means a save that kept no
+    // spot state: the current stage starts over.
+    if (d.phase != MONUMENT_FINISHED && d.spot_work == 0) {
+        d.phase = (int8_t)std::clamp((int)d.phase, 0, STAGE_COMPLETE - 1);
+        d.spot_work = stage_work(stage());
+        d.spot_figure = 0;
+    }
+    refresh_part_images();
 }
 
 xstring building_abu_simbel::demolish_blocked_message() const {
     return "#abu_simbel_not_demolishable";
 }
 
-void building_abu_simbel::on_phase_changed(int /*old_phase*/, int current) {
-    refresh_part_tiles();
-
-    if (current != MONUMENT_FINISHED) {
-        auto &d = runtime_data();
-        for (e_resource resource = RESOURCE_NONE; resource < RESOURCES_MAX; ++resource) {
-            d.resources_pct[resource] = 0;
+// OG remove_tiles_singly: the cliff comes back under every part but the entrance.
+void building_abu_simbel::on_destroy() {
+    const bool rock = part_kind() != KIND_ON_OPEN_GROUND;
+    for (int dy = 0; dy < base.size; ++dy) {
+        for (int dx = 0; dx < base.size; ++dx) {
+            const tile2i t = tile().shifted(dx, dy);
+            if (map_building_at(t) == id()) {
+                map_building_tile_clear_at(t.grid_offset(), 0);
+            }
+            if (rock) {
+                map_terrain_add(t.grid_offset(), k_monument_rock);
+            }
         }
     }
 }
@@ -710,79 +459,65 @@ void building_abu_simbel::update_day() {
     if (!is_main() || is_finished()) {
         return;
     }
-    for (auto &wid : runtime_data().workers) {
-        if (!wid) {
-            continue;
-        }
-        figure *f = figure_get(wid);
-        if (!f || !f->is_alive()) {
-            wid = 0;
-        }
+    auto& d = runtime_data();
+    if (d.spot_figure && !spot_still_held(d.spot_figure)) {
+        d.spot_figure = 0;
     }
-    if (need_carpenter_phase()) {
-        if (!has_carpenter_worker()) {
-            return;
-        }
-    } else if (!has_stonemason_worker()) {
-        return;
+    if (!has_active_worker()) {
+        d.workers[0] = 0;
     }
-    progress();
 }
 
+// Rotation only reaches the main record, so it redraws all parts.
 void building_abu_simbel::update_map_orientation(int /*map_orientation*/) {
-    refresh_part_tiles();
-}
-
-tile2i building_abu_simbel::center_point() const {
-    building *m = base.main();
-    const vec2i ft = m->dcast_abu_simbel() ? m->dcast_abu_simbel()->footprint_size() : vec2i{9, 21};
-    return m->tile.shifted(ft.x / 2, ft.y / 2);
-}
-
-tile2i building_abu_simbel::access_point() const {
-    building *m = base.main();
-    const int rot = m->orientation % 4;
-    return abu_part_tile(m->tile, k_parts[PART_MIDCUT_FRONT], rot).shifted(1, 1);
+    main_abu_simbel()->refresh_part_images();
 }
 
 grid_area building_abu_simbel::get_area() const {
-    building *m = base.main();
-    tile2i start = m->tile;
-    tile2i end = start.shifted(m->size - 1, m->size - 1);
-    for (building *p = m; p; p = p->has_next() ? p->next() : nullptr) {
-        const int sz = p->size > 0 ? p->size : 3;
-        tile2i pmin = p->tile;
-        tile2i pmax = p->tile.shifted(sz - 1, sz - 1);
-        if (pmin.x() < start.x()) {
-            start = tile2i(pmin.x(), start.y());
-        }
-        if (pmin.y() < start.y()) {
-            start = tile2i(start.x(), pmin.y());
-        }
-        if (pmax.x() > end.x()) {
-            end = tile2i(pmax.x(), end.y());
-        }
-        if (pmax.y() > end.y()) {
-            end = tile2i(end.x(), pmax.y());
-        }
+    const abu_simbel_part_def p0 = part_def(0);
+    tile2i origin = main_abu_simbel()->tile().shifted(-p0.dx, -p0.dy);
+    int x0 = 0, y0 = 0, x1 = 0, y1 = 0;
+    bool first = true;
+    for (const auto& p : abu_params().parts) {
+        const int px1 = p.dx + p.size - 1;
+        const int py1 = p.dy + p.size - 1;
+        x0 = first ? p.dx : std::min(x0, p.dx);
+        y0 = first ? p.dy : std::min(y0, p.dy);
+        x1 = first ? px1 : std::max(x1, px1);
+        y1 = first ? py1 : std::max(y1, py1);
+        first = false;
     }
-    return {start, end};
+    return {origin.shifted(x0, y0), origin.shifted(x1, y1)};
+}
+
+tile2i building_abu_simbel::center_point() const {
+    grid_area area = get_area();
+    return area.tmin().add(area.tmax()).div(2);
+}
+
+// OG abu_simbel_get_work_tile: the staging tile in front of the entrance, also every part's road access.
+tile2i building_abu_simbel::access_point() const {
+    const vec2i w = abu_params().work_tile;
+    return main_abu_simbel()->tile().shifted(w.x, w.y);
 }
 
 void building_abu_simbel::bind_dynamic(io_buffer *iob, size_t /*version*/) {
-    auto &monumentd = runtime_data();
+    auto& d = runtime_data();
 
-    iob->bind____skip(38);
+    // The current stage's spot (work, figure) takes 4 of the 38 bytes older saves wrote as zero.
+    iob->bind(BIND_SIGNATURE_UINT16, &d.spot_work);
+    iob->bind(BIND_SIGNATURE_UINT16, &d.spot_figure);
+    iob->bind____skip(34);
     iob->bind(BIND_SIGNATURE_UINT8, &base.orientation);
     for (int i = 0; i < 5; i++) {
-        iob->bind(BIND_SIGNATURE_UINT16, &monumentd.workers[i]);
+        iob->bind(BIND_SIGNATURE_UINT16, &d.workers[i]);
     }
-    iob->bind(BIND_SIGNATURE_UINT8, &monumentd.phase);
-    iob->bind(BIND_SIGNATURE_UINT8, &monumentd.funeral_done);
-    iob->bind(BIND_SIGNATURE_UINT8, &monumentd.preexisting);
-    iob->bind(BIND_SIGNATURE_UINT8, &monumentd.variant);
+    iob->bind(BIND_SIGNATURE_UINT8, &d.phase);
+    iob->bind(BIND_SIGNATURE_UINT8, &d.funeral_done);
+    iob->bind(BIND_SIGNATURE_UINT8, &d.preexisting);
+    iob->bind(BIND_SIGNATURE_UINT8, &d.variant);
 
     for (int i = 0; i < RESOURCES_MAX; i++) {
-        iob->bind(BIND_SIGNATURE_UINT8, &monumentd.resources_pct[i]);
+        iob->bind(BIND_SIGNATURE_UINT8, &d.resources_pct[i]);
     }
 }

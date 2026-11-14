@@ -203,6 +203,7 @@ void js_register_game_constants(js_State* J) {
     _R(TERRAIN_DIKE)
     _R(TERRAIN_ORE)
     _R(TERRAIN_DUNE)
+    _R(TERRAIN_ROCK_NEAR_MONUMENT)
 
     _R(TERRAIN_IRRIGATION_RANGE)
     _R(TERRAIN_ROAD_BLOCKED)

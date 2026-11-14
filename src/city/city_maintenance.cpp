@@ -312,16 +312,10 @@ void city_maintenance_t::check_kingdome_access() {
             }
             apply_building_road_access(b, r);
         } else if (b.type == BUILDING_ABU_SIMBEL) {
-            // Rectangular 9×21 (or rotated): square size would miss entrance-side roads.
-            vec2i ft{9, 21};
-            if (auto *abu = b.dcast_abu_simbel()) {
-                ft = abu->footprint_size();
-            }
-            int min_value = 12;
-            int min_go = b.tile.grid_offset();
+            // OG: every part's road access is the staging tile, found or not.
             building_road_access_result r;
-            if (map_road_find_minimum_tile_xy(b.tile, ft.x, ft.y, &min_value, &min_go) && min_value < 12) {
-                r.tile = tile2i(min_go);
+            if (auto* abu = b.dcast_abu_simbel()) {
+                r.tile = abu->access_point();
                 r.valid = true;
             }
             apply_building_road_access(b, r);

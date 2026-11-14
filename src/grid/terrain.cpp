@@ -181,7 +181,7 @@ bool map_terrain_exists_tile_in_radius_with_exact(int x, int y, int size, int ra
 
 bool map_terrain_exists_rock_kind_b_in_radius(tile2i tile, int size, int radius) {
     // Matches OG BUILD_FLAGS_KIND_MASK / BUILD_FLAGS_KIND_B.
-    constexpr uint32_t kind_mask = TERRAIN_ROCK | TERRAIN_ORE | TERRAIN_UNK_02 | TERRAIN_UNK_08;
+    constexpr uint32_t kind_mask = TERRAIN_ROCK | TERRAIN_ORE | TERRAIN_UNK_02 | TERRAIN_ROCK_NEAR_MONUMENT;
     constexpr uint32_t kind_b = TERRAIN_ROCK;
 
     grid_area area = map_grid_get_area(tile, size, radius);
