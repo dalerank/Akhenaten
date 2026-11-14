@@ -24,9 +24,9 @@ building_well {
   animations {
     preview { pack: PACK_GENERAL, id:23, max_frames:1 }
     base { pack: PACK_GENERAL, id:23, max_frames:1 }
-    base_work { pos[26, 11], pack: PACK_GENERAL, id:23, offset:1, max_frames:1 }
+    base_work { pos[26, 12], pack: PACK_GENERAL, id:23, offset:1, max_frames:1 }
     fancy { pack: PACK_GENERAL, id:23, offset:2, max_frames:1 }
-    fancy_work { pos[27, 11], pack: PACK_GENERAL, id:23, offset:3, max_frames:1 }
+    fancy_work { pos[28, 14], pack: PACK_GENERAL, id:23, offset:3, max_frames:1 }
     minimap {pack:PACK_GENERAL, id:151},
   }
 
