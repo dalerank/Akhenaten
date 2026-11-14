@@ -1382,15 +1382,32 @@ void figure_worker::figure_action() {
             base.roam_length = 0;
             advance_action(laborer_cleopatra_actions(site_head).sled);
         } else if (uses_ramp_climb(b_dest)) {
+            // OG at_storage_yard, BUILDING_PYRAMID: no route to the entry puts the load back, no train.
             tile2i entry = ramp_entry_tile(b_dest);
             base.destination_tile = entry.valid() ? entry : mason->tile;
+            base.wait_ticks = 0;
+            const bool at_entry = tile() == base.destination_tile;
+            if (!at_entry) {
+                base.terrain_usage = TERRAIN_USAGE_PREFER_ROADS;
+                base.figure_route_add();
+                if (base.routing_path_id <= 0) {
+                    yard->add_resource(resource, load, true);
+                    enter_idle_pool();
+                    break;
+                }
+            }
             pyramid_figure_spawn_sled_train(id());
-            base.wait_ticks = 0;
-            advance_action(ACTION_30_LABORER_SLED_AT_RAMP);
+            if (at_entry) {
+                advance_action(ACTION_18_LABORER_CLIMB_RAMP);
+                pyramid_laborer_pair_with_mason(id());
+                pyramid_figure_start_climb(id());
+            } else {
+                advance_action(ACTION_30_LABORER_SLED_AT_RAMP);
+            }
         } else {
-            base.destination_tile = mason->tile;
-            base.wait_ticks = 0;
-            advance_action(ACTION_17_LABORER_TO_PYRAMID);
+            // OG: any other monument type takes no load; ours hands it back instead of losing it.
+            yard->add_resource(resource, load, true);
+            enter_idle_pool();
         }
         break;
     }
@@ -1420,25 +1437,13 @@ void figure_worker::figure_action() {
         [[fallthrough]];
     }
     case ACTION_17_LABORER_TO_PYRAMID: {
-        const bool climb = rd.delivering_block && uses_ramp_climb(b_dest);
-        if (climb && base.routing_path_id > 0 && !pyramid_laborer_can_enter_ramp(id())) {
+        if (base.routing_path_id > 0 && !pyramid_laborer_can_enter_ramp(id())) {
             break;
         }
         if (do_goto(base.destination_tile, TERRAIN_USAGE_ANY, -1, ACTION_14_LABORER_ROUTE_LOST)) {
-            if (climb) {
-                pyramid_laborer_pair_with_mason(id());
-                pyramid_figure_start_climb(id());
-                advance_action(ACTION_18_LABORER_CLIMB_RAMP);
-            } else if (rd.mason_fid) {
-                finish_block_delivery();
-            } else {
-                enter_idle_pool();
-            }
-        } else if (!climb) {
-            figure *mason = figure_get(rd.mason_fid);
-            if (mason && mason->is_alive()) {
-                base.destination_tile = mason->tile;
-            }
+            pyramid_laborer_pair_with_mason(id());
+            pyramid_figure_start_climb(id());
+            advance_action(ACTION_18_LABORER_CLIMB_RAMP);
         }
         break;
     }

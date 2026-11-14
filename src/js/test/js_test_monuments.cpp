@@ -353,6 +353,8 @@ static int __test_pyramid_park_waiting_mason(int bid, int fid) {
             ps->worker_figure_id = (figure_id)fid;
         }
     }
+    f->set_destination(head);
+    f->terrain_usage = TERRAIN_USAGE_ANY;
     g_monument_pyramid_figure.set_work_part_bid(f, frontier[0]);
     g_monument_pyramid_figure.walk_mode(f) = PYRAMID_WALK_ON_LAYER;
     f->action_state
