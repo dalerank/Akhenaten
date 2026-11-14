@@ -119,6 +119,8 @@ bool map_tile_is_inside_area(tile2i tile, tile2i start, tile2i end, vec2i size =
 bool map_grid_is_inside(tile2i tile, vec2i size);
 inline int map_grid_is_inside(tile2i tile, int size) { return map_grid_is_inside(tile, vec2i{size, size}); }
 bool map_grid_inside_map_area(int grid_offset, int edge_size = 0);
+constexpr int BUILDING_MAP_EDGE_MARGIN = 3;
+bool map_grid_is_inside_building_area(tile2i tile);
 // bool map_grid_inside_map_area(int x, int y, int edge_size = 0);
 using offsets_array = svector<int, 150>;
 void map_grid_adjacent_offsets_xy(int sizex, int sizey, offsets_array &arr);

@@ -605,6 +605,7 @@ void build_planner::update_obstructions_check() {
     tiles_blocked_total = 0;
     const auto &params = building_static_params::get(build_type);
     const auto &preview = building_planer_renderer::get(build_type);
+    const bool edge_margin = !draggable() && !params.flags.no_map_edge_margin;
 
     for (int row = 0; row < size.y; row++) {
         for (int column = 0; column < size.x; column++) {
@@ -642,7 +643,8 @@ void build_planner::update_obstructions_check() {
 
             tile_blocked_array[row][column] = false;
             const bool blocked_by_floodplain_edge = (can_blocked_by_floodplain_edge && map_get_floodplain_edge(current_tile));
-            const bool inside_map = map_grid_is_inside(current_tile, 1);
+            const bool inside_map
+              = edge_margin ? map_grid_is_inside_building_area(current_tile) : map_grid_is_inside(current_tile, 1);
             const uint32_t ignore_terrain = preview.ghost_ignore_terrain(*this, current_tile);
             const uint32_t not_clear_mask = (restricted_terrain & TERRAIN_NOT_CLEAR) & ~ignore_terrain;
             const bool has_existing_building = is_tile_occupied_by_active_building(current_tile);

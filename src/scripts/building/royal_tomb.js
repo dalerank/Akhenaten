@@ -17,6 +17,7 @@ building_small_royal_tomb {
     cost [ 0, 0, 0, 0, 0 ]
     guild_worker_terrain: TERRAIN_USAGE_ANY
     flags {
+      no_map_edge_margin: true
         is_monument: true
         non_deletable: true
     }
@@ -36,6 +37,7 @@ building_medium_royal_tomb {
     cost [ 0, 0, 0, 0, 0 ]
     guild_worker_terrain: TERRAIN_USAGE_ANY
     flags {
+      no_map_edge_margin: true
         is_monument: true
         non_deletable: true
     }
@@ -55,6 +57,7 @@ building_large_royal_tomb {
     cost [ 0, 0, 0, 0, 0 ]
     guild_worker_terrain: TERRAIN_USAGE_ANY
     flags {
+      no_map_edge_margin: true
         is_monument: true
         non_deletable: true
     }
@@ -74,6 +77,7 @@ building_grand_royal_tomb {
     cost [ 0, 0, 0, 0, 0 ]
     guild_worker_terrain: TERRAIN_USAGE_ANY
     flags {
+      no_map_edge_margin: true
         is_monument: true
         non_deletable: true
     }

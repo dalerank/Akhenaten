@@ -235,6 +235,7 @@ building_pavilion = {
   damage_risk [4]
 
   flags {
+    no_map_edge_margin: true
     is_entertainment: true
   }
 }

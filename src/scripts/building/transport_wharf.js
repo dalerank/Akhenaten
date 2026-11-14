@@ -1,6 +1,7 @@
 log_info("akhenaten: loading building_transport_wharf")
 
 building_transport_wharf = {
+  flags : { no_map_edge_margin: true },
   animations : {
     preview : { pack:PACK_TERRAIN, id:17 },
     base : { pack:PACK_TERRAIN, id:17 },

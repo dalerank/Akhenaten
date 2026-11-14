@@ -126,8 +126,8 @@ function run_test() {
     test_prepare_pyramid_complex_causeway(gx, gy, 20, 4, 3)
     var gbid = test_building_place(BUILDING_GRAND_MUDBRICK_PYRAMID_COMPLEX, gx, gy)
     if (!gbid) {
-        test_prepare_pyramid_complex_causeway(16, 16, 20, 4, 3)
-        gbid = test_building_place(BUILDING_GRAND_MUDBRICK_PYRAMID_COMPLEX, 16, 16)
+        test_prepare_pyramid_complex_causeway(cx - 10, cy + 24, 20, 4, 3)
+        gbid = test_building_place(BUILDING_GRAND_MUDBRICK_PYRAMID_COMPLEX, cx - 10, cy + 24)
     }
     if (gbid && __building_type(gbid) == BUILDING_GRAND_MUDBRICK_PYRAMID_COMPLEX) {
         var gmon = city.get_monument(gbid)

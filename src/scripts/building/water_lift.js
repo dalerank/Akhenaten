@@ -35,6 +35,7 @@ building_water_lift {
   irrigation_radius : 2
   base_irrigation_value : 32
   flags {
+    no_map_edge_margin: true
     draw_normal_anim: true
   }
 }

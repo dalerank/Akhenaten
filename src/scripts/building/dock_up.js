@@ -32,6 +32,7 @@ building_dock_up {
   desirability : { value:[-12], step:[2], step_size:[2], range: [6] }
   laborers:[12], fire_risk:[4], damage_risk: [1]
   flags {
+    no_map_edge_margin: true
     is_industry: true
   }
 }

@@ -26,6 +26,7 @@ building_bandstand {
   desirability { value[4], step[1], step_size[-1], range[4] }
   laborers[12], fire_risk[4], damage_risk[3]
   flags {
+    no_map_edge_margin: true
     is_entertainment: true
   }
 

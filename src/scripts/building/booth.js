@@ -23,6 +23,7 @@ building_booth {
     fire_risk[4]
     damage_risk[2]
     flags {
+      no_map_edge_margin: true
         is_entertainment: true
         keeps_visitor_paths: true
     }

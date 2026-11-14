@@ -442,6 +442,36 @@ bool map_grid_inside_map_area(int grid_offset, int edge_size) {
     //        return 0; // outside play space, but visible
     return false; // outside viewable area
 }
+// OG map_building_tiles_shrub_fits: the footprint keeps BUILDING_MAP_EDGE_MARGIN tiles from the
+// map rectangle and from the playable diamond, whose quadrant tests follow OG is_inside_size_args.
+bool map_grid_is_inside_building_area(tile2i tile) {
+    const int width = scenario_map_data()->width;
+    const int height = scenario_map_data()->height;
+    const int margin = BUILDING_MAP_EDGE_MARGIN;
+    if (tile.x() < margin || tile.y() < margin || tile.x() >= width - margin || tile.y() >= height - margin) {
+        return false;
+    }
+
+    const int x_min = (GRID_LENGTH - width) / 2;
+    const int y_min = (GRID_LENGTH - height) / 2;
+    const int x_max = x_min - 1 + width;
+    const int y_max = y_min - 1 + height;
+    const int x_center = (x_max + x_min) / 2;
+    const int y_center = (y_max + y_min) / 2;
+    const int x = GRID_X(tile.grid_offset());
+    const int y = GRID_Y(tile.grid_offset());
+    if (x <= x_center) {
+        if (y <= y_center) {
+            return x + y - margin >= x_min + y_center;
+        }
+        return x - y - margin >= x_center - y_max;
+    }
+    if (y <= y_center) {
+        return x - y + margin <= x_max - y_center;
+    }
+    return x + y + margin <= x_max + 1 + y_center;
+}
+
 // bool map_grid_inside_map_area(int x, int y, int edge_size) {
 //     return map_tile_inside_map_area(x + scenario_map_data()->start_offset % GRID_LENGTH, y +
 //     scenario_map_data()->start_offset / GRID_LENGTH, edge_size);

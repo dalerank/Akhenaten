@@ -339,6 +339,7 @@ building_ferry {
     relative_orientation: 1
   }
   flags {
+    no_map_edge_margin: true
     is_water_crossing: true
     is_infrastructure: true
   }
@@ -385,6 +386,7 @@ building_shipyard = {
   desirability : { value:[-12], step:[2], step_size:[2], range: [6] }
   laborers:[20], fire_risk:[4], damage_risk: [1]
   flags {
+    no_map_edge_margin: true
     is_industry: true
   }
 }
@@ -534,6 +536,7 @@ building_strong_gatehouse = {
   desirability : { value:[-5], step:[1], step_size:[1], range: [5] }
   laborers:[9], fire_risk:[0], damage_risk: [2]
   flags {
+    no_map_edge_margin: true
     is_wall: true
     is_gatehouse: true
   }
@@ -562,6 +565,7 @@ building_brick_gatehouse = {
   desirability : { value:[-7], step:[1], step_size:[1], range: [6] }
   laborers:[9], fire_risk:[0], damage_risk: [2]
   flags {
+    no_map_edge_margin: true
     is_defense: true
     is_wall: true
   }
@@ -585,6 +589,7 @@ building_tower_gatehouse = {
   desirability : { value:[4], step:[1], step_size:[1], range: [3] }
   laborers:[6], fire_risk:[0], damage_risk: [2]
   flags {
+    no_map_edge_margin: true
     is_defense: true
     is_wall: true
   }
@@ -613,6 +618,7 @@ building_mud_gatehouse = {
   desirability : { value:[-6], step:[1], step_size:[2], range: [6] }
   laborers:[3], fire_risk:[0], damage_risk: [3, 12, 15, 18, 22]
   flags {
+    no_map_edge_margin: true
     is_defense: true
     is_wall: true
   }
@@ -640,6 +646,7 @@ building_decorative_gatehouse = {
   desirability : { value:[-6], step:[1], step_size:[2], range: [6] }
   laborers:[3], fire_risk:[0], damage_risk: [3]
   flags {
+    no_map_edge_margin: true
     is_defense: true
     is_wall: true
     is_gatehouse: true

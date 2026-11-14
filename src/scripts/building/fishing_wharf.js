@@ -28,6 +28,7 @@ building_fishing_wharf {
     shoreline : true
   }
   flags {
+    no_map_edge_margin: true
     is_food: true
   }
   labor_category : LABOR_CATEGORY_FOOD_PRODUCTION
