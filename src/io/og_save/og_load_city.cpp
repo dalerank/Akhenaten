@@ -168,14 +168,16 @@ namespace og {
         assign(g_city.houses.missing.education, p.houses_missing_education);
         assign(g_city.houses.requiring.school, p.houses_requiring_school);
         assign(g_city.houses.requiring.library, p.houses_requiring_library);
-        assign(g_city.houses.missing.apothecary, p.houses_missing_dentist);
-        assign(g_city.houses.missing.dentist, p.houses_missing_courthouse);
+        assign(g_city.houses.missing.dentist, p.houses_missing_dentist);
+        assign(g_city.houses.missing.courthouse, p.houses_missing_courthouse);
+        assign(g_city.houses.missing.any_courthouse, p.houses_missing_any_courthouse);
         assign(g_city.houses.missing.food, p.houses_missing_food);
-        assign(g_city.houses.missing.mortuary, p.houses_missing_health);
-        assign(g_city.houses.missing.physician, p.houses_missing_more_health);
+        assign(g_city.houses.missing.health, p.houses_missing_health);
+        assign(g_city.houses.missing.more_health, p.houses_missing_more_health);
         assign(g_city.houses.requiring.dentist, p.houses_requiring_dentist);
-        assign(g_city.houses.requiring.water_supply, p.houses_requiring_courthouse);
-        assign(g_city.houses.requiring.physician, p.houses_requiring_health);
+        assign(g_city.houses.requiring.courthouse, p.houses_requiring_courthouse);
+        assign(g_city.houses.requiring.more_courthouse, p.houses_requiring_more_courthouse);
+        assign(g_city.houses.requiring.health, p.houses_requiring_health);
         assign(g_city.houses.missing.religion, p.houses_missing_religion);
         assign(g_city.houses.missing.second_religion, p.houses_missing_second_religion);
         assign(g_city.houses.missing.third_religion, p.houses_missing_third_religion);
@@ -282,7 +284,8 @@ namespace og {
             assign(g_city.map.largest_road_networks[i].id, p.largest_road_networks[i].id);
             assign(g_city.map.largest_road_networks[i].size, p.largest_road_networks[i].size);
         }
-        assign(g_city.houses.missing.second_wine, p.houses_missing_second_luxury);
+        assign(g_city.resource.luxury_goods_kinds, p.luxury_goods_kinds);
+        assign(g_city.houses.missing.second_luxury, p.houses_missing_second_luxury);
         assign(g_city.entertainment.senet_house_has_plays, p.senet_house_has_plays);
         assign(g_city.mission.fired_message_shown, p.fired_message_shown);
         assign(g_city.mission.victory_message_shown, p.victory_message_shown);
