@@ -224,6 +224,7 @@ mission44 {
 			amount { value : 27 }
 			months_initial : 9
 			location_fields [ 9, 9, -1, -1 ]
+			warships : 4
 			event_trigger_type : EVENT_TRIGGER_BY_FAVOUR
 			on_completed_action : -1
 			on_refusal_action : -1

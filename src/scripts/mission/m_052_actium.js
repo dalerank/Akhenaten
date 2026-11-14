@@ -297,6 +297,7 @@ mission52 { // Actium - Antony and Cleopatra
 			amount { value : 19 }
 			months_initial : 4
 			location_fields [ 9, -1, 9, 11 ]
+			warships : 5
 			event_trigger_type : EVENT_TRIGGER_ONCE
 			on_completed_action : 17
 			on_refusal_action : -1
@@ -378,6 +379,7 @@ mission52 { // Actium - Antony and Cleopatra
 			amount { value : 40 }
 			months_initial : 1
 			location_fields [ 9, -1, 9, 11 ]
+			warships : 4
 			event_trigger_type : EVENT_TRIGGER_ONLY_VIA_EVENT
 			on_completed_action : 18
 			on_refusal_action : -1

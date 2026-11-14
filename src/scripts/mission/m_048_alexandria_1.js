@@ -158,6 +158,7 @@ mission48 { // Alexandria - Alexander the Great
 			amount { value : 7 }
 			months_initial : 8
 			location_fields [ 9, -1, 9, 11 ]
+			warships : 3
 			event_trigger_type : EVENT_TRIGGER_ONCE
 			on_completed_action : 5
 			on_refusal_action : -1
@@ -271,6 +272,7 @@ mission48 { // Alexandria - Alexander the Great
 			amount { value : 0 }
 			months_initial : 6
 			location_fields [ 12, -1, 12, 13 ]
+			warships : 3
 			event_trigger_type : EVENT_TRIGGER_ONCE
 			on_completed_action : -1
 			on_refusal_action : -1

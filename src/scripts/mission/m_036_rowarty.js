@@ -113,6 +113,7 @@ mission36 { // Rowarty (Avaris) — The Sea People
 			amount { value : 20 }
 			months_initial : 6
 			location_fields [ 11, -1, 9, 13 ]
+			warships : 2
 			event_trigger_type : EVENT_TRIGGER_ONCE
 			tag_id : 0
 			on_completed_action : -1
@@ -131,6 +132,7 @@ mission36 { // Rowarty (Avaris) — The Sea People
 			amount { value : 35 }
 			months_initial : 6
 			location_fields [ 11, -1, 9, 15 ]
+			warships : 6
 			event_trigger_type : EVENT_TRIGGER_ONCE
 			tag_id : 1
 			on_completed_action : -1
@@ -200,6 +202,7 @@ mission36 { // Rowarty (Avaris) — The Sea People
 			amount { value : 44 }
 			months_initial : 6
 			location_fields [ 10, -1, 9, 13 ]
+			warships : 8
 			event_trigger_type : EVENT_TRIGGER_ONCE
 			tag_id : 5
 			on_completed_action : -1
@@ -252,6 +255,7 @@ mission36 { // Rowarty (Avaris) — The Sea People
 			amount { value : 38 }
 			months_initial : 5
 			location_fields [ 9, -1, 9, 13 ]
+			warships : 5
 			event_trigger_type : EVENT_TRIGGER_ONCE
 			tag_id : 8
 			on_completed_action : 6
@@ -304,6 +308,7 @@ mission36 { // Rowarty (Avaris) — The Sea People
 			amount { value : 56 }
 			months_initial : 6
 			location_fields [ 12, -1, 9, 13 ]
+			warships : 6
 			event_trigger_type : EVENT_TRIGGER_RECURRING
 			tag_id : 11
 			on_completed_action : -1
@@ -1070,6 +1075,7 @@ mission36 { // Rowarty (Avaris) — The Sea People
 			amount { value : 72 }
 			months_initial : 6
 			location_fields [ 10, -1, 9, 16 ]
+			warships : 12
 			event_trigger_type : EVENT_TRIGGER_ONLY_VIA_EVENT
 			tag_id : 56
 			on_completed_action : -1

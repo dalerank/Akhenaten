@@ -104,6 +104,7 @@ mission47 { // Tanis - Rebirth of a Navy
 			amount { value : 0 }
 			months_initial : 2
 			location_fields [ 9, -1, 9, 10 ]
+			warships : 3
 			event_trigger_type : EVENT_TRIGGER_ONCE
 			on_completed_action : -1
 			on_refusal_action : -1
@@ -185,6 +186,7 @@ mission47 { // Tanis - Rebirth of a Navy
 			amount { value : 16 }
 			months_initial : 8
 			location_fields [ 11, 11, -1, -1 ]
+			warships : 5
 			event_trigger_type : EVENT_TRIGGER_ONCE
 			on_completed_action : 0
 			on_refusal_action : -1
@@ -298,6 +300,7 @@ mission47 { // Tanis - Rebirth of a Navy
 			amount { value : 12 }
 			months_initial : 10
 			location_fields [ 11, -1, 10, 12 ]
+			warships : 4
 			event_trigger_type : EVENT_TRIGGER_ONCE
 			on_completed_action : -1
 			on_refusal_action : -1

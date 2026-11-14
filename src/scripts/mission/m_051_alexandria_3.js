@@ -735,6 +735,7 @@ mission51 { // Cleopatra's Alexandria - The Legacy of a Queen
 			amount { value : 0 }
 			months_initial : 12
 			location_fields [ 9, -1, 9, 10 ]
+			warships : 2
 			event_trigger_type : EVENT_TRIGGER_ONLY_VIA_EVENT
 			on_completed_action : -1
 			on_refusal_action : -1
