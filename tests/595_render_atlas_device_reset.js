@@ -1,10 +1,10 @@
 // A lost render device drops every texture, the residency atlas page included: the atlas must
 // invalidate, repack onto a fresh page and keep drawing.
 
-var __test590_ok = false
+var __test595_ok = false
 
 function run_test() {
-    __log_info_native('[test:590] residency atlas survives a render device reset')
+    __log_info_native('[test:595] residency atlas survives a render device reset')
     test_ensure_city_session('data/default.map')
     __test_pump_frames(5)
 
@@ -13,21 +13,21 @@ function run_test() {
     __test_pump_frames(5)
 
     if (had_page && !__test_find_inlog('residency_atlas: atlas invalidated')) {
-        __log_info_native('[test:590] FAIL: atlas page kept across the device reset')
+        __log_info_native('[test:595] FAIL: atlas page kept across the device reset')
         return __test_signal_ready()
     }
 
-    __test_run_console_command('render_stats t590')
-    if (!__test_find_inlog('render_stats[t590]')) {
-        __log_info_native('[test:590] FAIL: render_stats wrote nothing')
+    __test_run_console_command('render_stats t595')
+    if (!__test_find_inlog('render_stats[t595]')) {
+        __log_info_native('[test:595] FAIL: render_stats wrote nothing')
         return __test_signal_ready()
     }
 
     __log_marker('render_atlas_device_reset_ok')
-    __test590_ok = true
+    __test595_ok = true
     __test_signal_ready()
 }
 
 function check_valid() {
-    return __test590_ok && __test_find_inlog('[test-marker] render_atlas_device_reset_ok')
+    return __test595_ok && __test_find_inlog('[test-marker] render_atlas_device_reset_ok')
 }
