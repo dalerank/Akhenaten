@@ -12,6 +12,7 @@
 const e_empire_city_tokens_t ANK_CONFIG_ENUM(e_empire_city_tokens);
 empire_city_options_t ANK_VARIABLE(empire_city_options);
 empire_city_images_t ANK_VARIABLE(empire_city_images);
+empire_city_conquest_t ANK_VARIABLE(empire_city_conquest);
 
 image_desc empire_city_images_t::for_type(e_empire_city type, bool expanded) const {
     image_desc desc;
@@ -201,6 +202,16 @@ int empire_city::free_trader_slot() const {
     }
     const int cap = std::clamp<int>(empire_trade_rules.max_traders_per_city, 0, (int)std::size(trader_figure_ids));
     return get_free_slot(std::min(size, cap));
+}
+
+bool empire_city::conquer() {
+    for (const empire_city_type_change& change : empire_city_conquest.types) {
+        if (change.from == type) {
+            type = change.to;
+            return true;
+        }
+    }
+    return false;
 }
 
 void empire_city::archive_load(archive arch) {

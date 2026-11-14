@@ -51,6 +51,15 @@ empire_city_images {
     foreign           : {path:"pharaoh_general/empire_bits_00066"}
 }
 
+// OG city_status_new_type, CITY_STATUS_CONQUERED: a foreign city conquered by Egypt becomes Egyptian;
+// a city of any other type is left alone.
+empire_city_conquest {
+    types [
+        { from: EMPIRE_CITY_FOREIGN_TRADING, to: EMPIRE_CITY_EGYPTIAN_TRADING }
+        { from: EMPIRE_CITY_FOREIGN, to: EMPIRE_CITY_EGYPTIAN }
+    ]
+}
+
 // OG empire_trade_rules + trade_recommends.txt: how much the city keeps before it exports a surplus,
 // and the stock IMPORT_AS_NEEDED imports up to. Recomputed once a day.
 empire_trade_rules {

@@ -1402,11 +1402,17 @@ void event_manager_t::process_event(int id, bool via_event_trigger, int chain_ac
                 break;
 
             case EVENT_SUBTYPE_FOREIGN_CITY_CONQUERED:
-                // Same subtype value as CITY_ASKS_FOR_TROOPS (requests) / MESSAGE conquered.
                 // Pak uses CITY_STATUS subtype=1 as "foreign city conquered" (e.g. Abu y6 Selima).
+                // OG: a city that is not foreign is left alone and nothing is posted.
+                if (!city->conquer()) {
+                    break;
+                }
+                if (full_empire_object* full = g_empire.ref_full_object(city->empire_object_id)) {
+                    full->city_type = city->type;
+                }
                 city_message_post_full(true, "message_template_foreign_city_conquered", &event, caller_event_id,
-                    PHRASE_foreign_city_conquered_title, PHRASE_foreign_city_conquered_initial_announcement,
-                    PHRASE_foreign_city_conquered_reason_A, id, city->name_id);
+                  PHRASE_foreign_city_conquered_title, PHRASE_foreign_city_conquered_initial_announcement,
+                  PHRASE_foreign_city_conquered_no_reason_A, id, city->name_id);
                 break;
 
             case EVENT_SUBTYPE_NEW_TRADE_ROUTE:

@@ -1563,6 +1563,17 @@ game_messages_en {
         content { text: "" }
     }
 
+    // OG MESSAGE_CITY_CONQUERED (MM 339): a foreign city conquered by Egypt; texts from the event phrases.
+    message_template_foreign_city_conquered {
+        id: 339
+        type: 2
+        message_type: 2
+        size [30, 20]
+        video { text: "@9" }
+        title { text: "" }
+        content { text: "" }
+    }
+
     // OG MESSAGE_EARTHQUAKE: title and text come from the event phrases, param2 is the first tile.
     message_earthquake {
         id: 261
