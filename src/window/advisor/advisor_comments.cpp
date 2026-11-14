@@ -840,7 +840,7 @@ advisor_comment advisor_comment_for(int topic, const advisor_city_state& s, cons
         c.text = military_comment(s);
         break;
     case ADVISOR_COMMENT_KINGDOM:
-        c.advisor = ADVISOR_IMPERIAL;
+        c.advisor = ADVISOR_KINGDOM;
         c.text = kingdom_comment(s, rules);
         break;
     case ADVISOR_COMMENT_NILOMETER:

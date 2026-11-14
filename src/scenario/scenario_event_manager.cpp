@@ -1785,7 +1785,7 @@ void event_manager_t::process_invasion(event_ph_t &e) {
 
 bool event_manager_t::any_invasion_running() const {
     for (const event_ph_t& e : g_scenario_events.event_list) {
-        if (e.type == EVENT_TYPE_INVASION && invasion_is_running(e)) {
+        if (e.type == EVENT_TYPE_INVASION && scenario_invasion_is_running(e)) {
             return true;
         }
     }
