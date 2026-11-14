@@ -181,4 +181,24 @@ construction_warning_rules {
                 no_route: "#setup_trade_route_to_import", not_imported: "#overseer_of_commerce_to_import"
                 both_no_route: "#import_limestone_trade_route", both_not_imported: "#import_limestone_overseer" } }
   ]
+
+  // A service building that uses up a product: the hints point at its maker, its raw material or its import.
+  finished_goods [
+    { buildings: [BUILDING_SENET_HOUSE], product: RESOURCE_BEER, raw: RESOURCE_BARLEY
+      warning: "#building_needs_beer", build: "#build_brewery"
+      no_route: "#build_brewery_or_import_beer_route", not_imported: "#build_brewery_or_import_beer"
+      raw_no_route: "#import_barley_trade_route", raw_not_imported: "#import_barley_overseer"
+      product_no_route: "#setup_trade_route_to_import", product_not_imported: "#overseer_of_commerce_to_import" }
+    { buildings: [BUILDING_SCRIBAL_SCHOOL, BUILDING_LIBRARY], product: RESOURCE_PAPYRUS, raw: RESOURCE_REEDS
+      warning: "#needs_papyrus", build: "#build_papyrus_maker"
+      no_route: "#build_papyrus_maker_or_import_route", not_imported: "#build_papyrus_maker_or_import"
+      import_only: true
+      raw_no_route: "#import_reeds_trade_route", raw_not_imported: "#import_reeds_overseer"
+      product_no_route: "#setup_trade_route_to_import", product_not_imported: "#overseer_of_commerce_to_import" }
+    { buildings: [BUILDING_MORTUARY], product: RESOURCE_LINEN, raw: RESOURCE_FLAX
+      warning: "#building_needs_linen", build: "#build_weaver"
+      no_route: "#build_weaver_or_import_linen_route", not_imported: "#build_weaver_or_import_linen"
+      raw_no_route: "#import_flax_trade_route", raw_not_imported: "#import_flax_overseer"
+      product_no_route: "#setup_trade_route_to_import", product_not_imported: "#overseer_of_commerce_to_import" }
+  ]
 }

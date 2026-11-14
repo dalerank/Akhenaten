@@ -45,20 +45,6 @@ building_scribal_school {
   }
 }
 
-[es=(building_scribal_school, on_place_checks)]
-function building_scribal_school_on_place_checks(ev) {
-  var papyrus = city.resources.papyrus
-  var has_supply = (papyrus.count_active_industry > 0) || (papyrus.yards_stored > 0)
-  if (has_supply) {
-    return
-  }
-
-  city.warnings.show("#needs_papyrus")
-  city.warnings.show_if_not(papyrus.can_produce, "#build_papyrus_maker")
-  city.warnings.show_if_not(papyrus.can_import, "#import_papyrus_overseer")
-  city.warnings.show_if_not(papyrus.trade_status == TRADE_STATUS_IMPORT, "#import_papyrus_trade_route")
-}
-
 function building_scribal_school_walker_cost() {
     return education_walker_cost(building_scribal_school)
 }
