@@ -1354,8 +1354,8 @@ void event_manager_t::process_event(int id, bool via_event_trigger, int chain_ac
         break;
 
     case EVENT_TYPE_MUMMY: {
-            int n = event.amount.value > 0 ? event.amount.value : 1;
-            figure_mummy::spawn_wave(n);
+        figure_mummy::start_plague(event.amount.value);
+        messages::popup("message_mummy_attacks", 0, 0);
         }
         break;
 

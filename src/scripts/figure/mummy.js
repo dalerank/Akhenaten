@@ -34,8 +34,12 @@ figure_mummy {
 	attack_value: 8
 	defense_value: 2
 	terrain_usage: TERRAIN_USAGE_ANY
-	// Live cap enforced in figure_mummy::spawn_wave (max 4).
 	max_roam_length: 480
+
+	// OG city_disasters.h, figure/plagues.h.
+	road_radius: 6
+	roam_min: 25
+	roam_spread: 50
 }
 
 function figure_mummy_gods_are_angry() {

@@ -121,6 +121,11 @@ static int __test_plagues_frogs_countdown() {
 }
 ANK_FUNCTION(__test_plagues_frogs_countdown);
 
+static int __test_plagues_mummies_max() {
+    return g_city.plagues.mummies_max;
+}
+ANK_FUNCTION(__test_plagues_mummies_max);
+
 static void __test_plagues_tick(int n) {
     for (int i = 0; i < n; i++) {
         g_city.update_tick(0);

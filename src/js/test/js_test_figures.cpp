@@ -362,10 +362,11 @@ static void __test_figure_set_wait_ticks_missile(int fid, int ticks) {
 }
 ANK_FUNCTION_2(__test_figure_set_wait_ticks_missile);
 
-static int __test_mummy_spawn_wave(int count) {
-    return figure_mummy::spawn_wave(count);
+static int __test_mummy_start_plague(int amount) {
+    figure* f = figure_mummy::start_plague(amount);
+    return f ? f->id : 0;
 }
-ANK_FUNCTION_1(__test_mummy_spawn_wave);
+ANK_FUNCTION_1(__test_mummy_start_plague);
 
 static void __test_figure_action_perform(int fid) {
     figure* f = figure_get(fid);

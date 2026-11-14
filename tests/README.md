@@ -123,7 +123,7 @@ See **IT1** in `REMAKE_TODO.md` / `REMAKE_NOTES.md` §4.
 | `92_ironwill.js` | Ironwill: mid-game save/load/autosave blocked; C++ write belt; exit checkpoint exempt |
 | `97_ptah_scorpion_curse.js` | Ptah scorpion raid (CF6): feature ON spawn at temple when no industry; OFF / no-temple fallback → no scorpions; raid prey skips ostrich; 1-day timer poof |
 | `94_locust_swarm.js` | CF2 locust: register, cloud variant/float, post_load; Osiris/EVENT/pak-chain/console start the OG countdown |
-| `85_mummy_attack.js` | BF3 mummy: register + `spawn_wave` → 1× msg 496; soldier target + kill; city cap 4; `EVENT_TYPE_MUMMY` |
+| `85_mummy_attack.js` | BF3 mummy: register; `EVENT_TYPE_MUMMY` msg 496 without a source; mummy from a temple is a soldier target + kill |
 | `91_popup_messages.js` | OG Popup Messages: category map + banner/click-open vs modal; unlisted stays modal |
 | `69_scorpion_spawn.js` | Cleopatra `FIGURE_SCORPION`: spawn + type + `update_animation` → `walk` (SprMain2 group 10; CF3c) |
 | `70_asp_spawn.js` | Cleopatra `FIGURE_ASP`: spawn + type + `update_animation` → `walk` (SprMain2 group 0; CF3 spawn) |
@@ -310,7 +310,7 @@ A new test binding goes into the matching domain file; a new domain file needs a
 | `__test_funeral_tomb_dest_is_road(bid)` | 0\|1 | BF2: resolved tomb destination is road/ferry |
 | `__test_monument_funeral_done(bid)` | 0\|1 | BF2: whether tomb has `funeral_done` |
 | `__test_monument_set_funeral_done(bid, done)` | undefined | BF2: set/clear `funeral_done` |
-| `__test_mummy_spawn_wave(n)` | figure id | BF3: spawn mummy wave + 1× msg 496 |
+| `__test_mummy_start_plague(amount)` | figure id | OG `city_mummies_start`: one mummy at a random source building, `amount` caps risen ones |
 | `__test_figure_is_enemy(fid)` | 0\|1 | Whether figure has enemy flag |
 | `__test_soldier_combat_target(x,y,d)` | figure id | Soldier combat target near tile |
 | `__test_figure_kill(fid)` | undefined | Kill live figure (reset wait_ticks) |
@@ -319,6 +319,7 @@ A new test binding goes into the matching domain file; a new domain file needs a
 | `__test_frog_house(fid)` | building id | House a frog walks to |
 | `__test_plagues_locusts_countdown()` / `__test_plagues_set_locusts_countdown(v)` | ticks | OG `city_locusts_countdown` (-1 = waits for the flood) |
 | `__test_plagues_frogs_countdown()` | ticks | OG `city_frogs_countdown` |
+| `__test_plagues_mummies_max()` | count | OG `mummies_max` |
 | `__test_plagues_tick(n)` | undefined | Run n city ticks of the plague countdowns |
 | `__test_floods_season()` | season | `g_floods.season` (flood month = season / 30) |
 | `__test_locust_cloud_variant(fid)` | 0..4 | CF2: SprMain2 group variant |

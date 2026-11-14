@@ -218,7 +218,11 @@ io_buffer* iob_junk16 = new io_buffer(default_bind);
 
 io_buffer* iob_junk17 = new io_buffer(default_bind);
 
-io_buffer* iob_junk18 = new io_buffer(default_bind);
+// OG: mummies_max, difficulty.
+io_buffer* iob_junk18 = new io_buffer([](io_buffer* iob, size_t version) {
+    iob->bind(BIND_SIGNATURE_INT32, &g_city.plagues.mummies_max);
+    iob->bind____skip(4);
+});
 
 struct {
     int current_chunk = 0;
