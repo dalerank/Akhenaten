@@ -87,7 +87,6 @@ import ui_file_dialog_save_scenario
 import ui_overlay_menu
 import ui_build_menu
 import ui_market_buyer_window
-import ui_abu_simbel_info_window
 import ui_obelisk_info_window
 import ui_mastaba_info_window
 import ui_gatehouse_info_window
