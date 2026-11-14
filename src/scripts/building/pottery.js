@@ -55,23 +55,6 @@ building_pottery {
     }
 }
 
-[es=(building_pottery, on_place_checks)]
-function building_pottery_on_place_checks(ev) {
-    var clay = city.resources.clay
-    var pottery = city.resources.pottery
-    var has_supply = (clay.count_active_industry > 0) || (clay.yards_stored > 0) || (pottery.yards_stored > 0)
-    if (!has_supply) {
-        city.warnings.show("#building_needs_clay")
-        if (clay.can_produce) {
-            city.warnings.show("#build_clay_pit")
-        } else if (clay.can_import) {
-            city.warnings.show_if_not(clay.trade_status == TRADE_STATUS_IMPORT, "#overseer_of_commerce_to_import")
-        } else if (clay.could_import) {
-            city.warnings.show("#setup_trade_route_to_import")
-        }
-    }
-}
-
 [es=(building_pottery, update_graphic)]
 function building_pottery_on_update_graphic(ev) {
     var building = city.get_building(ev.bid)

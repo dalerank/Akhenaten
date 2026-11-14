@@ -69,27 +69,3 @@ building_caesareum {
         non_deletable: true
     }
 }
-
-// OG construction_warning_check_ptolemaic.
-[es=(building_caesareum, on_place_checks)]
-function building_caesareum_on_place_checks(ev) {
-    var marble = city.resources.marble
-    if (marble.yards_stored == 0) {
-        city.warnings.show("#monument_needs_marble")
-        if (!marble.can_import) {
-            city.warnings.show("#setup_trade_route_to_import")
-        } else {
-            city.warnings.show_if_not(marble.trade_status == TRADE_STATUS_IMPORT, "#overseer_of_commerce_to_import")
-        }
-    }
-    var granite = city.resources.granite
-    if (granite.count_active_industry > 0 || granite.yards_stored > 0) {
-        return
-    }
-    city.warnings.show("#monument_needs_granite")
-    if (granite.can_import) {
-        city.warnings.show_if_not(granite.trade_status == TRADE_STATUS_IMPORT, "#overseer_of_commerce_to_import")
-    } else {
-        city.warnings.show("#setup_trade_route_to_import")
-    }
-}

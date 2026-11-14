@@ -88,4 +88,54 @@ construction_warning_rules {
     { building: BUILDING_PAVILLION, school: BUILDING_CONSERVATORY, warning: "#venue_build_conservatory" }
     { building: BUILDING_PAVILLION, school: BUILDING_DANCE_SCHOOL, warning: "#venue_build_dance_school" }
   ]
+
+  // Nothing produced, nothing in the yards: "needs X", then build the producer, or a trade route, or the overseer.
+  raw_materials [
+    { buildings: [BUILDING_BREWERY_WORKSHOP], industry: RESOURCE_BARLEY, stock: RESOURCE_BARLEY, product: RESOURCE_BEER
+      warning: "#needs_barley", produce: RESOURCE_BARLEY, build: "#build_barley_farm", import_res: RESOURCE_BARLEY
+      no_route: "#setup_trade_route_to_import", not_imported: "#overseer_of_commerce_to_import" }
+    { buildings: [BUILDING_WEAVER_WORKSHOP], industry: RESOURCE_FLAX, stock: RESOURCE_FLAX, product: RESOURCE_LINEN
+      warning: "#building_needs_flax", produce: RESOURCE_FLAX, build: "#build_flax_farm", import_res: RESOURCE_FLAX
+      no_route: "#setup_trade_route_to_import", not_imported: "#overseer_of_commerce_to_import" }
+    { buildings: [BUILDING_JEWELS_WORKSHOP], industry: RESOURCE_GEMS, stock: RESOURCE_GEMS, product: RESOURCE_LUXURY_GOODS
+      warning: "#needs_gems", produce: RESOURCE_GEMS, build: "#build_gem_mine", import_res: RESOURCE_GEMS
+      no_route: "#setup_trade_route_to_import", not_imported: "#overseer_of_commerce_to_import" }
+    { buildings: [BUILDING_POTTERY_WORKSHOP], industry: RESOURCE_CLAY, stock: RESOURCE_CLAY, product: RESOURCE_POTTERY
+      warning: "#building_needs_clay", produce: RESOURCE_CLAY, build: "#build_clay_pit", import_res: RESOURCE_CLAY
+      no_route: "#setup_trade_route_to_import", not_imported: "#overseer_of_commerce_to_import" }
+    { buildings: [BUILDING_PAPYRUS_WORKSHOP], industry: RESOURCE_REEDS, stock: RESOURCE_REEDS, product: RESOURCE_PAPYRUS
+      warning: "#building_needs_reeds", produce: RESOURCE_REEDS, build: "#build_reed_gatherer", import_res: RESOURCE_REEDS
+      no_route: "#setup_trade_route_to_import", not_imported: "#overseer_of_commerce_to_import" }
+    { buildings: [BUILDING_PAINT_WORKSHOP], industry: RESOURCE_HENNA, stock: RESOURCE_HENNA, product: RESOURCE_PAINT
+      warning: "#building_needs_henna", produce: RESOURCE_HENNA, build: "#build_henna_farm", import_res: RESOURCE_HENNA
+      no_route: "#import_henna_trade_route", not_imported: "#import_henna_overseer" }
+    { buildings: [BUILDING_CATTLE_RANCH], industry: RESOURCE_GRAIN, stock: RESOURCE_STRAW
+      warning: "#building_needs_straw", produce: RESOURCE_GRAIN, build: "#build_grain_farm", import_res: RESOURCE_STRAW
+      no_route: "#setup_trade_route_to_import", not_imported: "#overseer_of_commerce_to_import" }
+    { buildings: [BUILDING_CARPENTERS_GUILD], industry: RESOURCE_TIMBER, stock: RESOURCE_TIMBER
+      warning: "#building_needs_wood", produce: RESOURCE_TIMBER, build: "#build_wood_cutter", import_res: RESOURCE_TIMBER
+      no_route: "#setup_trade_route_to_import", not_imported: "#overseer_of_commerce_to_import" }
+    { buildings: [BUILDING_SUN_TEMPLE, BUILDING_MAUSOLEUM], industry: RESOURCE_SANDSTONE, stock: RESOURCE_SANDSTONE
+      warning: "#monument_needs_sandstone", produce: RESOURCE_SANDSTONE, build: "#build_sandstone_quarry"
+      import_res: RESOURCE_SANDSTONE
+      no_route: "#setup_trade_route_to_import", not_imported: "#overseer_of_commerce_to_import" }
+    { buildings: [BUILDING_SMALL_STEPPED_PYRAMID, BUILDING_MEDIUM_STEPPED_PYRAMID, BUILDING_LARGE_STEPPED_PYRAMID,
+                  BUILDING_STEPPED_PYRAMID_COMPLEX, BUILDING_GRAND_STEPPED_PYRAMID_COMPLEX]
+      industry: RESOURCE_STONE, stock: RESOURCE_STONE
+      warning: "#monument_needs_plain_stone", produce: RESOURCE_STONE, build: "#build_stone_quarry", import_res: RESOURCE_STONE
+      no_route: "#setup_trade_route_to_import", not_imported: "#overseer_of_commerce_to_import" }
+    { buildings: [BUILDING_SMALL_MASTABA, BUILDING_MEDIUM_MASTABA, BUILDING_LARGE_MASTABA]
+      industry: RESOURCE_BRICKS, stock: RESOURCE_BRICKS
+      warning: "#monument_needs_bricks", produce: RESOURCE_BRICKS, build: "#build_brickworks", import_res: RESOURCE_BRICKS
+      no_route: "#setup_trade_route_to_import", not_imported: "#overseer_of_commerce_to_import" }
+    { buildings: [BUILDING_PHAROS_LIGHTHOUSE, BUILDING_CAESAREUM, BUILDING_ALEXANDRIA_LIBRARY], stock: RESOURCE_MARBLE
+      warning: "#monument_needs_marble", import_res: RESOURCE_MARBLE
+      no_route: "#setup_trade_route_to_import", not_imported: "#overseer_of_commerce_to_import" }
+    { buildings: [BUILDING_ALEXANDRIA_LIBRARY], industry: RESOURCE_COPPER, stock: RESOURCE_COPPER
+      warning: "#monument_needs_copper", import_res: RESOURCE_COPPER
+      no_route: "#setup_trade_route_to_import", not_imported: "#overseer_of_commerce_to_import" }
+    { buildings: [BUILDING_CAESAREUM], industry: RESOURCE_GRANITE, stock: RESOURCE_GRANITE
+      warning: "#monument_needs_granite", import_res: RESOURCE_GRANITE
+      no_route: "#setup_trade_route_to_import", not_imported: "#overseer_of_commerce_to_import" }
+  ]
 }

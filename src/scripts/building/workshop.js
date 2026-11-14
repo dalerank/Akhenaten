@@ -48,19 +48,6 @@ building_brewery {
 
 [es=(building_brewery, on_place_checks)]
 function building_brewery_on_place_checks(ev) {
-    var barley = city.resources.barley
-    var has_supply = (barley.count_active_industry > 0) || (barley.yards_stored > 0)
-    if (!has_supply) {
-        city.warnings.show("#needs_barley")
-        if (barley.can_produce) {
-            city.warnings.show("#build_barley_farm")
-        } else if (barley.can_import) {
-            city.warnings.show_if_not(barley.trade_status == TRADE_STATUS_IMPORT, "#overseer_of_commerce_to_import")
-        } else if (barley.could_import) {
-            city.warnings.show("#setup_trade_route_to_import")
-        }
-    }
-
     if (game_features.gameplay_brewery_requires_water) {
         var b = city.get_building(ev.bid)
         var size = b.params.building_size
@@ -133,18 +120,4 @@ building_jewels_workshop = {
 function building_jewels_workshop_produce_uptick_per_day(ev) {
     var b = city.get_building(ev.bid)
     b.produce_uptick += industry_ptah_complex_bonus(b)
-}
-
-[es=(building_jewels_workshop, on_place_checks)]
-function building_jewels_workshop_on_place_checks(ev) {
-    var gems = city.resources.gems
-    var has_supply = (gems.count_active_industry > 0) || (gems.yards_stored > 0)
-    if (has_supply) {
-        return
-    }
-
-    city.warnings.show("#needs_gems")
-    city.warnings.show_if_not(gems.can_produce, "#build_gem_mine")
-    city.warnings.show_if_not(gems.can_import, "#setup_trade_route_to_import")
-    city.warnings.show_if_not(gems.trade_status == TRADE_STATUS_IMPORT, "#overseer_of_commerce_to_import")
 }

@@ -43,20 +43,6 @@ building_papyrus_maker = {
   }
 }
 
-[es=(building_papyrus_maker, on_place_checks)]
-function building_papyrus_maker_on_place_checks(ev) {
-    var reeds = city.resources.reeds
-    var has_supply = (reeds.count_active_industry > 0) || (reeds.yards_stored > 0)
-    if (has_supply) {
-        return
-    }
-
-    city.warnings.show("#building_needs_reeds")
-    city.warnings.show_if_not(reeds.can_produce, "#build_reed_gatherer")
-    city.warnings.show_if_not(reeds.can_import, "#setup_trade_route_to_import")
-    city.warnings.show_if_not(reeds.trade_status == TRADE_STATUS_IMPORT, "#overseer_of_commerce_to_import")
-}
-
 [es=(building_papyrus_maker, update_animation)]
 function building_papyrus_maker_on_update_animation(ev) {
     var b = city.get_building(ev.bid)
