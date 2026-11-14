@@ -8,7 +8,7 @@
 #include "core/app.h"
 
 void (*button_border_draw)(vec2i, vec2i, bool) = ui::textured::button_border_draw;
-void (*graphics_draw_background)(painter&, int, float, vec2i) = &ui::textured::graphics_draw_background;
+void (*graphics_draw_background)(painter&, int, float, vec2i, bool) = &ui::textured::graphics_draw_background;
 void (*large_label_draw)(vec2i, int, int) = ui::textured::large_label_draw;
 
 void ANK_REGISTER_APPLICATION_MODULE(ui_module_init) {

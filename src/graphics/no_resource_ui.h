@@ -10,7 +10,7 @@ struct painter;
 namespace ui {
     namespace no_resource {
         void button_border_fill(vec2i pos, vec2i size, bool hovered);
-        void graphics_draw_background(painter& ctx, int image_id, float scale, vec2i offset);
+        void graphics_draw_background(painter& ctx, int image_id, float scale, vec2i offset, bool fit);
         void large_label_fill(vec2i pos, int width_blocks, int type);
     }
 }

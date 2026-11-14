@@ -188,7 +188,7 @@ window_scenario_selection_campaign {
     ui {
         background : dummy({ size[64, 48] })
 
-        img_history : background({ pack:PACK_UNLOADED, id:33, offset:0 })
+        img_history : background({ pack:PACK_UNLOADED, id:33, offset:0, fit:false })
 
         campaign_hover_thumb : image_queue({ pos[270, 200], size[256, 152], fit:true, fade_ms:280, pack:PACK_UNLOADED, id:28, offset:0 })
 

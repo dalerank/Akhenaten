@@ -46,14 +46,14 @@ void graphics_shade_rect(vec2i start, vec2i size, int darkness) {
     g_render.fill_rect(start, size, alpha);
 }
 
-void ui::textured::graphics_draw_background(painter& ctx, int image_id, float scale, vec2i offset) {
+void ui::textured::graphics_draw_background(painter& ctx, int image_id, float scale, vec2i offset, bool fit) {
     const image_t* img = image_get(image_id);
     if (!img || img->width <= 0 || img->height <= 0) {
         return;
     }
 
     float fit_scale = scale;
-    if (img->width >= 500 && img->height >= 350) {
+    if (fit && img->width >= 500 && img->height >= 350) {
         float fit_x = (float)screen_width() / (float)img->width;
         float fit_y = (float)screen_height() / (float)img->height;
         fit_scale = std::max(fit_x, fit_y) * scale;

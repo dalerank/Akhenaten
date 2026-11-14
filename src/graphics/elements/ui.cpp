@@ -1483,7 +1483,7 @@ void ui::eimg_queue::image(int image) {
 void ui::ebackground::draw(UiFlags flags) {
     painter ctx = game.painter();
     scr_pos = pos;
-    graphics_draw_background(ctx, img_desc.tid(), 1.f, pos);
+    graphics_draw_background(ctx, img_desc.tid(), 1.f, pos, fit);
 }
 
 void ui::ebackground::load(archive arch, element* parent, items& elems) {
@@ -1492,6 +1492,7 @@ void ui::ebackground::load(archive arch, element* parent, items& elems) {
     xstring type = arch.r_string("type");
     assert(type == "background");
     scale = arch.r_float("scale", 1.f);
+    fit = arch.r_bool("fit", true);
     img_desc.pack = arch.r_int("pack");
     img_desc.id = arch.r_int("id");
     img_desc.offset = arch.r_int("offset");
