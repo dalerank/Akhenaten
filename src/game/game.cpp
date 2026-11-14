@@ -50,6 +50,7 @@
 #include "city/city_desirability.h"
 #include "city/city_message.h"
 #include "city/city_industry.h"
+#include "figuretype/figure_locust.h"
 #include "scenario/distant_battle.h"
 #include "scenario/empire.h"
 #include "empire/empire.h"
@@ -190,6 +191,8 @@ void game_t::advance_month() {
     //    map_tiles_river_refresh_entire();
     map_routing_update_land_citizen();
     //    city_message_sort_and_compact();
+
+    figure_locust::update_month(simtime.month + 1);
 
     // OG advance_month: the yearly update recomputes the ratings, so December does not also run the monthly one.
     if (simtime.advance_month()) {

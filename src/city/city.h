@@ -101,6 +101,11 @@ struct city_t {
         bool reeds_reachable = false;
     } vegetation;
 
+    // OG city_locusts_countdown (-1 = waiting for the flood).
+    struct {
+        int32_t locusts_countdown;
+    } plagues;
+
     struct {
         bool fired_message_shown;
         bool victory_message_shown;

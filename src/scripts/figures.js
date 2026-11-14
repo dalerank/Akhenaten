@@ -576,7 +576,7 @@ figure_cart {
 // Walk JS id=30 is timing only; main_image_update remaps to g30+variant.
 // Must override main_image_update (no dir+8*frame) — see figure_locust.cpp.
 // big_image: Cleopatra Unloaded pack 25 slot FIGURE_LOCUST (107).
-// Tunables: swarm_days matches building_curse_farms(big); happiness Major Plague TEMP.
+// OG city/locusts.h + city_disasters.h values.
 figure_locust {
 	animations {
 		walk { pack:PACK_EXPANSION_SPR, id:30, max_frames:6 }
@@ -591,10 +591,13 @@ figure_locust {
 	terrain_usage: TERRAIN_USAGE_ANY
 	max_roam_length: 320
 
-	default_swarm: 8
-	max_amount: 16
-	swarm_days: 48
-	happiness_hit: -10
+	countdown_after_plague: 2632
+	countdown_fly_off: 1000
+	months_before_flood: 2
+	locusts_per_farm: 9
+	square_side: 3
+	max_start_delay: 300
+	happiness_loss: 15
 	float_height: 20
 }
 

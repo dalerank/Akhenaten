@@ -933,6 +933,5 @@ io_buffer* iob_building_highest_id = new io_buffer([](io_buffer* iob, size_t ver
 io_buffer* iob_building_highest_id_ever = new io_buffer([](io_buffer* iob, size_t version) {
     //iob->bind(BIND_SIGNATURE_INT32, &building_extra_data.highest_id_ever);
     iob->bind____skip(4);
-    iob->bind____skip(4);
-    //    highest_id_ever->skip(4);
+    iob->bind(BIND_SIGNATURE_INT32, &g_city.plagues.locusts_countdown);
 });

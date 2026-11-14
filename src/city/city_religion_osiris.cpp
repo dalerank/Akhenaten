@@ -25,8 +25,8 @@ bool god_osiris_t::create_shipwreck_flotsam() {
 
 
 void god_osiris_t::perform_locusts() {
-    figure_locust::apply_plague();
     messages::popup("message_wrath_of_osiris_2", 0, 0);
+    figure_locust::start_plague();
 }
 
 void god_osiris_t::perform_major_curse() {

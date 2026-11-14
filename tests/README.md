@@ -122,7 +122,7 @@ See **IT1** in `REMAKE_TODO.md` / `REMAKE_NOTES.md` §4.
 | `90_plagued_citizen.js` | Plague carriers: spawn from infected house, roadblock ignore, herbalist/Isis cure |
 | `92_ironwill.js` | Ironwill: mid-game save/load/autosave blocked; C++ write belt; exit checkpoint exempt |
 | `97_ptah_scorpion_curse.js` | Ptah scorpion raid (CF6): feature ON spawn at temple when no industry; OFF / no-temple fallback → no scorpions; raid prey skips ostrich; 1-day timer poof |
-| `94_locust_swarm.js` | CF2 locust: Osiris/EVENT/pak-chain/cheat; sentiment; saveload; timer; variant/float |
+| `94_locust_swarm.js` | CF2 locust: register, cloud variant/float, post_load; Osiris/EVENT/pak-chain/console start the OG countdown |
 | `85_mummy_attack.js` | BF3 mummy: register + `spawn_wave` → 1× msg 496; soldier target + kill; city cap 4; `EVENT_TYPE_MUMMY` |
 | `91_popup_messages.js` | OG Popup Messages: category map + banner/click-open vs modal; unlisted stays modal |
 | `69_scorpion_spawn.js` | Cleopatra `FIGURE_SCORPION`: spawn + type + `update_animation` → `walk` (SprMain2 group 10; CF3c) |
@@ -314,9 +314,11 @@ A new test binding goes into the matching domain file; a new domain file needs a
 | `__test_figure_is_enemy(fid)` | 0\|1 | Whether figure has enemy flag |
 | `__test_soldier_combat_target(x,y,d)` | figure id | Soldier combat target near tile |
 | `__test_figure_kill(fid)` | undefined | Kill live figure (reset wait_ticks) |
-| `__test_locust_spawn_swarm(count)` | figure id | CF2: spawn locust swarm (0 → default) |
-| `__test_locust_set_days(fid, days)` | 0\|1 | CF2: set locust `days_left` |
-| `__test_locust_get_days(fid)` | days | CF2: get locust `days_left` |
+| `__test_locust_farm(fid)` | building id | Farm a locust flies to |
+| `__test_locust_update_month(month)` | undefined | OG `city_locusts_update` for the advanced month |
+| `__test_plagues_locusts_countdown()` / `__test_plagues_set_locusts_countdown(v)` | ticks | OG `city_locusts_countdown` (-1 = waits for the flood) |
+| `__test_plagues_tick(n)` | undefined | Run n city ticks of the plague countdowns |
+| `__test_floods_season()` | season | `g_floods.season` (flood month = season / 30) |
 | `__test_locust_cloud_variant(fid)` | 0..4 | CF2: SprMain2 group variant |
 | `__test_locust_post_load(fid)` | 0\|1 | CF2: exercise `on_post_load` restore |
 | `__test_figure_current_height(fid)` | height | Figure `current_height` (float) |

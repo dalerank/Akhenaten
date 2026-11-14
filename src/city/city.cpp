@@ -374,6 +374,10 @@ void city_t::update_tick(int simtick) {
         avg_coverage.update();
         break;
     }
+
+    if (plagues.locusts_countdown > 0) {
+        plagues.locusts_countdown--;
+    }
 }
 
 bool city_t::generate_trader_from(empire_city &city) {

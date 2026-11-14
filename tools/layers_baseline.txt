@@ -523,7 +523,6 @@ figuretype/figure_kingdome_trader.cpp -> graphics/image_desc.h
 figuretype/figure_kingdome_trader.cpp -> graphics/image_groups.h
 figuretype/figure_kingdome_trader.cpp -> widget/debug_console.h
 figuretype/figure_locust.cpp -> graphics/image.h
-figuretype/figure_locust.cpp -> sound/sound.h
 figuretype/figure_lumberjack.cpp -> graphics/graphics.h
 figuretype/figure_lumberjack.cpp -> graphics/image.h
 figuretype/figure_lumberjack.cpp -> graphics/image_groups.h

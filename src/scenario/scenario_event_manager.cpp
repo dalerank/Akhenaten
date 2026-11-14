@@ -1494,12 +1494,11 @@ void event_manager_t::process_event(int id, bool via_event_trigger, int chain_ac
         }
         break;
     }
-    case EVENT_TYPE_LOCUSTS: {
-        const int n = event.amount.value > 0 ? event.amount.value : 0;
-        figure_locust::apply_plague(n);
+    case EVENT_TYPE_LOCUSTS:
+        figure_locust::start_plague();
         messages::popup("message_plague_of_locusts", 0, 0);
         break;
-    }
+
     case EVENT_TYPE_CRIME_WAVE: {
         // TR4a: popup 491 + spawn 2 tomb robbers (TEMP).
         const int n = event.amount.value > 0 ? event.amount.value : 2;

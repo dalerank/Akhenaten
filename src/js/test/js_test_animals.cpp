@@ -8,6 +8,7 @@
 #include "city/city_animals.h"
 #include "city/city_buildings.h"
 #include "city/city_figures.h"
+#include "city/city_floods.h"
 #include "city/object_info.h"
 #include "core/bstring.h"
 #include "core/random.h"
@@ -34,30 +35,6 @@
 
 #include <algorithm>
 #include <cstring>
-
-static int __test_locust_spawn_swarm(int count) {
-    return figure_locust::spawn_swarm(count);
-}
-ANK_FUNCTION_1(__test_locust_spawn_swarm);
-
-static int __test_locust_set_days(int fid, int days) {
-    figure* f = figure_get(fid);
-    if (!f || !f->is_alive() || f->type != FIGURE_LOCUST) {
-        return 0;
-    }
-    figure_locust(f).runtime_data().days_left = (uint16_t)std::max(0, days);
-    return 1;
-}
-ANK_FUNCTION_2(__test_locust_set_days);
-
-static int __test_locust_get_days(int fid) {
-    figure* f = figure_get(fid);
-    if (!f || !f->is_alive() || f->type != FIGURE_LOCUST) {
-        return -1;
-    }
-    return figure_locust(f).runtime_data().days_left;
-}
-ANK_FUNCTION_1(__test_locust_get_days);
 
 static int __test_locust_cloud_variant(int fid) {
     figure* f = figure_get(fid);
@@ -91,6 +68,42 @@ static int __test_locust_post_load(int fid) {
     return 1;
 }
 ANK_FUNCTION_1(__test_locust_post_load);
+
+static int __test_locust_farm(int fid) {
+    figure* f = figure_get(fid);
+    if (!f || !f->is_alive() || f->type != FIGURE_LOCUST) {
+        return 0;
+    }
+    return figure_locust(f).runtime_data().farm_id;
+}
+ANK_FUNCTION_1(__test_locust_farm);
+
+static void __test_locust_update_month(int month) {
+    figure_locust::update_month(month);
+}
+ANK_FUNCTION_1(__test_locust_update_month);
+
+static int __test_plagues_locusts_countdown() {
+    return g_city.plagues.locusts_countdown;
+}
+ANK_FUNCTION(__test_plagues_locusts_countdown);
+
+static void __test_plagues_set_locusts_countdown(int v) {
+    g_city.plagues.locusts_countdown = v;
+}
+ANK_FUNCTION_1(__test_plagues_set_locusts_countdown);
+
+static void __test_plagues_tick(int n) {
+    for (int i = 0; i < n; i++) {
+        g_city.update_tick(0);
+    }
+}
+ANK_FUNCTION_1(__test_plagues_tick);
+
+static int __test_floods_season() {
+    return g_floods.season;
+}
+ANK_FUNCTION(__test_floods_season);
 
 static int __test_frog_spawn_swarm(int count) {
     return figure_frog::spawn_swarm(count);

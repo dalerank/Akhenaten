@@ -702,7 +702,7 @@ void figure_worker::find_work() {
                     continue;
                 }
                 int distance = calc_maximum_distance(tile(), b.tile);
-                if (distance > (int)p.farm_search_distance) {
+                if (distance > (int)p.farm_search_distance || g_city.plagues.locusts_countdown > 0) {
                     continue;
                 }
                 distance += farm->runtime_data().labor_days_left;
@@ -1088,7 +1088,9 @@ void figure_worker::figure_action() {
     case ACTION_10_LABORER_TO_FARM:
         if (do_gotobuilding(destination(), stop_at_road, terrain_usage, ACTION_10_LABORER_TO_FARM, ACTION_14_LABORER_ROUTE_LOST)) {
             worker_handoff_path_to_camp(base);
-            if (b_dest->is_floodplain_farm()) {
+            if (b_dest->is_floodplain_farm() && g_city.plagues.locusts_countdown != 0) {
+                poof();
+            } else if (b_dest->is_floodplain_farm()) {
                 auto &d = b_dest->dcast_farm()->runtime_data();
                 if (game_features::gameplay_change_work_camp_distance_scaled_farm_workers.to_bool()) {
                     b_dest->num_workers = std::clamp<int>((1.f - bhome->tile.dist(b_dest->tile) / 20.f) * 12, 2, 10);
