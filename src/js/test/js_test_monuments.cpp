@@ -1355,3 +1355,28 @@ static void __test_alexandria_library_deliver_material(int bid) {
     s->main_library()->on_material_delivered();
 }
 ANK_FUNCTION_1(__test_alexandria_library_deliver_material);
+
+static tile2i __test_building_access_tile(int bid) {
+    building* b = building_get(bid);
+    return b ? b->access_tile() : tile2i::invalid;
+}
+ANK_FUNCTION_1(__test_building_access_tile);
+
+static tile2i __test_building_road_access(int bid) {
+    building* b = building_get(bid);
+    return b ? b->road_access : tile2i::invalid;
+}
+ANK_FUNCTION_1(__test_building_road_access);
+
+static tile2i __test_building_main_tile(int bid) {
+    building* b = building_get(bid);
+    return b ? b->main()->tile : tile2i::invalid;
+}
+ANK_FUNCTION_1(__test_building_main_tile);
+
+static tile2i __test_monument_access_point(int bid) {
+    building* b = building_get(bid);
+    auto* mm = b ? b->dcast_monument() : nullptr;
+    return mm ? mm->access_point() : tile2i::invalid;
+}
+ANK_FUNCTION_1(__test_monument_access_point);
