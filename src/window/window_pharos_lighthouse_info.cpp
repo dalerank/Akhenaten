@@ -58,8 +58,8 @@ namespace {
                 return {178, 20};
             }
         }
-        const auto& texts = lh.lighthouse_params().stage_texts;
-        return {178, p.stage < (int)texts.size() ? texts[p.stage] : (uint16_t)0};
+        const auto& stages = lh.lighthouse_params().stages;
+        return {178, p.stage < (int)stages.size() ? stages[p.stage].text : (uint16_t)0};
     }
 
 } // namespace

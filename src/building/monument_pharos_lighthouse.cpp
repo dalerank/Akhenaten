@@ -163,12 +163,11 @@ int building_pharos_lighthouse::spot_work_left(e_figure_type type) const {
 void building_pharos_lighthouse::reset_spots() {
     auto& d = main_lighthouse()->runtime_data();
     d.spot_work.fill(0);
+    const auto& stages = lighthouse_params().stages;
     const int s = stage();
-    for (const auto& def : lighthouse_params().spots) {
-        const int i = spot_index(def.figure);
-        if (def.stage == s && i >= 0) {
-            d.spot_work[i] = def.work;
-        }
+    if (s < (int)stages.size()) {
+        d.spot_work[spot_index(FIGURE_STONEMASON)] = stages[s].stonemason;
+        d.spot_work[spot_index(FIGURE_CARPENTER)] = stages[s].carpenter;
     }
 }
 

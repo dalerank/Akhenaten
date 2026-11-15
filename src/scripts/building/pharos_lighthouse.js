@@ -15,24 +15,17 @@ building_pharos_lighthouse {
       preview { pack:PACK_LTHOUSE_1, id:1 }
     }
     building_size : 6
-    spots [
-        { stage: 0, figure: FIGURE_STONEMASON, work: 400 }
-        { stage: 1, figure: FIGURE_STONEMASON, work: 400 }
-        { stage: 2, figure: FIGURE_STONEMASON, work: 410 }
-        { stage: 2, figure: FIGURE_CARPENTER, work: 300 }
-        { stage: 3, figure: FIGURE_STONEMASON, work: 600 }
-        { stage: 3, figure: FIGURE_CARPENTER, work: 350 }
-        { stage: 4, figure: FIGURE_STONEMASON, work: 355 }
-        { stage: 4, figure: FIGURE_CARPENTER, work: 600 }
-        { stage: 5, figure: FIGURE_STONEMASON, work: 500 }
-        { stage: 5, figure: FIGURE_CARPENTER, work: 500 }
-        { stage: 6, figure: FIGURE_STONEMASON, work: 500 }
-        { stage: 6, figure: FIGURE_CARPENTER, work: 500 }
-        { stage: 7, figure: FIGURE_STONEMASON, work: 500 }
-        { stage: 7, figure: FIGURE_CARPENTER, work: 500 }
-        { stage: 8, figure: FIGURE_STONEMASON, work: 400 }
+    stages [
+        { stage: 0, hint: "laying the foundation", stonemason: 400, text: 133 }
+        { stage: 1, hint: "foundation and parquet floor", stonemason: 400, text: 134 }
+        { stage: 2, hint: "first tier", stonemason: 410, carpenter: 300, text: 135 }
+        { stage: 3, hint: "first tier", stonemason: 600, carpenter: 350, text: 135 }
+        { stage: 4, hint: "second octagonal tier", stonemason: 355, carpenter: 600, text: 136 }
+        { stage: 5, hint: "cupola", stonemason: 500, carpenter: 500, text: 137 }
+        { stage: 6, hint: "cupola", stonemason: 500, carpenter: 500, text: 137 }
+        { stage: 7, hint: "removing the scaffolding", stonemason: 500, carpenter: 500, text: 138 }
+        { stage: 8, hint: "last scaffolding, finishing", stonemason: 400, text: 139 }
     ]
-    stage_texts [133, 134, 135, 135, 136, 137, 137, 138, 139]
     fire_proof : true
     damage_proof : true
     info_title_id [198, 28]

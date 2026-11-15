@@ -7,12 +7,14 @@
 
 class figure;
 
-struct pharos_lighthouse_spot_def {
+struct pharos_lighthouse_stage_def {
     uint8_t stage = 0;
-    e_figure_type figure = FIGURE_NONE;
-    uint16_t work = 0;
+    xstring hint;
+    uint16_t stonemason = 0;
+    uint16_t carpenter = 0;
+    uint16_t text = 0;
 };
-ANK_CONFIG_STRUCT(pharos_lighthouse_spot_def, stage, figure, work)
+ANK_CONFIG_STRUCT(pharos_lighthouse_stage_def, stage, hint, stonemason, carpenter, text)
 
 class building_pharos_lighthouse : public building_monument {
 public:
@@ -35,8 +37,7 @@ public:
     } BUILDING_RUNTIME_DATA_T;
 
     struct base_params {
-        svector<pharos_lighthouse_spot_def, 16> spots;
-        svector<uint16_t, STAGE_COMPLETE> stage_texts;
+        svector<pharos_lighthouse_stage_def, STAGE_COMPLETE> stages;
     };
 
     struct static_params : public base_params, public building_static_params {
@@ -116,5 +117,5 @@ private:
     void advance_stage();
     void refresh_tower_tiles();
 };
-ANK_CONFIG_STRUCT(building_pharos_lighthouse::static_params, spots, stage_texts)
+ANK_CONFIG_STRUCT(building_pharos_lighthouse::static_params, stages)
 ANK_CONFIG_PROPERTY(building_pharos_lighthouse::runtime_data_t, variant)

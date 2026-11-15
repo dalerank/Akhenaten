@@ -89,6 +89,35 @@ function run_test() {
         return t393_fail('initial stage ' + __test_lighthouse_stage(bid) + ' pct ' + __test_lighthouse_percent(bid))
     }
 
+    // OG lighthouse_work_spots and lighthouse_stage_text, per stage 0..8.
+    var og_mason = [400, 400, 410, 600, 355, 500, 500, 500, 400]
+    var og_carpenter = [0, 0, 300, 350, 600, 500, 500, 500, 0]
+    var og_text = [133, 134, 135, 135, 136, 137, 137, 138, 139]
+    var og_spots = []
+    for (var s = 0; s < 9; s++) {
+        og_spots.push(s + ':' + FIGURE_STONEMASON + ':' + og_mason[s])
+        if (og_carpenter[s]) {
+            og_spots.push(s + ':' + FIGURE_CARPENTER + ':' + og_carpenter[s])
+        }
+    }
+    if (__test_lighthouse_spots(bid) != og_spots.join(';')) {
+        return t393_fail('spots ' + __test_lighthouse_spots(bid) + ' != ' + og_spots.join(';'))
+    }
+    for (var s = 0; s < 9; s++) {
+        __test_lighthouse_set_stage(bid, s)
+        var sm = __test_lighthouse_spot_work(bid, FIGURE_STONEMASON)
+        var sc = __test_lighthouse_spot_work(bid, FIGURE_CARPENTER)
+        var st = __test_lighthouse_stage_text(bid)
+        if (sm != og_mason[s] || sc != og_carpenter[s] || st != og_text[s]) {
+            return t393_fail('stage ' + s + ' mason ' + sm + ' carpenter ' + sc + ' text ' + st)
+        }
+    }
+    __test_lighthouse_set_stage(bid, 0)
+    if (__test_lighthouse_stage(bid) != 0 || __test_lighthouse_spot_work(bid, FIGURE_STONEMASON) != 400) {
+        return t393_fail('back to stage 0 failed')
+    }
+    __log_marker('t393_stage_table')
+
     var mason = __test_figure_create(FIGURE_STONEMASON, x + 2, y + 7)
     var carpenter = __test_figure_create(FIGURE_CARPENTER, x + 2, y + 7)
     __test_figure_set_action(mason, 19)
@@ -177,6 +206,7 @@ function check_valid() {
         && __test_find_inlog('[test-marker] t393_site_rules')
         && __test_find_inlog('[test-marker] t393_parts')
         && __test_find_inlog('[test-marker] t393_one_only')
+        && __test_find_inlog('[test-marker] t393_stage_table')
         && __test_find_inlog('[test-marker] t393_sleds_and_work')
         && __test_find_inlog('[test-marker] t393_saveload_ok')
         && __test_find_inlog('[test-marker] t393_stage_needs_both_spots')

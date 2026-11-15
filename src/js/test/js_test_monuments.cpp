@@ -1261,6 +1261,33 @@ static int __test_lighthouse_work(int bid, int fid) {
 }
 ANK_FUNCTION_2(__test_lighthouse_work);
 
+static pcstr __test_lighthouse_spots(int bid) {
+    static bstring1024 out;
+    out.clear();
+    if (!test_lighthouse(bid)) {
+        return out.c_str();
+    }
+    for (const auto& s : building_pharos_lighthouse::lighthouse_params().stages) {
+        out.append_fmt("%s%d:%d:%d", out.empty() ? "" : ";", s.stage, (int)FIGURE_STONEMASON, s.stonemason);
+        if (s.carpenter > 0) {
+            out.append_fmt(";%d:%d:%d", s.stage, (int)FIGURE_CARPENTER, s.carpenter);
+        }
+    }
+    return out.c_str();
+}
+ANK_FUNCTION_1(__test_lighthouse_spots);
+
+static int __test_lighthouse_stage_text(int bid) {
+    auto* l = test_lighthouse(bid);
+    if (!l) {
+        return -1;
+    }
+    const auto& stages = building_pharos_lighthouse::lighthouse_params().stages;
+    const int s = l->stage();
+    return s < (int)stages.size() ? stages[s].text : -1;
+}
+ANK_FUNCTION_1(__test_lighthouse_stage_text);
+
 static building_sun_temple *test_sun_temple(int bid) {
     building *b = building_get(bid);
     auto *s = b ? b->dcast_sun_temple() : nullptr;
