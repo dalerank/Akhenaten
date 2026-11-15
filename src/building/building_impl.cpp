@@ -340,7 +340,13 @@ void building_impl::update_animation() {
 }
 
 void building_impl::update_count() const {
-    g_city.buildings.increase_count(base.type, base.num_workers > 0);
+    const bool active = base.is_shrine() ? map_has_road_access_nearby(base.tile) : base.num_workers > 0;
+    g_city.buildings.increase_count(base.type, active);
+    if (active) {
+        for (const e_building_type type : current_params().active_counts_as) {
+            g_city.buildings.increase_active(type);
+        }
+    }
 }
 
 void building_impl::update_map_orientation(int orientation) {

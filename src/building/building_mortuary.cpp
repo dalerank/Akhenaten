@@ -21,6 +21,7 @@ BUILDING_RUNTIME_DATA_IMPL(building_mortuary)
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_mortuary);
 
 void building_mortuary::update_count() const {
+    building_impl::update_count();
     g_city.health.add_mortuary_workers(num_workers());
 }
 

@@ -38,6 +38,7 @@ bool building_type_ghost_road_access(e_building_type type);
 bool building_type_ghost_assume_occupied(e_building_type type);
 
 bool map_has_road_access(tile2i tile, int size);
+bool map_has_road_access_nearby(tile2i tile);
 tile2i map_get_road_access_tile(tile2i tile, int size);
 bool road_tile_valid_access(int grid_offset);
 tile2i map_has_road_access_rotation(int rotation, tile2i tile, int size);

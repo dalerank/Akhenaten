@@ -90,6 +90,7 @@ struct city_buildings_t {
     bool has_working_shipyard() const { return !tracked_buildings().at(BUILDING_SHIPWRIGHT).empty(); }
 
     void increase_count(e_building_type type, bool active);
+    void increase_active(e_building_type type);
     void increase_industry_count(int resource, bool active);
 
     int count_active(std::initializer_list<e_building_type> types);

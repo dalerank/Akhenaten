@@ -40,7 +40,7 @@ function building_warship_wharf_can_place(ev) {
     }
 
     // OG CONSTRUCTION_PLACE_RULE_MAX_WARSHIP_WHARVES = 6
-    if (city.count_active_buildings(BUILDING_WARSHIP_WHARF) >= 6) {
+    if (city.count_total_buildings(BUILDING_WARSHIP_WHARF) >= 6) {
         city_planner.set_warning("#full_complement_of_warship_wharves")
         city_planner.finalize_check_result = CAN_NOT_PLACE
         return

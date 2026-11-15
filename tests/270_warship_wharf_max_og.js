@@ -23,9 +23,9 @@ function run_test() {
             return
         }
     }
-    if (city.count_active_buildings(BUILDING_WARSHIP_WHARF) < 6) {
+    if (city.count_total_buildings(BUILDING_WARSHIP_WHARF) < 6) {
         test270_fail('expected 6 warship wharves, got '
-            + city.count_active_buildings(BUILDING_WARSHIP_WHARF))
+            + city.count_total_buildings(BUILDING_WARSHIP_WHARF))
         return
     }
     __log_info_native('[test-marker] warship_wharf_og_place_six')

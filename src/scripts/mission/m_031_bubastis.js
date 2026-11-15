@@ -637,7 +637,7 @@ function mission31_requests_and_events(ev) {
 	}
 
 	// Heaven TEMP: ≥2 active warship wharves → NEW_TRADE Gaza (no distant_battle in pak)
-	if (!mission.gaza_trade_done && city.count_active_buildings(BUILDING_WARSHIP_WHARF) >= 2) {
+	if (!mission.gaza_trade_done && city.count_total_buildings(BUILDING_WARSHIP_WHARF) >= 2) {
 		mission.gaza_trade_done = true
 		log_info("akhenaten: mission 31 NEW_TRADE Gaza (warship wharves)")
 		mission31_fire_simple_event(2020, EVENT_TYPE_CITY_STATUS_CHANGE, undefined, 1, "Gaza",

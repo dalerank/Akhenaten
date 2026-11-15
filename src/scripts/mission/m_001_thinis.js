@@ -110,7 +110,7 @@ function mission1_check_gold_mined(ev) {
 
 [event=event_migration_update, mission=mission1]
 function mission1_handle_population_cap(ev) {
-    var granary_built = city.count_active_buildings(BUILDING_GRANARY)
+    var granary_built = city.count_total_buildings(BUILDING_GRANARY)
     var max_pop = (granary_built > 0) ? 0 : mission.nogranary_population_cap
 
     migration.set_population_cap("no_granary_population_cap", max_pop)
@@ -133,7 +133,7 @@ function mission1_on_build_temple(ev) {
         return
     }
 
-    var temples_count = city.count_active_buildings(BUILDING_TEMPLE_BAST)
+    var temples_count = city.count_total_buildings(BUILDING_TEMPLE_BAST)
     if (temples_count == 0) {
         return
     }
@@ -155,7 +155,7 @@ function mission1_on_build_booth(ev) {
         return
     }
 
-    var booth_count = city.count_active_buildings(BUILDING_BOOTH)
+    var booth_count = city.count_total_buildings(BUILDING_BOOTH)
     if (booth_count == 0) {
         return
     }
@@ -170,7 +170,7 @@ function mission1_on_build_juggler_school(ev) {
 		return
 	}
 
-	var juggler_school_count = city.count_active_buildings(BUILDING_JUGGLER_SCHOOL)
+	var juggler_school_count = city.count_total_buildings(BUILDING_JUGGLER_SCHOOL)
 	if (juggler_school_count == 0) {
 		return
 	}

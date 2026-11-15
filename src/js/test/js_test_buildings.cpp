@@ -566,6 +566,11 @@ static void __test_city_buildings_update_tick() {
 }
 ANK_FUNCTION(__test_city_buildings_update_tick);
 
+static void __test_city_buildings_update_counters() {
+    g_city.buildings.update_counters();
+}
+ANK_FUNCTION(__test_city_buildings_update_counters);
+
 static int __test_building_shows_delivery_paths(int bid) {
     building* b = building_get(bid);
     if (!b) {

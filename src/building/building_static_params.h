@@ -64,6 +64,7 @@ struct building_static_params {
     building_planner_update_rule planner_update_rule;
     building_planner_need_rule needs;
     building_flags_rule flags;
+    svector<e_building_type, 4> active_counts_as;
     xstring build_menu_text;
     xstring info_sound;
 
@@ -93,7 +94,7 @@ ANK_CONFIG_STRUCT(building_static_params, labor_category, fire_proof, damage_pro
   overlay_anims, laborers, fire_risk, damage_risk, max_walkers, planner_update_rule, needs, flags, build_menu_text,
   info_sound, cost, desirability, crime, output_resource_second_rate, building_size, info_title_id, progress_max,
   overlay, sound_channel, max_service, max_storage_amount, max_serve_clients, max_gatherers, meta_id, meta,
-  production_rate, production_rate_dcy, min_houses_coverage, nearby_houses_radius)
+  production_rate, production_rate_dcy, min_houses_coverage, nearby_houses_radius, active_counts_as)
 
 ANK_CONFIG_PROPERTY(building_static_params, labor_category, fire_proof, damage_proof, laborers, fire_risk, damage_risk,
   max_walkers, guild_worker_terrain, build_menu_text, info_sound, cost, output_resource_second_rate, building_size,

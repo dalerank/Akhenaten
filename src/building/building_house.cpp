@@ -141,7 +141,7 @@ void building_house::update_week() {
 }
 
 void building_house::update_count() const {
-    g_city.buildings.increase_count(type(), runtime_data().hsize > 0);
+    g_city.buildings.increase_count(type(), house_population() > 0);
 }
 
 void building_house::bind_dynamic(io_buffer *iob, size_t version) {

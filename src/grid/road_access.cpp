@@ -100,6 +100,26 @@ bool map_road_find_minimum_tile_xy_classic(tile2i tile, int sizex, int sizey, in
     return found;
 }
 
+// OG map_has_road_access_nearby: a road on the four axis tiles one or two steps away; a roadblock or a ferry
+// landing standing on the road does not count.
+bool map_has_road_access_nearby(tile2i tile) {
+    static const vec2i deltas[] = {{0, -1}, {1, 0}, {0, 1}, {-1, 0}, {0, -2}, {2, 0}, {0, 2}, {-2, 0}};
+    for (const vec2i d : deltas) {
+        const tile2i t = tile.shifted(d);
+        if (!map_grid_is_inside(t, 1) || !map_terrain_is(t, TERRAIN_ROAD)) {
+            continue;
+        }
+        if (map_terrain_is(t, TERRAIN_BUILDING)) {
+            const e_building_type type = building_at(t.grid_offset())->type;
+            if (type == BUILDING_ROADBLOCK || type == BUILDING_FERRY) {
+                continue;
+            }
+        }
+        return true;
+    }
+    return false;
+}
+
 bool map_has_road_access(tile2i tile, int size) {
     tile2i result = map_has_road_access_rotation(0, tile, size);
     return result.valid();

@@ -155,7 +155,7 @@ int city_buildings_t::count_total(std::initializer_list<e_building_type> types) 
 }
 
 int city_buildings_t::count_active(e_building_type type) {
-    return buildings[type].total;
+    return buildings[type].active;
 }
 
 int city_buildings_t::count_total(e_building_type type) {
@@ -165,6 +165,10 @@ int city_buildings_t::count_total(e_building_type type) {
 void city_buildings_t::increase_count(e_building_type type, bool active) {
     buildings[type].total++;
     buildings[type].active += (active ? 1 : 0);
+}
+
+void city_buildings_t::increase_active(e_building_type type) {
+    buildings[type].active++;
 }
 
 void city_buildings_t::increase_industry_count(int resource, bool active) {

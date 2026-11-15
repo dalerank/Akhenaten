@@ -90,7 +90,7 @@ function mission0_on_build_firehouse(ev) {
         return
     }
 
-    var firehouse_count = city.count_active_buildings(BUILDING_FIREHOUSE)
+    var firehouse_count = city.count_total_buildings(BUILDING_FIREHOUSE)
     if (firehouse_count == 0) {
         return
     }
@@ -151,7 +151,7 @@ function mission0_on_build_granary(ev) {
         return
     }
 
-    var granaries_count = city.count_active_buildings(BUILDING_GRANARY)
+    var granaries_count = city.count_total_buildings(BUILDING_GRANARY)
     if (granaries_count == 0) {
         return
     }
