@@ -202,6 +202,7 @@ localization_en = [
   {key:"#TR_CONFIG_FARM_HARVEST_FERTILITY", text:"Floodplain harvest scaled by fertility (remake; original uses progress only)"}
   {key:"#TR_CONFIG_FARM_MEADOW_HARVEST_RETRY", text:"Meadow farms also harvest on day 1 (remake; original day 0 only)"}
   {key:"#TR_CONFIG_INDUSTRY_NEARBY_HOUSES", text:"Industry labor access from houses in building nearby_houses_radius (weekly; remake; original uses labor seekers)"}
+  {key:"#TR_CONFIG_JEWELER_NEARBY_DISCOUNT", text:"Jewelers take 5 fewer gems per neighbouring jeweler, down to 50 (remake; original always takes 100)"}
   {key:"#TR_CONFIG_DELIVER_ONLY_TO_ACCEPTING_GRANARIES", text:"Food isn't delivered to getting granaries"}
   {key:"#TR_CONFIG_ALL_HOUSES_MERGE", text:"All houses merge"}
   {key:"#TR_CONFIG_RANDOM_COLLAPSES_TAKE_MONEY", text:"Randomly collapsing clay pits and iron mines take some money instead"}

@@ -116,6 +116,7 @@ namespace game_features {
     extern game_feature gameplay_change_farm_harvest_fertility;
     extern game_feature gameplay_change_farm_meadow_harvest_retry;
     extern game_feature gameplay_change_industry_nearby_houses;
+    extern game_feature gameplay_change_jeweler_nearby_discount;
     extern game_feature gameplay_change_only_deliver_to_accepting_granaries;
     extern game_feature gameplay_change_all_houses_merge;
     extern game_feature gameplay_change_random_mine_or_pit_collapses_take_money;

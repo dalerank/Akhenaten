@@ -92,11 +92,15 @@ bool building_industry::og_has_inputs() const {
     return true;
 }
 
+short building_industry::og_input_consumed(e_resource r) const {
+    return OG_INPUT_LOAD;
+}
+
 void building_industry::og_start_new_production() {
     base.progress = 0;
     for (e_resource r : {base.input.resource, base.input.resource_second}) {
         if (r != RESOURCE_NONE && base.stored_amount(r) >= OG_INPUT_LOAD) {
-            consume_resource(r, OG_INPUT_LOAD);
+            consume_resource(r, og_input_consumed(r));
         }
     }
 }

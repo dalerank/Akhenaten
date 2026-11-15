@@ -2,12 +2,63 @@
 // the worker count each day up to 400, and when it is done the gems are taken and a 100 luxury goods cart leaves.
 // Akhenaten's jeweler set progress to 0 when it started a cycle, so the remake cycle never advanced:
 // update_day took the gems again every day and no luxury goods were made.
+// gameplay_change_jeweler_nearby_discount (remake): the cart takes 5 fewer gems per neighbouring jeweler, down to 50.
 
 var __test636_ok = false
+var __test636_prev_discount = false
+
+function test636_restore() {
+    game_features.set('gameplay_change_jeweler_nearby_discount', __test636_prev_discount)
+}
 
 function test636_fail(msg) {
+    test636_restore()
     __log_info_native('[test:636] FAIL: ' + msg)
     __test_signal_ready()
+}
+
+function test636_staff(bid) {
+    __test_building_force_road_access(bid)
+    __test_building_set_houses_covered(bid, 100)
+    __test_building_set_workers(bid, 12)
+}
+
+function test636_gems_taken_by_cart(bid) {
+    city.get_building(bid).consume_resource(RESOURCE_GEMS, -100)
+    for (var i = 0; i < 40; i++) {
+        __test_city_industry_update_production()
+        __test_building_update_day(bid)
+    }
+    if (__building_industry_progress(bid) != 400) {
+        return -1
+    }
+    __test_building_spawn_figure(bid)
+    return 100 - test636_gems(bid)
+}
+
+function test636_check_discount() {
+    test_reload_city_session('data/default.map')
+    __test_set_treasury(10000)
+    game_features.set('gameplay_change_jeweler_nearby_discount', true)
+
+    var cx = (__scenario_map.width / 2) | 0
+    var cy = (__scenario_map.height / 2) | 0
+    var bid = __test_building_create(BUILDING_JEWELS_WORKSHOP, cx, cy)
+    var west = __test_building_create(BUILDING_JEWELS_WORKSHOP, cx - 2, cy)
+    var east = __test_building_create(BUILDING_JEWELS_WORKSHOP, cx + 2, cy)
+    if (!bid || !west || !east) {
+        test636_fail('jeweler cluster create failed ' + bid + '/' + west + '/' + east)
+        return false
+    }
+    test636_staff(bid)
+
+    var taken = test636_gems_taken_by_cart(bid)
+    if (taken != 90) {
+        test636_fail('discount on, two neighbours: expected 90 gems taken, got ' + taken)
+        return false
+    }
+    __log_marker('test636_discount_ok')
+    return true
 }
 
 function test636_gems(bid) {
@@ -16,6 +67,8 @@ function test636_gems(bid) {
 
 function run_test() {
     __log_info_native('[test:636] jeweler OG production cycle')
+    __test636_prev_discount = game_features.get('gameplay_change_jeweler_nearby_discount') === true
+    game_features.set('gameplay_change_jeweler_nearby_discount', false)
     test_reload_city_session('data/default.map')
     __test_set_treasury(10000)
 
@@ -28,9 +81,7 @@ function run_test() {
         return
     }
 
-    __test_building_force_road_access(bid)
-    __test_building_set_houses_covered(bid, 100)
-    __test_building_set_workers(bid, 12)
+    test636_staff(bid)
 
     city.get_building(bid).consume_resource(RESOURCE_GEMS, -100)
     __test_building_update_day(bid)
@@ -78,6 +129,11 @@ function run_test() {
     }
     __log_marker('test636_cart_ok')
 
+    if (!test636_check_discount()) {
+        return
+    }
+
+    test636_restore()
     __test636_ok = true
     __test_signal_ready()
 }
@@ -87,4 +143,5 @@ function check_valid() {
         && __test_find_inlog('[test-marker] test636_needs_gems_ok')
         && __test_find_inlog('[test-marker] test636_progress_400_ok')
         && __test_find_inlog('[test-marker] test636_cart_ok')
+        && __test_find_inlog('[test-marker] test636_discount_ok')
 }

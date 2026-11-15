@@ -107,6 +107,8 @@ namespace game_features {
     game_feature gameplay_change_farm_harvest_fertility{ "gameplay_change_farm_harvest_fertility", "#TR_CONFIG_FARM_HARVEST_FERTILITY", false, false };
     game_feature gameplay_change_farm_meadow_harvest_retry{ "gameplay_change_farm_meadow_harvest_retry", "#TR_CONFIG_FARM_MEADOW_HARVEST_RETRY", false, false };
     game_feature gameplay_change_industry_nearby_houses{ "gameplay_change_industry_nearby_houses", "#TR_CONFIG_INDUSTRY_NEARBY_HOUSES", false, false };
+    game_feature gameplay_change_jeweler_nearby_discount{
+      "gameplay_change_jeweler_nearby_discount", "#TR_CONFIG_JEWELER_NEARBY_DISCOUNT", false, false};
     game_feature gameplay_change_only_deliver_to_accepting_granaries{ "gameplay_change_only_deliver_to_accepting_granaries", "#TR_CONFIG_DELIVER_ONLY_TO_ACCEPTING_GRANARIES", false, false };
     game_feature gameplay_change_all_houses_merge{
       "gameplay_change_all_houses_merge", "#TR_CONFIG_ALL_HOUSES_MERGE", false, false};
