@@ -196,6 +196,10 @@ void figure_impl::on_change_terrain(int old, int current) {
     }
 }
 
+void figure_impl::figure_dying_action() {
+    base.figure_combat_handle_corpse();
+}
+
 void figure_impl::figure_roaming_action() {
     switch (action_state()) {
     case FIGURE_ACTION_149_CORPSE:

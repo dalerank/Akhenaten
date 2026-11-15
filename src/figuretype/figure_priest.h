@@ -22,6 +22,7 @@ public:
         void archive_load(archive arch);
     } FIGURE_STATIC_DATA_T;
 
+    virtual figure_priest* dcast_priest() override { return this; }
     virtual void figure_before_action() override;
     virtual int provide_service() override;
     virtual const figure_impl::static_params& params() const override;

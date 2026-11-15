@@ -200,7 +200,7 @@ void figure::action_perform() {
         dcast()->figure_roaming_action();
 
         if (state == FIGURE_STATE_DYING) { // update corpses / dying animation
-            figure_combat_handle_corpse();
+            dcast()->figure_dying_action();
         }
 
 

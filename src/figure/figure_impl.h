@@ -31,6 +31,7 @@ public:
     virtual void figure_action() {}
     virtual void figure_before_action() {}
     virtual void figure_roaming_action();
+    virtual void figure_dying_action();
     virtual bool window_info_background(object_info &ctx) { return false; }
     virtual void draw_main_sprite(painter &ctx, vec2i pixel, int highlight);
     virtual void before_poof();
@@ -114,6 +115,7 @@ public:
     ALLOW_SMART_CAST_FIGURE_I(missile)
     ALLOW_SMART_CAST_FIGURE_I(fireman)
     ALLOW_SMART_CAST_FIGURE_I(festival_priest)
+    ALLOW_SMART_CAST_FIGURE_I(priest)
     ALLOW_SMART_CAST_FIGURE_I(ostrich)
     ALLOW_SMART_CAST_FIGURE_I(antelope)
     ALLOW_SMART_CAST_FIGURE_I(hippo)
