@@ -1,18 +1,24 @@
 log_info("akhenaten: mission 46 migdol started")
 
-// Cleopatra campaign scenario 46. Empire id=1.
-
-// Scenario enemy ENEMY_8_NUBIAN (briefing = Assyrians / Asarhaddon - pak id wins).
-// Gods: Osiris(1), Ptah(1), Seth(2). MM subtitle: Repel the Assyrians. Start year -677.
-// Funds Normal 15002 / loan 2500 / debt_interest 7. Rank 5 (pak).
-// Win: pop 1000 / culture 10 / prosperity 15 / monuments off / kingdom off /
-//   housing level 10 / survival 7y (m25=2 m50=4 m75=6).
-// Climate central; map_background empire pack id 24.
-// Redefine: enable_scenario_events + events[] (10; 4 invasions) + hide_pak empire + texts/ornaments.
-// Config-only fish/herd (omit -> empty). Inv land/sea empty in pak -> omit (exit fallback).
-// Sparse pak_allowed (hut/road/clear) -> briefing fill (military / weapons trade).
-// Trade JS: Enkomi / Men-nefer / Timna. next_mission 47.
-// Alt briefing: message_mission_pelusium (455). Invasions declarative in events[] (calendar once).
+// Mission 46 — Migdol, "Repel the Assyrians". Rank 5 (Royal Mayor).
+//
+// Goals:     population 1000, culture 10, prosperity 15, housing level 10, survive 7 years.
+// Start:     funds 15002, rescue loan 2500, debt interest 7% (normal difficulty).
+// Gods:      Osiris, Ptah, Seth.
+// Monuments: none.
+// Trade:     can open — Enkomi (by sea), Men-nefer, Timna; display only — Abu, Byblos, Dakhla Oasis,
+//            Djedu, Farafra Oasis, Gaza, Henen-nesw, Jericho, Kyrene, Mycenae, On, Qadesh, Sawu,
+//            Serabit Khadim, Sharuhen, Thinis, Tyre, Waset.
+// Enemies:   none in practice (see notes). The scenario enemy is Nubian; the briefing speaks of Assyrians.
+// Timeline:  from y3m6 famine request for 6 lettuce, repeating (delivered: Pharaoh's gift of 10 copper;
+//            refused: Men-nefer buys less papyrus; late: gift of 5 weapons); y5m6 contaminated water.
+//
+// Notes for developers:
+// - The four calendar invasions in events[] (y1m4 4, y2m8 8, y4m3 15, y5m3 25 soldiers of the scenario
+//   enemy) never start: events[] invasions run only with og_invasions or a favour trigger, and this file
+//   has neither and no JS raids. The map has no invasion points.
+// - The original allows almost no buildings; the list here follows the briefing (military, weapons trade).
+// - Every event is declared in events[] and run by the engine; on_*_action values are indexes into that list.
 
 mission46 { // Migdol - Repel the Assyrians
 	map_file : "data/maps/m_046_migdol.map"

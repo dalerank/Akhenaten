@@ -1,5 +1,29 @@
 log_info("akhenaten: mission 42 qadesh started")
 
+// Mission 42 — Qadesh, "The Battle of Qadesh". Rank 10 (Pharaoh).
+//
+// Goals:     population 1800, prosperity 20, kingdom 50, housing level 14, within 7 years.
+// Start:     funds 18000, rescue loan 1500, debt interest 8% (normal difficulty); the best infantry and
+//            chariot companies from Sumur (mission 41) join if the campaign carried them over.
+// Gods:      Osiris, Ra.
+// Monuments: none.
+// Trade:     can open — Sumur, Jericho, Timna, Migdol, Men-nefer; opened by events — Waset; display only —
+//            Bahariya Oasis, Dakhla Oasis, Tyre, Enkomi.
+// Enemies:   Canaanite raids (the briefing speaks of Hittites), all entering at the map entry point.
+// Timeline:  y1m4 raid 50; once it is beaten raid 30, and once that is beaten raid 35; y1m6 Waset asks
+//            5 luxury goods (delivered: gift of 7 chickpeas; late: gift of 4 fish); y4m8 Waset asks
+//            7 luxury goods (delivered: Waset route opens; late: gift of 5 pottery); y4m10 Enkomi asks
+//            11 gems (delivered: Waset buys more luxury goods); y5m2 Waset asks 8 pomegranates (kingdom +3);
+//            y5m5 request 27 troops for Jericho (won or late: kingdom +3; lost or refused: Enkomi route
+//            lost, kingdom −3); y5m6 Qadesh asks 6 beer (delivered or late: gift of 10 lettuce);
+//            y6m3 land trade problem. Refusing a request costs 3 kingdom.
+//
+// Notes for developers:
+// - The next raid waits for the previous one's invasion-history outcome (COMPLETED = beaten); a raid that
+//   ends any other way stops the chain (see mission42_invasion_followup).
+// - tag_id: 1000 + i chained events, 2000 + i calendar requests, 8000+ one-off kingdom changes
+//   (i = event index in the original scenario).
+
 mission42 {
 	map_file : "data/maps/m_042_qadesh.map"
 

@@ -1,5 +1,30 @@
 log_info("akhenaten: mission 43 abu simbel started")
 
+// Mission 43 — Abu Simbel, "Colossi of Abu Simbel". Rank 5 (Royal Mayor).
+//
+// Goals:     population 2200, culture 35, prosperity 35, monuments 44, kingdom 80, housing level 10.
+// Start:     funds 8000, rescue loan 2000, debt interest 10% (normal difficulty); infantry carried over
+//            from the previous mission joins.
+// Gods:      Osiris, Ra, Ptah.
+// Monuments: Abu Simbel.
+// Trade:     can open — Men-nefer, Waset, Sumur, Heh, Kerma (by sea), Pwenet; opened by events — Kharga
+//            Oasis; display only — Bahariya Oasis, Qadesh, Jericho, Enkomi, Timna, Abu, Piramesse.
+// Enemies:   Kushite raids, entering at the map entry point; Pharaoh's army (15) by sea with 2 warships if
+//            the kingdom rating falls to 0.
+// Timeline:  y2m4 request 7 figs (delivered or late: Kharga Oasis route opens; refused: kingdom −2);
+//            from y2m10 Pharaoh's gift of 15 linen every year, each followed by a request for 9 luxury
+//            goods; y3m3, y4m0 wages rise; y4m10 blood river; from y5m1 Pharaoh asks 34 sandstone every
+//            year (kingdom +2, refused −5, late −2); y5m3 request 7 figs (delivered: gift of 334 deben;
+//            late: gift of 3 luxury goods; refused: Kushite raid 25); from y7m10 Pharaoh asks 6 luxury goods
+//            every year (delivered: gift of 10 linen); y8m1 Kushite raid 27 (beaten: a trade route is lost
+//            and Pharaoh asks 12 troops — sent: a city is conquered and the route reopens, kingdom +2;
+//            refused: kingdom −5); y9m7 request 11 pottery; y10m4 frogs; y14m6 clay pits flood.
+//
+// Notes for developers:
+// - events[] invasions do not run (no og_invasions): the two Kushite raids are started from JS, and the
+//   chain after raid 27 is rebuilt in mission43_fire_inv20_win_chain. Only Pharaoh's army runs from
+//   events[] (favour trigger).
+
 mission43 {
 	map_file : "data/maps/m_043_abu_simbel.map"
 

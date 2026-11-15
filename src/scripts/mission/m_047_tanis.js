@@ -1,19 +1,30 @@
 log_info("akhenaten: mission 47 tanis started")
 
-// Cleopatra campaign scenario 47. Empire id=1.
-
-// Scenario enemy ENEMY_11_ROMAN (briefing = Persian / Conon - pak id wins).
-// Gods: Osiris(1), Ra(2), Seth(1). MM subtitle: Rebirth of a Navy. Start year -395.
-// Funds Normal 8000 / loan 2000 / debt_interest 8. Rank 6 (pak).
-// Win: pop 2500 / culture 30 / prosperity 40 / monuments off / kingdom 45 /
-//   housing level 10 / survival 10y (m25=3 m50=6 m75=10). time_limit off (pak years=10 unused).
-// Climate central; map_background empire pack id 24.
-// Redefine: enable_scenario_events + events[] (20; favour KR; i=0 ok=55 clamped to -1) + hide_pak empire + texts/ornaments.
-// Config-only fish/herd/disembark/inv (omit -> empty). Must copy from dump.
-// Sparse pak_allowed -> briefing fill; warship TEMP (CL-M / Naval) despite editor slot 43 off.
-// Trade JS: Enkomi (timber+copper) / Men-nefer / Athens.
-// next_mission -1 (campaign end - must not spill to Capital 48).
-// Alt briefing: message_mission_tanis_2 (456). Warship TEMP (CL-M / Naval).
+// Mission 47 — Tanis, "Rebirth of a Navy". Rank 6 (Royal Governor).
+//
+// Goals:     population 2500, culture 30, prosperity 40, kingdom 45, housing level 10, survive 10 years.
+// Start:     funds 8000, rescue loan 2000, debt interest 8% (normal difficulty).
+// Gods:      Osiris, Ra, Seth.
+// Monuments: none.
+// Trade:     can open — Enkomi, Athens (by sea), Men-nefer; display only — Abu, Behdet, Byblos,
+//            Dakhla Oasis, Farafra Oasis, Gaza, Henen-nesw, Jericho, Kyrene, Menat Khufu, Nekhen, On,
+//            Qadesh, Migdol, Sauty, Sawu, Sharuhen, Thinis, Timna, Tyre, Waset.
+// Enemies:   Pharaoh's army (26) by land if the kingdom rating falls to 0. The calendar invasions do not
+//            run (see notes). The scenario enemy is Roman; the briefing speaks of Persians under Conon.
+// Timeline:  y2m7 Pharaoh asks 7 papyrus (delivered: gift of 7 chickpeas; late: chickpeas cost more;
+//            refused: Men-nefer route lost, then a request for 10 reeds — delivered or late: the route
+//            reopens; refused: kingdom −4); y3m6 request 5 papyrus (delivered: kingdom +5; refused: Athens
+//            route lost; late: Athens buys fewer pomegranates); from y5m3 Pharaoh asks 9 fish every year
+//            (delivered: gift of 11 weapons, then kingdom +4; refused: −4; late: +4); y5m4 locusts;
+//            y7m5 Enkomi route lost.
+//
+// Notes for developers:
+// - The three calendar invasions in events[] (y4m0 3 warships with no soldiers, y6m2 16 soldiers with
+//   5 warships, y8m2 12 soldiers with 4 warships, all by sea) never start: events[] invasions run only
+//   with og_invasions or a favour trigger, and this file has no JS raids.
+// - The warship wharf is enabled for the navy briefing although the original scenario disallows it.
+// - next_mission -1: the Ancient Conquerors campaign ends here and must not continue into mission 48.
+// - Every event is declared in events[] and run by the engine; on_*_action values are indexes into that list.
 
 mission47 { // Tanis - Rebirth of a Navy
 	map_file : "data/maps/m_047_tanis.map"

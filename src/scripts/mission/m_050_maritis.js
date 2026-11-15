@@ -1,17 +1,27 @@
 log_info("akhenaten: mission 50 maritis started")
 
-// Full empire redefine (CC50). Dump 2026-08-01 Cleop.
-// MM briefing: message_mission_maritis (444) — *Caesar and Cleopatra*.
-// Rank 1. Year -50. Enemy ENEMY_9_PERSIAN. Empire id 0, image_id 26.
-// Env: alt_predator=1 (central → lion vs crocodile); set in on_start.
-// Win: pop 1000 / culture 10 / prosperity 25 / monuments OFF /
-//      kingdom 35 / housing 15x lv4 / survival 7y (m 3/4/5).
-// Monuments: none (first=second=third=0). No Library/Pharos/Caesareum/Mausoleum.
-// Burial: none. Gods: Ra(1) Ptah(2).
-// Invasions x3 (egypt invader; inv land/sea points empty -> exit fallback).
-// already_fired gift seeds i=[0, 1, 2, 19] kept for index fidelity.
-// SKIP empty map_obj idx=2. Cities x7 / routes x6 / ornaments x5 / texts x16.
-// next_mission 51 (Alexandria3 — Notes §13.14).
+// Mission 50 — Maritis, "Caesar and Cleopatra". Rank 1 (Village Noble).
+//
+// Goals:     population 1000, culture 10, prosperity 25, kingdom 35, 15 houses at housing level 4,
+//            survive 7 years.
+// Start:     funds 11000, rescue loan 1500, debt interest 7% (normal difficulty).
+// Gods:      Ra, Ptah (patron).
+// Monuments: none.
+// Trade:     can open — Men-nefer, Meidum, Migdol, Tyre (by sea); display only — Gaza, Alexandria.
+// Enemies:   none in practice (see notes). The scenario enemy is Persian.
+// Timeline:  y3m4 request 11 reeds (delivered: gift of 11 pottery; late: gift of 5 pottery; refused:
+//            kingdom −7); y4m4 Pharaoh asks 16 troops (sent: kingdom +8; late: +4; refused: battle-lost
+//            message); y5m5 Pharaoh asks 6 papyrus (delivered: gift of 7 pottery; refused: −7; late: +4);
+//            y6m1 request 8 fish (delivered: gift of 5 luxury goods; refused: Tyre route lost; late: gift of
+//            3 luxury goods).
+//
+// Notes for developers:
+// - The Egyptian invasions in events[] never start: events[] invasions run only with og_invasions or a
+//   favour trigger, and this file has no JS raids. They are y2m7 30 soldiers, then 25 once beaten (then a
+//   gift of 10 weapons), and 26 after the troop request is refused or lost (then three routes are lost).
+// - The gifts at indexes 0, 1, 2 and 19 are already fired in the original; they stay only to keep the
+//   indexes of the other events.
+// - Every event is declared in events[] and run by the engine; on_*_action values are indexes into that list.
 
 mission50 { // Maritis - Caesar and Cleopatra
 	map_file : "data/maps/m_050_maritis.map"

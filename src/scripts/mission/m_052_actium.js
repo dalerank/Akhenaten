@@ -1,17 +1,27 @@
 log_info("akhenaten: mission 52 actium started")
 
-// Full empire redefine (CC52). Dump 2026-08-01 Cleop.
-// MM briefing: message_mission_actium (446) — *Antony and Cleopatra*.
-// Pak map subtitle: "The Battle of Actium" (UI uses start_message subtitle).
-// Rank 10. Year -35. Enemy ENEMY_9_PERSIAN (briefing Octavian — pak id wins).
-// Win: pop 1000 / culture OFF / prosperity OFF / monuments OFF /
-//      kingdom 50 / housing 0x lv5 / survival 6y (m 2/4/6).
-// Monuments: none. Burial: none. Gods: Ra(2).
-// Env: alt_predator=1 (northern); set in on_start.
-// Invasions x2 via_sea (loc 9 → sea_point 0); calendar JS (events[] INVASION = no-op).
-// Warship editor slot 43 OFF — TEMP on for navy briefing (Tanis pattern).
-// SKIP empty map_obj idx=6. Orphan Waset route 17 -> 0.
-// next_mission -1 (campaign end — must not spill past 52).
+// Mission 52 — Actium, "Antony and Cleopatra". Rank 10 (Pharaoh).
+//
+// Goals:     population 1000, kingdom 50, housing level 5, survive 6 years.
+// Start:     funds 7000, rescue loan 2000, debt interest 3% (normal difficulty); archers and infantry
+//            carried over from the previous mission join.
+// Gods:      Ra (patron).
+// Monuments: none.
+// Trade:     can open — Athens, Alexandria (by sea); opened by events — Kyrene; display only — Enkomi, Gaza,
+//            Knossos, Men-nefer, Tyre, Meidum, Waset, Buhen, Byblos.
+// Enemies:   Persian fleet (the briefing's Octavian), both raids by sea from sea point 0.
+// Timeline:  y1m8 request 5 timber (prices fall, or rise if refused); y2m4 request 6 copper
+//            (delivered or late: Kyrene route opens; refused: Alexandria buys less timber); y3m2 famine
+//            request for 5 fish (delivered: gift of 5 weapons, kingdom +6; refused: Alexandria route lost);
+//            from y3m7 request 16 timber every year (delivered: gift of 7 weapons; late: 5 weapons;
+//            refused: kingdom −4); y3m8 sea trade problem; y4m4 raid 19 with 5 warships, once it is beaten
+//            raid 40 with 4 warships, and once that is beaten the Athens route is lost.
+//
+// Notes for developers:
+// - events[] invasions do not run (no og_invasions), so mission52_calendar_invasions starts both raids;
+//   the Athens route loss is fired by tag 18 when the second raid is beaten.
+// - The warship wharf is enabled for the navy briefing although the original scenario disallows it.
+// - next_mission -1: the campaign ends here.
 
 mission52 { // Actium - Antony and Cleopatra
 	map_file : "data/maps/m_052_actium.map"

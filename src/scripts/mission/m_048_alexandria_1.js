@@ -1,6 +1,32 @@
 log_info("akhenaten: mission 48 alexandria_1 started")
 
-// Monument: Mausoleum only (gr198:25). Weight 5 → trunc(6.32·√5+0.5)=14 = goal; burial goods all below one divisor.
+// Mission 48 — Alexandria, "Alexander the Great". Rank 5 (Royal Mayor).
+//
+// Goals:     population 4000, culture 45, prosperity 55, monuments 14, kingdom 60,
+//            12 houses at housing level 10, within 12 years.
+// Start:     funds 12980, rescue loan 5000, debt interest 5% (normal difficulty).
+// Gods:      Ra, Ptah.
+// Monuments: mausoleum, with burial provisions: 4 weapons, 10 gems, 8 luxury goods.
+// Trade:     open at start — Byblos; can open — Athens, Enkomi, Kyrene, Men-nefer, Iunet, Pwenet, Gaza,
+//            Buhen (by sea), Meidum, Serabit Khadim; opened by events — On, Bahariya Oasis; display only —
+//            Bubastis, Knossos, Tyre, Migdol, Waset.
+// Enemies:   none in practice (see notes). The scenario enemy is Phoenician; the briefing speaks of
+//            roaming vandals.
+// Timeline:  y3m5 On route opens; y3m8 Bahariya Oasis route opens; y4m7 Pharaoh's gift of 72 deben, then
+//            a request for 8 reeds; y5m3 Pharaoh asks 10 troops (lost: land trade problem); from y6m1
+//            request 8 grain, repeating; y7m2 Pharaoh's gift of 37 deben (also chained to the reeds request);
+//            y7m5 request 6 beer (delivered: gift of 9 gems; late: gift of 5 papyrus); y8m1 famine request
+//            for 6 pomegranates (refused: a second request for 7 pomegranates); y9m4 request 9 troops;
+//            y10m3 request 8 beer. Most requests pay a deben gift when delivered or late and cost kingdom
+//            when refused.
+//
+// Notes for developers:
+// - The invasions in events[] never start: events[] invasions run only with og_invasions or a favour
+//   trigger, and this file has no JS raids. They are y3m2 7 soldiers by sea with 3 warships (followed by
+//   the Byblos route lost and a price rise), y8m8 3 warships with no soldiers, and Pharaoh's army 20 after
+//   the second pomegranate request is refused.
+// - Every event is declared in events[] and run by the engine; on_*_action values are indexes into that list.
+
 mission48 { // Alexandria - Alexander the Great
 	map_file : "data/maps/m_048_alexandria_1.map"
 	start_message : "message_mission_alexandria_2"

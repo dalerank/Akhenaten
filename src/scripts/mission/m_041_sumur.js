@@ -1,20 +1,40 @@
 log_info("akhenaten: mission 41 sumur started")
 
-// Cleopatra campaign scenario 41. Empire id=23.
-
-// Scenario enemy ENEMY_2_CANAANITE (briefing = Hittites — pak id wins).
-// Gods: Ra(2), Ptah(1). MM subtitle: Lands of the Levant. Start year -1300.
-// Funds Normal 5565 / loan 1500 / debt_interest 9. Rank 6 (pak).
-// Win: pop 3000 / culture 35 / prosperity 40 / monuments 6 (pak;
-//   first=22 Small Obelisk, OG weight 1 → trunc(6.32·√1+0.5)=6) / kingdom 90 / housing level 14.
-// Climate northern; map_background empire pack id 21.
-// Full empire redefine (hide_pak_*) + JS event graph. SKIP empty map_obj idx=6.
-// Chain-only invasion i=11 (after LOST Qadesh) → JS chain via event_request_cleared.
-// Favour egypt×23 (i=30): events[] BY_FAVOUR, sent by the engine at Kingdom rating 0. Calendar canaanite×33 (i=31). next_mission 42 (Qadesh §13.4).
-// Recurring request/gift outcomes fire via request_cleared (shared ONLY_VIA = ALREADY_FIRED once).
-// Gift refuse paths are dead (engine gifts always COMPLETE).
-// Timber i=6 vs i=24 same m2/resource: handoff y16 (i=6 stops, i=24 starts).
-// Tag map: gift i5=3500+y; copper i5=7100+y (must differ — execute_event is first-tag-wins).
+// Mission 41 — Sumur, "Lands of the Levant". Rank 6 (Royal Governor).
+//
+// Goals:     population 3000, culture 35, prosperity 40, monuments 6, kingdom 90, housing level 14.
+// Start:     funds 5565, rescue loan 1500, debt interest 9% (normal difficulty).
+// Gods:      Ra (patron), Ptah.
+// Monuments: small obelisk.
+// Trade:     open at start — Qadesh; can open — Men-nefer, Rowarty, Waset, Enkomi (by sea), Timna, Jericho;
+//            opened by events — Knossos, Men-nefer; display only — Bahariya Oasis, Dakhla Oasis, Itjtawy,
+//            Menat Khufu, Pwenet, Tyre.
+// Enemies:   Canaanite raids (the briefing speaks of Hittites); Pharaoh's army (23) by sea with 3 warships
+//            if the kingdom rating falls to 0.
+// Timeline:  y0m2 gift of 16 grain and a request for 8 copper (kingdom +4, refused −3, late +1); y3m6
+//            Knossos asks 7 grain (delivered or late: Knossos route opens; refused: Qadesh asks 9 fish with
+//            the same outcomes); from y4m3 Menat Khufu asks 7 oil every year (delivered: gift of 8 granite);
+//            y5m1 Pwenet asks 9 gems (delivered: Men-nefer asks 20 weapons) — every path ends with the
+//            Qadesh route lost and a Canaanite raid 42; from y5m9 gift of 20 grain every year, each with a
+//            new request for 8 copper; y7m0 wages rise; y7m2..y15 Qadesh asks 21 timber every year
+//            (delivered: gift of 21 lettuce; late: 14 lettuce); y8m0 Pwenet asks 19 timber (delivered or
+//            late: Men-nefer route opens); y8m6 Rowarty buys more copper; y11m9 Men-nefer buys more timber;
+//            y12m3 Canaanite raid 33; y12m5, y13m8 sea trade problems; from y14m7 contaminated water every
+//            year; from y16m2 Men-nefer asks 14 timber every year (delivered: gift of 15 grain; late: 12
+//            lettuce); y20m0 wages rise. Most refusals cost 3 kingdom.
+//
+// Notes for developers:
+// - Raid location numbers follow the original events: 1 = land point [54,72], 2 = disembark point
+//   [30,85]; any other number enters at the map entry point (see mission41_loc_tile).
+// - Outcomes of repeating requests run from event_request_cleared and fire unique once-events: a shared
+//   chain-only event fires only once. Gifts always complete, so the original's gift-refusal outcomes are
+//   dead and not wired.
+// - Both timber requests want month 2: the Qadesh one stops after year 15 so the Men-nefer one can start
+//   in year 16.
+// - tag_id: 1000 + i chained events, 2000 + i calendar events, 3000 + i*100 + year repeating requests,
+//   7100 + year the copper request after the yearly gift (it must differ from the gift's 3500 + year:
+//   execute_event takes the first matching tag), 8000+ / 8500+ one-off kingdom changes / gifts,
+//   7030 Pharaoh's army (i = event index in the original scenario, quoted as "pak i=" below).
 
 mission41 { // Sumur — Lands of the Levant
 	map_file : "data/maps/m_041_sumur.map"

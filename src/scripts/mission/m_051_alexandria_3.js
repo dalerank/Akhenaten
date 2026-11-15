@@ -1,16 +1,33 @@
 log_info("akhenaten: mission 51 alexandria_3 started")
 
-// Full empire redefine (CC51). Dump 2026-08-01 Cleop.
-// MM briefing: message_mission_cleopatra_alexandria (445) — *The Legacy of a Queen*.
-// Pak map subtitle: "The Legacy of Cleopatra" (UI uses start_message subtitle).
-// Rank 10. Year -40. Enemy ENEMY_9_PERSIAN. Empire id 0, image_id 26.
-// Win: pop 10000 / culture 80 / prosperity 70 / monuments 24 /
-//      kingdom 80 / housing 6x lv19 / time_limit OFF (milestones 5/10/15).
-// Monuments: first=30 Caesareum, second=27 Mausoleum (gr198 skin 2).
-// Rating: Caesareum 10 + Mausoleum 5 → trunc(6.32·√15+0.5)=24 = goal; burial goods all below one divisor.
-// Burial: weapons4 linen4 gems5 luxury7 papyrus2. Gods: Ra(2) Ptah(1) Bast(1).
-// Rome sells weapons; Enkomi marble+timber. Orphans Migdol/Buhen/Kyrene → route 0.
-// SKIP empty map_obj idx=8. Chain invasion x1 (i=39). next_mission 52 (Actium §13.15).
+// Mission 51 — Cleopatra's Alexandria, "The Legacy of a Queen". Rank 10 (Pharaoh).
+//
+// Goals:     population 10000, culture 80, prosperity 70, monuments 24, kingdom 80,
+//            6 houses at housing level 19.
+// Start:     funds 56000, rescue loan 4000, debt interest 7% (normal difficulty); monuments carried over
+//            from the previous missions.
+// Gods:      Ra (patron), Ptah, Bast.
+// Monuments: Caesareum, mausoleum, with burial provisions: 4 weapons, 4 linen, 5 gems, 7 luxury goods,
+//            2 papyrus.
+// Trade:     can open — Rome, Athens, Knossos, Enkomi, Tyre, Gaza, Iunet, Pwenet (by sea), Men-nefer,
+//            Bahariya Oasis, Serabit Khadim; opened by events — On, Meidum; display only — Kyrene, Migdol,
+//            Waset, Buhen, Byblos.
+// Enemies:   none in practice (see notes). The scenario enemy is Persian.
+// Timeline:  y0m6 gift of 10 chickpeas, then a request for 5 papyrus; y0m8 gift of 6 timber, then a
+//            request for 10 grain (followed by luxury goods and a request for 7 grain); from y3m7 request
+//            5 luxury goods every year (gifts of weapons); y4m3 On route opens; y5m3 request 7 beer
+//            (Athens buys more grain, or less if refused); y6m6, y13m2, y21m10 wages rise; y7m9 request
+//            6 troops; y8m8 famine request for 13 fish; y9m4, y19m4 locusts, each followed by a gift of
+//            26 grain; y10m1 gift of 6 gems, then a request for 6 luxury goods; y10m3 Meidum route opens,
+//            then a request for 9 linen (refused: Gaza route lost); y12m4 request 23 troops; y14m3 gift of
+//            29 marble, then a request for 12 papyrus; from y15m1 request 10 beer every year; y16m2 request
+//            25 troops. Other outcomes are gifts, demand changes and kingdom ±4.
+//
+// Notes for developers:
+// - The warship-only invasion in events[] (2 warships, no soldiers, after a refused luxury-goods request)
+//   never starts: events[] invasions run only with og_invasions or a favour trigger, and this file has no
+//   JS raids.
+// - Every event is declared in events[] and run by the engine; on_*_action values are indexes into that list.
 
 mission51 { // Cleopatra's Alexandria - The Legacy of a Queen
 	map_file : "data/maps/m_051_alexandria_3.map"

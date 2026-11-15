@@ -1,5 +1,32 @@
 log_info("akhenaten: mission 44 ramses in the valley started")
 
+// Mission 44 — Ramses in the Valley, "An Unsurpassed Resting Place". Rank 6 (Royal Governor).
+//
+// Goals:     population 3000, culture 50, prosperity 55, monuments 45, kingdom 100,
+//            6 houses at housing level 17.
+// Start:     funds 15020, rescue loan 3000, debt interest 8% (normal difficulty); archers and infantry
+//            carried over from the previous mission join.
+// Gods:      Osiris, Ra, Bast.
+// Monuments: grand royal tomb, with burial provisions: 6 weapons, 16 linen, 20 luxury goods, 8 papyrus,
+//            6 chariots.
+// Trade:     can open — Piramesse, Sumur, Enkomi (by sea), Timna, Kharga Oasis, Dakhla Oasis, Pwenet;
+//            display only — Men-nefer, Sawu, Tyre, Waset, Abu, Thinis, Qadesh, Migdol, Abu Simbel, Heh.
+// Enemies:   Pharaoh's army (27) by sea with 4 warships if the kingdom rating falls to 0. The scenario
+//            enemy is set to Kushite, but no Kushite army is sent.
+// Timeline:  y4m4 blood river, then clay pits flood twice; from y4m10 Pharaoh asks 7 beer every year;
+//            from y5m4 request 10 bricks every year; y6m4 request 10 grain (delivered or late: Timna buys
+//            more oil; refused: grain demand falls); y6m6 request 14 troops; y6m7 frogs; y8m3 request
+//            7 paint (delivered or late: gift of 6 oil; refused: sea trade problem); y10m2 hailstorm;
+//            y11m10 request 5 linen (delivered or late: Pwenet buys more pottery; refused: pottery demand
+//            falls); y12m9 request 16 troops (lost: Sumur route lost); y14m2 locusts, then a gift of
+//            12 figs and a request for 11 grain; y18m9 crime wave. Requests without a listed outcome:
+//            kingdom +5, refused −5, late +2 (beer late −2).
+//
+// Notes for developers:
+// - Every event is declared in events[] and run by the engine; on_*_action values are indexes into that
+//   list, and route events address the city by route number (location_fields).
+// - next_mission -1: the Ramses II campaign ends here and must not continue into Pi-Yer (45).
+
 mission44 {
 	map_file : "data/maps/m_044_ramses_in_the_valley.map"
 

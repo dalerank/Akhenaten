@@ -1,16 +1,31 @@
 log_info("akhenaten: mission 40 valley seti started")
 
-// Cleopatra campaign scenario 40. Empire id=21.
-
-// Enemy ENEMY_6_KUSHITE. Gods: Osiris(1), Ra(2), Ptah(1). Start year -1290.
-// MM subtitle: Tomb for a Pharaoh. Rank 6 (pak). Funds Normal 13720 / loan 3000 / debt 8.
-// Win: pop 3000 / culture 40 / prosperity 70 / monuments 32 (pak; Large royal tomb 26 → trunc(6.32·√26+0.5)=32,
-//   burial goods all below one divisor; carried-over tombs take no monument slot) /
-//   kingdom 80 / housing_count 12 + housing_level 15.
-// Climate desert; map_background empire pack id 23. Our city: Deir el-Medina.
-// Burial: weapons×6 beer×12 luxury×10 papyrus×8 chariots×4. Fish points present.
-// Empire/events in JS (hide_pak_* + events[]). Robbers: crime_wave + TR engine.
-// next_mission -1 (campaign end — must not spill to Sumur 41; clears monument carry).
+// Mission 40 — Seti in the Valley, "Tomb for a Pharaoh". Rank 6 (Royal Governor).
+//
+// Goals:     population 3000, culture 40, prosperity 70, monuments 32, kingdom 80,
+//            12 houses at housing level 15.
+// Start:     funds 13720, rescue loan 3000, debt interest 8% (normal difficulty).
+// Gods:      Osiris, Ra (patron), Ptah.
+// Monuments: large royal tomb, with burial provisions: 6 weapons, 12 beer, 10 luxury goods, 8 papyrus,
+//            4 chariots. The small and medium royal tombs in the menu are carried over from missions 38-39.
+// Trade:     can open — Men-nefer, Itjtawy, Waset, Abu (by sea), Thinis, Sawu, Kharga Oasis; opened by
+//            events — Dakhla Oasis, Enkomi, Buhen; display only — Pwenet, Tyre.
+// Enemies:   Pharaoh's army (13) if the kingdom rating falls to 0. The scenario enemy is set to Kushite,
+//            but no Kushite army is sent.
+// Timeline:  y1m1 request 5 linen (kingdom +4, refused −2); y4m1 Pharaoh asks 9 linen (kingdom +4, refused
+//            −4); from y5m6 Pharaoh asks 11 beer, repeating (delivered: gift of 2 weapons, then kingdom +3);
+//            y6m3 request 8 bricks (delivered or late: Dakhla Oasis route opens); y7m11 request 6 linen
+//            (delivered or late: Enkomi route opens); y9m4 request 12 fish (delivered: Sawu buys more beer;
+//            late: gift of 3 luxury goods); y9m5 request 10 pomegranates (delivered: gift of 6 luxury goods;
+//            delivered or late: Buhen route opens); from y11m2 locusts, repeating (each followed by a gift of
+//            16 grain and a request for 8 linen); y13m9 land trade problem; crime waves y6m3, y8m2, y10m11,
+//            y13m8, y19m1.
+//
+// Notes for developers:
+// - Every event is declared in events[] and run by the engine; on_*_action values are indexes into that
+//   list. Route events address the city by route number (location_fields: 9 = Dakhla Oasis,
+//   11 = Enkomi, 6 = Buhen); those three cities have no goods in this file.
+// - next_mission -1: the Valley of the Kings campaign ends here and must not continue into Sumur (41).
 
 mission40 { // Seti in the Valley — Tomb for a Pharaoh
 	map_file : "data/maps/m_040_valley_seti.map"

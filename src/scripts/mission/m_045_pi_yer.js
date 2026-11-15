@@ -1,19 +1,37 @@
 log_info("akhenaten: mission 45 pi-yer started")
 
-// Empire / events verified vs Cleop original campaign scenario 45 (2026-07-28 dump).
-// Empire id=1. Scenario enemy ENEMY_1_ASSYRIAN (briefing = Sea Peoples / Maraye — pak id wins).
-// Gods: Osiris(2), Seth(1). Subtitle: The Sea People Land. Start year -1235.
-// Funds Normal 10080 / loan 3000 / debt_interest 7. Rank 4 (pak; first AC mission).
-// Win: pop 2500 / culture 25 / prosperity 30 / monuments off / kingdom 45 / housing 5×level 8.
-// Survival disabled (0/7) — 7-year hold is Migdol (46), not Pi-Yer.
-// Trade: Enkomi Byblos Tyre Men-nefer Bahariya Siwi Farafra Kyrene Waset.
-// Triage: SKIP empty map_obj idx=9. Chain-only invasions → JS via event_request_cleared.
-// pak_allowed sparse (hut/road/clear only) — buildings from briefing (warships + copper/wood import).
+// Mission 45 — Pi-Yer, "The Sea People Land". Rank 4 (Royal Judge).
 //
-// Tag_id scheme:
-//   1000 + i               chain-only ONLY_VIA_EVENT leaves
-//   2000 + i               once calendar roots
-//   3000 + i*100 + year    recurring roots (Sawu/Bubastis — avoid clash with 2000+i)
+// Goals:     population 2500, culture 25, prosperity 30, kingdom 45, 5 houses at housing level 8.
+// Start:     funds 10080, rescue loan 3000, debt interest 7% (normal difficulty).
+// Gods:      Osiris, Seth.
+// Monuments: none.
+// Trade:     can open — Enkomi, Byblos, Tyre, Men-nefer, Waset, Kyrene (by sea), Bahariya Oasis,
+//            Siwi Oasis, Farafra Oasis; events open Kyrene and close the Kyrene, Farafra and Jericho routes;
+//            display only — Djedu, Gaza, Jericho, Menat Khufu, On, Qadesh, Sauty, Sawu, Serabit Khadim,
+//            Timna, Buhen, Abu.
+// Enemies:   Assyrian raids (the briefing speaks of sea-borne tribes allied with the Libyans), two of them
+//            by sea with 3 warships each; one Egyptian raid if Pharaoh's second troop request is refused.
+// Timeline:  y1m2 Gaza asks 9 copper, then Kyrene 9 weapons, then Gaza 23 weapons — every path ends with
+//            the Farafra Oasis route lost and an Assyrian raid 17 by sea, and once it is beaten a second
+//            raid 13 by land; y2m6 Pharaoh asks 11 troops for Men-nefer (won: kingdom +14 and a gift of
+//            11 weapons; late: kingdom +9 and 7 luxury goods; lost or refused: Jericho route lost); from
+//            y3m2 Farafra asks 6 chickpeas every year (delivered: gift of 6 weapons; refused: luxury goods
+//            cost more; late: gift of 3 timber); y3m7 battle lost at Farafra, Kyrene route lost; y7m10
+//            Farafra asks 8 bricks (delivered or late: Kyrene route opens; refused: Assyrian raid 27 by
+//            sea); y8m3 Jericho asks 8 papyrus; y11m8 Gaza asks 11 grain (delivered: gift of 9 copper;
+//            refused: Kyrene route lost; late: gift of 7 timber); y13m0 Pharaoh asks 12 troops for Gaza
+//            (refused: kingdom −10 and an Egyptian raid 12); from y14m0 Men-nefer asks 6 papyrus every
+//            year (gifts of pottery); y15m4 wages rise; y21m2 Pharaoh asks 19 bricks; y24m10 Farafra
+//            asks 9 grain.
+//
+// Notes for developers:
+// - Raids enter at the map entry point; the sea raids sail from sea point 0 (original location 9).
+// - The original allows almost no buildings; the list here follows the briefing (warships, copper and
+//   timber imports).
+// - tag_id: 1000 + i chain-only events, 2000 + i calendar events, 3000 + i*100 + year repeating requests
+//   (i = event index in the original scenario, quoted as "pak i=" below); 1009 only anchors the raid-17
+//   bind so its history outcome is written.
 
 mission45 { // Pi-Yer — The Sea People Land
 	map_file : "data/maps/m_045_pi_yer.map"
