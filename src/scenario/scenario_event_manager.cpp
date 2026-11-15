@@ -1808,9 +1808,6 @@ bool event_manager_t::favour_invasion_fired() const {
 }
 
 bool event_manager_t::invasion_runs_og(const event_ph_t& e) {
-    if (og_invasions) {
-        return true;
-    }
     const event_ph_t* p = &e;
     for (int depth = 0; p && depth < MAX_EVENTS; depth++) {
         if (is_favour_trigger(p->event_trigger_type)) {

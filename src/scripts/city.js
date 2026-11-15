@@ -463,8 +463,9 @@ city.create_chain_event = function(obj) {
     }
 }
 
-// OG invasion event (needs og_invasions in the mission): { tag_id, invader, amount, months_initial,
-// route, empire_route, attack_target, year+month | delay, trigger }. Warnings, attack and chains follow the OG cycle.
+// OG invasion event: { tag_id, invader, amount, months_initial, route, empire_route, attack_target,
+// year+month | delay, trigger }. Only a favour invasion (trigger EVENT_TRIGGER_BY_FAVOUR, sent at Kingdom rating 0)
+// and the events chained from it run the OG warnings, attack and chains; any other one stays inert.
 city.create_invasion = function(obj) {
     var event_id = __city_create_invasion(obj)
     return {

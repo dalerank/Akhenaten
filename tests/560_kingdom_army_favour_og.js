@@ -1,7 +1,7 @@
 // Kingdom army at favour 0, vs OG city/kingdom.c:69-91 (city_emperor_update): at Kingdom rating 0 the
 // first BY_FAVOUR invasion that is not in use is chained to now, warns with the low-kingdom text and
 // rests 12 months (scenario_events_rearm); a second favour invasion is never pulled while the first rests.
-// Its army is called off at rating >= 15. Runs without the og_invasions mission flag.
+// Its army is called off at rating >= 15.
 // Markers:
 //   [test-marker] favour_rating_gate_ok
 //   [test-marker] favour_pull_ok
@@ -20,7 +20,6 @@ function test560_fail(msg) {
 
 function test560_session() {
     test_reload_city_session('data/default.map')
-    __test_og_invasions_set(0)
     __test_clear_enemy_formations()
     __test_set_scenario_enemy_id(ENEMY_0_BARBARIAN)
     __test_invasion_points_clear()

@@ -620,7 +620,7 @@ function mission18_ensure_pharaoh_gift_leaves() {
 
 // Troops chain: ok→31 KR+3→32 NEW_TRADE Iunet; late→33 SEA→34 troops×47 (first re-arm only).
 // Refuse/defeat → JS Hyksos×9 + unique KR−2 + fresh re-arm tag (unique tags remain hygiene; B14 allows shared).
-// 1035: the on_defeat leaf, pak i=35 (the Hyksos×9 invasion). It stays inert without og_invasions;
+// 1035: the on_defeat leaf, pak i=35 (the Hyksos×9 invasion). It stays inert (no favour trigger in its chain);
 // the raid itself comes from JS on the cleared request.
 function mission18_ensure_troops_chain_leaves() {
 	if (mission.troops_chain_leaves_wired) {

@@ -297,9 +297,6 @@ struct event_manager_t {
     bool any_invasion_running() const;
     bool favour_invasion_fired() const;
 
-    // Mission flag og_invasions: EVENT_TYPE_INVASION events run the OG monthly warning/attack cycle.
-    // Missions without it still raise their invasions from JS; a favour invasion and its chain run the OG cycle anyway.
-    bool og_invasions = false;
     event_ph_t *create(const event_ph_t *parent);
     bool create(const event_ph_t *master, const event_ph_t *parent, e_event_trigger_type trigger_type);
     bool is_valid_event_index(int id);

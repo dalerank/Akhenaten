@@ -21,7 +21,7 @@ log_info("akhenaten: mission 43 abu simbel started")
 //            refused: kingdom −5); y9m7 request 11 pottery; y10m4 frogs; y14m6 clay pits flood.
 //
 // Notes for developers:
-// - events[] invasions do not run (no og_invasions): the two Kushite raids are started from JS, and the
+// - events[] invasions do not run (no favour trigger): the two Kushite raids are started from JS, and the
 //   chain after raid 27 is rebuilt in mission43_fire_inv20_win_chain. Only Pharaoh's army runs from
 //   events[] (favour trigger).
 

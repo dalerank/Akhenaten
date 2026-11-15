@@ -67,14 +67,13 @@ void empire_markers_t::rebuild() {
 }
 
 // OG empire_window.c:615-640: an invasion shows once it is no farther than its route takes, and creeps on.
+// Only events the OG cycle runs attack (invasion_runs_og); mission raids come from JS and have no event.
 void empire_markers_t::add_invasions() {
-    if (!g_scenario.events.og_invasions) {
-        return;
-    }
     const auto& rules = empire_markers_rules;
     for (int i = 0; i < g_scenario.events.events_count() && !markers.full(); i++) {
         const event_ph_t* e = g_scenario.events.at(i);
-        if (!e || e->type != EVENT_TYPE_INVASION || !scenario_invasion_is_running(*e)) {
+        if (!e || e->type != EVENT_TYPE_INVASION || !g_scenario.events.invasion_runs_og(*e)
+            || !scenario_invasion_is_running(*e)) {
             continue;
         }
         const map_route_object* route = marker_route(e->route_fields[0]);

@@ -18,7 +18,7 @@ log_info("akhenaten: mission 52 actium started")
 //            raid 40 with 4 warships, and once that is beaten the Athens route is lost.
 //
 // Notes for developers:
-// - events[] invasions do not run (no og_invasions), so mission52_calendar_invasions starts both raids;
+// - events[] invasions do not run (no favour trigger), so mission52_calendar_invasions starts both raids;
 //   the Athens route loss is fired by tag 18 when the second raid is beaten.
 // - The warship wharf is enabled for the navy briefing although the original scenario disallows it.
 // - next_mission -1: the campaign ends here.

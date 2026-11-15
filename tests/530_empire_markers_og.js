@@ -1,5 +1,6 @@
 // Empire map markers vs OG window/empire_window.c:615-664 and editor/scenario_event_methods.c troops_request_state:
 //   an invasion shows on its route (scenario_event.invasion) once its months left fit in the route's travel months,
+//   here the army a favour invasion sends at Kingdom rating 0 (only such a chain runs the OG invasion cycle),
 //   at 100 - months_left * 100 / travel percent of the path, creeping (anim - 50) / 4 points on; troops sent to a
 //   city walk its route away from ours (100 - months_left * 100 / travel) and back (months_left * 100 / travel).
 //   A route has a path point every 5 pixels (io/empire_file.c), travel = points * 5 / 400 months.
@@ -101,9 +102,20 @@ function test530_invasion(ours, route_id) {
     }
     __log_marker('empire_markers_route_ok')
 
-    __test_og_invasions_set(1)
-    var inv = city.create_invasion({ tag_id: 53001, invader: EVENT_INVADER_ENEMY, amount: 10, months_initial: 12,
-        route: 1, empire_route: route_id, year: 1, month: 0 }).event_id
+    __test_simtime_set(1, 0)
+    var master = city.create_invasion({ tag_id: 53001, invader: EVENT_INVADER_ENEMY, amount: 10, months_initial: 12,
+        route: 1, empire_route: route_id, trigger: EVENT_TRIGGER_BY_FAVOUR }).event_id
+    var inv = __test_events_count()
+    __test_kingdom_set_rating(0)
+    __test_kingdom_favour_update()
+    if (__test_event_parent(inv) != master) {
+        test530_fail('favour army not sent: parent=' + __test_event_parent(inv))
+        return
+    }
+    if (test530_has_marker(master)) {
+        test530_fail('favour master shown')
+        return
+    }
 
     var steps = [
         // month, anim, x: 7 months left is beyond the 6 travel months
@@ -135,7 +147,6 @@ function test530_invasion(ours, route_id) {
         return
     }
     __log_marker('empire_markers_invasion_gone_ok')
-    __test_og_invasions_set(0)
 }
 
 function test530_pick(ours, event_id, kind) {

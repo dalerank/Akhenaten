@@ -1294,11 +1294,6 @@ ANK_FUNCTION(__test_enemy_formations_update);
 #include "scenario/scenario_event_manager.h"
 #include "scenario/event_phrases.h"
 
-static void __test_og_invasions_set(int on) {
-    g_scenario.events.og_invasions = on != 0;
-}
-ANK_FUNCTION_1(__test_og_invasions_set);
-
 static void __test_simtime_set(int years_since_start, int month) {
     game.simtime.year = g_scenario.start_year + years_since_start;
     game.simtime.month = month;
