@@ -1,3 +1,17 @@
+// Custom mission 132 — Chariot Blitz (Cleopatra map Chariot Blitz.map). Rank 0 (Village Elder).
+//
+// Goals:     house count 6, housing level 2.
+// Start:     funds 3750, rescue loan 3750 (normal difficulty).
+// Gods:      none (no temples allowed).
+// Monuments: none.
+// Trade:     no empire cities configured.
+// Enemies:   none.
+// Timeline:  no events.
+//
+// Notes for developers: a placeholder copied from the sandbox stub — only houses and roads can be built,
+// and "message_chariot_blitz" has no entry in the game messages.
+// The selection text promises a monument, but none is configured yet.
+
 mission132 { // Pharoah's Fury, custom mission
 	start_message : "message_chariot_blitz"
     selection_title : "Chariot Blitz"

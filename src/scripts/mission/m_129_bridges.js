@@ -1,20 +1,20 @@
 log_info("akhenaten: mission 129 bridges started")
 
-// Custom map Cleop/Maps/Bridges.map + reserved[0..46] editor flags from scenario_info.
-// Empire id=1; our city = Djedu (sells fish/clay/timber/granite/copper). Abu display-only.
-// Monuments (group 198): 23 Large Obelisk, 22 Small Obelisk → rating goal 13
-//   (weights 3+1 → trunc(6.32·√4+0.5)=13).
-// Subtitle "20 Years until invasion"; timed Pharaoh army y25m0 size=16 attack=BEST_BUILDINGS.
-// Climate desert; god Ra known; enemy ENEMY_6_KUSHITE (scenario id only — raid is Egyptian).
+// Custom mission 129 — Bridges, "20 Years until invasion" (Cleopatra map Bridges.map). Rank 0 (Village Elder).
 //
-// Allowed structures ON (editor 1–47 / reserved): Raw materials, Gold Mine, Water Lift,
-// Work Camp, Bazaar, Storage Yard, Dock, Juggling/Music/Dancing/Senet, Scribal School,
-// Dentist, Physician, Mortuary, Courthouse, Mansion, Roadblock, Bridge, Ferry, Plaza,
-// Statues, Wall, +46/47 (Firehouse / Architect — lang group 67 ids missing in EN).
-// Triage REMAP: Fishing Wharf + Granary + Well/Water Supply OFF in reserved but city
-// sells fish + 8 fishing_points — unlock via resource + playability (Steam clearings).
-// Triage SKIP: empty map_obj idx=0/1 (city=-); invasion loc=9,9 invalid → omit inv points
-// (engine entry/disembark); no trade routes.
+// Goals:     monuments 13, housing level 10 (house count is enabled with goal 0).
+// Start:     funds 7500, no rescue loan, debt interest 5% (normal difficulty).
+// Gods:      Ra.
+// Monuments: large obelisk, small obelisk.
+// Trade:     none — our city is Djedu, Abu is display only, no trade routes.
+// Enemies:   one Egyptian army (Pharaoh's) at the map entry point.
+// Timeline:  y25m0 Pharaoh's army of 16 attacks the best buildings. No requests or other events.
+//
+// Notes for developers:
+// - The map's own building flags turn off the fishing wharf, granary, well and water supply; they are
+//   allowed here because the city sells fish and the map has 8 fishing points.
+// - The map's invasion points are invalid, so the army enters at the map entry point (tile -1,-1).
+// - The army size and year 25 come from the map's event; the subtitle's "20 years" is the map's own text.
 
 mission129 { // Bridges.map
 	selection_title : "Bridges"

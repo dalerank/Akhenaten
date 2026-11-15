@@ -1,22 +1,30 @@
 log_info("akhenaten: mission 128 alexandria started")
 
-// Custom map Cleop/Maps/Alexandria.map ("An Alexandrian Affair").
-// Empire id=0; our city = Perwadjyt.
-// Monuments (group 198): 24 Sun Temple, 17 Grand Pyramid Complex, 15 Large Pyramid.
-// Allowed structures (scenario reserved[0..46]): all 47 editor flags ON.
-// Triage: SKIP map_obj idx=11 empty; SKIP orphan routes 19 (no polyline), 22, 25.
-// Remap Byblos→route 21, Qadesh→route 20 (pak city.route=19 missing polyline;
-// pak sea=0 discarded — polylines 20/21 are type=2 sea).
-// Tyre foreign non-trade display. Invasion points SoA-misread as empty in dump —
-// interleaved file values land[93,210] sea[203,125] restored in JS.
-// fishing_points / herd_points_predator: config-only (omit → empty), like invasion_points.
-// Events: bricks×11/12mo recurring y1m4+; clay flood y6m5+; gold collapse y6m4+;
-// contaminated water y3m9+; beduin×19 y8m0+ recurring (18mo warning, Libyan sprites).
+// Custom mission 128 — Alexandria, "An Alexandrian Affair" (Cleopatra map Alexandria.map). Rank 10 (Pharaoh).
 //
-// Tag_id scheme:
-//   1000 + i               chain-only ONLY_VIA leaves
-//   2000 + i               once calendar roots
-//   3000 + i*100 + year    recurring calendar roots
+// Goals:     population 20000, culture 65, prosperity 75, monuments 66, kingdom 75, house count 5,
+//            housing level 19.
+// Start:     funds 12000, rescue loan 6000, debt interest 5% (normal difficulty).
+// Gods:      Bast (patron), Osiris, Ra, Ptah — statuses come from the map.
+// Monuments: the map's monument goal is a sun temple, a grand pyramid complex and a large pyramid;
+//            every monument building is allowed.
+// Trade:     none open at start; can open — Mycenae, Knossos, Enkomi, Kyrene, Men-nefer, Bubastis,
+//            Rowarty, Meidum, Menat Khufu, Iunet, Qadesh, Byblos (all by sea), Rostja, Bahariya Oasis,
+//            Pwenet; display only — Gaza, Tyre. Our city is Perwadjyt.
+// Enemies:   Bedouin raids (Libyan sprites) at land point [93,210].
+// Timeline:  y1m4 and every year after: request 11 bricks within 12 months (delivered: kingdom +5;
+//            refused or late: -6); every year from y3m9 contaminated water, from y6m4 a gold mine
+//            collapse, from y6m5 a clay pit flood; from y8m0 an 18-month warning, then 19 Bedouin —
+//            repeated (about every two years) whenever no raid is in progress.
+//
+// Notes for developers:
+// - The map stores its invasion points interleaved, so the engine reads them as empty; they are
+//   restored in invasion_points_land / invasion_points_sea below.
+// - Qadesh and Byblos point at route 19 in the map, which has no polyline; they use the nearby sea
+//   routes 20 and 21 instead.
+// - tag_id: 1001/1002 kingdom rating outcomes of the bricks request; 3000/3100/3200/3300/3400 + year for
+//   the yearly bricks / clay flood / gold collapse / contaminated water / Bedouin warning;
+//   3500 + year*12 + month Bedouin reminders.
 
 mission128 { // Alexandria.map — An Alexandrian Affair
 	selection_title : "Alexandria"
