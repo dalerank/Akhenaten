@@ -4,6 +4,7 @@
 #include "core/random.h"
 #include "city/city.h"
 #include "dev/debug.h"
+#include "game/game_config.h"
 #include "grid/terrain.h"
 
 static const vec2i FISHPOINT_OFFSETS[] = {{0, 0}, {0, -2}, {-2, 0}, {1, 2}, {2, 0}, {-3, 1}, {4, -3}, {-2, 4}, {0, 0}};
@@ -49,15 +50,17 @@ void figure_fishing_point::figure_action() {
     bool animation_finished = false;
     auto &d = runtime_data();
     if (base.animctx.frame == 0) {
-        base.progress_on_tile++;
-        if (base.progress_on_tile > 14) { // wrap around
-            base.progress_on_tile = 0;
-        }
+        if (!!game_features::gameplay_change_fishing_points_drift) {
+            base.progress_on_tile++;
+            if (base.progress_on_tile > 14) {
+                base.progress_on_tile = 0;
+            }
 
-        d.offset++;
-        d.offset %= std::size(FISHPOINT_OFFSETS);
-        vec2i offset = FISHPOINT_OFFSETS[d.offset];
-        base.set_cross_country_destination(base.source_tile.shifted(offset.x, offset.y));
+            d.offset++;
+            d.offset %= std::size(FISHPOINT_OFFSETS);
+            vec2i offset = FISHPOINT_OFFSETS[d.offset];
+            base.set_cross_country_destination(base.source_tile.shifted(offset.x, offset.y));
+        }
         animation_finished = true;
     }
 

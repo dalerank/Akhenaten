@@ -135,6 +135,8 @@ namespace game_features {
     game_feature gameplay_change_fireman_returning{ "gameplay_change_fireman_returning", "#TR_CONFIG_FIREMAN_RETURNING", false, false };
     game_feature gameplay_change_fishing_points_monthly_respawn{
       "gameplay_change_fishing_points_monthly_respawn", "#TR_CONFIG_FISHING_POINTS_MONTHLY_RESPAWN", false, false};
+    game_feature gameplay_change_fishing_points_drift{
+      "gameplay_change_fishing_points_drift", "#TR_CONFIG_FISHING_POINTS_DRIFT", false, false};
     game_feature gameplay_change_house_evolve_delay{
       "gameplay_change_house_evolve_delay", "#TR_CONFIG_HOUSE_EVOLVE_DELAY", false, false};
     game_feature gameplay_change_abu_simbel_draw_scaffolds{

@@ -44,6 +44,7 @@
 #include "figuretype/figure_frog.h"
 #include "figuretype/figure_tomb_robber.h"
 #include "figuretype/figure_fishing_boat.h"
+#include "grid/figure.h"
 #include "grid/terrain.h"
 #include "game/game_config.h"
 #include "core/svector.h"
@@ -842,6 +843,15 @@ static int nearest_water_distance(tile2i t, const std::vector<tile2i>& water, in
 }
 
 // OG city_disasters.c city_blood_river_start. The sweep countdown lives in the event's data slot.
+static bool map_figure_chain_has(tile2i tile, int figure_id) {
+    for (int id = map_figure_id_get(tile); id > 0; id = figure_get(id)->next_figure) {
+        if (id == figure_id) {
+            return true;
+        }
+    }
+    return false;
+}
+
 static void city_blood_river_start(event_ph_t& event) {
     const int amount = std::clamp<int>(event.amount.value, BLOOD_RIVER_MIN_AMOUNT, BLOOD_RIVER_MAX_AMOUNT);
     const int limit = std::max(g_scenario.map.width, g_scenario.map.height);
@@ -880,7 +890,12 @@ static void city_blood_river_start(event_ph_t& event) {
             f->route_remove();
         }
     }
-    g_city.fishing_points.clear();
+    for (int id = 1; id < MAX_FIGURES; id++) {
+        figure* f = figure_get(id);
+        if (f->is_valid() && f->type == FIGURE_FISHING_POINT) {
+            f->map_figure_remove();
+        }
+    }
     event.data.sweep.total = (int16_t)(amount * DISASTER_TICKS_PER_AMOUNT);
     event.data.sweep.countdown = event.data.sweep.total;
     g_city.change_happiness(-DISASTER_HAPPINESS_LOSS);
@@ -1904,7 +1919,12 @@ void event_manager_t::process_invasions() {
 void event_manager_t::update_tick() {
     for (event_ph_t& e : g_scenario_events.event_list) {
         if (e.type == EVENT_TYPE_BLOOD_RIVER && e.data.sweep.countdown > 0 && --e.data.sweep.countdown == 0) {
-            g_city.fishing_points.create();
+            for (int id = 1; id < MAX_FIGURES; id++) {
+                figure* f = figure_get(id);
+                if (f->is_valid() && f->type == FIGURE_FISHING_POINT && !map_figure_chain_has(f->tile, id)) {
+                    f->map_figure_add();
+                }
+            }
         }
     }
 }

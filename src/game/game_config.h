@@ -136,6 +136,7 @@ namespace game_features {
     extern game_feature gameplay_change_wood_cutter_single_gatherer;
     extern game_feature gameplay_change_fireman_returning;
     extern game_feature gameplay_change_fishing_points_monthly_respawn;
+    extern game_feature gameplay_change_fishing_points_drift;
     extern game_feature gameplay_change_house_evolve_delay;
     extern game_feature gameplay_change_abu_simbel_draw_scaffolds;
     extern game_feature gameplay_change_food_consumption_remake;

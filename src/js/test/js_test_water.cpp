@@ -21,6 +21,7 @@
 #include "figuretype/figure_flotsam.h"
 #include "figuretype/figure_plagued_citizen.h"
 #include "game/resource.h"
+#include "grid/figure.h"
 #include "grid/grid.h"
 #include "grid/road_access.h"
 #include "grid/routing/routing.h"
@@ -123,6 +124,22 @@ static void __test_fishing_points_clear() {
     g_city.fishing_points.clear();
 }
 ANK_FUNCTION(__test_fishing_points_clear);
+
+static int __test_figure_on_map_grid(int fid) {
+    figure* f = figure_get(fid);
+    if (!f || f->id <= 0) {
+        return 0;
+    }
+    int guard = 0;
+    for (int id = map_figure_id_get(f->tile); id > 0 && guard < MAX_FIGURES;
+      id = figure_get(id)->next_figure, guard++) {
+        if (id == fid) {
+            return 1;
+        }
+    }
+    return 0;
+}
+ANK_FUNCTION_1(__test_figure_on_map_grid);
 
 static int __test_fishing_wharf_spawn_figure(int bid) {
     building* b = building_get(bid);

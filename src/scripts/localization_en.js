@@ -224,6 +224,7 @@ localization_en = [
   {key:"#TR_CONFIG_WOOD_CUTTER_SINGLE_GATHERER", text:"Wood cutters: one lumberjack + any-tree spawn gate (remake; original 1/2/3 by staffing, grown trees only)"}
   {key:"#TR_CONFIG_FIREMAN_RETURNING", text:"Fireman returning after fight fire"}
   {key:"#TR_CONFIG_FISHING_POINTS_MONTHLY_RESPAWN", text:"Fishing spots respawn every month"}
+  {key:"#TR_CONFIG_FISHING_POINTS_DRIFT", text:"Fishing spots drift around their point"}
   {key:"#TR_CONFIG_HOUSE_EVOLVE_DELAY", text:"Houses evolve at most once every 7 days"}
   {key:"#TR_CONFIG_ABU_SIMBEL_DRAW_SCAFFOLDS", text:"Abu Simbel shows its scaffolds while it is built"}
   {key:"#TR_CONFIG_FOOD_CONSUMPTION_REMAKE", text:"Houses eat their level's share of food twice a month"}
