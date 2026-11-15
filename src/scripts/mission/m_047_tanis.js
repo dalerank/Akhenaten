@@ -14,15 +14,18 @@ log_info("akhenaten: mission 47 tanis started")
 // Timeline:  y2m7 Pharaoh asks 7 papyrus (delivered: gift of 7 chickpeas; late: chickpeas cost more;
 //            refused: Men-nefer route lost, then a request for 10 reeds — delivered or late: the route
 //            reopens; refused: kingdom −4); y3m6 request 5 papyrus (delivered: kingdom +5; refused: Athens
-//            route lost; late: Athens buys fewer pomegranates); y4m0 3 warships with no soldiers; from y5m3
-//            Pharaoh asks 9 fish every year (delivered: gift of 11 weapons, then kingdom +4; refused: −4;
-//            late: +4); y5m4 locusts; y6m2 raid 16 with 5 warships, and 4 months later 3 more warships;
-//            y7m5 Enkomi route lost; y8m2 raid 12 with 4 warships.
+//            route lost; late: Athens buys fewer pomegranates); 3 warships with no soldiers announced y4m0,
+//            attack y4m2; from y5m3 Pharaoh asks 9 fish every year (delivered: gift of 11 weapons, then
+//            kingdom +4; refused: −4; late: +4); y5m4 locusts; raid 16 with 5 warships announced y6m2,
+//            attacks y6m10, and 3 more warships follow (announced y7m2, attack y7m4); y7m5 Enkomi route lost;
+//            raid 12 with 4 warships announced y8m2, attacks y9m0.
 //
 // Notes for developers:
-// - The calendar invasions of the original (pak i=0, 5, 12) are started from JS in their event month
-//   (mission47_raids); their events[] slots stay as EVENT_TYPE_NONE so the other indexes keep. Points 9
-//   and 11 are sea points 0 and 2; the map has two, so 11 wraps round to sea point 0 as in OG.
+// - The calendar invasions of the original (pak i=0, 5, 12) are raids from JS (mission47_raids); their
+//   events[] slots stay as EVENT_TYPE_NONE so the other indexes keep. Points 9..11 are sea points 0..2; the
+//   map has two, so 11 wraps round to sea point 0 as in OG (i=12 rolls 10 or 11).
+// - Raids follow the OG invasion cycle (missions.js mission_raids_month): warnings from the event's month,
+//   the attack months_initial months later, the point rolled from the event's location_fields.
 // - The warship wharf is enabled for the navy briefing although the original scenario disallows it.
 // - next_mission -1: the Ancient Conquerors campaign ends here and must not continue into mission 48.
 // - The other events are declared in events[] and run by the engine; on_*_action values are indexes into
@@ -684,10 +687,7 @@ mission47 { // Tanis - Rebirth of a Navy
 
 	vars {
 		start_message_shown : false
-		raid0_done : false
-		raid5_done : false
-		raid12_done : false
-		raid0_copy_due : -1
+		raids : ""
 	}
 }
 
@@ -710,21 +710,23 @@ function mission47_on_start(ev) {
 	}
 }
 
-// pak i=0, 5, 12: the calendar invasions of the scenario enemy, all by sea. As i=5 starts it chains a copy of
+// pak i=0, 5, 12: the calendar invasions of the scenario enemy, all by sea. As i=5 attacks it chains a copy of
 // i=0 (OG invasion_attack chains on_completed without the chain-only check), due 4 months later (i=0 time.year).
+function mission47_raid_list() {
+	return [
+		{ key: "i0", invasion_id: 0, year: 4, month: 0, invader: EVENT_INVADER_ENEMY, enemy: ENEMY_11_ROMAN, amount: 0,
+			months_initial: 2, location: [9, -1, 9, 10], warships: 3, attack_target: EVENT_ATTACK_TARGET_TROOPS },
+		{ key: "i5", invasion_id: 5, year: 6, month: 2, invader: EVENT_INVADER_ENEMY, enemy: ENEMY_11_ROMAN, amount: 16,
+			months_initial: 8, location: [11, 11, -1, -1], warships: 5, attack_target: EVENT_ATTACK_TARGET_BEST_BUILDINGS,
+			then: [{ key: "i0_copy", delay: 4 }] },
+		{ key: "i0_copy", invasion_id: 20, invader: EVENT_INVADER_ENEMY, enemy: ENEMY_11_ROMAN, amount: 0,
+			months_initial: 2, location: [9, -1, 9, 10], warships: 3, attack_target: EVENT_ATTACK_TARGET_TROOPS },
+		{ key: "i12", invasion_id: 12, year: 8, month: 2, invader: EVENT_INVADER_ENEMY, enemy: ENEMY_11_ROMAN, amount: 12,
+			months_initial: 10, location: [11, -1, 10, 12], warships: 4, attack_target: EVENT_ATTACK_TARGET_RANDOM }
+	]
+}
+
 [es=event_advance_month, mission=mission47]
 function mission47_raids(ev) {
-	mission_calendar_raids(mission, mission47, ev, [
-		{ flag: "raid0_done", year: 4, month: 0, invasion_id: 0, enemy: ENEMY_11_ROMAN, size: 0, location: 9,
-			warships: 3, attack_target: EVENT_ATTACK_TARGET_TROOPS },
-		{ flag: "raid5_done", year: 6, month: 2, invasion_id: 5, enemy: ENEMY_11_ROMAN, size: 16, location: 11,
-			warships: 5, attack_target: EVENT_ATTACK_TARGET_BEST_BUILDINGS,
-			schedule: { due_var: "raid0_copy_due", delay: 4 } },
-		{ flag: "raid12_done", year: 8, month: 2, invasion_id: 12, enemy: ENEMY_11_ROMAN, size: 12, location: 11,
-			warships: 4, attack_target: EVENT_ATTACK_TARGET_RANDOM }
-	])
-	if (mission_raid_due(mission, "raid0_copy_due", ev)) {
-		mission_start_raid(mission47, { invasion_id: 20, enemy: ENEMY_11_ROMAN, size: 0, location: 9, warships: 3,
-			attack_target: EVENT_ATTACK_TARGET_TROOPS })
-	}
+	mission_raids_month(mission, mission47, ev, mission47_raid_list())
 }

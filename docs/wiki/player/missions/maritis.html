@@ -99,7 +99,7 @@
 
       <h2 id="events">Scripted events (summary)</h2>
       <p>JS <code>events[]</code> ×25 from pak (CC50.2): reeds / troops / papyrus / fish requests; gift and city-status chains. Cities ×7 / routes ×6 / ornaments ×5 / texts ×16. SKIP empty map_obj idx=2.</p>
-      <p>Egyptian raids from mission JS, all at the map exit: <strong>y2m7</strong> ×30 (target troops), and a month later (<strong>y2m8</strong>) ×25 (troops; Pharaoh's gift of 10 weapons as it starts) · ×26 (random) <strong>2 months</strong> after the y4m4 troop request is refused or lost, with three trade routes lost one after another as it starts.</p>
+      <p>Egyptian raids from mission JS, all at the map exit. Each raid follows the OG invasion cycle: from the event&rsquo;s month the OG warnings (announcement, then reminders at 24/12/6/1 months left), the attack <code>months_initial</code> months later. Announced <strong>y2m7</strong> &rarr; attack <strong>y3m1</strong> ×30 (target troops), which chains ×25 announced <strong>y3m2</strong>, attacking <strong>y3m8</strong> (troops; Pharaoh&rsquo;s gift of 10 weapons as it attacks) · ×26 (random) announced <strong>2 months</strong> after the y4m4 troop request is refused or lost, attacking 6 months later, with three trade routes lost one after another as it attacks.</p>
 
       <div class="dev-section">
         <h2 id="dev">Developer reference</h2>
@@ -107,7 +107,7 @@
           <summary>Mission script</summary>
           <div class="details-body">
             <p><span class="file-ref">src/scripts/mission/m_050_maritis.js</span></p>
-            <p>Raids: <code>mission50_raids</code> (line 680) starts pak i=3, then i=4 a month later (its <code>time.year</code>), and i=13 once <code>mission50_on_request_cleared</code> (line 698) has armed it on the refusal or defeat of pak i=9 (<code>tag_id : 1009</code>, line 232); helpers in <span class="file-ref">src/scripts/missions.js</span>:197. Their <code>events[]</code> slots (lines 160, 163, 295) are <code>EVENT_TYPE_NONE</code> so the other indexes keep. As they start, i=4 fires i=17 (<code>tag_id : 1017</code>, line 349) and i=13 fires i=14 (<code>tag_id : 1014</code>, line 300; then 15, 16), as OG <code>invasion_attack</code> chains <code>on_completed</code>.</p>
+            <p>Raids: <code>mission50_raid_list</code> (line 680) holds pak i=3, i=4 (chained a month after i=3 attacks, its <code>time.year</code>) and i=13; <code>mission50_raids</code> (line 693) runs them through <code>mission_raids_month</code> (<span class="file-ref">src/scripts/missions.js</span>:305), and <code>mission50_on_request_cleared</code> (line 700) schedules i=13 on the refusal or defeat of pak i=9 (<code>tag_id : 1009</code>, line 235). Their <code>events[]</code> slots (lines 163, 166, 298) are <code>EVENT_TYPE_NONE</code> so the other indexes keep. As they attack, i=4 fires i=17 (<code>tag_id : 1017</code>, line 352) and i=13 fires i=14 (<code>tag_id : 1014</code>, line 303; then 15, 16), as OG <code>invasion_attack</code> chains <code>on_completed</code>.</p>
             <p><code>map_file</code>: <span class="file-ref">data/maps/m_050_maritis.map</span>. Empire id <strong>0</strong>, <code>map_background</code> pack empire id 26. Full <code>hide_pak_*</code>: cities ×7, routes ×6 (1–6), ornaments ×5, texts ×16. SKIP empty map_obj idx=2. Dump 2026-08-01 Cleop. Rank 1. <code>next_mission: 51</code>.</p>
           </div>
         </details>

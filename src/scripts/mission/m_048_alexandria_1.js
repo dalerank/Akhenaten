@@ -12,21 +12,24 @@ log_info("akhenaten: mission 48 alexandria_1 started")
 //            Bubastis, Knossos, Tyre, Migdol, Waset.
 // Enemies:   Phoenician raids by sea (the scenario enemy; the briefing speaks of roaming vandals);
 //            Pharaoh's army (20) by land if the second pomegranate request is refused.
-// Timeline:  y3m2 raid 7 with 3 warships (as it starts the Byblos route is lost and a price rises); y3m5 On
+// Timeline:  raid 7 with 3 warships announced y3m2, attacks y3m10 (the Byblos route is lost and a price
+//            rises as it attacks); y3m5 On
 //            route opens; y3m8 Bahariya Oasis route opens; y4m7 Pharaoh's gift of 72 deben, then a request
 //            for 8 reeds; y5m3 Pharaoh asks 10 troops (lost: land trade problem); from y6m1 request 8 grain,
 //            repeating; y7m2 Pharaoh's gift of 37 deben (also chained to the reeds request); y7m5 request
 //            6 beer (delivered: gift of 9 gems; late: gift of 5 papyrus); y8m1 famine request for
 //            6 pomegranates (refused: a second request for 7 pomegranates; refusing that one sends
-//            Pharaoh's army 4 months later, with a land trade problem); y8m8 3 warships with no soldiers;
-//            y9m4 request 9 troops; y10m3 request 8 beer. Most requests pay a deben gift when delivered or
+//            Pharaoh's army: announced 4 months later, attacks 6 months after that, with a land trade
+//            problem); 3 warships with no soldiers announced y8m8, attack y9m2; y9m4 request 9 troops; y10m3 request 8 beer. Most requests pay a deben gift when delivered or
 //            late and cost kingdom when refused.
 //
 // Notes for developers:
-// - The invasions of the original are started from JS: the calendar ones (pak i=4, 11) in their event
-//   month (mission48_raids), Pharaoh's army (pak i=26) 4 months after the pak i=23 request (tag 1023) is
-//   refused (mission48_on_request_cleared). Their events[] slots stay as EVENT_TYPE_NONE so the other
+// - The invasions of the original are raids from JS (mission48_raids): the calendar ones (pak i=4, 11) and
+//   Pharaoh's army (pak i=26), announced 4 months after the pak i=23 request (tag 1023) is refused
+//   (mission48_on_request_cleared). Their events[] slots stay as EVENT_TYPE_NONE so the other
 //   indexes keep; tags 1005 and 1028 let the raids fire the chained events.
+// - Raids follow the OG invasion cycle (missions.js mission_raids_month): warnings from the event's month,
+//   the attack months_initial months later, the point rolled from the event's location_fields.
 // - The other events are declared in events[] and run by the engine; on_*_action values are indexes into
 //   that list.
 
@@ -1114,9 +1117,7 @@ mission48 { // Alexandria - Alexander the Great
 
 	vars {
 		start_message_shown : false
-		raid4_done : false
-		raid11_done : false
-		pharaoh_army_due : -1
+		raids : ""
 	}
 }
 
@@ -1139,27 +1140,30 @@ function mission48_on_start(ev) {
 }
 
 // pak i=4, 11: the calendar invasions of the scenario enemy, both by sea; i=4 costs the Byblos route (pak i=5,
-// then a price rise) as it starts. Point 12 is sea point 3, which the map lacks, so it wraps round to sea point 0.
+// then a price rise) as it attacks. Point 12 is sea point 3, which the map lacks, so it wraps round to sea point 0.
 // pak i=26: Pharaoh's army after the second pomegranate request is refused, see mission48_on_request_cleared.
-[es=event_advance_month, mission=mission48]
-function mission48_raids(ev) {
-	mission_calendar_raids(mission, mission48, ev, [
-		{ flag: "raid4_done", year: 3, month: 2, invasion_id: 4, enemy: ENEMY_10_PHOENICIAN, size: 7, location: 9,
-			warships: 3, attack_target: EVENT_ATTACK_TARGET_RANDOM, chain_tag: 1005 },
-		{ flag: "raid11_done", year: 8, month: 8, invasion_id: 11, enemy: ENEMY_10_PHOENICIAN, size: 0, location: 12,
-			warships: 3, attack_target: EVENT_ATTACK_TARGET_TROOPS }
-	])
-	if (mission_raid_due(mission, "pharaoh_army_due", ev)) {
-		mission_start_raid(mission48, { invasion_id: 26, enemy: ENEMY_3_EGYPTIAN, size: 20, location: 1,
-			attack_target: EVENT_ATTACK_TARGET_BEST_BUILDINGS, chain_tag: 1028 })
-	}
+function mission48_raid_list() {
+	return [
+		{ key: "i4", invasion_id: 4, year: 3, month: 2, invader: EVENT_INVADER_ENEMY, enemy: ENEMY_10_PHOENICIAN,
+			amount: 7, months_initial: 8, location: [9, -1, 9, 11], warships: 3, attack_target: EVENT_ATTACK_TARGET_RANDOM,
+			chain_tag: 1005 },
+		{ key: "i11", invasion_id: 11, year: 8, month: 8, invader: EVENT_INVADER_ENEMY, enemy: ENEMY_10_PHOENICIAN,
+			amount: 0, months_initial: 6, location: [12, -1, 12, 13], warships: 3, attack_target: EVENT_ATTACK_TARGET_TROOPS },
+		{ key: "i26", invasion_id: 26, invader: EVENT_INVADER_PHARAOH, enemy: ENEMY_3_EGYPTIAN, amount: 20,
+			months_initial: 6, location: [1, -1, 1, 3], attack_target: EVENT_ATTACK_TARGET_BEST_BUILDINGS, chain_tag: 1028 }
+	]
 }
 
-// pak i=23 refused -> i=26 Pharaoh's army 20, due 4 months later (its time.year); as it starts, a land trade
+[es=event_advance_month, mission=mission48]
+function mission48_raids(ev) {
+	mission_raids_month(mission, mission48, ev, mission48_raid_list())
+}
+
+// pak i=23 refused -> i=26 Pharaoh's army 20, due 4 months later (its time.year); as it attacks, a land trade
 // problem (pak i=28).
 [es=event_request_cleared, mission=mission48]
 function mission48_on_request_cleared(ev) {
 	if (ev.tag_id == 1023 && mission_request_outcome(ev) == "refuse") {
-		mission_schedule_raid(mission, "pharaoh_army_due", 4)
+		mission_raid_schedule(mission, mission48_raid_list(), "i26", 4)
 	}
 }

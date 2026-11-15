@@ -10,18 +10,21 @@ log_info("akhenaten: mission 50 maritis started")
 // Trade:     can open — Men-nefer, Meidum, Migdol, Tyre (by sea); display only — Gaza, Alexandria.
 // Enemies:   Egyptian raids, entering at the map exit. The scenario enemy is Persian, but no Persian army
 //            is sent.
-// Timeline:  y2m7 raid 30, and a month later raid 25 (Pharaoh's gift of 10 weapons as it starts); y3m4
-//            request 11 reeds (delivered: gift of 11 pottery; late: gift of 5 pottery; refused: kingdom −7);
-//            y4m4 Pharaoh asks 16 troops (sent: kingdom +8; late: +4; refused: battle-lost message; refused
-//            or lost: raid 26 two months later, and three trade routes are lost as it starts); y5m5 Pharaoh
+// Timeline:  raid 30 announced y2m7, attacks y3m1, and a month later raid 25 is announced (attacks y3m8,
+//            with Pharaoh's gift of 10 weapons); y3m4 request 11 reeds (delivered: gift of 11 pottery; late:
+//            gift of 5 pottery; refused: kingdom −7); y4m4 Pharaoh asks 16 troops (sent: kingdom +8; late:
+//            +4; refused: battle-lost message; refused or lost: raid 26 announced two months later, attacks
+//            6 months after that, and three trade routes are lost as it attacks); y5m5 Pharaoh
 //            asks 6 papyrus (delivered: gift of 7 pottery; refused: −7; late: +4); y6m1 request 8 fish
 //            (delivered: gift of 5 luxury goods; refused: Tyre route lost; late: gift of 3 luxury goods).
 //
 // Notes for developers:
-// - The Egyptian invasions of the original are started from JS: pak i=3 in its event month and i=4 a month
-//   after it (mission50_raids), i=13 two months after the pak i=9 troop request (tag 1009) is refused or
-//   lost (mission50_on_request_cleared). Their events[] slots stay as EVENT_TYPE_NONE so the other indexes
+// - The Egyptian invasions of the original are raids from JS (mission50_raids): pak i=3, i=4 a month after
+//   i=3 attacks, i=13 two months after the pak i=9 troop request (tag 1009) is refused or lost
+//   (mission50_on_request_cleared). Their events[] slots stay as EVENT_TYPE_NONE so the other indexes
 //   keep; tags 1014 and 1017 let the raids fire the chained events.
+// - Raids follow the OG invasion cycle (missions.js mission_raids_month): warnings from the event's month,
+//   the attack months_initial months later, the point rolled from the event's location_fields.
 // - The gifts at indexes 0, 1, 2 and 19 are already fired in the original; they stay only to keep the
 //   indexes of the other events.
 // - The other events are declared in events[] and run by the engine; on_*_action values are indexes into
@@ -648,9 +651,7 @@ mission50 { // Maritis - Caesar and Cleopatra
 
 	vars {
 		start_message_shown : false
-		raid3_done : false
-		raid4_due : -1
-		raid13_due : -1
+		raids : ""
 	}
 }
 
@@ -673,30 +674,31 @@ function mission50_on_start(ev) {
 	}
 }
 
-// pak i=3: the calendar Egyptian invasion; as it starts it chains i=4, 25 more due a month later (its time.year),
-// which brings Pharaoh's gift of 10 weapons (pak i=17) as it starts. The map has no invasion points, so both come
+// pak i=3: the calendar Egyptian invasion; as it attacks it chains i=4, 25 more due a month later (its time.year),
+// which bring Pharaoh's gift of 10 weapons (pak i=17) as they attack. The map has no invasion points, so both come
 // in by the map exit. pak i=13: see mission50_on_request_cleared.
+function mission50_raid_list() {
+	return [
+		{ key: "i3", invasion_id: 3, year: 2, month: 7, invader: EVENT_INVADER_EGYPT, enemy: ENEMY_3_EGYPTIAN, amount: 30,
+			months_initial: 6, location: [3, -1, 1, 5], attack_target: EVENT_ATTACK_TARGET_TROOPS,
+			then: [{ key: "i4", delay: 1 }] },
+		{ key: "i4", invasion_id: 4, invader: EVENT_INVADER_EGYPT, enemy: ENEMY_3_EGYPTIAN, amount: 25, months_initial: 6,
+			location: [3, -1, 1, 5], attack_target: EVENT_ATTACK_TARGET_TROOPS, chain_tag: 1017 },
+		{ key: "i13", invasion_id: 13, invader: EVENT_INVADER_EGYPT, enemy: ENEMY_3_EGYPTIAN, amount: 26,
+			months_initial: 6, location: [2, -1, 1, 5], attack_target: EVENT_ATTACK_TARGET_RANDOM, chain_tag: 1014 }
+	]
+}
+
 [es=event_advance_month, mission=mission50]
 function mission50_raids(ev) {
-	mission_calendar_raids(mission, mission50, ev, [
-		{ flag: "raid3_done", year: 2, month: 7, invasion_id: 3, enemy: ENEMY_3_EGYPTIAN, size: 30, location: 3,
-			attack_target: EVENT_ATTACK_TARGET_TROOPS, schedule: { due_var: "raid4_due", delay: 1 } }
-	])
-	if (mission_raid_due(mission, "raid4_due", ev)) {
-		mission_start_raid(mission50, { invasion_id: 4, enemy: ENEMY_3_EGYPTIAN, size: 25, location: 3,
-			attack_target: EVENT_ATTACK_TARGET_TROOPS, chain_tag: 1017 })
-	}
-	if (mission_raid_due(mission, "raid13_due", ev)) {
-		mission_start_raid(mission50, { invasion_id: 13, enemy: ENEMY_3_EGYPTIAN, size: 26, location: 2,
-			attack_target: EVENT_ATTACK_TARGET_RANDOM, chain_tag: 1014 })
-	}
+	mission_raids_month(mission, mission50, ev, mission50_raid_list())
 }
 
 // pak i=9 (Pharaoh asks 16 troops) refused or lost -> i=13 Egyptian invasion 26, due 2 months later (its
-// time.year); as it starts the routes of pak i=14, 15, 16 are lost one after another.
+// time.year); as it attacks the routes of pak i=14, 15, 16 are lost one after another.
 [es=event_request_cleared, mission=mission50]
 function mission50_on_request_cleared(ev) {
 	if (ev.tag_id == 1009 && mission_request_outcome(ev) == "refuse") {
-		mission_schedule_raid(mission, "raid13_due", 2)
+		mission_raid_schedule(mission, mission50_raid_list(), "i13", 2)
 	}
 }

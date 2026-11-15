@@ -12,10 +12,11 @@ log_info("akhenaten: mission 51 alexandria_3 started")
 // Trade:     can open — Rome, Athens, Knossos, Enkomi, Tyre, Gaza, Iunet, Pwenet (by sea), Men-nefer,
 //            Bahariya Oasis, Serabit Khadim; opened by events — On, Meidum; display only — Kyrene, Migdol,
 //            Waset, Buhen, Byblos.
-// Enemies:   2 Persian warships with no soldiers, 6 months after each refused luxury-goods request.
+// Enemies:   2 Persian warships with no soldiers after each refused luxury-goods request (announced 6 months
+//            later, attack a year after that).
 // Timeline:  y0m6 gift of 10 chickpeas, then a request for 5 papyrus; y0m8 gift of 6 timber, then a request
 //            for 10 grain (followed by luxury goods and a request for 7 grain); from y3m7 request 5 luxury
-//            goods every year (gifts of weapons; refused: 2 warships 6 months later); y4m3 On route opens;
+//            goods every year (gifts of weapons; refused: 2 warships, see Enemies); y4m3 On route opens;
 //            y5m3 request 7 beer (Athens buys more grain, or less if refused); y6m6, y13m2, y21m10 wages
 //            rise; y7m9 request 6 troops; y8m8 famine request for 13 fish; y9m4, y19m4 locusts, each followed
 //            by a gift of 26 grain; y10m1 gift of 6 gems, then a request for 6 luxury goods; y10m3 Meidum
@@ -24,9 +25,11 @@ log_info("akhenaten: mission 51 alexandria_3 started")
 //            y16m2 request 25 troops. Other outcomes are gifts, demand changes and kingdom ±4.
 //
 // Notes for developers:
-// - The warship-only invasion of the original (pak i=39) is started from JS 6 months after the yearly
-//   luxury-goods request (pak i=5, tag 1005) is refused (mission51_on_request_cleared); its events[] slot
-//   stays as EVENT_TYPE_NONE so the other indexes keep.
+// - The warship-only invasion of the original (pak i=39) is a raid from JS (mission51_raids), announced 6
+//   months after the yearly luxury-goods request (pak i=5, tag 1005) is refused
+//   (mission51_on_request_cleared); its events[] slot stays as EVENT_TYPE_NONE so the other indexes keep.
+// - Raids follow the OG invasion cycle (missions.js mission_raids_month): warnings from the event's month,
+//   the attack months_initial months later, the point rolled from the event's location_fields.
 // - The other events are declared in events[] and run by the engine; on_*_action values are indexes into
 //   that list.
 
@@ -1183,7 +1186,7 @@ mission51 { // Cleopatra's Alexandria - The Legacy of a Queen
 
 	vars {
 		start_message_shown : false
-		warships_due : -1
+		raids : ""
 	}
 }
 
@@ -1209,17 +1212,21 @@ function mission51_on_start(ev) {
 
 // pak i=5 (5 luxury goods every year) refused -> i=39: 2 Persian warships with no soldiers, due 6 months later (its
 // time.year), once for every refusal. The map has no sea invasion point; OG then sails from the map exit.
+function mission51_raid_list() {
+	return [
+		{ key: "i39", invasion_id: 39, invader: EVENT_INVADER_ENEMY, enemy: ENEMY_9_PERSIAN, amount: 0, months_initial: 12,
+			location: [9, -1, 9, 10], warships: 2, attack_target: EVENT_ATTACK_TARGET_RANDOM }
+	]
+}
+
 [es=event_request_cleared, mission=mission51]
 function mission51_on_request_cleared(ev) {
 	if (ev.tag_id == 1005 && mission_request_outcome(ev) == "refuse") {
-		mission_schedule_raid(mission, "warships_due", 6)
+		mission_raid_schedule(mission, mission51_raid_list(), "i39", 6)
 	}
 }
 
 [es=event_advance_month, mission=mission51]
 function mission51_raids(ev) {
-	if (mission_raid_due(mission, "warships_due", ev)) {
-		mission_start_raid(mission51, { invasion_id: 39, enemy: ENEMY_9_PERSIAN, size: 0, location: 9, warships: 2,
-			attack_target: EVENT_ATTACK_TARGET_RANDOM })
-	}
+	mission_raids_month(mission, mission51, ev, mission51_raid_list())
 }
