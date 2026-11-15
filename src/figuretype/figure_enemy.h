@@ -29,6 +29,7 @@ public:
     virtual bool drowns_on_floodplain() const { return true; }
     virtual bool silent_on_march() const { return false; }
     virtual int8_t enemy_speed_multiplier() const { return 1; }
+    virtual int enemy_walk_ticks() { return base.speed_multiplier; }
     virtual e_figure_type missile_type() const { return FIGURE_NONE; }
     virtual bool ignore_pharaoh_soldiers() const { return false; }
     // Per-tick city tally: normal enemies → figures.enemies; kingdom army → kingdome_soldiers.

@@ -39,6 +39,7 @@ protected:
     virtual int home_road_radius() const override { return current_params().home_road_radius; }
     virtual void on_walk_cycle(bool wrapped) override;
     virtual void on_attack_tick() override;
+    virtual void play_attack_sound() override;
 };
 ANK_CONFIG_STRUCT(figure_constable::static_params, home_road_radius, crime_reduction, enemy_search_ticks,
   enemy_search_distance, native_distance_factor, enemy_distance_factor, animal_distance_factor, chased_animals,

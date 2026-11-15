@@ -413,7 +413,6 @@ public:
     int figure_image_normalize_direction(int dir);
 
     // sound.c
-    void play_attack_sound();
     void play_die_sound();
     void play_sound_file(const xstring& file);
     void play_hit_sound();

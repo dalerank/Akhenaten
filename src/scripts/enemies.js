@@ -2261,6 +2261,25 @@ enemy_seapeople = {
     layout: FORMATION_COLUMN
 }
 
+figure_bedouin = {
+  overlay : OVERLAY_ENEMIES
+    animations : {
+        walk : { pack:PACK_SPR_AMBIENT, id:13, max_frames:12 }
+        death : { pack:PACK_SPR_AMBIENT, id:14, max_frames:8, loop:false }
+        attack : { pack:PACK_SPR_AMBIENT, id:15, max_frames:12 }
+    }
+
+    category: figure_category_hostile
+    max_damage : 70
+    attack_value : 12
+    defense_value: 0
+    missile_defense_value : 0
+    terrain_usage : TERRAIN_USAGE_ANY
+    interval_attack_delay : 25
+    is_enemy : true
+    move_cycle : [1, 1, 2]
+}
+
 // Message phrases of an EVENT_INVADER_* invasion. warnings: the announcement, then the reminders at
 // 24 / 12 / 6 / 1 months left. low_kingdom replaces no_reason when the invasion comes from a favour event.
 // disembarked: the transport landing alert, -1 when the invader has none (OG scenario_invasion_landing_message).

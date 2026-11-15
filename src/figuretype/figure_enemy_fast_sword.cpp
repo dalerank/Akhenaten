@@ -90,7 +90,7 @@ void figure_enemy_fast_sword::figure_action() {
     case FIGURE_ACTION_148_FLEEING:
         base.destination_tile = base.source_tile;
 
-        base.move_ticks(base.speed_multiplier);
+        base.move_ticks(enemy_walk_ticks());
         if (direction() == DIR_FIGURE_NONE || direction() == DIR_FIGURE_REROUTE || direction() == DIR_FIGURE_CAN_NOT_REACH) {
             poof();
         }
@@ -174,7 +174,7 @@ void figure_enemy_fast_sword::enemy_fighting(formation *m) {
             m->recent_fight = 6;
             base.figure_combat_attack_figure_at(target->tile.grid_offset());
         } else {
-            base.move_ticks(base.speed_multiplier);
+            base.move_ticks(enemy_walk_ticks());
             if (direction() == DIR_FIGURE_NONE) {
                 base.destination_tile = target->tile;
                 route_remove();
@@ -225,7 +225,7 @@ void figure_enemy_fast_sword::enemy_marching(formation *m) {
         route_remove();
     }
 
-    base.move_ticks(base.speed_multiplier);
+    base.move_ticks(enemy_walk_ticks());
     if (direction() == DIR_FIGURE_NONE || direction() == DIR_FIGURE_REROUTE || direction() == DIR_FIGURE_CAN_NOT_REACH) {
         advance_action(ACTION_151_ENEMY_FAST_SWORD_INITIAL);
     }

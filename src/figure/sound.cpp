@@ -5,12 +5,6 @@
 #include "sound/effect.h"
 #include "sound/sound.h"
 
-void figure::play_attack_sound() {
-    if (type == FIGURE_CONSTABLE) {
-        g_sound.play_effect(SOUND_EFFECT_POLICE_ATTACK);
-    }
-}
-
 void figure::play_die_sound() {
 
     if (dcast()->play_die_sound()) {
@@ -91,6 +85,7 @@ void figure::play_hit_sound() {
     case FIGURE_ENEMY_EGYPTIAN_FAST_SWORD:
     case FIGURE_ENEMY_EGYPTIAN_MOUNTED_ARCHER:
     case FIGURE_ENEMY_KINGDOME_MOUNTED:
+    case FIGURE_BEDOUIN:
         if (city_sound_update_hit_soldier())
             effect = SOUND_EFFECT_SWORD_SWING;
         break;

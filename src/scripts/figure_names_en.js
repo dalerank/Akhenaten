@@ -954,7 +954,7 @@ default_enemy_ship_names = [
     "Plunderer",
 ]
 
-default_enemy_batalion_names = [
+default_bedouin_names = [
     "Putasokinhet",
     "Xander",
     "Ironrod",
@@ -1051,6 +1051,7 @@ default_seapeople_batalion_names = [
 
 figure_names = [
   { type:FIGURE_TAX_COLLECTOR  },
+  { type:FIGURE_BEDOUIN, names:default_bedouin_names },
 
   // Example: Generated names from three parts (prefix + middle + postfix)
   // { type:FIGURE_CITIZEN, use_parts_generation:true, prefixes:male_name_prefixes, middles:male_name_middles, postfixes:male_name_postfixes },

@@ -150,7 +150,7 @@ enum e_figure_type : uint16_t {
     FIGURE_SLED_PULLER = 96,
     FIGURE_SHOWMAN = 97, // named lang slot only; no OG walker — won't implement
     FIGURE_PLAGUED_CITIZEN = 98,
-    FIGURE_BEDOUIN_INFANTRY = 99, // lang/Ambient only; Bedouin raids → ENEMY_7_LIBIAN — won't implement
+    FIGURE_BEDOUIN = 99,
     FIGURE_ENEMY_EGYPTIAN_WARSHIP = 100,
     FIGURE_ENEMY_EGYPTIAN_TRANSPORT_SHIP = 101,
     FIGURE_ASP = 102,

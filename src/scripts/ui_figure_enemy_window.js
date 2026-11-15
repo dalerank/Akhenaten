@@ -154,6 +154,12 @@ figure_enemy_seapeople_info_window {
 }
 
 [es=figure_enemy_info_window]
+figure_enemy_bedouin_info_window {
+    related_figures [ FIGURE_BEDOUIN ]
+    ui : baseui(figure_info_window, {})
+}
+
+[es=figure_enemy_info_window]
 figure_enemy_naval_info_window {
     related_figures [FIGURE_ENEMY_TRANSPORT, FIGURE_ENEMY_WARSHIP]
     ui : baseui(figure_info_window, {})
