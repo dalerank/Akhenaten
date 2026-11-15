@@ -3,6 +3,8 @@ log_info("akhenaten: building_shrine_ptah started")
 [es=building]
 building_shrine_ptah {
     type: BUILDING_SHRINE_PTAH
+    always_work: true
+    road_access_distance: 2
     animations : {
       preview : {pack:PACK_GENERAL, id:73, },
       base : {pack:PACK_GENERAL, id:73, offset:0 },

@@ -44,5 +44,6 @@ public:
     virtual bool target_route_tile_blocked(int grid_offset) const override;
 
     virtual void spawn_figure() override;
+    virtual void update_count() const override;
 };
 ANK_CONFIG_STRUCT(building_pavilion::static_params, preview_dir, place_dir);

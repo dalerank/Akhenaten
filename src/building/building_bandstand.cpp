@@ -5,6 +5,7 @@
 #include "city/city_warnings.h"
 #include "construction/build_planner.h"
 #include "city/city_labor.h"
+#include "city/city.h"
 #include "game/resource.h"
 #include "grid/property.h"
 #include "grid/image.h"
@@ -135,6 +136,14 @@ void building_bandstand::update_map_orientation(int map_orientation) {
     tile2i btile(d.booth_corner_grid_offset);
     map_add_venue_plaza_tiles(id(), base.size, btile, plaza_image_id, true);
     map_add_bandstand_tiles(base.orientation);
+}
+
+// OG building_count_update: a working bandstand is also an active booth.
+void building_bandstand::update_count() const {
+    building_entertainment::update_count();
+    if (base.num_workers > 0) {
+        g_city.buildings.increase_active(BUILDING_BOOTH);
+    }
 }
 
 void building_bandstand::spawn_figure() {

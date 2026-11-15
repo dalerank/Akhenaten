@@ -157,6 +157,15 @@ bool building_pavilion::draw_ornaments_and_animations_height(painter &ctx, vec2i
     return true;
 }
 
+// OG building_count_update: a working pavilion is also an active booth and bandstand.
+void building_pavilion::update_count() const {
+    building_entertainment::update_count();
+    if (base.num_workers > 0) {
+        g_city.buildings.increase_active(BUILDING_BOOTH);
+        g_city.buildings.increase_active(BUILDING_BANDSTAND);
+    }
+}
+
 void building_pavilion::spawn_figure() {
     if (!is_main()) {
         return;

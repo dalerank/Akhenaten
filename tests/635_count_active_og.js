@@ -85,13 +85,20 @@ function test635_check_shrine() {
         return false
     }
     var t = __building_tile(shrine)
-    var nearby = [[0, -1], [1, 0], [0, 1], [-1, 0], [0, -2], [2, 0], [0, 2], [-2, 0], [1, 1]]
+    var nearby = [[0, -1], [1, 0], [0, 1], [-1, 0], [0, -2], [2, 0], [0, 2], [-2, 0], [1, 1], [3, 0]]
     for (var i = 0; i < nearby.length; i++) {
         terrain.remove({ x: t.x + nearby[i][0], y: t.y + nearby[i][1] }, TERRAIN_ROAD)
     }
     if (test635_total(BUILDING_SHRINE_RA) != 1 || test635_active(BUILDING_SHRINE_RA) != 0) {
         test635_fail('roadless shrine: total=' + test635_total(BUILDING_SHRINE_RA)
             + ' active=' + test635_active(BUILDING_SHRINE_RA) + ', want 1/0')
+        return false
+    }
+
+    // road_access_distance 2: three tiles away is too far.
+    terrain.add({ x: t.x + 3, y: t.y }, TERRAIN_ROAD)
+    if (test635_active(BUILDING_SHRINE_RA) != 0) {
+        test635_fail('a road three tiles away must not activate the shrine')
         return false
     }
 

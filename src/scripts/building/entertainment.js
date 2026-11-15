@@ -135,8 +135,6 @@ building_dancer_school {
 }
 
 building_pavilion = {
-  // OG building_count_update: a working pavilion is also an active booth and bandstand.
-  active_counts_as : [BUILDING_BOOTH, BUILDING_BANDSTAND],
   animations : {
     base : { pos:[0, 0], pack:PACK_GENERAL, id:48 },
     square : { pos:[0, 0], pack:PACK_GENERAL, id:50 },

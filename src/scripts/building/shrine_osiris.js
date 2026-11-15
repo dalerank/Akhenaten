@@ -3,6 +3,8 @@ log_info("akhenaten: building_shrine_osiris started")
 [es=building]
 building_shrine_osiris {
     type: BUILDING_SHRINE_OSIRIS
+    always_work: true
+    road_access_distance: 2
     animations : {
       preview : {pack:PACK_GENERAL, id:75, }
       base : {pack:PACK_GENERAL, id:75, offset:0 }

@@ -17,8 +17,6 @@ building_bandstand {
 
   overlay : OVERLAY_BANDSTAND
   labor_category : LABOR_CATEGORY_ENTERTAINMENT
-  // OG building_count_update: a working bandstand is also an active booth.
-  active_counts_as [BUILDING_BOOTH]
   min_houses_coverage : 100
   fire_proof: true
   meta { text_id:71, help_link:"message_building_bandstand" }

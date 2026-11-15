@@ -339,14 +339,13 @@ void building_impl::update_animation() {
     es(__func__);
 }
 
+// OG building_count_update: active while it has workers; an always_work building (the shrines) has none and is
+// active with a road on an axis tile within road_access_distance.
 void building_impl::update_count() const {
-    const bool active = base.is_shrine() ? map_has_road_access_nearby(base.tile) : base.num_workers > 0;
+    const auto& params = current_params();
+    const bool active
+      = params.always_work ? map_has_road_access_nearby(base.tile, params.road_access_distance) : base.num_workers > 0;
     g_city.buildings.increase_count(base.type, active);
-    if (active) {
-        for (const e_building_type type : current_params().active_counts_as) {
-            g_city.buildings.increase_active(type);
-        }
-    }
 }
 
 void building_impl::update_map_orientation(int orientation) {

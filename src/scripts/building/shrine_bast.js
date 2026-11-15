@@ -3,6 +3,8 @@ log_info("akhenaten: building_shrine_bast started")
 [es=building]
 building_shrine_bast {
     type: BUILDING_SHRINE_BAST
+    always_work: true
+    road_access_distance: 2
     animations : {
       preview : {pack:PACK_GENERAL, id:71, },
       base : {pack:PACK_GENERAL, id:71, offset:0 },
