@@ -7,6 +7,39 @@
 
 class figure;
 
+// Rows of the parts, stages and part_art tables in abu_simbel.js; archive_load derives the runtime tables below.
+struct abu_simbel_part_cfg {
+    xstring id;
+    int dx = 0;
+    int dy = 0;
+    xstring kind;
+};
+ANK_CONFIG_STRUCT(abu_simbel_part_cfg, id, dx, dy, kind)
+
+struct abu_simbel_stage_cfg {
+    int stage = 0;
+    xstring hint;
+    uint8_t scaffold = 0;
+    xstring art;
+    uint16_t work = 0;
+};
+ANK_CONFIG_STRUCT(abu_simbel_stage_cfg, stage, hint, scaffold, art, work)
+
+struct abu_simbel_view_art {
+    xstring image;
+    uint8_t offset = 0;
+    bool two_per_art_stage = false;
+};
+ANK_CONFIG_STRUCT(abu_simbel_view_art, image, offset, two_per_art_stage)
+
+struct abu_simbel_kind_art_cfg {
+    xstring kind;
+    xstring family;
+    uint8_t rotate = 0;
+    svector<abu_simbel_view_art, 4> views;
+};
+ANK_CONFIG_STRUCT(abu_simbel_kind_art_cfg, kind, family, rotate, views)
+
 // Offset from the clicked tile, edge in tiles, and OG part kind (which art it draws).
 struct abu_simbel_part_def {
     int dx = 0;
@@ -14,7 +47,6 @@ struct abu_simbel_part_def {
     uint8_t size = 0;
     uint8_t kind = 0;
 };
-ANK_CONFIG_STRUCT(abu_simbel_part_def, dx, dy, size, kind)
 
 // One stage = one work spot. Finishing it either toggles a scaffold flag (built_part 1..12)
 // or moves one part's art to part_stage.
@@ -26,18 +58,16 @@ struct abu_simbel_stage_def {
     uint8_t part = 0;
     uint8_t part_stage = 0;
 };
-ANK_CONFIG_STRUCT(abu_simbel_stage_def, figure, work, built_part, raise, part, part_stage)
 
-// The art a record of `kind` shows in camera `view`: the image group's first image + offset, and with `staged`
-// two images per art stage the record has reached.
+// The art a record of `kind` shows in camera rotation `view`: the image group's first image + offset, and with
+// two_per_art_stage two images per art stage the record has reached.
 struct abu_simbel_part_art {
     uint8_t kind = 0;
     uint8_t view = 0;
     xstring image;
     uint8_t offset = 0;
-    bool staged = false;
+    bool two_per_art_stage = false;
 };
-ANK_CONFIG_STRUCT(abu_simbel_part_art, kind, view, image, offset, staged)
 
 // Sixteen records cut into the cliff, fixed in map space (no rotation). The main record is part 0;
 // its phase holds the stage (0..55, then finished) and the work left at the current stage's spot.
@@ -50,8 +80,11 @@ public:
         PARTS = 16,
         STAGE_COMPLETE = 56,
         KIND_ON_OPEN_GROUND = 9,
+        KIND_NORTH_STATUE = 10,
+        KIND_SOUTH_STATUE = 11,
         PART_KINDS = 12,
         VIEWS = 4,
+        SCAFFOLDS = 12,
     };
 
     struct runtime_data_t : building_monument::runtime_data_t {
@@ -60,10 +93,14 @@ public:
     } BUILDING_RUNTIME_DATA_T;
 
     struct base_params {
-        svector<abu_simbel_part_def, PARTS> parts;
-        svector<abu_simbel_stage_def, STAGE_COMPLETE> stages;
-        svector<abu_simbel_part_art, PART_KINDS * VIEWS> part_art;
+        svector<abu_simbel_part_cfg, PARTS> parts;
+        svector<abu_simbel_stage_cfg, STAGE_COMPLETE> stages;
+        svector<abu_simbel_kind_art_cfg, PART_KINDS> part_art;
         vec2i work_tile;
+
+        svector<abu_simbel_part_def, PARTS> part_defs;
+        svector<abu_simbel_stage_def, STAGE_COMPLETE> stage_defs;
+        svector<abu_simbel_part_art, PART_KINDS * VIEWS> art_defs;
     };
 
     struct static_params : public base_params, public building_static_params {

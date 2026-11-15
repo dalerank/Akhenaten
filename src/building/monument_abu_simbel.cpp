@@ -4,6 +4,7 @@
 #include "city/city.h"
 #include "city/city_message.h"
 #include "construction/build_planner.h"
+#include "core/log.h"
 #include "figure/figure.h"
 #include "figuretype/figure_carpenter.h"
 #include "figuretype/figure_stonemason.h"
@@ -21,6 +22,7 @@
 #include "js/js_game.h"
 
 #include <algorithm>
+#include <array>
 
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_abu_simbel);
 BUILDING_RUNTIME_DATA_IMPL(building_abu_simbel)
@@ -43,17 +45,42 @@ namespace {
         }
     } g_monument_abu_simbel;
 
+    // OG part kinds by index; KIND_ON_OPEN_GROUND is the entrance.
+    constexpr pcstr k_part_kinds[building_abu_simbel::PART_KINDS] = {
+      "cliff_back",
+      "cliff_north",
+      "cliff_south",
+      "cliff_north_corner",
+      "cliff_south_corner",
+      "cliff_north_end",
+      "cliff_south_end",
+      "facade_inner",
+      "facade_door",
+      "entrance",
+      "statue_north",
+      "statue_south",
+    };
+
+    int part_kind_index(const xstring& name) {
+        for (int k = 0; k < building_abu_simbel::PART_KINDS; ++k) {
+            if (name == k_part_kinds[k]) {
+                return k;
+            }
+        }
+        return -1;
+    }
+
     const building_abu_simbel::base_params& abu_params() {
         return (const building_abu_simbel::base_params&)building_abu_simbel::current_params();
     }
 
     abu_simbel_part_def part_def(int part) {
-        const auto& parts = abu_params().parts;
+        const auto& parts = abu_params().part_defs;
         return (part >= 0 && part < (int)parts.size()) ? parts[part] : abu_simbel_part_def{};
     }
 
     const abu_simbel_stage_def* stage_def(int stage) {
-        const auto& stages = abu_params().stages;
+        const auto& stages = abu_params().stage_defs;
         return (stage >= 0 && stage < (int)stages.size()) ? &stages[stage] : nullptr;
     }
 
@@ -65,7 +92,7 @@ namespace {
     // Replays the stage table: the art stage a part has reached once `stage` stages are done.
     int part_art_stage(int part, int stage) {
         int art = 0;
-        const auto& stages = abu_params().stages;
+        const auto& stages = abu_params().stage_defs;
         for (int i = 0; i < stage && i < (int)stages.size(); ++i) {
             if (stages[i].built_part == 0 && stages[i].part == part) {
                 art = stages[i].part_stage;
@@ -99,7 +126,7 @@ namespace {
 
     template <typename F>
     void for_each_site_tile(tile2i origin, F f) {
-        const auto& parts = abu_params().parts;
+        const auto& parts = abu_params().part_defs;
         for (int p = 0; p < (int)parts.size(); ++p) {
             tile2i po = origin.shifted(parts[p].dx, parts[p].dy);
             for (int dy = 0; dy < parts[p].size; ++dy) {
@@ -157,7 +184,98 @@ namespace {
     }
 } // namespace
 
+// The tables in abu_simbel.js leave out what follows from the rest: a part's size from its kind, a stage's
+// figure from scaffold/art, raise from the scaffold's first appearance, part_stage from the part's n-th
+// appearance, and the cliff kinds' art per view from family + rotate.
 void building_abu_simbel::static_params::archive_load(archive /*arch*/) {
+    part_defs.clear();
+    for (const auto& p : parts) {
+        const int kind = part_kind_index(p.kind);
+        if (kind < 0) {
+            logs::error("abu_simbel: part '%s' has unknown kind '%s'", p.id.c_str(), p.kind.c_str());
+            continue;
+        }
+        const bool statue_block = kind == KIND_NORTH_STATUE || kind == KIND_SOUTH_STATUE;
+        part_defs.push_back({p.dx, p.dy, uint8_t(statue_block ? 6 : 3), uint8_t(kind)});
+    }
+    if (part_defs.size() != PARTS) {
+        logs::error("abu_simbel: %d parts, expected %d", (int)part_defs.size(), (int)PARTS);
+    }
+
+    stage_defs.clear();
+    std::array<int, SCAFFOLDS + 1> scaffold_seen{};
+    std::array<int, PARTS> art_seen{};
+    for (int i = 0; i < (int)stages.size(); ++i) {
+        const auto& s = stages[i];
+        if (s.stage != i) {
+            logs::error("abu_simbel: stage row %d says stage %d", i, s.stage);
+        }
+        abu_simbel_stage_def def;
+        def.work = s.work;
+        int part = -1;
+        for (int p = 0; p < (int)parts.size(); ++p) {
+            part = (!s.art.empty() && parts[p].id == s.art) ? p : part;
+        }
+        if ((s.scaffold != 0) == !s.art.empty()) {
+            logs::error("abu_simbel: stage %d needs either a scaffold or an art part", i);
+        } else if (s.scaffold > SCAFFOLDS) {
+            logs::error("abu_simbel: stage %d has scaffold %d, expected 1..%d", i, s.scaffold, (int)SCAFFOLDS);
+        } else if (s.scaffold) {
+            def.figure = FIGURE_CARPENTER;
+            def.built_part = s.scaffold;
+            def.raise = ++scaffold_seen[s.scaffold] == 1;
+        } else if (part < 0) {
+            logs::error("abu_simbel: stage %d carves unknown part '%s'", i, s.art.c_str());
+        } else {
+            def.figure = FIGURE_STONEMASON;
+            def.part = uint8_t(part);
+            def.part_stage = uint8_t(++art_seen[part]);
+        }
+        stage_defs.push_back(def);
+    }
+    if (stage_defs.size() != STAGE_COMPLETE) {
+        logs::error("abu_simbel: %d stages, expected %d", (int)stage_defs.size(), (int)STAGE_COMPLETE);
+    }
+    for (int k = 1; k <= SCAFFOLDS; ++k) {
+        if (scaffold_seen[k] != 2) {
+            logs::error("abu_simbel: scaffold %d comes up %d times, expected twice (raise, lower)", k,
+              scaffold_seen[k]);
+        }
+    }
+
+    art_defs.clear();
+    std::array<bool, PART_KINDS> kind_seen{};
+    for (const auto& a : part_art) {
+        const int kind = part_kind_index(a.kind);
+        if (kind < 0 || kind_seen[kind]) {
+            logs::error("abu_simbel: part_art row for an unknown or repeated kind '%s'", a.kind.c_str());
+            continue;
+        }
+        kind_seen[kind] = true;
+        const bool by_family = !a.family.empty();
+        if (by_family ? !a.views.empty() : a.views.size() != VIEWS) {
+            logs::error("abu_simbel: part_art '%s' needs either a family or %d views", a.kind.c_str(), (int)VIEWS);
+            continue;
+        }
+        for (int view = 0; view < VIEWS; ++view) {
+            abu_simbel_part_art art;
+            art.kind = uint8_t(kind);
+            art.view = uint8_t(view);
+            if (by_family) {
+                art.image.printf("%s_%d", a.family.c_str(), (view + a.rotate) % VIEWS);
+            } else {
+                art.image = a.views[view].image;
+                art.offset = a.views[view].offset;
+                art.two_per_art_stage = a.views[view].two_per_art_stage;
+            }
+            art_defs.push_back(art);
+        }
+    }
+    for (int k = 0; k < PART_KINDS; ++k) {
+        if (!kind_seen[k]) {
+            logs::error("abu_simbel: no part_art for kind '%s'", k_part_kinds[k]);
+        }
+    }
 }
 
 const monument& building_abu_simbel::config() const {
@@ -192,7 +310,7 @@ int building_abu_simbel::progress_percent() const {
 }
 
 bool building_abu_simbel::site_fits(tile2i origin) {
-    bool fits = !abu_params().parts.empty();
+    bool fits = !abu_params().part_defs.empty();
     for_each_site_tile(origin, [&](tile2i t, int kind) { fits = fits && tile_fits(t, kind); });
     return fits;
 }
@@ -309,7 +427,7 @@ void building_abu_simbel::refresh_part_images() {
 int building_abu_simbel::building_image_get() const {
     const int view = camera_view();
     const int kind = part_kind();
-    for (const auto& a : abu_params().part_art) {
+    for (const auto& a : abu_params().art_defs) {
         if (a.kind != kind || a.view != view) {
             continue;
         }
@@ -317,7 +435,7 @@ int building_abu_simbel::building_image_get() const {
         if (first <= 0) {
             return 0;
         }
-        return first + a.offset + (a.staged ? part_art_stage(part_index(), stage()) * 2 : 0);
+        return first + a.offset + (a.two_per_art_stage ? part_art_stage(part_index(), stage()) * 2 : 0);
     }
     return 0;
 }
@@ -391,7 +509,7 @@ void building_abu_simbel::on_place_update_tiles(int /*orientation*/, int /*varia
     runtime_data().phase = 0;
 
     building *prev = &base;
-    for (int i = 1; i < (int)abu_params().parts.size(); ++i) {
+    for (int i = 1; i < (int)abu_params().part_defs.size(); ++i) {
         const abu_simbel_part_def def = part_def(i);
         building* b = building_create(BUILDING_ABU_SIMBEL, origin.shifted(def.dx, def.dy), 0);
         game_undo_add_building(b);
@@ -478,7 +596,7 @@ grid_area building_abu_simbel::get_area() const {
     tile2i origin = main_abu_simbel()->tile().shifted(-p0.dx, -p0.dy);
     int x0 = 0, y0 = 0, x1 = 0, y1 = 0;
     bool first = true;
-    for (const auto& p : abu_params().parts) {
+    for (const auto& p : abu_params().part_defs) {
         const int px1 = p.dx + p.size - 1;
         const int py1 = p.dy + p.size - 1;
         x0 = first ? p.dx : std::min(x0, p.dx);
