@@ -1,6 +1,22 @@
 log_info("akhenaten: mission 4 started")
 
-// Trade + pharaoh request chains aligned with original campaign scenario 4 (2026-07-25 dump).
+// Mission 4 — Men-nefer (Memphis), "A Capital is Founded". Rank 1 (Village Noble). Tutorial.
+//
+// Goals:     population 1500, culture 15, prosperity 20, monuments 9, kingdom 40, housing level 10, plus
+//            the tutorial steps: a spacious apartment, 100 papyrus and 100 bricks in storage yards.
+// Start:     funds 3750, rescue loan 3750 (normal difficulty).
+// Gods:      Osiris, Ptah, Bast.
+// Monuments: small mastaba (unlocked by the tutorial).
+// Trade:     the empire map opens with the papyrus step; can open — Perwadjyt, Nekhen; display only — Nubt,
+//            Thinis.
+// Enemies:   none.
+// Timeline:  first spacious apartment — reed gatherer, papyrus workshop, scribal school; 100 papyrus —
+//            dock and empire map; 100 bricks — bricklayers' guild and small mastaba. Pharaoh's requests:
+//            y6m8 9 beer (delivered: also a gift of 20 bricks); y8m10 8 papyrus; y10m5 10 barley;
+//            y15m4 8 pottery.
+//
+// Notes for developers:
+// - Victory also waits a few days after the last tutorial step (victory_last_action_delay).
 
 mission4 {
 	map_file : "data/maps/m_004_mennefer.map"

@@ -1,8 +1,24 @@
 log_info("akhenaten: mission 6 behdet started")
 
-// Empire / requests / invasions aligned with original campaign scenario 6 (2026-07-25 dump).
+// Mission 6 — Behdet (Apollinopolis), "Pharaoh's Navy". Rank 2 (Royal Scholar).
+//
+// Goals:     population 2500, culture 15, prosperity 20, monuments 11, kingdom 45, housing level 10.
+// Start:     funds 3750, rescue loan 3750 (normal difficulty).
+// Gods:      Osiris, Ra.
+// Monuments: small mastaba, medium mastaba.
+// Trade:     can open — Nekhen, Timna, Perwadjyt (by sea), Men-nefer (by sea), Byblos (by sea);
+//            display only — Abedju, Nubt, Thinis, Selima Oasis.
+// Enemies:   Kushite raids by sea; Pharaoh's army (45) if the kingdom rating falls to 0.
+// Timeline:  y1m0 more demand for papyrus; y1m7 request 14 pottery; y2m0 request 11 beer (delivered:
+//            Pharaoh gifts 28 bricks); y3m3 request 13 fish; y5m1 raid by sea (5 soldiers, 2 warships);
+//            y8m6 a clay pit floods; a failed flood every year in month 0 from y10; y15m0 raid by sea
+//            (16 soldiers, 3 warships; beaten: kingdom +8); y17m0 request 21 beer; y19m4 raid by sea
+//            (4 soldiers, 2 warships).
+//
+// Notes for developers:
+// - The original failed flood repeats from year 10 with an unknown interval; it is fired every year here.
 
-mission6 { // Behdet — The Royal Navy
+mission6 { // Behdet — Pharaoh's Navy
 	map_file : "data/maps/m_006_behdet.map"
 
 	enable_scenario_events : true

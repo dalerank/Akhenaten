@@ -1,5 +1,20 @@
 log_info("akhenaten: mission 3 started")
 
+// Mission 3 — Nekhen (Hierakonpolis), "The First Pharaoh". Rank 0 (Village Elder). Tutorial.
+//
+// Goals:     population 1000, housing count 10, housing level modest apartment, plus the tutorial steps: 300 beer in
+//            storage yards and a tax collector built.
+// Start:     funds 3750, rescue loan 3750 (normal difficulty).
+// Gods:      Osiris, Ra, Bast.
+// Monuments: none.
+// Trade:     none (empire map off).
+// Enemies:   none.
+// Timeline:  300 beer stored — tax collector and personal mansion.
+//
+// Notes for developers:
+// - modest_houses_reached (10 modest homesteads) only drives the goal tooltip; it is not a victory step.
+// - Victory also waits a few days after the last tutorial step (victory_last_action_delay).
+
 mission3 {
 	map_file : "data/maps/m_003_nekhen.map"
 	start_message : "message_developing_culture"

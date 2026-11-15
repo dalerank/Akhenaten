@@ -1,11 +1,29 @@
 log_info("akhenaten: mission 11 serabit khadim started")
 
-// Empire / requests / invasions aligned with original campaign scenario 11 (2026-07-25 dump).
-// Favour Pharaoh army size=51 (attack=RANDOM): events[] BY_FAVOUR, sent by the engine at Kingdom rating 0.
-// Triage: skip year=100 CLAY_PIT_FLOOD junk; skip broken ok→99 after KR+6;
-// omit invasion/disembark (pak count 0); routes 3/5/9/11 orphan skip.
-// Clay floods i=16–20: copy (+ BUILDING_CLAY_PIT).
-// Recurring copper/luxury: yearly slot + gate (no stack while active; ≥1 mo after clear).
+// Mission 11 — Serabit Khadim, "The Bedouin of the East". Rank 5 (Royal Mayor).
+//
+// Goals:     population 2000, kingdom 80, housing level 4.
+// Start:     funds 15000, rescue loan 3500, debt interest 20% (normal difficulty).
+// Gods:      Seth, Ra.
+// Monuments: none.
+// Trade:     can open — Men-nefer, Selima Oasis, Abu, Nekhen, Behdet (all by land); Nekhen also opens if
+//            the 21 weapons are refused; display only — Byblos, Kerma, Kyrene, Saqqara.
+// Enemies:   Libyan raids by land, including a yearly Bedouin raid that uses Libyan soldiers; Pharaoh's
+//            army (51, rolled 45-80) if the kingdom rating falls to 0.
+// Timeline:  five clay pits flood every year in month 0 from y1; y1m7 Pharaoh gifts 32 chickpeas; request
+//            8 copper every year in month 7 from y1; y1m10 raid 8 (aimed at the treasury); from y2, every
+//            year in month 4, Bedouin raid 16 (skipped while enemies are on the map); y3m3 raid 12; y3m4
+//            request 11 copper and a land trade problem; y4m8 raid 20 (aimed at food); y5m9 request
+//            13 weapons; y6m0 raid 28; request 16 luxury goods every year in month 0 from y7; y8m2 request
+//            21 weapons (refused: Kerma under siege, kingdom -8, then the Nekhen route opens); y8m6 raid
+//            28; y10m1 raid 32.
+//
+// Notes for developers:
+// - Recurring copper and luxury requests never stack: a new one waits until the open one is cleared
+//   plus a month (mission_recurring_request_may_fire).
+// - Left out from the original: a clay pit flood dated year 100 and a follow-up of the +6 reward that
+//   points at a missing event. The map has no invasion points, so raids spawn where the engine picks.
+// - tag_id: the shared outcome events 21..30 keep the original event index.
 
 mission11 { // Serabit Khadim — The Bedouin of the East
 	map_file : "data/maps/m_011_serabit_khadim.map"

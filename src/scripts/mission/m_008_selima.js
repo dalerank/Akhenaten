@@ -1,9 +1,28 @@
 log_info("akhenaten: mission 8 selima started")
 
-// Empire / requests / invasions aligned with original campaign scenario 8 (2026-07-25 dump).
-// Favour Pharaoh army size=63: events[] BY_FAVOUR, sent by the engine at Kingdom rating 0.
-// Hyksos wipe/refuse → chain tags on start_foreign_army_invasion (engine bind resolve).
-// No EVENT_TYPE_DISTANT_BATTLE in pak — Kerma pressure is CITY_UNDER_SIEGE (+ troop request chain).
+// Mission 8 — Selima, "The Road to Africa". Rank 3 (Royal Scribe).
+//
+// Goals:     population 3000, culture 20, prosperity 20, kingdom 55, housing level 10.
+// Start:     funds 3750, rescue loan 3750, debt interest 20% (normal difficulty).
+// Gods:      Seth, Ra (with the Seth temple complex).
+// Monuments: none.
+// Trade:     can open — Men-nefer, Timna, Behdet, Abedju, Kerma (all by land); Men-nefer also opens when a
+//            troops request is answered; display only — Byblos, Kyrene, Nekhen, Nubt.
+// Enemies:   Hyksos raids by land, aimed at your troops; Pharaoh's army (63, rolled 40-75) if the kingdom
+//            rating falls to 0.
+// Timeline:  y0m2 luxury goods get cheaper; from y1, every 2 years, request 2 luxury goods in 4 months
+//            (late: Kerma under siege, then a request for 4 troops); from y2, every year in month 4, raid 9
+//            (skipped while the previous one is unresolved); y7m0 raid 22 (beaten: Kerma under siege, then
+//            the 4-troops request; otherwise straight to that request); y7m8 Kerma under siege and a request
+//            for 7 troops in 12 months (sent: Men-nefer route opens; refused: kingdom -10); y8m0 reeds get
+//            dearer; more demand for timber every year in month 8 from y8; y10m4 wages rise; more demand
+//            for luxury goods every year in month 2 from y19. The 4 troops sent: Men-nefer route opens.
+//
+// Notes for developers:
+// - The original troops request opens a route to Kyrene, which is display-only; Men-nefer is opened
+//   instead so the reward is playable.
+// - The 4-troops request is one shared template (mission8_ensure_troops_request_4), fired by whichever
+//   path reaches it first.
 
 mission8 { // Selima — The Road to Africa
 	map_file : "data/maps/m_008_selima.map"

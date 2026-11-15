@@ -1,8 +1,19 @@
 log_info("akhenaten: mission 9 abu started")
 
-// Empire / requests / events aligned with original campaign scenario 9 (2026-07-25 dump).
-// Favour: pak i=15 by_favour 40 FOOD → i=18×20 RANDOM → i=19×20 RANDOM (events[] BY_FAVOUR, sent by the engine at Kingdom rating 0).
-// pak CITY_STATUS subtype=1 Selima (FOREIGN_CITY_CONQUERED) ok→NEW_TRADE city=5=Kyrene.
+// Mission 9 — Abu (Elephantine), "The Nubian Border". Rank 6 (Royal Governor).
+//
+// Goals:     population 4000, culture 30, prosperity 30, kingdom 50, housing level 10.
+// Start:     funds 3750, rescue loan 3750, debt interest 20% (normal difficulty).
+// Gods:      Osiris, Ptah.
+// Monuments: none.
+// Trade:     can open — Abedju, Timna, Men-nefer (by sea), Behdet (by sea); display only — Selima Oasis,
+//            Byblos, Kyrene, Nubt.
+// Enemies:   no timed raids; Pharaoh's army (40 aimed at food, then 20 and 20 more) if the kingdom rating
+//            falls to 0.
+// Timeline:  y2m4 land trade problem; y4m7 request 13 granite; y6m4 Selima Oasis is conquered, then a new
+//            route to Kyrene is announced; y6m9 more demand for flax; y7m1 battle won at Nubt, then more
+//            demand for linen; y10m0 request 22 sandstone for construction (16 months); y13m7 contaminated
+//            water; y15m10 sea trade problem; more demand for gems every year in month 0 from y17.
 
 mission9 { // Abu — The Nubian Border
 	map_file : "data/maps/m_009_abu.map"

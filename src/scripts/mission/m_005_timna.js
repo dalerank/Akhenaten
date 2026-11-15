@@ -1,7 +1,21 @@
 log_info("akhenaten: mission 5 timna started")
 
-// Trade / requests / invasions aligned with original campaign scenario 5 (2026-07-24 dump).
-// Stub events/attacks/trade_routes removed — they were never wired. events[] holds only the favour chain.
+// Mission 5 — Timna, "An Expedition to Sinai". Rank 2 (Royal Scholar).
+//
+// Goals:     population 2000, prosperity 15, kingdom 70, housing level 10.
+// Start:     funds 3750, rescue loan 3750 (normal difficulty).
+// Gods:      Seth.
+// Monuments: none.
+// Trade:     can open — Nekhen, Nubt, Thinis; opened by events — Men-nefer (gems or weapons delivered);
+//            display only — Perwadjyt.
+// Enemies:   Libyan raids by land; Pharaoh's army (45) if the kingdom rating falls to 0.
+// Timeline:  y0m8 request 5 copper; y2m4 request 15 gems (delivered: Men-nefer route opens); y2m7 raid 9;
+//            y2m8 request 885 deben (delivered: Pharaoh gifts 16 chickpeas); y3m9 raid 16; y5m0 raid 24;
+//            y7m3 request 11 weapons (delivered: Men-nefer route opens).
+//
+// Notes for developers:
+// - The original raid events name Bedouins, but the scenario enemy is Libyan, so Libyan soldiers come.
+//   Raids pass no tile, so the engine picks one of the land invasion points.
 
 mission5 { // Timna
 	map_file : "data/maps/m_005_timna.map"

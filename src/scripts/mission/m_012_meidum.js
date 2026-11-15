@@ -1,26 +1,36 @@
 log_info("akhenaten: mission 12 meidum started")
 
-// Empire / requests / events aligned with original campaign scenario 12 (2026-07-25 dump).
-// Favour Pharaoh army size=25 → chain size=60: events[] BY_FAVOUR, sent by the engine at Kingdom rating 0.
-// Enemy is ENEMY_5_HYKSOS (pak_enemy_id=5) — NOT Libyan. Recurring raid y7m6 size=17.
-// Invasion points: land [114,79] sea [31,7] (pak; previous placeholder values were wrong).
-// Triage: SKIP route 47 (type=0, no city, orphan); SKIP map_obj idx=7 (empty stub, pos 0,0).
-// SKIP events year>=98 junk (i=65 failed_flood y99; i=66 reeds y98; i=67 wage y101;
-// i=68/69 papyrus y120 request + its gift chain).
-// SKIP orphan chain_only leaves with no inbound: i=46 (KR+7), i=58 (price− papyrus).
-// Shared ONLY_VIA leaves: i=27/28/29/30 (KR±, reused by most requests below).
-// Resource chains (ONLY_VIA, wired once from on_start): clay i=5/8/9/10/11 (from pottery
-// recurring i=7); timber i=20-25 (from i=19); grain i=42-45 (from i=41); papyrus i=54-57
-// (from i=53); gifts i=50/61/64 (from i=49/60/63).
-// Monuments goal 39 = pak: small stepped (3) + stepped complex (36) → trunc(6.32·√39+0.5)=39.
-// The complex counts its OG weight while on-land.
-// The causeway is not implemented.
+// Mission 12 — Meidum, "A Royal Necropolis". Rank 4 (Royal Judge).
 //
-// Tag_id scheme used throughout this file (documented once here, not repeated per call):
-//   1000 + i               chain-only ONLY_VIA_EVENT leaves (i = pak event index,
-//                          e.g. tag 1027 = pak i=27 "KR+8")
-//   2000 + i               once (EVENT_TRIGGER_ONCE) calendar roots
-//   3000 + i*100 + year    recurring calendar roots (fresh tag per qualifying year, same i)
+// Goals:     population 3000, culture 25, prosperity 25, monuments 39, kingdom 40, housing level 11.
+// Start:     funds 10000, rescue loan 3000, debt interest 8% (normal difficulty).
+// Gods:      Osiris, Ptah, Ra.
+// Monuments: small stepped pyramid and stepped pyramid complex (goal 39 needs both); small and medium
+//            mastabas are also available.
+// Trade:     can open — Saqqara, Serabit Khadim, Abu (by sea), Behdet (by sea), Nekhen (by sea); display
+//            only — Men-nefer (Pharaoh's city, no goods), Byblos, Kerma, Kyrene, Selima Oasis.
+// Enemies:   Hyksos raids by land; Pharaoh's army (25, then 60 more) if the kingdom rating falls to 0.
+// Timeline:  y3m4 request 10 timber; y5m3 wages fall; y5m7 request 8 reeds; from y7, every year in month 6,
+//            raid 17 (skipped while enemies are on the map); from y8 request 7 pottery in month 1 (its
+//            outcome moves clay demand and may lead to a 6-clay request and contaminated water); from y11
+//            4 pottery in month 9; y12m11 13 papyrus; y13m3 10 stone; from y13 10 grain in month 5; y13m8
+//            10 pottery (no reward or penalty); stone gets dearer every year in month 4 from y14; y15m10
+//            13 papyrus; wages rise every year in month 7 from y15; y16m9 failed flood; from y16 10 timber
+//            in month 7 (its outcome moves timber demand and may lead to an 11-timber request); y18m3
+//            22 grain; a clay pit floods every year in month 4 from y18. Requests for grain, pottery,
+//            papyrus, stone, clay and timber keep coming up to y95 (some rewarded with luxury goods or
+//            oil); y33m8 failed flood, perfect floods from y48, sea trade problems from y61.
+//
+// Notes for developers:
+// - Recurring pottery, grain and timber requests never stack: a new one waits until the open one for the
+//   same good is cleared (mission_recurring_request_may_fire).
+// - Left out from the original: events dated year 98 and later, an orphan route on the empire map and
+//   two follow-up events nothing points at.
+// - Raids pass no tile, so the engine uses the only land invasion point [114,79].
+// - tag_id (i = event index in the original scenario, also quoted as "pak i=" in comments below):
+//   1000 + i               follow-up events and requests (e.g. 1027..1030 = shared kingdom +/- outcomes)
+//   2000 + i               one-time calendar events
+//   3000 + i*100 + year    recurring calendar events (a fresh tag per year)
 
 mission12 { // Meidum
 	map_file : "data/maps/m_012_meidum.map"

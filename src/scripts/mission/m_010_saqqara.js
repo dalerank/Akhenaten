@@ -1,7 +1,22 @@
 log_info("akhenaten: mission 10 saqqara started")
 
-// Empire / requests / events aligned with original campaign scenario 10 (2026-07-25 dump).
-// Favour Pharaoh army size=69 (attack=RANDOM): events[] BY_FAVOUR, sent by the engine at Kingdom rating 0.
+// Mission 10 — Saqqara, "The First Pyramid". Rank 1 (Village Noble).
+//
+// Goals:     population 3500, prosperity 15, monuments 19, kingdom 50, housing level 10.
+// Start:     funds 12000, rescue loan 5200, debt interest 8% (normal difficulty).
+// Gods:      Ptah, Ra, Bast; the Seth temple complex is also available.
+// Monuments: medium stepped pyramid, small mastaba.
+// Trade:     can open — Men-nefer, Selima Oasis, Abu, Kerma (by sea), Abedju (by sea), Behdet (by sea);
+//            display only — Kyrene, Nubt, Byblos.
+// Enemies:   no raids (the map has no invasion points); Pharaoh's army (69, rolled 45-70) if the kingdom
+//            rating falls to 0.
+// Timeline:  y1m11 request 7 game meat; y3m0 Pharaoh gifts 11 pomegranates; y4m10 request 501 oil in
+//            2 months; a gold mine collapses every year in month 0 from y5; wages fall and a land trade
+//            problem every year in month 0 from y7. Recurring requests: 10 stone (month 6, from y10),
+//            3 luxury goods (month 4, from y12), 5 game meat (month 9, from y18), 5 game meat (month 0,
+//            from y33), 7 luxury goods (month 8, from y44), 6 luxury goods (month 4, from y46). Also a
+//            gold mine collapse followed by contaminated water every year in month 10 from y16; y20m1
+//            request 8 stone; y26m5 wages rise.
 
 mission10 { // Saqqara â€” The First Pyramid
 	map_file : "data/maps/m_010_saqqara.map"

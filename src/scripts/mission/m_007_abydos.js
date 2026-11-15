@@ -1,6 +1,19 @@
 log_info("akhenaten: mission 7 abydos started")
 
-// Empire / requests / invasions aligned with original campaign scenario 7 (2026-07-25 dump).
+// Mission 7 — Abydos (Abedju on the empire map), "The Challenge of the Sea". Rank 3 (Royal Scribe).
+//
+// Goals:     population 2500, culture 25, prosperity 25, monuments 17, kingdom 60, housing level 10.
+// Start:     funds 3750, rescue loan 3750 (normal difficulty).
+// Gods:      Osiris.
+// Monuments: small mastaba, medium mastaba.
+// Trade:     can open — Men-nefer, Timna, Behdet (by sea), Byblos (by sea), Nubt (by sea), Perwadjyt
+//            (by sea); display only — Nekhen, Thinis, Selima Oasis.
+// Enemies:   one Kushite raid by sea; Pharaoh's army (40, then 40 more) if the kingdom rating falls to 0.
+// Timeline:  y2m2 request 9 beer (delivered: Pharaoh gifts 21 bricks); a perfect flood every year in
+//            month 8 from y2; y5m3 contaminated water; y7m7 sea trade problem; y8m0 wages rise; y9m7 more
+//            demand for linen; y10m11 more demand for beer; y12m1 request 18 fish (delivered: the same
+//            21-brick gift); y14m9 raid by sea (3 soldiers, 1 warship); y15m4 wages rise; y18m6 less
+//            demand for fish; y19m8 contaminated water.
 
 mission7 { // Abydos / Abedju — The Challenge of the Sea
 	map_file : "data/maps/m_007_abydos.map"
