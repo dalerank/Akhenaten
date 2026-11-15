@@ -4,7 +4,7 @@ log_info("akhenaten: overlay malaria (active) started")
 overlay_malaria {
   id:OVERLAY_MALARIA
   title: "#overlay_malaria"
-  walkers:[FIGURE_HERBALIST, FIGURE_PLAGUED_CITIZEN]
+  walkers:[FIGURE_HERBALIST]
   buildings:[BUILDING_APOTHECARY, BUILDING_WATER_SUPPLY, BUILDING_ROADBLOCK]
   column_type: COLUMN_TYPE_RISK
   column_anim: {pack:PACK_GENERAL, id:103}

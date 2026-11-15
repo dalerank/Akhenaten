@@ -4,7 +4,7 @@ log_info("akhenaten: overlay disease started")
 overlay_disease {
   id:OVERLAY_DISEASE
   title: "#overlay_disease"
-  walkers:[FIGURE_PHYSICIAN]
+  walkers:[FIGURE_PHYSICIAN, FIGURE_PLAGUED_CITIZEN]
   buildings:[BUILDING_PHYSICIAN, BUILDING_ROADBLOCK]
   column_type: COLUMN_TYPE_RISK
   column_anim: {pack:PACK_GENERAL, id:103}

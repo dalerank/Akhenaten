@@ -4,7 +4,7 @@ log_info("akhenaten: overlay infected_housing started")
 overlay_infected_housing {
   id:OVERLAY_INFECTED_HOUSING
   title: "#overlay_infected_housing"
-  walkers:[FIGURE_PLAGUED_CITIZEN, FIGURE_PHYSICIAN, FIGURE_HERBALIST]
+  walkers:[FIGURE_PHYSICIAN, FIGURE_HERBALIST]
   buildings:[BUILDING_PHYSICIAN, BUILDING_APOTHECARY, BUILDING_MORTUARY, BUILDING_ROADBLOCK]
   column_type: COLUMN_TYPE_RISK
   column_anim: {pack:PACK_GENERAL, id:103}
