@@ -102,6 +102,27 @@ function run_test() {
     }
     __log_marker('shrine_road_radius_adjacent_ok')
 
+    // OG map_has_road_access_nearby: a roadblock standing on the road does not count.
+    var y4 = cy + 6
+    terrain.add({ x: cx + 2, y: y4 }, TERRAIN_ROAD)
+    __test_update_road_network()
+    if (!test_building_place(BUILDING_ROADBLOCK, cx + 2, y4)) {
+        __log_info_native('[test:186] roadblock placement failed')
+        __test_signal_ready()
+        return
+    }
+    var block_id = test186_place_shrine(cx, y4)
+    if (!block_id) {
+        __log_info_native('[test:186] roadblock shrine placement failed')
+        __test_signal_ready()
+        return
+    }
+    if (!test186_warnings_ok('roadblock', true)) {
+        __test_signal_ready()
+        return
+    }
+    __log_marker('shrine_road_radius_roadblock_warns_ok')
+
     __log_info_native('[test:186] ok')
     __test_signal_ready()
 }
@@ -111,7 +132,8 @@ function check_valid() {
         'shrine_road_radius_hover_excluded_ok',
         'shrine_road_radius_far_warns_ok',
         'shrine_road_radius_two_tiles_ok',
-        'shrine_road_radius_adjacent_ok'
+        'shrine_road_radius_adjacent_ok',
+        'shrine_road_radius_roadblock_warns_ok'
     ]
     for (var i = 0; i < markers.length; i++) {
         if (!__test_find_inlog('[test-marker] ' + markers[i])) {

@@ -208,13 +208,6 @@ namespace {
             }
         }
 
-        // OG map_has_road_access_nearby: the 4 neighbours and the 4 tiles two steps away.
-        bool shrine_has_road_nearby(tile2i tile) const {
-            static const vec2i offsets[] = {{0, -1}, {1, 0}, {-1, 0}, {0, 1}, {0, -2}, {2, 0}, {-2, 0}, {0, 2}};
-            return std::any_of(std::begin(offsets), std::end(offsets),
-              [tile](vec2i d) { return map_terrain_is(tile2i(tile).shifted(d.x, d.y), TERRAIN_ROAD); });
-        }
-
         bool has_road_access(building& b) const {
             if (map_has_road_access(b.tile, b.size)) {
                 return true;
@@ -232,7 +225,7 @@ namespace {
                 return;
             }
             const bool shrine = listed(rules.shrines, b.type);
-            if (shrine && shrine_has_road_nearby(b.tile)) {
+            if (shrine && map_has_road_access_nearby(b.tile, b.params().road_access_distance)) {
                 return;
             }
             if (city_message_problem_area_count() >= rules.max_problem_messages) {
