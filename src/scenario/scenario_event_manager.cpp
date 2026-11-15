@@ -1724,7 +1724,7 @@ static void invasion_attack(event_ph_t &e) {
                e.amount.value, e.location_fields[0], seq);
     if (seq) {
         city_message_post_full(true, "message_attack_alert", &e, e.parent_id, phrases.title, phrases.city_attacked,
-          phrases.no_reason, seq, 0);
+          invasion_parent_by_favour(e) ? phrases.low_kingdom : phrases.no_reason, seq, 0);
     } else {
         e.is_active = false;
     }
