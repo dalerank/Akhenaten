@@ -241,6 +241,11 @@ int __map_routing_distance(tile2i tile) {
 }
 ANK_FUNCTION_1(__map_routing_distance);
 
+int __map_citizen_grid(tile2i tile) {
+    return tile.valid() ? map_citizen_grid(tile.grid_offset()) : -1;
+}
+ANK_FUNCTION_1(__map_citizen_grid);
+
 int __calc_general_direction(tile2i from, tile2i to) {
     return calc_general_direction(from, to);
 }

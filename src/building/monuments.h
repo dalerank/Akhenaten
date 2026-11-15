@@ -178,6 +178,8 @@ public:
     virtual int is_construction_halted();
     virtual int toggle_construction_halted();
     virtual bool need_stonemason();
+    // The current stage has a work spot for this figure type that nobody holds.
+    virtual bool has_free_spot(e_figure_type /*type*/) const { return false; }
     virtual bool need_carpenter();
     virtual bool need_bricklayers();
     // OG block engines: claim a frontier part for this figure (0 = none).

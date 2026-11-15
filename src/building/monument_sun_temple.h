@@ -190,7 +190,7 @@ public:
 
     // Returns true when the figure is done here and should leave.
     bool work_tick(figure &f);
-    bool has_free_spot(e_figure_type type) const;
+    virtual bool has_free_spot(e_figure_type type) const override;
     bool check_work_for_figure(figure_id fid, bool assign);
     static int find_work_for_figure(figure_id fid);
 

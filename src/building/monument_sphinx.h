@@ -120,7 +120,7 @@ public:
 
     // Returns true when the figure is done here and should go home.
     bool work_tick(figure& f);
-    bool has_free_spot(e_figure_type type) const;
+    virtual bool has_free_spot(e_figure_type type) const override;
     int spot_attached(int spot) const;
     int spot_work_left(int spot) const;
     void reset_spots();

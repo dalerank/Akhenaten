@@ -63,18 +63,6 @@ info_window_sphinx = {
 }
 
 [es=ui_window]
-info_window_abu_simbel = {
-    ui : {
-        background     : outer_panel({size: [29, 16]}),
-        title          : text({pos: [0, 16], text:"${building.name}", size: [px(29), 20], font : FONT_LARGE_BLACK_ON_LIGHT, align:"center"}),
-        warning_text   : text({pos: [32, 56], size:[px(27), -1], wrap:px(27), multiline:true, font : FONT_NORMAL_BLACK_ON_LIGHT }),
-        progress_text  : text({pos: [32, 136], size:[px(27), -1], wrap:px(27), multiline:true, font : FONT_NORMAL_BLACK_ON_LIGHT }),
-        button_help    : help_button({}),
-        button_close   : close_button({}),
-    }
-}
-
-[es=ui_window]
 info_window_sun_temple = {
     ui : {
         background    : outer_panel({size: [29, 16]}),

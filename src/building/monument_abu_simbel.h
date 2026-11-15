@@ -111,7 +111,7 @@ public:
 
     // Returns true when the figure is done here and should go home.
     bool work_tick(figure& f);
-    bool has_free_spot(e_figure_type type) const;
+    virtual bool has_free_spot(e_figure_type type) const override;
     bool has_active_worker() const;
     int spot_work_left() const { return main_abu_simbel()->runtime_data().spot_work; }
     void set_stage(int stage);

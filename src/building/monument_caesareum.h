@@ -99,7 +99,7 @@ public:
 
     figure_id worker_figure_id() const;
     bool part_has_active_worker() const;
-    bool has_free_spot(e_figure_type type) const;
+    virtual bool has_free_spot(e_figure_type type) const override;
     // OG caesareum_check_work_for_figure with assign: takes the single worker slot.
     bool claim_worker(figure &f);
     // Returns true when the figure is done here and should go home.

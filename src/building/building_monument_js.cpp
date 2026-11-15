@@ -88,6 +88,16 @@ static void monument_proto_need_stonemason(js_State* J) {
     J->push(m && m->need_stonemason());
 }
 
+static void monument_proto_has_free_spot(js_State* J) {
+    building_monument* m = monument_this(J);
+    J->push(m && m->has_free_spot((e_figure_type)J->to<int>(1)));
+}
+
+static void monument_proto_access_point(js_State* J) {
+    building_monument* m = monument_this(J);
+    J->push(m ? m->access_point() : tile2i::invalid);
+}
+
 static void monument_proto_needs_resource(js_State* J) {
     building_monument* m = monument_this(J);
     const int resource = J->to<int>(1);
@@ -174,6 +184,8 @@ void js_register_monument(js_State* J) {
     jsB_propf(J, js_intern("Monument.prototype.material_pct_min"), monument_proto_material_pct_min, 0);
     jsB_propf(J, js_intern("Monument.prototype.is_preexisting"), monument_proto_is_preexisting, 0);
     jsB_propf(J, js_intern("Monument.prototype.need_stonemason"), monument_proto_need_stonemason, 0);
+    jsB_propf(J, js_intern("Monument.prototype.has_free_spot"), monument_proto_has_free_spot, 1);
+    jsB_propf(J, js_intern("Monument.prototype.access_point"), monument_proto_access_point, 0);
     jsB_propf(J, js_intern("Monument.prototype.needs_resource"), monument_proto_needs_resource, 1);
     jsB_propf(J, js_intern("Monument.prototype.resource_pct"), monument_proto_resource_pct, 1);
     jsB_propf(J, js_intern("Monument.prototype.workers_assigned"), monument_proto_workers_assigned, 0);
