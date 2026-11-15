@@ -82,7 +82,7 @@
         <br /><strong>Pak subtitle:</strong> map chunk «The Legacy of Cleopatra»; MM / start_message subtitle is *The Legacy of a Queen* (used in UI).
         <br /><strong>Monuments:</strong> <code>first=30</code> Caesareum · <code>second=27</code> Mausoleum (gr198 skin 2); goal <strong>24</strong>.
         Caesareum <strong>10</strong> + Mausoleum <strong>5</strong> → <code>trunc(6.32·√15+0.5)=24</code> = goal (Notes §13.9 / C9).
-        <br /><strong>JS:</strong> full empire redefine — <code>events[]</code> ×43 (1 chain invasion amount 0), cities ×19, routes ×13, ornaments ×8, texts ×16. Burial ×5. No local inv points → exit fallback.
+        <br /><strong>JS:</strong> full empire redefine — <code>events[]</code> ×43 (the chain invasion i=39 is a JS raid), cities ×19, routes ×13, ornaments ×8, texts ×16. Burial ×5. No local inv points → the warships sail from the map exit (OG <code>invasion_start_sea</code> fallback).
         <br /><strong>≠</strong> custom <code>m_128_alexandria.js</code>.
       </div>
 
@@ -99,7 +99,7 @@
       </ul>
 
       <h2 id="events">Scripted events (summary)</h2>
-      <p>JS <code>events[]</code> ×43 from pak (CC51.2). Requests / gifts / demand swings / wages / locusts / city-status; distant troops; one chain-only invasion (i=39, amount 0). Cities ×19 / routes ×13 / ornaments ×8 / texts ×16. Display orphans without polyline (Migdol / Buhen / Kyrene) use <code>route : 0</code>. Rome sells weapons; Enkomi marble+timber.</p>
+      <p>JS <code>events[]</code> ×43 from pak (CC51.2). Requests / gifts / demand swings / wages / locusts / city-status; distant troops. Each refusal of the yearly 5 luxury goods request (from y3m7) sends <strong>2 Persian warships</strong>, no soldiers (random target), <strong>6 months</strong> later. Cities ×19 / routes ×13 / ornaments ×8 / texts ×16. Display orphans without polyline (Migdol / Buhen / Kyrene) use <code>route : 0</code>. Rome sells weapons; Enkomi marble+timber.</p>
 
       <div class="dev-section">
         <h2 id="dev">Developer reference</h2>
@@ -107,7 +107,7 @@
           <summary>Mission script</summary>
           <div class="details-body">
             <p><span class="file-ref">src/scripts/mission/m_051_alexandria_3.js</span></p>
-            <p>Sea invasion events carry the OG warship count as <code>warships</code> (pak <code>phrase_var</code>): i=39 ×2.</p>
+            <p>Raids: pak i=39 (×2 warships, pak <code>phrase_var</code>) is armed by <code>mission51_on_request_cleared</code> (line 1213) on each refusal of pak i=5 (<code>tag_id : 1005</code>, line 207) and started by <code>mission51_raids</code> (line 1220) through <code>mission_start_raid</code> (<span class="file-ref">src/scripts/missions.js</span>:197). Its <code>events[]</code> slot (line 750) is <code>EVENT_TYPE_NONE</code> so the other indexes keep.</p>
             <p><code>map_file</code>: <span class="file-ref">data/maps/m_051_alexandria_3.map</span>. Empire id <strong>0</strong>, <code>map_background</code> pack empire id 26. Full <code>hide_pak_*</code>: cities ×19, routes ×13 (1–13), ornaments ×8, texts ×16. SKIP empty map_obj idx=8. Dump 2026-08-01 Cleop. Rank 10. <code>next_mission: 52</code>. Enemy <code>ENEMY_9_PERSIAN</code>.</p>
           </div>
         </details>

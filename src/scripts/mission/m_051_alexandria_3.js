@@ -12,22 +12,23 @@ log_info("akhenaten: mission 51 alexandria_3 started")
 // Trade:     can open — Rome, Athens, Knossos, Enkomi, Tyre, Gaza, Iunet, Pwenet (by sea), Men-nefer,
 //            Bahariya Oasis, Serabit Khadim; opened by events — On, Meidum; display only — Kyrene, Migdol,
 //            Waset, Buhen, Byblos.
-// Enemies:   none in practice (see notes). The scenario enemy is Persian.
-// Timeline:  y0m6 gift of 10 chickpeas, then a request for 5 papyrus; y0m8 gift of 6 timber, then a
-//            request for 10 grain (followed by luxury goods and a request for 7 grain); from y3m7 request
-//            5 luxury goods every year (gifts of weapons); y4m3 On route opens; y5m3 request 7 beer
-//            (Athens buys more grain, or less if refused); y6m6, y13m2, y21m10 wages rise; y7m9 request
-//            6 troops; y8m8 famine request for 13 fish; y9m4, y19m4 locusts, each followed by a gift of
-//            26 grain; y10m1 gift of 6 gems, then a request for 6 luxury goods; y10m3 Meidum route opens,
-//            then a request for 9 linen (refused: Gaza route lost); y12m4 request 23 troops; y14m3 gift of
-//            29 marble, then a request for 12 papyrus; from y15m1 request 10 beer every year; y16m2 request
-//            25 troops. Other outcomes are gifts, demand changes and kingdom ±4.
+// Enemies:   2 Persian warships with no soldiers, 6 months after each refused luxury-goods request.
+// Timeline:  y0m6 gift of 10 chickpeas, then a request for 5 papyrus; y0m8 gift of 6 timber, then a request
+//            for 10 grain (followed by luxury goods and a request for 7 grain); from y3m7 request 5 luxury
+//            goods every year (gifts of weapons; refused: 2 warships 6 months later); y4m3 On route opens;
+//            y5m3 request 7 beer (Athens buys more grain, or less if refused); y6m6, y13m2, y21m10 wages
+//            rise; y7m9 request 6 troops; y8m8 famine request for 13 fish; y9m4, y19m4 locusts, each followed
+//            by a gift of 26 grain; y10m1 gift of 6 gems, then a request for 6 luxury goods; y10m3 Meidum
+//            route opens, then a request for 9 linen (refused: Gaza route lost); y12m4 request 23 troops;
+//            y14m3 gift of 29 marble, then a request for 12 papyrus; from y15m1 request 10 beer every year;
+//            y16m2 request 25 troops. Other outcomes are gifts, demand changes and kingdom ±4.
 //
 // Notes for developers:
-// - The warship-only invasion in events[] (2 warships, no soldiers, after a refused luxury-goods request)
-//   never starts: events[] invasions run only with og_invasions or a favour trigger, and this file has no
-//   JS raids.
-// - Every event is declared in events[] and run by the engine; on_*_action values are indexes into that list.
+// - The warship-only invasion of the original (pak i=39) is started from JS 6 months after the yearly
+//   luxury-goods request (pak i=5, tag 1005) is refused (mission51_on_request_cleared); its events[] slot
+//   stays as EVENT_TYPE_NONE so the other indexes keep.
+// - The other events are declared in events[] and run by the engine; on_*_action values are indexes into
+//   that list.
 
 mission51 { // Cleopatra's Alexandria - The Legacy of a Queen
 	map_file : "data/maps/m_051_alexandria_3.map"
@@ -203,6 +204,7 @@ mission51 { // Cleopatra's Alexandria - The Legacy of a Queen
 		}
 		{ // pak i=5
 			type : EVENT_TYPE_REQUEST
+			tag_id : 1005
 			time { year : 3, month : 7 }
 			item { value : RESOURCE_LUXURY_GOODS }
 			amount { value : 5 }
@@ -745,23 +747,8 @@ mission51 { // Cleopatra's Alexandria - The Legacy of a Queen
 			subtype : 0
 			city_id : 8
 		}
-		{ // pak i=39
-			type : EVENT_TYPE_INVASION
-			time { year : 6, month : 0 }
-			item { value : 1 }
-			amount { value : 0 }
-			months_initial : 12
-			location_fields [ 9, -1, 9, 10 ]
-			warships : 2
-			event_trigger_type : EVENT_TRIGGER_ONLY_VIA_EVENT
-			on_completed_action : -1
-			on_refusal_action : -1
-			on_too_late_action : -1
-			on_defeat_action : -1
-			sender_faction : 0
-			subtype : 0
-			city_id : 8
-			invasion_attack_target : 4
+		{ // pak i=39: invasion, started from JS (mission51_raids, armed by mission51_on_request_cleared)
+			type : EVENT_TYPE_NONE
 		}
 		{ // pak i=40
 			type : EVENT_TYPE_GIFT_FROM_PHARAOH
@@ -1196,6 +1183,7 @@ mission51 { // Cleopatra's Alexandria - The Legacy of a Queen
 
 	vars {
 		start_message_shown : false
+		warships_due : -1
 	}
 }
 
@@ -1216,5 +1204,22 @@ function mission51_on_start(ev) {
 	city.set_scenario_enemy_id(ENEMY_9_PERSIAN)
 	for (var i = ADVISOR_NONE + 1; i <= ADVISOR_DIPLOMACY; i++) {
 		city.set_advisor_available(i, 1)
+	}
+}
+
+// pak i=5 (5 luxury goods every year) refused -> i=39: 2 Persian warships with no soldiers, due 6 months later (its
+// time.year), once for every refusal. The map has no sea invasion point; OG then sails from the map exit.
+[es=event_request_cleared, mission=mission51]
+function mission51_on_request_cleared(ev) {
+	if (ev.tag_id == 1005 && mission_request_outcome(ev) == "refuse") {
+		mission_schedule_raid(mission, "warships_due", 6)
+	}
+}
+
+[es=event_advance_month, mission=mission51]
+function mission51_raids(ev) {
+	if (mission_raid_due(mission, "warships_due", ev)) {
+		mission_start_raid(mission51, { invasion_id: 39, enemy: ENEMY_9_PERSIAN, size: 0, location: 9, warships: 2,
+			attack_target: EVENT_ATTACK_TARGET_RANDOM })
 	}
 }
