@@ -66,43 +66,82 @@ function test713_blood_river() {
     __log_marker('fishing_points_blood_river_og_ok')
 }
 
-// Number of distinct destination tiles a spot takes over n ticks.
-function test713_destinations(n) {
+// Deep-water pool around the first spot, with one land tile on its (0,-2) drift offset.
+var TEST713_POOL = { x: 12, y: 14, r: 8 }
+var TEST713_LAND = { x: 12, y: 12 }
+
+function test713_pool_setup() {
     var ids = test713_setup()
-    if (ids.length == 0) {
-        return -1
-    }
-    var fid = ids[0]
-    var seen = {}
-    var count = 0
-    for (var t = 0; t < n; t++) {
-        __test_figure_action_perform(fid)
-        var d = __figure_get_destination_tile(fid)
-        var key = d.x + ':' + d.y
-        if (!seen[key]) {
-            seen[key] = true
-            count++
+    for (var y = TEST713_POOL.y - TEST713_POOL.r; y <= TEST713_POOL.y + TEST713_POOL.r; y++) {
+        for (var x = TEST713_POOL.x - TEST713_POOL.r; x <= TEST713_POOL.x + TEST713_POOL.r; x++) {
+            __test_make_deep_water(x, y)
         }
     }
-    return count
+    __map_terrain_remove(TEST713_LAND, TERRAIN_ALL)
+    return ids.length > 0 ? ids[0] : 0
+}
+
+// Runs n spot actions; returns { tiles: distinct tiles, error: first broken invariant }.
+function test713_run_spot(fid, n) {
+    var seen = {}
+    var res = { tiles: 0, error: '' }
+    for (var t = 0; t < n; t++) {
+        __test_figure_action_perform(fid)
+        var p = __figure_get_tile(fid)
+        var key = p.x + ':' + p.y
+        if (!seen[key]) {
+            seen[key] = true
+            res.tiles++
+        }
+        if (!__map_terrain_is(p, TERRAIN_DEEPWATER)) {
+            res.error = 'tick ' + t + ': spot on non-deep-water tile ' + key
+            return res
+        }
+        if (!__test_blood_river_sweep_active() && __test_figure_on_map_grid(fid) != 1) {
+            res.error = 'tick ' + t + ': spot not on the figure grid at ' + key
+            return res
+        }
+    }
+    return res
 }
 
 function test713_drift() {
     game_features.gameplay_change_fishing_points_drift = false
-    var still = test713_destinations(400)
-    if (still != 1) {
-        test713_fail('OG: spot took ' + still + ' destinations')
+    var fid = test713_pool_setup()
+    var still = test713_run_spot(fid, 600)
+    if (!fid || still.error || still.tiles != 1) {
+        test713_fail('OG: spot ' + fid + ' took ' + still.tiles + ' tiles ' + still.error)
     } else {
         __log_marker('fishing_points_still_og_ok')
     }
 
     game_features.gameplay_change_fishing_points_drift = true
-    var drift = test713_destinations(400)
-    if (drift < 2) {
-        test713_fail('Enhanced: spot took ' + drift + ' destinations')
-    } else {
-        __log_marker('fishing_points_drift_enhanced_ok')
+    fid = test713_pool_setup()
+    var drift = test713_run_spot(fid, 600)
+    if (!fid || drift.error || drift.tiles < 3) {
+        test713_fail('Enhanced: spot ' + fid + ' took ' + drift.tiles + ' tiles ' + drift.error)
+        return
     }
+
+    fid = test713_pool_setup()
+    test713_run_spot(fid, 37)
+    var before = __figure_get_tile(fid)
+    var ev = city.create_chain_event({ tag_id: 7132, type: EVENT_TYPE_BLOOD_RIVER, amount: 1, trigger: EVENT_TRIGGER_ONCE })
+    ev.execute()
+    var sweep = test713_run_spot(fid, 600)
+    var during = __figure_get_tile(fid)
+    if (sweep.error || during.x != before.x || during.y != before.y || __test_figure_on_map_grid(fid) != 0) {
+        test713_fail('Enhanced sweep: spot moved ' + before.x + ':' + before.y + ' -> ' + during.x + ':' + during.y
+            + ' on grid=' + __test_figure_on_map_grid(fid) + ' ' + sweep.error)
+        return
+    }
+    __test_scenario_events_tick(3 * 816)
+    var after = test713_run_spot(fid, 600)
+    if (__test_blood_river_sweep_active() || after.error || after.tiles < 2) {
+        test713_fail('Enhanced after sweep: spot took ' + after.tiles + ' tiles ' + after.error)
+        return
+    }
+    __log_marker('fishing_points_drift_enhanced_ok')
 }
 
 function run_test() {

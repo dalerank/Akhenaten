@@ -23,6 +23,9 @@ public:
     } FIGURE_RUNTIME_DATA_T;
 
     void spot_tick();
+    void drift(bool animation_wrapped);
+    bool drift_stays_on_deep_water();
+    bool drift_retarget(tile2i dst);
 
     virtual void figure_action() override;
     virtual void update_animation() override;
