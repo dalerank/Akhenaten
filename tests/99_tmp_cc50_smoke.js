@@ -45,7 +45,7 @@ function run_test() {
         if (cfg.events[e].type == EVENT_TYPE_INVASION) inv = inv + 1
         if (cfg.events[e].event_trigger_type == EVENT_TRIGGER_ALREADY_FIRED) fired = fired + 1
     }
-    check("invasions3", inv == 3)
+    check("invasions_from_js", inv == 0)
     check("already_fired4", fired == 4)
 
     var has_fort = false

@@ -80,7 +80,7 @@
         <strong>Briefing:</strong> Command Mithradates' Roman force at Maritis (east shore of Lake Mariut) to defeat Ptolemy XIII's army and relieve Caesar and Cleopatra in Alexandria. Land battle — <em>not</em> an Alexandria city-build.
         <br /><strong>Messages:</strong> start <code>message_mission_maritis</code> (444); alt <code>…_2</code> (459).
         <br /><strong>Monuments:</strong> none (<code>first=second=third=0</code>; monuments win off). No Library / Pharos / Caesareum / Mausoleum.
-        <br /><strong>JS:</strong> full empire redefine — <code>events[]</code> ×25 (3 invasions egypt; 4 <code>already_fired</code> gift seeds kept for index fidelity), cities ×7, routes ×6, ornaments ×5, texts ×16. No burial. Inv land/sea points empty → exit fallback.
+        <br /><strong>JS:</strong> full empire redefine — <code>events[]</code> ×25 (4 <code>already_fired</code> gift seeds kept for index fidelity; the 3 Egyptian invasions are JS raids), cities ×7, routes ×6, ornaments ×5, texts ×16. No burial. Inv land/sea points empty → raids enter at the map exit <code>[106,100]</code>.
         <br /><strong>Enemy:</strong> pak <code>ENEMY_9_PERSIAN</code> (briefing = Roman / Egyptian clash — pak id wins).
         <br /><strong>editor_allow:</strong> forts + weaponsmith + chariot + zoo + gold on; recruiter / water supply / palace / academy / warship off.
       </div>
@@ -98,7 +98,8 @@
       </ul>
 
       <h2 id="events">Scripted events (summary)</h2>
-      <p>JS <code>events[]</code> ×25 from pak (CC50.2). Calendar egypt invasions (y2×30 → chain ×25; troop-request chain → ×26); reeds / troops / papyrus / fish requests; gift and city-status chains. Cities ×7 / routes ×6 / ornaments ×5 / texts ×16. SKIP empty map_obj idx=2.</p>
+      <p>JS <code>events[]</code> ×25 from pak (CC50.2): reeds / troops / papyrus / fish requests; gift and city-status chains. Cities ×7 / routes ×6 / ornaments ×5 / texts ×16. SKIP empty map_obj idx=2.</p>
+      <p>Egyptian raids from mission JS, all at the map exit: <strong>y2m7</strong> ×30 (target troops), and a month later (<strong>y2m8</strong>) ×25 (troops; Pharaoh's gift of 10 weapons as it starts) · ×26 (random) <strong>2 months</strong> after the y4m4 troop request is refused or lost, with three trade routes lost one after another as it starts.</p>
 
       <div class="dev-section">
         <h2 id="dev">Developer reference</h2>
@@ -106,6 +107,7 @@
           <summary>Mission script</summary>
           <div class="details-body">
             <p><span class="file-ref">src/scripts/mission/m_050_maritis.js</span></p>
+            <p>Raids: <code>mission50_raids</code> (line 680) starts pak i=3, then i=4 a month later (its <code>time.year</code>), and i=13 once <code>mission50_on_request_cleared</code> (line 698) has armed it on the refusal or defeat of pak i=9 (<code>tag_id : 1009</code>, line 232); helpers in <span class="file-ref">src/scripts/missions.js</span>:197. Their <code>events[]</code> slots (lines 160, 163, 295) are <code>EVENT_TYPE_NONE</code> so the other indexes keep. As they start, i=4 fires i=17 (<code>tag_id : 1017</code>, line 349) and i=13 fires i=14 (<code>tag_id : 1014</code>, line 300; then 15, 16), as OG <code>invasion_attack</code> chains <code>on_completed</code>.</p>
             <p><code>map_file</code>: <span class="file-ref">data/maps/m_050_maritis.map</span>. Empire id <strong>0</strong>, <code>map_background</code> pack empire id 26. Full <code>hide_pak_*</code>: cities ×7, routes ×6 (1–6), ornaments ×5, texts ×16. SKIP empty map_obj idx=2. Dump 2026-08-01 Cleop. Rank 1. <code>next_mission: 51</code>.</p>
           </div>
         </details>
