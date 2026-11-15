@@ -1454,3 +1454,54 @@ static int __test_enemy_missile_target(int fid, int max_distance) {
     return figure_combat_get_missile_target_for_enemy(f, max_distance, true).fid;
 }
 ANK_FUNCTION_2(__test_enemy_missile_target);
+
+static pcstr __test_formation_kind(int formation_id) {
+    static char out[64];
+    out[0] = 0;
+    formation* m = formation_get(formation_id);
+    if (!m || !m->in_use) {
+        return out;
+    }
+    snprintf(out, sizeof(out), "%d,%d,%d", (int)m->layout, (int)m->enemy_type, (int)m->figure_type);
+    return out;
+}
+ANK_FUNCTION_1(__test_formation_kind);
+
+static void __test_formation_set_herd(int formation_id, int herd) {
+    formation* m = formation_get(formation_id);
+    if (m && m->in_use) {
+        m->is_herd = herd != 0;
+    }
+}
+ANK_FUNCTION_2(__test_formation_set_herd);
+
+static pcstr __test_figure_type_combat(int type) {
+    static char out[64];
+    out[0] = 0;
+    if (type <= FIGURE_NONE || type >= FIGURE_MAX) {
+        return out;
+    }
+    const figure_static_params& p = figure_static_params::get((e_figure_type)type);
+    snprintf(out, sizeof(out), "%d,%d,%d,%d,%d", (int)p.category, (int)p.max_damage, (int)p.attack_value,
+      (int)p.defense_value, (int)p.missile_defense_value);
+    return out;
+}
+ANK_FUNCTION_1(__test_figure_type_combat);
+
+static int __test_first_figure_of_type(int type) {
+    for (int i = 1; i < MAX_FIGURES; i++) {
+        figure* f = figure_get(i);
+        if (f && f->is_alive() && f->type == (e_figure_type)type) {
+            return i;
+        }
+    }
+    return 0;
+}
+ANK_FUNCTION_1(__test_first_figure_of_type);
+
+static int __test_bedouin_walk_ticks(int fid) {
+    figure* f = figure_get(fid);
+    figure_enemy* bedouin = (f && f->is_alive() && f->type == FIGURE_BEDOUIN) ? f->dcast_enemy() : nullptr;
+    return bedouin ? bedouin->enemy_walk_ticks() : -1;
+}
+ANK_FUNCTION_1(__test_bedouin_walk_ticks);
