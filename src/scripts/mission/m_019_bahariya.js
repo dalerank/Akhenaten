@@ -1,18 +1,32 @@
 log_info("akhenaten: mission 19 bahariya started")
 
-// Empire / invasions aligned with original campaign scenario 19 (2026-07-26 dump).
-// Empire id=18. Enemy ENEMY_5_HYKSOS (scenario); timed enemy + beduin raids (Libyan sprites).
-// Gods: Ra, Seth. Funds Normal 7500 / loan 2500 / debt 20.
-// Win: pop 3000 / culture 15 / prosperity 25 / monuments 13 / kingdom 40 / housing 10.
-// Monuments goal 13 (pak; Sun Temple 4 → trunc(6.32·√4+0.5)=13). Burial empty.
-// Trade: On(1) Iunet(2) Abu(3) Serabit(4). Display Dahshur(17). Men-nefer stub route 19.
-// Triage: SKIP empty map_obj idx=10; SKIP orphan routes 5/6/7/25; omit river/disembark/inv points (pak 0).
-// Events: no requests; invasions + economy + NEW_TRADE Dahshur (i=28) + favour×76 + gift after wipe i=26→27.
+// Mission 19 — Bahariya Oasis, "The Western Desert". Rank 6 (Royal Governor).
 //
-// Tag_id scheme:
-//   1000 + i               chain-only leaves
-//   2000 + i               once calendar roots
-//   3000 + i*100 + year    recurring calendar roots
+// Goals:     population 3000, culture 15, prosperity 25, monuments 13, kingdom 40, housing level 10.
+// Start:     funds 7500, rescue loan 2500, debt interest 20% (normal difficulty).
+// Gods:      Ra, Seth.
+// Monuments: Sun Temple.
+// Trade:     nothing open at start; can open — On, Iunet, Abu, Serabit Khadim; opened by events —
+//            Dahshur (y1m1); display only — Men-nefer, Buhen, Byblos, Dunqul Oasis, Henen-nesw,
+//            Kharga Oasis, Nekhen, Saqqara.
+// Enemies:   Hyksos raids and Bedouin raids, all by land and growing to 96 soldiers; Pharaoh's army
+//            (76) if the kingdom rating falls to 0. No requests in this mission.
+// Timeline:  y1m1 Dahshur route opens; y2m0 Hyksos raid 8 (beaten: gift of 24 sandstone); y5m9 Hyksos 8;
+//            y7m4 Hyksos 16; y8m0 more timber demand; y8m10 Bedouin 16; y9m2 Hyksos 32; y11m6 Hyksos 64;
+//            y11m9 timber dearer; y12m3 Bedouin 32; y13m7 less grain demand; y14m0 Bedouin 64; y14m11
+//            land trade trouble; y17m4 Hyksos 80; y17m9 Bedouin 32; y21m2 Hyksos 96; y22m1 Hyksos 48;
+//            y22m6 Bedouin 32; y26m3 Hyksos 80; every m10 from y26 Hyksos 48; y27m4 land trade trouble;
+//            every m3 from y27 Bedouin 32; y31m1 Hyksos 64; y31m4 Hyksos 96; every m10 from y31 Bedouin
+//            48; every m8 from y39 contaminated water; every m5 from y46 Hyksos 64.
+//
+// Notes for developers:
+// - The original's raids name a generic "enemy"; they use the scenario enemy (Hyksos). Bedouins use the
+//   Libyan army sprites.
+// - The map has no invasion, river or disembark points, so raids pass tile -1 and the engine picks
+//   the fallback tile.
+// - tag_id: 1027 the sandstone gift, 2000 + i calendar events, 3000 + i*100 + year yearly events,
+//   7000 + i Pharaoh's army (i = event index in the original scenario, also quoted as "pak i=" in
+//   comments below).
 
 mission19 { // Bahariya Oasis — The Western Desert
 	map_file : "data/maps/m_019_bahariya.map"

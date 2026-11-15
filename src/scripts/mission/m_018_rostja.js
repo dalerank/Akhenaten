@@ -1,20 +1,38 @@
 log_info("akhenaten: mission 18 rostja started")
 
-// Empire / requests / events aligned with original campaign scenario 18 (2026-07-26 dump).
-// Empire id=18. Enemy ENEMY_5_HYKSOS. Gods: Ra, Ptah.
-// Trade: On (sea 500) / Byblos (sea 1250). Display routes 3/4 (Iunet/Dahshur).
-// Favour Pharaoh 50→20→50. Timed Hyksos×6 y5m7; recurring×10 y26m10+.
-// Triage: SKIP orphan routes 5/6/25; SKIP map_obj idx=6 empty;
-// Kyrene route 7 / Men-nefer route 19 — no polyline → 2-pt stubs + deviation.
-// NEW_TRADE i=20 copy Men-nefer; i=32/42/43 Nekhen→remap Iunet (route 3).
-// EVENT_TYPE_INVASION chain leaves no-op → JS via event_request_cleared:
-// gems crisis refuse/late → Hyksos×11; troops refuse/defeat → Hyksos×9 → re-arm ×47.
-// Monuments goal 53 (Sphinx 10 + complex 48 + medium true pyramid 12 → trunc(6.32·√70+0.5)=53).
+// Mission 18 — Rostja (Giza), "The Great Pyramid and Sphinx". Rank 6 (Royal Governor).
 //
-// Tag_id scheme:
-//   1000 + i               chain-only ONLY_VIA_EVENT leaves / chain requests
-//   2000 + i               once calendar roots
-//   3000 + i*100 + year    recurring calendar roots
+// Goals:     monuments 53, kingdom 50, housing level 10.
+// Start:     funds 10000, rescue loan 5000, debt interest 20% (normal difficulty).
+// Gods:      Ra, Ptah.
+// Monuments: Khufu's pyramid complex, a medium true pyramid for Khafra and the Sphinx; burial
+//            provisions 6 beer, 6 gems, 3 luxury goods, 18 timber, 12 granite (small / medium stepped
+//            pyramids and mastabas can also be built).
+// Trade:     nothing open at start; can open — On (by sea), Byblos (by sea); opened by events —
+//            Men-nefer (gems or luxury goods delivered), Iunet (y5m4, y15m5, or troops delivered);
+//            display only — Dahshur, Kyrene, Buhen, Nekhen, Saqqara, Bahariya Oasis.
+// Enemies:   Hyksos raids by land; Pharaoh's army (50, then 20, then 50) if the kingdom rating falls
+//            to 0.
+// Timeline:  y2m5 request 10 gems (delivered: Men-nefer route opens, then 14 gems for a gift of 23
+//            copper; refused: 11 luxury goods, which also open Men-nefer); every year from y3m9
+//            Pharaoh asks for 5 gems; y5m4 Iunet route opens; y5m7 Hyksos raid 6; y7m0 request 13 gems
+//            within 3 months (refused or late: Hyksos raid 11); y8m3 Men-nefer asks for 40 troops
+//            (won: Iunet route opens; late: sea trade trouble, then 47 troops; refused or lost:
+//            Hyksos raid 9 and a new ask for 47 troops); y11m0 wages drop; y11m3 sea trade trouble;
+//            every year from y12m8 request 15 game meat; y15..y24 stone, limestone and timber prices
+//            and demand shift; y16m10 Pharaoh asks for 12 game meat; y22m9 Pharaoh asks for 16 gems;
+//            every m10 from y26 Hyksos raid 10; every year from y35m4 Pharaoh asks for 10 timber;
+//            y35m11 gift of 19 limestone; every year from y44m4 Pharaoh asks for 15 game meat.
+//            Yearly requests are not repeated while the last one is open.
+//
+// Notes for developers:
+// - The original's Iunet route events name Nekhen, which has no route on this map; they open Iunet.
+// - A failed troops ask re-arms itself with a fresh tag (4100 + n) so each refusal brings its own
+//   raid and kingdom penalty (4200 + n); see mission18_troops_refuse_raid.
+// - The map's invasion points are not used: raids pass tile -1 and the engine picks the tile.
+// - tag_id: 1000 + i chained events and requests, 2000 + i calendar events, 3000 + i*100 + year yearly
+//   events, 7000 + i Pharaoh's army (i = event index in the original scenario, also quoted as "pak i="
+//   in comments below).
 
 mission18 { // Rostja (Giza) — The Great Pyramid and Sphinx
 	map_file : "data/maps/m_018_rostja.map"

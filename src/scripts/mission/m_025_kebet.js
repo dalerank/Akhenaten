@@ -1,28 +1,33 @@
 log_info("akhenaten: mission 25 kebet started")
 
-// Empire / events aligned with original campaign scenario 25 (2026-07-26 dump).
-// Empire id=24. Scenario enemy ENEMY_6_KUSHITE; every invasion in the pak is
-// invader=egypt(2) (Khmun loyalists) or pharaoh(3) on the favour trigger.
-// Gods: Osiris (patron x2), Ra, Seth. Funds Normal 20000 / loan 3500 / debt 20. Rank 9.
-// Win: pop 7000 / culture 40 / prosperity 45 / monuments 14 / kingdom 85 / housing 13.
-// Monuments: Large Obelisk (gr198 23) + Small Obelisk x2 (22/22) — all three implemented,
-// pak goal 14 = Large 3 + Small 1 + Small 1 → trunc(6.32·√5+0.5)=14.
-// Burial: pak burial_count=0 — no provisions block (nothing to hide).
-// Trade: Waset(1, open at start) Kharga(4) Buhen(6 sea).
-// Display: Byblos(2) Kerma(3 sea) Men-nefer(5 sea) Dakhla(7) Khmun(8 sea) Thinis(9 sea)
-//   Dunqul Henen-nesw Jericho. SKIP empty map_obj idx=11.
-// Men-nefer / Khmun are display cities unlocked mid-game by CITY_STATUS NEW_TRADE
-// (i=23 loc=5, i=21 loc=8) — pak leaves their goods empty, so standard goods are used
-// to keep the unlock playable (same treatment as Kerma in mission 24).
-// DEMAND_* / CITY_STATUS events address the trade route via loc (1=Waset .. 9=Thinis);
-// their `city` field is editor junk (often points at Kebet itself).
-// i=27 ok→i=28: OG's warship-only sea raid (0 soldiers, 5 warships from sea[0]).
-// Invasion loc = 1-based land point index; the map only has land[0]=[15,43], so loc 2/3/4
-// fall back to -1 (Egyptian spawns at the map entry point). loc 9 = sea point [71,43].
+// Mission 25 — Kebet (Coptos), "Reunification". Rank 9 (Vizier).
 //
-// Tag_id scheme:
-//   1000 + i               chain-only leaves / chain requests
-//   2000 + i               once calendar roots
+// Goals:     population 7000, culture 40, prosperity 45, monuments 14, kingdom 85, housing level 13.
+// Start:     funds 20000, rescue loan 3500, debt interest 20% (normal difficulty).
+// Gods:      Osiris (patron), Ra, Seth.
+// Monuments: large obelisk, two small obelisks.
+// Trade:     open at start — Waset; can open — Kharga Oasis, Buhen (by sea); opened by events —
+//            Khmun (henna delivered), Men-nefer (13 fish delivered); display only — Byblos, Kerma,
+//            Dakhla Oasis, Thinis, Dunqul Oasis, Henen-nesw, Jericho.
+// Enemies:   Egyptian raids (Khmun loyalists); Pharaoh's army (60, then 60 more) if the kingdom
+//            rating falls to 0. The scenario enemy is set to Kushite, but no Kushite army is sent.
+// Timeline:  y2m4 raid 17; y5m1 raid 33; y7m3 failed flood; y7m9 raid 55; y7m11 Waset buys more figs;
+//            y9m0 request 13 fish (delivered: Men-nefer route opens); y9m3 failed flood; y9m11 request 28 figs
+//            (if late: 11 fish, then 12 figs); y10m0 raid 70, and once it is beaten 5 warships sail
+//            in with no soldiers; y10m2 request 21 weapons; y11m2 request 56 henna (delivered: Khmun
+//            is conquered and opens for trade; refused: raid 60, then a second raid 60; late: 25 henna
+//            with the same outcomes); y13m3 perfect flood; y13m8 Buhen buys more beer.
+//
+// Notes for developers:
+// - Raid location numbers follow the original events: 1 = the only land point [15,43]; 2/3/4/8 have no
+//   point on this map, so those raids enter at the map entry point; 9 = sea point [71,43]
+//   (see mission25_loc_tile / mission25_egypt_raid).
+// - The original gives Men-nefer and Khmun no goods; standard goods are filled in so the mid-game
+//   unlocks are playable (same as Kerma in mission 24).
+// - Demand and route events address the city by route number (1 = Waset .. 9 = Thinis); the city named
+//   in the original event is often wrong (frequently Kebet itself), so the code names the route city.
+// - tag_id: 1000 + i chained events and requests, 2000 + i calendar events, 7000 + i Pharaoh's army
+//   (i = event index in the original scenario, also quoted as "pak i=" in comments below).
 
 mission25 { // Kebet (Coptos) — Reunification; briefing key = coptos
 	map_file : "data/maps/m_025_kebet.map"

@@ -1,18 +1,25 @@
 log_info("akhenaten: mission 17 on started")
 
-// Empire / requests / events aligned with original campaign scenario 17 (2026-07-26 dump).
-// Empire id=1. Scenario enemy ENEMY_4_HITTITE (no timed raids — only favour Pharaoh).
-// Gods: Osiris, Ra, Bast. Favour Pharaoh 20→20→20→20→20 (five waves).
-// Triage: SKIP MESSAGE i=6 (orphan chain_only, no inbound); SKIP map_obj idx=9 empty;
-// Men-nefer route 7 has no pak polyline → 2-pt stub + deviation.
-// Perfect flood y4m7+ recurring ok→ gamemeat×9 chain request.
-// Limestone×25/36mo recurring y3m5+; refuse→KR−18→LOST_TRADE Kyrene (display foreign).
-// Monuments 18 = 3 small mastabas (6) + burial limestone 32/32, granite 32/32 (2) → trunc(6.32·√8+0.5)=18.
+// Mission 17 — On (Heliopolis), "Ivory from the East". Rank 6 (Royal Governor).
 //
-// Tag_id scheme:
-//   1000 + i               chain-only ONLY_VIA_EVENT leaves / chain requests
-//   2000 + i               once calendar roots
-//   3000 + i*100 + year    recurring calendar roots
+// Goals:     population 4000, culture 40, prosperity 35, monuments 18, kingdom 60, housing level 10.
+// Start:     funds 6000, rescue loan 3000, debt interest 20% (normal difficulty).
+// Gods:      Osiris, Ra, Bast.
+// Monuments: three small mastabas (the briefing's "three mastaba tombs"), with burial provisions of
+//            8 linen, 8 luxury goods, 8 timber, 32 limestone, 32 granite.
+// Trade:     nothing open at start; can open — Iunet, Saqqara, Dahshur, Meidum (all by sea); display
+//            only — Men-nefer, Bahariya Oasis, Buhen, Byblos, Kerma, Kyrene, Nekhen, Selima Oasis.
+// Enemies:   no raids; Pharaoh's army (five armies of 20) if the kingdom rating falls to 0.
+//            The scenario enemy is set to Hittite, but no Hittite army is sent.
+// Timeline:  y3m2 Dahshur buys more limestone; from y3m5 a city asks for 25 limestone once a year (not
+//            while the last ask is open; refused: Kyrene loses its trade route); every m7 from y4 a
+//            perfect flood, followed by Pharaoh asking for 9 game meat; y7m9 clay pits flood (8%);
+//            y8m0 Iunet buys more limestone; y9m0 wages rise.
+//
+// Notes for developers:
+// - tag_id: 1000 + i chained events and requests, 2000 + i calendar events, 3000 + i*100 + year yearly
+//   events, 7000 + i Pharaoh's army (i = event index in the original scenario, also quoted as "pak i="
+//   in comments below).
 
 mission17 { // On (Heliopolis) — Ivory from the East
 	map_file : "data/maps/m_017_on.map"

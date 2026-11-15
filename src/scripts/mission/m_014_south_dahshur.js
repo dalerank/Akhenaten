@@ -1,20 +1,28 @@
 log_info("akhenaten: mission 14 south dahshur started")
 
-// Empire / requests / events aligned with original campaign scenario 14 (2026-07-26 dump).
-// Favour Pharaoh army size=49 → chain size=21: events[] BY_FAVOUR, sent by the engine at
-// Kingdom rating 0. No timed enemy raids in pak.
-// Scenario enemy is ENEMY_5_HYKSOS (pak_enemy_id=5) — used if invasions spawn; the
-// favour Pharaoh army is ENEMY_3_EGYPTIAN.
-// Empire id=13 (same pak empire as Buhen fork partner).
-// Triage: SKIP clay floods i=0/1/12/13 (all year=24 editor junk); SKIP map_obj idx=10
-// (empty stub). Route 5 (Men-nefer display) has no pak polyline → 2-pt stub + deviation.
-// Oil ladder i=2→…→i=8 is chain-only after the y1m6 root (amounts 500→8000).
-// Monuments goal 21 matches pak: medium bent pyramid (10) + granite burial 32/32 (1) → trunc(6.32·√11+0.5)=21.
+// Mission 14 — South Dahshur, "Snofru's Bent Pyramid". Rank 5 (Royal Mayor).
 //
-// Tag_id scheme:
-//   1000 + i               chain-only ONLY_VIA_EVENT leaves / chain requests
-//   2000 + i               once (EVENT_TRIGGER_ONCE) calendar roots
-//   3000 + i*100 + year    recurring calendar roots
+// Goals:     population 3500, prosperity 25, monuments 21, kingdom 50, housing level 19.
+// Start:     funds 10000, rescue loan 3500, debt interest 20% (normal difficulty).
+// Gods:      Osiris, Ptah, Ra.
+// Monuments: medium bent pyramid with 32 granite burial provisions (small bent pyramid and small /
+//            medium mastabas can also be built).
+// Trade:     nothing open at start; can open — Selima Oasis, Serabit Khadim, Abu (by sea), Meidum
+//            (by sea); display only — Men-nefer, Bahariya Oasis, Buhen, Byblos, Enkomi, Kerma, Kyrene,
+//            Nekhen, Saqqara.
+// Enemies:   no timed raids; Pharaoh's army (49, then 21 by sea) if the kingdom rating falls to 0.
+//            The scenario enemy is set to Hyksos, but no Hyksos army is sent.
+// Timeline:  y1m6 request 500 oil (delivered: asks grow to 1000, 2000, 4000; late: 2000, 4000, 8000;
+//            refused or failed at the end: Dahshur is besieged, Byblos falls, copper and gems get
+//            dearer); from y2m10 Pharaoh asks for 10 grain once a year (not while the last ask is
+//            open); y4m8 request 32 limestone (delivered: gift of 64 stone; late: 32 stone; refused:
+//            less demand for stone); every year from y5 wages drop.
+//
+// Notes for developers:
+// - The original's four clay pit floods are dated year 24 and are left out.
+// - tag_id: 1000 + i chained events and requests, 2000 + i calendar events, 3000 + i*100 + year yearly
+//   events, 7000 + i Pharaoh's army (i = event index in the original scenario, also quoted as "pak i="
+//   in comments below).
 
 mission14 { // South Dahshur — Snofru's Bent Pyramid
 	map_file : "data/maps/m_014_south_dahshur.map"

@@ -1,5 +1,35 @@
 log_info("akhenaten: mission 15 north dahshur started")
 
+// Mission 15 — North Dahshur, "The True Pyramid". Rank 6 (Royal Governor).
+//
+// Goals:     population 3000, culture 20, prosperity 30, monuments 32, kingdom 55, housing level 10.
+// Start:     funds 10000, rescue loan 4000, debt interest 20% (normal difficulty).
+// Gods:      Osiris, Ptah, Seth, Ra.
+// Monuments: large true pyramid (small / medium stepped pyramids and mastabas can also be built).
+// Trade:     nothing open at start; can open — Selima Oasis, Serabit Khadim, Abu (by sea), Byblos
+//            (by sea), Meidum (by sea); display only — Men-nefer, Bahariya Oasis, Buhen, Enkomi, Kerma,
+//            Kyrene, Nekhen, Saqqara.
+// Enemies:   Hyksos raids, Bedouin raids; Pharaoh's army (75) if the kingdom rating falls to 0.
+// Timeline:  every January from y1 clay pits flood (two waves of 8%); every other year from y2m1
+//            Pharaoh asks for 12 henna (refused or late: Hyksos raid 12); y3m11 Hyksos raid 5, and
+//            after each beaten wave another Hyksos raid 6 follows, for the rest of the mission; every
+//            year from y4 Pharaoh asks for 8 grain (delivered: gift of 48 stone; late: 24 stone); every
+//            year from y6m8 Bedouin raid 10; every year from y13m3 a gift of 48 stone, followed by a
+//            request for 24 limestone; every year from y17m4 request 18 grain (delivered: gift of 24
+//            copper; refused: Kerma loses its trade route); y20m7 Hyksos raid 11. Yearly requests are
+//            not repeated while the last one is open.
+//
+// Notes for developers:
+// - The original dates the clay pit floods and the henna request at year 24; they are run as yearly
+//   floods and an every-other-year henna request (12 instead of 8) instead.
+// - The endless Hyksos chain follows the original: the two size-6 events trigger each other once the
+//   previous wave is beaten (mission15_hyksos_chain_tick).
+// - The map has no invasion points, so raids pass tile -1 and the engine picks the fallback tile.
+//   Bedouins use the Libyan army sprites.
+// - tag_id: 1000 + i chained events and requests, 3000 + i*100 + year yearly events, 4000 + year*20 +
+//   wave*10 + k clay pit floods, 7000 + i Pharaoh's army (i = event index in the original scenario,
+//   also quoted as "pak i=" in comments below).
+
 mission15 { // North Dahshur — The True Pyramid
 	map_file : "data/maps/m_015_north_dahshur.map"
 	start_message : "message_mission_north_dahshur"

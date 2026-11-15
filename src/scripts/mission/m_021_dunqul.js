@@ -1,24 +1,37 @@
 log_info("akhenaten: mission 21 dunqul started")
 
-// Empire / events aligned with original campaign scenario 21 (2026-07-26 dump).
-// Empire id=0. Enemy ENEMY_4_HITTITE (scenario); beduin raids (Libyan sprites); favour Pharaoh×66.
-// Gods: Ra, Ptah, Seth. Funds Normal 6000 / loan 1500 / debt 15. Rank 8.
-// Win: pop 3500 / culture 20 / prosperity 20 / monuments 6 (pak; small obelisk) / kingdom 80 / housing 14.
-// Burial empty. Climate desert.
-// Trade: Buhen(5) Byblos(4) Henen-nesw(10) Kerma(8) Men-nefer(7) On(2) Selima(6).
-// Display: Djedu(1) Iunet(3) Nekhen(9) Saqqara(11) Dakhla(14). Kharga stub route 13.
-// Triage: SKIP empty map_obj idx=10; SKIP orphan i=6 LOST_TRADE Djedu (chain_only, no inbound);
-// omit river/disembark/inv points (pak 0).
-// Events: gamemeat×12 + granite×12 KR via request_cleared (not shared ONLY_VIA — B14);
-// siege→weapons×60; beduin/enemy raids (unique wipe KR tags); NEW_TRADE; favour×66.
-// SKIP empty NEW_TRADE Djedu/Iunet (display, no sells/buys).
+// Mission 21 — Dunqul Oasis (Dunqul), "The Kushite Threat". Rank 8 (Chancellor).
 //
-// Tag_id scheme:
-//   1000 + i               chain-only leaves / chain requests (once structures)
-//   2000 + i               once calendar roots
-//   3000 + i*100 + year    recurring calendar roots
-//   4100 + year / 4200+y   invasion wipe KR (unique ONCE leaves)
-//   50000 + seq            fire_kr unique ONCE
+// Goals:     population 3500, culture 20, prosperity 20, monuments 6, kingdom 80, housing level 14.
+// Start:     funds 6000, rescue loan 1500, debt interest 15% (normal difficulty).
+// Gods:      Ra, Ptah, Seth.
+// Monuments: small obelisk.
+// Trade:     nothing open at start; can open — Buhen, Byblos, Henen-nesw, Kerma, Men-nefer, On, Selima
+//            Oasis; display only — Djedu, Iunet, Nekhen, Saqqara, Dakhla Oasis, Bahariya Oasis, Kharga
+//            Oasis.
+// Enemies:   Bedouin raids and Hittite raids by land; Pharaoh's army (66) if the kingdom rating falls
+//            to 0.
+// Timeline:  y1m0 Bedouin raid 5; y1m1 Henen-nesw loses its route, is besieged and asks for 60 weapons
+//            within 3 months — whatever the outcome, Djedu then falls; y1m9 Henen-nesw route opens
+//            again; every m8 from y2 a city asks for 12 game meat and every m10 from y2 Pharaoh asks for
+//            12 granite (each: delivered kingdom +5, refused -36, late -5; not while the last ask is
+//            open); y3m0 Iunet is conquered, then the Kerma route opens; every January from y3 Bedouin
+//            raid 12 (beaten: kingdom +5); y3m9 more timber demand; every m4 from y4 Hittite raid 43
+//            (beaten: kingdom +8); y10m11 Kerma route opens (if still closed).
+//
+// Notes for developers:
+// - The briefing speaks of Kushites, but the original scenario enemy is Hittite and the code keeps it.
+//   Bedouins use the Libyan army sprites.
+// - The map has no invasion, river or disembark points, so raids pass tile -1 and the engine picks
+//   the fallback tile.
+// - Repeating outcomes fire one-off kingdom events (mission21_fire_kr, 50000 + n) instead of shared
+//   chain leaves, which can only fire once; raid rewards get their own leaf per year (4100 / 4200 +
+//   year).
+// - The original also opens routes to Iunet and Djedu, which have no goods; those events are left out.
+//   Its yearly Kerma route event fires only once here.
+// - tag_id: 1000 + i chained events, 2000 + i calendar events, 3000 + i*100 + year yearly requests,
+//   7000 + i Pharaoh's army (i = event index in the original scenario, also quoted as "pak i=" in
+//   comments below).
 
 mission21 { // Dunqul Oasis — The Kushite Threat
 	map_file : "data/maps/m_021_dunqul.map"

@@ -1,17 +1,31 @@
 log_info("akhenaten: mission 16 iunet started")
 
-// Empire / requests / events aligned with original campaign scenario 16 (2026-07-26 dump).
-// Empire id=1. Scenario enemy ENEMY_4_HITTITE (briefing text says Kushite — pak wins).
-// Gods: Ra, Seth, Bast. Favour Pharaoh 15→45→30→30.
-// Invasion i=3 amount=0 is OG's warship-only sea raid; NEW_TRADE i=1/6 remap Iunet→Men-nefer / Abu
-// (pak city=ours + ok=999/99 junk; goods filled — pak sells/buys empty).
-// Limestone refuse→KR−40→egypt×24: EVENT_TYPE_INVASION no-op → JS after KR−40 snap.
-// SKIP map_obj idx=9 empty; SKIP orphan route 15; Saqqara/Nekhen route 5/8 no polyline.
-// Clay flood i=9 y4m1 amount=7 → once, 7% of clay pits.
+// Mission 16 — Iunet (Dendera), "The defense of Egypt". Rank 6 (Royal Governor).
 //
-// Tag_id scheme:
-//   1000 + i               chain-only ONLY_VIA_EVENT leaves
-//   2000 + i               once calendar roots
+// Goals:     population 4000, culture 30, prosperity 30, monuments 9, kingdom 65, housing level 16.
+// Start:     funds 10000, rescue loan 2500, debt interest 8% (normal difficulty).
+// Gods:      Ra, Seth, Bast.
+// Monuments: small mastaba (medium mastaba can also be built).
+// Trade:     nothing open at start; can open — Buhen, Selima Oasis, Dahshur (by sea), Kerma (by sea),
+//            Byblos (by sea); opened by events — Men-nefer (4 fish delivered), Abu (2 meat delivered);
+//            display only — Bahariya Oasis, Kyrene, Nekhen, Saqqara.
+// Enemies:   Hittite raids, all by sea; an Egyptian army by sea if the limestone request is refused;
+//            Pharaoh's army (15, then 45, 30 and 30) if the kingdom rating falls to 0.
+// Timeline:  y1m0 Pharaoh asks for 4 fish (delivered: Men-nefer route opens); y2m7 one Hittite warship
+//            with no soldiers; y3m2 request 2 meat (delivered: Abu route opens; late: the y4 Hittite
+//            raid comes at once); y4m0 Hittite raid 10 with 2 warships; y4m1 clay pits flood (7%);
+//            y5m2 request 15 pottery (late: as for meat); y5m10 Hittite raid 20 with 4 warships;
+//            y8m0 Hittite raid 32 with 5 warships; y10m5 Pharaoh asks for 15 limestone (delivered: gift
+//            of 15 meat; refused: Egyptian raid 24 with 6 warships); y16m10 Hittite raid 48 with 8
+//            warships (beaten: kingdom +10; not beaten: kingdom -10).
+//
+// Notes for developers:
+// - The briefing speaks of Kushites, but the original scenario enemy is Hittite and the code keeps it.
+// - Hittite raids sail from sea point 0, the Egyptian raid from sea point 1 (original locations 9 / 10).
+// - The two route-opening events name Iunet itself in the original; they are pointed at Men-nefer and
+//   Abu, whose goods are filled in because the original leaves them empty.
+// - tag_id: 1000 + i chained events, 2000 + i calendar events, 7000 + i Pharaoh's army (i = event index
+//   in the original scenario, also quoted as "pak i=" in comments below).
 
 mission16 { // Iunet (Dendera) — The Defense of Egypt
 	map_file : "data/maps/m_016_iunet.map"

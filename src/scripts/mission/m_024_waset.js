@@ -1,23 +1,34 @@
 log_info("akhenaten: mission 24 waset started")
 
-// Empire / events aligned with original campaign scenario 24 (2026-07-26 dump).
-// Empire id=1. Scenario enemy ENEMY_6_KUSHITE; timed invasions invader=egypt(2).
-// Gods: Osiris, Ra (patron), Bast. Funds Normal 9000 / loan 4000 / debt 20. Rank 8.
-// Win: pop 6000 / culture 55 / prosperity 45 / monuments 20 (pak; Sun Temple+pyramid) / kingdom 70 / housing 10.
-// Burial: weapons×16 pottery×16 luxury×10. Climate northern (map).
-// Trade: Dakhla(4) Thinis(1) Dunqul(3) Men-nefer(5 sea) Khmun(6 sea).
-// Display: Henen-nesw(2 sea) Kharga(0) Nekhen Sauty.
-// Kerma: display foreign route 23 (pak 19→23); unlocked y3m1 via i=42 NEW_TRADE (pak city=Kharga+loc23).
-// Triage: SKIP empty map_obj idx=6; SKIP orphan route 19.
-// Events: fish/granite recurring; oil extortion + egypt chain refuse; troops ladders; failed flood;
-// favour 66@loc1→40@loc2→40@loc9: events[] BY_FAVOUR, sent by the engine at Kingdom rating 0.
-// Invasion loc 1-based land point (only land[0]=[23,48] exists).
-// Invasion loc 9 = sea[0]=[63,37] (OG sends any loc 9+ by sea, whatever the editor subtype).
+// Mission 24 — Waset (Thebes), "Civil War". Rank 8 (Chancellor).
 //
-// Tag_id scheme:
-//   1000 + i               chain-only leaves
-//   2000 + i               once calendar roots
-//   3000 + i*100 + year    recurring calendar roots
+// Goals:     population 6000, culture 55, prosperity 45, monuments 20, kingdom 70, housing level 10.
+// Start:     funds 9000, rescue loan 4000, debt interest 20% (normal difficulty).
+// Gods:      Osiris, Ra, Bast.
+// Monuments: Sun Temple and small pyramid; burial provisions 16 weapons, 16 pottery, 10 luxury goods.
+// Trade:     nothing open at start; can open — Thinis, Dunqul Oasis, Dakhla Oasis, Men-nefer (by sea),
+//            Khmun (by sea); opened by events — Kerma (y3m1); display only — Henen-nesw, Kharga Oasis,
+//            Nekhen, Sauty.
+// Enemies:   no timed raids; small Egyptian raids by sea if an oil request is refused; an Egyptian army
+//            (66, then 40, then 40 by sea with 9 warships) if the kingdom rating falls to 0. The scenario
+//            enemy is set to Kushite, but no Kushite army is sent.
+// Timeline:  every m3 from y2 Nekhen asks for 11 fish (not while the last ask is open); y3m1 Kerma route
+//            opens; y4m10 Nekhen demands 884 oil (refused: Egyptian raid 6 by sea with 1 warship;
+//            delivered: kingdom -6); y7m2 Nekhen asks for 8 troops; y9m1 Sauty asks for 7 copper;
+//            y10m4 Sauty demands 238 oil (refused: Egyptian raid 4 by sea with 1 warship; delivered:
+//            kingdom -15); y11m5 failed flood; y12m1 Kharga Oasis asks for 16 weapons; y15m1 Men-nefer
+//            asks for 20 troops (refused: Kharga Oasis falls, kingdom -34); every m4 from y19 Men-nefer
+//            asks for 20 granite (not while the last ask is open).
+//
+// Notes for developers:
+// - Raid location numbers follow the original events: 1 = the only land point [23,48]; 2 has no
+//   point and enters at the map entry point; 9 = sea point [63,37] with the event's warship count
+//   (mission24_loc_tile / mission24_egypt_raid).
+// - The original's Kerma route event names Kharga Oasis (with Kerma's route number); it is pointed at
+//   Kerma, whose goods are filled in because the original leaves them empty.
+// - tag_id: 1000 + i chained events, 2000 + i calendar events, 3000 + i*100 + year yearly requests,
+//   7000 + i the favour army (i = event index in the original scenario, also quoted as "pak i=" in
+//   comments below).
 
 mission24 { // Waset (Thebes) — Civil War
 	map_file : "data/maps/m_024_waset.map"

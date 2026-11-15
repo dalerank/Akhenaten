@@ -1,27 +1,48 @@
 log_info("akhenaten: mission 23 thinis civil-war started")
 
-// Empire / events aligned with original campaign scenario 23 (2026-07-26 dump).
-// Empire id=23. Scenario enemy ENEMY_6_KUSHITE (Nubian opportunism); Egyptian = loyalist/favour.
-// Gods: Osiris, Ra, Ptah. Funds Normal 13350 / loan 4200 / debt 20. Rank 9. Climate northern.
-// Win: pop 4500 / culture 25 / prosperity 35 / monuments 0 / kingdom 90 / housing count 10 + level 10.
-// Burial empty. No monument slots.
-// Trade: Waset(1) Men-nefer(2) Dunqul(3) Henen-nesw(4) Nekhen(5) Sauty(8) Khmun(9).
-// Display: Kharga(6) Dakhla(7) Kerma(10) Jericho(11). SKIP orphan routes 12/13/14; empty map_obj idx=8.
-// Protect (briefing): Temple Complex of Osiris + family mansion are pre-placed on the map
-// and omitted from buildings[] — cannot rebuild if destroyed (original; not mission-fail).
-// Altar/oracle stay allowed so the existing complex can still be upgraded.
-// Keys: message_mission_thinis (423) — NOT thinis_2 / NOT gold_and_crime (mission 1).
-// Oil i=7: ok/late → KR−10 → LOST×3 → pottery×23 → NEW×3 → (i=17) egypt×38;
-//          refuse → KR+7 → LOST×3 → (i=10) egypt×38. Egypt armed by leaf 1019, spawned next month tick.
-// Troops i=35–44: ok NEW→KR+5→enemy×29 wipe→egypt×33→KR+5; refuse KR−20→egypt×72 wipe→copper×30.
-// Copper outcomes: ok→egypt×72; refuse→enemy×29→egypt×33; late→egypt×33.
-// Henna×60 i=46–54: ok→egypt×32 wipe→enemy×48→KR+5→unlock troops rec; refuse→KR−25→egypt×72→enemy×48→KR+5;
-//   late→KR−12→unlock troops rec (also calendar y17).
+// Mission 23 — Thinis, "Civil War". Rank 9 (Vizier).
 //
-// Tag_id scheme:
-//   1000 + i               chain-only leaves / chain requests
-//   2000 + i               once calendar roots
-//   3000 + i*100 + year    recurring calendar roots
+// Goals:     population 4500, culture 25, prosperity 35, kingdom 90, housing count 10, housing level 10.
+// Start:     funds 13350, rescue loan 4200, debt interest 20% (normal difficulty).
+// Gods:      Osiris, Ra, Ptah.
+// Monuments: none. The Temple Complex of Osiris and the family mansion stand on the map and must be
+//            protected: they are not in the buildings list, so they cannot be rebuilt (losing them does
+//            not fail the mission). The altar and oracle stay buildable to upgrade the complex.
+// Trade:     nothing open at start; can open — Waset, Dunqul Oasis, Nekhen, Sauty, Khmun, Men-nefer
+//            (by sea), Henen-nesw (by sea); display only — Kharga Oasis, Dakhla Oasis, Kerma, Jericho.
+//            Several routes are closed and reopened by the oil request (see the timeline).
+// Enemies:   Egyptian loyalist raids and Kushite raids, by land and by sea; an Egyptian army (50, then
+//            50) if the kingdom rating falls to 0.
+// Timeline:  y1m7 request 120 henna within 2 months (whatever the outcome, Henen-nesw falls and loses
+//            its route); y2m1 gift of 10 copper; y2m4 gift of 8 beer; y3m0 Sauty falls; y3m7 more
+//            pottery demand; y5m1 request 10 game meat (refused or late: a gift of 16 copper follows);
+//            every January from y5 Kushite raid 21; y6m0 request 142 oil within 2 months (refused:
+//            kingdom +7, Henen-nesw, Sauty and Khmun lose their routes, then Egyptian raid 38;
+//            delivered or late: kingdom -10, Waset, Men-nefer and Dunqul Oasis lose their routes, then a
+//            request for 23 pottery, repeated until delivered, which reopens them and brings the
+//            Egyptian raid 38; beating that raid: kingdom +10 and a request for 39 pottery); y7m0 Kushite
+//            raid 24 by sea with 1 warship; y10m3 Khmun is besieged and asks for 48 troops (sent:
+//            Men-nefer route opens, then Kushite raid 29 by sea with 2 warships and after it Egyptian
+//            raid 33 by sea with 4 warships; refused: kingdom -20, Egyptian raid 72 by sea with
+//            4 warships, then a request for 30 copper — delivered: another raid 72, refused: raids 29
+//            and 33, late: raid 33; late or lost: kingdom -10 and the ask repeats); y14m4 request
+//            60 henna within 3 months (delivered: Egyptian raid 32 by land, then Kushite raid 48 by sea
+//            with 3 warships, then the yearly troops asks start early; refused: kingdom -25, Egyptian
+//            raid 72 by sea with 5 warships, then Kushite raid 48 by sea with 3 warships; late: kingdom
+//            -12 and the yearly troops asks start early); every January from y17 a request for 48
+//            troops (not while the last one is open).
+//
+// Notes for developers:
+// - Briefing key is message_mission_thinis; not thinis_2 and not mission 1's gold_and_crime.
+// - Raid location numbers follow the original events: 1 / 2 = land points [10,22] / [54,212], other
+//   land numbers have no point and enter at the map entry point; 9+ = sea point (number - 9) with the
+//   event's warship count; 13 has no sea point and falls back to the next valid one (mission23_loc_tile,
+//   mission23_apply_loc).
+// - Follow-up raids wait until the previous wave is beaten (mission23_invasion_chain_tick); the
+//   Egyptian raid 38 is armed by a chain leaf (1019) and spawned on the next month tick.
+// - tag_id: 1000 + i chained events and requests, 2000 + i calendar events, 3000 + i*100 + year yearly
+//   troops asks, 204200 + n copper requests, 7000 + i the favour army (i = event index in the original
+//   scenario, also quoted as "pak i=" in comments below).
 
 mission23 { // Thinis — Civil War FIP; != mission1 Dawn
 	map_file : "data/maps/m_023_thinis.map"

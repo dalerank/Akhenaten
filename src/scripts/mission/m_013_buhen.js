@@ -1,5 +1,32 @@
 log_info("akhenaten: mission 13 buhen started")
 
+// Mission 13 — Buhen, "Expansion to Nubia". Rank 5 (Royal Mayor).
+//
+// Goals:     population 3000, culture 25, prosperity 25, monuments 6, kingdom 75, housing level 10.
+// Start:     funds 10000, rescue loan 5000, debt interest 20% (normal difficulty).
+// Gods:      Ptah, Seth.
+// Monuments: small obelisk.
+// Trade:     nothing open at start; can open — Abu, Selima Oasis, Serabit Khadim, Men-nefer (by sea),
+//            Meidum (by sea), Enkomi (by sea); display only — Behdet, Byblos, Dahshur, Kerma, Kyrene,
+//            Nekhen, Saqqara.
+// Enemies:   Kushite raids by land (8 waves, 8 to 36 soldiers); Pharaoh's army (22, then 21, then 28)
+//            if the kingdom rating falls to 0.
+// Timeline:  every January from y1 clay pits flood; y1m6 request 8 limestone; every m9 from y2 Pharaoh
+//            asks for 9 beer (not while the last ask is open); y3m2 request 16 limestone; y4m7 Kyrene
+//            asks for 60 troops (won: a further 400 troops; refused/late: Dahshur falls, copper and gems
+//            get dearer; lost: Enkomi falls); y4m10 request 25 limestone; y5m1 more granite demand;
+//            y6m1 request 2000 oil; y6m5 raid 8; y7m2 request 32 limestone; y7m4 festival request
+//            13 beer (gift of 12 granite, 6 if late); y9m11 request 20 limestone; y10m0 more granite
+//            demand; y10m6 raid 16; y11m7 request 11 limestone; y12m8 raid 16; y13m3 raid 24; y15m5
+//            raid 24; y17m1 raid 32; y18m1 raid 32; y20m8 raid 36.
+//
+// Notes for developers:
+// - The map has no invasion points, so raids pass tile -1 and the engine picks the fallback tile.
+// - Sending the troops starts a distant battle; refusing or arriving late skips the battle.
+// - tag_id: 1000 + i chained events and requests, 2000 + i calendar events, 3000 + i*100 + year the
+//   yearly beer ask, 4000 + year*10 + k clay pit floods, 7000 + i Pharaoh's army
+//   (i = event index in the original scenario, also quoted as "pak i=" in comments below).
+
 mission13 { // Buhen — Expansion to Nubia
 	map_file : "data/maps/m_013_buhen.map"
 
