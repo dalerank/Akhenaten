@@ -77,6 +77,7 @@ public:
     virtual void set_water_access_tiles(const water_access_tiles &tiles);
     virtual water_access_tiles get_water_access_tiles() const;
     virtual water_access_tiles get_water_output_tiles() const;
+    virtual tile2i access_tile() const;
     virtual void start_production() {}
     virtual void debug_draw_properties() {}
     virtual bool is_protected_by_police() const { return false; }

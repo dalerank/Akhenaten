@@ -597,6 +597,10 @@ water_access_tiles building_impl::get_water_output_tiles() const {
     return {};
 }
 
+tile2i building_impl::access_tile() const {
+    return base.road_access;
+}
+
 void building_impl::highlight_waypoints() { // highlight the 4 routing tiles for roams from this building
     map_clear_highlights();
     if (has_road_access()) {

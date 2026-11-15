@@ -33,6 +33,7 @@ building_small_stepped_pyramid {
     damage_proof : true
     meta { text_id:178, help_link:"message_building_stepped_pyramid" }
     init_tiles [8, 8]
+    access_offset [0, 10]
 
     flags {
       is_monument: true
@@ -173,6 +174,7 @@ building_small_stepped_pyramid {
     damage_proof : true
     meta { text_id:178, help_link:"message_building_stepped_pyramid" }
     init_tiles [12, 12]
+    access_offset [0, 14]
 
     enter_offset : [2, 12]
 
@@ -377,6 +379,7 @@ building_small_stepped_pyramid {
     damage_proof : true
     meta { text_id:178, help_link:"message_building_stepped_pyramid" }
     init_tiles [16, 16]
+    access_offset [0, 22]
 
     enter_offset : [2, 16]
 
@@ -474,6 +477,7 @@ building_small_stepped_pyramid {
     damage_proof : true
     meta { text_id:178, help_link:"message_building_stepped_pyramid" }
     init_tiles [20, 20]
+    access_offset [0, 22]
 
     enter_offset : [2, 20]
 
@@ -788,6 +792,7 @@ building_small_stepped_pyramid {
     damage_proof : true
     meta { text_id:178, help_link:"message_building_stepped_pyramid" }
     init_tiles [20, 20]
+    access_offset [0, 22]
 
     enter_offset : [2, 20]
 
@@ -1112,6 +1117,7 @@ building_small_stepped_pyramid {
     damage_proof : true
     meta { text_id:178, help_link:"message_bent_pyramid" }
     init_tiles [8, 8]
+    access_offset [0, 10]
 
     flags {
       is_monument: true
@@ -1202,6 +1208,7 @@ building_small_stepped_pyramid {
     damage_proof : true
     meta { text_id:178, help_link:"message_bent_pyramid" }
     init_tiles [12, 12]
+    access_offset [0, 14]
 
     enter_offset : [2, 12]
 
@@ -1290,6 +1297,7 @@ building_small_stepped_pyramid {
     damage_proof : true
     meta { text_id:178, help_link:"message_true_pyramid" }
     init_tiles [8, 8]
+    access_offset [0, 10]
 
     flags {
       is_monument: true
@@ -1374,6 +1382,7 @@ building_small_stepped_pyramid {
     damage_proof : true
     meta { text_id:178, help_link:"message_brick_core_pyramid" }
     init_tiles [8, 8]
+    access_offset [0, 10]
 
     flags {
       is_monument: true
@@ -1458,6 +1467,7 @@ building_small_stepped_pyramid {
     damage_proof : true
     meta { text_id:178, help_link:"message_brick_core_pyramid" }
     init_tiles [12, 12]
+    access_offset [0, 14]
 
     flags {
       is_monument: true
@@ -1665,6 +1675,7 @@ building_small_stepped_pyramid {
     damage_proof : true
     meta { text_id:178, help_link:"message_brick_core_pyramid" }
     init_tiles [16, 16]
+    access_offset [0, 18]
 
     flags {
       is_monument: true
@@ -1884,6 +1895,7 @@ building_small_stepped_pyramid {
     damage_proof : true
     meta { text_id:178, help_link:"message_brick_core_pyramid" }
     init_tiles [20, 20]
+    access_offset [0, 22]
 
     flags {
       is_monument: true
@@ -2003,6 +2015,7 @@ building_small_stepped_pyramid {
     damage_proof : true
     meta { text_id:178, help_link:"message_brick_core_pyramid" }
     init_tiles [20, 20]
+    access_offset [0, 22]
 
     flags {
       is_monument: true
@@ -2162,6 +2175,7 @@ building_small_stepped_pyramid {
     damage_proof : true
     meta { text_id:178, help_link:"message_true_pyramid" }
     init_tiles [12, 12]
+    access_offset [0, 14]
 
     flags {
       is_monument: true
@@ -2373,6 +2387,7 @@ building_small_stepped_pyramid {
     damage_proof : true
     meta { text_id:178, help_link:"message_true_pyramid" }
     init_tiles [16, 16]
+    access_offset [0, 22]
 
     enter_offset : [2, 16]
 
@@ -2598,6 +2613,7 @@ building_small_stepped_pyramid {
     damage_proof : true
     meta { text_id:178, help_link:"message_true_pyramid" }
     init_tiles [20, 20]
+    access_offset [0, 22]
 
     enter_offset : [2, 20]
 
@@ -2920,6 +2936,7 @@ building_small_stepped_pyramid {
     damage_proof : true
     meta { text_id:178, help_link:"message_true_pyramid" }
     init_tiles [20, 20]
+    access_offset [0, 22]
 
     enter_offset : [2, 20]
 

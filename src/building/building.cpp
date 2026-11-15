@@ -758,66 +758,7 @@ xstring building::cls_name() const {
 }
 
 tile2i building::access_tile() {
-    switch (type) {
-    case BUILDING_SMALL_MASTABA:
-    case BUILDING_SMALL_MASTABA_ENTRANCE:
-    case BUILDING_SMALL_MASTABA_WALL:
-    case BUILDING_SMALL_MASTABA_SIDE:
-    case BUILDING_SMALL_STEPPED_PYRAMID:
-    case BUILDING_SMALL_BENT_PYRAMID:
-    case BUILDING_SMALL_PYRAMID:
-    case BUILDING_SMALL_MUDBRICK_PYRAMID:
-    case BUILDING_SMALL_MUDBRICK_PYRAMID_CORNER:
-    case BUILDING_SMALL_MUDBRICK_PYRAMID_WALL:
-    case BUILDING_SMALL_MUDBRICK_PYRAMID_CONE:
-        return main()->tile.shifted(0, 10);
-
-    case BUILDING_MEDIUM_MASTABA:
-    case BUILDING_MEDIUM_MASTABA_ENTRANCE:
-    case BUILDING_MEDIUM_MASTABA_WALL:
-    case BUILDING_MEDIUM_MASTABA_SIDE:
-    case BUILDING_MEDIUM_STEPPED_PYRAMID:
-    case BUILDING_MEDIUM_BENT_PYRAMID:
-    case BUILDING_MEDIUM_PYRAMID:
-    case BUILDING_MEDIUM_MUDBRICK_PYRAMID:
-    case BUILDING_MEDIUM_MUDBRICK_PYRAMID_CORNER:
-    case BUILDING_MEDIUM_MUDBRICK_PYRAMID_WALL:
-    case BUILDING_MEDIUM_MUDBRICK_PYRAMID_CONE:
-        return main()->tile.shifted(0, 14);
-
-    case BUILDING_LARGE_MASTABA:
-    case BUILDING_LARGE_MASTABA_ENTRANCE:
-    case BUILDING_LARGE_MASTABA_WALL:
-    case BUILDING_LARGE_MASTABA_SIDE:
-    // Mudbrick large is 16×16 (true large is 20×20 → shift 22).
-    case BUILDING_LARGE_MUDBRICK_PYRAMID:
-    case BUILDING_LARGE_MUDBRICK_PYRAMID_CORNER:
-    case BUILDING_LARGE_MUDBRICK_PYRAMID_WALL:
-    case BUILDING_LARGE_MUDBRICK_PYRAMID_CONE:
-        return main()->tile.shifted(0, 18);
-
-    case BUILDING_MUDBRICK_PYRAMID_COMPLEX:
-    case BUILDING_GRAND_MUDBRICK_PYRAMID_COMPLEX:
-    case BUILDING_LARGE_STEPPED_PYRAMID:
-    case BUILDING_STEPPED_PYRAMID_COMPLEX:
-    case BUILDING_GRAND_STEPPED_PYRAMID_COMPLEX:
-    case BUILDING_LARGE_PYRAMID:
-    case BUILDING_PYRAMID_COMPLEX:
-    case BUILDING_GRAND_PYRAMID_COMPLEX:
-        return main()->tile.shifted(0, 22);
-
-    case BUILDING_SPHINX:
-    case BUILDING_CAESAREUM:
-        if (auto *m = dcast_monument()) {
-            return m->access_point();
-        }
-        break;
-
-    default:
-        break;
-    }
-
-    return road_access;
+    return dcast()->access_tile();
 }
 
 int building::worker_percentage() const {

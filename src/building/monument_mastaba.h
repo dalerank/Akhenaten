@@ -49,6 +49,7 @@ public:
     virtual grid_area get_area() const override;
     virtual tile2i center_point() const override;
     virtual tile2i access_point() const override;
+    virtual tile2i access_tile() const override { return access_point(); }
 
     struct base_params {
         // Large mastaba = 4×9 parts (36); keep headroom above medium's 21.
