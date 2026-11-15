@@ -7,7 +7,26 @@
 
 class figure;
 
-// Rows of the parts, stages and part_art tables in abu_simbel.js; archive_load derives the runtime tables below.
+// Rows of the part_kinds, parts and stages tables in abu_simbel.js.
+struct abu_simbel_view_art {
+    xstring image;
+    uint8_t offset = 0;
+    bool two_per_art_stage = false;
+};
+ANK_CONFIG_STRUCT(abu_simbel_view_art, image, offset, two_per_art_stage)
+
+struct abu_simbel_part_kind {
+    int kind = 0;
+    xstring name;
+    xstring hint;
+    uint8_t size = 0;
+    bool on_rock = false;
+    xstring family;
+    uint8_t rotate = 0;
+    svector<abu_simbel_view_art, 4> views;
+};
+ANK_CONFIG_STRUCT(abu_simbel_part_kind, kind, name, hint, size, on_rock, family, rotate, views)
+
 struct abu_simbel_part_cfg {
     xstring id;
     int dx = 0;
@@ -25,50 +44,6 @@ struct abu_simbel_stage_cfg {
 };
 ANK_CONFIG_STRUCT(abu_simbel_stage_cfg, stage, hint, scaffold, art, work)
 
-struct abu_simbel_view_art {
-    xstring image;
-    uint8_t offset = 0;
-    bool two_per_art_stage = false;
-};
-ANK_CONFIG_STRUCT(abu_simbel_view_art, image, offset, two_per_art_stage)
-
-struct abu_simbel_kind_art_cfg {
-    xstring kind;
-    xstring family;
-    uint8_t rotate = 0;
-    svector<abu_simbel_view_art, 4> views;
-};
-ANK_CONFIG_STRUCT(abu_simbel_kind_art_cfg, kind, family, rotate, views)
-
-// Offset from the clicked tile, edge in tiles, and OG part kind (which art it draws).
-struct abu_simbel_part_def {
-    int dx = 0;
-    int dy = 0;
-    uint8_t size = 0;
-    uint8_t kind = 0;
-};
-
-// One stage = one work spot. Finishing it either toggles a scaffold flag (built_part 1..12)
-// or moves one part's art to part_stage.
-struct abu_simbel_stage_def {
-    e_figure_type figure = FIGURE_NONE;
-    uint16_t work = 0;
-    uint8_t built_part = 0;
-    bool raise = false;
-    uint8_t part = 0;
-    uint8_t part_stage = 0;
-};
-
-// The art a record of `kind` shows in camera rotation `view`: the image group's first image + offset, and with
-// two_per_art_stage two images per art stage the record has reached.
-struct abu_simbel_part_art {
-    uint8_t kind = 0;
-    uint8_t view = 0;
-    xstring image;
-    uint8_t offset = 0;
-    bool two_per_art_stage = false;
-};
-
 // Sixteen records cut into the cliff, fixed in map space (no rotation). The main record is part 0;
 // its phase holds the stage (0..55, then finished) and the work left at the current stage's spot.
 class building_abu_simbel : public building_monument {
@@ -79,12 +54,7 @@ public:
     enum {
         PARTS = 16,
         STAGE_COMPLETE = 56,
-        KIND_ON_OPEN_GROUND = 9,
-        KIND_NORTH_STATUE = 10,
-        KIND_SOUTH_STATUE = 11,
         PART_KINDS = 12,
-        VIEWS = 4,
-        SCAFFOLDS = 12,
     };
 
     struct runtime_data_t : building_monument::runtime_data_t {
@@ -92,19 +62,11 @@ public:
         uint16_t spot_figure;
     } BUILDING_RUNTIME_DATA_T;
 
-    struct base_params {
+    struct static_params : public building_static_params {
+        svector<abu_simbel_part_kind, PART_KINDS> part_kinds;
         svector<abu_simbel_part_cfg, PARTS> parts;
         svector<abu_simbel_stage_cfg, STAGE_COMPLETE> stages;
-        svector<abu_simbel_kind_art_cfg, PART_KINDS> part_art;
         vec2i work_tile;
-
-        svector<abu_simbel_part_def, PARTS> part_defs;
-        svector<abu_simbel_stage_def, STAGE_COMPLETE> stage_defs;
-        svector<abu_simbel_part_art, PART_KINDS * VIEWS> art_defs;
-    };
-
-    struct static_params : public base_params, public building_static_params {
-        void archive_load(archive arch);
     } BUILDING_STATIC_DATA_T;
 
     struct preview : building_planer_renderer {
@@ -142,7 +104,7 @@ public:
     int stage() const;
     int progress_percent() const;
     int part_index() const { return runtime_data().variant; }
-    int part_kind() const;
+    const abu_simbel_part_kind* part_kind() const;
     building_abu_simbel* main_abu_simbel();
     const building_abu_simbel* main_abu_simbel() const;
 
@@ -161,5 +123,5 @@ private:
     void advance_stage();
     void refresh_part_images();
 };
-ANK_CONFIG_STRUCT(building_abu_simbel::static_params, parts, stages, part_art, work_tile)
+ANK_CONFIG_STRUCT(building_abu_simbel::static_params, part_kinds, parts, stages, work_tile)
 ANK_CONFIG_PROPERTY(building_abu_simbel::runtime_data_t, variant)

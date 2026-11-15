@@ -20,8 +20,45 @@ building_abu_simbel {
       preview { pack:PACK_ABUSIMBEL, id:2 }
     }
     building_size : 3
-    // OG abu_simbel_parts: offset from the clicked tile and what the record is. Part 0 is the main record.
-    // Every kind but the entrance must stand on monument rock; statue blocks are 6x6, the rest 3x3.
+    // OG part kinds; the row index is the OG kind number. A kind is 3x3 tiles, a statue block 6x6; every kind but
+    // the entrance stands on monument rock. A view is the camera rotation 0..3: the cliff kinds take image
+    // family + "_" + (view + rotate) % 4, the others name the image per view, with an offset into it, and with
+    // two_per_art_stage step two images per art stage the record has reached.
+    part_kinds [
+        { kind: 0, name: "cliff_back", hint: "cliff behind the facade", size: 3, on_rock: true, family: "facade_view", rotate: 0 }
+        { kind: 1, name: "cliff_north", hint: "north cliff side", size: 3, on_rock: true, family: "facade_view", rotate: 1 }
+        { kind: 2, name: "cliff_south", hint: "south cliff side", size: 3, on_rock: true, family: "facade_view", rotate: 3 }
+        { kind: 3, name: "cliff_north_corner", hint: "north back corner", size: 3, on_rock: true, family: "statue_view", rotate: 0 }
+        { kind: 4, name: "cliff_south_corner", hint: "south back corner", size: 3, on_rock: true, family: "statue_view", rotate: 3 }
+        { kind: 5, name: "cliff_north_end", hint: "north front end", size: 3, on_rock: true, family: "statue_view", rotate: 1 }
+        { kind: 6, name: "cliff_south_end", hint: "south front end", size: 3, on_rock: true, family: "statue_view", rotate: 2 }
+        { kind: 7, name: "facade_inner", hint: "facade between the statues", size: 3, on_rock: true, views: [
+            { image: "part7_front", two_per_art_stage: true },
+            { image: "part7_side" },
+            { image: "part7_side", offset: 1 },
+            { image: "part7_front", offset: 1, two_per_art_stage: true } ] }
+        { kind: 8, name: "facade_door", hint: "facade with the door", size: 3, on_rock: true, views: [
+            { image: "part8", two_per_art_stage: true },
+            { image: "part8", offset: 15 },
+            { image: "part8", offset: 14 },
+            { image: "part8", offset: 1, two_per_art_stage: true } ] }
+        { kind: 9, name: "entrance", hint: "entrance on open ground", size: 3, on_rock: false, views: [
+            { image: "part9", two_per_art_stage: true },
+            { image: "part9", offset: 1, two_per_art_stage: true },
+            { image: "part9", two_per_art_stage: true },
+            { image: "part9", offset: 1, two_per_art_stage: true } ] }
+        { kind: 10, name: "statue_north", hint: "north statue block", size: 6, on_rock: true, views: [
+            { image: "part10_front", two_per_art_stage: true },
+            { image: "part10_side" },
+            { image: "part10_side", offset: 1 },
+            { image: "part10_front", offset: 1, two_per_art_stage: true } ] }
+        { kind: 11, name: "statue_south", hint: "south statue block", size: 6, on_rock: true, views: [
+            { image: "part10_front", two_per_art_stage: true },
+            { image: "part10_side" },
+            { image: "part10_side", offset: 1 },
+            { image: "part10_front", offset: 1, two_per_art_stage: true } ] }
+    ]
+    // OG abu_simbel_parts: offset from the clicked tile and the part kind. Part 0 is the main record.
     parts [
         { id: "main", dx: 1, dy: 7, kind: "cliff_north_end" }
         { id: "south_end", dx: 1, dy: -11, kind: "cliff_south_end" }
@@ -100,43 +137,6 @@ building_abu_simbel {
         { stage: 53, hint: "north statue, carving 9", art: "north_statue", work: 300 }
         { stage: 54, hint: "south statue, carving 9", art: "south_statue", work: 600 }
         { stage: 55, hint: "entrance, carving 2", art: "entrance", work: 400 }
-    ]
-    // OG abu_simbel_part_image, per part kind; a view is the camera rotation 0..3. The cliff kinds take image
-    // family + "_" + (view + rotate) % 4; the others name the image per view, with an offset into it, and with
-    // two_per_art_stage step two images per art stage the record has reached.
-    part_art [
-        { kind: "cliff_back", family: "facade_view", rotate: 0 }
-        { kind: "cliff_north", family: "facade_view", rotate: 1 }
-        { kind: "cliff_south", family: "facade_view", rotate: 3 }
-        { kind: "cliff_north_corner", family: "statue_view", rotate: 0 }
-        { kind: "cliff_south_corner", family: "statue_view", rotate: 3 }
-        { kind: "cliff_north_end", family: "statue_view", rotate: 1 }
-        { kind: "cliff_south_end", family: "statue_view", rotate: 2 }
-        { kind: "facade_inner", views: [
-            { image: "part7_front", two_per_art_stage: true },
-            { image: "part7_side" },
-            { image: "part7_side", offset: 1 },
-            { image: "part7_front", offset: 1, two_per_art_stage: true } ] }
-        { kind: "facade_door", views: [
-            { image: "part8", two_per_art_stage: true },
-            { image: "part8", offset: 15 },
-            { image: "part8", offset: 14 },
-            { image: "part8", offset: 1, two_per_art_stage: true } ] }
-        { kind: "entrance", views: [
-            { image: "part9", two_per_art_stage: true },
-            { image: "part9", offset: 1, two_per_art_stage: true },
-            { image: "part9", two_per_art_stage: true },
-            { image: "part9", offset: 1, two_per_art_stage: true } ] }
-        { kind: "statue_north", views: [
-            { image: "part10_front", two_per_art_stage: true },
-            { image: "part10_side" },
-            { image: "part10_side", offset: 1 },
-            { image: "part10_front", offset: 1, two_per_art_stage: true } ] }
-        { kind: "statue_south", views: [
-            { image: "part10_front", two_per_art_stage: true },
-            { image: "part10_side" },
-            { image: "part10_side", offset: 1 },
-            { image: "part10_front", offset: 1, two_per_art_stage: true } ] }
     ]
     // OG abu_simbel_get_work_tile, from the main record.
     work_tile [6, -8]
