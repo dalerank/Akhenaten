@@ -2280,6 +2280,14 @@ figure_bedouin = {
     move_cycle : [1, 1, 2]
 }
 
+enemy_bedouin = {
+    percentage_type1 : 100
+    percentage_type2 : 0
+    percentage_type3 : 0
+    figure_types: [FIGURE_BEDOUIN, FIGURE_BEDOUIN, FIGURE_BEDOUIN]
+    layout: FORMATION_ENEMY_MOB
+}
+
 // Message phrases of an EVENT_INVADER_* invasion. warnings: the announcement, then the reminders at
 // 24 / 12 / 6 / 1 months left. low_kingdom replaces no_reason when the invasion comes from a favour event.
 // disembarked: the transport landing alert, -1 when the invader has none (OG scenario_invasion_landing_message).

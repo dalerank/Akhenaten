@@ -1672,15 +1672,25 @@ void invasion_set_entry(invasion_opts_t &opts, int route, bool bedouin) {
         return; // random land point inside scenario_invasion_start
     }
     const auto &lands = g_scenario.invasion_points_land;
-    int index = std::min(route - 1, MAX_INVASION_POINTS_LAND - 1);
+    const auto& seas = g_scenario.invasion_points_sea;
+    auto point_at = [&](int i) -> tile2i {
+        if (i < MAX_INVASION_POINTS_LAND) {
+            return i < (int)lands.size() ? lands[i] : tile2i::invalid;
+        }
+        i -= MAX_INVASION_POINTS_LAND;
+        return i < (int)seas.size() ? seas[i] : tile2i::invalid;
+    };
+    int index = std::min(route - 1, MAX_INVASION_POINTS_LAND + MAX_INVASION_POINTS_SEA - 1);
     for (int tries = 0; tries < MAX_INVASION_POINTS_LAND; tries++) {
-        if (index < (int)lands.size() && lands[index].valid()) {
-            opts.invasion_point = lands[index];
-            return;
+        if (point_at(index).valid()) {
+            break;
         }
         if (++index >= MAX_INVASION_POINTS_LAND) {
             index = 0;
         }
+    }
+    if (point_at(index).valid()) {
+        opts.invasion_point = point_at(index);
     }
 }
 
@@ -1716,6 +1726,9 @@ static void invasion_attack(event_ph_t &e) {
     case EVENT_INVADER_ENEMY: opts.enemy_type = g_scenario.enemy_id; break;
     case EVENT_INVADER_EGYPT:
     case EVENT_INVADER_PHARAOH: opts.enemy_type = ENEMY_3_EGYPTIAN; break;
+    case EVENT_INVADER_BEDUINS:
+        opts.enemy_type = ENEMY_13_BEDOUIN;
+        break;
     default: opts.enemy_type = ENEMY_0_BARBARIAN; break;
     }
     opts.size = e.amount.value;

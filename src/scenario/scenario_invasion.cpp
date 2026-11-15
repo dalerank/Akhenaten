@@ -111,21 +111,23 @@ enemy_properties_t ANK_VARIABLE(enemy_persian);
 enemy_properties_t ANK_VARIABLE(enemy_phoenician);
 enemy_properties_t ANK_VARIABLE(enemy_roman);
 enemy_properties_t ANK_VARIABLE(enemy_seapeople);
+enemy_properties_t ANK_VARIABLE(enemy_bedouin);
 
-std::array<enemy_properties_t *, ENEMY_COUNT> g_enemy_properties = {
-    &enemy_barbarian,
-    &enemy_assyrian,
-    &enemy_canaanite,
-    &enemy_egyptian,
-    &enemy_hittite,
-    &enemy_hyksos,
-    &enemy_kushite,
-    &enemy_libian,
-    &enemy_nubian,
-    &enemy_persian,
-    &enemy_phoenician,
-    &enemy_roman,
-    &enemy_seapeople,
+std::array<enemy_properties_t*, ENEMY_COUNT> g_enemy_properties = {
+  &enemy_barbarian,
+  &enemy_assyrian,
+  &enemy_canaanite,
+  &enemy_egyptian,
+  &enemy_hittite,
+  &enemy_hyksos,
+  &enemy_kushite,
+  &enemy_libian,
+  &enemy_nubian,
+  &enemy_persian,
+  &enemy_phoenician,
+  &enemy_roman,
+  &enemy_seapeople,
+  &enemy_bedouin,
 };
 
 // The favour army uses figure IDs 55–57 instead of egyptian proxy types.
@@ -552,6 +554,9 @@ bool invasion_point_is_sea(tile2i point) {
 }
 
 bool invasion_should_use_sea(const invasion_opts_t &opts) {
+    if (opts.enemy_type == ENEMY_13_BEDOUIN) {
+        return false;
+    }
     if (opts.via_sea) {
         return true;
     }

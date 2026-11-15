@@ -17,6 +17,7 @@ enum e_enemy_type {
     ENEMY_10_PHOENICIAN = 10,
     ENEMY_11_ROMAN = 11,
     ENEMY_12_SEAPEOPLE = 12,
+    ENEMY_13_BEDOUIN = 13,
 
     ENEMY_COUNT
 };
