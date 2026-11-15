@@ -34,6 +34,7 @@ enum e_laborer_action : uint16_t {
     ACTION_36_LABORER_SLED_TO_TOMB = 36,
     // Remake (gameplay_change_mastaba_clay_delivery): clay pulled to a mastaba on a sled train.
     ACTION_37_LABORER_SLED_TO_MASTABA = 37,
+    ACTION_38_LABORER_SLED_RETURN = 38,
 
     // Non-OG sentinel: do_gotobuilding / do_goto route-lost → poof (removed in later commits).
     ACTION_14_LABORER_ROUTE_LOST = 14,
@@ -135,6 +136,9 @@ private:
     void sled_to_tomb_tick(building *tomb);
     void enter_idle_pool();
     void finish_block_delivery();
+    bool start_sled_return();
+    void sled_return_tick();
+    void end_sled_return();
 };
 
 ANK_CONFIG_STRUCT(figure_worker::static_params,

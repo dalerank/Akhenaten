@@ -679,6 +679,7 @@ figure_sled {
 		marble_ramp { id:177, max_frames:1 }
 		sandstone_ramp { id:178, max_frames:1 }
 		bricks_ramp { id:179, max_frames:1 }
+		empty { id:173, max_frames:1 }
 		copper { pack:PACK_EXPANSION_SPR, id:27, max_frames:1 }
 		lamps { pack:PACK_EXPANSION_SPR, id:39, max_frames:1 }
 	}
@@ -694,6 +695,7 @@ figure_sled {
 		{ resource: RESOURCE_LAMPS, ground: "lamps", ramp: "bricks_ramp" }
 	]
 	default_image { ground: "bricks", ramp: "bricks_ramp" }
+	empty_image { ground: "empty", ramp: "empty" }
 
 	// OG Figure_model "Pulled Stone": category 0, never fought; enemy.c skips it as a missile target.
 	category: figure_category_inactive

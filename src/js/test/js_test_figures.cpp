@@ -499,6 +499,33 @@ static int __test_figure_current_height(int fid) {
 }
 ANK_FUNCTION_1(__test_figure_current_height);
 
+static int __test_figure_target_height(int fid) {
+    figure* f = figure_get(fid);
+    if (!f || !f->is_alive()) {
+        return -1;
+    }
+    return f->target_height;
+}
+ANK_FUNCTION_1(__test_figure_target_height);
+
+static int __test_figure_height_adjusted_ticks(int fid) {
+    figure* f = figure_get(fid);
+    if (!f || !f->is_alive()) {
+        return -1;
+    }
+    return f->height_adjusted_ticks;
+}
+ANK_FUNCTION_1(__test_figure_height_adjusted_ticks);
+
+static void __test_figure_set_progress_on_tile(int fid, int progress) {
+    figure* f = figure_get(fid);
+    if (!f || !f->is_alive()) {
+        return;
+    }
+    f->progress_on_tile = (uint8_t)progress;
+}
+ANK_FUNCTION_2(__test_figure_set_progress_on_tile);
+
 static int __test_plagued_create_at_house(int bid) {
     building* b = building_get(bid);
     if (!b || !b->is_valid()) {

@@ -5,6 +5,7 @@
 #include "city/city_figures.h"
 #include "city/city_malaria_risk.h"
 #include "city/city_recorded_paths.h"
+#include "grid/bridge.h"
 #include "grid/building.h"
 #include "grid/figure.h"
 #include "grid/gems.h"
@@ -212,6 +213,11 @@ static int __test_figure_tile_x(int fid) {
     return (f && f->id > 0) ? f->tile.x() : -1;
 }
 ANK_FUNCTION_1(__test_figure_tile_x);
+
+static int __test_map_bridge_height(int x, int y) {
+    return map_bridge_height(tile2i(x, y).grid_offset());
+}
+ANK_FUNCTION_2(__test_map_bridge_height);
 
 static bool __test_animal_can_travel(int sx, int sy, int dx, int dy) {
     return map_routing_animal_can_travel(tile2i(sx, sy), tile2i(dx, dy));

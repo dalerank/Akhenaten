@@ -209,7 +209,7 @@ void figure::action_perform() {
         const bool on_ferry_lane = can_cross_ferry() && (on_ferry || (map_terrain_is(tile, TERRAIN_WATER) && map_terrain_is_near_ferry_route(tile.grid_offset(), 1)));
         if (on_normal_road || on_ferry_lane) {
             outside_road_ticks = 0;
-            if (map_terrain_is(tile.grid_offset(), TERRAIN_WATER)) {
+            if (map_terrain_is(tile.grid_offset(), TERRAIN_WATER) && !dcast()->sets_own_height()) {
                 set_target_height_bridge();
             }
         } else {
@@ -217,7 +217,7 @@ void figure::action_perform() {
                 outside_road_ticks++;
             }
 
-            if (map_terrain_is(tile.grid_offset(), TERRAIN_BUILDING)) {
+            if (map_terrain_is(tile.grid_offset(), TERRAIN_BUILDING) && !dcast()->sets_own_height()) {
                 set_target_height_building();
             }
 

@@ -117,6 +117,7 @@ game_features {
     @gameplay_change_dock_smart_routing {}
     @gameplay_change_follower_runaway {}
     @gameplay_change_sled_pullers_flee {}
+    @gameplay_change_sled_return_empty {}
     @gameplay_change_robber_remake {}
     @gameplay_change_tomb_robber_remake {}
     @gameplay_change_police_weapons {}

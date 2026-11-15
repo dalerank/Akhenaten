@@ -67,6 +67,8 @@ namespace game_features {
     game_feature gameplay_change_follower_runaway{ "gameplay_change_follower_runaway", "#TR_CONFIG_FOLLOWER_RUNAWAY", false, false };
     game_feature gameplay_change_sled_pullers_flee{
       "gameplay_change_sled_pullers_flee", "#TR_CONFIG_SLED_PULLERS_FLEE", false, false};
+    game_feature gameplay_change_sled_return_empty{
+      "gameplay_change_sled_return_empty", "#TR_CONFIG_SLED_RETURN_EMPTY", false, false};
     // Remake mugger: steal on spawn + always path to palace + ambient mansion theft. OG: wait, rob nearest rich building on arrival.
     game_feature gameplay_change_robber_remake{ "gameplay_change_robber_remake", "#TR_CONFIG_ROBBER_REMAKE", false, false };
     // Remake tomb robber: monthly/sentiment spawn, flee/arrest, fixed −10/−25. OG: house crime, wait 40, 2× walk, difficulty kingdom hit, die.

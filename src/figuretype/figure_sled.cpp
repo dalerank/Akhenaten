@@ -3,6 +3,7 @@
 #include "city/city_figures.h"
 #include "core/calc.h"
 #include "core/profiler.h"
+#include "figuretype/figure_worker.h"
 #include "game/game_config.h"
 #include "js/js_game.h"
 
@@ -25,6 +26,11 @@ void figure_sled::update_animation() {
             image = &entry;
             break;
         }
+    }
+    int position = 0;
+    const figure* leader = figure_get(pyramid_figure_find_train_leader(id(), &position));
+    if (leader && leader->action_state == ACTION_38_LABORER_SLED_RETURN) {
+        image = &p.empty_image;
     }
 
     const auto& rd = runtime_data();

@@ -87,6 +87,7 @@ localization_en = [
   {key:"#TR_CONFIG_DOCK_DOUBLE_HAUL", text:"Double the haul amount of dockers (800 per trip)"}
   {key:"#TR_CONFIG_DOCK_SMART_ROUTING", text:"Smart dock routing: score pier by orders/goods, hop to a better free pier (not original Pharaoh)"}
   {key:"#TR_CONFIG_SLED_PULLERS_FLEE", text:"Sled pullers drop the sled and flee to the map exit when enemies come near; the sled stays where it was left (not original Pharaoh)"}
+  {key:"#TR_CONFIG_SLED_RETURN_EMPTY", text:"After unloading at a monument, laborers pull the empty sled train back to the storage yard it came from (not original Pharaoh)"}
   {key:"#TR_CONFIG_FOLLOWER_RUNAWAY", text:"Followers flee to the map exit when their leader dies (caravan donkeys, delivery boys; not original Pharaoh)"}
   {key:"#TR_CONFIG_ROBBER_REMAKE", text:"Mugger remake: steal on spawn, always head for the palace, ambient mansion theft (not original Pharaoh)"}
   {key:"#TR_CONFIG_TOMB_ROBBER_REMAKE", text:"Tomb-robber remake: monthly spawn, flee/arrest, fixed kingdom hit (not original Pharaoh)"}

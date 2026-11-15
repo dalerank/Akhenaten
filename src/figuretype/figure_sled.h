@@ -24,6 +24,7 @@ public:
     struct static_params : public figure_static_params {
         svector<resource_image_t, 16> resource_images;
         resource_image_t default_image;
+        resource_image_t empty_image;
     } FIGURE_STATIC_DATA_T;
 
     struct runtime_data_t {
@@ -33,10 +34,11 @@ public:
 
     virtual void figure_action() override;
     virtual void update_animation() override;
+    virtual bool sets_own_height() const override { return base.action_state == ACTION_8_SLED_TRAIN_FOLLOW; }
     virtual figure_sled* dcast_sled() override { return this; }
 };
 ANK_CONFIG_STRUCT(figure_sled::resource_image_t, resource, ground, ramp)
-ANK_CONFIG_STRUCT(figure_sled::static_params, resource_images, default_image)
+ANK_CONFIG_STRUCT(figure_sled::static_params, resource_images, default_image, empty_image)
 
 class figure_sled_puller : public figure_impl {
 public:
@@ -56,6 +58,7 @@ public:
 
     virtual void figure_action() override;
     virtual void update_animation() override;
+    virtual bool sets_own_height() const override { return base.action_state == ACTION_8_SLED_TRAIN_FOLLOW; }
     virtual figure_sled_puller *dcast_sled_puller() override { return this; }
 
 private:
