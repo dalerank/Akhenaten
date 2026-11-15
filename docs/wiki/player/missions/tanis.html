@@ -93,7 +93,8 @@
       </ul>
 
       <h2 id="events">Scripted events (summary)</h2>
-      <p>JS <code>events[]</code> (20): papyrus / fish / reeds requests, invasions (incl. favour KR; i=0 <code>ok=55</code> clamped to <code>-1</code>), gifts, price/demand, city status, locusts, reputation ±. Empire via <code>hide_pak_*</code> + cities/routes (Enkomi timber+copper · Men-nefer · Athens).</p>
+      <p>JS <code>events[]</code> (20): papyrus / fish / reeds requests, Pharaoh's favour army (i=19), gifts, price/demand, city status, locusts, reputation ±. Empire via <code>hide_pak_*</code> + cities/routes (Enkomi timber+copper · Men-nefer · Athens).</p>
+      <p>Roman raids by sea from mission JS, in the month of the original calendar invasions: <strong>y4m0</strong> 3 warships, no soldiers (sea point 0, target troops) · <strong>y6m2</strong> ×16 with 5 warships (best buildings), and 4 months later (<strong>y6m6</strong>) another 3 warships · <strong>y8m2</strong> ×12 with 4 warships (random). Point 11 is sea point 2, which the map lacks, so it wraps round to sea point 0.</p>
 
       <div class="dev-section">
         <h2 id="dev">Developer reference</h2>
@@ -101,7 +102,7 @@
           <summary>Mission script</summary>
           <div class="details-body">
             <p><span class="file-ref">src/scripts/mission/m_047_tanis.js</span></p>
-            <p>Sea invasion events carry the OG warship count as <code>warships</code> (pak <code>phrase_var</code>): i=0 ×3, i=5 ×5, i=12 ×4.</p>
+            <p>Raids: <code>mission47_raids</code> (line 716) starts pak i=0 ×3, i=5 ×5, i=12 ×4 warships (pak <code>phrase_var</code>) through <code>mission_calendar_raids</code> / <code>mission_start_raid</code> (<span class="file-ref">src/scripts/missions.js</span>:197); their <code>events[]</code> slots (lines 113, 180, 279) are <code>EVENT_TYPE_NONE</code> so the other indexes keep. i=5 has <code>on_completed 0</code>: OG <code>invasion_attack</code> chains it without the chain-only check, so a copy of i=0 follows 4 months later (its <code>time.year</code>), <code>invasion_id 20</code>.</p>
             <p><code>map_file</code>: <span class="file-ref">data/maps/m_047_tanis.map</span>. Empire id 1, <code>map_background</code> pack empire id 24. Dump 2026-07-31 Cleop. SKIP empty map_obj idx=13. Rank 6. <code>enable_scenario_events</code> + <code>hide_pak_cities/routes/objects</code>. Config-only fish/herd/disembark/inv. Warship TEMP.</p>
           </div>
         </details>
