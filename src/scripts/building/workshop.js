@@ -107,12 +107,12 @@ building_jewels_workshop = {
   cost: [ 18, 30, 50, 100, 200 ]
   desirability : { value:[-2], step:[1], step_size:[1], range: [2] }
   laborers:[12], fire_risk:[4], damage_risk: [0]
-  material_reduction_per_nearby_workshop : 5
   info_advisors [ADVISOR_LABOR]
   flags {
     is_workshop: true
     is_industry: true
     work_anim: true
+    og_production_cycle: true
   }
 }
 
