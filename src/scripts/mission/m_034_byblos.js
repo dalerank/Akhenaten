@@ -1,14 +1,41 @@
 log_info("akhenaten: mission 34 byblos started")
 
-// Empire id=33. Climate desert (pak). Enemy ENEMY_2_CANAANITE (briefing Hittite ignored).
-// Gods Bast×2, Ptah, Seth. Funds Normal 45000 / loan 5000 / debt 20. Rank 10.
-// Win: pop 6000 / culture 60 / prosperity 40 / monuments 14 (Large+2×Small obelisk 3+1+1
-//   → trunc(6.32·√5+0.5)=14 = pak) / kingdom 75 / housing 10.
-// Burial empty. SKIP empty map_obj idx=9. Routes 1–10 copy (5/6/8 display-only orphans).
-// No warship requests in pak (briefing-only navy buildings). No Sea People events.
-// Favour egypt×161 → chain×128. Tag_id: 1000+i leaves; 2000+i once; 3000+i recurring.
-// Truncate: 1↔4; 6↔8; 27↔45↔44; 53↔54. SKIP orphan 49↔50. Terminalize i13 (ok=97 OOB).
-// TEMP: goods defeat→chain_only raids i4/i12/i27 unwired (engine defeat = troops only).
+// Mission 34 — Byblos, "Expansion and Conquest". Rank 10 (Pharaoh).
+//
+// Goals:     population 6000, culture 60, prosperity 40, monuments 14, kingdom 75, housing level 10.
+// Start:     funds 45000, rescue loan 5000, debt interest 20% (normal difficulty).
+// Gods:      Ptah, Seth, Bast (patron).
+// Monuments: large obelisk, two small obelisks; no burial goods.
+// Trade:     open at start — Abu (by sea); opened by events — Men-nefer (timber delivered), Qadesh
+//            (fish), Rowarty (chariots), Heh (henna for Iken), Iken (weapons/grain chain); display only —
+//            Gaza, Itjtawy, Kerma, Khmun, Knossos, Sharuhen, Waset.
+// Enemies:   Canaanite raids (late ones by sea), Bedouin raids (Libyan army); Egyptian army of 161 by
+//            sea with 9 warships if the kingdom rating falls to 0 (events[] also lists a second
+//            favour army of 128, not chained to the first).
+// Timeline:  y2m0 Canaanite raid 28; y2m2 request 17 timber (sent: Men-nefer route opens); y4m0
+//            request 44 henna for Abu (sent: Abu is conquered; otherwise kingdom -9), then 11 fish
+//            (sent: Qadesh route opens; otherwise one retry with 5 fish); y6m4 Canaanite raid 64;
+//            y7m1 request 34 henna for Khmun (sent: Khmun is conquered; otherwise as Abu); y8m10
+//            request 52 henna for Gaza (sent: Gaza is conquered; refused or late: sea trade problems);
+//            every 6 months from y9m0 request 9 timber while none is open; y9m8 request 11 chariots
+//            (sent: Rowarty route opens; otherwise kingdom -3 and one retry with 8 chariots); every
+//            6 months from y12m3 Bedouin raid 96; y13m7 request 64 henna for Iken (sent: Iken is
+//            conquered, Heh route opens; otherwise the Gaza route is lost and a troops/weapons/grain chain
+//            follows in which failures make Byblos fall); every 6 months from y16m0
+//            Canaanite raid 125 by sea with 12 warships; every 2 months price rises from y19m2
+//            (timber), y21m4 (copper), y22m6 (weapons); y22m8 Canaanite raid 119; y23m0, y24m0, y25m0
+//            Abu buys more timber, copper, weapons; every 6 months from y28m8 Canaanite raid 141 by
+//            sea with 12 warships. Recurring raids wait while enemies are on the map.
+//
+// Notes for developers:
+// - Raid location numbers: 1..5 = land points (mission34_loc_tile), 9+ = sea point loc - 9 with the
+//   event's warships (mission34_enemy_raid).
+// - Men-nefer has no route in the original; it gets the unused sea route 8 so its unlock opens a route.
+// - Request loops of the original (1/4, 6/8, 27/45/44, 53/54) are cut after one retry.
+// - Temporary: the original sends raids when a henna request is lost (defeat); the engine only
+//   reports defeat for troops requests, so those raids are not wired.
+// - tag_id: 1000 + i chained events and requests, 2000 + i calendar events, 3000 + i (+ year)
+//   recurring events, 7000 + i Egyptian army (i = event index in the original, "pak i=" / "i" below).
 
 mission34 { // Byblos — Expansion and Conquest
 	map_file : "data/maps/m_034_byblos.map"

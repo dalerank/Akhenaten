@@ -1,5 +1,32 @@
 log_info("akhenaten: mission 31 bubastis started")
 
+// Mission 31 — Bubastis, "The City of Bast". Rank 10 (Pharaoh).
+//
+// Goals:     culture 85, prosperity 85, monuments 15, kingdom 65, housing: 4 houses of level 19
+//            (no population goal).
+// Start:     funds 10000, no rescue loan, debt interest 20% (normal difficulty).
+// Gods:      Osiris, Ptah, Bast.
+// Monuments: large obelisks (the goal of 15 takes two of them); no burial goods.
+// Trade:     nothing open at start; can open — Heh (by sea), Iken (by sea), Pwenet, Sawu, Waset;
+//            opened by events — Kerma (troops delivered), Gaza (two working warship wharves); display
+//            only — Byblos, Itjtawy, Kebet, Men-nefer, Menat Khufu, Toshka.
+// Enemies:   no raids; Egyptian army (50, 50, then 20) if the kingdom rating falls to 0.
+// Timeline:  y5m0 request 32 troops for Itjtawy (sent: Kerma route opens; refused: 48 troops; late or
+//            lost: 16 troops for Heh, then 8 troops — each fallback repeats the same outcomes until a
+//            request is sent; refusing the 48 troops brings news of a lost battle at Iken); yearly from
+//            y6m2 request 12 fish while none is open (sent: Heh buys more granite; refused: Kerma buys
+//            less granite; late: kingdom -3); yearly from y8m8 request 24 timber (sent: Kerma buys more
+//            beer; otherwise Kerma buys less beer); y10m7 request 8 weapons for Kebet (sent or refused:
+//            Kebet buys more luxury goods; late: Kerma buys less timber).
+//
+// Notes for developers:
+// - The original has no event that opens Gaza; opening it once two warship wharves work is a
+//   remake rule (temporary) so the briefing's sea trade is reachable.
+// - The original gives Gaza and Kerma no goods and Kerma no route; goods and route 7 are added so
+//   the unlocks are playable.
+// - tag_id: 1000 + i chained events and requests, 2000 + i calendar events, 3000 + i*100 + year yearly
+//   requests, 7000 + i Egyptian army (i = event index in the original scenario, "pak i=" below).
+
 mission31 { // Bubastis — The City of Bast
 	map_file : "data/maps/m_031_bubastis.map"
 	start_message : "message_mission_bubastis"

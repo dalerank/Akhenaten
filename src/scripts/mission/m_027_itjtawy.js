@@ -1,44 +1,34 @@
 log_info("akhenaten: mission 27 itjtawy started")
 
-// Empire / events aligned with original campaign scenario 27 (2026-07-26 dump); see
-// tmp/mission27_clean.txt (triage) and tmp/mission27_key.txt (raw dump).
-// Empire id=1. Scenario enemy ENEMY_7_LIBIAN (briefing sprites only - every timed
-// invasion in the pak is invader=egypt(2) -> ENEMY_3_EGYPTIAN, incl. the by_favour pair).
-// Gods: Osirisx1, Ptahx1, Sethx1, Bastx2 - no JS override. Funds Normal 8000 / loan 3000 /
-// debt_interest 8 (low). Rank 10 (Pharaoh era, matches Iken/Heh).
-// Convergence: Kebet (25) and Menat Khufu (26) both funnel into this scenario. No
-// next_mission here - a choice[] host to Iken (28, already scripted) / Sawu (29, not yet;
-// its button stays hidden until that mission is scripted).
-// Win: pop 7500 / culture 60 / prosperity 60 / monuments 33 (Sphinx 10 + Medium mudbrick 12
-//   + Small mudbrick 4 + burial 1 → trunc(6.32·√27+0.5)=33) / kingdom 85 / housing_count 6 +
-//   housing_level 17 (six BUILDING_HOUSE_STATELY_MANOR).
-// Burial: pak burial_count=5 - grainx10 potteryx25 beerx12 luxury_goodsx12 papyrusx15.
-// Trade: Buhen(7 sea) Byblos(2) Dakhla Oasis(9) Men-nefer(6) Menat Khufu(4).
-// Display: Kerma(5 sea) Kharga Oasis(11) Waset(1) Kebet(3). SKIP empty map_obj idx=8.
-// No pak river/inv_land/inv_sea points beyond the single disembark slot i=2 - omit
-// invasion_points_*; chain invasions fall back to the map entry tile (-1,-1), the favour pair
-// (events[] BY_FAVOUR, sent by the engine at Kingdom rating 0) to the map exit.
-// Events (pragmatic depth, Menat-style - KR leaves + key side effects, not every nested
-// grain/pomegranates/papyrus chain request):
-//   i=0  meatx9      y2m7  /8mo  Men-nefer  ok KR+6 / refuse KRx3 + chain egyptx8 (i=3) / late KRx3
-//   i=67 meatx2      y2m10 /6mo  Kerma      ok KR+1 / refuse KRx3 / late GIFTx168 (no-op deben)
-//   i=48 potteryx7   y2m2  /8mo  Kerma      ok NEW_TRADE Kerma / refuse KRx2 / late = refuse
-//   i=17 bricksx13   y5m4  /10mo Men-nefer  ok KR+5 / refuse KRx3 + chain egyptx9 (i=22) / late = refuse
-//   i=70 limestonex6 y6m4  /10mo Men-nefer  ok KR+7->GIFTx1514 / refuse KRx5 + chain egyptx6 (i=76) / late KRx3->GIFTx135
-//   Favour i=118->119: egyptx50->x50 when kingdom rating x 0 (Menat pattern, size 50 not 40).
-//   Recurring idle-gate (fire once/year from the pak start year, month match):
-//     i=43 linenx15 y14m2+ Menat Khufu (ok KR+3->GIFTx1385 / refuse KRx3 / late KRx3)
-//     i=78/79/80/82/83 LAND_TRADE_PROBLEM y8/28/45/63/90
-//     i=84/85/86/87 WAGE_INCREASE/DECREASE y7/13/22/35
-//     i=88/89/90 CONTAMINATED_WATER y4/30/85
-// SKIP: orphan KR/MSG chain_only i=5,31,41,92,95,101,103 (no inbound reference); i=81 clay
-//   pit flood (editor year=31073 junk, not a real landslide); NEW_TRADE i=14/i=37 and LOST
-//   i=23 (deep chain-only, unreachable from the wired roots at this depth); pak_allowed dump
-//   (editor artifact - only ROAD/CLEAR_LAND/CRUDE_HUT).
-// Tag_id scheme:
-//   1000 + i               chain-only leaves
-//   2000 + i               once calendar roots
-//   3000 + i*100 + year    recurring calendar roots
+// Mission 27 — Itjtawy, "A New Capital is Founded". Rank 10 (Pharaoh).
+//
+// Goals:     population 7500, culture 60, prosperity 60, monuments 33, kingdom 85,
+//            housing: 6 houses of level 17.
+// Start:     funds 8000, rescue loan 3000, debt interest 8% (normal difficulty).
+// Gods:      Osiris, Ptah, Seth, Bast (patron).
+// Monuments: sphinx, medium mudbrick pyramid, small mudbrick pyramid (burial goods: 10 grain,
+//            25 pottery, 12 beer, 12 luxury goods, 15 papyrus).
+// Trade:     nothing open at start; can open — Buhen (by sea), Byblos, Dakhla Oasis, Men-nefer,
+//            Menat Khufu; opened by events — Kerma (7 pottery delivered); display only — Kharga Oasis,
+//            Waset, Kebet.
+// Enemies:   Egyptian raids only after a refused request; Egyptian army (50, then 50 more) if the
+//            kingdom rating falls to 0. The scenario enemy is set to Libyan, but no Libyan army is sent.
+// Timeline:  y2m2 request 7 pottery (delivered: Kerma route opens); y2m7 request 9 meat (refused:
+//            raid 8); y2m10 request 2 meat; y5m4 request 13 bricks (refused: raid 9); y6m4 request
+//            6 limestone (delivered: gift from Pharaoh; refused: raid 6).
+//            Yearly from the given year: contaminated water from y4m7, y30m7, y85m7; wage rise from
+//            y7m10 and y22m6, wage cut from y13m2 and y35m9; land trade problems from y8m3, y28m4,
+//            y45m3, y63m3, y90m3; request 15 linen from y14m2 (only while no linen request is open).
+//            Other requests only move the kingdom rating.
+//
+// Notes for developers:
+// - Next mission is a choice between Iken (28) and Sawu (29), so there is no next_mission.
+// - The map has no invasion points: refuse raids start at the map entry point (tile -1,-1) and the
+//   Egyptian army enters at the map exit point.
+// - The original gives Kerma no goods, so its unlock is cosmetic (same as Men-nefer/Khmun in Kebet).
+// - Deeper nested request chains of the original are reduced to their kingdom-rating outcomes.
+// - tag_id: 1000 + i chained events, 2000 + i one-time calendar events, 3000 + i*100 + year yearly
+//   events, 7000 + i Egyptian army (i = event index in the original scenario, "pak i=" below).
 
 mission27 { // Itjtawy - A New Capital is Founded
 	map_file : "data/maps/m_027_itjtawy.map"

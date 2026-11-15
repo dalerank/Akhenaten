@@ -1,5 +1,37 @@
 log_info("akhenaten: mission 30 heh started")
 
+// Mission 30 — Heh (Semna), "The Gauntlet". Rank 10 (Pharaoh).
+//
+// Goals:     population 6000, culture 50, prosperity 45, monuments 15, kingdom 60, housing level 10.
+// Start:     funds 5500, no rescue loan, debt interest 20% (normal difficulty).
+// Gods:      Osiris (patron), Ra, Seth.
+// Monuments: mausoleum (burial goods: 16 weapons, 8 pottery, 8 beer, 16 gems).
+// Trade:     nothing open at start; can open — Buhen (by sea), Byblos (by sea), Dakhla Oasis, Pwenet;
+//            opened by events — Men-nefer, Itjtawy (troops delivered), Baki and Sawu (henna delivered);
+//            display only — Iken, Kebet, Menat Khufu, Toshka, Waset.
+// Enemies:   Kushite raids, mostly by sea; Egyptian army (60, then 60 more) if the kingdom rating
+//            falls to 0.
+// Timeline:  y0m7 gems price drops, then request 16 troops (sent: kingdom +2, Men-nefer route opens;
+//            otherwise kingdom -2 and the request repeats); y2m0 timber price drops, then request
+//            24 troops (same pattern, Itjtawy route opens); y3m4 request 27 troops (sent: gift of
+//            32 chickpeas; otherwise kingdom -9); y5m0 timber demand rises; y5m10 timber price rises,
+//            then request 40 henna (sent: Baki is conquered, Baki and Sawu routes open; otherwise
+//            kingdom -5 and the request repeats); y10m6 request 13 chickpeas; y12m9 gift of
+//            32 sandstone.
+//            Kushite raids: y6m11 16 by sea with 2 warships; y8m4 38 by sea with 6; y10m0 40 by sea
+//            with 4; y12m6 40 by land, and once it is beaten 20 by sea with 2; from y14m0 every 8 years
+//            16 by sea; y16m0 60 by sea with 6; y19m6 40 by land; y21m0 24 by sea; y40m0 72 by sea;
+//            y50m7 72 by sea with 6; y60m10 72 by sea with 7. Sea raids without a count bring no warships.
+//
+// Notes for developers:
+// - Raid location numbers follow the original events, land points first, then sea points: 1/2 = land
+//   points [80,123]/[112,71], 3/4 = sea points [127,84]/[95,4]; 9+ = sea point loc - 9 with the
+//   event's warships; any other number sails in from sea point [127,84] (mission30_apply_invasion_loc).
+// - The original gives Itjtawy, Men-nefer, Sawu and Baki no goods; goods are filled in so their
+//   unlocks are playable (Baki sells sandstone, as the briefing says).
+// - tag_id: 1000 + i chained events and requests, 2000 + i calendar events, 7000 + i Egyptian army
+//   (i = event index in the original scenario, "pak i=" in comments below).
+
 mission30 { // Heh (Semna) — The Gauntlet
 	map_file : "data/maps/m_030_heh.map"
 

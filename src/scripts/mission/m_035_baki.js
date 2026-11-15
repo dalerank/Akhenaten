@@ -1,12 +1,31 @@
 log_info("akhenaten: mission 35 baki started")
 
-// Empire id=1. HITTITE (pak). Gods Ra×2, Osiris, Ptah, Seth.
-// Funds 7000/2500/20. Rank 10.
-// Win: pop 10000 / culture 70 / prosperity 70 / monuments 35 (Mausoleum+Med+Small mudbrick 5+12+4 + burial 10 → 35) / kingdom 85 / housing 19.
-// Burial ×5 all 32. SKIP map_obj idx=11. Orphan routes 25/26.
-// Truncate i=18→0. Remap i=1 ok=85. Favour egypt 60→5→15→20→20: events[] BY_FAVOUR, sent by the engine at Kingdom rating 0.
-// Inv: land×1 + sea×1 packed → loc2=sea[0] via_sea (E3c); loc3/4/8 OOB navy→sea0.
-// Tag_id: 1000+i leaves; 2000+i roots; 3000+i*100+year recurring.
+// Mission 35 — Baki (Kuban), "The Glory of Egypt". Rank 10 (Pharaoh).
+//
+// Goals:     population 10000, culture 70, prosperity 70, monuments 35, kingdom 85, housing level 19.
+// Start:     funds 7000, rescue loan 2500, debt interest 20% (normal difficulty).
+// Gods:      Osiris, Ra (patron), Ptah, Seth.
+// Monuments: mausoleum, medium mudbrick pyramid, small mudbrick pyramid (burial goods: 32 each of
+//            weapons, pottery, linen, luxury goods, chariots).
+// Trade:     nothing open at start; can open — Abu, Pwenet, and by sea Itjtawy, Men-nefer, Qadesh,
+//            Rowarty, Waset; opened by events — Kerma (no route, cosmetic), Itjtawy; display only —
+//            Menat Khufu, Byblos, Gaza, Heh, Iken, Kerma, Knossos, Tyre.
+// Enemies:   no raids; Egyptian army (60, then 5, 15, 20, 20) if the kingdom rating falls to 0. The
+//            scenario enemy is set to Hittite, but no Hittite army is sent.
+// Timeline:  y1m4 request 12 gems; y2m1 request 16 henna for Gaza (sent or late: request 16 henna for
+//            Iken — sent: Iken is conquered and the Kerma route opens; late: 32 henna with the same
+//            outcome); y4m0 request 10 luxury goods; y4m5 request 24 game meat; y5m11 request 64 gems
+//            for Heh within 5 months (sent or late: kingdom -15, as in the original; refused: kingdom
+//            +10, then 24 henna for Gaza — sent: battle won, Itjtawy is conquered and opens for trade;
+//            refused or lost: battle lost at Heh; late: Iken is saved); y7m1 request 31 copper; yearly
+//            while none is open: 24 sandstone from y9m6, 20 gems for Heh from y10m0. Other outcomes
+//            only move the kingdom rating.
+//
+// Notes for developers:
+// - The original's "city saved" leaf loops back to the first gems request; the loop is cut there.
+// - The Egyptian army uses the original location numbers; 2 is the sea point [75,198].
+// - tag_id: 1000 + i chained events and requests, 2000 + i calendar events, 3000 + i*100 + year yearly
+//   requests, 7000 + i Egyptian army (i = event index in the original scenario, "pak i=" below).
 
 mission35 { // Baki (Kuban) — The Glory of Egypt
 	map_file : "data/maps/m_035_baki.map"

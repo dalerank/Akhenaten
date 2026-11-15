@@ -1,5 +1,35 @@
 log_info("akhenaten: mission 29 sawu started")
 
+// Mission 29 — Sawu (Mersa Gawasis), "On the Shores of the Red Sea". Rank 10 (Pharaoh).
+//
+// Goals:     population 8000, culture 65, prosperity 65, monuments 21, kingdom 75, housing level 17.
+// Start:     funds 8000, rescue loan 3000, debt interest 20% (normal difficulty).
+// Gods:      Ra, Ptah, Bast.
+// Monuments: mausoleum, small mudbrick pyramid (burial goods: 12 weapons, 4 pottery, 16 linen,
+//            16 papyrus).
+// Trade:     nothing open at start; can open — Dakhla Oasis, Itjtawy, Men-nefer (by sea), Menat Khufu,
+//            Pwenet (by sea), Waset, Dunqul Oasis; opened by events — Buhen (pottery delivered), Kerma
+//            (henna delivered); display only — Byblos, Iken, Jericho, Kebet, Kharga Oasis.
+// Enemies:   Bedouin and Libyan raids (all with the Libyan army), most of them by sea; Egyptian army
+//            (three waves of 40) if the kingdom rating falls to 0.
+// Timeline:  y1m1 request 2 weapons for Kebet; y2m2 request 22 pottery (sent or late: Buhen route
+//            opens); y2m8 gold mine collapse; y3m3 clay pit flood; y3m5 request 11 linen; yearly while
+//            no such request is open: 16 troops from y4m0, 24 henna from y7m9 (sent: Kerma route
+//            opens), 21 beer from y9m0, 15 beer from y11m4. Refusing the weapons or troops request:
+//            Kerma falls, kingdom -18, then a request for 17 weapons for Iken (sent or late: Iken is
+//            conquered). Raids: y4m10 9 by sea; y12m0 5 by sea with 2 warships; y20m0 8 by land;
+//            y23m11 8 by sea with 2 warships; from y30m0 every 8 months 9 by land; from y45m4 yearly
+//            9 by sea with 2 warships (both recurring raids wait while enemies are on the map).
+//            Other requests only move the kingdom rating.
+//
+// Notes for developers:
+// - Raid location numbers follow the original events, land points first, then sea points: 1 = land
+//   point [13,100], 2 = sea point [74,16]. The other numbers have no point; Libyan raids with them
+//   sail in from the sea point (see mission29_apply_invasion_loc).
+// - The original gives Buhen and Kerma no goods, so their unlocks are cosmetic.
+// - tag_id: 1000 + i chained events, 2000 + i one-time calendar events, 3000 + i*100 + year yearly
+//   requests, 7000 + i Egyptian army (i = event index in the original scenario, "pak i=" below).
+
 mission29 { // Sawu (Mersa Gawasis) — Shores of the Red Sea; briefing key = mersa_gawasis
 	map_file : "data/maps/m_029_sawu.map"
 

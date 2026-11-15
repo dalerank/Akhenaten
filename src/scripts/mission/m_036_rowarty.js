@@ -1,14 +1,32 @@
 log_info("akhenaten: mission 36 rowarty started")
 
-// Empire id=35. Enemy ASSYRIAN (pak; briefing Sea People = flavor). Gods Osiris/Ptah/Seth×2.
-// Funds 10000/5000/20. Rank 10. Win pop 7000 / C65 / Pr50 / M29 / K80 / house 10.
-// Monuments 26/4/3 = Mausoleum skin1 + Medium + Small Mudbrick (5+12+4 → trunc(6.32·√21+0.5)=29).
-// Briefing «pair of mausoleums + brick» = flavor; keep as-pak (Hetep pattern).
-// Burial pottery×12 beer×12 linen×8 luxury×4. next_mission -1 (no Hetep/Cleo).
-// SKIP map_obj idx=12. Routes 1–8 copy. Mycenae route 5.
-// Invasions: events[] no-op -> JS calendar; favour i=58..61 run in the engine (BY_FAVOUR at Kingdom rating 0); sea loc>=9 via_sea.
-// Henna i=6 ONLY_VIA (raid wipe unlock + calendar y8m3). Troops fail→i=56 via request_cleared.
-// Dump 2026-08-01. events[] engine + JS invasion poll.
+// Mission 36 — Rowarty (Avaris), "The Sea People". Rank 10 (Pharaoh).
+//
+// Goals:     population 7000, culture 65, prosperity 50, monuments 29, kingdom 80, housing level 10.
+// Start:     funds 10000, rescue loan 5000, debt interest 20% (normal difficulty).
+// Gods:      Osiris, Ptah, Seth (patron).
+// Monuments: mausoleum, medium mudbrick pyramid, small mudbrick pyramid (burial goods: 12 pottery,
+//            12 beer, 8 linen, 4 luxury goods).
+// Trade:     nothing open at start; can open — Abu (by sea), Byblos (by sea), Itjtawy; route-status
+//            events of the request chains can change routes; display only — Bahariya Oasis, Dakhla
+//            Oasis, Farafra Oasis, Gaza, Heh, Iken, Kerma, Men-nefer, Mycenae, Qadesh, Tyre.
+// Enemies:   Assyrian raids by sea (the briefing's Sea People); favour armies of 30 in four waves
+//            (Egyptian, Egyptian, scenario enemy, Egyptian) if the kingdom rating falls to 0.
+// Timeline:  raids by sea: y2m8 38 with 5 warships (once beaten: request 42 henna, otherwise that
+//            request comes at y8m3); y3m1 20 with 2; y5m8 35 with 6; y7m1 44 with 8; yearly from
+//            y45m10 56 with 6. Requests: y6m9 10 grain; y10m11 93 henna; y22m1 80 troops; y34m7
+//            19 oil; recurring from y23m5 6 grain, y24m9 6 grain, y39m2 6 timber, y42m4 6 weapons,
+//            y52m4 70 troops (not sent: raid 72 by sea with 12 warships). The henna, oil and troops
+//            requests lead into chained requests whose outcomes conquer cities, open or lose routes,
+//            bring gifts (sandstone, limestone, granite, oil) or move the kingdom rating.
+//
+// Notes for developers:
+// - events[] holds the original event table and is run by the engine. Its invasion entries are
+//   no-ops except the favour armies, so the timed raids and the troops-70 raid are started from JS.
+// - Raid location numbers: 1..8 = land points, 9..16 = sea points (mission36_land / mission36_sea).
+// - The briefing speaks of two mausoleums; the original monument slots are kept (mausoleum, medium
+//   and small mudbrick pyramids).
+// - next_mission is -1: the campaign ends here.
 
 mission36 { // Rowarty (Avaris) — The Sea People
 	map_file : "data/maps/m_036_rowarty.map"

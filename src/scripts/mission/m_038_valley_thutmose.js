@@ -1,5 +1,28 @@
 log_info("akhenaten: mission 38 valley thutmose started")
 
+// Mission 38 — Thutmose in the Valley (Deir el-Medina), "The First Tomb". Rank 5 (Royal Mayor).
+//
+// Goals:     culture 35, prosperity 40, monuments 13, kingdom 65, housing level 14 (no population
+//            goal).
+// Start:     funds 8000, rescue loan 2500, debt interest 9% (normal difficulty).
+// Gods:      Osiris, Ptah, Bast.
+// Monuments: small royal tomb (unlocked during the mission, see below).
+// Trade:     nothing open at start; can open — Itjtawy, Kerma, Men-nefer, Waset, Enkomi (all by sea),
+//            Pwenet; two events open further routes; display only — Menat Khufu, Sawu, Tyre, Byblos, Abu.
+// Enemies:   no raids; Pharaoh's army of 13 if the kingdom rating falls to 0. The scenario enemy is
+//            set to Kushite, but no Kushite army is sent.
+// Timeline:  y1m8 gift of 16 beer, then request 5 henna; y4m3 request 5 linen (sent: a route opens;
+//            late: gift of 5 oil); y4m6 failed flood; y5m4 request 7 paint (sent or late: straw price
+//            drops; refused: it rises); y6m0 request 12 henna (sent or late: a route opens); y8m1
+//            request 6 bricks; y8m3 request 5 oil; y9m7 clay pit flood; y10m4 request 8 clay; y13m3
+//            request 8 grain. Other outcomes move the kingdom rating.
+//            Tutorial unlocks: lamp workshop, paint workshop and artisans guild at population 400;
+//            small royal tomb at population 800.
+//
+// Notes for developers:
+// - events[] holds the original event table and is run by the engine.
+// - The tutorial population thresholds are provisional until the original tutorial beats are dumped.
+
 mission38 { // Thutmose in the Valley — The First Tomb
 	map_file : "data/maps/m_038_valley_thutmose.map"
 

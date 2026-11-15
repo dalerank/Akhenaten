@@ -1,14 +1,36 @@
 log_info("akhenaten: mission 37 hetepsensusret started")
 
-// Empire id=23. Enemy ASSYRIAN (pak). Gods Osiris/Ra/Ptah/Bast x2. Rank 10.
-// Funds 2000/3000/20. Win pop 12000 / C80 / Pr80 / M70 / K75 / house lvl 14.
-// Monuments 27/7/5 = Mausoleum skin2 + Grand Mudbrick Complex + Large Mudbrick
-//   (5+80+26 + burial 10 → trunc(6.32·√121+0.5)=70). Goal 70 = pak. Briefing "true>Khufu" = flavor.
-// Burial x5 all 32 (pottery/linen/luxury/papyrus/weapons). next_mission -1 (no Cleo).
-// SKIP map_obj idx=11. Routes 1-11 copy. Farafra NEW_TRADE cosmetic (no route).
-// Favour egypt x40; pak inv empty -> land-proxy [80,40] near entry.
-// Truncate junk late>=50 on non-request; defeat 0/998/999 -> -1.
-// Dump 2026-08-01. events[] engine (Seti/Tanis pattern).
+// Mission 37 — Hetepsensusret (Kahun), "The Glory of Pharaoh". Rank 10 (Pharaoh).
+//
+// Goals:     population 12000, culture 80, prosperity 80, monuments 70, kingdom 75, housing level 14.
+// Start:     funds 2000, rescue loan 3000, debt interest 20% (normal difficulty).
+// Gods:      Osiris, Ra, Ptah, Bast (patron).
+// Monuments: mausoleum, grand mudbrick pyramid complex, large mudbrick pyramid (burial goods: 32 each
+//            of weapons, pottery, linen, luxury goods, papyrus).
+// Trade:     nothing open at start; can open — Baki, Dakhla Oasis; calendar events open further
+//            routes (y15m8, y16m0, y25m2, y35m8); display only — Abu, Bahariya Oasis, Farafra Oasis,
+//            Itjtawy, Knossos, Men-nefer, Menat Khufu, Mycenae, Pwenet, Qadesh, Rowarty, Tyre, Waset.
+// Enemies:   no raids; Egyptian army (three waves of 40) if the kingdom rating falls to 0. The
+//            scenario enemy is set to Assyrian, but no Assyrian army is sent.
+// Timeline:  requests y0m11 8 timber, y1m8 500 deben, y2m8 11 game meat, y5m1 10 bricks, y7m3
+//            12 papyrus, y13m8 32 papyrus, y45m1 32 papyrus; recurring requests from y9m6 18 fish,
+//            y11m0 26 reeds, y22m3 24 grain; gifts of bricks y17m2 and recurring from y26m0, of
+//            limestone recurring from y46m6; failed floods y20m1, y24m1 (then a fish request) and
+//            y49m3 (then a game meat request); y49m5 grain and recurring from y49m7 fish requests
+//            (sent: gifts of limestone, sandstone, linen); perfect floods
+//            recurring from y40m3 (then a luxury goods request); troops requests y30m2 15, y31m6 36,
+//            y34m0 60, y36m7 36, y55m0 32 (a lost battle brings a message); demand rises for
+//            limestone, sandstone (y20m10) and papyrus (y18m8, y60m8); y60m0 contaminated water,
+//            then a repeating papyrus request. Most other outcomes move the kingdom rating.
+//
+// Notes for developers:
+// - events[] holds the original event table and is run by the engine; this file has no event code.
+// - The original map has no invasion points; invasion_points_land [80,40] near the entry is a stand-in
+//   for the Egyptian army.
+// - The briefing promises a pyramid larger than Khufu's; the original monument slots are kept.
+// - Gods are left to the map's religion data: the script API can only mark a god known, which would
+//   demote Bast from patron.
+// - next_mission is -1: the campaign ends here.
 
 mission37 { // Hetepsensusret (Kahun) — The Glory of Pharaoh
 	map_file : "data/maps/m_037_hetepsensusret.map"

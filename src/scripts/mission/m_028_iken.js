@@ -1,5 +1,39 @@
 log_info("akhenaten: mission 28 iken started")
 
+// Mission 28 — Iken (Mirgissa), "Into Nubia". Rank 10 (Pharaoh).
+//
+// Goals:     population 6000, culture 45, prosperity 40, monuments 11, kingdom 80, housing level 10.
+// Start:     funds 7000, rescue loan 3000, no debt interest (normal difficulty).
+// Gods:      Osiris, Seth, Bast.
+// Monuments: large obelisk.
+// Trade:     nothing open at start; can open — Buhen, Kebet, Men-nefer, Sawu, Waset (all by sea),
+//            Dakhla Oasis, Farafra Oasis; opened by events — Byblos (y3m0), Kerma (after the Hittite
+//            raid series), Sawu (linen delivered), Waset (weapons); display only — Kharga Oasis,
+//            Menat Khufu.
+// Enemies:   Bedouin raids (Libyan army), Hittite raids (some by sea), one Egyptian raid after a
+//            refused request; Egyptian army (three waves of 40) if the kingdom rating falls to 0.
+// Timeline:  y0m2 request 6 game meat (sent: gift of 8 copper; refused: granite price rises);
+//            y0m9 Kebet buys less copper; y1m1 request 200 copper in one month — whatever the outcome,
+//            a Hittite raid series follows, each wave after the previous one is beaten: 32 by sea
+//            with 5 warships, 64, 72, 24 by sea with 6 warships, 96; after the last, kingdom +25 and
+//            the Kerma route opens; y1m8 request 1168 oil (sent: gift of 8 copper; refused: Egyptian
+//            raid 64); y2m3 request 7 barley (sent: gift of 16 copper); y2m8 Bedouin raid 12;
+//            yearly from y2m8 request 10 linen while none is open (sent: gift of 8 copper, Sawu route
+//            opens, Sawu buys more copper); y3m0 Byblos route opens; y7m7 request 15 weapons (sent or
+//            late: Waset route opens; refused: Sawu is besieged, loses its route, then reopens it);
+//            y10m7 Hittite raid 12 by sea with 2 warships; Bedouin raids y12m9 64, y15m3 64,
+//            y20m10 64, y23m7 96, y27m0 96.
+//
+// Notes for developers:
+// - Raid location numbers follow the original events: 1 = land point [221,187], 2 = [152,100]; 3..8
+//   have no point, so those raids enter at the map entry point; 9 = sea point [109,148]
+//   (see mission28_loc_tile / mission28_hittite_raid).
+// - The original gives Byblos no goods; timber and luxury goods are filled in so its unlock is playable.
+// - Route events name the route city (Sawu, Kerma, Kebet); the city named in the original event is
+//   often wrong.
+// - tag_id: 1000 + i chained events, 2000 + i calendar events, 7000 + i Egyptian army
+//   (i = event index in the original scenario, "pak i=" in comments below).
+
 mission28 { // Iken (Mirgissa) — Into Nubia; briefing key = mirgissa
 	map_file : "data/maps/m_028_iken.map"
 

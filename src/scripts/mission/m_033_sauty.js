@@ -1,15 +1,32 @@
 log_info("akhenaten: mission 33 sauty started")
 
-// Empire id=21. HYKSOS (pak BARBARIAN ignored). Gods Osiris×2, Ra, Seth.
-// Funds Normal 9000 / loan 0 / debt 20. Rank 10.
-// Win: pop 6500 / culture 70 / prosperity 75 / monuments 40 (3× Medium Mudbrick 36 + burial 4 → trunc(6.32·√40+0.5)=40) / kingdom 60 / housing 14.
-// Burial: pottery 32, linen 16, luxury 16, chariots 8.
-// SKIP empty map_obj idx=7. Routes 1–10 copy. loan=0 → rescue_loans all 0.
-// Calendar: i=0 FELL remap Heh (dump Pwenet); i=1 FELL remap Iken (dump Itjtawy) → pom chain;
-//   i=10 oil×1000 y7m7; i=46 favour egypt×50 → i=47 chain×50.
-// Loops 2↔4 / 13↔14 / 24↔25 / 40↔44↔45: one bounce then advance (once flags).
-// DEMAND amounts from pak (38/47/17/7/6). i=43 meat DEMAND recurring. ok=996 = END.
-// Tag_id: 1000+i leaves; 2000+i roots.
+// Mission 33 — Sauty (Lykopolis), "Egypt Reclaimed". Rank 10 (Pharaoh).
+//
+// Goals:     population 6500, culture 70, prosperity 75, monuments 40, kingdom 60, housing level 14.
+// Start:     funds 9000, no rescue loan, debt interest 20% (normal difficulty).
+// Gods:      Osiris (patron), Ra, Seth.
+// Monuments: three medium mudbrick pyramids (burial goods: 32 pottery, 16 linen, 16 luxury goods,
+//            8 chariots).
+// Trade:     nothing open at start; can open — Bubastis, Itjtawy, Men-nefer (all by sea), Menat Khufu;
+//            events also open Men-nefer, Pwenet and Kerma (the last two have no goods here); display
+//            only — Heh, Iken, Kerma, Pwenet, Rowarty, Sharuhen, Waset.
+// Enemies:   no raids; Egyptian army (50, then 50 more) if the kingdom rating falls to 0. The scenario
+//            enemy is set to Hyksos, but no Hyksos army is sent.
+// Timeline:  y1m0 Heh falls to the enemy; y3m0 Iken falls and Men-nefer asks for 16 pomegranates —
+//            whatever the outcome the Men-nefer route opens, then a request for 32 pomegranates (sent:
+//            gift of 2500 oil, Itjtawy buys more linen, linen price rises; otherwise the Menat Khufu
+//            route is lost); y7m7 request 1000 oil, followed by 1500, 2000 and 2500 oil while they are
+//            sent. Any failed oil request starts a long troops-and-henna chain: refusals make Menat
+//            Khufu and Kerma fall and cost the Men-nefer and Pwenet routes; deliveries conquer
+//            Men-nefer, Menat Khufu and Itjtawy and open the Pwenet and Kerma routes; conquering
+//            Itjtawy makes Men-nefer buy more meat again and again.
+//
+// Notes for developers:
+// - The original's chained requests contain loops (pomegranates 2/4, oil 13/14, henna 24/25 and
+//   40/44/45); each loop bounces once and then moves on (the *_bounce_done / *_loop_done flags).
+// - The original "city fell" events at y1 and y3 name Pwenet and Itjtawy; the code uses Heh and Iken.
+// - tag_id: 1000 + i chained events and requests, 2000 + i calendar events, 7000 + i Egyptian army
+//   (i = event index in the original scenario, "pak i=" in comments below).
 
 mission33 { // Sauty (Lykopolis) — Egypt Reclaimed
 	map_file : "data/maps/m_033_sauty.map"

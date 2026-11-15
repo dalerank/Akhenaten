@@ -1,15 +1,36 @@
 log_info("akhenaten: mission 32 khmun started")
 
-// Empire id=21. Hyksos reclaim (ENEMY_5_HYKSOS; pak enemy_id BARBARIAN ignored). Gods Ra×2, Ptah, Seth.
-// Funds Normal 9000 / loan 3500 / debt 20. Rank 10.
-// Win: pop 6000 / culture 55 / prosperity 50 / monuments 18 (pak; small mudbrick weight 4 + burial goods 4 → trunc(6.32·√8+0.5)=18) / kingdom 75 / housing 14.
-// Monuments pak first=3 Small Mudbrick — building allowed.
-// Burial ×5: weapons 5, beer 20, linen 32, luxury 20, papyrus 10.
-// SKIP empty map_obj idx=9. Orphan routes 5/10 — empire display only.
-// i=0/1 CITY_STATUS subtype0 loc=7/8 → FELL Heh/Iken (Nubian beat); trade opens via cost_to_open.
-// i=23 subtype2 → NEW_TRADE Kerma (cosmetic; route=0). Gift i=16 limestone×64; i=17 pottery×20.
+// Mission 32 — Khmun (Hermopolis), "Egypt Reclaimed". Rank 10 (Pharaoh).
 //
-// Tag_id: 1000+i chain leaves; 2000+i once roots; 3000+i*100+year recurring.
+// Goals:     population 6000, culture 55, prosperity 50, monuments 18, kingdom 75, housing level 14.
+// Start:     funds 9000, rescue loan 3500, debt interest 20% (normal difficulty).
+// Gods:      Ra (patron), Ptah, Seth.
+// Monuments: small mudbrick pyramid (burial goods: 5 weapons, 20 beer, 32 linen, 20 luxury goods,
+//            10 papyrus).
+// Trade:     nothing open at start; can open — Itjtawy (by sea), Tyre (by sea), Pwenet, Sharuhen,
+//            Men-nefer; opened by events — Kerma (y5m0 and after Itjtawy is conquered; it has no route,
+//            so the unlock is cosmetic); display only — Bubastis, Gaza, Heh, Iken, Menat Khufu, Rowarty,
+//            Sawu, Waset.
+// Enemies:   Hyksos raids tied to the henna requests; Egyptian army (70, then 35) if the kingdom rating
+//            falls to 0.
+// Timeline:  y1m0 Heh falls to the enemy; y2m0 request 16 henna for Men-nefer (sent: Iken buys more
+//            beer, then Hyksos raid 16; otherwise the raid comes at once); y3m3 Iken falls; y5m0 Kerma
+//            route opens.
+//            Beating the raid 16 brings a request for 32 troops for Itjtawy (sent: gift of 16 papyrus,
+//            then request 32 henna; otherwise Kerma buys less beer). Henna 32 sent: Itjtawy is
+//            conquered, Kerma route opens, Hyksos raid 48; refused: Hyksos raid 32, and once it is
+//            beaten the henna 32 request again; late: request 16 henna with the same outcomes.
+//            Beating the raid 48 brings a request for 48 henna for Khmun (sent: Iken is conquered;
+//            then gifts of 64 limestone and 20 pottery). After the pottery gift: Hyksos raids 29 and 39.
+//
+// Notes for developers:
+// - The map has no invasion points. Raid location 1 uses the entry point [16,53] and 2 the
+//   disembark point [75,47] (mission32_loc_tile).
+// - The original loops raids 29 and 39 into each other; the loop is cut after one pass (inv_loop_done).
+// - EVENT_TYPE_INVASION leaves are no-ops; the matching raids are started from JS
+//   (mission32_on_request_cleared / mission32_invasion_followups).
+// - tag_id: 1000 + i chained events and requests, 2000 + i calendar events, 7000 + i Egyptian army
+//   (i = event index in the original scenario, "pak i=" in comments below).
 
 mission32 { // Khmun (Hermopolis) — Egypt Reclaimed
 	map_file : "data/maps/m_032_khmun.map"
