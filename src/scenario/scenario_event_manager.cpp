@@ -1630,17 +1630,25 @@ bool invasion_parent_by_favour(const event_ph_t &e) {
 }
 
 // OG scenario_events.c invasion_warning_for: a reminder by months left, else the announcement in the event's month.
-int invasion_warning_for(const event_ph_t &e, int months_left) {
+int invasion_warning_for(int months_since, int months_left) {
     const invasion_warning_rule *rules = invasion_warning_rules();
     for (int w = 1; w < invasion_warning_count; w++) {
         if (rules[w].months_left == months_left) {
             return w;
         }
     }
-    if (months_since_event_date(e) != 0 || months_left <= 1) {
+    if (months_since != 0 || months_left <= 1) {
         return -1;
     }
     return 0;
+}
+
+void post_invasion_warning(const event_ph_t &e, int w, bool popup) {
+    const int invader = std::clamp<int>(e.item.value, EVENT_INVADER_ENEMY, EVENT_INVADER_BEDUINS);
+    const invader_phrases_t& phrases = invader_phrases(invader);
+    const int text = invasion_parent_by_favour(e) ? phrases.low_kingdom : phrases.no_reason;
+    city_message_post_full(popup, invasion_warning_rules()[w].message[invader - EVENT_INVADER_ENEMY], &e, e.parent_id,
+      phrases.title, phrases.warnings[w], text, e.event_id, 0);
 }
 
 bool invasion_has_formation(int event_id) {
@@ -1723,12 +1731,25 @@ static void invasion_attack(event_ph_t &e) {
     logs::info("[invasion-event] attack event=%d invader=%d size=%d route=%d seq=%d", e.event_id, e.item.value,
                e.amount.value, e.location_fields[0], seq);
     if (seq) {
-        city_message_post_full(true, "message_attack_alert", &e, e.parent_id, phrases.title, phrases.city_attacked,
-          invasion_parent_by_favour(e) ? phrases.low_kingdom : phrases.no_reason, seq, 0);
+        scenario_invasion_post_attack_alert(e, seq);
     } else {
         e.is_active = false;
     }
     g_scenario.events.process_event(e.on_completed_action, true, EVENT_ACTION_COMPLETED, e.event_id);
+}
+
+void scenario_invasion_post_attack_alert(const event_ph_t &e, int invasion_sequence) {
+    const invader_phrases_t& phrases = invader_phrases(e.item.value);
+    city_message_post_full(true, "message_attack_alert", &e, e.parent_id, phrases.title, phrases.city_attacked,
+      invasion_parent_by_favour(e) ? phrases.low_kingdom : phrases.no_reason, invasion_sequence, 0);
+}
+
+int scenario_invasion_post_warning(const event_ph_t &e, int months_since) {
+    const int w = invasion_warning_for(months_since, e.months_initial - months_since);
+    if (w >= 0) {
+        post_invasion_warning(e, w, months_since == 0);
+    }
+    return w;
 }
 
 void scenario_invasion_landing_message(int invasion_id, tile2i tile, int invasion_sequence) {
@@ -1768,7 +1789,8 @@ void event_manager_t::process_invasion(event_ph_t &e) {
         return;
     }
 
-    const int w = invasion_warning_for(e, months_left);
+    const int months_since = months_since_event_date(e);
+    const int w = invasion_warning_for(months_since, months_left);
     if (w < 0) {
         return;
     }
@@ -1777,13 +1799,7 @@ void event_manager_t::process_invasion(event_ph_t &e) {
         return;
     }
     e.invasion_warnings_shown |= shown;
-
-    const int invader = std::clamp<int>(e.item.value, EVENT_INVADER_ENEMY, EVENT_INVADER_BEDUINS);
-    const invader_phrases_t& phrases = invader_phrases(invader);
-    const bool popup = months_since_event_date(e) == 0;
-    const int text = invasion_parent_by_favour(e) ? phrases.low_kingdom : phrases.no_reason;
-    city_message_post_full(popup, invasion_warning_rules()[w].message[invader - EVENT_INVADER_ENEMY], &e, e.parent_id,
-      phrases.title, phrases.warnings[w], text, e.event_id, 0);
+    post_invasion_warning(e, w, months_since == 0);
     logs::info("[invasion-event] warning event=%d months_left=%d slot=%d", e.event_id, months_left, w);
 }
 

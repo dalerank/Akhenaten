@@ -7,6 +7,7 @@
 #include "empire/empire.h"
 #include "core/variant.h"
 #include "core/profiler.h"
+#include "core/random.h"
 #include "game/game.h"
 
 #include <algorithm>
@@ -187,6 +188,20 @@ void __city_request_set_defeat_action(int master_tag, int slave_tag) {
 }
 ANK_FUNCTION_2(__city_request_set_defeat_action)
 
+// The event an OG invasion would have for a mission script's raid: its messages read invader, size and months.
+static event_ph_t script_invasion_event(const bvariant_map &args) {
+    event_ph_t e = {};
+    e.type = EVENT_TYPE_INVASION;
+    e.event_id = args.i32("invasion_id", 0);
+    e.parent_id = -1;
+    e.item.value = (int16_t)args.i32("invader", EVENT_INVADER_ENEMY);
+    e.amount.value = (int16_t)args.i32("size", 0);
+    e.months_initial = (int16_t)args.i32("months_initial", 0);
+    e.city_id = -1;
+    e.location_fields = {(int16_t)args.i32("location", 0), -1, -1, -1};
+    return e;
+}
+
 int ANK_FUNCTION_UNIFIED(__city_start_foreign_army_invasion)(const bvariant_map &args) {
     invasion_opts_t opts;
     opts.mode = (e_attack_faction)args.i32("mode", ATTACK_TYPE_ENEMIES);
@@ -203,6 +218,9 @@ int ANK_FUNCTION_UNIFIED(__city_start_foreign_army_invasion)(const bvariant_map 
     opts.via_sea = args.i32("via_sea", 0) != 0;
     opts.sea_point_index = (int8_t)args.i32("sea_point", -1);
     opts.warships = args.i32("warships", 0);
+    // With `invader` the OG invasion_attack alert (the invader's phrases) replaces the generic one.
+    const int invader = args.i32("invader", 0);
+    opts.announce = invader == 0;
     // Optional spawn kind (favour → INVASION_KIND_KINGDOME). Omitted → derive.
     {
         const int kind_arg = args.i32("kind", -1);
@@ -210,8 +228,26 @@ int ANK_FUNCTION_UNIFIED(__city_start_foreign_army_invasion)(const bvariant_map 
             opts.kind = (e_invasion_spawn_kind)kind_arg;
         }
     }
-    return scenario_invasion_start(opts);
+    const int seq = scenario_invasion_start(opts);
+    if (seq && invader) {
+        scenario_invasion_post_attack_alert(script_invasion_event(args), seq);
+    }
+    return seq;
 }
+
+// A mission script's raid in its warning months: the OG warning due `months_since` months after the raid's date.
+int ANK_FUNCTION_UNIFIED(__city_invasion_warning)(const bvariant_map &args) {
+    return scenario_invasion_post_warning(script_invasion_event(args), args.i32("months_since", 0));
+}
+
+// OG scenario_value_randomize on the game RNG: an event value [value, fixed, min, max] as a scenario reset rolls it.
+int __city_roll_event_value(int value, int fixed, int min, int max) {
+    int16_t field[4] = {(int16_t)value, (int16_t)fixed, (int16_t)min, (int16_t)max};
+    int32_t seed = 1;
+    randomize_event_fields(field, &seed);
+    return field[0];
+}
+ANK_FUNCTION_4(__city_roll_event_value)
 
 int __city_invasion_history_count() {
     return g_invasions.history_entry_count();

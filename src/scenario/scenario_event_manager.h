@@ -267,6 +267,10 @@ ANK_CONFIG_STRUCT(event_ph_t, type, time, item, amount, tag_id, months_initial, 
 // OG event_helpers.c scenario_event_is_running / scenario_event_months_left for an invasion event.
 bool scenario_invasion_is_running(const event_ph_t& e);
 int scenario_invasion_months_left(const event_ph_t& e);
+// OG scenario_event_process_invasion messages for an invasion event `e` (item = invader, months_initial set):
+// the warning due `months_since` months after its date (returns its slot, -1 = none), and the attack alert.
+int scenario_invasion_post_warning(const event_ph_t& e, int months_since);
+void scenario_invasion_post_attack_alert(const event_ph_t& e, int invasion_sequence);
 
 struct mission_id_t;
 struct event_manager_t {
