@@ -113,6 +113,35 @@ struct std::hash<auto_phrase> {
 using auto_phrases_t = stable_array<auto_phrase>;
 auto_phrases_t ANK_VARIABLE(eventmsg_auto_phrases);
 
+struct invader_phrases_t {
+    int title;
+    std::array<int, 5> warnings;
+    int city_attacked;
+    int no_reason;
+    int low_kingdom;
+    int disembarked = -1; // OG scenario_invasion_landing_message; -1: no message
+};
+ANK_CONFIG_STRUCT(invader_phrases_t, title, warnings, city_attacked, no_reason, low_kingdom, disembarked)
+
+struct invader_properties_t {
+    invader_phrases_t phrases;
+};
+ANK_CONFIG_STRUCT(invader_properties_t, phrases)
+
+invader_properties_t ANK_VARIABLE(invader_enemy);
+invader_properties_t ANK_VARIABLE(invader_egypt);
+invader_properties_t ANK_VARIABLE(invader_pharaoh);
+invader_properties_t ANK_VARIABLE(invader_bedouins);
+
+static const invader_phrases_t& invader_phrases(int invader) {
+    static const std::array<const invader_properties_t*, EVENT_INVADER_MAX - EVENT_INVADER_ENEMY> invaders
+      = {&invader_enemy, &invader_egypt, &invader_pharaoh, &invader_bedouins};
+    if (invader < EVENT_INVADER_ENEMY || invader >= EVENT_INVADER_MAX) {
+        invader = EVENT_INVADER_ENEMY;
+    }
+    return invaders[invader - EVENT_INVADER_ENEMY]->phrases;
+}
+
 events_data_t g_scenario_events;
 
 declare_console_command_p(run_scenario_event) {
@@ -1352,18 +1381,11 @@ void event_manager_t::process_event(int id, bool via_event_trigger, int chain_ac
 
     case EVENT_TYPE_FOREIGN_ARMY_ATTACK_WARNING: {
             const bool bedouin = event.item.value == EVENT_INVADER_BEDUINS;
-            const int title = bedouin ? PHRASE_bedouin_attacks_you_title
-                                      : PHRASE_foreign_army_attacks_you_title;
-            const int announcement = event.reasons[0]
-                ? event.reasons[0]
-                : (bedouin ? PHRASE_bedouin_attacks_you_initial_announcement
-                           : PHRASE_foreign_army_attacks_you_initial_announcement);
-            const int reason = event.reasons[1]
-                ? event.reasons[1]
-                : (bedouin ? PHRASE_bedouin_attacks_you_no_reason_A
-                           : PHRASE_foreign_army_attacks_you_no_reason_A);
-            city_message_post_full(true, "message_template_general", &event, caller_event_id,
-                title, announcement, reason, id, 0);
+            const invader_phrases_t& phrases = invader_phrases(bedouin ? EVENT_INVADER_BEDUINS : EVENT_INVADER_ENEMY);
+            const int announcement = event.reasons[0] ? event.reasons[0] : phrases.warnings[0];
+            const int reason = event.reasons[1] ? event.reasons[1] : phrases.no_reason;
+            city_message_post_full(true, "message_template_general", &event, caller_event_id, phrases.title,
+              announcement, reason, id, 0);
         }
         break;
 
@@ -1590,48 +1612,6 @@ const invasion_warning_rule *invasion_warning_rules() {
 constexpr int invasion_warning_count = 5;
 constexpr int invasion_bribe_kingdom = 15;
 
-struct invasion_phrase_set {
-    int title;
-    int warning[invasion_warning_count];
-    int alert;
-    int text;
-    int text_by_favour;
-    int landed; // OG scenario_invasion_landing_message; 0: no message
-};
-
-const invasion_phrase_set &invasion_phrases(int invader) {
-    static const invasion_phrase_set enemy = {PHRASE_foreign_army_attacks_you_title,
-      {PHRASE_foreign_army_attacks_you_initial_announcement, PHRASE_foreign_army_attacks_you_2year_reminder,
-        PHRASE_foreign_army_attacks_you_1year_reminder, PHRASE_foreign_army_attacks_you_6month_warning,
-        PHRASE_foreign_army_attacks_you_1month_Warning},
-      PHRASE_foreign_army_attacks_you_city_attacked_alert, PHRASE_foreign_army_attacks_you_no_reason_A,
-      PHRASE_foreign_army_attacks_you_no_reason_A, PHRASE_foreign_army_attacks_you_disembarked_alert};
-    static const invasion_phrase_set egypt = {PHRASE_eg_city_attacks_you_title,
-      {PHRASE_eg_city_attacks_you_initial_announcement, PHRASE_eg_city_attacks_you_2year_reminder,
-        PHRASE_eg_city_attacks_you_1year_reminder, PHRASE_eg_city_attacks_you_6month_warning,
-        PHRASE_eg_city_attacks_you_1month_warning},
-      PHRASE_eg_city_attacks_you_city_attacked_alert, PHRASE_eg_city_attacks_you_no_reason_A,
-      PHRASE_eg_city_attacks_you_because_of_low_kingdom, PHRASE_eg_city_attacks_you_disembarked_alert};
-    static const invasion_phrase_set pharaoh = {PHRASE_pharaoh_attacks_you_title,
-      {PHRASE_pharaoh_attacks_you_initial_announcement, PHRASE_pharaoh_attacks_you_2year_reminder,
-        PHRASE_pharaoh_attacks_you_1year_reminder, PHRASE_pharaoh_attacks_you_6month_warning,
-        PHRASE_pharaoh_attacks_you_1month_warning},
-      PHRASE_pharaoh_attacks_you_city_attacked_alert, PHRASE_pharaoh_attacks_you_no_reason_A,
-      PHRASE_pharaoh_attacks_you_because_of_low_kingdom, 0};
-    static const invasion_phrase_set bedouin = {PHRASE_bedouin_attacks_you_title,
-      {PHRASE_bedouin_attacks_you_initial_announcement, PHRASE_bedouin_attacks_you_2year_reminder,
-        PHRASE_bedouin_attacks_you_1year_reminder, PHRASE_bedouin_attacks_you_6month_warning,
-        PHRASE_bedouin_attacks_you_1month_warning},
-      PHRASE_bedouin_attacks_you_city_attacked_alert, PHRASE_bedouin_attacks_you_no_reason_A,
-      PHRASE_bedouin_attacks_you_no_reason_A, PHRASE_bedouin_attacks_you_disembarked_alert};
-    switch (invader) {
-    case EVENT_INVADER_EGYPT: return egypt;
-    case EVENT_INVADER_PHARAOH: return pharaoh;
-    case EVENT_INVADER_BEDUINS: return bedouin;
-    default: return enemy;
-    }
-}
-
 int months_since_event_date(const event_ph_t &e) {
     const game_date_t now = game.simtime.date();
     return (now.year - e.time.year) * 12 + now.month - e.time.month;
@@ -1719,7 +1699,7 @@ int scenario_invasion_months_left(const event_ph_t& e) {
 
 // OG scenario_events.c invasion_attack.
 static void invasion_attack(event_ph_t &e) {
-    const invasion_phrase_set &phrases = invasion_phrases(e.item.value);
+    const invader_phrases_t& phrases = invader_phrases(e.item.value);
     const bool bedouin = e.item.value == EVENT_INVADER_BEDUINS;
 
     invasion_opts_t opts;
@@ -1743,8 +1723,8 @@ static void invasion_attack(event_ph_t &e) {
     logs::info("[invasion-event] attack event=%d invader=%d size=%d route=%d seq=%d", e.event_id, e.item.value,
                e.amount.value, e.location_fields[0], seq);
     if (seq) {
-        city_message_post_full(true, "message_attack_alert", &e, e.parent_id, phrases.title, phrases.alert,
-                               phrases.text, seq, 0);
+        city_message_post_full(true, "message_attack_alert", &e, e.parent_id, phrases.title, phrases.city_attacked,
+          phrases.no_reason, seq, 0);
     } else {
         e.is_active = false;
     }
@@ -1759,12 +1739,12 @@ void scenario_invasion_landing_message(int invasion_id, tile2i tile, int invasio
     if (!e || e->type != EVENT_TYPE_INVASION) {
         return;
     }
-    const invasion_phrase_set& phrases = invasion_phrases(e->item.value);
-    if (!phrases.landed) {
+    const invader_phrases_t& phrases = invader_phrases(e->item.value);
+    if (phrases.disembarked < 0) {
         return;
     }
-    const int text = invasion_parent_by_favour(*e) ? phrases.text_by_favour : phrases.text;
-    city_message_post_full(true, "message_attack_alert", e, e->parent_id, phrases.title, phrases.landed, text,
+    const int text = invasion_parent_by_favour(*e) ? phrases.low_kingdom : phrases.no_reason;
+    city_message_post_full(true, "message_attack_alert", e, e->parent_id, phrases.title, phrases.disembarked, text,
       invasion_sequence, tile.grid_offset());
 }
 
@@ -1799,11 +1779,11 @@ void event_manager_t::process_invasion(event_ph_t &e) {
     e.invasion_warnings_shown |= shown;
 
     const int invader = std::clamp<int>(e.item.value, EVENT_INVADER_ENEMY, EVENT_INVADER_BEDUINS);
-    const invasion_phrase_set &phrases = invasion_phrases(invader);
+    const invader_phrases_t& phrases = invader_phrases(invader);
     const bool popup = months_since_event_date(e) == 0;
-    const int text = invasion_parent_by_favour(e) ? phrases.text_by_favour : phrases.text;
+    const int text = invasion_parent_by_favour(e) ? phrases.low_kingdom : phrases.no_reason;
     city_message_post_full(popup, invasion_warning_rules()[w].message[invader - EVENT_INVADER_ENEMY], &e, e.parent_id,
-                           phrases.title, phrases.warning[w], text, e.event_id, 0);
+      phrases.title, phrases.warnings[w], text, e.event_id, 0);
     logs::info("[invasion-event] warning event=%d months_left=%d slot=%d", e.event_id, months_left, w);
 }
 

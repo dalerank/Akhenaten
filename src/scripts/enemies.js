@@ -2234,3 +2234,58 @@ enemy_seapeople = {
     figure_types: [FIGURE_ENEMY_SEAPEOPLE_ARCHER, FIGURE_ENEMY_SEAPEOPLE_SWORDMAN, FIGURE_NONE]
     layout: FORMATION_COLUMN
 }
+
+// Message phrases of an EVENT_INVADER_* invasion. warnings: the announcement, then the reminders at
+// 24 / 12 / 6 / 1 months left. low_kingdom replaces no_reason when the invasion comes from a favour event.
+// disembarked: the transport landing alert, -1 when the invader has none (OG scenario_invasion_landing_message).
+invader_enemy = {
+    phrases : {
+        title : PHRASE_foreign_army_attacks_you_title
+        warnings : [PHRASE_foreign_army_attacks_you_initial_announcement, PHRASE_foreign_army_attacks_you_2year_reminder,
+                    PHRASE_foreign_army_attacks_you_1year_reminder, PHRASE_foreign_army_attacks_you_6month_warning,
+                    PHRASE_foreign_army_attacks_you_1month_Warning]
+        city_attacked : PHRASE_foreign_army_attacks_you_city_attacked_alert
+        no_reason : PHRASE_foreign_army_attacks_you_no_reason_A
+        low_kingdom : PHRASE_foreign_army_attacks_you_no_reason_A
+        disembarked : PHRASE_foreign_army_attacks_you_disembarked_alert
+    }
+}
+
+invader_egypt = {
+    phrases : {
+        title : PHRASE_eg_city_attacks_you_title
+        warnings : [PHRASE_eg_city_attacks_you_initial_announcement, PHRASE_eg_city_attacks_you_2year_reminder,
+                    PHRASE_eg_city_attacks_you_1year_reminder, PHRASE_eg_city_attacks_you_6month_warning,
+                    PHRASE_eg_city_attacks_you_1month_warning]
+        city_attacked : PHRASE_eg_city_attacks_you_city_attacked_alert
+        no_reason : PHRASE_eg_city_attacks_you_no_reason_A
+        low_kingdom : PHRASE_eg_city_attacks_you_because_of_low_kingdom
+        disembarked : PHRASE_eg_city_attacks_you_disembarked_alert
+    }
+}
+
+invader_pharaoh = {
+    phrases : {
+        title : PHRASE_pharaoh_attacks_you_title
+        warnings : [PHRASE_pharaoh_attacks_you_initial_announcement, PHRASE_pharaoh_attacks_you_2year_reminder,
+                    PHRASE_pharaoh_attacks_you_1year_reminder, PHRASE_pharaoh_attacks_you_6month_warning,
+                    PHRASE_pharaoh_attacks_you_1month_warning]
+        city_attacked : PHRASE_pharaoh_attacks_you_city_attacked_alert
+        no_reason : PHRASE_pharaoh_attacks_you_no_reason_A
+        low_kingdom : PHRASE_pharaoh_attacks_you_because_of_low_kingdom
+        disembarked : -1
+    }
+}
+
+invader_bedouins = {
+    phrases : {
+        title : PHRASE_bedouin_attacks_you_title
+        warnings : [PHRASE_bedouin_attacks_you_initial_announcement, PHRASE_bedouin_attacks_you_2year_reminder,
+                    PHRASE_bedouin_attacks_you_1year_reminder, PHRASE_bedouin_attacks_you_6month_warning,
+                    PHRASE_bedouin_attacks_you_1month_warning]
+        city_attacked : PHRASE_bedouin_attacks_you_city_attacked_alert
+        no_reason : PHRASE_bedouin_attacks_you_no_reason_A
+        low_kingdom : PHRASE_bedouin_attacks_you_no_reason_A
+        disembarked : PHRASE_bedouin_attacks_you_disembarked_alert
+    }
+}

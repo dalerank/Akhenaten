@@ -1397,6 +1397,11 @@ static int __test_invasion_low_kingdom_phrase(int invader) {
 }
 ANK_FUNCTION_1(__test_invasion_low_kingdom_phrase);
 
+static void __test_invasion_landing_message(int event_id) {
+    scenario_invasion_landing_message(event_id, tile2i(g_scenario.map.width / 2, g_scenario.map.height / 2), 1);
+}
+ANK_FUNCTION_1(__test_invasion_landing_message);
+
 // A land company of `soldier_count` infantry at the map centre, in empire service; returns its formation id.
 static int __test_land_company_create(int soldier_count) {
     const tile2i tile(g_scenario.map.width / 2, g_scenario.map.height / 2);
