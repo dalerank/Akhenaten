@@ -178,6 +178,83 @@ function mission_recurring_request_may_fire(mission, resource, prefix, abs_month
     return true
 }
 
+// OG invasion.c invasion_land_point: invasion_points_land[location - 1] or the next point set after it,
+// else the map exit.
+function mission_raid_land_tile(config, location) {
+	var lands = config.invasion_points_land || []
+	for (var i = 0; i < 8; i++) {
+		var p = lands[(location - 1 + i) % 8]
+		if (p) {
+			return p
+		}
+	}
+	return config.exit_point || [-1, -1]
+}
+
+// An OG events[] invasion started from mission JS, vs OG invasion.c scenario_invasion_start: `location` is the
+// event's point; 9 and up sails from sea point location - 9 with `warships`, the Persians always land by the map
+// entry, others at mission_raid_land_tile. Returns the invasion sequence (0 when nothing spawned).
+function mission_start_raid(config, raid) {
+	var opts = {
+		invasion_id: raid.invasion_id,
+		enemy: raid.enemy,
+		size: raid.size,
+		invasion_attack_target: raid.attack_target
+	}
+	if (raid.location >= 9) {
+		opts.via_sea = 1
+		opts.sea_point = raid.location - 9
+		opts.warships = raid.warships || 0
+	} else if (raid.enemy != ENEMY_9_PERSIAN) {
+		var tile = mission_raid_land_tile(config, raid.location)
+		opts.tilex = tile[0]
+		opts.tiley = tile[1]
+	}
+	var seq = city.start_foreign_army_invasion(opts)
+	log_info("akhenaten: mission raid id=" + raid.invasion_id + " enemy=" + raid.enemy + " size=" + raid.size
+		+ " location=" + raid.location + " warships=" + (opts.warships || 0) + " seq=" + seq)
+	// OG invasion_attack chains on_completed as the invasion starts, not when it is beaten.
+	if (raid.chain_tag) {
+		__city_event_fire_chain(raid.chain_tag)
+	}
+	return seq
+}
+
+// Each raid starts once (mission var `flag`), in the year and month of its OG calendar event; `schedule`
+// ({ due_var, delay }) arms the chained invasion its OG event sends.
+function mission_calendar_raids(mission, config, ev, raids) {
+	for (var i = 0; i < raids.length; i++) {
+		var raid = raids[i]
+		if (mission[raid.flag] || ev.years_since_start != raid.year || ev.month != raid.month) {
+			continue
+		}
+		mission[raid.flag] = true
+		mission_start_raid(config, raid)
+		if (raid.schedule) {
+			mission_schedule_raid(mission, raid.schedule.due_var, raid.schedule.delay)
+		}
+	}
+}
+
+function mission_months_since_start() {
+	return (game.simtime.year - scenario.start_year) * 12 + game.simtime.month
+}
+
+// A chained OG invasion is due `delay` months (its template's time.year) after its parent fires; the month is kept
+// in the mission var `due_var` (-1 = none pending).
+function mission_schedule_raid(mission, due_var, delay) {
+	mission[due_var] = mission_months_since_start() + delay
+}
+
+function mission_raid_due(mission, due_var, ev) {
+	var due = mission[due_var]
+	if (due < 0 || ev.years_since_start * 12 + ev.month < due) {
+		return false
+	}
+	mission[due_var] = -1
+	return true
+}
+
 // Derive ok/late/refuse from factual event_request_cleared (no KR read).
 function mission_request_outcome(ev) {
 	if (!ev || !ev.fulfilled) {

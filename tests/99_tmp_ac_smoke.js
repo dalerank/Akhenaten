@@ -6,7 +6,7 @@
 
     check("enable46", get_mission_config(46).enable_scenario_events == true)
     check("hide46", get_mission_config(46).hide_pak_cities == true)
-    check("events46", get_mission_config(46).events && get_mission_config(46).events.length == 10)
+    check("events46", get_mission_config(46).events && get_mission_config(46).events.length == 6)
     check("cities46", get_mission_config(46).cities && get_mission_config(46).cities.length == 22)
     check("routes46", get_mission_config(46).empire_routes && get_mission_config(46).empire_routes.length == 3)
 

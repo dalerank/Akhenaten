@@ -77,7 +77,7 @@
       <div class="deviation-note">
         <strong>Briefing:</strong> Hold the eastern Delta fortress ~7 years against Assyrian waves; train troops and trade for weapons / raw materials.
         <br /><strong>Enemy:</strong> briefing is Assyrians; pak scenario enemy is <code>ENEMY_8_NUBIAN</code> (used for timed invasions).
-        <br /><strong>Note:</strong> Inv land/sea empty in pak → invasions use map exit fallback.
+        <br /><strong>Note:</strong> Inv land/sea empty in pak → invasions enter at the map exit <code>[71,16]</code> (OG <code>invasion_land_point</code> fallback).
         <br /><strong>Topo:</strong> linear AC chain 45→46→47 (<code>next_mission: 47</code>). Alt title Pelusium (msg 455).
       </div>
 
@@ -93,7 +93,8 @@
       </ul>
 
       <h2 id="events">Scripted events (summary)</h2>
-      <p>JS <code>events[]</code> (10): 4 calendar invasions (y1/y2/y4/y5), lettuce request, gifts, contaminated water, demand decrease, city status. Empire via <code>hide_pak_*</code> + cities/routes (Enkomi · Men-nefer · Timna).</p>
+      <p>JS <code>events[]</code> (6): lettuce request, gifts, contaminated water, demand decrease, city status. Empire via <code>hide_pak_*</code> + cities/routes (Enkomi · Men-nefer · Timna).</p>
+      <p>Nubian raids from mission JS, in the month of the original calendar invasions: <strong>y1m4</strong> ×4 (target troops) · <strong>y2m8</strong> ×8 (troops; the Enkomi route is lost as it starts) · <strong>y4m3</strong> ×15 (food) · <strong>y5m3</strong> ×25 (best buildings). All enter at the map exit.</p>
 
       <div class="dev-section">
         <h2 id="dev">Developer reference</h2>
@@ -101,6 +102,7 @@
           <summary>Mission script</summary>
           <div class="details-body">
             <p><span class="file-ref">src/scripts/mission/m_046_migdol.js</span></p>
+            <p>Raids: <code>mission46_raids</code> (line 498) runs pak i=6..9 through <code>mission_calendar_raids</code> / <code>mission_start_raid</code> (<span class="file-ref">src/scripts/missions.js</span>:197); those events are gone from <code>events[]</code>, which keeps i=0..5. i=7 fires pak i=2 (lost trade route, <code>tag_id : 1002</code>, line 136) as it starts, as OG <code>invasion_attack</code> chains <code>on_completed</code>.</p>
             <p><code>map_file</code>: <span class="file-ref">data/maps/m_046_migdol.map</span>. Empire id 1, <code>map_background</code> pack empire id 24. Dump 2026-07-31 Cleop. SKIP empty map_obj idx=12. Rank 5. <code>enable_scenario_events</code> + <code>hide_pak_cities/routes/objects</code>. Config-only fish/herd; no inv points.</p>
           </div>
         </details>

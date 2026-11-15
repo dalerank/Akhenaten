@@ -9,16 +9,17 @@ log_info("akhenaten: mission 46 migdol started")
 // Trade:     can open — Enkomi (by sea), Men-nefer, Timna; display only — Abu, Byblos, Dakhla Oasis,
 //            Djedu, Farafra Oasis, Gaza, Henen-nesw, Jericho, Kyrene, Mycenae, On, Qadesh, Sawu,
 //            Serabit Khadim, Sharuhen, Thinis, Tyre, Waset.
-// Enemies:   none in practice (see notes). The scenario enemy is Nubian; the briefing speaks of Assyrians.
-// Timeline:  from y3m6 famine request for 6 lettuce, repeating (delivered: Pharaoh's gift of 10 copper;
-//            refused: Men-nefer buys less papyrus; late: gift of 5 weapons); y5m6 contaminated water.
+// Enemies:   Nubian raids (the scenario enemy; the briefing speaks of Assyrians), entering at the map exit.
+// Timeline:  y1m4 raid 4; y2m8 raid 8 (the Enkomi route is lost as it starts); from y3m6 famine request for
+//            6 lettuce, repeating (delivered: Pharaoh's gift of 10 copper; refused: Men-nefer buys less
+//            papyrus; late: gift of 5 weapons); y4m3 raid 15; y5m3 raid 25; y5m6 contaminated water.
 //
 // Notes for developers:
-// - The four calendar invasions in events[] (y1m4 4, y2m8 8, y4m3 15, y5m3 25 soldiers of the scenario
-//   enemy) never start: events[] invasions run only with og_invasions or a favour trigger, and this file
-//   has neither and no JS raids. The map has no invasion points.
+// - The four calendar invasions of the original (pak i=6..9) are started from JS in their event month
+//   (mission46_raids); the map has no invasion points, so they come in by the map exit.
 // - The original allows almost no buildings; the list here follows the briefing (military, weapons trade).
-// - Every event is declared in events[] and run by the engine; on_*_action values are indexes into that list.
+// - The other events are declared in events[] and run by the engine; on_*_action values are indexes into
+//   that list (tag 1002 lets the raid fire pak i=2).
 
 mission46 { // Migdol - Repel the Assyrians
 	map_file : "data/maps/m_046_migdol.map"
@@ -132,6 +133,7 @@ mission46 { // Migdol - Repel the Assyrians
 			city_id : 5
 		}
 		{
+			tag_id : 1002
 			type : EVENT_TYPE_CITY_STATUS_CHANGE
 			time { year : 2, month : 0 }
 			item { value : 1 }
@@ -194,74 +196,6 @@ mission46 { // Migdol - Repel the Assyrians
 			sender_faction : 0
 			subtype : 0
 			city_id : 7
-		}
-		{
-			type : EVENT_TYPE_INVASION
-			time { year : 1, month : 4 }
-			item { value : 1 }
-			amount { value : 4 }
-			months_initial : 1
-			location_fields [ 1, 1, -1, -1 ]
-			event_trigger_type : EVENT_TRIGGER_ONCE
-			on_completed_action : -1
-			on_refusal_action : -1
-			on_too_late_action : -1
-			on_defeat_action : -1
-			sender_faction : 0
-			subtype : 0
-			city_id : 5
-			invasion_attack_target : 3
-		}
-		{
-			type : EVENT_TYPE_INVASION
-			time { year : 2, month : 8 }
-			item { value : 1 }
-			amount { value : 8 }
-			months_initial : 4
-			location_fields [ 1, -1, 1, 2 ]
-			event_trigger_type : EVENT_TRIGGER_ONCE
-			on_completed_action : 2
-			on_refusal_action : -1
-			on_too_late_action : -1
-			on_defeat_action : -1
-			sender_faction : 0
-			subtype : 0
-			city_id : 6
-			invasion_attack_target : 3
-		}
-		{
-			type : EVENT_TYPE_INVASION
-			time { year : 4, month : 3 }
-			item { value : 1 }
-			amount { value : 15 }
-			months_initial : 4
-			location_fields [ 2, -1, 2, 3 ]
-			event_trigger_type : EVENT_TRIGGER_ONCE
-			on_completed_action : -1
-			on_refusal_action : -1
-			on_too_late_action : -1
-			on_defeat_action : -1
-			sender_faction : 0
-			subtype : 0
-			city_id : 7
-			invasion_attack_target : 0
-		}
-		{
-			type : EVENT_TYPE_INVASION
-			time { year : 5, month : 3 }
-			item { value : 1 }
-			amount { value : 25 }
-			months_initial : 5
-			location_fields [ 4, -1, 4, 5 ]
-			event_trigger_type : EVENT_TRIGGER_ONCE
-			on_completed_action : -1
-			on_refusal_action : -1
-			on_too_late_action : -1
-			on_defeat_action : -1
-			sender_faction : 0
-			subtype : 0
-			city_id : 8
-			invasion_attack_target : 2
 		}
 	]
 
@@ -532,6 +466,10 @@ mission46 { // Migdol - Repel the Assyrians
 
 	vars {
 		start_message_shown : false
+		raid6_done : false
+		raid7_done : false
+		raid8_done : false
+		raid9_done : false
 	}
 }
 
@@ -552,4 +490,20 @@ function mission46_on_start(ev) {
 	for (var i = ADVISOR_NONE + 1; i <= ADVISOR_DIPLOMACY; i++) {
 		city.set_advisor_available(i, 1)
 	}
+}
+
+// pak i=6..9: the calendar invasions of the scenario enemy. The map has no invasion points, so they come in by
+// the map exit; i=7 costs the Enkomi route (pak i=2) as it starts.
+[es=event_advance_month, mission=mission46]
+function mission46_raids(ev) {
+	mission_calendar_raids(mission, mission46, ev, [
+		{ flag: "raid6_done", year: 1, month: 4, invasion_id: 6, enemy: ENEMY_8_NUBIAN, size: 4, location: 1,
+			attack_target: EVENT_ATTACK_TARGET_TROOPS },
+		{ flag: "raid7_done", year: 2, month: 8, invasion_id: 7, enemy: ENEMY_8_NUBIAN, size: 8, location: 1,
+			attack_target: EVENT_ATTACK_TARGET_TROOPS, chain_tag: 1002 },
+		{ flag: "raid8_done", year: 4, month: 3, invasion_id: 8, enemy: ENEMY_8_NUBIAN, size: 15, location: 2,
+			attack_target: EVENT_ATTACK_TARGET_FOOD },
+		{ flag: "raid9_done", year: 5, month: 3, invasion_id: 9, enemy: ENEMY_8_NUBIAN, size: 25, location: 4,
+			attack_target: EVENT_ATTACK_TARGET_BEST_BUILDINGS }
+	])
 }
