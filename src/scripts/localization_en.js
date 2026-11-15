@@ -93,6 +93,7 @@ localization_en = [
   {key:"#TR_CONFIG_POLICE_WEAPONS", text:"Police stations fetch weapons from storage yards, each constable takes one (not original Pharaoh)"}
   {key:"#TR_CONFIG_WALKER_PHRASES_REMAKE", text:"Walker phrases remake: each walker picks its own lines, soldiers and enemies talk too (not original Pharaoh)"}
   {key:"#TR_CONFIG_PROTESTOR_HUNT_NOBLES", text:"Protestors hunt noble citizens and manor/estate houses (not original Pharaoh)"}
+  {key:"#TR_CONFIG_PLAGUED_CITIZEN_REMAKE", text:"Plague carrier remake: one per sick house, cured near herbalists, corpse fades (not original Pharaoh)"}
   {key:"#TR_CONFIG_FISHING_BOAT_REMAKE", text:"Fishing-boat remake: faster with staff, half load, sticky spots, soft lose-home (not original Pharaoh)"}
   {key:"#TR_CONFIG_BAZAAR_MULTI_BUYERS", text:"Bazaars can send two buyers at once (food + goods)"}
   {key:"#TR_CONFIG_BAZAAR_BUYER_SPAWN_TIMER", text:"Bazaar buyers use labor spawn timer instead of original every-8-days stagger (not original Pharaoh)"}

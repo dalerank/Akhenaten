@@ -93,6 +93,7 @@ namespace game_features {
     extern game_feature gameplay_change_walker_phrases_remake;
     extern game_feature gameplay_change_protestor_hunt_nobles;
     extern game_feature gameplay_change_fishing_boat_remake;
+    extern game_feature gameplay_change_plagued_citizen_remake;
     extern game_feature gameplay_change_bazaar_multi_buyers;
     extern game_feature gameplay_change_bazaar_buyer_spawn_timer;
     extern game_feature gameplay_change_bazaar_demand_from_trader;

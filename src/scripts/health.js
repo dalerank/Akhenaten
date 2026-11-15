@@ -9,6 +9,8 @@ city_health_rules {
     third_food_points: 5
     physician_and_food_points: 40
     monthly_step: 2
+    // Remake sick-house model: days a house stays plagued.
+    plague_house_days: 30
 
     population_bonus [
         { pop: 200, bonus: 100 }

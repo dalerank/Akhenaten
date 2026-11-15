@@ -16,6 +16,7 @@
 #include "figuretype/figure_mummy.h"
 #include "figuretype/figure_plagued_citizen.h"
 #include "game/game_events.h"
+#include "graphics/animkeys.h"
 #include "game/resource.h"
 #include "grid/grid.h"
 #include "grid/road_access.h"
@@ -194,6 +195,17 @@ static int __test_figure_main_image_id(int fid) {
     return f->main_image_id;
 }
 ANK_FUNCTION_1(__test_figure_main_image_id);
+
+// Frame of the death strip the figure draws now (main image minus the death animation's first image).
+static int __test_figure_death_frame(int fid) {
+    figure* f = figure_get(fid);
+    if (!f || (f->state != FIGURE_STATE_ALIVE && f->state != FIGURE_STATE_DYING)) {
+        return -1;
+    }
+    // main_image_id is 16 bits; without resources the first image id is a negative sentinel.
+    return (uint16_t)(f->main_image_id - f->dcast()->anim(animkeys().death).first_img());
+}
+ANK_FUNCTION_1(__test_figure_death_frame);
 
 // Ferry action id a landing assigns to this figure: 0 wait, 1 ride, 2 reroute. -1 when missing.
 static int __test_figure_ferry_action(int fid, int which) {
@@ -478,19 +490,14 @@ static int __test_figure_current_height(int fid) {
 }
 ANK_FUNCTION_1(__test_figure_current_height);
 
-static int __test_plagued_spawn_from_house(int bid) {
+static int __test_plagued_create_at_house(int bid) {
     building* b = building_get(bid);
     if (!b || !b->is_valid()) {
         return 0;
     }
-    return figure_plagued_citizen::spawn_from_house(*b);
+    return figure_plagued_citizen::create_at_house(*b);
 }
-ANK_FUNCTION_1(__test_plagued_spawn_from_house);
-
-static int __test_plagued_cure_nearby(int x, int y) {
-    return figure_plagued_citizen::cure_nearby(tile2i(x, y), 1);
-}
-ANK_FUNCTION_2(__test_plagued_cure_nearby);
+ANK_FUNCTION_1(__test_plagued_create_at_house);
 
 static int __test_figure_provide_service(int fid) {
     figure* f = figure_get(fid);

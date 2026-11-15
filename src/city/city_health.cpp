@@ -8,6 +8,7 @@
 #include "city/buildings.h"
 #include "city/city.h"
 #include "city/city_figures.h"
+#include "game/game_config.h"
 #include "game/game_events.h"
 #include "city/coverage.h"
 #include "city/city_message.h"
@@ -48,6 +49,10 @@ declare_console_command_p(plague_no) {
 
 void city_health_t::change(int amount) {
     value = calc_bound(value + amount, 0, 100);
+}
+
+void city_health_t::infect_house(building& main) {
+    main.mark_plague(city_health_rules.plague_house_days);
 }
 
 void city_health_t::start_disease(int total_people, bool force, int plague_people) {
@@ -98,8 +103,10 @@ void city_health_t::start_disease(int total_people, bool force, int plague_peopl
         }
         warn_building = &main->base;
         people_to_plague -= house->house_population();
-        main->base.mark_plague(30);
-        figure_plagued_citizen::spawn_from_house(main->base);
+        city_health_t::infect_house(main->base);
+        if (!!game_features::gameplay_change_plagued_citizen_remake) {
+            figure_plagued_citizen::create_at_house(main->base);
+        }
     };
 
     // kill people where has little common_health
@@ -155,6 +162,11 @@ void city_health_t::start_disease(int total_people, bool force, int plague_peopl
 
     if (bast_forced) {
         g_city.religion.bast_curse_active = false;
+    }
+
+    // OG city_health_start_plague_at_house: one carrier from the outbreak's house.
+    if (!game_features::gameplay_change_plagued_citizen_remake.to_bool()) {
+        figure_plagued_citizen::create_at_house(*warn_building);
     }
 
     change(10);

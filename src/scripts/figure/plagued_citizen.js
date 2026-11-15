@@ -1,7 +1,6 @@
 log_info("akhenaten: figure plagued_citizen started")
 
-// Plague carrier — SprMain GROUP_FIGURE_DESEASED (203/205).
-// TEMP: same strip ids as figure_drunkard (art collision; follow-up after pak dump).
+// Plague carrier — OG image groups 242 walk / 244 death (SprMain 203 / 205, shared with figure_drunkard).
 figure_plagued_citizen {
 	animations {
 		walk { pack:PACK_SPR_MAIN, id:203, max_frames:12 }
@@ -23,10 +22,30 @@ figure_plagued_citizen {
 		plagued_city_is_amazing { sound:"plagued_city_is_amazing.wav", text: "#plagued_city_is_amazing" }
 	}
 
+	// OG Figure_model.txt row 98, city_disasters.h PLAGUE_FIGURE_WAIT_TICKS, plagues.h PLAGUE_CITIZEN_ROAD_RADIUS.
 	category: figure_category_citizen
 	max_damage: 10
 	terrain_usage: TERRAIN_USAGE_ROADS
-	max_roam_length: 480
+	spawn_wait_ticks: 500
+	road_radius: 2
+
+	// OG figure_data.c figure_corpse_offsets[wait_ticks / 2]: death frame from each wait_ticks on.
+	corpse_frames: [
+		{ wait_ticks:0, frame:0 }    // index 0
+		{ wait_ticks:2, frame:1 }    // index 1
+		{ wait_ticks:4, frame:2 }    // index 2
+		{ wait_ticks:6, frame:3 }    // index 3
+		{ wait_ticks:8, frame:4 }    // index 4..15
+		{ wait_ticks:32, frame:5 }   // index 16..35
+		{ wait_ticks:72, frame:6 }   // index 36..75
+		{ wait_ticks:152, frame:7 }  // index 76..127
+		{ wait_ticks:256, frame:0 }  // index 128
+		{ wait_ticks:258, frame:1 }  // index 129
+		{ wait_ticks:260, frame:2 }  // index 130
+		{ wait_ticks:262, frame:3 }  // index 131
+		{ wait_ticks:264, frame:4 }  // index 132..143
+		{ wait_ticks:288, frame:0 }  // index 144..255, zero-filled
+	]
 }
 
 function figure_plagued_citizen_gods_are_angry() {

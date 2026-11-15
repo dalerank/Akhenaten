@@ -6,6 +6,7 @@
 #include "figure/movement.h"
 #include "figure/route.h"
 #include "figuretype/figure_enemy_transport.h"
+#include "figuretype/figure_plagued_citizen.h"
 #include "figuretype/figure_soldier.h"
 #include "figuretype/figure_robber.h" // ACTION_10_ROBBER_FLEEING
 #include "game/difficulty.h"
@@ -568,6 +569,10 @@ void figure::figure_combat_attack_figure_at(int grid_offset) {
             attack = true;
         else if (my_category == figure_category_hostile && opponent_category == figure_category_animal)
             attack = true;
+
+        if (figure_plagued_citizen::cure_on_meeting(*this, *opponent)) {
+            return;
+        }
 
         if (attack && in_attack() && opponent->num_attackers >= 2) {
             attack = false;

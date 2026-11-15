@@ -1,4 +1,4 @@
-// FIGURE_PLAGUED_CITIZEN register + spawn + Bast/plague_start + herbalist cure.
+// FIGURE_PLAGUED_CITIZEN register + spawn + Bast/plague_start + herbalist cure (OG same-tile meeting).
 // Markers:
 //   [test-marker] plagued_registered_ok
 //   [test-marker] plagued_outbreak_spawn_ok
@@ -33,7 +33,7 @@ function test90_setup_sick_house() {
     if (b) {
         b.common_health = 5
     }
-    // Plague walker spawn requires a road tile near the house (never house.tile).
+    // OG: the carrier leaves the house tile for a road within 2 tiles.
     var ht = __building_tile(bid)
     for (var dx = 0; dx < 2; dx++) {
         terrain.add({ x: ht.x + dx, y: ht.y + 1 }, TERRAIN_ROAD)
@@ -60,7 +60,7 @@ function run_test() {
     __test_figure_kill(probe)
     __log_marker('plagued_registered_ok')
 
-    // --- spawn_from_house (same helper start_disease uses) ---
+    // --- create_at_house (same helper start_disease uses) ---
     test90_remove_plagued()
     var hid = test90_setup_sick_house()
     if (!hid) {
@@ -68,14 +68,14 @@ function run_test() {
         __test_signal_ready()
         return
     }
-    var fid = __test_plagued_spawn_from_house(hid)
+    var fid = __test_plagued_create_at_house(hid)
     if (!fid || !__figure_is_valid(fid) || __figure_get_type(fid) != FIGURE_PLAGUED_CITIZEN) {
-        __log_info_native('[test:90] spawn_from_house failed, fid=' + fid)
+        __log_info_native('[test:90] create_at_house failed, fid=' + fid)
         __test_signal_ready()
         return
     }
     if (test90_count_plagued() < 1) {
-        __log_info_native('[test:90] no live plagued after spawn_from_house')
+        __log_info_native('[test:90] no live plagued after create_at_house')
         __test_signal_ready()
         return
     }
@@ -103,7 +103,7 @@ function run_test() {
     }
     __log_marker('plagued_bast_curse_spawn_ok')
 
-    // --- Herbalist provide_service removes nearby carrier ---
+    // --- Herbalist stepping on the carrier's tile removes it ---
     test90_remove_plagued()
     var land = test_find_buildable_tile(BUILDING_HOUSE_CRUDE_HUT)
     if (!land) {
@@ -116,15 +116,11 @@ function run_test() {
         __test_signal_ready()
         return
     }
-    __test_figure_provide_service(herbalist)
+    __test_figure_combat_attack_at(herbalist, land.x, land.y)
     if (test90_count_plagued() != 0) {
-        var tile = __figure_get_tile(plagued)
-        __test_plagued_cure_nearby(tile.x, tile.y)
-        if (test90_count_plagued() != 0) {
-            __log_info_native('[test:90] herbalist/cure_nearby failed, left ' + test90_count_plagued())
-            __test_signal_ready()
-            return
-        }
+        __log_info_native('[test:90] herbalist meeting failed, left ' + test90_count_plagued())
+        __test_signal_ready()
+        return
     }
     __log_marker('plagued_herbalist_cure_ok')
 
