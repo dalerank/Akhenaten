@@ -9,21 +9,24 @@ log_info("akhenaten: mission 43 abu simbel started")
 // Monuments: Abu Simbel.
 // Trade:     can open — Men-nefer, Waset, Sumur, Heh, Kerma (by sea), Pwenet; opened by events — Kharga
 //            Oasis; display only — Bahariya Oasis, Qadesh, Jericho, Enkomi, Timna, Abu, Piramesse.
-// Enemies:   Kushite raids, entering at the map entry point; Pharaoh's army (15) by sea with 2 warships if
+// Enemies:   Kushite raids at the land point [51,51]; Pharaoh's army (15) by sea with 2 warships if
 //            the kingdom rating falls to 0.
 // Timeline:  y2m4 request 7 figs (delivered or late: Kharga Oasis route opens; refused: kingdom −2);
 //            from y2m10 Pharaoh's gift of 15 linen every year, each followed by a request for 9 luxury
 //            goods; y3m3, y4m0 wages rise; y4m10 blood river; from y5m1 Pharaoh asks 34 sandstone every
 //            year (kingdom +2, refused −5, late −2); y5m3 request 7 figs (delivered: gift of 334 deben;
-//            late: gift of 3 luxury goods; refused: Kushite raid 25); from y7m10 Pharaoh asks 6 luxury goods
-//            every year (delivered: gift of 10 linen); y8m1 Kushite raid 27 (beaten: a trade route is lost
+//            late: gift of 3 luxury goods; refused: Kushite raid 25 announced a month later, attacking
+//            6 months after that); from y7m10 Pharaoh asks 6 luxury goods every year (delivered: gift of
+//            10 linen); Kushite raid 27 announced y8m1, attacks y8m10 (as it attacks a trade route is lost
 //            and Pharaoh asks 12 troops — sent: a city is conquered and the route reopens, kingdom +2;
 //            refused: kingdom −5); y9m7 request 11 pottery; y10m4 frogs; y14m6 clay pits flood.
 //
 // Notes for developers:
-// - events[] invasions do not run (no favour trigger): the two Kushite raids are started from JS, and the
-//   chain after raid 27 is rebuilt in mission43_fire_inv20_win_chain. Only Pharaoh's army runs from
-//   events[] (favour trigger).
+// - events[] invasions do not run (no favour trigger): the two Kushite raids follow the OG invasion cycle
+//   from JS (missions.js mission_raids_month: warnings from the event's month, the attack months_initial
+//   months later, the point rolled from the event's location_fields); the chain raid 27 sends as it
+//   attacks is rebuilt in mission43_fire_inv20_win_chain. Only Pharaoh's army runs from events[] (favour
+//   trigger).
 
 mission43 {
 	map_file : "data/maps/m_043_abu_simbel.map"
@@ -843,11 +846,8 @@ mission43 {
 
 
 	vars {
+		raids : ""
 		start_message_shown : false
-		inv20_done : false
-		inv20_seq : 0
-		inv20_chain_done : false
-		inv12_done : false
 	}
 }
 
@@ -869,20 +869,6 @@ function mission43_on_start(ev) {
 	for (var i = ADVISOR_NONE + 1; i <= ADVISOR_DIPLOMACY; i++) {
 		city.set_advisor_available(i, 1)
 	}
-}
-
-function mission43_invasion_outcome(seq) {
-	if (!seq) {
-		return -1
-	}
-	var n = city.invasion_history_count()
-	for (var i = 0; i < n; i++) {
-		var h = city.invasion_history_at(i)
-		if (h.seq == seq) {
-			return h.outcome
-		}
-	}
-	return -1
 }
 
 function mission43_fire_inv20_win_chain() {
@@ -938,60 +924,26 @@ function mission43_fire_inv20_win_chain() {
 	troops.execute()
 }
 
+// pak i=12 after the figs request (tag 2010) is refused, due a month on (its time.year); i=20 with its chain.
+function mission43_raid_list() {
+	var K = ENEMY_6_KUSHITE
+	var E = EVENT_INVADER_ENEMY
+	return [
+		{ key: "i12", invasion_id: 12, invader: E, enemy: K, amount: 25, months_initial: 6, location: [2, -1, 1, 3],
+			attack_target: EVENT_ATTACK_TARGET_RANDOM },
+		{ key: "i20", invasion_id: 20, year: 8, month: 1, invader: E, enemy: K, amount: 27, months_initial: 9,
+			location: [3, 3, -1, -1], attack_target: EVENT_ATTACK_TARGET_TROOPS, on_attack: mission43_fire_inv20_win_chain }
+	]
+}
+
 [es=event_advance_month, mission=mission43]
-function mission43_calendar_invasion_i20(ev) {
-	if (mission.inv20_done) {
-		if (mission.inv20_chain_done || mission.inv20_seq <= 0) {
-			return
-		}
-		var outcome = mission43_invasion_outcome(mission.inv20_seq)
-		if (outcome == 1) {
-			mission.inv20_chain_done = true
-			log_info("akhenaten: mission 43 invasion x27 won -> LOST_TRADE chain", {seq: mission.inv20_seq})
-			mission43_fire_inv20_win_chain()
-		} else if (outcome == 2 || outcome == 3) {
-			mission.inv20_chain_done = true
-			log_info("akhenaten: mission 43 invasion x27 lost/retreat - skip chain", {outcome: outcome})
-		}
-		return
-	}
-	if (ev.years_since_start < 8 || (ev.years_since_start == 8 && ev.month < 1)) {
-		return
-	}
-	mission.inv20_done = true
-	__image_request_pak(PACK_ENEMY_KUSHITE)
-	mission.inv20_seq = city.start_foreign_army_invasion({
-		mode: ATTACK_TYPE_ENEMIES,
-		enemy: ENEMY_6_KUSHITE,
-		size: 27,
-		invasion_id: 20,
-		tilex: -1,
-		tiley: -1,
-		want_destroy_buildings: 0,
-		invasion_attack_target: EVENT_ATTACK_TARGET_TROOPS
-	})
-	log_info("akhenaten: mission 43 enemy x27 calendar", {seq: mission.inv20_seq})
+function mission43_raids(ev) {
+	mission_raids_month(mission, mission43, ev, mission43_raid_list())
 }
 
 [es=event_request_cleared, mission=mission43]
 function mission43_on_request_cleared(ev) {
-	if (mission.inv12_done || ev.tag_id != 2010) {
-		return
+	if (ev.tag_id == 2010 && mission_request_outcome(ev) == "refuse") {
+		mission_raid_schedule(mission, mission43_raid_list(), "i12", 1)
 	}
-	if (mission_request_outcome(ev) != "refuse") {
-		return
-	}
-	mission.inv12_done = true
-	__image_request_pak(PACK_ENEMY_KUSHITE)
-	city.start_foreign_army_invasion({
-		mode: ATTACK_TYPE_ENEMIES,
-		enemy: ENEMY_6_KUSHITE,
-		size: 25,
-		invasion_id: 12,
-		tilex: -1,
-		tiley: -1,
-		want_destroy_buildings: 0,
-		invasion_attack_target: EVENT_ATTACK_TARGET_RANDOM
-	})
-	log_info("akhenaten: mission 43 enemy x25 after figs refuse", {ev:ev})
 }

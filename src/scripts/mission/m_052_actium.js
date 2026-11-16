@@ -9,17 +9,20 @@ log_info("akhenaten: mission 52 actium started")
 // Monuments: none.
 // Trade:     can open — Athens, Alexandria (by sea); opened by events — Kyrene; display only — Enkomi, Gaza,
 //            Knossos, Men-nefer, Tyre, Meidum, Waset, Buhen, Byblos.
-// Enemies:   Persian fleet (the briefing's Octavian), both raids by sea from sea point 0.
+// Enemies:   Persian fleet (the briefing's Octavian), both raids by sea from sea point 0 or 1.
 // Timeline:  y1m8 request 5 timber (prices fall, or rise if refused); y2m4 request 6 copper
 //            (delivered or late: Kyrene route opens; refused: Alexandria buys less timber); y3m2 famine
 //            request for 5 fish (delivered: gift of 5 weapons, kingdom +6; refused: Alexandria route lost);
 //            from y3m7 request 16 timber every year (delivered: gift of 7 weapons; late: 5 weapons;
-//            refused: kingdom −4); y3m8 sea trade problem; y4m4 raid 19 with 5 warships, once it is beaten
-//            raid 40 with 4 warships, and once that is beaten the Athens route is lost.
+//            refused: kingdom −4); y3m8 sea trade problem; raid 19 with 5 warships announced y4m4, attacks
+//            y4m8; 2 months later raid 40 with 4 warships is announced and attacks the month after (y4m11),
+//            and as it attacks the Athens route is lost.
 //
 // Notes for developers:
-// - events[] invasions do not run (no favour trigger), so mission52_calendar_invasions starts both raids;
-//   the Athens route loss is fired by tag 18 when the second raid is beaten.
+// - events[] invasions do not run (no favour trigger), so the raids follow the OG invasion cycle from JS
+//   (missions.js mission_raids_month: warnings from the event's month, the attack months_initial months
+//   later, the point rolled from the event's location_fields); i=12 chains i=17 and i=17 the Athens route
+//   loss (tag 18) as they attack.
 // - The warship wharf is enabled for the navy briefing although the original scenario disallows it.
 // - next_mission -1: the campaign ends here.
 
@@ -630,42 +633,9 @@ mission52 { // Actium - Antony and Cleopatra
 	]
 
 	vars {
+		raids : ""
 		start_message_shown : false
-		inv12_done : false
-		inv12_active : false
-		inv12_enemies_seen : false
-		inv17_done : false
 	}
-}
-
-function mission52_sea(i) {
-	var pts = [[52, 56], [38, 66]]
-	if (i < 0 || i >= pts.length) { return [-1, -1] }
-	return pts[i]
-}
-
-// warships: the event's `warships` (pak phrase_var).
-function mission52_enemy_raid(invasion_id, size, sea_point, on_completed_tag, warships) {
-	var sea = mission52_sea(sea_point === undefined ? 0 : sea_point)
-	__image_request_pak(PACK_ENEMY_PERSIAN)
-	var opts = {
-		mode: ATTACK_TYPE_ENEMIES,
-		enemy: ENEMY_9_PERSIAN,
-		size: size,
-		invasion_id: invasion_id,
-		want_destroy_buildings: size,
-		invasion_attack_target: EVENT_ATTACK_TARGET_TROOPS,
-		via_sea: 1,
-		sea_point: sea_point === undefined ? 0 : sea_point,
-		warships: warships || 0,
-		tilex: sea[0],
-		tiley: sea[1]
-	}
-	// C++ bind fire_chain_by_tag (+ drain) — not __city_event_fire_chain from JS.
-	if (on_completed_tag !== undefined && on_completed_tag > 0) {
-		opts.on_completed_tag = on_completed_tag
-	}
-	return city.start_foreign_army_invasion(opts)
 }
 
 [es=event_mission_start, mission=mission52]
@@ -687,29 +657,20 @@ function mission52_on_start(ev) {
 	}
 }
 
-// Calendar invasions (events[] EVENT_TYPE_INVASION is engine no-op — B2 / CC52.N).
-// pak i=12 y4m4 ×19 loc9 sea → wipe → i=17 ×40 → wipe bind → i=18 LOST_TRADE (tag_id 18).
-[es=event_advance_month, mission=mission52]
-function mission52_calendar_invasions(ev) {
-	if (!mission.inv12_done && ev.years_since_start == 4 && ev.month == 4) {
-		mission.inv12_done = true
-		mission.inv12_active = true
-		mission.inv12_enemies_seen = false
-		log_info("akhenaten: mission 52 sea invasion ×19 (i=12)")
-		mission52_enemy_raid(12, 19, 0, undefined, 5)
-	}
+// pak i=12 -> i=17 (2 months on, its time.year) -> i=18.
+function mission52_raid_list() {
+	var P = ENEMY_9_PERSIAN
+	var E = EVENT_INVADER_ENEMY
+	return [
+		{ key: "i12", invasion_id: 12, year: 4, month: 4, invader: E, enemy: P, amount: 19, months_initial: 4,
+			location: [9, -1, 9, 11], warships: 5, attack_target: EVENT_ATTACK_TARGET_TROOPS,
+			then: [{ key: "i17", delay: 2 }] },
+		{ key: "i17", invasion_id: 17, invader: E, enemy: P, amount: 40, months_initial: 1, location: [9, -1, 9, 11],
+			warships: 4, attack_target: EVENT_ATTACK_TARGET_TROOPS, chain_tag: 18 }
+	]
+}
 
-	if (mission.inv12_active && !mission.inv17_done) {
-		if (city.num_enemy_formations > 0) {
-			mission.inv12_enemies_seen = true
-			return
-		}
-		if (!mission.inv12_enemies_seen) {
-			return
-		}
-		mission.inv12_active = false
-		mission.inv17_done = true
-		log_info("akhenaten: mission 52 sea invasion ×40 (i=17) → chain tag 18")
-		mission52_enemy_raid(17, 40, 0, 18, 4)
-	}
+[es=event_advance_month, mission=mission52]
+function mission52_raids(ev) {
+	mission_raids_month(mission, mission52, ev, mission52_raid_list())
 }

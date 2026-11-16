@@ -115,6 +115,7 @@
               Jericho / Enkomi / Timna / Kharga (route 6) / Abu / Piramesse.
               Sea routes 1–4,7 · land 5–6; ornament <code>img=13863</code>.</p>
             <p>Sea invasion events carry the OG warship count as <code>warships</code> (pak <code>phrase_var</code>): i=26 ×2.</p>
+            <p>Raids: <code>mission43_raid_list</code> runs through <code>mission_raids_month</code> / <code>mission_raid_schedule</code> (<span class="file-ref">src/scripts/missions.js</span>) on the OG invasion cycle: the OG warnings with the invader&rsquo;s phrases from the event&rsquo;s month, the attack <code>months_initial</code> months later, the point rolled from the event&rsquo;s <code>location_fields</code>, its <code>on_completed</code> chain as it attacks; a chained raid is due its <code>time.year</code> months after its parent attacks or its request clears. i=12 ×25 chained (e.g. announced y5m10 &rarr; attacks y6m4) · i=20 ×27 announced y8m1 &rarr; attacks y8m10.</p>
           </div>
         </details>
       </div>

@@ -107,6 +107,7 @@
             <p>Sea invasion events carry the OG warship count as <code>warships</code> (pak <code>phrase_var</code>): i=0 ×2, i=1 ×6, i=5 ×8, i=8 ×5, i=11 ×6, i=56 ×12. The JS calendar raids that send them (<code>mission36_enemy_raid</code>) pass the same counts.</p>
             <p><span class="file-ref">data/maps/m_036_rowarty.map</span></p>
             <p><code>next_mission : -1</code>. Empire id 35 · map_background PACK_EMPIRE id 35. SKIP map_obj idx=12. Dump 2026-08-01. <code>events[]</code> redefine (62) + JS invasion poll.</p>
+            <p>Raids: <code>mission36_raid_list</code> runs through <code>mission_raids_month</code> / <code>mission_raid_schedule</code> (<span class="file-ref">src/scripts/missions.js</span>) on the OG invasion cycle: the OG warnings with the invader&rsquo;s phrases from the event&rsquo;s month, the attack <code>months_initial</code> months later, the point rolled from the event&rsquo;s <code>location_fields</code>, its <code>on_completed</code> chain as it attacks; a chained raid is due its <code>time.year</code> months after its parent attacks or its request clears. i=8 ×38 with 5 warships announced y2m8 &rarr; attacks y3m1 · i=0 ×20 with 2 warships announced y3m1 &rarr; attacks y3m7 · i=1 ×35 with 6 warships announced y5m8 &rarr; attacks y6m2 · i=5 ×44 with 8 warships announced y7m1 &rarr; attacks y7m7 · i=11 ×56 with 6 warships announced y45m10 &rarr; attacks y46m4, recurring · i=56 ×72 with 12 warships chained (e.g. announced y53m1 &rarr; attacks y53m7).</p>
           </div>
         </details>
         <details>

@@ -8,7 +8,6 @@
 function run_test() {
     __log_info_native('[test:139] naval mission via_sea (Rowarty + Actium + Heh/Sawu)')
 
-    // Warships come only from the invasion's OG warship count, which these raid helpers do not pass.
     function expect_fleet(label, marker) {
         var transports = __test_count_enemy_transports()
         if (transports < 1) {
@@ -21,12 +20,8 @@ function run_test() {
 
     // --- E3d: Rowarty loc>=9 via_sea ---
     __game_load_mission(36, 1)
-    if (typeof mission36_enemy_raid !== 'function') {
-        __log_info_native('[test:139] mission36_enemy_raid missing after load')
-        __test_signal_ready()
-        return
-    }
-    mission36_enemy_raid(990, 8, 9, 1)
+    mission_start_raid(mission36, { key: "t", invasion_id: 990, invader: EVENT_INVADER_ENEMY, enemy: ENEMY_1_ASSYRIAN,
+        amount: 8, months_initial: 0, warships: 0, attack_target: EVENT_ATTACK_TARGET_VAULTS }, 9)
     if (!expect_fleet('rowarty', 'rowarty_sea_invasion_ok')) {
         __test_signal_ready()
         return
@@ -34,12 +29,8 @@ function run_test() {
 
     // --- CC52.N: Actium Persian via_sea ---
     __game_load_mission(52, 1)
-    if (typeof mission52_enemy_raid !== 'function') {
-        __log_info_native('[test:139] mission52_enemy_raid missing after load')
-        __test_signal_ready()
-        return
-    }
-    mission52_enemy_raid(991, 8, 0)
+    mission_start_raid(mission52, { key: "t", invasion_id: 991, invader: EVENT_INVADER_ENEMY, enemy: ENEMY_9_PERSIAN,
+        amount: 8, months_initial: 0, warships: 0, attack_target: EVENT_ATTACK_TARGET_TROOPS }, 9)
     if (!expect_fleet('actium', 'actium_sea_invasion_ok')) {
         __test_signal_ready()
         return
