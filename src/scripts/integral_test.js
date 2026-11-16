@@ -52,31 +52,53 @@ function test_planner_exit_build_mode() {
     __test_process_events()
 }
 
-function test_find_buildable_tile(type) {
+function test_find_buildable_tile(type, step) {
     if (!test_planner_enter_build_mode(type)) {
         return null
     }
 
+    step = step || 1
     var footprint = __building_static_building_size(type)
     var w = __scenario_map.width
     var h = __scenario_map.height
     var cx = (w / 2) | 0
     var cy = (h / 2) | 0
     var best = null
-    var best_dist_sq = 999999999
+    var best_dist_sq = 0
 
-    for (var y = footprint; y < h - footprint; y++) {
-        for (var x = footprint; x < w - footprint; x++) {
-            var dx = x - cx
-            var dy = y - cy
-            var dist_sq = dx * dx + dy * dy
-            if (best && dist_sq >= best_dist_sq) {
-                continue
-            }
-            city_planner.update(x, y)
-            if (city_planner.can_be_placed() == CAN_PLACE) {
-                best = { x: x, y: y }
-                best_dist_sq = dist_sq
+    var try_tile = function (x, y) {
+        if (x < footprint || x >= w - footprint || y < footprint || y >= h - footprint) {
+            return
+        }
+        if (step > 1 && (x % step || y % step)) {
+            return
+        }
+        var dx = x - cx
+        var dy = y - cy
+        var dist_sq = dx * dx + dy * dy
+        if (best && (dist_sq > best_dist_sq || (dist_sq == best_dist_sq && (y > best.y || (y == best.y && x > best.x))))) {
+            return
+        }
+        city_planner.update(x, y)
+        if (city_planner.can_be_placed() == CAN_PLACE) {
+            best = { x: x, y: y }
+            best_dist_sq = dist_sq
+        }
+    }
+
+    var max_r = Math.max(cx, cy, w - cx, h - cy)
+    for (var r = 0; r <= max_r; r++) {
+        if (best && r * r > best_dist_sq) {
+            break
+        }
+        for (var y = cy - r; y <= cy + r; y++) {
+            if (r == 0 || y == cy - r || y == cy + r) {
+                for (var x = cx - r; x <= cx + r; x++) {
+                    try_tile(x, y)
+                }
+            } else {
+                try_tile(cx - r, y)
+                try_tile(cx + r, y)
             }
         }
     }
@@ -130,12 +152,12 @@ function test_win_criteria_restore(snap) {
     __test_scenario_init_max_year()
 }
 
-function test_building_place(type, x, y) {
+function test_building_place(type, x, y, step) {
     var place = null
     if (x >= 0 && y >= 0) {
         place = { x: x, y: y }
     } else {
-        place = test_find_buildable_tile(type)
+        place = test_find_buildable_tile(type, step)
     }
 
     if (!place) {

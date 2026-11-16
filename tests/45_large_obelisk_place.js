@@ -19,7 +19,7 @@ function run_test() {
 
     var rejected_no_granite = test_building_place(BUILDING_LARGE_OBELISK, cx - 2, cy - 2)
     if (!rejected_no_granite) {
-        rejected_no_granite = test_building_place(BUILDING_LARGE_OBELISK, -1, -1)
+        rejected_no_granite = test_building_place(BUILDING_LARGE_OBELISK, -1, -1, 4)
     }
     if (rejected_no_granite) {
         __log_info_native('[test:45] unexpected place without granite bid=' + rejected_no_granite)
