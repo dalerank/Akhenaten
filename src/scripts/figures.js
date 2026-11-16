@@ -137,23 +137,80 @@ figure_hyena {
 }
 
 figure_asp {
+	// OG scenario_climate.c CENTRAL_PREDATOR_1: max_figures 6
 	herd_size : 6
 	animations {
-		walk { pack:PACK_EXPANSION_SPR, id:0, max_frames:12 }
-		attack { pack:PACK_EXPANSION_SPR, id:1, max_frames:12 }
+		walk { pack:PACK_EXPANSION_SPR, id:0, max_frames:12 } // OG IMAGE_GROUP_FIGURE_ASP
+		attack { pack:PACK_EXPANSION_SPR, id:1, max_frames:12 } // OG IMAGE_GROUP_FIGURE_ASP_ATTACK
 		idle { pack:PACK_EXPANSION_SPR, id:2, max_frames:12 }
-		death { pack:PACK_EXPANSION_SPR, id:3, max_frames:6, loop:false }
-		eating { pack:PACK_EXPANSION_SPR, id:4, max_frames:12 }
+		death { pack:PACK_EXPANSION_SPR, id:3, max_frames:6, loop:false } // OG IMAGE_GROUP_FIGURE_ASP_DEATH
+		eating { pack:PACK_EXPANSION_SPR, id:4, max_frames:12 } // OG IMAGE_GROUP_FIGURE_ASP_REST
 		big_image { pack:PACK_EXPANSION, id:1, offset:4 }
 	}
 
-	category: figure_category_animal
-	max_damage: 60
-	attack_value: 4
+	// OG Figure_model row 102: category 7 (predator), hit points 10, attack 5, armor 0, speed 7
+	category: figure_category_hostile
+	max_damage: 10
+	attack_value: 5
+	defense_value: 0
+	missile_defense_value: 0
 	terrain_usage: TERRAIN_USAGE_ANIMAL
-	max_hungry: 30
-	max_hunting_distance: 10
-	chase_speed_mult: 2
+	speed_mult: 1
+	// OG figure_movement_move_ticks walk ticks per call, cycled: speed 7 and PROWL speed 14
+	move_cycle: [1, 1, 1, 2]
+	prowl_cycle: [2, 2, 3]
+
+	// OG animal_rules: asp_rest_base_ticks, asp_rest_random_ticks, dying_ticks, predator_chase_ticks_per_ring
+	rest_base_ticks: 50
+	rest_random_ticks: 100
+	dying_ticks: 500
+	chase_ticks_per_ring: 18
+	// OG climate record: hunt_delay, hunt_radius
+	hunt_delay: 30
+	hunt_radius: 6
+	// OG predator_prey_on_tile_at skips figure_is_boat
+	forbidden_prey: [
+		FIGURE_FISHING_BOAT, FIGURE_TRADE_SHIP, FIGURE_FERRY_BOAT,
+		FIGURE_TRANSPORT_SHIP, FIGURE_WARSHIP, FIGURE_SHIPWRECK,
+		FIGURE_ENEMY_TRANSPORT, FIGURE_ENEMY_WARSHIP,
+		FIGURE_ENEMY_EGYPTIAN_TRANSPORT_SHIP, FIGURE_ENEMY_EGYPTIAN_WARSHIP
+	]
+	// OG effect.c figure_binds group 3: variant 2 (attack), variant 3 (death)
+	attack_sound: "Wavs/asp_r.wav"
+	die_sound: "Wavs/aspdie.wav"
+
+	// OG herds.c update_predators with the climate record: spawn_delay 16, move_delay 30, roam_radius 2
+	herd_spawn_delay: 16
+	herd_move_delay: 30
+	herd_roam_radius: 2
+	herd_spawn_only_when_present: false
+	// OG animals_wild.c: HERD_SPAWN_WAIT_RANGE 25, PREDATOR_SPAWN_WAIT_FACTOR 4; herds.h HERD_SPAWNED_WAIT_TICKS 10
+	herd_spawn_wait_range: 25
+	herd_spawn_wait_factor: 4
+	herd_new_animal_wait: 10
+	// OG animal_terrain_allowed_climate: climate record terrain (none for the asp), ANIMAL_TERRAIN_BLOCKED,
+	// ANIMAL_TERRAIN_SPECIAL; TERRAIN_UNK_02 = gem rock
+	herd_allowed_terrain: []
+	herd_blocked_terrain: [
+		TERRAIN_ROCK, TERRAIN_GARDEN, TERRAIN_RUBBLE, TERRAIN_WALL, TERRAIN_GATEHOUSE, TERRAIN_DIKE,
+		TERRAIN_ORE, TERRAIN_UNK_02, TERRAIN_ROCK_NEAR_MONUMENT
+	]
+	herd_special_terrain: [
+		TERRAIN_TREE, TERRAIN_ROCK, TERRAIN_WATER, TERRAIN_SHRUB, TERRAIN_GARDEN, TERRAIN_ROAD,
+		TERRAIN_ELEVATION, TERRAIN_RUBBLE, TERRAIN_FLOODPLAIN, TERRAIN_MARSHLAND, TERRAIN_ORE,
+		TERRAIN_UNK_02, TERRAIN_DUNE, TERRAIN_DEEPWATER, TERRAIN_ROCK_NEAR_MONUMENT
+	]
+
+	// Seth curse raid (gameplay_seth_asp_raid), not in OG
+	raid_hunt_distance: 40
+	raid_chase_speed_mult: 2
+	raid_non_targets: [
+		FIGURE_ASP, FIGURE_SCORPION, FIGURE_LION, FIGURE_HYENA, FIGURE_HIPPO, FIGURE_CROCODILE,
+		FIGURE_ANTELOPE, FIGURE_OSTRICH, FIGURE_FROG, FIGURE_LOCUST, FIGURE_BIRDS, FIGURE_EXPLOSION,
+		FIGURE_STANDARD_BEARER, FIGURE_TRADE_SHIP, FIGURE_FISHING_BOAT, FIGURE_MAP_FLAG, FIGURE_FLOTSAM,
+		FIGURE_BUBBLES, FIGURE_SHIPWRECK, FIGURE_INDIGENOUS_NATIVE, FIGURE_TOWER_SENTRY, FIGURE_NATIVE_TRADER,
+		FIGURE_ARROW, FIGURE_JAVELIN, FIGURE_BOLT, FIGURE_BALLISTA, FIGURE_CREATURE
+	]
 }
 
 figure_lion {

@@ -415,6 +415,7 @@ public:
     // sound.c
     void play_attack_sound();
     void play_die_sound();
+    void play_sound_file(const xstring& file);
     void play_hit_sound();
 
     // service.c

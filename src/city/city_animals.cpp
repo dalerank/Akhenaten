@@ -6,6 +6,7 @@
 #include "core/log.h"
 #include "core/random.h"
 #include "figuretype/figure_animal.h"
+#include "figuretype/animal_asp.h"
 #include "figuretype/animal_hyena.h"
 #include "js/js_game.h"
 #include "grid/terrain.h"
@@ -186,7 +187,9 @@ formation* city_animals_t::create_herd(tile2i tile, e_figure_type herd_type, int
     }
 
     formation* formation = formation_create_herd(herd_type, tile, num_animals);
-    if (formation && formation->id > 0) {
+    if (formation && formation->id > 0 && herd_type == FIGURE_ASP) {
+        figure_asp::create_herd_animals(*formation, num_animals);
+    } else if (formation && formation->id > 0) {
         for (int fig = 0; fig < num_animals; fig++) {
             random_generate_next();
 
@@ -455,6 +458,11 @@ void city_animals_t::update_herd_formation(formation *m) {
                 break;
             }
         }
+    }
+
+    if (m->figure_type == FIGURE_ASP) {
+        figure_asp::update_herd(*m);
+        return;
     }
 
     if (can_spawn_ostrich(m) && allow_span_ostrich()) {

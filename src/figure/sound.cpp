@@ -71,6 +71,10 @@ void figure::play_die_sound() {
     }
 }
 
+void figure::play_sound_file(const xstring& file) {
+    g_sound.speech_play_file(file, 255);
+}
+
 void figure::play_hit_sound() {
     int effect = 0;
     switch (type) {
