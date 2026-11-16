@@ -71,18 +71,32 @@ void content_cache_real_file_paths(pcstr f) {
 }
 
 void content_cache_paths() {
-    pcstr folders[] = {
-        "",
-        "AUDIO",
-        "AUDIO/Ambient",
-        "AUDIO/Music",
-        "AUDIO/Voice",
-        "AUDIO/Wavs",
-        "Data",
+    // Cache every file and folder under the game directory recursively, so lookups such as
+    // "AUDIO/Wavs/CLAY.WAV" resolve on case-sensitive filesystems even when an install uses
+    // different casing (e.g. "Audio/Wavs/clay.wav" on CD / localized releases). Previously only
+    // a fixed list of exactly-cased folders was scanned, so such installs had no sound at all.
+    vfs::path root = content_internal_path("");
+    std::error_code ec;
+    if (!fs::is_directory(root.c_str(), ec)) {
+        return;
+    }
+
+    auto add_cached_path = [] (pcstr entry) {
+        path_uri uri;
+        uri.original = entry;
+        uri.original.replace('\\', '/');
+        uri.lowered = uri.original;
+        uri.lowered.tolower();
+        path_cache.insert({uri.lowered.hash(), uri});
     };
 
-    for (const auto &folder : folders) {
-        content_cache_real_file_paths(folder);
+    add_cached_path(root);
+    for (auto it = fs::recursive_directory_iterator(root.c_str(), fs::directory_options::skip_permission_denied, ec);
+         it != fs::recursive_directory_iterator(); it.increment(ec)) {
+        if (ec) {
+            break;
+        }
+        add_cached_path(it->path().string().c_str());
     }
 }
 
