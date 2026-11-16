@@ -366,6 +366,7 @@ struct scenario_data_t {
     int city_tax_percentage() const;
 
     void load_metadata(const mission_id_t &missionid, bool is_new_mission);
+    void apply_editor_allowed_buildings();
     void bind_data(io_buffer *iob, size_t version, size_t size);
     void init();
 
