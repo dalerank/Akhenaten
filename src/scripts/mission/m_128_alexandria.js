@@ -14,12 +14,14 @@ log_info("akhenaten: mission 128 alexandria started")
 // Enemies:   Bedouin raids (Libyan sprites) at land point [93,210].
 // Timeline:  y1m4 and every year after: request 11 bricks within 12 months (delivered: kingdom +5;
 //            refused or late: -6); every year from y3m9 contaminated water, from y6m4 a gold mine
-//            collapse, from y6m5 a clay pit flood; from y8m0 an 18-month warning, then 19 Bedouin —
-//            repeated (about every two years) whenever no raid is in progress.
+//            collapse, from y6m5 a clay pit flood; Bedouin raid 19 announced y8m0, attacks y9m6, and
+//            again every time its army is gone (its year plus the years since start later).
 //
 // Notes for developers:
 // - The map stores its invasion points interleaved, so the engine reads them as empty; they are
 //   restored in invasion_points_land / invasion_points_sea below.
+// - Raids follow the OG invasion cycle (missions.js mission_raids_month): warnings from the event's month,
+//   the attack months_initial months later, the point rolled from the event's location_fields.
 // - Qadesh and Byblos point at route 19 in the map, which has no polyline; they use the nearby sea
 //   routes 20 and 21 instead.
 // - tag_id: 1001/1002 kingdom rating outcomes of the bricks request; 3000/3100/3200/3300/3400 + year for
@@ -586,16 +588,12 @@ mission128 { // Alexandria.map — An Alexandrian Affair
 	]
 
 	vars {
+		raids : ""
 		bricks_leaves_wired : false
 		bricks_recurring_last_year : -1
 		clay_flood_last_year : -1
 		gold_collapse_last_year : -1
 		contaminated_last_year : -1
-		beduin_raid_last_year : -1
-		beduin_raid_warning_months : 0
-		beduin_raid_active : false
-		beduin_raid_enemies_seen : false
-		beduin_raid_resolved : false
 		start_message_shown : false
 	}
 }
@@ -632,31 +630,6 @@ function mission128_fire_request(tag, resource, amount, months, ok_tag, fail_tag
 	}
 	request.execute()
 	return request
-}
-
-function mission128_beduin_raid(invasion_id, size) {
-	city.start_foreign_army_invasion({
-		invasion_id: invasion_id,
-		enemy: ENEMY_7_LIBIAN,
-		size: size,
-		tilex: 93,
-		tiley: 210,
-		want_destroy_buildings: size,
-		invasion_attack_target: EVENT_ATTACK_TARGET_RANDOM
-	})
-}
-
-function mission128_beduin_warning(tag, months, announcement) {
-	var warn = city.create_foreign_army_attack_warning({
-		tag_id: tag,
-		sender_faction: 0,
-		months: months,
-		invader: EVENT_INVADER_BEDUINS
-	})
-	if (announcement !== undefined) {
-		warn.set_reasons(announcement, PHRASE_bedouin_attacks_you_no_reason_A, 0, 0)
-	}
-	warn.execute()
 }
 
 [es=event_mission_start, mission=mission128]
@@ -746,72 +719,15 @@ function mission128_contaminated_water_recurring(ev) {
 	}).execute()
 }
 
-// pak i=6: beduin size=19 recurring from y8m0, attack=RANDOM, months=18 warning.
-// Sprites = Libyan (Serabit/N.Dahshur beduin pattern). Scenario enemy_id = BARBARIAN.
-[es=event_advance_month, mission=mission128]
-function mission128_beduin_raid_recurring(ev) {
-	if (ev.years_since_start < 8 || ev.month != 0) {
-		return
-	}
-	if (mission.beduin_raid_last_year == ev.years_since_start) {
-		return
-	}
-	if (mission.beduin_raid_warning_months > 0) {
-		return
-	}
-	if (city.num_enemy_formations > 0) {
-		return
-	}
-	if (mission.beduin_raid_active && !mission.beduin_raid_resolved) {
-		return
-	}
-	mission.beduin_raid_last_year = ev.years_since_start
-	mission.beduin_raid_warning_months = 18
-	log_info("akhenaten: mission 128 beduin warning 18mo year=" + ev.years_since_start, {ev:ev})
-	mission128_beduin_warning(3400 + ev.years_since_start, 18)
-}
-
-// Countdown pak months=18; milestones at 12 / 6 / 1; spawn at 0.
-[es=event_advance_month, mission=mission128]
-function mission128_beduin_raid_warning_tick(ev) {
-	if (mission.beduin_raid_warning_months <= 0) {
-		return
-	}
-	// Same month as the calendar warning start — leave months at 18.
-	if (mission.beduin_raid_last_year == ev.years_since_start && ev.month == 0) {
-		return
-	}
-	mission.beduin_raid_warning_months = mission.beduin_raid_warning_months - 1
-	var left = mission.beduin_raid_warning_months
-	var tag = 3500 + ev.years_since_start * 12 + ev.month
-	if (left == 12) {
-		mission128_beduin_warning(tag, 12, PHRASE_bedouin_attacks_you_1year_reminder)
-	} else if (left == 6) {
-		mission128_beduin_warning(tag, 6, PHRASE_bedouin_attacks_you_6month_warning)
-	} else if (left == 1) {
-		mission128_beduin_warning(tag, 1, PHRASE_bedouin_attacks_you_1month_warning)
-	} else if (left == 0) {
-		mission.beduin_raid_enemies_seen = false
-		mission.beduin_raid_resolved = false
-		mission.beduin_raid_active = true
-		mission128_beduin_warning(tag, 0, PHRASE_bedouin_attacks_you_city_attacked_alert)
-		log_info("akhenaten: mission 128 beduin raid size=19 year=" + ev.years_since_start, {ev:ev})
-		mission128_beduin_raid(2 + ev.years_since_start, 19)
-	}
+// map i=6: the recurring Bedouin raid (Libyan soldiers).
+function mission128_raid_list() {
+	return [
+		{ key: "i6", invasion_id: 6, year: 8, month: 0, invader: EVENT_INVADER_BEDUINS, enemy: ENEMY_7_LIBIAN, amount: 19,
+			months_initial: 18, location: [1, -1, 1, 2], attack_target: EVENT_ATTACK_TARGET_RANDOM, recurring: true }
+	]
 }
 
 [es=event_advance_month, mission=mission128]
-function mission128_beduin_raid_resolve(ev) {
-	if (!mission.beduin_raid_active || mission.beduin_raid_resolved) {
-		return
-	}
-	if (city.num_enemy_formations > 0) {
-		mission.beduin_raid_enemies_seen = true
-		return
-	}
-	if (!mission.beduin_raid_enemies_seen) {
-		return
-	}
-	mission.beduin_raid_resolved = true
-	mission.beduin_raid_active = false
+function mission128_raids(ev) {
+	mission_raids_month(mission, mission128, ev, mission128_raid_list())
 }

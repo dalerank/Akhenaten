@@ -7,13 +7,17 @@ log_info("akhenaten: mission 129 bridges started")
 // Gods:      Ra.
 // Monuments: large obelisk, small obelisk.
 // Trade:     none — our city is Djedu, Abu is display only, no trade routes.
-// Enemies:   one Egyptian army (Pharaoh's) at the map entry point.
-// Timeline:  y25m0 Pharaoh's army of 16 attacks the best buildings. No requests or other events.
+// Enemies:   one Egyptian army (Pharaoh's), by sea with 9 warships from the map exit.
+// Timeline:  Pharaoh's army of 16 announced y25m0, attacks the best buildings y25m1. No requests or other
+//            events.
 //
 // Notes for developers:
 // - The map's own building flags turn off the fishing wharf, granary, well and water supply; they are
 //   allowed here because the city sells fish and the map has 8 fishing points.
-// - The map's invasion points are invalid, so the army enters at the map entry point (tile -1,-1).
+// - The map's event sends the army from point 9 (a sea point) with 9 warships; the map has no valid
+//   invasion points, so as in OG invasion_start_sea it sails from the map exit.
+// - Raids follow the OG invasion cycle (missions.js mission_raids_month): warnings from the event's month,
+//   the attack months_initial months later, the point rolled from the event's location_fields.
 // - The army size and year 25 come from the map's event; the subtitle's "20 years" is the map's own text.
 
 mission129 { // Bridges.map
@@ -111,24 +115,8 @@ mission129 { // Bridges.map
 	hide_pak_objects : true
 
 	vars {
-		pharaoh_raid_done : false
-		pharaoh_raid_active : false
-		pharaoh_raid_enemies_seen : false
-		pharaoh_raid_resolved : false
+		raids : ""
 	}
-}
-
-function mission129_pharaoh_raid(invasion_id, size) {
-	__image_request_pak(PACK_ENEMY_EGYPTIAN)
-	city.start_foreign_army_invasion({
-		invasion_id: invasion_id,
-		enemy: ENEMY_3_EGYPTIAN,
-		size: size,
-		tilex: -1,
-		tiley: -1,
-		want_destroy_buildings: size,
-		invasion_attack_target: EVENT_ATTACK_TARGET_BEST_BUILDINGS
-	})
 }
 
 [es=event_mission_start, mission=mission129]
@@ -141,35 +129,16 @@ function mission129_on_start(ev) {
 	}
 }
 
-// map i=0: Pharaoh invasion y25m0 size=16 once, attack=BEST_BUILDINGS (2)
-[es=event_advance_month, mission=mission129]
-function mission129_pharaoh_raid_tick(ev) {
-	if (mission.pharaoh_raid_done || mission.pharaoh_raid_active) {
-		return
-	}
-	if (ev.years_since_start != 25 || ev.month != 0) {
-		return
-	}
-	mission.pharaoh_raid_done = true
-	mission.pharaoh_raid_active = true
-	mission.pharaoh_raid_enemies_seen = false
-	mission.pharaoh_raid_resolved = false
-	log_info("akhenaten: mission 129 pharaoh raid size=16 year=25")
-	mission129_pharaoh_raid(1, 16)
+// map i=0: Pharaoh's army.
+function mission129_raid_list() {
+	return [
+		{ key: "i0", invasion_id: 1, year: 25, month: 0, invader: EVENT_INVADER_PHARAOH, enemy: ENEMY_3_EGYPTIAN,
+			amount: 16, months_initial: 1, location: [9, 9, -1, -1], warships: 9,
+			attack_target: EVENT_ATTACK_TARGET_BEST_BUILDINGS }
+	]
 }
 
 [es=event_advance_month, mission=mission129]
-function mission129_pharaoh_raid_resolve(ev) {
-	if (!mission.pharaoh_raid_active || mission.pharaoh_raid_resolved) {
-		return
-	}
-	if (city.num_enemy_formations > 0) {
-		mission.pharaoh_raid_enemies_seen = true
-		return
-	}
-	if (!mission.pharaoh_raid_enemies_seen) {
-		return
-	}
-	mission.pharaoh_raid_resolved = true
-	mission.pharaoh_raid_active = false
+function mission129_raids(ev) {
+	mission_raids_month(mission, mission129, ev, mission129_raid_list())
 }
