@@ -7,6 +7,9 @@
 #include "city/constants.h"
 #include "overlays/city_overlay_fwd.h"
 
+// OG military.h FIGURE_CORPSE_LAST_TICK 127: figure_combat_handle_corpse removes the corpse on tick 128.
+enum e_figure_corpse { FIGURE_CORPSE_TICKS = 128 };
+
 struct figure_static_params {
     static figure_static_params dummy;
 

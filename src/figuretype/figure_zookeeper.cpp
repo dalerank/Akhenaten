@@ -55,10 +55,6 @@ void figure_zookeeper::figure_action() {
     }
 
     switch (action_state()) {
-    case FIGURE_ACTION_149_CORPSE:
-        base.figure_combat_handle_corpse();
-        break;
-
     case ACTION_0_ENTERTAINER_AT_SCHOOL_CREATED: {
         base.set_flag(e_figure_flag_invisible, true);
         base.animctx.frame = 0;

@@ -43,7 +43,6 @@ void figure_native::figure_action() {
 
     switch (base.action_state) {
     case FIGURE_ACTION_149_CORPSE:
-        base.figure_combat_handle_corpse();
         break;
 
     case ACTION_11_NATIVE_ATTACKING:

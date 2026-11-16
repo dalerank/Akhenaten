@@ -245,7 +245,6 @@ void figure_homeless::figure_action() {
 void figure_homeless::figure_before_action() {
     switch (action_state()) {
     case FIGURE_ACTION_149_CORPSE:
-        base.figure_combat_handle_corpse();
         break;
 
     case ACTION_125_ROAMER_ROAMING:

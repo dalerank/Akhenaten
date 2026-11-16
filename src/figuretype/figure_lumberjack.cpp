@@ -26,7 +26,6 @@ void figure_lumberjack::figure_action() {
     switch (action_state()) {
     case FIGURE_ACTION_149_CORPSE:
         // OG case 4; also reached via lost→kill().
-        base.figure_combat_handle_corpse();
         break;
 
     case ACTION_6_CARTPUSHER_ON_FERRY:

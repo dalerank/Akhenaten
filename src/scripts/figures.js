@@ -129,7 +129,6 @@ figure_ostrich {
 
 	category: figure_category_animal
 	max_damage: 100
-	corpse_time_delay: 500
 	terrain_usage : TERRAIN_USAGE_ANIMAL
 	speed_mult: 1
 	scared_ticks: 128
@@ -311,7 +310,6 @@ figure_antelope {
 	terrain_usage : TERRAIN_USAGE_ANIMAL
 	speed_mult: 1
 	scared_ticks: 128
-	corpse_time_delay: 500
 	rest_base_ticks: 150
 	rest_random_ticks: 150
 	no_tile_wait_ticks: 100
@@ -363,7 +361,6 @@ figure_birds = {
 
 	category: figure_category_animal
 	max_damage: 100
-	corpse_time_delay: 500
 	terrain_usage : TERRAIN_USAGE_ANIMAL
 	speed_mult: 1
 	scared_ticks: 128

@@ -133,7 +133,6 @@ void figure_entertainer::figure_action() {
     int speed_factor = (type() == FIGURE_CHARIOR_RACER ? 2 : 1);
     switch (action_state()) {
     case FIGURE_ACTION_149_CORPSE:
-        base.figure_combat_handle_corpse();
         break;
 
     case ACTION_0_ENTERTAINER_AT_SCHOOL_CREATED:

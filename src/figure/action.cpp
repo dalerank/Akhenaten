@@ -199,7 +199,7 @@ void figure::action_perform() {
         // common action states handling
         dcast()->figure_roaming_action();
 
-        if (state == FIGURE_STATE_DYING) { // update corpses / dying animation
+        if (state == FIGURE_STATE_DYING || action_state == FIGURE_ACTION_149_CORPSE) {
             dcast()->figure_dying_action();
         }
 

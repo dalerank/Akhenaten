@@ -365,7 +365,6 @@ void figure_hippo::figure_action() {
             base.play_die_sound();
         }
         d.frame_count = 8;
-        base.figure_combat_handle_corpse();
         break;
 
     case ACTION_8_HIPPO_CHOOSE:

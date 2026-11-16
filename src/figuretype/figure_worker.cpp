@@ -1104,7 +1104,6 @@ void figure_worker::figure_action() {
 
     if (action == FIGURE_ACTION_149_CORPSE) {
         rd.tomb_bid = 0;
-        base.figure_combat_handle_corpse();
         return;
     }
 

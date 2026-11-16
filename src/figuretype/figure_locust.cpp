@@ -51,7 +51,6 @@ void figure_locust::figure_action() {
 
     switch (action_state()) {
     case FIGURE_ACTION_149_CORPSE:
-        base.figure_combat_handle_corpse();
         break;
 
     case ACTION_120_LOCUST_CREATED:
