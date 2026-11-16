@@ -147,10 +147,10 @@ building_mausoleum {
     // y7: W . 9 9 5 5 9 9 5 5 9 9 5 5 9 9 5 5 6 7 6 w
     //
     blocks [
-      { hint: "#0 sandstone block 0", offset: [2, 2], size: 4, kind: 0 }
-      { hint: "#1 sandstone block 1", offset: [6, 2], size: 4, kind: 1 }
-      { hint: "#2 sandstone block 2", offset: [10, 2], size: 4, kind: 2 }
-      { hint: "#3 sandstone block 3", offset: [14, 2], size: 4, kind: 3 }
+      { hint: "#0 sandstone block 0", offset: [2, 2], size: 4, kind: 0, block: -1, pair: -1 }
+      { hint: "#1 sandstone block 1", offset: [6, 2], size: 4, kind: 1, block: -1, pair: -1 }
+      { hint: "#2 sandstone block 2", offset: [10, 2], size: 4, kind: 2, block: -1, pair: -1 }
+      { hint: "#3 sandstone block 3", offset: [14, 2], size: 4, kind: 3, block: -1, pair: -1 }
     ]
     fence_map [
       "W . 8 8 5 5 8 8 5 5 8 8 5 5 8 8 5 5 6 7 6 w"

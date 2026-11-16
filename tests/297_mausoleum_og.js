@@ -73,8 +73,8 @@ function run_test() {
     __log_marker('t297_240_sandstone')
 
     for (var k = 0; k < 4; k++) {
-        if ((__test_mausoleum_part_kind(__test_mausoleum_part_id(bid, k)) & 255) != k) {
-            return t297_fail('part ' + k + ' is not block kind ' + k)
+        if (__test_mausoleum_part_kind(__test_mausoleum_part_id(bid, k)) != k) {
+            return t297_fail('part ' + k + ' kind word ' + __test_mausoleum_part_kind(__test_mausoleum_part_id(bid, k)) + ', OG block kind ' + k)
         }
     }
     var first_ground = __test_mausoleum_part_id(bid, 4)
