@@ -6,6 +6,7 @@
 #include "io/io_buffer.h"
 #include "scenario/map.h"
 #include "grid/point.h"
+#include "grid/tiles.h"
 
 #include <vector>
 #include <algorithm>
@@ -25,54 +26,22 @@ void map_clay_deplete(int grid_offset, int amount) {
     }
 }
 
+static bool clay_water(int grid_offset) {
+    return map_terrain_is(grid_offset, TERRAIN_WATER) || map_terrain_is(grid_offset, TERRAIN_DEEPWATER)
+           || map_terrain_is(grid_offset, TERRAIN_FLOODPLAIN | TERRAIN_WATER);
+}
+
 void map_clay_init() {
-    // Initialize clay grid: mark all tiles within 2 tiles of water with value 65000
     constexpr int CLAY_MAX = 65000;
     constexpr int RADIUS = 3;
-    
-    int grid_offset = scenario_map_data()->start_offset;
-    int map_width = scenario_map_data()->width;
-    int map_height = scenario_map_data()->height;
-    
-    // First pass: identify all water tiles and mark them
-    std::vector<tile2i> water_tiles;
-    for (int y = 0; y < map_height; y++, grid_offset += scenario_map_data()->border_size) {
-        for (int x = 0; x < map_width; x++, grid_offset++) {
-            // Check for water: TERRAIN_WATER, TERRAIN_DEEPWATER, or floodplain with water
-            if (map_terrain_is(grid_offset, TERRAIN_WATER) || 
-                map_terrain_is(grid_offset, TERRAIN_DEEPWATER) ||
-                map_terrain_is(grid_offset, TERRAIN_FLOODPLAIN | TERRAIN_WATER)) {
-                water_tiles.push_back(tile2i(grid_offset));
-            }
-            // Initialize all tiles to 0
-            map_grid_set(g_terrain_clay, grid_offset, 0);
-        }
-    }
-    
-    grid_offset = scenario_map_data()->start_offset;
-    for (int y = 0; y < map_height; y++, grid_offset += scenario_map_data()->border_size) {
-        for (int x = 0; x < map_width; x++, grid_offset++) {
-             if (map_terrain_is(grid_offset, TERRAIN_WATER) || 
-                map_terrain_is(grid_offset, TERRAIN_DEEPWATER) ||
-                map_terrain_is(grid_offset, TERRAIN_FLOODPLAIN | TERRAIN_WATER)) {
-                continue;
-            }
-            
-            tile2i current_tile(grid_offset);
-            
-            // Check if within RADIUS of any water tile
-            for (const auto& water_tile : water_tiles) {
-                int dx = std::abs(current_tile.x() - water_tile.x());
-                int dy = std::abs(current_tile.y() - water_tile.y());
-                int distance = std::max(dx, dy); // Chebyshev distance (king move)
-                
-                if (distance <= RADIUS) {
-                    map_grid_set(g_terrain_clay, grid_offset, CLAY_MAX);
-                    break;
-                }
-            }
-        }
-    }
+
+    const int map_width = scenario_map_data()->width;
+    const std::vector<uint8_t> distance = map_grid_king_distance(clay_water, RADIUS);
+    map_tiles_foreach_map_tile([&](int grid_offset) {
+        const tile2i tile(grid_offset);
+        const bool near_water = !clay_water(grid_offset) && distance[(size_t)tile.y() * map_width + tile.x()] <= RADIUS;
+        map_grid_set(g_terrain_clay, grid_offset, near_water ? CLAY_MAX : 0);
+    });
 }
 
 io_buffer* iob_clay = new io_buffer([](io_buffer* iob, size_t version) {

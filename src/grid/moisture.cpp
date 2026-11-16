@@ -38,14 +38,18 @@ uint8_t map_grasslevel_get(int grid_offset) {
     return 13;
 }
 
+static bool moisture_water(int grid_offset) {
+    return map_terrain_is(grid_offset, TERRAIN_WATER | TERRAIN_DEEPWATER)
+           && !map_terrain_is(grid_offset, TERRAIN_FLOODPLAIN);
+}
+
 static int distance_to_water(tile2i tile, int max_d) {
     for (int r = 1; r <= max_d; ++r) {
         const grid_area area = map_grid_get_area(tile, 1, r);
         for (int yy = area.tmin_y; yy <= area.tmax_y; ++yy) {
             for (int xx = area.tmin_x; xx <= area.tmax_x; ++xx) {
                 const int n = MAP_OFFSET(xx, yy);
-                if (map_terrain_is(n, TERRAIN_WATER | TERRAIN_DEEPWATER)
-                    && !map_terrain_is(n, TERRAIN_FLOODPLAIN)) {
+                if (moisture_water(n)) {
                     return r;
                 }
             }
@@ -94,6 +98,8 @@ void map_moisture_recompute_profile() {
     int level12_count[17] = {0};
     int grass_count[17] = {0};
 
+    const int map_width = scenario_map_data()->width;
+    const std::vector<uint8_t> water_distance = map_grid_king_distance(moisture_water, probe_cap);
     map_tiles_foreach_map_tile([&](int grid_offset) {
         if (map_terrain_is(grid_offset, TERRAIN_NOT_CLEAR)) {
             return;
@@ -104,7 +110,8 @@ void map_moisture_recompute_profile() {
             // not gradient samples
             return;
         }
-        int d = distance_to_water(tile2i(grid_offset), probe_cap);
+        const tile2i tile(grid_offset);
+        const int d = std::max<int>(1, water_distance[(size_t)tile.y() * map_width + tile.x()]);
         if (d < 1 || d > probe_cap) {
             // farther than the probe cap from any water — not part of the
             // measured grass band
