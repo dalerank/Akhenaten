@@ -112,8 +112,11 @@ struct enemy_properties_t {
     std::array<e_figure_type, 3> figure_types;
     xstring army_title;
     e_formation_layout layout;
+    e_figure_type warship;
+    e_figure_type transport;
 };
-ANK_CONFIG_STRUCT(enemy_properties_t, percentage_type1, percentage_type2, percentage_type3, figure_types, army_title, layout)
+ANK_CONFIG_STRUCT(enemy_properties_t, percentage_type1, percentage_type2, percentage_type3, figure_types, army_title,
+  layout, warship, transport)
 
 struct invasion_data_t {
     enum {

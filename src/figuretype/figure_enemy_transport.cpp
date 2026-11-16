@@ -16,6 +16,7 @@
 #include "scenario/invasion_auto_resolve.h"
 #include "scenario/map.h"
 #include "scenario/scenario.h"
+#include "scenario/scenario_invasion.h"
 #include "widget/widget_city.h"
 
 const e_action_enemy_transport_tokens_t ANK_CONFIG_ENUM(e_action_enemy_transport_tokens)
@@ -78,24 +79,9 @@ figure_id enemy_ship_closest_player_ship(tile2i center, figure_id self, int size
 }
 
 e_figure_type enemy_transport_type_for(e_enemy_type enemy) {
-    switch (enemy) {
-    case ENEMY_1_ASSYRIAN: return FIGURE_ENEMY_ASSYRIAN_TRANSPORT_SHIP;
-    case ENEMY_2_CANAANITE: return FIGURE_ENEMY_CANAANITE_TRANSPORT_SHIP;
-    case ENEMY_3_EGYPTIAN: return FIGURE_ENEMY_EGYPTIAN_TRANSPORT_SHIP;
-    case ENEMY_4_HITTITE: return FIGURE_ENEMY_HITTITE_TRANSPORT_SHIP;
-    case ENEMY_5_HYKSOS: return FIGURE_ENEMY_HYKSOS_TRANSPORT_SHIP;
-    case ENEMY_6_KUSHITE: return FIGURE_ENEMY_KUSHITE_TRANSPORT_SHIP;
-    case ENEMY_7_LIBIAN: return FIGURE_ENEMY_LIBIAN_TRANSPORT_SHIP;
-    case ENEMY_8_NUBIAN: return FIGURE_ENEMY_NUBIAN_TRANSPORT_SHIP;
-    case ENEMY_9_PERSIAN: return FIGURE_ENEMY_PERSIAN_TRANSPORT_SHIP;
-    case ENEMY_10_PHOENICIAN: return FIGURE_ENEMY_PHOENICIAN_TRANSPORT_SHIP;
-    case ENEMY_11_ROMAN: return FIGURE_ENEMY_ROMAN_TRANSPORT_SHIP;
-    case ENEMY_12_SEAPEOPLE: return FIGURE_ENEMY_SEAPEOPLE_TRANSPORT_SHIP;
-    case ENEMY_0_BARBARIAN:
-        return FIGURE_ENEMY_BARBARIAN_TRANSPORT_SHIP;
-    default:
-        return FIGURE_ENEMY_TRANSPORT;
-    }
+    const e_figure_type type
+      = (enemy >= 0 && enemy < ENEMY_COUNT) ? g_invasions.get_prop(enemy).transport : FIGURE_NONE;
+    return type != FIGURE_NONE ? type : FIGURE_ENEMY_TRANSPORT;
 }
 
 bool enemy_transport_of_invasion_exists(int invasion_id) {

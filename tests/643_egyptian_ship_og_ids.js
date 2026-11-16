@@ -29,6 +29,18 @@ function run_test() {
     }
     __log_marker('egyptian_ship_ids_ok')
 
+    var nations = [enemy_barbarian, enemy_assyrian, enemy_canaanite, enemy_egyptian, enemy_hittite, enemy_hyksos,
+        enemy_kushite, enemy_libian, enemy_nubian, enemy_persian, enemy_phoenician, enemy_roman, enemy_seapeople]
+    for (var n = 0; n < nations.length; n++) {
+        if (nations[n].type != n || !nations[n].warship || !nations[n].transport) {
+            return test643_fail('enemy config ' + n + ' type=' + nations[n].type + ' warship=' + nations[n].warship
+                + ' transport=' + nations[n].transport)
+        }
+    }
+    if (enemy_egyptian.warship != 100 || enemy_egyptian.transport != 101) {
+        return test643_fail('enemy_egyptian ships ' + enemy_egyptian.warship + '/' + enemy_egyptian.transport)
+    }
+
     test_reload_city_session('data/default.map')
     __test_clear_enemy_formations()
     var cx = (__scenario_map.width / 2) | 0
