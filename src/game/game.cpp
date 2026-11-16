@@ -410,7 +410,7 @@ bool game_init(game_opts opts) {
         pcstr base = vfs::platform_file_manager_get_base_path();
         return (base && *base) ? vfs::path(base, "/", folder) : vfs::path(folder);
     };
-    vfs::create_folders(data_folder(vfs::SAVE_FOLDER));
+    vfs::create_folders(vfs::content_path(vfs::save_folder().c_str()));
     vfs::create_folders(data_folder(vfs::MAPS_FOLDER));
 
     if (!image_load_paks()) {

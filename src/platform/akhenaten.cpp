@@ -10,6 +10,7 @@
 #include "game/game.h"
 #include "input/scroll.h"
 #include "graphics/screen.h"
+#include "content/dir.h"
 #include "content/vfs.h"
 #include "io/gamefiles/lang.h"
 #include "game/game_config.h"
@@ -480,6 +481,12 @@ static void setup() {
     game_opts opts = g_args.use_sound() ? game_opt_sound : game_opt_none;
     platform.append_startup_log("Startup: game_init");
 
+    if (g_args.is_integral_tests()) {
+        std::error_code ec;
+        const auto saves = std::filesystem::absolute(std::filesystem::path(platform.user_directory()) / "Save", ec);
+        vfs::set_save_folder(saves.generic_string().c_str());
+        logs::info("[integraltests] saves go to %s", saves.generic_string().c_str());
+    }
 
     if (!game_init(opts)) {
         platform.append_startup_log("Startup: game_init failed");

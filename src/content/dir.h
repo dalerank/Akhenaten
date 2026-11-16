@@ -49,6 +49,8 @@ std::vector<path> dir_find_all_subdirectories(vfs::path dir, bool);
 void dir_look_entries(pcstr path, xfunction<void(pcstr, bool)> fn);
 
 vfs::path content_path(pcstr filepath);
+vfs::path save_folder();
+void set_save_folder(pcstr absolute);
 vfs::path current_path(pcstr filepath);
 
 bool is_directory(pcstr path);

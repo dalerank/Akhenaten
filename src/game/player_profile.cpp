@@ -82,7 +82,7 @@ bool player_profile_t::remove(pcstr player_name) {
     }
 
     vfs::remove_folder(fullpath_player_folder(player_name));
-    vfs::file_remove(vfs::path(vfs::SAVE_FOLDER, "/", player_name, ".dat"));
+    vfs::file_remove(vfs::path(vfs::save_folder().c_str(), "/", player_name, ".dat"));
 
     if (g_player.name == player_name) {
         g_player.select("");
@@ -203,7 +203,7 @@ bool player_profile_t::save() const {
 }
 
 bool player_profile_t::import_legacy_dat() {
-    const vfs::path legacy(vfs::SAVE_FOLDER, "/", name.c_str(), ".dat");
+    const vfs::path legacy(vfs::save_folder().c_str(), "/", name.c_str(), ".dat");
     buffer buf(DAT_FILE_SIZE);
     const int size = io_read_file_into_buffer(legacy, NOT_LOCALIZED, &buf, DAT_FILE_SIZE);
     if (!size) {

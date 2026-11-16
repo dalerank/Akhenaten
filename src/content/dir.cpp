@@ -36,7 +36,31 @@ struct path_uri {
 std::map<size_t, path_uri> path_cache;
 std::set<size_t> path_missing;
 
+static bool is_absolute_path(pcstr filepath) {
+    if (!filepath || !*filepath) {
+        return false;
+    }
+    if (platform.is_windows()) {
+        return std::isalpha(*filepath) && (*(filepath + 1) == ':')
+               && ((*(filepath + 2) == '/') || (*(filepath + 2) == '\\'));
+    }
+    return (*filepath) == '/';
+}
+
+static vfs::path g_save_folder_override;
+
+void set_save_folder(pcstr absolute) {
+    g_save_folder_override = absolute ? absolute : "";
+}
+
+vfs::path save_folder() {
+    return g_save_folder_override.empty() ? vfs::path(SAVE_FOLDER) : g_save_folder_override;
+}
+
 vfs::path content_internal_path(pcstr path) {
+    if (is_absolute_path(path)) {
+        return vfs::path(path);
+    }
     pcstr dir = platform_file_manager_get_base_path();
     vfs::path corrected_path(dir, "/", path);
     return corrected_path;
@@ -288,16 +312,7 @@ vfs::path vfs::path::resolve() {
 #ifndef GAME_PLATFORM_ANDROID
     pcstr filepath = data();
 
-    // Check if the path is absolute
-    bool is_absolute_path = false;
-    if (platform.is_windows()) {
-        is_absolute_path = std::isalpha(*filepath) && (*(filepath + 1) == ':') && ((*(filepath + 2) == '/') || (*(filepath + 2) == '\\'));
-    } else {
-        is_absolute_path = (*filepath) == '/';
-    }
-
-    // For absolute paths, return as-is (normalized)
-    if (is_absolute_path) {
+    if (is_absolute_path(filepath)) {
         return filepath;
     }
 

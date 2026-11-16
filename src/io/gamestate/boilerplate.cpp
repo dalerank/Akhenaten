@@ -127,7 +127,7 @@ uint32_t svx_container_version() {
 }
 
 vfs::path fullpath_player_folder(pcstr player_name) {
-    return vfs::path(vfs::SAVE_FOLDER, "/", player_name ? player_name : "");
+    return vfs::path(vfs::save_folder().c_str(), "/", player_name ? player_name : "");
 }
 
 vfs::path fullpath_saves(vfs::path filename) {
