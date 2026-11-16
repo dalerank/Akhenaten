@@ -175,7 +175,13 @@ leave useful existing comments alone.
 (`.github/workflows/akhenaten_integral_tests.yml`); a red run blocks the PR.
 **This is the default way to verify a change.**
 
-Run the whole suite (the invocation CI uses):
+Run the whole suite in parallel (the invocation CI uses): the process starts N copies of itself, each running
+every N-th test with its own user dir `<user-dir>/shard-<i>`, then prints the failures with their reasons, the slowest
+tests and `[integraltests] N passed, M failed, K problem(s)`, and writes `summary.txt` / `summary.md` to `--user-dir`:
+```
+build/RelWithDebInfo/akhenaten.exe --integraltests --integraltest-jobs 8 --user-dir build/integraltests --no-logo --no-resource --nosound --window --size 800x600 --config-keys-baseline tools/config_keys_baseline.txt
+```
+One process, no shards:
 ```
 build/RelWithDebInfo/akhenaten.exe --integraltests --no-logo --no-resource --nosound --window --size 800x600
 ```
@@ -184,7 +190,11 @@ Run one test — the tests whose filename stem starts with NAME (case-insensitiv
 ```
 build/RelWithDebInfo/akhenaten.exe --integraltests --integraltest-only 06 --no-logo --no-resource --nosound --window --size 800x600
 ```
-Exit code is `0` only when every test passed.
+Exit code is `0` only when every test passed. `--integraltest-shard I/N` keeps every N-th selected test from
+index I (what `--integraltest-jobs` passes to each child).
+
+Every test leaves `<user-dir>/results/<test stem>.result` (`status=PASS|FAIL`, `ms=`, and for a failure `reason=`
+plus the test's `FAIL`/`error:` log lines), so a run is read from those files, not from one shared log.
 
 Results go to the log, **not** to stdout:
 - Windows: `%APPDATA%/Akhenaten/akhenaten-log.txt`
@@ -194,6 +204,11 @@ Results go to the log, **not** to stdout:
 
 Grep it for `\[test:.*\] (PASS|FAIL)` per test and `\[integraltests\] N passed, M failed`
 for the summary.
+
+Under `--integraltests` saves go to `<user-dir>/Save`, the monthly and replay autosaves are off and the renderer
+runs without vsync. Tests check save/load in memory (`__test_save_memory(name)` / `__test_load_memory(name)`,
+`__test_save_roundtrip(name)`); only `92_ironwill` (quicksave + Ironwill), `309_save_roundtrip` and `373_mods_saveload` (the mods switch reloads the
+save file) write a save file.
 
 Tests that need real Pharaoh data take the install path as the last positional argument;
 `--no-resource` covers the rest.

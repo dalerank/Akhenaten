@@ -702,6 +702,10 @@ int main(int argc, char** argv) {
     logs::initialize();
     game_debug_cli_attach_log_sink();
 
+    if (const int jobs = integral_tests_parallel_jobs()) {
+        return run_integral_tests_parallel(argc, argv, jobs);
+    }
+
     setup();
 
     if (g_args.should_unpack_scripts()) {

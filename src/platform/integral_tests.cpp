@@ -19,13 +19,20 @@
 #include "mujs/mujs.h"
 #include "graphics/screenshot.h"
 #include "platform/arguments.h"
+#include "platform/child_process.h"
+#include "platform/platform.h"
 #include "platform/version.hpp"
 
 #include <SDL.h>
 
 #include <algorithm>
 #include <cctype>
+#include <cstdio>
+#include <cstdlib>
 #include <cstring>
+#include <filesystem>
+#include <fstream>
+#include <iterator>
 #include <string>
 #include <thread>
 #include <vector>
@@ -418,15 +425,214 @@ static void clear_global(js_State* J, const char* name) {
     js_setglobal(J, name);
 }
 
-int run_js_tests() {
-    constexpr int kMaxFramesPerTest = 600; // ~10s at 60fps
+static constexpr int kMaxFramesPerTest = 600;
 
+static std::string test_stem(const xstring& name) {
+    std::string stem = name.c_str();
+    const size_t slash = stem.find_last_of("/\\");
+    if (slash != std::string::npos) {
+        stem = stem.substr(slash + 1);
+    }
+    const size_t dot = stem.rfind('.');
+    if (dot != std::string::npos) {
+        stem = stem.substr(0, dot);
+    }
+    return stem;
+}
+
+static void write_test_result(const xstring& name, const std::string& reason, Uint32 ms) {
+    std::error_code ec;
+    const std::filesystem::path dir = std::filesystem::path(platform.user_directory()) / "results";
+    std::filesystem::create_directories(dir, ec);
+    std::ofstream out(dir / (test_stem(name) + ".result"), std::ios::binary | std::ios::trunc);
+    if (!out) {
+        logs::error("[integraltests] cannot write result file for %s", name.c_str());
+        return;
+    }
+    out << "test=" << name.c_str() << "\n";
+    out << "status=" << (reason.empty() ? "PASS" : "FAIL") << "\n";
+    out << "ms=" << ms << "\n";
+    if (!reason.empty()) {
+        out << "reason=" << reason << "\n";
+        for (const std::string& line : test_log_lines_with({"FAIL", "error:"}, 20)) {
+            out << "log=" << line << "\n";
+        }
+    }
+}
+
+static std::string run_one_test(const xstring& name, const game_features::snapshot_t& features_at_start) {
+    logs::info("[integraltests] >> %s", name.c_str());
+    logs::flush();
+    test_log_mark_test_start();
+
+    // Fresh map/UI for every test — leftover city/editor/events otherwise bleed.
+    test_reset_session_between_tests();
+    // crt_rand is not part of the session reset, so without this a test inherits the previous one's stream.
+    anti_scum_srand(1);
+
+    g_app.quit = false;
+    SDL_FlushEvent(SDL_USEREVENT);
+
+    game_features::restore(features_at_start);
+    game_features::gameopt_ironwill.set(false);
+    // A test may rebuild the VM (disabling a mod does), which frees the previous js_State.
+    js_State* J = js_vm_state();
+    // Otherwise a test without run_test()/check_valid() would run the previous test's.
+    clear_global(J, "run_test");
+    clear_global(J, "check_valid");
+    const int stale = js_vm_force_idle_stack();
+    if (stale > 0) {
+        logs::info("[test:%s] cleared %d stale MuJS stack slot(s) before test", name.c_str(), stale);
+    }
+
+    const int load_baseline = J->gettop();
+    js_vm_reset_error();
+    logs::info("[test:%s] loading script", name.c_str());
+    if (!js_vm_load_file_and_exec(name.c_str())) {
+        logs::error("[test:%s] FAIL: load error", name.c_str());
+        pop_to(J, load_baseline);
+        js_vm_reset_error();
+        return "load error";
+    }
+    js_vm_sync({});           // run include() queued while loading the test script
+    pop_to(J, load_baseline); // discard top-level result residue
+    logs::info("[test:%s] script loaded", name.c_str());
+    const uint32_t vm_generation = js_vm_generation();
+
+    // run_test
+    if (!js_vm_global_is_callable(J, "run_test")) {
+        logs::error("[test:%s] FAIL: missing run_test()", name.c_str());
+        return "missing run_test()";
+    }
+    g_test_signal_ready = false;
+    logs::info("[test:%s] calling run_test()", name.c_str());
+    if (!call_global_void(J, "run_test")) {
+        logs::error("[test:%s] FAIL: run_test threw", name.c_str());
+        return "run_test threw";
+    }
+    logs::info("[test:%s] run_test() returned, signal_ready=%d", name.c_str(), g_test_signal_ready ? 1 : 0);
+
+    // Pump frames while the game runs as usual.
+    int frames = 0;
+    while (!g_test_signal_ready && frames < kMaxFramesPerTest && !g_app.quit) {
+        g_app.pump_one_frame();
+        ++frames;
+    }
+
+    // Fresh framebuffer, then end-of-test display shot (skipped under --no-resource).
+    g_app.pump_one_frame();
+    {
+        pcstr leaf = name.c_str();
+        if (const char* slash = std::strrchr(leaf, '/')) {
+            leaf = slash + 1;
+        }
+        if (const char* bslash = std::strrchr(leaf, '\\')) {
+            leaf = bslash + 1;
+        }
+        size_t stem_len = std::strlen(leaf);
+        if (stem_len > 3 && std::strcmp(leaf + stem_len - 3, ".js") == 0) {
+            stem_len -= 3;
+        }
+        bstring256 shot_name;
+        shot_name.printf("end_");
+        shot_name.ncat(leaf, stem_len);
+        graphics_save_screenshot_as(SCREENSHOT_DISPLAY, shot_name.c_str());
+    }
+
+    if (!g_test_signal_ready) {
+        logs::error("[test:%s] FAIL: timeout after %d frames (forgot __test_signal_ready?)", name.c_str(), frames);
+        return "timeout, no __test_signal_ready";
+    }
+    logs::info("[test:%s] finished after %d frame(s)", name.c_str(), frames);
+
+    if (test_log_contains("!!! TypeError:")) {
+        logs::error("[test:%s] FAIL: !!! TypeError: found in log", name.c_str());
+        return "TypeError in log";
+    }
+
+    if (test_log_contains("[record-overflow]")) {
+        logs::error("[test:%s] FAIL: a building record overflowed its save slot (see [record-overflow])", name.c_str());
+        return "building record overflow";
+    }
+
+    if (test_log_contains("[stub-record]")) {
+        logs::error("[test:%s] FAIL: record 0 of buildings or figures was written (see [stub-record])", name.c_str());
+        return "stub record written";
+    }
+
+    if (js_vm_generation() != vm_generation) {
+        // The rebuilt VM no longer has this test's globals; load the file again for check_valid().
+        J = js_vm_state();
+        logs::info("[test:%s] VM was rebuilt during the test, reloading the script", name.c_str());
+        js_vm_reset_error();
+        const int reload_baseline = J->gettop();
+        js_vm_load_file_and_exec(name.c_str());
+        js_vm_sync({});
+        pop_to(J, reload_baseline);
+    }
+
+    // check_valid -> bool
+    if (!js_vm_global_is_callable(J, "check_valid")) {
+        logs::error("[test:%s] FAIL: missing check_valid()", name.c_str());
+        return "missing check_valid()";
+    }
+    const int cv_baseline = J->gettop();
+    js_vm_reset_error();
+    logs::info("[test:%s] calling check_valid() (log=%s)", name.c_str(), logs::output_path());
+    js_getglobal(J, "check_valid");
+    js_pushnull(J); // `this`
+    int cv_ok = js_vm_trypcall_keep_result(J, 0);
+    bool result = false;
+    if (cv_ok) {
+        // Accept any truthy return: explicit boolean is normal, but
+        // returning 1, "ok", an object, etc. should also count as PASS.
+        result = (js_toboolean(J, -1) != 0);
+    }
+    pop_to(J, cv_baseline);
+    logs::flush();
+
+    std::string reason;
+    if (!cv_ok) {
+        logs::error("[test:%s] FAIL: check_valid threw", name.c_str());
+        reason = "check_valid threw";
+    } else if (!result) {
+        logs::error("[test:%s] FAIL (check_valid returned false)", name.c_str());
+        reason = "check_valid returned false";
+    }
+
+    // MuJS value stack must be idle-empty between tests (catches hot-reload leaks).
+    const int leaked = js_vm_force_idle_stack();
+    if (leaked > 0) {
+        logs::error("[test:%s] FAIL: MuJS stack not idle after test (leaked %d slot(s))", name.c_str(), leaked);
+        reason = "MuJS stack not idle after test";
+    }
+    return reason;
+}
+
+int run_js_tests() {
     if (!js_vm_state()) {
         logs::error("[integraltests] JS VM not initialized");
         return 1;
     }
 
-    const auto files = list_test_files();
+    auto files = list_test_files();
+    const xstring shard = g_args.get_str("integraltest_shard");
+    if (!shard.empty()) {
+        int index = -1;
+        int count = 0;
+        if (std::sscanf(shard.c_str(), "%d/%d", &index, &count) != 2 || count < 1 || index < 0 || index >= count) {
+            logs::error("[integraltests] bad --integraltest-shard %s, expected I/N with 0 <= I < N", shard.c_str());
+            return 1;
+        }
+        hvector<xstring, 16> mine;
+        for (int i = 0; i < (int)files.size(); ++i) {
+            if (i % count == index) {
+                mine.push_back(files[i]);
+            }
+        }
+        files = mine;
+        logs::info("[integraltests] shard %d/%d: %d test(s)", index, count, (int)files.size());
+    }
     if (files.empty()) {
         if (!g_args.get_integraltest_only().empty()) {
             // user asked for a specific test that doesn't exist — that's a hard failure
@@ -442,171 +648,17 @@ int run_js_tests() {
 
     int passed = 0;
     int failed = 0;
-    for (const auto &name : files) {
-        logs::info("[integraltests] >> %s", name.c_str());
-        logs::flush();
-        test_log_mark_test_start();
-
-        // Fresh map/UI for every test — leftover city/editor/events otherwise bleed.
-        test_reset_session_between_tests();
-        // crt_rand is not part of the session reset, so without this a test inherits the previous one's stream.
-        anti_scum_srand(1);
-
-        g_app.quit = false;
-        SDL_FlushEvent(SDL_USEREVENT);
-
-        game_features::restore(features_at_start);
-        game_features::gameopt_ironwill.set(false);
-        // A test may rebuild the VM (disabling a mod does), which frees the previous js_State.
-        js_State* J = js_vm_state();
-        // Otherwise a test without run_test()/check_valid() would run the previous test's.
-        clear_global(J, "run_test");
-        clear_global(J, "check_valid");
-        const int stale = js_vm_force_idle_stack();
-        if (stale > 0) {
-            logs::info("[test:%s] cleared %d stale MuJS stack slot(s) before test", name.c_str(), stale);
-        }
-
-        const int load_baseline = J->gettop();
-        js_vm_reset_error();
-        logs::info("[test:%s] loading script", name.c_str());
-        if (!js_vm_load_file_and_exec(name.c_str())) {
-            logs::error("[test:%s] FAIL: load error", name.c_str());
-            pop_to(J, load_baseline);
-            js_vm_reset_error();
-            ++failed;
-            continue;
-        }
-        js_vm_sync({}); // run include() queued while loading the test script
-        pop_to(J, load_baseline); // discard top-level result residue
-        logs::info("[test:%s] script loaded", name.c_str());
-        const uint32_t vm_generation = js_vm_generation();
-
-        // run_test
-        if (!js_vm_global_is_callable(J, "run_test")) {
-            logs::error("[test:%s] FAIL: missing run_test()", name.c_str());
-            ++failed;
-            continue;
-        }
-        g_test_signal_ready = false;
-        logs::info("[test:%s] calling run_test()", name.c_str());
-        if (!call_global_void(J, "run_test")) {
-            logs::error("[test:%s] FAIL: run_test threw", name.c_str());
-            ++failed;
-            continue;
-        }
-        logs::info("[test:%s] run_test() returned, signal_ready=%d", name.c_str(), g_test_signal_ready ? 1 : 0);
-
-        // Pump frames while the game runs as usual.
-        int frames = 0;
-        while (!g_test_signal_ready && frames < kMaxFramesPerTest && !g_app.quit) {
-            g_app.pump_one_frame();
-            ++frames;
-        }
-
-        // Fresh framebuffer, then end-of-test display shot (skipped under --no-resource).
-        g_app.pump_one_frame();
-        {
-            pcstr leaf = name.c_str();
-            if (const char *slash = std::strrchr(leaf, '/')) {
-                leaf = slash + 1;
-            }
-            if (const char *bslash = std::strrchr(leaf, '\\')) {
-                leaf = bslash + 1;
-            }
-            size_t stem_len = std::strlen(leaf);
-            if (stem_len > 3 && std::strcmp(leaf + stem_len - 3, ".js") == 0) {
-                stem_len -= 3;
-            }
-            bstring256 shot_name;
-            shot_name.printf("end_");
-            shot_name.ncat(leaf, stem_len);
-            graphics_save_screenshot_as(SCREENSHOT_DISPLAY, shot_name.c_str());
-        }
-
-        if (!g_test_signal_ready) {
-            logs::error("[test:%s] FAIL: timeout after %d frames (forgot __test_signal_ready?)",
-                        name.c_str(), frames);
-            ++failed;
-            continue;
-        }
-        logs::info("[test:%s] finished after %d frame(s)", name.c_str(), frames);
-
-        if (test_log_contains("!!! TypeError:")) {
-            logs::error("[test:%s] FAIL: !!! TypeError: found in log", name.c_str());
-            ++failed;
-            continue;
-        }
-
-        if (test_log_contains("[record-overflow]")) {
-            logs::error("[test:%s] FAIL: a building record overflowed its save slot (see [record-overflow])",
-              name.c_str());
-            ++failed;
-            continue;
-        }
-
-        if (test_log_contains("[stub-record]")) {
-            logs::error("[test:%s] FAIL: record 0 of buildings or figures was written (see [stub-record])",
-              name.c_str());
-            ++failed;
-            continue;
-        }
-
-        if (js_vm_generation() != vm_generation) {
-            // The rebuilt VM no longer has this test's globals; load the file again for check_valid().
-            J = js_vm_state();
-            logs::info("[test:%s] VM was rebuilt during the test, reloading the script", name.c_str());
-            js_vm_reset_error();
-            const int reload_baseline = J->gettop();
-            js_vm_load_file_and_exec(name.c_str());
-            js_vm_sync({});
-            pop_to(J, reload_baseline);
-        }
-
-        // check_valid -> bool
-        if (!js_vm_global_is_callable(J, "check_valid")) {
-            logs::error("[test:%s] FAIL: missing check_valid()", name.c_str());
-            ++failed;
-            continue;
-        }
-        const int cv_baseline = J->gettop();
-        js_vm_reset_error();
-        logs::info("[test:%s] calling check_valid() (log=%s)", name.c_str(), logs::output_path());
-        js_getglobal(J, "check_valid");
-        js_pushnull(J); // `this`
-        int cv_ok = js_vm_trypcall_keep_result(J, 0);
-        bool result = false;
-        if (cv_ok) {
-            // Accept any truthy return: explicit boolean is normal, but
-            // returning 1, "ok", an object, etc. should also count as PASS.
-            result = (js_toboolean(J, -1) != 0);
-        }
-        pop_to(J, cv_baseline);
-        logs::flush();
-
-        bool ok_result = false;
-        if (!cv_ok) {
-            logs::error("[test:%s] FAIL: check_valid threw", name.c_str());
-        } else if (!result) {
-            logs::error("[test:%s] FAIL (check_valid returned false)", name.c_str());
-        } else {
-            ok_result = true;
-        }
-
-        // MuJS value stack must be idle-empty between tests (catches hot-reload leaks).
-        const int leaked = js_vm_force_idle_stack();
-        if (leaked > 0) {
-            logs::error("[test:%s] FAIL: MuJS stack not idle after test (leaked %d slot(s))", name.c_str(),
-                        leaked);
-            ok_result = false;
-        }
-
-        if (ok_result) {
+    for (const auto& name : files) {
+        const Uint32 started = SDL_GetTicks();
+        const std::string reason = run_one_test(name, features_at_start);
+        const Uint32 ms = SDL_GetTicks() - started;
+        if (reason.empty()) {
             logs::info("[test:%s] PASS", name.c_str());
             ++passed;
         } else {
             ++failed;
         }
+        write_test_result(name, reason, ms);
     }
     js_vm_reset_error();
     const int final_leak = js_vm_force_idle_stack();
@@ -676,4 +728,230 @@ int run_integral_tests() {
 
     logs::error("[integraltests] finished with %d C++ failure(s), JS rc=%d", failure_count, js_rc);
     return 1;
+}
+
+namespace {
+
+    struct parallel_result {
+        std::string test;
+        std::string shard;
+        std::string status;
+        std::string reason;
+        std::vector<std::string> log;
+        long ms = 0;
+    };
+
+    std::string read_text(const std::filesystem::path& path) {
+        std::ifstream in(path, std::ios::binary);
+        return std::string(std::istreambuf_iterator<char>(in), std::istreambuf_iterator<char>());
+    }
+
+    std::vector<std::string> split_lines(const std::string& text) {
+        std::vector<std::string> lines;
+        size_t start = 0;
+        while (start < text.size()) {
+            size_t end = text.find('\n', start);
+            if (end == std::string::npos) {
+                end = text.size();
+            }
+            std::string line = text.substr(start, end - start);
+            if (!line.empty() && line.back() == '\r') {
+                line.pop_back();
+            }
+            lines.push_back(line);
+            start = end + 1;
+        }
+        return lines;
+    }
+
+    parallel_result read_result(const std::filesystem::path& path, const std::string& shard) {
+        parallel_result r;
+        r.shard = shard;
+        for (const std::string& line : split_lines(read_text(path))) {
+            const size_t eq = line.find('=');
+            if (eq == std::string::npos) {
+                continue;
+            }
+            const std::string key = line.substr(0, eq);
+            const std::string value = line.substr(eq + 1);
+            if (key == "test") {
+                r.test = value;
+            } else if (key == "status") {
+                r.status = value;
+            } else if (key == "reason") {
+                r.reason = value;
+            } else if (key == "ms") {
+                r.ms = std::atol(value.c_str());
+            } else if (key == "log") {
+                r.log.push_back(value);
+            }
+        }
+        return r;
+    }
+
+    std::vector<std::string> shard_problems(const std::filesystem::path& log_path, const std::string& shard, int rc) {
+        std::vector<std::string> problems;
+        std::error_code ec;
+        if (!std::filesystem::exists(log_path, ec)) {
+            problems.push_back(shard + ": no log, rc=" + std::to_string(rc));
+            return problems;
+        }
+        bool summary = false;
+        for (const std::string& line : split_lines(read_text(log_path))) {
+            if (line.find("[integraltests] ") != std::string::npos && line.find(" passed, ") != std::string::npos) {
+                summary = true;
+            }
+            if (line.find("[config-keys] FAIL") != std::string::npos
+                || line.find("[integraltests] finished with") != std::string::npos
+                || line.find("[integraltests] FAIL") != std::string::npos) {
+                problems.push_back(shard + ": " + line);
+            }
+        }
+        if (!summary) {
+            problems.push_back(shard + ": no suite summary in the log (crashed or killed), rc=" + std::to_string(rc));
+        } else if (rc != 0 && problems.empty()) {
+            problems.push_back(shard + ": exit code " + std::to_string(rc));
+        }
+        return problems;
+    }
+
+} // namespace
+
+int integral_tests_parallel_jobs() {
+    if (!g_args.is_integral_tests() || !g_args.get_str("integraltest_shard").empty()) {
+        return 0;
+    }
+    const int jobs = std::atoi(g_args.get_str("integraltest_jobs").c_str());
+    return jobs > 1 ? jobs : 0;
+}
+
+int run_integral_tests_parallel(int argc, char** argv, int jobs) {
+    namespace fs = std::filesystem;
+    if (g_args.is("config_keys_update", false)) {
+        logs::error("[integraltests] --config-keys-update needs the whole suite in "
+                    "one process, drop --integraltest-jobs");
+        return 1;
+    }
+
+    std::error_code ec;
+    const fs::path base = fs::absolute(fs::path(platform.user_directory()), ec);
+    std::vector<std::string> args_common;
+    for (int i = 0; i < argc; ++i) {
+        const std::string arg = argv[i] ? argv[i] : "";
+        if ((arg == "--integraltest-jobs" || arg == "--user-dir") && i + 1 < argc) {
+            ++i;
+            continue;
+        }
+        args_common.push_back(arg);
+    }
+
+    const Uint32 started = SDL_GetTicks();
+    std::vector<child_process> children(jobs);
+    std::vector<std::string> names(jobs);
+    for (int i = 0; i < jobs; ++i) {
+        names[i] = "shard-" + std::to_string(i);
+        const fs::path dir = base / names[i];
+        fs::remove_all(dir, ec);
+        fs::create_directories(dir, ec);
+        std::vector<std::string> args = args_common;
+        args.push_back("--integraltest-shard");
+        args.push_back(std::to_string(i) + "/" + std::to_string(jobs));
+        args.push_back("--user-dir");
+        args.push_back(dir.generic_string());
+        if (!child_process_start(args, children[i])) {
+            logs::error("[integraltests] cannot start %s", names[i].c_str());
+        }
+    }
+
+    std::vector<int> rcs(jobs);
+    for (int i = 0; i < jobs; ++i) {
+        rcs[i] = child_process_wait(children[i]);
+    }
+    const double wall = (SDL_GetTicks() - started) / 1000.0;
+
+    std::vector<parallel_result> results;
+    std::vector<std::string> problems;
+    for (int i = 0; i < jobs; ++i) {
+        const fs::path dir = base / names[i];
+        std::vector<fs::path> files;
+        for (const auto& entry : fs::directory_iterator(dir / "results", ec)) {
+            if (entry.path().extension() == ".result") {
+                files.push_back(entry.path());
+            }
+        }
+        std::sort(files.begin(), files.end());
+        for (const fs::path& file : files) {
+            results.push_back(read_result(file, names[i]));
+        }
+        for (const std::string& p : shard_problems(dir / "akhenaten-log.txt", names[i], rcs[i])) {
+            problems.push_back(p);
+        }
+    }
+
+    std::vector<const parallel_result*> failed;
+    std::vector<const parallel_result*> slowest;
+    long total_ms = 0;
+    for (const parallel_result& r : results) {
+        total_ms += r.ms;
+        slowest.push_back(&r);
+        if (r.status != "PASS") {
+            failed.push_back(&r);
+        }
+    }
+    const int passed = (int)(results.size() - failed.size());
+    std::sort(slowest.begin(), slowest.end(),
+      [](const parallel_result* a, const parallel_result* b) { return a->ms > b->ms; });
+
+    std::string text;
+    char line[1024];
+    for (const parallel_result* r : failed) {
+        std::snprintf(line, sizeof(line), "FAIL %s (%s, %ld ms): %s\n", r->test.c_str(), r->shard.c_str(), r->ms,
+          r->reason.c_str());
+        text += line;
+        for (const std::string& l : r->log) {
+            text += "     " + l + "\n";
+        }
+    }
+    text += "\nslowest:\n";
+    for (size_t i = 0; i < slowest.size() && i < 15; ++i) {
+        std::snprintf(line, sizeof(line), "  %7ld ms  %s\n", slowest[i]->ms, slowest[i]->test.c_str());
+        text += line;
+    }
+    text += "\n";
+    for (const std::string& p : problems) {
+        text += "PROBLEM " + p + "\n";
+    }
+    std::snprintf(line, sizeof(line),
+      "[integraltests] %d passed, %d failed, %d problem(s), test "
+      "time %.1f s in %d shard(s), wall %.1f s\n",
+      passed, (int)failed.size(), (int)problems.size(), total_ms / 1000.0, jobs, wall);
+    text += line;
+
+    std::string md = "## Integral tests\n\n";
+    std::snprintf(line, sizeof(line),
+      "**%d passed, %d failed, %d problem(s)** (%d tests, %.1f s of "
+      "test time in %d shard(s))\n\n",
+      passed, (int)failed.size(), (int)problems.size(), (int)results.size(), total_ms / 1000.0, jobs);
+    md += line;
+    if (!failed.empty()) {
+        md += "| Test | Reason |\n|------|--------|\n";
+        for (const parallel_result* r : failed) {
+            md += "| " + r->test + " | " + r->reason + " |\n";
+        }
+        md += "\n";
+    }
+    for (const std::string& p : problems) {
+        md += "- " + p + "\n";
+    }
+
+    std::ofstream(base / "summary.txt", std::ios::binary | std::ios::trunc) << text;
+    std::ofstream(base / "summary.md", std::ios::binary | std::ios::trunc) << md;
+    std::ofstream(base / "counts.txt", std::ios::binary | std::ios::trunc)
+      << "passed=" << passed << "\nfailed=" << failed.size() + problems.size() << "\n";
+
+    for (const std::string& l : split_lines(text)) {
+        logs::info("%s", l.c_str());
+    }
+
+    return failed.empty() && problems.empty() && !results.empty() ? 0 : 1;
 }

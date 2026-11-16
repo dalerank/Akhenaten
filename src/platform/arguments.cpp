@@ -201,6 +201,13 @@ ANK_REGISTER_STRING_ARGUMENT_HANDLER("--integraltest-only", "integraltest_only",
   "--integraltest-only NAME",
   "with --integraltests, run only the tests whose filename (stem) starts with NAME, or, if none does, every test whose "
   "stem contains NAME (case-insensitive)");
+ANK_REGISTER_STRING_ARGUMENT_HANDLER("--integraltest-shard", "integraltest_shard",
+  "Option --integraltest-shard must be followed by I/N (e.g. 0/4)", "--integraltest-shard I/N",
+  "with --integraltests, run only every N-th selected test starting at index I (0-based), for parallel runs");
+ANK_REGISTER_STRING_ARGUMENT_HANDLER("--integraltest-jobs", "integraltest_jobs",
+  "Option --integraltest-jobs must be followed by a number of processes", "--integraltest-jobs N",
+  "with --integraltests, run the suite in N child processes (shards with their own user dirs under --user-dir) and "
+  "print the combined result");
 ANK_REGISTER_STRING_ARGUMENT_HANDLER("--extract-installer", "extract_installer", "Option --extract-installer must be followed by a path to a Pharaoh installer (.exe)", "--extract-installer PATH", "extract Pharaoh data from Inno/GOG (innoextract) or InstallShield (7z+unshield) installer");
 ANK_REGISTER_STRING_ARGUMENT_HANDLER("--extract-dir", "extract_dir", "Option --extract-dir must be followed by an output directory path", "--extract-dir PATH", "output directory for --extract-installer (default: user config …/pharaoh-data)");
 ANK_REGISTER_STRING_ARGUMENT_HANDLER("--screenshot-dir", "screenshot_dir", "Option --screenshot-dir must be followed by a directory path", "--screenshot-dir PATH", "directory to save screenshots into (created if missing; default: working dir)");

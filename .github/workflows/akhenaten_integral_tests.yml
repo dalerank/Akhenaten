@@ -24,75 +24,48 @@ jobs:
         cmake --build --preset linux-gcc-release-make -- -j$(nproc)
     - name: Run integral tests
       id: tests
-      timeout-minutes: 45
+      timeout-minutes: 30
       env:
         SDL_VIDEODRIVER: dummy
         SDL_AUDIODRIVER: dummy
       run: |
         set +e
-        ./build/akhenaten --integraltests --nocrashdlg --no-logo --no-resource --nosound --window --size 800x600 --config-keys-baseline tools/config_keys_baseline.txt
+        ./build/akhenaten --integraltests --integraltest-jobs $(nproc) --user-dir integraltests --nocrashdlg --no-logo --no-resource --nosound --window --size 800x600 --config-keys-baseline tools/config_keys_baseline.txt
         echo "rc=$?" >> "$GITHUB_OUTPUT"
         exit 0
-    - name: Stage integral test log
-      if: always()
-      run: |
-        LOG_FILE="${XDG_DATA_HOME:-$HOME/.local/share}/Akhenaten/akhenaten-log.txt"
-        if [ -f "$LOG_FILE" ]; then
-          cp "$LOG_FILE" akhenaten-log.txt
-        fi
     - name: Render summary
       if: always()
       run: |
-        {
-          echo "## Integral tests"
-          echo ""
-          if [ -f akhenaten-log.txt ]; then
-            echo "| Test | Result |"
-            echo "|------|--------|"
-            grep -E '\[test:[^]]+\] (PASS|FAIL)' akhenaten-log.txt \
-              | sed -E 's/.*\[test:([^]]+)\] (PASS|FAIL.*)/| \1 | \2 |/' \
-              || echo "| _no tests ran_ | |"
-            echo ""
-            grep -E '\[integraltests\] [0-9]+ passed' akhenaten-log.txt \
-              | sed -E 's/.*\[integraltests\] /**/; s/$/**/' || true
-          else
-            echo "_log file not produced_"
-          fi
-        } >> "$GITHUB_STEP_SUMMARY"
+        if [ -f integraltests/summary.md ]; then
+          cat integraltests/summary.md >> "$GITHUB_STEP_SUMMARY"
+        else
+          echo "_no test results_" >> "$GITHUB_STEP_SUMMARY"
+        fi
     - name: Emit failure annotations
       if: always()
       run: |
-        if [ -f akhenaten-log.txt ]; then
-          grep -E '\[test:[^]]+\] FAIL' akhenaten-log.txt \
-            | sed -E 's/.*\[test:([^]]+)\] FAIL(:.*)?/::error title=integraltest \1::test failed\2/' || true
+        if [ -f integraltests/summary.txt ]; then
+          grep -E '^FAIL ' integraltests/summary.txt | sed -E 's/^FAIL ([^ ]+) [^:]*: (.*)/::error title=integraltest ::/' || true
+          grep -E '^PROBLEM ' integraltests/summary.txt | sed -E 's/^PROBLEM (.*)/::error title=integraltests::/' || true
         fi
     - name: Parse test counts
       id: parse
       if: always()
       run: |
-        message="log missing"
+        message="no results"
         color="lightgrey"
-        if [ -f akhenaten-log.txt ]; then
-          line=$(grep -E '\[integraltests\] [0-9]+ passed, [0-9]+ failed' akhenaten-log.txt | tail -1 || true)
-          if [ -n "$line" ]; then
-            passed=$(echo "$line" | sed -nE 's/.*\[integraltests\] ([0-9]+) passed.*/\1/p')
-            failed=$(echo "$line" | sed -nE 's/.*([0-9]+) failed.*/\1/p')
-            passed=${passed:-0}
-            failed=${failed:-0}
-            total=$((passed + failed))
-            if [ "$total" -eq 0 ]; then
-              message="no tests"
-              color="lightgrey"
-            elif [ "$failed" -eq 0 ]; then
-              message="${passed}/${total} passing"
-              color="brightgreen"
-            else
-              message="${passed}/${total} passing"
-              color="red"
-            fi
+        if [ -f integraltests/counts.txt ]; then
+          passed=$(sed -nE 's/^passed=([0-9]+)//p' integraltests/counts.txt)
+          failed=$(sed -nE 's/^failed=([0-9]+)//p' integraltests/counts.txt)
+          total=$((passed + failed))
+          if [ "$total" -eq 0 ]; then
+            message="no tests"
+          elif [ "$failed" -eq 0 ]; then
+            message="${passed}/${total} passing"
+            color="brightgreen"
           else
-            message="no summary"
-            color="lightgrey"
+            message="${passed}/${total} passing"
+            color="red"
           fi
         fi
         echo "message=$message" >> "$GITHUB_OUTPUT"
@@ -107,16 +80,19 @@ jobs:
         label: tests
         message: ${{ steps.parse.outputs.message }}
         color: ${{ steps.parse.outputs.color }}
-    - name: Show test log
+    - name: Show test summary
       if: always()
       run: |
-        tail -n 200 akhenaten-log.txt || true
-    - name: Upload log
+        cat integraltests/summary.txt || true
+    - name: Upload logs and results
       if: always()
       uses: actions/upload-artifact@v4
       with:
-        name: akhenaten-log
-        path: akhenaten-log.txt
+        name: akhenaten-integraltests
+        path: |
+          integraltests/summary.*
+          integraltests/shard-*/akhenaten-log.txt
+          integraltests/shard-*/results/
         retention-days: 14
     - name: Fail if tests failed
       if: steps.tests.outputs.rc != '0'
