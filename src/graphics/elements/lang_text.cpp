@@ -200,11 +200,13 @@ namespace {
 #endif
 
 #if defined(GAME_PLATFORM_ANDROID)
+// Base table explicitly requested by lang_reload_localized_files().
+// Other requests (e.g. modules.js importing localization_base_en) must not
+// overwrite the active language's base table.
+static std::string g_android_active_base_path;
+
 bool lang_android_load_localization_base_en_direct(pcstr path) {
-    const auto current_lang = lang_get_current_language();
-    bstring256 expected;
-    expected.printf(":%s.js", current_lang.base_table.c_str());
-    if (strcmp(expected.c_str(), path) != 0) {
+    if (!g_android_active_base_path.empty() && g_android_active_base_path != path) {
         return true;
     }
     return android_load_localization_base_en_direct(path);
@@ -246,6 +248,7 @@ bool lang_reload_localized_files() {
         vfs::path lang_base_file(":", localization_base_table.c_str(), ".js");
         bool lang_base_file_loaded = false;
 #if defined(GAME_PLATFORM_ANDROID)
+        g_android_active_base_path = lang_base_file.c_str();
         if (lang_android_load_localization_base_en_direct(lang_base_file.c_str())) {
             logs::info("Loaded localization base directly on Android: %s", lang_base_file.c_str());
             lang_base_file_loaded = true;
