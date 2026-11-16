@@ -105,6 +105,7 @@
             <p>Favour army: <code>events[]</code> pak i=118→119 (<code>EVENT_TRIGGER_BY_FAVOUR</code> master, <code>ONLY_VIA_EVENT</code> chain), sent by <code>event_manager_t::update_kingdom_favour</code> (OG <code>city/kingdom.c</code> <code>city_emperor_update</code>); no mission JS.</p>
             <p>Empire id <strong>1</strong> (pak). Map <span class="file-ref">data/maps/m_027_itjtawy.map</span>. Rank 10. Scenario enemy <code>ENEMY_7_LIBIAN</code>; favour / refuse waves via <code>ENEMY_3_EGYPTIAN</code>. Dump 2026-07-26.</p>
             <p><code>choice_title [144, 58]</code> → Iken (28) / Sawu (29). No <code>next_mission</code>. SKIP: empty map_obj idx=8; clay flood i=81 (y31073 junk); orphan KR/MSG leaves.</p>
+            <p>Raids: <code>mission27_raid_list</code> runs through <code>mission_raids_month</code> / <code>mission_raid_schedule</code> (<span class="file-ref">src/scripts/missions.js</span>) on the OG invasion cycle: the OG warnings with the invader&rsquo;s phrases from the event&rsquo;s month, the attack <code>months_initial</code> months later, the point rolled from the event&rsquo;s <code>location_fields</code>, its <code>on_completed</code> chain as it attacks; a chained raid is due its <code>time.year</code> months after its parent attacks or its request clears. i=3 ×8 chained (e.g. announced y3m3 &rarr; attacks y3m8) · i=22 ×9 chained (e.g. announced y6m2 &rarr; attacks y6m10) · i=76 ×6 chained (e.g. announced y7m7 &rarr; attacks y8m1).</p>
           </div>
         </details>
         <details>

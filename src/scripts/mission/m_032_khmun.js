@@ -13,22 +13,23 @@ log_info("akhenaten: mission 32 khmun started")
 //            Sawu, Waset.
 // Enemies:   Hyksos raids tied to the henna requests; Egyptian army (70, then 35) if the kingdom rating
 //            falls to 0.
-// Timeline:  y1m0 Heh falls to the enemy; y2m0 request 16 henna for Men-nefer (sent: Iken buys more
-//            beer, then Hyksos raid 16; otherwise the raid comes at once); y3m3 Iken falls; y5m0 Kerma
-//            route opens.
-//            Beating the raid 16 brings a request for 32 troops for Itjtawy (sent: gift of 16 papyrus,
-//            then request 32 henna; otherwise Kerma buys less beer). Henna 32 sent: Itjtawy is
-//            conquered, Kerma route opens, Hyksos raid 48; refused: Hyksos raid 32, and once it is
-//            beaten the henna 32 request again; late: request 16 henna with the same outcomes.
-//            Beating the raid 48 brings a request for 48 henna for Khmun (sent: Iken is conquered;
-//            then gifts of 64 limestone and 20 pottery). After the pottery gift: Hyksos raids 29 and 39.
+// Timeline:  y1m0 Heh falls to the enemy; y2m0 request 16 henna for Men-nefer (sent: Iken buys more beer;
+//            whatever the outcome, Hyksos raid 16 announced a year later, attacking 9 months after that);
+//            y3m3 Iken falls; y5m0 Kerma route opens.
+//            As the raid 16 attacks, a request for 32 troops for Itjtawy (sent: gift of 16 papyrus, then
+//            request 32 henna; otherwise Kerma buys less beer). Henna 32 sent: Itjtawy is conquered,
+//            Kerma route opens, Hyksos raid 48 announced 8 months later (attacks 6 after that); refused:
+//            Hyksos raid 32 announced 5 months later (attacks 3 after that), which brings the henna 32
+//            request again; late: request 16 henna with the same outcomes.
+//            As the raid 48 attacks, a request for 48 henna for Khmun (sent: Iken is conquered; then
+//            gifts of 64 limestone and 20 pottery). After the pottery gift Hyksos raids 29 and 39 follow
+//            each other for the rest of the mission (each announced 11 / 10 months after the other attacks).
 //
 // Notes for developers:
-// - The map has no invasion points. Raid location 1 uses the entry point [16,53] and 2 the
-//   disembark point [75,47] (mission32_loc_tile).
-// - The original loops raids 29 and 39 into each other; the loop is cut after one pass (inv_loop_done).
-// - EVENT_TYPE_INVASION leaves are no-ops; the matching raids are started from JS
-//   (mission32_on_request_cleared / mission32_invasion_followups).
+// - The map has no invasion points, so raids come in by the map exit. They follow the OG invasion cycle
+//   (missions.js mission_raids_month): warnings from the event's month, the attack months_initial months
+//   later, their on_completed chain as they attack.
+// - EVENT_TYPE_INVASION leaves are no-ops; the matching raids are scheduled in mission32_on_request_cleared.
 // - tag_id: 1000 + i chained events and requests, 2000 + i calendar events, 7000 + i Egyptian army
 //   (i = event index in the original scenario, "pak i=" in comments below).
 
@@ -487,19 +488,12 @@ mission32 { // Khmun (Hermopolis) — Egypt Reclaimed
 	]
 
 	vars {
+		raids : ""
 		chain_leaves_wired : false
 		event0_heh_fell_done : false
 		event1_iken_fell_done : false
 		event2_henna_done : false
 		event23_kerma_done : false
-		inv4_done : false
-		inv10_done : false
-		inv13_done : false
-		inv18_done : false
-		inv19_done : false
-		inv_loop_done : false
-		pending_inv13 : false
-		pending_inv4_after_demand : false
 		start_message_shown : false
 	}
 }
@@ -558,31 +552,6 @@ function mission32_fire_request(tag, resource, amount, months, ok_tag, refuse_ta
 	if (defeat_tag !== undefined && defeat_tag > 0) { request.set_defeat_action_tag(defeat_tag) }
 	request.event_is_active = true
 	return request
-}
-
-function mission32_loc_tile(loc, prefer_sea) {
-	if (loc == 1) { return [16, 53] }
-	if (loc == 2) { return [75, 47] }
-	if (prefer_sea && loc == 2) { return [75, 47] }
-	return [-1, -1]
-}
-
-function mission32_hyksos_raid(invasion_id, size, attack_target, on_completed_tag, loc) {
-	var tile = mission32_loc_tile(loc === undefined ? 1 : loc, false)
-	log_info("akhenaten: mission 32 hyksos raid id=" + invasion_id + " size=" + size
-		+ " loc=" + loc + " tile=" + tile[0] + "," + tile[1])
-	__image_request_pak(PACK_ENEMY_HYKSOS)
-	var opts = {
-		invasion_id: invasion_id,
-		enemy: ENEMY_5_HYKSOS,
-		size: size,
-		tilex: tile[0],
-		tiley: tile[1],
-		want_destroy_buildings: size,
-		invasion_attack_target: attack_target === undefined ? EVENT_ATTACK_TARGET_RANDOM : attack_target
-	}
-	if (on_completed_tag) { opts.on_completed_tag = on_completed_tag }
-	return city.start_foreign_army_invasion(opts)
 }
 
 function mission32_ensure_chain_leaves() {
@@ -696,60 +665,44 @@ function mission32_requests_and_events(ev) {
 	}
 }
 
+// pak i=4 (chains the troops request i=5), i=10 (chains henna 32, i=8, again), i=13 (chains henna 48, i=14),
+// i=18 <-> i=19; delays are the events' time.year.
+function mission32_raid_list() {
+	var H = ENEMY_5_HYKSOS
+	var E = EVENT_INVADER_ENEMY
+	return [
+		{ key: "i4", invasion_id: 4, invader: E, enemy: H, amount: 16, months_initial: 9, location: [1, 1, -1, -1],
+			attack_target: EVENT_ATTACK_TARGET_BEST_BUILDINGS, chain_tag: 1005 },
+		{ key: "i10", invasion_id: 10, invader: E, enemy: H, amount: 32, months_initial: 3, location: [2, 2, -1, -1],
+			attack_target: EVENT_ATTACK_TARGET_BEST_BUILDINGS, chain_tag: 1008 },
+		{ key: "i13", invasion_id: 13, invader: E, enemy: H, amount: 48, months_initial: 6, location: [2, 2, -1, -1],
+			attack_target: EVENT_ATTACK_TARGET_BEST_BUILDINGS, chain_tag: 1014 },
+		{ key: "i18", invasion_id: 18, invader: E, enemy: H, amount: 29, months_initial: 6, location: [2, 2, -1, -1],
+			attack_target: EVENT_ATTACK_TARGET_RANDOM, then: [{ key: "i19", delay: 10 }] },
+		{ key: "i19", invasion_id: 19, invader: E, enemy: H, amount: 39, months_initial: 6, location: [2, 2, -1, -1],
+			attack_target: EVENT_ATTACK_TARGET_RANDOM, then: [{ key: "i18", delay: 11 }] }
+	]
+}
+
+[es=event_advance_month, mission=mission32]
+function mission32_raids(ev) {
+	mission_raids_month(mission, mission32, ev, mission32_raid_list())
+}
+
 [es=event_request_cleared, mission=mission32]
 function mission32_on_request_cleared(ev) {
 	var outcome = mission_request_outcome(ev)
-
-	if (ev.tag_id == 2002 && !mission.inv4_done) {
+	var raids = mission32_raid_list()
+	if (ev.tag_id == 2002) {
 		if (outcome == "ok") {
-			log_info("akhenaten: mission 32 henna ok → demand beer (i=2→3); hyksos×16 next day")
 			__city_event_fire_chain(1003)
-			mission.pending_inv4_after_demand = true
-		} else {
-			mission.inv4_done = true
-			log_info("akhenaten: mission 32 henna refuse/late → hyksos×16 (i=2→4)")
-			mission32_hyksos_raid(4, 16, EVENT_ATTACK_TARGET_TROOPS, 1005, 1)
 		}
-		return
-	}
-	if (ev.tag_id == 1008 && outcome == "refuse" && !mission.inv10_done) {
-		mission.inv10_done = true
-		log_info("akhenaten: mission 32 henna×32 refuse → hyksos×32 (i=10)")
-		mission32_hyksos_raid(10, 32, EVENT_ATTACK_TARGET_TROOPS, 1008, 2)
-		return
-	}
-	if (ev.tag_id == 1008 && outcome == "ok" && !mission.inv13_done) {
-		mission.pending_inv13 = true
-		log_info("akhenaten: mission 32 henna×32 ok → Itjtawy/Kerma chain (i=8→9→12), hyksos×48 pending")
-		return
-	}
-	if (ev.tag_id == 1017 && outcome == "ok" && !mission.inv18_done) {
-		mission.inv18_done = true
-		log_info("akhenaten: mission 32 gift gems ok → hyksos×29 (i=18)")
-		mission32_hyksos_raid(18, 29, EVENT_ATTACK_TARGET_RANDOM, 1019, 2)
-		return
-	}
-}
-
-[es=event_update_day, mission=mission32]
-function mission32_invasion_followups(ev) {
-	if (mission.pending_inv4_after_demand && !mission.inv4_done) {
-		mission.pending_inv4_after_demand = false
-		mission.inv4_done = true
-		log_info("akhenaten: mission 32 hyksos×16 after demand beer (i=3→4)")
-		mission32_hyksos_raid(4, 16, EVENT_ATTACK_TARGET_TROOPS, 1005, 1)
-	}
-	if (mission.pending_inv13 && !mission.inv13_done) {
-		mission.inv13_done = true
-		mission.pending_inv13 = false
-		log_info("akhenaten: mission 32 hyksos×48 after henna chain (i=13)")
-		mission32_hyksos_raid(13, 48, EVENT_ATTACK_TARGET_TROOPS, 1014, 2)
-	}
-	if (mission.inv18_done && !mission.inv19_done && !mission.inv_loop_done) {
-		if (city.num_enemy_formations > 0) { return }
-		mission.inv19_done = true
-		log_info("akhenaten: mission 32 hyksos×39 after wave1 (i=19)")
-		mission32_hyksos_raid(19, 39, EVENT_ATTACK_TARGET_RANDOM, 0, 2)
-		mission.inv_loop_done = true
+		mission_raid_schedule(mission, raids, "i4", 12)
+	} else if (ev.tag_id == 1008 && outcome == "refuse") {
+		mission_raid_schedule(mission, raids, "i10", 5)
+	} else if (ev.tag_id == 1008 && outcome == "ok") {
+		mission_raid_schedule(mission, raids, "i13", 8)
+	} else if (ev.tag_id == 1017 && outcome == "ok") {
+		mission_raid_schedule(mission, raids, "i18", 11)
 	}
 }

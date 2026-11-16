@@ -11,17 +11,18 @@ log_info("akhenaten: mission 25 kebet started")
 //            Dakhla Oasis, Thinis, Dunqul Oasis, Henen-nesw, Jericho.
 // Enemies:   Egyptian raids (Khmun loyalists); Pharaoh's army (60, then 60 more) if the kingdom
 //            rating falls to 0. The scenario enemy is set to Kushite, but no Kushite army is sent.
-// Timeline:  y2m4 raid 17; y5m1 raid 33; y7m3 failed flood; y7m9 raid 55; y7m11 Waset buys more figs;
+// Timeline:  raids are announced 6 months before they attack: y2m4 raid 17; y5m1 raid 33; y7m3 failed
+//            flood; y7m9 raid 55; y7m11 Waset buys more figs;
 //            y9m0 request 13 fish (delivered: Men-nefer route opens); y9m3 failed flood; y9m11 request 28 figs
-//            (if late: 11 fish, then 12 figs); y10m0 raid 70, and once it is beaten 5 warships sail
-//            in with no soldiers; y10m2 request 21 weapons; y11m2 request 56 henna (delivered: Khmun
-//            is conquered and opens for trade; refused: raid 60, then a second raid 60; late: 25 henna
-//            with the same outcomes); y13m3 perfect flood; y13m8 Buhen buys more beer.
+//            (if late: 11 fish, then 12 figs); y10m0 raid 70, and as it attacks 5 warships sail in with
+//            no soldiers; y10m2 request 21 weapons; y11m2 request 56 henna (delivered: Khmun
+//            is conquered and opens for trade; refused: raid 60 announced 2 months later, and as it
+//            attacks a second raid 60; late: 25 henna with the same outcomes); y13m3 perfect flood; y13m8 Buhen buys more beer.
 //
 // Notes for developers:
-// - Raid location numbers follow the original events: 1 = the only land point [15,43]; 2/3/4/8 have no
-//   point on this map, so those raids enter at the map entry point; 9 = sea point [71,43]
-//   (see mission25_loc_tile / mission25_egypt_raid).
+// - Raids follow the OG invasion cycle (missions.js mission_raids_month): warnings from the event's month,
+//   the attack months_initial months later; land locations all come to the only land point [15,43]
+//   (empty slots wrap round), 9 = sea point [71,43].
 // - The original gives Men-nefer and Khmun no goods; standard goods are filled in so the mid-game
 //   unlocks are playable (same as Kerma in mission 24).
 // - Demand and route events address the city by route number (1 = Waset .. 9 = Thinis); the city named
@@ -453,6 +454,7 @@ mission25 { // Kebet (Coptos) — Reunification; briefing key = coptos
 	]
 
 	vars {
+		raids : ""
 		flood_leaves_wired : false
 		food_leaves_wired : false
 		henna_leaves_wired : false
@@ -468,16 +470,7 @@ mission25 { // Kebet (Coptos) — Reunification; briefing key = coptos
 		event33_demand_done : false
 		event35_flood_done : false
 
-		event24_invasion_done : false
-		event25_invasion_done : false
-		event26_invasion_done : false
-		event27_invasion_done : false
-		event27_enemies_seen : false
-		event28_warships_done : false
 
-		henna_raid_done : false
-		henna_raid_wave2_done : false
-		henna_raid_enemies_seen : false
 
 
 		start_message_shown : false
@@ -566,40 +559,6 @@ function mission25_fire_request(tag, resource, amount, months, ok_tag, fail_tag,
 	}
 	request.execute()
 	return request
-}
-
-// pak location_fields after randomize = 1-based land invasion point index (MAX 8).
-// Map 25 only has land[0]=[15,43]; loc 2/3/4 have no point -> -1 (Egyptian falls back
-// to the map entry point). loc 9+ is a sea point (see mission25_egypt_raid).
-function mission25_loc_tile(loc) {
-	if (loc == 1) {
-		return [15, 43]
-	}
-	return [-1, -1]
-}
-
-// OG scenario_invasion_start: loc 9+ sails from sea point loc - 9 with the event's phrase_var warships.
-function mission25_egypt_raid(invasion_id, size, attack_target, loc, warships) {
-	var opts = {
-		invasion_id: invasion_id,
-		enemy: ENEMY_3_EGYPTIAN,
-		size: size,
-		want_destroy_buildings: size,
-		invasion_attack_target: attack_target
-	}
-	if (loc >= 9) {
-		opts.via_sea = 1
-		opts.sea_point = loc - 9
-		opts.warships = warships || 0
-	} else {
-		var tile = mission25_loc_tile(loc === undefined ? 0 : loc)
-		opts.tilex = tile[0]
-		opts.tiley = tile[1]
-	}
-	log_info("akhenaten: mission 25 egypt raid id=" + invasion_id + " size=" + size + " loc=" + loc
-		+ " warships=" + (opts.warships || 0))
-	__image_request_pak(PACK_ENEMY_EGYPTIAN)
-	city.start_foreign_army_invasion(opts)
 }
 
 function mission25_ensure_flood_leaves() {
@@ -793,79 +752,38 @@ function mission25_requests_and_events(ev) {
 	}
 }
 
-// pak i=24/25/26/27: timed Khmun-loyalist egypt raids. i=27 ok→i=28 (see below).
-[es=event_advance_month, mission=mission25]
-function mission25_timed_invasions(ev) {
-	if (!mission.event24_invasion_done && ev.years_since_start == 2 && ev.month == 4) {
-		mission.event24_invasion_done = true
-		mission25_egypt_raid(24, 17, EVENT_ATTACK_TARGET_BEST_BUILDINGS, 1)
-		return
-	}
-	if (!mission.event25_invasion_done && ev.years_since_start == 5 && ev.month == 1) {
-		mission.event25_invasion_done = true
-		mission25_egypt_raid(25, 33, EVENT_ATTACK_TARGET_BEST_BUILDINGS, 1)
-		return
-	}
-	if (!mission.event26_invasion_done && ev.years_since_start == 7 && ev.month == 9) {
-		mission.event26_invasion_done = true
-		mission25_egypt_raid(26, 55, EVENT_ATTACK_TARGET_RANDOM, 3)
-		return
-	}
-	if (!mission.event27_invasion_done && ev.years_since_start == 10 && ev.month == 0) {
-		mission.event27_invasion_done = true
-		mission25_egypt_raid(27, 70, EVENT_ATTACK_TARGET_RANDOM, 2)
-	}
+// pak i=24..27 (i=27 chains the warship-only i=28 as it attacks); i=19 after the henna refusal (chains i=20).
+function mission25_raid_list() {
+	var G = ENEMY_3_EGYPTIAN
+	var E = EVENT_INVADER_EGYPT
+	return [
+		{ key: "i24", invasion_id: 24, year: 2, month: 4, invader: E, enemy: G, amount: 17, months_initial: 6,
+			location: [1, 1, -1, -1], attack_target: EVENT_ATTACK_TARGET_BEST_BUILDINGS },
+		{ key: "i25", invasion_id: 25, year: 5, month: 1, invader: E, enemy: G, amount: 33, months_initial: 6,
+			location: [1, 1, -1, -1], attack_target: EVENT_ATTACK_TARGET_BEST_BUILDINGS },
+		{ key: "i26", invasion_id: 26, year: 7, month: 9, invader: E, enemy: G, amount: 55, months_initial: 6,
+			location: [3, 3, -1, -1], attack_target: EVENT_ATTACK_TARGET_RANDOM },
+		{ key: "i27", invasion_id: 27, year: 10, month: 0, invader: E, enemy: G, amount: 70, months_initial: 6,
+			location: [2, -1, 1, 3], attack_target: EVENT_ATTACK_TARGET_RANDOM, then: [{ key: "i28", delay: 0 }] },
+		{ key: "i28", invasion_id: 28, invader: E, enemy: G, amount: 0, months_initial: 0, location: [9, 9, -1, -1],
+			warships: 5, attack_target: EVENT_ATTACK_TARGET_FOOD },
+		{ key: "i19", invasion_id: 19, invader: E, enemy: G, amount: 60, months_initial: 6, location: [1, 1, -1, -1],
+			attack_target: EVENT_ATTACK_TARGET_BEST_BUILDINGS, then: [{ key: "i20", delay: 0 }] },
+		{ key: "i20", invasion_id: 20, invader: E, enemy: G, amount: 60, months_initial: 0, location: [8, 8, -1, -1],
+			attack_target: EVENT_ATTACK_TARGET_BEST_BUILDINGS }
+	]
 }
 
-// pak i=27 ok→i=28: once the egypt×70 raid is wiped, 5 Egyptian warships sail in from sea[0], no soldiers.
 [es=event_advance_month, mission=mission25]
-function mission25_warships_after_event27(ev) {
-	if (!mission.event27_invasion_done || mission.event28_warships_done) {
-		return
-	}
-	if (city.num_enemy_formations > 0) {
-		mission.event27_enemies_seen = true
-		return
-	}
-	if (!mission.event27_enemies_seen) {
-		return
-	}
-	mission.event28_warships_done = true
-	mission25_egypt_raid(28, 0, EVENT_ATTACK_TARGET_FOOD, 9, 5)
+function mission25_raids(ev) {
+	mission_raids_month(mission, mission25, ev, mission25_raid_list())
 }
 
-// Chain invasions from JS after a request refuse (EVENT_TYPE_INVASION is a no-op).
+// pak i=15 refused, or i=17 (the 25-henna follow-up) not delivered on time -> i=19, due 2 months on (time.year).
 [es=event_request_cleared, mission=mission25]
 function mission25_on_request_cleared(ev) {
-	if (mission.henna_raid_done) {
-		return
-	}
 	var outcome = mission_request_outcome(ev)
-	// i=15 refuse and every non-ok outcome of the i=17 follow-up land on i=19 egypt×60.
-	var from_i15 = (ev.tag_id == 2015 && outcome == "refuse")
-	var from_i17 = (ev.tag_id == 1017 && outcome != "ok")
-	if (!from_i15 && !from_i17) {
-		return
+	if ((ev.tag_id == 2015 && outcome == "refuse") || (ev.tag_id == 1017 && outcome != "ok")) {
+		mission_raid_schedule(mission, mission25_raid_list(), "i19", 2)
 	}
-	mission.henna_raid_done = true
-	mission.henna_raid_enemies_seen = false
-	log_info("akhenaten: mission 25 egypt×60 after henna refuse (i=19)", {ev:ev})
-	mission25_egypt_raid(19, 60, EVENT_ATTACK_TARGET_BEST_BUILDINGS, 1)
-}
-
-// pak i=19 ok→i=20: a second egypt×60 wave once the first one is wiped (loc 8 → entry).
-[es=event_advance_month, mission=mission25]
-function mission25_henna_raid_second_wave(ev) {
-	if (!mission.henna_raid_done || mission.henna_raid_wave2_done) {
-		return
-	}
-	if (city.num_enemy_formations > 0) {
-		mission.henna_raid_enemies_seen = true
-		return
-	}
-	if (!mission.henna_raid_enemies_seen) {
-		return
-	}
-	mission.henna_raid_wave2_done = true
-	mission25_egypt_raid(20, 60, EVENT_ATTACK_TARGET_BEST_BUILDINGS, 8)
 }

@@ -13,17 +13,16 @@ log_info("akhenaten: mission 24 waset started")
 //            (66, then 40, then 40 by sea with 9 warships) if the kingdom rating falls to 0. The scenario
 //            enemy is set to Kushite, but no Kushite army is sent.
 // Timeline:  every m3 from y2 Nekhen asks for 11 fish (not while the last ask is open); y3m1 Kerma route
-//            opens; y4m10 Nekhen demands 884 oil (refused: Egyptian raid 6 by sea with 1 warship;
-//            delivered: kingdom -6); y7m2 Nekhen asks for 8 troops; y9m1 Sauty asks for 7 copper;
-//            y10m4 Sauty demands 238 oil (refused: Egyptian raid 4 by sea with 1 warship; delivered:
-//            kingdom -15); y11m5 failed flood; y12m1 Kharga Oasis asks for 16 weapons; y15m1 Men-nefer
+//            opens; y4m10 Nekhen demands 884 oil (refused: Egyptian raid 6 by sea with 1 warship
+//            announced 4 months later, attacking 2 months after that; delivered: kingdom -6); y7m2 Nekhen asks for 8 troops; y9m1 Sauty asks for 7 copper;
+//            y10m4 Sauty demands 238 oil (refused: Egyptian raid 4 by sea with 1 warship announced
+//            4 months later, attacking 3 months after that; delivered: kingdom -15); y11m5 failed flood; y12m1 Kharga Oasis asks for 16 weapons; y15m1 Men-nefer
 //            asks for 20 troops (refused: Kharga Oasis falls, kingdom -34); every m4 from y19 Men-nefer
 //            asks for 20 granite (not while the last ask is open).
 //
 // Notes for developers:
-// - Raid location numbers follow the original events: 1 = the only land point [23,48]; 2 has no
-//   point and enters at the map entry point; 9 = sea point [63,37] with the event's warship count
-//   (mission24_loc_tile / mission24_egypt_raid).
+// - Raids follow the OG invasion cycle (missions.js mission_raids_month): warnings from the event's month,
+//   the attack months_initial months later; location 9 = sea point [63,37] with the event's warships.
 // - The original's Kerma route event names Kharga Oasis (with Kerma's route number); it is pointed at
 //   Kerma, whose goods are filled in because the original leaves them empty.
 // - tag_id: 1000 + i chained events, 2000 + i calendar events, 3000 + i*100 + year yearly requests,
@@ -474,6 +473,7 @@ mission24 { // Waset (Thebes) — Civil War
 		]
 
 	vars {
+		raids : ""
 		fish_leaves_wired : false
 		oil_i4_leaves_wired : false
 		troops_i10_leaves_wired : false
@@ -492,8 +492,6 @@ mission24 { // Waset (Thebes) — Civil War
 		event29_troops_done : false
 		event42_trade_done : false
 
-		oil_i4_egypt_done : false
-		oil_i18_egypt_done : false
 
 		event0_fish_last_year : -1
 		event37_granite_last_year : -1
@@ -562,38 +560,6 @@ function mission24_fire_request(tag, resource, amount, months, ok_tag, fail_tag,
 	}
 	request.execute()
 	return request
-}
-
-// pak location_fields after randomize = 1-based land invasion point index (MAX 8).
-// Map only has land[0]=[23,48] and sea[0]=[63,37]. Missing/OOB → -1 (Egyptian → map entry).
-function mission24_loc_tile(loc) {
-	if (loc == 1) {
-		return [23, 48]
-	}
-	// loc=2: no land point 2 in pak; keep unset (entry fallback for Egyptian).
-	return [-1, -1]
-}
-
-// OG scenario_invasion_start: loc 9+ sails from sea point loc - 9 with the event's phrase_var warships.
-function mission24_egypt_raid(invasion_id, size, attack_target, loc, warships) {
-	__image_request_pak(PACK_ENEMY_EGYPTIAN)
-	var opts = {
-		invasion_id: invasion_id,
-		enemy: ENEMY_3_EGYPTIAN,
-		size: size,
-		want_destroy_buildings: size,
-		invasion_attack_target: attack_target
-	}
-	if (loc >= 9) {
-		opts.via_sea = 1
-		opts.sea_point = loc - 9
-		opts.warships = warships || 0
-	} else {
-		var tile = mission24_loc_tile(loc)
-		opts.tilex = tile[0]
-		opts.tiley = tile[1]
-	}
-	city.start_foreign_army_invasion(opts)
 }
 
 function mission24_ensure_fish_leaves() {
@@ -832,19 +798,31 @@ function mission24_event_i42_new_trade_kerma(ev) {
 	}).execute()
 }
 
-// Chain invasions from JS after request refuse (EVENT_TYPE_INVASION no-op).
+// pak i=7 / i=21: Egyptian raids after the oil requests i=4 / i=18 are refused, due 4 months on (time.year).
+function mission24_raid_list() {
+	var G = ENEMY_3_EGYPTIAN
+	var E = EVENT_INVADER_EGYPT
+	return [
+		{ key: "i7", invasion_id: 7, invader: E, enemy: G, amount: 6, months_initial: 2, location: [9, 9, -1, -1],
+			warships: 1, attack_target: EVENT_ATTACK_TARGET_VAULTS },
+		{ key: "i21", invasion_id: 21, invader: E, enemy: G, amount: 4, months_initial: 3, location: [9, 9, -1, -1],
+			warships: 1, attack_target: EVENT_ATTACK_TARGET_VAULTS }
+	]
+}
+
+[es=event_advance_month, mission=mission24]
+function mission24_raids(ev) {
+	mission_raids_month(mission, mission24, ev, mission24_raid_list())
+}
+
 [es=event_request_cleared, mission=mission24]
 function mission24_on_request_cleared(ev) {
-	var outcome = mission_request_outcome(ev)
-	if (ev.tag_id == 2004 && outcome == "refuse" && !mission.oil_i4_egypt_done) {
-		mission.oil_i4_egypt_done = true
-		log_info("akhenaten: mission 24 egypt×6 via_sea after oil×884 refuse (i=7)", {ev:ev})
-		mission24_egypt_raid(7, 6, EVENT_ATTACK_TARGET_VAULTS, 9, 1)
+	if (mission_request_outcome(ev) != "refuse") {
 		return
 	}
-	if (ev.tag_id == 2018 && outcome == "refuse" && !mission.oil_i18_egypt_done) {
-		mission.oil_i18_egypt_done = true
-		log_info("akhenaten: mission 24 egypt×4 after oil×238 refuse (i=21)", {ev:ev})
-		mission24_egypt_raid(21, 4, EVENT_ATTACK_TARGET_VAULTS, 9, 1)
+	if (ev.tag_id == 2004) {
+		mission_raid_schedule(mission, mission24_raid_list(), "i7", 4)
+	} else if (ev.tag_id == 2018) {
+		mission_raid_schedule(mission, mission24_raid_list(), "i21", 4)
 	}
 }

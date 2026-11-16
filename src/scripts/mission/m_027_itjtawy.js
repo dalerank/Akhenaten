@@ -14,8 +14,11 @@ log_info("akhenaten: mission 27 itjtawy started")
 // Enemies:   Egyptian raids only after a refused request; Egyptian army (50, then 50 more) if the
 //            kingdom rating falls to 0. The scenario enemy is set to Libyan, but no Libyan army is sent.
 // Timeline:  y2m2 request 7 pottery (delivered: Kerma route opens); y2m7 request 9 meat (refused:
-//            raid 8); y2m10 request 2 meat; y5m4 request 13 bricks (refused: raid 9); y6m4 request
-//            6 limestone (delivered: gift from Pharaoh; refused: raid 6).
+//            raid 8 announced 5 months later, attacking 5 months after that, kingdom -10 as it attacks);
+//            y2m10 request 2 meat; y5m4 request 13 bricks (refused: raid 9 announced 7 months later,
+//            attacking 8 months after that, Menat Khufu route lost as it attacks); y6m4 request
+//            6 limestone (delivered: gift from Pharaoh; refused: raid 6 announced 3 months later,
+//            attacking 6 months after that, kingdom -7 as it attacks).
 //            Yearly from the given year: contaminated water from y4m7, y30m7, y85m7; wage rise from
 //            y7m10 and y22m6, wage cut from y13m2 and y35m9; land trade problems from y8m3, y28m4,
 //            y45m3, y63m3, y90m3; request 15 linen from y14m2 (only while no linen request is open).
@@ -23,8 +26,9 @@ log_info("akhenaten: mission 27 itjtawy started")
 //
 // Notes for developers:
 // - Next mission is a choice between Iken (28) and Sawu (29), so there is no next_mission.
-// - The map has no invasion points: refuse raids start at the map entry point (tile -1,-1) and the
-//   Egyptian army enters at the map exit point.
+// - The map has no invasion points: raids and the Egyptian army enter at the map exit point. Raids follow
+//   the OG invasion cycle (missions.js mission_raids_month): warnings from the event's month, the attack
+//   months_initial months later.
 // - The original gives Kerma no goods, so its unlock is cosmetic (same as Men-nefer/Khmun in Kebet).
 // - Deeper nested request chains of the original are reduced to their kingdom-rating outcomes.
 // - tag_id: 1000 + i chained events, 2000 + i one-time calendar events, 3000 + i*100 + year yearly
@@ -464,6 +468,7 @@ mission27 { // Itjtawy - A New Capital is Founded
 	]
 
 	vars {
+		raids : ""
 		i0_leaves_wired : false
 		i17_leaves_wired : false
 		i48_leaves_wired : false
@@ -491,9 +496,6 @@ mission27 { // Itjtawy - A New Capital is Founded
 		event89_water_last_year : -1
 		event90_water_last_year : -1
 
-		b12_i0_done : false
-		b12_i17_done : false
-		b12_i70_done : false
 
 
 		start_message_shown : false
@@ -635,21 +637,6 @@ function mission27_ensure_all_leaves() {
 	mission27_ensure_i43_leaves()
 }
 
-// No pak inv_land/sea points - chain Egyptian raids use the map entry fallback (-1,-1).
-function mission27_egypt_raid(invasion_id, size, attack_target) {
-	log_info("akhenaten: mission 27 itjtawy egypt raid id=" + invasion_id + " size=" + size)
-	__image_request_pak(PACK_ENEMY_EGYPTIAN)
-	city.start_foreign_army_invasion({
-		invasion_id: invasion_id,
-		enemy: ENEMY_3_EGYPTIAN,
-		size: size,
-		tilex: -1,
-		tiley: -1,
-		want_destroy_buildings: size,
-		invasion_attack_target: attack_target
-	})
-}
-
 [es=event_mission_start, mission=mission27]
 function mission27_on_start(ev) {
 	__image_request_pak(PACK_ENEMY_LIBIAN)
@@ -779,28 +766,40 @@ function mission27_requests_and_events(ev) {
 	}
 }
 
-// Chain invasions from JS after a request refuse (EVENT_TYPE_INVASION chain nodes are
-// no-ops in this engine). Only the three once-request roots have a pak invasion child.
+// pak i=3 / i=22 / i=76: the Egyptian raids of the refused meat / bricks / limestone requests (tags 2000 / 2017 /
+// 2070), due their time.year months on; as they attack, pak i=5 / i=23 / i=77.
+function mission27_raid_list() {
+	var G = ENEMY_3_EGYPTIAN
+	var E = EVENT_INVADER_EGYPT
+	return [
+		{ key: "i3", invasion_id: 3, invader: E, enemy: G, amount: 8, months_initial: 5, location: [2, -1, 1, 5],
+			attack_target: EVENT_ATTACK_TARGET_RANDOM,
+			chain_event: { tag_id: 1005, type: EVENT_TYPE_REPUTATION_DECREASE, amount: 10 } },
+		{ key: "i22", invasion_id: 22, invader: E, enemy: G, amount: 9, months_initial: 8, location: [2, -1, 1, 5],
+			attack_target: EVENT_ATTACK_TARGET_RANDOM,
+			chain_event: { tag_id: 1023, type: EVENT_TYPE_CITY_STATUS_CHANGE, amount: 5,
+				subtype: EVENT_SUBTYPE_LOST_TRADE_ROUTE, city: "Menat Khufu" } },
+		{ key: "i76", invasion_id: 76, invader: E, enemy: G, amount: 6, months_initial: 6, location: [1, -1, 1, 5],
+			attack_target: EVENT_ATTACK_TARGET_FOOD,
+			chain_event: { tag_id: 1077, type: EVENT_TYPE_REPUTATION_DECREASE, amount: 7 } }
+	]
+}
+
+[es=event_advance_month, mission=mission27]
+function mission27_raids(ev) {
+	mission_raids_month(mission, mission27, ev, mission27_raid_list())
+}
+
 [es=event_request_cleared, mission=mission27]
 function mission27_on_request_cleared(ev) {
 	if (mission_request_outcome(ev) != "refuse") {
 		return
 	}
-	if (ev.tag_id == 2000 && !mission.b12_i0_done) {
-		mission.b12_i0_done = true
-		log_info("akhenaten: mission 27 egyptx8 after meat refuse (i=3)", {ev:ev})
-		mission27_egypt_raid(3, 8, EVENT_ATTACK_TARGET_RANDOM)
-		return
-	}
-	if (ev.tag_id == 2017 && !mission.b12_i17_done) {
-		mission.b12_i17_done = true
-		log_info("akhenaten: mission 27 egyptx9 after bricks refuse (i=22)", {ev:ev})
-		mission27_egypt_raid(22, 9, EVENT_ATTACK_TARGET_RANDOM)
-		return
-	}
-	if (ev.tag_id == 2070 && !mission.b12_i70_done) {
-		mission.b12_i70_done = true
-		log_info("akhenaten: mission 27 egyptx6 after limestone refuse (i=76)", {ev:ev})
-		mission27_egypt_raid(76, 6, EVENT_ATTACK_TARGET_RANDOM)
+	if (ev.tag_id == 2000) {
+		mission_raid_schedule(mission, mission27_raid_list(), "i3", 5)
+	} else if (ev.tag_id == 2017) {
+		mission_raid_schedule(mission, mission27_raid_list(), "i22", 7)
+	} else if (ev.tag_id == 2070) {
+		mission_raid_schedule(mission, mission27_raid_list(), "i76", 3)
 	}
 }
