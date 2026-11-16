@@ -15,8 +15,6 @@
 
 struct music_player_t;
 
-struct event_sound_effect { int effect; };
-
 
 class sound_manager_t {
 public:

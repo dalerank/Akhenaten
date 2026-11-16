@@ -4,6 +4,10 @@
 #include "core/xstring.h"
 #include "game/game_events_history.h"
 
+struct event_sound_effect {
+    int effect;
+};
+
 // Plays a music/ambient track by its music.js key.
 struct event_sound_track {
     xstring track;
