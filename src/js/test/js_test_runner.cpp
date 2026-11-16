@@ -264,7 +264,6 @@ bool __test_start_city_session(pcstr map_path) {
         return false;
     }
 
-    GamestateIO::start_loaded_file();
     auto cities = g_empire.get_cities();
     cities[0].type = EMPIRE_CITY_OURS;
     cities[0].in_use = true;
