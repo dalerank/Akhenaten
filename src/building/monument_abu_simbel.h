@@ -35,10 +35,19 @@ struct abu_simbel_part_cfg {
 };
 ANK_CONFIG_STRUCT(abu_simbel_part_cfg, id, dx, dy, kind)
 
+struct abu_simbel_scaffold_cfg {
+    int scaffold = 0;
+    xstring name;
+    xstring image;
+    vec2i view0;
+    vec2i view3;
+};
+ANK_CONFIG_STRUCT(abu_simbel_scaffold_cfg, scaffold, name, image, view0, view3)
+
 struct abu_simbel_stage_cfg {
     int stage = 0;
     xstring hint;
-    uint8_t scaffold = 0;
+    xstring scaffold;
     xstring art;
     uint16_t work = 0;
 };
@@ -55,6 +64,7 @@ public:
         PARTS = 16,
         STAGE_COMPLETE = 56,
         PART_KINDS = 12,
+        SCAFFOLDS = 12,
     };
 
     struct runtime_data_t : building_monument::runtime_data_t {
@@ -64,6 +74,7 @@ public:
 
     struct static_params : public building_static_params {
         svector<abu_simbel_part_kind, PART_KINDS> part_kinds;
+        svector<abu_simbel_scaffold_cfg, SCAFFOLDS> scaffolds;
         svector<abu_simbel_part_cfg, PARTS> parts;
         svector<abu_simbel_stage_cfg, STAGE_COMPLETE> stages;
         vec2i work_tile;
@@ -87,6 +98,7 @@ public:
     virtual void update_day() override;
     virtual void update_map_orientation(int map_orientation) override;
     virtual int building_image_get() const override;
+    virtual bool draw_ornaments_and_animations_height(painter& ctx, vec2i point, tile2i tile, color mask) override;
     virtual bool need_stonemason() override;
     virtual bool need_carpenter() override;
     virtual bool need_workers() const override;
@@ -114,6 +126,8 @@ public:
     bool has_active_worker() const;
     int spot_work_left() const { return main_abu_simbel()->runtime_data().spot_work; }
     void set_stage(int stage);
+    int scaffolds_raised() const;
+    int scaffold_draw_count() const;
 
     // OG abu_simbel_can_place: every part tile away from the map edge, rock parts on monument rock.
     static bool site_fits(tile2i origin);
@@ -123,5 +137,5 @@ private:
     void advance_stage();
     void refresh_part_images();
 };
-ANK_CONFIG_STRUCT(building_abu_simbel::static_params, part_kinds, parts, stages, work_tile)
+ANK_CONFIG_STRUCT(building_abu_simbel::static_params, part_kinds, scaffolds, parts, stages, work_tile)
 ANK_CONFIG_PROPERTY(building_abu_simbel::runtime_data_t, variant)

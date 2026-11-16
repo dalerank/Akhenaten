@@ -59,21 +59,34 @@ function t395_check() {
     if (!stages || stages.length != 56) {
         return '56 stages expected, got ' + (stages ? stages.length : 'none')
     }
+    var scaffolds = cfg.scaffolds
+    if (!scaffolds || scaffolds.length != 12) {
+        return '12 scaffolds expected, got ' + (scaffolds ? scaffolds.length : 'none')
+    }
     var scaffold_seen = {}
+    for (var k = 0; k < scaffolds.length; k++) {
+        var sc = scaffolds[k]
+        if (sc.scaffold != k + 1 || !sc.name || scaffold_seen[sc.name] !== undefined) {
+            return 'scaffold row ' + k + ': index ' + sc.scaffold + ' name ' + sc.name
+        }
+        if (!anims[sc.image] || !sc.view0 || !sc.view3) {
+            return 'scaffold ' + sc.name + ' has no image or offsets'
+        }
+        scaffold_seen[sc.name] = 0
+    }
     for (var s = 0; s < stages.length; s++) {
         var st = stages[s]
         if (st.stage != s) {
             return 'stage row ' + s + ' says stage ' + st.stage
         }
-        var scaffold = st.scaffold | 0
-        if ((scaffold != 0) == !!st.art) {
+        if (!!st.scaffold == !!st.art) {
             return 'stage ' + s + ' needs either a scaffold or an art part'
         }
-        if (scaffold) {
-            if (scaffold < 1 || scaffold > 12) {
-                return 'stage ' + s + ' scaffold ' + scaffold
+        if (st.scaffold) {
+            if (scaffold_seen[st.scaffold] === undefined) {
+                return 'stage ' + s + ' names unknown scaffold ' + st.scaffold
             }
-            scaffold_seen[scaffold] = (scaffold_seen[scaffold] | 0) + 1
+            scaffold_seen[st.scaffold]++
         } else if (part_ids[st.art] === undefined) {
             return 'stage ' + s + ' carves unknown part ' + st.art
         }
@@ -81,9 +94,9 @@ function t395_check() {
             return 'stage ' + s + ' has no work'
         }
     }
-    for (var n = 1; n <= 12; n++) {
-        if (scaffold_seen[n] != 2) {
-            return 'scaffold ' + n + ' comes up ' + (scaffold_seen[n] | 0) + ' times, expected 2'
+    for (var name in scaffold_seen) {
+        if (scaffold_seen[name] != 2) {
+            return 'scaffold ' + name + ' comes up ' + scaffold_seen[name] + ' times, expected 2'
         }
     }
     return ''

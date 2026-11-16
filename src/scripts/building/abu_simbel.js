@@ -17,6 +17,8 @@ building_abu_simbel {
       facade_view_3 { pack:PACK_ABUSIMBEL, id:12 }
       facade_view_1 { pack:PACK_ABUSIMBEL, id:13 }
       facade_view_2 { pack:PACK_ABUSIMBEL, id:14 }
+      scaffold_a { pack:PACK_ABUSIMBEL, id:15 }
+      scaffold_b { pack:PACK_ABUSIMBEL, id:16 }
       preview { pack:PACK_ABUSIMBEL, id:2 }
     }
     building_size : 3
@@ -77,56 +79,71 @@ building_abu_simbel {
         { id: "north_statue", dx: -2, dy: 1, kind: "statue_north" }
         { id: "south_statue", dx: -2, dy: -8, kind: "statue_south" }
     ]
-    // OG work spots, one per stage. A scaffold stage is carpenter work that raises scaffold N the first time it
-    // comes up and lowers it the second (OG keeps the flags but never draws them); an art stage is stonemason
-    // work that moves that part's art one stage on.
+    // OG built parts (abu_simbel_data.c): 4 tiers of 3, screen offset from the main record in camera views 0 and 3;
+    // the image steps by one in view 3.
+    scaffolds [
+        { scaffold: 1, name: "tier1_left", image: "scaffold_a", view0: [243, -99], view3: [-411, -247] }
+        { scaffold: 2, name: "tier1_middle", image: "scaffold_a", view0: [401, -178], view3: [-253, -171] }
+        { scaffold: 3, name: "tier1_right", image: "scaffold_a", view0: [540, -244], view3: [-114, -101] }
+        { scaffold: 4, name: "tier2_left", image: "scaffold_a", view0: [243, -159], view3: [-411, -307] }
+        { scaffold: 5, name: "tier2_middle", image: "scaffold_a", view0: [401, -238], view3: [-253, -231] }
+        { scaffold: 6, name: "tier2_right", image: "scaffold_a", view0: [540, -304], view3: [-114, -161] }
+        { scaffold: 7, name: "tier3_left", image: "scaffold_b", view0: [228, -269], view3: [-396, -417] }
+        { scaffold: 8, name: "tier3_middle", image: "scaffold_b", view0: [386, -348], view3: [-238, -341] }
+        { scaffold: 9, name: "tier3_right", image: "scaffold_b", view0: [525, -414], view3: [-99, -271] }
+        { scaffold: 10, name: "tier4_left", image: "scaffold_b", view0: [208, -384], view3: [-376, -532] }
+        { scaffold: 11, name: "tier4_middle", image: "scaffold_b", view0: [366, -463], view3: [-218, -456] }
+        { scaffold: 12, name: "tier4_right", image: "scaffold_b", view0: [505, -529], view3: [-79, -386] }
+    ]
+    // OG work spots, one per stage. A scaffold stage is carpenter work that raises the scaffold the first time it
+    // comes up and lowers it the second; an art stage is stonemason work that moves that part's art one stage on.
     stages [
-        { stage: 0, hint: "scaffold 1 up", scaffold: 1, work: 200 }
-        { stage: 1, hint: "scaffold 4 up", scaffold: 4, work: 200 }
-        { stage: 2, hint: "scaffold 7 up", scaffold: 7, work: 250 }
-        { stage: 3, hint: "scaffold 10 up", scaffold: 10, work: 300 }
-        { stage: 4, hint: "scaffold 2 up", scaffold: 2, work: 170 }
-        { stage: 5, hint: "scaffold 5 up", scaffold: 5, work: 200 }
-        { stage: 6, hint: "scaffold 8 up", scaffold: 8, work: 250 }
-        { stage: 7, hint: "scaffold 11 up", scaffold: 11, work: 300 }
-        { stage: 8, hint: "scaffold 3 up", scaffold: 3, work: 300 }
-        { stage: 9, hint: "scaffold 6 up", scaffold: 6, work: 300 }
-        { stage: 10, hint: "scaffold 9 up", scaffold: 9, work: 350 }
-        { stage: 11, hint: "scaffold 12 up", scaffold: 12, work: 400 }
+        { stage: 0, hint: "raise the tier 1 left scaffold", scaffold: "tier1_left", work: 200 }
+        { stage: 1, hint: "raise the tier 2 left scaffold", scaffold: "tier2_left", work: 200 }
+        { stage: 2, hint: "raise the tier 3 left scaffold", scaffold: "tier3_left", work: 250 }
+        { stage: 3, hint: "raise the tier 4 left scaffold", scaffold: "tier4_left", work: 300 }
+        { stage: 4, hint: "raise the tier 1 middle scaffold", scaffold: "tier1_middle", work: 170 }
+        { stage: 5, hint: "raise the tier 2 middle scaffold", scaffold: "tier2_middle", work: 200 }
+        { stage: 6, hint: "raise the tier 3 middle scaffold", scaffold: "tier3_middle", work: 250 }
+        { stage: 7, hint: "raise the tier 4 middle scaffold", scaffold: "tier4_middle", work: 300 }
+        { stage: 8, hint: "raise the tier 1 right scaffold", scaffold: "tier1_right", work: 300 }
+        { stage: 9, hint: "raise the tier 2 right scaffold", scaffold: "tier2_right", work: 300 }
+        { stage: 10, hint: "raise the tier 3 right scaffold", scaffold: "tier3_right", work: 350 }
+        { stage: 11, hint: "raise the tier 4 right scaffold", scaffold: "tier4_right", work: 400 }
         { stage: 12, hint: "north statue, carving 1", art: "north_statue", work: 1550 }
         { stage: 13, hint: "door facade, carving 1", art: "door_facade", work: 1000 }
         { stage: 14, hint: "inner facade, carving 1", art: "inner_facade", work: 950 }
         { stage: 15, hint: "south statue, carving 1", art: "south_statue", work: 1050 }
-        { stage: 16, hint: "scaffold 10 down", scaffold: 10, work: 500 }
+        { stage: 16, hint: "lower the tier 4 left scaffold", scaffold: "tier4_left", work: 500 }
         { stage: 17, hint: "north statue, carving 2", art: "north_statue", work: 1050 }
-        { stage: 18, hint: "scaffold 11 down", scaffold: 11, work: 500 }
+        { stage: 18, hint: "lower the tier 4 middle scaffold", scaffold: "tier4_middle", work: 500 }
         { stage: 19, hint: "door facade, carving 2", art: "door_facade", work: 1200 }
-        { stage: 20, hint: "scaffold 8 down", scaffold: 8, work: 400 }
+        { stage: 20, hint: "lower the tier 3 middle scaffold", scaffold: "tier3_middle", work: 400 }
         { stage: 21, hint: "inner facade, carving 2", art: "inner_facade", work: 1100 }
-        { stage: 22, hint: "scaffold 12 down", scaffold: 12, work: 500 }
+        { stage: 22, hint: "lower the tier 4 right scaffold", scaffold: "tier4_right", work: 500 }
         { stage: 23, hint: "south statue, carving 2", art: "south_statue", work: 1000 }
-        { stage: 24, hint: "scaffold 7 down", scaffold: 7, work: 400 }
+        { stage: 24, hint: "lower the tier 3 left scaffold", scaffold: "tier3_left", work: 400 }
         { stage: 25, hint: "north statue, carving 3", art: "north_statue", work: 1000 }
         { stage: 26, hint: "door facade, carving 3", art: "door_facade", work: 900 }
-        { stage: 27, hint: "scaffold 9 down", scaffold: 9, work: 300 }
+        { stage: 27, hint: "lower the tier 3 right scaffold", scaffold: "tier3_right", work: 300 }
         { stage: 28, hint: "south statue, carving 3", art: "south_statue", work: 1000 }
         { stage: 29, hint: "north statue, carving 4", art: "north_statue", work: 1200 }
         { stage: 30, hint: "inner facade, carving 3", art: "inner_facade", work: 900 }
         { stage: 31, hint: "south statue, carving 4", art: "south_statue", work: 400 }
-        { stage: 32, hint: "scaffold 4 down", scaffold: 4, work: 300 }
+        { stage: 32, hint: "lower the tier 2 left scaffold", scaffold: "tier2_left", work: 300 }
         { stage: 33, hint: "north statue, carving 5", art: "north_statue", work: 500 }
-        { stage: 34, hint: "scaffold 5 down", scaffold: 5, work: 300 }
+        { stage: 34, hint: "lower the tier 2 middle scaffold", scaffold: "tier2_middle", work: 300 }
         { stage: 35, hint: "door facade, carving 4", art: "door_facade", work: 800 }
-        { stage: 36, hint: "scaffold 6 down", scaffold: 6, work: 300 }
+        { stage: 36, hint: "lower the tier 2 right scaffold", scaffold: "tier2_right", work: 300 }
         { stage: 37, hint: "south statue, carving 5", art: "south_statue", work: 900 }
-        { stage: 38, hint: "scaffold 1 down", scaffold: 1, work: 300 }
+        { stage: 38, hint: "lower the tier 1 left scaffold", scaffold: "tier1_left", work: 300 }
         { stage: 39, hint: "north statue, carving 6", art: "north_statue", work: 900 }
-        { stage: 40, hint: "scaffold 2 down", scaffold: 2, work: 200 }
+        { stage: 40, hint: "lower the tier 1 middle scaffold", scaffold: "tier1_middle", work: 200 }
         { stage: 41, hint: "inner facade, carving 4", art: "inner_facade", work: 500 }
         { stage: 42, hint: "door facade, carving 5", art: "door_facade", work: 500 }
         { stage: 43, hint: "entrance, carving 1", art: "entrance", work: 400 }
         { stage: 44, hint: "inner facade, carving 5", art: "inner_facade", work: 350 }
-        { stage: 45, hint: "scaffold 3 down", scaffold: 3, work: 200 }
+        { stage: 45, hint: "lower the tier 1 right scaffold", scaffold: "tier1_right", work: 200 }
         { stage: 46, hint: "south statue, carving 6", art: "south_statue", work: 700 }
         { stage: 47, hint: "north statue, carving 7", art: "north_statue", work: 300 }
         { stage: 48, hint: "door facade, carving 6", art: "door_facade", work: 400 }

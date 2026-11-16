@@ -7,6 +7,7 @@
 #include "figure/figure.h"
 #include "figuretype/figure_carpenter.h"
 #include "figuretype/figure_stonemason.h"
+#include "game/game_config.h"
 #include "game/undo.h"
 #include "graphics/color.h"
 #include "graphics/graphics.h"
@@ -82,10 +83,10 @@ namespace {
 
     e_figure_type stage_figure(int stage) {
         const abu_simbel_stage_cfg* s = stage_row(stage);
-        if (!s || (s->scaffold != 0) == !s->art.empty()) {
+        if (!s || s->scaffold.empty() == s->art.empty()) {
             return FIGURE_NONE;
         }
-        return s->scaffold ? FIGURE_CARPENTER : FIGURE_STONEMASON;
+        return s->scaffold.empty() ? FIGURE_STONEMASON : FIGURE_CARPENTER;
     }
 
     uint16_t stage_work(int stage) {
@@ -102,9 +103,19 @@ namespace {
         const auto& stages = abu_params().stages;
         int art = 0;
         for (int i = 0; i < stage && i < (int)stages.size(); ++i) {
-            art += (!stages[i].scaffold && stages[i].art == p->id) ? 1 : 0;
+            art += (stages[i].scaffold.empty() && stages[i].art == p->id) ? 1 : 0;
         }
         return art;
+    }
+
+    // OG built_parts: raised by the first stage that names the scaffold, lowered by the second.
+    bool scaffold_raised(const xstring& name, int stage) {
+        const auto& stages = abu_params().stages;
+        int seen = 0;
+        for (int i = 0; i < stage && i < (int)stages.size(); ++i) {
+            seen += stages[i].scaffold == name ? 1 : 0;
+        }
+        return seen == 1;
     }
 
     // The cliff kinds take image family + "_" + (view + rotate) % 4, the others name the image per view.
@@ -307,7 +318,7 @@ bool building_abu_simbel::work_tick(figure& f) {
     return true;
 }
 
-// OG abu_simbel_advance_stage. The scaffold flags it toggles are never drawn by the original.
+// OG abu_simbel_advance_stage.
 void building_abu_simbel::advance_stage() {
     const int s = stage();
     if (s >= STAGE_COMPLETE) {
@@ -357,6 +368,49 @@ int building_abu_simbel::building_image_get() const {
         return 0;
     }
     return first + art.offset + (art.two_per_art_stage ? part_art_stage(part_index(), stage()) * 2 : 0);
+}
+
+int building_abu_simbel::scaffolds_raised() const {
+    int count = 0;
+    for (const auto& sc : abu_params().scaffolds) {
+        count += scaffold_raised(sc.name, stage()) ? 1 : 0;
+    }
+    return count;
+}
+
+int building_abu_simbel::scaffold_draw_count() const {
+    const int view = camera_view();
+    // OG draw_abu_simbel_top: the front record anchors the scaffolds in N/S, the back record in E/W; only
+    // views 0 and 3 have offsets, so the south and east views draw none.
+    const int anchor = view == 0 ? 0 : (view == 3 ? 1 : -1);
+    if (part_index() != anchor || !game_features::gameplay_change_abu_simbel_draw_scaffolds) {
+        return 0;
+    }
+    int count = 0;
+    for (const auto& sc : abu_params().scaffolds) {
+        count += (scaffold_raised(sc.name, stage()) && current_params().first_img(sc.image) > 0) ? 1 : 0;
+    }
+    return count;
+}
+
+// OG abu_simbel_draw_built_parts.
+bool building_abu_simbel::draw_ornaments_and_animations_height(painter& ctx, vec2i point, tile2i tile, color mask) {
+    const bool drew = building_monument::draw_ornaments_and_animations_height(ctx, point, tile, mask);
+    if (scaffold_draw_count() == 0) {
+        return drew;
+    }
+    const int view = camera_view();
+    for (const auto& sc : abu_params().scaffolds) {
+        const int first = current_params().first_img(sc.image);
+        if (!scaffold_raised(sc.name, stage()) || first <= 0) {
+            continue;
+        }
+        auto& command = ImageDraw::create_subcommand(ctx, render_command_t::ert_drawtile);
+        command.image_id = first + (view & 1);
+        command.pixel = point + (view == 0 ? sc.view0 : sc.view3);
+        command.mask = mask;
+    }
+    return true;
 }
 
 void building_abu_simbel::preview::setup_preview_graphics(build_planner& planer) const {

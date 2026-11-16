@@ -223,6 +223,7 @@ localization_en = [
   {key:"#TR_CONFIG_FIREMAN_RETURNING", text:"Fireman returning after fight fire"}
   {key:"#TR_CONFIG_FISHING_POINTS_MONTHLY_RESPAWN", text:"Fishing spots respawn every month"}
   {key:"#TR_CONFIG_HOUSE_EVOLVE_DELAY", text:"Houses evolve at most once every 7 days"}
+  {key:"#TR_CONFIG_ABU_SIMBEL_DRAW_SCAFFOLDS", text:"Abu Simbel shows its scaffolds while it is built"}
   {key:"#TR_CONFIG_FOOD_CONSUMPTION_REMAKE", text:"Houses eat their level's share of food twice a month"}
   {key:"#TR_CONFIG_ARCHITECT_PATROL_MOST_DAMAGED", text:"Architects path to most damaged buildings"}
   {key:"#TR_CONFIG_OG_ARCHITECT", text:"Original Pharaoh architect (subtract damage, repair walls)"}

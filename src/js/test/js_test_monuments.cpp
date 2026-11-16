@@ -1116,6 +1116,18 @@ static void __test_abu_simbel_set_stage(int bid, int stage) {
 }
 ANK_FUNCTION_2(__test_abu_simbel_set_stage);
 
+static int __test_abu_simbel_scaffolds_raised(int bid) {
+    auto* a = test_abu_simbel(bid);
+    return a ? a->scaffolds_raised() : -1;
+}
+ANK_FUNCTION_1(__test_abu_simbel_scaffolds_raised);
+
+static int __test_abu_simbel_scaffold_draws(int bid) {
+    auto* a = test_abu_simbel(bid);
+    return a ? a->scaffold_draw_count() : -1;
+}
+ANK_FUNCTION_1(__test_abu_simbel_scaffold_draws);
+
 static int __test_abu_simbel_spot_work(int bid) {
     auto* a = test_abu_simbel(bid);
     return a ? a->spot_work_left() : -1;
