@@ -77,9 +77,8 @@ public:
     // "[sound] ..." log lines of what plays, for --log-sound and the integral tests (no audio hardware needed).
     bool log_events() const;
     bool data_available() const;
-    void set_og_effect_file(int id, xstring file);
-    void set_og_figure_effect_file(int sound, int variant, xstring file);
-    void clear_og_effect_files();
+    void set_effect_file(int effect, xstring file);
+    void clear_effect_files();
     void stop_city_channels();
     void stop_city_channel(int channel);
 
@@ -131,8 +130,7 @@ private:
     music_player_t *_music_player = nullptr;
     std::array<channel_t, SOUND_CHANNEL_MAX> _channels;
     std::array<vfs::path, SOUND_CHANNEL_MAX> _channels_info;
-    std::array<og_sample_t, OG_SOUND_EFFECT_COUNT> _og_effects;
-    std::array<og_sample_t, OG_FIGURE_SOUND_COUNT * OG_FIGURE_SOUND_VARIANTS> _og_figure_effects;
+    std::array<og_sample_t, SOUND_EFFECT_COUNT> _effect_files;
 };
 
 extern sound_manager_t g_sound;
