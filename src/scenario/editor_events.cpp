@@ -41,24 +41,6 @@ void scenario_editor_gladiator_revolt_set_year(int year) {
     g_scenario.is_saved = 0;
 }
 
-int scenario_editor_emperor_change_enabled(void) {
-    return g_scenario.emperor_change.enabled;
-}
-
-int scenario_editor_emperor_change_year(void) {
-    return g_scenario.emperor_change.year;
-}
-
-void scenario_editor_emperor_change_toggle_enabled(void) {
-    g_scenario.emperor_change.enabled = !g_scenario.emperor_change.enabled;
-    g_scenario.is_saved = 0;
-}
-
-void scenario_editor_emperor_change_set_year(int year) {
-    g_scenario.emperor_change.year = year;
-    g_scenario.is_saved = 0;
-}
-
 int scenario_editor_sea_trade_problem_enabled(void) {
     return g_scenario.random_events.sea_trade_problem;
 }

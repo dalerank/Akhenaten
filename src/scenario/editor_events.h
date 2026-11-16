@@ -16,13 +16,9 @@ void scenario_editor_gladiator_revolt_toggle_enabled();
 
 void scenario_editor_gladiator_revolt_set_year(int year);
 
-int scenario_editor_emperor_change_enabled();
 
-int scenario_editor_emperor_change_year();
 
-void scenario_editor_emperor_change_toggle_enabled();
 
-void scenario_editor_emperor_change_set_year(int year);
 
 int scenario_editor_sea_trade_problem_enabled();
 

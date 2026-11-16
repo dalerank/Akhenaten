@@ -7,7 +7,6 @@
 #include "core/custom_span.hpp"
 #include "empire/trade_route.h"
 #include "earthquake.h"
-#include "farao_change.h"
 #include "scenario_event_manager.h"
 #include "game/difficulty.h"
 #include "game/game.h"
@@ -478,5 +477,4 @@ void scenario_data_t::update() {
     scenario_earthquake_process();
     events.update_tick();
     //scenario_slave_revolt_process();
-    scenario_kingdome_change_process();
 }

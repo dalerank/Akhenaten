@@ -248,11 +248,6 @@ struct scenario_data_t {
     struct {
         int year;
         int enabled;
-    } emperor_change;
-
-    struct {
-        int year;
-        int enabled;
     } gladiator_revolt;
 
     struct {

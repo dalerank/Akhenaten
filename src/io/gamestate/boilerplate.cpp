@@ -70,7 +70,6 @@
 #include "scenario/distant_battle.h"
 #include "scenario/earthquake.h"
 #include "scenario/editor_map_meta.h"
-#include "scenario/farao_change.h"
 #include "scenario/scenario_revolt.h"
 #include "scenario/scenario_invasion.h"
 #include "scenario/invasion_auto_resolve.h"
@@ -444,7 +443,6 @@ void GamestateIO::start_loaded_file() {
 
         // set up events
         scenario_revolt_init();
-        scenario_kingdome_change_init();
         scenario_criteria_init_max_year();
         g_invasions.init();
         g_distant_battle.determine_distant_battle_city();

@@ -19,8 +19,6 @@ static void button_earthquake_severity(int param1, int param2);
 static void button_earthquake_year(int param1, int param2);
 static void button_gladiator_toggle(int param1, int param2);
 static void button_gladiator_year(int param1, int param2);
-static void button_emperor_toggle(int param1, int param2);
-static void button_emperor_year(int param1, int param2);
 static void button_sea_trade_toggle(int param1, int param2);
 static void button_land_trade_toggle(int param1, int param2);
 static void button_raise_wages_toggle(int param1, int param2);
@@ -34,8 +32,6 @@ static generic_button buttons[] = {
   {326, 106, 150, 24, button_earthquake_year, button_none},
   {216, 136, 100, 24, button_gladiator_toggle, button_none},
   {326, 136, 150, 24, button_gladiator_year, button_none},
-  {216, 166, 100, 24, button_emperor_toggle, button_none},
-  {326, 166, 150, 24, button_emperor_year, button_none},
   {216, 196, 100, 24, button_sea_trade_toggle, button_none},
   {216, 226, 100, 24, button_land_trade_toggle, button_none},
   {216, 256, 100, 24, button_raise_wages_toggle, button_none},
@@ -87,51 +83,39 @@ static void draw_foreground(int) {
                         142,
                         FONT_NORMAL_BLACK_ON_LIGHT);
 
-    // emperor change
-    lang_text_draw(38, 3, 36, 172, FONT_NORMAL_BLACK_ON_LIGHT);
-    button_border_draw({216, 166}, {100, 24}, focus_button_id == 5);
-    lang_text_draw_centered(18, scenario_editor_emperor_change_enabled(), 216, 172, 100, FONT_NORMAL_BLACK_ON_LIGHT);
-
-    button_border_draw({326, 166}, {150, 24}, focus_button_id == 6);
-    width = text_draw_number(scenario_editor_emperor_change_year(), '+', " ", 346, 172, FONT_NORMAL_BLACK_ON_LIGHT);
-    lang_text_draw_year(g_scenario.start_year + scenario_editor_emperor_change_year(),
-                        356 + width,
-                        172,
-                        FONT_NORMAL_BLACK_ON_LIGHT);
-
     // random events
     lang_text_draw(38, 4, 36, 202, FONT_NORMAL_BLACK_ON_LIGHT);
-    button_border_draw({216, 196}, {100, 24}, focus_button_id == 7);
+    button_border_draw({216, 196}, {100, 24}, focus_button_id == 5);
     lang_text_draw_centered(18, scenario_editor_sea_trade_problem_enabled(), 216, 202, 100, FONT_NORMAL_BLACK_ON_LIGHT);
     lang_text_draw(38, 13, 346, 204, FONT_SMALL_PLAIN);
 
     lang_text_draw(38, 5, 36, 232, FONT_NORMAL_BLACK_ON_LIGHT);
-    button_border_draw({216, 226}, {100, 24}, focus_button_id == 8);
+    button_border_draw({216, 226}, {100, 24}, focus_button_id == 6);
     lang_text_draw_centered(18, scenario_editor_land_trade_problem_enabled(), 216, 232, 100, FONT_NORMAL_BLACK_ON_LIGHT);
     lang_text_draw(38, 13, 346, 234, FONT_SMALL_PLAIN);
 
     lang_text_draw(38, 6, 36, 262, FONT_NORMAL_BLACK_ON_LIGHT);
-    button_border_draw({216, 256}, {100, 24}, focus_button_id == 9);
+    button_border_draw({216, 256}, {100, 24}, focus_button_id == 7);
     lang_text_draw_centered(18, scenario_editor_raise_wages_enabled(), 216, 262, 100, FONT_NORMAL_BLACK_ON_LIGHT);
     lang_text_draw(38, 13, 346, 264, FONT_SMALL_PLAIN);
 
     lang_text_draw(38, 7, 36, 292, FONT_NORMAL_BLACK_ON_LIGHT);
-    button_border_draw({216, 286}, {100, 24}, focus_button_id == 10);
+    button_border_draw({216, 286}, {100, 24}, focus_button_id == 8);
     lang_text_draw_centered(18, scenario_editor_lower_wages_enabled(), 216, 292, 100, FONT_NORMAL_BLACK_ON_LIGHT);
     lang_text_draw(38, 13, 346, 294, FONT_SMALL_PLAIN);
 
     lang_text_draw(38, 8, 36, 322, FONT_NORMAL_BLACK_ON_LIGHT);
-    button_border_draw({216, 316}, {100, 24}, focus_button_id == 11);
+    button_border_draw({216, 316}, {100, 24}, focus_button_id == 9);
     lang_text_draw_centered(18, scenario_editor_contaminated_water_enabled(), 216, 322, 100, FONT_NORMAL_BLACK_ON_LIGHT);
     lang_text_draw(38, 13, 346, 324, FONT_SMALL_PLAIN);
 
     lang_text_draw(38, 9, 36, 352, FONT_NORMAL_BLACK_ON_LIGHT);
-    button_border_draw({216, 346}, {100, 24}, focus_button_id == 12);
+    button_border_draw({216, 346}, {100, 24}, focus_button_id == 10);
     lang_text_draw_centered(18, scenario_editor_iron_mine_collapse_enabled(), 216, 352, 100, FONT_NORMAL_BLACK_ON_LIGHT);
     lang_text_draw(38, 13, 346, 354, FONT_SMALL_PLAIN);
 
     lang_text_draw(38, 10, 36, 382, FONT_NORMAL_BLACK_ON_LIGHT);
-    button_border_draw({216, 376}, {100, 24}, focus_button_id == 13);
+    button_border_draw({216, 376}, {100, 24}, focus_button_id == 11);
     lang_text_draw_centered(18, scenario_editor_clay_pit_flooded_enabled(), 216, 382, 100, FONT_NORMAL_BLACK_ON_LIGHT);
     lang_text_draw(38, 13, 346, 384, FONT_SMALL_PLAIN);
 
@@ -139,7 +123,7 @@ static void draw_foreground(int) {
 }
 
 static void handle_input(const mouse* m, const hotkeys* h) {
-    if (generic_buttons_handle_mouse(mouse_in_dialog(m), {0, 0}, buttons, 13, &focus_button_id, nullptr))
+    if (generic_buttons_handle_mouse(mouse_in_dialog(m), {0, 0}, buttons, 11, &focus_button_id, nullptr))
         return;
     if (input_go_back_requested(m, h))
         window_editor_attributes_show();
@@ -164,15 +148,6 @@ static void button_gladiator_year(int param1, int param2) {
                               3,
                               999,
                               scenario_editor_gladiator_revolt_set_year);
-}
-
-static void button_emperor_toggle(int param1, int param2) {
-    scenario_editor_emperor_change_toggle_enabled();
-}
-
-static void button_emperor_year(int param1, int param2) {
-    window_numeric_input_show(
-      g_screen.dialog_offset.x + 190, g_screen.dialog_offset.y + 100, 3, 999, scenario_editor_emperor_change_set_year);
 }
 
 static void button_sea_trade_toggle(int param1, int param2) {
