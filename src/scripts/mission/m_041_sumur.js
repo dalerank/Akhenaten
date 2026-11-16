@@ -15,17 +15,18 @@ log_info("akhenaten: mission 41 sumur started")
 //            Knossos asks 7 grain (delivered or late: Knossos route opens; refused: Qadesh asks 9 fish with
 //            the same outcomes); from y4m3 Menat Khufu asks 7 oil every year (delivered: gift of 8 granite);
 //            y5m1 Pwenet asks 9 gems (delivered: Men-nefer asks 20 weapons) — every path ends with the
-//            Qadesh route lost and a Canaanite raid 42; from y5m9 gift of 20 grain every year, each with a
+//            Qadesh route lost and a Canaanite raid 42 announced, attacking 10 months later; from y5m9 gift of 20 grain every year, each with a
 //            new request for 8 copper; y7m0 wages rise; y7m2..y15 Qadesh asks 21 timber every year
 //            (delivered: gift of 21 lettuce; late: 14 lettuce); y8m0 Pwenet asks 19 timber (delivered or
 //            late: Men-nefer route opens); y8m6 Rowarty buys more copper; y11m9 Men-nefer buys more timber;
-//            y12m3 Canaanite raid 33; y12m5, y13m8 sea trade problems; from y14m7 contaminated water every
+//            Canaanite raid 33 announced y12m3, attacks y12m10; y12m5, y13m8 sea trade problems; from y14m7 contaminated water every
 //            year; from y16m2 Men-nefer asks 14 timber every year (delivered: gift of 15 grain; late: 12
 //            lettuce); y20m0 wages rise. Most refusals cost 3 kingdom.
 //
 // Notes for developers:
-// - Raid location numbers follow the original events: 1 = land point [54,72], 2 = disembark point
-//   [30,85]; any other number enters at the map entry point (see mission41_loc_tile).
+// - Raid locations follow OG: 1..8 = the only land point [54,72] (empty ones wrap round).
+// - Raids follow the OG invasion cycle (missions.js mission_raids_month): warnings from the event's month,
+//   the attack months_initial months later, the point rolled from the event's location_fields.
 // - Outcomes of repeating requests run from event_request_cleared and fire unique once-events: a shared
 //   chain-only event fires only once. Gifts always complete, so the original's gift-refusal outcomes are
 //   dead and not wired.
@@ -474,6 +475,7 @@ mission41 { // Sumur — Lands of the Levant
 	fishing_points [ [56, 121], [82, 117], [76, 102], [74, 118] ]
 
 	vars {
+		raids : ""
 		chain_leaves_wired : false
 
 		event0_gift_done : false
@@ -493,7 +495,6 @@ mission41 { // Sumur — Lands of the Levant
 		event24_timber_armed : false
 		event27_sea_done : false
 		event28_timber_done : false
-		event31_invasion_done : false
 
 		timber6_recurring_was_busy : false
 		timber6_recurring_idle_since_abs : -1
@@ -595,33 +596,6 @@ function mission41_fire_simple_event(tag, type, resource, amount, city_name, sub
 	}
 	event.execute()
 	return event
-}
-
-// pak loc is 1-based invasion-point index; out of range → entry fallback (-1,-1).
-function mission41_loc_tile(loc) {
-	if (loc == 1) {
-		return [54, 72] // invasion_points_land[0]
-	}
-	if (loc == 2) {
-		return [30, 85] // disembark_points[0]
-	}
-	return [-1, -1]
-}
-
-function mission41_canaanite_raid(invasion_id, size, attack_target, loc) {
-	var tile = mission41_loc_tile(loc === undefined ? 0 : loc)
-	log_info("akhenaten: mission 41 canaanite raid size=" + size + " id=" + invasion_id
-		+ " loc=" + loc + " tile=" + tile[0] + "," + tile[1])
-	__image_request_pak(PACK_ENEMY_CANAANITE)
-	city.start_foreign_army_invasion({
-		invasion_id: invasion_id,
-		enemy: ENEMY_2_CANAANITE,
-		size: size,
-		tilex: tile[0],
-		tiley: tile[1],
-		want_destroy_buildings: size,
-		invasion_attack_target: attack_target === undefined ? EVENT_ATTACK_TARGET_RANDOM : attack_target
-	})
 }
 
 // Multi-fire outcomes (KR / gifts) must NOT use shared ONLY_VIA leaves — master becomes
@@ -977,20 +951,6 @@ function mission41_event_i28_timber(ev) {
 	mission41_fire_request(2028, RESOURCE_TIMBER, 19, 12, 1029, 0, 1029, 4, 0, "Pwenet")
 }
 
-// pak i=31: canaanite×33 once y12m3 attack=BEST_BUILDINGS loc=5 → entry fallback
-[es=event_advance_month, mission=mission41]
-function mission41_event_i31_invasion(ev) {
-	if (mission.event31_invasion_done) {
-		return
-	}
-	if (ev.years_since_start < 12 || (ev.years_since_start == 12 && ev.month < 3)) {
-		return
-	}
-	mission.event31_invasion_done = true
-	log_info("akhenaten: mission 41 canaanite×33", {ev:ev})
-	mission41_canaanite_raid(31, 33, EVENT_ATTACK_TARGET_BEST_BUILDINGS, 5)
-}
-
 // Multi-fire outcomes + LOST Qadesh → canaanite×42 (pak i=11 loc=2)
 [es=event_request_cleared, mission=mission41]
 function mission41_on_request_cleared(ev) {
@@ -1057,6 +1017,23 @@ function mission41_on_request_cleared(ev) {
 	if (lost_chain && !mission.inv_lost_qadesh_done) {
 		mission.inv_lost_qadesh_done = true
 		log_info("akhenaten: mission 41 canaanite×42 after LOST Qadesh chain", {ev:ev, outcome:outcome})
-		mission41_canaanite_raid(11, 42, EVENT_ATTACK_TARGET_RANDOM, 2)
+		mission_raid_schedule(mission, mission41_raid_list(), "i11", 0)
 	}
+}
+
+// pak i=31; i=11 after the Qadesh route is lost (pak i=12, see mission41_on_request_cleared).
+function mission41_raid_list() {
+	var C = ENEMY_2_CANAANITE
+	var E = EVENT_INVADER_ENEMY
+	return [
+		{ key: "i11", invasion_id: 11, invader: E, enemy: C, amount: 42, months_initial: 10, location: [2, -1, 1, 3],
+			attack_target: EVENT_ATTACK_TARGET_RANDOM },
+		{ key: "i31", invasion_id: 31, year: 12, month: 3, invader: E, enemy: C, amount: 33, months_initial: 7,
+			location: [5, 5, -1, -1], attack_target: EVENT_ATTACK_TARGET_BEST_BUILDINGS }
+	]
+}
+
+[es=event_advance_month, mission=mission41]
+function mission41_raids(ev) {
+	mission_raids_month(mission, mission41, ev, mission41_raid_list())
 }

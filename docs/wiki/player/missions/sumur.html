@@ -107,6 +107,7 @@
             <p><span class="file-ref">src/scripts/mission/m_041_sumur.js</span></p>
             <p>Favour event i=30 (loc 9, sea) carries the OG warship count <code>warships : 3</code> (pak <code>phrase_var</code>).</p>
             <p><code>map_file</code>: <span class="file-ref">data/maps/m_041_sumur.map</span>. Empire id 23, <code>map_background</code> pack empire id 21. SKIP empty map_obj idx=6. Dump 2026-07-28 Cleop (<span class="file-ref">tmp/mission41_pak.txt</span>). Trade: Qadesh open; Men-nefer / Rowarty / Waset / Timna / Jericho / Enkomi closed. Ours sells fish/timber/copper.</p>
+            <p>Raids: <code>mission41_raid_list</code> runs through <code>mission_raids_month</code> / <code>mission_raid_schedule</code> (<span class="file-ref">src/scripts/missions.js</span>) on the OG invasion cycle: the OG warnings with the invader&rsquo;s phrases from the event&rsquo;s month, the attack <code>months_initial</code> months later, the point rolled from the event&rsquo;s <code>location_fields</code>, its <code>on_completed</code> chain as it attacks; a chained raid is due its <code>time.year</code> months after its parent attacks or its request clears. i=11 ×42 chained (e.g. announced y5m2 &rarr; attacks y6m0) · i=31 ×33 announced y12m3 &rarr; attacks y12m10.</p>
           </div>
         </details>
         <details>

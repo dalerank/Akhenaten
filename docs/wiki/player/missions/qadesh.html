@@ -116,6 +116,7 @@
               Trade (JS): Sumur · Jericho · Timna · Migdol · Men-nefer; display Tyre / Waset (pharaoh→NEW_TRADE via i=5) / oases / Enkomi.
               Land routes 1–6; ornament <code>img=13863</code>.
               Events: luxury×2, troops×27, beer, gems, pomegranates; canaanite×50→×30→×35; land trade y6; SKIP i=8/i=9.</p>
+            <p>Raids: <code>mission42_raid_list</code> runs through <code>mission_raids_month</code> / <code>mission_raid_schedule</code> (<span class="file-ref">src/scripts/missions.js</span>) on the OG invasion cycle: the OG warnings with the invader&rsquo;s phrases from the event&rsquo;s month, the attack <code>months_initial</code> months later, the point rolled from the event&rsquo;s <code>location_fields</code>, its <code>on_completed</code> chain as it attacks; a chained raid is due its <code>time.year</code> months after its parent attacks or its request clears. i=1 ×50 announced y1m4 &rarr; attacks y2m4 · i=19 ×30 chained (e.g. announced y2m4 &rarr; attacks y2m4) · i=22 ×35 chained (e.g. announced y2m6 &rarr; attacks y2m6).</p>
           </div>
         </details>
       </div>

@@ -9,8 +9,9 @@ log_info("akhenaten: mission 42 qadesh started")
 // Monuments: none.
 // Trade:     can open — Sumur, Jericho, Timna, Migdol, Men-nefer; opened by events — Waset; display only —
 //            Bahariya Oasis, Dakhla Oasis, Tyre, Enkomi.
-// Enemies:   Canaanite raids (the briefing speaks of Hittites), all entering at the map entry point.
-// Timeline:  y1m4 raid 50; once it is beaten raid 30, and once that is beaten raid 35; y1m6 Waset asks
+// Enemies:   Canaanite raids (the briefing speaks of Hittites), all entering at the map exit.
+// Timeline:  raid 50 announced y1m4, attacks y2m4 together with raid 30, and 2 months later raid 35
+//            attacks (OG: each chains the next as it attacks); y1m6 Waset asks
 //            5 luxury goods (delivered: gift of 7 chickpeas; late: gift of 4 fish); y4m8 Waset asks
 //            7 luxury goods (delivered: Waset route opens; late: gift of 5 pottery); y4m10 Enkomi asks
 //            11 gems (delivered: Waset buys more luxury goods); y5m2 Waset asks 8 pomegranates (kingdom +3);
@@ -19,8 +20,8 @@ log_info("akhenaten: mission 42 qadesh started")
 //            y6m3 land trade problem. Refusing a request costs 3 kingdom.
 //
 // Notes for developers:
-// - The next raid waits for the previous one's invasion-history outcome (COMPLETED = beaten); a raid that
-//   ends any other way stops the chain (see mission42_invasion_followup).
+// - Raids follow the OG invasion cycle (missions.js mission_raids_month): warnings from the event's month,
+//   the attack months_initial months later, the point rolled from the event's location_fields.
 // - tag_id: 1000 + i chained events, 2000 + i calendar requests, 8000+ one-off kingdom changes
 //   (i = event index in the original scenario).
 
@@ -329,6 +330,7 @@ mission42 {
 	enable_scenario_events : true
 
 	vars {
+		raids : ""
 		chain_leaves_wired : false
 
 		event0_luxury_done : false
@@ -339,13 +341,6 @@ mission42 {
 		event20_trade_done : false
 		event21_pomegranates_done : false
 
-		inv_wave1_done : false
-		inv_wave1_seq : 0
-		inv_wave1_abs : -1
-		inv_wave2_done : false
-		inv_wave2_seq : 0
-		inv_wave2_abs : -1
-		inv_wave3_done : false
 
 		kr_seq : 0
 
@@ -422,38 +417,6 @@ function mission42_fire_kr(delta) {
 	mission42_fire_simple_event(8000 + mission.kr_seq, type, undefined, amount)
 }
 
-function mission42_canaanite_raid(invasion_id, size, attack_target, on_completed_tag) {
-	log_info("akhenaten: mission 42 canaanite raid size=" + size + " id=" + invasion_id)
-	__image_request_pak(PACK_ENEMY_CANAANITE)
-	var opts = {
-		invasion_id: invasion_id,
-		enemy: ENEMY_2_CANAANITE,
-		size: size,
-		tilex: -1,
-		tiley: -1,
-		want_destroy_buildings: size,
-		invasion_attack_target: attack_target === undefined ? EVENT_ATTACK_TARGET_RANDOM : attack_target
-	}
-	if (on_completed_tag) {
-		opts.on_completed_tag = on_completed_tag
-	}
-	return city.start_foreign_army_invasion(opts)
-}
-
-function mission42_invasion_outcome(seq) {
-	if (!seq) {
-		return -1
-	}
-	var n = city.invasion_history_count()
-	for (var i = 0; i < n; i++) {
-		var h = city.invasion_history_at(i)
-		if (h.seq == seq) {
-			return h.outcome
-		}
-	}
-	return -1
-}
-
 function mission42_ensure_chain_leaves() {
 	if (mission.chain_leaves_wired) {
 		return
@@ -484,8 +447,6 @@ function mission42_ensure_chain_leaves() {
 
 	mission42_make_leaf(1018, EVENT_TYPE_DEMAND_INCREASE, RESOURCE_LUXURY_GOODS, 8, 12, undefined, "Waset")
 
-	mission42_make_leaf(1019, EVENT_TYPE_INVASION, undefined, 12, 0)
-	mission42_make_leaf(1022, EVENT_TYPE_INVASION, undefined, 0, 0)
 }
 
 [es=event_mission_start, mission=mission42]
@@ -508,68 +469,6 @@ function mission42_on_start(ev) {
 }
 
 [es=event_advance_month, mission=mission42]
-function mission42_invasion_followup(ev) {
-	var abs = ev.years_since_start * 12 + ev.month
-
-	if (mission.inv_wave1_done && !mission.inv_wave2_done) {
-		if (mission.inv_wave1_abs < 0) {
-			mission.inv_wave1_abs = abs
-		}
-		var ready2 = false
-		if (mission.inv_wave1_seq > 0) {
-			var o1 = mission42_invasion_outcome(mission.inv_wave1_seq)
-			if (o1 == 1) {
-				ready2 = true
-			} else if (o1 == 2 || o1 == 3) {
-				mission.inv_wave2_done = true
-				mission.inv_wave3_done = true
-				log_info("akhenaten: mission 42 skip invasion chain after wave1 non-ok", {
-					seq: mission.inv_wave1_seq, outcome: o1
-				})
-				return
-			}
-		} else if (abs - mission.inv_wave1_abs >= 3) {
-			ready2 = true
-		}
-		if (ready2) {
-			mission.inv_wave2_done = true
-			mission.inv_wave2_abs = abs
-			mission.inv_wave2_seq = mission42_canaanite_raid(19, 30, EVENT_ATTACK_TARGET_TROOPS, 1022)
-			log_info("akhenaten: mission 42 canaanite×30 after wave1", {
-				seq: mission.inv_wave2_seq, abs: abs
-			})
-		}
-		return
-	}
-
-	if (mission.inv_wave2_done && !mission.inv_wave3_done) {
-		if (mission.inv_wave2_abs < 0) {
-			mission.inv_wave2_abs = abs
-		}
-		var ready3 = false
-		if (mission.inv_wave2_seq > 0) {
-			var o2 = mission42_invasion_outcome(mission.inv_wave2_seq)
-			if (o2 == 1) {
-				ready3 = true
-			} else if (o2 == 2 || o2 == 3) {
-				mission.inv_wave3_done = true
-				log_info("akhenaten: mission 42 skip canaanite×35 after wave2 non-ok", {
-					seq: mission.inv_wave2_seq, outcome: o2
-				})
-				return
-			}
-		} else if (abs - mission.inv_wave2_abs >= 3) {
-			ready3 = true
-		}
-		if (ready3) {
-			mission.inv_wave3_done = true
-			mission42_canaanite_raid(22, 35, EVENT_ATTACK_TARGET_RANDOM)
-			log_info("akhenaten: mission 42 canaanite×35 after wave2", {abs: abs})
-		}
-	}
-}
-
-[es=event_advance_month, mission=mission42]
 function mission42_event_i0_luxury(ev) {
 	if (mission.event0_luxury_done) {
 		return
@@ -581,21 +480,6 @@ function mission42_event_i0_luxury(ev) {
 	mission42_ensure_chain_leaves()
 	log_info("akhenaten: mission 42 luxury×5", {ev:ev})
 	mission42_fire_request(2000, RESOURCE_LUXURY_GOODS, 5, 8, 1002, 0, 1004, 0, 0, undefined, "Waset")
-}
-
-[es=event_advance_month, mission=mission42]
-function mission42_event_i1_invasion(ev) {
-	if (mission.inv_wave1_done) {
-		return
-	}
-	if (ev.years_since_start < 1 || (ev.years_since_start == 1 && ev.month < 4)) {
-		return
-	}
-	mission.inv_wave1_done = true
-	mission.inv_wave1_abs = -1
-	mission42_ensure_chain_leaves()
-	mission.inv_wave1_seq = mission42_canaanite_raid(1, 50, EVENT_ATTACK_TARGET_TROOPS, 1019)
-	log_info("akhenaten: mission 42 canaanite×50", {ev:ev, seq: mission.inv_wave1_seq})
 }
 
 [es=event_advance_month, mission=mission42]
@@ -700,4 +584,23 @@ function mission42_on_request_cleared(ev) {
 			mission42_fire_kr(-3)
 		}
 	}
+}
+
+// pak i=1 -> i=19 (at once) -> i=22 (2 months on, its time.year): the Canaanite raids.
+function mission42_raid_list() {
+	var C = ENEMY_2_CANAANITE
+	var E = EVENT_INVADER_ENEMY
+	return [
+		{ key: "i1", invasion_id: 1, year: 1, month: 4, invader: E, enemy: C, amount: 50, months_initial: 12,
+			location: [1, -1, 1, 3], attack_target: EVENT_ATTACK_TARGET_TROOPS, then: [{ key: "i19", delay: 0 }] },
+		{ key: "i19", invasion_id: 19, invader: E, enemy: C, amount: 30, months_initial: 0, location: [4, -1, 4, 5],
+			attack_target: EVENT_ATTACK_TARGET_TROOPS, then: [{ key: "i22", delay: 2 }] },
+		{ key: "i22", invasion_id: 22, invader: E, enemy: C, amount: 35, months_initial: 0, location: [1, -1, 1, 5],
+			attack_target: EVENT_ATTACK_TARGET_RANDOM }
+	]
+}
+
+[es=event_advance_month, mission=mission42]
+function mission42_raids(ev) {
+	mission_raids_month(mission, mission42, ev, mission42_raid_list())
 }
