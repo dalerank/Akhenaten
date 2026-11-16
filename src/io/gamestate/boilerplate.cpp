@@ -146,6 +146,12 @@ vfs::path fullpath_maps(vfs::path filename) {
     return vfs::path(vfs::MAPS_FOLDER, "/", filename.c_str());
 }
 
+static bool g_replay_autosave = true;
+
+void GamestateIO::set_replay_autosave(bool enabled) {
+    g_replay_autosave = enabled;
+}
+
 bool GamestateIO::write_family_marker(pcstr filename_short) {
     vfs::path full = fullpath_saves(filename_short);
     vfs::path folders = vfs::content_path(fullpath_saves("").c_str());
@@ -244,8 +250,10 @@ bool GamestateIO::load_mission(const int scenario_id, bool start_immediately) {
         start_loaded_file();
 
         // replay mission autosave file
-        bstring256 filename("autosave_replay.", saved_game_data_expanded.extension);
-        GamestateIO::write_savegame(filename);
+        if (g_replay_autosave) {
+            bstring256 filename("autosave_replay.", saved_game_data_expanded.extension);
+            GamestateIO::write_savegame(filename);
+        }
     }
 
     return true;
@@ -371,8 +379,10 @@ bool GamestateIO::load_map(pcstr filename, bool relative, bool start_immediately
 
     if (start_immediately) {
         start_loaded_file();
-        bstring256 filename("autosave_replay.", saved_game_data_expanded.extension);
-        GamestateIO::write_savegame(filename);
+        if (g_replay_autosave) {
+            bstring256 filename("autosave_replay.", saved_game_data_expanded.extension);
+            GamestateIO::write_savegame(filename);
+        }
     }
 
     return true;

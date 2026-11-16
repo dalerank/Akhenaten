@@ -12,6 +12,7 @@
 #include "core/vec2i.h"
 #include "core/xvalue.h"
 #include "game/game_config.h"
+#include "io/gamestate/boilerplate.h"
 #include "game/game_system.h"
 #include "js/js.h"
 #include "js/js_game.h"
@@ -435,6 +436,8 @@ int run_js_tests() {
         return 0;
     }
 
+    GamestateIO::set_replay_autosave(false);
+    game_features::gameopt_monthly_autosave.set(false);
     const game_features::snapshot_t features_at_start = game_features::snapshot();
 
     int passed = 0;
