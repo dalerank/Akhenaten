@@ -11,7 +11,7 @@
 #include "figure/figure.h"
 #include "figure/figure_type.h"
 #include "figure/formation_batalion.h"
-#include "figuretype/animal_asp.h"
+#include "figuretype/animal_predator.h"
 #include "figuretype/water.h"
 #include "game/game_config.h"
 #include "game/game_events.h"
@@ -127,7 +127,7 @@ bool god_seth_t::perform_asps() {
         if (!f || !f->is_valid()) {
             continue;
         }
-        figure_asp_setup_curse_raid(*f, days);
+        figure_predator_setup_curse_raid(*f, days);
         spawned++;
     }
 

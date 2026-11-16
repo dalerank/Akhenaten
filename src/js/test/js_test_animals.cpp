@@ -144,7 +144,7 @@ static int __test_lion_setup_curse_raid(int fid, int days) {
     if (!f || !f->is_alive() || f->type != FIGURE_LION) {
         return 0;
     }
-    figure_lion_setup_curse_raid(*f, days);
+    figure_predator_setup_curse_raid(*f, days);
     return 1;
 }
 ANK_FUNCTION_2(__test_lion_setup_curse_raid);
@@ -154,7 +154,8 @@ static int __test_lion_is_curse_raid(int fid) {
     if (!f || f->type != FIGURE_LION) {
         return 0;
     }
-    return figure_lion(f).is_curse_raid() ? 1 : 0;
+    auto lion = f->dcast<figure_predator>();
+    return (lion && lion->is_curse_raid()) ? 1 : 0;
 }
 ANK_FUNCTION_1(__test_lion_is_curse_raid);
 
@@ -163,7 +164,7 @@ static int __test_asp_setup_curse_raid(int fid, int days) {
     if (!f || !f->is_alive() || f->type != FIGURE_ASP) {
         return 0;
     }
-    figure_asp_setup_curse_raid(*f, days);
+    figure_predator_setup_curse_raid(*f, days);
     return 1;
 }
 ANK_FUNCTION_2(__test_asp_setup_curse_raid);
@@ -173,7 +174,8 @@ static int __test_asp_is_curse_raid(int fid) {
     if (!f || f->type != FIGURE_ASP) {
         return 0;
     }
-    return figure_asp(f).is_curse_raid() ? 1 : 0;
+    auto asp = f->dcast<figure_predator>();
+    return (asp && asp->is_curse_raid()) ? 1 : 0;
 }
 ANK_FUNCTION_1(__test_asp_is_curse_raid);
 

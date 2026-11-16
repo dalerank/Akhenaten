@@ -10,7 +10,7 @@
 #include "core/calc.h"
 #include "core/random.h"
 #include "figure/figure.h"
-#include "figuretype/animal_lion.h"
+#include "figuretype/animal_predator.h"
 #include "game/game_config.h"
 #include "game/game_events.h"
 #include "game/simulation_time.h"
@@ -84,7 +84,7 @@ bool god_bast_t::perform_lions() {
         if (!f || !f->is_valid()) {
             continue;
         }
-        figure_lion_setup_curse_raid(*f, days);
+        figure_predator_setup_curse_raid(*f, days);
         spawned++;
     }
 

@@ -36,6 +36,7 @@ class figure_antelope;
 class figure_hippo;
 class figure_hyena;
 class figure_animal;
+class figure_predator;
 class figure_ballista;
 class figure_market_buyer;
 class figure_bricklayer;

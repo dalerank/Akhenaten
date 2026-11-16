@@ -25,6 +25,7 @@ struct figure_static_params {
     e_permission permission;
     bool is_enemy;
     bool is_soldier;
+    bool is_predator;
     bool use_cart;
     e_figure_category category;
     uint16_t max_damage;
@@ -54,9 +55,9 @@ struct figure_static_params {
     inline int first_img(const xstring &anim_key) const { return animations[anim_key].first_img(); }
 };
 ANK_CONFIG_STRUCT(figure_static_params, terrain_usage, animations, sounds, max_roam_length, speed_mult, meta,
-  permission, is_enemy, is_soldier, use_cart, category, max_damage, attack_value, defense_value, missile_defense_value,
-  missile_attack_value, missile_delay, missile_range, corpse_time_delay, render_on_flat_tiles, record_path,
-  can_cross_ferry, boards_ferry, ignored_by_enemy_missiles, no_portrait, overlay, herd_size)
+  permission, is_enemy, is_soldier, is_predator, use_cart, category, max_damage, attack_value, defense_value,
+  missile_defense_value, missile_attack_value, missile_delay, missile_range, corpse_time_delay, render_on_flat_tiles,
+  record_path, can_cross_ferry, boards_ferry, ignored_by_enemy_missiles, no_portrait, overlay, herd_size)
 
 ANK_CONFIG_PROPERTY(figure_static_params, terrain_usage, max_roam_length, speed_mult, permission, is_enemy, is_soldier,
   use_cart, category, max_damage, attack_value, defense_value, missile_defense_value, missile_attack_value,
