@@ -76,6 +76,45 @@ import figure.water_carrier
 import figure.worker
 import figure.zookeeper
 
+// Spot offsets of the 16 figures of a formation, per layout (OG enemy_formation_layout_offsets, figure_data.c).
+// chariot_spots: the wider double line of chariot batalions (OG soldier_layout_offset).
+formation_layouts = [
+    { layout: FORMATION_COLUMN, hint: "column",
+      spots: [[0,0], [1,0], [0,1], [1,1], [-1,0], [-1,1], [0,-1], [1,-1], [-1,-1], [2,-1], [2,0], [2,1], [0,2], [1,2], [-1,2], [2,2]] }
+    { layout: FORMATION_DOUBLE_LINE_1, hint: "double line, first rank",
+      spots: [[0,0], [0,1], [-1,0], [1,0], [-1,1], [1,1], [-2,0], [-2,1], [2,0], [2,1], [-3,0], [-3,1], [3,0], [3,1], [-4,0], [-4,1]],
+      chariot_spots: [[0,0], [0,2], [-2,0], [2,0], [-2,2], [2,2], [-4,0], [-4,2], [4,0], [4,2], [-6,0], [-6,2], [6,0], [6,2], [-8,0], [-8,2]] }
+    { layout: FORMATION_DOUBLE_LINE_2, hint: "double line, second rank",
+      spots: [[0,0], [0,-1], [0,1], [1,0], [1,-1], [1,1], [0,-2], [1,-2], [0,2], [1,2], [0,-3], [1,-3], [0,3], [1,3], [0,-4], [1,-4]],
+      chariot_spots: [[0,0], [0,-2], [0,2], [2,0], [2,-2], [2,2], [0,-4], [2,-4], [0,4], [2,4], [0,-6], [2,-6], [0,6], [2,6], [0,-8], [2,-8]] }
+    { layout: FORMATION_SINGLE_LINE_1, hint: "single line, first rank",
+      spots: [[0,0], [2,0], [-2,0], [1,1], [-1,1], [3,1], [-3,1], [4,0], [-4,0], [5,1], [6,0], [-5,1], [-6,0], [7,1], [8,0], [-7,1]] }
+    { layout: FORMATION_SINGLE_LINE_2, hint: "single line, second rank",
+      spots: [[0,0], [0,-2], [0,2], [1,-1], [1,1], [1,-3], [1,3], [0,-4], [0,4], [1,-5], [0,-6], [1,5], [0,6], [1,-7], [0,-8], [1,7]] }
+    { layout: FORMATION_TORTOISE, hint: "tortoise; also the herd spawn spots (OG layout 5)",
+      spots: [[0,0], [0,-1], [1,0], [0,1], [-1,0], [1,-1], [1,1], [-1,1], [-1,-1], [1,-1], [1,1], [-1,1], [-1,-1], [1,0], [-1,0], [0,0]] }
+    { layout: FORMATION_MOP_UP, hint: "mop up",
+      spots: [[0,0], [1,0], [0,1], [1,1], [2,0], [2,1], [1,2], [0,2], [2,2], [3,0], [3,1], [3,2], [1,3], [2,3], [0,3], [3,3]] }
+    { layout: FORMATION_AT_REST, hint: "at rest",
+      spots: [[0,0], [1,0], [0,1], [1,1], [2,0], [2,1], [1,2], [0,2], [2,2], [3,0], [3,1], [3,2], [1,3], [2,3], [0,3], [3,3]] }
+    { layout: FORMATION_ENEMY_MOB, hint: "enemy mob",
+      spots: [[0,0], [1,-1], [0,1], [0,0], [1,0], [-1,1], [2,1], [-1,-1], [1,-1], [0,1], [1,0], [0,2], [1,1], [-1,1], [1,-2], [-1,1]] }
+    { layout: FORMATION_HERD, hint: "herd roaming spots, every animal herd",
+      spots: [[0,0], [2,1], [-1,-1], [1,1], [1,0], [-1,1], [3,1], [-2,-1], [0,2], [-4,0], [-1,3], [0,3], [1,4], [4,0], [2,3], [-3,2]] }
+    { layout: FORMATION_ENEMY_DOUBLE_LINE, hint: "enemy double line",
+      spots: [[0,0], [0,0], [0,0], [0,0], [0,0], [0,0], [0,0], [0,0], [0,0], [0,0], [0,0], [0,0], [0,0], [0,0], [0,0], [0,0]] }
+    { layout: FORMATION_ENEMY_WIDE_COLUMN, hint: "enemy wide column",
+      spots: [[0,0], [2,0], [0,2], [2,2], [-2,0], [-2,2], [0,-2], [2,-2], [-2,-2], [4,-2], [4,0], [4,2], [0,4], [2,4], [-2,4], [4,4]] }
+    { layout: FORMATION_ENEMY12, hint: "enemy 12",
+      spots: [[0,0], [1,0], [0,1], [1,1], [2,0], [2,1], [1,2], [0,2], [2,2], [3,0], [3,1], [3,2], [1,3], [2,3], [0,3], [3,3]] }
+    { layout: FORMATION_UNUSED_13, hint: "unused",
+      spots: [[0,0], [1,0], [0,1], [1,1], [-1,0], [-1,1], [0,-1], [1,-1], [-1,-1], [2,-1], [2,0], [2,1], [0,2], [1,2], [-1,2], [2,2]] }
+    { layout: FORMATION_UNUSED_14, hint: "unused",
+      spots: [[0,0], [1,0], [0,1], [1,1], [-1,0], [-1,1], [0,-1], [1,-1], [-1,-1], [2,-1], [2,0], [2,1], [0,2], [1,2], [-1,2], [2,2]] }
+    { layout: FORMATION_CHARGE, hint: "after a charge, column spacing",
+      spots: [[0,0], [1,0], [0,1], [1,1], [-1,0], [-1,1], [0,-1], [1,-1], [-1,-1], [2,-1], [2,0], [2,1], [0,2], [1,2], [-1,2], [2,2]] }
+]
+
 figure_ostrich {
 	herd_size : 7
 	animations {

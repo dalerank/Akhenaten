@@ -18,6 +18,7 @@
 #include "figure/figure_impl.h"
 #include "figure/figure_names.h"
 #include "figure/formation.h"
+#include "figure/formation_layout.h"
 #include "figuretype/animal_asp.h"
 #include "figuretype/animal_lion.h"
 #include "figuretype/animal_scorpion.h"
@@ -468,6 +469,13 @@ static int __test_formation_figure(int formation_id, int index) {
     return m->figures[index];
 }
 ANK_FUNCTION_2(__test_formation_figure);
+
+// Pack (x << 16) | (y & 0xffff).
+static int __test_formation_layout_position(int layout, int index) {
+    const tile2i p = formation_layout_position(layout, index);
+    return (p.x() << 16) | (p.y() & 0xffff);
+}
+ANK_FUNCTION_2(__test_formation_layout_position);
 
 static int __test_figure_max_damage(int fid) {
     figure* f = figure_get(fid);
