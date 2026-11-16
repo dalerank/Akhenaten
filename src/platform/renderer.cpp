@@ -1211,8 +1211,9 @@ static SDL_Renderer* create_renderer(SDL_Window* window, const xstring& requeste
         const pcstr label = name.empty() ? "(SDL default)" : name.c_str();
 
         platform_render_setup_options(name);
-        SDL_Renderer* renderer = SDL_CreateRenderer(window, index,
-          SDL_RENDERER_PRESENTVSYNC | (software ? SDL_RENDERER_SOFTWARE : SDL_RENDERER_ACCELERATED));
+        const Uint32 vsync = g_args.is_integral_tests() ? 0 : SDL_RENDERER_PRESENTVSYNC;
+        SDL_Renderer* renderer
+          = SDL_CreateRenderer(window, index, vsync | (software ? SDL_RENDERER_SOFTWARE : SDL_RENDERER_ACCELERATED));
         bstring256 problem;
         if (!renderer) {
             problem = SDL_GetError();
