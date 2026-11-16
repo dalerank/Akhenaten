@@ -18,15 +18,18 @@ log_info("akhenaten: mission 30 heh started")
 //            then request 40 henna (sent: Baki is conquered, Baki and Sawu routes open; otherwise
 //            kingdom -5 and the request repeats); y10m6 request 13 chickpeas; y12m9 gift of
 //            32 sandstone.
-//            Kushite raids: y6m11 16 by sea with 2 warships; y8m4 38 by sea with 6; y10m0 40 by sea
-//            with 4; y12m6 40 by land, and once it is beaten 20 by sea with 2; from y14m0 every 8 years
-//            16 by sea; y16m0 60 by sea with 6; y19m6 40 by land; y21m0 24 by sea; y40m0 72 by sea;
-//            y50m7 72 by sea with 6; y60m10 72 by sea with 7. Sea raids without a count bring no warships.
+//            Kushite raids (announced, then attacking): 16 by sea with 2 warships y6m11, y7m5; 38 by sea
+//            with 6 y8m4, y9m1; 40 by sea with 4 y10m0, y10m9; 40 by land y12m6, y13m3, and as it attacks
+//            20 by sea with 2; 16 by land y14m0, y14m6, again every time its army is gone; 60 by sea with 6
+//            y16m0, y16m9; 40 by land y19m6, y20m6; 24 by land y21m0, y21m3; 72 by land y40m0, y41m0;
+//            72 by sea with 6 y50m7, y51m7; 72 by sea with 7 y60m10, y61m10.
 //
 // Notes for developers:
-// - Raid location numbers follow the original events, land points first, then sea points: 1/2 = land
-//   points [80,123]/[112,71], 3/4 = sea points [127,84]/[95,4]; 9+ = sea point loc - 9 with the
-//   event's warships; any other number sails in from sea point [127,84] (mission30_apply_invasion_loc).
+// - Raid locations follow OG: 1..8 = land points [80,123] / [112,71] (empty ones wrap round), 9+ = sea
+//   point loc - 9 with the event's warships.
+// - Raids follow the OG invasion cycle (missions.js mission_raids_month): warnings from the event's month,
+//   the attack months_initial months later, the point rolled from the event's location_fields; a recurring
+//   raid comes back its year plus the years since start later (OG scenario_events_rearm).
 // - The original gives Itjtawy, Men-nefer, Sawu and Baki no goods; goods are filled in so their
 //   unlocks are playable (Baki sells sandstone, as the briefing says).
 // - tag_id: 1000 + i chained events and requests, 2000 + i calendar events, 7000 + i Egyptian army
@@ -592,6 +595,7 @@ mission30 { // Heh (Semna) — The Gauntlet
 		{ name : "#canaan", pos : [850, 271] }
 	]
 	vars {
+		raids : ""
 		misc_leaves_wired : false
 		troops_i6_leaves_wired : false
 		troops_i1_leaves_wired : false
@@ -603,19 +607,6 @@ mission30 { // Heh (Semna) — The Gauntlet
 		event10_troops_done : false
 		event14_price_done : false
 		event26_sandstone_gift_done : false
-		event18_invasion_done : false
-		event20_invasion_done : false
-		event21_invasion_done : false
-		event22_invasion_done : false
-		event22_enemies_seen : false
-		event23_invasion_done : false
-		event24_invasion_done : false
-		event25_invasion_done : false
-		event27_invasion_done : false
-		event28_invasion_last_year : -1
-		event29_invasion_done : false
-		event30_invasion_done : false
-		event31_invasion_done : false
 		event32_chickpeas_done : false
 		event37_demand_done : false
 
@@ -710,68 +701,6 @@ function mission30_fire_request(tag, resource, amount, months, ok_tag, refuse_ta
 	}
 	request.event_is_active = true
 	return request
-}
-
-// pak location_fields = 1-based packed (land first, then sea). MAX editor slots 8+.
-// land[0]=[80,123] land[1]=[112,71]; sea[0]=[127,84] sea[1]=[95,4].
-// loc3/4 = sea → via_sea. OOB navy → sea0.
-// loc 9+ = OG sea point loc - 9 (scenario_invasion_start), carrying the event's phrase_var warships.
-function mission30_apply_invasion_loc(opts, loc, warships) {
-	if (loc >= 9) {
-		opts.via_sea = 1
-		opts.sea_point = loc - 9
-		opts.warships = warships || 0
-		return true
-	}
-	if (loc == 1) {
-		opts.tilex = 80
-		opts.tiley = 123
-		return false
-	}
-	if (loc == 2) {
-		opts.tilex = 112
-		opts.tiley = 71
-		return false
-	}
-	if (loc == 3) {
-		opts.via_sea = 1
-		opts.sea_point = 0
-		opts.tilex = 127
-		opts.tiley = 84
-		return true
-	}
-	if (loc == 4) {
-		opts.via_sea = 1
-		opts.sea_point = 1
-		opts.tilex = 95
-		opts.tiley = 4
-		return true
-	}
-	opts.via_sea = 1
-	opts.sea_point = 0
-	opts.tilex = 127
-	opts.tiley = 84
-	return true
-}
-
-function mission30_kushite_raid(invasion_id, size, loc, on_completed_tag, warships) {
-	if (loc === undefined) {
-		loc = 9
-	}
-	var opts = {
-		enemy: ENEMY_6_KUSHITE,
-		amount: size,
-		size: size,
-		invasion_id: invasion_id,
-		want_destroy_buildings: 0,
-		invasion_attack_target: EVENT_ATTACK_TARGET_RANDOM,
-		on_completed_tag: on_completed_tag
-	}
-	var via_sea = mission30_apply_invasion_loc(opts, loc, warships)
-	log_info("akhenaten: mission 30 kushite raid id=" + invasion_id + " size=" + size
-		+ " loc=" + loc + " sea=" + via_sea + " warships=" + (opts.warships || 0)
-		+ " tile=" + opts.tilex + "," + opts.tiley)
-	return city.start_foreign_army_invasion(opts)
 }
 
 function mission30_ensure_troops_i1_leaves() {
@@ -915,65 +844,6 @@ function mission30_requests_and_events(ev) {
 		log_info("akhenaten: mission 30 gift sandstone×32 (i=26)")
 		mission30_fire_simple_event(2026, EVENT_TYPE_GIFT_FROM_PHARAOH, RESOURCE_SANDSTONE, 32)
 	}
-	// Kushite invasions — loc from pak; packed sea/OOB-navy → via_sea (E3c)
-	if (!mission.event18_invasion_done && ev.years_since_start == 6 && ev.month == 11) {
-		mission.event18_invasion_done = true
-		log_info("akhenaten: mission 30 kushite×16 (i=18)")
-		mission30_kushite_raid(18, 16, 10, undefined, 2)
-	}
-	if (!mission.event20_invasion_done && ev.years_since_start == 8 && ev.month == 4) {
-		mission.event20_invasion_done = true
-		log_info("akhenaten: mission 30 kushite×38 (i=20)")
-		mission30_kushite_raid(20, 38, 9, undefined, 6)
-	}
-	if (!mission.event21_invasion_done && ev.years_since_start == 10 && ev.month == 0) {
-		mission.event21_invasion_done = true
-		log_info("akhenaten: mission 30 kushite×40 (i=21)")
-		mission30_kushite_raid(21, 40, 9, undefined, 4)
-	}
-	if (!mission.event22_invasion_done && ev.years_since_start == 12 && ev.month == 6) {
-		mission.event22_invasion_done = true
-		log_info("akhenaten: mission 30 kushite×40 (i=22) → chain i=23×20")
-		mission30_kushite_raid(22, 40, 1)
-	}
-	if (!mission.event24_invasion_done && ev.years_since_start == 16 && ev.month == 0) {
-		mission.event24_invasion_done = true
-		log_info("akhenaten: mission 30 kushite×60 (i=24)")
-		mission30_kushite_raid(24, 60, 9, undefined, 6)
-	}
-	if (!mission.event25_invasion_done && ev.years_since_start == 19 && ev.month == 6) {
-		mission.event25_invasion_done = true
-		log_info("akhenaten: mission 30 kushite×40 (i=25)")
-		mission30_kushite_raid(25, 40, 2)
-	}
-	if (!mission.event27_invasion_done && ev.years_since_start == 21 && ev.month == 0) {
-		mission.event27_invasion_done = true
-		log_info("akhenaten: mission 30 kushite×24 (i=27)")
-		mission30_kushite_raid(27, 24, 8)
-	}
-	// pak i=28 recurring ×16 from y14m0 every 8 years (loc months field)
-	if (ev.years_since_start >= 14 && ev.month == 0 &&
-		(ev.years_since_start - 14) % 8 == 0 &&
-		mission.event28_invasion_last_year != ev.years_since_start) {
-		mission.event28_invasion_last_year = ev.years_since_start
-		log_info("akhenaten: mission 30 kushite×16 recurring (i=28)")
-		mission30_kushite_raid(28, 16, 6)
-	}
-	if (!mission.event29_invasion_done && ev.years_since_start == 40 && ev.month == 0) {
-		mission.event29_invasion_done = true
-		log_info("akhenaten: mission 30 kushite×72 (i=29)")
-		mission30_kushite_raid(29, 72, 3)
-	}
-	if (!mission.event30_invasion_done && ev.years_since_start == 50 && ev.month == 7) {
-		mission.event30_invasion_done = true
-		log_info("akhenaten: mission 30 kushite×72 (i=30)")
-		mission30_kushite_raid(30, 72, 9, undefined, 6)
-	}
-	if (!mission.event31_invasion_done && ev.years_since_start == 60 && ev.month == 10) {
-		mission.event31_invasion_done = true
-		log_info("akhenaten: mission 30 kushite×72 (i=31)")
-		mission30_kushite_raid(31, 72, 9, undefined, 7)
-	}
 	// pak i=32 chickpeas×13 /12mo y10m6
 	if (!mission.event32_chickpeas_done && ev.years_since_start == 10 && ev.month == 6) {
 		mission.event32_chickpeas_done = true
@@ -982,18 +852,39 @@ function mission30_requests_and_events(ev) {
 	}
 }
 
-[es=event_update_day, mission=mission30]
-function mission30_update_day(ev) {
-	// pak i=22 ok→i=23 kushite×20 loc=9 (after wave1 cleared)
-	if (mission.event22_invasion_done && !mission.event23_invasion_done) {
-		if (!mission.event22_enemies_seen) {
-			if (city.num_enemy_formations > 0) {
-				mission.event22_enemies_seen = true
-			}
-		} else if (city.num_enemy_formations == 0) {
-			mission.event23_invasion_done = true
-			log_info("akhenaten: mission 30 kushite×20 chain (i=23)")
-			mission30_kushite_raid(23, 20, 9, undefined, 2)
-		}
-	}
+// pak i=18..31: the Kushite raids; i=22 chains i=23 (delay 0) as it attacks, i=28 recurs.
+function mission30_raid_list() {
+	var E = EVENT_INVADER_ENEMY
+	var K = ENEMY_6_KUSHITE
+	return [
+		{ key: "i18", invasion_id: 18, year: 6, month: 11, invader: E, enemy: K, amount: 16, months_initial: 6,
+			location: [10, 10, -1, -1], warships: 2, attack_target: EVENT_ATTACK_TARGET_RANDOM },
+		{ key: "i20", invasion_id: 20, year: 8, month: 4, invader: E, enemy: K, amount: 38, months_initial: 9,
+			location: [9, 9, -1, -1], warships: 6, attack_target: EVENT_ATTACK_TARGET_RANDOM },
+		{ key: "i21", invasion_id: 21, year: 10, month: 0, invader: E, enemy: K, amount: 40, months_initial: 9,
+			location: [9, 9, -1, -1], warships: 4, attack_target: EVENT_ATTACK_TARGET_RANDOM },
+		{ key: "i22", invasion_id: 22, year: 12, month: 6, invader: E, enemy: K, amount: 40, months_initial: 9,
+			location: [1, -1, 1, 3], attack_target: EVENT_ATTACK_TARGET_RANDOM, then: [{ key: "i23", delay: 0 }] },
+		{ key: "i23", invasion_id: 23, invader: E, enemy: K, amount: 20, months_initial: 0,
+			location: [9, 9, -1, -1], warships: 2, attack_target: EVENT_ATTACK_TARGET_RANDOM },
+		{ key: "i24", invasion_id: 24, year: 16, month: 0, invader: E, enemy: K, amount: 60, months_initial: 9,
+			location: [9, 9, -1, -1], warships: 6, attack_target: EVENT_ATTACK_TARGET_RANDOM },
+		{ key: "i25", invasion_id: 25, year: 19, month: 6, invader: E, enemy: K, amount: 40, months_initial: 12,
+			location: [2, -1, 1, 8], attack_target: EVENT_ATTACK_TARGET_RANDOM },
+		{ key: "i27", invasion_id: 27, year: 21, month: 0, invader: E, enemy: K, amount: 24, months_initial: 3,
+			location: [8, 8, -1, -1], attack_target: EVENT_ATTACK_TARGET_RANDOM },
+		{ key: "i28", invasion_id: 28, year: 14, month: 0, invader: E, enemy: K, amount: 16, months_initial: 6,
+			location: [6, -1, 1, 8], attack_target: EVENT_ATTACK_TARGET_RANDOM, recurring: true },
+		{ key: "i29", invasion_id: 29, year: 40, month: 0, invader: E, enemy: K, amount: 72, months_initial: 12,
+			location: [3, -1, 1, 8], attack_target: EVENT_ATTACK_TARGET_RANDOM },
+		{ key: "i30", invasion_id: 30, year: 50, month: 7, invader: E, enemy: K, amount: 72, months_initial: 12,
+			location: [9, 9, -1, -1], warships: 6, attack_target: EVENT_ATTACK_TARGET_RANDOM },
+		{ key: "i31", invasion_id: 31, year: 60, month: 10, invader: E, enemy: K, amount: 72, months_initial: 12,
+			location: [9, 9, -1, -1], warships: 7, attack_target: EVENT_ATTACK_TARGET_RANDOM }
+	]
+}
+
+[es=event_advance_month, mission=mission30]
+function mission30_raids(ev) {
+	mission_raids_month(mission, mission30, ev, mission30_raid_list())
 }

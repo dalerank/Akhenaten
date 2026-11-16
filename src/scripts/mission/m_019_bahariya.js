@@ -11,19 +11,26 @@ log_info("akhenaten: mission 19 bahariya started")
 //            Kharga Oasis, Nekhen, Saqqara.
 // Enemies:   Hyksos raids and Bedouin raids, all by land and growing to 96 soldiers; Pharaoh's army
 //            (76) if the kingdom rating falls to 0. No requests in this mission.
-// Timeline:  y1m1 Dahshur route opens; y2m0 Hyksos raid 8 (beaten: gift of 24 sandstone); y5m9 Hyksos 8;
-//            y7m4 Hyksos 16; y8m0 more timber demand; y8m10 Bedouin 16; y9m2 Hyksos 32; y11m6 Hyksos 64;
-//            y11m9 timber dearer; y12m3 Bedouin 32; y13m7 less grain demand; y14m0 Bedouin 64; y14m11
-//            land trade trouble; y17m4 Hyksos 80; y17m9 Bedouin 32; y21m2 Hyksos 96; y22m1 Hyksos 48;
-//            y22m6 Bedouin 32; y26m3 Hyksos 80; every m10 from y26 Hyksos 48; y27m4 land trade trouble;
-//            every m3 from y27 Bedouin 32; y31m1 Hyksos 64; y31m4 Hyksos 96; every m10 from y31 Bedouin
-//            48; every m8 from y39 contaminated water; every m5 from y46 Hyksos 64.
+// Timeline:  raids are given by the month they are announced, attacking 2 months later unless noted: y1m1
+//            Dahshur route opens; y2m0 Hyksos raid 8 (attacks y3m0, with a gift of 24 sandstone); y5m9
+//            Hyksos 8 (attacks at once; 7 months later another Hyksos 16 is announced); y7m4 Hyksos 16;
+//            y8m0 more timber demand (again as each Hyksos 16 and the Hyksos 32 attack); y8m10 Bedouin 16;
+//            y9m2 Hyksos 32 (attacks y10m2); y11m6 Hyksos 64; y11m9 timber dearer; y12m3 Bedouin 32;
+//            y13m7 less grain demand; y14m0 Bedouin 64; y14m11 land trade trouble; y17m4 Hyksos 80; y17m9
+//            Bedouin 32; y21m2 Hyksos 96; y22m1 Hyksos 48; y22m6 Bedouin 32; y26m3 Hyksos 80; y26m10
+//            Hyksos 48; y27m4 land trade trouble; y27m3 Bedouin 32; y31m1 Hyksos 64; y31m4 Hyksos 96;
+//            y31m10 Bedouin 48; every m8 from y39 contaminated water; y46m5 Hyksos 64 (attacks y46m11).
+//            The y26m10, y27m3, y31m10 and y46m5 raids come back each time their army is gone.
 //
 // Notes for developers:
 // - The original's raids name a generic "enemy"; they use the scenario enemy (Hyksos). Bedouins use the
 //   Libyan army sprites.
-// - The map has no invasion, river or disembark points, so raids pass tile -1 and the engine picks
-//   the fallback tile.
+// - The map has no invasion, river or disembark points, so raids come in by the map exit.
+// - Raids follow the OG invasion cycle (missions.js mission_raids_month): warnings from the event's month,
+//   the attack months_initial months later, the point rolled from the event's location_fields; a recurring
+//   raid comes back its year plus the years since start later (OG scenario_events_rearm). OG invasion_attack
+//   chains on_completed as the army attacks without the chain-only check: i=0 sends a copy of i=1 (Hyksos 16,
+//   7 months on), i=1 and i=4 more timber demand (pak i=2), i=26 the sandstone gift.
 // - tag_id: 1027 the sandstone gift, 2000 + i calendar events, 3000 + i*100 + year yearly events,
 //   7000 + i Pharaoh's army (i = event index in the original scenario, also quoted as "pak i=" in
 //   comments below).
@@ -419,6 +426,7 @@ cities [
 	]
 
 	vars {
+		raids : ""
 		event2_demand_done : false
 		event6_price_done : false
 		event8_demand_done : false
@@ -427,27 +435,7 @@ cities [
 		event20_trade_done : false
 		event28_trade_done : false
 
-		event0_enemy_done : false
-		event1_enemy_done : false
-		event3_beduin_done : false
-		event4_enemy_done : false
-		event5_enemy_done : false
-		event7_beduin_done : false
-		event9_beduin_done : false
-		event11_enemy_done : false
-		event12_beduin_done : false
-		event13_enemy_done : false
-		event14_enemy_done : false
-		event15_beduin_done : false
-		event17_enemy_done : false
-		event21_enemy_done : false
-		event22_enemy_done : false
-		event26_enemy_done : false
 
-		event18_enemy_last_year : -1
-		event19_beduin_last_year : -1
-		event23_beduin_last_year : -1
-		event24_enemy_last_year : -1
 
 		gift_sandstone_wired : false
 		start_message_shown : false
@@ -481,34 +469,6 @@ function mission19_fire_simple_event(tag, type, resource, amount, city_name) {
 		opts.city = city_name
 	}
 	city.create_chain_event(opts).execute()
-}
-
-function mission19_enemy_raid(invasion_id, size, attack_target, on_completed_tag) {
-	var opts = {
-		invasion_id: invasion_id,
-		enemy: ENEMY_5_HYKSOS,
-		size: size,
-		tilex: -1,
-		tiley: -1,
-		want_destroy_buildings: size,
-		invasion_attack_target: attack_target
-	}
-	if (on_completed_tag) {
-		opts.on_completed_tag = on_completed_tag
-	}
-	city.start_foreign_army_invasion(opts)
-}
-
-function mission19_beduin_raid(invasion_id, size) {
-	city.start_foreign_army_invasion({
-		invasion_id: invasion_id,
-		enemy: ENEMY_7_LIBIAN,
-		size: size,
-		tilex: -1,
-		tiley: -1,
-		want_destroy_buildings: size,
-		invasion_attack_target: EVENT_ATTACK_TARGET_RANDOM
-	})
 }
 
 function mission19_ensure_gift_leaf() {
@@ -545,7 +505,7 @@ function mission19_maybe_year_month(ev, year, month) {
 }
 
 [es=event_advance_month, mission=mission19]
-function mission19_economy_and_invasions(ev) {
+function mission19_economy(ev) {
 	// Economy once
 	if (!mission.event2_demand_done && mission19_maybe_year_month(ev, 8, 0)) {
 		mission.event2_demand_done = true
@@ -584,72 +544,74 @@ function mission19_economy_and_invasions(ev) {
 		mission19_fire_simple_event(3000 + 16 * 100 + ev.years_since_start,
 			EVENT_TYPE_CONTAMINATED_WATER, undefined, 7)
 	}
+}
 
-	// Timed enemy invasions (Hyksos pack = scenario enemy)
-	// [pak_i, year, month, size, attack_target, gift_on_wipe]
-	var enemy_once = [
-		[0, 5, 9, 8, EVENT_ATTACK_TARGET_RANDOM, false],
-		[1, 7, 4, 16, EVENT_ATTACK_TARGET_FOOD, false],
-		[4, 9, 2, 32, EVENT_ATTACK_TARGET_VAULTS, false],
-		[5, 11, 6, 64, EVENT_ATTACK_TARGET_BEST_BUILDINGS, false],
-		[11, 17, 4, 80, EVENT_ATTACK_TARGET_TROOPS, false],
-		[13, 21, 2, 96, EVENT_ATTACK_TARGET_VAULTS, false],
-		[14, 22, 1, 48, EVENT_ATTACK_TARGET_BEST_BUILDINGS, false],
-		[17, 26, 3, 80, EVENT_ATTACK_TARGET_TROOPS, false],
-		[21, 31, 1, 64, EVENT_ATTACK_TARGET_VAULTS, false],
-		[22, 31, 4, 96, EVENT_ATTACK_TARGET_BEST_BUILDINGS, false],
-		[26, 2, 0, 8, EVENT_ATTACK_TARGET_BEST_BUILDINGS, true],
+function mission19_timber_demand() {
+	return { tag_id: 1002, type: EVENT_TYPE_DEMAND_INCREASE, resource: RESOURCE_TIMBER, amount: 10 }
+}
+
+function mission19_raid_i26_chain() {
+	mission19_ensure_gift_leaf()
+	__city_event_fire_chain(1027)
+}
+
+// The Hyksos (scenario enemy) and Bedouin (Libyan soldiers) events of the original, by pak index.
+function mission19_raid_list() {
+	var H = ENEMY_5_HYKSOS
+	var L = ENEMY_7_LIBIAN
+	var E = EVENT_INVADER_ENEMY
+	var B = EVENT_INVADER_BEDUINS
+	return [
+		{ key: "i0", invasion_id: 0, year: 5, month: 9, enemy: H, invader: E, amount: 8, months_initial: 0,
+			location: [1, 1, -1, -1], attack_target: EVENT_ATTACK_TARGET_RANDOM,
+			then: [{ key: "i1_copy", delay: 7 }] },
+		{ key: "i1", invasion_id: 1, year: 7, month: 4, enemy: H, invader: E, amount: 16, months_initial: 2,
+			location: [1, 1, -1, -1], attack_target: EVENT_ATTACK_TARGET_FOOD,
+			chain_event: mission19_timber_demand() },
+		{ key: "i3", invasion_id: 3, year: 8, month: 10, enemy: L, invader: B, amount: 16, months_initial: 2,
+			location: [8, 8, -1, -1], attack_target: EVENT_ATTACK_TARGET_FOOD },
+		{ key: "i4", invasion_id: 4, year: 9, month: 2, enemy: H, invader: E, amount: 32, months_initial: 12,
+			location: [3, 3, -1, -1], attack_target: EVENT_ATTACK_TARGET_VAULTS,
+			chain_event: mission19_timber_demand() },
+		{ key: "i5", invasion_id: 5, year: 11, month: 6, enemy: H, invader: E, amount: 64, months_initial: 2,
+			location: [2, 2, -1, -1], attack_target: EVENT_ATTACK_TARGET_BEST_BUILDINGS },
+		{ key: "i7", invasion_id: 7, year: 12, month: 3, enemy: L, invader: B, amount: 32, months_initial: 2,
+			location: [7, 7, -1, -1], attack_target: EVENT_ATTACK_TARGET_FOOD },
+		{ key: "i9", invasion_id: 9, year: 14, month: 0, enemy: L, invader: B, amount: 64, months_initial: 2,
+			location: [7, -1, 6, 8], attack_target: EVENT_ATTACK_TARGET_FOOD },
+		{ key: "i11", invasion_id: 11, year: 17, month: 4, enemy: H, invader: E, amount: 80, months_initial: 2,
+			location: [1, -1, 1, 4], attack_target: EVENT_ATTACK_TARGET_TROOPS },
+		{ key: "i12", invasion_id: 12, year: 17, month: 9, enemy: L, invader: B, amount: 32, months_initial: 2,
+			location: [7, -1, 4, 8], attack_target: EVENT_ATTACK_TARGET_FOOD },
+		{ key: "i13", invasion_id: 13, year: 21, month: 2, enemy: H, invader: E, amount: 96, months_initial: 2,
+			location: [1, -1, 1, 4], attack_target: EVENT_ATTACK_TARGET_VAULTS },
+		{ key: "i14", invasion_id: 14, year: 22, month: 1, enemy: H, invader: E, amount: 48, months_initial: 2,
+			location: [3, -1, 1, 4], attack_target: EVENT_ATTACK_TARGET_BEST_BUILDINGS },
+		{ key: "i15", invasion_id: 15, year: 22, month: 6, enemy: L, invader: B, amount: 32, months_initial: 2,
+			location: [5, -1, 4, 8], attack_target: EVENT_ATTACK_TARGET_FOOD },
+		{ key: "i17", invasion_id: 17, year: 26, month: 3, enemy: H, invader: E, amount: 80, months_initial: 2,
+			location: [3, -1, 1, 4], attack_target: EVENT_ATTACK_TARGET_TROOPS },
+		{ key: "i18", invasion_id: 18, year: 26, month: 10, enemy: H, invader: E, amount: 48, months_initial: 2,
+			location: [2, -1, 1, 4], attack_target: EVENT_ATTACK_TARGET_FOOD, recurring: true },
+		{ key: "i19", invasion_id: 19, year: 27, month: 3, enemy: L, invader: B, amount: 32, months_initial: 2,
+			location: [5, -1, 4, 8], attack_target: EVENT_ATTACK_TARGET_FOOD, recurring: true },
+		{ key: "i21", invasion_id: 21, year: 31, month: 1, enemy: H, invader: E, amount: 64, months_initial: 2,
+			location: [3, -1, 1, 4], attack_target: EVENT_ATTACK_TARGET_VAULTS },
+		{ key: "i22", invasion_id: 22, year: 31, month: 4, enemy: H, invader: E, amount: 96, months_initial: 2,
+			location: [3, -1, 1, 4], attack_target: EVENT_ATTACK_TARGET_BEST_BUILDINGS },
+		{ key: "i23", invasion_id: 23, year: 31, month: 10, enemy: L, invader: B, amount: 48, months_initial: 2,
+			location: [4, -1, 4, 8], attack_target: EVENT_ATTACK_TARGET_FOOD, recurring: true },
+		{ key: "i24", invasion_id: 24, year: 46, month: 5, enemy: H, invader: E, amount: 64, months_initial: 6,
+			location: [2, -1, 1, 4], attack_target: EVENT_ATTACK_TARGET_FOOD, recurring: true },
+		{ key: "i26", invasion_id: 26, year: 2, month: 0, enemy: H, invader: E, amount: 8, months_initial: 12,
+			location: [2, -1, 1, 8], attack_target: EVENT_ATTACK_TARGET_BEST_BUILDINGS,
+			on_attack: mission19_raid_i26_chain },
+		{ key: "i1_copy", invasion_id: 41, enemy: H, invader: E, amount: 16, months_initial: 2,
+			location: [1, 1, -1, -1], attack_target: EVENT_ATTACK_TARGET_FOOD, chain_event: mission19_timber_demand() }
 	]
-	for (var i = 0; i < enemy_once.length; i++) {
-		var e = enemy_once[i]
-		var flag = "event" + e[0] + "_enemy_done"
-		if (!mission[flag] && mission19_maybe_year_month(ev, e[1], e[2])) {
-			mission[flag] = true
-			var on_ok = e[5] ? 1027 : undefined
-			if (on_ok) {
-				mission19_ensure_gift_leaf()
-			}
-			log_info("akhenaten: mission 19 enemy raid i=" + e[0] + " size=" + e[3])
-			mission19_enemy_raid(100 + e[0], e[3], e[4], on_ok)
-		}
-	}
+}
 
-	var beduin_once = [
-		[3, 8, 10, 16],
-		[7, 12, 3, 32],
-		[9, 14, 0, 64],
-		[12, 17, 9, 32],
-		[15, 22, 6, 32],
-	]
-	for (var j = 0; j < beduin_once.length; j++) {
-		var b = beduin_once[j]
-		var bflag = "event" + b[0] + "_beduin_done"
-		if (!mission[bflag] && mission19_maybe_year_month(ev, b[1], b[2])) {
-			mission[bflag] = true
-			log_info("akhenaten: mission 19 beduin raid i=" + b[0] + " size=" + b[3])
-			mission19_beduin_raid(200 + b[0], b[3])
-		}
-	}
-
-	// Recurring
-	if (ev.years_since_start >= 26 && ev.month == 10
-			&& mission.event18_enemy_last_year != ev.years_since_start) {
-		mission.event18_enemy_last_year = ev.years_since_start
-		mission19_enemy_raid(300 + ev.years_since_start, 48, EVENT_ATTACK_TARGET_RANDOM)
-	}
-	if (ev.years_since_start >= 27 && ev.month == 3
-			&& mission.event19_beduin_last_year != ev.years_since_start) {
-		mission.event19_beduin_last_year = ev.years_since_start
-		mission19_beduin_raid(400 + ev.years_since_start, 32)
-	}
-	if (ev.years_since_start >= 31 && ev.month == 10
-			&& mission.event23_beduin_last_year != ev.years_since_start) {
-		mission.event23_beduin_last_year = ev.years_since_start
-		mission19_beduin_raid(500 + ev.years_since_start, 48)
-	}
-	if (ev.years_since_start >= 46 && ev.month == 5
-			&& mission.event24_enemy_last_year != ev.years_since_start) {
-		mission.event24_enemy_last_year = ev.years_since_start
-		mission19_enemy_raid(600 + ev.years_since_start, 64, EVENT_ATTACK_TARGET_RANDOM)
-	}
+[es=event_advance_month, mission=mission19]
+function mission19_raids(ev) {
+	mission_raids_month(mission, mission19, ev, mission19_raid_list())
 }

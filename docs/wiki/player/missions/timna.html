@@ -415,6 +415,7 @@
   <span class="cmt">// cities[] / empire_routes[] / empire_ornaments[] / empire_texts[] from pak dump</span>
 }</code></pre>
             <p>Trade partners (pak): Nekhen route 4 cost 1020; Nubt route 1 cost 850; Thinis route 2 cost 800 — all closed land. Men-nefer: locked Pharaoh city (route 5, cost 460) — <code>CITY_STATUS_CHANGE</code> / <code>NEW_TRADE_ROUTE</code> after gems or weapons success enables trading type and opens the route. Perwadjyt display-only. Ornament: mastaba <code>pharaoh_general/empire_bits_00120</code> at [522, 492].</p>
+            <p>Raids: <code>mission5_raid_list</code> runs through <code>mission_raids_month</code> (<span class="file-ref">src/scripts/missions.js</span>) on the OG invasion cycle: the OG warnings with the invader&rsquo;s phrases from the event&rsquo;s month, the attack <code>months_initial</code> months later, the point rolled from the event&rsquo;s <code>location_fields</code>, its <code>on_completed</code> chain as it attacks; a recurring raid comes back its year plus the years since start later. i=4 ×9 announced y2m7 &rarr; attacks y3m7 · i=8 ×16 announced y3m9 &rarr; attacks y4m6, recurring · i=9 ×24 announced y5m0 &rarr; attacks y5m7, recurring.</p>
           </div>
         </details>
 

@@ -49,6 +49,9 @@ function test640_attacked(invader) {
     if (invader == EVENT_INVADER_PHARAOH) {
         return PHRASE_pharaoh_attacks_you_city_attacked_alert
     }
+    if (invader == EVENT_INVADER_BEDUINS) {
+        return PHRASE_bedouin_attacks_you_city_attacked_alert
+    }
     return PHRASE_foreign_army_attacks_you_city_attacked_alert
 }
 
@@ -58,6 +61,9 @@ function test640_title(invader) {
     }
     if (invader == EVENT_INVADER_PHARAOH) {
         return PHRASE_pharaoh_attacks_you_title
+    }
+    if (invader == EVENT_INVADER_BEDUINS) {
+        return PHRASE_bedouin_attacks_you_title
     }
     return PHRASE_foreign_army_attacks_you_title
 }
@@ -147,6 +153,8 @@ function test640_mission(name, id, month_fn, cleared_fn, raids, refusals) {
         var y = (abs / 12) | 0
         var m = abs % 12
         __test_simtime_set(y, m)
+        // No fighting happens here, so armies would pile up into the formation limit over the decades.
+        __test_clear_enemy_formations()
         for (var f = 0; f < (refusals || []).length; f++) {
             if (refusals[f].y == y && refusals[f].m == m) {
                 on_cleared({ tag_id: refusals[f].tag, resource: 0, fulfilled: 0, was_overdue: 0 })
@@ -171,6 +179,10 @@ function test640_mission(name, id, month_fn, cleared_fn, raids, refusals) {
                 }
             }
         }
+        warnings.sort(function(a, b) { return a.raid.id - b.raid.id })
+        attacks.sort(function(a, b) { return a.id - b.id })
+        test640_warned.sort(function(a, b) { return a.opts.invasion_id - b.opts.invasion_id })
+        test640_started.sort(function(a, b) { return a.opts.invasion_id - b.opts.invasion_id })
         var posted = 0
         for (var k = 0; k < test640_warned.length; k++) {
             posted += test640_warned[k].slot >= 0 ? 1 : 0
@@ -203,18 +215,167 @@ function test640_mission(name, id, month_fn, cleared_fn, raids, refusals) {
                 return
             }
             want_ships += test640_started[a].opts.via_sea ? attacks[a].warships : 0
-            want_chain += attacks[a].chain ? 1 : 0
+            if (attacks[a].chain < 0) {
+                want_chain = -1000
+            }
+            want_chain += attacks[a].chain === true ? 1 : (attacks[a].chain || 0)
         }
         if (__test_count_enemy_warships() - warships != want_ships) {
             test640_fail(when + ': warships +' + (__test_count_enemy_warships() - warships) + ' want +' + want_ships)
             return
         }
-        if (__test_events_count() - events != want_chain) {
+        if (want_chain >= 0 && __test_events_count() - events != want_chain) {
             test640_fail(when + ': chained events +' + (__test_events_count() - events) + ' want +' + want_chain)
             return
         }
     }
     __log_marker('raids_' + name + '_ok')
+}
+
+// Rows [y, m, months_initial, id, invader, enemy, amount, location_fields, warships, target, chain]: the event
+// date of each raid's first cycle; chain = events its on_completed adds (-1 = not counted).
+function test640_rows(rows) {
+    var out = []
+    for (var i = 0; i < rows.length; i++) {
+        var r = rows[i]
+        out.push({ date: [r[0], r[1]], mi: r[2], id: r[3], invader: r[4], enemy: r[5], amount: r[6], loc: r[7],
+            warships: r[8], target: r[9], chain: r[10] || 0 })
+    }
+    return out
+}
+
+// The older JS raids moved onto the shared cycle, with the OG events' fields.
+function test640_older_missions() {
+    var E = EVENT_INVADER_ENEMY
+    var B = EVENT_INVADER_BEDUINS
+    var T = { food: EVENT_ATTACK_TARGET_FOOD, vaults: EVENT_ATTACK_TARGET_VAULTS,
+        best: EVENT_ATTACK_TARGET_BEST_BUILDINGS, troops: EVENT_ATTACK_TARGET_TROOPS, random: EVENT_ATTACK_TARGET_RANDOM }
+    test640_mission('timna', 5, 'mission5_raids', null, test640_rows([
+        [2, 7, 12, 4, B, ENEMY_7_LIBIAN, 9, [2, 2, -1, -1], 0, T.random],
+        [3, 9, 9, 8, B, ENEMY_7_LIBIAN, 16, [1, 1, -1, -1], 0, T.vaults],
+        [5, 0, 7, 9, B, ENEMY_7_LIBIAN, 24, [3, -1, 1, 4], 0, T.vaults]
+    ]))
+    test640_mission('behdet', 6, 'mission6_raids', null, test640_rows([
+        [5, 1, 18, 9, E, ENEMY_6_KUSHITE, 5, [9, 9, -1, -1], 2, T.random],
+        [15, 0, 16, 13, E, ENEMY_6_KUSHITE, 16, [9, 9, -1, -1], 3, T.troops, 2],
+        [19, 4, 16, 18, E, ENEMY_6_KUSHITE, 4, [9, 9, -1, -1], 2, T.best]
+    ]))
+    test640_mission('abydos', 7, 'mission7_raids', null, test640_rows([
+        [14, 9, 16, 13, E, ENEMY_6_KUSHITE, 3, [9, 9, -1, -1], 1, T.random]
+    ]))
+    test640_mission('selima', 8, 'mission8_raids', null, test640_rows([
+        [2, 4, 12, 5, E, ENEMY_5_HYKSOS, 9, [2, 2, -1, -1], 0, T.troops, 2],
+        [7, 0, 4, 25, E, ENEMY_5_HYKSOS, 22, [2, 2, -1, -1], 0, T.troops, -1]
+    ]))
+    test640_mission('serabit', 11, 'mission11_raids', null, test640_rows([
+        [1, 10, 24, 6, E, ENEMY_7_LIBIAN, 8, [4, 4, -1, -1], 0, T.vaults],
+        [2, 4, 0, 5, B, ENEMY_7_LIBIAN, 16, [1, -1, 1, 4], 0, T.random],
+        [3, 3, 12, 8, E, ENEMY_7_LIBIAN, 12, [3, 3, -1, -1], 0, T.best],
+        [4, 8, 24, 9, E, ENEMY_7_LIBIAN, 20, [4, 4, -1, -1], 0, T.food],
+        [6, 0, 24, 12, E, ENEMY_7_LIBIAN, 28, [1, 1, -1, -1], 0, T.vaults],
+        [8, 6, 18, 14, E, ENEMY_7_LIBIAN, 28, [2, 2, -1, -1], 0, T.random],
+        [10, 1, 24, 15, E, ENEMY_7_LIBIAN, 32, [3, -1, 3, 4], 0, T.best]
+    ]))
+    test640_mission('meidum', 12, 'mission12_raids', null, test640_rows([
+        [7, 6, 12, 70, E, ENEMY_5_HYKSOS, 17, [1, 1, -1, -1], 0, T.random]
+    ]))
+    var H = ENEMY_5_HYKSOS
+    test640_mission('north_dahshur', 15, 'mission15_raids', 'mission15_on_request_cleared', test640_rows([
+        [3, 11, 18, 7, E, H, 5, [1, -1, 1, 2], 0, T.food],
+        [5, 3, 30, 30, E, H, 12, [1, -1, 1, 2], 0, T.best],
+        [6, 8, 2, 6, B, ENEMY_7_LIBIAN, 10, [2, -1, 1, 3], 0, T.random],
+        // i=7 attacks y5m5 and chains i=8 43 months on, which chains i=9 56 months after its attack, and so on.
+        [9, 0, 24, 8, E, H, 6, [1, -1, 1, 2], 0, T.best],
+        [15, 8, 24, 9, E, H, 6, [1, -1, 1, 2], 0, T.food],
+        [20, 7, 24, 10, E, H, 11, [1, -1, 1, 2], 0, T.vaults],
+        [21, 3, 24, 8, E, H, 6, [1, -1, 1, 2], 0, T.best]
+    ]), [{ y: 2, m: 3, tag: 4102 }])
+    var HT = ENEMY_4_HITTITE
+    test640_mission('iunet', 16, 'mission16_raids', 'mission16_on_request_cleared', test640_rows([
+        [2, 7, 9, 3, E, HT, 0, [9, 9, -1, -1], 1, T.random],
+        [4, 0, 9, 8, E, HT, 10, [9, 9, -1, -1], 2, T.random],
+        [5, 10, 9, 12, E, HT, 20, [9, 9, -1, -1], 4, T.random],
+        [8, 0, 12, 13, E, HT, 32, [9, 9, -1, -1], 5, T.food],
+        [10, 8, 2, 16, EVENT_INVADER_EGYPT, ENEMY_3_EGYPTIAN, 24, [10, 10, -1, -1], 6, T.food],
+        [16, 10, 18, 17, E, HT, 48, [9, 9, -1, -1], 8, T.food, -1]
+    ]), [{ y: 10, m: 6, tag: 2014 }])
+    test640_mission('rostja', 18, 'mission18_raids', 'mission18_on_request_cleared', test640_rows([
+        [5, 7, 10, 26, E, H, 6, [4, -1, 1, 8], 0, T.best],
+        [7, 9, 6, 29, E, H, 11, [5, -1, 1, 8], 0, T.vaults],
+        [9, 7, 9, 35, E, H, 9, [7, -1, 1, 8], 0, T.food, 1],
+        [26, 10, 2, 37, E, H, 10, [3, -1, 1, 8], 0, T.food, -1]
+    ]), [{ y: 7, m: 1, tag: 2027 }, { y: 9, m: 0, tag: 2030 }])
+    var L = ENEMY_7_LIBIAN
+    test640_mission('bahariya', 19, 'mission19_raids', null, test640_rows([
+        [5, 9, 0, 0, E, H, 8, [1, 1, -1, -1], 0, T.random, 0],
+        [7, 4, 2, 1, E, H, 16, [1, 1, -1, -1], 0, T.food, 2],
+        [8, 10, 2, 3, B, L, 16, [8, 8, -1, -1], 0, T.food, 0],
+        [9, 2, 12, 4, E, H, 32, [3, 3, -1, -1], 0, T.vaults, 2],
+        [11, 6, 2, 5, E, H, 64, [2, 2, -1, -1], 0, T.best, 0],
+        [12, 3, 2, 7, B, L, 32, [7, 7, -1, -1], 0, T.food, 0],
+        [14, 0, 2, 9, B, L, 64, [7, -1, 6, 8], 0, T.food, 0],
+        [17, 4, 2, 11, E, H, 80, [1, -1, 1, 4], 0, T.troops, 0],
+        [17, 9, 2, 12, B, L, 32, [7, -1, 4, 8], 0, T.food, 0],
+        [21, 2, 2, 13, E, H, 96, [1, -1, 1, 4], 0, T.vaults, 0],
+        [22, 1, 2, 14, E, H, 48, [3, -1, 1, 4], 0, T.best, 0],
+        [22, 6, 2, 15, B, L, 32, [5, -1, 4, 8], 0, T.food, 0],
+        [26, 3, 2, 17, E, H, 80, [3, -1, 1, 4], 0, T.troops, 0],
+        [26, 10, 2, 18, E, H, 48, [2, -1, 1, 4], 0, T.food, 0],
+        [27, 3, 2, 19, B, L, 32, [5, -1, 4, 8], 0, T.food, 0],
+        [31, 1, 2, 21, E, H, 64, [3, -1, 1, 4], 0, T.vaults, 0],
+        [31, 4, 2, 22, E, H, 96, [3, -1, 1, 4], 0, T.best, 0],
+        [31, 10, 2, 23, B, L, 48, [4, -1, 4, 8], 0, T.food, 0],
+        [46, 5, 6, 24, E, H, 64, [2, -1, 1, 4], 0, T.food, 0],
+        [2, 0, 12, 26, E, H, 8, [2, -1, 1, 8], 0, T.best, -1],
+        [6, 4, 2, 41, E, H, 16, [1, 1, -1, -1], 0, T.food, 2]
+    ]))
+    test640_mission('dunqul', 21, 'mission21_raids', null, test640_rows([
+        [1, 0, 6, 11, B, L, 5, [8, 8, -1, -1], 0, T.random],
+        [3, 0, 3, 12, B, L, 12, [4, -1, 1, 8], 0, T.random, 2],
+        [4, 4, 12, 14, E, HT, 43, [3, -1, 3, 6], 0, T.random, 2]
+    ]))
+    test640_mission('sawu', 29, 'mission29_raids', null, test640_rows([
+        [4, 10, 8, 23, B, L, 9, [3, 3, -1, -1], 0, T.random],
+        [12, 0, 12, 24, E, L, 5, [9, 9, -1, -1], 2, T.troops],
+        [20, 0, 8, 25, B, L, 8, [1, -1, 1, 2], 0, T.random],
+        [23, 11, 12, 26, E, L, 8, [9, 9, -1, -1], 2, T.food],
+        [30, 0, 8, 27, B, L, 9, [1, -1, 1, 2], 0, T.random],
+        [45, 4, 12, 28, E, L, 9, [9, 9, -1, -1], 2, T.troops]
+    ]))
+    var K = ENEMY_6_KUSHITE
+    test640_mission('heh', 30, 'mission30_raids', null, test640_rows([
+        [6, 11, 6, 18, E, K, 16, [10, 10, -1, -1], 2, T.random],
+        [8, 4, 9, 20, E, K, 38, [9, 9, -1, -1], 6, T.random],
+        [10, 0, 9, 21, E, K, 40, [9, 9, -1, -1], 4, T.random],
+        [12, 6, 9, 22, E, K, 40, [1, -1, 1, 3], 0, T.random],
+        [13, 3, 0, 23, E, K, 20, [9, 9, -1, -1], 2, T.random],
+        [14, 0, 6, 28, E, K, 16, [6, -1, 1, 8], 0, T.random],
+        [16, 0, 9, 24, E, K, 60, [9, 9, -1, -1], 6, T.random],
+        [19, 6, 12, 25, E, K, 40, [2, -1, 1, 8], 0, T.random],
+        [21, 0, 3, 27, E, K, 24, [8, 8, -1, -1], 0, T.random],
+        [40, 0, 12, 29, E, K, 72, [3, -1, 1, 8], 0, T.random],
+        [50, 7, 12, 30, E, K, 72, [9, 9, -1, -1], 6, T.random],
+        [60, 10, 12, 31, E, K, 72, [9, 9, -1, -1], 7, T.random]
+    ]))
+    var C = ENEMY_2_CANAANITE
+    test640_mission('byblos', 34, 'mission34_raids', null, test640_rows([
+        [2, 0, 6, 0, E, C, 28, [3, -1, 1, 4], 0, T.best],
+        [6, 4, 2, 5, E, C, 64, [5, -1, 5, 8], 0, T.food],
+        [12, 3, 6, 24, B, L, 96, [1, -1, 1, 8], 0, T.food],
+        [16, 0, 6, 29, E, C, 125, [11, -1, 9, 13], 12, T.random],
+        [22, 8, 18, 33, E, C, 119, [3, -1, 1, 8], 0, T.vaults],
+        [28, 8, 6, 37, E, C, 141, [12, -1, 9, 13], 12, T.food]
+    ]))
+    test640_mission('buhen', 13, 'mission13_raids', null, test640_rows([
+        [6, 5, 24, 9, E, ENEMY_6_KUSHITE, 8, [1, 1, -1, -1], 0, T.best],
+        [10, 6, 24, 14, E, ENEMY_6_KUSHITE, 16, [2, 2, -1, -1], 0, T.best],
+        [12, 8, 24, 16, E, ENEMY_6_KUSHITE, 16, [3, 3, -1, -1], 0, T.random],
+        [13, 3, 24, 17, E, ENEMY_6_KUSHITE, 24, [2, 2, -1, -1], 0, T.random],
+        [15, 5, 24, 18, E, ENEMY_6_KUSHITE, 24, [1, 1, -1, -1], 0, T.vaults],
+        [17, 1, 24, 19, E, ENEMY_6_KUSHITE, 32, [3, 3, -1, -1], 0, T.food],
+        [18, 1, 24, 20, E, ENEMY_6_KUSHITE, 32, [2, 2, -1, -1], 0, T.best],
+        [20, 8, 18, 21, E, ENEMY_6_KUSHITE, 36, [2, -1, 1, 3], 0, T.random]
+    ]))
 }
 
 function run_test() {
@@ -270,6 +431,8 @@ function run_test() {
         { date: [6, 7], mi: 12, id: 39, invader: E, enemy: ENEMY_9_PERSIAN, amount: 0, loc: [9, -1, 9, 10],
             warships: 2, target: EVENT_ATTACK_TARGET_RANDOM }
     ], [{ y: 4, m: 6, tag: 1005 }, { y: 6, m: 1, tag: 1005 }, { y: 6, m: 2, tag: 4242 }])
+
+    test640_older_missions()
 
     city.start_foreign_army_invasion = saved.start
     __city_invasion_warning = saved.warn

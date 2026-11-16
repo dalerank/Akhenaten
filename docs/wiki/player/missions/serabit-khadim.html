@@ -436,6 +436,7 @@
   <span class="cmt">// empire id=8; hide_pak_* + cities/routes/ornaments/texts</span>
 }</code></pre>
             <p>Goals match the original campaign (pop 2000, kingdom 80, housing 4). Trade: Men-nefer / Selima / Abu / Nekhen / Behdet — all land, start closed. Display: Byblos, Kerma, Kyrene, Saqqara. Kebet is not on this scenario.</p>
+            <p>Raids: <code>mission11_raid_list</code> runs through <code>mission_raids_month</code> (<span class="file-ref">src/scripts/missions.js</span>) on the OG invasion cycle: the OG warnings with the invader&rsquo;s phrases from the event&rsquo;s month, the attack <code>months_initial</code> months later, the point rolled from the event&rsquo;s <code>location_fields</code>, its <code>on_completed</code> chain as it attacks; a recurring raid comes back its year plus the years since start later. i=6 ×8 announced y1m10 &rarr; attacks y3m10 · i=5 ×16 announced y2m4 &rarr; attacks y2m4, recurring · i=8 ×12 announced y3m3 &rarr; attacks y4m3 · i=9 ×20 announced y4m8 &rarr; attacks y6m8 · i=12 ×28 announced y6m0 &rarr; attacks y8m0 · i=14 ×28 announced y8m6 &rarr; attacks y10m0 · i=15 ×32 announced y10m1 &rarr; attacks y12m1.</p>
           </div>
         </details>
 

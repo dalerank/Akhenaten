@@ -11,21 +11,26 @@ log_info("akhenaten: mission 15 north dahshur started")
 //            Kyrene, Nekhen, Saqqara.
 // Enemies:   Hyksos raids, Bedouin raids; Pharaoh's army (75) if the kingdom rating falls to 0.
 // Timeline:  every January from y1 clay pits flood (two waves of 8%); every other year from y2m1
-//            Pharaoh asks for 12 henna (refused or late: Hyksos raid 12); y3m11 Hyksos raid 5, and
-//            after each beaten wave another Hyksos raid 6 follows, for the rest of the mission; every
-//            year from y4 Pharaoh asks for 8 grain (delivered: gift of 48 stone; late: 24 stone); every
-//            year from y6m8 Bedouin raid 10; every year from y13m3 a gift of 48 stone, followed by a
-//            request for 24 limestone; every year from y17m4 request 18 grain (delivered: gift of 24
-//            copper; refused: Kerma loses its trade route); y20m7 Hyksos raid 11. Yearly requests are
-//            not repeated while the last one is open.
+//            Pharaoh asks for 12 henna (refused or late: Hyksos raid 12 announced 3 years later, attacking
+//            30 months after that); Hyksos raid 5 announced y3m11, attacks y5m5, and each Hyksos raid 6
+//            that follows is announced 43 or 56 months after the last one attacks, attacking two years
+//            later, for the rest of the mission; every year from y4 Pharaoh asks for 8 grain (delivered:
+//            gift of 48 stone; late: 24 stone); Bedouin raid 10 announced y6m8, attacks y6m10, and again
+//            every time its army is gone; every year from y13m3 a gift of 48 stone, followed by a request
+//            for 24 limestone; every year from y17m4 request 18 grain (delivered: gift of 24 copper;
+//            refused: Kerma loses its trade route); Hyksos raid 11 announced y20m7, attacks y22m7. Yearly
+//            requests are not repeated while the last one is open.
 //
 // Notes for developers:
 // - The original dates the clay pit floods and the henna request at year 24; they are run as yearly
 //   floods and an every-other-year henna request (12 instead of 8) instead.
-// - The endless Hyksos chain follows the original: the two size-6 events trigger each other once the
-//   previous wave is beaten (mission15_hyksos_chain_tick).
-// - The map has no invasion points, so raids pass tile -1 and the engine picks the fallback tile.
-//   Bedouins use the Libyan army sprites.
+// - The endless Hyksos chain follows the original: the two size-6 events (pak i=8, i=9) chain each other
+//   as they attack, 43 and 56 months on (their time.year).
+// - The map has no invasion points, so raids come in by the map exit. Bedouins use the Libyan army
+//   sprites.
+// - Raids follow the OG invasion cycle (missions.js mission_raids_month): warnings from the event's month,
+//   the attack months_initial months later, the point rolled from the event's location_fields; a recurring
+//   raid comes back its year plus the years since start later (OG scenario_events_rearm).
 // - tag_id: 1000 + i chained events and requests, 3000 + i*100 + year yearly events, 4000 + year*20 +
 //   wave*10 + k clay pit floods, 7000 + i Pharaoh's army (i = event index in the original scenario,
 //   also quoted as "pak i=" in comments below).
@@ -428,23 +433,17 @@ mission15 { // North Dahshur — The True Pyramid
 	]
 
 	vars {
+		raids : ""
 		grain_kr_leaves_wired : false
 		limestone_leaves_wired : false
 		grain2_leaves_wired : false
 		henna_leaves_wired : false
 
-		event7_hyksos_done : false
-		event10_hyksos_done : false
 
-		hyksos_chain_active : false
-		hyksos_chain_enemies_seen : false
-		hyksos_chain_alt : 0
-		hyksos_chain_invasion_seq : 10
 
 		event2_grain_last_year : -1
 		event3_gift_last_year : -1
 		event5_grain_last_year : -1
-		event6_beduin_last_year : -1
 		event11_henna_last_year : -1
 		clay_pit_flood_last_year : -1
 		grain_recurring_was_busy : false
@@ -497,31 +496,6 @@ function mission15_fire_request(tag, resource, amount, months, ok_tag, fail_tag,
 	}
 	request.execute()
 	return request
-}
-
-function mission15_hyksos_raid(invasion_id, size, attack_target) {
-	city.start_foreign_army_invasion({
-		invasion_id: invasion_id,
-		enemy: ENEMY_5_HYKSOS,
-		size: size,
-		tilex: -1,
-		tiley: -1,
-		want_destroy_buildings: size,
-		invasion_attack_target: attack_target
-	})
-}
-
-function mission15_beduin_raid(invasion_id, size) {
-	// pak invader=beduins; sprites match Serabit beduin pattern (Libyan pack).
-	city.start_foreign_army_invasion({
-		invasion_id: invasion_id,
-		enemy: ENEMY_7_LIBIAN,
-		size: size,
-		tilex: -1,
-		tiley: -1,
-		want_destroy_buildings: size,
-		invasion_attack_target: EVENT_ATTACK_TARGET_RANDOM
-	})
 }
 
 // pak i=2 grain tails: ok→20→23 gift stone×48; refuse→21 KR−10; late→22 gift stone×24.
@@ -731,75 +705,6 @@ function mission15_event_i5_grain_recurring(ev) {
 	mission15_fire_request(3000 + 5 * 100 + ev.years_since_start, RESOURCE_GRAIN, 18, 18, 1025, 1026, 1027, 5, 0)
 }
 
-// pak i=7: Hyksos size=5 once y3m11 → activates size6↔6 chain (i=8/i=9).
-[es=event_advance_month, mission=mission15]
-function mission15_event_i7_hyksos_invasion(ev) {
-	if (mission.event7_hyksos_done) {
-		return
-	}
-	if (ev.years_since_start < 3 || (ev.years_since_start == 3 && ev.month < 11)) {
-		return
-	}
-	mission.event7_hyksos_done = true
-	mission.hyksos_chain_active = true
-	mission.hyksos_chain_enemies_seen = false
-	mission.hyksos_chain_alt = 0
-	log_info("akhenaten: mission 15 hyksos invasion size=5 year=3", {ev:ev})
-	mission15_hyksos_raid(0, 5, EVENT_ATTACK_TARGET_FOOD)
-}
-
-// After i=7 wipe: keep spawning size=6 alternating attack FOOD ↔ BEST_BUILDINGS (pak i=9/i=8).
-[es=event_advance_month, mission=mission15]
-function mission15_hyksos_chain_tick(ev) {
-	if (!mission.hyksos_chain_active) {
-		return
-	}
-	var enemies = city.num_enemy_formations
-	if (enemies > 0) {
-		mission.hyksos_chain_enemies_seen = true
-		return
-	}
-	if (!mission.hyksos_chain_enemies_seen) {
-		return
-	}
-	mission.hyksos_chain_enemies_seen = false
-	var attack = (mission.hyksos_chain_alt % 2 == 0)
-		? EVENT_ATTACK_TARGET_BEST_BUILDINGS
-		: EVENT_ATTACK_TARGET_FOOD
-	mission.hyksos_chain_alt = mission.hyksos_chain_alt + 1
-	mission.hyksos_chain_invasion_seq = mission.hyksos_chain_invasion_seq + 1
-	log_info("akhenaten: mission 15 hyksos chain size=6 alt=" + mission.hyksos_chain_alt, {ev:ev})
-	mission15_hyksos_raid(mission.hyksos_chain_invasion_seq, 6, attack)
-}
-
-// pak i=6: beduin size=10 recurring from y6m8, attack=RANDOM.
-[es=event_advance_month, mission=mission15]
-function mission15_event_i6_beduin_recurring(ev) {
-	if (ev.years_since_start < 6 || (ev.years_since_start == 6 && ev.month < 8)) {
-		return
-	}
-	if (mission.event6_beduin_last_year == ev.years_since_start) {
-		return
-	}
-	mission.event6_beduin_last_year = ev.years_since_start
-	log_info("akhenaten: mission 15 beduin raid size=10 year=" + ev.years_since_start, {ev:ev})
-	mission15_beduin_raid(2 + ev.years_since_start, 10)
-}
-
-// pak i=10: Hyksos size=11 once y20m7, attack=VAULTS.
-[es=event_advance_month, mission=mission15]
-function mission15_event_i10_hyksos_invasion(ev) {
-	if (mission.event10_hyksos_done) {
-		return
-	}
-	if (ev.years_since_start < 20 || (ev.years_since_start == 20 && ev.month < 7)) {
-		return
-	}
-	mission.event10_hyksos_done = true
-	log_info("akhenaten: mission 15 hyksos invasion size=11 year=20", {ev:ev})
-	mission15_hyksos_raid(3, 11, EVENT_ATTACK_TARGET_VAULTS)
-}
-
 // Factual request close — pak i=30 Hyksos×12 after henna refuse/late (INVASION no-op).
 // Leaf KR still via wired on_* tags. Tags = 3000+11*100+year (biennial).
 [es=event_request_cleared, mission=mission15]
@@ -812,5 +717,31 @@ function mission15_on_request_cleared(ev) {
 		return
 	}
 	log_info("akhenaten: mission 15 henna " + outcome + " → hyksos×12 tag=" + ev.tag_id, {ev:ev})
-	mission15_hyksos_raid(30, 12, EVENT_ATTACK_TARGET_FOOD)
+	mission_raid_schedule(mission, mission15_raid_list(), "i30", 36)
+}
+
+// pak i=6 (recurring Bedouins, Libyan soldiers), i=7 -> i=8 <-> i=9 (Hyksos), i=10, i=30 (after a refused or late
+// henna request, see mission15_on_request_cleared).
+function mission15_raid_list() {
+	var H = ENEMY_5_HYKSOS
+	var E = EVENT_INVADER_ENEMY
+	return [
+		{ key: "i6", invasion_id: 6, year: 6, month: 8, invader: EVENT_INVADER_BEDUINS, enemy: ENEMY_7_LIBIAN, amount: 10,
+			months_initial: 2, location: [2, -1, 1, 3], attack_target: EVENT_ATTACK_TARGET_RANDOM, recurring: true },
+		{ key: "i7", invasion_id: 7, year: 3, month: 11, invader: E, enemy: H, amount: 5, months_initial: 18,
+			location: [1, -1, 1, 2], attack_target: EVENT_ATTACK_TARGET_FOOD, then: [{ key: "i8", delay: 43 }] },
+		{ key: "i8", invasion_id: 8, invader: E, enemy: H, amount: 6, months_initial: 24, location: [1, -1, 1, 2],
+			attack_target: EVENT_ATTACK_TARGET_BEST_BUILDINGS, then: [{ key: "i9", delay: 56 }] },
+		{ key: "i9", invasion_id: 9, invader: E, enemy: H, amount: 6, months_initial: 24, location: [1, -1, 1, 2],
+			attack_target: EVENT_ATTACK_TARGET_FOOD, then: [{ key: "i8", delay: 43 }] },
+		{ key: "i10", invasion_id: 10, year: 20, month: 7, invader: E, enemy: H, amount: 11, months_initial: 24,
+			location: [1, -1, 1, 2], attack_target: EVENT_ATTACK_TARGET_VAULTS },
+		{ key: "i30", invasion_id: 30, invader: E, enemy: H, amount: 12, months_initial: 30, location: [1, -1, 1, 2],
+			attack_target: EVENT_ATTACK_TARGET_BEST_BUILDINGS }
+	]
+}
+
+[es=event_advance_month, mission=mission15]
+function mission15_raids(ev) {
+	mission_raids_month(mission, mission15, ev, mission15_raid_list())
 }

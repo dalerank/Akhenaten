@@ -9,13 +9,16 @@ log_info("akhenaten: mission 5 timna started")
 // Trade:     can open — Nekhen, Nubt, Thinis; opened by events — Men-nefer (gems or weapons delivered);
 //            display only — Perwadjyt.
 // Enemies:   Libyan raids by land; Pharaoh's army (45) if the kingdom rating falls to 0.
-// Timeline:  y0m8 request 5 copper; y2m4 request 15 gems (delivered: Men-nefer route opens); y2m7 raid 9;
-//            y2m8 request 885 deben (delivered: Pharaoh gifts 16 chickpeas); y3m9 raid 16; y5m0 raid 24;
-//            y7m3 request 11 weapons (delivered: Men-nefer route opens).
+// Timeline:  y0m8 request 5 copper; y2m4 request 15 gems (delivered: Men-nefer route opens); raid 9
+//            announced y2m7, attacks y3m7; y2m8 request 885 deben (delivered: Pharaoh gifts 16 chickpeas);
+//            raid 16 announced y3m9, attacks y4m6, and again every time its army is gone; raid 24 announced
+//            y5m0, attacks y5m7, also recurring; y7m3 request 11 weapons (delivered: Men-nefer route opens).
 //
 // Notes for developers:
-// - The original raid events name Bedouins, but the scenario enemy is Libyan, so Libyan soldiers come.
-//   Raids pass no tile, so the engine picks one of the land invasion points.
+// - The original raid events name Bedouins (their phrases), but the scenario enemy is Libyan, so Libyan
+//   soldiers come. Raids follow the OG invasion cycle (missions.js mission_raids_month): warnings from the
+//   event's month, the attack months_initial months later, the point rolled from the event's location_fields;
+//   a recurring raid comes back its year plus the years since start later (OG scenario_events_rearm).
 
 mission5 { // Timna
 	map_file : "data/maps/m_005_timna.map"
@@ -314,13 +317,11 @@ mission5 { // Timna
 	]
 
 	vars {
+		raids : ""
 		pharaoh_requested_copper : false
 		pharaoh_requested_gems : false
 		pharaoh_requested_deben : false
 		pharaoh_requested_weapons : false
-		libyan_invasion_1 : false
-		libyan_invasion_2 : false
-		libyan_invasion_3 : false
 		start_message_shown : false
 	}
 
@@ -383,17 +384,6 @@ function mission5_fire_request(tag, resource, amount, months, ok_tag, fail_tag, 
 	}
 	request.execute()
 	return ok_ev
-}
-
-function mission5_libyan_raid(invasion_id, size) {
-	city.start_foreign_army_invasion({
-		invasion_id: invasion_id,
-		enemy: ENEMY_7_LIBIAN,
-		size: size,
-		tilex: -1,
-		tiley: -1,
-		want_destroy_buildings: size
-	})
 }
 
 [es=event_mission_start, mission=mission5]
@@ -483,31 +473,19 @@ function mission5_pharaoh_request_weapons(ev) {
 	ok_ev.set_completed_action_tag(404)
 }
 
-// pak invasions: EVENT_INVADER_BEDUINS field, but scenario enemy_id = ENEMY_7_LIBIAN (sprites).
-// Favour-KR Pharaoh army amount=45 via JS helper.
-[es=event_advance_month, mission=mission5]
-function mission5_libyan_invasion_1(ev) {
-	if (mission.libyan_invasion_1) { return }
-	if (ev.years_since_start < 2 || (ev.years_since_start == 2 && ev.month < 7)) { return }
-	mission.libyan_invasion_1 = true
-	log_info("akhenaten: mission 5 timna libyan invasion 1 size=9", {ev:ev})
-	mission5_libyan_raid(0, 9)
+// pak i=4, 8, 9: the Bedouin events (Libyan soldiers); i=8 and i=9 recur.
+function mission5_raid_list() {
+	return [
+		{ key: "i4", invasion_id: 4, year: 2, month: 7, invader: EVENT_INVADER_BEDUINS, enemy: ENEMY_7_LIBIAN, amount: 9,
+			months_initial: 12, location: [2, 2, -1, -1], attack_target: EVENT_ATTACK_TARGET_RANDOM },
+		{ key: "i8", invasion_id: 8, year: 3, month: 9, invader: EVENT_INVADER_BEDUINS, enemy: ENEMY_7_LIBIAN, amount: 16,
+			months_initial: 9, location: [1, 1, -1, -1], attack_target: EVENT_ATTACK_TARGET_VAULTS, recurring: true },
+		{ key: "i9", invasion_id: 9, year: 5, month: 0, invader: EVENT_INVADER_BEDUINS, enemy: ENEMY_7_LIBIAN, amount: 24,
+			months_initial: 7, location: [3, -1, 1, 4], attack_target: EVENT_ATTACK_TARGET_VAULTS, recurring: true }
+	]
 }
 
 [es=event_advance_month, mission=mission5]
-function mission5_libyan_invasion_2(ev) {
-	if (mission.libyan_invasion_2) { return }
-	if (ev.years_since_start < 3 || (ev.years_since_start == 3 && ev.month < 9)) { return }
-	mission.libyan_invasion_2 = true
-	log_info("akhenaten: mission 5 timna libyan invasion 2 size=16", {ev:ev})
-	mission5_libyan_raid(1, 16)
-}
-
-[es=event_advance_month, mission=mission5]
-function mission5_libyan_invasion_3(ev) {
-	if (mission.libyan_invasion_3) { return }
-	if (ev.years_since_start < 5) { return }
-	mission.libyan_invasion_3 = true
-	log_info("akhenaten: mission 5 timna libyan invasion 3 size=24", {ev:ev})
-	mission5_libyan_raid(2, 24)
+function mission5_raids(ev) {
+	mission_raids_month(mission, mission5, ev, mission5_raid_list())
 }

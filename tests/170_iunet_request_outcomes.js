@@ -1,8 +1,10 @@
-// B13a: Iunet request-outcome smoke (event_request_cleared → JS raids).
-// Uses RESOURCE_DEBEN so fulfill/refuse need no storage yard; tags match mission16.
+// B13a: Iunet request-outcome smoke (event_request_cleared → JS raids on the OG cycle).
+// Uses RESOURCE_DEBEN so fulfill/refuse need no storage yard; tags match mission16. A late meat or pottery
+// request chains pak i=7 (kingdom -5), whose on_completed points at the calendar raid i=8; as that is not a
+// chain-only event, OG sends no raid. The refused limestone request arms the Egyptian raid i=16 2 months on.
 // Markers:
-//   [test-marker] iunet_meat_late_hittite_ok
-//   [test-marker] iunet_pottery_late_once_ok
+//   [test-marker] iunet_meat_late_no_raid_ok
+//   [test-marker] iunet_pottery_late_no_raid_ok
 //   [test-marker] iunet_meat_ok_leaf_only_ok
 //   [test-marker] iunet_limestone_refuse_egypt_ok
 //   [test-marker] iunet_favour_not_egypt24_ok
@@ -25,6 +27,10 @@ function test170_hist_count_matching(size, invasion_id) {
     return found
 }
 
+function test170_armed(key) {
+    return mission_raids_state(mission)[key]
+}
+
 function test170_fire_tagged(tag, ok_tag, fail_tag, late_tag) {
     return mission16_fire_request(tag, RESOURCE_DEBEN, 2, 12, ok_tag, fail_tag, late_tag, 0, 0)
 }
@@ -36,8 +42,7 @@ function test170_load() {
         return false
     }
     // mission.* = scenario vars proxy (not mission16 config); flags must exist after start.
-    if (typeof mission.event8_hittite_done === 'undefined'
-        || typeof mission.limestone_egypt_done === 'undefined') {
+    if (typeof mission16_raid_list !== 'function' || typeof mission.raids !== 'string') {
         __log_info_native('[test:170] mission vars missing after load16')
         return false
     }
@@ -53,7 +58,7 @@ function run_test() {
     }
     __test_set_treasury(500000)
 
-    // --- meat late → hittite×10 (id 0), once-flag ---
+    // --- meat late → no raid ---
     var hist_before = city.invasion_history_count()
     var seq0 = __test_request_cleared_seq()
     test170_fire_tagged(2004, 1005, 1002, 1007)
@@ -74,31 +79,23 @@ function run_test() {
             + ' ov=' + __test_request_cleared_was_overdue())
         return
     }
-    if (!mission.event8_hittite_done) {
-        test170_fail('meat late: event8_hittite_done not set')
+    if (test170_armed('i8') || test170_armed('i16') || city.invasion_history_count() != hist_before) {
+        test170_fail('meat late: a raid came, state=' + mission.raids)
         return
     }
-    if (test170_hist_count_matching(10, 0) < 1 && city.invasion_history_count() <= hist_before) {
-        __log_info_native('[test:170] warn: no history size=10 id=0 after meat late (flag ok)')
-    }
-    __log_marker('iunet_meat_late_hittite_ok')
+    __log_marker('iunet_meat_late_no_raid_ok')
 
-    // --- pottery late shares once-flag → no second hittite×10 ---
-    var hittite_hits = test170_hist_count_matching(10, 0)
+    // --- pottery late → no raid either ---
     test170_fire_tagged(2010, 1011, 1002, 1007)
     __test_process_events()
     __test_request_force_fulfill(2010, 1)
     __test_process_events()
 
-    if (!mission.event8_hittite_done) {
-        test170_fail('pottery late: once-flag cleared unexpectedly')
+    if (test170_armed('i8') || test170_armed('i16') || city.invasion_history_count() != hist_before) {
+        test170_fail('pottery late: a raid came, state=' + mission.raids)
         return
     }
-    if (test170_hist_count_matching(10, 0) !== hittite_hits) {
-        test170_fail('pottery late: second hittite×10 spawned (want once)')
-        return
-    }
-    __log_marker('iunet_pottery_late_once_ok')
+    __log_marker('iunet_pottery_late_no_raid_ok')
 
     // --- on-time meat fulfill → ok leaf only (no hittite via late path) ---
     if (!test170_load()) {
@@ -113,12 +110,8 @@ function run_test() {
     __test_process_events()
     __test_process_scenario_events()
 
-    if (mission.event8_hittite_done) {
-        test170_fail('meat ok: event8_hittite_done set (late path leaked)')
-        return
-    }
-    if (mission.limestone_egypt_done) {
-        test170_fail('meat ok: limestone_egypt_done set unexpectedly')
+    if (test170_armed('i8') || test170_armed('i16')) {
+        test170_fail('meat ok: a raid armed, state=' + mission.raids)
         return
     }
     var kr1 = __test_kingdom_rating()
@@ -139,16 +132,14 @@ function run_test() {
     __test_request_force_refuse_now(2014)
     __test_process_events()
 
-    if (!mission.limestone_egypt_done) {
-        test170_fail('limestone refuse: limestone_egypt_done not set')
+    var i16 = test170_armed('i16')
+    if (!i16 || i16.date != mission_months_since_start() + 2) {
+        test170_fail('limestone refuse: i16 not armed 2 months on, state=' + mission.raids)
         return
     }
     if (__test_event_trigger(__test_event_id_by_tag(7019)) != EVENT_TRIGGER_BY_FAVOUR) {
         test170_fail('limestone refuse: favour event spent (should be egypt×24 only)')
         return
-    }
-    if (test170_hist_count_matching(24, 10) < 1) {
-        __log_info_native('[test:170] warn: no history size=24 id=10 (flag ok)')
     }
     __log_marker('iunet_limestone_refuse_egypt_ok')
 
@@ -165,11 +156,7 @@ function run_test() {
         test170_fail('favour: no Pharaoh×15 army at KR0 (events=' + __test_events_count() + ')')
         return
     }
-    if (mission.limestone_egypt_done) {
-        test170_fail('favour: limestone_egypt_done set without refuse')
-        return
-    }
-    if (test170_hist_count_matching(24, 10) > 0) {
+    if (test170_armed('i16') || test170_hist_count_matching(24, 16) > 0) {
         test170_fail('favour: got egypt×24 history instead of the favour army')
         return
     }
@@ -181,12 +168,9 @@ function run_test() {
     __test_request_force_refuse_now(2014)
     __test_process_events()
 
-    if (!mission.limestone_egypt_done) {
-        test170_fail('KR0+refuse: limestone_egypt_done not set')
+    if (!test170_armed('i16')) {
+        test170_fail('KR0+refuse: i16 not armed, state=' + mission.raids)
         return
-    }
-    if (test170_hist_count_matching(24, 10) < 1) {
-        __log_info_native('[test:170] warn: no history egypt×24 after KR0 refuse (flag ok)')
     }
     __log_marker('iunet_kr0_refuse_egypt24_ok')
 
@@ -196,8 +180,8 @@ function run_test() {
 
 function check_valid() {
     var markers = [
-        'iunet_meat_late_hittite_ok',
-        'iunet_pottery_late_once_ok',
+        'iunet_meat_late_no_raid_ok',
+        'iunet_pottery_late_no_raid_ok',
         'iunet_meat_ok_leaf_only_ok',
         'iunet_limestone_refuse_egypt_ok',
         'iunet_favour_not_egypt24_ok',

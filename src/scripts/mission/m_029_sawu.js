@@ -10,22 +10,24 @@ log_info("akhenaten: mission 29 sawu started")
 // Trade:     nothing open at start; can open — Dakhla Oasis, Itjtawy, Men-nefer (by sea), Menat Khufu,
 //            Pwenet (by sea), Waset, Dunqul Oasis; opened by events — Buhen (pottery delivered), Kerma
 //            (henna delivered); display only — Byblos, Iken, Jericho, Kebet, Kharga Oasis.
-// Enemies:   Bedouin and Libyan raids (all with the Libyan army), most of them by sea; Egyptian army
+// Enemies:   Bedouin raids by land and Libyan raids by sea (all with the Libyan army); Egyptian army
 //            (three waves of 40) if the kingdom rating falls to 0.
 // Timeline:  y1m1 request 2 weapons for Kebet; y2m2 request 22 pottery (sent or late: Buhen route
 //            opens); y2m8 gold mine collapse; y3m3 clay pit flood; y3m5 request 11 linen; yearly while
 //            no such request is open: 16 troops from y4m0, 24 henna from y7m9 (sent: Kerma route
 //            opens), 21 beer from y9m0, 15 beer from y11m4. Refusing the weapons or troops request:
 //            Kerma falls, kingdom -18, then a request for 17 weapons for Iken (sent or late: Iken is
-//            conquered). Raids: y4m10 9 by sea; y12m0 5 by sea with 2 warships; y20m0 8 by land;
-//            y23m11 8 by sea with 2 warships; from y30m0 every 8 months 9 by land; from y45m4 yearly
-//            9 by sea with 2 warships (both recurring raids wait while enemies are on the map).
+//            conquered). Raids (announced, then attacking): Bedouins 9 y4m10, y5m6; Libyans 5 by sea with
+//            2 warships y12m0, y13m0; Bedouins 8 y20m0, y20m8; Libyans 8 by sea with 2 warships y23m11,
+//            y24m11; Bedouins 9 y30m0, y30m8, and Libyans 9 by sea with 2 warships y45m4, y46m4, both
+//            again every time their army is gone.
 //            Other requests only move the kingdom rating.
 //
 // Notes for developers:
-// - Raid location numbers follow the original events, land points first, then sea points: 1 = land
-//   point [13,100], 2 = sea point [74,16]. The other numbers have no point; Libyan raids with them
-//   sail in from the sea point (see mission29_apply_invasion_loc).
+// - Raid locations follow OG: 1..8 = the only land point [13,100], 9 = sea point [74,16].
+// - Raids follow the OG invasion cycle (missions.js mission_raids_month): warnings from the event's month,
+//   the attack months_initial months later, the point rolled from the event's location_fields; a recurring
+//   raid comes back its year plus the years since start later (OG scenario_events_rearm).
 // - The original gives Buhen and Kerma no goods, so their unlocks are cosmetic.
 // - tag_id: 1000 + i chained events, 2000 + i one-time calendar events, 3000 + i*100 + year yearly
 //   requests, 7000 + i Egyptian army (i = event index in the original scenario, "pak i=" below).
@@ -574,6 +576,7 @@ mission29 { // Sawu (Mersa Gawasis) — Shores of the Red Sea; briefing key = me
 		{ name : "#canaan", pos : [850, 271] }
 	]
 	vars {
+		raids : ""
 		shared_leaves_wired : false
 		kerma_chain_leaves_wired : false
 
@@ -595,12 +598,6 @@ mission29 { // Sawu (Mersa Gawasis) — Shores of the Red Sea; briefing key = me
 		beer_recurring_was_busy : false
 		beer_recurring_idle_since_abs : -1
 
-		event23_invasion_done : false
-		event24_invasion_done : false
-		event25_invasion_done : false
-		event26_invasion_done : false
-		event27_invasion_last_abs : -1
-		event28_invasion_last_abs : -1
 
 
 		start_message_shown : false
@@ -735,58 +732,6 @@ function mission29_ensure_all_leaves() {
 	mission29_ensure_kerma_chain_leaves()
 }
 
-// pak location_fields = 1-based packed (land first, then sea).
-// land[0]=[13,100] → loc1; sea[0]=[74,16] → loc2.
-// Libyan OOB navy (3/5/8/9) → via_sea sea0.
-function mission29_apply_invasion_loc(opts, loc, prefer_sea) {
-	if (loc == 1) {
-		opts.tilex = 13
-		opts.tiley = 100
-		return false
-	}
-	if (loc == 2) {
-		opts.via_sea = 1
-		opts.sea_point = 0
-		opts.tilex = 74
-		opts.tiley = 16
-		return true
-	}
-	if (prefer_sea) {
-		opts.via_sea = 1
-		opts.sea_point = 0
-		opts.tilex = 74
-		opts.tiley = 16
-		return true
-	}
-	opts.tilex = -1
-	opts.tiley = -1
-	return false
-}
-
-// pak beduins(4) and the scenario enemy(1) both resolve to ENEMY_7_LIBIAN in this scenario.
-// warships: the OG event's phrase_var, sent with a sea invasion.
-function mission29_libyan_raid(invasion_id, size, loc, attack_target, warships) {
-	if (loc === undefined) {
-		loc = 9
-	}
-	var opts = {
-		invasion_id: invasion_id,
-		enemy: ENEMY_7_LIBIAN,
-		size: size,
-		want_destroy_buildings: size,
-		invasion_attack_target: attack_target === undefined ? EVENT_ATTACK_TARGET_RANDOM : attack_target
-	}
-	var via_sea = mission29_apply_invasion_loc(opts, loc, true)
-	if (via_sea) {
-		opts.warships = warships || 0
-	}
-	log_info("akhenaten: mission 29 libyan raid id=" + invasion_id + " size=" + size
-		+ " loc=" + loc + " sea=" + via_sea + " warships=" + (opts.warships || 0)
-		+ " tile=" + opts.tilex + "," + opts.tiley)
-	__image_request_pak(PACK_ENEMY_LIBIAN)
-	return city.start_foreign_army_invasion(opts)
-}
-
 [es=event_mission_start, mission=mission29]
 function mission29_on_start(ev) {
 	__image_request_pak(PACK_ENEMY_LIBIAN)
@@ -879,59 +824,28 @@ function mission29_requests_and_events(ev) {
 	}
 }
 
+// pak i=23, 25, 27 (recurring): Bedouins; i=24, 26, 28 (recurring): the scenario enemy by sea. All Libyan soldiers.
+function mission29_raid_list() {
+	var L = ENEMY_7_LIBIAN
+	var B = EVENT_INVADER_BEDUINS
+	var E = EVENT_INVADER_ENEMY
+	return [
+		{ key: "i23", invasion_id: 23, year: 4, month: 10, invader: B, enemy: L, amount: 9, months_initial: 8,
+			location: [3, 3, -1, -1], attack_target: EVENT_ATTACK_TARGET_RANDOM },
+		{ key: "i24", invasion_id: 24, year: 12, month: 0, invader: E, enemy: L, amount: 5, months_initial: 12,
+			location: [9, 9, -1, -1], warships: 2, attack_target: EVENT_ATTACK_TARGET_TROOPS },
+		{ key: "i25", invasion_id: 25, year: 20, month: 0, invader: B, enemy: L, amount: 8, months_initial: 8,
+			location: [1, -1, 1, 2], attack_target: EVENT_ATTACK_TARGET_RANDOM },
+		{ key: "i26", invasion_id: 26, year: 23, month: 11, invader: E, enemy: L, amount: 8, months_initial: 12,
+			location: [9, 9, -1, -1], warships: 2, attack_target: EVENT_ATTACK_TARGET_FOOD },
+		{ key: "i27", invasion_id: 27, year: 30, month: 0, invader: B, enemy: L, amount: 9, months_initial: 8,
+			location: [1, -1, 1, 2], attack_target: EVENT_ATTACK_TARGET_RANDOM, recurring: true },
+		{ key: "i28", invasion_id: 28, year: 45, month: 4, invader: E, enemy: L, amount: 9, months_initial: 12,
+			location: [9, 9, -1, -1], warships: 2, attack_target: EVENT_ATTACK_TARGET_TROOPS, recurring: true }
+	]
+}
+
 [es=event_advance_month, mission=mission29]
-function mission29_timed_invasions(ev) {
-	// pak i=23: beduin×9 y4m10 loc=3 attack=4.
-	if (!mission.event23_invasion_done && ev.years_since_start == 4 && ev.month == 10) {
-		mission.event23_invasion_done = true
-		log_info("akhenaten: mission 29 beduin×9 (i=23)")
-		mission29_libyan_raid(23, 9, 3, EVENT_ATTACK_TARGET_RANDOM)
-		return
-	}
-	// pak i=24: enemy×5 y12m0 loc=9 attack=3 (troops).
-	if (!mission.event24_invasion_done && ev.years_since_start == 12 && ev.month == 0) {
-		mission.event24_invasion_done = true
-		log_info("akhenaten: mission 29 enemy×5 (i=24)")
-		mission29_libyan_raid(24, 5, 9, EVENT_ATTACK_TARGET_TROOPS, 2)
-		return
-	}
-	// pak i=25: beduin×8 y20m0 loc=1 attack=4.
-	if (!mission.event25_invasion_done && ev.years_since_start == 20 && ev.month == 0) {
-		mission.event25_invasion_done = true
-		log_info("akhenaten: mission 29 beduin×8 (i=25)")
-		mission29_libyan_raid(25, 8, 1, EVENT_ATTACK_TARGET_RANDOM)
-		return
-	}
-	// pak i=26: enemy×8 y23m11 loc=9 attack=0 (food).
-	if (!mission.event26_invasion_done && ev.years_since_start == 23 && ev.month == 11) {
-		mission.event26_invasion_done = true
-		log_info("akhenaten: mission 29 enemy×8 (i=26)")
-		mission29_libyan_raid(26, 8, 9, EVENT_ATTACK_TARGET_FOOD, 2)
-		return
-	}
-	// pak i=27: beduin×9 recurring from y30m0; months=8 → every 8 calendar months.
-	// Idle-gate while enemies remain (Selima pattern).
-	var abs = ev.years_since_start * 12 + ev.month
-	if (abs >= 30 * 12 + 0
-			&& (abs - (30 * 12 + 0)) % 8 == 0
-			&& mission.event27_invasion_last_abs != abs) {
-		if (city.num_enemy_formations > 0) {
-			return
-		}
-		mission.event27_invasion_last_abs = abs
-		log_info("akhenaten: mission 29 beduin×9 recurring (i=27) abs=" + abs)
-		mission29_libyan_raid(27, 9, 1, EVENT_ATTACK_TARGET_RANDOM)
-		return
-	}
-	// pak i=28: enemy×9 recurring from y45m4; months=12 → yearly at month 4.
-	if (abs >= 45 * 12 + 4
-			&& (abs - (45 * 12 + 4)) % 12 == 0
-			&& mission.event28_invasion_last_abs != abs) {
-		if (city.num_enemy_formations > 0) {
-			return
-		}
-		mission.event28_invasion_last_abs = abs
-		log_info("akhenaten: mission 29 enemy×9 recurring (i=28) abs=" + abs)
-		mission29_libyan_raid(28, 9, 9, EVENT_ATTACK_TARGET_TROOPS, 2)
-	}
+function mission29_raids(ev) {
+	mission_raids_month(mission, mission29, ev, mission29_raid_list())
 }

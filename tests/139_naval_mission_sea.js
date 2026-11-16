@@ -45,27 +45,18 @@ function run_test() {
         return
     }
 
-    // --- E3c: Heh kushite loc3 = packed sea[0] ---
+    // --- Heh / Sawu: location 9 = sea point 0 through the shared raid helper ---
     __game_load_mission(30, 1)
-    if (typeof mission30_kushite_raid !== 'function') {
-        __log_info_native('[test:139] mission30_kushite_raid missing after load')
-        __test_signal_ready()
-        return
-    }
-    mission30_kushite_raid(993, 8, 3)
+    mission_start_raid(mission30, { key: "t", invasion_id: 993, invader: EVENT_INVADER_ENEMY, enemy: ENEMY_6_KUSHITE,
+        amount: 8, months_initial: 0, attack_target: EVENT_ATTACK_TARGET_RANDOM }, 9)
     if (!expect_fleet('heh', 'heh_sea_invasion_ok')) {
         __test_signal_ready()
         return
     }
 
-    // --- E3c: Sawu libyan loc2 = packed sea[0] ---
     __game_load_mission(29, 1)
-    if (typeof mission29_libyan_raid !== 'function') {
-        __log_info_native('[test:139] mission29_libyan_raid missing after load')
-        __test_signal_ready()
-        return
-    }
-    mission29_libyan_raid(994, 8, 2)
+    mission_start_raid(mission29, { key: "t", invasion_id: 994, invader: EVENT_INVADER_ENEMY, enemy: ENEMY_7_LIBIAN,
+        amount: 8, months_initial: 0, attack_target: EVENT_ATTACK_TARGET_RANDOM }, 9)
     if (!expect_fleet('sawu', 'sawu_sea_invasion_ok')) {
         __test_signal_ready()
         return

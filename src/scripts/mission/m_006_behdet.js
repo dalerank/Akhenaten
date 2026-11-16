@@ -10,12 +10,16 @@ log_info("akhenaten: mission 6 behdet started")
 //            display only — Abedju, Nubt, Thinis, Selima Oasis.
 // Enemies:   Kushite raids by sea; Pharaoh's army (45) if the kingdom rating falls to 0.
 // Timeline:  y1m0 more demand for papyrus; y1m7 request 14 pottery; y2m0 request 11 beer (delivered:
-//            Pharaoh gifts 28 bricks); y3m3 request 13 fish; y5m1 raid by sea (5 soldiers, 2 warships);
-//            y8m6 a clay pit floods; a failed flood every year in month 0 from y10; y15m0 raid by sea
-//            (16 soldiers, 3 warships; beaten: kingdom +8); y17m0 request 21 beer; y19m4 raid by sea
-//            (4 soldiers, 2 warships).
+//            Pharaoh gifts 28 bricks); y3m3 request 13 fish; raid by sea announced y5m1, attacks y6m7
+//            (5 soldiers, 2 warships), and again every time its army is gone; y8m6 a clay pit floods; a failed
+//            flood every year in month 0 from y10; raid by sea announced y15m0, attacks y16m4 (16 soldiers,
+//            3 warships; kingdom +8 as it attacks); y17m0 request 21 beer; raid by sea announced y19m4,
+//            attacks y20m8 (4 soldiers, 2 warships).
 //
 // Notes for developers:
+// - Raids follow the OG invasion cycle (missions.js mission_raids_month): warnings from the event's month,
+//   the attack months_initial months later; the recurring one comes back its year plus the years since
+//   start later (OG scenario_events_rearm).
 // - The original failed flood repeats from year 10 with an unknown interval; it is fired every year here.
 
 mission6 { // Behdet — Pharaoh's Navy
@@ -376,6 +380,7 @@ mission6 { // Behdet — Pharaoh's Navy
 	]
 
 	vars {
+		raids : ""
 		pharaoh_pottery_requested : false
 		pharaoh_fish_requested : false
 		pharaoh_beer_requested : false
@@ -383,9 +388,6 @@ mission6 { // Behdet — Pharaoh's Navy
 		papyrus_demand_increased : false
 		clay_pit_flood_done : false
 		failed_flood_last_year : -1
-		kushite_invasion_1 : false
-		kushite_invasion_2 : false
-		kushite_invasion_3 : false
 		start_message_shown : false
 	}
 }
@@ -402,24 +404,6 @@ function mission6_fire_request(tag, resource, amount, months, ok_tag, fail_tag, 
 	}
 	request.execute()
 	return ok_ev
-}
-
-// pak loc=9: OG sea invasion from sea point 0 with the event's phrase_var warships.
-function mission6_kushite_raid(invasion_id, size, warships, on_completed_tag) {
-	var opts = {
-		invasion_id: invasion_id,
-		enemy: ENEMY_6_KUSHITE,
-		size: size,
-		via_sea: 1,
-		sea_point: 0,
-		warships: warships,
-		want_destroy_buildings: size,
-		invasion_attack_target: EVENT_ATTACK_TARGET_RANDOM // pak attack=4
-	}
-	if (on_completed_tag) {
-		opts.on_completed_tag = on_completed_tag
-	}
-	city.start_foreign_army_invasion(opts)
 }
 
 [es=event_mission_start, mission=mission6]
@@ -555,32 +539,22 @@ function mission6_failed_flood(ev) {
 	}).execute()
 }
 
-// pak invasions (scenario enemy = Kushite). Favour-KR Pharaoh army amount=45.
-// y15 wipe → REPUTATION +8 via on_completed_tag bind (engine resolve).
-[es=event_advance_month, mission=mission6]
-function mission6_kushite_invasion_1(ev) {
-	if (mission.kushite_invasion_1) { return }
-	if (ev.years_since_start < 5 || (ev.years_since_start == 5 && ev.month < 1)) { return }
-	mission.kushite_invasion_1 = true
-	log_info("akhenaten: mission 6 behdet kushite invasion 1 size=5", {ev:ev})
-	mission6_kushite_raid(0, 5, 2)
+// pak i=9 (recurring), 13, 18: Kushite raids by sea from sea point 0; i=13 brings kingdom +8 (pak i=8) as it
+// attacks.
+function mission6_raid_list() {
+	return [
+		{ key: "i9", invasion_id: 9, year: 5, month: 1, invader: EVENT_INVADER_ENEMY, enemy: ENEMY_6_KUSHITE, amount: 5,
+			months_initial: 18, location: [9, 9, -1, -1], warships: 2, attack_target: EVENT_ATTACK_TARGET_RANDOM,
+			recurring: true },
+		{ key: "i13", invasion_id: 13, year: 15, month: 0, invader: EVENT_INVADER_ENEMY, enemy: ENEMY_6_KUSHITE, amount: 16,
+			months_initial: 16, location: [9, 9, -1, -1], warships: 3, attack_target: EVENT_ATTACK_TARGET_TROOPS,
+			chain_event: { tag_id: 701, type: EVENT_TYPE_REPUTATION_INCREASE, amount: 8 } },
+		{ key: "i18", invasion_id: 18, year: 19, month: 4, invader: EVENT_INVADER_ENEMY, enemy: ENEMY_6_KUSHITE, amount: 4,
+			months_initial: 16, location: [9, 9, -1, -1], warships: 2, attack_target: EVENT_ATTACK_TARGET_BEST_BUILDINGS }
+	]
 }
 
 [es=event_advance_month, mission=mission6]
-function mission6_kushite_invasion_2(ev) {
-	if (mission.kushite_invasion_2) { return }
-	if (ev.years_since_start < 15) { return }
-	mission.kushite_invasion_2 = true
-	log_info("akhenaten: mission 6 behdet kushite invasion 2 size=16", {ev:ev})
-	city.create_chain_event({ tag_id: 701, type: EVENT_TYPE_REPUTATION_INCREASE, amount: 8 })
-	mission6_kushite_raid(1, 16, 3, 701)
-}
-
-[es=event_advance_month, mission=mission6]
-function mission6_kushite_invasion_3(ev) {
-	if (mission.kushite_invasion_3) { return }
-	if (ev.years_since_start < 19 || (ev.years_since_start == 19 && ev.month < 4)) { return }
-	mission.kushite_invasion_3 = true
-	log_info("akhenaten: mission 6 behdet kushite invasion 3 size=4", {ev:ev})
-	mission6_kushite_raid(2, 4, 2)
+function mission6_raids(ev) {
+	mission_raids_month(mission, mission6, ev, mission6_raid_list())
 }

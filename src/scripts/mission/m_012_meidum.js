@@ -10,8 +10,8 @@ log_info("akhenaten: mission 12 meidum started")
 // Trade:     can open — Saqqara, Serabit Khadim, Abu (by sea), Behdet (by sea), Nekhen (by sea); display
 //            only — Men-nefer (Pharaoh's city, no goods), Byblos, Kerma, Kyrene, Selima Oasis.
 // Enemies:   Hyksos raids by land; Pharaoh's army (25, then 60 more) if the kingdom rating falls to 0.
-// Timeline:  y3m4 request 10 timber; y5m3 wages fall; y5m7 request 8 reeds; from y7, every year in month 6,
-//            raid 17 (skipped while enemies are on the map); from y8 request 7 pottery in month 1 (its
+// Timeline:  y3m4 request 10 timber; y5m3 wages fall; y5m7 request 8 reeds; raid 17 announced y7m6,
+//            attacks y8m6, and again every time its army is gone; from y8 request 7 pottery in month 1 (its
 //            outcome moves clay demand and may lead to a 6-clay request and contaminated water); from y11
 //            4 pottery in month 9; y12m11 13 papyrus; y13m3 10 stone; from y13 10 grain in month 5; y13m8
 //            10 pottery (no reward or penalty); stone gets dearer every year in month 4 from y14; y15m10
@@ -26,7 +26,10 @@ log_info("akhenaten: mission 12 meidum started")
 //   same good is cleared (mission_recurring_request_may_fire).
 // - Left out from the original: events dated year 98 and later, an orphan route on the empire map and
 //   two follow-up events nothing points at.
-// - Raids pass no tile, so the engine uses the only land invasion point [114,79].
+// - The Hyksos raid (pak i=70, recurring) uses the only land invasion point [114,79].
+// - Raids follow the OG invasion cycle (missions.js mission_raids_month): warnings from the event's month,
+//   the attack months_initial months later, the point rolled from the event's location_fields; a recurring
+//   raid comes back its year plus the years since start later (OG scenario_events_rearm).
 // - tag_id (i = event index in the original scenario, also quoted as "pak i=" in comments below):
 //   1000 + i               follow-up events and requests (e.g. 1027..1030 = shared kingdom +/- outcomes)
 //   2000 + i               one-time calendar events
@@ -438,6 +441,7 @@ mission12 { // Meidum
 	]
 
 	vars {
+		raids : ""
 		// Chain-leaf wiring (idempotent, all wired once from on_start).
 		shared_kr_leaves_wired : false
 		clay_chain_leaves_wired : false
@@ -486,7 +490,6 @@ mission12 { // Meidum
 		event59_timber_last_year : -1
 		event60_grain_last_year : -1
 		event63_stone_last_year : -1
-		event70_hyksos_last_year : -1
 
 		// Shared resource-busy gates (pottery/grain/timber recurrings can overlap; see
 		// mission_recurring_request_may_fire — Serabit copper pattern).
@@ -497,7 +500,6 @@ mission12 { // Meidum
 		timber_recurring_was_busy : false
 		timber_recurring_idle_since_abs : -1
 
-		hyksos_invasion_count : 0
 
 
 		start_message_shown : false
@@ -654,18 +656,6 @@ function mission12_ensure_gift_leaves() {
 	mission12_make_leaf(1050, EVENT_TYPE_GIFT_FROM_PHARAOH, RESOURCE_LUXURY_GOODS, 25, 2) // i50 ← i49.ok
 	mission12_make_leaf(1061, EVENT_TYPE_GIFT_FROM_PHARAOH, RESOURCE_LUXURY_GOODS, 28, 2) // i61 ← i60.ok
 	mission12_make_leaf(1064, EVENT_TYPE_GIFT_FROM_PHARAOH, RESOURCE_OIL, 21, 2) // i64 ← i63.ok
-}
-
-function mission12_hyksos_raid(invasion_id, size) {
-	// pak enemy_id=5 ENEMY_5_HYKSOS; tilex/tiley -1 → engine picks from invasion_points_land.
-	city.start_foreign_army_invasion({
-		invasion_id: invasion_id,
-		enemy: ENEMY_5_HYKSOS,
-		size: size,
-		tilex: -1,
-		tiley: -1,
-		want_destroy_buildings: size
-	})
 }
 
 [es=event_mission_start, mission=mission12]
@@ -1269,20 +1259,15 @@ function mission12_event_i63_stone_gift_recurring(ev) {
 	mission12_fire_request(3000 + 63 * 100 + ev.years_since_start, RESOURCE_STONE, 12, 12, 1064, 1028, 1030, 4)
 }
 
-// pak i=70: year=7+ month=6 Hyksos invasion size=17, recurring ~every 12 months.
+// pak i=70: the recurring Hyksos raid.
+function mission12_raid_list() {
+	return [
+		{ key: "i70", invasion_id: 70, year: 7, month: 6, invader: EVENT_INVADER_ENEMY, enemy: ENEMY_5_HYKSOS, amount: 17,
+			months_initial: 12, location: [1, 1, -1, -1], attack_target: EVENT_ATTACK_TARGET_RANDOM, recurring: true }
+	]
+}
+
 [es=event_advance_month, mission=mission12]
-function mission12_event_i70_hyksos_invasion_recurring(ev) {
-	if (ev.years_since_start < 7 || ev.month != 6) {
-		return
-	}
-	if (mission.event70_hyksos_last_year == ev.years_since_start) {
-		return
-	}
-	if (city.num_enemy_formations > 0) {
-		return
-	}
-	mission.event70_hyksos_last_year = ev.years_since_start
-	mission.hyksos_invasion_count = mission.hyksos_invasion_count + 1
-	log_info("akhenaten: mission 12 meidum i70 hyksos invasion size=17 y" + ev.years_since_start, {ev:ev})
-	mission12_hyksos_raid(mission.hyksos_invasion_count, 17)
+function mission12_raids(ev) {
+	mission_raids_month(mission, mission12, ev, mission12_raid_list())
 }

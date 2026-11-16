@@ -287,6 +287,7 @@
   }
 }</code></pre>
             <p>There is no <code>choice[]</code>: Buhen and South Dahshur are the two arms of a fork the player picks at the end of mission 11/12; both set <code>next_mission : 15</code>. Empire id is set to <strong>13</strong> via <code>empire.set_id(13)</code> in <code>mission13_on_start</code> (<span class="file-ref">m_013_buhen.js:630</span>) together with a full <code>hide_pak_*</code> cities/routes/ornaments/texts redefine (six openable trading partners — Men-nefer, Selima Oasis, Abu, Meidum, Enkomi, Serabit Khadim — plus seven display-only cities).</p>
+            <p>Raids: <code>mission13_raid_list</code> runs through <code>mission_raids_month</code> (<span class="file-ref">src/scripts/missions.js</span>) on the OG invasion cycle: the OG warnings with the invader&rsquo;s phrases from the event&rsquo;s month, the attack <code>months_initial</code> months later, the point rolled from the event&rsquo;s <code>location_fields</code>, its <code>on_completed</code> chain as it attacks; a recurring raid comes back its year plus the years since start later. i=9 ×8 announced y6m5 &rarr; attacks y8m5 · i=14 ×16 announced y10m6 &rarr; attacks y12m6 · i=16 ×16 announced y12m8 &rarr; attacks y14m8 · i=17 ×24 announced y13m3 &rarr; attacks y15m3 · i=18 ×24 announced y15m5 &rarr; attacks y17m5 · i=19 ×32 announced y17m1 &rarr; attacks y19m1 · i=20 ×32 announced y18m1 &rarr; attacks y20m1 · i=21 ×36 announced y20m8 &rarr; attacks y22m2.</p>
           </div>
         </details>
 

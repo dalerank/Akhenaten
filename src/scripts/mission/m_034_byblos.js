@@ -12,24 +12,29 @@ log_info("akhenaten: mission 34 byblos started")
 // Enemies:   Canaanite raids (late ones by sea), Bedouin raids (Libyan army); Egyptian army of 161 by
 //            sea with 9 warships if the kingdom rating falls to 0 (events[] also lists a second
 //            favour army of 128, not chained to the first).
-// Timeline:  y2m0 Canaanite raid 28; y2m2 request 17 timber (sent: Men-nefer route opens); y4m0
+// Timeline:  raids are given by the month they are announced. y2m0 Canaanite raid 28 (attacks y2m6); y2m2
+//            request 17 timber (sent: Men-nefer route opens); y4m0
 //            request 44 henna for Abu (sent: Abu is conquered; otherwise kingdom -9), then 11 fish
-//            (sent: Qadesh route opens; otherwise one retry with 5 fish); y6m4 Canaanite raid 64;
+//            (sent: Qadesh route opens; otherwise one retry with 5 fish); y6m4 Canaanite raid 64 (attacks y6m6);
 //            y7m1 request 34 henna for Khmun (sent: Khmun is conquered; otherwise as Abu); y8m10
 //            request 52 henna for Gaza (sent: Gaza is conquered; refused or late: sea trade problems);
 //            every 6 months from y9m0 request 9 timber while none is open; y9m8 request 11 chariots
-//            (sent: Rowarty route opens; otherwise kingdom -3 and one retry with 8 chariots); every
-//            6 months from y12m3 Bedouin raid 96; y13m7 request 64 henna for Iken (sent: Iken is
+//            (sent: Rowarty route opens; otherwise kingdom -3 and one retry with 8 chariots); y12m3
+//            Bedouin raid 96 (attacks y12m9); y13m7 request 64 henna for Iken (sent: Iken is
 //            conquered, Heh route opens; otherwise the Gaza route is lost and a troops/weapons/grain chain
-//            follows in which failures make Byblos fall); every 6 months from y16m0
-//            Canaanite raid 125 by sea with 12 warships; every 2 months price rises from y19m2
-//            (timber), y21m4 (copper), y22m6 (weapons); y22m8 Canaanite raid 119; y23m0, y24m0, y25m0
-//            Abu buys more timber, copper, weapons; every 6 months from y28m8 Canaanite raid 141 by
-//            sea with 12 warships. Recurring raids wait while enemies are on the map.
+//            follows in which failures make Byblos fall); y16m0 Canaanite raid 125 by sea with 12 warships
+//            (attacks y16m6); every 2 months price rises from y19m2
+//            (timber), y21m4 (copper), y22m6 (weapons); y22m8 Canaanite raid 119 (attacks y24m2); y23m0, y24m0, y25m0
+//            Abu buys more timber, copper, weapons; y28m8 Canaanite raid 141 by sea with 12 warships
+//            (attacks y29m2). The Bedouin raid and the two sea raids come back every time their army is
+//            gone.
 //
 // Notes for developers:
-// - Raid location numbers: 1..5 = land points (mission34_loc_tile), 9+ = sea point loc - 9 with the
-//   event's warships (mission34_enemy_raid).
+// - Raid locations follow OG: 1..8 = land points (empty ones wrap round), 9+ = sea point loc - 9 with the
+//   event's warships.
+// - Raids follow the OG invasion cycle (missions.js mission_raids_month): warnings from the event's month,
+//   the attack months_initial months later, the point rolled from the event's location_fields; a recurring
+//   raid comes back its year plus the years since start later (OG scenario_events_rearm).
 // - Men-nefer has no route in the original; it gets the unused sea route 8 so its unlock opens a route.
 // - Request loops of the original (1/4, 6/8, 27/45/44, 53/54) are cut after one retry.
 // - Temporary: the original sends raids when a henna request is lost (defeat); the engine only
@@ -507,15 +512,13 @@ mission34 { // Byblos — Expansion and Conquest
 	]
 
 	vars {
+		raids : ""
 		chain_leaves_wired : false
 
-		event0_invasion_done : false
 		event1_henna_done : false
-		event5_invasion_done : false
 		event9_henna_done : false
 		event14_henna_done : false
 		event25_henna_done : false
-		event33_invasion_done : false
 		event34_demand_done : false
 		event35_demand_done : false
 		event36_demand_done : false
@@ -523,12 +526,9 @@ mission34 { // Byblos — Expansion and Conquest
 		event51_chariots_done : false
 
 		event11_timber_last_abs : -1
-		event24_beduin_last_abs : -1
-		event29_invasion_last_abs : -1
 		event30_price_last_abs : -1
 		event31_price_last_abs : -1
 		event32_price_last_abs : -1
-		event37_invasion_last_abs : -1
 		timber_recurring_was_busy : false
 		timber_recurring_idle_since_abs : -1
 
@@ -592,61 +592,6 @@ function mission34_fire_request(tag, resource, amount, months, ok_tag, refuse_ta
 	if (defeat_tag !== undefined && defeat_tag > 0) { request.set_defeat_action_tag(defeat_tag) }
 	request.event_is_active = true
 	return request
-}
-
-function mission34_loc_tile(loc) {
-	if (loc == 1) { return [33, 76] }
-	if (loc == 2) { return [50, 51] }
-	if (loc == 3) { return [70, 34] }
-	if (loc == 4) { return [103, 9] }
-	if (loc == 5) { return [124, 7] }
-	return [-1, -1]
-}
-
-function mission34_attack_target(attack) {
-	if (attack == 0) { return EVENT_ATTACK_TARGET_FOOD }
-	if (attack == 1) { return EVENT_ATTACK_TARGET_VAULTS }
-	if (attack == 2) { return EVENT_ATTACK_TARGET_BEST_BUILDINGS }
-	if (attack == 3) { return EVENT_ATTACK_TARGET_TROOPS }
-	return EVENT_ATTACK_TARGET_RANDOM
-}
-
-// OG scenario_invasion_start: loc 9+ sails from sea point loc - 9 with the event's phrase_var warships.
-function mission34_enemy_raid(invasion_id, size, loc, attack, warships) {
-	var opts = {
-		mode: ATTACK_TYPE_ENEMIES,
-		enemy: ENEMY_2_CANAANITE,
-		size: size,
-		invasion_id: invasion_id,
-		want_destroy_buildings: 0,
-		invasion_attack_target: mission34_attack_target(attack)
-	}
-	if (loc >= 9) {
-		opts.via_sea = 1
-		opts.sea_point = loc - 9
-		opts.warships = warships || 0
-	} else {
-		var tile = mission34_loc_tile(loc)
-		opts.tilex = tile[0]
-		opts.tiley = tile[1]
-	}
-	__image_request_pak(PACK_ENEMY_CANAANITE)
-	city.start_foreign_army_invasion(opts)
-}
-
-function mission34_beduin_raid(invasion_id, size, loc) {
-	var tile = mission34_loc_tile(loc)
-	__image_request_pak(PACK_ENEMY_LIBIAN)
-	city.start_foreign_army_invasion({
-		mode: ATTACK_TYPE_ENEMIES,
-		enemy: ENEMY_7_LIBIAN,
-		size: size,
-		invasion_id: invasion_id,
-		tilex: tile[0],
-		tiley: tile[1],
-		want_destroy_buildings: size,
-		invasion_attack_target: EVENT_ATTACK_TARGET_RANDOM
-	})
 }
 
 function mission34_ensure_chain_leaves() {
@@ -786,20 +731,10 @@ function mission34_requests_and_events(ev) {
 	mission34_ensure_chain_leaves()
 	var abs = ev.years_since_start * 12 + ev.month
 
-	if (!mission.event0_invasion_done && ev.years_since_start == 2 && ev.month == 0) {
-		mission.event0_invasion_done = true
-		log_info("akhenaten: mission 34 canaanite×28 (i=0)")
-		mission34_enemy_raid(2000, 28, 3, 2)
-	}
 	if (!mission.event1_henna_done && ev.years_since_start == 4 && ev.month == 0) {
 		mission.event1_henna_done = true
 		log_info("akhenaten: mission 34 henna×44 (i=1)")
 		mission34_fire_request(2001, RESOURCE_HENNA, 44, 12, 1002, 1003, 1003, 2, "Abu")
-	}
-	if (!mission.event5_invasion_done && ev.years_since_start == 6 && ev.month == 4) {
-		mission.event5_invasion_done = true
-		log_info("akhenaten: mission 34 canaanite×64 (i=5)")
-		mission34_enemy_raid(2005, 64, 5, 0)
 	}
 	if (!mission.event9_henna_done && ev.years_since_start == 7 && ev.month == 1) {
 		mission.event9_henna_done = true
@@ -826,11 +761,6 @@ function mission34_requests_and_events(ev) {
 		log_info("akhenaten: mission 34 henna×64 (i=25)")
 		mission34_fire_request(2025, RESOURCE_HENNA, 64, 18, 1026, 1017, 1017, 2, "Iken")
 	}
-	if (!mission.event33_invasion_done && ev.years_since_start == 22 && ev.month == 8) {
-		mission.event33_invasion_done = true
-		log_info("akhenaten: mission 34 canaanite×119 (i=33)")
-		mission34_enemy_raid(2033, 119, 3, 1)
-	}
 	if (!mission.event34_demand_done && ev.years_since_start == 23 && ev.month == 0) {
 		mission.event34_demand_done = true
 		log_info("akhenaten: mission 34 timber demand +8 (i=34)")
@@ -856,24 +786,6 @@ function mission34_requests_and_events(ev) {
 		}
 	}
 
-	// i24 beduin×96 / 6mo from y12m3
-	if (abs >= 12 * 12 + 3 && (abs - (12 * 12 + 3)) % 6 == 0 && mission.event24_beduin_last_abs != abs) {
-		if (city.num_enemy_formations == 0) {
-			mission.event24_beduin_last_abs = abs
-			log_info("akhenaten: mission 34 beduin×96 recurring (i=24) abs=" + abs)
-			mission34_beduin_raid(3024, 96, 1)
-		}
-	}
-
-	// i29 canaanite×125 / 6mo from y16m0 (loc 11 → sea[2], 12 warships)
-	if (abs >= 16 * 12 + 0 && (abs - (16 * 12 + 0)) % 6 == 0 && mission.event29_invasion_last_abs != abs) {
-		if (city.num_enemy_formations == 0) {
-			mission.event29_invasion_last_abs = abs
-			log_info("akhenaten: mission 34 canaanite×125 recurring (i=29) abs=" + abs)
-			mission34_enemy_raid(3029, 125, 11, 4, 12)
-		}
-	}
-
 	// i30/31/32 recurring prices months=2
 	if (abs >= 19 * 12 + 2 && (abs - (19 * 12 + 2)) % 2 == 0 && mission.event30_price_last_abs != abs) {
 		mission.event30_price_last_abs = abs
@@ -886,15 +798,6 @@ function mission34_requests_and_events(ev) {
 	if (abs >= 22 * 12 + 6 && (abs - (22 * 12 + 6)) % 2 == 0 && mission.event32_price_last_abs != abs) {
 		mission.event32_price_last_abs = abs
 		mission34_fire_simple_event(3032 + ev.years_since_start, EVENT_TYPE_PRICE_INCREASE, RESOURCE_WEAPONS, 24, "Abu")
-	}
-
-	// i37 canaanite×141 / 6mo from y28m8 (loc 12 → sea[3], 12 warships)
-	if (abs >= 28 * 12 + 8 && (abs - (28 * 12 + 8)) % 6 == 0 && mission.event37_invasion_last_abs != abs) {
-		if (city.num_enemy_formations == 0) {
-			mission.event37_invasion_last_abs = abs
-			log_info("akhenaten: mission 34 canaanite×141 recurring (i=37) abs=" + abs)
-			mission34_enemy_raid(3037, 141, 12, 0, 12)
-		}
 	}
 }
 
@@ -910,4 +813,31 @@ function mission34_on_request_cleared(ev) {
 		mission.kr39_once_done = true
 		log_info("akhenaten: mission 34 grain refuse → KR once (truncate)")
 	}
+}
+
+// pak i=0, 5, 33: Canaanite raids; i=24 (recurring): Bedouins with Libyan soldiers; i=29, 37 (recurring): Canaanite
+// raids by sea. The chained raids i=4, 12, 27 of the request outcomes are not wired (see mission34_on_request_cleared).
+function mission34_raid_list() {
+	var C = ENEMY_2_CANAANITE
+	var E = EVENT_INVADER_ENEMY
+	return [
+		{ key: "i0", invasion_id: 0, year: 2, month: 0, invader: E, enemy: C, amount: 28, months_initial: 6,
+			location: [3, -1, 1, 4], attack_target: EVENT_ATTACK_TARGET_BEST_BUILDINGS },
+		{ key: "i5", invasion_id: 5, year: 6, month: 4, invader: E, enemy: C, amount: 64, months_initial: 2,
+			location: [5, -1, 5, 8], attack_target: EVENT_ATTACK_TARGET_FOOD },
+		{ key: "i24", invasion_id: 24, year: 12, month: 3, invader: EVENT_INVADER_BEDUINS, enemy: ENEMY_7_LIBIAN,
+			amount: 96, months_initial: 6, location: [1, -1, 1, 8], attack_target: EVENT_ATTACK_TARGET_FOOD,
+			recurring: true },
+		{ key: "i29", invasion_id: 29, year: 16, month: 0, invader: E, enemy: C, amount: 125, months_initial: 6,
+			location: [11, -1, 9, 13], warships: 12, attack_target: EVENT_ATTACK_TARGET_RANDOM, recurring: true },
+		{ key: "i33", invasion_id: 33, year: 22, month: 8, invader: E, enemy: C, amount: 119, months_initial: 18,
+			location: [3, -1, 1, 8], attack_target: EVENT_ATTACK_TARGET_VAULTS },
+		{ key: "i37", invasion_id: 37, year: 28, month: 8, invader: E, enemy: C, amount: 141, months_initial: 6,
+			location: [12, -1, 9, 13], warships: 12, attack_target: EVENT_ATTACK_TARGET_FOOD, recurring: true }
+	]
+}
+
+[es=event_advance_month, mission=mission34]
+function mission34_raids(ev) {
+	mission_raids_month(mission, mission34, ev, mission34_raid_list())
 }

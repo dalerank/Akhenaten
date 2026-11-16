@@ -12,8 +12,13 @@ log_info("akhenaten: mission 7 abydos started")
 // Timeline:  y2m2 request 9 beer (delivered: Pharaoh gifts 21 bricks); a perfect flood every year in
 //            month 8 from y2; y5m3 contaminated water; y7m7 sea trade problem; y8m0 wages rise; y9m7 more
 //            demand for linen; y10m11 more demand for beer; y12m1 request 18 fish (delivered: the same
-//            21-brick gift); y14m9 raid by sea (3 soldiers, 1 warship); y15m4 wages rise; y18m6 less
-//            demand for fish; y19m8 contaminated water.
+//            21-brick gift); raid by sea announced y14m9 (3 soldiers, 1 warship), attacks y16m1; y15m4 wages
+//            rise; y18m6 less demand for fish; y19m8 contaminated water.
+//
+// Notes for developers:
+// - Raids follow the OG invasion cycle (missions.js mission_raids_month): warnings from the event's month,
+//   the attack months_initial months later, the point rolled from the event's location_fields; a recurring
+//   raid comes back its year plus the years since start later (OG scenario_events_rearm).
 
 mission7 { // Abydos / Abedju — The Challenge of the Sea
 	map_file : "data/maps/m_007_abydos.map"
@@ -417,6 +422,7 @@ mission7 { // Abydos / Abedju — The Challenge of the Sea
 	]
 
 	vars {
+		raids : ""
 		pharaoh_beer_requested : false
 		pharaoh_fish_requested : false
 		contaminated_water_1 : false
@@ -427,7 +433,6 @@ mission7 { // Abydos / Abedju — The Challenge of the Sea
 		wage_increase_2 : false
 		fish_demand_decreased : false
 		contaminated_water_2 : false
-		kushite_invasion_1 : false
 		start_message_shown : false
 	}
 }
@@ -600,29 +605,6 @@ function mission7_pharaoh_request_fish(ev) {
 	ok_ev.set_completed_action_tag(1701)
 }
 
-// pak: y14 m9 size=3 Kushite (timed). Favour-KR Pharaoh army amount=40 via JS helper.
-[es=event_advance_month, mission=mission7]
-function mission7_kushite_invasion_1(ev) {
-	if (mission.kushite_invasion_1) {
-		return
-	}
-	if (ev.years_since_start < 14 || (ev.years_since_start == 14 && ev.month < 9)) {
-		return
-	}
-	mission.kushite_invasion_1 = true
-	log_info("akhenaten: mission 7 abydos kushite invasion size=3", {ev:ev})
-	city.start_foreign_army_invasion({
-		invasion_id: 0,
-		enemy: ENEMY_6_KUSHITE,
-		size: 3,
-		via_sea: 1, // pak loc=9 â†’ sea point 0
-		sea_point: 0,
-		warships: 1,
-		want_destroy_buildings: 3,
-		invasion_attack_target: EVENT_ATTACK_TARGET_RANDOM // pak attack=4
-	})
-}
-
 // pak: year=15 month=4 WAGE_INCREASE once
 [es=event_advance_month, mission=mission7]
 function mission7_wage_increase_2(ev) {
@@ -676,4 +658,17 @@ function mission7_contaminated_water_2(ev) {
 		amount: 2,
 		trigger: EVENT_TRIGGER_ONCE
 	}).execute()
+}
+
+// pak i=13: the Kushite raid by sea from sea point 0.
+function mission7_raid_list() {
+	return [
+		{ key: "i13", invasion_id: 13, year: 14, month: 9, invader: EVENT_INVADER_ENEMY, enemy: ENEMY_6_KUSHITE, amount: 3,
+			months_initial: 16, location: [9, 9, -1, -1], warships: 1, attack_target: EVENT_ATTACK_TARGET_RANDOM }
+	]
+}
+
+[es=event_advance_month, mission=mission7]
+function mission7_raids(ev) {
+	mission_raids_month(mission, mission7, ev, mission7_raid_list())
 }

@@ -472,6 +472,7 @@
   <span class="kw">hide_pak_cities</span> : <span class="num">true</span>
 }</code></pre>
             <p>The monument goal of <strong>39</strong> matches pak: small stepped (3) + stepped complex (36) → <code>trunc(6.32 × √39 + 0.5) = 39</code> (see <span class="file-ref">src/scripts/city/monuments.js</span>). Causeway placement for the complex is still open. All other goals (pop 3000, culture 25, prosperity 25, kingdom 40, housing level 11) and the funds/debt-interest ladders match pak exactly. Trade: Abu / Behdet / Nekhen (sea, 650–1050 Db), Saqqara / Serabit Khadim (land, 200–350 Db) — all start closed. Men-nefer is a display-only Pharaoh route (no goods). Display: Byblos, Kerma, Kyrene, Selima Oasis.</p>
+            <p>Raids: <code>mission12_raid_list</code> runs through <code>mission_raids_month</code> (<span class="file-ref">src/scripts/missions.js</span>) on the OG invasion cycle: the OG warnings with the invader&rsquo;s phrases from the event&rsquo;s month, the attack <code>months_initial</code> months later, the point rolled from the event&rsquo;s <code>location_fields</code>, its <code>on_completed</code> chain as it attacks; a recurring raid comes back its year plus the years since start later. i=70 ×17 announced y7m6 &rarr; attacks y8m6, recurring.</p>
           </div>
         </details>
 

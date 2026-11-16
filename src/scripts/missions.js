@@ -196,9 +196,10 @@ function mission_raid_land_tile(config, location) {
 // 24 / 12 / 6 / 1 months left), and the attack months_initial months later. A raid (the OG event's fields):
 //   key, invader (EVENT_INVADER_*, picks the phrases), enemy (ENEMY_*), amount, months_initial,
 //   location [value, fixed, min, max] (OG location_fields, rolled when the raid is scheduled), warships,
-//   attack_target, chain_tag (the events[] tag its on_completed chains as it attacks), then [{ key, delay }]
-//   (raids its on_completed chains, due `delay` months later: the child's time.year), year + month (a calendar
-//   event), recurring (OG EVENT_FLAG_RECURRING).
+//   attack_target; what its on_completed chains as it attacks: chain_tag (an events[] tag), chain_event (the
+//   city.create_chain_event options of that event), on_attack(seq) (a longer chain), then [{ key, delay }]
+//   (raids, due `delay` months later: the child's time.year); year + month (a calendar event), recurring
+//   (OG EVENT_FLAG_RECURRING).
 // The state lives in the mission var `raids` (JSON): key -> { date, loc, seq, done }.
 function mission_raids_state(mission) {
 	var text = mission.raids
@@ -294,8 +295,15 @@ function mission_raid_month(config, raid, st, now) {
 	}
 	st.seq = mission_start_raid(config, raid, st.loc)
 	st.done = true
+	if (raid.chain_event) {
+		city.create_chain_event(raid.chain_event)
+		__city_event_fire_chain(raid.chain_event.tag_id)
+	}
 	if (raid.chain_tag) {
 		__city_event_fire_chain(raid.chain_tag)
+	}
+	if (raid.on_attack) {
+		raid.on_attack(st.seq)
 	}
 	return raid.then || []
 }

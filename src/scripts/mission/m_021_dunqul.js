@@ -11,22 +11,25 @@ log_info("akhenaten: mission 21 dunqul started")
 //            Oasis.
 // Enemies:   Bedouin raids and Hittite raids by land; Pharaoh's army (66) if the kingdom rating falls
 //            to 0.
-// Timeline:  y1m0 Bedouin raid 5; y1m1 Henen-nesw loses its route, is besieged and asks for 60 weapons
+// Timeline:  Bedouin raid 5 announced y1m0, attacks y1m6; y1m1 Henen-nesw loses its route, is besieged and asks for 60 weapons
 //            within 3 months — whatever the outcome, Djedu then falls; y1m9 Henen-nesw route opens
 //            again; every m8 from y2 a city asks for 12 game meat and every m10 from y2 Pharaoh asks for
 //            12 granite (each: delivered kingdom +5, refused -36, late -5; not while the last ask is
-//            open); y3m0 Iunet is conquered, then the Kerma route opens; every January from y3 Bedouin
-//            raid 12 (beaten: kingdom +5); y3m9 more timber demand; every m4 from y4 Hittite raid 43
-//            (beaten: kingdom +8); y10m11 Kerma route opens (if still closed).
+//            open); y3m0 Iunet is conquered, then the Kerma route opens; Bedouin raid 12 announced y3m0,
+//            attacks y3m3 (kingdom +5), and again every time its army is gone; y3m9 more timber demand;
+//            Hittite raid 43 announced y4m4, attacks y5m4 (kingdom +8), also recurring; y10m11 Kerma route
+//            opens (if still closed).
 //
 // Notes for developers:
 // - The briefing speaks of Kushites, but the original scenario enemy is Hittite and the code keeps it.
 //   Bedouins use the Libyan army sprites.
-// - The map has no invasion, river or disembark points, so raids pass tile -1 and the engine picks
-//   the fallback tile.
+// - The map has no invasion, river or disembark points, so raids come in by the map exit.
+// - Raids follow the OG invasion cycle (missions.js mission_raids_month): warnings from the event's month,
+//   the attack months_initial months later, the point rolled from the event's location_fields; a recurring
+//   raid comes back its year plus the years since start later (OG scenario_events_rearm), its kingdom
+//   reward coming as it attacks (OG invasion_attack chains on_completed then).
 // - Repeating outcomes fire one-off kingdom events (mission21_fire_kr, 50000 + n) instead of shared
-//   chain leaves, which can only fire once; raid rewards get their own leaf per year (4100 / 4200 +
-//   year).
+//   chain leaves, which can only fire once.
 // - The original also opens routes to Iunet and Djedu, which have no goods; those events are left out.
 //   Its yearly Kerma route event fires only once here.
 // - tag_id: 1000 + i chained events, 2000 + i calendar events, 3000 + i*100 + year yearly requests,
@@ -535,16 +538,14 @@ mission21 { // Dunqul Oasis — The Kushite Threat
 		]
 
 	vars {
+		raids : ""
 		weapons_leaves_wired : false
 		event7_siege_done : false
 		event10_troops_done : false
-		event11_beduin_done : false
 		event20_trade_done : false
 		event21_demand_done : false
 		event0_gamemeat_last_year : -1
 		event4_granite_last_year : -1
-		event12_beduin_last_year : -1
-		event14_enemy_last_year : -1
 		event18_trade_last_year : -1
 		kr_seq : 0
 		gamemeat_recurring_was_busy : false
@@ -654,38 +655,6 @@ function mission21_ensure_weapons_leaves() {
 	siege.set_completed_action_tag(1005)
 }
 
-function mission21_beduin_raid(invasion_id, size, on_completed_tag) {
-	var opts = {
-		invasion_id: invasion_id,
-		enemy: ENEMY_7_LIBIAN,
-		size: size,
-		tilex: -1,
-		tiley: -1,
-		want_destroy_buildings: size,
-		invasion_attack_target: EVENT_ATTACK_TARGET_RANDOM
-	}
-	if (on_completed_tag) {
-		opts.on_completed_tag = on_completed_tag
-	}
-	city.start_foreign_army_invasion(opts)
-}
-
-function mission21_enemy_raid(invasion_id, size, on_completed_tag) {
-	var opts = {
-		invasion_id: invasion_id,
-		enemy: ENEMY_4_HITTITE,
-		size: size,
-		tilex: -1,
-		tiley: -1,
-		want_destroy_buildings: size,
-		invasion_attack_target: EVENT_ATTACK_TARGET_RANDOM
-	}
-	if (on_completed_tag) {
-		opts.on_completed_tag = on_completed_tag
-	}
-	city.start_foreign_army_invasion(opts)
-}
-
 [es=event_mission_start, mission=mission21]
 function mission21_on_start(ev) {
 	__image_request_pak(PACK_ENEMY_HITTITE)
@@ -723,12 +692,6 @@ function mission21_requests_and_raids(ev) {
 		lost.set_param("months_initial", 2)
 		lost.set_completed_action_tag(1008)
 		lost.execute()
-	}
-
-	if (!mission.event11_beduin_done && ev.years_since_start == 1 && ev.month == 0) {
-		mission.event11_beduin_done = true
-		log_info("akhenaten: mission 21 beduin×5")
-		mission21_beduin_raid(11, 5)
 	}
 
 	if (!mission.event10_troops_done && ev.years_since_start == 3 && ev.month == 0) {
@@ -771,25 +734,6 @@ function mission21_requests_and_raids(ev) {
 		}
 	}
 
-	if (ev.years_since_start >= 3 && ev.month == 0
-			&& mission.event12_beduin_last_year != ev.years_since_start) {
-		mission.event12_beduin_last_year = ev.years_since_start
-		var beduin_kr = 4100 + ev.years_since_start
-		mission21_make_leaf(beduin_kr, EVENT_TYPE_REPUTATION_INCREASE, undefined, 5, 2)
-		log_info("akhenaten: mission 21 beduin×12 recurring")
-		mission21_beduin_raid(12, 12, beduin_kr)
-	}
-
-	if (ev.years_since_start > 4 || (ev.years_since_start == 4 && ev.month >= 4)) {
-		if (ev.month == 4 && mission.event14_enemy_last_year != ev.years_since_start) {
-			mission.event14_enemy_last_year = ev.years_since_start
-			var enemy_kr = 4200 + ev.years_since_start
-			mission21_make_leaf(enemy_kr, EVENT_TYPE_REPUTATION_INCREASE, undefined, 8, 2)
-			log_info("akhenaten: mission 21 enemy×43 recurring")
-			mission21_enemy_raid(14, 43, enemy_kr)
-		}
-	}
-
 	// SKIP pak i=16/17 NEW_TRADE Iunet/Djedu — display cities with no sells/buys (empty unlock).
 	if (!mission.event20_trade_done && ev.years_since_start == 1 && ev.month == 9) {
 		mission.event20_trade_done = true
@@ -822,3 +766,22 @@ function mission21_on_request_cleared(ev) {
 	}
 }
 
+// pak i=11 and i=12 (recurring, kingdom +5 via pak i=1): Bedouins with Libyan soldiers; i=14 (recurring,
+// kingdom +8 via pak i=15): Hittites.
+function mission21_raid_list() {
+	return [
+		{ key: "i11", invasion_id: 11, year: 1, month: 0, invader: EVENT_INVADER_BEDUINS, enemy: ENEMY_7_LIBIAN, amount: 5,
+			months_initial: 6, location: [8, 8, -1, -1], attack_target: EVENT_ATTACK_TARGET_RANDOM },
+		{ key: "i12", invasion_id: 12, year: 3, month: 0, invader: EVENT_INVADER_BEDUINS, enemy: ENEMY_7_LIBIAN,
+			amount: 12, months_initial: 3, location: [4, -1, 1, 8], attack_target: EVENT_ATTACK_TARGET_RANDOM,
+			recurring: true, chain_event: { tag_id: 1001, type: EVENT_TYPE_REPUTATION_INCREASE, amount: 5 } },
+		{ key: "i14", invasion_id: 14, year: 4, month: 4, invader: EVENT_INVADER_ENEMY, enemy: ENEMY_4_HITTITE,
+			amount: 43, months_initial: 12, location: [3, -1, 3, 6], attack_target: EVENT_ATTACK_TARGET_RANDOM,
+			recurring: true, chain_event: { tag_id: 1015, type: EVENT_TYPE_REPUTATION_INCREASE, amount: 8 } }
+	]
+}
+
+[es=event_advance_month, mission=mission21]
+function mission21_raids(ev) {
+	mission_raids_month(mission, mission21, ev, mission21_raid_list())
+}

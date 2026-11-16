@@ -15,13 +15,16 @@ log_info("akhenaten: mission 18 rostja started")
 //            to 0.
 // Timeline:  y2m5 request 10 gems (delivered: Men-nefer route opens, then 14 gems for a gift of 23
 //            copper; refused: 11 luxury goods, which also open Men-nefer); every year from y3m9
-//            Pharaoh asks for 5 gems; y5m4 Iunet route opens; y5m7 Hyksos raid 6; y7m0 request 13 gems
-//            within 3 months (refused or late: Hyksos raid 11); y8m3 Men-nefer asks for 40 troops
-//            (won: Iunet route opens; late: sea trade trouble, then 47 troops; refused or lost:
-//            Hyksos raid 9 and a new ask for 47 troops); y11m0 wages drop; y11m3 sea trade trouble;
+//            Pharaoh asks for 5 gems; y5m4 Iunet route opens; Hyksos raid 6 announced y5m7, attacks
+//            y6m5; y7m0 request 13 gems within 3 months (refused or late: Hyksos raid 11 announced 8 months
+//            later, attacking 6 months after that); y8m3 Men-nefer asks for 40 troops (won: Iunet route
+//            opens; late: sea trade trouble, then 47 troops; refused or lost: kingdom -2 and Hyksos raid 9
+//            announced 7 months later, which brings a new ask for 47 troops as it attacks 9 months after
+//            that); y11m0 wages drop; y11m3 sea trade trouble;
 //            every year from y12m8 request 15 game meat; y15..y24 stone, limestone and timber prices
 //            and demand shift; y16m10 Pharaoh asks for 12 game meat; y22m9 Pharaoh asks for 16 gems;
-//            every m10 from y26 Hyksos raid 10; every year from y35m4 Pharaoh asks for 10 timber;
+//            Hyksos raid 10 announced y26m10, attacks y27m0 (kingdom +1), and again every time its army is
+//            gone; every year from y35m4 Pharaoh asks for 10 timber;
 //            y35m11 gift of 19 limestone; every year from y44m4 Pharaoh asks for 15 game meat.
 //            Yearly requests are not repeated while the last one is open.
 //
@@ -29,7 +32,10 @@ log_info("akhenaten: mission 18 rostja started")
 // - The original's Iunet route events name Nekhen, which has no route on this map; they open Iunet.
 // - A failed troops ask re-arms itself with a fresh tag (4100 + n) so each refusal brings its own
 //   raid and kingdom penalty (4200 + n); see mission18_troops_refuse_raid.
-// - The map's invasion points are not used: raids pass tile -1 and the engine picks the tile.
+// - Raids follow the OG invasion cycle (missions.js mission_raids_month): warnings from the event's month,
+//   the attack months_initial months later, the point rolled from the event's location_fields (all land
+//   points but [138,136] are empty, so every point comes there); a recurring raid comes back its year plus
+//   the years since start later (OG scenario_events_rearm).
 // - tag_id: 1000 + i chained events and requests, 2000 + i calendar events, 3000 + i*100 + year yearly
 //   events, 7000 + i Pharaoh's army (i = event index in the original scenario, also quoted as "pak i="
 //   in comments below).
@@ -436,6 +442,7 @@ mission18 { // Rostja (Giza) — The Great Pyramid and Sphinx
 	]
 
 	vars {
+		raids : ""
 		shared_kr_leaves_wired : false
 		gems_ladder_leaves_wired : false
 		troops_chain_leaves_wired : false
@@ -453,7 +460,6 @@ mission18 { // Rostja (Giza) — The Great Pyramid and Sphinx
 		event14_gems_done : false
 		event15_gift_done : false
 		event19_gems_done : false
-		event26_hyksos_done : false
 		event27_gems_done : false
 		event30_troops_done : false
 		event42_trade_done : false
@@ -475,9 +481,7 @@ mission18 { // Rostja (Giza) — The Great Pyramid and Sphinx
 		timber_recurring_was_busy : false
 		timber_recurring_idle_since_abs : -1
 
-		event37_hyksos_last_year : -1
 
-		gems_crisis_raid_done : false
 		troops_rearm_seq : 0
 		troops_kr_seq : 0
 
@@ -540,22 +544,6 @@ function mission18_fire_request(tag, resource, amount, months, ok_tag, fail_tag,
 	}
 	request.execute()
 	return request
-}
-
-function mission18_hyksos_raid(invasion_id, size, attack_target, on_completed_tag) {
-	var opts = {
-		invasion_id: invasion_id,
-		enemy: ENEMY_5_HYKSOS,
-		size: size,
-		tilex: -1,
-		tiley: -1,
-		want_destroy_buildings: size,
-		invasion_attack_target: attack_target
-	}
-	if (on_completed_tag) {
-		opts.on_completed_tag = on_completed_tag
-	}
-	city.start_foreign_army_invasion(opts)
 }
 
 // Shared KR leaves: i=1 (+4 ok), i=2 (−1 refuse), i=3 (+1 late; do NOT wire ok→sea i=4).
@@ -673,10 +661,8 @@ function mission18_troops_refuse_raid(tag) {
 	mission.troops_rearm_seq = (mission.troops_rearm_seq | 0) + 1
 	var rearm_tag = 4100 + mission.troops_rearm_seq
 	mission18_create_troops_rearm_request(rearm_tag)
-	// High band: avoid colliding with calendar Hyksos (0 / 3+year%20).
-	var invasion_id = 60 + (mission.troops_rearm_seq % 20)
 	log_info("akhenaten: mission 18 rostja hyksos×9 after troops refuse/defeat tag=" + tag + " rearm=" + rearm_tag)
-	mission18_hyksos_raid(invasion_id, 9, EVENT_ATTACK_TARGET_FOOD, rearm_tag)
+	mission_raid_schedule(mission, mission18_raid_list(), "i35", 7)
 }
 
 function mission18_is_troops_rearm_tag(tag) {
@@ -923,20 +909,6 @@ function mission18_event_i19_gems_ladder(ev) {
 	mission18_fire_request(2019, RESOURCE_GEMS, 10, 6, 1020, 1023, 0, 0, 0)
 }
 
-// pak i=26: Hyksos×6 once y5m7 attack=BEST_BUILDINGS.
-[es=event_advance_month, mission=mission18]
-function mission18_event_i26_hyksos(ev) {
-	if (mission.event26_hyksos_done) {
-		return
-	}
-	if (ev.years_since_start < 5 || (ev.years_since_start == 5 && ev.month < 7)) {
-		return
-	}
-	mission.event26_hyksos_done = true
-	log_info("akhenaten: mission 18 rostja hyksos×6", {ev:ev})
-	mission18_hyksos_raid(0, 6, EVENT_ATTACK_TARGET_BEST_BUILDINGS)
-}
-
 // pak i=27: gems×13/3mo once y7m0 subtype=6; ok→28 MESSAGE; refuse/late→29 invasion (JS).
 [es=event_advance_month, mission=mission18]
 function mission18_event_i27_gems_crisis(ev) {
@@ -977,10 +949,9 @@ function mission18_on_request_cleared(ev) {
 	var tag = ev.tag_id
 
 	// pak i=29 Hyksos×11 after gems crisis refuse/late (EVENT_TYPE_INVASION no-op).
-	if (tag == 2027 && outcome != "ok" && !mission.gems_crisis_raid_done) {
-		mission.gems_crisis_raid_done = true
+	if (tag == 2027 && outcome != "ok") {
 		log_info("akhenaten: mission 18 rostja hyksos×11 after gems crisis (" + outcome + ")", {ev:ev})
-		mission18_hyksos_raid(1, 11, EVENT_ATTACK_TARGET_VAULTS)
+		mission_raid_schedule(mission, mission18_raid_list(), "i29", 8)
 		return
 	}
 
@@ -1008,21 +979,6 @@ function mission18_event_i36_gamemeat_recurring(ev) {
 	mission18_ensure_shared_kr_leaves()
 	log_info("akhenaten: mission 18 rostja gamemeat×15 city rec y" + ev.years_since_start, {ev:ev})
 	mission18_fire_request(3000 + 36 * 100 + ev.years_since_start, RESOURCE_GAMEMEAT, 15, 8, 1001, 1002, 1003, 0, 0)
-}
-
-// pak i=37: Hyksos×10 recurring y26m10+ attack=FOOD; ok→3 KR+1.
-[es=event_advance_month, mission=mission18]
-function mission18_event_i37_hyksos_recurring(ev) {
-	if (ev.years_since_start < 26 || ev.month != 10) {
-		return
-	}
-	if (mission.event37_hyksos_last_year == ev.years_since_start) {
-		return
-	}
-	mission.event37_hyksos_last_year = ev.years_since_start
-	mission18_ensure_shared_kr_leaves()
-	log_info("akhenaten: mission 18 rostja hyksos×10 recurring y" + ev.years_since_start, {ev:ev})
-	mission18_hyksos_raid(3 + (ev.years_since_start % 20), 10, EVENT_ATTACK_TARGET_FOOD, 1003)
 }
 
 // pak i=38: timber×10/9mo recurring y35m4+ sender=pharaoh; ok→39 refuse→2 late→3.
@@ -1083,4 +1039,37 @@ function mission18_event_i43_new_trade_route(ev) {
 		city: "Iunet",
 		trigger: EVENT_TRIGGER_ONCE
 	}).execute()
+}
+
+// pak i=26; i=29 after the gems crisis, i=35 after a refused or lost troops ask (see mission18_on_request_cleared),
+// which brings the newest 47-troops ask (4100 + n) as it attacks; i=37 recurring (kingdom +1, pak i=3, as it
+// attacks).
+function mission18_raid_list() {
+	var H = ENEMY_5_HYKSOS
+	var E = EVENT_INVADER_ENEMY
+	return [
+		{ key: "i26", invasion_id: 26, year: 5, month: 7, invader: E, enemy: H, amount: 6, months_initial: 10,
+			location: [4, -1, 1, 8], attack_target: EVENT_ATTACK_TARGET_BEST_BUILDINGS },
+		{ key: "i29", invasion_id: 29, invader: E, enemy: H, amount: 11, months_initial: 6, location: [5, -1, 1, 8],
+			attack_target: EVENT_ATTACK_TARGET_VAULTS },
+		{ key: "i35", invasion_id: 35, invader: E, enemy: H, amount: 9, months_initial: 9, location: [7, -1, 1, 8],
+			attack_target: EVENT_ATTACK_TARGET_FOOD, on_attack: mission18_raid_i35_chain },
+		{ key: "i37", invasion_id: 37, year: 26, month: 10, invader: E, enemy: H, amount: 10, months_initial: 2,
+			location: [3, -1, 1, 8], attack_target: EVENT_ATTACK_TARGET_FOOD, recurring: true,
+			on_attack: mission18_raid_i37_chain }
+	]
+}
+
+function mission18_raid_i35_chain() {
+	__city_event_fire_chain(4100 + mission.troops_rearm_seq)
+}
+
+function mission18_raid_i37_chain() {
+	mission18_ensure_shared_kr_leaves()
+	__city_event_fire_chain(1003)
+}
+
+[es=event_advance_month, mission=mission18]
+function mission18_raids(ev) {
+	mission_raids_month(mission, mission18, ev, mission18_raid_list())
 }

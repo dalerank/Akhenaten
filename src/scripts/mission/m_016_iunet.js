@@ -11,17 +11,22 @@ log_info("akhenaten: mission 16 iunet started")
 //            display only — Bahariya Oasis, Kyrene, Nekhen, Saqqara.
 // Enemies:   Hittite raids, all by sea; an Egyptian army by sea if the limestone request is refused;
 //            Pharaoh's army (15, then 45, 30 and 30) if the kingdom rating falls to 0.
-// Timeline:  y1m0 Pharaoh asks for 4 fish (delivered: Men-nefer route opens); y2m7 one Hittite warship
-//            with no soldiers; y3m2 request 2 meat (delivered: Abu route opens; late: the y4 Hittite
-//            raid comes at once); y4m0 Hittite raid 10 with 2 warships; y4m1 clay pits flood (7%);
-//            y5m2 request 15 pottery (late: as for meat); y5m10 Hittite raid 20 with 4 warships;
-//            y8m0 Hittite raid 32 with 5 warships; y10m5 Pharaoh asks for 15 limestone (delivered: gift
-//            of 15 meat; refused: Egyptian raid 24 with 6 warships); y16m10 Hittite raid 48 with 8
-//            warships (beaten: kingdom +10; not beaten: kingdom -10).
+// Timeline:  y1m0 Pharaoh asks for 4 fish (delivered: Men-nefer route opens); one Hittite warship with no
+//            soldiers announced y2m7, attacks y3m4; y3m2 request 2 meat (delivered: Abu route opens);
+//            Hittite raid 10 with 2 warships announced y4m0, attacks y4m9; y4m1 clay pits flood (7%);
+//            y5m2 request 15 pottery; Hittite raid 20 with 4 warships announced y5m10, attacks y6m7;
+//            Hittite raid 32 with 5 warships announced y8m0, attacks y9m0; y10m5 Pharaoh asks for 15
+//            limestone (delivered: gift of 15 meat; refused: kingdom -40, and an Egyptian raid 24 with
+//            6 warships announced 2 months later, attacking 2 months after that); Hittite raid 48 with
+//            8 warships announced y16m10, attacks y18m4 (kingdom +10 as it attacks).
 //
 // Notes for developers:
 // - The briefing speaks of Kushites, but the original scenario enemy is Hittite and the code keeps it.
 // - Hittite raids sail from sea point 0, the Egyptian raid from sea point 1 (original locations 9 / 10).
+// - The late meat / pottery outcome (pak i=7, kingdom -5) points at the calendar raid i=8, which is not a
+//   chain-only event, so as in OG it sends no raid.
+// - Raids follow the OG invasion cycle (missions.js mission_raids_month): warnings from the event's month,
+//   the attack months_initial months later, the point rolled from the event's location_fields.
 // - The two route-opening events name Iunet itself in the original; they are pointed at Men-nefer and
 //   Abu, whose goods are filled in because the original leaves them empty.
 // - tag_id: 1000 + i chained events, 2000 + i calendar events, 7000 + i Pharaoh's army (i = event index
@@ -488,6 +493,7 @@ mission16 { // Iunet (Dendera) — The Defense of Egypt
 	]
 
 	vars {
+		raids : ""
 		shared_kr_leaves_wired : false
 		fish_leaves_wired : false
 		meat_leaves_wired : false
@@ -495,16 +501,10 @@ mission16 { // Iunet (Dendera) — The Defense of Egypt
 		limestone_leaves_wired : false
 
 		event0_fish_done : false
-		event3_warships_done : false
 		event4_meat_done : false
-		event8_hittite_done : false
 		event9_clay_done : false
 		event10_pottery_done : false
-		event12_hittite_done : false
-		event13_hittite_done : false
 		event14_limestone_done : false
-		event17_hittite_done : false
-		limestone_egypt_done : false
 
 		start_message_shown : false
 	}
@@ -548,41 +548,6 @@ function mission16_fire_request(tag, resource, amount, months, ok_tag, fail_tag,
 	}
 	request.execute()
 	return request
-}
-
-// pak loc=9 (Hittite) / loc=10 (Egypt): OG sea invasions from sea points 0 / 1 with phrase_var warships.
-function mission16_hittite_raid(invasion_id, size, warships, attack_target, on_completed_tag, on_refusal_tag) {
-	var opts = {
-		invasion_id: invasion_id,
-		enemy: ENEMY_4_HITTITE,
-		size: size,
-		via_sea: 1,
-		sea_point: 0,
-		warships: warships,
-		want_destroy_buildings: size,
-		invasion_attack_target: attack_target
-	}
-	if (on_completed_tag) {
-		opts.on_completed_tag = on_completed_tag
-	}
-	if (on_refusal_tag) {
-		opts.on_refusal_tag = on_refusal_tag
-	}
-	city.start_foreign_army_invasion(opts)
-}
-
-function mission16_egypt_raid(invasion_id, size, warships, attack_target) {
-	__image_request_pak(PACK_ENEMY_EGYPTIAN)
-	city.start_foreign_army_invasion({
-		invasion_id: invasion_id,
-		enemy: ENEMY_3_EGYPTIAN,
-		size: size,
-		via_sea: 1,
-		sea_point: 1,
-		warships: warships,
-		want_destroy_buildings: size,
-		invasion_attack_target: attack_target
-	})
 }
 
 // Shared KR−10 leaf (pak i=2). Refuse/late only — do not chain to NEW_TRADE (pak did via junk i=1).
@@ -681,20 +646,6 @@ function mission16_event_i0_fish(ev) {
 	mission16_fire_request(2000, RESOURCE_FISH, 4, 12, 1001, 1002, 1002, 3, 1)
 }
 
-// pak i=3: Hittite×0 once y2m7, one warship and no soldiers.
-[es=event_advance_month, mission=mission16]
-function mission16_event_i3_warships(ev) {
-	if (mission.event3_warships_done) {
-		return
-	}
-	if (ev.years_since_start < 2 || (ev.years_since_start == 2 && ev.month < 7)) {
-		return
-	}
-	mission.event3_warships_done = true
-	log_info("akhenaten: mission 16 iunet hittite warship×1", {ev:ev})
-	mission16_hittite_raid(4, 0, 1, EVENT_ATTACK_TARGET_RANDOM)
-}
-
 // pak i=4: meat×2 / 12mo once y3m2. ok→KR+10; refuse→KR−10; late→KR−5→hittite×10.
 [es=event_advance_month, mission=mission16]
 function mission16_event_i4_meat(ev) {
@@ -708,20 +659,6 @@ function mission16_event_i4_meat(ev) {
 	mission16_ensure_meat_leaves()
 	log_info("akhenaten: mission 16 iunet meat×2", {ev:ev})
 	mission16_fire_request(2004, RESOURCE_MEAT, 2, 12, 1005, 1002, 1007, 0, 0)
-}
-
-// pak i=8: Hittite×10 once y4m0 (also meat/pottery late chain target via i=7).
-[es=event_advance_month, mission=mission16]
-function mission16_event_i8_hittite(ev) {
-	if (mission.event8_hittite_done) {
-		return
-	}
-	if (ev.years_since_start < 4) {
-		return
-	}
-	mission.event8_hittite_done = true
-	log_info("akhenaten: mission 16 iunet hittite×10", {ev:ev})
-	mission16_hittite_raid(0, 10, 2, EVENT_ATTACK_TARGET_RANDOM)
 }
 
 // pak i=9: clay flood once y4m1 amount=7 → 7% of clay pits.
@@ -762,34 +699,6 @@ function mission16_event_i10_pottery(ev) {
 	mission16_fire_request(2010, RESOURCE_POTTERY, 15, 12, 1011, 1002, 1007, 0, 0)
 }
 
-// pak i=12: Hittite×20 once y5m10.
-[es=event_advance_month, mission=mission16]
-function mission16_event_i12_hittite(ev) {
-	if (mission.event12_hittite_done) {
-		return
-	}
-	if (ev.years_since_start < 5 || (ev.years_since_start == 5 && ev.month < 10)) {
-		return
-	}
-	mission.event12_hittite_done = true
-	log_info("akhenaten: mission 16 iunet hittite×20", {ev:ev})
-	mission16_hittite_raid(1, 20, 4, EVENT_ATTACK_TARGET_RANDOM)
-}
-
-// pak i=13: Hittite×32 once y8m0.
-[es=event_advance_month, mission=mission16]
-function mission16_event_i13_hittite(ev) {
-	if (mission.event13_hittite_done) {
-		return
-	}
-	if (ev.years_since_start < 8) {
-		return
-	}
-	mission.event13_hittite_done = true
-	log_info("akhenaten: mission 16 iunet hittite×32", {ev:ev})
-	mission16_hittite_raid(2, 32, 5, EVENT_ATTACK_TARGET_FOOD)
-}
-
 // pak i=14: limestone×15 / 12mo once y10m5. ok→meat gift; refuse→KR−40→egypt×24; late→KR−10.
 [es=event_advance_month, mission=mission16]
 function mission16_event_i14_limestone(ev) {
@@ -805,38 +714,43 @@ function mission16_event_i14_limestone(ev) {
 	mission16_fire_request(2014, RESOURCE_LIMESTONE, 15, 12, 1015, 1018, 1002, 4, 1)
 }
 
-// Factual request close — invasions from JS (no KR-snap).
-// Leaf KR still via wired on_* tags in C++ storage path.
-[es=event_request_cleared, mission=mission16]
-function mission16_on_request_cleared(ev) {
-	var outcome = mission_request_outcome(ev)
-	// pak i=16 egypt×24 after limestone refuse (tag 2014 → KR−40 leaf 1018).
-	if (ev.tag_id == 2014 && outcome == "refuse" && !mission.limestone_egypt_done) {
-		mission.limestone_egypt_done = true
-		log_info("akhenaten: mission 16 iunet egypt×24 after limestone refuse", {ev:ev})
-		mission16_egypt_raid(10, 24, 6, EVENT_ATTACK_TARGET_FOOD)
-		return
-	}
-	// pak i=7→i=8 hittite×10 after meat (2004) or pottery (2010) late; share calendar once-flag.
-	if ((ev.tag_id == 2004 || ev.tag_id == 2010) && outcome == "late" && !mission.event8_hittite_done) {
-		mission.event8_hittite_done = true
-		log_info("akhenaten: mission 16 iunet hittite×10 after request late tag=" + ev.tag_id, {ev:ev})
-		mission16_hittite_raid(0, 10, 2, EVENT_ATTACK_TARGET_RANDOM)
-	}
+// pak i=3, 8, 12, 13, 17: Hittite raids by sea; i=17 brings kingdom +10 (pak i=11) as it attacks. pak i=16:
+// the Egyptian raid after the limestone refusal (see mission16_on_request_cleared).
+function mission16_raid_list() {
+	var H = ENEMY_4_HITTITE
+	var E = EVENT_INVADER_ENEMY
+	return [
+		{ key: "i3", invasion_id: 3, year: 2, month: 7, invader: E, enemy: H, amount: 0, months_initial: 9,
+			location: [9, 9, -1, -1], warships: 1, attack_target: EVENT_ATTACK_TARGET_RANDOM },
+		{ key: "i8", invasion_id: 8, year: 4, month: 0, invader: E, enemy: H, amount: 10, months_initial: 9,
+			location: [9, 9, -1, -1], warships: 2, attack_target: EVENT_ATTACK_TARGET_RANDOM },
+		{ key: "i12", invasion_id: 12, year: 5, month: 10, invader: E, enemy: H, amount: 20, months_initial: 9,
+			location: [9, 9, -1, -1], warships: 4, attack_target: EVENT_ATTACK_TARGET_RANDOM },
+		{ key: "i13", invasion_id: 13, year: 8, month: 0, invader: E, enemy: H, amount: 32, months_initial: 12,
+			location: [9, 9, -1, -1], warships: 5, attack_target: EVENT_ATTACK_TARGET_FOOD },
+		{ key: "i17", invasion_id: 17, year: 16, month: 10, invader: E, enemy: H, amount: 48, months_initial: 18,
+			location: [9, 9, -1, -1], warships: 8, attack_target: EVENT_ATTACK_TARGET_FOOD, on_attack: mission16_raid_i17_chain },
+		{ key: "i16", invasion_id: 16, invader: EVENT_INVADER_EGYPT, enemy: ENEMY_3_EGYPTIAN, amount: 24, months_initial: 2,
+			location: [10, 10, -1, -1], warships: 6, attack_target: EVENT_ATTACK_TARGET_FOOD }
+	]
 }
 
-// pak i=17: Hittite×48 once y16m10. ok→11 KR+10; refuse→2 KR−10 (shared leaves).
-[es=event_advance_month, mission=mission16]
-function mission16_event_i17_hittite(ev) {
-	if (mission.event17_hittite_done) {
-		return
-	}
-	if (ev.years_since_start < 16 || (ev.years_since_start == 16 && ev.month < 10)) {
-		return
-	}
-	mission.event17_hittite_done = true
+function mission16_raid_i17_chain() {
 	mission16_ensure_shared_kr_leaves()
 	mission16_ensure_pottery_leaves()
-	log_info("akhenaten: mission 16 iunet hittite×48", {ev:ev})
-	mission16_hittite_raid(3, 48, 8, EVENT_ATTACK_TARGET_FOOD, 1011, 1002)
+	__city_event_fire_chain(1011)
+}
+
+[es=event_advance_month, mission=mission16]
+function mission16_raids(ev) {
+	mission_raids_month(mission, mission16, ev, mission16_raid_list())
+}
+
+// pak i=14 limestone refused -> i=18 kingdom -40 -> i=16 Egyptian raid, due 2 months on (its time.year).
+[es=event_request_cleared, mission=mission16]
+function mission16_on_request_cleared(ev) {
+	if (ev.tag_id == 2014 && mission_request_outcome(ev) == "refuse") {
+		__image_request_pak(PACK_ENEMY_EGYPTIAN)
+		mission_raid_schedule(mission, mission16_raid_list(), "i16", 2)
+	}
 }
