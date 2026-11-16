@@ -336,19 +336,74 @@ figure_scorpion {
 	animations {
 		walk { pack:PACK_EXPANSION_SPR, id:10, max_frames:12 }
 		attack { pack:PACK_EXPANSION_SPR, id:11, max_frames:6 }
-		idle { pack:PACK_EXPANSION_SPR, id:12, max_frames:6 }
-		eating { pack:PACK_EXPANSION_SPR, id:14, max_frames:6 }
 		death { pack:PACK_EXPANSION_SPR, id:13, max_frames:6, loop:false }
+		idle { pack:PACK_EXPANSION_SPR, id:14, max_frames:6 }
+		choose { pack:PACK_EXPANSION_SPR, id:10, max_frames:1 }
+		return { pack:PACK_EXPANSION_SPR, id:10, max_frames:1 }
+		look { pack:PACK_EXPANSION_SPR, id:14, max_frames:1 }
+		spawned { pack:PACK_EXPANSION_SPR, id:10, max_frames:8 }
 		big_image { pack:PACK_EXPANSION, id:1, offset:2 }
 	}
 
-	category: figure_category_animal
-	max_damage: 80
-	attack_value: 5
+	category: figure_category_hostile
+	is_predator: true
+	max_damage: 7
+	attack_value: 4
+	defense_value: 0
+	missile_defense_value: 0
 	terrain_usage: TERRAIN_USAGE_ANIMAL
-	max_hungry: 30
-	max_hunting_distance: 10
-	chase_speed_mult: 2
+	speed_mult: 1
+	move_cycle: [1]
+	prowl_cycle: [2]
+
+	reset_frame_on_walk: true
+	death_has_directions: false
+
+	rest_base_ticks: 0
+	rest_random_ticks: 100
+	arrival_rest_base_ticks: 0
+	no_tile_wait_ticks: 0
+	no_tile_wait_random_ticks: 100
+	dying_ticks: 500
+	chase_ticks_per_ring: 18
+	hunt_delay: 20
+	hunt_radius: 6
+	forbidden_prey: [
+		FIGURE_FISHING_BOAT, FIGURE_TRADE_SHIP, FIGURE_FERRY_BOAT,
+		FIGURE_TRANSPORT_SHIP, FIGURE_WARSHIP, FIGURE_SHIPWRECK,
+		FIGURE_ENEMY_TRANSPORT, FIGURE_ENEMY_WARSHIP,
+		FIGURE_ENEMY_EGYPTIAN_TRANSPORT_SHIP, FIGURE_ENEMY_EGYPTIAN_WARSHIP
+	]
+	attack_sound: "Wavs/scorpion_r.wav"
+	die_sound: "Wavs/scorpiondie.wav"
+
+	herd_spawn_delay: 20
+	herd_move_delay: 20
+	herd_roam_radius: 7
+	herd_spawn_only_when_present: false
+	herd_spawn_wait_range: 25
+	herd_spawn_wait_factor: 4
+	herd_new_animal_wait: 10
+	herd_allowed_terrain: []
+	herd_blocked_terrain: [
+		TERRAIN_ROCK, TERRAIN_GARDEN, TERRAIN_RUBBLE, TERRAIN_WALL, TERRAIN_GATEHOUSE, TERRAIN_DIKE,
+		TERRAIN_ORE, TERRAIN_UNK_02, TERRAIN_ROCK_NEAR_MONUMENT
+	]
+	herd_special_terrain: [
+		TERRAIN_TREE, TERRAIN_ROCK, TERRAIN_WATER, TERRAIN_SHRUB, TERRAIN_GARDEN, TERRAIN_ROAD,
+		TERRAIN_ELEVATION, TERRAIN_RUBBLE, TERRAIN_FLOODPLAIN, TERRAIN_MARSHLAND, TERRAIN_ORE,
+		TERRAIN_UNK_02, TERRAIN_DUNE, TERRAIN_DEEPWATER, TERRAIN_ROCK_NEAR_MONUMENT
+	]
+
+	raid_hunt_distance: 40
+	raid_chase_speed_mult: 2
+	raid_non_targets: [
+		FIGURE_ASP, FIGURE_SCORPION, FIGURE_LION, FIGURE_HYENA, FIGURE_HIPPO, FIGURE_CROCODILE,
+		FIGURE_ANTELOPE, FIGURE_OSTRICH, FIGURE_FROG, FIGURE_LOCUST, FIGURE_BIRDS, FIGURE_EXPLOSION,
+		FIGURE_STANDARD_BEARER, FIGURE_TRADE_SHIP, FIGURE_FISHING_BOAT, FIGURE_MAP_FLAG, FIGURE_FLOTSAM,
+		FIGURE_BUBBLES, FIGURE_SHIPWRECK, FIGURE_INDIGENOUS_NATIVE, FIGURE_TOWER_SENTRY, FIGURE_NATIVE_TRADER,
+		FIGURE_ARROW, FIGURE_JAVELIN, FIGURE_BOLT, FIGURE_BALLISTA, FIGURE_CREATURE
+	]
 }
 
 figure_antelope {

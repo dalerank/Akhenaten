@@ -184,7 +184,7 @@ static int __test_scorpion_setup_curse_raid(int fid, int days) {
     if (!f || !f->is_alive() || f->type != FIGURE_SCORPION) {
         return 0;
     }
-    figure_scorpion_setup_curse_raid(*f, days);
+    figure_predator_setup_curse_raid(*f, days);
     return 1;
 }
 ANK_FUNCTION_2(__test_scorpion_setup_curse_raid);
@@ -194,7 +194,8 @@ static int __test_scorpion_is_curse_raid(int fid) {
     if (!f || f->type != FIGURE_SCORPION) {
         return 0;
     }
-    return figure_scorpion(f).is_curse_raid() ? 1 : 0;
+    auto scorpion = f->dcast<figure_predator>();
+    return (scorpion && scorpion->is_curse_raid()) ? 1 : 0;
 }
 ANK_FUNCTION_1(__test_scorpion_is_curse_raid);
 

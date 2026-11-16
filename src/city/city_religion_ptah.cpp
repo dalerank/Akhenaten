@@ -7,7 +7,7 @@
 #include "core/calc.h"
 #include "core/random.h"
 #include "figure/figure.h"
-#include "figuretype/animal_scorpion.h"
+#include "figuretype/animal_predator.h"
 #include "figuretype/figure_frog.h"
 #include "game/game_config.h"
 #include "game/game_events.h"
@@ -85,7 +85,7 @@ bool god_ptah_t::perform_scorpions() {
         if (!f || !f->is_valid()) {
             continue;
         }
-        figure_scorpion_setup_curse_raid(*f, days);
+        figure_predator_setup_curse_raid(*f, days);
         spawned++;
     }
 
