@@ -51,16 +51,16 @@ function saveload_midphase(type, phase, save_name, marker_prefix) {
         return false
     }
 
-    if (!__game_write_savegame(save_name)) {
+    if (!__test_save_memory(save_name)) {
         __log_marker(marker_prefix + '_saveload_skipped')
         return true
     }
-    if (!__game_load_savegame(save_name)) {
-        __game_delete_savegame(save_name)
+    if (!__test_load_memory(save_name)) {
+        __test_drop_memory_save(save_name)
         __log_marker(marker_prefix + '_saveload_skipped')
         return true
     }
-    __game_delete_savegame(save_name)
+    __test_drop_memory_save(save_name)
 
     var found = find_main(type)
     var ph = found ? __test_monument_phase(found) : -999

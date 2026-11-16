@@ -94,8 +94,8 @@ function run_test() {
     }
     var work6 = __test_sphinx_spot_work(bid, 6)
     var save_name = 'test_43_sphinx_spots.svx'
-    if (__game_write_savegame(save_name) && __game_load_savegame(save_name)) {
-        __game_delete_savegame(save_name)
+    if (__test_save_memory(save_name) && __test_load_memory(save_name)) {
+        __test_drop_memory_save(save_name)
         if (__building_type(bid) != BUILDING_SPHINX || __test_sphinx_stage(bid) != 5
             || __test_sphinx_spot_work(bid, 6) != work6 || __test_sphinx_spot_work(bid, 3) != 0) {
             return t43_fail('after load: stage ' + __test_sphinx_stage(bid) + ' spot6 ' + __test_sphinx_spot_work(bid, 6)

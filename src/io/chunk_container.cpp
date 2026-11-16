@@ -192,7 +192,19 @@ svx::e_scan_result svx::scan(vfs::reader reader, int offset, scan_header &hdr_ou
     return SCAN_OK;
 }
 
-bool svx::write_file_header(FILE *fp, uint32_t save_data_version, uint32_t section_count, pcstr debug_path) {
+bool svx::byte_sink::write(const void* data, size_t size) {
+    if (size == 0) {
+        return true;
+    }
+    if (bytes) {
+        const uint8_t* p = (const uint8_t*)data;
+        bytes->insert(bytes->end(), p, p + size);
+        return true;
+    }
+    return fp && fwrite(data, 1, size, fp) == size;
+}
+
+bool svx::write_file_header(byte_sink& out, uint32_t save_data_version, uint32_t section_count, pcstr debug_path) {
     file_header hdr = {};
     memcpy(hdr.magic, MAGIC, sizeof(hdr.magic));
     hdr.container_rev = CONTAINER_REV;
@@ -201,15 +213,15 @@ bool svx::write_file_header(FILE *fp, uint32_t save_data_version, uint32_t secti
     hdr.section_header_size = (uint16_t)sizeof(section_header);
     hdr.epilog_size = (uint16_t)sizeof(section_epilog);
 
-    if (fwrite(&hdr, sizeof(hdr), 1, fp) != 1) {
+    if (!out.write(&hdr, sizeof(hdr))) {
         logs::error("Unable to write file [%s], container header write failed.", debug_path);
         return false;
     }
     return true;
 }
 
-bool svx::write_section(FILE *fp, pcstr name, const prefixed_payload &payload,
-                        uint32_t raw_size, uint32_t crc, int index, pcstr debug_path) {
+bool svx::write_section(byte_sink& out, pcstr name, const prefixed_payload& payload, uint32_t raw_size, uint32_t crc,
+  int index, pcstr debug_path) {
     section_header sh = {};
     const size_t name_len = name ? ::strlen(name) : 0;
     if (name_len > 0) {
@@ -224,10 +236,8 @@ bool svx::write_section(FILE *fp, pcstr name, const prefixed_payload &payload,
     ep.mark_end = EPILOG_MARK;
     memcpy(ep.name, sh.name, NAME_LEN);
 
-    const bool ok = (fwrite(&sh, sizeof(sh), 1, fp) == 1)
-                    && (fwrite(&payload.prefix, sizeof(payload.prefix), 1, fp) == 1)
-                    && (payload.body_size == 0 || fwrite(payload.body, 1, payload.body_size, fp) == payload.body_size)
-                    && (fwrite(&ep, sizeof(ep), 1, fp) == 1);
+    const bool ok = out.write(&sh, sizeof(sh)) && out.write(&payload.prefix, sizeof(payload.prefix))
+                    && out.write(payload.body, payload.body_size) && out.write(&ep, sizeof(ep));
 
     if (!ok) {
         logs::error("Unable to write file [%s], write failure at section %d (%s).",

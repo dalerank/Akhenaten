@@ -66,16 +66,16 @@ function run_test() {
 
     var before = test318_states(heads)
     var save_name = 'test_318_monument_parts.svx'
-    if (!__game_write_savegame(save_name) || !__game_load_savegame(save_name)) {
-        __game_delete_savegame(save_name)
+    if (!__test_save_memory(save_name) || !__test_load_memory(save_name)) {
+        __test_drop_memory_save(save_name)
         test318_fail('save/load failed')
         __test_signal_ready()
         return
     }
     var after = test318_states(heads)
     // Writes again after the load so an overflow on write lands in this test's log.
-    __game_write_savegame(save_name)
-    __game_delete_savegame(save_name)
+    __test_save_memory(save_name)
+    __test_drop_memory_save(save_name)
 
     var count = 0
     var bad = []

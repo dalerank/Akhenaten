@@ -6,6 +6,7 @@
 
 #include <cstdint>
 #include <cstdio>
+#include <vector>
 
 // Sectioned container for .svx savegames.
 //
@@ -79,8 +80,15 @@ public:
     static void compress_prefixed(const void *raw, uint32_t raw_size, bool try_compress,
                                   void *scratch, int scratch_cap, prefixed_payload *out);
 
-    static bool write_file_header(FILE *fp, uint32_t save_data_version, uint32_t section_count, pcstr debug_path);
+    struct byte_sink {
+        FILE* fp = nullptr;
+        std::vector<uint8_t>* bytes = nullptr;
 
-    static bool write_section(FILE *fp, pcstr name, const prefixed_payload &payload,
-                              uint32_t raw_size, uint32_t crc, int index, pcstr debug_path);
+        bool write(const void* data, size_t size);
+    };
+
+    static bool write_file_header(byte_sink& out, uint32_t save_data_version, uint32_t section_count, pcstr debug_path);
+
+    static bool write_section(byte_sink& out, pcstr name, const prefixed_payload& payload, uint32_t raw_size,
+      uint32_t crc, int index, pcstr debug_path);
 };

@@ -219,7 +219,9 @@ bool ChunkSerializer::serialize(pcstr filename, int offset, e_file_format format
     }
 
     if (file_sectioned) {
-        if (!serialize_sectioned(fp, fs_path.c_str())) {
+        svx::byte_sink sink;
+        sink.fp = fp;
+        if (!serialize_sectioned(sink, fs_path.c_str())) {
             abort_write();
             return false;
         }
@@ -274,6 +276,39 @@ void ChunkSerializer::snapshot_chunks(chunk_snapshots& out) const {
     }
 }
 
+bool ChunkSerializer::serialize_to_bytes(const int version,
+  void (*init_schema)(e_file_format _format, const int _version), std::vector<uint8_t>& out) {
+    out.clear();
+    clear();
+    file_path = "memory";
+    file_offset = 0;
+    file_format = FILE_FORMAT_SAVE_FILE_EXT;
+    file_version = version;
+    file_sectioned = true;
+
+    if (init_schema == nullptr) {
+        logs::error("Unable to write state to memory, provided schema is invalid.");
+        clear();
+        return false;
+    }
+
+    init_schema(file_format, file_version);
+    for (int i = 0; i < num_chunks(); ++i) {
+        if (file_chunks.at(i).VALID) {
+            file_chunks.at(i).iob->write();
+        }
+    }
+
+    svx::byte_sink sink;
+    sink.bytes = &out;
+    if (!serialize_sectioned(sink, "memory")) {
+        out.clear();
+        clear();
+        return false;
+    }
+    return true;
+}
+
 bool ChunkSerializer::write_to_memory(e_file_format format, const int version,
   void (*init_schema)(e_file_format _format, const int _version), chunk_snapshots& out) {
     out.clear();
@@ -325,23 +360,23 @@ bool ChunkSerializer::build_svx_section_payload(const file_chunk_t* chunk, int i
     return true;
 }
 
-bool ChunkSerializer::write_svx_section(FILE* fp, const file_chunk_t* chunk, int index, pcstr debug_path) {
+bool ChunkSerializer::write_svx_section(svx::byte_sink& out, const file_chunk_t* chunk, int index, pcstr debug_path) {
     svx::prefixed_payload payload;
     uint32_t raw_size = 0;
     uint32_t crc = 0;
     if (!build_svx_section_payload(chunk, index, debug_path, &payload, &raw_size, &crc)) {
         return false;
     }
-    return svx::write_section(fp, chunk->name, payload, raw_size, crc, index, debug_path);
+    return svx::write_section(out, chunk->name, payload, raw_size, crc, index, debug_path);
 }
 
-bool ChunkSerializer::serialize_sectioned(FILE* fp, pcstr debug_path) {
-    if (!svx::write_file_header(fp, (uint32_t)file_version, (uint32_t)num_chunks(), debug_path)) {
+bool ChunkSerializer::serialize_sectioned(svx::byte_sink& out, pcstr debug_path) {
+    if (!svx::write_file_header(out, (uint32_t)file_version, (uint32_t)num_chunks(), debug_path)) {
         return false;
     }
 
     for (int i = 0; i < num_chunks(); i++) {
-        if (!write_svx_section(fp, &file_chunks.at(i), i, debug_path)) {
+        if (!write_svx_section(out, &file_chunks.at(i), i, debug_path)) {
             return false;
         }
     }

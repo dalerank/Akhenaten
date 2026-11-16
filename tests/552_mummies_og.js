@@ -122,12 +122,12 @@ function run_test() {
     __log_marker('mummies_cap_ok')
 
     var save_name = 'test_552_mummies.svx'
-    if (__game_write_savegame(save_name) && __game_load_savegame(save_name) && __test_plagues_mummies_max() == 2) {
+    if (__test_save_memory(save_name) && __test_load_memory(save_name) && __test_plagues_mummies_max() == 2) {
         __log_marker('mummies_saveload_ok')
     } else {
         test552_fail('saveload: max=' + __test_plagues_mummies_max())
     }
-    __game_delete_savegame(save_name)
+    __test_drop_memory_save(save_name)
     __test_signal_ready()
 }
 

@@ -304,13 +304,13 @@ function run_test() {
     __test_pump_frames(3)
     var days_sl = __invasion_auto_resolve_head_days_left()
     var save_name = 'test_76_auto_resolve.svx'
-    if (!__game_write_savegame(save_name)) {
+    if (!__test_save_memory(save_name)) {
         __log_marker('auto_resolve_saveload_skipped')
-    } else if (!__game_load_savegame(save_name)) {
-        __game_delete_savegame(save_name)
+    } else if (!__test_load_memory(save_name)) {
+        __test_drop_memory_save(save_name)
         __log_marker('auto_resolve_saveload_skipped')
     } else {
-        __game_delete_savegame(save_name)
+        __test_drop_memory_save(save_name)
         game_features.set('gameplay_enhanced_auto_resolve_invasions', true)
         if (__invasion_auto_resolve_pending_count() >= 1
                 && __invasion_auto_resolve_is_seq_frozen(seq_sl) == 1

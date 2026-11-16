@@ -89,8 +89,8 @@ function run_test() {
     }
 
     var save_name = 'test_296_sun_temple_spots.svx'
-    if (__game_write_savegame(save_name) && __game_load_savegame(save_name)) {
-        __game_delete_savegame(save_name)
+    if (__test_save_memory(save_name) && __test_load_memory(save_name)) {
+        __test_drop_memory_save(save_name)
         if (__building_type(bid) != BUILDING_SUN_TEMPLE
             || __test_sun_temple_stage(bid) != 0
             || __test_sun_temple_spot_work(bid, 0) != work0

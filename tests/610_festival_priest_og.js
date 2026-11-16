@@ -202,12 +202,12 @@ function run_test() {
 
     var trips = __test_festival_priest_trips(fid)
     var save_name = 'test_610_festival_priest.svx'
-    if (!__game_write_savegame(save_name) || !__game_load_savegame(save_name)) {
+    if (!__test_save_memory(save_name) || !__test_load_memory(save_name)) {
         t610_fail('save/load')
         __test_signal_ready()
         return
     }
-    __game_delete_savegame(save_name)
+    __test_drop_memory_save(save_name)
     if (!__figure_is_valid(fid) || __test_festival_priest_trips(fid) != trips
         || __test_festival_priest_look(fid) != FIGURE_PRIEST || __figure_get_action_state(fid) != ACTION_ARRIVED) {
         t610_fail('after load trips ' + __test_festival_priest_trips(fid) + ' want ' + trips + ' look '

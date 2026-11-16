@@ -25,18 +25,18 @@ function run_test() {
     __log_marker('invasion_warning_seed_ok')
 
     var save_name = 'test_169_invasion_warnings.svx'
-    if (!__game_write_savegame(save_name)) {
+    if (!__test_save_memory(save_name)) {
         __log_info_native('[test:169] write_savegame failed')
         __test_signal_ready()
         return
     }
-    if (!__game_load_savegame(save_name)) {
-        __game_delete_savegame(save_name)
+    if (!__test_load_memory(save_name)) {
+        __test_drop_memory_save(save_name)
         __log_info_native('[test:169] load_savegame failed')
         __test_signal_ready()
         return
     }
-    __game_delete_savegame(save_name)
+    __test_drop_memory_save(save_name)
 
     if (__test_invasion_warning_months_to_go(idx) !== 17
         || __test_invasion_warning_handled(idx) !== 1

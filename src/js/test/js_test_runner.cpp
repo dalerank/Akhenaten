@@ -47,7 +47,9 @@
 #include <cstdlib>
 #include <cstring>
 #include <fstream>
+#include <map>
 #include <string>
+#include <vector>
 
 // SDL_main.h does `#define main SDL_main`; undo it here so building::main() etc.
 // are not macro-mangled (this TU is not the program entry point).
@@ -126,6 +128,34 @@ bool test_log_contains(pcstr marker) {
 
     const size_t marker_len = std::strlen(marker);
     return file_contains_marker(logs::output_path(), marker, marker_len, g_test_log_start);
+}
+
+std::vector<std::string> test_log_lines_with(std::initializer_list<const char*> needles, int max_lines) {
+    logs::flush();
+    std::vector<std::string> lines;
+    pcstr path = logs::output_path();
+    std::ifstream in(path, std::ios::binary);
+    if (!in) {
+        return lines;
+    }
+    std::streamoff start = g_test_log_start;
+    if (start > log_file_size(path)) {
+        start = 0;
+    }
+    in.seekg(start);
+    std::string line;
+    while ((int)lines.size() < max_lines && std::getline(in, line)) {
+        if (!line.empty() && line.back() == '\r') {
+            line.pop_back();
+        }
+        for (const char* needle : needles) {
+            if (line.find(needle) != std::string::npos) {
+                lines.push_back(line);
+                break;
+            }
+        }
+    }
+    return lines;
 }
 
 static bool __test_find_inlog(pcstr marker) {
@@ -243,7 +273,10 @@ bool __test_start_city_session(pcstr map_path) {
 }
 ANK_FUNCTION_1(__test_start_city_session);
 
+void test_drop_memory_saves();
+
 void test_reset_session_between_tests() {
+    test_drop_memory_saves();
     if (editor_is_active()) {
         editor_set_active(0);
     }
@@ -713,20 +746,29 @@ static std::string chunk_snapshots_diff(const chunk_snapshots& expected, const c
 }
 
 // Our save -> load -> our save again; returns the chunks that changed, "" when none, "error:..." on failure.
-static std::string save_roundtrip(pcstr filename) {
+static std::string save_roundtrip(pcstr filename, bool via_file) {
     chunk_snapshots before;
     if (!g_chunk_io.write_to_memory(FILE_FORMAT_SAVE_FILE_EXT, save_data_version(), file_schema, before)) {
         return "error:write_before";
     }
 
-    if (!GamestateIO::write_savegame(filename)) {
-        return "error:write_file";
-    }
-
-    const bool loaded = GamestateIO::load_savegame(filename);
-    GamestateIO::delete_savegame(filename);
-    if (!loaded) {
-        return "error:load_file";
+    if (via_file) {
+        if (!GamestateIO::write_savegame(filename)) {
+            return "error:write_file";
+        }
+        const bool loaded = GamestateIO::load_savegame(filename);
+        GamestateIO::delete_savegame(filename);
+        if (!loaded) {
+            return "error:load_file";
+        }
+    } else {
+        std::vector<uint8_t> bytes;
+        if (!GamestateIO::write_savegame_memory(bytes)) {
+            return "error:write_memory";
+        }
+        if (!GamestateIO::load_savegame_memory(bytes, filename)) {
+            return "error:load_memory";
+        }
     }
 
     chunk_snapshots after;
@@ -755,10 +797,48 @@ ANK_FUNCTION(__test_mods_apply_saved);
 
 static pcstr __test_save_roundtrip(pcstr filename) {
     static std::string result;
-    result = save_roundtrip(filename);
+    result = save_roundtrip(filename, false);
     return result.c_str();
 }
 ANK_FUNCTION_1(__test_save_roundtrip);
+
+static pcstr __test_save_roundtrip_file(pcstr filename) {
+    static std::string result;
+    result = save_roundtrip(filename, true);
+    return result.c_str();
+}
+ANK_FUNCTION_1(__test_save_roundtrip_file);
+
+static std::map<std::string, std::vector<uint8_t>> g_memory_saves;
+
+void test_drop_memory_saves() {
+    g_memory_saves.clear();
+}
+
+static bool __test_save_memory(pcstr name) {
+    std::vector<uint8_t> bytes;
+    if (!GamestateIO::write_savegame_memory(bytes)) {
+        return false;
+    }
+    g_memory_saves[name ? name : ""] = std::move(bytes);
+    return true;
+}
+ANK_FUNCTION_1(__test_save_memory);
+
+static bool __test_load_memory(pcstr name) {
+    const auto it = g_memory_saves.find(name ? name : "");
+    if (it == g_memory_saves.end()) {
+        logs::error("[test] no memory save %s", name ? name : "");
+        return false;
+    }
+    return GamestateIO::load_savegame_memory(it->second, name);
+}
+ANK_FUNCTION_1(__test_load_memory);
+
+static bool __test_drop_memory_save(pcstr name) {
+    return g_memory_saves.erase(name ? name : "") > 0;
+}
+ANK_FUNCTION_1(__test_drop_memory_save);
 
 // Some simulation code still draws from libc rand() (figure names, houses, festivals); a test that
 // compares two runs must start both from the same libc state.

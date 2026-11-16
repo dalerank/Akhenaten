@@ -199,13 +199,13 @@ function run_test() {
     __test_pump_frames(2)
     if (__test_monument_phase(bid) != 4) {
         __log_marker('large_mastaba_saveload_phase_fail')
-    } else if (!__game_write_savegame('test_128_large_mastaba_mid.svx')) {
+    } else if (!__test_save_memory('test_128_large_mastaba_mid.svx')) {
         __log_marker('large_mastaba_saveload_skipped')
-    } else if (!__game_load_savegame('test_128_large_mastaba_mid.svx')) {
-        __game_delete_savegame('test_128_large_mastaba_mid.svx')
+    } else if (!__test_load_memory('test_128_large_mastaba_mid.svx')) {
+        __test_drop_memory_save('test_128_large_mastaba_mid.svx')
         __log_marker('large_mastaba_saveload_skipped')
     } else {
-        __game_delete_savegame('test_128_large_mastaba_mid.svx')
+        __test_drop_memory_save('test_128_large_mastaba_mid.svx')
         var loaded = find_large_main()
         var ph = loaded ? __test_monument_phase(loaded) : -999
         var loaded_parts = loaded ? count_parts_from(loaded).length : 0

@@ -456,16 +456,16 @@ function run_test() {
     }
 
     var save_name = 'test_84_funeral_midwalk.svx'
-    if (!__game_write_savegame(save_name)) {
+    if (!__test_save_memory(save_name)) {
         __log_info_native('[test:84] write_savegame failed — saveload skipped')
         __log_marker('funeral_midwalk_saveload_skipped')
         __test84_saveload_skipped = true
         __test_signal_ready()
         return
     }
-    if (!__game_load_savegame(save_name)) {
+    if (!__test_load_memory(save_name)) {
         __log_info_native('[test:84] load_savegame failed — saveload skipped')
-        __game_delete_savegame(save_name)
+        __test_drop_memory_save(save_name)
         __log_marker('funeral_midwalk_saveload_skipped')
         __test84_saveload_skipped = true
         __test_signal_ready()
@@ -474,7 +474,7 @@ function run_test() {
 
     if (__test_monument_funeral_done(pbid) != 0) {
         __log_info_native('[test:84] funeral_done flipped after mid-walk load')
-        __game_delete_savegame(save_name)
+        __test_drop_memory_save(save_name)
         __test_signal_ready()
         return
     }
@@ -491,7 +491,7 @@ function run_test() {
         __test_figure_action_perform(loaded)
         if (__test_monument_funeral_done(pbid) != 1) {
             __log_info_native('[test:84] restored walker arrive did not set funeral_done')
-            __game_delete_savegame(save_name)
+            __test_drop_memory_save(save_name)
             __test_signal_ready()
             return
         }
@@ -501,15 +501,15 @@ function run_test() {
     }
     if (__test_monument_funeral_done(pbid) != 1) {
         __log_info_native('[test:84] could not set funeral_done after mid-walk load')
-        __game_delete_savegame(save_name)
+        __test_drop_memory_save(save_name)
         __test_signal_ready()
         return
     }
 
     // Persist funeral_done across a second save/load; no re-spawn.
-    if (!__game_write_savegame(save_name) || !__game_load_savegame(save_name)) {
+    if (!__test_save_memory(save_name) || !__test_load_memory(save_name)) {
         __log_info_native('[test:84] second saveload failed — saveload skipped')
-        __game_delete_savegame(save_name)
+        __test_drop_memory_save(save_name)
         __log_marker('funeral_midwalk_saveload_skipped')
         __test84_saveload_skipped = true
         __test_signal_ready()
@@ -517,19 +517,19 @@ function run_test() {
     }
     if (__test_monument_funeral_done(pbid) != 1) {
         __log_info_native('[test:84] funeral_done lost after second load')
-        __game_delete_savegame(save_name)
+        __test_drop_memory_save(save_name)
         __test_signal_ready()
         return
     }
     again = __test_funeral_try_spawn(1)
     if (again) {
         __log_info_native('[test:84] should not re-spawn after saved funeral_done, got ' + again)
-        __game_delete_savegame(save_name)
+        __test_drop_memory_save(save_name)
         __test_signal_ready()
         return
     }
 
-    __game_delete_savegame(save_name)
+    __test_drop_memory_save(save_name)
     __log_marker('funeral_midwalk_saveload_ok')
     __test84_saveload_ok = true
 

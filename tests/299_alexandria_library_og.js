@@ -125,15 +125,15 @@ function run_test() {
 
     // Save/load while under construction — phase must survive (spots rebuild from stage).
     var save_name = 'test_299_alexandria_library.svx'
-    if (!__game_write_savegame(save_name) || !__game_load_savegame(save_name)) {
-        __game_delete_savegame(save_name)
+    if (!__test_save_memory(save_name) || !__test_load_memory(save_name)) {
+        __test_drop_memory_save(save_name)
         return t299_fail('saveload write/load failed')
     }
     __test_process_events()
     __test_pump_frames(2)
     var stage_sl = __test_alexandria_library_stage(bid)
     var parts_sl = __test_alexandria_library_part_count(bid)
-    __game_delete_savegame(save_name)
+    __test_drop_memory_save(save_name)
     if (parts_sl != 25 || stage_sl != 3) {
         return t299_fail('after load: parts=' + parts_sl + ' stage=' + stage_sl + ' (want 25 / 3)')
     }

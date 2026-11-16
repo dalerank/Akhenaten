@@ -129,8 +129,8 @@ function run_test() {
     __log_marker('t119_stage_needs_all_spots')
 
     var save_name = 'test_119_caesareum_spots.svx'
-    if (__game_write_savegame(save_name) && __game_load_savegame(save_name)) {
-        __game_delete_savegame(save_name)
+    if (__test_save_memory(save_name) && __test_load_memory(save_name)) {
+        __test_drop_memory_save(save_name)
         if (__building_type(bid) != BUILDING_CAESAREUM || __test_caesareum_stage(bid) != 2
             || __test_caesareum_spot_work(bid, 3) != work3 || __test_caesareum_spot_work(bid, 2) != 0) {
             return t119_fail('after load: stage ' + __test_caesareum_stage(bid) + ' spot3 ' + __test_caesareum_spot_work(bid, 3))

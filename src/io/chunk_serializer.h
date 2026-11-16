@@ -73,12 +73,12 @@ private:
     bool load_svx_chunk_payload(vfs::reader reader, file_chunk_t* chunk, const svx::section_info& info, pcstr debug_path);
     bool build_svx_section_payload(const file_chunk_t* chunk, int index, pcstr debug_path,
                                    svx::prefixed_payload* out, uint32_t* out_raw_size, uint32_t* out_crc);
-    bool write_svx_section(FILE* fp, const file_chunk_t* chunk, int index, pcstr debug_path);
+    bool write_svx_section(svx::byte_sink& out, const file_chunk_t* chunk, int index, pcstr debug_path);
     const svx::section_info* find_svx_section(const svx::section_list& sections, pcstr name, int* out_matches);
     void warn_unknown_svx_sections(const svx::section_list& sections);
     bool apply_svx_chunk_state(file_chunk_t* chunk);
 
-    bool serialize_sectioned(FILE* fp, pcstr debug_path);
+    bool serialize_sectioned(svx::byte_sink& out, pcstr debug_path);
     bool unserialize_sectioned(vfs::reader reader, void (*init_schema)(e_file_format _format, const int _version));
     bool unserialize_legacy(vfs::reader reader, const int (*determine_file_version)(pcstr _filename, int _offset),
                             void (*init_schema)(e_file_format _format, const int _version));
@@ -107,6 +107,8 @@ public:
     // raw (uncompressed) bytes of every VALID chunk in the current cache
     void snapshot_chunks(chunk_snapshots& out) const;
     // serialize live game state through a schema into the chunk cache and copy it out, no file I/O
+    bool serialize_to_bytes(const int version, void (*init_schema)(e_file_format _format, const int _version),
+      std::vector<uint8_t>& out);
     bool write_to_memory(e_file_format format, const int version,
       void (*init_schema)(e_file_format _format, const int _version), chunk_snapshots& out);
 };

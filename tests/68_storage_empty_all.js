@@ -132,16 +132,16 @@ function run_test() {
     }
 
     var save_name = 'test_68_empty_all.svx'
-    if (!__game_write_savegame(save_name)) {
+    if (!__test_save_memory(save_name)) {
         __log_info_native('[test:68] write_savegame failed — saveload skipped')
         __log_marker('empty_all_saveload_skipped')
         __test68_saveload_skipped = true
         __test_signal_ready()
         return
     }
-    if (!__game_load_savegame(save_name)) {
+    if (!__test_load_memory(save_name)) {
         __log_info_native('[test:68] load_savegame failed — saveload skipped')
-        __game_delete_savegame(save_name)
+        __test_drop_memory_save(save_name)
         __log_marker('empty_all_saveload_skipped')
         __test68_saveload_skipped = true
         __test_signal_ready()
@@ -151,7 +151,7 @@ function run_test() {
     yard = city.get_storage_yard(bid)
     if (!yard || !yard.is_empty_all()) {
         __log_info_native('[test:68] after load missing empty_all flag')
-        __game_delete_savegame(save_name)
+        __test_drop_memory_save(save_name)
         __test_signal_ready()
         return
     }
@@ -162,12 +162,12 @@ function run_test() {
         || yard.resource_state(res_b) != STORAGE_STATE_REFUSE) {
         __log_info_native('[test:68] STOP after saveload failed flag=' + yard.is_empty_all()
             + ' A=' + yard.resource_state(res_a) + ' B=' + yard.resource_state(res_b))
-        __game_delete_savegame(save_name)
+        __test_drop_memory_save(save_name)
         __test_signal_ready()
         return
     }
 
-    __game_delete_savegame(save_name)
+    __test_drop_memory_save(save_name)
     __log_marker('empty_all_saveload_ok')
     __test68_saveload_ok = true
 

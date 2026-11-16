@@ -11,16 +11,16 @@ function test184_fail(msg) {
 }
 
 function test184_roundtrip(save_name) {
-    if (!__game_write_savegame(save_name)) {
+    if (!__test_save_memory(save_name)) {
         test184_fail('write_savegame failed')
         return false
     }
-    if (!__game_load_savegame(save_name)) {
-        __game_delete_savegame(save_name)
+    if (!__test_load_memory(save_name)) {
+        __test_drop_memory_save(save_name)
         test184_fail('load_savegame failed')
         return false
     }
-    __game_delete_savegame(save_name)
+    __test_drop_memory_save(save_name)
     return true
 }
 

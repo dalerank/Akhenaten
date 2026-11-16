@@ -94,7 +94,7 @@ function run_test() {
 
     var save_name = 'test_551_frogs.svx'
     var countdown = __test_plagues_frogs_countdown()
-    if (__game_write_savegame(save_name) && __game_load_savegame(save_name)) {
+    if (__test_save_memory(save_name) && __test_load_memory(save_name)) {
         if (__test_plagues_frogs_countdown() == countdown && countdown > 0) {
             __log_marker('frogs_saveload_ok')
         } else {
@@ -103,7 +103,7 @@ function run_test() {
     } else {
         test551_fail('save/load failed')
     }
-    __game_delete_savegame(save_name)
+    __test_drop_memory_save(save_name)
     __test_signal_ready()
 }
 

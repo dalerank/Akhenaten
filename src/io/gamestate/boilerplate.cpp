@@ -306,6 +306,23 @@ bool GamestateIO::load_og_savegame(pcstr full_path, bool start_immediately) {
     return true;
 }
 
+static bool load_savegame_reader(vfs::reader savegame, e_file_format file_format, pcstr name, bool start_immediately) {
+    GamestateLoadDetail::pre_load();
+    if (!g_chunk_io.unserialize(savegame, 0, file_format, GamestateLoadDetail::read_file_version, file_schema)) {
+        return false;
+    }
+
+    game.session.last_loaded = e_session_save;
+    game.session.last_loaded_mission = name;
+    GamestateLoadDetail::post_load();
+
+    if (start_immediately) {
+        GamestateIO::start_loaded_file();
+    }
+
+    return true;
+}
+
 bool GamestateIO::load_savegame(pcstr filename_short, bool start_immediately) {
     bstring256 full = fullpath_saves(filename_short).resolve();
 
@@ -318,24 +335,23 @@ bool GamestateIO::load_savegame(pcstr filename_short, bool start_immediately) {
         return load_og_savegame(full.c_str(), start_immediately);
     }
 
-    // read file
-    GamestateLoadDetail::pre_load();
-    e_file_format file_format = get_format_from_file(filename_short);
-    auto savegame = vfs::file_open(full);
-    if (!g_chunk_io.unserialize(savegame, 0, file_format, GamestateLoadDetail::read_file_version, file_schema)) {
+    return load_savegame_reader(vfs::file_open(full), get_format_from_file(filename_short), filename_short,
+      start_immediately);
+}
+
+bool GamestateIO::write_savegame_memory(std::vector<uint8_t>& out) {
+    return g_chunk_io.serialize_to_bytes(save_data_version(), file_schema, out);
+}
+
+bool GamestateIO::load_savegame_memory(const std::vector<uint8_t>& bytes, pcstr name, bool start_immediately) {
+    if (bytes.empty()) {
+        logs::error("Load game: empty memory save %s", name);
         return false;
     }
-
-    game.session.last_loaded = e_session_save;
-    game.session.last_loaded_mission = filename_short;
-    GamestateLoadDetail::post_load();
-
-    // finish loading and start
-    if (start_immediately) {
-        start_loaded_file();
-    }
-
-    return true;
+    void* copy = malloc(bytes.size());
+    memcpy(copy, bytes.data(), bytes.size());
+    auto reader = std::make_shared<vfs::data_reader>("memory save", copy, (int)bytes.size());
+    return load_savegame_reader(reader, FILE_FORMAT_SAVE_FILE_EXT, name, start_immediately);
 }
 
 bool GamestateIO::load_map(pcstr filename, bool relative, bool start_immediately) {

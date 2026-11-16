@@ -165,8 +165,8 @@ function run_test() {
     __log_marker('t297_mason_subtile')
 
     var save_name = 'test_297_mausoleum.svx'
-    if (__game_write_savegame(save_name) && __game_load_savegame(save_name)) {
-        __game_delete_savegame(save_name)
+    if (__test_save_memory(save_name) && __test_load_memory(save_name)) {
+        __test_drop_memory_save(save_name)
         if (__building_type(bid) != BUILDING_MAUSOLEUM
             || __test_mausoleum_part_count(bid) != 116
             || __test_mausoleum_part_stage(first_ground) != 1

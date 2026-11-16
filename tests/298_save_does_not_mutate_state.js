@@ -26,7 +26,7 @@ function run_test() {
 
     var save_name = 'test_298_save_no_mutate.svx'
     for (var i = 0; i < 2; i++) {
-        if (!__game_write_savegame(save_name)) {
+        if (!__test_save_memory(save_name)) {
             __test_empire_trader_release(handle)
             return test298_fail('write_' + i)
         }
@@ -35,17 +35,17 @@ function run_test() {
         var draw_mode = __test_figure_draw_mode(fid)
         __log_info_native('[test:298] after save ' + i + ': bought=' + bought + ' sold=' + sold + ' draw_mode=' + draw_mode)
         if (bought != 150 || sold != 250) {
-            __game_delete_savegame(save_name)
+            __test_drop_memory_save(save_name)
             __test_empire_trader_release(handle)
             return test298_fail('trader_changed_' + i)
         }
         if (draw_mode != e_figure_draw_routing) {
-            __game_delete_savegame(save_name)
+            __test_drop_memory_save(save_name)
             __test_empire_trader_release(handle)
             return test298_fail('draw_mode_changed_' + i)
         }
     }
-    __game_delete_savegame(save_name)
+    __test_drop_memory_save(save_name)
     __test_empire_trader_release(handle)
 
     __log_marker('save_no_mutate_ok')

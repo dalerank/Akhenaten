@@ -178,17 +178,17 @@ function test550_laborer() {
 function test550_saveload() {
     __test_plagues_set_locusts_countdown(-1)
     var save_name = 'test_550_locusts.svx'
-    if (!__game_write_savegame(save_name)) {
+    if (!__test_save_memory(save_name)) {
         test550_fail('write savegame')
         return
     }
     __test_plagues_set_locusts_countdown(0)
-    if (!__game_load_savegame(save_name)) {
-        __game_delete_savegame(save_name)
+    if (!__test_load_memory(save_name)) {
+        __test_drop_memory_save(save_name)
         test550_fail('load savegame')
         return
     }
-    __game_delete_savegame(save_name)
+    __test_drop_memory_save(save_name)
     if (__test_plagues_locusts_countdown() != -1) {
         test550_fail('after load countdown=' + __test_plagues_locusts_countdown())
         return

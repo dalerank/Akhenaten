@@ -17,18 +17,18 @@ function run_test() {
     }
 
     var save_name = 'test_293_vars_overflow.svx'
-    if (!__game_write_savegame(save_name)) {
+    if (!__test_save_memory(save_name)) {
         __log_marker('vars_overflow_fail:write')
         __test_signal_ready()
         return
     }
-    if (!__game_load_savegame(save_name)) {
-        __game_delete_savegame(save_name)
+    if (!__test_load_memory(save_name)) {
+        __test_drop_memory_save(save_name)
         __log_marker('vars_overflow_fail:load')
         __test_signal_ready()
         return
     }
-    __game_delete_savegame(save_name)
+    __test_drop_memory_save(save_name)
 
     var vars = __scenario_vars()
     if (vars['aaa_overflow_00'] != filler) {

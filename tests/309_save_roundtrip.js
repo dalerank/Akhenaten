@@ -38,7 +38,7 @@ function run_test() {
     var by = 61
     __city_bookmark_set(1, { x: bx, y: by })
 
-    var diff = __test_save_roundtrip('test_309_roundtrip.svx')
+    var diff = __test_save_roundtrip_file('test_309_roundtrip.svx')
     var mark = __city_bookmark_get(1)
     if (diff !== '') {
         t309_fail('svx roundtrip: ' + diff)

@@ -115,11 +115,11 @@ function run_test() {
 
     var days_before = city.get_house(hid2).frog_infest_days
     var save_name = 'test_113_frog.svx'
-    if (!__game_write_savegame(save_name) || !__game_load_savegame(save_name)) {
-        __game_delete_savegame(save_name)
+    if (!__test_save_memory(save_name) || !__test_load_memory(save_name)) {
+        __test_drop_memory_save(save_name)
         return test113_fail('save/load failed')
     }
-    __game_delete_savegame(save_name)
+    __test_drop_memory_save(save_name)
     var h_sl = city.get_house(hid2)
     if (!h_sl || h_sl.frog_infest_days != days_before) {
         return test113_fail('after load frog_infest_days want ' + days_before + ', got ' + (h_sl ? h_sl.frog_infest_days : 'no-house'))

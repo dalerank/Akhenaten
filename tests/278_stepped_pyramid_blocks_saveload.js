@@ -37,13 +37,13 @@ function run_test() {
     }
 
     var save_name = 'test_278_stepped_blocks.svx'
-    if (!__game_write_savegame(save_name) || !__game_load_savegame(save_name)) {
-        __game_delete_savegame(save_name)
+    if (!__test_save_memory(save_name) || !__test_load_memory(save_name)) {
+        __test_drop_memory_save(save_name)
         __log_marker('stepped_blocks_saveload_skipped')
         __test_signal_ready()
         return
     }
-    __game_delete_savegame(save_name)
+    __test_drop_memory_save(save_name)
 
     __test_pump_frames(20)
     var after = __pyramid_remaining_blocks(bid)

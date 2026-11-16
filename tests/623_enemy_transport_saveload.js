@@ -42,14 +42,14 @@ function run_test() {
     }
 
     var save_name = 'test_623_enemy_transport.svx'
-    if (!__game_write_savegame(save_name)) {
+    if (!__test_save_memory(save_name)) {
         return test623_fail('write_savegame failed')
     }
-    if (!__game_load_savegame(save_name)) {
-        __game_delete_savegame(save_name)
+    if (!__test_load_memory(save_name)) {
+        __test_drop_memory_save(save_name)
         return test623_fail('load_savegame failed')
     }
-    __game_delete_savegame(save_name)
+    __test_drop_memory_save(save_name)
 
     var after = test623_state(ship)
     if (after != before) {

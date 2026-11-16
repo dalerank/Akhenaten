@@ -123,13 +123,13 @@ function run_test() {
     }
 
     var save_name = 'test_123_mudbrick_pyramid_medium_polish.svx'
-    if (!__game_write_savegame(save_name)) {
+    if (!__test_save_memory(save_name)) {
         __log_marker('mudbrick_pyramid_medium_saveload_skipped')
-    } else if (!__game_load_savegame(save_name)) {
-        __game_delete_savegame(save_name)
+    } else if (!__test_load_memory(save_name)) {
+        __test_drop_memory_save(save_name)
         __log_marker('mudbrick_pyramid_medium_saveload_skipped')
     } else {
-        __game_delete_savegame(save_name)
+        __test_drop_memory_save(save_name)
         var found = find_medium_mudbrick_pyramid_main()
         var ph = found ? __test_monument_phase(found) : -999
         if (!found || ph != 32) {

@@ -157,15 +157,15 @@ function run_test() {
     }
 
     var save_name = 'test_160_labor_split.svx'
-    if (!__game_write_savegame(save_name)) {
+    if (!__test_save_memory(save_name)) {
         __log_marker('labor_split_saveload_skipped')
         __test160_ok.saveload = true
-    } else if (!__game_load_savegame(save_name)) {
-        __game_delete_savegame(save_name)
+    } else if (!__test_load_memory(save_name)) {
+        __test_drop_memory_save(save_name)
         __log_marker('labor_split_saveload_skipped')
         __test160_ok.saveload = true
     } else {
-        __game_delete_savegame(save_name)
+        __test_drop_memory_save(save_name)
         game_features.set('gameplay_enhanced_labor_category_split', true)
         var prio_after = city.labor.get_category(LABOR_CATEGORY_STORAGE).priority
         if (prio_after !== 2) {

@@ -141,13 +141,13 @@ function run_test() {
 
     // Mid-polish save/load (DoD §5).
     var save_name = 'test_108_true_pyramid_polish.svx'
-    if (!__game_write_savegame(save_name)) {
+    if (!__test_save_memory(save_name)) {
         __log_marker('true_pyramid_small_saveload_skipped')
-    } else if (!__game_load_savegame(save_name)) {
-        __game_delete_savegame(save_name)
+    } else if (!__test_load_memory(save_name)) {
+        __test_drop_memory_save(save_name)
         __log_marker('true_pyramid_small_saveload_skipped')
     } else {
-        __game_delete_savegame(save_name)
+        __test_drop_memory_save(save_name)
         var found = find_true_pyramid_main()
         var ph = found ? __test_monument_phase(found) : -999
         if (!found || ph != 24) {

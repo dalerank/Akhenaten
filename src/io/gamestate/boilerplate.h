@@ -1,6 +1,7 @@
 #pragma once
 
 #include <cstdint>
+#include <vector>
 #include "content/dir.h"
 #include "io/gamestate/save_versions.h"
 
@@ -23,6 +24,8 @@ bool write_map(pcstr path, bool relative = true);
 
 bool load_mission(const int scenario_id, bool start_immediately);
 bool load_savegame(pcstr filename_short, bool start_immediately = true);
+bool write_savegame_memory(std::vector<uint8_t>& out);
+bool load_savegame_memory(const std::vector<uint8_t>& bytes, pcstr name, bool start_immediately = true);
 // Original Pharaoh .sav at a full path, through the og_save converter.
 bool load_og_savegame(pcstr full_path, bool start_immediately = true);
 bool load_map(pcstr filename, bool relative, bool start_immediately);
