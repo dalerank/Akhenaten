@@ -157,7 +157,7 @@ function test640_mission(name, id, month_fn, cleared_fn, raids, refusals) {
         __test_clear_enemy_formations()
         for (var f = 0; f < (refusals || []).length; f++) {
             if (refusals[f].y == y && refusals[f].m == m) {
-                on_cleared({ tag_id: refusals[f].tag, resource: 0, fulfilled: 0, was_overdue: 0 })
+                on_cleared({ tag_id: refusals[f].tag, resource: 0, fulfilled: refusals[f].ok ? 1 : 0, was_overdue: 0 })
             }
         }
         test640_started = []
@@ -366,6 +366,88 @@ function test640_older_missions() {
         [22, 8, 18, 33, E, C, 119, [3, -1, 1, 8], 0, T.vaults],
         [28, 8, 6, 37, E, C, 141, [12, -1, 9, 13], 12, T.food]
     ]))
+    test640_mission('sumur', 41, 'mission41_raids', 'mission41_on_request_cleared', test640_rows([
+        [5, 2, 10, 11, E, C, 42, [2, -1, 1, 3], 0, T.random],
+        [12, 3, 7, 31, E, C, 33, [5, 5, -1, -1], 0, T.best]
+    ]), [{ y: 5, m: 2, tag: 2009 }])
+    test640_mission('qadesh', 42, 'mission42_raids', null, test640_rows([
+        [1, 4, 12, 1, E, C, 50, [1, -1, 1, 3], 0, T.troops],
+        [2, 4, 0, 19, E, C, 30, [4, -1, 4, 5], 0, T.troops],
+        [2, 6, 0, 22, E, C, 35, [1, -1, 1, 5], 0, T.random]
+    ]))
+    test640_mission('abu_simbel', 43, 'mission43_raids', 'mission43_on_request_cleared', test640_rows([
+        [5, 10, 6, 12, E, ENEMY_6_KUSHITE, 25, [2, -1, 1, 3], 0, T.random],
+        [8, 1, 9, 20, E, ENEMY_6_KUSHITE, 27, [3, 3, -1, -1], 0, T.troops, -1]
+    ]), [{ y: 5, m: 9, tag: 2010 }])
+    var A = ENEMY_1_ASSYRIAN
+    test640_mission('pi_yer', 45, 'mission45_raids', 'mission45_on_request_cleared', test640_rows([
+        [1, 4, 8, 4, E, A, 17, [9, 9, -1, -1], 3, T.best],
+        [2, 1, 2, 9, E, A, 13, [1, 1, -1, -1], 0, T.food],
+        [9, 5, 6, 39, E, A, 27, [9, 9, -1, -1], 3, T.random],
+        [13, 10, 12, 29, EVENT_INVADER_PHARAOH, ENEMY_3_EGYPTIAN, 12, [2, 2, -1, -1], 0, T.best]
+    ]), [{ y: 1, m: 3, tag: 2005 }, { y: 8, m: 6, tag: 2037 }, { y: 13, m: 6, tag: 2027 }])
+    test640_mission('actium', 52, 'mission52_raids', null, test640_rows([
+        [4, 4, 4, 12, E, ENEMY_9_PERSIAN, 19, [9, -1, 9, 11], 5, T.troops],
+        [4, 10, 1, 17, E, ENEMY_9_PERSIAN, 40, [9, -1, 9, 11], 4, T.troops, 1]
+    ]))
+    test640_mission('rowarty', 36, 'mission36_raids', 'mission36_on_request_cleared', test640_rows([
+        [2, 8, 5, 8, E, A, 38, [9, -1, 9, 13], 5, T.vaults, -1],
+        [3, 1, 6, 0, E, A, 20, [11, -1, 9, 13], 2, T.food],
+        [5, 8, 6, 1, E, A, 35, [11, -1, 9, 15], 6, T.random],
+        [7, 1, 6, 5, E, A, 44, [10, -1, 9, 13], 8, T.food],
+        [45, 10, 6, 11, E, A, 56, [12, -1, 9, 13], 6, T.random],
+        [53, 1, 6, 56, E, A, 72, [10, -1, 9, 16], 12, T.random]
+    ]), [{ y: 52, m: 4, tag: 54 }])
+    var EG = EVENT_INVADER_EGYPT
+    test640_mission('waset', 24, 'mission24_raids', 'mission24_on_request_cleared', test640_rows([
+        [5, 2, 2, 7, EG, ENEMY_3_EGYPTIAN, 6, [9, 9, -1, -1], 1, T.vaults],
+        [11, 8, 3, 21, EG, ENEMY_3_EGYPTIAN, 4, [9, 9, -1, -1], 1, T.vaults]
+    ]), [{ y: 4, m: 10, tag: 2004 }, { y: 11, m: 4, tag: 2018 }])
+    var G = ENEMY_3_EGYPTIAN
+    test640_mission('kebet', 25, 'mission25_raids', 'mission25_on_request_cleared', test640_rows([
+        [2, 4, 6, 24, EG, G, 17, [1, 1, -1, -1], 0, T.best],
+        [5, 1, 6, 25, EG, G, 33, [1, 1, -1, -1], 0, T.best],
+        [7, 9, 6, 26, EG, G, 55, [3, 3, -1, -1], 0, T.random],
+        [10, 0, 6, 27, EG, G, 70, [2, -1, 1, 3], 0, T.random],
+        [10, 6, 0, 28, EG, G, 0, [9, 9, -1, -1], 5, T.food],
+        [11, 4, 6, 19, EG, G, 60, [1, 1, -1, -1], 0, T.best],
+        [11, 10, 0, 20, EG, G, 60, [8, 8, -1, -1], 0, T.best]
+    ]), [{ y: 11, m: 2, tag: 2015 }])
+    test640_mission('itjtawy', 27, 'mission27_raids', 'mission27_on_request_cleared', test640_rows([
+        [3, 3, 5, 3, EG, G, 8, [2, -1, 1, 5], 0, T.random, 2],
+        [6, 2, 8, 22, EG, G, 9, [2, -1, 1, 5], 0, T.random, 2],
+        [7, 7, 6, 76, EG, G, 6, [1, -1, 1, 5], 0, T.food, 2]
+    ]), [{ y: 2, m: 10, tag: 2000 }, { y: 5, m: 7, tag: 2017 }, { y: 7, m: 4, tag: 2070 }])
+    test640_mission('iken', 28, 'mission28_raids', 'mission28_on_request_cleared', test640_rows([
+        [1, 8, 9, 18, E, HT, 32, [9, 9, -1, -1], 5, T.random],
+        [2, 6, 6, 5, EG, G, 64, [4, 4, -1, -1], 0, T.best],
+        [2, 8, 6, 6, B, L, 12, [3, 3, -1, -1], 0, T.random],
+        [2, 8, 12, 19, E, HT, 64, [2, -1, 1, 3], 0, T.food],
+        [3, 11, 12, 21, E, HT, 72, [3, 3, -1, -1], 0, T.troops],
+        [5, 8, 9, 22, E, HT, 24, [9, 9, -1, -1], 6, T.food],
+        [6, 7, 4, 23, E, HT, 96, [3, 3, -1, -1], 0, T.random, -1],
+        [10, 7, 4, 7, E, HT, 12, [9, 9, -1, -1], 2, T.random],
+        [12, 9, 6, 36, B, L, 64, [7, -1, 1, 8], 0, T.random],
+        [15, 3, 6, 37, B, L, 64, [2, -1, 1, 8], 0, T.random],
+        [20, 10, 4, 38, B, L, 64, [7, -1, 1, 8], 0, T.random],
+        [23, 7, 6, 39, B, L, 96, [6, -1, 1, 8], 0, T.random],
+        [27, 0, 4, 40, B, L, 96, [4, -1, 1, 8], 0, T.random]
+    ]), [{ y: 1, m: 2, tag: 2016 }, { y: 2, m: 0, tag: 2003 }])
+    test640_mission('khmun', 32, 'mission32_raids', 'mission32_on_request_cleared', test640_rows([
+        [3, 1, 9, 4, E, H, 16, [1, 1, -1, -1], 0, T.best, -1],
+        [5, 8, 3, 10, E, H, 32, [2, 2, -1, -1], 0, T.best, -1],
+        [7, 10, 6, 18, E, H, 29, [2, 2, -1, -1], 0, T.random],
+        [9, 2, 6, 19, E, H, 39, [2, 2, -1, -1], 0, T.random]
+    ]), [{ y: 2, m: 1, tag: 2002 }, { y: 5, m: 3, tag: 1008 }, { y: 6, m: 11, tag: 1017, ok: true }])
+    test640_mission('thinis', 23, 'mission23_raids', 'mission23_on_request_cleared', test640_rows([
+        [5, 0, 5, 61, E, ENEMY_6_KUSHITE, 21, [3, -1, 3, 4], 0, T.random],
+        [6, 2, 4, 19, EG, G, 38, [1, 1, -1, -1], 0, T.random, -1],
+        [7, 0, 10, 20, E, ENEMY_6_KUSHITE, 24, [10, 10, -1, -1], 1, T.random, -1],
+        [10, 9, 4, 38, E, ENEMY_6_KUSHITE, 29, [10, 10, -1, -1], 2, T.random],
+        [11, 2, 4, 43, EG, G, 33, [9, 9, -1, -1], 4, T.random, -1],
+        [14, 7, 2, 51, EG, G, 72, [9, 9, -1, -1], 5, T.random],
+        [14, 10, 2, 52, E, ENEMY_6_KUSHITE, 48, [13, 13, -1, -1], 3, T.random, -1]
+    ]), [{ y: 6, m: 1, tag: 2007 }, { y: 10, m: 8, tag: 1035, ok: true }, { y: 14, m: 6, tag: 2046 }])
     test640_mission('buhen', 13, 'mission13_raids', null, test640_rows([
         [6, 5, 24, 9, E, ENEMY_6_KUSHITE, 8, [1, 1, -1, -1], 0, T.best],
         [10, 6, 24, 14, E, ENEMY_6_KUSHITE, 16, [2, 2, -1, -1], 0, T.best],
