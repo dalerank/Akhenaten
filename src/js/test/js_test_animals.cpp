@@ -431,3 +431,46 @@ static int __test_fishing_spot_og_tick(int fid) {
     return 1;
 }
 ANK_FUNCTION_1(__test_fishing_spot_og_tick);
+
+static int __test_create_herd(int x, int y, int ftype, int count) {
+    formation* m = g_city.animals.create_herd(tile2i(x, y), (e_figure_type)ftype, count);
+    return (m && m->id > 0) ? m->id : 0;
+}
+ANK_FUNCTION_4(__test_create_herd);
+
+// One herd step of formation_update_all: figure counts first, then the herd.
+static void __test_herd_update(int formation_id) {
+    formation* m = formation_get(formation_id);
+    if (!m || !m->in_use || !m->is_herd) {
+        return;
+    }
+    g_formations.calculate_figures();
+    g_city.animals.update_herd_formation(m);
+}
+ANK_FUNCTION_1(__test_herd_update);
+
+// Pack (x << 16) | y; -1 when the formation is not in use.
+static int __test_formation_destination(int formation_id) {
+    formation* m = formation_get(formation_id);
+    if (!m || !m->in_use) {
+        return -1;
+    }
+    return (m->destination.x() << 16) | (m->destination.y() & 0xffff);
+}
+ANK_FUNCTION_1(__test_formation_destination);
+
+static int __test_formation_figure(int formation_id, int index) {
+    formation* m = formation_get(formation_id);
+    if (!m || !m->in_use || index < 0 || index >= formation::max_figures_count) {
+        return 0;
+    }
+    g_formations.calculate_figures();
+    return m->figures[index];
+}
+ANK_FUNCTION_2(__test_formation_figure);
+
+static int __test_figure_max_damage(int fid) {
+    figure* f = figure_get(fid);
+    return (f && f->id > 0) ? f->max_damage() : -1;
+}
+ANK_FUNCTION_1(__test_figure_max_damage);
