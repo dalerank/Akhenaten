@@ -5,6 +5,8 @@
 #include "core/calc.h"
 #include "core/profiler.h"
 #include "core/random.h"
+#include "core/svector.h"
+#include "js/js_game.h"
 #include "grid/basin.h"
 #include "grid/floodplain.h"
 #include "grid/tiles.h"
@@ -298,6 +300,27 @@ void floods_t::cycle_states_recalc() {
     flood_progress_target = std::clamp(flood_progress_target, 0, 30);
 }
 
+struct flood_quality_step_t {
+    int weight;
+    int delta;
+};
+ANK_CONFIG_STRUCT(flood_quality_step_t, weight, delta)
+svector<flood_quality_step_t, 16> ANK_VARIABLE(flood_quality_steps);
+
+// OG floods.c floodplain_settings_randomize_next_quality; the steps table lives in city/floods.js.
+static int flood_randomized_quality(int quality) {
+    random_generate_next();
+    const int roll = random_short() % 99 + 1;
+    int sum = 0;
+    for (const auto& step : flood_quality_steps) {
+        sum += step.weight;
+        if (roll < sum) {
+            return calc_bound(quality + step.delta, 0, 100);
+        }
+    }
+    return calc_bound(quality, 0, 100);
+}
+
 void floods_t::update_next_flood_params() {
     season = season_initial;     // reset to initial
     duration = duration_initial; // reset to initial
@@ -305,10 +328,7 @@ void floods_t::update_next_flood_params() {
     quality_last = quality_current;
 
     quality_current = quality_next;
-    // calculate the next flood quality
-    int quality_randm = (rand() % 100) + 20;
-    quality_next += quality_randm;
-    quality_next = quality_next % 100;
+    quality_next = flood_randomized_quality(quality_initial);
 }
 
 void floods_t::post_flood_prediction_message() {
@@ -428,20 +448,16 @@ void floods_t::tick_update(bool calc_only) {
 io_buffer* iob_floodplain_settings = new io_buffer([](io_buffer* iob, size_t version) {
     auto& data = g_floods;
 
-    iob->bind(BIND_SIGNATURE_UINT8, &data.season_initial);
-    iob->bind____skip(3);
+    iob->bind(BIND_SIGNATURE_INT32, &data.season_initial);
     iob->bind(BIND_SIGNATURE_INT32, &data.duration_initial);
-    iob->bind(BIND_SIGNATURE_UINT8, &data.quality_initial);
-    iob->bind____skip(3);
+    iob->bind(BIND_SIGNATURE_INT32, &data.quality_initial);
     iob->bind(BIND_SIGNATURE_INT32, &data.season);
     iob->bind(BIND_SIGNATURE_INT32, &data.duration);
-    iob->bind(BIND_SIGNATURE_UINT8, &data.quality_current);
-    iob->bind____skip(3);
+    iob->bind(BIND_SIGNATURE_INT32, &data.quality_current);
     iob->bind(BIND_SIGNATURE_INT32, &data.unk00);
     iob->bind(BIND_SIGNATURE_UINT8, &data.quality_next);
     iob->bind(BIND_SIGNATURE_UINT8, &data.flood_progress);
     iob->bind(BIND_SIGNATURE_UINT8, &data.flood_progress_target);
     iob->bind____skip(1);
-    iob->bind(BIND_SIGNATURE_UINT8, &data.quality_last);
-    iob->bind____skip(3);
+    iob->bind(BIND_SIGNATURE_INT32, &data.quality_last);
 });

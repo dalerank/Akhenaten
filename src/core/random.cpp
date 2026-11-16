@@ -5,7 +5,8 @@
 // #include <cmath>
 
 static random_data_t g_random_data;
-static uint32_t anti_scum_seed = 0;
+static uint32_t anti_scum_seed = 1;
+static bool anti_scum_clock_reseed = true;
 
 const random_data_t* random_data_struct() {
     return &g_random_data;
@@ -213,6 +214,20 @@ bool anti_scum_random_bool() {
         rnd_bool_test = (randm - 1 | 0xfffffffe) == 0xffffffff;
     }
     return rnd_bool_test;
+}
+
+void anti_scum_srand(uint32_t seed) {
+    anti_scum_seed = seed;
+}
+
+void anti_scum_reseed_from_clock(uint32_t millis) {
+    if (anti_scum_clock_reseed) {
+        anti_scum_seed = millis;
+    }
+}
+
+void anti_scum_set_clock_reseed(bool enabled) {
+    anti_scum_clock_reseed = enabled;
 }
 
 int random_int() {

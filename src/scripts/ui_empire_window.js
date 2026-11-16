@@ -127,7 +127,7 @@ empire_window {
 
 [es=(empire_window, go_back)]
 function empire_window_on_go_back(window) {
-    if (empire_window.selected_object) {
+    if (empire_window.selected_object || empire.selected_marker_kind >= 0) {
         __empire_map_clear_selected_object()
         return
     }
@@ -147,6 +147,7 @@ function empire_window_on_init(window) {
     empire_window.finished_scroll = 0
     empire_window.camera.valid = false
     empire_window.screen_bounds.ready = false
+    __empire_markers_clear_selection()
 }
 
 [es=(empire_window, help)]

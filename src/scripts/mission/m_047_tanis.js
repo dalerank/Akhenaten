@@ -27,7 +27,6 @@ mission47 { // Tanis - Rebirth of a Navy
 	initial_funds [16000, 10670, 8000, 5360, 4240]
 	rescue_loans [4000, 2670, 2000, 1340, 1060]
 	debt_interest [5, 6, 8, 10, 12]
-	house_tax_multipliers [300, 200, 150, 100, 75]
 
 	env {
 		has_animals : true
@@ -105,6 +104,7 @@ mission47 { // Tanis - Rebirth of a Navy
 			amount { value : 0 }
 			months_initial : 2
 			location_fields [ 9, -1, 9, 10 ]
+			warships : 3
 			event_trigger_type : EVENT_TRIGGER_ONCE
 			on_completed_action : -1
 			on_refusal_action : -1
@@ -186,6 +186,7 @@ mission47 { // Tanis - Rebirth of a Navy
 			amount { value : 16 }
 			months_initial : 8
 			location_fields [ 11, 11, -1, -1 ]
+			warships : 5
 			event_trigger_type : EVENT_TRIGGER_ONCE
 			on_completed_action : 0
 			on_refusal_action : -1
@@ -299,6 +300,7 @@ mission47 { // Tanis - Rebirth of a Navy
 			amount { value : 12 }
 			months_initial : 10
 			location_fields [ 11, -1, 10, 12 ]
+			warships : 4
 			event_trigger_type : EVENT_TRIGGER_ONCE
 			on_completed_action : -1
 			on_refusal_action : -1
@@ -445,8 +447,6 @@ mission47 { // Tanis - Rebirth of a Navy
 			cost_to_open : 800
 			is_sea_trade : true
 			type : EMPIRE_CITY_FOREIGN_TRADING
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_FISH, RESOURCE_TIMBER, RESOURCE_COPPER ]
 			buys [ RESOURCE_POMEGRANATES, RESOURCE_BEER ]
 			route_limits [
@@ -466,8 +466,6 @@ mission47 { // Tanis - Rebirth of a Navy
 			cost_to_open : 150
 			is_sea_trade : false
 			type : EMPIRE_CITY_PHARAOH_TRADING
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_CHICKPEAS, RESOURCE_BARLEY ]
 			buys [ RESOURCE_POTTERY, RESOURCE_BEER, RESOURCE_TIMBER, RESOURCE_PAPYRUS ]
 			route_limits [
@@ -488,8 +486,6 @@ mission47 { // Tanis - Rebirth of a Navy
 			cost_to_open : 1000
 			is_sea_trade : true
 			type : EMPIRE_CITY_FOREIGN_TRADING
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_WEAPONS, RESOURCE_POTTERY, RESOURCE_LUXURY_GOODS ]
 			buys [ RESOURCE_POMEGRANATES, RESOURCE_PAPYRUS ]
 			route_limits [

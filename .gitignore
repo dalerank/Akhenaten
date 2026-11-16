@@ -52,8 +52,6 @@ doc
 /tools/*
 !/tools/*.zip
 !/tools/*.7z
-!/tools/akhenaten-updater/
-!/tools/akhenaten-updater/**
 !/tools/check_layers.py
 !/tools/layers_baseline.txt
 

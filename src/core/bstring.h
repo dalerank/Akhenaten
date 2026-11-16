@@ -12,6 +12,18 @@
 
 #include "core/core.h"
 
+#if !defined(_MSC_VER)
+#include <strings.h>
+#endif
+
+inline int bstring_icmp(const char *a, const char *b) {
+#if defined(_MSC_VER)
+    return ::_stricmp(a, b);
+#else
+    return ::strcasecmp(a, b);
+#endif
+}
+
 using pcstr = const char *;
 using pstr = char *;
 
@@ -299,14 +311,14 @@ public:
     inline pcstr strstr(const_ref sub_str) const { return ::strstr(_data, sub_str._data); }
     inline pcstr strstr(const_ref sub_str) { return ::strstr(_data, sub_str._data); }
     inline int cmp(const_ref other) const { return strcmp(_data, other._data); }
-    inline int icmp(const_ref other) const { return stricmp(_data, other._data); }
+    inline int icmp(const_ref other) const { return bstring_icmp(_data, other._data); }
     inline int ncmp(const_ref other, unsigned int count) const { return ::strncmp(_data, other._data, count); }
 
     inline pcstr strstr(pcstr sub_str) const { return ::strstr(_data, sub_str); }
     inline pcstr strstr(pcstr sub_str) { return ::strstr(_data, sub_str); }
     inline pcstr strchr(char v) { return ::strchr(_data, v); }
     inline int cmp(pcstr str) const { return strcmp(_data, str); }
-    inline int icmp(pcstr str) const { return stricmp(_data, str); }
+    inline int icmp(pcstr str) const { return bstring_icmp(_data, str); }
     inline int ncmp(pcstr str, unsigned int count) const { return ::strncmp(_data, str, count); }
 
     inline size_t hash() {

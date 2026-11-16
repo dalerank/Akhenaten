@@ -90,29 +90,6 @@ int herd_impassable_mask(e_figure_type herd_type) {
     }
 }
 
-int climate_herd_count(e_figure_type type) {
-    // A herd point must never roll an empty herd — prey herds are the only food source
-    // for hunting lodges, and ostrich respawn needs at least one live figure to seed from.
-    switch (type) {
-    case FIGURE_ANTELOPE:
-        return 1 + (rand() % 10);
-    case FIGURE_BIRDS:
-        return 1 + (rand() % 8);
-    case FIGURE_OSTRICH:
-        return 1 + (rand() % 12);
-    case FIGURE_CROCODILE:
-    case FIGURE_HIPPO:
-        return 1 + (rand() % 8);
-    case FIGURE_HYENA:
-    case FIGURE_SCORPION:
-    case FIGURE_LION:
-    case FIGURE_ASP:
-        return 2 + (rand() % 5);
-    default:
-        return 1 + (rand() % 8);
-    }
-}
-
 bool figure_is_prey(e_figure_type type) {
     return type == FIGURE_OSTRICH || type == FIGURE_ANTELOPE || type == FIGURE_BIRDS;
 }
@@ -134,7 +111,7 @@ bool herd_can_travel_to(tile2i src, tile2i dst, e_figure_type herd_type) {
     case FIGURE_HIPPO:
         return map_routing_amphibia_can_travel_over_land_water(src, dst, -1, 2000);
     default:
-        return map_routing_noncitizen_can_travel_over_land(src, dst, -1, 2000);
+        return map_routing_animal_can_travel(src, dst);
     }
 }
 
@@ -239,7 +216,7 @@ void city_animals_t::create_herds() {
             if (type == FIGURE_NONE) {
                 continue;
             }
-            const int count = hp.count > 0 ? hp.count : climate_herd_count(type);
+            const int count = hp.count > 0 ? hp.count : figure_static_params::get(type).herd_size;
             formation *m = create_herd(hp.tile, type, count);
             if (m && m->id > 0 && hp.radius > 0) {
                 m->reseach_radius = hp.radius;
@@ -467,11 +444,20 @@ void city_animals_t::update_herd_formation(formation *m) {
         }
     }
 
-    if (can_spawn_ostrich(m) && allow_span_ostrich()) {
-        if (m->failed_creation_count > 10) {
-            m->home = random_around_point(m->home, m->home, /*step*/4, /*bias*/8, /*max_dist*/32);
+    // OG herds never move their home (herds.c). Saves made while it drifted can hold a home off the map,
+    // which sends the whole herd to the map corner: put it back on a living animal of the herd.
+    if (!map_grid_inside_map_area(m->home.grid_offset(), 1)) {
+        for (auto f : m->valid_figures()) {
+            if (map_grid_inside_map_area(f->tile.grid_offset(), 1)) {
+                m->home = f->tile;
+                m->tile = f->tile;
+                formation_set_destination(m, f->tile);
+                break;
+            }
         }
+    }
 
+    if (can_spawn_ostrich(m) && allow_span_ostrich()) {
         const int impassable = herd_impassable_mask(m->figure_type);
         bool is_passible = !map_terrain_is(m->tile, impassable);
         bool valid_tile = m->tile.valid();

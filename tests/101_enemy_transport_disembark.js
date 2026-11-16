@@ -1,5 +1,5 @@
 // E3b smoke: spawn enemy transport with troops → sail → disembark ≥1 visible soldier.
-// Also covers E3c via_sea spawn (transport + escort warship) and E3a-smoke Seth sink.
+// Also covers E3c via_sea spawn (transport + the invasion's one warship) and E3a-smoke Seth sink.
 // Markers:
 //   [test-marker] transport_loaded_ok
 //   [test-marker] transport_disembark_ok
@@ -43,7 +43,7 @@ function run_test() {
 
     // --- E3c via_sea fleet ---
     test_reload_city_session('data/default.map')
-    if (!__test_start_sea_invasion(ENEMY_4_HITTITE, 8)) {
+    if (!__test_start_sea_invasion(ENEMY_4_HITTITE, 8, 1)) {
         __log_info_native('[test:101] sea invasion failed to start')
         __test_signal_ready()
         return

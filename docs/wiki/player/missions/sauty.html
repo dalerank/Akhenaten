@@ -78,8 +78,8 @@
         <strong>Showpiece:</strong> three Medium Mudbrick pyramids, chariots, navy/ferry, Hyksos pushback, troops/oil/henna north.
         <br /><strong>Enemy:</strong> scenario <code>ENEMY_5_HYKSOS</code> (pak dump <code>ENEMY_0_BARBARIAN</code> ignored).
         <br /><strong>Topo:</strong> inv land/sea empty — loc 1 entry, 2 disembark[2]; favour Egyptian×50→×50.
-        <br /><strong>Monuments 40:</strong> 3× Medium mudbrick (W=8) →
-        <code>trunc(2.25·24+4.5)=58</code> ≥ pak 40 (keep pak goal).
+        <br /><strong>Monuments 40:</strong> 3× Medium mudbrick (12) + burial pottery 32/16, linen 16/16, luxury 16/16 (4) →
+        <code>trunc(6.32·√40+0.5)=40</code> = pak.
         <br /><strong>Soft:</strong> calendar FELL remap Heh/Iken (dump Pwenet/Itjtawy); request loops 2↔4 / 13↔14 / 24↔25 / 40↔44↔45 one bounce then advance; henna refuse→oil-fail hub once-gated; i=43 meat DEMAND recurring; SKIP map_obj idx=7.
       </div>
 
@@ -105,6 +105,7 @@
           <summary>Mission script</summary>
           <div class="details-body">
             <p><span class="file-ref">src/scripts/mission/m_033_sauty.js</span></p>
+            <p>Kingdom army: at Kingdom rating 0 the engine sends the <code>EVENT_TRIGGER_BY_FAVOUR</code> invasion from <code>events[]</code> (<code>update_kingdom_favour</code>, <code>src/scenario/scenario_event_manager.cpp</code>): warnings for its <code>months_initial</code>, then the attack; its <code>on_completed_action</code> chain joins at the attack. Called off if the rating reaches 15 before it attacks; it can come again 12 months later. pak i=46→47: Egypt ×50 → ×50.</p>
             <p><span class="file-ref">data/maps/m_033_sauty.map</span></p>
             <p><code>choice_title [144, 67]</code> → Byblos (34) / Baki (35). Empire id 21 · map_background PACK_EMPIRE id 21. SKIP map_obj idx=7. Dump 2026-08-01.</p>
           </div>

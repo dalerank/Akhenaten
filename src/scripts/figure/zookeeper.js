@@ -27,6 +27,8 @@ figure_zookeeper {
 	terrain_usage : TERRAIN_USAGE_ROADS
 	max_roam_length: 640
 	permission : epermission_entertainer
+	can_cross_ferry: true
+	boards_ferry: true
 }
 
 function figure_zookeeper_gods_are_angry() {

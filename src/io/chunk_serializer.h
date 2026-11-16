@@ -7,6 +7,9 @@
 #include "io/chunk_container.h"
 #include "core/hvector.h"
 
+#include <string>
+#include <vector>
+
 struct file_chunk_t {
     bool VALID = false;
     // was this chunk actually found in the file we are loading? sectioned files may
@@ -23,6 +26,12 @@ struct file_chunk_t {
     // allowed to change.
     void resize(int new_size);
 };
+
+struct chunk_snapshot {
+    std::string name;
+    std::vector<uint8_t> raw;
+};
+using chunk_snapshots = std::vector<chunk_snapshot>;
 
 // Chunk schema serialize/unserialize for savegames, maps, and mission packs.
 // - contains an internal collection of file pieces that are format-agnostic
@@ -94,6 +103,12 @@ public:
     bool serialize(pcstr filename, int offset, e_file_format format, const int version, void (*init_schema)(e_file_format _format, const int _version));
     bool unserialize(vfs::reader filename, int offset, e_file_format format, const int (*determine_file_version)(pcstr _filename, int _offset),
                      void (*init_schema)(e_file_format _format, const int _version));
+
+    // raw (uncompressed) bytes of every VALID chunk in the current cache
+    void snapshot_chunks(chunk_snapshots& out) const;
+    // serialize live game state through a schema into the chunk cache and copy it out, no file I/O
+    bool write_to_memory(e_file_format format, const int version,
+      void (*init_schema)(e_file_format _format, const int _version), chunk_snapshots& out);
 };
 
 extern ChunkSerializer g_chunk_io;

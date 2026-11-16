@@ -14,7 +14,6 @@ mission4 {
 	player_rank : 1
 	initial_funds [7500, 5000, 3750, 2500, 2000]
 	rescue_loans [7500, 5000, 3750, 2500, 2000]
-	house_tax_multipliers [300, 200, 150, 100, 75]
 
 	buildings  [
 					BUILDING_SMALL_STATUE, BUILDING_MEDIUM_STATUE, BUILDING_LARGE_STATUE, BUILDING_GARDENS, BUILDING_PLAZA,
@@ -74,8 +73,6 @@ mission4 {
 			cost_to_open : 300
 			is_sea_trade : false
 			type : EMPIRE_CITY_EGYPTIAN_TRADING
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_FIGS, RESOURCE_CLAY, RESOURCE_BRICKS, RESOURCE_POTTERY, RESOURCE_REEDS ]
 			route_limits [
 				{ resource: RESOURCE_FIGS, limit: 4000 }
@@ -95,8 +92,6 @@ mission4 {
 			cost_to_open : 550
 			is_sea_trade : false
 			type : EMPIRE_CITY_EGYPTIAN_TRADING
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_CLAY, RESOURCE_POTTERY, RESOURCE_BEER ]
 			buys [ RESOURCE_PAPYRUS ]
 			route_limits [
@@ -275,7 +270,7 @@ function mission4_on_start(ev) {
 	}
 
 	city.set_advisor_available(ADVISOR_LABOR, 1)
-	city.set_advisor_available(ADVISOR_IMPERIAL, 1)
+	city.set_advisor_available(ADVISOR_KINGDOM, 1)
 	city.set_advisor_available(ADVISOR_RATINGS, 1)
 	city.set_advisor_available(ADVISOR_POPULATION, 1)
 	city.set_advisor_available(ADVISOR_HEALTH, 1)

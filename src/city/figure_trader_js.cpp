@@ -145,9 +145,9 @@ static void figure_trade_proto_sold_amount(js_State *J) {
 }
 
 static void figure_trade_proto_toString(js_State *J) {
-    char buf[64];
-    snprintf(buf, sizeof buf, "FigureTrade(%d)", figure_trade_this_fid(J));
-    J->pushstring(buf);
+    bstring64 buf;
+    buf.printf("FigureTrade(%d)", figure_trade_this_fid(J));
+    J->pushstring(buf.c_str());
 }
 
 static void js_push_figure_trade(js_State *J, int fid) {

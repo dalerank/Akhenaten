@@ -1,6 +1,7 @@
 log_info("akhenaten: mods started")
 
-mods {
+// Read by C++ (g_mods_config); the script API is the separate mods object below.
+mods_config {
     mods_list [
         {
             name : "pharaoh_german_voices"
@@ -83,11 +84,14 @@ mods {
             email : "dalerankn8@gmail.com"
         }
     ]
+}
 
+mods {
     count : __mods_count
     name : __mods_name
     display_name : __mods_display_name
     enabled : __mods_enabled
+    broken : __mods_broken
     download_progress : __mods_download_progress
     downloaded : __mods_downloaded
     download_mod_async : __mods_download_mod_async

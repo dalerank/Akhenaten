@@ -458,7 +458,6 @@ building_temple_complex_osiris {
 
     // OG Bast complex bonuses (citywide while the complex stands)
     food_consumption_pct : 80
-    goods_consumption_pct : 80
     service_decay_skip_odd_months : 1
     hathor_sentiment_bonus : 10
     isis_health_bonus : 10

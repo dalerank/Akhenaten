@@ -36,6 +36,9 @@ function window_features_append_gameplay_pages(pages) {
         if (name === "gameopt_ironwill" && game_mission_options_locked)
             continue
 
+        if (name === "gameopt_auto_update" && !__updater_available())
+            continue
+
         var text = game_features.text(name)
         if (!text)
             continue

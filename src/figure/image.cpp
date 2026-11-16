@@ -5,6 +5,7 @@
 #include "graphics/image_desc.h"
 #include "graphics/image_groups.h"
 #include "graphics/animation.h"
+#include "city/city_figures.h"
 #include "core/stable_array.h"
 #include "core/profiler.h"
 
@@ -106,6 +107,23 @@ void figure::figure_image_update(bool refresh_only) {
 
     dcast()->main_image_update();
     dcast()->cart_image_update();
+}
+
+void figure::refresh_image_for_orientation() {
+    if (!animctx.valid()) {
+        return;
+    }
+
+    dcast()->main_image_update();
+    dcast()->cart_image_update();
+}
+
+void figures_refresh_images_for_orientation() {
+    for (figure* f : map_figures()) {
+        if (f->state != FIGURE_STATE_NONE) {
+            f->refresh_image_for_orientation();
+        }
+    }
 }
 
 int figure::figure_image_corpse_offset() {

@@ -3,18 +3,20 @@
 #include "core/xstring.h"
 #include "core/svector.h"
 #include "core/custom_span.hpp"
+#include "game/game_events.h"
 #include "content/dir.h"
 #include "content/vfs.h"
 #include "sound/channel.h"
 #include "sound/effect.h"
 #include <array>
+#include <future>
 #include <string_view>
 #include <stdint.h>
 
 struct music_player_t;
 
 struct event_sound_effect { int effect; };
-struct event_sound_track { xstring track; };
+
 
 class sound_manager_t {
 public:
@@ -24,7 +26,13 @@ public:
         int right_pan = 0;
         int volume = 0;
         void* chunk = nullptr;
+        // Mirrors Mix_Playing, refreshed on the main thread each frame.
         bool playing = false;
+
+        // The file is decoded on a worker; the main thread picks it up in begin_frame.
+        std::future<vfs::reader> pending;
+        bool play_requested = false;
+        bool panned = false;
     };
 
     struct speech_t {
@@ -40,6 +48,7 @@ public:
     bool speech_play_file(xstring filename, int volume);
     bool speech_file_exist(xstring filename, vfs::path &fs_path);
     void set_channel_volume(int channel, int volume_pct);
+    void set_channel_pan(int channel, int left_pct, int right_pct);
     bool is_channel_playing(int channel);
     void play_channel(int channel, int volume_pct);
     void play_channel_panned(int channel, int volume_pct, int left_pct, int right_pct);
@@ -58,6 +67,7 @@ public:
     void music_update(bool forces);
     void music_next_track();
     void music_frame();
+    void music_city_frame();
     int music_load_playlist_text(std::string_view text);
     int music_playlist_size() const;
     void play_editor();
@@ -65,8 +75,15 @@ public:
     void music_stop();
     const xstring& music_current_track() const;
     void play_track(const xstring track, bool loop = true);
-    void play_effect(int effect);
+    int play_effect(int effect);
+    // "[sound] ..." log lines of what plays, for --log-sound and the integral tests (no audio hardware needed).
+    bool log_events() const;
+    bool data_available() const;
+    void set_og_effect_file(int id, xstring file);
+    void set_og_figure_effect_file(int sound, int variant, xstring file);
+    void clear_og_effect_files();
     void stop_city_channels();
+    void stop_city_channel(int channel);
 
 public:
     void on_sound_effect(event_sound_effect);
@@ -75,7 +92,6 @@ public:
     speech_t speech;
 
 private:
-    static void channel_finished_cb(int channel);
     void init_channel(int index, vfs::path filename);
     void allocate_channels();
     void open();
@@ -85,25 +101,40 @@ private:
     void set_channel_panning(int channel, int left, int right);
     bool play_file_on_channel(pcstr filename, int channel, int volume_pct);
     void stop_channel(int channel);
+    void og_music_update(int mission);
+    void music_fade_out();
+    void fade_out_music(int ms);
     void free_custom_audio_stream();
-    bool create_custom_audio_stream(uint16_t src_format, uint8_t src_channels, int src_rate, uint16_t dst_format, uint8_t dst_channels, int dst_rate);
-    bool init_audio_with_timeout(const char *driver_name, int timeout_ms = 2000);
+    bool create_custom_audio_stream(uint16_t src_format, uint8_t src_channels, int src_rate, uint16_t dst_format,
+      uint8_t dst_channels, int dst_rate);
     int get_custom_audio_stream(uint8_t *dst, int len);
     static void custom_music_callback(void *dummy, uint8_t *stream, int len);
     vfs::path speech_filename(xstring filename);
     bool speech_try_rel(pcstr rel, vfs::path &fs_path);
     static bool speech_ieq_prefix(pcstr path, pcstr prefix);
     vfs::path speech_normalize_rel(pcstr filename) const;
-    bool load_channel(channel_t *channel);
-    void *load_chunk(pcstr filename);
-    vfs::reader load_cached_chunk(vfs::path filename);
+    void* load_chunk(pcstr filename, bool cache);
+    void* chunk_from_reader(const vfs::reader& r);
+    void start_channel(int channel);
+    void request_channel(int channel);
+    void poll_pending_chunks();
     bool put_custom_audio_stream(uint8_t *audio_data, int len);
 
+    struct og_sample_t {
+        xstring file;
+        vfs::path resolved;
+        bool probed = false;
+    };
+    const vfs::path& og_sample_path(og_sample_t& sample);
+    int pick_effect_channel(const vfs::path& filename);
+
 private:
-    bool initialized;
+    bool initialized = false;
     music_player_t *_music_player = nullptr;
     std::array<channel_t, SOUND_CHANNEL_MAX> _channels;
     std::array<vfs::path, SOUND_CHANNEL_MAX> _channels_info;
+    std::array<og_sample_t, OG_SOUND_EFFECT_COUNT> _og_effects;
+    std::array<og_sample_t, OG_FIGURE_SOUND_COUNT * OG_FIGURE_SOUND_VARIANTS> _og_figure_effects;
 };
 
 extern sound_manager_t g_sound;

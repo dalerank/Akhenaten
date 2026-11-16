@@ -16,7 +16,6 @@ mission135 { // Enkomi, custom mission
 
 	initial_funds [7500, 5000, 3750, 2500, 2000]
 	rescue_loans [7500, 5000, 3750, 2500, 2000]
-	house_tax_multipliers [300, 200, 150, 100, 75]
 
 	buildings [
 		BUILDING_HOUSE_VACANT_LOT, BUILDING_CLEAR_LAND, BUILDING_ROAD

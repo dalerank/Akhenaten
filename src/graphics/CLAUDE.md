@@ -46,18 +46,30 @@ Types: tiles, sprites, ornaments, generic draws, rectangles.
 - Images must be pre-loaded into atlases; IDs are stable references
 
 ### Residency atlas (`res_atlas::`)
-The SDL2 renderer auto-batches only while the bound texture and blend mode stay put.
-Depth-sorted city drawing switches source texture constantly, which defeats batching.
+The SDL2 OpenGL renderer merges consecutive draws only while the bound texture and blend mode
+stay put (the D3D9 backend never merges: one draw call per sprite whatever we do).
 The residency atlas repacks the sprites actually touched this frame onto a single page,
 so consecutive draws share one texture.
 
 - Gated by the `graphics_atlas_render` game feature (`res_atlas::set_render`), wired in
-  `platform/akhenaten.cpp`; sources register from `platform/renderer.cpp`.
+  `platform/akhenaten.cpp`; on by default on desktop, off on Android/web/consoles.
+  Sources register from `platform/renderer.cpp`.
+- Page size is `graphics_atlas_page_size` capped by 8192 and the renderer's max texture size.
+  A full page is recycled (at most once per 600 frames); when it fills again, sprites that do not
+  fit draw from their pak pages and one warning is logged.
 - `painter` calls `res_atlas::resolve()` to swap a draw onto the page; a miss falls back
   to the original texture, so correctness never depends on the atlas.
 - Anything that reloads or frees image paks must `invalidate()` / `forget_source()`, or
   the page keeps stale rects.
+- SDL queues draws only with `SDL_HINT_RENDER_BATCHING`, which it drops for a renderer chosen by name;
+  `platform/renderer.cpp` sets it. Of the queued copies only the opengl backend merges same-texture runs;
+  direct3d / direct3d11 / direct3d12 still issue one draw per copy from a single vertex upload.
 - Stats are exposed through `dev/perfmon.cpp` (fill %, pack+blit ms); `dump()` writes the page.
+- `render_stats` (console, perfmon) counts sprite draws, texture/blend switches and estimated
+  batches per frame, plus draw/present ms.
+- Every painter draw uses the premultiplied blend mode; `ImgFlag_Alpha` scales the tint by the
+  alpha instead of switching to `SDL_BLENDMODE_BLEND`. Only PNG textures marked straight
+  (`texture_alpha.h`) still blend as straight alpha.
 
 ## SDL2 Usage
 

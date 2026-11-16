@@ -33,9 +33,9 @@ building_water_lift {
   fire_risk [0]
   damage_risk [3]
   irrigation_radius : 2
-  canal_fill_water_level : 32
   base_irrigation_value : 32
   flags {
+    no_map_edge_margin: true
     draw_normal_anim: true
   }
 }

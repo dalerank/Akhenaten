@@ -1,5 +1,6 @@
 #include "figure_entertainer.h"
 
+#include "building/building_ferry.h"
 #include "core/calc.h"
 #include "city/city_buildings.h"
 #include "city/city_figures.h"
@@ -225,6 +226,21 @@ void figure_entertainer::figure_action() {
             // Reached the square, now return home
             advance_action(ACTION_7_ENTERTAINER_RETURNING_EMPTY);
         }
+        break;
+
+    case ACTION_8_ENTERTAINER_ON_FERRY:
+        base.set_flag(e_figure_flag_invisible, true);
+        if (++base.wait_ticks > 100) {
+            base.wait_ticks = 0;
+            if (!figure_is_queued_for_ferry(id())) {
+                base.set_flag(e_figure_flag_invisible, false);
+                advance_action(ACTION_0_ENTERTAINER_AT_SCHOOL_CREATED);
+            }
+        }
+        break;
+
+    case ACTION_9_ENTERTAINER_WAIT_FOR_FERRY:
+        base.animctx.frame = 0;
         break;
 
     case ACTION_7_ENTERTAINER_RETURNING_EMPTY:

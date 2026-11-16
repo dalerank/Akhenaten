@@ -143,6 +143,21 @@ message_dialog_window_image {
     })
 }
 
+// Gift message dialog (OG MESSAGE_TEMPLATE_GIFT): the replies shown are the message's gift buttons.
+[es=message_dialog_window]
+message_dialog_window_gift {
+    pos: [(sw(0) - px(30))/2, (sh(0) - px(20))/2]
+    help_id: ""
+
+    ui :baseui(message_dialog_window_general, {
+        content_panel  : inner_panel({pos[16, 54], size[28, 13]})
+        content_text   : text({pos[16, 54], size[px(28), px(13)], font: FONT_NORMAL_WHITE_ON_DARK, rich: true, clip_area: true, text_margin{ left:10, right:20 }})
+        button_refuse  : button({pos[38, 274], size[130, 25], text:"#gift_refuse", font:FONT_NORMAL_BLACK_ON_LIGHT, enabled: false})
+        button_later   : button({pos[172, 274], size[130, 25], text:"#gift_later", font:FONT_NORMAL_BLACK_ON_LIGHT, enabled: false})
+        button_accept  : button({pos[306, 274], size[130, 25], text:"#gift_accept", font:FONT_NORMAL_BLACK_ON_LIGHT, enabled: false})
+    })
+}
+
 [es=message_dialog_window]
 message_dialog_window_troop_request {
     pos: [(sw(0) - px(30))/2, (sh(0) - px(32))/2]

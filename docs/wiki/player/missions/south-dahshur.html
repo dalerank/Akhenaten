@@ -166,21 +166,21 @@
         <li><span class="obj-label">Population</span><span class="obj-value">3 500 citizens</span></li>
         <li><span class="obj-label">Culture rating</span><span class="obj-value">not required</span></li>
         <li><span class="obj-label">Prosperity rating</span><span class="obj-value">25</span></li>
-        <li><span class="obj-label">Monument rating</span><span class="obj-value">21 — complete the Medium Bent Pyramid</span></li>
+        <li><span class="obj-label">Monument rating</span><span class="obj-value">21 — complete the Medium Bent Pyramid and send its granite</span></li>
         <li><span class="obj-label">Kingdom rating</span><span class="obj-value">50</span></li>
         <li><span class="obj-label">Housing level</span><span class="obj-value">19</span></li>
       </ul>
       <div class="deviation-note">
-        <strong>Note:</strong> the Medium Bent Pyramid uses the original <code>bent_pyramid</code> art pack. A finished medium bent (weight 8) gives rating 22 under the additive formula — enough for the pak goal of 21. Per-type monument weights are still placeholders pending weight recalibration.
+        <strong>Note:</strong> the Medium Bent Pyramid uses the original <code>bent_pyramid</code> art pack. A finished medium bent (weight 10) gives <code>trunc(6.32·√10+0.5) = 20</code> under the original formula; the burial provisions (granite ×32, one point) bring it to <code>trunc(6.32·√11+0.5) = 21</code>, the pak goal.
       </div>
 
       <h2 id="events">Scripted events</h2>
-      <p>Full empire redefine + event schedule verified against original campaign scenario 14. Empire id <strong>13</strong> (same fork map as Buhen). Scenario enemy is <strong>Hyksos</strong> (<code>ENEMY_5_HYKSOS</code>); there are <strong>no</strong> timed enemy raids — only Pharaoh's favour punishment (size <strong>49 → 21</strong>) if kingdom rating collapses. Favour / invasions stay JS-proxied until B2-migrate.</p>
+      <p>Full empire redefine + event schedule verified against original campaign scenario 14. Empire id <strong>13</strong> (same fork map as Buhen). Scenario enemy is <strong>Hyksos</strong> (<code>ENEMY_5_HYKSOS</code>); there are <strong>no</strong> timed enemy raids — only Pharaoh's favour punishment (size <strong>49 → 21</strong>, <code>BY_FAVOUR</code> events in <code>events[]</code>, pak i=37→38). At Kingdom rating 0 the engine sends the <code>BY_FAVOUR</code> invasion from <code>events[]</code> (OG <code>city/kingdom.c</code>): warnings over its <code>months_initial</code>, then the attack; the chained wave attacks together with it. It is called off if the rating reaches 15 before the attack, and can come again 12 months later.</p>
       <div class="tutorial-step"><span class="step-tag">Year 1 · month 6</span><span>Oil ladder root: <strong>500 oil</strong> / 12 months. Success KR steps chain further oil asks (1 000 → 2 000 → 4 000); refuse/late branches escalate amounts up to <strong>8 000</strong> and eventually land on CITY_UNDER_SIEGE Dahshur → Byblos falls → copper/gems price &amp; demand cascade.</span></div>
       <div class="tutorial-step"><span class="step-tag">Year 2 · month 10+</span><span>Recurring Pharaoh request: <strong>10 grain</strong> / 24 months (idle-gated). Completing +8 kingdom; refuse −8; late −4.</span></div>
       <div class="tutorial-step"><span class="step-tag">Year 4 · month 8</span><span>Limestone <strong>×32</strong> / 24 months → ok: KR+8 then stone gift ×64; refuse: KR−15 then stone demand −8; late: KR−5 then stone gift ×32.</span></div>
       <div class="tutorial-step"><span class="step-tag">Year 5+</span><span>Recurring wage decrease (−1) every year from year 5.</span></div>
-      <div class="tutorial-step"><span class="step-tag">Favour collapse</span><span>Pharaoh army size <strong>49</strong>, then chained size <strong>21</strong> (Egyptian troops, random target).</span></div>
+      <div class="tutorial-step"><span class="step-tag">Favour collapse</span><span>Pharaoh army size <strong>49</strong> (warning 6 months) with a chained size <strong>21</strong> (Egyptian troops, random target).</span></div>
 
       <h2 id="strategy">Strategy</h2>
       <p>Everything here serves the pyramid. Culture is not scored, so effort goes into food (for 3 500 people), stone/limestone, housing level 19, and keeping kingdom rating off the floor while the oil ladder and grain requests fire.</p>
@@ -259,7 +259,7 @@
               <li><span class="ev-name">Grain recurring (i=9)</span><span class="ev-desc">y2m10+ grain×10/24mo, idle-gated, Pharaoh sender.</span><span class="ev-fn">mission14_event_i9_grain_recurring</span></li>
               <li><span class="ev-name">Limestone once (i=10)</span><span class="ev-desc">y4m8 limestone×32 → stone gift / demand leaves.</span><span class="ev-fn">mission14_event_i10_limestone_request</span></li>
               <li><span class="ev-name">Wage decrease (i=11)</span><span class="ev-desc">y5m0+ amount 1 recurring.</span><span class="ev-fn">mission14_event_i11_wage_decrease</span></li>
-              <li><span class="ev-name">Favour (i=37→38)</span><span class="ev-desc">Pharaoh army 49→21 via shared helper.</span><span class="ev-fn">mission14_pharaoh_favour_invasion</span></li>
+              <li><span class="ev-name">Favour (i=37→38)</span><span class="ev-desc">Pharaoh army 49→21, <code>events[]</code> sent by the engine at Kingdom rating 0.</span><span class="ev-fn">event_manager_t::update_kingdom_favour</span></li>
             </ul>
           </div>
         </details>
@@ -282,12 +282,12 @@
           <summary>Known deviations from the original (tracked)</summary>
           <div class="details-body">
             <ul>
-              <li><strong>Monument weights:</strong> goal 21 is the pak raw value; finished medium bent → rating 22 under the additive formula. Per-type weights will be recalibrated later.</li>
+              <li><strong>Monument weights:</strong> goal 21 is the pak raw value; finished medium bent (weight 10) → 20, plus granite burial 32/32 (one point) → 21. <code>burial_provisions</code> in <code>m_014_south_dahshur.js</code> states the pak granite ×32 explicitly.</li>
               <li><strong>Clay floods i=0/1/12/13 skipped:</strong> all year=24 editor junk.</li>
               <li><strong>Route 5 (Men-nefer):</strong> pak has no polyline — 2-point stub + deviation from Dahshur to Men-nefer.</li>
               <li><strong>map_obj idx=10</strong> empty stub skipped.</li>
               <li><strong>Oil ladder end:</strong> completing the final KR+16 leaf also chains into CITY_UNDER_SIEGE Dahshur (pak wiring copied faithfully — odd for a success path).</li>
-              <li><strong>Favour invasions</strong> JS-proxied until B2-migrate (no timed Hyksos raids in this scenario).</li>
+              <li><strong>Favour invasions</strong> are native <code>events[]</code> <code>BY_FAVOUR</code> entries (no timed Hyksos raids in this scenario).</li>
               <li><strong>Next mission 15</strong> (North Dahshur) is not scripted yet; the campaign currently ends after a win here.</li>
             </ul>
           </div>

@@ -62,12 +62,14 @@ constexpr int BUILDING_STORAGE_EMPTY_ALL_BACKUP_CHUNK_SIZE =
     BUILDING_STORAGE_EMPTY_ALL_BACKUP_SLOTS * RESOURCES_MAX * 2;
 
 void building_storage_clear_all();
-int building_storage_create(int building_type);
+int building_storage_create(int building_type, int building_id);
 
 int building_storage_restore(int storage_id);
 void building_storage_delete(int storage_id);
 
 const storage_t* building_storage_get(int storage_id);
+// Fills a storage record as a converted save holds it (OG save converter).
+void building_storage_set(int storage_id, int building_id, bool in_use, const storage_t &storage);
 
 void building_storage_cycle_resource_state(int storage_id, int resource_id, bool backwards);
 

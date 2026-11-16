@@ -27,6 +27,9 @@ figure_worker {
 	category: figure_category_citizen
 	max_damage : 10
 	record_path : true
+	// OG laborer.c handles FIGURE_ACTION_WAIT_FOR_FERRY / ON_FERRY; its sled train rides along.
+	can_cross_ferry: true
+	boards_ferry: true
 	// OG laborer_rules defaults (laborer.c).
 	load: 400
 	yard_wait_ticks: 4

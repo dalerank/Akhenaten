@@ -148,6 +148,3 @@ bool building_dike::preview::can_construction_start(build_planner &p, tile2i sta
     }
     return map_routing_calculate_distances_for_building(ROUTED_BUILDING_DIKE, start);
 }
-
-void building_dike::on_place_checks() {
-}

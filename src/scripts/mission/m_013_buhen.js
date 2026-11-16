@@ -16,7 +16,6 @@ mission13 { // Buhen — Expansion to Nubia
 	initial_funds [20000, 13300, 10000, 6700, 5300]
 	rescue_loans [10000, 6700, 5000, 3300, 2700]
 	debt_interest [10, 15, 20, 25, 30]
-	house_tax_multipliers [300, 200, 150, 100, 75]
 
 	init_resources : {
 		bricks: { type:RESOURCE_BRICKS, allow: true},
@@ -59,13 +58,13 @@ mission13 { // Buhen — Expansion to Nubia
 	]
 
 	// Goals aligned with original campaign scenario 13: pop 1/3000, culture 1/25, prosperity
-	// 1/25, monuments TEMP 9 (pak raw 6; one small obelisk → formula 9, see header),
+	// 1/25, monuments 1/6 (pak; one small obelisk, OG weight 1 → 6),
 	// kingdom 1/75, housing_level 1/10 (housing count goal 0 ignored).
 	win_criteria {
 		population    {enabled : true, goal : 3000 }
 		culture       {enabled : true, goal : 25 }
 		prosperity    {enabled : true, goal : 25 }
-		monuments     {enabled : true, goal : 9 }
+		monuments     {enabled : true, goal : 6 }
 		kingdom       {enabled : true, goal : 75 }
 		housing_level {enabled : true, goal : 10 }
 	}
@@ -79,6 +78,54 @@ mission13 { // Buhen — Expansion to Nubia
 	disembark_points [ [-1, -1], [-1, -1], [71, 49] ]
 
 	enable_scenario_events : true
+
+	events [
+		{ // pak i=48
+			type : EVENT_TYPE_INVASION
+			time { year : 0, month : 0 }
+			item { value : EVENT_INVADER_PHARAOH }
+			amount { value : 22, min : 20, max : 30 }
+			months_initial : 9
+			location_fields [ 1, 1, -1, -1 ]
+			event_trigger_type : EVENT_TRIGGER_BY_FAVOUR
+			tag_id : 7048
+			on_completed_action : 1
+			on_refusal_action : -1
+			on_too_late_action : -1
+			on_defeat_action : -1
+			invasion_attack_target : EVENT_ATTACK_TARGET_RANDOM
+		}
+		{ // pak i=49
+			type : EVENT_TYPE_INVASION
+			time { year : 0, month : 0 }
+			item { value : EVENT_INVADER_PHARAOH }
+			amount { value : 21, min : 20, max : 30 }
+			months_initial : 0
+			location_fields [ 2, 2, -1, -1 ]
+			event_trigger_type : EVENT_TRIGGER_ONLY_VIA_EVENT
+			tag_id : 7049
+			on_completed_action : 2
+			on_refusal_action : -1
+			on_too_late_action : -1
+			on_defeat_action : -1
+			invasion_attack_target : EVENT_ATTACK_TARGET_RANDOM
+		}
+		{ // pak i=50
+			type : EVENT_TYPE_INVASION
+			time { year : 0, month : 0 }
+			item { value : EVENT_INVADER_PHARAOH }
+			amount { value : 28, min : 20, max : 30 }
+			months_initial : 0
+			location_fields [ 3, 3, -1, -1 ]
+			event_trigger_type : EVENT_TRIGGER_ONLY_VIA_EVENT
+			tag_id : 7050
+			on_completed_action : -1
+			on_refusal_action : -1
+			on_too_late_action : -1
+			on_defeat_action : -1
+			invasion_attack_target : EVENT_ATTACK_TARGET_RANDOM
+		}
+	]
 
 	// Empire from original campaign scenario 13 (empire id=13) — full map objects.
 	map_background : {pack:PACK_EMPIRE, id:1}
@@ -103,8 +150,6 @@ mission13 { // Buhen — Expansion to Nubia
 			cost_to_open : 600
 			is_sea_trade : false
 			type : EMPIRE_CITY_EGYPTIAN_TRADING
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_GRAIN, RESOURCE_STRAW, RESOURCE_FLAX, RESOURCE_LINEN, RESOURCE_GEMS, RESOURCE_GRANITE ]
 			buys [ RESOURCE_POTTERY, RESOURCE_PAPYRUS ]
 			route_limits [
@@ -128,8 +173,6 @@ mission13 { // Buhen — Expansion to Nubia
 			cost_to_open : 300
 			is_sea_trade : false
 			type : EMPIRE_CITY_EGYPTIAN_TRADING
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_LUXURY_GOODS, RESOURCE_TIMBER ]
 			buys [ RESOURCE_POTTERY, RESOURCE_BEER, RESOURCE_LINEN, RESOURCE_PAPYRUS, RESOURCE_COPPER ]
 			route_limits [
@@ -152,8 +195,6 @@ mission13 { // Buhen — Expansion to Nubia
 			cost_to_open : 900
 			is_sea_trade : true
 			type : EMPIRE_CITY_EGYPTIAN_TRADING
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_GRAIN, RESOURCE_CLAY, RESOURCE_POTTERY, RESOURCE_TIMBER, RESOURCE_REEDS, RESOURCE_PAPYRUS ]
 			buys [ RESOURCE_BARLEY, RESOURCE_BEER, RESOURCE_LINEN ]
 			route_limits [
@@ -178,8 +219,6 @@ mission13 { // Buhen — Expansion to Nubia
 			cost_to_open : 800
 			is_sea_trade : true
 			type : EMPIRE_CITY_PHARAOH_TRADING
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_CHICKPEAS, RESOURCE_POTTERY, RESOURCE_PAPYRUS ]
 			buys [ RESOURCE_BRICKS, RESOURCE_BARLEY, RESOURCE_BEER ]
 			route_limits [
@@ -201,8 +240,6 @@ mission13 { // Buhen — Expansion to Nubia
 			cost_to_open : 1580
 			is_sea_trade : true
 			type : EMPIRE_CITY_FOREIGN_TRADING
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_FISH, RESOURCE_COPPER ]
 			buys [ RESOURCE_BEER ]
 			route_limits [
@@ -222,8 +259,6 @@ mission13 { // Buhen — Expansion to Nubia
 			cost_to_open : 1250
 			is_sea_trade : false
 			type : EMPIRE_CITY_EGYPTIAN_TRADING
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_GEMS, RESOURCE_LUXURY_GOODS, RESOURCE_COPPER ]
 			route_limits [
 				{ resource: RESOURCE_GEMS, limit: 2500 }
@@ -435,15 +470,6 @@ mission13 { // Buhen — Expansion to Nubia
 		clay_pit_flood_last_year : -1
 
 		// Favour Pharaoh invasion — three waves (pak i=48→49→50: 22→21→28).
-		pharaoh_favour_invasion_done : false
-		pharaoh_favour_chain_done : false
-		pharaoh_favour_enemies_seen : false
-		pharaoh_favour_wave_next : -1
-		pharaoh_favour_wave_seq : 0
-		pharaoh_favour_wave2_enemies_seen : false
-		pharaoh_favour_wave2_done : false
-		pharaoh_favour_wave3_enemies_seen : false
-		pharaoh_favour_wave3_done : false
 
 		start_message_shown : false
 	}
@@ -944,10 +970,4 @@ function mission13_clay_pit_flood_recurring(ev) {
 			trigger: EVENT_TRIGGER_ONCE
 		}).execute()
 	}
-}
-
-// pak i=48/49/50: by_favour Pharaoh army size=22 → 21 → 28.
-[es=event_advance_month, mission=mission13]
-function mission13_pharaoh_favour_invasion(ev) {
-	mission_pharaoh_favour_invasion_tick(mission, [22, 21, 28])
 }

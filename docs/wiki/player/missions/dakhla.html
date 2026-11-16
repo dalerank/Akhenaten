@@ -84,12 +84,12 @@
         <li><span class="obj-label">Population</span><span class="obj-value">5 000</span></li>
         <li><span class="obj-label">Culture</span><span class="obj-value">50</span></li>
         <li><span class="obj-label">Prosperity</span><span class="obj-value">45</span></li>
-        <li><span class="obj-label">Monuments</span><span class="obj-value">9 — small granite obelisk (TEMP; pak raw 6)</span></li>
+        <li><span class="obj-label">Monuments</span><span class="obj-value">6 — small granite obelisk (pak)</span></li>
         <li><span class="obj-label">Kingdom</span><span class="obj-value">65</span></li>
         <li><span class="obj-label">Housing level</span><span class="obj-value">11</span></li>
       </ul>
       <div class="deviation-note">
-        <strong>TEMP monuments 9 / pak 6:</strong> same additive formula as Buhen. Clear trees carefully — they block oasis water. Briefing “ebony” maps to <code>RESOURCE_LUXURY_GOODS</code> (no native ebony resource).
+        <strong>Monuments 6 = pak:</strong> one finished small obelisk (weight 1) → <code>trunc(6.32·√1+0.5)=6</code>, as in Buhen. Clear trees carefully — they block oasis water. Briefing “ebony” maps to <code>RESOURCE_LUXURY_GOODS</code> (no native ebony resource).
       </div>
 
       <h2 id="events">Scripted events (summary)</h2>
@@ -101,6 +101,7 @@
           <summary>Mission script</summary>
           <div class="details-body">
             <p><span class="file-ref">src/scripts/mission/m_022_dakhla.js</span> · import in <span class="file-ref">src/scripts/missions.js</span></p>
+            <p>Kingdom army: at Kingdom rating 0 the engine sends the <code>EVENT_TRIGGER_BY_FAVOUR</code> invasion from <code>events[]</code> (<code>update_kingdom_favour</code>, <code>src/scenario/scenario_event_manager.cpp</code>): warnings for its <code>months_initial</code>, then the attack; its <code>on_completed_action</code> chain joins at the attack. Called off if the rating reaches 15 before it attacks; it can come again 12 months later. pak i=56: Pharaoh ×90, no chain.</p>
             <p>Empire id <strong>1</strong>. Map <span class="file-ref">data/maps/m_022_dakhla.map</span>. Rank 8. Enemy <code>ENEMY_6_KUSHITE</code>.</p>
             <p>SKIP: empty map_obj idx=9. Kharga route 12 = 2-pt stub. No river / disembark / inv points in pak. Timber gift oil×812 is pak amount (engine ×100 units).</p>
             <p>Once + recurring request KR via <code>event_request_cleared</code> + unique <code>fire_kr</code> (B14). Timber ×18 gift ladder remains ONLY_VIA (once). Luxury i=39 late=666 skipped.</p>

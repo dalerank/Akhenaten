@@ -284,7 +284,7 @@
       <p>Goals match original campaign scenario 7. Small and medium mastabas plus bricklayers guild support the monument target.</p>
 
       <h2 id="events">Scripted events</h2>
-      <p>Verified against pak scenario 7 (2026-07-25 dump). Enemy is <strong>Kushite</strong> (<code>ENEMY_6_KUSHITE</code>). Favour-KR Pharaoh army size 40 via shared helper.</p>
+      <p>Verified against pak scenario 7 (2026-07-25 dump). Enemy is <strong>Kushite</strong> (<code>ENEMY_6_KUSHITE</code>). Favour-KR Pharaoh army size 40 → chained 40: <code>BY_FAVOUR</code> events in <code>events[]</code> (pak i=19→20).</p>
 
       <div class="tutorial-step">
         <span class="step-tag">Year 2 · month 2</span>
@@ -336,7 +336,7 @@
       </div>
       <div class="tutorial-step">
         <span class="step-tag">Favour KR</span>
-        <span>Pharaoh punishment army size <strong>40</strong>; after it clears, chain army size <strong>40</strong> again.</span>
+        <span>Pharaoh punishment army size <strong>40</strong>; when it attacks, a chained army of <strong>40</strong> attacks at a second entry point. At Kingdom rating 0 the engine sends the <code>BY_FAVOUR</code> invasion from <code>events[]</code> (OG <code>city/kingdom.c</code>): warnings over its <code>months_initial</code>, then the attack. It is called off if the rating reaches 15 before the attack, and can come again 12 months later.</span>
       </div>
 
       <h2 id="strategy">Strategy</h2>
@@ -362,6 +362,7 @@
           <summary>Mission script — <code>src/scripts/mission/m_007_abydos.js</code></summary>
           <div class="details-body">
             <p>Imported by <span class="file-ref">src/scripts/missions.js</span>. Full empire redefine: <code>hide_pak_cities</code> / <code>hide_pak_routes</code> / <code>hide_pak_objects</code>, <code>map_background</code>, empire id <strong>0</strong>, cities with <code>pos</code>/<code>idx</code>, sea+land <code>empire_routes</code>, region texts, mastaba ornament.</p>
+            <p>OG sends a pak invasion with loc 9+ by sea from sea point loc&nbsp;&minus;&nbsp;9, with the event&rsquo;s <code>phrase_var</code> warships; the JS raid passes them as <code>via_sea</code> / <code>sea_point</code> / <code>warships</code>: Kushite i=13 ×3 with 1 warship (loc 9 &rarr; <code>[127,59]</code>). <code>mission7_kushite_invasion_1</code>.</p>
             <pre><code><span class="kw">win_criteria</span> {
   <span class="kw">population</span> <span class="num">2500</span> · <span class="kw">culture</span> <span class="num">25</span> · <span class="kw">prosperity</span> <span class="num">25</span>
   <span class="kw">monuments</span> <span class="num">17</span> · <span class="kw">kingdom</span> <span class="num">60</span> · <span class="kw">housing_level</span> <span class="num">10</span>
@@ -391,8 +392,8 @@
               <li>
                 <span class="ev-name">event_advance_month</span>
                 <span class="ev-line">invasions</span>
-                <span class="ev-desc">Kushite size 3 (y14m9); favour army 40 then chain 40 after clear.</span>
-                <span class="ev-fn">mission7_kushite_invasion_1 / favour</span>
+                <span class="ev-desc">Kushite size 3 (y14m9); favour army 40 + chain 40 from <code>events[]</code> (engine).</span>
+                <span class="ev-fn">mission7_kushite_invasion_1</span>
               </li>
             </ul>
           </div>

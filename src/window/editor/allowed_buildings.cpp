@@ -8,9 +8,14 @@
 #include "graphics/elements/panel.h"
 #include "graphics/window.h"
 #include "input/input.h"
+#include "building/building_type.h"
+#include "city/city.h"
+#include "empire/empire.h"
 #include "scenario/editor.h"
+#include "scenario/scenario.h"
 #include "window/editor/attributes.h"
 #include "window/editor/window_editor.h"
+#include "window/popup_dialog.h"
 
 static void toggle_building(int id, int param2);
 
@@ -47,7 +52,34 @@ static void draw_background(int) {
     window_editor_map_draw_all();
 }
 
+static bool empire_city_sells(e_resource resource) {
+    for (const auto &city : g_empire.get_cities()) {
+        if (city.in_use && city.sells_resource[resource]) {
+            return true;
+        }
+    }
+    return false;
+}
+
+void editor_check_zoo_resources(void) {
+    if (popup_dialog::is_open()) {
+        return;
+    }
+    if (!g_scenario.allowed_buildings[BUILDING_ZOO]) {
+        return;
+    }
+    // Straw ignores other cities' grain; only our city producing grain counts.
+    const bool straw = empire_city_sells(RESOURCE_STRAW) || g_city.can_produce_resource(RESOURCE_GRAIN);
+    if (empire_city_sells(RESOURCE_GAMEMEAT) && straw) {
+        return;
+    }
+    g_scenario.allowed_buildings[BUILDING_ZOO] = false;
+    g_scenario.is_saved = 0;
+    popup_dialog::show_ok("#building_removed_zoo");
+}
+
 static void draw_foreground(int) {
+    editor_check_zoo_resources();
     graphics_set_to_dialog();
 
     outer_panel_draw(vec2i{16, 32}, 38, 26);

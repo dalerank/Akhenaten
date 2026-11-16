@@ -1,5 +1,5 @@
-// Laborer brick delivery: spawn OG sled train (5 pullers + sled) linked via leading_figure_id;
-// train members stay in ACTION_8 and follow_closely while laborer pulls.
+// Laborer brick delivery: OG sled train (5 pullers + sled) linked via leading_figure_id, spawned once the
+// laborer has its load; train members stay in ACTION_8 and follow_closely while the laborer pulls.
 
 function run_test() {
     __log_info_native('[test:275] laborer sled train spawn + follow_closely')
@@ -94,12 +94,12 @@ function run_test() {
         return
     }
 
-    var fid = __test_figure_create(FIGURE_LABORER, tile.x, tile.y + 3)
+    var ytile = __building_tile(yard)
+    var fid = __test_figure_create(FIGURE_LABORER, ytile.x, ytile.y)
     // figure_before_action poofs workers whose home building slot 0 lacks them.
     __test_figure_set_home_slot(fid, camp)
     city.get_building(bid).add_workers(fid)
     __worker_assign_brick_delivery(fid, bid, bl)
-    // ACTION_15 TO_STORAGE_YARD keeps train followers pulling.
     if (__test_figure_get_action(fid) != 15) {
         __log_info_native('[test:275] assign_block_delivery did not enter TO_STORAGE_YARD')
         __log_marker('sled_train_spawn_fail:assign')
@@ -107,9 +107,14 @@ function run_test() {
         return
     }
 
-    var n = __pyramid_spawn_sled_train(fid, bid)
+    // OG at_storage_yard: the train appears only after the load is taken.
+    var n = 0
+    for (var s = 0; s < 400 && n < 6; s++) {
+        __test_figures_update()
+        n = __pyramid_count_sled_train_followers(fid)
+    }
     if (n < 6) {
-        __log_info_native('[test:275] spawn_sled_train expected 6 figures, got ' + n)
+        __log_info_native('[test:275] spawn_sled_train expected 6 figures, got ' + n + ' action=' + __test_figure_get_action(fid))
         __log_marker('sled_train_spawn_fail:' + n)
         __test_signal_ready()
         return

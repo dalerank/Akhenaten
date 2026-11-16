@@ -12,6 +12,7 @@ enum e_event_type : uint8_t {
 
     EVENT_TYPE_REQUEST = 1,
     EVENT_TYPE_INVASION = 2,
+    EVENT_TYPE_EARTHQUAKE = 3,
 
     EVENT_TYPE_SEA_TRADE_PROBLEM = 6,
     EVENT_TYPE_LAND_TRADE_PROBLEM = 7,
@@ -56,6 +57,13 @@ enum e_event_state : uint8_t {
     e_event_state_failed = 5,
     e_event_state_received = 6,
     e_event_state_already_fired = 7,
+    // Requests after the dispatch (OG REQUEST_STATE_DISPATCHED / _DISPATCHED_LATE): on the way.
+    e_event_state_dispatched = 8,
+    e_event_state_dispatched_late = 9,
+    // Troop requests (OG REQUEST_STATE_RECEIVED / TROOPS_RETURN / TROOPS_RETURN_TOO_LATE).
+    e_event_state_troops_away = 10,
+    e_event_state_troops_return = 11,
+    e_event_state_troops_return_too_late = 12,
     e_event_state_max
 };
 using e_event_state_tokens_t = token_holder<e_event_state, e_event_state_initial, e_event_state_max>;
@@ -65,10 +73,11 @@ extern const e_event_state_tokens_t e_event_state_tokens;
 // exposes the *first* name at each value to JS; other aliases are registered
 // separately in scenario_event_manager.cpp.
 enum e_event_subtype : uint8_t {
-    EVENT_SUBTYPE_MSG_CITY_SAVED = 0,       // MESSAGE (JS primary for 0)
-    EVENT_SUBTYPE_CITY_FELL_TO_ENEMY = 0,   // CITY_STATUS
-    EVENT_SUBTYPE_GENERIC_REQUEST = 0,      // REQUEST
-    EVENT_SUBTYPE_FOREIGN_CITY_CONQUERED = 1,
+    EVENT_SUBTYPE_MSG_CITY_SAVED = 0,         // MESSAGE (JS primary for 0)
+    EVENT_SUBTYPE_CITY_FELL_TO_ENEMY = 0,     // CITY_STATUS
+    EVENT_SUBTYPE_GENERIC_REQUEST = 0,        // REQUEST
+    EVENT_SUBTYPE_MSG_BATTLE_WON = 1,         // MESSAGE (JS primary for 1)
+    EVENT_SUBTYPE_FOREIGN_CITY_CONQUERED = 1, // CITY_STATUS
     EVENT_SUBTYPE_CITY_ASKS_FOR_TROOPS = 1,
     EVENT_SUBTYPE_MSG_DISTANT_BATTLE_LOST = 2,
     EVENT_SUBTYPE_DISTANT_BATTLE = 2,
@@ -139,6 +148,27 @@ enum e_event_var : uint8_t {
     EVENT_VAR_AUTO = 6, // (automatically set)
 };
 
+// OG scenario_internal.h gift_state, kept in event_state of EVENT_TYPE_GIFT_FROM_PHARAOH.
+enum e_gift_state : uint8_t {
+    GIFT_STATE_NEW = 0,
+    GIFT_STATE_OFFERED = 1,
+    GIFT_STATE_OFFER_AGAIN = 2,
+    GIFT_STATE_OFFERED_AGAIN = 3,
+    GIFT_STATE_OFFER_LAST = 4,
+    GIFT_STATE_OFFERED_LAST = 5,
+    GIFT_STATE_ACCEPTED = 6,
+    GIFT_STATE_REFUSED = 7,
+    GIFT_STATE_TOO_LATE = 8,
+    GIFT_STATE_DONE = 9,
+};
+
+// OG gift_button_flag: the replies a gift message offers.
+enum e_gift_button : uint8_t {
+    GIFT_BUTTON_REFUSE = 1,
+    GIFT_BUTTON_LATER = 2,
+    GIFT_BUTTON_ACCEPT = 4,
+};
+
 enum e_event_action : int8_t {
     EVENT_ACTION_NONE = -1,
     EVENT_ACTION_COMPLETED = 0,
@@ -152,6 +182,8 @@ struct event_ph_value {
     int16_t f_fixed;
     int16_t f_min;
     int16_t f_max;
+
+    void archive_load(archive arch);
 };
 ANK_CONFIG_STRUCT(event_ph_value, value)
 
@@ -183,21 +215,37 @@ struct event_ph_t {
     bool is_active;
     bool can_comply_dialog_shown;
     bool appear_dialgow_shown;
-    int16_t __unk11;
-    int8_t festival_deity;
+    int16_t parent_id;
+    int8_t phrase_var; // OG phrase_var: the warships of a sea invasion (mission key `warships`)
     int8_t reserved_unk12;
     int8_t invasion_attack_target;
-    // ...
-    // ...
-    // ...
+    // OG scenario_event.data: 22 bytes, read by type.
+    union {
+        struct {
+            int16_t duration;
+            int16_t delay;
+            int16_t ticks;
+            std::array<int16_t, 8> locations; // 4 fronts, x/y
+        } earthquake;
+        struct {
+            int16_t countdown;
+            int16_t total;
+        } sweep; // blood river: OG map_sweep_countdown / map_sweep_total
+        struct {
+            int32_t kingdom;       // editor request slot
+            uint8_t months_margin; // troop request: OG months_margin (its slot 0x61 holds city_id here)
+        } request;
+    } data;
+    int16_t earthquake_step;
     int16_t on_too_late_action;
     int16_t on_defeat_action;
     int8_t sender_faction;
-    int32_t param1;
-    int16_t route_fields[4];
+    uint8_t invasion_warnings_shown; // bit w = OG invasion_warnings[w] already posted
+    std::array<int16_t, 4> route_fields;
     int8_t subtype;
     int8_t city_id;
-    int16_t __unk16;
+    uint8_t coin; // troop request: which month the last reminder comes
+    uint8_t parent_city;
     image_desc image;
     int8_t on_completed_msgAlt;
     int8_t on_refusal_msgAlt;
@@ -209,12 +257,16 @@ struct event_ph_t {
 
     void set_param(pcstr name, int param);
 
-    game_date_t date() { return {time.year, time.month}; }
+    game_date_t date() const { return {time.year, time.month}; }
     void archive_load(archive arch);
 };
-ANK_CONFIG_STRUCT(event_ph_t, type, time, item, amount, tag_id, months_initial, location_fields, reasons,
-                   sender_faction, event_trigger_type, on_completed_action, on_refusal_action, on_too_late_action,
-                   on_defeat_action, subtype, city_id, invasion_attack_target)
+ANK_CONFIG_STRUCT(event_ph_t, type, time, item, amount, tag_id, months_initial, location_fields, route_fields, reasons,
+  sender_faction, event_trigger_type, on_completed_action, on_refusal_action, on_too_late_action, on_defeat_action,
+  subtype, city_id, invasion_attack_target)
+
+// OG event_helpers.c scenario_event_is_running / scenario_event_months_left for an invasion event.
+bool scenario_invasion_is_running(const event_ph_t& e);
+int scenario_invasion_months_left(const event_ph_t& e);
 
 struct mission_id_t;
 struct event_manager_t {
@@ -224,11 +276,30 @@ struct event_manager_t {
 
     void execute_event(int tag);
     void process_active_request(int id);
+    void process_gift(event_ph_t& event);
+    // OG gift_buttons.c: the reply to a gift message; false when the gift no longer takes it.
+    bool gift_reply(int event_id, e_gift_button button);
+
     void process_event(int id, bool via_event_trigger, int chain_action_parent, int caller_event_id = -1, int caller_event_var = EVENT_VAR_AUTO);
     void process_event_city_under_siege(const event_ph_t &event, bool via_event_trigger, int chain_action_parent, int caller_event_id, int caller_event_var);
     void process_event_distant_battle(const event_ph_t &event, bool via_event_trigger, int chain_action_parent, int caller_event_id, int caller_event_var);
     void process_events();
     void process_random_events();
+    void process_invasions();
+    void process_invasion(event_ph_t &event);
+    // OG city/kingdom.c city_emperor_update, tick 4 of each day: at Kingdom rating 0 the first
+    // favour invasion is sent now and rests 12 months.
+    void update_kingdom_favour();
+    bool invasion_runs_og(const event_ph_t& e);
+    // Per sim tick: the blood river sweep (earthquakes: scenario_earthquake_process).
+    void update_tick();
+    bool blood_river_sweep_active() const;
+    bool any_invasion_running() const;
+    bool favour_invasion_fired() const;
+
+    // Mission flag og_invasions: EVENT_TYPE_INVASION events run the OG monthly warning/attack cycle.
+    // Missions without it still raise their invasions from JS; a favour invasion and its chain run the OG cycle anyway.
+    bool og_invasions = false;
     event_ph_t *create(const event_ph_t *parent);
     bool create(const event_ph_t *master, const event_ph_t *parent, e_event_trigger_type trigger_type);
     bool is_valid_event_index(int id);
@@ -242,6 +313,20 @@ struct event_manager_t {
     void create_pharaoh_gift(int tag, e_resource r, int amount);
     void create_foreign_army_attack_warning(int tag, int8_t sender_faction, int months_initial = 0,
                                             int invader = 0);
+    // EVENT_TYPE_INVASION created at run time; same fields as a mission events[] entry. Returns the event id.
+    struct invasion_event_desc {
+        int tag = 0;
+        e_event_trigger_type trigger = EVENT_TRIGGER_ONCE;
+        int year = 0;  // years since start; for ONLY_VIA templates the delay in months
+        int month = 0;
+        int invader = EVENT_INVADER_ENEMY;
+        int amount = 0;
+        int months_initial = 0;
+        int route = 0;
+        int empire_route = 0; // OG scenario_event.invasion: the route its marker walks on the empire map
+        int8_t attack_target = EVENT_ATTACK_TARGET_RANDOM;
+    };
+    int create_invasion(const invasion_event_desc &desc);
     void create_distant_battle(int tag, pcstr city, vec2i pos);
     void win_distant_battle(int tag, pcstr city, vec2i pos);
     void create_chain_event(int tag, e_event_type type, int amount, e_resource resource = RESOURCE_NONE,

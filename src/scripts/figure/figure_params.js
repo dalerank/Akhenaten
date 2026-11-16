@@ -5,3 +5,4 @@ log_info("akhenaten: figure_params.js loaded")
 FigureParams.property.overlay = { }
 FigureParams.property.is_enemy = { }
 FigureParams.property.category = { }
+FigureParams.property.no_portrait = { }

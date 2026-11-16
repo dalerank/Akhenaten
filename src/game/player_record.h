@@ -33,7 +33,7 @@ struct player_record {
     uint32_t final_funds = 0;
     uint32_t completion_months = 0;
     uint32_t difficulty = 0;
-    uint32_t unk09 = 0;
+    uint32_t monuments = 0;
     bool nonempty = false;
 
     uint32_t calc_score() const;

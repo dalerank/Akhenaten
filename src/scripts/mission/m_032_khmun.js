@@ -2,8 +2,8 @@ log_info("akhenaten: mission 32 khmun started")
 
 // Empire id=21. Hyksos reclaim (ENEMY_5_HYKSOS; pak enemy_id BARBARIAN ignored). Gods Ra×2, Ptah, Seth.
 // Funds Normal 9000 / loan 3500 / debt 20. Rank 10.
-// Win: pop 6000 / culture 55 / prosperity 50 / monuments TEMP 0 (pak 18; small mudbrick W=4 → 13.5 under F3) / kingdom 75 / housing 14.
-// Monuments pak first=3 Small Mudbrick — building allowed; restore goal 18 after F3 weight calibrate.
+// Win: pop 6000 / culture 55 / prosperity 50 / monuments 18 (pak; small mudbrick weight 4 + burial goods 4 → trunc(6.32·√8+0.5)=18) / kingdom 75 / housing 14.
+// Monuments pak first=3 Small Mudbrick — building allowed.
 // Burial ×5: weapons 5, beer 20, linen 32, luxury 20, papyrus 10.
 // SKIP empty map_obj idx=9. Orphan routes 5/10 — empire display only.
 // i=0/1 CITY_STATUS subtype0 loc=7/8 → FELL Heh/Iken (Nubian beat); trade opens via cost_to_open.
@@ -46,7 +46,6 @@ mission32 { // Khmun (Hermopolis) — Egypt Reclaimed
 	initial_funds [18000, 12000, 9000, 6000, 4800]
 	rescue_loans [7000, 4700, 3500, 2300, 1800]
 	debt_interest [10, 15, 20, 25, 30]
-	house_tax_multipliers [300, 200, 150, 100, 75]
 
 	env {
 		has_animals : true
@@ -86,12 +85,12 @@ mission32 { // Khmun (Hermopolis) — Egypt Reclaimed
 		BUILDING_SCRIBAL_SCHOOL, BUILDING_LIBRARY,
 	]
 
-	// Small mudbrick W=4 → trunc(2.25·4+4.5)=13; pak 18 = soft weight calib.
+	// Small mudbrick (4) + burial beer 20/16, linen 32/16, luxury 20/16 (4) → trunc(6.32·√8+0.5)=18 = pak.
 	win_criteria {
 		population    {enabled : true, goal : 6000 }
 		culture       {enabled : true, goal : 55 }
 		prosperity    {enabled : true, goal : 50 }
-		monuments     {enabled : true, goal : 13 }
+		monuments     {enabled : true, goal : 18 }
 		kingdom       {enabled : true, goal : 75 }
 		housing_level {enabled : true, goal : 14 }
 	}
@@ -112,6 +111,39 @@ mission32 { // Khmun (Hermopolis) — Egypt Reclaimed
 	]
 
 	enable_scenario_events : true
+
+	events [
+		{ // pak i=20
+			type : EVENT_TYPE_INVASION
+			time { year : 0, month : 0 }
+			item { value : EVENT_INVADER_EGYPT }
+			amount { value : 70 }
+			months_initial : 5
+			location_fields [ 1, 1, -1, -1 ]
+			event_trigger_type : EVENT_TRIGGER_BY_FAVOUR
+			tag_id : 7020
+			on_completed_action : 1
+			on_refusal_action : -1
+			on_too_late_action : -1
+			on_defeat_action : -1
+			invasion_attack_target : EVENT_ATTACK_TARGET_RANDOM
+		}
+		{ // pak i=22
+			type : EVENT_TYPE_INVASION
+			time { year : 0, month : 0 }
+			item { value : EVENT_INVADER_EGYPT }
+			amount { value : 35 }
+			months_initial : 0
+			location_fields [ 1, -1, 1, 8 ]
+			event_trigger_type : EVENT_TRIGGER_ONLY_VIA_EVENT
+			tag_id : 7022
+			on_completed_action : -1
+			on_refusal_action : -1
+			on_too_late_action : -1
+			on_defeat_action : -1
+			invasion_attack_target : EVENT_ATTACK_TARGET_RANDOM
+		}
+	]
 
 	map_background : {pack:PACK_EMPIRE, id:21}
 	hide_pak_cities : true
@@ -134,8 +166,6 @@ mission32 { // Khmun (Hermopolis) — Egypt Reclaimed
 			cost_to_open : 450
 			is_sea_trade : true
 			type : EMPIRE_CITY_EGYPTIAN_TRADING
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_MEAT, RESOURCE_STRAW, RESOURCE_POTTERY, RESOURCE_LINEN, RESOURCE_PAPYRUS, RESOURCE_LIMESTONE ]
 			buys [ RESOURCE_BEER ]
 			route_limits [
@@ -156,8 +186,6 @@ mission32 { // Khmun (Hermopolis) — Egypt Reclaimed
 			cost_to_open : 1250
 			is_sea_trade : true
 			type : EMPIRE_CITY_FOREIGN_TRADING
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_LUXURY_GOODS, RESOURCE_TIMBER, RESOURCE_COPPER ]
 			route_limits [
 				{ resource: RESOURCE_LUXURY_GOODS, limit: 2500 }
@@ -174,8 +202,6 @@ mission32 { // Khmun (Hermopolis) — Egypt Reclaimed
 			cost_to_open : 1250
 			is_sea_trade : false
 			type : EMPIRE_CITY_FOREIGN_TRADING
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_LUXURY_GOODS ]
 			route_limits [
 				{ resource: RESOURCE_LUXURY_GOODS, limit: 2500 }
@@ -190,8 +216,6 @@ mission32 { // Khmun (Hermopolis) — Egypt Reclaimed
 			cost_to_open : 500
 			is_sea_trade : false
 			type : EMPIRE_CITY_FOREIGN_TRADING
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_CLAY, RESOURCE_BARLEY, RESOURCE_COPPER ]
 			route_limits [
 				{ resource: RESOURCE_CLAY, limit: 2500 }
@@ -208,8 +232,6 @@ mission32 { // Khmun (Hermopolis) — Egypt Reclaimed
 			cost_to_open : 400
 			is_sea_trade : false
 			type : EMPIRE_CITY_EGYPTIAN_TRADING
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_POTTERY, RESOURCE_PAPYRUS ]
 			buys [ RESOURCE_BRICKS, RESOURCE_BARLEY, RESOURCE_BEER, RESOURCE_LUXURY_GOODS ]
 			route_limits [
@@ -457,11 +479,6 @@ mission32 { // Khmun (Hermopolis) — Egypt Reclaimed
 		inv_loop_done : false
 		pending_inv13 : false
 		pending_inv4_after_demand : false
-		pharaoh_favour_invasion_done : false
-		pharaoh_favour_chain_done : false
-		pharaoh_favour_enemies_seen : false
-		pharaoh_favour_wave_next : -1
-		pharaoh_favour_wave_seq : 0
 		start_message_shown : false
 	}
 }
@@ -656,8 +673,6 @@ function mission32_requests_and_events(ev) {
 		mission32_fire_simple_event(2023, EVENT_TYPE_CITY_STATUS_CHANGE, undefined, 7, "Kerma",
 			EVENT_SUBTYPE_NEW_TRADE_ROUTE)
 	}
-
-	mission_pharaoh_favour_invasion_tick(mission, 70, 35)
 }
 
 [es=event_request_cleared, mission=mission32]

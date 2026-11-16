@@ -30,7 +30,7 @@ jobs:
         SDL_AUDIODRIVER: dummy
       run: |
         set +e
-        ./build/akhenaten --integraltests --nocrashdlg --no-logo --no-resource --nosound --window --size 800x600
+        ./build/akhenaten --integraltests --nocrashdlg --no-logo --no-resource --nosound --window --size 800x600 --config-keys-baseline tools/config_keys_baseline.txt
         echo "rc=$?" >> "$GITHUB_OUTPUT"
         exit 0
     - name: Stage integral test log

@@ -4,7 +4,7 @@ log_info("akhenaten: mission 19 bahariya started")
 // Empire id=18. Enemy ENEMY_5_HYKSOS (scenario); timed enemy + beduin raids (Libyan sprites).
 // Gods: Ra, Seth. Funds Normal 7500 / loan 2500 / debt 20.
 // Win: pop 3000 / culture 15 / prosperity 25 / monuments 13 / kingdom 40 / housing 10.
-// Monuments goal 13 (pak; Sun Temple weight 4). Burial empty.
+// Monuments goal 13 (pak; Sun Temple 4 → trunc(6.32·√4+0.5)=13). Burial empty.
 // Trade: On(1) Iunet(2) Abu(3) Serabit(4). Display Dahshur(17). Men-nefer stub route 19.
 // Triage: SKIP empty map_obj idx=10; SKIP orphan routes 5/6/7/25; omit river/disembark/inv points (pak 0).
 // Events: no requests; invasions + economy + NEW_TRADE Dahshur (i=28) + favour×76 + gift after wipe i=26→27.
@@ -50,7 +50,6 @@ mission19 { // Bahariya Oasis — The Western Desert
 	initial_funds [15000, 10000, 7500, 5000, 4000]
 	rescue_loans [5000, 3300, 2500, 1700, 1300]
 	debt_interest [10, 15, 20, 25, 30]
-	house_tax_multipliers [300, 200, 150, 100, 75]
 
 	env {
 		has_animals : true
@@ -85,7 +84,7 @@ mission19 { // Bahariya Oasis — The Western Desert
 		BUILDING_SCRIBAL_SCHOOL,
 	]
 
-	// Goals vs pak; monuments 13 = Sun Temple weight 4.
+	// Goals vs pak; monuments 13 = Sun Temple (4).
 	win_criteria {
 		population    {enabled : true, goal : 3000 }
 		culture       {enabled : true, goal : 15 }
@@ -99,6 +98,24 @@ mission19 { // Bahariya Oasis — The Western Desert
 	exit_point [84, 14]
 
 	enable_scenario_events : true
+
+	events [
+		{ // pak i=25
+			type : EVENT_TYPE_INVASION
+			time { year : 0, month : 0 }
+			item { value : EVENT_INVADER_PHARAOH }
+			amount { value : 76, min : 60, max : 80 }
+			months_initial : 2
+			location_fields [ 1, -1, 1, 8 ]
+			event_trigger_type : EVENT_TRIGGER_BY_FAVOUR
+			tag_id : 7025
+			on_completed_action : -1
+			on_refusal_action : -1
+			on_too_late_action : -1
+			on_defeat_action : -1
+			invasion_attack_target : EVENT_ATTACK_TARGET_RANDOM
+		}
+	]
 
 	map_background : {pack:PACK_EMPIRE, id:1}
 	hide_pak_cities : true
@@ -121,8 +138,6 @@ cities [
 			cost_to_open : 800
 			is_sea_trade : false
 			type : EMPIRE_CITY_EGYPTIAN_TRADING
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_GRAIN, RESOURCE_STRAW, RESOURCE_FLAX, RESOURCE_LINEN, RESOURCE_GEMS, RESOURCE_GRANITE, RESOURCE_SANDSTONE ]
 			buys [ RESOURCE_CLAY, RESOURCE_POTTERY, RESOURCE_REEDS, RESOURCE_PAPYRUS ]
 			route_limits [
@@ -149,8 +164,6 @@ cities [
 			cost_to_open : 600
 			is_sea_trade : false
 			type : EMPIRE_CITY_EGYPTIAN_TRADING
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_MEAT, RESOURCE_CLAY, RESOURCE_POTTERY, RESOURCE_LIMESTONE, RESOURCE_GRANITE, RESOURCE_COPPER ]
 			buys [ RESOURCE_STRAW ]
 			route_limits [
@@ -173,8 +186,6 @@ cities [
 			cost_to_open : 400
 			is_sea_trade : false
 			type : EMPIRE_CITY_EGYPTIAN_TRADING
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_MEAT, RESOURCE_CLAY, RESOURCE_REEDS, RESOURCE_LIMESTONE ]
 			buys [ RESOURCE_BEER, RESOURCE_LINEN, RESOURCE_GEMS, RESOURCE_LUXURY_GOODS, RESOURCE_TIMBER, RESOURCE_GRANITE ]
 			route_limits [
@@ -200,8 +211,6 @@ cities [
 			cost_to_open : 950
 			is_sea_trade : false
 			type : EMPIRE_CITY_EGYPTIAN_TRADING
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_GEMS, RESOURCE_LUXURY_GOODS, RESOURCE_COPPER ]
 			buys [ RESOURCE_GRAIN, RESOURCE_CLAY ]
 			route_limits [
@@ -427,7 +436,6 @@ cities [
 		event24_enemy_last_year : -1
 
 		gift_sandstone_wired : false
-		pharaoh_favour_invasion_done : false
 		start_message_shown : false
 	}
 }
@@ -630,6 +638,4 @@ function mission19_economy_and_invasions(ev) {
 		mission.event24_enemy_last_year = ev.years_since_start
 		mission19_enemy_raid(600 + ev.years_since_start, 64, EVENT_ATTACK_TARGET_RANDOM)
 	}
-
-	mission_pharaoh_favour_invasion_tick(mission, 76)
 }

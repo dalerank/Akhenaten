@@ -30,7 +30,6 @@ public:
     building_temple_complex_oracle(building &b) : building_temple_complex_upgrade(b) {}
     virtual building_temple_complex_oracle *dcast_temple_complex_oracle() override { return this; }
 
-    virtual void on_place_checks() override;
     virtual void update_map_orientation(int orientation) override;
 };
 

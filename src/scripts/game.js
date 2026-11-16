@@ -10,6 +10,10 @@ game = extend(__game, {
     mission_briefing_scenario_id : 0
     mission_briefing_is_review : false
 
+    main_menu_update_dismissed : false
+    // The recent-commits answer re-inits the main menu, so asking again from its init would loop.
+    main_menu_commits_requested : false
+
     simtime: __game_simtime
 
     @absolute_day { get: __game_absolute_day }
@@ -106,17 +110,25 @@ game_features {
     @gameopt_clouds_speed {}
     @gameplay_change_random_mine_or_pit_collapses_take_money {}
     @gameplay_change_goldmine_reduced_production {}
+    @gameplay_change_industry_remake_rates {}
     @gameplay_change_disaster_events_use_amount {}
     @gameplay_change_trader_capacity_1600 {}
     @gameplay_change_trader_per_good_1600 {}
     @gameplay_change_dock_smart_routing {}
     @gameplay_change_follower_runaway {}
+    @gameplay_change_sled_pullers_flee {}
     @gameplay_change_robber_remake {}
     @gameplay_change_tomb_robber_remake {}
+    @gameplay_change_police_weapons {}
+    @gameplay_change_walker_phrases_remake {}
     @gameplay_change_protestor_hunt_nobles {}
     @gameplay_change_fishing_boat_remake {}
     @gameplay_change_wood_cutter_single_gatherer {}
+    @gameplay_change_irrigation_range_5x5 {}
     @gameplay_fishing_wharf_spawn_boats {}
+    @gameplay_change_fishing_points_monthly_respawn {}
+    @gameplay_change_house_evolve_delay {}
+    @gameplay_change_food_consumption_remake {}
     @gameplay_change_market_distribute_remake {}
     @gameplay_change_library_service_cap {}
     @gameplay_change_dentist_service_cap {}
@@ -145,6 +157,7 @@ game_features {
     @gameplay_enhanced_walker_spawn_boost {}
     @gameplay_enhanced_walker_move_boost {}
     @gameplay_enhanced_festival_calendar {}
+    @gameplay_enhanced_city_ambient {}
     @gameplay_enhanced_local_cults {}
     @gameplay_juggler_school_one_walker {}
     @gameplay_chariots_workshop_needs_weapons {}

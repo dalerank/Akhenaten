@@ -71,7 +71,6 @@ building/building_farm.cpp -> graphics/view/view.h
 building/building_farm.cpp -> sound/sound_building.h
 building/building_farm.cpp -> widget/city/building_ghost.h
 building/building_farm.cpp -> window/building/common.h
-building/building_ferry.cpp -> graphics/animkeys.h
 building/building_ferry.cpp -> graphics/image.h
 building/building_ferry.cpp -> graphics/view/view.h
 building/building_fishing_wharf.cpp -> dev/debug.h
@@ -145,8 +144,6 @@ building/building_plaza.cpp -> sound/sound_building.h
 building/building_plaza.cpp -> window/building/common.h
 building/building_plaza.cpp -> window/building/figures.h
 building/building_plaza.cpp -> window/window_figure_info.h
-building/building_police_station.cpp -> graphics/elements/ui.h
-building/building_police_station.cpp -> window/building/common.h
 building/building_road.cpp -> graphics/graphics.h
 building/building_road.cpp -> graphics/image.h
 building/building_roadblock.cpp -> graphics/elements/ui.h
@@ -199,8 +196,6 @@ building/building_water_lift.cpp -> graphics/elements/ui.h
 building/building_wharf.cpp -> graphics/graphics.h
 building/building_wharf.cpp -> graphics/image.h
 building/building_wharf.cpp -> graphics/view/view.h
-building/building_zoo.cpp -> graphics/graphics.h
-building/building_zoo.cpp -> window/popup_dialog.h
 building/construction/build_planner.cpp -> editor/tool.h
 building/construction/build_planner.cpp -> graphics/graphics.h
 building/construction/build_planner.cpp -> graphics/image.h
@@ -285,7 +280,6 @@ city/city.cpp -> graphics/image_groups.h
 city/city.cpp -> graphics/view/lookup.h
 city/city.cpp -> graphics/view/view.h
 city/city.cpp -> overlays/city_overlay.h
-city/city.cpp -> widget/city/clouds.h
 city/city_animals.cpp -> dev/debug.h
 city/city_festival.cpp -> graphics/image_groups.h
 city/city_floods.cpp -> dev/debug.h
@@ -336,9 +330,6 @@ core/app.cpp -> input/mouse.h
 core/app.cpp -> platform/screen.h
 core/app.cpp -> scenario/scenario.h
 core/app.cpp -> window/popup_dialog.h
-core/app_updater.cpp -> content/zipreader.hpp
-core/app_updater.cpp -> game/game.h
-core/app_updater.cpp -> net/http_client.h
 core/archive.cpp -> graphics/animation.h
 core/archive.cpp -> graphics/image_desc.h
 core/archive.h -> graphics/image_desc.h
@@ -464,8 +455,6 @@ figuretype/figure_caravan_donkey.cpp -> window/window_figure_info.h
 figuretype/figure_cartpusher.cpp -> graphics/elements/ui.h
 figuretype/figure_cartpusher.cpp -> graphics/image.h
 figuretype/figure_cartpusher.cpp -> window/building/figures.h
-figuretype/figure_constable.cpp -> graphics/graphics.h
-figuretype/figure_constable.cpp -> graphics/image.h
 figuretype/figure_dancer.cpp -> sound/sound.h
 figuretype/figure_deliveryboy.cpp -> graphics/graphics.h
 figuretype/figure_deliveryboy.cpp -> graphics/image.h
@@ -491,9 +480,7 @@ figuretype/figure_enemy_transport.cpp -> dev/debug.h
 figuretype/figure_enemy_transport.cpp -> input/mouse.h
 figuretype/figure_enemy_transport.cpp -> widget/widget_city.h
 figuretype/figure_enemy_warship.cpp -> dev/debug.h
-figuretype/figure_enemy_warship.cpp -> graphics/image_desc.h
 figuretype/figure_enemy_warship.cpp -> input/mouse.h
-figuretype/figure_enemy_warship.cpp -> sound/effect.h
 figuretype/figure_enemy_warship.cpp -> sound/sound.h
 figuretype/figure_enemy_warship.cpp -> widget/widget_city.h
 figuretype/figure_entertainer.cpp -> graphics/image.h
@@ -515,7 +502,6 @@ figuretype/figure_fishing_boat.cpp -> window/building/figures.h
 figuretype/figure_fishing_point.cpp -> dev/debug.h
 figuretype/figure_flotsam.cpp -> graphics/animkeys.h
 figuretype/figure_frog.cpp -> dev/debug.h
-figuretype/figure_frog.cpp -> sound/sound.h
 figuretype/figure_homeless.cpp -> dev/debug.h
 figuretype/figure_homeless.cpp -> graphics/view/lookup.h
 figuretype/figure_hunter.cpp -> graphics/animkeys.h
@@ -530,7 +516,6 @@ figuretype/figure_kingdome_trader.cpp -> graphics/image_desc.h
 figuretype/figure_kingdome_trader.cpp -> graphics/image_groups.h
 figuretype/figure_kingdome_trader.cpp -> widget/debug_console.h
 figuretype/figure_locust.cpp -> graphics/image.h
-figuretype/figure_locust.cpp -> sound/sound.h
 figuretype/figure_lumberjack.cpp -> graphics/graphics.h
 figuretype/figure_lumberjack.cpp -> graphics/image.h
 figuretype/figure_lumberjack.cpp -> graphics/image_groups.h
@@ -549,15 +534,11 @@ figuretype/figure_native.cpp -> graphics/animkeys.h
 figuretype/figure_native_trader.cpp -> graphics/image.h
 figuretype/figure_native_trader.cpp -> graphics/image_groups.h
 figuretype/figure_native_trader.cpp -> widget/debug_console.h
-figuretype/figure_priest.cpp -> graphics/animation.h
-figuretype/figure_priest.cpp -> graphics/image.h
-figuretype/figure_priest.cpp -> graphics/image_groups.h
 figuretype/figure_reed_gatherer.cpp -> graphics/image_groups.h
 figuretype/figure_shipwreck.cpp -> graphics/animkeys.h
 figuretype/figure_shipwreck.cpp -> graphics/elements/lang_text.h
 figuretype/figure_shipwreck.cpp -> graphics/elements/ui.h
 figuretype/figure_shipwreck.cpp -> window/building/figures.h
-figuretype/figure_sled.cpp -> graphics/graphics.h
 figuretype/figure_soldier.cpp -> graphics/image.h
 figuretype/figure_soldier.cpp -> graphics/image_groups.h
 figuretype/figure_soldier.cpp -> sound/sound.h
@@ -841,10 +822,6 @@ io/gamestate/boilerplate_detail.cpp -> widget/widget_figure_follow.h
 io/gamestate/file_schemas.h -> content/file_formats.h
 io/io.cpp -> content/zipreader.hpp
 io/io.h -> content/dir.h
-io/mods/mods.cpp -> graphics/boilerplate.h
-io/mods/mods.cpp -> graphics/color.h
-io/mods/mods.h -> graphics/image.h
-io/mods/png_read.h -> graphics/color.h
 overlays/city_overlay.cpp -> dev/debug.h
 resource/icons.cpp -> platform/renderer.h
 resource/icons.cpp -> platform/screen.h

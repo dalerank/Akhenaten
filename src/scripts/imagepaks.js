@@ -18,9 +18,47 @@ imagepaks = [
   {id: PACK_LIB_EXTRA, name:"LibExtra", index:24000, delayed:true, system:false}, // 24000 --> 24000 + 201 + 27
   {id: PACK_LIB_EXTRA_2, name:"LibExtra2", index:24230, delayed:true, system:false}, // 24230 --> 24230 + 201 + 27
   {id: PACK_LIB_MAUS_CARRYOVER, name:"MausCarryover", index:24460, delayed:true, system:false}, // 24460 --> 24460 + 201 + 9
-  {id: PACK_LIB_MAUSOLEUM_0, name:"mausoleum0_extra", index:24690, delayed:true, system:false}, // 24690 --> 24690 + 201 + 16
-  {id: PACK_LIB_MAUSOLEUM_1, name:"mausoleum1_extra", index:24910, delayed:true, system:false}, // 24910 --> 24910 + 201 + 16
-  {id: PACK_LIB_MAUSOLEUM_2, name:"mausoleum2_extra", index:25130, delayed:true, system:false}, // 25130 --> 25130 + 201 + 16
+  // Ground/fence extras (16 frames). Compact + high indices — avoid mastaba@25000 overlap.
+  {id: PACK_LIB_MAUSOLEUM_0, name:"mausoleum0_extra", index:52072, delayed:true, system:false, compact:true}, // 16
+  {id: PACK_LIB_MAUSOLEUM_1, name:"mausoleum1_extra", index:52088, delayed:true, system:false, compact:true}, // 16
+  {id: PACK_LIB_MAUSOLEUM_2, name:"mausoleum2_extra", index:52104, delayed:true, system:false, compact:true}, // 16
+  // OG block stage packs maus{skin}_{1..3}{a..d}: 2 camera frames each. Before sphinx@53000.
+  {id: PACK_MAUS0_1A, name:"maus0_1a", index:52000, delayed:true, system:false, compact:true},
+  {id: PACK_MAUS0_1B, name:"maus0_1b", index:52002, delayed:true, system:false, compact:true},
+  {id: PACK_MAUS0_1C, name:"maus0_1c", index:52004, delayed:true, system:false, compact:true},
+  {id: PACK_MAUS0_1D, name:"maus0_1d", index:52006, delayed:true, system:false, compact:true},
+  {id: PACK_MAUS0_2A, name:"maus0_2a", index:52008, delayed:true, system:false, compact:true},
+  {id: PACK_MAUS0_2B, name:"maus0_2b", index:52010, delayed:true, system:false, compact:true},
+  {id: PACK_MAUS0_2C, name:"maus0_2c", index:52012, delayed:true, system:false, compact:true},
+  {id: PACK_MAUS0_2D, name:"maus0_2d", index:52014, delayed:true, system:false, compact:true},
+  {id: PACK_MAUS0_3A, name:"maus0_3a", index:52016, delayed:true, system:false, compact:true},
+  {id: PACK_MAUS0_3B, name:"maus0_3b", index:52018, delayed:true, system:false, compact:true},
+  {id: PACK_MAUS0_3C, name:"maus0_3c", index:52020, delayed:true, system:false, compact:true},
+  {id: PACK_MAUS0_3D, name:"maus0_3d", index:52022, delayed:true, system:false, compact:true},
+  {id: PACK_MAUS1_1A, name:"maus1_1a", index:52024, delayed:true, system:false, compact:true},
+  {id: PACK_MAUS1_1B, name:"maus1_1b", index:52026, delayed:true, system:false, compact:true},
+  {id: PACK_MAUS1_1C, name:"maus1_1c", index:52028, delayed:true, system:false, compact:true},
+  {id: PACK_MAUS1_1D, name:"maus1_1d", index:52030, delayed:true, system:false, compact:true},
+  {id: PACK_MAUS1_2A, name:"maus1_2a", index:52032, delayed:true, system:false, compact:true},
+  {id: PACK_MAUS1_2B, name:"maus1_2b", index:52034, delayed:true, system:false, compact:true},
+  {id: PACK_MAUS1_2C, name:"maus1_2c", index:52036, delayed:true, system:false, compact:true},
+  {id: PACK_MAUS1_2D, name:"maus1_2d", index:52038, delayed:true, system:false, compact:true},
+  {id: PACK_MAUS1_3A, name:"maus1_3a", index:52040, delayed:true, system:false, compact:true},
+  {id: PACK_MAUS1_3B, name:"maus1_3b", index:52042, delayed:true, system:false, compact:true},
+  {id: PACK_MAUS1_3C, name:"maus1_3c", index:52044, delayed:true, system:false, compact:true},
+  {id: PACK_MAUS1_3D, name:"maus1_3d", index:52046, delayed:true, system:false, compact:true},
+  {id: PACK_MAUS2_1A, name:"maus2_1a", index:52048, delayed:true, system:false, compact:true},
+  {id: PACK_MAUS2_1B, name:"maus2_1b", index:52050, delayed:true, system:false, compact:true},
+  {id: PACK_MAUS2_1C, name:"maus2_1c", index:52052, delayed:true, system:false, compact:true},
+  {id: PACK_MAUS2_1D, name:"maus2_1d", index:52054, delayed:true, system:false, compact:true},
+  {id: PACK_MAUS2_2A, name:"maus2_2a", index:52056, delayed:true, system:false, compact:true},
+  {id: PACK_MAUS2_2B, name:"maus2_2b", index:52058, delayed:true, system:false, compact:true},
+  {id: PACK_MAUS2_2C, name:"maus2_2c", index:52060, delayed:true, system:false, compact:true},
+  {id: PACK_MAUS2_2D, name:"maus2_2d", index:52062, delayed:true, system:false, compact:true},
+  {id: PACK_MAUS2_3A, name:"maus2_3a", index:52064, delayed:true, system:false, compact:true},
+  {id: PACK_MAUS2_3B, name:"maus2_3b", index:52066, delayed:true, system:false, compact:true},
+  {id: PACK_MAUS2_3C, name:"maus2_3c", index:52068, delayed:true, system:false, compact:true},
+  {id: PACK_MAUS2_3D, name:"maus2_3d", index:52070, delayed:true, system:false, compact:true},
   {id: PACK_PYRAMID, name:"Pyramid", index:34000, delayed:true, system:false}, // 34000 --> 34000 + 201 + 228
   {id: PACK_BENT_PYRAMID, name:"bent_pyramid", index:34450, delayed:true, system:false}, // 34250 --> 34250 + 201 + 228
   {id: PACK_MUDBRICK_PYRAMID, name:"mudbrick_pyramid", index:34900, delayed:true, system:false}, // 34900 --> 34900 + 201 + 228
@@ -28,16 +66,44 @@ imagepaks = [
   // AbuSimbel.sg3: 201 SYSTEM + 70 layers (backing/2statue/midcut/stairs/cliffs/scaffold).
   // Keep system slots (no compact) — JS uses group ids 1..16 (see abu_simbel.js).
   {id: PACK_ABUSIMBEL, name:"AbuSimbel", index:35850, delayed:true, system:false}, // 35850 --> 35850 + 201 + 70
-  {id: PACK_CAESAREUM_1, name:"caesareum1", index:36150, delayed:true, system:false}, // 36150 --> 36150 + 201 + 9
-  {id: PACK_CAESAREUM_2, name:"caesareum2", index:36360, delayed:true, system:false}, // 36360 --> 36360 + 201 + 9
-  {id: PACK_CAESAREUM_3, name:"caesareum3", index:36570, delayed:true, system:false}, // 36570 --> 36570 + 201 + 9
-  {id: PACK_CAESAREUM_4, name:"caesareum4", index:36780, delayed:true, system:false}, // 36780 --> 36780 + 201 + 9
+  // caesareum1..20: one pack per OG stage (0..18, 19 = complete), 9 part images each (compact).
+  {id: PACK_CAESAREUM_1, name:"caesareum1", index:36150, delayed:true, system:false, compact:true},
+  {id: PACK_CAESAREUM_2, name:"caesareum2", index:36159, delayed:true, system:false, compact:true},
+  {id: PACK_CAESAREUM_3, name:"caesareum3", index:36168, delayed:true, system:false, compact:true},
+  {id: PACK_CAESAREUM_4, name:"caesareum4", index:36177, delayed:true, system:false, compact:true},
+  {id: PACK_CAESAREUM_5, name:"caesareum5", index:36186, delayed:true, system:false, compact:true},
+  {id: PACK_CAESAREUM_6, name:"caesareum6", index:36195, delayed:true, system:false, compact:true},
+  {id: PACK_CAESAREUM_7, name:"caesareum7", index:36204, delayed:true, system:false, compact:true},
+  {id: PACK_CAESAREUM_8, name:"caesareum8", index:36213, delayed:true, system:false, compact:true},
+  {id: PACK_CAESAREUM_9, name:"caesareum9", index:36222, delayed:true, system:false, compact:true},
+  {id: PACK_CAESAREUM_10, name:"caesareum10", index:36231, delayed:true, system:false, compact:true},
+  {id: PACK_CAESAREUM_11, name:"caesareum11", index:36240, delayed:true, system:false, compact:true},
+  {id: PACK_CAESAREUM_12, name:"caesareum12", index:36249, delayed:true, system:false, compact:true},
+  {id: PACK_CAESAREUM_13, name:"caesareum13", index:36258, delayed:true, system:false, compact:true},
+  {id: PACK_CAESAREUM_14, name:"caesareum14", index:36267, delayed:true, system:false, compact:true},
+  {id: PACK_CAESAREUM_15, name:"caesareum15", index:36276, delayed:true, system:false, compact:true},
+  {id: PACK_CAESAREUM_16, name:"caesareum16", index:36285, delayed:true, system:false, compact:true},
+  {id: PACK_CAESAREUM_17, name:"caesareum17", index:36294, delayed:true, system:false, compact:true},
+  {id: PACK_CAESAREUM_18, name:"caesareum18", index:36303, delayed:true, system:false, compact:true},
+  {id: PACK_CAESAREUM_19, name:"caesareum19", index:36312, delayed:true, system:false, compact:true},
+  {id: PACK_CAESAREUM_20, name:"caesareum20", index:36321, delayed:true, system:false, compact:true},
   // LibMaina1..a5 — after Caesareum, before Assyrian@37000 (compact: 2 imgs each).
   {id: PACK_LIB_MAIN_1, name:"LibMaina1", index:36990, delayed:true, system:false, compact:true}, // 2
   {id: PACK_LIB_MAIN_2, name:"LibMaina2", index:36992, delayed:true, system:false, compact:true},
   {id: PACK_LIB_MAIN_3, name:"LibMaina3", index:36994, delayed:true, system:false, compact:true},
   {id: PACK_LIB_MAIN_4, name:"LibMaina4", index:36996, delayed:true, system:false, compact:true},
   {id: PACK_LIB_MAIN_5, name:"LibMaina5", index:36998, delayed:true, system:false, compact:true},
+  // LibMainb1..b5 / LibMainc1..c5 (compact: 2 imgs each) — before LtHouse@50900.
+  {id: PACK_LIB_MAIN_B1, name:"LibMainb1", index:50880, delayed:true, system:false, compact:true},
+  {id: PACK_LIB_MAIN_B2, name:"LibMainb2", index:50882, delayed:true, system:false, compact:true},
+  {id: PACK_LIB_MAIN_B3, name:"LibMainb3", index:50884, delayed:true, system:false, compact:true},
+  {id: PACK_LIB_MAIN_B4, name:"LibMainb4", index:50886, delayed:true, system:false, compact:true},
+  {id: PACK_LIB_MAIN_B5, name:"LibMainb5", index:50888, delayed:true, system:false, compact:true},
+  {id: PACK_LIB_MAIN_C1, name:"LibMainc1", index:50890, delayed:true, system:false, compact:true},
+  {id: PACK_LIB_MAIN_C2, name:"LibMainc2", index:50892, delayed:true, system:false, compact:true},
+  {id: PACK_LIB_MAIN_C3, name:"LibMainc3", index:50894, delayed:true, system:false, compact:true},
+  {id: PACK_LIB_MAIN_C4, name:"LibMainc4", index:50896, delayed:true, system:false, compact:true},
+  {id: PACK_LIB_MAIN_C5, name:"LibMainc5", index:50898, delayed:true, system:false, compact:true},
   // LtHouse1..9 stages (1 img); LtHouse10 beacon anim (11). Before obelisk@51000.
   {id: PACK_LTHOUSE_1, name:"LtHouse1", index:50900, delayed:true, system:false, compact:true},
   {id: PACK_LTHOUSE_2, name:"LtHouse2", index:50901, delayed:true, system:false, compact:true},

@@ -13,6 +13,7 @@
 #include "content/vfs.h"
 #include "io/gamefiles/lang.h"
 #include "game/game_config.h"
+#include "platform/app_updater.h"
 #include "platform/arguments.h"
 #include "platform/integral_tests.h"
 #include "content/content.h"
@@ -26,6 +27,7 @@
 #include "widget/debug_console.h"
 #include "graphics/imagepak_holder.h"
 #include "graphics/image.h"
+#include "graphics/render_stats.h"
 #include "graphics/residency_atlas.h"
 #include "sound/sound.h"
 #include "scenario/scenario.h"
@@ -206,6 +208,12 @@ static bool pre_init(const xstring& custom_data_dir) {
         return true;
     }
 
+    // Hermetic: no fallback to the exe dir or the user pref, and no message box a headless runner would hang on.
+    if (g_args.is_integral_tests()) {
+        logs::error("[integraltests] data directory %s is not usable", custom_data_dir.c_str());
+        exit(2);
+    }
+
     if (pre_init_dir_attempt(".", "Attempting to load game from working directory %s")) {
         return true;
     }
@@ -290,14 +298,11 @@ static void setup() {
         if (!innoextract::has_required_game_files(g_args.get_data_directory().c_str())) {
             // Prefer Steam Cleopatra only when the configured path has no usable Pharaoh data.
             if (!innoextract::has_pharaoh_data(g_args.get_data_directory().c_str())) {
-                vfs::path steam_path = platform.get_steam_path();
-                if (!steam_path.empty()) {
-                    vfs::path steam_data(steam_path, "/steamapps/common/Pharaoh + Cleopatra/");
-                    if (innoextract::has_required_game_files(steam_data.c_str())) {
-                        g_args.set_data_directory(steam_data.c_str());
-                        arguments::store(g_args);
-                        logs::info("Using Steam Pharaoh data at %s", steam_data.c_str());
-                    }
+                const xstring steam_data = innoextract::find_steam_pharaoh_dir();
+                if (!steam_data.empty() && innoextract::has_required_game_files(steam_data.c_str())) {
+                    g_args.set_data_directory(steam_data.c_str());
+                    arguments::store(g_args);
+                    logs::info("Using Steam Pharaoh data at %s", steam_data.c_str());
                 }
             }
         }
@@ -426,16 +431,41 @@ static void setup() {
 
     image_data_init();                                           // image paks structures init
 
+    // Script folders, first match wins: --mixed, then Scripts/ in the data dir and in the working dir,
+    // then the embedded scripts. A Scripts/ folder counts only when --unpack_scripts wrote it for this
+    // very build: an old unpack would otherwise shadow newer embedded scripts forever.
+    // Integral tests use only --mixed and the embedded scripts.
+    js_vm_add_scripts_folder(g_args.get_scripts_directory().c_str());
+
+    auto add_unpacked_scripts_folder = [](const vfs::path& folder) {
+        if (g_args.is_integral_tests()) {
+            return;
+        }
+        if (platform.is_android()) {
+            js_vm_add_scripts_folder(folder);
+            return;
+        }
+        if (!vfs::is_directory(folder.c_str())) {
+            return;
+        }
+        xstring version;
+        if (vfs::scripts_folder_matches_build(folder.c_str(), version)) {
+            js_vm_add_scripts_folder(folder);
+            logs::info("[scripts] using unpacked scripts in %s", folder.c_str());
+            return;
+        }
+        logs::warn("[scripts] ignoring %s: unpacked by %s, this is %s; run --unpack_scripts again or use --mixed",
+          folder.c_str(), version.empty() ? "an unknown version" : version.c_str(), get_version().c_str());
+    };
+
     vfs::path scripts_base_path(vfs::SCRIPTS_FOLDER);
     if (!platform.is_android()) {
         pcstr base_path = vfs::platform_file_manager_get_base_path();
         scripts_base_path = vfs::path(base_path, "/", vfs::SCRIPTS_FOLDER);
     }
-    js_vm_add_scripts_folder(scripts_base_path); // setup script engine data scripts folder
-
-    js_vm_add_scripts_folder(g_args.get_scripts_directory().c_str()); // setup script engine user folder
+    add_unpacked_scripts_folder(scripts_base_path);
     if (!platform.is_android()) {
-        js_vm_add_scripts_folder(vfs::SCRIPTS_FOLDER);                    // setup script engine additional folder
+        add_unpacked_scripts_folder(vfs::SCRIPTS_FOLDER);
     }
 
     platform.append_startup_log("Startup: js_vm_setup");
@@ -486,6 +516,7 @@ static void run_and_draw() {
         NANO_PROFILE_SCOPE("_Frame");
 
         OZZY_PROFILER_BEGIN_FRAME();
+        render_stats::frame_begin();
         js_vm_frame_begin();
         reset_frame_string_allocator();
 
@@ -514,6 +545,7 @@ static void run_and_draw() {
             game.city_sounds_frame_begin();
             game.handle_input_frame();
         }
+        render_stats::frame_draw_done();
         Uint32 time_after_draw = SDL_GetTicks();
 
         game.frame_phase_ms((double)(time_between_run_and_draw - time_before_run),
@@ -553,6 +585,7 @@ static void run_and_draw() {
             game.frame_pre_present();
             platform_renderer_render();
         }
+        render_stats::frame_end();
 
         game.frame_end();
     }
@@ -651,7 +684,7 @@ static int handle_unpack_scripts() {
 
 int main(int argc, char** argv) {
     g_args.parse(argc, argv);
-    archive_check::report_keys = g_args.is("log_config_keys", false);
+    archive_check::report_keys = g_args.is("log_config_keys", false) || !g_args.get_str("config_keys_baseline").empty();
 
     if (g_args.no_mouse() || g_args.is_integral_tests()) {
         g_scroll.set_mouse_input(false);
@@ -693,6 +726,8 @@ int main(int argc, char** argv) {
         logs::info("[integraltests] keep: suite finished (rc=%d), leaving window open", integral_rc);
     }
 
+    app_updater_start(argc, argv);
+
     bool ok = platform.run_main_loop(
           []() { g_app.pump_one_frame(); },
           []() { return !g_app.quit; });
@@ -700,6 +735,7 @@ int main(int argc, char** argv) {
     game_imgui_overlay_destroy();
 
     teardown();
+    app_updater_finish();
 
     return g_args.is_integral_tests() ? integral_rc : EXIT_SUCCESS;
 }

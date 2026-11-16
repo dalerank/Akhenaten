@@ -3,14 +3,14 @@ log_info("akhenaten: mission 26 menat khufu started")
 // Empire / events aligned with original campaign scenario 26 (2026-07-26 dump).
 // Empire id=1. Scenario enemy ENEMY_6_KUSHITE. Favour invasions invader=pharaoh(3) → ENEMY_3_EGYPTIAN.
 // Gods: Osiris(2), Ra(1), Bast(1) — no JS override. Funds Normal 10000 / loan 2500 / debt 20. Rank 9.
-// Win: pop 7000 / culture 60 / prosperity 50 / monuments 21 (2×small obelisk 2+2 + Small
-//   mudbrick 4 → trunc(2.25·8+4.5)=22 ≥ pak 21) / kingdom 75 / housing 10.
+// Win: pop 7000 / culture 60 / prosperity 50 / monuments 21 (2×small obelisk 1+1 + Small mudbrick 4
+//   + burial goods 5 → trunc(6.32·√11+0.5)=21 = pak) / kingdom 75 / housing 10.
 // Monuments pak: first=22 Small Obelisk ×2, third=3 Small Mudbrick Pyramid.
 // Burial: pottery×8 beer×32 linen×32 papyrus×8 granite×32. Climate northern (map).
 // Trade: Waset(1 sea) Men-nefer(2 sea) Dakhla(3). Display: Buhen Byblos Dunqul Henen-nesw Jericho Kebet Kerma Kharga.
 // Triage: SKIP empty map_obj idx=11; SKIP orphan msgs i=1,4,8,11,14,17,21,24,27,30,33,36; SKIP DEMAND chain_only i=6.
-// No pak inv_land/sea — omit invasion_points_*; favour tile entry fallback.
-// Events: food requests (pomegranates/figs); linen DEMAND +7 Dakhla y12m0; favour egypt×40→×40.
+// No pak inv_land/sea — omit invasion_points_*; the favour army (events[]) falls back to the map exit.
+// Events: food requests (pomegranates/figs); linen DEMAND +7 Dakhla y12m0; favour pharaoh×40→×40 (events[] BY_FAVOUR, sent by the engine at Kingdom rating 0).
 //
 // Tag_id scheme:
 //   1000 + i               chain-only leaves
@@ -29,7 +29,6 @@ mission26 { // Menat Khufu (Beni Hasan) — Reunification
 	initial_funds [20000, 13300, 10000, 6700, 5300]
 	rescue_loans [5000, 3300, 2500, 1700, 1300]
 	debt_interest [10, 15, 20, 25, 30]
-	house_tax_multipliers [300, 200, 150, 100, 75]
 
 	env {
 		has_animals : true
@@ -68,7 +67,7 @@ mission26 { // Menat Khufu (Beni Hasan) — Reunification
 		BUILDING_SCRIBAL_SCHOOL, BUILDING_LIBRARY,
 	]
 
-	// Monuments 21: 2×Small Obelisk(2) + Small mudbrick(4) → trunc(22.5)=22 ≥ 21.
+	// Monuments 21: 2×Small Obelisk (1+1) + Small mudbrick (4) + burial beer 32/16, linen 32/16, granite 32/32 (5) → trunc(6.32·√11+0.5)=21.
 	win_criteria {
 		population    {enabled : true, goal : 7000 }
 		culture       {enabled : true, goal : 60 }
@@ -96,6 +95,39 @@ mission26 { // Menat Khufu (Beni Hasan) — Reunification
 
 	enable_scenario_events : true
 
+	events [
+		{ // pak i=38
+			type : EVENT_TYPE_INVASION
+			time { year : 0, month : 0 }
+			item { value : EVENT_INVADER_PHARAOH }
+			amount { value : 40 }
+			months_initial : 9
+			location_fields [ 1, 1, -1, -1 ]
+			event_trigger_type : EVENT_TRIGGER_BY_FAVOUR
+			tag_id : 7038
+			on_completed_action : 1
+			on_refusal_action : -1
+			on_too_late_action : -1
+			on_defeat_action : -1
+			invasion_attack_target : EVENT_ATTACK_TARGET_RANDOM
+		}
+		{ // pak i=39
+			type : EVENT_TYPE_INVASION
+			time { year : 0, month : 0 }
+			item { value : EVENT_INVADER_PHARAOH }
+			amount { value : 40 }
+			months_initial : 0
+			location_fields [ 1, 1, -1, -1 ]
+			event_trigger_type : EVENT_TRIGGER_ONLY_VIA_EVENT
+			tag_id : 7039
+			on_completed_action : -1
+			on_refusal_action : -1
+			on_too_late_action : -1
+			on_defeat_action : -1
+			invasion_attack_target : EVENT_ATTACK_TARGET_RANDOM
+		}
+	]
+
 	map_background : {pack:PACK_EMPIRE, id:1}
 	hide_pak_cities : true
 	cities [
@@ -118,8 +150,6 @@ mission26 { // Menat Khufu (Beni Hasan) — Reunification
 				cost_to_open : 600
 				is_sea_trade : true
 				type : EMPIRE_CITY_PHARAOH_TRADING
-				max_traders : 1
-				trade_limits : default_trade_limits
 				sells [ RESOURCE_CLAY, RESOURCE_POTTERY, RESOURCE_LINEN, RESOURCE_STONE, RESOURCE_LIMESTONE, RESOURCE_GRANITE, RESOURCE_COPPER ]
 				route_limits [
 					{ resource: RESOURCE_CLAY, limit: 2500 }
@@ -140,8 +170,6 @@ mission26 { // Menat Khufu (Beni Hasan) — Reunification
 				cost_to_open : 400
 				is_sea_trade : true
 				type : EMPIRE_CITY_EGYPTIAN_TRADING
-				max_traders : 1
-				trade_limits : default_trade_limits
 				sells [ RESOURCE_CHICKPEAS, RESOURCE_POTTERY, RESOURCE_PAPYRUS ]
 				buys [ RESOURCE_LETTUCE, RESOURCE_BRICKS, RESOURCE_BARLEY, RESOURCE_BEER, RESOURCE_LUXURY_GOODS ]
 				route_limits [
@@ -165,8 +193,6 @@ mission26 { // Menat Khufu (Beni Hasan) — Reunification
 				cost_to_open : 400
 				is_sea_trade : false
 				type : EMPIRE_CITY_EGYPTIAN_TRADING
-				max_traders : 1
-				trade_limits : default_trade_limits
 				sells [ RESOURCE_BRICKS, RESOURCE_TIMBER ]
 				buys [ RESOURCE_MEAT, RESOURCE_LINEN, RESOURCE_LUXURY_GOODS, RESOURCE_PAPYRUS, RESOURCE_GRANITE ]
 				route_limits [
@@ -348,9 +374,6 @@ mission26 { // Menat Khufu (Beni Hasan) — Reunification
 		event40_figs_done : false
 		event41_pome_done : false
 
-		pharaoh_favour_invasion_done : false
-		pharaoh_favour_wave2_done : false
-		pharaoh_favour_wave2_enemies_seen : false
 
 		start_message_shown : false
 	}
@@ -489,24 +512,6 @@ function mission26_ensure_all_leaves() {
 	mission26_ensure_pome_i32_leaves()
 }
 
-// No pak inv_land/sea points — Egyptian favour uses map entry fallback (tile −1,−1).
-function mission26_favour_wave(size, invasion_id) {
-	log_info("akhenaten: mission 26 menat khufu favour wave size=" + size + " kr=" + city.rating_kingdom
-		+ " id=" + invasion_id)
-	__image_request_pak(PACK_ENEMY_EGYPTIAN)
-	city.start_foreign_army_invasion({
-		mode: ATTACK_TYPE_ENEMIES,
-		enemy: ENEMY_3_EGYPTIAN,
-		kind: INVASION_KIND_KINGDOME,
-		size: size,
-		invasion_id: invasion_id,
-		tilex: -1,
-		tiley: -1,
-		want_destroy_buildings: 0,
-		invasion_attack_target: EVENT_ATTACK_TARGET_RANDOM
-	})
-}
-
 [es=event_mission_start, mission=mission26]
 function mission26_on_start(ev) {
 	__image_request_pak(PACK_ENEMY_KUSHITE)
@@ -585,31 +590,4 @@ function mission26_requests_and_events(ev) {
 		log_info("akhenaten: mission 26 pomegranates×24 (i=32)")
 		mission26_fire_request(2032, RESOURCE_POMEGRANATES, 24, 24, 1034, 1035, 1037, 5, 1, "Jericho")
 	}
-}
-
-// pak i=38→39: by_favour egypt/pharaoh ×40 → after wipe ×40 (attack=4 RANDOM). No refuse-chain invasions.
-[es=event_advance_month, mission=mission26]
-function mission26_pharaoh_favour_invasion(ev) {
-	if (mission.pharaoh_favour_invasion_done && !mission.pharaoh_favour_wave2_done) {
-		if (city.num_enemy_formations > 0) {
-			mission.pharaoh_favour_wave2_enemies_seen = true
-			return
-		}
-		if (!mission.pharaoh_favour_wave2_enemies_seen) {
-			return
-		}
-		mission.pharaoh_favour_wave2_done = true
-		mission26_favour_wave(40, 39)
-		return
-	}
-
-	if (mission.pharaoh_favour_invasion_done) {
-		return
-	}
-	if (city.rating_kingdom > 0) {
-		return
-	}
-	mission.pharaoh_favour_invasion_done = true
-	mission.pharaoh_favour_wave2_enemies_seen = false
-	mission26_favour_wave(40, 38)
 }

@@ -6,6 +6,8 @@
 #include "mujs/jsi.h"
 #include "mujs/mujs.h"
 
+#include <fstream>
+#include <set>
 #include <string>
 #include <unordered_set>
 #include <vector>
@@ -34,6 +36,10 @@ namespace archive_check {
             std::unordered_set<std::string> read;
         };
         std::unordered_map<const void*, object_keys> g_objects;
+
+        // "zeroed | ctx.field" / "unknown | ctx.key", the keys of tools/config_keys_baseline.txt.
+        std::set<std::string> g_issues;
+        std::set<std::string> g_wrong_type;
 
         std::string context() {
             std::string c = g_roots.empty() ? std::string() : g_roots.back();
@@ -97,6 +103,7 @@ namespace archive_check {
             for (const auto& k : obj.own) {
                 if (!obj.read.count(k)) {
                     report("[config] unknown key " + obj.where + "." + k);
+                    g_issues.insert("unknown | " + obj.where + "." + k);
                 }
             }
         }
@@ -137,10 +144,64 @@ namespace archive_check {
 
     void zeroed_default(pcstr field, const std::string& value, const void*) {
         report("[config] missing key " + context() + "." + field + " resets C++ default " + value + " to 0");
+        g_issues.insert("zeroed | " + context() + "." + field);
     }
 
     void wrong_type(pcstr key, pcstr expected) {
         report("[config] " + context() + "." + key + ": expected " + expected);
+        g_wrong_type.insert(context() + "." + key + ": expected " + expected);
+    }
+
+    int check_baseline(pcstr path, bool update) {
+        flush();
+        if (update) {
+            std::ofstream out(path, std::ios::binary);
+            out
+              << "# Known config key issues (category | context.key) from a full integral suite run with\n"
+                 "# --no-resource. Regenerate with --integraltests --config-keys-baseline PATH --config-keys-update.\n"
+                 "# Remove lines as issues get fixed; never add lines by hand to silence a new one.\n";
+            for (const auto& v : g_issues) {
+                out << v << "\n";
+            }
+            logs::info("[config-keys] baseline updated: %d entries", (int)g_issues.size());
+            return out ? 0 : 1;
+        }
+
+        std::set<std::string> baseline;
+        std::ifstream in(path, std::ios::binary);
+        if (!in) {
+            logs::error("[config-keys] FAIL: baseline not found: %s", path);
+            return 1;
+        }
+        for (std::string line; std::getline(in, line);) {
+            while (!line.empty() && (line.back() == '\r' || line.back() == ' ')) {
+                line.pop_back();
+            }
+            if (!line.empty() && line[0] != '#') {
+                baseline.insert(line);
+            }
+        }
+
+        int failures = 0;
+        for (const auto& v : baseline) {
+            if (!g_issues.count(v)) {
+                logs::info("[config-keys] fixed, remove from baseline: %s", v.c_str());
+            }
+        }
+        for (const auto& v : g_issues) {
+            if (!baseline.count(v)) {
+                logs::error("[config-keys] FAIL: new: %s", v.c_str());
+                ++failures;
+            }
+        }
+        for (const auto& v : g_wrong_type) {
+            logs::error("[config-keys] FAIL: wrong type: %s", v.c_str());
+            ++failures;
+        }
+        if (failures == 0) {
+            logs::info("[config-keys] passed: %d known entries, 0 new", (int)g_issues.size());
+        }
+        return failures;
     }
 } // namespace archive_check
 

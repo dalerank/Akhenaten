@@ -134,7 +134,3 @@ void building_temple_complex_oracle::update_map_orientation(int _) {
     int image_id = anim(orientation_key[orientation]).first_img();
     map_building_tiles_add(id(), tile(), 3, image_id, TERRAIN_BUILDING);
 }
-
-void building_temple_complex_oracle::on_place_checks() {
-    // nothhing
-}

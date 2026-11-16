@@ -88,6 +88,7 @@ struct id_anim_t {
     static const xstring cart;
     static const xstring flat;
     static const xstring pulling;
+    static const xstring front;
 };
 
 const id_anim_t &animkeys();

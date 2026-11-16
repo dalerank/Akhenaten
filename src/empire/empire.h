@@ -5,8 +5,51 @@
 #include "core/custom_span.hpp"
 #include "trade_route.h"
 #include "core/svector.h"
+#include "building/building_type.h"
 
 struct mission_id_t;
+
+// OG trade_recommends.txt: what the city keeps of the advisor's goods before it exports, by population.
+struct trade_recommend_row {
+    int32_t population_below = 0; // 0 = no upper bound (last row)
+    int32_t food = 0;
+    int32_t pottery = 0;
+    int32_t beer = 0;
+    int32_t linen = 0;
+    int32_t papyrus = 0;
+    int32_t luxury_goods = 0;
+};
+ANK_CONFIG_STRUCT(trade_recommend_row, population_below, food, pottery, beer, linen, papyrus, luxury_goods)
+
+// OG monument_unplaced_needs by the scenario's monument id; building tells a placed slot from an unplaced one.
+struct trade_monument_unplaced_need {
+    int32_t monument = 0;
+    e_building_type building = BUILDING_NONE;
+    e_resource resource = RESOURCE_NONE;
+    int32_t amount = 0;
+    int32_t limestone = 0;
+};
+ANK_CONFIG_STRUCT(trade_monument_unplaced_need, monument, building, resource, amount, limestone)
+
+struct empire_trade_rules_t {
+    // OG trader_size: up to this many traders per city at once, fewer on small routes.
+    int32_t max_traders_per_city = 3;
+    int32_t trader_limit_small = 1500;
+    int32_t trader_limit_medium = 2500;
+    int32_t keep_workshop_amount = 200;
+    int32_t keep_monument_amount = 500;
+    int32_t keep_other_amount = 1000;
+    int32_t stock_cap_small = 10000;
+    int32_t stock_cap_default = 15000;
+    int32_t stock_cap_large = 30000;
+    svector<trade_recommend_row, 8> recommends;
+    svector<trade_monument_unplaced_need, 40> monument_unplaced_needs;
+};
+ANK_CONFIG_STRUCT(empire_trade_rules_t, max_traders_per_city, trader_limit_small, trader_limit_medium,
+  keep_workshop_amount, keep_monument_amount, keep_other_amount, stock_cap_small, stock_cap_default, stock_cap_large,
+  recommends, monument_unplaced_needs)
+
+extern empire_trade_rules_t empire_trade_rules;
 
 class empire_t {
 public:
@@ -32,7 +75,7 @@ public:
     int trade_route_for_city(int city_id);
     void reset_yearly_trade_amounts();
     int get_city_for_object(int empire_object_id) const;
-    int count_beer_sources();
+    int count_luxury_goods_kinds();
     void expand();
     int get_city_vulnerable();
     void end_siege(int city_id);
@@ -68,16 +111,7 @@ public:
         }
     }
 
-    int random_city() {
-        svector<empire_city*, 32> valid_cities;
-        select_cities(valid_cities, [] (empire_city *c) { return c->in_use; });
-
-        if (valid_cities.empty()) {
-            return -1;
-        }
-
-        return valid_cities[rand() % valid_cities.size()]->name_id;
-    }
+    int random_city();
 
     inline trade_route &get_route(int route_id) {
         route_id = std::max(route_id, 0);
@@ -104,7 +138,7 @@ public:
     const empire_object *get_battle_icon(int path_id, int year);
     int get_max_invasion_path();
 
-    int get_closest_object(vec2i pos) const;
+    int get_closest_object(vec2i pos, int* distance = nullptr) const;
     void object_set_expanded(int object_id, e_empire_city new_city_type);
     bool city_buys_resource(int object_id, e_resource resource, bool from_raw_object);
     bool city_sells_resource(int object_id, e_resource resource, bool from_raw_object);

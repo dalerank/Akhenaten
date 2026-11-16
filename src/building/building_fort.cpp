@@ -159,13 +159,6 @@ void building_fort::on_place_update_tiles(int orientation, int variant) {
     g_campaign_carry.try_apply_to_fort(type(), base.formation_id);
 }
 
-void building_fort::on_place_checks() {
-    construction_warnings warnings;
-
-    const bool has_barracks = g_city.buildings.count_active(BUILDING_RECRUITER) > 0;
-    warnings.add_if(!has_barracks, "#needs_recruiter_to_conscript");
-}
-
 void building_fort::remove_batalion() {
     if (base.formation_id <= 0) {
         return;

@@ -37,6 +37,7 @@
 #include "game/game_events.h"
 #include "city/city_resource.h"
 #include "city/city_warnings.h"
+#include "building/construction/construction_warnings.h"
 #include "clear.h"
 #include "figure/formation_batalion.h"
 #include "game/undo.h"
@@ -263,7 +264,7 @@ int build_planner::place_houses(bool measure_only, int x_start, int y_start, int
     }
 
     if (!measure_only) {
-        //building_construction_warning_check_food_stocks(BUILDING_HOUSE_VACANT_LOT);
+        construction_warnings_check_house_plots();
         if (needs_road_warning) {
             events::emit(event_city_warning{ "#plots_too_far_from_road" });
         }
@@ -605,6 +606,7 @@ void build_planner::update_obstructions_check() {
     tiles_blocked_total = 0;
     const auto &params = building_static_params::get(build_type);
     const auto &preview = building_planer_renderer::get(build_type);
+    const bool edge_margin = !draggable() && !params.flags.no_map_edge_margin;
 
     for (int row = 0; row < size.y; row++) {
         for (int column = 0; column < size.x; column++) {
@@ -642,7 +644,8 @@ void build_planner::update_obstructions_check() {
 
             tile_blocked_array[row][column] = false;
             const bool blocked_by_floodplain_edge = (can_blocked_by_floodplain_edge && map_get_floodplain_edge(current_tile));
-            const bool inside_map = map_grid_is_inside(current_tile, 1);
+            const bool inside_map
+              = edge_margin ? map_grid_is_inside_building_area(current_tile) : map_grid_is_inside(current_tile, 1);
             const uint32_t ignore_terrain = preview.ghost_ignore_terrain(*this, current_tile);
             const uint32_t not_clear_mask = (restricted_terrain & TERRAIN_NOT_CLEAR) & ~ignore_terrain;
             const bool has_existing_building = is_tile_occupied_by_active_building(current_tile);
@@ -1128,25 +1131,14 @@ void build_planner::construction_update(tile2i tile) {
     total_cost = current_cost;
 }
 
-void build_planner::check_road_access(building *b, tile2i tile, int size, int orientation) {
-    if (!b->is_temple_complex()) {
+void build_planner::checks_generic_rules(building* b) {
+    if (!b || !b->is_valid()) {
         return;
     }
 
-    const bool has_road = map_has_road_access_temple_complex(tile, orientation, true, nullptr);
-    if (!has_road) {
-        events::emit(event_construction_warning{ "#needs_road_access" });
-    }
-}
-
-void build_planner::checks_generic_rules(building *b, tile2i tile, int size, int orientation) {
-    if (!b) {
-        return;
-    }
-
-    e_building_type type = b->type;
-    check_road_access(b, tile, size, orientation);
+    construction_warnings_check_site(*b);
     b->dcast()->on_place_checks();
+    construction_warnings_check_road_access(*b);
 }
 
 void build_planner::construction_finalize() { // confirm final placement
@@ -1187,9 +1179,7 @@ void build_planner::construction_finalize() { // confirm final placement
     logs::info("[build-btn] finalize place() OK type=%d cost=%d end=%d(%d,%d)", (int)build_type, total_cost,
                end.grid_offset(), end.x(), end.y());
 
-    // final generic building warnings - these are in another file
-    // TODO: bring these warnings over.
-    checks_generic_rules(last_created_building, end, size.x, relative_orientation);
+    checks_generic_rules(last_created_building);
     bool should_recalc_ferry_routes = params.needs.shoreline;
 
     setup_building_variant(end, build_type);
@@ -1528,6 +1518,7 @@ bool build_planner::place() {
     const auto &params = building_static_params::get(build_type);
     const auto &preview = building_planer_renderer::get(build_type);
     int placement_cost = params.get_cost();
+    last_created_building = nullptr;
 
     switch (build_type) {
     case BUILDING_CLEAR_LAND: {
@@ -1594,7 +1585,8 @@ bool build_planner::place() {
     }
 
     total_cost = placement_cost;
-    if (total_cost == 0) {
+    // Free buildings (OG cost 0: sphinx, royal tombs) still placed something on the default path.
+    if (total_cost == 0 && params.get_cost() != 0) {
         return false;
     }
 

@@ -294,7 +294,7 @@
       <p>Goals match original campaign scenario 9. No monument requirement — ratings and trade dominate.</p>
 
       <h2 id="events">Scripted events</h2>
-      <p>Verified against pak scenario 9 (2026-07-25 dump). Scenario enemy id is <strong>Hyksos</strong>; timed invasions are Pharaoh favour only (<code>ENEMY_3_EGYPTIAN</code>). Favour chain: 40 (attack food) → 20 (random) → 20 (random) via <code>mission_pharaoh_favour_invasion_tick</code> + bind wipe (B2-migrate). Smoke: <code>tests/178_favour_wave_bind.js</code>.</p>
+      <p>Verified against pak scenario 9 (2026-07-25 dump). Scenario enemy id is <strong>Hyksos</strong>; timed invasions are Pharaoh favour only (<code>ENEMY_3_EGYPTIAN</code>). Favour chain: 40 (attack food) → 20 (random) → 20 (random), <code>BY_FAVOUR</code> events in <code>events[]</code> (pak i=15→18→19). At Kingdom rating 0 the engine sends the <code>BY_FAVOUR</code> invasion from <code>events[]</code> (OG <code>city/kingdom.c</code>): warnings over its <code>months_initial</code>, then the attack; the chained waves attack together with it. It is called off if the rating reaches 15 before the attack, and can come again 12 months later.</p>
 
       <div class="tutorial-step">
         <span class="step-tag">Year 2 · month 4</span>
@@ -306,7 +306,7 @@
       </div>
       <div class="tutorial-step">
         <span class="step-tag">Year 6 · month 4</span>
-        <span>CITY_STATUS Selima conquered (subtype 1) → <strong>NEW_TRADE Kyrene</strong> (pak city_id=5; display).</span>
+        <span>CITY_STATUS Selima conquered (subtype 1): Selima becomes Egyptian, "Foreign City Conquered" message → <strong>NEW_TRADE Kyrene</strong> (pak city_id=5; display).</span>
       </div>
       <div class="tutorial-step">
         <span class="step-tag">Year 6 · month 9</span>
@@ -314,7 +314,7 @@
       </div>
       <div class="tutorial-step">
         <span class="step-tag">Year 7 · month 1</span>
-        <span>Foreign city conquered (Nubt) → linen <strong>demand increase</strong> (amount 9).</span>
+        <span>Battle won message (Nubt) → linen <strong>demand increase</strong> (amount 9).</span>
       </div>
       <div class="tutorial-step">
         <span class="step-tag">Year 10</span>
@@ -334,7 +334,7 @@
       </div>
       <div class="tutorial-step">
         <span class="step-tag">Favour KR</span>
-        <span>Pharaoh punishment army size <strong>40</strong> (targets food), then chain <strong>20</strong> (random), then another <strong>20</strong> (random).</span>
+        <span>Pharaoh punishment army size <strong>40</strong> (targets food), with chained <strong>20</strong> (random) and another <strong>20</strong> (random) in the same attack.</span>
       </div>
 
       <h2 id="strategy">Strategy</h2>
@@ -382,14 +382,14 @@
               <li>
                 <span class="ev-name">event_advance_month</span>
                 <span class="ev-line">requests / trade</span>
-                <span class="ev-desc">Granite +6/−7/−3; sandstone construction +6/−11/−5; Selima CITY_STATUS conquered→NEW_TRADE Kyrene; Nubt MESSAGE→linen demand; flax/gems demand; land/sea trade problems; contaminated water.</span>
+                <span class="ev-desc">Granite +6/−7/−3; sandstone construction +6/−11/−5; Selima CITY_STATUS conquered→NEW_TRADE Kyrene; Nubt MESSAGE battle won→linen demand; flax/gems demand; land/sea trade problems; contaminated water.</span>
                 <span class="ev-fn">mission9_pharaoh_request_* / selima_* / demands</span>
               </li>
               <li>
                 <span class="ev-name">event_advance_month</span>
                 <span class="ev-line">invasions</span>
-                <span class="ev-desc">Favour i15 size 40 FOOD → i18 size 20 RANDOM → i19 size 20 RANDOM (bind wipe).</span>
-                <span class="ev-fn">mission9_pharaoh_favour_invasion</span>
+                <span class="ev-desc">Favour i15 size 40 FOOD → i18 size 20 RANDOM → i19 size 20 RANDOM — <code>events[]</code>, sent by the engine at Kingdom rating 0.</span>
+                <span class="ev-fn">event_manager_t::update_kingdom_favour</span>
               </li>
             </ul>
           </div>

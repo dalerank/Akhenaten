@@ -8,16 +8,20 @@
 #include "city/city_animals.h"
 #include "city/city_buildings.h"
 #include "city/city_figures.h"
+#include "city/city_floods.h"
 #include "city/object_info.h"
 #include "core/bstring.h"
+#include "core/random.h"
 #include "core/xstring.h"
 #include "empire/trader_handler.h"
 #include "figure/figure.h"
 #include "figure/figure_impl.h"
+#include "figure/figure_names.h"
 #include "figure/formation.h"
 #include "figuretype/animal_asp.h"
 #include "figuretype/animal_lion.h"
 #include "figuretype/animal_scorpion.h"
+#include "figuretype/figure_fishing_point.h"
 #include "figuretype/figure_frog.h"
 #include "figuretype/figure_hunter.h"
 #include "figuretype/figure_locust.h"
@@ -31,30 +35,6 @@
 
 #include <algorithm>
 #include <cstring>
-
-static int __test_locust_spawn_swarm(int count) {
-    return figure_locust::spawn_swarm(count);
-}
-ANK_FUNCTION_1(__test_locust_spawn_swarm);
-
-static int __test_locust_set_days(int fid, int days) {
-    figure* f = figure_get(fid);
-    if (!f || !f->is_alive() || f->type != FIGURE_LOCUST) {
-        return 0;
-    }
-    figure_locust(f).runtime_data().days_left = (uint16_t)std::max(0, days);
-    return 1;
-}
-ANK_FUNCTION_2(__test_locust_set_days);
-
-static int __test_locust_get_days(int fid) {
-    figure* f = figure_get(fid);
-    if (!f || !f->is_alive() || f->type != FIGURE_LOCUST) {
-        return -1;
-    }
-    return figure_locust(f).runtime_data().days_left;
-}
-ANK_FUNCTION_1(__test_locust_get_days);
 
 static int __test_locust_cloud_variant(int fid) {
     figure* f = figure_get(fid);
@@ -89,29 +69,28 @@ static int __test_locust_post_load(int fid) {
 }
 ANK_FUNCTION_1(__test_locust_post_load);
 
-static int __test_frog_spawn_swarm(int count) {
-    return figure_frog::spawn_swarm(count);
+static int __test_locust_farm(int fid) {
+    figure* f = figure_get(fid);
+    if (!f || !f->is_alive() || f->type != FIGURE_LOCUST) {
+        return 0;
+    }
+    return figure_locust(f).runtime_data().farm_id;
 }
-ANK_FUNCTION_1(__test_frog_spawn_swarm);
+ANK_FUNCTION_1(__test_locust_farm);
 
-static int __test_frog_set_days(int fid, int days) {
+static void __test_locust_update_month(int month) {
+    figure_locust::update_month(month);
+}
+ANK_FUNCTION_1(__test_locust_update_month);
+
+static int __test_frog_house(int fid) {
     figure* f = figure_get(fid);
     if (!f || !f->is_alive() || f->type != FIGURE_FROG) {
         return 0;
     }
-    figure_frog(f).runtime_data().days_left = (uint16_t)std::max(0, days);
-    return 1;
+    return figure_frog(f).runtime_data().house_id;
 }
-ANK_FUNCTION_2(__test_frog_set_days);
-
-static int __test_frog_get_days(int fid) {
-    figure* f = figure_get(fid);
-    if (!f || !f->is_alive() || f->type != FIGURE_FROG) {
-        return -1;
-    }
-    return figure_frog(f).runtime_data().days_left;
-}
-ANK_FUNCTION_1(__test_frog_get_days);
+ANK_FUNCTION_1(__test_frog_house);
 
 static int __test_frog_infest_house(int bid) {
     building* b = building_get(bid);
@@ -126,6 +105,38 @@ static int __test_frog_infest_house(int bid) {
     return house->runtime_data().frog_infest_days > 0 ? 1 : 0;
 }
 ANK_FUNCTION_1(__test_frog_infest_house);
+
+static int __test_plagues_locusts_countdown() {
+    return g_city.plagues.locusts_countdown;
+}
+ANK_FUNCTION(__test_plagues_locusts_countdown);
+
+static void __test_plagues_set_locusts_countdown(int v) {
+    g_city.plagues.locusts_countdown = v;
+}
+ANK_FUNCTION_1(__test_plagues_set_locusts_countdown);
+
+static int __test_plagues_frogs_countdown() {
+    return g_city.plagues.frogs_countdown;
+}
+ANK_FUNCTION(__test_plagues_frogs_countdown);
+
+static int __test_plagues_mummies_max() {
+    return g_city.plagues.mummies_max;
+}
+ANK_FUNCTION(__test_plagues_mummies_max);
+
+static void __test_plagues_tick(int n) {
+    for (int i = 0; i < n; i++) {
+        g_city.update_tick(0);
+    }
+}
+ANK_FUNCTION_1(__test_plagues_tick);
+
+static int __test_floods_season() {
+    return g_floods.season;
+}
+ANK_FUNCTION(__test_floods_season);
 
 static int __test_lion_setup_curse_raid(int fid, int days) {
     figure* f = figure_get(fid);
@@ -373,3 +384,50 @@ static int __test_hunting_lodge_spawn_figure(int bid) {
     return __test_hunting_lodge_active_hunters(b) - before;
 }
 ANK_FUNCTION_1(__test_hunting_lodge_spawn_figure);
+
+static void __test_crt_reseed_from_clock(int millis) {
+    anti_scum_reseed_from_clock((uint32_t)millis);
+}
+ANK_FUNCTION_1(__test_crt_reseed_from_clock);
+
+static void __test_figure_name_init() {
+    figure_name_init();
+}
+ANK_FUNCTION(__test_figure_name_init);
+
+static int __test_figure_name_counter(int slot) {
+    return figure_name_counter(slot);
+}
+ANK_FUNCTION_1(__test_figure_name_counter);
+
+static int __test_fishing_spot_create(int x, int y) {
+    figure* f = figure_fishing_point::create(tile2i(x, y));
+    return (f && f->id > 0 && f->type == FIGURE_FISHING_POINT) ? f->id : 0;
+}
+ANK_FUNCTION_2(__test_fishing_spot_create);
+
+static figure_fishing_point* test_fishing_spot(int fid) {
+    figure* f = figure_get(fid);
+    return (f && f->id > 0 && f->is_alive()) ? f->dcast<figure_fishing_point>() : nullptr;
+}
+
+// frame | spot_wait_ticks << 8 | pause_ticks << 16, or -1 for a figure that is not a live fishing spot.
+static int __test_fishing_spot_state(int fid) {
+    auto* spot = test_fishing_spot(fid);
+    if (!spot) {
+        return -1;
+    }
+    const auto& d = spot->runtime_data();
+    return d.spot_frame | (d.spot_wait_ticks << 8) | (d.spot_pause_ticks << 16);
+}
+ANK_FUNCTION_1(__test_fishing_spot_state);
+
+static int __test_fishing_spot_og_tick(int fid) {
+    auto* spot = test_fishing_spot(fid);
+    if (!spot) {
+        return 0;
+    }
+    spot->spot_tick();
+    return 1;
+}
+ANK_FUNCTION_1(__test_fishing_spot_og_tick);

@@ -261,7 +261,7 @@ top_menu_widget {
 			items [
 				{ id: "advisor_labor", text: "#top_menu_advisor_labor", parameter: ADVISOR_LABOR }
 				{ id: "advisor_military", text: "#top_menu_advisor_military", parameter: ADVISOR_MILITARY }
-				{ id: "advisor_imperial", text: "#top_menu_advisor_imperial", parameter: ADVISOR_IMPERIAL }
+				{ id: "advisor_imperial", text: "#top_menu_advisor_imperial", parameter: ADVISOR_KINGDOM }
 				{ id: "advisor_ratings", text: "#top_menu_advisor_ratings", parameter: ADVISOR_RATINGS }
 				{ id: "advisor_trade", text: "#top_menu_advisor_trade", parameter: ADVISOR_TRADE }
 				{ id: "advisor_population", text: "#top_menu_advisor_population", parameter: ADVISOR_POPULATION }

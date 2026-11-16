@@ -13,6 +13,7 @@
 
 #include "dev/debug.h"
 
+
 declare_console_command_p(addprosperity) {
     int amount = args.next_int(10);
     g_city.ratings.prosperity = calc_bound(g_city.ratings.prosperity + amount, 0, 100);
@@ -23,31 +24,71 @@ declare_console_command_p(addculture) {
     g_city.ratings.culture = calc_bound(g_city.ratings.culture + amount, 0, 100);
 };
 
-struct rating_points {
-    using points_t = svector<city_ratings_t::point, 32>;
-    points_t points;
+struct culture_rating_record {
+    xstring coverage;
+    svector<int, 8> points;
+    svector<int, 8> limits;
+};
+ANK_CONFIG_STRUCT(culture_rating_record, coverage, points, limits)
 
-    void archive_init() { verify_no_crash(!points.empty()); }
+// OG culture_records (city_data.c) and city_ratings_culture_bonus, in scripts/city/ratings.js.
+struct culture_rating_params_t {
+    svector<culture_rating_record, 16> records;
+    svector<int, 8> bonus_limits;
+    int bonus_margin;
+    int bonus_points;
+};
+ANK_CONFIG_STRUCT(culture_rating_params_t, records, bonus_limits, bonus_margin, bonus_points)
+culture_rating_params_t ANK_VARIABLE(culture_rating);
 
-    void archive_unload() { points.clear(); }
-    auto &emplace_back() { return points.emplace_back(); }
+namespace {
 
-    int find(int coverage) {
-        for (const auto &p : points) {
-            if (coverage >= p.coverage) {
-                return p.points;
-            }
-        }
+    int culture_coverage_value(const xstring& coverage) {
+        const auto& c = g_city.coverage;
+        if (coverage == "jugglers")
+            return c.booth;
+        if (coverage == "musicians")
+            return c.bandstand;
+        if (coverage == "dancers")
+            return c.pavilion;
+        if (coverage == "senet")
+            return c.senet_house;
+        if (coverage == "zoo")
+            return c.zoo;
+        if (coverage == "school")
+            return c.school;
+        if (coverage == "library")
+            return c.library;
+        if (coverage == "religion")
+            return g_city.religion.coverage_common;
+        if (coverage == "dentist")
+            return c.dentist;
+        if (coverage == "physician")
+            return c.physician;
+        if (coverage == "mortuary")
+            return c.mortuary;
+        logs::error("[culture] unknown coverage %s in culture_rating.records", coverage.c_str());
         return 0;
     }
-};
-ANK_CONFIG_STRUCT(rating_points, points)
 
-rating_points ANK_OBJECTS_VARIABLE(culture_religion_rating_points);
-rating_points ANK_OBJECTS_VARIABLE(culture_booth_rating_points);
-rating_points ANK_OBJECTS_VARIABLE(culture_school_rating_points);
-rating_points ANK_OBJECTS_VARIABLE(culture_academy_rating_points);
-rating_points ANK_OBJECTS_VARIABLE(culture_library_rating_points);
+    // Band i (i >= 1) is coverage below limits[i]; band 0 is coverage up to limits[0]; past the last limit
+    // the last points apply.
+    int culture_points(const svector<int, 8>& points, const svector<int, 8>& limits, int coverage) {
+        if (points.empty()) {
+            return 0;
+        }
+        if (!limits.empty() && coverage <= limits[0]) {
+            return points[0];
+        }
+        for (size_t band = 1; band < limits.size() && band < points.size(); ++band) {
+            if (coverage < limits[band]) {
+                return points[band];
+            }
+        }
+        return points.back();
+    }
+
+} // namespace
 
 void city_ratings_t::reduce_prosperity_after_bailout() {
     prosperity -= 3;
@@ -55,7 +96,7 @@ void city_ratings_t::reduce_prosperity_after_bailout() {
         prosperity = 0;
     }
 
-    prosperity_explanation = 8;
+    prosperity_explanation = e_prosperity_reason_tribute_not_paid;
 }
 
 void city_ratings_t::monument_building_destroyed(e_building_type type) {
@@ -77,34 +118,35 @@ void city_ratings_t::monument_record_rioter() {
 }
 
 void city_ratings_t::update_culture_rating() {
-    culture = 0;
-    culture_explanation = 0;
-
-    if (g_city.population.current <= 0) {
-        return;
+    const auto& records = culture_rating.records;
+    int lowest_points = 100;
+    int lowest_index = 0;
+    for (int i = 0; i < (int)records.size(); ++i) {
+        const int points
+          = culture_points(records[i].points, records[i].limits, culture_coverage_value(records[i].coverage));
+        if (points < lowest_points) {
+            lowest_points = points;
+            lowest_index = i;
+        }
     }
 
-    culture_points.entertainment = culture_booth_rating_points.find(g_city.coverage.booth);
-    culture += culture_points.entertainment;
+    // OG quirk: a category earns the bonus when its points are bonus_margin *below* the lowest, which only
+    // the 90-limit records (dentist, physician) can reach, at 90..99% coverage.
+    int bonus = 0;
+    for (const auto& r : records) {
+        const int points = culture_points(r.points, culture_rating.bonus_limits, culture_coverage_value(r.coverage));
+        if (points + culture_rating.bonus_margin < lowest_points) {
+            bonus += culture_rating.bonus_points;
+        }
+    }
 
-    culture_points.religion = culture_religion_rating_points.find(g_city.religion.coverage_common);
-    culture += culture_points.religion;
+    culture = lowest_points + bonus;
 
-    culture_points.school = culture_school_rating_points.find(g_city.coverage.school);
-    culture += culture_points.school;
-
-    culture_points.academy = culture_academy_rating_points.find(g_city.coverage.academy);
-    culture += culture_points.academy;
-
-    culture_points.library = culture_library_rating_points.find(g_city.coverage.library);
-    culture += culture_points.library;
-
-    // Add culture bonus from working jewels workshops: +1 per every 3 workshops (if enabled)
     if (!!game_features::gameplay_jewels_workshops_culture_bonus) {
-        int active_jewels_workshops = g_city.buildings.buildings[BUILDING_JEWELS_WORKSHOP].active;
-        int jewels_workshops_culture_bonus = active_jewels_workshops / 3;
-        culture += jewels_workshops_culture_bonus;
+        const int active_jewels_workshops = g_city.buildings.buildings[BUILDING_JEWELS_WORKSHOP].active;
+        culture += active_jewels_workshops / 3;
     }
 
     culture = calc_bound(culture, 0, 100);
+    culture_explanation = lowest_index;
 }

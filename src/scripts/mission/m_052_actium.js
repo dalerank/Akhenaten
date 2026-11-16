@@ -30,7 +30,6 @@ mission52 { // Actium - Antony and Cleopatra
 	initial_funds [14000, 9330, 7000, 4690, 3710]
 	rescue_loans [4000, 2670, 2000, 1340, 1060]
 	debt_interest [0, 1, 3, 5, 7]
-	house_tax_multipliers [300, 200, 150, 100, 75]
 
 	env {
 		has_animals : true
@@ -298,6 +297,7 @@ mission52 { // Actium - Antony and Cleopatra
 			amount { value : 19 }
 			months_initial : 4
 			location_fields [ 9, -1, 9, 11 ]
+			warships : 5
 			event_trigger_type : EVENT_TRIGGER_ONCE
 			on_completed_action : 17
 			on_refusal_action : -1
@@ -379,6 +379,7 @@ mission52 { // Actium - Antony and Cleopatra
 			amount { value : 40 }
 			months_initial : 1
 			location_fields [ 9, -1, 9, 11 ]
+			warships : 4
 			event_trigger_type : EVENT_TRIGGER_ONLY_VIA_EVENT
 			on_completed_action : 18
 			on_refusal_action : -1
@@ -484,8 +485,6 @@ mission52 { // Actium - Antony and Cleopatra
 			cost_to_open : 185
 			is_sea_trade : true
 			type : EMPIRE_CITY_FOREIGN_TRADING
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_POTTERY, RESOURCE_LUXURY_GOODS, RESOURCE_COPPER ]
 			buys [ RESOURCE_GRAIN ]
 			route_limits [
@@ -513,8 +512,6 @@ mission52 { // Actium - Antony and Cleopatra
 			cost_to_open : 525
 			is_sea_trade : true
 			type : EMPIRE_CITY_PHARAOH_TRADING
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_GRAIN, RESOURCE_CHICKPEAS, RESOURCE_FISH, RESOURCE_POTTERY ]
 			buys [ RESOURCE_LUXURY_GOODS, RESOURCE_TIMBER ]
 			route_limits [
@@ -637,7 +634,8 @@ function mission52_sea(i) {
 	return pts[i]
 }
 
-function mission52_enemy_raid(invasion_id, size, sea_point, on_completed_tag) {
+// warships: the event's `warships` (pak phrase_var).
+function mission52_enemy_raid(invasion_id, size, sea_point, on_completed_tag, warships) {
 	var sea = mission52_sea(sea_point === undefined ? 0 : sea_point)
 	__image_request_pak(PACK_ENEMY_PERSIAN)
 	var opts = {
@@ -649,6 +647,7 @@ function mission52_enemy_raid(invasion_id, size, sea_point, on_completed_tag) {
 		invasion_attack_target: EVENT_ATTACK_TARGET_TROOPS,
 		via_sea: 1,
 		sea_point: sea_point === undefined ? 0 : sea_point,
+		warships: warships || 0,
 		tilex: sea[0],
 		tiley: sea[1]
 	}
@@ -687,7 +686,7 @@ function mission52_calendar_invasions(ev) {
 		mission.inv12_active = true
 		mission.inv12_enemies_seen = false
 		log_info("akhenaten: mission 52 sea invasion ×19 (i=12)")
-		mission52_enemy_raid(12, 19, 0)
+		mission52_enemy_raid(12, 19, 0, undefined, 5)
 	}
 
 	if (mission.inv12_active && !mission.inv17_done) {
@@ -701,6 +700,6 @@ function mission52_calendar_invasions(ev) {
 		mission.inv12_active = false
 		mission.inv17_done = true
 		log_info("akhenaten: mission 52 sea invasion ×40 (i=17) → chain tag 18")
-		mission52_enemy_raid(17, 40, 0, 18)
+		mission52_enemy_raid(17, 40, 0, 18, 4)
 	}
 }

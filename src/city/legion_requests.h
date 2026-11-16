@@ -11,6 +11,7 @@ int figure_warship_request_strength(int figure_id);
 int formation_request_strength(int request_id, int *warships_out, int *legions_out);
 int figure_find_legion_transport_ship(int formation_id);
 bool formation_legion_is_on_ship(int formation_id);
+bool troop_request_is_sea(int event_id);
 
 void formation_legions_dispatch_to_request(int event_id);
 void formation_legions_return_from_request(int event_id);

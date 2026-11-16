@@ -3,7 +3,7 @@ log_info("akhenaten: mission 22 dakhla started")
 // Empire / events aligned with original campaign scenario 22 (2026-07-26 dump).
 // Empire id=1. Enemy ENEMY_6_KUSHITE. Favour Pharaoh×90.
 // Gods: Ra, Ptah, Bast. Funds Normal 6000 / loan 2500 / debt 8. Rank 8.
-// Win: pop 5000 / culture 50 / prosperity 45 / monuments TEMP 9 (pak 6 small obelisk) / kingdom 65 / housing 11.
+// Win: pop 5000 / culture 50 / prosperity 45 / monuments 6 (pak; small obelisk) / kingdom 65 / housing 11.
 // Burial empty. Climate desert.
 // Trade: Nekhen(9) On(2) Saqqara(8) Selima(6). Display Buhen/Byblos/Djedu/Dunqul/Henen/Iunet/Kharga(stub12)/Men-nefer.
 // Triage: SKIP empty map_obj idx=9; omit river/disembark/inv points (pak 0).
@@ -54,7 +54,6 @@ mission22 { // Dakhla Oasis — The Caravan Trail
 	initial_funds [12000, 8000, 6000, 4000, 3000]
 	rescue_loans [5000, 3300, 2500, 1700, 1300]
 	debt_interest [0, 4, 8, 12, 16]
-	house_tax_multipliers [300, 200, 150, 100, 75]
 
 	env {
 		has_animals : true
@@ -91,12 +90,12 @@ mission22 { // Dakhla Oasis — The Caravan Trail
 		BUILDING_TEMPLE_COMPLEX_RA, BUILDING_TEMPLE_COMPLEX_PTAH, BUILDING_TEMPLE_COMPLEX_BAST,
 	]
 
-	// Monuments TEMP 9 (pak raw 6; one small obelisk → formula 9, same as Buhen).
+	// Monuments 6 = pak; one small obelisk, OG weight 1 → trunc(6.32·√1+0.5)=6.
 	win_criteria {
 		population    {enabled : true, goal : 5000 }
 		culture       {enabled : true, goal : 50 }
 		prosperity    {enabled : true, goal : 45 }
-		monuments     {enabled : true, goal : 9 }
+		monuments     {enabled : true, goal : 6 }
 		kingdom       {enabled : true, goal : 65 }
 		housing_level {enabled : true, goal : 11 }
 	}
@@ -105,6 +104,24 @@ mission22 { // Dakhla Oasis — The Caravan Trail
 	exit_point [92, 8]
 
 	enable_scenario_events : true
+
+	events [
+		{ // pak i=56
+			type : EVENT_TYPE_INVASION
+			time { year : 0, month : 0 }
+			item { value : EVENT_INVADER_PHARAOH }
+			amount { value : 90 }
+			months_initial : 9
+			location_fields [ 4, -1, 1, 8 ]
+			event_trigger_type : EVENT_TRIGGER_BY_FAVOUR
+			tag_id : 7056
+			on_completed_action : -1
+			on_refusal_action : -1
+			on_too_late_action : -1
+			on_defeat_action : -1
+			invasion_attack_target : EVENT_ATTACK_TARGET_RANDOM
+		}
+	]
 
 	map_background : {pack:PACK_EMPIRE, id:1}
 	hide_pak_cities : true
@@ -128,8 +145,6 @@ mission22 { // Dakhla Oasis — The Caravan Trail
 				cost_to_open : 600
 				is_sea_trade : false
 				type : EMPIRE_CITY_EGYPTIAN_TRADING
-				max_traders : 1
-				trade_limits : default_trade_limits
 				sells [ RESOURCE_POTTERY, RESOURCE_BEER, RESOURCE_FLAX, RESOURCE_LINEN ]
 				buys [ RESOURCE_PAPYRUS ]
 				route_limits [
@@ -150,8 +165,6 @@ mission22 { // Dakhla Oasis — The Caravan Trail
 				cost_to_open : 1070
 				is_sea_trade : false
 				type : EMPIRE_CITY_EGYPTIAN_TRADING
-				max_traders : 1
-				trade_limits : default_trade_limits
 				sells [ RESOURCE_MEAT, RESOURCE_CLAY, RESOURCE_REEDS, RESOURCE_LIMESTONE ]
 				buys [ RESOURCE_BEER, RESOURCE_LINEN, RESOURCE_GEMS, RESOURCE_LUXURY_GOODS, RESOURCE_TIMBER, RESOURCE_GRANITE ]
 				route_limits [
@@ -177,8 +190,6 @@ mission22 { // Dakhla Oasis — The Caravan Trail
 				cost_to_open : 1250
 				is_sea_trade : false
 				type : EMPIRE_CITY_EGYPTIAN_TRADING
-				max_traders : 1
-				trade_limits : default_trade_limits
 				sells [ RESOURCE_LUXURY_GOODS, RESOURCE_STONE ]
 				buys [ RESOURCE_CLAY, RESOURCE_BRICKS, RESOURCE_POTTERY, RESOURCE_TIMBER, RESOURCE_REEDS, RESOURCE_PAPYRUS, RESOURCE_LIMESTONE ]
 				route_limits [
@@ -203,8 +214,6 @@ mission22 { // Dakhla Oasis — The Caravan Trail
 				cost_to_open : 645
 				is_sea_trade : false
 				type : EMPIRE_CITY_FOREIGN_TRADING
-				max_traders : 1
-				trade_limits : default_trade_limits
 				sells [ RESOURCE_LUXURY_GOODS, RESOURCE_TIMBER ]
 				buys [ RESOURCE_CLAY, RESOURCE_POTTERY, RESOURCE_BEER, RESOURCE_LINEN, RESOURCE_PAPYRUS, RESOURCE_COPPER ]
 				route_limits [
@@ -502,7 +511,6 @@ mission22 { // Dakhla Oasis — The Caravan Trail
 		luxury_recurring_idle_since_abs : -1
 		pottery_recurring_was_busy : false
 		pottery_recurring_idle_since_abs : -1
-		pharaoh_favour_invasion_done : false
 		start_message_shown : false
 	}
 }
@@ -936,11 +944,5 @@ function mission22_on_request_cleared(ev) {
 	if (early_once[tag] || (tag >= 7900 && tag < 8000)) {
 		mission22_apply_early_kr(outcome)
 	}
-}
-
-[es=event_advance_month, mission=mission22]
-function mission22_pharaoh_favour_invasion(ev) {
-	// pak i=56: favour Pharaoh ×90 (no chain).
-	mission_pharaoh_favour_invasion_tick(mission, 90)
 }
 

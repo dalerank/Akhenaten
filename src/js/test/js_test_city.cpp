@@ -17,7 +17,9 @@
 #include "building/monument_royal_tomb.h"
 #include "city/city.h"
 #include "city/city_message.h"
+#include "core/random.h"
 #include "core/xstring.h"
+#include "game/game.h"
 #include "figure/figure_impl.h"
 #include "figuretype/animal_asp.h"
 #include "figuretype/animal_lion.h"
@@ -41,9 +43,15 @@
 #include "figuretype/figure_transport_ship.h"
 #include "figuretype/figure_war_ship.h"
 #include "figuretype/figure_worker.h"
+#include "scenario/criteria.h"
 #include "scenario/request.h"
 #include "scenario/scenario.h"
 #include "scenario/scenario_event_manager.h"
+#include "scenario/earthquake.h"
+#include "grid/grid.h"
+#include "grid/image.h"
+#include "grid/terrain.h"
+
 
 #include <algorithm>
 
@@ -56,6 +64,11 @@ void __test_set_city_population(int amount) {
     g_city.population.current = amount;
 }
 ANK_FUNCTION_1(__test_set_city_population);
+
+void __test_set_city_enemies(int count) {
+    g_city.figures.enemies = (int16_t)count;
+}
+ANK_FUNCTION_1(__test_set_city_enemies);
 
 int __test_request_cleared_seq() {
     return scenario_request_last_cleared().seq;
@@ -158,19 +171,16 @@ void __test_request_force_refuse_now(int tag) {
 }
 ANK_FUNCTION_1(__test_request_force_refuse_now);
 
-// Tag-targeted fulfill (visible-index dispatch is ambiguous when a mission has many requests).
+// Tag-targeted fulfill (visible-index dispatch is ambiguous when a mission has many requests):
+// the dispatched goods arrive at once.
 void __test_request_force_fulfill(int tag, int as_late) {
     event_ph_t* e = __test_find_request_by_tag(tag);
     if (!e || !e->is_active) {
         return;
     }
-    if (as_late) {
-        e->is_overdue = true;
-        e->event_state = e_event_state_finished_late;
-    } else {
-        e->is_overdue = false;
-        e->event_state = e_event_state_finished;
-    }
+    e->is_overdue = as_late != 0;
+    e->event_state = as_late ? e_event_state_dispatched_late : e_event_state_dispatched;
+    e->quest_months_left = 1;
     g_scenario.events.process_active_request(e->event_id);
 }
 ANK_FUNCTION_2(__test_request_force_fulfill);
@@ -208,6 +218,36 @@ static void __test_kingdom_set_rating(int value) {
     g_city.kingdome.rating = (uint8_t)std::clamp(value, 0, 100);
 }
 ANK_FUNCTION_1(__test_kingdom_set_rating);
+
+// Draws one crt rand() and returns the low 31 bits of the new state: output bits 16..30, peek gives bits 0..15.
+// Bit 31 never reaches a later output, so JS can predict every following roll from this.
+static int __test_crt_sync_state31() {
+    const int high = anti_scum_random_15bit();
+    const int low = anti_scum_random_15bit(false);
+    return (high << 16) | low;
+}
+ANK_FUNCTION(__test_crt_sync_state31);
+
+static void __test_crt_srand(int seed) {
+    anti_scum_srand((uint32_t)seed);
+}
+ANK_FUNCTION_1(__test_crt_srand);
+
+static int __test_ra_harsh_trade_months() {
+    return g_city.religion.ra_harshly_reduced_trading_months_left;
+}
+ANK_FUNCTION(__test_ra_harsh_trade_months);
+
+static int __test_ra_no_traders_months() {
+    return g_city.religion.ra_no_traders_months_left;
+}
+ANK_FUNCTION(__test_ra_no_traders_months);
+
+static void __test_ra_clear_curse_months() {
+    g_city.religion.ra_harshly_reduced_trading_months_left = 0;
+    g_city.religion.ra_no_traders_months_left = 0;
+}
+ANK_FUNCTION(__test_ra_clear_curse_months);
 
 static void __test_house_calculate_culture_aggregates() {
     g_city.house_service_calculate_culture_aggregates();
@@ -256,3 +296,289 @@ static void __test_scenario_var_set_string(pcstr name, pcstr value) {
     g_scenario.vars.set_string(name, value);
 }
 ANK_FUNCTION_2(__test_scenario_var_set_string);
+
+static void __test_city_update_month() {
+    g_city.update_month(game.simtime);
+}
+ANK_FUNCTION(__test_city_update_month);
+
+static int __test_event_id_by_tag(int tag) {
+    for (int i = 0; i < g_scenario.events.events_count(); i++) {
+        if (g_scenario.events.at(i)->tag_id == tag) {
+            return i;
+        }
+    }
+    return -1;
+}
+ANK_FUNCTION_1(__test_event_id_by_tag);
+
+static int __test_event_sweep_countdown(int event_id) {
+    const event_ph_t* e = g_scenario.events.at(event_id);
+    return e ? e->data.sweep.countdown : -1;
+}
+ANK_FUNCTION_1(__test_event_sweep_countdown);
+
+static void __test_scenario_events_tick(int n) {
+    for (int i = 0; i < n; i++) {
+        g_scenario.events.update_tick();
+    }
+}
+ANK_FUNCTION_1(__test_scenario_events_tick);
+
+static int __test_blood_river_sweep_active() {
+    return g_scenario.events.blood_river_sweep_active() ? 1 : 0;
+}
+ANK_FUNCTION(__test_blood_river_sweep_active);
+
+static building_house* test_house(int bid) {
+    building* b = building_get(bid);
+    return (b && b->is_valid()) ? b->dcast_house() : nullptr;
+}
+
+static int __test_house_water_supply(int bid) {
+    building_house* h = test_house(bid);
+    return h ? h->runtime_data().water_supply : -1;
+}
+ANK_FUNCTION_1(__test_house_water_supply);
+
+static void __test_house_set_water_supply(int bid, int v) {
+    if (building_house* h = test_house(bid)) {
+        h->runtime_data().water_supply = (uint8_t)v;
+    }
+}
+ANK_FUNCTION_2(__test_house_set_water_supply);
+
+static int __test_house_happiness(int bid) {
+    building_house* h = test_house(bid);
+    return h ? h->runtime_data().house_happiness : -1;
+}
+ANK_FUNCTION_1(__test_house_happiness);
+
+static void __test_house_set_happiness(int bid, int v) {
+    if (building_house* h = test_house(bid)) {
+        h->runtime_data().house_happiness = (uint8_t)v;
+    }
+}
+ANK_FUNCTION_2(__test_house_set_happiness);
+
+static int __test_building_malaria_risk(int bid) {
+    building* b = building_get(bid);
+    return b ? b->malaria_risk : -1;
+}
+ANK_FUNCTION_1(__test_building_malaria_risk);
+
+static void __test_set_earthquake_point(int x, int y) {
+    g_scenario.earthquake_point = (x < 0 || y < 0) ? tile2i::invalid : tile2i(x, y);
+}
+ANK_FUNCTION_2(__test_set_earthquake_point);
+
+static void __test_earthquake_tick(int n) {
+    for (int i = 0; i < n; i++) {
+        scenario_earthquake_process();
+    }
+}
+ANK_FUNCTION_1(__test_earthquake_tick);
+
+static int __test_event_state(int event_id) {
+    const event_ph_t* e = g_scenario.events.at(event_id);
+    return e ? (int)e->event_state : -1;
+}
+ANK_FUNCTION_1(__test_event_state);
+
+// Front i of an earthquake event as x * 1000 + y.
+static int __test_earthquake_front(int event_id, int i) {
+    const event_ph_t* e = g_scenario.events.at(event_id);
+    if (!e || i < 0 || i > 3) {
+        return -1;
+    }
+    return e->data.earthquake.locations[2 * i] * 1000 + e->data.earthquake.locations[2 * i + 1];
+}
+ANK_FUNCTION_2(__test_earthquake_front);
+
+static int __test_earthquake_duration(int event_id) {
+    const event_ph_t* e = g_scenario.events.at(event_id);
+    return e ? e->data.earthquake.duration : -1;
+}
+ANK_FUNCTION_1(__test_earthquake_duration);
+
+static int __test_earthquake_tile_free(int x, int y) {
+    return map_terrain_is(MAP_OFFSET(x, y), TERRAIN_ELEVATION | TERRAIN_ROCK | TERRAIN_WATER) ? 0 : 1;
+}
+ANK_FUNCTION_2(__test_earthquake_tile_free);
+
+// Makes a tile meadow with a stale image id, to see whether a refresh redraws it.
+static void __test_map_set_meadow(int x, int y, int image_id) {
+    map_terrain_add(MAP_OFFSET(x, y), TERRAIN_MEADOW);
+    map_image_set(MAP_OFFSET(x, y), image_id);
+}
+ANK_FUNCTION_3(__test_map_set_meadow);
+
+static int __test_map_image(int x, int y) {
+    return map_image_at(MAP_OFFSET(x, y));
+}
+ANK_FUNCTION_2(__test_map_image);
+
+static int __test_gift_reply(int event_id, int button) {
+    return g_scenario.events.gift_reply(event_id, (e_gift_button)button) ? 1 : 0;
+}
+ANK_FUNCTION_2(__test_gift_reply);
+
+static int __test_treasury() {
+    return g_city.finance.treasury.value;
+}
+ANK_FUNCTION(__test_treasury);
+
+static void __test_simtime_set_month(int month) {
+    game.simtime.month = std::clamp(month, 0, 11);
+}
+ANK_FUNCTION_1(__test_simtime_set_month);
+
+static void __test_city_ratings_update(int is_yearly_update) {
+    g_city.ratings_update(is_yearly_update != 0);
+}
+ANK_FUNCTION_1(__test_city_ratings_update);
+
+static void __test_city_ra_yearly_favour() {
+    g_city.ra_temple_complex_yearly_favour();
+}
+ANK_FUNCTION(__test_city_ra_yearly_favour);
+
+static void __test_city_update_prosperity() {
+    g_city.update_prosperity_rating();
+}
+ANK_FUNCTION(__test_city_update_prosperity);
+
+static void __test_city_update_culture() {
+    g_city.ratings.update_culture_rating();
+}
+ANK_FUNCTION(__test_city_update_culture);
+
+static void __test_coverage_set(pcstr field, int value) {
+    auto& c = g_city.coverage;
+    const xstring name(field);
+    if (name == "booth")
+        c.booth = value;
+    else if (name == "bandstand")
+        c.bandstand = value;
+    else if (name == "pavilion")
+        c.pavilion = value;
+    else if (name == "senet_house")
+        c.senet_house = value;
+    else if (name == "zoo")
+        c.zoo = value;
+    else if (name == "school")
+        c.school = value;
+    else if (name == "library")
+        c.library = value;
+    else if (name == "religion")
+        g_city.religion.coverage_common = (uint8_t)value;
+    else if (name == "dentist")
+        c.dentist = (uint8_t)value;
+    else if (name == "physician")
+        c.physician = (uint8_t)value;
+    else if (name == "mortuary")
+        c.mortuary = (uint8_t)value;
+    else
+        logs::error("[test] __test_coverage_set: unknown field %s", field);
+}
+ANK_FUNCTION_2(__test_coverage_set);
+
+static int __test_house_tax_units(int bid) {
+    auto* house = building_get(bid)->dcast_house();
+    return house ? g_city.finance.house_monthly_tax_units(house) : -1;
+}
+ANK_FUNCTION_1(__test_house_tax_units);
+
+// The house model of the current difficulty.
+static int __test_house_model_value(int bid, pcstr field) {
+    auto* house = building_get(bid)->dcast_house();
+    if (!house) {
+        return -1;
+    }
+    const xstring name(field);
+    if (name == "prosperity")
+        return house->model().prosperity;
+    if (name == "tax_multiplier")
+        return house->model().tax_multiplier;
+    logs::error("[test] __test_house_model_value: unknown field %s", field);
+    return -1;
+}
+ANK_FUNCTION_2(__test_house_model_value);
+
+// Sets a per-difficulty scenario meta table to five copies of value; a negative value clears it.
+static void __test_scenario_meta_tax(pcstr field, int value) {
+    const xstring name(field);
+    int_dcy* table = nullptr;
+    if (name == "tax_percentage")
+        table = &g_scenario.meta.tax_percentage;
+    else if (name == "house_tax_multipliers")
+        table = &g_scenario.meta.house_tax_multipliers;
+    if (!table) {
+        logs::error("[test] __test_scenario_meta_tax: unknown field %s", field);
+        return;
+    }
+    table->value.clear();
+    for (int i = 0; value >= 0 && i < 5; ++i) {
+        table->value.push_back(value);
+    }
+}
+ANK_FUNCTION_2(__test_scenario_meta_tax);
+
+static void __test_ratings_set(int culture, int prosperity, int prosperity_max) {
+    g_city.ratings.culture = culture;
+    g_city.ratings.prosperity = prosperity;
+    g_city.ratings.prosperity_max = prosperity_max;
+}
+ANK_FUNCTION_3(__test_ratings_set);
+
+// Last year's finance and the other inputs the OG prosperity change reads.
+static void __test_finance_last_year_set(pcstr field, int value) {
+    auto& f = g_city.finance;
+    const xstring name(field);
+    if (name == "taxes")
+        f.last_year.income.taxes = value;
+    else if (name == "exports")
+        f.last_year.income.exports = value;
+    else if (name == "donated")
+        f.last_year.income.donated = value;
+    else if (name == "gold_delivered")
+        f.last_year.income.gold_delivered = value;
+    else if (name == "imports")
+        f.last_year.expenses.imports = value;
+    else if (name == "wages")
+        f.last_year.expenses.wages = value;
+    else if (name == "construction")
+        f.last_year.expenses.construction = value;
+    else if (name == "construction_this_year")
+        f.this_year.expenses.construction = value;
+    else if (name == "interest")
+        f.last_year.expenses.interest = value;
+    else if (name == "salary")
+        f.last_year.expenses.mayour_salary = value;
+    else if (name == "income_total")
+        f.last_year.income.total = value;
+    else if (name == "expenses_total")
+        f.last_year.expenses.total = value;
+    else if (name == "wage_rate_paid_last_year")
+        f.wage_rate_paid_last_year = value;
+    else if (name == "wages_kingdome")
+        f.wages_kingdome = (int8_t)value;
+    else if (name == "tribute_not_paid_last_year")
+        f.tribute_not_paid_last_year = !!value;
+    else if (name == "tribute_not_paid_total_years")
+        f.tribute_not_paid_total_years = (uint8_t)value;
+    else if (name == "workers_needed")
+        g_city.labor.workers_needed = value;
+    else if (name == "unemployment_percentage")
+        g_city.labor.unemployment_percentage = (int8_t)value;
+    else if (name == "senet_house_plays")
+        g_city.entertainment.senet_house_plays = value;
+    else
+        logs::error("[test] __test_finance_last_year_set: unknown field %s", field);
+}
+ANK_FUNCTION_2(__test_finance_last_year_set);
+
+void __test_scenario_init_max_year() {
+    scenario_criteria_init_max_year();
+}
+ANK_FUNCTION(__test_scenario_init_max_year);

@@ -25,8 +25,8 @@ struct empire_object {
 };
 ANK_CONFIG_PROPERTY(empire_object, id, type, pos, image_id, expanded_pos, expanded_image_id, distant_battle_travel_months)
 
-#define EMPIRE_OBJ_MAX_SOLD_RESOURCES 14
-#define EMPIRE_OBJ_MAX_BOUGHT_RESOURCES 8
+constexpr int EMPIRE_OBJ_MAX_SOLD_RESOURCES = 14;
+constexpr int EMPIRE_OBJ_MAX_BOUGHT_RESOURCES = 8;
 
 struct full_empire_object {
     int in_use; // this can be 2, so it's an int!
@@ -62,6 +62,10 @@ struct map_route_object {
     int path_length;
     int deviation;
 
-    int calc_length();
+    // OG empire_file.c route path: points every `step` pixels along the way points; path_length counts them.
+    int step() const { return unk_header[0] & 0xff; }
+    int calc_length() const;
+    vec2i path_point(int index) const;
+    int travel_months() const;
     void improve_route();
 };

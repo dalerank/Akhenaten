@@ -2,12 +2,8 @@
 
 #include "building/monument_mastaba.h"
 #include "city/city_buildings.h"
-#include "city/city_figures.h"
 #include "city/city_message.h"
-#include "core/custom_span.hpp"
-#include "core/hvector.h"
 #include "core/random.h"
-#include "figure/figure.h"
 #include "game/game_config.h"
 #include "game/resource.h"
 #include "grid/grid.h"
@@ -56,23 +52,6 @@ void sync_parts_to_main_phase(building_monument &main) {
     }
 }
 
-bool part_id_matches(const hvector<int, 64> &part_ids, int dest_id) {
-    if (dest_id <= 0) {
-        return false;
-    }
-    for (int id : part_ids) {
-        if (id == dest_id) {
-            return true;
-        }
-    }
-    return false;
-}
-
-void abort_sled_cargo(figure &f) {
-    f.set_resource(RESOURCE_NONE);
-    f.poof();
-}
-
 } // namespace
 
 int construction_blessing_cap_phase(const building_monument &monument) {
@@ -119,44 +98,6 @@ building_monument *find_construction_blessing_target() {
     return best;
 }
 
-void clear_deliveries_for_chain(building_monument &main) {
-    // Heap-backed after stack fill â€” safe for medium/large mastaba chains.
-    hvector<int, 64> part_ids;
-    building *part = &main.base;
-    while (part) {
-        part_ids.push_back(part->id);
-        building_monument_remove_all_deliveries(part->id);
-        part = part->has_next() ? part->next() : nullptr;
-    }
-
-    hvector<int, 32> poofed_pullers;
-    const auto sled_types = make_array(FIGURE_SLED, FIGURE_SLED_PULLER);
-
-    // Pass 1: anyone already targeted at a chain part.
-    figure_valid_do([&](figure &f) {
-        if (!part_id_matches(part_ids, f.destination_building_id)) {
-            return;
-        }
-        if (f.type == FIGURE_SLED_PULLER) {
-            poofed_pullers.push_back(f.id);
-        }
-        abort_sled_cargo(f);
-    }, sled_types);
-
-    // Pass 2: sleds that only follow a puller (dest unset/stale) whose leader we just aborted.
-    figure_valid_do([&](figure &f) {
-        if (f.type != FIGURE_SLED || f.leading_figure_id <= 0) {
-            return;
-        }
-        for (int puller_id : poofed_pullers) {
-            if (f.leading_figure_id == puller_id) {
-                abort_sled_cargo(f);
-                return;
-            }
-        }
-    }, make_array(FIGURE_SLED));
-}
-
 bool apply_construction_blessing(building_monument &main, int budget) {
     const int cap = construction_blessing_cap_phase(main);
     int phase = (int)main.runtime_data().phase;
@@ -177,11 +118,6 @@ bool apply_construction_blessing(building_monument &main, int budget) {
 
         const bool was_site_prep = phase < CONSTRUCTION_BLESSING_FIRST_MASONRY_PHASE;
         const int old_phase = phase;
-
-        // Clear only once a bump is guaranteed (invariant: false â‡’ deliveries intact).
-        if (!worked) {
-            clear_deliveries_for_chain(main);
-        }
 
         zero_footprint_progress(main);
         if (old_phase >= CONSTRUCTION_BLESSING_FIRST_MASONRY_PHASE) {

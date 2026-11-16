@@ -1,6 +1,7 @@
 log_info("akhenaten: loading building_warship_wharf")
 
 building_warship_wharf = {
+  flags : { no_map_edge_margin: true },
   animations : {
     preview : { pack:PACK_TERRAIN, id:28 },
     base : { pack:PACK_TERRAIN, id:28 },

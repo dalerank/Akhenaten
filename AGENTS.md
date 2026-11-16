@@ -57,7 +57,8 @@ Sources are collected via `file(GLOB ...)` with **no `CONFIGURE_DEPENDS`**, so a
 --pos X,Y             window position
 --display-scale PCT   display scale, 50..500
 --cursor-scale PCT    cursor scale, 100 / 150 / 200
---render RENDERER     force renderer (opengl, direct3d)
+--render RENDERER     force renderer (direct3d11, opengl, direct3d, software); without it Windows tries
+                      direct3d11 -> opengl -> direct3d -> software, other platforms SDL's pick -> software
 --font PATH           use custom TTF font (overrides the font from localization.js)
 --language ru         set language (en, ru, fr, de, it, sp, po, pr, sw, tc, sc, kr)
 --nosound             disable audio (skips sound manager init and audio file probing)

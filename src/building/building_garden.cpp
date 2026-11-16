@@ -67,8 +67,9 @@ void building_garden::set_image(int grid_offset) {
 }
 
 void building_garden::determine_tile(int grid_offset) {
+    // Without Pharaoh art every variant is IMAGE_ID_MISSING, so a missing tile image would match one.
     const int image_id = map_image_at(grid_offset);
-    if (!image_id) {
+    if (image_id <= 0 || map_terrain_is(grid_offset, TERRAIN_BUILDING)) {
         return;
     }
 

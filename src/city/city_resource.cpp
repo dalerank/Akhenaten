@@ -9,6 +9,7 @@
 #include "building/building_bazaar.h"
 #include "building/building_house.h"
 #include "city/city.h"
+#include "city/city_food_supply.h"
 #include "city/city_warnings.h"
 #include "graphics/window.h"
 #include "core/calc.h"
@@ -16,6 +17,7 @@
 #include "empire/empire.h"
 #include "grid/road_access.h"
 #include "scenario/scenario.h"
+#include "game/game_config.h"
 #include "game/game_events.h"
 
 struct available_data_t {
@@ -70,15 +72,8 @@ const resource_list &city_resources_t::available_market_goods() {
     return g_available_data.market_goods;
 }
 
-int city_resource_multiple_wine_available() {
-    return g_city.resource.beer_types_available >= 2;
-}
-
 int city_resource_food_supply_months() {
     return g_city.resource.food_supply_months;
-}
-int city_resources_t::food_percentage_produced() {
-    return calc_percentage(food_produced_last_month(), food_consumed_last_month());
 }
 
 int city_resource_operating_granaries() {
@@ -398,7 +393,7 @@ void city_resources_t::calculate_available_food() {
         food_types_available[i] = granary_food_stored[i] > 0 ? 1 : 0;
     }
 
-    food_needed_per_month = calc_adjust_with_percentage(g_city.population.current, 50);
+    food_needed_per_month = calc_adjust_with_percentage(g_city.population.current, city_food_consumption_percentage());
     if (food_needed_per_month > 0) {
         food_supply_months = granary_total_stored / food_needed_per_month;
     } else {
@@ -429,13 +424,12 @@ void city_resources_t::calculate_food_stocks_and_supply_wheat() {
     }
 }
 
-void city_resources_t::consume_goods_weekly(const simulation_time_t& t) {
-    buildings_house_do([&] (building_house *house) {
-        house->consume_goods_weekly();
-    });
-}
-
+// Remake model (scripts/building/house.js): the model's percentage, twice a month.
 void city_resources_t::consume_food_weekly(const simulation_time_t& t) {
+    if (!game_features::gameplay_change_food_consumption_remake.to_bool()) {
+        return;
+    }
+
     calculate_available_food();
 
     for (int i = 0; i < RESOURCES_FOODS_MAX; i++) {
@@ -449,6 +443,76 @@ void city_resources_t::consume_food_weekly(const simulation_time_t& t) {
         const uint8_t num_foods = house->runtime_data().num_foods;
         if (num_foods > food_types_eaten_max_value) {
             food_types_eaten_max_value = num_foods;
+        }
+    });
+}
+
+// OG city/resources.c city_resource_consume_food: once a month every house eats the percentage of its people,
+// split over the food kinds its level needs, from the first city foods it has in stock. A kind it has less of
+// than its share is emptied and still counts as eaten (and as the full share consumed).
+void city_resources_t::consume_food_monthly() {
+    OZZY_PROFILER_FUNCTION();
+    if (game_features::gameplay_change_food_consumption_remake.to_bool()) {
+        return;
+    }
+
+    calculate_available_food();
+
+    for (int i = 0; i < RESOURCES_FOODS_MAX; i++) {
+        food_types_eaten[i] = 0;
+    }
+    food_types_eaten_max_value = 1;
+
+    const int percentage = city_food_consumption_percentage();
+    buildings_house_do([&](building_house* house) {
+        auto& d = house->runtime_data();
+        if (!d.hsize) {
+            return;
+        }
+
+        const int types = house->model().food_types;
+        int amount = calc_adjust_with_percentage<int>(house->house_population(), percentage);
+        if (types > 1) {
+            amount /= types;
+        }
+
+        d.num_foods = 0;
+        if (g_scenario.kingdom_supplies_grain) {
+            d.foods[0] = (uint16_t)amount;
+            d.num_foods = 1;
+            return;
+        }
+
+        if (types <= 0) {
+            return;
+        }
+
+        for (int i = INVENTORY_MIN_FOOD; i < INVENTORY_MAX_FOOD; i++) {
+            const e_resource food = g_city.allowed_foods(i);
+            if (food == RESOURCE_NONE) {
+                continue;
+            }
+
+            uint16_t& stock = d.foods[i];
+            bool eaten = false;
+            if (stock >= amount) {
+                stock = (uint16_t)(stock - amount);
+                eaten = true;
+            } else if (stock != 0) {
+                stock = 0;
+                eaten = true;
+            }
+
+            if (eaten) {
+                res_this_month.consumed[food] += (uint16_t)amount;
+                food_types_eaten[food] = 1;
+                d.num_foods++;
+            }
+
+            food_types_eaten_max_value = std::max<uint8_t>(food_types_eaten_max_value, d.num_foods);
+            if (d.num_foods >= types) {
+                break;
+            }
         }
     });
 }

@@ -128,23 +128,57 @@ void building_entertainment::place_latch_on_venue(e_building_type type, int dx, 
     }
 }
 
+void building_entertainment::on_post_load() {
+    // Saves before the record fit lost these past the record end and load them as 0; all follow from tile/orientation.
+    auto& d = runtime_data();
+    if (!d.booth_corner_grid_offset
+        && building_type_any_of(base.type, {BUILDING_BOOTH, BUILDING_BANDSTAND, BUILDING_PAVILLION})) {
+        d.booth_corner_grid_offset = tile().grid_offset();
+    }
+
+    inherited::on_post_load();
+}
+
+void building_entertainment::latch_stand_offsets(vec2i main_offset, vec2i add_offset) {
+    auto& d = runtime_data();
+    d.latched_venue_main_grid_offset = base.tile.shifted(main_offset.x, main_offset.y).grid_offset();
+    d.latched_venue_add_grid_offset = base.tile.shifted(add_offset.x, add_offset.y).grid_offset();
+}
+
+void building_entertainment::latch_stand_offsets(const venue_place_offset& place) {
+    vec2i main_offset, add_offset;
+    for (const auto& item : place.items) {
+        if (item.type == BUILDING_BANDSTAND) {
+            (item.main ? main_offset : add_offset) = item.offset;
+        }
+    }
+    latch_stand_offsets(main_offset, add_offset);
+}
+
+void building_entertainment::place_venue_items(const venue_place_offset& place, int stand_orientation) {
+    for (const auto& item : place.items) {
+        place_latch_on_venue(item.type, item.offset.x, item.offset.y, stand_orientation, item.main);
+    }
+}
+
+// Offsets inside the dynamic part, which starts at record 0x52; OG data.entertainment starts at 0x54.
+// OG keeps juggler/musician/dancer figure ids at 76..81 and num_shows + show_days_left at 84..87 (0xA6..0xA9);
+// 2..75 and 88..101 are unused there, so the remake-only fields live in them.
 void building_entertainment::bind_dynamic(io_buffer *iob, size_t version) {
     auto &d = runtime_data();
 
-    iob->bind____skip(26);
-    iob->bind____skip(58);
-    iob->bind(BIND_SIGNATURE_UINT8, &d.num_shows);
-    iob->bind(BIND_SIGNATURE_UINT8, &d.juggler_visited);
-    iob->bind(BIND_SIGNATURE_UINT8, &d.musician_visited);
-    iob->bind(BIND_SIGNATURE_UINT8, &d.dancer_visited);
-    iob->bind(BIND_SIGNATURE_INT8, &d.play_index);
-    iob->bind____skip(19);
-    iob->bind(BIND_SIGNATURE_UINT32, &d.latched_venue_main_grid_offset);
-    iob->bind(BIND_SIGNATURE_UINT32, &d.latched_venue_add_grid_offset);
-    iob->bind(BIND_SIGNATURE_UINT8, &base.orientation);
-    iob->bind(BIND_SIGNATURE_UINT8, &d.conservatory_help);
-    iob->bind____skip(6);
-    iob->bind(BIND_SIGNATURE_UINT8, &d.consume_material_id);
-    iob->bind(BIND_SIGNATURE_UINT8, &d.spawned_entertainer_days);
-    iob->bind(BIND_SIGNATURE_UINT32, &d.booth_corner_grid_offset);
+    iob->bind____skip(2);
+    iob->bind(BIND_SIGNATURE_UINT32, &d.latched_venue_main_grid_offset); // 2
+    iob->bind(BIND_SIGNATURE_UINT32, &d.latched_venue_add_grid_offset);  // 6
+    iob->bind(BIND_SIGNATURE_UINT32, &d.booth_corner_grid_offset);       // 10
+    iob->bind(BIND_SIGNATURE_UINT8, &d.conservatory_help);               // 14
+    iob->bind(BIND_SIGNATURE_UINT8, &d.consume_material_id);             // 15
+    iob->bind(BIND_SIGNATURE_UINT8, &d.spawned_entertainer_days);        // 16
+    iob->bind____skip(67);
+    iob->bind(BIND_SIGNATURE_UINT8, &d.num_shows);        // 84
+    iob->bind(BIND_SIGNATURE_UINT8, &d.juggler_visited);  // 85
+    iob->bind(BIND_SIGNATURE_UINT8, &d.musician_visited); // 86
+    iob->bind(BIND_SIGNATURE_UINT8, &d.dancer_visited);   // 87
+    iob->bind(BIND_SIGNATURE_INT8, &d.play_index);        // 88
+    iob->bind____skip(15);
 }

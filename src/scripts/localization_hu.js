@@ -184,13 +184,12 @@ localization_hu = [
   {key:"#TR_CONFIG_FARM_MEADOW_HARVEST_RETRY", text:"Réti farmok 1. napon is aratnak (remake; eredeti: csak 0. nap)"}
   {key:"#TR_CONFIG_DELIVER_ONLY_TO_ACCEPTING_GRANARIES", text:"Az élelem nem kerül beszállító magtárakba"}
   {key:"#TR_CONFIG_ALL_HOUSES_MERGE", text:"Minden ház összevonható"}
-  {key:"#TR_CONFIG_WINE_COUNTS_IF_OPEN_TRADE_ROUTE", text:"A megnyitott kereskedelmi útvonal külön borfajtának számít"}
   {key:"#TR_CONFIG_RANDOM_COLLAPSES_TAKE_MONEY", text:"A véletlen bányaomlások pénzveszteséget okoznak"}
   {key:"#TR_CONFIG_DISASTER_EVENTS_USE_AMOUNT", text:"Agyagárvíz / aranybánya-omlás az esemény amount épületét rombolja"}
   {key:"#TR_CONFIG_MULTIPLE_BARRACKS", text:"Több laktanya építésének engedélyezése"}
   {key:"#TR_CONFIG_NOT_ACCEPTING_WAREHOUSES", text:"Az új raktárak kezdetben semmit sem fogadnak"}
   {key:"#TR_CONFIG_HOUSES_DONT_EXPAND_INTO_GARDENS", text:"A házak nem terjeszkednek a kertekre"}
-  {key:"#TR_CONFIG_FIX_IRRIGATION_RANGE", text:"Öntözési hatótáv javítása"}
+  {key:"#TR_CONFIG_IRRIGATION_RANGE_5X5", text:"Farmok öntözése 5x5-ös területről"}
   {key:"#TR_CONFIG_FIX_FARM_PRODUCING", text:"Farmtermelés javítása"}
   {key:"#TR_CONFIG_EMPIRE_MAP_RUNS_SIMULATION", text:"A város szimulációja a birodalmi térképen is fut"}
   {key:"#TR_CONFIG_CAMERA_KEEP_INERTIA", text:"A kamera megtartja a tehetetlenségét"}
@@ -432,13 +431,9 @@ localization_hu = [
   {key:"#warship_moving_to_position", text:"Elfoglalja a kijelölt pozíciót"}
   {key:"#warship_moving_to_position_text", text:"A hajó a kijelölt pozíció felé hajózik, és ott marad, amíg más parancsot nem kap."}
   {key:"#main_menu_update_downloading", text:"Frissítés letöltése..."}
-  {key:"#main_menu_update_opening_page", text:"Letöltési oldal megnyitása..."}
   {key:"#main_menu_update_now", text:"frissítés most"}
   {key:"#main_menu_update_later", text:"később"}
   {key:"#main_menu_loading_commits", text:"Legutóbbi módosítások betöltése..."}
-  {key:"#main_menu_new_build", text:"Új build: ${commit} (a jelenlegi: ${local})"}
-  {key:"#main_menu_updated", text:"Frissítve"}
-  {key:"#main_menu_build_up_to_date", text:"Build: ${build} (naprakész)"}
   {key:"#message_dialog_distant_battle", text:"Távoli csata"}
   {key:"#mods_window_title", text:"Modok"}
   {key:"#mods_window_unpack_scripts", text:"Parancsfájlok kicsomagolása"}
@@ -760,13 +755,18 @@ localization_hu = [
   {key: "#building_removed_fort_archers", group:19, id:183}
   {key: "#building_removed_fort_charioteers", group:19, id:184}
   {key: "#building_removed_academies", group:19, id:185}
-  {key: "#mausoleum_needs_sandstone", group:19, id:186}
-  {key: "#build_brewery_or_import_beer", group:19, id:187}
-  {key: "#build_papyrus_maker_or_import", group:19, id:188}
-  {key: "#build_weaver_or_import_linen", group:19, id:189}
-  {key: "#tax_collector_robbed", group:19, id:190}
-  {key: "#courthouse_robbed", group:19, id:191}
-  {key: "#mansion_destroyed", group:19, id:192}
+  {key: "#building_removed_fort_infantry_weapons", group:19, id:186}
+  {key: "#building_removed_fort_charioteers_chariots", group:19, id:187}
+  {key: "#mausoleum_needs_sandstone", group:19, id:188}
+  {key: "#build_brewery_or_import_beer", group:19, id:189}
+  {key: "#build_brewery_or_import_beer_route", group:19, id:190}
+  {key: "#build_papyrus_maker_or_import", group:19, id:191}
+  {key: "#build_papyrus_maker_or_import_route", group:19, id:192}
+  {key: "#build_weaver_or_import_linen", group:19, id:193}
+  {key: "#build_weaver_or_import_linen_route", group:19, id:194}
+  {key: "#tax_collector_robbed", group:19, id:195}
+  {key: "#courthouse_robbed", group:19, id:196}
+  {key: "#mansion_destroyed", group:19, id:197}
   {key: "#mansion_protected_by_police", text:"Rendőrség védi"}
   {key: "#mansion_not_protected_theft", text:"Nincs védelem - tolvajok ellophatják a megtakarításokat"}
   {key: "#palace_destroyed", group:19, id:198}
@@ -778,6 +778,8 @@ localization_hu = [
   {key: "#max_docks_reached", group:19, id:204}
   {key: "#shrines_near_road_required", group:19, id:205}
   {key: "#build_jugglers_school", group:19, id:206}
+  {key: "#venue_build_conservatory", group:19, id:207}
+  {key: "#venue_build_dance_school", group:19, id:208}
   {key: "#company_cannot_reach_destination", group:19, id:209}
   {key: "#game_saved", group:19, id:210}
   {key: "#must_be_on_clear_land", group:19, id:211}
@@ -807,6 +809,7 @@ localization_hu = [
   {key: "#building_needs_game_meat", group:19, id:235}
   {key: "#build_hunting_lodge", group:19, id:236}
   {key: "#build_hunting_lodge_or_import", group:19, id:237}
+  {key: "#game_meat_import_trade_route", group:19, id:238}
   {key: "#monument_needs_copper", group:19, id:239}
   {key: "#monument_needs_marble", group:19, id:240}
   {key: "#one_library_only", group:19, id:241}
@@ -836,6 +839,7 @@ localization_hu = [
   {key: "#building_needs_oil", group:19, id:263}
   {key: "#building_needs_pottery", group:19, id:264}
   {key: "#build_paint_maker_or_import", group:19, id:265}
+  {key: "#paint_import_overseer", group:19, id:266}
   {key: "#build_paint_maker", group:19, id:267}
   {key: "#building_needs_clay_and_paint", group:19, id:268}
   {key: "#employees_needed", group:19, id:269}
@@ -1049,7 +1053,7 @@ localization_hu = [
   {key: "#figure_constable", group:64, id:88 }
   {key: "#figure_magistrate", group:64, id:89 }
   {key: "#figure_reed_gatherer", group:64, id:90 }
-  {key: "#figure_festival_guy", group:64, id:91 }
+  {key: "#figure_festival_priest", group:64, id:91 }
   {key: "#figure_enemy_transport", group:64, id:92 }
   {key: "#figure_enemy_warship", group:64, id:93 }
   {key: "#figure_funeral_walker", text: "Temetési menet" }

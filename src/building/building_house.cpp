@@ -9,6 +9,7 @@
 #include "core/object_property.h"
 #include "core/custom_span.hpp"
 #include "city/city_labor.h"
+#include "core/calc.h"
 #include "figuretype/figure_noble.h"
 #include "game/resource.h"
 #include "graphics/image.h"
@@ -150,9 +151,10 @@ void building_house::bind_dynamic(io_buffer *iob, size_t version) {
         iob->bind(BIND_SIGNATURE_UINT16, &d.foods[i]);
     }
 
-    uint16_t tmp;
-    iob->bind(BIND_SIGNATURE_UINT16, &tmp);
-    iob->bind(BIND_SIGNATURE_UINT16, &tmp);
+    // OG house tax income (1/10000 deben) in 4 of the 6 bytes that were padding; older saves hold 0 here.
+    int32_t og_tax_income = d.tax_income;
+    iob->bind_i32(og_tax_income);
+    uint16_t tmp = 0;
     iob->bind(BIND_SIGNATURE_UINT16, &tmp);
     iob->bind_u16(d.image_id);
 
@@ -198,8 +200,13 @@ void building_house::bind_dynamic(io_buffer *iob, size_t version) {
     iob->bind_u16(d.population);
     iob->bind_u8(d.tax_coverage);
     iob->bind_u16((uint16_t&)d.tax_collector_id);
-    //
-    iob->bind_i16(base.tax_income_or_storage);
+    // Legacy tax units (people * model tax) for saves without the OG int32 above.
+    int16_t legacy_tax_units
+      = (int16_t)std::min<int>(g_city.finance.house_tax_units_from_income(d.tax_income), INT16_MAX);
+    iob->bind_i16(legacy_tax_units);
+    if (iob->is_read_access()) {
+        d.tax_income = og_tax_income ? og_tax_income : g_city.finance.house_tax_income(legacy_tax_units);
+    }
     iob->bind_u8(d.days_without_food);
     iob->bind_u8(d.hsize);
     iob->bind_u16(d.unreachable_ticks);
@@ -213,16 +220,6 @@ void building_house::bind_dynamic(io_buffer *iob, size_t version) {
     iob->bind_u8(d.frog_infest_days);
     iob->bind_u32(d.last_update_day);
     iob->bind_u8(d.tax_bonus);
-}
-
-int building_house::get_fire_risk(int value) const {
-    if (house_population() <= 0) {
-        if (house_level() == HOUSE_CRUDE_HUT || runtime_data().frog_infest_days > 0) {
-            return 0;
-        }
-    }
-
-    return value;
 }
 
 void building_house::highlight_waypoints() {
@@ -283,12 +280,47 @@ void building_house::consume_food_weekly() {
     es(__func__);
 }
 
-void building_house::consume_goods_weekly() {
+// OG house_evolve.c house_consume_goods (days 0 and 7): a house bigger than 1x1 uses 4x the model's amounts, and
+// eats a quarter of that per call. An amount that is not a multiple of 4 eats 0 or 1, by its remainder and the day.
+void building_house::consume_goods(int day) {
     if (!hsize()) {
         return;
     }
 
-    es(__func__);
+    const model_house& m = model();
+    const int mul = (base.size > 1) ? 4 : 1;
+    int by_remainder[4] = {0, 0, 0, 0};
+    switch (day % 4) {
+    case 0:
+        by_remainder[1] = 1;
+        by_remainder[2] = 1;
+        break;
+    case 1:
+    case 3:
+        by_remainder[3] = 1;
+        break;
+    case 2:
+        by_remainder[2] = 1;
+        by_remainder[3] = 1;
+        break;
+    }
+
+    auto consume = [&](int slot, int value, e_resource resource) {
+        const int remainder = value % 4;
+        const int amount = (remainder == 0) ? value / 4 : by_remainder[std::max(remainder, 0)];
+        if (amount <= 0) {
+            return;
+        }
+        uint16_t& stock = runtime_data().inventory[slot];
+        const int spent = std::min<int>(amount, stock);
+        stock = (uint16_t)(stock - spent);
+        g_city.resource.res_this_month.consumed[resource] += (uint16_t)spent;
+    };
+
+    consume(INVENTORY_GOOD4, m.beer * mul, RESOURCE_BEER);
+    consume(INVENTORY_GOOD1, m.pottery * mul, RESOURCE_POTTERY);
+    consume(INVENTORY_GOOD3, m.linen * mul, RESOURCE_LINEN);
+    consume(INVENTORY_GOOD2, m.jewelry * mul, RESOURCE_LUXURY_GOODS);
 }
 
 template<bool use_offset>
@@ -334,11 +366,13 @@ static void split_size2(building* b, e_building_type new_type);
 void building_house::change_to(building &b, e_building_type new_type, bool force) {
     auto &d = *(building_house::runtime_data_t*)b.runtime_data;
 
-    const int house_update_delay = std::min(house_up_delay(), 7);
-    const int absolute_day = game.simtime.absolute_day(true);
-    const bool can_update = (absolute_day - d.last_update_day < house_update_delay);
-    if (!force && (house_update_delay > 0 && (new_type > b.type) && can_update)) {
-        return;
+    // OG has no delay between two evolutions; the 7-day one is a remake change.
+    if (!force && new_type > b.type && game_features::gameplay_change_house_evolve_delay.to_bool()) {
+        const int house_update_delay = std::min(house_up_delay(), 7);
+        const int absolute_day = game.simtime.absolute_day(true);
+        if (house_update_delay > 0 && absolute_day - d.last_update_day < house_update_delay) {
+            return;
+        }
     }
 
     const bool target_is_1x1_tier = (new_type >= BUILDING_HOUSE_CRUDE_HUT && new_type <= BUILDING_HOUSE_SPACIOUS_APARTMENT);
@@ -357,14 +391,25 @@ void building_house::change_to(building &b, e_building_type new_type, bool force
 
     const auto &variants_data = house->is_merged() ? house_params.variants_merged.data : house_params.variants.data;
     if (!variants_data.empty()) {
-        const size_t n = variants_data.size();
-        const size_t start = rand() % n;
+        // OG variant index follows config order (_1, _2, ...); unordered_map iteration order is arbitrary.
+        std::vector<const std::pair<const xstring, animation_t>*> ordered;
+        ordered.reserve(variants_data.size());
+        for (const auto& variant : variants_data) {
+            ordered.push_back(&variant);
+        }
+        std::sort(ordered.begin(), ordered.end(),
+          [](auto lhs, auto rhs) { return strcmp(lhs->first.c_str(), rhs->first.c_str()) < 0; });
+
+        const size_t n = ordered.size();
+        const size_t start = map_random_get(b.tile) % n;
+        // Without art no variant has an image: keep the random pick so the key does not depend on data.
+        d.image_key = ordered[start]->first;
+        image_id = ordered[start]->second.first_img();
         for (size_t i = 0; i < n; i++) {
-            auto anim_it = variants_data.begin();
-            std::advance(anim_it, (start + i) % n);
-            const int candidate = anim_it->second.first_img();
-            if (candidate > 0 || i == n - 1) {
-                d.image_key = anim_it->first;
+            const auto& variant = *ordered[(start + i) % n];
+            const int candidate = variant.second.first_img();
+            if (candidate > 0) {
+                d.image_key = variant.first;
                 image_id = candidate;
                 break;
             }
@@ -570,6 +615,15 @@ e_house_progress building_house::check_requirements(house_demands* demands) {
     return status;
 }
 
+// OG house_good_requirement: the model's goods amounts are for houses bigger than 1x1; a 1x1 house needs a quarter,
+// rounded, but at least one.
+static int house_good_requirement(int value, int size) {
+    if (size == 1 && value > 0) {
+        return std::max((value + 2) / 4, 1);
+    }
+    return value;
+}
+
 e_house_progress building_house::has_required_goods_and_services(int for_upgrade, house_demands* demands) {
     int level = house_level();
     if (for_upgrade) {
@@ -633,42 +687,45 @@ e_house_progress building_house::has_required_goods_and_services(int for_upgrade
     } else if (religion > 0)
         ++demands->requiring.religion;
 
-    // dentist
     int dentist = model.dentist;
     if (d.dentist < dentist) {
         ++demands->missing.dentist;
         return e_house_none;
     }
-
     if (dentist == 1) {
         ++demands->requiring.dentist;
     }
 
-    // physician
-    int physician_required = model.physician;
-    if (d.physician < physician_required) {
-        ++demands->missing.physician;
-        return e_house_none;
-    }
-    if (physician_required == 1) {
-        ++demands->requiring.physician;
-    }
-
-    // health
-    int health_need = model.health;
-    if (d.health < health_need) {
-        if (health_need < 2)
-            ++demands->missing.dentist;
-        else {
-            ++demands->missing.physician;
+    // OG house_evolve_checks.c: the model's "courthouse" column is checked against magistrate access.
+    int courthouse = model.courthouse;
+    if (d.magistrate < courthouse) {
+        if (d.magistrate != 0) {
+            ++demands->missing.courthouse;
+        } else {
+            ++demands->missing.any_courthouse;
         }
         return e_house_none;
     }
-    if (health_need >= 1) {
-        ++demands->requiring.physician;
+    if (courthouse == 2) {
+        ++demands->requiring.courthouse;
+        ++demands->requiring.more_courthouse;
+    } else if (courthouse == 1) {
+        ++demands->requiring.courthouse;
     }
 
-    // food types
+    int health_need = model.health;
+    if (d.health < health_need) {
+        if (health_need >= 2) {
+            ++demands->missing.more_health;
+        } else {
+            ++demands->missing.health;
+        }
+        return e_house_none;
+    }
+    if (health_need > 0) {
+        ++demands->requiring.health;
+    }
+
     int foodtypes_required = model.food_types;
     int foodtypes_available = 0;
     for (int i = INVENTORY_MIN_FOOD; i < INVENTORY_MAX_FOOD; i++) {
@@ -680,22 +737,26 @@ e_house_progress building_house::has_required_goods_and_services(int for_upgrade
         return e_house_none;
     }
 
-    // goods
-    if (d.inventory[INVENTORY_GOOD1] < model.pottery)
+    const int size = base.size;
+    if (d.inventory[INVENTORY_GOOD1] < house_good_requirement(model.pottery, size)) {
         return e_house_none;
+    }
 
-    if (d.inventory[INVENTORY_GOOD3] < model.linen)
+    if (house_good_requirement(model.beer, size) != 0 && d.inventory[INVENTORY_GOOD4] <= 0) {
         return e_house_none;
+    }
 
-    if (d.inventory[INVENTORY_GOOD2] < model.jewelry)
+    if (d.inventory[INVENTORY_GOOD3] < house_good_requirement(model.linen, size)) {
         return e_house_none;
+    }
 
-    int beer = model.beer;
-    if (beer && d.inventory[INVENTORY_GOOD4] <= 0)
+    const int jewelry = house_good_requirement(model.jewelry, size);
+    if (d.inventory[INVENTORY_GOOD2] < jewelry) {
         return e_house_none;
+    }
 
-    if (beer > 1 && !city_resource_multiple_wine_available()) {
-        ++demands->missing.second_wine;
+    if (jewelry >= 2 && g_city.resource.luxury_goods_kinds < 2) {
+        ++demands->missing.second_luxury;
         return e_house_none;
     }
 
@@ -1225,7 +1286,9 @@ void building_house::on_post_load() {
     map_building_tiles_add(id(), tile(), size(), imgid, TERRAIN_BUILDING);
 
     const auto &house_params = get_house_params(base.type);
-    if (d.image_key.empty()) {
+    // Without art imgid and every variant are IMAGE_ID_MISSING: leave the key empty rather than guess.
+    const bool has_art = imgid > 0;
+    if (d.image_key.empty() && has_art) {
         const auto &variants = house_params.variants.data;
         auto it = std::find_if(variants.begin(), variants.end(), [imgid] (auto &i) { return i.second.first_img() == imgid; });
         if (it != variants.end()) {
@@ -1233,24 +1296,13 @@ void building_house::on_post_load() {
         }
     }
 
-    if (d.image_key.empty()) {
+    if (d.image_key.empty() && has_art) {
         const auto &variants_merged = house_params.variants_merged.data;
         auto it = std::find_if(variants_merged.begin(), variants_merged.end(), [imgid] (auto &i) { return i.second.first_img() == imgid; });
         if (it != variants_merged.end()) {
             d.image_key = it->first;
         }
     }
-}
-
-void building_house::on_place_checks() {
-    if (type() != BUILDING_HOUSE_VACANT_LOT) {
-        return;
-    }
-
-    construction_warnings warnings;
-    const int city_population = g_city.population.current;
-    const bool need_more_food = (city_population >= 200 && !g_scenario.kingdom_supplies_grain && g_city.resource.food_percentage_produced() <= 95);
-    warnings.add_if(need_more_food, "#people_eat_more_than_produce");
 }
 
 e_house_progress building_house::check_evolve_status(house_demands *demands) {
@@ -1269,7 +1321,7 @@ bool building_house::evolve(house_demands *demands) {
     }
 
     const e_house_progress status = check_evolve_status(demands);
-    if (params.can_devolve && has_devolve_delay(status)) {
+    if (!params.skip_devolve_delay && has_devolve_delay(status)) {
         return false;
     }
 

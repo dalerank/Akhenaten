@@ -20,11 +20,6 @@ void figure_enemy::on_create() {
 }
 
 void figure_enemy::count_as_city_invader() {
-    // Embarked cargo is invisible on a transport hull — do not inflate the
-    // on-map enemy counter until they disembark.
-    if (!base.is_visible()) {
-        return;
-    }
     if (figure_is_kingdome_army(type())) {
         g_city.figures_add_kingdome_soldier();
     } else {
@@ -42,10 +37,6 @@ void figure_enemy::update_animation() {
 
 void figure_enemy::formation_reset_to_initial(const formation *m) {
     if (is_attack()) {
-        return;
-    }
-    // Embarked cargo stays frozen until the transport disembarks.
-    if (!base.is_visible()) {
         return;
     }
 

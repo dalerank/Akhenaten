@@ -143,8 +143,8 @@ function run_test() {
         test170_fail('limestone refuse: limestone_egypt_done not set')
         return
     }
-    if (mission.pharaoh_favour_invasion_done) {
-        test170_fail('limestone refuse: favour flag set (should be egypt×24 only)')
+    if (__test_event_trigger(__test_event_id_by_tag(7019)) != EVENT_TRIGGER_BY_FAVOUR) {
+        test170_fail('limestone refuse: favour event spent (should be egypt×24 only)')
         return
     }
     if (test170_hist_count_matching(24, 10) < 1) {
@@ -152,23 +152,25 @@ function run_test() {
     }
     __log_marker('iunet_limestone_refuse_egypt_ok')
 
-    // --- favour≠egypt×24: KR0 favour wave size 15 / id 24 ---
+    // --- favour≠egypt×24: KR0 sends the events[] favour army (pak i=19, Pharaoh×15) ---
     if (!test170_load()) {
         test170_fail('reload for favour path failed')
         return
     }
     __test_kingdom_set_rating(0)
-    mission_pharaoh_favour_invasion_tick(mission, [15, 45, 30, 30])
-    if (!mission.pharaoh_favour_invasion_done) {
-        test170_fail('favour: wave0 not fired at KR0')
+    var favour_count = __test_events_count()
+    __test_kingdom_favour_update()
+    if (__test_events_count() != favour_count + 1
+        || __test_invasion_event_amount(favour_count) != 15) {
+        test170_fail('favour: no Pharaoh×15 army at KR0 (events=' + __test_events_count() + ')')
         return
     }
     if (mission.limestone_egypt_done) {
         test170_fail('favour: limestone_egypt_done set without refuse')
         return
     }
-    if (test170_hist_count_matching(15, 24) < 1 && test170_hist_count_matching(24, 10) > 0) {
-        test170_fail('favour: got egypt×24 history instead of favour×15')
+    if (test170_hist_count_matching(24, 10) > 0) {
+        test170_fail('favour: got egypt×24 history instead of the favour army')
         return
     }
     __log_marker('iunet_favour_not_egypt24_ok')

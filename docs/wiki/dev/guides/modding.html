@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Modding — Akhenaten Wiki</title>
+  <link rel="stylesheet" href="../../../style.css" />
+</head>
+<body>
+  <header>
+    <nav>
+      <a href="../../../index.html" class="nav-logo">Akhenaten</a>
+      <ul>
+        <li><a href="../../../about.html">About</a></li>
+        <li><a href="../../../devblog.html">Devblog</a></li>
+        <li><a href="../../index.html" class="active">Wiki</a></li>
+        <li><a href="../../../screenshots.html">Screenshots</a></li>
+        <li><a href="../../../downloads.html">Downloads</a></li>
+        <li><a href="../../../contributors.html">Contributors</a></li>
+        <li><a href="../../../contact.html">Join us</a></li>
+        <li><a href="../../../reportbug.html">Report Bug</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main class="wiki-layout">
+    <aside class="wiki-sidebar">
+      <div class="wiki-sidebar-section">
+        <div class="wiki-sidebar-title"><a href="../index.html">← Developer Docs</a></div>
+      </div>
+      <div class="wiki-sidebar-section">
+        <div class="wiki-sidebar-title">On this page</div>
+        <ul>
+          <li><a href="#what">What a mod is</a></li>
+          <li><a href="#where">Where mods live</a></li>
+          <li><a href="#contents">What a mod can change</a></li>
+          <li><a href="#order">Order and conflicts</a></li>
+          <li><a href="#saves">Mods and saves</a></li>
+        </ul>
+      </div>
+    </aside>
+
+    <div class="wiki-content">
+      <div class="wiki-breadcrumb"><a href="../../index.html">Wiki</a> / <a href="../index.html">Developer Docs</a> / Modding</div>
+      <h1>Modding</h1>
+      <p class="section-intro">A short note on how the mod system works today. The code is <code>src/content/mods.{h,cpp}</code>; the built-in catalog of downloadable mods is <code>src/scripts/mods.js</code>.</p>
+
+      <h2 id="what">What a mod is</h2>
+      <p>A mod is a zip archive with the <code>.sgx</code> extension, or a plain folder with the same layout. Its id is the file name without the extension (or the folder name). A folder mod can carry scripts and sounds, not an image pack. A mod has no manifest: the description, version and author shown in the Mods window come from the catalog in <code>mods.js</code>, if the id is listed there.</p>
+
+      <h2 id="where">Where mods live</h2>
+      <ul class="wiki-list">
+        <li>By default the game looks in <code>mods/</code> inside the Pharaoh data directory.</li>
+        <li><code>--mods PATH</code> replaces that folder (a relative path is taken from the working directory).</li>
+        <li>Mods are switched on and off in the Mods window; the enabled ids are stored in the config key <code>gameopt_enabled_mods</code>.</li>
+      </ul>
+
+      <h2 id="contents">What a mod can change</h2>
+      <ul class="wiki-list">
+        <li><strong>Scripts.</strong> Every <code>*.js</code> in the archive runs when the mod is mounted. A file with the same path as a built-in script (for example <code>building/well.js</code>) is loaded instead of the built-in one on every later <code>import</code>. Configs are scripts too, so a mod can change building and figure parameters.</li>
+        <li><strong>Sounds.</strong> <code>*.wav</code>, <code>*.mp3</code>, <code>*.ogg</code> with the same path as a speech file replace it.</li>
+        <li><strong>Images.</strong> An image pack named after the mod (<code>&lt;id&gt;.js</code> inside the archive describes its groups).</li>
+      </ul>
+      <h2 id="order">Order and conflicts</h2>
+      <p>Mods are sorted by id (case-insensitive) and applied in that order. When two enabled mods ship the same file, the mod whose id sorts later wins, whichever was enabled first; the log shows <code>[mods] conflict &lt;path&gt;: &lt;winner&gt; overrides &lt;loser&gt;</code>. To make a mod win, give it an id that sorts later. Switching a mod off rebuilds the script VM without it.</p>
+      <p>If a mod's script fails to parse or throws (while loading or later, from one of its handlers), the mod is marked broken: the Mods window shows <code>[ERR]</code>, the log has <code>[mods] &lt;id&gt; is broken</code>, and the script VM is rebuilt without it. The rest of the game's scripts keep running. Switch the mod off and on again to retry it.</p>
+
+      <h2 id="saves">Mods and saves</h2>
+      <p>A save (save version 198 and later) records the ids and catalog versions of the mods that were active. Loading it with a different set logs <code>[mods] the save was made with mods: …; enabled now: …</code> and asks whether to switch to the save's mods: <em>Yes</em> enables exactly the save's installed mods (and disables the others) and loads the save again; <em>No</em> keeps the current mods and the game as loaded. Mods the save used but that are not installed are listed and cannot be enabled; the save still loads.</p>
+
+      <p>Replacing a config object in a script replaces it whole: fields the mod leaves out become zero. To change one field, assign it, e.g. <code>building_well.max_service = 2</code>, in a new file of the mod.</p>
+    </div>
+  </main>
+
+  <footer>
+    <p>Akhenaten is an open-source, non-commercial project. All rights to Pharaoh, its mechanics and setting belong to their respective copyright owners.</p>
+    <p><a href="https://github.com/dalerank/Akhenaten" target="_blank">github.com/dalerank/Akhenaten</a></p>
+  </footer>
+</body>
+</html>

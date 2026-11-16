@@ -634,7 +634,7 @@ generic_button& ui::button(pcstr label, vec2i pos, vec2i size, fonts_vec fonts, 
           Mask{darkened ? 0xffe0e0e0u : 0xffffffffu});
     } else if (hasbody) {
         if (thinborder) {
-            push(cmd_t::draw_rect, Pos{offset + pos}, Size{size}, TextColor{0xff00000});
+            push(cmd_t::draw_rect, Pos{offset + pos}, Size{size}, TextColor{0xff000000});
         } else {
             push(cmd_t::button_border, Pos{offset + pos}, Size{size},
               ImgFlagsTag{((gbutton.hovered && !darkened) ? ImgFlag_Alpha : ImgFlag_None)});
@@ -938,11 +938,6 @@ void ui::icon(vec2i pos, e_resource res, UiFlags flags) {
         const image_t* img = image_get(image_id);
         ui::draw_rect(pos - vec2i{1, 1}, vec2i{img->width, img->height} + vec2i{2, 2}, COLOR_BLACK);
     }
-}
-
-void ui::icon(vec2i pos, e_advisor adv) {
-    const vec2i offset = g_state.offset();
-    push(cmd_t::image, Pos{offset + pos}, ImageId{advisor_icons.tid() + (adv - 1)});
 }
 
 arrow_button& ui::arw_button(vec2i pos, bool down, bool tiny, UiFlags_ flags, int* external_repeats) {
@@ -1427,7 +1422,10 @@ void ui::eimg_queue::draw_one(image_desc desc, color mask) const {
     const image_t* img = (fit && size.x > 0 && size.y > 0) ? image_get(tid) : nullptr;
     float draw_scale = 1.f;
     if (fit && img && img->width > 0 && img->height > 0) {
-        draw_scale = std::min({(float)size.x / img->width, (float)size.y / img->height, 1.f});
+        draw_scale = std::min((float)size.x / img->width, (float)size.y / img->height);
+        if (!upscale) {
+            draw_scale = std::min(draw_scale, 1.f);
+        }
     }
 
     ui::push(cmd_t::image,
@@ -1463,6 +1461,7 @@ void ui::eimg_queue::load(archive arch, element* parent, items& elems) {
     showing.id = arch.r_int("id");
     showing.offset = arch.r_int("offset");
     fit = arch.r_bool("fit");
+    upscale = arch.r_bool("upscale");
     coalesce = arch.r_bool("coalesce", true);
     fade_ms = arch.r_int("fade_ms", 280);
 }
@@ -1484,7 +1483,7 @@ void ui::eimg_queue::image(int image) {
 void ui::ebackground::draw(UiFlags flags) {
     painter ctx = game.painter();
     scr_pos = pos;
-    graphics_draw_background(ctx, img_desc.tid(), 1.f, pos);
+    graphics_draw_background(ctx, img_desc.tid(), 1.f, pos, fit);
 }
 
 void ui::ebackground::load(archive arch, element* parent, items& elems) {
@@ -1493,6 +1492,7 @@ void ui::ebackground::load(archive arch, element* parent, items& elems) {
     xstring type = arch.r_string("type");
     assert(type == "background");
     scale = arch.r_float("scale", 1.f);
+    fit = arch.r_bool("fit", true);
     img_desc.pack = arch.r_int("pack");
     img_desc.id = arch.r_int("id");
     img_desc.offset = arch.r_int("offset");

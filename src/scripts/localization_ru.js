@@ -85,12 +85,15 @@ localization_ru = [
     { key:"#TR_CONFIG_FORT_REFUND_CARRY_TROOPS", text:"Форт-ремейк: снос форта возвращает войска, перенесённые из прошлой миссии (не как в оригинале)"}
     { key:"#TR_CONFIG_STATUE_VARIANTS", text:"Статуи-ремейк: случайный вид при выборе, отдельные клавиши поворота и вида, дополнительные виды статуй (не как в оригинале)"}
     { key:"#TR_CONFIG_GUILD_STATUE_SERVICE", text:"Гильдии-ремейк: свободные рабочие гильдий ухаживают за статуями (не как в оригинале)"}
-    { key:"#TR_CONFIG_MASTABA_CLAY_DELIVERY", text:"Мастаба-ремейк: склады возят глину из квот brick-фаз (в оригинале на памятник везли только кирпичи)"}
+    { key:"#TR_CONFIG_MASTABA_CLAY_DELIVERY", text:"Мастаба-ремейк: рабочие возят на санях и глину из квот brick-фаз (в оригинале на памятник везли только кирпичи)"}
     { key:"#TR_CONFIG_RECRUIT_NEAREST_FORT", text:"Казармы-ремейк: рекрут идёт в ближайший форт, а не сначала к колесничим, потом к пехоте, потом к лучникам (не как в оригинале)"}
     { key:"#TR_CONFIG_DOCK_SMART_ROUTING", text:"Умный выбор причала: по заказам/товарам и смена на лучший свободный (не как в оригинале)"}
+    { key:"#TR_CONFIG_SLED_PULLERS_FLEE", text:"Тянущие сани бросают их и убегают к выходу с карты, если рядом враги; сани остаются на месте (не как в оригинале)"}
     { key:"#TR_CONFIG_FOLLOWER_RUNAWAY", text:"Спутники убегают к выходу с карты, если лидер погиб (ослы каравана, разносчики; не как в оригинале)"}
     { key:"#TR_CONFIG_ROBBER_REMAKE", text:"Вор-ремейк: кража при появлении, всегда к дворцу, фоновые кражи из особняков (не как в оригинале)"}
     { key:"#TR_CONFIG_TOMB_ROBBER_REMAKE", text:"Расхититель гробниц-ремейк: месячный спавн, бегство/арест, фиксированный удар по рейтингу (не как в оригинале)"}
+    { key:"#TR_CONFIG_POLICE_WEAPONS", text:"Полиция берёт оружие со складов, каждый констебль забирает одно (не как в оригинале)"}
+    { key:"#TR_CONFIG_WALKER_PHRASES_REMAKE", text:"Фразы ходоков-ремейк: у каждого ходока свои реплики, говорят и солдаты с врагами (не как в оригинале)"}
     { key:"#TR_CONFIG_PROTESTOR_HUNT_NOBLES", text:"Протестующие охотятся на ноблей и их усадьбы (не как в оригинале)"}
     { key:"#TR_CONFIG_FISHING_BOAT_REMAKE", text:"Рыбацкая лодка-ремейк: быстрее с рабочими, половинный улов, липкие точки, мягкая потеря пристани (не как в оригинале)"}
     { key:"#TR_CONFIG_WOOD_CUTTER_SINGLE_GATHERER", text:"Лесорубы: один дровосек + любой TERRAIN_TREE (ремейк; в оригинале 1/2/3 по штату и только выросшие деревья)"}
@@ -110,6 +113,7 @@ localization_ru = [
     { key:"#TR_CONFIG_LABOR_CATEGORY_SPLIT", text:"Enhanced: склады и доки отдельно от индустрии в советнике по труду"}
     { key:"#TR_CONFIG_WALKER_SPAWN_BOOST", text:"Enhanced: чаще выпускать служебных walkers (недокомплект менее жёсткий)"}
     { key:"#TR_CONFIG_WALKER_MOVE_BOOST", text:"Enhanced: быстрее граждане / короче ожидание телеги"}
+    { key:"#TR_CONFIG_CITY_AMBIENT", text:"Enhanced: объёмный звук города (ближние здания, плавные переходы)"}
     { key:"#TR_CONFIG_FESTIVAL_CALENDAR", text:"Enhanced: сезонные календарные обряды (темы фестивалей)"}
     { key:"#TR_CONFIG_LOCAL_CULTS", text:"Enhanced: локальные культы через алтарь/оракул комплекса"}
     { key:"#labor_category_storage", text:"Склады и снабжение"}
@@ -192,7 +196,6 @@ localization_ru = [
     { key:"#TR_CONFIG_FARM_MEADOW_HARVEST_RETRY", text:"Луговые фермы собирают урожай и в день 1 (ремейк; в оригинале только день 0)"}
     { key:"#TR_CONFIG_DELIVER_ONLY_TO_ACCEPTING_GRANARIES", text:"Не доставлять еду в амбары с включенной доставкой"}
     { key:"#TR_CONFIG_ALL_HOUSES_MERGE", text:"Разрешить слияние всех домов"}
-    { key:"#TR_CONFIG_WINE_COUNTS_IF_OPEN_TRADE_ROUTE", text:"Торговые пути увеличивают разнообразие вина"}
     { key:"#TR_CONFIG_RANDOM_COLLAPSES_TAKE_MONEY", text:"Вместо разрушения, разрушающаяся шахта заберет часть денег"}
     { key:"#TR_CONFIG_DISASTER_EVENTS_USE_AMOUNT", text:"Затопление глины / обвал золота ломают amount зданий из события"}
     { key:"#TR_CONFIG_MULTIPLE_BARRACKS", text:"Разрешить постройку нескольких казарм"}
@@ -359,6 +362,7 @@ localization_ru = [
     { key:"#popup_dialog_delete_bridge", text:"Снос моста" }
     { key:"#popup_dialog_quit_without_saving", text:"Выход" }
     { key:"#popup_dialog_map_file_missing", text:"Файл карты не найден" }
+    { key:"#popup_dialog_save_mods_differ", text:"Сохранение сделано с другими модами" }
     { key:"#exit_without_saving", text:"Выйти без сохранения?" }
     { key:"#popup_dialog_no_festival_square", text:"Фестиваль: Нет площади для фестивалей." }
     { key:"#popup_dialog_delete_dynasty", text:"Удалить династию?" }
@@ -1514,6 +1518,7 @@ localization_ru = [
     { key: "#zoo_info_game_meat", text: "Дичь:" }
     { key: "#zoo_info_straw", text: "Солома:" }
     { key: "#building_needs_game_meat", text: "Этому зданию нужна дичь" }
+    { key: "#game_meat_import_trade_route", text: "Постройте охотничий домик или импортируйте дичь." }
 
     // pavilion overlay
     { key: "#pavilion_access_none", text: "У этого дома нет доступа к танцевальной сцене" }
@@ -1706,6 +1711,9 @@ localization_ru = [
     { key: "#cannot_evolve_needs_linen", text: "Этот дом не может эволюционировать. Ему нужны поставки полотна, предоставленные ему его местным базаром, прежде чем более богатый класс граждан въедет." }
     { key: "#cannot_evolve_needs_beer", text: "Этот дом не может эволюционировать. Ему нужны поставки пива, предоставленные ему его местным базаром, прежде чем более богатый класс граждан въедет." }
     { key: "#cannot_evolve_needs_jewlery", text: "Этот дом не может эволюционировать. Прежде чем более богатый класс граждан въедет, местный базар должен поставлять этому жилищу предметы роскоши, такие как" }
+    { key: "#cannot_evolve_needs_second_luxury", text: "Чтобы дом развился, базар должен поставлять ему второй вид предметов роскоши, такой как" }
+    { key: "#run_out_of_jewelry", text: "Этот дом скоро деградирует. Живущим здесь праздным писцам нужен базар, который поставляет предметы роскоши, такие как" }
+    { key: "#run_out_of_second_luxury", text: "Этот дом скоро деградирует: его взыскательным жильцам нужен второй вид предметов роскоши, такой как" }
 
     { key: "#house_low_desirabilty", text: "Этот дом скоро деградирует. Падающая желательность жизни в этой местности тянет его вниз" }
     { key: "#not_visited_by_water_carrier", text: "Этот дом скоро деградирует, так как его не посещает водонос" }

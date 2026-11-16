@@ -39,26 +39,26 @@ void city_t::house_service_update_health() {
 }
 
 void city_t::houses_calculate_culture_demands(void) {
-    // health
+    // OG finance_estimates.c: the health advisor's demand (1 courthouse, 2 dentist, 3 health, 4 no courthouse at all).
     houses.health = 0;
     int max = 0;
-    if (houses.missing.water_supply > max) {
-        houses.health = 1;
-        max = houses.missing.water_supply;
+    if (houses.missing.courthouse > 0 || houses.missing.any_courthouse > 0) {
+        if (houses.missing.courthouse < houses.missing.any_courthouse) {
+            houses.health = 4;
+            max = houses.missing.any_courthouse;
+        } else {
+            houses.health = 1;
+            max = houses.missing.courthouse;
+        }
     }
 
-    if (houses.missing.apothecary > max) {
+    if (max < houses.missing.dentist) {
         houses.health = 2;
-        max = houses.missing.apothecary;
-    }
-
-    if (houses.missing.dentist > max) {
-        houses.health = 3;
         max = houses.missing.dentist;
     }
 
-    if (houses.missing.physician > max) {
-        houses.health = 4;
+    if (max < houses.missing.health) {
+        houses.health = 3;
     }
 
     // education
@@ -121,12 +121,20 @@ void city_t::house_process_evolve() {
     g_city.houses_reset_demands();
     house_demands &demands = g_city.houses;
     bool has_expanded = false;
-    buildings_house_do([&] (building_house *house) {
+    const int day = game.simtime.day;
+    buildings_house_do([&](building_house* house) {
+        building& b = house->base;
         e_building_type save_type = house->type();
         has_expanded |= house->evolve(&demands);
-        e_building_type new_type = house->type();
-        if (new_type != save_type) {
-            house->base.clear_impl();
+        if (b.type != save_type) {
+            b.clear_impl();
+        }
+
+        // OG building_house_process_evolve_and_consume_goods: goods are eaten right after the evolve, days 0 and 7.
+        if ((day == 0 || day == 7) && b.state == BUILDING_STATE_VALID) {
+            if (auto* consumer = b.dcast_house()) {
+                consumer->consume_goods(day);
+            }
         }
     });
 
@@ -159,9 +167,14 @@ void city_t::house_service_calculate_culture_aggregates() {
         const int senet_value = housed.senet_player;
         housed.entertainment += (senet_value * 10) / model.entertainment_senet_divider;
 
-        // Zoo points match senet (+40 at full coverage with divider 25).
-        const int zoo_value = housed.zookeeper;
-        housed.entertainment += (zoo_value * 10) / model.entertainment_senet_divider;
+        // any zoo visit adds 40 while the house is still at or below 60, otherwise the visit fills entertainment to 100.
+        if (housed.zookeeper) {
+            if (housed.entertainment <= 60) {
+                housed.entertainment += 40;
+            } else {
+                housed.entertainment = 100;
+            }
+        }
 
         housed.entertainment = std::min<int>(housed.entertainment, 100);
 

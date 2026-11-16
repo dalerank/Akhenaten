@@ -1,5 +1,18 @@
 log_info("akhenaten: city victory started")
 
+// time_limit_extra_years: years added to a time limit per difficulty (OG 7 on Very Easy, 2 on Easy).
+// lost_population_*: the city is lost when enemies and kingdom soldiers outnumber its soldiers by more than
+// extra_enemies and the population falls under highest_ever / fraction (OG 2 and 4).
+// lower_difficulty_max: "Lower Difficulty" after a lost time limit leaves at most this difficulty (OG 1, Easy).
+victory_rules {
+  time_limit_extra_years [7, 2, 0, 0, 0]
+  lost_population_extra_enemies : 2
+  lost_population_fraction : 4
+  lower_difficulty_max : 1
+}
+
+var VICTORY_DIFFICULTY_EASY = 1
+
 city.victory = extend(__city_victory, {
     reasons: {},
 
@@ -25,7 +38,11 @@ city.victory = extend(__city_victory, {
             return true
         }
         return city.victory.houses_of_required_level() >= city.winning.housing_count.goal
-    }
+    },
+
+    end_year: __city_victory_end_year,
+    defeat_options: __city_victory_defeat_options,
+    lower_difficulty: __city_victory_lower_difficulty
 })
 
 function city_victory_all_reasons_met() {
@@ -44,117 +61,18 @@ function city_victory_all_reasons_met() {
 }
 
 function city_victory_determine_state() {
-    var state = 1
-    var has_criteria = 0
+    return __city_victory_determine_state(city_victory_all_reasons_met())
+}
 
-    if (city.winning.culture.enabled) {
-        has_criteria = 1
-        if (city.rating.culture < city.winning.culture.goal) {
-            state = 0
-        }
+// OG city_victory_check: a lost city first gets the defeat popup, unless the time limit ran out on Easy or
+// harder, where the mission ends at once.
+function city_victory_lost_shows_popup() {
+    if (city.mission.fired_message_shown) {
+        return false
     }
-
-    if (city.winning.prosperity.enabled) {
-        has_criteria = 1
-        if (city.rating.prosperity < city.winning.prosperity.goal) {
-            state = 0
-        }
-    }
-
-    if (city.winning.monuments.enabled) {
-        has_criteria = 1
-        if (city.rating.monument < city.winning.monuments.goal) {
-            state = 0
-        }
-        // Burial provisions (scenario.monuments.burial_provisions) must be fully
-        // dispatched before the monument win criterion can pass.
-        if (!__scenario_burial_provisions_complete()) {
-            state = 0
-        }
-    }
-
-    if (city.winning.kingdom.enabled) {
-        has_criteria = 1
-        if (city.rating.kingdom < city.winning.kingdom.goal) {
-            state = 0
-        }
-    }
-
-    if (city.winning.population.enabled) {
-        has_criteria = 1
-        if (city.population < city.winning.population.goal) {
-            state = 0
-        }
-    }
-
-    if (city.winning.housing_count.enabled) {
-        has_criteria = 1
-        if (!city.victory.is_housing_condition_met()) {
-            state = 0
-        }
-    }
-
-    if (!city_victory_all_reasons_met()) {
-        state = 0
-    }
-
-    if (!has_criteria) {
-        state = 0
-    }
-
-    var fix_editor_events = game_features.gameplay_fix_editor_events
-    var max_year = __scenario_criteria_max_year()
-
-    if (fix_editor_events) {
-        if (game.simtime.year >= max_year) {
-            if (__win_criteria.time_limit.enabled) {
-                state = -1
-            } else if (__win_criteria.survival_time.enabled) {
-                if (!has_criteria) {
-                    state = 1
-                } else if (state != 1) {
-                    state = -1
-                }
-            }
-        } else if (__win_criteria.survival_time.enabled) {
-            state = 0
-        }
-
-        if (__win_criteria.time_limit.enabled || __win_criteria.survival_time.enabled) {
-            has_criteria = 1
-        }
-    } else {
-        if (!has_criteria) {
-            if (__win_criteria.time_limit.enabled || __win_criteria.survival_time.enabled) {
-                has_criteria = 1
-            }
-        }
-
-        if (game.simtime.year >= max_year) {
-            if (__win_criteria.time_limit.enabled) {
-                state = -1
-            } else if (__win_criteria.survival_time.enabled) {
-                state = 1
-            }
-        }
-    }
-
-    var invaders = __city_figures_total_invading_enemies()
-    if (invaders > 2 + city.figures.soldiers) {
-        if (city.population < city.population_stats.highest_ever / 4) {
-            state = -1
-        }
-    }
-
-    if (invaders > 0 && city.population <= 0) {
-        state = -1
-    }
-
-    if (!has_criteria) {
-        state = 0
-    }
-
-    return state
+    return city.victory.lost_by_population
+        || !__win_criteria.time_limit.enabled
+        || game.difficulty < VICTORY_DIFFICULTY_EASY
 }
 
 function city_victory_handle_outcome() {
@@ -169,11 +87,12 @@ function city_victory_handle_outcome() {
     __city_planner_reset()
 
     if (city.victory.state == -1) {
-        if (city.mission.fired_message_shown) {
-            mission_end_show(1)
-        } else {
+        if (city_victory_lost_shows_popup()) {
             city.mission.fired_message_shown = true
             ui.popup_message("message_mission_defeat", 0, 0)
+        } else {
+            __city_victory_lost_cleanup()
+            mission_end_show(1)
         }
         city.victory.force_win = false
     } else if (city.victory.state == 1) {

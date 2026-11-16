@@ -29,7 +29,9 @@ bool figure_is_alive_soldier(int figure_id) {
     return f && f->is_alive() && f->action_state != FIGURE_ACTION_149_CORPSE;
 }
 
-bool event_request_is_sea(int event_id) {
+} // namespace
+
+bool troop_request_is_sea(int event_id) {
     const event_ph_t *ev = g_scenario.events.at(event_id);
     if (ev && ev->city_id > 0) {
         empire_city *city = g_empire.city(ev->city_id);
@@ -51,8 +53,6 @@ bool event_request_is_sea(int event_id) {
     }
     return false;
 }
-
-} // namespace
 
 int figure_warship_request_strength(int figure_id) {
     figure *f = figure_get(figure_id);
@@ -138,7 +138,7 @@ void formation_legions_dispatch_to_request(int event_id) {
     if (event_id < 0) {
         return;
     }
-    const bool by_sea = event_request_is_sea(event_id);
+    const bool by_sea = troop_request_is_sea(event_id);
 
     for (int id = 1; id < MAX_FORMATIONS; id++) {
         formation *m = formation_get(id);

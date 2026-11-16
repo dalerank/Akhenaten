@@ -124,7 +124,7 @@ void ANK_REGISTER_CONFIG_ITERATOR(config_load_image_context) {
         map_tiles_river_refresh_entire();
         map_tiles_update_all_elevation();
         map_tiles_update_all_earthquake();
-        map_update_canals();
+        map_canal_update_all_tiles(0);
         building_mud_wall::update_all_walls();
     }
 }

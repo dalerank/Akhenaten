@@ -260,6 +260,10 @@ public:
     int16_t tax_income_or_storage;
     animation_context anim;
     std::array<animation_context, 4> anims;
+    // A sprite's own frames (sprite + 1 .. sprite + N), keyed by the sprite id in base. OG steps them
+    // per tile from the draw (animation_offset.c); here they tick with the simulation (building_impl::on_tick).
+    std::array<animation_context, 4> sprite_anims;
+    uint8_t sprite_anims_seen = 0;
     svector<building_overlay_anim, 4> overlay_anims;
     std::array<figure_id, max_figures> figure_ids;
 
@@ -267,7 +271,8 @@ public:
     alignas(runtime_data_align) char runtime_data[186] = { 0 };
     bool play_animation = false;
 
-    building();
+    // Defaulted on first declaration, so `new (p) building()` value-initializes (zeroes) — reset_slot relies on it.
+    building() = default;
     building* main();
     const building* main() const;
     inline building *next() { return building_get(next_part_building_id); }
@@ -312,6 +317,9 @@ public:
 
     void clear_related_data();
     void clear_impl();
+    // Fresh record for slot `slot_id`: every member back to its constructed default (no stale
+    // fields from the slot's previous building, road_access invalid).
+    void reset_slot(building_id slot_id);
     void reset_impl();
     void setup_static_flags();
     void initialize(e_building_type type, tile2i tile, int orientation);
@@ -357,7 +365,7 @@ public:
     void destroy_by_flooded();
     void destroy_by_fire();
 
-    int animation_offset(int image_id, int grid_offset, int max_frames, int duration);
+    const animation_context* sprite_anim(int sprite_id) const;
 
     void mark_plague(int days);
     bool is_ajacent_tile(tile2i t) const;

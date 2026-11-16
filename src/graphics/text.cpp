@@ -8,6 +8,7 @@
 #include "graphics/elements/ui.h"
 #include "core/log.h"
 
+#include <algorithm>
 #include <cstring>
 
 #define ELLIPSIS_LENGTH 4
@@ -31,16 +32,20 @@ struct input_cursor_t {
 
 input_cursor_t input_cursor;
 
-static struct {
-    const uint8_t string[ELLIPSIS_LENGTH];
-    int width[FONT_TYPES_MAX];
-} ellipsis = {{'.', '.', '.', 0}};
+struct text_ellipsis_t {
+    const uint8_t string[ELLIPSIS_LENGTH] = {'.', '.', '.', 0};
+    int width[FONT_TYPES_MAX] = {};
+
+    void reset() { std::fill_n(width, FONT_TYPES_MAX, 0); }
+};
+
+static text_ellipsis_t g_text_ellipsis;
 
 static int get_ellipsis_width(e_font font) {
-    if (!ellipsis.width[font])
-        ellipsis.width[font] = text_get_width(ellipsis.string, font);
+    if (!g_text_ellipsis.width[font])
+        g_text_ellipsis.width[font] = text_get_width(g_text_ellipsis.string, font);
 
-    return ellipsis.width[font];
+    return g_text_ellipsis.width[font];
 }
 
 void text_capture_cursor(int cursor_position, int offset_start, int offset_end) {
@@ -309,7 +314,7 @@ void text_ellipsize(uint8_t* str, e_font font, int requested_width) {
     }
 
     if (10000 - maxlen < string_length(orig_str)) {
-        string_copy(ellipsis.string, orig_str + length_with_ellipsis, ELLIPSIS_LENGTH);
+        string_copy(g_text_ellipsis.string, orig_str + length_with_ellipsis, ELLIPSIS_LENGTH);
     }
 }
 

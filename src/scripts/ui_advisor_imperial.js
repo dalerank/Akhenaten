@@ -144,7 +144,7 @@ function imperial_requests_on_render_item(p) {
 
 [es=advisor_window]
 advisor_imperial_window {
-    advisor: ADVISOR_IMPERIAL
+    advisor: ADVISOR_KINGDOM
     allow_rmb_goback : true
     help_id: "message_overseer_political"
     ui : baseui(advisor_window_base, {
@@ -227,7 +227,7 @@ function advisor_imperial_window_salary_rank(window) {
 
 [es=(advisor_imperial_window, init)]
 function advisor_imperial_window_on_init(window) {
-    advisors_toolbar_refresh(window, ADVISOR_IMPERIAL)
+    advisors_toolbar_refresh(window, ADVISOR_KINGDOM)
     window.header_label.text = __loc("#advisor_imperial_political_overseer_for") + " " + game.dynasty_name
     window.rating_label.text = __loc(52, 0) + " " + city.rating_kingdom
 }

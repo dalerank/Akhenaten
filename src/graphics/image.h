@@ -143,13 +143,17 @@ bool image_request_pak(int pak_id);
 bool image_request_pak(const xstring &name);
 bool image_pak_is_loaded(int pak_id);
 bool image_pak_is_loaded(const xstring &name);
+int image_paks_loaded_count();
 bool image_ensure_pak_loaded(int pak_id);
 void image_paks_pump();
 void image_invalidate_pak_cache(int pak_id);
+// The only way to drop a pack: clears its image cache range, deletes the handle and resets the status.
+void image_unload_pak(int pak_id);
 void image_recreate_all_textures();
 
 int image_id_resource_icon(int resource);
 int image_id_from_group(int collection, int group);
+int image_id_from_group(int collection, int group, int offset);
 
 image_desc image_desc_from_name(const xstring &name);
 
@@ -159,7 +163,6 @@ const image_t *image_get(image_desc desc);
 const image_t *image_get(const xstring &name);
 
 const image_t *image_letter(int letter_id);
-const image_t *image_get_enemy(int type, int id);
 const image_t *image_next_close_get(image_desc desc, bool &last, int &last_index);
 
 inline int image_safe_width(const image_t *img) { return img ? img->width : 0; }

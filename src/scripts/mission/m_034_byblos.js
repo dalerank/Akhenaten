@@ -2,8 +2,8 @@ log_info("akhenaten: mission 34 byblos started")
 
 // Empire id=33. Climate desert (pak). Enemy ENEMY_2_CANAANITE (briefing Hittite ignored).
 // Gods Bast×2, Ptah, Seth. Funds Normal 45000 / loan 5000 / debt 20. Rank 10.
-// Win: pop 6000 / culture 60 / prosperity 40 / monuments 14 (Large+2×Small obelisk
-//   W=4+2+2=8 → trunc(2.25·8+4.5)=22 ≥ 14 keep pak) / kingdom 75 / housing 10.
+// Win: pop 6000 / culture 60 / prosperity 40 / monuments 14 (Large+2×Small obelisk 3+1+1
+//   → trunc(6.32·√5+0.5)=14 = pak) / kingdom 75 / housing 10.
 // Burial empty. SKIP empty map_obj idx=9. Routes 1–10 copy (5/6/8 display-only orphans).
 // No warship requests in pak (briefing-only navy buildings). No Sea People events.
 // Favour egypt×161 → chain×128. Tag_id: 1000+i leaves; 2000+i once; 3000+i recurring.
@@ -27,7 +27,6 @@ mission34 { // Byblos — Expansion and Conquest
 	initial_funds [90000, 60000, 45000, 30000, 24000]
 	rescue_loans [10000, 6700, 5000, 3300, 2700]
 	debt_interest [10, 15, 20, 25, 30]
-	house_tax_multipliers [300, 200, 150, 100, 75]
 
 	env {
 		has_animals : true
@@ -89,6 +88,40 @@ mission34 { // Byblos — Expansion and Conquest
 
 	enable_scenario_events : true
 
+	events [
+		{ // pak i=38
+			type : EVENT_TYPE_INVASION
+			time { year : 0, month : 0 }
+			item { value : EVENT_INVADER_EGYPT }
+			amount { value : 161, min : 128, max : 176 }
+			months_initial : 12
+			location_fields [ 9, 9, -1, -1 ]
+			warships : 9
+			event_trigger_type : EVENT_TRIGGER_BY_FAVOUR
+			tag_id : 7038
+			on_completed_action : -1
+			on_refusal_action : -1
+			on_too_late_action : -1
+			on_defeat_action : -1
+			invasion_attack_target : EVENT_ATTACK_TARGET_BEST_BUILDINGS
+		}
+		{ // pak i=46
+			type : EVENT_TYPE_INVASION
+			time { year : 0, month : 0 }
+			item { value : EVENT_INVADER_EGYPT }
+			amount { value : 128, min : 128, max : 176 }
+			months_initial : 18
+			location_fields [ 5, -1, 1, 8 ]
+			event_trigger_type : EVENT_TRIGGER_BY_FAVOUR
+			tag_id : 7046
+			on_completed_action : -1
+			on_refusal_action : -1
+			on_too_late_action : -1
+			on_defeat_action : -1
+			invasion_attack_target : EVENT_ATTACK_TARGET_RANDOM
+		}
+	]
+
 	map_background : {pack:PACK_EMPIRE, id:33}
 	hide_pak_cities : true
 	cities [
@@ -110,8 +143,6 @@ mission34 { // Byblos — Expansion and Conquest
 			cost_to_open : 1600
 			is_sea_trade : true
 			type : EMPIRE_CITY_EGYPTIAN_TRADING
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_GRAIN, RESOURCE_STRAW, RESOURCE_FLAX, RESOURCE_LINEN, RESOURCE_GEMS, RESOURCE_GRANITE, RESOURCE_SANDSTONE ]
 			buys [ RESOURCE_CLAY, RESOURCE_POTTERY, RESOURCE_REEDS, RESOURCE_PAPYRUS ]
 			route_limits [
@@ -137,8 +168,6 @@ mission34 { // Byblos — Expansion and Conquest
 			cost_to_open : 200
 			trade : false
 			type : EMPIRE_CITY_FOREIGN
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_LUXURY_GOODS, RESOURCE_TIMBER, RESOURCE_COPPER ]
 			buys [ RESOURCE_LINEN, RESOURCE_PAPYRUS ]
 			route_limits [
@@ -157,8 +186,6 @@ mission34 { // Byblos — Expansion and Conquest
 			is_open : false
 			trade : false
 			type : EMPIRE_CITY_FOREIGN
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_WEAPONS, RESOURCE_TIMBER ]
 			buys [ RESOURCE_BEER, RESOURCE_LINEN ]
 			route_limits [
@@ -177,8 +204,6 @@ mission34 { // Byblos — Expansion and Conquest
 			cost_to_open : 1750
 			trade : false
 			type : EMPIRE_CITY_FOREIGN
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_GEMS, RESOURCE_GOLD ]
 			buys [ RESOURCE_POTTERY, RESOURCE_BEER, RESOURCE_LINEN ]
 			route_limits [
@@ -198,8 +223,6 @@ mission34 { // Byblos — Expansion and Conquest
 			cost_to_open : 1825
 			trade : false
 			type : EMPIRE_CITY_FOREIGN
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_GEMS, RESOURCE_GOLD ]
 			buys [ RESOURCE_POTTERY, RESOURCE_BEER ]
 			route_limits [
@@ -257,8 +280,6 @@ mission34 { // Byblos — Expansion and Conquest
 			is_sea_trade : true
 			trade : false
 			type : EMPIRE_CITY_EGYPTIAN
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_POTTERY, RESOURCE_PAPYRUS ]
 			buys [ RESOURCE_LETTUCE, RESOURCE_BRICKS, RESOURCE_BARLEY, RESOURCE_BEER, RESOURCE_LUXURY_GOODS ]
 			route_limits [
@@ -281,8 +302,6 @@ mission34 { // Byblos — Expansion and Conquest
 			is_sea_trade : true
 			trade : false
 			type : EMPIRE_CITY_EGYPTIAN
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_BRICKS, RESOURCE_POTTERY, RESOURCE_BARLEY, RESOURCE_BEER, RESOURCE_LINEN, RESOURCE_PAPYRUS ]
 			buys [ RESOURCE_GEMS, RESOURCE_COPPER, RESOURCE_SANDSTONE ]
 			route_limits [
@@ -488,11 +507,6 @@ mission34 { // Byblos — Expansion and Conquest
 
 		kr39_once_done : false
 
-		pharaoh_favour_invasion_done : false
-		pharaoh_favour_chain_done : false
-		pharaoh_favour_enemies_seen : false
-		pharaoh_favour_wave_next : -1
-		pharaoh_favour_wave_seq : 0
 		start_message_shown : false
 	}
 }
@@ -570,19 +584,27 @@ function mission34_attack_target(attack) {
 	return EVENT_ATTACK_TARGET_RANDOM
 }
 
-function mission34_enemy_raid(invasion_id, size, loc, attack) {
-	var tile = mission34_loc_tile(loc)
-	__image_request_pak(PACK_ENEMY_CANAANITE)
-	city.start_foreign_army_invasion({
+// OG scenario_invasion_start: loc 9+ sails from sea point loc - 9 with the event's phrase_var warships.
+function mission34_enemy_raid(invasion_id, size, loc, attack, warships) {
+	var opts = {
 		mode: ATTACK_TYPE_ENEMIES,
 		enemy: ENEMY_2_CANAANITE,
 		size: size,
 		invasion_id: invasion_id,
-		tilex: tile[0],
-		tiley: tile[1],
 		want_destroy_buildings: 0,
 		invasion_attack_target: mission34_attack_target(attack)
-	})
+	}
+	if (loc >= 9) {
+		opts.via_sea = 1
+		opts.sea_point = loc - 9
+		opts.warships = warships || 0
+	} else {
+		var tile = mission34_loc_tile(loc)
+		opts.tilex = tile[0]
+		opts.tiley = tile[1]
+	}
+	__image_request_pak(PACK_ENEMY_CANAANITE)
+	city.start_foreign_army_invasion(opts)
 }
 
 function mission34_beduin_raid(invasion_id, size, loc) {
@@ -816,12 +838,12 @@ function mission34_requests_and_events(ev) {
 		}
 	}
 
-	// i29 canaanite×125 / 6mo from y16m0 (loc 11 → entry fallback)
+	// i29 canaanite×125 / 6mo from y16m0 (loc 11 → sea[2], 12 warships)
 	if (abs >= 16 * 12 + 0 && (abs - (16 * 12 + 0)) % 6 == 0 && mission.event29_invasion_last_abs != abs) {
 		if (city.num_enemy_formations == 0) {
 			mission.event29_invasion_last_abs = abs
 			log_info("akhenaten: mission 34 canaanite×125 recurring (i=29) abs=" + abs)
-			mission34_enemy_raid(3029, 125, 11, 4)
+			mission34_enemy_raid(3029, 125, 11, 4, 12)
 		}
 	}
 
@@ -839,16 +861,14 @@ function mission34_requests_and_events(ev) {
 		mission34_fire_simple_event(3032 + ev.years_since_start, EVENT_TYPE_PRICE_INCREASE, RESOURCE_WEAPONS, 24, "Abu")
 	}
 
-	// i37 canaanite×141 / 6mo from y28m8
+	// i37 canaanite×141 / 6mo from y28m8 (loc 12 → sea[3], 12 warships)
 	if (abs >= 28 * 12 + 8 && (abs - (28 * 12 + 8)) % 6 == 0 && mission.event37_invasion_last_abs != abs) {
 		if (city.num_enemy_formations == 0) {
 			mission.event37_invasion_last_abs = abs
 			log_info("akhenaten: mission 34 canaanite×141 recurring (i=37) abs=" + abs)
-			mission34_enemy_raid(3037, 141, 12, 0)
+			mission34_enemy_raid(3037, 141, 12, 0, 12)
 		}
 	}
-
-	mission_pharaoh_favour_invasion_tick(mission, 161, 128)
 }
 
 [es=event_request_cleared, mission=mission34]

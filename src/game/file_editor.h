@@ -1,6 +1,8 @@
 #ifndef GAME_FILE_EDITOR_H
 #define GAME_FILE_EDITOR_H
 
+#include <cstdint>
+
 /**
  * Clears city/scenario memory not applicable to editing scenarios
  */
@@ -17,6 +19,7 @@ void game_file_editor_create_scenario(int size);
  * @param size Size index 0..5 (same as create_scenario)
  */
 void game_file_editor_generate_scenario(int size);
+void game_file_editor_generate_scenario_seeded(int size, uint32_t seed);
 
 /**
  * Load scenario from disk and init it for using in the editor

@@ -20,6 +20,7 @@
 #include "scenario/scenario.h"
 #include "platform/renderer.h"
 #include "city/city.h"
+#include "figure/figure.h"
 #include "game/game.h"
 #include "input/mouse.h"
 #include "core/profiler.h"
@@ -447,6 +448,7 @@ void viewport_t::rotate_left() {
     }
 
     map_orientation_change(0);
+    figures_refresh_images_for_orientation();
 }
 
 void viewport_t::rotate_right() {
@@ -462,6 +464,7 @@ void viewport_t::rotate_right() {
     }
 
     map_orientation_change(1);
+    figures_refresh_images_for_orientation();
 }
 
 void viewport_t::rotate_north() {

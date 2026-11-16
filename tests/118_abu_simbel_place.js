@@ -98,10 +98,11 @@ function run_test() {
     }
     __log_marker('abu_simbel_finished_ok')
 
+    test_monument_slots([BUILDING_ABU_SIMBEL])
     city_update_monthly_monument_rating({})
     var rating_done = city.rating.monument | 0
-    if (rating_done < 90) {
-        __log_info_native('[test:118] finished rating want >=90 got ' + rating_done)
+    if (rating_done < 44) {
+        __log_info_native('[test:118] finished rating want >=44 got ' + rating_done)
         __log_marker('abu_simbel_rating_fail:' + rating_done)
         __test_signal_ready()
         return

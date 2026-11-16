@@ -35,9 +35,9 @@ function console_command_clearprogress(args) {
 	__map_monuments_clear()
 }
 
-[console_command=locust_apply_plague]
+[console_command=locust_start_plague]
 function console_command_cropbusters(args) {
-	__locust_apply_plague()
+	__locust_start_plague()
 	ui.popup_message("message_plague_of_locusts")
 	city.warnings.show("Crop Busters")
 }

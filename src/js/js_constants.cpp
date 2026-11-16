@@ -22,6 +22,7 @@
 #include "city/city_kingdome_relations.h"
 #include "sound/sound_city.h"
 #include "game/gods.h"
+#include "figuretype/figure_law_walker.h"
 #include "figuretype/figure_physician.h"
 #include "figuretype/figure_water_carrier.h"
 #include "figuretype/figure_war_ship.h"
@@ -137,6 +138,7 @@ void js_register_game_constants(js_State* J) {
     _R(ACTION_125_ROAMER_ROAMING)
     _R(ACTION_126_ROAMER_RETURNING)
     _R(ACTION_60_PHYSICIAN_CREATED)
+    _R(ACTION_70_LAW_WALKER_CREATED)
     _R(ACTION_72_WATER_CARRIER_ROAMING)
     _R(ACTION_9_WORKER_CREATED)
     _R(ACTION_8_LABORER_IDLE)

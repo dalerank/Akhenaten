@@ -11,6 +11,7 @@
 #include <cctype>
 #include <cstdio>
 #include <cstring>
+#include <filesystem>
 #include <string>
 
 #if defined(_MSC_VER)
@@ -321,11 +322,13 @@ bool editor_map_meta_write(pcstr map_path) {
     }
 
     vfs::path meta = editor_map_meta_path(map_path);
-    FILE *fp = vfs::file_open_os(meta, "wb");
-    if (!fp) {
-        vfs::create_folders(vfs::MAPS_FOLDER);
-        fp = vfs::file_open_os(meta, "wb");
+    // The map's own folder (data dir Maps/), not Maps/ under the working directory.
+    std::error_code ec;
+    const std::filesystem::path parent = std::filesystem::path(meta.c_str()).parent_path();
+    if (!parent.empty()) {
+        std::filesystem::create_directories(parent, ec);
     }
+    FILE* fp = vfs::file_open_os(meta, "wb");
     if (!fp) {
         return false;
     }

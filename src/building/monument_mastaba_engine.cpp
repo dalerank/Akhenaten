@@ -361,7 +361,7 @@ int mastaba_engine_try_assign_bricklayer(building *main, figure_id fid) {
     if (!mon || !mon->is_unfinished() || mon->phase() < MASTABA_PHASE_BRICKS) {
         return 0;
     }
-    if (auto *mastaba = mon->dcast_mastaba()) {
+    if (auto* mastaba = mon->dcast_mastaba()) {
         if (!mastaba->clay_stock_ready()) {
             return 0;
         }
@@ -438,6 +438,17 @@ void monument_mastaba_engine::apply_block_placed(building *head, pyramid_main_st
     if (ms.remaining_blocks == 0) {
         ms.block_phase_active = 0;
         mon->sync_visuals();
+    }
+
+    // Laborers bring blocks, not stock: the info windows read the phase's brick share from resources_pct.
+    const int phase = mon->phase();
+    const int quota = mon->phase_blocks(phase);
+    if (quota > 0) {
+        int before = 0;
+        for (int ph = 0; ph < phase; ++ph) {
+            before += mon->phase_blocks(ph);
+        }
+        mon->runtime_data().resources_pct[RESOURCE_BRICKS] = (uint8_t)std::clamp((done - before) * 100 / quota, 0, 100);
     }
 }
 

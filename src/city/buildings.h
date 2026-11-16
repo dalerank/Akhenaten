@@ -51,7 +51,7 @@ struct city_buildings_t {
     void shutdown();
 
     void update_tick(bool refresh_only);
-    void update_canals_from_water_lifts();
+    void update_water_supply();
     void pump_water_lifts_iterative();
     void stamp_water_lift_irrigation();
     void update_religion_supply_houses();

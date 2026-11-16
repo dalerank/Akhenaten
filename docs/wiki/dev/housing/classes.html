@@ -98,7 +98,7 @@ building_impl                          (src/building/building_impl.h)
             <tr><td><code>merge() / merge_impl()</code></td><td>Attempts to merge a 1×1 plot into a 2×2 block with three adjacent matching tiles. Returns true if merge succeeded.</td></tr>
             <tr><td><code>split(int new_type)</code></td><td>Undoes a merge, placing four 1×1 plots in place of one large footprint.</td></tr>
             <tr><td><code>decay_services()</code></td><td>Called monthly. Decrements all service counters so that coverage must be renewed each month.</td></tr>
-            <tr><td><code>consume_food_weekly() / consume_goods_weekly()</code></td><td>Deducts food and goods from <code>runtime_data.foods[]</code> and <code>runtime_data.inventory[]</code>.</td></tr>
+            <tr><td><code>consume_goods(day)</code></td><td>OG goods consumption, run after the evolve on days 0 and 7: 4× the model amounts for houses bigger than 1×1, a quarter per call. Food is eaten monthly by <code>city_resources_t::consume_food_monthly()</code> (or <code>consume_food_weekly()</code> with the remake food flag).</td></tr>
             <tr><td><code>dcast_house()</code></td><td>Convenience downcast shorthand (see <a href="#downcast">Downcasting</a>).</td></tr>
           </tbody>
         </table>

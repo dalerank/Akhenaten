@@ -24,11 +24,6 @@ building_recruiter {
   }
 }
 
-[es=(building_recruiter, on_place_checks)]
-function building_recruiter_on_place_checks(ev) {
-    city.warnings.show_if_not(city.resources.weapons.yards_stored > 0, "#soldiers_need_supplies_of_weapons")
-}
-
 [es=(building_recruiter, add_resource)]
 function building_recruiter_add_resource(ev) {
     if (ev.resource != RESOURCE_WEAPONS && ev.resource != RESOURCE_CHARIOTS) {

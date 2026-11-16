@@ -126,4 +126,6 @@ extern graphics_renderer_interface g_render;
 void set_render_scale(painter &ctx, float scale);
 std::vector<video_mode> get_video_modes();
 svector<xstring, 8> get_video_drivers(bool log);
+svector<xstring, 8> render_backend_order(const xstring& requested, const svector<xstring, 8>& available);
+xstring platform_render_preferred_backend(const xstring& requested);
 xstring get_video_driver();

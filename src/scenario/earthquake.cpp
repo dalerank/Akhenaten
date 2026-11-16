@@ -2,6 +2,7 @@
 
 #include "building/building.h"
 #include "building/destruction.h"
+#include "building/building_wall.h"
 #include "graphics/graphics.h"
 #include "graphics/image.h"
 #include "city/city_message.h"
@@ -10,6 +11,7 @@
 #include "figure/figure.h"
 #include "game/game.h"
 #include "grid/building.h"
+#include "grid/canals.h"
 #include "grid/grid.h"
 #include "grid/image.h"
 #include "grid/gardens.h"
@@ -18,52 +20,10 @@
 #include "grid/terrain.h"
 #include "grid/tiles.h"
 #include "scenario/scenario.h"
+#include "scenario/event_phrases.h"
+#include "core/log.h"
+#include <algorithm>
 #include "sound/effect.h"
-
-struct eathquake_data_t {
-    int game_year;
-    int month;
-    int state;
-    int duration;
-    int max_duration;
-    int delay;
-    int max_delay;
-    struct {
-        int x;
-        int y;
-    } expand[4];
-};
-
-eathquake_data_t g_eathquake_data;
-
-void scenario_earthquake_init(void) {
-    auto &data = g_eathquake_data;
-    data.game_year = g_scenario.start_year + g_scenario.earthquake.year;
-    data.month = 2 + (random_byte() & 7);
-    switch (g_scenario.earthquake.severity) {
-    default:
-        data.max_duration = 0;
-        data.max_delay = 0;
-        break;
-    case EARTHQUAKE_SMALL:
-        data.max_duration = 25 + (random_byte() & 0x1f);
-        data.max_delay = 10;
-        break;
-    case EARTHQUAKE_MEDIUM:
-        data.max_duration = 100 + (random_byte() & 0x3f);
-        data.max_delay = 8;
-        break;
-    case EARTHQUAKE_LARGE:
-        data.max_duration = 250 + random_byte();
-        data.max_delay = 6;
-        break;
-    }
-    data.state = e_event_state_initial;
-    for (int i = 0; i < 4; i++) {
-        data.expand[i].x = g_scenario.earthquake_point.x();
-        data.expand[i].y = g_scenario.earthquake_point.y();
-    }
-}
 
 static int can_advance_earthquake_to_tile(int x, int y) {
     if (map_terrain_is(MAP_OFFSET(x, y), TERRAIN_ELEVATION | TERRAIN_ROCK | TERRAIN_WATER))
@@ -89,6 +49,10 @@ static void advance_earthquake_to_tile(int x, int y) {
     map_tiles_gardens_update_all();
     map_tiles_update_all_roads();
     map_tiles_update_all_plazas();
+    // Augustus 3bdd1189d: the fault changes the neighbours of meadow, wall and canal tiles too.
+    map_tiles_update_all_meadow();
+    building_mud_wall::update_all_walls();
+    map_canal_update_all_tiles(0);
 
     map_routing_update_land();
     map_routing_update_walls();
@@ -96,156 +60,136 @@ static void advance_earthquake_to_tile(int x, int y) {
     figure_create_explosion_cloud(tile2i(x, y), 1);
 }
 
-void scenario_earthquake_process() {
-    auto &data = g_eathquake_data;
-    if (g_scenario.earthquake.severity == EARTHQUAKE_NONE || g_scenario.earthquake_point.x() == -1
-        || g_scenario.earthquake_point.y() == -1)
-        return;
-    if (data.state == e_event_state_initial) {
-        if (game.simtime.year == data.game_year && game.simtime.month == data.month) {
-            data.state = e_event_state_in_progress;
-            data.duration = 0;
-            data.delay = 0;
-            advance_earthquake_to_tile(data.expand[0].x, data.expand[0].y);
-            messages::popup("message_earthquake", 0, MAP_OFFSET(data.expand[0].x, data.expand[0].y));
-        }
-    } else if (data.state == e_event_state_in_progress) {
-        data.delay++;
-        if (data.delay >= data.max_delay) {
-            data.delay = 0;
-            data.duration++;
-            if (data.duration >= data.max_duration)
-                data.state = e_event_state_finished;
+namespace {
 
-            int dx, dy, index;
-            switch (random_byte() & 0xf) {
-            case 0:
-                index = 0;
-                dx = 0;
-                dy = -1;
-                break;
-            case 1:
-                index = 1;
-                dx = 1;
-                dy = 0;
-                break;
-            case 2:
-                index = 2;
-                dx = 0;
-                dy = 1;
-                break;
-            case 3:
-                index = 3;
-                dx = -1;
-                dy = 0;
-                break;
-            case 4:
-                index = 0;
-                dx = 0;
-                dy = -1;
-                break;
-            case 5:
-                index = 0;
-                dx = -1;
-                dy = 0;
-                break;
-            case 6:
-                index = 0;
-                dx = 1;
-                dy = 0;
-                break;
-            case 7:
-                index = 1;
-                dx = 1;
-                dy = 0;
-                break;
-            case 8:
-                index = 1;
-                dx = 0;
-                dy = -1;
-                break;
-            case 9:
-                index = 1;
-                dx = 0;
-                dy = 1;
-                break;
-            case 10:
-                index = 2;
-                dx = 0;
-                dy = 1;
-                break;
-            case 11:
-                index = 2;
-                dx = -1;
-                dy = 0;
-                break;
-            case 12:
-                index = 2;
-                dx = 1;
-                dy = 0;
-                break;
-            case 13:
-                index = 3;
-                dx = -1;
-                dy = 0;
-                break;
-            case 14:
-                index = 3;
-                dx = 0;
-                dy = -1;
-                break;
-            case 15:
-                index = 3;
-                dx = 0;
-                dy = 1;
-                break;
-            default:
-                return;
-            }
-            int x = calc_bound(data.expand[index].x + dx, 0, g_scenario.map.width - 1);
-            int y = calc_bound(data.expand[index].y + dy, 0, g_scenario.map.height - 1);
-            if (can_advance_earthquake_to_tile(x, y)) {
-                data.expand[index].x = x;
-                data.expand[index].y = y;
-                advance_earthquake_to_tile(x, y);
-            }
+    enum e_earthquake_state : uint8_t {
+        EARTHQUAKE_STATE_DUE = 0,
+        EARTHQUAKE_STATE_RUNNING = 1,
+        EARTHQUAKE_STATE_OVER = 2,
+    };
+
+    constexpr int EARTHQUAKE_STEPS_PER_AMOUNT = 25;
+
+    // OG scenario_rules.c earthquake_steps: the front each random step moves and its direction.
+    struct earthquake_step {
+        int front;
+        int dx;
+        int dy;
+    };
+    constexpr earthquake_step earthquake_steps[16] = {
+      {0, 0, -1},
+      {1, 1, 0},
+      {2, 0, 1},
+      {3, -1, 0},
+      {0, 0, -1},
+      {0, -1, 0},
+      {0, 1, 0},
+      {1, 1, 0},
+      {1, 0, -1},
+      {1, 0, 1},
+      {2, 0, 1},
+      {2, -1, 0},
+      {2, 1, 0},
+      {3, -1, 0},
+      {3, 0, -1},
+      {3, 0, 1},
+    };
+
+    bool earthquake_is_due(const event_ph_t& e) {
+        switch (e.event_trigger_type) {
+        case EVENT_TRIGGER_ONLY_VIA_EVENT:
+        case EVENT_TRIGGER_ALREADY_FIRED:
+        case EVENT_TRIGGER_BY_FAVOUR:
+        case EVENT_TRIGGER_BY_FAVOUR_IN_USE:
+            return false;
+        default:
+            return e.date() == game.simtime.date();
+        }
+    }
+
+    bool earthquake_start(event_ph_t& e) {
+        if (!earthquake_is_due(e)) {
+            return false;
+        }
+        auto& quake = e.data.earthquake;
+        for (int i = 0; i < 4; i++) {
+            quake.locations[2 * i] = (int16_t)g_scenario.earthquake_point.x();
+            quake.locations[2 * i + 1] = (int16_t)g_scenario.earthquake_point.y();
+        }
+        e.is_active = true;
+        if (e.event_trigger_type != EVENT_TRIGGER_RECURRING) {
+            e.event_trigger_type = EVENT_TRIGGER_ALREADY_FIRED;
+        }
+        e.event_state = (e_event_state)EARTHQUAKE_STATE_RUNNING;
+        quake.duration = 0;
+        quake.ticks = 0;
+        advance_earthquake_to_tile(quake.locations[0], quake.locations[1]);
+        const int grid_offset = MAP_OFFSET(quake.locations[0], quake.locations[1]);
+        city_message_post_full(true, "message_earthquake", &e, -1, PHRASE_earthquake_title,
+          PHRASE_earthquake_initial_announcement, PHRASE_earthquake_no_reason_A, 0, grid_offset);
+
+        logs::info("[earthquake] start event=%d at %d,%d", e.event_id, quake.locations[0], quake.locations[1]);
+        return true;
+    }
+
+} // namespace
+
+// OG disaster_events.c scenario_earthquake_event_process: four fronts, one step every `delay`
+// ticks, amount * 25 steps in all.
+bool scenario_earthquake_event_process(event_ph_t& e) {
+    if (e.type != EVENT_TYPE_EARTHQUAKE) {
+        return false;
+    }
+    if (e.event_state == (e_event_state)EARTHQUAKE_STATE_DUE) {
+        return earthquake_start(e);
+    }
+    if (e.event_state != (e_event_state)EARTHQUAKE_STATE_RUNNING) {
+        return false;
+    }
+    auto& quake = e.data.earthquake;
+    if (++quake.ticks < quake.delay) {
+        return true;
+    }
+    quake.ticks = 0;
+    const int steps = std::max(e.amount.value * EARTHQUAKE_STEPS_PER_AMOUNT, EARTHQUAKE_STEPS_PER_AMOUNT);
+    if (++quake.duration >= steps) {
+        e.event_state = (e_event_state)EARTHQUAKE_STATE_OVER;
+        e.is_active = false;
+    }
+    const int r = random_byte() & 15;
+    e.earthquake_step = (int16_t)r;
+    const earthquake_step& step = earthquake_steps[r];
+    int16_t* front = &quake.locations[2 * step.front];
+    const int x = calc_bound(front[0] + step.dx, 0, g_scenario.map.width - 1);
+    const int y = calc_bound(front[1] + step.dy, 0, g_scenario.map.height - 1);
+    if (can_advance_earthquake_to_tile(x, y)) {
+        front[0] = (int16_t)x;
+        front[1] = (int16_t)y;
+        advance_earthquake_to_tile(x, y);
+    }
+    return true;
+}
+
+// OG event_manager.c scenario_earthquake_process: only the first due or running earthquake moves each tick.
+void scenario_earthquake_process() {
+    if (!g_scenario.earthquake_point.valid()) {
+        return;
+    }
+    for (int i = 0; i < g_scenario.events.events_count(); i++) {
+        if (scenario_earthquake_event_process(*g_scenario.events.at(i))) {
+            return;
         }
     }
 }
 
 int scenario_earthquake_is_in_progress(void) {
-    auto &data = g_eathquake_data;
-    return data.state == e_event_state_in_progress;
-}
-
-void scenario_earthquake_save_state(buffer* buf) {
-    auto &data = g_eathquake_data;
-    buf->write_i32(data.game_year);
-    buf->write_i32(data.month);
-    buf->write_i32(data.state);
-    buf->write_i32(data.duration);
-    buf->write_i32(data.max_duration);
-    buf->write_i32(data.max_delay);
-    buf->write_i32(data.delay);
-    for (int i = 0; i < 4; i++) {
-        buf->write_i32(data.expand[i].x);
-        buf->write_i32(data.expand[i].y);
+    for (int i = 0; i < g_scenario.events.events_count(); i++) {
+        const event_ph_t* e = g_scenario.events.at(i);
+        if (e->type == EVENT_TYPE_EARTHQUAKE && e->event_state == (e_event_state)EARTHQUAKE_STATE_RUNNING) {
+            return 1;
+        }
     }
-}
-
-void scenario_earthquake_load_state(buffer* buf) {
-    auto &data = g_eathquake_data;
-    data.game_year = buf->read_i32();
-    data.month = buf->read_i32();
-    data.state = buf->read_i32();
-    data.duration = buf->read_i32();
-    data.max_duration = buf->read_i32();
-    data.max_delay = buf->read_i32();
-    data.delay = buf->read_i32();
-    for (int i = 0; i < 4; i++) {
-        data.expand[i].x = buf->read_i32();
-        data.expand[i].y = buf->read_i32();
-    }
+    return 0;
 }
 
 static void set_earthquake_image(int grid_offset) {

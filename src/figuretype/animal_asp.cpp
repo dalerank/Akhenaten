@@ -3,6 +3,7 @@
 #include "city/city.h"
 #include "core/profiler.h"
 #include "core/random.h"
+#include "game/game.h"
 #include "figure/formation.h"
 #include "figure/figure.h"
 #include "figuretype/figure_animal.h"
@@ -121,7 +122,7 @@ void figure_asp::on_create() {
     figure_impl::on_create();
     auto &d = runtime_data();
     const uint16_t max_h = current_params().max_hungry;
-    d.hungry = max_h ? (rand() % max_h) : 0;
+    d.hungry = max_h ? (random_hash(game.simtime.absolute_tick(), id(), RANDOM_SALT_ANIMAL_HUNGRY) % max_h) : 0;
     d.curse_raid = 0;
     d.raid_days_left = 0;
     base.allow_move_type = EMOVE_TERRAIN;
@@ -317,7 +318,9 @@ void figure_asp::figure_action() {
                     advance_action(ACTION_25_ASP_LOOKING_FOR_ATTACK);
                 } else {
                     const uint16_t max_h = current_params().max_hungry;
-                    d.hungry = max_h ? (rand() % max_h) : 0;
+                    d.hungry = max_h
+                                 ? (random_hash(game.simtime.absolute_tick(), id(), RANDOM_SALT_ANIMAL_HUNGRY) % max_h)
+                                 : 0;
                     advance_action(ACTION_21_ASP_SUCCESS_KILL);
                     base.wait_ticks = 30 + (random_byte() % 20);
                 }

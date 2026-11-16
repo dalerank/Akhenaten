@@ -113,7 +113,7 @@ bool game_scenario_beaten(int scenario_id) {
     return g_player.beaten(scenario_id);
 }
 
-#define TMP_BUFFER_SIZE 10000
+constexpr int TMP_BUFFER_SIZE = 10000;
 static const uint8_t* skip_non_digits(const uint8_t* str) {
     int safeguard = 0;
     while (1) {

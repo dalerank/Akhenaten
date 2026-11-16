@@ -6,7 +6,7 @@ figure_constable {
 		_pack { pack:PACK_SPR_MAIN }
 		walk { id:20, max_frames:12 }
 		death { id:21, max_frames:8, loop:false }
-		attack { id:21, max_frames:8, loop:false }
+		attack { id:22, max_frames:6 }
 		big_image { pack:PACK_UNLOADED, id:25, offset:FIGURE_CONSTABLE }
 	}
 
@@ -31,12 +31,26 @@ figure_constable {
 		policeman_city_is_amazing { sound: "police_g10.WAV", text: "#policeman_city_is_amazing" }
 	}
 
-	category: figure_category_citizen
-	max_damage: 100
+	// OG Figure_model 88 Policeman: fighting unit 2, hit points 20, attack 5, armor 0.
+	category: figure_category_armed
+	max_damage: 20
 	attack_value: 5
-	defense_value: 3
+	defense_value: 0
 	terrain_usage : TERRAIN_USAGE_ROADS
+	// OG walker_rules: law walker roam 640, home road radius 2, enemy search every 10 wraps within 30.
 	max_roam_length : 640
+	home_road_radius : 2
+	enemy_search_ticks : 10
+	enemy_search_distance : 30
+	// OG figure_closest_enemy_for_constable: distance x1 attacking natives, x2 enemy soldiers, x3 the animals below.
+	native_distance_factor : 1
+	enemy_distance_factor : 2
+	animal_distance_factor : 3
+	chased_animals : [FIGURE_CROCODILE, FIGURE_HYENA, FIGURE_HIPPO, FIGURE_LION, FIGURE_SCORPION, FIGURE_ASP, FIGURE_MUMMY]
+	// OG Pharaoh_Model police station service reduction.
+	crime_reduction : 100
+	// Remake tomb robber (gameplay_change_tomb_robber_remake) arrest range.
+	tomb_robber_arrest_distance : 22
 }
 
 function figure_constable_gods_are_angry() {
@@ -122,8 +136,8 @@ function figure_constable_setup_phrase(ev) {
 	}
 
 	var state = f.action_state
-	// ACTION_76/77/150 — going to / fighting enemy
-	if (state == 76 || state == 77 || state == 150) {
+	// ACTION_76_LAW_WALKER_CHASE — going to an enemy
+	if (state == 76) {
 		figure_apply_phrase(f, "policeman_enemies_are_coming")
 		return
 	}

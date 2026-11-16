@@ -85,12 +85,12 @@
       </ul>
       <div class="deviation-note">
         Monument goal matches pak (<strong>13</strong>). Sun Temple weight 4 →
-        <code>2.25·4+4.5 = 13.5</code>. Request chain depth simplified vs pak
+        <code>trunc(6.32·√4+0.5) = 13</code>. Request chain depth simplified vs pak
         (calendar roots + shared KR wired; some nested gift/demand tails deferred).
       </div>
 
       <h2 id="events">Scripted events (summary)</h2>
-      <p>Oil / gamemeat / fish / timber / linen requests; favour Pharaoh 25→25→25→45; wage increase recurring; contaminated water; NEW_TRADE unlocks on success paths.</p>
+      <p>Oil / gamemeat / fish / timber / linen requests; favour Pharaoh army 25→25→25→45 (attack RANDOM, land points 1→2→3→4). It is the OG kingdom army: when the kingdom rating falls to <strong>0</strong>, the engine sends the first favour invasion — announcement and reminders first, the attack 9 months later; chained waves follow as soon as the previous wave attacks. It is called off if the rating climbs back to <strong>15</strong> before it attacks, and can come again 12 months later while the rating stays at 0. Also: wage increase recurring; contaminated water; NEW_TRADE unlocks on success paths.</p>
 
       <div class="dev-section">
         <h2 id="dev">Developer reference</h2>
@@ -98,6 +98,7 @@
           <summary>Mission script</summary>
           <div class="details-body">
             <p><span class="file-ref">src/scripts/mission/m_020_djedu.js</span> · import in <span class="file-ref">src/scripts/missions.js</span></p>
+            <p>Favour army: <code>events[]</code> pak i=41→42→43→44 (<code>EVENT_TRIGGER_BY_FAVOUR</code> master, <code>ONLY_VIA_EVENT</code> chain), sent by <code>event_manager_t::update_kingdom_favour</code> (OG <code>city/kingdom.c</code> <code>city_emperor_update</code>); no mission JS.</p>
             <p>Empire id <strong>19</strong>. Map <span class="file-ref">data/maps/m_020_djedu.map</span>. Rank 7. Start message <code>message_mission_abusir</code>.</p>
             <p>SKIP: empty map_obj idx=12; orphan route 25. Men-nefer route 19 = 2-pt stub.</p>
           </div>

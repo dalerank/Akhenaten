@@ -78,6 +78,18 @@ const xstring scrollable_list::get_entry_text_by_idx(int index, int filename_syn
     }
 }
 
+bstring256 scrollable_list::get_entry_draw_text(int index) {
+    if (index < 0 || index >= _items_count) {
+        return {};
+    }
+    if (ui_params.use_file_finder) {
+        vfs::path no_ext(file_finder->files[index]);
+        no_ext.remove_extension();
+        return no_ext.c_str();
+    }
+    return manual_entry_list[index].text.c_str();
+}
+
 const xstring scrollable_list::get_selected_entry_text(int filename_syntax) {
     return get_entry_text_by_idx(get_selected_entry_idx(), filename_syntax);
 }
@@ -365,7 +377,6 @@ void scrollable_list::draw() {
         ui::panel(vec2i{0, 0}, { ui_params.blocks_x, ui_params.blocks_y }, UiFlags_PanelInner);
     }
 
-    bstring256 text_utf8;
     bstring256 text;
     for (int i = 0; i < ui_params.view_items; ++i) {
         e_font font = ui_params.font_asleep;
@@ -384,20 +395,7 @@ void scrollable_list::draw() {
         int text_pos_x = button_pos_x + ui_params.text_padding_x;
         int text_pos_y = button_pos_y + ui_params.text_padding_y;
 
-        if (ui_params.use_file_finder) {
-            text_utf8 = file_finder->files[current_index];
-            encoding_from_utf8(text_utf8, text, text.capacity);
-            vfs::path no_ext(text.c_str());
-            no_ext.remove_extension();
-            text = no_ext.c_str();
-        } else {
-            if (i < _items_count) {
-                text_utf8 = manual_entry_list[current_index].text.c_str();
-            } else {
-                text_utf8.clear();
-            }
-            encoding_from_utf8(text_utf8, text, text.capacity);
-        }
+        text = get_entry_draw_text(current_index);
 
         if (custom_text_render) {
             if (current_index < manual_entry_list.size()) {

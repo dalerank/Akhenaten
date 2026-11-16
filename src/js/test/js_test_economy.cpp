@@ -23,10 +23,13 @@
 #include "city/city.h"
 #include "city/city_buildings.h"
 #include "city/city_figures.h"
+#include "city/city_food_supply.h"
 #include "city/city_industry.h"
+#include "city/city_trade.h"
 #include "city/object_info.h"
 #include "core/bstring.h"
 #include "core/xstring.h"
+#include "empire/empire.h"
 #include "empire/empire_traders.h"
 #include "empire/trader_handler.h"
 #include "figure/figure.h"
@@ -92,6 +95,140 @@ static void __test_city_set_trade(int resource, int status, int trading_amount) 
     g_city.resource.trading_amount[resource] = (int16_t)trading_amount;
 }
 ANK_FUNCTION_3(__test_city_set_trade);
+
+static void __test_trade_update_export_keep() {
+    city_trade_update_export_keep();
+}
+ANK_FUNCTION(__test_trade_update_export_keep);
+
+// What the trade checks read as stored in yards, without placing a connected yard.
+static void __test_city_set_yards_stored(int resource, int amount) {
+    if (resource > RESOURCE_NONE && resource < RESOURCES_MAX) {
+        g_city.resource.stored_in_storages[resource] = (uint16_t)amount;
+    }
+}
+ANK_FUNCTION_2(__test_city_set_yards_stored);
+
+static int __test_trade_export_keep(int resource) {
+    return city_trade_export_keep((e_resource)resource);
+}
+ANK_FUNCTION_1(__test_trade_export_keep);
+
+static bool __test_empire_can_export_to(int city_id, int resource) {
+    if (!g_empire.city(city_id) || resource <= RESOURCE_NONE || resource >= RESOURCES_MAX) {
+        return false;
+    }
+    return g_empire.can_export_resource_to_city(city_id, (e_resource)resource);
+}
+ANK_FUNCTION_2(__test_empire_can_export_to);
+
+static bool __test_empire_can_import_from(int city_id, int resource) {
+    if (!g_empire.city(city_id) || resource <= RESOURCE_NONE || resource >= RESOURCES_MAX) {
+        return false;
+    }
+    return g_empire.can_import_resource_from_city(city_id, (e_resource)resource);
+}
+ANK_FUNCTION_2(__test_empire_can_import_from);
+
+static int __test_empire_import_stock_limit(int resource) {
+    if (resource <= RESOURCE_NONE || resource >= RESOURCES_MAX) {
+        return 0;
+    }
+    return g_empire.import_stock_limit((e_resource)resource);
+}
+ANK_FUNCTION_1(__test_empire_import_stock_limit);
+
+// Makes city_id trade only `resource` (buys and sells) with the given route limit; -1 when the slot is unused.
+static int __test_empire_city_trade_only(int city_id, int resource, int limit) {
+    empire_city* city = g_empire.city(city_id);
+    if (!city || !city->in_use || resource <= RESOURCE_NONE || resource >= RESOURCES_MAX) {
+        return -1;
+    }
+    city->clear_trade_resources();
+    city->buys_resource[resource] = true;
+    city->sells_resource[resource] = true;
+    trade_route& route = city->get_route();
+    for (e_resource r = RESOURCES_MIN; r < RESOURCES_MAX; ++r) {
+        route.init(r, 0);
+    }
+    route.init((e_resource)resource, limit);
+    return city->route_id;
+}
+ANK_FUNCTION_3(__test_empire_city_trade_only);
+
+static bool __test_empire_city_add_trade(int city_id, int resource, int limit) {
+    empire_city* city = g_empire.city(city_id);
+    if (!city || !city->in_use || resource <= RESOURCE_NONE || resource >= RESOURCES_MAX) {
+        return false;
+    }
+    city->buys_resource[resource] = true;
+    city->get_route().init((e_resource)resource, limit);
+    return true;
+}
+ANK_FUNCTION_3(__test_empire_city_add_trade);
+
+static int __test_empire_city_trader_size(int city_id) {
+    empire_city* city = g_empire.city(city_id);
+    return city ? city->trader_size() : -1;
+}
+ANK_FUNCTION_1(__test_empire_city_trader_size);
+
+static int __test_empire_city_free_trader_slot(int city_id) {
+    empire_city* city = g_empire.city(city_id);
+    return city ? city->free_trader_slot() : -1;
+}
+ANK_FUNCTION_1(__test_empire_city_free_trader_slot);
+
+// Marks trader slots as taken (fid != 0) without spawning figures.
+static void __test_empire_city_set_trader_figure(int city_id, int slot, int fid) {
+    empire_city* city = g_empire.city(city_id);
+    if (city && slot >= 0 && slot < (int)std::size(city->trader_figure_ids)) {
+        city->trader_figure_ids[slot] = fid;
+    }
+}
+ANK_FUNCTION_3(__test_empire_city_set_trader_figure);
+
+static void __test_empire_city_set_trader_blocked(int city_id, int blocked) {
+    if (empire_city* city = g_empire.city(city_id)) {
+        city->trader_blocked = blocked;
+    }
+}
+ANK_FUNCTION_2(__test_empire_city_set_trader_blocked);
+
+static int __test_empire_set_max_traders_per_city(int count) {
+    const int prev = empire_trade_rules.max_traders_per_city;
+    empire_trade_rules.max_traders_per_city = count;
+    return prev;
+}
+ANK_FUNCTION_1(__test_empire_set_max_traders_per_city);
+
+static void __test_empire_close_cities() {
+    for (auto& city : g_empire.get_cities()) {
+        city.is_open = false;
+    }
+}
+ANK_FUNCTION(__test_empire_close_cities);
+
+// Makes empire city `slot` an open luxury seller with the culture of `name_id`, on `route_id` with a limit.
+static void __test_empire_city_luxury_source(int slot, int name_id, int route_id) {
+    empire_city* city = g_empire.city(slot);
+    if (!city || route_id < 0 || route_id >= empire_t::MAX_ROUTES) {
+        return;
+    }
+    city->in_use = 1;
+    city->is_open = true;
+    city->name_id = (uint8_t)name_id;
+    city->route_id = route_id;
+    city->sells_resource[RESOURCE_LUXURY_GOODS] = true;
+    g_empire.get_route(route_id).set_limit(RESOURCE_LUXURY_GOODS, 1500);
+}
+ANK_FUNCTION_3(__test_empire_city_luxury_source);
+
+static int __test_city_update_luxury_goods_kinds() {
+    g_city.resource.luxury_goods_kinds = g_empire.count_luxury_goods_kinds();
+    return g_city.resource.luxury_goods_kinds;
+}
+ANK_FUNCTION(__test_city_update_luxury_goods_kinds);
 
 static int __test_cartpusher_destination_wait_threshold() {
     return figure_cartpusher::destination_wait_threshold();
@@ -283,6 +420,45 @@ static int __test_empire_trader_buy_room_at(int resource, int amount) {
     return result;
 }
 ANK_FUNCTION_2(__test_empire_trader_buy_room_at);
+
+// Active trader with the given per-resource bought/sold amounts; returns its handle or -1.
+static int __test_empire_trader_create_with(int resource, int bought, int sold) {
+    empire_trader_handle h = empire_create_trader();
+    if (!h.valid()) {
+        return -1;
+    }
+    auto& t = g_empire_traders.traders[h.handle];
+    const e_resource r = (e_resource)std::clamp(resource, 0, (int)RESOURCES_MAX - 1);
+    t.bought_resources[r] = (uint16_t)std::max(0, bought);
+    t.sold_resources[r] = (uint16_t)std::max(0, sold);
+    return h.handle;
+}
+ANK_FUNCTION_3(__test_empire_trader_create_with);
+
+static int __test_empire_trader_bought_at(int handle, int resource) {
+    if (handle < 0 || handle >= (int)g_empire_traders.traders.size()) {
+        return -1;
+    }
+    const e_resource r = (e_resource)std::clamp(resource, 0, (int)RESOURCES_MAX - 1);
+    return g_empire_traders.traders[handle].bought_resources[r];
+}
+ANK_FUNCTION_2(__test_empire_trader_bought_at);
+
+static int __test_empire_trader_sold_at(int handle, int resource) {
+    if (handle < 0 || handle >= (int)g_empire_traders.traders.size()) {
+        return -1;
+    }
+    const e_resource r = (e_resource)std::clamp(resource, 0, (int)RESOURCES_MAX - 1);
+    return g_empire_traders.traders[handle].sold_resources[r];
+}
+ANK_FUNCTION_2(__test_empire_trader_sold_at);
+
+static void __test_empire_trader_release(int handle) {
+    if (handle >= 0 && handle < (int)g_empire_traders.traders.size()) {
+        g_empire_traders.traders[handle].is_active = false;
+    }
+}
+ANK_FUNCTION_1(__test_empire_trader_release);
 
 // Attach FIGURE_MARKET_BUYER to a bazaar slot and run before_action.
 // Returns figure id if still alive, else 0.
@@ -831,6 +1007,22 @@ static int __test_set_allowed_food(int food_index, int resource) {
     return 1;
 }
 ANK_FUNCTION_2(__test_set_allowed_food);
+
+// The month's and the week's food consumption, each a no-op unless its model is the active one.
+static void __test_city_consume_food_monthly() {
+    g_city.resource.consume_food_monthly();
+}
+ANK_FUNCTION(__test_city_consume_food_monthly);
+
+static void __test_city_consume_food_weekly() {
+    g_city.resource.consume_food_weekly(game.simtime);
+}
+ANK_FUNCTION(__test_city_consume_food_weekly);
+
+static int __test_city_food_consumption_percentage() {
+    return city_food_consumption_percentage();
+}
+ANK_FUNCTION(__test_city_food_consumption_percentage);
 
 static int __test_city_recalc_granary_stored(int resource) {
     g_city.resource.calculate_available_food();

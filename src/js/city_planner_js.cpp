@@ -216,11 +216,6 @@ int __map_adjust_building_determine_orientation(tile2i tile, int size, int adjus
 }
 ANK_FUNCTION_5(__map_adjust_building_determine_orientation);
 
-bool __map_terrain_is_adjacent_to_wall(tile2i tile, int size) {
-    return map_terrain_is_adjacent_to_wall(tile.x(), tile.y(), size);
-}
-ANK_FUNCTION_2(__map_terrain_is_adjacent_to_wall);
-
 bool __map_tile_is_connected_to_open_water(tile2i tile) {
     return map_tile_is_connected_to_open_water(tile);
 }

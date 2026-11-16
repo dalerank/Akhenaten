@@ -37,9 +37,9 @@ function run_test() {
 
     __test_city_industry_update_production()
     var after_base = __building_industry_progress(bid)
-    // quarry uptick = max(1, 8/2) = 4 → progress 5
-    if (after_base != 5) {
-        __log_info_native('[test:257] base tick expected 5 got ' + after_base)
+    // OG quarry uptick = num_workers = 8 → progress 9
+    if (after_base != 9) {
+        __log_info_native('[test:257] base tick expected 9 got ' + after_base)
         __test_signal_ready()
         return
     }
@@ -61,9 +61,9 @@ function run_test() {
 
     __test_city_industry_update_production()
     var after_complex = __building_industry_progress(bid)
-    // no altar yet → still +4 only
-    if (after_complex != 9) {
-        __log_info_native('[test:257] complex-only tick expected 9 got ' + after_complex)
+    // no altar yet → still +8 only
+    if (after_complex != 17) {
+        __log_info_native('[test:257] complex-only tick expected 17 got ' + after_complex)
         __test_signal_ready()
         return
     }
@@ -71,9 +71,9 @@ function run_test() {
     complex.temple_complex_upgrades = TEMPLE_COMPLEX_UPGRADE_ALTAR
     __test_city_industry_update_production()
     var after_altar = __building_industry_progress(bid)
-    // +4 uptick + floor(8/2)=4 Ptah → +8 → progress 17
-    if (after_altar != 17) {
-        __log_info_native('[test:257] altar tick expected 17 got ' + after_altar)
+    // +8 uptick + floor(8/2)=4 Ptah → +12 → progress 29
+    if (after_altar != 29) {
+        __log_info_native('[test:257] altar tick expected 29 got ' + after_altar)
         __test_signal_ready()
         return
     }

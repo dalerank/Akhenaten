@@ -73,6 +73,11 @@ static void monument_proto_phases_total(js_State* J) {
     J->push(m ? m->phases() : 0);
 }
 
+static void monument_proto_is_preexisting(js_State* J) {
+    building_monument* m = monument_this(J);
+    J->push(m && m->is_preexisting());
+}
+
 static void monument_proto_material_pct_min(js_State* J) {
     building_monument* m = monument_this(J);
     J->push(m ? m->material_pct_min() : 100);
@@ -167,6 +172,7 @@ void js_register_monument(js_State* J) {
     jsB_propf(J, js_intern("Monument.prototype.phase"), monument_proto_phase, 0);
     jsB_propf(J, js_intern("Monument.prototype.phases_total"), monument_proto_phases_total, 0);
     jsB_propf(J, js_intern("Monument.prototype.material_pct_min"), monument_proto_material_pct_min, 0);
+    jsB_propf(J, js_intern("Monument.prototype.is_preexisting"), monument_proto_is_preexisting, 0);
     jsB_propf(J, js_intern("Monument.prototype.need_stonemason"), monument_proto_need_stonemason, 0);
     jsB_propf(J, js_intern("Monument.prototype.needs_resource"), monument_proto_needs_resource, 1);
     jsB_propf(J, js_intern("Monument.prototype.resource_pct"), monument_proto_resource_pct, 1);

@@ -22,6 +22,7 @@
 #include "figure/figure_names.h"
 #include "figure/formation.h"
 #include "figure/route.h"
+#include "grid/routing/routing.h"
 #include "file_schemas.h"
 #include "game/game.h"
 #include "game/game_config.h"
@@ -85,9 +86,12 @@ void GamestateLoadDetail::pre_load() { // do we NEED this...?
     building_storage_clear_all();
     g_city.figures.init_figures();
     g_enemy_armies.clear();
+    // .map files carry no cities chunk; stale cities would rewrite empire objects in load_mission_metadata.
+    g_empire.clear_cities_data();
     figure_name_init();
     g_formations.clear_all();
     figure_route_clear_all();
+    map_routing_stats_clear();
     g_recorded_paths.clear();
     map_clear_floodplain_growth();
     // Troop carry lives outside city_data; clear so old saves (no chunk) and map

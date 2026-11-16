@@ -5,7 +5,6 @@
 //   [test-marker] construction_blessing_message_ok
 //   [test-marker] construction_blessing_site_prep_ok
 //   [test-marker] construction_blessing_masonry_major_ok
-//   [test-marker] construction_blessing_delivery_clear_ok
 //   [test-marker] construction_blessing_two_mastaba_min_id_ok
 //   [test-marker] construction_blessing_at_cap_fallback_ok
 //   [test-marker] construction_blessing_halted_ok
@@ -156,29 +155,6 @@ function run_test() {
         __log_marker('construction_blessing_message_skip')
     }
 
-    // Delivery on non-main part id must clear on blessing.
-    var part_id = __test_monument_next_part(bid_a)
-    if (!part_id) {
-        part_id = bid_a
-    }
-    __test_monument_add_delivery(part_id, 999001, RESOURCE_BRICKS, 4)
-    var in_deliv = __test_monument_resource_in_delivery(part_id, RESOURCE_BRICKS)
-    if (in_deliv < 4) {
-        __log_info_native('[test:81] failed to seed delivery on part id=' + part_id + ' got ' + in_deliv)
-        game_features.set('gameopt_pyramid_speedup', feat_prev)
-        __test_signal_ready()
-        return
-    }
-    __test_run_console_command('god_major_blessing ' + GOD_PTAH)
-    var after_deliv = __test_monument_resource_in_delivery(part_id, RESOURCE_BRICKS)
-    if (after_deliv != 0) {
-        __log_info_native('[test:81] delivery clear expected 0, got ' + after_deliv + ' on part ' + part_id)
-        game_features.set('gameopt_pyramid_speedup', feat_prev)
-        __test_signal_ready()
-        return
-    }
-    __log_marker('construction_blessing_delivery_clear_ok')
-
     // Keep first mastaba under cap so min-id targeting is exercised next.
     __test_monument_set_phase(bid_a, 3)
 
@@ -268,7 +244,6 @@ function check_valid() {
         'construction_blessing_on_phase_up_ok',
         'construction_blessing_site_prep_ok',
         'construction_blessing_masonry_major_ok',
-        'construction_blessing_delivery_clear_ok',
         'construction_blessing_two_mastaba_min_id_ok',
         'construction_blessing_at_cap_fallback_ok',
         'construction_blessing_halted_chain_ok',

@@ -59,6 +59,9 @@ struct {
     std::unordered_set<std::string> queued_files;
     std::unordered_set<std::string> loaded_files;
     int have_error;
+    bool reset_requested = false;
+    bool requeue_mods = false;
+    uint32_t generation = 0;
     bstring256 error_str;
     js_State *J;
     char *frame_alloc_buffer = nullptr;
@@ -341,6 +344,26 @@ int js_vm_trypcall_keep_result(js_State *J, int params) {
         js_vm_dump_stack(J);
 
         vm.error_str = error_msg_copy;
+
+        // An error thrown from a mod's code drops that mod (VM rebuild without it) instead of
+        // stopping every JS call until the next rebuild.
+        xstring owner = mods_owner_of_script(error_msg->value.c_str());
+        if (owner.empty() && J->isobject(-1) && J->hasproperty(-1, property_stackTrace)) {
+            J->getproperty(-1, property_stackTrace);
+            if (J->isstring(-1)) {
+                owner = mods_owner_of_script(js_tostring(J, -1)->value.c_str());
+            }
+            js_pop(J, 1);
+        }
+        if (!owner.empty()) {
+            bstring256 reason;
+            pcstr msg = error_msg->value.c_str();
+            pcstr eol = strchr(msg, '\n');
+            reason.printf("%.*s", eol ? (int)(eol - msg) : (int)strlen(msg), msg);
+            mods_mark_broken(owner, reason.c_str());
+            vm.have_error = 0;
+        }
+
         js_pop(J, 1);
         return 0;
     }
@@ -534,6 +557,7 @@ int js_vm_load_file_and_exec(pcstr path) {
             int error = js_ploadstring(vm.J, r.path.c_str(), data.c_str());
             if (error) {
                 js_vm_log_script_parse_or_compile_failure(vm.J, r.path.c_str());
+                mods_mark_broken(r.mod, r.path.c_str());
 #if defined(GAME_PLATFORM_ANDROID)
                 startup_log("js parse failed", r.path.c_str());
 #endif
@@ -546,6 +570,9 @@ int js_vm_load_file_and_exec(pcstr path) {
             js_getglobal(vm.J, "");
             int ok = js_vm_trypcall(vm.J, 0);
             if (!ok) {
+                mods_mark_broken(r.mod, r.path.c_str());
+                // The mod is dropped on the next rebuild; the rest of the queue still has to run.
+                js_vm_reset_error();
                 logs::error("Fatal error on call base after load %s", r.path.c_str());
                 if (vm.error_str.len() > 0) {
                     logs::error("Error details: %s", vm.error_str.c_str());
@@ -684,11 +711,13 @@ namespace {
 }
 
 bool js_vm_sync(const xstring &mission_id) {
-    if (vm.files2load.empty()) {
+    // A requested rebuild waits for an idle VM: freeing js_State under a running JS call crashes.
+    const bool reset_now = vm.reset_requested && js_vm_stack_depth_if_idle() >= 0;
+    if (vm.files2load.empty() && !reset_now) {
         return false;
     }
 
-    if (vm.have_error) {
+    if (vm.have_error || reset_now) {
         js_reset_vm_state();
     }
 
@@ -707,8 +736,19 @@ bool js_vm_sync(const xstring &mission_id) {
     }
     const time_millis t0 = time_get_millis();
 
-    // Iterate by index so newly appended imports (from js_game_import) are also processed
-    for (int i = 0; i < (int)vm.files2load.size(); i++) {
+    // Iterate by index so newly appended imports (from js_game_import) are also processed.
+    // Mod scripts go last, after every built-in they may patch has been defined.
+    for (int i = 0;; i++) {
+        if (i >= (int)vm.files2load.size()) {
+            if (!vm.requeue_mods) {
+                break;
+            }
+            vm.requeue_mods = false;
+            mods_queue_enabled_scripts();
+            if (i >= (int)vm.files2load.size()) {
+                break;
+            }
+        }
         const std::string key = js_vm_file_key(vm.files2load[i].c_str());
         vm.queued_files.erase(key);
         logs::info("JS: script reloaded %s", vm.files2load[i].c_str());
@@ -763,6 +803,14 @@ bool js_vm_sync(const xstring &mission_id) {
 
 void js_vm_reload_file(pcstr path) {
     js_vm_queue_file(path, true);
+}
+
+void js_vm_request_reset() {
+    vm.reset_requested = true;
+}
+
+uint32_t js_vm_generation() {
+    return vm.generation;
 }
 
 int js_vm_exec_function_args(pcstr funcname, const char *szTypes, ...) {
@@ -1001,6 +1049,9 @@ void js_reset_vm_state() {
     vm.queued_files.clear();
     vm.loaded_files.clear();
     vm.have_error = 0;
+    vm.reset_requested = false;
+    vm.requeue_mods = true;
+    ++vm.generation;
     vm.frame_alloc_ctx.release();
 
     vm.J = js_newstate(js_alloc_wrapper, nullptr, JS_STRICT);

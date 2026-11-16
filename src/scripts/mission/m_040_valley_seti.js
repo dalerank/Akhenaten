@@ -4,8 +4,8 @@ log_info("akhenaten: mission 40 valley seti started")
 
 // Enemy ENEMY_6_KUSHITE. Gods: Osiris(1), Ra(2), Ptah(1). Start year -1290.
 // MM subtitle: Tomb for a Pharaoh. Rank 6 (pak). Funds Normal 13720 / loan 3000 / debt 8.
-// Win: pop 3000 / culture 40 / prosperity 70 / monuments 33 (Large W=13 → trunc(33);
-//   pak goal often listed 32 — we use 33 so finished Large clears the gate) /
+// Win: pop 3000 / culture 40 / prosperity 70 / monuments 32 (pak; Large royal tomb 26 → trunc(6.32·√26+0.5)=32,
+//   burial goods all below one divisor; carried-over tombs take no monument slot) /
 //   kingdom 80 / housing_count 12 + housing_level 15.
 // Climate desert; map_background empire pack id 23. Our city: Deir el-Medina.
 // Burial: weapons×6 beer×12 luxury×10 papyrus×8 chariots×4. Fish points present.
@@ -29,7 +29,6 @@ mission40 { // Seti in the Valley — Tomb for a Pharaoh
 	initial_funds [27440, 18290, 13720, 9150, 7270]
 	rescue_loans [6000, 4000, 3000, 2000, 1590]
 	debt_interest [4, 6, 8, 10, 12]
-	house_tax_multipliers [300, 200, 150, 100, 75]
 
 	env {
 		has_animals : true
@@ -77,7 +76,7 @@ mission40 { // Seti in the Valley — Tomb for a Pharaoh
 		population    {enabled : true, goal : 3000 }
 		culture       {enabled : true, goal : 40 }
 		prosperity    {enabled : true, goal : 70 }
-		monuments     {enabled : true, goal : 33 }
+		monuments     {enabled : true, goal : 32 }
 		kingdom       {enabled : true, goal : 80 }
 		housing_count {enabled : true, goal : 12 }
 		housing_level {enabled : true, goal : 15 }
@@ -587,8 +586,6 @@ mission40 { // Seti in the Valley — Tomb for a Pharaoh
 				cost_to_open : 810
 				is_sea_trade : true
 				type : EMPIRE_CITY_EGYPTIAN_TRADING
-				max_traders : 1
-				trade_limits : default_trade_limits
 				sells [
 					RESOURCE_GRAIN,
 					RESOURCE_STRAW
@@ -613,8 +610,6 @@ mission40 { // Seti in the Valley — Tomb for a Pharaoh
 				cost_to_open : 900
 				is_sea_trade : true
 				type : EMPIRE_CITY_PHARAOH_TRADING
-				max_traders : 1
-				trade_limits : default_trade_limits
 				sells [
 					RESOURCE_GRAIN,
 					RESOURCE_WEAPONS,
@@ -651,8 +646,6 @@ mission40 { // Seti in the Valley — Tomb for a Pharaoh
 				cost_to_open : 200
 				is_sea_trade : false
 				type : EMPIRE_CITY_FOREIGN_TRADING
-				max_traders : 1
-				trade_limits : default_trade_limits
 				sells [
 					RESOURCE_LUXURY_GOODS,
 					RESOURCE_OIL
@@ -685,8 +678,6 @@ mission40 { // Seti in the Valley — Tomb for a Pharaoh
 				cost_to_open : 60
 				is_sea_trade : true
 				type : EMPIRE_CITY_EGYPTIAN_TRADING
-				max_traders : 1
-				trade_limits : default_trade_limits
 				sells [ RESOURCE_CLAY ]
 				buys [
 					RESOURCE_CHARIOTS,
@@ -728,8 +719,6 @@ mission40 { // Seti in the Valley — Tomb for a Pharaoh
 				cost_to_open : 340
 				is_sea_trade : true
 				type : EMPIRE_CITY_EGYPTIAN_TRADING
-				max_traders : 1
-				trade_limits : default_trade_limits
 				sells [ RESOURCE_LUXURY_GOODS ]
 				buys [
 					RESOURCE_WEAPONS,
@@ -750,8 +739,6 @@ mission40 { // Seti in the Valley — Tomb for a Pharaoh
 				cost_to_open : 225
 				is_sea_trade : false
 				type : EMPIRE_CITY_FOREIGN_TRADING
-				max_traders : 1
-				trade_limits : default_trade_limits
 				sells [
 					RESOURCE_FIGS,
 					RESOURCE_HENNA
@@ -784,8 +771,6 @@ mission40 { // Seti in the Valley — Tomb for a Pharaoh
 				cost_to_open : 125
 				is_sea_trade : false
 				type : EMPIRE_CITY_EGYPTIAN_TRADING
-				max_traders : 1
-				trade_limits : default_trade_limits
 				sells [
 					RESOURCE_CLAY,
 					RESOURCE_POTTERY,

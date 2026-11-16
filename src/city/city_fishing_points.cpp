@@ -11,8 +11,8 @@
 
 #include <algorithm>
 #include <random>
-#include <time.h>
 #include "core/calc.h"
+#include "core/random.h"
 
 void city_fishing_points_t::create() {
     scenario_map_foreach_fishing_point([] (tile2i tile) {
@@ -129,11 +129,13 @@ void city_fishing_points_t::update_month(int points_num) {
         }
     }
 
-    srand (time(nullptr));
+    // OG takes the spots from the map and draws nothing here; a local engine seeded from the (unadvanced) LFSR
+    // keeps this repeatable without touching the LFSR or crt streams.
+    std::minstd_rand engine(random_data_struct()->iv1);
 
     if (!deep_water.empty()) {
         for (int i = 0; i < num_fishing_spots; i++) {
-            int index = rand() % deep_water.size();
+            const int index = (int)(engine() % deep_water.size());
             g_scenario.fishing_points[i] = tile2i(deep_water[index]);
         }
     }

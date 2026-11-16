@@ -1,7 +1,7 @@
 log_info("akhenaten: mission 10 saqqara started")
 
 // Empire / requests / events aligned with original campaign scenario 10 (2026-07-25 dump).
-// Favour Pharaoh army size=69 (by_favour, attack=RANDOM) via mission_pharaoh_favour_invasion_tick.
+// Favour Pharaoh army size=69 (attack=RANDOM): events[] BY_FAVOUR, sent by the engine at Kingdom rating 0.
 
 mission10 { // Saqqara â€” The First Pyramid
 	map_file : "data/maps/m_010_saqqara.map"
@@ -48,7 +48,6 @@ mission10 { // Saqqara â€” The First Pyramid
 	initial_funds [24000, 16000, 12000, 8000, 6400]
 	rescue_loans [10400, 7000, 5200, 3500, 2800]
 	debt_interest [4, 6, 8, 10, 12]
-	house_tax_multipliers [300, 200, 150, 100, 75]
 
 	init_resources : {
 		bricks: { type:RESOURCE_BRICKS, allow: true},
@@ -105,6 +104,24 @@ mission10 { // Saqqara â€” The First Pyramid
 
 	enable_scenario_events : true
 
+	events [
+		{ // pak i=30
+			type : EVENT_TYPE_INVASION
+			time { year : 0, month : 0 }
+			item { value : EVENT_INVADER_PHARAOH }
+			amount { value : 69, min : 45, max : 70 }
+			months_initial : 9
+			location_fields [ 3, -1, 1, 8 ]
+			event_trigger_type : EVENT_TRIGGER_BY_FAVOUR
+			tag_id : 7030
+			on_completed_action : -1
+			on_refusal_action : -1
+			on_too_late_action : -1
+			on_defeat_action : -1
+			invasion_attack_target : EVENT_ATTACK_TARGET_RANDOM
+		}
+	]
+
 	// Empire from original campaign scenario 10 (empire id=1) â€” full map objects.
 	map_background : {pack:PACK_EMPIRE, id:1}
 	hide_pak_cities : true
@@ -128,8 +145,6 @@ mission10 { // Saqqara â€” The First Pyramid
 			cost_to_open : 150
 			is_sea_trade : false
 			type : EMPIRE_CITY_PHARAOH_TRADING
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_POTTERY, RESOURCE_PAPYRUS ]
 			buys [ RESOURCE_LETTUCE, RESOURCE_BRICKS, RESOURCE_BARLEY, RESOURCE_BEER, RESOURCE_LUXURY_GOODS ]
 			route_limits [
@@ -152,8 +167,6 @@ mission10 { // Saqqara â€” The First Pyramid
 			cost_to_open : 645
 			is_sea_trade : false
 			type : EMPIRE_CITY_EGYPTIAN_TRADING
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_LUXURY_GOODS, RESOURCE_TIMBER ]
 			buys [ RESOURCE_CLAY, RESOURCE_POTTERY, RESOURCE_BEER, RESOURCE_LINEN, RESOURCE_PAPYRUS, RESOURCE_COPPER ]
 			route_limits [
@@ -177,8 +190,6 @@ mission10 { // Saqqara â€” The First Pyramid
 			cost_to_open : 780
 			is_sea_trade : true
 			type : EMPIRE_CITY_FOREIGN_TRADING
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_LUXURY_GOODS ]
 			buys [ RESOURCE_LINEN, RESOURCE_LUXURY_GOODS ]
 			route_limits [
@@ -196,8 +207,6 @@ mission10 { // Saqqara â€” The First Pyramid
 			cost_to_open : 500
 			is_sea_trade : false
 			type : EMPIRE_CITY_EGYPTIAN_TRADING
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_GRAIN, RESOURCE_STRAW, RESOURCE_FLAX, RESOURCE_LINEN, RESOURCE_GEMS, RESOURCE_GRANITE, RESOURCE_SANDSTONE ]
 			buys [ RESOURCE_CLAY, RESOURCE_POTTERY, RESOURCE_REEDS, RESOURCE_PAPYRUS ]
 			route_limits [
@@ -224,8 +233,6 @@ mission10 { // Saqqara â€” The First Pyramid
 			cost_to_open : 350
 			is_sea_trade : true
 			type : EMPIRE_CITY_EGYPTIAN_TRADING
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_FISH, RESOURCE_BARLEY, RESOURCE_BEER, RESOURCE_LINEN, RESOURCE_STONE ]
 			buys [ RESOURCE_GAMEMEAT, RESOURCE_CLAY, RESOURCE_BRICKS, RESOURCE_TIMBER, RESOURCE_PAPYRUS, RESOURCE_LIMESTONE, RESOURCE_GRANITE, RESOURCE_SANDSTONE ]
 			route_limits [
@@ -254,8 +261,6 @@ mission10 { // Saqqara â€” The First Pyramid
 			cost_to_open : 400
 			is_sea_trade : true
 			type : EMPIRE_CITY_EGYPTIAN_TRADING
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_FISH, RESOURCE_CLAY, RESOURCE_POTTERY, RESOURCE_BEER, RESOURCE_REEDS, RESOURCE_PAPYRUS, RESOURCE_GRANITE ]
 			buys [ RESOURCE_BRICKS, RESOURCE_LINEN, RESOURCE_GEMS, RESOURCE_LUXURY_GOODS, RESOURCE_TIMBER ]
 			route_limits [
@@ -415,7 +420,6 @@ mission10 { // Saqqara â€” The First Pyramid
 		wage_decrease_last_year : -1
 		land_trade_problem_last_year : -1
 		wage_increase_late_done : false
-		pharaoh_favour_invasion_done : false
 		start_message_shown : false
 	}
 }
@@ -781,10 +785,4 @@ function mission10_pharaoh_request_luxury_y46(ev) {
 	request.set_refusal_action_tag(base + 2)
 	request.set_too_late_action_tag(base + 3)
 	request.execute()
-}
-
-// pak i=30: by_favour amount=69 invader=pharaoh attack=RANDOM(4) ok=-1 (no chain).
-[es=event_advance_month, mission=mission10]
-function mission10_pharaoh_favour_invasion(ev) {
-	mission_pharaoh_favour_invasion_tick(mission, 69)
 }

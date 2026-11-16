@@ -28,7 +28,7 @@
 
 #include <string.h>
 
-#define MAX_UNDO_BUILDINGS 500
+constexpr int MAX_UNDO_BUILDINGS = 500;
 
 struct undo_data_t {
     int available;

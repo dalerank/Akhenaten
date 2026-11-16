@@ -3,6 +3,7 @@
 #include "building/building.h"
 #include "building/building_delivery_path.h"
 #include "building/building_dock.h"
+#include "building/building_ferry.h"
 #include "building/building_fishing_wharf.h"
 #include "building/building_shipyard.h"
 #include "building/building_storage_yard.h"
@@ -330,3 +331,86 @@ int __test_map_get_free_dock(int ship_id) {
     return map_get_free_destination_dock(ship_id).bid;
 }
 ANK_FUNCTION_1(__test_map_get_free_dock)
+
+#include "city/city_floods.h"
+#include "core/random.h"
+
+static void __test_random_set_state(int iv1, int iv2) {
+    random_TEMP_SET_DEBUG((uint32_t)iv1, (uint32_t)iv2);
+}
+ANK_FUNCTION_2(__test_random_set_state);
+
+static int __test_random_iv1() {
+    return (int)random_data_struct()->iv1;
+}
+ANK_FUNCTION(__test_random_iv1);
+
+static void __test_random_generate_next() {
+    random_generate_next();
+}
+ANK_FUNCTION(__test_random_generate_next);
+
+static int __test_random_1_3bit() {
+    return random_data_struct()->random1_3bit;
+}
+ANK_FUNCTION(__test_random_1_3bit);
+
+static int __test_random_1_15bit() {
+    return random_data_struct()->random1_15bit;
+}
+ANK_FUNCTION(__test_random_1_15bit);
+
+static void __test_floods_set_quality(int initial, int next) {
+    g_floods.quality_initial = initial;
+    g_floods.quality_next = next;
+}
+ANK_FUNCTION_2(__test_floods_set_quality);
+
+static int __test_floods_quality_next() {
+    return g_floods.quality_next;
+}
+ANK_FUNCTION(__test_floods_quality_next);
+
+static void __test_floods_update_next_params() {
+    g_floods.update_next_flood_params();
+}
+ANK_FUNCTION(__test_floods_update_next_params);
+
+// Queue fid at a ferry landing the way building_ferry::try_enter_ferry does.
+static int __test_ferry_landing_enqueue(int bid, int fid) {
+    building* b = building_get(bid);
+    auto* landing = b ? b->dcast_ferry() : nullptr;
+    figure* f = figure_get(fid);
+    if (!landing || !f || !f->is_alive() || !landing->queue_push((figure_id)fid)) {
+        return 0;
+    }
+    f->action_state_before_attack = (uint8_t)f->action_state;
+    f->action_state = f->dcast()->ferry_wait_action();
+    f->route_remove();
+    return 1;
+}
+ANK_FUNCTION_2(__test_ferry_landing_enqueue);
+
+static int __test_ferry_boat_load(int boat_fid, int bid) {
+    figure* boat_f = figure_get(boat_fid);
+    auto* boat = boat_f ? boat_f->dcast_ferry_boat() : nullptr;
+    building* b = building_get(bid);
+    auto* landing = b ? b->dcast_ferry() : nullptr;
+    if (!boat || !landing) {
+        return -1;
+    }
+    boat->load_passengers(landing, figure_ferry_boat::PASSENGER_SLOTS);
+    return boat->passenger_count();
+}
+ANK_FUNCTION_2(__test_ferry_boat_load);
+
+static void __test_ferry_boat_unload(int boat_fid, int bid) {
+    figure* boat_f = figure_get(boat_fid);
+    auto* boat = boat_f ? boat_f->dcast_ferry_boat() : nullptr;
+    building* b = building_get(bid);
+    auto* landing = b ? b->dcast_ferry() : nullptr;
+    if (boat && landing) {
+        boat->unload_passengers(landing);
+    }
+}
+ANK_FUNCTION_2(__test_ferry_boat_unload);

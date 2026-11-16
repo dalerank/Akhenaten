@@ -106,11 +106,11 @@ void map_orientation_update_buildings() {
                 if (orientation_is_top_bottom)
                     image_id = image_id_from_group(GROUP_BUILDING_TRIUMPHAL_ARCH);
                 else {
-                    image_id = image_id_from_group(GROUP_BUILDING_TRIUMPHAL_ARCH) + 2;
+                    image_id = image_id_from_group(GROUP_BUILDING_TRIUMPHAL_ARCH, 2);
                 }
             } else {
                 if (orientation_is_top_bottom)
-                    image_id = image_id_from_group(GROUP_BUILDING_TRIUMPHAL_ARCH) + 2;
+                    image_id = image_id_from_group(GROUP_BUILDING_TRIUMPHAL_ARCH, 2);
                 else {
                     image_id = image_id_from_group(GROUP_BUILDING_TRIUMPHAL_ARCH);
                 }

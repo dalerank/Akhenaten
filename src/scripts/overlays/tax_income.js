@@ -11,7 +11,8 @@ overlay_tax_income {
 }
 
 function tax_income_denarii(house) {
-    return Math.floor((house.tax_income_or_storage / 2) * city.finance.tax_percentage / 100)
+    var unit = finance_tax_rules.house_tax_income_unit
+    return Math.floor((house.tax_income + unit / 2) / unit)
 }
 
 [es=(overlay_tax_income, get_tooltip_for_building)]
@@ -49,5 +50,5 @@ function tax_income_building_column_height(ev) {
         return
     }
 
-    city.overlay_column_height = Math.floor(tax_income_denarii(house) / 10)
+    city.overlay_column_height = Math.floor(tax_income_denarii(house) / 25)
 }

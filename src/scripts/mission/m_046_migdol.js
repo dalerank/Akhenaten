@@ -26,7 +26,6 @@ mission46 { // Migdol - Repel the Assyrians
 	initial_funds [30004, 20003, 15002, 10001, 7951]
 	rescue_loans [5000, 3330, 2500, 1670, 1325]
 	debt_interest [4, 5, 7, 9, 11]
-	house_tax_multipliers [300, 200, 150, 100, 75]
 
 	env {
 		has_animals : true
@@ -281,8 +280,6 @@ mission46 { // Migdol - Repel the Assyrians
 			cost_to_open : 700
 			is_sea_trade : true
 			type : EMPIRE_CITY_FOREIGN_TRADING
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_FISH, RESOURCE_COPPER ]
 			buys [ RESOURCE_CHICKPEAS, RESOURCE_BEER ]
 			route_limits [
@@ -301,8 +298,6 @@ mission46 { // Migdol - Repel the Assyrians
 			cost_to_open : 200
 			is_sea_trade : false
 			type : EMPIRE_CITY_PHARAOH_TRADING
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_CHICKPEAS, RESOURCE_POTTERY, RESOURCE_BARLEY, RESOURCE_CHARIOTS ]
 			buys [ RESOURCE_WEAPONS, RESOURCE_LUXURY_GOODS, RESOURCE_PAPYRUS, RESOURCE_COPPER ]
 			route_limits [
@@ -325,8 +320,6 @@ mission46 { // Migdol - Repel the Assyrians
 			cost_to_open : 280
 			is_sea_trade : false
 			type : EMPIRE_CITY_FOREIGN_TRADING
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_WEAPONS, RESOURCE_POTTERY, RESOURCE_COPPER ]
 			buys [ RESOURCE_FISH, RESOURCE_BEER, RESOURCE_PAPYRUS ]
 			route_limits [

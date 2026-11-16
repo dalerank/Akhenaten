@@ -9,6 +9,8 @@
 #include "graphics/elements/ui.h"
 #include "graphics/graphics.h"
 #include "city/city.h"
+#include "core/random.h"
+#include "game/game.h"
 #include "city/city_warnings.h"
 #include "construction/build_planner.h"
 #include "figuretype/figure_entertainer.h"
@@ -24,16 +26,6 @@
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_pavilion);
 
 void building_pavilion::static_params::archive_load(archive arch) {
-    for (auto &pdir : preview_dir) {
-        bstring32 key; key.printf("preview_dir_%d", std::distance(preview_dir, &pdir));
-        arch.r(key, pdir);
-    }
-
-    for (auto &pdir : place_dir) {
-        bstring32 key; key.printf("place_dir_%d", std::distance(place_dir, &pdir));
-        arch.r(key, pdir);
-    }
-
     dancer_tile = base_img();
     booth_tile = first_img(animkeys().booth);
     musician_tile_s = first_img(animkeys().stand_sn_s);
@@ -93,7 +85,7 @@ void building_pavilion::on_create(int orientation) {
 }
 
 void building_pavilion::update_month() {
-    runtime_data().play_index = std::rand() % 10;
+    runtime_data().play_index = random_hash(game.simtime.absolute_day(true), id(), RANDOM_SALT_PAVILION_PLAY) % 10;
 }
 
 void building_pavilion::update_day() {
@@ -110,6 +102,15 @@ void building_pavilion::update_day() {
     d.num_shows = shows;
 }
 
+void building_pavilion::on_post_load() {
+    auto& d = runtime_data();
+    if (!d.latched_venue_main_grid_offset || !d.latched_venue_add_grid_offset) {
+        latch_stand_offsets(current_params().place_dir[base.orientation % 8]);
+    }
+
+    building_entertainment::on_post_load();
+}
+
 void building_pavilion::on_place_update_tiles(int /*orientation*/, int /*variant*/) {
     runtime_data().booth_corner_grid_offset = tile().grid_offset();
 
@@ -121,23 +122,14 @@ void building_pavilion::on_place_update_tiles(int /*orientation*/, int /*variant
     base.orientation = map_orientation;
 
     map_add_venue_plaza_tiles(id(), size, tile(), image_id, false);
-    const int stand_ori = map_orientation / 2;
-    for (const auto &item: current_params().place_dir[map_orientation].items) {
-        place_latch_on_venue(item.type, item.offset.x, item.offset.y, stand_ori, item.main);
-    }
+    place_venue_items(current_params().place_dir[map_orientation], map_orientation / 2);
 }
 
-void building_pavilion::on_place_checks() {
-    building_impl::on_place_checks();
-
-    construction_warnings warnings;
-    const bool has_dance_school = g_city.buildings.count_active(BUILDING_DANCE_SCHOOL) > 0;
-    const bool has_jugglers = g_city.buildings.count_active(BUILDING_JUGGLER_SCHOOL) > 0;
-    const bool has_musician = g_city.buildings.count_active(BUILDING_CONSERVATORY) > 0;
-
-    warnings.add_if(!has_dance_school, "#build_dance_school");
-    warnings.add_if(!has_jugglers, "#build_juggling_school");
-    warnings.add_if(!has_musician, "#build_conservatory");
+void building_pavilion::update_sprite_anims() {
+    register_sprite_anim(anim(animkeys().dancer));
+    register_sprite_anim(anim(animkeys().musician_sn));
+    register_sprite_anim(anim(animkeys().musician_we));
+    register_sprite_anim(anim(animkeys().juggler));
 }
 
 bool building_pavilion::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {

@@ -17,6 +17,7 @@ uint8_t map_moisture_get(int grid_offset);
 uint8_t map_grasslevel_get(int grid_offset);
 
 void map_moisture_clear_tile(int grid_offset);
+void map_moisture_set(int grid_offset, uint8_t value);
 void map_moisture_update_region(tile2i tmin, tile2i tmax);
 int map_moisture_band_radius();
 void map_moisture_recompute_profile();

@@ -16,6 +16,7 @@
 #include "city/city.h"
 #include "city/city_figures.h"
 #include "core/log.h"
+#include "core/random.h"
 #include "js/js_game.h"
 #include "scenario/empire.h"
 
@@ -161,8 +162,8 @@ void empire_traders_manager::create_trader(int trade_route_id, int destination_c
             traders_on_route++;
         }
     }
-    
-    if (traders_on_route >= 2) {
+
+    if (traders_on_route >= empire_trade_rules.max_traders_per_city) {
         return;
     }
 
@@ -198,7 +199,8 @@ void empire_traders_manager::create_trader(int trade_route_id, int destination_c
     }
     // guard against modulo-by-zero when the config/city delay range max is 0
     const int delay_max_bound = std::max(1, movement_delay_range.y);
-    trader->movement_delay_max = std::max<uint8_t>(movement_delay_range.x, rand() % delay_max_bound);
+    trader->movement_delay_max = std::max<uint8_t>(movement_delay_range.x,
+      random_hash(game.simtime.absolute_tick(), trader->id, RANDOM_SALT_EMPIRE_TRADER_DELAY) % delay_max_bound);
 
     if (route.in_use && route.num_points > 0) {
         const auto &point = route.points[0];
@@ -301,7 +303,7 @@ empire_trader* empire_traders_manager::get_free_trader() {
         return nullptr;
     }
 
-    memset(&*it, 0, sizeof(empire_trader));
+    *it = empire_trader{};
     it->id = std::distance(traders.begin(), it);
     return &*it;
 }

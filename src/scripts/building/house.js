@@ -6,6 +6,7 @@ House.property.population = { }
 House.property.tax_coverage = { }
 House.property.tax_bonus = { }
 House.property.tax_income_or_storage = { }
+House.property.tax_income = { }
 House.property.house_happiness = { }
 House.property.current_desirability = { }
 House.property.has_water_access = { }
@@ -60,15 +61,13 @@ function difficulty_adjust_food_consumption(pct) {
     return ((reduced / 5) | 0) * 5
 }
 
-// OG Bast temple complex (citywide): food/goods consumption × food_consumption_pct / 100.
-function house_bast_complex_consumption_pct(kind) {
+// Bast temple complex (citywide): food consumption × food_consumption_pct / 100.
+function house_bast_complex_food_pct() {
     var complex = city.get_temple_complex(BUILDING_TEMPLE_COMPLEX_BAST)
     if (!complex) {
         return 100
     }
-    var pct = (kind == "goods")
-        ? building_temple_complex_bast.goods_consumption_pct
-        : building_temple_complex_bast.food_consumption_pct
+    var pct = building_temple_complex_bast.food_consumption_pct
     return pct > 0 ? pct : 100
 }
 
@@ -85,7 +84,7 @@ House.prototype.consume_food_weekly = function() {
         amount_per_type = (amount_per_type / food_types) | 0
     }
 
-    var bast_pct = house_bast_complex_consumption_pct("food")
+    var bast_pct = house_bast_complex_food_pct()
     if (bast_pct != 100 && amount_per_type > 0) {
         amount_per_type = (amount_per_type * bast_pct / 100) | 0
     }
@@ -145,49 +144,9 @@ function house_consume_food_pass(house, food_types, amount_per_type, want_consum
     }
 }
 
-House.prototype.consume_goods_weekly = function() {
-    if (!this.hsize) {
-        return
-    }
-
-    var model = this.model
-    var bast_pct = house_bast_complex_consumption_pct("goods")
-    function scaled(amount) {
-        if (bast_pct == 100 || amount <= 0) {
-            return amount
-        }
-        var next = (amount * bast_pct / 100) | 0
-        return next < 1 ? 1 : next
-    }
-    house_consume_good(this, 0, scaled(model.pottery), RESOURCE_POTTERY)
-    house_consume_good(this, 1, scaled(model.jewelry), RESOURCE_LUXURY_GOODS)
-    house_consume_good(this, 2, scaled(model.linen), RESOURCE_LINEN)
-    house_consume_good(this, 3, scaled(model.beer), RESOURCE_BEER)
-}
-
-function house_consume_good(house, inv, amount, resource) {
-    if (amount <= 0) {
-        return
-    }
-    var stored = house.inv(inv)
-    var spent = Math.min(amount, stored)
-    if (spent <= 0) {
-        return
-    }
-    house.set_inv(inv, stored - spent)
-    city.resources.note_consumed(resource, spent)
-}
-
 function house_es_consume_food_weekly(ev) {
     var house = city.get_house(ev.bid)
     if (house) {
         house.consume_food_weekly()
-    }
-}
-
-function house_es_consume_goods_weekly(ev) {
-    var house = city.get_house(ev.bid)
-    if (house) {
-        house.consume_goods_weekly()
     }
 }

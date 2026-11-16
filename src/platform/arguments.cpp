@@ -1,6 +1,7 @@
 #include "arguments.h"
 
 #include "platform/platform.h"
+#include "platform/innoextract_util.h"
 #include "core/app.h"
 #include "core/bstring.h"
 #include "core/log.h"
@@ -154,6 +155,8 @@ ANK_REGISTER_BOOL_ARGUMENT_HANDLER("--window", "window", true, "enable window mo
 ANK_REGISTER_BOOL_ARGUMENT_HANDLER("--nosound", "sound", false, "disable audio: skip sound manager init and audio file probing at startup");
 ANK_REGISTER_BOOL_ARGUMENT_HANDLER("--no-logo", "no_logo", true, "skip logo screen; go straight to main menu");
 ANK_REGISTER_BOOL_ARGUMENT_HANDLER("--nointro", "nointro", true, "skip the intro video on startup");
+ANK_REGISTER_BOOL_ARGUMENT_HANDLER("--no-update", "no_update", true,
+  "do not check for or download a newer build (CI builds only)");
 ANK_REGISTER_BOOL_ARGUMENT_HANDLER("--nomouse", "nomouse", true, "disable mouse-driven input (e.g. edge/drag camera scrolling); useful for tests/screenshots");
 ANK_REGISTER_BOOL_ARGUMENT_HANDLER("--logjsfiles", "logjsfiles", true, "print logs which files open with js");
 ANK_REGISTER_BOOL_ARGUMENT_HANDLER("--log-js-handlers", "log_js_handlers", true, "print logs when JavaScript event handlers are registered");
@@ -169,6 +172,14 @@ ANK_REGISTER_BOOL_ARGUMENT_HANDLER("--log-resources", "log_resources", true, "lo
 ANK_REGISTER_BOOL_ARGUMENT_HANDLER("--log-sound", "log_sound", true, "log sound file loading (city sounds, speech, music, effects)");
 ANK_REGISTER_BOOL_ARGUMENT_HANDLER("--log-config-keys", "log_config_keys", true,
   "warn about config keys nothing reads and non-zero C++ defaults that a missing key resets to 0");
+ANK_REGISTER_BOOL_ARGUMENT_HANDLER("--config-keys-update", "config_keys_update", true,
+  "with --config-keys-baseline, rewrite the baseline from this run instead of checking it");
+ANK_REGISTER_STRING_ARGUMENT_HANDLER("--config-keys-baseline", "config_keys_baseline",
+  "Option --config-keys-baseline must be followed by a file path", "--config-keys-baseline PATH",
+  "with --integraltests, fail on config key issues not listed in PATH (implies --log-config-keys)");
+ANK_REGISTER_STRING_ARGUMENT_HANDLER("--user-dir", "user_dir", "Option --user-dir must be followed by a directory path",
+  "--user-dir PATH",
+  "use PATH instead of the per-user app folder (test log, options); lets several runs go in parallel");
 ANK_REGISTER_BOOL_ARGUMENT_HANDLER("--discord-log", "discord_log", true, "enable Discord RPC verbose logging");
 ANK_REGISTER_BOOL_ARGUMENT_HANDLER("--no-resource", "no_resource", true, "run without Pharaoh data files (skips campaign.txt; DATA_DIR is optional VFS base path)");
 ANK_REGISTER_BOOL_ARGUMENT_HANDLER("--nodatacheck", "no_data_check", true, "skip Pharaoh/Cleopatra install validation at startup (allow any data_directory)");
@@ -176,13 +187,20 @@ ANK_REGISTER_BOOL_ARGUMENT_HANDLER("--integraltests", "integral_tests", true, "r
 ANK_REGISTER_BOOL_ARGUMENT_HANDLER("--integraltest-keep", "integraltest_keep", true, "with --integraltests, keep the game window open after the suite (inspect final city state; exit code still from tests)");
 ANK_REGISTER_BOOL_ARGUMENT_HANDLER("--editor", "editor", true, "start in scenario editor (dev-only; blank map, bypasses main menu)");
 
-ANK_REGISTER_STRING_ARGUMENT_HANDLER("--render", "renderer", "Option --render must be opengl,direct3d", "--render RENDERER", "use specific renderer");
-ANK_REGISTER_STRING_ARGUMENT_HANDLER("--mods", "mods_directory", "Option --mods folder should exist", "--mods PATH", "set mods data directory path");
+ANK_REGISTER_STRING_ARGUMENT_HANDLER("--render", "renderer",
+  "Option --render must be a renderer name (direct3d11, opengl, direct3d, software)", "--render RENDERER",
+  "use specific renderer");
+ANK_REGISTER_STRING_ARGUMENT_HANDLER("--mods", "mods_directory", "Option --mods must be followed by a folder path",
+  "--mods PATH", "mods folder instead of <data>/mods");
 ANK_REGISTER_STRING_ARGUMENT_HANDLER("--mixed", "scripts_directory", MIXED_MODE_ERROR_MESSAGE, "--mixed PATH", "hot reload scripts from disk");
 ANK_REGISTER_STRING_ARGUMENT_HANDLER("--language", "language", "Option --language must be followed by a language code (e.g., ru, en, fr)", "--language CODE", "set game language (e.g., ru, en, fr, de, it, sp, po, pr, sw, tc, sc, kr)");
 ANK_REGISTER_STRING_ARGUMENT_HANDLER("--font", "custom_font", "Option --font must be followed by a font file path", "--font PATH", "use custom TTF font file (overrides font from localization.js)");
 ANK_REGISTER_STRING_ARGUMENT_HANDLER("--load-map", "load_map", "Option --load-map must be followed by a map file path", "--load-map PATH", "load arbitrary .map file straight into the city, bypassing the main menu (path may be absolute, relative to PWD/data dir, or a name inside Maps/)");
-ANK_REGISTER_STRING_ARGUMENT_HANDLER("--integraltest-only", "integraltest_only", "Option --integraltest-only must be followed by a test name (e.g. 06 or 06_stonemason_guild_info_window)", "--integraltest-only NAME", "with --integraltests, run only tests whose filename (stem) contains NAME (case-insensitive); useful for debugging a single failing test");
+ANK_REGISTER_STRING_ARGUMENT_HANDLER("--integraltest-only", "integraltest_only",
+  "Option --integraltest-only must be followed by a test name (e.g. 06 or 06_stonemason_guild_info_window)",
+  "--integraltest-only NAME",
+  "with --integraltests, run only the tests whose filename (stem) starts with NAME, or, if none does, every test whose "
+  "stem contains NAME (case-insensitive)");
 ANK_REGISTER_STRING_ARGUMENT_HANDLER("--extract-installer", "extract_installer", "Option --extract-installer must be followed by a path to a Pharaoh installer (.exe)", "--extract-installer PATH", "extract Pharaoh data from Inno/GOG (innoextract) or InstallShield (7z+unshield) installer");
 ANK_REGISTER_STRING_ARGUMENT_HANDLER("--extract-dir", "extract_dir", "Option --extract-dir must be followed by an output directory path", "--extract-dir PATH", "output directory for --extract-installer (default: user config …/pharaoh-data)");
 ANK_REGISTER_STRING_ARGUMENT_HANDLER("--screenshot-dir", "screenshot_dir", "Option --screenshot-dir must be followed by a directory path", "--screenshot-dir PATH", "directory to save screenshots into (created if missing; default: working dir)");
@@ -306,20 +324,16 @@ void Arguments::parse(int argc, char** argv) {
     });
 
     if (!integraltests_mode) {
-        vfs::path steam_path = platform.get_steam_path();
-        if (!steam_path.empty()) {
-            vfs::path pharaoh_steam_path(steam_path, "/steamapps/common/Pharaoh + Cleopatra/");
-            vfs::path pharaoh_exe_path(pharaoh_steam_path, "Pharaoh.exe");
-            bool binary_exist = std::filesystem::exists(pharaoh_exe_path.c_str());
-            if (binary_exist) {
-                logs::info("Steam pharaoh path: %s", pharaoh_steam_path.c_str());
-                data_dir = pharaoh_steam_path.c_str();
-            }
+        const xstring steam_dir = innoextract::find_steam_pharaoh_dir();
+        if (!steam_dir.empty()) {
+            logs::info("Steam pharaoh path: %s", steam_dir.c_str());
+            data_dir = steam_dir;
         }
     }
 
     args_["data_directory"] = bvariant(data_dir);
-    const bool file_exists = arguments::load(*this);
+    // akhenaten.cfg usually holds the developer's Steam data dir; tests take theirs only from the command line.
+    const bool file_exists = integraltests_mode ? false : arguments::load(*this);
     args_["config_file_exists"] = bvariant(file_exists);
 
     if (platform.is_emscripten()) {
@@ -485,6 +499,7 @@ void Arguments::parse_cli_(int argc, char** argv) {
         } else {
             // TODO: ???? check that there are no other arguments after
             args_["data_directory"] = bvariant(xstring(argv[i]));
+            args_["data_directory_cli"] = bvariant(true);
         }
     }
 }

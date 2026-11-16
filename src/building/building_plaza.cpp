@@ -87,11 +87,7 @@ void building_plaza::set_image(int grid_offset) {
         && !map_image_at(btile)) {
         int image_id = base_image_id;
         if (is_two_tile_square_plaza(grid_offset)) {
-            if (map_random_get(grid_offset) & 1)
-                image_id += 7;
-            else {
-                image_id += 6;
-            }
+            image_id = image_offset(image_id, (map_random_get(grid_offset) & 1) ? 7 : 6);
             map_building_tiles_add(0, btile, 2, image_id, TERRAIN_ROAD);
         } else {
             // single tile plaza
@@ -99,10 +95,10 @@ void building_plaza::set_image(int grid_offset) {
             int y = btile.y();
             switch ((x & 1) + (y & 1)) {
             case 2:
-                image_id += 1;
+                image_id = image_offset(image_id, 1);
                 break;
             case 1:
-                image_id += 2;
+                image_id = image_offset(image_id, 2);
                 break;
             }
             map_image_set(grid_offset, image_id);

@@ -8,6 +8,7 @@
 
 #include <cassert>
 #include <cinttypes>
+#include <filesystem>
 #include <string.h>
 
 #include "SDL.h"
@@ -178,6 +179,15 @@ bool ChunkSerializer::serialize(pcstr filename, int offset, e_file_format format
     const bool atomic_write = !platform.is_android() && (file_offset == 0);
     const vfs::path write_path = atomic_write ? vfs::path(fs_path.c_str(), ".tmp") : fs_path;
 
+    if (!platform.is_android()) {
+        // A fresh data or user dir has no Maps/ or Save/<player>/ yet.
+        std::error_code ec;
+        const std::filesystem::path parent = std::filesystem::path(write_path.c_str()).parent_path();
+        if (!parent.empty()) {
+            std::filesystem::create_directories(parent, ec);
+        }
+    }
+
     FILE* fp = vfs::file_open_os(write_path, "wb");
     if (!fp) {
         logs::error("Unable to write file [%s], file could not be accessed.", write_path.c_str());
@@ -249,6 +259,43 @@ bool ChunkSerializer::serialize(pcstr filename, int offset, e_file_format format
                file_offset,
                file_version);
 
+    return true;
+}
+
+void ChunkSerializer::snapshot_chunks(chunk_snapshots& out) const {
+    out.clear();
+    for (int i = 0; i < alloc_index; ++i) {
+        const file_chunk_t& chunk = file_chunks.at(i);
+        if (!chunk.VALID || chunk.buf == nullptr) {
+            continue;
+        }
+        const uint8_t* raw = chunk.buf->get_data();
+        out.push_back({chunk.name, std::vector<uint8_t>(raw, raw + chunk.buf->size())});
+    }
+}
+
+bool ChunkSerializer::write_to_memory(e_file_format format, const int version,
+  void (*init_schema)(e_file_format _format, const int _version), chunk_snapshots& out) {
+    out.clear();
+    clear();
+    file_format = format;
+    file_version = version;
+    file_sectioned = (file_format == FILE_FORMAT_SAVE_FILE_EXT);
+
+    if (init_schema == nullptr) {
+        logs::error("Unable to write state to memory, provided schema is invalid.");
+        clear();
+        return false;
+    }
+
+    init_schema(file_format, file_version);
+    for (int i = 0; i < num_chunks(); ++i) {
+        if (file_chunks.at(i).VALID) {
+            file_chunks.at(i).iob->write();
+        }
+    }
+
+    snapshot_chunks(out);
     return true;
 }
 

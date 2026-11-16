@@ -71,51 +71,78 @@ enemy_warship_sounds = {
 	enemy_warship_for_glory { sound:"enemy_warship_for_glory.wav", text: "#enemy_warship_for_glory" }
 }
 
+// OG enemy_attack_priority / enemy_attack_fallback (figure_data.c:499-511): the first building type in a list
+// wins, distance breaks ties within one type; fallback when the chosen list finds nothing reachable.
 enemy_attack_rules = {
     priority : {
-        food_chain : [BUILDING_GRANARY, BUILDING_STORAGE_YARD, BUILDING_BAZAAR,
-                      BUILDING_BARLEY_FARM, BUILDING_FLAX_FARM, BUILDING_GRAIN_FARM,
-                      BUILDING_LETTUCE_FARM, BUILDING_POMEGRANATES_FARM, BUILDING_CHICKPEAS_FARM]
+        food_chain : [BUILDING_GRANARY, BUILDING_STORAGE_YARD, BUILDING_BAZAAR, BUILDING_GRANARY_UP,
+                      BUILDING_STORAGE_YARD_UP, BUILDING_BAZAAR_UP, BUILDING_GRAIN_FARM, BUILDING_LETTUCE_FARM,
+                      BUILDING_BARLEY_FARM, BUILDING_FLAX_FARM, BUILDING_CHICKPEAS_FARM, BUILDING_CATTLE_RANCH,
+                      BUILDING_HENNA_FARM, BUILDING_POMEGRANATES_FARM, BUILDING_FIGS_FARM]
 
-        gold_stores: [BUILDING_TOWN_PALACE,  BUILDING_VILLAGE_PALACE,
-                      BUILDING_TAX_COLLECTOR_UPGRADED, BUILDING_TAX_COLLECTOR]
+        gold_stores : [BUILDING_TOWN_PALACE, BUILDING_VILLAGE_PALACE, BUILDING_TAX_COLLECTOR_UPGRADED,
+                       BUILDING_TAX_COLLECTOR, BUILDING_COURTHOUSE, BUILDING_VILLAGE_PALACE_UP,
+                       BUILDING_TOWN_PALACE_UP, BUILDING_CITY_PALACE]
 
-        best_buildings : [BUILDING_DYNASTY_MANSION,        BUILDING_FAMILY_MANSION,           BUILDING_PERSONAL_MANSION,         BUILDING_HOUSE_PALATIAL_ESTATE,
-                          BUILDING_HOUSE_MODEST_ESTATE,    BUILDING_HOUSE_STATELY_MANOR,      BUILDING_HOUSE_ELEGANT_MANOR,      BUILDING_HOUSE_SPACIOUS_MANOR,
-                          BUILDING_HOUSE_COMMON_MANOR,     BUILDING_HOUSE_FANCY_RESIDENCE,    BUILDING_HOUSE_ELEGANT_RESIDENCE,  BUILDING_HOUSE_SPACIOUS_RESIDENCE,
-                          BUILDING_HOUSE_COMMON_RESIDENCE, BUILDING_HOUSE_SPACIOUS_APARTMENT, BUILDING_HOUSE_MODEST_APARTMENT,   BUILDING_HOUSE_SPACIOUS_HOMESTEAD,
-                          BUILDING_HOUSE_MODEST_HOMESTEAD, BUILDING_HOUSE_ORDINARY_COTTAGE,   BUILDING_HOUSE_ROUGH_COTTAGE,      BUILDING_HOUSE_COMMON_SHANTY,
-                          BUILDING_HOUSE_MEAGER_SHANTY,    BUILDING_HOUSE_STURDY_HUT,         BUILDING_HOUSE_CRUDE_HUT]
+        best_buildings : [BUILDING_VILLAGE_PALACE_UP, BUILDING_TOWN_PALACE_UP, BUILDING_CITY_PALACE,
+                          BUILDING_DYNASTY_MANSION, BUILDING_FAMILY_MANSION, BUILDING_PERSONAL_MANSION,
+                          BUILDING_HOUSE_PALATIAL_ESTATE, BUILDING_HOUSE_MODEST_ESTATE, BUILDING_HOUSE_STATELY_MANOR,
+                          BUILDING_HOUSE_ELEGANT_MANOR, BUILDING_HOUSE_SPACIOUS_MANOR, BUILDING_HOUSE_COMMON_MANOR,
+                          BUILDING_HOUSE_FANCY_RESIDENCE, BUILDING_HOUSE_ELEGANT_RESIDENCE,
+                          BUILDING_HOUSE_SPACIOUS_RESIDENCE, BUILDING_HOUSE_COMMON_RESIDENCE,
+                          BUILDING_HOUSE_SPACIOUS_APARTMENT, BUILDING_HOUSE_MODEST_APARTMENT,
+                          BUILDING_HOUSE_SPACIOUS_HOMESTEAD, BUILDING_HOUSE_MODEST_HOMESTEAD,
+                          BUILDING_HOUSE_ORDINARY_COTTAGE, BUILDING_HOUSE_ROUGH_COTTAGE,
+                          BUILDING_HOUSE_COMMON_SHANTY, BUILDING_HOUSE_MEAGER_SHANTY, BUILDING_HOUSE_STURDY_HUT,
+                          BUILDING_HOUSE_CRUDE_HUT]
 
-        troops: [BUILDING_MILITARY_ACADEMY, BUILDING_POLICE_STATION]
+        troops : [BUILDING_MILITARY_ACADEMY, BUILDING_MILITARY_ACADEMY_2, BUILDING_MILITARY_ACADEMY_3,
+                  BUILDING_POLICE_STATION]
 
-        simple: [BUILDING_FORT_INFANTRY, BUILDING_FORT_ARCHERS,
-                 BUILDING_FORT_CHARIOTEERS, BUILDING_FORT_GROUND, BUILDING_MILITARY_ACADEMY
-                 BUILDING_RECRUITER, BUILDING_WEAPONSMITH, BUILDING_CHARIOTS_WORKSHOP,
-
-                 BUILDING_GRANARY, BUILDING_STORAGE_YARD, BUILDING_WATER_LIFT,
-                 BUILDING_WELL, BUILDING_VILLAGE_PALACE, BUILDING_TOWN_PALACE,
-                 BUILDING_CITY_PALACE, BUILDING_ARCHITECT_POST,
-
-                 BUILDING_GOLD_MINE, BUILDING_COPPER_MINE, BUILDING_GEMSTONE_MINE,
-                 BUILDING_STONE_QUARRY, BUILDING_GRANITE_QUARRY, BUILDING_LIMESTONE_QUARRY,
-                 BUILDING_CLAY_PIT, BUILDING_WOOD_CUTTERS, BUILDING_DOCK, BUILDING_SHIPWRIGHT,
-
-                 BUILDING_BARLEY_FARM, BUILDING_GRAIN_FARM, BUILDING_FLAX_FARM,
-                 BUILDING_BREWERY_WORKSHOP, BUILDING_WEAVER_WORKSHOP, BUILDING_POTTERY_WORKSHOP,
-                 BUILDING_BRICKS_WORKSHOP, BUILDING_PAPYRUS_WORKSHOP, BUILDING_JEWELS_WORKSHOP,
-
-                 BUILDING_BAZAAR, BUILDING_TAX_COLLECTOR, BUILDING_FIREHOUSE,
-                 BUILDING_POLICE_STATION, BUILDING_FERRY,
-                 BUILDING_COURTHOUSE,
-
-                 BUILDING_TEMPLE_OSIRIS, BUILDING_TEMPLE_RA,
-                 BUILDING_ORACLE, BUILDING_FESTIVAL_SQUARE,
-
-                 BUILDING_APOTHECARY, BUILDING_PHYSICIAN, BUILDING_SCRIBAL_SCHOOL,
-                 BUILDING_LIBRARY, BUILDING_BANDSTAND, BUILDING_GARDENS
-                ]
+        fallback : [BUILDING_VILLAGE_PALACE_UP, BUILDING_TOWN_PALACE_UP, BUILDING_CITY_PALACE,
+                    BUILDING_DYNASTY_MANSION, BUILDING_FAMILY_MANSION, BUILDING_PERSONAL_MANSION,
+                    BUILDING_HOUSE_PALATIAL_ESTATE, BUILDING_HOUSE_MODEST_ESTATE, BUILDING_HOUSE_STATELY_MANOR,
+                    BUILDING_HOUSE_ELEGANT_MANOR, BUILDING_HOUSE_SPACIOUS_MANOR, BUILDING_TOWN_PALACE,
+                    BUILDING_VILLAGE_PALACE, BUILDING_SENET_HOUSE, BUILDING_PAVILLION, BUILDING_ORACLE,
+                    BUILDING_TEMPLE_COMPLEX_OSIRIS, BUILDING_TEMPLE_COMPLEX_RA, BUILDING_TEMPLE_COMPLEX_PTAH,
+                    BUILDING_TEMPLE_COMPLEX_SETH, BUILDING_TEMPLE_COMPLEX_BAST, BUILDING_TAX_COLLECTOR_UPGRADED,
+                    BUILDING_TAX_COLLECTOR, BUILDING_COURTHOUSE, BUILDING_BANDSTAND, BUILDING_BOOTH,
+                    BUILDING_MORTUARY, BUILDING_APOTHECARY, BUILDING_LIBRARY, BUILDING_SCRIBAL_SCHOOL,
+                    BUILDING_HOUSE_COMMON_MANOR, BUILDING_HOUSE_FANCY_RESIDENCE, BUILDING_HOUSE_ELEGANT_RESIDENCE,
+                    BUILDING_HOUSE_SPACIOUS_RESIDENCE, BUILDING_HOUSE_COMMON_RESIDENCE, BUILDING_PHYSICIAN,
+                    BUILDING_POTTERY_WORKSHOP, BUILDING_CARPENTERS_GUILD, BUILDING_BRICKLAYERS_GUILD,
+                    BUILDING_STONEMASONS_GUILD, BUILDING_ARTISANS_GUILD, BUILDING_JEWELS_WORKSHOP,
+                    BUILDING_WEAPONSMITH, BUILDING_WEAVER_WORKSHOP, BUILDING_BREWERY_WORKSHOP, BUILDING_GRANARY,
+                    BUILDING_STORAGE_YARD, BUILDING_BAZAAR, BUILDING_SHIPWRIGHT, BUILDING_DOCK,
+                    BUILDING_FISHING_WHARF, BUILDING_TEMPLE_OSIRIS, BUILDING_TEMPLE_RA, BUILDING_TEMPLE_PTAH,
+                    BUILDING_TEMPLE_SETH, BUILDING_TEMPLE_BAST, BUILDING_CONSERVATORY, BUILDING_JUGGLER_SCHOOL,
+                    BUILDING_BULLFIGHT_SCHOOL, BUILDING_DANCE_SCHOOL, BUILDING_MILITARY_ACADEMY,
+                    BUILDING_MILITARY_ACADEMY_2, BUILDING_MILITARY_ACADEMY_3, BUILDING_HOUSE_SPACIOUS_APARTMENT,
+                    BUILDING_HOUSE_MODEST_APARTMENT, BUILDING_HOUSE_SPACIOUS_HOMESTEAD,
+                    BUILDING_HOUSE_MODEST_HOMESTEAD, BUILDING_HOUSE_ORDINARY_COTTAGE, BUILDING_DENTIST,
+                    BUILDING_STONE_QUARRY, BUILDING_LIMESTONE_QUARRY, BUILDING_GRANITE_QUARRY, BUILDING_GOLD_MINE,
+                    BUILDING_COPPER_MINE, BUILDING_GEMSTONE_MINE, BUILDING_CLAY_PIT, BUILDING_WOOD_CUTTERS,
+                    BUILDING_RESERVED_90, BUILDING_GRAIN_FARM, BUILDING_LETTUCE_FARM, BUILDING_POMEGRANATES_FARM,
+                    BUILDING_FLAX_FARM, BUILDING_BARLEY_FARM, BUILDING_CATTLE_RANCH, BUILDING_CHICKPEAS_FARM,
+                    BUILDING_HENNA_FARM, BUILDING_POLICE_STATION, BUILDING_ARCHITECT_POST, BUILDING_WATER_SUPPLY,
+                    BUILDING_WELL, BUILDING_HOUSE_ROUGH_COTTAGE, BUILDING_HOUSE_COMMON_SHANTY,
+                    BUILDING_HOUSE_MEAGER_SHANTY, BUILDING_HOUSE_STURDY_HUT, BUILDING_HOUSE_CRUDE_HUT]
     }
+}
+
+// OG figure/enemy_ships.c + scenario/invasion.c constants of the enemy transport ship.
+enemy_transport_rules {
+    soldiers_per_ship : 16
+    launch_first_wait : 10
+    launch_wait_step : 40
+    landing_wait : 50
+    evade_wait : 100
+    evade_ticks : 75
+    evade_range : 18
+    damaged_percent : 15
+    reroute_ticks : 99
+    sinking_ticks : 32
+    escape_distance : 10
 }
 
 // Generic enemy transport (FIGURE_ENEMY_TRANSPORT = 92). Fallback when a nation
@@ -125,18 +152,84 @@ figure_enemy_transport_generic = {
     sounds: enemy_transport_sounds
     animations : {
         swim : { pack:PACK_ENEMY_HITTITE, id:7, max_frames:4 }
-        death : { pack:PACK_ENEMY_HITTITE, id:8, max_frames:11, loop:false }
+        death : { pack:PACK_ENEMY_HITTITE, id:8, max_frames:11, duration:3, loop:false }
+        bubbles : { pack:PACK_SPR_AMBIENT, id:11, max_frames:23, duration:1, loop:false }
         idle : { pack:PACK_ENEMY_HITTITE, id:9, max_frames:1 }
         big_image : { pack:PACK_UNLOADED, id:25, offset:44 }
     }
 
+    // OG Figure_model_Normal.txt row 92 Enemy Transport; speed from the Hittite row (92 has none).
     category: figure_category_hostile
-    max_damage : 290
+    max_damage : 100
     attack_value : 0
-    missile_defense_value : 2
+    missile_defense_value : 3
     terrain_usage : TERRAIN_USAGE_ANY
     is_enemy : true
     max_amount : 25
+    // OG speed 6 (figure_movement_move_ticks).
+    move_cycle : [1]
+}
+
+// OG figure/enemy_ships.c, ships_player.h, military.c ship_move and scenario/invasion.c constants of the enemy
+// warship.
+enemy_warship_rules {
+    launch_first_wait : 10
+    launch_wait_step : 25
+    reroute_ticks : 99
+    damaged_percent : 15
+    sinking_ticks : 32
+    stay_months : 4
+    attack_ticks : 50
+    patrol_base_ticks : 75
+    patrol_random_ticks : 30
+    docked_target_reduction : 20
+    ram_cooldown : 15
+    evade_ticks : 75
+    evade_range : 18
+    escape_distance : 10
+    shoot_ticks : 100
+    fast_ram_percent : 20
+    slow_speed_percent : 40
+    full_speed_max : 18
+    mode_change_ticks : 200
+    score_land_enemy : 17
+    score_boat : 5
+    score_transport : 10
+    score_loaded_transport : 25
+    score_warship : 15
+    // OG figure_movement_move_ticks: walk ticks per tick for speed 0..18 (18 = default case).
+    speed_cycles : [
+        { ticks:[0] }
+        { ticks:[0, 0, 0, 1] }
+        { ticks:[0, 0, 1] }
+        { ticks:[1, 0] }
+        { ticks:[1, 1, 0] }
+        { ticks:[1, 1, 1, 0] }
+        { ticks:[1] }
+        { ticks:[1, 1, 1, 2] }
+        { ticks:[1, 1, 2] }
+        { ticks:[1, 2] }
+        { ticks:[2, 2, 1] }
+        { ticks:[2, 2, 2, 1] }
+        { ticks:[2] }
+        { ticks:[2, 2, 2, 3] }
+        { ticks:[2, 2, 3] }
+        { ticks:[3, 2] }
+        { ticks:[3, 3, 2] }
+        { ticks:[3, 3, 3, 2] }
+        { ticks:[3] }
+    ]
+    // OG figure_ship_direction_table: row = target heading, column = own heading.
+    ram_divisors : [
+        { own:[5, 3, 1, 2, 4, 2, 1, 3] }
+        { own:[3, 5, 3, 1, 2, 4, 2, 1] }
+        { own:[1, 3, 5, 3, 1, 2, 4, 2] }
+        { own:[2, 1, 3, 5, 3, 1, 2, 4] }
+        { own:[4, 2, 1, 3, 5, 3, 1, 2] }
+        { own:[2, 4, 2, 1, 3, 5, 3, 1] }
+        { own:[1, 2, 4, 2, 1, 3, 4, 3] }
+        { own:[3, 1, 2, 4, 3, 1, 3, 5] }
+    ]
 }
 
 // Generic enemy warship (FIGURE_ENEMY_WARSHIP = 93). Fallback for barbarian /
@@ -146,18 +239,27 @@ figure_enemy_warship_generic = {
     sounds: enemy_warship_sounds
     animations : {
         swim : { pack:PACK_ENEMY_HITTITE, id:10, max_frames:4 }
-        death : { pack:PACK_ENEMY_HITTITE, id:11, max_frames:11, loop:false }
+        death : { pack:PACK_ENEMY_HITTITE, id:11, max_frames:11, duration:3, loop:false }
+        bubbles : { pack:PACK_SPR_AMBIENT, id:11, max_frames:23, duration:1, loop:false }
         idle : { pack:PACK_ENEMY_HITTITE, id:12, max_frames:1 }
         big_image : { pack:PACK_UNLOADED, id:25, offset:44 }
     }
 
+    // OG Figure_model_Normal.txt row 93 Enemy Warship; speed, ship_steps and ship_moves from the Hittite row (93 has none).
     category: figure_category_hostile
-    max_damage : 290
-    attack_value : 17
-    missile_defense_value : 3
+    max_damage : 100
+    attack_value : 0
+    missile_defense_value : 5
+    missile_attack_value : 5
+    missile_range : 8
+    missile_delay : 35
     terrain_usage : TERRAIN_USAGE_ANY
     is_enemy : true
     max_amount : 25
+    hit_points : 100
+    speed : 6
+    ship_steps : 3
+    ship_moves : 750
 }
 
 // barbarian
@@ -212,18 +314,22 @@ figure_barbarian_transport_ship = {
     sounds: enemy_transport_sounds
     animations : {
         swim : { pack:PACK_ENEMY_HITTITE, id:7, max_frames:4 }
-        death : { pack:PACK_ENEMY_HITTITE, id:8, max_frames:11, loop:false }
+        death : { pack:PACK_ENEMY_HITTITE, id:8, max_frames:11, duration:3, loop:false }
+        bubbles : { pack:PACK_SPR_AMBIENT, id:11, max_frames:23, duration:1, loop:false }
         idle : { pack:PACK_ENEMY_HITTITE, id:9, max_frames:1 }
         big_image : { pack:PACK_UNLOADED, id:25, offset:44 }
     }
 
+    // OG Figure_model_Normal.txt row 92 Enemy Transport; speed from the Hittite row (92 has none).
     category: figure_category_hostile
-    max_damage : 290
+    max_damage : 100
     attack_value : 0
-    missile_defense_value : 2
+    missile_defense_value : 3
     terrain_usage : TERRAIN_USAGE_ANY
     is_enemy : true
     max_amount : 25
+    // OG speed 6 (figure_movement_move_ticks).
+    move_cycle : [1]
 }
 
 enemy_barbarian = {
@@ -286,18 +392,22 @@ figure_assyrian_transport_ship = {
     sounds: enemy_transport_sounds
     animations : {
         swim : { pack:PACK_ENEMY_ASSYRIAN, id:7, max_frames:4 }
-        death : { pack:PACK_ENEMY_ASSYRIAN, id:8, max_frames:11, loop:false }
+        death : { pack:PACK_ENEMY_ASSYRIAN, id:8, max_frames:11, duration:3, loop:false }
+        bubbles : { pack:PACK_SPR_AMBIENT, id:11, max_frames:23, duration:1, loop:false }
         idle : { pack:PACK_ENEMY_ASSYRIAN, id:9, max_frames:1 }
         big_image : { pack:PACK_UNLOADED, id:25, offset:44 }
     }
 
+    // OG Figure_model_Normal.txt enemy row 44 Assyrian Transport.
     category: figure_category_hostile
-    max_damage : 290
+    max_damage : 95
     attack_value : 0
-    missile_defense_value : 2
+    missile_defense_value : 4
     terrain_usage : TERRAIN_USAGE_ANY
     is_enemy : true
     max_amount : 25
+    // OG speed 6 (figure_movement_move_ticks).
+    move_cycle : [1]
 }
 
 figure_assyrian_war_ship = {
@@ -305,18 +415,27 @@ figure_assyrian_war_ship = {
     sounds: enemy_warship_sounds
     animations : {
         swim : { pack:PACK_ENEMY_ASSYRIAN, id:10, max_frames:4 }
-        death : { pack:PACK_ENEMY_ASSYRIAN, id:11, max_frames:11, loop:false }
+        death : { pack:PACK_ENEMY_ASSYRIAN, id:11, max_frames:11, duration:3, loop:false }
+        bubbles : { pack:PACK_SPR_AMBIENT, id:11, max_frames:23, duration:1, loop:false }
         idle : { pack:PACK_ENEMY_ASSYRIAN, id:12, max_frames:1 }
         big_image : { pack:PACK_UNLOADED, id:25, offset:44 }
     }
 
+    // OG Figure_model_Normal.txt enemy row 43 (Blank: Assyrian warships have 0 hp and sink at once).
     category: figure_category_hostile
-    max_damage : 290
-    attack_value : 17
-    missile_defense_value : 3
+    max_damage : 0
+    attack_value : 0
+    missile_defense_value : 0
+    missile_attack_value : 0
+    missile_range : 0
+    missile_delay : 0
     terrain_usage : TERRAIN_USAGE_ANY
     is_enemy : true
     max_amount : 25
+    hit_points : 0
+    speed : 0
+    ship_steps : 0
+    ship_moves : 0
 }
 
 figure_assyrian_chariot = {
@@ -408,18 +527,22 @@ figure_canaanite_transport_ship = {
     sounds: enemy_transport_sounds
     animations : {
         swim : { pack:PACK_ENEMY_CANAANITE, id:0, max_frames:4 }
-        death : { pack:PACK_ENEMY_CANAANITE, id:1, max_frames:11, loop:false }
+        death : { pack:PACK_ENEMY_CANAANITE, id:1, max_frames:11, duration:3, loop:false }
+        bubbles : { pack:PACK_SPR_AMBIENT, id:11, max_frames:23, duration:1, loop:false }
         idle : { pack:PACK_ENEMY_CANAANITE, id:2, max_frames:1 }
         big_image : { pack:PACK_UNLOADED, id:25, offset:44 }
     }
 
+    // OG Figure_model_Normal.txt enemy row 39 Canaanite Transport.
     category: figure_category_hostile
-    max_damage : 290
+    max_damage : 15
     attack_value : 0
-    missile_defense_value : 2
+    missile_defense_value : 0
     terrain_usage : TERRAIN_USAGE_ANY
     is_enemy : true
     max_amount : 25
+    // OG speed 6 (figure_movement_move_ticks).
+    move_cycle : [1]
 }
 
 figure_canaanite_war_ship = {
@@ -427,18 +550,27 @@ figure_canaanite_war_ship = {
     sounds: enemy_warship_sounds
     animations : {
         swim : { pack:PACK_ENEMY_CANAANITE, id:10, max_frames:4 }
-        death : { pack:PACK_ENEMY_CANAANITE, id:11, max_frames:11, loop:false }
+        death : { pack:PACK_ENEMY_CANAANITE, id:11, max_frames:11, duration:3, loop:false }
+        bubbles : { pack:PACK_SPR_AMBIENT, id:11, max_frames:23, duration:1, loop:false }
         idle : { pack:PACK_ENEMY_CANAANITE, id:12, max_frames:1 }
         big_image : { pack:PACK_UNLOADED, id:25, offset:44 }
     }
 
+    // OG Figure_model_Normal.txt enemy row 38 Canaanite Warship.
     category: figure_category_hostile
-    max_damage : 290
-    attack_value : 17
-    missile_defense_value : 3
+    max_damage : 80
+    attack_value : 80
+    missile_defense_value : 1
+    missile_attack_value : 15
+    missile_range : 7
+    missile_delay : 35
     terrain_usage : TERRAIN_USAGE_ANY
     is_enemy : true
     max_amount : 25
+    hit_points : 80
+    speed : 7
+    ship_steps : 2
+    ship_moves : 650
 }
 
 figure_canaanite_chariot = {
@@ -487,18 +619,22 @@ figure_egyptian_transport_ship = {
     sounds: enemy_transport_sounds
     animations : {
         swim : { pack:PACK_ENEMY_EGYPTIAN, id:0, max_frames:4 }
-        death : { pack:PACK_ENEMY_EGYPTIAN, id:1, max_frames:11, loop:false }
+        death : { pack:PACK_ENEMY_EGYPTIAN, id:1, max_frames:11, duration:3, loop:false }
+        bubbles : { pack:PACK_SPR_AMBIENT, id:11, max_frames:23, duration:1, loop:false }
         idle : { pack:PACK_ENEMY_EGYPTIAN, id:2, max_frames:1 }
         big_image : { pack:PACK_UNLOADED, id:25, offset:44 }
     }
 
+    // OG Figure_model_Normal.txt row 101 Egyptian Transport Ships.
     category: figure_category_hostile
-    max_damage : 290
+    max_damage : 75
     attack_value : 0
-    missile_defense_value : 2
+    missile_defense_value : 3
     terrain_usage : TERRAIN_USAGE_ANY
     is_enemy : true
     max_amount : 25
+    // OG speed 6 (figure_movement_move_ticks).
+    move_cycle : [1]
 }
 
 figure_egyptian_galera = {
@@ -506,19 +642,28 @@ figure_egyptian_galera = {
     sounds: enemy_warship_sounds
     animations : {
         swim : { pack:PACK_ENEMY_EGYPTIAN, id:0, max_frames:4 }
-        death : { pack:PACK_ENEMY_EGYPTIAN, id:1, max_frames:11, loop:false }
+        death : { pack:PACK_ENEMY_EGYPTIAN, id:1, max_frames:11, duration:3, loop:false }
+        bubbles : { pack:PACK_SPR_AMBIENT, id:11, max_frames:23, duration:1, loop:false }
         idle : { pack:PACK_ENEMY_EGYPTIAN, id:2, max_frames:1 }
         idle_ready : { pack:PACK_ENEMY_EGYPTIAN, id:3, max_frames:1 }
         big_image : { pack:PACK_UNLOADED, id:25, offset:44 }
     }
 
+    // OG Figure_model_Normal.txt row 100 Egyptian Warships.
     category: figure_category_hostile
-    max_damage : 290
-    attack_value : 17
-    missile_defense_value : 2
+    max_damage : 300
+    attack_value : 100
+    missile_defense_value : 5
+    missile_attack_value : 5
+    missile_range : 8
+    missile_delay : 35
     terrain_usage : TERRAIN_USAGE_ANY
     is_enemy : true
     max_amount : 25
+    hit_points : 300
+    speed : 6
+    ship_steps : 4
+    ship_moves : 800
 }
 
 figure_egyptian_war_ship = {
@@ -526,18 +671,27 @@ figure_egyptian_war_ship = {
     sounds: enemy_warship_sounds
     animations : {
         swim : { pack:PACK_ENEMY_EGYPTIAN, id:4, max_frames:4 }
-        death : { pack:PACK_ENEMY_EGYPTIAN, id:5, max_frames:11, loop:false }
+        death : { pack:PACK_ENEMY_EGYPTIAN, id:5, max_frames:11, duration:3, loop:false }
+        bubbles : { pack:PACK_SPR_AMBIENT, id:11, max_frames:23, duration:1, loop:false }
         idle : { pack:PACK_ENEMY_EGYPTIAN, id:6, max_frames:1 }
         big_image : { pack:PACK_UNLOADED, id:25, offset:44 }
     }
 
+    // OG Figure_model_Normal.txt row 100 Egyptian Warships.
     category: figure_category_hostile
-    max_damage : 290
-    attack_value : 17
-    missile_defense_value : 3
+    max_damage : 300
+    attack_value : 100
+    missile_defense_value : 5
+    missile_attack_value : 5
+    missile_range : 8
+    missile_delay : 35
     terrain_usage : TERRAIN_USAGE_ANY
     is_enemy : true
     max_amount : 25
+    hit_points : 300
+    speed : 6
+    ship_steps : 4
+    ship_moves : 800
 }
 
 figure_egyptian_archer = {
@@ -925,19 +1079,22 @@ figure_hittite_transport_ship = {
     sounds: enemy_transport_sounds
     animations : {
         swim : { pack:PACK_ENEMY_HITTITE, id:7, max_frames:4 }
-        death : { pack:PACK_ENEMY_HITTITE, id:8, max_frames:11, loop:false }
+        death : { pack:PACK_ENEMY_HITTITE, id:8, max_frames:11, duration:3, loop:false }
+        bubbles : { pack:PACK_SPR_AMBIENT, id:11, max_frames:23, duration:1, loop:false }
         idle : { pack:PACK_ENEMY_HITTITE, id:9, max_frames:1 }
         big_image : { pack:PACK_UNLOADED, id:25, offset:44 }
     }
 
+    // OG Figure_model_Normal.txt enemy row 14 Hittite Transport.
     category: figure_category_hostile
-    max_damage : 290
+    max_damage : 100
     attack_value : 0
-    defense_value: 2
-    missile_defense_value : 0
+    missile_defense_value : 4
     terrain_usage : TERRAIN_USAGE_ANY
     is_enemy : true
     max_amount : 25
+    // OG speed 6 (figure_movement_move_ticks).
+    move_cycle : [1]
 }
 
 figure_hittite_war_ship = {
@@ -945,18 +1102,27 @@ figure_hittite_war_ship = {
     sounds: enemy_warship_sounds
     animations : {
         swim : { pack:PACK_ENEMY_HITTITE, id:10, max_frames:4 }
-        death : { pack:PACK_ENEMY_HITTITE, id:11, max_frames:11, loop:false }
+        death : { pack:PACK_ENEMY_HITTITE, id:11, max_frames:11, duration:3, loop:false }
+        bubbles : { pack:PACK_SPR_AMBIENT, id:11, max_frames:23, duration:1, loop:false }
         idle : { pack:PACK_ENEMY_HITTITE, id:12, max_frames:1 }
         big_image : { pack:PACK_UNLOADED, id:25, offset:44 }
     }
 
+    // OG Figure_model_Normal.txt enemy row 13 Hittite Warship.
     category: figure_category_hostile
-    max_damage : 290
-    attack_value : 17
-    missile_defense_value : 0
+    max_damage : 250
+    attack_value : 100
+    missile_defense_value : 4
+    missile_attack_value : 4
+    missile_range : 11
+    missile_delay : 35
     terrain_usage : TERRAIN_USAGE_ANY
     is_enemy : true
     max_amount : 25
+    hit_points : 250
+    speed : 6
+    ship_steps : 3
+    ship_moves : 750
 }
 
 figure_hittite_chariot = {
@@ -1047,17 +1213,21 @@ figure_hyksos_transport_ship = {
     sounds: enemy_transport_sounds
     animations : {
         swim : { pack:PACK_ENEMY_HYKSOS, id:7, max_frames:4 }
-        death : { pack:PACK_ENEMY_HYKSOS, id:8, max_frames:11, loop:false }
+        death : { pack:PACK_ENEMY_HYKSOS, id:8, max_frames:11, duration:3, loop:false }
+        bubbles : { pack:PACK_SPR_AMBIENT, id:11, max_frames:23, duration:1, loop:false }
         idle : { pack:PACK_ENEMY_HYKSOS, id:9, max_frames:1 }
     }
 
+    // OG Figure_model_Normal.txt enemy row 4 Hyksos Transport.
     category: figure_category_hostile
-    max_damage : 290
+    max_damage : 100
     attack_value : 0
-    missile_defense_value : 2
+    missile_defense_value : 3
     terrain_usage : TERRAIN_USAGE_ANY
     is_enemy : true
     max_amount : 25
+    // OG speed 6 (figure_movement_move_ticks).
+    move_cycle : [1]
 }
 
 figure_hyksos_war_ship = {
@@ -1065,17 +1235,26 @@ figure_hyksos_war_ship = {
     sounds: enemy_warship_sounds
     animations : {
         swim : { pack:PACK_ENEMY_HYKSOS, id:10, max_frames:4 }
-        death : { pack:PACK_ENEMY_HYKSOS, id:11, max_frames:11, loop:false }
+        death : { pack:PACK_ENEMY_HYKSOS, id:11, max_frames:11, duration:3, loop:false }
+        bubbles : { pack:PACK_SPR_AMBIENT, id:11, max_frames:23, duration:1, loop:false }
         idle : { pack:PACK_ENEMY_HYKSOS, id:12, max_frames:1 }
     }
 
+    // OG Figure_model_Normal.txt enemy row 3 Hyksos Warship.
     category: figure_category_hostile
-    max_damage : 290
-    attack_value : 17
-    missile_defense_value : 2
+    max_damage : 300
+    attack_value : 100
+    missile_defense_value : 5
+    missile_attack_value : 6
+    missile_range : 9
+    missile_delay : 25
     terrain_usage : TERRAIN_USAGE_ANY
     is_enemy : true
     max_amount : 25
+    hit_points : 300
+    speed : 6
+    ship_steps : 4
+    ship_moves : 900
 }
 
 figure_hyksos_chariot = {
@@ -1166,17 +1345,21 @@ figure_kushite_transport_ship = {
     sounds: enemy_transport_sounds
     animations : {
         swim : { pack:PACK_ENEMY_KUSHITE, id:7, max_frames:4 }
-        death : { pack:PACK_ENEMY_KUSHITE, id:8, max_frames:11, loop:false }
+        death : { pack:PACK_ENEMY_KUSHITE, id:8, max_frames:11, duration:3, loop:false }
+        bubbles : { pack:PACK_SPR_AMBIENT, id:11, max_frames:23, duration:1, loop:false }
         idle : { pack:PACK_ENEMY_KUSHITE, id:9, max_frames:1 }
     }
 
+    // OG Figure_model_Normal.txt enemy row 24 Kushite Transport Ships.
     category: figure_category_hostile
-    max_damage : 290
+    max_damage : 50
     attack_value : 0
-    missile_defense_value : 0
+    missile_defense_value : 1
     terrain_usage : TERRAIN_USAGE_ANY
     is_enemy : true
     max_amount : 25
+    // OG speed 6 (figure_movement_move_ticks).
+    move_cycle : [1]
 }
 
 figure_kushite_war_ship = {
@@ -1184,17 +1367,26 @@ figure_kushite_war_ship = {
     sounds: enemy_warship_sounds
     animations : {
         swim : { pack:PACK_ENEMY_KUSHITE, id:10, max_frames:4 }
-        death : { pack:PACK_ENEMY_KUSHITE, id:11, max_frames:11, loop:false }
+        death : { pack:PACK_ENEMY_KUSHITE, id:11, max_frames:11, duration:3, loop:false }
+        bubbles : { pack:PACK_SPR_AMBIENT, id:11, max_frames:23, duration:1, loop:false }
         idle : { pack:PACK_ENEMY_KUSHITE, id:12, max_frames:1 }
     }
 
+    // OG Figure_model_Normal.txt enemy row 23 Kushite Warships.
     category: figure_category_hostile
-    max_damage : 290
-    attack_value : 17
-    missile_defense_value : 0
+    max_damage : 200
+    attack_value : 100
+    missile_defense_value : 3
+    missile_attack_value : 4
+    missile_range : 8
+    missile_delay : 45
     terrain_usage : TERRAIN_USAGE_ANY
     is_enemy : true
     max_amount : 25
+    hit_points : 200
+    speed : 6
+    ship_steps : 3
+    ship_moves : 1000
 }
 
 figure_kushite_chariot = {
@@ -1290,17 +1482,21 @@ figure_libian_transport_ship = {
     sounds: enemy_transport_sounds
     animations : {
         swim : { pack:PACK_ENEMY_LIBIAN, id:7, max_frames:4 }
-        death : { pack:PACK_ENEMY_LIBIAN, id:8, max_frames:11, loop:false }
+        death : { pack:PACK_ENEMY_LIBIAN, id:8, max_frames:11, duration:3, loop:false }
+        bubbles : { pack:PACK_SPR_AMBIENT, id:11, max_frames:23, duration:1, loop:false }
         idle : { pack:PACK_ENEMY_LIBIAN, id:9, max_frames:1 }
     }
 
+    // OG Figure_model_Normal.txt enemy row 29 Libyan Transport.
     category: figure_category_hostile
-    max_damage : 290
+    max_damage : 20
     attack_value : 0
     missile_defense_value : 0
     terrain_usage : TERRAIN_USAGE_ANY
     is_enemy : true
     max_amount : 25
+    // OG speed 6 (figure_movement_move_ticks).
+    move_cycle : [1]
 }
 
 figure_libian_war_ship = {
@@ -1308,17 +1504,26 @@ figure_libian_war_ship = {
     sounds: enemy_warship_sounds
     animations : {
         swim : { pack:PACK_ENEMY_LIBIAN, id:10, max_frames:4 }
-        death : { pack:PACK_ENEMY_LIBIAN, id:11, max_frames:11, loop:false }
+        death : { pack:PACK_ENEMY_LIBIAN, id:11, max_frames:11, duration:3, loop:false }
+        bubbles : { pack:PACK_SPR_AMBIENT, id:11, max_frames:23, duration:1, loop:false }
         idle : { pack:PACK_ENEMY_LIBIAN, id:12, max_frames:1 }
     }
 
+    // OG Figure_model_Normal.txt enemy row 28 Libyan Warship.
     category: figure_category_hostile
-    max_damage : 290
-    attack_value : 17
+    max_damage : 150
+    attack_value : 100
     missile_defense_value : 0
+    missile_attack_value : 3
+    missile_range : 8
+    missile_delay : 25
     terrain_usage : TERRAIN_USAGE_ANY
     is_enemy : true
     max_amount : 25
+    hit_points : 150
+    speed : 7
+    ship_steps : 2
+    ship_moves : 900
 }
 
 figure_libian_chariot = {
@@ -1410,18 +1615,22 @@ figure_nubian_transport_ship = {
     sounds: enemy_transport_sounds
     animations : {
         swim : { pack:PACK_ENEMY_NUBIAN, id:7, max_frames:4 }
-        death : { pack:PACK_ENEMY_NUBIAN, id:8, max_frames:11, loop:false }
+        death : { pack:PACK_ENEMY_NUBIAN, id:8, max_frames:11, duration:3, loop:false }
+        bubbles : { pack:PACK_SPR_AMBIENT, id:11, max_frames:23, duration:1, loop:false }
         idle : { pack:PACK_ENEMY_NUBIAN, id:9, max_frames:1 }
         big_image : { pack:PACK_UNLOADED, id:25, offset:44 }
     }
 
+    // OG Figure_model_Normal.txt enemy row 34 Nubian Transport Ships.
     category: figure_category_hostile
-    max_damage : 290
+    max_damage : 20
     attack_value : 0
     missile_defense_value : 0
     terrain_usage : TERRAIN_USAGE_ANY
     is_enemy : true
     max_amount : 25
+    // OG speed 6 (figure_movement_move_ticks).
+    move_cycle : [1]
 }
 
 figure_nubian_war_ship = {
@@ -1429,17 +1638,26 @@ figure_nubian_war_ship = {
     sounds: enemy_warship_sounds
     animations : {
         swim : { pack:PACK_ENEMY_NUBIAN, id:10, max_frames:4 }
-        death : { pack:PACK_ENEMY_NUBIAN, id:11, max_frames:11, loop:false }
+        death : { pack:PACK_ENEMY_NUBIAN, id:11, max_frames:11, duration:3, loop:false }
+        bubbles : { pack:PACK_SPR_AMBIENT, id:11, max_frames:23, duration:1, loop:false }
         idle : { pack:PACK_ENEMY_NUBIAN, id:12, max_frames:1 }
     }
 
+    // OG Figure_model_Normal.txt enemy row 33 Nubian Warships.
     category: figure_category_hostile
-    max_damage : 290
-    attack_value : 17
-    missile_defense_value : 0
+    max_damage : 100
+    attack_value : 100
+    missile_defense_value : 2
+    missile_attack_value : 3
+    missile_range : 6
+    missile_delay : 50
     terrain_usage : TERRAIN_USAGE_ANY
     is_enemy : true
     max_amount : 25
+    hit_points : 100
+    speed : 7
+    ship_steps : 2
+    ship_moves : 700
 }
 
 figure_nubian_chariot = {
@@ -1536,18 +1754,21 @@ figure_persian_transport_ship = {
     sounds: enemy_transport_sounds
     animations : {
         swim : { pack:PACK_ENEMY_PERSIAN, id:7, max_frames:4 }
-        death : { pack:PACK_ENEMY_PERSIAN, id:8, max_frames:11, loop:false }
+        death : { pack:PACK_ENEMY_PERSIAN, id:8, max_frames:11, duration:3, loop:false }
+        bubbles : { pack:PACK_SPR_AMBIENT, id:11, max_frames:23, duration:1, loop:false }
         idle : { pack:PACK_ENEMY_PERSIAN, id:9, max_frames:1 }
     }
 
+    // OG Figure_model_Normal.txt enemy row 59 Persian Transport.
     category: figure_category_hostile
-    max_damage : 290
+    max_damage : 86
     attack_value : 0
-    defense_value: 2
-    missile_defense_value : 0
+    missile_defense_value : 3
     terrain_usage : TERRAIN_USAGE_ANY
     is_enemy : true
     max_amount : 25
+    // OG speed 5 (figure_movement_move_ticks).
+    move_cycle : [1, 1, 1, 0]
 }
 
 figure_persian_war_ship = {
@@ -1555,18 +1776,26 @@ figure_persian_war_ship = {
     sounds: enemy_warship_sounds
     animations : {
         swim : { pack:PACK_ENEMY_PERSIAN, id:10, max_frames:4 }
-        death : { pack:PACK_ENEMY_PERSIAN, id:11, max_frames:11, loop:false }
+        death : { pack:PACK_ENEMY_PERSIAN, id:11, max_frames:11, duration:3, loop:false }
+        bubbles : { pack:PACK_SPR_AMBIENT, id:11, max_frames:23, duration:1, loop:false }
         idle : { pack:PACK_ENEMY_PERSIAN, id:12, max_frames:1 }
     }
 
+    // OG Figure_model_Normal.txt enemy row 58 Persian Warships.
     category: figure_category_hostile
-    max_damage : 290
-    attack_value : 17
-    defense_value: 3
-    missile_defense_value : 0
+    max_damage : 350
+    attack_value : 110
+    missile_defense_value : 6
+    missile_attack_value : 8
+    missile_range : 6
+    missile_delay : 20
     terrain_usage : TERRAIN_USAGE_ANY
     is_enemy : true
     max_amount : 25
+    hit_points : 350
+    speed : 5
+    ship_steps : 5
+    ship_moves : 850
 }
 
 figure_persian_chariot = {
@@ -1650,18 +1879,21 @@ figure_phoenician_transport_ship = {
     sounds: enemy_transport_sounds
     animations : {
         swim : { pack:PACK_ENEMY_PHOENICIAN, id:7, max_frames:4 }
-        death : { pack:PACK_ENEMY_PHOENICIAN, id:8, max_frames:11, loop:false }
+        death : { pack:PACK_ENEMY_PHOENICIAN, id:8, max_frames:11, duration:3, loop:false }
+        bubbles : { pack:PACK_SPR_AMBIENT, id:11, max_frames:23, duration:1, loop:false }
         idle : { pack:PACK_ENEMY_PHOENICIAN, id:9, max_frames:1 }
     }
 
+    // OG Figure_model_Normal.txt enemy row 54 Phoenician Transport.
     category: figure_category_hostile
-    max_damage : 290
+    max_damage : 90
     attack_value : 0
-    defense_value: 2
-    missile_defense_value : 0
+    missile_defense_value : 4
     terrain_usage : TERRAIN_USAGE_ANY
     is_enemy : true
     max_amount : 25
+    // OG speed 5 (figure_movement_move_ticks).
+    move_cycle : [1, 1, 1, 0]
 }
 
 figure_phoenician_war_ship = {
@@ -1669,18 +1901,26 @@ figure_phoenician_war_ship = {
     sounds: enemy_warship_sounds
     animations : {
         swim : { pack:PACK_ENEMY_PHOENICIAN, id:10, max_frames:4 }
-        death : { pack:PACK_ENEMY_PHOENICIAN, id:11, max_frames:11, loop:false }
+        death : { pack:PACK_ENEMY_PHOENICIAN, id:11, max_frames:11, duration:3, loop:false }
+        bubbles : { pack:PACK_SPR_AMBIENT, id:11, max_frames:23, duration:1, loop:false }
         idle : { pack:PACK_ENEMY_PHOENICIAN, id:12, max_frames:1 }
     }
 
+    // OG Figure_model_Normal.txt enemy row 53 Phoenician Warships.
     category: figure_category_hostile
-    max_damage : 290
-    attack_value : 17
-    defense_value: 2
-    missile_defense_value : 0
+    max_damage : 350
+    attack_value : 110
+    missile_defense_value : 6
+    missile_attack_value : 8
+    missile_range : 6
+    missile_delay : 20
     terrain_usage : TERRAIN_USAGE_ANY
     is_enemy : true
     max_amount : 25
+    hit_points : 350
+    speed : 5
+    ship_steps : 5
+    ship_moves : 850
 }
 
 figure_phoenician_chariot = {
@@ -1776,17 +2016,21 @@ figure_roman_transport_ship = {
     sounds: enemy_transport_sounds
     animations : {
         swim : { pack:PACK_ENEMY_ROMAN, id:7, max_frames:4 }
-        death : { pack:PACK_ENEMY_ROMAN, id:8, max_frames:11, loop:false }
+        death : { pack:PACK_ENEMY_ROMAN, id:8, max_frames:11, duration:3, loop:false }
+        bubbles : { pack:PACK_SPR_AMBIENT, id:11, max_frames:23, duration:1, loop:false }
         idle : { pack:PACK_ENEMY_ROMAN, id:9, max_frames:1 }
     }
 
+    // OG Figure_model_Normal.txt enemy row 49 Roman Transport.
     category: figure_category_hostile
-    max_damage : 290
+    max_damage : 60
     attack_value : 0
-    missile_defense_value : 0
+    missile_defense_value : 3
     terrain_usage : TERRAIN_USAGE_ANY
     is_enemy : true
     max_amount : 25
+    // OG speed 4 (figure_movement_move_ticks).
+    move_cycle : [1, 1, 0]
 }
 
 figure_roman_war_ship = {
@@ -1794,17 +2038,26 @@ figure_roman_war_ship = {
     sounds: enemy_warship_sounds
     animations : {
         swim : { pack:PACK_ENEMY_ROMAN, id:10, max_frames:4 }
-        death : { pack:PACK_ENEMY_ROMAN, id:11, max_frames:11, loop:false }
+        death : { pack:PACK_ENEMY_ROMAN, id:11, max_frames:11, duration:3, loop:false }
+        bubbles : { pack:PACK_SPR_AMBIENT, id:11, max_frames:23, duration:1, loop:false }
         idle : { pack:PACK_ENEMY_ROMAN, id:12, max_frames:1 }
     }
 
+    // OG Figure_model_Normal.txt enemy row 48 Roman Warships.
     category: figure_category_hostile
-    max_damage : 290
-    attack_value : 17
-    missile_defense_value : 0
+    max_damage : 320
+    attack_value : 110
+    missile_defense_value : 5
+    missile_attack_value : 5
+    missile_range : 6
+    missile_delay : 30
     terrain_usage : TERRAIN_USAGE_ANY
     is_enemy : true
     max_amount : 25
+    hit_points : 320
+    speed : 4
+    ship_steps : 3
+    ship_moves : 700
 }
 
 figure_roman_chariot = {
@@ -1896,17 +2149,21 @@ figure_seapeople_transport_ship = {
     sounds: enemy_transport_sounds
     animations : {
         swim : { pack:PACK_ENEMY_SEAPEOPLE, id:7, max_frames:4 }
-        death : { pack:PACK_ENEMY_SEAPEOPLE, id:8, max_frames:11, loop:false }
+        death : { pack:PACK_ENEMY_SEAPEOPLE, id:8, max_frames:11, duration:3, loop:false }
+        bubbles : { pack:PACK_SPR_AMBIENT, id:11, max_frames:23, duration:1, loop:false }
         idle : { pack:PACK_ENEMY_SEAPEOPLE, id:9, max_frames:1 }
     }
 
+    // OG Figure_model_Normal.txt enemy row 9 Sea People Transport Ships.
     category: figure_category_hostile
-    max_damage : 290
+    max_damage : 150
     attack_value : 0
-    missile_defense_value : 0
+    missile_defense_value : 5
     terrain_usage : TERRAIN_USAGE_ANY
     is_enemy : true
     max_amount : 25
+    // OG speed 4 (figure_movement_move_ticks).
+    move_cycle : [1, 1, 0]
 }
 
 figure_seapeople_war_ship = {
@@ -1914,17 +2171,26 @@ figure_seapeople_war_ship = {
     sounds: enemy_warship_sounds
     animations : {
         swim : { pack:PACK_ENEMY_SEAPEOPLE, id:10, max_frames:4 }
-        death : { pack:PACK_ENEMY_SEAPEOPLE, id:11, max_frames:11, loop:false }
+        death : { pack:PACK_ENEMY_SEAPEOPLE, id:11, max_frames:11, duration:3, loop:false }
+        bubbles : { pack:PACK_SPR_AMBIENT, id:11, max_frames:23, duration:1, loop:false }
         idle : { pack:PACK_ENEMY_SEAPEOPLE, id:12, max_frames:1 }
     }
 
+    // OG Figure_model_Normal.txt enemy row 8 Sea People Warships.
     category: figure_category_hostile
-    max_damage : 290
-    attack_value : 17
-    missile_defense_value : 0
+    max_damage : 400
+    attack_value : 120
+    missile_defense_value : 7
+    missile_attack_value : 8
+    missile_range : 6
+    missile_delay : 15
     terrain_usage : TERRAIN_USAGE_ANY
     is_enemy : true
     max_amount : 25
+    hit_points : 400
+    speed : 5
+    ship_steps : 5
+    ship_moves : 850
 }
 
 figure_seapeople_chariot = {

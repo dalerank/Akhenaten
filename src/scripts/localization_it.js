@@ -175,13 +175,12 @@ localization_it = [
   {key:"#TR_CONFIG_FARM_MEADOW_HARVEST_RETRY", text:"Fattorie di prato raccolgono anche il giorno 1 (remake; originale solo giorno 0)"}
   {key:"#TR_CONFIG_DELIVER_ONLY_TO_ACCEPTING_GRANARIES", text:"Il cibo non viene consegnato ai granai in raccolta"}
   {key:"#TR_CONFIG_ALL_HOUSES_MERGE", text:"Tutte le case si uniscono"}
-  {key:"#TR_CONFIG_WINE_COUNTS_IF_OPEN_TRADE_ROUTE", text:"Una via commerciale aperta conta come un tipo di vino diverso"}
   {key:"#TR_CONFIG_RANDOM_COLLAPSES_TAKE_MONEY", text:"Le cave d'argilla e le miniere di ferro, invece di crollare a caso, costano denaro"}
   {key:"#TR_CONFIG_DISASTER_EVENTS_USE_AMOUNT", text:"Alluvione dell'argilla / crollo dell'oro distruggono la quantità di costruzioni indicata dall'evento"}
   {key:"#TR_CONFIG_MULTIPLE_BARRACKS", text:"Consenti la costruzione di più caserme."}
   {key:"#TR_CONFIG_NOT_ACCEPTING_WAREHOUSES", text:"I depositi non accettano nulla appena costruiti"}
   {key:"#TR_CONFIG_HOUSES_DONT_EXPAND_INTO_GARDENS", text:"Le case non si espandono sui giardini"}
-  {key:"#TR_CONFIG_FIX_IRRIGATION_RANGE", text:"Correggi il raggio d'irrigazione"}
+  {key:"#TR_CONFIG_IRRIGATION_RANGE_5X5", text:"Fattorie irrigate da un'area 5x5"}
   {key:"#TR_CONFIG_FIX_FARM_PRODUCING", text:"Correggi la produzione delle fattorie"}
   {key:"#TR_CONFIG_EMPIRE_MAP_RUNS_SIMULATION", text:"Continua la simulazione della città con la mappa dell'impero aperta"}
   {key:"#TR_CONFIG_CAMERA_KEEP_INERTIA", text:"Inerzia della telecamera"}
@@ -414,13 +413,9 @@ localization_it = [
   {key:"#warship_moving_to_position", text:"In movimento verso la posizione"}
   {key:"#warship_moving_to_position_text", text:"La nave sta raggiungendo la posizione che hai indicato e vi resterà finché non le darai altri ordini."}
   {key:"#main_menu_update_downloading", text:"Scarico l'aggiornamento..."}
-  {key:"#main_menu_update_opening_page", text:"Apro la pagina di scaricamento..."}
   {key:"#main_menu_update_now", text:"aggiorna ora"}
   {key:"#main_menu_update_later", text:"più tardi"}
   {key:"#main_menu_loading_commits", text:"Carico le ultime modifiche..."}
-  {key:"#main_menu_new_build", text:"Nuova versione: ${commit} (hai la ${local})"}
-  {key:"#main_menu_updated", text:"Aggiornato"}
-  {key:"#main_menu_build_up_to_date", text:"Versione ${build} (aggiornata)"}
   {key:"#message_dialog_distant_battle", text:"Battaglia lontana"}
   {key:"#mods_window_title", text:"Mod"}
   {key:"#mods_window_unpack_scripts", text:"Estrai gli script"}

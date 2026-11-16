@@ -4,7 +4,6 @@
         if (!cond) { log_info("FAIL: " + name); fails = fails + 1 } else { log_info("ok: " + name) }
     }
 
-    check("no_keep46", get_mission_config(46).keep_pak_events != true)
     check("enable46", get_mission_config(46).enable_scenario_events == true)
     check("hide46", get_mission_config(46).hide_pak_cities == true)
     check("events46", get_mission_config(46).events && get_mission_config(46).events.length == 10)

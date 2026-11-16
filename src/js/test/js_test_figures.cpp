@@ -10,6 +10,7 @@
 #include "figure/figure.h"
 #include "figure/figure_impl.h"
 #include "figure/formation.h"
+#include "figuretype/figure_festival_priest.h"
 #include "figuretype/figure_funeral_walker.h"
 #include "figuretype/figure_immigrant.h"
 #include "figuretype/figure_mummy.h"
@@ -49,6 +50,20 @@ static int __test_figure_create(int type, int x, int y) {
     return f->id;
 }
 ANK_FUNCTION_3(__test_figure_create);
+
+static int __test_figure_draw_mode(int fid) {
+    figure* f = figure_get(fid);
+    return (f && f->id > 0) ? (int)f->draw_mode : -1;
+}
+ANK_FUNCTION_1(__test_figure_draw_mode);
+
+static void __test_figure_set_draw_mode(int fid, int mode) {
+    figure* f = figure_get(fid);
+    if (f && f->id > 0) {
+        f->draw_mode = (uint8_t)mode;
+    }
+}
+ANK_FUNCTION_2(__test_figure_set_draw_mode);
 
 static void __test_figure_set_home(int fid, int bid) {
     figure* f = figure_get(fid);
@@ -256,6 +271,25 @@ static tile2i __figure_get_destination_tile(int fid) {
 }
 ANK_FUNCTION_1(__figure_get_destination_tile);
 
+static void __test_figure_set_destination(int fid, int x, int y) {
+    figure* f = figure_get(fid);
+    if (!f || !f->is_alive()) {
+        return;
+    }
+    f->destination_tile = tile2i(x, y);
+    f->route_remove();
+}
+ANK_FUNCTION_3(__test_figure_set_destination);
+
+static void __test_figure_set_direction(int fid, int dir) {
+    figure* f = figure_get(fid);
+    if (f && f->is_alive()) {
+        f->direction = (uint8_t)dir;
+        f->previous_tile_direction = (uint8_t)dir;
+    }
+}
+ANK_FUNCTION_2(__test_figure_set_direction);
+
 static int __test_figure_is_alive(int fid) {
     figure* f = figure_get(fid);
     return (f && f->is_alive()) ? 1 : 0;
@@ -293,6 +327,17 @@ static int __test_figure_get_formation_id(int fid) {
     return f ? f->formation_id : 0;
 }
 ANK_FUNCTION_1(__test_figure_get_formation_id);
+
+static void __test_city_set_security_breach(int duration) {
+    g_city.figures.security_breach_duration = duration;
+}
+ANK_FUNCTION_1(__test_city_set_security_breach);
+
+static int __test_figure_targeted_by(int fid) {
+    figure* f = figure_get(fid);
+    return f ? f->targeted_by_figure_id : 0;
+}
+ANK_FUNCTION_1(__test_figure_targeted_by);
 
 static void __test_buildings_generate_figures() {
     g_city.buildings_generate_figure();
@@ -348,10 +393,11 @@ static void __test_figure_set_wait_ticks_missile(int fid, int ticks) {
 }
 ANK_FUNCTION_2(__test_figure_set_wait_ticks_missile);
 
-static int __test_mummy_spawn_wave(int count) {
-    return figure_mummy::spawn_wave(count);
+static int __test_mummy_start_plague(int amount) {
+    figure* f = figure_mummy::start_plague(amount);
+    return f ? f->id : 0;
 }
-ANK_FUNCTION_1(__test_mummy_spawn_wave);
+ANK_FUNCTION_1(__test_mummy_start_plague);
 
 static void __test_figure_action_perform(int fid) {
     figure* f = figure_get(fid);
@@ -528,6 +574,15 @@ static void __test_figure_update_animation(int fid) {
 }
 ANK_FUNCTION_1(__test_figure_update_animation);
 
+static void __test_figure_refresh_image(int fid) {
+    figure* f = figure_get(fid);
+    if (!f || !f->is_alive()) {
+        return;
+    }
+    f->figure_image_update(true);
+}
+ANK_FUNCTION_1(__test_figure_refresh_image);
+
 static int __test_figure_carrying_amount(int fid) {
     figure* f = figure_get(fid);
     return f ? f->get_carrying_amount() : -1;
@@ -539,3 +594,47 @@ static int __test_figure_resource(int fid) {
     return f ? (int)f->get_resource() : -1;
 }
 ANK_FUNCTION_1(__test_figure_resource);
+
+static xstring __test_figure_anim_key(int fid) {
+    figure* f = figure_get(fid);
+    return f ? f->animctx.key : xstring();
+}
+ANK_FUNCTION_1(__test_figure_anim_key);
+
+static void __test_figure_set_resource(int fid, int resource) {
+    figure* f = figure_get(fid);
+    if (f && resource >= RESOURCE_NONE && resource < RESOURCES_MAX) {
+        f->resource_id = (e_resource)resource;
+    }
+}
+ANK_FUNCTION_2(__test_figure_set_resource);
+
+static int __test_figure_get_leading(int fid) {
+    figure* f = figure_get(fid);
+    return f ? (int)f->leading_figure_id : -1;
+}
+ANK_FUNCTION_1(__test_figure_get_leading);
+
+static void __test_festival_execute() {
+    g_city.festival.execute_festival();
+}
+ANK_FUNCTION(__test_festival_execute);
+
+static void __test_festival_spawn_celebrants(int size) {
+    figure_festival_priest::spawn_celebrants(size);
+}
+ANK_FUNCTION_1(__test_festival_spawn_celebrants);
+
+static int __test_festival_priest_trips(int fid) {
+    figure* f = figure_get(fid);
+    auto* priest = (f && f->is_alive()) ? f->dcast_festival_priest() : nullptr;
+    return priest ? priest->runtime_data().trips : -100;
+}
+ANK_FUNCTION_1(__test_festival_priest_trips);
+
+static int __test_festival_priest_look(int fid) {
+    figure* f = figure_get(fid);
+    auto* priest = (f && f->is_alive()) ? f->dcast_festival_priest() : nullptr;
+    return priest ? (int)priest->look() : -1;
+}
+ANK_FUNCTION_1(__test_festival_priest_look);

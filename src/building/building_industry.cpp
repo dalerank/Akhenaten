@@ -26,7 +26,7 @@ void building_industry::produce_uptick_per_day() {
 void building_industry::bind_dynamic(io_buffer *iob, size_t version) {
     auto &d = runtime_data();
 
-    short tmp_short;
+    short tmp_short = 0;
     iob->bind_i16(tmp_short);
     iob->bind(BIND_SIGNATURE_INT16, &base.progress);
     iob->bind_bool(d.spawned_worker_this_month);
@@ -70,7 +70,7 @@ void building_industry::bind_dynamic(io_buffer *iob, size_t version) {
     iob->bind____skip(2);
     iob->bind(BIND_SIGNATURE_UINT8, &d.processed_figure);
 
-    int tmp;
+    int tmp = 0;
     iob->bind(BIND_SIGNATURE_UINT8, &tmp); // reserved for extended figure type
 }
 

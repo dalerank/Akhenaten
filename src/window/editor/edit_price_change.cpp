@@ -30,13 +30,18 @@ static generic_button buttons[] = {{30, 152, 60, 25, button_year, button_none},
                                    {30, 230, 250, 25, button_delete, button_none},
                                    {320, 230, 100, 25, button_save, button_none}};
 
-static struct {
+struct edit_price_change_data_t {
     int id;
     editor_price_change price_change;
     int focus_button_id;
-} data;
+
+    void reset() { *this = {}; }
+};
+
+static edit_price_change_data_t g_edit_price_change_data;
 
 static void init(int id) {
+    auto& data = g_edit_price_change_data;
     data.id = id;
     scenario_editor_price_change_get(id, &data.price_change);
 }
@@ -46,6 +51,7 @@ static void draw_background(int) {
 }
 
 static void draw_foreground(int) {
+    auto& data = g_edit_price_change_data;
     graphics_set_to_dialog();
 
     outer_panel_draw(vec2i{0, 100}, 38, 11);
@@ -74,6 +80,7 @@ static void draw_foreground(int) {
 }
 
 static void handle_input(const mouse* m, const hotkeys* h) {
+    auto& data = g_edit_price_change_data;
     if (generic_buttons_handle_mouse(mouse_in_dialog(m), {0, 0}, buttons, 6, &data.focus_button_id, nullptr)) {
         return;
     }
@@ -84,6 +91,7 @@ static void handle_input(const mouse* m, const hotkeys* h) {
 }
 
 static void set_year(int value) {
+    auto& data = g_edit_price_change_data;
     data.price_change.year = value;
 }
 
@@ -92,6 +100,7 @@ static void button_year(int param1, int param2) {
 }
 
 static void set_resource(int value) {
+    auto& data = g_edit_price_change_data;
     data.price_change.resource = (e_resource)value;
 }
 
@@ -100,10 +109,12 @@ static void button_resource(int param1, int param2) {
 }
 
 static void button_toggle_rise(int param1, int param2) {
+    auto& data = g_edit_price_change_data;
     data.price_change.is_rise = !data.price_change.is_rise;
 }
 
 static void set_amount(int value) {
+    auto& data = g_edit_price_change_data;
     data.price_change.amount = value;
 }
 
@@ -112,11 +123,13 @@ static void button_amount(int param1, int param2) {
 }
 
 static void button_delete(int param1, int param2) {
+    auto& data = g_edit_price_change_data;
     scenario_editor_price_change_delete(data.id);
     window_editor_price_changes_show();
 }
 
 static void button_save(int param1, int param2) {
+    auto& data = g_edit_price_change_data;
     scenario_editor_price_change_save(data.id, &data.price_change);
     window_editor_price_changes_show();
 }

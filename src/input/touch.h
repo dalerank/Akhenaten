@@ -3,7 +3,7 @@
 #include "core/vec2i.h"
 #include "core/system_time.h"
 
-#define MAX_ACTIVE_TOUCHES 2
+constexpr int MAX_ACTIVE_TOUCHES = 2;
 
 enum {
     TOUCH_MODE_ORIGINAL = 0, // original akhenaten touch mode

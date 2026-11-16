@@ -16,7 +16,6 @@ mission44 {
 	initial_funds [30040, 20030, 15020, 10010, 7960]
 	rescue_loans [6000, 4000, 3000, 2000, 1590]
 	debt_interest [4, 6, 8, 10, 12]
-	house_tax_multipliers [300, 200, 150, 100, 75]
 
 	env {
 		has_animals : true
@@ -225,6 +224,7 @@ mission44 {
 			amount { value : 27 }
 			months_initial : 9
 			location_fields [ 9, 9, -1, -1 ]
+			warships : 4
 			event_trigger_type : EVENT_TRIGGER_BY_FAVOUR
 			on_completed_action : -1
 			on_refusal_action : -1
@@ -561,8 +561,6 @@ mission44 {
 			cost_to_open : 585
 			is_sea_trade : false
 			type : EMPIRE_CITY_FOREIGN_TRADING
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_LUXURY_GOODS ]
 			buys [ RESOURCE_POTTERY, RESOURCE_LINEN ]
 			route_limits [
@@ -580,8 +578,6 @@ mission44 {
 			cost_to_open : 1780
 			is_sea_trade : true
 			type : EMPIRE_CITY_FOREIGN_TRADING
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_OIL ]
 			buys [ RESOURCE_BEER, RESOURCE_LUXURY_GOODS ]
 			route_limits [
@@ -599,8 +595,6 @@ mission44 {
 			cost_to_open : 250
 			is_sea_trade : false
 			type : EMPIRE_CITY_FOREIGN_TRADING
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_FIGS, RESOURCE_HENNA ]
 			buys [ RESOURCE_GRAIN, RESOURCE_BRICKS ]
 			route_limits [
@@ -619,8 +613,6 @@ mission44 {
 			cost_to_open : 525
 			is_sea_trade : false
 			type : EMPIRE_CITY_FOREIGN_TRADING
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_FIGS, RESOURCE_HENNA ]
 			buys [ RESOURCE_STRAW, RESOURCE_BRICKS, RESOURCE_POTTERY ]
 			route_limits [
@@ -640,8 +632,6 @@ mission44 {
 			cost_to_open : 1700
 			is_sea_trade : true
 			type : EMPIRE_CITY_EGYPTIAN_TRADING
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_LINEN, RESOURCE_TIMBER, RESOURCE_OIL ]
 			buys [ RESOURCE_LAMPS ]
 			route_limits [
@@ -660,8 +650,6 @@ mission44 {
 			cost_to_open : 940
 			is_sea_trade : true
 			type : EMPIRE_CITY_PHARAOH_TRADING
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_LETTUCE, RESOURCE_WEAPONS, RESOURCE_LINEN, RESOURCE_PAPYRUS, RESOURCE_CHARIOTS ]
 			buys [ RESOURCE_BEER, RESOURCE_OIL, RESOURCE_PAINT ]
 			route_limits [
@@ -684,8 +672,6 @@ mission44 {
 			cost_to_open : 890
 			is_sea_trade : false
 			type : EMPIRE_CITY_FOREIGN_TRADING
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_COPPER, RESOURCE_OIL ]
 			buys [ RESOURCE_GRAIN, RESOURCE_BEER ]
 			route_limits [
@@ -885,7 +871,6 @@ mission44 {
 
 	vars {
 		start_message_shown : false
-		pharaoh_favour_invasion_done : false
 	}
 }
 
@@ -893,6 +878,7 @@ mission44 {
 function mission44_on_start(ev) {
 	log_info("mission44: on_start", {ev:ev})
 	__image_request_pak(PACK_ENEMY_KUSHITE)
+	__image_request_pak(PACK_ENEMY_EGYPTIAN)
 	scenario.start_year = -1250
 	scenario.climate = 2
 	__scenario_monuments.first = 36
@@ -908,26 +894,3 @@ function mission44_on_start(ev) {
 	}
 }
 
-[es=event_advance_month, mission=mission44]
-function mission44_pharaoh_favour_invasion(ev) {
-	if (mission.pharaoh_favour_invasion_done) {
-		return
-	}
-	if (city.rating_kingdom > 0) {
-		return
-	}
-	mission.pharaoh_favour_invasion_done = true
-	log_info("akhenaten: mission 44 pharaoh favour invasion size=27 kr=" + city.rating_kingdom)
-	__image_request_pak(PACK_ENEMY_EGYPTIAN)
-	city.start_foreign_army_invasion({
-		mode: ATTACK_TYPE_ENEMIES,
-		enemy: ENEMY_3_EGYPTIAN,
-		kind: INVASION_KIND_KINGDOME,
-		size: 27,
-		invasion_id: 8,
-		tilex: -1,
-		tiley: -1,
-		want_destroy_buildings: 0,
-		invasion_attack_target: EVENT_ATTACK_TARGET_TROOPS
-	})
-}

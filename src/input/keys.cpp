@@ -1,5 +1,6 @@
 #include "keys.h"
 
+#include "core/bstring.h"
 #include "core/encoding.h"
 #include "input/keyboard.h"
 #include "graphics/font.h"
@@ -42,16 +43,15 @@ static const modifier_name modifier_names[] = {
 };
 
 pcstr key_combination_name(e_key key, e_key_mode modifiers) {
-    static char name[100];
-    name[0] = 0;
+    static bstring<100> name;
+    name.clear();
     for (const modifier_name* modname = modifier_names; modname->modifier; modname++) {
         if (modifiers & modname->modifier) {
-            strcat(name, modname->name);
-            strcat(name, " ");
+            name.cat(modname->name, " ");
         }
     }
-    strcat(name, key_names[key]);
-    return name;
+    name.cat(key_names[key]);
+    return name.c_str();
 }
 
 static e_key_mode parse_modifier(pcstr name) {
@@ -109,25 +109,21 @@ static int can_display(const char* key_name) {
 }
 
 const uint8_t* key_combination_display_name(int key, int modifiers) {
-    static char result[100];
+    static bstring<100> result;
     static uint8_t str_result[100];
 
-    result[0] = 0;
+    result.clear();
     if (modifiers & KEY_MOD_CTRL) {
-        strcat(result, keyboard_t::key_modifier_name(KEY_MOD_CTRL));
-        strcat(result, " ");
+        result.cat(keyboard_t::key_modifier_name(KEY_MOD_CTRL), " ");
     }
     if (modifiers & KEY_MOD_ALT) {
-        strcat(result, keyboard_t::key_modifier_name(KEY_MOD_ALT));
-        strcat(result, " ");
+        result.cat(keyboard_t::key_modifier_name(KEY_MOD_ALT), " ");
     }
     if (modifiers & KEY_MOD_GUI) {
-        strcat(result, keyboard_t::key_modifier_name(KEY_MOD_GUI));
-        strcat(result, " ");
+        result.cat(keyboard_t::key_modifier_name(KEY_MOD_GUI), " ");
     }
     if (modifiers & KEY_MOD_SHIFT) {
-        strcat(result, keyboard_t::key_modifier_name(KEY_MOD_SHIFT));
-        strcat(result, " ");
+        result.cat(keyboard_t::key_modifier_name(KEY_MOD_SHIFT), " ");
     }
 
     // Modifiers are easy, now for key name...
@@ -186,14 +182,12 @@ const uint8_t* key_combination_display_name(int key, int modifiers) {
         case '\0':
             key_name = key_display_names[key];
         }
-        strcat(result, key_name);
+        result.cat(key_name);
     } else if (can_display(key_name))
-        strcat(result, key_name);
+        result.cat(key_name);
     else {
-        strcat(result, "? (");
-        strcat(result, key_display_names[key]);
-        strcat(result, ")");
+        result.cat("? (", key_display_names[key], ")");
     }
-    encoding_from_utf8(result, str_result, 100);
+    encoding_from_utf8(result.c_str(), str_result, 100);
     return str_result;
 }

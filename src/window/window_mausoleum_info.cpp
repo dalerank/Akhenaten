@@ -2,6 +2,8 @@
 
 #include "building/monuments.h"
 #include "city/city.h"
+#include "city/city_floods.h"
+#include "city/city_resource.h"
 #include "game/resource.h"
 #include "window/building/common.h"
 #include "window/window_building_info.h"
@@ -19,6 +21,76 @@ void apply_mausoleum_title(ui::widget &ui, building_monument *st) {
     // from static info_title_id [198, 25].
     const int skin = st->runtime_data().variant % 3;
     ui["title"] = textid{198, (uint16_t)(25 + skin)};
+}
+
+bool built(e_building_type type) {
+    return g_city.buildings.count_total(type) > 0;
+}
+
+bool working(e_building_type type) {
+    return g_city.buildings.count_active(type) > 0;
+}
+
+textid no_peasants_text() {
+    const int s = g_floods.state;
+    if (s == FLOOD_STATE_IMMINENT || s == FLOOD_STATE_FLOODING || s == FLOOD_STATE_INUNDATED) {
+        return {178, 51};
+    }
+    return {178, 17};
+}
+
+textid stone_text(const int *p, bool sandstone_ok) {
+    if (!built(BUILDING_WORK_CAMP)) {
+        return {178, 13};
+    }
+    if (!built(BUILDING_STONEMASONS_GUILD)) {
+        return {178, 14};
+    }
+    const int masons = p[MAUSOLEUM_PROGRESS_STONEMASONS];
+    const int waiting = p[MAUSOLEUM_PROGRESS_STONEMASONS_WAITING];
+    if (masons == waiting && !sandstone_ok) {
+        return {178, 24};
+    }
+    if (masons == 0) {
+        return {178, 18};
+    }
+    if (waiting == 0 || !sandstone_ok || p[MAUSOLEUM_PROGRESS_MATERIAL] == 0) {
+        return {178, 59};
+    }
+    return g_city.resource.is_stockpiled(RESOURCE_SANDSTONE) ? textid{178, 100} : textid{178, 24};
+}
+
+textid building_text(const int *p, bool sandstone_ok) {
+    if (p[MAUSOLEUM_PROGRESS_PERCENT] >= 100) {
+        return {178, 60};
+    }
+    if (p[MAUSOLEUM_PROGRESS_MATERIAL] == 0) {
+        if (p[MAUSOLEUM_PROGRESS_PARTS_BELOW_2] == 0) {
+            return {178, 59};
+        }
+        if (!built(BUILDING_WORK_CAMP)) {
+            return {178, 13};
+        }
+        return p[MAUSOLEUM_PROGRESS_LABORERS] == 0 ? textid{178, 17} : textid{178, 59};
+    }
+    if (!built(BUILDING_WORK_CAMP)) {
+        return {178, 13};
+    }
+    if (!built(BUILDING_STONEMASONS_GUILD)) {
+        return {178, 14};
+    }
+    if (p[MAUSOLEUM_PROGRESS_BLOCKS_LEFT] != 0) {
+        return {178, 97};
+    }
+    const int masons = p[MAUSOLEUM_PROGRESS_STONEMASONS];
+    const int waiting = p[MAUSOLEUM_PROGRESS_STONEMASONS_WAITING];
+    if (masons == waiting && !sandstone_ok) {
+        return {178, 24};
+    }
+    if (masons == 0) {
+        return {178, 18};
+    }
+    return (waiting != 0 && sandstone_ok) ? textid{178, 24} : textid{178, 59};
 }
 
 } // namespace
@@ -41,85 +113,59 @@ void info_window_mausoleum::window_info_background(object_info &c) {
 void info_window_mausoleum::init(object_info &c) {
     building_info_window::init(c);
 
-    auto *st = c.building_get()->dcast_monument();
+    auto *part = c.building_get()->dcast_mausoleum();
+    auto *st = part ? part->main_mausoleum() : nullptr;
     if (!st) {
         return;
     }
 
     apply_mausoleum_title(ui, st);
-    auto &d = st->runtime_data();
 
     if (st->is_unfinished()) {
-        textid reason = {178, 58};
-        int work_camps = g_city.buildings.count_active(BUILDING_WORK_CAMP);
-        int carpenters = g_city.buildings.count_active(BUILDING_CARPENTERS_GUILD);
-        int stonemasons = g_city.buildings.count_active(BUILDING_STONEMASONS_GUILD);
+        int progress[MAUSOLEUM_PROGRESS_SLOTS] = {};
+        const int percent = st->get_progress(progress);
+        const bool sandstone_ok = building_mausoleum::yards_available(RESOURCE_SANDSTONE)
+            >= (progress[MAUSOLEUM_PROGRESS_STONEMASONS_WAITING] + 1) * 5 * 80;
 
-        auto still_needs = [&](e_resource r) {
-            return st->needs_resource(r) > 0 && d.resources_pct[r] < 100;
-        };
-
-        if (d.phase < 2 && work_camps == 0) {
-            reason = {199, 51}; // not begun
-        } else if (d.phase < 2) {
-            reason = {178, 58}; // clearing / enough sandstone
-        } else if (still_needs(RESOURCE_TIMBER)) {
-            reason = {178, 97}; // ramps — carpenters / timber
-        } else if (still_needs(RESOURCE_SANDSTONE) && stonemasons == 0) {
-            reason = {178, 14};
-        } else if (d.phase == 2 || d.phase == 4) {
-            reason = stonemasons ? textid{178, 59} : textid{178, 14};
-        } else if (d.phase == 3) {
-            // Timber delivered; ramps going up (or waiting on carpenter finish).
-            reason = carpenters ? textid{178, 59} : textid{178, 97};
-        } else {
-            reason = {178, 59};
+        textid reason;
+        switch (progress[MAUSOLEUM_PROGRESS_STATUS]) {
+        case MAUSOLEUM_STATUS_SITE:
+            if (!built(BUILDING_WORK_CAMP)) {
+                reason = {178, 13};
+            } else if (working(BUILDING_WORK_CAMP) || progress[MAUSOLEUM_PROGRESS_LABORERS] != 0) {
+                reason = {178, 58};
+            } else {
+                reason = no_peasants_text();
+            }
+            break;
+        case MAUSOLEUM_STATUS_STARTED:
+            reason = stone_text(progress, sandstone_ok);
+            break;
+        default:
+            reason = building_text(progress, sandstone_ok);
+            break;
         }
-
         ui["warning_text"] = reason;
 
-        int min_pct = 100;
-        bool any_resource = false;
-        for (int ri = (int)RESOURCES_MIN; ri < (int)RESOURCES_MAX; ++ri) {
-            auto r = (e_resource)ri;
-            if (st->needs_resource(r) <= 0) {
-                continue;
-            }
-            any_resource = true;
-            min_pct = std::min(min_pct, (int)d.resources_pct[r]);
-        }
-        if (!any_resource) {
-            const int art_phases = std::max(1, st->phases() - 1);
-            min_pct = std::min(99, (d.phase * 100) / art_phases);
-        }
-
         bstring64 progress_str;
-        progress_str.printf("%d%%", min_pct);
+        progress_str.printf("%d%%", percent);
         ui["progress_text"] = textid{199, 53}; // "This mausoleum is"
         ui["progress_pct"] = progress_str;
 
-        auto fill_resource_slot = [&](e_resource r, pcstr icon_key, pcstr text_key) {
-            int needed = st->needs_resource(r);
-            if (needed <= 0) {
-                ui[text_key] = "";
-                ui[icon_key].set_enabled(false);
-                return;
-            }
-            ui[icon_key].set_enabled(true);
-            int delivered = std::min(needed * d.resources_pct[r] / 100, needed);
-            bstring64 s;
-            s.printf("%d / %d", delivered, needed);
-            ui[text_key] = s;
-        };
-        fill_resource_slot(RESOURCE_SANDSTONE, "sandstone_icon", "sandstone_text");
-        fill_resource_slot(RESOURCE_TIMBER, "timber_icon", "timber_text");
+        const int material_total = progress[MAUSOLEUM_PROGRESS_MATERIAL_TOTAL];
+        const int material_left = progress[MAUSOLEUM_PROGRESS_MATERIAL];
+        ui["sandstone_icon"].set_enabled(true);
+        bstring64 s;
+        s.printf("%d / %d", (material_total - material_left) / MAUSOLEUM_MATERIAL_PER_LOAD,
+          material_total / MAUSOLEUM_MATERIAL_PER_LOAD);
+        ui["sandstone_text"] = s;
     } else {
         ui["warning_text"] = textid{178, 60}; // complete
         ui["progress_text"] = textid{199, 54};
         ui["progress_pct"] = "";
         ui["sandstone_text"] = "";
-        ui["timber_text"] = "";
         ui["sandstone_icon"].set_enabled(false);
-        ui["timber_icon"].set_enabled(false);
     }
+    ui["timber_text"] = "";
+    ui["timber_icon"].set_enabled(false);
 }

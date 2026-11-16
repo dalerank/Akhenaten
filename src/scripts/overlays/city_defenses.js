@@ -4,7 +4,7 @@ log_info("akhenaten: overlay city_defenses started")
 overlay_city_defenses {
   id:OVERLAY_CITY_DEFENSES
   title: "#overlay_city_defenses"
-  walkers:[FIGURE_TOWER_SENTRY]
+  walkers:[FIGURE_TOWER_SENTRY, FIGURE_CONSTABLE]
   buildings:[BUILDING_ROADBLOCK]
   column_type: COLUMN_TYPE_POSITIVE
   column_anim: {pack:PACK_GENERAL, id:103}

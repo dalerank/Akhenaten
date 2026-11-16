@@ -35,13 +35,18 @@ static generic_button buttons[] = {
   {310, 230, 100, 25, button_save, button_none},
 };
 
-static struct {
+struct edit_invasion_data_t {
     int id;
     editor_invasion invasion;
     int focus_button_id;
-} data;
+
+    void reset() { *this = {}; }
+};
+
+static edit_invasion_data_t g_edit_invasion_data;
 
 static void init(int id) {
+    auto& data = g_edit_invasion_data;
     data.id = id;
     scenario_editor_invasion_get(id, &data.invasion);
 }
@@ -51,6 +56,7 @@ static void draw_background(int) {
 }
 
 static void draw_foreground(int) {
+    auto& data = g_edit_invasion_data;
     graphics_set_to_dialog();
 
     outer_panel_draw(vec2i{0, 100}, 38, 11);
@@ -85,6 +91,7 @@ static void draw_foreground(int) {
 }
 
 static void handle_input(const mouse* m, const hotkeys* h) {
+    auto& data = g_edit_invasion_data;
     if (generic_buttons_handle_mouse(mouse_in_dialog(m), {0, 0}, buttons, 7, &data.focus_button_id, nullptr))
         return;
     if (input_go_back_requested(m, h))
@@ -92,6 +99,7 @@ static void handle_input(const mouse* m, const hotkeys* h) {
 }
 
 static void set_year(int value) {
+    auto& data = g_edit_invasion_data;
     data.invasion.year = value;
 }
 
@@ -100,6 +108,7 @@ static void button_year(int param1, int param2) {
 }
 
 static void set_amount(int value) {
+    auto& data = g_edit_invasion_data;
     data.invasion.amount = value;
 }
 
@@ -108,6 +117,7 @@ static void button_amount(int param1, int param2) {
 }
 
 static void set_type(int value) {
+    auto& data = g_edit_invasion_data;
     data.invasion.type = value == 3 ? 4 : value;
 }
 
@@ -116,29 +126,35 @@ static void button_type(int param1, int param2) {
 }
 
 static void set_from(int value) {
+    auto& data = g_edit_invasion_data;
     data.invasion.from = value;
 }
 
 static void button_from(int param1, int param2) {
+    auto& data = g_edit_invasion_data;
     if (data.invasion.type != INVASION_TYPE_DISTANT_BATTLE)
         window_select_list_show(g_screen.dialog_offset.x + 330, g_screen.dialog_offset.y + 50, 35, 9, set_from);
 }
 
 static void set_attack(int value) {
+    auto& data = g_edit_invasion_data;
     data.invasion.attack_type = (e_formation_attack_type)value;
 }
 
 static void button_attack(int param1, int param2) {
+    auto& data = g_edit_invasion_data;
     if (data.invasion.type != INVASION_TYPE_DISTANT_BATTLE)
         window_select_list_show(g_screen.dialog_offset.x + 120, g_screen.dialog_offset.y + 120, 36, 5, set_attack);
 }
 
 static void button_delete(int param1, int param2) {
+    auto& data = g_edit_invasion_data;
     scenario_editor_invasion_delete(data.id);
     window_editor_invasions_show();
 }
 
 static void button_save(int param1, int param2) {
+    auto& data = g_edit_invasion_data;
     scenario_editor_invasion_save(data.id, &data.invasion);
     window_editor_invasions_show();
 }

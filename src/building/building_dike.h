@@ -13,7 +13,6 @@ public:
         virtual int construction_place(build_planner &planer, tile2i start, tile2i end, int orientation, int variant) const override;
     };
 
-    virtual void on_place_checks() override;
 
     static int place_dike(bool measure_only, tile2i start, tile2i end);
     static bool set_dike(tile2i tile);

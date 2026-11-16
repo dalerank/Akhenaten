@@ -15,6 +15,7 @@
 #include "platform/platform.h"
 #include "window/autoconfig_window.h"
 #include "core/app.h"
+#include "graphics/elements/lang_text.h"
 
 #include <algorithm>
 #include <cstring>
@@ -27,6 +28,49 @@ void ANK_REGISTER_CONFIG_ITERATOR(config_load_external_fonts) {
 
 ANK_CONFIG_STRUCT(font_config, type, size, bold, color, shadow_offset, line_height, letter_spacing)
 const e_font_tokens_t ANK_CONFIG_ENUM(e_font_tokens);
+
+void game_language::decode_symbols(font_utf8_symbols_t& out) const {
+    if (symbols.empty()) {
+        return;
+    }
+
+    svector<bstring32, 1024> data_str;
+    string_to_array_t(data_str, symbols.c_str(), ',');
+
+    svector<uint64_t, 1024> data;
+    for (const auto& x : data_str) {
+        char sym[8] = {0};
+        memcpy(sym, (uint32_t*)x.c_str(), 4);
+        data.push_back(*(uint64_t*)sym);
+    }
+
+    for (const auto& sym : data) {
+        uint8_t symbol_len = strlen((pcstr)&sym);
+        uint32_t symdec = 0;
+        switch (symbol_len) {
+        case 1: // single byte
+            symdec = *(uint8_t*)&sym;
+            break;
+        case 2: { // two bytes - UTF-8 decoding for 2-byte sequences
+            uint8_t* symdata = (uint8_t*)&sym;
+            symdec = ((symdata[0] & 0x1F) << 6) | (symdata[1] & 0x3F);
+        } break;
+        case 3: { // three bytes (most common for non-ASCII)
+            // UTF-8 decoding for 3-byte sequences
+            uint8_t* symdata = (uint8_t*)&sym;
+            symdec = ((symdata[0] & 0x0F) << 12) | ((symdata[1] & 0x3F) << 6) | (symdata[2] & 0x3F);
+        } break;
+        case 4: { // four bytes - UTF-8 decoding for 4-byte sequences
+            uint8_t* symdata = (uint8_t*)&sym;
+            symdec = ((symdata[0] & 0x07) << 18) | ((symdata[1] & 0x3F) << 12) | ((symdata[2] & 0x3F) << 6)
+                     | (symdata[3] & 0x3F);
+        } break;
+        default:
+            return;
+        }
+        out.push_back(symdec);
+    }
+}
 
 static int image_y_offset_none(const uint8_t *c, int image_height, int line_height);
 static int image_y_offset_default(const uint8_t *c, int image_height, int line_height);
@@ -109,11 +153,13 @@ static int image_y_offset_default(const uint8_t *c, int image_height, int line_h
         offset = 0;
     }
 
-    if ((*c < 0x80 || *c == 0xE7) && !g_font_data.use_utf_font) {
+    // UTF-8 lead bytes of Latin-1 letters (U+0080..U+00FF) sit on the same baseline as ASCII in the bitmap font.
+    const bool latin1_lead = (*c == 0xC2 || *c == 0xC3);
+    if ((*c < 0x80 || *c == 0xE7 || latin1_lead) && !g_font_data.use_utf_font) {
         offset = 0;
     }
 
-    if ((*c > 0x80) || g_font_data.use_utf_font) {
+    if ((*c > 0x80 && !latin1_lead) || g_font_data.use_utf_font) {
         offset = -line_height;
     }
 
@@ -249,76 +295,28 @@ void font_atlas_regenerate() {
     return;
 #endif
 
-    vfs::path symbols_font;
-    svector<uint32_t, 1024> utf8_symbols;
     xstring locale_short = game_features::gameopt_language.to_string();
     if (!locale_short) {
         locale_short = "en";
     }
 
-    font_configs_t font_configs;
-    bool font_bold = false;
-
-    g_config_arch.r_array("game_languages", [&] (archive arch) {
-        xstring lang_current = arch.r_string("lang");
-        if (lang_current != locale_short) {
-            return;
+    game_language lang_font;
+    game_languages_vec languages;
+    g_config_arch.r("game_languages", languages);
+    for (const auto& l : languages) {
+        if (l.lang == locale_short) {
+            lang_font = l;
+            break;
         }
+    }
 
-        xstring symbols = arch.r_string("symbols");
-        if (symbols.empty()) {
-            return;
-        }
+    vfs::path symbols_font = lang_font.font.c_str();
+    const font_configs_t& font_configs = lang_font.font_configs;
+    const bool uses_bitmap_font = lang_font.is_bitmap_font;
+    font_utf8_symbols_t utf8_symbols;
+    lang_font.decode_symbols(utf8_symbols);
 
-        arch.r("font_configs", font_configs);
-        symbols_font = arch.r_string("font");
-
-        svector<bstring32, 1024> data_str;
-        string_to_array_t(data_str, symbols.c_str(), ',');
-
-        svector<uint64_t, 1024> data;
-        for (const auto& x: data_str) {
-            char sym[8] = { 0 };
-            memcpy(sym, (uint32_t *)x.c_str(), 4);
-            data.push_back( *(uint64_t*)sym );
-        }
-
-        for (const auto &sym : data) {
-            uint8_t symbol_len = strlen((pcstr)&sym);
-            uint32_t symdec = 0;
-            switch (symbol_len) {
-            case 1: // single byte
-                symdec = *(uint8_t *)&sym;
-                break;
-            case 2: { // two bytes - UTF-8 decoding for 2-byte sequences
-                    uint8_t* symdata = (uint8_t*)&sym;
-                    symdec = ((symdata[0] & 0x1F) << 6) | (symdata[1] & 0x3F);
-                }
-                break;
-            case 3: { // three bytes (most common for non-ASCII)
-                    // UTF-8 decoding for 3-byte sequences
-                    uint8_t* symdata = (uint8_t*)&sym;
-                    symdec = ((symdata[0] & 0x0F) << 12) |
-                             ((symdata[1] & 0x3F) << 6) |
-                             (symdata[2] & 0x3F);
-                }
-                break;
-            case 4: { // four bytes - UTF-8 decoding for 4-byte sequences
-                    uint8_t* symdata = (uint8_t*)&sym;
-                    symdec = ((symdata[0] & 0x07) << 18) |
-                             ((symdata[1] & 0x3F) << 12) |
-                             ((symdata[2] & 0x3F) << 6) |
-                             (symdata[3] & 0x3F);
-                }
-                break;
-            default:
-                return;
-            }
-            utf8_symbols.push_back(symdec);
-        }
-    });
-
-    g_font_data.use_utf_font = (locale_short != "en") || g_font_data.force_utf_font;
+    g_font_data.use_utf_font = !uses_bitmap_font || g_font_data.force_utf_font;
     if (!g_args.get_custom_font().empty() && !g_font_data.use_utf_font) {
         g_font_data.use_utf_font = true;
     }

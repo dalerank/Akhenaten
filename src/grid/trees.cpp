@@ -69,30 +69,30 @@ void map_tree_update_image(int grid_offset) {
 
     if (map_terrain_is(grid_offset, TERRAIN_TREE)
         && !map_terrain_is(grid_offset, TERRAIN_ELEVATION | TERRAIN_ACCESS_RAMP)) {
-        int image_id = image_id_from_group(GROUP_TERRAIN_TREE) + (map_random_get(grid_offset) & 7);
+        int image_id = image_id_from_group(GROUP_TERRAIN_TREE, (map_random_get(grid_offset) & 7));
 
         int grasslevel = map_grasslevel_get(grid_offset);
         if (map_get_vegetation_growth(grid_offset) == 255) {
             if (map_terrain_has_only_rocks_trees_in_ring(x, y, 3))
-                image_id += 56;
+                image_id = image_offset(image_id, 56);
             else if (map_terrain_has_only_rocks_trees_in_ring(x, y, 2))
-                image_id += 48;
+                image_id = image_offset(image_id, 48);
             else {
                 if (grasslevel > 8)
-                    image_id += 32;
+                    image_id = image_offset(image_id, 32);
                 else if (grasslevel > 4)
-                    image_id += 16;
+                    image_id = image_offset(image_id, 16);
                 if (map_terrain_has_only_rocks_trees_in_ring(x, y, 1))
-                    image_id += 8;
+                    image_id = image_offset(image_id, 8);
             }
         } else {
-            image_id += 64;
+            image_id = image_offset(image_id, 64);
             if (grasslevel > 8)
-                image_id += 16;
+                image_id = image_offset(image_id, 16);
             else if (grasslevel > 4)
-                image_id += 8;
+                image_id = image_offset(image_id, 8);
             //            if (map_terrain_has_only_rocks_trees_in_ring(x, y, 1))
-            //                image_id += 8;
+            //                image_id = image_offset(image_id, 8);
         }
         map_image_set(grid_offset, image_id);
 

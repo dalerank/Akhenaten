@@ -1,6 +1,6 @@
 # IO Subsystem
 
-Chunk-based save/load, mod image loading, and localization strings.
+Chunk-based save/load and localization strings.
 
 ## Key Files
 
@@ -16,7 +16,6 @@ Chunk-based save/load, mod image loading, and localization strings.
 | `gamestate/file_schema_*.cpp` | Per-format `push_chunk` lists (map / sav / svx) |
 | `gamestate/chunks.h` | Global `io_buffer*` declarations for game data chunks |
 | `io.h` | Low-level file reads (`io_read_file_into_buffer`, sg3/sgx counts) |
-| `mods/mods.h` | Mod image loading: group/name lookup, PNG support |
 | `gamefiles/lang.h` | Localization string management |
 
 ## Save/Load Layers
@@ -82,11 +81,10 @@ Bind callback for read/write. Optional default callback / `reset_data()` for chu
 3. Bump `latest_save_version` only if existing field layout/meaning changes — or when gating the new chunk with `if (file_version > N)` until the version cascade is cleaned up.
 4. Do not rename existing chunk names without an alias plan — names are part of the `.svx` format.
 
-## Mod System
+## Mods
 
-- Mods registered by author + name → group ID
-- Image lookup: `group_id + image_name → image_id`
-- PNG via `png_read.h`
+Not part of `io/`. The mod system lives in `src/content/mods.{h,cpp}` (mounting, script/sound
+lookup, enabled list); see the header for the conflict rule and lookup order.
 
 ## Localization
 

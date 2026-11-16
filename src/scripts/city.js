@@ -87,9 +87,9 @@ city {
             @school {}
             @library {}
             @dentist {}
-            @physician {}
-            @water_supply {}
-            @magistrate {}
+            @courthouse {}
+            @more_courthouse {}
+            @health {}
             @religion {}
         }
 
@@ -97,6 +97,12 @@ city {
             __property_getter: __city_get_house_demands_missing_property
             @entertainment {}
             @more_entertainment {}
+            @dentist {}
+            @courthouse {}
+            @any_courthouse {}
+            @health {}
+            @more_health {}
+            @second_luxury {}
         }
     }
 
@@ -139,6 +145,7 @@ city {
         @available_foods { get: __city_resources_available_foods }
         @food_produced_last_month { get: __city_resource_food_produced_last_month }
         @food_consumed_last_month { get: __city_resource_food_consumed_last_month }
+        @luxury_goods_kinds { get: __city_resource_luxury_goods_kinds }
         @food_percentage_produced {
             get: function () {
                 return Math.calc_percentage(__city_resource_food_produced_last_month(), __city_resource_food_consumed_last_month())
@@ -388,7 +395,7 @@ city.get_house_model = function(level) {
         @education { }
         @health { }
         @dentist { }
-        @physician { }
+        @courthouse { }
         @fancy_bazaar { }
     }
 }
@@ -453,6 +460,17 @@ city.create_chain_event = function(obj) {
         set_sender_faction: function(sender_faction) { __city_request_set_sender_faction(this.tag_id, sender_faction) }
         set_param: function(param, value) { __city_request_set_param(this.tag_id, param, value) }
         execute: function() { __city_request_execute(this.tag_id) }
+    }
+}
+
+// OG invasion event (needs og_invasions in the mission): { tag_id, invader, amount, months_initial,
+// route, empire_route, attack_target, year+month | delay, trigger }. Warnings, attack and chains follow the OG cycle.
+city.create_invasion = function(obj) {
+    var event_id = __city_create_invasion(obj)
+    return {
+        tag_id: obj.tag_id
+        event_id: event_id
+        set_completed_action_tag: function(slave_tag) { __city_request_set_completed_action(this.tag_id, slave_tag) }
     }
 }
 

@@ -9,7 +9,7 @@ log_info("akhenaten: mission 18 rostja started")
 // NEW_TRADE i=20 copy Men-nefer; i=32/42/43 Nekhen→remap Iunet (route 3).
 // EVENT_TYPE_INVASION chain leaves no-op → JS via event_request_cleared:
 // gems crisis refuse/late → Hyksos×11; troops refuse/defeat → Hyksos×9 → re-arm ×47.
-// Monuments goal 53 (Sphinx + complex + medium true pyramid).
+// Monuments goal 53 (Sphinx 10 + complex 48 + medium true pyramid 12 → trunc(6.32·√70+0.5)=53).
 //
 // Tag_id scheme:
 //   1000 + i               chain-only ONLY_VIA_EVENT leaves / chain requests
@@ -52,7 +52,6 @@ mission18 { // Rostja (Giza) — The Great Pyramid and Sphinx
 	initial_funds [20000, 13300, 10000, 6700, 5300]
 	rescue_loans [10000, 6700, 5000, 3300, 2700]
 	debt_interest [10, 15, 20, 25, 30]
-	house_tax_multipliers [300, 200, 150, 100, 75]
 
 	init_resources : {
 		bricks: { type:RESOURCE_BRICKS, allow: true},
@@ -123,6 +122,54 @@ mission18 { // Rostja (Giza) — The Great Pyramid and Sphinx
 
 	enable_scenario_events : true
 
+	events [
+		{ // pak i=18
+			type : EVENT_TYPE_INVASION
+			time { year : 0, month : 0 }
+			item { value : EVENT_INVADER_PHARAOH }
+			amount { value : 50 }
+			months_initial : 9
+			location_fields [ 1, 1, -1, -1 ]
+			event_trigger_type : EVENT_TRIGGER_BY_FAVOUR
+			tag_id : 7018
+			on_completed_action : 1
+			on_refusal_action : -1
+			on_too_late_action : -1
+			on_defeat_action : -1
+			invasion_attack_target : EVENT_ATTACK_TARGET_RANDOM
+		}
+		{ // pak i=40
+			type : EVENT_TYPE_INVASION
+			time { year : 0, month : 0 }
+			item { value : EVENT_INVADER_PHARAOH }
+			amount { value : 20 }
+			months_initial : 0
+			location_fields [ 3, 3, -1, -1 ]
+			event_trigger_type : EVENT_TRIGGER_ONLY_VIA_EVENT
+			tag_id : 7040
+			on_completed_action : 2
+			on_refusal_action : -1
+			on_too_late_action : -1
+			on_defeat_action : -1
+			invasion_attack_target : EVENT_ATTACK_TARGET_RANDOM
+		}
+		{ // pak i=41
+			type : EVENT_TYPE_INVASION
+			time { year : 0, month : 0 }
+			item { value : EVENT_INVADER_PHARAOH }
+			amount { value : 50 }
+			months_initial : 0
+			location_fields [ 8, 8, -1, -1 ]
+			event_trigger_type : EVENT_TRIGGER_ONLY_VIA_EVENT
+			tag_id : 7041
+			on_completed_action : -1
+			on_refusal_action : -1
+			on_too_late_action : -1
+			on_defeat_action : -1
+			invasion_attack_target : EVENT_ATTACK_TARGET_RANDOM
+		}
+	]
+
 	map_background : {pack:PACK_EMPIRE, id:1}
 	hide_pak_cities : true
 	cities [
@@ -145,8 +192,6 @@ mission18 { // Rostja (Giza) — The Great Pyramid and Sphinx
 			cost_to_open : 500
 			is_sea_trade : true
 			type : EMPIRE_CITY_EGYPTIAN_TRADING
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_MEAT, RESOURCE_CLAY, RESOURCE_REEDS, RESOURCE_LIMESTONE ]
 			buys [ RESOURCE_BEER, RESOURCE_LINEN, RESOURCE_GEMS, RESOURCE_LUXURY_GOODS, RESOURCE_TIMBER, RESOURCE_GRANITE ]
 			route_limits [
@@ -172,8 +217,6 @@ mission18 { // Rostja (Giza) — The Great Pyramid and Sphinx
 			cost_to_open : 1250
 			is_sea_trade : true
 			type : EMPIRE_CITY_FOREIGN_TRADING
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_LUXURY_GOODS, RESOURCE_TIMBER, RESOURCE_COPPER ]
 			buys [ RESOURCE_GEMS, RESOURCE_LUXURY_GOODS ]
 			route_limits [
@@ -195,8 +238,6 @@ mission18 { // Rostja (Giza) — The Great Pyramid and Sphinx
 			is_sea_trade : true
 			trade : false
 			type : EMPIRE_CITY_EGYPTIAN
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_MEAT, RESOURCE_CLAY, RESOURCE_POTTERY, RESOURCE_LIMESTONE, RESOURCE_GRANITE, RESOURCE_COPPER ]
 			buys [ RESOURCE_STRAW ]
 			route_limits [
@@ -233,8 +274,6 @@ mission18 { // Rostja (Giza) — The Great Pyramid and Sphinx
 			is_sea_trade : false
 			trade : false
 			type : EMPIRE_CITY_PHARAOH
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_STONE, RESOURCE_BEER ]
 			buys [ RESOURCE_POTTERY, RESOURCE_PAPYRUS, RESOURCE_LUXURY_GOODS ]
 			route_limits [
@@ -424,17 +463,6 @@ mission18 { // Rostja (Giza) — The Great Pyramid and Sphinx
 		troops_rearm_seq : 0
 		troops_kr_seq : 0
 
-		pharaoh_favour_invasion_done : false
-		pharaoh_favour_chain_done : false
-		pharaoh_favour_enemies_seen : false
-		pharaoh_favour_wave_next : -1
-		pharaoh_favour_wave_seq : 0
-		// Legacy mid-save (pre-B7 local poll):
-		pharaoh_favour_wave2_done : false
-		pharaoh_favour_wave3_done : false
-		pharaoh_favour_wave2_enemies_seen : false
-		pharaoh_favour_wave3_enemies_seen : false
-
 		start_message_shown : false
 	}
 }
@@ -574,7 +602,8 @@ function mission18_ensure_pharaoh_gift_leaves() {
 
 // Troops chain: ok→31 KR+3→32 NEW_TRADE Iunet; late→33 SEA→34 troops×47 (first re-arm only).
 // Refuse/defeat → JS Hyksos×9 + unique KR−2 + fresh re-arm tag (unique tags remain hygiene; B14 allows shared).
-// 1035: silent defeat-deferral stub (on_defeat_action >= 0); HAILSTORM is a no-op handler.
+// 1035: the on_defeat leaf, pak i=35 (the Hyksos×9 invasion). It stays inert without og_invasions;
+// the raid itself comes from JS on the cleared request.
 function mission18_ensure_troops_chain_leaves() {
 	if (mission.troops_chain_leaves_wired) {
 		return
@@ -584,7 +613,7 @@ function mission18_ensure_troops_chain_leaves() {
 	mission18_make_leaf(1032, EVENT_TYPE_CITY_STATUS_CHANGE, undefined, 7, 2,
 		EVENT_SUBTYPE_NEW_TRADE_ROUTE, "Iunet")
 	var sea = mission18_make_leaf(1033, EVENT_TYPE_SEA_TRADE_PROBLEM, undefined, 5, 2)
-	mission18_make_leaf(1035, EVENT_TYPE_HAILSTORM, undefined, 0, 2)
+	mission18_make_leaf(1035, EVENT_TYPE_INVASION, undefined, 0, 2)
 	var troops2 = city.create_good_request({
 		tag_id: 1034, resource: RESOURCE_TROOPS, amount: 47, months_initial: 8, subtype: 1,
 		trigger: EVENT_TRIGGER_ONLY_VIA_EVENT, city: "Men-nefer"
@@ -626,7 +655,7 @@ function mission18_troops_refuse_raid(tag) {
 	mission.troops_rearm_seq = (mission.troops_rearm_seq | 0) + 1
 	var rearm_tag = 4100 + mission.troops_rearm_seq
 	mission18_create_troops_rearm_request(rearm_tag)
-	// High band: avoid colliding with calendar Hyksos (0 / 3+year%20) and favour (24+).
+	// High band: avoid colliding with calendar Hyksos (0 / 3+year%20).
 	var invasion_id = 60 + (mission.troops_rearm_seq % 20)
 	log_info("akhenaten: mission 18 rostja hyksos×9 after troops refuse/defeat tag=" + tag + " rearm=" + rearm_tag)
 	mission18_hyksos_raid(invasion_id, 9, EVENT_ATTACK_TARGET_FOOD, rearm_tag)
@@ -918,7 +947,7 @@ function mission18_event_i30_troops(ev) {
 	mission.event30_troops_done = true
 	mission18_ensure_troops_chain_leaves()
 	log_info("akhenaten: mission 18 rostja troops×40", {ev:ev})
-	// refuse_tag 0: KR from cleared (unique). defeat_tag 1035: defer-to-battle gate only.
+	// refuse_tag 0: KR from cleared (unique). defeat_tag 1035: inert pak invasion leaf.
 	mission18_fire_request(2030, RESOURCE_TROOPS, 40, 12, 1031, 0, 1033, 1, 0, 1035, "Men-nefer")
 }
 
@@ -1036,10 +1065,4 @@ function mission18_event_i43_new_trade_route(ev) {
 		city: "Iunet",
 		trigger: EVENT_TRIGGER_ONCE
 	}).execute()
-}
-
-// pak i=18→40→41: favour Pharaoh 50→20→50.
-[es=event_advance_month, mission=mission18]
-function mission18_pharaoh_favour_invasion(ev) {
-	mission_pharaoh_favour_invasion_tick(mission, [50, 20, 50])
 }

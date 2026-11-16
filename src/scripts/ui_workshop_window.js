@@ -38,11 +38,7 @@ function workshop_info_window_setup_advisors(window, building_type) {
         if (!show) {
             continue
         }
-        var frame = (advisor - 1) * 3
-        if (frame <= 0) {
-            continue
-        }
-        var img = get_image({pack:PACK_GENERAL, id:106, offset:frame})
+        var img = advisor_portrait_image(advisor)
         if (img) {
             btn.image = img.tid
         }

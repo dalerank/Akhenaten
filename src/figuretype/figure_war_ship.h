@@ -101,13 +101,14 @@ public:
         uint8_t secondary_action;
         uint8_t ship_move_mode;
         uint8_t ram_cooldown;
-        uint8_t answers_requests = 1;
+        uint8_t answers_requests = 0;
         int8_t crew_fatigue = 0;
         uint8_t fatigue_tick = 0;
     } FIGURE_RUNTIME_DATA_T;
 
     int8_t missile_attack_value() const { return current_params().missile_attack_value; }
     int16_t missile_delay() const { return current_params().missile_delay; }
+    int request_event_id() const { return runtime_data().request_event_id; }
 
     virtual void on_create() override;
     virtual void on_destroy() override;

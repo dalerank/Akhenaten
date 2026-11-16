@@ -7,6 +7,7 @@
 #include "game/game_config.h"
 #include "js/js_game.h"
 #include "grid/routing/routing.h"
+#include "scenario/scenario.h"
 
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_reed_gatherer);
 
@@ -39,6 +40,11 @@ void figure_reed_gatherer::figure_action() {
     case ACTION_14_REED_GATHERER_CREATED: // spawning
         base.animctx.frame = 0;
         if (base.wait_ticks++ >= 10) {
+            // OG figure_reed_gatherer_action: no reeds are cut while the river of blood sweeps.
+            if (g_scenario.events.blood_river_sweep_active()) {
+                poof();
+                break;
+            }
             const auto rtile = map_routing_citizen_found_reeds(tile());
 
             if (rtile.res == RESOURCE_REEDS) {

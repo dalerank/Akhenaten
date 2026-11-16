@@ -127,7 +127,7 @@ struct archive {
     inline void r(pcstr name, std::unordered_set<T> &v) {
         v.clear();
         this->r_array(name, [&] (archive arch) {
-            T itemv;
+            T itemv{};
             arch.r(itemv);
             v.insert(itemv);
         });
@@ -146,7 +146,7 @@ struct archive {
     template<typename N, typename T>
     inline bool insert(pcstr name, std::unordered_map<N, T> &v) {
         this->r_objects(name, [&] (pcstr key, archive arch) {
-            T itemv; arch.r(itemv);
+            T itemv{}; arch.r(itemv);
             v.insert({ key, itemv });
         });
         return true;
@@ -458,7 +458,7 @@ struct g_archive : public archive {
     inline bool r(pcstr name, std::unordered_set<T>& v) {
         v.clear();
         this->r_array(name, [&] (archive arch) {
-            T itemv; arch.r(itemv);
+            T itemv{}; arch.r(itemv);
             v.insert(itemv);
         });
         return true;
@@ -467,7 +467,7 @@ struct g_archive : public archive {
     template<typename T>
     inline bool insert(pcstr name, std::unordered_set<T> &v) {
         this->r_array(name, [&] (archive arch) {
-            T itemv; arch.r(itemv);
+            T itemv{}; arch.r(itemv);
             v.insert(itemv);
         });
         return true;
@@ -480,7 +480,7 @@ struct g_archive : public archive {
         getglobal(name);
         if (isarray(-1)) {
             r_array_impl([&] (void* arch_state) {
-                T itemv;
+                T itemv{};
                 archive arch(arch_state);
                 arch.r(itemv);
                 v[itemv.key] = itemv;
@@ -507,7 +507,7 @@ struct g_archive : public archive {
         getglobal(name);
         if (isarray(-1)) {
             r_array_impl([&] (void* arch_state) {
-                T itemv;
+                T itemv{};
                 archive arch(arch_state);
                 arch.r(itemv);
                 verify_no_crash(!itemv.key.empty());
@@ -874,6 +874,9 @@ namespace archive_check {
     bool key_missing(void* js_state, pcstr key);
     void zeroed_default(pcstr field, const std::string& value, const void* addr);
     void wrong_type(pcstr key, pcstr expected);
+    // Compares the issues collected so far with a baseline file (or rewrites it with update);
+    // returns the number of new issues plus wrong-typed values.
+    int check_baseline(pcstr path, bool update);
 
     template <typename T>
     inline void before_field(void* js_state, pcstr field, const T& v) {
@@ -1078,7 +1081,7 @@ inline bool archive::r_stable_array_impl(pcstr name, T &arr) {
             for (int i = 0; i < length; ++i) {
                 getindex(-1, i);
                 if (isobject(-1)) {
-                    value_type item;
+                    value_type item = value_type();
                     archive_helper::reader(*this, item);
                     arr[std::hash<value_type>()(item)] = item;
                 }
@@ -1114,7 +1117,7 @@ inline bool archive::r_vector_impl(pcstr name, T &v, int max_size) {
                 v.push_back(static_cast<value_type>(item));
             } else {
                 if (isobject(-1)) {
-                    value_type item;
+                    value_type item = value_type();
                     archive_helper::reader(archive(state), item);
                     v.push_back(std::move(item));
                 }

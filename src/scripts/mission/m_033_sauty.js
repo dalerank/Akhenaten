@@ -2,7 +2,7 @@ log_info("akhenaten: mission 33 sauty started")
 
 // Empire id=21. HYKSOS (pak BARBARIAN ignored). Gods Osiris×2, Ra, Seth.
 // Funds Normal 9000 / loan 0 / debt 20. Rank 10.
-// Win: pop 6500 / culture 70 / prosperity 75 / monuments 40 (3× Medium Mudbrick W=8 → 58) / kingdom 60 / housing 14.
+// Win: pop 6500 / culture 70 / prosperity 75 / monuments 40 (3× Medium Mudbrick 36 + burial 4 → trunc(6.32·√40+0.5)=40) / kingdom 60 / housing 14.
 // Burial: pottery 32, linen 16, luxury 16, chariots 8.
 // SKIP empty map_obj idx=7. Routes 1–10 copy. loan=0 → rescue_loans all 0.
 // Calendar: i=0 FELL remap Heh (dump Pwenet); i=1 FELL remap Iken (dump Itjtawy) → pom chain;
@@ -45,7 +45,6 @@ mission33 { // Sauty (Lykopolis) — Egypt Reclaimed
 	initial_funds [18000, 12000, 9000, 6000, 4800]
 	rescue_loans [0, 0, 0, 0, 0]
 	debt_interest [10, 15, 20, 25, 30]
-	house_tax_multipliers [300, 200, 150, 100, 75]
 
 	env {
 		has_animals : true
@@ -110,6 +109,39 @@ mission33 { // Sauty (Lykopolis) — Egypt Reclaimed
 
 	enable_scenario_events : true
 
+	events [
+		{ // pak i=46
+			type : EVENT_TYPE_INVASION
+			time { year : 0, month : 0 }
+			item { value : EVENT_INVADER_EGYPT }
+			amount { value : 50 }
+			months_initial : 9
+			location_fields [ 1, 1, -1, -1 ]
+			event_trigger_type : EVENT_TRIGGER_BY_FAVOUR
+			tag_id : 7046
+			on_completed_action : 1
+			on_refusal_action : -1
+			on_too_late_action : -1
+			on_defeat_action : -1
+			invasion_attack_target : EVENT_ATTACK_TARGET_RANDOM
+		}
+		{ // pak i=47
+			type : EVENT_TYPE_INVASION
+			time { year : 0, month : 0 }
+			item { value : EVENT_INVADER_EGYPT }
+			amount { value : 50 }
+			months_initial : 0
+			location_fields [ 2, 2, -1, -1 ]
+			event_trigger_type : EVENT_TRIGGER_ONLY_VIA_EVENT
+			tag_id : 7047
+			on_completed_action : -1
+			on_refusal_action : -1
+			on_too_late_action : -1
+			on_defeat_action : -1
+			invasion_attack_target : EVENT_ATTACK_TARGET_RANDOM
+		}
+	]
+
 	map_background : {pack:PACK_EMPIRE, id:21}
 	hide_pak_cities : true
 	cities [
@@ -130,8 +162,6 @@ mission33 { // Sauty (Lykopolis) — Egypt Reclaimed
 			cost_to_open : 450
 			is_sea_trade : true
 			type : EMPIRE_CITY_EGYPTIAN_TRADING
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_MEAT, RESOURCE_POTTERY, RESOURCE_LINEN, RESOURCE_TIMBER, RESOURCE_PAPYRUS ]
 			buys [ RESOURCE_BEER, RESOURCE_LUXURY_GOODS, RESOURCE_GRANITE ]
 			route_limits [
@@ -151,8 +181,6 @@ mission33 { // Sauty (Lykopolis) — Egypt Reclaimed
 			cost_to_open : 425
 			is_sea_trade : true
 			type : EMPIRE_CITY_EGYPTIAN_TRADING
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_MEAT, RESOURCE_STRAW, RESOURCE_BRICKS, RESOURCE_POTTERY, RESOURCE_LINEN, RESOURCE_PAPYRUS ]
 			buys [ RESOURCE_BEER ]
 			route_limits [
@@ -172,8 +200,6 @@ mission33 { // Sauty (Lykopolis) — Egypt Reclaimed
 			cost_to_open : 350
 			is_sea_trade : true
 			type : EMPIRE_CITY_EGYPTIAN_TRADING
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_CHICKPEAS, RESOURCE_POTTERY, RESOURCE_PAPYRUS ]
 			buys [ RESOURCE_LETTUCE, RESOURCE_BRICKS, RESOURCE_BARLEY, RESOURCE_BEER, RESOURCE_LUXURY_GOODS ]
 			route_limits [
@@ -194,8 +220,6 @@ mission33 { // Sauty (Lykopolis) — Egypt Reclaimed
 			cost_to_open : 150
 			is_sea_trade : false
 			type : EMPIRE_CITY_EGYPTIAN_TRADING
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_BARLEY, RESOURCE_BEER, RESOURCE_STONE ]
 			buys [ RESOURCE_BRICKS, RESOURCE_LIMESTONE, RESOURCE_GRANITE ]
 			route_limits [
@@ -412,11 +436,6 @@ mission33 { // Sauty (Lykopolis) — Egypt Reclaimed
 		pom_bounce_done : false
 		henna24_bounce_done : false
 		henna48_bounce_done : false
-		pharaoh_favour_invasion_done : false
-		pharaoh_favour_chain_done : false
-		pharaoh_favour_enemies_seen : false
-		pharaoh_favour_wave_next : -1
-		pharaoh_favour_wave_seq : 0
 		start_message_shown : false
 	}
 }
@@ -734,8 +753,6 @@ function mission33_requests_and_events(ev) {
 		log_info("akhenaten: mission 33 oil×1000 Men-nefer (i=10)")
 		mission33_fire_request(2010, RESOURCE_OIL, 1000, 6, 1011, 1015, 1015, 6, "Men-nefer", 1015)
 	}
-
-	mission_pharaoh_favour_invasion_tick(mission, 50, 50)
 }
 
 [es=event_request_cleared, mission=mission33]

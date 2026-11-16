@@ -29,6 +29,7 @@ building_pharos_lighthouse {
     cost [ 5000, 6500, 8000, 11000, 16000 ]
     guild_worker_terrain: TERRAIN_USAGE_ANY
     flags {
+      no_map_edge_margin: true
         is_monument: true
         non_deletable: true
     }

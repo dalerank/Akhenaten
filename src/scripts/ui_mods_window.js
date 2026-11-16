@@ -26,7 +26,8 @@ function mods_window_on_render_item(p) {
             }
         }
     } else {
-        prefix = "[" + (mods.enabled(p.text) ? "ON" : "OFF") + "] "
+        var state = mods.enabled(p.text) ? (mods.broken(p.text) ? "ERR" : "ON") : "OFF"
+        prefix = "[" + state + "] "
         name = mods.display_name(p.text)
     }
 

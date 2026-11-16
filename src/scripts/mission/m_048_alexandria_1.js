@@ -1,6 +1,6 @@
 log_info("akhenaten: mission 48 alexandria_1 started")
 
-// Monument: Mausoleum only (gr198:25). W=5 → trunc(2.25*5+4.5)=15 ≥ goal 14.
+// Monument: Mausoleum only (gr198:25). Weight 5 → trunc(6.32·√5+0.5)=14 = goal; burial goods all below one divisor.
 mission48 { // Alexandria - Alexander the Great
 	map_file : "data/maps/m_048_alexandria_1.map"
 	start_message : "message_mission_alexandria_2"
@@ -12,7 +12,6 @@ mission48 { // Alexandria - Alexander the Great
 	initial_funds [25960, 17310, 12980, 8700, 6880]
 	rescue_loans [10000, 6670, 5000, 3350, 2650]
 	debt_interest [2, 3, 5, 7, 9]
-	house_tax_multipliers [300, 200, 150, 100, 75]
 
 	env {
 		has_animals : true
@@ -159,6 +158,7 @@ mission48 { // Alexandria - Alexander the Great
 			amount { value : 7 }
 			months_initial : 8
 			location_fields [ 9, -1, 9, 11 ]
+			warships : 3
 			event_trigger_type : EVENT_TRIGGER_ONCE
 			on_completed_action : 5
 			on_refusal_action : -1
@@ -272,6 +272,7 @@ mission48 { // Alexandria - Alexander the Great
 			amount { value : 0 }
 			months_initial : 6
 			location_fields [ 12, -1, 12, 13 ]
+			warships : 3
 			event_trigger_type : EVENT_TRIGGER_ONCE
 			on_completed_action : -1
 			on_refusal_action : -1
@@ -764,8 +765,6 @@ mission48 { // Alexandria - Alexander the Great
 			cost_to_open : 675
 			is_sea_trade : true
 			type : EMPIRE_CITY_FOREIGN_TRADING
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_POMEGRANATES, RESOURCE_TIMBER, RESOURCE_COPPER ]
 			buys [ RESOURCE_GRAIN, RESOURCE_BEER, RESOURCE_LINEN ]
 			route_limits [
@@ -786,8 +785,6 @@ mission48 { // Alexandria - Alexander the Great
 			cost_to_open : 700
 			is_sea_trade : true
 			type : EMPIRE_CITY_FOREIGN_TRADING
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_MEAT, RESOURCE_LUXURY_GOODS, RESOURCE_TIMBER ]
 			buys [ RESOURCE_POMEGRANATES, RESOURCE_LINEN, RESOURCE_PAPYRUS ]
 			route_limits [
@@ -808,8 +805,6 @@ mission48 { // Alexandria - Alexander the Great
 			cost_to_open : 900
 			is_sea_trade : true
 			type : EMPIRE_CITY_EGYPTIAN_TRADING
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_MEAT, RESOURCE_POTTERY, RESOURCE_FLAX, RESOURCE_LIMESTONE, RESOURCE_GRANITE ]
 			buys [ RESOURCE_STRAW, RESOURCE_TIMBER ]
 			route_limits [
@@ -840,8 +835,6 @@ mission48 { // Alexandria - Alexander the Great
 			cost_to_open : 515
 			is_sea_trade : true
 			type : EMPIRE_CITY_FOREIGN_TRADING
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_WEAPONS, RESOURCE_POTTERY, RESOURCE_GEMS ]
 			buys [ RESOURCE_STRAW, RESOURCE_PAPYRUS, RESOURCE_SANDSTONE ]
 			route_limits [
@@ -862,8 +855,6 @@ mission48 { // Alexandria - Alexander the Great
 			cost_to_open : 290
 			is_sea_trade : true
 			type : EMPIRE_CITY_EGYPTIAN_TRADING
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_POTTERY, RESOURCE_FLAX, RESOURCE_TIMBER, RESOURCE_PAPYRUS ]
 			buys [ RESOURCE_BRICKS, RESOURCE_BARLEY, RESOURCE_BEER, RESOURCE_LUXURY_GOODS ]
 			route_limits [
@@ -886,8 +877,6 @@ mission48 { // Alexandria - Alexander the Great
 			cost_to_open : 760
 			is_sea_trade : true
 			type : EMPIRE_CITY_FOREIGN_TRADING
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_POTTERY, RESOURCE_LUXURY_GOODS ]
 			buys [ RESOURCE_GRAIN, RESOURCE_BARLEY ]
 			route_limits [
@@ -906,8 +895,6 @@ mission48 { // Alexandria - Alexander the Great
 			cost_to_open : 1300
 			is_sea_trade : true
 			type : EMPIRE_CITY_FOREIGN_TRADING
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_GEMS, RESOURCE_LUXURY_GOODS, RESOURCE_COPPER ]
 			buys [ RESOURCE_POMEGRANATES, RESOURCE_PAPYRUS ]
 			route_limits [
@@ -962,8 +949,6 @@ mission48 { // Alexandria - Alexander the Great
 			cost_to_open : 260
 			is_sea_trade : false
 			type : EMPIRE_CITY_EGYPTIAN_TRADING
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_GRAIN, RESOURCE_REEDS ]
 			buys [ RESOURCE_TIMBER, RESOURCE_SANDSTONE ]
 			route_limits [
@@ -990,8 +975,6 @@ mission48 { // Alexandria - Alexander the Great
 			cost_to_open : 600
 			is_sea_trade : false
 			type : EMPIRE_CITY_FOREIGN_TRADING
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_GEMS, RESOURCE_COPPER ]
 			buys [ RESOURCE_GRAIN ]
 			route_limits [
@@ -1009,8 +992,6 @@ mission48 { // Alexandria - Alexander the Great
 			cost_to_open : 1560
 			is_sea_trade : true
 			type : EMPIRE_CITY_FOREIGN_TRADING
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_GEMS ]
 			buys [ RESOURCE_POMEGRANATES, RESOURCE_WEAPONS, RESOURCE_LINEN ]
 			route_limits [
@@ -1029,8 +1010,6 @@ mission48 { // Alexandria - Alexander the Great
 			cost_to_open : 900
 			is_sea_trade : true
 			type : EMPIRE_CITY_FOREIGN_TRADING
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_FISH, RESOURCE_LINEN, RESOURCE_LUXURY_GOODS, RESOURCE_TIMBER, RESOURCE_OIL ]
 			buys [ RESOURCE_PAPYRUS, RESOURCE_COPPER ]
 			route_limits [

@@ -51,15 +51,6 @@ io_buffer* iob_monuments_progress_grid = new io_buffer([](io_buffer* iob, size_t
     iob->bind(BIND_SIGNATURE_GRID, &g_monuments_progress_grid);
 });
 
-struct monument_delivery {
-    int walker_id;
-    int destination_id;
-    int resource;
-    int cartloads;
-};
-
-svector<monument_delivery, 32> g_monument_deliveries;
-
 bool building_monument::deliver_resource(e_resource resource, int amount) {
     // Always credit the chain head — yard/sled destination may be a corner/wall
     // part, while update_day / info UI read resources_pct only from main().
@@ -320,6 +311,23 @@ int building_monument::needs_resource(e_resource resource, int phase) const {
     return (r_it != ph.resources.end() ? r_it->count : 0);
 }
 
+int building_monument::remaining_resource_need(e_resource resource) const {
+    const auto& d = runtime_data();
+    if (d.phase < 0) {
+        return 0;
+    }
+
+    int total = 0;
+    for (int ph = d.phase, num = phases(); ph < num; ++ph) {
+        int need = needs_resource(resource, ph);
+        if (ph == d.phase) {
+            need -= need * (int)d.resources_pct[resource] / 100;
+        }
+        total += need;
+    }
+    return total;
+}
+
 void building_monument::on_phase_changed(int old, int current) {
     if (current >= 2) {
         map_building_tiles_add(id(), tile(), size(), this->building_image_get(), TERRAIN_BUILDING);
@@ -428,92 +436,6 @@ int building_monument::progress() {
         }
     }
     return 1;
-}
-
-static int delivery_in_use(const monument_delivery *delivery) {
-    return delivery->destination_id != 0;
-}
-
-void building_monument::add_delivery(int figure_id, int resource_id, int num_loads) {
-    g_monument_deliveries.push_back({0});
-    monument_delivery &delivery = g_monument_deliveries.back();
-
-    delivery.destination_id = id();
-    delivery.walker_id = figure_id;
-    delivery.resource = resource_id;
-    delivery.cartloads = num_loads;
-}
-
-bool building_monument_has_delivery_for_worker(int figure_id) {
-    for(auto &delivery: g_monument_deliveries) {
-        if (delivery.walker_id == figure_id && delivery.destination_id > 0) {
-            return 1;
-        }
-    }
-    return 0;
-}
-
-void building_monument_remove_delivery(int figure_id) {
-    for(auto &delivery: g_monument_deliveries) {
-        if (delivery.walker_id == figure_id) {
-            delivery.destination_id = 0;
-        }
-    }
-
-    auto &delv = g_monument_deliveries;
-    delv.erase(std::remove_if(delv.begin(), delv.end(), [] (auto &d) { return !d.destination_id; }), delv.end());
-}
-
-void building_monument_remove_all_deliveries(int monument_id) {
-    for(auto &delivery: g_monument_deliveries) {
-        if (delivery.destination_id == monument_id) {
-            delivery.destination_id = 0;
-        }
-    }
-
-    auto &delv = g_monument_deliveries;
-    delv.erase(std::remove_if(delv.begin(), delv.end(), [] (auto &d) { return !d.destination_id; }), delv.end());
-}
-
-int building_monument_resource_in_delivery(int monument_id, int resource_id) {
-    int resources = 0;
-    for(auto &delivery: g_monument_deliveries) {
-        if (delivery.destination_id == monument_id &&
-            delivery.resource == resource_id) {
-            resources += delivery.cartloads;
-        }
-    }
-
-    return resources;
-}
-
-static int resource_in_delivery_multipart(building *b, int resource_id) {
-    int resources = 0;
-
-    while (b->prev_part_building_id) {
-        b = building_get(b->prev_part_building_id);
-    }
-
-    while (b->id) {
-        for(auto &delivery: g_monument_deliveries) {
-            if (delivery.destination_id == b->id &&
-                delivery.resource == resource_id) {
-                resources += delivery.cartloads;
-            }
-        }
-        b = building_get(b->next_part_building_id);
-    }
-
-    return resources;
-}
-
-int building_monument_resource_in_delivery(building *b, int resource_id)
-{
-    if (b->next_part_building_id || b->prev_part_building_id) {
-        return resource_in_delivery_multipart(b, resource_id);
-    } else {
-        return building_monument_resource_in_delivery(b->id, resource_id);
-    }
 }
 
 int building_monument_get_id(e_building_type type) {
@@ -650,15 +572,14 @@ int building_monument::module_type() {
     return d.upgrades;
 }
 
-io_buffer *iob_city_building_monuments = new io_buffer([] (io_buffer *iob, size_t version) {
-    int delivers_size = (int)g_monument_deliveries.size();
-    iob->bind(BIND_SIGNATURE_INT32, &delivers_size);
-    for (int i = 0; i < g_monument_deliveries.capacity(); ++i) {
-        monument_delivery &delivery = g_monument_deliveries[i];
-        iob->bind(BIND_SIGNATURE_INT32, &delivery.walker_id);
-        iob->bind(BIND_SIGNATURE_INT32, &delivery.destination_id);
-        iob->bind(BIND_SIGNATURE_INT32, &delivery.resource);
-        iob->bind(BIND_SIGNATURE_INT32, &delivery.cartloads);
+// Former storage-yard sled delivery table: no longer used, its slots are kept so saves keep their layout.
+io_buffer* iob_city_building_monuments = new io_buffer([](io_buffer* iob, size_t version) {
+    enum { UNUSED_DELIVERY_SLOTS = 32, UNUSED_DELIVERY_FIELDS = 4 };
+    int unused = 0;
+    iob->bind(BIND_SIGNATURE_INT32, &unused);
+    for (int i = 0; i < UNUSED_DELIVERY_SLOTS * UNUSED_DELIVERY_FIELDS; ++i) {
+        unused = 0;
+        iob->bind(BIND_SIGNATURE_INT32, &unused);
     }
 });
 
@@ -700,6 +621,10 @@ bool building_monument::need_stonemason() {
 
 bool building_monument::need_artisan() {
     return false;
+}
+
+bool building_monument::need_artisan_with(e_resource material) {
+    return need_artisan() && needs_resource(material) > 0 && resource_pct(material) < 100;
 }
 
 bool building_monument::need_carpenter() {
@@ -903,6 +828,90 @@ bool building_monument::take_burial_stock(e_resource r, int n) {
     }
     d.burial_stock[r] = (uint8_t)(d.burial_stock[r] - n);
     return true;
+}
+
+// Mostly zero per-resource bytes: a presence bit per resource, then the present values only.
+static void bind_sparse_resource_bytes(io_buffer* iob, uint8_t (&values)[RESOURCES_MAX]) {
+    uint8_t present[(RESOURCES_MAX + 7) / 8] = {};
+    if (!iob->is_read_access()) {
+        for (int r = 0; r < RESOURCES_MAX; ++r) {
+            if (values[r]) {
+                present[r / 8] |= (uint8_t)(1 << (r % 8));
+            }
+        }
+    }
+    for (auto& bits : present) {
+        iob->bind_u8(bits);
+    }
+    for (int r = 0; r < RESOURCES_MAX; ++r) {
+        if (present[r / 8] & (1 << (r % 8))) {
+            iob->bind_u8(values[r]);
+        } else {
+            values[r] = 0;
+        }
+    }
+}
+
+void building_monument::bind_block_engine_state(io_buffer* iob, int alt_image_base) {
+    auto& d = runtime_data();
+
+    iob->bind_u8(base.orientation);
+    iob->bind_i8(d.phase);
+    iob->bind_u8(d.layer);
+    iob->bind_u8(d.stair_index);
+    iob->bind_u8(d.variant);
+    iob->bind_u8(d.funeral_done);
+    iob->bind_u8(d.preexisting);
+    iob->bind_u8(d.causeway_length);
+    iob->bind_u8(d.causeway_dir);
+    for (auto& w : d.workers) {
+        iob->bind_u16(w);
+    }
+
+    // 0 = none, else 1 + offset from alt_image_base: the save does not depend on image pack ids.
+    uint8_t alt_image_slot = 0;
+    if (!iob->is_read_access() && d.alt_image > 0 && alt_image_base > 0) {
+        const int offset = (int)d.alt_image - alt_image_base;
+        alt_image_slot = (offset >= 0 && offset < 255) ? (uint8_t)(offset + 1) : 0;
+    }
+    iob->bind_u8(alt_image_slot);
+    if (iob->is_read_access()) {
+        d.alt_image = (alt_image_slot && alt_image_base > 0) ? (uint16_t)(alt_image_base + alt_image_slot - 1) : 0;
+    }
+
+    // Deliveries, burial goods and the block count live on the chain head only.
+    if (base.is_main()) {
+        bind_sparse_resource_bytes(iob, d.resources_pct);
+        bind_sparse_resource_bytes(iob, d.burial_stock);
+
+        auto& main = d.og_main;
+        iob->bind_u8((uint8_t&)main.style);
+        iob->bind_u8(main.size_variant);
+        iob->bind_u16(main.remaining_blocks);
+        iob->bind_u8(main.block_phase_active);
+        iob->bind_u8(main.force_show_ramps);
+    } else if (iob->is_read_access()) {
+        std::fill(std::begin(d.resources_pct), std::end(d.resources_pct), 0);
+        std::fill(std::begin(d.burial_stock), std::end(d.burial_stock), 0);
+        d.og_main = {};
+    }
+
+    // The ramp sprite and its offsets are a draw cache (they follow the camera rotation), not saved.
+    auto& part = d.og_part;
+    iob->bind_u8(part.size_variant);
+    iob->bind_u8(part.stage);
+    iob->bind_u8(part.blocks);
+    iob->bind_u8(part.layer);
+    iob->bind_u8(part.target_layers);
+    iob->bind_u8(part.subtype);
+    iob->bind_u16(part.worker_figure_id);
+    iob->bind_u8(part.ramp1_height);
+    iob->bind_u8(part.ramp2_height);
+    if (iob->is_read_access()) {
+        part.ramp_image_id = 0;
+        part.ramp_image_x1 = part.ramp_image_y1 = 0;
+        part.ramp_image_x2 = part.ramp_image_y2 = 0;
+    }
 }
 
 building *burial_provisions_pick_dispatch_tomb() {

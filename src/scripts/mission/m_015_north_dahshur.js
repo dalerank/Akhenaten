@@ -34,7 +34,6 @@ mission15 { // North Dahshur — The True Pyramid
 	initial_funds [20000, 13300, 10000, 6700, 5300]
 	rescue_loans [8000, 5300, 4000, 2700, 2100]
 	debt_interest [10, 15, 20, 25, 30]
-	house_tax_multipliers [300, 200, 150, 100, 75]
 
 	init_resources : {
 		bricks: { type:RESOURCE_BRICKS, allow: true},
@@ -96,6 +95,24 @@ mission15 { // North Dahshur — The True Pyramid
 
 	enable_scenario_events : true
 
+	events [
+		{ // pak i=31
+			type : EVENT_TYPE_INVASION
+			time { year : 0, month : 0 }
+			item { value : EVENT_INVADER_PHARAOH }
+			amount { value : 75, min : 60, max : 80 }
+			months_initial : 2
+			location_fields [ 4, -1, 1, 8 ]
+			event_trigger_type : EVENT_TRIGGER_BY_FAVOUR
+			tag_id : 7031
+			on_completed_action : -1
+			on_refusal_action : -1
+			on_too_late_action : -1
+			on_defeat_action : -1
+			invasion_attack_target : EVENT_ATTACK_TARGET_RANDOM
+		}
+	]
+
 	map_background : {pack:PACK_EMPIRE, id:1}
 	hide_pak_cities : true
 	cities [
@@ -118,8 +135,6 @@ mission15 { // North Dahshur — The True Pyramid
 			cost_to_open : 1500
 			is_sea_trade : false
 			type : EMPIRE_CITY_EGYPTIAN_TRADING
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_LUXURY_GOODS, RESOURCE_TIMBER ]
 			buys [ RESOURCE_POTTERY, RESOURCE_BEER, RESOURCE_LINEN, RESOURCE_PAPYRUS, RESOURCE_COPPER ]
 			route_limits [
@@ -142,8 +157,6 @@ mission15 { // North Dahshur — The True Pyramid
 			cost_to_open : 900
 			is_sea_trade : true
 			type : EMPIRE_CITY_EGYPTIAN_TRADING
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_GRAIN, RESOURCE_FLAX, RESOURCE_LINEN, RESOURCE_GEMS ]
 			buys [ RESOURCE_CLAY, RESOURCE_BRICKS, RESOURCE_POTTERY, RESOURCE_PAPYRUS ]
 			route_limits [
@@ -167,8 +180,6 @@ mission15 { // North Dahshur — The True Pyramid
 			cost_to_open : 1200
 			is_sea_trade : true
 			type : EMPIRE_CITY_FOREIGN_TRADING
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_LUXURY_GOODS, RESOURCE_TIMBER, RESOURCE_COPPER ]
 			buys [ RESOURCE_GEMS, RESOURCE_LUXURY_GOODS ]
 			route_limits [
@@ -188,8 +199,6 @@ mission15 { // North Dahshur — The True Pyramid
 			cost_to_open : 300
 			is_sea_trade : true
 			type : EMPIRE_CITY_EGYPTIAN_TRADING
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_GRAIN, RESOURCE_CLAY, RESOURCE_POTTERY, RESOURCE_TIMBER, RESOURCE_REEDS, RESOURCE_PAPYRUS, RESOURCE_STONE ]
 			buys [ RESOURCE_BARLEY, RESOURCE_BEER, RESOURCE_LINEN, RESOURCE_LIMESTONE ]
 			route_limits [
@@ -216,8 +225,6 @@ mission15 { // North Dahshur — The True Pyramid
 			cost_to_open : 600
 			is_sea_trade : false
 			type : EMPIRE_CITY_EGYPTIAN_TRADING
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_GEMS, RESOURCE_LUXURY_GOODS, RESOURCE_COPPER ]
 			buys [ RESOURCE_GRAIN ]
 			route_limits [
@@ -417,9 +424,6 @@ mission15 { // North Dahshur — The True Pyramid
 		henna_recurring_was_busy : false
 		henna_recurring_idle_since_abs : -1
 
-		pharaoh_favour_invasion_done : false
-		pharaoh_favour_enemies_seen : false
-		pharaoh_favour_chain_done : false
 
 		start_message_shown : false
 	}
@@ -779,10 +783,4 @@ function mission15_on_request_cleared(ev) {
 	}
 	log_info("akhenaten: mission 15 henna " + outcome + " → hyksos×12 tag=" + ev.tag_id, {ev:ev})
 	mission15_hyksos_raid(30, 12, EVENT_ATTACK_TARGET_FOOD)
-}
-
-// Favour: pak i=31 size=75 by_favour (no chain child).
-[es=event_advance_month, mission=mission15]
-function mission15_pharaoh_favour_invasion(ev) {
-	mission_pharaoh_favour_invasion_tick(mission, 75)
 }

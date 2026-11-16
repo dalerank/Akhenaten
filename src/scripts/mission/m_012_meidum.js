@@ -1,8 +1,7 @@
 log_info("akhenaten: mission 12 meidum started")
 
 // Empire / requests / events aligned with original campaign scenario 12 (2026-07-25 dump).
-// Favour Pharaoh army size=25 (by_favour) → chain size=60; proxied in JS until B2
-// (mission_pharaoh_favour_invasion_tick, same pattern as Saqqara/Serabit).
+// Favour Pharaoh army size=25 → chain size=60: events[] BY_FAVOUR, sent by the engine at Kingdom rating 0.
 // Enemy is ENEMY_5_HYKSOS (pak_enemy_id=5) — NOT Libyan. Recurring raid y7m6 size=17.
 // Invasion points: land [114,79] sea [31,7] (pak; previous placeholder values were wrong).
 // Triage: SKIP route 47 (type=0, no city, orphan); SKIP map_obj idx=7 (empty stub, pos 0,0).
@@ -13,9 +12,9 @@ log_info("akhenaten: mission 12 meidum started")
 // Resource chains (ONLY_VIA, wired once from on_start): clay i=5/8/9/10/11 (from pottery
 // recurring i=7); timber i=20-25 (from i=19); grain i=42-45 (from i=41); papyrus i=54-57
 // (from i=53); gifts i=50/61/64 (from i=49/60/63).
-// Monuments goal: small(8)+complex(24) → trunc(2.25*32+4.5)=76.
-// Complex weight = large (24) while on-land; rating clamp 100 forbids weight 44 alone.
-// Pak original was 39. The causeway is not implemented.
+// Monuments goal 39 = pak: small stepped (3) + stepped complex (36) → trunc(6.32·√39+0.5)=39.
+// The complex counts its OG weight while on-land.
+// The causeway is not implemented.
 //
 // Tag_id scheme used throughout this file (documented once here, not repeated per call):
 //   1000 + i               chain-only ONLY_VIA_EVENT leaves (i = pak event index,
@@ -61,7 +60,6 @@ mission12 { // Meidum
 	initial_funds [20000, 13300, 10000, 6700, 5300]
 	rescue_loans [6000, 4000, 3000, 2000, 1600]
 	debt_interest [4, 6, 8, 10, 12]
-	house_tax_multipliers [300, 200, 150, 100, 75]
 
 	init_resources : {
 		bricks: { type:RESOURCE_BRICKS, allow: true},
@@ -104,12 +102,12 @@ mission12 { // Meidum
 
 	// Goals aligned with original campaign scenario 12: pop 1/3000, culture 1/25, prosperity 1/25,
 	// monuments 1/39 (pak), kingdom 1/40, housing_level 1/11.
-	// Goal = trunc(2.25*(8+24)+4.5) = 76 (complex weight = large until the causeway lands).
+	// Goal = trunc(6.32·√(3+36)+0.5) = 39.
 	win_criteria {
 		population    {enabled : true, goal : 3000 }
 		culture       {enabled : true, goal : 25 }
 		prosperity    {enabled : true, goal : 25 }
-		monuments     {enabled : true, goal : 76 }
+		monuments     {enabled : true, goal : 39 }
 		kingdom       {enabled : true, goal : 40 }
 		housing_level {enabled : true, goal : 11 }
 	}
@@ -123,6 +121,39 @@ mission12 { // Meidum
 	invasion_points_sea [ [31, 7] ]
 
 	enable_scenario_events : true
+
+	events [
+		{ // pak i=71
+			type : EVENT_TYPE_INVASION
+			time { year : 0, month : 0 }
+			item { value : EVENT_INVADER_PHARAOH }
+			amount { value : 25 }
+			months_initial : 9
+			location_fields [ 1, 1, -1, -1 ]
+			event_trigger_type : EVENT_TRIGGER_BY_FAVOUR
+			tag_id : 7071
+			on_completed_action : 1
+			on_refusal_action : -1
+			on_too_late_action : -1
+			on_defeat_action : -1
+			invasion_attack_target : EVENT_ATTACK_TARGET_RANDOM
+		}
+		{ // pak i=72
+			type : EVENT_TYPE_INVASION
+			time { year : 0, month : 0 }
+			item { value : EVENT_INVADER_PHARAOH }
+			amount { value : 60 }
+			months_initial : 0
+			location_fields [ 2, 2, -1, -1 ]
+			event_trigger_type : EVENT_TRIGGER_ONLY_VIA_EVENT
+			tag_id : 7072
+			on_completed_action : -1
+			on_refusal_action : -1
+			on_too_late_action : -1
+			on_defeat_action : -1
+			invasion_attack_target : EVENT_ATTACK_TARGET_RANDOM
+		}
+	]
 
 	// Empire from original campaign scenario 12 (empire id=1) — full map objects.
 	map_background : {pack:PACK_EMPIRE, id:1}
@@ -147,8 +178,6 @@ mission12 { // Meidum
 			cost_to_open : 1050
 			is_sea_trade : true
 			type : EMPIRE_CITY_EGYPTIAN_TRADING
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_GRAIN, RESOURCE_STRAW, RESOURCE_FLAX, RESOURCE_LINEN, RESOURCE_GEMS, RESOURCE_GRANITE, RESOURCE_SANDSTONE ]
 			buys [ RESOURCE_CLAY, RESOURCE_POTTERY, RESOURCE_REEDS, RESOURCE_PAPYRUS ]
 			route_limits [
@@ -175,8 +204,6 @@ mission12 { // Meidum
 			cost_to_open : 700
 			is_sea_trade : true
 			type : EMPIRE_CITY_EGYPTIAN_TRADING
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_FISH, RESOURCE_CLAY, RESOURCE_POTTERY, RESOURCE_BEER, RESOURCE_REEDS, RESOURCE_PAPYRUS, RESOURCE_GRANITE ]
 			buys [ RESOURCE_BRICKS, RESOURCE_LINEN, RESOURCE_GEMS, RESOURCE_LUXURY_GOODS, RESOURCE_TIMBER ]
 			route_limits [
@@ -204,8 +231,6 @@ mission12 { // Meidum
 			cost_to_open : 650
 			is_sea_trade : true
 			type : EMPIRE_CITY_EGYPTIAN_TRADING
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_POTTERY, RESOURCE_BEER, RESOURCE_FLAX, RESOURCE_LINEN ]
 			buys [ RESOURCE_PAPYRUS ]
 			route_limits [
@@ -226,8 +251,6 @@ mission12 { // Meidum
 			cost_to_open : 200
 			is_sea_trade : false
 			type : EMPIRE_CITY_EGYPTIAN_TRADING
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_LUXURY_GOODS, RESOURCE_STONE ]
 			buys [ RESOURCE_CLAY, RESOURCE_BRICKS, RESOURCE_POTTERY, RESOURCE_TIMBER, RESOURCE_REEDS, RESOURCE_PAPYRUS, RESOURCE_LIMESTONE ]
 			route_limits [
@@ -252,8 +275,6 @@ mission12 { // Meidum
 			cost_to_open : 350
 			is_sea_trade : false
 			type : EMPIRE_CITY_EGYPTIAN_TRADING
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_GEMS, RESOURCE_LUXURY_GOODS, RESOURCE_COPPER ]
 			buys [ RESOURCE_GRAIN, RESOURCE_CLAY ]
 			route_limits [
@@ -468,11 +489,6 @@ mission12 { // Meidum
 
 		hyksos_invasion_count : 0
 
-		pharaoh_favour_invasion_done : false
-		pharaoh_favour_enemies_seen : false
-		pharaoh_favour_chain_done : false
-		pharaoh_favour_wave_next : -1
-		pharaoh_favour_wave_seq : 0
 
 		start_message_shown : false
 	}
@@ -645,6 +661,7 @@ function mission12_hyksos_raid(invasion_id, size) {
 [es=event_mission_start, mission=mission12]
 function mission12_on_start(ev) {
 	__image_request_pak(PACK_ENEMY_HYKSOS)
+	__image_request_pak(PACK_ENEMY_EGYPTIAN)
 	__image_request_pak(PACK_MASTABA)
 	__image_request_pak(PACK_STEPPED_PYRAMID)
 	mission_show_start_message(mission, "message_mission_meidum")
@@ -1258,10 +1275,4 @@ function mission12_event_i70_hyksos_invasion_recurring(ev) {
 	mission.hyksos_invasion_count = mission.hyksos_invasion_count + 1
 	log_info("akhenaten: mission 12 meidum i70 hyksos invasion size=17 y" + ev.years_since_start, {ev:ev})
 	mission12_hyksos_raid(mission.hyksos_invasion_count, 17)
-}
-
-// pak i=71/72: by_favour Pharaoh army size=25 → ok chains to a size=60 second wave.
-[es=event_advance_month, mission=mission12]
-function mission12_pharaoh_favour_invasion(ev) {
-	mission_pharaoh_favour_invasion_tick(mission, 25, 60)
 }

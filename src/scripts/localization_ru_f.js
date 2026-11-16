@@ -87,9 +87,12 @@ localization_ru_f = [
     { key:"#TR_CONFIG_GETTING_GRANARIES_GO_OFFROAD", text:"Тележки в амбар могут покидать дорогу"}
     { key:"#TR_CONFIG_GRANARIES_GET_DOUBLE", text:"Удвоить вместимость тележек распределяющих еду между амбарами"}
     { key:"#TR_CONFIG_DOCK_SMART_ROUTING", text:"Умный выбор причала: по заказам/товарам и смена на лучший свободный (не как в оригинале)"}
+    { key:"#TR_CONFIG_SLED_PULLERS_FLEE", text:"Тянущие сани бросают их и убегают к выходу с карты, если рядом враги; сани остаются на месте (не как в оригинале)"}
     { key:"#TR_CONFIG_FOLLOWER_RUNAWAY", text:"Спутники убегают к выходу с карты, если лидер погиб (ослы каравана, разносчики; не как в оригинале)"}
     { key:"#TR_CONFIG_ROBBER_REMAKE", text:"Вор-ремейк: кража при появлении, всегда к дворцу, фоновые кражи из особняков (не как в оригинале)"}
     { key:"#TR_CONFIG_TOMB_ROBBER_REMAKE", text:"Расхититель гробниц-ремейк: месячный спавн, бегство/арест, фиксированный удар по рейтингу (не как в оригинале)"}
+    { key:"#TR_CONFIG_POLICE_WEAPONS", text:"Полиция берёт оружие со складов, каждый констебль забирает одно (не как в оригинале)"}
+    { key:"#TR_CONFIG_WALKER_PHRASES_REMAKE", text:"Фразы ходоков-ремейк: у каждого ходока свои реплики, говорят и солдаты с врагами (не как в оригинале)"}
     { key:"#TR_CONFIG_PROTESTOR_HUNT_NOBLES", text:"Протестующие охотятся на ноблей и их усадьбы (не как в оригинале)"}
     { key:"#TR_CONFIG_FISHING_BOAT_REMAKE", text:"Рыбацкая лодка-ремейк: быстрее с рабочими, половинный улов, липкие точки, мягкая потеря пристани (не как в оригинале)"}
     { key:"#TR_CONFIG_WOOD_CUTTER_SINGLE_GATHERER", text:"Лесорубы: один дровосек + любой TERRAIN_TREE (ремейк; в оригинале 1/2/3 по штату и только выросшие деревья)"}
@@ -173,13 +176,12 @@ localization_ru_f = [
     { key:"#TR_CONFIG_FORT_REFUND_CARRY_TROOPS", text:"Форт-ремейк: снос форта возвращает войска, перенесённые из прошлой миссии (не как в оригинале)"}
     { key:"#TR_CONFIG_STATUE_VARIANTS", text:"Статуи-ремейк: случайный вид при выборе, отдельные клавиши поворота и вида, дополнительные виды статуй (не как в оригинале)"}
     { key:"#TR_CONFIG_GUILD_STATUE_SERVICE", text:"Гильдии-ремейк: свободные рабочие гильдий ухаживают за статуями (не как в оригинале)"}
-    { key:"#TR_CONFIG_MASTABA_CLAY_DELIVERY", text:"Мастаба-ремейк: склады возят глину из квот brick-фаз (в оригинале на памятник везли только кирпичи)"}
+    { key:"#TR_CONFIG_MASTABA_CLAY_DELIVERY", text:"Мастаба-ремейк: рабочие возят на санях и глину из квот brick-фаз (в оригинале на памятник везли только кирпичи)"}
     { key:"#TR_CONFIG_RECRUIT_NEAREST_FORT", text:"Казармы-ремейк: рекрут идёт в ближайший форт, а не сначала к колесничим, потом к пехоте, потом к лучникам (не как в оригинале)"}
     { key:"#TR_CONFIG_TOWER_SENTRIES_GO_OFFROAD", text:"Башенные часовые не нуждаются в дороге"}
     { key:"#TR_CONFIG_FARMS_DELIVER_CLOSE", text:"Фермы и причалы доставляют еду только в близкорасположенные амбары"}
     { key:"#TR_CONFIG_DELIVER_ONLY_TO_ACCEPTING_GRANARIES", text:"Не доставлять еду в амбары с включенной доставкой"}
     { key:"#TR_CONFIG_ALL_HOUSES_MERGE", text:"Разрешить слияние всех домов"}
-    { key:"#TR_CONFIG_WINE_COUNTS_IF_OPEN_TRADE_ROUTE", text:"Торговые пути увеличивают разнообразие вина"}
     { key:"#TR_CONFIG_RANDOM_COLLAPSES_TAKE_MONEY", text:"Вместо разрушения, разрушающаяся шахта заберет часть денег"}
     { key:"#TR_CONFIG_DISASTER_EVENTS_USE_AMOUNT", text:"Затопление глины / обвал золота ломают amount зданий из события"}
     { key:"#TR_CONFIG_MULTIPLE_BARRACKS", text:"Разрешить постройку нескольких казарм"}
@@ -809,6 +811,7 @@ localization_ru_f = [
     { key: "#zoo_info_game_meat", text: "Mяco:" }
     { key: "#zoo_info_straw", text: "Coлoмa:" }
     { key: "#building_needs_game_meat", text: "Этoмy здaнию нyжнa дичь" }
+    { key: "#game_meat_import_trade_route", text: "Пocтpoй oxoтничью cтopoжкy или импopтиpyй дичь." }
 
     // pavilion overlay
     { key: "#pavilion_access_none", text: "Этoт дoм нe имeeт никaкoгo дocтyпa к cцeнe для тaнцeв" }

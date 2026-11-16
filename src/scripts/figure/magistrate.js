@@ -5,6 +5,8 @@ figure_magistrate {
 	animations {
 		walk { pack: PACK_SPR_MAIN, id: 212, max_frames:12 }
 		death { pack: PACK_SPR_MAIN, id: 213, max_frames:8, loop:false }
+		// OG law_walker_action draws the magistrate fight with its walk group.
+		attack { pack: PACK_SPR_MAIN, id: 212, max_frames:6 }
 		big_image { pack:PACK_UNLOADED, id:25, offset:FIGURE_MAGISTRATE }
 	}
 
@@ -25,11 +27,18 @@ figure_magistrate {
 		magistrate_city_is_amazing { sound: "magistrate_g10.wav", text: "#magistrate_city_is_amazing" }
 	}
 
+	// OG Figure_model 89 Magistrate: fighting unit 1, hit points 10, attack 0, armor 0.
 	category: figure_category_citizen
 	max_damage: 10
+	attack_value: 0
+	defense_value: 0
 	meta { text_id: 210, help_link:"message_history_defensive_structures" }
 	terrain_usage : TERRAIN_USAGE_ROADS
-	max_roam_length : 800
+	// OG walker_rules: law walker roam 640, home road radius 2.
+	max_roam_length : 640
+	home_road_radius : 2
+	// OG Pharaoh_Model courthouse service reduction.
+	crime_reduction : 500
 }
 
 function figure_magistrate_gods_are_angry() {

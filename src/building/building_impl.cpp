@@ -83,21 +83,6 @@ void building_impl::on_destroy() {
 }
 
 void building_impl::on_place_checks() {
-    switch (type()) {
-    case BUILDING_NONE:
-    case BUILDING_CLEAR_LAND:
-        return;
-    }
-
-    construction_warnings warnings;
-    if (building_type_hover_road_access(type())) {
-        warnings.add_if(!map_has_road_access(tile(), size()), "#needs_road_access");
-    }
-
-    if (base.max_workers > 0) {
-        warnings.add_if(g_city.labor.workers_needed >= 10, "#city_needs_more_workers");
-    }
-
     es(__func__);
 }
 
@@ -259,6 +244,10 @@ int building_impl::ready_production() const {
     const auto &p = current_params();
     if (!!game_features::gameplay_rebalance_workshop_output && !p.production_rate_dcy.value.empty()) {
         return p.production_rate_dcy.get();
+    }
+    // OG spawn_industry: every finished cycle ships one 100-unit load, whatever the building.
+    if (!game_features::gameplay_change_industry_remake_rates) {
+        return 100;
     }
     return p.production_rate;
 }
@@ -646,6 +635,8 @@ void building_impl::highlight_waypoints() { // highlight the 4 routing tiles for
 }
 
 void building_impl::on_tick(bool refresh_only) {
+    tick_sprite_anims(refresh_only);
+
     if (base.anim.valid()) {
         base.anim.update(refresh_only);
     }

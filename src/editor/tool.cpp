@@ -41,7 +41,7 @@
       | TERRAIN_GARDEN | TERRAIN_ROAD | TERRAIN_MEADOW | TERRAIN_FLOODPLAIN | TERRAIN_MARSHLAND | TERRAIN_DUNE \
       | TERRAIN_ORE)
 
-static struct {
+struct editor_tool_data_t {
     int active = 0;
     int type = TOOL_GRASS;
     int id = 0;
@@ -49,7 +49,11 @@ static struct {
     int build_in_progress = 0;
     int start_elevation = 0;
     tile2i start_tile = {0, 0};
-} data;
+
+    void reset() { *this = {}; }
+};
+
+static editor_tool_data_t g_editor_tool_data;
 
 // Set per stroke by add_terrain when a TOOL_GRASS brush clears a TERRAIN_WATER
 // or TERRAIN_DEEPWATER bit. editor_tool_update_use reads it to decide whether
@@ -61,14 +65,17 @@ static struct {
 static bool s_brush_cleared_water = false;
 
 int editor_tool_type(void) {
+    auto& data = g_editor_tool_data;
     return data.type;
 }
 
 int editor_tool_is_active(void) {
+    auto& data = g_editor_tool_data;
     return data.active;
 }
 
 void editor_tool_deactivate(void) {
+    auto& data = g_editor_tool_data;
     if (editor_tool_is_updatable() && data.build_in_progress) {
         game_undo_restore_map(1);
         data.build_in_progress = 0;
@@ -82,20 +89,24 @@ void editor_tool_set_type(int type) {
 }
 
 void editor_tool_set_with_id(int type, int id) {
+    auto& data = g_editor_tool_data;
     data.active = 1;
     data.type = type;
     data.id = id;
 }
 
 int editor_tool_brush_size(void) {
+    auto& data = g_editor_tool_data;
     return data.brush_size;
 }
 
 void editor_tool_set_brush_size(int size) {
+    auto& data = g_editor_tool_data;
     data.brush_size = size;
 }
 
 void editor_tool_foreach_brush_tile(void (*callback)(const void* user_data, int dx, int dy), const void* user_data) {
+    auto& data = g_editor_tool_data;
     if (data.type == TOOL_RAISE_LAND || data.type == TOOL_LOWER_LAND) {
         for (int dy = -1; dy <= 1; dy++) {
             for (int dx = -1; dx <= 1; dx++) {
@@ -114,14 +125,17 @@ void editor_tool_foreach_brush_tile(void (*callback)(const void* user_data, int 
 }
 
 int editor_tool_is_updatable(void) {
+    auto& data = g_editor_tool_data;
     return data.type == TOOL_ROAD;
 }
 
 int editor_tool_is_in_use(void) {
+    auto& data = g_editor_tool_data;
     return data.build_in_progress;
 }
 
 void editor_tool_start_use(tile2i tile) {
+    auto& data = g_editor_tool_data;
     if (!data.active)
         return;
     data.build_in_progress = 1;
@@ -134,6 +148,7 @@ void editor_tool_start_use(tile2i tile) {
 }
 
 int editor_tool_is_brush(void) {
+    auto& data = g_editor_tool_data;
     switch (data.type) {
     case TOOL_GRASS:
     case TOOL_TREES:
@@ -154,6 +169,7 @@ int editor_tool_is_brush(void) {
 }
 
 static int raise_land_tile(int x, int y, int grid_offset, int terrain) {
+    auto& data = g_editor_tool_data;
     int elevation = map_elevation_at(grid_offset);
     if (elevation < 5 && elevation == data.start_elevation) {
         if (!(terrain & (TERRAIN_ACCESS_RAMP | TERRAIN_ELEVATION))) {
@@ -166,6 +182,7 @@ static int raise_land_tile(int x, int y, int grid_offset, int terrain) {
 }
 
 static int lower_land_tile(int x, int y, int grid_offset, int terrain) {
+    auto& data = g_editor_tool_data;
     if (terrain & TERRAIN_ACCESS_RAMP) {
         terrain |= TERRAIN_ELEVATION;
         terrain &= ~(TERRAIN_ACCESS_RAMP);
@@ -225,6 +242,7 @@ static void demolish_building_at(int grid_offset) {
 }
 
 static void add_terrain(const void* tile_data, int dx, int dy) {
+    auto& data = g_editor_tool_data;
     tile2i tile = *(tile2i*)tile_data;
     int x = tile.x() + dx;
     int y = tile.y() + dy;
@@ -332,6 +350,7 @@ static void add_terrain(const void* tile_data, int dx, int dy) {
 }
 
 void editor_tool_update_use(tile2i tile) {
+    auto& data = g_editor_tool_data;
     if (!data.build_in_progress)
         return;
 
@@ -491,6 +510,7 @@ void editor_tool_update_use(tile2i tile) {
 }
 
 static void place_earthquake_flag(tile2i tile) {
+    auto& data = g_editor_tool_data;
     xstring warning;
     if (editor_tool_can_place_flag(data.type, tile, warning)) {
         if (scenario_editor_earthquake_severity())
@@ -504,6 +524,7 @@ static void place_earthquake_flag(tile2i tile) {
 }
 
 static void place_flag(tile2i tile, void (*update)(int x, int y)) {
+    auto& data = g_editor_tool_data;
     xstring warning;
     if (editor_tool_can_place_flag(data.type, tile, warning))
         update(tile.x(), tile.y());
@@ -513,6 +534,7 @@ static void place_flag(tile2i tile, void (*update)(int x, int y)) {
 }
 
 static void place_flag_with_id(tile2i tile, void (*update)(int id, int x, int y)) {
+    auto& data = g_editor_tool_data;
     xstring warning;
     if (editor_tool_can_place_flag(data.type, tile, warning))
         update(data.id, tile.x(), tile.y());
@@ -521,6 +543,7 @@ static void place_flag_with_id(tile2i tile, void (*update)(int id, int x, int y)
 }
 
 static void place_building(tile2i tile) {
+    auto& data = g_editor_tool_data;
     int image_id;
     int size;
     e_building_type type;
@@ -594,6 +617,7 @@ static void place_road(tile2i start_tile, tile2i end_tile) {
 }
 
 void editor_tool_end_use(tile2i tile) {
+    auto& data = g_editor_tool_data;
     if (!data.build_in_progress)
         return;
     data.build_in_progress = 0;

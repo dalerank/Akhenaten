@@ -119,8 +119,3 @@ function building_decorative_gatehouse_can_place(ev) {
     }
     city_planner.finalize_check_result = ev.state
 }
-
-[es=(building_decorative_gatehouse, on_place_checks)]
-function building_decorative_gatehouse_on_place_checks(ev) {
-    building_gatehouse_on_place_checks(ev, 5)
-}

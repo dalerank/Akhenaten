@@ -837,7 +837,8 @@ void city_religion_t::update_monthly_data(e_god randm_god) {
         god->months_since_festival++;
     }
 
-    // handle blessings, curses, etc every month
+    // OG gods.c discard_random_roll(): one crt rand() is thrown away before the monthly event.
+    anti_scum_random_15bit();
     update_curses_and_blessings(randm_god, (e_god_event)-1);
 
     // post city message about the gods being angery
@@ -870,11 +871,13 @@ void city_religion_t::update() {
     calc_coverage();
     calculate_gods_mood_targets();
 
+    // OG gods.c draws the daily god before checking whether gods are enabled.
+    e_god randm_god = e_god(anti_scum_random_15bit() % MAX_GODS);
+
     if (!game_features::gameopt_gods_enabled) {
         return;
     }
 
-    e_god randm_god = e_god(anti_scum_random_15bit() % MAX_GODS);
     update_mood(randm_god);
 
     //        perform_minor_blessing(GOD_PTAH); // TODO: DEBUGGING

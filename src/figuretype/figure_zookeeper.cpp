@@ -1,6 +1,5 @@
 #include "figure_zookeeper.h"
 
-#include "building/building_entertainment.h"
 #include "building/building_house.h"
 #include "city/city.h"
 #include "figure/service.h"
@@ -9,18 +8,7 @@
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_zookeeper);
 
 void figure_zookeeper::update_shows() {
-    building *dest = destination();
-    if (!dest) {
-        return;
-    }
-
-    building_entertainment *entertainment = dest->dcast_entertainment();
-    if (!entertainment) {
-        return;
-    }
-
-    // Reuse juggler_visited as "animals present / show active" timer (same pattern as senet).
-    entertainment->runtime_data().juggler_visited = 32;
+    // figure_entertainer_update_shows writes show days only for juggler, musician and dancer.
 }
 
 int figure_zookeeper::provide_service() {

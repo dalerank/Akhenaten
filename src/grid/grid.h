@@ -73,13 +73,13 @@ void map_grid_fill(grid_xx& grid, int64_t value);
 void map_grid_clear(grid_xx& grid);
 void map_grid_copy(grid_xx& src, grid_xx& dst);
 
-template<typename T>
-tile2i map_random_choose(T &arr, tile2i avoid) {
+template <typename T>
+tile2i map_random_choose(T& arr, tile2i avoid, uint32_t rnd) {
     if (arr.empty()) {
         return tile2i::invalid;
     }
 
-    auto idx = rand() % arr.size();
+    auto idx = rnd % arr.size();
     if (arr[idx] != avoid) {
         return arr[idx];
     }
@@ -119,6 +119,8 @@ bool map_tile_is_inside_area(tile2i tile, tile2i start, tile2i end, vec2i size =
 bool map_grid_is_inside(tile2i tile, vec2i size);
 inline int map_grid_is_inside(tile2i tile, int size) { return map_grid_is_inside(tile, vec2i{size, size}); }
 bool map_grid_inside_map_area(int grid_offset, int edge_size = 0);
+constexpr int BUILDING_MAP_EDGE_MARGIN = 3;
+bool map_grid_is_inside_building_area(tile2i tile);
 // bool map_grid_inside_map_area(int x, int y, int edge_size = 0);
 using offsets_array = svector<int, 150>;
 void map_grid_adjacent_offsets_xy(int sizex, int sizey, offsets_array &arr);

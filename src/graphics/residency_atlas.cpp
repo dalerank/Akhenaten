@@ -1,5 +1,7 @@
 #include "graphics/residency_atlas.h"
 
+#include "graphics/render_stats.h"
+
 #include "platform/renderer.h"
 #include "game/game.h"
 #include "game/game_config.h"
@@ -32,10 +34,13 @@ namespace {
 bool &g_enabled = detail::g_enabled;
 bool &g_redirect = detail::g_redirect;
 
-constexpr int DEFAULT_SIZE = 8192;
-constexpr int MIN_SIZE = 1024;
-constexpr int PADDING = 1;
-constexpr int PREVIEW_MAX_DIM = 512;
+enum e_atlas_limits {
+    ATLAS_MAX_SIZE = 8192,
+    ATLAS_MIN_SIZE = 1024,
+    ATLAS_PADDING = 1,
+    ATLAS_PREVIEW_MAX_DIM = 512,
+    ATLAS_RECYCLE_COOLDOWN_FRAMES = 600,
+};
 
 struct key_t {
     SDL_Texture *tex;
@@ -81,7 +86,7 @@ int g_max_sprite_width = 512;
 SDL_Texture *g_atlas = nullptr;
 int g_atlas_w = 0;
 int g_atlas_h = 0;
-int g_wanted_size = DEFAULT_SIZE;
+int g_wanted_size = ATLAS_MAX_SIZE;
 
 std::unordered_map<key_t, slot_t, key_hash> g_slots;
 std::unordered_set<const void *> g_sources;
@@ -93,6 +98,10 @@ int g_distinct = 0;
 int64_t g_used_area = 0;
 int g_no_room = 0;
 int64_t g_no_room_area = 0;
+uint32_t g_frame_index = 0;
+uint32_t g_last_recycle_frame = 0;
+bool g_recycled_once = false;
+bool g_overflow_logged = false;
 
 std::atomic<uint32_t> g_cnt_hit{0};
 std::atomic<uint32_t> g_cnt_miss{0};
@@ -252,6 +261,7 @@ void flush_pending() {
     if (g_pending.empty()) {
         return;
     }
+    render_stats::note_break();
     SDL_Renderer *r = g_render.renderer();
     draw_blend_guard blend_guard(r);
     SDL_Texture *prev = SDL_GetRenderTarget(r);
@@ -312,7 +322,7 @@ void draw_preview() {
     SDL_RenderSetClipRect(r, nullptr);
     SDL_RenderSetViewport(r, nullptr);
 
-    const float scale = (float)PREVIEW_MAX_DIM / (float)std::max(g_atlas_w, g_atlas_h);
+    const float scale = (float)ATLAS_PREVIEW_MAX_DIM / (float)std::max(g_atlas_w, g_atlas_h);
     const int margin = 10;
     SDL_Rect dst{margin, margin, (int)(g_atlas_w * scale), (int)(g_atlas_h * scale)};
     SDL_Rect frame{dst.x - 2, dst.y - 2, dst.w + 4, dst.h + 4};
@@ -352,6 +362,7 @@ void drop_contents() {
     g_used_area = 0;
     g_no_room = 0;
     g_no_room_area = 0;
+    g_overflow_logged = false;
 
     std::lock_guard<std::mutex> lock(buffers_mutex());
     for (tls_requests *b : tls_requests::buffers()) {
@@ -361,9 +372,9 @@ void drop_contents() {
 
 int clamp_size(int size) {
     if (size <= 0) {
-        size = DEFAULT_SIZE;
+        size = ATLAS_MAX_SIZE;
     }
-    size = std::max(size, MIN_SIZE);
+    size = std::clamp<int>(size, ATLAS_MIN_SIZE, ATLAS_MAX_SIZE);
     const vec2i maxsz = g_render.get_max_image_size();
     if (maxsz.x > 0) {
         size = std::min(size, maxsz.x);
@@ -439,7 +450,7 @@ bool ensure_page() {
         return false;
     }
     SDL_Renderer *r = g_render.renderer();
-    for (int size = clamp_size(g_wanted_size); size >= MIN_SIZE; size /= 2) {
+    for (int size = clamp_size(g_wanted_size); size >= ATLAS_MIN_SIZE; size /= 2) {
         g_atlas = SDL_CreateTexture(r, SDL_PIXELFORMAT_ABGR8888, SDL_TEXTUREACCESS_TARGET, size, size);
         if (!g_atlas) {
             logs::warn("residency_atlas: driver rejected a %dx%d target texture (%s), trying %dx%d", size, size,
@@ -458,8 +469,8 @@ bool ensure_page() {
         return true;
     }
 
-    logs::error("residency_atlas: no usable atlas size down to %dx%d, disabling: %s", MIN_SIZE, MIN_SIZE,
-                SDL_GetError());
+    logs::error("residency_atlas: no usable atlas size down to %dx%d, disabling: %s", ATLAS_MIN_SIZE, ATLAS_MIN_SIZE,
+      SDL_GetError());
     g_page_alloc_failed = true;
     g_enabled = false;
     g_redirect = false;
@@ -467,6 +478,59 @@ bool ensure_page() {
 }
 
 std::vector<key_t> g_batch;
+
+bool pack_batch() {
+    bool all_fit = true;
+    for (const key_t& k : g_batch) {
+        if (g_slots.find(k) != g_slots.end()) {
+            continue;
+        }
+        int rx = 0, ry = 0;
+        if (pack(k.w + ATLAS_PADDING, k.h + ATLAS_PADDING, rx, ry)) {
+            g_slots.emplace(k, slot_t{rx, ry, k.w, k.h, true});
+            g_packed_sources.insert(k.tex);
+            ++g_distinct;
+            g_used_area += (int64_t)k.w * k.h;
+            g_pending.push_back(blit_t{k.tex, {k.ox, k.oy, k.w, k.h}, {rx, ry, k.w, k.h}});
+        } else {
+            all_fit = false;
+        }
+    }
+    if (all_fit) {
+        return true;
+    }
+
+    // A full page keeps what it has; sprites that missed draw from their own pak pages.
+    for (const key_t& k : g_batch) {
+        if (g_slots.find(k) == g_slots.end()) {
+            g_slots.emplace(k, slot_t{0, 0, k.w, k.h, false});
+            ++g_no_room;
+            g_no_room_area += (int64_t)k.w * k.h;
+        }
+    }
+    return false;
+}
+
+bool can_recycle() {
+    return !g_recycled_once || g_frame_index - g_last_recycle_frame >= ATLAS_RECYCLE_COOLDOWN_FRAMES;
+}
+
+// Keeps the texture: draws already queued this frame still read their old rects, the new blits queue after them.
+void recycle_page() {
+    logs::info("residency_atlas: page full (%.1f%% placed, %d sprites), repacking the current working set",
+      100.0 * (double)g_used_area / ((double)g_atlas_w * g_atlas_h), g_distinct);
+    g_slots.clear();
+    g_packed_sources.clear();
+    g_pending.clear();
+    g_skyline.clear();
+    g_skyline.push_back(skyline_node{0, 0, g_atlas_w});
+    g_distinct = 0;
+    g_used_area = 0;
+    g_no_room = 0;
+    g_no_room_area = 0;
+    g_recycled_once = true;
+    g_last_recycle_frame = g_frame_index;
+}
 
 void collect_requests() {
     g_batch.clear();
@@ -508,22 +572,16 @@ void process_requests() {
 
     std::sort(g_batch.begin(), g_batch.end(), [](const key_t &a, const key_t &b) { return a.h > b.h; });
 
-    for (const key_t &k : g_batch) {
-        if (g_slots.find(k) != g_slots.end()) {
-            continue;
-        }
-        int rx = 0, ry = 0;
-        if (pack(k.w + PADDING, k.h + PADDING, rx, ry)) {
-            g_slots.emplace(k, slot_t{rx, ry, k.w, k.h, true});
-            g_packed_sources.insert(k.tex);
-            ++g_distinct;
-            g_used_area += (int64_t)k.w * k.h;
-            g_pending.push_back(blit_t{k.tex, {k.ox, k.oy, k.w, k.h}, {rx, ry, k.w, k.h}});
-        } else {
-            g_slots.emplace(k, slot_t{0, 0, k.w, k.h, false});
-            ++g_no_room;
-            g_no_room_area += (int64_t)k.w * k.h;
-        }
+    bool fit = pack_batch();
+    if (!fit && can_recycle()) {
+        recycle_page();
+        fit = pack_batch();
+    }
+    if (!fit && !g_overflow_logged) {
+        g_overflow_logged = true;
+        logs::warn("residency_atlas: %dx%d page is full (%d sprites placed, %d did not fit), new sprites draw from "
+                   "their pak pages",
+          g_atlas_w, g_atlas_h, g_distinct, g_no_room);
     }
     g_batch.clear();
 }
@@ -676,6 +734,7 @@ bool page_linear() {
 
 void frame_pre_present() {
     const Uint64 t0 = SDL_GetPerformanceCounter();
+    ++g_frame_index;
 
     apply_registry_changes();
     if (g_enabled || g_atlas) {

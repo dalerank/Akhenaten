@@ -10,12 +10,12 @@ god_ra_t god_ra;
 
 void god_ra_t::perform_reduced_trading() {
     g_city.religion.ra_harshly_reduced_trading_months_left = 12;
-    messages::popup("message_wrath_of_ra", 0, 0);
+    messages::popup("message_wrath_of_ra_2", 0, 0);
 }
 
 void god_ra_t::perform_lower_reputation() {
     g_city.kingdome.reduce_god_wrath(15);
-    messages::popup("message_wrath_of_ra_2", 0, 0);
+    messages::popup("message_wrath_of_ra", 0, 0);
 }
 
 void god_ra_t::perform_no_traders() {
@@ -24,11 +24,11 @@ void god_ra_t::perform_no_traders() {
 }
 
 void god_ra_t::perform_major_curse() {
-    int rand_value = anti_scum_random_15bit() % 3;
-    if (rand_value == 0) {
+    // OG gods.c rolls again for the second branch: the outcomes are 1/3, 2/9, 4/9, not 1/3 each.
+    if (anti_scum_random_15bit() % 3 == 0) {
         // lowers commerce prices
         perform_reduced_trading();
-    } else if (rand_value == 1) {
+    } else if (anti_scum_random_15bit() % 3 == 1) {
         // lowers reputation
         perform_lower_reputation();
     } else {

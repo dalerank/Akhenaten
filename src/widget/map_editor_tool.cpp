@@ -12,7 +12,7 @@
 #include "scenario/scenario.h"
 #include "game/game.h"
 
-#define MAX_TILES 4
+constexpr int MAX_TILES = 4;
 
 static const int X_VIEW_OFFSETS[MAX_TILES] = {0, -30, 30, 0};
 static const int Y_VIEW_OFFSETS[MAX_TILES] = {0, 15, 15, 30};

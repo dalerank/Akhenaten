@@ -16,6 +16,7 @@ building_festival_square = {
   cost : [ 100, 250, 500, 1000, 1500 ]
   desirability : { value:[16], step:[2], step_size:[-3], range: [5] }
   flags {
+    no_map_edge_margin: true
     is_religion: true
   }
 }

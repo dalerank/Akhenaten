@@ -73,6 +73,7 @@ public:
     virtual void update_animation() override;
 
     bool has_troops() const;
+    int request_event_id() const { return runtime_data().request_event_id; }
     int transported_formation() const;
     bool can_embark() const;
     bool embark_formation(int formation_id);

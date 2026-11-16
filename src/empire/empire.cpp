@@ -7,6 +7,7 @@
 #include "city/buildings.h"
 #include "city/city_message.h"
 #include "city/city.h"
+#include "city/city_trade.h"
 #include "city/city_resource_handle.h"
 #include "city/city_population.h"
 #include "scenario/map.h"
@@ -18,6 +19,8 @@
 #include "io/gamefiles/lang.h"
 #include "game/game_config.h"
 #include "core/log.h"
+#include "core/random.h"
+#include "game/game.h"
 #include "content/vfs.h"
 #include <string>
 
@@ -26,6 +29,7 @@
 
 //empire_t ANK_VARIABLE_N(g_empire, "empire");
 empire_t g_empire;
+empire_trade_rules_t ANK_VARIABLE(empire_trade_rules);
 
 #ifndef _WIN32
 #define stricmp strcasecmp
@@ -137,7 +141,9 @@ void empire_t::load_mission_metadata(const mission_id_t &missionid, bool preserv
                 continue;
             }
             cities[i].is_open = saved_open[i] != 0;
-            if (full_empire_object *full = ref_full_object(cities[i].empire_object_id)) {
+            // Maps store "open" as any non-zero byte (0xff in OG maps); keep it unless openness changed.
+            full_empire_object* full = ref_full_object(cities[i].empire_object_id);
+            if (full && (full->trade_route_open != 0) != (saved_open[i] != 0)) {
                 full->trade_route_open = saved_open[i];
             }
         }
@@ -152,7 +158,10 @@ void empire_t::load_mission_metadata(const mission_id_t &missionid, bool preserv
 
         if (full_empire_object *full = ref_full_object(city.empire_object_id)) {
             if (full->obj.type == EMPIRE_OBJECT_CITY) {
-                full->in_use = 1;
+                // OG keeps the stored value: objects from the empire file carry in_use 2.
+                if (!full->in_use) {
+                    full->in_use = 1;
+                }
                 full->city_name_id = city.name_id;
                 full->city_type = city.type;
             }
@@ -240,14 +249,35 @@ void empire_t::expand() {
     }
 }
 
-int empire_t::count_beer_sources() {
-    int sources = 0;
-    for (const auto &city: cities) {
-        if (city.in_use && city.is_open && city.sells_resource[RESOURCE_BEER]) {
-            sources++;
+// OG empire_count_luxury_goods_kinds + empire_city_generate_trader: a city with a luxury workshop has the first
+// kind; every open city that sells luxury goods on a route with a limit adds its culture's kind while the city
+// imports them.
+int empire_t::count_luxury_goods_kinds() {
+    int kinds[LUXURY_KIND_MAX] = {};
+    kinds[LUXURY_JEWELRY] = g_city.buildings.count_industry_total(RESOURCE_LUXURY_GOODS) > 0;
+
+    const e_trade_status status = g_city.resource.trade_status[RESOURCE_LUXURY_GOODS];
+    const bool imports = (status == TRADE_STATUS_IMPORT || status == TRADE_STATUS_IMPORT_AS_NEEDED);
+    for (int id = 1; imports && id < MAX_CITIES; id++) {
+        const empire_city& city = cities[id];
+        if (!city.in_use || !city.is_open || !city.sells_resource[RESOURCE_LUXURY_GOODS]) {
+            continue;
+        }
+        if (get_route(city.route_id).limit(RESOURCE_LUXURY_GOODS) <= 0) {
+            continue;
+        }
+        const auto& table = empire_city_cultures.luxury_kind;
+        const int kind = (city.name_id < table.size()) ? table[city.name_id] : LUXURY_JEWELRY;
+        if (kind < LUXURY_KIND_MAX) {
+            kinds[kind]++;
         }
     }
-    return sources;
+
+    int count = 0;
+    for (int kind : kinds) {
+        count += (kind != 0) ? 1 : 0;
+    }
+    return count;
 }
 
 int empire_t::trade_route_for_city(int city_id) {
@@ -321,46 +351,6 @@ void empire_t::generate_traders() {
     }
 }
 
-int get_max_raw_stock_for_population(e_resource resource) {
-    int finished_good = RESOURCE_NONE;
-    switch (resource) {
-    case RESOURCE_CLAY: finished_good = RESOURCE_POTTERY; break;
-    case RESOURCE_GEMS: finished_good = RESOURCE_LUXURY_GOODS; break;
-    case RESOURCE_STRAW: finished_good = RESOURCE_OIL; break;
-    case RESOURCE_BARLEY: finished_good = RESOURCE_BEER; break;
-    case RESOURCE_FLAX: finished_good = RESOURCE_LINEN; break;
-    case RESOURCE_COPPER: finished_good = RESOURCE_WEAPONS; break;
-    }
-
-    int max_in_stock = 0;
-    if (finished_good) {
-        max_in_stock = 200 + 200 * g_city.buildings.count_industry_active(resource);
-    }
-
-    return max_in_stock;
-}
-
-int get_max_food_stock_for_population(e_resource resource) {
-    const int city_population = g_city.population.current;
-
-    switch (resource) {
-    case RESOURCE_GRAIN:
-    case RESOURCE_MEAT:
-    case RESOURCE_LETTUCE:
-    case RESOURCE_GAMEMEAT:
-    case RESOURCE_POTTERY:
-    case RESOURCE_LUXURY_GOODS:
-    case RESOURCE_OIL:
-    case RESOURCE_BEER:
-        return std::max(100, (city_population / 100) * 100);
-
-    default:
-        verify_no_crash(false);
-    }
-
-    return 0;
-}
-
 resource_list empire_t::importable_resources_from_city(int city_id) {
     resource_list result;
     for (const auto &r: resource_list::all) {
@@ -392,20 +382,25 @@ bool empire_t::can_export_resource_to_city(int city_id, e_resource resource) {
     }
 
     city_resource_handle hresource{ resource };
-    if (g_city.resource.yards_stored(resource) <= hresource.trading_amount()) {
-        // stocks too low
+    const int stored = g_city.resource.yards_stored(resource);
+    switch (hresource.trade_status()) {
+    case TRADE_STATUS_EXPORT:
+        if (stored <= hresource.trading_amount()) {
+            return false;
+        }
+        break;
+
+    case TRADE_STATUS_EXPORT_SURPLUS:
+        if (stored <= city_trade_export_keep(resource)) {
+            return false;
+        }
+        break;
+
+    default:
         return false;
     }
 
-    if (city_id == 0 || city->buys_resource[resource]) {
-        int status = hresource.trade_status();
-        switch (status) {
-        case TRADE_STATUS_EXPORT: return true;
-        case TRADE_STATUS_EXPORT_SURPLUS: return city_resource_trade_surplus(resource);
-        }
-    }
-
-    return false;
+    return city_id == 0 || city->buys_resource[resource];
 }
 
 bool empire_t::can_import_resource_from_city(int city_id, e_resource resource) {
@@ -436,62 +431,12 @@ bool empire_t::can_import_resource_from_city(int city_id, e_resource resource) {
 
 int empire_t::import_stock_limit(e_resource resource) {
     city_resource_handle hresource{ resource };
-    const int city_population = g_city.population.current;
-    int max_in_stock = 0;
-
     if (hresource.trade_status() == TRADE_STATUS_IMPORT_AS_NEEDED) {
-        switch (resource) {
-            // food and finished materials
-        case RESOURCE_GRAIN:
-        case RESOURCE_MEAT:
-        case RESOURCE_LETTUCE:
-        case RESOURCE_GAMEMEAT:
-        case RESOURCE_OIL:
-        case RESOURCE_BEER:
-            max_in_stock = get_max_food_stock_for_population(resource);
-            break;
-
-        case RESOURCE_MARBLE:
-        case RESOURCE_WEAPONS:
-            max_in_stock = 10;
-            break;
-
-        case RESOURCE_CLAY:
-        case RESOURCE_STRAW: 
-        case RESOURCE_BARLEY:
-        case RESOURCE_COPPER:
-        case RESOURCE_FLAX:
-            max_in_stock = get_max_raw_stock_for_population(resource);
-            break;
-
-        case RESOURCE_TIMBER:
-            max_in_stock = g_city.buildings.count_active(BUILDING_SHIPWRIGHT) * 200;
-            break;
-
-        case RESOURCE_BRICKS:
-            max_in_stock = std::max(100, (city_population / 100) * 100);
-            break;
-
-        case RESOURCE_POTTERY:
-        case RESOURCE_LUXURY_GOODS:
-            max_in_stock = std::max(100, (city_population / 100) * 50);
-            break;
-
-        case RESOURCE_PAPYRUS:
-            max_in_stock = std::max(100, g_city.buildings.count_active({ BUILDING_SCRIBAL_SCHOOL, BUILDING_LIBRARY }) * 100);
-            break;
-
-        default:
-            max_in_stock = 100;
-            break;
-        }
-    } else {
-        max_in_stock = hresource.trading_amount();
+        return city_trade_export_keep(resource);
     }
 
-    return max_in_stock;
+    return hresource.trading_amount();
 }
-
 
 io_buffer* iob_empire_cities = new io_buffer([](io_buffer* iob, size_t version) {
     // v178+: Cleopatra name ids 61+ need array slots. Older files keep classic 61.
@@ -502,7 +447,8 @@ io_buffer* iob_empire_cities = new io_buffer([](io_buffer* iob, size_t version) 
         empire_city& city = g_empire.get_cities()[i];
         city.lookup_id = i;
         iob->bind_u8(city.in_use);
-        iob->bind_u8(city.max_traders);
+        uint8_t reserved = 0;
+        iob->bind_u8(reserved);
         iob->bind_u8((uint8_t&)city.type);
 
         iob->bind(BIND_SIGNATURE_UINT8, &city.name_id);
@@ -520,7 +466,7 @@ io_buffer* iob_empire_cities = new io_buffer([](io_buffer* iob, size_t version) 
         iob->bind_i16(city.cost_to_open);
         iob->bind(BIND_SIGNATURE_INT16, &city.ph_unk01);
         iob->bind(BIND_SIGNATURE_INT16, &city.trader_entry_delay);
-        iob->bind(BIND_SIGNATURE_INT16, &city.ph_unk02);
+        iob->bind(BIND_SIGNATURE_INT16, &city.trader_blocked);
         iob->bind(BIND_SIGNATURE_INT16, &city.empire_object_id);
         iob->bind(BIND_SIGNATURE_UINT8, &city.is_sea_trade);
         iob->bind_u8(city.months_under_siege);
@@ -533,10 +479,6 @@ io_buffer* iob_empire_cities = new io_buffer([](io_buffer* iob, size_t version) 
         iob->bind_u8(city.ship_movement_delay_min);
         iob->bind_u8(city.ship_movement_delay_max);
         iob->bind____skip(7);
-
-        if (iob->is_read_access()) {
-            city.check_attributes();
-        }
     }
 });
 
@@ -591,4 +533,17 @@ declare_console_command_p(list_cities) {
                        city->can_trade() ? "Yes" : "No");
         }
     }
+}
+
+int empire_t::random_city() {
+    svector<empire_city*, 32> valid_cities;
+    select_cities(valid_cities, [](empire_city* c) { return c->in_use; });
+
+    if (valid_cities.empty()) {
+        return -1;
+    }
+
+    const uint32_t h
+      = random_hash(game.simtime.absolute_day(true), (uint32_t)valid_cities.size(), RANDOM_SALT_EMPIRE_CITY);
+    return valid_cities[h % valid_cities.size()]->name_id;
 }

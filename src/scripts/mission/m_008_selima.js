@@ -1,7 +1,7 @@
 log_info("akhenaten: mission 8 selima started")
 
 // Empire / requests / invasions aligned with original campaign scenario 8 (2026-07-25 dump).
-// Favour Pharaoh army size=63 (trigger=by_favour) via mission_pharaoh_favour_invasion_tick.
+// Favour Pharaoh army size=63: events[] BY_FAVOUR, sent by the engine at Kingdom rating 0.
 // Hyksos wipe/refuse → chain tags on start_foreign_army_invasion (engine bind resolve).
 // No EVENT_TYPE_DISTANT_BATTLE in pak — Kerma pressure is CITY_UNDER_SIEGE (+ troop request chain).
 
@@ -18,7 +18,6 @@ mission8 { // Selima — The Road to Africa
 	initial_funds [7500, 5000, 3750, 2500, 2000]
 	rescue_loans [7500, 5000, 3750, 2500, 2000]
 	debt_interest [10, 15, 20, 25, 30]
-	house_tax_multipliers [300, 200, 150, 100, 75]
 
 	env {
 		has_animals : true
@@ -64,6 +63,24 @@ mission8 { // Selima — The Road to Africa
 
 	enable_scenario_events : true
 
+	events [
+		{ // pak i=18
+			type : EVENT_TYPE_INVASION
+			time { year : 0, month : 0 }
+			item { value : EVENT_INVADER_PHARAOH }
+			amount { value : 63, min : 40, max : 75 }
+			months_initial : 9
+			location_fields [ 1, 1, -1, -1 ]
+			event_trigger_type : EVENT_TRIGGER_BY_FAVOUR
+			tag_id : 7018
+			on_completed_action : -1
+			on_refusal_action : -1
+			on_too_late_action : -1
+			on_defeat_action : -1
+			invasion_attack_target : EVENT_ATTACK_TARGET_RANDOM
+		}
+	]
+
 	// Empire from original campaign scenario 8 (empire id=0) — full map objects.
 	map_background : {pack:PACK_EMPIRE, id:1}
 	hide_pak_cities : true
@@ -87,8 +104,6 @@ mission8 { // Selima — The Road to Africa
 			cost_to_open : 1100
 			is_sea_trade : false
 			type : EMPIRE_CITY_PHARAOH_TRADING
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_CHICKPEAS, RESOURCE_POTTERY, RESOURCE_PAPYRUS ]
 			buys [ RESOURCE_LETTUCE, RESOURCE_BRICKS, RESOURCE_BARLEY, RESOURCE_BEER, RESOURCE_LUXURY_GOODS ]
 			route_limits [
@@ -112,8 +127,6 @@ mission8 { // Selima — The Road to Africa
 			cost_to_open : 1650
 			is_sea_trade : false
 			type : EMPIRE_CITY_EGYPTIAN_TRADING
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_WEAPONS, RESOURCE_CLAY, RESOURCE_POTTERY, RESOURCE_COPPER ]
 			buys [ RESOURCE_FISH, RESOURCE_BEER, RESOURCE_LINEN, RESOURCE_PAPYRUS ]
 			route_limits [
@@ -137,8 +150,6 @@ mission8 { // Selima — The Road to Africa
 			cost_to_open : 400
 			is_sea_trade : false
 			type : EMPIRE_CITY_EGYPTIAN_TRADING
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_FISH, RESOURCE_CLAY, RESOURCE_POTTERY, RESOURCE_BEER, RESOURCE_REEDS, RESOURCE_PAPYRUS, RESOURCE_GRANITE ]
 			buys [ RESOURCE_BRICKS, RESOURCE_LINEN, RESOURCE_GEMS, RESOURCE_LUXURY_GOODS, RESOURCE_TIMBER ]
 			route_limits [
@@ -166,8 +177,6 @@ mission8 { // Selima — The Road to Africa
 			cost_to_open : 500
 			is_sea_trade : false
 			type : EMPIRE_CITY_EGYPTIAN_TRADING
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_FISH, RESOURCE_BARLEY, RESOURCE_BEER, RESOURCE_LINEN, RESOURCE_STONE ]
 			buys [ RESOURCE_GAMEMEAT, RESOURCE_CLAY, RESOURCE_BRICKS, RESOURCE_TIMBER, RESOURCE_PAPYRUS, RESOURCE_LIMESTONE, RESOURCE_GRANITE, RESOURCE_SANDSTONE ]
 			route_limits [
@@ -196,8 +205,6 @@ mission8 { // Selima — The Road to Africa
 			cost_to_open : 450
 			is_sea_trade : false
 			type : EMPIRE_CITY_FOREIGN_TRADING
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_LUXURY_GOODS ]
 			buys [ RESOURCE_LINEN, RESOURCE_LUXURY_GOODS ]
 			route_limits [
@@ -351,9 +358,19 @@ mission8 { // Selima — The Road to Africa
 		hyksos_raid_small_last_year : -1
 		hyksos_raid_small_seq : 0
 		hyksos_invasion_2 : false
-		pharaoh_favour_invasion_done : false
 		start_message_shown : false
 	}
+}
+
+function mission8_invasion_outcome(seq) {
+	var n = city.invasion_history_count()
+	for (var i = 0; i < n; i++) {
+		var h = city.invasion_history_at(i)
+		if (h.seq == seq) {
+			return h.outcome
+		}
+	}
+	return -1
 }
 
 function mission8_hyksos_raid(invasion_id, size, on_completed_tag, on_refusal_tag) {
@@ -457,7 +474,7 @@ function mission8_hyksos_invasion_1(ev) {
 	}
 	var prev = mission.hyksos_raid_small_seq | 0
 	if (prev > 0) {
-		var prev_out = mission_pharaoh_favour_invasion_outcome(prev)
+		var prev_out = mission8_invasion_outcome(prev)
 		if (prev_out < 0 || prev_out == 0) {
 			return
 		}
@@ -653,7 +670,7 @@ function mission8_ensure_troops_request_4(as_chain_child) {
 	var ok_msg = city.create_chain_event({
 		tag_id: 410,
 		type: EVENT_TYPE_MESSAGE,
-		subtype: 1, // EVENT_SUBTYPE_FOREIGN_CITY_CONQUERED
+		subtype: EVENT_SUBTYPE_MSG_BATTLE_WON,
 		city: "Men-nefer",
 		amount: 5
 	})
@@ -721,9 +738,4 @@ function mission8_luxury_demand_increase(ev) {
 		amount: 3,
 		trigger: EVENT_TRIGGER_ONCE
 	}).execute()
-}
-
-[es=event_advance_month, mission=mission8]
-function mission8_pharaoh_favour_invasion(ev) {
-	mission_pharaoh_favour_invasion_tick(mission, 63)
 }

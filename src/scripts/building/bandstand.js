@@ -26,8 +26,36 @@ building_bandstand {
   desirability { value[4], step[1], step_size[-1], range[4] }
   laborers[12], fire_risk[4], damage_risk[3]
   flags {
+    no_map_edge_margin: true
     is_entertainment: true
   }
+
+  place_dir : [
+    { items: [
+      {type: BUILDING_GARDENS, offset:[2, 1]},
+      {type: BUILDING_BOOTH, offset:[2, 0]},
+      {type: BUILDING_BANDSTAND, offset:[0, 0], main:true},
+      {type: BUILDING_BANDSTAND, offset:[0, 1], main:false}
+    ]},
+    { items: [
+      {type: BUILDING_GARDENS, offset:[1, 2]},
+      {type: BUILDING_BOOTH, offset:[2, 2]},
+      {type: BUILDING_BANDSTAND, offset:[1, 0], main:true},
+      {type: BUILDING_BANDSTAND, offset:[2, 0], main:false}
+    ]},
+    { items: [
+      {type: BUILDING_GARDENS, offset:[2, 1]},
+      {type: BUILDING_BOOTH, offset:[2, 2]},
+      {type: BUILDING_BANDSTAND, offset:[0, 1], main:true},
+      {type: BUILDING_BANDSTAND, offset:[0, 2], main:false}
+    ]},
+    { items: [
+      {type: BUILDING_GARDENS, offset:[1, 2]},
+      {type: BUILDING_BOOTH, offset:[0, 2]},
+      {type: BUILDING_BANDSTAND, offset:[1, 0], main:true},
+      {type: BUILDING_BANDSTAND, offset:[0, 0], main:false}
+    ]}
+  ]
 }
 
 [es=(building_bandstand, ghost_allow_tile)]
@@ -39,14 +67,6 @@ function building_bandstand_ghost_allow_tile(ev) {
 function building_bandstand_setup_preview_graphics(ev) {
     var size = building_bandstand.building_size
     city_planner.init_tiles(size, size)
-}
-
-[es=(building_bandstand, on_place_checks)]
-function building_bandstand_on_place_checks(ev) {
-    var has_conservatory = city.count_active_buildings(BUILDING_CONSERVATORY) > 0
-    var has_juggler_school = city.count_active_buildings(BUILDING_JUGGLER_SCHOOL) > 0
-    city.warnings.show_if_not(has_conservatory, "#build_conservatory")
-    city.warnings.show_if_not(has_juggler_school, "#build_juggling_school")
 }
 
 [es=(building_bandstand, update_day)]

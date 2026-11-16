@@ -457,10 +457,6 @@ bool building_sphinx::needs_resources() const {
     return m->resource_pct(RESOURCE_PAINT) < 100 || m->resource_pct(RESOURCE_CLAY) < 100;
 }
 
-bool building_sphinx::accepts_yard_delivery(e_resource /*resource*/) const {
-    return false;
-}
-
 bool building_sphinx::need_carpenter() {
     return is_main() && !is_finished() && has_free_spot(FIGURE_CARPENTER);
 }
@@ -629,10 +625,6 @@ void building_sphinx::on_post_load() {
         }
     }
     refresh_part_images();
-}
-
-void building_sphinx::on_destroy() {
-    building_monument_remove_all_deliveries(id());
 }
 
 void building_sphinx::update_day() {

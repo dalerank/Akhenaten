@@ -2,6 +2,7 @@
 
 #include "core/calc.h"
 #include "core/log.h"
+#include "core/random.h"
 #include "core/string.h"
 #include "core/svector.h"
 #include "empire/empire.h"
@@ -25,9 +26,14 @@
 #include <cstdlib>
 #include <cmath>
 
-#define MAX_OBJECTS 200
-#define MAX_ROUTES 20
-#define EMPIRE_REGION_NAME_SCAN 128
+enum e_empire_object_limits {
+    MAX_OBJECTS = 200,
+    MAX_ROUTES = 20,
+    EMPIRE_REGION_NAME_SCAN = 128,
+    // OG empire.c empire_route_travel_months / io/empire_file.c ROUTE_STEP_RESET.
+    ROUTE_TRAVEL_DIVISOR = 400,
+    ROUTE_STEP_RESET = 5,
+};
 
 const e_empire_object_tokens_t ANK_CONFIG_ENUM(e_empire_object_tokens);
 
@@ -312,7 +318,6 @@ void empire_t::load_empire_cities(archive arch, bool preserve_runtime) {
 
         sync_city_object_size(full, city->type);
         city->name_str = empire_city::get_display_name(city->name_id);
-        city->check_attributes();
 
         if (city->can_trade()) {
             g_empire.set_trade_route_type(city->route_id, city->is_sea_trade);
@@ -356,6 +361,7 @@ void empire_t::load_empire_routes(archive arch) {
         route.num_points = (unsigned char)count;
         route.length = entry.r_int("length", 0);
         route.deviation = entry.r_int("deviation", 0);
+        route.unk_header[0] = ROUTE_STEP_RESET;
         route.path_length = route.calc_length();
         if (route.length <= 0) {
             route.length = route.path_length;
@@ -623,7 +629,7 @@ void empire_t::init_cities() {
         city->trader_figure_ids[1] = 0;
         city->trader_figure_ids[2] = 0;
         city->empire_object_id = i;
-        city->max_traders = 1;
+        city->trader_blocked = 0;
     }
 }
 
@@ -683,7 +689,7 @@ int empire_t::get_max_invasion_path() {
     return max_path;
 }
 
-int empire_t::get_closest_object(vec2i pos) const {
+int empire_t::get_closest_object(vec2i pos, int* distance) const {
     auto& objects = g_empire_objects;
     int min_dist = 10000;
     int min_obj_id = 0;
@@ -720,6 +726,9 @@ int empire_t::get_closest_object(vec2i pos) const {
             min_dist = dist;
             min_obj_id = i + 1;
         }
+    }
+    if (distance) {
+        *distance = min_dist;
     }
     return min_obj_id;
 }
@@ -836,7 +845,6 @@ void empire_t::fix_trade_routes() {
 io_buffer* iob_empire_map_objects = new io_buffer([](io_buffer* iob, size_t version) {
     logs::info("iob_empire_map_objects");
     auto& objects = g_empire_objects;
-    int last_object_was_used = 1;
     for (int i = 0; i < MAX_OBJECTS; i++) {
         full_empire_object* full = &objects[i];
         empire_object* obj = &full->obj;
@@ -886,14 +894,6 @@ io_buffer* iob_empire_map_objects = new io_buffer([](io_buffer* iob, size_t vers
                 iob->bind(BIND_SIGNATURE_UINT8, &full->trade_demand[r]);
             }
         }
-
-        if (iob->is_read_access()) {
-            if (last_object_was_used) {
-                last_object_was_used = full->in_use;
-            } else {
-                full->in_use = 0;
-            }
-        }
     }
 });
 
@@ -941,20 +941,68 @@ void full_empire_object::add_sell_resource(e_resource r) {
     *it = r;
 }
 
-int map_route_object::calc_length() {
-    if (num_points == 0) {
-        return 0;
+namespace {
+
+    // OG empire_route_draw_segment: from points[from] towards points[from + 1], a point every `step` pixels.
+    struct route_segment {
+        vec2i origin;
+        float step_x = 0.f;
+        float step_y = 0.f;
+        float distance = 0.f;
+    };
+
+    route_segment route_segment_at(const map_route_object& route, int from) {
+        route_segment seg;
+        seg.origin = route.points[from].p;
+        const vec2i to = route.points[from + 1].p;
+        const int dx = to.x - seg.origin.x;
+        const int dy = to.y - seg.origin.y;
+        seg.distance = (float)std::sqrt((double)dx * dx + (double)dy * dy);
+        if (seg.distance != 0.f) {
+            seg.step_x = (float)((double)dx / seg.distance);
+            seg.step_y = (float)((double)dy / seg.distance);
+        }
+        return seg;
     }
 
-    float pathlen = 0.f;
-    for (int i = 0; i < num_points - 1; i++) {
-        const auto route_point = points[0];
-        const auto nextup_route_point = points[i + 1];
-        vec2i d = nextup_route_point.p - route_point.p;
-        pathlen += 0.2f * sqrtf(float(d.x * d.x) + float(d.y * d.y));
+    int route_segment_count(const route_segment& seg, int step) {
+        if (seg.distance == 0.f || step <= 0) {
+            return 0;
+        }
+        int count = 0;
+        for (int t = 0; (double)t <= (double)seg.distance; t += step) {
+            count++;
+        }
+        return count;
     }
 
-    return (int)pathlen;
+} // namespace
+
+int map_route_object::calc_length() const {
+    int length = 0;
+    for (int p = 1; p < num_points; p++) {
+        length += route_segment_count(route_segment_at(*this, p - 1), step());
+    }
+    return length;
+}
+
+vec2i map_route_object::path_point(int index) const {
+    index = std::max(index, 0);
+    for (int p = 1; p < num_points; p++) {
+        const route_segment seg = route_segment_at(*this, p - 1);
+        const int count = route_segment_count(seg, step());
+        if (index < count) {
+            const double t = (double)(index * step());
+            return {(int16_t)(int)(t * seg.step_x + (double)seg.origin.x),
+              (int16_t)(int)(t * seg.step_y + (double)(float)seg.origin.y)};
+        }
+        index -= count;
+    }
+    return {0, 0};
+}
+
+int map_route_object::travel_months() const {
+    return std::max(1, path_length * step() / ROUTE_TRAVEL_DIVISOR);
 }
 
 void map_route_object::improve_route() {
@@ -993,7 +1041,9 @@ void map_route_object::improve_route() {
                     const float dy = (float)(b.y - a.y);
                     const float px = -dy / dist;
                     const float py = dx / dist;
-                    const float t = ((rand() % 2001) - 1000) / 1000.f; // [-1, 1]
+                    const uint32_t h
+                      = random_hash((a.x << 16) ^ a.y, (b.x << 16) ^ b.y, RANDOM_SALT_EMPIRE_ROUTE_JITTER);
+                    const float t = ((int)(h % 2001) - 1000) / 1000.f; // [-1, 1]
                     const float amount = t * max_deviation * std::min(1.f, dist / 200.f);
                     mid_point.x += (int)(px * amount);
                     mid_point.y += (int)(py * amount);
@@ -1022,7 +1072,10 @@ void map_route_object::improve_route() {
         }
 
         // Pick a random index between 1 and size-2
-        int index_to_remove = 1 + (rand() % (temp_points.size() - 2));
+        const vec2i first = temp_points.front().p;
+        const uint32_t h
+          = random_hash((first.x << 16) ^ first.y, (uint32_t)temp_points.size(), RANDOM_SALT_EMPIRE_ROUTE_REMOVE);
+        int index_to_remove = 1 + (h % (temp_points.size() - 2));
         temp_points.erase(temp_points.begin() + index_to_remove);
     }
 

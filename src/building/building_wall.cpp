@@ -400,10 +400,6 @@ bool building_mud_wall::preview::can_construction_start(build_planner &p, tile2i
     return map_routing_calculate_distances_for_building(ROUTED_BUILDING_WALL, start);
 }
 
-void building_mud_wall::on_place_checks() {
-    // nothing
-}
-
 int building_brick_wall::preview::construction_update(build_planner &p, tile2i start, tile2i end) const {
     return building_mud_wall::place_wall(true, start, end, BUILDING_BRICK_WALL);
 }
@@ -416,10 +412,6 @@ bool building_brick_wall::preview::can_construction_start(build_planner &p, tile
     return map_routing_calculate_distances_for_building(ROUTED_BUILDING_WALL, start);
 }
 
-void building_brick_wall::on_place_checks() {
-    // nothing
-}
-
 int building_wall::preview::construction_update(build_planner &p, tile2i start, tile2i end) const {
     return building_mud_wall::place_wall(true, start, end, BUILDING_WALL);
 }
@@ -430,8 +422,4 @@ int building_wall::preview::construction_place(build_planner &planer, tile2i sta
 
 bool building_wall::preview::can_construction_start(build_planner &p, tile2i start) const {
     return map_routing_calculate_distances_for_building(ROUTED_BUILDING_WALL, start);
-}
-
-void building_wall::on_place_checks() {
-    // nothing
 }

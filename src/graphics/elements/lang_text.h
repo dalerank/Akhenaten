@@ -14,10 +14,15 @@ struct game_language {
     xstring table;
     xstring message_table;
     xstring game_messages;
+    xstring symbols;
+    xstring font;
+    bool is_bitmap_font = false;
+    font_configs_t font_configs;
+
+    void decode_symbols(font_utf8_symbols_t& out) const;
 };
-ANK_CONFIG_STRUCT(game_language,
-    lang, caption, key, base_table,
-    table, message_table, game_messages)
+ANK_CONFIG_STRUCT(game_language, lang, caption, key, base_table, table, message_table, game_messages, symbols, font,
+  is_bitmap_font, font_configs)
 
 using game_languages_vec = svector<game_language, 16>;
 

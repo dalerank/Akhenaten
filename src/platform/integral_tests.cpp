@@ -7,6 +7,7 @@
 #include "core/archive.h"
 #include "core/bstring.h"
 #include "core/log.h"
+#include "core/random.h"
 #include "core/variant.h"
 #include "core/vec2i.h"
 #include "core/xvalue.h"
@@ -353,19 +354,38 @@ hvector<xstring, 16> list_test_files() {
         return found_tests;
     }
 
+    // Tests whose name starts with NAME ("99_tmp" -> every 99_tmp_*, "06" -> 06_* but not 106_*);
+    // only when none does, every test whose name contains NAME.
+    auto stem_of = [](const xstring& p) {
+        std::string stem = p.c_str();
+        const size_t slash = stem.find_last_of("/\\");
+        if (slash != std::string::npos) {
+            stem = stem.substr(slash + 1);
+        }
+        const size_t dot = stem.rfind('.');
+        if (dot != std::string::npos) {
+            stem = stem.substr(0, dot);
+        }
+        std::transform(stem.begin(), stem.end(), stem.begin(), [](unsigned char c) { return (char)std::tolower(c); });
+        return stem;
+    };
+
+    hvector<xstring, 16> by_prefix;
+    hvector<xstring, 16> by_substring;
     for (const auto& p : found_tests) {
-        vfs::path strp = p.c_str();
-        const bool found = strp.strstr(only.c_str()) != nullptr;
-        if (found) {
-            const xstring stem = p; // copy before clear() invalidates `p`
-            found_tests.clear();
-            found_tests.push_back(stem);
-            break;
+        const std::string stem = stem_of(p);
+        if (stem.rfind(only.c_str(), 0) == 0) {
+            by_prefix.push_back(p);
+        } else if (stem.find(only.c_str()) != std::string::npos) {
+            by_substring.push_back(p);
         }
     }
 
-    if (!found_tests.empty()) {
-        return found_tests;
+    if (!by_prefix.empty()) {
+        return by_prefix;
+    }
+    if (!by_substring.empty()) {
+        return by_substring;
     }
 
     logs::error("[integraltests] cant find '%s' in tests", only.c_str());
@@ -400,8 +420,7 @@ static void clear_global(js_State* J, const char* name) {
 int run_js_tests() {
     constexpr int kMaxFramesPerTest = 600; // ~10s at 60fps
 
-    js_State *J = js_vm_state();
-    if (!J) {
+    if (!js_vm_state()) {
         logs::error("[integraltests] JS VM not initialized");
         return 1;
     }
@@ -427,12 +446,16 @@ int run_js_tests() {
 
         // Fresh map/UI for every test — leftover city/editor/events otherwise bleed.
         test_reset_session_between_tests();
+        // crt_rand is not part of the session reset, so without this a test inherits the previous one's stream.
+        anti_scum_srand(1);
 
         g_app.quit = false;
         SDL_FlushEvent(SDL_USEREVENT);
 
         game_features::restore(features_at_start);
         game_features::gameopt_ironwill.set(false);
+        // A test may rebuild the VM (disabling a mod does), which frees the previous js_State.
+        js_State* J = js_vm_state();
         // Otherwise a test without run_test()/check_valid() would run the previous test's.
         clear_global(J, "run_test");
         clear_global(J, "check_valid");
@@ -454,6 +477,7 @@ int run_js_tests() {
         js_vm_sync({}); // run include() queued while loading the test script
         pop_to(J, load_baseline); // discard top-level result residue
         logs::info("[test:%s] script loaded", name.c_str());
+        const uint32_t vm_generation = js_vm_generation();
 
         // run_test
         if (!js_vm_global_is_callable(J, "run_test")) {
@@ -509,6 +533,31 @@ int run_js_tests() {
             logs::error("[test:%s] FAIL: !!! TypeError: found in log", name.c_str());
             ++failed;
             continue;
+        }
+
+        if (test_log_contains("[record-overflow]")) {
+            logs::error("[test:%s] FAIL: a building record overflowed its save slot (see [record-overflow])",
+              name.c_str());
+            ++failed;
+            continue;
+        }
+
+        if (test_log_contains("[stub-record]")) {
+            logs::error("[test:%s] FAIL: record 0 of buildings or figures was written (see [stub-record])",
+              name.c_str());
+            ++failed;
+            continue;
+        }
+
+        if (js_vm_generation() != vm_generation) {
+            // The rebuilt VM no longer has this test's globals; load the file again for check_valid().
+            J = js_vm_state();
+            logs::info("[test:%s] VM was rebuilt during the test, reloading the script", name.c_str());
+            js_vm_reset_error();
+            const int reload_baseline = J->gettop();
+            js_vm_load_file_and_exec(name.c_str());
+            js_vm_sync({});
+            pop_to(J, reload_baseline);
         }
 
         // check_valid -> bool
@@ -611,6 +660,11 @@ int run_integral_tests() {
 
     run_integral_tests_impl();
     int js_rc = run_js_tests();
+
+    const xstring& baseline = g_args.get_str("config_keys_baseline");
+    if (!baseline.empty()) {
+        failure_count += archive_check::check_baseline(baseline.c_str(), g_args.is("config_keys_update", false));
+    }
 
     if (failure_count == 0 && js_rc == 0) {
         logs::info("[integraltests] all checks passed");

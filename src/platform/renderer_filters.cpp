@@ -16,9 +16,6 @@ ANK_REGISTER_PROPS_ITERATOR(config_load_filter_properties);
 
 struct renderer_filter_t {
     // Basic filters
-    gpupixel::FilterPtr bilaterial;
-    bool bilaterial_active = false;
-    
     gpupixel::FilterPtr grayscale;
     bool grayscale_active = false;
     
@@ -49,18 +46,6 @@ struct renderer_filter_t {
     gpupixel::FilterPtr boxBlur;
     bool boxBlur_active = false;
     
-    gpupixel::FilterPtr beautyFace;
-    bool beautyFace_active = false;
-    
-    gpupixel::FilterPtr blusher;
-    bool blusher_active = false;
-    
-    gpupixel::FilterPtr boxDifference;
-    bool boxDifference_active = false;
-    
-    gpupixel::FilterPtr boxMonoBlur;
-    bool boxMonoBlur_active = false;
-    
     gpupixel::FilterPtr cannyEdgeDetection;
     bool cannyEdgeDetection_active = false;
     
@@ -70,20 +55,11 @@ struct renderer_filter_t {
     gpupixel::FilterPtr emboss;
     bool emboss_active = false;
     
-    gpupixel::FilterPtr faceReshape;
-    bool faceReshape_active = false;
-    
     gpupixel::FilterPtr glassSphere;
     bool glassSphere_active = false;
     
     gpupixel::FilterPtr halftone;
     bool halftone_active = false;
-    
-    gpupixel::FilterPtr lipstick;
-    bool lipstick_active = false;
-    
-    gpupixel::FilterPtr nonMaximumSuppression;
-    bool nonMaximumSuppression_active = false;
     
     gpupixel::FilterPtr pixellation;
     bool pixellation_active = false;
@@ -97,9 +73,6 @@ struct renderer_filter_t {
     gpupixel::FilterPtr toon;
     bool toon_active = false;
     
-    gpupixel::FilterPtr weakPixelInclusion;
-    bool weakPixelInclusion_active = false;
-    
     gpupixel::FilterPtr whiteBalance;
     bool whiteBalance_active = false;
     
@@ -108,6 +81,11 @@ struct renderer_filter_t {
 
     bool render_support_filters = false;
     bool any_filter_active = false;
+
+    // GPUPixel needs an OpenGL context; under another renderer (direct3d, ...) it gets a hidden window
+    // of its own. Frames come and go as pixel buffers, so it never shares textures with the renderer.
+    SDL_Window *own_gl_window = nullptr;
+    SDL_GLContext own_gl_context = nullptr;
 };
 
 renderer_filter_t g_renderer_filter;
@@ -115,38 +93,82 @@ renderer_filter_t g_renderer_filter;
 bool platform_render_any_filter_active() {
     auto &data = g_renderer_filter;
 
-    return data.bilaterial_active || data.grayscale_active ||
+    return data.grayscale_active ||
            data.brightness_active || data.contrast_active ||
            data.saturation_active || data.exposure_active ||
            data.hue_active || data.colorInvert_active ||
            data.posterize_active || data.gaussianBlur_active ||
-           data.boxBlur_active || data.beautyFace_active ||
-           data.blusher_active || data.boxDifference_active ||
-           data.boxMonoBlur_active || data.cannyEdgeDetection_active ||
+           data.boxBlur_active || data.cannyEdgeDetection_active ||
            data.crosshatch_active || data.emboss_active ||
-           data.faceReshape_active || data.glassSphere_active ||
-           data.halftone_active || data.lipstick_active ||
-           data.nonMaximumSuppression_active || data.pixellation_active ||
+           data.glassSphere_active ||
+           data.halftone_active || data.pixellation_active ||
            data.rgb_active || data.smoothToon_active || data.toon_active ||
-           data.weakPixelInclusion_active || data.whiteBalance_active;
+           data.whiteBalance_active;
 }
 
 bool platform_render_support_filters() {
     return g_renderer_filter.render_support_filters;
 }
 
+static void filters_make_current() {
+    auto &data = g_renderer_filter;
+    if (data.own_gl_context) {
+        SDL_GL_MakeCurrent(data.own_gl_window, data.own_gl_context);
+    }
+}
+
+static bool filters_create_own_context() {
+    auto &data = g_renderer_filter;
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_COMPATIBILITY);
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3);
+
+    data.own_gl_window = SDL_CreateWindow("gpupixel", 0, 0, 1, 1, SDL_WINDOW_OPENGL | SDL_WINDOW_HIDDEN);
+    if (!data.own_gl_window) {
+        logs::warn("GPU filters disabled: no hidden OpenGL window (%s)", SDL_GetError());
+        return false;
+    }
+
+    data.own_gl_context = SDL_GL_CreateContext(data.own_gl_window);
+    if (!data.own_gl_context) {
+        logs::warn("GPU filters disabled: no OpenGL context for the filters (%s)", SDL_GetError());
+        SDL_DestroyWindow(data.own_gl_window);
+        data.own_gl_window = nullptr;
+        return false;
+    }
+
+    filters_make_current();
+    return true;
+}
+
+static void filters_destroy_own_context() {
+    auto &data = g_renderer_filter;
+    if (data.own_gl_context) {
+        SDL_GL_DeleteContext(data.own_gl_context);
+        data.own_gl_context = nullptr;
+    }
+    if (data.own_gl_window) {
+        SDL_DestroyWindow(data.own_gl_window);
+        data.own_gl_window = nullptr;
+    }
+}
+
 void platform_render_init_filters() {
     auto &data = g_renderer_filter;
 
-    xstring driver = get_video_driver();
-    data.render_support_filters = (driver == "opengl");
-    data.render_support_filters &= SDL_VERSION_ATLEAST(2, 0, 12);
-
+    data.render_support_filters = SDL_VERSION_ATLEAST(2, 0, 12);
     if (!platform_render_support_filters()) {
         return;
     }
 
-    if (!SDL_GL_GetCurrentContext()) {
+    xstring driver = get_video_driver();
+    if (driver != "opengl") {
+        if (!filters_create_own_context()) {
+            data.render_support_filters = false;
+            return;
+        }
+        logs::info("GPU filters: own OpenGL context for the %s renderer", driver.c_str());
+    } else if (!SDL_GL_GetCurrentContext()) {
         logs::warn("GPU filters disabled: no active OpenGL context");
         data.render_support_filters = false;
         return;
@@ -164,12 +186,12 @@ void platform_render_init_filters() {
     data.sourceImage = gpupixel::SourceImage::create_from_memory(1, 1, 4, nullptr);
     if (!data.sourceImage) {
         logs::warn("GPU filters disabled: failed to initialize GPUPixel shaders");
+        filters_destroy_own_context();
         data.render_support_filters = false;
         return;
     }
 
     // Initialize all filters
-    data.bilaterial = gpupixel::BilateralFilter::create();
     data.grayscale = gpupixel::GrayscaleFilter::create();
 
     gpupixel::GPUPixelContext::getInstance()->runSync([&] {
@@ -182,23 +204,15 @@ void platform_render_init_filters() {
         data.posterize = gpupixel::PosterizeFilter::Create();
         data.gaussianBlur = gpupixel::GaussianBlurFilter::Create();
         data.boxBlur = gpupixel::BoxBlurFilter::Create();
-        data.beautyFace = gpupixel::BeautyFaceFilter::Create();
-        data.blusher = gpupixel::BlusherFilter::Create();
-        data.boxDifference = gpupixel::BoxDifferenceFilter::Create();
-        data.boxMonoBlur = gpupixel::BoxMonoBlurFilter::Create(gpupixel::GaussianBlurMonoFilter::HORIZONTAL);
         data.cannyEdgeDetection = gpupixel::CannyEdgeDetectionFilter::Create();
         data.crosshatch = gpupixel::CrosshatchFilter::Create();
         data.emboss = gpupixel::EmbossFilter::Create();
-        data.faceReshape = gpupixel::FaceReshapeFilter::Create();
         data.glassSphere = gpupixel::GlassSphereFilter::Create();
         data.halftone = gpupixel::HalftoneFilter::Create();
-        data.lipstick = gpupixel::LipstickFilter::Create();
-        data.nonMaximumSuppression = gpupixel::NonMaximumSuppressionFilter::Create();
         data.pixellation = gpupixel::PixellationFilter::Create();
         data.rgb = gpupixel::RGBFilter::Create();
         data.smoothToon = gpupixel::SmoothToonFilter::Create();
         data.toon = gpupixel::ToonFilter::Create();
-        data.weakPixelInclusion = gpupixel::WeakPixelInclusionFilter::Create();
         data.whiteBalance = gpupixel::WhiteBalanceFilter::Create();
     });
 
@@ -206,6 +220,7 @@ void platform_render_init_filters() {
     if (!data.outputImage || !data.outputImage->has_valid_program()) {
         logs::warn("GPU filters disabled: failed to initialize GPUPixel output view");
         data.sourceImage.reset();
+        filters_destroy_own_context();
         data.render_support_filters = false;
         return;
     }
@@ -220,12 +235,12 @@ void platform_render_shutdown_filters() {
         return;
     }
 
+    filters_make_current();
     glGetError();
 
     data.outputImage.reset();
     data.sourceImage.reset();
 
-    data.bilaterial.reset();
     data.grayscale.reset();
     data.brightness.reset();
     data.contrast.reset();
@@ -236,25 +251,18 @@ void platform_render_shutdown_filters() {
     data.posterize.reset();
     data.gaussianBlur.reset();
     data.boxBlur.reset();
-    data.beautyFace.reset();
-    data.blusher.reset();
-    data.boxDifference.reset();
-    data.boxMonoBlur.reset();
     data.cannyEdgeDetection.reset();
     data.crosshatch.reset();
     data.emboss.reset();
-    data.faceReshape.reset();
     data.glassSphere.reset();
     data.halftone.reset();
-    data.lipstick.reset();
-    data.nonMaximumSuppression.reset();
     data.pixellation.reset();
     data.rgb.reset();
     data.smoothToon.reset();
     data.toon.reset();
-    data.weakPixelInclusion.reset();
     data.whiteBalance.reset();
 
+    filters_destroy_own_context();
     data.render_support_filters = false;
 }
 
@@ -275,30 +283,6 @@ void game_debug_show_filter_property_float(gpupixel::FilterPtr filter, const cha
     if(save_value != value) {
         filter->setProperty(name, value);
     }
-}
-
-bool platform_render_bilaterial_options() {
-    auto &data = g_renderer_filter;
-
-    bool save_active = data.bilaterial_active;
-    ImGui::PushID(0x10000000 | 0x1);
-
-    ImGui::TableNextRow();
-    ImGui::TableSetColumnIndex(0);
-    ImGui::AlignTextToFramePadding();
-    bool common_open = ImGui::TreeNodeEx("Bilateral", ImGuiTreeNodeFlags_None, "Bilateral");
-    ImGui::TableSetColumnIndex(1);
-
-    if (common_open) {
-        game_debug_show_property("Active", data.bilaterial_active);
-        game_debug_show_filter_property_float(data.bilaterial, "texelSpacingMultiplier");
-        game_debug_show_filter_property_float(data.bilaterial, "distanceNormalizationFactor");
-        ImGui::TreePop();
-    }
-
-    ImGui::PopID();
-
-    return (save_active != data.bilaterial_active);
 }
 
 bool platform_render_grayscale_options() {
@@ -545,106 +529,6 @@ bool platform_render_boxBlur_options() {
     return (save_active != data.boxBlur_active);
 }
 
-bool platform_render_beautyFace_options() {
-    auto &data = g_renderer_filter;
-
-    bool save_active = data.beautyFace_active;
-    ImGui::PushID(0x10000000 | 0xC);
-
-    ImGui::TableNextRow();
-    ImGui::TableSetColumnIndex(0);
-    ImGui::AlignTextToFramePadding();
-    bool common_open = ImGui::TreeNodeEx("Beauty Face", ImGuiTreeNodeFlags_None, "Beauty Face");
-    ImGui::TableSetColumnIndex(1);
-
-    if (common_open) {
-        game_debug_show_property("Active", data.beautyFace_active);
-        if (data.beautyFace->hasProperty("whiteness")) {
-            game_debug_show_filter_property_float(data.beautyFace, "whiteness", 0.05f);
-        }
-        if (data.beautyFace->hasProperty("skin_smoothing")) {
-            game_debug_show_filter_property_float(data.beautyFace, "skin_smoothing", 0.05f);
-        }
-        ImGui::TreePop();
-    }
-
-    ImGui::PopID();
-
-    return (save_active != data.beautyFace_active);
-}
-
-bool platform_render_blusher_options() {
-    auto &data = g_renderer_filter;
-
-    bool save_active = data.blusher_active;
-    ImGui::PushID(0x10000000 | 0xD);
-
-    ImGui::TableNextRow();
-    ImGui::TableSetColumnIndex(0);
-    ImGui::AlignTextToFramePadding();
-    bool common_open = ImGui::TreeNodeEx("Blusher", ImGuiTreeNodeFlags_None, "Blusher");
-    ImGui::TableSetColumnIndex(1);
-
-    if (common_open) {
-        game_debug_show_property("Active", data.blusher_active);
-        if (data.blusher->hasProperty("blend_level")) {
-            game_debug_show_filter_property_float(data.blusher, "blend_level", 0.05f);
-        }
-        ImGui::TreePop();
-    }
-
-    ImGui::PopID();
-
-    return (save_active != data.blusher_active);
-}
-
-bool platform_render_boxDifference_options() {
-    auto &data = g_renderer_filter;
-
-    bool save_active = data.boxDifference_active;
-    ImGui::PushID(0x10000000 | 0xE);
-
-    ImGui::TableNextRow();
-    ImGui::TableSetColumnIndex(0);
-    ImGui::AlignTextToFramePadding();
-    bool common_open = ImGui::TreeNodeEx("Box Difference", ImGuiTreeNodeFlags_None, "Box Difference");
-    ImGui::TableSetColumnIndex(1);
-
-    if (common_open) {
-        game_debug_show_property("Active", data.boxDifference_active);
-        // Note: BoxDifferenceFilter requires 2 input images, so it may not work correctly in current setup
-        ImGui::Text("Note: Requires 2 input images");
-        ImGui::TreePop();
-    }
-
-    ImGui::PopID();
-
-    return (save_active != data.boxDifference_active);
-}
-
-bool platform_render_boxMonoBlur_options() {
-    auto &data = g_renderer_filter;
-
-    bool save_active = data.boxMonoBlur_active;
-    ImGui::PushID(0x10000000 | 0xF);
-
-    ImGui::TableNextRow();
-    ImGui::TableSetColumnIndex(0);
-    ImGui::AlignTextToFramePadding();
-    bool common_open = ImGui::TreeNodeEx("Box Mono Blur", ImGuiTreeNodeFlags_None, "Box Mono Blur");
-    ImGui::TableSetColumnIndex(1);
-
-    if (common_open) {
-        game_debug_show_property("Active", data.boxMonoBlur_active);
-        ImGui::Text("Note: Horizontal direction only");
-        ImGui::TreePop();
-    }
-
-    ImGui::PopID();
-
-    return (save_active != data.boxMonoBlur_active);
-}
-
 bool platform_render_cannyEdgeDetection_options() {
     auto &data = g_renderer_filter;
 
@@ -720,35 +604,6 @@ bool platform_render_emboss_options() {
     return (save_active != data.emboss_active);
 }
 
-bool platform_render_faceReshape_options() {
-    auto &data = g_renderer_filter;
-
-    bool save_active = data.faceReshape_active;
-    ImGui::PushID(0x10000000 | 0x13);
-
-    ImGui::TableNextRow();
-    ImGui::TableSetColumnIndex(0);
-    ImGui::AlignTextToFramePadding();
-    bool common_open = ImGui::TreeNodeEx("Face Reshape", ImGuiTreeNodeFlags_None, "Face Reshape");
-    ImGui::TableSetColumnIndex(1);
-
-    if (common_open) {
-        game_debug_show_property("Active", data.faceReshape_active);
-        if (data.faceReshape->hasProperty("thin_face")) {
-            game_debug_show_filter_property_float(data.faceReshape, "thin_face", 0.05f);
-        }
-        if (data.faceReshape->hasProperty("big_eye")) {
-            game_debug_show_filter_property_float(data.faceReshape, "big_eye", 0.05f);
-        }
-        ImGui::Text("Note: Requires face landmarks");
-        ImGui::TreePop();
-    }
-
-    ImGui::PopID();
-
-    return (save_active != data.faceReshape_active);
-}
-
 bool platform_render_glassSphere_options() {
     auto &data = g_renderer_filter;
 
@@ -806,56 +661,6 @@ bool platform_render_halftone_options() {
     ImGui::PopID();
 
     return (save_active != data.halftone_active);
-}
-
-bool platform_render_lipstick_options() {
-    auto &data = g_renderer_filter;
-
-    bool save_active = data.lipstick_active;
-    ImGui::PushID(0x10000000 | 0x16);
-
-    ImGui::TableNextRow();
-    ImGui::TableSetColumnIndex(0);
-    ImGui::AlignTextToFramePadding();
-    bool common_open = ImGui::TreeNodeEx("Lipstick", ImGuiTreeNodeFlags_None, "Lipstick");
-    ImGui::TableSetColumnIndex(1);
-
-    if (common_open) {
-        game_debug_show_property("Active", data.lipstick_active);
-        if (data.lipstick->hasProperty("blend_level")) {
-            game_debug_show_filter_property_float(data.lipstick, "blend_level", 0.05f);
-        }
-        ImGui::TreePop();
-    }
-
-    ImGui::PopID();
-
-    return (save_active != data.lipstick_active);
-}
-
-bool platform_render_nonMaximumSuppression_options() {
-    auto &data = g_renderer_filter;
-
-    bool save_active = data.nonMaximumSuppression_active;
-    ImGui::PushID(0x10000000 | 0x17);
-
-    ImGui::TableNextRow();
-    ImGui::TableSetColumnIndex(0);
-    ImGui::AlignTextToFramePadding();
-    bool common_open = ImGui::TreeNodeEx("Non Maximum Suppression", ImGuiTreeNodeFlags_None, "Non Maximum Suppression");
-    ImGui::TableSetColumnIndex(1);
-
-    if (common_open) {
-        game_debug_show_property("Active", data.nonMaximumSuppression_active);
-        if (data.nonMaximumSuppression->hasProperty("texelSizeMultiplier")) {
-            game_debug_show_filter_property_float(data.nonMaximumSuppression, "texelSizeMultiplier", 0.1f);
-        }
-        ImGui::TreePop();
-    }
-
-    ImGui::PopID();
-
-    return (save_active != data.nonMaximumSuppression_active);
 }
 
 bool platform_render_pixellation_options() {
@@ -976,31 +781,6 @@ bool platform_render_toon_options() {
     return (save_active != data.toon_active);
 }
 
-bool platform_render_weakPixelInclusion_options() {
-    auto &data = g_renderer_filter;
-
-    bool save_active = data.weakPixelInclusion_active;
-    ImGui::PushID(0x10000000 | 0x1C);
-
-    ImGui::TableNextRow();
-    ImGui::TableSetColumnIndex(0);
-    ImGui::AlignTextToFramePadding();
-    bool common_open = ImGui::TreeNodeEx("Weak Pixel Inclusion", ImGuiTreeNodeFlags_None, "Weak Pixel Inclusion");
-    ImGui::TableSetColumnIndex(1);
-
-    if (common_open) {
-        game_debug_show_property("Active", data.weakPixelInclusion_active);
-        if (data.weakPixelInclusion->hasProperty("texelSizeMultiplier")) {
-            game_debug_show_filter_property_float(data.weakPixelInclusion, "texelSizeMultiplier", 0.1f);
-        }
-        ImGui::TreePop();
-    }
-
-    ImGui::PopID();
-
-    return (save_active != data.weakPixelInclusion_active);
-}
-
 bool platform_render_whiteBalance_options() {
     auto &data = g_renderer_filter;
 
@@ -1036,6 +816,7 @@ void platform_render_proceed_filter(int w, int h, int format, const std::vector<
     // readpixels, ...) may leave an unread GL error behind; gpupixel's CHECK_GL
     // would then misattribute that stale error to itself and spam bogus
     // "GL ERROR" log lines. Clear the error state before gpupixel does any GL.
+    filters_make_current();
     glGetError();
 
     data.sourceImage->init(w, h, SDL_BYTESPERPIXEL(format), (uint8_t *)pixels.data());
@@ -1064,7 +845,6 @@ void config_load_filter_properties(bool header) {
         ImGui::BeginTable("Filters", 2, ImGuiTableFlags_BordersOuter | ImGuiTableFlags_Resizable);
 
         bool changed = false;
-        changed |= platform_render_bilaterial_options();
         changed |= platform_render_grayscale_options();
         changed |= platform_render_brightness_options();
         changed |= platform_render_contrast_options();
@@ -1075,23 +855,15 @@ void config_load_filter_properties(bool header) {
         changed |= platform_render_posterize_options();
         changed |= platform_render_gaussianBlur_options();
         changed |= platform_render_boxBlur_options();
-        changed |= platform_render_beautyFace_options();
-        changed |= platform_render_blusher_options();
-        changed |= platform_render_boxDifference_options();
-        changed |= platform_render_boxMonoBlur_options();
         changed |= platform_render_cannyEdgeDetection_options();
         changed |= platform_render_crosshatch_options();
         changed |= platform_render_emboss_options();
-        changed |= platform_render_faceReshape_options();
         changed |= platform_render_glassSphere_options();
         changed |= platform_render_halftone_options();
-        changed |= platform_render_lipstick_options();
-        changed |= platform_render_nonMaximumSuppression_options();
         changed |= platform_render_pixellation_options();
         changed |= platform_render_rgb_options();
         changed |= platform_render_smoothToon_options();
         changed |= platform_render_toon_options();
-        changed |= platform_render_weakPixelInclusion_options();
         changed |= platform_render_whiteBalance_options();
         
         filter_changed = changed;
@@ -1107,9 +879,6 @@ void config_load_filter_properties(bool header) {
         gpupixel::SourcePtr last = data.sourceImage;
         
         // Apply filters in order
-        if (data.bilaterial_active) {
-            last = last->addTarget(data.bilaterial);
-        }
         if (data.grayscale_active) {
             last = last->addTarget(data.grayscale);
         }
@@ -1140,19 +909,6 @@ void config_load_filter_properties(bool header) {
         if (data.boxBlur_active) {
             last = last->addTarget(data.boxBlur);
         }
-        if (data.beautyFace_active) {
-            last = last->addTarget(data.beautyFace);
-        }
-        if (data.blusher_active) {
-            last = last->addTarget(data.blusher);
-        }
-        if (data.boxDifference_active) {
-            // Note: BoxDifferenceFilter requires 2 inputs, may need special handling
-            last = last->addTarget(data.boxDifference);
-        }
-        if (data.boxMonoBlur_active) {
-            last = last->addTarget(data.boxMonoBlur);
-        }
         if (data.cannyEdgeDetection_active) {
             last = last->addTarget(data.cannyEdgeDetection);
         }
@@ -1162,20 +918,11 @@ void config_load_filter_properties(bool header) {
         if (data.emboss_active) {
             last = last->addTarget(data.emboss);
         }
-        if (data.faceReshape_active) {
-            last = last->addTarget(data.faceReshape);
-        }
         if (data.glassSphere_active) {
             last = last->addTarget(data.glassSphere);
         }
         if (data.halftone_active) {
             last = last->addTarget(data.halftone);
-        }
-        if (data.lipstick_active) {
-            last = last->addTarget(data.lipstick);
-        }
-        if (data.nonMaximumSuppression_active) {
-            last = last->addTarget(data.nonMaximumSuppression);
         }
         if (data.pixellation_active) {
             last = last->addTarget(data.pixellation);
@@ -1188,9 +935,6 @@ void config_load_filter_properties(bool header) {
         }
         if (data.toon_active) {
             last = last->addTarget(data.toon);
-        }
-        if (data.weakPixelInclusion_active) {
-            last = last->addTarget(data.weakPixelInclusion);
         }
         if (data.whiteBalance_active) {
             last = last->addTarget(data.whiteBalance);

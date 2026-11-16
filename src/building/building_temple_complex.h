@@ -124,9 +124,9 @@ public:
     BUILDING_METAINFO(BUILDING_TEMPLE_COMPLEX_BAST, building_temple_complex_bast, building_temple_complex)
 
     struct static_params : public base_params_t, public building_static_params {
-        // OG: Bast complex makes citizens "satisfied with less" (Heaven: food 0.25→0.20).
+        // Remake food model only (OG eats 20% instead of 25% with a Bast complex, see
+        // city_food_consumption_percentage).
         int food_consumption_pct = 100;
-        int goods_consumption_pct = 100;
         // OG: entertainers / educators / health last longer — skip those decays every other month.
         int service_decay_skip_odd_months = 0;
         // OG Hathor oracle: better city sentiment.
@@ -138,7 +138,5 @@ public:
     virtual e_overlay get_overlay() const override { return OVERLAY_RELIGION_BAST; }
     virtual const base_params_t &base_params() const override { return static_cast<const base_params_t &>(current_params()); }
 };
-ANK_CONFIG_STRUCT(building_temple_complex_bast::static_params,
-    allowed_altar, allowed_oracle,
-    food_consumption_pct, goods_consumption_pct, service_decay_skip_odd_months,
-    hathor_sentiment_bonus, isis_health_bonus)
+ANK_CONFIG_STRUCT(building_temple_complex_bast::static_params, allowed_altar, allowed_oracle, food_consumption_pct,
+  service_decay_skip_odd_months, hathor_sentiment_bonus, isis_health_bonus)

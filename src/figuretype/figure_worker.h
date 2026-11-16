@@ -32,6 +32,8 @@ enum e_laborer_action : uint16_t {
     ACTION_34_LABORER_SLED_TO_CAESAREUM = 34,
     ACTION_35_LABORER_SLED_TO_LIGHTHOUSE = 35,
     ACTION_36_LABORER_SLED_TO_TOMB = 36,
+    // Remake (gameplay_change_mastaba_clay_delivery): clay pulled to a mastaba on a sled train.
+    ACTION_37_LABORER_SLED_TO_MASTABA = 37,
 
     // Non-OG sentinel: do_gotobuilding / do_goto route-lost → poof (removed in later commits).
     ACTION_14_LABORER_ROUTE_LOST = 14,
@@ -57,6 +59,8 @@ public:
 
     figure_worker(figure *f) : figure_impl(f) {}
     virtual figure_worker *dcast_worker() override { return this; }
+
+    static bool farm_work_waiting();
 
     // OG laborer_rules[] (laborer.h / laborer.c defaults).
     struct static_params : public figure_static_params {
@@ -103,6 +107,7 @@ public:
     virtual void figure_before_action() override;
     virtual void update_animation() override;
     virtual void poof() override;
+    virtual pcstr info_type_name() const override;
 
     tile2i monumen_tile4work(building *b);
     // OG assign_pyramid block haul: style material → yard → mason.
@@ -112,6 +117,8 @@ public:
     }
     void find_work();
     e_resource block_material_for(building *monument, figure_id mason_fid) const;
+    // Its sled was left behind: free the mason for another laborer and go back idle.
+    void drop_load();
 
 private:
     bool uses_ramp_climb(building *monument) const;
@@ -122,6 +129,9 @@ private:
     void sled_to_monument_tick(building *monument);
     bool assign_lamp_delivery(building *tomb);
     void at_storage_yard_lamps();
+    bool assign_clay_delivery(building* mastaba);
+    void at_storage_yard_clay();
+    bool hauls_to_site() const;
     void sled_to_tomb_tick(building *tomb);
     void enter_idle_pool();
     void finish_block_delivery();

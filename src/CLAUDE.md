@@ -14,7 +14,7 @@
 | `widget/` | Persistent HUD elements (sidebar, top menu, minimap, city view) |
 | `scenario/` | Mission metadata, win criteria, timed events, requests, invasions |
 | `editor/` | Scenario editor screens and tools |
-| `io/` | Chunk-based save/load, mod image loading, localization strings |
+| `io/` | Chunk-based save/load, localization strings |
 | `game/` | Main game loop, resource type enums, config, simulation tick |
 | `config/` | Game settings and config-archive readers |
 | `content/` | Content/asset registration and loading |

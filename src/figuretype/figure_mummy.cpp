@@ -1,16 +1,13 @@
 #include "figuretype/figure_mummy.h"
 
+#include "building/building.h"
 #include "city/city.h"
-#include "city/city_figures.h"
-#include "city/city_message.h"
+#include "city/city_buildings.h"
+#include "core/log.h"
 #include "core/random.h"
 #include "figure/figure.h"
-#include "game/simulation_time.h"
 #include "grid/road_access.h"
-#include "grid/terrain.h"
 #include "js/js_game.h"
-#include "scenario/map.h"
-#include "scenario/scenario.h"
 
 const e_mummy_action_tokens_t ANK_CONFIG_ENUM(e_mummy_action_tokens)
 
@@ -18,76 +15,110 @@ REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_mummy);
 
 namespace {
 
-constexpr int k_mummy_roam_days = 16;
-constexpr int k_mummy_default_wave = 1;
-constexpr int k_mummy_max_wave = 4;
+    int random_15bit() {
+        random_generate_next();
+        return (uint16_t)random_short() & 0x7fff;
+    }
 
-int count_live_mummies() {
-    int n = 0;
-    for (figure *f : map_figures()) {
-        if (f->is_alive() && f->type == FIGURE_MUMMY) {
-            ++n;
+    int count_mummies() {
+        int n = 0;
+        for (int i = 1; i < MAX_FIGURES; i++) {
+            figure* f = figure_get(i);
+            if (f->state != FIGURE_STATE_NONE && f->type == FIGURE_MUMMY) {
+                n++;
+            }
         }
+        return n;
     }
-    return n;
-}
 
-tile2i map_edge_spawn_tile() {
-    scenario_map_init_entry_exit();
-    tile2i t = scenario_map_entry();
-    if (t.valid()) {
-        return t;
+    void start_roaming(figure& f, building& source) {
+        f.set_home(source.id);
+        f.advance_action(ACTION_1_MUMMY_ROAMING);
+        f.init_roaming_from_building(source.figure_roam_direction);
+        source.figure_roam_direction += 2;
+        if (source.figure_roam_direction > 6) {
+            source.figure_roam_direction = 0;
+        }
+        f.roam_length = 0;
     }
-    return tile2i(g_scenario.map.width - 1, g_scenario.map.height / 2);
-}
-
-tile2i resolve_entry_tile() {
-    tile2i t = g_city.map.entry_point;
-    if (t.valid()) {
-        return t;
-    }
-    t = g_city.map.exit_point;
-    if (t.valid()) {
-        return t;
-    }
-    return map_edge_spawn_tile();
-}
-
-tile2i pick_spawn_tile() {
-    tile2i spawn = resolve_entry_tile();
-    if (!spawn.valid()) {
-        return tile2i::invalid;
-    }
-    // Prefer streets (message: "walks the streets"); widen search if entry is off-road.
-    tile2i road = map_closest_road_within_radius(spawn, 1, 6);
-    if (!road.valid()) {
-        road = map_closest_road_within_radius(spawn, 1, 16);
-    }
-    if (road.valid()) {
-        return road;
-    }
-    return spawn;
-}
 
 } // namespace
 
 void figure_mummy::on_create() {
-    base.roam_wander_freely = true;
-    base.max_roam_length = 480;
     // Soldiers target is_enemy() || is_criminal(); params().is_enemy sets enemy flag at create.
     base.flags |= e_figure_flag_criminal;
-    // figure_create leaves action_state=0; start roam even if caller skips spawn_wave.
     advance_action(ACTION_0_MUMMY_CREATED);
 }
 
+bool figure_mummy::is_source_building(building& b) {
+    if (!b.is_valid()) {
+        return false;
+    }
+    const e_building_type type = b.type;
+    const bool source = (type > BUILDING_MUD_TOWER && type < BUILDING_TEMPLE_COMPLEX_OSIRIS)
+                        || type == BUILDING_MORTUARY || type == BUILDING_PYRAMID || type == BUILDING_MAUSOLEUM
+                        || type == BUILDING_SMALL_ROYAL_TOMB || type == BUILDING_MEDIUM_ROYAL_TOMB
+                        || type == BUILDING_LARGE_ROYAL_TOMB || type == BUILDING_GRAND_ROYAL_TOMB;
+    return source && map_closest_road_within_radius(b.road_access, 1, current_params().road_radius).valid();
+}
+
+figure* figure_mummy::start_plague(int amount) {
+    g_city.plagues.mummies_max = amount;
+    int count = 0;
+    for (auto& b : city_buildings()) {
+        if (is_source_building(b)) {
+            count++;
+        }
+    }
+    if (count <= 0) {
+        return nullptr;
+    }
+
+    const int wanted = random_15bit() % count + 1;
+    int seen = 0;
+    building* source = nullptr;
+    for (auto& b : city_buildings()) {
+        if (is_source_building(b) && ++seen == wanted) {
+            source = &b;
+            break;
+        }
+    }
+    if (!source) {
+        return nullptr;
+    }
+
+    const tile2i road = map_closest_road_within_radius(source->road_access, 1, current_params().road_radius);
+    figure* f = figure_create(FIGURE_MUMMY, road, DIR_4_BOTTOM_LEFT);
+    if (!f || !f->is_alive()) {
+        return nullptr;
+    }
+    f->wait_ticks = 0;
+    start_roaming(*f, *source);
+    logs::info("[disaster] mummies from building %d, max=%d", source->id, amount);
+    return f;
+}
+
 void figure_mummy::figure_action() {
-    // action_perform already advances DYING corpses — do not double-tick, and never melee.
     if (!base.is_alive()) {
         return;
     }
+    const auto& p = current_params();
 
-    // Melee lock (same pattern as enemy sword).
-    if (base.opponent_id > 0 && !figure_get(base.opponent_id)->is_dead()) {
+    if (base.opponent_id > 0) {
+        figure* victim = figure_get(base.opponent_id);
+        if (victim->is_dead() && count_mummies() < g_city.plagues.mummies_max) {
+            figure* risen = figure_create(FIGURE_MUMMY, victim->tile, DIR_4_BOTTOM_LEFT);
+            if (risen && risen->is_alive()) {
+                risen->wait_ticks = (int16_t)(random_15bit() % p.roam_spread + p.roam_min);
+                building* source = home();
+                if (source && source->is_valid()) {
+                    start_roaming(*risen, *source);
+                } else {
+                    risen->advance_action(ACTION_1_MUMMY_ROAMING);
+                    risen->roam_wander_freely = true;
+                }
+            }
+        }
         base.set_flag(e_figure_flag_inattack);
         base.figure_combat_handle_attack();
         return;
@@ -95,32 +126,18 @@ void figure_mummy::figure_action() {
 
     switch (action_state()) {
     case ACTION_0_MUMMY_CREATED:
-        // spawn_wave may set wait_ticks > 0 to stagger figures.
-        if (base.wait_ticks > 0) {
-            base.wait_ticks--;
-            break;
-        }
-        runtime_data().roam_ticks = 0;
         advance_action(ACTION_1_MUMMY_ROAMING);
+        base.roam_wander_freely = true;
         break;
 
     case ACTION_1_MUMMY_ROAMING:
-        if (map_terrain_is(tile(), TERRAIN_ROAD)) {
-            base.roam_ticks(1);
-        } else {
-            // Off-road: walk toward nearest street instead of idling until despawn.
-            tile2i road = map_closest_road_within_radius(tile(), 1, 12);
-            if (road.valid() && road != tile()) {
-                base.destination_tile = road;
-                base.move_ticks(1);
-                if (direction() == DIR_FIGURE_REROUTE || direction() == DIR_FIGURE_CAN_NOT_REACH) {
-                    route_remove();
-                }
-            }
-        }
-        runtime_data().roam_ticks++;
-        if (runtime_data().roam_ticks > simulation_time_t::ticks_in_day * k_mummy_roam_days) {
+        if (++base.roam_length >= base.max_roam_length
+            && !map_closest_road_within_radius(tile(), 1, p.road_radius).valid()) {
             poof();
+            break;
+        }
+        if ((runtime_data().step++ & 1) == 0) {
+            base.roam_ticks(1);
         }
         break;
     }
@@ -140,55 +157,4 @@ void figure_mummy::acquire_attack() {
     // Default acquire_attack() is empty — without the flag, tile-overlap combat
     // re-enters every step and never locks the mummy into handle_attack.
     base.set_flag(e_figure_flag_inattack);
-}
-
-int figure_mummy::spawn_wave(int count) {
-    if (count < 1) {
-        count = k_mummy_default_wave;
-    }
-    if (count > k_mummy_max_wave) {
-        count = k_mummy_max_wave;
-    }
-
-    const int room = k_mummy_max_wave - count_live_mummies();
-    if (room <= 0) {
-        return 0;
-    }
-    if (count > room) {
-        count = room;
-    }
-
-    tile2i base_tile = pick_spawn_tile();
-    if (!base_tile.valid()) {
-        return 0;
-    }
-
-    int first_id = 0;
-    int spawned = 0;
-    for (int i = 0; i < count; ++i) {
-        tile2i spawn = base_tile;
-        if (i > 0) {
-            tile2i alt = map_closest_road_within_radius(base_tile, 1, 4 + i);
-            if (alt.valid()) {
-                spawn = alt;
-            }
-        }
-
-        figure *f = figure_create(FIGURE_MUMMY, spawn, DIR_4_BOTTOM_LEFT);
-        if (!f || !f->is_alive()) {
-            continue;
-        }
-        f->advance_action(ACTION_0_MUMMY_CREATED);
-        f->wait_ticks = 4 + (random_byte() & 0x7);
-        if (!first_id) {
-            first_id = f->id;
-        }
-        ++spawned;
-    }
-
-    if (spawned > 0) {
-        // One popup per wave (message id 496).
-        messages::popup("message_mummy_attacks", 0, 0);
-    }
-    return first_id;
 }

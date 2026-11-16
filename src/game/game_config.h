@@ -86,8 +86,11 @@ namespace game_features {
     extern game_feature gameplay_change_dock_double_haul;
     extern game_feature gameplay_change_dock_smart_routing;
     extern game_feature gameplay_change_follower_runaway;
+    extern game_feature gameplay_change_sled_pullers_flee;
     extern game_feature gameplay_change_robber_remake;
     extern game_feature gameplay_change_tomb_robber_remake;
+    extern game_feature gameplay_change_police_weapons;
+    extern game_feature gameplay_change_walker_phrases_remake;
     extern game_feature gameplay_change_protestor_hunt_nobles;
     extern game_feature gameplay_change_fishing_boat_remake;
     extern game_feature gameplay_change_bazaar_multi_buyers;
@@ -115,12 +118,11 @@ namespace game_features {
     extern game_feature gameplay_change_industry_nearby_houses;
     extern game_feature gameplay_change_only_deliver_to_accepting_granaries;
     extern game_feature gameplay_change_all_houses_merge;
-    extern game_feature gameplay_change_beer_open_trade_route_counts;
     extern game_feature gameplay_change_random_mine_or_pit_collapses_take_money;
     extern game_feature gameplay_change_multiple_barracks;
     extern game_feature gameplay_change_warehouses_dont_accept;
     extern game_feature gameplay_change_houses_dont_expand_into_gardens;
-    extern game_feature gameplay_fix_irrigation_range;
+    extern game_feature gameplay_change_irrigation_range_5x5;
     extern game_feature gameplay_fix_farm_produce_quantity;
     extern game_feature gameui_keep_camera_inertia;
     extern game_feature gameplay_change_understaffed_accept_goods;
@@ -130,6 +132,9 @@ namespace game_features {
     extern game_feature gameplay_change_multiple_gatherers;
     extern game_feature gameplay_change_wood_cutter_single_gatherer;
     extern game_feature gameplay_change_fireman_returning;
+    extern game_feature gameplay_change_fishing_points_monthly_respawn;
+    extern game_feature gameplay_change_house_evolve_delay;
+    extern game_feature gameplay_change_food_consumption_remake;
     extern game_feature gameplay_change_architect_patrol_most_damaged;
     extern game_feature gameplay_og_architect;
     extern game_feature gameplay_og_fireman;
@@ -143,6 +148,7 @@ namespace game_features {
     extern game_feature gameplay_change_work_camp_distance_scaled_farm_workers;
     extern game_feature gameplay_change_fire_risk_clay_pit_reduced;
     extern game_feature gameplay_change_goldmine_reduced_production;
+    extern game_feature gameplay_change_industry_remake_rates;
     extern game_feature gameplay_change_new_tax_collection_system;
     extern game_feature gameplay_change_small_hut_not_create_emigrant;
     extern game_feature gameplay_change_delivery_boy_goes_to_market_alone;
@@ -167,6 +173,7 @@ namespace game_features {
     extern game_feature gameopt_last_save_filename;
     extern game_feature gameopt_enabled_mods;
     extern game_feature gameopt_last_game_version;
+    extern game_feature gameopt_auto_update;
     extern game_feature gameopt_scroll_speed;
     extern game_feature gameopt_middle_mouse_camera_pan;
     extern game_feature gameopt_middle_mouse_pan_speed;
@@ -229,6 +236,7 @@ namespace game_features {
     extern game_feature gameplay_enhanced_labor_category_split;
     extern game_feature gameplay_enhanced_walker_spawn_boost;
     extern game_feature gameplay_enhanced_walker_move_boost;
+    extern game_feature gameplay_enhanced_city_ambient;
     extern game_feature gameplay_enhanced_festival_calendar;
     extern game_feature gameplay_enhanced_local_cults;
     extern game_feature graphics_atlas_render;

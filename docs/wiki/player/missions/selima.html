@@ -294,7 +294,7 @@
       <p>Goals match original campaign scenario 8. No monument requirement — military and trade ratings dominate.</p>
 
       <h2 id="events">Scripted events</h2>
-      <p>Verified against pak scenario 8 (2026-07-25 dump). Enemy is <strong>Hyksos</strong> (<code>ENEMY_5_HYKSOS</code>). Favour-KR Pharaoh army size 63 via shared helper. No distant-battle event in pak.</p>
+      <p>Verified against pak scenario 8 (2026-07-25 dump). Enemy is <strong>Hyksos</strong> (<code>ENEMY_5_HYKSOS</code>). Favour Pharaoh army size 63 (rolled 40–75, 9 warning months) is an <code>events[]</code> BY_FAVOUR invasion: at Kingdom rating 0 the engine sends it (<code>event_manager_t::update_kingdom_favour</code>, OG <code>city/kingdom.c</code> <code>city_emperor_update</code>): warnings, then the attack; chained waves attack with it; called off if the rating reaches 15 first; it can come again 12 months later. No distant-battle event in pak.</p>
 
       <div class="tutorial-step">
         <span class="step-tag">Year 0 · month 2</span>
@@ -390,7 +390,7 @@
                 <span class="ev-name">event_advance_month</span>
                 <span class="ev-line">invasions</span>
                 <span class="ev-desc">Hyksos 9 yearly m4 (clear → +2) / 22 once (clear → +2, destroy-goal → −2); favour 63. Demand timber y8+ m8 / luxury y19+ m2 yearly.</span>
-                <span class="ev-fn">mission8_hyksos_* / demands / favour</span>
+                <span class="ev-fn">mission8_hyksos_* / demands / events[] favour</span>
               </li>
             </ul>
           </div>

@@ -32,6 +32,13 @@ building_water_supply {
   }
 }
 
+// OG spawn_water_supply: days between carriers by the share of workers (100/75/50/25/1%), the share halved below
+// low_desirability on the building tile.
+var building_water_supply_rules = {
+    spawn_delays : [1, 3, 7, 15, 29]
+    low_desirability : 30
+}
+
 [es=(building_water_supply, spawn_figure)]
 function building_water_supply_spawn_figure(ev) {
     var building = city.get_building(ev.bid)
@@ -40,19 +47,19 @@ function building_water_supply_spawn_figure(ev) {
         building.show_on_problem_overlay = 2
         return
     }
-    building.common_spawn_roamer(FIGURE_WATER_CARRIER, building_water_supply.min_houses_coverage, ACTION_72_WATER_CARRIER_ROAMING)
-}
-
-[es=(building_water_supply, on_place_checks)]
-function building_water_supply_on_place_checks(ev) {
-    var b = city.get_building(ev.bid)
-    var has_groundwater = terrain.is(b.tile, TERRAIN_GROUNDWATER)
-    city.warnings.show_if_not(has_groundwater, "#needs_groundwater")
+    var rules = building_water_supply_rules
+    var low = __desirability_at_tile(building.tile.x, building.tile.y) < rules.low_desirability
+    building.spawn_service_walker({ min_houses_coverage: building_water_supply.min_houses_coverage, spawn_delays: rules.spawn_delays,
+                                    workers_halved: low }, FIGURE_WATER_CARRIER, ACTION_72_WATER_CARRIER_ROAMING)
 }
 
 [es=(building_water_supply, update_month)]
 function building_water_supply_update_month(ev) {
     var building = city.get_building(ev.bid)
+    // OG water_supply_update_image: only a staffed building on groundwater changes its image.
+    if (building.num_workers <= 0 || !building.has_water_access) {
+        return
+    }
     var avg_desirability = __desirability_get_avg(building.tile, 4)
     var is_fancy = avg_desirability > 30
     building.set_fancy(is_fancy)

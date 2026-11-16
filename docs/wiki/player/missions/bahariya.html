@@ -84,7 +84,7 @@
       </ul>
       <div class="deviation-note">
         Monument goal matches pak (<strong>13</strong>). Sun Temple weight 4 →
-        <code>2.25·4+4.5 = 13.5</code>.
+        <code>trunc(6.32·√4+0.5) = 13</code>.
       </div>
 
       <h2 id="events">Scripted events (summary)</h2>
@@ -98,6 +98,7 @@
             <p><span class="file-ref">src/scripts/mission/m_019_bahariya.js</span> · import in <span class="file-ref">src/scripts/missions.js</span></p>
             <p>Empire id <strong>18</strong>. Map <span class="file-ref">data/maps/m_019_bahariya.map</span>. Rank 6.</p>
             <p>SKIP: empty map_obj idx=10; orphan routes 5/6/7/25. Men-nefer route 19 = 2-pt stub.</p>
+            <p>Kingdom army: at Kingdom rating 0 the engine sends the <code>EVENT_TRIGGER_BY_FAVOUR</code> invasion from <code>events[]</code> (<code>update_kingdom_favour</code>, <code>src/scenario/scenario_event_manager.cpp</code>): warnings for its <code>months_initial</code>, then the attack; its <code>on_completed_action</code> chain joins at the attack. Called off if the rating reaches 15 before it attacks; it can come again 12 months later. pak i=25: Pharaoh ×76 (60–80 roll), no chain.</p>
           </div>
         </details>
         <details>

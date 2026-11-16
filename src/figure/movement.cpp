@@ -60,6 +60,10 @@ void figure::advance_figure_tick() {
     default:
         break;
     }
+    advance_height();
+}
+
+void figure::advance_height() {
     if (height_adjusted_ticks) {
         height_adjusted_ticks--;
         if (height_adjusted_ticks > 0) {

@@ -821,9 +821,18 @@ void show_options_window(Arguments& args) {
             ImGui::SameLine();
             {ImGui::BeginChild("DriverSection");
             ImGui::Text("Driver:");
-            static int item_driver_current_idx = 0;
+            static int item_driver_current_idx = -1;
+            if (item_driver_current_idx < 0) {
+                const auto chosen = std::find(video_drivers.begin(), video_drivers.end(), args.get_renderer());
+                item_driver_current_idx
+                  = chosen != video_drivers.end() ? (int)std::distance(video_drivers.begin(), chosen) + 1 : 0;
+            }
             if (ImGui::BeginListBox("##drivers", ImVec2(-FLT_MIN, ImGui::GetTextLineHeightWithSpacing() * 6.5f))) {
-                int index = 0;
+                if (ImGui::Selectable("auto", item_driver_current_idx == 0)) {
+                    item_driver_current_idx = 0;
+                    args.set_renderer("");
+                }
+                int index = 1;
                 for (auto it = video_drivers.begin(); it != video_drivers.end(); ++it, ++index) {
                     const bool is_selected = (item_driver_current_idx == index);
                     if (ImGui::Selectable(it->c_str(), is_selected)) {

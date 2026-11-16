@@ -140,7 +140,7 @@ bool building_farm::requested_workers() const {
 }
 
 void building_farm::draw_workers(painter &ctx, building *b, tile2i tile, vec2i pos) {
-    if (b->num_workers == 0) {
+    if (b->num_workers == 0 || g_city.plagues.locusts_countdown > 0) {
         return;
     }
 

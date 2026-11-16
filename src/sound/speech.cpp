@@ -113,6 +113,11 @@ bool sound_manager_t::speech_file_exist(xstring filename, vfs::path &fs_path) {
 }
 
 bool sound_manager_t::speech_play_file(xstring filename, int volume) {
+    // Without a mixer (--nosound) or data (--no-resource) the file probe is wasted and only spams warnings.
+    if (!initialized || !data_available()) {
+        return false;
+    }
+
     vfs::path fs_path;
     if (!speech_file_exist(filename, fs_path)) {
         logs::warn("Sound: speech file not found '%s'", filename.empty() ? "" : filename.c_str());

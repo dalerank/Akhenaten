@@ -206,10 +206,6 @@ bool building_obelisk::need_carpenter() {
     return has_free_worker_slot();
 }
 
-bool building_obelisk::accepts_yard_delivery(e_resource resource) const {
-    return resource != RESOURCE_TIMBER;
-}
-
 void building_obelisk::add_workers(figure_id fid) {
     scrub_dead_workers();
     auto &d = runtime_data();
@@ -341,10 +337,6 @@ void building_obelisk::preview::ghost_preview(build_planner &planer, painter &ct
 void building_obelisk::on_place_update_tiles(int /*orientation*/, int /*variant*/) {
     const int size = base.size > 0 ? base.size : 3;
     map_building_tiles_add(id(), tile(), size, building_image_get(), TERRAIN_BUILDING);
-}
-
-void building_obelisk::on_destroy() {
-    building_monument_remove_all_deliveries(id());
 }
 
 void building_obelisk::update_day() {

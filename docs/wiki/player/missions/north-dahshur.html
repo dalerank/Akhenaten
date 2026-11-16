@@ -167,18 +167,18 @@
         <li><span class="obj-label">Population</span><span class="obj-value">3 000 citizens</span></li>
         <li><span class="obj-label">Culture rating</span><span class="obj-value">20</span></li>
         <li><span class="obj-label">Prosperity rating</span><span class="obj-value">30</span></li>
-        <li><span class="obj-label">Monument rating</span><span class="obj-value">32 (large true pyramid, weight 13)</span></li>
+        <li><span class="obj-label">Monument rating</span><span class="obj-value">32 (large true pyramid, weight 26)</span></li>
         <li><span class="obj-label">Kingdom rating</span><span class="obj-value">55</span></li>
         <li><span class="obj-label">Housing level</span><span class="obj-value">10</span></li>
       </ul>
       <div class="deviation-note">
-        Monument goal matches pak (<strong>32</strong>). Large true pyramid weight 13 →
-        <code>trunc(2.25·13+4.5)=33</code> (≥32; weight 12 truncated to 31 and missed the goal).
+        Monument goal matches pak (<strong>32</strong>). Large true pyramid weight 26 →
+        <code>trunc(6.32·√26+0.5)=32</code>.
         Small/medium true and stepped remain available as extras.
       </div>
 
       <h2 id="events">Scripted events</h2>
-      <p>Full empire redefine + schedule verified against original campaign scenario 15 (2026-07-26). Empire id <strong>14</strong>. Scenario enemy <strong>Hyksos</strong> (<code>ENEMY_5_HYKSOS</code>). Favour Pharaoh army size <strong>75</strong> (no chain). Invasion points omitted (none on map).</p>
+      <p>Full empire redefine + schedule verified against original campaign scenario 15 (2026-07-26). Empire id <strong>14</strong>. Scenario enemy <strong>Hyksos</strong> (<code>ENEMY_5_HYKSOS</code>). Favour Pharaoh army size <strong>75</strong> (no chain), <code>BY_FAVOUR</code> event in <code>events[]</code> (pak i=31). At Kingdom rating 0 the engine sends the <code>BY_FAVOUR</code> invasion from <code>events[]</code> (OG <code>city/kingdom.c</code>): warnings over its <code>months_initial</code>, then the attack. It is called off if the rating reaches 15 before the attack, and can come again 12 months later. Invasion points omitted (none on map).</p>
       <div class="tutorial-step"><span class="step-tag">Year 1+</span><span>Annual <strong>clay pit floods</strong> (pak i=0/1 amount=8 → 8% of clay pits ×2 waves).</span></div>
       <div class="tutorial-step"><span class="step-tag">Year 2 · month 1+</span><span>Biennial <strong>henna ×12</strong> / 24 months (ok KR+25; refuse −40; late −20).</span></div>
       <div class="tutorial-step"><span class="step-tag">Year 3 · month 11</span><span><strong>Hyksos</strong> size 5 once → then a continuous size-6 chain alternating attack targets (pak i=7→8↔9).</span></div>
@@ -187,7 +187,7 @@
       <div class="tutorial-step"><span class="step-tag">Year 13 · month 3+</span><span>Recurring stone gift ×48 → chains <strong>limestone ×24</strong> / 24 months (KR ± / stone demand on refuse).</span></div>
       <div class="tutorial-step"><span class="step-tag">Year 17 · month 4+</span><span>Recurring grain ×18 → ok: KR+3 + copper gift; refuse: KR−15 + LOST_TRADE Kerma; late KR−5.</span></div>
       <div class="tutorial-step"><span class="step-tag">Year 20 · month 7</span><span>Hyksos size 11 once (attack vaults).</span></div>
-      <div class="tutorial-step"><span class="step-tag">Favour collapse</span><span>Pharaoh army size <strong>75</strong>.</span></div>
+      <div class="tutorial-step"><span class="step-tag">Favour collapse</span><span>Pharaoh army size <strong>75</strong> (rolled 60–80; 2 months' warning).</span></div>
 
       <h2 id="strategy">Strategy</h2>
       <p>Largest monument yet (large true pyramid), prosperity 30, and Hyksos pressure that does not stop after the first wipe. Open Byblos early for timber; Meidum is cheap stone (300 Db).</p>
@@ -244,7 +244,7 @@
   <span class="kw">initial_funds</span> [<span class="num">20000</span>, <span class="num">13300</span>, <span class="num">10000</span>, <span class="num">6700</span>, <span class="num">5300</span>]
   <span class="kw">debt_interest</span> [<span class="num">10</span>, <span class="num">15</span>, <span class="num">20</span>, <span class="num">25</span>, <span class="num">30</span>]
 
-  <span class="cmt">// pop 3000, culture 20, prosperity 30, monuments 32 (large true W=13 → trunc 33), kingdom 55, housing 10</span>
+  <span class="cmt">// pop 3000, culture 20, prosperity 30, monuments 32 (large true weight 26 → 32), kingdom 55, housing 10</span>
   <span class="kw">win_criteria</span> { … }
 }</code></pre>
             <p>Empire id <strong>14</strong> via <code>empire.set_id(14)</code>. Choice → Iunet/On (scripts exist; empire redefine still pending for 16/17).</p>
@@ -260,7 +260,7 @@
               <li><span class="ev-name">Henna</span><span class="ev-desc">i=11 biennial y2m1+ henna×12/24mo; KR +25 / −40 / −20; refuse/late→Hyksos×12.</span><span class="ev-fn">mission15_event_i11_henna_recurring</span></li>
               <li><span class="ev-name">Request cleared</span><span class="ev-desc">henna refuse/late→Hyksos×12 (<code>event_request_cleared</code>; pak i=30).</span><span class="ev-fn">mission15_on_request_cleared</span></li>
               <li><span class="ev-name">Grain / gift / limestone</span><span class="ev-desc">i=2 grain×8 y4+; i=3 stone gift y13m3+ → limestone×24; i=5 grain×18 y17m4+.</span><span class="ev-fn">mission15_event_i2_* / i3_* / i5_*</span></li>
-              <li><span class="ev-name">Hyksos + Beduin + favour</span><span class="ev-desc">i=7 size5→size6 chain; i=6 beduin×10 y6m8+; i=10 size11 y20m7; favour 75.</span><span class="ev-fn">mission15_event_i7_* / i6_* / i10_* / favour</span></li>
+              <li><span class="ev-name">Hyksos + Beduin + favour</span><span class="ev-desc">i=7 size5→size6 chain; i=6 beduin×10 y6m8+; i=10 size11 y20m7; favour 75 (<code>events[]</code>, engine).</span><span class="ev-fn">mission15_event_i7_* / i6_* / i10_*</span></li>
             </ul>
           </div>
         </details>
@@ -284,7 +284,7 @@
           <div class="details-body">
             <ul>
               <li><strong>Monuments 32</strong> (pak) — large true ✅
-                (<code>monument_pyramid.*</code> / tests 108–110); weight 13 → trunc 33 ≥ 32.
+                (<code>monument_pyramid.*</code> / tests 108–110); weight 26 → <code>trunc(6.32·√26+0.5)=32</code>.
                 Stepped S/M still on the build list as extras.
                 </li>
               <li><strong>Clay floods i=0/1</strong> — pak year=24 reinterpreted as annual y1m0+; amount=8 = 8% of clay pits per wave (×2 waves).</li>
@@ -292,7 +292,7 @@
               <li><strong>Routes 7/8</strong> orphan polylines skipped; map_obj idx=10 empty stub skipped.</li>
               <li><strong>Invasion points</strong> omitted (pak 0/0) — raids use map exit fallback.</li>
               <li><strong>Hyksos size-6 chain</strong> after i=7 is infinite in pak (8↔9); mirrored with a month tick until B2-migrate bind tags.</li>
-              <li><strong>Favour / invasions</strong> JS-proxied until B2-migrate.</li>
+              <li><strong>Invasions</strong> JS-proxied until B2-migrate; <strong>favour</strong> is a native <code>events[]</code> <code>BY_FAVOUR</code> entry.</li>
               <li><strong>Iunet/On (16/17)</strong> have scripts but not full empire redefine yet.</li>
             </ul>
           </div>

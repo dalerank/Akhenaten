@@ -247,7 +247,6 @@ namespace ui {
     void border(vec2i pos, vec2i size, int type, color c, UiFlags flags);
     void rect(vec2i pos, vec2i size, int fill, int color, UiFlags flags);
     void icon(vec2i pos, e_resource img, UiFlags flags = UiFlags_None);
-    void icon(vec2i pos, e_advisor advisor);
     int button_hover(const mouse* m);
 
     inline fonts_vec fonts_def() {
@@ -621,6 +620,7 @@ namespace ui {
         svector<image_desc, MAX_QUEUE> pending;
         bool fading = false;
         bool fit = false;
+        bool upscale = false; // with fit: also enlarge images smaller than the box
         // When true (default), a new enqueue replaces pending targets so hover stays snappy.
         bool coalesce = true;
         int fade_ms = 280;
@@ -649,6 +649,7 @@ namespace ui {
     struct ebackground : public element {
         image_desc img_desc;
         float scale = 1.f;
+        bool fit = true;
 
         virtual void draw(UiFlags flags) override;
         virtual void load(archive elem, element* parent, items& elems) override;
@@ -1116,6 +1117,6 @@ inline void archive::r<ui::widget>(pcstr name, ui::widget& v) {
 }
 ANK_CONFIG_STRUCT(ui::widget, pos)
 
-extern void (*graphics_draw_background)(painter&, int image_id, float scale, vec2i offset);
+extern void (*graphics_draw_background)(painter&, int image_id, float scale, vec2i offset, bool fit);
 extern void (*button_border_draw)(vec2i, vec2i, bool);
 extern void (*large_label_draw)(vec2i, int, int);

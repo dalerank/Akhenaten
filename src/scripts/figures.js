@@ -3,7 +3,8 @@ log_info("akhenaten: figures info started")
 import figure.prototype
 import figure.figure_params
 import figure.phrase
-import figure.festival_guy
+import figure.phrase_speech
+import figure.festival_priest
 import figure.ostrich_hunter
 import figure.antelope_hunter
 import figure.birds_hunter
@@ -75,39 +76,8 @@ import figure.water_carrier
 import figure.worker
 import figure.zookeeper
 
-figure_festival_guy {
-  overlay : OVERLAY_RELIGION
-	animations {
-		juggler_walk { pack:PACK_SPR_MAIN, id:130, max_frames:12 }
-		musician_walk { pack:PACK_SPR_MAIN, id:191, max_frames:12 }
-		dancer_walk {pack:PACK_SPR_MAIN, id:128, max_frames:12}
-		priest_ra_walk { pack:PACK_SPR_MAIN, id:210, max_frames:12 }
-		priest_osiris_walk {pack:PACK_SPR_MAIN, id:197, max_frames:12}
-		priest_ptah_walk {pack:PACK_SPR_MAIN, id:187, max_frames:12}
-		priest_seth_walk {pack:PACK_SPR_MAIN, id:193, max_frames:12}
-		priest_bast_walk {pack:PACK_SPR_MAIN, id:208, max_frames:12}
-		big_image { pack:PACK_UNLOADED, id:25, offset:FIGURE_FESTIVAL_GUY }
-	}
-
-	sounds {
-		osiris_god_love_festival { sound:"priest_osiris_e01.wav", group:230, text:0 }
-		ra_god_love_festival { sound:"priest_ra_e01.wav", group:231, text:0 }
-		ptah_god_love_festival { sound:"priest_ptah_e01.wav", group:232, text:0 }
-		seth_god_love_festival { sound:"priest_seth_e01.wav", group:233, text:0 }
-		bast_god_love_festival { sound:"priest_bast_e01.wav", group:234, text:0 }
-		juggler_i_like_festivals { sound:"juggler_e01.wav" }
-		musician_i_like_festivals { sound:"musician_e01.wav" }
-		dancer_i_like_festivals { sound:"dancer_e01.wav" }
-	}
-
-	category: figure_category_citizen
-	max_damage: 10
-	terrain_usage : TERRAIN_USAGE_ANY
-	max_amount : 25
-	permission : epermission_entertainer
-}
-
 figure_ostrich {
+	herd_size : 7
 	animations {
 		_pack { pack:PACK_SPR_MAIN }
 		walk { id:156, max_frames:12 }
@@ -132,6 +102,7 @@ figure_ostrich {
 }
 
 figure_hyena {
+	herd_size : 7
 	animations {
 		_pack { pack:PACK_SPR_MAIN }
 		walk { id:161, max_frames:12 }
@@ -167,6 +138,7 @@ figure_hyena {
 }
 
 figure_asp {
+	herd_size : 6
 	animations {
 		walk { pack:PACK_EXPANSION_SPR, id:0, max_frames:12 }
 		attack { pack:PACK_EXPANSION_SPR, id:1, max_frames:12 }
@@ -186,6 +158,7 @@ figure_asp {
 }
 
 figure_lion {
+	herd_size : 4
 	animations {
 		walk { pack:PACK_EXPANSION_SPR, id:5, max_frames:11 }
 		attack { pack:PACK_EXPANSION_SPR, id:6, max_frames:11 }
@@ -205,6 +178,7 @@ figure_lion {
 }
 
 figure_scorpion {
+	herd_size : 2
 	animations {
 		walk { pack:PACK_EXPANSION_SPR, id:10, max_frames:12 }
 		attack { pack:PACK_EXPANSION_SPR, id:11, max_frames:6 }
@@ -224,6 +198,7 @@ figure_scorpion {
 }
 
 figure_antelope {
+	herd_size : 7
 	// OG ANTELOPE…FLEE (SprAmbient 30–35); flee uses run; rest=idle, graze=eating.
 	animations {
 		_pack { pack:PACK_SPR_AMBIENT }
@@ -283,6 +258,7 @@ figure_ballista {
 }
 
 figure_birds = {
+	herd_size : 7
 	// OG IMAGE_GROUP_FIGURE_BIRDS/_DEATH (SprMain 114/115); flock is non-directional (frame>>1).
 	animations : {
 		walk : { pack:PACK_SPR_MAIN, id:114, max_frames:25, loop:true }
@@ -303,6 +279,7 @@ figure_birds = {
 }
 
 figure_crocodile = {
+  herd_size : 1
   animations : {
 		walk : { pack:PACK_SPR_MAIN, id:23, max_frames:12 }
 		death : { pack:PACK_SPR_MAIN, id:24, max_frames:8, duration:3, loop:false }
@@ -342,6 +319,7 @@ figure_crocodile = {
 }
 
 figure_hippo = {
+  herd_size : 3
   animations : {
 		walk : { pack:PACK_SPR_AMBIENT, id:22, max_frames:12 }
 		idle : { pack:PACK_SPR_AMBIENT, id:22, max_frames:1 }
@@ -565,7 +543,7 @@ figure_cart {
 // Walk JS id=30 is timing only; main_image_update remaps to g30+variant.
 // Must override main_image_update (no dir+8*frame) — see figure_locust.cpp.
 // big_image: Cleopatra Unloaded pack 25 slot FIGURE_LOCUST (107).
-// Tunables: swarm_days matches building_curse_farms(big); happiness Major Plague TEMP.
+// OG city/locusts.h + city_disasters.h values.
 figure_locust {
 	animations {
 		walk { pack:PACK_EXPANSION_SPR, id:30, max_frames:6 }
@@ -580,10 +558,13 @@ figure_locust {
 	terrain_usage: TERRAIN_USAGE_ANY
 	max_roam_length: 320
 
-	default_swarm: 8
-	max_amount: 16
-	swarm_days: 48
-	happiness_hit: -10
+	countdown_after_plague: 2632
+	countdown_fly_off: 1000
+	months_before_flood: 2
+	locusts_per_farm: 9
+	square_side: 3
+	max_start_delay: 300
+	happiness_loss: 15
 	float_height: 20
 }
 
@@ -600,33 +581,59 @@ figure_shipwreck = {
 	terrain_usage : TERRAIN_USAGE_ANY,
 }
 
+// OG figure_sled_action / figure_sled_puller_action (laborer.c): image groups minus 39 in SprMain,
+// minus 659 in SprMain2. A resource missing from resource_images uses default_image (OG bricks).
 figure_sled {
 	animations {
-		empty { pack:PACK_SPR_MAIN, id:166, max_frames:1 }
-		stone { pack:PACK_SPR_MAIN, id:167, max_frames:1 }
-		sandstone { pack:PACK_SPR_MAIN, id:168, max_frames:1 }
-		granite { pack:PACK_SPR_MAIN, id:169, max_frames:1 }
-		limestone { pack:PACK_SPR_MAIN, id:170, max_frames:1 }
-		clay { pack:PACK_SPR_MAIN, id:171, max_frames:1 }
-		bricks { pack:PACK_SPR_MAIN, id:172, max_frames:1 }
-		marble { pack:PACK_SPR_MAIN, id:170, max_frames:1 }
-		copper { pack:PACK_SPR_MAIN, id:167, max_frames:1 }
-		big_image { pack:PACK_UNLOADED, id:25, offset:FIGURE_SLED }
+		_pack { pack:PACK_SPR_MAIN }
+		stone { id:167, max_frames:1 }
+		limestone { id:168, max_frames:1 }
+		granite { id:169, max_frames:1 }
+		marble { id:170, max_frames:1 }
+		sandstone { id:171, max_frames:1 }
+		bricks { id:172, max_frames:1 }
+		stone_ramp { id:174, max_frames:1 }
+		limestone_ramp { id:175, max_frames:1 }
+		granite_ramp { id:176, max_frames:1 }
+		marble_ramp { id:177, max_frames:1 }
+		sandstone_ramp { id:178, max_frames:1 }
+		bricks_ramp { id:179, max_frames:1 }
+		copper { pack:PACK_EXPANSION_SPR, id:27, max_frames:1 }
+		lamps { pack:PACK_EXPANSION_SPR, id:39, max_frames:1 }
 	}
 
-	category: figure_category_citizen
+	resource_images [
+		{ resource: RESOURCE_STONE, ground: "stone", ramp: "stone_ramp" }
+		{ resource: RESOURCE_LIMESTONE, ground: "limestone", ramp: "limestone_ramp" }
+		{ resource: RESOURCE_GRANITE, ground: "granite", ramp: "granite_ramp" }
+		{ resource: RESOURCE_MARBLE, ground: "marble", ramp: "marble_ramp" }
+		{ resource: RESOURCE_SANDSTONE, ground: "sandstone", ramp: "sandstone_ramp" }
+		{ resource: RESOURCE_BRICKS, ground: "bricks", ramp: "bricks_ramp" }
+		{ resource: RESOURCE_COPPER, ground: "copper", ramp: "bricks_ramp" }
+		{ resource: RESOURCE_LAMPS, ground: "lamps", ramp: "bricks_ramp" }
+	]
+	default_image { ground: "bricks", ramp: "bricks_ramp" }
+
+	// OG Figure_model "Pulled Stone": category 0, never fought; enemy.c skips it as a missile target.
+	category: figure_category_inactive
+	ignored_by_enemy_missiles: true
+	no_portrait: true
 	max_damage: 10
 	terrain_usage: TERRAIN_USAGE_ANY,
 }
 
 figure_sled_puller = {
 	animations : {
-		walk : { pack:PACK_SPR_MAIN, id:121, max_frames:12 }
+		_pack { pack:PACK_SPR_MAIN }
+		pulling : { id:121, max_frames:12 }
+		front : { id:122, max_frames:12 }
 		big_image : { pack:PACK_UNLOADED, id:25, offset:FIGURE_SLED_PULLER }
 	}
 
 	category: figure_category_citizen
-	max_damage: 10
+	max_damage: 100
+	// Remake gameplay_change_sled_pullers_flee: an enemy this close makes the pullers drop the sled.
+	flee_enemy_distance: 8
 	terrain_usage: TERRAIN_USAGE_ANY,
 }
 

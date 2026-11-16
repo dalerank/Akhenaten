@@ -2,6 +2,7 @@
 
 #include "building/building.h"
 #include "building/building_delivery_path.h"
+#include "building/building_entertainment.h"
 #include "building/building_house.h"
 #include "building/building_mansion.h"
 #include "building/building_static_params.h"
@@ -23,6 +24,7 @@
 #include "figure/formation.h"
 #include "figuretype/figure_cartpusher.h"
 #include "figuretype/figure_plagued_citizen.h"
+#include "game/game.h"
 #include "game/game_events.h"
 #include "game/resource.h"
 #include "graphics/image.h"
@@ -125,6 +127,15 @@ static int __test_building_create(int type, int x, int y) {
 }
 ANK_FUNCTION_3(__test_building_create);
 
+static bool __test_entertainment_set(int bid, pcstr property, int value) {
+    building_entertainment* ent = building_get(bid)->dcast_entertainment();
+    if (!ent) {
+        return false;
+    }
+    return archive_helper::set(ent->runtime_data(), property, bvariant(int32_t(value)), true);
+}
+ANK_FUNCTION_3(__test_entertainment_set);
+
 static int __test_building_destroy_by_enemy(int bid) {
     building* b = building_get(bid);
     if (!b || !b->is_valid()) {
@@ -134,6 +145,23 @@ static int __test_building_destroy_by_enemy(int bid) {
     return 1;
 }
 ANK_FUNCTION_1(__test_building_destroy_by_enemy);
+
+// Free a slot the way the game does: 0 = destroy_by_poof (slot just marked unused),
+// 1 = deleted by the player and removed by building_update_state.
+static int __test_building_release_slot(int bid, int via_delete) {
+    building* b = building_get(bid);
+    if (!b || !b->is_valid()) {
+        return 0;
+    }
+    if (via_delete) {
+        b->state = BUILDING_STATE_DELETED_BY_PLAYER;
+        building_update_state();
+    } else {
+        b->dcast()->destroy_by_poof(false);
+    }
+    return b->state == BUILDING_STATE_UNUSED ? 1 : 0;
+}
+ANK_FUNCTION_2(__test_building_release_slot);
 
 static int __test_destroy_buildings_of_type(int type) {
     if (type <= BUILDING_NONE || type >= BUILDING_MAX) {
@@ -566,3 +594,179 @@ static int __test_building_recorded_path_at(int bid, int index) {
     return g_recorded_paths.building_path_at(main ? main->id : bid, index);
 }
 ANK_FUNCTION_2(__test_building_recorded_path_at);
+
+#include "building/building_burning_ruin.h"
+#include "grid/random.h"
+
+static int __test_map_random_at(int x, int y) {
+    return map_random_get(tile2i(x, y));
+}
+ANK_FUNCTION_2(__test_map_random_at);
+
+static int __test_burning_ruin_create(int x, int y) {
+    building* b = building_create(BUILDING_BURNING_RUIN, tile2i(x, y), 0);
+    return (b && b->id > 0) ? b->id : 0;
+}
+ANK_FUNCTION_2(__test_burning_ruin_create);
+
+static int __test_burning_ruin_update(int bid) {
+    building* b = building_get(bid);
+    auto* ruin = b ? b->dcast_burning_ruin() : nullptr;
+    return ruin ? (ruin->update() ? 1 : 0) : -1;
+}
+ANK_FUNCTION_1(__test_burning_ruin_update);
+
+static int __test_building_fire_duration(int bid) {
+    building* b = building_get(bid);
+    return b ? b->fire_duration : -1000;
+}
+ANK_FUNCTION_1(__test_building_fire_duration);
+
+static void __test_city_check_building_destroying() {
+    g_city.maintenance.check_building_destroying();
+}
+ANK_FUNCTION(__test_city_check_building_destroying);
+
+#include "figuretype/figure_fireman.h"
+
+// One ACTION_5_FIREMAN_AT_FIRE tick from a fireman standing next to the ruin; returns the ruin's fire_duration.
+static int __test_fireman_extinguish_tick(int ruin_id) {
+    building* ruin = building_get(ruin_id);
+    if (!ruin || !ruin->dcast_burning_ruin()) {
+        return -1000;
+    }
+
+    figure* f = figure_create(FIGURE_FIREMAN, ruin->tile.shifted(1, 0), DIR_0_TOP_RIGHT);
+    figure_fireman* fireman = f ? f->dcast<figure_fireman>() : nullptr;
+    if (!fireman) {
+        return -1000;
+    }
+
+    f->action_state = ACTION_5_FIREMAN_AT_FIRE;
+    f->wait_ticks = 50;
+    f->set_destination(ruin_id);
+    fireman->extinguish_fire();
+    f->poof();
+    return ruin->fire_duration;
+}
+ANK_FUNCTION_1(__test_fireman_extinguish_tick);
+
+// Calls extinguish_fire on a fresh fireman standing `distance` tiles from the ruin until he leaves the fire.
+static int __test_fireman_ticks_at_fire(int ruin_id, int distance) {
+    building* ruin = building_get(ruin_id);
+    if (!ruin || !ruin->dcast_burning_ruin()) {
+        return -1000;
+    }
+
+    figure* f = figure_create(FIGURE_FIREMAN, ruin->tile.shifted(distance, 0), DIR_0_TOP_RIGHT);
+    figure_fireman* fireman = f ? f->dcast<figure_fireman>() : nullptr;
+    if (!fireman) {
+        return -1000;
+    }
+
+    f->action_state = ACTION_5_FIREMAN_AT_FIRE;
+    f->wait_ticks = 50;
+    f->set_destination(ruin_id);
+    fireman->runtime_data().extinguish_ticks = 0;
+
+    int ticks = 0;
+    while (f->action_state == ACTION_5_FIREMAN_AT_FIRE && ticks < 1000) {
+        fireman->extinguish_fire();
+        ++ticks;
+    }
+    f->poof();
+    return ticks;
+}
+ANK_FUNCTION_2(__test_fireman_ticks_at_fire);
+
+static int __test_building_is_rubble(int bid) {
+    building* b = building_get(bid);
+    return (b && b->state == BUILDING_STATE_RUBBLE) ? 1 : 0;
+}
+ANK_FUNCTION_1(__test_building_is_rubble);
+
+static int __test_house_change_to(int bid, int type) {
+    building* b = building_get(bid);
+    if (!b || !b->dcast_house()) {
+        return 0;
+    }
+    building_house::change_to(*b, (e_building_type)type, true);
+    return 1;
+}
+ANK_FUNCTION_2(__test_house_change_to);
+
+// One day of house evolution for a single house, as city_t::house_process_evolve runs it; returns the new type.
+static int __test_house_evolve_day(int bid) {
+    building* b = building_get(bid);
+    auto* house = b ? b->dcast_house() : nullptr;
+    if (!house) {
+        return -1;
+    }
+    g_city.houses_reset_demands();
+    const e_building_type save_type = house->type();
+    house->evolve(&g_city.houses);
+    if (house->type() != save_type) {
+        house->base.clear_impl();
+    }
+    return b->type;
+}
+ANK_FUNCTION_1(__test_house_evolve_day);
+
+static int __test_house_evolve_status(int bid) {
+    building* b = building_get(bid);
+    auto* house = b ? b->dcast_house() : nullptr;
+    if (!house) {
+        return -100;
+    }
+    g_city.houses_reset_demands();
+    return house->check_evolve_status(&g_city.houses);
+}
+ANK_FUNCTION_1(__test_house_evolve_status);
+
+// has_required_goods_and_services on fresh demand counters, then the advisor demands from them (city.houses.*).
+static int __test_house_has_requirements(int bid, int for_upgrade) {
+    building* b = building_get(bid);
+    auto* house = b ? b->dcast_house() : nullptr;
+    if (!house) {
+        return -100;
+    }
+    g_city.houses_reset_demands();
+    const int result = house->has_required_goods_and_services(for_upgrade, &g_city.houses);
+    g_city.houses_calculate_culture_demands();
+    return result;
+}
+ANK_FUNCTION_2(__test_house_has_requirements);
+
+static int __test_house_consume_goods(int bid, int day) {
+    building* b = building_get(bid);
+    auto* house = b ? b->dcast_house() : nullptr;
+    if (!house) {
+        return 0;
+    }
+    house->consume_goods(day);
+    return 1;
+}
+ANK_FUNCTION_2(__test_house_consume_goods);
+
+// The daily evolve-and-consume pass of every house, as if it ran on `day` of the month.
+static void __test_city_house_process_evolve_on_day(int day) {
+    const int saved_day = game.simtime.day;
+    game.simtime.day = day;
+    g_city.house_process_evolve();
+    game.simtime.day = saved_day;
+}
+ANK_FUNCTION_1(__test_city_house_process_evolve_on_day);
+
+static xstring __test_house_image_key(int bid) {
+    building* b = building_get(bid);
+    auto* house = b ? b->dcast_house() : nullptr;
+    return house ? house->runtime_data().image_key : xstring{};
+}
+ANK_FUNCTION_1(__test_house_image_key);
+
+static int __test_house_image_id(int bid) {
+    building* b = building_get(bid);
+    auto* house = b ? b->dcast_house() : nullptr;
+    return house ? house->runtime_data().image_id : 0;
+}
+ANK_FUNCTION_1(__test_house_image_id);

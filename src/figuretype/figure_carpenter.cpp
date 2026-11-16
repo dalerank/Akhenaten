@@ -2,8 +2,12 @@
 
 #include "building/building_guild_carpenters.h"
 #include "building/building_statue.h"
+#include "building/monument_caesareum.h"
 #include "building/monument_obelisk.h"
 #include "building/monument_sphinx.h"
+#include "building/monument_sun_temple.h"
+#include "building/monument_alexandria_library.h"
+#include "building/monument_mausoleum.h"
 #include "building/monument_mastaba_engine.h"
 #include "building/monument_pyramid.h"
 #include "building/monument_pyramid_engine.h"
@@ -46,9 +50,18 @@ void figure_carpenter::assign_monument_task(building *monument) {
         return;
     }
 
-    set_destination(monument);
+    building *site = monument;
+    if (monument->dcast_mausoleum()) {
+        const int part_id = building_mausoleum::find_work_for_figure(id());
+        if (!part_id) {
+            return;
+        }
+        site = building_get(part_id);
+    }
+
+    set_destination(site);
     auto& rd = runtime_data();
-    rd.destination_bid = monument->id;
+    rd.destination_bid = site->id;
     rd.ramp_part_bid = 0;
     rd.serving_statue = 0;
 
@@ -231,6 +244,54 @@ void figure_carpenter::figure_action() {
             base.set_flag(e_figure_flag_invisible);
             if (sphinx->work_tick(base)) {
                 base.set_flag(e_figure_flag_invisible, false);
+                advance_action(ACTION_3_CARPENTER_RETURN);
+            }
+            break;
+        }
+
+        if (auto *cae = worked->dcast_caesareum()) {
+            base.set_flag(e_figure_flag_invisible);
+            if (cae->work_tick(base)) {
+                base.set_flag(e_figure_flag_invisible, false);
+                advance_action(ACTION_3_CARPENTER_RETURN);
+            }
+            break;
+        }
+
+        if (auto *sun = worked->dcast_sun_temple()) {
+            base.set_flag(e_figure_flag_invisible);
+            if (sun->work_tick(base)) {
+                base.set_flag(e_figure_flag_invisible, false);
+                if (auto *mon = worked->dcast_monument()) {
+                    mon->remove_worker(id());
+                }
+                advance_action(ACTION_3_CARPENTER_RETURN);
+            }
+            break;
+        }
+
+        if (auto *maus = worked->dcast_mausoleum()) {
+            base.set_flag(e_figure_flag_invisible);
+            if (maus->work_tick(base)) {
+                base.set_flag(e_figure_flag_invisible, false);
+                maus->remove_worker(id());
+                set_destination(nullptr);
+                rd.destination_bid = 0;
+                rd.ramp_part_bid = 0;
+                rd.serving_statue = 0;
+                base.wait_ticks = params.mausoleum_head_start;
+                advance_action(ACTION_0_CARPENTER_ROAM);
+            }
+            break;
+        }
+
+        if (auto *library = worked->dcast_alexandria_library()) {
+            base.set_flag(e_figure_flag_invisible);
+            if (library->work_tick(base)) {
+                base.set_flag(e_figure_flag_invisible, false);
+                if (auto *mon = worked->dcast_monument()) {
+                    mon->remove_worker(id());
+                }
                 advance_action(ACTION_3_CARPENTER_RETURN);
             }
             break;

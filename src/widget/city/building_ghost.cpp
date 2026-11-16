@@ -33,7 +33,7 @@ static const int RESERVOIR_GRID_OFFSETS_PH[4] = {GRID_OFFSET(-1, -1), GRID_OFFSE
 static const int HIPPODROME_X_VIEW_OFFSETS[4] = {150, 150, -150, -150};
 static const int HIPPODROME_Y_VIEW_OFFSETS[4] = {75, -75, -75, 75};
 
-#define RESERVOIR_RANGE_MAX_TILES 520
+constexpr int RESERVOIR_RANGE_MAX_TILES = 520;
 
 struct reservoir_range_data_t {
     int total;

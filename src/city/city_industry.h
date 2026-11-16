@@ -20,8 +20,6 @@ struct delivery_destination {
 
 delivery_destination building_get_asker_for_resource(tile2i tile, e_building_type btype, e_resource resource, int road_network_id, int distance_from_entry);
 
-void building_curse_farms(int big_curse);
-
 void building_workshop_add_raw_material(building* b, int amount, e_resource res);
 
 int building_get_workshop_for_raw_material(tile2i tile, e_resource resource, int distance_from_entry, int road_network_id, tile2i& dst);

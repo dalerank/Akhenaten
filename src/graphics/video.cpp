@@ -17,7 +17,7 @@
 #include <cstring>
 #include <algorithm>
 
-static struct {
+struct video_data_t {
     bool is_playing;
     bool is_ended;
     int backend;
@@ -43,7 +43,11 @@ static struct {
         color* pixels;
         int width;
     } buffer;
-} data;
+
+    void reset() { *this = {}; }
+};
+
+static video_data_t g_video_data;
 
 static int s_video_profile_logs = 0;
 static constexpr int BIK_STARTUP_PREBUFFER_FRAMES = 4;
@@ -56,6 +60,7 @@ enum {
 };
 
 static void close_smk(void) {
+    auto& data = g_video_data;
     if (data.s) {
         smacker_close(data.s);
         data.s = 0;
@@ -63,6 +68,7 @@ static void close_smk(void) {
 }
 
 static void close_bik(void) {
+    auto& data = g_video_data;
     if (data.b) {
         bink_close(data.b);
         data.b = 0;
@@ -70,6 +76,7 @@ static void close_bik(void) {
 }
 
 static int load_smk(const char* filename) {
+    auto& data = g_video_data;
     vfs::path fs_file = vfs::path(filename).resolve();
     if (fs_file.empty()) {
         return 0;
@@ -114,6 +121,7 @@ static int load_smk(const char* filename) {
 }
 
 static int load_bik(const char* filename) {
+    auto& data = g_video_data;
     data.b = bink_open(filename);
     if (!data.b) {
         return 0;
@@ -155,6 +163,7 @@ static void queue_bik_audio_chunk(void*, const void* audio_data, int len) {
 }
 
 bool video_start(const char* filename) {
+    auto& data = g_video_data;
     data.is_playing = false;
     data.is_ended = false;
     data.backend = VIDEO_BACKEND_NONE;
@@ -173,11 +182,13 @@ bool video_start(const char* filename) {
 }
 
 void video_size(int* width, int* height) {
+    auto& data = g_video_data;
     *width = data.video.width;
     *height = data.video.y_scale == SMACKER_Y_SCALE_NONE ? data.video.height : 2 * data.video.height;
 }
 
 void video_init(void) {
+    auto& data = g_video_data;
     data.video.start_render_millis = time_get_millis();
     s_video_profile_logs = 0;
 
@@ -203,10 +214,12 @@ void video_init(void) {
 }
 
 int video_is_finished(void) {
+    auto& data = g_video_data;
     return data.is_ended;
 }
 
 void video_stop(void) {
+    auto& data = g_video_data;
     if (data.is_playing) {
         if (!data.is_ended)
             end_video();
@@ -219,6 +232,7 @@ void video_stop(void) {
 }
 
 void video_shutdown(void) {
+    auto& data = g_video_data;
     if (data.is_playing) {
         close_smk();
         close_bik();
@@ -228,6 +242,7 @@ void video_shutdown(void) {
 }
 
 static int get_next_frame(void) {
+    auto& data = g_video_data;
     if (data.backend == VIDEO_BACKEND_NONE) {
         return 0;
     }
@@ -294,6 +309,7 @@ static int get_next_frame(void) {
     return draw_frame;
 }
 static void update_video_frame(void) {
+    auto& data = g_video_data;
     if (data.backend == VIDEO_BACKEND_BIK) {
         const uint32_t* frame = bink_get_frame_rgba(data.b);
         if (frame) {
@@ -329,6 +345,7 @@ void video_draw(int x_offset, int y_offset) {
 }
 
 void video_draw_in_rect(int x_offset, int y_offset, int width, int height) {
+    auto& data = g_video_data;
     if (get_next_frame())
         update_video_frame();
 

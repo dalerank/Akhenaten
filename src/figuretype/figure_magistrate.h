@@ -1,27 +1,20 @@
 #pragma once
 
-#include "figure/figure.h"
+#include "figuretype/figure_law_walker.h"
 
-enum e_magistrate_action {
-    ACTION_10_MAGISTRATE_GOING = 10,
-    ACTION_70_MAGISTRATE_CREATED = 70,
-    ACTION_71_MAGISTRATE_ENTERING_EXITING = 71,
-    ACTION_72_MAGISTRATE_ROAMING = 72,
-    ACTION_73_MAGISTRATE_RETURNING = 73,
-    ACTION_74_MAGISTRATE_GOING_TO_FORT = 74,
-    ACTION_75_MAGISTRATE_AT_FORT = 75,
-    ACTION_76_MAGISTRATE_RESERVED_1 = 76,
-    ACTION_77_MAGISTRATE_AT_ENEMY = 77,
-    ACTION_125_MAGISTRATE_ROAMING = 125,
-};
-
-class figure_magistrate : public figure_impl {
+class figure_magistrate : public figure_law_walker {
 public:
     FIGURE_METAINFO(FIGURE_MAGISTRATE, figure_magistrate)
-    figure_magistrate(figure *f) : figure_impl(f) {}
+    figure_magistrate(figure* f) : figure_law_walker(f) {}
 
-    virtual void on_create() override {}
-    virtual void figure_action() override;
-    virtual void figure_before_action() override;
+    struct static_params : public figure_static_params {
+        int home_road_radius;
+        int crime_reduction;
+    } FIGURE_STATIC_DATA_T;
+
     virtual int provide_service() override;
+
+protected:
+    virtual int home_road_radius() const override { return current_params().home_road_radius; }
 };
+ANK_CONFIG_STRUCT(figure_magistrate::static_params, home_road_radius, crime_reduction)

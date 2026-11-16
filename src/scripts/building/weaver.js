@@ -41,20 +41,6 @@ building_weaver = {
   }
 }
 
-[es=(building_weaver, on_place_checks)]
-function building_weaver_on_place_checks(ev) {
-    var flax = city.resources.flax
-    var has_supply = (flax.count_active_industry > 0) || (flax.yards_stored > 0)
-    if (has_supply) {
-        return
-    }
-
-    city.warnings.show("#building_needs_flax")
-    city.warnings.show_if_not(flax.can_produce, "#build_flax_farm")
-    city.warnings.show_if_not(flax.can_import, "#setup_trade_route_to_import")
-    city.warnings.show_if_not(flax.trade_status == TRADE_STATUS_IMPORT, "#overseer_of_commerce_to_import")
-}
-
 [es=(building_weaver, produce_uptick_per_day)]
 function building_weaver_produce_uptick_per_day(ev) {
     var b = city.get_building(ev.bid)

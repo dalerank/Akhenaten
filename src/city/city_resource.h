@@ -27,7 +27,7 @@ struct city_resources_t {
     bool mothballed[RESOURCES_MAX];
     int16_t unk_00[RESOURCES_MAX];
 
-    uint8_t beer_types_available;
+    int32_t luxury_goods_kinds;
     svector<uint16_t, RESOURCES_FOODS_MAX> food_types_available;
     svector<uint16_t, RESOURCES_FOODS_MAX> food_types_eaten;
     uint8_t food_types_eaten_max_value = 0;
@@ -75,12 +75,11 @@ struct city_resources_t {
     void calculate_stocks();
     const resource_list &available();
     const resource_list &available_foods();
-    const resource_list &available_market_goods();
-    int food_percentage_produced();
+    const resource_list& available_market_goods();
     void calculate_available_food();
     void calculate_food_stocks_and_supply_wheat();
     void consume_food_weekly(const simulation_time_t& t);
-    void consume_goods_weekly(const simulation_time_t& t);
+    void consume_food_monthly();
     void toggle_mothballed(e_resource resource);
     bool is_mothballed(e_resource resource);
     void toggle_stockpiled(e_resource resource);
@@ -94,7 +93,6 @@ struct city_resources_t {
 };
 
 
-int city_resource_multiple_wine_available();
 int city_resource_food_supply_months();
 int city_resource_operating_granaries();
 

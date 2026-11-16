@@ -5,6 +5,40 @@ log_info("akhenaten: mission 7 abydos started")
 mission7 { // Abydos / Abedju — The Challenge of the Sea
 	map_file : "data/maps/m_007_abydos.map"
 
+	enable_scenario_events : true
+	events [
+		{ // pak i=19
+			type : EVENT_TYPE_INVASION
+			time { year : 0, month : 0 }
+			item { value : EVENT_INVADER_PHARAOH }
+			amount { value : 40 }
+			months_initial : 10
+			location_fields [ 1, 1, -1, -1 ]
+			event_trigger_type : EVENT_TRIGGER_BY_FAVOUR
+			tag_id : 7019
+			on_completed_action : 1
+			on_refusal_action : -1
+			on_too_late_action : -1
+			on_defeat_action : -1
+			invasion_attack_target : EVENT_ATTACK_TARGET_RANDOM
+		}
+		{ // pak i=20
+			type : EVENT_TYPE_INVASION
+			time { year : 0, month : 0 }
+			item { value : EVENT_INVADER_PHARAOH }
+			amount { value : 40 }
+			months_initial : 0
+			location_fields [ 2, 2, -1, -1 ]
+			event_trigger_type : EVENT_TRIGGER_ONLY_VIA_EVENT
+			tag_id : 7020
+			on_completed_action : -1
+			on_refusal_action : -1
+			on_too_late_action : -1
+			on_defeat_action : -1
+			invasion_attack_target : EVENT_ATTACK_TARGET_RANDOM
+		}
+	]
+
 	// Map points from data/maps/m_007_abydos.map.
 	herd_points_predator [ [88, 57], [74, 71], [92, 35] ]
 	fishing_points [ [95, 66], [76, 65], [110, 71] ]
@@ -43,7 +77,6 @@ mission7 { // Abydos / Abedju — The Challenge of the Sea
 
 	initial_funds [7500, 5000, 3750, 2500, 2000]
 	rescue_loans [7500, 5000, 3750, 2500, 2000]
-	house_tax_multipliers [300, 200, 150, 100, 75]
 
 	init_resources : {
 		barley: { type:RESOURCE_BARLEY, allow: true},
@@ -117,8 +150,6 @@ mission7 { // Abydos / Abedju — The Challenge of the Sea
 			cost_to_open : 400
 			is_sea_trade : true
 			type : EMPIRE_CITY_EGYPTIAN_TRADING
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_FISH, RESOURCE_CLAY, RESOURCE_POTTERY, RESOURCE_BEER, RESOURCE_REEDS, RESOURCE_PAPYRUS, RESOURCE_GRANITE ]
 			buys [ RESOURCE_BRICKS, RESOURCE_LINEN, RESOURCE_GEMS, RESOURCE_LUXURY_GOODS, RESOURCE_TIMBER ]
 			route_limits [
@@ -146,8 +177,6 @@ mission7 { // Abydos / Abedju — The Challenge of the Sea
 			cost_to_open : 1000
 			is_sea_trade : true
 			type : EMPIRE_CITY_FOREIGN_TRADING
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_LUXURY_GOODS, RESOURCE_TIMBER, RESOURCE_COPPER ]
 			buys [ RESOURCE_GEMS, RESOURCE_LUXURY_GOODS ]
 			route_limits [
@@ -167,8 +196,6 @@ mission7 { // Abydos / Abedju — The Challenge of the Sea
 			cost_to_open : 700
 			is_sea_trade : false
 			type : EMPIRE_CITY_PHARAOH_TRADING
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_CHICKPEAS, RESOURCE_POTTERY, RESOURCE_PAPYRUS ]
 			buys [ RESOURCE_LETTUCE, RESOURCE_BRICKS, RESOURCE_BARLEY, RESOURCE_BEER, RESOURCE_LUXURY_GOODS ]
 			route_limits [
@@ -192,8 +219,6 @@ mission7 { // Abydos / Abedju — The Challenge of the Sea
 			cost_to_open : 270
 			is_sea_trade : true
 			type : EMPIRE_CITY_EGYPTIAN_TRADING
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_GAMEMEAT, RESOURCE_STRAW, RESOURCE_CLAY, RESOURCE_BRICKS ]
 			route_limits [
 				{ resource: RESOURCE_GAMEMEAT, limit: 2500 }
@@ -212,8 +237,6 @@ mission7 { // Abydos / Abedju — The Challenge of the Sea
 			cost_to_open : 900
 			is_sea_trade : true
 			type : EMPIRE_CITY_EGYPTIAN_TRADING
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_FIGS, RESOURCE_STRAW, RESOURCE_CLAY, RESOURCE_BRICKS, RESOURCE_POTTERY, RESOURCE_REEDS ]
 			route_limits [
 				{ resource: RESOURCE_FIGS, limit: 2500 }
@@ -234,8 +257,6 @@ mission7 { // Abydos / Abedju — The Challenge of the Sea
 			cost_to_open : 900
 			is_sea_trade : false
 			type : EMPIRE_CITY_EGYPTIAN_TRADING
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_WEAPONS, RESOURCE_CLAY, RESOURCE_POTTERY, RESOURCE_COPPER ]
 			buys [ RESOURCE_FISH, RESOURCE_BEER, RESOURCE_LINEN, RESOURCE_PAPYRUS ]
 			route_limits [
@@ -394,11 +415,6 @@ mission7 { // Abydos / Abedju — The Challenge of the Sea
 		fish_demand_decreased : false
 		contaminated_water_2 : false
 		kushite_invasion_1 : false
-		pharaoh_favour_invasion_done : false
-		pharaoh_favour_enemies_seen : false
-		pharaoh_favour_chain_done : false
-		pharaoh_favour_wave_next : -1
-		pharaoh_favour_wave_seq : 0
 		start_message_shown : false
 	}
 }
@@ -420,6 +436,7 @@ function mission7_fire_request(tag, resource, amount, months, ok_tag, fail_tag, 
 [es=event_mission_start, mission=mission7]
 function mission7_on_start(ev) {
 	__image_request_pak(PACK_ENEMY_KUSHITE)
+	__image_request_pak(PACK_ENEMY_EGYPTIAN)
 	mission_show_start_message(mission, "message_soldiers_and_forts")
 	empire.set_id(0)
 	empire.set_expanded(false)
@@ -585,8 +602,9 @@ function mission7_kushite_invasion_1(ev) {
 		invasion_id: 0,
 		enemy: ENEMY_6_KUSHITE,
 		size: 3,
-		tilex: -1,
-		tiley: -1,
+		via_sea: 1, // pak loc=9 â†’ sea point 0
+		sea_point: 0,
+		warships: 1,
 		want_destroy_buildings: 3,
 		invasion_attack_target: EVENT_ATTACK_TARGET_RANDOM // pak attack=4
 	})
@@ -645,10 +663,4 @@ function mission7_contaminated_water_2(ev) {
 		amount: 2,
 		trigger: EVENT_TRIGGER_ONCE
 	}).execute()
-}
-
-[es=event_advance_month, mission=mission7]
-function mission7_pharaoh_favour_invasion(ev) {
-	// pak: by_favour amount=40 → ok→chain_only Pharaoh army amount=40
-	mission_pharaoh_favour_invasion_tick(mission, 40, 40)
 }

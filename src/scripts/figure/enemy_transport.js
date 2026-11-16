@@ -61,15 +61,15 @@ function figure_enemy_transport_city_phrase_key() {
 function figure_enemy_transport_phrase_key(f) {
 	var state = f.action_state
 	switch (state) {
-	case ACTION_2_ENEMY_TRANSPORT_DISEMBARKING:
-		return "enemy_transport_disembarking"
-	case ACTION_1_ENEMY_TRANSPORT_SAILING:
+	case ACTION_13_ENEMY_TRANSPORT_GOING_TO_LANDING:
 		if (Math.random() < 0.5) {
 			return "enemy_transport_sailing"
 		}
 		break
-	case ACTION_0_ENEMY_TRANSPORT_CREATED:
+	case ACTION_8_ENEMY_TRANSPORT_WAITING:
 		return "enemy_transport_created"
+	case ACTION_17_ENEMY_TRANSPORT_LEAVING:
+		return "enemy_transport_disembarking"
 	}
 
 	return figure_enemy_transport_city_phrase_key()

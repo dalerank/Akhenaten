@@ -16,7 +16,6 @@ mission43 {
 	initial_funds [16000, 10670, 8000, 5360, 4240]
 	rescue_loans [4000, 2670, 2000, 1340, 1060]
 	debt_interest [6, 8, 10, 12, 14]
-	house_tax_multipliers [300, 200, 150, 100, 75]
 
 	env {
 		has_animals : true
@@ -509,6 +508,7 @@ mission43 {
 			amount { value : 15 }
 			months_initial : 8
 			location_fields [ 9, 9, -1, -1 ]
+			warships : 2
 			event_trigger_type : EVENT_TRIGGER_BY_FAVOUR
 			on_completed_action : -1
 			on_refusal_action : -1
@@ -541,8 +541,6 @@ mission43 {
 			cost_to_open : 1300
 			is_sea_trade : true
 			type : EMPIRE_CITY_EGYPTIAN_TRADING
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_MEAT, RESOURCE_CHICKPEAS, RESOURCE_BEER, RESOURCE_TIMBER ]
 			buys [ RESOURCE_BARLEY, RESOURCE_LUXURY_GOODS, RESOURCE_SANDSTONE ]
 			route_limits [
@@ -564,8 +562,6 @@ mission43 {
 			cost_to_open : 650
 			is_sea_trade : true
 			type : EMPIRE_CITY_EGYPTIAN_TRADING
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_CHICKPEAS, RESOURCE_STRAW, RESOURCE_POTTERY, RESOURCE_FLAX, RESOURCE_LINEN ]
 			buys [ RESOURCE_LUXURY_GOODS ]
 			route_limits [
@@ -586,8 +582,6 @@ mission43 {
 			cost_to_open : 2000
 			is_sea_trade : true
 			type : EMPIRE_CITY_EGYPTIAN_TRADING
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_GEMS, RESOURCE_LUXURY_GOODS, RESOURCE_TIMBER ]
 			buys [ RESOURCE_CHICKPEAS, RESOURCE_FIGS, RESOURCE_LINEN ]
 			route_limits [
@@ -608,8 +602,6 @@ mission43 {
 			cost_to_open : 140
 			is_sea_trade : true
 			type : EMPIRE_CITY_EGYPTIAN_TRADING
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_GEMS ]
 			buys [ RESOURCE_MEAT, RESOURCE_CHICKPEAS, RESOURCE_POTTERY, RESOURCE_LINEN ]
 			route_limits [
@@ -629,8 +621,6 @@ mission43 {
 			cost_to_open : 400
 			is_sea_trade : true
 			type : EMPIRE_CITY_EGYPTIAN_TRADING
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_LUXURY_GOODS ]
 			buys [ RESOURCE_FIGS, RESOURCE_LINEN ]
 			route_limits [
@@ -648,8 +638,6 @@ mission43 {
 			cost_to_open : 400
 			is_sea_trade : false
 			type : EMPIRE_CITY_FOREIGN_TRADING
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_GEMS, RESOURCE_COPPER ]
 			buys [ RESOURCE_BEER, RESOURCE_LINEN ]
 			route_limits [
@@ -831,7 +819,6 @@ mission43 {
 
 	vars {
 		start_message_shown : false
-		pharaoh_favour_invasion_done : false
 		inv20_done : false
 		inv20_seq : 0
 		inv20_chain_done : false
@@ -843,6 +830,7 @@ mission43 {
 function mission43_on_start(ev) {
 	log_info("mission43: on_start", {ev:ev})
 	__image_request_pak(PACK_ENEMY_KUSHITE)
+	__image_request_pak(PACK_ENEMY_EGYPTIAN)
 	scenario.start_year = -1270
 	scenario.climate = 2
 	__scenario_monuments.first = 37
@@ -923,30 +911,6 @@ function mission43_fire_inv20_win_chain() {
 	troops.set_completed_action_tag(1023)
 	troops.set_refusal_action_tag(1007)
 	troops.execute()
-}
-
-[es=event_advance_month, mission=mission43]
-function mission43_pharaoh_favour_invasion(ev) {
-	if (mission.pharaoh_favour_invasion_done) {
-		return
-	}
-	if (city.rating_kingdom > 0) {
-		return
-	}
-	mission.pharaoh_favour_invasion_done = true
-	log_info("akhenaten: mission 43 pharaoh favour invasion size=15 kr=" + city.rating_kingdom)
-	__image_request_pak(PACK_ENEMY_EGYPTIAN)
-	city.start_foreign_army_invasion({
-		mode: ATTACK_TYPE_ENEMIES,
-		enemy: ENEMY_3_EGYPTIAN,
-		kind: INVASION_KIND_KINGDOME,
-		size: 15,
-		invasion_id: 26,
-		tilex: -1,
-		tiley: -1,
-		want_destroy_buildings: 0,
-		invasion_attack_target: EVENT_ATTACK_TARGET_FOOD
-	})
 }
 
 [es=event_advance_month, mission=mission43]

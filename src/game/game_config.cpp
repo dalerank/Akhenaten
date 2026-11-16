@@ -19,7 +19,7 @@ void ANK_REGISTER_CONFIG_ITERATOR(config_load_game_settings) {
 }
 
 namespace game_features {
-    svector<game_feature*, 192> _features;
+    svector<game_feature*, 256> _features;
     globals_settings_t _settings;
 
     game_feature gameplay_fix_immigration{ "gameplay_fix_immigration", "#TR_CONFIG_FIX_IMMIGRATION_BUG", false, false };
@@ -65,10 +65,19 @@ namespace game_features {
     game_feature gameplay_change_dock_smart_routing{ "gameplay_change_dock_smart_routing", "#TR_CONFIG_DOCK_SMART_ROUTING", false, false };
     // Remake QoL: caravan donkeys / delivery boys flee to exit when leader dies. OG: die with leader.
     game_feature gameplay_change_follower_runaway{ "gameplay_change_follower_runaway", "#TR_CONFIG_FOLLOWER_RUNAWAY", false, false };
+    game_feature gameplay_change_sled_pullers_flee{
+      "gameplay_change_sled_pullers_flee", "#TR_CONFIG_SLED_PULLERS_FLEE", false, false};
     // Remake mugger: steal on spawn + always path to palace + ambient mansion theft. OG: wait, rob nearest rich building on arrival.
     game_feature gameplay_change_robber_remake{ "gameplay_change_robber_remake", "#TR_CONFIG_ROBBER_REMAKE", false, false };
     // Remake tomb robber: monthly/sentiment spawn, flee/arrest, fixed −10/−25. OG: house crime, wait 40, 2× walk, difficulty kingdom hit, die.
     game_feature gameplay_change_tomb_robber_remake{ "gameplay_change_tomb_robber_remake", "#TR_CONFIG_TOMB_ROBBER_REMAKE", false, false };
+    // Remake police: stations fetch weapons from storage yards, each constable takes one. OG: no weapons.
+    game_feature gameplay_change_police_weapons{
+      "gameplay_change_police_weapons", "#TR_CONFIG_POLICE_WEAPONS", false, false};
+    // Remake walker phrases: per-walker script heuristics, also for walkers OG keeps silent. OG: city problems by
+    // weight.
+    game_feature gameplay_change_walker_phrases_remake{
+      "gameplay_change_walker_phrases_remake", "#TR_CONFIG_WALKER_PHRASES_REMAKE", false, false};
     // Remake protestor: hunt noble walkers / manor-estate houses. OG: stand still then vanish.
     game_feature gameplay_change_protestor_hunt_nobles{ "gameplay_change_protestor_hunt_nobles", "#TR_CONFIG_PROTESTOR_HUNT_NOBLES", false, false };
     // Remake fishing boat: worker-scaled fish time, half load, sticky spot, soft lose-home. OG: 200 ticks, 100 fish, tile sidestep, sink.
@@ -88,8 +97,10 @@ namespace game_features {
     game_feature gameplay_change_fort_rotation{ "gameplay_change_fort_rotation", "#TR_CONFIG_FORT_ROTATION", false, false };
     game_feature gameplay_change_fort_refund_carry_troops{ "gameplay_change_fort_refund_carry_troops", "#TR_CONFIG_FORT_REFUND_CARRY_TROOPS", false, false };
     game_feature gameplay_change_statue_variants{ "gameplay_change_statue_variants", "#TR_CONFIG_STATUE_VARIANTS", false, false };
-    game_feature gameplay_change_guild_statue_service{ "gameplay_change_guild_statue_service", "#TR_CONFIG_GUILD_STATUE_SERVICE", false, false };
-    game_feature gameplay_change_mastaba_clay_delivery{ "gameplay_change_mastaba_clay_delivery", "#TR_CONFIG_MASTABA_CLAY_DELIVERY", false, false };
+    game_feature gameplay_change_guild_statue_service{
+      "gameplay_change_guild_statue_service", "#TR_CONFIG_GUILD_STATUE_SERVICE", false, false};
+    game_feature gameplay_change_mastaba_clay_delivery{
+      "gameplay_change_mastaba_clay_delivery", "#TR_CONFIG_MASTABA_CLAY_DELIVERY", false, false};
     game_feature gameplay_change_recruit_nearest_fort{ "gameplay_change_recruit_nearest_fort", "#TR_CONFIG_RECRUIT_NEAREST_FORT", false, false };
     game_feature gameplay_change_tower_sentries_go_offroad{ "gameplay_change_tower_sentries_go_offroad", "#TR_CONFIG_TOWER_SENTRIES_GO_OFFROAD", false, false };
     game_feature gameplay_change_farms_deliver_close{ "gameplay_change_farms_deliver_close", "#TR_CONFIG_FARMS_DELIVER_CLOSE", false, false };
@@ -97,13 +108,14 @@ namespace game_features {
     game_feature gameplay_change_farm_meadow_harvest_retry{ "gameplay_change_farm_meadow_harvest_retry", "#TR_CONFIG_FARM_MEADOW_HARVEST_RETRY", false, false };
     game_feature gameplay_change_industry_nearby_houses{ "gameplay_change_industry_nearby_houses", "#TR_CONFIG_INDUSTRY_NEARBY_HOUSES", false, false };
     game_feature gameplay_change_only_deliver_to_accepting_granaries{ "gameplay_change_only_deliver_to_accepting_granaries", "#TR_CONFIG_DELIVER_ONLY_TO_ACCEPTING_GRANARIES", false, false };
-    game_feature gameplay_change_all_houses_merge{ "gameplay_change_all_houses_merge", "#TR_CONFIG_ALL_HOUSES_MERGE", false, false };
-    game_feature gameplay_change_beer_open_trade_route_counts{ "gameplay_change_beer_open_trade_route_counts", "#TR_CONFIG_WINE_COUNTS_IF_OPEN_TRADE_ROUTE", false, false };
+    game_feature gameplay_change_all_houses_merge{
+      "gameplay_change_all_houses_merge", "#TR_CONFIG_ALL_HOUSES_MERGE", false, false};
     game_feature gameplay_change_random_mine_or_pit_collapses_take_money{ "gameplay_change_random_mine_or_pit_collapses_take_money", "#TR_CONFIG_RANDOM_COLLAPSES_TAKE_MONEY", false, false };
     game_feature gameplay_change_multiple_barracks{ "gameplay_change_multiple_barracks", "#TR_CONFIG_MULTIPLE_BARRACKS", false, false };
     game_feature gameplay_change_warehouses_dont_accept{ "gameplay_change_warehouses_dont_accept", "#TR_CONFIG_NOT_ACCEPTING_WAREHOUSES", false, false };
     game_feature gameplay_change_houses_dont_expand_into_gardens{ "gameplay_change_houses_dont_expand_into_gardens", "#TR_CONFIG_HOUSES_DONT_EXPAND_INTO_GARDENS", false, false };
-    game_feature gameplay_fix_irrigation_range{ "gameplay_fix_irrigation_range", "#TR_CONFIG_FIX_IRRIGATION_RANGE", false, false };
+    game_feature gameplay_change_irrigation_range_5x5{
+      "gameplay_change_irrigation_range_5x5", "#TR_CONFIG_IRRIGATION_RANGE_5X5", false, false};
     game_feature gameplay_fix_farm_produce_quantity{ "gameplay_fix_farm_produce_quantity", "#TR_CONFIG_FIX_FARM_PRODUCING", false, false };
     game_feature gameui_keep_camera_inertia{ "gameui_keep_camera_inertia", "#TR_CONFIG_CAMERA_KEEP_INERTIA", false, false };
     game_feature gameplay_change_understaffed_accept_goods{ "gameplay_change_understaffed_accept_goods", "#TR_CONFIG_UNDERSTAFFED_ACCEPT_GOODS", false, false };
@@ -113,6 +125,12 @@ namespace game_features {
     game_feature gameplay_change_multiple_gatherers{ "gameplay_change_multiple_gatherers", "#TR_CONFIG_MULTIPLE_GATHERERS", false, false };
     game_feature gameplay_change_wood_cutter_single_gatherer{ "gameplay_change_wood_cutter_single_gatherer", "#TR_CONFIG_WOOD_CUTTER_SINGLE_GATHERER", false, false };
     game_feature gameplay_change_fireman_returning{ "gameplay_change_fireman_returning", "#TR_CONFIG_FIREMAN_RETURNING", false, false };
+    game_feature gameplay_change_fishing_points_monthly_respawn{
+      "gameplay_change_fishing_points_monthly_respawn", "#TR_CONFIG_FISHING_POINTS_MONTHLY_RESPAWN", false, false};
+    game_feature gameplay_change_house_evolve_delay{
+      "gameplay_change_house_evolve_delay", "#TR_CONFIG_HOUSE_EVOLVE_DELAY", false, false};
+    game_feature gameplay_change_food_consumption_remake{
+      "gameplay_change_food_consumption_remake", "#TR_CONFIG_FOOD_CONSUMPTION_REMAKE", false, false};
     game_feature gameplay_change_architect_patrol_most_damaged{ "gameplay_change_architect_patrol_most_damaged", "#TR_CONFIG_ARCHITECT_PATROL_MOST_DAMAGED", false, false };
     game_feature gameplay_og_architect{ "gameplay_og_architect", "#TR_CONFIG_OG_ARCHITECT", false, true };
     game_feature gameplay_og_fireman{ "gameplay_og_fireman", "#TR_CONFIG_OG_FIREMAN", false, true };
@@ -126,6 +144,8 @@ namespace game_features {
     game_feature gameplay_change_work_camp_distance_scaled_farm_workers{ "gameplay_change_work_camp_distance_scaled_farm_workers", "#TR_CONFIG_CH_WORK_CAMP_DISTANCE_SCALED_FARM_WORKERS", false, false };
     game_feature gameplay_change_fire_risk_clay_pit_reduced{ "gameplay_change_fire_risk_clay_pit_reduced", "#TR_CONFIG_CH_CLAY_PIT_FIRE_RISK_REDUCED", false, false };
     game_feature gameplay_change_goldmine_reduced_production{ "gameplay_change_goldmine_reduced_production", "#TR_CONFIG_GOLDMINE_REDUCED_PRODUCTION", false, false };
+    game_feature gameplay_change_industry_remake_rates{
+      "gameplay_change_industry_remake_rates", "#TR_CONFIG_INDUSTRY_REMAKE_RATES", false, false};
     game_feature gameplay_change_new_tax_collection_system{ "gameplay_change_new_tax_collection_system", "#TR_CONFIG_NEW_TAX_COLLECTION_SYSTEM", false, false };
     game_feature gameplay_change_small_hut_not_create_emigrant{ "gameplay_change_small_hut_not_create_emigrant", "#TR_CONFIG_SMALL_HUT_NOT_CREATE_EMIGRANT", false, false };
     game_feature gameplay_change_delivery_boy_goes_to_market_alone{ "gameplay_change_delivery_boy_goes_to_market_alone", "#TR_CONFIG_DELIVERY_BOY_GOES_TO_MARKET_ALONE", false, false };
@@ -150,6 +170,7 @@ namespace game_features {
     game_feature gameopt_last_save_filename{ "gameopt_last_save_filename", "", "", "" };
     game_feature gameopt_enabled_mods{ "gameopt_enabled_mods", "", "", "" };
     game_feature gameopt_last_game_version{ "gameopt_last_game_version", "", "", "" };
+    game_feature gameopt_auto_update{"gameopt_auto_update", "#TR_CONFIG_AUTO_UPDATE", true, true};
     game_feature gameopt_scroll_speed{ "gameopt_scroll_speed", "", 70.0f, 70.0f };
     game_feature gameopt_middle_mouse_camera_pan{ "gameopt_middle_mouse_camera_pan", "", true, true };
     game_feature gameopt_middle_mouse_pan_speed{ "gameopt_middle_mouse_pan_speed", "", 100.0f, 100.0f };
@@ -210,6 +231,8 @@ namespace game_features {
     game_feature gameplay_enhanced_labor_category_split{ "gameplay_enhanced_labor_category_split", "#TR_CONFIG_LABOR_CATEGORY_SPLIT", false, false };
     game_feature gameplay_enhanced_walker_spawn_boost{ "gameplay_enhanced_walker_spawn_boost", "#TR_CONFIG_WALKER_SPAWN_BOOST", false, false };
     game_feature gameplay_enhanced_walker_move_boost{ "gameplay_enhanced_walker_move_boost", "#TR_CONFIG_WALKER_MOVE_BOOST", false, false };
+    game_feature gameplay_enhanced_city_ambient{
+      "gameplay_enhanced_city_ambient", "#TR_CONFIG_CITY_AMBIENT", false, false};
     game_feature gameplay_enhanced_festival_calendar{ "gameplay_enhanced_festival_calendar", "#TR_CONFIG_FESTIVAL_CALENDAR", false, false };
     game_feature gameplay_enhanced_local_cults{ "gameplay_enhanced_local_cults", "#TR_CONFIG_LOCAL_CULTS", false, false };
     game_feature graphics_atlas_render{ "graphics_atlas_render", "", true, true };

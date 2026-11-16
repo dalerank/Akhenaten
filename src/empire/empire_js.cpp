@@ -2,6 +2,7 @@
 
 #include "empire/empire_city.h"
 #include "empire/empire_map.h"
+#include "empire/empire_markers.h"
 #include "empire/empire_object.h"
 #include "empire/empire_traders.h"
 #include "city/city.h"
@@ -57,6 +58,40 @@ void __empire_map_clear_selected_object() {
     g_empire_map.clear_selected_object();
 }
 ANK_FUNCTION(__empire_map_clear_selected_object)
+
+void __empire_markers_update() {
+    g_empire_markers.update();
+}
+ANK_FUNCTION(__empire_markers_update)
+
+int __empire_markers_count() {
+    return (int)g_empire_markers.markers.size();
+}
+ANK_FUNCTION(__empire_markers_count)
+
+std::optional<bvariant> __empire_marker_get_property(int index, pcstr property) {
+    if (index < 0 || index >= (int)g_empire_markers.markers.size()) {
+        return {};
+    }
+    return archive_helper::get(g_empire_markers.markers[index], property, true);
+}
+ANK_FUNCTION_2(__empire_marker_get_property)
+
+void __empire_marker_set_size(int index, vec2i size) {
+    g_empire_markers.set_size(index, size);
+}
+ANK_FUNCTION_2(__empire_marker_set_size)
+
+int __empire_markers_selected_kind() {
+    const empire_marker_t* m = g_empire_markers.selected();
+    return m ? m->kind : -1;
+}
+ANK_FUNCTION(__empire_markers_selected_kind)
+
+void __empire_markers_clear_selection() {
+    g_empire_markers.clear_selection();
+}
+ANK_FUNCTION(__empire_markers_clear_selection)
 
 int __empire_luxury_goods_traded_sum() {
     int sum = 0;
@@ -187,5 +222,4 @@ void js_register_empire_objects(js_State *J) {
     js_register_empire_city_map_proto(J);
     js_register_empire_city_proto(J);
     js_register_empire_trader_proto(J);
-    js_register_invasion_warning_proto(J);
 }

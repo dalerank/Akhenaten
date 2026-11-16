@@ -32,6 +32,15 @@ static empty_all_backup_slot_t g_empty_all_backups[BUILDING_STORAGE_EMPTY_ALL_BA
 static_assert(sizeof(g_empty_all_backups) == BUILDING_STORAGE_EMPTY_ALL_BACKUP_CHUNK_SIZE,
               "empty-all backup blob size");
 
+void building_storage_set(int storage_id, int building_id, bool in_use, const storage_t &storage) {
+    if (storage_id < 0 || storage_id >= MAX_STORAGES) {
+        return;
+    }
+    g_storages[storage_id].building_id = building_id;
+    g_storages[storage_id].in_use = in_use;
+    g_storages[storage_id].storage = storage;
+}
+
 static void building_storage_clear_empty_all_backup(int storage_id) {
     if (storage_id <= 0 || storage_id >= MAX_STORAGES) {
         return;
@@ -58,7 +67,7 @@ void building_storage_reset_building_ids(void) {
             if (b->storage_id) {
                 if (g_storages[b->storage_id].building_id) {
                     // storage is already connected to a building: corrupt, create new
-                    b->storage_id = building_storage_create(b->type);
+                    b->storage_id = building_storage_create(b->type, i);
                 } else {
                     g_storages[b->storage_id].building_id = i;
                 }
@@ -67,12 +76,13 @@ void building_storage_reset_building_ids(void) {
     }
 }
 
-int building_storage_create(int building_type) {
+int building_storage_create(int building_type, int building_id) {
     for (int i = 1; i < MAX_STORAGES; i++) {
         if (!g_storages[i].in_use) {
             memset(&g_storages[i], 0, sizeof(g_storages[i]));
             memset(&g_empty_all_backups[i], 0, sizeof(g_empty_all_backups[i]));
             g_storages[i].in_use = 1;
+            g_storages[i].building_id = building_id;
 
             // default settings for Pharaoh
             for (int r = 0; r < 36; r++) {

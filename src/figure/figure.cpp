@@ -633,10 +633,6 @@ bool figure::has_cart() const {
     return (use_cart && cart_image_id != 0);
 }
 
-const animation_t &figure::anim(const xstring &key) {
-    return params().animations[key];
-}
-
 vec2i figure::adjust_pixel_offset(const vec2i pixel) {
     // determining x/y offset on tile
     vec2i offset(0, 0);
@@ -724,12 +720,6 @@ void figure::draw(painter &ctx, int highlight) {
     if (threading::xchg(&mt_render_worker, true)) {
         return;
     }
-
-    // This is to update the sprite's direction when rotating the city view.
-    // Unfortunately, because the only thing we have at the time of file loading is
-    // the raw sprite image id, it doesn't work if we haven't performed at least a
-    // single frame of figure action after loading a file (i.e. if paused instantly)
-    figure_image_update(true);
 
     if (cart_image_id) {
         switch (type) {
@@ -948,7 +938,7 @@ void figure::draw_tooltip(tooltip_context *c) const {
 
 void figure::bind(io_buffer* iob) {
     figure* f = this;
-    int tmpe;
+    int tmpe = 0;
     iob->bind(BIND_SIGNATURE_UINT8, &f->alternative_location_index);
     iob->bind(BIND_SIGNATURE_UINT8, &tmpe);
     iob->bind____skip(1); // iob->bind(BIND_SIGNATURE_UINT8, &f->is_enemy_image);
@@ -1037,8 +1027,8 @@ void figure::bind(io_buffer* iob) {
     iob->bind(BIND_SIGNATURE_UINT8, &f->target_height);
     iob->bind(BIND_SIGNATURE_UINT8, &f->collecting_item_id);
     iob->bind____skip(1); // iob->bind(BIND_SIGNATURE_UINT8, &f->trade_ship_failed_dock_attempts);
-    iob->bind____skip(1); // iob->bind(BIND_SIGNATURE_UINT8, &f->phrase_sequence_exact);
-    iob->bind____skip(1); // iob->bind(BIND_SIGNATURE_UINT8, &f->phrase.id);
+    iob->bind(BIND_SIGNATURE_UINT8, &f->phrase_sequence);
+    iob->bind(BIND_SIGNATURE_INT8, &f->phrase_id);
     iob->bind____skip(1); // iob->bind(BIND_SIGNATURE_UINT8, &f->phrase_sequence_city);
     iob->bind(BIND_SIGNATURE_INT8, &f->progress_inside);
     iob->bind____skip(1);  // iob->bind(BIND_SIGNATURE_UINT8, &f->trader_id);
@@ -1076,9 +1066,10 @@ void figure::bind(io_buffer* iob) {
 
     iob->bind____skip(2);
 
-    draw_mode = 0;
     // Runtime-only trail (persisted in recorded_paths building rings); clear stale ids on load.
+    // draw_mode is a debug overlay toggle; OG stores unrelated data in that byte.
     if (iob->is_read_access()) {
+        f->draw_mode = 0;
         f->trail_path_id = 0;
     }
 }

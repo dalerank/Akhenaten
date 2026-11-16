@@ -3,7 +3,7 @@ log_info("akhenaten: mission 129 bridges started")
 // Custom map Cleop/Maps/Bridges.map + reserved[0..46] editor flags from scenario_info.
 // Empire id=1; our city = Djedu (sells fish/clay/timber/granite/copper). Abu display-only.
 // Monuments (group 198): 23 Large Obelisk, 22 Small Obelisk → rating goal 13
-//   (weights 4+2 → 2.25*6+4.5 = 18 ≥ 13 under current formula).
+//   (weights 3+1 → trunc(6.32·√4+0.5)=13).
 // Subtitle "20 Years until invasion"; timed Pharaoh army y25m0 size=16 attack=BEST_BUILDINGS.
 // Climate desert; god Ra known; enemy ENEMY_6_KUSHITE (scenario id only — raid is Egyptian).
 //
@@ -26,7 +26,6 @@ mission129 { // Bridges.map
 	initial_funds [15000, 10000, 7500, 5000, 4000]
 	rescue_loans [0, 0, 0, 0, 0]
 	debt_interest [1, 3, 5, 8, 10]
-	house_tax_multipliers [300, 200, 150, 100, 75]
 
 	env {
 		has_animals : true

@@ -60,13 +60,16 @@ struct screen_city_t {
     void draw_figures_on_flat_tiles(vec2i pixel, tile2i tile, painter &ctx);
     void draw_figures_overlay(vec2i pixel, tile2i tile, painter &ctx);
     void draw_isometric_flat(vec2i pixel, tile2i tile, painter &ctx);
+    // Stores the water frames the flat pass queued; call after every flat pass, before the height pass.
+    void apply_water_frames();
+    int pending_water_frames() const;
     void draw_isometric_terrain_height(vec2i pixel, tile2i tile, painter &ctx);
     void draw_isometric_nonterrain_height(vec2i pixel, tile2i tile, painter &ctx);
     void draw_isometric_nonterrain_height(vec2i pixel, tile2i tile, color mask, painter &ctx);
     void draw_postrender_building_effects(vec2i pixel, tile2i tile, painter &ctx);
     void draw_building_road_access_marker(painter &ctx);
     void draw_recorded_delivery_paths(painter &ctx);
-    void draw_isometric_mark_sound(int building_id, int grid_offset, color &color_mask, int direction);
+    void draw_isometric_mark_sound(int building_id, int grid_offset, color& color_mask, int direction, vec2i pixel);
     void draw_tooltip(tooltip_context* c);
     void debug_draw_figures(painter &ctx);
     void draw_current_select_tile(painter &ctx);

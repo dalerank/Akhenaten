@@ -16,6 +16,10 @@ uint8_t map_moisture_get(int grid_offset) {
     return map_grid_get(terrain_moisture, grid_offset);
 }
 
+void map_moisture_set(int grid_offset, uint8_t value) {
+    map_grid_set(terrain_moisture, grid_offset, value);
+}
+
 void map_moisture_clear_tile(int grid_offset) {
     map_grid_set(terrain_moisture, grid_offset, 0);
 }

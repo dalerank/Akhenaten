@@ -52,29 +52,64 @@ window_mission_lost {
         title               : text({pos:[0, 32], text:{group:62, id:1}, font: FONT_LARGE_BLACK_ON_LIGHT, align:"center", size:[px(32), 20] })
         warning_text        : text({pos:[32, 72], text:{group:62, id:16}, wrap:px(32), font: FONT_NORMAL_BLACK_ON_LIGHT, multiline:true })
 
-        replay_mission      : button({margin:{centerx:-135, bottom:-40}, size:[270, 25], text:"#replay_mission", onclick_event: "replay_mission" })
+        lower_difficulty    : button({pos:[32, 215], size:[px(9), 20], text:{group:62, id:40}, onclick_event: "lower_difficulty" })
+        new_game            : button({pos:[64, 215], size:[px(26), 20], text:{group:62, id:6}, onclick_event: "new_game" })
+        replay_mission      : button({pos:[352, 215], size:[px(9), 20], text:{group:62, id:37}, onclick_event: "replay_mission" })
     }
 }
 
+var DEFEAT_OPTIONS_NEW_GAME = 1
+var DEFEAT_OPTIONS_REPLAY = 2
+var DEFEAT_OPTIONS_LOWER_DIFFICULTY = 3
+
+// OG high score results (window/high_scores.c) and their texts in group 148.
+var HIGH_SCORE_RESULT_TEXTS = [0, 10, 11, 12, 13, 14, 16]
+var HIGH_SCORE_RESULT_OTHER_KEPT = 4
+var HIGH_SCORE_RESULT_OTHER_BEATEN = 5
+
+var mission_end_highscore = { result: 0, previous_name: "" }
+
+// OG: the months since the start year plus the month of the year.
 function mission_won_completion_months() {
     var years = game.simtime.year - scenario.start_year
     if (years < 0) {
-        years = 0
+        years = -years
     }
-    return years * 12 + game.simtime.month + 1
+    return years * 12 + game.simtime.month
 }
 
-function mission_won_calc_score(funds, population, culture, prosperity, kingdom, months, difficulty) {
-    if (months < 1) {
-        months = 1
+function mission_won_summary() {
+    var months = mission_won_completion_months()
+    var monuments = city_finished_slot_monuments()
+    return {
+        months: months,
+        monuments: monuments.count,
+        score: __city_victory_score(months, monuments.weight)
     }
-    var score = (difficulty + 1.0) / 3.0
-        * ((funds / (months / 30.0))
-           + population * 0.002 * (culture + prosperity + kingdom))
-    if (score < 0) {
-        score = 0
+}
+
+// OG highscore_record_mission: a campaign victory is written to highscore.jas when new or beaten.
+function mission_end_record_highscore() {
+    mission_end_highscore = { result: 0, previous_name: "" }
+    if (scenario.scmode != e_scenario_normal) {
+        return
     }
-    return score | 0
+    var summary = mission_won_summary()
+    mission_end_highscore.result = __highscores_record_mission(scenario.campaign_scenario_id, summary.months,
+        summary.score, summary.monuments)
+    mission_end_highscore.previous_name = __highscores_previous_name()
+}
+
+function mission_won_highscore_text() {
+    var result = mission_end_highscore.result
+    if (result <= 0 || result >= HIGH_SCORE_RESULT_TEXTS.length) {
+        return ""
+    }
+    var text = __loc(148, HIGH_SCORE_RESULT_TEXTS[result])
+    if (result == HIGH_SCORE_RESULT_OTHER_KEPT || result == HIGH_SCORE_RESULT_OTHER_BEATEN) {
+        text = text.replace("[player_name]", mission_end_highscore.previous_name)
+    }
+    return text
 }
 
 function mission_won_difficulty_label(diff) {
@@ -107,20 +142,6 @@ function mission_won_erected_monuments_text() {
     return names.join("\n")
 }
 
-function mission_won_compare_text(scenario_id, new_score) {
-    if (!__game_mission_scenario_beaten(scenario_id)) {
-        return ""
-    }
-    var prev_score = __game_player_scenario_record_score(scenario_id)
-    if (new_score > prev_score) {
-        return __loc(148, 12)
-    }
-    if (new_score < prev_score) {
-        return __loc(148, 11)
-    }
-    return ""
-}
-
 [es=(window_mission_won, init)]
 function window_mission_won_on_init(window) {
     __log_marker("window_show:window_mission_won")
@@ -146,9 +167,10 @@ function window_mission_won_on_init(window) {
     var kingdom = city.rating.kingdom
     var funds = city.finance.treasury
     var population = city.population
-    var months = mission_won_completion_months()
+    var summary = mission_won_summary()
+    var months = summary.months
     var difficulty = game.difficulty
-    var score = mission_won_calc_score(funds, population, culture, prosperity, kingdom, months, difficulty)
+    var score = summary.score
 
     // Win-screen labels match the original dialog (no "was"); group 298 is for score panels.
     window.culture_line.text = __loc("#mission_won_culture_rating") + " " + String(culture)
@@ -162,7 +184,7 @@ function window_mission_won_on_init(window) {
     window.months_line.text = __loc(148, 7) + " " + String(months) + " " + __loc(148, 15)
     window.difficulty_line.text = __loc(148, 8) + " " + mission_won_difficulty_label(difficulty)
     window.score_line.text = __loc(148, 9) + " " + String(score)
-    window.compare_line.text = mission_won_compare_text(scenario.campaign_scenario_id, score)
+    window.compare_line.text = mission_won_highscore_text()
 }
 
 [es=(window_mission_won, go_back)]
@@ -179,6 +201,42 @@ function window_mission_lost_on_init(window) {
     __game_sound.music_stop()
     __game_sound.speech_stop()
     __game_sound.speech_play("Wavs/FANFARE2.WAV")
+
+    var options = city.victory.defeat_options()
+    var lower = options == DEFEAT_OPTIONS_LOWER_DIFFICULTY
+    window.title.text = __loc(62, lower ? 38 : 1)
+    window.warning_text.text = __loc(62, lower ? 39 : 16)
+
+    window.lower_difficulty.enabled = lower
+    window.replay_mission.enabled = options != DEFEAT_OPTIONS_NEW_GAME
+    if (options == DEFEAT_OPTIONS_NEW_GAME) {
+        window.new_game.pos = { x: 64, y: 215 }
+        window.new_game.size = [px(26), 20]
+    } else {
+        window.new_game.pos = { x: lower ? 208 : 64, y: 215 }
+        window.new_game.size = [px(9), 20]
+        window.replay_mission.pos = { x: lower ? 384 : 352, y: 215 }
+    }
+    __log_marker("mission_lost_options:" + options)
+}
+
+// OG defeat_button_easier: one difficulty lower, at most Easy, and the city goes on.
+[es=(window_mission_lost, lower_difficulty)]
+function window_mission_lost_on_lower_difficulty(window) {
+    city.victory.lower_difficulty()
+    __log_marker("mission_lost_lower_difficulty:" + game.difficulty)
+    ui.window_city_show()
+}
+
+// OG defeat_button_menu: back to the main menu.
+[es=(window_mission_lost, new_game)]
+function window_mission_lost_on_new_game(window) {
+    scenario.has_won = 0
+    scenario.continue_months_left = 0
+    scenario.continue_months_chosen = 0
+    __game_undo_disable()
+    widget_top_menu_clear_state()
+    emit event_show_main_menu{ play_intro: true }
 }
 
 [es=(window_mission_lost, replay_mission)]
@@ -190,7 +248,7 @@ function mission_end_replay_mission() {
     __ui_city_planner_reset()
     var is_custom = scenario.scmode != e_scenario_normal
     if (is_custom) {
-        __game_load_savegame("autosave_replay.sav")
+        __game_load_savegame("autosave_replay.svx")
         ui.window_city_show()
     } else {
         widget_top_menu_clear_state()
@@ -278,6 +336,7 @@ function mission_end_after_video() {
 }
 
 function mission_end_open_won_dialog() {
+    mission_end_record_highscore()
     emit event_show_window { id: "window_mission_won" }
 }
 

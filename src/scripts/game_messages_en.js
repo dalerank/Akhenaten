@@ -1469,6 +1469,50 @@ game_messages_en {
         content { text: "xxxx see eventmsg.txt" }
     }
 
+    // OG Pharaoh_MM.eng invasion warning shells: title and text come from the event phrases.
+    message_invasion_enemy_near {
+        id: 113
+        type: 2
+        size [30, 20]
+        urgent: 1
+        video { text: "@12" }
+    }
+
+    message_invasion_enemy_far {
+        id: 119
+        type: 2
+        size [30, 20]
+        video { text: "@12" }
+    }
+
+    message_invasion_egypt_near {
+        id: 127
+        type: 2
+        size [30, 20]
+        video { text: "@11" }
+    }
+
+    message_invasion_egypt_mid {
+        id: 128
+        type: 2
+        size [30, 20]
+        video { text: "@11" }
+    }
+
+    message_invasion_egypt_far {
+        id: 129
+        type: 2
+        size [30, 20]
+        video { text: "@11" }
+    }
+
+    message_attack_alert {
+        id: 133
+        type: 2
+        message_type: 7
+        size [30, 20]
+    }
+
     message_template_request {
         id: 130,
         type: 2
@@ -1484,6 +1528,91 @@ game_messages_en {
         type: 2
         message_type: 2
         size [30, 20]
+        title { text: "" }
+        content { text: "" }
+    }
+
+    // OG MESSAGE_TEMPLATE_GIFT: title and text come from the gift phrases; the dialog shows the
+    // message's reply buttons (accept / later / refuse).
+    message_template_gift {
+        id: 132
+        type: 2
+        message_type: 2
+        size [30, 20]
+        title { text: "" }
+        content { text: "" }
+    }
+
+    // OG MESSAGE_TRADE_CITY_UNDER_SIEGE / MESSAGE_DISTANT_BATTLE_REQUEST: troop requests, a city asks
+    // for help or Pharaoh calls the legions to a distant battle; texts from the event phrases.
+    message_trade_city_under_siege {
+        id: 266
+        type: 2
+        message_type: 2
+        size [30, 20]
+        title { text: "" }
+        content { text: "" }
+    }
+
+    message_distant_battle_request {
+        id: 272
+        type: 2
+        message_type: 2
+        size [30, 20]
+        title { text: "" }
+        content { text: "" }
+    }
+
+    // OG MESSAGE_CITY_SAVED (MM 262) / MESSAGE_DISTANT_BATTLE_WON (MM 263): texts from the event phrases.
+    message_template_city_saved {
+        id: 262
+        type: 2
+        message_type: 2
+        size [30, 20]
+        video { text: "@1" }
+        title { text: "" }
+        content { text: "" }
+    }
+
+    message_template_distant_battle_won {
+        id: 263
+        type: 2
+        message_type: 2
+        size [30, 20]
+        video { text: "@2" }
+        title { text: "" }
+        content { text: "" }
+    }
+
+    // OG MESSAGE_CITY_FELL_TO_ENEMY (MM 338): an Egyptian city taken by the enemy; texts from the event phrases.
+    message_template_city_fell_to_enemy {
+        id: 338
+        type: 2
+        message_type: 2
+        size [30, 20]
+        video { text: "@8" }
+        title { text: "" }
+        content { text: "" }
+    }
+
+    // OG MESSAGE_CITY_CONQUERED (MM 339): a foreign city conquered by Egypt; texts from the event phrases.
+    message_template_foreign_city_conquered {
+        id: 339
+        type: 2
+        message_type: 2
+        size [30, 20]
+        video { text: "@9" }
+        title { text: "" }
+        content { text: "" }
+    }
+
+    // OG MESSAGE_EARTHQUAKE: title and text come from the event phrases, param2 is the first tile.
+    message_earthquake {
+        id: 261
+        type: 2
+        message_type: 1
+        size [30, 20]
+        urgent: 1
         title { text: "" }
         content { text: "" }
     }

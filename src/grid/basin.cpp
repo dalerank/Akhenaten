@@ -333,8 +333,7 @@ void map_basin_rebuild() {
     g_basin_dirty = false;
 
     if (!game_features::gameplay_enhanced_flood_basins.to_bool()) {
-        // Ids cleared — drop any sealed-clipped stamps / overlay values.
-        map_irrigation_restamp_from_wet_canals();
+        // OG keeps the saved IRRIGATION_RANGE; a clipped stamp left by a flag toggle goes at the next water update.
         g_irrigation_value.update();
         return;
     }

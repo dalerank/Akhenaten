@@ -16,6 +16,7 @@ enum e_routed_mode {
 
 using e_routed_mode_tokens_t = token_holder<e_routed_mode, ROUTED_BUILDING_ROAD, ROUTED_BUILDING_MAX>;
 
+void map_routing_stats_clear();
 void map_routing_calculate_distances(tile2i tile);
 void map_routing_calculate_distances_water_boat(tile2i tile);
 void map_routing_calculate_distances_deepwater(tile2i tile);
@@ -38,12 +39,15 @@ int map_water_grid(int grid_offset);
 bool map_routing_citizen_found_terrain(tile2i src, tile2i *dst, int terrain_type);
 resource_tile map_routing_citizen_found_reeds(tile2i src);
 resource_tile map_routing_citizen_found_timber(tile2i src);
+// OG map_routing_citizen_find_first_of_any: 1-based index of the first offset a citizen reaches, 0 if none.
+int map_routing_citizen_find_first_of_any(tile2i src, const int* offsets, int count);
 
 bool map_routing_citizen_can_travel_over_land(tile2i src, tile2i dst, bool allow_ferry = false);
 bool map_routing_citizen_can_travel_over_road(tile2i src, tile2i dst, bool allow_ferry = false);
 bool map_routing_citizen_can_travel_over_road_garden(int src_x, int src_y, int dst_x, int dst_y);
 bool map_routing_can_travel_over_walls(int src_x, int src_y, int dst_x, int dst_y);
 
+bool map_routing_animal_can_travel(tile2i src, tile2i dst);
 bool map_routing_noncitizen_can_travel_over_land(tile2i src, tile2i dst, int only_through_building_id, int max_tiles);
 bool map_routing_noncitizen_can_travel_through_everything(tile2i src, tile2i dst);
 bool map_routing_amphibia_can_travel_over_land_water(tile2i src, tile2i dst, int only_through_building_id, int max_tiles);

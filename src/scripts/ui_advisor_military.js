@@ -111,6 +111,8 @@ advisor_military_window {
                                         }
                                     })
 
+                navy_btn      : image_button({pos[532, 347], size[80, 48], pack:PACK_GENERAL, id:4, offset:1, tooltip:[68, 144], param1: ADVISOR_FLEET, onclick_event: "show_advisor" })
+
                 button_help   : help_button({})
             }
         })

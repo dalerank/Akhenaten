@@ -7,6 +7,7 @@
 #include "figure/figure_type.h"
 #include "core/tokenum.h"
 #include "core/archive.h"
+#include "core/svector.h"
 
 struct empire_city_options_t {
     uint16_t text_group_old_names;
@@ -34,6 +35,43 @@ ANK_CONFIG_STRUCT(empire_city_images_t,
 
 extern empire_city_images_t empire_city_images;
 
+struct empire_city_type_change {
+    e_empire_city from;
+    e_empire_city to;
+};
+ANK_CONFIG_STRUCT(empire_city_type_change, from, to)
+
+// OG city_status_new_type rows of one city-status subtype; a city whose type has no row is left alone.
+struct empire_city_type_changes_t {
+    svector<empire_city_type_change, 4> types;
+};
+ANK_CONFIG_STRUCT(empire_city_type_changes_t, types)
+
+extern empire_city_type_changes_t empire_city_conquest;
+extern empire_city_type_changes_t empire_city_fall_to_enemy;
+
+// What a foreign city sells as luxury goods. OG keeps the resource-name text id (group 23, 38 + 2 * kind).
+enum e_luxury_kind : uint8_t {
+    LUXURY_JEWELRY = 0,
+    LUXURY_WINE,
+    LUXURY_IVORY,
+    LUXURY_EBONY,
+    LUXURY_INCENSE,
+    LUXURY_OLIVE_OIL,
+    LUXURY_LEOPARD_SKINS,
+    LUXURY_PERFUME,
+    LUXURY_KIND_MAX
+};
+using e_luxury_kind_tokens_t = token_holder<e_luxury_kind, LUXURY_JEWELRY, LUXURY_KIND_MAX>;
+
+// OG empire_culture_table (luxury_kind only): one entry per city name id; configured in empire.js.
+struct empire_city_cultures_t {
+    svector<uint8_t, 66> luxury_kind;
+};
+ANK_CONFIG_STRUCT(empire_city_cultures_t, luxury_kind)
+
+extern empire_city_cultures_t empire_city_cultures;
+
 struct empire_city {
     enum {
         check_open_route = 1
@@ -50,13 +88,11 @@ struct empire_city {
     bool sells_resource[RESOURCES_MAX];
     int16_t cost_to_open;
     int ph_unk01;
-    int ph_unk02;
+    int trader_blocked;
     int trader_entry_delay;
     int empire_object_id;
     bool is_sea_trade;
     int trader_figure_ids[3];
-    svector<uint16_t, 5> trade_limits;
-    uint8_t max_traders;
     uint8_t months_under_siege;  // Track if city is under siege
     // Per-city cadence overrides. 0 = use defaults (32-day sea / 4-day land entry,
     // and the empire-wide ship_movement_delay range from empire.js).
@@ -67,6 +103,7 @@ struct empire_city {
     void remove_trader(int figure_id);
     bool can_trade() const;
     void set_trade_enabled(bool enabled);
+    bool change_type(const empire_city_type_changes_t& changes);
     void clear_trade_resources();
 
     bool shows_as_trade_city_on_map() const;
@@ -77,9 +114,10 @@ struct empire_city {
     const full_empire_object *get_full_empire_object() const;
     int get_free_slot(int max_traders) const;
     int get_free_slot() const;
+    int trader_size() const;
+    int free_trader_slot() const;
 
     void archive_load(archive arch);
-    void check_attributes();
 
     void set_vulnerable() {
         type = EMPIRE_CITY_FOREIGN_TRADING;
@@ -101,7 +139,8 @@ struct empire_city {
         return months_under_siege > 0;
     }
 };
-ANK_CONFIG_STRUCT(empire_city, is_sea_trade, max_traders, trade_limits, trader_entry_delay_override, ship_movement_delay_min, ship_movement_delay_max)
+ANK_CONFIG_STRUCT(empire_city, is_sea_trade, trader_entry_delay_override, ship_movement_delay_min,
+  ship_movement_delay_max)
 
 struct empire_city_handle {
     uint8_t handle = 0;

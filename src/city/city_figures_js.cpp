@@ -189,6 +189,10 @@ xstring __figure_phrase_text(int fid) {
         return {};
     }
 
+    if (figure_phrase_is_og(f->type)) {
+        return figure_phrase_text(*f);
+    }
+
     const auto sound_reaction = f->dcast()->get_sound_reaction(f->phrase_key);
     if (!sound_reaction.text.empty()) {
         return sound_reaction.text;
@@ -202,6 +206,26 @@ xstring __figure_phrase_text(int fid) {
     return xstring(fallback.c_str());
 }
 ANK_FUNCTION_1(__figure_phrase_text)
+
+bool __figure_phrase_has_other_problem(int fid) {
+    figure* f = figure_get(fid);
+    return f && f->is_valid() && figure_phrase_is_og(f->type) && figure_phrase_has_other_problem(*f);
+}
+ANK_FUNCTION_1(__figure_phrase_has_other_problem)
+
+void __figure_phrase_next_problem(int fid) {
+    figure* f = figure_get(fid);
+    if (f && f->is_valid() && figure_phrase_is_og(f->type)) {
+        figure_phrase_next_problem(*f);
+    }
+}
+ANK_FUNCTION_1(__figure_phrase_next_problem)
+
+int __figure_phrase_advisor(int fid) {
+    figure* f = figure_get(fid);
+    return (f && f->is_valid() && figure_phrase_is_og(f->type)) ? figure_phrase_advisor(*f) : 0;
+}
+ANK_FUNCTION_1(__figure_phrase_advisor)
 
 void __figure_info_set_help(int fid) {
     figure *f = figure_get(fid);

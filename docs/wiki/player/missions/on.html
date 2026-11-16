@@ -171,7 +171,7 @@
         <li><span class="obj-label">Housing level</span><span class="obj-value">10</span></li>
       </ul>
       <div class="deviation-note">
-        <strong>Matches the original:</strong> monument goal 18 — three small mastabas under the additive rating formula (<code>2.25·Σ+4.5</code>, weight 2 each → <code>2.25·6+4.5 = 18</code>, in <code>city/monuments.js</code>). After construction, dispatch burial provisions via the Overseer of Monuments: linen / luxury goods / timber ×8 and limestone / granite ×32 (from JS <code>burial_provisions</code>; win waits until these are sent). When a mastaba is finished and those provisions are complete, a one-shot <strong>funeral walker</strong> procession walks to that tomb.
+        <strong>Matches the original:</strong> monument goal 18 — three small mastabas (weight 2 each) plus the limestone and granite burial loads (32/32 each, one point apiece) under the original rating formula (<code>trunc(6.32·√points+0.5)</code> → <code>trunc(6.32·√8+0.5) = 18</code>, in <code>city/monuments.js</code>). After construction, dispatch burial provisions via the Overseer of Monuments: linen / luxury goods / timber ×8 and limestone / granite ×32 (from JS <code>burial_provisions</code>; win waits until these are sent). When a mastaba is finished and those provisions are complete, a one-shot <strong>funeral walker</strong> procession walks to that tomb.
       </div>
 
       <h2 id="events">Scripted events</h2>
@@ -182,7 +182,7 @@
       <div class="tutorial-step"><span class="step-tag">Year 7 · month 9</span><span>Clay pit flood (8% of pits).</span></div>
       <div class="tutorial-step"><span class="step-tag">Year 8</span><span>Limestone demand +9 at Iunet.</span></div>
       <div class="tutorial-step"><span class="step-tag">Year 9</span><span>Wage increase +7.</span></div>
-      <div class="tutorial-step"><span class="step-tag">Favour collapse</span><span>Pharaoh army 20 → 20 → 20 → 20 → 20.</span></div>
+      <div class="tutorial-step"><span class="step-tag">Favour collapse</span><span>At rating 0: Pharaoh army 20, then four more armies of 20 with it.</span></div>
 
       <h2 id="strategy">Strategy</h2>
       <p>On trades military pressure for economic and cultural demands: culture 40, three mastabas, and a limestone-export economy. Keep kingdom rating above zero — favour is five waves of size 20.</p>
@@ -244,7 +244,7 @@
             <ul class="event-list">
               <li><span class="ev-name">event_mission_start</span><span class="ev-desc"><code>empire.set_id(1)</code>; wire limestone / gamemeat leaves.</span><span class="ev-fn">mission17_on_start</span></li>
               <li><span class="ev-name">Requests / floods</span><span class="ev-desc">limestone×25 y3m5+; perfect flood→gamemeat×9; clay 8% y7m9.</span><span class="ev-fn">mission17_event_i5 / i1 / i2</span></li>
-              <li><span class="ev-name">Demand / wage / favour</span><span class="ev-desc">demand +6/+9; wage +7; favour 20×5.</span><span class="ev-fn">mission17_event_i0/i3/i4 / favour</span></li>
+              <li><span class="ev-name">Demand / wage / favour</span><span class="ev-desc">demand +6/+9; wage +7; favour 20×5.</span><span class="ev-fn">mission17_event_i0/i3/i4 / events[] favour</span></li>
             </ul>
           </div>
         </details>
@@ -263,7 +263,7 @@
               <li><strong>Men-nefer route 7</strong> — no pak polyline; 2-pt stub + deviation.</li>
               <li><strong>Empty map_obj idx=9</strong> skipped.</li>
               <li><strong>Briefing Byblos ivory</strong> — Byblos is non-trade foreign on this map; luxury via Saqqara.</li>
-              <li><strong>Favour</strong> JS-proxied until B2-migrate (five waves; helper only supports two).</li>
+              <li><strong>Favour</strong> — Kingdom army: at Kingdom rating 0 the engine sends the <code>EVENT_TRIGGER_BY_FAVOUR</code> invasion from <code>events[]</code> (<code>update_kingdom_favour</code>, <code>src/scenario/scenario_event_manager.cpp</code>): warnings for its <code>months_initial</code>, then the attack; its <code>on_completed_action</code> chain joins at the attack. Called off if the rating reaches 15 before it attacks; it can come again 12 months later. Chain pak i=15→16→17→18→19, 20 each; the last wave targets food.</li>
               <li><strong>LOST_TRADE Kyrene</strong> on limestone refuse — Kyrene is already non-trading foreign (pak as-is).</li>
             </ul>
           </div>

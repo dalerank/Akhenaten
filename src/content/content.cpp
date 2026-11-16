@@ -4,6 +4,7 @@
 #include "core/log.h"
 #include "platform/platform.h"
 #include "content/vfs.h"
+#include "content/dir.h"
 #include "platform/vita/vita.h"
 #include "platform/android/android.h"
 
@@ -166,6 +167,7 @@ int platform_file_manager_list_directory_contents(pcstr dir, int type, pcstr ext
 
 int platform_file_manager_set_base_path(pcstr path) {
     content_dir = path;
+    content_clear_path_cache();
 #if defined(GAME_PLATFORM_ANDROID)
     if (!path) {
         logs::error("set_base_path: path was not set. Akhenaten will probably crash.");

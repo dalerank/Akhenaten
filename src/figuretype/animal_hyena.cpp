@@ -107,7 +107,7 @@ int figure_hyena::prey_on_tile(tile2i tile) const {
 }
 
 void figure_hyena::reseed_crt_rand() {
-    srand((unsigned)time_get_millis());
+    anti_scum_reseed_from_clock(time_get_millis());
 }
 
 void figure_hyena::static_params::archive_init() {

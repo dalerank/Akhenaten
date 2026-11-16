@@ -1,4 +1,5 @@
-// event_request_cleared facts — ok / late (overdue fulfill) / refuse.
+// event_request_cleared facts — ok / late (overdue fulfill) / refuse; ok and late arrive after
+// the OG delivery months.
 // Uses RESOURCE_DEBEN so fulfill does not need a storage yard.
 //
 // Markers:
@@ -24,6 +25,13 @@ function request_cleared_expect(label, tag, resource, fulfilled, was_overdue) {
         return false
     }
     return true
+}
+
+// OG requests.c: dispatched goods arrive after 1..4 months.
+function test57_wait_delivery(seq) {
+    for (var m = 0; m < 4 && __test_request_cleared_seq() <= seq; m++) {
+        __test_process_scenario_events()
+    }
 }
 
 function run_test() {
@@ -58,7 +66,7 @@ function run_test() {
 
     __scenario_request_dispatch(0)
     __test_process_events()
-    __test_process_scenario_events()
+    test57_wait_delivery(seq0)
 
     if (__test_request_cleared_seq() <= seq0) {
         __log_info_native('[test:57] ok path: no cleared emit')
@@ -98,7 +106,7 @@ function run_test() {
 
     __scenario_request_dispatch(0)
     __test_process_events()
-    __test_process_scenario_events()
+    test57_wait_delivery(seq1)
 
     if (__test_request_cleared_seq() <= seq1) {
         __log_info_native('[test:57] late path: no cleared emit')

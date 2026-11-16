@@ -86,14 +86,14 @@
         <li><span class="obj-label">Population</span><span class="obj-value">6 000</span></li>
         <li><span class="obj-label">Culture</span><span class="obj-value">50</span></li>
         <li><span class="obj-label">Prosperity</span><span class="obj-value">45</span></li>
-        <li><span class="obj-label">Monuments</span><span class="obj-value">15 (Mausoleum W=5)</span></li>
+        <li><span class="obj-label">Monuments</span><span class="obj-value">15 (Mausoleum 5 + burial weapons 16/16 → 15)</span></li>
         <li><span class="obj-label">Kingdom</span><span class="obj-value">60</span></li>
         <li><span class="obj-label">Housing level</span><span class="obj-value">10</span></li>
         <li><span class="obj-label">Burial</span><span class="obj-value">weapons×16 · pottery×8 · beer×8 · gems×16</span></li>
       </ul>
 
       <h2 id="events">Scripted events (summary)</h2>
-      <p>Troop requests to northern cities; henna ask → conquer <strong>Baki</strong> → NEW_TRADE sandstone (and Sawu). Timed Kushite invasions: packed sea locs 3/4 + OOB navy → <code>via_sea</code> (E3c). Favour Pharaoh army ×60→×60. Chickpeas request. Fort cluster between the cataracts is gameplay, not a rating.</p>
+      <p>Troop requests to northern cities; henna ask → conquer <strong>Baki</strong> → NEW_TRADE sandstone (and Sawu). Timed Kushite invasions: packed sea locs 3/4 + OOB navy → <code>via_sea</code> (E3c). Favour Egypt army ×60→×60 (pak i=35→36) is an <code>events[]</code> BY_FAVOUR chain: at Kingdom rating 0 the engine sends it (<code>event_manager_t::update_kingdom_favour</code>, OG <code>city/kingdom.c</code> <code>city_emperor_update</code>): warnings, then the attack; chained waves attack with it; called off if the rating reaches 15 first; it can come again 12 months later. Chickpeas request. Fort cluster between the cataracts is gameplay, not a rating.</p>
 
       <div class="dev-section">
         <h2 id="dev">Developer reference</h2>
@@ -101,8 +101,9 @@
           <summary>Mission script</summary>
           <div class="details-body">
             <p><span class="file-ref">src/scripts/mission/m_030_heh.js</span> · import in <span class="file-ref">src/scripts/missions.js</span></p>
+            <p>OG sends a pak invasion with loc 9+ by sea from sea point loc&nbsp;&minus;&nbsp;9, with the event&rsquo;s <code>phrase_var</code> warships; the JS raid passes them as <code>via_sea</code> / <code>sea_point</code> / <code>warships</code>: Kushite i=18 ×16 / 2 warships (loc 10 &rarr; sea[1]), i=20 ×38 / 6, i=21 ×40 / 4, i=23 ×20 / 2, i=24 ×60 / 6, i=30 ×72 / 6, i=31 ×72 / 7 (loc 9 &rarr; sea[0]). <code>mission30_apply_invasion_loc</code>.</p>
             <p>Empire id <strong>20</strong> (pak). Map <span class="file-ref">data/maps/m_030_heh.map</span>. Rank 10. Scenario enemy <code>ENEMY_6_KUSHITE</code>; favour via <code>ENEMY_3_EGYPTIAN</code>. Dump 2026-07-26.</p>
-            <p><code>choice[]</code> → Khmun/Sauty (g144 64/65/66); sibling Bubastis. SKIP: empty map_obj idx=9. Soft: sea invasion points. Monuments pak 15 = W=5.</p>
+            <p><code>choice[]</code> → Khmun/Sauty (g144 64/65/66); sibling Bubastis. SKIP: empty map_obj idx=9. Soft: sea invasion points. Monuments pak 15 = Mausoleum (5) + burial weapons (1) → <code>trunc(6.32·√6+0.5)</code>.</p>
           </div>
         </details>
         <details>

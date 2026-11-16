@@ -91,7 +91,6 @@ public:
 
     virtual void on_place_update_tiles(int orientation, int variant) override;
     virtual void on_post_load() override;
-    virtual void on_destroy() override;
     virtual void update_day() override;
     virtual void update_map_orientation(int map_orientation) override;
     virtual int building_image_get() const override;
@@ -102,7 +101,6 @@ public:
     virtual bool need_artisan() override;
     virtual bool need_workers() const override;
     virtual bool needs_resources() const override;
-    virtual bool accepts_yard_delivery(e_resource resource) const override;
     virtual void add_workers(figure_id fid) override;
     virtual void remove_worker(figure_id fid) override;
     virtual const monument& config() const override;

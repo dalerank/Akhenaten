@@ -210,19 +210,6 @@ void building_industry_update_farms(void) {
     });
 }
 
-void building_curse_farms(int big_curse) {
-    buildings_valid_farms_do([big_curse](building &b) {
-        building_farm *farm = b.dcast_farm();
-        if (!farm) {
-            return;
-        }
-        b.progress = 0;
-        b.blessing_days_left = 0;
-        b.curse_days_left = big_curse ? 48 : 4;
-        farm->update_tiles_image();
-    });
-}
-
 void building_workshop_add_raw_material(building* b, int amount, e_resource res) {
     if (b->id > 0 && b->is_workshop() && b->need_resource(res)) {
         if (b->input.resource == res || b->input.resource_second == res) {

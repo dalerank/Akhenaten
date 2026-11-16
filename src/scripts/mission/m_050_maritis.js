@@ -25,7 +25,6 @@ mission50 { // Maritis - Caesar and Cleopatra
 	initial_funds [22000, 14670, 11000, 7370, 5830]
 	rescue_loans [3000, 2000, 1500, 1005, 795]
 	debt_interest [4, 5, 7, 9, 11]
-	house_tax_multipliers [300, 200, 150, 100, 75]
 
 	env {
 		has_animals : true
@@ -524,8 +523,6 @@ mission50 { // Maritis - Caesar and Cleopatra
 			cost_to_open : 90
 			is_sea_trade : false
 			type : EMPIRE_CITY_EGYPTIAN_TRADING
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_POTTERY, RESOURCE_PAPYRUS ]
 			buys [ RESOURCE_LUXURY_GOODS, RESOURCE_TIMBER ]
 			route_limits [
@@ -544,8 +541,6 @@ mission50 { // Maritis - Caesar and Cleopatra
 			cost_to_open : 780
 			is_sea_trade : true
 			type : EMPIRE_CITY_FOREIGN_TRADING
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_LINEN, RESOURCE_LUXURY_GOODS, RESOURCE_TIMBER, RESOURCE_COPPER ]
 			buys [ RESOURCE_GRAIN, RESOURCE_POTTERY, RESOURCE_PAPYRUS ]
 			route_limits [
@@ -577,8 +572,6 @@ mission50 { // Maritis - Caesar and Cleopatra
 			cost_to_open : 185
 			is_sea_trade : false
 			type : EMPIRE_CITY_EGYPTIAN_TRADING
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_GRAIN ]
 			buys [ RESOURCE_TIMBER, RESOURCE_REEDS ]
 			route_limits [
@@ -596,8 +589,6 @@ mission50 { // Maritis - Caesar and Cleopatra
 			cost_to_open : 190
 			is_sea_trade : false
 			type : EMPIRE_CITY_EGYPTIAN_TRADING
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_GRAIN, RESOURCE_MEAT, RESOURCE_WEAPONS, RESOURCE_TIMBER ]
 			buys [ RESOURCE_LINEN, RESOURCE_PAPYRUS ]
 			route_limits [

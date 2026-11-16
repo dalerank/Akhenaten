@@ -2,17 +2,6 @@
 
 #include "building/building_entertainment.h"
 
-struct pavilion_place_offset {
-    struct item {
-        e_building_type type = BUILDING_NONE;
-        vec2i offset;
-        bool main;
-    };
-    svector<item, 8> items;
-};
-ANK_CONFIG_STRUCT(pavilion_place_offset::item, type, offset, main)
-ANK_CONFIG_STRUCT(pavilion_place_offset, items)
-
 struct pavilion_preview_offset {
     vec2i stand, stand_b, stand_e, booth;
     int stand_b_img = 0, stand_e_img = 0;
@@ -34,20 +23,21 @@ public:
         int musician_tile_s = 0;
         int musician_tile_e = 0;
 
-        pavilion_preview_offset preview_dir[8];
-        pavilion_place_offset place_dir[8];
+        svector<pavilion_preview_offset, 8> preview_dir;
+        svector<venue_place_offset, 8> place_dir;
 
         void archive_load(archive arch);
     } BUILDING_STATIC_DATA_T;
 
     virtual void on_create(int orientation) override;
     virtual void update_day() override;
+    virtual void on_post_load() override;
     virtual void update_month() override;
     virtual void on_place_update_tiles(int orientation, int variant) override;
-    virtual void on_place_checks() override;
     virtual building_pavilion *dcast_pavilion() override { return this; }
     virtual e_sound_channel_city sound_channel() const override { return SOUND_CHANNEL_CITY_PAVILION; }
     virtual bool draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) override;
+    virtual void update_sprite_anims() override;
     virtual void on_undo() override;
     virtual void update_map_orientation(int map_orientation) override;
     virtual bool get_route_citizen_land_type(int grid_offset, int &land_result) const override;
@@ -55,4 +45,4 @@ public:
 
     virtual void spawn_figure() override;
 };
-ANK_CONFIG_STRUCT(building_pavilion::static_params, meta);
+ANK_CONFIG_STRUCT(building_pavilion::static_params, preview_dir, place_dir);

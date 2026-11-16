@@ -120,7 +120,7 @@ public:
         uint8_t preexisting;   // sealed carry-over tomb (no steal)
         uint8_t causeway_length; // complex only: land tiles along strip (save v182+)
         uint8_t causeway_dir;    // 0=N 1=E 2=S 3=W
-        uint16_t lamp_stock;     // royal tomb working stock (≤700); unused elsewhere
+        uint16_t lamp_stock;     // royal tomb lamp stock (main part); unused elsewhere
         // Burial goods loads at this tomb (BP1 ledger). Fits former bind____skip(36).
         uint8_t burial_stock[RESOURCES_MAX];
         // Ephemeral (not saved): working figure id set each tick; cleared daily.
@@ -141,6 +141,8 @@ public:
     virtual bool deliver_resource(e_resource resource, int amount);
     virtual int needs_resource(e_resource resource, int phase) const;
     virtual int needs_resource(e_resource resource) const;
+    // Material still to deliver until the monument is finished (OG monuments_unplaced_resource_need, placed slot).
+    int remaining_resource_need(e_resource resource) const;
     virtual bool needs_resources() const;
     virtual int progress();
     virtual void set_phase(int phase);
@@ -154,7 +156,6 @@ public:
     int phase_worker_count(int ph_id, e_figure_type type) const;
     int phase_bricks_per_block(int ph_id) const;
     int phase_for_blocks_done(int blocks_done) const;
-    virtual void add_delivery(int figure_id, int resource_id, int num_loads);
     virtual bool requires_resource(e_resource resource) const;
     virtual span_const<uint16_t> active_workers() const;
     int workers_assigned() const;
@@ -183,7 +184,8 @@ public:
     virtual int try_assign_bricklayer(figure_id /*fid*/) { return 0; }
     virtual void place_bricklayer_block(figure_id /*fid*/) {}
     virtual bool need_artisan();
-    virtual bool accepts_yard_delivery(e_resource /*resource*/) const { return true; }
+    // OG artisans guild: a trip carries one load of clay (tomb plaster stage) or of paint (painting stage).
+    virtual bool need_artisan_with(e_resource material);
     virtual bool is_unfinished() const;
     virtual bool is_finished() const;
     virtual xstring demolish_blocked_message() const override;
@@ -198,6 +200,10 @@ public:
     int burial_stock_total() const;
     int add_burial_stock(e_resource r, int n);
     bool take_burial_stock(e_resource r, int n);
+
+    // Save v196+ layout of the OG block-engine monuments (pyramids, mastabas).
+    // alt_image_base: first image alt_image is chosen from (0 when the type has none).
+    void bind_block_engine_state(io_buffer* iob, int alt_image_base);
 };
 
 // City required/dispatched stay UI/win SoT; tomb burial_stock is the steal ledger.
@@ -222,8 +228,6 @@ enum module_type {
 bool building_monument_has_unfinished(std::initializer_list<e_building_type> types,
   bool main_parts_only = false, bool include_just_placed = false);
 
-bool building_monument_has_delivery_for_worker(int figure_id);
-
 // Burial tombs (mastaba / pyramid / …) vs non-tomb monuments (sphinx / obelisk / …).
 // Shared by the tomb robber and the funeral walker.
 bool building_monument_is_non_tomb_type(e_building_type type);
@@ -235,9 +239,6 @@ inline bool building_monument_is_alive(const building &b) {
         && (b.state == BUILDING_STATE_VALID || b.state == BUILDING_STATE_MOTHBALLED);
 }
 
-int building_monument_resource_in_delivery(building *b, int resource_id);
-void building_monument_remove_delivery(int figure_id);
-void building_monument_remove_all_deliveries(int monument_id);
 int building_monument_get_id(e_building_type type);
 void building_monument_finish_monuments();
 

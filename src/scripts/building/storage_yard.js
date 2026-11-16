@@ -27,8 +27,6 @@ building_storage_yard {
     fire_risk: [4]
     damage_risk: [1]
 
-    monument_sled_max_load: 400
-    marble_monument_min_haul: 400
     flags {
         is_industry: true
         work_anim: true

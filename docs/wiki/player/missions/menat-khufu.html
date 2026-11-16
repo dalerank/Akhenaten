@@ -91,13 +91,13 @@
         <li><span class="obj-label">Burial</span><span class="obj-value">pottery ×8 · beer ×32 · linen ×32 · papyrus ×8 · granite ×32</span></li>
       </ul>
       <div class="deviation-note">
-        <strong>Monuments 21:</strong> 2×Small Obelisk (2+2) + Small mudbrick (4) →
-        <code>trunc(2.25·8+4.5)=22</code> ≥ pak goal 21
+        <strong>Monuments 21:</strong> 2×Small Obelisk (1+1) + Small mudbrick (4) + burial beer 32/16, linen 32/16, granite 32/32 (5) →
+        <code>trunc(6.32·√11+0.5)=21</code> = pak goal
         (<span class="file-ref">src/scripts/city/monuments.js</span>).
       </div>
 
       <h2 id="events">Scripted events (summary)</h2>
-      <p>Frequent food requests (pomegranates and figs) with kingdom rating outcomes. Linen demand increase at Dakhla. Favour Pharaoh army waves ×40→×40 when kingdom rating collapses. No timed Egyptian/loyalist invasion events in the pak dump (unlike the civil-war sibling missions).</p>
+      <p>Frequent food requests (pomegranates and figs) with kingdom rating outcomes. Linen demand increase at Dakhla. Favour Pharaoh army waves ×40→×40 (no invasion points: they enter at the map exit). It is the OG kingdom army: when the kingdom rating falls to <strong>0</strong>, the engine sends the first favour invasion — announcement and reminders first, the attack 9 months later; chained waves follow as soon as the previous wave attacks. It is called off if the rating climbs back to <strong>15</strong> before it attacks, and can come again 12 months later while the rating stays at 0. No timed Egyptian/loyalist invasion events in the pak dump (unlike the civil-war sibling missions).</p>
 
       <div class="dev-section">
         <h2 id="dev">Developer reference</h2>
@@ -105,6 +105,7 @@
           <summary>Mission script</summary>
           <div class="details-body">
             <p><span class="file-ref">src/scripts/mission/m_026_menat_khufu.js</span> · import in <span class="file-ref">src/scripts/missions.js</span></p>
+            <p>Favour army: <code>events[]</code> pak i=38→39 (<code>EVENT_TRIGGER_BY_FAVOUR</code> master, <code>ONLY_VIA_EVENT</code> chain), sent by <code>event_manager_t::update_kingdom_favour</code> (OG <code>city/kingdom.c</code> <code>city_emperor_update</code>); no mission JS.</p>
             <p>Empire id <strong>1</strong> (pak). Map <span class="file-ref">data/maps/m_026_menat_khufu.map</span>. Rank 9. Scenario enemy <code>ENEMY_6_KUSHITE</code>; favour waves via <code>ENEMY_3_EGYPTIAN</code>. Dump 2026-07-26.</p>
             <p><code>next_mission : 27</code> (funnel with Kebet → <a href="itjtawy.html">Itjtawy</a>). SKIP: empty map_obj idx=11; orphan MESSAGE leaves; orphan DEMAND i=6.</p>
           </div>

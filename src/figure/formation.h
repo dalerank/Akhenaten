@@ -87,6 +87,7 @@ struct formation {
     int16_t morale;
     uint8_t months_from_home;
     uint8_t months_low_morale;
+    uint8_t ticks_without_target; // OG: > 48 enemy updates without a target building -> rout
     uint8_t months_very_low_morale;
 
     /* Figures */
@@ -179,7 +180,7 @@ struct formations_t {
     int dispatch_batalion_to_distant_battle(formation *m);
     void batalions_update();
 
-    void update_enemy_formation(formation *m, int *pharaoh_batalion_distance, attacked_buildings &attackd_buildings);
+    void update_enemy_formation(formation* m, int* target_found);
 
     void enemy_update();
 };
@@ -239,5 +240,5 @@ int formation_add_figure(int formation_id, int figure_id, int deployed, int dama
 
 void formation_move_herds_away(tile2i tile);
 
-void formation_update_all();
+void formation_update_all(bool skip_morale);
 int formation_rioter_get_target_building(int* x_tile, int* y_tile);

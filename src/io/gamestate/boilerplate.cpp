@@ -1,5 +1,7 @@
 #include "boilerplate.h"
 #include "boilerplate_detail.h"
+#include "io/og_save/og_save.h"
+#include "io/og_save/og_load.h"
 
 #include "building/construction/build_planner.h"
 #include "building/building_granary.h"
@@ -249,13 +251,63 @@ bool GamestateIO::load_mission(const int scenario_id, bool start_immediately) {
     return true;
 }
 
+bool GamestateIO::load_og_savegame(pcstr full_path, bool start_immediately) {
+    og::savegame original;
+    std::string error;
+    if (!og::read_savegame_file(full_path, original, error)) {
+        logs::error("[og-save] %s: %s", full_path, error.c_str());
+        return false;
+    }
+
+    if (original.missing_chunks) {
+        logs::info("[og-save] %s: %d extended chunks are empty in the file, read as zeros", full_path,
+          original.missing_chunks);
+    }
+
+    // Scenario rules, events and the empire come from our mission script; the save adds the city on top.
+    const int mission = og::mission_id(original);
+    if (mission < 0) {
+        logs::error("[og-save] %s: custom scenario saves are not supported yet", full_path);
+        return false;
+    }
+    if (!load_mission(mission, false)) {
+        logs::error("[og-save] %s: mission %d failed to load", full_path, mission);
+        return false;
+    }
+
+    og::load_report report;
+    og::load_grids(original);
+    og::load_world(original);
+    og::load_city_state(original);
+    og::load_buildings(original, report);
+    og::load_formations(original, report);
+    og::load_events(original, report);
+    logs::info("[og-save] %s: mission %d, %d buildings (%d dropped, %d without per-type data), %d figures dropped, "
+               "%d legions (%d formations dropped), %d events synced (%d unmatched)",
+      full_path, mission, report.buildings, report.buildings_dropped, report.buildings_runtime_unmapped,
+      report.figures_dropped, report.legions, report.formations_dropped, report.events_synced, report.events_unmatched);
+
+    game.session.last_loaded = e_session_save;
+    game.session.last_loaded_mission = full_path;
+    GamestateLoadDetail::post_load();
+    og::load_after_post_load(original);
+
+    if (start_immediately) {
+        start_loaded_file();
+    }
+    return true;
+}
+
 bool GamestateIO::load_savegame(pcstr filename_short, bool start_immediately) {
-    // concatenate string
     bstring256 full = fullpath_saves(filename_short).resolve();
 
     if (!vfs::file_exists(full)) {
         logs::error("Load game: file not found %s", full.c_str());
         return false;
+    }
+
+    if (get_format_from_file(filename_short) == FILE_FORMAT_SAVE_FILE) {
+        return load_og_savegame(full.c_str(), start_immediately);
     }
 
     // read file
@@ -365,7 +417,6 @@ void GamestateIO::start_loaded_file() {
         g_empire_traders.init();
 
         // set up events
-        scenario_earthquake_init();
         scenario_revolt_init();
         scenario_kingdome_change_init();
         scenario_criteria_init_max_year();
@@ -380,13 +431,15 @@ void GamestateIO::start_loaded_file() {
 
     g_camera.init();
     map_orientation_update_buildings();
-    map_terrain_init_outside_map();
+    // Corners first: the off-map ring mirrors them, and mirroring corners a later load has already cleared
+    // would give that load a different ring.
     map_normalize_outside_diamond_all();
+    map_terrain_init_outside_map();
 
     // river / garden tiles refresh
     build_terrain_caches();
     map_basin_rebuild();
-    canals_reset_decay_phase();
+    canals_reset_hold_phase();
 
     // routing
     map_routing_update_all();

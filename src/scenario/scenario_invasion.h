@@ -43,7 +43,6 @@ struct invasion_warning_t {
     int months_to_go;
     int invasion_id;
 };
-ANK_CONFIG_PROPERTY(invasion_warning_t, in_use, handled, pos, image_id)
 
 struct invasion_opts_t {
     e_attack_faction mode = ATTACK_TYPE_ENEMIES;
@@ -63,6 +62,10 @@ struct invasion_opts_t {
     // invasion_point in invasion_points_sea / water — never auto land-empty→sea.
     bool via_sea = false;
     int8_t sea_point_index = -1; // -1 = pick random valid sea point
+    // OG invasion_start_sea: warships launched before the transports (event phrase_var, cheat size / 4).
+    int warships = 0;
+    // false: the caller posts the attack message (OG event path posts message 133 with event phrases).
+    bool announce = true;
 };
 
 // Map pak/JS invasion_attack_target (EVENT_ATTACK_TARGET_*) → formation attack_type.
@@ -146,6 +149,8 @@ extern const int LOCAL_UPRISING_NUM_ENEMIES[20];
 
 
 bool scenario_invasion_exists_upcoming();
+int city_own_warships();
+bool scenario_invasion_city_undefended();
 
 int scenario_invasion_count();
 
@@ -162,6 +167,24 @@ int map_invasion_point(tile2i point);
 // Adjusts opts.size in-place (difficulty clamp) before spawning.
 tile2i scenario_start_invasion_impl(invasion_opts_t &opts);
 tile2i scenario_start_sea_invasion_impl(invasion_opts_t &opts);
+
+struct invasion_army_spawn_t {
+    int formations = 0;
+    int last_wait_ticks = 0;
+};
+// OG invasion.c scenario_invasion_start / enemy_ships.c enemy_transport_unload: `size` soldiers split over the
+// three type groups, up to three formations each, at `tile`; last_wait_ticks is the wait after the last one.
+invasion_army_spawn_t scenario_invasion_spawn_army(const invasion_opts_t& opts, int size, tile2i tile, int orientation,
+  int invasion_sequence);
+// OG invasion.c scenario_invasion_landing_message: the alert when a transport of an invasion event lands.
+void scenario_invasion_landing_message(int invasion_id, tile2i tile, int invasion_sequence);
+
+// OG invasion_land_point(INVASION_POINT_RANDOM): masks the current random1_7bit without advancing the RNG.
+int scenario_invasion_land_point_index();
+// OG invasion_sea_point: deterministic forward scan over invasion_points_sea, wrapping.
+int scenario_invasion_sea_point_index(int start);
+// OG invasion_start_sea landing roll; -1 (and no RNG step) when there are no disembark points.
+int scenario_invasion_landing_index();
 
 // Force bind/history outcome for a spawn seq (auto-resolve, cheats, etc.).
 // COMPLETED → on_completed_tag; DEFEAT → on_defeat_tag; NONE → clear bind, no tags.

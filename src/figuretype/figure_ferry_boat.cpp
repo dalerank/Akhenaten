@@ -4,6 +4,7 @@
 #include "figure/route.h"
 #include "city/city_figures.h"
 #include "building/building_ferry.h"
+#include "building/monument_pyramid_figure.h"
 #include "grid/road_access.h"
 #include "grid/routing/routing.h"
 #include "grid/terrain.h"
@@ -42,6 +43,12 @@ int ferry_follower_leader_id(figure &f) {
             cur = figure_get(cur->leading_figure_id);
         }
         return (cur && cur->type == FIGURE_MARKET_BUYER) ? cur->id : -1;
+    }
+    case FIGURE_SLED:
+    case FIGURE_SLED_PULLER: {
+        int position = 0;
+        const figure_id leader = pyramid_figure_find_train_leader(f.id, &position);
+        return leader ? leader : -1;
     }
     default:
         return -1;

@@ -35,6 +35,7 @@ localization_en = [
   {key:"#TR_CONFIG_HEADER_BUILDING_CHANGES", text:"Building changes"}
   {key:"#TR_CONFIG_HEADER_RESOURCE_CHANGES", text:"Resource changes"}
   {key:"#TR_CONFIG_SHOW_INTRO_VIDEO", text:"Play intro videos"}
+  {key:"#TR_CONFIG_AUTO_UPDATE", text:"Download new builds automatically"}
   {key:"#TR_CONFIG_HIDE_NEW_GAME_TOP_MENU", text:"Hide top menu new game button"}
   {key:"#TR_CONFIG_SAVE_YEAR_KINGDOME_RATING", text:"Save kingdom rating on yearly update"}
   {key:"#TR_CONFIG_SIDEBAR_INFO", text:"Extra information in the control panel"}
@@ -85,9 +86,12 @@ localization_en = [
   {key:"#TR_CONFIG_GRANARIES_GET_DOUBLE", text:"Double the capacity of cart pushers from getting granaries"}
   {key:"#TR_CONFIG_DOCK_DOUBLE_HAUL", text:"Double the haul amount of dockers (800 per trip)"}
   {key:"#TR_CONFIG_DOCK_SMART_ROUTING", text:"Smart dock routing: score pier by orders/goods, hop to a better free pier (not original Pharaoh)"}
+  {key:"#TR_CONFIG_SLED_PULLERS_FLEE", text:"Sled pullers drop the sled and flee to the map exit when enemies come near; the sled stays where it was left (not original Pharaoh)"}
   {key:"#TR_CONFIG_FOLLOWER_RUNAWAY", text:"Followers flee to the map exit when their leader dies (caravan donkeys, delivery boys; not original Pharaoh)"}
   {key:"#TR_CONFIG_ROBBER_REMAKE", text:"Mugger remake: steal on spawn, always head for the palace, ambient mansion theft (not original Pharaoh)"}
   {key:"#TR_CONFIG_TOMB_ROBBER_REMAKE", text:"Tomb-robber remake: monthly spawn, flee/arrest, fixed kingdom hit (not original Pharaoh)"}
+  {key:"#TR_CONFIG_POLICE_WEAPONS", text:"Police stations fetch weapons from storage yards, each constable takes one (not original Pharaoh)"}
+  {key:"#TR_CONFIG_WALKER_PHRASES_REMAKE", text:"Walker phrases remake: each walker picks its own lines, soldiers and enemies talk too (not original Pharaoh)"}
   {key:"#TR_CONFIG_PROTESTOR_HUNT_NOBLES", text:"Protestors hunt noble citizens and manor/estate houses (not original Pharaoh)"}
   {key:"#TR_CONFIG_FISHING_BOAT_REMAKE", text:"Fishing-boat remake: faster with staff, half load, sticky spots, soft lose-home (not original Pharaoh)"}
   {key:"#TR_CONFIG_BAZAAR_MULTI_BUYERS", text:"Bazaars can send two buyers at once (food + goods)"}
@@ -106,7 +110,7 @@ localization_en = [
   {key:"#TR_CONFIG_FORT_REFUND_CARRY_TROOPS", text:"Fort remake: demolishing a fort returns troops carried over from the previous mission (not original Pharaoh)"}
   {key:"#TR_CONFIG_STATUE_VARIANTS", text:"Statue remake: random starting look, separate rotate and variant keys, extra statue looks (not original Pharaoh)"}
   {key:"#TR_CONFIG_GUILD_STATUE_SERVICE", text:"Guild remake: idle guild workers tend statues (not original Pharaoh)"}
-  {key:"#TR_CONFIG_MASTABA_CLAY_DELIVERY", text:"Mastaba remake: storage yards deliver clay listed in brick phases (original only hauled bricks)"}
+  {key:"#TR_CONFIG_MASTABA_CLAY_DELIVERY", text:"Mastaba remake: laborers also haul the clay listed in brick phases on sled trains (original only hauled bricks)"}
   {key:"#TR_CONFIG_RECRUIT_NEAREST_FORT", text:"Recruiter remake: recruits go to the nearest fort instead of chariots first, then infantry, then archers (not original Pharaoh)"}
   {key:"#TR_CONFIG_TRADER_CAPACITY_1600", text:"Larger trader capacity (1600 per visit; not yearly empire limit)"}
   {key:"#TR_CONFIG_TRADER_PER_GOOD_1600", text:"New Era: traders buy/sell up to 1600 of each good per visit (not yearly limit; not total-bag only)"}
@@ -124,6 +128,7 @@ localization_en = [
   {key:"#TR_CONFIG_LABOR_CATEGORY_SPLIT", text:"Enhanced: split Storage yards/docks from Industry in the labor advisor"}
   {key:"#TR_CONFIG_WALKER_SPAWN_BOOST", text:"Enhanced: faster service walker respawn (understaffed less harsh)"}
   {key:"#TR_CONFIG_WALKER_MOVE_BOOST", text:"Enhanced: faster citizen walkers / shorter cart wait"}
+  {key:"#TR_CONFIG_CITY_AMBIENT", text:"Enhanced: positional city ambience (nearby buildings, crossfades)"}
   {key:"#TR_CONFIG_FESTIVAL_CALENDAR", text:"Enhanced: seasonal calendar rites (extra festival themes)"}
   {key:"#TR_CONFIG_LOCAL_CULTS", text:"Enhanced: local cults via temple complex altar/oracle"}
   {key:"#local_cult_anubis", text:"Anubis"}
@@ -199,13 +204,12 @@ localization_en = [
   {key:"#TR_CONFIG_INDUSTRY_NEARBY_HOUSES", text:"Industry labor access from houses in building nearby_houses_radius (weekly; remake; original uses labor seekers)"}
   {key:"#TR_CONFIG_DELIVER_ONLY_TO_ACCEPTING_GRANARIES", text:"Food isn't delivered to getting granaries"}
   {key:"#TR_CONFIG_ALL_HOUSES_MERGE", text:"All houses merge"}
-  {key:"#TR_CONFIG_WINE_COUNTS_IF_OPEN_TRADE_ROUTE", text:"Open trade route count as providing different wine type"}
   {key:"#TR_CONFIG_RANDOM_COLLAPSES_TAKE_MONEY", text:"Randomly collapsing clay pits and iron mines take some money instead"}
   {key:"#TR_CONFIG_DISASTER_EVENTS_USE_AMOUNT", text:"Clay flood / gold collapse destroy amount buildings from event"}
   {key:"#TR_CONFIG_MULTIPLE_BARRACKS", text:"Allow building multiple barracks."}
   {key:"#TR_CONFIG_NOT_ACCEPTING_WAREHOUSES", text:"Warehouses don't accept anything when built"}
   {key:"#TR_CONFIG_HOUSES_DONT_EXPAND_INTO_GARDENS", text:"Houses don't expand into gardens"}
-  {key:"#TR_CONFIG_FIX_IRRIGATION_RANGE", text:"Fix irrigation range"}
+  {key:"#TR_CONFIG_IRRIGATION_RANGE_5X5", text:"Farms irrigated from a 5x5 area"}
   {key:"#TR_CONFIG_FIX_FARM_PRODUCING", text:"Fix farm producing"}
   {key:"#TR_CONFIG_EMPIRE_MAP_RUNS_SIMULATION", text:"Run city simulation while empire map is open"}
   {key:"#TR_CONFIG_CAMERA_KEEP_INERTIA", text:"Camera keep inertia"}
@@ -216,6 +220,9 @@ localization_en = [
   {key:"#TR_CONFIG_MULTIPLE_GATHERERS", text:"Multiple gatherers"}
   {key:"#TR_CONFIG_WOOD_CUTTER_SINGLE_GATHERER", text:"Wood cutters: one lumberjack + any-tree spawn gate (remake; original 1/2/3 by staffing, grown trees only)"}
   {key:"#TR_CONFIG_FIREMAN_RETURNING", text:"Fireman returning after fight fire"}
+  {key:"#TR_CONFIG_FISHING_POINTS_MONTHLY_RESPAWN", text:"Fishing spots respawn every month"}
+  {key:"#TR_CONFIG_HOUSE_EVOLVE_DELAY", text:"Houses evolve at most once every 7 days"}
+  {key:"#TR_CONFIG_FOOD_CONSUMPTION_REMAKE", text:"Houses eat their level's share of food twice a month"}
   {key:"#TR_CONFIG_ARCHITECT_PATROL_MOST_DAMAGED", text:"Architects path to most damaged buildings"}
   {key:"#TR_CONFIG_OG_ARCHITECT", text:"Original Pharaoh architect (subtract damage, repair walls)"}
   {key:"#TR_CONFIG_OG_FIREMAN", text:"Original Pharaoh fireman (subtract fire risk, detect fires farther)"}
@@ -227,6 +234,7 @@ localization_en = [
   {key:"#TR_CONFIG_CH_CLAY_PIT_FIRE_RISK_REDUCED", text:"Clay pit fire risk reduced"}
   {key:"#TR_CONFIG_CITY_HAS_ANIMALS", text:"City has animals" }
   {key:"#TR_CONFIG_GOLDMINE_REDUCED_PRODUCTION", text:"Gold mine produces at 1/10 worker rate"}
+  {key:"#TR_CONFIG_INDUSTRY_REMAKE_RATES", text:"Workshops yield 20-50 per cycle, copper and gem mines and quarries work at half or third speed"}
   {key:"#TR_CONFIG_NEW_TAX_COLLECTION_SYSTEM", text:"New tax collection system"}
   {key:"#TR_CONFIG_SMALL_HUT_NOT_CREATE_EMIGRANT", text:"Small hut houses not create enimgrant"}
   {key:"#TR_CONFIG_DELIVERY_BOY_GOES_TO_MARKET_ALONE", text:"Delivery boy goes to market alone"}
@@ -465,13 +473,13 @@ localization_en = [
   {key:"#warship_moving_to_position", text:"Moving to position"}
   {key:"#warship_moving_to_position_text", text:"The ship is sailing to the position you designated and will hold there until ordered otherwise."}
   {key:"#main_menu_update_downloading", text:"Downloading update..."}
-  {key:"#main_menu_update_opening_page", text:"Opening download page..."}
   {key:"#main_menu_update_now", text:"update now"}
   {key:"#main_menu_update_later", text:"later"}
+  {key:"#main_menu_update_restart", text:"restart now"}
+  {key:"#main_menu_update_ready", text:"The update is installed when the game closes."}
+  {key:"#main_menu_update_failed", text:"The update could not be downloaded, see the log."}
+  {key:"#main_menu_new_build_date", text:"New build from ${date}"}
   {key:"#main_menu_loading_commits", text:"Loading recent commits..."}
-  {key:"#main_menu_new_build", text:"New build: ${commit} (you have ${local})"}
-  {key:"#main_menu_updated", text:"Updated"}
-  {key:"#main_menu_build_up_to_date", text:"Build ${build} (up to date)"}
   {key:"#message_dialog_distant_battle", text:"Distant Battle"}
   {key:"#mods_window_title", text:"Mods"}
   {key:"#mods_window_unpack_scripts", text:"Unpack scripts"}
@@ -528,6 +536,7 @@ localization_en = [
   {key: "#popup_dialog_delete_bridge", text:"Demolishing a bridge" }
   {key: "#popup_dialog_quit_without_saving", text:"Quit" }
   {key: "#popup_dialog_map_file_missing", text:"Map file missing" }
+  {key: "#popup_dialog_save_mods_differ", text:"Saved with other mods" }
   {key: "#exit_without_saving", text:"Exit without saving?" }
   {key: "#popup_dialog_no_festival_square", text:"Festival: No Festival Square." }
   {key: "#popup_dialog_delete_dynasty", text:"Delete Dynasty?" }
@@ -796,13 +805,18 @@ localization_en = [
   {key: "#building_removed_fort_archers", group:19, id:183}
   {key: "#building_removed_fort_charioteers", group:19, id:184}
   {key: "#building_removed_academies", group:19, id:185}
-  {key: "#mausoleum_needs_sandstone", group:19, id:186}
-  {key: "#build_brewery_or_import_beer", group:19, id:187}
-  {key: "#build_papyrus_maker_or_import", group:19, id:188}
-  {key: "#build_weaver_or_import_linen", group:19, id:189}
-  {key: "#tax_collector_robbed", group:19, id:190}
-  {key: "#courthouse_robbed", group:19, id:191}
-  {key: "#mansion_destroyed", group:19, id:192}
+  {key: "#building_removed_fort_infantry_weapons", group:19, id:186}
+  {key: "#building_removed_fort_charioteers_chariots", group:19, id:187}
+  {key: "#mausoleum_needs_sandstone", group:19, id:188}
+  {key: "#build_brewery_or_import_beer", group:19, id:189}
+  {key: "#build_brewery_or_import_beer_route", group:19, id:190}
+  {key: "#build_papyrus_maker_or_import", group:19, id:191}
+  {key: "#build_papyrus_maker_or_import_route", group:19, id:192}
+  {key: "#build_weaver_or_import_linen", group:19, id:193}
+  {key: "#build_weaver_or_import_linen_route", group:19, id:194}
+  {key: "#tax_collector_robbed", group:19, id:195}
+  {key: "#courthouse_robbed", group:19, id:196}
+  {key: "#mansion_destroyed", group:19, id:197}
   {key: "#mansion_protected_by_police", text:"Protected by police"}
   {key: "#mansion_not_protected_theft", text:"Not protected - thieves may steal savings"}
   {key: "#palace_destroyed", group:19, id:198}
@@ -814,6 +828,8 @@ localization_en = [
   {key: "#max_docks_reached", group:19, id:204}
   {key: "#shrines_near_road_required", group:19, id:205}
   {key: "#build_jugglers_school", group:19, id:206}
+  {key: "#venue_build_conservatory", group:19, id:207}
+  {key: "#venue_build_dance_school", group:19, id:208}
   {key: "#company_cannot_reach_destination", group:19, id:209}
   {key: "#game_saved", group:19, id:210}
   {key: "#must_be_on_clear_land", group:19, id:211}
@@ -843,6 +859,7 @@ localization_en = [
   {key: "#building_needs_game_meat", group:19, id:235}
   {key: "#build_hunting_lodge", group:19, id:236}
   {key: "#build_hunting_lodge_or_import", group:19, id:237}
+  {key: "#game_meat_import_trade_route", group:19, id:238}
   {key: "#monument_needs_copper", group:19, id:239}
   {key: "#monument_needs_marble", group:19, id:240}
   {key: "#one_library_only", group:19, id:241}
@@ -871,6 +888,7 @@ localization_en = [
   {key: "#building_needs_oil", group:19, id:263}
   {key: "#building_needs_pottery", group:19, id:264}
   {key: "#build_paint_maker_or_import", group:19, id:265}
+  {key: "#paint_import_overseer", group:19, id:266}
   {key: "#build_paint_maker", group:19, id:267}
   {key: "#building_needs_clay_and_paint", group:19, id:268}
   {key: "#employees_needed", group:19, id:269}
@@ -1094,7 +1112,7 @@ localization_en = [
   {key: "#figure_constable", group:64, id:88 }
   {key: "#figure_magistrate", group:64, id:89 }
   {key: "#figure_reed_gatherer", group:64, id:90 }
-  {key: "#figure_festival_guy", group:64, id:91 }
+  {key: "#figure_festival_priest", group:64, id:91 }
   {key: "#figure_enemy_transport", group:64, id:92 }
   {key: "#figure_enemy_warship", group:64, id:93 }
   {key: "#figure_funeral_walker", group:64, id:94 }
@@ -1249,6 +1267,9 @@ localization_en = [
   {key: "#cannot_evolve_needs_linen", text:"This house cannot evolve. It needs supplies of linen provided to it by its local Bazaar before a wealthier class of citizen will move in."}
   {key: "#cannot_evolve_needs_beer", text:"This house cannot evolve. It needs supplies of beer provided to it by its local Bazaar before a wealthier class of citizen will move in."}
   {key: "#cannot_evolve_needs_jewlery", text:"This house cannot evolve. Before a wealthier class of citizen will move in, the local Bazaar must supply this dwelling with luxury goods, like"}
+  {key: "#cannot_evolve_needs_second_luxury", text:"In order to evolve, a Bazaar must provide this house with a second type of luxury good, like"}
+  {key: "#run_out_of_jewelry", text:"This house will devolve soon. The idle scribes who live here need a Bazaar to provide luxury goods, like"}
+  {key: "#run_out_of_second_luxury", text:"This house will devolve soon, as its discerning residents want a second type of luxury good, like"}
   {key: "#trader_from", text:"from"}
   {key: "#trader_capacity", text:"Capacity"}
   {key: "#trader_buys", text:"Buys"}
@@ -2147,6 +2168,9 @@ localization_en = [
   { key: "#magistrate_i_am_overwhelmed", text: "I can barely manage my caseload, yet the streets are still unsafe." }
 
   { key: "#goto_site_of_event", text: "Go to site of event" }
+  { key: "#gift_refuse", text: "Refuse" }
+  { key: "#gift_later", text: "Later" }
+  { key: "#gift_accept", text: "Accept" }
   { key: "#hold_festival_to", text: "Hold festival to" }
   { key: "#god_osiris", text: "Osiris" }
   { key: "#god_ra", text: "Ra" }

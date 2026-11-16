@@ -81,8 +81,8 @@
 
       <div class="deviation-note">
         <strong>Full redefine (2026-07-31):</strong> <code>hide_pak_*</code> empire + JS event graph
-        (dump <span class="file-ref">tmp/mission44_pak.txt</span>). Favour pharaoh×27 TROOPS via JS.
-        Monument goal <strong>45</strong> (Grand Royal Tomb W=18). Soft: lamp/paint playtest.
+        (dump <span class="file-ref">tmp/mission44_pak.txt</span>). Favour pharaoh×27 TROOPS: <code>events[]</code> BY_FAVOUR pak i=8, at Kingdom rating 0 the engine sends it (<code>event_manager_t::update_kingdom_favour</code>, OG <code>city/kingdom.c</code> <code>city_emperor_update</code>): warnings, then the attack; chained waves attack with it; called off if the rating reaches 15 first; it can come again 12 months later.
+        Monument goal <strong>45</strong> (Grand Royal Tomb 48 + burial linen 16/16, luxury 20/16 (2) → <code>trunc(6.32·√50+0.5)=45</code>). Soft: lamp/paint playtest.
       </div>
 
       <h2 id="objectives">Objectives (pak)</h2>
@@ -90,7 +90,7 @@
         <li><span class="obj-label">Population</span> 3 000</li>
         <li><span class="obj-label">Culture</span> 50</li>
         <li><span class="obj-label">Prosperity</span> 55</li>
-        <li><span class="obj-label">Monuments</span> 45 (Grand Royal Tomb W=18)</li>
+        <li><span class="obj-label">Monuments</span> 45 (Grand Royal Tomb + burial goods)</li>
         <li><span class="obj-label">Kingdom</span> 100</li>
         <li><span class="obj-label">Housing</span> 6 × level 17</li>
         <li><span class="obj-label">Burial</span> weapons×6 · linen×16 · luxury×20 · papyrus×8 · chariots×6</li>
@@ -115,6 +115,7 @@
               Trade (JS): Pwenet · Enkomi · Kharga · Dakhla · Sumur · Piramesse · Timna;
               display Men-nefer / Sawu / Tyre / Waset / Abu / Thinis / Qadesh / Migdol / Abu Simbel / Heh.
               Sea routes 1–3 · land 4–7; 6 ornaments.</p>
+            <p>Sea invasion events carry the OG warship count as <code>warships</code> (pak <code>phrase_var</code>): i=8 ×4.</p>
           </div>
         </details>
       </div>

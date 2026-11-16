@@ -3,7 +3,7 @@ log_info("akhenaten: mission 16 iunet started")
 // Empire / requests / events aligned with original campaign scenario 16 (2026-07-26 dump).
 // Empire id=1. Scenario enemy ENEMY_4_HITTITE (briefing text says Kushite — pak wins).
 // Gods: Ra, Seth, Bast. Favour Pharaoh 15→45→30→30.
-// Triage: SKIP invasion i=3 amount=0; NEW_TRADE i=1/6 remap Iunet→Men-nefer / Abu
+// Invasion i=3 amount=0 is OG's warship-only sea raid; NEW_TRADE i=1/6 remap Iunet→Men-nefer / Abu
 // (pak city=ours + ok=999/99 junk; goods filled — pak sells/buys empty).
 // Limestone refuse→KR−40→egypt×24: EVENT_TYPE_INVASION no-op → JS after KR−40 snap.
 // SKIP map_obj idx=9 empty; SKIP orphan route 15; Saqqara/Nekhen route 5/8 no polyline.
@@ -31,7 +31,6 @@ mission16 { // Iunet (Dendera) — The Defense of Egypt
 	initial_funds [20000, 13300, 10000, 6700, 5300]
 	rescue_loans [5000, 3300, 2500, 1700, 1300]
 	debt_interest [4, 6, 8, 10, 12]
-	house_tax_multipliers [300, 200, 150, 100, 75]
 
 	init_resources : {
 		bricks: { type:RESOURCE_BRICKS, allow: true},
@@ -97,6 +96,69 @@ mission16 { // Iunet (Dendera) — The Defense of Egypt
 
 	enable_scenario_events : true
 
+	events [
+		{ // pak i=19
+			type : EVENT_TYPE_INVASION
+			time { year : 0, month : 0 }
+			item { value : EVENT_INVADER_PHARAOH }
+			amount { value : 15 }
+			months_initial : 9
+			location_fields [ 1, 1, -1, -1 ]
+			event_trigger_type : EVENT_TRIGGER_BY_FAVOUR
+			tag_id : 7019
+			on_completed_action : 1
+			on_refusal_action : -1
+			on_too_late_action : -1
+			on_defeat_action : -1
+			invasion_attack_target : EVENT_ATTACK_TARGET_FOOD
+		}
+		{ // pak i=20
+			type : EVENT_TYPE_INVASION
+			time { year : 0, month : 0 }
+			item { value : EVENT_INVADER_PHARAOH }
+			amount { value : 45 }
+			months_initial : 0
+			location_fields [ 2, 2, -1, -1 ]
+			event_trigger_type : EVENT_TRIGGER_ONLY_VIA_EVENT
+			tag_id : 7020
+			on_completed_action : 2
+			on_refusal_action : -1
+			on_too_late_action : -1
+			on_defeat_action : -1
+			invasion_attack_target : EVENT_ATTACK_TARGET_RANDOM
+		}
+		{ // pak i=21
+			type : EVENT_TYPE_INVASION
+			time { year : 0, month : 0 }
+			item { value : EVENT_INVADER_PHARAOH }
+			amount { value : 30 }
+			months_initial : 0
+			location_fields [ 8, 8, -1, -1 ]
+			event_trigger_type : EVENT_TRIGGER_ONLY_VIA_EVENT
+			tag_id : 7021
+			on_completed_action : 3
+			on_refusal_action : -1
+			on_too_late_action : -1
+			on_defeat_action : -1
+			invasion_attack_target : EVENT_ATTACK_TARGET_RANDOM
+		}
+		{ // pak i=22
+			type : EVENT_TYPE_INVASION
+			time { year : 0, month : 0 }
+			item { value : EVENT_INVADER_PHARAOH }
+			amount { value : 30 }
+			months_initial : 0
+			location_fields [ 7, 7, -1, -1 ]
+			event_trigger_type : EVENT_TRIGGER_ONLY_VIA_EVENT
+			tag_id : 7022
+			on_completed_action : -1
+			on_refusal_action : -1
+			on_too_late_action : -1
+			on_defeat_action : -1
+			invasion_attack_target : EVENT_ATTACK_TARGET_RANDOM
+		}
+	]
+
 	map_background : {pack:PACK_EMPIRE, id:1}
 	hide_pak_cities : true
 	cities [
@@ -119,8 +181,6 @@ mission16 { // Iunet (Dendera) — The Defense of Egypt
 			cost_to_open : 480
 			is_sea_trade : false
 			type : EMPIRE_CITY_EGYPTIAN_TRADING
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_BARLEY, RESOURCE_BEER ]
 			buys [ RESOURCE_TIMBER, RESOURCE_GRANITE, RESOURCE_COPPER ]
 			route_limits [
@@ -141,8 +201,6 @@ mission16 { // Iunet (Dendera) — The Defense of Egypt
 			cost_to_open : 820
 			is_sea_trade : false
 			type : EMPIRE_CITY_EGYPTIAN_TRADING
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_LUXURY_GOODS, RESOURCE_TIMBER ]
 			buys [ RESOURCE_CLAY, RESOURCE_POTTERY, RESOURCE_BEER, RESOURCE_LINEN, RESOURCE_PAPYRUS, RESOURCE_COPPER ]
 			route_limits [
@@ -166,8 +224,6 @@ mission16 { // Iunet (Dendera) — The Defense of Egypt
 			cost_to_open : 870
 			is_sea_trade : true
 			type : EMPIRE_CITY_FOREIGN_TRADING
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_LUXURY_GOODS ]
 			buys [ RESOURCE_LINEN, RESOURCE_LUXURY_GOODS ]
 			route_limits [
@@ -187,8 +243,6 @@ mission16 { // Iunet (Dendera) — The Defense of Egypt
 			is_sea_trade : true
 			trade : false
 			type : EMPIRE_CITY_EGYPTIAN
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_STRAW, RESOURCE_CHICKPEAS ]
 			buys [ RESOURCE_GRANITE, RESOURCE_POTTERY, RESOURCE_LUXURY_GOODS ]
 			route_limits [
@@ -209,8 +263,6 @@ mission16 { // Iunet (Dendera) — The Defense of Egypt
 			cost_to_open : 620
 			is_sea_trade : true
 			type : EMPIRE_CITY_EGYPTIAN_TRADING
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_STRAW, RESOURCE_BARLEY, RESOURCE_BEER, RESOURCE_LIMESTONE ]
 			buys [ RESOURCE_BRICKS, RESOURCE_GEMS, RESOURCE_STONE, RESOURCE_GRANITE ]
 			route_limits [
@@ -236,8 +288,6 @@ mission16 { // Iunet (Dendera) — The Defense of Egypt
 			is_sea_trade : true
 			trade : false
 			type : EMPIRE_CITY_PHARAOH
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_STRAW, RESOURCE_BEER ]
 			buys [ RESOURCE_GRANITE, RESOURCE_GOLD, RESOURCE_POTTERY ]
 			route_limits [
@@ -258,8 +308,6 @@ mission16 { // Iunet (Dendera) — The Defense of Egypt
 			cost_to_open : 1400
 			is_sea_trade : true
 			type : EMPIRE_CITY_FOREIGN_TRADING
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_LUXURY_GOODS, RESOURCE_TIMBER, RESOURCE_COPPER ]
 			buys [ RESOURCE_GEMS ]
 			route_limits [
@@ -433,6 +481,7 @@ mission16 { // Iunet (Dendera) — The Defense of Egypt
 		limestone_leaves_wired : false
 
 		event0_fish_done : false
+		event3_warships_done : false
 		event4_meat_done : false
 		event8_hittite_done : false
 		event9_clay_done : false
@@ -442,18 +491,6 @@ mission16 { // Iunet (Dendera) — The Defense of Egypt
 		event14_limestone_done : false
 		event17_hittite_done : false
 		limestone_egypt_done : false
-
-		pharaoh_favour_invasion_done : false
-		pharaoh_favour_chain_done : false
-		pharaoh_favour_enemies_seen : false
-		pharaoh_favour_wave_next : -1
-		pharaoh_favour_wave_seq : 0
-		pharaoh_favour_wave2_done : false
-		pharaoh_favour_wave3_done : false
-		pharaoh_favour_wave4_done : false
-		pharaoh_favour_wave2_enemies_seen : false
-		pharaoh_favour_wave3_enemies_seen : false
-		pharaoh_favour_wave4_enemies_seen : false
 
 		start_message_shown : false
 	}
@@ -499,13 +536,15 @@ function mission16_fire_request(tag, resource, amount, months, ok_tag, fail_tag,
 	return request
 }
 
-function mission16_hittite_raid(invasion_id, size, attack_target, on_completed_tag, on_refusal_tag) {
+// pak loc=9 (Hittite) / loc=10 (Egypt): OG sea invasions from sea points 0 / 1 with phrase_var warships.
+function mission16_hittite_raid(invasion_id, size, warships, attack_target, on_completed_tag, on_refusal_tag) {
 	var opts = {
 		invasion_id: invasion_id,
 		enemy: ENEMY_4_HITTITE,
 		size: size,
-		tilex: -1,
-		tiley: -1,
+		via_sea: 1,
+		sea_point: 0,
+		warships: warships,
 		want_destroy_buildings: size,
 		invasion_attack_target: attack_target
 	}
@@ -518,14 +557,15 @@ function mission16_hittite_raid(invasion_id, size, attack_target, on_completed_t
 	city.start_foreign_army_invasion(opts)
 }
 
-function mission16_egypt_raid(invasion_id, size, attack_target) {
+function mission16_egypt_raid(invasion_id, size, warships, attack_target) {
 	__image_request_pak(PACK_ENEMY_EGYPTIAN)
 	city.start_foreign_army_invasion({
 		invasion_id: invasion_id,
 		enemy: ENEMY_3_EGYPTIAN,
 		size: size,
-		tilex: -1,
-		tiley: -1,
+		via_sea: 1,
+		sea_point: 1,
+		warships: warships,
 		want_destroy_buildings: size,
 		invasion_attack_target: attack_target
 	})
@@ -627,6 +667,20 @@ function mission16_event_i0_fish(ev) {
 	mission16_fire_request(2000, RESOURCE_FISH, 4, 12, 1001, 1002, 1002, 3, 1)
 }
 
+// pak i=3: Hittite×0 once y2m7, one warship and no soldiers.
+[es=event_advance_month, mission=mission16]
+function mission16_event_i3_warships(ev) {
+	if (mission.event3_warships_done) {
+		return
+	}
+	if (ev.years_since_start < 2 || (ev.years_since_start == 2 && ev.month < 7)) {
+		return
+	}
+	mission.event3_warships_done = true
+	log_info("akhenaten: mission 16 iunet hittite warship×1", {ev:ev})
+	mission16_hittite_raid(4, 0, 1, EVENT_ATTACK_TARGET_RANDOM)
+}
+
 // pak i=4: meat×2 / 12mo once y3m2. ok→KR+10; refuse→KR−10; late→KR−5→hittite×10.
 [es=event_advance_month, mission=mission16]
 function mission16_event_i4_meat(ev) {
@@ -653,7 +707,7 @@ function mission16_event_i8_hittite(ev) {
 	}
 	mission.event8_hittite_done = true
 	log_info("akhenaten: mission 16 iunet hittite×10", {ev:ev})
-	mission16_hittite_raid(0, 10, EVENT_ATTACK_TARGET_RANDOM)
+	mission16_hittite_raid(0, 10, 2, EVENT_ATTACK_TARGET_RANDOM)
 }
 
 // pak i=9: clay flood once y4m1 amount=7 → 7% of clay pits.
@@ -705,7 +759,7 @@ function mission16_event_i12_hittite(ev) {
 	}
 	mission.event12_hittite_done = true
 	log_info("akhenaten: mission 16 iunet hittite×20", {ev:ev})
-	mission16_hittite_raid(1, 20, EVENT_ATTACK_TARGET_RANDOM)
+	mission16_hittite_raid(1, 20, 4, EVENT_ATTACK_TARGET_RANDOM)
 }
 
 // pak i=13: Hittite×32 once y8m0.
@@ -719,7 +773,7 @@ function mission16_event_i13_hittite(ev) {
 	}
 	mission.event13_hittite_done = true
 	log_info("akhenaten: mission 16 iunet hittite×32", {ev:ev})
-	mission16_hittite_raid(2, 32, EVENT_ATTACK_TARGET_FOOD)
+	mission16_hittite_raid(2, 32, 5, EVENT_ATTACK_TARGET_FOOD)
 }
 
 // pak i=14: limestone×15 / 12mo once y10m5. ok→meat gift; refuse→KR−40→egypt×24; late→KR−10.
@@ -746,14 +800,14 @@ function mission16_on_request_cleared(ev) {
 	if (ev.tag_id == 2014 && outcome == "refuse" && !mission.limestone_egypt_done) {
 		mission.limestone_egypt_done = true
 		log_info("akhenaten: mission 16 iunet egypt×24 after limestone refuse", {ev:ev})
-		mission16_egypt_raid(10, 24, EVENT_ATTACK_TARGET_FOOD)
+		mission16_egypt_raid(10, 24, 6, EVENT_ATTACK_TARGET_FOOD)
 		return
 	}
 	// pak i=7→i=8 hittite×10 after meat (2004) or pottery (2010) late; share calendar once-flag.
 	if ((ev.tag_id == 2004 || ev.tag_id == 2010) && outcome == "late" && !mission.event8_hittite_done) {
 		mission.event8_hittite_done = true
 		log_info("akhenaten: mission 16 iunet hittite×10 after request late tag=" + ev.tag_id, {ev:ev})
-		mission16_hittite_raid(0, 10, EVENT_ATTACK_TARGET_RANDOM)
+		mission16_hittite_raid(0, 10, 2, EVENT_ATTACK_TARGET_RANDOM)
 	}
 }
 
@@ -770,11 +824,5 @@ function mission16_event_i17_hittite(ev) {
 	mission16_ensure_shared_kr_leaves()
 	mission16_ensure_pottery_leaves()
 	log_info("akhenaten: mission 16 iunet hittite×48", {ev:ev})
-	mission16_hittite_raid(3, 48, EVENT_ATTACK_TARGET_FOOD, 1011, 1002)
-}
-
-// pak i=19→20→21→22: favour 15→45→30→30.
-[es=event_advance_month, mission=mission16]
-function mission16_pharaoh_favour_invasion(ev) {
-	mission_pharaoh_favour_invasion_tick(mission, [15, 45, 30, 30])
+	mission16_hittite_raid(3, 48, 8, EVENT_ATTACK_TARGET_FOOD, 1011, 1002)
 }

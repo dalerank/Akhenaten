@@ -5,6 +5,7 @@
 #include "figure/formation.h"
 #include "figure/movement.h"
 #include "figure/route.h"
+#include "figuretype/figure_enemy_transport.h"
 #include "figuretype/figure_soldier.h"
 #include "figuretype/figure_robber.h" // ACTION_10_ROBBER_FLEEING
 #include "game/difficulty.h"
@@ -171,7 +172,8 @@ static bool figure_is_enemy_warship(e_figure_type type) {
     }
 }
 
-// OG get_missile_target_for_soldier: priority enemies(50) > warships(30) > transports(20) > predators(10).
+// OG get_missile_target_for_soldier: priority enemies(50) > loaded transports(40) > warships(30) > transports(20)
+// > predators(10).
 static int soldier_missile_target_priority(figure *f) {
     switch (f->type) {
     case FIGURE_CROCODILE:
@@ -189,7 +191,8 @@ static int soldier_missile_target_priority(figure *f) {
         return 30;
     }
     if (figure_is_enemy_transport_ship(f->type)) {
-        return 20;
+        auto* transport = smart_cast<figure_enemy_transport>(f);
+        return (transport && transport->has_troops()) ? 40 : 20;
     }
     if (f->is_enemy()) {
         return 50;
@@ -248,7 +251,7 @@ target_figure figure_combat_get_missile_target_for_enemy(figure* enemy, int max_
     figure* min_figure = 0;
     int min_distance = max_distance;
     for (figure* f: map_figures()) {
-        if (!f->is_valid() || f->is_dead()) {
+        if (!f->is_valid() || f->is_dead() || f->params().ignored_by_enemy_missiles) {
             continue;
         }
 

@@ -235,7 +235,7 @@ void figure_fishing_boat::figure_action_og() {
         if (wharf->runtime_data().fish_caught > 0) {
             pct_workers = 0;
         }
-        if (pct_workers <= 0) {
+        if (g_scenario.events.blood_river_sweep_active() || pct_workers <= 0) {
             break;
         }
         base.wait_ticks++;

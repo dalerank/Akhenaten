@@ -596,7 +596,7 @@ void building_granary_draw_anim(building &b, vec2i point, tile2i tile, color mas
 
 void building_granary::on_create(int orientation) {
     runtime_data().resource_stored[RESOURCE_NONE] = current_params().max_capacty_stored;
-    base.storage_id = building_storage_create(BUILDING_GRANARY);
+    base.storage_id = building_storage_create(BUILDING_GRANARY, base.id);
 }
 
 void building_granary::on_post_load() {
@@ -679,6 +679,10 @@ void building_granary::update_graphic() {
     map_building_tiles_add(base.id, base.tile, base.size, first_img(animkey), TERRAIN_BUILDING);
 
     building_impl::update_graphic();
+}
+
+void building_granary::update_sprite_anims() {
+    register_sprite_anim(anim("work"));
 }
 
 bool building_granary::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color mask) {

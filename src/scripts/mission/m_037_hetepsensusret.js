@@ -3,7 +3,7 @@ log_info("akhenaten: mission 37 hetepsensusret started")
 // Empire id=23. Enemy ASSYRIAN (pak). Gods Osiris/Ra/Ptah/Bast x2. Rank 10.
 // Funds 2000/3000/20. Win pop 12000 / C80 / Pr80 / M70 / K75 / house lvl 14.
 // Monuments 27/7/5 = Mausoleum skin2 + Grand Mudbrick Complex + Large Mudbrick
-//   (W=5+44+12 -> clamp 100 >=70). Soft goal 70. Briefing "true>Khufu" = flavor.
+//   (5+80+26 + burial 10 → trunc(6.32·√121+0.5)=70). Goal 70 = pak. Briefing "true>Khufu" = flavor.
 // Burial x5 all 32 (pottery/linen/luxury/papyrus/weapons). next_mission -1 (no Cleo).
 // SKIP map_obj idx=11. Routes 1-11 copy. Farafra NEW_TRADE cosmetic (no route).
 // Favour egypt x40; pak inv empty -> land-proxy [80,40] near entry.
@@ -22,7 +22,6 @@ mission37 { // Hetepsensusret (Kahun) — The Glory of Pharaoh
 	initial_funds [4000, 2660, 2000, 1340, 1060]
 	rescue_loans [6000, 4000, 3000, 2000, 1590]
 	debt_interest [10, 15, 20, 25, 30]
-	house_tax_multipliers [300, 200, 150, 100, 75]
 
 	env {
 		// pak animals=0; enable so prey update after create_herds (hunting lodge).
@@ -64,7 +63,7 @@ mission37 { // Hetepsensusret (Kahun) — The Glory of Pharaoh
 		BUILDING_SCRIBAL_SCHOOL, BUILDING_LIBRARY, BUILDING_ZOO,
 	]
 
-	// Soft goal 70; engine weights Mausoleum+Grand Mudbrick Complex+Large Mudbrick W=5+44+12 → clamp 100.
+	// Goal 70 = pak: Mausoleum+Grand Mudbrick Complex+Large Mudbrick (5+80+26) + burial 5×32/16 (10) → trunc(6.32·√121+0.5)=70.
 	win_criteria {
 		population    {enabled : true, goal : 12000 }
 		culture       {enabled : true, goal : 80 }
@@ -1234,8 +1233,6 @@ mission37 { // Hetepsensusret (Kahun) — The Glory of Pharaoh
 			cost_to_open : 1000
 			is_sea_trade : false
 			type : EMPIRE_CITY_FOREIGN_TRADING
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_GEMS, RESOURCE_COPPER, RESOURCE_SANDSTONE ]
 			route_limits [
 				{ resource: RESOURCE_GEMS, limit: 1500 }
@@ -1252,8 +1249,6 @@ mission37 { // Hetepsensusret (Kahun) — The Glory of Pharaoh
 			cost_to_open : 650
 			is_sea_trade : false
 			type : EMPIRE_CITY_FOREIGN_TRADING
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_BRICKS, RESOURCE_TIMBER ]
 			buys [ RESOURCE_MEAT, RESOURCE_LINEN, RESOURCE_LUXURY_GOODS, RESOURCE_PAPYRUS, RESOURCE_GRANITE ]
 			route_limits [

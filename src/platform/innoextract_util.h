@@ -16,6 +16,8 @@ xstring binary_directory();
 xstring pharaoh_data_directory();
 xstring default_extract_directory();
 bool has_pharaoh_data(pcstr dir);
+// Steam "Pharaoh + Cleopatra" install with Pharaoh data (campaign.txt), or empty.
+xstring find_steam_pharaoh_dir();
 bool has_required_game_files(pcstr dir);
 bool extract_installer(pcstr setup_exe, pcstr out_dir, xstring *error_out = nullptr);
 xstring find_extracted_game_path(pcstr out_dir);

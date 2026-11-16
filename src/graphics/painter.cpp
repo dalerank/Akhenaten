@@ -4,7 +4,9 @@
 #include "core/profiler.h"
 #include "graphics/graphics.h"
 #include "graphics/image.h"
+#include "graphics/render_stats.h"
 #include "graphics/residency_atlas.h"
+#include "graphics/texture_alpha.h"
 #include "platform/renderer.h"
 
 #include <cmath>
@@ -22,7 +24,7 @@ void painter::draw(SDL_Texture *texture, vec2i pos, vec2i offset, vec2i size, co
     if (!use_grayscale) {
         draw_impl(texture, pos, offset, size, color, scale_x, scale_y, angle, flags, force_linear);
     } else {
-        draw_grayscale(texture, pos, offset, size, scale_x, scale_y, angle, !!(flags & ImgFlag_Alpha), force_linear);
+        draw_grayscale(texture, pos, offset, size, scale_x, scale_y, angle, flags & ~ImgFlag_Grayscale, force_linear);
     }
 
     const bool debug = !!(flags & ImgFlag_Debug);
@@ -278,14 +280,26 @@ void painter::draw_impl(SDL_Texture *texture, vec2i pos, vec2i offset, vec2i siz
         g_render.set_texture_scale_mode(texture, overall_scale_factor, force_linear);
     }
 
-    SDL_SetTextureColorMod(draw_tex,
-                           (color & COLOR_CHANNEL_RED) >> COLOR_BITSHIFT_RED,
-                           (color & COLOR_CHANNEL_GREEN) >> COLOR_BITSHIFT_GREEN,
-                           (color & COLOR_CHANNEL_BLUE) >> COLOR_BITSHIFT_BLUE);
-    SDL_SetTextureAlphaMod(draw_tex, (color & COLOR_CHANNEL_ALPHA) >> COLOR_BITSHIFT_ALPHA);
+    int mod_r = (color & COLOR_CHANNEL_RED) >> COLOR_BITSHIFT_RED;
+    int mod_g = (color & COLOR_CHANNEL_GREEN) >> COLOR_BITSHIFT_GREEN;
+    int mod_b = (color & COLOR_CHANNEL_BLUE) >> COLOR_BITSHIFT_BLUE;
+    const int mod_a = (color & COLOR_CHANNEL_ALPHA) >> COLOR_BITSHIFT_ALPHA;
 
+    // Faded draws stay in the premultiplied blend mode by scaling the tint with the alpha, so a
+    // run of sprites never switches blend mode (which ends an SDL batch). Only PNG textures with
+    // straight alpha keep the plain blend.
     const bool alpha = !!(flags & ImgFlag_Alpha);
-    SDL_SetTextureBlendMode(draw_tex, alpha ? SDL_BLENDMODE_BLEND : (SDL_BlendMode)g_render.premult_alpha());
+    const bool straight = alpha && texture_alpha::is_straight(texture);
+    if (alpha && !straight) {
+        mod_r = (mod_r * mod_a + 127) / 255;
+        mod_g = (mod_g * mod_a + 127) / 255;
+        mod_b = (mod_b * mod_a + 127) / 255;
+    }
+    SDL_SetTextureColorMod(draw_tex, (Uint8)mod_r, (Uint8)mod_g, (Uint8)mod_b);
+    SDL_SetTextureAlphaMod(draw_tex, (Uint8)mod_a);
+
+    const SDL_BlendMode blend = straight ? SDL_BLENDMODE_BLEND : (SDL_BlendMode)g_render.premult_alpha();
+    SDL_SetTextureBlendMode(draw_tex, blend);
 
     // uncomment here if you want save something from atlases
     int k = 0;
@@ -327,6 +341,8 @@ void painter::draw_impl(SDL_Texture *texture, vec2i pos, vec2i offset, vec2i siz
             }
 
             const bool mirrored = !!(flags & ImgFlag_Mirrored);
+            const SDL_FRect full_dst = screen_coords;
+            const SDL_Rect full_src = texture_coords;
             float src_x = (float)texture_coords.x;
             float src_y = (float)texture_coords.y;
             float src_w = (float)texture_coords.w;
@@ -376,9 +392,21 @@ void painter::draw_impl(SDL_Texture *texture, vec2i pos, vec2i offset, vec2i siz
                 || screen_coords.w < 0.5f || screen_coords.h < 0.5f) {
                 return;
             }
+
+            // Re-place dst from the rounded src: rounding shifts the src by up to half a texel, which
+            // at zoom-in is several pixels and opens a gap along the row of tiles crossing the clip edge.
+            // The overhang this leaves past the clip edge is cut by the renderer's clip rect.
+            const float kx = full_dst.w / (float)full_src.w;
+            const float ky = full_dst.h / (float)full_src.h;
+            const float lead_x = (float)(texture_coords.x - full_src.x) * kx;
+            screen_coords.w = (float)texture_coords.w * kx;
+            screen_coords.h = (float)texture_coords.h * ky;
+            screen_coords.x = mirrored ? full_dst.x + full_dst.w - lead_x - screen_coords.w : full_dst.x + lead_x;
+            screen_coords.y = full_dst.y + (float)(texture_coords.y - full_src.y) * ky;
         }
     }
 
+    render_stats::note_draw(draw_tex, (int)blend, resident);
     if (!!(flags & ImgFlag_Mirrored)) {
         SDL_RenderCopyExF(this->renderer, draw_tex, &texture_coords, &screen_coords, angle, nullptr, SDL_FLIP_HORIZONTAL);
     } else {
@@ -433,6 +461,13 @@ SDL_Texture* painter::convertToGrayscale(SDL_Texture *tx, vec2i offset, vec2i si
         return nullptr;
     }
 
+    // Declared after the deleter, so it runs first: the target is restored before ren_tex dies.
+    struct RenTargetRestore {
+        SDL_Renderer* renderer;
+        SDL_Texture* target;
+        ~RenTargetRestore() { SDL_SetRenderTarget(renderer, target); }
+    } _renTargetRestore{this->renderer, old_target};
+
     SDL_SetRenderDrawColor(this->renderer, 0x00, 0x00, 0x00, 0x00);
     SDL_RenderClear(this->renderer);
 
@@ -465,11 +500,12 @@ SDL_Texture* painter::convertToGrayscale(SDL_Texture *tx, vec2i offset, vec2i si
     }
 
     SDL_Texture *gray_tx_ptr = SDL_CreateTextureFromSurface(this->renderer, surface);
+    if (texture_alpha::is_straight(tx)) {
+        texture_alpha::mark_straight(gray_tx_ptr);
+    }
 
     gray_tx.first->second = gray_tx_ptr;
     SDL_FreeSurface(surface);
-
-    SDL_SetRenderTarget(this->renderer, old_target);
 
     return gray_tx_ptr;
 }

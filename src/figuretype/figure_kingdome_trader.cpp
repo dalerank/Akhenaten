@@ -10,6 +10,7 @@
 #include "city/city_message.h"
 #include "city/city_resource.h"
 #include "core/calc.h"
+#include "core/random.h"
 #include "empire/empire.h"
 #include "empire/empire_map.h"
 #include "empire/trade_prices.h"
@@ -119,7 +120,10 @@ void figure_trade_caravan::on_create() {
     if (game_features::gameplay_change_trader_capacity_1600.to_bool() || range == 0) {
         range = (max_cap >= min_cap) ? (uint16_t)(max_cap - min_cap + 1) : 1;
     }
-    const uint16_t capacity = min_cap + (range > 0 ? (rand() % range) : 0);
+    const uint16_t capacity
+      = min_cap
+        + (range > 0 ? (random_hash(game.simtime.absolute_tick(), id(), RANDOM_SALT_KINGDOME_TRADER_CAPACITY) % range)
+                     : 0);
     d.capacity = std::clamp(capacity, min_cap, max_cap);
 }
 

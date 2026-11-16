@@ -5,6 +5,25 @@ log_info("akhenaten: mission 6 behdet started")
 mission6 { // Behdet — The Royal Navy
 	map_file : "data/maps/m_006_behdet.map"
 
+	enable_scenario_events : true
+	events [
+		{ // pak i=19
+			type : EVENT_TYPE_INVASION
+			time { year : 0, month : 0 }
+			item { value : EVENT_INVADER_PHARAOH }
+			amount { value : 45 }
+			months_initial : 11
+			location_fields [ 7, -1, 1, 8 ]
+			event_trigger_type : EVENT_TRIGGER_BY_FAVOUR
+			tag_id : 7019
+			on_completed_action : -1
+			on_refusal_action : -1
+			on_too_late_action : -1
+			on_defeat_action : -1
+			invasion_attack_target : EVENT_ATTACK_TARGET_RANDOM
+		}
+	]
+
 	// Map points from data/maps/m_006_behdet.map.
 	fishing_points [ [73, 38], [89, 61] ]
 
@@ -37,7 +56,6 @@ mission6 { // Behdet — The Royal Navy
 
 	initial_funds [7500, 5000, 3750, 2500, 2000]
 	rescue_loans [7500, 5000, 3750, 2500, 2000]
-	house_tax_multipliers [300, 200, 150, 100, 75]
 
 	env {
 		has_animals : true
@@ -113,8 +131,6 @@ mission6 { // Behdet — The Royal Navy
 			cost_to_open : 1000
 			is_sea_trade : true
 			type : EMPIRE_CITY_EGYPTIAN_TRADING
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_FIGS, RESOURCE_CLAY, RESOURCE_BRICKS, RESOURCE_POTTERY, RESOURCE_REEDS ]
 			route_limits [
 				{ resource: RESOURCE_FIGS, limit: 2500 }
@@ -134,8 +150,6 @@ mission6 { // Behdet — The Royal Navy
 			cost_to_open : 300
 			is_sea_trade : false
 			type : EMPIRE_CITY_EGYPTIAN_TRADING
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_POTTERY, RESOURCE_BEER, RESOURCE_FLAX, RESOURCE_LINEN ]
 			buys [ RESOURCE_PAPYRUS ]
 			route_limits [
@@ -156,8 +170,6 @@ mission6 { // Behdet — The Royal Navy
 			cost_to_open : 750
 			is_sea_trade : true
 			type : EMPIRE_CITY_PHARAOH_TRADING
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_CHICKPEAS, RESOURCE_POTTERY, RESOURCE_PAPYRUS ]
 			buys [ RESOURCE_LETTUCE, RESOURCE_BRICKS, RESOURCE_BARLEY, RESOURCE_BEER, RESOURCE_LUXURY_GOODS ]
 			route_limits [
@@ -181,8 +193,6 @@ mission6 { // Behdet — The Royal Navy
 			cost_to_open : 750
 			is_sea_trade : false
 			type : EMPIRE_CITY_EGYPTIAN_TRADING
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_WEAPONS, RESOURCE_CLAY, RESOURCE_POTTERY, RESOURCE_COPPER ]
 			buys [ RESOURCE_FISH, RESOURCE_BEER, RESOURCE_LINEN, RESOURCE_PAPYRUS ]
 			route_limits [
@@ -206,8 +216,6 @@ mission6 { // Behdet — The Royal Navy
 			cost_to_open : 1000
 			is_sea_trade : true
 			type : EMPIRE_CITY_FOREIGN_TRADING
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_LUXURY_GOODS, RESOURCE_TIMBER, RESOURCE_COPPER ]
 			buys [ RESOURCE_GEMS, RESOURCE_LUXURY_GOODS ]
 			route_limits [
@@ -362,7 +370,6 @@ mission6 { // Behdet — The Royal Navy
 		kushite_invasion_1 : false
 		kushite_invasion_2 : false
 		kushite_invasion_3 : false
-		pharaoh_favour_invasion_done : false
 		start_message_shown : false
 	}
 }
@@ -381,13 +388,15 @@ function mission6_fire_request(tag, resource, amount, months, ok_tag, fail_tag, 
 	return ok_ev
 }
 
-function mission6_kushite_raid(invasion_id, size, on_completed_tag) {
+// pak loc=9: OG sea invasion from sea point 0 with the event's phrase_var warships.
+function mission6_kushite_raid(invasion_id, size, warships, on_completed_tag) {
 	var opts = {
 		invasion_id: invasion_id,
 		enemy: ENEMY_6_KUSHITE,
 		size: size,
-		tilex: -1,
-		tiley: -1,
+		via_sea: 1,
+		sea_point: 0,
+		warships: warships,
 		want_destroy_buildings: size,
 		invasion_attack_target: EVENT_ATTACK_TARGET_RANDOM // pak attack=4
 	}
@@ -400,6 +409,7 @@ function mission6_kushite_raid(invasion_id, size, on_completed_tag) {
 [es=event_mission_start, mission=mission6]
 function mission6_on_start(ev) {
 	__image_request_pak(PACK_ENEMY_KUSHITE)
+	__image_request_pak(PACK_ENEMY_EGYPTIAN)
 	mission_show_start_message(mission, "message_soldiers_and_forts")
 	empire.set_id(1)
 	empire.set_expanded(false)
@@ -537,7 +547,7 @@ function mission6_kushite_invasion_1(ev) {
 	if (ev.years_since_start < 5 || (ev.years_since_start == 5 && ev.month < 1)) { return }
 	mission.kushite_invasion_1 = true
 	log_info("akhenaten: mission 6 behdet kushite invasion 1 size=5", {ev:ev})
-	mission6_kushite_raid(0, 5)
+	mission6_kushite_raid(0, 5, 2)
 }
 
 [es=event_advance_month, mission=mission6]
@@ -547,7 +557,7 @@ function mission6_kushite_invasion_2(ev) {
 	mission.kushite_invasion_2 = true
 	log_info("akhenaten: mission 6 behdet kushite invasion 2 size=16", {ev:ev})
 	city.create_chain_event({ tag_id: 701, type: EVENT_TYPE_REPUTATION_INCREASE, amount: 8 })
-	mission6_kushite_raid(1, 16, 701)
+	mission6_kushite_raid(1, 16, 3, 701)
 }
 
 [es=event_advance_month, mission=mission6]
@@ -556,10 +566,5 @@ function mission6_kushite_invasion_3(ev) {
 	if (ev.years_since_start < 19 || (ev.years_since_start == 19 && ev.month < 4)) { return }
 	mission.kushite_invasion_3 = true
 	log_info("akhenaten: mission 6 behdet kushite invasion 3 size=4", {ev:ev})
-	mission6_kushite_raid(2, 4)
-}
-
-[es=event_advance_month, mission=mission6]
-function mission6_pharaoh_favour_invasion(ev) {
-	mission_pharaoh_favour_invasion_tick(mission, 45)
+	mission6_kushite_raid(2, 4, 2)
 }

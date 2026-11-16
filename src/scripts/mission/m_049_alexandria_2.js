@@ -7,7 +7,7 @@ log_info("akhenaten: mission 49 alexandria_2 started")
 // Win: pop 7000 / culture 75 / prosperity 75 / monuments 28 /
 //      kingdom 75 / housing 6x lv16 / time_limit OFF (milestones 6/12/18).
 // Monuments: first=29 Library, second=28 Pharos (gr198).
-// Rating: Library W=6 + Pharos W=5 → trunc(2.25*11+4.5)=29 ≥ goal 28.
+// Rating: Library 12 + Pharos 8 → trunc(6.32·√20+0.5)=28 = goal.
 // Burial: none. Gods: Ra(2) Ptah(1) Bast(1).
 // Enkomi sells marble (briefing OK). Orphan routes Knossos/Migdol/Waset -> route 0.
 // SKIP empty map_obj idx=8. Invasions: 0. next_mission 50 (Maritis → Notes §13.13).
@@ -26,7 +26,6 @@ mission49 { // Ptolemy's Alexandria - A Beacon of Light
 	initial_funds [60000, 40000, 30000, 20100, 15900]
 	rescue_loans [10000, 6670, 5000, 3350, 2650]
 	debt_interest [3, 4, 6, 8, 10]
-	house_tax_multipliers [300, 200, 150, 100, 75]
 
 	env {
 		has_animals : true
@@ -833,8 +832,6 @@ mission49 { // Ptolemy's Alexandria - A Beacon of Light
 			cost_to_open : 300
 			is_sea_trade : false
 			type : EMPIRE_CITY_FOREIGN_TRADING
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_FIGS, RESOURCE_GAMEMEAT ]
 			buys [ RESOURCE_FISH, RESOURCE_LUXURY_GOODS ]
 			route_limits [
@@ -853,8 +850,6 @@ mission49 { // Ptolemy's Alexandria - A Beacon of Light
 			cost_to_open : 675
 			is_sea_trade : true
 			type : EMPIRE_CITY_FOREIGN_TRADING
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_TIMBER, RESOURCE_COPPER, RESOURCE_MARBLE ]
 			buys [ RESOURCE_GRAIN, RESOURCE_BEER, RESOURCE_LINEN ]
 			route_limits [
@@ -885,8 +880,6 @@ mission49 { // Ptolemy's Alexandria - A Beacon of Light
 			cost_to_open : 900
 			is_sea_trade : true
 			type : EMPIRE_CITY_EGYPTIAN_TRADING
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_GRAIN, RESOURCE_BARLEY, RESOURCE_FLAX ]
 			buys [ RESOURCE_STRAW, RESOURCE_TIMBER ]
 			route_limits [
@@ -915,8 +908,6 @@ mission49 { // Ptolemy's Alexandria - A Beacon of Light
 			cost_to_open : 515
 			is_sea_trade : true
 			type : EMPIRE_CITY_FOREIGN_TRADING
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_POTTERY, RESOURCE_GEMS ]
 			buys [ RESOURCE_BEER, RESOURCE_PAPYRUS ]
 			route_limits [
@@ -935,8 +926,6 @@ mission49 { // Ptolemy's Alexandria - A Beacon of Light
 			cost_to_open : 155
 			is_sea_trade : false
 			type : EMPIRE_CITY_EGYPTIAN_TRADING
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_GRAIN, RESOURCE_BARLEY, RESOURCE_BEER, RESOURCE_PAPYRUS ]
 			buys [ RESOURCE_BRICKS, RESOURCE_POTTERY, RESOURCE_LUXURY_GOODS, RESOURCE_TIMBER ]
 			route_limits [
@@ -959,8 +948,6 @@ mission49 { // Ptolemy's Alexandria - A Beacon of Light
 			cost_to_open : 760
 			is_sea_trade : true
 			type : EMPIRE_CITY_FOREIGN_TRADING
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_LUXURY_GOODS ]
 			buys [ RESOURCE_GRAIN, RESOURCE_BARLEY, RESOURCE_PAPYRUS, RESOURCE_MARBLE ]
 			route_limits [
@@ -1025,8 +1012,6 @@ mission49 { // Ptolemy's Alexandria - A Beacon of Light
 			cost_to_open : 250
 			is_sea_trade : false
 			type : EMPIRE_CITY_EGYPTIAN_TRADING
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_STRAW ]
 			buys [ RESOURCE_WEAPONS, RESOURCE_TIMBER ]
 			route_limits [
@@ -1071,8 +1056,6 @@ mission49 { // Ptolemy's Alexandria - A Beacon of Light
 			cost_to_open : 900
 			is_sea_trade : true
 			type : EMPIRE_CITY_FOREIGN_TRADING
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_LINEN, RESOURCE_LUXURY_GOODS, RESOURCE_TIMBER ]
 			buys [ RESOURCE_GRAIN, RESOURCE_BARLEY, RESOURCE_PAPYRUS ]
 			route_limits [

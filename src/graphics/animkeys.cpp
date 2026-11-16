@@ -86,6 +86,7 @@ const xstring id_anim_t::enter = "enter";
 const xstring id_anim_t::cart = "cart";
 const xstring id_anim_t::flat = "flat";
 const xstring id_anim_t::pulling = "pulling";
+const xstring id_anim_t::front = "front";
 
 const id_anim_t &animkeys() {
     return g_animkeys;

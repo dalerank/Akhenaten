@@ -12,7 +12,6 @@
 #include "figuretype/figure_soldier.h"
 #include "figure/formation_layout.h"
 #include "figuretype/figure_enemy.h"
-#include "figuretype/figure_enemy_transport.h"
 #include "city/city_figures.h"
 #include "figure/route.h"
 #include "grid/figure.h"
@@ -26,57 +25,36 @@
 #include "grid/road_access.h"
 #include "scenario/invasion_auto_resolve.h"
 
-using stage_attack_weight = std::array<int16_t, BUILDING_MAX>;
-using stage_attack_rules = svector<uint16_t, BUILDING_MAX>;
+// OG enemy_attack_priority / enemy_attack_fallback (figure_data.c:499-511): building types by priority,
+// the first type in a list wins, distance only breaks ties within one type.
+using stage_attack_rules = svector<uint16_t, 100>;
 
 struct enemy_attack_priority_t {
     stage_attack_rules food_chain;
     stage_attack_rules gold_stores;
     stage_attack_rules best_buildings;
     stage_attack_rules troops;
-    stage_attack_rules simple;
-    stage_attack_rules random;
+    stage_attack_rules fallback;
 
-    stage_attack_weight food_chain_w;
-    stage_attack_weight gold_stores_w;
-    stage_attack_weight best_buildings_w;
-    stage_attack_weight troops_w;
-    stage_attack_weight simple_w;
-    stage_attack_weight random_w;
-
-    struct attack_pairs {
-        stage_attack_rules *rules;
-        stage_attack_weight *weights;
-    };
-
-    std::array<attack_pairs, FORMATION_ATTACK_MAX> data = { {
-        {&food_chain, &food_chain_w},
-        {&gold_stores, &gold_stores_w},
-        {&best_buildings, &best_buildings_w},
-        {&troops, &troops_w},
-        {&simple, &simple_w},
-        {&random, &random_w }
-    } };
-
-    const stage_attack_weight &get_weights(e_formation_attack_type rule) {
-        return *data[rule].weights;
+    const stage_attack_rules& get(int kind) const {
+        switch (kind) {
+        case FORMATION_ATTACK_FOOD_CHAIN:
+            return food_chain;
+        case FORMATION_ATTACK_GOLD_STORES:
+            return gold_stores;
+        case FORMATION_ATTACK_BEST_BUILDINGS:
+            return best_buildings;
+        case FORMATION_ATTACK_TROOPS:
+            return troops;
+        default:
+            return fallback;
+        }
     }
 };
-ANK_CONFIG_STRUCT(enemy_attack_priority_t,
-    food_chain, gold_stores, best_buildings, troops, simple)
+ANK_CONFIG_STRUCT(enemy_attack_priority_t, food_chain, gold_stores, best_buildings, troops, fallback)
 
 struct enemy_attack_rules_t {
     enemy_attack_priority_t priority;
-
-    void archive_load(archive arch) {
-        for (auto &it : priority.data) {
-            std::fill(it.weights->begin(), it.weights->end(), 0);
-            for (int i = 0; i < it.rules->size(); i++) {
-                uint16_t btype = it.rules->at(i);
-                it.weights->at(btype) = (it.rules->size() - i) + 1;
-            }
-        }
-    }
 };
 ANK_CONFIG_STRUCT(enemy_attack_rules_t, priority)
 
@@ -230,96 +208,63 @@ static const vec2i LAYOUT_ORIENTATION_OFFSETS[13][4][40]= {
      }
 };
 
-static void set_enemy_target_building(formation* m, attacked_buildings& attackd_buildings) {
-    if (m->destination_building_id > 0) {
-        building *current_target = building_get(m->destination_building_id);
-        if (current_target && current_target->state == BUILDING_STATE_VALID) {
-            building_id main_bid = current_target->main()->id;
-            attackd_buildings.insert({ main_bid, true });
-            return;
+// OG find_target_building (formation_enemy.c:185): reachable buildings without soldiers on them; a type earlier
+// in the list wins, the closer building wins within the same type.
+static void find_target_building(const formation* m, const stage_attack_rules& list, int& best_index,
+  int& best_distance, building_id& best_id) {
+    for (auto b = building_begin(); b != building_end(); ++b) {
+        if (b->state != BUILDING_STATE_VALID || map_soldier_strength_get(b->tile) != 0
+            || map_routing_distance(b->tile) <= 0) {
+            continue;
         }
-        m->destination_building_id = 0;
-    }
-
-    e_formation_attack_type attack = m->attack_type;
-    if (attack == FORMATION_ATTACK_RANDOM) {
-        attack = (e_formation_attack_type)(random_byte() % FORMATION_ATTACK_RANDOM);
-    }
-
-    auto is_building_attacked = [&] (building* b) -> bool {
-        if (!b) return false;
-        building_id main_bid = b->main()->id;
-        auto it = attackd_buildings.find(main_bid);
-        return (it != attackd_buildings.end());
-    };
-
-    auto get_best_target = [&] (const stage_attack_weight& weights) {
-        building *best_building = nullptr;
-        int max_score = -9999;
-        for (auto b = building_begin(); b != building_end(); ++b) {
-            if (b->state != BUILDING_STATE_VALID || map_soldier_strength_get(b->tile)) {
+        for (int i = 0; i <= best_index && i < (int)list.size(); i++) {
+            if (b->type != list[i]) {
                 continue;
             }
-
-            // Skip buildings that are already being attacked by other formations
-            if (is_building_attacked(b)) {
-                continue;
+            const int distance = calc_maximum_distance(m->home, b->tile);
+            if (i < best_index) {
+                best_index = i;
+                best_distance = distance;
+                best_id = b->id;
+            } else if (distance < best_distance) {
+                best_distance = distance;
+                best_id = b->id;
             }
-
-            const int weight = weights[b->type];
-            if (weight > 0) {
-                int distance = calc_maximum_distance(m->home, b->tile);
-                int score = weight - distance;
-                if (score > max_score) {
-                    best_building = b;
-                    max_score = score;
-                }
-            }
+            break;
         }
+    }
+}
 
-        return best_building;
-    };
+// OG formation_enemy_set_target_building (formation_enemy.c:215). RANDOM draws crt_rand on every call.
+static bool set_enemy_target_building(formation* m) {
+    int kind = m->attack_type;
+    if (kind == FORMATION_ATTACK_RANDOM) {
+        kind = anti_scum_random_15bit() & 3;
+    }
 
-    auto get_closes_buildings = [&] () {
-        building *best_building = nullptr;
-        int min_distance = 9999;
-        for (auto b = building_begin(); b != building_end(); ++b) {
-            if (b->state != BUILDING_STATE_VALID || map_soldier_strength_get(b->tile)) {
-                continue;
-            }
-
-            // Skip buildings that are already being attacked by other formations
-            if (is_building_attacked(b)) {
-                continue;
-            }
-
-            int distance = calc_maximum_distance(m->home, b->tile);
-            if (distance < min_distance) {
-                best_building = b;
-                min_distance = distance;
-            }
+    constexpr int list_length = 100;
+    int best_index = list_length;
+    int best_distance = 10000;
+    building_id best_id = 0;
+    // Fill the distance grid from the formation; tile2i(-2, -2) would be a real tile and stop the search there.
+    map_routing_noncitizen_can_travel_through_everything(m->home, tile2i::invalid);
+    find_target_building(m, enemy_attack_rules.priority.get(kind), best_index, best_distance, best_id);
+    if (best_id <= 0) {
+        find_target_building(m, enemy_attack_rules.priority.fallback, best_index, best_distance, best_id);
+        if (best_id <= 0) {
+            return false;
         }
-
-        return best_building;
-    };
-
-    const auto &formation_attack_weights = enemy_attack_rules.priority.get_weights(attack);
-    building* best_building = get_best_target(formation_attack_weights);
-
-    if (!best_building) {
-        // no target buildings left: take common attack priority
-        best_building = get_best_target(enemy_attack_rules.priority.simple_w);
     }
 
-    if (!best_building) {
-        // no target building left: take closest for attack
-        best_building = get_closes_buildings();
+    building* b = building_get(best_id);
+    if (b->type != BUILDING_STORAGE_YARD && b->type != BUILDING_STORAGE_YARD_UP) {
+        m->set_destination_building(b->tile, best_id);
+        return true;
     }
-
-    if (best_building) {
-        attackd_buildings.insert({ best_building->id, true });
-        m->set_destination_building(best_building->tile, best_building->id);
-    }
+    // OG aims at the yard's first room, one tile right of the yard (id + 1 there).
+    const building_id room = b->next_part_building_id > 0 ? b->next_part_building_id : best_id;
+    m->set_destination_building(b->tile.shifted(1, 0), room);
+    return true;
 }
 
 static void set_native_target_building(formation* m) {
@@ -355,24 +300,6 @@ static void set_native_target_building(formation* m) {
 
     if (min_building) {
         m->set_destination_building(min_building->tile, min_building->id);
-    }
-}
-
-void formation_enemy_approach_target(formation* m) {
-    bool can_reach = map_routing_enemy_can_travel_over_land(m->home, m->destination, m->destination_building_id, 400);
-    
-    if (!can_reach) {
-        can_reach = map_routing_noncitizen_can_travel_through_everything(m->home, m->destination);
-    }
-
-    if (!can_reach) {
-        return;
-    }
-
-    tile2i dest;
-    const bool found = map_routing_get_closest_tile_within_range(m->home, m->destination, 8, 20, dest);
-    if (found) {
-        formation_set_destination(m, dest);
     }
 }
 
@@ -453,158 +380,152 @@ void formation_seth_kill_enemies() {
     messages::popup("message_spirit_of_seth", 0, grid_offset);
 }
 
-static void update_enemy_movement(formation* m, int roman_distance) {
+// OG formation.c ENEMY_* constants (formation.h:99-139).
+enum {
+    ENEMY_FORMATION_GATHER_TICKS = 32,
+    ENEMY_FORMATION_FLEE_CHECK_TICKS = 45,
+    ENEMY_FORMATION_MAX_TICKS_WITHOUT_TARGET = 48,
+    ENEMY_CYCLE_GATHER_REGROUP = 4,
+    ENEMY_CYCLE_ADVANCE = 6,
+    ENEMY_CYCLE_REGROUP = 4,
+    ENEMY_CYCLE_HALT = 2,
+    ENEMY_CYCLE_NO_TARGET_ADVANCE = 1,
+    ENEMY_CYCLE_NO_TARGET_REGROUP = 12,
+    ENEMY_CYCLE_NO_TARGET_HALT = 1,
+    ENEMY_MOB_CYCLE_ADVANCE = 2,
+    ENEMY_MOB_CYCLE_FRONT_REGROUP = 4,
+    ENEMY_MOB_CYCLE_FRONT_HALT = 2,
+    ENEMY_MOB_CYCLE_MIDDLE_REGROUP = 5,
+    ENEMY_MOB_CYCLE_MIDDLE_HALT = 3,
+    ENEMY_MOB_CYCLE_BACK_REGROUP = 6,
+    ENEMY_MOB_CYCLE_BACK_HALT = 4,
+    ENEMY_MOB_CYCLE_NO_TARGET_EXTRA_REGROUP = 6,
+    ENEMY_SOLDIERS_NEAR_RADIUS = 16,
+    ENEMY_SOLDIERS_FAR_RADIUS = 32,
+};
+
+enum e_enemy_target_found {
+    ENEMY_TARGET_NONE = 0,
+    ENEMY_TARGET_SOLDIERS_NEAR = 1,
+    ENEMY_TARGET_SOLDIERS_FAR = 2,
+};
+
+// OG formation_enemy_update after the target (formation.c:620-719). OG calls the counters regroup/advance/halt:
+// "advance" walks the formation to its spot around the army home, the regroup phase keeps the destination on
+// the army target, so the army marches.
+static void update_enemy_movement(formation* m, int target_found) {
     const enemy_army& army = g_enemy_armies.get(m->invasion_id);
     formation_state* state = &m->enemy_state;
-    int regroup = 0;
-    int halt = 0;
-    int pursue_target = 0;
-    int advance = 0;
+    int& regroup = state->duration_regroup;
+    int& advance = state->duration_advance;
+    int& halt = state->duration_halt;
+
+    bool hold_position = false;
+    bool move_to_spot = false;
+    bool follow_target = false;
     int target_formation_id = 0;
-    if (m->missile_fired)
-        halt = 1;
-    else if (m->missile_attack_timeout) {
-        pursue_target = 1;
+    if (m->missile_fired) {
+        hold_position = true;
+    } else if (m->missile_attack_timeout) {
+        follow_target = true;
         target_formation_id = m->missile_attack_formation_id;
-    } else if (m->wait_ticks < 32) {
-        regroup = 1;
-        state->duration_advance = 4;
+    } else if (m->wait_ticks < ENEMY_FORMATION_GATHER_TICKS) {
+        move_to_spot = true;
+        regroup = ENEMY_CYCLE_GATHER_REGROUP;
     } else if (army.ignore_pharaoh_soldiers) {
-        halt = 0;
-        regroup = 0;
-        advance = 1;
+        move_to_spot = false;
     } else {
-        int halt_duration, advance_duration, regroup_duration;
+        int next_halt, next_regroup, next_advance;
         if (army.layout == FORMATION_ENEMY_MOB || army.layout == FORMATION_ENEMY12) {
-            switch (m->enemy_batalion_index) {
-            case 0:
-            case 1:
-                regroup_duration = 2;
-                advance_duration = 4;
-                halt_duration = 2;
-                break;
-            case 2:
-            case 3:
-                regroup_duration = 2;
-                advance_duration = 5;
-                halt_duration = 3;
-                break;
-            default:
-                regroup_duration = 2;
-                advance_duration = 6;
-                halt_duration = 4;
-                break;
-            }
-            if (!roman_distance) {
-                advance_duration += 6;
-                halt_duration--;
-                regroup_duration--;
-            }
-        } else {
-            if (roman_distance) {
-                regroup_duration = 6;
-                advance_duration = 4;
-                halt_duration = 2;
+            const int index = m->enemy_batalion_index;
+            next_advance = ENEMY_MOB_CYCLE_ADVANCE;
+            if (index == 0 || index == 1) {
+                next_regroup = ENEMY_MOB_CYCLE_FRONT_REGROUP;
+                next_halt = ENEMY_MOB_CYCLE_FRONT_HALT;
+            } else if (index == 2 || index == 3) {
+                next_regroup = ENEMY_MOB_CYCLE_MIDDLE_REGROUP;
+                next_halt = ENEMY_MOB_CYCLE_MIDDLE_HALT;
             } else {
-                regroup_duration = 1;
-                advance_duration = 12;
-                halt_duration = 1;
+                next_regroup = ENEMY_MOB_CYCLE_BACK_REGROUP;
+                next_halt = ENEMY_MOB_CYCLE_BACK_HALT;
             }
+            if (target_found == ENEMY_TARGET_NONE) {
+                next_regroup += ENEMY_MOB_CYCLE_NO_TARGET_EXTRA_REGROUP;
+                next_halt--;
+                next_advance = ENEMY_CYCLE_NO_TARGET_ADVANCE;
+            }
+        } else if (target_found == ENEMY_TARGET_NONE) {
+            next_advance = ENEMY_CYCLE_NO_TARGET_ADVANCE;
+            next_regroup = ENEMY_CYCLE_NO_TARGET_REGROUP;
+            next_halt = ENEMY_CYCLE_NO_TARGET_HALT;
+        } else {
+            next_advance = ENEMY_CYCLE_ADVANCE;
+            next_regroup = ENEMY_CYCLE_REGROUP;
+            next_halt = ENEMY_CYCLE_HALT;
         }
-        if (state->duration_halt) {
-            state->duration_advance = 0;
-            state->duration_regroup = 0;
-            halt = 1;
-            state->duration_halt--;
-            if (state->duration_halt <= 0) {
-                state->duration_regroup = regroup_duration;
+
+        if (halt) {
+            hold_position = true;
+            regroup = 0;
+            advance = 0;
+            if (--halt <= 0) {
+                advance = next_advance;
                 set_enemy_figures_to_initial(m);
-                regroup = 0;
-                halt = 1;
             }
-        } else if (state->duration_regroup) {
-            state->duration_advance = 0;
-            state->duration_halt = 0;
-            regroup = 1;
-            state->duration_regroup--;
-            if (state->duration_regroup <= 0) {
-                state->duration_advance = advance_duration;
+        } else if (advance) {
+            regroup = 0;
+            halt = 0;
+            move_to_spot = true;
+            if (--advance <= 0) {
+                regroup = next_regroup;
                 set_enemy_figures_to_initial(m);
-                advance = 1;
-                regroup = 0;
+                move_to_spot = false;
             }
         } else {
-            state->duration_regroup = 0;
-            state->duration_halt = 0;
-            advance = 1;
-            state->duration_advance--;
-            if (state->duration_advance <= 0) {
-                state->duration_halt = halt_duration;
+            advance = 0;
+            halt = 0;
+            if (--regroup <= 0) {
+                halt = next_halt;
                 set_enemy_figures_to_initial(m);
-                halt = 1;
-                advance = 0;
+                hold_position = true;
             }
         }
     }
 
-    if (m->wait_ticks > 32) {
+    if (m->wait_ticks > ENEMY_FORMATION_FLEE_CHECK_TICKS) {
         formation_seth_kill_enemies();
     }
 
-    if (halt) {
+    if (hold_position) {
         formation_set_destination(m, m->home);
-    } else if (pursue_target) {
-        if (target_formation_id > 0) {
+    } else if (follow_target) {
+        if (target_formation_id <= 0) {
+            formation_set_destination(m, army.destination);
+        } else {
             const formation* target = formation_get(target_formation_id);
             if (target->num_figures > 0) {
                 formation_set_destination(m, target->home);
             }
-
-        } else {
-            formation_set_destination(m, army.destination);
         }
-
-    } else if (regroup) {
-        int layout = army.layout;
+    } else if (move_to_spot) {
+        const vec2i offset = LAYOUT_ORIENTATION_OFFSETS[army.layout][m->orientation / 2][m->enemy_batalion_index];
         tile2i army_home = army.home;
-        vec2i offset = LAYOUT_ORIENTATION_OFFSETS[layout][m->orientation / 2][2 * m->enemy_batalion_index];
         auto destination = formation_enemy_move_formation_to(m, army_home.shifted(offset));
-        if (destination.valid) {
-            formation_set_destination(m, destination.tile);
-        }
-
-    } else if (advance) {
-        int layout = army.layout;
-        tile2i army_destination = army.destination;
-        vec2i offset = LAYOUT_ORIENTATION_OFFSETS[layout][m->orientation / 2][2 * m->enemy_batalion_index];
-        auto destination = formation_enemy_move_formation_to(m, army_destination.shifted(offset));
         if (destination.valid) {
             formation_set_destination(m, destination.tile);
         }
     }
 }
 
-void formations_t::update_enemy_formation(formation* m, int* pharaoh_batalion_distance, attacked_buildings& attackd_buildings) {
+// OG formation_enemy_update for one enemy formation (formation.c:539-619). target_found lives across the loop
+// like the OG local: the first formation of each invasion sets it, the others reuse it.
+void formations_t::update_enemy_formation(formation* m, int* target_found) {
     enemy_army* army = enemy_army_get_editable(m->invasion_id);
     if (enemy_army_is_stronger_than_batalions()) {
-        const auto figure = figure_get<figure_enemy>(m->figure_type);
-        army->ignore_pharaoh_soldiers = figure && figure->ignore_pharaoh_soldiers();
+        army->ignore_pharaoh_soldiers = true;
     }
 
     if (army->buildings_to_destroy > 0 && army->buildings_destroyed >= army->buildings_to_destroy) {
-        // Still embarked: dismiss cargo instead of leave_city (glue would undo ACTION_156).
-        if (m->is_halted) {
-            for (figure *ship : map_figures()) {
-                auto *t = smart_cast<figure_enemy_transport>(ship);
-                if (t && t->is_alive() && t->transported_formation() == m->id) {
-                    t->dismiss_cargo();
-                    // Withdraw empty hull — do not leave an idle enemy transport.
-                    t->poof();
-                }
-            }
-            return;
-        }
-
         for (figure_id fid : m->figures) {
             figure_enemy *f = figure_get(fid)->dcast_enemy();
             if (f && f->is_alive()) {
@@ -612,11 +533,6 @@ void formations_t::update_enemy_formation(formation* m, int* pharaoh_batalion_di
                 f->route_remove();
             }
         }
-        return;
-    }
-
-    // Halted while embarked on an enemy transport — do not pick targets or march.
-    if (m->is_halted) {
         return;
     }
 
@@ -653,35 +569,33 @@ void formations_t::update_enemy_formation(formation* m, int* pharaoh_batalion_di
         }
     }
 
+    // Only the first formation of an invasion picks the army target; the others follow it.
     if (!army->formation_id) {
         army->formation_id = m->id;
         army->home = m->home;
         army->layout = m->layout;
 
-        *pharaoh_batalion_distance = 0;
+        *target_found = ENEMY_TARGET_NONE;
         map_routing_enemy_can_travel_over_land(m->home, tile2i(-2, -2), 100000, 300);
-   
-        auto strength_tile = map_soldier_strength_get_max(m->home, 16);
+        auto strength_tile = map_soldier_strength_get_max(m->home, ENEMY_SOLDIERS_NEAR_RADIUS);
         if (strength_tile.strength > 0) {
-            *pharaoh_batalion_distance = 1;
-        } else {
-            strength_tile = map_soldier_strength_get_max(m->home, 32);
-            if (strength_tile.strength > 0) {
-                *pharaoh_batalion_distance = 2;
-            }
-        }
-        
-        if (army->ignore_pharaoh_soldiers) {
-            *pharaoh_batalion_distance = 0;
+            *target_found = ENEMY_TARGET_SOLDIERS_NEAR;
+        } else if (map_soldier_strength_get_max(m->home, ENEMY_SOLDIERS_FAR_RADIUS).strength > 0) {
+            *target_found = ENEMY_TARGET_SOLDIERS_FAR;
         }
 
-        if (*pharaoh_batalion_distance == 1) {
+        if (!army->ignore_pharaoh_soldiers && *target_found == ENEMY_TARGET_SOLDIERS_NEAR) {
             army->destination = strength_tile.tile;
             army->destination_building_id = 0;
         } else {
-            set_enemy_target_building(m, attackd_buildings);
-            formation_enemy_approach_target(m);
-
+            if (army->ignore_pharaoh_soldiers) {
+                *target_found = ENEMY_TARGET_NONE;
+            }
+            if (set_enemy_target_building(m)) {
+                m->ticks_without_target = 0;
+            } else if (++m->ticks_without_target > ENEMY_FORMATION_MAX_TICKS_WITHOUT_TARGET) {
+                m->months_low_morale = 1;
+            }
             army->destination = m->destination;
             army->destination_building_id = m->destination_building_id;
         }
@@ -689,17 +603,9 @@ void formations_t::update_enemy_formation(formation* m, int* pharaoh_batalion_di
 
     m->enemy_batalion_index = army->num_batalions++;
     m->wait_ticks++;
+    m->set_destination_building(army->destination, army->destination_building_id);
 
-    if (m->destination_building_id == 0) {
-        set_enemy_target_building(m, attackd_buildings);
-        formation_enemy_approach_target(m);
-
-        army->destination = m->destination;
-        army->destination_building_id = m->destination_building_id;
-    }
-
-    //m->set_destination_building(army->destination, army->destination_building_id);
-    update_enemy_movement(m, *pharaoh_batalion_distance);
+    update_enemy_movement(m, *target_found);
 }
 
 void formations_t::enemy_update() {
@@ -709,31 +615,14 @@ void formations_t::enemy_update() {
         g_enemy_army_in_city.calculate_kingdome_influence();
         g_enemy_armies.clear_formations();
 
-        attacked_buildings attackd_buildings;
-        for (int i = 1; i < MAX_FORMATIONS; i++) {
-            formation *m = formation_get(i);
-            if (m->in_use && !m->is_herd && !m->own_batalion && m->destination_building_id > 0) {
-                building *target = building_get(m->destination_building_id);
-                if (target && target->state == BUILDING_STATE_VALID) {
-                    building_id bid = target->main()->id;
-                    auto result = attackd_buildings.insert({ bid, true });
-                    if (!result.second) {
-                        m->destination_building_id = 0;
-                    }
-                } else {
-                    m->destination_building_id = 0;
-                }
-            }
-        }
-
-        int pharaoh_batalion_distance = 0;
+        int target_found = ENEMY_TARGET_NONE;
         for (int i = 1; i < MAX_FORMATIONS; i++) {
             formation *m = formation_get(i);
             if (m->in_use && !m->is_herd && !m->own_batalion) {
                 if (g_invasion_auto_resolve.is_formation_frozen(m)) {
                     continue;
                 }
-                update_enemy_formation(m, &pharaoh_batalion_distance, attackd_buildings);
+                update_enemy_formation(m, &target_found);
             }
         }
     }

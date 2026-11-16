@@ -6,6 +6,8 @@
 #include "figure/figure_names.h"
 #include "core/custom_span.hpp"
 #include "core/random.h"
+#include "city/city_buildings.h"
+#include "grid/grid.h"
 
 struct figure_data_t {
     //int created_sequence;
@@ -79,6 +81,13 @@ void city_figures_t::update() {
     //g_city.entertainment.hippodrome_has_race = false;
 
     for (auto &figure: map_figures()) {
+        // Stray tile from a bad save or a broken move: used to be dropped by the draw sort.
+        if (figure->tile.x() >= GRID_LENGTH || figure->tile.y() > GRID_LENGTH) {
+            figure->tile = {-1, -1};
+            figure->main_cached_pos = {-1, -1};
+            figure->cart_cached_pos = {-1, -1};
+            figure->poof();
+        }
         figure->action_perform();
     }
 }
@@ -163,6 +172,8 @@ figure *figure_create(e_figure_type type, tile2i tile, int dir) {
     f->progress_on_tile = 8;
     f->progress_inside = 0;
     f->progress_inside_speed = 0;
+    // OG figure_create draws one crt_rand for the phrase sequences; gods/floods share that stream.
+    anti_scum_random_15bit();
     f->name = figure_name_get(type);
     f->map_figure_add();
 
@@ -172,6 +183,7 @@ figure *figure_create(e_figure_type type, tile2i tile, int dir) {
 }
 
 void figure_clear_all() {
+    stub_records_guard_reset();
     if (!g_figure_data.initialized) {
         return;
     }
@@ -185,7 +197,10 @@ void figure_clear_all() {
     }
 }
 
-io_buffer *iob_figures = new io_buffer([] (io_buffer *iob, size_t version) {
+io_buffer* iob_figures = new io_buffer([](io_buffer* iob, size_t version) {
+    if (iob->is_read_access()) {
+        stub_records_guard_reset();
+    }
     g_figure_data.init();
     for (int i = 0; i < MAX_FIGURES; i++) {
         figure_get(i)->bind(iob); // doing this because some members are PRIVATE.

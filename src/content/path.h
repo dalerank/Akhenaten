@@ -42,7 +42,13 @@ struct path : public bstring256 {
         int remain = capacity - size;
         *(mptr + ((remain > 0) ? 1 : 0)) = 0;
         replace('\\', '/'); // Replace backslashes with slashes
+        if (len() >= capacity - 2) {
+            report_truncation(c_str());
+        }
     }
+
+    // bstring formatting cuts at capacity - 2 characters without telling anyone.
+    static void report_truncation(pcstr truncated);
 
     template <typename... Args>
     path(Args&&... args) : bstring256(fmt_arg(args)...) {

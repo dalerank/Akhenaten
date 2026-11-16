@@ -4,12 +4,40 @@
 #include "building/building_temple_complex.h"
 #include "figure/service.h"
 #include "figuretype/figure_plagued_citizen.h"
-#include "graphics/image_groups.h"
-#include "graphics/image.h"
-#include "graphics/animation.h"
 #include "js/js_game.h"
 
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_priest);
+
+void figure_priest::static_params::archive_load(archive arch) {
+    gods.clear();
+    for (const xstring& config : god_configs) {
+        god_params& p = gods.emplace_back();
+        (figure_static_params&)p = (const figure_static_params&)*this;
+        p.config = config;
+        p.name = p.config.c_str();
+        const bool loaded = g_config_arch.r(p.config.c_str(), p);
+        verify_no_crash_var(loaded, "Variable not exist in config: %s", p.config.c_str());
+        p.initialize();
+    }
+}
+
+const figure_priest::god_params* figure_priest::god() const {
+    const building* temple = home();
+    for (const god_params& p : current_params().gods) {
+        if (std::find(p.temples.begin(), p.temples.end(), temple->type) != p.temples.end()) {
+            return &p;
+        }
+    }
+    return nullptr;
+}
+
+const figure_impl::static_params& figure_priest::params() const {
+    const god_params* p = god();
+    if (p) {
+        return *p;
+    }
+    return current_params();
+}
 
 void figure_priest::figure_before_action() {
     building* b = home();
@@ -18,143 +46,51 @@ void figure_priest::figure_before_action() {
     }
 }
 
-void figure_priest::figure_action() {
-
+static uint8_t& temple_coverage(building_house& house, e_god god) {
+    auto& d = house.runtime_data();
+    switch (god) {
+    case GOD_RA:
+        return d.temple_ra;
+    case GOD_PTAH:
+        return d.temple_ptah;
+    case GOD_SETH:
+        return d.temple_seth;
+    case GOD_BAST:
+        return d.temple_bast;
+    default:
+        return d.temple_osiris;
+    }
 }
 
 int figure_priest::provide_service() {
-    int houses_serviced = 0;
-    switch (home()->type) {
-    case BUILDING_TEMPLE_OSIRIS:
-    case BUILDING_TEMPLE_COMPLEX_OSIRIS:
-        houses_serviced = figure_provide_service(tile(), &base, [] (building *b, figure *f) {
-            auto house = b->dcast_house();
-            if (house && house->house_population() > 0) {
-                house->runtime_data().temple_osiris = MAX_COVERAGE;
-            }
-        });
-        break;
-
-    case BUILDING_TEMPLE_RA:
-    case BUILDING_TEMPLE_COMPLEX_RA:
-        houses_serviced = figure_provide_service(tile(), &base, [] (building *b, figure *f) {
-            auto house = b->dcast_house();
-            if (house && house->house_population() > 0) {
-                house->runtime_data().temple_ra = MAX_COVERAGE;
-            }
-        });
-        break;
-
-    case BUILDING_TEMPLE_PTAH:
-    case BUILDING_TEMPLE_COMPLEX_PTAH:
-        houses_serviced = figure_provide_service(tile(), &base, [] (building *b, figure *f) {
-            auto house = b->dcast_house();
-            if (house && house->house_population() > 0) {
-                house->runtime_data().temple_ptah = MAX_COVERAGE;
-            }
-        });
-        break;
-
-    case BUILDING_TEMPLE_SETH:
-    case BUILDING_TEMPLE_COMPLEX_SETH:
-        houses_serviced = figure_provide_service(tile(), &base, [] (building *b, figure *f) {
-            auto house = b->dcast_house();
-            if (house && house->house_population() > 0) {
-                house->runtime_data().temple_seth = MAX_COVERAGE;
-            }
-        });
-        break;
-
-    case BUILDING_TEMPLE_BAST:
-        houses_serviced = figure_provide_service(tile(), &base, [] (building *b, figure *f) {
-            auto house = b->dcast_house();
-            if (house && house->house_population() > 0) {
-                house->runtime_data().temple_bast = MAX_COVERAGE;
-            }
-        });
-        break;
-
-    case BUILDING_TEMPLE_COMPLEX_BAST: {
-        // Isis altar on Bast complex: clear infected houses + remove plagued walkers.
-        building *main = home()->main();
-        auto *complex = main ? main->dcast_temple_complex() : nullptr;
-        const bool isis_altar = complex && complex->has_upgrade(etc_upgrade_altar);
-        houses_serviced = figure_provide_service(tile(), &base, [isis_altar] (building *b, figure *f) {
-            auto house = b->dcast_house();
-            if (house && house->house_population() > 0) {
-                house->runtime_data().temple_bast = MAX_COVERAGE;
-            }
-            if (isis_altar && house) {
-                building *main = &house->main()->base;
-                if (main->has_plague) {
-                    main->has_plague = false;
-                    main->disease_days = 0;
-                }
-            }
-        });
-        if (isis_altar) {
-            figure_plagued_citizen::cure_nearby(tile(), 1);
-        }
-        break;
+    const god_params* p = god();
+    if (!p) {
+        return 0;
     }
 
-    default:
-        break;
+    building* main = home()->main();
+    auto* complex = main ? main->dcast_temple_complex() : nullptr;
+    const bool cures_plague = p->altar_cures_plague && complex && complex->has_upgrade(etc_upgrade_altar);
+    const e_god god = p->god;
+    const int houses_serviced = figure_provide_service(tile(), &base, [god, cures_plague](building* b, figure* f) {
+        auto house = b->dcast_house();
+        if (!house) {
+            return;
+        }
+        if (house->house_population() > 0) {
+            temple_coverage(*house, god) = MAX_COVERAGE;
+        }
+        if (cures_plague) {
+            building* main = &house->main()->base;
+            if (main->has_plague) {
+                main->has_plague = false;
+                main->disease_days = 0;
+            }
+        }
+    });
+    if (cures_plague) {
+        figure_plagued_citizen::cure_nearby(tile(), 1);
     }
 
     return houses_serviced;
 }
-
-e_overlay figure_priest::get_overlay() const {
-    switch (home()->type) {
-    case BUILDING_SHRINE_OSIRIS: case BUILDING_TEMPLE_OSIRIS: case BUILDING_TEMPLE_COMPLEX_OSIRIS: return OVERLAY_RELIGION_OSIRIS;
-    case BUILDING_SHRINE_RA: case BUILDING_TEMPLE_RA: case BUILDING_TEMPLE_COMPLEX_RA: return OVERLAY_RELIGION_RA;
-    case BUILDING_SHRINE_PTAH: case BUILDING_TEMPLE_PTAH: case BUILDING_TEMPLE_COMPLEX_PTAH: return OVERLAY_RELIGION_PTAH;
-    case BUILDING_SHRINE_SETH: case BUILDING_TEMPLE_SETH: case BUILDING_TEMPLE_COMPLEX_SETH: return OVERLAY_RELIGION_SETH;
-    case BUILDING_SHRINE_BAST: case BUILDING_TEMPLE_BAST: case BUILDING_TEMPLE_COMPLEX_BAST: return OVERLAY_RELIGION_BAST;
-
-    default:
-        return OVERLAY_NONE;
-    }
-}
-
-void figure_priest::update_animation() {
-    building* temple = home();
-    if (!temple->is_valid()) {
-        return;
-    }
-
-    xstring animkey = {};
-    switch (temple->type) {
-    case BUILDING_TEMPLE_OSIRIS:
-    case BUILDING_TEMPLE_COMPLEX_OSIRIS:
-        animkey = "osiris_walk";
-        break;
-
-    case BUILDING_TEMPLE_RA:
-    case BUILDING_TEMPLE_COMPLEX_RA:
-        animkey = "ra_walk";
-        break;
-
-    case BUILDING_TEMPLE_PTAH:
-    case BUILDING_TEMPLE_COMPLEX_PTAH:
-        animkey = "ptah_walk";
-        break;
-
-    case BUILDING_TEMPLE_SETH:
-    case BUILDING_TEMPLE_COMPLEX_SETH:
-        animkey = "seth_walk";
-        break;
-
-    case BUILDING_TEMPLE_BAST:
-    case BUILDING_TEMPLE_COMPLEX_BAST:
-        animkey = "bast_walk";
-        break;
-
-    default:
-        return;
-    }
-
-    image_set_animation(animkey);
-}
-

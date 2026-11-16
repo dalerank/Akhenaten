@@ -122,8 +122,8 @@ See **IT1** in `REMAKE_TODO.md` / `REMAKE_NOTES.md` §4.
 | `90_plagued_citizen.js` | Plague carriers: spawn from infected house, roadblock ignore, herbalist/Isis cure |
 | `92_ironwill.js` | Ironwill: mid-game save/load/autosave blocked; C++ write belt; exit checkpoint exempt |
 | `97_ptah_scorpion_curse.js` | Ptah scorpion raid (CF6): feature ON spawn at temple when no industry; OFF / no-temple fallback → no scorpions; raid prey skips ostrich; 1-day timer poof |
-| `94_locust_swarm.js` | CF2 locust: Osiris/EVENT/pak-chain/cheat; sentiment; saveload; timer; variant/float |
-| `85_mummy_attack.js` | BF3 mummy: register + `spawn_wave` → 1× msg 496; soldier target + kill; city cap 4; `EVENT_TYPE_MUMMY` |
+| `94_locust_swarm.js` | CF2 locust: register, cloud variant/float, post_load; Osiris/EVENT/pak-chain/console start the OG countdown |
+| `85_mummy_attack.js` | BF3 mummy: register; `EVENT_TYPE_MUMMY` msg 496 without a source; mummy from a temple is a soldier target + kill |
 | `91_popup_messages.js` | OG Popup Messages: category map + banner/click-open vs modal; unlisted stays modal |
 | `69_scorpion_spawn.js` | Cleopatra `FIGURE_SCORPION`: spawn + type + `update_animation` → `walk` (SprMain2 group 10; CF3c) |
 | `70_asp_spawn.js` | Cleopatra `FIGURE_ASP`: spawn + type + `update_animation` → `walk` (SprMain2 group 0; CF3 spawn) |
@@ -163,7 +163,7 @@ See **IT1** in `REMAKE_TODO.md` / `REMAKE_NOTES.md` §4.
 | `112_true_pyramid_complex_place.js` | C3c true pyramid complex (20×20 on-land): same large polish schedule, parts/phases |
 | `133_pyramid_complex_causeway.js` | Complex causeway: grand east-only (south reject), plain south place+claim, demolish clears strip |
 | `134_grand_stepped_place.js` | C1c grand stepped 252: south reject, east place+claim, type/parts/schedule |
-| `113_frog_plague.js` | CF1 Frog: register/anim walk+idle; Ptah/EVENT/cheat swarm; happiness; house infest + lockout; saveload; timer poof |
+| `113_frog_plague.js` | CF1 Frog: register/anim walk+idle; Ptah/EVENT/cheat start the OG countdown; happiness; house infest + lockout; saveload |
 | `115_bridge_menu_smoke.js` | BR2: Perwadjyt Low Bridge locked→`use_building` unlock; Bridges.map day-0 ON (else Nekhen hermetic fallback). Editor-flag table: [`docs/bridge_editor_allow_triage.md`](../docs/bridge_editor_allow_triage.md) |
 | `116_canal_shore_refresh.js` | IR3a: adding WATER next to existing canal restamps neighbor canal image |
 | `77_brick_wall_placement.js` | Brick wall L-drag; material; clear+undo; mud↔brick overwrite no-op |
@@ -181,7 +181,7 @@ See **IT1** in `REMAKE_TODO.md` / `REMAKE_NOTES.md` §4.
 | `59_autosave_slots.js` | Autosave slot filename format + pick missing/oldest (`__test_autosave_*`; AS4) |
 | `64_trader_capacity.js` | Trade capacity: OG roll to 800 (`uint16` random), flag 1600, buy gate, `has_traded_max(cap)` (TC*) |
 | `65_zoo_place.js` | Cleopatra Zoo: place 6×6, stock straw+gamemeat, spawn `FIGURE_ZOOKEEPER`, animals-present timer, no spawn without stock (Z5) |
-| `70_artisans_guild.js` | Artisans' Guild: Sphinx phase 6 + stock paint/clay → spawn `FIGURE_TOMB_ARTISAN`; no spawn without paint/clay (AG6) |
+| `70_artisans_guild.js` | Artisans guild (OG): clay trip before paint, one 100-load per trip, no stock no artisan, staffing caps 1-4 artisans, animation needs paint |
 | `141_small_royal_tomb.js` | C10: Small royal tomb cliff place + finish rating W=4 |
 | `143_medium_royal_tomb.js` | C10: Medium royal tomb cliff place + finish rating W=8 |
 | `145_large_royal_tomb.js` | C10: Large royal tomb cliff place + finish rating W=13 |
@@ -206,6 +206,14 @@ See **IT1** in `REMAKE_TODO.md` / `REMAKE_NOTES.md` §4.
 | `170_iunet_request_outcomes.js` | B13a: Iunet meat/pottery late→hittite×10 once; ok leaf; limestone refuse→egypt×24 ≠ favour |
 | `184_request_saveload.js` | Pharaoh request `.svx` round-trip: tag/state/months/faction; fulfill after load keeps `event_request_cleared.tag_id` |
 | `176_north_dahshur_henna_raid.js` | B12/B13d: North Dahshur henna refuse/late→Hyksos×12; on-time fulfill no raid |
+| `370_mods_fixture.js` | Folder mod `fixtures/mods/akh_test_mod`: config + script override applied on enable, gone after disable (VM rebuild) |
+| `371_mods_order.js` | Two mods with the same `speech.js`: the later id (`akh_test_mod_b`) wins regardless of enable order; clash logged |
+| `372_mods_broken.js` | Mod whose script throws is reported broken; the next mod queued in the same sync still runs |
+| `373_mods_saveload.js` | `.svx` chunk `mods`: loading a save made with another mod set logs the mismatch and leaves mods as they are; `__test_mods_apply_saved` (the popup's Yes) enables the saved mods and reloads |
+| `421_artisans_guild_og.js` | Artisans guild (OG): needs-clay-and-paint placement warning (gone with clay+paint in a yard), info state line 312.2/8/9/3, 15/20 workers by difficulty |
+| `483_zoom_wheel_returns_to_default.js` | Zoom: wheel steps stay on the 100% + k*step grid after hitting zoom_min, so scrolling back returns to exactly 100% (stepped and smooth modes) |
+| `484_building_record_size_all_types.js` | Save records: for every building type with a model, header + `bind_dynamic` of a fresh unplaced building fit the 186-byte record head; logs each type over budget |
+| `485_entertainment_record_saveload.js` | Save records: booth, bandstand and pavilion keep num_shows, show days, play_index, spawned_entertainer_days, conservatory_help, consume_material_id, booth corner, latched stand offsets and orientation through save -> load |
 
 Farm **placement** tests (34/35) cover `can_place` / terrain rules; **37** covers preview image helpers.
 When adding more preview draw coverage, follow JS draw conventions in
@@ -302,13 +310,18 @@ A new test binding goes into the matching domain file; a new domain file needs a
 | `__test_funeral_tomb_dest_is_road(bid)` | 0\|1 | BF2: resolved tomb destination is road/ferry |
 | `__test_monument_funeral_done(bid)` | 0\|1 | BF2: whether tomb has `funeral_done` |
 | `__test_monument_set_funeral_done(bid, done)` | undefined | BF2: set/clear `funeral_done` |
-| `__test_mummy_spawn_wave(n)` | figure id | BF3: spawn mummy wave + 1× msg 496 |
+| `__test_mummy_start_plague(amount)` | figure id | OG `city_mummies_start`: one mummy at a random source building, `amount` caps risen ones |
 | `__test_figure_is_enemy(fid)` | 0\|1 | Whether figure has enemy flag |
 | `__test_soldier_combat_target(x,y,d)` | figure id | Soldier combat target near tile |
 | `__test_figure_kill(fid)` | undefined | Kill live figure (reset wait_ticks) |
-| `__test_locust_spawn_swarm(count)` | figure id | CF2: spawn locust swarm (0 → default) |
-| `__test_locust_set_days(fid, days)` | 0\|1 | CF2: set locust `days_left` |
-| `__test_locust_get_days(fid)` | days | CF2: get locust `days_left` |
+| `__test_locust_farm(fid)` | building id | Farm a locust flies to |
+| `__test_locust_update_month(month)` | undefined | OG `city_locusts_update` for the advanced month |
+| `__test_frog_house(fid)` | building id | House a frog walks to |
+| `__test_plagues_locusts_countdown()` / `__test_plagues_set_locusts_countdown(v)` | ticks | OG `city_locusts_countdown` (-1 = waits for the flood) |
+| `__test_plagues_frogs_countdown()` | ticks | OG `city_frogs_countdown` |
+| `__test_plagues_mummies_max()` | count | OG `mummies_max` |
+| `__test_plagues_tick(n)` | undefined | Run n city ticks of the plague countdowns |
+| `__test_floods_season()` | season | `g_floods.season` (flood month = season / 30) |
 | `__test_locust_cloud_variant(fid)` | 0..4 | CF2: SprMain2 group variant |
 | `__test_locust_post_load(fid)` | 0\|1 | CF2: exercise `on_post_load` restore |
 | `__test_figure_current_height(fid)` | height | Figure `current_height` (float) |
@@ -324,7 +337,6 @@ A new test binding goes into the matching domain file; a new domain file needs a
 | `__test_monument_add_resource(bid, resource, amount)` | boolean | Deliver resource units into monument (`deliver_resource`) |
 | `__test_monument_resource_pct(bid, resource)` | int | Monument `resources_pct[resource]` (0..100+; −1 if invalid) |
 | `__test_storage_yard_add_resource(bid, resource, amount)` | boolean | Force-stock a Storage Yard (bypass accept rules) |
-| `__test_storageyard_monument_task_resource(yard_bid)` | int | Resource id if yard would start a monument sled task, else 0 (stockpile check) |
 | `__test_yards_stored(resource)` / `__test_yards_stored_staffed(resource)` | int | City granite/etc. in yards (all / staffed only) |
 | `__test_building_current_image(bid)` | int | Monument `building_image_get()` |
 | `__test_camera_center_building(bid)` | undefined | Center camera on building / monument `center_point` |
@@ -383,3 +395,4 @@ When adding a test that asserts a window transition, add the matching `__log_mar
 - One process, sequential. Tests share global state (session, map, buildings). Later tests may need `test_reload_city_session` if an earlier test left buildings on the map (see 10 → 11).
 - The log file is truncated on each process start. Under `--integraltests` it is written to `platform.user_directory()` (e.g. `%APPDATA%\Akhenaten` on Windows); `__test_find_inlog` reads `logs::output_path()`.
 - The driver expects `--no-logo --no-resource` for a hermetic run; CI sets `SDL_VIDEODRIVER=dummy` for headless runs.
+- Mods come only from `--mods PATH` (default `tests/fixtures/mods`); the user's enabled-mods list and `Scripts/` folders are ignored, and nothing is written back to the config. A test that disables a mod rebuilds the VM; the driver then reloads the test file before `check_valid()`, so keep state for `check_valid()` in the log or in C++, not in JS globals.

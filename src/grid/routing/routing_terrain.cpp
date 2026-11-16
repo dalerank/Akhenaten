@@ -112,9 +112,27 @@ int map_routing_land_penalty_amphibia(int grid_offset) {
     return routing_amphibia_buildings[b->type].penalty;
 }
 
+// OG noncitizen_building_value (routing_terrain.c:176): enemies treat any building as one to break through,
+// except forts, fort ground, the ferry and the monuments/native buildings that block them outright.
 static int get_land_type_noncitizen(int grid_offset) {
     building *b = building_at(grid_offset);
-    return routing_amphibia_buildings[b->type].penalty;
+    switch (b->type) {
+    case BUILDING_FORT_CHARIOTEERS:
+    case BUILDING_FORT_ARCHERS:
+    case BUILDING_FORT_INFANTRY:
+        return NONCITIZEN_5_FORT;
+    case BUILDING_FORT_GROUND:
+        return NONCITIZEN_0_PASSABLE;
+    case BUILDING_FERRY:
+    case BUILDING_BURNING_RUIN:
+    case BUILDING_UNUSED_NATIVE_HUT_88:
+    case BUILDING_UNUSED_NATIVE_MEETING_89:
+    case BUILDING_UNUSED_NATIVE_CROPS_93:
+    case BUILDING_PYRAMID_ENTRY_TILE:
+        return NONCITIZEN_N1_BLOCKED;
+    default:
+        return b->is_monument() ? NONCITIZEN_N1_BLOCKED : NONCITIZEN_1_BUILDING;
+    }
 }
 
 static bool is_water_tile(int grid_offset) {
@@ -574,6 +592,13 @@ void map_routing_update_all() {
 
 /////////////
 
+// Animals walk the noncitizen grid but only its open tiles: buildings there are "break through" tiles
+// for enemies (NONCITIZEN_1_BUILDING), and walls, gatehouses and forts stop animals as well.
+bool map_routing_animal_passable(int grid_offset) {
+    const int value = map_grid_get(routing_land_noncitizen, grid_offset);
+    return value == NONCITIZEN_0_PASSABLE || value == NONCITIZEN_2_CLEARABLE;
+}
+
 bool map_routing_passable_by_usage(int terrain_usage, int grid_offset) {
     switch (terrain_usage) {
     case TERRAIN_USAGE_ANY:
@@ -587,7 +612,7 @@ bool map_routing_passable_by_usage(int terrain_usage, int grid_offset) {
     case TERRAIN_USAGE_WALLS:
         return map_grid_get(routing_tiles_walls, grid_offset) == WALL_0_PASSABLE;
     case TERRAIN_USAGE_ANIMAL:
-        return map_grid_get(routing_land_noncitizen, grid_offset) >= NONCITIZEN_0_PASSABLE;
+        return map_routing_animal_passable(grid_offset);
     case TERRAIN_USAGE_AMPHIBIA:
         return map_grid_get(routing_land_amphibia, grid_offset) >= AMPHIBIA_0_PASSABLE;
     }

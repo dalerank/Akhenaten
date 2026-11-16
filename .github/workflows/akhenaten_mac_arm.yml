@@ -38,12 +38,6 @@ jobs:
         cmake --build --preset macos-clang-relwithdebinfo-make-arm64 --target install/local
         mkdir macos_build
         cp -R ./build/install/akhenaten.app ./macos_build/akhenaten.app
-        if [ -f ./build/akhenaten-updater ]; then
-          cp ./build/akhenaten-updater ./macos_build/akhenaten.app/Contents/MacOS/akhenaten-updater
-          cp ./build/akhenaten-updater ./macos_build/akhenaten-updater
-          chmod +x ./macos_build/akhenaten.app/Contents/MacOS/akhenaten-updater \
-                   ./macos_build/akhenaten-updater
-        fi
         # Ship innoextract where SDL_GetBasePath() looks (Resources) and next to the binary.
         INNO_SRC=""
         if [ -f ./build/tools/innoextract/bin/innoextract ]; then
@@ -73,3 +67,18 @@ jobs:
       with:
         name: macos_arm_build
         path: macos_build
+
+    # itch.io updates the game itself: its package (akhenaten_content.yml) gets a build without the updater.
+    - name: build-itch-package
+      if: github.event_name == 'push'
+      run: |
+        cmake -B build -DAKHENATEN_UPDATER=OFF
+        cmake --build --preset macos-clang-relwithdebinfo-make-arm64 -- -j$(sysctl -n hw.ncpu)
+        cmake --build --preset macos-clang-relwithdebinfo-make-arm64 --target install/local
+        cp -R ./macos_build ./macos_itch_build
+        cp ./build/install/akhenaten.app/Contents/MacOS/akhenaten ./macos_itch_build/akhenaten.app/Contents/MacOS/akhenaten
+    - uses: actions/upload-artifact@v6
+      if: github.event_name == 'push'
+      with:
+        name: macos_arm_itch_build
+        path: macos_itch_build

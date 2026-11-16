@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<assembly manifestVersion="1.0" xmlns="urn:schemas-microsoft-com:asm.v1">
+  <!-- Narrow-char CRT/Win32 calls (fopen, std::ifstream, std::filesystem::path(char*), SHGetFolderPathA)
+       take UTF-8, the encoding SDL and the rest of the engine use, so non-ASCII profile/install paths work.
+       Needs Windows 10 1903+; older Windows ignores it and keeps the ANSI code page. -->
+  <application xmlns="urn:schemas-microsoft-com:asm.v3">
+    <windowsSettings>
+      <activeCodePage xmlns="http://schemas.microsoft.com/SMI/2019/WindowsSettings">UTF-8</activeCodePage>
+    </windowsSettings>
+  </application>
+</assembly>

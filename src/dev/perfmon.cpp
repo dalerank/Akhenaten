@@ -8,9 +8,12 @@
 #include "dev/perfmon_widget.h"
 #include "game/game.h"
 #include "game/game_events.h"
+#include "graphics/render_stats.h"
 #include "graphics/residency_atlas.h"
 #include "input/keys.h"
 #include "js/js.h"
+#include "core/log.h"
+#include "platform/renderer.h"
 #include "widget/debug_console.h"
 
 #include "imgui.h"
@@ -95,6 +98,26 @@ void game_perfmon_t::ensure_metrics() {
         []() { return res_atlas::frame_time_ms(); },
         atlasTimeSettings,
         { 0.25, 0.5, 1.0, 2.0, 4.0, 8.0 }));
+
+    Perfmon::PerfMetricSettings drawCountSettings;
+    drawCountSettings.goodValue = 200.0;
+    drawCountSettings.badValue = 3000.0;
+
+    widget.RegisterMetric(
+      Perfmon::Metric("sprite draws / frame", []() { return (double)render_stats::last_frame().draws; },
+        drawCountSettings, {500.0, 1000.0, 2000.0, 4000.0, 8000.0}));
+
+    widget.RegisterMetric(
+      Perfmon::Metric("est. batches / frame", []() { return (double)render_stats::last_frame().batches; },
+        drawCountSettings, {50.0, 200.0, 500.0, 1000.0, 4000.0}));
+
+    widget.RegisterMetric(
+      Perfmon::Metric("texture switches / frame", []() { return (double)render_stats::last_frame().texture_switches; },
+        drawCountSettings, {50.0, 200.0, 500.0, 1000.0, 4000.0}));
+
+    widget.RegisterMetric(
+      Perfmon::Metric("blend switches / frame", []() { return (double)render_stats::last_frame().blend_switches; },
+        drawCountSettings, {10.0, 50.0, 200.0, 1000.0}));
 }
 
 void game_perfmon_t::set_phase_ms(double update_ms, double draw_phase_ms) {
@@ -136,6 +159,20 @@ void ANK_REGISTER_APPLICATION_MODULE(register_perfmon_module) {
     bind_debug_command("perfmon", [&module](console_args &, console_output &out) {
         module.visible = !module.visible;
         out.println(module.visible ? "perfmon on" : "perfmon off");
+    });
+
+    bind_debug_command("render_stats", [](console_args& args, console_output& out) {
+        const bstring128 tag = args.next_str();
+        render_stats::frame_t avg;
+        const uint32_t frames = render_stats::take_average(avg);
+        bstring512 line;
+        line.printf("render_stats[%s] renderer=%s atlas=%s frames=%u draws=%u resident=%u batches=%u tex_switches=%u "
+                    "blend_switches=%u frame_ms=%.2f draw_ms=%.2f present_ms=%.2f atlas_fill=%.2f%%",
+          tag.c_str(), get_video_driver().c_str(), res_atlas::render_enabled() ? "on" : "off", frames, avg.draws,
+          avg.resident, avg.batches, avg.texture_switches, avg.blend_switches, avg.frame_ms, avg.draw_ms,
+          avg.present_ms, res_atlas::fill_percent());
+        logs::info("%s", line.c_str());
+        out.println(line.c_str());
     });
 }
 

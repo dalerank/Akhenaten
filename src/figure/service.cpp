@@ -7,6 +7,8 @@
 #include "grid/grid.h"
 #include "game/game_config.h"
 
+#include <algorithm>
+
 static int provide_missionary_coverage(int x, int y) {
     grid_area area = map_grid_get_area(tile2i(x, y), 1, 4);
 
@@ -19,6 +21,22 @@ static int provide_missionary_coverage(int x, int y) {
         }
     });
     return 1;
+}
+
+int figure_provide_crime_coverage(tile2i tile, int reduction) {
+    int crime_seen = 0;
+    figure_provide_service(tile, nullptr, [&](building* b, figure*) {
+        auto house = b->dcast_house();
+        if (!house) {
+            return;
+        }
+
+        // TODO: crime is the remake house criminal_active until the OG crime_risk lands (og-diff item 8).
+        auto& housed = house->runtime_data();
+        crime_seen = std::max<int>(crime_seen, housed.criminal_active);
+        housed.criminal_active = (uint8_t)std::max(0, housed.criminal_active - reduction);
+    });
+    return crime_seen;
 }
 
 int figure::figure_service_provide_coverage() {

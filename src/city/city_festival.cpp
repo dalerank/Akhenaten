@@ -11,7 +11,7 @@
 #include "core/random.h"
 #include "figure/figure.h"
 #include "game/game_config.h"
-#include "figuretype/festival_guy.h"
+#include "figuretype/figure_festival_priest.h"
 #include "graphics/image_groups.h"
 #include "core/tokenum.h"
 #include "game/local_cults.h"
@@ -24,41 +24,6 @@ void city_festival_t::execute_festival() {
     building *square = building_at(square_pos);
     if (!square->is_valid()) {
         return;
-    }
-
-    for (int i = 1; i < MAX_BUILDINGS; i++) {
-        building* b = building_get(i);
-        if (b->state != BUILDING_STATE_VALID)
-            continue;
-
-        switch (b->type) {
-        case BUILDING_TEMPLE_OSIRIS:
-        case BUILDING_TEMPLE_COMPLEX_OSIRIS:
-        case BUILDING_TEMPLE_RA:
-        case BUILDING_TEMPLE_COMPLEX_RA:
-        case BUILDING_TEMPLE_PTAH:
-        case BUILDING_TEMPLE_COMPLEX_PTAH:
-        case BUILDING_TEMPLE_SETH:
-        case BUILDING_TEMPLE_COMPLEX_SETH:
-        case BUILDING_TEMPLE_BAST:
-        case BUILDING_TEMPLE_COMPLEX_BAST:
-        case BUILDING_JUGGLER_SCHOOL:
-        case BUILDING_CONSERVATORY:
-        case BUILDING_DANCE_SCHOOL: {
-                figure* f = b->dcast()->create_figure_generic(FIGURE_FESTIVAL_GUY, (e_figure_action)ACTION_10_FESTIVAL_GUY_CREATED, BUILDING_SLOT_PRIEST, DIR_4_BOTTOM_LEFT);
-
-                tile2i tile_on_square = square_pos.shifted(rand() % square->size, rand() % square->size);
-                f->tile = b->road_access;
-                f->set_home(b);
-                f->set_destination(square);
-                f->destination_tile = tile_on_square;
-                f->wait_ticks = rand() % 10;
-
-                auto fguy = f->dcast_festival_guy();
-                fguy->runtime_data().festival_remaining_dances = rand() % 10;
-            }
-            break;
-        }
     }
 
     if (first_festival_effect_months <= 0) {
@@ -142,6 +107,9 @@ void city_festival_t::execute_festival() {
 
         break;
     }
+
+    figure_festival_priest::spawn_celebrants(
+      planned_size * figure_festival_priest::current_params().celebrants_per_size);
 
     planned_size = FESTIVAL_NONE;
     months_till_next = 0;

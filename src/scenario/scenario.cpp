@@ -76,15 +76,6 @@ int scenario_data_t::rescue_loan() const {
     return difficulty.loan_money(finance.rescue_loan);
 }
 
-int scenario_data_t::house_tax_multiplier(int v) const {
-    const int multiplier = meta.house_tax_multipliers.get();
-    if (multiplier > 0) {
-        return calc_adjust_with_percentage<int>(v, multiplier);
-    }
-
-    return difficulty.house_tax_multiplier(v);
-}
-
 int scenario_data_t::debt_interest() const {
     const int rate = meta.debt_interest.get();
     if (rate > 0) {
@@ -96,9 +87,27 @@ int scenario_data_t::debt_interest() const {
     return 10;
 }
 
+// Percent of the taxed amount the city keeps: the mission's tax_percentage, else the system table.
+int scenario_data_t::city_tax_percentage() const {
+    if (!meta.tax_percentage.value.empty()) {
+        return meta.tax_percentage.get();
+    }
+    return finance_tax_rules.tax_percentage.get();
+}
+
 void scenario_data_t::load_metadata(const mission_id_t &missionid, bool is_new_mission) {
-    g_config_arch.r_section(missionid, [this, is_new_mission] (archive arch) {
+    g_config_arch.r_section(missionid, [this, is_new_mission](archive arch) {
+        meta.tax_percentage.value.clear();
+        meta.house_tax_multipliers.value.clear();
         arch.r(meta);
+        if (!meta.house_tax_multipliers.value.empty()) {
+            static bool warned = false;
+            if (!warned) {
+                warned = true;
+                logs::warn("[scenario] house_tax_multipliers is obsolete and ignored; use tax_percentage (percent the "
+                           "city keeps, OG 50)");
+            }
+        }
         arch.r("env", env);
 
         int rank = std::min(arch.r_int("player_rank", -1), 10);
@@ -120,6 +129,7 @@ void scenario_data_t::load_metadata(const mission_id_t &missionid, bool is_new_m
             carry_troops_mask |= troop_carry_mask_parse_name(name.c_str());
         }
         carry_monuments = arch.r_bool("carry_monuments");
+        events.og_invasions = arch.r_bool("og_invasions", false);
         reset_personal_savings = arch.r_bool("reset_personal_savings");
         if (is_new_mission && reset_personal_savings) {
             g_city.kingdome.campaign_carry_personal_savings = 0;
@@ -127,6 +137,8 @@ void scenario_data_t::load_metadata(const mission_id_t &missionid, bool is_new_m
 
         arch.r("invasion_points_land", invasion_points_land);
         arch.r("invasion_points_sea", invasion_points_sea);
+        // The criteria come from the mission script only; start clean so a previous mission's goals do not linger.
+        win_criteria = {};
         arch.r("win_criteria", win_criteria);
         arch.r("sounds", sounds);
 
@@ -297,11 +309,6 @@ bool scenario_data_t::is_scenario_id(xspan<int> missions) {
     return false;
 }
 
-int scenario_data_t::is_before_mission(int mission) {
-    const bool is_custom_map = (mode() != e_scenario_normal);
-    return !is_custom_map && campaign_mission_rank < mission;
-}
-
 void scenario_set_name(pcstr name) {
     g_scenario.scenario_name = (name && *name) ? name : "";
 }
@@ -416,7 +423,7 @@ io_buffer *iob_scenario_info = new io_buffer([] (io_buffer *iob, size_t version)
     iob->bind____skip(1); // used?
     iob->bind____skip(8);
 
-    int tmp;
+    int tmp = 0;
     iob->bind(BIND_SIGNATURE_UINT8, &tmp);
     iob->bind(BIND_SIGNATURE_UINT8, &g_scenario.player_faction);
 
@@ -470,6 +477,7 @@ io_buffer* iob_scenario_map_name = new io_buffer([](io_buffer* iob, size_t versi
 
 void scenario_data_t::update() {
     scenario_earthquake_process();
+    events.update_tick();
     //scenario_slave_revolt_process();
     scenario_kingdome_change_process();
 }

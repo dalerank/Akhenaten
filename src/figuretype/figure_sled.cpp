@@ -1,9 +1,9 @@
 #include "figure_sled.h"
 
-#include "core/profiler.h"
-#include "building/monuments.h"
-#include "graphics/graphics.h"
 #include "city/city_figures.h"
+#include "core/calc.h"
+#include "core/profiler.h"
+#include "game/game_config.h"
 #include "js/js_game.h"
 
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_sled);
@@ -11,129 +11,50 @@ REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_sled_puller);
 
 void figure_sled::figure_action() {
     OZZY_PROFILER_FUNCTION();
-    if (base.leading_figure_id > 0) {
-        // OG laborer train: members stay in ACTION_8 and follow via follow_closely.
-        if (action_state() == ACTION_8_SLED_TRAIN_FOLLOW) {
-            pyramid_figure_train_follow(id(), 1);
-            return;
-        }
-
-        figure *leader = figure_get(base.leading_figure_id);
-        if (leader && leader->type == FIGURE_SLED_PULLER && leader->state == FIGURE_STATE_ALIVE) {
-            follow_ticks(1);
-            return;
-        }
-
-        building *dest = destination();
-        auto monument = (dest && dest->id) ? dest->dcast_monument() : nullptr;
-        if (monument) {
-            grid_area area = monument->get_area();
-            if (map_tile_is_inside_area(tile(), area.tmin(), area.tmax())) {
-                do_deliver(ACTION_11_SLED_RETURNING_EMPTY);
-            }
-        }
-        building_monument_remove_delivery(id());
-        poof();
+    if (action_state() == ACTION_9_SLED_DROPPED) {
         return;
     }
+    pyramid_figure_train_follow(id(), 1);
 }
 
 void figure_sled::update_animation() {
-    xstring animkey;
-    switch (base.resource_id) {
-    case RESOURCE_STONE: animkey = "stone"; break;
-    case RESOURCE_LIMESTONE: animkey = "limestone"; break;
-    case RESOURCE_GRANITE: animkey = "granite"; break;
-    case RESOURCE_SANDSTONE: animkey = "sandstone"; break;
-    case RESOURCE_MARBLE: animkey = "marble"; break;
-    case RESOURCE_COPPER: animkey = "copper"; break;
-    case RESOURCE_CLAY: animkey = "clay"; break;
-    case RESOURCE_BRICKS: animkey = "bricks"; break;
-
-    default:
-        animkey = "empty";
-        break;
+    const auto& p = current_params();
+    const resource_image_t* image = &p.default_image;
+    for (const auto& entry : p.resource_images) {
+        if (entry.resource == base.resource_id) {
+            image = &entry;
+            break;
+        }
     }
 
-    image_set_animation(animkey);
-}
-
-void figure_sled::do_deliver(int action_done) {
-    base.animctx.frame = 0;
-    base.wait_ticks++;
-
-    int carrying = base.get_carrying_amount();
-    e_resource resource = base.get_resource();
-
-    if (resource == RESOURCE_NONE || carrying <= 0) {
-        base.progress_inside_speed = 0;
-        return advance_action(action_done);
-    }
-
-    building *dest = destination();
-    auto monument = (dest && dest->id) ? dest->dcast_monument() : nullptr;
-    if (monument) {
-        monument->deliver_resource(resource, carrying);
-    }
+    const auto& rd = runtime_data();
+    const bool on_ramp = rd.walk_mode != PYRAMID_WALK_NONE && rd.climb.previous_height < rd.climb.height;
+    image_set_animation(on_ramp ? image->ramp : image->ground);
 }
 
 void figure_sled_puller::figure_action() {
     OZZY_PROFILER_FUNCTION();
-    if (action_state() == ACTION_8_SLED_TRAIN_FOLLOW) {
-        pyramid_figure_train_follow(id(), 0);
+    if (is_follower_runaway()) {
+        do_follower_runaway_tick();
         return;
     }
-
-    if (base.leading_figure_id > 0) {
-        --base.wait_ticks;
-        if (base.wait_ticks > 0) {
-            return;
-        }
-
-        figure *leader = figure_get(base.leading_figure_id);
-        if (leader && leader->type == FIGURE_SLED_PULLER && leader->state == FIGURE_STATE_ALIVE) {
-            follow_ticks(1);
-            return;
-        }
-        poof();
+    if (game_features::gameplay_change_sled_pullers_flee.to_bool() && enemy_near()) {
+        g_monument_pyramid_figure.drop_train(id());
         return;
     }
+    pyramid_figure_train_follow(id(), 0);
+}
 
-    switch (action_state()) {
-    case ACTION_8_RECALCULATE:
-    case ACTION_50_SLED_PULLER_CREATED: {
-            --base.wait_ticks;
-            if (base.wait_ticks > 0) {
-                return;
-            }
-            advance_action(ACTION_51_SLED_PULLER_DELIVERING_RESOURCE);
-            auto monument = destination()->dcast_monument();
-            assert(monument);
-            if (monument) {
-                base.destination_tile = monument->center_point();
-            }
+bool figure_sled_puller::enemy_near() const {
+    const int distance = current_params().flee_enemy_distance;
+    for (figure* f : map_figures()) {
+        if (f && f->is_alive() && f->is_enemy() && calc_maximum_distance(base.tile, f->tile) <= distance) {
+            return true;
         }
-        break;
-
-    case ACTION_51_SLED_PULLER_DELIVERING_RESOURCE:
-        do_goto(base.destination_tile, TERRAIN_USAGE_PREFER_ROADS, ACTION_52_SLED_PULLER_AT_DELIVERY_BUILDING, ACTION_53_SLED_PULLER_DESTROY);
-        break;
-
-    case ACTION_52_SLED_PULLER_AT_DELIVERY_BUILDING:
-        base.wait_ticks = 25;
-        advance_action(ACTION_54_SLED_PULLER_WAITING_FOR_DESTROY);
-        break;
-
-    case ACTION_54_SLED_PULLER_WAITING_FOR_DESTROY:
-        --base.wait_ticks;
-        if (base.wait_ticks > 0) {
-            return;
-        }
-        advance_action(ACTION_53_SLED_PULLER_DESTROY);
-        break;
-
-    case ACTION_53_SLED_PULLER_DESTROY:
-        poof();
-        break;
     }
+    return false;
+}
+
+void figure_sled_puller::update_animation() {
+    image_set_animation(runtime_data().side ? animkeys().pulling : animkeys().front);
 }

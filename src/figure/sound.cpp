@@ -5,6 +5,12 @@
 #include "sound/effect.h"
 #include "sound/sound.h"
 
+void figure::play_attack_sound() {
+    if (type == FIGURE_CONSTABLE) {
+        g_sound.play_effect(SOUND_EFFECT_POLICE_ATTACK);
+    }
+}
+
 void figure::play_die_sound() {
 
     if (dcast()->play_die_sound()) {

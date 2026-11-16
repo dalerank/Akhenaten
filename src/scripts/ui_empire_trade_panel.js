@@ -217,7 +217,7 @@ function empire_window_sync_object_info_ui(window) {
 
     var obj = empire_window.selected_object
     if (!obj) {
-        window.info_tooltip.text = __loc(47, 9)
+        window.info_tooltip.text = empire.selected_marker_kind >= 0 ? "" : __loc(47, 9)
         return
     }
 

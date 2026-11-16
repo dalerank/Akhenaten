@@ -7,6 +7,7 @@
 #include "core/random.h"
 #include "core/profiler.h"
 #include "core/log.h"
+#include "city/city_buildings.h"
 #include "grid/vegetation.h"
 #include "grid/trees.h"
 #include "grid/canals.h"
@@ -49,6 +50,7 @@
 #include "city/city_desirability.h"
 #include "city/city_message.h"
 #include "city/city_industry.h"
+#include "figuretype/figure_locust.h"
 #include "scenario/distant_battle.h"
 #include "scenario/empire.h"
 #include "empire/empire.h"
@@ -100,7 +102,7 @@ void game_t::animation_timers_update() {
 }
 
 bool game_t::animation_should_advance(uint32_t speed) {
-    if (!animation || paused) {
+    if (!animation || paused || redraw_read_only) {
         return false;
     }
 
@@ -117,6 +119,11 @@ void game_t::update_tick(int simtick) {
         random_generate_next(); // update random to randomize native huts
         g_city.figures.update(); // just update the flag figures
         return;
+    }
+
+    static const bool guard_stub_records = g_args.is_integral_tests();
+    if (guard_stub_records) {
+        stub_records_guard_check("between ticks");
     }
 
     g_city.population.housing_type_counts_update();
@@ -136,6 +143,10 @@ void game_t::update_tick(int simtick) {
     g_city.figures.update();
 
     g_scenario.update();
+
+    if (guard_stub_records) {
+        stub_records_guard_check("during tick");
+    }
 }
 
 void game_t::advance_year() {
@@ -146,10 +157,9 @@ void game_t::advance_year() {
     g_city.finance.advance_year();
     g_city.migration.advance_year();
     g_city.monuments.advance_year();
-    // Update ratings before resetting trade amounts so we can use last year's export data
-    g_city.ratings_update(/*yearly_update*/true);
     g_empire.reset_yearly_trade_amounts();
-    g_city.kingdome.advance_year();
+    g_city.ratings_update(/*yearly_update*/ true);
+    g_city.ra_temple_complex_yearly_favour();
     g_city.buildings.update_year();
     //    city_gods_reset_yearly_blessings();
 }
@@ -167,6 +177,8 @@ void game_t::advance_month() {
     random_generate_next();                  // TODO: find out the source / reason for this
     g_empire.update_month();
     g_scenario.events.process_random_events();
+    // OG tick.c advance_month: invasions are processed before the other events.
+    g_scenario.events.process_invasions();
     g_scenario.events.process_events();
     g_invasions.process_bind_resolutions();
     // Julius: monthly — warning months_to_go tick + timed map invasions (KNGDOME/enemy/uprising).
@@ -180,8 +192,13 @@ void game_t::advance_month() {
     map_routing_update_land_citizen();
     //    city_message_sort_and_compact();
 
+    figure_locust::update_month(simtime.month + 1);
+
+    // OG advance_month: the yearly update recomputes the ratings, so December does not also run the monthly one.
     if (simtime.advance_month()) {
         advance_year();
+    } else {
+        g_city.ratings_update(/*yearly_update*/false);
     }
 
     g_city.finance.update_estimate_taxes();
@@ -209,7 +226,6 @@ void game_t::advance_day() {
     g_city.victory.victory_check();
     g_city.avg_coverage.update();
 
-    g_sound.music_update(false);
     widget_minimap_invalidate();
 
     events::emit(event_advance_day::from_simtime(game.simtime));
@@ -366,6 +382,7 @@ bool game_t::check_valid() {
     }
     logs::switch_output(log_directory.c_str());
     locale_determine_language();
+    anti_scum_set_clock_reseed(!g_args.is_integral_tests());
 
     game_features::load(g_args.features_profile(), g_args.get_game_config_cli_overrides());
 
@@ -388,8 +405,13 @@ bool game_t::check_valid() {
 }
 
 bool game_init(game_opts opts) {
-    vfs::create_folders(vfs::SAVE_FOLDER);
-    vfs::create_folders(vfs::MAPS_FOLDER);
+    // In the data dir, where saves and maps are read from, not in the working directory.
+    auto data_folder = [](pcstr folder) {
+        pcstr base = vfs::platform_file_manager_get_base_path();
+        return (base && *base) ? vfs::path(base, "/", folder) : vfs::path(folder);
+    };
+    vfs::create_folders(data_folder(vfs::SAVE_FOLDER));
+    vfs::create_folders(data_folder(vfs::MAPS_FOLDER));
 
     if (!image_load_paks()) {
         logs::error("unable to load main graphics");
@@ -401,7 +423,7 @@ bool game_init(game_opts opts) {
         return false;
     }
 
-    mods_init();
+    mods_init({g_args.get_mods_directory().c_str(), g_args.is_integral_tests()});
     mods_load();
     mods_remount();
 
@@ -459,6 +481,8 @@ void game_t::update() {
     int num_ticks = get_elapsed_ticks();
     for (int i = 0; i < num_ticks; i++) {
         update_tick(simtime.tick);
+        // Above 100% speed one frame runs several ticks; handlers must see the tick that emitted the event.
+        events::process();
     }
 
     if (g_window_manager.window_is("window_city")) {

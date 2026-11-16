@@ -6,7 +6,7 @@ log_info("akhenaten: mission 25 kebet started")
 // Gods: Osiris (patron x2), Ra, Seth. Funds Normal 20000 / loan 3500 / debt 20. Rank 9.
 // Win: pop 7000 / culture 40 / prosperity 45 / monuments 14 / kingdom 85 / housing 13.
 // Monuments: Large Obelisk (gr198 23) + Small Obelisk x2 (22/22) — all three implemented,
-// so the pak goal 14 is kept as-is (Large 4 + Small 2 -> 2.25*6+4.5 = 18 >= 14).
+// pak goal 14 = Large 3 + Small 1 + Small 1 → trunc(6.32·√5+0.5)=14.
 // Burial: pak burial_count=0 — no provisions block (nothing to hide).
 // Trade: Waset(1, open at start) Kharga(4) Buhen(6 sea).
 // Display: Byblos(2) Kerma(3 sea) Men-nefer(5 sea) Dakhla(7) Khmun(8 sea) Thinis(9 sea)
@@ -16,10 +16,9 @@ log_info("akhenaten: mission 25 kebet started")
 // to keep the unlock playable (same treatment as Kerma in mission 24).
 // DEMAND_* / CITY_STATUS events address the trade route via loc (1=Waset .. 9=Thinis);
 // their `city` field is editor junk (often points at Kebet itself).
-// Triage SKIP: i=28 invasion amount=0 (orphan chain child of i=27).
+// i=27 ok→i=28: OG's warship-only sea raid (0 soldiers, 5 warships from sea[0]).
 // Invasion loc = 1-based land point index; the map only has land[0]=[15,43], so loc 2/3/4
-// fall back to -1 (Egyptian spawns at the map entry point). Sea point [71,43] is water and
-// no pak invasion is naval here, so it stays unused.
+// fall back to -1 (Egyptian spawns at the map entry point). loc 9 = sea point [71,43].
 //
 // Tag_id scheme:
 //   1000 + i               chain-only leaves / chain requests
@@ -45,7 +44,6 @@ mission25 { // Kebet (Coptos) — Reunification; briefing key = coptos
 	initial_funds [40000, 26600, 20000, 13400, 10600]
 	rescue_loans [7000, 4700, 3500, 2300, 1800]
 	debt_interest [10, 15, 20, 25, 30]
-	house_tax_multipliers [300, 200, 150, 100, 75]
 
 	env {
 		has_animals : true
@@ -105,6 +103,39 @@ mission25 { // Kebet (Coptos) — Reunification; briefing key = coptos
 
 	enable_scenario_events : true
 
+	events [
+		{ // pak i=29
+			type : EVENT_TYPE_INVASION
+			time { year : 0, month : 0 }
+			item { value : EVENT_INVADER_PHARAOH }
+			amount { value : 60 }
+			months_initial : 9
+			location_fields [ 2, 2, -1, -1 ]
+			event_trigger_type : EVENT_TRIGGER_BY_FAVOUR
+			tag_id : 7029
+			on_completed_action : 1
+			on_refusal_action : -1
+			on_too_late_action : -1
+			on_defeat_action : -1
+			invasion_attack_target : EVENT_ATTACK_TARGET_RANDOM
+		}
+		{ // pak i=30
+			type : EVENT_TYPE_INVASION
+			time { year : 0, month : 0 }
+			item { value : EVENT_INVADER_PHARAOH }
+			amount { value : 60 }
+			months_initial : 0
+			location_fields [ 4, 4, -1, -1 ]
+			event_trigger_type : EVENT_TRIGGER_ONLY_VIA_EVENT
+			tag_id : 7030
+			on_completed_action : -1
+			on_refusal_action : -1
+			on_too_late_action : -1
+			on_defeat_action : -1
+			invasion_attack_target : EVENT_ATTACK_TARGET_RANDOM
+		}
+	]
+
 	map_background : {pack:PACK_EMPIRE, id:1}
 	hide_pak_cities : true
 	cities [
@@ -126,8 +157,6 @@ mission25 { // Kebet (Coptos) — Reunification; briefing key = coptos
 			cost_to_open : 300
 			is_sea_trade : false
 			type : EMPIRE_CITY_PHARAOH_TRADING
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_CLAY, RESOURCE_POTTERY, RESOURCE_STONE, RESOURCE_LIMESTONE, RESOURCE_GRANITE, RESOURCE_COPPER ]
 			buys [ RESOURCE_FIGS ]
 			route_limits [
@@ -150,8 +179,6 @@ mission25 { // Kebet (Coptos) — Reunification; briefing key = coptos
 			cost_to_open : 700
 			is_sea_trade : false
 			type : EMPIRE_CITY_EGYPTIAN_TRADING
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_BARLEY, RESOURCE_TIMBER ]
 			buys [ RESOURCE_FISH ]
 			route_limits [
@@ -170,8 +197,6 @@ mission25 { // Kebet (Coptos) — Reunification; briefing key = coptos
 			cost_to_open : 520
 			is_sea_trade : true
 			type : EMPIRE_CITY_EGYPTIAN_TRADING
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_BARLEY, RESOURCE_BEER ]
 			buys [ RESOURCE_TIMBER, RESOURCE_GRANITE, RESOURCE_COPPER ]
 			route_limits [
@@ -215,8 +240,6 @@ mission25 { // Kebet (Coptos) — Reunification; briefing key = coptos
 			is_sea_trade : true
 			trade : false
 			type : EMPIRE_CITY_EGYPTIAN
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_POTTERY, RESOURCE_PAPYRUS ]
 			buys [ RESOURCE_LETTUCE, RESOURCE_BRICKS, RESOURCE_BARLEY, RESOURCE_BEER, RESOURCE_LUXURY_GOODS ]
 			route_limits [
@@ -252,8 +275,6 @@ mission25 { // Kebet (Coptos) — Reunification; briefing key = coptos
 			is_sea_trade : true
 			trade : false
 			type : EMPIRE_CITY_FOREIGN
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_LINEN, RESOURCE_STONE ]
 			buys [ RESOURCE_POTTERY, RESOURCE_TIMBER, RESOURCE_PAPYRUS ]
 			route_limits [
@@ -446,14 +467,13 @@ mission25 { // Kebet (Coptos) — Reunification; briefing key = coptos
 		event25_invasion_done : false
 		event26_invasion_done : false
 		event27_invasion_done : false
+		event27_enemies_seen : false
+		event28_warships_done : false
 
 		henna_raid_done : false
 		henna_raid_wave2_done : false
 		henna_raid_enemies_seen : false
 
-		pharaoh_favour_invasion_done : false
-		pharaoh_favour_wave2_done : false
-		pharaoh_favour_enemies_seen : false
 
 		start_message_shown : false
 	}
@@ -545,7 +565,7 @@ function mission25_fire_request(tag, resource, amount, months, ok_tag, fail_tag,
 
 // pak location_fields after randomize = 1-based land invasion point index (MAX 8).
 // Map 25 only has land[0]=[15,43]; loc 2/3/4 have no point -> -1 (Egyptian falls back
-// to the map entry point). Sea point [71,43] is water and unused (no naval pak invasion).
+// to the map entry point). loc 9+ is a sea point (see mission25_egypt_raid).
 function mission25_loc_tile(loc) {
 	if (loc == 1) {
 		return [15, 43]
@@ -553,38 +573,28 @@ function mission25_loc_tile(loc) {
 	return [-1, -1]
 }
 
-function mission25_egypt_raid(invasion_id, size, attack_target, loc) {
-	var tile = mission25_loc_tile(loc === undefined ? 0 : loc)
-	log_info("akhenaten: mission 25 egypt raid id=" + invasion_id + " size=" + size
-		+ " loc=" + loc + " tile=" + tile[0] + "," + tile[1])
-	__image_request_pak(PACK_ENEMY_EGYPTIAN)
-	city.start_foreign_army_invasion({
+// OG scenario_invasion_start: loc 9+ sails from sea point loc - 9 with the event's phrase_var warships.
+function mission25_egypt_raid(invasion_id, size, attack_target, loc, warships) {
+	var opts = {
 		invasion_id: invasion_id,
 		enemy: ENEMY_3_EGYPTIAN,
 		size: size,
-		tilex: tile[0],
-		tiley: tile[1],
 		want_destroy_buildings: size,
 		invasion_attack_target: attack_target
-	})
-}
-
-function mission25_favour_wave(size, invasion_id, loc) {
-	var tile = mission25_loc_tile(loc === undefined ? 0 : loc)
-	log_info("akhenaten: mission 25 kebet favour wave size=" + size + " kr=" + city.rating_kingdom
-		+ " loc=" + loc + " tile=" + tile[0] + "," + tile[1])
+	}
+	if (loc >= 9) {
+		opts.via_sea = 1
+		opts.sea_point = loc - 9
+		opts.warships = warships || 0
+	} else {
+		var tile = mission25_loc_tile(loc === undefined ? 0 : loc)
+		opts.tilex = tile[0]
+		opts.tiley = tile[1]
+	}
+	log_info("akhenaten: mission 25 egypt raid id=" + invasion_id + " size=" + size + " loc=" + loc
+		+ " warships=" + (opts.warships || 0))
 	__image_request_pak(PACK_ENEMY_EGYPTIAN)
-	city.start_foreign_army_invasion({
-		mode: ATTACK_TYPE_ENEMIES,
-		enemy: ENEMY_3_EGYPTIAN,
-		kind: INVASION_KIND_KINGDOME,
-		size: size,
-		invasion_id: invasion_id,
-		tilex: tile[0],
-		tiley: tile[1],
-		want_destroy_buildings: 0,
-		invasion_attack_target: EVENT_ATTACK_TARGET_RANDOM
-	})
+	city.start_foreign_army_invasion(opts)
 }
 
 function mission25_ensure_flood_leaves() {
@@ -650,7 +660,7 @@ function mission25_ensure_henna_leaves() {
 	}
 	mission.henna_leaves_wired = true
 	var message = mission25_make_leaf(1018, EVENT_TYPE_MESSAGE, undefined, 8, 2,
-		EVENT_SUBTYPE_FOREIGN_CITY_CONQUERED, "Henen-nesw")
+		EVENT_SUBTYPE_MSG_BATTLE_WON, "Henen-nesw")
 	var conquered = mission25_make_leaf(1016, EVENT_TYPE_CITY_STATUS_CHANGE, undefined, 5, 2,
 		EVENT_SUBTYPE_FOREIGN_CITY_CONQUERED, "Khmun")
 	mission25_make_leaf(1021, EVENT_TYPE_CITY_STATUS_CHANGE, undefined, 5, 2,
@@ -778,7 +788,7 @@ function mission25_requests_and_events(ev) {
 	}
 }
 
-// pak i=24/25/26/27: timed Khmun-loyalist egypt raids. i=27 ok→i=28 is SKIPped (amount=0).
+// pak i=24/25/26/27: timed Khmun-loyalist egypt raids. i=27 ok→i=28 (see below).
 [es=event_advance_month, mission=mission25]
 function mission25_timed_invasions(ev) {
 	if (!mission.event24_invasion_done && ev.years_since_start == 2 && ev.month == 4) {
@@ -800,6 +810,23 @@ function mission25_timed_invasions(ev) {
 		mission.event27_invasion_done = true
 		mission25_egypt_raid(27, 70, EVENT_ATTACK_TARGET_RANDOM, 2)
 	}
+}
+
+// pak i=27 ok→i=28: once the egypt×70 raid is wiped, 5 Egyptian warships sail in from sea[0], no soldiers.
+[es=event_advance_month, mission=mission25]
+function mission25_warships_after_event27(ev) {
+	if (!mission.event27_invasion_done || mission.event28_warships_done) {
+		return
+	}
+	if (city.num_enemy_formations > 0) {
+		mission.event27_enemies_seen = true
+		return
+	}
+	if (!mission.event27_enemies_seen) {
+		return
+	}
+	mission.event28_warships_done = true
+	mission25_egypt_raid(28, 0, EVENT_ATTACK_TARGET_FOOD, 9, 5)
 }
 
 // Chain invasions from JS after a request refuse (EVENT_TYPE_INVASION is a no-op).
@@ -836,31 +863,4 @@ function mission25_henna_raid_second_wave(ev) {
 	}
 	mission.henna_raid_wave2_done = true
 	mission25_egypt_raid(20, 60, EVENT_ATTACK_TARGET_BEST_BUILDINGS, 8)
-}
-
-// pak i=29→30: favour pharaoh×60 loc=2 → chain ×60 loc=4 (attack=RANDOM).
-[es=event_advance_month, mission=mission25]
-function mission25_pharaoh_favour_invasion(ev) {
-	if (mission.pharaoh_favour_invasion_done && !mission.pharaoh_favour_wave2_done) {
-		if (city.num_enemy_formations > 0) {
-			mission.pharaoh_favour_enemies_seen = true
-			return
-		}
-		if (!mission.pharaoh_favour_enemies_seen) {
-			return
-		}
-		mission.pharaoh_favour_wave2_done = true
-		mission25_favour_wave(60, 30, 4)
-		return
-	}
-
-	if (mission.pharaoh_favour_invasion_done) {
-		return
-	}
-	if (city.rating_kingdom > 0) {
-		return
-	}
-	mission.pharaoh_favour_invasion_done = true
-	mission.pharaoh_favour_enemies_seen = false
-	mission25_favour_wave(60, 29, 2)
 }

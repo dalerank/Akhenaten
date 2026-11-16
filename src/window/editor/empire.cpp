@@ -19,6 +19,7 @@
 #include "input/scroll.h"
 #include "scenario/editor.h"
 #include "scenario/empire.h"
+#include "window/editor/allowed_buildings.h"
 #include "window/editor/window_editor.h"
 #include "game/game_events.h"
 #include "platform/renderer.h"
@@ -276,6 +277,7 @@ static void draw_panel_buttons(const empire_city* city) {
 }
 
 static void draw_foreground(int) {
+    editor_check_zoo_resources();
     window_editor_draw_map();
 
     const empire_city* city = nullptr;

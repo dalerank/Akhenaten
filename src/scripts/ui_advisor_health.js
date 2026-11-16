@@ -1,21 +1,16 @@
 log_info("akhenaten: ui advisor health started")
 
-function advisor_health_advice_index() {
-	var d = city.houses.health
+// OG window/advisor/health.c health_advice_text: group 56 text id. Demand 1 and 4 are the courthouse
+// advice, which the OG text calls "Physicians" though its check is magistrate access.
+function advisor_health_advice_text_id() {
 	var req = city.houses.requiring
-	if (d === 1) {
-		return req.water_supply ? 1 : 0
+	switch (city.houses.health) {
+	case 1: return req.courthouse ? 8 : 7
+	case 2: return req.dentist ? 10 : 9
+	case 3: return req.health ? 12 : 11
+	case 4: return req.more_courthouse ? 14 : 13
 	}
-	if (d === 2) {
-		return req.dentist ? 3 : 2
-	}
-	if (d === 3) {
-		return req.physician ? 5 : 4
-	}
-	if (d === 4) {
-		return 6
-	}
-	return 7
+	return 15
 }
 
 var ADVISOR_HEALTH_FACILITIES = [
@@ -112,7 +107,7 @@ function advisor_health_window_init(window) {
 		list.add_item(ADVISOR_HEALTH_FACILITIES[i].id)
 	}
 
-	window.health_advice.text = __loc(56, 6 + advisor_health_advice_index())
+	window.health_advice.text = __loc(56, advisor_health_advice_text_id())
 
 	advisors_toolbar_refresh(window, ADVISOR_HEALTH)
 }

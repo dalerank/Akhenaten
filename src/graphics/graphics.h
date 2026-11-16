@@ -33,7 +33,7 @@ void graphics_shade_rect(vec2i start, vec2i size, int darkness);
 
 namespace ui {
     namespace textured {
-        void graphics_draw_background(painter&, int image_id, float scale, vec2i offset);
+        void graphics_draw_background(painter&, int image_id, float scale, vec2i offset, bool fit);
     }
 }
 

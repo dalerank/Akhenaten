@@ -99,6 +99,7 @@ function run_test() {
     }
     __log_marker('true_pyramid_large_finish_phase:' + fin)
 
+    test_monument_slots([BUILDING_LARGE_PYRAMID])
     city_update_monthly_monument_rating({})
     var rating = city.rating.monument | 0
     if (rating >= 32) {

@@ -170,10 +170,9 @@
         <li><span class="obj-label">Housing level</span><span class="obj-value">10</span></li>
       </ul>
       <div class="deviation-note">
-        Monument goal matches pak (<strong>53</strong>). On-land pyramid complex weight 13
-        (causeway water-gate: Slice A; full W=44 after temples).
-        (= large true) + medium 16 + Sphinx 1 → <code>trunc(2.25·30+4.5)=72</code> when all three
-        are finished (above 53). Causeway/temples still pending for full complex weight 44.
+        Monument goal matches pak (<strong>53</strong>). Pyramid complex 48 (counted while on-land;
+        causeway water-gate: Slice A) + medium true 12 + Sphinx 10 → <code>trunc(6.32·√70+0.5)=53</code>
+        when all three are finished. Burial loads are all below one divisor. Temples still pending.
       </div>
 
       <h2 id="events">Scripted events</h2>
@@ -188,7 +187,7 @@
       <div class="tutorial-step"><span class="step-tag">Years 11–24</span><span>Sea trade storm; wage −2; stone/limestone/timber price &amp; demand shifts.</span></div>
       <div class="tutorial-step"><span class="step-tag">Year 26 · month 10+</span><span><strong>Hyksos ×10</strong> recurring.</span></div>
       <div class="tutorial-step"><span class="step-tag">Year 35+</span><span>Timber ×10 recurring; limestone gift; late game-meat / gems asks.</span></div>
-      <div class="tutorial-step"><span class="step-tag">Favour collapse</span><span>Pharaoh army 50 → 20 → 50.</span></div>
+      <div class="tutorial-step"><span class="step-tag">Favour collapse</span><span>At rating 0: Pharaoh army 50, then 20 → 50 with it.</span></div>
 
       <h2 id="strategy">Strategy</h2>
       <p>Rostja is a monument grind with Hyksos pressure and a gems/timber import economy. Keep kingdom rating above zero — favour is three waves (50/20/50).</p>
@@ -239,7 +238,7 @@
   <span class="kw">player_rank</span> : <span class="num">6</span>
   <span class="kw">choice</span> [ { <span class="kw">id</span> : <span class="num">19</span> }, { <span class="kw">id</span> : <span class="num">20</span> } ]
   <span class="cmt">// funds Normal 10000 / loan 5000 / debt 20%</span>
-  <span class="cmt">// monuments 53 (complex W=13 + medium + Sphinx), kingdom 50, housing_level 10</span>
+  <span class="cmt">// monuments 53 (complex 48 + medium 12 + Sphinx 10), kingdom 50, housing_level 10</span>
   <span class="cmt">// empire.set_id(18); ENEMY_5_HYKSOS</span>
 }</code></pre>
             <p>Empire id <strong>18</strong> via <code>empire.set_id(18)</code>. Full <code>hide_pak_*</code> redefine.</p>
@@ -251,7 +250,7 @@
             <ul class="event-list">
               <li><span class="ev-name">event_mission_start</span><span class="ev-desc"><code>empire.set_id(18)</code>; wire shared / gems / troops leaves.</span><span class="ev-fn">mission18_on_start</span></li>
               <li><span class="ev-name">Gems ladder / crisis</span><span class="ev-desc">gems×10 y2m5 → Men-nefer; gems×13 y7 → Hyksos×11 on refuse.</span><span class="ev-fn">mission18_event_i19 / i27</span></li>
-              <li><span class="ev-name">Troops / Hyksos / favour</span><span class="ev-desc">troops×40 y8m3; Hyksos×6 / ×10 rec; favour 50→20→50.</span><span class="ev-fn">mission18_event_i30 / i26 / i37 / favour</span></li>
+              <li><span class="ev-name">Troops / Hyksos / favour</span><span class="ev-desc">troops×40 y8m3; Hyksos×6 / ×10 rec; favour 50→20→50.</span><span class="ev-fn">mission18_event_i30 / i26 / i37 / events[] favour</span></li>
             </ul>
           </div>
         </details>
@@ -267,7 +266,7 @@
             </table>
             <ul style="margin-top:0.75rem">
               <li><strong>Monuments 53</strong> (pak) — complex + medium true + Sphinx ✅
-                (on-land complex W=13; causeway/full W=44 still open).</li>
+                (weights 48 + 12 + 10 → 53; causeway temples still open).</li>
               <li><strong>Burial provisions</strong> (JS): beer×6, gems×6, luxury×3, timber×18, granite×12 — <code>hide_pak_burial</code> + <code>burial_provisions</code>.</li>
               <li><strong>NEW_TRADE Nekhen</strong> (i=32/42/43) remapped → <strong>Iunet</strong> (route 3).</li>
               <li><strong>Orphan routes 5/6/25</strong> skipped; empty map_obj idx=6 skipped.</li>
@@ -275,7 +274,7 @@
               <li><strong>Troops refuse/defeat</strong> → JS Hyksos×9 (FOOD) + unique KR−2 + fresh re-arm tag via <code>event_request_cleared</code> (pak i=35 INVASION no-op; defeat also emits cleared).</li>
               <li><strong>Gems crisis refuse/late</strong> → JS Hyksos×11 via <code>event_request_cleared</code> (leaf 1029 still applies KR−1).</li>
               <li><strong>Shared ONLY_VIA burn (B14)</strong> — troops refuse loop uses unique KR/re-arm tags (Dunqul-style); SEA leaf 1033 still burns after first late.</li>
-              <li><strong>Favour</strong> JS-proxied via <code>mission_pharaoh_favour_invasion_tick([50,20,50])</code> (B7).</li>
+              <li><strong>Favour</strong> — Kingdom army: at Kingdom rating 0 the engine sends the <code>EVENT_TRIGGER_BY_FAVOUR</code> invasion from <code>events[]</code> (<code>update_kingdom_favour</code>, <code>src/scenario/scenario_event_manager.cpp</code>): warnings for its <code>months_initial</code>, then the attack; its <code>on_completed_action</code> chain joins at the attack. Called off if the rating reaches 15 before it attacks; it can come again 12 months later. Chain pak i=18→40→41 (50 → 20 → 50).</li>
               <li><strong>Choice 19/20</strong> (Bahariya / Djedu) — see D6 / mission scripts.</li>
             </ul>
           </div>

@@ -2,9 +2,9 @@ log_info("akhenaten: mission 35 baki started")
 
 // Empire id=1. HITTITE (pak). Gods Ra×2, Osiris, Ptah, Seth.
 // Funds 7000/2500/20. Rank 10.
-// Win: pop 10000 / culture 70 / prosperity 70 / monuments 35 (Mausoleum+Med+Small mudbrick W=5+8+4→42) / kingdom 85 / housing 19.
+// Win: pop 10000 / culture 70 / prosperity 70 / monuments 35 (Mausoleum+Med+Small mudbrick 5+12+4 + burial 10 → 35) / kingdom 85 / housing 19.
 // Burial ×5 all 32. SKIP map_obj idx=11. Orphan routes 25/26.
-// Truncate i=18→0. Remap i=1 ok=85. Favour egypt 60→5→15→20→20.
+// Truncate i=18→0. Remap i=1 ok=85. Favour egypt 60→5→15→20→20: events[] BY_FAVOUR, sent by the engine at Kingdom rating 0.
 // Inv: land×1 + sea×1 packed → loc2=sea[0] via_sea (E3c); loc3/4/8 OOB navy→sea0.
 // Tag_id: 1000+i leaves; 2000+i roots; 3000+i*100+year recurring.
 
@@ -20,7 +20,6 @@ mission35 { // Baki (Kuban) — The Glory of Egypt
 	initial_funds [14000, 9300, 7000, 4700, 3700]
 	rescue_loans [5000, 3300, 2500, 1700, 1300]
 	debt_interest [10, 15, 20, 25, 30]
-	house_tax_multipliers [300, 200, 150, 100, 75]
 
 	env {
 		// pak animals=0; enable so prey update after create_herds (hunting lodge).
@@ -62,7 +61,7 @@ mission35 { // Baki (Kuban) — The Glory of Egypt
 		BUILDING_SCRIBAL_SCHOOL, BUILDING_LIBRARY, BUILDING_ZOO,
 	]
 
-	// Soft goal 35; engine weights Mausoleum+Med+Small mudbrick W=5+8+4 → ~42.
+	// Goal 35 = pak: Mausoleum+Med+Small mudbrick (5+12+4) + burial 5×32/16 (10) → trunc(6.32·√31+0.5)=35.
 	win_criteria {
 		population    {enabled : true, goal : 10000 }
 		culture       {enabled : true, goal : 70 }
@@ -99,6 +98,84 @@ mission35 { // Baki (Kuban) — The Glory of Egypt
 
 	enable_scenario_events : true
 
+	events [
+		{ // pak i=23
+			type : EVENT_TYPE_INVASION
+			time { year : 0, month : 0 }
+			item { value : EVENT_INVADER_EGYPT }
+			amount { value : 60 }
+			months_initial : 5
+			location_fields [ 1, 1, -1, -1 ]
+			event_trigger_type : EVENT_TRIGGER_BY_FAVOUR
+			tag_id : 7023
+			on_completed_action : 1
+			on_refusal_action : -1
+			on_too_late_action : -1
+			on_defeat_action : -1
+			invasion_attack_target : EVENT_ATTACK_TARGET_RANDOM
+		}
+		{ // pak i=27
+			type : EVENT_TYPE_INVASION
+			time { year : 0, month : 0 }
+			item { value : EVENT_INVADER_EGYPT }
+			amount { value : 5 }
+			months_initial : 0
+			location_fields [ 2, 2, -1, -1 ]
+			event_trigger_type : EVENT_TRIGGER_ONLY_VIA_EVENT
+			tag_id : 7027
+			on_completed_action : 2
+			on_refusal_action : -1
+			on_too_late_action : -1
+			on_defeat_action : -1
+			invasion_attack_target : EVENT_ATTACK_TARGET_RANDOM
+		}
+		{ // pak i=28
+			type : EVENT_TYPE_INVASION
+			time { year : 0, month : 0 }
+			item { value : EVENT_INVADER_EGYPT }
+			amount { value : 15 }
+			months_initial : 0
+			location_fields [ 3, 3, -1, -1 ]
+			event_trigger_type : EVENT_TRIGGER_ONLY_VIA_EVENT
+			tag_id : 7028
+			on_completed_action : 3
+			on_refusal_action : -1
+			on_too_late_action : -1
+			on_defeat_action : -1
+			invasion_attack_target : EVENT_ATTACK_TARGET_RANDOM
+		}
+		{ // pak i=29
+			type : EVENT_TYPE_INVASION
+			time { year : 0, month : 0 }
+			item { value : EVENT_INVADER_EGYPT }
+			amount { value : 20 }
+			months_initial : 0
+			location_fields [ 4, 4, -1, -1 ]
+			event_trigger_type : EVENT_TRIGGER_ONLY_VIA_EVENT
+			tag_id : 7029
+			on_completed_action : 4
+			on_refusal_action : -1
+			on_too_late_action : -1
+			on_defeat_action : -1
+			invasion_attack_target : EVENT_ATTACK_TARGET_RANDOM
+		}
+		{ // pak i=30
+			type : EVENT_TYPE_INVASION
+			time { year : 0, month : 0 }
+			item { value : EVENT_INVADER_EGYPT }
+			amount { value : 20 }
+			months_initial : 0
+			location_fields [ 8, 8, -1, -1 ]
+			event_trigger_type : EVENT_TRIGGER_ONLY_VIA_EVENT
+			tag_id : 7030
+			on_completed_action : -1
+			on_refusal_action : -1
+			on_too_late_action : -1
+			on_defeat_action : -1
+			invasion_attack_target : EVENT_ATTACK_TARGET_RANDOM
+		}
+	]
+
 	map_background : {pack:PACK_EMPIRE, id:1}
 	hide_pak_cities : true
 	cities [
@@ -119,8 +196,6 @@ mission35 { // Baki (Kuban) — The Glory of Egypt
 			cost_to_open : 200
 			is_sea_trade : false
 			type : EMPIRE_CITY_EGYPTIAN_TRADING
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_STRAW, RESOURCE_FLAX, RESOURCE_LINEN, RESOURCE_GEMS, RESOURCE_GRANITE, RESOURCE_SANDSTONE ]
 			buys [ RESOURCE_CLAY, RESOURCE_POTTERY, RESOURCE_REEDS, RESOURCE_PAPYRUS ]
 			route_limits [
@@ -145,8 +220,6 @@ mission35 { // Baki (Kuban) — The Glory of Egypt
 			cost_to_open : 1015
 			is_sea_trade : true
 			type : EMPIRE_CITY_EGYPTIAN_TRADING
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_MEAT, RESOURCE_STRAW, RESOURCE_POTTERY, RESOURCE_LINEN, RESOURCE_PAPYRUS ]
 			buys [ RESOURCE_BEER ]
 			route_limits [
@@ -167,8 +240,6 @@ mission35 { // Baki (Kuban) — The Glory of Egypt
 			cost_to_open : 1085
 			is_sea_trade : true
 			type : EMPIRE_CITY_EGYPTIAN_TRADING
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_CHICKPEAS, RESOURCE_POTTERY, RESOURCE_REEDS, RESOURCE_PAPYRUS ]
 			buys [ RESOURCE_LETTUCE, RESOURCE_BRICKS, RESOURCE_BARLEY, RESOURCE_BEER, RESOURCE_LUXURY_GOODS ]
 			route_limits [
@@ -192,8 +263,6 @@ mission35 { // Baki (Kuban) — The Glory of Egypt
 			cost_to_open : 300
 			is_sea_trade : false
 			type : EMPIRE_CITY_FOREIGN_TRADING
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_LUXURY_GOODS ]
 			route_limits [
 				{ resource: RESOURCE_LUXURY_GOODS, limit: 2500 }
@@ -208,8 +277,6 @@ mission35 { // Baki (Kuban) — The Glory of Egypt
 			cost_to_open : 1845
 			is_sea_trade : true
 			type : EMPIRE_CITY_FOREIGN_TRADING
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_LUXURY_GOODS, RESOURCE_TIMBER, RESOURCE_COPPER ]
 			buys [ RESOURCE_LINEN, RESOURCE_PAPYRUS ]
 			route_limits [
@@ -229,8 +296,6 @@ mission35 { // Baki (Kuban) — The Glory of Egypt
 			cost_to_open : 1230
 			is_sea_trade : true
 			type : EMPIRE_CITY_EGYPTIAN_TRADING
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_BRICKS, RESOURCE_POTTERY, RESOURCE_BARLEY, RESOURCE_BEER, RESOURCE_LINEN, RESOURCE_PAPYRUS ]
 			buys [ RESOURCE_GEMS, RESOURCE_COPPER, RESOURCE_SANDSTONE ]
 			route_limits [
@@ -254,8 +319,6 @@ mission35 { // Baki (Kuban) — The Glory of Egypt
 			cost_to_open : 325
 			is_sea_trade : true
 			type : EMPIRE_CITY_EGYPTIAN_TRADING
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_CLAY, RESOURCE_POTTERY, RESOURCE_STONE, RESOURCE_LIMESTONE, RESOURCE_GRANITE, RESOURCE_COPPER ]
 			route_limits [
 				{ resource: RESOURCE_CLAY, limit: 2500 }
@@ -517,12 +580,6 @@ mission35 { // Baki (Kuban) — The Glory of Egypt
 		gems_recurring_was_busy : false
 		gems_recurring_idle_since_abs : -1
 
-		pharaoh_favour_invasion_done : false
-		pharaoh_favour_wave2_done : false
-		pharaoh_favour_wave3_done : false
-		pharaoh_favour_wave4_done : false
-		pharaoh_favour_wave5_done : false
-		pharaoh_favour_enemies_seen : false
 
 		start_message_shown : false
 	}
@@ -654,7 +711,7 @@ function mission35_ensure_heh_gems_leaves() {
 	var kr10 = mission35_make_leaf(1012, EVENT_TYPE_REPUTATION_INCREASE, undefined, 10, 2)
 	var henna24 = mission35_make_chain_request(1013, RESOURCE_HENNA, 24, 9, 2, "Gaza")
 	var msg_conquered = mission35_make_leaf(1014, EVENT_TYPE_MESSAGE, undefined, 6, 2,
-		EVENT_SUBTYPE_FOREIGN_CITY_CONQUERED, "Kerma")
+		EVENT_SUBTYPE_MSG_BATTLE_WON, "Kerma")
 	var conquered_itj = mission35_make_leaf(1015, EVENT_TYPE_CITY_STATUS_CHANGE, undefined, 5, 2,
 		EVENT_SUBTYPE_FOREIGN_CITY_CONQUERED, "Itjtawy")
 	var trade_itj = mission35_make_leaf(1016, EVENT_TYPE_CITY_STATUS_CHANGE, undefined, 8, 2,
@@ -680,38 +737,6 @@ function mission35_ensure_all_leaves() {
 	mission35_ensure_shared_leaves()
 	mission35_ensure_henna_iken_leaves()
 	mission35_ensure_heh_gems_leaves()
-}
-
-// pak location_fields = 1-based packed (land first, then sea).
-// land[0]=[187,137] → loc1; sea[0]=[75,198] → loc2. Loc 3/4/8 = OOB navy → sea0.
-function mission35_favour_wave(size, invasion_id, loc) {
-	if (loc === undefined) {
-		loc = 1
-	}
-	var opts = {
-		mode: ATTACK_TYPE_ENEMIES,
-		enemy: ENEMY_3_EGYPTIAN,
-		kind: INVASION_KIND_KINGDOME,
-		size: size,
-		invasion_id: invasion_id,
-		want_destroy_buildings: 0,
-		invasion_attack_target: EVENT_ATTACK_TARGET_RANDOM
-	}
-	var via_sea = loc != 1
-	if (via_sea) {
-		opts.via_sea = 1
-		opts.sea_point = 0
-		opts.tilex = 75
-		opts.tiley = 198
-	} else {
-		opts.tilex = 187
-		opts.tiley = 137
-	}
-	log_info("akhenaten: mission 35 favour wave size=" + size + " kr=" + city.rating_kingdom
-		+ " id=" + invasion_id + " loc=" + loc + " sea=" + via_sea
-		+ " tile=" + opts.tilex + "," + opts.tiley)
-	__image_request_pak(PACK_ENEMY_EGYPTIAN)
-	return city.start_foreign_army_invasion(opts)
 }
 
 [es=event_mission_start, mission=mission35]
@@ -794,47 +819,4 @@ function mission35_requests_and_events(ev) {
 		mission35_fire_request(3000 + 22 * 100 + ev.years_since_start,
 			RESOURCE_GEMS, 20, 10, 1024, 1026, 1025, 0, "Heh")
 	}
-}
-
-// pak i=23→27→28→29→30: by_favour egypt×60 loc1, then ×5×15×20×20 at loc 2/3/4/8.
-[es=event_advance_month, mission=mission35]
-function mission35_pharaoh_favour_invasion(ev) {
-	if (mission.pharaoh_favour_invasion_done && !mission.pharaoh_favour_wave5_done) {
-		if (city.num_enemy_formations > 0) {
-			mission.pharaoh_favour_enemies_seen = true
-			return
-		}
-		if (!mission.pharaoh_favour_enemies_seen) {
-			return
-		}
-		mission.pharaoh_favour_enemies_seen = false
-		if (!mission.pharaoh_favour_wave2_done) {
-			mission.pharaoh_favour_wave2_done = true
-			mission35_favour_wave(5, 27, 2)
-			return
-		}
-		if (!mission.pharaoh_favour_wave3_done) {
-			mission.pharaoh_favour_wave3_done = true
-			mission35_favour_wave(15, 28, 3)
-			return
-		}
-		if (!mission.pharaoh_favour_wave4_done) {
-			mission.pharaoh_favour_wave4_done = true
-			mission35_favour_wave(20, 29, 4)
-			return
-		}
-		mission.pharaoh_favour_wave5_done = true
-		mission35_favour_wave(20, 30, 8)
-		return
-	}
-	if (mission.pharaoh_favour_invasion_done) {
-		return
-	}
-	if (city.rating_kingdom > 0) {
-		return
-	}
-	mission.pharaoh_favour_invasion_done = true
-	mission.pharaoh_favour_enemies_seen = false
-	log_info("akhenaten: mission 35 favour egypt×60 (i=23)")
-	mission35_favour_wave(60, 23, 1)
 }

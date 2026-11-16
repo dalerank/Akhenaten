@@ -36,9 +36,14 @@ struct mouse;
 // Dynamic advisor window registered from JavaScript
 struct js_advisor_window : public advisor_window {
     xstring window_name;
+    e_advisor advisor = ADVISOR_NONE;
 
     js_advisor_window(xstring name) : advisor_window(name), window_name(name) {}
     virtual xstring section() const override { return window_name; }
+    virtual void archive_load(archive arch) override {
+        advisor_window::archive_load(arch);
+        advisor = arch.r_type<e_advisor>("advisor");
+    }
     virtual int handle_mouse(const mouse *m) override { return 0; }
     virtual int get_tooltip_text() override { return 0; }
     virtual void draw_foreground(UiFlags flags) override {}

@@ -1,25 +1,26 @@
 #include "figure_enemy_transport.h"
 
-#include "city/city_figures.h"
+#include "city/city.h"
+#include "city/city_buildings.h"
 #include "city/city_warnings.h"
-#include "core/string.h"
+#include "core/calc.h"
 #include "dev/debug.h"
-#include "figure/formation.h"
-#include "figure/formation_layout.h"
+#include "figure/figure_names.h"
 #include "figure/route.h"
-#include "figuretype/figure_shipwreck.h"
 #include "game/game_events.h"
 #include "grid/figure.h"
 #include "grid/terrain.h"
+#include "grid/water.h"
 #include "input/mouse.h"
 #include "js/js_game.h"
-#include "scenario/scenario.h"
 #include "scenario/invasion_auto_resolve.h"
+#include "scenario/map.h"
+#include "scenario/scenario.h"
 #include "widget/widget_city.h"
 
-#include <cstdlib>
-
 const e_action_enemy_transport_tokens_t ANK_CONFIG_ENUM(e_action_enemy_transport_tokens)
+
+enemy_transport_rules_t ANK_VARIABLE(enemy_transport_rules);
 
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_enemy_transport_generic)
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_egyptian_transport_ship)
@@ -36,90 +37,44 @@ REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_phoenician_transport_ship)
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_roman_transport_ship)
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_seapeople_transport_ship)
 
-namespace {
-
-constexpr int ENEMY_TRANSPORT_DISEMBARK_TICKS = 50;
-
-tile2i enemy_transport_find_shore_tile(tile2i water_tile) {
-    static const vec2i dirs[] = {
-        {0, 1}, {1, 1}, {1, 0}, {1, -1}, {0, -1}, {-1, -1}, {-1, 0}, {-1, 1}
-    };
-
-    for (const vec2i &dir : dirs) {
-        tile2i land = water_tile.shifted(dir);
-        if (enemy_transport_land_ok(land)) {
-            return land;
+figure_id enemy_ship_player_ship_at(tile2i tile, figure_id self) {
+    for (figure_id fid = map_figure_id_get(tile); fid > 0;) {
+        figure* f = figure_get(fid);
+        if (fid != self
+            && (f->type == FIGURE_TRANSPORT_SHIP || f->type == FIGURE_WARSHIP || f->type == FIGURE_FISHING_BOAT)) {
+            return fid;
         }
+        fid = (f->next_figure != fid) ? f->next_figure : 0;
     }
-
-    return tile2i::invalid;
+    return 0;
 }
 
-// Water tile near `from` that has a valid adjacent shore (for re-routing).
-tile2i enemy_transport_find_alternate_landing(tile2i from, int max_radius) {
-    for (int radius = 1; radius <= max_radius; radius++) {
-        for (int dy = -radius; dy <= radius; dy++) {
-            for (int dx = -radius; dx <= radius; dx++) {
-                if (std::abs(dx) != radius && std::abs(dy) != radius) {
-                    continue;
-                }
-                tile2i water = from.shifted(dx, dy);
-                if (!water.valid()
-                    || !map_terrain_is(water, TERRAIN_WATER | TERRAIN_DEEPWATER)) {
-                    continue;
-                }
-                if (enemy_transport_find_shore_tile(water).valid()) {
-                    return water;
-                }
+figure_id enemy_ship_closest_player_ship(tile2i center, figure_id self, int size) {
+    figure_id best_id = 0;
+    int best_distance = 500000;
+    const int x0 = center.x() - size / 2;
+    const int y0 = center.y() - size / 2;
+    for (int y = y0; y < y0 + size; y++) {
+        for (int x = x0; x < x0 + size; x++) {
+            const tile2i t(x, y);
+            if (!t.valid()) {
+                continue;
+            }
+            const figure_id fid = enemy_ship_player_ship_at(t, self);
+            if (!fid) {
+                continue;
+            }
+            const figure* f = figure_get(fid);
+            const int dx = f->tile.x() - center.x();
+            const int dy = f->tile.y() - center.y();
+            const int distance = dx * dx + dy * dy;
+            if (distance < best_distance) {
+                best_id = fid;
+                best_distance = distance;
             }
         }
     }
-    return tile2i::invalid;
-}
-
-tile2i find_water_spawn_tile_for_transport(tile2i preferred) {
-    if (preferred.valid()
-        && map_terrain_is(preferred, TERRAIN_WATER | TERRAIN_DEEPWATER)
-        && !map_terrain_is(preferred, TERRAIN_BUILDING)) {
-        return preferred;
-    }
-
-    auto &seas = g_scenario.invasion_points_sea;
-    for (const auto &t : seas) {
-        if (t.valid()
-            && map_terrain_is(t, TERRAIN_WATER | TERRAIN_DEEPWATER)
-            && !map_terrain_is(t, TERRAIN_BUILDING)) {
-            return t;
-        }
-    }
-
-    const int w = g_scenario.map.width;
-    const int h = g_scenario.map.height;
-    for (int y = 0; y < h; y++) {
-        for (int x = 0; x < w; x++) {
-            tile2i t(x, y);
-            if (map_terrain_is(t, TERRAIN_WATER | TERRAIN_DEEPWATER)
-                && !map_terrain_is(t, TERRAIN_BUILDING)) {
-                return t;
-            }
-        }
-    }
-    return tile2i::invalid;
-}
-
-} // namespace
-
-bool enemy_transport_land_ok(tile2i land) {
-    if (!land.valid()) {
-        return false;
-    }
-    if (map_terrain_is(land, TERRAIN_WATER | TERRAIN_DEEPWATER)) {
-        return false;
-    }
-    if (map_terrain_is(land, TERRAIN_BUILDING | TERRAIN_WALL | TERRAIN_ROCK | TERRAIN_ELEVATION)) {
-        return false;
-    }
-    return true;
+    return best_id;
 }
 
 e_figure_type enemy_transport_type_for(e_enemy_type enemy) {
@@ -143,430 +98,273 @@ e_figure_type enemy_transport_type_for(e_enemy_type enemy) {
     }
 }
 
+bool enemy_transport_of_invasion_exists(int invasion_id) {
+    for (figure* f : map_figures()) {
+        auto* t = f ? smart_cast<figure_enemy_transport>(f) : nullptr;
+        if (t && !f->is_dead() && t->invasion_id() == invasion_id) {
+            return true;
+        }
+    }
+    return false;
+}
+
+bool enemy_transport_of_invasion_loaded(int invasion_id) {
+    for (figure* f : map_figures()) {
+        auto* t = f ? smart_cast<figure_enemy_transport>(f) : nullptr;
+        if (t && f->is_alive() && t->has_troops() && t->invasion_id() == invasion_id) {
+            return true;
+        }
+    }
+    return false;
+}
+
 void figure_enemy_transport::on_create() {
     figure_enemy::on_create();
     base.allow_move_type = EMOVE_WATER;
     base.terrain_usage = TERRAIN_USAGE_ANY;
+    runtime_data() = {};
+    runtime_data().landing_x = -1;
+    runtime_data().landing_y = -1;
+    runtime_data().secondary_action = ENEMY_TRANSPORT_SECONDARY_WAITING;
+    advance_action(ACTION_8_ENEMY_TRANSPORT_WAITING);
+}
+
+void figure_enemy_transport::launch(const invasion_opts_t& opts, int soldiers, tile2i landing, int wait_ticks,
+  int invasion_sequence) {
+    auto& d = runtime_data();
+    base.faction_id = 0;
+    base.wait_ticks = (int16_t)wait_ticks;
+    base.set_flag(e_figure_flag_invisible);
+    base.name = figure_name_get(base.type);
+    d.landing_x = (int16_t)landing.x();
+    d.landing_y = (int16_t)landing.y();
+    d.has_troops = 1;
+    d.soldiers = (int16_t)soldiers;
+    d.invasion_id = (int16_t)opts.invasion_id;
+    d.invasion_sequence = (int16_t)invasion_sequence;
+    d.nation = (uint8_t)opts.enemy_type;
+    d.kind = (uint8_t)opts.kind;
+    d.attack_type = (uint8_t)opts.attack_type;
+    advance_action(ACTION_8_ENEMY_TRANSPORT_WAITING);
+}
+
+void figure_enemy_transport::move() {
     auto &d = runtime_data();
-    d.formation_id = 0;
-    d.wreck_spawned = 0;
-    d.landing_x = -1;
-    d.landing_y = -1;
-    d.disembark_x = -1;
-    d.disembark_y = -1;
-    d.ticks = 0;
-    d.invasion_sequence = 0;
-    advance_action(ACTION_0_ENEMY_TRANSPORT_CREATED);
-}
-
-bool figure_enemy_transport::has_troops() const {
-    const int fid = runtime_data().formation_id;
-    if (fid <= 0) {
-        return false;
-    }
-    const formation *m = formation_get(fid);
-    return m && m->in_use;
-}
-
-int figure_enemy_transport::transported_formation() const {
-    return has_troops() ? runtime_data().formation_id : 0;
-}
-
-void figure_enemy_transport::release_empty_cargo() {
-    auto &d = runtime_data();
-    if (d.formation_id <= 0) {
-        return;
-    }
-
-    formation *m = formation_get(d.formation_id);
-    if (!m || !m->in_use) {
-        d.formation_id = 0;
-        return;
-    }
-
-    int alive = 0;
-    for (figure *f : map_figures()) {
-        if (f && f->is_alive() && f->formation_id == d.formation_id) {
-            alive++;
+    const auto& cycle = transport_params().move_cycle;
+    int ticks = 0;
+    if (!cycle.empty()) {
+        if (d.move_counter >= cycle.size()) {
+            d.move_counter = 0;
         }
+        ticks = cycle[d.move_counter];
+        d.move_counter++;
     }
-    if (alive > 0) {
+    base.move_ticks(ticks);
+    base.height_adjusted_ticks = 0;
+}
+
+void figure_enemy_transport::action_wait() {
+    auto& d = runtime_data();
+    base.set_flag(e_figure_flag_invisible, false);
+    d.moving = 0;
+    if (--base.wait_ticks >= 1) {
         return;
     }
-
-    m->num_figures = 0;
-    for (int i = 0; i < formation::max_figures_count; i++) {
-        m->figures[i] = 0;
+    base.wait_ticks = 0;
+    base.source_tile = base.tile;
+    if (d.has_troops) {
+        tile2i dest;
+        map_water_farthest_on_line(base.tile, landing(), dest);
+        base.destination_tile = dest;
+        advance_action(ACTION_13_ENEMY_TRANSPORT_GOING_TO_LANDING);
+        route_remove();
+        return;
     }
-    m->in_use = false;
-    m->is_halted = 0;
-    d.formation_id = 0;
+    base.destination_tile = scenario_map_river_exit();
+    advance_action(ACTION_17_ENEMY_TRANSPORT_LEAVING);
 }
 
-bool figure_enemy_transport::load_formation(int formation_id) {
-    if (has_troops() || formation_id <= 0) {
-        return false;
+void figure_enemy_transport::action_move() {
+    move();
+    if (direction() == DIR_FIGURE_REROUTE) {
+        route_remove();
+    } else if (direction() == DIR_FIGURE_CAN_NOT_REACH) {
+        kill();
+    } else if (direction() == DIR_FIGURE_NONE) {
+        runtime_data().moving = 0;
     }
+}
 
-    formation *m = formation_get(formation_id);
-    if (!m || !m->in_use || m->own_batalion) {
-        return false;
-    }
-
-    int loaded = 0;
-    for (figure *f : map_figures()) {
-        if (!f || !f->is_alive() || f->formation_id != formation_id) {
-            continue;
+void figure_enemy_transport::action_evade() {
+    auto &d = runtime_data();
+    const auto& rules = enemy_transport_rules;
+    if (d.secondary_action == ENEMY_TRANSPORT_SECONDARY_FOLLOW_TARGET) {
+        action_move();
+        if (direction() == DIR_FIGURE_NONE) {
+            d.secondary_action = ENEMY_TRANSPORT_SECONDARY_WAITING;
+            d.moving = 0;
         }
-
-        f->map_figure_remove();
-        f->set_flag(e_figure_flag_invisible);
-        f->tile = base.tile;
-        f->route_remove();
-        // WAITING: no enemy_initial missile fire / march while aboard.
-        f->action_state = ACTION_152_ENEMY_WAITING;
-        f->wait_ticks = 30000;
-        f->formation_at_rest = 1;
-        // Land enemies on a water hull would be killed by action.cpp's
-        // !can_move_by_water() check — keep them amphibious until disembark.
-        f->allow_move_type = EMOVE_AMPHIBIAN;
-        loaded++;
+        return;
     }
-
-    if (loaded <= 0) {
-        return false;
+    if (d.secondary_action != ENEMY_TRANSPORT_SECONDARY_WAITING) {
+        return;
     }
-
-    auto &d = runtime_data();
-    d.formation_id = (int8_t)formation_id;
-    d.ticks = 0;
-    m->is_halted = 1;
-    return true;
-}
-
-bool figure_enemy_transport::sail_to_landing(tile2i water_tile) {
-    if (!water_tile.valid()
-        || !map_terrain_is(water_tile, TERRAIN_WATER | TERRAIN_DEEPWATER)) {
-        return false;
+    d.moving = 0;
+    if (++base.wait_ticks < rules.evade_ticks) {
+        return;
     }
-
-    tile2i shore = enemy_transport_find_shore_tile(water_tile);
-    if (!shore.valid()) {
-        return false;
+    base.wait_ticks = 0;
+    figure* enemy = figure_get(enemy_ship_closest_player_ship(base.tile, base.id, rules.evade_range));
+    if (!enemy || !enemy->id) {
+        return;
     }
-
-    auto &d = runtime_data();
-    d.landing_x = water_tile.x();
-    d.landing_y = water_tile.y();
-    d.disembark_x = shore.x();
-    d.disembark_y = shore.y();
-    d.ticks = 0;
-
-    base.destination_tile = water_tile;
-    if (!base.source_tile.valid()) {
-        base.source_tile = base.tile;
+    int dir = calc_general_direction(enemy->tile, base.tile);
+    if (dir > DIR_6_TOP_LEFT) {
+        dir = DIR_7_TOP;
     }
-    advance_action(ACTION_1_ENEMY_TRANSPORT_SAILING);
+    tile2i escape = map_water_escape_tile(base.tile, dir, rules.escape_distance);
+    map_water_find_free_tile(escape);
+    base.destination_tile = escape;
     route_remove();
-    return true;
+    d.secondary_action = ENEMY_TRANSPORT_SECONDARY_FOLLOW_TARGET;
 }
 
-void figure_enemy_transport::disembark_troops() {
+void figure_enemy_transport::unload(tile2i land) {
     auto &d = runtime_data();
-    formation *m = formation_get(d.formation_id);
-    if (!m || !m->in_use) {
-        d.formation_id = 0;
-        d.ticks = 0;
-        advance_action(ACTION_3_ENEMY_TRANSPORT_IDLE);
+    invasion_opts_t opts;
+    opts.enemy_type = (e_enemy_type)d.nation;
+    opts.kind = (e_invasion_spawn_kind)d.kind;
+    opts.attack_type = (e_formation_attack_type)d.attack_type;
+    opts.invasion_id = d.invasion_id;
+    const invasion_army_spawn_t army
+      = scenario_invasion_spawn_army(opts, d.soldiers, land, DIR_0_TOP_RIGHT, d.invasion_sequence);
+    if (army.formations > 0) {
+        base.wait_ticks = (int16_t)army.last_wait_ticks;
+    }
+    d.has_troops = 0;
+    advance_action(ACTION_8_ENEMY_TRANSPORT_WAITING);
+}
+
+void figure_enemy_transport::action_go_to_landing() {
+    move();
+    if (direction() == DIR_FIGURE_NONE) {
+        auto& d = runtime_data();
+        d.moving = 0;
+        tile2i land = landing();
+        map_find_nearest_free_land_tile(land);
+        if (map_terrain_is(land, TERRAIN_TREE | TERRAIN_ROCK | TERRAIN_ELEVATION)) {
+            base.wait_ticks = enemy_transport_rules.landing_wait;
+        }
+        if (map_terrain_is(land, TERRAIN_WATER)) {
+            if (!map_terrain_is(land, TERRAIN_ROAD)) {
+                base.wait_ticks = enemy_transport_rules.landing_wait;
+            }
+        } else if (map_terrain_is(land, TERRAIN_BUILDING | TERRAIN_CANAL | TERRAIN_WALL | TERRAIN_GATEHOUSE)) {
+            building* b = building_at(land);
+            if (b && b->id) {
+                g_city.maintenance.destroy_by_enemy(b);
+            }
+        }
+        unload(land);
+        scenario_invasion_landing_message(d.invasion_id, base.tile, d.invasion_sequence);
+    } else if (direction() == DIR_FIGURE_REROUTE) {
+        route_remove();
+    } else if (direction() == DIR_FIGURE_CAN_NOT_REACH) {
+        kill();
+    }
+}
+
+void figure_enemy_transport::action_go_away() {
+    move();
+    if (direction() == DIR_FIGURE_REROUTE) {
+        route_remove();
         return;
     }
-
-    tile2i disembark(d.disembark_x, d.disembark_y);
-    if (!enemy_transport_land_ok(disembark)) {
-        disembark = enemy_transport_find_shore_tile(base.tile);
-    }
-    if (!enemy_transport_land_ok(disembark)) {
-        // Last resort: stay embarked rather than dumping onto water.
-        advance_action(ACTION_3_ENEMY_TRANSPORT_IDLE);
-        return;
-    }
-
-    int index = 0;
-    for (figure *f : map_figures()) {
-        if (!f || !f->is_alive() || f->formation_id != d.formation_id) {
-            continue;
+    if (direction() != DIR_FIGURE_CAN_NOT_REACH) {
+        if (direction() != DIR_FIGURE_NONE) {
+            return;
         }
-
-        tile2i pos = disembark.shifted(formation_layout_position(m->layout, f->index_in_formation));
-        if (!enemy_transport_land_ok(pos)) {
-            pos = disembark;
+        const tile2i entry = scenario_map_river_entry();
+        const tile2i exit = scenario_map_river_exit();
+        if (base.tile == entry) {
+            base.destination_tile = exit;
+            route_remove();
+            return;
         }
-
-        f->set_flag(e_figure_flag_invisible, false);
-        f->map_figure_remove();
-        f->tile = pos;
-        if (auto *enemy = f->dcast_enemy()) {
-            f->action_state = enemy->enemy_initial_action();
-        } else {
-            f->action_state = ACTION_151_ENEMY_INITIAL;
+        if (base.tile != exit) {
+            base.destination_tile = entry;
+            route_remove();
+            return;
         }
-        f->wait_ticks = 10 + index * 10;
-        f->formation_at_rest = 0;
-        f->allow_move_type = EMOVE_TERRAIN;
-        f->map_figure_add();
-        index++;
-    }
-
-    if (index <= 0) {
-        // Cargo died while aboard — free the empty formation slot.
-        m->num_figures = 0;
-        for (int i = 0; i < formation::max_figures_count; i++) {
-            m->figures[i] = 0;
+        if (has_troops()) {
+            route_remove();
+            advance_action(ACTION_8_ENEMY_TRANSPORT_WAITING);
+            return;
         }
-        m->in_use = false;
-    } else {
-        m->tile = disembark;
-        m->home = disembark;
-        m->standard_tile = disembark;
-        m->destination = disembark;
-        m->is_halted = 0;
-        m->is_at_fort = 0;
     }
-
-    d.formation_id = 0;
-    d.ticks = 0;
-    advance_action(ACTION_3_ENEMY_TRANSPORT_IDLE);
-}
-
-void figure_enemy_transport::kill_cargo() {
-    auto &d = runtime_data();
-    if (d.formation_id <= 0) {
-        return;
-    }
-
-    const int fid = d.formation_id;
-    for (figure *f : map_figures()) {
-        if (!f || !f->is_alive() || f->formation_id != fid) {
-            continue;
-        }
-        f->map_figure_remove();
-        f->set_flag(e_figure_flag_invisible, false);
-        f->kill();
-    }
-
-    formation *m = formation_get(fid);
-    if (m && m->in_use) {
-        m->num_figures = 0;
-        for (int i = 0; i < formation::max_figures_count; i++) {
-            m->figures[i] = 0;
-        }
-        m->in_use = false;
-        m->is_halted = 0;
-    }
-
-    d.formation_id = 0;
-}
-
-void figure_enemy_transport::dismiss_cargo() {
-    auto &d = runtime_data();
-    if (d.formation_id <= 0) {
-        return;
-    }
-
-    const int fid = d.formation_id;
-    for (figure *f : map_figures()) {
-        if (!f || !f->is_alive() || f->formation_id != fid) {
-            continue;
-        }
-        f->map_figure_remove();
-        f->set_flag(e_figure_flag_invisible, false);
-        f->poof();
-    }
-
-    formation *m = formation_get(fid);
-    if (m && m->in_use) {
-        m->num_figures = 0;
-        for (int i = 0; i < formation::max_figures_count; i++) {
-            m->figures[i] = 0;
-        }
-        m->in_use = false;
-        m->is_halted = 0;
-    }
-
-    d.formation_id = 0;
-    advance_action(ACTION_3_ENEMY_TRANSPORT_IDLE);
-}
-
-void figure_enemy_transport::before_poof() {
-    kill_cargo();
-}
-
-void figure_enemy_transport::kill() {
-    kill_cargo();
-    // Combat often calls figure::kill() first (DYING); corpse handling may bump
-    // wait_ticks before we run — use an explicit one-shot wreck flag.
-    auto &d = runtime_data();
-    if (!d.wreck_spawned) {
-        figure_shipwreck::create(tile());
-        d.wreck_spawned = 1;
-    }
-    if (is_alive()) {
-        base.wait_ticks = 1;
-        figure_impl::kill();
-    }
+    kill();
 }
 
 void figure_enemy_transport::figure_action() {
-    // Prefer virtual kill() so shipwreck + cargo clear run even when combat
-    // already set FIGURE_STATE_DYING via figure::kill().
-    if (base.damage > base.max_damage()) {
-        kill();
-        return;
-    }
     if (!is_alive()) {
         return;
     }
-    // Pending auto-resolve: freeze sail/disembark like land formations.
     if (invasion_auto_resolve_figure_immune(&base)) {
         return;
     }
 
-    assert(base.allow_move_type == EMOVE_WATER);
-
-    release_empty_cargo();
-
     auto &d = runtime_data();
+    const auto& rules = enemy_transport_rules;
+    count_as_city_invader();
+    d.moving = 1;
+    const int max_hp = base.max_damage();
+    const int hp = max_hp - base.damage;
+    if (hp <= 0) {
+        kill();
+        return;
+    }
+    const int percent = calc_percentage(hp, max_hp);
+    if (percent <= rules.damaged_percent && percent > 0) {
+        advance_action(ACTION_10_ENEMY_TRANSPORT_EVADING);
+        d.secondary_action = ENEMY_TRANSPORT_SECONDARY_WAITING;
+        base.wait_ticks = rules.evade_wait;
+    }
 
-    // Keep embarked troops glued to the hull while sailing.
-    if (has_troops()) {
-        for (figure *f : map_figures()) {
-            if (!f || !f->is_alive() || f->formation_id != d.formation_id) {
-                continue;
-            }
-            // Destroy-goal leave_city sets ACTION_156 — do not snap them back aboard.
-            if (f->action_state == ACTION_156_ENEMY_LEAVING) {
-                continue;
-            }
-            f->map_figure_remove();
-            f->tile = base.tile;
-            f->wait_ticks = 30000;
-            f->formation_at_rest = 1;
-            f->allow_move_type = EMOVE_AMPHIBIAN;
-            f->action_state = ACTION_152_ENEMY_WAITING;
-            f->set_flag(e_figure_flag_invisible);
-        }
+    if (++d.reroute_ticks > rules.reroute_ticks) {
+        d.reroute_ticks = 0;
+        route_remove();
     }
 
     switch (action_state()) {
-    case ACTION_0_ENEMY_TRANSPORT_CREATED:
-        d.ticks++;
-        if (d.ticks >= 20) {
-            d.ticks = 0;
-            if (has_troops() && d.landing_x >= 0 && d.landing_y >= 0) {
-                if (!sail_to_landing(tile2i(d.landing_x, d.landing_y))) {
-                    advance_action(ACTION_3_ENEMY_TRANSPORT_IDLE);
-                }
-            } else {
-                advance_action(ACTION_3_ENEMY_TRANSPORT_IDLE);
-            }
-        }
+    case ACTION_8_ENEMY_TRANSPORT_WAITING:
+        action_wait();
         break;
-
-    case ACTION_1_ENEMY_TRANSPORT_SAILING: {
-        base.move_ticks(1);
-        base.height_adjusted_ticks = 0;
-        if (direction() == DIR_FIGURE_NONE) {
-            advance_action(ACTION_2_ENEMY_TRANSPORT_DISEMBARKING);
-            d.ticks = 0;
-        } else if (direction() == DIR_FIGURE_REROUTE) {
-            route_remove();
-        } else if (direction() == DIR_FIGURE_CAN_NOT_REACH) {
-            // Prefer immediate shore unload; else re-route to alternate landing.
-            tile2i shore = enemy_transport_find_shore_tile(base.tile);
-            if (shore.valid()) {
-                d.disembark_x = shore.x();
-                d.disembark_y = shore.y();
-                advance_action(ACTION_2_ENEMY_TRANSPORT_DISEMBARKING);
-                d.ticks = 0;
-            } else if (has_troops()) {
-                tile2i alt = enemy_transport_find_alternate_landing(base.tile, 24);
-                if (alt.valid() && sail_to_landing(alt)) {
-                    // re-routed
-                } else if (d.landing_x >= 0 && d.landing_y >= 0) {
-                    d.ticks++;
-                    if (d.ticks >= 50) {
-                        d.ticks = 0;
-                        if (!sail_to_landing(tile2i(d.landing_x, d.landing_y))) {
-                            advance_action(ACTION_3_ENEMY_TRANSPORT_IDLE);
-                        }
-                    }
-                } else {
-                    advance_action(ACTION_3_ENEMY_TRANSPORT_IDLE);
-                }
-            } else {
-                advance_action(ACTION_3_ENEMY_TRANSPORT_IDLE);
-            }
-        }
+    case ACTION_9_ENEMY_TRANSPORT_MOVING:
+        action_move();
         break;
-    }
-
-    case ACTION_2_ENEMY_TRANSPORT_DISEMBARKING:
-        d.ticks++;
-        if (d.ticks >= ENEMY_TRANSPORT_DISEMBARK_TICKS) {
-            if (has_troops()) {
-                disembark_troops();
-            } else {
-                advance_action(ACTION_3_ENEMY_TRANSPORT_IDLE);
-            }
-        }
+    case ACTION_10_ENEMY_TRANSPORT_EVADING:
+        action_evade();
         break;
-
-    case ACTION_3_ENEMY_TRANSPORT_IDLE:
-        // Loaded but stranded (no path earlier): keep looking for a shore.
-        if (has_troops()) {
-            d.ticks++;
-            if (d.ticks >= 50) {
-                d.ticks = 0;
-                tile2i shore = enemy_transport_find_shore_tile(base.tile);
-                if (shore.valid()) {
-                    d.disembark_x = shore.x();
-                    d.disembark_y = shore.y();
-                    advance_action(ACTION_2_ENEMY_TRANSPORT_DISEMBARKING);
-                } else {
-                    tile2i alt = enemy_transport_find_alternate_landing(base.tile, 24);
-                    if (alt.valid() && sail_to_landing(alt)) {
-                        // sailing again
-                    } else if (d.landing_x >= 0 && d.landing_y >= 0) {
-                        if (!sail_to_landing(tile2i(d.landing_x, d.landing_y))) {
-                            // stay IDLE; retry next cooldown
-                        }
-                    }
-                }
-            }
-        }
+    case ACTION_12_ENEMY_TRANSPORT_IDLE:
         break;
-
+    case ACTION_13_ENEMY_TRANSPORT_GOING_TO_LANDING:
+        action_go_to_landing();
+        break;
+    case ACTION_17_ENEMY_TRANSPORT_LEAVING:
+        action_go_away();
+        break;
     default:
+        advance_action(ACTION_17_ENEMY_TRANSPORT_LEAVING);
         break;
     }
 }
 
 void figure_enemy_transport::update_animation() {
-    pcstr anim_key = "swim";
-    switch (action_state()) {
-    case ACTION_0_ENEMY_TRANSPORT_CREATED:
-    case ACTION_2_ENEMY_TRANSPORT_DISEMBARKING:
-    case ACTION_3_ENEMY_TRANSPORT_IDLE:
-        anim_key = "idle";
-        break;
-    case ACTION_1_ENEMY_TRANSPORT_SAILING:
-        anim_key = "swim";
-        break;
-    default:
-        anim_key = "swim";
-        break;
+    if (action_state() == FIGURE_ACTION_149_CORPSE) {
+        image_set_animation(base.wait_ticks <= enemy_transport_rules.sinking_ticks ? "death" : "bubbles");
+        return;
     }
-    image_set_animation(anim_key);
+    image_set_animation(runtime_data().moving ? "swim" : "idle");
 }
 
 declare_console_command_p(spawn_enemy_transport) {
@@ -574,22 +372,20 @@ declare_console_command_p(spawn_enemy_transport) {
     int tilex = args.next_int(0);
     int tiley = args.next_int(0);
 
-    tile2i preferred = tile2i::invalid;
+    tile2i spawn = tile2i::invalid;
     if (tilex >= 0 && tiley >= 0) {
-        preferred = tile2i(tilex, tiley);
+        spawn = tile2i(tilex, tiley);
     } else {
         const mouse &m = mouse::get();
-        preferred = g_screen_city.update_city_view_coords({ m.x, m.y });
+        spawn = g_screen_city.update_city_view_coords({m.x, m.y});
     }
 
-    tile2i spawn = find_water_spawn_tile_for_transport(preferred);
-    if (!spawn.valid()) {
+    if (!spawn.valid() || !map_water_find_free_tile(spawn)) {
         events::emit(event_city_warning{ "No water tile for enemy transport" });
         return;
     }
 
-    e_figure_type ftype = enemy_transport_type_for(enemy);
-    figure *f = figure_create(ftype, spawn, DIR_0_TOP_RIGHT);
+    figure* f = figure_create(enemy_transport_type_for(enemy), spawn, DIR_0_TOP_RIGHT);
     if (!f || !f->is_valid()) {
         events::emit(event_city_warning{ "Failed to spawn enemy transport" });
         return;

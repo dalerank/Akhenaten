@@ -83,20 +83,6 @@ function building_mortuary_spawn_figure(ev) {
     building_spawn_stock_walker(city.get_building(ev.bid), building_mortuary, FIGURE_EMBALMER, RESOURCE_LINEN, building_mortuary_walker_cost())
 }
 
-[es=(building_mortuary, on_place_checks)]
-function building_mortuary_on_place_checks(ev) {
-    var linen = city.resources.linen
-    var has_supply = (linen.count_active_industry > 0) || (linen.yards_stored > 0)
-    if (has_supply) {
-        return
-    }
-
-    city.warnings.show("#building_needs_linen")
-    city.warnings.show_if_not(!linen.can_produce, "#build_weaver_or_import_linen")
-    city.warnings.show_if_not(linen.can_import, "#setup_trade_route_to_import")
-    city.warnings.show_if_not(linen.trade_status == TRADE_STATUS_IMPORT, "#overseer_of_commerce_to_import")
-}
-
 [es=(building_mortuary, update_animation)]
 function building_mortuary_update_animation(ev) {
     var b = city.get_building(ev.bid)

@@ -17,7 +17,6 @@ mission42 {
 	initial_funds [36000, 24000, 18000, 12000, 9540]
 	rescue_loans [3000, 2000, 1500, 1000, 800]
 	debt_interest [4, 6, 8, 10, 12]
-	house_tax_multipliers [300, 200, 150, 100, 75]
 
 	env {
 		has_animals : true
@@ -96,8 +95,6 @@ mission42 {
 			cost_to_open : 70
 			is_sea_trade : false
 			type : EMPIRE_CITY_EGYPTIAN_TRADING
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_FISH, RESOURCE_WEAPONS, RESOURCE_TIMBER, RESOURCE_COPPER ]
 			buys [ RESOURCE_CHICKPEAS, RESOURCE_POMEGRANATES ]
 			route_limits [
@@ -118,8 +115,6 @@ mission42 {
 			cost_to_open : 250
 			is_sea_trade : false
 			type : EMPIRE_CITY_FOREIGN_TRADING
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_POTTERY ]
 			buys [ RESOURCE_POMEGRANATES, RESOURCE_LUXURY_GOODS ]
 			route_limits [
@@ -137,8 +132,6 @@ mission42 {
 			cost_to_open : 500
 			is_sea_trade : false
 			type : EMPIRE_CITY_FOREIGN_TRADING
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_COPPER ]
 			buys [ RESOURCE_CHICKPEAS, RESOURCE_LUXURY_GOODS, RESOURCE_TIMBER ]
 			route_limits [
@@ -157,8 +150,6 @@ mission42 {
 			cost_to_open : 490
 			is_sea_trade : false
 			type : EMPIRE_CITY_EGYPTIAN_TRADING
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_LETTUCE, RESOURCE_CHICKPEAS, RESOURCE_POTTERY, RESOURCE_CHARIOTS ]
 			buys [ RESOURCE_WEAPONS, RESOURCE_TIMBER ]
 			route_limits [
@@ -179,8 +170,6 @@ mission42 {
 			cost_to_open : 630
 			is_sea_trade : false
 			type : EMPIRE_CITY_EGYPTIAN_TRADING
-			max_traders : 1
-			trade_limits : default_trade_limits
 			sells [ RESOURCE_CHICKPEAS, RESOURCE_BEER ]
 			buys [ RESOURCE_WEAPONS, RESOURCE_LUXURY_GOODS, RESOURCE_TIMBER ]
 			route_limits [
@@ -455,7 +444,7 @@ function mission42_ensure_chain_leaves() {
 	mission42_make_leaf(1007, EVENT_TYPE_GIFT_FROM_PHARAOH, RESOURCE_POTTERY, 5, 12)
 
 	var msg_won = mission42_make_leaf(1011, EVENT_TYPE_MESSAGE, undefined, 8, 12,
-		EVENT_SUBTYPE_FOREIGN_CITY_CONQUERED, "Jericho")
+		EVENT_SUBTYPE_MSG_BATTLE_WON, "Jericho")
 	msg_won.set_completed_action_tag(1016)
 	mission42_make_leaf(1016, EVENT_TYPE_REPUTATION_INCREASE, undefined, 3, 12)
 

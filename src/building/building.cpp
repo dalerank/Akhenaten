@@ -1,5 +1,7 @@
 #include "building.h"
 
+#include <new>
+
 #include "building/rotation.h"
 #include "building/building_type.h"
 #include "building/building_storage.h"
@@ -104,8 +106,6 @@ void building::initialize(e_building_type _tp, tile2i _tl, int orientation) {
     state = BUILDING_STATE_CREATED;
     size = props.building_size;
     distance_from_entry = 0;
-    // Slots are reused without clearing: a stale road_access sends walkers to the old (or 0,0) tile.
-    road_access = tile2i::invalid;
 
     map_random_7bit = map_random_get(tile.grid_offset()) & 0x7f;
     figure_roam_direction = map_random_7bit & 6;
@@ -424,9 +424,6 @@ building_impl *building::dcast() {
     return _ptr;
 }
 
-building::building() {
-}
-
 const building* building::main() const {
     OZZY_PROFILER_SECTION(_, "building_main")
 
@@ -467,6 +464,15 @@ building* building::top_xy() {
 
 bool building::is_main() {
     return (prev_part_building_id == 0);
+}
+
+void building::reset_slot(building_id slot_id) {
+    this->~building();
+    // Members without an initializer were zero in the OG records. Value-initialization zeroes them
+    // before the constructor runs; a memset between the destructor and placement new is a store to
+    // dead storage, which GCC's lifetime DSE drops (stale next_part_building_id etc. survived).
+    new (this) building();
+    id = slot_id;
 }
 
 void building::clear_impl() {
@@ -801,6 +807,7 @@ tile2i building::access_tile() {
         return main()->tile.shifted(0, 22);
 
     case BUILDING_SPHINX:
+    case BUILDING_CAESAREUM:
         if (auto *m = dcast_monument()) {
             return m->access_point();
         }
@@ -926,6 +933,5 @@ io_buffer* iob_building_highest_id = new io_buffer([](io_buffer* iob, size_t ver
 io_buffer* iob_building_highest_id_ever = new io_buffer([](io_buffer* iob, size_t version) {
     //iob->bind(BIND_SIGNATURE_INT32, &building_extra_data.highest_id_ever);
     iob->bind____skip(4);
-    iob->bind____skip(4);
-    //    highest_id_ever->skip(4);
+    iob->bind(BIND_SIGNATURE_INT32, &g_city.plagues.locusts_countdown);
 });

@@ -1,10 +1,15 @@
 #include "figure_stonemason.h"
 
+#include "building/monument_caesareum.h"
 #include "building/monument_mastaba.h"
 #include "building/monument_pyramid.h"
 #include "building/monument_pyramid_engine.h"
 #include "building/monument_obelisk.h"
+#include "building/monument_royal_tomb.h"
 #include "building/monument_sphinx.h"
+#include "building/monument_sun_temple.h"
+#include "building/monument_alexandria_library.h"
+#include "building/monument_mausoleum.h"
 #include "building/building_statue.h"
 #include "building/monuments.h"
 #include "building/monument_pyramid_figure.h"
@@ -41,6 +46,18 @@ void figure_stonemason::figure_action() {
         break;
 
     case ACTION_0_MASON_CREATED: {
+            if (b_dest->dcast_mausoleum()) {
+                if (!building_mausoleum::find_work_for_figure(id())) {
+                    advance_action(ACTION_6_MASON_RETURN_HOME);
+                }
+                break;
+            }
+            if (auto *cae = b_dest->dcast_caesareum()) {
+                if (!cae->claim_worker(base)) {
+                    advance_action(ACTION_6_MASON_RETURN_HOME);
+                    break;
+                }
+            }
             // Prefer monument access_point (enter_offset); fall back to access_tile.
             if (auto *mon = b_dest->dcast_monument()) {
                 base.destination_tile = mon->access_point();
@@ -61,12 +78,19 @@ void figure_stonemason::figure_action() {
         break;
 
     case ACTION_1_MASON_GOING: {
-        const bool to_obelisk = b_dest->dcast_obelisk() != nullptr || b_dest->dcast_sphinx() != nullptr;
+        auto *sun = b_dest->dcast_sun_temple();
+        auto *library = b_dest->dcast_alexandria_library();
+        const bool to_obelisk = b_dest->dcast_obelisk() != nullptr || b_dest->dcast_sphinx() != nullptr
+                                || b_dest->dcast_royal_tomb() != nullptr || (sun && sun->part_index() == 0);
         const bool to_og_pyramid = b_dest->dcast_pyramid()
             && g_monument_pyramid_engine.uses_block_engine(b_dest);
-        const short arrived = to_obelisk
+        short arrived = to_obelisk
             ? (short)ACTION_9_MASON_WORK_OBELISK
             : (to_og_pyramid ? (short)ACTION_16_MASON_CLIMB_RAMP : (short)ACTION_7_MASON_LOOKING_FOR_WORK_TILE);
+        // OG: side parts / library mason wait for a material sled before working.
+        if ((sun && sun->part_index() != 0) || library || b_dest->dcast_mausoleum() || b_dest->dcast_caesareum()) {
+            arrived = ACTION_19_MASON_WAIT_FOR_BLOCK;
+        }
         if (do_goto(base.destination_tile, terrain_usage, arrived, ACTION_10_MASON_DESTROY)) {
             base.wait_ticks = 0;
             if (to_obelisk) {
@@ -126,6 +150,32 @@ void figure_stonemason::figure_action() {
     case ACTION_19_MASON_WAIT_FOR_BLOCK: {
         base.terrain_usage = TERRAIN_USAGE_ANY;
         base.outside_road_ticks = 0;
+        // OG sun temple / library: linger until a laborer sled wakes us to WORK.
+        if (auto *sun = b_dest->dcast_sun_temple()) {
+            if (sun->runtime_data().og_part.worker_figure_id != id()) {
+                advance_action(ACTION_6_MASON_RETURN_HOME);
+            }
+            break;
+        }
+        if (auto *maus = b_dest->dcast_mausoleum()) {
+            if (maus->runtime_data().og_part.worker_figure_id != id()) {
+                advance_action(ACTION_6_MASON_RETURN_HOME);
+            }
+            break;
+        }
+        if (auto *cae = b_dest->dcast_caesareum()) {
+            if (cae->worker_figure_id() != id()) {
+                advance_action(ACTION_6_MASON_RETURN_HOME);
+            }
+            break;
+        }
+        if (auto *library = b_dest->dcast_alexandria_library()) {
+            auto *main = library->main_library();
+            if (!main || main->runtime_data().og_part.worker_figure_id != id()) {
+                advance_action(ACTION_6_MASON_RETURN_HOME);
+            }
+            break;
+        }
         auto &rd = runtime_data();
         if (rd.walk_mode == PYRAMID_WALK_NONE) {
             advance_action(ACTION_6_MASON_RETURN_HOME);
@@ -192,14 +242,62 @@ void figure_stonemason::figure_action() {
         break;
 
     case ACTION_9_MASON_WORK_OBELISK: {
+        if (auto *maus = b_dest->dcast_mausoleum()) {
+            base.set_flag(e_figure_flag_invisible);
+            if (maus->work_tick(base)) {
+                base.set_flag(e_figure_flag_invisible, false);
+                maus->remove_worker(id());
+                advance_action(ACTION_6_MASON_RETURN_HOME);
+            }
+            break;
+        }
         building *worked = building_get(runtime_data().destination_bid);
         if (!worked || !worked->id) {
             worked = destination();
+        }
+        if (auto* tomb = worked ? worked->dcast_royal_tomb() : nullptr) {
+            base.set_flag(e_figure_flag_invisible);
+            if (tomb->work_tick(base)) {
+                base.set_flag(e_figure_flag_invisible, false);
+                tomb->remove_worker(id());
+                advance_action(ACTION_6_MASON_RETURN_HOME);
+            }
+            break;
         }
         if (auto *sphinx = worked ? worked->dcast_sphinx() : nullptr) {
             base.set_flag(e_figure_flag_invisible);
             if (sphinx->work_tick(base)) {
                 base.set_flag(e_figure_flag_invisible, false);
+                advance_action(ACTION_6_MASON_RETURN_HOME);
+            }
+            break;
+        }
+        if (auto *cae = worked ? worked->dcast_caesareum() : nullptr) {
+            base.set_flag(e_figure_flag_invisible);
+            if (cae->work_tick(base)) {
+                base.set_flag(e_figure_flag_invisible, false);
+                advance_action(ACTION_6_MASON_RETURN_HOME);
+            }
+            break;
+        }
+        if (auto *sun = worked ? worked->dcast_sun_temple() : nullptr) {
+            base.set_flag(e_figure_flag_invisible);
+            if (sun->work_tick(base)) {
+                base.set_flag(e_figure_flag_invisible, false);
+                if (auto *mon = worked->dcast_monument()) {
+                    mon->remove_worker(id());
+                }
+                advance_action(ACTION_6_MASON_RETURN_HOME);
+            }
+            break;
+        }
+        if (auto *library = worked ? worked->dcast_alexandria_library() : nullptr) {
+            base.set_flag(e_figure_flag_invisible);
+            if (library->work_tick(base)) {
+                base.set_flag(e_figure_flag_invisible, false);
+                if (auto *mon = worked->dcast_monument()) {
+                    mon->remove_worker(id());
+                }
                 advance_action(ACTION_6_MASON_RETURN_HOME);
             }
             break;

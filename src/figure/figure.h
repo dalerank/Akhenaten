@@ -173,6 +173,9 @@ public:
     uint8_t collecting_item_id; // NOT a resource ID for cartpushers! IS a resource ID for warehousemen
     xstring phrase_key;
     xstring phrase_sound;
+    uint8_t phrase_sequence;
+    int8_t phrase_id;
+    uint8_t phrase_group; // e_advisor of the phrase subject (OG phrase group)
     figure_id target_figure_id;
     short targeted_by_figure_id;
     uint8_t num_attackers;
@@ -207,7 +210,7 @@ public:
     ALLOW_SMART_CAST_FIGURE(immigrant)
     ALLOW_SMART_CAST_FIGURE(emigrant)
     ALLOW_SMART_CAST_FIGURE(homeless)
-    ALLOW_SMART_CAST_FIGURE(festival_guy)
+    ALLOW_SMART_CAST_FIGURE(festival_priest)
     ALLOW_SMART_CAST_FIGURE(enemy_spearman)
     ALLOW_SMART_CAST_FIGURE(ostrich)
     ALLOW_SMART_CAST_FIGURE(hippo)
@@ -261,8 +264,7 @@ public:
     bool is_fighting_friendly();
     bool is_fighting_enemy();
     e_minimap_figure_color get_figure_color();
-    const figure_static_params &params() const;
-    const animation_t &anim(const xstring &key);
+    const figure_static_params& params() const;
 
     void kill();
 
@@ -331,6 +333,7 @@ public:
     void image_set_animation(int collection, int group, int offset = 0, int max_frames = 12, int duration = 1, bool loop = true);
     void set_force_valid_animation(bool enabled);
     void figure_image_update(bool refresh_only);
+    void refresh_image_for_orientation();
     int figure_image_corpse_offset();
     int figure_image_missile_launcher_offset();
     int figure_image_direction();
@@ -350,6 +353,7 @@ public:
     void draw_map_flag(vec2i pixel, int highlight, vec2i* coord_out = nullptr);
 
     void advance_figure_tick();
+    void advance_height();
     void set_target_height_bridge();
     void set_target_height_building();
     e_permission get_permission_for_figure();
@@ -409,6 +413,7 @@ public:
     int figure_image_normalize_direction(int dir);
 
     // sound.c
+    void play_attack_sound();
     void play_die_sound();
     void play_hit_sound();
 
@@ -452,6 +457,10 @@ struct fproperty {
 figure *figure_create(e_figure_type type, tile2i tile, int dir);
 int figure_movement_can_launch_cross_country_missile(tile2i src, tile2i dst);
 void figure_create_explosion_cloud(tile2i tile, int size);
+
+// OG picks the new view direction up on each figure's next tick; this redoes it at once, so a
+// paused city rotates its walkers too while drawing only reads the sprite ids.
+void figures_refresh_images_for_orientation();
 
 template <typename dest_type>
 inline dest_type *smart_cast(figure *f) {

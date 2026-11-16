@@ -16,6 +16,7 @@
 #include "graphics/screen.h"
 #include "graphics/image.h"
 #include "graphics/residency_atlas.h"
+#include "content/mods.h"
 #include "content/zipreader.hpp"
 
 #include "game/game.h"
@@ -252,13 +253,9 @@ static buffer* load_external_data(const image_t &img) {
     // load external file
     size = io_read_file_part_into_buffer(filename, MAY_BE_LOCALIZED, external_image_buf, img.data_length, img.sgx_data_offset - 1);
     if (!size) {
-        // try in 555 dir
-        size = io_read_file_part_into_buffer(filename, MAY_BE_LOCALIZED, external_image_buf, img.data_length, img.sgx_data_offset - 1);
-        if (!size) {
-            logs::error("unable to load external image %s (tried: %s, offset=%d, length=%d)", 
-                        img.bmp.name.c_str(), filename.c_str(), img.sgx_data_offset, img.data_length);
-            return nullptr;
-        }
+        logs::error("unable to load external image %s (tried: %s, offset=%d, length=%d)", img.bmp.name.c_str(),
+          filename.c_str(), img.sgx_data_offset, img.data_length);
+        return nullptr;
     }
     return external_image_buf;
 }
@@ -450,7 +447,16 @@ bool imagepak::load_zip_pak(vfs::path pak, int starting_index) {
     bool found = false;
     vfs::path datafile;
 
+    const vfs::path mod_path = mods_get_path(xstring(pak.c_str()));
+    if (!mod_path.empty() && vfs::file_exists(mod_path)) {
+        datafile = mod_path;
+        found = true;
+    }
+
     for (const auto &dir : allow_dirs_to_find) {
+        if (found) {
+            break;
+        }
         datafile.printf("%s/%s.sgx", dir, pak);
 
         if (vfs::file_exists(datafile)) {

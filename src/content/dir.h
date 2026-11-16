@@ -55,5 +55,6 @@ bool is_directory(pcstr path);
 
 void content_cache_real_file_paths(pcstr folder);
 void content_cache_paths();
+void content_clear_path_cache();
 
 } // vfs

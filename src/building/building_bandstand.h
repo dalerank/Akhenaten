@@ -17,11 +17,15 @@ public:
         virtual void ghost_preview(build_planner &p, painter &ctx, tile2i tile, tile2i end, vec2i pixel) const override;
     };
 
+    struct static_params : public building_static_params {
+        svector<venue_place_offset, 4> place_dir;
+    } BUILDING_STATIC_DATA_T;
+
     virtual void on_place(int orientation, int variant) override;
+    virtual void on_post_load() override;
     virtual void on_place_update_tiles(int orientation, int variant) override;
     virtual void update_map_orientation(int map_orientation) override;
     virtual void spawn_figure() override;
-    virtual int get_fire_risk(int value) const override { return value / 10; }
     virtual e_sound_channel_city sound_channel() const override { return SOUND_CHANNEL_CITY_BANDSTAND; }
     virtual bool force_draw_flat_tile(painter &ctx, tile2i tile, vec2i pixel, color mask) override;
     virtual bool force_draw_height_tile(painter &ctx, tile2i tile, vec2i pixel, color mask) override;
@@ -33,3 +37,4 @@ public:
     void draw_shows_musicians(painter &ctx, vec2i pixel, tile2i tile, int direction, color color_mask);
     void draw_shows_juggler(painter &ctx, vec2i pixel, tile2i tile, int direction, color color_mask);
 };
+ANK_CONFIG_STRUCT(building_bandstand::static_params, place_dir);

@@ -36,6 +36,7 @@ function empire_window_draw_object_info_enemy_army(ev, obj) {
 function empire_window_draw_object_info(ev) {
     var obj = empire_window.selected_object
     if (!obj) {
+        empire_window_draw_marker_tooltip()
         return
     }
     switch (obj.type) {

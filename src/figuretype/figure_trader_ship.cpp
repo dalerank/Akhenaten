@@ -434,7 +434,6 @@ void figure_trade_ship::figure_action() {
         base.height_adjusted_ticks = 0;
         if (direction() == DIR_FIGURE_NONE) {
             base.action_state = ACTION_114_TRADE_SHIP_ANCHORED;
-            base.direction = rand() % 8;
         } else if (direction() == DIR_FIGURE_REROUTE) {
             route_remove();
         } else if (direction() == DIR_FIGURE_CAN_NOT_REACH) {

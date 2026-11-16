@@ -57,7 +57,8 @@ Sources are collected via `file(GLOB ...)` with **no `CONFIGURE_DEPENDS`**, so a
 --pos X,Y             window position
 --display-scale PCT   display scale, 50..500
 --cursor-scale PCT    cursor scale, 100 / 150 / 200
---render RENDERER     force renderer (opengl, direct3d)
+--render RENDERER     force renderer (direct3d11, opengl, direct3d, software); without it Windows tries
+                      direct3d11 -> opengl -> direct3d -> software, other platforms SDL's pick -> software
 --font PATH           use custom TTF font (overrides the font from localization.js)
 --language ru         set language (en, ru, fr, de, it, sp, po, pr, sw, tc, sc, kr)
 --nosound             disable audio (skips sound manager init and audio file probing)
@@ -65,16 +66,22 @@ Sources are collected via `file(GLOB ...)` with **no `CONFIGURE_DEPENDS`**, so a
 --nodatacheck         skip Pharaoh/Cleopatra install validation at startup
 --no-logo             skip the logo screen, go straight to the main menu
 --nointro             skip the intro video on startup
+--no-update           do not check for or download a newer build (the updater exists only in CI builds)
 --nomouse             disable mouse-driven input (edge/drag camera scrolling) — for tests/screenshots
 --config              show configuration dialog on startup
 --noconfig-window     skip configuration dialog on startup (even without akhenaten.cfg)
 --og                  force original Pharaoh behavior (disable all Enhanced / gameplay-change features)
 --enhanced            enable all Enhanced / gameplay-change features (overrides --og if both are set)
---mods PATH           set mods directory
---mixed PATH          hot-reload JS scripts from disk (dev mode)
---unpack_scripts      extract embedded JS to user directory
+--mods PATH           mods folder instead of <data>/mods (relative to the working directory);
+                      with --integraltests the only mod source (default tests/fixtures/mods),
+                      the user's enabled list and <data>/Scripts, ./Scripts are ignored
+--mixed PATH          hot-reload JS scripts from PATH (dev mode); PATH is searched before every other
+                      script folder (mods still come first)
+--unpack_scripts      extract embedded JS to <data>/Scripts with akhenaten_scripts_version.txt; a Scripts/
+                      folder (in <data> or the working dir) is used only while that stamp matches the
+                      running build, otherwise it is ignored with a "[scripts] ignoring" log line
 --integraltests       run the built-in integral test suite and exit (see "Testing" below)
---integraltest-only NAME  with --integraltests, run only tests whose filename contains NAME
+--integraltest-only NAME  with --integraltests, run only tests whose filename starts with NAME (else: contains NAME)
 --integraltest-keep   with --integraltests, keep the window open after the suite (inspect final state)
 --editor              start in the scenario editor (dev-only; blank map, bypasses main menu)
 --load-map PATH       load a .map straight into the city, bypassing the main menu
@@ -85,6 +92,9 @@ Sources are collected via `file(GLOB ...)` with **no `CONFIGURE_DEPENDS`**, so a
 --log-sound           log which sound files the game tries to load
 --log-config-keys     warn about config keys nothing reads and non-zero C++ defaults a missing key resets to 0
                       (a value of the wrong type is always reported as "[config] ... expected number")
+--config-keys-baseline PATH  with --integraltests, fail on config key issues not listed in PATH (implies --log-config-keys)
+--config-keys-update  with --config-keys-baseline, rewrite PATH from this run instead of checking it
+--user-dir PATH       use PATH instead of the per-user app folder (integral-test log, options) — for parallel runs
 --discord-log         verbose Discord RPC logging
 --nocrashdlg          suppress crash dialog
 --fulldmp             create full crash dump
@@ -125,6 +135,11 @@ headers of its own layer or lower. Known violations live in `tools/layers_baseli
 fail. When you remove a violation, delete its baseline line (or run `--update` after a cleanup);
 never add lines to silence a new one. `--summary` prints counts per layer pair.
 
+`--integraltests --config-keys-baseline tools/config_keys_baseline.txt` (what the integral-test CI job runs)
+fails the suite on C++ defaults zeroed by a missing config key and on unknown keys that the baseline does not
+list (`[config-keys]` lines in the log); a wrong-typed value always fails. Add `--config-keys-update` to rewrite
+the baseline after a cleanup; never add lines to silence a new issue.
+
 ### Comments
 
 Do **not** sprinkle comments everywhere. Prefer clear names and structure over narration.
@@ -156,7 +171,7 @@ leave useful existing comments alone.
 
 ## Testing — integral tests
 
-`tests/*.js` is the integral test suite (219 files). It is a CI gate
+`tests/*.js` is the integral test suite (377 files). It is a CI gate
 (`.github/workflows/akhenaten_integral_tests.yml`); a red run blocks the PR.
 **This is the default way to verify a change.**
 
@@ -164,7 +179,8 @@ Run the whole suite (the invocation CI uses):
 ```
 build/RelWithDebInfo/akhenaten.exe --integraltests --no-logo --no-resource --nosound --window --size 800x600
 ```
-Run one test — match is a case-insensitive substring of the filename stem:
+Run one test — the tests whose filename stem starts with NAME (case-insensitive; `06` runs `06_*` but not
+`106_*`); when no stem starts with NAME, every stem that contains it:
 ```
 build/RelWithDebInfo/akhenaten.exe --integraltests --integraltest-only 06 --no-logo --no-resource --nosound --window --size 800x600
 ```
@@ -173,6 +189,8 @@ Exit code is `0` only when every test passed.
 Results go to the log, **not** to stdout:
 - Windows: `%APPDATA%/Akhenaten/akhenaten-log.txt`
 - Linux: `${XDG_DATA_HOME:-~/.local/share}/Akhenaten/akhenaten-log.txt`
+- with `--user-dir PATH`: `PATH/akhenaten-log.txt`. The default log is shared by every exe, so two suites
+  running at once (e.g. from two worktrees) overwrite each other's results — give each its own `--user-dir`.
 
 Grep it for `\[test:.*\] (PASS|FAIL)` per test and `\[integraltests\] N passed, M failed`
 for the summary.
@@ -186,6 +204,9 @@ A test file defines two globals and is discovered automatically by living in `te
   (otherwise the runner fails it on a frame timeout)
 - `check_valid()` — returns truthy on success; usually asserts via
   `__test_find_inlog('[test-marker] …')` against markers the game logs
+
+A regression test must be seen failing on the old code before the fix (or say why it cannot be); a test that
+passes on both says nothing about the bug.
 
 `tests/*.js` load from disk, so a new or edited test needs **no rebuild** — unlike
 `src/scripts/*.js`, which are embedded at build time.
@@ -231,7 +252,7 @@ src/
 ├── widget/       persistent HUD (sidebar, top menu, minimap)
 ├── scenario/     mission config, events, requests, win criteria
 ├── editor/       scenario editor
-├── io/           save/load (chunk schema), mods, localization
+├── io/           save/load (chunk schema), localization
 ├── game/         game state, main loop, resource enums
 ├── config/       game settings and config-archive readers
 ├── content/      content/asset registration and loading

@@ -13,4 +13,11 @@ kingdome_relation {
 	first_debt_penalty : -5
 	second_debt_penalty : -10
 	last_debt_rating_cap : 10
+	// OG update_kingdom_yearly: the yearly change from mission yearly_decay_from_mission on (and on custom
+	// maps), and the bonus after a year with the tribute paid and a profit; a Ra temple complex adds its
+	// bonus after the yearly ratings (temple_complex.c).
+	yearly_decay : -1
+	yearly_decay_from_mission : 2
+	yearly_profit_bonus : 1
+	ra_complex_yearly_bonus : 1
 }

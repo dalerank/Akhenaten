@@ -37,7 +37,7 @@ building_granary {
         base { pack:PACK_GENERAL, id:99 },
         fancy { pack:PACK_GENERAL, id:99, offset:1 },
         work { pack:PACK_SPR_AMBIENT, id:47, max_frames:23 },
-        resources {pack:PACK_GENERAL, id:99, offset:2},
+        resources {pack:PACK_GENERAL, id:99, offset:3},
         minimap {pack:PACK_GENERAL, id:149, offset:160},
     }
 
@@ -73,12 +73,6 @@ building_granary {
 
     max_capacty_stored : 3200
     allow_food_types : 4
-}
-
-[es=(building_granary, on_place_checks)]
-function building_granary_on_place_checks(ev) {
-    var has_bazaar = city.count_active_buildings(BUILDING_BAZAAR) > 0
-    city.warnings.show_if_not(has_bazaar, "#build_bazaars_to_distribute_food")
 }
 
 [es=(building_granary, draw_usable_paths)]

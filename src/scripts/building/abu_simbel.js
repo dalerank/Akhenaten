@@ -59,6 +59,7 @@ building_abu_simbel {
     info_sound : "Wavs/rock3.wav"
     cost [ 5000, 6500, 8000, 11000, 16000 ]
     flags {
+      no_map_edge_margin: true
         is_monument: true
         non_deletable: true
         allow_rotate: true

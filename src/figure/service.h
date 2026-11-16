@@ -23,6 +23,9 @@ inline int figure_provide_service(tile2i tile, figure* f, T callback) {
     return serviced;
 }
 
+// OG service.c service_provide_crime_coverage: lowers the crime around the tile, returns the highest crime seen.
+int figure_provide_crime_coverage(tile2i tile, int reduction);
+
 template<typename T>
 static int figure_provide_culture(tile2i tile, figure* f, T callback) {
     return figure_provide_service(tile, f, callback);

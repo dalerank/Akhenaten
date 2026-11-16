@@ -11,7 +11,7 @@ building_courthouse {
 
   labor_category : LABOR_CATEGORY_INFRASTRUCTURE
   overlay : OVERLAY_COUTHOUSE
-  min_houses_coverage : 50
+  min_houses_coverage : 100
   building_size : 3
   meta { text_id:176, help_link:"message_building_courthouse" }
   info_sound : "Wavs/forum.WAV"
@@ -30,8 +30,7 @@ building_courthouse {
 
 [es=(building_courthouse, spawn_figure)]
 function building_courthouse_spawn_figure(ev) {
-    var building = city.get_building(ev.bid)
-    building.common_spawn_roamer(FIGURE_MAGISTRATE, building_courthouse.min_houses_coverage, ACTION_125_ROAMER_ROAMING)
+    city.get_building(ev.bid).spawn_service_walker(building_courthouse, FIGURE_MAGISTRATE, ACTION_70_LAW_WALKER_CREATED)
 }
 
 [es=(building_courthouse, update_graphic)]
