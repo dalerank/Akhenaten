@@ -126,7 +126,8 @@ e_figure_type enemy_warship_type_for(e_enemy_type enemy) {
     switch (enemy) {
     case ENEMY_1_ASSYRIAN: return FIGURE_ENEMY_ASSYRIAN_WAR_SHIP;
     case ENEMY_2_CANAANITE: return FIGURE_ENEMY_CANAANITE_WAR_SHIP;
-    case ENEMY_3_EGYPTIAN: return FIGURE_ENEMY_EGYPTIAN_WAR_SHIP;
+    case ENEMY_3_EGYPTIAN:
+        return FIGURE_ENEMY_EGYPTIAN_WARSHIP;
     case ENEMY_4_HITTITE: return FIGURE_ENEMY_HITTITE_WAR_SHIP;
     case ENEMY_5_HYKSOS: return FIGURE_ENEMY_HYKSOS_WAR_SHIP;
     case ENEMY_6_KUSHITE: return FIGURE_ENEMY_KUSHITE_WAR_SHIP;

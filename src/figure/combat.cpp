@@ -154,7 +154,7 @@ static bool figure_is_enemy_transport_ship(e_figure_type type) {
 static bool figure_is_enemy_warship(e_figure_type type) {
     switch (type) {
     case FIGURE_ENEMY_WARSHIP:
-    case FIGURE_ENEMY_EGYPTIAN_WAR_SHIP:
+    case FIGURE_ENEMY_EGYPTIAN_WARSHIP:
     case FIGURE_ENEMY_EGYPTIAN_GALERA:
     case FIGURE_ENEMY_CANAANITE_WAR_SHIP:
     case FIGURE_ENEMY_KUSHITE_WAR_SHIP:

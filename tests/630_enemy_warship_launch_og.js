@@ -83,7 +83,7 @@ function run_test() {
     if (!test630_invade(ENEMY_3_EGYPTIAN, 0, 2)) {
         return test630_fail('egyptian sea invasion did not start')
     }
-    var egypt = test630_ships(FIGURE_ENEMY_EGYPTIAN_WAR_SHIP)
+    var egypt = test630_ships(FIGURE_ENEMY_EGYPTIAN_WARSHIP)
     if (egypt.length != 2) {
         return test630_fail('egyptian warships=' + egypt.length)
     }

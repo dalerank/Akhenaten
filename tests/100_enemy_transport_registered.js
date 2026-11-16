@@ -1,5 +1,5 @@
 // Verifies enemy transports resolve to a registered figure class (E3b). Every
-// FIGURE_ENEMY_*_TRANSPORT_SHIP (+ generic 92 / egyptian 51 / barbarian 115)
+// FIGURE_ENEMY_*_TRANSPORT_SHIP (+ generic 92 / egyptian 101 / barbarian 115)
 // must have a C++ class + FIGURE_METAINFO.
 // Markers:
 //   [test-marker] transport_control_registered_ok

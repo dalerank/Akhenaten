@@ -54,7 +54,7 @@ e_bribe_unit_class classify_figure(e_figure_type t) {
     case FIGURE_ENEMY_BARBARIAN_TRANSPORT_SHIP:
         return BRIBE_TRANSPORT;
     case FIGURE_ENEMY_WARSHIP:
-    case FIGURE_ENEMY_EGYPTIAN_WAR_SHIP:
+    case FIGURE_ENEMY_EGYPTIAN_WARSHIP:
     case FIGURE_ENEMY_EGYPTIAN_GALERA:
         return BRIBE_WARSHIP;
     case FIGURE_ENEMY_EGYPTIAN_ARCHER:

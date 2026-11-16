@@ -811,7 +811,7 @@ localization_de = [
   {key: "#figure_enemy_egyptian_chariot", group:64, id:48 }
   {key: "#figure_enemy_egyptian_sword", group:64, id:49 }
   {key: "#figure_enemy_egyptian_heavy_sword", group:64, id:50 }
-  {key: "#figure_enemy_egyptian_transport_ship", group:64, id:51 }
+  {key: "#figure_enemy_reserved_51", group:64, id:51 }
   {key: "#figure_enemy_egyptian_mounted_archer", group:64, id:52 }
   {key: "#figure_enemy_egyptian_axe", group:64, id:53 }
   {key: "#figure_rioter", group:64, id:54 }
@@ -864,8 +864,8 @@ localization_de = [
   {key: "#figure_showman", group:64, id:97 }
   {key: "#figure_plagued_citizen", group:64, id:98 }
   {key: "#figure_bedouin_infantry", group:64, id:99 }
-  {key: "#figure_egyptian_warship", group:64, id:100 }
-  {key: "#figure_egyptian_transport", group:64, id:101 }
+  {key: "#figure_egyptian_war_ship", group:64, id:100 }
+  {key: "#figure_egyptian_transport_ship", group:64, id:101 }
   {key: "#figure_asp", group:64, id:102 }
   {key: "#figure_lion", group:64, id:103 }
   {key: "#figure_scorpion", group:64, id:104 }

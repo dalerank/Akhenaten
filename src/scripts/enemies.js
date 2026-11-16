@@ -612,7 +612,7 @@ enemy_canaanite = {
 }
 
 // egyptian
-// Egyptian transport (FIGURE_ENEMY_EGYPTIAN_TRANSPORT_SHIP = 51). No dedicated
+// Egyptian transport (FIGURE_ENEMY_EGYPTIAN_TRANSPORT_SHIP = 101). No dedicated
 // transport strip in the pack — reuse galera hull frames for E3b.
 figure_egyptian_transport_ship = {
   overlay : OVERLAY_ENEMIES
