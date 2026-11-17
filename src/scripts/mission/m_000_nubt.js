@@ -113,7 +113,7 @@ function mission0_on_build_firehouse(ev) {
         return
     }
 
-	mission.last_action = game.absolute_day
+	mission.last_action_time = game.absolute_day
     mission.tutorial_firehouse_built = true
 }
 
@@ -174,7 +174,7 @@ function mission0_on_build_granary(ev) {
         return
     }
 
-    mission.last_action = game.absolute_day
+    mission.last_action_time = game.absolute_day
     mission.granary_built = true
 
 	city.set_advisor_available(ADVISOR_POPULATION, 1)
