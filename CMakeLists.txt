@@ -1508,3 +1508,8 @@ if(UNIX AND NOT APPLE AND NOT ANDROID AND NOT EMSCRIPTEN)
     install(FILES ${AKHENATEN_DATA_FILES} DESTINATION bin/data)
     install(DIRECTORY "${CMAKE_SOURCE_DIR}/data/maps" DESTINATION bin/data)
 endif()
+
+if(NOT ANDROID AND NOT EMSCRIPTEN)
+    add_executable(check_layers EXCLUDE_FROM_ALL tools/check_layers.cpp)
+    set_target_properties(check_layers PROPERTIES CXX_STANDARD 17 CXX_STANDARD_REQUIRED ON)
+endif()

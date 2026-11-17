@@ -16,4 +16,6 @@ jobs:
     steps:
     - uses: actions/checkout@v6
     - name: check include layers
-      run: python3 tools/check_layers.py
+      run: |
+        g++ -std=c++17 -O2 tools/check_layers.cpp -o check_layers
+        ./check_layers

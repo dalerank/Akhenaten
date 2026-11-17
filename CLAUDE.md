@@ -129,8 +129,9 @@ check `clang-format --version` before formatting.
 
 ### Include layers
 
-`python3 tools/check_layers.py` (CI gate `akhenaten_layers.yml`) enforces the include direction
-core < grid < sim < presentation < app (directory → layer map in the script): a file may include
+`tools/check_layers.cpp` (CI gate `akhenaten_layers.yml`; build it with the CMake target `check_layers`, or
+`g++ -std=c++17 -O2 tools/check_layers.cpp -o check_layers`, and run it from the repository root) enforces the include
+direction core < grid < sim < presentation < app (directory → layer map in the source): a file may include
 headers of its own layer or lower. Known violations live in `tools/layers_baseline.txt`; only new ones
 fail. When you remove a violation, delete its baseline line (or run `--update` after a cleanup);
 never add lines to silence a new one. `--summary` prints counts per layer pair.

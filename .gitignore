@@ -52,7 +52,7 @@ doc
 /tools/*
 !/tools/*.zip
 !/tools/*.7z
-!/tools/check_layers.py
+!/tools/check_layers.cpp
 !/tools/layers_baseline.txt
 
 /bin_x64
