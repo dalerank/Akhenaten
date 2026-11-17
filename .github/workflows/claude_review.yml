@@ -24,10 +24,7 @@ jobs:
           fetch-depth: 1
       - uses: anthropics/claude-code-action@v1
         with:
-          anthropic_federation_rule_id: fdrl_01Ni1mrqCxvn3znr9RDP5Nbr
-          anthropic_organization_id: 2700020e-d2e0-4721-92cf-a37c07cdc0a8
-          anthropic_service_account_id: svac_01DnHm5t3Ui9QwmrcjKF21Z1
-          anthropic_workspace_id: wrkspc_0137XbQVzB3BA32AzsE9Q82W
+          claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
           # The Claude app token is only issued when the triggering user has write access; issues and PRs
           # here come from outside users, so run with the job token. Safe only because this job's tools
           # and permissions are narrow (see allowedTools and the permissions block).
