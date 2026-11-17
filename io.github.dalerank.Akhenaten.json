@@ -3,8 +3,10 @@
     "runtime": "org.freedesktop.Platform",
     "runtime-version": "26.08",
     "sdk": "org.freedesktop.Sdk",
-    "command": "akhenaten-run",
+    "command": "akhenaten",
     "finish-args": [
+        "--filesystem=home",
+        "--filesystem=/run/media",
         "--share=ipc",
         "--share=network",
         "--device=dri",
@@ -216,23 +218,6 @@
                         "cp -r _deps/sdl_mixer_deps/libxmp _deps/SDL2_mixer-src/external/",
                         "cp -r _deps/sdl_mixer_deps/wavpack _deps/SDL2_mixer-src/external/",
                         "cp -r _deps/sdl_mixer_deps/libgme _deps/SDL2_mixer-src/external/"
-                    ]
-                }
-            ]
-        },
-        {
-            "name": "akhenaten-runner",
-            "buildsystem": "simple",
-            "build-commands": [
-                "install -Dm755 flatpak-akhenaten-wrapper.sh /app/bin/akhenaten-run"
-            ],
-            "sources": [
-                {
-                    "type": "script",
-                    "dest-filename": "flatpak-akhenaten-wrapper.sh",
-                    "commands": [
-                        "cd /app/bin",
-                        "exec /app/bin/akhenaten \"$@\""
                     ]
                 }
             ]
