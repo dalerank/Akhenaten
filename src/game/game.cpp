@@ -535,7 +535,7 @@ void game_t::before_start_simulation() {
 void game_t::handle_input_frame() {
     OZZY_PROFILER_FUNCTION();
     const mouse& m = mouse::get();
-    const hotkeys *h = hotkey_state();
+    const hotkeys* h = &g_hotkeys;
 
     g_window_manager.handle_input(&m ,h);
 

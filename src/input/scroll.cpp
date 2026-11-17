@@ -13,8 +13,6 @@
 #include <cmath>
 #include <cstdlib>
 
-enum key_state { KEY_STATE_UNPRESSED = 0, KEY_STATE_PRESSED = 1, KEY_STATE_HELD = 2, KEY_STATE_AXIS = 3 };
-
 scroll_t g_scroll;
 
 void ANK_REGISTER_CONFIG_ITERATOR(config_load_scroll_config) {
@@ -46,77 +44,77 @@ float scroll_t::dampen_mouse_relative_pan_delta(float d) const {
 void scroll_t::clear_speed() {
     speed_clear(speed.x);
     speed_clear(speed.y);
-    speed.decaying = 0;
+    speed.decaying = false;
 }
 
-int scroll_t::arrow_key_t::get_value() {
-    if (state == KEY_STATE_AXIS)
-        return value;
+int scroll_t::arrow_value(arrow_key_t& arrow) {
+    if (arrow.state == key_state::axis)
+        return arrow.value;
 
     if (!!game_features::gameui_smooth_scrolling) {
-        return state != KEY_STATE_UNPRESSED;
+        return arrow.state != key_state::unpressed;
     }
 
-    if (state == KEY_STATE_PRESSED) {
-        state = KEY_STATE_HELD;
+    if (arrow.state == key_state::pressed) {
+        arrow.state = key_state::held;
         return 1;
     }
-    if (state == KEY_STATE_HELD && time_get_millis() - last_change >= g_scroll.config.key_wait_time_after_hold)
+    if (arrow.state == key_state::held && time_get_millis() - arrow.last_change >= config.key_wait_time_after_hold)
         return 1;
 
     return 0;
 }
 
-float scroll_t::arrow_key_t::get_normalized_value() {
-    int v = get_value();
-    if (v == g_scroll.config.key_pressed)
+float scroll_t::arrow_normalized_value(arrow_key_t& arrow) {
+    int v = arrow_value(arrow);
+    if (v == config.key_pressed)
         return 1.0f;
 
-    return fminf(value / g_scroll.config.key_max_value, 1.0f);
+    return fminf(arrow.value / config.key_max_value, 1.0f);
 }
 
-void scroll_t::arrow_key_t::restart_unless(const arrow_key_t *exception) {
-    if (this == exception)
+void scroll_t::restart_arrow_unless(arrow_key_t& arrow, const arrow_key_t* exception) {
+    if (&arrow == exception)
         return;
-    if (state != KEY_STATE_UNPRESSED && state != KEY_STATE_AXIS) {
-        state = KEY_STATE_PRESSED;
-        last_change = time_get_millis();
+    if (arrow.state != key_state::unpressed && arrow.state != key_state::axis) {
+        arrow.state = key_state::pressed;
+        arrow.last_change = time_get_millis();
     }
 }
 
-void scroll_t::arrows_t::restart_all_except(const arrow_key_t *arrow) {
-    g_scroll.clear_speed();
-    up.restart_unless(arrow);
-    down.restart_unless(arrow);
-    left.restart_unless(arrow);
-    right.restart_unless(arrow);
+void scroll_t::restart_arrows_except(const arrow_key_t* arrow) {
+    clear_speed();
+    restart_arrow_unless(arrows.up, arrow);
+    restart_arrow_unless(arrows.down, arrow);
+    restart_arrow_unless(arrows.left, arrow);
+    restart_arrow_unless(arrows.right, arrow);
 }
 
-int scroll_t::get_key_state_for_value(int value) const {
+scroll_t::key_state scroll_t::key_state_for_value(int value) const {
     if (!value)
-        return KEY_STATE_UNPRESSED;
+        return key_state::unpressed;
 
     if (value == config.key_pressed)
-        return KEY_STATE_PRESSED;
+        return key_state::pressed;
 
-    return KEY_STATE_AXIS;
+    return key_state::axis;
 }
 
-void scroll_t::arrow_key_t::set(int new_value) {
-    int new_state = g_scroll.get_key_state_for_value(new_value);
-    if (new_state != KEY_STATE_AXIS && new_state != KEY_STATE_UNPRESSED && state != KEY_STATE_UNPRESSED)
+void scroll_t::set_arrow(arrow_key_t& arrow, int new_value) {
+    const key_state new_state = key_state_for_value(new_value);
+    if (new_state != key_state::axis && new_state != key_state::unpressed && arrow.state != key_state::unpressed)
         return;
     // Key should retain axis state even if its value is zero
-    if (state != KEY_STATE_AXIS || new_state != KEY_STATE_UNPRESSED)
-        state = new_state;
+    if (arrow.state != key_state::axis || new_state != key_state::unpressed)
+        arrow.state = new_state;
 
-    value = new_value;
-    last_change = time_get_millis();
-    if (new_state != KEY_STATE_AXIS && !game_features::gameui_smooth_scrolling)
-        g_scroll.arrows.restart_all_except(this);
+    arrow.value = new_value;
+    arrow.last_change = time_get_millis();
+    if (new_state != key_state::axis && !game_features::gameui_smooth_scrolling)
+        restart_arrows_except(&arrow);
 }
 
-int scroll_t::in_progress() const {
+bool scroll_t::in_progress() const {
     return is_scrolling || drag.active;
 }
 
@@ -124,11 +122,11 @@ int scroll_t::speed_factor() const {
     return calc_bound((100 - game_features::gameopt_scroll_speed.to_int()) / 10, 0, 10);
 }
 
-int scroll_t::is_smooth() const {
+bool scroll_t::is_smooth() const {
     return !!game_features::gameui_smooth_scrolling || drag.active || speed.decaying;
 }
 
-int scroll_t::should_scroll() {
+bool scroll_t::should_scroll() {
     time_millis current_time = time_get_millis();
     time_millis diff = current_time - last_time;
     unsigned int scroll_delay = speed_factor();
@@ -136,13 +134,13 @@ int scroll_t::should_scroll() {
     if (scroll_delay < 10) { // 0% = 10 = no scroll at all
         if (diff >= 12 * (scroll_delay + further_delay) + 2) {
             last_time = current_time;
-            return 1;
+            return true;
         }
     }
-    return 0;
+    return false;
 }
 
-int scroll_t::direction_from_sides(int top, int left, int bottom, int right) {
+int scroll_t::direction_from_sides(bool top, bool left, bool bottom, bool right) {
     // two sides
     if (left && top)
         return DIR_7_TOP;
@@ -174,22 +172,22 @@ int scroll_t::direction_from_sides(int top, int left, int bottom, int right) {
 }
 
 void scroll_t::set_custom_margins(vec2i pos, vec2i size) {
-    limits.active = 1;
+    limits.active = true;
     limits.pos = pos;
     limits.size = size;
 }
 
 void scroll_t::restore_margins() {
-    limits.active = 0;
+    limits.active = false;
 }
 
 void scroll_t::drag_start(drag_source source) {
     if (drag.active)
         return;
-    drag.active = 1;
-    drag.is_touch = (source == drag_source::touch) ? 1 : 0;
-    drag.apply_middle_mouse_pan_speed = (source == drag_source::middle_mouse_pan) ? 1 : 0;
-    drag.moved = 0;
+    drag.active = true;
+    drag.is_touch = (source == drag_source::touch);
+    drag.apply_middle_mouse_pan_speed = (source == drag_source::middle_mouse_pan);
+    drag.moved = false;
     drag.delta = {0, 0};
     drag.travel = {0, 0};
     if (!drag.is_touch)
@@ -198,9 +196,9 @@ void scroll_t::drag_start(drag_source source) {
     clear_speed();
 }
 
-int scroll_t::set_speed_from_drag(bool keep_delta) {
+bool scroll_t::set_speed_from_drag(bool keep_delta) {
     if (!drag.active)
-        return 0;
+        return false;
     int delta_x = 0;
     int delta_y = 0;
     if (!drag.is_touch) {
@@ -230,27 +228,27 @@ int scroll_t::set_speed_from_drag(bool keep_delta) {
     drag.travel.y += std::abs(delta_y);
     if (!drag.moved
         && (drag.travel.x > config.drag_min_delta || drag.travel.y > config.drag_min_delta)) {
-        drag.moved = 1;
+        drag.moved = true;
     }
     speed_set_target(speed.x, drag.delta.x, SPEED_CHANGE_IMMEDIATE, 0);
     speed_set_target(speed.y, drag.delta.y, SPEED_CHANGE_IMMEDIATE, 0);
     if (!keep_delta) {
         drag.delta = {0, 0};
     }
-    return 1;
+    return true;
 }
 
-int scroll_t::drag_end() {
+bool scroll_t::drag_end() {
     if (!drag.active)
-        return 0;
-    int has_scrolled = drag.moved;
+        return false;
+    const bool has_scrolled = drag.moved;
 
-    drag.active = 0;
-    drag.moved = 0;
-    drag.apply_middle_mouse_pan_speed = 0;
+    drag.active = false;
+    drag.moved = false;
+    drag.apply_middle_mouse_pan_speed = false;
 
     if (!drag.is_touch)
-        g_mouse.set_relative_mode(0);
+        g_mouse.set_relative_mode(false);
     else if (has_scrolled) {
         const touch_t* t = g_touch.earliest();
         speed_set_target(speed.x, -t->frame_movement.x, SPEED_CHANGE_IMMEDIATE, 1);
@@ -262,37 +260,37 @@ int scroll_t::drag_end() {
     return has_scrolled;
 }
 
-int scroll_t::set_arrow_input(arrow_key_t *arrow, const arrow_key_t *opposite_arrow, float *modifier) {
-    if (arrow->get_value() && (!opposite_arrow || !opposite_arrow->is_active())) {
-        if (arrow->state == KEY_STATE_AXIS) {
-            constant_input = 1;
-            *modifier = arrow->get_normalized_value();
+bool scroll_t::set_arrow_input(arrow_key_t& arrow, const arrow_key_t* opposite_arrow, float& modifier) {
+    if (arrow_value(arrow) && (!opposite_arrow || !opposite_arrow->is_active())) {
+        if (arrow.state == key_state::axis) {
+            constant_input = true;
+            modifier = arrow_normalized_value(arrow);
         }
-        return 1;
+        return true;
     }
-    return 0;
+    return false;
 }
 
 int scroll_t::get_direction(const mouse *m) {
-    int is_inside_window = m->is_inside_window;
+    bool is_inside_window = m->is_inside_window;
     int width = screen_width();
     int height = screen_height();
     if (game.is_fullscreen() && m->x < width && m->y < height) {
         // For Windows 10, in fullscreen mode, on HiDPI screens, this is needed
         // to get scrolling to work
-        is_inside_window = 1;
+        is_inside_window = true;
     }
     if (!is_inside_window && !m->is_touch)
         return DIR_8_NONE;
 
-    int top = 0;
-    int bottom = 0;
-    int left = 0;
-    int right = 0;
+    bool top = false;
+    bool bottom = false;
+    bool left = false;
+    bool right = false;
     int border = config.mouse_border;
     int x = m->x;
     int y = m->y;
-    constant_input = 0;
+    constant_input = false;
     speed.modifier_x = 0.0f;
     speed.modifier_y = 0.0f;
     if (limits.active) {
@@ -301,7 +299,7 @@ int scroll_t::get_direction(const mouse *m) {
         height = limits.size.y;
         x -= limits.pos.x;
         y -= limits.pos.y;
-        constant_input = 1;
+        constant_input = true;
     }
     // mouse near map edge
     // NOTE: using <= width/height (instead of <) to compensate for rounding
@@ -309,25 +307,25 @@ int scroll_t::get_direction(const mouse *m) {
     // the right or the bottom when the aspect ratio does not match exactly.
     if ((!m->is_touch || limits.active) && (x >= 0 && x <= width && y >= 0 && y <= height)) {
         if (x < border) {
-            left = 1;
+            left = true;
             speed.modifier_x = 1 - x / (float)border;
         } else if (x >= width - border) {
-            right = 1;
+            right = true;
             speed.modifier_x = 1 - (width - x) / (float)border;
         }
         if (y < border) {
-            top = 1;
+            top = true;
             speed.modifier_y = 1 - y / (float)border;
         } else if (y >= height - border) {
-            bottom = 1;
+            bottom = true;
             speed.modifier_y = 1 - (height - y) / (float)border;
         }
     }
     // keyboard/joystick arrow keys
-    left |= set_arrow_input(&arrows.left, nullptr, &speed.modifier_x);
-    right |= set_arrow_input(&arrows.right, &arrows.left, &speed.modifier_x);
-    top |= set_arrow_input(&arrows.up, nullptr, &speed.modifier_y);
-    bottom |= set_arrow_input(&arrows.down, &arrows.up, &speed.modifier_y);
+    left |= set_arrow_input(arrows.left, nullptr, speed.modifier_x);
+    right |= set_arrow_input(arrows.right, &arrows.left, speed.modifier_x);
+    top |= set_arrow_input(arrows.up, nullptr, speed.modifier_y);
+    bottom |= set_arrow_input(arrows.down, &arrows.up, speed.modifier_y);
 
     if (constant_input) {
         if (!speed.modifier_x)
@@ -391,15 +389,15 @@ bool scroll_t::set_speed_from_input(const mouse *m, type t) {
         clear_speed();
 
     vec2i dir = config.direction(direction);
-    int y_fraction = t == CITY ? 2 : 1;
+    int y_fraction = t == type::city ? 2 : 1;
     const auto &steps = config.steps_for(t);
 
     if (!game_features::gameui_smooth_scrolling && !limits.active) {
-        int do_scroll = should_scroll();
+        const int do_scroll = should_scroll() ? 1 : 0;
         int step = steps[0];
         int align_x = 0;
         int align_y = 0;
-        if (t == CITY) {
+        if (t == type::city) {
             vec2i camera_pixels = g_camera.camera_pixel_offset_internal;
             align_x = get_alignment_delta(dir.x, config.tile_x_pixels, camera_pixels.x);
             align_y = get_alignment_delta(dir.y, config.tile_y_pixels, camera_pixels.y);
@@ -445,24 +443,29 @@ vec2i scroll_t::get_delta(const mouse* m, type t) {
 
 void scroll_t::stop() {
     clear_speed();
-    g_mouse.set_relative_mode(0);
-    is_scrolling = 0;
-    constant_input = 0;
-    drag.active = 0;
-    drag.apply_middle_mouse_pan_speed = 0;
-    limits.active = 0;
+    g_mouse.set_relative_mode(false);
+    is_scrolling = false;
+    constant_input = false;
+    drag.active = false;
+    drag.apply_middle_mouse_pan_speed = false;
+    limits.active = false;
 }
 
 void scroll_t::arrow(arrow_dir which, int value) {
-    arrow_key_t *key = nullptr;
     switch (which) {
-    case arrow_dir::up: key = &arrows.up; break;
-    case arrow_dir::down: key = &arrows.down; break;
-    case arrow_dir::left: key = &arrows.left; break;
-    case arrow_dir::right: key = &arrows.right; break;
+    case arrow_dir::up:
+        set_arrow(arrows.up, value);
+        break;
+    case arrow_dir::down:
+        set_arrow(arrows.down, value);
+        break;
+    case arrow_dir::left:
+        set_arrow(arrows.left, value);
+        break;
+    case arrow_dir::right:
+        set_arrow(arrows.right, value);
+        break;
     }
-    if (key)
-        key->set(value);
 }
 
 void __scroll_arrow(int which, int value) {
@@ -471,7 +474,7 @@ void __scroll_arrow(int which, int value) {
 ANK_FUNCTION_2(__scroll_arrow)
 
 vec2i __scroll_get_delta_empire() {
-    return g_scroll.get_delta(&mouse::get(), scroll_t::EMPIRE);
+    return g_scroll.get_delta(&mouse::get(), scroll_t::type::empire);
 }
 ANK_FUNCTION(__scroll_get_delta_empire)
 

@@ -13,11 +13,7 @@ ANK_GLOBAL_OBJECT(g_hotkeys, __hotkeys,
     enter_pressed,
     escape_pressed)
 
-const hotkeys* hotkey_state(void) {
-    return &g_hotkeys;
-}
-
-void hotkey_reset_state(void) {
-    g_hotkeys.enter_pressed = 0;
-    g_hotkeys.escape_pressed = 0;
+void hotkeys::reset() {
+    enter_pressed = 0;
+    escape_pressed = 0;
 }

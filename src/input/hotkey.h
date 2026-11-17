@@ -2,7 +2,6 @@
 
 #include "input/keys.h"
 #include "config/hotkeys.h"
-#include "core/xfunction.h"
 
 struct event_hotkey_overlay { int value; };
 struct event_toggle_overlay { int value; };
@@ -38,12 +37,10 @@ struct event_hotkey_key { int key; int modifiers; int pressed; int repeat; };
 struct event_hotkey_bindings_changed { int reserved; };
 
 struct hotkeys {
-    // fixed keys with multiple functions
-    int enter_pressed;
-    int escape_pressed;
+    int enter_pressed = 0;
+    int escape_pressed = 0;
 
-    xfunction<void()> callback;
+    void reset();
 };
 
-const hotkeys* hotkey_state(void);
-void hotkey_reset_state(void);
+extern hotkeys g_hotkeys;

@@ -112,7 +112,7 @@ int autoconfig_window::ui_handle_mouse(const mouse *m) {
     bool handled = ui::handle_mouse(m);
 
     if (allow_rmb_goback && (is_modal() || !handled)) {
-        const hotkeys *h = hotkey_state();
+        const hotkeys* h = &g_hotkeys;
         if (input_go_back_requested(m, h)) {
             window_go_back();
             ui.end_widget();
@@ -120,7 +120,7 @@ int autoconfig_window::ui_handle_mouse(const mouse *m) {
         }
     }
 
-    const hotkeys *h = hotkey_state();
+    const hotkeys* h = &g_hotkeys;
     if (input_go_back_requested(m, h)) {
         go_back();
     }

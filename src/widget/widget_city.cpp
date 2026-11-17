@@ -144,7 +144,7 @@ void screen_city_t::update_zoom_level(painter &ctx) {
 }
 
 void screen_city_t::scroll_map(const mouse* m) {
-    vec2i delta = g_scroll.get_delta(m, scroll_t::CITY);
+    vec2i delta = g_scroll.get_delta(m, scroll_t::type::city);
     if (delta.x || delta.y) {
         const screen_tile before = g_camera.tile_internal;
         g_camera.scroll(delta.x, delta.y);

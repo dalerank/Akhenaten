@@ -63,7 +63,7 @@ void popup_dialog::prepare(xstring header, xstring cbody, window_popup_dialog_ca
 }
 
 int popup_dialog::ui_handle_mouse(const mouse *m) {
-    const hotkeys *h = hotkey_state();
+    const hotkeys* h = &g_hotkeys;
 
     if (num_buttons || ui["btn_close"].enabled) {
         ui.begin_widget(pos);

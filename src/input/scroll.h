@@ -7,10 +7,9 @@
 #include <array>
 
 struct scroll_t {
-    enum type {
-        CITY = 0,
-        EMPIRE = 1,
-        MAX = 2
+    enum class type {
+        city = 0,
+        empire = 1,
     };
 
     enum class drag_source {
@@ -43,22 +42,20 @@ struct scroll_t {
         std::array<int, 11> step_city{{60, 44, 30, 20, 16, 12, 10, 8, 6, 4, 2}};
         std::array<int, 11> step_empire{{20, 15, 10, 7, 5, 4, 3, 3, 2, 2, 1}};
 
-        const std::array<int, 11> &steps_for(type t) const {
-            return t == CITY ? step_city : step_empire;
-        }
+        const std::array<int, 11>& steps_for(type t) const { return t == type::city ? step_city : step_empire; }
 
         vec2i direction(int dir) const {
             return {direction_x[dir], direction_y[dir]};
         }
     } config;
 
-    int in_progress() const;
-    int is_smooth() const;
+    bool in_progress() const;
+    bool is_smooth() const;
 
     vec2i get_delta(const mouse *m, type t);
 
     void drag_start(drag_source source);
-    int drag_end();
+    bool drag_end();
 
     void stop();
 
@@ -69,16 +66,19 @@ struct scroll_t {
     void set_mouse_input(bool enabled);
 
 private:
+    enum class key_state {
+        unpressed = 0,
+        pressed = 1,
+        held = 2,
+        axis = 3,
+    };
+
     struct arrow_key_t {
-        int state = 0;
+        key_state state = key_state::unpressed;
         int value = 0;
         time_millis last_change = 0;
 
-        int get_value();
-        float get_normalized_value();
-        int is_active() const { return value != 0; }
-        void set(int value);
-        void restart_unless(const arrow_key_t *exception);
+        bool is_active() const { return value != 0; }
     };
 
     struct arrows_t {
@@ -86,15 +86,13 @@ private:
         arrow_key_t down;
         arrow_key_t left;
         arrow_key_t right;
-
-        void restart_all_except(const arrow_key_t *arrow);
     };
 
     struct drag_t {
-        int active = 0;
-        int is_touch = 0;
-        int apply_middle_mouse_pan_speed = 0;
-        int moved = 0;
+        bool active = false;
+        bool is_touch = false;
+        bool apply_middle_mouse_pan_speed = false;
+        bool moved = false;
         vec2i delta;
         vec2i travel;
     };
@@ -102,36 +100,41 @@ private:
     struct camera_speed_t {
         speed_type x{};
         speed_type y{};
-        int decaying = 0;
+        bool decaying = false;
         float modifier_x = 0.f;
         float modifier_y = 0.f;
     };
 
     struct margins_t {
-        int active = 0;
+        bool active = false;
         vec2i pos;
         vec2i size;
     };
 
     bool mouse_input = true;
-    int is_scrolling = 0;
-    int constant_input = 0;
+    bool is_scrolling = false;
+    bool constant_input = false;
     arrows_t arrows;
     drag_t drag;
     camera_speed_t speed;
     time_millis last_time = 0;
     margins_t limits;
 
-    int should_scroll();
+    bool should_scroll();
     int speed_factor() const;
     void clear_speed();
     float dampen_mouse_relative_pan_delta(float d) const;
-    int get_key_state_for_value(int value) const;
-    int set_arrow_input(arrow_key_t *arrow, const arrow_key_t *opposite_arrow, float *modifier);
+    key_state key_state_for_value(int value) const;
+    int arrow_value(arrow_key_t& arrow);
+    float arrow_normalized_value(arrow_key_t& arrow);
+    void set_arrow(arrow_key_t& arrow, int value);
+    void restart_arrow_unless(arrow_key_t& arrow, const arrow_key_t* exception);
+    void restart_arrows_except(const arrow_key_t* arrow);
+    bool set_arrow_input(arrow_key_t& arrow, const arrow_key_t* opposite_arrow, float& modifier);
     int get_direction(const mouse *m);
-    static int direction_from_sides(int top, int left, int bottom, int right);
+    static int direction_from_sides(bool top, bool left, bool bottom, bool right);
     static int get_alignment_delta(int direction, int camera_max_offset, int camera_offset);
-    int set_speed_from_drag(bool keep_delta);
+    bool set_speed_from_drag(bool keep_delta);
     bool set_speed_from_input(const mouse *m, type t);
 };
 

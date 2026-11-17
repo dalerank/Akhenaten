@@ -104,7 +104,7 @@ static void update_city_view_coords(int x, int y, tile2i* tile) {
 }
 
 static void scroll_map(const mouse* m) {
-    vec2i delta = g_scroll.get_delta(m, scroll_t::CITY);
+    vec2i delta = g_scroll.get_delta(m, scroll_t::type::city);
     if (delta.x || delta.y) {
         g_camera.scroll(delta.x, delta.y);
         sound_city_decay_views();

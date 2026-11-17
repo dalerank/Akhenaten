@@ -99,7 +99,7 @@ void windows_manager_t::update_input_after() {
     if (data.current_window) {
         input_cursor_update(data.current_window->id);
     }
-    hotkey_reset_state();
+    g_hotkeys.reset();
 }
 
 void windows_manager_t::handle_input(const mouse *m, const hotkeys *h) {

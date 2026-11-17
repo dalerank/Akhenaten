@@ -1,5 +1,4 @@
-#ifndef INPUT_CURSOR_H
-#define INPUT_CURSOR_H
+#pragma once
 
 #include "graphics/window.h"
 
@@ -27,5 +26,3 @@ struct cursor {
 const cursor* input_cursor_data(cursor_shape cursor_id, cursor_scale scale);
 
 void input_cursor_update(xstring window);
-
-#endif // INPUT_CURSOR_H

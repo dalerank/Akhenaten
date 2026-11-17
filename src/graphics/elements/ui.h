@@ -9,6 +9,7 @@
 #include "core/variant.h"
 #include "core/cstring.h"
 #include "core/flat_map.h"
+#include "core/xfunction.h"
 
 #include "input/hotkey.h"
 #include "graphics/elements/scroll_list_panel.h"

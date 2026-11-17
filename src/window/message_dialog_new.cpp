@@ -470,7 +470,7 @@ bool ui::message_dialog_base::handle_input_video(const mouse* m_dialog, const la
 }
 
 int ui::message_dialog_base::ui_handle_mouse(const mouse *m) {
-    const hotkeys *h = hotkey_state();
+    const hotkeys* h = &g_hotkeys;
     const mouse* m_dialog = m->in_dialog();
     const lang_message& msg = lang_get_message(text_id);
 

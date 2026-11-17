@@ -307,7 +307,7 @@ static void determine_selected_object(const mouse* m) {
 
 static void handle_input(const mouse* m, const hotkeys* h) {
     auto &data = g_window_empire;
-    vec2i position = g_scroll.get_delta(m, scroll_t::EMPIRE);
+    vec2i position = g_scroll.get_delta(m, scroll_t::type::empire);
     if (position.x || position.y) {
         g_empire_map.scroll_map(position);
     }

@@ -373,7 +373,7 @@ const cursor* input_cursor_data(cursor_shape cursor_id, cursor_scale scale) {
     case CURSOR_SWORD:
         return &SWORD[scale];
     default:
-        return 0;
+        return nullptr;
     }
 }
 
