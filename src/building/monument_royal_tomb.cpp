@@ -213,6 +213,10 @@ int building_royal_tomb::spot_table() const {
     return g_royal_tomb_spot_tables[kind];
 }
 
+bool building_royal_tomb::continues_cliff() const {
+    return is_sealed() && part_init().kind != ROYAL_TOMB_KIND_ENTRANCE_A;
+}
+
 bool building_royal_tomb::part_has_active_worker() const {
     auto& d = const_cast<building_royal_tomb*>(this)->runtime_data();
     if (!d.worker_figure_id) {

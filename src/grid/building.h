@@ -24,6 +24,7 @@ void map_building_set(int grid_offset, int building_id);
 
 e_building_type map_building_type_at(tile2i tile);
 bool map_building_type_is(tile2i tile, e_building_type type);
+bool map_building_continues_cliff(int grid_offset);
 
 int map_building_height_at(int grid_offset);
 void map_building_height_set(int grid_offset, int8_t height);

@@ -98,6 +98,7 @@ public:
     int lamp_stock() const { return main_tomb()->runtime_data().lamp_stock; }
     void add_lamp_stock(int amount);
     bool is_sealed() const { return main_tomb()->runtime_data().sealed != 0; }
+    virtual bool continues_cliff() const override;
     // OG royal_tomb_is_idle: no lamps on site and no chamber worker — the chambers go dark.
     bool is_idle() const;
     // A laborer may fetch lamps for this tomb (main only; the caller checks for a yard and a hauler).

@@ -112,12 +112,118 @@ static void clear_rock_image(int grid_offset) {
         map_property_mark_draw_tile(grid_offset);
     }
 }
+static bool area_is_plain_rock(tile2i tile, int size) {
+    if (!map_terrain_all_tiles_in_area_are(tile, size, TERRAIN_ROCK)) {
+        return false;
+    }
+    for (int dy = 0; dy < size; dy++) {
+        for (int dx = 0; dx < size; dx++) {
+            if (map_terrain_is(tile.shifted(dx, dy).grid_offset(),
+                  TERRAIN_ORE | TERRAIN_UNK_02 | TERRAIN_ROCK_NEAR_MONUMENT)) {
+                return false;
+            }
+        }
+    }
+    return true;
+}
+
+constexpr uint32_t TERRAIN_CLIFF = TERRAIN_ROCK | TERRAIN_ROCK_NEAR_MONUMENT;
+
+static bool is_cliff(int grid_offset) {
+    return ((uint32_t)map_terrain_get(grid_offset) & TERRAIN_CLIFF) == TERRAIN_CLIFF;
+}
+
+static int cliff_image_turned(int first_image, int variants, int turns, int turn) {
+    const int view_turn = g_camera.orientation / 2;
+    return first_image + variants * ((turn + view_turn) % turns);
+}
+
+static int cliff_image_offset(int grid_offset) {
+    enum { TOP, TOP_RIGHT, RIGHT, BOTTOM_RIGHT, BOTTOM, BOTTOM_LEFT, LEFT, TOP_LEFT, NEIGHBOURS };
+    static const int dx[NEIGHBOURS] = {0, 1, 1, 1, 0, -1, -1, -1};
+    static const int dy[NEIGHBOURS] = {-1, -1, 0, 1, 1, 1, 0, -1};
+    enum { OUTER_CORNER = 0, INNER_CORNER = 12, SIDE = 24, FULL = 48, TWO_CORNERS = 72 };
+    enum { CORNER_VARIANTS = 3, SIDE_VARIANTS = 6, FULL_VARIANTS = 24, TURNS = 4 };
+
+    bool t[NEIGHBOURS];
+    int count = 0;
+    for (int i = 0; i < NEIGHBOURS; i++) {
+        const int offset = grid_offset + GRID_OFFSET(dx[i], dy[i]);
+        t[i] = (is_cliff(offset) && !map_terrain_is(offset, TERRAIN_DIKE)) || map_building_continues_cliff(offset);
+        count += t[i] ? 1 : 0;
+    }
+
+    const unsigned random = (unsigned)map_random_get(grid_offset);
+    const int corner_variant = random % CORNER_VARIANTS;
+    const int side_variant = random % SIDE_VARIANTS;
+    if (count == 8) {
+        return FULL + random % FULL_VARIANTS;
+    }
+    if (count == 7) {
+        if (!t[TOP_RIGHT]) {
+            return cliff_image_turned(INNER_CORNER, CORNER_VARIANTS, TURNS, 0) + corner_variant;
+        }
+        if (!t[TOP_LEFT]) {
+            return cliff_image_turned(INNER_CORNER, CORNER_VARIANTS, TURNS, 1) + corner_variant;
+        }
+        if (!t[BOTTOM_LEFT]) {
+            return cliff_image_turned(INNER_CORNER, CORNER_VARIANTS, TURNS, 2) + corner_variant;
+        }
+        if (!t[BOTTOM_RIGHT]) {
+            return cliff_image_turned(INNER_CORNER, CORNER_VARIANTS, TURNS, 3) + corner_variant;
+        }
+    } else if (count == 6) {
+        if (!t[TOP_LEFT] && !t[BOTTOM_RIGHT]) {
+            return cliff_image_turned(TWO_CORNERS, CORNER_VARIANTS, 2, 0) + corner_variant;
+        }
+        if (!t[TOP_RIGHT] && !t[BOTTOM_LEFT]) {
+            return cliff_image_turned(TWO_CORNERS, CORNER_VARIANTS, 2, 1) + corner_variant;
+        }
+    }
+    if (t[LEFT] && t[TOP_LEFT] && t[TOP] && t[TOP_RIGHT] && t[RIGHT]) {
+        return cliff_image_turned(SIDE, SIDE_VARIANTS, TURNS, 0) + side_variant;
+    }
+    if (t[BOTTOM] && t[BOTTOM_LEFT] && t[LEFT] && t[TOP_LEFT] && t[TOP]) {
+        return cliff_image_turned(SIDE, SIDE_VARIANTS, TURNS, 1) + side_variant;
+    }
+    if (t[RIGHT] && t[BOTTOM_RIGHT] && t[BOTTOM] && t[BOTTOM_LEFT] && t[LEFT]) {
+        return cliff_image_turned(SIDE, SIDE_VARIANTS, TURNS, 2) + side_variant;
+    }
+    if (t[TOP] && t[TOP_RIGHT]) {
+        if (t[RIGHT] && t[BOTTOM_RIGHT] && t[BOTTOM]) {
+            return cliff_image_turned(SIDE, SIDE_VARIANTS, TURNS, 3) + side_variant;
+        }
+        if (t[RIGHT]) {
+            return cliff_image_turned(OUTER_CORNER, CORNER_VARIANTS, TURNS, 0) + corner_variant;
+        }
+    }
+    if (t[LEFT] && t[TOP_LEFT] && t[TOP]) {
+        return cliff_image_turned(OUTER_CORNER, CORNER_VARIANTS, TURNS, 1) + corner_variant;
+    }
+    if (t[BOTTOM] && t[BOTTOM_LEFT] && t[LEFT]) {
+        return cliff_image_turned(OUTER_CORNER, CORNER_VARIANTS, TURNS, 2) + corner_variant;
+    }
+    if (t[RIGHT] && t[BOTTOM_RIGHT] && t[BOTTOM]) {
+        return cliff_image_turned(OUTER_CORNER, CORNER_VARIANTS, TURNS, 3) + corner_variant;
+    }
+    return -1;
+}
+
+static void set_cliff_image(int grid_offset) {
+    if (!is_updatable_rock(grid_offset) || map_image_at(grid_offset) || !is_cliff(grid_offset)) {
+        return;
+    }
+    const int offset = cliff_image_offset(grid_offset);
+    if (offset >= 0) {
+        map_image_set(grid_offset, image_id_from_group(GROUP_TERRAIN_CLIFF, offset));
+    }
+}
+
 static void set_rock_image(int grid_offset) {
     tile2i tile(grid_offset);
     if (is_updatable_rock(grid_offset)) {
         if (!map_image_at(grid_offset)) {
-            if (map_terrain_all_tiles_in_area_are(tile, 3, TERRAIN_ROCK)
-                && terrain_no_image_at(grid_offset, 3)) { // 3-tile large rock
+            if (area_is_plain_rock(tile, 3) && terrain_no_image_at(grid_offset, 3)) { // 3-tile large rock
                 int image_id = 12 + (map_random_get(grid_offset) & 1);
                 if (map_terrain_exists_tile_in_radius_with_type(tile, 3, 4, TERRAIN_ELEVATION))
                     image_id = image_id_from_group(GROUP_TERRAIN_ELEVATION_ROCK, image_id);
@@ -125,7 +231,7 @@ static void set_rock_image(int grid_offset) {
                     image_id = image_id_from_group(GROUP_TERRAIN_ROCK, image_id);
 
                 map_building_tiles_add(0, tile, 3, image_id, TERRAIN_ROCK);
-            } else if (map_terrain_all_tiles_in_area_are(tile, 2, TERRAIN_ROCK) && terrain_no_image_at(grid_offset, 2)) { // 2-tile large rock
+            } else if (area_is_plain_rock(tile, 2) && terrain_no_image_at(grid_offset, 2)) { // 2-tile large rock
                 int image_id = 8 + (map_random_get(grid_offset) & 3);
                 if (map_terrain_exists_tile_in_radius_with_type(tile, 2, 4, TERRAIN_ELEVATION))
                     image_id = image_id_from_group(GROUP_TERRAIN_ELEVATION_ROCK, image_id);
@@ -179,6 +285,7 @@ static void set_ore_rock_image(int grid_offset) {
 void map_tiles_update_all_rocks(void) {
     map_tiles_foreach_map_tile(clear_rock_image);
     map_tiles_foreach_map_tile(set_ore_rock_image);
+    map_tiles_foreach_map_tile(set_cliff_image);
     map_tiles_foreach_map_tile(set_rock_image);
 }
 

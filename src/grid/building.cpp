@@ -45,6 +45,15 @@ bool map_building_type_is(tile2i tile, e_building_type type) {
     return (btype == type);
 }
 
+bool map_building_continues_cliff(int grid_offset) {
+    const int bid = map_building_at(grid_offset);
+    if (bid <= 0) {
+        return false;
+    }
+    building* b = building_get(bid);
+    return b->type != BUILDING_NONE && b->dcast()->continues_cliff();
+}
+
 void map_building_damage_clear(int grid_offset) {
     map_grid_set(g_damage_grid, grid_offset, 0);
 }

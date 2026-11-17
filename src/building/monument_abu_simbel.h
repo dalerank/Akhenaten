@@ -95,6 +95,7 @@ public:
     virtual void on_post_load() override;
     virtual void on_destroy() override;
     virtual xstring demolish_blocked_message() const override;
+    virtual bool continues_cliff() const override { return true; }
     virtual void update_day() override;
     virtual void update_map_orientation(int map_orientation) override;
     virtual int building_image_get() const override;
