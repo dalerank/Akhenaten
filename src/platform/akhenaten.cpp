@@ -149,12 +149,11 @@ static bool check_engine_data_files() {
     }
 
     bstring2048 message;
-    message.printf(
-        "Akhenaten engine data files are missing (%d):\n\n%s\n\n"
-        "Copy these files from the Akhenaten build \"data\" folder into the "
-        "Pharaoh Data/ folder (data/ is also accepted on Linux).",
-        missing_count,
-        missing.c_str());
+    message.printf("Akhenaten engine data files are missing (%d):\n\n%s\n\n"
+                   "Akhenaten looks for them in a data/ folder next to its executable and in the "
+                   "Pharaoh Data/ folder (data/ is also accepted on Linux); copy them from the "
+                   "Akhenaten build \"data\" folder into one of these.",
+      missing_count, missing.c_str());
 
     SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "Akhenaten data missing", message.c_str(), nullptr);
     return false;

@@ -19,6 +19,7 @@
 
 #include <algorithm>
 #include <cstdio>
+#include <cstring>
 #include <filesystem>
 #include <string>
 #include <thread>
@@ -249,6 +250,34 @@ pcstr __test_user_dir() {
     return platform.user_directory();
 }
 ANK_FUNCTION(__test_user_dir);
+
+static pcstr __test_exe_dir_path(pcstr relative) {
+    static vfs::path result;
+    result = vfs::current_path(relative ? relative : "");
+    return result.c_str();
+}
+ANK_FUNCTION_1(__test_exe_dir_path);
+
+static bool __test_file_write_text(pcstr path, pcstr text) {
+    std::error_code ec;
+    std::filesystem::create_directories(std::filesystem::path(path).parent_path(), ec);
+    FILE* fp = fopen(path, "wb");
+    if (!fp) {
+        return false;
+    }
+    const size_t len = text ? std::strlen(text) : 0;
+    const bool ok = fwrite(text, 1, len, fp) == len;
+    fclose(fp);
+    return ok;
+}
+ANK_FUNCTION_2(__test_file_write_text);
+
+static pcstr __test_vfs_resolve(pcstr relative) {
+    static vfs::path result;
+    result = vfs::path(relative ? relative : "").resolve();
+    return result.c_str();
+}
+ANK_FUNCTION_1(__test_vfs_resolve);
 
 // Queues the event SDL sends after a lost device; the next frame takes the renderer's recovery path.
 static void __test_render_device_reset() {

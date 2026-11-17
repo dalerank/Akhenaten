@@ -286,12 +286,23 @@ vfs::path content_path(pcstr path) {
 }
 
 vfs::path current_path(pcstr path) {
-    vfs::path result;
-    if (char* base = SDL_GetBasePath()) {
-        result.concat(base, "/", path);
-        SDL_free(base);
-    }
+    static const vfs::path base = [] {
+        vfs::path dir;
+        if (char* sdl_base = SDL_GetBasePath()) {
+            std::string s = sdl_base;
+            SDL_free(sdl_base);
+            while (!s.empty() && (s.back() == '/' || s.back() == '\\')) {
+                s.pop_back();
+            }
+            dir = s.c_str();
+        }
+        return dir;
+    }();
 
+    vfs::path result;
+    if (!base.empty()) {
+        result.concat(base.c_str(), "/", path);
+    }
     return result;
 }
 
@@ -324,6 +335,11 @@ vfs::path vfs::path::resolve() {
     vfs::path from_pwd = vfs::path("./", filepath);
     if (std::filesystem::exists(from_pwd.c_str())) {
         return std::filesystem::absolute(from_pwd.c_str()).string().c_str();
+    }
+
+    vfs::path from_exe = current_path(filepath);
+    if (!from_exe.empty() && std::filesystem::exists(from_exe.c_str())) {
+        return from_exe;
     }
 
 #if defined(GAME_PLATFORM_BROWSER)
