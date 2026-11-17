@@ -30,6 +30,7 @@ jobs:
           # and permissions are narrow (see allowedTools and the permissions block).
           github_token: ${{ secrets.GITHUB_TOKEN }}
           allowed_non_write_users: "*"
+          show_full_output: true
           prompt: |
             Review PR #${{ github.event.pull_request.number }} in ${{ github.repository }}.
             The checked-out tree is the base branch; read the change with `gh pr diff` and `gh pr view`.
