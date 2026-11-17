@@ -323,6 +323,7 @@ A new test binding goes into the matching domain file; a new domain file needs a
 | `__test_plagues_tick(n)` | undefined | Run n city ticks of the plague countdowns |
 | `__test_floods_season_month()` | month | OG floods `season_month` (`season / 30`, 0 without floodplain) |
 | `__test_figure_use_cross_country(fid)` / `__test_figure_terrain_usage(fid)` | 0\|1 / usage | Figure movement mode |
+| `__test_overlay_show_figure(overlay, fid)` | 0\|1 | `city_overlay::show_figure` of that overlay |
 | `__test_figure_current_height(fid)` | height | Figure `current_height` (float) |
 | `__test_lion_setup_curse_raid(fid, days)` | 0\|1 | Mark `FIGURE_LION` as Bast curse raid with duration days |
 | `__test_lion_is_curse_raid(fid)` | 0\|1 | Whether lion has curse-raid flag |

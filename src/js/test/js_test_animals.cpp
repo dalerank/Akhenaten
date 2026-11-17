@@ -31,6 +31,7 @@
 #include "grid/road_access.h"
 #include "grid/routing/routing.h"
 #include "grid/routing/routing_terrain.h"
+#include "overlays/city_overlay.h"
 #include "scenario/scenario.h"
 
 #include <algorithm>
@@ -61,6 +62,16 @@ static int __test_figure_terrain_usage(int fid) {
     return (f && f->is_alive()) ? f->terrain_usage : -1;
 }
 ANK_FUNCTION_1(__test_figure_terrain_usage);
+
+static int __test_overlay_show_figure(int overlay_id, int fid) {
+    const city_overlay* overlay = city_overlay::get((e_overlay)overlay_id);
+    figure* f = figure_get(fid);
+    if (!overlay || !f || !f->is_alive()) {
+        return -1;
+    }
+    return overlay->show_figure(f) ? 1 : 0;
+}
+ANK_FUNCTION_2(__test_overlay_show_figure);
 
 static int __test_frog_house(int fid) {
     figure* f = figure_get(fid);

@@ -74,7 +74,7 @@ overlays = [
   {
     id:OVERLAY_PROBLEMS
     title: "#overlay_problems"
-    walkers:[]
+    walkers:[FIGURE_FROG, FIGURE_MUMMY, FIGURE_LOCUST]
     buildings:[BUILDING_ROADBLOCK]
     column_type: COLUMN_TYPE_RISK
     column_anim: {pack:PACK_GENERAL, id:103}

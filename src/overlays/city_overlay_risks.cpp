@@ -56,7 +56,7 @@ bool city_overlay_problems::show_figure(const figure *f) const {
         return f->action_state == ACTION_20_CARTPUSHER_INITIAL || f->min_max_seen;
     }
 
-    return false;
+    return city_overlay::show_figure(f);
 }
 
 int city_overlay_problems::get_column_height(const building *b) const {
