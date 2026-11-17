@@ -436,9 +436,12 @@ public:
     static constexpr pcstr CLSID = #clsid;                      \
     static constexpr e_figure_type TYPE = type;
 
+#define FIGURE_RUNTIME_DATA_CHECKS(type)                                                                \
+    static_assert(sizeof(type) <= sizeof(figure::runtime_data), #type " does not fit figure::runtime_data")
+
 #define FIGURE_RUNTIME_DATA(type) ;                                                                   \
-    type& runtime_data() { return *(type*)this->base.runtime_data; }                                  \
-    const type& runtime_data() const { static_assert(sizeof(type) < sizeof(figure::runtime_data)); return *(type*)this->base.runtime_data; }
+    type& runtime_data() { FIGURE_RUNTIME_DATA_CHECKS(type); return *(type*)this->base.runtime_data; } \
+    const type& runtime_data() const { FIGURE_RUNTIME_DATA_CHECKS(type); return *(type*)this->base.runtime_data; }
 
 #define FIGURE_RUNTIME_DATA_T FIGURE_RUNTIME_DATA(runtime_data_t)
 
