@@ -615,6 +615,8 @@ bool map_routing_passable_by_usage(int terrain_usage, int grid_offset) {
         return map_routing_animal_passable(grid_offset);
     case TERRAIN_USAGE_AMPHIBIA:
         return map_grid_get(routing_land_amphibia, grid_offset) >= AMPHIBIA_0_PASSABLE;
+    case TERRAIN_USAGE_ANYWHERE:
+        return true;
     }
     assert(false && "uknown terrain usage option");
     return false;

@@ -151,7 +151,7 @@ void figure::set_next_tile_and_direction() {
 }
 
 void figure::advance_route_tile(int roaming_enabled) {
-    if (direction >= 8) {
+    if (direction >= 8 || terrain_usage == TERRAIN_USAGE_ANYWHERE) {
         return;
     }
 

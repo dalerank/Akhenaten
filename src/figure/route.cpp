@@ -167,6 +167,10 @@ void figure::figure_route_add() {
             can_travel = map_routing_amphibia_can_travel_over_land_water(tile, destination_tile, -1, 5000);
             break;
 
+        case TERRAIN_USAGE_ANYWHERE:
+            can_travel = map_routing_can_travel_anywhere(tile, destination_tile);
+            break;
+
         case TERRAIN_USAGE_PREFER_ROADS:
             can_travel = map_routing_citizen_can_travel_over_road(tile, destination_tile, can_cross_ferry());
             if (!can_travel) {
