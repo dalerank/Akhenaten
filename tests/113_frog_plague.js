@@ -3,7 +3,7 @@
 // Markers:
 //   [test-marker] frog_registered_ok
 //   [test-marker] frog_anim_walk_ok
-//   [test-marker] frog_anim_idle_ok
+//   [test-marker] frog_anim_created_walk_ok
 //   [test-marker] frog_ptah_countdown_ok
 //   [test-marker] frog_event_countdown_ok
 //   [test-marker] frog_happiness_ok
@@ -64,10 +64,10 @@ function run_test() {
     __test_figure_set_action(probe, ACTION_FROG_CREATED)
     __test_figure_update_animation(probe)
     key = __figure_get_anim_key(probe)
-    if (key != 'idle') {
-        return test113_fail('anim key want "idle", got "' + key + '"')
+    if (key != 'walk') {
+        return test113_fail('CREATED anim key want "walk" (OG one group for all but the corpse), got "' + key + '"')
     }
-    __log_marker('frog_anim_idle_ok')
+    __log_marker('frog_anim_created_walk_ok')
     city.figures.remove_figures(FIGURE_FROG)
 
     if (!test113_try_ptah_frogs(40)) {
@@ -130,7 +130,7 @@ function run_test() {
 }
 
 function check_valid() {
-    var markers = ['frog_registered_ok', 'frog_anim_walk_ok', 'frog_anim_idle_ok', 'frog_ptah_countdown_ok',
+    var markers = ['frog_registered_ok', 'frog_anim_walk_ok', 'frog_anim_created_walk_ok', 'frog_ptah_countdown_ok',
         'frog_event_countdown_ok', 'frog_happiness_ok', 'frog_cheat_ok', 'frog_house_infest_ok', 'frog_saveload_ok']
     for (var i = 0; i < markers.length; i++) {
         if (!__test_find_inlog('[test-marker] ' + markers[i])) {

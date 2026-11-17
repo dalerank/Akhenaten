@@ -30,26 +30,6 @@ namespace {
         return (uint16_t)random_short() & 0x7fff;
     }
 
-void cancel_incoming_immigrant(building &b) {
-    figure *f = b.get_figure(BUILDING_SLOT_IMMIGRANT);
-    b.remove_figure(BUILDING_SLOT_IMMIGRANT);
-    if (!f || !f->is_alive()) {
-        return;
-    }
-    if (f->type == FIGURE_IMMIGRANT) {
-        f->poof();
-        return;
-    }
-    if (f->type == FIGURE_HOMELESS) {
-        if (auto *hl = f->dcast_homeless()) {
-            hl->runtime_data().adv_home_building_id = 0;
-        }
-        f->home_building_id = 0;
-        f->advance_action(ACTION_0_HOMELESS_CREATED);
-        f->wait_ticks = 0;
-    }
-}
-
 // OG animals.c search_rings: square rings around the tile, top row first, clockwise.
 bool find_nearest_terrain(tile2i from, int terrain, int rings, tile2i& out) {
     static const int dx[4] = {1, 0, -1, 0};
@@ -121,10 +101,10 @@ figure* figure_frog::create_at(building& house, tile2i water) {
         return nullptr;
     }
     figure_frog(f).runtime_data().house_id = house.id;
-    cancel_incoming_immigrant(house);
     house.set_figure(BUILDING_SLOT_IMMIGRANT, f->id);
     f->advance_action(ACTION_120_FROG_CREATED);
     f->wait_ticks = (int16_t)(random_15bit() % std::max<int>(1, current_params().max_start_delay));
+    logs::info("Created frog %d at: %d, %d, headed for building: %d", f->id, water.x(), water.y(), house.id);
     return f;
 }
 
@@ -134,11 +114,8 @@ void figure_frog::infest_house(building& b) {
         return;
     }
     auto& d = house->runtime_data();
-    const int pop = house->house_population();
-    if (pop > 0) {
-        events::emit(event_create_homeless{b.tile, pop, SOURCE_LOCATION});
-        d.population = 0;
-    }
+    events::emit(event_create_homeless{b.tile, house->house_population(), SOURCE_LOCATION});
+    d.population = 0;
     // OG keeps the house sick for whole months of the frog countdown; our infestation counts days.
     const int months
       = g_city.plagues.frogs_countdown / simulation_time_t::ticks_in_day / simulation_time_t::days_in_month;
@@ -210,6 +187,7 @@ void figure_frog::figure_action() {
 
     case ACTION_120_FROG_CREATED: {
         base.set_flag(e_figure_flag_invisible, true);
+        base.animctx.frame = 0;
         if (--base.wait_ticks > 0) {
             break;
         }
@@ -226,16 +204,22 @@ void figure_frog::figure_action() {
 
     case ACTION_121_FROG_GOING_TO_HOUSE:
         base.set_flag(e_figure_flag_invisible, false);
-        if (random_15bit() % 100 >= p.move_chance) {
-            break;
+        if (random_15bit() % 100 < p.move_chance) {
+            base.move_ticks(base.speed_multiplier);
         }
-        if (do_goto(base.destination_tile, TERRAIN_USAGE_AMPHIBIA, ACTION_122_FROG_ENTERING_HOUSE,
-              ACTION_121_FROG_GOING_TO_HOUSE)) {
-            base.set_cross_country_destination(b->tile);
-            base.roam_length = 0;
+        if (direction() == DIR_FIGURE_REROUTE) {
+            advance_action(ACTION_120_FROG_CREATED);
+            base.wait_ticks = 1;
+            route_remove();
         } else if (direction() == DIR_FIGURE_CAN_NOT_REACH) {
             b->remove_figure(BUILDING_SLOT_IMMIGRANT);
+            b->distance_from_entry = 0;
             poof();
+        } else if (direction() == DIR_FIGURE_NONE) {
+            advance_action(ACTION_122_FROG_ENTERING_HOUSE);
+            base.destination_tile = b->tile;
+            base.set_cross_country_destination(b->tile);
+            base.roam_length = 0;
         }
         break;
 
@@ -246,7 +230,9 @@ void figure_frog::figure_action() {
             infest_house(*b);
             b->remove_figure(BUILDING_SLOT_IMMIGRANT);
             poof();
+            break;
         }
+        base.set_flag(e_figure_flag_invisible, base.in_building_wait_ticks != 0);
         break;
 
     default:
@@ -259,8 +245,6 @@ void figure_frog::update_animation() {
     xstring animkey = animkeys().walk;
     if (action_state(FIGURE_ACTION_149_CORPSE) || !base.is_alive()) {
         animkey = animkeys().death;
-    } else if (action_state() == ACTION_120_FROG_CREATED || direction() == DIR_FIGURE_NONE) {
-        animkey = animkeys().idle;
     }
     image_set_animation(animkey);
 }

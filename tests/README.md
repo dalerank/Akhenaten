@@ -163,7 +163,7 @@ See **IT1** in `REMAKE_TODO.md` / `REMAKE_NOTES.md` §4.
 | `112_true_pyramid_complex_place.js` | C3c true pyramid complex (20×20 on-land): same large polish schedule, parts/phases |
 | `133_pyramid_complex_causeway.js` | Complex causeway: grand east-only (south reject), plain south place+claim, demolish clears strip |
 | `134_grand_stepped_place.js` | C1c grand stepped 252: south reject, east place+claim, type/parts/schedule |
-| `113_frog_plague.js` | CF1 Frog: register/anim walk+idle; Ptah/EVENT/cheat start the OG countdown; happiness; house infest + lockout; saveload |
+| `113_frog_plague.js` | CF1 Frog: register/anim walk (OG one group, no idle); Ptah/EVENT/cheat start the OG countdown; happiness; house infest + lockout; saveload |
 | `115_bridge_menu_smoke.js` | BR2: Perwadjyt Low Bridge locked→`use_building` unlock; Bridges.map day-0 ON (else Nekhen hermetic fallback). Editor-flag table: [`docs/bridge_editor_allow_triage.md`](../docs/bridge_editor_allow_triage.md) |
 | `116_canal_shore_refresh.js` | IR3a: adding WATER next to existing canal restamps neighbor canal image |
 | `77_brick_wall_placement.js` | Brick wall L-drag; material; clear+undo; mud↔brick overwrite no-op |

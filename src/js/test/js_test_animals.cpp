@@ -92,6 +92,16 @@ static int __test_frog_house(int fid) {
 }
 ANK_FUNCTION_1(__test_frog_house);
 
+static int __test_frog_create_at(int bid, int x, int y) {
+    building* b = building_get(bid);
+    if (!b || !b->is_valid()) {
+        return 0;
+    }
+    figure* f = figure_frog::create_at(*b, tile2i(x, y));
+    return f ? f->id : 0;
+}
+ANK_FUNCTION_3(__test_frog_create_at);
+
 static int __test_frog_infest_house(int bid) {
     building* b = building_get(bid);
     if (!b || !b->is_valid()) {

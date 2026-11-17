@@ -3,7 +3,6 @@ log_info("akhenaten: figure frog started")
 figure_frog {
 	animations {
 		walk { pack:PACK_EXPANSION_SPR, id:22, max_frames:9 }
-		idle { pack:PACK_EXPANSION_SPR, id:23, max_frames:9 }
 		death { pack:PACK_EXPANSION_SPR, id:25, max_frames:6, loop:false }
 		big_image { pack:PACK_EXPANSION, id:1, offset:6 }
 		icon { pack:PACK_EXPANSION, id:32 }
@@ -25,7 +24,7 @@ figure_frog {
 	}
 
 	category: figure_category_inactive
-	max_damage: 20
+	max_damage: 10
 	attack_value: 0
 	terrain_usage: TERRAIN_USAGE_AMPHIBIA
 
