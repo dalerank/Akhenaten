@@ -821,7 +821,8 @@ int integral_tests_parallel_jobs() {
     if (!g_args.is_integral_tests() || !g_args.get_str("integraltest_shard").empty()) {
         return 0;
     }
-    const int jobs = std::atoi(g_args.get_str("integraltest_jobs").c_str());
+    const xstring& value = g_args.get_str("integraltest_jobs");
+    const int jobs = value.empty() ? 0 : std::atoi(value.c_str());
     return jobs > 1 ? jobs : 0;
 }
 
