@@ -123,7 +123,7 @@ declare_console_command_p(flood_dump) {
 void floods_t::init() {
     season_default = season_initial;
     duration_default = duration_initial;
-    unk01 = 0;
+    season_month = 0;
     state = FLOOD_STATE_FARMABLE;
     floodplain_width = 0;
     has_floodplains = false;
@@ -239,8 +239,7 @@ void floods_t::cycle_states_recalc() {
         return false;
     };
 
-    // ???
-    unk01 = season / 30;
+    season_month = season / 30;
     if (force_inundation != 0) {
         if (force_inundation < flood_progress) {
             state = FLOOD_STATE_INUNDATED;

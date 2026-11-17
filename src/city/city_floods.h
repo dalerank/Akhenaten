@@ -29,7 +29,7 @@ struct floods_t {
     //
     int flood_progress = 30;   // 0 - 30
     int flood_progress_target; // 0 - 30
-    int unk01;            // season/floodplain_width -- probably a leftover from a previous flood system
+    int season_month;
     e_flood_state state;
     int floodplain_width; // 0 - 30
     bool has_floodplains; // 0 - 1
