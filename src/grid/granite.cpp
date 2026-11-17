@@ -25,52 +25,8 @@ void map_granite_deplete(int grid_offset, int amount) {
 }
 
 void map_granite_init() {
-    // Initialize granite grid: mark all rock tiles and tiles within 2 tiles of rocks with value 65000
-    constexpr int GRANITE_MAX = 65000;
-    constexpr int RADIUS = 2;
-    
-    int grid_offset = scenario_map_data()->start_offset;
-    int map_width = scenario_map_data()->width;
-    int map_height = scenario_map_data()->height;
-    
-    // First pass: identify all rock tiles and mark them
-    std::vector<tile2i> rock_tiles;
-    for (int y = 0; y < map_height; y++, grid_offset += scenario_map_data()->border_size) {
-        for (int x = 0; x < map_width; x++, grid_offset++) {
-            if (map_terrain_is(grid_offset, TERRAIN_ROCK)) {
-                rock_tiles.push_back(tile2i(grid_offset));
-                map_grid_set(g_terrain_granite, grid_offset, GRANITE_MAX);
-            } else {
-                map_grid_set(g_terrain_granite, grid_offset, 0);
-            }
-        }
-    }
-    
-    // Second pass: mark all tiles within RADIUS distance from any rock
-    grid_offset = scenario_map_data()->start_offset;
-    for (int y = 0; y < map_height; y++, grid_offset += scenario_map_data()->border_size) {
-        for (int x = 0; x < map_width; x++, grid_offset++) {
-            tile2i current_tile(grid_offset);
-            int current_value = map_grid_get(g_terrain_granite, grid_offset);
-            
-            // If already marked as rock, skip
-            if (current_value == GRANITE_MAX) {
-                continue;
-            }
-            
-            // Check if within RADIUS of any rock tile
-            for (const auto& rock_tile : rock_tiles) {
-                int dx = std::abs(current_tile.x() - rock_tile.x());
-                int dy = std::abs(current_tile.y() - rock_tile.y());
-                int distance = std::max(dx, dy); // Chebyshev distance (king move)
-                
-                if (distance <= RADIUS) {
-                    map_grid_set(g_terrain_granite, grid_offset, GRANITE_MAX);
-                    break;
-                }
-            }
-        }
-    }
+    map_grid_mark_near(
+      g_terrain_granite, [](int grid_offset) { return map_terrain_is(grid_offset, TERRAIN_ROCK); }, 2, 65000);
 }
 
 io_buffer* iob_granite = new io_buffer([](io_buffer* iob, size_t version) {

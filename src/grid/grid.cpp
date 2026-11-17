@@ -341,6 +341,17 @@ std::vector<uint8_t> map_grid_king_distance(const std::function<bool(int grid_of
     return d;
 }
 
+void map_grid_mark_near(grid_xx& grid, const std::function<bool(int grid_offset)>& is_source, int radius, int value) {
+    const int w = scenario_map_data()->width;
+    const int h = scenario_map_data()->height;
+    const std::vector<uint8_t> d = map_grid_king_distance(is_source, radius);
+    for (int y = 0; y < h; ++y) {
+        for (int x = 0; x < w; ++x) {
+            map_grid_set(grid, MAP_OFFSET(x, y), d[(size_t)y * w + x] <= radius ? value : 0);
+        }
+    }
+}
+
 grid_area map_grid_get_area(tile2i tile, int size, int radius) {
     tile2i tmin(tile.x() - radius, tile.y() - radius);
     tile2i tmax(tile.x() + size + radius - 1, tile.y() + size + radius - 1);
