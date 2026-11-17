@@ -10,33 +10,10 @@
 #include <SDL.h>
 
 struct keyboard_module_t {
-    e_key_mode get_modifier(int mod);
-
     void handle_key_down(SDL_Event* ev);
     void handle_key_up(SDL_Event* ev);
     void handle_text(SDL_Event* ev);
 };
-
-static int is_alt_down(SDL_KeyboardEvent* event) {
-    return (event->keysym.mod & KMOD_ALT) != 0;
-}
-
-e_key_mode keyboard_module_t::get_modifier(int mod) {
-    int key_mod = KEY_MOD_NONE;
-    if (mod & KMOD_SHIFT)
-        key_mod |= KEY_MOD_SHIFT;
-
-    if (mod & KMOD_CTRL)
-        key_mod |= KEY_MOD_CTRL;
-
-    if (mod & KMOD_ALT)
-        key_mod |= KEY_MOD_ALT;
-
-    if (mod & KMOD_GUI)
-        key_mod |= KEY_MOD_GUI;
-
-    return (e_key_mode)key_mod;
-}
 
 void keyboard_module_t::handle_key_down(SDL_Event* ev) {
     if (SDL_KEYDOWN != ev->type) {
@@ -103,8 +80,8 @@ void keyboard_module_t::handle_key_down(SDL_Event* ev) {
     if (game.debug_console) {
         return;
     }
-    e_key key = (e_key)keyboard_t::get_key_from_scancode(event->keysym.scancode);
-    e_key_mode mod = get_modifier(event->keysym.mod);
+    e_key key = keyboard_t::get_key_from_scancode(event->keysym.scancode);
+    e_key_mode mod = keyboard_t::modifiers_from_sdl(event->keysym.mod);
 
     // when a text field is capturing input, suppress global hotkeys so typing
     // characters like digits or '-' doesn't trigger advisor/menu shortcuts.
@@ -134,8 +111,8 @@ void keyboard_module_t::handle_key_up(SDL_Event* ev) {
         return;
     }
 
-    e_key key = (e_key)keyboard_t::get_key_from_scancode(event->keysym.scancode);
-    int mod = get_modifier(event->keysym.mod);
+    e_key key = keyboard_t::get_key_from_scancode(event->keysym.scancode);
+    int mod = keyboard_t::modifiers_from_sdl(event->keysym.mod);
     events::emit(event_hotkey_key{ key, mod, 0, 0 });
 }
 
