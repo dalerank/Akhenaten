@@ -632,6 +632,10 @@ int run_js_tests() {
         }
         files = mine;
         logs::info("[integraltests] shard %d/%d: %d test(s)", index, count, (int)files.size());
+        if (files.empty()) {
+            logs::info("[integraltests] 0 passed, 0 failed");
+            return 0;
+        }
     }
     if (files.empty()) {
         if (!g_args.get_integraltest_only().empty()) {
