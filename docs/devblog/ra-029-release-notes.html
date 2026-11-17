@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Akhenaten RA 0.29 — Release Notes — Akhenaten</title>
+  <link rel="stylesheet" href="../style.css" />
+</head>
+<body>
+  <header>
+    <nav>
+      <a href="../index.html" class="nav-logo">Akhenaten</a>
+      <ul>
+        <li><a href="../about.html">About</a></li>
+        <li><a href="../devblog.html" class="active">Devblog</a></li>
+        <li><a href="../wiki/index.html">Wiki</a></li>
+        <li><a href="../screenshots.html">Screenshots</a></li>
+        <li><a href="../downloads.html">Downloads</a></li>
+        <li><a href="../contributors.html">Contributors</a></li>
+        <li><a href="../contact.html">Join us</a></li>
+        <li><a href="../reportbug.html">Report Bug</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main class="page-content post-page">
+    <div class="post-meta"><time>November 17, 2026</time> — <a href="../devblog.html">← Devblog</a></div>
+    <h1>Akhenaten RA 0.29 — Five Months of Original Pharaoh Logic</h1>
+
+    <p>
+      <strong>RA 0.29</strong> is out. Since <a href="https://github.com/dalerank/Akhenaten/releases/tag/ra2606">RA 0.27</a> on June 14, 2026 the project has landed about <strong>1,600 commits</strong>. RA 0.27 was the script migration wave. This release is mostly about parity: walkers, animals, plagues, monuments and mission events were ported from the original game's logic one by one and checked against it, replacing behaviour that used to be a remake approximation.
+    </p>
+    <p>
+      This post covers what changed for players, what changed under the hood, and how the test suite grew from 15 files to 549 along the way.
+    </p>
+
+    <h2>The Big Theme: Original Behaviour by Default</h2>
+    <p>
+      Every game feature flag now carries its original-game value next to its default, and the default profile is the original Pharaoh behaviour. Remake changes that used to be on silently (one-walker shortcuts, service caps, toothache, nearest-fort recruiting, random statue variants and many more) are now <em>Enhanced</em> options. Two new command-line flags pick a profile: <code>--og</code> forces original behaviour everywhere and <code>--enhanced</code> turns every Enhanced feature on.
+    </p>
+    <p>
+      The porting itself followed one pattern for each figure or building: read the original routine, rewrite ours to match it (action ids, timers, spawn delays, model costs, risks), keep any remake behaviour behind a flag, and add an integral test that drives the real game through the cycle.
+    </p>
+
+    <h3>Walkers and services</h3>
+    <ul>
+      <li><strong>Figure type ids</strong> 0–109 now match the original, including legion types and the Egyptian enemy warship and transport (100 and 101), so figure types in saves line up with Pharaoh</li>
+      <li>Immigrants, emigrants, homeless, patricians, priests, the festival priest and its celebrants, physicians, dentists, apothecaries, embalmers, teachers, librarians, tax collectors and architects follow their original spawn delays, routes and coverage</li>
+      <li><strong>Constable and magistrate</strong> share the original law-walker state machine; police stations no longer need weapons unless the Enhanced option is on</li>
+      <li>Market buyers make original multi-stop trips with separate food and goods lists; granaries run two carts and the original Get/Empty rules; dockers haul four loads with the original import and export checks</li>
+      <li>Thieves, tomb robbers, firemen at a fire, water carriers and the ferry boarding of carts, caravans and delivery boys follow the original rules</li>
+      <li><strong>Zookeeper</strong> walks and serves as an original entertainer; <strong>tomb artisans</strong> pick chamber work in building order and use the original ghost worker</li>
+      <li><strong>Corpses</strong> last 128 ticks for every figure type, as in the original, instead of 43 to 500 depending on the type</li>
+    </ul>
+
+    <img src="../images/hyena.gif" alt="A hyena roaming near the city" class="post-image" loading="lazy" style="image-rendering:pixelated" />
+
+    <h3>Animals, predators and plagues</h3>
+    <ul>
+      <li><strong>Hyena, crocodile and hippo</strong> run their original predator state machines</li>
+      <li><strong>Asp, lion and scorpion</strong> share one predator base ported from the original wild-predator action: herd spawn, idle cycle, hunt and death</li>
+      <li>Ostriches, antelopes and birds use the original herd cycle; herd homes stay put; animals and hunters route over the same grid as in the original</li>
+      <li><strong>Frog plague</strong>: frogs come out of the water and walk to the houses; <strong>locusts</strong> wait for the flood, then fly in strips with the original hit points</li>
+      <li><strong>Mummies</strong> rise at a tomb or temple and on their victims</li>
+      <li><strong>Plagued citizens</strong> carry disease as in the original and are cured on a shared tile; they and the plague figures show on the disease and problems overlays</li>
+    </ul>
+
+    <h3>Invasions and the military</h3>
+    <ul>
+      <li>Enemy formations update twice a day with a daily morale check, choose targets and land and sea points as the original does, and can break through buildings</li>
+      <li><strong>Enemy warships and transports</strong> launch, patrol, ram, land troops and escape by the original rules; player warships and transports, the shipwright and the fleet advisor were ported too</li>
+      <li><strong>Bedouin raids</strong> now send the original Bedouin infantry</li>
+      <li><strong>Mission raids</strong> in every mission that has them (Thinis, Waset, Kebet, Itjtawy, Iken, Khmun, Sumur, Qadesh, Rowarty, Abu Simbel, Pi-Yer, Actium, Migdol, Tanis, Maritis, the Alexandria missions and more) run on the shared original invasion cycle: announcement, reminders at 24/12/6/1 months, then the attack</li>
+      <li>The Kingdom's army comes at a Kingdom rating of 0, as in the original; recruiting needs weapons and chariots in stock and fort costs come from the original model</li>
+      <li>Towers, gatehouses, sentries, ballistas, javelins, arrows and enemy missiles use the original aim, reload and damage formulas</li>
+    </ul>
+
+    <h3>Economy, city life and events</h3>
+    <ul>
+      <li>House evolution checks the magistrate, uses the second luxury kind, the two-day devolve delay, and the original food and goods consumption</li>
+      <li>Workshop output, raw material rates, fire and collapse risk, ruins and fire spread follow the original numbers; the jeweler, lamp maker, paint maker, chariot maker and cattle ranch use their original production cycles</li>
+      <li>Farms: original soil depletion after a flood harvest, curse countdown, minimum growth and a 3×3 irrigation check (5×5 is an Enhanced option); canals and water lifts use the original water supply</li>
+      <li>Prosperity, culture and Kingdom favour ratings, taxes, wages and the monument rating curve follow the original formulas; mission monument goals came out right again once they did</li>
+      <li>Original troop and goods requests, gifts from Pharaoh (Accept / Later / Refuse), earthquakes, hailstorms, the river of blood, better and worse floods, and the original victory time limit, defeat popup and highscores</li>
+      <li><strong>Construction warnings</strong> were compared against the original table and ported: road access, workers, raw materials, two-input workshops and service buildings</li>
+      <li>Walker phrases use the original rules for picking the city's main problem; figure info windows got the original “tell me more” buttons</li>
+    </ul>
+
+    <h2>Monuments</h2>
+    <p>
+      Most monuments were rebuilt from the original part layouts, stages and work spots, and the Cleopatra ones became playable for the first time.
+    </p>
+
+    <img src="../images/sphinx-city.jpg" alt="The completed sphinx in a desert city" class="post-image" loading="lazy" style="image-rendering:pixelated" />
+
+    <ul>
+      <li><strong>Pyramids</strong> — mudbrick, stepped, bent and true pyramids run on the original block engine, with carpenter ramps, the original casing figures and the large 16×16 sizes; stepped and mudbrick pyramid complexes and the grand stepped complex can be built</li>
+      <li><strong>Mastabas</strong> — original bricklayer block engine; the large 8×18 mastaba is playable</li>
+      <li><strong>Sphinx</strong> — three parts along one axis, 16 stages and 22 work spots, as described in <a href="how-to-build-a-sphinx.html">How to build a sphinx</a></li>
+      <li><strong>Obelisks</strong> — small and large, with stage-by-stage mason and carpenter work</li>
+      <li><strong>Royal tombs</strong> — small to grand, with the original part chain, chamber stages and lamp economy; artisans come from the Artisans' Guild</li>
+      <li><strong>Abu Simbel</strong> — the original sixteen-record layout on monument rock with 56 work stages and the original info window</li>
+      <li><strong>Pharos lighthouse</strong> — the original tower and land part, stages, work spots and marble sleds</li>
+      <li><strong>Sun temple</strong> (100 parts), <strong>Mausoleum</strong> (116 parts, plus a fix for its sandstone blocks), <strong>Alexandria library</strong> (25 parts) and <strong>Caesareum</strong> (9 parts, 19 stages)</li>
+      <li><strong>Sled trains</strong> carry every pyramid load from the yard with the original images, follow rules and ferry crossings; sled pullers can be attacked, and burial provisions are dispatched to finished tombs</li>
+    </ul>
+
+    <h2>Missions and Campaign</h2>
+    <ul>
+      <li>Campaign maps ship with the game under <code>data/maps</code>, and the missions from Serabit Khadim through the Cleopatra capital missions (up to 52) have scripts, events and empire maps taken from the original mission data</li>
+      <li>Request chains, favour invasions, burial provisions, fishing points and herds are defined per mission in script</li>
+      <li><strong>Campaign carry-over</strong> of troops, monuments and dynasty savings</li>
+      <li><strong>Free Play</strong> in the main menu lists every scripted mission without dynasty progress</li>
+      <li><strong>Ironwill</strong> mode blocks mid-game save, load and autosave</li>
+      <li>Original Pharaoh <code>.sav</code> files (version 160) can be read and loaded on top of their mission: map grids, buildings, city state, formations and event progress carry over; walkers do not yet</li>
+    </ul>
+
+    <h2>UI and Quality of Life</h2>
+    <ul>
+      <li><strong>In-game updater</strong> on Windows, Linux and macOS: checks, downloads and swaps the build without a separate helper (CI builds only; off with <code>--no-update</code>)</li>
+      <li><strong>Pharaoh data from the installer</strong>: the game can unpack a GOG/Inno <code>Setup.exe</code> through innoextract, with a progress bar (<code>--extract-installer</code>)</li>
+      <li>Empire map moved to script, pans with the left mouse button, and draws routes, invasion and troop markers as the original does</li>
+      <li>F5/F9 quicksave, monthly autosave rotation (Enhanced), live minimap preview in scenario selection</li>
+      <li>Interface scale controls, zoom fixes (100% stays reachable, no tile seams), Alt shows recorded delivery and patrol trails</li>
+      <li>Bug report window attaches a screenshot, recent errors and a session log tail</li>
+      <li>Sound: effects from the original effect tables, battle music and the <code>music.txt</code> playlist, original city ambience rules</li>
+      <li>Info windows, advisors, the top menu and the hotkey editor finished moving to script; every UI click now goes through script event handlers</li>
+    </ul>
+
+    <h2>Scenario Editor and Modding</h2>
+    <p>
+      The editor gained a seeded procedural map generator, the original 40 map flags (prey herds, disembark and sea invasion points among them), and stores requests, invasions, prices and win criteria in a <code>*.meta.js</code> file next to the map. Mods can be plain folders, keep a fixed id order with one conflict rule for scripts and sounds, and a broken mod script is dropped instead of stopping all scripts. Saves record which mods were active and offer to switch to them on load. <code>--mods PATH</code> points at a mods folder, and an unpacked <code>Scripts/</code> folder is only used when it was unpacked for the running build.
+    </p>
+
+    <h2>Platforms and Distribution</h2>
+    <ul>
+      <li><strong>Flathub</strong> — Akhenaten is packaged as <code>io.github.dalerank.Akhenaten</code>. Issue #685 (the menu entry stopped with “engine data files are missing”) is fixed: engine data is now also found next to the executable, the wrapper script is gone, and the sandbox can see <code>/run/media</code> for Steam libraries on a Steam Deck SD card. The fix was checked on a Steam Deck with a Flatpak built from it, started the same way as the menu entry</li>
+      <li><strong>Windows</strong> — direct3d11 is the default renderer, with a fallback chain to OpenGL, Direct3D 9 and software; the app icon is embedded for the taskbar</li>
+      <li><strong>Rendering</strong> — the residency atlas is on by default and faded sprites share one premultiplied blend mode, so more of a frame batches into fewer draw calls</li>
+      <li><strong>Linux and macOS</strong> — build and startup fixes, case-insensitive paths, curl built against OpenSSL on macOS</li>
+      <li><strong>Android</strong> — engine data in the APK, landscape lock, saves and touch building restored, native MP3 decoding, soft-keyboard fixes</li>
+      <li><strong>Browser</strong> — mission maps embedded so Free Play works in the web build</li>
+    </ul>
+    <p>
+      Localization: Hungarian was added, Italian completed, Spanish got a bitmap font and a full set of files, and non-English TTF rendering now matches the original bitmaps.
+    </p>
+
+    <h2>Under the Hood: Tests and Load Times</h2>
+    <p>
+      The integral test suite grew from 15 files at RA 0.27 to <strong>549</strong>. Most of the porting work above landed together with a test that drives the real game, and a regression test has to be seen failing on the old code first. Tests check save round trips and the state hash of drawn frames against headless ticks, and fail when they write to building or figure record 0.
+    </p>
+    <p>
+      Run one after another, the suite took about an hour. Now the executable starts its own shards (<code>--integraltest-jobs N</code>), each test writes a result file, and the runner collects failures and the slowest tests into a summary. Tests save and load in memory instead of writing files, and CI runs one shard per core, which brings the whole suite to about 75 seconds.
+    </p>
+    <p>
+      Map and mission loading got faster in the process. Clay, moisture and the six ore and stone grids used to compare every land tile with every water or rock tile; they are now computed from one distance pass over the map, which cuts about 3–4 seconds from each mission load, with identical grids on all 53 campaign missions.
+    </p>
+    <p>
+      Other gates: the include-layer check (core &lt; grid &lt; sim &lt; presentation &lt; app) was rewritten in C++, so the project no longer needs Python; a config-key gate fails on C++ defaults silently zeroed by a missing script key; building records that overflow their save slot are an error. Drawing no longer writes simulation state, sprite animations tick with the simulation, and our own random rolls no longer touch the original random stream.
+    </p>
+
+    <h2>Download</h2>
+    <p>
+      <strong>RA 0.29</strong> (version <code>0.2.9</code>) is available from <a href="https://github.com/dalerank/Akhenaten/releases">GitHub Releases</a>, <a href="https://dalerank.itch.io/Akhenaten">itch.io</a> and Flathub. The save format moved forward several versions in this release; report saves that do not load on <a href="https://github.com/dalerank/Akhenaten/issues">GitHub</a> or <a href="https://discord.gg/HS4njmBvpb">Discord</a>.
+    </p>
+    <p>
+      Thank you to everyone who filed bugs, sent PRs and playtested nightly builds — especially <strong>sirkalmi</strong>, <strong>Joe Malott</strong>, <strong>Genroa</strong>, <strong>Agustin Pre</strong>, <strong>viidix</strong>, <strong>Alberto Tudela</strong>, <strong>Chase Shields</strong> and <strong>Ivan Anisimov</strong>.
+    </p>
+
+    <div class="post-nav">
+      <a href="how-to-build-a-sphinx.html">← How to build a sphinx</a>
+      <a href="ra-027-release-notes.html">Akhenaten RA 0.27 Release Notes →</a>
+    </div>
+  </main>
+
+  <footer>
+    <p>Akhenaten is an open-source, non-commercial project. All rights to Pharaoh, its mechanics and setting belong to their respective copyright owners.</p>
+    <p><a href="https://github.com/dalerank/Akhenaten" target="_blank">github.com/dalerank/Akhenaten</a></p>
+  </footer>
+</body>
+</html>
