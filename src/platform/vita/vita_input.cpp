@@ -127,7 +127,7 @@ int vita_poll_event(SDL_Event* event) {
                 break;
             case VITA_PAD_SELECT:
                 if (can_change_touch_mode) {
-                    touch_cycle_mode();
+                    g_touch.cycle_mode();
                     can_change_touch_mode = 0;
                 }
                 break;

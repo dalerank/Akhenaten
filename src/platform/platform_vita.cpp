@@ -28,7 +28,7 @@ void platform_run_init_callback() {
     }
 
     vita2d_set_clear_color(RGBA8(0, 0, 0, 255));
-    touch_set_mode(TOUCH_MODE_TOUCHPAD);
+    g_touch.set_mode(e_touch_mode::touchpad);
 }
 
 void platform_run_per_frame_callback() {

@@ -313,7 +313,7 @@ static void handle_input(const mouse* m, const hotkeys* h) {
     }
 
     if (m->is_touch) {
-        const touch_t* t = get_earliest_touch();
+        const touch_t* t = g_touch.earliest();
         if (!is_outside_map(t->current_point.x, t->current_point.y)) {
             if (t->has_started) {
                 data.is_scrolling = 1;
@@ -322,7 +322,7 @@ static void handle_input(const mouse* m, const hotkeys* h) {
         }
         if (t->has_ended) {
             data.is_scrolling = 0;
-            data.finished_scroll = !touch_was_click(t);
+            data.finished_scroll = !t->was_click();
             g_scroll.drag_end();
         }
     }

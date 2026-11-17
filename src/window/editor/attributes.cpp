@@ -177,7 +177,7 @@ static void draw_foreground(int) {
 
 static void handle_input(const mouse* m, const hotkeys* h) {
     auto& data = g_editor_attributes_data;
-    const mouse* m_dialog = mouse_in_dialog(m);
+    const mouse* m_dialog = m->in_dialog();
     if (input_box_handle_mouse(m_dialog, &scenario_description_input)
         || generic_buttons_handle_mouse(m_dialog, {0, 0}, buttons, 11, &data.focus_button_id, nullptr)
         || arrow_buttons_handle_mouse(m_dialog, image_arrows, 2, 0)

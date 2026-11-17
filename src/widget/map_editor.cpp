@@ -141,13 +141,13 @@ static void handle_touch_scroll(const touch_t * t) {
     if (!data.capture_input)
         return;
 
-    int was_click = touch_was_click(get_latest_touch());
+    int was_click = g_touch.latest()->was_click();
     if (t->has_started || was_click) {
         g_scroll.drag_start(scroll_t::drag_source::touch);
         return;
     }
 
-    if (!touch_not_click(t))
+    if (!t->not_click())
         return;
 
     if (t->has_ended)
@@ -155,7 +155,7 @@ static void handle_touch_scroll(const touch_t * t) {
 }
 
 static void handle_touch_zoom(const touch_t * first, const touch_t * last) {
-    if (touch_not_click(first))
+    if (first->not_click())
         g_zoom.handle_touch(first, last, g_zoom.get_percentage());
 
     if (first->has_ended || last->has_ended)
@@ -163,15 +163,15 @@ static void handle_touch_zoom(const touch_t * first, const touch_t * last) {
 }
 
 static void handle_last_touch(void) {
-    const touch_t * last = get_latest_touch();
+    const touch_t* last = g_touch.latest();
     if (!last->in_use)
         return;
-    if (touch_was_click(last)) {
+    if (last->was_click()) {
         editor_tool_deactivate();
         return;
     }
-    if (touch_not_click(last))
-        handle_touch_zoom(get_earliest_touch(), last);
+    if (last->not_click())
+        handle_touch_zoom(g_touch.earliest(), last);
 }
 
 static bool handle_cancel_construction_button(const touch_t * t) {
@@ -195,9 +195,9 @@ static bool handle_cancel_construction_button(const touch_t * t) {
 
 static void handle_first_touch(tile2i tile) {
     auto &data = g_map_editor_data;
-    const touch_t * first = get_earliest_touch();
+    const touch_t* first = g_touch.earliest();
 
-    if (touch_was_click(first)) {
+    if (first->was_click()) {
         if (handle_cancel_construction_button(first))
             return;
     }
@@ -218,7 +218,7 @@ static void handle_first_touch(tile2i tile) {
                 if (data.selected_grid_offset != tile.grid_offset())
                     data.new_start_grid_offset = tile.grid_offset();
             }
-            if (touch_not_click(first) && data.new_start_grid_offset) {
+            if (first->not_click() && data.new_start_grid_offset) {
                 data.new_start_grid_offset = 0;
                 data.selected_grid_offset = 0;
                 editor_tool_deactivate();
@@ -252,8 +252,8 @@ static void handle_first_touch(tile2i tile) {
         return;
     }
 
-    if (touch_was_click(first) && first->has_ended && data.capture_input
-        && data.selected_grid_offset == tile.grid_offset()) {
+    if (
+      first->was_click() && first->has_ended && data.capture_input && data.selected_grid_offset == tile.grid_offset()) {
         editor_tool_start_use(tile);
         editor_tool_update_use(tile);
         editor_tool_end_use(tile);
@@ -264,7 +264,7 @@ static void handle_first_touch(tile2i tile) {
 
 static void handle_touch(void) {
     auto &data = g_map_editor_data;
-    const touch_t * first = get_earliest_touch();
+    const touch_t* first = g_touch.earliest();
     if (!first->in_use) {
         g_scroll.restore_margins();
         return;

@@ -26,7 +26,7 @@ static void noop_input(const mouse* m, const hotkeys* h) {
 
 static void reset_input() {
     mouse::ref().reset_button_state();
-    reset_touches(1);
+    g_touch.reset(true);
     g_scroll.stop();
 }
 
@@ -94,7 +94,7 @@ void window_go_back() {
 
 void windows_manager_t::update_input_after() {
     auto& data = g_window_manager;
-    reset_touches(0);
+    g_touch.reset(false);
     mouse::ref().reset_scroll();
     if (data.current_window) {
         input_cursor_update(data.current_window->id);
@@ -119,7 +119,7 @@ void window_draw(int force) {
     // draw the current (top) window in the queue
     ui::begin_frame();
 
-    if (!touch_to_mouse()) {
+    if (!g_touch.to_mouse()) {
         mouse::ref().determine_button_state(); // touch overrides mouse
     }
 

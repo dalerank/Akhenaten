@@ -27,21 +27,21 @@ void __mouse_reset_up_state() { mouse::ref().reset_up_state(); }
 ANK_FUNCTION(__mouse_reset_up_state)
 
 vec2i __touch_earliest_current() {
-    return get_earliest_touch()->current_point;
+    return g_touch.earliest()->current_point;
 }
 ANK_FUNCTION(__touch_earliest_current)
 
 int __touch_earliest_has_started() {
-    return get_earliest_touch()->has_started;
+    return g_touch.earliest()->has_started;
 }
 ANK_FUNCTION(__touch_earliest_has_started)
 
 int __touch_earliest_has_ended() {
-    return get_earliest_touch()->has_ended;
+    return g_touch.earliest()->has_ended;
 }
 ANK_FUNCTION(__touch_earliest_has_ended)
 
 int __touch_earliest_was_click() {
-    return touch_was_click(get_earliest_touch());
+    return g_touch.earliest()->was_click();
 }
 ANK_FUNCTION(__touch_earliest_was_click)

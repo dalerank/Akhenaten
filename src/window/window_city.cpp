@@ -167,9 +167,9 @@ static bool handle_construction_buttons(const mouse *m) {
     construction_buttons[1].enabled = count > 1;
 
     const vec2i base = construction_buttons_base_pos();
-    // get_earliest_touch() hides fingers for ~150ms (start_delayed). Button downs
+    // g_touch.earliest() hides fingers for ~150ms (start_delayed). Button downs
     // in that window never latched; use the raw finger and decide by start_point.
-    const touch_t *t = (m->is_touch || platform.is_android()) ? get_earliest_touch_raw() : nullptr;
+    const touch_t* t = (m->is_touch || platform.is_android()) ? g_touch.earliest_raw() : nullptr;
     if (!t || !t->in_use) {
         construction_button_pressed = -1;
         construction_buttons[0].pressed = 0;
@@ -190,15 +190,15 @@ static bool handle_construction_buttons(const mouse *m) {
                         || is_in_construction_buttons_region(t->current_point);
 
     if (t->has_started || t->has_ended) {
-        logs::info(
-            "[build-btn] touch start=(%d,%d) cur=(%d,%d) hit_start=%d hit_cur=%d in_region=%d "
-            "started=%d ended=%d moved=%d click=%d base=(%d,%d) view=(%d,%d) "
-            "btns={cancel:(%d,%d,%dx%d) confirm:(%d,%d,%dx%d)} build=%d progress=%d",
-            t->start_point.x, t->start_point.y, t->current_point.x, t->current_point.y, hit_start, hit_cur, in_region ? 1 : 0,
-            t->has_started, t->has_ended, t->has_moved, touch_was_click(t), base.x, base.y, g_camera.size_pixels.x,
-            g_camera.size_pixels.y, base.x, base.y, construction_buttons[0].width, construction_buttons[0].height,
-            base.x + construction_buttons[1].x, base.y + construction_buttons[1].y, construction_buttons[1].width,
-            construction_buttons[1].height, (int)g_city_planner.build_type, g_city_planner.in_progress ? 1 : 0);
+        logs::info("[build-btn] touch start=(%d,%d) cur=(%d,%d) hit_start=%d hit_cur=%d in_region=%d "
+                   "started=%d ended=%d moved=%d click=%d base=(%d,%d) view=(%d,%d) "
+                   "btns={cancel:(%d,%d,%dx%d) confirm:(%d,%d,%dx%d)} build=%d progress=%d",
+          t->start_point.x, t->start_point.y, t->current_point.x, t->current_point.y, hit_start, hit_cur,
+          in_region ? 1 : 0, t->has_started, t->has_ended, t->has_moved, t->was_click(), base.x, base.y,
+          g_camera.size_pixels.x, g_camera.size_pixels.y, base.x, base.y, construction_buttons[0].width,
+          construction_buttons[0].height, base.x + construction_buttons[1].x, base.y + construction_buttons[1].y,
+          construction_buttons[1].width, construction_buttons[1].height, (int)g_city_planner.build_type,
+          g_city_planner.in_progress ? 1 : 0);
     }
 
     // Whole gesture: only steal if finger began on or in region of buttons.

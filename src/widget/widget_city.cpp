@@ -1327,13 +1327,13 @@ void screen_city_t::handle_touch_scroll(const touch_t * t, bool fore_capture_inp
         return;
     }
 
-    int was_click = touch_was_click(get_latest_touch());
+    int was_click = g_touch.latest()->was_click();
     if (t->has_started || was_click) {
         g_scroll.drag_start(scroll_t::drag_source::touch);
         return;
     }
 
-    if (!touch_not_click(t)) {
+    if (!t->not_click()) {
         return;
     }
 
@@ -1343,7 +1343,7 @@ void screen_city_t::handle_touch_scroll(const touch_t * t, bool fore_capture_inp
 }
 
 static void handle_touch_zoom(const touch_t * first, const touch_t * last) {
-    if (touch_not_click(first))
+    if (first->not_click())
         g_zoom.handle_touch(first, last, g_zoom.get_percentage());
 
     if (first->has_ended || last->has_ended)
@@ -1351,10 +1351,10 @@ static void handle_touch_zoom(const touch_t * first, const touch_t * last) {
 }
 
 void screen_city_t::handle_first_touch(tile2i tile) {
-    const touch_t * first = get_earliest_touch();
+    const touch_t* first = g_touch.earliest();
     e_building_type type = g_city_planner.build_type;
 
-    if (touch_was_click(first)) {
+    if (first->was_click()) {
         if (handle_legion_click(tile) || handle_warship_click(tile) || handle_transport_click(tile)) {
             return;
         }
@@ -1384,7 +1384,7 @@ void screen_city_t::handle_first_touch(tile2i tile) {
                     new_start_grid_offset = tile.grid_offset();
                 }
             }
-            if (touch_not_click(first) && new_start_grid_offset) {
+            if (first->not_click() && new_start_grid_offset) {
                 new_start_grid_offset = 0;
                 selected_tile.set(0);
                 g_city_planner.construction_cancel();
@@ -1412,7 +1412,7 @@ void screen_city_t::handle_first_touch(tile2i tile) {
         size = 3;
     }
 
-    if (touch_was_click(first) && first->has_ended && capture_input
+    if (first->was_click() && first->has_ended && capture_input
         && has_confirmed_construction(selected_tile, tile, size)) {
         g_city_planner.construction_start(selected_tile);
         build_move(selected_tile);
@@ -1424,17 +1424,17 @@ void screen_city_t::handle_first_touch(tile2i tile) {
 }
 
 static void handle_last_touch(void) {
-    const touch_t * last = get_latest_touch();
+    const touch_t* last = g_touch.latest();
     if (!last->in_use)
         return;
 
-    if (touch_not_click(last)) {
-        handle_touch_zoom(get_earliest_touch(), last);
+    if (last->not_click()) {
+        handle_touch_zoom(g_touch.earliest(), last);
     }
 }
 
 void screen_city_t::handle_touch() {
-    const touch_t * first = get_earliest_touch();
+    const touch_t* first = g_touch.earliest();
     if (!first->in_use) {
         g_scroll.restore_margins();
         return;
@@ -1442,8 +1442,8 @@ void screen_city_t::handle_touch() {
 
     if (g_city_planner.build_type && (first->has_started || first->has_ended)) {
         logs::info("[build-btn] CITY touch leaked start=(%d,%d) cur=(%d,%d) started=%d ended=%d click=%d",
-                   first->start_point.x, first->start_point.y, first->current_point.x, first->current_point.y,
-                   first->has_started, first->has_ended, touch_was_click(first));
+          first->start_point.x, first->start_point.y, first->current_point.x, first->current_point.y,
+          first->has_started, first->has_ended, first->was_click());
     }
 
     if (!g_city_planner.in_progress || input_coords_in_city(first->current_point.x, first->current_point.y)) {
@@ -1502,7 +1502,7 @@ void screen_city_t::handle_input_military(const mouse *m, const hotkeys *h, int 
     }
 
     if (m->is_touch) {
-        const touch_t *t = get_earliest_touch();
+        const touch_t* t = g_touch.earliest();
         if (!t->in_use) {
             return;
         }
@@ -1522,8 +1522,8 @@ void screen_city_t::handle_input_military(const mouse *m, const hotkeys *h, int 
     current_tile = update_city_view_coords(*m);
 
     const bool m_left_down = (!m->is_touch && m->left.went_down);
-    const auto *early_touch = get_earliest_touch();
-    const bool m_has_touch = (m->is_touch && m->left.went_up && touch_was_click(early_touch));
+    const auto* early_touch = g_touch.earliest();
+    const bool m_has_touch = (m->is_touch && m->left.went_up && early_touch->was_click());
 
     if (m_left_down || m_has_touch) {
         const tile2i tile = current_tile;
@@ -1756,7 +1756,7 @@ void screen_city_t::handle_input_transport(const mouse *m, const hotkeys *h, int
     }
 
     if (m->is_touch) {
-        const touch_t *t = get_earliest_touch();
+        const touch_t* t = g_touch.earliest();
         if (!t->in_use) {
             return;
         }
@@ -1803,8 +1803,8 @@ void screen_city_t::handle_input_transport(const mouse *m, const hotkeys *h, int
     }
 
     const bool m_left_down = (!m->is_touch && m->left.went_down);
-    const auto *early_touch = get_earliest_touch();
-    const bool m_has_touch = (m->is_touch && m->left.went_up && touch_was_click(early_touch));
+    const auto* early_touch = g_touch.earliest();
+    const bool m_has_touch = (m->is_touch && m->left.went_up && early_touch->was_click());
 
     if (m_left_down || m_has_touch) {
         transport_map_click(transport_figure_id, pick_mode, current_tile);
@@ -1819,7 +1819,7 @@ void screen_city_t::handle_input_warship(const mouse *m, const hotkeys *h, int w
     }
 
     if (m->is_touch) {
-        const touch_t *t = get_earliest_touch();
+        const touch_t* t = g_touch.earliest();
         if (!t->in_use) {
             return;
         }
@@ -1846,8 +1846,8 @@ void screen_city_t::handle_input_warship(const mouse *m, const hotkeys *h, int w
     current_tile = update_city_view_coords(*m);
 
     const bool m_left_down = (!m->is_touch && m->left.went_down);
-    const auto *early_touch = get_earliest_touch();
-    const bool m_has_touch = (m->is_touch && m->left.went_up && touch_was_click(early_touch));
+    const auto* early_touch = g_touch.earliest();
+    const bool m_has_touch = (m->is_touch && m->left.went_up && early_touch->was_click());
 
     if (m_left_down || m_has_touch) {
         const tile2i tile = current_tile;

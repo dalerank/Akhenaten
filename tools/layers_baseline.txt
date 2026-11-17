@@ -801,7 +801,6 @@ grid/water_supply.cpp -> graphics/image.h
 grid/water_supply.cpp -> graphics/image_groups.h
 grid/water_supply.cpp -> scenario/map.h
 grid/water_supply.cpp -> scenario/scenario.h
-input/touch.cpp -> platform/touch.h
 io/chunk_container.h -> content/reader.h
 io/chunk_serializer.h -> content/file_formats.h
 io/gamefiles/lang.h -> content/dir.h

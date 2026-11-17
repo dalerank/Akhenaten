@@ -11,7 +11,7 @@
 
 int ui::message_dialog_disaster::handle_mouse(const mouse *m) {
     const hotkeys *h = hotkey_state();
-    const mouse *m_dialog = mouse_in_dialog(m);
+    const mouse* m_dialog = m->in_dialog();
     const lang_message &msg = lang_get_message(text_id);
 
     bool handled = handle_input_normal(m_dialog, msg);

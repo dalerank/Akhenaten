@@ -51,7 +51,7 @@ static void draw_foreground(int) {
 }
 
 static void handle_input(const mouse* m, const hotkeys* h) {
-    const mouse* m_dialog = mouse_in_dialog(m);
+    const mouse* m_dialog = m->in_dialog();
     if (input_box_handle_mouse(m_dialog, &command_input) || image_buttons_handle_mouse(m_dialog, {159, 249}, image_buttons, 2, 0)) {
         return;
     }

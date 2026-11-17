@@ -528,7 +528,7 @@ bool ui::handle_mouse(const mouse* m) {
         handle |= !!panel->input_handle(m);
     }
 
-    const mouse* m_dialog = mouse_in_dialog(m);
+    const mouse* m_dialog = m->in_dialog();
     for (int i = (int)g_state.input_boxes.size() - 1; i >= 0 && !handle; --i) {
         handle |= !!input_box_handle_mouse(m_dialog, g_state.input_boxes[i]);
     }

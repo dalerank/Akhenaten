@@ -3,8 +3,6 @@
 #include "graphics/screen.h"
 #include "input/touch.h"
 
-static SDL_FingerID touch_id[MAX_ACTIVE_TOUCHES];
-
 #ifdef __APPLE__
 static SDL_TouchID trackpad_id;
 #endif
@@ -14,14 +12,6 @@ static vec2i get_touch_coordinates(float x, float y) {
     coords.x = (int)(x * screen_width());
     coords.y = (int)(y * screen_height());
     return coords;
-}
-
-static int get_touch_index(SDL_FingerID id) {
-    for (int i = 0; i < MAX_ACTIVE_TOUCHES; ++i) {
-        if (touch_id[i] == id && touch_in_use(i))
-            return i;
-    }
-    return MAX_ACTIVE_TOUCHES;
 }
 
 void platform_touch_start(SDL_TouchFingerEvent* event) {
@@ -37,25 +27,13 @@ void platform_touch_start(SDL_TouchFingerEvent* event) {
     if (event->touchId == 1)
         return;
 #endif
-    int index = touch_create(get_touch_coordinates(event->x, event->y), event->timestamp);
-    if (index != MAX_ACTIVE_TOUCHES)
-        touch_id[index] = event->fingerId;
+    g_touch.finger_down(event->fingerId, get_touch_coordinates(event->x, event->y), event->timestamp);
 }
 
 void platform_touch_move(SDL_TouchFingerEvent* event) {
-    touch_move(get_touch_index(event->fingerId), get_touch_coordinates(event->x, event->y), event->timestamp);
+    g_touch.finger_move(event->fingerId, get_touch_coordinates(event->x, event->y), event->timestamp);
 }
 
 void platform_touch_end(SDL_TouchFingerEvent* event) {
-    int index = get_touch_index(event->fingerId);
-    if (index != MAX_ACTIVE_TOUCHES) {
-        touch_end(index, event->timestamp);
-        touch_id[index] = 0;
-    }
-}
-
-void platform_touch_reset(void) {
-    for (int i = 0; i < MAX_ACTIVE_TOUCHES; ++i) {
-        touch_id[i] = 0;
-    }
+    g_touch.finger_up(event->fingerId, event->timestamp);
 }

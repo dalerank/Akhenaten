@@ -193,7 +193,7 @@ void scroll_t::drag_start(drag_source source) {
     drag.delta = {0, 0};
     drag.travel = {0, 0};
     if (!drag.is_touch)
-        g_mouse.get_relative_state(nullptr, nullptr);
+        g_mouse.relative_state();
 
     clear_speed();
 }
@@ -204,9 +204,9 @@ int scroll_t::set_speed_from_drag(bool keep_delta) {
     int delta_x = 0;
     int delta_y = 0;
     if (!drag.is_touch) {
-        g_mouse.get_relative_state(&delta_x, &delta_y);
-        float fx = dampen_mouse_relative_pan_delta((float)delta_x);
-        float fy = dampen_mouse_relative_pan_delta((float)delta_y);
+        const vec2i relative = g_mouse.relative_state();
+        float fx = dampen_mouse_relative_pan_delta((float)relative.x);
+        float fy = dampen_mouse_relative_pan_delta((float)relative.y);
         if (drag.apply_middle_mouse_pan_speed) {
             float s = game_features::gameopt_middle_mouse_pan_speed.to_float();
             if (s < 0.f)
@@ -220,7 +220,7 @@ int scroll_t::set_speed_from_drag(bool keep_delta) {
         delta_x = (int)std::lround(fx);
         delta_y = (int)std::lround(fy);
     } else {
-        const touch_t* t = get_earliest_touch();
+        const touch_t* t = g_touch.earliest();
         delta_x = -t->frame_movement.x;
         delta_y = -t->frame_movement.y;
     }
@@ -252,7 +252,7 @@ int scroll_t::drag_end() {
     if (!drag.is_touch)
         g_mouse.set_relative_mode(0);
     else if (has_scrolled) {
-        const touch_t* t = get_earliest_touch();
+        const touch_t* t = g_touch.earliest();
         speed_set_target(speed.x, -t->frame_movement.x, SPEED_CHANGE_IMMEDIATE, 1);
         speed_set_target(speed.y, -t->frame_movement.y, SPEED_CHANGE_IMMEDIATE, 1);
     }
