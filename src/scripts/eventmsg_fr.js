@@ -172,8 +172,8 @@ eventmsg_fr = [
   { key: PHRASE_project_too_late_reason_C_B, text:	  "vous avez tergiversé et n'avez pas envoyé à [city_name] les [amount] charrettes en [item] demandées. Malheureusement," }
   { key: PHRASE_project_too_late_reason_C_C, text:	  "bien que vous ayez tergiversé sur l'envoi à [city_name] des [amount] charrettes en [item] demandées, votre effort a été apprécié, et par conséquent," }
   { key: PHRASE_project_refuse_reason_P_A, text:	"dans la mesure où vous avez décliné la requête du pharaon relative à l'envoi de [amount] charrettes en [item] indispensables à la réalisation de son projet important à [city_name]," }
-  { key: PHRASE_project_refuse_reason_P_B, text:	  "vous avez imprudemment décliné la requête du pharaon relative à l'envoi de [amount] charrettes en [item] pour son important projet à {city_name]. Par conséquent," }
-  { key: PHRASE_project_refuse_reason_P_C, text:	  "bien qu'il soit très imprudent de décliner la requête du pharaon relative à l'envoi de [amount] charrettes en [item] pour son important projet à {city_name] comme vous l'avez fait," }
+  { key: PHRASE_project_refuse_reason_P_B, text:	  "vous avez imprudemment décliné la requête du pharaon relative à l'envoi de [amount] charrettes en [item] pour son important projet à [city_name]. Par conséquent," }
+  { key: PHRASE_project_refuse_reason_P_C, text:	  "bien qu'il soit très imprudent de décliner la requête du pharaon relative à l'envoi de [amount] charrettes en [item] pour son important projet à [city_name] comme vous l'avez fait," }
   { key: PHRASE_project_refuse_reason_C_A, text: 	"dans la mesure où vous avez repoussé [city_name] et sa requête de [amount] charrettes en [item]," }
   { key: PHRASE_project_refuse_reason_C_B, text:	  "vous avez repoussé [city_name] et sa requête de [amount] charrettes en [item]. En outre," }
   { key: PHRASE_project_refuse_reason_C_C, text:	  "bien que vous ayez repoussé [city_name] et sa requête de [amount] charrettes en [item]," }
@@ -187,7 +187,7 @@ eventmsg_fr = [
   { key:PHRASE_famine_title_P, text: 					"Famine" }
   { key:PHRASE_famine_title_C, text: 					"Famine" }
   { key:PHRASE_famine_initial_announcement_P, text:	"[greeting] [player_name], [reason_phrase] la famine assaille [city_name]. Le pharaon exige que vous lui portiez secours. Vous disposez de [time_allotted] mois pour envoyer [amount] charrettes en [item] à la cité pour la soulager." }
-  { key:PHRASE_famine_initial_announcement_C, text:	"[greeting] [player_name], [reason_phrase] la famine a frappé [city_name] et ses citoyens meurent de fin. Envoyez [amount] charrettes en [item] dans les [time_allotted] mois. Des vies sont en jeu !" }
+  { key:PHRASE_famine_initial_announcement_C, text:	"[greeting] [player_name], [reason_phrase] la famine a frappé [city_name] et ses citoyens meurent de faim. Envoyez [amount] charrettes en [item] dans les [time_allotted] mois. Des vies sont en jeu !" }
   { key:PHRASE_famine_reminder_P, text: 				"[greeting] [player_name], le pharaon se demande si vous avez un cœur. Vous n'avez toujours pas envoyé les [amount] charrettes en [item] à [city_name] alors que ses citoyens sont dans le besoin. Il ne vous reste que 6 mois pour satisfaire la requête du pharaon." }
   { key:PHRASE_famine_reminder_C, text: 				"[greeting] [player_name], le peuple de [city_name] se meurt de faim et vous n'avez toujours pas envoyé les [amount] charrettes en [item]. Envoyez les marchandises dans les 6 mois ou vous aurez de nombreuses morts sur la conscience." }
   { key:PHRASE_famine_overdue_P, text: 				"[greeting] [player_name], le pharaon pense que votre avarice est sans bornes. Vous n'avez rien fait pour soulager la faim de vos compatriotes. Envoyez toujours vos [amount] charrettes en [item] à [city_name] et vous pourrez éventuellement être réhabilité auprès du pharaon." }
@@ -510,13 +510,13 @@ eventmsg_fr = [
   { key: PHRASE_flood_fails_no_reason_B, text:	  "nos problèmes ne font que commencer, étant donné que" }
   { key: PHRASE_flood_fails_no_reason_C, text:	  "" }
 
-  { key : PHRASE_perfect_flood_title, text: 					"Perfect Flood Expected" }
-  { key : PHRASE_perfect_flood_initial_announcement, text: 	"[greeting] [player_name], [reason_phrase] this is indeed a blessing, for the likelihood of a bountiful flood is quite high!  Consult the Nilometer periodically.  If the prediction should worsen, the city could find itself unprepared." }
-  { key : PHRASE_perfect_flood_reason_A, text:  	 	 				"because the flood was expected to be bountiful," }
-  { key : PHRASE_perfect_flood_reason_B, text:	  "the flood was expected to be bountiful, and" }
-  { key : PHRASE_perfect_flood_reason_C, text:	  "even though the flood was expected to be bountiful," }
-  { key : PHRASE_perfect_flood_no_reason_A, text:  	 					"the monsoons in Africa are expected to come, so" }
-  { key : PHRASE_perfect_flood_no_reason_B, text:	  "we are indeed fortunate, for" }
+  { key : PHRASE_perfect_flood_title, text: 					"Crue parfaite attendue" }
+  { key : PHRASE_perfect_flood_initial_announcement, text: 	"[greeting] [player_name], [reason_phrase] c'est un don du ciel, les chances que la crue soit importante sont optimales ! Consultez le nilomètre périodiquement. Si la prédiction se noircit, la cité n'aura pas le temps de se préparer." }
+  { key : PHRASE_perfect_flood_reason_A, text:  	 	 				"dans la mesure où il a des chances que l'inondation soit fertile," }
+  { key : PHRASE_perfect_flood_reason_B, text:	  "il a des chances que l'inondation soit fertile et" }
+  { key : PHRASE_perfect_flood_reason_C, text:	  "bien qu'il y ait des chances que l'inondation soit fertile," }
+  { key : PHRASE_perfect_flood_no_reason_A, text:  	 					"les moussons d'Afrique sont attendues, par conséquent" }
+  { key : PHRASE_perfect_flood_no_reason_B, text:	  "nous avons vraiment de la chance, car" }
   { key : PHRASE_perfect_flood_no_reason_C, text:	  "" }
 
   { key: PHRASE_bedouin_attacks_you_title, text: 					"L'armée bédouine attaque" }
