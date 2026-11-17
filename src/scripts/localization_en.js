@@ -525,6 +525,7 @@ localization_en = [
   {key: "#mission1_goal_build_mines", text:"Mine some gold for the Palace's treasury" }
   {key: "#mission1_goal_build_temples", text:"Build some Temples and Shrines to Bast" }
   {key: "#mission1_goal_build_entertainment", text:"Build Booths and Juggler Schools to raise city Culture" }
+  {key: "#mission1_goal_evolve_housing", text:"Evolve 10 houses to Ordinary Cottage" }
 
   {key: "#exit_this_panel", text:"Exit this panel"}
   {key: "#display_options_title", text:"Display options"}

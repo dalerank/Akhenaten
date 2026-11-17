@@ -72,14 +72,22 @@ mission1 {
 
 	goal_tooltip: function() {
 		if (!mission.gold_mined_handled) {
-			return "#mission1_goal_build_temples"
+			return "#mission1_goal_build_mines"
 		}
 
 		if (!mission.temples_built) {
+			return "#mission1_goal_build_temples"
+		}
+
+		if (!mission.booth_built || !mission.juggler_school_built) {
 			return "#mission1_goal_build_entertainment"
 		}
 
-		return "#mission1_goal_build_mines"
+		if (!city.victory.is_housing_condition_met()) {
+			return "#mission1_goal_evolve_housing"
+		}
+
+		return ""
 	}
 }
 

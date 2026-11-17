@@ -508,7 +508,7 @@
                 <span></span>
               </li>
             </ul>
-            <p style="margin-top:0.75rem">The goal tooltip function <code>mission1_get_goal_tooltip()</code> (line 49) returns a different hint string depending on which milestone is still pending — it is called by <code>city.goal_tooltip</code> to drive the in-game objective display.</p>
+            <p style="margin-top:0.75rem">The goal tooltip <code>mission1.goal_tooltip()</code> (line 73) shows the next pending step in the OG order (<code>city_warning_tutorial_hint_text</code>): mine gold (<code>#mission1_goal_build_mines</code>), build temples to Bast (<code>#mission1_goal_build_temples</code>), build a booth and a juggler school (<code>#mission1_goal_build_entertainment</code>); once the tutorial steps are done and the housing goal is not met it asks to evolve 10 houses to Ordinary Cottage (<code>#mission1_goal_evolve_housing</code>). It is shown as the immediate goal in the mission briefing window.</p>
           </div>
         </details>
 
