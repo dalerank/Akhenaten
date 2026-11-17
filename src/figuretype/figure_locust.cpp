@@ -8,7 +8,6 @@
 #include "core/log.h"
 #include "core/random.h"
 #include "game/game_events.h"
-#include "graphics/image.h"
 #include "js/js_game.h"
 #include "scenario/scenario.h"
 
@@ -18,56 +17,34 @@ REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_locust);
 
 namespace {
 
-constexpr int k_locust_cloud_groups = 5; // SprMain2 g30–34
-
-void apply_float_height(figure &f, int height) {
-    f.target_height = (uint8_t)height;
-    f.current_height = (uint8_t)height;
-    // Refresh so advance_figure_tick does not decay height while idle/drifting.
-    f.height_adjusted_ticks = 32;
-}
-
 int random_15bit() {
     random_generate_next();
     return (uint16_t)random_short() & 0x7fff;
 }
 
 int flood_month_before() {
-    const int month = g_floods.season / 30 - 1;
+    const int month = g_floods.season_month - 1;
     return month < 0 ? month + 12 : month;
+}
+
+bool field_in_use(const building& field) {
+    return field.state == BUILDING_STATE_VALID || field.state == BUILDING_STATE_MOTHBALLED;
 }
 
 } // namespace
 
 void figure_locust::on_create() {
-    base.terrain_usage = TERRAIN_USAGE_ANY;
-    base.use_cross_country = true;
+    base.terrain_usage = TERRAIN_USAGE_ANYWHERE;
     base.allow_move_type = EMOVE_AMPHIBIAN;
-    apply_float_height(base, current_params().float_height);
-    runtime_data().cloud_variant = (uint8_t)(random_byte() % k_locust_cloud_groups);
     advance_action(ACTION_120_LOCUST_CREATED);
-}
-
-void figure_locust::on_post_load() {
-    base.use_cross_country = true;
-    base.allow_move_type = EMOVE_AMPHIBIAN;
-    base.terrain_usage = TERRAIN_USAGE_ANY;
-    apply_float_height(base, current_params().float_height);
-    auto &d = runtime_data();
-    if (d.cloud_variant >= k_locust_cloud_groups) {
-        d.cloud_variant = 0;
-    }
 }
 
 void figure_locust::figure_action() {
     const auto& p = current_params();
-    base.use_cross_country = true;
-    base.allow_move_type = EMOVE_AMPHIBIAN;
-    base.terrain_usage = TERRAIN_USAGE_ANY;
-    apply_float_height(base, p.float_height);
+    base.terrain_usage = TERRAIN_USAGE_ANYWHERE;
 
     building* field = building_get(runtime_data().farm_id);
-    if (!field || !field->is_valid() || !field->is_farm()) {
+    if (!field || !field_in_use(*field)) {
         poof();
         return;
     }
@@ -79,21 +56,30 @@ void figure_locust::figure_action() {
 
     case ACTION_120_LOCUST_CREATED:
         base.set_flag(e_figure_flag_invisible, true);
+        base.animctx.restart();
         if (--base.wait_ticks < 1) {
-            if (!base.destination_tile.valid()) {
+            base.figure_route_add();
+            if (base.routing_path_id < 1) {
                 poof();
-                break;
+            } else {
+                advance_action(ACTION_121_LOCUST_GOING_TO_FIELD);
             }
-            advance_action(ACTION_121_LOCUST_GOING_TO_FIELD);
         }
         break;
 
     case ACTION_121_LOCUST_GOING_TO_FIELD:
         base.set_flag(e_figure_flag_invisible, false);
-        if (do_goto(base.destination_tile, TERRAIN_USAGE_ANY, ACTION_122_LOCUST_EATING, ACTION_123_LOCUST_FLYING_OFF)) {
-            base.destination_tile = field->tile;
-        } else if (action_state() == ACTION_123_LOCUST_FLYING_OFF) {
+        base.move_ticks(base.speed_multiplier);
+        if (direction() == DIR_FIGURE_REROUTE) {
+            advance_action(ACTION_120_LOCUST_CREATED);
+            base.wait_ticks = 1;
+            base.route_remove();
+        } else if (direction() == DIR_FIGURE_CAN_NOT_REACH) {
+            field->distance_from_entry = 0;
             poof();
+        } else if (direction() == DIR_FIGURE_NONE) {
+            advance_action(ACTION_122_LOCUST_EATING);
+            base.destination_tile = field->tile;
         }
         break;
 
@@ -118,10 +104,9 @@ void figure_locust::figure_action() {
 
     case ACTION_123_LOCUST_FLYING_OFF:
         base.set_flag(e_figure_flag_invisible, false);
-        if (!base.destination_tile.valid()
-            || do_goto(base.destination_tile, TERRAIN_USAGE_ANY, ACTION_123_LOCUST_FLYING_OFF,
-              ACTION_123_LOCUST_FLYING_OFF)
-            || direction() == DIR_FIGURE_CAN_NOT_REACH || direction() == DIR_FIGURE_REROUTE) {
+        base.move_ticks(base.speed_multiplier);
+        if (direction() == DIR_FIGURE_REROUTE || direction() == DIR_FIGURE_CAN_NOT_REACH
+            || direction() == DIR_FIGURE_NONE) {
             poof();
         }
         break;
@@ -133,22 +118,11 @@ void figure_locust::figure_action() {
 }
 
 void figure_locust::update_animation() {
-    // Timing strip from JS walk (g30); main_image_update remaps to variant group.
-    image_set_animation(animkeys().walk);
+    image_set_animation(action_state() == ACTION_122_LOCUST_EATING ? animkeys().eating : animkeys().walk);
 }
 
 void figure_locust::main_image_update() {
-    // Cloud strip is NOT 8-dir (group has only 6 frames). Default
-    // start+dir+8*frame would read past the atlas into neighboring groups.
-    const int variant = std::min<int>(runtime_data().cloud_variant, k_locust_cloud_groups - 1);
-    const int start = image_id_from_group(PACK_EXPANSION_SPR, 30 + variant);
-    // Pharaoh-only / missing SprMain2: hide rather than garbage atlas reads.
-    if (start <= 0) {
-        base.main_image_id = 0;
-        return;
-    }
-    const int frame = std::min<int>(base.animctx.current_frame(), 5);
-    base.main_image_id = start + frame;
+    base.main_image_id = base.animctx.start_frame() + base.animctx.current_frame();
 }
 
 void figure_locust::start_plague() {
@@ -170,7 +144,10 @@ void figure_locust::update_month(int month) {
     const int width = g_scenario.map.width;
     const int side = std::max<int>(1, p.square_side);
     int locusts = 0;
-    buildings_valid_farms_do([&](building& farm) {
+    for (auto& farm : city_buildings()) {
+        if (farm.state == BUILDING_STATE_UNUSED || !farm.is_farm()) {
+            continue;
+        }
         for (int i = 0; i < p.locusts_per_farm; i++) {
             const int offset = random_15bit() % std::max(1, width / 4);
             const tile2i spawn(width * 7 / 8 - offset, width * 3 / 8 - offset);
@@ -196,7 +173,7 @@ void figure_locust::update_month(int month) {
             }
             d.worker_id = 0;
         }
-    });
+    }
 
     events::emit(event_sound_track{"plague_locusts"});
     logs::info("[disaster] locusts hit the farms, locusts=%d countdown=%d", locusts, g_city.plagues.locusts_countdown);

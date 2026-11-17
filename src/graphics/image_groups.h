@@ -666,9 +666,7 @@ extern const e_pack_tokens_t e_pack_type_tokens;
 #define GROUP_FIGURE_LION PACK_EXPANSION_SPR, 5
 // Cleopatra SprMain2 bmp scorpion — walk group 10 (entry 727+), after Lion 5–9.
 #define GROUP_FIGURE_SCORPION PACK_EXPANSION_SPR, 10
-// Cleopatra SprMain2 bmp locust — cloud swarm group 30 (6 frames, non-8-dir); variants 31–34.
-#define GROUP_FIGURE_FROG PACK_EXPANSION_SPR, 22
-#define GROUP_FIGURE_LOCUST PACK_EXPANSION_SPR, 30
+#define GROUP_FIGURE_FROG     PACK_EXPANSION_SPR, 22
 // Cleopatra SprMain2 bmp mummy — walk group 40 (entry 1919+); attack 41; idle 42.
 #define GROUP_FIGURE_MUMMY PACK_EXPANSION_SPR, 40
 #define GROUP_FIGURE_MUMMY_ATTACK PACK_EXPANSION_SPR, 41

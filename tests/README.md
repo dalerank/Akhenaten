@@ -122,7 +122,7 @@ See **IT1** in `REMAKE_TODO.md` / `REMAKE_NOTES.md` §4.
 | `90_plagued_citizen.js` | Plague carriers: spawn from infected house, roadblock ignore, herbalist/Isis cure |
 | `92_ironwill.js` | Ironwill: mid-game save/load/autosave blocked; C++ write belt; exit checkpoint exempt |
 | `97_ptah_scorpion_curse.js` | Ptah scorpion raid (CF6): feature ON spawn at temple when no industry; OFF / no-temple fallback → no scorpions; raid prey skips ostrich; 1-day timer poof |
-| `94_locust_swarm.js` | CF2 locust: register, cloud variant/float, post_load; Osiris/EVENT/pak-chain/console start the OG countdown |
+| `94_locust_swarm.js` | Locust: register, walk anim; Osiris/EVENT/pak-chain/console start the OG countdown |
 | `85_mummy_attack.js` | BF3 mummy: register; `EVENT_TYPE_MUMMY` msg 496 without a source; mummy from a temple is a soldier target + kill |
 | `91_popup_messages.js` | OG Popup Messages: category map + banner/click-open vs modal; unlisted stays modal |
 | `69_scorpion_spawn.js` | Cleopatra `FIGURE_SCORPION`: spawn + type + `update_animation` → `walk` (SprMain2 group 10; CF3c) |
@@ -321,9 +321,8 @@ A new test binding goes into the matching domain file; a new domain file needs a
 | `__test_plagues_frogs_countdown()` | ticks | OG `city_frogs_countdown` |
 | `__test_plagues_mummies_max()` | count | OG `mummies_max` |
 | `__test_plagues_tick(n)` | undefined | Run n city ticks of the plague countdowns |
-| `__test_floods_season()` | season | `g_floods.season` (flood month = season / 30) |
-| `__test_locust_cloud_variant(fid)` | 0..4 | CF2: SprMain2 group variant |
-| `__test_locust_post_load(fid)` | 0\|1 | CF2: exercise `on_post_load` restore |
+| `__test_floods_season_month()` | month | OG floods `season_month` (`season / 30`, 0 without floodplain) |
+| `__test_figure_use_cross_country(fid)` / `__test_figure_terrain_usage(fid)` | 0\|1 / usage | Figure movement mode |
 | `__test_figure_current_height(fid)` | height | Figure `current_height` (float) |
 | `__test_lion_setup_curse_raid(fid, days)` | 0\|1 | Mark `FIGURE_LION` as Bast curse raid with duration days |
 | `__test_lion_is_curse_raid(fid)` | 0\|1 | Whether lion has curse-raid flag |

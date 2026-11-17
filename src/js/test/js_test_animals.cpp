@@ -36,39 +36,6 @@
 #include <algorithm>
 #include <cstring>
 
-static int __test_locust_cloud_variant(int fid) {
-    figure* f = figure_get(fid);
-    if (!f || !f->is_alive() || f->type != FIGURE_LOCUST) {
-        return -1;
-    }
-    return figure_locust(f).runtime_data().cloud_variant;
-}
-ANK_FUNCTION_1(__test_locust_cloud_variant);
-
-static int __test_locust_post_load(int fid) {
-    figure* f = figure_get(fid);
-    if (!f || !f->is_alive() || f->type != FIGURE_LOCUST) {
-        return 0;
-    }
-    // Simulate corrupt save flags then restore via on_post_load.
-    f->allow_move_type = EMOVE_TERRAIN;
-    f->use_cross_country = false;
-    f->current_height = 0;
-    figure_locust(f).runtime_data().cloud_variant = 99;
-    figure_locust(f).on_post_load();
-    if (f->allow_move_type != EMOVE_AMPHIBIAN || !f->use_cross_country) {
-        return 0;
-    }
-    if (figure_locust(f).runtime_data().cloud_variant != 0) {
-        return 0;
-    }
-    if (f->current_height <= 0) {
-        return 0;
-    }
-    return 1;
-}
-ANK_FUNCTION_1(__test_locust_post_load);
-
 static int __test_locust_farm(int fid) {
     figure* f = figure_get(fid);
     if (!f || !f->is_alive() || f->type != FIGURE_LOCUST) {
@@ -82,6 +49,18 @@ static void __test_locust_update_month(int month) {
     figure_locust::update_month(month);
 }
 ANK_FUNCTION_1(__test_locust_update_month);
+
+static int __test_figure_use_cross_country(int fid) {
+    figure* f = figure_get(fid);
+    return (f && f->is_alive() && f->use_cross_country) ? 1 : 0;
+}
+ANK_FUNCTION_1(__test_figure_use_cross_country);
+
+static int __test_figure_terrain_usage(int fid) {
+    figure* f = figure_get(fid);
+    return (f && f->is_alive()) ? f->terrain_usage : -1;
+}
+ANK_FUNCTION_1(__test_figure_terrain_usage);
 
 static int __test_frog_house(int fid) {
     figure* f = figure_get(fid);
@@ -143,10 +122,10 @@ static void __test_plagues_tick(int n) {
 }
 ANK_FUNCTION_1(__test_plagues_tick);
 
-static int __test_floods_season() {
-    return g_floods.season;
+static int __test_floods_season_month() {
+    return g_floods.season_month;
 }
-ANK_FUNCTION(__test_floods_season);
+ANK_FUNCTION(__test_floods_season_month);
 
 static int __test_lion_setup_curse_raid(int fid, int days) {
     figure* f = figure_get(fid);

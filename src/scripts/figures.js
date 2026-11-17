@@ -535,25 +535,17 @@ figure_cart {
 	empty: { pack:PACK_SPR_MAIN, id:77 }
 }
 
-// Locust swarm — Cleopatra SprMain2 bmp "locust":
-// groups 30–34 = 6-frame cloud strips (non-8-dir). Runtime picks variant 0–4.
-// Walk JS id=30 is timing only; main_image_update remaps to g30+variant.
-// Must override main_image_update (no dir+8*frame) — see figure_locust.cpp.
-// big_image: Cleopatra Unloaded pack 25 slot FIGURE_LOCUST (107).
-// OG city/locusts.h + city_disasters.h values.
 figure_locust {
 	animations {
 		walk { pack:PACK_EXPANSION_SPR, id:30, max_frames:6 }
-		idle { pack:PACK_EXPANSION_SPR, id:30, max_frames:6 }
-		death { pack:PACK_EXPANSION_SPR, id:30, max_frames:6, loop:false }
+		eating { pack:PACK_EXPANSION_SPR, id:32, max_frames:6 }
 		big_image { pack:PACK_EXPANSION, id:1, offset:7 }
 	}
 
 	category: figure_category_inactive
-	max_damage: 1
+	max_damage: 10
 	attack_value: 0
-	terrain_usage: TERRAIN_USAGE_ANY
-	max_roam_length: 320
+	terrain_usage: TERRAIN_USAGE_ANYWHERE
 
 	countdown_after_plague: 2632
 	countdown_fly_off: 1000
@@ -562,7 +554,6 @@ figure_locust {
 	square_side: 3
 	max_start_delay: 300
 	happiness_loss: 15
-	float_height: 20
 }
 
 // OG FIG_SHIPWRECK: 36 animation frames then gone; settle to open water once (wait=1000).

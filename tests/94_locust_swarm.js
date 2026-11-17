@@ -1,9 +1,8 @@
-// FIGURE_LOCUST register + cloud anim + post_load; Osiris curse / EVENT / pak chain / console command
+// FIGURE_LOCUST register + walk anim; Osiris curse / EVENT / pak chain / console command
 // start the OG countdown (-1: waits for the flood) without spawning locusts. OG behaviour itself: test 550.
 // Markers:
 //   [test-marker] locust_registered_ok
 //   [test-marker] locust_anim_walk_ok
-//   [test-marker] locust_post_load_ok
 //   [test-marker] locust_osiris_countdown_ok
 //   [test-marker] locust_event_countdown_ok
 //   [test-marker] locust_cheat_ok
@@ -47,16 +46,10 @@ function run_test() {
     __test_figure_set_action(probe, ACTION_LOCUST_GOING_TO_FIELD)
     __test_figure_update_animation(probe)
     var key = __figure_get_anim_key(probe)
-    var variant = __test_locust_cloud_variant(probe)
-    if (key != 'walk' || variant < 0 || variant > 4 || __test_figure_current_height(probe) <= 0) {
-        return test94_fail('anim key=' + key + ' variant=' + variant + ' height=' + __test_figure_current_height(probe))
+    if (key != 'walk') {
+        return test94_fail('anim key=' + key)
     }
     __log_marker('locust_anim_walk_ok')
-
-    if (!__test_locust_post_load(probe)) {
-        return test94_fail('on_post_load restore failed')
-    }
-    __log_marker('locust_post_load_ok')
     city.figures.remove_figures(FIGURE_LOCUST)
 
     if (!test94_try_locust_curse(40) || test94_count_locusts() != 0) {
@@ -92,7 +85,7 @@ function run_test() {
 }
 
 function check_valid() {
-    var markers = ['locust_registered_ok', 'locust_anim_walk_ok', 'locust_post_load_ok', 'locust_osiris_countdown_ok',
+    var markers = ['locust_registered_ok', 'locust_anim_walk_ok', 'locust_osiris_countdown_ok',
         'locust_event_countdown_ok', 'locust_cheat_ok', 'locust_pak_chain_ok']
     for (var i = 0; i < markers.length; i++) {
         if (!__test_find_inlog('[test-marker] ' + markers[i])) {

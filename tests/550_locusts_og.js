@@ -18,7 +18,7 @@ function test550_fail(msg) {
 }
 
 function test550_fire_month() {
-    var flood_month = ((__test_floods_season() / 30) | 0) - 1
+    var flood_month = __test_floods_season_month() - 1
     if (flood_month < 0) {
         flood_month += 12
     }
