@@ -816,7 +816,9 @@ ANK_FUNCTION_2(__test_royal_tomb_part_image);
 
 // The part a guild worker of this type would be sent to (probe, nothing assigned), -1 if none.
 static int __test_royal_tomb_find_work(int figure_type, int only_stage) {
-    auto* p = building_royal_tomb::find_work((e_figure_type)figure_type, 0, false, only_stage);
+    auto* p = (figure_type == FIGURE_TOMB_ARTISAN && only_stage >= 0)
+                ? building_royal_tomb::find_artisan_work(only_stage)
+                : building_royal_tomb::find_work((e_figure_type)figure_type, 0, false);
     return p ? p->part_index() : -1;
 }
 ANK_FUNCTION_2(__test_royal_tomb_find_work);
@@ -848,7 +850,7 @@ static int __test_royal_tomb_attach_worker(int bid, int figure_type) {
         }
     } else if (figure_type == FIGURE_TOMB_ARTISAN) {
         f->action_state = ACTION_14_TOMB_ARTISAN_WORK;
-        if (auto* impl = static_cast<figure_tomb_artisan*>(f->dcast())) {
+        if (auto* impl = smart_cast<figure_tomb_artisan>(f)) {
             impl->runtime_data().destination_bid = part->id;
         }
     }

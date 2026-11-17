@@ -17,7 +17,7 @@ building* building_artisans_guild::find_monument_task(e_resource material) {
     if (stage < 0) {
         return nullptr;
     }
-    if (building_royal_tomb* part = building_royal_tomb::find_work(FIGURE_TOMB_ARTISAN, 0, false, stage)) {
+    if (building_royal_tomb* part = building_royal_tomb::find_artisan_work(stage)) {
         return &part->base;
     }
     // Not OG: the Enhanced sphinx painting stage also takes artisans.

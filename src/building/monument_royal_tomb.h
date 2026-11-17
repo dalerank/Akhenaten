@@ -132,7 +132,8 @@ public:
     static bool part_tile_allowed(const royal_tomb_layout& l, int part, tile2i t);
     static bool has_unfinished_royal_tomb(e_building_type type);
     // Stonemasons / tomb artisans: the first royal tomb part that takes this figure (0 = none).
-    static building_royal_tomb* find_work(e_figure_type type, figure_id fid, bool assign, int only_stage = -1);
+    static building_royal_tomb* find_work(e_figure_type type, figure_id fid, bool assign);
+    static building_royal_tomb* find_artisan_work(int stage);
     static bool goals_reached();
     static void seal_all_finished();
 

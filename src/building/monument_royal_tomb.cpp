@@ -225,9 +225,7 @@ bool building_royal_tomb::part_has_active_worker() const {
             && (a == ACTION_0_MASON_CREATED || a == ACTION_1_MASON_GOING || a == ACTION_9_MASON_WORK_OBELISK)) {
             return true;
         }
-        if (f->type == FIGURE_TOMB_ARTISAN
-            && (a == ACTION_10_TOMB_ARTISAN_CREATED || a == ACTION_11_TOMB_ARTISAN_GOING
-                || a == ACTION_14_TOMB_ARTISAN_WORK)) {
+        if (f->type == FIGURE_TOMB_ARTISAN && (a == ACTION_11_TOMB_ARTISAN_GOING || a == ACTION_14_TOMB_ARTISAN_WORK)) {
             return true;
         }
     }
@@ -269,7 +267,7 @@ bool building_royal_tomb::check_work_for_figure(e_figure_type type, figure_id fi
     return true;
 }
 
-building_royal_tomb* building_royal_tomb::find_work(e_figure_type type, figure_id fid, bool assign, int only_stage) {
+building_royal_tomb* building_royal_tomb::find_work(e_figure_type type, figure_id fid, bool assign) {
     // OG searches the tomb types small, medium, large, grand in turn, every part in id order.
     static const e_building_type order[]
       = {BUILDING_SMALL_ROYAL_TOMB, BUILDING_MEDIUM_ROYAL_TOMB, BUILDING_LARGE_ROYAL_TOMB, BUILDING_GRAND_ROYAL_TOMB};
@@ -284,7 +282,7 @@ building_royal_tomb* building_royal_tomb::find_work(e_figure_type type, figure_i
             }
             for (building* pb = &m->base; pb; pb = pb->has_next() ? pb->next() : nullptr) {
                 auto* tomb = pb->dcast_royal_tomb();
-                if (!tomb || (only_stage >= 0 && tomb->stage() != only_stage)) {
+                if (!tomb) {
                     continue;
                 }
                 if (bt == BUILDING_GRAND_ROYAL_TOMB && tomb->stage() >= ROYAL_TOMB_STAGE_DONE) {
@@ -297,6 +295,14 @@ building_royal_tomb* building_royal_tomb::find_work(e_figure_type type, figure_i
         }
     }
     return nullptr;
+}
+
+building_royal_tomb* building_royal_tomb::find_artisan_work(int stage) {
+    building* found = buildings_valid_first([stage](building& b) {
+        auto* tomb = b.dcast_royal_tomb();
+        return tomb && tomb->stage() == stage && tomb->check_work_for_figure(FIGURE_TOMB_ARTISAN, 0, false);
+    });
+    return found ? found->dcast_royal_tomb() : nullptr;
 }
 
 bool building_royal_tomb::work_tick(figure& f) {
