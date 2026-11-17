@@ -151,6 +151,15 @@ static void __test_figure_set_wait_ticks(int fid, int ticks) {
 }
 ANK_FUNCTION_2(__test_figure_set_wait_ticks);
 
+static void __test_figure_set_roam_length(int fid, int length) {
+    figure* f = figure_get(fid);
+    if (!f || !f->is_alive()) {
+        return;
+    }
+    f->roam_length = (int16_t)length;
+}
+ANK_FUNCTION_2(__test_figure_set_roam_length);
+
 static int __test_figure_get_action(int fid) {
     figure* f = figure_get(fid);
     if (!f || !f->is_alive()) {

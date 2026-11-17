@@ -47,8 +47,20 @@ int building_artisans_guild::max_active_artisans() const {
     return 0;
 }
 
+int building_artisans_guild::artisans_out() const {
+    int count = 0;
+    for (int i = 0; i < MAX_FIGURES; i++) {
+        figure* f = figure_get(i);
+        const bool counted = f->state == FIGURE_STATE_ALIVE || f->state == FIGURE_STATE_DYING;
+        if (counted && f->type == FIGURE_TOMB_ARTISAN && f->has_home(&base)) {
+            count++;
+        }
+    }
+    return count;
+}
+
 bool building_artisans_guild::can_spawn_tomb_artisan() const {
-    return get_figures_number(FIGURE_TOMB_ARTISAN) < max_active_artisans();
+    return artisans_out() < max_active_artisans();
 }
 
 void building_artisans_guild::update_animation() {
@@ -72,28 +84,8 @@ void building_artisans_guild::spawn_figure() {
     }
     base.figure_spawn_delay = 0;
 
-    // OG building_artisans_guild_spawn_figure: a clay task first, then a paint task; each trip takes
-    // one load of that material. OG spawns an invisible corpse when neither is possible — nothing
-    // visible comes of it, so no figure is made here.
-    const int load = params.material_load;
-    e_resource material = RESOURCE_NONE;
-    building* site = nullptr;
-    for (e_resource r : {RESOURCE_CLAY, RESOURCE_PAINT}) {
-        if (stored_amount(r) < load) {
-            continue;
-        }
-        site = find_monument_task(r);
-        if (site) {
-            material = r;
-            break;
-        }
-    }
-    if (!site) {
-        return;
-    }
-
-    figure* f = create_figure_generic(FIGURE_TOMB_ARTISAN, (e_figure_action)ACTION_12_TOMB_ARTISAN_ROAM,
-      BUILDING_SLOT_SERVICE, DIR_4_BOTTOM_LEFT);
+    figure* f
+      = create_roaming_figure(FIGURE_TOMB_ARTISAN, (e_figure_action)ACTION_12_TOMB_ARTISAN_ROAM, BUILDING_SLOT_SERVICE);
     auto* artisan = smart_cast<figure_tomb_artisan>(f);
     if (!artisan) {
         return;
@@ -102,9 +94,16 @@ void building_artisans_guild::spawn_figure() {
     f->roam_length = 0;
     f->wait_ticks = 0;
     base.progress = 0;
-    if (!artisan->assign_task(site, material)) {
-        f->poof();
-        return;
+    const int load = params.material_load;
+    for (e_resource r : {RESOURCE_CLAY, RESOURCE_PAINT}) {
+        if (stored_amount(r) < load) {
+            continue;
+        }
+        building* site = find_monument_task(r);
+        if (site && artisan->assign_task(site, r)) {
+            consume_resource(r, (int16_t)load);
+            return;
+        }
     }
-    consume_resource(material, (int16_t)load);
+    artisan->become_ghost();
 }

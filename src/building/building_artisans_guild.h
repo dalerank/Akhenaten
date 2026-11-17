@@ -14,6 +14,7 @@ public:
     virtual void update_animation() override;
 
     int max_active_artisans() const;
+    int artisans_out() const;
     bool can_spawn_tomb_artisan() const;
 
     static building* find_monument_task(e_resource material);

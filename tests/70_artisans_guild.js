@@ -1,7 +1,7 @@
 // Artisans guild (OG building_artisans_guild_spawn_figure), driven through the Enhanced
 // gameplay_sphinx_artisans painting stage (needs paint and clay):
 // - a clay trip is sent before a paint trip, each trip takes one load (100) of one material;
-// - no stock, no artisan;
+// - no stock, no artisan on the way (OG: an invisible ghost that takes no stock);
 // - staffing caps active artisans at 1/2/3/4 for 25/50/75/100%;
 // - the guild animates only with paint in stock.
 // Markers:
@@ -149,6 +149,8 @@ function run_test() {
     __test70_ok.no_stock = true
 
     // 50% staffing → at most two artisans out, even with four loads of clay.
+    // The no-stock spawns above left OG ghost artisans holding slots; clear them first.
+    city.figures.remove_figures(FIGURE_TOMB_ARTISAN)
     b = city.get_building(guild_bid)
     __test70_workers = Math.ceil(b.max_workers / 2)
     test70_set_stock(b, 0, 400)

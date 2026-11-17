@@ -46,6 +46,19 @@ bool figure_tomb_artisan::try_find_task() {
     return false;
 }
 
+void figure_tomb_artisan::become_ghost() {
+    runtime_data().ghost = 1;
+    base.set_flag(e_figure_flag_invisible);
+    advance_action(FIGURE_ACTION_149_CORPSE);
+}
+
+void figure_tomb_artisan::on_post_load() {
+    figure_impl::on_post_load();
+    if (runtime_data().ghost) {
+        base.set_flag(e_figure_flag_invisible);
+    }
+}
+
 void figure_tomb_artisan::figure_action() {
     const auto& params = current_params();
     base.use_cross_country = false;
@@ -64,16 +77,9 @@ void figure_tomb_artisan::figure_action() {
     }
 
     switch (action_state()) {
-    case ACTION_20_TOMB_ARTISAN_DESTROY:
-        poof();
-        break;
-
-    case ACTION_10_TOMB_ARTISAN_CREATED:
-        advance_action(ACTION_11_TOMB_ARTISAN_GOING);
-        break;
-
     case ACTION_12_TOMB_ARTISAN_ROAM: {
         base.wait_ticks++;
+        random_generate_next();
         const int search_rand = params.task_search_rand > 0 ? (random_short() % params.task_search_rand) : 0;
         if (base.wait_ticks > params.task_search_base + search_rand) {
             try_find_task();
@@ -87,8 +93,9 @@ void figure_tomb_artisan::figure_action() {
         if (++base.roam_length >= base.max_roam_length) {
             tile2i road = map_closest_road_within_radius(*bhome, params.guild_road_radius);
             if (!road.valid()) {
-                poof();
-                return;
+                advance_action(FIGURE_ACTION_149_CORPSE);
+                base.roam_ticks(1);
+                break;
             }
             base.destination_tile = road;
             base.roam_length = 0;
@@ -100,6 +107,7 @@ void figure_tomb_artisan::figure_action() {
     }
 
     case ACTION_11_TOMB_ARTISAN_GOING: {
+        base.set_flag(e_figure_flag_invisible, false);
         // OG ROADS_OR_MONUMENT for a royal tomb is building.guild_worker_terrain ANY in its config.
         const e_terrain_usage terrain
           = (b_dest && b_dest->is_valid())
@@ -119,6 +127,7 @@ void figure_tomb_artisan::figure_action() {
     }
 
     case ACTION_14_TOMB_ARTISAN_WORK: {
+        base.set_flag(e_figure_flag_invisible, false);
         if (!b_dest || !b_dest->is_valid()) {
             advance_action(ACTION_12_TOMB_ARTISAN_ROAM);
             base.wait_ticks = 0;
@@ -128,7 +137,6 @@ void figure_tomb_artisan::figure_action() {
         if (auto* tomb = b_dest->dcast_royal_tomb()) {
             base.set_flag(e_figure_flag_invisible);
             if (tomb->work_tick(base)) {
-                base.set_flag(e_figure_flag_invisible, false);
                 tomb->remove_worker(id());
                 advance_action(ACTION_16_TOMB_ARTISAN_RETURN_HOME);
             }
@@ -166,14 +174,17 @@ void figure_tomb_artisan::figure_action() {
         break;
     }
 
-    case ACTION_16_TOMB_ARTISAN_RETURN_HOME:
+    case ACTION_16_TOMB_ARTISAN_RETURN_HOME: {
         base.set_flag(e_figure_flag_invisible, false);
         // OG return_and_disappear: the destination is still the work site after WORK, so the
         // artisan vanishes there; only a roam that ran out walks to the guild road first.
-        if (do_goto(base.destination_tile, TERRAIN_USAGE_ANY, -1, ACTION_20_TOMB_ARTISAN_DESTROY)) {
+        const bool arrived = do_goto(base.destination_tile, TERRAIN_USAGE_ANY, ACTION_16_TOMB_ARTISAN_RETURN_HOME,
+          ACTION_16_TOMB_ARTISAN_RETURN_HOME);
+        if (arrived || base.direction == DIR_FIGURE_CAN_NOT_REACH || base.direction == DIR_FIGURE_REROUTE) {
             poof();
         }
         break;
+    }
     }
 }
 
