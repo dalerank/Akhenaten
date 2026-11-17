@@ -463,7 +463,7 @@ void figure_hyena::main_image_update() {
         const int base_img = death.first_img();
         // OG WILD_CORPSE_LAST_FRAME = 5.
         const int frame = base.wait_ticks > 5 ? 5 : base.wait_ticks;
-        if (base_img > 0 || base.force_valid_animation) {
+        if (base_img > 0) {
             base.main_image_id = base_img + frame;
         }
         return;

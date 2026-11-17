@@ -67,9 +67,6 @@ function run_test() {
     __test_figure_set_leading(boy2, boy1)
     __test_figure_set_collecting_item(boy1, 0)
     __test_figure_set_collecting_item(boy2, 0)
-    test_figure_set_force_valid_animation(buyer, true)
-    test_figure_set_force_valid_animation(boy1, true)
-    test_figure_set_force_valid_animation(boy2, true)
 
     // WAIT_FOR_FERRY: no follow (tile stays), still visible
     __test_figure_set_action(buyer, ACTION_7_WAIT_FOR_FERRY)

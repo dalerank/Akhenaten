@@ -58,9 +58,6 @@ function run_test() {
 
     test_figure_set_home(hunter, bid)
     test_figure_set_speed(ostrich, 0)
-    // Under --no-resource hunt/pack/unload need animctx to tick without atlas.
-    test_figure_set_force_valid_animation(hunter, true)
-    test_figure_set_force_valid_animation(ostrich, true)
     __test_figure_set_action(ostrich, ACTION_19_OSTRICH_IDLE)
     __test_figure_set_action(hunter, ACTION_8_RECALCULATE)
 

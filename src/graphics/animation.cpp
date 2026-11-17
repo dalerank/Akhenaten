@@ -73,11 +73,10 @@ void animation_context::setup(const animation_t &anim) {
     can_reverse = is_reverse || anim.can_reverse;
     hashtime = anim.hashtime;
     flags = anim.flags;
-    force_valid = false;
 }
 
 void animation_context::update(bool refresh_only) {
-    if (!valid()) {
+    if (!ticks()) {
         return;
     }
 

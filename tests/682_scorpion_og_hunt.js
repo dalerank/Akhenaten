@@ -114,7 +114,6 @@ function run_test() {
     test682_clear()
     scorpion = test_figure_create(FIGURE_SCORPION, x, y)
     prey = test682_create(FIGURE_IMMIGRANT, x, y)
-    test_figure_set_force_valid_animation(scorpion, true)
     __test_figure_set_action(scorpion, 18)
     if (__test_figure_combat_attack_at(scorpion, x, y) != 1) {
         return test682_fail('scorpion want in_attack against a citizen')

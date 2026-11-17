@@ -387,10 +387,6 @@ function test_figure_set_speed(fid, speed) {
     __test_figure_set_speed(fid, speed)
 }
 
-function test_figure_set_force_valid_animation(fid, enabled) {
-    __test_figure_set_force_valid_animation(fid, enabled ? 1 : 0)
-}
-
 function test_figure_get_damage(fid) {
     return __test_figure_get_damage(fid)
 }

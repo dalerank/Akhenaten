@@ -97,7 +97,6 @@ public:
     uint16_t cart_image_id;
     bool use_cart;
     animation_context animctx;
-    bool force_valid_animation;
 
     uint8_t alternative_location_index;
     figure_id next_figure;
@@ -330,8 +329,8 @@ public:
     // image.c
     void image_set_animation(const animation_t &anim);
     void image_set_animation(const xstring &anim);
-    void image_set_animation(int collection, int group, int offset = 0, int max_frames = 12, int duration = 1, bool loop = true);
-    void set_force_valid_animation(bool enabled);
+    void image_set_animation(int collection, int group, int offset = 0, int max_frames = 12, int duration = 1,
+      bool loop = true);
     void figure_image_update(bool refresh_only);
     void refresh_image_for_orientation();
     int figure_image_corpse_offset();

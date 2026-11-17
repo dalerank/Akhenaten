@@ -53,7 +53,6 @@ function run_test() {
     if (!fid) {
         return test671_fail('herd create failed')
     }
-    test_figure_set_force_valid_animation(fid, true)
 
     // SPAWNED (24): invisible while waiting, CHOOSE (8) when the wait runs out.
     __test_figure_set_action(fid, 24)

@@ -35,8 +35,6 @@ function run_test() {
 
     test_figure_set_home(hunter, bid)
     test_figure_set_speed(prey, 0)
-    test_figure_set_force_valid_animation(hunter, true)
-    test_figure_set_force_valid_animation(prey, true)
     __test_figure_set_action(prey, ACTION_19_OSTRICH_IDLE)
     __test_figure_set_action(hunter, ACTION_8_RECALCULATE)
 

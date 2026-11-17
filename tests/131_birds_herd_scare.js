@@ -40,9 +40,6 @@ function run_test() {
     test_figure_set_home(hunter, bid)
     test_figure_set_speed(prey, 0)
     test_figure_set_speed(companion, 0)
-    test_figure_set_force_valid_animation(hunter, true)
-    test_figure_set_force_valid_animation(prey, true)
-    test_figure_set_force_valid_animation(companion, true)
     __test_figure_set_action(prey, 19) // ACTION_19_BIRDS_IDLE
     __test_figure_set_action(companion, 19)
     __test_figure_set_action(hunter, ACTION_8_RECALCULATE)

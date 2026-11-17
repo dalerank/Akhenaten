@@ -211,6 +211,7 @@ static int __test_figure_death_frame(int fid) {
     if (!f || (f->state != FIGURE_STATE_ALIVE && f->state != FIGURE_STATE_DYING)) {
         return -1;
     }
+    f->dcast()->main_image_update();
     // main_image_id is 16 bits; without resources the first image id is a negative sentinel.
     return (uint16_t)(f->main_image_id - f->dcast()->anim(animkeys().death).first_img());
 }
@@ -249,15 +250,6 @@ static int __test_create_immigrant(int bid, int num_people) {
     return f->id;
 }
 ANK_FUNCTION_2(__test_create_immigrant);
-
-static void __test_figure_set_force_valid_animation(int fid, int enabled) {
-    figure* f = figure_get(fid);
-    if (!f || !f->is_valid()) {
-        return;
-    }
-    f->set_force_valid_animation(enabled != 0);
-}
-ANK_FUNCTION_2(__test_figure_set_force_valid_animation);
 
 static int __test_figure_get_damage(int fid) {
     figure* f = figure_get(fid);

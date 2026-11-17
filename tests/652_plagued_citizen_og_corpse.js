@@ -23,7 +23,6 @@ function t652_corpse(t) {
     if (!fid) {
         return 0
     }
-    test_figure_set_force_valid_animation(fid, true)
     __test_figure_kill(fid)
     return fid
 }

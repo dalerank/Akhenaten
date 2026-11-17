@@ -582,11 +582,9 @@ void figure_predator::main_image_update() {
         const int base_img = death.first_img();
         const int last_frame = std::max(0, death.max_frames - 1);
         const int frame = std::min<int>(std::max<int>(0, base.wait_ticks), last_frame);
-        if (base_img > 0 || base.force_valid_animation) {
-            const int direction = predator_config().death_has_directions ? base.figure_image_direction() : 0;
-            const int stride = predator_config().death_has_directions ? 8 : 1;
-            base.main_image_id = base_img + frame * stride + direction;
-        }
+        const int direction = predator_config().death_has_directions ? base.figure_image_direction() : 0;
+        const int stride = predator_config().death_has_directions ? 8 : 1;
+        base.main_image_id = base_img + frame * stride + direction;
         return;
     }
 

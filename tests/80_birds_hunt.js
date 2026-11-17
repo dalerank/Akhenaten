@@ -43,8 +43,6 @@ function run_test() {
     test_figure_set_speed(ostrich, 0)
     test_figure_set_speed(antelope, 0)
     test_figure_set_speed(bird, 0)
-    test_figure_set_force_valid_animation(hunter, true)
-    test_figure_set_force_valid_animation(bird, true)
     __test_figure_set_action(ostrich, ACTION_19_OSTRICH_IDLE)
     __test_figure_set_action(antelope, ACTION_19_OSTRICH_IDLE)
     __test_figure_set_action(bird, 19) // ACTION_19_BIRDS_IDLE

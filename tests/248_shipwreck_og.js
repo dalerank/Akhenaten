@@ -38,7 +38,6 @@ function run_test() {
         return test248_fail('shipwreck create failed')
     }
     __test_figure_set_wait_ticks(wreck, 0)
-    test_figure_set_force_valid_animation(wreck, true)
 
     var before = __figure_get_tile(wreck)
     __test_figure_action_perform(wreck)

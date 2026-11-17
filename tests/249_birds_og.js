@@ -22,7 +22,6 @@ function run_test() {
     if (!fid) {
         return test249_fail('create failed')
     }
-    test_figure_set_force_valid_animation(fid, true)
 
     // SPAWNED (24): invisible until wait expires → CHOOSE (8).
     __test_figure_set_action(fid, 24)
@@ -72,7 +71,6 @@ function run_test() {
     if (!fid2) {
         return test249_fail('create2 failed')
     }
-    test_figure_set_force_valid_animation(fid2, true)
     __test_figure_set_action(fid2, 18)
     __test_figure_set_wait_ticks(fid2, 50)
     __test_figure_apply_damage(fid2, 1)

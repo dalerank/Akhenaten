@@ -64,9 +64,6 @@ function t386_setup() {
     if (!seeker || !other) {
         return null
     }
-    // Without art no animation is valid, and the draw-side image update would have nothing to do.
-    __test_figure_set_force_valid_animation(seeker, 1)
-    __test_figure_set_force_valid_animation(other, 1)
     if (shops.length) {
         __test_camera_center_building(shops[0])
     }

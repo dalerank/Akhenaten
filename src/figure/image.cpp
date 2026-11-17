@@ -71,10 +71,8 @@ void figure::image_set_animation(const xstring &anim) {
 }
 
 void figure::image_set_animation(const animation_t &anim) {
-    const bool allow_empty_atlas = force_valid_animation && anim.max_frames > 0;
-    if (anim.pack > 0 || anim.id > 0 || allow_empty_atlas) {
+    if (anim.pack > 0 || anim.id > 0) {
         this->animctx = anim;
-        this->animctx.force_valid = allow_empty_atlas;
         return;
     }
 }
@@ -85,25 +83,18 @@ void figure::image_set_animation(int collection, int group, int offset, int max_
     animctx.max_frames = max_frames;
     animctx.frame_duration = std::max(1, duration);
     animctx.loop = loop;
-    animctx.force_valid = force_valid_animation && max_frames > 0 && animctx.base <= 0;
-}
-
-void figure::set_force_valid_animation(bool enabled) {
-    force_valid_animation = enabled;
-    if (force_valid_animation && animctx.max_frames > 0 && animctx.base <= 0) {
-        animctx.force_valid = true;
-    } else if (!force_valid_animation) {
-        animctx.force_valid = false;
-    }
 }
 
 void figure::figure_image_update(bool refresh_only) {
     OZZY_PROFILER_FUNCTION();
-    if (!animctx.valid()) {
+    if (!animctx.ticks()) {
         return;
     }
 
     animctx.update(refresh_only);
+    if (!animctx.valid()) {
+        return;
+    }
 
     dcast()->main_image_update();
     dcast()->cart_image_update();

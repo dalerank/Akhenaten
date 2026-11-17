@@ -16,8 +16,7 @@ function test683_fail(msg) {
 
 function test683_dying_image(fid, wait) {
     __test_figure_set_wait_ticks(fid, wait)
-    __test_figure_refresh_image(fid)
-    return __test_figure_main_image_id(fid)
+    return __test_figure_death_frame(fid)
 }
 
 function run_test() {
@@ -42,7 +41,6 @@ function run_test() {
     __log_marker('scorpion_hit_points_ok')
 
     // Corpse: death sprites, removed on the 128th tick.
-    test_figure_set_force_valid_animation(scorpion, true)
     __test_figure_kill(scorpion)
     __test_figure_set_wait_ticks(scorpion, 0)
     for (var t = 1; t < 128; t++) {
@@ -85,7 +83,6 @@ function run_test() {
     if (!scorpion3) {
         return test683_fail('create3 failed')
     }
-    test_figure_set_force_valid_animation(scorpion3, true)
     __test_figure_set_action(scorpion3, 12)
     __test_figure_update_animation(scorpion3)
     var img2 = test683_dying_image(scorpion3, 2)

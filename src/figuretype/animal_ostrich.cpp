@@ -270,7 +270,7 @@ void figure_ostrich::main_image_update() {
         const int base_img = death.first_img();
         // OG death group: wait_ticks frames, capped at 7.
         const int frame = base.wait_ticks < 8 ? base.wait_ticks : 7;
-        if (base_img > 0 || base.force_valid_animation) {
+        if (base_img > 0) {
             base.main_image_id = base_img + frame;
         }
         return;
@@ -279,7 +279,7 @@ void figure_ostrich::main_image_update() {
     if (action_state(FIGURE_ACTION_149_CORPSE)) {
         const animation_t &death = anim(animkeys().death);
         const int base_img = death.first_img();
-        if (base_img > 0 || base.force_valid_animation) {
+        if (base_img > 0) {
             base.main_image_id = base_img + 7;
         }
         return;

@@ -30,8 +30,6 @@ function run_test() {
         return
     }
     __test_figure_set_leading(donkey_og, head_og)
-    test_figure_set_force_valid_animation(head_og, true)
-    test_figure_set_force_valid_animation(donkey_og, true)
     __test_figure_kill(head_og)
     __test_figure_action_perform(donkey_og)
     if (__figure_is_valid(donkey_og) && __test_figure_is_alive(donkey_og)) {
@@ -52,8 +50,6 @@ function run_test() {
     }
 
     __test_figure_set_leading(donkey, head)
-    test_figure_set_force_valid_animation(head, true)
-    test_figure_set_force_valid_animation(donkey, true)
 
     __log_marker('caravan_donkey_runaway_setup_ok')
 

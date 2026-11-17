@@ -617,7 +617,7 @@ void figure_hippo::main_image_update() {
             const animation_t &water_death = anim(animkeys().bubbles);
             const int base_img = water_death.first_img();
             const int frame = base.wait_ticks < 23 ? base.wait_ticks : 22;
-            if (base_img > 0 || base.force_valid_animation) {
+            if (base_img > 0) {
                 base.main_image_id = base_img + frame;
             }
             return;
@@ -627,7 +627,7 @@ void figure_hippo::main_image_update() {
         const int frame = action_state(ACTION_12_HIPPO_DYING)
             ? (base.wait_ticks < 8 ? base.wait_ticks : 7)
             : 7;
-        if (base_img > 0 || base.force_valid_animation) {
+        if (base_img > 0) {
             base.main_image_id = base_img + frame;
         }
         return;

@@ -24,7 +24,6 @@ function run_test() {
     if (!fid) {
         return test271_fail('create failed')
     }
-    test_figure_set_force_valid_animation(fid, true)
 
     // SPAWNED (24): invisible until wait expires → CHOOSE (8).
     __test_figure_set_action(fid, 24)
@@ -77,7 +76,6 @@ function run_test() {
     if (!fid2) {
         return test271_fail('create2 failed')
     }
-    test_figure_set_force_valid_animation(fid2, true)
     __test_figure_set_action(fid2, 21)
     __test_figure_set_wait_ticks(fid2, 0)
     var a2 = 21
@@ -99,7 +97,6 @@ function run_test() {
     if (!fid3) {
         return test271_fail('create3 failed')
     }
-    test_figure_set_force_valid_animation(fid3, true)
     __test_figure_set_action(fid3, 23)
     __test_figure_action_perform(fid3)
     var a3 = __figure_get_action_state(fid3)
@@ -116,7 +113,6 @@ function run_test() {
     if (!prey || !fid4) {
         return test271_fail('attack spawn failed')
     }
-    test_figure_set_force_valid_animation(fid4, true)
     __test_figure_set_action(fid4, 18)
     if (__test_figure_combat_attack_at(fid4, 22, 22) != 1) {
         return test271_fail('combat_attack_at want in_attack')

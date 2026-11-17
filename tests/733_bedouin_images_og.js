@@ -101,7 +101,6 @@ function run_test() {
     if (!fid) {
         test733_fail('no bedouin created')
     } else {
-        test_figure_set_force_valid_animation(fid, true)
         test733_move_cycle(fid)
         test733_images(fid)
     }

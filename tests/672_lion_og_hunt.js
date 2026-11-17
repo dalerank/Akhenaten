@@ -114,7 +114,6 @@ function run_test() {
     test672_clear()
     lion = test_figure_create(FIGURE_LION, x, y)
     prey = test672_create(FIGURE_IMMIGRANT, x, y)
-    test_figure_set_force_valid_animation(lion, true)
     __test_figure_set_action(lion, 18)
     if (__test_figure_combat_attack_at(lion, x, y) != 1) {
         return test672_fail('lion want in_attack against a citizen')

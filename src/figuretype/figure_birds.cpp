@@ -245,7 +245,7 @@ void figure_birds::main_image_update() {
         if (base.wait_ticks < k_death_image_frames) {
             const animation_t &death = anim(animkeys().death);
             const int base_img = death.first_img();
-            if (base_img > 0 || base.force_valid_animation) {
+            if (base_img > 0) {
                 base.main_image_id = base_img + base.wait_ticks;
             } else {
                 base.main_image_id = 0;
@@ -259,7 +259,7 @@ void figure_birds::main_image_update() {
     // OG: image_id = (animation_frame >> 1) + IMAGE_GROUP_FIGURE_BIRDS — no direction.
     const animation_t &walk = anim(animkeys().walk);
     const int base_img = walk.first_img();
-    if (base_img > 0 || base.force_valid_animation) {
+    if (base_img > 0) {
         base.main_image_id = base_img + (d.flock_frame >> 1);
     }
 }

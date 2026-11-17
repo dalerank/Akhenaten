@@ -54,13 +54,13 @@ struct animation_context {
     bool is_reverse = false;
     bool was_finished = false;
     bool tick_updated = false;
-    bool force_valid = false; // set from figure::force_valid_animation in image_set_animation
     xstring path;
     xfunction<void()> on_finished_cb;
 
     void setup(const animation_t &anim);
     void update(bool refresh_only);
-    inline bool valid() const { return force_valid || base > 0; }
+    inline bool valid() const { return base > 0; }
+    inline bool ticks() const { return max_frames > 0 || base > 0; }
     inline int current_frame() const { return std::clamp<int>(frame / frame_duration, 0, max_frames); }
     inline int start_frame() const { return base + offset; }
     inline void restart() { was_finished = false; frame = sframe; }

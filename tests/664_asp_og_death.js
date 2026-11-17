@@ -34,7 +34,6 @@ function run_test() {
     __log_marker('asp_hit_points_ok')
 
     // Corpse: death sprites, removed on the 128th tick.
-    test_figure_set_force_valid_animation(asp, true)
     __test_figure_kill(asp)
     __test_figure_set_wait_ticks(asp, 0)
     for (var t = 1; t < 128; t++) {

@@ -101,7 +101,6 @@ function run_test() {
     test663_clear()
     asp = test_figure_create(FIGURE_ASP, x, y)
     prey = test663_create(FIGURE_IMMIGRANT, x, y)
-    test_figure_set_force_valid_animation(asp, true)
     __test_figure_set_action(asp, 18)
     if (__test_figure_combat_attack_at(asp, x, y) != 1) {
         return test663_fail('asp want in_attack against a citizen')

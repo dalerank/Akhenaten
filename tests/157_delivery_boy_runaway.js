@@ -48,8 +48,6 @@ function run_test() {
     __test_figure_set_leading(boy, buyer)
     __test_figure_set_collecting_item(boy, 0)
     __test_bazaar_set_inventory(bid, 0, 50)
-    test_figure_set_force_valid_animation(buyer, true)
-    test_figure_set_force_valid_animation(boy, true)
 
     __log_marker('delivery_boy_runaway_setup_ok')
 
