@@ -77,6 +77,11 @@
   </content_rating>
 
   <releases>
+    <release version="0.2.9" date="2026-11-17">
+      <description>
+        <p>RA 0.29: OG behaviour for many walkers, animals and plagues (asp, lion, scorpion, frog, locust, zookeeper, tomb artisan, Bedouin raiders, corpses), Abu Simbel and the Pharos lighthouse, faster map loading, and the Flatpak engine data fix.</p>
+      </description>
+    </release>
     <release version="0.2.8" date="2026-10-11">
       <description>
         <p>Flatpak/Flathub packaging: App ID io.github.dalerank.Akhenaten, AppStream metadata, and sandbox permissions.</p>
