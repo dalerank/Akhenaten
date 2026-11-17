@@ -8,6 +8,7 @@ enum e_render_state {
     RENDER_NONE = 0x0,
     RENDER_TALL_TILE = 0x1,
     RENDER_TALL_TILE_DRAWN = 0x2,
+    RENDER_RAISED_TILE = 0x4,
 };
 
 struct local_render_context_t {
@@ -20,7 +21,11 @@ struct local_render_context_t {
     int image_id_deepwater_first;
     int image_id_deepwater_last;
 
+    int image_id_cliff_raised_first = 0;
+    int image_id_cliff_raised_last = -1;
+
     void init();
+    bool is_raised_cliff_ground(int image_id) const;
 };
 
 void map_render_clear();
@@ -31,6 +36,8 @@ void map_render_add(int grid_offset, int flag);
 void map_render_sub(int grid_offset, int flag);
 bool map_render_is(int grid_offset, int render_mask);
 bool map_render_isu(int grid_offset, int render_mask);
+
+void draw_raised_cliff_ground(vec2i pixel, int image_id, color mask, painter& ctx);
 
 void draw_isometrics_overlay_flat(vec2i pixel, tile2i point, painter &ctx);
 void draw_isometrics_overlay_height(vec2i pixel, tile2i point, painter &ctx);

@@ -813,6 +813,11 @@ void screen_city_t::draw_isometric_flat(vec2i pixel, tile2i tile, painter &ctx) 
         color_mask = COLOR_MASK_GREEN;
     }
 
+    if (!flatten && render_ctx.is_raised_cliff_ground(image_id)) {
+        map_render_set(tile, RENDER_RAISED_TILE);
+        return;
+    }
+
     const image_t* img = image_get(image_id);
     if (!img) {
         return;
@@ -896,6 +901,11 @@ void screen_city_t::draw_isometric_nonterrain_height(vec2i pixel, tile2i tile, p
 
     if (flatten) {
         // No RENDER_TALL_TILE / iso tops under flat view.
+        return;
+    }
+
+    if (map_render_isu(grid_offset, RENDER_RAISED_TILE)) {
+        draw_raised_cliff_ground(pixel, map_image_at(grid_offset), color_mask, ctx);
         return;
     }
 
@@ -1080,6 +1090,7 @@ void screen_city_t::draw_with_overlay(painter &ctx, int selected_figure_id) {
         return;
     }
 
+    render_ctx.init();
     map_render_clear();
     ImageDraw::clear_render_commands();
 

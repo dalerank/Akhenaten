@@ -24,6 +24,7 @@
 
 #include "overlays/city_overlay.h"
 #include "overlays/city_overlay_risks.h"
+#include "widget/widget_city.h"
 
 static const int ADJACENT_OFFSETS_PH[2][4][7]
   = {{{GRID_OFFSET(-1, 0), GRID_OFFSET(-1, -1), GRID_OFFSET(-1, -2), GRID_OFFSET(0, -2), GRID_OFFSET(1, -2)},
@@ -59,6 +60,8 @@ static const int ADJACENT_OFFSETS_PH[2][4][7]
        GRID_OFFSET(-3, -1),
        GRID_OFFSET(-3, -2)}}};
 
+
+enum { CLIFF_RAISED_FIRST = 48, CLIFF_RAISED_END = 72, CLIFF_RAISE = 150 };
 
 grid_xx g_render_grid(FS_UINT32);
 
@@ -117,6 +120,24 @@ void local_render_context_t::init() {
     if (image_id_water_first <= 0 || image_id_deepwater_first <= 0) {
         advance_water_animation = 0;
     }
+
+    const int cliff_first = image_id_from_group(GROUP_TERRAIN_CLIFF);
+    image_id_cliff_raised_first = cliff_first > 0 ? cliff_first + CLIFF_RAISED_FIRST : 0;
+    image_id_cliff_raised_last = cliff_first > 0 ? cliff_first + CLIFF_RAISED_END - 1 : -1;
+}
+
+bool local_render_context_t::is_raised_cliff_ground(int image_id) const {
+    return image_id >= image_id_cliff_raised_first && image_id <= image_id_cliff_raised_last;
+}
+
+void draw_raised_cliff_ground(vec2i pixel, int image_id, color mask, painter& ctx) {
+    auto& command = ImageDraw::create_command(ctx, render_command_t::ert_drawtile_full);
+    command.image_id = image_id;
+    command.pixel = pixel - vec2i{0, CLIFF_RAISE};
+    command.mask = mask;
+    command.use_sort_pixel = true;
+    command.sort_pixel = pixel;
+    command.location = SOURCE_LOCATION;
 }
 
 bool drawing_building_as_deleted(building* b) {
@@ -220,6 +241,9 @@ void draw_isometrics_overlay_flat(vec2i pixel, tile2i tile, painter &ctx) {
         } else if (terrain & TERRAIN_BUILDING) {
             overlay->draw_building_footprint(ctx, pixel, tile, 0);
 
+        } else if (g_screen_city.render_ctx.is_raised_cliff_ground(map_image_at(tile))) {
+            map_render_set(tile, RENDER_RAISED_TILE);
+
         } else {
             auto& command = ImageDraw::create_command(ctx, render_command_t::ert_drawtile);
             command.image_id = map_image_at(tile);
@@ -246,7 +270,9 @@ void draw_isometrics_overlay_height(vec2i pixel, tile2i point, painter &ctx) {
         //ImageDraw::isometric_from_drawtile(ctx, image_id_from_group(GROUP_TERRAIN_BLACK), pixel, 0);
     } else if (map_property_is_draw_tile(grid_offset)) {
         bool tall_flat_tile = map_render_is(grid_offset, RENDER_TALL_TILE);
-        if (tall_flat_tile) {
+        if (map_render_is(grid_offset, RENDER_RAISED_TILE)) {
+            draw_raised_cliff_ground(pixel, map_image_at(grid_offset), COLOR_MASK_NONE, ctx);
+        } else if (tall_flat_tile) {
             auto& command = ImageDraw::create_command(ctx, render_command_t::ert_drawtile_top);
 
             int image_id = map_image_at(grid_offset);
