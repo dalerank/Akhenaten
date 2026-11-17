@@ -41,7 +41,7 @@ figure_festival_priest {
 		juggler_walk { pack:PACK_SPR_MAIN, id:130, max_frames:12 }
 		dancer_walk { pack:PACK_SPR_MAIN, id:128, max_frames:12 }
 		teacher_walk { pack:PACK_SPR_MAIN, id:57, max_frames:12 }
-		zookeeper_walk { pack:PACK_EXPANSION_SPR, id:35, max_frames:12 }
+		zookeeper_walk { pack:PACK_EXPANSION_SPR, id:20, max_frames:12 }
 		priest_osiris_walk { pack:PACK_SPR_MAIN, id:197, max_frames:12 }
 		priest_ra_walk { pack:PACK_SPR_MAIN, id:210, max_frames:12 }
 		priest_ptah_walk { pack:PACK_SPR_MAIN, id:187, max_frames:12 }

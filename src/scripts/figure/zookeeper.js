@@ -1,11 +1,10 @@
 log_info("akhenaten: figure zookeeper started")
 
-// Cleopatra SprMain2: bmp "zookeeper", group 35 starts at entry 1616 (SprMain2_01616).
 figure_zookeeper {
 	overlay : OVERLAY_ZOO
 	animations {
-		walk { pack:PACK_EXPANSION_SPR, id:35, max_frames:12 }
-		death { pack:PACK_EXPANSION_SPR, id:36, max_frames:7, loop:false }
+		walk { pack:PACK_EXPANSION_SPR, id:20, max_frames:12 }
+		death { pack:PACK_EXPANSION_SPR, id:21, max_frames:8, loop:false }
 		big_image { pack:PACK_EXPANSION, id:1, offset:0 }
 	}
 
@@ -22,10 +21,15 @@ figure_zookeeper {
 		zookeeper_city_is_amazing { sound: "zookeeper_e10.wav", text: "#zookeeper_city_is_amazing" }
 	}
 
-	category: figure_category_citizen
-	max_damage : 20
+	category: figure_category_armed
+	max_damage : 50
+	attack_value : 5
+	defense_value : 0
 	terrain_usage : TERRAIN_USAGE_ROADS
-	max_roam_length: 640
+	max_roam_length: 512
+	venue_walk_ticks : 3200
+	home_road_radius : 2
+	ferry_wait_ticks : 100
 	permission : epermission_entertainer
 	can_cross_ferry: true
 	boards_ferry: true
