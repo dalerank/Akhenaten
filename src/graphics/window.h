@@ -14,6 +14,8 @@ struct window_type {
     xfunction <void(const mouse*, const hotkeys*)> handle_input;
     xfunction <void(tooltip_context*)> draw_tooltip;
     xfunction <void()> draw_refresh;
+    bool sim_time_runs = false;
+    bool city_sounds = false;
 };
 
 struct windows_manager_t {

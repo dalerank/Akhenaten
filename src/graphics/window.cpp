@@ -9,6 +9,7 @@
 #include "core/tokenum.h"
 #include "graphics/elements/ui_js.h"
 #include "game/game_events.h"
+#include "game/game.h"
 
 windows_manager_t g_window_manager;
 
@@ -28,6 +29,11 @@ static void reset_input() {
     mouse::ref().reset_button_state();
     g_touch.reset(true);
     g_scroll.stop();
+}
+
+static void set_current_window(window_type* window) {
+    g_window_manager.current_window = window;
+    game.sim_time_runs = window->sim_time_runs;
 }
 
 static void increase_queue_index() {
@@ -65,7 +71,7 @@ void window_show(const window_type* window) {
     ui::clear_active_elements();
     increase_queue_index();
     data.window_queue[data.queue_index] = *window;
-    data.current_window = &data.window_queue[data.queue_index];
+    set_current_window(&data.window_queue[data.queue_index]);
     if (!data.current_window->draw_background)
         data.current_window->draw_background = noop;
 
@@ -89,7 +95,7 @@ void window_go_back() {
     ui::stop_active_input();
     decrease_queue_index();
 
-    data.current_window = &data.window_queue[data.queue_index];
+    set_current_window(&data.window_queue[data.queue_index]);
 }
 
 void windows_manager_t::update_input_after() {

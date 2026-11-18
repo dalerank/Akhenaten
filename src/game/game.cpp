@@ -331,19 +331,7 @@ static int get_elapsed_ticks() {
 
     int game_speed_index = 0;
     int ticks_per_frame = 1;
-    pcstr meaning_windows[] = {
-        "window_city",
-        "window_city_military",
-        "window_city_warship",
-        "window_sliding_sidebar",
-        "overlay_menu_widget",
-        "build_menu_widget",
-        "window_editor_map"
-    };
-    auto it = std::find_if(std::begin(meaning_windows), std::end(meaning_windows), [] (pcstr id) {
-        return window_get_id() == id;
-    });
-    if (it != std::end(meaning_windows) || game.pause_allow) {
+    if (game.sim_time_runs || game.pause_allow) {
         game_speed_index = (100 - game_features::gameopt_game_speed.to_int()) / 10;
         if (game_speed_index >= 10) {
             return 0;
@@ -523,7 +511,7 @@ void game_t::init_state() {
 
 void game_t::city_sounds_frame_begin() {
     OZZY_PROFILER_FUNCTION();
-    if (g_window_manager.window_is("window_city") || g_window_manager.window_is("window_city_military") || g_window_manager.window_is("window_city_warship") || g_window_manager.window_is("window_sliding_sidebar")) {
+    if (g_window_manager.current_window && g_window_manager.current_window->city_sounds) {
         sound_city_play();
     }
 }

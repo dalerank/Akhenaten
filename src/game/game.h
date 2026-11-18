@@ -66,6 +66,7 @@ struct game_t {
 
     bool paused = false;
     bool pause_allow = false;
+    bool sim_time_runs = false;
     bool cli_fullscreen = false;
     bool save_debug_texture = false;
 

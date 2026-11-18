@@ -3,6 +3,7 @@ log_info("akhenaten: ui build menu started")
 [es=modal_window]
 build_menu_widget = {
     allow_rmb_goback : true
+    sim_time_runs : true
 
     ui : {
         background : dummy({size:[155, 200]})

@@ -85,5 +85,6 @@ void window_editor_map_show(void) {
         draw_foreground,
         handle_input
     };
+    window.sim_time_runs = true;
     window_show(&window);
 }

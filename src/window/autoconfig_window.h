@@ -33,6 +33,7 @@ struct autoconfig_window : public ui::widget {
     bool _is_inited = false;
     bool allow_rmb_goback = false;
     bool draw_underlying = false;
+    bool sim_time_runs = false;
     xstring help_id;
 
     struct deferred_event {

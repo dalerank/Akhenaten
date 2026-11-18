@@ -132,6 +132,7 @@ function overlay_menu_point_in_rect(mx, my, x, y, w, h) {
 overlay_menu_widget {
 	pos [sw(0)-355, 40]
 	allow_rmb_goback: true
+	sim_time_runs: true
 	selected_menu: 0
 	selected_submenu: 0
 	keep_submenu_open: 0

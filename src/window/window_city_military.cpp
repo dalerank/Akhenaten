@@ -39,6 +39,8 @@ void window_city_military_show(int legion_formation_id) {
         },
         [] (auto c) { g_screen_city.draw_tooltip(c); }
     };
+    window.sim_time_runs = true;
+    window.city_sounds = true;
 
     window_show(&window);
 }

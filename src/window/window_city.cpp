@@ -412,6 +412,8 @@ void window_city::show() {
         [](const mouse *m, const hotkeys *h) { instance().handle_input(m, h); },
         [](tooltip_context *c) { g_screen_city.draw_tooltip(c); }
     };
+    window.sim_time_runs = true;
+    window.city_sounds = true;
 
     instance().init_city();
     window_show(&window);

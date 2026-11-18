@@ -93,6 +93,7 @@ void autoconfig_window::archive_load(archive arch) {
     help_id = arch.r_string("help_id");
     allow_rmb_goback = arch.r_bool("allow_rmb_goback");
     draw_underlying = arch.r_bool("draw_underlying", false);
+    sim_time_runs = arch.r_bool("sim_time_runs");
 }
 
 void autoconfig_window::go_back() {
@@ -196,6 +197,7 @@ void autoconfig_window::show(xstring section) {
        [section] (int flags) { auto *w = get_window_current(section); if (w) w->ui_draw_foreground(flags); },
        [section] (const mouse *m, const hotkeys *h) { auto *w = get_window_current(section); if (w) w->ui_handle_mouse(m); }
     };
+    s_script_window_type.sim_time_runs = w->sim_time_runs;
     w->init();
     window_show(&s_script_window_type);
 }
