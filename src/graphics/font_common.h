@@ -4,6 +4,7 @@
 #include "graphics/imagepak_holder.h"
 #include "content/atlas_packer.h"
 #include "content/vfs.h"
+#include "core/archive.h"
 #include "core/stable_array.h"
 #include "core/svector.h"
 
@@ -35,6 +36,7 @@ struct font_config {
     uint8_t line_height;
     int8_t letter_spacing;
 };
+ANK_CONFIG_STRUCT(font_config, type, size, bold, color, shadow_offset, line_height, letter_spacing)
 
 template<>
 struct stable_array_max_elements<font_config> {

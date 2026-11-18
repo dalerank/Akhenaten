@@ -26,7 +26,6 @@ void ANK_REGISTER_CONFIG_ITERATOR(config_load_external_fonts) {
     font_atlas_regenerate();
 }
 
-ANK_CONFIG_STRUCT(font_config, type, size, bold, color, shadow_offset, line_height, letter_spacing)
 const e_font_tokens_t ANK_CONFIG_ENUM(e_font_tokens);
 
 void game_language::decode_symbols(font_utf8_symbols_t& out) const {
