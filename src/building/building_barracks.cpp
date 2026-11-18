@@ -208,6 +208,10 @@ int building_barracks_has_tower_sentry_request() {
     return g_tower_sentry_request;
 }
 
+void building_barracks_clear_tower_sentry_request() {
+    g_tower_sentry_request = 0;
+}
+
 void building_barracks_save_state(buffer* buf) {
     buf->write_i32(g_tower_sentry_request);
 }

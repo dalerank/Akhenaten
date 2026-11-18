@@ -1,6 +1,7 @@
 #include "boilerplate_detail.h"
 
 #include "building/building.h"
+#include "building/building_barracks.h"
 #include "building/construction/build_planner.h"
 #include "building/building_storage.h"
 #include "building/monuments.h"
@@ -84,6 +85,7 @@ void GamestateLoadDetail::pre_load() { // do we NEED this...?
     sound_city_init();
     building_clear_all();
     building_storage_clear_all();
+    building_barracks_clear_tower_sentry_request();
     g_city.figures.init_figures();
     g_enemy_armies.clear();
     // .map files carry no cities chunk; stale cities would rewrite empire objects in load_mission_metadata.
