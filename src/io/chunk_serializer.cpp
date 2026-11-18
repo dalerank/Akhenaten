@@ -93,16 +93,13 @@ bool ChunkSerializer::read_compressed_chunk(vfs::reader reader, buffer* buf, int
     return svx::decompress_prefixed(compress_buffer, prefix, buf->data_unsafe_pls_use_carefully(), filepiece_size);
 }
 
-bool ChunkSerializer::write_compressed_chunk(FILE* fp, buffer* buf, int bytes_to_write) {
+bool ChunkSerializer::write_stored_chunk(FILE* fp, buffer* buf, int bytes_to_write) {
     if (bytes_to_write > svx::CODEC_SCRATCH_SIZE)
         return false;
 
-    svx::prefixed_payload payload;
-    svx::compress_prefixed(buf->get_data(), (uint32_t)bytes_to_write, true,
-                           compress_buffer, svx::CODEC_SCRATCH_SIZE, &payload);
-
-    fwrite(&payload.prefix, 4, 1, fp);
-    fwrite(payload.body, 1, payload.body_size, fp);
+    const uint32_t prefix = svx::PAYLOAD_UNCOMPRESSED;
+    fwrite(&prefix, 4, 1, fp);
+    fwrite(buf->get_data(), 1, bytes_to_write, fp);
     return true;
 }
 
@@ -231,7 +228,7 @@ bool ChunkSerializer::serialize(pcstr filename, int offset, e_file_format format
 
             int result = 0;
             if (chunk->compressed) {
-                result = write_compressed_chunk(fp, chunk->buf, chunk->buf->size());
+                result = write_stored_chunk(fp, chunk->buf, chunk->buf->size());
             } else {
                 result = chunk->buf->to_file(chunk->buf->size(), fp);
             }
@@ -348,13 +345,14 @@ bool ChunkSerializer::build_svx_section_payload(const file_chunk_t* chunk, int i
     const uint8_t* raw = chunk->buf->get_data();
 
     if (raw_size > (uint32_t)svx::CODEC_SCRATCH_SIZE) {
-        logs::error("Unable to write file [%s], chunk %d (%s) is %u bytes, over the compress buffer.",
-                    debug_path, index, chunk->name, raw_size);
+        logs::error("Unable to write file [%s], chunk %d (%s) is %u bytes, over the section size limit.", debug_path,
+          index, chunk->name, raw_size);
         return false;
     }
 
-    svx::compress_prefixed(raw, raw_size, chunk->compressed != 0,
-                           compress_buffer, svx::CODEC_SCRATCH_SIZE, out);
+    out->prefix = svx::PAYLOAD_UNCOMPRESSED;
+    out->body = raw;
+    out->body_size = raw_size;
     *out_raw_size = raw_size;
     *out_crc = crc32(raw, raw_size);
     return true;

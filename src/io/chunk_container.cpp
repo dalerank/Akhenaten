@@ -77,24 +77,6 @@ bool svx::decompress_prefixed(const void *src, uint32_t compressed_size, void *d
     return written == expected_raw_size;
 }
 
-void svx::compress_prefixed(const void *raw, uint32_t raw_size, bool try_compress,
-                            void *scratch, int scratch_cap, prefixed_payload *out) {
-    out->prefix = PAYLOAD_UNCOMPRESSED;
-    out->body = raw;
-    out->body_size = raw_size;
-
-    if (!try_compress || !raw || !scratch || scratch_cap <= 0 || raw_size == 0) {
-        return;
-    }
-
-    int compressed_size = scratch_cap;
-    if (zip_compress(raw, (int)raw_size, scratch, &compressed_size)) {
-        out->prefix = (uint32_t)compressed_size;
-        out->body = scratch;
-        out->body_size = (uint32_t)compressed_size;
-    }
-}
-
 bool svx::is_container(vfs::reader reader, int offset) {
     file_header hdr = {};
     return peek_file_header(reader, offset, hdr);

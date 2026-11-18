@@ -66,7 +66,7 @@ Self-describing sections: file header + per-section header/payload/epilog. Looku
 
 Legacy `.svx` (no magic) still loads via the positional path. Dead chunks `file_version` / `chunks_schema` stay in that path only (`is_sectioned()` false).
 
-Shared codec: every compressed piece is `[u32 prefix][body]` with `svx::PAYLOAD_UNCOMPRESSED` / zip — used by both legacy and sectioned writers (`svx::compress_prefixed` / `decompress_prefixed`).
+Shared payload layout: every piece is `[u32 prefix][body]`; the prefix is `svx::PAYLOAD_UNCOMPRESSED` (raw body) or the PKWare-imploded byte count. Writers always store raw; readers still explode compressed pieces from older saves (`svx::decompress_prefixed`).
 
 Chunk names are on-disk keys: max `svx::NAME_LEN` (32), no silent truncation.
 

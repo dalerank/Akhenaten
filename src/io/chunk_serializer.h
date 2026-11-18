@@ -68,7 +68,7 @@ private:
     bool io_failure_cleanup(const char* action, const char* reason); // because I'm anal about reusing code...
 
     bool read_compressed_chunk(vfs::reader reader, buffer* buf, int filepiece_size);
-    bool write_compressed_chunk(FILE* fp, buffer* buf, int bytes_to_write);
+    bool write_stored_chunk(FILE* fp, buffer* buf, int bytes_to_write);
     bool read_section_payload(vfs::reader reader, const svx::section_info& info, buffer* buf, pcstr debug_path);
     bool load_svx_chunk_payload(vfs::reader reader, file_chunk_t* chunk, const svx::section_info& info, pcstr debug_path);
     bool build_svx_section_payload(const file_chunk_t* chunk, int index, pcstr debug_path,

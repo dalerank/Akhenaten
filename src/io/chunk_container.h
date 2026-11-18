@@ -77,9 +77,6 @@ public:
 
     static bool decompress_prefixed(const void *src, uint32_t compressed_size, void *dst, int expected_raw_size);
 
-    static void compress_prefixed(const void *raw, uint32_t raw_size, bool try_compress,
-                                  void *scratch, int scratch_cap, prefixed_payload *out);
-
     struct byte_sink {
         FILE* fp = nullptr;
         std::vector<uint8_t>* bytes = nullptr;
