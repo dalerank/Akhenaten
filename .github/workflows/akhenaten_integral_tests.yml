@@ -45,8 +45,8 @@ jobs:
       if: always()
       run: |
         if [ -f integraltests/summary.txt ]; then
-          grep -E '^FAIL ' integraltests/summary.txt | sed -E 's/^FAIL ([^ ]+) [^:]*: (.*)/::error title=integraltest ::/' || true
-          grep -E '^PROBLEM ' integraltests/summary.txt | sed -E 's/^PROBLEM (.*)/::error title=integraltests::/' || true
+          grep -E '^FAIL ' integraltests/summary.txt | sed -E 's/^FAIL ([^ ]+) [^:]*: (.*)/::error title=integraltest \1::\2/' || true
+          grep -E '^PROBLEM ' integraltests/summary.txt | sed -E 's/^PROBLEM (.*)/::error title=integraltests::\1/' || true
         fi
     - name: Parse test counts
       id: parse
@@ -55,8 +55,8 @@ jobs:
         message="no results"
         color="lightgrey"
         if [ -f integraltests/counts.txt ]; then
-          passed=$(sed -nE 's/^passed=([0-9]+)//p' integraltests/counts.txt)
-          failed=$(sed -nE 's/^failed=([0-9]+)//p' integraltests/counts.txt)
+          passed=$(sed -nE 's/^passed=([0-9]+)/\1/p' integraltests/counts.txt)
+          failed=$(sed -nE 's/^failed=([0-9]+)/\1/p' integraltests/counts.txt)
           total=$((passed + failed))
           if [ "$total" -eq 0 ]; then
             message="no tests"
