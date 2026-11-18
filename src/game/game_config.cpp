@@ -137,6 +137,8 @@ namespace game_features {
       "gameplay_change_fishing_points_monthly_respawn", "#TR_CONFIG_FISHING_POINTS_MONTHLY_RESPAWN", false, false};
     game_feature gameplay_change_fishing_points_drift{
       "gameplay_change_fishing_points_drift", "#TR_CONFIG_FISHING_POINTS_DRIFT", false, false};
+    game_feature gameplay_change_migration_unemployment{
+      "gameplay_change_migration_unemployment", "#TR_CONFIG_MIGRATION_UNEMPLOYMENT", false, false};
     game_feature gameplay_change_house_evolve_delay{
       "gameplay_change_house_evolve_delay", "#TR_CONFIG_HOUSE_EVOLVE_DELAY", false, false};
     game_feature gameplay_change_abu_simbel_draw_scaffolds{

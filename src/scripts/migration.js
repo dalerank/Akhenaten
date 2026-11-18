@@ -8,12 +8,12 @@ migration_defaults {
 }
 
 migration_sentiment_influence = [
-    {s: 70, i:  100}
-    {s: 60, i:  75}
+    {s: 71, i:  100}
+    {s: 61, i:  75}
     {s: 50, i:  50}
-    {s: 40, i:  0}
-    {s: 30, i: -10}
-    {s: 20, i: -25}
+    {s: 41, i:  0}
+    {s: 31, i: -10}
+    {s: 21, i: -25}
     {s: 0,  i: -50}
 ]
 

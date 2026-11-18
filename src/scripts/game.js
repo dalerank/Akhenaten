@@ -130,6 +130,7 @@ game_features {
     @gameplay_fishing_wharf_spawn_boats {}
     @gameplay_change_fishing_points_monthly_respawn {}
     @gameplay_change_fishing_points_drift {}
+    @gameplay_change_migration_unemployment {}
     @gameplay_change_house_evolve_delay {}
     @gameplay_change_abu_simbel_draw_scaffolds {}
     @gameplay_change_food_consumption_remake {}

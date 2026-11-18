@@ -7,6 +7,7 @@
 #include "core/calc.h"
 #include "core/log.h"
 #include "game/game.h"
+#include "game/game_config.h"
 #include "game/game_events.h"
 #include "js/js_game.h"
 
@@ -28,7 +29,7 @@ void city_migration_t::update_status() {
 
     const auto &sentiment = g_city.sentiment;
     auto sent_it = std::find_if(migration_sentiment_influence.begin(), migration_sentiment_influence.end(), [sentiment = sentiment.value] (const auto& t) {
-        return sentiment > t.s;
+        return sentiment >= t.s;
     });
 
     const int8_t unemployment_percentage = g_city.labor.unemployment_percentage;
@@ -42,7 +43,11 @@ void city_migration_t::update_status() {
         range_percentage_by_unemployments.first = std::max(range_percentage_by_unemployments.first, it.second.first);
         range_percentage_by_unemployments.second = std::min(range_percentage_by_unemployments.second, it.second.second);
     }
-    percentage_by_unemployments = std::clamp(want_percentage_by_unemployments, range_percentage_by_unemployments.first, range_percentage_by_unemployments.second);
+    if (!!game_features::gameplay_change_migration_unemployment) {
+        percentage_by_unemployments = std::clamp(want_percentage_by_unemployments, range_percentage_by_unemployments.first, range_percentage_by_unemployments.second);
+    } else {
+        percentage_by_unemployments = 0;
+    }
 
     percentage_by_sentiment = (sent_it != migration_sentiment_influence.end()) ? sent_it->i : 0;
     percentage = (percentage_by_sentiment + percentage_by_unemployments);
