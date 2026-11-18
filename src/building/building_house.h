@@ -108,7 +108,6 @@ public:
     virtual e_sound_channel_city sound_channel() const override { return SOUND_CHANNEL_CITY_STATUE; }
     virtual void on_undo() override;
     virtual void update_day() override;
-    virtual void update_week() override;
     virtual void update_count() const override;
     virtual void bind_dynamic(io_buffer *iob, size_t version) override;
     // Shared by every tier: applies the rung its config describes. The hooks below cover the

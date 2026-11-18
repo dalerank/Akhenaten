@@ -136,10 +136,6 @@ void building_house::update_day() {
     building_impl::update_day();
 }
 
-void building_house::update_week() {
-    building_impl::update_week();
-}
-
 void building_house::update_count() const {
     g_city.buildings.increase_count(type(), house_population() > 0);
 }
