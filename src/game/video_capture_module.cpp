@@ -243,7 +243,7 @@ void video_writer_t::stop() {
     {
         std::lock_guard<std::mutex> lock(queue_mu);
         if (!filled.empty() && !pump_scheduled.exchange(true, std::memory_order_acq_rel)) {
-            game.mt.detach_task([this]() {
+            game.mtrpc.detach_task([this]() {
                 pump();
             });
         }
@@ -325,7 +325,7 @@ void video_writer_t::on_frame_end() {
     }
 
     if (!pump_scheduled.exchange(true, std::memory_order_acq_rel)) {
-        game.mt.detach_task([this]() {
+        game.mtrpc.detach_task([this]() {
             pump();
         });
     }

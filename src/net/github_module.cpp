@@ -247,7 +247,7 @@ void github_get_recent_commits_async(pcstr owner, pcstr repo) {
     const xstring owner_str(owner ? owner : "");
     const xstring repo_str(repo ? repo : "");
 
-    game.mt.detach_task([owner_str, repo_str]() {
+    game.mtrpc.detach_task([owner_str, repo_str]() {
         const xstring commits = github_get_recent_commits(owner_str.c_str(), repo_str.c_str(), 10);
         game.add_frame_end_event([commits]() {
             events::emit(event_github_recent_commits_loaded{ commits });
@@ -259,7 +259,7 @@ void github_get_total_commits_async(pcstr owner, pcstr repo) {
     const xstring owner_str(owner ? owner : "");
     const xstring repo_str(repo ? repo : "");
 
-    game.mt.detach_task([owner_str, repo_str]() {
+    game.mtrpc.detach_task([owner_str, repo_str]() {
         const int current_commit = github_get_total_commits(owner_str.c_str(), repo_str.c_str());
         game.add_frame_end_event([current_commit]() {
             events::emit(event_github_totals_commits_loaded{ current_commit });

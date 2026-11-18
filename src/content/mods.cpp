@@ -471,7 +471,7 @@ void mods_download_mod_async(xstring name) {
 
 #ifdef GAME_HAVE_CURL
     // Start download in background thread
-    game.mt.detach_task([name]() {
+    game.mtrpc.detach_task([name]() {
         mod_info* it = g_mods.find(name);
         if (!it) {
             return;

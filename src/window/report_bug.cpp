@@ -199,7 +199,7 @@ static void report_bug_post_now() {
     std::string lang = std::move(g_report_bug.lang);
     std::string log_text = std::move(g_report_bug.log);
 
-    game.mt.detach_task([title_str, body_str, build, platform_name, lang, log_text, shot]() {
+    game.mtrpc.detach_task([title_str, body_str, build, platform_name, lang, log_text, shot]() {
         CURL* curl = curl_easy_init();
         if (!curl) {
             logs::error("report_bug: curl_easy_init failed");
