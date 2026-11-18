@@ -506,15 +506,17 @@ static void bind_building_record(io_buffer* iob, building* b, building_id i, siz
     b->max_workers = params.laborers;
 }
 
-io_buffer* iob_buildings = new io_buffer([](io_buffer* iob, size_t version) {
-    if (iob->is_read_access()) {
-        stub_records_guard_reset();
-    }
-    for (int i = 0; i < MAX_BUILDINGS; i++) {
-        bind_building_record(iob, &g_all_buildings[i], i, version);
-    }
-    //building_extra_data.created_sequence = 0;
-});
+io_buffer* iob_buildings = new io_buffer(
+  [](io_buffer* iob, size_t version) {
+      if (iob->is_read_access()) {
+          stub_records_guard_reset();
+      }
+      for (int i = 0; i < MAX_BUILDINGS; i++) {
+          bind_building_record(iob, &g_all_buildings[i], i, version);
+      }
+      // building_extra_data.created_sequence = 0;
+  },
+  [] { building_clear_all(); });
 
 namespace {
     struct stub_records_guard_t {

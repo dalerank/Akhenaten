@@ -803,16 +803,18 @@ int map_water_grid(int grid_offset) {
     return map_grid_get(routing_tiles_water, grid_offset);
 }
 
-io_buffer* iob_routing_stats = new io_buffer([](io_buffer* iob, size_t version) {
-    iob->bind____skip(4);
-    iob->bind____skip(4); // resets to zero at the start of a new scenario
-    iob->bind____skip(4); // unused counter
-    iob->bind_u32(g_routing_stats.total_routes_calculated);
-    iob->bind_u32(g_routing_stats.enemy_routes_calculated);
-    iob->bind_u32(g_routing_stats.noncitizen_routes_calculated);
-    iob->bind_u32(g_routing_stats.amphibia_routes_calculated);
-    iob->bind____skip(4); // ??? coords?
-    iob->bind____skip(8); // ??? coords?
-    iob->bind____skip(2); // ??? something empire map related?
-    iob->bind____skip(8); // ??? something storage related?
-});
+io_buffer* iob_routing_stats = new io_buffer(
+  [](io_buffer* iob, size_t version) {
+      iob->bind____skip(4);
+      iob->bind____skip(4); // resets to zero at the start of a new scenario
+      iob->bind____skip(4); // unused counter
+      iob->bind_u32(g_routing_stats.total_routes_calculated);
+      iob->bind_u32(g_routing_stats.enemy_routes_calculated);
+      iob->bind_u32(g_routing_stats.noncitizen_routes_calculated);
+      iob->bind_u32(g_routing_stats.amphibia_routes_calculated);
+      iob->bind____skip(4); // ??? coords?
+      iob->bind____skip(8); // ??? coords?
+      iob->bind____skip(2); // ??? something empire map related?
+      iob->bind____skip(8); // ??? something storage related?
+  },
+  [] { map_routing_stats_clear(); });

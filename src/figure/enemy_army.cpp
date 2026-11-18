@@ -122,30 +122,33 @@ int enemy_army_is_stronger_than_batalions() {
     return g_enemy_army_in_city.enemy_strength > 2 * g_enemy_army_in_city.batalion_strength;
 }
 
-io_buffer *iob_enemy_armies_stats = new io_buffer([] (io_buffer *iob, size_t version) {
-    iob->bind_i32(g_enemy_army_in_city.enemy_formations);
-    iob->bind_i32(g_enemy_army_in_city.enemy_strength);
-    iob->bind_i32(g_enemy_army_in_city.batlion_formations);
-    iob->bind_i32(g_enemy_army_in_city.batalion_strength);
-    iob->bind_i32(g_enemy_army_in_city.days_since_pharaoh_influence_calculation);
-    iob->bind____skip(256);
+io_buffer* iob_enemy_armies_stats = new io_buffer(
+  [](io_buffer* iob, size_t version) {
+      iob->bind_i32(g_enemy_army_in_city.enemy_formations);
+      iob->bind_i32(g_enemy_army_in_city.enemy_strength);
+      iob->bind_i32(g_enemy_army_in_city.batlion_formations);
+      iob->bind_i32(g_enemy_army_in_city.batalion_strength);
+      iob->bind_i32(g_enemy_army_in_city.days_since_pharaoh_influence_calculation);
+      iob->bind____skip(256);
 
-    for (int i = 0; i < g_enemy_armies.MAX_ENEMY_ARMIES; i++) {
-        iob->bind_u8(g_enemy_armies.data[i].formation_id);
-        iob->bind_tile(g_enemy_armies.data[i].home);
-        iob->bind_u8(g_enemy_armies.data[i].layout);
-        iob->bind_tile(g_enemy_armies.data[i].destination);
-        iob->bind_u16(g_enemy_armies.data[i].destination_building_id);
-        iob->bind_u8(g_enemy_armies.data[i].num_batalions);
-        iob->bind_bool(g_enemy_armies.data[i].ignore_pharaoh_soldiers);
-        iob->bind_u8(g_enemy_armies.data[i].buildings_to_destroy);
-        iob->bind_u8(g_enemy_armies.data[i].buildings_destroyed);
-        iob->bind_u16(g_enemy_armies.data[i].want_money);
-        iob->bind_u16(g_enemy_armies.data[i].grab_money);
-        iob->bind____skip(64);
-    }
-}, [] (size_t version) {
-    // saves older than v170 carry no army stats at all
-    g_enemy_army_in_city = {};
-    g_enemy_armies.clear();
-});
+      for (int i = 0; i < g_enemy_armies.MAX_ENEMY_ARMIES; i++) {
+          iob->bind_u8(g_enemy_armies.data[i].formation_id);
+          iob->bind_tile(g_enemy_armies.data[i].home);
+          iob->bind_u8(g_enemy_armies.data[i].layout);
+          iob->bind_tile(g_enemy_armies.data[i].destination);
+          iob->bind_u16(g_enemy_armies.data[i].destination_building_id);
+          iob->bind_u8(g_enemy_armies.data[i].num_batalions);
+          iob->bind_bool(g_enemy_armies.data[i].ignore_pharaoh_soldiers);
+          iob->bind_u8(g_enemy_armies.data[i].buildings_to_destroy);
+          iob->bind_u8(g_enemy_armies.data[i].buildings_destroyed);
+          iob->bind_u16(g_enemy_armies.data[i].want_money);
+          iob->bind_u16(g_enemy_armies.data[i].grab_money);
+          iob->bind____skip(64);
+      }
+  },
+  [](size_t version) {
+      // saves older than v170 carry no army stats at all
+      g_enemy_army_in_city = {};
+      g_enemy_armies.clear();
+  },
+  [] { g_enemy_armies.clear(); });

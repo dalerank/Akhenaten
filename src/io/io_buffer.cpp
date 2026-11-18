@@ -3,7 +3,14 @@
 
 #include "gamestate/boilerplate.h"
 
+#include <algorithm>
 #include <cassert>
+#include <vector>
+
+static std::vector<io_buffer*>& reset_registry() {
+    static std::vector<io_buffer*> s;
+    return s;
+}
 
 void io_buffer::hook(buffer* buf, int _size, bool _compressed, const char* _name) {
     p_buf = buf;
@@ -58,9 +65,33 @@ io_buffer::io_buffer(io_buffer_bind bclb, io_buffer_default dclb) {
     bind_callback = bclb;
     default_callback = dclb;
 }
+io_buffer::io_buffer(io_buffer_bind bclb, io_buffer_reset rclb) {
+    bind_callback = bclb;
+    register_reset(rclb);
+}
+io_buffer::io_buffer(io_buffer_bind bclb, io_buffer_default dclb, io_buffer_reset rclb) {
+    bind_callback = bclb;
+    default_callback = dclb;
+    register_reset(rclb);
+}
 io_buffer::~io_buffer() {
     // this DOES NOT free up the internal buffer memory (for now)!!!
     // it WILL become a dangling pointer!
+    if (reset_callback) {
+        auto& r = reset_registry();
+        r.erase(std::remove(r.begin(), r.end(), this), r.end());
+    }
+}
+
+void io_buffer::register_reset(io_buffer_reset* rclb) {
+    reset_callback = rclb;
+    reset_registry().push_back(this);
+}
+
+void io_buffer::reset_all() {
+    for (io_buffer* iob : reset_registry()) {
+        iob->reset_callback();
+    }
 }
 
 ////

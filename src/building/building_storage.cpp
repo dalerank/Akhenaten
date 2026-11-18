@@ -282,27 +282,29 @@ void building_storage_increase_decrease_resource_state(int storage_id, int resou
 void building_storage_load_state(buffer* buf) {
 }
 
-io_buffer* iob_building_storages = new io_buffer([](io_buffer* iob, size_t version) {
-    for (int i = 0; i < MAX_STORAGES; i++) {
-        iob->bind(BIND_SIGNATURE_INT32, &g_storages[i].storage.permissions); // Originally unused
-        iob->bind(BIND_SIGNATURE_INT32, &g_storages[i].building_id);
-        iob->bind(BIND_SIGNATURE_UINT8, &g_storages[i].in_use);
-        iob->bind(BIND_SIGNATURE_UINT8, &g_storages[i].storage.empty_all);
-        for (int r = 0; r < RESOURCES_MAX; r++) {
-            iob->bind(BIND_SIGNATURE_UINT8, &g_storages[i].storage.resource_state[r]);
-        }
+io_buffer* iob_building_storages = new io_buffer(
+  [](io_buffer* iob, size_t version) {
+      for (int i = 0; i < MAX_STORAGES; i++) {
+          iob->bind(BIND_SIGNATURE_INT32, &g_storages[i].storage.permissions); // Originally unused
+          iob->bind(BIND_SIGNATURE_INT32, &g_storages[i].building_id);
+          iob->bind(BIND_SIGNATURE_UINT8, &g_storages[i].in_use);
+          iob->bind(BIND_SIGNATURE_UINT8, &g_storages[i].storage.empty_all);
+          for (int r = 0; r < RESOURCES_MAX; r++) {
+              iob->bind(BIND_SIGNATURE_UINT8, &g_storages[i].storage.resource_state[r]);
+          }
 
-        iob->bind____skip(6); // unused resource states
-        for (int r = 0; r < RESOURCES_MAX; r++) {
-            iob->bind(BIND_SIGNATURE_UINT16, &g_storages[i].storage.resource_max_accept[r]);
-        }
+          iob->bind____skip(6); // unused resource states
+          for (int r = 0; r < RESOURCES_MAX; r++) {
+              iob->bind(BIND_SIGNATURE_UINT16, &g_storages[i].storage.resource_max_accept[r]);
+          }
 
-        for (int r = 0; r < RESOURCES_MAX; r++) {
-            iob->bind(BIND_SIGNATURE_UINT16, &g_storages[i].storage.resource_max_get[r]);
-        }
-        //        iob->bind____skip(144); // ?????
-    }
-});
+          for (int r = 0; r < RESOURCES_MAX; r++) {
+              iob->bind(BIND_SIGNATURE_UINT16, &g_storages[i].storage.resource_max_get[r]);
+          }
+          //        iob->bind____skip(144); // ?????
+      }
+  },
+  [] { building_storage_clear_all(); });
 
 // Empty All order snapshot — appended chunk (save v175+), raw blob.
 io_buffer* iob_building_storages_empty_all_backup = new io_buffer([](io_buffer* iob, size_t version) {

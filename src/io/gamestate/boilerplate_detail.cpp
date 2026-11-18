@@ -79,27 +79,12 @@ void GamestateLoadDetail::pre_load() { // do we NEED this...?
     g_city.migration.reset();
     g_city_planner.reset();
     g_city.init();
-    g_message_manager.init();
     game.init_state();
     game.animation_timers_init();
     sound_city_init();
-    building_clear_all();
-    building_storage_clear_all();
+    io_buffer::reset_all();
     building_barracks_clear_tower_sentry_request();
-    g_city.figures.init_figures();
-    g_enemy_armies.clear();
-    // .map files carry no cities chunk; stale cities would rewrite empire objects in load_mission_metadata.
-    g_empire.clear_cities_data();
     figure_name_init();
-    g_formations.clear_all();
-    figure_route_clear_all();
-    map_routing_stats_clear();
-    g_recorded_paths.clear();
-    // Troop carry lives outside city_data; clear so old saves (no chunk) and map
-    // loads cannot inherit a stale snapshot from the previous session.
-    g_campaign_carry.clear();
-
-    g_simulation.simtime.init(2098);
     grid_xx::clear_all_grids();
 
     map_image_context_init();

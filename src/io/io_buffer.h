@@ -56,6 +56,7 @@ using io_buffer_bind = void(io_buffer *io, size_t version);
 // whole system silently blank. So: add a chunk behind a version gate, add its
 // defaulter in the same breath.
 using io_buffer_default = void(size_t version);
+using io_buffer_reset = void();
 
 class io_buffer {
 private:
@@ -70,6 +71,9 @@ private:
     // manually defined external binding schema
     io_buffer_bind *bind_callback;
     io_buffer_default *default_callback = nullptr;
+    io_buffer_reset* reset_callback = nullptr;
+
+    void register_reset(io_buffer_reset* rclb);
 
     // this is the parent of the below READ / WRITE functions, written
     // into a single generalized form.
@@ -263,9 +267,13 @@ public:
     bool has_default() const { return default_callback != nullptr || has_reset_data(); }
     void apply_default(size_t version);
 
+    static void reset_all();
+
     io_buffer();
     io_buffer(io_buffer_bind bclb);
     io_buffer(io_buffer_bind bclb, io_buffer_default dclb);
+    io_buffer(io_buffer_bind bclb, io_buffer_reset rclb);
+    io_buffer(io_buffer_bind bclb, io_buffer_default dclb, io_buffer_reset rclb);
     virtual ~io_buffer();
 };
 
