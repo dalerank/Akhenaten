@@ -6,7 +6,7 @@
 #include "city/city_warnings.h"
 #include "core/calc.h"
 #include "core/log.h"
-#include "game/game.h"
+#include "game/simulation.h"
 #include "game/game_config.h"
 #include "game/game_events.h"
 #include "js/js_game.h"
@@ -238,9 +238,9 @@ void city_migration_t::update_month() {
     });
 
     logs::info("[migration] %d.%02d pop=%d room=%d/%d reachable_room=%d sentiment=%d unemp=%d%%",
-               game.simtime.year, game.simtime.month + 1,
-               g_city.population.current, g_city.population.room_in_houses, g_city.population.total_capacity,
-               room_reachable, g_city.sentiment.value, g_city.labor.unemployment_percentage);
+      g_simulation.simtime.year, g_simulation.simtime.month + 1, g_city.population.current,
+      g_city.population.room_in_houses, g_city.population.total_capacity, room_reachable, g_city.sentiment.value,
+      g_city.labor.unemployment_percentage);
     logs::info("[migration] pct=%d (sent=%d unemp=%d) queue=%d/%d batch=%d/%d duration=%d/%d",
                percentage, percentage_by_sentiment, percentage_by_unemployments,
                immigration_queue_size, emigration_queue_size,

@@ -22,7 +22,7 @@
 #include "graphics/image.h"
 #include "building/building_granary.h"
 #include "graphics/graphics.h"
-#include "game/game.h"
+#include "game/simulation.h"
 #include "widget/city/ornaments.h"
 #include "js/js_game.h"
 #include <numeric>
@@ -995,8 +995,8 @@ void building_bazaar::spawn_figure() {
     const bool remake_buyer_timer = !!game_features::gameplay_change_bazaar_buyer_spawn_timer;
     // OG: day % 8 == bazaar_index % 8. Remake flag: buyers share labor spawn_due.
     const bool buyers_due = remake_buyer_timer
-        ? spawn_due
-        : ((game.simtime.day % 8) == (g_city.figures.bazaar_figure_pass_index % 8));
+                              ? spawn_due
+                              : ((g_simulation.simtime.day % 8) == (g_city.figures.bazaar_figure_pass_index % 8));
 
     if (buyers_due) {
         if (multi) {

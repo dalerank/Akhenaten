@@ -8,7 +8,7 @@
 #include "core/variant.h"
 #include "core/profiler.h"
 #include "core/random.h"
-#include "game/game.h"
+#include "game/simulation.h"
 
 #include <algorithm>
 
@@ -158,12 +158,12 @@ int ANK_FUNCTION_UNIFIED(__city_create_invasion)(const bvariant_map &args) {
     if (desc.trigger == EVENT_TRIGGER_ONLY_VIA_EVENT) {
         desc.year = std::max(delay, 0);
     } else if (delay >= 0) {
-        const int month_abs = game.simtime.years_since_start() * 12 + game.simtime.month + delay;
+        const int month_abs = g_simulation.simtime.years_since_start() * 12 + g_simulation.simtime.month + delay;
         desc.year = month_abs / 12;
         desc.month = month_abs % 12;
     } else {
-        desc.year = args.i32("year", game.simtime.years_since_start());
-        desc.month = args.i32("month", game.simtime.month);
+        desc.year = args.i32("year", g_simulation.simtime.years_since_start());
+        desc.month = args.i32("month", g_simulation.simtime.month);
     }
     return g_scenario.events.create_invasion(desc);
 }

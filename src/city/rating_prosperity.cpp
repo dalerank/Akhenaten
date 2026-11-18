@@ -1,7 +1,7 @@
 #include "city/city.h"
 
 #include "core/calc.h"
-#include "game/game.h"
+#include "game/simulation.h"
 #include "scenario/scenario.h"
 #include "building/building_house.h"
 #include "building/building_temple_complex.h"
@@ -263,7 +263,7 @@ void city_t::update_prosperity_explanation() {
     const prosperity_change_t c = prosperity_change(in, in.construction_this_year);
     const int change = c.change;
 
-    if (change == 0 || (ratings.prosperity < 1 && game.simtime.year == g_scenario.start_year)) {
+    if (change == 0 || (ratings.prosperity < 1 && g_simulation.simtime.year == g_scenario.start_year)) {
         ratings.prosperity_explanation = e_prosperity_reason_none;
         ratings.prosperity_trend = e_prosperity_same;
         return;

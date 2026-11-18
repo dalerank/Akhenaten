@@ -884,7 +884,7 @@ void city_religion_t::update() {
     //        BAST_houses_destruction();
 
     // at the start of every month
-    if (game.simtime.day == 0) {
+    if (g_simulation.simtime.day == 0) {
         update_monthly_data(randm_god);
     }
 }

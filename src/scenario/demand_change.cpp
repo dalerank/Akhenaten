@@ -6,7 +6,7 @@
 #include "empire/empire.h"
 #include "empire/empire_city.h"
 #include "empire/trade_route.h"
-#include "game/game.h"
+#include "game/simulation.h"
 #include "scenario/scenario.h"
 
 void scenario_demand_change_init(void) {
@@ -22,8 +22,8 @@ void scenario_demand_change_process() {
         if (!g_scenario.demand_changes[i].year)
             continue;
 
-        if (game.simtime.year != g_scenario.demand_changes[i].year + g_scenario.start_year
-            || game.simtime.month != g_scenario.demand_changes[i].month) {
+        if (g_simulation.simtime.year != g_scenario.demand_changes[i].year + g_scenario.start_year
+            || g_simulation.simtime.month != g_scenario.demand_changes[i].month) {
             continue;
         }
 

@@ -4,7 +4,7 @@
 #include "graphics/elements/lang_text.h"
 #include "imgui.h"
 #include "imgui_internal.h"
-#include "game/game.h"
+#include "game/simulation.h"
 #include "scenario/scenario.h"
 
 void game_debug_show_properties_object(pcstr prefix, event_ph_t &e) {
@@ -20,8 +20,8 @@ void game_debug_show_properties_object(pcstr prefix, event_ph_t &e) {
         game_debug_show_property("event_id", e.event_id, true);
 
         bstring256 type_name;
-        game_debug_show_property("Execute", [&] { 
-            auto date = game.simtime.date();
+        game_debug_show_property("Execute", [&] {
+            auto date = g_simulation.simtime.date();
             e.time.year = date.year;
             e.time.month = date.month;
             e.event_trigger_type = EVENT_TRIGGER_ONCE;

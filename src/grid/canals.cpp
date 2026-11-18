@@ -111,7 +111,7 @@ static bool canal_image_follows_water(int grid_offset) {
 }
 
 static bool basin_hold_pass_now() {
-    const uint32_t total_days = game.simtime.total_days;
+    const uint32_t total_days = g_simulation.simtime.total_days;
     if (total_days != s_hold_prev_total_days) {
         s_hold_prev_total_days = total_days;
         s_hold_subpass = 0;

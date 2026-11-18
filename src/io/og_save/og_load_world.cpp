@@ -5,7 +5,7 @@
 #include "core/random.h"
 #include "empire/empire.h"
 #include "empire/trade_route.h"
-#include "game/game.h"
+#include "game/simulation.h"
 #include "grid/building.h"
 #include "grid/elevation.h"
 #include "grid/figure.h"
@@ -84,7 +84,7 @@ namespace og {
     }
 
     void load_world(const savegame& s) {
-        auto& time = game.simtime;
+        auto& time = g_simulation.simtime;
         time.tick = s.value<int32_t>(CHUNK_GAME_TIME_TICK);
         time.day = s.value<int32_t>(CHUNK_GAME_TIME_DAY);
         time.month = s.value<int32_t>(CHUNK_GAME_TIME_MONTH);

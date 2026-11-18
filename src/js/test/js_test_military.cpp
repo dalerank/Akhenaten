@@ -1290,13 +1290,13 @@ static void __test_enemy_formations_update() {
 }
 ANK_FUNCTION(__test_enemy_formations_update);
 
-#include "game/game.h"
+#include "game/simulation.h"
 #include "scenario/scenario_event_manager.h"
 #include "scenario/event_phrases.h"
 
 static void __test_simtime_set(int years_since_start, int month) {
-    game.simtime.year = g_scenario.start_year + years_since_start;
-    game.simtime.month = month;
+    g_simulation.simtime.year = g_scenario.start_year + years_since_start;
+    g_simulation.simtime.month = month;
 }
 ANK_FUNCTION_2(__test_simtime_set);
 

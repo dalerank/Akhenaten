@@ -2,10 +2,12 @@
 
 #include "io/io_buffer.h"
 #include "scenario/scenario.h"
-#include "game/game.h"
+#include "game/simulation.h"
 #include "js/js_game.h"
 
 e_month_tokens_t ANK_CONFIG_ENUM(e_month_tokens);
+
+simulation_t g_simulation;
 
 void simulation_time_t::init(int y) {
     tick = 0;
@@ -68,7 +70,7 @@ void simulation_time_t::advance_year() {
 }
 
 io_buffer* iob_game_time = new io_buffer([](io_buffer* iob, size_t version) {
-    auto &data = game.simtime;
+    auto& data = g_simulation.simtime;
     // OG stores all of these as int32; BC years are negative and need the sign-extension bytes.
     iob->bind(BIND_SIGNATURE_INT32, &data.tick);
     iob->bind(BIND_SIGNATURE_INT32, &data.day);

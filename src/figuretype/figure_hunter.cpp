@@ -12,7 +12,7 @@
 #include "city/city_figures.h"
 #include "city/city_recorded_paths.h"
 #include "core/random.h"
-#include "game/game.h"
+#include "game/simulation.h"
 #include "building/building_storage.h"
 #include "game/resource.h"
 #include "js/js_game.h"
@@ -322,7 +322,7 @@ void figure_hunter::figure_action() {
         }
         advance_action(ACTION_12_OSTRICH_HUNTER_MOVE_RANDOM_PACKED);
         base.destination_tile = map_random_choose(free_tiles, tile(),
-          random_hash(game.simtime.absolute_tick(), id(), RANDOM_SALT_HUNTER_LOOK));
+          random_hash(g_simulation.simtime.absolute_tick(), id(), RANDOM_SALT_HUNTER_LOOK));
     } break;
 
     case ACTION_12_OSTRICH_HUNTER_MOVE_RANDOM_PACKED:

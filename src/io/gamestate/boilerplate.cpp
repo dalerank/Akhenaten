@@ -434,7 +434,7 @@ void GamestateIO::start_loaded_file() {
         g_city.map.entry_point = scenario_map_entry();
         g_city.map.exit_point = scenario_map_exit();
 
-        game.time_init(g_scenario.start_year);
+        g_simulation.simtime.init(g_scenario.start_year);
 
         // traders / empire
         g_empire_map.init_scenario();

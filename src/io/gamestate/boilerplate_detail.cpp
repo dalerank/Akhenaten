@@ -100,7 +100,7 @@ void GamestateLoadDetail::pre_load() { // do we NEED this...?
     // loads cannot inherit a stale snapshot from the previous session.
     g_campaign_carry.clear();
 
-    game.time_init(2098);
+    g_simulation.simtime.init(2098);
     map_monuments_clear();
     // clear grids
     map_image_clear();

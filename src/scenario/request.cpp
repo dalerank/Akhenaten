@@ -23,7 +23,7 @@
 #include "empire/empire.h"
 #include "empire/empire_city.h"
 #include "empire/empire_object.h"
-#include "game/game.h"
+#include "game/simulation.h"
 #include "js/js_game.h"
 
 #include <algorithm>
@@ -220,7 +220,7 @@ static int request_travel_months_or_default(const event_ph_t& e) {
 
 // OG event_helpers.c scenario_event_months_left: months to the deadline by the calendar.
 static int request_months_to_deadline(const event_ph_t& e) {
-    const game_date_t now = game.simtime.date();
+    const game_date_t now = g_simulation.simtime.date();
     return e.months_initial + (e.time.year - now.year) * 12 + e.time.month - now.month;
 }
 
@@ -358,8 +358,8 @@ static void troops_request_start(event_ph_t& e) {
     e.is_active = true;
     e.is_overdue = false;
     e.event_state = e_event_state_in_progress;
-    e.time.year = (int16_t)game.simtime.years_since_start();
-    e.time.month = (int16_t)game.simtime.month;
+    e.time.year = (int16_t)g_simulation.simtime.years_since_start();
+    e.time.month = (int16_t)g_simulation.simtime.month;
     e.quest_months_left = e.months_initial;
     e.appear_dialgow_shown = true;
     random_generate_next();

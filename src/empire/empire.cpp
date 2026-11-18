@@ -20,7 +20,7 @@
 #include "game/game_config.h"
 #include "core/log.h"
 #include "core/random.h"
-#include "game/game.h"
+#include "game/simulation.h"
 #include "content/vfs.h"
 #include <string>
 
@@ -544,6 +544,6 @@ int empire_t::random_city() {
     }
 
     const uint32_t h
-      = random_hash(game.simtime.absolute_day(true), (uint32_t)valid_cities.size(), RANDOM_SALT_EMPIRE_CITY);
+      = random_hash(g_simulation.simtime.absolute_day(true), (uint32_t)valid_cities.size(), RANDOM_SALT_EMPIRE_CITY);
     return valid_cities[h % valid_cities.size()]->name_id;
 }

@@ -25,7 +25,7 @@
 #include "grid/terrain.h"
 #include "game/game_config.h"
 #include "io/gamefiles/lang.h"
-#include "game/game.h"
+#include "game/simulation.h"
 #include "js/js_game.h"
 #include "widget/widget_city.h"
 #include "dev/debug.h"
@@ -365,7 +365,7 @@ void building_house::change_to(building &b, e_building_type new_type, bool force
     // OG has no delay between two evolutions; the 7-day one is a remake change.
     if (!force && new_type > b.type && game_features::gameplay_change_house_evolve_delay.to_bool()) {
         const int house_update_delay = std::min(house_up_delay(), 7);
-        const int absolute_day = game.simtime.absolute_day(true);
+        const int absolute_day = g_simulation.simtime.absolute_day(true);
         if (house_update_delay > 0 && absolute_day - d.last_update_day < house_update_delay) {
             return;
         }
@@ -413,7 +413,7 @@ void building_house::change_to(building &b, e_building_type new_type, bool force
     }
 
     map_building_tiles_add(b.id, b.tile, b.size, image_id, TERRAIN_BUILDING);
-    d.last_update_day = game.simtime.absolute_day(true);
+    d.last_update_day = g_simulation.simtime.absolute_day(true);
     d.image_id = image_id;
 }
 
@@ -818,7 +818,7 @@ void building_house::decay_services() {
     const building_id complex_id = g_city.buildings.temple_complex_id(BUILDING_TEMPLE_COMPLEX_BAST);
     if (complex_id) {
         const auto &params = building_temple_complex_bast::current_params();
-        if (params.service_decay_skip_odd_months && (game.simtime.month & 1)) {
+        if (params.service_decay_skip_odd_months && (g_simulation.simtime.month & 1)) {
             decay_extended_services = false;
         }
     }

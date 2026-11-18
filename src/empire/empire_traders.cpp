@@ -11,7 +11,8 @@
 #include "figuretype/figure_trader_ship.h"
 #include "building/building_dock.h"
 #include "core/calc.h"
-#include "game/game.h"
+#include "game/simulation.h"
+#include "game/game_events.h"
 #include "dev/debug.h"
 #include "city/city.h"
 #include "city/city_figures.h"
@@ -200,7 +201,7 @@ void empire_traders_manager::create_trader(int trade_route_id, int destination_c
     // guard against modulo-by-zero when the config/city delay range max is 0
     const int delay_max_bound = std::max(1, movement_delay_range.y);
     trader->movement_delay_max = std::max<uint8_t>(movement_delay_range.x,
-      random_hash(game.simtime.absolute_tick(), trader->id, RANDOM_SALT_EMPIRE_TRADER_DELAY) % delay_max_bound);
+      random_hash(g_simulation.simtime.absolute_tick(), trader->id, RANDOM_SALT_EMPIRE_TRADER_DELAY) % delay_max_bound);
 
     if (route.in_use && route.num_points > 0) {
         const auto &point = route.points[0];

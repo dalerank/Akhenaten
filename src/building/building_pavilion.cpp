@@ -10,7 +10,7 @@
 #include "graphics/graphics.h"
 #include "city/city.h"
 #include "core/random.h"
-#include "game/game.h"
+#include "game/simulation.h"
 #include "city/city_warnings.h"
 #include "construction/build_planner.h"
 #include "figuretype/figure_entertainer.h"
@@ -85,7 +85,8 @@ void building_pavilion::on_create(int orientation) {
 }
 
 void building_pavilion::update_month() {
-    runtime_data().play_index = random_hash(game.simtime.absolute_day(true), id(), RANDOM_SALT_PAVILION_PLAY) % 10;
+    runtime_data().play_index
+      = random_hash(g_simulation.simtime.absolute_day(true), id(), RANDOM_SALT_PAVILION_PLAY) % 10;
 }
 
 void building_pavilion::update_day() {

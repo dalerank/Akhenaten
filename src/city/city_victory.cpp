@@ -63,7 +63,7 @@ static bool burial_provisions_complete() {
 static e_victory_state fixed_editor_events_time_check(e_victory_state st, bool& has_goals) {
     const auto& wc = g_scenario.win_criteria;
     const bool had_goals = has_goals;
-    if (game.simtime.year >= city_victory_end_year()) {
+    if (g_simulation.simtime.year >= city_victory_end_year()) {
         if (wc.time_limit.enabled) {
             st = e_victory_state_lost;
         } else if (wc.survival_time.enabled) {
@@ -150,7 +150,7 @@ e_victory_state city_victory_t::determine_state(bool script_goals_met) {
         }
 
         if (check_time) {
-            if (game.simtime.year >= city_victory_end_year()) {
+            if (g_simulation.simtime.year >= city_victory_end_year()) {
                 if (time_limit) {
                     st = e_victory_state_lost;
                 } else if (survival && st == e_victory_state_none) {

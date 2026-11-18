@@ -7,7 +7,7 @@
 #include "construction/build_planner.h"
 #include "core/profiler.h"
 #include "figure/figure.h"
-#include "game/game.h"
+#include "game/simulation.h"
 #include "game/game_config.h"
 #include "game/resource.h"
 #include "game/undo.h"
@@ -651,7 +651,7 @@ void building_sphinx::update_map_orientation(int /*map_orientation*/) {
 }
 
 void building_sphinx::animate_spots() {
-    const int now = game.simtime.absolute_tick();
+    const int now = g_simulation.simtime.absolute_tick();
     int steps = (g_spot_anim_tick < 0) ? 1 : std::clamp(now - g_spot_anim_tick, 0, 64);
     g_spot_anim_tick = now;
 

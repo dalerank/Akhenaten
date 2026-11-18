@@ -24,7 +24,7 @@
 #include "io/io_buffer.h"
 #include "core/random.h"
 #include "game/mission.h"
-#include "game/game.h"
+#include "game/simulation.h"
 #include "game/game_events.h"
 #include "request.h"
 #include "scenario/editor.h"
@@ -158,7 +158,7 @@ declare_console_command_p(run_scenario_event) {
         return;
     }
 
-    auto date = game.simtime.date();
+    auto date = g_simulation.simtime.date();
     it->event_trigger_type = EVENT_TRIGGER_ONCE;
     it->time.year = date.year;
     it->time.month = date.month;
@@ -241,8 +241,8 @@ void event_manager_t::create_good_request(int tag, e_resource r, int amount, int
     int event_id = g_scenario_events.event_list.size() - 1;
     memset(&request, 0, sizeof(event_ph_t));
     request.type = EVENT_TYPE_REQUEST;
-    request.time.year = game.simtime.years_since_start();
-    request.time.month = game.simtime.month;
+    request.time.year = g_simulation.simtime.years_since_start();
+    request.time.month = g_simulation.simtime.month;
     request.item.value = r;
     request.sender_faction = 1;
     request.amount.value = amount;
@@ -265,8 +265,8 @@ void event_manager_t::create_pharaoh_gift(int tag, e_resource r, int amount) {
     int event_id = g_scenario_events.event_list.size() - 1;
     memset(&event, 0, sizeof(event_ph_t));
     event.type = EVENT_TYPE_GIFT_FROM_PHARAOH;
-    event.time.year = game.simtime.years_since_start();
-    event.time.month = game.simtime.month;
+    event.time.year = g_simulation.simtime.years_since_start();
+    event.time.month = g_simulation.simtime.month;
     event.item.value = r;
     event.sender_faction = 1;
     event.amount.value = amount;
@@ -288,8 +288,8 @@ void event_manager_t::create_foreign_army_attack_warning(int tag, int8_t sender_
     int event_id = g_scenario_events.event_list.size() - 1;
     memset(&event, 0, sizeof(event_ph_t));
     event.type = EVENT_TYPE_FOREIGN_ARMY_ATTACK_WARNING;
-    event.time.year = game.simtime.years_since_start();
-    event.time.month = game.simtime.month;
+    event.time.year = g_simulation.simtime.years_since_start();
+    event.time.month = g_simulation.simtime.month;
     event.tag_id = tag;
     event.location_fields = { -1, -1, -1, -1 };
     event.sender_faction = sender_faction;
@@ -306,8 +306,8 @@ void event_manager_t::create_distant_battle(int tag, pcstr city, vec2i pos) {
     int event_id = g_scenario_events.event_list.size() - 1;
     memset(&event, 0, sizeof(event_ph_t));
     event.type = EVENT_TYPE_DISTANT_BATTLE;
-    event.time.year = game.simtime.years_since_start();
-    event.time.month = game.simtime.month;
+    event.time.year = g_simulation.simtime.years_since_start();
+    event.time.month = g_simulation.simtime.month;
     event.tag_id = tag;
     const auto city_ptr = g_empire.city(city);
     event.city_id = city_ptr ? city_ptr->name_id : 0;
@@ -323,8 +323,8 @@ void event_manager_t::win_distant_battle(int tag, pcstr city, vec2i pos) {
     int event_id = g_scenario_events.event_list.size() - 1;
     memset(&event, 0, sizeof(event_ph_t));
     event.type = EVENT_TYPE_DISTANT_BATTLE_WON;
-    event.time.year = game.simtime.years_since_start();
-    event.time.month = game.simtime.month;
+    event.time.year = g_simulation.simtime.years_since_start();
+    event.time.month = g_simulation.simtime.month;
     event.tag_id = tag;
     const auto city_ptr = g_empire.city(city);
     event.city_id = city_ptr ? city_ptr->name_id : 0;
@@ -350,8 +350,8 @@ void event_manager_t::create_chain_event(int tag, e_event_type type, int amount,
     event.subtype = subtype;
     event.city_id = city_id;
     event.tag_id = tag;
-    event.time.year = game.simtime.years_since_start();
-    event.time.month = game.simtime.month;
+    event.time.year = g_simulation.simtime.years_since_start();
+    event.time.month = g_simulation.simtime.month;
     event.event_trigger_type = trigger;
     event.event_id = event_id;
     event.location_fields = { -1, -1, -1, -1 };
@@ -661,7 +661,7 @@ bool event_manager_t::create(const event_ph_t* master, const event_ph_t* parent,
         // OG scenario_event_chain: a child's delay (months, in time.year) counts from the current month.
         // Read from the template: update_randomized_values treats time as {year, month, ...} value/fixed/min/max.
         const int delay = master->time.year;
-        const game_date_t now = game.simtime.date();
+        const game_date_t now = g_simulation.simtime.date();
         const int month_abs = now.year * 12 + now.month + delay;
         child->time.year = month_abs / 12;
         child->time.month = month_abs % 12;
@@ -1224,8 +1224,7 @@ void event_manager_t::process_event(int id, bool via_event_trigger, int chain_ac
     // creation date which is in the past, so fire immediately instead of waiting for date match.
     const bool activated_child = event.event_trigger_type == EVENT_TRIGGER_ACTIVATED_8
                               || event.event_trigger_type == EVENT_TRIGGER_ACTIVATED_12;
-    const bool should_handle = !event.is_active
-                            && (activated_child || event.date() == game.simtime.date());
+    const bool should_handle = !event.is_active && (activated_child || event.date() == g_simulation.simtime.date());
     if (!(should_handle)) {
         return;
     }
@@ -1628,7 +1627,7 @@ constexpr int invasion_warning_count = 5;
 constexpr int invasion_bribe_kingdom = 15;
 
 int months_since_event_date(const event_ph_t &e) {
-    const game_date_t now = game.simtime.date();
+    const game_date_t now = g_simulation.simtime.date();
     return (now.year - e.time.year) * 12 + now.month - e.time.month;
 }
 
@@ -1911,7 +1910,7 @@ void event_manager_t::process_invasions() {
             e.event_state = e_event_state_initial;
             e.invasion_warnings_shown = 0;
             e.parent_id = -1;
-            e.time.year += game.simtime.years_since_start();
+            e.time.year += g_simulation.simtime.years_since_start();
         }
     }
 }

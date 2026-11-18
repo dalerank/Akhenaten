@@ -13,7 +13,7 @@
 #include "figuretype/figure_missile.h"
 #include "figuretype/figure_transport_ship.h"
 #include "figuretype/figure_war_ship.h"
-#include "game/game.h"
+#include "game/simulation.h"
 #include "game/game_events.h"
 #include "grid/grid.h"
 #include "grid/routing/routing.h"
@@ -133,7 +133,7 @@ void figure_enemy_warship::on_create() {
     base.allow_move_type = EMOVE_WATER;
     base.terrain_usage = TERRAIN_USAGE_ANY;
     runtime_data() = {};
-    runtime_data().leave_month = (uint8_t)game.simtime.month;
+    runtime_data().leave_month = (uint8_t)g_simulation.simtime.month;
     advance_action(ACTION_8_ENEMY_WARSHIP_WAITING);
 }
 
@@ -145,7 +145,7 @@ void figure_enemy_warship::launch(int wait_ticks, int invasion_sequence) {
     base.name = figure_name_get(base.type);
     base.damage = 0;
     d.invasion_sequence = (int16_t)invasion_sequence;
-    d.leave_month = (uint8_t)game.simtime.month;
+    d.leave_month = (uint8_t)g_simulation.simtime.month;
     advance_action(ACTION_8_ENEMY_WARSHIP_WAITING);
 }
 
@@ -425,7 +425,7 @@ void figure_enemy_warship::action_attack() {
         const bool on_land = map_water_grid(target->tile.grid_offset()) < 0;
         if (is_land_troop(target->type) || target->type == FIGURE_TRANSPORT_SHIP || target->type == FIGURE_WARSHIP) {
             if (anti_scum_random_15bit() & 1) {
-                d.leave_month = (uint8_t)((game.simtime.month + 1) % ENEMY_WARSHIP_MONTHS_PER_YEAR);
+                d.leave_month = (uint8_t)((g_simulation.simtime.month + 1) % ENEMY_WARSHIP_MONTHS_PER_YEAR);
             }
         }
         if (is_land_troop(target->type)) {
@@ -553,7 +553,7 @@ void figure_enemy_warship::figure_action() {
         advance_action(ACTION_12_ENEMY_WARSHIP_EVADING);
         d.secondary_action = ENEMY_WARSHIP_SECONDARY_WAITING;
     }
-    if ((d.leave_month + rules.stay_months) % ENEMY_WARSHIP_MONTHS_PER_YEAR == game.simtime.month) {
+    if ((d.leave_month + rules.stay_months) % ENEMY_WARSHIP_MONTHS_PER_YEAR == g_simulation.simtime.month) {
         advance_action(ACTION_18_ENEMY_WARSHIP_LEAVING);
         base.destination_tile = scenario_map_river_exit();
     }

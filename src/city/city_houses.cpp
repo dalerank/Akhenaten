@@ -3,7 +3,7 @@
 #include "core/random.h"
 #include "core/profiler.h"
 #include "figure/service.h"
-#include "game/game.h"
+#include "game/simulation.h"
 #include "game/game_config.h"
 #include "grid/routing/routing_terrain.h"
 #include "building/building_house.h"
@@ -121,7 +121,7 @@ void city_t::house_process_evolve() {
     g_city.houses_reset_demands();
     house_demands &demands = g_city.houses;
     bool has_expanded = false;
-    const int day = game.simtime.day;
+    const int day = g_simulation.simtime.day;
     buildings_house_do([&](building_house* house) {
         building& b = house->base;
         e_building_type save_type = house->type();

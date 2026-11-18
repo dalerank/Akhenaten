@@ -4,7 +4,7 @@
 #include "city/city_message.h"
 #include "city/city.h"
 #include "core/random.h"
-#include "game/game.h"
+#include "game/simulation.h"
 #include "scenario/scenario.h"
 
 struct revolt_t {
@@ -29,7 +29,7 @@ void scenario_revolt_process(void) {
     }
 
     if (g_revolt.state == e_event_state_initial) {
-        if (game.simtime.year == g_revolt.game_year && game.simtime.month == g_revolt.month) {
+        if (g_simulation.simtime.year == g_revolt.game_year && g_simulation.simtime.month == g_revolt.month) {
             if (g_city.buildings.count_active(BUILDING_CONSERVATORY) > 0) {
                 g_revolt.state = e_event_state_in_progress;
                 events::emit(event_message{ true, "message_revolt_start", 0, 0, SOURCE_LOCATION });
@@ -38,7 +38,7 @@ void scenario_revolt_process(void) {
             }
         }
     } else if (g_revolt.state == e_event_state_in_progress) {
-        if (g_revolt.end_month == game.simtime.month) {
+        if (g_revolt.end_month == g_simulation.simtime.month) {
             g_revolt.state = e_event_state_finished;
             events::emit(event_message{ true, "message_revolt_finished_finished", 0, 0, SOURCE_LOCATION });
         }

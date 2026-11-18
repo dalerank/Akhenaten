@@ -12,7 +12,7 @@
 #include "figuretype/figure_stonemason.h"
 #include "figuretype/figure_carpenter.h"
 #include "figuretype/figure_worker.h"
-#include "game/game.h"
+#include "game/simulation.h"
 #include "game/game_events.h"
 #include "game/resource.h"
 #include "game/undo.h"
@@ -1054,7 +1054,7 @@ int building_sun_temple::building_image_get() const {
 }
 
 void building_sun_temple::animate_spots() {
-    const int now = game.simtime.absolute_tick();
+    const int now = g_simulation.simtime.absolute_tick();
     int steps = (g_spot_anim_tick < 0) ? 1 : std::clamp(now - g_spot_anim_tick, 0, 64);
     g_spot_anim_tick = now;
     const int view = camera_view();

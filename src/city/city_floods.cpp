@@ -16,7 +16,7 @@
 #include "game/game_config.h"
 #include "core/log.h"
 #include "dev/debug.h"
-#include "game/game.h"
+#include "game/simulation.h"
 
 #include <cmath>
 #include <cctype>
@@ -142,12 +142,13 @@ int floods_t::debug_period() {
 }
 
 int floods_t::current_cycle() {
-    const int tick_since_year = game.simtime.absolute_tick(true) - game.simtime.absolute_tick_year_start() + 1;
+    const int tick_since_year
+      = g_simulation.simtime.absolute_tick(true) - g_simulation.simtime.absolute_tick_year_start() + 1;
     return (tick_since_year / 25) % CYCLES_IN_A_YEAR;
 }
 
 int floods_t::current_subcycle() {
-    return (game.simtime.absolute_tick(true) + 1) % 25;
+    return (g_simulation.simtime.absolute_tick(true) + 1) % 25;
 }
 
 bool floods_t::is_start_cycle() {
@@ -417,7 +418,7 @@ void floods_t::tick_update(bool calc_only) {
     }
 
     // update at the end of each day
-    if (game.simtime.tick == 50) {
+    if (g_simulation.simtime.tick == 50) {
         if (state_is(FLOOD_STATE_INUNDATED)) {
             g_city.religion.osiris_flood_will_destroy_active = 0;
         }

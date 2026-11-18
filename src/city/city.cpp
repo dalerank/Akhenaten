@@ -181,7 +181,7 @@ void city_t::ratings_update(bool is_yearly_update) {
     }
     calculate_max_prosperity();
 
-    if (is_prosperity_update_month(game.simtime.month)) {
+    if (is_prosperity_update_month(g_simulation.simtime.month)) {
         update_prosperity_rating();
     }
 }
@@ -1929,8 +1929,8 @@ mission_result_t city_make_mission_result(int scenario_id) {
     result.rating_kingdom = g_city.kingdome.rating;
     result.final_population = g_city.population.current;
     result.final_funds = g_city.finance.treasury;
-    result.completion_months = (uint32_t)(game.simtime.years_since_start() * simulation_time_t::months_in_year
-                                          + game.simtime.month + 1);
+    result.completion_months = (uint32_t)(g_simulation.simtime.years_since_start() * simulation_time_t::months_in_year
+                                          + g_simulation.simtime.month + 1);
     result.difficulty = game_difficulty();
     result.player_name = g_city.kingdome.player_name;
 

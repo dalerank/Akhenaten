@@ -59,7 +59,7 @@
 #include "figuretype/figure_transport_ship.h"
 #include "figuretype/figure_war_ship.h"
 #include "figuretype/figure_worker.h"
-#include "game/game.h"
+#include "game/simulation.h"
 #include "game/game_config.h"
 #include "game/resource.h"
 #include "grid/grid.h"
@@ -788,7 +788,7 @@ static int __test_bazaar_force_spawn(int bid) {
     // Align OG buyer stagger: pass index becomes 1 on spawn ? day % 8 == 1.
     g_city.figures.bazaar_figure_pass_index = 0;
     if (!game_features::gameplay_change_bazaar_buyer_spawn_timer.to_bool()) {
-        game.simtime.day = 1;
+        g_simulation.simtime.day = 1;
     }
     bazaar->spawn_figure();
     return 1;
@@ -1015,7 +1015,7 @@ static void __test_city_consume_food_monthly() {
 ANK_FUNCTION(__test_city_consume_food_monthly);
 
 static void __test_city_consume_food_weekly() {
-    g_city.resource.consume_food_weekly(game.simtime);
+    g_city.resource.consume_food_weekly(g_simulation.simtime);
 }
 ANK_FUNCTION(__test_city_consume_food_weekly);
 

@@ -565,7 +565,7 @@ static int __test_run_ticks(int n) {
     }
     n = std::clamp(n, 0, 100000);
     for (int i = 0; i < n; ++i) {
-        game.update_tick(game.simtime.tick);
+        game.update_tick(g_simulation.simtime.tick);
         events::process();
     }
     return n;

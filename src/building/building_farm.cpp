@@ -8,7 +8,7 @@
 #include "city/city_warnings.h"
 #include "core/calc.h"
 #include "game/resource.h"
-#include "game/game.h"
+#include "game/simulation.h"
 #include "game/game_events.h"
 #include "graphics/elements/panel.h"
 #include "graphics/elements/lang_text.h"
@@ -150,7 +150,7 @@ void building_farm::draw_workers(painter &ctx, building *b, tile2i tile, vec2i p
     int direction = map_random_get(b->tile.grid_offset()) % 8;
     const bool flood_imminent = b->is_floodplain_farm() && g_floods.state_is(FLOOD_STATE_IMMINENT);
 
-    direction = (direction >= 0) ? direction : (game.simtime.absolute_tick() % 128 / 16);
+    direction = (direction >= 0) ? direction : (g_simulation.simtime.absolute_tick() % 128 / 16);
     vec2i coords = farm_params().tile_coord(pos, d.worker_tile.x, d.worker_tile.y);
     draw_farm_worker(ctx, direction, d.worker_action, coords);
 }
@@ -163,10 +163,10 @@ bool building_farm::time_to_deliver(bool floodplains, int resource_id) {
         return g_floods.state_is(FLOOD_STATE_IMMINENT) && (current_cycle >= harvest_cycle);
     } else {
         const auto &months = farm_params().month_harvest;
-        const bool is_correct_month = std::count(months.begin(), months.end(), game.simtime.month) > 0;
+        const bool is_correct_month = std::count(months.begin(), months.end(), g_simulation.simtime.month) > 0;
         // OG: day == 0 only. Remake retry window (day < 2) behind the feature flag.
         const int day_limit = game_features::gameplay_change_farm_meadow_harvest_retry.to_bool() ? 2 : 1;
-        return is_correct_month && game.simtime.day < day_limit;
+        return is_correct_month && g_simulation.simtime.day < day_limit;
     }
 }
 

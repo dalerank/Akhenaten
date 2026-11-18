@@ -9,7 +9,7 @@
 #include "core/calc.h"
 #include "core/random.h"
 #include "figure/figure.h"
-#include "game/game.h"
+#include "game/simulation.h"
 #include "grid/building.h"
 #include "grid/canals.h"
 #include "grid/grid.h"
@@ -103,7 +103,7 @@ namespace {
         case EVENT_TRIGGER_BY_FAVOUR_IN_USE:
             return false;
         default:
-            return e.date() == game.simtime.date();
+            return e.date() == g_simulation.simtime.date();
         }
     }
 

@@ -65,11 +65,11 @@
 game_t game;
 events::typed_queue g_permanent_events;
 
-declare_console_ref_int16(gameyear, game.simtime.year)
-declare_console_ref_uint8(gamemonth, game.simtime.month)
+declare_console_ref_int16(gameyear, g_simulation.simtime.year);
+declare_console_ref_uint8(gamemonth, g_simulation.simtime.month);
 
 declare_console_command_p(nextyear) {
-    game.simtime.advance_year();
+    g_simulation.simtime.advance_year();
     game.advance_year();
 }
 const e_sound_type_tokens_t ANK_CONFIG_ENUM(e_sound_type_tokens);
@@ -136,7 +136,7 @@ void game_t::update_tick(int simtick) {
 
     g_city.update_tick(simtick);
 
-    if (simtime.advance_tick()) {
+    if (g_simulation.simtime.advance_tick()) {
         advance_day();
     }
 
@@ -152,7 +152,7 @@ void game_t::update_tick(int simtick) {
 void game_t::advance_year() {
     scenario_empire_process_expansion();
     game_undo_disable();
-    simtime.advance_year();
+    g_simulation.simtime.advance_year();
     city_population_request_yearly_update();
     g_city.finance.advance_year();
     g_city.migration.advance_year();
@@ -165,13 +165,13 @@ void game_t::advance_year() {
 }
 
 void game_t::advance_week() {
-    g_city.update_week(simtime);
+    g_city.update_week(g_simulation.simtime);
 
-    events::emit(event_advance_week::from_simtime(simtime));
+    events::emit(event_advance_week::from_simtime(g_simulation.simtime));
 }
 
 void game_t::advance_month() {
-    g_city.update_month(simtime);
+    g_city.update_month(g_simulation.simtime);
     g_distant_battle.update_month();
 
     random_generate_next();                  // TODO: find out the source / reason for this
@@ -192,10 +192,10 @@ void game_t::advance_month() {
     map_routing_update_land_citizen();
     //    city_message_sort_and_compact();
 
-    figure_locust::update_month(simtime.month + 1);
+    figure_locust::update_month(g_simulation.simtime.month + 1);
 
     // OG advance_month: the yearly update recomputes the ratings, so December does not also run the monthly one.
-    if (simtime.advance_month()) {
+    if (g_simulation.simtime.advance_month()) {
         advance_year();
     } else {
         g_city.ratings_update(/*yearly_update*/false);
@@ -203,14 +203,14 @@ void game_t::advance_month() {
 
     g_city.finance.update_estimate_taxes();
 
-    events::emit(event_advance_month::from_simtime(game.simtime));
+    events::emit(event_advance_month::from_simtime(g_simulation.simtime));
 }
 
 void game_t::advance_day() {
     OZZY_PROFILER_FUNCTION();
     //    map_advance_floodplain_growth();
 
-    day_result dr = simtime.advance_day();
+    day_result dr = g_simulation.simtime.advance_day();
     if (dr.month_advanced) {
         advance_month();
     }
@@ -222,13 +222,13 @@ void game_t::advance_day() {
     g_distant_battle.update_day();
     g_invasion_auto_resolve.update_day();
 
-    g_city.update_day(simtime);
+    g_city.update_day(g_simulation.simtime);
     g_city.victory.victory_check();
     g_city.avg_coverage.update();
 
     widget_minimap_invalidate();
 
-    events::emit(event_advance_day::from_simtime(game.simtime));
+    events::emit(event_advance_day::from_simtime(g_simulation.simtime));
 }
 
 void game_t::shutdown() {
@@ -331,7 +331,7 @@ static int get_elapsed_ticks() {
 
     int game_speed_index = 0;
     int ticks_per_frame = 1;
-    if (game.sim_time_runs || game.pause_allow) {
+    if (g_simulation.time_runs || game.pause_allow) {
         game_speed_index = (100 - game_features::gameopt_game_speed.to_int()) / 10;
         if (game_speed_index >= 10) {
             return 0;
@@ -468,7 +468,7 @@ void game_t::update() {
 
     int num_ticks = get_elapsed_ticks();
     for (int i = 0; i < num_ticks; i++) {
-        update_tick(simtime.tick);
+        update_tick(g_simulation.simtime.tick);
         // Above 100% speed one frame runs several ticks; handlers must see the tick that emitted the event.
         events::process();
     }
@@ -494,10 +494,6 @@ void game_t::frame_end() {
     execute_frame_end_events();
 }
 
-void game_t::time_init(int year) {
-    simtime.init(year);
-}
-
 void game_t::init_state() {
     g_city.victory.reset();
     g_city.migration.reset();
@@ -517,7 +513,7 @@ void game_t::city_sounds_frame_begin() {
 }
 
 void game_t::before_start_simulation() {
-    events::emit(event_advance_day::from_simtime(game.simtime));
+    events::emit(event_advance_day::from_simtime(g_simulation.simtime));
 }
 
 void game_t::handle_input_frame() {

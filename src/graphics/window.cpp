@@ -9,7 +9,7 @@
 #include "core/tokenum.h"
 #include "graphics/elements/ui_js.h"
 #include "game/game_events.h"
-#include "game/game.h"
+#include "game/simulation.h"
 
 windows_manager_t g_window_manager;
 
@@ -33,7 +33,7 @@ static void reset_input() {
 
 static void set_current_window(window_type* window) {
     g_window_manager.current_window = window;
-    game.sim_time_runs = window->sim_time_runs;
+    g_simulation.time_runs = window->sim_time_runs;
 }
 
 static void increase_queue_index() {

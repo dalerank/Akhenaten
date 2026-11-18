@@ -15,7 +15,7 @@
 #include "core/random.h"
 #include "figuretype/figure_plagued_citizen.h"
 #include "scenario/scenario.h"
-#include "game/game.h"
+#include "game/simulation.h"
 #include "js/js_game.h"
 #include "dev/debug.h"
 
@@ -170,7 +170,7 @@ void city_health_t::start_disease(int total_people, bool force, int plague_peopl
     }
 
     change(10);
-    events::emit(event_city_disease{game.simtime.absolute_day(true)});
+    events::emit(event_city_disease{g_simulation.simtime.absolute_day(true)});
 
     e_building_type btype = warn_building->type;
     int grid_offset = warn_building->tile.grid_offset();

@@ -5,7 +5,7 @@
 
 #include "building/building.h"
 #include "city/city.h"
-#include "game/game.h"
+#include "game/simulation.h"
 #include "game/game_config.h"
 #include "game/simulation_time.h"
 
@@ -201,8 +201,8 @@ void city_local_cults_t::advance_month() {
         return;
     }
 
-    const int month = game.simtime.month;
-    const int year = game.simtime.year;
+    const int month = g_simulation.simtime.month;
+    const int year = g_simulation.simtime.year;
     for (int ri = 0; ri < (int)std::size(g_calendar_rites); ++ri) {
         const auto &rite = g_calendar_rites[ri];
         if ((int)rite.month != month) {

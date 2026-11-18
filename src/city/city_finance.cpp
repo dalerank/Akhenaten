@@ -8,7 +8,7 @@
 #include "game/game_events.h"
 #include "core/calc.h"
 #include "game/difficulty.h"
-#include "game/game.h"
+#include "game/simulation.h"
 #include "game/game_config.h"
 #include "core/random.h"
 #include "figure/figure.h"
@@ -145,7 +145,7 @@ void city_finance_t::calculate_totals() {
 void city_finance_t::estimate_wages() {
     int monthly_wages = wages * g_city.labor.workers_employed / 10 / 12;
     this_year.expenses.wages = wages_so_far;
-    estimated_wages = (12 - game.simtime.month) * monthly_wages + wages_so_far;
+    estimated_wages = (12 - g_simulation.simtime.month) * monthly_wages + wages_so_far;
 }
 
 
@@ -234,14 +234,14 @@ void city_finance_t::update_estimate_taxes() {
 
     int monthly_patricians = apply_tax_rate(taxes.monthly.collected_nobles);
     int monthly_plebs = apply_tax_rate(taxes.monthly.collected_citizens);
-    int estimated_rest_of_year = (12 - game.simtime.month) * (monthly_patricians + monthly_plebs);
+    int estimated_rest_of_year = (12 - g_simulation.simtime.month) * (monthly_patricians + monthly_plebs);
 
     this_year.income.taxes = taxes.yearly.collected_citizens + taxes.yearly.collected_nobles;
     taxes.estimated_income = this_year.income.taxes + estimated_rest_of_year;
 
     int uncollected_patricians = apply_tax_rate(taxes.monthly.uncollected_nobles);
     int uncollected_plebs = apply_tax_rate(taxes.monthly.uncollected_citizens);
-    int uncollected_rest_of_year = (12 - game.simtime.month) * (uncollected_patricians + uncollected_plebs);
+    int uncollected_rest_of_year = (12 - g_simulation.simtime.month) * (uncollected_patricians + uncollected_plebs);
     int uncollected_ytd = taxes.yearly.uncollected_citizens + taxes.yearly.uncollected_nobles;
     taxes.estimated_uncollected = uncollected_ytd + uncollected_rest_of_year;
     if (taxes.estimated_uncollected < 0) {

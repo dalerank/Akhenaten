@@ -19,7 +19,7 @@
 #include "city/city_message.h"
 #include "core/random.h"
 #include "core/xstring.h"
-#include "game/game.h"
+#include "game/simulation.h"
 #include "figure/figure_impl.h"
 #include "figuretype/animal_asp.h"
 #include "figuretype/animal_lion.h"
@@ -304,7 +304,7 @@ static void __test_scenario_var_set_string(pcstr name, pcstr value) {
 ANK_FUNCTION_2(__test_scenario_var_set_string);
 
 static void __test_city_update_month() {
-    g_city.update_month(game.simtime);
+    g_city.update_month(g_simulation.simtime);
 }
 ANK_FUNCTION(__test_city_update_month);
 
@@ -435,7 +435,7 @@ static int __test_treasury() {
 ANK_FUNCTION(__test_treasury);
 
 static void __test_simtime_set_month(int month) {
-    game.simtime.month = std::clamp(month, 0, 11);
+    g_simulation.simtime.month = std::clamp(month, 0, 11);
 }
 ANK_FUNCTION_1(__test_simtime_set_month);
 

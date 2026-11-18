@@ -24,7 +24,7 @@
 #include "figure/formation.h"
 #include "figuretype/figure_cartpusher.h"
 #include "figuretype/figure_plagued_citizen.h"
-#include "game/game.h"
+#include "game/simulation.h"
 #include "game/game_events.h"
 #include "game/resource.h"
 #include "graphics/image.h"
@@ -755,10 +755,10 @@ ANK_FUNCTION_2(__test_house_consume_goods);
 
 // The daily evolve-and-consume pass of every house, as if it ran on `day` of the month.
 static void __test_city_house_process_evolve_on_day(int day) {
-    const int saved_day = game.simtime.day;
-    game.simtime.day = day;
+    const int saved_day = g_simulation.simtime.day;
+    g_simulation.simtime.day = day;
     g_city.house_process_evolve();
-    game.simtime.day = saved_day;
+    g_simulation.simtime.day = saved_day;
 }
 ANK_FUNCTION_1(__test_city_house_process_evolve_on_day);
 

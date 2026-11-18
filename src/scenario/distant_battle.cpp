@@ -13,7 +13,7 @@
 #include "empire/type.h"
 #include "figure/formation_batalion.h"
 #include "figuretype/figure_soldier.h"
-#include "game/game.h"
+#include "game/simulation.h"
 #include "empire/empire.h"
 #include "city/city.h"
 #include "scenario/scenario.h"
@@ -243,9 +243,10 @@ void dispatched_army_t::return_from_distant_battle() {
 void distant_battles_t::update_month() {
     if (!has_distant_battle()) {
         for (int i = 0; i < MAX_INVASIONS; i++) {
-            const bool should_start_battle = g_scenario.invasions[i].type == INVASION_TYPE_DISTANT_BATTLE
-                && game.simtime.year == g_scenario.invasions[i].year + g_scenario.start_year
-                && game.simtime.month == g_scenario.invasions[i].month
+            const bool should_start_battle
+              = g_scenario.invasions[i].type == INVASION_TYPE_DISTANT_BATTLE
+                && g_simulation.simtime.year == g_scenario.invasions[i].year + g_scenario.start_year
+                && g_simulation.simtime.month == g_scenario.invasions[i].month
                 && g_scenario.empire.distant_battle_enemy_travel_months > 4
                 && g_scenario.empire.distant_battle_kingdome_travel_months > 4;
 
@@ -499,9 +500,9 @@ void distant_battles_t::fight_distant_battle() {
             if (!request_linked) {
                 const auto city = g_empire.city(battle.city);
                 if (city && city->get_empire_object()) {
-                    uint16_t rtag
-                      = random_hash(game.simtime.absolute_day(true), battle.city, RANDOM_SALT_DISTANT_BATTLE_TAG)
-                        % 0xffff;
+                    uint16_t rtag = random_hash(g_simulation.simtime.absolute_day(true), battle.city,
+                                      RANDOM_SALT_DISTANT_BATTLE_TAG)
+                                    % 0xffff;
                     g_scenario.events.win_distant_battle(rtag, city->name_str.c_str(), city->get_empire_object()->pos);
                     g_scenario.events.execute_event(rtag);
                 }
