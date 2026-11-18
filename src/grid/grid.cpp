@@ -348,6 +348,7 @@ void map_grid_mark_near(grid_xx& grid, const std::function<bool(int grid_offset)
     const int w = scenario_map_data()->width;
     const int h = scenario_map_data()->height;
     const std::vector<uint8_t> d = map_grid_king_distance(is_source, radius);
+    map_grid_clear(grid);
     for (int y = 0; y < h; ++y) {
         for (int x = 0; x < w; ++x) {
             map_grid_set(grid, MAP_OFFSET(x, y), d[(size_t)y * w + x] <= radius ? value : 0);

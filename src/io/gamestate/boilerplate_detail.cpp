@@ -106,6 +106,7 @@ void GamestateLoadDetail::pre_load() { // do we NEED this...?
     map_image_clear();
     map_building_clear();
     map_terrain_clear();
+    map_wall_material_clear_all();
     map_canal_clear();
     map_figure_clear();
     map_property_clear();

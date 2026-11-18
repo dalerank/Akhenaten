@@ -35,6 +35,8 @@ void map_clay_init() {
     constexpr int CLAY_MAX = 65000;
     constexpr int RADIUS = 3;
 
+    map_grid_clear(g_terrain_clay);
+
     const int map_width = scenario_map_data()->width;
     const std::vector<uint8_t> distance = map_grid_king_distance(clay_water, RADIUS);
     map_tiles_foreach_map_tile([&](int grid_offset) {
