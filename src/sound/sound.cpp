@@ -970,6 +970,14 @@ void sound_manager_t::update_channel(int channel, vfs::path filename) {
     }
 }
 
+void ANK_PERMANENT_CALLBACK(event_sound_effect, ev) {
+    g_sound.on_sound_effect(ev);
+}
+
+void ANK_PERMANENT_CALLBACK(event_sound_track, ev) {
+    g_sound.on_sound_track(ev);
+}
+
 const e_sound_effect_tokens_t ANK_CONFIG_ENUM(e_sound_effect_tokens);
 
 void ANK_REGISTER_CONFIG_ITERATOR(config_load_sound_effects) {
