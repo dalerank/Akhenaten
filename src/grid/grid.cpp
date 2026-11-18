@@ -10,6 +10,9 @@
 #include <stdlib.h>
 #include <mutex>
 
+constexpr size_t gr_sizes[]
+  = {0, sizeof(uint8_t), sizeof(int8_t), sizeof(uint16_t), sizeof(int16_t), sizeof(uint32_t), sizeof(int32_t)};
+
 static const int DIRECTION_DELTA_PH[] = {-GRID_OFFSET(0, 1),
                                          GRID_OFFSET(1, -1),
                                          1,
