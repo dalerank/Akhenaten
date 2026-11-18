@@ -3,14 +3,8 @@
 
 #include "gamestate/boilerplate.h"
 
-#include <algorithm>
 #include <cassert>
 #include <vector>
-
-static std::vector<io_buffer*>& reset_registry() {
-    static std::vector<io_buffer*> s;
-    return s;
-}
 
 void io_buffer::hook(buffer* buf, int _size, bool _compressed, const char* _name) {
     p_buf = buf;
@@ -24,8 +18,6 @@ bool io_buffer::validate() {
         return false;
     if (access_type != CHUNK_ACCESS_REVOKED)
         return false;
-    if (bind_callback == nullptr && !inherited)
-        return false;
     return true;
 }
 
@@ -34,8 +26,6 @@ bool io_buffer::io_sync(chunk_buffer_access_e flag, size_t version) {
         return false;
     access_type = flag;
     bind_data(version);
-    //    if (!bind_callback(this))
-    //        return false;
     access_type = CHUNK_ACCESS_REVOKED;
     return true;
 }
@@ -46,61 +36,20 @@ bool io_buffer::write() {
     return io_sync(CHUNK_ACCESS_WRITE, save_data_version());
 }
 
-void io_buffer::apply_default(size_t version) {
-    if (default_callback != nullptr) {
-        default_callback(version);
-        return;
+static std::vector<std::pair<const char*, io_chunk*>>& chunk_registry() {
+    static std::vector<std::pair<const char*, io_chunk*>> s;
+    return s;
+}
+
+io_chunk::io_chunk(const char* name, e_presence _presence) : presence(_presence) {
+    for (const auto& [chunk_name, chunk] : chunk_registry()) {
+        assert(strcmp(chunk_name, name) != 0);
     }
-
-    reset_data(version);
+    chunk_registry().emplace_back(name, this);
 }
 
-io_buffer::io_buffer() {
-    bind_callback = nullptr;
-}
-io_buffer::io_buffer(io_buffer_bind bclb) {
-    bind_callback = bclb;
-}
-io_buffer::io_buffer(io_buffer_bind bclb, io_buffer_default dclb) {
-    bind_callback = bclb;
-    default_callback = dclb;
-}
-io_buffer::io_buffer(io_buffer_bind bclb, io_buffer_reset rclb) {
-    bind_callback = bclb;
-    register_reset(rclb);
-}
-io_buffer::io_buffer(io_buffer_bind bclb, io_buffer_default dclb, io_buffer_reset rclb) {
-    bind_callback = bclb;
-    default_callback = dclb;
-    register_reset(rclb);
-}
-io_buffer::~io_buffer() {
-    // this DOES NOT free up the internal buffer memory (for now)!!!
-    // it WILL become a dangling pointer!
-    if (reset_callback) {
-        auto& r = reset_registry();
-        r.erase(std::remove(r.begin(), r.end(), this), r.end());
+void io_chunk::reset_all() {
+    for (const auto& [chunk_name, chunk] : chunk_registry()) {
+        chunk->reset();
     }
 }
-
-void io_buffer::register_reset(io_buffer_reset* rclb) {
-    reset_callback = rclb;
-    reset_registry().push_back(this);
-}
-
-void io_buffer::reset_all() {
-    for (io_buffer* iob : reset_registry()) {
-        iob->reset_callback();
-    }
-}
-
-////
-
-void default_bind(io_buffer* iob, size_t version) {
-    //iob->bind(BIND_SIGNATURE_NONE);
-    iob->bind____skip(0);
-}
-io_buffer* iob_none = new io_buffer(default_bind);
-io_buffer* iob_ = new io_buffer([](io_buffer* iob, size_t version) {
-    //
-});

@@ -1,6 +1,5 @@
 #pragma once
 
-#include "io/io_buffer.h"
 #include "scenario/scenario_invasion.h"
 
 #include <array>
@@ -64,7 +63,6 @@ struct invasion_auto_resolve_t {
 };
 
 extern invasion_auto_resolve_t g_invasion_auto_resolve;
-extern io_buffer *iob_invasion_auto_resolve;
 
 // True if this figure (or its formation) belongs to a frozen pending wave.
 bool invasion_auto_resolve_figure_immune(const figure *f);

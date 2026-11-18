@@ -1,4 +1,5 @@
 #include "scenario_invasion.h"
+#include "scenario/scenario_invasion_chunks.h"
 
 #include "building/destruction.h"
 #include "city/city.h"
@@ -990,8 +991,8 @@ int scenario_invasion_start(invasion_opts_t opts) {
 
 // Julius layout: 101 × 32 = 3232 (matches push_chunk size).
 // per warning: u8×4 + i16×6 + i32 + u8 + pad11.
-io_buffer* iob_invasion_warnings = new io_buffer([](io_buffer* iob, size_t version) {
-    for (auto &w : g_invasions.warnings) {
+void invasion_warnings_chunk::bind_data(io_buffer* iob, size_t version) {
+    for (auto& w : g_invasions.warnings) {
         iob->bind_bool(w.in_use);
         iob->bind_bool(w.handled);
         iob->bind(BIND_SIGNATURE_UINT8, &w.invasion_path_id);
@@ -1005,23 +1006,25 @@ io_buffer* iob_invasion_warnings = new io_buffer([](io_buffer* iob, size_t versi
         iob->bind(BIND_SIGNATURE_UINT8, &w.invasion_id);
         iob->bind____skip(11);
     }
-});
+}
 
 // v172 stub: keep chunk in schema so old saves load; ignore contents.
-io_buffer *iob_invasion_event_pending = new io_buffer([] (io_buffer *iob, size_t version) {
+void invasion_event_pending_chunk::bind_data(io_buffer* iob, size_t version) {
     iob->bind____skip(272);
-}, [] (size_t version) {
+}
+
+void invasion_event_pending_chunk::load_defaults(size_t version) {
     // v172 stub: the chunk holds no state, it only keeps a slot in the old positional
     // layout. The defaulter exists to mark it optional for saves older than v172.
-});
+}
 
 // v173: active binds + history ring (audit/debug; binds are gameplay mid-fight).
 // Layout 1480: header 8 + 16×12 binds + 64×20 history.
-io_buffer *iob_invasion_runtime = new io_buffer([] (io_buffer *iob, size_t version) {
-    auto &data = g_invasions;
+void invasion_runtime_chunk::bind_data(io_buffer* iob, size_t version) {
+    auto& data = g_invasions;
     iob->bind(BIND_SIGNATURE_INT32, &data.history_count);
     iob->bind(BIND_SIGNATURE_INT32, &data.history_next);
-    for (auto &b : data.binds) {
+    for (auto& b : data.binds) {
         iob->bind_bool(b.in_use);
         iob->bind_bool(b.enemies_seen);
         iob->bind_u8(b.invasion_id);
@@ -1031,7 +1034,7 @@ io_buffer *iob_invasion_runtime = new io_buffer([] (io_buffer *iob, size_t versi
         iob->bind_u16(b.on_refusal_tag);
         iob->bind_u16(b.on_defeat_tag);
     }
-    for (auto &h : data.history) {
+    for (auto& h : data.history) {
         iob->bind_u16(h.seq);
         iob->bind(BIND_SIGNATURE_INT16, &h.year);
         iob->bind(BIND_SIGNATURE_INT8, &h.month);
@@ -1047,14 +1050,17 @@ io_buffer *iob_invasion_runtime = new io_buffer([] (io_buffer *iob, size_t versi
         iob->bind_u8(h.outcome);
         iob->bind____skip(2);
     }
-}, [] (size_t version) {
-    // saves older than v173 have no resolve binds or history ring
+}
+
+void invasion_runtime_chunk::load_defaults(size_t version) {
+    // saves older than v173 have no resolve binds or history
+    // ring
     g_invasions.history_count = 0;
     g_invasions.history_next = 0;
-    for (auto &b : g_invasions.binds) {
+    for (auto& b : g_invasions.binds) {
         b = {};
     }
-});
+}
 
 const enemy_properties_t &invasion_data_t::get_prop(e_enemy_type type) {
     return *g_enemy_properties[type];

@@ -1,4 +1,5 @@
 #include "random.h"
+#include "grid/random_chunks.h"
 #include "io/io_buffer.h"
 
 #include "core/random.h"
@@ -28,6 +29,6 @@ void map_random_set(int grid_offset, int value) {
     map_grid_set(random_xx, grid_offset, value);
 }
 
-io_buffer* iob_random_grid = new io_buffer([](io_buffer* iob, size_t version) {
+void random_grid_chunk::bind_data(io_buffer* iob, size_t version) {
     iob->bind(BIND_SIGNATURE_GRID, &random_xx);
-});
+}

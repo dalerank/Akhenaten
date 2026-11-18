@@ -1,4 +1,5 @@
 #include "floodplain.h"
+#include "grid/floodplain_chunks.h"
 
 #include "building_tiles.h"
 #include "building/building_dike.h"
@@ -624,10 +625,10 @@ void map_floodplain_apply_basin_fertility_bonus(int grid_offset) {
     map_update_tile_fertility(grid_offset, add);
 }
 
-io_buffer* iob_soil_fertility_grid = new io_buffer([](io_buffer* iob, size_t version) {
+void soil_fertility_grid_chunk::bind_data(io_buffer* iob, size_t version) {
     iob->bind(BIND_SIGNATURE_GRID, &g_terrain_floodplain_fertility);
-});
+}
 
-io_buffer* iob_terrain_floodplain_growth = new io_buffer([](io_buffer* iob, size_t version) {
+void terrain_floodplain_growth_chunk::bind_data(io_buffer* iob, size_t version) {
     iob->bind(BIND_SIGNATURE_GRID, &g_terrain_floodplain_growth);
-});
+}

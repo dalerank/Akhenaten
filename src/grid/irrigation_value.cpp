@@ -1,4 +1,5 @@
 #include "irrigation_value.h"
+#include "grid/irrigation_value_chunks.h"
 
 #include "building/building.h"
 #include "building/building_water_lift.h"
@@ -226,10 +227,11 @@ int irrigation_value_t::get_avg(tile2i tile, int size) {
     return count > 0 ? summ / count : 0;
 }
 
-io_buffer* iob_irrigation_value_grid = new io_buffer([](io_buffer* iob, size_t version) {
+void irrigation_value_grid_chunk::bind_data(io_buffer* iob, size_t version) {
     iob->bind(BIND_SIGNATURE_GRID, &g_irrigation_value_grid);
-}, [](size_t version) {
+}
+
+void irrigation_value_grid_chunk::load_defaults(size_t version) {
     // recomputed from water sources when the grid is absent
     map_grid_clear(g_irrigation_value_grid);
-});
-
+}

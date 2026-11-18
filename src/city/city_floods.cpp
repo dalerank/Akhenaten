@@ -1,4 +1,5 @@
 #include "city_floods.h"
+#include "city/city_floods_chunks.h"
 
 #include "building/building.h"
 #include "building/building_farm.h"
@@ -445,7 +446,7 @@ void floods_t::tick_update(bool calc_only) {
     map_floodplain_sub_growth();
 }
 
-io_buffer* iob_floodplain_settings = new io_buffer([](io_buffer* iob, size_t version) {
+void floodplain_settings_chunk::bind_data(io_buffer* iob, size_t version) {
     auto& data = g_floods;
 
     iob->bind(BIND_SIGNATURE_INT32, &data.season_initial);
@@ -460,4 +461,4 @@ io_buffer* iob_floodplain_settings = new io_buffer([](io_buffer* iob, size_t ver
     iob->bind(BIND_SIGNATURE_UINT8, &data.flood_progress_target);
     iob->bind____skip(1);
     iob->bind(BIND_SIGNATURE_INT32, &data.quality_last);
-});
+}

@@ -1,4 +1,5 @@
 #include "core/random.h"
+#include "core/random_chunks.h"
 
 #include "io/io_buffer.h"
 #include <string.h>
@@ -191,11 +192,11 @@ bool random_bool_lerp_scalar_int(int minimum, int maximum, int v) {
         return true;
 }
 
-io_buffer* iob_random_iv = new io_buffer([](io_buffer* iob, size_t version) {
+void random_iv_chunk::bind_data(io_buffer* iob, size_t version) {
     iob->bind(BIND_SIGNATURE_UINT32, &g_random_data.iv1);
     iob->bind(BIND_SIGNATURE_UINT32, &g_random_data.iv2);
     random_bits_fill();
-});
+}
 
 // used in OG Pharaoh to get non-deterministic random values
 uint16_t anti_scum_random_15bit(bool update) {

@@ -35,5 +35,3 @@ void map_wall_material_migrate_from_terrain();
 
 e_wall_material wall_material_from_building_type(e_building_type type);
 e_building_type wall_building_type_from_material(e_wall_material material);
-
-extern struct io_buffer *iob_wall_material_grid;

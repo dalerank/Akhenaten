@@ -1,4 +1,5 @@
 #include "stone.h"
+#include "grid/stone_chunks.h"
 
 #include "grid/grid.h"
 #include "grid/terrain.h"
@@ -29,10 +30,11 @@ void map_stone_init() {
       g_terrain_stone, [](int grid_offset) { return map_terrain_is(grid_offset, TERRAIN_ROCK); }, 2, 65000);
 }
 
-io_buffer* iob_stone = new io_buffer([](io_buffer* iob, size_t version) {
+void stone_grid_chunk::bind_data(io_buffer* iob, size_t version) {
     iob->bind(BIND_SIGNATURE_GRID, &g_terrain_stone);
-}, [](size_t version) {
+}
+
+void stone_grid_chunk::load_defaults(size_t version) {
     // saves older than this grid carry no ore at all
     map_grid_clear(g_terrain_stone);
-});
-
+}

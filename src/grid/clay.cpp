@@ -1,4 +1,5 @@
 #include "clay.h"
+#include "grid/clay_chunks.h"
 
 #include "grid/grid.h"
 #include "grid/terrain.h"
@@ -46,10 +47,11 @@ void map_clay_init() {
     });
 }
 
-io_buffer* iob_clay = new io_buffer([](io_buffer* iob, size_t version) {
+void clay_grid_chunk::bind_data(io_buffer* iob, size_t version) {
     iob->bind(BIND_SIGNATURE_GRID, &g_terrain_clay);
-}, [](size_t version) {
+}
+
+void clay_grid_chunk::load_defaults(size_t version) {
     // saves older than this grid carry no ore at all
     map_grid_clear(g_terrain_clay);
-});
-
+}

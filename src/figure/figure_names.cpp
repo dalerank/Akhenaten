@@ -1,4 +1,5 @@
 #include "figure/figure_names.h"
+#include "figure/figure_names_chunks.h"
 #include "io/io_buffer.h"
 #include "js/js_register.h"
 #include "core/random.h"
@@ -124,8 +125,8 @@ bstring32 figure_name_get(int type) {
 
 // OG io_data.c: this 84-byte chunk holds counter slots 40 down to 20 (groups 254..274). Slots 0..3 and 4..19
 // live in other OG chunks that are not bound here yet.
-io_buffer* iob_figure_names = new io_buffer([](io_buffer* iob, size_t version) {
+void figure_names_chunk::bind_data(io_buffer* iob, size_t version) {
     for (int slot = FIGURE_NAME_SAVED_SLOT_FIRST; slot >= FIGURE_NAME_SAVED_SLOT_LAST; slot--) {
         iob->bind(BIND_SIGNATURE_INT32, &g_figure_name_counters[slot]);
     }
-});
+}

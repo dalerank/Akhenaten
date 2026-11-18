@@ -1,4 +1,5 @@
 #include "sound_city.h"
+#include "sound/sound_city_chunks.h"
 
 #include "game/game_config.h"
 
@@ -559,8 +560,8 @@ static void og_city_sounds_image(std::array<og_city_sound_slot, SAVED_CHANNELS>&
     }
 }
 
-io_buffer* iob_city_sounds = new io_buffer([](io_buffer* iob, size_t version) {
+void city_sounds_chunk::bind_data(io_buffer* iob, size_t version) {
     static std::array<og_city_sound_slot, SAVED_CHANNELS> slots;
     og_city_sounds_image(slots);
     iob->bind(BIND_SIGNATURE_RAW, slots.data(), sizeof(og_city_sound_slot) * slots.size());
-});
+}

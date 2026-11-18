@@ -166,8 +166,3 @@ int malaria_risk_t::get_avg(tile2i tile, int size) {
 
     return summ / count;
 }
-
-io_buffer* iob_malaria_risk_grid = new io_buffer([](io_buffer* iob, size_t version) {
-    iob->bind(BIND_SIGNATURE_GRID, &g_malaria_risk_grid);
-});
-

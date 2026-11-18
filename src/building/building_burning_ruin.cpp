@@ -1,4 +1,5 @@
 #include "building_burning_ruin.h"
+#include "building/building_burning_ruin_chunks.h"
 
 #include "game/undo.h"
 #include "city/city.h"
@@ -178,17 +179,17 @@ bool building_burning_ruin::update() {
     return false;
 }
 
-io_buffer *iob_building_list_burning = new io_buffer([] (io_buffer *iob, size_t version) {
+void building_list_burning_chunk::bind_data(io_buffer* iob, size_t version) {
     for (int i = 0; i < g_burning_ruins.capacity(); i++) {
         iob->bind(BIND_SIGNATURE_UINT16, &g_burning_ruins[i]);
     }
-});
+}
 
-io_buffer *iob_building_burning_list_info = new io_buffer([] (io_buffer *iob, size_t version) {
+void building_burning_list_info_chunk::bind_data(io_buffer* iob, size_t version) {
     uint32_t total = g_burning_ruins.capacity();
     uint32_t size = g_burning_ruins.size();
     iob->bind(BIND_SIGNATURE_UINT32, &total);
     iob->bind(BIND_SIGNATURE_UINT32, &size);
 
     g_burning_ruins.resize(size);
-});
+}

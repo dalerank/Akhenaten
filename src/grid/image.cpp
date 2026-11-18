@@ -5,6 +5,7 @@
 #include "io/io_buffer.h"
 #include "grid/grid.h"
 #include "image.h"
+#include "grid/image_chunks.h"
 
 grid_xx g_images_grid(FS_UINT32);
 grid_xx g_images_grid_backup(FS_UINT32);
@@ -63,10 +64,6 @@ void map_image_restore_at(int grid_offset) {
     map_grid_set(g_images_grid, grid_offset, map_grid_get(g_images_grid_backup, grid_offset));
 }
 
-void map_image_fix_icorrect_tiles() {
-    io_image_grid::instance().fix_incorrect_tiles_img();
-}
-
 void map_image_clear(void) {
     map_grid_clear(g_images_grid);
     map_grid_clear(g_images_alt_grid);
@@ -92,7 +89,7 @@ void set_image_grid_correction_shift(int shift) {
     image_shift = shift;
 }
 
-uint32_t io_image_grid::fix_img_index(int grid_offset, uint32_t index) const {
+static uint32_t fix_img_index(int grid_offset, uint32_t index) {
     if (index >= 15600 && index <= 15616) {
         if (index == 15600 || index == 15601) {
             return 15063;
@@ -103,7 +100,7 @@ uint32_t io_image_grid::fix_img_index(int grid_offset, uint32_t index) const {
     return index;
 }
 
-void io_image_grid::fix_incorrect_tiles_img() {
+static void fix_incorrect_tiles_img() {
     for (int grid_offset = 0; grid_offset < GRID_SIZE_TOTAL; grid_offset++) {
         int64_t nv = map_grid_get(g_images_grid, grid_offset) - image_shift;
         nv = fix_img_index(grid_offset, nv);
@@ -111,11 +108,10 @@ void io_image_grid::fix_incorrect_tiles_img() {
     }
 }
 
-void io_image_grid::bind_data(size_t version) {
-    bind(BIND_SIGNATURE_GRID, &g_images_grid);
+void map_image_fix_icorrect_tiles() {
+    fix_incorrect_tiles_img();
 }
 
-io_image_grid& io_image_grid::instance() {
-    static io_image_grid inst;
-    return inst;
+void image_grid_chunk::bind_data(io_buffer* iob, size_t version) {
+    iob->bind(BIND_SIGNATURE_GRID, &g_images_grid);
 }

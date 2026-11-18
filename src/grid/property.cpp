@@ -1,4 +1,5 @@
 #include "property.h"
+#include "grid/property_chunks.h"
 #include "io/io_buffer.h"
 
 #include "grid/random.h"
@@ -166,13 +167,13 @@ void map_property_restore(void) {
     map_grid_copy(edge_backup, g_edge_grid);
 }
 
-io_buffer* iob_bitfields_grid = new io_buffer([](io_buffer* iob, size_t version) {
+void bitfields_grid_chunk::bind_data(io_buffer* iob, size_t version) {
     iob->bind(BIND_SIGNATURE_GRID, &bitfields_grid);
-});
+}
 
-io_buffer* iob_edge_grid = new io_buffer([](io_buffer* iob, size_t version) {
+void edge_grid_chunk::bind_data(io_buffer* iob, size_t version) {
     iob->bind(BIND_SIGNATURE_GRID, &g_edge_grid);
-});
+}
 
 uint8_t map_bitfield_get(int grid_offset) {
     return map_grid_get(bitfields_grid, grid_offset);

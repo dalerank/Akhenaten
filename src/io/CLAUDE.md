@@ -14,7 +14,7 @@ Chunk-based save/load and localization strings.
 | `gamestate/save_versions.h` | `latest_save_version` changelog |
 | `gamestate/file_schemas.h` | Format schema entry points (`file_schema`, builders) |
 | `gamestate/file_schema_*.cpp` | Per-format `push_chunk` lists (map / sav / svx) |
-| `gamestate/chunks.h` | Global `io_buffer*` declarations for game data chunks |
+| `gamestate/chunks.h` | Chunk types with no other owner (junk, bizarre fields, schema slots) |
 | `io.h` | Low-level file reads (`io_read_file_into_buffer`, sg3/sgx counts) |
 | `gamefiles/lang.h` | Localization string management |
 
@@ -41,7 +41,7 @@ Current save data version: **189** (sectioned `.svx`; chunk field layout unchang
 ### ChunkSerializer
 
 ```cpp
-g_chunk_io.push_chunk(size, compressed, "buildings", iob_buildings);
+g_chunk_io.push_chunk<buildings_chunk>(size, compressed);
 g_chunk_io.serialize(path, 0, FILE_FORMAT_SAVE_FILE_EXT, save_data_version(), file_schema);
 g_chunk_io.unserialize(reader, 0, format, GamestateIO::read_file_version, file_schema);
 ```
@@ -72,12 +72,12 @@ Chunk names are on-disk keys: max `svx::NAME_LEN` (32), no silent truncation.
 
 ### io_buffer
 
-Bind callback for read/write. Optional default callback / `reset_data()` for chunks that may be absent in older saves. Presence of a defaulter = chunk is optional.
+Typed bind/read/write over a chunk buffer. `io_chunk_of<T>` adapts a chunk type to it: it registers one object per type the schemas use, calls `T::bind_data`, makes the chunk optional when `T::load_defaults` exists, and calls `T::reset()` before a load.
 
 ## Adding a New Save Chunk
 
-1. Declare `io_buffer *io_mychunk` in `gamestate/chunks.h`, implement bind (+ defaulter if the chunk can be missing from older files).
-2. `push_chunk(size, compressed, "short_name", iob)` in `file_schema_svx.cpp` for `FILE_FORMAT_SAVE_FILE_EXT` (name ≤ 32 chars).
+1. In `<module>_chunks.h` next to the module that owns the state, declare `struct short_name_chunk { static constexpr const char* name = "short_name"; static void bind_data(io_buffer* iob, size_t version); };`, adding `static void load_defaults(size_t version)` for a chunk older files may lack and `static void reset()` to clear the state before a load. Define them in the module's .cpp.
+2. Include that `_chunks.h` in the schema and call `push_chunk<short_name_chunk>(size, compressed)` in `file_schema_svx.cpp` for `FILE_FORMAT_SAVE_FILE_EXT` (name ≤ 32 chars).
 3. Bump `latest_save_version` only if existing field layout/meaning changes — or when gating the new chunk with `if (file_version > N)` until the version cascade is cleaned up.
 4. Do not rename existing chunk names without an alias plan — names are part of the `.svx` format.
 

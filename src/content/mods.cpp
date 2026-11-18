@@ -1,4 +1,5 @@
 #include "mods.h"
+#include "content/mods_chunks.h"
 
 #include "content/content.h"
 #include "content/reader.h"
@@ -279,32 +280,32 @@ bool mods_apply_saved_mods() {
     return true;
 }
 
-io_buffer* iob_mods = new io_buffer(
-  [](io_buffer* iob, size_t version) {
-      (void)version;
-      std::vector<saved_mod> list;
-      if (!iob->is_read_access()) {
-          list = mods_active_list();
-      }
-      uint16_t count = (uint16_t)std::min<size_t>(list.size(), MODS_CHUNK_MAX);
-      uint16_t reserved = 0;
-      iob->bind(BIND_SIGNATURE_UINT16, &count);
-      iob->bind(BIND_SIGNATURE_UINT16, &reserved);
-      list.resize(MODS_CHUNK_MAX);
-      for (auto& m : list) {
-          iob->bind_xstr<48>(m.id);
-          iob->bind_xstr<16>(m.version);
-      }
-      if (iob->is_read_access()) {
-          list.resize(std::min<int>(count, MODS_CHUNK_MAX));
-          mods_check_save(list);
-      }
-  },
-  [](size_t) {
-      // Saves before version 198 have no record of their mods: nothing to compare.
-      g_save_mods_differ = false;
-      g_save_mods_pending.clear();
-  });
+void mods_chunk::bind_data(io_buffer* iob, size_t version) {
+    (void)version;
+    std::vector<saved_mod> list;
+    if (!iob->is_read_access()) {
+        list = mods_active_list();
+    }
+    uint16_t count = (uint16_t)std::min<size_t>(list.size(), MODS_CHUNK_MAX);
+    uint16_t reserved = 0;
+    iob->bind(BIND_SIGNATURE_UINT16, &count);
+    iob->bind(BIND_SIGNATURE_UINT16, &reserved);
+    list.resize(MODS_CHUNK_MAX);
+    for (auto& m : list) {
+        iob->bind_xstr<48>(m.id);
+        iob->bind_xstr<16>(m.version);
+    }
+    if (iob->is_read_access()) {
+        list.resize(std::min<int>(count, MODS_CHUNK_MAX));
+        mods_check_save(list);
+    }
+}
+
+void mods_chunk::load_defaults(size_t version) {
+    // Saves before version 198 have no record of their mods: nothing to compare.
+    g_save_mods_differ = false;
+    g_save_mods_pending.clear();
+}
 
 void mods_queue_enabled_scripts() {
     for (const auto& it : g_mods.list) {

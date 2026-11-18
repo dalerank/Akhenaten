@@ -1,4 +1,5 @@
 #include "vegetation.h"
+#include "grid/vegetation_chunks.h"
 
 #include "figure.h"
 #include "grid.h"
@@ -72,9 +73,9 @@ void map_vegetation_growth_update() {
     }
 }
 
-io_buffer* iob_vegetation_growth = new io_buffer([](io_buffer* iob, size_t version) {
+void vegetation_growth_chunk::bind_data(io_buffer* iob, size_t version) {
     iob->bind(BIND_SIGNATURE_GRID, &g_terrain_vegetation_growth);
-});
+}
 
 int gatherers_harvesting_point(int grid_offset) {
     // check if there's any figure already gathering at the spot

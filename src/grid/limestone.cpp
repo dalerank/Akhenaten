@@ -1,4 +1,5 @@
 #include "limestone.h"
+#include "grid/limestone_chunks.h"
 
 #include "grid/grid.h"
 #include "grid/terrain.h"
@@ -29,10 +30,11 @@ void map_limestone_init() {
       g_terrain_limestone, [](int grid_offset) { return map_terrain_is(grid_offset, TERRAIN_ROCK); }, 2, 65000);
 }
 
-io_buffer* iob_limestone = new io_buffer([](io_buffer* iob, size_t version) {
+void limestone_grid_chunk::bind_data(io_buffer* iob, size_t version) {
     iob->bind(BIND_SIGNATURE_GRID, &g_terrain_limestone);
-}, [](size_t version) {
+}
+
+void limestone_grid_chunk::load_defaults(size_t version) {
     // saves older than this grid carry no ore at all
     map_grid_clear(g_terrain_limestone);
-});
-
+}

@@ -47,7 +47,7 @@ void ChunkSerializer::clear() {
     alloc_index = 0;
 }
 
-buffer* ChunkSerializer::push_chunk(int size, bool compressed, const char* name, io_buffer* iob) {
+buffer* ChunkSerializer::push_chunk(int size, bool compressed, const char* name, io_chunk* iob) {
     if (alloc_index >= file_chunks.size())
         file_chunks.push_back(file_chunk_t());
 
@@ -432,14 +432,14 @@ bool ChunkSerializer::apply_svx_chunk_state(file_chunk_t* chunk) {
         return true;
     }
 
-    if (!chunk->iob->has_default()) {
+    if (!chunk->iob->is_optional()) {
         logs::error("Unable to read file [%s], required chunk [%s] is missing.",
                     file_path.c_str(), chunk->name);
         return false;
     }
 
     logs::info("chunk [%s] missing from [%s], defaults applied", chunk->name, file_path.c_str());
-    chunk->iob->apply_default(file_version);
+    chunk->iob->load_defaults(file_version);
     return true;
 }
 

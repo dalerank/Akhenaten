@@ -1,4 +1,5 @@
 #include "terrain.h"
+#include "grid/terrain_chunks.h"
 #include "io/io_buffer.h"
 
 #include "city/city_floods.h"
@@ -504,14 +505,14 @@ int map_get_UNK04(int grid_offset) {
     return map_grid_get(GRID04_8BIT, grid_offset);
 }
 
-io_buffer* iob_terrain_grid = new io_buffer([](io_buffer* iob, size_t version) { 
-    iob->bind(BIND_SIGNATURE_GRID, &g_terrain_grid); 
-});
+void terrain_grid_chunk::bind_data(io_buffer* iob, size_t version) {
+    iob->bind(BIND_SIGNATURE_GRID, &g_terrain_grid);
+}
 
-io_buffer* iob_GRID03_32BIT = new io_buffer([](io_buffer* iob, size_t version) {
+void GRID03_32BIT_chunk::bind_data(io_buffer* iob, size_t version) {
     iob->bind(BIND_SIGNATURE_GRID, &GRID03_32BIT);
-});
+}
 
-io_buffer* iob_GRID04_8BIT = new io_buffer([](io_buffer* iob, size_t version) {
+void GRID04_8BIT_chunk::bind_data(io_buffer* iob, size_t version) {
     iob->bind(BIND_SIGNATURE_GRID, &GRID04_8BIT);
-});
+}

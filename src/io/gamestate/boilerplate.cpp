@@ -87,7 +87,6 @@
 #include "city/city_recorded_paths.h"
 #include "empire/empire_traders.h"
 
-#include "chunks.h"
 #include "file_schemas.h"
 #include "city/coverage.h"
 #include "city/city_floods.h"

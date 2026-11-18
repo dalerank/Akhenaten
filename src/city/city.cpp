@@ -1,4 +1,5 @@
 #include "city.h"
+#include "city/city_chunks.h"
 
 #include "city/constants.h"
 #include "city/buildings.h"
@@ -583,7 +584,6 @@ const city_overlay *city_t::overlay() {
     return city_overlay::get(current_overlay);
 }
 
-
 void city_t::houses_reset_demands() {
     houses.missing.fountain = 0;
     houses.missing.well = 0;
@@ -1152,13 +1152,13 @@ static void city_data_bind_og_layout(io_buffer* iob) {
     verify_no_crash(iob->get_offset() == 37808);
 }
 
-io_buffer* iob_city_data = new io_buffer([](io_buffer* iob, size_t version) {
+void city_data_chunk::bind_data(io_buffer* iob, size_t version) {
     if (g_chunk_io.get_file_format() != FILE_FORMAT_SAVE_FILE_EXT || version >= 199) {
         city_data_bind_og_layout(iob);
         return;
     }
 
-    auto &data = g_city;
+    auto& data = g_city;
     iob->bind(BIND_SIGNATURE_RAW, &data.unused.other_player, 18904);
     verify_no_crash(iob->get_offset() == 18904);
     iob->bind(BIND_SIGNATURE_INT8, &data.unused.unknown_00a0);
@@ -1247,7 +1247,7 @@ io_buffer* iob_city_data = new io_buffer([](io_buffer* iob, size_t version) {
     }
 
     iob->bind(BIND_SIGNATURE_INT16, &data.unused.unknown_27f0);
-    iob->bind____skip(2); 
+    iob->bind____skip(2);
     for (int i = 0; i < 18; i++) {
         iob->bind(BIND_SIGNATURE_INT16, &data.unused.unknown_27f4[i]);
     }
@@ -1255,9 +1255,9 @@ io_buffer* iob_city_data = new io_buffer([](io_buffer* iob, size_t version) {
     iob->bind____skip(4);
     iob->bind(BIND_SIGNATURE_INT32, data.map.exit_point);
     iob->bind____skip(4);
-    iob->bind____skip(4);  // iob->bind(BIND_SIGNATURE_INT32, data.buildings.palace_point);
+    iob->bind____skip(4); // iob->bind(BIND_SIGNATURE_INT32, data.buildings.palace_point);
     iob->bind____skip(4);
-    iob->bind____skip(4);  // iob->bind(BIND_SIGNATURE_INT32, &data.buildings.palace_building_id);
+    iob->bind____skip(4); // iob->bind(BIND_SIGNATURE_INT32, &data.buildings.palace_building_id);
     iob->bind(BIND_SIGNATURE_INT16, &data.unused.unknown_2828);
     iob->bind____skip(2);
     for (int i = 0; i < RESOURCES_MAX; i++) {
@@ -1530,7 +1530,7 @@ io_buffer* iob_city_data = new io_buffer([](io_buffer* iob, size_t version) {
     iob->bind____skip(8);
     iob->bind(BIND_SIGNATURE_UINT8, &data.kingdome.player_rank);
     iob->bind____skip(3);
-    iob->bind_u16(data.kingdome.personal_savings); // ok
+    iob->bind_u16(data.kingdome.personal_savings);                // ok
     iob->bind_u16(data.kingdome.campaign_carry_personal_savings); // savings carried over to next mission
     //    for (int i = 0; i < 2; i++)
     //        iob->bind(BIND_SIGNATURE_INT32, &city_data.unused.unknown_4374[i]);
@@ -1560,7 +1560,7 @@ io_buffer* iob_city_data = new io_buffer([](io_buffer* iob, size_t version) {
 
     iob->bind____skip(2);
     iob->bind____skip(2);
-    iob->bind____skip(2);  // iob->bind(BIND_SIGNATURE_INT16, &data.buildings.palace_placed);
+    iob->bind____skip(2); // iob->bind(BIND_SIGNATURE_INT16, &data.buildings.palace_placed);
     iob->bind____skip(2);
     iob->bind____skip(2);
     iob->bind____skip(2);
@@ -1679,7 +1679,7 @@ io_buffer* iob_city_data = new io_buffer([](io_buffer* iob, size_t version) {
     iob->bind____skip(4);
     iob->bind(BIND_SIGNATURE_INT32, &data.ratings.monument_riot_cause);
     iob->bind____skip(4);
-    iob->bind____skip(4); //iob->bind(BIND_SIGNATURE_INT32, &data.mission.tutorial_senate_built); // ok
+    iob->bind____skip(4); // iob->bind(BIND_SIGNATURE_INT32, &data.mission.tutorial_senate_built); // ok
     iob->bind(BIND_SIGNATURE_UINT32, data.buildings.distribution_center);
     iob->bind(BIND_SIGNATURE_INT32, &data.buildings.distribution_center_building_id);
     iob->bind(BIND_SIGNATURE_INT32, &data.buildings.distribution_center_placed);
@@ -1821,26 +1821,28 @@ io_buffer* iob_city_data = new io_buffer([](io_buffer* iob, size_t version) {
     iob->bind____skip(3);
     iob->bind____skip(57);
     verify_no_crash(iob->get_offset() == 37808);
-});
+}
 
-io_buffer* iob_city_data_extra = new io_buffer([](io_buffer* iob, size_t version) {
-    auto &data = g_city;
+void city_data_extra_chunk::bind_data(io_buffer* iob, size_t version) {
+    auto& data = g_city;
     iob->bind(BIND_SIGNATURE_INT16, &data.unused.faction_bytes[0]);
     iob->bind(BIND_SIGNATURE_INT16, &data.unused.faction_bytes[1]);
     iob->bind(BIND_SIGNATURE_XSTR, data.kingdome.player_name_adversary, MAX_PLAYER_NAME);
     iob->bind(BIND_SIGNATURE_XSTR, data.kingdome.player_name, MAX_PLAYER_NAME);
     iob->bind(BIND_SIGNATURE_INT32, &data.unused.faction_id);
-});
+}
 
-io_buffer *iob_labor_storage_priority = new io_buffer([](io_buffer *iob, size_t version) {
+void labor_storage_priority_chunk::bind_data(io_buffer* iob, size_t version) {
     iob->bind(BIND_SIGNATURE_INT32, &g_city.labor.categories[LABOR_CATEGORY_STORAGE].priority);
-}, [](size_t version) {
+}
+
+void labor_storage_priority_chunk::load_defaults(size_t version) {
     // before the labor split, STORAGE had no priority of its own
     g_city.labor.categories[LABOR_CATEGORY_STORAGE].priority = 0;
-});
+}
 
-io_buffer *iob_enhanced_religion = new io_buffer([](io_buffer *iob, size_t version) {
-    auto &lc = g_city.local_cults;
+void enhanced_religion_chunk::bind_data(io_buffer* iob, size_t version) {
+    auto& lc = g_city.local_cults;
     for (int i = 0; i < LOCAL_CULT_MAX; ++i) {
         iob->bind(BIND_SIGNATURE_UINT8, &lc.cults[i].unlocked);
         iob->bind(BIND_SIGNATURE_UINT8, &lc.cults[i].active);
@@ -1861,22 +1863,24 @@ io_buffer *iob_enhanced_religion = new io_buffer([](io_buffer *iob, size_t versi
     iob->bind(BIND_SIGNATURE_UINT8, &lc.reserved_pad[2]);
     // 4*4 + 13 = 29; pad to 64
     iob->bind____skip(35);
-}, [](size_t version) {
+}
+
+void enhanced_religion_chunk::load_defaults(size_t version) {
     // pre-Enhanced saves have no local cults and no festival calendar state
     g_city.local_cults = {};
-});
+}
 
-io_buffer* iob_city_graph_order = new io_buffer([](io_buffer* iob, size_t version) {
-    auto &data = g_city;
+void city_graph_order_chunk::bind_data(io_buffer* iob, size_t version) {
+    auto& data = g_city;
     iob->bind(BIND_SIGNATURE_INT32, &data.unused.unknown_order);
     iob->bind(BIND_SIGNATURE_INT32, &data.unused.unknown_order);
-});
+}
 
-io_buffer *iob_city_bookmarks = new io_buffer([] (io_buffer *iob, size_t version) {
-    auto &data = g_city;
+void bookmarks_chunk::bind_data(io_buffer* iob, size_t version) {
+    auto& data = g_city;
     static_assert(data.bookmarks.MAX_BOOKMARKS == 4);
-    // OG layout: {int32 grid_offset, int32 unused} per bookmark; OG keeps the second at -1.
-    // Our .svx before v194 kept 4 tiles instead.
+    // OG layout: {int32 grid_offset, int32 unused} per bookmark; OG keeps the second
+    // at -1. Our .svx before v194 kept 4 tiles instead.
     const bool og_layout = g_chunk_io.get_file_format() != FILE_FORMAT_SAVE_FILE_EXT || version >= 194;
     for (int i = 0; i < data.bookmarks.MAX_BOOKMARKS; i++) {
         tile2i& point = data.bookmarks.points[i];
@@ -1893,20 +1897,20 @@ io_buffer *iob_city_bookmarks = new io_buffer([] (io_buffer *iob, size_t version
             point = offset >= 0 ? tile2i(offset) : tile2i::invalid;
         }
     }
-});
+}
 
 // The first 64 bytes held the 16 cloud positions; they live in the "clouds" chunk now (v200) and
 // these bytes are written as zero.
-io_buffer* iob_city_utilities_data = new io_buffer([](io_buffer* iob, size_t version) {
+void building_list_small_chunk::bind_data(io_buffer* iob, size_t version) {
     iob->bind____skip(64);
     iob->bind____skip(36);
     iob->bind____skip(900);
-});
+}
 
-io_buffer *iob_building_list_large = new io_buffer([] (io_buffer *iob, size_t version) {
+void building_list_large_chunk::bind_data(io_buffer* iob, size_t version) {
     iob->bind____skip(6000);
     g_scenario.bind_data(iob, version, 2000);
-});
+}
 
 pcstr city_player_name() {
     return g_city.kingdome.player_name.c_str();

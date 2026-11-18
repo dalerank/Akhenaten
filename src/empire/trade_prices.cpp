@@ -1,4 +1,5 @@
 #include "trade_prices.h"
+#include "empire/trade_prices_chunks.h"
 
 #include "io/io_buffer.h"
 #include "city/city.h"
@@ -43,9 +44,9 @@ int trade_price_sell(e_resource resource, int bonus_inclusion) {
     return 999;
 }
 
-io_buffer* iob_trade_prices = new io_buffer([](io_buffer* iob, size_t version) {
+void trade_prices_chunk::bind_data(io_buffer* iob, size_t version) {
     for (int i = 0; i < RESOURCES_MAX; i++) {
         iob->bind(BIND_SIGNATURE_INT32, &prices[i].buy);
         iob->bind(BIND_SIGNATURE_INT32, &prices[i].sell);
     }
-});
+}

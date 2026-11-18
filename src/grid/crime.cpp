@@ -156,8 +156,3 @@ int __crime_at_tile(int x, int y) {
     return g_crime.get(tile2i(x, y));
 }
 ANK_FUNCTION_2(__crime_at_tile)
-
-io_buffer* iob_crime_grid = new io_buffer([](io_buffer* iob, size_t version) {
-    iob->bind(BIND_SIGNATURE_GRID, &g_crime_grid);
-});
-

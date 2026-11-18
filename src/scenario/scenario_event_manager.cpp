@@ -1,4 +1,5 @@
 #include "scenario_event_manager.h"
+#include "scenario/scenario_event_manager_chunks.h"
 
 #include "building/building.h"
 #include "building/building_house.h"
@@ -2036,7 +2037,7 @@ static void bind_event_ph(io_buffer *iob, event_ph_t &event) {
     iob->bind(BIND_SIGNATURE_RAW, event.reasons.data(), sizeof(event.reasons));
 }
 
-io_buffer* iob_scenario_events = new io_buffer([](io_buffer* iob, size_t version) {
+void scenario_events_chunk::bind_data(io_buffer* iob, size_t version) {
     auto& data = g_scenario_events;
 
     if (iob->is_read_access()) {
@@ -2065,11 +2066,11 @@ io_buffer* iob_scenario_events = new io_buffer([](io_buffer* iob, size_t version
     for (int i = 0; i < n; i++) {
         bind_event_ph(iob, data.event_list[i]);
     }
-});
+}
 
-io_buffer* iob_scenario_events_extra = new io_buffer([](io_buffer* iob, size_t version) {
+void scenario_events_extra_chunk::bind_data(io_buffer* iob, size_t version) {
     // TODO ????????
-});
+}
 
 static const uint8_t* skip_non_digits(const uint8_t* str) {
     int safeguard = 0;

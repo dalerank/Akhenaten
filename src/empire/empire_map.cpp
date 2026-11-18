@@ -1,4 +1,5 @@
 #include "empire_map.h"
+#include "empire/empire_map_chunks.h"
 
 #include "city/constants.h"
 #include "city/city_resource.h"
@@ -110,9 +111,9 @@ void empire_map_t::select_object(vec2i pos) {
     }
 }
 
-io_buffer* iob_empire_map_params = new io_buffer([](io_buffer* iob, size_t version) {
+void empire_map_params_chunk::bind_data(io_buffer* iob, size_t version) {
     auto& data = g_empire_map;
     iob->bind(BIND_SIGNATURE_INT32, &data.scroll_x);
     iob->bind(BIND_SIGNATURE_INT32, &data.scroll_y);
     iob->bind(BIND_SIGNATURE_INT32, &data.selected_obj);
-});
+}

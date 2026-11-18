@@ -1,6 +1,7 @@
 ﻿#include "view.h"
 
 #include <cmath>
+#include "graphics/view/view_chunks.h"
 
 #include "io/io_buffer.h"
 #include "core/calc.h"
@@ -30,7 +31,7 @@ viewport_t g_camera;
 static const int X_DIRECTION_FOR_ORIENTATION[] = {1, 1, -1, -1};
 static const int Y_DIRECTION_FOR_ORIENTATION[] = {1, -1, -1, 1};
 
-io_buffer* iob_camera_view_orientation = new io_buffer([](io_buffer* iob, size_t version) {
+void city_view_orientation_chunk::bind_data(io_buffer* iob, size_t version) {
     auto& data = g_camera;
 
     iob->bind(BIND_SIGNATURE_INT32, &data.orientation);
@@ -39,9 +40,9 @@ io_buffer* iob_camera_view_orientation = new io_buffer([](io_buffer* iob, size_t
         data.orientation = 2 * (data.orientation / 2); // ensure even number
     else
         data.orientation = 0;
-});
+}
 
-io_buffer* iob_city_view_camera = new io_buffer([](io_buffer* iob, size_t version) {
+void city_view_camera_chunk::bind_data(io_buffer* iob, size_t version) {
     auto& data = g_camera;
 
     iob->bind(BIND_SIGNATURE_INT32, &data.tile_internal.x);
@@ -51,7 +52,7 @@ io_buffer* iob_city_view_camera = new io_buffer([](io_buffer* iob, size_t versio
     //    set_viewport_with_sidebar();
     data.go_to_corner_tile(data.tile_internal, false);
     data.update_derived_camera_state();
-});
+}
 
 carera_scrollable viewport_t::get_scrollable_pixel_limits(float p) {
     carera_scrollable result;

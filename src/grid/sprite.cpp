@@ -1,4 +1,5 @@
 #include "sprite.h"
+#include "grid/sprite_chunks.h"
 #include "io/io_buffer.h"
 
 #include "grid/grid.h"
@@ -27,10 +28,10 @@ void map_sprite_restore(void) {
     map_grid_copy(g_sprite_grid_backup, g_sprite_grid);
 }
 
-io_buffer* iob_sprite_grid = new io_buffer([](io_buffer* iob, size_t version) {
+void sprite_grid_chunk::bind_data(io_buffer* iob, size_t version) {
     iob->bind(BIND_SIGNATURE_GRID, &g_sprite_grid);
-});
+}
 
-io_buffer* iob_sprite_backup_grid = new io_buffer([](io_buffer* iob, size_t version) {
+void sprite_backup_grid_chunk::bind_data(io_buffer* iob, size_t version) {
     iob->bind(BIND_SIGNATURE_GRID, &g_sprite_grid_backup);
-});
+}

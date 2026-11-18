@@ -1,4 +1,5 @@
 #include "desirability.h"
+#include "grid/desirability_chunks.h"
 
 #include "building/building.h"
 #include "core/calc.h"
@@ -168,6 +169,6 @@ int __desirability_at_tile(int x, int y) {
 }
 ANK_FUNCTION_2(__desirability_at_tile)
 
-io_buffer* iob_desirability_grid = new io_buffer([](io_buffer* iob, size_t version) {
+void desirability_grid_chunk::bind_data(io_buffer* iob, size_t version) {
     iob->bind(BIND_SIGNATURE_GRID, &g_desirability_grid);
-});
+}

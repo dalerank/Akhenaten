@@ -1,6 +1,7 @@
 ﻿#include "canals.h"
 
 #include "core/profiler.h"
+#include "grid/canals_chunks.h"
 #include "graphics/image_groups.h"
 #include "graphics/image.h"
 #include "graphics/graphics.h"
@@ -97,13 +98,13 @@ void map_canal_restore(void) {
     map_grid_copy(canals_grid_backup, canals_grid);
 }
 
-io_buffer* iob_aqueduct_grid = new io_buffer([](io_buffer* iob, size_t version) {
+void aqueduct_grid_chunk::bind_data(io_buffer* iob, size_t version) {
     iob->bind(BIND_SIGNATURE_GRID, &canals_grid);
-});
+}
 
-io_buffer *iob_aqueduct_backup_grid = new io_buffer([] (io_buffer *iob, size_t version) {
+void aqueduct_backup_grid_chunk::bind_data(io_buffer* iob, size_t version) {
     iob->bind(BIND_SIGNATURE_GRID, &canals_grid_backup);
-});
+}
 
 static bool canal_image_follows_water(int grid_offset) {
     const int building_id = map_building_at(grid_offset);

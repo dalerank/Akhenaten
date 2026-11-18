@@ -1,4 +1,5 @@
 #include "criteria.h"
+#include "scenario/criteria_chunks.h"
 
 #include "io/io_buffer.h"
 #include "js/js_game.h"
@@ -122,6 +123,6 @@ int scenario_criteria_max_year() {
     return max_game_year;
 }
 
-io_buffer* iob_max_year = new io_buffer([](io_buffer* iob, size_t version) {
+void max_year_chunk::bind_data(io_buffer* iob, size_t version) {
     iob->bind(BIND_SIGNATURE_UINT32, &max_game_year);
-});
+}

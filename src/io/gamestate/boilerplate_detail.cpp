@@ -82,7 +82,7 @@ void GamestateLoadDetail::pre_load() { // do we NEED this...?
     game.init_state();
     game.animation_timers_init();
     sound_city_init();
-    io_buffer::reset_all();
+    io_chunk::reset_all();
     building_barracks_clear_tower_sentry_request();
     figure_name_init();
     grid_xx::clear_all_grids();

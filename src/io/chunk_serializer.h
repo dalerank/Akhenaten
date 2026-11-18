@@ -17,7 +17,7 @@ struct file_chunk_t {
     // for everything, since there a chunk is always at its fixed position
     bool present = false;
     buffer* buf = nullptr;
-    io_buffer* iob = nullptr;
+    io_chunk* iob = nullptr;
     int compressed = 0;
     char name[svx::NAME_LEN + 1] = "";
 
@@ -84,7 +84,11 @@ private:
                             void (*init_schema)(e_file_format _format, const int _version));
 public:
     // push parametric chunk onto the schema
-    buffer* push_chunk(int size, bool compressed, const char* name, io_buffer* iob);
+    template <typename T>
+    buffer* push_chunk(int size, bool compressed) {
+        return push_chunk(size, compressed, T::name, &io_chunk_of<T>::registered);
+    }
+    buffer* push_chunk(int size, bool compressed, const char* name, io_chunk* iob);
 
     const int num_chunks();
     const int get_file_version() {

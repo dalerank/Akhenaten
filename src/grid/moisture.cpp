@@ -1,4 +1,5 @@
 #include "moisture.h"
+#include "grid/moisture_chunks.h"
 #include "grid.h"
 #include "terrain.h"
 #include "tiles.h"
@@ -193,6 +194,6 @@ void map_moisture_recompute_profile() {
     }
 }
 
-io_buffer* iob_moisture_grid = new io_buffer([](io_buffer* iob, size_t version) {
+void moisture_grid_chunk::bind_data(io_buffer* iob, size_t version) {
     iob->bind(BIND_SIGNATURE_GRID, &terrain_moisture);
-});
+}

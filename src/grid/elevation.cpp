@@ -1,4 +1,5 @@
 #include "elevation.h"
+#include "grid/elevation_chunks.h"
 #include "io/io_buffer.h"
 
 #include "grid/grid.h"
@@ -39,5 +40,6 @@ void map_elevation_remove_cliffs(void) {
     }
 }
 
-io_buffer* iob_elevation_grid
-  = new io_buffer([](io_buffer* iob, size_t version) { iob->bind(BIND_SIGNATURE_GRID, &elevation); });
+void elevation_grid_chunk::bind_data(io_buffer* iob, size_t version) {
+    iob->bind(BIND_SIGNATURE_GRID, &elevation);
+}

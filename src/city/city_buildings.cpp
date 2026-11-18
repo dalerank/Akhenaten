@@ -1,4 +1,5 @@
 #include "city_buildings.h"
+#include "city/city_buildings_chunks.h"
 
 #include "city/city.h"
 #include "game/undo.h"
@@ -506,17 +507,19 @@ static void bind_building_record(io_buffer* iob, building* b, building_id i, siz
     b->max_workers = params.laborers;
 }
 
-io_buffer* iob_buildings = new io_buffer(
-  [](io_buffer* iob, size_t version) {
-      if (iob->is_read_access()) {
-          stub_records_guard_reset();
-      }
-      for (int i = 0; i < MAX_BUILDINGS; i++) {
-          bind_building_record(iob, &g_all_buildings[i], i, version);
-      }
-      // building_extra_data.created_sequence = 0;
-  },
-  [] { building_clear_all(); });
+void buildings_chunk::bind_data(io_buffer* iob, size_t version) {
+    if (iob->is_read_access()) {
+        stub_records_guard_reset();
+    }
+    for (int i = 0; i < MAX_BUILDINGS; i++) {
+        bind_building_record(iob, &g_all_buildings[i], i, version);
+    }
+    // building_extra_data.created_sequence = 0;
+}
+
+void buildings_chunk::reset() {
+    building_clear_all();
+}
 
 namespace {
     struct stub_records_guard_t {
@@ -534,9 +537,17 @@ namespace {
         figure_get(0)->bind(iob);
     }
 
-    std::vector<uint8_t> serialize_record(io_buffer_bind* bind) {
+    struct record_buffer : io_buffer {
+        void (*bind_record)(io_buffer* iob, size_t version);
+
+        explicit record_buffer(void (*fn)(io_buffer*, size_t)) : bind_record(fn) {}
+
+        void bind_data(size_t version) override { bind_record(this, version); }
+    };
+
+    std::vector<uint8_t> serialize_record(void (*bind)(io_buffer*, size_t)) {
         buffer buf(1024);
-        io_buffer iob(bind);
+        record_buffer iob(bind);
         iob.hook(&buf, (int)buf.size(), false, "stub_record");
         iob.write();
         return std::vector<uint8_t>(buf.get_data(), buf.get_data() + buf.get_offset());

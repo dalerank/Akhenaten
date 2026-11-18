@@ -1,4 +1,5 @@
 #include "figure.h"
+#include "grid/figure_chunks.h"
 
 #include "core/custom_span.hpp"
 #include "grid/grid.h"
@@ -185,6 +186,6 @@ void map_figure_clear(void) {
     map_grid_clear(grid_figures);
 }
 
-io_buffer* iob_figure_grid = new io_buffer([](io_buffer* iob, size_t version) {
+void figure_grid_chunk::bind_data(io_buffer* iob, size_t version) {
     iob->bind(BIND_SIGNATURE_GRID, &grid_figures);
-});
+}

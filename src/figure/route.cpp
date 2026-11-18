@@ -1,4 +1,5 @@
 #include "route.h"
+#include "figure/route_chunks.h"
 
 #include "city/city_figures.h"
 #include "grid/routing/queue.h"
@@ -265,21 +266,23 @@ int figure_find_best_road_direction(tile2i spawn_tile, tile2i target_tile) {
     return best_direction;
 }
 
-io_buffer* iob_route_figures = new io_buffer(
-  [](io_buffer* iob, size_t version) {
-      auto& data = g_figure_route_data;
-      for (int i = 0; i < MAX_ROUTES; i++) {
-          iob->bind(BIND_SIGNATURE_INT16, &data.figure_ids[i]);
-      }
-  },
-  [] { figure_route_clear_all(); });
+void route_figures_chunk::bind_data(io_buffer* iob, size_t version) {
+    auto& data = g_figure_route_data;
+    for (int i = 0; i < MAX_ROUTES; i++) {
+        iob->bind(BIND_SIGNATURE_INT16, &data.figure_ids[i]);
+    }
+}
 
-io_buffer* iob_route_paths = new io_buffer([](io_buffer* iob, size_t version) {
-    auto &data = g_figure_route_data;
+void route_figures_chunk::reset() {
+    figure_route_clear_all();
+}
+
+void route_paths_chunk::bind_data(io_buffer* iob, size_t version) {
+    auto& data = g_figure_route_data;
     for (int i = 0; i < MAX_ROUTES; i++) {
         iob->bind(BIND_SIGNATURE_RAW, &data.direction_paths[i], MAX_PATH_LENGTH);
     }
-});
+}
 
 int g_direction_path[MAX_PATH_LENGTH];
 

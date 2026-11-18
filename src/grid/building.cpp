@@ -1,5 +1,6 @@
 ﻿#include "building.h"
 #include "io/io_buffer.h"
+#include "grid/building_chunks.h"
 #include "js/js_register.h"
 
 #include "building/building.h"
@@ -250,17 +251,19 @@ void map_building_update_all_tiles() {
     building_mud_wall::update_all_walls();
 }
 
-io_buffer *iob_building_grid = new io_buffer([] (io_buffer *iob, size_t version) {
+void building_grid_chunk::bind_data(io_buffer* iob, size_t version) {
     iob->bind(BIND_SIGNATURE_GRID, &g_buildings_grid);
-});
+}
 
-io_buffer *iob_damage_grid = new io_buffer([] (io_buffer *iob, size_t version) {
+void building_damage_grid_chunk::bind_data(io_buffer* iob, size_t version) {
     iob->bind(BIND_SIGNATURE_GRID, &g_damage_grid);
-});
+}
 
-io_buffer *iob_rubble_type_grid = new io_buffer([] (io_buffer *iob, size_t version) {
+void rubble_type_grid_chunk::bind_data(io_buffer* iob, size_t version) {
     iob->bind(BIND_SIGNATURE_GRID, &g_rubble_type_grid);
-}, [] (size_t version) {
+}
+
+void rubble_type_grid_chunk::load_defaults(size_t version) {
     // saves older than this grid leave every ruin at the default variant
     map_grid_clear(g_rubble_type_grid);
-});
+}

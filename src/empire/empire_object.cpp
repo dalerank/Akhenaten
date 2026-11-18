@@ -1,4 +1,5 @@
 #include "empire_object.h"
+#include "empire/empire_object_chunks.h"
 
 #include "core/calc.h"
 #include "core/log.h"
@@ -842,7 +843,7 @@ void empire_t::fix_trade_routes() {
     }
 }
 
-io_buffer* iob_empire_map_objects = new io_buffer([](io_buffer* iob, size_t version) {
+void empire_map_objects_chunk::bind_data(io_buffer* iob, size_t version) {
     logs::info("iob_empire_map_objects");
     auto& objects = g_empire_objects;
     for (int i = 0; i < MAX_OBJECTS; i++) {
@@ -895,9 +896,9 @@ io_buffer* iob_empire_map_objects = new io_buffer([](io_buffer* iob, size_t vers
             }
         }
     }
-});
+}
 
-io_buffer* iob_empire_map_routes = new io_buffer([](io_buffer* iob, size_t version) {
+void empire_map_routes_chunk::bind_data(io_buffer* iob, size_t version) {
     logs::info("iob_empire_map_routes");
     for (int id = 0; id < g_empire_route_objects.max_size(); id++) {
         map_route_object& obj = g_empire_route_objects[id];
@@ -926,7 +927,7 @@ io_buffer* iob_empire_map_routes = new io_buffer([](io_buffer* iob, size_t versi
         obj.deviation = 0;
         obj.path_length = obj.calc_length();
     }
-});
+}
 
 void full_empire_object::add_sell_resource(e_resource r) {
     // check resource exist in set

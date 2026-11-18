@@ -1,4 +1,5 @@
 #include "scenario.h"
+#include "scenario/scenario_chunks.h"
 
 #include "io/io_buffer.h"
 #include "city/campaign_carry.h"
@@ -27,7 +28,6 @@ void ANK_REGISTER_CONFIG_ITERATOR(config_load_scenario_load_meta_data) {
     g_scenario.load_metadata(missionid, /*is_new_mission*/ true);
     js_register_mission_vars(g_scenario.vars);
 }
-
 
 int get_custom_mission_id(xstring mission) {
     for (const auto& m : custom_missions) {
@@ -281,12 +281,12 @@ int scenario_building_image_native_crops() {
     return g_scenario.native_images.crops;
 }
 
-
 // fancy lambdas! probably gonna create many problems down the road. :3
-io_buffer* iob_scenario_mission_id = new io_buffer([](io_buffer* iob, size_t version) {
-    // Chunk is 4 bytes; INT8 truncated custom mission ids > 127 (e.g. mission 129).
+void scenario_mission_index_chunk::bind_data(io_buffer* iob, size_t version) {
+    // Chunk is 4 bytes; INT8 truncated custom mission ids > 127 (e.g. mission
+    // 129).
     iob->bind(BIND_SIGNATURE_INT32, &g_scenario.campaign_scenario_id);
-});
+}
 
 e_scenario_mode scenario_data_t::mode() {
     return scmode;
@@ -322,7 +322,7 @@ int scenario_property_player_rank() {
     return g_scenario.player_rank;
 }
 
-io_buffer *iob_scenario_info = new io_buffer([] (io_buffer *iob, size_t version) {
+void scenario_info_chunk::bind_data(io_buffer* iob, size_t version) {
     iob->bind(BIND_SIGNATURE_INT16, &g_scenario.start_year);
     iob->bind____skip(2);
     iob->bind(BIND_SIGNATURE_INT16, &g_scenario.empire.id);
@@ -456,22 +456,23 @@ io_buffer *iob_scenario_info = new io_buffer([] (io_buffer *iob, size_t version)
     ///
 
     g_scenario.is_saved = true;
-});
+}
 
-io_buffer* iob_scenario_carry_settings = new io_buffer([](io_buffer* iob, size_t version) {
+void scenario_carry_settings_chunk::bind_data(io_buffer* iob, size_t version) {
     iob->bind(BIND_SIGNATURE_INT32, &g_scenario.settings.starting_kingdom);
-    iob->bind____skip(4); // legacy starting_personal_savings (mission scripts set kingdome savings)
+    iob->bind____skip(4); // legacy starting_personal_savings (mission
+                          // scripts set kingdome savings)
     iob->bind(BIND_SIGNATURE_INT32, &g_scenario.campaign_mission_rank);
-});
+}
 
-io_buffer* iob_scenario_is_custom = new io_buffer([](io_buffer* iob, size_t version) {
+void scenario_is_custom_chunk::bind_data(io_buffer* iob, size_t version) {
     iob->bind(BIND_SIGNATURE_UINT8, &g_scenario.scmode);
     iob->bind____skip(3);
-});
+}
 
-io_buffer* iob_scenario_map_name = new io_buffer([](io_buffer* iob, size_t version) {
+void scenario_map_name_chunk::bind_data(io_buffer* iob, size_t version) {
     iob->bind(BIND_SIGNATURE_XSTR, g_scenario.scenario_name, MAX_SCENARIO_NAME);
-});
+}
 
 void scenario_data_t::update() {
     scenario_earthquake_process();

@@ -2,9 +2,10 @@
 
 #include <cstdint>
 
+#include "core/bstring.h"
+
 #include "building/building_type.h"
 #include "figure/figure_type.h"
-#include "io/io_buffer.h"
 
 enum e_troop_carry_slot : uint8_t {
     TROOP_CARRY_INFANTRY = 0,
@@ -66,8 +67,6 @@ struct campaign_carry_t {
 };
 
 extern campaign_carry_t g_campaign_carry;
-extern io_buffer *iob_campaign_carry_troops;
-extern io_buffer *iob_campaign_carry_monuments;
 
 e_troop_carry_slot troop_carry_slot_for_building(e_building_type type);
 e_troop_carry_slot troop_carry_slot_for_figure(e_figure_type type);

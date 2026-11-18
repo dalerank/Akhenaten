@@ -1,4 +1,5 @@
 #include "copper.h"
+#include "grid/copper_chunks.h"
 
 #include "core/log.h"
 #include "dev/debug.h"
@@ -36,8 +37,10 @@ void map_copper_init() {
       g_terrain_copper, [](int grid_offset) { return map_terrain_is(grid_offset, TERRAIN_ORE); }, 2, 65000);
 }
 
-io_buffer* iob_copper = new io_buffer(
-    [](io_buffer* iob, size_t version) { iob->bind(BIND_SIGNATURE_GRID, &g_terrain_copper); }, 
-    [](size_t version) { map_grid_clear(g_terrain_copper); }
-);
+void copper_grid_chunk::bind_data(io_buffer* iob, size_t version) {
+    iob->bind(BIND_SIGNATURE_GRID, &g_terrain_copper);
+}
 
+void copper_grid_chunk::load_defaults(size_t version) {
+    map_grid_clear(g_terrain_copper);
+}
