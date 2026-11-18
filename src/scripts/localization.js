@@ -85,7 +85,7 @@ game_languages = [
   {
     lang:"fr", caption:"French", key:"french",
     base_table:"localization_base_fr", table:"localization_fr", message_table:"eventmsg_fr", game_messages:"game_messages_fr"
-    symbols:"A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z,a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r,s,t,u,v,w,x,y,z"
+    symbols:"A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z,a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r,s,t,u,v,w,x,y,z,À,Â,Ç,É,È,Ê,Ë,Î,Ï,Ô,Œ,Ù,Û,Ü,à,â,ç,é,è,ê,ë,î,ï,ô,œ,ù,û,ü,«,»"
     font:"data/neucha.ttf"
     font_configs [
       { type: FONT_SMALL_PLAIN, size:12, color:0xffffffff, bold:false, line_height:12, letter_spacing:1 },
