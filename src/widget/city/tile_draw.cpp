@@ -26,41 +26,6 @@
 #include "overlays/city_overlay_risks.h"
 #include "widget/widget_city.h"
 
-static const int ADJACENT_OFFSETS_PH[2][4][7]
-  = {{{GRID_OFFSET(-1, 0), GRID_OFFSET(-1, -1), GRID_OFFSET(-1, -2), GRID_OFFSET(0, -2), GRID_OFFSET(1, -2)},
-      {GRID_OFFSET(0, -1), GRID_OFFSET(1, -1), GRID_OFFSET(2, -1), GRID_OFFSET(2, 0), GRID_OFFSET(2, 1)},
-      {GRID_OFFSET(1, 0), GRID_OFFSET(1, 1), GRID_OFFSET(1, 2), GRID_OFFSET(0, 2), GRID_OFFSET(-1, 2)},
-      {GRID_OFFSET(0, 1), GRID_OFFSET(-1, 1), GRID_OFFSET(-2, 1), GRID_OFFSET(-2, 0), GRID_OFFSET(-2, -1)}},
-     {{GRID_OFFSET(-1, 0),
-       GRID_OFFSET(-1, -1),
-       GRID_OFFSET(-1, -2),
-       GRID_OFFSET(-1, -3),
-       GRID_OFFSET(0, -3),
-       GRID_OFFSET(1, -3),
-       GRID_OFFSET(2, -3)},
-      {GRID_OFFSET(0, -1),
-       GRID_OFFSET(1, -1),
-       GRID_OFFSET(2, -1),
-       GRID_OFFSET(3, -1),
-       GRID_OFFSET(3, 0),
-       GRID_OFFSET(3, 1),
-       GRID_OFFSET(3, 2)},
-      {GRID_OFFSET(1, 0),
-       GRID_OFFSET(1, 1),
-       GRID_OFFSET(1, 2),
-       GRID_OFFSET(1, 3),
-       GRID_OFFSET(0, 3),
-       GRID_OFFSET(-1, 3),
-       GRID_OFFSET(-2, 3)},
-      {GRID_OFFSET(0, 1),
-       GRID_OFFSET(-1, 1),
-       GRID_OFFSET(-2, 1),
-       GRID_OFFSET(-3, 1),
-       GRID_OFFSET(-3, 0),
-       GRID_OFFSET(-3, -1),
-       GRID_OFFSET(-3, -2)}}};
-
-
 enum { CLIFF_RAISED_FIRST = 48, CLIFF_RAISED_END = 72, CLIFF_RAISE = 150 };
 
 grid_xx g_render_grid(FS_UINT32);
@@ -159,25 +124,6 @@ bool drawing_building_as_deleted(building_id bid) {
     }
 
     return drawing_building_as_deleted(building_get(bid));
-}
-
-static bool is_multi_tile_terrain(int grid_offset) {
-    return (!map_building_at(grid_offset) && map_property_multi_tile_size(grid_offset) > 1);
-}
-
-static bool has_adjacent_deletion(int grid_offset) {
-    int size = map_property_multi_tile_size(grid_offset);
-    int total_adjacent_offsets = size * 2 + 1;
-    const int* adjacent_offset; // = ADJACENT_OFFSETS[size - 2][g_camera.orientation / 2];
-
-    adjacent_offset = ADJACENT_OFFSETS_PH[size - 2][g_camera.orientation / 2];
-    for (int i = 0; i < total_adjacent_offsets; ++i) {
-        if (map_property_is_deleted(grid_offset + adjacent_offset[i])
-            || drawing_building_as_deleted(building_at(grid_offset + adjacent_offset[i]))) {
-            return true;
-        }
-    }
-    return false;
 }
 
 static void clip_between_rectangles(int* xOut, int* yOut, int* wOut, int* hOut, int xA, int yA, int wA, int hA, int xB, int yB, int wB, int hB) {
