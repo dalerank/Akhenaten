@@ -310,6 +310,18 @@ int __test_sound_play_effect(int effect) {
 }
 ANK_FUNCTION_1(__test_sound_play_effect);
 
+void __test_sound_emit_effect(int effect) {
+    events::emit(event_sound_effect{effect});
+    events::process();
+}
+ANK_FUNCTION_1(__test_sound_emit_effect);
+
+void __test_sound_emit_track(pcstr track) {
+    events::emit(event_sound_track{track ? track : ""});
+    events::process();
+}
+ANK_FUNCTION_1(__test_sound_emit_track);
+
 pcstr __test_sound_ambient_summary() {
     return sound_city_ambient_summary();
 }
