@@ -237,142 +237,70 @@ void city_t::change_happiness(int amount) {
     });
 }
 
+struct city_tick_slot {
+    int tick;
+    pcstr name;
+    void (*update)(city_t& city);
+};
+
+static const city_tick_slot city_tick_slots[] = {
+  {1, "religion", [](city_t& c) { c.religion.update(); }},
+  {1, "coverage", [](city_t& c) { c.coverage.update(); }},
+  {2, "tree_growth", [](city_t&) { map_tree_growth_update(); }},
+  {4, "kingdome", [](city_t& c) { c.kingdome.update(); }},
+  {5, "irrigation_value", [](city_t&) { g_irrigation_value.update(); }},
+  {5, "formations", [](city_t&) { formation_update_all(/*skip_morale*/ false); }},
+  {6, "natives_land", [](city_t&) { map_natives_check_land(); }},
+  {7, "road_network", [](city_t& c) { c.map.update_road_network(); }},
+  {8, "stocks", [](city_t&) { g_city.resource.calculate_stocks(); }},
+  {9, "house_service_decay", [](city_t& c) { c.house_decay_services(); }},
+  {10, "desirability", [](city_t&) { g_desirability.update(); }},
+  {11, "trade_export_keep", [](city_t&) { city_trade_update_export_keep(); }},
+  {12, "houses_covered_decay", [](city_t& c) { c.house_service_decay_houses_covered(); }},
+  {16, "storageyard_stocks", [](city_t&) { city_resource_calculate_storageyard_stocks(); }},
+  {17, "food_stocks", [](city_t&) { g_city.resource.calculate_food_stocks_and_supply_wheat(); }},
+  {18, "vegetation_growth", [](city_t&) { map_vegetation_growth_update(); }},
+  {19, "open_water_access", [](city_t& c) { c.buildings_update_open_water_access(); }},
+  {20, "industry_production", [](city_t& c) { c.industry.update_production(); }},
+  {21, "kingdome_access", [](city_t& c) { c.maintenance.check_kingdome_access(); }},
+  {22, "population_room", [](city_t& c) { c.population.update_room(); }},
+  {23, "migration", [](city_t& c) { c.migration.update(); }},
+  {23, "population_migration", [](city_t& c) { c.population.update_migration(); }},
+  {24, "evict_overcrowded", [](city_t& c) { c.population.evict_overcrowded(); }},
+  {25, "labor", [](city_t& c) { c.labor.update(); }},
+  {27, "water_supply", [](city_t& c) { c.buildings.update_water_supply(); }},
+  {28, "religion_supply", [](city_t& c) { c.buildings.update_religion_supply_houses(); }},
+  {29, "formations_skip_morale", [](city_t&) { formation_update_all(/*skip_morale*/ true); }},
+  {30, "crime", [](city_t&) { g_crime.update(); }},
+  {31, "tower_sentry_decay", [](city_t&) { building_barracks_decay_tower_sentry_request(); }},
+  {31, "generate_figures", [](city_t& c) { c.buildings_generate_figure(); }},
+  {32, "empire_traders", [](city_t&) { g_empire_traders.update(); }},
+  {32, "trade", [](city_t& c) { c.trade_update(); }},
+  {33, "building_counters", [](city_t& c) { c.buildings.update_counters(); }},
+  {33, "avg_coverage", [](city_t& c) { c.avg_coverage.update(); }},
+  {33, "health_coverage", [](city_t& c) { c.health.update_coverage(); }},
+  {33, "farms", [](city_t&) { building_industry_update_farms(); }},
+  {34, "distribute_treasury", [](city_t& c) { c.government_distribute_treasury(); }},
+  {35, "house_health", [](city_t& c) { c.house_service_update_health(); }},
+  {36, "culture_aggregates", [](city_t& c) { c.house_service_calculate_culture_aggregates(); }},
+  {37, "malaria_risk", [](city_t&) { g_malaria_risk.update(); }},
+  {38, "building_desirability", [](city_t&) { building_update_desirability(); }},
+  {39, "house_evolve", [](city_t& c) { c.house_process_evolve(); }},
+  {40, "building_state", [](city_t&) { building_update_state(); }},
+  {43, "burning_ruins", [](city_t&) { building_burning_ruin::update_all_ruins(); }},
+  {44, "building_destroying", [](city_t& c) { c.maintenance.check_building_destroying(); }},
+  {44, "reset_protesters", [](city_t& c) { c.sentiment.reset_protesters_criminals(); }},
+  {45, "criminals", [](city_t& c) { c.figures_generate_criminals(); }},
+  {46, "building_malaria_risk", [](city_t&) { building_update_malaria_risk(); }},
+  {48, "house_tax_coverage_decay", [](city_t& c) { c.house_decay_tax_coverage(); }},
+  {49, "avg_coverage", [](city_t& c) { c.avg_coverage.update(); }},
+};
+
 void city_t::update_tick(int simtick) {
-    switch (simtick) {
-    case 1:
-        religion.update();
-        coverage.update();
-        break;
-    case 2:
-        map_tree_growth_update();
-        break;
-    case 3:
-        break;
-    case 4:
-        kingdome.update();
-        break;
-    case 5:
-        g_irrigation_value.update();
-        formation_update_all(/*skip_morale*/ false);
-        break;
-    case 6:
-        map_natives_check_land();
-        break;
-    case 7:
-        map.update_road_network();
-        break;
-    case 8:
-        g_city.resource.calculate_stocks();
-        break;
-    case 9:
-        house_decay_services();
-        break;
-    case 10:
-        g_desirability.update();
-        break;
-    case 11:
-        city_trade_update_export_keep();
-        break;
-    case 12:
-        house_service_decay_houses_covered();
-        break;
-    case 16:
-        city_resource_calculate_storageyard_stocks();
-        break;
-    case 17:
-        g_city.resource.calculate_food_stocks_and_supply_wheat();
-        break;
-    case 18:
-        map_vegetation_growth_update();
-        break;
-    case 19:
-        buildings_update_open_water_access();
-        break;
-    case 20:
-        industry.update_production();
-        break;
-    case 21:
-        maintenance.check_kingdome_access();
-        break;
-    case 22:
-        population.update_room();
-        break;
-    case 23:
-        migration.update();
-        population.update_migration();
-        break;
-    case 24:
-        population.evict_overcrowded();
-        break;
-    case 25:
-        labor.update();
-        break;
-    case 27:
-        buildings.update_water_supply();
-        break;
-    case 28:
-        buildings.update_religion_supply_houses();
-        break;
-    case 29:
-        formation_update_all(/*skip_morale*/ true);
-        break;
-    case 30:
-        g_crime.update();
-        break;
-    case 31:
-        building_barracks_decay_tower_sentry_request();
-        buildings_generate_figure();
-        break;
-    case 32:
-        g_empire_traders.update();
-        trade_update();
-        break;
-    case 33:
-        buildings.update_counters();
-        avg_coverage.update();
-        health.update_coverage();
-        building_industry_update_farms();
-        break;
-    case 34:
-        government_distribute_treasury();
-        break;
-    case 35:
-        house_service_update_health();
-        break;
-    case 36:
-        house_service_calculate_culture_aggregates();
-        break;
-    case 37:
-        g_malaria_risk.update();
-        break;
-    case 38:
-        building_update_desirability();
-        break;
-    case 39:
-        house_process_evolve();
-        break;
-    case 40:
-        building_update_state();
-        break;
-    case 43:
-        building_burning_ruin::update_all_ruins();
-        break;
-    case 44:
-        maintenance.check_building_destroying();
-        sentiment.reset_protesters_criminals();
-        break;
-    case 45:
-        figures_generate_criminals();
-        break;
-    case 46:
-        building_update_malaria_risk();
-        break;
-    case 48:
-        house_decay_tax_coverage();
-        break;
-    case 49:
-        avg_coverage.update();
-        break;
+    for (const city_tick_slot& slot : city_tick_slots) {
+        if (slot.tick == simtick) {
+            slot.update(*this);
+        }
     }
 
     if (plagues.locusts_countdown > 0) {
