@@ -971,10 +971,16 @@ void sound_manager_t::update_channel(int channel, vfs::path filename) {
 }
 
 void ANK_PERMANENT_CALLBACK(event_sound_effect, ev) {
+    if (g_args.is_log_sound_events()) {
+        logs::info("[event] effect=%d sent from %s:%d", ev.effect, ev.source_file, ev.source_line);
+    }
     g_sound.on_sound_effect(ev);
 }
 
 void ANK_PERMANENT_CALLBACK(event_sound_track, ev) {
+    if (g_args.is_log_sound_events()) {
+        logs::info("[event] track=%s sent from %s:%d", ev.track.c_str(), ev.source_file, ev.source_line);
+    }
     g_sound.on_sound_track(ev);
 }
 
@@ -987,7 +993,7 @@ void ANK_REGISTER_CONFIG_ITERATOR(config_load_sound_effects) {
 }
 
 bool sound_manager_t::log_events() const {
-    return g_args.is_integral_tests() || g_args.is_log_sound();
+    return g_args.is_integral_tests() || g_args.is_log_sound() || g_args.is_log_sound_events();
 }
 
 bool sound_manager_t::data_available() const {

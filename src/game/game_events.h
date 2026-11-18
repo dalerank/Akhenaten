@@ -6,11 +6,15 @@
 
 struct event_sound_effect {
     int effect;
+    pcstr source_file = __builtin_FILE();
+    int source_line = __builtin_LINE();
 };
 
 // Plays a music/ambient track by its music.js key.
 struct event_sound_track {
     xstring track;
+    pcstr source_file = __builtin_FILE();
+    int source_line = __builtin_LINE();
 };
 
 extern events::typed_queue g_city_events;

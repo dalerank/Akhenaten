@@ -90,6 +90,7 @@ Sources are collected via `file(GLOB ...)` with **no `CONFIGURE_DEPENDS`**, so a
 --log-js-handlers     log when JS event handlers are registered
 --log-resources       log resource loading (textures, image packs)
 --log-sound           log which sound files the game tries to load
+--log-sound-events    log each sound effect / music event: where it is sent (file:line) and when it plays
 --log-config-keys     warn about config keys nothing reads and non-zero C++ defaults a missing key resets to 0
                       (a value of the wrong type is always reported as "[config] ... expected number")
 --config-keys-baseline PATH  with --integraltests, fail on config key issues not listed in PATH (implies --log-config-keys)
