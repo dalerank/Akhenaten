@@ -25,7 +25,7 @@ static const int DIRECTION_DELTA_PH[] = {-GRID_OFFSET(0, 1),
 void map_grid_init(grid_xx& grid) {
     grid.size_field = gr_sizes[grid.datatype];
     grid.size_total = grid.size_field * GRID_SIZE_TOTAL;
-    grid.items_xx = malloc(grid.size_total);
+    grid.items_xx = calloc(1, grid.size_total);
     grid.initialized = 1;
 }
 
@@ -51,6 +51,15 @@ void grid_xx::init_all_grids() {
     for (grid_xx *p : detail::registered_grids()) {
         if (!p->initialized) {
             map_grid_init(*p);
+        }
+    }
+}
+
+void grid_xx::clear_all_grids() {
+    std::scoped_lock lock(detail::registered_grids_mutex());
+    for (grid_xx* p : detail::registered_grids()) {
+        if (p->initialized) {
+            map_grid_clear(*p);
         }
     }
 }

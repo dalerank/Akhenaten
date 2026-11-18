@@ -55,6 +55,7 @@ struct grid_xx {
     }
     static void register_grid_init(grid_xx* p);
     static void init_all_grids();
+    static void clear_all_grids();
 
     inline int32_t get(uint32_t grid_offset);
 };

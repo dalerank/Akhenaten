@@ -95,32 +95,15 @@ void GamestateLoadDetail::pre_load() { // do we NEED this...?
     figure_route_clear_all();
     map_routing_stats_clear();
     g_recorded_paths.clear();
-    map_clear_floodplain_growth();
     // Troop carry lives outside city_data; clear so old saves (no chunk) and map
     // loads cannot inherit a stale snapshot from the previous session.
     g_campaign_carry.clear();
 
     g_simulation.simtime.init(2098);
-    map_monuments_clear();
-    // clear grids
-    map_image_clear();
-    map_building_clear();
-    map_terrain_clear();
-    map_wall_material_clear_all();
-    map_canal_clear();
-    map_figure_clear();
-    map_property_clear();
-    map_sprite_clear();
-    map_bridge_grids_clear();
-    map_random_clear();
-    g_desirability.clear_map();
-    map_elevation_clear();
-    map_soldier_strength_clear();
-    map_road_network_clear();
+    grid_xx::clear_all_grids();
 
     map_image_context_init();
     map_random_init();
-    map_tiles_gardens_clear_all();
 
     events::emit(event_game_mission_pre_load{});
     events::process();
