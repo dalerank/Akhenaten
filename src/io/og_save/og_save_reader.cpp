@@ -256,11 +256,11 @@ namespace og {
                 return fail(error, "chunk %d: compressed payload of %d bytes runs past the end of the file", index,
                   (int)header);
             }
-            int written = (int)raw_size;
-            const int ok = zip_decompress(in.data + in.pos, (int)header, out.data(), &written);
+            const auto written = zip_decompress(xspan<const uint8_t>(in.data + in.pos, header), make_span(out));
             in.pos += header;
-            if (!ok || written != (int)raw_size) {
-                return fail(error, "chunk %d: decompressed %d bytes, expected %d", index, written, (int)raw_size);
+            if (!written || *written != raw_size) {
+                return fail(error, "chunk %d: decompressed %d bytes, expected %d", index, written ? (int)*written : 0,
+                  (int)raw_size);
             }
             return true;
         }

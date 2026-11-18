@@ -72,9 +72,9 @@ bool svx::decompress_prefixed(const void *src, uint32_t compressed_size, void *d
         return false;
     }
 
-    int out_size = expected_raw_size;
-    const int written = zip_decompress(src, (int)compressed_size, dst, &out_size);
-    return written == expected_raw_size;
+    const auto written = zip_decompress(xspan<const uint8_t>((const uint8_t*)src, compressed_size),
+      xspan<uint8_t>((uint8_t*)dst, (size_t)expected_raw_size));
+    return written && *written == (size_t)expected_raw_size;
 }
 
 bool svx::is_container(vfs::reader reader, int offset) {
