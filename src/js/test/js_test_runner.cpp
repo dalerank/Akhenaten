@@ -873,6 +873,26 @@ static bool state_snapshot_drawn(chunk_snapshots& out) {
     return true;
 }
 
+static pcstr __test_state_digest() {
+    static bstring32 result;
+    result.clear();
+
+    chunk_snapshots chunks;
+    if (!state_snapshot_drawn(chunks)) {
+        logs::error("[state-digest] write_to_memory failed");
+        return result.c_str();
+    }
+
+    std::vector<uint32_t> crcs;
+    crcs.reserve(chunks.size());
+    for (const chunk_snapshot& chunk : chunks) {
+        crcs.push_back(crc32(chunk.raw.data(), (uint32_t)chunk.raw.size()));
+    }
+    result.printf("%08x", crc32(crcs.data(), (uint32_t)(crcs.size() * sizeof(uint32_t))));
+    return result.c_str();
+}
+ANK_FUNCTION(__test_state_digest);
+
 static bool __test_state_mark() {
     return state_snapshot_drawn(g_state_mark);
 }
