@@ -5,7 +5,7 @@
 #include "graphics/animkeys.h"
 #include "graphics/elements/ui.h"
 #include "game/game.h"
-#include "js/js_game.h"
+#include "js/js_register.h"
 #include "window/building/figures.h"
 #include "city/object_info.h"
 #include "graphics/elements/lang_text.h"

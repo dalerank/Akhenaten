@@ -1,7 +1,7 @@
 #include "figuretype/figure_pharaoh.h"
 
 #include "game/simulation_time.h"
-#include "js/js_game.h"
+#include "js/js_register.h"
 
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_pharaoh);
 

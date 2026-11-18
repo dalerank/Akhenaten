@@ -14,7 +14,7 @@
 #include "figure/figure.h"
 #include "game/resource.h"
 #include "grid/routing/queue.h"
-#include "js/js_game.h"
+#include "js/js_register.h"
 #include "scenario/scenario.h"
 
 tile_cache marshland_tiles_cache;

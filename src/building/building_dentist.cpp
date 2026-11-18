@@ -3,7 +3,7 @@
 #include "building/building_house.h"
 #include "city/city_buildings.h"
 #include "io/gamefiles/lang.h"
-#include "js/js_game.h"
+#include "js/js_register.h"
 #include "figuretype/figure_dentist.h"
 #include "game/game_config.h"
 

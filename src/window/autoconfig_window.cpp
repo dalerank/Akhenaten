@@ -1,7 +1,7 @@
 #include "autoconfig_window.h"
 
 #include "core/log.h"
-#include "js/js_game.h"
+#include "js/js_register.h"
 #include "game/game_events.h"
 #include "window/message_dialog.h"
 #include "core/profiler.h"

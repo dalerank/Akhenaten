@@ -5,7 +5,7 @@
 #include "grid/figure.h"
 #include "dev/debug.h"
 #include "window/building/figures.h"
-#include "js/js_game.h"
+#include "js/js_register.h"
 #include "js/js_struct.h"
 #include "graphics/elements/ui_js.h"
 #include "window/figure_info_thumbnails.h"

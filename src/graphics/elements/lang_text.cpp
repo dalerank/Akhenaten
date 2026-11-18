@@ -4,7 +4,7 @@
 #include "io/gamefiles/lang.h"
 #include "core/bstring.h"
 #include "core/xstring.h"
-#include "js/js_game.h"
+#include "js/js_register.h"
 #include "js/js.h"
 #include "core/log.h"
 #include "game/game_config.h"

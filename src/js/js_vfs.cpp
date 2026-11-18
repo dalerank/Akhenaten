@@ -1,7 +1,7 @@
 #include "content/vfs.h"
 
 #include "cmrc/cmrc.hpp"
-#include "js/js_game.h"
+#include "js/js_register.h"
 #include "core/log.h"
 #include "platform/version.hpp"
 #include <iostream>

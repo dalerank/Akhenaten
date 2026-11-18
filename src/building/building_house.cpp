@@ -26,7 +26,7 @@
 #include "game/game_config.h"
 #include "io/gamefiles/lang.h"
 #include "game/simulation.h"
-#include "js/js_game.h"
+#include "js/js_register.h"
 #include "widget/widget_city.h"
 #include "dev/debug.h"
 #include "scenario/scenario.h"

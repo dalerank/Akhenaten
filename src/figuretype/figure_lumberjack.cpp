@@ -7,7 +7,7 @@
 #include "game/game_config.h"
 #include "graphics/image.h"
 #include "graphics/graphics.h"
-#include "js/js_game.h"
+#include "js/js_register.h"
 
 const e_lumberjack_action_tokens_t ANK_CONFIG_ENUM(e_lumberjack_action_tokens)
 

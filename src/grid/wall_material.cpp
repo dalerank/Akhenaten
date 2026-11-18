@@ -4,7 +4,7 @@
 #include "grid/terrain.h"
 #include "io/io_buffer.h"
 #include "scenario/map.h"
-#include "js/js_game.h"
+#include "js/js_register.h"
 
 const e_wall_material_tokens_t ANK_CONFIG_ENUM(e_wall_material_tokens);
 

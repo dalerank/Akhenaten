@@ -19,7 +19,7 @@
 #include "core/object_property.h"
 #include "figuretype/figure_docker.h"
 #include "scenario/map.h"
-#include "js/js_game.h"
+#include "js/js_register.h"
 
 
 const e_trade_ship_action_tokens_t ANK_CONFIG_ENUM(e_trade_ship_action_tokens)

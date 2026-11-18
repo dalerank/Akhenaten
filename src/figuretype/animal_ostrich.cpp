@@ -8,7 +8,7 @@
 #include "graphics/animation.h"
 #include "grid/grid.h"
 #include "grid/terrain.h"
-#include "js/js_game.h"
+#include "js/js_register.h"
 #include "sound/effect.h"
 #include "sound/sound.h"
 

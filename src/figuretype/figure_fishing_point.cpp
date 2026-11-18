@@ -1,6 +1,6 @@
 #include "figure_fishing_point.h"
 
-#include "js/js_game.h"
+#include "js/js_register.h"
 #include "core/random.h"
 #include "city/city.h"
 #include "dev/debug.h"

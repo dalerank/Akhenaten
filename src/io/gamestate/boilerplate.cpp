@@ -78,7 +78,7 @@
 #include "scenario/scenario.h"
 #include "sound/sound_city.h"
 #include "sound/sound.h"
-#include "js/js_game.h"
+#include "js/js_register.h"
 #include "window/window_city.h"
 #include "window/file_dialog_common.h"
 #include "game/game_events.h"
@@ -95,7 +95,7 @@
 #include "core/profiler.h"
 #include "io/io.h"
 #include "io/chunk_serializer.h"
-#include "js/js_game.h"
+#include "js/js_register.h"
 #include "dev/debug.h"
 #include "window/popup_dialog.h"
 

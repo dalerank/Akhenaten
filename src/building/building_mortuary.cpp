@@ -15,7 +15,7 @@ BUILDING_RUNTIME_DATA_IMPL(building_mortuary)
 #include "city/city.h"
 #include "city/city_resource.h"
 #include "dev/debug.h"
-#include "js/js_game.h"
+#include "js/js_register.h"
 #include <iostream>
 
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_mortuary);

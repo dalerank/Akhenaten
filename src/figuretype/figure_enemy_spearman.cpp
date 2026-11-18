@@ -7,7 +7,7 @@
 #include "figure/combat.h"
 #include "figuretype/figure_missile.h"
 #include "figure/formation_layout.h"
-#include "js/js_game.h"
+#include "js/js_register.h"
 #include "scenario/invasion_auto_resolve.h"
 
 const e_action_enemy_spearman_tokens_t ANK_CONFIG_ENUM(e_action_enemy_spearman_tokens)

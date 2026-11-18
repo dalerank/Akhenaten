@@ -33,7 +33,7 @@
 #include "figuretype/figure_cartpusher.h"
 #include "widget/debug_console.h"
 #include "core/object_property.h"
-#include "js/js_game.h"
+#include "js/js_register.h"
 
 const e_trade_caravan_action_tokens_t ANK_CONFIG_ENUM(e_trade_caravan_action_tokens)
 

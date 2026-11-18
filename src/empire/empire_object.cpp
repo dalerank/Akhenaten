@@ -18,7 +18,7 @@
 #include "scenario/empire.h"
 #include "game/game.h"
 #include "dev/debug.h"
-#include "js/js_game.h"
+#include "js/js_register.h"
 
 #include <vector>
 #include <algorithm>

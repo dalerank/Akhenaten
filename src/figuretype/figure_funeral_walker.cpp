@@ -7,7 +7,7 @@
 #include "figure/figure.h"
 #include "grid/road_access.h"
 #include "grid/terrain.h"
-#include "js/js_game.h"
+#include "js/js_register.h"
 #include "scenario/map.h"
 #include "scenario/scenario.h"
 

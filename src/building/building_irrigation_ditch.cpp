@@ -5,7 +5,7 @@
 #include "building/construction/routed.h"
 #include "grid/canals.h"
 #include "game/undo.h"
-#include "js/js_game.h"
+#include "js/js_register.h"
 
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_irrigation_ditch);
 

@@ -11,7 +11,7 @@
 #include "grid/tiles.h"
 #include "grid/canals.h"
 #include "building/building_wall.h"
-#include "js/js_game.h"
+#include "js/js_register.h"
 #include "moisture.h"
 #include "scenario/earthquake.h"
 

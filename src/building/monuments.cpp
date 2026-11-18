@@ -28,7 +28,7 @@
 #include "io/io_buffer.h"
 #include "scenario/scenario.h"
 
-#include "js/js_game.h"
+#include "js/js_register.h"
 
 #include <algorithm>
 

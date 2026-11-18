@@ -52,6 +52,7 @@ static const std::set<std::string> INFRASTRUCTURE = {
   "js/js_defines.h",
   "js/js_events.h",
   "js/js_game.h",
+  "js/js_register.h",
   "js/js_struct.h",
   "io/io_buffer.h",
   "platform/platform.h",

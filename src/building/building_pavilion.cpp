@@ -21,7 +21,7 @@
 #include "figure/figure.h"
 #include "grid/routing/routing_grids.h"
 
-#include "js/js_game.h"
+#include "js/js_register.h"
 
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_pavilion);
 

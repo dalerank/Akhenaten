@@ -8,7 +8,7 @@
 #include "city/city_buildings.h"
 #include "building/building_temple_complex.h"
 #include "building/rotation.h"
-#include "js/js_game.h"
+#include "js/js_register.h"
 
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_temple_complex_altar_amon);
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_temple_complex_oracle_thoth);

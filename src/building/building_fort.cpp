@@ -27,7 +27,7 @@
 #include "game/undo.h"
 #include "game/game_config.h"
 
-#include "js/js_game.h"
+#include "js/js_register.h"
 #include "dev/debug.h"
 
 BUILDING_RUNTIME_DATA_IMPL(building_fort)

@@ -14,7 +14,7 @@
 #include "io/io.h"
 #include "scenario/scenario.h"
 #include "sound/sound.h"
-#include "js/js_game.h"
+#include "js/js_register.h"
 
 #include "dev/debug.h"
 #include <algorithm>

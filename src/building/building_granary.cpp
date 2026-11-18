@@ -29,7 +29,7 @@
 #include "grid/building_tiles.h"
 #include "grid/desirability.h"
 #include "grid/terrain.h"
-#include "js/js_game.h"
+#include "js/js_register.h"
 #include <cmath>
 
 const int ONE_LOAD = 100;

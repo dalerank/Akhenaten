@@ -6,7 +6,7 @@
 #include "game/game.h"
 #include "game/game_config.h"
 #include "io/gamestate/boilerplate.h"
-#include "js/js_game.h"
+#include "js/js_register.h"
 #include "core/profiler.h"
 #include "scenario/criteria.h"
 #include "scenario/scenario.h"

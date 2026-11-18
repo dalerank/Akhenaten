@@ -5,7 +5,7 @@
 #include "figuretype/figure_soldier.h"
 #include "grid/figure.h"
 #include "grid/grid.h"
-#include "js/js_game.h"
+#include "js/js_register.h"
 
 #include <algorithm>
 

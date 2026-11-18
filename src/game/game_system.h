@@ -2,7 +2,7 @@
 
 #include "core/variant.h"
 #include "core/profiler.h"
-#include "js/js_game.h"
+#include "js/js_register.h"
 
 struct game_system {
     void emit(const bstring128& esname_str, const bvariant_map& args);

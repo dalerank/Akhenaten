@@ -14,7 +14,7 @@
 #include "grid/road_access.h"
 #include "grid/routing/routing_terrain.h"
 #include "grid/routing/routing.h"
-#include "js/js_game.h"
+#include "js/js_register.h"
 
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_burning_ruin);
 svector<uint16_t, 2500> g_burning_ruins;

@@ -34,7 +34,7 @@
 #include "widget/widget_city.h"
 #include "grid/routing/routing_grids.h"
 #include "dev/debug.h"
-#include "js/js_game.h"
+#include "js/js_register.h"
 #include "grid/canals.h"
 #include "grid/water.h"
 #include "building/monument_mastaba.h"

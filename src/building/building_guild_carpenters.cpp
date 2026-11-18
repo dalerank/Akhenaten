@@ -8,7 +8,7 @@
 #include "dev/debug.h"
 #include "figuretype/figure_carpenter.h"
 #include "game/game.h"
-#include "js/js_game.h"
+#include "js/js_register.h"
 
 #include <initializer_list>
 

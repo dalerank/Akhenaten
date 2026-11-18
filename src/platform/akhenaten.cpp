@@ -5,7 +5,7 @@
 #include "core/log.h"
 #include "figure/figure.h"
 #include "js/js.h"
-#include "js/js_game.h"
+#include "js/js_register.h"
 #include "core/profiler.h"
 #include "game/game.h"
 #include "input/scroll.h"

@@ -8,7 +8,7 @@
 #include "figuretype/figure_noble.h"
 #include "game/game_config.h"
 #include "grid/road_access.h"
-#include "js/js_game.h"
+#include "js/js_register.h"
 
 #include <algorithm>
 

@@ -30,7 +30,7 @@
 #include "empire/trader_handler.h"
 #include "city/city.h"
 #include "city/city_buildings.h"
-#include "js/js_game.h"
+#include "js/js_register.h"
 
 #include <cstring>
 

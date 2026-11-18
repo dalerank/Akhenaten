@@ -27,9 +27,10 @@ BUILDING_RUNTIME_DATA_IMPL(building_shipyard)
 #include "grid/road_access.h"
 #include "grid/building.h"
 #include "city/city_labor.h"
-#include "js/js_game.h"
+#include "js/js_register.h"
 
 #include <algorithm>
+#include <cmath>
 
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_shipyard);
 

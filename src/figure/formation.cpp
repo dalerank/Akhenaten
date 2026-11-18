@@ -16,7 +16,7 @@
 #include "scenario/distant_battle.h"
 #include "scenario/invasion_auto_resolve.h"
 #include "sound/sound.h"
-#include "js/js_game.h"
+#include "js/js_register.h"
 
 #include <string.h>
 

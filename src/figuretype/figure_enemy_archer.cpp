@@ -16,7 +16,7 @@
 #include "grid/image.h"
 #include "grid/point.h"
 #include "grid/terrain.h"
-#include "js/js_game.h"
+#include "js/js_register.h"
 
 const e_action_enemy_archer_tokens_t ANK_CONFIG_ENUM(e_action_enemy_archer_tokens)
 

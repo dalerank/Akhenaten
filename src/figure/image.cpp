@@ -9,7 +9,7 @@
 #include "core/stable_array.h"
 #include "core/profiler.h"
 
-#include "js/js_game.h"
+#include "js/js_register.h"
 
 static const int CORPSE_IMAGE_OFFSETS[128] = {
     0, 1, 2, 3, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5,

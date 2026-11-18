@@ -16,7 +16,7 @@
 #include "core/profiler.h"
 #include "graphics/elements/ui_js.h"
 #include "window/autoconfig_window.h"
-#include "js/js_game.h"
+#include "js/js_register.h"
 #include "platform/arguments.h"
 
 struct building_info_window_draw { vec2i pos; building_id bid; };

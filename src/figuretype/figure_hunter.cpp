@@ -15,7 +15,7 @@
 #include "game/simulation.h"
 #include "building/building_storage.h"
 #include "game/resource.h"
-#include "js/js_game.h"
+#include "js/js_register.h"
 
 const e_ostrich_hunter_action_tokens_t ANK_CONFIG_ENUM(e_ostrich_hunter_action_tokens);
 

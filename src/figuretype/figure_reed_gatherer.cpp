@@ -5,7 +5,7 @@
 #include "graphics/image_groups.h"
 #include "grid/vegetation.h"
 #include "game/game_config.h"
-#include "js/js_game.h"
+#include "js/js_register.h"
 #include "grid/routing/routing.h"
 #include "scenario/scenario.h"
 

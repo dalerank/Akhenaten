@@ -8,6 +8,7 @@
 #include "city/city_migration.h"
 #include "city/city_resource.h"
 #include "figure/formation.h"
+#include "js/js_game.h"
 
 void window_advisors_prepare_opening() {
     g_city.labor.allocate_workers();

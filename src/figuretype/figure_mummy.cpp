@@ -7,7 +7,7 @@
 #include "core/random.h"
 #include "figure/figure.h"
 #include "grid/road_access.h"
-#include "js/js_game.h"
+#include "js/js_register.h"
 
 const e_mummy_action_tokens_t ANK_CONFIG_ENUM(e_mummy_action_tokens)
 

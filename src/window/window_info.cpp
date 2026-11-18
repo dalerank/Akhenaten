@@ -36,7 +36,7 @@
 #include "io/gamefiles/lang.h"
 #include "core/log.h"
 #include "dev/debug.h"
-#include "js/js_game.h"
+#include "js/js_register.h"
 #include "graphics/elements/tooltip.h"
 #include "input/mouse.h"
 

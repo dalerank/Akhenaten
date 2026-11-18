@@ -12,7 +12,7 @@
 #include "platform/platform.h"
 #include "platform/vita/vita.h"
 #include "game/game.h"
-#include "js/js_game.h"
+#include "js/js_register.h"
 
 #include "lame_helper.h"
 

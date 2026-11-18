@@ -1,7 +1,7 @@
 #include "city_overlay.h"
 
 #include "core/log.h"
-#include "js/js_game.h"
+#include "js/js_register.h"
 #include "js/js_struct.h"
 
 #include <memory>

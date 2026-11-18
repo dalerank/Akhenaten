@@ -22,7 +22,7 @@
 #include "grid/building.h"
 #include "city/city.h"
 #include "core/object_property.h"
-#include "js/js_game.h"
+#include "js/js_register.h"
 
 #include <algorithm>
 

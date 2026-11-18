@@ -18,7 +18,7 @@
 #include "sound/sound_building.h"
 #include "graphics/animation.h"
 #include "figuretype/figure_entertainer.h"
-#include "js/js_game.h"
+#include "js/js_register.h"
 
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_dancer_school);
 

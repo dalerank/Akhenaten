@@ -2,7 +2,7 @@
 
 #include "graphics/image.h"
 #include "graphics/image_groups.h"
-#include "js/js_game.h"
+#include "js/js_register.h"
 
 std::array<vec2i, 8> ANK_VARIABLE(enemy_chariot_cart_offsets);
 

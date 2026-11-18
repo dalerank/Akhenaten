@@ -15,7 +15,7 @@
 #include "grid/grid.h"
 #include "grid/point.h"
 #include "sound/sound.h"
-#include "js/js_game.h"
+#include "js/js_register.h"
 #include "scenario/distant_battle.h"
 
 static const vec2i ALTERNATIVE_POINTS[] = {

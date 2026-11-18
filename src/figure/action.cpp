@@ -1,7 +1,7 @@
 
 #include "action.h"
 
-#include "js/js_game.h"
+#include "js/js_register.h"
 #include "grid/terrain.h"
 #include "grid/road_network.h"
 

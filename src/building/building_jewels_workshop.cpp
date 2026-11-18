@@ -1,6 +1,6 @@
 #include "building_jewels_workshop.h"
 
-#include "js/js_game.h"
+#include "js/js_register.h"
 #include "game/game_config.h"
 #include "grid/building.h"
 #include "grid/grid.h"

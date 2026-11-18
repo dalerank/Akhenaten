@@ -11,7 +11,7 @@
 #include "core/log.h"
 #include "input/mouse.h"
 #include "js/js_events.h"
-#include "js/js_game.h"
+#include "js/js_register.h"
 #include "scenario/scenario.h"
 #include "window/popup_dialog.h"
 

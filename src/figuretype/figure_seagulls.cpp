@@ -1,7 +1,7 @@
 #include "figure_seagulls.h"
 
 #include "core/random.h"
-#include "js/js_game.h"
+#include "js/js_register.h"
 
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_seagulls);
 

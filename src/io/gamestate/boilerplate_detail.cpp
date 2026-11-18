@@ -50,7 +50,7 @@
 #include "grid/wall_material.h"
 #include "io/chunk_serializer.h"
 #include "io/io.h"
-#include "js/js_game.h"
+#include "js/js_register.h"
 #include "scenario/distant_battle.h"
 #include "scenario/invasion_auto_resolve.h"
 #include "scenario/scenario.h"

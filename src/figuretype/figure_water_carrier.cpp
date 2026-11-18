@@ -11,7 +11,7 @@
 #include "building/building_brewery.h"
 #include "game/game_config.h"
 #include "scenario/scenario.h"
-#include "js/js_game.h"
+#include "js/js_register.h"
 
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_water_carrier);
 

@@ -3,7 +3,7 @@
 
 #include "graphics/view/lookup.h"
 #include "dev/debug.h"
-#include "js/js_game.h"
+#include "js/js_register.h"
 
 declare_console_var_int(fill_figure_radius, 30);
 

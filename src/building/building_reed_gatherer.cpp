@@ -7,7 +7,7 @@
 #include "core/random.h"
 #include "game/game_events.h"
 #include "city/city_resource.h"
-#include "js/js_game.h"
+#include "js/js_register.h"
 
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_reed_gatherer);
 

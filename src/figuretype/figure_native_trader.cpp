@@ -6,7 +6,7 @@
 #include "graphics/image_groups.h"
 #include "graphics/image.h"
 #include "city/city.h"
-#include "js/js_game.h"
+#include "js/js_register.h"
 
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_native_trader);
 

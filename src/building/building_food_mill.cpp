@@ -16,7 +16,7 @@
 #include "grid/building_tiles.h"
 #include "grid/image.h"
 #include "grid/road_access.h"
-#include "js/js_game.h"
+#include "js/js_register.h"
 #include "building/building_granary.h"
 
 #include <algorithm>

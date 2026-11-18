@@ -3,7 +3,7 @@
 #include <map>
 #include <string>
 
-#include "js/js_game.h"
+#include "js/js_register.h"
 
 std::map<xstring, metainfo> g_building_metainfo;
 

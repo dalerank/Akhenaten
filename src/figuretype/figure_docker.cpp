@@ -26,7 +26,7 @@
 #include "figuretype/figure_trader_ship.h"
 #include "city/city_figures.h"
 #include "game/game_config.h"
-#include "js/js_game.h"
+#include "js/js_register.h"
 
 #include <algorithm>
 

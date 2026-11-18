@@ -13,7 +13,7 @@
 #include "grid/grid.h"
 #include "grid/ring.h"
 #include "grid/terrain.h"
-#include "js/js_game.h"
+#include "js/js_register.h"
 #include "sound/sound.h"
 #include "core/system_time.h"
 

@@ -1,6 +1,6 @@
 #include "graphics/animation.h"
 
-#include "js/js_game.h"
+#include "js/js_register.h"
 
 #include "graphics/image_desc.h"
 #include "graphics/image.h"

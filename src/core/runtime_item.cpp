@@ -1,6 +1,6 @@
 #include "core/runtime_item.h"
 
-#include "js/js_game.h"
+#include "js/js_register.h"
 #include <mutex>
 
 using runtime_items = std::vector<config::static_params *>;

@@ -1,7 +1,7 @@
 #include "figure_bubbles.h"
 
 #include "graphics/animkeys.h"
-#include "js/js_game.h"
+#include "js/js_register.h"
 
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_bubbles);
 

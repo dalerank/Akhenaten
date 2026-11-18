@@ -16,7 +16,7 @@
 #include "figuretype/figure_plagued_citizen.h"
 #include "scenario/scenario.h"
 #include "game/simulation.h"
-#include "js/js_game.h"
+#include "js/js_register.h"
 #include "dev/debug.h"
 
 city_health_rules_t ANK_VARIABLE(city_health_rules)

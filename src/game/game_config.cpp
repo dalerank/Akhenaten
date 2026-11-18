@@ -7,7 +7,7 @@
 #include <variant>
 #include <cstring>
 #include "core/svector.h"
-#include "js/js_game.h"
+#include "js/js_register.h"
 #include "dev/debug.h"
 
 #include <SDL.h>

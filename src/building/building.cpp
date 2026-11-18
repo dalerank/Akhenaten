@@ -53,7 +53,7 @@
 #include <cmath>
 
 #include "dev/debug.h"
-#include "js/js_game.h"
+#include "js/js_register.h"
 
 declare_console_command_p(destroytype) {
     int type = args.next_int(0);

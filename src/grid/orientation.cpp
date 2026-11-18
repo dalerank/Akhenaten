@@ -27,7 +27,7 @@
 #include "grid/water.h"
 #include "grid/canals.h"
 #include "image.h"
-#include "js/js_game.h"
+#include "js/js_register.h"
 #include <scenario/map.h>
 
 using e_venue_mode_tokens_t = token_holder<e_venue_mode_orientation, e_venue_mode_booth, e_venue_mode_festival_square>;

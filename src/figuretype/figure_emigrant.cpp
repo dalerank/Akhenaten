@@ -7,7 +7,7 @@
 #include "city/city.h"
 #include "game/game_events.h"
 #include "widget/debug_console.h"
-#include "js/js_game.h"
+#include "js/js_register.h"
 
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_emigrant);
 

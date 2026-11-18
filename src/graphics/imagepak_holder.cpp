@@ -1,6 +1,6 @@
 #include "imagepak_holder.h"
 
-#include "js/js_game.h"
+#include "js/js_register.h"
 
 imagepak_holder_t *g_image_data = nullptr;
 

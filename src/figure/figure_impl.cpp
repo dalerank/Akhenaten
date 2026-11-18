@@ -18,7 +18,7 @@
 #include "core/object_property.h"
 #include "core/profiler.h"
 #include "scenario/invasion_auto_resolve.h"
-#include "js/js_game.h"
+#include "js/js_register.h"
 #include "js/js_struct.h"
 
 #include "dev/debug.h"

@@ -28,7 +28,7 @@
 #include "core/log.h"
 #include "core/svector.h"
 #include "empire/empire.h"
-#include "js/js_game.h"
+#include "js/js_register.h"
 #include "figure/enemy_army.h"
 #include "scenario/scenario_event_manager.h"
 

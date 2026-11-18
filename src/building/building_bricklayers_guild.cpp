@@ -10,7 +10,7 @@
 #include "figuretype/figure_bricklayer.h"
 #include "game/game.h"
 #include "game/resource.h"
-#include "js/js_game.h"
+#include "js/js_register.h"
 
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_bricklayers_guild);
 

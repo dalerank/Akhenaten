@@ -73,7 +73,7 @@
 #include "city/city_figures.h"
 #include "input/mouse.h"
 #include "core/profiler.h"
-#include "js/js_game.h"
+#include "js/js_register.h"
 #include "js/js_struct.h"
 
 #include <algorithm>

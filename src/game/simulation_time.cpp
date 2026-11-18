@@ -3,7 +3,7 @@
 #include "io/io_buffer.h"
 #include "scenario/scenario.h"
 #include "game/simulation.h"
-#include "js/js_game.h"
+#include "js/js_register.h"
 
 e_month_tokens_t ANK_CONFIG_ENUM(e_month_tokens);
 

@@ -28,7 +28,7 @@
 #include "game/game_events.h"
 #include "request.h"
 #include "scenario/editor.h"
-#include "js/js_game.h"
+#include "js/js_register.h"
 #include "city/city.h"
 #include "city/city_resource.h"
 #include "dev/debug.h"

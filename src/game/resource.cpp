@@ -3,7 +3,7 @@
 #include "building/building_type.h"
 #include "scenario/scenario.h"
 #include "graphics/image_groups.h"
-#include "js/js_game.h"
+#include "js/js_register.h"
 
 const e_resource_tokens_t ANK_CONFIG_ENUM(e_resource_tokens);
 

@@ -3,7 +3,7 @@
 #include "building_type.h"
 #include "grid/point.h"
 #include "building_fwd.h"
-#include "js/js_game.h"
+#include "js/js_register.h"
 
 class build_planner;
 struct painter;

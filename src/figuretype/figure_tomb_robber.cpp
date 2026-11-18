@@ -17,7 +17,7 @@
 #include "game/resource.h"
 #include "game/simulation_time.h"
 #include "grid/road_access.h"
-#include "js/js_game.h"
+#include "js/js_register.h"
 #include "scenario/map.h"
 #include "scenario/scenario.h"
 

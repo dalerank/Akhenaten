@@ -35,7 +35,7 @@
 #include "game/game_config.h"
 #include "widget/city/ornaments.h"
 #include "figuretype/figure_storageyard_cart.h"
-#include "js/js_game.h"
+#include "js/js_register.h"
 #include <cmath>
 
 BUILDING_RUNTIME_DATA_IMPL(building_storage_yard)

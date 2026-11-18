@@ -5,7 +5,7 @@
 #include "game/game_config.h"
 #include "lookup.h"
 #include "view.h"
-#include "js/js_game.h"
+#include "js/js_register.h"
 #include <cmath>
 
 zoom_t ANK_VARIABLE_N(g_zoom, "camera_zoom");

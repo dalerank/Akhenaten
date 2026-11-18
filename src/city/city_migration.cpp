@@ -9,7 +9,7 @@
 #include "game/simulation.h"
 #include "game/game_config.h"
 #include "game/game_events.h"
-#include "js/js_game.h"
+#include "js/js_register.h"
 
 svector<city_migration_t::condition, 16> g_migration_conditions;
 city_migration_defaults_t ANK_VARIABLE(migration_defaults);

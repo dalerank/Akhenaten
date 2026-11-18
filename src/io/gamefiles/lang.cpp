@@ -4,7 +4,7 @@
 #include "core/log.h"
 #include "content/vfs.h"
 #include "io/io.h"
-#include "js/js_game.h"
+#include "js/js_register.h"
 
 #include <cstring>
 

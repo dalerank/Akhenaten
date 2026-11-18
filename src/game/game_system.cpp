@@ -1,6 +1,6 @@
 #include "game/game_system.h"
 
-#include "js/js_game.h"
+#include "js/js_register.h"
 
 void game_system::emit(const bstring128& esname_str, const bvariant_map& args) {
     OZZY_PROFILER_SECTION(_, esname_str.c_str());

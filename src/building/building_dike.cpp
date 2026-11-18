@@ -12,7 +12,7 @@
 #include "grid/routing/routing_terrain.h"
 #include "grid/terrain.h"
 #include "grid/tiles.h"
-#include "js/js_game.h"
+#include "js/js_register.h"
 
 #include "grid/basin.h"
 

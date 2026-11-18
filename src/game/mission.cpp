@@ -6,7 +6,7 @@
 #include "content/vfs.h"
 #include "io/io.h"
 #include "game/player_profile.h"
-#include "js/js_game.h"
+#include "js/js_register.h"
 
 const e_campaign_tokens_t ANK_CONFIG_ENUM(e_campaign_tokens);
 

@@ -4,7 +4,7 @@
 #include "core/log.h"
 #include "core/memory_manager.h"
 #include "image.h"
-#include "js/js_game.h"
+#include "js/js_register.h"
 #include "graphics/imagepak_holder.h"
 #include "platform/renderer.h"
 #include "content/atlas_packer.h"

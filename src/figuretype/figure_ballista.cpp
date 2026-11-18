@@ -9,7 +9,7 @@
 #include "graphics/animkeys.h"
 #include "graphics/image.h"
 #include "graphics/view/view.h"
-#include "js/js_game.h"
+#include "js/js_register.h"
 #include "sound/effect.h"
 #include "sound/sound.h"
 

@@ -17,7 +17,7 @@
 #include "grid/water.h"
 #include "queue.h"
 #include "routing_grids.h"
-#include "js/js_game.h"
+#include "js/js_register.h"
 
 const e_routed_mode_tokens_t ANK_CONFIG_ENUM(e_routed_mode_tokens);
 

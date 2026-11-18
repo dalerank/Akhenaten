@@ -11,7 +11,7 @@
 #include "figuretype/figure_immigrant.h"
 #include "figuretype/figure_homeless.h"
 #include "core/profiler.h"
-#include "js/js_game.h"
+#include "js/js_register.h"
 #include "dev/debug.h"
 
 #include <cstring>

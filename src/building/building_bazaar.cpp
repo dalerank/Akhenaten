@@ -24,7 +24,7 @@
 #include "graphics/graphics.h"
 #include "game/simulation.h"
 #include "widget/city/ornaments.h"
-#include "js/js_game.h"
+#include "js/js_register.h"
 #include <numeric>
 #include <algorithm>
 

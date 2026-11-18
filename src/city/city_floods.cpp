@@ -6,7 +6,7 @@
 #include "core/profiler.h"
 #include "core/random.h"
 #include "core/svector.h"
-#include "js/js_game.h"
+#include "js/js_register.h"
 #include "grid/basin.h"
 #include "grid/floodplain.h"
 #include "grid/tiles.h"

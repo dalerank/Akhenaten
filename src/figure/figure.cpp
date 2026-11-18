@@ -28,7 +28,7 @@
 #include "grid/routing/routing.h"
 #include "graphics/elements/tooltip.h"
 #include "building/construction/build_planner.h"
-#include "js/js_game.h"
+#include "js/js_register.h"
 #include "core/pool.h"
 #include "core/interlocked.h"
 

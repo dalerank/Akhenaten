@@ -13,7 +13,7 @@
 #include "graphics/elements/ui.h"
 #include "game/game.h"
 #include "game/game_events.h"
-#include "js/js_game.h"
+#include "js/js_register.h"
 #include "figuretype/figure_cartpusher.h"
 #include "figuretype/figure_caravan_donkey.h"
 #include "figuretype/figure_deliveryboy.h"

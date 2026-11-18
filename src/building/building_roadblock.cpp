@@ -4,7 +4,7 @@
 #include "graphics/window.h"
 #include "window/building/common.h"
 #include "window/window_building_info.h"
-#include "js/js_game.h"
+#include "js/js_register.h"
 
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_roadblock);
 

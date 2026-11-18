@@ -11,7 +11,7 @@
 #include "grid/routing/routing.h"
 #include "game/game_events.h"
 #include "game/sound_effect.h"
-#include "js/js_game.h"
+#include "js/js_register.h"
 
 #include <algorithm>
 

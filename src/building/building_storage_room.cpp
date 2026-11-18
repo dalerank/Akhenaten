@@ -9,7 +9,9 @@
 #include "empire/trade_prices.h"
 #include "city/city_finance.h"
 #include "core/log.h"
-#include "js/js_game.h"
+#include "js/js_register.h"
+
+#include <cmath>
 
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_storage_room);
 

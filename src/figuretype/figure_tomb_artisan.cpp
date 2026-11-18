@@ -6,7 +6,7 @@
 #include "core/random.h"
 #include "game/resource.h"
 #include "grid/road_access.h"
-#include "js/js_game.h"
+#include "js/js_register.h"
 
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_tomb_artisan);
 

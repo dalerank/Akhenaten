@@ -5,7 +5,7 @@
 #include "content/vfs.h"
 #include "core/log.h"
 #include "game/game_events.h"
-#include "js/js_game.h"
+#include "js/js_register.h"
 #include "core/svector.h"
 
 #include <stdio.h>

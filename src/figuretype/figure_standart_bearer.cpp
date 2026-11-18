@@ -1,6 +1,6 @@
 #include "figure_standart_bearer.h"
 
-#include "js/js_game.h"
+#include "js/js_register.h"
 #include "graphics/image.h"
 #include "graphics/painter.h"
 

@@ -12,7 +12,7 @@
 #include "io/io_buffer.h"
 #include "sound/channel.h"
 #include "sound/sound.h"
-#include "js/js_game.h"
+#include "js/js_register.h"
 
 #include <assert.h>
 #include <string.h>

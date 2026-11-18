@@ -30,7 +30,7 @@
 #include "city/city_warnings.h"
 #include "game/game.h"
 #include "core/stable_array.h"
-#include "js/js_game.h"
+#include "js/js_register.h"
 
 #include <algorithm>
 #include <array>

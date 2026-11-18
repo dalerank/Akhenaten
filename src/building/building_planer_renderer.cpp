@@ -8,7 +8,7 @@
 #include "game/undo.h"
 #include "grid/figure.h"
 #include "graphics/graphics.h"
-#include "js/js_game.h"
+#include "js/js_register.h"
 #include "js/js_struct.h"
 
 struct ghost_preview_ev {

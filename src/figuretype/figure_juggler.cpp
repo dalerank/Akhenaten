@@ -5,7 +5,7 @@
 #include "figure/service.h"
 #include "building/building_entertainment.h"
 #include "building/building_house.h"
-#include "js/js_game.h"
+#include "js/js_register.h"
 
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_juggler);
 

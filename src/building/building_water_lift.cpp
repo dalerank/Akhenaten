@@ -7,7 +7,7 @@
 #include "grid/canals.h"
 #include "grid/building.h"
 #include "graphics/elements/ui.h"
-#include "js/js_game.h"
+#include "js/js_register.h"
 
 BUILDING_RUNTIME_DATA_IMPL(building_water_lift)
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_water_lift);

@@ -32,7 +32,9 @@
 #include "figuretype/figure_worker.h"
 #include "grid/tiles.h"
 #include "figuretype/figure_cartpusher.h"
-#include "js/js_game.h"
+#include "js/js_register.h"
+
+#include <cmath>
 
 BUILDING_RUNTIME_DATA_IMPL(building_farm)
 

@@ -2,7 +2,7 @@
 
 #include "city/buildings.h"
 #include "grid/road_access.h"
-#include "js/js_game.h"
+#include "js/js_register.h"
 #include "city/city.h"
 
 const e_governor_action_tokens_t ANK_CONFIG_ENUM(e_governor_action_tokens)

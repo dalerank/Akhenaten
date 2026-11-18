@@ -6,7 +6,7 @@
 #include "figure/figure.h"
 #include "figuretype/figure_tomb_artisan.h"
 #include "game/resource.h"
-#include "js/js_game.h"
+#include "js/js_register.h"
 
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_artisans_guild);
 

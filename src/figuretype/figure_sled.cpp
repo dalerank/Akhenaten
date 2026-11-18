@@ -5,7 +5,7 @@
 #include "core/profiler.h"
 #include "figuretype/figure_worker.h"
 #include "game/game_config.h"
-#include "js/js_game.h"
+#include "js/js_register.h"
 
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_sled);
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_sled_puller);

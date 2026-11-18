@@ -1,6 +1,7 @@
 #include "build_planner.h"
 
 #include <algorithm>
+#include <cmath>
 
 #include "editor/tool.h"
 #include "graphics/view/lookup.h"
@@ -61,7 +62,7 @@
 #include "game/game_config.h"
 #include "routed.h"
 #include "city/city.h"
-#include "js/js_game.h"
+#include "js/js_register.h"
 #include "core/profiler.h"
 #include "scenario/scenario.h"
 

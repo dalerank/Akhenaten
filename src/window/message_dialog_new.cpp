@@ -41,7 +41,7 @@
 #include "window/window_advisors.h"
 #include "window/window_city.h"
 #include "scenario/scenario_invasion.h"
-#include "js/js_game.h"
+#include "js/js_register.h"
 #include "game/game.h"
 #include "message_dialog.h"
 #include "core/log.h"

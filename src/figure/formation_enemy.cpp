@@ -21,7 +21,7 @@
 #include "grid/soldier_strength.h"
 #include "grid/terrain.h"
 #include "core/flat_map.h"
-#include "js/js_game.h"
+#include "js/js_register.h"
 #include "grid/road_access.h"
 #include "scenario/invasion_auto_resolve.h"
 

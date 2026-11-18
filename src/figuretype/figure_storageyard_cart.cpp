@@ -9,7 +9,7 @@
 #include "graphics/graphics.h"
 #include "graphics/image.h"
 #include "game/game.h"
-#include "js/js_game.h"
+#include "js/js_register.h"
 #include "game/game_config.h"
 
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_storageyard_cart);

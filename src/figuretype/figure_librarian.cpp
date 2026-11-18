@@ -8,7 +8,7 @@
 #include "grid/building.h"
 #include "grid/grid.h"
 #include "grid/road_access.h"
-#include "js/js_game.h"
+#include "js/js_register.h"
 #include "game/game.h"
 
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_librarian);

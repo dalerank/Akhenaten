@@ -18,7 +18,9 @@
 #include "figuretype/figure_birds.h"
 #include "figuretype/figure_antelope.h"
 #include "game/game_events.h"
-#include "js/js_game.h"
+#include "js/js_register.h"
+
+#include <cmath>
 #include "scenario/scenario.h"
 
 missile_rules_t ANK_VARIABLE(missile_rules);

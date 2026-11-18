@@ -21,7 +21,7 @@
 #include "scenario/map.h"
 #include "figure/route.h"
 #include "city/city_buildings.h"
-#include "js/js_game.h"
+#include "js/js_register.h"
 #include <array>
 #include <cstdlib>
 

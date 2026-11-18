@@ -1,6 +1,6 @@
 #include "platform.h"
 #include "platform/screen.h"
-#include "js/js_game.h"
+#include "js/js_register.h"
 #include "core/bstring.h"
 #include "platform/arguments.h"
 

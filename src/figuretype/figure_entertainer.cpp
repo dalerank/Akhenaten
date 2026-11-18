@@ -12,7 +12,7 @@
 #include "grid/building.h"
 #include "figure/service.h"
 #include "building/building_house.h"
-#include "js/js_game.h"
+#include "js/js_register.h"
 
 const e_entertainer_action_tokens_t ANK_CONFIG_ENUM(e_entertainer_action_tokens)
 

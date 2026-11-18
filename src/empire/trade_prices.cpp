@@ -2,7 +2,7 @@
 
 #include "io/io_buffer.h"
 #include "city/city.h"
-#include "js/js_game.h"
+#include "js/js_register.h"
 
 stable_array<trade_price> ANK_VARIABLE(default_prices);
 

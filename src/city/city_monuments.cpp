@@ -1,7 +1,7 @@
 #include "city/city_monuments.h"
 
 #include "game/game_events.h"
-#include "js/js_game.h"
+#include "js/js_register.h"
 
 void city_monuments_t::update_month() {
 

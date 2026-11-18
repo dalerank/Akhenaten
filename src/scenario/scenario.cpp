@@ -14,7 +14,7 @@
 #include "dev/debug.h"
 #include "core/log.h"
 
-#include "js/js_game.h"
+#include "js/js_register.h"
 
 #include <cstring>
 

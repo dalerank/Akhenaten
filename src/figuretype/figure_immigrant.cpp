@@ -14,7 +14,7 @@
 #include "graphics/view/lookup.h"
 #include "game/game.h"
 
-#include "js/js_game.h"
+#include "js/js_register.h"
 
 const e_immigrant_action_tokens_t ANK_CONFIG_ENUM(e_immigrant_action_tokens)
 

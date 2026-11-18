@@ -6,7 +6,7 @@
 #include "widget/widget_sidebar.h"
 #include "widget/widget_figure_follow.h"
 #include "graphics/window.h"
-#include "js/js_game.h"
+#include "js/js_register.h"
 #include "grid/point.h"
 #include "figure/formation.h"
 #include "figure/formation_batalion.h"

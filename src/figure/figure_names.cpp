@@ -1,6 +1,6 @@
 #include "figure/figure_names.h"
 #include "io/io_buffer.h"
-#include "js/js_game.h"
+#include "js/js_register.h"
 #include "core/random.h"
 #include "core/stable_array.h"
 

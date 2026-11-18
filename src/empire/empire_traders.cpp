@@ -18,7 +18,7 @@
 #include "city/city_figures.h"
 #include "core/log.h"
 #include "core/random.h"
-#include "js/js_game.h"
+#include "js/js_register.h"
 #include "scenario/empire.h"
 
 empire_traders_manager ANK_VARIABLE_N(g_empire_traders, "empire_traders");

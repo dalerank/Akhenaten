@@ -12,7 +12,7 @@
 #include "figuretype/figure_carpenter.h"
 #include "figuretype/figure_stonemason.h"
 #include "grid/grid.h"
-#include "js/js_game.h"
+#include "js/js_register.h"
 
 #include <algorithm>
 

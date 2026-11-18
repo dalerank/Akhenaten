@@ -4,7 +4,7 @@
 #include "grid/building_tiles.h"
 #include "grid/building.h"
 #include "io/io_buffer.h"
-#include "js/js_game.h"
+#include "js/js_register.h"
 
 BUILDING_RUNTIME_DATA_IMPL(building_festival_square)
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_festival_square);

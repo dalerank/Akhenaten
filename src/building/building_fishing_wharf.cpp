@@ -14,7 +14,7 @@
 #include "game/game.h"
 #include "graphics/elements/ui.h"
 #include "graphics/graphics.h"
-#include "js/js_game.h"
+#include "js/js_register.h"
 #include "dev/debug.h"
 
 BUILDING_RUNTIME_DATA_IMPL(building_fishing_wharf)

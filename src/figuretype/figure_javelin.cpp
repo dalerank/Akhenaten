@@ -6,7 +6,7 @@
 #include "graphics/animkeys.h"
 #include "graphics/view/view.h"
 #include "grid/figure.h"
-#include "js/js_game.h"
+#include "js/js_register.h"
 
 javelin_rules_t ANK_VARIABLE(javelin_rules);
 

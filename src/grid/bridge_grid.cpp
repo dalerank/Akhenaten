@@ -10,7 +10,7 @@
 #include "grid/sprite.h"
 #include "grid/terrain.h"
 #include "io/io_buffer.h"
-#include "js/js_game.h"
+#include "js/js_register.h"
 #include "scenario/map.h"
 
 #include <unordered_map>

@@ -4,7 +4,7 @@
 #include "core/vec2i.h"
 #include "figure/formation.h"
 #include "core/archive.h"
-#include "js/js_game.h"
+#include "js/js_register.h"
 
 struct formation_layout_row {
     e_formation_layout layout;

@@ -6,7 +6,7 @@
 #include "city/city_figures.h"
 #include "building/building_bazaar.h"
 #include "figuretype/figure_cartpusher.h"
-#include "js/js_game.h"
+#include "js/js_register.h"
 
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_delivery_boy);
 

@@ -5,7 +5,7 @@
 #include "game/game_config.h"
 #include "city/city_buildings.h"
 #include "building/building_house.h"
-#include "js/js_game.h"
+#include "js/js_register.h"
 #include "grid/routing/routing.h"
 
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_drunkard);

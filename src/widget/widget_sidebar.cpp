@@ -18,7 +18,9 @@
 #include "sound/sound.h"
 #include "game/game.h"
 
-#include "js/js_game.h"
+#include "js/js_register.h"
+
+#include <cmath>
 #include "js/js_struct.h"
 #include "graphics/elements/ui_js.h"
 

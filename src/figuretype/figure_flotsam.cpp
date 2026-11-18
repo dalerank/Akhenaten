@@ -5,7 +5,7 @@
 #include "figure/figure.h"
 #include "game/game_config.h"
 #include "graphics/animkeys.h"
-#include "js/js_game.h"
+#include "js/js_register.h"
 #include "scenario/map.h"
 #include "scenario/scenario.h"
 

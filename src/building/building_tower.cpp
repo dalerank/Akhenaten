@@ -13,7 +13,7 @@
 #include "city/city_warnings.h"
 #include "building/building_wall.h"
 #include "figuretype/figure_ballista.h"
-#include "js/js_game.h"
+#include "js/js_register.h"
 
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_brick_tower);
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_strong_tower);

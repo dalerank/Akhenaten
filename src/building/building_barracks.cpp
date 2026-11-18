@@ -16,7 +16,7 @@
 #include "game/game.h"
 #include "graphics/elements/ui.h"
 #include "graphics/graphics.h"
-#include "js/js_game.h"
+#include "js/js_register.h"
 #include "graphics/image.h"
 #include "figuretype/figure_soldier.h"
 #include "figuretype/figure_tower_sentry.h"

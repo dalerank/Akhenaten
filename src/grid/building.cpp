@@ -1,6 +1,6 @@
 ﻿#include "building.h"
 #include "io/io_buffer.h"
-#include "js/js_game.h"
+#include "js/js_register.h"
 
 #include "building/building.h"
 #include "building/building_wall.h"

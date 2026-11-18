@@ -21,13 +21,14 @@
 
 #include "game/game.h"
 
-#include "js/js_game.h"
+#include "js/js_register.h"
 #include "js/js.h"
 
 #include <array>
 #include <unordered_set>
 #include <cinttypes>
 #include <cstring>
+#include <mutex>
 
 SDL_Surface *IMG_LoadPNG_RW(SDL_RWops *src);
 image_packer packer;

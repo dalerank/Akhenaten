@@ -12,7 +12,7 @@
 #include "grid/terrain.h"
 #include "grid/water.h"
 #include "input/mouse.h"
-#include "js/js_game.h"
+#include "js/js_register.h"
 #include "scenario/invasion_auto_resolve.h"
 #include "scenario/map.h"
 #include "scenario/scenario.h"

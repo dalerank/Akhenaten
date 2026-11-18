@@ -14,7 +14,7 @@
 #include "building/rotation.h"
 #include "graphics/view/lookup.h"
 #include "construction/build_planner.h"
-#include "js/js_game.h"
+#include "js/js_register.h"
 #include "game/game_pool.h"
 
 BUILDING_RUNTIME_DATA_IMPL(building_temple_complex)
