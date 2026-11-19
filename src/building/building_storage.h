@@ -61,6 +61,29 @@ constexpr int BUILDING_STORAGE_EMPTY_ALL_BACKUP_SLOTS = 400;
 constexpr int BUILDING_STORAGE_EMPTY_ALL_BACKUP_CHUNK_SIZE =
     BUILDING_STORAGE_EMPTY_ALL_BACKUP_SLOTS * RESOURCES_MAX * 2;
 
+constexpr int MAX_STORAGES = 200;
+
+struct empty_all_backup_slot_t {
+    uint8_t resource_state[RESOURCES_MAX];
+    uint8_t has_flag;
+    uint8_t pad[RESOURCES_MAX * 2 - RESOURCES_MAX - 1];
+};
+static_assert(sizeof(empty_all_backup_slot_t) == RESOURCES_MAX * 2, "empty-all backup slot size");
+
+struct city_storage_t {
+    int in_use;
+    int building_id;
+    storage_t storage;
+};
+
+struct building_storages_t {
+    city_storage_t slots[MAX_STORAGES];
+    // Save blob (v175+) — also runtime Empty All snapshot.
+    empty_all_backup_slot_t empty_all_backups[BUILDING_STORAGE_EMPTY_ALL_BACKUP_SLOTS];
+};
+static_assert(sizeof(building_storages_t::empty_all_backups) == BUILDING_STORAGE_EMPTY_ALL_BACKUP_CHUNK_SIZE,
+  "empty-all backup blob size");
+
 void building_storage_clear_all();
 int building_storage_create(int building_type, int building_id);
 
