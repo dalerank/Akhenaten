@@ -1,5 +1,7 @@
 #pragma once
 
+#include <cstddef>
+
 class io_buffer;
 
 struct building_extra_highest_id_chunk {

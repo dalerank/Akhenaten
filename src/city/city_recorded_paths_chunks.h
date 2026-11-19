@@ -1,5 +1,7 @@
 #pragma once
 
+#include <cstddef>
+
 class io_buffer;
 
 struct recorded_paths_chunk {

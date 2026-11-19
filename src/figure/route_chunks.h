@@ -1,5 +1,7 @@
 #pragma once
 
+#include <cstddef>
+
 class io_buffer;
 
 struct route_figures_chunk {

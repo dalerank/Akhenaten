@@ -1,5 +1,7 @@
 #pragma once
 
+#include <cstddef>
+
 class io_buffer;
 
 struct scenario_events_chunk {
