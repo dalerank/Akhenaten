@@ -2,6 +2,10 @@
 
 #include "building/building.h"
 
+struct burning_ruins_t {
+    svector<uint16_t, 2500> ids;
+};
+
 class building_burning_ruin : public building_impl {
 public:
     BUILDING_METAINFO(BUILDING_BURNING_RUIN, building_burning_ruin, building_impl)

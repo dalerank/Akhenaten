@@ -1,5 +1,5 @@
 #include "building_burning_ruin.h"
-#include "building/building_burning_ruin_chunks.h"
+#include "core/xvalue.h"
 
 #include "game/undo.h"
 #include "city/city.h"
@@ -18,7 +18,6 @@
 #include "js/js_register.h"
 
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_burning_ruin);
-svector<uint16_t, 2500> g_burning_ruins;
 
 tile2i building_burning_ruin::can_be_accessed() {
     int base_offset = tile().grid_offset();
@@ -111,19 +110,23 @@ bool building_burning_ruin::target_route_tile_blocked(int grid_offset) const {
 }
 
 xspan<uint16_t> building_burning_ruin::get_all() {
-    return make_span(g_burning_ruins.data(), g_burning_ruins.size());
+    auto& ruins = xvalue<burning_ruins_t>::ref().ids;
+    return make_span(ruins.data(), ruins.size());
 }
 
 void building_burning_ruin::update_all_ruins() {
     OZZY_PROFILER_FUNCTION();
     bool recalculate_terrain = 0;
 
-    g_burning_ruins.clear();
-    buildings_valid_do([&recalculate_terrain] (building &b) {
-        auto ruin = b.dcast_burning_ruin();
-        g_burning_ruins.push_back(b.id);
-        recalculate_terrain |= ruin->update();
-    }, BUILDING_BURNING_RUIN);
+    auto& ruins = xvalue<burning_ruins_t>::ref().ids;
+    ruins.clear();
+    buildings_valid_do(
+      [&recalculate_terrain, &ruins](building& b) {
+          auto ruin = b.dcast_burning_ruin();
+          ruins.push_back(b.id);
+          recalculate_terrain |= ruin->update();
+      },
+      BUILDING_BURNING_RUIN);
 
     if (recalculate_terrain) {
         map_routing_update_land();
@@ -177,19 +180,4 @@ bool building_burning_ruin::update() {
     }
 
     return false;
-}
-
-void building_list_burning_chunk::bind_data(io_buffer* iob, size_t version) {
-    for (int i = 0; i < g_burning_ruins.capacity(); i++) {
-        iob->bind(BIND_SIGNATURE_UINT16, &g_burning_ruins[i]);
-    }
-}
-
-void building_burning_list_info_chunk::bind_data(io_buffer* iob, size_t version) {
-    uint32_t total = g_burning_ruins.capacity();
-    uint32_t size = g_burning_ruins.size();
-    iob->bind(BIND_SIGNATURE_UINT32, &total);
-    iob->bind(BIND_SIGNATURE_UINT32, &size);
-
-    g_burning_ruins.resize(size);
 }
