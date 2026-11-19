@@ -1,5 +1,5 @@
 #include "route.h"
-#include "figure/route_chunks.h"
+#include "core/xvalue.h"
 
 #include "city/city_figures.h"
 #include "grid/routing/queue.h"
@@ -14,18 +14,9 @@
 
 #include <assert.h>
 
-#define MAX_ROUTES 3000
-
-struct figure_route_data_t {
-    int figure_ids[MAX_ROUTES];
-    uint8_t direction_paths[MAX_ROUTES][MAX_PATH_LENGTH];
-};
-
-figure_route_data_t g_figure_route_data;
-
 void figure_route_clear_all(void) {
-    auto &data = g_figure_route_data;
-    for (int i = 0; i < MAX_ROUTES; i++) {
+    auto& data = xvalue<figure_route_data_t>::ref();
+    for (int i = 0; i < figure_route_data_t::MAX_ROUTES; i++) {
         data.figure_ids[i] = 0;
         for (int j = 0; j < MAX_PATH_LENGTH; j++) {
             data.direction_paths[i][j] = 0;
@@ -34,8 +25,8 @@ void figure_route_clear_all(void) {
 }
 
 void figure_route_clean(void) {
-    auto &data = g_figure_route_data;
-    for (int i = 0; i < MAX_ROUTES; i++) {
+    auto& data = xvalue<figure_route_data_t>::ref();
+    for (int i = 0; i < figure_route_data_t::MAX_ROUTES; i++) {
         int figure_id = data.figure_ids[i];
         if (figure_id > 0 && figure_id < MAX_FIGURES) {
             const figure* f = figure_get(figure_id);
@@ -45,8 +36,8 @@ void figure_route_clean(void) {
     }
 }
 int map_routing_get_first_available_id() {
-    auto &data = g_figure_route_data;
-    for (int i = 1; i < MAX_ROUTES; i++) {
+    auto& data = xvalue<figure_route_data_t>::ref();
+    for (int i = 1; i < figure_route_data_t::MAX_ROUTES; i++) {
         if (data.figure_ids[i] == 0)
             return i;
     }
@@ -124,7 +115,7 @@ void figure::map_figure_remove() {
 }
 
 void figure::figure_route_add() {
-    auto &data = g_figure_route_data;
+    auto& data = xvalue<figure_route_data_t>::ref();
     routing_path_id = 0;
     routing_path_current_tile = 0;
     routing_path_length = 0;
@@ -212,7 +203,7 @@ void figure::figure_route_add() {
 }
 
 void figure::route_remove() {
-    auto &data = g_figure_route_data;
+    auto& data = xvalue<figure_route_data_t>::ref();
     if (routing_path_id > 0) {
         if (data.figure_ids[routing_path_id] == id) {
             data.figure_ids[routing_path_id] = 0;
@@ -222,7 +213,7 @@ void figure::route_remove() {
 }
 
 int figure_route_get_direction(int path_id, int index) {
-    auto &data = g_figure_route_data;
+    auto& data = xvalue<figure_route_data_t>::ref();
     return data.direction_paths[path_id][index];
 }
 
@@ -264,24 +255,6 @@ int figure_find_best_road_direction(tile2i spawn_tile, tile2i target_tile) {
     }
 
     return best_direction;
-}
-
-void route_figures_chunk::bind_data(io_buffer* iob, size_t version) {
-    auto& data = g_figure_route_data;
-    for (int i = 0; i < MAX_ROUTES; i++) {
-        iob->bind(BIND_SIGNATURE_INT16, &data.figure_ids[i]);
-    }
-}
-
-void route_figures_chunk::reset() {
-    figure_route_clear_all();
-}
-
-void route_paths_chunk::bind_data(io_buffer* iob, size_t version) {
-    auto& data = g_figure_route_data;
-    for (int i = 0; i < MAX_ROUTES; i++) {
-        iob->bind(BIND_SIGNATURE_RAW, &data.direction_paths[i], MAX_PATH_LENGTH);
-    }
 }
 
 int g_direction_path[MAX_PATH_LENGTH];

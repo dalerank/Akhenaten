@@ -5,6 +5,12 @@
 
 constexpr uint32_t MAX_PATH_LENGTH = 500;
 
+struct figure_route_data_t {
+    static constexpr int MAX_ROUTES = 3000;
+    int figure_ids[MAX_ROUTES];
+    uint8_t direction_paths[MAX_ROUTES][MAX_PATH_LENGTH];
+};
+
 void figure_route_clear_all();
 void figure_route_clean();
 int figure_route_get_direction(int path_id, int index);
