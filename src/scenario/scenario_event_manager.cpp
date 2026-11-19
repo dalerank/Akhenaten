@@ -1,5 +1,5 @@
 #include "scenario_event_manager.h"
-#include "scenario/scenario_event_manager_chunks.h"
+#include "core/xvalue.h"
 
 #include "building/building.h"
 #include "building/building_house.h"
@@ -22,7 +22,6 @@
 #include "empire/trade_prices.h"
 #include "empire/trade_route.h"
 #include "io/io.h"
-#include "io/io_buffer.h"
 #include "core/random.h"
 #include "game/mission.h"
 #include "game/simulation.h"
@@ -55,8 +54,6 @@
 #include <cmath>
 #include <cstdlib>
 #include <vector>
-
-constexpr int MAX_EVENTS = 150;
 
 static bool is_favour_trigger(e_event_trigger_type t) {
     return t == EVENT_TRIGGER_BY_FAVOUR || t == EVENT_TRIGGER_BY_FAVOUR_IN_USE;
@@ -95,10 +92,6 @@ struct auto_phrase {
     svector<uint8_t, 36> phrase_ids;
 };
 ANK_CONFIG_STRUCT(auto_phrase, id, text, phrase_ids)
-
-struct events_data_t {
-    svector<event_ph_t, MAX_EVENTS> event_list;
-};
 
 template <>
 struct stable_array_max_elements<auto_phrase>{
@@ -144,7 +137,9 @@ static const invader_phrases_t& invader_phrases(int invader) {
     return invaders[invader - EVENT_INVADER_ENEMY]->phrases;
 }
 
-events_data_t g_scenario_events;
+static events_data_t& scenario_events_data() {
+    return xvalue<events_data_t>::ref();
+}
 
 declare_console_command_p(run_scenario_event) {
     int tag_id = args.next_int(0);
@@ -153,7 +148,7 @@ declare_console_command_p(run_scenario_event) {
         return;
     }
 
-    auto& events = g_scenario_events.event_list;
+    auto& events = scenario_events_data().event_list;
     auto it = std::find_if(events.begin(), events.end(), [&] (auto& e) { return e.tag_id == tag_id; });
     if (it == events.end()) {
         return;
@@ -210,7 +205,7 @@ void event_ph_t::archive_load(archive arch) {
 }
 
 void event_manager_t::load_mission_metadata(const mission_id_t &missionid) {
-    auto &sc_events = g_scenario_events;
+    auto& sc_events = scenario_events_data();
 
     // Events come only from the mission script; whatever the map/pak loaded is dropped.
     bool enable_scenario_events = false;
@@ -238,8 +233,8 @@ void event_manager_t::load_mission_metadata(const mission_id_t &missionid) {
 
 void event_manager_t::create_good_request(int tag, e_resource r, int amount, int months_initial, int8_t subtype,
                                           e_event_trigger_type trigger, int8_t city_id) {
-    auto& request = g_scenario_events.event_list.emplace_back();
-    int event_id = g_scenario_events.event_list.size() - 1;
+    auto& request = scenario_events_data().event_list.emplace_back();
+    int event_id = scenario_events_data().event_list.size() - 1;
     memset(&request, 0, sizeof(event_ph_t));
     request.type = EVENT_TYPE_REQUEST;
     request.time.year = g_simulation.simtime.years_since_start();
@@ -258,12 +253,12 @@ void event_manager_t::create_good_request(int tag, e_resource r, int amount, int
     request.on_refusal_action = -1;
     request.on_too_late_action = -1;
     request.on_defeat_action = -1;
-    g_scenario_events.event_list.front().num_total_header = g_scenario_events.event_list.size();
+    scenario_events_data().event_list.front().num_total_header = scenario_events_data().event_list.size();
 }
 
 void event_manager_t::create_pharaoh_gift(int tag, e_resource r, int amount) {
-    auto& event = g_scenario_events.event_list.emplace_back();
-    int event_id = g_scenario_events.event_list.size() - 1;
+    auto& event = scenario_events_data().event_list.emplace_back();
+    int event_id = scenario_events_data().event_list.size() - 1;
     memset(&event, 0, sizeof(event_ph_t));
     event.type = EVENT_TYPE_GIFT_FROM_PHARAOH;
     event.time.year = g_simulation.simtime.years_since_start();
@@ -280,13 +275,13 @@ void event_manager_t::create_pharaoh_gift(int tag, e_resource r, int amount) {
     event.on_too_late_action = -1;
     event.on_defeat_action = -1;
     event.reasons = {0xffff, 0xffff, 0xffff, 0xffff};
-    g_scenario_events.event_list.front().num_total_header = g_scenario_events.event_list.size();
+    scenario_events_data().event_list.front().num_total_header = scenario_events_data().event_list.size();
 }
 
 void event_manager_t::create_foreign_army_attack_warning(int tag, int8_t sender_faction, int months_initial,
                                                          int invader) {
-    auto& event = g_scenario_events.event_list.emplace_back();
-    int event_id = g_scenario_events.event_list.size() - 1;
+    auto& event = scenario_events_data().event_list.emplace_back();
+    int event_id = scenario_events_data().event_list.size() - 1;
     memset(&event, 0, sizeof(event_ph_t));
     event.type = EVENT_TYPE_FOREIGN_ARMY_ATTACK_WARNING;
     event.time.year = g_simulation.simtime.years_since_start();
@@ -299,12 +294,12 @@ void event_manager_t::create_foreign_army_attack_warning(int tag, int8_t sender_
     event.item.value = invader;
     event.event_id = event_id;
     event.event_state = e_event_state_initial;
-    g_scenario_events.event_list.front().num_total_header = g_scenario_events.event_list.size();
+    scenario_events_data().event_list.front().num_total_header = scenario_events_data().event_list.size();
 }
 
 void event_manager_t::create_distant_battle(int tag, pcstr city, vec2i pos) {
-    auto &event = g_scenario_events.event_list.emplace_back();
-    int event_id = g_scenario_events.event_list.size() - 1;
+    auto& event = scenario_events_data().event_list.emplace_back();
+    int event_id = scenario_events_data().event_list.size() - 1;
     memset(&event, 0, sizeof(event_ph_t));
     event.type = EVENT_TYPE_DISTANT_BATTLE;
     event.time.year = g_simulation.simtime.years_since_start();
@@ -316,12 +311,12 @@ void event_manager_t::create_distant_battle(int tag, pcstr city, vec2i pos) {
     //event.sender_faction = sender_faction;
     event.event_id = event_id;
     event.event_state = e_event_state_initial;
-    g_scenario_events.event_list.front().num_total_header = g_scenario_events.event_list.size();
+    scenario_events_data().event_list.front().num_total_header = scenario_events_data().event_list.size();
 }
 
 void event_manager_t::win_distant_battle(int tag, pcstr city, vec2i pos) {
-    auto &event = g_scenario_events.event_list.emplace_back();
-    int event_id = g_scenario_events.event_list.size() - 1;
+    auto& event = scenario_events_data().event_list.emplace_back();
+    int event_id = scenario_events_data().event_list.size() - 1;
     memset(&event, 0, sizeof(event_ph_t));
     event.type = EVENT_TYPE_DISTANT_BATTLE_WON;
     event.time.year = g_simulation.simtime.years_since_start();
@@ -333,13 +328,13 @@ void event_manager_t::win_distant_battle(int tag, pcstr city, vec2i pos) {
     //event.sender_faction = sender_faction;
     event.event_id = event_id;
     event.event_state = e_event_state_initial;
-    g_scenario_events.event_list.front().num_total_header = g_scenario_events.event_list.size();
+    scenario_events_data().event_list.front().num_total_header = scenario_events_data().event_list.size();
 }
 
 void event_manager_t::create_chain_event(int tag, e_event_type type, int amount, e_resource resource,
                                          int8_t subtype, int8_t city_id, e_event_trigger_type trigger) {
-    auto& event = g_scenario_events.event_list.emplace_back();
-    int event_id = g_scenario_events.event_list.size() - 1;
+    auto& event = scenario_events_data().event_list.emplace_back();
+    int event_id = scenario_events_data().event_list.size() - 1;
     memset(&event, 0, sizeof(event_ph_t));
     event.type = type;
     event.amount.value = amount;
@@ -361,15 +356,15 @@ void event_manager_t::create_chain_event(int tag, e_event_type type, int amount,
     event.on_too_late_action = -1;
     event.on_defeat_action = -1;
     event.reasons = { 0xffff, 0xffff, 0xffff, 0xffff };
-    g_scenario_events.event_list.front().num_total_header = g_scenario_events.event_list.size();
+    scenario_events_data().event_list.front().num_total_header = scenario_events_data().event_list.size();
 }
 
 int event_manager_t::create_invasion(const invasion_event_desc &desc) {
     if (events_count() >= MAX_EVENTS) {
         return -1;
     }
-    auto &event = g_scenario_events.event_list.emplace_back();
-    const int event_id = g_scenario_events.event_list.size() - 1;
+    auto& event = scenario_events_data().event_list.emplace_back();
+    const int event_id = scenario_events_data().event_list.size() - 1;
     memset(&event, 0, sizeof(event_ph_t));
     event.type = EVENT_TYPE_INVASION;
     event.event_id = event_id;
@@ -389,14 +384,14 @@ int event_manager_t::create_invasion(const invasion_event_desc &desc) {
     event.on_too_late_action = -1;
     event.on_defeat_action = -1;
     event.reasons = {0xffff, 0xffff, 0xffff, 0xffff};
-    g_scenario_events.event_list.front().num_total_header = g_scenario_events.event_list.size();
+    scenario_events_data().event_list.front().num_total_header = scenario_events_data().event_list.size();
     return event_id;
 }
 
 static event_ph_t *find_event_by_tag(int tag) {
-    auto it = std::find_if(g_scenario_events.event_list.begin(), g_scenario_events.event_list.end(),
-                           [tag] (auto &p) { return p.tag_id == tag; });
-    return (it == g_scenario_events.event_list.end()) ? nullptr : &*it;
+    auto it = std::find_if(scenario_events_data().event_list.begin(), scenario_events_data().event_list.end(),
+      [tag](auto& p) { return p.tag_id == tag; });
+    return (it == scenario_events_data().event_list.end()) ? nullptr : &*it;
 }
 
 void event_manager_t::set_request_completed_action(int master_tag, int slave_tag) {
@@ -432,7 +427,7 @@ void event_manager_t::set_request_defeat_action(int master_tag, int slave_tag) {
 }
 
 static void editor_reindex_events() {
-    auto &list = g_scenario_events.event_list;
+    auto& list = scenario_events_data().event_list;
     for (int i = 0; i < (int)list.size(); ++i) {
         list[i].event_id = i;
     }
@@ -442,7 +437,7 @@ static void editor_reindex_events() {
 }
 
 static void editor_ensure_header() {
-    auto &list = g_scenario_events.event_list;
+    auto& list = scenario_events_data().event_list;
     if (list.empty()) {
         list.push_back({});
     }
@@ -458,7 +453,7 @@ static int editor_request_event_id(int slot) {
         return -1;
     }
     const int tag = editor_request_tag(slot);
-    auto &list = g_scenario_events.event_list;
+    auto& list = scenario_events_data().event_list;
     for (int i = 1; i < (int)list.size(); ++i) {
         if (list[i].type == EVENT_TYPE_REQUEST && list[i].tag_id == tag) {
             return i;
@@ -506,9 +501,9 @@ static void editor_apply_to_event(event_ph_t &e, const editor_request *in, int e
 }
 
 void event_manager_t::clear_for_editor() {
-    g_scenario_events.event_list.clear();
-    g_scenario_events.event_list.push_back({});
-    g_scenario_events.event_list.front().num_total_header = 1;
+    scenario_events_data().event_list.clear();
+    scenario_events_data().event_list.push_back({});
+    scenario_events_data().event_list.front().num_total_header = 1;
 }
 
 void event_manager_t::editor_request_get(int slot, editor_request *out) const {
@@ -520,7 +515,7 @@ void event_manager_t::editor_request_get(int slot, editor_request *out) const {
     if (eid < 0) {
         return;
     }
-    editor_fill_from_event(g_scenario_events.event_list[eid], out);
+    editor_fill_from_event(scenario_events_data().event_list[eid], out);
 }
 
 void event_manager_t::editor_request_save(int slot, const editor_request *in) {
@@ -528,7 +523,7 @@ void event_manager_t::editor_request_save(int slot, const editor_request *in) {
         return;
     }
     editor_ensure_header();
-    auto &list = g_scenario_events.event_list;
+    auto& list = scenario_events_data().event_list;
 
     if (in->resource == RESOURCE_NONE || in->amount <= 0) {
         editor_request_delete(slot);
@@ -553,16 +548,17 @@ void event_manager_t::editor_request_delete(int slot) {
     if (eid < 0) {
         return;
     }
-    auto &list = g_scenario_events.event_list;
+    auto& list = scenario_events_data().event_list;
     list.erase(list.begin() + eid);
     editor_ensure_header();
     editor_reindex_events();
 }
 
 void event_manager_t::execute_event(int tag) {
-    auto it = std::find_if(g_scenario_events.event_list.begin(), g_scenario_events.event_list.end(), [tag] (auto &p) { return p.tag_id == tag; });
+    auto it = std::find_if(scenario_events_data().event_list.begin(), scenario_events_data().event_list.end(),
+      [tag](auto& p) { return p.tag_id == tag; });
 
-    if (it == g_scenario_events.event_list.end()) {
+    if (it == scenario_events_data().event_list.end()) {
         return;
     }
 
@@ -570,47 +566,52 @@ void event_manager_t::execute_event(int tag) {
 }
 
 void event_manager_t::set_request_location_fields(int tag, int16_t l1, int16_t l2, int16_t l3, int16_t l4) {
-    auto it = std::find_if(g_scenario_events.event_list.begin(), g_scenario_events.event_list.end(), [tag] (auto &p) { return p.tag_id == tag; });
+    auto it = std::find_if(scenario_events_data().event_list.begin(), scenario_events_data().event_list.end(),
+      [tag](auto& p) { return p.tag_id == tag; });
 
-    if (it != g_scenario_events.event_list.end()) {
+    if (it != scenario_events_data().event_list.end()) {
         it->location_fields = { l1, l2, l3, l4 };
     }
 }
 
 void event_manager_t::set_request_reasons(int tag, uint16_t r1, uint16_t r2, uint16_t r3, uint16_t r4) {
-    auto it = std::find_if(g_scenario_events.event_list.begin(), g_scenario_events.event_list.end(), [tag] (auto &p) { return p.tag_id == tag; });
+    auto it = std::find_if(scenario_events_data().event_list.begin(), scenario_events_data().event_list.end(),
+      [tag](auto& p) { return p.tag_id == tag; });
 
-    if (it != g_scenario_events.event_list.end()) {
+    if (it != scenario_events_data().event_list.end()) {
         it->reasons = { r1, r2, r3, r4 };
     }
 }
 
 void event_manager_t::set_request_param(int tag, pcstr name, int param) {
-    auto it = std::find_if(g_scenario_events.event_list.begin(), g_scenario_events.event_list.end(), [tag] (auto &p) { return p.tag_id == tag; });
+    auto it = std::find_if(scenario_events_data().event_list.begin(), scenario_events_data().event_list.end(),
+      [tag](auto& p) { return p.tag_id == tag; });
 
-    if (it != g_scenario_events.event_list.end()) {
+    if (it != scenario_events_data().event_list.end()) {
         it->set_param(name, param);
     }
 }
 
 void event_manager_t::set_request_image(int tag, xstring image) {
-    auto it = std::find_if(g_scenario_events.event_list.begin(), g_scenario_events.event_list.end(), [tag] (auto &p) { return p.tag_id == tag; });
+    auto it = std::find_if(scenario_events_data().event_list.begin(), scenario_events_data().event_list.end(),
+      [tag](auto& p) { return p.tag_id == tag; });
 
-    if (it != g_scenario_events.event_list.end()) {
+    if (it != scenario_events_data().event_list.end()) {
         it->image = image_desc::resolve(image);
     }
 }
 
 void event_manager_t::set_request_sender_faction(int tag, int8_t sender_faction) {
-    auto it = std::find_if(g_scenario_events.event_list.begin(), g_scenario_events.event_list.end(), [tag] (auto &p) { return p.tag_id == tag; });
+    auto it = std::find_if(scenario_events_data().event_list.begin(), scenario_events_data().event_list.end(),
+      [tag](auto& p) { return p.tag_id == tag; });
 
-    if (it != g_scenario_events.event_list.end()) {
+    if (it != scenario_events_data().event_list.end()) {
         it->sender_faction = sender_faction;
     }
 }
 
 int16_t event_manager_t::events_count() {
-    return g_scenario_events.event_list.size();
+    return scenario_events_data().event_list.size();
 }
 
 static void update_randomized_values(event_ph_t &event) {
@@ -627,7 +628,7 @@ static void update_randomized_values(event_ph_t &event) {
 }
 
 event_ph_t* event_manager_t::create(const event_ph_t* parent) {
-    auto& data = g_scenario_events;
+    auto& data = scenario_events_data();
     if (events_count() >= MAX_EVENTS) {
         return nullptr;
     }
@@ -683,17 +684,17 @@ bool event_manager_t::create(const event_ph_t* master, const event_ph_t* parent,
 // Out-of-range ids return nullptr: the list is a fixed-capacity svector, so indexing past size()
 // reads stale events left by an earlier mission instead of failing.
 const event_ph_t* event_manager_t::at(int id) const {
-    if (id < 0 || id >= (int)g_scenario_events.event_list.size()) {
+    if (id < 0 || id >= (int)scenario_events_data().event_list.size()) {
         return nullptr;
     }
-    return &g_scenario_events.event_list[id];
+    return &scenario_events_data().event_list[id];
 }
 
 event_ph_t* event_manager_t::at(int id) {
-    if (id < 0 || id >= (int)g_scenario_events.event_list.size()) {
+    if (id < 0 || id >= (int)scenario_events_data().event_list.size()) {
         return nullptr;
     }
-    return &g_scenario_events.event_list[id];
+    return &scenario_events_data().event_list[id];
 }
 
 bool event_manager_t::is_valid_event_index(int id) {
@@ -708,7 +709,7 @@ int event_manager_t::get_auto_reason_phrase_id(int param_1, int param_2) {
 }
 
 xstring event_manager_t::msg_text(int group_id, int index) {
-    auto& data = g_scenario_events;
+    auto& data = scenario_events_data();
     return lang_text_from_message(group_id + index);
 }
 
@@ -717,7 +718,7 @@ void event_manager_t::process_active_request(int id) {
         return;
     }
 
-    auto &data = g_scenario_events;
+    auto& data = scenario_events_data();
     if (!is_valid_event_index(id)) {
         return;
     }
@@ -904,7 +905,7 @@ static void city_blood_river_start(event_ph_t& event) {
 }
 
 bool event_manager_t::blood_river_sweep_active() const {
-    for (const event_ph_t& e : g_scenario_events.event_list) {
+    for (const event_ph_t& e : scenario_events_data().event_list) {
         if (e.type == EVENT_TYPE_BLOOD_RIVER && e.data.sweep.countdown > 0) {
             return true;
         }
@@ -1162,7 +1163,7 @@ void event_manager_t::process_event(int id, bool via_event_trigger, int chain_ac
         return;
     }
 
-    auto& data = g_scenario_events;
+    auto& data = scenario_events_data();
     if (!is_valid_event_index(id)) {
         return;
     }
@@ -1202,7 +1203,7 @@ void event_manager_t::process_event(int id, bool via_event_trigger, int chain_ac
         if (event.type == EVENT_TYPE_REQUEST) {
             create(&event, at(caller_event_id), EVENT_TRIGGER_ACTIVATED_8);
         } else if (create(&event, at(caller_event_id), EVENT_TRIGGER_ACTIVATED_12)) {
-            event_ph_t &child = g_scenario_events.event_list.back();
+            event_ph_t& child = scenario_events_data().event_list.back();
             if (child.type == EVENT_TYPE_INVASION && invasion_runs_og(child) && child.quest_months_left == 0) {
                 // OG scenario_event_chain: an undelayed invasion child is processed at once.
                 process_invasion(child);
@@ -1832,7 +1833,7 @@ void event_manager_t::process_invasion(event_ph_t &e) {
 }
 
 bool event_manager_t::any_invasion_running() const {
-    for (const event_ph_t& e : g_scenario_events.event_list) {
+    for (const event_ph_t& e : scenario_events_data().event_list) {
         if (e.type == EVENT_TYPE_INVASION && scenario_invasion_is_running(e)) {
             return true;
         }
@@ -1842,7 +1843,7 @@ bool event_manager_t::any_invasion_running() const {
 
 // OG figure_phrase_city_weights: the first invasion triggered by favour, once fired.
 bool event_manager_t::favour_invasion_fired() const {
-    for (const event_ph_t& e : g_scenario_events.event_list) {
+    for (const event_ph_t& e : scenario_events_data().event_list) {
         const int flags = e.event_trigger_type;
         if (e.type == EVENT_TYPE_INVASION && (flags & EVENT_TRIGGER_BY_FAVOUR)) {
             return (flags & EVENT_TRIGGER_ALREADY_FIRED) != 0;
@@ -1869,7 +1870,7 @@ void event_manager_t::update_kingdom_favour() {
     if (g_city.kingdome.rating != 0) {
         return;
     }
-    auto& events = g_scenario_events.event_list;
+    auto& events = scenario_events_data().event_list;
     auto master = std::find_if(events.begin(), events.end(),
       [](const event_ph_t& e) { return e.type == EVENT_TYPE_INVASION && is_favour_trigger(e.event_trigger_type); });
     if (master == events.end() || master->event_trigger_type == EVENT_TRIGGER_BY_FAVOUR_IN_USE) {
@@ -1895,7 +1896,7 @@ void event_manager_t::update_kingdom_favour() {
 
 void event_manager_t::process_invasions() {
     for (int i = 0; i < events_count(); i++) {
-        event_ph_t &e = g_scenario_events.event_list[i];
+        event_ph_t& e = scenario_events_data().event_list[i];
         if (e.type != EVENT_TYPE_INVASION || !invasion_runs_og(e)) {
             continue;
         }
@@ -1917,7 +1918,7 @@ void event_manager_t::process_invasions() {
 }
 
 void event_manager_t::update_tick() {
-    for (event_ph_t& e : g_scenario_events.event_list) {
+    for (event_ph_t& e : scenario_events_data().event_list) {
         if (e.type == EVENT_TYPE_BLOOD_RIVER && e.data.sweep.countdown > 0 && --e.data.sweep.countdown == 0) {
             for (int id = 1; id < MAX_FIGURES; id++) {
                 figure* f = figure_get(id);
@@ -1930,7 +1931,7 @@ void event_manager_t::update_tick() {
 }
 
 void event_manager_t::process_events() {
-    auto& data = g_scenario_events;
+    auto& data = scenario_events_data();
 
     // OG runs each event's processor once a month: what is already running goes first, so an
     // event started this month waits for the next one.
@@ -1967,109 +1968,6 @@ void event_manager_t::process_events() {
             event.time.month = 0;
         }
     }
-}
-
-static void bind_event_ph(io_buffer *iob, event_ph_t &event) {
-    iob->bind(BIND_SIGNATURE_INT16, &event.num_total_header);
-    iob->bind(BIND_SIGNATURE_INT16, &event.__unk01);
-    iob->bind(BIND_SIGNATURE_INT16, &event.event_id);
-    iob->bind(BIND_SIGNATURE_INT8, &event.type);
-    iob->bind(BIND_SIGNATURE_INT8, &event.time.month);
-    iob->bind(BIND_SIGNATURE_INT16, &event.item.value);
-    iob->bind(BIND_SIGNATURE_INT16, &event.item.f_fixed);
-    iob->bind(BIND_SIGNATURE_INT16, &event.item.f_min);
-    iob->bind(BIND_SIGNATURE_INT16, &event.item.f_max);
-    iob->bind(BIND_SIGNATURE_INT16, &event.amount.value);
-    iob->bind(BIND_SIGNATURE_INT16, &event.amount.f_fixed);
-    iob->bind(BIND_SIGNATURE_INT16, &event.amount.f_min);
-    iob->bind(BIND_SIGNATURE_INT16, &event.amount.f_max);
-    iob->bind(BIND_SIGNATURE_INT16, &event.time.year);
-    iob->bind____skip(2); // (BIND_SIGNATURE_INT16, &event.time.unk01);
-    iob->bind(BIND_SIGNATURE_INT16, &event.time.unk02);
-    iob->bind(BIND_SIGNATURE_INT16, &event.time.unk03);
-    iob->bind(BIND_SIGNATURE_INT16, &event.location_fields[0]);
-    iob->bind(BIND_SIGNATURE_INT16, &event.location_fields[1]);
-    iob->bind(BIND_SIGNATURE_INT16, &event.location_fields[2]);
-    iob->bind(BIND_SIGNATURE_INT16, &event.location_fields[3]);
-    iob->bind(BIND_SIGNATURE_INT16, &event.on_completed_action);
-    iob->bind(BIND_SIGNATURE_INT16, &event.on_refusal_action);
-    iob->bind(BIND_SIGNATURE_INT8, &event.event_trigger_type);
-    iob->bind____skip(1);
-    iob->bind_u16(event.tag_id); // original unk07; JS mission requests key off this
-    iob->bind(BIND_SIGNATURE_INT16, &event.months_initial);
-    iob->bind(BIND_SIGNATURE_INT16, &event.quest_months_left);
-    iob->bind(BIND_SIGNATURE_INT8, &event.event_state);
-    iob->bind(BIND_SIGNATURE_INT8, &event.is_overdue);
-    iob->bind(BIND_SIGNATURE_INT8, &event.is_active);
-    iob->bind(BIND_SIGNATURE_INT8, &event.can_comply_dialog_shown);
-    iob->bind(BIND_SIGNATURE_INT16, &event.parent_id);
-    iob->bind(BIND_SIGNATURE_INT8, &event.phrase_var);
-    iob->bind(BIND_SIGNATURE_INT8, &event.reserved_unk12);
-    iob->bind(BIND_SIGNATURE_INT8, &event.invasion_attack_target);
-    iob->bind_bool(event.appear_dialgow_shown);
-    iob->bind(BIND_SIGNATURE_INT16, &event.data.earthquake.duration);
-    iob->bind(BIND_SIGNATURE_INT16, &event.data.earthquake.delay);
-    iob->bind(BIND_SIGNATURE_INT16, &event.data.earthquake.ticks);
-    for (int16_t& l : event.data.earthquake.locations) {
-        iob->bind(BIND_SIGNATURE_INT16, &l);
-    }
-    iob->bind(BIND_SIGNATURE_INT16, &event.earthquake_step);
-    iob->bind(BIND_SIGNATURE_INT16, &event.on_too_late_action);
-    iob->bind(BIND_SIGNATURE_INT16, &event.on_defeat_action);
-    iob->bind(BIND_SIGNATURE_INT8, &event.sender_faction);
-    iob->bind(BIND_SIGNATURE_UINT8, &event.invasion_warnings_shown);
-    iob->bind(BIND_SIGNATURE_INT16, &event.route_fields[0]);
-    iob->bind(BIND_SIGNATURE_INT16, &event.route_fields[1]);
-    iob->bind(BIND_SIGNATURE_INT16, &event.route_fields[2]);
-    iob->bind(BIND_SIGNATURE_INT16, &event.route_fields[3]);
-    iob->bind(BIND_SIGNATURE_INT8, &event.subtype);
-    iob->bind(BIND_SIGNATURE_INT8, &event.city_id);
-    iob->bind(BIND_SIGNATURE_UINT8, &event.coin);
-    iob->bind(BIND_SIGNATURE_UINT8, &event.parent_city);
-    iob->bind(BIND_SIGNATURE_INT16, &event.image.pack);
-    iob->bind(BIND_SIGNATURE_INT16, &event.image.id);
-    iob->bind(BIND_SIGNATURE_INT16, &event.image.offset);
-    iob->bind(BIND_SIGNATURE_INT8, &event.on_completed_msgAlt);
-    iob->bind(BIND_SIGNATURE_INT8, &event.on_refusal_msgAlt);
-    iob->bind(BIND_SIGNATURE_INT8, &event.on_tooLate_msgAlt);
-    iob->bind(BIND_SIGNATURE_INT8, &event.on_defeat_msgAlt);
-    iob->bind(BIND_SIGNATURE_INT16, &event.reserved_1);
-    iob->bind(BIND_SIGNATURE_RAW, event.reasons.data(), sizeof(event.reasons));
-}
-
-void scenario_events_chunk::bind_data(io_buffer* iob, size_t version) {
-    auto& data = g_scenario_events;
-
-    if (iob->is_read_access()) {
-        data.event_list.clear();
-        event_ph_t first{};
-        bind_event_ph(iob, first);
-        int n = first.num_total_header;
-        if (n < 1) {
-            n = 1;
-        }
-        if (n > MAX_EVENTS) {
-            n = MAX_EVENTS;
-        }
-        data.event_list.resize(n);
-        data.event_list[0] = first;
-        for (int i = 1; i < n; i++) {
-            bind_event_ph(iob, data.event_list[i]);
-        }
-        return;
-    }
-
-    if (!data.event_list.empty()) {
-        data.event_list.front().num_total_header = (int16_t)data.event_list.size();
-    }
-    const int n = std::min((int)data.event_list.size(), MAX_EVENTS);
-    for (int i = 0; i < n; i++) {
-        bind_event_ph(iob, data.event_list[i]);
-    }
-}
-
-void scenario_events_extra_chunk::bind_data(io_buffer* iob, size_t version) {
-    // TODO ????????
 }
 
 static const uint8_t* skip_non_digits(const uint8_t* str) {

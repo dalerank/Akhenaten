@@ -4,6 +4,7 @@
 #include "core/xstring.h"
 #include "core/tokenum.h"
 #include "core/variant.h"
+#include "core/svector.h"
 #include "game/simulation_time.h"
 #include "game/resource.h"
 
@@ -263,6 +264,12 @@ struct event_ph_t {
 ANK_CONFIG_STRUCT(event_ph_t, type, time, item, amount, tag_id, months_initial, location_fields, route_fields, reasons,
   sender_faction, event_trigger_type, on_completed_action, on_refusal_action, on_too_late_action, on_defeat_action,
   subtype, city_id, invasion_attack_target)
+
+constexpr int MAX_EVENTS = 150;
+
+struct events_data_t {
+    svector<event_ph_t, MAX_EVENTS> event_list;
+};
 
 // OG event_helpers.c scenario_event_is_running / scenario_event_months_left for an invasion event.
 bool scenario_invasion_is_running(const event_ph_t& e);
