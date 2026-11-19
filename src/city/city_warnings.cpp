@@ -29,6 +29,10 @@ static void warnings_subscribe_events() {
 }
 static events::session_subscriber g_warnings_session(&warnings_subscribe_events);
 
+void ANK_PERMANENT_CALLBACK(event_screen_resized, ev) {
+    g_warning_manager.clear_all();
+}
+
 void window_warnings::archive_load(archive arch) {
     autoconfig_window::archive_load(arch);
 

@@ -3,7 +3,9 @@
 
 #include <SDL.h>
 
-#define INTPTR(d) (*(int*)(d))
+#include <cstdint>
+
+#define INTPTR(d) ((int)(intptr_t)(d))
 
 struct user_event_module_t {
     void handle_resize(SDL_Event* ev);

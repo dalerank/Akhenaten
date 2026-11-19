@@ -17,6 +17,11 @@ struct event_sound_track {
     int source_line = __builtin_LINE();
 };
 
+struct event_screen_resized {
+    int width;
+    int height;
+};
+
 extern events::typed_queue g_city_events;
 extern events::typed_queue g_permanent_events;
 

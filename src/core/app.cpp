@@ -17,6 +17,8 @@
 
 #include <SDL.h>
 
+#include <cstdint>
+
 application_t g_app;
 
 ANK_SCRIPT_EVENT(event_request_exit, value)
@@ -24,16 +26,11 @@ ANK_SCRIPT_EVENT(event_app_toggle_fullscreen, value)
 ANK_SCRIPT_EVENT(event_display_options_apply_resolution, w, h)
 
 void app_window_resize(const vec2i& wsize) {
-    static int s_width;
-    static int s_height;
-
-    s_width = wsize.x;
-    s_height = wsize.y;
     SDL_Event event;
     event.user.type = SDL_USEREVENT;
     event.user.code = USER_EVENT_RESIZE;
-    event.user.data1 = &s_width;
-    event.user.data2 = &s_height;
+    event.user.data1 = (void*)(intptr_t)wsize.x;
+    event.user.data2 = (void*)(intptr_t)wsize.y;
     SDL_PushEvent(&event);
 }
 
