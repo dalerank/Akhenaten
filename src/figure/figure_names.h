@@ -4,6 +4,11 @@
 #include "figure/figure_type.h"
 #include "core/bstring.h"
 
+struct figure_name_counters_t {
+    static constexpr int COUNT = 41;
+    int32_t counters[COUNT];
+};
+
 /**
  * Initializes the figure name generator.
  */

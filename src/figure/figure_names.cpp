@@ -1,6 +1,5 @@
 #include "figure/figure_names.h"
-#include "figure/figure_names_chunks.h"
-#include "io/io_buffer.h"
+#include "core/xvalue.h"
 #include "js/js_register.h"
 #include "core/random.h"
 #include "core/stable_array.h"
@@ -63,24 +62,19 @@ stable_array<random_names_t> ANK_VARIABLE(figure_names);
 figure_name_generator_t ANK_VARIABLE(figure_name_generator);
 
 enum {
-    FIGURE_NAME_COUNTERS = 41,
     FIGURE_NAME_COUNTER_MASK = 0xF,
-    FIGURE_NAME_SAVED_SLOT_FIRST = 40,
-    FIGURE_NAME_SAVED_SLOT_LAST = 20,
 };
 
-// OG name counters: seeded at scenario start (one crt draw each) and kept in the save as-is, so an OG save
-// round-trips and the crt stream stays in step. Names themselves come from figure_names / the generator.
-static int32_t g_figure_name_counters[FIGURE_NAME_COUNTERS];
-
 int figure_name_counter(int slot) {
-    return (slot >= 0 && slot < FIGURE_NAME_COUNTERS) ? g_figure_name_counters[slot] : -1;
+    auto& counters = xvalue<figure_name_counters_t>::ref().counters;
+    return (slot >= 0 && slot < figure_name_counters_t::COUNT) ? counters[slot] : -1;
 }
 
 void figure_name_init() {
+    auto& counters = xvalue<figure_name_counters_t>::ref().counters;
     // OG scenario_start.c figure_name_init: slots seeded high to low, one crt_rand each.
-    for (int i = FIGURE_NAME_COUNTERS - 1; i >= 0; i--) {
-        g_figure_name_counters[i] = anti_scum_random_15bit() & FIGURE_NAME_COUNTER_MASK;
+    for (int i = figure_name_counters_t::COUNT - 1; i >= 0; i--) {
+        counters[i] = anti_scum_random_15bit() & FIGURE_NAME_COUNTER_MASK;
     }
     for (auto &t : figure_names) {
         t.id = 0;
@@ -121,12 +115,4 @@ bstring32 figure_name_get(int type) {
     }
 
     return figure_name_generator.get_male_name();
-}
-
-// OG io_data.c: this 84-byte chunk holds counter slots 40 down to 20 (groups 254..274). Slots 0..3 and 4..19
-// live in other OG chunks that are not bound here yet.
-void figure_names_chunk::bind_data(io_buffer* iob, size_t version) {
-    for (int slot = FIGURE_NAME_SAVED_SLOT_FIRST; slot >= FIGURE_NAME_SAVED_SLOT_LAST; slot--) {
-        iob->bind(BIND_SIGNATURE_INT32, &g_figure_name_counters[slot]);
-    }
 }
