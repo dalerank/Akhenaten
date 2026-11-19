@@ -1,5 +1,4 @@
 #include "empire_map.h"
-#include "empire/empire_map_chunks.h"
 
 #include "city/constants.h"
 #include "city/city_resource.h"
@@ -109,11 +108,4 @@ void empire_map_t::select_object(vec2i pos) {
     if (g_empire_markers.select(vec2i(map_x, map_y), selected_obj ? distance : INT_MAX)) {
         selected_obj = 0;
     }
-}
-
-void empire_map_params_chunk::bind_data(io_buffer* iob, size_t version) {
-    auto& data = g_empire_map;
-    iob->bind(BIND_SIGNATURE_INT32, &data.scroll_x);
-    iob->bind(BIND_SIGNATURE_INT32, &data.scroll_y);
-    iob->bind(BIND_SIGNATURE_INT32, &data.selected_obj);
 }

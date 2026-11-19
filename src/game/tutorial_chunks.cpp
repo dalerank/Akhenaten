@@ -1,5 +1,5 @@
-#include "building/building_granary.h"
 #include "game/tutorial_chunks.h"
+
 #include "io/io_buffer.h"
 
 void tutorial_flags_struct_chunk::bind_data(io_buffer* iob, size_t version) {
