@@ -22,7 +22,7 @@
 #include "figure/route_chunks.h"
 #include "game/simulation_time_chunks.h"
 #include "game/tutorial_chunks.h"
-#include "graphics/view/view_chunks.h"
+#include "io/gamestate/presentation_chunks.h"
 #include "grid/building_chunks.h"
 #include "grid/canals_chunks.h"
 #include "grid/desirability_chunks.h"
@@ -42,7 +42,6 @@
 #include "scenario/scenario_chunks.h"
 #include "scenario/scenario_event_manager_chunks.h"
 #include "scenario/scenario_invasion_chunks.h"
-#include "sound/sound_city_chunks.h"
 
 // Classic Pharaoh .sav — positional, compressed chunks.
 void file_schema_sav(const int file_version) {

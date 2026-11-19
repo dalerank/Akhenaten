@@ -5,7 +5,7 @@
 #include "core/random_chunks.h"
 #include "empire/empire_object_chunks.h"
 #include "empire/trade_prices_chunks.h"
-#include "graphics/view/view_chunks.h"
+#include "io/gamestate/presentation_chunks.h"
 #include "grid/elevation_chunks.h"
 #include "grid/floodplain_chunks.h"
 #include "grid/image_chunks.h"

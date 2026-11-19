@@ -14,7 +14,7 @@
 #include "city/city_floods_chunks.h"
 #include "city/city_message_chunks.h"
 #include "city/city_recorded_paths_chunks.h"
-#include "content/mods_chunks.h"
+#include "io/gamestate/presentation_chunks.h"
 #include "core/random_chunks.h"
 #include "empire/empire_chunks.h"
 #include "empire/empire_map_chunks.h"
@@ -28,7 +28,6 @@
 #include "figure/route_chunks.h"
 #include "game/simulation_time_chunks.h"
 #include "game/tutorial_chunks.h"
-#include "graphics/view/view_chunks.h"
 #include "grid/bridge_grid_chunks.h"
 #include "grid/building_chunks.h"
 #include "grid/canals_chunks.h"
@@ -60,9 +59,6 @@
 #include "scenario/scenario_chunks.h"
 #include "scenario/scenario_event_manager_chunks.h"
 #include "scenario/scenario_invasion_chunks.h"
-#include "sound/sound_city_chunks.h"
-#include "widget/city/clouds_chunks.h"
-#include "widget/city/clouds_chunks.h"
 
 // Akhenaten .svx - sectioned container when g_chunk_io.is_sectioned(), else legacy
 // positional layout (keeps dead file_version/chunks_schema slots for old files).
