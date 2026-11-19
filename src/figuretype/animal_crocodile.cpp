@@ -1,4 +1,5 @@
 #include "animal_crocodile.h"
+#include "game/game_events.h"
 
 #include "city/city.h"
 #include "city/city_figures.h"
@@ -14,7 +15,6 @@
 #include "grid/ring.h"
 #include "grid/terrain.h"
 #include "js/js_register.h"
-#include "sound/sound.h"
 #include "core/system_time.h"
 
 #include <algorithm>
@@ -294,7 +294,7 @@ void figure_crocodile::figure_action() {
     // OG ATTACK (5): crocatk each tick + figure_combat_handle_attack.
     if (base.in_attack() || (base.opponent_id > 0 && !figure_get(base.opponent_id)->is_dead())) {
         base.set_flag(e_figure_flag_inattack);
-        g_sound.speech_play_file("Wavs/crocatk.wav", 255);
+        events::emit(event_sound_speech{"Wavs/crocatk.wav"});
         base.figure_combat_handle_attack();
         return;
     }
@@ -522,7 +522,7 @@ void figure_crocodile::acquire_attack() {
 
 bool figure_crocodile::play_die_sound() {
     // OG FIGURE_SOUND_CROCODILE variant die → crocdie.wav
-    g_sound.speech_play_file("Wavs/crocdie.wav", 255);
+    events::emit(event_sound_speech{"Wavs/crocdie.wav"});
     return true;
 }
 

@@ -1,9 +1,10 @@
 #include "figure_enemy_spearman.h"
+#include "game/sound_effect.h"
+#include "game/game_events.h"
 
 #include "core/profiler.h"
 #include "city/city.h"
 #include "city/sound.h"
-#include "sound/sound.h"
 #include "figure/combat.h"
 #include "figuretype/figure_missile.h"
 #include "figure/formation_layout.h"
@@ -33,11 +34,11 @@ void figure_enemy_spearman::enemy_initial(formation *m) {
     if (base.wait_ticks <= 0) {
         if (base.index_in_formation == 0) {
             if (m->layout == FORMATION_ENEMY_MOB) {
-                g_sound.speech_play_file("Wavs/WEAPON.WAV", 255);
+                events::emit(event_sound_speech{"Wavs/WEAPON.WAV"});
             } else if (m->layout == FORMATION_ENEMY12) {
-                g_sound.speech_play_file("Wavs/CHARIOT.WAV", 255);
+                events::emit(event_sound_speech{"Wavs/CHARIOT.WAV"});
             } else {
-                g_sound.speech_play_file("Wavs/BARRACK.WAV", 255);
+                events::emit(event_sound_speech{"Wavs/BARRACK.WAV"});
             }
         }
 
@@ -90,7 +91,7 @@ void figure_enemy_spearman::enemy_initial(formation *m) {
         }
 
         if (missilet == FIGURE_ARROW && city_sound_update_shoot_arrow()) {
-            g_sound.play_effect(SOUND_EFFECT_ARROW);
+            events::emit(event_sound_effect{SOUND_EFFECT_ARROW});
         }
 
         base.attack_image_offset++;
@@ -138,7 +139,7 @@ void figure_enemy_spearman::enemy_fighting(formation *m) {
     }
 
     if (city_sound_update_march_enemy()) {
-        g_sound.play_effect(SOUND_EFFECT_MARCHING);
+        events::emit(event_sound_effect{SOUND_EFFECT_MARCHING});
     }
 
     figure_id target_id = base.target_figure_id;

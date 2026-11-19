@@ -1,4 +1,6 @@
 #include "figure_antelope.h"
+#include "game/sound_effect.h"
+#include "game/game_events.h"
 
 #include "city/city.h"
 #include "core/random.h"
@@ -10,7 +12,6 @@
 #include "grid/terrain.h"
 #include "js/js_register.h"
 #include "sound/effect.h"
-#include "sound/sound.h"
 
 #include <algorithm>
 
@@ -291,7 +292,7 @@ void figure_antelope::before_poof() {
 }
 
 bool figure_antelope::play_die_sound() {
-    g_sound.play_effect(SOUND_EFFECT_ZEBRA_DIE);
+    events::emit(event_sound_effect{SOUND_EFFECT_ZEBRA_DIE});
     return true;
 }
 

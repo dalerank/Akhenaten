@@ -77,7 +77,6 @@
 #include "scenario/request.h"
 #include "scenario/scenario.h"
 #include "sound/sound_city.h"
-#include "sound/sound.h"
 #include "js/js_register.h"
 #include "window/window_city.h"
 #include "window/file_dialog_common.h"
@@ -503,7 +502,7 @@ void GamestateIO::start_loaded_file() {
     } else {
         game.paused = false;
         window_city_show();
-        g_sound.music_update(true);
+        events::emit(event_music_update{true});
     }
 
     events::process();

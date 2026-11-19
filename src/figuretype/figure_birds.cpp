@@ -1,4 +1,6 @@
 #include "figure_birds.h"
+#include "game/sound_effect.h"
+#include "game/game_events.h"
 
 #include "city/city.h"
 #include "core/random.h"
@@ -11,7 +13,6 @@
 #include "grid/terrain.h"
 #include "js/js_register.h"
 #include "sound/effect.h"
-#include "sound/sound.h"
 
 #include <algorithm>
 
@@ -269,7 +270,7 @@ void figure_birds::before_poof() {
 
 bool figure_birds::play_die_sound() {
     // Match figure::play_die_sound FIGURE_BIRDS branch (SHEEP_DIE placeholder).
-    g_sound.play_effect(SOUND_EFFECT_SHEEP_DIE);
+    events::emit(event_sound_effect{SOUND_EFFECT_SHEEP_DIE});
     return true;
 }
 

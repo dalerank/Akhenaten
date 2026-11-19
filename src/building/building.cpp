@@ -1,4 +1,5 @@
 #include "building.h"
+#include "game/sound_effect.h"
 
 #include <new>
 
@@ -45,7 +46,6 @@
 #include "core/object_property.h"
 #include "game/game_config.h"
 #include "core/random.h"
-#include "sound/sound.h"
 
 #include <string.h>
 #include <map>
@@ -619,7 +619,7 @@ void building::destroy_by_collapse() {
     map_building_tiles_set_rubble(id, tile, size);
     figure_create_explosion_cloud(tile, size);
     destroy_linked_parts(false);
-    g_sound.play_effect(SOUND_EFFECT_EXPLOSION);
+    events::emit(event_sound_effect{SOUND_EFFECT_EXPLOSION});
 }
 
 void building::destroy_by_enemy() {
@@ -634,7 +634,7 @@ void building::destroy_by_enemy() {
     map_building_tiles_set_rubble(id, tile, size);
     figure_create_explosion_cloud(tile, size);
     destroy_linked_parts(false);
-    g_sound.play_effect(SOUND_EFFECT_EXPLOSION);
+    events::emit(event_sound_effect{SOUND_EFFECT_EXPLOSION});
 }
 
 void building::destroy_by_flooded() {
@@ -648,7 +648,7 @@ void building::destroy_by_flooded() {
     dcast()->on_before_flooded();
     map_building_tiles_set_rubble(id, tile, size);
     destroy_linked_parts(false);
-    g_sound.play_effect(SOUND_EFFECT_FLOODED);
+    events::emit(event_sound_effect{SOUND_EFFECT_FLOODED});
 }
 
 void building::destroy_on_fire_impl(bool plagued) {
@@ -694,7 +694,7 @@ void building::destroy_by_fire() {
 
     destroy_on_fire_impl(false);
     destroy_linked_parts(true);
-    g_sound.play_effect(SOUND_EFFECT_EXPLOSION);
+    events::emit(event_sound_effect{SOUND_EFFECT_EXPLOSION});
 }
 
 void building::destroy_linked_parts(bool on_fire) {

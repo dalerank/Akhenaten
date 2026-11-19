@@ -17,6 +17,17 @@ struct event_sound_track {
     int source_line = __builtin_LINE();
 };
 
+struct event_sound_speech {
+    xstring path;
+    int volume = 255;
+    pcstr source_file = __builtin_FILE();
+    int source_line = __builtin_LINE();
+};
+
+struct event_music_update {
+    bool force;
+};
+
 struct event_screen_resized {
     int width;
     int height;

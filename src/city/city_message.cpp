@@ -12,9 +12,9 @@
 #include "graphics/window.h"
 #include "graphics/image.h"
 #include "io/gamefiles/lang.h"
-#include "sound/sound.h"
 #include "window/message_dialog.h"
 #include "game/game_events.h"
+#include "game/sound_effect.h"
 #include "game/simulation.h"
 #include "game/game_config.h"
 #include "scenario/scenario.h"
@@ -287,9 +287,9 @@ static void enqueue_message(int sequence) {
 
 static void play_sound(const lang_message &template_id) {
     if (template_id.urgent) {
-        g_sound.play_effect(SOUND_EFFECT_FANFARE_URGENT);
+        events::emit(event_sound_effect{SOUND_EFFECT_FANFARE_URGENT});
     } else {
-        g_sound.play_effect(SOUND_EFFECT_FANFARE);
+        events::emit(event_sound_effect{SOUND_EFFECT_FANFARE});
     }
 }
 
@@ -348,7 +348,7 @@ static void apply_popup_delivery(bool use_popup, e_popup_message_category popup_
     if (use_popup && popup_messages_want_banner(popup_cat)) {
         show_message_banner_for_index(message_index);
         // I3: quiet UI chime instead of fanfare on banner path.
-        g_sound.play_effect(SOUND_EFFECT_ICON);
+        events::emit(event_sound_effect{SOUND_EFFECT_ICON});
         should_play_sound = true;
         return;
     }

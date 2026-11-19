@@ -1,9 +1,10 @@
 #include "figure/figure.h"
+#include "game/sound_effect.h"
+#include "game/game_events.h"
 
 #include "city/city.h"
 #include "city/sound.h"
 #include "sound/effect.h"
-#include "sound/sound.h"
 
 void figure::play_die_sound() {
 
@@ -49,24 +50,24 @@ void figure::play_die_sound() {
     }
 
     if (effect) {
-        g_sound.play_effect(effect);
+        events::emit(event_sound_effect{effect});
     }
 
     if (is_soldier) {
-        g_sound.play_effect(SOUND_EFFECT_SOLDIER_DIE + city_sound_update_die_soldier());
+        events::emit(event_sound_effect{SOUND_EFFECT_SOLDIER_DIE + city_sound_update_die_soldier()});
     } else if (is_citizen) {
-        g_sound.play_effect(SOUND_EFFECT_CITIZEN_DIE + city_sound_update_die_citizen());
+        events::emit(event_sound_effect{SOUND_EFFECT_CITIZEN_DIE + city_sound_update_die_citizen()});
     }
 
     if (is_enemy()) {
         if (g_city.figures.total_invading_enemies() == 1) {
-            g_sound.speech_play_file("Wavs/sword_atk.wav", 255);
+            events::emit(event_sound_speech{"Wavs/sword_atk.wav"});
         }
     }
 }
 
 void figure::play_sound_file(const xstring& file) {
-    g_sound.speech_play_file(file, 255);
+    events::emit(event_sound_speech{file});
 }
 
 void figure::play_hit_sound() {
@@ -139,6 +140,6 @@ void figure::play_hit_sound() {
     }
 
     if (effect) {
-        g_sound.play_effect(effect);
+        events::emit(event_sound_effect{effect});
     }
 }

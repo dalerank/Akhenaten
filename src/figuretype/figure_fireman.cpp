@@ -1,10 +1,11 @@
 #include "figure/figure.h"
+#include "game/game_events.h"
+#include "game/sound_effect.h"
 
 #include "graphics/image_groups.h"
 #include "grid/road_access.h"
 #include "core/calc.h"
 #include "figure_fireman.h"
-#include "sound/sound.h"
 #include "game/game_config.h"
 #include "building/building_house.h"
 #include "building/building_burning_ruin.h"
@@ -133,7 +134,7 @@ void figure_fireman::extinguish_fire() {
     const bool is_valid = (burn->state == BUILDING_STATE_VALID || burn->state == BUILDING_STATE_MOTHBALLED) && burn->type == BUILDING_BURNING_RUIN;
     if (is_valid && distance < 2) {
         burn->dcast_burning_ruin()->extinguish();
-        g_sound.play_effect(SOUND_EFFECT_FIRE_SPLASH);
+        events::emit(event_sound_effect{SOUND_EFFECT_FIRE_SPLASH});
     } else {
         base.wait_ticks = 1;
     }

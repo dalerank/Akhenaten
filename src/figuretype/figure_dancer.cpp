@@ -1,7 +1,8 @@
 #include "figure_dancer.h"
+#include "game/game_events.h"
+#include "game/sound_effect.h"
 
 #include "figure/service.h"
-#include "sound/sound.h"
 #include "building/building_entertainment.h"
 #include "building/building_house.h"
 #include "js/js_register.h"
@@ -14,7 +15,7 @@ void figure_dancer::update_shows() {
 }
 
 bool figure_dancer::play_die_sound() {
-    g_sound.play_effect(SOUND_EFFECT_DANCER_DIE);
+    events::emit(event_sound_effect{SOUND_EFFECT_DANCER_DIE});
     return true;
 }
 

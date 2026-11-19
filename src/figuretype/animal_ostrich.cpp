@@ -1,4 +1,6 @@
 #include "animal_ostrich.h"
+#include "game/sound_effect.h"
+#include "game/game_events.h"
 
 #include "city/city.h"
 #include "core/random.h"
@@ -10,7 +12,6 @@
 #include "grid/terrain.h"
 #include "js/js_register.h"
 #include "sound/effect.h"
-#include "sound/sound.h"
 
 #include <algorithm>
 
@@ -293,7 +294,7 @@ void figure_ostrich::before_poof() {
 }
 
 bool figure_ostrich::play_die_sound() {
-    g_sound.play_effect(SOUND_EFFECT_OSTRICH_DIE);
+    events::emit(event_sound_effect{SOUND_EFFECT_OSTRICH_DIE});
     return true;
 }
 

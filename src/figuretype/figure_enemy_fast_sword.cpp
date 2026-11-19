@@ -1,9 +1,10 @@
 #include "figure_enemy_fast_sword.h"
+#include "game/sound_effect.h"
+#include "game/game_events.h"
 
 #include "core/profiler.h"
 #include "city/city.h"
 #include "city/sound.h"
-#include "sound/sound.h"
 #include "figure/combat.h"
 #include "figuretype/figure_missile.h"
 #include "figure/formation_layout.h"
@@ -136,10 +137,10 @@ void figure_enemy_fast_sword::enemy_fighting(formation *m) {
         if (type() == FIGURE_ENEMY_EGYPTIAN_CHARIOT
             || type() == FIGURE_ENEMY_KINGDOME_MOUNTED) {
             if (city_sound_update_march_horse()) {
-                g_sound.play_effect(SOUND_EFFECT_HORSE_MOVING);
+                events::emit(event_sound_effect{SOUND_EFFECT_HORSE_MOVING});
             }
         } else if (city_sound_update_march_enemy()) {
-            g_sound.play_effect(SOUND_EFFECT_MARCHING);
+            events::emit(event_sound_effect{SOUND_EFFECT_MARCHING});
         }
     }
 
@@ -247,11 +248,11 @@ void figure_enemy_fast_sword::enemy_initial(formation *m) {
 
     if (base.index_in_formation == 0) {
         if (m->layout == FORMATION_ENEMY_MOB) {
-            g_sound.speech_play_file("Wavs/WEAPON.WAV", 255);
+            events::emit(event_sound_speech{"Wavs/WEAPON.WAV"});
         } else if (m->layout == FORMATION_ENEMY12) {
-            g_sound.speech_play_file("Wavs/CHARIOT.WAV", 255);
+            events::emit(event_sound_speech{"Wavs/CHARIOT.WAV"});
         } else {
-            g_sound.speech_play_file("Wavs/BARRACK.WAV", 255);
+            events::emit(event_sound_speech{"Wavs/BARRACK.WAV"});
         }
     }
 

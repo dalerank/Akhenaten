@@ -984,6 +984,17 @@ void ANK_PERMANENT_CALLBACK(event_sound_track, ev) {
     g_sound.on_sound_track(ev);
 }
 
+void ANK_PERMANENT_CALLBACK(event_sound_speech, ev) {
+    if (g_args.is_log_sound_events()) {
+        logs::info("[event] speech=%s sent from %s:%d", ev.path.c_str(), ev.source_file, ev.source_line);
+    }
+    g_sound.speech_play_file(ev.path, ev.volume);
+}
+
+void ANK_PERMANENT_CALLBACK(event_music_update, ev) {
+    g_sound.music_update(ev.force);
+}
+
 const e_sound_effect_tokens_t ANK_CONFIG_ENUM(e_sound_effect_tokens);
 
 void ANK_REGISTER_CONFIG_ITERATOR(config_load_sound_effects) {

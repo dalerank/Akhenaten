@@ -1,4 +1,5 @@
 #include "building_impl.h"
+#include "game/sound_effect.h"
 
 #include "building/building.h"
 #include "city/object_info.h"
@@ -533,7 +534,7 @@ void building_impl::destroy_by_poof(bool clouds) {
     building* b = base.main();
     if (clouds) {
         figure_create_explosion_cloud(b->tile, b->size);
-        g_sound.play_effect(SOUND_EFFECT_EXPLOSION);
+        events::emit(event_sound_effect{SOUND_EFFECT_EXPLOSION});
     }
 
     do {

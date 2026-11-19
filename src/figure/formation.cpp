@@ -1,4 +1,6 @@
 #include "formation.h"
+#include "game/game_events.h"
+#include "game/sound_effect.h"
 
 #include "city/city.h"
 #include "core/calc.h"
@@ -15,7 +17,6 @@
 #include "building/building_fort.h"
 #include "scenario/distant_battle.h"
 #include "scenario/invasion_auto_resolve.h"
-#include "sound/sound.h"
 #include "js/js_register.h"
 
 #include <string.h>
@@ -542,7 +543,7 @@ void formations_t::calculate_figures() {
                 enemy_army_totals_add_batalion_formation(total_strength);
                 if (m->figure_type == FIGURE_STANDARD_BEARER) {
                     if (!was_halted && m->is_halted)
-                        g_sound.play_effect(SOUND_EFFECT_FORMATION_SHIELD);
+                        events::emit(event_sound_effect{SOUND_EFFECT_FORMATION_SHIELD});
                 }
 
             }

@@ -1,4 +1,5 @@
 #include "animal_hyena.h"
+#include "game/game_events.h"
 
 #include "city/city.h"
 #include "city/city_figures.h"
@@ -15,7 +16,6 @@
 #include "grid/ring.h"
 #include "grid/terrain.h"
 #include "js/js_register.h"
-#include "sound/sound.h"
 
 #include <algorithm>
 #include <cstdlib>
@@ -276,7 +276,7 @@ void figure_hyena::figure_action() {
     // OG ATTACK (5): hyenaatk each tick + figure_combat_handle_attack.
     if (base.in_attack() || (base.opponent_id > 0 && !figure_get(base.opponent_id)->is_dead())) {
         base.set_flag(e_figure_flag_inattack);
-        g_sound.speech_play_file("Wavs/hyenaatk.wav", 255);
+        events::emit(event_sound_speech{"Wavs/hyenaatk.wav"});
         base.figure_combat_handle_attack();
         return;
     }
@@ -477,7 +477,7 @@ void figure_hyena::acquire_attack() {
 }
 
 bool figure_hyena::play_die_sound() {
-    g_sound.speech_play_file("Wavs/hyenadie.wav", 255);
+    events::emit(event_sound_speech{"Wavs/hyenadie.wav"});
     return true;
 }
 
