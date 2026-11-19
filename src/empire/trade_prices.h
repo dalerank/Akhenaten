@@ -11,6 +11,10 @@ struct trade_price {
 };
 ANK_CONFIG_STRUCT(trade_price, res, buy, sell)
 
+struct trade_prices_t {
+    trade_price prices[RESOURCES_MAX];
+};
+
 template<>
 struct stable_array_max_elements<trade_price> {
     enum { max_elements = RESOURCES_MAX };

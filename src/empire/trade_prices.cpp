@@ -1,21 +1,20 @@
 #include "trade_prices.h"
-#include "empire/trade_prices_chunks.h"
+#include "core/xvalue.h"
 
-#include "io/io_buffer.h"
 #include "city/city.h"
 #include "js/js_register.h"
 
 stable_array<trade_price> ANK_VARIABLE(default_prices);
 
-trade_price prices[RESOURCES_MAX];
-
 void trade_prices_reset() {
+    auto& prices = xvalue<trade_prices_t>::ref().prices;
     for (int i = 0; i < RESOURCES_MAX; i++) {
         prices[i] = default_prices[i];
     }
 }
 
 bool trade_price_change(e_resource resource, int amount) {
+    auto& prices = xvalue<trade_prices_t>::ref().prices;
     if (amount < 0 && prices[resource].sell <= 0) {
         // cannot lower the price to negative
         return false;
@@ -31,10 +30,12 @@ bool trade_price_change(e_resource resource, int amount) {
 }
 
 int trade_price_buy(e_resource resource) {
+    auto& prices = xvalue<trade_prices_t>::ref().prices;
     return prices[resource].buy;
 }
 
 int trade_price_sell(e_resource resource, int bonus_inclusion) {
+    auto& prices = xvalue<trade_prices_t>::ref().prices;
     switch (bonus_inclusion) {
     case PRICE_WITH_BONUS: return prices[resource].sell * (g_city.religion.ra_150_export_profits_months_left > 0 ? 1.5f : 1.0f);
     case PRICE_ONLY_BASE: return prices[resource].sell;
@@ -42,11 +43,4 @@ int trade_price_sell(e_resource resource, int bonus_inclusion) {
     }
 
     return 999;
-}
-
-void trade_prices_chunk::bind_data(io_buffer* iob, size_t version) {
-    for (int i = 0; i < RESOURCES_MAX; i++) {
-        iob->bind(BIND_SIGNATURE_INT32, &prices[i].buy);
-        iob->bind(BIND_SIGNATURE_INT32, &prices[i].sell);
-    }
 }
