@@ -26,6 +26,7 @@ struct random_data_t {
 const random_data_t* random_data_struct();
 
 void random_init(void);
+void random_bits_fill();
 void random_generate_next(void);
 void random_generate_pool(void);
 void random_TEMP_SET_DEBUG(uint32_t iv1, uint32_t iv2);

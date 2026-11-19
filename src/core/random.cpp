@@ -1,27 +1,25 @@
 #include "core/random.h"
-#include "core/random_chunks.h"
+#include "core/xvalue.h"
 
-#include "io/io_buffer.h"
 #include <string.h>
 // #include <cmath>
 
-static random_data_t g_random_data;
 static uint32_t anti_scum_seed = 1;
 static bool anti_scum_clock_reseed = true;
 
 const random_data_t* random_data_struct() {
-    return &g_random_data;
+    return &xvalue<random_data_t>::ref();
 }
 
 void random_init() {
-    auto &data = g_random_data;
+    auto& data = xvalue<random_data_t>::ref();
     memset(&data, 0, sizeof(data));
     data.iv1 = 0x54657687;
     data.iv2 = 0x72641663;
 }
 
-static void random_bits_fill() {
-    auto &data = g_random_data;
+void random_bits_fill() {
+    auto& data = xvalue<random_data_t>::ref();
     data.random1_3bit = data.iv1 & 0x7;
     data.random1_7bit = data.iv1 & 0x7f;
     data.random1_15bit = data.iv1 & 0x7fff;
@@ -30,7 +28,7 @@ static void random_bits_fill() {
     data.random2_15bit = data.iv2 & 0x7fff;
 }
 void random_generate_next() {
-    auto &data = g_random_data;
+    auto& data = xvalue<random_data_t>::ref();
     data.pool[data.pool_index++] = data.random1_7bit;
     if (data.pool_index >= MAX_RANDOM)
         data.pool_index = 0;
@@ -49,7 +47,7 @@ void random_generate_next() {
 }
 
 void random_generate_pool() {
-    auto &data = g_random_data;
+    auto& data = xvalue<random_data_t>::ref();
     data.pool_index = 0;
     for (int i = 0; i < MAX_RANDOM; i++) {
         random_generate_next();
@@ -57,23 +55,24 @@ void random_generate_pool() {
 }
 
 void random_TEMP_SET_DEBUG(uint32_t iv1, uint32_t iv2) {
-    auto &data = g_random_data;
+    auto& data = xvalue<random_data_t>::ref();
     data.iv1 = iv1;
     data.iv2 = iv2;
     random_bits_fill();
 }
 
 int8_t random_byte() {
-    return g_random_data.random1_7bit;
+    return xvalue<random_data_t>::ref().random1_7bit;
 }
 int8_t random_byte_alt() {
-    return g_random_data.random2_7bit;
+    return xvalue<random_data_t>::ref().random2_7bit;
 }
 int16_t random_short() {
-    return g_random_data.random1_15bit;
+    return xvalue<random_data_t>::ref().random1_15bit;
 }
 int32_t random_from_pool(int index) {
-    return g_random_data.pool[(g_random_data.pool_index + index) % MAX_RANDOM];
+    auto& data = xvalue<random_data_t>::ref();
+    return data.pool[(data.pool_index + index) % MAX_RANDOM];
 }
 
 void randomize_event_fields(int16_t field[4], int32_t* seed) {
@@ -95,7 +94,7 @@ void randomize_event_fields(int16_t field[4], int32_t* seed) {
 
     // second operation
     random_generate_next();
-    unsigned long long random_broche = g_random_data.random1_15bit; //_DAT_00d3a360
+    unsigned long long random_broche = xvalue<random_data_t>::ref().random1_15bit; //_DAT_00d3a360
     if (f_fixed < 0) {
         int field_range = f_max - f_min;
         // Guard: pak/JS often leave min=max=-1 (or equal) → range 0. Original would
@@ -192,12 +191,6 @@ bool random_bool_lerp_scalar_int(int minimum, int maximum, int v) {
         return true;
 }
 
-void random_iv_chunk::bind_data(io_buffer* iob, size_t version) {
-    iob->bind(BIND_SIGNATURE_UINT32, &g_random_data.iv1);
-    iob->bind(BIND_SIGNATURE_UINT32, &g_random_data.iv2);
-    random_bits_fill();
-}
-
 // used in OG Pharaoh to get non-deterministic random values
 uint16_t anti_scum_random_15bit(bool update) {
     if (update) {
@@ -232,7 +225,7 @@ void anti_scum_set_clock_reseed(bool enabled) {
 }
 
 int random_int() {
-    auto &data = g_random_data;
+    auto& data = xvalue<random_data_t>::ref();
     time_t t;
     t = time(&t);
     if (data.last_seed != t) {
