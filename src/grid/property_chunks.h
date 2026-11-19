@@ -1,13 +1,11 @@
 #pragma once
 
-class io_buffer;
+#include "io/io_buffer.h"
 
-struct bitfields_grid_chunk {
+struct bitfields_grid_chunk : grid_chunk<bitfields_grid_chunk, FS_UINT8> {
     static constexpr const char* name = "bitfields_grid";
-    static void bind_data(io_buffer* iob, size_t version);
 };
 
-struct edge_grid_chunk {
+struct edge_grid_chunk : grid_chunk<edge_grid_chunk, FS_UINT8> {
     static constexpr const char* name = "edge_grid";
-    static void bind_data(io_buffer* iob, size_t version);
 };

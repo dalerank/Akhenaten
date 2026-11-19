@@ -17,11 +17,11 @@
 #include "vegetation.h"
 #include "water.h"
 
-grid_xx g_terrain_grid(FS_UINT32);
 grid_xx g_terrain_grid_backup(FS_UINT32);
 
 bool map_terrain_is(int grid_offset, int terrain_mask) {
-    return map_grid_is_valid_offset(grid_offset) && !!(map_grid_get(g_terrain_grid, grid_offset) & terrain_mask);
+    return map_grid_is_valid_offset(grid_offset)
+           && !!(map_grid_get(terrain_grid_chunk::grid, grid_offset) & terrain_mask);
 }
 
 bool map_terrain_is_near_ferry_route(int base_offset, int radius) {
@@ -37,22 +37,22 @@ bool map_terrain_is_near_ferry_route(int base_offset, int radius) {
 }
 
 int map_terrain_get(int grid_offset) {
-    return map_grid_get(g_terrain_grid, grid_offset);
+    return map_grid_get(terrain_grid_chunk::grid, grid_offset);
 }
 void map_terrain_set(int grid_offset, int terrain) {
-    const int old_terrain = map_grid_get(g_terrain_grid, grid_offset);
-    map_grid_set(g_terrain_grid, grid_offset, terrain);
+    const int old_terrain = map_grid_get(terrain_grid_chunk::grid, grid_offset);
+    map_grid_set(terrain_grid_chunk::grid, grid_offset, terrain);
     if ((old_terrain & TERRAIN_WALL) && !(terrain & TERRAIN_WALL)) {
         map_wall_material_clear(grid_offset);
     }
 }
 void map_terrain_add(int grid_offset, int terrain) {
-    map_grid_or(g_terrain_grid, grid_offset, terrain);
+    map_grid_or(terrain_grid_chunk::grid, grid_offset, terrain);
 }
 void map_terrain_remove(int grid_offset, int terrain) {
-    const int old_terrain = map_grid_get(g_terrain_grid, grid_offset);
-    map_grid_and(g_terrain_grid, grid_offset, ~terrain);
-    const int now_terrain = map_grid_get(g_terrain_grid, grid_offset);
+    const int old_terrain = map_grid_get(terrain_grid_chunk::grid, grid_offset);
+    map_grid_and(terrain_grid_chunk::grid, grid_offset, ~terrain);
+    const int now_terrain = map_grid_get(terrain_grid_chunk::grid, grid_offset);
     if ((old_terrain & TERRAIN_WALL) && !(now_terrain & TERRAIN_WALL)) {
         map_wall_material_clear(grid_offset);
     }
@@ -85,7 +85,7 @@ void map_terrain_remove_all(int terrain) {
     if (terrain & TERRAIN_WALL) {
         map_wall_material_clear_all();
     }
-    map_grid_and_all(g_terrain_grid, ~terrain);
+    map_grid_and_all(terrain_grid_chunk::grid, ~terrain);
 }
 
 int map_terrain_count_directly_adjacent_with_type(int grid_offset, int terrain) {
@@ -151,9 +151,8 @@ bool map_terrain_has_adjacent_y_with_type(int grid_offset, int terrain) {
 bool map_terrain_exists_tile_in_area_with_type(tile2i tile, int size, int terrain) {
     grid_area area = map_grid_get_area(tile, size, 0);
 
-    tile2i res = map_grid_area_first(area, [terrain] (tile2i t) {
-        return map_grid_is_inside(t, 1) && map_grid_get(g_terrain_grid, t) & terrain;
-    });
+    tile2i res = map_grid_area_first(area,
+      [terrain](tile2i t) { return map_grid_is_inside(t, 1) && map_grid_get(terrain_grid_chunk::grid, t) & terrain; });
 
     return res.valid();
 }
@@ -203,7 +202,7 @@ bool map_terrain_exists_clear_tile_in_radius(tile2i tile, int size, int radius, 
     for (int yy = area.tmin_y, endy = area.tmax_y; yy <= endy; yy++) {
         for (int xx = area.tmin_x, endx = area.tmax_x; xx <= endx; xx++) {
             int grid_offset = MAP_OFFSET(xx, yy);
-            if (grid_offset != except_grid_offset && !map_grid_get(g_terrain_grid, grid_offset)) {
+            if (grid_offset != except_grid_offset && !map_grid_get(terrain_grid_chunk::grid, grid_offset)) {
                 result = {xx,yy};
                 return true;
             }
@@ -384,15 +383,15 @@ void map_terrain_add_triumphal_arch_roads(int x, int y, int orientation) {
 /////
 
 void map_terrain_backup() {
-    map_grid_copy(g_terrain_grid, g_terrain_grid_backup);
+    map_grid_copy(terrain_grid_chunk::grid, g_terrain_grid_backup);
 }
 
 void map_terrain_restore() {
-    map_grid_copy(g_terrain_grid_backup, g_terrain_grid);
+    map_grid_copy(g_terrain_grid_backup, terrain_grid_chunk::grid);
 }
 
 void map_terrain_clear() {
-    map_grid_clear(g_terrain_grid);
+    map_grid_clear(terrain_grid_chunk::grid);
 }
 
 void map_terrain_init_outside_map() {
@@ -425,8 +424,8 @@ void map_terrain_init_outside_map() {
             int nx = x;
             if (nx < x_start) nx = x_start;
             else if (nx > x_end) nx = x_end;
-            const int src = map_grid_get(g_terrain_grid, nx + GRID_LENGTH * ny);
-            map_grid_set(g_terrain_grid, x + GRID_LENGTH * y, src);
+            const int src = map_grid_get(terrain_grid_chunk::grid, nx + GRID_LENGTH * ny);
+            map_grid_set(terrain_grid_chunk::grid, x + GRID_LENGTH * y, src);
         }
     }
 }
@@ -494,25 +493,11 @@ void build_terrain_caches() {
 }
 
 // unknown data grid
-grid_xx GRID03_32BIT(FS_INT32); // ?? routing
 int map_get_UNK03(int grid_offset) {
-    return map_grid_get(GRID03_32BIT, grid_offset);
+    return map_grid_get(GRID03_32BIT_chunk::grid, grid_offset);
 }
 
 // unknown data grid
-grid_xx GRID04_8BIT(FS_INT8);
 int map_get_UNK04(int grid_offset) {
-    return map_grid_get(GRID04_8BIT, grid_offset);
-}
-
-void terrain_grid_chunk::bind_data(io_buffer* iob, size_t version) {
-    iob->bind(BIND_SIGNATURE_GRID, &g_terrain_grid);
-}
-
-void GRID03_32BIT_chunk::bind_data(io_buffer* iob, size_t version) {
-    iob->bind(BIND_SIGNATURE_GRID, &GRID03_32BIT);
-}
-
-void GRID04_8BIT_chunk::bind_data(io_buffer* iob, size_t version) {
-    iob->bind(BIND_SIGNATURE_GRID, &GRID04_8BIT);
+    return map_grid_get(GRID04_8BIT_chunk::grid, grid_offset);
 }

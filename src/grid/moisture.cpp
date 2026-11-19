@@ -8,21 +8,20 @@
 
 #include <algorithm>
 
-static grid_xx terrain_moisture(FS_UINT8);
 
 static uint8_t s_moisture_profile[17] = {0};
 static int s_map_grass_radius = 4;
 
 uint8_t map_moisture_get(int grid_offset) {
-    return map_grid_get(terrain_moisture, grid_offset);
+    return map_grid_get(moisture_grid_chunk::grid, grid_offset);
 }
 
 void map_moisture_set(int grid_offset, uint8_t value) {
-    map_grid_set(terrain_moisture, grid_offset, value);
+    map_grid_set(moisture_grid_chunk::grid, grid_offset, value);
 }
 
 void map_moisture_clear_tile(int grid_offset) {
-    map_grid_set(terrain_moisture, grid_offset, 0);
+    map_grid_set(moisture_grid_chunk::grid, grid_offset, 0);
 }
 
 uint8_t map_grasslevel_get(int grid_offset) {
@@ -65,7 +64,7 @@ static void recompute_moisture_tile(int grid_offset) {
     }
     int d = distance_to_water(tile2i(grid_offset), 16);
     uint8_t m = (d >= 1 && d <= 16) ? s_moisture_profile[d] : 0;
-    map_grid_set(terrain_moisture, grid_offset, m);
+    map_grid_set(moisture_grid_chunk::grid, grid_offset, m);
 }
 
 void map_moisture_update_region(tile2i tmin, tile2i tmax) {
@@ -192,8 +191,4 @@ void map_moisture_recompute_profile() {
         logs::info("[moisture]  d=%2d  total=%5d  lvl12=%5d  grass=%5d  profile=%3d",
                    d, total_count[d], level12_count[d], grass_count[d], (int)s_moisture_profile[d]);
     }
-}
-
-void moisture_grid_chunk::bind_data(io_buffer* iob, size_t version) {
-    iob->bind(BIND_SIGNATURE_GRID, &terrain_moisture);
 }

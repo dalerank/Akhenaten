@@ -1,8 +1,7 @@
 #pragma once
 
-class io_buffer;
+#include "io/io_buffer.h"
 
-struct image_grid_chunk {
+struct image_grid_chunk : grid_chunk<image_grid_chunk, FS_UINT32> {
     static constexpr const char* name = "image_grid";
-    static void bind_data(io_buffer* iob, size_t version);
 };

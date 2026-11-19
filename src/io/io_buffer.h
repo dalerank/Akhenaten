@@ -301,3 +301,15 @@ protected:
 
 template <typename T>
 io_chunk_of<T> io_chunk_of<T>::registered;
+
+template <typename T, e_grid_data_type Type>
+struct grid_chunk {
+    inline static grid_xx grid{Type};
+
+    static void bind_data(io_buffer* iob, size_t version) { iob->bind(BIND_SIGNATURE_GRID, &grid); }
+};
+
+template <typename T, e_grid_data_type Type>
+struct optional_grid_chunk : grid_chunk<T, Type> {
+    static void load_defaults(size_t version) { map_grid_clear(grid_chunk<T, Type>::grid); }
+};

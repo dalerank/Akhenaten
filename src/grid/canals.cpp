@@ -60,8 +60,6 @@ namespace {
 
 static int canals_include_construction = 0;
 
-grid_xx canals_grid(FS_UINT8);
-grid_xx canals_grid_backup(FS_UINT8);
 // Filled by this water update. OG uses the canal value itself; a held basin canal is wet but not yet filled.
 grid_xx canals_filled_grid(FS_UINT8);
 
@@ -75,35 +73,27 @@ bool map_canal_is_filled(int grid_offset) {
 }
 
 int map_canal_at(int grid_offset) {
-    return map_grid_get(canals_grid, grid_offset);
+    return map_grid_get(aqueduct_grid_chunk::grid, grid_offset);
 }
 
 void map_canal_set(int grid_offset, int value) {
-    map_grid_set(canals_grid, grid_offset, value);
+    map_grid_set(aqueduct_grid_chunk::grid, grid_offset, value);
 }
 
 void map_canal_remove(int grid_offset) {
-    map_grid_set(canals_grid, grid_offset, 0);
+    map_grid_set(aqueduct_grid_chunk::grid, grid_offset, 0);
 }
 
 void map_canal_clear() {
-    map_grid_clear(canals_grid);
+    map_grid_clear(aqueduct_grid_chunk::grid);
 }
 
 void map_canal_backup() {
-    map_grid_copy(canals_grid, canals_grid_backup);
+    map_grid_copy(aqueduct_grid_chunk::grid, aqueduct_backup_grid_chunk::grid);
 }
 
 void map_canal_restore(void) {
-    map_grid_copy(canals_grid_backup, canals_grid);
-}
-
-void aqueduct_grid_chunk::bind_data(io_buffer* iob, size_t version) {
-    iob->bind(BIND_SIGNATURE_GRID, &canals_grid);
-}
-
-void aqueduct_backup_grid_chunk::bind_data(io_buffer* iob, size_t version) {
-    iob->bind(BIND_SIGNATURE_GRID, &canals_grid_backup);
+    map_grid_copy(aqueduct_backup_grid_chunk::grid, aqueduct_grid_chunk::grid);
 }
 
 static bool canal_image_follows_water(int grid_offset) {

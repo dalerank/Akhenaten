@@ -45,12 +45,7 @@ const e_pyramid_style_tokens_t ANK_CONFIG_ENUM(e_pyramid_style_tokens);
 #define NOTHING 0
 #define INFINITE 10000
 
-grid_xx g_monuments_progress_grid(FS_UINT32);
 BUILDING_RUNTIME_DATA_IMPL(building_monument)
-
-void monuments_progress_chunk::bind_data(io_buffer* iob, size_t version) {
-    iob->bind(BIND_SIGNATURE_GRID, &g_monuments_progress_grid);
-}
 
 bool building_monument::deliver_resource(e_resource resource, int amount) {
     // Always credit the chain head — yard/sled destination may be a corner/wall
@@ -73,15 +68,15 @@ bool building_monument::deliver_resource(e_resource resource, int amount) {
 }
 
 uint32_t map_monuments_get_progress(tile2i tile) {
-    return map_grid_get(g_monuments_progress_grid, tile.grid_offset());
+    return map_grid_get(monuments_progress_chunk::grid, tile.grid_offset());
 }
 
 void map_monuments_set_progress(tile2i tile, uint32_t progress) {
-    map_grid_set(g_monuments_progress_grid, tile.grid_offset(), progress);
+    map_grid_set(monuments_progress_chunk::grid, tile.grid_offset(), progress);
 }
 
 void map_monuments_clear() {
-    map_grid_fill(g_monuments_progress_grid, 0);
+    map_grid_fill(monuments_progress_chunk::grid, 0);
 }
 
 tile2i building_monument_mason_waiting_tile(building *b) {

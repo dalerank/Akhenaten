@@ -13,17 +13,16 @@
 #include <algorithm>
 #include <cmath>
 
-grid_xx g_terrain_clay(FS_UINT16);
 
 int map_get_clay(int grid_offset) {
-    return map_grid_get(g_terrain_clay, grid_offset);
+    return map_grid_get(clay_grid_chunk::grid, grid_offset);
 }
 
 void map_clay_deplete(int grid_offset, int amount) {
-    int current = map_grid_get(g_terrain_clay, grid_offset);
+    int current = map_grid_get(clay_grid_chunk::grid, grid_offset);
     if (current > 0) {
         int new_value = std::max(0, current - amount);
-        map_grid_set(g_terrain_clay, grid_offset, new_value);
+        map_grid_set(clay_grid_chunk::grid, grid_offset, new_value);
     }
 }
 
@@ -36,22 +35,13 @@ void map_clay_init() {
     constexpr int CLAY_MAX = 65000;
     constexpr int RADIUS = 3;
 
-    map_grid_clear(g_terrain_clay);
+    map_grid_clear(clay_grid_chunk::grid);
 
     const int map_width = scenario_map_data()->width;
     const std::vector<uint8_t> distance = map_grid_king_distance(clay_water, RADIUS);
     map_tiles_foreach_map_tile([&](int grid_offset) {
         const tile2i tile(grid_offset);
         const bool near_water = !clay_water(grid_offset) && distance[(size_t)tile.y() * map_width + tile.x()] <= RADIUS;
-        map_grid_set(g_terrain_clay, grid_offset, near_water ? CLAY_MAX : 0);
+        map_grid_set(clay_grid_chunk::grid, grid_offset, near_water ? CLAY_MAX : 0);
     });
-}
-
-void clay_grid_chunk::bind_data(io_buffer* iob, size_t version) {
-    iob->bind(BIND_SIGNATURE_GRID, &g_terrain_clay);
-}
-
-void clay_grid_chunk::load_defaults(size_t version) {
-    // saves older than this grid carry no ore at all
-    map_grid_clear(g_terrain_clay);
 }

@@ -1,15 +1,11 @@
 #pragma once
 
-class io_buffer;
+#include "io/io_buffer.h"
 
-struct bridge_part_grid_chunk {
+struct bridge_part_grid_chunk : optional_grid_chunk<bridge_part_grid_chunk, FS_UINT16> {
     static constexpr const char* name = "bridge_part_grid";
-    static void bind_data(io_buffer* iob, size_t version);
-    static void load_defaults(size_t version);
 };
 
-struct bridge_type_grid_chunk {
+struct bridge_type_grid_chunk : optional_grid_chunk<bridge_type_grid_chunk, FS_UINT16> {
     static constexpr const char* name = "bridge_type_grid";
-    static void bind_data(io_buffer* iob, size_t version);
-    static void load_defaults(size_t version);
 };

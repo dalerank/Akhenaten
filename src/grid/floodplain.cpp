@@ -55,8 +55,6 @@ void foreach_floodplain_row(int is_flooding, int row, void (*callback)(int is_fl
 }
 
 grid_xx g_terrain_floodplain_row(FS_UINT8);
-grid_xx g_terrain_floodplain_growth (FS_UINT8);
-grid_xx g_terrain_floodplain_fertility(FS_UINT8);
 grid_xx g_terrain_floodplain_max_fertile(FS_UINT8);
 grid_xx g_terrain_floodplain_flood_shore(FS_UINT8);
 
@@ -340,11 +338,11 @@ int8_t map_get_floodplain_row(int grid_offset) {
 }
 
 uint8_t map_get_floodplain_growth(int grid_offset) {
-    return map_grid_get(g_terrain_floodplain_growth, grid_offset);
+    return map_grid_get(terrain_floodplain_growth_chunk::grid, grid_offset);
 }
 
 void map_clear_floodplain_growth() {
-    map_grid_fill(g_terrain_floodplain_growth, 0);
+    map_grid_fill(terrain_floodplain_growth_chunk::grid, 0);
 }
 
 void set_floodplain_land_tiles_image(int grid_offset, bool force) {
@@ -518,11 +516,11 @@ int map_get_floodplain_edge(tile2i tile) {
 int map_get_fertility(int grid_offset, int tally_type) { // actual percentage integer [0-99]
     switch (tally_type) {
     case FERT_WITH_MALUS:
-        return map_grid_get(g_terrain_floodplain_fertility, grid_offset);
+        return map_grid_get(soil_fertility_grid_chunk::grid, grid_offset);
         break;
 
     case FERT_ONLY_MALUS:
-        return map_grid_get(g_terrain_floodplain_fertility, grid_offset)
+        return map_grid_get(soil_fertility_grid_chunk::grid, grid_offset)
                - map_grid_get(g_terrain_floodplain_max_fertile, grid_offset);
         break;
 
@@ -588,18 +586,18 @@ ANK_FUNCTION_2(__fertility_for_farm_at_tile)
 
 void map_set_floodplain_growth(int grid_offset, int growth) {
     if (growth >= 0 && growth < 6) {
-        map_grid_set(g_terrain_floodplain_growth, grid_offset, growth);
+        map_grid_set(terrain_floodplain_growth_chunk::grid, grid_offset, growth);
     }
 }
 
 void map_update_tile_fertility(int grid_offset, int delta) {
     int new_fert = map_get_fertility(grid_offset, FERT_WITH_MALUS) + delta;
-    map_grid_set(g_terrain_floodplain_fertility, grid_offset, std::clamp(new_fert, 3, 99));
+    map_grid_set(soil_fertility_grid_chunk::grid, grid_offset, std::clamp(new_fert, 3, 99));
 }
 
 void map_soil_set_depletion(int grid_offset, int malus) {
     int new_fert = map_get_fertility(grid_offset, FERT_NO_MALUS) + malus;
-    map_grid_set(g_terrain_floodplain_fertility, grid_offset, std::clamp(new_fert, 3, 99));
+    map_grid_set(soil_fertility_grid_chunk::grid, grid_offset, std::clamp(new_fert, 3, 99));
 }
 
 // Sealed-basin fertility bump after inundation restore.
@@ -623,12 +621,4 @@ void map_floodplain_apply_basin_fertility_bonus(int grid_offset) {
     const int pct = BONUS_PCT_AT_PERFECT + (100 - q) * (BONUS_PCT_AT_NONE - BONUS_PCT_AT_PERFECT) / 100;
     const int add = std::max(1, fert * pct / 100);
     map_update_tile_fertility(grid_offset, add);
-}
-
-void soil_fertility_grid_chunk::bind_data(io_buffer* iob, size_t version) {
-    iob->bind(BIND_SIGNATURE_GRID, &g_terrain_floodplain_fertility);
-}
-
-void terrain_floodplain_growth_chunk::bind_data(io_buffer* iob, size_t version) {
-    iob->bind(BIND_SIGNATURE_GRID, &g_terrain_floodplain_growth);
 }

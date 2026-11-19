@@ -16,7 +16,6 @@
 #include "scenario/map.h"
 #include "city/city.h"
 
-grid_xx g_irrigation_value_grid(FS_INT8);
 
 irrigation_value_t g_irrigation_value;
 
@@ -59,9 +58,9 @@ void irrigation_value_t::add_irrigation_at_distance(tile2i tile, int size, int d
                 if (!irrigation_value_accepts_tile(src_basin_id, grid_offset)) {
                     continue;
                 }
-                int current = map_grid_get(g_irrigation_value_grid, grid_offset);
+                int current = map_grid_get(irrigation_value_grid_chunk::grid, grid_offset);
                 int new_value = std::max(current, value);
-                map_grid_set(g_irrigation_value_grid, grid_offset, new_value);
+                map_grid_set(irrigation_value_grid_chunk::grid, grid_offset, new_value);
             }
         }
     } else {
@@ -71,9 +70,9 @@ void irrigation_value_t::add_irrigation_at_distance(tile2i tile, int size, int d
             if (!irrigation_value_accepts_tile(src_basin_id, grid_offset)) {
                 continue;
             }
-            int current = map_grid_get(g_irrigation_value_grid, grid_offset);
+            int current = map_grid_get(irrigation_value_grid_chunk::grid, grid_offset);
             int new_value = std::max(current, value);
-            map_grid_set(g_irrigation_value_grid, grid_offset, new_value);
+            map_grid_set(irrigation_value_grid_chunk::grid, grid_offset, new_value);
         }
     }
 }
@@ -97,9 +96,9 @@ void irrigation_value_t::add_irrigation(tile2i tile, int size, int base_value, i
                 if (!irrigation_value_accepts_tile(src_basin_id, grid_offset)) {
                     continue;
                 }
-                int current = map_grid_get(g_irrigation_value_grid, grid_offset);
+                int current = map_grid_get(irrigation_value_grid_chunk::grid, grid_offset);
                 int new_value = std::max(current, base_value);
-                map_grid_set(g_irrigation_value_grid, grid_offset, new_value);
+                map_grid_set(irrigation_value_grid_chunk::grid, grid_offset, new_value);
             }
         }
     }
@@ -177,7 +176,7 @@ void irrigation_value_t::update_canals() {
 }
 
 void irrigation_value_t::clear_map() {
-    map_grid_clear(g_irrigation_value_grid);
+    map_grid_clear(irrigation_value_grid_chunk::grid);
 }
 
 void irrigation_value_t::update() {
@@ -188,19 +187,19 @@ void irrigation_value_t::update() {
 }
 
 int irrigation_value_t::get(int grid_offset) {
-    return map_grid_get(g_irrigation_value_grid, grid_offset);
+    return map_grid_get(irrigation_value_grid_chunk::grid, grid_offset);
 }
 
 int irrigation_value_t::get_max(tile2i tile, int size) {
     if (size == 1) {
-        return map_grid_get(g_irrigation_value_grid, tile.grid_offset());
+        return map_grid_get(irrigation_value_grid_chunk::grid, tile.grid_offset());
     }
 
     int max = 0;
     for (int dy = 0; dy < size; dy++) {
         for (int dx = 0; dx < size; dx++) {
             tile2i t = tile.shifted(dx, dy);
-            int value = map_grid_get(g_irrigation_value_grid, t.grid_offset());
+            int value = map_grid_get(irrigation_value_grid_chunk::grid, t.grid_offset());
             max = std::max(value, max);
         }
     }
@@ -209,7 +208,7 @@ int irrigation_value_t::get_max(tile2i tile, int size) {
 
 int irrigation_value_t::get_avg(tile2i tile, int size) {
     if (size == 1) {
-        return map_grid_get(g_irrigation_value_grid, tile.grid_offset());
+        return map_grid_get(irrigation_value_grid_chunk::grid, tile.grid_offset());
     }
     
     grid_area area = map_grid_get_area(tile, size, size);
@@ -219,19 +218,10 @@ int irrigation_value_t::get_avg(tile2i tile, int size) {
     for (int y = area.tmin_y, endy = area.tmax_y; y <= endy; y++) {
         for (int x = area.tmin_x, endx = area.tmax_x; x <= endx; x++) {
             int grid_offset = MAP_OFFSET(x, y);
-            summ += map_grid_get(g_irrigation_value_grid, grid_offset);
+            summ += map_grid_get(irrigation_value_grid_chunk::grid, grid_offset);
             count++;
         }
     }
 
     return count > 0 ? summ / count : 0;
-}
-
-void irrigation_value_grid_chunk::bind_data(io_buffer* iob, size_t version) {
-    iob->bind(BIND_SIGNATURE_GRID, &g_irrigation_value_grid);
-}
-
-void irrigation_value_grid_chunk::load_defaults(size_t version) {
-    // recomputed from water sources when the grid is absent
-    map_grid_clear(g_irrigation_value_grid);
 }

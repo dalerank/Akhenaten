@@ -11,30 +11,20 @@
 #include <algorithm>
 #include <cmath>
 
-grid_xx g_terrain_sandstone(FS_UINT16);
 
 int map_get_sandstone(int grid_offset) {
-    return map_grid_get(g_terrain_sandstone, grid_offset);
+    return map_grid_get(sandstone_grid_chunk::grid, grid_offset);
 }
 
 void map_sandstone_deplete(int grid_offset, int amount) {
-    int current = map_grid_get(g_terrain_sandstone, grid_offset);
+    int current = map_grid_get(sandstone_grid_chunk::grid, grid_offset);
     if (current > 0) {
         int new_value = std::max(0, current - amount);
-        map_grid_set(g_terrain_sandstone, grid_offset, new_value);
+        map_grid_set(sandstone_grid_chunk::grid, grid_offset, new_value);
     }
 }
 
 void map_sandstone_init() {
     map_grid_mark_near(
-      g_terrain_sandstone, [](int grid_offset) { return map_terrain_is(grid_offset, TERRAIN_ROCK); }, 2, 65000);
-}
-
-void sandstone_grid_chunk::bind_data(io_buffer* iob, size_t version) {
-    iob->bind(BIND_SIGNATURE_GRID, &g_terrain_sandstone);
-}
-
-void sandstone_grid_chunk::load_defaults(size_t version) {
-    // saves older than this grid carry no ore at all
-    map_grid_clear(g_terrain_sandstone);
+      sandstone_grid_chunk::grid, [](int grid_offset) { return map_terrain_is(grid_offset, TERRAIN_ROCK); }, 2, 65000);
 }

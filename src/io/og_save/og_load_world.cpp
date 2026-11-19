@@ -1,4 +1,13 @@
 #include "io/og_save/og_load.h"
+#include "grid/building_chunks.h"
+#include "grid/canals_chunks.h"
+#include "grid/desirability_chunks.h"
+#include "grid/floodplain_chunks.h"
+#include "grid/image_chunks.h"
+#include "grid/property_chunks.h"
+#include "grid/sprite_chunks.h"
+#include "grid/terrain_chunks.h"
+#include "grid/vegetation_chunks.h"
 
 #include "building/building_storage.h"
 #include "core/log.h"
@@ -14,22 +23,6 @@
 #include "grid/random.h"
 
 // Grids the save carries byte for byte; their modules expose no per-cell setter.
-extern grid_xx g_images_grid;
-extern grid_xx g_edge_grid;
-extern grid_xx g_buildings_grid;
-extern grid_xx g_terrain_grid;
-extern grid_xx canals_grid;
-extern grid_xx canals_grid_backup;
-extern grid_xx bitfields_grid;
-extern grid_xx g_sprite_grid;
-extern grid_xx g_sprite_grid_backup;
-extern grid_xx g_desirability_grid;
-extern grid_xx g_damage_grid;
-extern grid_xx g_terrain_floodplain_fertility;
-extern grid_xx g_terrain_vegetation_growth;
-extern grid_xx g_rubble_type_grid;
-extern grid_xx GRID03_32BIT;
-extern grid_xx GRID04_8BIT;
 
 namespace og {
 
@@ -53,22 +46,22 @@ namespace og {
     }
 
     void load_grids(const savegame& s) {
-        copy_grid<uint32_t>(s, CHUNK_GRID_IMAGES, g_images_grid);
-        copy_grid<uint8_t>(s, CHUNK_GRID_EDGE, g_edge_grid);
-        copy_grid<uint16_t>(s, CHUNK_GRID_BUILDING_IDS, g_buildings_grid);
-        copy_grid<uint32_t>(s, CHUNK_GRID_TERRAIN, g_terrain_grid);
-        copy_grid<uint8_t>(s, CHUNK_GRID_CANALS, canals_grid);
-        copy_grid<uint8_t>(s, CHUNK_GRID_CANALS_BACKUP, canals_grid_backup);
-        copy_grid<uint8_t>(s, CHUNK_GRID_BITFIELDS, bitfields_grid);
-        copy_grid<uint8_t>(s, CHUNK_GRID_SPRITE, g_sprite_grid);
-        copy_grid<uint8_t>(s, CHUNK_GRID_SPRITE_BACKUP, g_sprite_grid_backup);
-        copy_grid<int8_t>(s, CHUNK_GRID_DESIRABILITY, g_desirability_grid);
-        copy_grid<uint16_t>(s, CHUNK_GRID_BUILDING_DAMAGE, g_damage_grid);
-        copy_grid<uint8_t>(s, CHUNK_GRID_SOIL_FERTILITY, g_terrain_floodplain_fertility);
-        copy_grid<uint8_t>(s, CHUNK_GRID_VEGETATION_GROWTH, g_terrain_vegetation_growth);
-        copy_grid<uint8_t>(s, CHUNK_GRID_RUBBLE_BUILDING_TYPE, g_rubble_type_grid);
-        copy_grid<uint8_t>(s, CHUNK_GRID_RUBBLE_BUILDING_TYPE, GRID04_8BIT);
-        copy_grid<uint32_t>(s, CHUNK_GRID_SERVICE_VISIT, GRID03_32BIT);
+        copy_grid<uint32_t>(s, CHUNK_GRID_IMAGES, image_grid_chunk::grid);
+        copy_grid<uint8_t>(s, CHUNK_GRID_EDGE, edge_grid_chunk::grid);
+        copy_grid<uint16_t>(s, CHUNK_GRID_BUILDING_IDS, building_grid_chunk::grid);
+        copy_grid<uint32_t>(s, CHUNK_GRID_TERRAIN, terrain_grid_chunk::grid);
+        copy_grid<uint8_t>(s, CHUNK_GRID_CANALS, aqueduct_grid_chunk::grid);
+        copy_grid<uint8_t>(s, CHUNK_GRID_CANALS_BACKUP, aqueduct_backup_grid_chunk::grid);
+        copy_grid<uint8_t>(s, CHUNK_GRID_BITFIELDS, bitfields_grid_chunk::grid);
+        copy_grid<uint8_t>(s, CHUNK_GRID_SPRITE, sprite_grid_chunk::grid);
+        copy_grid<uint8_t>(s, CHUNK_GRID_SPRITE_BACKUP, sprite_backup_grid_chunk::grid);
+        copy_grid<int8_t>(s, CHUNK_GRID_DESIRABILITY, desirability_grid_chunk::grid);
+        copy_grid<uint16_t>(s, CHUNK_GRID_BUILDING_DAMAGE, building_damage_grid_chunk::grid);
+        copy_grid<uint8_t>(s, CHUNK_GRID_SOIL_FERTILITY, soil_fertility_grid_chunk::grid);
+        copy_grid<uint8_t>(s, CHUNK_GRID_VEGETATION_GROWTH, vegetation_growth_chunk::grid);
+        copy_grid<uint8_t>(s, CHUNK_GRID_RUBBLE_BUILDING_TYPE, rubble_type_grid_chunk::grid);
+        copy_grid<uint8_t>(s, CHUNK_GRID_RUBBLE_BUILDING_TYPE, GRID04_8BIT_chunk::grid);
+        copy_grid<uint32_t>(s, CHUNK_GRID_SERVICE_VISIT, GRID03_32BIT_chunk::grid);
 
         const uint8_t* random = s.array<uint8_t>(CHUNK_GRID_RANDOM);
         const uint8_t* elevation = s.array<uint8_t>(CHUNK_GRID_ELEVATION);

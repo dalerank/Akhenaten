@@ -13,7 +13,6 @@
 #include "city/city.h"
 #include "js/js_game.h"
 
-grid_xx g_desirability_grid(FS_INT8);
 desirability_t ANK_VARIABLE_N(g_desirability, "desirability");
 
 void desirability_t::add_to_terrain_at_distance(tile2i tile, int size, int distance, int desirability) {
@@ -36,15 +35,16 @@ void desirability_t::add_to_terrain_at_distance(tile2i tile, int size, int dista
         for (int i = start; i < end; i++) {
             const ring_tile* tile = map_ring_tile(i);
             if (map_ring_is_inside_map(x + tile->x, y + tile->y)) {
-                int newd = map_grid_get(g_desirability_grid, base_offset + tile->grid_offset) + desirability;
-                map_grid_set(g_desirability_grid, base_offset + tile->grid_offset, calc_bound(newd, -100, 100));
+                int newd = map_grid_get(desirability_grid_chunk::grid, base_offset + tile->grid_offset) + desirability;
+                map_grid_set(desirability_grid_chunk::grid, base_offset + tile->grid_offset,
+                  calc_bound(newd, -100, 100));
             }
         }
     } else {
         for (int i = start; i < end; i++) {
             const ring_tile* tile = map_ring_tile(i);
-            int newd = map_grid_get(g_desirability_grid, base_offset + tile->grid_offset) + desirability;
-            map_grid_set(g_desirability_grid, base_offset + tile->grid_offset, calc_bound(newd, -100, 100));
+            int newd = map_grid_get(desirability_grid_chunk::grid, base_offset + tile->grid_offset) + desirability;
+            map_grid_set(desirability_grid_chunk::grid, base_offset + tile->grid_offset, calc_bound(newd, -100, 100));
         }
     }
 }
@@ -110,7 +110,7 @@ void desirability_t::update_terrain() {
 }
 
 void desirability_t::clear_map() {
-    map_grid_clear(g_desirability_grid);
+    map_grid_clear(desirability_grid_chunk::grid);
 }
 
 void desirability_t::update() {
@@ -121,19 +121,19 @@ void desirability_t::update() {
 }
 
 int desirability_t::get(int grid_offset) {
-    return map_grid_get(g_desirability_grid, grid_offset);
+    return map_grid_get(desirability_grid_chunk::grid, grid_offset);
 }
 
 int desirability_t::get_max(tile2i tile, int size) {
     if (size == 1) {
-        return map_grid_get(g_desirability_grid, tile.grid_offset());
+        return map_grid_get(desirability_grid_chunk::grid, tile.grid_offset());
     }
 
     int max = -9999;
     for (int dy = 0; dy < size; dy++) {
         for (int dx = 0; dx < size; dx++) {
             tile2i t = tile.shifted(dx, dy);
-            int value = map_grid_get(g_desirability_grid, t.grid_offset());
+            int value = map_grid_get(desirability_grid_chunk::grid, t.grid_offset());
             max = std::max(value, max);
         }
     }
@@ -142,7 +142,7 @@ int desirability_t::get_max(tile2i tile, int size) {
 
 int desirability_t::get_avg(tile2i tile, int size) {
     if (size == 1) {
-        return map_grid_get(g_desirability_grid, tile.grid_offset());
+        return map_grid_get(desirability_grid_chunk::grid, tile.grid_offset());
     }
     grid_area area = map_grid_get_area(tile.shifted(-size, -size), tile.shifted(size, size));
 
@@ -151,7 +151,7 @@ int desirability_t::get_avg(tile2i tile, int size) {
     for (int y = area.tmin_y, endy = area.tmax_y; y <= endy; y++) {
         for (int x = area.tmin_x, endx = area.tmax_x; x <= endx; x++) {
             int grid_offset = MAP_OFFSET(x, y);
-            summ += map_grid_get(g_desirability_grid, grid_offset);
+            summ += map_grid_get(desirability_grid_chunk::grid, grid_offset);
             count++;
         }
     }
@@ -168,7 +168,3 @@ int __desirability_at_tile(int x, int y) {
     return g_desirability.get(tile2i(x, y));
 }
 ANK_FUNCTION_2(__desirability_at_tile)
-
-void desirability_grid_chunk::bind_data(io_buffer* iob, size_t version) {
-    iob->bind(BIND_SIGNATURE_GRID, &g_desirability_grid);
-}

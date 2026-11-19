@@ -1,13 +1,11 @@
 #pragma once
 
-class io_buffer;
+#include "io/io_buffer.h"
 
-struct soil_fertility_grid_chunk {
+struct soil_fertility_grid_chunk : grid_chunk<soil_fertility_grid_chunk, FS_UINT8> {
     static constexpr const char* name = "soil_fertility_grid";
-    static void bind_data(io_buffer* iob, size_t version);
 };
 
-struct terrain_floodplain_growth_chunk {
+struct terrain_floodplain_growth_chunk : grid_chunk<terrain_floodplain_growth_chunk, FS_UINT8> {
     static constexpr const char* name = "terrain_floodplain_growth";
-    static void bind_data(io_buffer* iob, size_t version);
 };

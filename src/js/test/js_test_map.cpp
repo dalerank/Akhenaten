@@ -1,4 +1,5 @@
 #include "js/test/js_test_common.h"
+#include "grid/desirability_chunks.h"
 
 #include "building/building_road.h"
 #include "city/city.h"
@@ -115,9 +116,8 @@ static int __test_road_is_paved(int x, int y) {
 }
 ANK_FUNCTION_2(__test_road_is_paved);
 
-extern grid_xx g_desirability_grid;
 static void __test_set_desirability(int x, int y, int value) {
-    map_grid_set(g_desirability_grid, tile2i(x, y).grid_offset(), value);
+    map_grid_set(desirability_grid_chunk::grid, tile2i(x, y).grid_offset(), value);
 }
 ANK_FUNCTION_3(__test_set_desirability);
 

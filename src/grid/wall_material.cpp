@@ -9,21 +9,20 @@
 
 const e_wall_material_tokens_t ANK_CONFIG_ENUM(e_wall_material_tokens);
 
-grid_xx g_wall_material_grid(FS_UINT8);
 grid_xx g_wall_material_grid_backup(FS_UINT8);
 
 e_wall_material map_wall_material_at(int grid_offset) {
     if (!map_grid_is_valid_offset(grid_offset)) {
         return WALL_MATERIAL_NONE;
     }
-    return (e_wall_material)map_grid_get(g_wall_material_grid, grid_offset);
+    return (e_wall_material)map_grid_get(wall_material_grid_chunk::grid, grid_offset);
 }
 
 void map_wall_material_set(int grid_offset, e_wall_material material) {
     if (!map_grid_is_valid_offset(grid_offset)) {
         return;
     }
-    map_grid_set(g_wall_material_grid, grid_offset, material);
+    map_grid_set(wall_material_grid_chunk::grid, grid_offset, material);
 }
 
 void map_wall_material_clear(int grid_offset) {
@@ -31,15 +30,15 @@ void map_wall_material_clear(int grid_offset) {
 }
 
 void map_wall_material_clear_all() {
-    map_grid_clear(g_wall_material_grid);
+    map_grid_clear(wall_material_grid_chunk::grid);
 }
 
 void map_wall_material_backup() {
-    map_grid_copy(g_wall_material_grid, g_wall_material_grid_backup);
+    map_grid_copy(wall_material_grid_chunk::grid, g_wall_material_grid_backup);
 }
 
 void map_wall_material_restore() {
-    map_grid_copy(g_wall_material_grid_backup, g_wall_material_grid);
+    map_grid_copy(g_wall_material_grid_backup, wall_material_grid_chunk::grid);
 }
 
 void map_wall_material_migrate_from_terrain() {
@@ -81,13 +80,4 @@ e_building_type wall_building_type_from_material(e_wall_material material) {
     default:
         return BUILDING_MUD_WALL;
     }
-}
-
-void wall_material_grid_chunk::bind_data(io_buffer* iob, size_t version) {
-    iob->bind(BIND_SIGNATURE_GRID, &g_wall_material_grid);
-}
-
-void wall_material_grid_chunk::load_defaults(size_t version) {
-    // older saves have no material grid; post_load migrates it from terrain bits
-    map_grid_clear(g_wall_material_grid);
 }

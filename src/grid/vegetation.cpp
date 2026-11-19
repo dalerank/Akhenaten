@@ -19,7 +19,6 @@
 #include "scenario/scenario.h"
 
 tile_cache marshland_tiles_cache;
-grid_xx g_terrain_vegetation_growth(FS_UINT8);
 
 void foreach_marshland_tile(void (*callback)(int grid_offset)) {
     for (int grid_offset: marshland_tiles_cache)
@@ -27,28 +26,28 @@ void foreach_marshland_tile(void (*callback)(int grid_offset)) {
 }
 
 int map_get_vegetation_growth(int grid_offset) {
-    return map_grid_get(g_terrain_vegetation_growth, grid_offset);
+    return map_grid_get(vegetation_growth_chunk::grid, grid_offset);
 }
 
 void map_vegetation_set_growth(int grid_offset, int growth) {
-    map_grid_set(g_terrain_vegetation_growth, grid_offset, std::clamp(growth, 0, 255));
+    map_grid_set(vegetation_growth_chunk::grid, grid_offset, std::clamp(growth, 0, 255));
     map_tiles_update_vegetation(grid_offset);
 }
 
 void map_vegetation_deplete(int grid_offset) {
-    map_grid_set(g_terrain_vegetation_growth, grid_offset, 0);
+    map_grid_set(vegetation_growth_chunk::grid, grid_offset, 0);
     map_tiles_update_vegetation(grid_offset);
 }
 
 void map_vegetation_deplete(tile2i tile, int delta) {
     int grid_offset = tile.grid_offset();
-    int value = map_grid_get(g_terrain_vegetation_growth, grid_offset);
-    map_grid_set(g_terrain_vegetation_growth, grid_offset, std::max(0, value - delta));
+    int value = map_grid_get(vegetation_growth_chunk::grid, grid_offset);
+    map_grid_set(vegetation_growth_chunk::grid, grid_offset, std::max(0, value - delta));
     map_tiles_update_vegetation(grid_offset);
 }
 
 void vegetation_tile_update(int grid_offset, vegetation_opt opt) {
-    int growth = g_terrain_vegetation_growth.get(grid_offset);
+    int growth = vegetation_growth_chunk::grid.get(grid_offset);
     if (opt.random_max == 0) {
         return;
     }
@@ -58,7 +57,7 @@ void vegetation_tile_update(int grid_offset, vegetation_opt opt) {
         int r = random_short() % opt.random_max + opt.random_min;
         growth = std::clamp(growth + r, 0, 255);
 
-        map_grid_set(g_terrain_vegetation_growth, grid_offset, growth);
+        map_grid_set(vegetation_growth_chunk::grid, grid_offset, growth);
         if (growth == 255) {
             map_tiles_update_vegetation(grid_offset);
         }
@@ -71,10 +70,6 @@ void map_vegetation_growth_update() {
     for (int tile_offset : marshland_tiles_cache) {
         vegetation_tile_update(tile_offset, opt);
     }
-}
-
-void vegetation_growth_chunk::bind_data(io_buffer* iob, size_t version) {
-    iob->bind(BIND_SIGNATURE_GRID, &g_terrain_vegetation_growth);
 }
 
 int gatherers_harvesting_point(int grid_offset) {

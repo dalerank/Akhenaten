@@ -1,8 +1,7 @@
 #pragma once
 
-class io_buffer;
+#include "io/io_buffer.h"
 
-struct moisture_grid_chunk {
+struct moisture_grid_chunk : grid_chunk<moisture_grid_chunk, FS_UINT8> {
     static constexpr const char* name = "moisture_grid";
-    static void bind_data(io_buffer* iob, size_t version);
 };

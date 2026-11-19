@@ -11,17 +11,16 @@
 
 #include <assert.h>
 
-static grid_xx grid_figures(FS_UINT16);
 
 svector<figure_draw, 5000> g_figures_y_sort;
 static uint32_t g_figures_y_sort_generation = 0;
 
 bool map_has_figure_at(int grid_offset) {
-    return map_grid_is_valid_offset(grid_offset) && map_grid_get(grid_figures, grid_offset) > 0;
+    return map_grid_is_valid_offset(grid_offset) && map_grid_get(figure_grid_chunk::grid, grid_offset) > 0;
 }
 
 int map_figure_id_get(int grid_offset) {
-    return map_grid_is_valid_offset(grid_offset) ? map_grid_get(grid_figures, grid_offset) : 0;
+    return map_grid_is_valid_offset(grid_offset) ? map_grid_get(figure_grid_chunk::grid, grid_offset) : 0;
 }
 
 void map_figure_sort_by_y() {
@@ -104,7 +103,7 @@ xspan<figure_draw> map_figures_in_row(tile2i tile) {
 }
 
 void map_figure_set(int grid_offset, int id) {
-    map_grid_set(grid_figures, grid_offset, id);
+    map_grid_set(figure_grid_chunk::grid, grid_offset, id);
 }
 
 figure *map_figure_get(int grid_offset) {
@@ -183,9 +182,5 @@ int map_figure_foreach_until(int grid_offset, int test) {
 }
 
 void map_figure_clear(void) {
-    map_grid_clear(grid_figures);
-}
-
-void figure_grid_chunk::bind_data(io_buffer* iob, size_t version) {
-    iob->bind(BIND_SIGNATURE_GRID, &grid_figures);
+    map_grid_clear(figure_grid_chunk::grid);
 }

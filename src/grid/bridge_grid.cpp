@@ -18,9 +18,7 @@
 
 const e_bridge_part_tokens_t ANK_CONFIG_ENUM(e_bridge_part_tokens);
 
-grid_xx g_bridge_part_grid(FS_UINT16);
 grid_xx g_bridge_part_grid_backup(FS_UINT16);
-grid_xx g_bridge_type_grid(FS_UINT16);
 grid_xx g_bridge_type_grid_backup(FS_UINT16);
 
 struct bridge_part_draw_t {
@@ -127,39 +125,39 @@ bool bridge_style_part_draw(uint16_t type, int part, int &img_offset, vec2i &pos
 }
 
 int map_bridge_part_at(int grid_offset) {
-    return map_grid_get(g_bridge_part_grid, grid_offset);
+    return map_grid_get(bridge_part_grid_chunk::grid, grid_offset);
 }
 
 void map_bridge_part_set(int grid_offset, int value) {
-    map_grid_set(g_bridge_part_grid, grid_offset, value);
+    map_grid_set(bridge_part_grid_chunk::grid, grid_offset, value);
 }
 
 uint16_t map_bridge_type_at(int grid_offset) {
-    return (uint16_t)map_grid_get(g_bridge_type_grid, grid_offset);
+    return (uint16_t)map_grid_get(bridge_type_grid_chunk::grid, grid_offset);
 }
 
 void map_bridge_type_set(int grid_offset, uint16_t value) {
-    map_grid_set(g_bridge_type_grid, grid_offset, value);
+    map_grid_set(bridge_type_grid_chunk::grid, grid_offset, value);
 }
 
 void map_bridge_tile_clear(int grid_offset) {
-    map_grid_set(g_bridge_part_grid, grid_offset, 0);
-    map_grid_set(g_bridge_type_grid, grid_offset, 0);
+    map_grid_set(bridge_part_grid_chunk::grid, grid_offset, 0);
+    map_grid_set(bridge_type_grid_chunk::grid, grid_offset, 0);
 }
 
 void map_bridge_grids_clear() {
-    map_grid_clear(g_bridge_part_grid);
-    map_grid_clear(g_bridge_type_grid);
+    map_grid_clear(bridge_part_grid_chunk::grid);
+    map_grid_clear(bridge_type_grid_chunk::grid);
 }
 
 void map_bridge_grids_backup() {
-    map_grid_copy(g_bridge_part_grid, g_bridge_part_grid_backup);
-    map_grid_copy(g_bridge_type_grid, g_bridge_type_grid_backup);
+    map_grid_copy(bridge_part_grid_chunk::grid, g_bridge_part_grid_backup);
+    map_grid_copy(bridge_type_grid_chunk::grid, g_bridge_type_grid_backup);
 }
 
 void map_bridge_grids_restore() {
-    map_grid_copy(g_bridge_part_grid_backup, g_bridge_part_grid);
-    map_grid_copy(g_bridge_type_grid_backup, g_bridge_type_grid);
+    map_grid_copy(g_bridge_part_grid_backup, bridge_part_grid_chunk::grid);
+    map_grid_copy(g_bridge_type_grid_backup, bridge_type_grid_chunk::grid);
 }
 
 void map_bridge_migrate_from_sprite() {
@@ -183,18 +181,3 @@ void map_bridge_migrate_from_sprite() {
 
 // Both bridge grids default to empty: saves older than v171 keep bridges in the
 // sprite grid, and map_bridge_migrate_from_sprite() rebuilds them during post_load.
-void bridge_part_grid_chunk::bind_data(io_buffer* iob, size_t version) {
-    iob->bind(BIND_SIGNATURE_GRID, &g_bridge_part_grid);
-}
-
-void bridge_part_grid_chunk::load_defaults(size_t version) {
-    map_grid_clear(g_bridge_part_grid);
-}
-
-void bridge_type_grid_chunk::bind_data(io_buffer* iob, size_t version) {
-    iob->bind(BIND_SIGNATURE_GRID, &g_bridge_type_grid);
-}
-
-void bridge_type_grid_chunk::load_defaults(size_t version) {
-    map_grid_clear(g_bridge_type_grid);
-}
