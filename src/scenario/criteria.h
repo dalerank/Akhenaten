@@ -2,6 +2,10 @@
 
 #include "core/buffer.h"
 
+struct scenario_criteria_state_t {
+    int max_game_year;
+};
+
 int scenario_criteria_time_limit_enabled();
 int scenario_criteria_time_limit_years();
 

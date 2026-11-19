@@ -1,12 +1,9 @@
 #include "criteria.h"
-#include "scenario/criteria_chunks.h"
+#include "core/xvalue.h"
 
-#include "io/io_buffer.h"
 #include "js/js_game.h"
 #include "js/js_global_object.h"
 #include "scenario/scenario.h"
-
-static int max_game_year;
 
 void ank_global_obj_bind_field(js_State *J, js_StringNode name, win_criteria_t *ptr) {
     J->newobject();
@@ -112,6 +109,7 @@ int scenario_criteria_milestone_year(int percentage) {
 }
 
 void scenario_criteria_init_max_year() {
+    auto& max_game_year = xvalue<scenario_criteria_state_t>::ref().max_game_year;
     if (g_scenario.win_criteria.time_limit.enabled)
         max_game_year = g_scenario.start_year + g_scenario.win_criteria.time_limit.years;
     else if (g_scenario.win_criteria.survival_time.enabled)
@@ -120,9 +118,5 @@ void scenario_criteria_init_max_year() {
         max_game_year = 1000000 + g_scenario.start_year;
 }
 int scenario_criteria_max_year() {
-    return max_game_year;
-}
-
-void max_year_chunk::bind_data(io_buffer* iob, size_t version) {
-    iob->bind(BIND_SIGNATURE_UINT32, &max_game_year);
+    return xvalue<scenario_criteria_state_t>::ref().max_game_year;
 }
