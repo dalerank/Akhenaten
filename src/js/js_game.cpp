@@ -17,7 +17,7 @@
 #include "platform/version.hpp"
 #include "graphics/elements/lang_text.h"
 #include "graphics/screen.h"
-#include "core/app.h"
+#include "app/app.h"
 #include "game/file_editor.h"
 #include "game/game.h"
 #include "game/game_config.h"

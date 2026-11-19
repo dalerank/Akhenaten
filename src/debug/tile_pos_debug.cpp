@@ -1,4 +1,4 @@
-#include "core/app.h"
+#include "app/app.h"
 #include "dev/debug.h"
 
 #include "grid/image.h"

@@ -173,27 +173,15 @@ void application_t::handle_hud_end(hud_end_context_t* context) {
 }
 
 void application_t::subscribe_events() {
-    events::subscribe_permanent([] (event_app_center_screen ev) {
-        app_post_event(USER_EVENT_CENTER_WINDOW);
-    });
+    events::subscribe_permanent([](event_app_center_screen ev) { app_post_event(USER_EVENT_CENTER_WINDOW); });
 
-    events::subscribe_permanent([] (event_app_toggle_fullscreen ev) {
-        app_fullscreen(!game.is_fullscreen(false));
-    });
+    events::subscribe_permanent([](event_app_toggle_fullscreen ev) { app_fullscreen(!game.is_fullscreen(false)); });
 
-    events::subscribe_permanent([] (event_app_screenshot ev) {
-        graphics_save_screenshot(SCREENSHOT_DISPLAY);
-    });
+    events::subscribe_permanent([](event_app_screenshot ev) { graphics_save_screenshot(SCREENSHOT_DISPLAY); });
 
-    events::subscribe_permanent([] (event_app_city_screenshot ev) {
-        graphics_save_screenshot(SCREENSHOT_FULL_CITY);
-    });
+    events::subscribe_permanent([](event_app_city_screenshot ev) { graphics_save_screenshot(SCREENSHOT_FULL_CITY); });
 
-    events::subscribe_permanent([] (event_request_exit ev) {
-        app_post_event(USER_EVENT_QUIT);
-    });
+    events::subscribe_permanent([](event_request_exit ev) { app_post_event(USER_EVENT_QUIT); });
 
-    events::subscribe_permanent([] (event_display_options_apply_resolution ev) {
-        app_window_resize({ev.w, ev.h});
-    });
+    events::subscribe_permanent([](event_display_options_apply_resolution ev) { app_window_resize({ev.w, ev.h}); });
 }

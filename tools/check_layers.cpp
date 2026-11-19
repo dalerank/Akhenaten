@@ -34,7 +34,7 @@ static const std::vector<layer_def> LAYERS = {
   {"grid", {"grid"}},
   {"sim", {"building", "figure", "figuretype", "city", "scenario", "empire", "game", "io", "resource", "config"}},
   {"presentation", {"graphics", "overlays", "widget", "window", "sound", "input", "content"}},
-  {"app", {"platform", "js", "dev", "debug", "editor", "net"}},
+  {"app", {"app", "platform", "js", "dev", "debug", "editor", "net"}},
 };
 
 // Enum-only "vocabulary" headers: usable from any layer as long as they include nothing above themselves.

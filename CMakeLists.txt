@@ -779,6 +779,7 @@ file(GLOB PLATFORM_FILES ${PROJECT_SOURCE_DIR}/src/platform/*.cpp)
 file(GLOB CONFIG_FILES ${PROJECT_SOURCE_DIR}/src/config/*.cpp)
 file(GLOB CONTENT_FILES ${PROJECT_SOURCE_DIR}/src/content/*.cpp)
 file(GLOB CORE_FILES ${PROJECT_SOURCE_DIR}/src/core/*.cpp)
+file(GLOB APP_FILES ${PROJECT_SOURCE_DIR}/src/app/*.cpp)
 file(GLOB NET_FILES ${PROJECT_SOURCE_DIR}/src/net/*.cpp)
 file(GLOB CORE_ENCODING_FILES ${PROJECT_SOURCE_DIR}/src/core/encoding/*.cpp)
 file(GLOB BUILDING_FILES ${PROJECT_SOURCE_DIR}/src/building/*.cpp)
@@ -908,6 +909,7 @@ file(WRITE
 
 if(MSVC)
     file(GLOB CORE_HEADERS ${PROJECT_SOURCE_DIR}/src/core/*.h)
+    file(GLOB APP_HEADERS ${PROJECT_SOURCE_DIR}/src/app/*.h)
     file(GLOB IO_HEADERS ${PROJECT_SOURCE_DIR}/src/io/*.h)
     file(GLOB PLATFORM_HEADERS ${PROJECT_SOURCE_DIR}/src/platform/*.h)
     file(GLOB BUILDING_HEADERS ${PROJECT_SOURCE_DIR}/src/building/*.h)
@@ -936,6 +938,7 @@ if(MSVC)
     file(GLOB TRANSLATION_HEADERS ${PROJECT_SOURCE_DIR}/src/translation/*.h)
 
     source_group("core" FILES ${CORE_FILES})
+    source_group("app" FILES ${APP_FILES})
     source_group("net" FILES ${NET_FILES})
     source_group("core/encoding" FILES ${CORE_ENCODING_FILES})
     source_group("platform" FILES ${PLATFORM_FILES} )
@@ -991,6 +994,7 @@ set(SOURCE_FILES
     ${CONTENT_FILES}
     ${CONFIG_FILES}
     ${CORE_FILES} ${CORE_HEADERS}
+    ${APP_FILES} ${APP_HEADERS}
     ${NET_FILES}
     ${IO_FILES} ${IO_HEADERS}
     ${IO_GAMEFILES_FILES}

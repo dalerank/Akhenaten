@@ -5,7 +5,7 @@
 #include "input/hotkey.h"
 #include "input/keyboard.h"
 #include "input/keys.h"
-#include "core/app.h"
+#include "app/app.h"
 
 #include <SDL.h>
 
@@ -63,7 +63,7 @@ void keyboard_module_t::handle_key_down(SDL_Event* ev) {
         break;
 #else
     // Hack: since Android handles the right mouse button as a back button
-    // (or even as an "ESC" keypress) and SDL doesn't yet have a proper implementation 
+    // (or even as an "ESC" keypress) and SDL doesn't yet have a proper implementation
     // for this, we'll treat the back button as a right mouse button when the mouse is active
     case SDLK_ESCAPE:
         if (!mouse::get().is_touch) {
@@ -90,7 +90,7 @@ void keyboard_module_t::handle_key_down(SDL_Event* ev) {
         return;
     }
 
-    events::emit(event_hotkey_key{ key, mod, 1, event->repeat });
+    events::emit(event_hotkey_key{key, mod, 1, event->repeat});
 }
 
 void keyboard_module_t::handle_key_up(SDL_Event* ev) {
@@ -113,7 +113,7 @@ void keyboard_module_t::handle_key_up(SDL_Event* ev) {
 
     e_key key = keyboard_t::get_key_from_scancode(event->keysym.scancode);
     int mod = keyboard_t::modifiers_from_sdl(event->keysym.mod);
-    events::emit(event_hotkey_key{ key, mod, 0, 0 });
+    events::emit(event_hotkey_key{key, mod, 0, 0});
 }
 
 void keyboard_module_t::handle_text(SDL_Event* event) {
@@ -131,5 +131,3 @@ void ANK_REGISTER_APPLICATION_MODULE(register_keyboard_module) {
     g_app.register_keyboard_event_handler([&](void* ev) { kb.handle_key_up((SDL_Event*)ev); });
     g_app.register_keyboard_event_handler([&](void* ev) { kb.handle_text((SDL_Event*)ev); });
 }
-
-

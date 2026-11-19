@@ -2,7 +2,7 @@
 
 #include "content/vfs.h"
 #include "content/zipreader.hpp"
-#include "core/app.h"
+#include "app/app.h"
 #include "core/log.h"
 #include "game/game.h"
 #include "game/game_config.h"

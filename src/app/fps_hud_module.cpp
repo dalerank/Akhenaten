@@ -1,4 +1,4 @@
-#include "core/app.h"
+#include "app/app.h"
 
 #include "game/game.h"
 #include "game/game_config.h"
@@ -12,8 +12,9 @@ struct fps_hud_module_t {
 };
 
 void fps_hud_module_t::draw(hud_end_context_t* ctx) {
-    const bool main_windows = (g_window_manager.window_is("window_city") || g_window_manager.window_is("window_city_military")
-                               || g_window_manager.window_is("window_city_warship") || g_window_manager.window_is("window_sliding_sidebar"));
+    const bool main_windows
+      = (g_window_manager.window_is("window_city") || g_window_manager.window_is("window_city_military")
+         || g_window_manager.window_is("window_city_warship") || g_window_manager.window_is("window_sliding_sidebar"));
 
     if (!game_features::gameui_draw_fps || !main_windows) {
         return;

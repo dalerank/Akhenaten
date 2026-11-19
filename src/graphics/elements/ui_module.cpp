@@ -5,7 +5,7 @@
 #include "graphics/elements/button.h"
 #include "graphics/elements/panel.h"
 #include "graphics/graphics.h"
-#include "core/app.h"
+#include "core/app_module.h"
 
 void (*button_border_draw)(vec2i, vec2i, bool) = ui::textured::button_border_draw;
 void (*graphics_draw_background)(painter&, int, float, vec2i, bool) = &ui::textured::graphics_draw_background;

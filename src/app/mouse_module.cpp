@@ -1,4 +1,4 @@
-#include "core/app.h"
+#include "app/app.h"
 #include "input/mouse.h"
 
 #include <SDL.h>

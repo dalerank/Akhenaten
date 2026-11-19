@@ -1,6 +1,6 @@
 #include "platform/cursor.h"
 
-#include "core/app.h"
+#include "app/app.h"
 #include "input/mouse.h"
 #include "platform/arguments.h"
 

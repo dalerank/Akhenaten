@@ -4,7 +4,7 @@
 
 #include "core/log.h"
 #include "core/profiler.h"
-#include "core/app.h"
+#include "app/app.h"
 #include "js/js_game.h"
 #include "platform/arguments.h"
 

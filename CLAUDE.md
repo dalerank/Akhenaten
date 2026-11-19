@@ -280,6 +280,7 @@ src/
 ├── sound/        music, speech, effects, city sounds
 ├── net/          networking / remote services
 ├── events/       typed event bus infrastructure
+├── app/          application shell (SDL event loop, input/HUD modules)
 ├── core/         utilities (CRC32, ZIP, threading, math, logging)
 ├── debug/        tile overlay / ImGui debug registration
 ├── dev/          dev tooling (console commands, event history)

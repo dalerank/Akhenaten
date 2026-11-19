@@ -2,7 +2,7 @@
 
 #include "platform/platform.h"
 #include "platform/innoextract_util.h"
-#include "core/app.h"
+#include "app/app.h"
 #include "core/bstring.h"
 #include "core/log.h"
 #include "content/vfs.h"

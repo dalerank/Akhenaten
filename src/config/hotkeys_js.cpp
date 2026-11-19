@@ -2,7 +2,7 @@
 
 #include "input/keys.h"
 #include "input/hotkey.h"
-#include "core/app.h"
+#include "core/app_events.h"
 #include "game/game_events.h"
 #include "js/js_events.h"
 #include "js/js_game.h"

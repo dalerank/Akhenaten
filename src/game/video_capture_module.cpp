@@ -1,6 +1,6 @@
 #include "video_capture_module.h"
 
-#include "core/app.h"
+#include "core/app_module.h"
 #include "core/archive.h"
 #include "core/log.h"
 #include "core/system_time.h"

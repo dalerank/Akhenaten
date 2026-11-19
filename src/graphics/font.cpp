@@ -14,7 +14,7 @@
 #include "platform/arguments.h"
 #include "platform/platform.h"
 #include "window/autoconfig_window.h"
-#include "core/app.h"
+#include "core/app_module.h"
 #include "graphics/elements/lang_text.h"
 
 #include <algorithm>

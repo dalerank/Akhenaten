@@ -1,4 +1,4 @@
-#include "core/app.h"
+#include "app/app.h"
 #include "core/profiler.h"
 #include "core/xvalue.h"
 #include "game/game_events.h"

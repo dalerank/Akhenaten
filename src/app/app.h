@@ -5,13 +5,8 @@
 #include "core/xfunction.h"
 #include "core/hvector.h"
 
-struct event_app_center_screen { int value; };
-struct event_app_toggle_fullscreen { int value; };
-struct event_app_screenshot { int value; };
-struct event_app_city_screenshot { int value; };
-struct event_request_exit { int value; };
-struct event_app_close_requested { int reserved = 0; };
-struct event_display_options_apply_resolution { int w; int h; };
+#include "core/app_events.h"
+#include "core/app_module.h"
 
 enum e_user_event {
     USER_EVENT_QUIT,
@@ -67,15 +62,3 @@ struct application_t {
 };
 
 extern application_t g_app;
-
-namespace application {
-
-    struct AppTag {};
-    using module_iterator_function_cb = void();
-    using ModuleIterator = FuncLinkedList<module_iterator_function_cb*, AppTag>;
-
-} // end namespace application
-
-#define ANK_REGISTER_APPLICATION_MODULE(func) func(); \
-    namespace application {int ANK_CONFIG_PULL_VAR_NAME(func) = 1;} \
-    static application::ModuleIterator ANK_CONFIG_CC1(module_handler, __LINE__)(func); void func()

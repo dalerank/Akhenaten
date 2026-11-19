@@ -30,6 +30,7 @@
 | `scripts/` | Embedded game JS (`building/`, `city/`, `ui_*.js`, `mission_*.js`) |
 | `platform/` | Platform-specific init code (Android, PS Vita, Nintendo Switch) |
 | `events/` | Typed event bus infrastructure (`g_city_events`) |
+| `app/` | Application shell: SDL event loop, keyboard/mouse/touch/user-event and HUD modules |
 | `core/` | Utilities: CRC32, event bus, ZIP, threading, math, logging |
 
 Vendored third-party sources — do not edit: `bzip/`, `lame/`, `lzma/`.

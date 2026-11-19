@@ -7,7 +7,7 @@
 #include "city/city.h"
 #include "city/object_info.h"
 #include "content/mods.h"
-#include "core/app.h"
+#include "app/app.h"
 #include "core/bstring.h"
 #include "core/crc32.h"
 #include "core/system_time.h"

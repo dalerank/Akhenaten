@@ -3,7 +3,7 @@
 #include "content/content.h"
 #include "content/dir.h"
 #include "content/vfs.h"
-#include "core/app.h"
+#include "app/app.h"
 #include "core/archive.h"
 #include "core/bstring.h"
 #include "core/log.h"

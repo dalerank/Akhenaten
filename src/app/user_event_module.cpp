@@ -1,4 +1,4 @@
-#include "core/app.h"
+#include "app/app.h"
 #include "platform/screen.h"
 
 #include <SDL.h>

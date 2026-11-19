@@ -1,4 +1,4 @@
-#include "core/app.h"
+#include "app/app.h"
 
 #include "core/encoding.h"
 #include "core/stacktrace.h"

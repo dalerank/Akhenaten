@@ -1,5 +1,5 @@
 #include "core/bstring.h"
-#include "core/app.h"
+#include "app/app.h"
 #include "game/game_events.h"
 #include "city/city_maintenance.h"
 #include "city/city_finance.h"

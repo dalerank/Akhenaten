@@ -2,7 +2,7 @@
 
 #ifndef GAME_PLATFORM_ANDROID
 
-#include "core/app.h"
+#include "app/app.h"
 #include "core/xvalue.h"
 #include "dev/perfmon_nanoprofiler.h"
 #include "dev/perfmon_widget.h"

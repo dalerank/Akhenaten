@@ -1,4 +1,4 @@
-#include "core/app.h"
+#include "app/app.h"
 
 #include "core/svector.h"
 #include "game/game_config.h"

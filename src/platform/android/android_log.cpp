@@ -1,7 +1,7 @@
 #include "platform/android/android.h"
 
 #include "content/content.h"
-#include "core/app.h"
+#include "app/app.h"
 #include "core/log.h"
 #include "core/xvalue.h"
 

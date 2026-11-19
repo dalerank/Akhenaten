@@ -1,6 +1,6 @@
 #include "widget/city/clouds.h"
 
-#include "core/app.h"
+#include "core/app_module.h"
 #include "core/calc.h"
 #include "core/profiler.h"
 #include "core/speed.h"
