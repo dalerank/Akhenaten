@@ -1,6 +1,7 @@
 #pragma once
 
 #include <cstdint>
+#include <cstring>
 
 #include "core/xstring.h"
 #include "content/dir.h"
@@ -11,6 +12,19 @@
 #include "core/archive.h"
 
 struct event_mods_info_updated { uint64_t count; };
+
+struct saved_mod {
+    xstring id;
+    xstring version;
+    static bool same(const xstring& a, const xstring& b) {
+        return strcmp(a.empty() ? "" : a.c_str(), b.empty() ? "" : b.c_str()) == 0;
+    }
+    bool operator==(const saved_mod& o) const { return same(id, o.id) && same(version, o.version); }
+};
+
+std::vector<saved_mod> mods_active_list();
+void mods_check_save(const std::vector<saved_mod>& saved);
+void mods_forget_saved();
 
 struct mod_entry {
     xstring name;

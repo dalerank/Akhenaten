@@ -1,5 +1,4 @@
 #include "mods.h"
-#include "content/mods_chunks.h"
 
 #include "content/content.h"
 #include "content/reader.h"
@@ -15,7 +14,6 @@
 #include "game/game.h"
 #include "graphics/elements/lang_text.h"
 #include "io/gamestate/boilerplate.h"
-#include "io/io_buffer.h"
 #include "window/popup_dialog.h"
 
 #include <algorithm>
@@ -157,27 +155,6 @@ const xstring* mod_info::find_sound(pcstr name) const {
 }
 
 namespace {
-    constexpr int MODS_CHUNK_MAX = 32;
-
-    struct saved_mod {
-        xstring id;
-        xstring version;
-        // An empty string read back from a save is not the same xstring as a default-constructed one.
-        static bool same(const xstring& a, const xstring& b) {
-            return strcmp(a.empty() ? "" : a.c_str(), b.empty() ? "" : b.c_str()) == 0;
-        }
-        bool operator==(const saved_mod& o) const { return same(id, o.id) && same(version, o.version); }
-    };
-
-    std::vector<saved_mod> mods_active_list() {
-        std::vector<saved_mod> active;
-        for (const auto& m : g_mods.list) {
-            if (m->enabled && m->mounted && !m->broken) {
-                active.push_back({m->name, m->version});
-            }
-        }
-        return active;
-    }
 
     std::string mods_describe(const std::vector<saved_mod>& list) {
         if (list.empty()) {
@@ -217,44 +194,58 @@ namespace {
         }
         return missing;
     }
-
-    // Nothing changes unless the player accepts: "No" keeps the current mods and the loaded game.
-    void mods_check_save(const std::vector<saved_mod>& saved) {
-        const std::vector<saved_mod> active = mods_active_list();
-        g_save_mods_differ = !(saved == active);
-        g_save_mods_pending = g_save_mods_differ ? saved : std::vector<saved_mod>{};
-        if (!g_save_mods_differ) {
-            if (!saved.empty()) {
-                logs::info("[mods] the save's mods match the enabled ones: %s", mods_describe(saved).c_str());
-            }
-            return;
-        }
-
-        const std::vector<saved_mod> missing = mods_missing(saved);
-        std::string text
-          = "the save was made with mods: " + mods_describe(saved) + "; enabled now: " + mods_describe(active);
-        if (!missing.empty()) {
-            text += "; not installed: " + mods_describe(missing);
-        }
-        logs::warn("[mods] %s", text.c_str());
-        if (g_mods_isolated) {
-            return;
-        }
-
-        const xstring body = (text
-                              + ".\nThe game may play differently than when it was saved."
-                                "\nSwitch to the save's mods and load it again? (No keeps the current mods.)")
-                               .c_str();
-        game.add_frame_end_event([body] {
-            popup_dialog::show(xstring(lang_text_from_key("#popup_dialog_save_mods_differ")), body, e_popup_btns_yesno,
-              [](bool accepted) {
-                  if (accepted) {
-                      mods_apply_saved_mods();
-                  }
-              });
-        });
-    }
 } // namespace
+
+std::vector<saved_mod> mods_active_list() {
+    std::vector<saved_mod> active;
+    for (const auto& m : g_mods.list) {
+        if (m->enabled && m->mounted && !m->broken) {
+            active.push_back({m->name, m->version});
+        }
+    }
+    return active;
+}
+
+void mods_check_save(const std::vector<saved_mod>& saved) {
+    const std::vector<saved_mod> active = mods_active_list();
+    g_save_mods_differ = !(saved == active);
+    g_save_mods_pending = g_save_mods_differ ? saved : std::vector<saved_mod>{};
+    if (!g_save_mods_differ) {
+        if (!saved.empty()) {
+            logs::info("[mods] the save's mods match the enabled ones: %s", mods_describe(saved).c_str());
+        }
+        return;
+    }
+
+    const std::vector<saved_mod> missing = mods_missing(saved);
+    std::string text
+      = "the save was made with mods: " + mods_describe(saved) + "; enabled now: " + mods_describe(active);
+    if (!missing.empty()) {
+        text += "; not installed: " + mods_describe(missing);
+    }
+    logs::warn("[mods] %s", text.c_str());
+    if (g_mods_isolated) {
+        return;
+    }
+
+    const xstring body = (text
+                          + ".\nThe game may play differently than when it was saved."
+                            "\nSwitch to the save's mods and load it again? (No keeps the current mods.)")
+                           .c_str();
+    game.add_frame_end_event([body] {
+        popup_dialog::show(xstring(lang_text_from_key("#popup_dialog_save_mods_differ")), body, e_popup_btns_yesno,
+          [](bool accepted) {
+              if (accepted) {
+                  mods_apply_saved_mods();
+              }
+          });
+    });
+}
+
+void mods_forget_saved() {
+    g_save_mods_differ = false;
+    g_save_mods_pending.clear();
+}
 
 bool mods_apply_saved_mods() {
     if (!g_save_mods_differ) {
@@ -278,33 +269,6 @@ bool mods_apply_saved_mods() {
     game.add_frame_end_event(
       [save] { game.add_frame_end_event([save] { GamestateIO::load_savegame(save.c_str()); }); });
     return true;
-}
-
-void mods_chunk::bind_data(io_buffer* iob, size_t version) {
-    (void)version;
-    std::vector<saved_mod> list;
-    if (!iob->is_read_access()) {
-        list = mods_active_list();
-    }
-    uint16_t count = (uint16_t)std::min<size_t>(list.size(), MODS_CHUNK_MAX);
-    uint16_t reserved = 0;
-    iob->bind(BIND_SIGNATURE_UINT16, &count);
-    iob->bind(BIND_SIGNATURE_UINT16, &reserved);
-    list.resize(MODS_CHUNK_MAX);
-    for (auto& m : list) {
-        iob->bind_xstr<48>(m.id);
-        iob->bind_xstr<16>(m.version);
-    }
-    if (iob->is_read_access()) {
-        list.resize(std::min<int>(count, MODS_CHUNK_MAX));
-        mods_check_save(list);
-    }
-}
-
-void mods_chunk::load_defaults(size_t version) {
-    // Saves before version 198 have no record of their mods: nothing to compare.
-    g_save_mods_differ = false;
-    g_save_mods_pending.clear();
 }
 
 void mods_queue_enabled_scripts() {
