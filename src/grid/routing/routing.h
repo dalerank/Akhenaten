@@ -3,6 +3,15 @@
 #include "core/tokenum.h"
 #include "routing_fwd.h"
 
+#include <cstdint>
+
+struct routing_stats_t {
+    uint32_t enemy_routes_calculated;
+    uint32_t noncitizen_routes_calculated;
+    uint32_t amphibia_routes_calculated;
+    uint32_t total_routes_calculated;
+};
+
 class building;
 
 enum e_routed_mode {
