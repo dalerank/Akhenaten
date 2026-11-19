@@ -161,8 +161,9 @@ void message_manager_t::init() {
     }
 
     init_problem_areas();
+}
 
-    // city_t::init() drops every g_city_events listener; re-subscribe on each init (subscribe() dedups).
+void message_manager_t::subscribe_events() {
     events::subscribe([this] (event_message ev) {
         auto& msg = post_common(ev.use_popup, ev.message_id, ev.param1, ev.param2, GOD_UNKNOWN, 0);
         msg.src_location = ev.src_location;
@@ -176,6 +177,11 @@ void message_manager_t::init() {
         post_common(ev.use_popup, ev.message_id, 0, 0, GOD_UNKNOWN, messages::IMAGE_FROM_SCHEME);
     });
 }
+
+static void message_manager_subscribe_events() {
+    g_message_manager.subscribe_events();
+}
+static events::session_subscriber g_message_manager_session(&message_manager_subscribe_events);
 
 void message_manager_t::init_problem_areas() {
     problem_count = 0;

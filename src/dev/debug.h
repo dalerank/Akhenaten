@@ -125,7 +125,7 @@ struct game_debug_t {
     using screen_draw_cb = xfunction<void(painter &)>;
     using tile_draw_cb = xfunction<void(vec2i, tile2i, painter &)>;
 
-    void init();
+    void subscribe_events();
     void add_render_handler(const xstring &name, screen_draw_cb func);
     void draw_render_handlers(painter &ctx);
     void add_tile_render_handler(const xstring &name, tile_draw_cb func);

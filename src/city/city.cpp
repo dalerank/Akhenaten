@@ -64,6 +64,15 @@
 city_t g_city;
 events::typed_queue g_city_events;
 
+static void city_subscribe_events() {
+    g_city.maintenance.subscribe_events();
+    g_city.resource.subscribe_events();
+    g_city.food_supply.subscribe_events();
+    g_city.finance.subscribe_events();
+    g_city.hotkeys_handler.subscribe_events();
+}
+static events::session_subscriber g_city_session(&city_subscribe_events);
+
 ANK_DECLARE_CONFIG_ITERATOR(config_reload_city);
 void config_reload_city() {
     g_city.reload_system(g_city.animals);
@@ -71,7 +80,6 @@ void config_reload_city() {
 
 void city_t::init() {
     buildings.shutdown();
-    g_city_events.removeListeners();
 
     memset(this, 0, sizeof(struct city_t));
 
@@ -94,18 +102,11 @@ void city_t::init() {
     local_cults.reset();
     buildings.init();
     figure_clear_all();
-    maintenance.init();
-    resource.init();
-    food_supply.init();
     g_warning_manager.clear_all();
     sentiment.init();
     finance.init();
-    hotkeys_handler.init();
-    g_debug.init();
-    g_city_planner.init();
     empire_screen = AVAILABLE;
     bookmarks.reset();
-    common_info_window::register_handlers();
     kingdome.init();
     reload_system(animals);
 }
@@ -113,7 +114,6 @@ void city_t::init() {
 void city_t::reload_objects() {
     buildings.reload_objects();
     figures.reload_objects();
-    g_city_planner.init();
 }
 
 void city_t::update_day(simulation_time_t simtime) {

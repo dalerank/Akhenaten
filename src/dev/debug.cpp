@@ -46,6 +46,11 @@ int g_debug_figure_id = 0;
 
 game_debug_t g_debug;
 
+static void debug_subscribe_events() {
+    g_debug.subscribe_events();
+}
+static events::session_subscriber g_debug_session(&debug_subscribe_events);
+
 const token_holder<e_debug_render, e_debug_render_none, e_debug_render_size> ANK_CONFIG_ENUM(e_debug_render_tokens);
 
 declare_console_var_int(debugrender, 0);
@@ -430,7 +435,7 @@ void game_debug_t::for_each_render_mode_name(const xfunction<void(const xstring 
     }
 }
 
-void game_debug_t::init() {
+void game_debug_t::subscribe_events() {
     events::subscribe([] (event_debug_render_change ev) {
         int mode = debugrender.value + ev.value;
         if (mode < e_debug_render_none) {

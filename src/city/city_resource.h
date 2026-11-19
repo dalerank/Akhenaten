@@ -88,7 +88,7 @@ struct city_resources_t {
     int food_types_available_num() const;
     int food_types_eaten_max();
 
-    void init();
+    void subscribe_events();
     void advance_month();
 };
 

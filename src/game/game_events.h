@@ -83,6 +83,12 @@ namespace events {
         g_city_events.process();
         g_permanent_events.process();
     }
+
+    struct session_subscriber {
+        explicit session_subscriber(void (*subscribe)());
+    };
+
+    void start_session();
 } // namespace events
 
 #define ANK_PERMANENT_CALLBACK_IMPL(event, a, unique_id)                                                                               \

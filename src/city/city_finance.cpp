@@ -58,7 +58,9 @@ finance_tax_rules_t ANK_VARIABLE(finance_tax_rules);
 void city_finance_t::init() {
     wages_kingdome = 30;
     wages = 30;
+}
 
+void city_finance_t::subscribe_events() {
     events::subscribe([this] (event_finance_donation ev) {
         treasury += ev.amount;
         this_year.income.donated += ev.amount;

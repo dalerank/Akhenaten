@@ -28,6 +28,11 @@ struct sidebar_window_draw { vec2i pos; int opened_menu; };
 ANK_REGISTER_STRUCT_WRITER(sidebar_window_draw, pos, opened_menu);
 
 ui::sidebar_window_expanded_t ANK_VARIABLE(sidebar_window_expanded);
+
+static void sidebar_subscribe_events() {
+    sidebar_window_expanded.subscribe_events();
+}
+static events::session_subscriber g_sidebar_session(&sidebar_subscribe_events);
 ui::sidebar_window_collapsed_t ANK_VARIABLE(sidebar_window_collapsed);
 
 ui::sidebar_window g_sidebar;
@@ -45,7 +50,6 @@ void ui::sidebar_window_expanded_t::init() {
     extra_block_size = img ? img->size() : vec2i{0, 0};
 
     widget_minimap_init();
-    subscribe_events();
 }
 
 void ui::sidebar_window_expanded_t::subscribe_events() {

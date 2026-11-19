@@ -157,7 +157,7 @@ public:
 
     int can_be_placed();
 
-    void init();
+    void subscribe_events();
     void reset();
 
 private:

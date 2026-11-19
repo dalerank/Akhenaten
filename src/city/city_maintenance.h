@@ -23,7 +23,7 @@ struct city_maintenance_t {
     void collapse_building(building *b);
     void flood_building(building *b);
     void destroy_by_enemy(building *b);
-    void init();
+    void subscribe_events();
     void check_kingdome_access();
     void update_fire_direction();
 

@@ -118,7 +118,7 @@ void city_maintenance_t::flood_building(building *b) {
     b->destroy_by_flooded();
 }
 
-void city_maintenance_t::init() {
+void city_maintenance_t::subscribe_events() {
     events::subscribe([this] (event_advance_month) {
         update_fire_direction();
     });

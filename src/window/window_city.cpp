@@ -395,11 +395,14 @@ void window_city_draw() {
 
 void window_city::init_city() {
     widget_sidebar_city_init();
+}
 
+static void window_city_subscribe_events() {
     events::subscribe([] (event_toggle_legion ev) {
         cycle_legion();
     });
 }
+static events::session_subscriber g_window_city_session(&window_city_subscribe_events);
 
 window_city &window_city::instance() {
     return g_window_city;

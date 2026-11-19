@@ -85,7 +85,7 @@ static int food_supply_imports() {
     return imports;
 }
 
-void city_food_supply_t::init() {
+void city_food_supply_t::subscribe_events() {
     events::subscribe([this](event_produced_resources ev) {
         if (ev.resource == RESOURCE_GAMEMEAT) {
             game_meat_this_month += city_food_supply_rules.food_per_cart;

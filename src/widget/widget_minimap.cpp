@@ -25,6 +25,11 @@
 static const color ENEMY_COLOR_BY_CLIMATE[] = {COLOR_MINIMAP_ENEMY_CENTRAL, COLOR_MINIMAP_ENEMY_NORTHERN, COLOR_MINIMAP_ENEMY_DESERT};
 minimap_window g_minimap_window;
 
+static void minimap_subscribe_events() {
+    g_minimap_window.subscribe_events();
+}
+static events::session_subscriber g_minimap_session(&minimap_subscribe_events);
+
 template<typename F>
 void city_view_foreach_minimap_tile(int x_offset, int y_offset, int absolute_x, int absolute_y, int width_tiles, int height_tiles, F callback) {
     int odd = 0;
@@ -82,7 +87,9 @@ void minimap_window::init() {
 
 void minimap_window::on_mission_start() {
     set_bounds(draw_size);
+}
 
+void minimap_window::subscribe_events() {
     events::subscribe([] (event_rotate_map ev) {
         widget_minimap_invalidate();
     });

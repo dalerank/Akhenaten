@@ -6,7 +6,7 @@
 #include "widget/city/flat_draw.h"
 #include "window/window_city.h"
 
-void city_hotkeys_handler_t::init() {
+void city_hotkeys_handler_t::subscribe_events() {
     events::subscribe([] (event_hotkey_overlay ev) {
         e_overlay overlay = OVERLAY_NONE;
         switch(ev.value) {

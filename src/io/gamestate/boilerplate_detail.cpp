@@ -79,6 +79,7 @@ void GamestateLoadDetail::pre_load() { // do we NEED this...?
     g_city.migration.reset();
     g_city_planner.reset();
     g_city.init();
+    events::start_session();
     game.init_state();
     game.animation_timers_init();
     sound_city_init();

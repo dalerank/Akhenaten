@@ -145,6 +145,7 @@ struct city_finance_t {
     int32_t gold_stolen_this_month;
 
     void init();
+    void subscribe_events();
     bool is_out_of_money() const;
     void update_estimate_taxes();
     void estimate_wages();

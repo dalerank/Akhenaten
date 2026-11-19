@@ -299,6 +299,7 @@ void common_info_window::register_handlers() {
         window_info_update(true);
     });
 }
+static events::session_subscriber g_info_window_session(&common_info_window::register_handlers);
 
 object_info &common_info_window::get_object_info() {
     return def_object_info;

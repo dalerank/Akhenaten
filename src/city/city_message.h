@@ -206,6 +206,7 @@ struct message_manager_t {
     short scroll_position;
 
     void init();
+    void subscribe_events();
     void init_problem_areas();
     int new_message_id();
 

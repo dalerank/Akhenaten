@@ -54,7 +54,7 @@ struct city_food_supply_t {
     int32_t fish_last_month;
     int32_t fish_this_month;
 
-    void init();
+    void subscribe_events();
     void advance_month();
     food_supply_sources gather() const;
     int percentage() const;

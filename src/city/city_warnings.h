@@ -26,6 +26,7 @@ struct window_warnings : autoconfig_window_t<window_warnings> {
     int message_interval = 25;
 
     void on_mission_start() override;
+    void subscribe_events();
     void show(pcstr type);
     void show_custom(pcstr text);
     // City-message banner (OG Popup Messages). Ignores gameopt_warnings.

@@ -24,6 +24,11 @@
 
 window_warnings g_warning_manager;
 
+static void warnings_subscribe_events() {
+    g_warning_manager.subscribe_events();
+}
+static events::session_subscriber g_warnings_session(&warnings_subscribe_events);
+
 void window_warnings::archive_load(archive arch) {
     autoconfig_window::archive_load(arch);
 
@@ -76,7 +81,9 @@ void window_warnings::show_console(pcstr warning_text) {
 
 void window_warnings::on_mission_start() {
     has_warning = false;
+}
 
+void window_warnings::subscribe_events() {
     events::subscribe([this] (event_construction_warning ev) {
         show(ev.id.c_str());
     });

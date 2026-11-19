@@ -218,7 +218,7 @@ void city_resource_remove_from_granary(int food, int amount) {
     g_city.resource.granary_food_stored[food] -= amount;
 }
 
-void city_resources_t::init() {
+void city_resources_t::subscribe_events() {
     events::subscribe([this] (event_stats_remove_resource ev) {
         space_in_storages[ev.resource] += ev.amount;
         stored_in_storages[ev.resource] -= ev.amount;

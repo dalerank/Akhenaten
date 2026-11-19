@@ -81,6 +81,11 @@ enum e_place_reservoir {
 
 build_planner g_city_planner;
 
+static void city_planner_subscribe_events() {
+    g_city_planner.subscribe_events();
+}
+static events::session_subscriber g_city_planner_session(&city_planner_subscribe_events);
+
 static int last_items_cleared;
 
 static const vec2i FORT_OFFSET[4][4] = {{{3, -1}, {4, -1}, {4, 0}, {3, 0}},
@@ -279,7 +284,7 @@ int build_planner::can_be_placed() {
     return can_place;
 }
 
-void build_planner::init() {
+void build_planner::subscribe_events() {
     events::subscribe([this] (event_city_building_mode ev) {
         e_building_type btype = (e_building_type)ev.value;
         if (ev.value == BUILDING_NONE) {
