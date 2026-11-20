@@ -1418,6 +1418,12 @@ void build_planner::draw_flat_tile_immediate(painter& ctx, vec2i pixel, color co
 
 void build_planner::draw(painter &ctx) {
     OZZY_PROFILER_FUNCTION();
+    draw_ctx = &ctx;
+    draw_impl(ctx);
+    draw_ctx = nullptr;
+}
+
+void build_planner::draw_impl(painter &ctx) {
     if (needBridge()) {
         vec2i pixel = pixel_coords_cache[0][0];
         draw_bridge(end, pixel, build_type, ctx);
