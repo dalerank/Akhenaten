@@ -1,4 +1,5 @@
 #include "renderer.h"
+#include "core/main_thread.h"
 
 #include "core/log.h"
 #include "core/profiler.h"
@@ -140,6 +141,7 @@ bool graphics_renderer_interface::save_screen_buffer(painter &ctx, color* pixels
 }
 
 void graphics_renderer_interface::draw_line(vec2i start, vec2i end, color color) {
+    main_thread::check("graphics_renderer_interface::draw_line");
     auto &data = g_renderer_data;
     render_stats::note_break();
     SDL_SetRenderDrawColor(data.renderer,
@@ -151,6 +153,7 @@ void graphics_renderer_interface::draw_line(vec2i start, vec2i end, color color)
 }
 
 void graphics_renderer_interface::draw_pixel(vec2i pixel, color color) {
+    main_thread::check("graphics_renderer_interface::draw_pixel");
     auto &data = g_renderer_data;
     render_stats::note_break();
     SDL_SetRenderDrawColor(data.renderer,
@@ -161,6 +164,7 @@ void graphics_renderer_interface::draw_pixel(vec2i pixel, color color) {
     SDL_RenderDrawPoint(data.renderer, pixel.x, pixel.y);
 }
 void graphics_renderer_interface::draw_rect(vec2i start, vec2i size, color color) {
+    main_thread::check("graphics_renderer_interface::draw_rect");
     auto &data = g_renderer_data;
     render_stats::note_break();
     SDL_SetRenderDrawColor(data.renderer,
@@ -173,6 +177,7 @@ void graphics_renderer_interface::draw_rect(vec2i start, vec2i size, color color
 }
 
 void graphics_renderer_interface::fill_rect(vec2i start, vec2i size, color color) {
+    main_thread::check("graphics_renderer_interface::fill_rect");
     auto &data = g_renderer_data;
     render_stats::note_break();
     SDL_SetRenderDrawColor(data.renderer,
@@ -185,12 +190,14 @@ void graphics_renderer_interface::fill_rect(vec2i start, vec2i size, color color
 }
 
 void graphics_renderer_interface::clear_screen(void) {
+    main_thread::check("graphics_renderer_interface::clear_screen");
     auto &data = g_renderer_data;
     SDL_SetRenderDrawColor(data.renderer, 0, 0, 0, 0xff);
     SDL_RenderClear(data.renderer);
 }
 
 void graphics_renderer_interface::set_viewport(int x, int y, int width, int height) {
+    main_thread::check("graphics_renderer_interface::set_viewport");
     auto &data = g_renderer_data;
     render_stats::note_break();
     SDL_Rect viewport = {x, y, width, height};
@@ -198,6 +205,7 @@ void graphics_renderer_interface::set_viewport(int x, int y, int width, int heig
 }
 
 void graphics_renderer_interface::reset_viewport(void) {
+    main_thread::check("graphics_renderer_interface::reset_viewport");
     auto &data = g_renderer_data;
     render_stats::note_break();
     SDL_RenderSetViewport(data.renderer, NULL);
@@ -205,6 +213,7 @@ void graphics_renderer_interface::reset_viewport(void) {
 }
 
 void graphics_renderer_interface::set_clip_rectangle(vec2i pos, int width, int height) {
+    main_thread::check("graphics_renderer_interface::set_clip_rectangle");
     auto &data = g_renderer_data;
     render_stats::note_break();
     SDL_Rect clip = {pos.x, pos.y, width, height};
@@ -232,6 +241,7 @@ rect graphics_renderer_interface::clip_rectangle() {
 }
 
 void graphics_renderer_interface::reset_clip_rectangle(void) {
+    main_thread::check("graphics_renderer_interface::reset_clip_rectangle");
     auto &data = g_renderer_data;
     render_stats::note_break();
     SDL_RenderSetClipRect(data.renderer, NULL);
@@ -726,6 +736,7 @@ static void set_texture_color_and_scale_mode(SDL_Texture *texture, color color, 
 }
 
 void graphics_renderer_interface::draw_texture_advanced(const image_t *img, float x, float y, color color, float scale_x, float scale_y, double angle, int disable_coord_scaling) {
+    main_thread::check("graphics_renderer_interface::draw_texture_advanced");
     auto &data = g_renderer_data;
     render_stats::note_break();
     if (!img->atlas.p_atlas) {
@@ -782,6 +793,7 @@ static void draw_texture(const image_t *img, int x, int y, color color, float sc
 }
 
 void graphics_renderer_interface::draw_custom_texture(int type, int x, int y, float scale) {
+    main_thread::check("graphics_renderer_interface::draw_custom_texture");
     auto &data = g_renderer_data;
     if (type == CUSTOM_IMAGE_RED_FOOTPRINT || type == CUSTOM_IMAGE_GREEN_FOOTPRINT) {
         if (!data.custom_textures[type].texture) {

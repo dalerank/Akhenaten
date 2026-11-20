@@ -59,7 +59,6 @@ struct imagepak_holder_t {
 
     // Packs load only on the main thread (SDL textures, unsynchronized pak_list); render workers
     // that hit an unloaded pack leave the id here and draw without it until the main thread loads it.
-    std::thread::id main_thread;
     std::mutex worker_requests_mutex;
     hvector<int, 32> worker_requests;
 };

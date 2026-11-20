@@ -1,4 +1,5 @@
 #include "app/app.h"
+#include "core/main_thread.h"
 
 #include "core/encoding.h"
 #include "core/stacktrace.h"
@@ -691,6 +692,7 @@ static int handle_unpack_scripts() {
 }
 
 int main(int argc, char** argv) {
+    main_thread::set();
     g_args.parse(argc, argv);
     archive_check::report_keys = g_args.is("log_config_keys", false) || !g_args.get_str("config_keys_baseline").empty();
 

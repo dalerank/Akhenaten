@@ -1,4 +1,5 @@
 #include "js/test/js_test_common.h"
+#include "core/main_thread.h"
 
 #include "building/building.h"
 #include "building/building_delivery_path.h"
@@ -276,6 +277,7 @@ ANK_FUNCTION_1(__test_start_city_session);
 void test_drop_memory_saves();
 
 void test_reset_session_between_tests() {
+    main_thread::reset_reports();
     test_drop_memory_saves();
     if (editor_is_active()) {
         editor_set_active(0);

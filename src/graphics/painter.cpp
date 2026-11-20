@@ -1,4 +1,5 @@
 #include "graphics/painter.h"
+#include "core/main_thread.h"
 
 #include "game/game.h"
 #include "core/profiler.h"
@@ -251,6 +252,7 @@ const image_t* painter::img_isometric(int image_id, vec2i p, color color_mask, f
 
 void painter::draw_impl(SDL_Texture *texture, vec2i pos, vec2i offset, vec2i size, color color, float scale_x,
                         float scale_y, double angle, ImgFlags flags, const bool force_linear) {
+    main_thread::check("painter::draw_impl");
     OZZY_PROFILER_FUNCTION();
     if (texture == nullptr) {
         return;

@@ -1,4 +1,5 @@
 #include "image.h"
+#include "core/main_thread.h"
 #include "font.h"
 #include "image_groups.h"
 #include "content/imagepak.h"
@@ -156,7 +157,7 @@ bool image_ensure_pak_loaded(int pak_id) {
         return false;
     }
 
-    if (std::this_thread::get_id() != g_image_data->main_thread) {
+    if (!main_thread::is()) {
         std::scoped_lock lock(g_image_data->worker_requests_mutex);
         auto& requests = g_image_data->worker_requests;
         if (std::find(requests.begin(), requests.end(), pak_id) == requests.end()) {
