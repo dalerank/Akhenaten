@@ -281,7 +281,6 @@ void painter::draw_impl(SDL_Texture *texture, vec2i pos, vec2i offset, vec2i siz
         draw_tex = texture;
         texture_coords = SDL_Rect{offset.x, offset.y, size.x, size.y};
     }
-    g_render.set_texture_scale_mode(draw_tex, overall_scale_factor, force_linear);
 
     int mod_r = (color & COLOR_CHANNEL_RED) >> COLOR_BITSHIFT_RED;
     int mod_g = (color & COLOR_CHANNEL_GREEN) >> COLOR_BITSHIFT_GREEN;
@@ -407,7 +406,8 @@ void painter::draw_impl(SDL_Texture *texture, vec2i pos, vec2i offset, vec2i siz
     render_stats::note_draw(draw_tex, blend, resident);
     g_render.draw_sprite(sprite_draw_t{draw_tex, texture_coords.x, texture_coords.y, texture_coords.w, texture_coords.h,
       screen_coords.x, screen_coords.y, screen_coords.w, screen_coords.h, (uint8_t)mod_r, (uint8_t)mod_g,
-      (uint8_t)mod_b, (uint8_t)mod_a, blend, angle, !!(flags & ImgFlag_Mirrored)});
+      (uint8_t)mod_b, (uint8_t)mod_a, blend, angle, !!(flags & ImgFlag_Mirrored),
+      force_linear || overall_scale_factor < 1.0f});
 }
 
 SDL_Texture* painter::convertToGrayscale(SDL_Texture *tx, vec2i offset, vec2i size) {

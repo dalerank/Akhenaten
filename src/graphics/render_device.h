@@ -33,6 +33,7 @@ struct sprite_draw_t {
     int blend;
     double angle;
     bool mirrored;
+    bool linear;
 };
 
 struct graphics_renderer_interface {

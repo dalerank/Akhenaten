@@ -189,9 +189,23 @@ void graphics_renderer_interface::fill_rect(vec2i start, vec2i size, color color
     SDL_RenderFillRect(data.renderer, &rect);
 }
 
+static void apply_texture_scale_mode(SDL_Texture* texture, bool linear) {
+#ifdef USE_TEXTURE_SCALE_MODE
+    if (HAS_TEXTURE_SCALE_MODE) {
+        SDL_ScaleMode current_scale_mode;
+        SDL_GetTextureScaleMode(texture, &current_scale_mode);
+        const SDL_ScaleMode desired_scale_mode = linear ? SDL_ScaleModeLinear : SDL_ScaleModeNearest;
+        if (current_scale_mode != desired_scale_mode) {
+            SDL_SetTextureScaleMode(texture, desired_scale_mode);
+        }
+    }
+#endif
+}
+
 void graphics_renderer_interface::draw_sprite(const sprite_draw_t& sprite) {
     main_thread::check("graphics_renderer_interface::draw_sprite");
     auto& data = g_renderer_data;
+    apply_texture_scale_mode(sprite.texture, sprite.linear);
     SDL_SetTextureColorMod(sprite.texture, sprite.r, sprite.g, sprite.b);
     SDL_SetTextureAlphaMod(sprite.texture, sprite.a);
     SDL_SetTextureBlendMode(sprite.texture, (SDL_BlendMode)sprite.blend);
@@ -393,17 +407,7 @@ void set_render_scale(painter &ctx, float scale) {
 }
 
 void graphics_renderer_interface::set_texture_scale_mode(SDL_Texture* texture, float scale_factor, bool force_linear) {
-#ifdef USE_TEXTURE_SCALE_MODE
-    if (HAS_TEXTURE_SCALE_MODE) {
-        SDL_ScaleMode current_scale_mode;
-        SDL_GetTextureScaleMode(texture, &current_scale_mode);
-        SDL_ScaleMode desired_scale_mode = (force_linear || scale_factor < 1.0f ? SDL_ScaleModeLinear : SDL_ScaleModeNearest);
-        //        SDL_ScaleMode desired_scale_mode = (scale_factor < 1.0f ? SDL_ScaleModeBest : SDL_ScaleModeNearest);
-        if (current_scale_mode != desired_scale_mode) {
-            SDL_SetTextureScaleMode(texture, desired_scale_mode);
-        }
-    }
-#endif
+    apply_texture_scale_mode(texture, force_linear || scale_factor < 1.0f);
 }
 
 unsigned int graphics_renderer_interface::premult_alpha() {
