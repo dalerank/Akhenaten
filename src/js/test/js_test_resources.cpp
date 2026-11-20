@@ -5,6 +5,7 @@
 #include "content/vfs.h"
 #include "graphics/image.h"
 #include "graphics/imagepak_holder.h"
+#include "graphics/render_stats.h"
 #include "grid/gardens.h"
 #include "grid/grid.h"
 #include "grid/image.h"
@@ -286,6 +287,16 @@ static void __test_render_device_reset() {
     SDL_PushEvent(&ev);
 }
 ANK_FUNCTION(__test_render_device_reset);
+
+static int __test_render_draws() {
+    return (int)render_stats::last_frame().draws;
+}
+ANK_FUNCTION(__test_render_draws);
+
+static int __test_render_resident_draws() {
+    return (int)render_stats::last_frame().resident;
+}
+ANK_FUNCTION(__test_render_resident_draws);
 
 // Renderer try order for a request and a comma-separated driver list, joined by ','; "-" stands for SDL's own pick.
 static xstring __test_render_backend_order(pcstr requested, pcstr available) {
