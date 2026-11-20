@@ -520,7 +520,6 @@ static int __test_map_image_at(int x, int y) {
 }
 ANK_FUNCTION_2(__test_map_image_at);
 
-// Whether the last drawn city frame marked the tile for a top (the part of its image above the tile).
 static bool __test_map_render_tall(int x, int y) {
     return map_render_isu(tile2i(x, y).grid_offset(), RENDER_TALL_TILE);
 }

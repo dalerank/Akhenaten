@@ -2,6 +2,7 @@
 
 #include "content/content.h"
 #include "content/dir.h"
+#include "content/imagepak.h"
 #include "content/vfs.h"
 #include "app/app.h"
 #include "core/archive.h"
@@ -331,6 +332,28 @@ void run_archive_property_unit_tests() {
     }
 }
 
+// The foot keeps rows from isometric_foot_first_row down; a footprint-high top keeps exactly the rest.
+void run_isometric_split_unit_tests() {
+    const int sizes[][2] = { {58, 30}, {58, 40}, {118, 60}, {118, 75}, {178, 90}, {178, 120} };
+    bool partition = true;
+    for (const auto &s : sizes) {
+        const int w = s[0], h = s[1];
+        std::vector<color> foot(w * h, 0xffffffffu);
+        std::vector<color> top(w * h, 0xffffffffu);
+        isometric_clear_above_foot(foot.data(), w, w, h);
+        isometric_clear_foot(top.data(), w, w, h);
+        for (int i = 0; i < w * h; ++i) {
+            partition &= ((foot[i] != 0) != (top[i] != 0));
+        }
+    }
+    expect_true(partition, "isometric foot and footprint-high top split every pixel exactly once");
+
+    // A one-tile image keeps its whole diamond in the foot: the bottom vertex row and the left/right corners.
+    expect_true(isometric_foot_first_row(58, 30, 0) <= 15 && isometric_foot_first_row(58, 30, 57) <= 15
+                  && isometric_foot_first_row(58, 30, 29) <= 1,
+      "isometric foot keeps the footprint diamond");
+}
+
 void run_bvariant_unit_tests() {
     {
         const bvariant v;
@@ -630,6 +653,7 @@ void run_integral_tests_impl() {
     run_multi_es_handler_unit_tests();
     run_archive_property_unit_tests();
     run_bvariant_unit_tests();
+    run_isometric_split_unit_tests();
     run_xvalue_unit_tests();
 }
 

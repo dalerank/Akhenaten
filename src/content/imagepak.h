@@ -77,3 +77,8 @@ public:
 
     void cleanup_and_destroy();
 };
+
+// An isometric image is split into a foot (kept from isometric_foot_first_row of each column down) and a top.
+int isometric_foot_first_row(int width, int height, int x);
+void isometric_clear_above_foot(color *pixels, int stride, int width, int height);
+void isometric_clear_foot(color *pixels, int stride, int width, int height);
