@@ -4,7 +4,7 @@ building_booth {
     animations {
         booth { pack:PACK_GENERAL, id:114 },
         square { pack:PACK_GENERAL, id:112 },
-        juggler { pos [35, 17], pack:PACK_SPR_AMBIENT, id:7, offset:-1 },
+        juggler { pos [35, 17], pack:PACK_SPR_AMBIENT, id:7, offset:-1, max_frames:26, duration:2 },
     }
 
     preview_booth_offsets : [

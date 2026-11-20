@@ -698,6 +698,17 @@ static int __test_building_sprite_frame(int bid) {
 }
 ANK_FUNCTION_1(__test_building_sprite_frame);
 
+// Frame (1..N) of the building's sprite animation for sprite_id, 0 when that sprite does not tick.
+static int __test_building_sprite_frame_of(int bid, int sprite_id) {
+    building* b = building_get(bid);
+    if (!b || !b->is_valid()) {
+        return -1;
+    }
+    const animation_context* a = b->sprite_anim(sprite_id);
+    return a ? a->offset + a->current_frame() : 0;
+}
+ANK_FUNCTION_2(__test_building_sprite_frame_of);
+
 // Compares two chunk lists written through the same schema; logs every differing chunk and
 // returns their names joined by ',' (empty when identical).
 static std::string chunk_snapshots_diff(const chunk_snapshots& expected, const chunk_snapshots& actual, pcstr tag) {
