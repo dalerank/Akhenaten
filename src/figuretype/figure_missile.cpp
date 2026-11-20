@@ -533,7 +533,9 @@ void hunter_spear_figure_action(figure_missile *missile) {
 
 void hunter_spear_main_image_update(figure_missile *missile) {
     const auto &r = hunter_spear_rules;
-    int dir = missile->direction() - r.orientation_mult * g_camera.orientation;
+    // direction() is a 16-step missile direction (0 = map -y); the sheet has 32 frames, frame k pointing
+    // (k+1) * 11.25 deg clockwise from the map's -x,-y corner, so -y is frame 3.
+    int dir = 2 * missile->direction() + 3 - r.orientation_mult * g_camera.orientation;
     if (dir < 0) {
         dir += r.image_directions;
     }

@@ -230,6 +230,19 @@ static int __test_hunter_force_shot(int hunter_fid) {
 }
 ANK_FUNCTION_1(__test_hunter_force_shot);
 
+// Frame index (from the walk animation's first image) a fresh missile of `type` shows flying src -> dst.
+static int __test_missile_image_frame(int type, int src_x, int src_y, int dst_x, int dst_y) {
+    auto missile = figure_missile::create(0, tile2i(src_x, src_y), tile2i(dst_x, dst_y), (e_figure_type)type);
+    if (!missile) {
+        return -1;
+    }
+    missile->main_image_update();
+    const int frame = (uint16_t)(missile->base.main_image_id - missile->anim(animkeys().walk).first_img());
+    missile->poof();
+    return frame;
+}
+ANK_FUNCTION_5(__test_missile_image_frame);
+
 static int __test_get_scenario_climate() {
     return (int)g_scenario.climate;
 }
