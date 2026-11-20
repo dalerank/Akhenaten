@@ -270,17 +270,15 @@ void painter::draw_impl(SDL_Texture *texture, vec2i pos, vec2i offset, vec2i siz
         DOWNSCALED_CITY = true;
     }
 
-    const bool want_linear = force_linear || overall_scale_factor < 1.0f;
     SDL_Texture *draw_tex = nullptr;
     SDL_Rect texture_coords;
-    const bool found = res_atlas::enabled()
-                       && res_atlas::resolve(texture, offset, size, want_linear, draw_tex, texture_coords);
+    const bool found = res_atlas::enabled() && res_atlas::resolve(texture, offset, size, draw_tex, texture_coords);
     const bool resident = found && res_atlas::render_enabled();
     if (!resident) {
         draw_tex = texture;
         texture_coords = SDL_Rect{offset.x, offset.y, size.x, size.y};
-        g_render.set_texture_scale_mode(texture, overall_scale_factor, force_linear);
     }
+    g_render.set_texture_scale_mode(draw_tex, overall_scale_factor, force_linear);
 
     int mod_r = (color & COLOR_CHANNEL_RED) >> COLOR_BITSHIFT_RED;
     int mod_g = (color & COLOR_CHANNEL_GREEN) >> COLOR_BITSHIFT_GREEN;

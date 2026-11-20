@@ -105,12 +105,10 @@ bool g_overflow_logged = false;
 
 std::atomic<uint32_t> g_cnt_hit{0};
 std::atomic<uint32_t> g_cnt_miss{0};
-std::atomic<uint32_t> g_cnt_filter{0};
 std::atomic<uint32_t> g_cnt_unregistered{0};
 std::atomic<uint32_t> g_cnt_too_wide{0};
 uint32_t g_last_hit = 0;
 uint32_t g_last_miss = 0;
-uint32_t g_last_filter = 0;
 uint32_t g_last_unregistered = 0;
 uint32_t g_last_too_wide = 0;
 uint32_t g_last_requests = 0;
@@ -589,14 +587,13 @@ void process_requests() {
 void snapshot_counters() {
     g_last_hit = g_cnt_hit.exchange(0, std::memory_order_relaxed);
     g_last_miss = g_cnt_miss.exchange(0, std::memory_order_relaxed);
-    g_last_filter = g_cnt_filter.exchange(0, std::memory_order_relaxed);
     g_last_unregistered = g_cnt_unregistered.exchange(0, std::memory_order_relaxed);
     g_last_too_wide = g_cnt_too_wide.exchange(0, std::memory_order_relaxed);
 }
 
 }
 
-bool resolve(SDL_Texture *src, vec2i offset, vec2i size, bool want_linear, SDL_Texture *&out_tex, SDL_Rect &out_src) {
+bool resolve(SDL_Texture* src, vec2i offset, vec2i size, SDL_Texture*& out_tex, SDL_Rect& out_src) {
     if (!g_enabled || src == nullptr) {
         return false;
     }
@@ -608,10 +605,6 @@ bool resolve(SDL_Texture *src, vec2i offset, vec2i size, bool want_linear, SDL_T
     }
     if (size.x > g_max_sprite_width) {
         g_cnt_too_wide.fetch_add(1, std::memory_order_relaxed);
-        return false;
-    }
-    if (want_linear != g_page_linear) {
-        g_cnt_filter.fetch_add(1, std::memory_order_relaxed);
         return false;
     }
     if (g_sources.find(src) == g_sources.end()) {
@@ -764,6 +757,7 @@ double fill_percent() {
     return total > 0 ? 100.0 * (double)g_used_area / (double)total : 0.0;
 }
 
+
 double frame_time_ms() {
     return g_last_frame_ms;
 }
@@ -793,9 +787,9 @@ void log_stats() {
                g_atlas_w, g_atlas_h, g_distinct, (int)g_packed_sources.size(), (int)g_sources.size(),
                (long long)g_used_area, coverage, peak, peak_pct, pack_eff, g_no_room, (long long)g_no_room_area,
                (long long)(total * 4 / (1024 * 1024)));
-    logs::info("residency_atlas last frame: resident=%u | from source=%u | filter mismatch=%u | unregistered=%u | "
+    logs::info("residency_atlas last frame: resident=%u | from source=%u | unregistered=%u | "
                "too wide=%u | distinct requests=%u",
-               g_last_hit, g_last_miss, g_last_filter, g_last_unregistered, g_last_too_wide, g_last_requests);
+      g_last_hit, g_last_miss, g_last_unregistered, g_last_too_wide, g_last_requests);
 }
 
 void dump(const char *filename) {

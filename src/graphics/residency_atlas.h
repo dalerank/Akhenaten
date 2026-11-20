@@ -20,7 +20,7 @@ inline bool render_enabled() {
     return detail::g_redirect;
 }
 
-bool resolve(SDL_Texture *src, vec2i offset, vec2i size, bool want_linear, SDL_Texture *&out_tex, SDL_Rect &out_src);
+bool resolve(SDL_Texture* src, vec2i offset, vec2i size, SDL_Texture*& out_tex, SDL_Rect& out_src);
 
 void register_source(SDL_Texture *tex);
 void forget_source(SDL_Texture *tex);
