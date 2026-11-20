@@ -1,5 +1,5 @@
-// Renderer choice: the user's renderer is tried first, then the platform chain, software last;
-// a renderer the build does not list is skipped.
+// Renderer choice: the user's renderer is tried first, then the platform chain (opengl first on Windows),
+// software last; a renderer the build does not list is skipped.
 
 var __test440_ok = false
 
@@ -15,6 +15,9 @@ function run_test() {
     var auto = __test_render_backend_order('', all).split(',')
     if (auto[auto.length - 1] != 'software') {
         return t440_fail('software is not the last resort: ' + auto.join(','))
+    }
+    if (__platform_is_windows() && auto[0] != 'opengl') {
+        return t440_fail('opengl is not the first renderer on Windows: ' + auto.join(','))
     }
 
     var user = __test_render_backend_order('opengles2', all).split(',')
