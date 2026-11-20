@@ -7,11 +7,12 @@ Rendering abstraction over SDL2. Owns the painter, image atlas, fonts, and the U
 | File | Purpose |
 |------|---------|
 | `graphics.h / .cpp` | Central render API: clipping, primitives, render commands |
-| `painter.h / .cpp` | SDL2 abstraction: texture drawing, scaling, transforms |
+| `painter.h / .cpp` | Sprite drawing: scaling, software clip, atlas lookup; draws through `g_render` |
+| `render_device.h` | Render device interface (`g_render`, `sprite_draw_t`); implemented in `platform/renderer.cpp` |
 | `screen.h / .cpp` | Global screen state (width, height, dialog offset) |
 | `image.h / .cpp` | Image atlas management: SDL texture loading/caching |
 | `image_desc.h` / `image_groups.h` / `imagepak_holder.h` | Image id descriptors, atlas group enums, pak ownership |
-| `residency_atlas.h / .cpp` | Residency atlas: repacks the frame's live sprites onto one page (`res_atlas::`) |
+| `residency_atlas.h` | Residency atlas (implementation in `platform/residency_atlas.cpp`): repacks the frame's live sprites onto one page (`res_atlas::`) |
 | `animation.h` / `animkeys.h` | Animation descriptors and config keys |
 | `window.h / .cpp` | Window manager queue (up to 6 concurrent windows), z-order |
 | `font.h / .cpp` | Font definitions, glyph management (10+ font types) |
@@ -52,7 +53,7 @@ The residency atlas repacks the sprites actually touched this frame onto a singl
 so consecutive draws share one texture.
 
 - Gated by the `graphics_atlas_render` game feature (`res_atlas::set_render`), wired in
-  `platform/akhenaten.cpp`; on by default on desktop, off on Android/web/consoles.
+  `platform/akhenaten.cpp`; on by default on every platform.
   Sources register from `platform/renderer.cpp`.
 - Page size is `graphics_atlas_page_size` capped by 8192 and the renderer's max texture size.
   A full page is recycled (at most once per 600 frames); when it fills again, sprites that do not
@@ -73,9 +74,7 @@ so consecutive draws share one texture.
 
 ## SDL2 Usage
 
-Never call SDL directly from game code. All SDL access goes through `painter`:
-- `SDL_Texture` — one texture atlas per image group
-- `SDL_Renderer` — held by painter, used for all draw operations
+The SDL render API is called only in `platform/` (`renderer.cpp`, `residency_atlas.cpp`, the Switch/Vita backends). Graphics, widget and window code draws through `g_render` from `graphics/render_device.h` and through `painter`; render entry points log `called off the main thread` when used from a worker (`core/main_thread.h`).
 
 ## ImGui Usage
 

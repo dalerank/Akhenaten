@@ -536,7 +536,7 @@ void image_recreate_all_textures() {
                 if (atlas.temp.pixel_buffer) {
                     if (atlas.texture) {
                         res_atlas::forget_source(atlas.texture);
-                        SDL_DestroyTexture(atlas.texture);
+                        g_render.destroy_texture(atlas.texture);
                         atlas.texture = nullptr;
                     }
                     atlas.texture = g_render.create_texture_from_buffer(atlas.temp.pixel_buffer, atlas.width, atlas.height);

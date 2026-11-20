@@ -201,6 +201,12 @@ void graphics_renderer_interface::draw_sprite(const sprite_draw_t& sprite) {
       sprite.mirrored ? SDL_FLIP_HORIZONTAL : SDL_FLIP_NONE);
 }
 
+void graphics_renderer_interface::destroy_texture(SDL_Texture* texture) {
+    if (texture) {
+        SDL_DestroyTexture(texture);
+    }
+}
+
 SDL_Texture* graphics_renderer_interface::create_grayscale_texture(SDL_Texture* tx, vec2i offset, vec2i size) {
     auto& data = g_renderer_data;
     uint32_t format;

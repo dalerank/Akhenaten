@@ -418,7 +418,7 @@ void imagepak::cleanup_and_destroy() {
         if (atlas_data.texture != nullptr) {
             g_memory.track_pack_texture(name.c_str(), atlas_data.width, atlas_data.height, false);
             res_atlas::forget_source(atlas_data.texture);
-            SDL_DestroyTexture(atlas_data.texture);
+            g_render.destroy_texture(atlas_data.texture);
         }
         atlas_data.texture = nullptr;
     }

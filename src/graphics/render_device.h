@@ -79,6 +79,7 @@ struct graphics_renderer_interface {
     vec2i get_max_image_size();
 
     SDL_Texture* create_texture_from_buffer(color* p_data, int width, int height);
+    void destroy_texture(SDL_Texture* texture);
     SDL_Texture* create_grayscale_texture(SDL_Texture* tx, vec2i offset, vec2i size);
     SDL_Texture* create_texture_from_png_buffer(void* p_data, int size, vec2i& txsize);
 
