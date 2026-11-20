@@ -539,7 +539,6 @@ graphics/font.cpp -> platform/arguments.h
 graphics/graphics.cpp -> dev/debug.h
 graphics/graphics.cpp -> platform/arguments.h
 graphics/image.cpp -> platform/arguments.h
-graphics/residency_atlas.cpp -> dev/debug.h
 graphics/screenshot.cpp -> platform/arguments.h
 graphics/view/view.cpp -> dev/debug.h
 grid/basin.cpp -> building/building.h
