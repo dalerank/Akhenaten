@@ -193,7 +193,7 @@ public:
     static void draw_ghost_overlay(painter &ctx, int image_id, vec2i pixel);
     static void draw_from_below(painter &ctx, int image_id, vec2i pixel, color color_mask = COLOR_MASK_GREEN);
     static void draw_overlay_tile(painter &ctx, int image_id, vec2i pixel, color color_mask, float scale = 1.f);
-    static void draw_flat_tile(painter &ctx, vec2i pixel, color color_mask);
+    static void draw_flat_tile_immediate(painter& ctx, vec2i pixel, color color_mask);
     static void draw_flat_tile(vec2i pos, color color_mask, painter &ctx);
     static int is_blocked_for_building(tile2i tile, int size, blocked_tile_vec &blocked_tiles, uint32_t restricted_terrain = TERRAIN_ALL);
     static void draw_bridge(tile2i tile, vec2i pixel, int type, painter &ctx);

@@ -58,7 +58,7 @@ void building_pavilion::preview::ghost_preview(build_planner &planer, painter &c
 
     if (!can_build) {
         for (int i = 0; i < params.building_size * params.building_size; i++) {
-            planer.draw_flat_tile(ctx, pixel + VIEW_OFFSETS[i], COLOR_MASK_RED);
+            planer.draw_flat_tile_immediate(ctx, pixel + VIEW_OFFSETS[i], COLOR_MASK_RED);
         }
     } else {
         int square_id = params.first_img(animkeys().square);

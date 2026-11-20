@@ -1335,9 +1335,10 @@ void build_planner::draw_bridge(tile2i tile, vec2i pixel, int type, painter &ctx
         return;
     }
     if (blocked) {
-        draw_flat_tile(ctx, pixel, length > 0 ? COLOR_MASK_GREEN : COLOR_MASK_RED);
+        draw_flat_tile_immediate(ctx, pixel, length > 0 ? COLOR_MASK_GREEN : COLOR_MASK_RED);
         if (length > 1)
-            draw_flat_tile(ctx, pixel + vec2i(x_delta * (length - 1), y_delta * (length - 1)), COLOR_MASK_RED);
+            draw_flat_tile_immediate(ctx, pixel + vec2i(x_delta * (length - 1), y_delta * (length - 1)),
+              COLOR_MASK_RED);
 
     } else {
         if (dir == DIR_0_TOP_RIGHT || dir == DIR_6_TOP_LEFT) {
@@ -1403,7 +1404,7 @@ int build_planner::is_blocked_for_building(tile2i tile, int size, blocked_tile_v
 void build_planner::draw_partially_blocked(painter &ctx, int fully_blocked, const blocked_tile_vec &blocked_tiles) {
     for (auto &tile : blocked_tiles) {
         vec2i pixel = g_camera.lookup_tile_to_pixel(tile.tile);
-        draw_flat_tile(ctx, pixel, (fully_blocked || tile.blocked) ? COLOR_MASK_RED_30 : COLOR_MASK_GREEN_30);
+        draw_flat_tile_immediate(ctx, pixel, (fully_blocked || tile.blocked) ? COLOR_MASK_RED_30 : COLOR_MASK_GREEN_30);
     }
 }
 
@@ -1411,7 +1412,7 @@ int build_planner::tile_grid_offset(int orientation, int y) {
     return TILE_GRID_OFFSETS_PH[orientation][y];
 }
 
-void build_planner::draw_flat_tile(painter &ctx, vec2i pixel, color color_mask) {
+void build_planner::draw_flat_tile_immediate(painter& ctx, vec2i pixel, color color_mask) {
     ctx.img_generic(image_id_from_group(GROUP_TERRAIN_OVERLAY_COLORED), pixel, color_mask);
 }
 

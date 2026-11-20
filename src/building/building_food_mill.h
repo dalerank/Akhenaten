@@ -31,6 +31,7 @@ public:
     virtual void bind_dynamic(io_buffer *iob, size_t version) override;
     virtual bool force_draw_flat_tile(painter &ctx, tile2i tile, vec2i pixel, color mask) override;
     virtual bool draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) override;
+    virtual void draw_postrender_effects(painter& ctx, vec2i point, tile2i tile, color color_mask) override;
 
     virtual int amount(e_resource resource) const override;
     virtual bool is_getting(e_resource resource) override;

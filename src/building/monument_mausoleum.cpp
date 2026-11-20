@@ -69,7 +69,7 @@ void draw_area_mask(painter &ctx, tile2i origin, int w, int h, bool force_red) {
             tile2i t = origin.shifted(dx, dy);
             vec2i pixel = g_camera.lookup_tile_to_pixel(t);
             const bool bad = force_red || !map_grid_is_inside(t, 1) || tile_not_clear(t);
-            build_planner::draw_flat_tile(ctx, pixel, bad ? COLOR_MASK_RED_30 : COLOR_MASK_GREEN_30);
+            build_planner::draw_flat_tile_immediate(ctx, pixel, bad ? COLOR_MASK_RED_30 : COLOR_MASK_GREEN_30);
         }
     }
 }

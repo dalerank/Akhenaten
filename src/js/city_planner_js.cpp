@@ -131,7 +131,7 @@ ANK_FUNCTION(__city_planner_validate_last_created);
 
 void __city_planner_draw_blocked(vec2i pixel) {
     painter ctx = game.painter();
-    g_city_planner.draw_flat_tile(ctx, pixel, COLOR_MASK_RED);
+    g_city_planner.draw_flat_tile_immediate(ctx, pixel, COLOR_MASK_RED);
 }
 ANK_FUNCTION_1(__city_planner_draw_blocked);
 
@@ -165,7 +165,7 @@ ANK_FUNCTION_2(__map_venue_build_orientation);
 void __city_planner_draw_flat_tiles(vec2i pixel, int count) {
     painter ctx = game.painter();
     for (int i = 0; i < count; i++) {
-        g_city_planner.draw_flat_tile(ctx, pixel + VIEW_OFFSETS[i], COLOR_MASK_RED);
+        g_city_planner.draw_flat_tile_immediate(ctx, pixel + VIEW_OFFSETS[i], COLOR_MASK_RED);
     }
 }
 ANK_FUNCTION_2(__city_planner_draw_flat_tiles);
@@ -184,7 +184,7 @@ ANK_FUNCTION_4(__city_planner_draw_overlay_tile);
 
 void __city_planner_draw_flat_tile(vec2i pixel, color color_mask) {
     painter ctx = game.painter();
-    build_planner::draw_flat_tile(ctx, pixel, color_mask);
+    build_planner::draw_flat_tile_immediate(ctx, pixel, color_mask);
 }
 ANK_FUNCTION_2(__city_planner_draw_flat_tile);
 
