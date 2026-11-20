@@ -1,6 +1,7 @@
-// A staffed venue with a show must tick that show's animation: booth juggler, pavilion juggler / musicians /
-// dancer, bandstand juggler / musicians. Needs the Pharaoh data.
+// Venue show animations tick: booth, pavilion and bandstand. The juggler config check runs everywhere,
+// the animation check only with the Pharaoh data.
 // Markers:
+//   [test-marker] t567_config_ok
 //   [test-marker] t567_ok
 //   [test-marker] t567_skipped:no_resource
 //   [test-marker] t567_fail:<what>
@@ -52,7 +53,6 @@ function t567_sprite_frames(bid, type, keys) {
     return frames
 }
 
-// 1-based like the sprite frames, 0 when no slot shows that key.
 function t567_slot_frames(bid, keys) {
     var frames = {}
     for (var slot = 0; slot < 4; slot++) {
@@ -68,7 +68,25 @@ function t567_slot_frames(bid, keys) {
     return out
 }
 
+// The juggler sprite id is the image before its group (offset -1), which has no frame count of its own.
+function t567_check_juggler_config() {
+    var venues = [['booth', building_booth], ['pavilion', building_pavilion]]
+    for (var i = 0; i < venues.length; i++) {
+        var j = venues[i][1].animations.juggler
+        if (j.max_frames != 26 || j.duration != 2) {
+            t567_fail(venues[i][0] + '_juggler_config:' + j.max_frames + '/' + j.duration)
+            return
+        }
+    }
+    __log_info_native('[test-marker] t567_config_ok')
+}
+
 function t567_run() {
+    t567_check_juggler_config()
+    if (__t567_failed) {
+        return
+    }
+
     var juggler = building_booth.animations.juggler
     var img = get_image({ pack: juggler.pack, id: juggler.id })
     if (!img || img.height <= 0) {
@@ -96,7 +114,7 @@ function t567_run() {
     t567_start_shows(pavilion, 20)
     t567_start_shows(bandstand, 12)
 
-    // Booth and pavilion shows tick with the simulation; the bandstand sets its show slots while drawn.
+    // The bandstand sets its show slots while drawn.
     var pavilion_keys = ['juggler', 'musician_sn', 'musician_we', 'dancer']
     var bandstand_keys = ['juggler', 'musician_sn']
     __test_run_ticks(2)
@@ -105,7 +123,7 @@ function t567_run() {
     var booth0 = t567_sprite_frames(booth, BUILDING_BOOTH, ['juggler'])
     var pavilion0 = t567_sprite_frames(pavilion, BUILDING_PAVILLION, pavilion_keys)
     var bandstand0 = t567_slot_frames(bandstand, bandstand_keys)
-    // Under the shortest loop (11 frames), so no animation can wrap back to the frame it started on.
+    // Fewer ticks than the shortest loop (11 frames), or a frame could wrap back to where it started.
     __test_run_ticks(7)
     __test_draw_frames(1)
     var booth1 = t567_sprite_frames(booth, BUILDING_BOOTH, ['juggler'])
@@ -132,5 +150,6 @@ function run_test() {
 
 function check_valid() {
     return !__t567_failed
+        && __test_find_inlog('[test-marker] t567_config_ok')
         && (__test_find_inlog('[test-marker] t567_ok') || __test_find_inlog('[test-marker] t567_skipped:no_resource'))
 }

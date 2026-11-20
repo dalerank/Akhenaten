@@ -458,15 +458,6 @@ static void __test_building_road_access_set_stale(int bid) {
 }
 ANK_FUNCTION_1(__test_building_road_access_set_stale);
 
-// A test road that does not reach the map entry leaves it 0, and venues at 0 are not offered to performers.
-static void __test_building_set_distance_from_entry(int bid, int distance) {
-    building* b = building_get(bid);
-    if (b && b->is_valid()) {
-        b->main()->distance_from_entry = distance;
-    }
-}
-ANK_FUNCTION_2(__test_building_set_distance_from_entry);
-
 static int __test_building_road_access_fields_cleared(int bid) {
     building* b = building_get(bid);
     if (!b || !b->is_valid()) {
