@@ -29,7 +29,7 @@
 #include "core/random.h"
 #include "figure/route.h"
 #include "grid/figure.h"
-#include "platform/renderer.h"
+#include "graphics/render_device.h"
 #include "overlays/city_overlay.h"
 #include "scenario/scenario.h"
 #include "figure/formation.h"

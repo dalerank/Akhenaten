@@ -22,7 +22,7 @@
 #include "window/editor/allowed_buildings.h"
 #include "window/editor/window_editor.h"
 #include "game/game_events.h"
-#include "platform/renderer.h"
+#include "graphics/render_device.h"
 #include "game/game.h"
 
 const static int EMPIRE_WIDTH = 1200 + 32;

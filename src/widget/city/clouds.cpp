@@ -14,7 +14,7 @@
 #include "graphics/window.h"
 #include "io/io_buffer.h"
 #include "js/js_register.h"
-#include "platform/renderer.h"
+#include "graphics/render_device.h"
 #include "widget/widget_city.h"
 
 #include <algorithm>

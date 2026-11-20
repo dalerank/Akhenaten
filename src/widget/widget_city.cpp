@@ -38,7 +38,7 @@
 #include "game/game_config.h"
 #include "io/gamefiles/lang.h"
 #include "core/log.h"
-#include "platform/renderer.h"
+#include "graphics/render_device.h"
 #include "scenario/scenario.h"
 #include "scenario/invasion_auto_resolve.h"
 #include "sound/sound_city.h"

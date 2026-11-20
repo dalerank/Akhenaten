@@ -4,7 +4,7 @@
 #include "graphics/graphics.h"
 #include "graphics/screen.h"
 #include "graphics/video.h"
-#include "platform/renderer.h"
+#include "graphics/render_device.h"
 #include "graphics/window.h"
 #include "core/bstring.h"
 #include "core/profiler.h"

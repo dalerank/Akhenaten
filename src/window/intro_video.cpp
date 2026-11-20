@@ -7,7 +7,7 @@
 #include "graphics/video.h"
 #include "graphics/window.h"
 #include "js/js_game.h"
-#include "platform/renderer.h"
+#include "graphics/render_device.h"
 #include "sound/sound.h"
 #include "window/autoconfig_window.h"
 

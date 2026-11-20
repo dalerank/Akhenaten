@@ -7,7 +7,7 @@
 #include "content/vfs.h"
 #include "io/gamefiles/bink.h"
 #include "io/gamefiles/smacker.h"
-#include "platform/renderer.h"
+#include "graphics/render_device.h"
 #include "game/game_config.h"
 #include "screen.h"
 #include "sound/sound.h"

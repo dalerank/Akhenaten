@@ -1,7 +1,7 @@
 #include "graphics/graphics.h"
 
 #include "graphics/screen.h"
-#include "platform/renderer.h"
+#include "graphics/render_device.h"
 #include "graphics/font.h"
 #include "graphics/view/view.h"
 #include "graphics/image_desc.h"

@@ -3,7 +3,7 @@
 #include "graphics/image.h"
 #include "game/game_events.h"
 #include "graphics/view/view.h"
-#include "platform/renderer.h"
+#include "graphics/render_device.h"
 #include "graphics/graphics.h"
 #include "window.h"
 

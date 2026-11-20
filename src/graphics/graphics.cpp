@@ -5,7 +5,7 @@
 #include "core/profiler.h"
 #include "core/log.h"
 #include "platform/arguments.h"
-#include "platform/renderer.h"
+#include "graphics/render_device.h"
 #include "graphics/screen.h"
 #include "game/game.h"
 

@@ -15,7 +15,7 @@
 #include "input/scroll.h"
 #include "game/game_config.h"
 #include "game/game_events.h"
-#include "platform/renderer.h"
+#include "graphics/render_device.h"
 #include "sound/sound_city.h"
 #include "sound/sound.h"
 #include "widget/city/tile_draw.h"

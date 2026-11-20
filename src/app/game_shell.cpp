@@ -27,7 +27,7 @@
 #include "window/autoconfig_window.h"
 #include "input/hotkey.h"
 #include "graphics/view/view.h"
-#include "platform/renderer.h"
+#include "graphics/render_device.h"
 #include "content/mods.h"
 
 ::painter game_t::painter() {

@@ -12,7 +12,7 @@
 
 #include <SDL.h>
 #include <SDL_keyboard.h>
-#include "platform/renderer.h"
+#include "graphics/render_device.h"
 
 #include "imgui.h"
 #include "graphics/elements/imui.h"

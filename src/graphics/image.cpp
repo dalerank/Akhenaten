@@ -18,7 +18,7 @@
 #include <algorithm>
 #include <array>
 
-#include "platform/renderer.h"
+#include "graphics/render_device.h"
 
 int image_copy_to_atlas(const image_t &img) {
     int pixels_count = 0;

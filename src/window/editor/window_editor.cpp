@@ -17,7 +17,7 @@
 #include "widget/sidebar/editor.h"
 #include "window/editor/attributes.h"
 #include "window/popup_dialog.h"
-#include "platform/renderer.h"
+#include "graphics/render_device.h"
 
 static int city_view_dirty;
 

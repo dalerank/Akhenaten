@@ -5,7 +5,7 @@
 #include "input/cursor.h"
 #include "input/scroll.h"
 #include "graphics/elements/ui.h"
-#include "platform/renderer.h"
+#include "graphics/render_device.h"
 #include "core/tokenum.h"
 #include "graphics/elements/ui_js.h"
 #include "game/game_events.h"

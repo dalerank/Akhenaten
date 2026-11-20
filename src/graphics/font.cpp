@@ -6,7 +6,7 @@
 #include "image.h"
 #include "js/js_register.h"
 #include "graphics/imagepak_holder.h"
-#include "platform/renderer.h"
+#include "graphics/render_device.h"
 #include "content/atlas_packer.h"
 #include "content/vfs.h"
 #include "game/game_config.h"

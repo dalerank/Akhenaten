@@ -8,7 +8,7 @@
 #include "graphics/render_stats.h"
 #include "graphics/residency_atlas.h"
 #include "graphics/texture_alpha.h"
-#include "platform/renderer.h"
+#include "graphics/render_device.h"
 
 #include <cmath>
 #include <string>

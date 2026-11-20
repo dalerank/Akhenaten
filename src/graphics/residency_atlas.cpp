@@ -2,7 +2,7 @@
 
 #include "graphics/render_stats.h"
 
-#include "platform/renderer.h"
+#include "graphics/render_device.h"
 #include "game/game.h"
 #include "game/game_config.h"
 #include "content/file_formats.h"

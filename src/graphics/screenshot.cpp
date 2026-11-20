@@ -11,7 +11,7 @@
 #include "content/vfs.h"
 #include "grid/grid.h"
 #include "platform/arguments.h"
-#include "platform/renderer.h"
+#include "graphics/render_device.h"
 #include "graphics/screen.h"
 #include "graphics/graphics.h"
 #include "graphics/graphics.h"
