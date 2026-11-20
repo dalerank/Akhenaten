@@ -6,6 +6,7 @@
 #include "graphics/view/view.h"
 #include "grid/property.h"
 #include "grid/grid.h"
+#include "sound/sound_view_queue.h"
 #include "widget/city/building_ghost.h"
 #include "widget/city/flat_draw.h"
 #include "overlays/city_overlay.h"
@@ -117,42 +118,6 @@ struct water_frame_queue_t {
 };
 static water_frame_queue_t g_water_frame_queue;
 
-struct sound_view_queue_t {
-    struct entry {
-        int building_id;
-        int grid_offset;
-        int direction;
-        vec2i pixel;
-    };
-    std::array<entry, GRID_SIZE_TOTAL> entries;
-    std::atomic<int> count{0};
-
-    void push(int building_id, int grid_offset, int direction, vec2i pixel) {
-        const int index = count.fetch_add(1, std::memory_order_relaxed);
-        if (index < (int)entries.size()) {
-            entries[index] = {building_id, grid_offset, direction, pixel};
-        }
-    }
-
-    void apply() {
-        const int n = std::min(count.load(std::memory_order_relaxed), (int)entries.size());
-        for (int i = 0; i < n; i++) {
-            const entry& en = entries[i];
-            if (en.building_id) {
-                building* b = building_get(en.building_id);
-                sound_city_mark_building_view(b, en.direction);
-                if (!!game_features::gameplay_enhanced_city_ambient) {
-                    if (const int channel = sound_city_building_channel(b)) {
-                        sound_city_ambient_note(channel, en.pixel);
-                    }
-                }
-            } else {
-                sound_city_mark_terrain_view(map_terrain_get(en.grid_offset), en.grid_offset, en.direction);
-            }
-        }
-        count.store(0, std::memory_order_relaxed);
-    }
-};
 static sound_view_queue_t g_sound_view_queue;
 
 void screen_city_t::apply_water_frames() {
