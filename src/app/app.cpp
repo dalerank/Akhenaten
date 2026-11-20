@@ -8,6 +8,7 @@
 #include "game/game_events_history.h"
 #include "platform/screen.h"
 #include "graphics/screenshot.h"
+#include "graphics/elements/ui.h"
 #include "core/log.h"
 #include "input/mouse.h"
 #include "js/js_events.h"
@@ -164,9 +165,11 @@ void application_t::handle_touch_event(void* event) {
 }
 
 void application_t::handle_hud_end(hud_end_context_t* context) {
+    ui::reset_ui_command_queue();
     for (auto& handler : hud_end_handlers) {
         handler(context);
     }
+    ui::flush_commands();
 }
 
 void application_t::subscribe_events() {

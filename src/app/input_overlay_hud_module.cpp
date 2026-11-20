@@ -3,6 +3,7 @@
 #include "core/svector.h"
 #include "game/game_config.h"
 #include "graphics/color.h"
+#include "graphics/elements/ui.h"
 #include "graphics/screen.h"
 #include "graphics/text.h"
 #include "input/keyboard.h"
@@ -92,7 +93,7 @@ void input_overlay_hud_module_t::draw(hud_end_context_t* ctx) {
     }
 
     for (pcstr label : labels) {
-        text_draw(label, x, y, FONT_SMALL_OUTLINED, COLOR_WHITE);
+        ui::text_abs(label, {x, y}, FONT_SMALL_OUTLINED, COLOR_WHITE);
         y += line_height;
     }
 }
