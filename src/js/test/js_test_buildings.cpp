@@ -374,6 +374,15 @@ static xstring __test_building_slot_anim_key(int bid, int slot) {
 }
 ANK_FUNCTION_2(__test_building_slot_anim_key);
 
+static int __test_building_slot_anim_frame(int bid, int slot) {
+    building* b = building_get(bid);
+    if (!b || !b->is_valid() || slot < 0 || slot >= (int)b->anims.size()) {
+        return -1;
+    }
+    return b->anims[slot].current_frame();
+}
+ANK_FUNCTION_2(__test_building_slot_anim_frame);
+
 static xstring __test_building_anim_key(int bid) {
     building* b = building_get(bid);
     if (!b || !b->is_valid()) {
@@ -448,6 +457,15 @@ static void __test_building_road_access_set_stale(int bid) {
     m->road_access = m->tile;
 }
 ANK_FUNCTION_1(__test_building_road_access_set_stale);
+
+// A test road that does not reach the map entry leaves it 0, and venues at 0 are not offered to performers.
+static void __test_building_set_distance_from_entry(int bid, int distance) {
+    building* b = building_get(bid);
+    if (b && b->is_valid()) {
+        b->main()->distance_from_entry = distance;
+    }
+}
+ANK_FUNCTION_2(__test_building_set_distance_from_entry);
 
 static int __test_building_road_access_fields_cleared(int bid) {
     building* b = building_get(bid);
