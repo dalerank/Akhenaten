@@ -16,7 +16,10 @@
 
 #include <SDL.h>
 
-std::unordered_map<uint64_t, SDL_Texture *> grayscaled_txs;
+#include <map>
+#include <tuple>
+
+std::map<std::tuple<SDL_Texture*, int, int, int, int>, SDL_Texture*> grayscaled_txs;
 
 void painter::draw(SDL_Texture *texture, vec2i pos, vec2i offset, vec2i size, color color, float scale_x, float scale_y,
                    double angle, ImgFlags flags, const bool force_linear) {
@@ -412,23 +415,17 @@ SDL_Texture* painter::convertToGrayscale(SDL_Texture *tx, vec2i offset, vec2i si
         return nullptr;
     }
 
-    uint64_t hash = ((uint64_t)tx & 0xffffffff) | ((uint64_t)offset.x << 32) | ((uint64_t)offset.y << 48);
-
-    auto it = grayscaled_txs.find(hash);
+    const auto key = std::make_tuple(tx, offset.x, offset.y, size.x, size.y);
+    auto it = grayscaled_txs.find(key);
     if (it != grayscaled_txs.end()) {
         return it->second;
     }
 
-    auto gray_tx = grayscaled_txs.insert({ hash , nullptr });
-
     SDL_Texture* gray_tx_ptr = g_render.create_grayscale_texture(tx, offset, size);
-    if (!gray_tx_ptr) {
-        return nullptr;
-    }
-    if (texture_alpha::is_straight(tx)) {
+    if (gray_tx_ptr && texture_alpha::is_straight(tx)) {
         texture_alpha::mark_straight(gray_tx_ptr);
     }
-    gray_tx.first->second = gray_tx_ptr;
+    grayscaled_txs[key] = gray_tx_ptr;
 
     return gray_tx_ptr;
 }

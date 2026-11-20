@@ -266,6 +266,7 @@ SDL_Texture* graphics_renderer_interface::create_grayscale_texture(SDL_Texture* 
             *pixel = SDL_MapRGBA(pxformat, gray, gray, gray, a);
         }
     }
+    SDL_FreeFormat((SDL_PixelFormat*)pxformat);
 
     /* Copy pixel data over to surface */
     SDL_Surface* surface = SDL_CreateRGBSurfaceWithFormatFrom(pixels.data(), size.x, size.y, SDL_BITSPERPIXEL(format),
