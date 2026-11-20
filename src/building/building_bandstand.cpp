@@ -22,7 +22,6 @@
 #include "window/building/figures.h"
 #include "widget/city/ornaments.h"
 #include "widget/city/flat_draw.h"
-#include "widget/city/building_ghost.h"
 #include "figuretype/figure_entertainer.h"
 #include "sound/sound_building.h"
 #include "figure/figure.h"
@@ -64,14 +63,14 @@ void building_bandstand::preview::ghost_preview(build_planner &planer, painter &
 
     if (!can_build) {
         for (int i = 0; i < params.building_size * params.building_size; i++) {
-            planer.draw_flat_tile_immediate(ctx, pixel + VIEW_OFFSETS[i], COLOR_MASK_RED);
+            planer.draw_ground_tile(ctx, pixel + VIEW_OFFSETS[i], COLOR_MASK_RED);
         }
     } else {
         int square_id = params.first_img(animkeys().square);
         for (int i = 0; i < params.building_size * params.building_size; i++) {
             const int x = ((i % params.building_size) - (i / params.building_size)) * 30;
             const int y = ((i % params.building_size) + (i / params.building_size)) * 15;
-            ctx.img_isometric(square_id + i, pixel + vec2i{ x, y }, COLOR_MASK_GREEN, 1.f, ImgFlag_None);
+            build_planner::draw_ground_isometric(ctx, square_id + i, pixel + vec2i{x, y}, COLOR_MASK_GREEN);
         }
 
         switch (orientation / 2) {

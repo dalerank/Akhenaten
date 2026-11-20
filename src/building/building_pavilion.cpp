@@ -2,7 +2,6 @@
 
 #include "graphics/image.h"
 #include "widget/city/ornaments.h"
-#include "widget/city/building_ghost.h"
 #include "window/building/common.h"
 #include "window/building/figures.h"
 #include "sound/sound_building.h"
@@ -58,14 +57,14 @@ void building_pavilion::preview::ghost_preview(build_planner &planer, painter &c
 
     if (!can_build) {
         for (int i = 0; i < params.building_size * params.building_size; i++) {
-            planer.draw_flat_tile_immediate(ctx, pixel + VIEW_OFFSETS[i], COLOR_MASK_RED);
+            planer.draw_ground_tile(ctx, pixel + VIEW_OFFSETS[i], COLOR_MASK_RED);
         }
     } else {
         int square_id = params.first_img(animkeys().square);
         for (int i = 0; i < params.building_size * params.building_size; i++) {
             const int x = ((i % params.building_size) - (i / params.building_size)) * 30;
             const int y = ((i % params.building_size) + (i / params.building_size)) * 15;
-            ctx.img_isometric(square_id + i, pixel + vec2i{ x, y }, COLOR_MASK_GREEN, 1.f, ImgFlag_None);
+            build_planner::draw_ground_isometric(ctx, square_id + i, pixel + vec2i{x, y}, COLOR_MASK_GREEN);
         }
         int stand_sn_n = params.first_img(animkeys().stand_sn_n);
         int stand_sn_s = params.first_img(animkeys().stand_sn_s);

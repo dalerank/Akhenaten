@@ -17,7 +17,6 @@ building/building_bandstand.cpp -> graphics/elements/panel.h
 building/building_bandstand.cpp -> graphics/graphics.h
 building/building_bandstand.cpp -> graphics/image.h
 building/building_bandstand.cpp -> sound/sound_building.h
-building/building_bandstand.cpp -> widget/city/building_ghost.h
 building/building_bandstand.cpp -> widget/city/flat_draw.h
 building/building_bandstand.cpp -> widget/city/ornaments.h
 building/building_bandstand.cpp -> window/building/common.h
@@ -68,7 +67,6 @@ building/building_farm.cpp -> graphics/image.h
 building/building_farm.cpp -> graphics/text.h
 building/building_farm.cpp -> graphics/view/view.h
 building/building_farm.cpp -> sound/sound_building.h
-building/building_farm.cpp -> widget/city/building_ghost.h
 building/building_farm.cpp -> window/building/common.h
 building/building_ferry.cpp -> graphics/image.h
 building/building_ferry.cpp -> graphics/view/view.h
@@ -131,7 +129,6 @@ building/building_pavilion.cpp -> graphics/elements/ui.h
 building/building_pavilion.cpp -> graphics/graphics.h
 building/building_pavilion.cpp -> graphics/image.h
 building/building_pavilion.cpp -> sound/sound_building.h
-building/building_pavilion.cpp -> widget/city/building_ghost.h
 building/building_pavilion.cpp -> widget/city/ornaments.h
 building/building_pavilion.cpp -> window/building/common.h
 building/building_pavilion.cpp -> window/building/figures.h

@@ -18,7 +18,6 @@
 #include "graphics/view/zoom.h"
 #include "grid/building.h"
 #include "grid/terrain.h"
-#include "widget/city/building_ghost.h"
 #include "game/game.h"
 
 #include "building/construction/build_planner.h"

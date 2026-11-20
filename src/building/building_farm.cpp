@@ -26,7 +26,6 @@
 #include "io/gamefiles/lang.h"
 #include "game/game_config.h"
 #include "window/building/common.h"
-#include "widget/city/building_ghost.h"
 #include "construction/build_planner.h"
 #include "sound/sound_building.h"
 #include "figuretype/figure_worker.h"

@@ -68,8 +68,13 @@ struct render_command_t {
         ert_from_below = 7,
         ert_draw_rect = 8,
     };
+    enum e_layer : uint8_t {
+        layer_ground = 0,
+        layer_scene = 1,
+    };
     e_render_type rtype = ert_none;
     bool use_sort_pixel = false;
+    e_layer layer = layer_scene;
     int32_t image_id = 0;
     int32_t base_id = 0;
     vec2i size = {};

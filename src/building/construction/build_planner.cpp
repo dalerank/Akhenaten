@@ -1335,10 +1335,9 @@ void build_planner::draw_bridge(tile2i tile, vec2i pixel, int type, painter &ctx
         return;
     }
     if (blocked) {
-        draw_flat_tile_immediate(ctx, pixel, length > 0 ? COLOR_MASK_GREEN : COLOR_MASK_RED);
+        draw_ground_tile(ctx, pixel, length > 0 ? COLOR_MASK_GREEN : COLOR_MASK_RED);
         if (length > 1)
-            draw_flat_tile_immediate(ctx, pixel + vec2i(x_delta * (length - 1), y_delta * (length - 1)),
-              COLOR_MASK_RED);
+            draw_ground_tile(ctx, pixel + vec2i(x_delta * (length - 1), y_delta * (length - 1)), COLOR_MASK_RED);
 
     } else {
         if (dir == DIR_0_TOP_RIGHT || dir == DIR_6_TOP_LEFT) {
@@ -1404,7 +1403,7 @@ int build_planner::is_blocked_for_building(tile2i tile, int size, blocked_tile_v
 void build_planner::draw_partially_blocked(painter &ctx, int fully_blocked, const blocked_tile_vec &blocked_tiles) {
     for (auto &tile : blocked_tiles) {
         vec2i pixel = g_camera.lookup_tile_to_pixel(tile.tile);
-        draw_flat_tile_immediate(ctx, pixel, (fully_blocked || tile.blocked) ? COLOR_MASK_RED_30 : COLOR_MASK_GREEN_30);
+        draw_ground_tile(ctx, pixel, (fully_blocked || tile.blocked) ? COLOR_MASK_RED_30 : COLOR_MASK_GREEN_30);
     }
 }
 
@@ -1412,8 +1411,39 @@ int build_planner::tile_grid_offset(int orientation, int y) {
     return TILE_GRID_OFFSETS_PH[orientation][y];
 }
 
-void build_planner::draw_flat_tile_immediate(painter& ctx, vec2i pixel, color color_mask) {
-    ctx.img_generic(image_id_from_group(GROUP_TERRAIN_OVERLAY_COLORED), pixel, color_mask);
+void build_planner::draw_ground_tile(painter& ctx, vec2i pixel, color color_mask) {
+    auto& command = ImageDraw::create_command(ctx, render_command_t::ert_generic);
+    command.layer = render_command_t::layer_ground;
+    command.image_id = image_id_from_group(GROUP_TERRAIN_OVERLAY_COLORED);
+    command.pixel = pixel;
+    command.mask = color_mask;
+    command.scale = 1.f;
+    command.location = SOURCE_LOCATION;
+}
+
+void build_planner::draw_ground_isometric(painter& ctx, int image_id, vec2i pixel, color color_mask) {
+    const image_t* img = image_get(image_id);
+    if (!img) {
+        return;
+    }
+    const int ydiff = img->isometric_size() * HALF_TILE_HEIGHT_PIXELS;
+    auto& base = ImageDraw::create_command(ctx, render_command_t::ert_drawtile);
+    base.layer = render_command_t::layer_ground;
+    base.image_id = image_id;
+    base.pixel = pixel + vec2i{0, ydiff};
+    base.use_sort_pixel = true;
+    base.sort_pixel = pixel;
+    base.mask = color_mask;
+    base.location = SOURCE_LOCATION;
+
+    auto& top = ImageDraw::create_command(ctx, render_command_t::ert_drawtile_top);
+    top.layer = render_command_t::layer_ground;
+    top.image_id = image_id;
+    top.pixel = pixel;
+    top.use_sort_pixel = true;
+    top.sort_pixel = pixel;
+    top.mask = color_mask;
+    top.location = SOURCE_LOCATION;
 }
 
 void build_planner::draw(painter &ctx) {

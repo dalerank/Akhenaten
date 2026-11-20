@@ -7,7 +7,6 @@
 #include "grid/property.h"
 #include "grid/grid.h"
 #include "sound/sound_view_queue.h"
-#include "widget/city/building_ghost.h"
 #include "widget/city/flat_draw.h"
 #include "overlays/city_overlay.h"
 #include "graphics/image_groups.h"

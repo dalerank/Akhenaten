@@ -176,6 +176,7 @@ render_command_t& ImageDraw::create_command(painter& ctx, render_command_t::e_re
     command.id = static_cast<uint32_t>(dst->size() - 1);
     command.rtype = rt;
     command.use_sort_pixel = false;
+    command.layer = render_command_t::layer_scene;
     command.sort_pixel = {};
     command.start_subcommand = -1;
     command.finish_subcommand = -1;
@@ -210,6 +211,12 @@ render_command_t& ImageDraw::create_subcommand(painter& ctx, render_command_t::e
     }
 
     int last_idx = static_cast<int>(cmds->size()) - 1;
+    while (last_idx >= 0 && (*cmds)[last_idx].layer == render_command_t::layer_ground) {
+        --last_idx;
+    }
+    if (last_idx < 0) {
+        return create_command(ctx, rt);
+    }
     auto& subcommand = subcmds->emplace_back();
     int new_idx = static_cast<int>(subcmds->size()) - 1;
 
@@ -242,6 +249,9 @@ void ImageDraw::apply_render_commands(painter& ctx, std::string_view p) {
     {
         OZZY_PROFILER_SECTION(_, "sort");
         auto sort_less = [](const render_command_t& lhs, const render_command_t& rhs) {
+            if (lhs.layer != rhs.layer) {
+                return lhs.layer < rhs.layer;
+            }
             const vec2i lhs_sort = lhs.use_sort_pixel ? lhs.sort_pixel : lhs.pixel;
             const vec2i rhs_sort = rhs.use_sort_pixel ? rhs.sort_pixel : rhs.pixel;
             if (lhs_sort.y != rhs_sort.y) {
