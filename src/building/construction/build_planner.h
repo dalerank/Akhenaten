@@ -136,6 +136,8 @@ public:
     bool draw_as_constructing;
     // The city view's painter (zoom scale) while draw() runs; JS preview hooks draw through it.
     painter *draw_ctx = nullptr;
+    // Render scale the last JS preview draw used (checked by test 569).
+    float js_draw_scale = 0.f;
     int construction_update_items = 0;
     int finalize_check_result = 0;
     int need_flag_result = 0;

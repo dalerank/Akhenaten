@@ -10,7 +10,6 @@
 #include "game/undo.h"
 #include "graphics/graphics.h"
 #include "graphics/image.h"
-#include "graphics/render_device.h"
 #include "graphics/view/view.h"
 #include "grid/building.h"
 #include "grid/building_tiles.h"
@@ -21,25 +20,12 @@
 #include "grid/terrain.h"
 #include "mujs/mujs.h"
 
-static float g_planner_js_draw_scale = 0.f;
-
 // Immediate draws need the city view's zoom scale; a fresh game.painter() only has the display scale.
 static painter planner_painter() {
     painter ctx = g_city_planner.draw_ctx ? *g_city_planner.draw_ctx : game.painter();
-    g_planner_js_draw_scale = ctx.global_render_scale;
+    g_city_planner.js_draw_scale = ctx.global_render_scale;
     return ctx;
 }
-
-// Draws the planner as the city view does, with a context at `scale`; returns the render scale the JS
-// preview drew with (0 if it drew nothing).
-float __test_city_planner_draw(float scale) {
-    painter ctx = game.painter();
-    set_render_scale(ctx, scale);
-    g_planner_js_draw_scale = 0.f;
-    g_city_planner.draw(ctx);
-    return g_planner_js_draw_scale;
-}
-ANK_FUNCTION_1(__test_city_planner_draw);
 
 ANK_GLOBAL_OBJECT(g_city_planner, __city_planner,
     build_type,

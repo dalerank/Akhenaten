@@ -1418,9 +1418,13 @@ void build_planner::draw_flat_tile_immediate(painter& ctx, vec2i pixel, color co
 
 void build_planner::draw(painter &ctx) {
     OZZY_PROFILER_FUNCTION();
+    struct restore_draw_ctx {
+        painter *&slot;
+        painter *previous;
+        ~restore_draw_ctx() { slot = previous; }
+    } restore{draw_ctx, draw_ctx};
     draw_ctx = &ctx;
     draw_impl(ctx);
-    draw_ctx = nullptr;
 }
 
 void build_planner::draw_impl(painter &ctx) {
