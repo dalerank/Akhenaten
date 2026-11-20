@@ -405,10 +405,9 @@ void painter::draw_impl(SDL_Texture *texture, vec2i pos, vec2i offset, vec2i siz
 
     const bool linear = force_linear || overall_scale_factor < 1.0f;
     render_stats::note_draw(draw_tex, blend, linear, resident);
-    g_render.draw_sprite(sprite_draw_t{draw_tex, texture_coords.x, texture_coords.y, texture_coords.w, texture_coords.h,
+    g_render.draw_sprite(sprite_draw_t{g_render.material(draw_tex, blend, linear), texture_coords.x, texture_coords.y, texture_coords.w, texture_coords.h,
       screen_coords.x, screen_coords.y, screen_coords.w, screen_coords.h, (uint8_t)mod_r, (uint8_t)mod_g,
-      (uint8_t)mod_b, (uint8_t)mod_a, blend, angle, !!(flags & ImgFlag_Mirrored),
-      linear});
+      (uint8_t)mod_b, (uint8_t)mod_a, angle, !!(flags & ImgFlag_Mirrored)});
 }
 
 SDL_Texture* painter::convertToGrayscale(SDL_Texture *tx, vec2i offset, vec2i size) {

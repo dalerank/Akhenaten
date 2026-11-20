@@ -116,6 +116,7 @@ struct renderer_data_t {
     svector<buffer_texture, 8> texture_buffers;
     hvector<SDL_Vertex, 1024, false> run_vertices;
     hvector<int, 1536, false> run_indices;
+    hvector<render_material_t, 64, false> materials;
     int texture_buffer_id = 0;
     struct {
         int id;
@@ -218,22 +219,24 @@ static std::vector<sprite_draw_t> g_sprite_list;
 
 static void copy_sprite(const sprite_draw_t& sprite) {
     auto& data = g_renderer_data;
-    apply_texture_scale_mode(sprite.texture, sprite.linear);
-    SDL_SetTextureColorMod(sprite.texture, sprite.r, sprite.g, sprite.b);
-    SDL_SetTextureAlphaMod(sprite.texture, sprite.a);
-    SDL_SetTextureBlendMode(sprite.texture, (SDL_BlendMode)sprite.blend);
+    const render_material_t& m = data.materials[sprite.material];
+    apply_texture_scale_mode(m.texture, m.linear);
+    SDL_SetTextureColorMod(m.texture, sprite.r, sprite.g, sprite.b);
+    SDL_SetTextureAlphaMod(m.texture, sprite.a);
+    SDL_SetTextureBlendMode(m.texture, (SDL_BlendMode)m.blend);
     const SDL_Rect src{sprite.src_x, sprite.src_y, sprite.src_w, sprite.src_h};
     const SDL_FRect dst{sprite.dst_x, sprite.dst_y, sprite.dst_w, sprite.dst_h};
-    SDL_RenderCopyExF(data.renderer, sprite.texture, &src, &dst, sprite.angle, nullptr,
+    SDL_RenderCopyExF(data.renderer, m.texture, &src, &dst, sprite.angle, nullptr,
       sprite.mirrored ? SDL_FLIP_HORIZONTAL : SDL_FLIP_NONE);
 }
 
 static bool same_run(const sprite_draw_t& a, const sprite_draw_t& b) {
-    return a.texture == b.texture && a.blend == b.blend && a.linear == b.linear && b.angle == 0.0;
+    return a.material == b.material && b.angle == 0.0;
 }
 
 static void draw_sprite_run(const sprite_draw_t* first, size_t count) {
-    SDL_Texture* texture = first->texture;
+    const render_material_t& m = g_renderer_data.materials[first->material];
+    SDL_Texture* texture = m.texture;
     int tex_w = 0;
     int tex_h = 0;
     if (SDL_QueryTexture(texture, nullptr, nullptr, &tex_w, &tex_h) != 0 || tex_w <= 0 || tex_h <= 0) {
@@ -243,10 +246,10 @@ static void draw_sprite_run(const sprite_draw_t* first, size_t count) {
         return;
     }
 
-    apply_texture_scale_mode(texture, first->linear);
+    apply_texture_scale_mode(texture, m.linear);
     SDL_SetTextureColorMod(texture, 255, 255, 255);
     SDL_SetTextureAlphaMod(texture, 255);
-    SDL_SetTextureBlendMode(texture, (SDL_BlendMode)first->blend);
+    SDL_SetTextureBlendMode(texture, (SDL_BlendMode)m.blend);
 
     auto& vertices = g_renderer_data.run_vertices;
     auto& indices = g_renderer_data.run_indices;
@@ -309,6 +312,19 @@ static void flush_sprites() {
         i = end;
     }
     g_sprite_list.clear();
+    g_renderer_data.materials.clear();
+}
+
+uint16_t graphics_renderer_interface::material(SDL_Texture* texture, int blend, bool linear) {
+    auto& materials = g_renderer_data.materials;
+    for (size_t i = materials.size(); i-- > 0;) {
+        const render_material_t& m = materials[i];
+        if (m.texture == texture && m.blend == blend && m.linear == linear) {
+            return (uint16_t)i;
+        }
+    }
+    materials.push_back({texture, blend, linear});
+    return (uint16_t)(materials.size() - 1);
 }
 
 void graphics_renderer_interface::draw_sprite(const sprite_draw_t& sprite) {
