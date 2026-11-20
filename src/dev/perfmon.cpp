@@ -112,6 +112,10 @@ void game_perfmon_t::ensure_metrics() {
         drawCountSettings, {50.0, 200.0, 500.0, 1000.0, 4000.0}));
 
     widget.RegisterMetric(
+      Perfmon::Metric("sprite list flushes / frame", []() { return (double)render_stats::last_frame().flushes; },
+        drawCountSettings, {50.0, 200.0, 500.0, 1000.0, 4000.0}));
+
+    widget.RegisterMetric(
       Perfmon::Metric("texture switches / frame", []() { return (double)render_stats::last_frame().texture_switches; },
         drawCountSettings, {50.0, 200.0, 500.0, 1000.0, 4000.0}));
 
@@ -166,10 +170,10 @@ void ANK_REGISTER_APPLICATION_MODULE(register_perfmon_module) {
         render_stats::frame_t avg;
         const uint32_t frames = render_stats::take_average(avg);
         bstring512 line;
-        line.printf("render_stats[%s] renderer=%s atlas=%s frames=%u draws=%u resident=%u batches=%u tex_switches=%u "
+        line.printf("render_stats[%s] renderer=%s atlas=%s frames=%u draws=%u resident=%u batches=%u flushes=%u tex_switches=%u "
                     "blend_switches=%u frame_ms=%.2f draw_ms=%.2f present_ms=%.2f atlas_fill=%.2f%%",
           tag.c_str(), get_video_driver().c_str(), res_atlas::render_enabled() ? "on" : "off", frames, avg.draws,
-          avg.resident, avg.batches, avg.texture_switches, avg.blend_switches, avg.frame_ms, avg.draw_ms,
+          avg.resident, avg.batches, avg.flushes, avg.texture_switches, avg.blend_switches, avg.frame_ms, avg.draw_ms,
           avg.present_ms, res_atlas::fill_percent());
         logs::info("%s", line.c_str());
         out.println(line.c_str());

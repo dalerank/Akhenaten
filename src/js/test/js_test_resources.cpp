@@ -298,6 +298,16 @@ static int __test_render_resident_draws() {
 }
 ANK_FUNCTION(__test_render_resident_draws);
 
+static int __test_render_batches() {
+    return (int)render_stats::last_frame().batches;
+}
+ANK_FUNCTION(__test_render_batches);
+
+static int __test_render_flushes() {
+    return (int)render_stats::last_frame().flushes;
+}
+ANK_FUNCTION(__test_render_flushes);
+
 // Renderer try order for a request and a comma-separated driver list, joined by ','; "-" stands for SDL's own pick.
 static xstring __test_render_backend_order(pcstr requested, pcstr available) {
     svector<xstring, 8> drivers;

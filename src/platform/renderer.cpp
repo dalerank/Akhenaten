@@ -225,6 +225,10 @@ static void copy_sprite(const sprite_draw_t& sprite) {
 }
 
 static void flush_sprites() {
+    if (g_sprite_list.empty()) {
+        return;
+    }
+    render_stats::note_flush();
     for (const sprite_draw_t& sprite : g_sprite_list) {
         copy_sprite(sprite);
     }

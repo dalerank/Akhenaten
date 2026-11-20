@@ -12,13 +12,15 @@ namespace render_stats {
         uint32_t texture_switches = 0;
         uint32_t blend_switches = 0;
         uint32_t batches = 0;
+        uint32_t flushes = 0;
         double frame_ms = 0.0;
         double draw_ms = 0.0;
         double present_ms = 0.0;
     };
 
-    void note_draw(SDL_Texture* texture, int blend, bool resident);
+    void note_draw(SDL_Texture* texture, int blend, bool linear, bool resident);
     void note_break();
+    void note_flush();
 
     void frame_begin();
     void frame_draw_done();

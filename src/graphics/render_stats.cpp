@@ -13,6 +13,7 @@ namespace render_stats {
 
         const SDL_Texture* g_batch_texture = nullptr;
         int g_batch_blend = -1;
+        int g_batch_linear = -1;
         int g_last_blend = -1;
 
         Uint64 g_frame_start = 0;
@@ -26,7 +27,7 @@ namespace render_stats {
 
     } // namespace
 
-    void note_draw(SDL_Texture* texture, int blend, bool resident) {
+    void note_draw(SDL_Texture* texture, int blend, bool linear, bool resident) {
         ++g_current.draws;
         if (resident) {
             ++g_current.resident;
@@ -37,17 +38,24 @@ namespace render_stats {
         if (blend != g_last_blend && g_last_blend != -1) {
             ++g_current.blend_switches;
         }
-        if (texture != g_batch_texture || blend != g_batch_blend) {
+        if (texture != g_batch_texture || blend != g_batch_blend || (int)linear != g_batch_linear) {
             ++g_current.batches;
         }
         g_batch_texture = texture;
         g_batch_blend = blend;
+        g_batch_linear = (int)linear;
         g_last_blend = blend;
     }
 
     void note_break() {
         g_batch_texture = nullptr;
         g_batch_blend = -1;
+        g_batch_linear = -1;
+    }
+
+    void note_flush() {
+        ++g_current.flushes;
+        note_break();
     }
 
     void frame_begin() {
@@ -74,6 +82,7 @@ namespace render_stats {
         g_sum.texture_switches += g_last.texture_switches;
         g_sum.blend_switches += g_last.blend_switches;
         g_sum.batches += g_last.batches;
+        g_sum.flushes += g_last.flushes;
         g_sum.frame_ms += g_last.frame_ms;
         g_sum.draw_ms += g_last.draw_ms;
         g_sum.present_ms += g_last.present_ms;
@@ -97,6 +106,7 @@ namespace render_stats {
             out.texture_switches = g_sum.texture_switches / n;
             out.blend_switches = g_sum.blend_switches / n;
             out.batches = g_sum.batches / n;
+            out.flushes = g_sum.flushes / n;
             out.frame_ms = g_sum.frame_ms / n;
             out.draw_ms = g_sum.draw_ms / n;
             out.present_ms = g_sum.present_ms / n;

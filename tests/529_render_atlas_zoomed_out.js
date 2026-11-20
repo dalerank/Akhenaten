@@ -3,7 +3,7 @@
 // come from the atlas page once it has filled. Needs Pharaoh art; without it (--no-resource) the city
 // draws only a few dozen sprites and the check is skipped.
 // Markers:
-//   [test-marker] t529_ok resident=<n> draws=<n>
+//   [test-marker] t529_ok resident=<n> draws=<n> batches=<n> flushes=<n>
 //   [test-marker] t529_fail resident=<n> draws=<n>
 //   [test-marker] t529_art_skipped:no_resource
 
@@ -33,7 +33,8 @@ function run_test() {
         var draws = __test_render_draws()
         var resident = __test_render_resident_draws()
         if (draws > 0 && resident * 2 > draws) {
-            __log_info_native('[test-marker] t529_ok resident=' + resident + ' draws=' + draws)
+            __log_info_native('[test-marker] t529_ok resident=' + resident + ' draws=' + draws +
+                ' batches=' + __test_render_batches() + ' flushes=' + __test_render_flushes())
             __t529_ok = true
         } else {
             __log_info_native('[test-marker] t529_fail resident=' + resident + ' draws=' + draws)
