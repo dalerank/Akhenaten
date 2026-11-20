@@ -421,84 +421,14 @@ SDL_Texture* painter::convertToGrayscale(SDL_Texture *tx, vec2i offset, vec2i si
 
     auto gray_tx = grayscaled_txs.insert({ hash , nullptr });
 
-    uint32_t format;
-    int w, h;
-
-    /* Get information about texture we want to save */
-    int st = SDL_QueryTexture(tx, &format, NULL, &w, &h);
-    if (st != 0) {
+    SDL_Texture* gray_tx_ptr = g_render.create_grayscale_texture(tx, offset, size);
+    if (!gray_tx_ptr) {
         return nullptr;
     }
-
-    if (SDL_BYTESPERPIXEL(format) != 4) {
-        return nullptr;
-    }
-
-    SDL_Texture* ren_tex = SDL_CreateTexture(this->renderer, format, SDL_TEXTUREACCESS_TARGET, size.x, size.y);
-    if (!ren_tex) {
-        return nullptr;
-    }
-
-    struct RenTexDeleter {
-        SDL_Texture *tx;
-        ~RenTexDeleter() { SDL_DestroyTexture(tx); }
-    } _renTexDeleter{ ren_tex };
-
-    /*
-     * Initialize our canvas, then copy texture to a target whose pixel data we
-     * can access
-     */
-    SDL_Texture *old_target = SDL_GetRenderTarget(this->renderer);
-    st = SDL_SetRenderTarget(this->renderer, ren_tex);
-    if (st != 0) {
-        return nullptr;
-    }
-
-    // Declared after the deleter, so it runs first: the target is restored before ren_tex dies.
-    struct RenTargetRestore {
-        SDL_Renderer* renderer;
-        SDL_Texture* target;
-        ~RenTargetRestore() { SDL_SetRenderTarget(renderer, target); }
-    } _renTargetRestore{this->renderer, old_target};
-
-    SDL_SetRenderDrawColor(this->renderer, 0x00, 0x00, 0x00, 0x00);
-    SDL_RenderClear(this->renderer);
-
-    SDL_Rect srcrect{ offset.x, offset.y, size.x, size.y };
-    st = SDL_RenderCopy(this->renderer, tx, &srcrect, NULL);
-    if (st != 0) {
-        return nullptr;
-    }
-
-    /* Create buffer to hold texture data and load it */
-    std::vector<uint32_t> pixels(size.x * size.y);
-    st = SDL_RenderReadPixels(this->renderer, NULL, format, pixels.data(), size.x * SDL_BYTESPERPIXEL(format));
-
-    const SDL_PixelFormat *pxformat = SDL_AllocFormat(format);
-    for (int y = 0; y < size.y; ++y) {
-        for (int x = 0; x < size.x; ++x) {
-            Uint32 *pixel = pixels.data() + y * size.x + x;
-            Uint8 r, g, b, a;
-            SDL_GetRGBA(*pixel, pxformat, &r, &g, &b, &a);
-            Uint8 gray = static_cast<Uint8>(0.3 * r + 0.59 * g + 0.11 * b);
-            *pixel = SDL_MapRGBA(pxformat, gray, gray, gray, a);
-        }
-    }
-
-    /* Copy pixel data over to surface */
-    SDL_Surface *surface = SDL_CreateRGBSurfaceWithFormatFrom(pixels.data(), size.x, size.y, SDL_BITSPERPIXEL(format),
-                                                              size.x * SDL_BYTESPERPIXEL(format), format);
-    if (!surface) {
-        return nullptr;
-    }
-
-    SDL_Texture *gray_tx_ptr = SDL_CreateTextureFromSurface(this->renderer, surface);
     if (texture_alpha::is_straight(tx)) {
         texture_alpha::mark_straight(gray_tx_ptr);
     }
-
     gray_tx.first->second = gray_tx_ptr;
-    SDL_FreeSurface(surface);
 
     return gray_tx_ptr;
 }
