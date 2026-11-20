@@ -189,6 +189,11 @@ bool autoconfig_window::defers_relayout(xstring section) {
     return w && w->defer_relayout;
 }
 
+bool autoconfig_window::draws_underlying(xstring section) {
+    const autoconfig_window *w = get_window_current(section);
+    return w && w->draw_underlying;
+}
+
 // A script window's pos is computed once from the screen size; this lets an open window follow a resize.
 static void __window_set_pos(xstring section, int x, int y) {
     if (autoconfig_window *w = get_window_current(section)) {

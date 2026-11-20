@@ -842,7 +842,17 @@ static bool ui_relayout_ready() {
     if (m.left.is_down || m.right.is_down || m.middle.is_down) {
         return false;
     }
-    return !autoconfig_window::defers_relayout(window_get_id());
+    // A popup over a deferring window draws it underneath, so the reload would rebuild that one too.
+    for (int depth = 0; depth < 6; ++depth) {
+        const xstring id = window_get_id_at_depth(depth);
+        if (autoconfig_window::defers_relayout(id)) {
+            return false;
+        }
+        if (!autoconfig_window::draws_underlying(id)) {
+            break;
+        }
+    }
+    return true;
 }
 
 static void js_vm_reload_ui_layouts() {

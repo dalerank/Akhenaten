@@ -43,4 +43,7 @@ void window_show(const window_type* window);
 
 xstring window_get_id(void);
 
+// Window `depth` steps below the top of the queue (0 = top); empty past the queue.
+xstring window_get_id_at_depth(int depth);
+
 void window_go_back(void);

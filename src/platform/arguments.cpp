@@ -591,6 +591,10 @@ bool load(Arguments& arguments) {
 }
 
 void store(Arguments const& arguments) {
+    // Integral tests never read akhenaten.cfg (it holds the developer's own setup); they must not write it either.
+    if (arguments.is_integral_tests()) {
+        return;
+    }
     std::ofstream output(get_configuration_path().c_str(), std::ios::trunc | std::ios::out);
 
     output << "data_directory" << '=' << arguments.get_data_directory().c_str() << '\n';

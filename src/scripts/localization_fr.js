@@ -586,7 +586,6 @@ localization_fr = [
   { key:"#exit_this_panel", text:"Quitter ce panneau" }
   { key:"#display_options_title", text:"Affichage" }
   { key:"#display_options_ui_scale", text:"Échelle de l'interface" }
-  { key:"#display_options_restart_required", text:"Redémarrez le jeu pour appliquer correctement l'échelle de l'interface." }
   { key:"#popup_dialog_quit", text:"Quitter" }
   { key:"#popup_dialog_open_trade", text:"Ouvrir une route de commerce" }
   { key:"#popup_dialog_send_goods", text:"Distribuer les biens ?" }

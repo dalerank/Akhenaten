@@ -8,6 +8,7 @@
 #include "city/object_info.h"
 #include "content/mods.h"
 #include "app/app.h"
+#include "platform/screen.h"
 #include "core/bstring.h"
 #include "core/crc32.h"
 #include "core/system_time.h"
@@ -337,6 +338,12 @@ void __test_set_campaign_scenario_id(int id) {
     g_scenario.scmode = e_scenario_normal;
 }
 ANK_FUNCTION_1(__test_set_campaign_scenario_id);
+
+// Resizes the window behind the game's back, as a drag on its frame does: only the SIZE_CHANGED event follows.
+static void __test_window_os_resize(int w, int h) {
+    SDL_SetWindowSize((SDL_Window *)g_platform_screen.sdl_window(), w, h);
+}
+ANK_FUNCTION_2(__test_window_os_resize);
 
 void __test_process_events() {
     events::process();

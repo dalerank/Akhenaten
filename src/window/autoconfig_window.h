@@ -48,6 +48,7 @@ struct autoconfig_window : public ui::widget {
     static void before_mission_start();
     static void refresh_all();
     static bool defers_relayout(xstring section);
+    static bool draws_underlying(xstring section);
     static void show(xstring section);
     static autoconfig_window* find(xstring section);
     static void unregister_section(xstring section);

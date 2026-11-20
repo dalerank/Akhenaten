@@ -511,7 +511,6 @@ localization_sp = [
   {key:"#exit_this_panel", text:"Salir de este panel"},
   {key:"#display_options_title", text:"Opciones de pantalla"},
   {key:"#display_options_ui_scale", text:"Escala de la interfaz"},
-  {key:"#display_options_restart_required", text:"Reinicia el juego para que la escala de la interfaz se aplique correctamente."},
   {key:"#popup_dialog_quit", text:"Salir"},
   {key:"#popup_dialog_open_trade", text:"Abrir ruta comercial"},
   {key:"#popup_dialog_send_goods", text:"¿Enviar mercancías?"},

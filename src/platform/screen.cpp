@@ -128,6 +128,7 @@ int platform_screen_t::create(const xstring& title, const xstring& renderer, boo
     }
 
     destroy();
+    windowed_pos_known = !fullscreen;
 
 #if defined(GAME_PLATFORM_ANDROID)
     // Fix for wrong colors on some android devices
@@ -201,16 +202,6 @@ void platform_screen_t::destroy() {
 }
 
 bool platform_screen_t::resize(int pixel_width, int pixel_height, int save) {
-    // Leaving fullscreen, the OS can restore the old windowed rect after our SDL_SetWindowSize;
-    // put the requested size back instead of adopting (and saving) the restored one.
-    if (windowed_target.x > 0 && SDL_GetTicks() < windowed_target_until && !is_window_fullscreen()) {
-        if (pixel_width != windowed_target.x || pixel_height != windowed_target.y) {
-            SDL_SetWindowSize(as_sdl_window(window), windowed_target.x, windowed_target.y);
-            center_window();
-            return true;
-        }
-    }
-
 #if defined(GAME_PLATFORM_ANDROID)
     constexpr int k_min_logical_w = 800;
     constexpr int k_min_logical_h = 600;
@@ -297,12 +288,6 @@ void platform_screen_t::set_fullscreen_resolution(vec2i resolution) {
     }
 }
 
-void platform_screen_t::hold_windowed_size(vec2i size) {
-    constexpr Uint32 hold_ms = 1000;
-    windowed_target = size;
-    windowed_target_until = SDL_GetTicks() + hold_ms;
-}
-
 // SDL does not give a window created fullscreen a border or resize frame when it leaves fullscreen.
 void platform_screen_t::restore_window_decorations() {
     SDL_SetWindowBordered(as_sdl_window(window), SDL_TRUE);
@@ -349,6 +334,7 @@ void platform_screen_t::move(int x, int y) {
         pos.x = x;
         pos.y = y;
         centered = 0;
+        windowed_pos_known = true;
         SDL_SetWindowPosition(as_sdl_window(window), x, y);
     }
 }
@@ -396,10 +382,10 @@ void platform_screen_t::set_windowed() {
     auto wsize = game_features::gameopt_display_size.to_vec2i();
     SDL_SetWindowFullscreen(as_sdl_window(window), 0);
     restore_window_decorations();
-    hold_windowed_size(wsize);
     SDL_SetWindowSize(as_sdl_window(window), wsize.x, wsize.y);
-    // A window created fullscreen has no windowed position to return to.
-    center_window();
+    if (!windowed_pos_known) {
+        center_window();
+    }
     if (SDL_GetWindowGrab(as_sdl_window(window)) == SDL_TRUE) {
         SDL_SetWindowGrab(as_sdl_window(window), SDL_FALSE);
     }
@@ -416,7 +402,6 @@ void platform_screen_t::set_window_size(int pixel_width, int pixel_height) {
     if (is_window_fullscreen()) {
         SDL_SetWindowFullscreen(as_sdl_window(window), 0);
         restore_window_decorations();
-        hold_windowed_size({pixel_width, pixel_height});
     } else {
         SDL_GetWindowPosition(as_sdl_window(window), &pos.x, &pos.y);
     }
@@ -452,7 +437,7 @@ void platform_screen_t::recreate_texture() {
     // On Windows, if ctrl + alt + del is pressed during fullscreen, the rendering context may be lost for a few frames
     // after restoring the window, preventing the texture from being recreated. This forces an attempt to recreate the
     // texture every frame to bypass that issue.
-    if (game.is_fullscreen() && platform_renderer_lost_render_texture()) {
+    if (is_window_fullscreen() && platform_renderer_lost_render_texture()) {
         SDL_DisplayMode mode;
         SDL_GetWindowDisplayMode(as_sdl_window(window), &mode);
         const vec2i base = render_base_size(mode.w, mode.h);
