@@ -8,9 +8,7 @@ var __t386_ok = false
 var __t386_ticks = 300
 var __t386_step = 5
 var __t386_frames = 2
-// Written by the draw but owned by other work in progress (sound view counters, audit item 5):
-// logged, not failed, until that lands. Remove a name here once its chunk matches.
-var __t386_known = { city_sounds: true }
+var __t386_known = {}
 var __t386_draw_diffs = {}
 
 function t386_fail(msg) {

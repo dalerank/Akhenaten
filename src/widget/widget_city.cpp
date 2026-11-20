@@ -117,6 +117,44 @@ struct water_frame_queue_t {
 };
 static water_frame_queue_t g_water_frame_queue;
 
+struct sound_view_queue_t {
+    struct entry {
+        int building_id;
+        int grid_offset;
+        int direction;
+        vec2i pixel;
+    };
+    std::array<entry, GRID_SIZE_TOTAL> entries;
+    std::atomic<int> count{0};
+
+    void push(int building_id, int grid_offset, int direction, vec2i pixel) {
+        const int index = count.fetch_add(1, std::memory_order_relaxed);
+        if (index < (int)entries.size()) {
+            entries[index] = {building_id, grid_offset, direction, pixel};
+        }
+    }
+
+    void apply() {
+        const int n = std::min(count.load(std::memory_order_relaxed), (int)entries.size());
+        for (int i = 0; i < n; i++) {
+            const entry& en = entries[i];
+            if (en.building_id) {
+                building* b = building_get(en.building_id);
+                sound_city_mark_building_view(b, en.direction);
+                if (!!game_features::gameplay_enhanced_city_ambient) {
+                    if (const int channel = sound_city_building_channel(b)) {
+                        sound_city_ambient_note(channel, en.pixel);
+                    }
+                }
+            } else {
+                sound_city_mark_terrain_view(map_terrain_get(en.grid_offset), en.grid_offset, en.direction);
+            }
+        }
+        count.store(0, std::memory_order_relaxed);
+    }
+};
+static sound_view_queue_t g_sound_view_queue;
+
 void screen_city_t::apply_water_frames() {
     g_water_frame_queue.apply();
 }
@@ -450,16 +488,10 @@ void screen_city_t::draw_isometric_mark_sound(int building_id, int grid_offset, 
         }
 
         if (!game.redraw_read_only) {
-            sound_city_mark_building_view(b, direction);
-            if (!!game_features::gameplay_enhanced_city_ambient) {
-                if (const int channel = sound_city_building_channel(b)) {
-                    sound_city_ambient_note(channel, pixel);
-                }
-            }
+            g_sound_view_queue.push(building_id, grid_offset, direction, pixel);
         }
     } else if (!game.redraw_read_only) {
-        int terrain = map_terrain_get(grid_offset);
-        sound_city_mark_terrain_view(terrain, grid_offset, direction);
+        g_sound_view_queue.push(0, grid_offset, direction, pixel);
     }
 }
 
@@ -537,6 +569,7 @@ void screen_city_t::draw_without_overlay(painter &ctx, int selected_figure_id) {
             draw_ornaments_flat
         );
         g_water_frame_queue.apply();
+        g_sound_view_queue.apply();
         g_camera.foreach_valid_map_tile(ctx,
             [this](vec2i pixel, tile2i tile, painter& ctx) { draw_isometric_terrain_height(pixel, tile, ctx); }
         );
@@ -573,6 +606,7 @@ void screen_city_t::draw_without_overlay(painter &ctx, int selected_figure_id) {
 
         // The height pass reads these tiles back, as it did when the flat pass wrote in place.
         g_water_frame_queue.apply();
+        g_sound_view_queue.apply();
 
         for (size_t blk = 0; blk < num_blocks; blk++) {
             const int y_start = block_start(blk);
