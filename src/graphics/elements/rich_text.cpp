@@ -243,8 +243,11 @@ void rich_text_t::draw_line(painter &ctx, pcstr str, int x, int y, color clr, bo
                 if (letter) {
                     x -= letter->width;
                 }
-                const image_t *img = ctx.img_generic(small_image_id, { x, y });
+                const image_t* img = image_get(small_image_id);
                 if (img) {
+                    if (!measure_only) {
+                        ctx.img_generic(small_image_id, {x, y});
+                    }
                     x += img->width;
                 }
                 continue;
