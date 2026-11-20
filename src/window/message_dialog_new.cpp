@@ -416,7 +416,7 @@ void ui::message_dialog_base::draw_content(const lang_message& msg) {
         ui["content_text"] = text;
     }
 
-    graphics_reset_clip_rectangle();
+    ui::push_cmd(ui::cmd_t(ui::cmd_t::clip_reset));
 }
 
 void ui::message_dialog_base::draw_background_content() {
@@ -429,7 +429,8 @@ void ui::message_dialog_base::draw_background_content() {
 void ui::message_dialog_base::draw_background_video() {
     const vec2i video_pos = pos + ui["video_area"].pos;
     const vec2i video_size = ui["video_area"].pxsize();
-    graphics_draw_rect(video_pos + vec2i{-1, -1}, video_size + vec2i{2, 2}, COLOR_BLACK);
+    ui::push(ui::cmd_t::draw_rect, ui::opt::Pos{video_pos + vec2i{-1, -1}}, ui::opt::Size{video_size + vec2i{2, 2}},
+      ui::opt::TextColor{COLOR_BLACK});
 }
 
 int ui::message_dialog_base::draw_background(UiFlags flags) {
@@ -459,7 +460,7 @@ void ui::message_dialog_base::draw_foreground_content() {
 void ui::message_dialog_base::draw_foreground_video() {
     const vec2i video_pos = pos + ui["video_area"].pos;
     const vec2i video_size = ui["video_area"].pxsize();
-    video_draw_in_rect(video_pos.x, video_pos.y, video_size.x, video_size.y);
+    ui::push(ui::cmd_t::video, ui::opt::Pos{video_pos}, ui::opt::Size{video_size});
 }
 
 bool ui::message_dialog_base::handle_input_normal(const mouse* m_dialog, const lang_message& msg) {

@@ -12,9 +12,9 @@
 
 
 void ui::message_dialog_god::draw_foreground(UiFlags flags) {
+    const size_t dialog_commands = ui::command_mark();
     message_dialog_base::draw_foreground(flags);
 
-    painter ctx = game.painter();
     const lang_message &msg = lang_get_message(text_id);
 
     draw_city_message_text(msg);
@@ -33,7 +33,9 @@ void ui::message_dialog_god::draw_foreground(UiFlags flags) {
         int image_x = area_abs_pos.x + (area_size.x - img->width) / 2;
         int image_y = area_abs_pos.y + (area_size.y - img->height) / 2;
 
-        ctx.img_generic(img, vec2i{ image_x, image_y });
+        const size_t god_commands = ui::command_mark();
+        ui::image_abs(imgid, {image_x, image_y});
+        ui::move_commands_below(god_commands, dialog_commands);
     }
 }
 

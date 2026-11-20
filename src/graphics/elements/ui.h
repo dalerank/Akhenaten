@@ -149,6 +149,7 @@ namespace ui {
             background,
             panel_unbordered,
             panel_outer_exact,
+            video,
             line,
             pixel,
         };

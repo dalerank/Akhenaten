@@ -2,6 +2,7 @@
 
 #include "graphics/image.h"
 #include "graphics/graphics.h"
+#include "graphics/elements/ui.h"
 #include "graphics/screen.h"
 #include "graphics/video.h"
 #include "graphics/render_device.h"
@@ -41,7 +42,8 @@ static void draw_background(int) {
 
 static void draw_foreground(int) {
     auto& data = g_victory_video_data;
-    video_draw((screen_width() - data.width) / 2, (screen_height() - data.height) / 2);
+    ui::push(ui::cmd_t::video,
+      ui::opt::Pos{vec2i{(screen_width() - data.width) / 2, (screen_height() - data.height) / 2}});
 }
 
 static void handle_input(const mouse* m, const hotkeys* h) {

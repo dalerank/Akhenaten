@@ -4,6 +4,7 @@
 #include "game/game.h"
 #include "graphics/elements/lang_text.h"
 #include "graphics/font.h"
+#include "graphics/video.h"
 
 #include <algorithm>
 
@@ -172,6 +173,14 @@ void execute_ui_command(painter& ctx, const ui::cmd_t& cmd) {
 
     case cmd_t::panel_outer_exact:
         outer_panel_draw_exact(cmd.pos, cmd.size);
+        break;
+
+    case cmd_t::video:
+        if (cmd.size.x > 0) {
+            video_draw_in_rect(cmd.pos.x, cmd.pos.y, cmd.size.x, cmd.size.y);
+        } else {
+            video_draw(cmd.pos.x, cmd.pos.y);
+        }
         break;
 
     case cmd_t::panel_unbordered:
