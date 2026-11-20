@@ -20,11 +20,8 @@
 #include "grid/terrain.h"
 #include "mujs/mujs.h"
 
-// Immediate draws need the city view's zoom scale; a fresh game.painter() only has the display scale.
 static painter planner_painter() {
-    painter ctx = g_city_planner.draw_ctx ? *g_city_planner.draw_ctx : game.painter();
-    g_city_planner.js_draw_scale = ctx.global_render_scale;
-    return ctx;
+    return g_city_planner.draw_ctx ? *g_city_planner.draw_ctx : game.painter();
 }
 
 ANK_GLOBAL_OBJECT(g_city_planner, __city_planner,
