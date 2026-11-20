@@ -156,13 +156,12 @@ void minimap_window::draw_foreground(UiFlags flags) {
 
     set_bounds(draw_size);
 
-    painter ctx = game.painter();
-    graphics_set_clip_rectangle(screen_offset, size);
+    ui::push(ui::cmd_t::clip_set, ui::opt::Pos{screen_offset}, ui::opt::Size{size});
 
     draw_uncached(screen_offset);
 
-    draw_viewport_rectangle(ctx);
-    graphics_reset_clip_rectangle();
+    draw_viewport_rectangle();
+    ui::push_cmd(ui::cmd_t(ui::cmd_t::clip_reset));
 }
 
 void widget_minimap_init() {
@@ -224,19 +223,30 @@ bool minimap_window::draw_figure(vec2i screen, tile2i point) {
         break;
     }
 
-    graphics_draw_pixel(screen, color);
+    if (immediate) {
+        graphics_draw_pixel(screen, color);
+    } else {
+        ui::push(ui::cmd_t::pixel, ui::opt::Pos{screen}, ui::opt::TextColor{color});
+    }
     return true;
 }
 
+void minimap_window::put_image(int image_id, vec2i pos) {
+    if (immediate) {
+        game.painter().img_generic(image_id, pos);
+    } else {
+        ui::image_abs(image_id, pos);
+    }
+}
+
 void minimap_window::draw_minimap_tile(vec2i screen, tile2i point) {
-    painter ctx = game.painter();
     int grid_offset = point.grid_offset();
     if (grid_offset < 0) {
         const int water_base = terrain_water.first_img();
         if (water_base > 0) {
-            ctx.img_generic(water_base + ((screen.x / 2 + screen.y) & 3), screen);
+            put_image(water_base + ((screen.x / 2 + screen.y) & 3), screen);
         } else {
-            ctx.img_generic(image_id_from_group(GROUP_MINIMAP_BLACK), screen);
+            put_image(image_id_from_group(GROUP_MINIMAP_BLACK), screen);
         }
         return;
     }
@@ -300,13 +310,13 @@ void minimap_window::draw_minimap_tile(vec2i screen, tile2i point) {
             case 3:
             case 4:
             case 5:
-                ctx.img_generic(image_id + (multi_tile_size - 1), screen + vec2i{ 0,  -(multi_tile_size - 1) });
+                put_image(image_id + (multi_tile_size - 1), screen + vec2i{0, -(multi_tile_size - 1)});
                 break;
             case 6: // TODO: make a generalized formula?
-                ctx.img_generic(image_id + 2, screen + vec2i{ 0,  -2 });
-                ctx.img_generic(image_id + 2, screen + vec2i{ +3, -5 });
-                ctx.img_generic(image_id + 2, screen + vec2i{ +6, -2 });
-                ctx.img_generic(image_id + 2, screen + vec2i{ +3, +1 });
+                put_image(image_id + 2, screen + vec2i{0, -2});
+                put_image(image_id + 2, screen + vec2i{+3, -5});
+                put_image(image_id + 2, screen + vec2i{+6, -2});
+                put_image(image_id + 2, screen + vec2i{+3, +1});
                 break;
             }
         }
@@ -344,11 +354,11 @@ void minimap_window::draw_minimap_tile(vec2i screen, tile2i point) {
         else
             image_id = image_id_from_group(GROUP_MINIMAP_EMPTY_LAND) + (rand & 7);
 
-        ctx.img_generic(image_id, screen);
+        put_image(image_id, screen);
     }
 }
 
-void minimap_window::draw_viewport_rectangle(painter &ctx) {
+void minimap_window::draw_viewport_rectangle() {
     tile2i camera_tile = g_camera.camera_mappoint;
     vec2i camera_pixels = g_camera.camera_pixel_offset_internal;
     vec2i view_size_tiles = g_camera.size_tiles;
@@ -361,7 +371,9 @@ void minimap_window::draw_viewport_rectangle(painter &ctx) {
     }
 
     int y_offset = screen_offset.y + camera_tile.y() - absolute_tile.y() + 1;
-    graphics_draw_rect(vec2i{x_offset, y_offset}, vec2i{ view_size_tiles.x * 2 + 8, view_size_tiles.y + 3}, COLOR_MINIMAP_VIEWPORT);
+    ui::push(ui::cmd_t::draw_rect, ui::opt::Pos{vec2i{x_offset, y_offset}},
+      ui::opt::Size{vec2i{view_size_tiles.x * 2 + 8, view_size_tiles.y + 3}},
+      ui::opt::TextColor{COLOR_MINIMAP_VIEWPORT});
 }
 
 void minimap_window::clear() {
@@ -395,9 +407,12 @@ void widget_minimap_draw_border(int sidebar_x_offset) {
     const int right = sidebar_x_offset + MINIMAP_X_OFFSET + g_minimap_window.size.x - 1;
     const int bottom = MINIMAP_Y_OFFSET + g_minimap_window.draw_size.y;
 
-    graphics_draw_line(vec2i{left + 1, top}, vec2i{right, top}, COLOR_MINIMAP_DARK);
-    graphics_draw_line(vec2i{left, top + 1}, vec2i{left, bottom}, COLOR_MINIMAP_DARK);
-    graphics_draw_line(vec2i{right, top + 1}, vec2i{right, bottom}, COLOR_MINIMAP_LIGHT);
+    ui::push(ui::cmd_t::line, ui::opt::Pos{vec2i{left + 1, top}}, ui::opt::Size{vec2i{right, top}},
+      ui::opt::TextColor{COLOR_MINIMAP_DARK});
+    ui::push(ui::cmd_t::line, ui::opt::Pos{vec2i{left, top + 1}}, ui::opt::Size{vec2i{left, bottom}},
+      ui::opt::TextColor{COLOR_MINIMAP_DARK});
+    ui::push(ui::cmd_t::line, ui::opt::Pos{vec2i{right, top + 1}}, ui::opt::Size{vec2i{right, bottom}},
+      ui::opt::TextColor{COLOR_MINIMAP_LIGHT});
 }
 
 bool widget_minimap_handle_mouse(const mouse* m) {
@@ -503,7 +518,9 @@ void rebuild_minimap_preview() {
 
     graphics_set_clip_rectangle(capture_pos, native);
     fill_with_minimap_water(capture_pos, native);
+    g_minimap_window.immediate = true;
     g_minimap_window.draw(UiFlags_None);
+    g_minimap_window.immediate = false;
     g_minimap_preview.texture_id = graphics_save_to_texture(-1, capture_pos, native);
 
     vec2i final_size = native;

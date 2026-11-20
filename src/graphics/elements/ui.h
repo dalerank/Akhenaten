@@ -148,6 +148,8 @@ namespace ui {
             lang_text_year,
             background,
             panel_unbordered,
+            line,
+            pixel,
         };
 
         e_type type = none;

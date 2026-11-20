@@ -18,6 +18,7 @@ struct minimap_window : public autoconfig_window_t<minimap_window> {
     vec2i mouse_last_coords;
     int refresh_requested;
     bool draw_force = false;
+    bool immediate = false;
     int cached_texture = 0;
     animation_t terrain_canal;
     animation_t terrain_water;
@@ -57,7 +58,8 @@ struct minimap_window : public autoconfig_window_t<minimap_window> {
     void set_bounds(vec2i draw_size);
     void draw_uncached(vec2i offset);
     void draw_minimap_tile(vec2i screen, tile2i point);
-    void draw_viewport_rectangle(painter &ctx);
+    void draw_viewport_rectangle();
+    void put_image(int image_id, vec2i pos);
     void clear();
     virtual void draw(UiFlags flags) override;
 };

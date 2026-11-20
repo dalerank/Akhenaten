@@ -162,6 +162,14 @@ void execute_ui_command(painter& ctx, const ui::cmd_t& cmd) {
         graphics_draw_background(ctx, cmd.image_id, cmd.scale, cmd.pos, cmd.box_width != 0);
         break;
 
+    case cmd_t::line:
+        graphics_draw_line(cmd.pos, cmd.size, cmd.clr);
+        break;
+
+    case cmd_t::pixel:
+        graphics_draw_pixel(cmd.pos, cmd.clr);
+        break;
+
     case cmd_t::panel_unbordered:
         unbordered_panel_draw(cmd.pos.x, cmd.pos.y, cmd.size.x, cmd.size.y);
         break;

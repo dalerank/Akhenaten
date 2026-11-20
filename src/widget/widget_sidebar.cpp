@@ -132,10 +132,12 @@ void ui::sidebar_window_expanded_t::ui_draw_foreground(UiFlags flags) {
     const UiFlags wflags = is_disabled ? UiFlags_Readonly : UiFlags_None;
 
     ui.begin_widget(pos);
+    const size_t minimap_commands = ui::command_mark();
     widget_minimap_draw({ x_offset + MINIMAP_X_OFFSET, MINIMAP_Y_OFFSET }, 0);
+    widget_minimap_draw_border(x_offset);
+    ui::move_commands_below(minimap_commands, sidebar_commands);
 
     ui.draw(wflags);
-    widget_minimap_draw_border(x_offset);
 
     ui.end_widget();
 
