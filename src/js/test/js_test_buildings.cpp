@@ -7,6 +7,7 @@
 #include "building/building_mansion.h"
 #include "building/building_static_params.h"
 #include "building/building_temple_complex.h"
+#include "building/construction/build_planner.h"
 #include "building/monument_obelisk.h"
 #include "building/monument_pyramid.h"
 #include "building/monument_royal_tomb.h"
@@ -25,9 +26,11 @@
 #include "figuretype/figure_cartpusher.h"
 #include "figuretype/figure_plagued_citizen.h"
 #include "game/simulation.h"
+#include "game/game.h"
 #include "game/game_events.h"
 #include "game/resource.h"
 #include "graphics/image.h"
+#include "graphics/render_device.h"
 #include "grid/grid.h"
 #include "grid/road_access.h"
 #include "grid/routing/routing.h"
@@ -775,3 +778,14 @@ static int __test_house_image_id(int bid) {
     return house ? house->runtime_data().image_id : 0;
 }
 ANK_FUNCTION_1(__test_house_image_id);
+
+// Draws the planner as the city view does, with a context at `scale`; returns the render scale the JS
+// preview drew with (0 if it drew nothing).
+static float __test_city_planner_draw(float scale) {
+    painter ctx = game.painter();
+    set_render_scale(ctx, scale);
+    g_city_planner.js_draw_scale = 0.f;
+    g_city_planner.draw(ctx);
+    return g_city_planner.js_draw_scale;
+}
+ANK_FUNCTION_1(__test_city_planner_draw);

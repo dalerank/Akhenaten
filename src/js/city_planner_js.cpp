@@ -20,6 +20,13 @@
 #include "grid/terrain.h"
 #include "mujs/mujs.h"
 
+// Immediate draws need the city view's zoom scale; a fresh game.painter() only has the display scale.
+static painter planner_painter() {
+    painter ctx = g_city_planner.draw_ctx ? *g_city_planner.draw_ctx : game.painter();
+    g_city_planner.js_draw_scale = ctx.global_render_scale;
+    return ctx;
+}
+
 ANK_GLOBAL_OBJECT(g_city_planner, __city_planner,
     build_type,
     in_progress,
@@ -101,7 +108,7 @@ void __city_planner_update_tiles_building(int image_id) {
 ANK_FUNCTION_1(__city_planner_update_tiles_building);
 
 void __city_planner_draw_tile_graphics_array(tile2i start, tile2i end, vec2i pixel) {
-    painter ctx = game.painter();
+    painter ctx = planner_painter();
     g_city_planner.draw_tile_graphics_array(ctx, start, end, pixel);
 }
 ANK_FUNCTION_3(__city_planner_draw_tile_graphics_array);
@@ -130,25 +137,25 @@ void __city_planner_validate_last_created() {
 ANK_FUNCTION(__city_planner_validate_last_created);
 
 void __city_planner_draw_blocked(vec2i pixel) {
-    painter ctx = game.painter();
+    painter ctx = planner_painter();
     g_city_planner.draw_flat_tile_immediate(ctx, pixel, COLOR_MASK_RED);
 }
 ANK_FUNCTION_1(__city_planner_draw_blocked);
 
 void __city_planner_draw_ghost(vec2i pixel, int image_id) {
-    painter ctx = game.painter();
+    painter ctx = planner_painter();
     g_city_planner.draw_building_ghost(ctx, image_id, pixel);
 }
 ANK_FUNCTION_2(__city_planner_draw_ghost);
 
 void __city_planner_draw_ghost_overlay(vec2i pixel, int image_id) {
-    painter ctx = game.painter();
+    painter ctx = planner_painter();
     build_planner::draw_ghost_overlay(ctx, image_id, pixel);
 }
 ANK_FUNCTION_2(__city_planner_draw_ghost_overlay);
 
 void __city_planner_draw_from_below(vec2i pixel, int image_id) {
-    painter ctx = game.painter();
+    painter ctx = planner_painter();
     build_planner::draw_from_below(ctx, image_id, pixel, COLOR_MASK_GREEN);
 }
 ANK_FUNCTION_2(__city_planner_draw_from_below);
@@ -163,7 +170,7 @@ int __map_venue_build_orientation(tile2i tile, int mode) {
 ANK_FUNCTION_2(__map_venue_build_orientation);
 
 void __city_planner_draw_flat_tiles(vec2i pixel, int count) {
-    painter ctx = game.painter();
+    painter ctx = planner_painter();
     for (int i = 0; i < count; i++) {
         g_city_planner.draw_flat_tile_immediate(ctx, pixel + VIEW_OFFSETS[i], COLOR_MASK_RED);
     }
@@ -171,19 +178,19 @@ void __city_planner_draw_flat_tiles(vec2i pixel, int count) {
 ANK_FUNCTION_2(__city_planner_draw_flat_tiles);
 
 void __city_planner_draw_isometric_ghost(vec2i pixel, int image_id, color color_mask) {
-    painter ctx = game.painter();
+    painter ctx = planner_painter();
     ctx.img_isometric(image_id, pixel, color_mask, 1.f, ImgFlag_None);
 }
 ANK_FUNCTION_3(__city_planner_draw_isometric_ghost);
 
 void __city_planner_draw_overlay_tile(vec2i pixel, int image_id, color color_mask, float scale) {
-    painter ctx = game.painter();
+    painter ctx = planner_painter();
     build_planner::draw_overlay_tile(ctx, image_id, pixel, color_mask, scale);
 }
 ANK_FUNCTION_4(__city_planner_draw_overlay_tile);
 
 void __city_planner_draw_flat_tile(vec2i pixel, color color_mask) {
-    painter ctx = game.painter();
+    painter ctx = planner_painter();
     build_planner::draw_flat_tile_immediate(ctx, pixel, color_mask);
 }
 ANK_FUNCTION_2(__city_planner_draw_flat_tile);
