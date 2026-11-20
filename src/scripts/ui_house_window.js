@@ -94,6 +94,7 @@ function house_determine_worst_desirability_building(house) {
     var lowest_desirability = 0
     var lowest_building_id = 0
     var myTile = house.tile
+    var myType = house.type
 
     for (var y = area.miny; y <= area.maxy; y++) {
         for (var x = area.minx; x <= area.maxx; x++) {
@@ -102,8 +103,9 @@ function house_determine_worst_desirability_building(house) {
             if (!building.valid || building.id === house_id)
                 continue
 
-            var otherLevel = building.level
-            if (otherLevel > 0 && otherLevel === myLevel)
+            // Only lower-level houses count. House types run in level order; a plain Building has no level.
+            var type = building.type
+            if (type >= BUILDING_HOUSE_CRUDE_HUT && type <= BUILDING_HOUSE_PALATIAL_ESTATE && type >= myType)
                 continue
 
             var des = building.des_influence_value
