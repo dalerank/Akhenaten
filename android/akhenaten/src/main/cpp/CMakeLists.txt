@@ -29,6 +29,7 @@ file(GLOB PLATFORM_FILES ${SRC_ROOT}/platform/*.cpp)
 file(GLOB ANDROID_FILES ${SRC_ROOT}/platform/android/*.cpp)
 file(GLOB CONFIG_FILES ${SRC_ROOT}/config/*.cpp)
 file(GLOB CONTENT_FILES ${SRC_ROOT}/content/*.cpp)
+file(GLOB APP_FILES ${SRC_ROOT}/app/*.cpp)
 file(GLOB CORE_FILES ${SRC_ROOT}/core/*.cpp)
 file(GLOB CORE_ENCODING_FILES ${SRC_ROOT}/core/encoding/*.cpp)
 file(GLOB BUILDING_FILES ${SRC_ROOT}/building/*.cpp)
@@ -99,6 +100,7 @@ set(SOURCE_FILES
     ${ANDROID_FILES}
     ${CONFIG_FILES}
     ${CONTENT_FILES}
+    ${APP_FILES}
     ${CORE_FILES}
     ${CORE_ENCODING_FILES}
     ${BUILDING_FILES}
