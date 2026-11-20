@@ -43,6 +43,7 @@ namespace game_features {
     game_feature gameui_complete_ratings_columns{ "gameui_complete_ratings_columns", "#TR_CONFIG_COMPLETE_RATING_COLUMNS", false, false };
     game_feature gameui_highlight_legions{ "gameui_highlight_legions", "#TR_CONFIG_HIGHLIGHT_LEGIONS", false, false };
     game_feature gameui_rotate_manually{ "gameui_rotate_manually", "#TR_CONFIG_ROTATE_MANUALLY", false, false };
+    game_feature gameui_house_interior{ "gameui_house_interior", "#TR_CONFIG_HOUSE_INTERIOR", false, false };
     game_feature gameplay_change_grandfestival{ "gameplay_change_grandfestival", "#TR_CONFIG_GRANDFESTIVAL", false, false };
     game_feature gameplay_change_hasanimals{ "gameplay_change_has_animals", "#TR_CONFIG_CITY_HAS_ANIMALS", false, false };
     game_feature gameplay_change_jealous_gods{ "gameplay_change_jealous_gods", "#TR_CONFIG_JEALOUS_GODS", false, false };

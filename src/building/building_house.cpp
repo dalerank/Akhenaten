@@ -1515,6 +1515,10 @@ void building_house::update_fade_alpha() {
 bool building_house::draw_ornaments_and_animations_height(painter &ctx, vec2i point, tile2i tile, color color_mask) {
     building_impl::draw_ornaments_and_animations_height(ctx, point, tile, color_mask);
 
+    if (!game_features::gameui_house_interior) {
+        return true;
+    }
+
     update_fade_alpha();
 
     auto &d = runtime_data();

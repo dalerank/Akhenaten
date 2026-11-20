@@ -67,6 +67,7 @@ namespace game_features {
     extern game_feature gameui_complete_ratings_columns;
     extern game_feature gameui_highlight_legions;
     extern game_feature gameui_rotate_manually;
+    extern game_feature gameui_house_interior;
     extern game_feature gameplay_change_grandfestival;
     extern game_feature gameplay_change_jealous_gods;
     extern game_feature gameplay_change_global_labour;

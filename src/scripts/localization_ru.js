@@ -52,6 +52,7 @@ localization_ru = [
     { key:"#TR_CONFIG_FIX_EDITOR_EVENTS", text:"Исправлять запросы Императора и время выживания в польз. миссиях"}
     { key:"#TR_CONFIG_DRAW_WALKER_WAYPOINTS", text:"Отображать маршрут ходоков по правому щелчку на здании"}
     { key:"#TR_CONFIG_ZOOM_STEPPED", text:"Включить функцию зума (возможно замедление)"}
+    { key:"#TR_CONFIG_HOUSE_INTERIOR", text:"Показывать интерьер объединённых домов под курсором"}
     { key:"#TR_CONFIG_COMPLETE_RATING_COLUMNS", text:"Исправить незавершенные колонны рейтинга"}
     { key:"#TR_CONFIG_GRANDFESTIVAL", text:"Великий фестиваль разрешает дополнительное благословение от божества"}
     { key:"#TR_CONFIG_JEALOUS_GODS", text:"Отключить ревность божеств"}

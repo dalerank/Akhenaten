@@ -62,6 +62,7 @@ localization_en = [
   {key:"#TR_CONFIG_PAUSE_SIM_WHILE_BUILDING", text:"Pause simulation while placing buildings"}
   {key:"#TR_CONFIG_HIGHLIGHT_LEGIONS", text:"Highlight legion on cursor hover"}
   {key:"#TR_CONFIG_ROTATE_MANUALLY", text:"Rotate Gatehouse and Triumph Arch by hotkey"}
+  {key:"#TR_CONFIG_HOUSE_INTERIOR", text:"Show the inside of merged houses under the cursor"}
   {key:"#TR_CONFIG_FIX_IMMIGRATION_BUG", text:"Fix immigration bug on very hard"}
   {key:"#TR_CONFIG_FIX_100_YEAR_GHOSTS", text:"Fix 100-year-old ghosts"}
   {key:"#TR_CONFIG_FIX_EDITOR_EVENTS", text:"Fix Emperor change and survival time in custom missions"}
