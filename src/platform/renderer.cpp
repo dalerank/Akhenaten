@@ -1288,13 +1288,13 @@ static pcstr render_backend_name(e_render_backend backend) {
     return "";
 }
 
-// Tried in order after the user's choice. On Windows direct3d11 is as fast as opengl on a full city and keeps that
-// speed when sprites switch textures (atlas off), where opengl slows down; SDL's own pick there is direct3d (D3D9).
-// Elsewhere SDL's pick is kept.
+// Tried in order after the user's choice. On Windows opengl comes first because shader effects start there;
+// direct3d11 keeps its speed when sprites switch textures (atlas off), where opengl slows down; SDL's own pick
+// there is direct3d (D3D9). Elsewhere SDL's pick is kept.
 static const e_render_backend k_render_backend_chain[] = {
 #if defined(GAME_PLATFORM_WIN)
-  RENDER_BACKEND_DIRECT3D11,
   RENDER_BACKEND_OPENGL,
+  RENDER_BACKEND_DIRECT3D11,
   RENDER_BACKEND_DIRECT3D,
 #else
   RENDER_BACKEND_SDL_DEFAULT,
