@@ -38,6 +38,7 @@ struct sprite_draw_t {
     uint8_t r, g, b, a;
     double angle;
     bool mirrored;
+    uint16_t clip = 0;
 };
 
 struct graphics_renderer_interface {

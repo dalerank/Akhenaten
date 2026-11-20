@@ -83,6 +83,11 @@ struct buffer_texture {
     int tex_height;
 };
 
+struct render_clip_t {
+    bool enabled;
+    SDL_Rect rect;
+};
+
 struct renderer_data_t {
     SDL_Window *window;
     SDL_Renderer* renderer;
@@ -117,6 +122,8 @@ struct renderer_data_t {
     hvector<SDL_Vertex, 1024, false> run_vertices;
     hvector<int, 1536, false> run_indices;
     hvector<render_material_t, 64, false> materials;
+    hvector<render_clip_t, 16, false> clips;
+    render_clip_t clip = {};
     int texture_buffer_id = 0;
     struct {
         int id;
@@ -128,8 +135,7 @@ struct renderer_data_t {
         bool active = false;
         SDL_Texture *former_target = nullptr;
         SDL_Rect former_viewport = {};
-        SDL_Rect former_clip = {};
-        SDL_bool had_clip = SDL_FALSE;
+        render_clip_t former_clip = {};
     } saved_texture_target;
 
     int supports_yuv_textures;
@@ -230,8 +236,29 @@ static void copy_sprite(const sprite_draw_t& sprite) {
       sprite.mirrored ? SDL_FLIP_HORIZONTAL : SDL_FLIP_NONE);
 }
 
+static void apply_clip(const render_clip_t& clip) {
+    if (!g_renderer_data.renderer) {
+        return;
+    }
+    SDL_RenderSetClipRect(g_renderer_data.renderer, clip.enabled ? &clip.rect : nullptr);
+}
+
+static bool same_clip(const render_clip_t& a, const render_clip_t& b) {
+    return a.enabled == b.enabled && (!a.enabled || SDL_memcmp(&a.rect, &b.rect, sizeof(SDL_Rect)) == 0);
+}
+
+static uint16_t current_clip_id() {
+    auto& data = g_renderer_data;
+    auto& clips = data.clips;
+    if (!clips.empty() && same_clip(clips.back(), data.clip)) {
+        return (uint16_t)(clips.size() - 1);
+    }
+    clips.push_back(data.clip);
+    return (uint16_t)(clips.size() - 1);
+}
+
 static bool same_run(const sprite_draw_t& a, const sprite_draw_t& b) {
-    return a.material == b.material && b.angle == 0.0;
+    return a.material == b.material && a.clip == b.clip && b.angle == 0.0;
 }
 
 static void draw_sprite_run(const sprite_draw_t* first, size_t count) {
@@ -290,7 +317,9 @@ static void draw_sprite_run(const sprite_draw_t* first, size_t count) {
 }
 
 static void flush_sprites() {
+    auto& data = g_renderer_data;
     if (g_sprite_list.empty()) {
+        apply_clip(data.clip);
         return;
     }
     render_stats::note_flush();
@@ -298,6 +327,9 @@ static void flush_sprites() {
     size_t i = 0;
     while (i < n) {
         const sprite_draw_t& first = g_sprite_list[i];
+        if (i == 0 || first.clip != g_sprite_list[i - 1].clip) {
+            apply_clip(data.clips[first.clip]);
+        }
         size_t end = i + 1;
         if (!g_renderer_data.is_software_renderer && first.angle == 0.0) {
             while (end < n && same_run(first, g_sprite_list[end])) {
@@ -312,7 +344,9 @@ static void flush_sprites() {
         i = end;
     }
     g_sprite_list.clear();
-    g_renderer_data.materials.clear();
+    data.materials.clear();
+    data.clips.clear();
+    apply_clip(data.clip);
 }
 
 uint16_t graphics_renderer_interface::material(SDL_Texture* texture, int blend, bool linear) {
@@ -330,6 +364,7 @@ uint16_t graphics_renderer_interface::material(SDL_Texture* texture, int blend, 
 void graphics_renderer_interface::draw_sprite(const sprite_draw_t& sprite) {
     main_thread::check("graphics_renderer_interface::draw_sprite");
     g_sprite_list.push_back(sprite);
+    g_sprite_list.back().clip = current_clip_id();
 }
 
 void graphics_renderer_interface::destroy_texture(SDL_Texture* texture) {
@@ -442,23 +477,23 @@ void graphics_renderer_interface::reset_viewport(void) {
     auto &data = g_renderer_data;
     render_stats::note_break();
     SDL_RenderSetViewport(data.renderer, NULL);
-    SDL_RenderSetClipRect(data.renderer, NULL);
+    data.clip = {};
+    apply_clip(data.clip);
 }
 
 void graphics_renderer_interface::set_clip_rectangle(vec2i pos, int width, int height) {
-    flush_sprites();
     main_thread::check("graphics_renderer_interface::set_clip_rectangle");
     auto &data = g_renderer_data;
     render_stats::note_break();
-    SDL_Rect clip = {pos.x, pos.y, width, height};
-    SDL_RenderSetClipRect(data.renderer, &clip);
+    if (width >= 0 && height >= 0) {
+        data.clip = {true, {pos.x, pos.y, width, height}};
+    } else {
+        data.clip = {};
+    }
 }
 
 bool graphics_renderer_interface::inside_clip_rectangle(vec2i pos) {
-    auto &data = g_renderer_data;
-    SDL_Rect clip;
-    SDL_RenderGetClipRect(data.renderer, &clip);
-
+    const SDL_Rect& clip = g_renderer_data.clip.rect;
     if (clip.w <= 0 || clip.h <= 0) {
         return true;
     }
@@ -467,19 +502,15 @@ bool graphics_renderer_interface::inside_clip_rectangle(vec2i pos) {
 }
 
 rect graphics_renderer_interface::clip_rectangle() {
-    auto &data = g_renderer_data;
-    SDL_Rect clip;
-    SDL_RenderGetClipRect(data.renderer, &clip);
-
+    const SDL_Rect& clip = g_renderer_data.clip.rect;
     return { {clip.x, clip.y}, {clip.x + clip.w, clip.y + clip.h} };
 }
 
 void graphics_renderer_interface::reset_clip_rectangle(void) {
-    flush_sprites();
     main_thread::check("graphics_renderer_interface::reset_clip_rectangle");
     auto &data = g_renderer_data;
     render_stats::note_break();
-    SDL_RenderSetClipRect(data.renderer, NULL);
+    data.clip = {};
 }
 
 vec2i graphics_renderer_interface::get_max_image_size() {
@@ -802,15 +833,14 @@ bool graphics_renderer_interface::begin_saved_texture_target(int texture_id) {
 
     data.saved_texture_target.former_target = SDL_GetRenderTarget(data.renderer);
     SDL_RenderGetViewport(data.renderer, &data.saved_texture_target.former_viewport);
-    data.saved_texture_target.had_clip = SDL_RenderIsClipEnabled(data.renderer);
-    if (data.saved_texture_target.had_clip) {
-        SDL_RenderGetClipRect(data.renderer, &data.saved_texture_target.former_clip);
-    }
+    data.saved_texture_target.former_clip = data.clip;
 
     SDL_Rect viewport = {0, 0, texture_info->width, texture_info->height};
-    SDL_RenderSetClipRect(data.renderer, nullptr);
+    data.clip = {};
+    apply_clip(data.clip);
     if (SDL_SetRenderTarget(data.renderer, texture_info->texture) != 0) {
-        SDL_RenderSetClipRect(data.renderer, data.saved_texture_target.had_clip ? &data.saved_texture_target.former_clip : nullptr);
+        data.clip = data.saved_texture_target.former_clip;
+        apply_clip(data.clip);
         return false;
     }
     SDL_RenderSetViewport(data.renderer, &viewport);
@@ -828,7 +858,8 @@ void graphics_renderer_interface::end_saved_texture_target() {
 
     SDL_SetRenderTarget(data.renderer, data.saved_texture_target.former_target);
     SDL_RenderSetViewport(data.renderer, &data.saved_texture_target.former_viewport);
-    SDL_RenderSetClipRect(data.renderer, data.saved_texture_target.had_clip ? &data.saved_texture_target.former_clip : nullptr);
+    data.clip = data.saved_texture_target.former_clip;
+    apply_clip(data.clip);
     data.saved_texture_target = {};
 }
 
@@ -1605,6 +1636,7 @@ int platform_renderer_create_render_texture(int width, int height) {
     if (data.render_texture) {
         logs::info("Render texture created (%d x %d)", width, height);
         SDL_SetRenderTarget(data.renderer, data.render_texture);
+        data.clip = {};
         SDL_SetRenderDrawBlendMode(data.renderer, SDL_BLENDMODE_BLEND);
 
 #ifdef USE_TEXTURE_SCALE_MODE
@@ -1791,6 +1823,7 @@ void platform_renderer_render() {
 
     SDL_RenderPresent(data.renderer);
     SDL_SetRenderTarget(data.renderer, data.render_texture);
+    data.clip = {};
 }
 
 void platform_renderer_generate_mouse_cursor_texture(int cursor_id, int size, const color* pixels, int hotspot_x, int hotspot_y) {
@@ -1821,6 +1854,7 @@ void platform_renderer_resume() {
     auto &data = g_renderer_data;
     platform_renderer_create_render_texture(screen_width(), screen_height());
     SDL_SetRenderTarget(data.renderer, data.render_texture);
+    data.clip = {};
 }
 
 void platform_renderer_destroy(void) {
