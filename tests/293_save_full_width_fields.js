@@ -1,0 +1,86 @@
+// game_time is four OG int32 fields bound at full width; a BC (negative) year must
+// survive save -> load together with tick/day/month, and so must a request's
+// months_left (OG int16).
+// The on-disk sign-extension bytes themselves are not observable from JS.
+// Markers:
+//   [test-marker] save_full_width_year_ok
+//   [test-marker] save_full_width_request_months_ok
+
+function test293_fail(msg) {
+    __log_info_native('[test:293] FAIL: ' + msg)
+    __test_signal_ready()
+}
+
+function test293_roundtrip(save_name) {
+    if (!__test_save_memory(save_name)) {
+        test293_fail('write_savegame failed: ' + save_name)
+        return false
+    }
+    if (!__test_load_memory(save_name)) {
+        __test_drop_memory_save(save_name)
+        test293_fail('load_savegame failed: ' + save_name)
+        return false
+    }
+    __test_drop_memory_save(save_name)
+    return true
+}
+
+function run_test() {
+    __log_info_native('[test:293] save full-width fields')
+    test_ensure_city_session('data/default.map')
+
+    var want_year = -2850
+    game.simtime.year = want_year
+    game.simtime.month = 7
+    game.simtime.day = 9
+    game.simtime.tick = 13
+    if (game.simtime.year != want_year) {
+        test293_fail('could not set simtime.year, got ' + game.simtime.year)
+        return
+    }
+
+    var tag = 30701
+    var req = city.create_good_request({
+        tag_id: tag,
+        resource: RESOURCE_DEBEN,
+        amount: 20,
+        months_initial: 14
+    })
+    req.execute()
+    __test_process_events()
+    var months = __test_request_months_left(tag)
+    if (months <= 0) {
+        test293_fail('request months_left before save=' + months)
+        return
+    }
+
+    if (!test293_roundtrip('test_307_full_width.svx')) {
+        return
+    }
+
+    if (game.simtime.year != want_year || game.simtime.month != 7
+        || game.simtime.day != 9 || game.simtime.tick != 13) {
+        test293_fail('after load y=' + game.simtime.year + ' m=' + game.simtime.month
+            + ' d=' + game.simtime.day + ' t=' + game.simtime.tick)
+        return
+    }
+    __log_marker('save_full_width_year_ok')
+
+    if (__test_request_months_left(tag) !== months) {
+        test293_fail('request months_left after load=' + __test_request_months_left(tag) + ' want=' + months)
+        return
+    }
+    __log_marker('save_full_width_request_months_ok')
+    __test_signal_ready()
+}
+
+function check_valid() {
+    var markers = ['save_full_width_year_ok', 'save_full_width_request_months_ok']
+    for (var i = 0; i < markers.length; i++) {
+        if (!__test_find_inlog('[test-marker] ' + markers[i])) {
+            __log_info_native('[test:293] missing marker: ' + markers[i])
+            return false
+        }
+    }
+    return true
+}

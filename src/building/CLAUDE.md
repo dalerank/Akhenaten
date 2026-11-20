@@ -77,7 +77,7 @@ When moving building placement preview from C++ `preview::ghost_preview` into Mu
    or look wrong). **Resolved (J1):** bind color params as `color` (== `uint32_t`), which
    routes through `js_to_value<unsigned int>` → `js_touint32` and preserves the full mask.
    `draw_flat_tile` / `draw_overlay_tile` (`src/js/city_planner_js.cpp`) take `color`, so
-   you may now pass full `COLOR_MASK_*` from JS (regression test: `tests/38_color_mask_passing.js`).
+   you may now pass full `COLOR_MASK_*` from JS (regression test: `tests/338_color_mask_passing.js`).
    Use `color` — not `int` — for any new color parameter; the `_30` masks are no longer a
    required workaround.
 

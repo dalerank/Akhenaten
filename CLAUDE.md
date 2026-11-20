@@ -173,7 +173,7 @@ leave useful existing comments alone.
 
 ## Testing — integral tests
 
-`tests/*.js` is the integral test suite (377 files). It is a CI gate
+`tests/*.js` is the integral test suite (565 files, numbered `000`-`564` in run order). It is a CI gate
 (`.github/workflows/akhenaten_integral_tests.yml`); a red run blocks the PR.
 **This is the default way to verify a change.**
 
@@ -187,10 +187,10 @@ One process, no shards:
 ```
 build/RelWithDebInfo/akhenaten.exe --integraltests --no-logo --no-resource --nosound --window --size 800x600
 ```
-Run one test — the tests whose filename stem starts with NAME (case-insensitive; `06` runs `06_*` but not
-`106_*`); when no stem starts with NAME, every stem that contains it:
+Run one test — the tests whose filename stem starts with NAME (case-insensitive; `006` runs `006_*`; `06` runs
+`060_*`..`069_*`); when no stem starts with NAME, every stem that contains it:
 ```
-build/RelWithDebInfo/akhenaten.exe --integraltests --integraltest-only 06 --no-logo --no-resource --nosound --window --size 800x600
+build/RelWithDebInfo/akhenaten.exe --integraltests --integraltest-only 006 --no-logo --no-resource --nosound --window --size 800x600
 ```
 Exit code is `0` only when every test passed. `--integraltest-shard I/N` keeps every N-th selected test from
 index I (what `--integraltest-jobs` passes to each child).
@@ -209,7 +209,7 @@ for the summary.
 
 Under `--integraltests` saves go to `<user-dir>/Save`, the monthly and replay autosaves are off and the renderer
 runs without vsync. Tests check save/load in memory (`__test_save_memory(name)` / `__test_load_memory(name)`,
-`__test_save_roundtrip(name)`); only `92_ironwill` (quicksave + Ironwill), `309_save_roundtrip` and `373_mods_saveload` (the mods switch reloads the
+`__test_save_roundtrip(name)`); only `544_ironwill` (quicksave + Ironwill), `295_save_roundtrip` and `332_mods_saveload` (the mods switch reloads the
 save file) write a save file.
 
 Tests that need real Pharaoh data take the install path as the last positional argument;

@@ -100,7 +100,7 @@ cmake --build --preset win-msvc-relwithdebinfo-vs2022 > log 2>&1; echo $?
 
 Тест не должен зависеть от дефолтов сборки или от флагов командной строки:
 нужные `game_features` он включает у себя внутри и восстанавливает в конце.
-Образец — `tests/107_flood_basin_irrigation_hold.js`.
+Образец — `tests/017_flood_basin_irrigation_hold.js`.
 
 ## Открытые проблемы
 

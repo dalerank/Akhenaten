@@ -199,7 +199,7 @@ ANK_REGISTER_STRING_ARGUMENT_HANDLER("--language", "language", "Option --languag
 ANK_REGISTER_STRING_ARGUMENT_HANDLER("--font", "custom_font", "Option --font must be followed by a font file path", "--font PATH", "use custom TTF font file (overrides font from localization.js)");
 ANK_REGISTER_STRING_ARGUMENT_HANDLER("--load-map", "load_map", "Option --load-map must be followed by a map file path", "--load-map PATH", "load arbitrary .map file straight into the city, bypassing the main menu (path may be absolute, relative to PWD/data dir, or a name inside Maps/)");
 ANK_REGISTER_STRING_ARGUMENT_HANDLER("--integraltest-only", "integraltest_only",
-  "Option --integraltest-only must be followed by a test name (e.g. 06 or 06_stonemason_guild_info_window)",
+  "Option --integraltest-only must be followed by a test name (e.g. 006 or 006_stonemason_guild_info_window)",
   "--integraltest-only NAME",
   "with --integraltests, run only the tests whose filename (stem) starts with NAME, or, if none does, every test whose "
   "stem contains NAME (case-insensitive)");

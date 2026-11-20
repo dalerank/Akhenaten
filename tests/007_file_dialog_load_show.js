@@ -1,0 +1,24 @@
+// Verifies that window_show_by_id("file_dialog_load") opens
+// file_dialog_load. The init handler logs
+// "[test-marker] window_show:file_dialog_load".
+
+function run_test() {
+    __log_info_native('[test:007] opening load savegame file dialog')
+    test_ensure_city_session('data/default.map')
+    window_show_by_id("file_dialog_load")
+    __test_pump_frames(10)
+
+    window_go_back()
+    __test_pump_frames(2)
+
+    __test_signal_ready()
+}
+
+function check_valid() {
+    var marker = '[test-marker] window_show:file_dialog_load'
+    if (!__test_find_inlog(marker)) {
+        __log_info_native('[test:007] missing marker: ' + marker)
+        return false
+    }
+    return true
+}

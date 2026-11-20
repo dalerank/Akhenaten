@@ -8,11 +8,11 @@
 **SHIP_BRIDGE = none** — no editor slot; `BUILDING_UNUSED_SHIP_BRIDGE_83` is not a
 consumer of UB1 (**SB0=A** locked 2026-08-01). Do not map Bridge → 83.
 Engine/load/undo may still know type 83 (C3 leftover); campaign menu and
-`buildings[]` must not. Place regression: `tests/136_ship_bridge_placement.js`.
+`buildings[]` must not. Place regression: `tests/049_ship_bridge_placement.js`.
 Enhanced menu (if ever) = PC2 only — not remake-close.
 
 Merge: **UB-A** (JS `buildings[]` / `use_building` = menu; map editor flags = audit).
-Menu smoke: `tests/115_bridge_menu_smoke.js` (Perwadjyt REMAP + Bridges/Nekhen day-0;
+Menu smoke: `tests/027_bridge_menu_smoke.js` (Perwadjyt REMAP + Bridges/Nekhen day-0;
 also asserts type 83 never allowed).
 
 Source: campaign `data/maps/m_NNN_*.map` + Cleop `Maps/{Alexandria,Bridges}.map`.

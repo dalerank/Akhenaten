@@ -56,7 +56,7 @@ figure::action_perform()
    and combat live in the `figure_static_params` base (parsed generically); `ANK_CONFIG_STRUCT`
    lists only the **extra** fields. New `.cpp` files need a CMake reconfigure (see root
    `CLAUDE.md`). Reference: `figure_enemy_chariot.{h,cpp}` (12 leaves, shared base, one config
-   per class); regression pattern: `tests/39_enemy_chariot_registered.js`.
+   per class); regression pattern: `tests/346_enemy_chariot_registered.js`.
 
 ## Cross-Subsystem Connections
 

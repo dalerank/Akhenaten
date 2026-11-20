@@ -1,0 +1,195 @@
+// Scribal School OG spawn_stock_walker: days between teachers from {5,10,25,50,100} by worker %,
+// papyrus (walker_cost by difficulty) paid only when the teacher leaves; no papyrus => no teacher,
+// while the day counter keeps running. Model cost/fire/damage and advisor max_service 300 match OG.
+// Teacher coverage always sets 96 on inhabited houses only.
+
+var __test149_ok = false
+
+function test149_fail(msg) {
+    __log_info_native('[test:149] FAIL: ' + msg)
+    __test_signal_ready()
+}
+
+function test149_spawn(bid) {
+    building_scribal_school_spawn_figure({ bid: bid })
+    return __test_count_figures(FIGURE_TEACHER)
+}
+
+function run_test() {
+    __log_info_native('[test:149] scribal school OG teacher spawn')
+    test_reload_city_session('data/default.map')
+    __test_set_treasury(100000)
+
+    var bid = test_building_place(BUILDING_SCRIBAL_SCHOOL, -1, -1)
+    if (!bid) {
+        test149_fail('place failed')
+        return
+    }
+
+    var zt = __building_tile(bid)
+    for (var dx = 0; dx < 3; dx++) {
+        terrain.add({ x: zt.x + dx, y: zt.y + 2 }, TERRAIN_ROAD)
+    }
+    __test_update_road_network()
+    __test_check_kingdome_access()
+
+    __test_building_set_workers(bid, 10)
+    var b = city.get_building(bid)
+    b.has_road_access = true
+    b.figure_spawn_delay = 0
+    city.figures.remove_figures(FIGURE_TEACHER)
+
+    var cost = dcy_get(building_scribal_school.walker_cost)
+    if (cost <= 0) {
+        test149_fail('walker_cost not configured')
+        return
+    }
+
+    for (var i = 0; i < 10; i++) {
+        if (test149_spawn(bid) > 0) {
+            test149_fail('teacher spawned without papyrus at day ' + i)
+            return
+        }
+    }
+    b = city.get_building(bid)
+    if (b.figure_spawn_delay != 10) {
+        test149_fail('day counter must keep running without stock, got ' + b.figure_spawn_delay)
+        return
+    }
+    __log_marker('test149_no_papyrus_no_teacher')
+
+    b.consume_resource(RESOURCE_PAPYRUS, -(cost * 2))
+    if (test149_spawn(bid) < 1) {
+        test149_fail('expected teacher once papyrus stocked, cost=' + cost)
+        return
+    }
+    b = city.get_building(bid)
+    if (b.stored_resource(RESOURCE_PAPYRUS) != cost) {
+        test149_fail('papyrus after spawn expected ' + cost + ' got ' + b.stored_resource(RESOURCE_PAPYRUS))
+        return
+    }
+    if (b.figure_spawn_delay != 0) {
+        test149_fail('day counter must reset after spawn, got ' + b.figure_spawn_delay)
+        return
+    }
+    __log_marker('test149_paid_on_spawn:' + cost)
+
+    // 100% workers: OG delay 5 => 6th day spawns. Fresh school: a poofed teacher keeps its slot until cleanup.
+    var bid2 = test_building_place(BUILDING_SCRIBAL_SCHOOL, -1, -1)
+    if (!bid2) {
+        test149_fail('second place failed')
+        return
+    }
+    var zt2 = __building_tile(bid2)
+    for (var dx2 = 0; dx2 < 3; dx2++) {
+        terrain.add({ x: zt2.x + dx2, y: zt2.y + 2 }, TERRAIN_ROAD)
+    }
+    __test_update_road_network()
+    __test_building_set_workers(bid2, 10)
+    var b2 = city.get_building(bid2)
+    b2.has_road_access = true
+    b2.figure_spawn_delay = 0
+    b2.consume_resource(RESOURCE_PAPYRUS, -cost)
+
+    var teachers = __test_count_figures(FIGURE_TEACHER)
+    for (var d = 1; d <= 5; d++) {
+        if (test149_spawn(bid2) > teachers) {
+            test149_fail('teacher spawned too early at day ' + d)
+            return
+        }
+    }
+    if (test149_spawn(bid2) <= teachers) {
+        test149_fail('teacher expected on day 6 at 100% workers')
+        return
+    }
+    __log_marker('test149_delay_100pct')
+
+    var cid = test_building_place(BUILDING_TEMPLE_COMPLEX_PTAH, -1, -1)
+    var complex = city.get_temple_complex()
+    if (!cid || !complex || complex.type != BUILDING_TEMPLE_COMPLEX_PTAH) {
+        test149_fail('ptah complex place failed id=' + cid)
+        return
+    }
+    if (building_scribal_school_walker_cost() != cost) {
+        test149_fail('discount applied without oracle')
+        return
+    }
+    complex.temple_complex_upgrades = TEMPLE_COMPLEX_UPGRADE_ORACLE
+    var discounted = Math.floor(cost * dcy_get(building_scribal_school.ptah_oracle_walker_cost_pct) / 100)
+    if (building_scribal_school_walker_cost() != discounted) {
+        test149_fail('ptah oracle cost expected ' + discounted + ' got ' + building_scribal_school_walker_cost())
+        return
+    }
+    __log_marker('test149_ptah_oracle_cost:' + discounted)
+
+    var expected_cost = [30, 120, 150, 180, 225]
+    var expected_fire = [6, 25, 30, 36, 45]
+    for (var d = 0; d < 5; d++) {
+        if (building_scribal_school.cost[d] != expected_cost[d]) {
+            test149_fail('cost[' + d + '] expected ' + expected_cost[d] + ' got ' + building_scribal_school.cost[d])
+            return
+        }
+        if (building_scribal_school.fire_risk[d] != expected_fire[d]) {
+            test149_fail('fire_risk[' + d + '] expected ' + expected_fire[d] + ' got ' + building_scribal_school.fire_risk[d])
+            return
+        }
+    }
+    if (building_scribal_school.damage_risk[0] != 0) {
+        test149_fail('damage_risk must be 0, got ' + building_scribal_school.damage_risk[0])
+        return
+    }
+    if (building_scribal_school.max_service != 300) {
+        test149_fail('max_service expected 300 got ' + building_scribal_school.max_service)
+        return
+    }
+    __log_marker('test149_og_model')
+
+    var cx = (__scenario_map.width / 2) | 0
+    var cy = (__scenario_map.height / 2) | 0
+    var lived_id = __test_building_create(BUILDING_HOUSE_CRUDE_HUT, cx, cy)
+    var empty_id = __test_building_create(BUILDING_HOUSE_CRUDE_HUT, cx + 1, cy)
+    if (!lived_id || !empty_id) {
+        test149_fail('house create failed')
+        return
+    }
+    if (__test_house_set_population(lived_id, 10) < 1) {
+        test149_fail('set population failed')
+        return
+    }
+    city.get_house(lived_id).school = 50
+    city.get_house(empty_id).school = 0
+
+    var fid = test_figure_create(FIGURE_TEACHER, cx, cy + 1)
+    if (!fid) {
+        test149_fail('teacher figure create failed')
+        return
+    }
+    __test_figure_set_home(fid, bid)
+    var served = __test_figure_provide_service(fid)
+    if (city.get_house(lived_id).school != 96) {
+        test149_fail('OG must refresh inhabited house to 96, got ' + city.get_house(lived_id).school)
+        return
+    }
+    if (city.get_house(empty_id).school != 0) {
+        test149_fail('OG must skip empty house, got ' + city.get_house(empty_id).school)
+        return
+    }
+    if (served != 1) {
+        test149_fail('OG must count inhabited house tiles only, got ' + served)
+        return
+    }
+    __log_marker('test149_og_coverage')
+
+    __test149_ok = true
+    __test_signal_ready()
+}
+
+function check_valid() {
+    return __test149_ok
+        && __test_find_inlog('[test-marker] test149_no_papyrus_no_teacher')
+        && __test_find_inlog('[test-marker] test149_paid_on_spawn:')
+        && __test_find_inlog('[test-marker] test149_delay_100pct')
+        && __test_find_inlog('[test-marker] test149_ptah_oracle_cost:')
+        && __test_find_inlog('[test-marker] test149_og_model')
+        && __test_find_inlog('[test-marker] test149_og_coverage')
+}

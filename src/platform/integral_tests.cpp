@@ -646,7 +646,7 @@ hvector<xstring, 16> list_test_files() {
         return found_tests;
     }
 
-    // Tests whose name starts with NAME ("99_tmp" -> every 99_tmp_*, "06" -> 06_* but not 106_*);
+    // Tests whose name starts with NAME ("563_tmp" -> every 563_tmp_*, "006" -> 006_* but not 1006_*);
     // only when none does, every test whose name contains NAME.
     auto stem_of = [](const xstring& p) {
         std::string stem = p.c_str();
