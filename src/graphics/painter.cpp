@@ -295,11 +295,7 @@ void painter::draw_impl(SDL_Texture *texture, vec2i pos, vec2i offset, vec2i siz
         mod_g = (mod_g * mod_a + 127) / 255;
         mod_b = (mod_b * mod_a + 127) / 255;
     }
-    SDL_SetTextureColorMod(draw_tex, (Uint8)mod_r, (Uint8)mod_g, (Uint8)mod_b);
-    SDL_SetTextureAlphaMod(draw_tex, (Uint8)mod_a);
-
-    const SDL_BlendMode blend = straight ? SDL_BLENDMODE_BLEND : (SDL_BlendMode)g_render.premult_alpha();
-    SDL_SetTextureBlendMode(draw_tex, blend);
+    const int blend = straight ? (int)SDL_BLENDMODE_BLEND : (int)g_render.premult_alpha();
 
     // uncomment here if you want save something from atlases
     int k = 0;
@@ -326,13 +322,12 @@ void painter::draw_impl(SDL_Texture *texture, vec2i pos, vec2i offset, vec2i siz
     }
 
     {
-        SDL_Rect clip{};
-        SDL_RenderGetClipRect(this->renderer, &clip);
-        if (clip.w > 0 && clip.h > 0 && angle == 0.0) {
-            const float clip_l = (float)clip.x;
-            const float clip_t = (float)clip.y;
-            const float clip_r = (float)(clip.x + clip.w);
-            const float clip_b = (float)(clip.y + clip.h);
+        const rect clip = g_render.clip_rectangle();
+        if (clip.valid() && angle == 0.0) {
+            const float clip_l = (float)clip.mn.x;
+            const float clip_t = (float)clip.mn.y;
+            const float clip_r = (float)clip.mx.x;
+            const float clip_b = (float)clip.mx.y;
 
             if (screen_coords.x + screen_coords.w <= clip_l || screen_coords.x >= clip_r
                 || screen_coords.y + screen_coords.h <= clip_t || screen_coords.y >= clip_b
@@ -406,12 +401,10 @@ void painter::draw_impl(SDL_Texture *texture, vec2i pos, vec2i offset, vec2i siz
         }
     }
 
-    render_stats::note_draw(draw_tex, (int)blend, resident);
-    if (!!(flags & ImgFlag_Mirrored)) {
-        SDL_RenderCopyExF(this->renderer, draw_tex, &texture_coords, &screen_coords, angle, nullptr, SDL_FLIP_HORIZONTAL);
-    } else {
-        SDL_RenderCopyExF(this->renderer, draw_tex, &texture_coords, &screen_coords, angle, nullptr, SDL_FLIP_NONE);
-    }
+    render_stats::note_draw(draw_tex, blend, resident);
+    g_render.draw_sprite(sprite_draw_t{draw_tex, texture_coords.x, texture_coords.y, texture_coords.w, texture_coords.h,
+      screen_coords.x, screen_coords.y, screen_coords.w, screen_coords.h, (uint8_t)mod_r, (uint8_t)mod_g,
+      (uint8_t)mod_b, (uint8_t)mod_a, blend, angle, !!(flags & ImgFlag_Mirrored)});
 }
 
 SDL_Texture* painter::convertToGrayscale(SDL_Texture *tx, vec2i offset, vec2i size) {

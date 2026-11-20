@@ -189,6 +189,18 @@ void graphics_renderer_interface::fill_rect(vec2i start, vec2i size, color color
     SDL_RenderFillRect(data.renderer, &rect);
 }
 
+void graphics_renderer_interface::draw_sprite(const sprite_draw_t& sprite) {
+    main_thread::check("graphics_renderer_interface::draw_sprite");
+    auto& data = g_renderer_data;
+    SDL_SetTextureColorMod(sprite.texture, sprite.r, sprite.g, sprite.b);
+    SDL_SetTextureAlphaMod(sprite.texture, sprite.a);
+    SDL_SetTextureBlendMode(sprite.texture, (SDL_BlendMode)sprite.blend);
+    const SDL_Rect src{sprite.src_x, sprite.src_y, sprite.src_w, sprite.src_h};
+    const SDL_FRect dst{sprite.dst_x, sprite.dst_y, sprite.dst_w, sprite.dst_h};
+    SDL_RenderCopyExF(data.renderer, sprite.texture, &src, &dst, sprite.angle, nullptr,
+      sprite.mirrored ? SDL_FLIP_HORIZONTAL : SDL_FLIP_NONE);
+}
+
 void graphics_renderer_interface::clear_screen(void) {
     main_thread::check("graphics_renderer_interface::clear_screen");
     auto &data = g_renderer_data;

@@ -25,6 +25,16 @@ enum e_custome_image_type {
     CUSTOM_IMAGE_MAX = 8
 };
 
+struct sprite_draw_t {
+    SDL_Texture* texture;
+    int src_x, src_y, src_w, src_h;
+    float dst_x, dst_y, dst_w, dst_h;
+    uint8_t r, g, b, a;
+    int blend;
+    double angle;
+    bool mirrored;
+};
+
 struct graphics_renderer_interface {
     void clear_screen();
     void set_viewport(int x, int y, int width, int height);
@@ -39,6 +49,7 @@ struct graphics_renderer_interface {
     void draw_pixel(vec2i pixel, color color);
     void draw_rect(vec2i start, vec2i size, color color);
     void fill_rect(vec2i start, vec2i size, color color);
+    void draw_sprite(const sprite_draw_t& sprite);
 
     bool save_screen_buffer(painter& ctx, color* pixels, int x, int y, int width, int height, int row_width);
 
