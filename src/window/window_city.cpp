@@ -16,6 +16,7 @@
 #include "graphics/image.h"
 #include "graphics/text.h"
 #include "graphics/window.h"
+#include "js/js_register.h"
 #include "graphics/view/lookup.h"
 #include "grid/grid.h"
 #include "scenario/scenario.h"
@@ -124,9 +125,9 @@ void window_city_draw_time_left_panel() {
             years = end_year - g_simulation.simtime.year - 1;
         }
         int total_months = 12 - g_simulation.simtime.month + simulation_time_t::months_in_year * years;
-        small_panel_draw({ 1, 25 }, 15, 1);
-        int width = lang_text_draw(6, 2, 6, 29, FONT_NORMAL_BLACK_ON_LIGHT);
-        text_draw_number(total_months, '@', " ", 6 + width, 29, FONT_NORMAL_BLACK_ON_LIGHT);
+        ui::push(ui::cmd_t::small_panel, ui::opt::Pos{vec2i{1, 25}}, ui::opt::BoxWidth{15}, ui::opt::ImageId{1});
+        const int width = ui::text_abs(ui::str(6, 2), {6, 29}, FONT_NORMAL_BLACK_ON_LIGHT);
+        ui::number_abs(total_months, '@', " ", {6 + width, 29}, FONT_NORMAL_BLACK_ON_LIGHT);
         //        city_view_dirty = 1;
     } else if (scenario_criteria_survival_enabled() && !g_scenario.has_won) {
         int years;
@@ -137,9 +138,9 @@ void window_city_draw_time_left_panel() {
         }
         int total_months
           = simulation_time_t::months_in_year - g_simulation.simtime.month + simulation_time_t::months_in_year * years;
-        small_panel_draw({ 1, 25 }, 15, 1);
-        int width = lang_text_draw(6, 3, 6, 29, FONT_NORMAL_BLACK_ON_LIGHT);
-        text_draw_number(total_months, '@', " ", 6 + width, 29, FONT_NORMAL_BLACK_ON_LIGHT);
+        ui::push(ui::cmd_t::small_panel, ui::opt::Pos{vec2i{1, 25}}, ui::opt::BoxWidth{15}, ui::opt::ImageId{1});
+        const int width = ui::text_abs(ui::str(6, 3), {6, 29}, FONT_NORMAL_BLACK_ON_LIGHT);
+        ui::number_abs(total_months, '@', " ", {6 + width, 29}, FONT_NORMAL_BLACK_ON_LIGHT);
     }
 }
 
@@ -150,11 +151,11 @@ static void draw_construction_buttons() {
 
     const vec2i base = construction_buttons_base_pos();
     const int count = construction_buttons_count();
-    inner_panel_draw({base.x - 4, 40}, {3, 2});
+    ui::push(ui::cmd_t::panel_inner, ui::opt::Pos{vec2i{base.x - 4, 40}}, ui::opt::Size{vec2i{3, 2}});
     if (count > 1) {
-        inner_panel_draw({base.x - 4, 76}, {3, 2});
+        ui::push(ui::cmd_t::panel_inner, ui::opt::Pos{vec2i{base.x - 4, 76}}, ui::opt::Size{vec2i{3, 2}});
     }
-    image_buttons_draw(base, construction_buttons, count);
+    image_buttons_push_commands(base, construction_buttons, count);
 }
 
 static bool handle_construction_buttons(const mouse *m) {
@@ -249,8 +250,7 @@ bool window_city_draw_construction_cost_and_size() {
         return false;
     }
 
-    painter ctx = game.painter();
-    set_city_clip_rectangle(ctx);
+    ui::push(ui::cmd_t::clip_set, ui::opt::Pos{g_camera.offset}, ui::opt::Size{g_camera.size_pixels});
     screen_tile screen = g_camera.selected_tile;
     int inverted_scale = calc_percentage<int>(100, g_zoom.get_percentage());
     int x = calc_adjust_with_percentage(screen.x, inverted_scale);
@@ -262,19 +262,19 @@ bool window_city_draw_construction_cost_and_size() {
             color = g_scenario.is_desert() ? COLOR_FONT_ORANGE : COLOR_FONT_ORANGE_LIGHT;
         else
             color = COLOR_FONT_RED;
-        text_draw_number_colored(cost, '@', " ", x + 58 + 1, y + 1, FONT_SMALL_PLAIN, COLOR_BLACK);
-        text_draw_number_colored(cost, '@', " ", x + 58, y, FONT_SMALL_PLAIN, color);
+        ui::number_abs(cost, '@', " ", {x + 58 + 1, y + 1}, FONT_SMALL_PLAIN, COLOR_BLACK);
+        ui::number_abs(cost, '@', " ", {x + 58, y}, FONT_SMALL_PLAIN, color);
     }
 
     if (has_size) {
         int width = -text_get_width(string_from_ascii("  "), FONT_SMALL_PLAIN);
-        width += text_draw_number_colored(size_x, '@', "x", x - 15 + 1, y + 25 + 1, FONT_SMALL_PLAIN, COLOR_BLACK);
-        text_draw_number_colored(size_x, '@', "x", x - 15, y + 25, FONT_SMALL_PLAIN, COLOR_FONT_YELLOW);
-        text_draw_number_colored(size_y, '@', " ", x - 15 + width + 1, y + 25 + 1, FONT_SMALL_PLAIN, COLOR_BLACK);
-        text_draw_number_colored(size_y, '@', " ", x - 15 + width, y + 25, FONT_SMALL_PLAIN, COLOR_FONT_YELLOW);
+        width += ui::number_abs(size_x, '@', "x", {x - 15 + 1, y + 25 + 1}, FONT_SMALL_PLAIN, COLOR_BLACK);
+        ui::number_abs(size_x, '@', "x", {x - 15, y + 25}, FONT_SMALL_PLAIN, COLOR_FONT_YELLOW);
+        ui::number_abs(size_y, '@', " ", {x - 15 + width + 1, y + 25 + 1}, FONT_SMALL_PLAIN, COLOR_BLACK);
+        ui::number_abs(size_y, '@', " ", {x - 15 + width, y + 25}, FONT_SMALL_PLAIN, COLOR_FONT_YELLOW);
     }
 
-    graphics_reset_clip_rectangle();
+    ui::push_cmd(ui::cmd_t(ui::cmd_t::clip_reset));
     return true;
 }
 
@@ -282,7 +282,11 @@ void window_city::draw_foreground(UiFlags flags) {
     OZZY_PROFILER_FUNCTION();
 
     window_city_draw();
+    const size_t sidebar_commands = ui::command_mark();
     widget_sidebar_city_draw_foreground();
+    const size_t top_menu_commands = ui::command_mark();
+    js_call_event_handlers("top_menu_draw_bar", {});
+    ui::move_commands_below(top_menu_commands, sidebar_commands);
     ui::dispatch_autoconfig_es_event(this, __func__, {});
 
     if (window_is_city_view()) {

@@ -248,6 +248,20 @@ function top_menu_draw(ev) {
 	top_menu_draw_status()
 }
 
+[es=top_menu_draw_bar]
+function top_menu_draw_bar(ev) {
+	if (top_menu_state.open_sub_menu && !ui.window_is("top_menu_submenu")) {
+		top_menu_clear_state()
+	}
+	top_menu_update_status_shift()
+	top_menu_draw_background()
+}
+
+function top_menu_draw_over_bar() {
+	top_menu_draw_headers()
+	top_menu_draw_status()
+}
+
 function top_menu_handle_input() {
 	if (__screen_city.capture_input) {
 		return 0

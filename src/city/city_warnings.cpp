@@ -148,7 +148,6 @@ void window_warnings::draw_foreground(UiFlags flags) {
     }
 
     int center = (screen_width() - 180) / 2;
-    auto ctx = game.painter();
     for (int i = 0; i < warnings.size(); i++) {
         pcstr text = get_warning(i);
         if (!text) {
@@ -161,13 +160,14 @@ void window_warnings::draw_foreground(UiFlags flags) {
         }
 
         int box_width = determine_width(text);
-        small_panel_draw({ center - box_width / 2 + 1, offset }, box_width / 16 + 1, 1);
+        ui::push(ui::cmd_t::small_panel, ui::opt::Pos{vec2i{center - box_width / 2 + 1, offset}},
+          ui::opt::BoxWidth{box_width / 16 + 1}, ui::opt::ImageId{1});
         if (box_width < 460) {
             // ornaments at the side
-            ctx.img_generic(image_id_from_group(GROUP_CONTEXT_ICONS) + 15, { center - box_width / 2 + 2, offset + 2 });
-            ctx.img_generic(image_id_from_group(GROUP_CONTEXT_ICONS) + 15, { center + box_width / 2 - 30, offset + 2 });
+            ui::image_abs(image_id_from_group(GROUP_CONTEXT_ICONS) + 15, {center - box_width / 2 + 2, offset + 2});
+            ui::image_abs(image_id_from_group(GROUP_CONTEXT_ICONS) + 15, {center + box_width / 2 - 30, offset + 2});
         }
-        text_draw_centered((const uint8_t *)text, center - box_width / 2 + 1, offset + 4, box_width, FONT_NORMAL_WHITE_ON_DARK, 0);
+        ui::text_centered_abs(text, {center - box_width / 2 + 1, offset + 4}, box_width, FONT_NORMAL_WHITE_ON_DARK);
     }
 
     clear_outdated();

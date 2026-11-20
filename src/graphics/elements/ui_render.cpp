@@ -5,6 +5,8 @@
 #include "graphics/elements/lang_text.h"
 #include "graphics/font.h"
 
+#include <algorithm>
+
 namespace ui {
 
 hvector<ui::cmd_t, 256> g_ui_commands;
@@ -179,6 +181,14 @@ void execute_ui_command(painter& ctx, const ui::cmd_t& cmd) {
 
 void push_cmd(cmd_t&& cmd) {
     g_ui_commands.push_back(std::move(cmd));
+}
+
+size_t command_mark() {
+    return g_ui_commands.size();
+}
+
+void move_commands_below(size_t from, size_t below) {
+    std::rotate(g_ui_commands.begin() + below, g_ui_commands.begin() + from, g_ui_commands.end());
 }
 
 void flush_commands() {

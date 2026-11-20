@@ -8,7 +8,7 @@ window_city {
 
 [es=(window_city, draw_foreground)]
 function window_city_draw_foreground(ev) {
-    top_menu_draw()
+    top_menu_draw_over_bar()
 }
 
 [es=(window_city, draw_paused_panel)]

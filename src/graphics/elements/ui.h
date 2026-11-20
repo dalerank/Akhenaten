@@ -210,6 +210,8 @@ namespace ui {
     void end_frame();
 
     void push_cmd(cmd_t&& cmd);
+    size_t command_mark();
+    void move_commands_below(size_t from, size_t below);
 
     template <typename... Args>
     void push(cmd_t::e_type t, const Args&... args) {

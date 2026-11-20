@@ -107,6 +107,7 @@ void ui::sidebar_window_expanded_t::ui_draw_extra(UiFlags flags) {
 
 void ui::sidebar_window_expanded_t::ui_draw_foreground(UiFlags flags) {
     OZZY_PROFILER_FUNCTION();
+    const size_t sidebar_commands = ui::command_mark();
 
     {
         OZZY_PROFILER_SECTION(_, "sidebar_window_draw")
@@ -138,7 +139,9 @@ void ui::sidebar_window_expanded_t::ui_draw_foreground(UiFlags flags) {
 
     ui.end_widget();
 
+    const size_t relief_commands = ui::command_mark();
     ui_draw_relief(flags);
+    ui::move_commands_below(relief_commands, sidebar_commands);
 }
 
 void ui::sidebar_window_collapsed_t::collapse() {
@@ -184,6 +187,7 @@ void ui::sidebar_window_collapsed_t::init() {
 }
 
 void ui::sidebar_window_collapsed_t::ui_draw_foreground(UiFlags flags) {
+    const size_t sidebar_commands = ui::command_mark();
     x_offset = screen_width();
     slider.update(x_offset, expanded_offset_x, [this] {
         if (slider.slide_mode == slider.e_slide_collapse) {
@@ -208,8 +212,10 @@ void ui::sidebar_window_collapsed_t::ui_draw_foreground(UiFlags flags) {
     ui.draw(wflags);
     ui.end_widget();
 
+    const size_t relief_commands = ui::command_mark();
     int relief_y_offset = SIDEBAR_MAIN_SECTION_HEIGHT + TOP_MENU_HEIGHT;
     sidebar_common_draw_relief({ x_offset, relief_y_offset }, relief_block);
+    ui::move_commands_below(relief_commands, sidebar_commands);
 }
 
 void widget_sidebar_city_init() {
