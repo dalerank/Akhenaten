@@ -38,11 +38,24 @@ struct platform_screen_t {
     bool ignore_window_size_changed() const { return ignore_size_changed; }
     vec2i get_window_size() const;
 
+    bool is_window_fullscreen() const;
+    // Fullscreen render resolution (0x0 = desktop). Takes effect immediately when fullscreen.
+    void set_fullscreen_resolution(vec2i resolution);
+    // Resolution the game renders at before the interface scale: the fullscreen resolution when
+    // fullscreen and one is set, otherwise the window's pixel size.
+    vec2i render_base_size(int pixel_width, int pixel_height) const;
+    void* sdl_window() const { return window; }
+
 private:
     void* window = nullptr;
     bool ignore_size_changed = false;
+    // False while the window has never been windowed (created fullscreen): there is no position to restore.
+    bool windowed_pos_known = false;
 
     void set_scale_percentage(int new_scale, int pixel_width, int pixel_height);
+    void refresh_render_size();
+    void store_window_mode(bool fullscreen);
+    void restore_window_decorations();
 };
 
 extern platform_screen_t g_platform_screen;

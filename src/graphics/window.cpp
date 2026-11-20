@@ -63,6 +63,15 @@ xstring window_get_id() {
     return data.current_window->id;
 }
 
+xstring window_get_id_at_depth(int depth) {
+    auto& data = g_window_manager;
+    const int n = (int)data.window_queue.size();
+    if (depth < 0 || depth >= n) {
+        return {};
+    }
+    return data.window_queue[((data.queue_index - depth) % n + n) % n].id;
+}
+
 void window_show(const window_type* window) {
     auto& data = g_window_manager;
     // push window into queue of screens to render

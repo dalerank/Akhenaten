@@ -37,9 +37,6 @@ void app_window_resize(const vec2i& wsize) {
 void app_fullscreen(bool fullscreen) {
     app_post_event(fullscreen ? USER_EVENT_FULLSCREEN : USER_EVENT_WINDOWED);
     game.set_fullscreen(fullscreen);
-    if (!fullscreen) {
-        app_window_resize({1200, 800});
-    }
 }
 
 void app_post_event(int code) {
@@ -175,7 +172,8 @@ void application_t::handle_hud_end(hud_end_context_t* context) {
 void application_t::subscribe_events() {
     events::subscribe_permanent([](event_app_center_screen ev) { app_post_event(USER_EVENT_CENTER_WINDOW); });
 
-    events::subscribe_permanent([](event_app_toggle_fullscreen ev) { app_fullscreen(!game.is_fullscreen(false)); });
+    events::subscribe_permanent(
+      [](event_app_toggle_fullscreen ev) { app_fullscreen(!g_platform_screen.is_window_fullscreen()); });
 
     events::subscribe_permanent([](event_app_screenshot ev) { graphics_save_screenshot(SCREENSHOT_DISPLAY); });
 
