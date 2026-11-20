@@ -291,6 +291,18 @@ static void isometric_clear_top_height(image_t &img) {
     }
 }
 
+// Footprint-high image (top height 0) whose pixels still rise above the diamond: keep in the top only what
+// isometric_clear_top_height removes from the foot. The rest of the diamond stays with the foot, so the top
+// drawn in the height pass does not repaint the tile's ground over the tiles in front of it.
+static void isometric_clear_top_kept_by_foot(image_t &img) {
+    for (int x = 0; x < img.width; ++x) {
+        int start_y = 15 * (img.width / 58) + ((x < img.width / 2) ? (x / 2) : ((img.width - x) / 2)) + 2;
+        for (int y = std::max(0, img.height - start_y + 1); y < img.height; ++y) {
+            img.temp.pixel_data[y * img.atlas.p_atlas->width + x] = 0;
+        }
+    }
+}
+
 static void isometric_clear_foot_bottom(image_t &img) {
     for (int x = 0; x < img.width; ++x) {  // diagonals
         int start_y = 15 * (img.width / 58) + ((x < img.width / 2) ? (x / 4) : ((img.width - x) / 4));
@@ -329,6 +341,9 @@ static bool convert_image_data(buffer* buf, image_t &img, bool convert_fonts) {
         }
 
         if (img.is_isometric_top) {
+            if (img.isometric_top_height == 0) {
+                isometric_clear_top_kept_by_foot(img);
+            }
             isometric_clear_foot_bottom(img);
         }
     } else if (img.is_fully_compressed) {
