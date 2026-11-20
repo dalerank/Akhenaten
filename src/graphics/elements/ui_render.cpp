@@ -170,6 +170,10 @@ void execute_ui_command(painter& ctx, const ui::cmd_t& cmd) {
         graphics_draw_pixel(cmd.pos, cmd.clr);
         break;
 
+    case cmd_t::panel_outer_exact:
+        outer_panel_draw_exact(cmd.pos, cmd.size);
+        break;
+
     case cmd_t::panel_unbordered:
         unbordered_panel_draw(cmd.pos.x, cmd.pos.y, cmd.size.x, cmd.size.y);
         break;

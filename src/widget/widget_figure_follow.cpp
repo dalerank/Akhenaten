@@ -189,8 +189,9 @@ void figure_follow_t::draw_panel() {
     const vec2i sz = panel_size();
     const int img = snapshot_size();
 
-    outer_panel_draw_exact(panel_pos_, sz);
-    graphics_draw_from_texture(snapshot_.texture_id(), panel_pos_ + vec2i{k_panel_pad, k_panel_header}, {img, img});
+    ui::push(ui::cmd_t::panel_outer_exact, ui::opt::Pos{panel_pos_}, ui::opt::Size{sz});
+    ui::push(ui::cmd_t::saved_texture, ui::opt::ImageId{snapshot_.texture_id()},
+      ui::opt::Pos{panel_pos_ + vec2i{k_panel_pad, k_panel_header}}, ui::opt::Size{vec2i{img, img}});
 
     figure* f = figure_get(figure_id_);
     if (f) {
@@ -198,7 +199,8 @@ void figure_follow_t::draw_panel() {
     }
 
     const rect stop_button = stop_button_rect();
-    small_panel_draw(stop_button.mn, stop_button_blocks(), 1);
+    ui::push(ui::cmd_t::small_panel, ui::opt::Pos{stop_button.mn}, ui::opt::BoxWidth{stop_button_blocks()},
+      ui::opt::ImageId{1});
     ui::label(lang_text_from_key("#stop_following"), stop_button.mn + vec2i{4, 4}, FONT_NORMAL_BLACK_ON_DARK);
 }
 

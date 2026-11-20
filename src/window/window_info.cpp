@@ -53,7 +53,8 @@ std::vector<common_info_window *> *g_window_terrain_handlers = nullptr;
 struct empty_info_window : public common_info_window {
     virtual void window_info_background(object_info &c) override {
         //outer_panel_draw(c.offset, c.bgsize.x, c.bgsize.y);
-        lang_text_draw_centered(70, 0, c.offset.x, c.offset.y + 10, 16 * c.bgsize.x, FONT_LARGE_BLACK_ON_LIGHT);
+        ui::text_centered_abs(ui::str(70, 0), {c.offset.x, c.offset.y + 10}, 16 * c.bgsize.x,
+          FONT_LARGE_BLACK_ON_LIGHT);
     }
 };
 

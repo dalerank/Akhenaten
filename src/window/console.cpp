@@ -12,6 +12,7 @@
 #include "graphics/elements/image_button.h"
 #include "graphics/elements/lang_text.h"
 #include "graphics/elements/panel.h"
+#include "graphics/elements/ui.h"
 #include "graphics/image_groups.h"
 #include "graphics/text.h"
 #include "graphics/window.h"
@@ -38,16 +39,14 @@ static void init(void) {
 }
 
 static void draw_foreground(int) {
-    graphics_set_to_dialog();
-    outer_panel_draw(vec2i{128, 160}, 24, 8);
-    text_draw_centered((uint8_t*)"Console", 128, 172, 384, FONT_LARGE_BLACK_ON_LIGHT, 0);
-    lang_text_draw(13, 5, 352, 256, FONT_NORMAL_BLACK_ON_LIGHT);
-    lang_text_draw(12, 0, 200, 256, FONT_NORMAL_BLACK_ON_LIGHT);
+    const vec2i base = g_screen.dialog_offset;
+    ui::panel_abs(base + vec2i{128, 160}, {24, 8});
+    ui::text_centered_abs("Console", base + vec2i{128, 172}, 384, FONT_LARGE_BLACK_ON_LIGHT);
+    ui::text_abs(ui::str(13, 5), base + vec2i{352, 256}, FONT_NORMAL_BLACK_ON_LIGHT);
+    ui::text_abs(ui::str(12, 0), base + vec2i{200, 256}, FONT_NORMAL_BLACK_ON_LIGHT);
     input_box_draw(&command_input);
 
-    image_buttons_draw({159, 249}, image_buttons, 2);
-
-    graphics_reset_dialog();
+    image_buttons_push_commands(base + vec2i{159, 249}, image_buttons, 2);
 }
 
 static void handle_input(const mouse* m, const hotkeys* h) {

@@ -4,6 +4,7 @@
 #include "graphics/graphics.h"
 #include "graphics/elements/image_button.h"
 #include "graphics/elements/panel.h"
+#include "graphics/elements/ui.h"
 #include "graphics/image_groups.h"
 #include "graphics/text.h"
 #include "graphics/window.h"
@@ -36,17 +37,16 @@ static int init(pcstr title, pcstr message, pcstr info) {
 }
 
 static void draw_background(int) {
-    graphics_set_to_dialog();
-    outer_panel_draw(vec2i{80, 80}, 30, 12);
-    text_draw_centered(plain_message_dialog.title.c_str(), 80, 100, 480, FONT_LARGE_BLACK_ON_LIGHT, 0);
-    text_draw_multiline(plain_message_dialog.message, { 100, 140 }, 450, FONT_NORMAL_BLACK_ON_LIGHT, 0);
-    graphics_reset_dialog();
+    const vec2i base = g_screen.dialog_offset;
+    ui::panel_abs(base + vec2i{80, 80}, {30, 12});
+    ui::text_centered_abs(plain_message_dialog.title.c_str(), base + vec2i{80, 100}, 480, FONT_LARGE_BLACK_ON_LIGHT);
+    ui::push(ui::cmd_t::text_multiline, ui::opt::Pos{base + vec2i{100, 140}}, ui::opt::BoxWidth{450},
+      ui::opt::Font{FONT_NORMAL_BLACK_ON_LIGHT}, ui::opt::TextColor{0},
+      ui::opt::Caption{plain_message_dialog.message.c_str()});
 }
 
 static void draw_foreground(int) {
-    graphics_set_to_dialog();
-    image_buttons_draw({80, 80}, buttons, 1);
-    graphics_reset_dialog();
+    image_buttons_push_commands(g_screen.dialog_offset + vec2i{80, 80}, buttons, 1);
 }
 
 static void close(void) {

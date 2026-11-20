@@ -64,20 +64,18 @@ static void close(void) {
 
 static void draw_number_button(int x, int y, int number, int is_selected) {
     color color = is_selected ? COLOR_FONT_BLUE : COLOR_BLACK;
-    graphics_draw_rect(vec2i{x, y}, vec2i{25, 25}, color);
-    uint8_t number_string[2];
-    number_string[0] = '0' + number;
-    number_string[1] = 0;
-    text_draw_centered(number_string, x, y, 25, FONT_NORMAL_BLUE, color);
+    ui::push(ui::cmd_t::draw_rect, ui::opt::Pos{vec2i{x, y}}, ui::opt::Size{vec2i{25, 25}}, ui::opt::TextColor{color});
+    const char number_string[2] = {char('0' + number), 0};
+    ui::text_centered_abs(number_string, {x, y}, 25, FONT_NORMAL_BLUE, color);
 }
 
 static void draw_foreground(int) {
     auto &data = g_numeric_input;
-    outer_panel_draw(data, 8, 14);
+    ui::panel_abs({data.x, data.y}, {8, 14});
 
     ui::fill_rect(vec2i{data.x + 16, data.y + 16}, vec2i{96, 30}, COLOR_BLACK);
     if (data.num_digits > 0)
-        text_draw_number_centered_colored(data.value, data.x + 16, data.y + 19, 92, FONT_NORMAL_BLUE, COLOR_FONT_RED);
+        ui::number_centered_abs(data.value, '@', " ", {data.x + 16, data.y + 19}, 92, FONT_NORMAL_BLUE, COLOR_FONT_RED);
 
     draw_number_button(data.x + 21, data.y + 51, 1, data.focus_button_id == 1);
     draw_number_button(data.x + 51, data.y + 51, 2, data.focus_button_id == 2);
@@ -90,11 +88,15 @@ static void draw_foreground(int) {
     draw_number_button(data.x + 81, data.y + 111, 9, data.focus_button_id == 9);
     draw_number_button(data.x + 21, data.y + 141, 0, data.focus_button_id == 10);
 
-    graphics_draw_rect(vec2i{data.x + 51, data.y + 141}, vec2i{55, 25}, data.focus_button_id == 11 ? COLOR_FONT_BLUE : COLOR_BLACK);
-    lang_text_draw_centered_colored(44,16,data.x + 51, data.y + 147, 55, FONT_SMALL_PLAIN, data.focus_button_id == 11 ? COLOR_FONT_BLUE : COLOR_BLACK);
+    ui::push(ui::cmd_t::draw_rect, ui::opt::Pos{vec2i{data.x + 51, data.y + 141}}, ui::opt::Size{vec2i{55, 25}},
+      ui::opt::TextColor{data.focus_button_id == 11 ? COLOR_FONT_BLUE : COLOR_BLACK});
+    ui::text_centered_abs(ui::str(44, 16), {data.x + 51, data.y + 147}, 55, FONT_SMALL_PLAIN,
+      data.focus_button_id == 11 ? COLOR_FONT_BLUE : COLOR_BLACK);
 
-    graphics_draw_rect(vec2i{data.x + 21, data.y + 171}, vec2i{85, 25}, data.focus_button_id == 12 ? COLOR_FONT_BLUE : COLOR_BLACK);
-    lang_text_draw_centered_colored(44, 17, data.x + 21, data.y + 177, 85, FONT_SMALL_PLAIN, data.focus_button_id == 12 ? COLOR_FONT_BLUE : COLOR_BLACK);
+    ui::push(ui::cmd_t::draw_rect, ui::opt::Pos{vec2i{data.x + 21, data.y + 171}}, ui::opt::Size{vec2i{85, 25}},
+      ui::opt::TextColor{data.focus_button_id == 12 ? COLOR_FONT_BLUE : COLOR_BLACK});
+    ui::text_centered_abs(ui::str(44, 17), {data.x + 21, data.y + 177}, 85, FONT_SMALL_PLAIN,
+      data.focus_button_id == 12 ? COLOR_FONT_BLUE : COLOR_BLACK);
 }
 
 static void handle_input(const mouse* m, const hotkeys* h) {

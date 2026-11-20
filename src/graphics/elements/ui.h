@@ -148,6 +148,7 @@ namespace ui {
             lang_text_year,
             background,
             panel_unbordered,
+            panel_outer_exact,
             line,
             pixel,
         };

@@ -5,6 +5,7 @@
 #include "graphics/elements/generic_button.h"
 #include "graphics/elements/lang_text.h"
 #include "graphics/elements/panel.h"
+#include "graphics/elements/ui.h"
 #include "graphics/text.h"
 #include "graphics/window.h"
 #include "input/input.h"
@@ -93,21 +94,21 @@ static void draw_item(int item_id, int x, int y, int selected) {
 
     color color = selected ? COLOR_FONT_BLUE : COLOR_BLACK;
     if (data.mode == MODE_GROUP) {
-        lang_text_draw_centered_colored(data.group, item_id, data.x + x, data.y + y, 190, FONT_SMALL_PLAIN, color);
+        ui::text_centered_abs(ui::str(data.group, item_id), {data.x + x, data.y + y}, 190, FONT_SMALL_PLAIN, color);
         return;
     }
 
     if (data.items[item_id].empty()) {
         return;
     }
-    text_draw_centered((uint8_t*)data.items[item_id].c_str(), data.x + x, data.y + y, 190, FONT_SMALL_PLAIN, color);
+    ui::text_centered_abs(data.items[item_id].c_str(), {data.x + x, data.y + y}, 190, FONT_SMALL_PLAIN, color);
 }
 
 static void draw_foreground(int) {
     auto &data = g_select_list;
     const int count = select_list_item_count();
     assert(count <= MAX_ITEMS_PER_LIST);
-    outer_panel_draw(vec2i{data.x, data.y}, 13, (20 * count + 24) / 16);
+    ui::panel_abs({data.x, data.y}, {13, (20 * count + 24) / 16});
     for (int i = 0; i < count; i++) {
         draw_item(i, 5, 11 + 20 * i, i + 1 == data.focus_button_id);
     }
