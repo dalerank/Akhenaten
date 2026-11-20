@@ -1,4 +1,5 @@
 #include "sound_city.h"
+#include "core/main_thread.h"
 
 #include "game/game_config.h"
 
@@ -116,6 +117,7 @@ int building_type_to_channel(building *b) {
 }
 
 void sound_city_add_channel(int system_channel_index, int direction) {
+    main_thread::check("sound_city_add_channel");
     if (!system_channel_index) {
         return;
     }
@@ -366,6 +368,7 @@ namespace {
 } // namespace
 
 void sound_city_ambient_note(int channel, vec2i pixel) {
+    main_thread::check("sound_city_ambient_note");
     const int index = channel - SOUND_CHANNEL_CITY_START;
     if (index < 0 || index >= MAX_CHANNELS) {
         return;
