@@ -17,6 +17,7 @@
 #include "js/js_register.h"
 
 #include <cstring>
+#include <initializer_list>
 
 scenario_data_t g_scenario;
 std::unordered_set<custom_mission_config> ANK_VARIABLE(custom_missions);
@@ -93,8 +94,179 @@ int scenario_data_t::city_tax_percentage() const {
     return finance_tax_rules.tax_percentage.get();
 }
 
+// Custom maps made with the original editor have no JS mission config: rebuild
+// allowed_buildings from the map's own editor flags (pak_reserved slots 1..45),
+// plus the buildings the original game never gates (housing, farms, industry,
+// guilds, temples of known gods, monuments chosen in the editor).
+static void scenario_allow_list(scenario_data_t &sc, std::initializer_list<e_building_type> types) {
+    for (const e_building_type t : types) {
+        sc.allowed_buildings[t] = true;
+    }
+}
+
+void scenario_data_t::apply_editor_allowed_buildings() {
+    memset(allowed_buildings, 0, sizeof(allowed_buildings));
+
+    scenario_allow_list(*this, {
+        BUILDING_HOUSE_VACANT_LOT, BUILDING_CLEAR_LAND, BUILDING_ROAD, BUILDING_WELL,
+        BUILDING_FIREHOUSE, BUILDING_ARCHITECT_POST, BUILDING_POLICE_STATION,
+        BUILDING_GRAIN_FARM, BUILDING_BARLEY_FARM, BUILDING_FLAX_FARM, BUILDING_LETTUCE_FARM,
+        BUILDING_POMEGRANATES_FARM, BUILDING_CHICKPEAS_FARM, BUILDING_HENNA_FARM, BUILDING_FIGS_FARM,
+        BUILDING_HUNTING_LODGE, BUILDING_CATTLE_RANCH,
+        BUILDING_POTTERY_WORKSHOP, BUILDING_BREWERY_WORKSHOP, BUILDING_JEWELS_WORKSHOP,
+        BUILDING_WEAVER_WORKSHOP, BUILDING_PAPYRUS_WORKSHOP, BUILDING_BRICKS_WORKSHOP,
+        BUILDING_LAMP_WORKSHOP, BUILDING_PAINT_WORKSHOP,
+        BUILDING_STONEMASONS_GUILD, BUILDING_CARPENTERS_GUILD, BUILDING_BRICKLAYERS_GUILD, BUILDING_ARTISANS_GUILD,
+    });
+
+    // Original editor slots (group 67 texts) -> Akhenaten building types.
+    struct slot_type { int slot; e_building_type type; };
+    static const slot_type slots[] = {
+        { 1, BUILDING_CLAY_PIT },
+        { 1, BUILDING_REED_GATHERER },
+        { 1, BUILDING_WOOD_CUTTERS },
+        { 1, BUILDING_STONE_QUARRY },
+        { 1, BUILDING_LIMESTONE_QUARRY },
+        { 1, BUILDING_GRANITE_QUARRY },
+        { 1, BUILDING_SANDSTONE_QUARRY },
+        { 1, BUILDING_COPPER_MINE },
+        { 1, BUILDING_GEMSTONE_MINE },
+        { 2, BUILDING_GOLD_MINE },
+        { 3, BUILDING_WATER_LIFT },
+        { 4, BUILDING_IRRIGATION_DITCH },
+        { 5, BUILDING_FISHING_WHARF },
+        { 5, BUILDING_SHIPWRIGHT },
+        { 6, BUILDING_WORK_CAMP },
+        { 7, BUILDING_GRANARY },
+        { 8, BUILDING_BAZAAR },
+        { 9, BUILDING_STORAGE_YARD },
+        { 10, BUILDING_DOCK },
+        { 10, BUILDING_DOCK_UP },
+        { 11, BUILDING_BOOTH },
+        { 11, BUILDING_JUGGLER_SCHOOL },
+        { 12, BUILDING_BANDSTAND },
+        { 12, BUILDING_CONSERVATORY },
+        { 13, BUILDING_PAVILLION },
+        { 13, BUILDING_DANCE_SCHOOL },
+        { 14, BUILDING_SENET_HOUSE },
+        { 15, BUILDING_FESTIVAL_SQUARE },
+        { 16, BUILDING_SCRIBAL_SCHOOL },
+        { 17, BUILDING_LIBRARY },
+        { 18, BUILDING_WATER_SUPPLY },
+        { 19, BUILDING_DENTIST },
+        { 20, BUILDING_APOTHECARY },
+        { 21, BUILDING_PHYSICIAN },
+        { 22, BUILDING_MORTUARY },
+        { 23, BUILDING_TAX_COLLECTOR },
+        { 24, BUILDING_COURTHOUSE },
+        { 25, BUILDING_VILLAGE_PALACE },
+        { 25, BUILDING_TOWN_PALACE },
+        { 25, BUILDING_CITY_PALACE },
+        { 26, BUILDING_PERSONAL_MANSION },
+        { 26, BUILDING_FAMILY_MANSION },
+        { 26, BUILDING_DYNASTY_MANSION },
+        { 27, BUILDING_ROADBLOCK },
+        { 28, BUILDING_LOW_BRIDGE },
+        { 29, BUILDING_FERRY },
+        { 30, BUILDING_GARDENS },
+        { 31, BUILDING_PLAZA },
+        { 32, BUILDING_SMALL_STATUE },
+        { 32, BUILDING_MEDIUM_STATUE },
+        { 32, BUILDING_LARGE_STATUE },
+        { 33, BUILDING_MUD_WALL },
+        { 33, BUILDING_BRICK_WALL },
+        { 33, BUILDING_WALL },
+        { 34, BUILDING_MUD_TOWER },
+        { 34, BUILDING_BRICK_TOWER },
+        { 34, BUILDING_TOWER },
+        { 35, BUILDING_MUD_GATEHOUSE },
+        { 35, BUILDING_BRICK_GATEHOUSE },
+        { 35, BUILDING_GATEHOUSE },
+        { 36, BUILDING_RECRUITER },
+        { 37, BUILDING_FORT_INFANTRY },
+        { 38, BUILDING_FORT_ARCHERS },
+        { 39, BUILDING_FORT_CHARIOTEERS },
+        { 40, BUILDING_MILITARY_ACADEMY },
+        { 41, BUILDING_WEAPONSMITH },
+        { 42, BUILDING_CHARIOTS_WORKSHOP },
+        { 43, BUILDING_WARSHIP_WHARF },
+        { 43, BUILDING_SHIPWRIGHT },
+        { 44, BUILDING_TRANSPORT_WHARF },
+        { 44, BUILDING_SHIPWRIGHT },
+        { 45, BUILDING_ZOO },
+    };
+    for (const auto &s : slots) {
+        if (pak_editor_allow_flag(s.slot)) {
+            allowed_buildings[s.type] = true;
+        }
+    }
+
+    // Temples, shrines and temple complexes of the gods known in this map.
+    const e_building_type god_buildings[MAX_GODS][3] = {
+        { BUILDING_TEMPLE_OSIRIS, BUILDING_SHRINE_OSIRIS, BUILDING_TEMPLE_COMPLEX_OSIRIS },
+        { BUILDING_TEMPLE_RA, BUILDING_SHRINE_RA, BUILDING_TEMPLE_COMPLEX_RA },
+        { BUILDING_TEMPLE_PTAH, BUILDING_SHRINE_PTAH, BUILDING_TEMPLE_COMPLEX_PTAH },
+        { BUILDING_TEMPLE_SETH, BUILDING_SHRINE_SETH, BUILDING_TEMPLE_COMPLEX_SETH },
+        { BUILDING_TEMPLE_BAST, BUILDING_SHRINE_BAST, BUILDING_TEMPLE_COMPLEX_BAST },
+    };
+    for (int god = 0; god < MAX_GODS; god++) {
+        if (g_city.religion.gods[god].is_known != GOD_STATUS_UNKNOWN) {
+            for (const e_building_type t : god_buildings[god]) {
+                allowed_buildings[t] = true;
+            }
+        }
+    }
+
+    // Monuments chosen in the editor (OG monument def ids, see city/monuments.js).
+    auto allow_monument_def = [this] (int def_id) {
+        switch (def_id) {
+        case 1: allowed_buildings[BUILDING_SMALL_BENT_PYRAMID] = true; break;
+        case 2: allowed_buildings[BUILDING_MEDIUM_BENT_PYRAMID] = true; break;
+        case 3: allowed_buildings[BUILDING_SMALL_MUDBRICK_PYRAMID] = true; break;
+        case 4: allowed_buildings[BUILDING_MEDIUM_MUDBRICK_PYRAMID] = true; break;
+        case 5: allowed_buildings[BUILDING_LARGE_MUDBRICK_PYRAMID] = true; break;
+        case 6: allowed_buildings[BUILDING_MUDBRICK_PYRAMID_COMPLEX] = true; break;
+        case 7: allowed_buildings[BUILDING_GRAND_MUDBRICK_PYRAMID_COMPLEX] = true; break;
+        case 8: allowed_buildings[BUILDING_SMALL_STEPPED_PYRAMID] = true; break;
+        case 9: allowed_buildings[BUILDING_MEDIUM_STEPPED_PYRAMID] = true; break;
+        case 10: allowed_buildings[BUILDING_LARGE_STEPPED_PYRAMID] = true; break;
+        case 11: allowed_buildings[BUILDING_STEPPED_PYRAMID_COMPLEX] = true; break;
+        case 12: allowed_buildings[BUILDING_GRAND_STEPPED_PYRAMID_COMPLEX] = true; break;
+        case 13: allowed_buildings[BUILDING_SMALL_PYRAMID] = true; break;
+        case 14: allowed_buildings[BUILDING_MEDIUM_PYRAMID] = true; break;
+        case 15: allowed_buildings[BUILDING_LARGE_PYRAMID] = true; break;
+        case 16: allowed_buildings[BUILDING_PYRAMID_COMPLEX] = true; break;
+        case 17: allowed_buildings[BUILDING_GRAND_PYRAMID_COMPLEX] = true; break;
+        case 18: allowed_buildings[BUILDING_SMALL_MASTABA] = true; break;
+        case 19: allowed_buildings[BUILDING_MEDIUM_MASTABA] = true; break;
+        case 20: allowed_buildings[BUILDING_LARGE_MASTABA] = true; break;
+        case 21: allowed_buildings[BUILDING_SPHINX] = true; break;
+        case 22: allowed_buildings[BUILDING_SMALL_OBELISK] = true; break;
+        case 23: allowed_buildings[BUILDING_LARGE_OBELISK] = true; break;
+        case 24: allowed_buildings[BUILDING_SUN_TEMPLE] = true; break;
+        case 25: case 26: case 27: allowed_buildings[BUILDING_MAUSOLEUM] = true; break;
+        case 28: allowed_buildings[BUILDING_PHAROS_LIGHTHOUSE] = true; break;
+        case 29: allowed_buildings[BUILDING_ALEXANDRIA_LIBRARY] = true; break;
+        case 30: allowed_buildings[BUILDING_CAESAREUM] = true; break;
+        case 31: allowed_buildings[BUILDING_COLOSSI] = true; break;
+        case 32: allowed_buildings[BUILDING_TEMPLE_OF_LUXOR] = true; break;
+        case 33: allowed_buildings[BUILDING_SMALL_ROYAL_TOMB] = true; break;
+        case 34: allowed_buildings[BUILDING_MEDIUM_ROYAL_TOMB] = true; break;
+        case 35: allowed_buildings[BUILDING_LARGE_ROYAL_TOMB] = true; break;
+        case 36: allowed_buildings[BUILDING_GRAND_ROYAL_TOMB] = true; break;
+        case 37: allowed_buildings[BUILDING_ABU_SIMBEL] = true; break;
+        default: break;
+        }
+    };
+    allow_monument_def(monuments.first);
+    allow_monument_def(monuments.second);
+    allow_monument_def(monuments.third);
+}
+
 void scenario_data_t::load_metadata(const mission_id_t &missionid, bool is_new_mission) {
-    g_config_arch.r_section(missionid, [this, is_new_mission](archive arch) {
+    bool mission_config_found = false;
+    g_config_arch.r_section(missionid, [this, is_new_mission, &mission_config_found](archive arch) {
+        mission_config_found = true;
         meta.tax_percentage.value.clear();
         meta.house_tax_multipliers.value.clear();
         arch.r(meta);
@@ -197,6 +369,10 @@ void scenario_data_t::load_metadata(const mission_id_t &missionid, bool is_new_m
         arch.r("vars", newvars);
         vars.insert(newvars);
     });
+
+    if (!mission_config_found) {
+        apply_editor_allowed_buildings();
+    }
 
     // Keep pak rate if present; otherwise default 10%. Mission meta ladder is read via debt_interest().
     if (debt_interest_rate <= 0) {
