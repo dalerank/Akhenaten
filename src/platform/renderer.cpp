@@ -1,4 +1,5 @@
 #include "renderer.h"
+#include "core/hvector.h"
 #include "core/main_thread.h"
 
 #include "core/log.h"
@@ -23,6 +24,7 @@
 #include <algorithm>
 #include <set>
 #include <vector>
+#include <utility>
 #include <string>
 
 #if SDL_VERSION_ATLEAST(2, 0, 1)
@@ -112,6 +114,8 @@ struct renderer_data_t {
     } max_texture_size;
 
     svector<buffer_texture, 8> texture_buffers;
+    hvector<SDL_Vertex, 1024, false> run_vertices;
+    hvector<int, 1536, false> run_indices;
     int texture_buffer_id = 0;
     struct {
         int id;
@@ -224,13 +228,85 @@ static void copy_sprite(const sprite_draw_t& sprite) {
       sprite.mirrored ? SDL_FLIP_HORIZONTAL : SDL_FLIP_NONE);
 }
 
+static bool same_run(const sprite_draw_t& a, const sprite_draw_t& b) {
+    return a.texture == b.texture && a.blend == b.blend && a.linear == b.linear && b.angle == 0.0;
+}
+
+static void draw_sprite_run(const sprite_draw_t* first, size_t count) {
+    SDL_Texture* texture = first->texture;
+    int tex_w = 0;
+    int tex_h = 0;
+    if (SDL_QueryTexture(texture, nullptr, nullptr, &tex_w, &tex_h) != 0 || tex_w <= 0 || tex_h <= 0) {
+        for (size_t i = 0; i < count; ++i) {
+            copy_sprite(first[i]);
+        }
+        return;
+    }
+
+    apply_texture_scale_mode(texture, first->linear);
+    SDL_SetTextureColorMod(texture, 255, 255, 255);
+    SDL_SetTextureAlphaMod(texture, 255);
+    SDL_SetTextureBlendMode(texture, (SDL_BlendMode)first->blend);
+
+    auto& vertices = g_renderer_data.run_vertices;
+    auto& indices = g_renderer_data.run_indices;
+    vertices.resize(count * 4);
+    indices.resize(count * 6);
+    const float inv_w = 1.0f / (float)tex_w;
+    const float inv_h = 1.0f / (float)tex_h;
+    for (size_t i = 0; i < count; ++i) {
+        const sprite_draw_t& s = first[i];
+        float u0 = (float)s.src_x * inv_w;
+        float u1 = (float)(s.src_x + s.src_w) * inv_w;
+        const float v0 = (float)s.src_y * inv_h;
+        const float v1 = (float)(s.src_y + s.src_h) * inv_h;
+        if (s.mirrored) {
+            std::swap(u0, u1);
+        }
+        const float x0 = s.dst_x;
+        const float y0 = s.dst_y;
+        const float x1 = s.dst_x + s.dst_w;
+        const float y1 = s.dst_y + s.dst_h;
+        const SDL_Color c{s.r, s.g, s.b, s.a};
+        SDL_Vertex* v = &vertices[i * 4];
+        v[0] = {{x0, y0}, c, {u0, v0}};
+        v[1] = {{x1, y0}, c, {u1, v0}};
+        v[2] = {{x1, y1}, c, {u1, v1}};
+        v[3] = {{x0, y1}, c, {u0, v1}};
+        const int base = (int)(i * 4);
+        int* idx = &indices[i * 6];
+        idx[0] = base;
+        idx[1] = base + 1;
+        idx[2] = base + 2;
+        idx[3] = base;
+        idx[4] = base + 2;
+        idx[5] = base + 3;
+    }
+    SDL_RenderGeometry(g_renderer_data.renderer, texture, vertices.data(), (int)vertices.size(),
+      indices.data(), (int)indices.size());
+}
+
 static void flush_sprites() {
     if (g_sprite_list.empty()) {
         return;
     }
     render_stats::note_flush();
-    for (const sprite_draw_t& sprite : g_sprite_list) {
-        copy_sprite(sprite);
+    const size_t n = g_sprite_list.size();
+    size_t i = 0;
+    while (i < n) {
+        const sprite_draw_t& first = g_sprite_list[i];
+        size_t end = i + 1;
+        if (!g_renderer_data.is_software_renderer && first.angle == 0.0) {
+            while (end < n && same_run(first, g_sprite_list[end])) {
+                ++end;
+            }
+        }
+        if (end - i > 1) {
+            draw_sprite_run(&g_sprite_list[i], end - i);
+        } else {
+            copy_sprite(first);
+        }
+        i = end;
     }
     g_sprite_list.clear();
 }
