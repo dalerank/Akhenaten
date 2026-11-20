@@ -67,6 +67,7 @@ struct {
     int have_error;
     bool reset_requested = false;
     bool requeue_mods = false;
+    bool ui_relayout_only = false;
     uint32_t generation = 0;
     bstring256 error_str;
     js_State *J;
@@ -727,6 +728,9 @@ bool js_vm_sync(const xstring &mission_id) {
         js_reset_vm_state();
     }
 
+    const bool windows_only = vm.ui_relayout_only && !vm.have_error && !reset_now && !vm.requeue_mods;
+    vm.ui_relayout_only = false;
+
     const int nfiles = (int)vm.files2load.size();
     bstring512 files_summary;
     for (int i = 0; i < nfiles; i++) {
@@ -788,7 +792,11 @@ bool js_vm_sync(const xstring &mission_id) {
         }
     }
 
-    config::refresh(vm.J);
+    if (windows_only) {
+        autoconfig_window::refresh_all();
+    } else {
+        config::refresh(vm.J);
+    }
     archive_check::flush();
 
     if (vm.J) {
@@ -800,11 +808,11 @@ bool js_vm_sync(const xstring &mission_id) {
     }
 
     const unsigned elapsed_ms = (unsigned)(time_get_millis() - t0);
-    logs::info("JS: vm_sync done files=%d (%s) refresh=full elapsed_ms=%u", nfiles, files_summary.c_str(),
-               elapsed_ms);
+    logs::info("JS: vm_sync done files=%d (%s) refresh=%s elapsed_ms=%u", nfiles, files_summary.c_str(),
+      windows_only ? "windows" : "full", elapsed_ms);
 
     vm.have_error = 0;
-    return true;
+    return !windows_only;
 }
 
 void js_vm_reload_file(pcstr path) {
@@ -856,6 +864,7 @@ static bool ui_relayout_ready() {
 }
 
 static void js_vm_reload_ui_layouts() {
+    vm.ui_relayout_only = vm.files2load.empty();
     std::vector<std::string> files;
     for (const auto &key : vm.loaded_files) {
         const size_t slash = key.find_last_of("/\\:");
