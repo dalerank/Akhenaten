@@ -14,6 +14,7 @@
 #include <map>
 #include <set>
 #include <string>
+#include <vector>
 
 namespace fs = std::filesystem;
 
@@ -209,45 +210,55 @@ void content_clear_path_cache() {
 // Case-sensitive file systems: Pharaoh installs mix "Data"/"data", "SprMain.sg3"/"SPRMAIN.SG3", and the
 // game asks for one fixed spelling. Correct every component under the base dir, not just the files of
 // the folders content_cache_paths() pre-lists.
-static bool correct_case_on_disk(pcstr relative, vfs::path& out) {
+static bool match_case_on_disk(const fs::path& cur, const std::vector<std::string>& parts, size_t index,
+  fs::path& out) {
+    if (index == parts.size()) {
+        out = cur;
+        return true;
+    }
+
     std::error_code ec;
-    fs::path cur(platform_file_manager_get_base_path());
-    if (cur.empty()) {
-        cur = ".";
+    const std::string& part = parts[index];
+    const fs::path exact = cur / part;
+    if (fs::exists(exact, ec) && match_case_on_disk(exact, parts, index + 1, out)) {
+        return true;
+    }
+
+    for (const auto& entry : fs::directory_iterator(cur, ec)) {
+        const std::string name = entry.path().filename().string();
+        if (name != part && string_compare_case_insensitive(name.c_str(), part.c_str()) == 0
+            && match_case_on_disk(entry.path(), parts, index + 1, out)) {
+            return true;
+        }
+    }
+    return false;
+}
+
+static bool correct_case_on_disk(pcstr relative, vfs::path& out) {
+    fs::path base(platform_file_manager_get_base_path());
+    if (base.empty()) {
+        base = ".";
     }
 
     std::string rel(relative);
     std::replace(rel.begin(), rel.end(), '\\', '/');
+    std::vector<std::string> parts;
     size_t pos = 0;
     while (pos <= rel.size()) {
         const size_t slash = rel.find('/', pos);
-        const std::string part = rel.substr(pos, slash == std::string::npos ? std::string::npos : slash - pos);
+        std::string part = rel.substr(pos, slash == std::string::npos ? std::string::npos : slash - pos);
         pos = (slash == std::string::npos) ? rel.size() + 1 : slash + 1;
-        if (part.empty() || part == ".") {
-            continue;
-        }
-
-        fs::path exact = cur / part;
-        if (fs::exists(exact, ec)) {
-            cur = exact;
-            continue;
-        }
-
-        bool found = false;
-        for (const auto& entry : fs::directory_iterator(cur, ec)) {
-            const std::string name = entry.path().filename().string();
-            if (string_compare_case_insensitive(name.c_str(), part.c_str()) == 0) {
-                cur = entry.path();
-                found = true;
-                break;
-            }
-        }
-        if (!found) {
-            return false;
+        if (!part.empty() && part != ".") {
+            parts.push_back(std::move(part));
         }
     }
 
-    out = cur.string().c_str();
+    fs::path found;
+    if (!match_case_on_disk(base, parts, 0, found)) {
+        return false;
+    }
+
+    out = found.string().c_str();
     return true;
 }
 #endif

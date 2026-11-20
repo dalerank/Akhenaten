@@ -1,6 +1,7 @@
 #include "platform/innoextract_util.h"
 
 #include "core/log.h"
+#include "core/string.h"
 #include "core/xvalue.h"
 #include "platform/platform.h"
 
@@ -509,13 +510,27 @@ xstring find_7z_binary() {
     return {};
 }
 
+static fs::path find_entry_any_case(const fs::path& dir, pcstr name) {
+    std::error_code ec;
+    const fs::path exact = dir / name;
+    if (fs::exists(exact, ec)) {
+        return exact;
+    }
+    for (const auto& entry : fs::directory_iterator(dir, ec)) {
+        if (string_compare_case_insensitive(entry.path().filename().string().c_str(), name) == 0) {
+            return entry.path();
+        }
+    }
+    return {};
+}
+
 xstring find_campaign_dir(const fs::path &root, int depth = 0) {
     if (depth > 4) {
         return {};
     }
     std::error_code ec;
-    const fs::path campaign = root / "campaign.txt";
-    if (fs::is_regular_file(campaign, ec)) {
+    const fs::path campaign = find_entry_any_case(root, "campaign.txt");
+    if (!campaign.empty() && fs::is_regular_file(campaign, ec)) {
         return xstring(root.string().c_str());
     }
     if (!fs::is_directory(root, ec)) {
@@ -810,19 +825,16 @@ bool has_required_game_files(pcstr dir) {
     }
     std::error_code ec;
     const fs::path root_path(root.c_str());
-    fs::path data = root_path / "Data";
-    if (!fs::is_directory(data, ec)) {
-        data = root_path / "data";
-    }
-    if (!fs::is_directory(data, ec)) {
+    const fs::path data = find_entry_any_case(root_path, "Data");
+    if (data.empty() || !fs::is_directory(data, ec)) {
         logs::warn("install check: missing Data/ folder under %s", root.c_str());
         return false;
     }
     // Pharaoh_Fonts.sg3 is optional — image_load_paks falls back to TTF/GLCD.
-    const bool cleopatra = fs::is_regular_file(data / "Expansion.sg3", ec)
-                           || fs::is_regular_file(data / "Expansion.SG3", ec)
-                           || fs::is_regular_file(data / "SprMain2.sg3", ec)
-                           || fs::is_regular_file(data / "SprMain2.SG3", ec);
+    const fs::path expansion = find_entry_any_case(data, "Expansion.sg3");
+    const fs::path sprmain2 = find_entry_any_case(data, "SprMain2.sg3");
+    const bool cleopatra = (!expansion.empty() && fs::is_regular_file(expansion, ec))
+                           || (!sprmain2.empty() && fs::is_regular_file(sprmain2, ec));
     if (!cleopatra) {
         logs::warn("install check: missing Cleopatra packs (Expansion/SprMain2) under %s", root.c_str());
         return false;

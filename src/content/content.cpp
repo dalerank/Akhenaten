@@ -100,7 +100,12 @@ int platform_file_manager_list_directory_contents(pcstr dir, int type, pcstr ext
     return android_get_directory_contents(dir ? dir : "", type, extension ? extension : "", callback);
 #endif
 
-    path save_dir(platform_file_manager_get_base_path(), "/", dir);
+    const path requested(dir ? dir : "");
+    path save_dir = content_path(requested);
+    const bool wants_slash = requested.back() == '/' || requested.back() == '\\';
+    if (wants_slash && save_dir.back() != '/') {
+        save_dir.append('/');
+    }
     dir = save_dir.c_str();
     dir_name current_dir;
 
