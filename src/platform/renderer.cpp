@@ -22,6 +22,7 @@
 #include <string.h>
 #include <algorithm>
 #include <set>
+#include <vector>
 #include <string>
 
 #if SDL_VERSION_ATLEAST(2, 0, 1)
@@ -135,12 +136,16 @@ struct renderer_data_t {
 graphics_renderer_interface g_render;
 renderer_data_t g_renderer_data;
 
+static void flush_sprites();
+
 bool graphics_renderer_interface::save_screen_buffer(painter &ctx, color* pixels, int x, int y, int width, int height, int row_width) {
+    flush_sprites();
     SDL_Rect rect = {x, y, width, height};
     return SDL_RenderReadPixels(ctx.renderer, &rect, SDL_PIXELFORMAT_ARGB8888, pixels, row_width * sizeof(color)) == 0;
 }
 
 void graphics_renderer_interface::draw_line(vec2i start, vec2i end, color color) {
+    flush_sprites();
     main_thread::check("graphics_renderer_interface::draw_line");
     auto &data = g_renderer_data;
     render_stats::note_break();
@@ -153,6 +158,7 @@ void graphics_renderer_interface::draw_line(vec2i start, vec2i end, color color)
 }
 
 void graphics_renderer_interface::draw_pixel(vec2i pixel, color color) {
+    flush_sprites();
     main_thread::check("graphics_renderer_interface::draw_pixel");
     auto &data = g_renderer_data;
     render_stats::note_break();
@@ -164,6 +170,7 @@ void graphics_renderer_interface::draw_pixel(vec2i pixel, color color) {
     SDL_RenderDrawPoint(data.renderer, pixel.x, pixel.y);
 }
 void graphics_renderer_interface::draw_rect(vec2i start, vec2i size, color color) {
+    flush_sprites();
     main_thread::check("graphics_renderer_interface::draw_rect");
     auto &data = g_renderer_data;
     render_stats::note_break();
@@ -177,6 +184,7 @@ void graphics_renderer_interface::draw_rect(vec2i start, vec2i size, color color
 }
 
 void graphics_renderer_interface::fill_rect(vec2i start, vec2i size, color color) {
+    flush_sprites();
     main_thread::check("graphics_renderer_interface::fill_rect");
     auto &data = g_renderer_data;
     render_stats::note_break();
@@ -202,8 +210,9 @@ static void apply_texture_scale_mode(SDL_Texture* texture, bool linear) {
 #endif
 }
 
-void graphics_renderer_interface::draw_sprite(const sprite_draw_t& sprite) {
-    main_thread::check("graphics_renderer_interface::draw_sprite");
+static std::vector<sprite_draw_t> g_sprite_list;
+
+static void copy_sprite(const sprite_draw_t& sprite) {
     auto& data = g_renderer_data;
     apply_texture_scale_mode(sprite.texture, sprite.linear);
     SDL_SetTextureColorMod(sprite.texture, sprite.r, sprite.g, sprite.b);
@@ -215,13 +224,27 @@ void graphics_renderer_interface::draw_sprite(const sprite_draw_t& sprite) {
       sprite.mirrored ? SDL_FLIP_HORIZONTAL : SDL_FLIP_NONE);
 }
 
+static void flush_sprites() {
+    for (const sprite_draw_t& sprite : g_sprite_list) {
+        copy_sprite(sprite);
+    }
+    g_sprite_list.clear();
+}
+
+void graphics_renderer_interface::draw_sprite(const sprite_draw_t& sprite) {
+    main_thread::check("graphics_renderer_interface::draw_sprite");
+    g_sprite_list.push_back(sprite);
+}
+
 void graphics_renderer_interface::destroy_texture(SDL_Texture* texture) {
+    flush_sprites();
     if (texture) {
         SDL_DestroyTexture(texture);
     }
 }
 
 SDL_Texture* graphics_renderer_interface::create_grayscale_texture(SDL_Texture* tx, vec2i offset, vec2i size) {
+    flush_sprites();
     auto& data = g_renderer_data;
     uint32_t format;
     int w, h;
@@ -301,6 +324,7 @@ SDL_Texture* graphics_renderer_interface::create_grayscale_texture(SDL_Texture* 
 }
 
 void graphics_renderer_interface::clear_screen(void) {
+    flush_sprites();
     main_thread::check("graphics_renderer_interface::clear_screen");
     auto &data = g_renderer_data;
     SDL_SetRenderDrawColor(data.renderer, 0, 0, 0, 0xff);
@@ -308,6 +332,7 @@ void graphics_renderer_interface::clear_screen(void) {
 }
 
 void graphics_renderer_interface::set_viewport(int x, int y, int width, int height) {
+    flush_sprites();
     main_thread::check("graphics_renderer_interface::set_viewport");
     auto &data = g_renderer_data;
     render_stats::note_break();
@@ -316,6 +341,7 @@ void graphics_renderer_interface::set_viewport(int x, int y, int width, int heig
 }
 
 void graphics_renderer_interface::reset_viewport(void) {
+    flush_sprites();
     main_thread::check("graphics_renderer_interface::reset_viewport");
     auto &data = g_renderer_data;
     render_stats::note_break();
@@ -324,6 +350,7 @@ void graphics_renderer_interface::reset_viewport(void) {
 }
 
 void graphics_renderer_interface::set_clip_rectangle(vec2i pos, int width, int height) {
+    flush_sprites();
     main_thread::check("graphics_renderer_interface::set_clip_rectangle");
     auto &data = g_renderer_data;
     render_stats::note_break();
@@ -352,6 +379,7 @@ rect graphics_renderer_interface::clip_rectangle() {
 }
 
 void graphics_renderer_interface::reset_clip_rectangle(void) {
+    flush_sprites();
     main_thread::check("graphics_renderer_interface::reset_clip_rectangle");
     auto &data = g_renderer_data;
     render_stats::note_break();
@@ -407,6 +435,7 @@ void set_render_scale(painter &ctx, float scale) {
 }
 
 void graphics_renderer_interface::set_texture_scale_mode(SDL_Texture* texture, float scale_factor, bool force_linear) {
+    flush_sprites();
     apply_texture_scale_mode(texture, force_linear || scale_factor < 1.0f);
 }
 
@@ -415,6 +444,7 @@ unsigned int graphics_renderer_interface::premult_alpha() {
 }
 
 void graphics_renderer_interface::create_custom_texture(int type, int width, int height) {
+    flush_sprites();
     auto &data = g_renderer_data;
     if (data.custom_textures[type].texture) {
         SDL_DestroyTexture(data.custom_textures[type].texture);
@@ -440,6 +470,7 @@ void graphics_renderer_interface::create_custom_texture(int type, int width, int
     SDL_SetTextureBlendMode(data.custom_textures[type].texture, SDL_BLENDMODE_BLEND);
 }
 color* graphics_renderer_interface::get_custom_texture_buffer(int type, int* actual_texture_width) {
+    flush_sprites();
     auto &data = g_renderer_data;
     if (!data.custom_textures[type].texture) {
         return 0;
@@ -470,6 +501,7 @@ color* graphics_renderer_interface::get_custom_texture_buffer(int type, int* act
 }
 
 void graphics_renderer_interface::release_custom_texture_buffer(int type) {
+    flush_sprites();
     auto &data = g_renderer_data;
 #ifndef __vita__
     free(data.custom_textures[type].buffer);
@@ -478,6 +510,7 @@ void graphics_renderer_interface::release_custom_texture_buffer(int type) {
 }
 
 void graphics_renderer_interface::update_custom_texture(int type) {
+    flush_sprites();
     auto &data = g_renderer_data;
 #ifndef __vita__
     if (!data.custom_textures[type].texture || !data.custom_textures[type].buffer) {
@@ -490,6 +523,7 @@ void graphics_renderer_interface::update_custom_texture(int type) {
 }
 
 SDL_Texture* graphics_renderer_interface::get_custom_texture(int type) {
+    flush_sprites();
     auto &data = g_renderer_data;
     return data.custom_textures[type].texture;
 }
@@ -497,6 +531,7 @@ SDL_Texture* graphics_renderer_interface::get_custom_texture(int type) {
 void graphics_renderer_interface::update_custom_texture_from(int type, const color *buffer,
     int x_offset, int y_offset, int width, int height)
 {
+    flush_sprites();
     auto &data = g_renderer_data;
     if (!data.custom_textures[type].texture) {
         return;
@@ -523,6 +558,7 @@ void graphics_renderer_interface::update_custom_texture_from(int type, const col
 }
 
 void graphics_renderer_interface::update_custom_texture_yuv(int type, const uint8_t* y_data, int y_width, const uint8_t* cb_data, int cb_width, const uint8_t* cr_data, int cr_width) {
+    flush_sprites();
     auto &data = g_renderer_data;
 #ifdef USE_YUV_TEXTURES
     if (!data.supports_yuv_textures || !data.custom_textures[type].texture) {
@@ -551,6 +587,7 @@ static buffer_texture* get_saved_texture_info(int texture_id) {
 }
 
 int graphics_renderer_interface::save_texture_from_screen(int texture_id, vec2i pos, int width, int height) {
+    flush_sprites();
     assert(width > 0 && height > 0);
 
     auto &data = g_renderer_data;
@@ -619,6 +656,7 @@ int graphics_renderer_interface::save_texture_from_screen(int texture_id, vec2i 
 }
 
 int graphics_renderer_interface::ensure_saved_texture(int texture_id, int width, int height) {
+    flush_sprites();
     assert(width > 0 && height > 0);
 
     auto &data = g_renderer_data;
@@ -654,6 +692,7 @@ int graphics_renderer_interface::ensure_saved_texture(int texture_id, int width,
 }
 
 bool graphics_renderer_interface::begin_saved_texture_target(int texture_id) {
+    flush_sprites();
     auto &data = g_renderer_data;
     render_stats::note_break();
     if (data.saved_texture_target.active) {
@@ -684,6 +723,7 @@ bool graphics_renderer_interface::begin_saved_texture_target(int texture_id) {
 }
 
 void graphics_renderer_interface::end_saved_texture_target() {
+    flush_sprites();
     auto &data = g_renderer_data;
     render_stats::note_break();
     if (!data.saved_texture_target.active) {
@@ -697,6 +737,7 @@ void graphics_renderer_interface::end_saved_texture_target() {
 }
 
 void graphics_renderer_interface::delete_saved_texture(int image_id) {
+    flush_sprites();
     auto &data = g_renderer_data;
 
     auto it = std::find_if(data.texture_buffers.begin(), data.texture_buffers.end(), [image_id] (auto &i) { return i.id == image_id; });
@@ -709,6 +750,7 @@ void graphics_renderer_interface::delete_saved_texture(int image_id) {
 }
 
 void graphics_renderer_interface::draw_saved_texture_to_screen(int texture_id, int x, int y, int width, int height) {
+    flush_sprites();
     auto &data = g_renderer_data;
     render_stats::note_break();
     buffer_texture* texture_info = get_saved_texture_info(texture_id);
@@ -721,6 +763,7 @@ void graphics_renderer_interface::draw_saved_texture_to_screen(int texture_id, i
 }
 
 void graphics_renderer_interface::clear_saved_texture(int texture_id, color clr) {
+    flush_sprites();
     auto &data = g_renderer_data;
     SDL_Texture *former_target = SDL_GetRenderTarget(data.renderer);
     if (!former_target) {
@@ -837,6 +880,7 @@ static void set_texture_color_and_scale_mode(SDL_Texture *texture, color color, 
 }
 
 void graphics_renderer_interface::draw_texture_advanced(const image_t *img, float x, float y, color color, float scale_x, float scale_y, double angle, int disable_coord_scaling) {
+    flush_sprites();
     main_thread::check("graphics_renderer_interface::draw_texture_advanced");
     auto &data = g_renderer_data;
     render_stats::note_break();
@@ -894,6 +938,7 @@ static void draw_texture(const image_t *img, int x, int y, color color, float sc
 }
 
 void graphics_renderer_interface::draw_custom_texture(int type, int x, int y, float scale) {
+    flush_sprites();
     main_thread::check("graphics_renderer_interface::draw_custom_texture");
     auto &data = g_renderer_data;
     if (type == CUSTOM_IMAGE_RED_FOOTPRINT || type == CUSTOM_IMAGE_GREEN_FOOTPRINT) {
@@ -912,6 +957,7 @@ int graphics_renderer_interface::has_custom_texture(int type) {
 }
 
 void load_unpacked_image(const image_t* img, const color* pixels) {
+    flush_sprites();
     auto &data = g_renderer_data;
     //    int unpacked_image_id = img->atlas.bitflags & IMAGE_ATLAS_BIT_MASK;
     int unpacked_image_id = 0;
@@ -977,6 +1023,7 @@ void load_unpacked_image(const image_t* img, const color* pixels) {
 }
 
 SDL_Texture* graphics_renderer_interface::create_texture_from_buffer(color* p_data, int width, int height) {
+    flush_sprites();
     auto &data = g_renderer_data;
     if (p_data == nullptr)
         return nullptr;
@@ -1018,6 +1065,7 @@ bool graphics_renderer_interface::has_texture_scale_mode() {
 }
 
 SDL_Texture* graphics_renderer_interface::create_texture_from_png_buffer(void *buffer, int size, vec2i &txsize) {
+    flush_sprites();
     auto &data = g_renderer_data;
     SDL_RWops *rw = SDL_RWFromMem(buffer, size);
     SDL_Surface* loadedSurface= IMG_LoadPNG_RW(rw);
@@ -1053,6 +1101,7 @@ float graphics_renderer_interface::scale() {
 }
 
 SDL_Renderer *graphics_renderer_interface::renderer() {
+    flush_sprites();
     return g_renderer_data.renderer;
 }
 
@@ -1061,6 +1110,7 @@ SDL_Window *graphics_renderer_interface::window() {
 }
 
 bool graphics_renderer_interface::save_texture_to_file(pcstr filename, SDL_Texture* tex, e_file_format file_format) {
+    flush_sprites();
     auto &data = g_renderer_data;
     SDL_Texture* ren_tex;
     SDL_Surface* surf;
@@ -1424,6 +1474,7 @@ static void destroy_render_texture(void) {
 }
 
 int platform_renderer_create_render_texture(int width, int height) {
+    flush_sprites();
     auto &data = g_renderer_data;
     destroy_render_texture();
 
@@ -1489,6 +1540,7 @@ int platform_renderer_lost_render_texture() {
 }
 
 void platform_renderer_invalidate_all_textures() {
+    flush_sprites();
     auto &data = g_renderer_data;
 
     // Destroy texture buffers (TARGET textures)
@@ -1529,6 +1581,7 @@ void platform_renderer_invalidate_all_textures() {
 
 
 void platform_renderer_invalidate_target_textures() {
+    flush_sprites();
     auto &data = g_renderer_data;
     if (data.custom_textures[CUSTOM_IMAGE_RED_FOOTPRINT].texture) {
         SDL_DestroyTexture(data.custom_textures[CUSTOM_IMAGE_RED_FOOTPRINT].texture);
@@ -1560,6 +1613,7 @@ static void draw_software_mouse_cursor(void) {
 #endif
 
 void graphics_renderer_interface::apply_filter() {
+    flush_sprites();
     auto &data = g_renderer_data;
 
     if (!platform_render_support_filters()) {
@@ -1617,6 +1671,7 @@ void graphics_renderer_interface::apply_filter() {
 }
 
 void platform_renderer_render() {
+    flush_sprites();
     OZZY_PROFILER_FUNCTION();
     auto &data = g_renderer_data;
 
@@ -1643,6 +1698,7 @@ void platform_renderer_render() {
 }
 
 void platform_renderer_generate_mouse_cursor_texture(int cursor_id, int size, const color* pixels, int hotspot_x, int hotspot_y) {
+    flush_sprites();
     auto &data = g_renderer_data;
     if (data.cursors[cursor_id].texture) {
         SDL_DestroyTexture(data.cursors[cursor_id].texture);
@@ -1660,6 +1716,7 @@ void platform_renderer_generate_mouse_cursor_texture(int cursor_id, int size, co
 }
 
 void platform_renderer_pause() {
+    flush_sprites();
     auto &data = g_renderer_data;
     SDL_SetRenderTarget(data.renderer, NULL);
 }
@@ -1671,6 +1728,7 @@ void platform_renderer_resume() {
 }
 
 void platform_renderer_destroy(void) {
+    flush_sprites();
     auto &data = g_renderer_data;
     destroy_render_texture();
     platform_render_shutdown_filters();
