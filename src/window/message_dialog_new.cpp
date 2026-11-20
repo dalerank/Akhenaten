@@ -434,16 +434,15 @@ void ui::message_dialog_base::draw_background_video() {
 }
 
 int ui::message_dialog_base::draw_background(UiFlags flags) {
-    autoconfig_window::draw_background(flags);
-
     if (background_callback) {
         background_callback();
-        ui::flush_commands();
         // City/sidebar draw registers HUD buttons; drop them so only the dialog is interactive.
         ui::clear_active_elements();
     } else {
         window_draw_underlying_window(0);
     }
+
+    autoconfig_window::draw_background(flags);
 
     if (show_video) {
         draw_background_video();
