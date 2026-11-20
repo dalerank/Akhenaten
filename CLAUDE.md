@@ -173,7 +173,7 @@ leave useful existing comments alone.
 
 ## Testing — integral tests
 
-`tests/*.js` is the integral test suite (565 files, numbered `000`-`564` in run order). It is a CI gate
+`tests/*.js` is the integral test suite (567 files, numbered `000`-`566` in run order). It is a CI gate
 (`.github/workflows/akhenaten_integral_tests.yml`); a red run blocks the PR.
 **This is the default way to verify a change.**
 
