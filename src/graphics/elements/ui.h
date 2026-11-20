@@ -146,6 +146,8 @@ namespace ui {
             saved_texture,
             texture_icon,
             lang_text_year,
+            background,
+            panel_unbordered,
         };
 
         e_type type = none;
@@ -163,6 +165,7 @@ namespace ui {
         int box_width = 0;
         rich_text_t* rt = nullptr;
         void* sdl_texture = nullptr;
+        rich_text_t::margin_t margin;
 
         cmd_t() = default;
         explicit cmd_t(e_type t) : type(t) {}
@@ -270,7 +273,11 @@ namespace ui {
     void draw_rect(vec2i pos, vec2i size, color c);
     void image_abs(int image_id, vec2i abs_pos);
     void panel_abs(vec2i pos, vec2i size_blocks, UiFlags flags = UiFlags_None);
-    void text_abs(pcstr str, vec2i pos, e_font font, color clr = 0);
+    int text_abs(pcstr str, vec2i pos, e_font font, color clr = 0);
+    void text_centered_abs(pcstr str, vec2i pos, int box_width, e_font font, color clr = 0);
+    int number_abs(int value, char prefix, pcstr postfix, vec2i pos, e_font font, color clr = 0);
+    void number_centered_abs(int value, char prefix, pcstr postfix, vec2i pos, int box_width, e_font font,
+      color clr = 0);
     void text_multiline(pcstr text, vec2i pos, int width, e_font font, color clr);
     vec2i current_offset();
 

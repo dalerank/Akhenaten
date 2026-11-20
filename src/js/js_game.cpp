@@ -16,6 +16,7 @@
 #include "io/gamefiles/lang.h"
 #include "platform/version.hpp"
 #include "graphics/elements/lang_text.h"
+#include "graphics/elements/ui.h"
 #include "graphics/screen.h"
 #include "app/app.h"
 #include "game/file_editor.h"
@@ -728,7 +729,11 @@ bvariant js_call_function(xstring js_ref, const bvariant_map &params) {
 }
 
 void __lang_text_draw_multiline(int group, int number, int x, int y, int box_width, int font) {
-    lang_text_draw_multiline(group, number, vec2i{x, y}, box_width, (e_font)font);
+    pcstr str = lang_get_string(group, number);
+    if (str) {
+        ui::push(ui::cmd_t::text_multiline, ui::opt::Pos{vec2i{x, y}}, ui::opt::BoxWidth{box_width},
+          ui::opt::Font{(e_font)font}, ui::opt::TextColor{0}, ui::opt::Caption{str});
+    }
 }
 ANK_FUNCTION_6(__lang_text_draw_multiline)
 

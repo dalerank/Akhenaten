@@ -9,6 +9,7 @@
 #include "lang_text.h"
 #include "panel.h"
 #include "graphics/text.h"
+#include "graphics/font.h"
 #include "core/svector.h"
 #include "core/log.h"
 #include "game/game.h"
@@ -407,8 +408,39 @@ void ui::panel_abs(vec2i pos, vec2i size_blocks, UiFlags flags) {
     push(!!(flags & UiFlags_PanelInner) ? cmd_t::panel_inner : cmd_t::panel_outer, Pos{pos}, Size{size_blocks});
 }
 
-void ui::text_abs(pcstr str, vec2i pos, e_font font, color clr) {
-    push(cmd_t::text_colored, Pos{pos}, Font{font}, TextColor{clr}, BoxWidth{0}, Caption{str});
+static int text_advance(pcstr str, e_font font) {
+    const font_definition* def = font_definition_for(font);
+    if (!str || !*str || !def) {
+        return 0;
+    }
+    return text_get_width((const uint8_t*)str, font) + def->space_width;
+}
+
+static bstring64 number_text(int value, char prefix, pcstr postfix) {
+    bstring64 s;
+    if (prefix) {
+        s.printf("%c%d%s", prefix, value, postfix);
+    } else {
+        s.printf("%d%s", value, postfix);
+    }
+    return s;
+}
+
+int ui::text_abs(pcstr str, vec2i pos, e_font font, color clr) {
+    push(cmd_t::text_colored, Pos{pos}, Font{font}, TextColor{clr}, BoxWidth{0}, Caption{str ? str : ""});
+    return text_advance(str, font);
+}
+
+void ui::text_centered_abs(pcstr str, vec2i pos, int box_width, e_font font, color clr) {
+    push(cmd_t::text_colored, Pos{pos}, Font{font}, TextColor{clr}, BoxWidth{box_width}, Caption{str ? str : ""});
+}
+
+int ui::number_abs(int value, char prefix, pcstr postfix, vec2i pos, e_font font, color clr) {
+    return text_abs(number_text(value, prefix, postfix).c_str(), pos, font, clr);
+}
+
+void ui::number_centered_abs(int value, char prefix, pcstr postfix, vec2i pos, int box_width, e_font font, color clr) {
+    text_centered_abs(number_text(value, prefix, postfix).c_str(), pos, box_width, font, clr);
 }
 
 void ui::text_multiline(pcstr text, vec2i pos, int width, e_font font, color clr) {
@@ -824,13 +856,15 @@ int ui::label(pcstr label, vec2i pos, e_font font, UiFlags flags, int box_width)
 }
 
 int ui::label_amount(int group, int number, int amount, vec2i pos, e_font font, pcstr postfix) {
-    const vec2i offset = g_state.offset();
-    return lang_text_draw_amount(group, number, amount, offset.x + pos.x, offset.y + pos.y, font, postfix);
+    const vec2i at = g_state.offset() + pos;
+    const int amount_offset = (amount == 1 || amount == -1) ? 0 : 1;
+    const int number_width
+      = amount >= 0 ? number_abs(amount, ' ', postfix, at, font) : number_abs(-amount, '-', postfix, at, font);
+    return number_width + text_abs(lang_get_string(group, number + amount_offset), at + vec2i{number_width, 0}, font);
 }
 
 int ui::label_percent(int amount, vec2i pos, e_font font) {
-    const vec2i offset = g_state.offset();
-    return text_draw_percentage(amount, offset.x + pos.x, offset.y + pos.y, font);
+    return number_abs(amount, '@', "%", g_state.offset() + pos, font);
 }
 
 int ui::label_year(int year, vec2i pos, e_font font) {
@@ -909,7 +943,7 @@ void ui::rect(vec2i pos, vec2i size, int fill, int color, UiFlags flags) {
     if (fill) {
         ui::fill_rect(offset + pos, size, fill);
     } else {
-        graphics_draw_rect(offset + pos, size, color);
+        push(cmd_t::draw_rect, Pos{offset + pos}, Size{size}, TextColor{static_cast<uint32_t>(color)});
     }
 }
 
@@ -1223,24 +1257,24 @@ void ui::widget::end_widget() {
 
 void ui::widget::set_clip_rectangle(vec2i pos, vec2i size) {
     const vec2i offset = g_state.offset();
-    graphics_set_clip_rectangle(pos + offset, size);
+    push(cmd_t::clip_set, Pos{pos + offset}, Size{size});
 }
 
 void ui::widget::set_clip_rectangle(const element& e) {
     const vec2i offset = g_state.offset();
-    graphics_set_clip_rectangle(e.pos + offset, e.pxsize());
+    push(cmd_t::clip_set, Pos{e.pos + offset}, Size{e.pxsize()});
 }
 
 void ui::widget::reset_clip_rectangle() {
-    graphics_reset_clip_rectangle();
+    push_cmd(cmd_t(cmd_t::clip_reset));
 }
 
 void ui::widget::line(bool hline, vec2i npos, int size, color c) {
     const vec2i offset = g_state.offset();
     if (hline) {
-        graphics_draw_horizontal_line(npos + offset, size, c);
+        push(cmd_t::h_line, Pos{npos + offset}, BoxWidth{size}, TextColor{c});
     } else {
-        graphics_draw_vertical_line(npos + offset, size, c);
+        push(cmd_t::v_line, Pos{npos + offset}, BoxWidth{size}, TextColor{c});
     }
 }
 
@@ -1481,9 +1515,8 @@ void ui::eimg_queue::image(int image) {
 }
 
 void ui::ebackground::draw(UiFlags flags) {
-    painter ctx = game.painter();
     scr_pos = pos;
-    graphics_draw_background(ctx, img_desc.tid(), 1.f, pos, fit);
+    push(cmd_t::background, ImageId{img_desc.tid()}, Scale{1.f}, Pos{pos}, BoxWidth{fit ? 1 : 0});
 }
 
 void ui::ebackground::load(archive arch, element* parent, items& elems) {
@@ -1672,10 +1705,10 @@ void ui::elabel::draw(UiFlags flags) {
     } else if (!!(_flags & UiFlags_LabelMultiline)) {
         push(cmd_t::text_multiline, Pos{text_pos}, BoxWidth{box_width}, Font{_font}, Caption{caption});
     } else if (!!(_flags & UiFlags_Rich)) {
-        rich_text_t rich_text;
-        rich_text.set_fonts(_font, FONT_NORMAL_YELLOW);
-        rich_text.set_margin(_text_margin);
-        rich_text.draw(_text.c_str(), offset, box_width, 10, false);
+        cmd_t cmd(cmd_t::text_rich, Pos{offset}, Font{_font}, BoxWidth{box_width}, Size{vec2i(0, 10)},
+          Caption{_text.c_str()});
+        cmd.margin = _text_margin;
+        push_cmd(std::move(cmd));
     } else {
         push(cmd_t::text, Pos{text_pos}, BoxWidth{box_width}, Font{_font}, Caption{caption});
     }
@@ -2382,7 +2415,7 @@ void ui::emenu_header::draw(UiFlags flags) {
         impl.text = ui::sformat<128>(&holder, impl.text);
     }
 
-    lang_text_draw(impl.text.c_str(), pos, _font);
+    push(cmd_t::text, Pos{pos}, Font{_font}, Caption{impl.text.c_str()});
 }
 
 const xstring& ui::emenu_header::tooltip() const {

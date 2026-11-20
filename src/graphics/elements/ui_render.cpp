@@ -80,6 +80,7 @@ void execute_ui_command(painter& ctx, const ui::cmd_t& cmd) {
     case cmd_t::text_rich: {
         rich_text_t rich_text;
         rich_text.set_fonts(cmd.font, FONT_NORMAL_YELLOW);
+        rich_text.set_margin(cmd.margin);
         const bool centered = !!(cmd.flags & UiFlags_AlignCentered);
         rich_text.draw(cmd.str.c_str(), cmd.pos, cmd.box_width, cmd.size.y, false, centered);
         break;
@@ -153,6 +154,14 @@ void execute_ui_command(painter& ctx, const ui::cmd_t& cmd) {
 
     case cmd_t::saved_texture:
         graphics_draw_from_texture(cmd.image_id, cmd.pos, cmd.size);
+        break;
+
+    case cmd_t::background:
+        graphics_draw_background(ctx, cmd.image_id, cmd.scale, cmd.pos, cmd.box_width != 0);
+        break;
+
+    case cmd_t::panel_unbordered:
+        unbordered_panel_draw(cmd.pos.x, cmd.pos.y, cmd.size.x, cmd.size.y);
         break;
 
     case cmd_t::texture_icon:

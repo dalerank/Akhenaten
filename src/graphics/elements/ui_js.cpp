@@ -68,10 +68,7 @@ void __ui_draw_image_scaled(int imgid, vec2i pos, float scale) {
     if (!img) {
         return;
     }
-    painter ctx = game.painter();
-    sprite spr;
-    spr.img = img;
-    ctx.draw(spr, pos, COLOR_MASK_NONE, scale, scale);
+    ui::push(ui::cmd_t::image, ui::opt::Pos{pos}, ui::opt::ImageId{imgid}, ui::opt::Scale{scale});
 }
 ANK_FUNCTION_3(__ui_draw_image_scaled);
 
@@ -175,7 +172,7 @@ xstring __ui_text_ellipsize(pcstr text, int font, int max_width) {
 ANK_FUNCTION_3(__ui_text_ellipsize)
 
 void __ui_unbordered_panel(int x, int y, int width_blocks, int height_blocks) {
-    unbordered_panel_draw(x, y, width_blocks, height_blocks);
+    ui::push(ui::cmd_t::panel_unbordered, ui::opt::Pos{vec2i{x, y}}, ui::opt::Size{vec2i{width_blocks, height_blocks}});
 }
 ANK_FUNCTION_4(__ui_unbordered_panel)
 
@@ -368,8 +365,7 @@ void __ui_window_select_list_show(int x, int y, int group, int count, js_helpers
 }
 ANK_FUNCTION_5(__ui_window_select_list_show)
 void __ui_draw_texture(vec2i pos, int img_id) {
-    ::painter ctx = game.painter();
-    ctx.img_generic(img_id, pos);
+    ui::push(ui::cmd_t::image, ui::opt::Pos{pos}, ui::opt::ImageId{img_id});
 }
 ANK_FUNCTION_2(__ui_draw_texture)
 
