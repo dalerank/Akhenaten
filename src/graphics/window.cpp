@@ -179,6 +179,7 @@ void window_draw_underlying_window(int flags) {
         if (window_behind->draw_foreground)
             window_behind->draw_foreground(flags);
 
+        ui::flush_commands();
         increase_queue_index();
         ui::clear_active_elements();
         --data.underlying_windows_redrawing;

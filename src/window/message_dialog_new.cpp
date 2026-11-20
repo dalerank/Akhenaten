@@ -437,6 +437,7 @@ int ui::message_dialog_base::draw_background(UiFlags flags) {
 
     if (background_callback) {
         background_callback();
+        ui::flush_commands();
         // City/sidebar draw registers HUD buttons; drop them so only the dialog is interactive.
         ui::clear_active_elements();
     } else {
