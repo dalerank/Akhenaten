@@ -215,7 +215,10 @@ void move_commands_below(size_t from, size_t below) {
 void flush_commands() {
     painter ctx = game.painter();
     for (size_t i = 0; i < g_ui_commands.size(); ++i) {
-        execute_ui_command(ctx, g_ui_commands[i]);
+        const size_t queued = g_ui_commands.size();
+        const cmd_t cmd = std::move(g_ui_commands[i]);
+        execute_ui_command(ctx, cmd);
+        std::rotate(g_ui_commands.begin() + i + 1, g_ui_commands.begin() + queued, g_ui_commands.end());
     }
     g_ui_commands.clear();
 }
