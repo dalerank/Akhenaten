@@ -1,7 +1,6 @@
 #include "widget/debug_console.h"
 #include "imgui.h"
 #include "js/js_game.h"
-#include "platform/renderer.h"
 #include "game/game.h"
 #include "graphics/imagepak_holder.h"
 #include "graphics/font.h"

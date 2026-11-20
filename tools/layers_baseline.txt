@@ -551,7 +551,6 @@ graphics/screenshot.cpp -> platform/arguments.h
 graphics/screenshot.cpp -> platform/renderer.h
 graphics/video.cpp -> platform/renderer.h
 graphics/view/view.cpp -> dev/debug.h
-graphics/view/view.cpp -> platform/renderer.h
 graphics/window.cpp -> platform/renderer.h
 grid/basin.cpp -> building/building.h
 grid/basin.cpp -> building/building_dike.h
@@ -805,5 +804,4 @@ window/window_building_info.cpp -> dev/debug.h
 window/window_building_info.cpp -> platform/arguments.h
 window/window_city.cpp -> dev/debug.h
 window/window_figure_info.cpp -> dev/debug.h
-window/window_font_preview.cpp -> platform/renderer.h
 window/window_info.cpp -> dev/debug.h

@@ -18,7 +18,6 @@
 #include "widget/widget_sidebar.h"
 #include "widget/sidebar/common.h"
 #include "scenario/scenario.h"
-#include "platform/renderer.h"
 #include "city/city.h"
 #include "figure/figure.h"
 #include "game/game.h"
