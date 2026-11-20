@@ -53,8 +53,12 @@ function run_test() {
     __test347_land_ok = true
     city.figures.remove_figures(FIGURE_HIPPO)
 
-    // Paint open water and spawn hippo on it.
-    terrain.add(land, TERRAIN_WATER)
+    // OG animal_in_deep_water: the tile and all 8 neighbours must be water.
+    for (var dy = -1; dy <= 1; dy++) {
+        for (var dx = -1; dx <= 1; dx++) {
+            terrain.add({ x: land.x + dx, y: land.y + dy }, TERRAIN_WATER)
+        }
+    }
     if (!terrain.is(land, TERRAIN_WATER)) {
         __log_info_native('[test:347] failed to paint TERRAIN_WATER')
         __test_signal_ready()

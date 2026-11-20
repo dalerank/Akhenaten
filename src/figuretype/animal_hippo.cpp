@@ -559,12 +559,10 @@ void figure_hippo::update_animation() {
         return;
     }
 
-    const bool water = in_deep_water() || map_terrain_is(tile(), TERRAIN_WATER);
-    xstring anim_key = water ? animkeys().swim_idle : animkeys().idle;
+    const bool water = in_deep_water();
+    xstring anim_key = water ? animkeys().swim_idle : animkeys().eating;
 
-    if (base.in_attack()) {
-        anim_key = water ? animkeys().swim_attack : animkeys().attack;
-    } else {
+    if (!base.in_attack()) {
         switch (action_state()) {
         case FIGURE_ACTION_149_CORPSE:
         case ACTION_12_HIPPO_DYING:
@@ -589,15 +587,10 @@ void figure_hippo::update_animation() {
             break;
 
         case ACTION_26_HIPPO_ANIMATE:
-            anim_key = water ? animkeys().dancer : animkeys().idle;
-            break;
-
-        case ACTION_18_HIPPO_REST:
-            anim_key = water ? animkeys().swim_idle : animkeys().eating;
+            anim_key = water ? animkeys().swim_animate : animkeys().idle;
             break;
 
         default:
-            anim_key = water ? animkeys().swim_idle : animkeys().eating;
             break;
         }
     }
@@ -611,7 +604,7 @@ void figure_hippo::main_image_update() {
         return;
     }
 
-    const bool water_corpse = map_terrain_is(tile(), TERRAIN_WATER);
+    const bool water_corpse = in_deep_water();
     if (action_state(ACTION_12_HIPPO_DYING) || action_state(FIGURE_ACTION_149_CORPSE)) {
         if (water_corpse) {
             const animation_t &water_death = anim(animkeys().bubbles);
