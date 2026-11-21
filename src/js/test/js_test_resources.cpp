@@ -108,8 +108,8 @@ static bool __test_image_exists(int id) {
 ANK_FUNCTION_1(__test_image_exists);
 
 static bool __test_image_cached(int id) {
-    return id >= 0 && static_cast<size_t>(id) < g_image_data->image_cache.size()
-           && g_image_data->image_cache[id] != nullptr;
+    return id >= 0 && static_cast<size_t>(id) < g_image_data->image_cache_size
+           && g_image_data->image_cache[id].load() != nullptr;
 }
 ANK_FUNCTION_1(__test_image_cached);
 

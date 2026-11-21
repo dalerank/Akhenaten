@@ -523,8 +523,8 @@ void image_invalidate_pak_cache(int pak_id) {
     }
 
     const int end = begin + count;
-    for (int id = begin; id < end && static_cast<size_t>(id) < data.image_cache.size(); ++id) {
-        data.image_cache[id] = nullptr;
+    for (int id = begin; id < end && static_cast<size_t>(id) < data.image_cache_size; ++id) {
+        data.image_cache[id].store(nullptr, std::memory_order_release);
     }
 }
 
@@ -554,12 +554,12 @@ const image_t* image_get(int id) {
     }
 
     auto& data = *g_image_data;
-    if (static_cast<size_t>(id) >= data.image_cache.size()) {
+    if (static_cast<size_t>(id) >= data.image_cache_size) {
         return nullptr;
     }
 
-    if (data.image_cache[id]) {
-        return data.image_cache[id];
+    if (const image_t* cached = data.image_cache[id].load(std::memory_order_acquire)) {
+        return cached;
     }
 
     const image_t* img = nullptr;
@@ -580,7 +580,7 @@ const image_t* image_get(int id) {
 
         img = pak.handle->get_image(id);
         if (img != nullptr) {
-            data.image_cache[id] = img;
+            data.image_cache[id].store(img, std::memory_order_release);
             return img;
         }
     }

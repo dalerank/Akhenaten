@@ -16,7 +16,8 @@ void ANK_REGISTER_CONFIG_ITERATOR(config_load_imagepaks_config) {
         pak.name = pak_name.tolower();
     }
 
-    g_image_data->image_cache.resize(65 * 1024, nullptr);
+    g_image_data->image_cache_size = 65 * 1024;
+    g_image_data->image_cache.reset(new std::atomic<const image_t*>[g_image_data->image_cache_size]());
     g_image_data->common_inited = true;
 }
 
