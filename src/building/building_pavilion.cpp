@@ -50,10 +50,16 @@ bool building_pavilion::target_route_tile_blocked(int grid_offset) const {
     return false;
 }
 
+void building_pavilion::preview::collect_site(build_planner& planer, tile2i end) const {
+    int orientation = 0;
+    planer.site_blocked = !map_venue_ghost_orientation(end, e_venue_mode_pavilion, &orientation);
+    planer.site_orientation = orientation;
+}
+
 void building_pavilion::preview::ghost_preview(build_planner &planer, painter &ctx, tile2i start, tile2i end, vec2i pixel) const {
     const auto &params = building_static_params::get(planer.build_type);
-    int orientation = 0;
-    const bool can_build = map_venue_ghost_orientation(end, e_venue_mode_pavilion, &orientation);
+    const int orientation = planer.site_orientation;
+    const bool can_build = !planer.site_blocked;
 
     if (!can_build) {
         for (int i = 0; i < params.building_size * params.building_size; i++) {

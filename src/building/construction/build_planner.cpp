@@ -302,6 +302,9 @@ void build_planner::subscribe_events() {
 void build_planner::reset() {
     // reset build info
     total_cost = 0;
+    site_parts.clear();
+    site_blocked = false;
+    site_orientation = 0;
     build_type = BUILDING_NONE;
     in_progress = false;
     draw_as_constructing = false;
@@ -1247,6 +1250,10 @@ void build_planner::update_preview(tile2i cursor_tile) {
 
     end = cursor_tile;
     update_tile_caches();
+    site_parts.clear();
+    site_blocked = false;
+    site_orientation = 0;
+    placement_rules_of(build_type).collect_site(*this, end);
 
     immediate_warning = "";
     extra_warning = "";
@@ -1407,6 +1414,14 @@ int build_planner::is_blocked_for_building(tile2i tile, int size, blocked_tile_v
 
 void build_planner::draw_partially_blocked(painter &ctx, int fully_blocked, const blocked_tile_vec &blocked_tiles) {
     for (auto &tile : blocked_tiles) {
+        vec2i pixel = g_camera.lookup_tile_to_pixel(tile.tile);
+        draw_ground_tile(ctx, pixel, (fully_blocked || tile.blocked) ? COLOR_MASK_RED_30 : COLOR_MASK_GREEN_30);
+    }
+}
+
+void build_planner::draw_partially_blocked(painter& ctx, int fully_blocked,
+  const std::vector<blocked_tile>& blocked_tiles) {
+    for (auto& tile : blocked_tiles) {
         vec2i pixel = g_camera.lookup_tile_to_pixel(tile.tile);
         draw_ground_tile(ctx, pixel, (fully_blocked || tile.blocked) ? COLOR_MASK_RED_30 : COLOR_MASK_GREEN_30);
     }

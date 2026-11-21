@@ -60,14 +60,10 @@ namespace {
         land = {land_tile, !building_pharos_lighthouse::site_tile_free(land_tile, false)};
     }
 
-    void draw_site(painter& ctx, tile2i tower, bool fully_blocked) {
-        blocked_tile_vec tiles;
-        blocked_tile land;
-        collect_site(tower, tiles, land);
-        build_planner::draw_partially_blocked(ctx, fully_blocked, tiles);
-        blocked_tile_vec land_only;
-        land_only.push_back(land);
-        build_planner::draw_partially_blocked(ctx, fully_blocked, land_only);
+    void draw_site(painter& ctx, const build_planner& planer, bool fully_blocked) {
+        for (const auto& part : planer.site_parts) {
+            build_planner::draw_partially_blocked(ctx, fully_blocked, part);
+        }
     }
 
     bool laborer_fetching_for(const figure* laborer, figure_id mason_id) {
@@ -394,11 +390,22 @@ uint32_t building_pharos_lighthouse::preview::ghost_ignore_terrain(build_planner
     return TERRAIN_NOT_CLEAR;
 }
 
-int building_pharos_lighthouse::preview::can_place(build_planner& /*p*/, tile2i /*tile*/, tile2i end, int state) const {
+void building_pharos_lighthouse::preview::collect_site(build_planner& p, tile2i end) const {
+    blocked_tile_vec tiles;
+    blocked_tile land;
+    ::collect_site(end, tiles, land);
+    blocked_tile_vec land_only;
+    land_only.push_back(land);
+    p.add_site_part(tiles);
+    p.add_site_part(land_only);
+    p.site_blocked = land.blocked || std::any_of(tiles.begin(), tiles.end(), [](const auto& t) { return t.blocked; });
+}
+
+int building_pharos_lighthouse::preview::can_place(build_planner& p, tile2i /*tile*/, tile2i /*end*/, int state) const {
     if (state != CAN_PLACE && state != CAN_NOT_BUT_GREEN) {
         return state;
     }
-    if (!site_fits(end) || has_unfinished_pharos_lighthouse()) {
+    if (p.site_blocked || has_unfinished_pharos_lighthouse()) {
         return CAN_NOT_BUT_GREEN;
     }
     return CAN_PLACE;
@@ -434,14 +441,14 @@ int building_pharos_lighthouse::preview::construction_place(build_planner& plane
     return 1;
 }
 
-void building_pharos_lighthouse::preview::ghost_preview(build_planner& /*planer*/, painter& ctx, tile2i /*start*/,
-  tile2i end, vec2i /*pixel*/) const {
-    draw_site(ctx, end, false);
+void building_pharos_lighthouse::preview::ghost_preview(build_planner& planer, painter& ctx, tile2i /*start*/,
+  tile2i /*end*/, vec2i /*pixel*/) const {
+    draw_site(ctx, planer, false);
 }
 
-void building_pharos_lighthouse::preview::ghost_blocked(build_planner& /*planer*/, painter& ctx, tile2i /*start*/,
-  tile2i end, vec2i /*pixel*/, bool fully_blocked) const {
-    draw_site(ctx, end, fully_blocked);
+void building_pharos_lighthouse::preview::ghost_blocked(build_planner& planer, painter& ctx, tile2i /*start*/,
+  tile2i /*end*/, vec2i /*pixel*/, bool fully_blocked) const {
+    draw_site(ctx, planer, fully_blocked);
 }
 
 void building_pharos_lighthouse::on_place_update_tiles(int orientation, int /*variant*/) {

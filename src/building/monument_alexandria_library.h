@@ -130,6 +130,7 @@ public:
     struct preview : building_planer_renderer {
         virtual void setup_preview_graphics(build_planner &planer) const override;
         virtual int can_place(build_planner &p, tile2i tile, tile2i end, int state) const override;
+        virtual void collect_site(build_planner& p, tile2i end) const override;
         virtual int finalize_check(build_planner &p, tile2i tile, tile2i end, int state) const override;
         virtual int construction_place(build_planner &p, tile2i tile, tile2i end, int orientation, int variant) const override;
         virtual void ghost_preview(build_planner &planer, painter &ctx, tile2i start, tile2i end, vec2i pixel) const override;
@@ -196,7 +197,6 @@ private:
     void update_part_image();
     int resolve_image(bool *is_front) const;
     void finish_all();
-    static bool area_for_part_free(tile2i origin, const library_part_desc &desc);
     static vec2i box_extent();
 };
 

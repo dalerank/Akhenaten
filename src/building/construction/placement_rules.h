@@ -23,4 +23,5 @@ struct placement_rules {
     virtual int can_place(build_planner& p, tile2i tile, tile2i end, int state) const = 0;
     virtual int finalize_check(build_planner& p, tile2i tile, tile2i end, int state) const = 0;
     virtual bool is_need_flag(build_planner& p, e_building_need_rules flag) const = 0;
+    virtual void collect_site(build_planner& p, tile2i end) const = 0;
 };

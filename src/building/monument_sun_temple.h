@@ -154,6 +154,7 @@ public:
     struct preview : building_planer_renderer {
         virtual void setup_preview_graphics(build_planner &planer) const override;
         virtual int can_place(build_planner &p, tile2i tile, tile2i end, int state) const override;
+        virtual void collect_site(build_planner& p, tile2i end) const override;
         virtual int finalize_check(build_planner &p, tile2i tile, tile2i end, int state) const override;
         virtual int construction_place(build_planner &p, tile2i tile, tile2i end, int orientation, int variant) const override;
         virtual void ghost_preview(build_planner &planer, painter &ctx, tile2i start, tile2i end, vec2i pixel) const override;
@@ -222,7 +223,6 @@ private:
     int assign_material(figure_id fid, bool assign, e_terrain_usage terrain);
     void update_part_image();
     void animate_spots();
-    static bool area_for_part_free(tile2i origin, const sun_temple_part_desc &desc);
 
     static int map_view();
     static int art_orient_idx();

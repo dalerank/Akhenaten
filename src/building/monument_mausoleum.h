@@ -143,6 +143,7 @@ public:
         virtual void setup_preview_graphics(build_planner &planer) const override;
         virtual int construction_place(build_planner &p, tile2i tile, tile2i end, int orientation, int variant) const override;
         virtual int can_place(build_planner &p, tile2i tile, tile2i end, int state) const override;
+        virtual void collect_site(build_planner& p, tile2i end) const override;
         virtual int finalize_check(build_planner &p, tile2i tile, tile2i end, int state) const override;
         virtual void ghost_preview(build_planner &planer, painter &ctx, tile2i start, tile2i end, vec2i pixel) const override;
     };
@@ -213,7 +214,6 @@ private:
     void finish_all();
     int block_index() const;
     int camera_view() const;
-    static bool area_blocked_at(tile2i origin, vec2i extent);
 };
 
 ANK_CONFIG_STRUCT(building_mausoleum::static_params, placement_resources, blocks, fence_tokens, fence_map, fence_links, leveled, unbuilt)

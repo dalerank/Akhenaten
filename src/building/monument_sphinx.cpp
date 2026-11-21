@@ -518,11 +518,9 @@ void building_sphinx::preview::ghost_preview(build_planner& planer, painter& ctx
     const int view = camera_view();
     const tile2i origin = origin_from_anchor(end, view);
 
-    std::array<blocked_tile_vec, PARTS> parts;
-    const bool blocked = collect_site(origin, parts) || g_city.buildings.count_total(BUILDING_SPHINX) > 0;
-    if (blocked) {
-        const bool all_red = g_city.buildings.count_total(BUILDING_SPHINX) > 0;
-        for (const auto& p : parts) {
+    const bool all_red = g_city.buildings.count_total(BUILDING_SPHINX) > 0;
+    if (planer.site_blocked || all_red) {
+        for (const auto& p : planer.site_parts) {
             planer.draw_partially_blocked(ctx, all_red, p);
         }
         return;
@@ -537,10 +535,16 @@ void building_sphinx::preview::ghost_preview(build_planner& planer, painter& ctx
 
 void building_sphinx::preview::ghost_blocked(build_planner& planer, painter& ctx, tile2i /*start*/, tile2i end,
   vec2i /*pixel*/, bool fully_blocked) const {
-    std::array<blocked_tile_vec, PARTS> parts;
-    collect_site(origin_from_anchor(end, camera_view()), parts);
-    for (const auto& p : parts) {
+    for (const auto& p : planer.site_parts) {
         planer.draw_partially_blocked(ctx, fully_blocked, p);
+    }
+}
+
+void building_sphinx::preview::collect_site(build_planner& planer, tile2i end) const {
+    std::array<blocked_tile_vec, PARTS> parts;
+    planer.site_blocked = ::collect_site(origin_from_anchor(end, camera_view()), parts);
+    for (const auto& part : parts) {
+        planer.add_site_part(part);
     }
 }
 
@@ -566,8 +570,7 @@ int building_sphinx::preview::can_place(build_planner& planer, tile2i /*start*/,
         planer.set_warning("#only_one_building_of_this_type");
         return CAN_NOT_PLACE;
     }
-    std::array<blocked_tile_vec, PARTS> parts;
-    if (collect_site(origin_from_anchor(end, camera_view()), parts)) {
+    if (planer.site_blocked) {
         planer.set_warning("#must_build_on_cleared_land");
         return CAN_NOT_PLACE;
     }

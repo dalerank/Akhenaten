@@ -48,32 +48,6 @@ bool tile_not_clear(tile2i t) {
         || map_has_figure_at(t);
 }
 
-bool area_blocked(tile2i origin, int w, int h) {
-    if (w < 1 || h < 1) {
-        return true;
-    }
-    for (int dy = 0; dy < h; dy++) {
-        for (int dx = 0; dx < w; dx++) {
-            tile2i t = origin.shifted(dx, dy);
-            if (!map_grid_is_inside(t, 1) || tile_not_clear(t)) {
-                return true;
-            }
-        }
-    }
-    return false;
-}
-
-void draw_area_mask(painter &ctx, tile2i origin, int w, int h, bool force_red) {
-    for (int dy = 0; dy < h; dy++) {
-        for (int dx = 0; dx < w; dx++) {
-            tile2i t = origin.shifted(dx, dy);
-            vec2i pixel = g_camera.lookup_tile_to_pixel(t);
-            const bool bad = force_red || !map_grid_is_inside(t, 1) || tile_not_clear(t);
-            build_planner::draw_ground_tile(ctx, pixel, bad ? COLOR_MASK_RED_30 : COLOR_MASK_GREEN_30);
-        }
-    }
-}
-
 bool worker_slot_occupied(uint16_t wid) {
     if (wid == 0) {
         return false;
@@ -343,10 +317,6 @@ vec2i building_mausoleum::part_offset(int index, int view, int orientation) {
 
 vec2i building_mausoleum::entry_offset(int view, int orientation) {
     return oriented_offset(MAUSOLEUM_ENTRY_DX, MAUSOLEUM_ENTRY_DY, 1, view, orientation);
-}
-
-bool building_mausoleum::area_blocked_at(tile2i origin, vec2i extent) {
-    return area_blocked(origin, extent.x, extent.y);
 }
 
 building_mausoleum *building_mausoleum::main_mausoleum() {
@@ -1003,7 +973,7 @@ int building_mausoleum::preview::can_place(build_planner &p, tile2i /*tile*/, ti
     if (sandstone_need > 0 && yards_available(RESOURCE_SANDSTONE) < sandstone_need) {
         return CAN_NOT_PLACE;
     }
-    if (area_blocked_at(origin_from_cursor(end), box_extent(map_view_orientation()))) {
+    if (p.site_blocked) {
         return CAN_NOT_PLACE;
     }
     return CAN_PLACE;
@@ -1034,9 +1004,8 @@ int building_mausoleum::preview::finalize_check(build_planner &p, tile2i tile, t
     return can_place(p, tile, end, CAN_PLACE);
 }
 
-void building_mausoleum::preview::ghost_preview(build_planner &planer, painter &ctx, tile2i /*start*/, tile2i end, vec2i /*pixel*/) const {
-    const vec2i ext = box_extent(map_view_orientation());
-    const tile2i org = origin_from_cursor(end);
+void building_mausoleum::preview::ghost_preview(build_planner& planer, painter& ctx, tile2i /*start*/, tile2i /*end*/,
+  vec2i /*pixel*/) const {
     int sandstone_need = 0;
     for (const auto &pr : maus_params().placement_resources) {
         if (pr.resource == RESOURCE_SANDSTONE) {
@@ -1045,8 +1014,28 @@ void building_mausoleum::preview::ghost_preview(build_planner &planer, painter &
         }
     }
     const bool short_of_sandstone = sandstone_need > 0 && yards_available(RESOURCE_SANDSTONE) < sandstone_need;
-    const bool blocked = has_unfinished_mausoleum() || short_of_sandstone || area_blocked_at(org, ext);
-    draw_area_mask(ctx, org, ext.x, ext.y, blocked);
+    const bool blocked = has_unfinished_mausoleum() || short_of_sandstone || planer.site_blocked;
+    for (const auto& part : planer.site_parts) {
+        planer.draw_partially_blocked(ctx, blocked, part);
+    }
+}
+
+void building_mausoleum::preview::collect_site(build_planner& planer, tile2i end) const {
+    const vec2i ext = box_extent(map_view_orientation());
+    tile2i origin = origin_from_cursor(end);
+    std::vector<blocked_tile> tiles;
+    for (int dy = 0; dy < ext.y; dy++) {
+        for (int dx = 0; dx < ext.x; dx++) {
+            const tile2i t = origin.shifted(dx, dy);
+            const bool bad = !map_grid_is_inside(t, 1) || tile_not_clear(t);
+            tiles.push_back({t, bad});
+            planer.site_blocked |= bad;
+        }
+    }
+    if (ext.x < 1 || ext.y < 1) {
+        planer.site_blocked = true;
+    }
+    planer.add_site_part(tiles);
 }
 
 void building_mausoleum::on_place(int orientation, int variant) {

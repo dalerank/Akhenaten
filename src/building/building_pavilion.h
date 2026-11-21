@@ -15,6 +15,7 @@ public:
     struct preview : building_planer_renderer {
         virtual void setup_preview_graphics(build_planner &planer) const override;
         virtual void ghost_preview(build_planner &p, painter &ctx, tile2i tile, tile2i end, vec2i pixel) const override;
+        virtual void collect_site(build_planner& p, tile2i end) const override;
     };
 
     struct static_params : public building_static_params {

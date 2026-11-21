@@ -455,9 +455,7 @@ int building_caesareum::preview::construction_place(build_planner &planer, tile2
 // OG caesareum_draw_placement: the bare footprint, each tile green or red.
 void building_caesareum::preview::ghost_preview(build_planner &planer, painter &ctx, tile2i /*start*/, tile2i end,
   vec2i /*pixel*/) const {
-    std::array<blocked_tile_vec, PARTS> parts;
-    collect_site(origin_from_center(end), parts);
-    for (const auto &p : parts) {
+    for (const auto& p : planer.site_parts) {
         planer.draw_partially_blocked(ctx, false, p);
     }
 }
@@ -465,6 +463,14 @@ void building_caesareum::preview::ghost_preview(build_planner &planer, painter &
 void building_caesareum::preview::ghost_blocked(build_planner &planer, painter &ctx, tile2i start, tile2i end,
   vec2i pixel, bool /*fully_blocked*/) const {
     ghost_preview(planer, ctx, start, end, pixel);
+}
+
+void building_caesareum::preview::collect_site(build_planner& planer, tile2i end) const {
+    std::array<blocked_tile_vec, PARTS> parts;
+    planer.site_blocked = ::collect_site(origin_from_center(end), parts);
+    for (const auto& part : parts) {
+        planer.add_site_part(part);
+    }
 }
 
 bool building_caesareum::preview::ghost_allow_tile(build_planner &planer, tile2i tile) const {
@@ -482,8 +488,7 @@ int building_caesareum::preview::can_place(build_planner &planer, tile2i /*start
     if (state != CAN_PLACE && state != CAN_NOT_BUT_GREEN) {
         return state;
     }
-    std::array<blocked_tile_vec, PARTS> parts;
-    if (collect_site(origin_from_center(end), parts)) {
+    if (planer.site_blocked) {
         planer.set_warning("#must_build_on_cleared_land");
         return CAN_NOT_PLACE;
     }

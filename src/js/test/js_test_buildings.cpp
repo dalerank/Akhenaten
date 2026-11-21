@@ -6,6 +6,7 @@
 #include "building/building_house.h"
 #include "building/building_mansion.h"
 #include "building/building_static_params.h"
+#include "building/construction/build_planner.h"
 #include "building/building_temple_complex.h"
 #include "building/monument_obelisk.h"
 #include "building/monument_pyramid.h"
@@ -24,10 +25,13 @@
 #include "figure/formation.h"
 #include "figuretype/figure_cartpusher.h"
 #include "figuretype/figure_plagued_citizen.h"
+#include "game/game.h"
 #include "game/simulation.h"
 #include "game/game_events.h"
 #include "game/resource.h"
+#include "graphics/graphics.h"
 #include "graphics/image.h"
+#include "graphics/painter.h"
 #include "grid/grid.h"
 #include "grid/road_access.h"
 #include "grid/routing/routing.h"
@@ -784,3 +788,20 @@ static int __test_house_image_id(int bid) {
     return house ? house->runtime_data().image_id : 0;
 }
 ANK_FUNCTION_1(__test_house_image_id);
+
+static int __test_planner_preview_red_tiles() {
+    ImageDraw::render_command_vec commands;
+    ImageDraw::render_command_vec subcommands;
+    painter ctx = game.painter();
+    ctx.command_buffer = &commands;
+    ctx.subcommand_buffer = &subcommands;
+    g_city_planner.draw(ctx);
+    int red = 0;
+    for (const render_command_t& c : commands) {
+        if (c.mask == COLOR_MASK_RED || c.mask == COLOR_MASK_RED_30) {
+            ++red;
+        }
+    }
+    return red;
+}
+ANK_FUNCTION(__test_planner_preview_red_tiles);

@@ -29,6 +29,7 @@ struct building_planer_renderer : placement_rules, ghost_painter {
     virtual int can_place(build_planner &p, tile2i tile, tile2i end, int state) const;
     virtual int finalize_check(build_planner &p, tile2i tile, tile2i end, int state) const;
     virtual bool is_need_flag(build_planner &p, e_building_need_rules flag) const;
+    virtual void collect_site(build_planner& p, tile2i end) const {}
 
     static void register_model(e_building_type e, const building_planer_renderer &p);
     static void unregister_model(e_building_type e);

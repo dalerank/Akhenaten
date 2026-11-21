@@ -68,6 +68,7 @@ public:
         virtual bool ghost_allow_tile(build_planner &planer, tile2i tile) const override;
         virtual uint32_t ghost_ignore_terrain(build_planner &planer, tile2i tile) const override;
         virtual int can_place(build_planner &planer, tile2i start, tile2i end, int state) const override;
+        virtual void collect_site(build_planner& planer, tile2i end) const override;
     };
 
     virtual void on_place_update_tiles(int orientation, int variant) override;

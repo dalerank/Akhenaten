@@ -58,6 +58,7 @@ public:
         virtual void setup_preview_graphics(build_planner& planer) const override;
         virtual uint32_t ghost_ignore_terrain(build_planner &p, tile2i tile) const override;
         virtual int can_place(build_planner &p, tile2i tile, tile2i end, int state) const override;
+        virtual void collect_site(build_planner& p, tile2i end) const override;
         virtual int finalize_check(build_planner &p, tile2i tile, tile2i end, int state) const override;
         virtual int construction_place(build_planner& p, tile2i tile, tile2i end, int orientation,
           int variant) const override;

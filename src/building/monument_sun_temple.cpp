@@ -202,32 +202,6 @@ bool tile_not_clear(tile2i t) {
         || map_has_figure_at(t);
 }
 
-bool area_blocked(tile2i origin, int w, int h) {
-    if (w < 1 || h < 1) {
-        return true;
-    }
-    for (int dy = 0; dy < h; dy++) {
-        for (int dx = 0; dx < w; dx++) {
-            tile2i t = origin.shifted(dx, dy);
-            if (!map_grid_is_inside(t, 1) || tile_not_clear(t)) {
-                return true;
-            }
-        }
-    }
-    return false;
-}
-
-void draw_area_mask(painter &ctx, tile2i origin, int w, int h, bool force_red) {
-    for (int dy = 0; dy < h; dy++) {
-        for (int dx = 0; dx < w; dx++) {
-            tile2i t = origin.shifted(dx, dy);
-            vec2i pixel = g_camera.lookup_tile_to_pixel(t);
-            const bool bad = force_red || !map_grid_is_inside(t, 1) || tile_not_clear(t);
-            build_planner::draw_ground_tile(ctx, pixel, bad ? COLOR_MASK_RED_30 : COLOR_MASK_GREEN_30);
-        }
-    }
-}
-
 bool figure_still_working(int fid) {
     figure *f = figure_get(fid);
     return f && f->is_alive();
@@ -288,10 +262,6 @@ bool building_sun_temple::has_completed_sun_temple() {
         }
     }
     return false;
-}
-
-bool building_sun_temple::area_for_part_free(tile2i origin, const sun_temple_part_desc &desc) {
-    return !area_blocked(origin.shifted(desc.offset.x, desc.offset.y), desc.size, desc.size);
 }
 
 int building_sun_temple::parts_count() {
@@ -1299,10 +1269,8 @@ int building_sun_temple::preview::can_place(build_planner &p, tile2i /*tile*/, t
     if (sandstone_need > 0 && yards_available(RESOURCE_SANDSTONE) < sandstone_need) {
         return CAN_NOT_PLACE;
     }
-    for (int i = 0; i < parts_count(); ++i) {
-        if (!area_for_part_free(end, part_desc(i))) {
-            return CAN_NOT_PLACE;
-        }
+    if (p.site_blocked) {
+        return CAN_NOT_PLACE;
     }
     return CAN_PLACE;
 }
@@ -1346,23 +1314,38 @@ void building_sun_temple::preview::ghost_preview(build_planner &planer, painter 
     const auto &params = building_static_params::get(planer.build_type);
     const int preview = params.first_img("preview");
     const int img_body = params.first_img("sa1");
-    bool blocked = false;
-    for (int i = 0; i < parts_count(); ++i) {
-        if (!area_for_part_free(end, part_desc(i))) {
-            blocked = true;
-            break;
-        }
-    }
-    for (int i = 0; i < parts_count(); ++i) {
+    const bool blocked = planer.site_blocked;
+    const int parts = std::min(parts_count(), (int)planer.site_parts.size());
+    for (int i = 0; i < parts; ++i) {
         const auto &d = part_desc(i);
         tile2i t = end.shifted(d.offset.x, d.offset.y);
         if (blocked) {
-            draw_area_mask(ctx, t, d.size, d.size, true);
+            planer.draw_partially_blocked(ctx, true, planer.site_parts[i]);
         } else if (d.kind == SUN_TEMPLE_PART_TEMPLE) {
             planer.draw_building_ghost(ctx, img_body > 0 ? img_body : preview, g_camera.lookup_tile_to_pixel(t));
         } else {
-            draw_area_mask(ctx, t, d.size, d.size, false);
+            planer.draw_partially_blocked(ctx, false, planer.site_parts[i]);
         }
+    }
+}
+
+void building_sun_temple::preview::collect_site(build_planner& planer, tile2i end) const {
+    for (int i = 0; i < parts_count(); ++i) {
+        const auto& d = part_desc(i);
+        tile2i origin = end.shifted(d.offset.x, d.offset.y);
+        std::vector<blocked_tile> tiles;
+        for (int dy = 0; dy < d.size; dy++) {
+            for (int dx = 0; dx < d.size; dx++) {
+                const tile2i t = origin.shifted(dx, dy);
+                const bool bad = !map_grid_is_inside(t, 1) || tile_not_clear(t);
+                tiles.push_back({t, bad});
+                planer.site_blocked |= bad;
+            }
+        }
+        if (d.size < 1) {
+            planer.site_blocked = true;
+        }
+        planer.add_site_part(tiles);
     }
 }
 

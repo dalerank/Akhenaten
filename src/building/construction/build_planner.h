@@ -7,6 +7,8 @@
 #include "grid/point.h"
 #include "grid/terrain.h"
 
+#include <vector>
+
 enum e_planner_rule : uint8_t {
     PLANNER_RULE_GROUNDWATER = 0,
     PLANNER_RULE_WATER = 1,
@@ -140,6 +142,14 @@ public:
     int preview_allow_result = 0;
     tile2i start;
     tile2i end;
+    std::vector<std::vector<blocked_tile>> site_parts;
+    bool site_blocked = false;
+    int site_orientation = 0;
+
+    template <typename Tiles>
+    void add_site_part(const Tiles& tiles) {
+        site_parts.emplace_back(tiles.begin(), tiles.end());
+    }
     int total_cost;
     int global_rotation = 0;
     int road_orientation = 1;
@@ -200,6 +210,7 @@ public:
     static int is_blocked_for_building(tile2i tile, int size, blocked_tile_vec &blocked_tiles, uint32_t restricted_terrain = TERRAIN_ALL);
     static void draw_bridge(tile2i tile, vec2i pixel, int type, painter &ctx);
     static void draw_partially_blocked(painter &ctx, int fully_blocked, const blocked_tile_vec &blocked_tiles);
+    static void draw_partially_blocked(painter& ctx, int fully_blocked, const std::vector<blocked_tile>& blocked_tiles);
     static int tile_grid_offset(int x, int y);
 
     vec2i pixel_coord_offset(int row, int column) const;
