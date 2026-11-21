@@ -1,4 +1,5 @@
 #include "monument_alexandria_library.h"
+#include "grid/orientation.h"
 
 #include "building/monuments.h"
 #include "building/rotation.h"
@@ -17,7 +18,6 @@
 #include "game/undo.h"
 #include "graphics/color.h"
 #include "graphics/view/lookup.h"
-#include "graphics/view/view.h"
 #include "grid/building.h"
 #include "grid/building_tiles.h"
 #include "grid/figure.h"
@@ -111,7 +111,7 @@ std::array<spot_anim, LIBRARY_WORK_SPOTS> g_spot_anims{};
 int g_spot_anim_tick = -1;
 
 int camera_view() {
-    return g_camera.orientation / 2;
+    return map_view_orientation() / 2;
 }
 
 const library_anim_script *anim_script(const xstring &name) {
@@ -976,7 +976,7 @@ int building_alexandria_library::resolve_image(bool *is_front) const {
         return 0;
     }
 
-    const int view = g_camera.orientation / 2;
+    const int view = map_view_orientation() / 2;
     const bool south = view >= LIBRARY_VIEW_SOUTH_FIRST;
     const xstring &key = south ? step->south : step->north;
     const xstring &script = south ? step->south_script : step->north_script;

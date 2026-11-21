@@ -1,4 +1,6 @@
 #include "monument_abu_simbel.h"
+#include "graphics/view/view.h"
+#include "grid/orientation.h"
 
 #include "building/monuments.h"
 #include "city/city.h"
@@ -13,7 +15,6 @@
 #include "graphics/graphics.h"
 #include "graphics/image.h"
 #include "graphics/view/lookup.h"
-#include "graphics/view/view.h"
 #include "grid/building.h"
 #include "grid/building_tiles.h"
 #include "grid/grid.h"
@@ -129,7 +130,7 @@ namespace {
     }
 
     int camera_view() {
-        return (g_camera.orientation / 2) & 3;
+        return (map_view_orientation() / 2) & 3;
     }
 
     bool tile_fits(tile2i t, bool on_rock) {

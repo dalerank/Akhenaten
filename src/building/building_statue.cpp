@@ -1,4 +1,5 @@
 #include "building_statue.h"
+#include "grid/orientation.h"
 
 #include "building/building.h"
 #include "city/object_info.h"
@@ -88,13 +89,13 @@ void building_statue::on_create(int orientation) {
 
 void building_statue::on_place_update_tiles(int orientation, int variant) {
     base.orientation = orientation;
-    int orientation_rel = g_camera.relative_orientation(orientation);
+    int orientation_rel = map_view_relative_orientation(orientation);
     int image_id = get_image(type(), orientation_rel, variant);
     map_building_tiles_add(id(), tile(), size(), image_id, TERRAIN_BUILDING);
 }
 
 void building_statue::update_map_orientation(int /*map_orientation*/) {
-    int orientation_rel = g_camera.relative_orientation(base.orientation);
+    int orientation_rel = map_view_relative_orientation(base.orientation);
     int image_id = get_image(type(), orientation_rel, runtime_data().variant);
     map_building_tiles_add(id(), tile(), base.size, image_id, TERRAIN_BUILDING);
 }

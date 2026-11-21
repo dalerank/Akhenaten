@@ -1,6 +1,6 @@
 #include "io/gamestate/presentation_chunks.h"
 
-#include "building/construction/build_planner.h"
+#include "grid/orientation.h"
 #include "graphics/view/view.h"
 #include "io/io_buffer.h"
 
@@ -14,7 +14,7 @@ void city_view_orientation_chunk::bind_data(io_buffer* iob, size_t version) {
     else
         data.orientation = 0;
 
-    g_city_planner.set_view_orientation(data.orientation);
+    map_view_orientation_set(data.orientation);
 }
 
 void city_view_camera_chunk::bind_data(io_buffer* iob, size_t version) {

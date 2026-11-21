@@ -1,9 +1,9 @@
 ﻿#include "rotation.h"
+#include "grid/orientation.h"
 
 #include "building/construction/build_planner.h"
 #include "building/building_statue.h"
 #include "core/direction.h"
-#include "graphics/view/view.h"
 #include "grid/grid.h"
 #include "game/game_config.h"
 
@@ -59,11 +59,11 @@ void building_rotation_update_road_orientation() {
 }
 
 int building_rotation_get_storage_fort_orientation(int building_rotation) {
-    return (2 * building_rotation + g_camera.orientation) % 8;
+    return (2 * building_rotation + map_view_orientation()) % 8;
 }
 
 int building_rotation_get_storage_gatehouse_orientation(int building_rotation) {
-    return (2 * building_rotation + g_camera.orientation) % 8;
+    return (2 * building_rotation + map_view_orientation()) % 8;
 }
 
 int building_rotation_get_delta_with_rotation(int default_delta) {

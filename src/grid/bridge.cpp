@@ -1,8 +1,8 @@
 ﻿#include "bridge.h"
+#include "grid/orientation.h"
 
 #include "building/building_bridge.h"
 #include "core/direction.h"
-#include "graphics/view/view.h"
 #include "grid/bridge_grid.h"
 #include "grid/figure.h"
 #include "grid/grid.h"
@@ -294,7 +294,7 @@ int map_bridge_add(int x, int y, bool is_ship_bridge) {
         return g_bridge.length;
     }
 
-    g_bridge.direction -= g_camera.orientation;
+    g_bridge.direction -= map_view_orientation();
     if (g_bridge.direction < 0)
         g_bridge.direction += 8;
 

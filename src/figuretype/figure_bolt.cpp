@@ -1,10 +1,10 @@
 #include "figure_bolt.h"
+#include "grid/orientation.h"
 
 #include "city/city_figures.h"
 #include "figure/formation.h"
 #include "figuretype/figure_javelin.h"
 #include "graphics/animkeys.h"
-#include "graphics/view/view.h"
 #include "js/js_register.h"
 
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_bolt);
@@ -64,7 +64,7 @@ void figure_bolt::figure_action() {
 void figure_bolt::main_image_update() {
     // OG missile_set_image(MISSILE_IMAGE_BOLT): offset 32, 16 directions.
     const auto &r = missile_rules;
-    int dir = direction() - 2 * g_camera.orientation;
+    int dir = direction() - 2 * map_view_orientation();
     if (dir < 0) {
         dir += r.image_directions;
     }

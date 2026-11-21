@@ -3,7 +3,7 @@
 #include "building/building.h"
 #include "core/tokenum.h"
 #include "graphics/color.h"
-#include "graphics/view/view.h"
+#include "grid/orientation.h"
 #include "grid/point.h"
 #include "grid/terrain.h"
 
@@ -70,7 +70,6 @@ class build_planner {
     int tiles_blocked_total = 0;
 
     tile2i tile_coord_cache[TILE_DIM][TILE_DIM];
-    int view_orientation_ = 0;
 
     int additional_req_param2 = -1;
     int additional_req_param3 = -1;
@@ -205,8 +204,7 @@ public:
 
     vec2i pixel_coord_offset(int row, int column) const;
     vec2i end_pixel() const;
-    int view_orientation() const { return view_orientation_; }
-    void set_view_orientation(int orientation) { view_orientation_ = orientation; }
+    int view_orientation() const { return map_view_orientation(); }
     bool is_blocked_tile(int row, int column) { return tile_blocked_array[row][column]; }
 
     bool ghost_mark_deleting(tile2i tile);

@@ -1,4 +1,6 @@
 #include "monument_pyramid_ramp.h"
+#include "graphics/view/view.h"
+#include "grid/orientation.h"
 
 #include "building/monument_pyramid.h"
 #include "building/monument_pyramid_engine.h"
@@ -9,7 +11,6 @@
 #include "figure/figure.h"
 #include "graphics/graphics.h"
 #include "graphics/image.h"
-#include "graphics/view/view.h"
 #include "grid/building.h"
 #include "grid/grid.h"
 #include "js/js_game.h"
@@ -151,7 +152,7 @@ void pyramid_engine_update_part_ramp_image(building_id part_id) {
     // OG uses pyramid_part_layout[size][subtype].kind — not full-footprint geometry
     // (inner-ring edge parts stay EDGE_BOTTOM_* so they still get ramp sprites).
     int kind = engine.layout_kind(head, ps->subtype);
-    kind = engine.rotated_kind(kind, g_camera.orientation / 2);
+    kind = engine.rotated_kind(kind, map_view_orientation() / 2);
 
     const int ramp_img = engine.ramp_base_image(*part, kind, style);
     if ((ps->ramp1_height == 0 && ps->ramp2_height == 0) || ramp_img <= 0) {
@@ -336,7 +337,7 @@ static int pyramid_ramp_sprite_for(building &part, const pyramid_part_state &ps,
         return 0;
     }
     int kind = g_monument_pyramid_engine.layout_kind(head, ps.subtype);
-    kind = g_monument_pyramid_engine.rotated_kind(kind, g_camera.orientation / 2);
+    kind = g_monument_pyramid_engine.rotated_kind(kind, map_view_orientation() / 2);
     if (kind >= PYRAMID_PART_EDGE_TOP_LEFT) {
         return (height - 1) % 3;
     }
@@ -418,7 +419,7 @@ static building *pyramid_ramp_neighbour_at(building &part, int32_t delta) {
 }
 
 static tile2i pyramid_part_draw_anchor(building &part) {
-    switch (g_camera.orientation) {
+    switch (map_view_orientation()) {
     case DIR_0_TOP_RIGHT: return part.tile.shifted(0, 1);
     case DIR_4_BOTTOM_LEFT: return part.tile.shifted(1, 0);
     case DIR_6_TOP_LEFT: return part.tile.shifted(1, 1);
@@ -442,7 +443,7 @@ static building *pyramid_ramp_link_neighbor(building &part, const pyramid_part_s
         return nullptr;
     }
     int kind = g_monument_pyramid_engine.layout_kind(head, ps.subtype);
-    kind = g_monument_pyramid_engine.rotated_kind(kind, g_camera.orientation / 2);
+    kind = g_monument_pyramid_engine.rotated_kind(kind, map_view_orientation() / 2);
     const bool attach = (style == PYRAMID_STYLE_STEPPED)
         ? (kind != PYRAMID_PART_CORNER_TOP && kind != PYRAMID_PART_EDGE_TOP_LEFT
             && kind != PYRAMID_PART_EDGE_TOP_RIGHT)
@@ -450,7 +451,7 @@ static building *pyramid_ramp_link_neighbor(building &part, const pyramid_part_s
     if (!attach) {
         return nullptr;
     }
-    const int view = g_camera.orientation / 2;
+    const int view = map_view_orientation() / 2;
     const int slot = (kind == PYRAMID_PART_CORNER_BOTTOM) ? 0 : 1;
     const int32_t delta = pyramid_engine_config.neighbour_offsets[view * 3 + slot];
     return pyramid_ramp_neighbour_at(part, delta);

@@ -1,4 +1,5 @@
 ﻿#include "canals.h"
+#include "grid/orientation.h"
 
 #include "core/profiler.h"
 #include "grid/canals_chunks.h"
@@ -19,7 +20,6 @@
 #include "city/city_buildings.h"
 #include "grid/building.h"
 #include "grid/image_context.h"
-#include "graphics/view/view.h"
 #include "game/game.h"
 #include "game/game_config.h"
 
@@ -296,7 +296,7 @@ int get_canal_image(int grid_offset, bool is_road, int terrain, const terrain_im
         if (map_terrain_is(grid_offset + GRID_OFFSET(0, 1), TERRAIN_ROAD))
             road_dir_right = true;
 
-        road_dir_right = g_camera.relative_orientation(road_dir_right) % 2;
+        road_dir_right = map_view_relative_orientation(road_dir_right) % 2;
         bool is_paved = building_road::is_paved(tile2i(grid_offset));
 
         if (road_dir_right) // left/right offset is opposite from C3

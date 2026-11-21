@@ -1,10 +1,10 @@
 ﻿#include "tiles.h"
+#include "grid/orientation.h"
 
 #include "city/map.h"
 #include "core/direction.h"
 #include "graphics/image.h"
 #include "graphics/image_groups.h"
-#include "graphics/view/view.h"
 #include "grid/canals.h"
 #include "grid/building.h"
 #include "grid/building_tiles.h"
@@ -134,7 +134,7 @@ static bool is_cliff(int grid_offset) {
 }
 
 static int cliff_image_turned(int first_image, int variants, int turns, int turn) {
-    const int view_turn = g_camera.orientation / 2;
+    const int view_turn = map_view_orientation() / 2;
     return first_image + variants * ((turn + view_turn) % turns);
 }
 
@@ -643,7 +643,7 @@ static int get_access_ramp_image_offset(tile2i tile) {
     if (image_offset < 0)
         return -1;
 
-    switch (g_camera.orientation) {
+    switch (map_view_orientation()) {
     case DIR_0_TOP_RIGHT:
         break;
     case DIR_6_TOP_LEFT:
@@ -761,7 +761,7 @@ void map_tiles_add_entry_exit_flags() {
         }
         tile2i grid_offset_flag = g_city.map.set_entry_flag(flag_tile);
         map_terrain_add(grid_offset_flag, TERRAIN_ROCK);
-        int orientation = (8 - g_camera.orientation + entry_orientation) % 8;
+        int orientation = (8 - map_view_orientation() + entry_orientation) % 8;
         map_image_set(grid_offset_flag, image_id_from_group(GROUP_TERRAIN_ENTRY_EXIT_FLAGS, orientation / 2));
     }
 
@@ -775,7 +775,7 @@ void map_tiles_add_entry_exit_flags() {
         }
         tile2i grid_offset_flag = g_city.map.set_exit_flag(flag_tile);
         map_terrain_add(grid_offset_flag, TERRAIN_ROCK);
-        int orientation = (8 - g_camera.orientation + exit_orientation) % 8;
+        int orientation = (8 - map_view_orientation() + exit_orientation) % 8;
         map_image_set(grid_offset_flag, image_id_from_group(GROUP_TERRAIN_ENTRY_EXIT_FLAGS, 4 + orientation / 2));
     }
 }
@@ -893,7 +893,7 @@ static void set_empty_land_pass2(int grid_offset) {
 
             // correct for city orientation the janky, hardcoded, but at least working way
             int tr_offset = ph_grass - 16;
-            int orientation = g_camera.orientation;
+            int orientation = map_view_orientation();
             if (tr_offset < 8) {
                 if (tr_offset % 2 == 0) {
                     tr_offset -= orientation;

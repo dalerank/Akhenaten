@@ -1,6 +1,7 @@
 ﻿#include "figure_missile.h"
-
 #include "graphics/view/view.h"
+#include "grid/orientation.h"
+
 #include "graphics/view/lookup.h"
 #include "grid/figure.h"
 #include "sound/sound.h"
@@ -269,7 +270,7 @@ void figure_arrow::figure_action() {
 void figure_arrow::main_image_update() {
     // OG missile_set_image: arrow_image_offset + 16-dir frame.
     const auto &r = missile_rules;
-    int dir = direction() - 2 * g_camera.orientation;
+    int dir = direction() - 2 * map_view_orientation();
     if (dir < 0) {
         dir += r.image_directions;
     }
@@ -443,7 +444,7 @@ void figure_spear::figure_action() {
 void figure_spear::main_image_update() {
     // OG spear_set_image: 32 dirs, orientation*4; enemy-archer sprite path is dead (spear type ≠ archer).
     const auto &r = missile_rules;
-    int dir = direction() - r.spear_orientation_mult * g_camera.orientation;
+    int dir = direction() - r.spear_orientation_mult * map_view_orientation();
     if (dir < 0) {
         dir += r.spear_image_directions;
     }
@@ -535,7 +536,7 @@ void hunter_spear_main_image_update(figure_missile *missile) {
     const auto &r = hunter_spear_rules;
     // direction() is a 16-step missile direction (0 = map -y); the sheet has 32 frames, frame k pointing
     // (k+1) * 11.25 deg clockwise from the map's -x,-y corner, so -y is frame 3.
-    int dir = 2 * missile->direction() + 3 - r.orientation_mult * g_camera.orientation;
+    int dir = 2 * missile->direction() + 3 - r.orientation_mult * map_view_orientation();
     if (dir < 0) {
         dir += r.image_directions;
     }

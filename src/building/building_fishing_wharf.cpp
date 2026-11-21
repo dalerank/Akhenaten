@@ -1,4 +1,5 @@
 #include "building_fishing_wharf.h"
+#include "grid/orientation.h"
 
 #include "city/city.h"
 #include "grid/water.h"
@@ -39,7 +40,7 @@ bool temple_complex_osiris_has_oracle() {
 } // namespace
 
 void building_fishing_wharf::on_place_update_tiles(int orientation, int variant) {
-    int orientation_rel = g_camera.relative_orientation(orientation);
+    int orientation_rel = map_view_relative_orientation(orientation);
     int img_id = base_img();
     map_water_add_building(id(), tile(), size(), img_id + orientation_rel);
 }
@@ -141,7 +142,7 @@ void building_fishing_wharf::on_undo() {
 }
 
 void building_fishing_wharf::update_map_orientation(int orientation) {
-    int image_offset = g_camera.relative_orientation(base.orientation);
+    int image_offset = map_view_relative_orientation(base.orientation);
     int image_id = base_img() + image_offset;
     map_water_add_building(id(), tile(), size(), image_id);
 }

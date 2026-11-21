@@ -1,4 +1,5 @@
 ﻿#include "figure_animal.h"
+#include "grid/orientation.h"
 
 #include "building/building.h"
 #include "city/entertainment.h"
@@ -14,7 +15,6 @@
 #include "graphics/image.h"
 #include "graphics/image_desc.h"
 #include "graphics/image_groups.h"
-#include "graphics/view/view.h"
 #include "grid/building.h"
 #include "grid/figure.h"
 #include "grid/water.h"
@@ -70,7 +70,7 @@ bool figure_herd_roost(figure* f, int step, int bias, int max_dist, int terrain_
 
 static void set_horse_destination(int state) {
     //    building *b = building_get(building_id);
-    //    int orientation = g_camera.orientation;
+    //    int orientation = map_view_orientation();
     //    int rotation = b->subtype.orientation;
     //    if (state == HORSE_CREATED) {
     //        map_f->map_figure_remove();

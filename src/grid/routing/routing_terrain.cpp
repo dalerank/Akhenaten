@@ -1,4 +1,5 @@
 ﻿#include "routing_terrain.h"
+#include "grid/orientation.h"
 
 #include "building/building.h"
 #include "building/monuments.h"
@@ -7,7 +8,6 @@
 #include "core/svector.h"
 #include "graphics/image.h"
 #include "graphics/image_groups.h"
-#include "graphics/view/view.h"
 #include "grid/building.h"
 #include "grid/image.h"
 #include "grid/property.h"
@@ -165,7 +165,7 @@ static int is_wall_tile(int grid_offset) {
 
 static int count_adjacent_wall_tiles(int grid_offset) {
     int adjacent = 0;
-    switch (g_camera.orientation) {
+    switch (map_view_orientation()) {
     case DIR_0_TOP_RIGHT:
         adjacent += is_wall_tile(grid_offset + GRID_OFFSET(0, 1));
         adjacent += is_wall_tile(grid_offset + GRID_OFFSET(1, 1));

@@ -1,6 +1,6 @@
 #include "monument_pyramid.h"
+#include "grid/orientation.h"
 
-#include "graphics/view/view.h"
 #include "monuments.h"
 #include "core/direction.h"
 #include "core/custom_span.hpp"
@@ -86,7 +86,7 @@ int bent_og_part_image(building& part, const pyramid_part_state& ps, bool finish
     const int half_first = params.first_img("half_bricks");
     const int bent0 = half_first > 0 ? half_first : pyramid0 + 111;
     int kind = g_monument_pyramid_engine.layout_kind(head, ps.subtype);
-    kind = g_monument_pyramid_engine.rotated_kind(kind, g_camera.orientation / 2);
+    kind = g_monument_pyramid_engine.rotated_kind(kind, map_view_orientation() / 2);
     const bool half = g_monument_pyramid_engine.bent_is_half_layer((int)ps.size_variant, (int)ps.layer);
     if (finished || ps.stage == PYRAMID_STAGE_CASING) {
         const int blocks = finished ? 0 : (int)ps.blocks;
@@ -110,7 +110,7 @@ struct pyramid_causeway_probe {
 tile2i pyramid_place_nw_from_cursor(tile2i end, vec2i init_tiles) {
     const int sx = init_tiles.x;
     const int sy = init_tiles.y;
-    switch (g_camera.orientation) {
+    switch (map_view_orientation()) {
     case DIR_2_BOTTOM_RIGHT:
         return end.shifted(-sx + 1, 0);
     case DIR_4_BOTTOM_LEFT:
@@ -266,7 +266,7 @@ int annex_building_image(e_building_type complex_type, e_building_type annex_typ
     if (base <= 0) {
         return 0;
     }
-    const int ori2 = (g_camera.orientation / 2) & 3;
+    const int ori2 = (map_view_orientation() / 2) & 3;
     if (annex_type == BUILDING_VALLEY_TEMPLE) {
         return base + ori2;
     }
@@ -1375,7 +1375,7 @@ void building_stepped_pyramid::preview_renderer::setup_preview_graphics(build_pl
 
     const vec2i init_tiles = base_params.init_tiles;
 
-    switch (g_camera.orientation / 2) {
+    switch (map_view_orientation() / 2) {
     case 0: planer.init_tiles(init_tiles.y, init_tiles.x); break;
     case 1: planer.init_tiles(init_tiles.x, init_tiles.y); break;
     case 2: planer.init_tiles(init_tiles.y, init_tiles.x); break;
@@ -1485,7 +1485,7 @@ int building_stepped_pyramid::preview_renderer::construction_place(build_planner
 
 void map_pyramid_tiles_add(int building_id, tile2i tile, int size, int image_id, int terrain) {
     int x_leftmost, y_leftmost;
-    switch (g_camera.orientation) {
+    switch (map_view_orientation()) {
     case DIR_0_TOP_RIGHT: x_leftmost = 0; y_leftmost = 1; break;
     case DIR_2_BOTTOM_RIGHT: x_leftmost = y_leftmost = 0; break;
     case DIR_4_BOTTOM_LEFT: x_leftmost = 1; y_leftmost = 0; break;
@@ -1594,7 +1594,7 @@ int building_stepped_pyramid::get_image(const building_static_params& params, in
 
     if (result < random) {
         int offset = result - base_image_id;
-        result = (base_image_id + (offset + (8 - g_camera.orientation)) % 8);
+        result = (base_image_id + (offset + (8 - map_view_orientation())) % 8);
         return result;
     }
 
@@ -1616,7 +1616,7 @@ int building_stepped_pyramid::get_channel_image(int orientation, tile2i tile, ti
     // 8 - cross
 
     int variant = 0;
-    int orientation_offset = (g_camera.orientation / 2) % 4;
+    int orientation_offset = (map_view_orientation() / 2) % 4;
 
     if (neighbors_count == 0) {
         variant = 0;
@@ -2072,7 +2072,7 @@ int building_stepped_pyramid::get_masonry_image(int orientation, tile2i tile, ti
         BUILDING_LARGE_MUDBRICK_PYRAMID_CORNER
     });
     // OG pyramid_images.rotated_kind: face index += view (orientation/2), wrap in 0..3.
-    const int view = (g_camera.orientation / 2) & 3;
+    const int view = (map_view_orientation() / 2) & 3;
 
     if (is_corner || is_nw_origin) {
         const xstring corner_key = polished && current_params().first_img("corner_polish") > 0
@@ -2180,7 +2180,7 @@ bool building_stepped_pyramid::draw_ornaments_and_animations_hight_impl(painter 
     const int L = d.layer;
 
     tile2i anchor = base.tile;
-    switch (g_camera.orientation) {
+    switch (map_view_orientation()) {
     case DIR_0_TOP_RIGHT: anchor = base.tile.shifted(0, 1); break;
     case DIR_4_BOTTOM_LEFT: anchor = base.tile.shifted(1, 0); break;
     case DIR_6_TOP_LEFT: anchor = base.tile.shifted(1, 1); break;
@@ -2264,7 +2264,7 @@ bool building_stepped_pyramid::draw_completed_height_ornaments(painter &ctx, vec
     // Anchor to the orientation draw-tile of this 2×2 part (same as map_building_tiles_add),
     // not whatever city pass `point` is — keeps casing joined across rotates.
     tile2i anchor = base.tile;
-    switch (g_camera.orientation) {
+    switch (map_view_orientation()) {
     case DIR_0_TOP_RIGHT: anchor = base.tile.shifted(0, 1); break;
     case DIR_4_BOTTOM_LEFT: anchor = base.tile.shifted(1, 0); break;
     case DIR_6_TOP_LEFT: anchor = base.tile.shifted(1, 1); break;

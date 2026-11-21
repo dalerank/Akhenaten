@@ -13,7 +13,6 @@
 #include "game/undo.h"
 #include "graphics/image.h"
 #include "graphics/image_groups.h"
-#include "graphics/view/view.h"
 #include "grid/bridge.h"
 #include "scenario/earthquake.h"
 #include "grid/building_tiles.h"
@@ -34,7 +33,7 @@ using e_venue_mode_tokens_t = token_holder<e_venue_mode_orientation, e_venue_mod
 const e_venue_mode_tokens_t ANK_CONFIG_ENUM(e_venue_mode_tokens);
 
 static void determine_leftmost_tile() {
-    int orientation = g_camera.orientation;
+    int orientation = map_view_orientation();
     int grid_offset = scenario_map_data()->start_offset;
     for (int y = 0; y < scenario_map_data()->height; y++, grid_offset += scenario_map_data()->border_size) {
         for (int x = 0; x < scenario_map_data()->width; x++, grid_offset++) {
@@ -50,6 +49,24 @@ static void determine_leftmost_tile() {
                 map_property_mark_draw_tile(grid_offset);
         }
     }
+}
+
+static int g_view_orientation = 0;
+
+int map_view_orientation() {
+    return g_view_orientation;
+}
+
+void map_view_orientation_set(int orientation) {
+    g_view_orientation = orientation;
+}
+
+int map_view_relative_orientation(int orientation_absolute) {
+    return (4 + orientation_absolute - g_view_orientation / 2) % 4;
+}
+
+int map_view_absolute_orientation(int orientation_relative) {
+    return (4 + orientation_relative + g_view_orientation / 2) % 4;
 }
 
 void map_orientation_change(int counter_clockwise) {
@@ -85,7 +102,7 @@ void map_orientation_change(int counter_clockwise) {
 }
 
 void map_orientation_update_buildings() {
-    int map_orientation = g_camera.orientation;
+    int map_orientation = map_view_orientation();
     int orientation_is_top_bottom = map_orientation == DIR_0_TOP_RIGHT || map_orientation == DIR_4_BOTTOM_LEFT;
     for (int i = 1; i < MAX_BUILDINGS; i++) {
         building* b = building_get(i);
@@ -300,7 +317,7 @@ bool map_orientation_for_venue(int x, int y, e_venue_mode_orientation mode, int*
 bool map_orientation_for_venue_with_map_orientation(tile2i tile, e_venue_mode_orientation mode, int* building_orientation) {
     int x = tile.x();
     int y = tile.y();
-    int map_orientation = g_camera.orientation;
+    int map_orientation = map_view_orientation();
     switch (map_orientation) {
     case 2: // east
         x -= (mode + 1);
@@ -317,7 +334,7 @@ bool map_orientation_for_venue_with_map_orientation(tile2i tile, e_venue_mode_or
 }
 
 int map_venue_orient_to_view(int map_orientation) {
-    return (map_orientation + (8 - g_camera.orientation)) % 8;
+    return (map_orientation + (8 - map_view_orientation())) % 8;
 }
 
 bool map_venue_ghost_orientation(tile2i tile, e_venue_mode_orientation mode, int* view_orientation) {
@@ -330,7 +347,7 @@ bool map_venue_ghost_orientation(tile2i tile, e_venue_mode_orientation mode, int
 }
 
 int map_orientation_for_gatehouse(int x, int y) {
-    switch (g_camera.orientation) {
+    switch (map_view_orientation()) {
     case DIR_2_BOTTOM_RIGHT:
         x--;
         break;
@@ -425,7 +442,7 @@ int map_orientation_for_gatehouse(int x, int y) {
     return 0;
 }
 int map_orientation_for_triumphal_arch(int x, int y) {
-    switch (g_camera.orientation) {
+    switch (map_view_orientation()) {
     case DIR_2_BOTTOM_RIGHT:
         x -= 2;
         break;

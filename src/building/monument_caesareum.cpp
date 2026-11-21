@@ -1,4 +1,5 @@
 #include "monument_caesareum.h"
+#include "grid/orientation.h"
 
 #include "building/monuments.h"
 #include "city/city.h"
@@ -11,7 +12,6 @@
 #include "game/undo.h"
 #include "graphics/color.h"
 #include "graphics/view/lookup.h"
-#include "graphics/view/view.h"
 #include "grid/building_tiles.h"
 #include "grid/grid.h"
 #include "grid/terrain.h"
@@ -45,7 +45,7 @@ namespace {
     }
 
     int camera_view() {
-        return (g_camera.orientation / 2) & 3;
+        return (map_view_orientation() / 2) & 3;
     }
 
     tile2i part_offset(int part) {

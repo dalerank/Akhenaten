@@ -1,4 +1,5 @@
 #include "building_entertainment.h"
+#include "grid/orientation.h"
 
 #include "io/io_buffer.h"
 #include "grid/terrain.h"
@@ -6,35 +7,34 @@
 #include "grid/image.h"
 #include "grid/gardens.h"
 #include "grid/building_tiles.h"
-#include "graphics/view/view.h"
 
 BUILDING_RUNTIME_DATA_IMPL(building_entertainment)
 
 int building_entertainment::bandstand_main_img_offset(int orientation) {
     int offset = 0;
     if (orientation == 2) {
-        switch (g_camera.orientation / 2) {
+        switch (map_view_orientation() / 2) {
         case 0: offset = 1; break;
         case 1: offset = 2; break;
         case 2: offset = 0; break;
         case 3: offset = 3; break;
         }
     } else if (orientation == 3) {
-        switch (g_camera.orientation / 2) {
+        switch (map_view_orientation() / 2) {
         case 0: offset = 3; break;
         case 1: offset = 1; break;
         case 2: offset = 2; break;
         case 3: offset = 0; break;
         }
     } else if (orientation == 0) {
-        switch (g_camera.orientation / 2) {
+        switch (map_view_orientation() / 2) {
         case 0: offset = 1; break;
         case 1: offset = 2; break;
         case 2: offset = 0; break;
         case 3: offset = 3; break;
         }
     } else if (orientation == 1) {
-        switch (g_camera.orientation / 2) {
+        switch (map_view_orientation() / 2) {
         case 0: offset = 2; break;
         case 1: offset = 0; break;
         case 2: offset = 3; break;
@@ -47,28 +47,28 @@ int building_entertainment::bandstand_main_img_offset(int orientation) {
 int building_entertainment::bandstand_add_img_offset(int orientation) {
     int offset = 0;
     if (orientation == 2) {
-        switch (g_camera.orientation / 2) {
+        switch (map_view_orientation() / 2) {
         case 0: offset = 0; break;
         case 1: offset = 3; break;
         case 2: offset = 1; break;
         case 3: offset = 2; break;
         }
     } else if (orientation == 3) {
-        switch (g_camera.orientation / 2) {
+        switch (map_view_orientation() / 2) {
         case 0: offset = 2; break;
         case 1: offset = 0; break;
         case 2: offset = 3; break;
         case 3: offset = 1; break;
         }
     } else if (orientation == 0) {
-        switch (g_camera.orientation / 2) {
+        switch (map_view_orientation() / 2) {
         case 0: offset = 0; break;
         case 1: offset = 3; break;
         case 2: offset = 1; break;
         case 3: offset = 2; break;
         }
     } else if (orientation == 1) {
-        switch (g_camera.orientation / 2) {
+        switch (map_view_orientation() / 2) {
         case 0: offset = 3; break;
         case 1: offset = 1; break;
         case 2: offset = 2; break;

@@ -1,4 +1,5 @@
 ﻿#include "figure_ballista.h"
+#include "grid/orientation.h"
 
 #include "building/building.h"
 #include "city/city_figures.h"
@@ -8,7 +9,6 @@
 #include "game/game_events.h"
 #include "graphics/animkeys.h"
 #include "graphics/image.h"
-#include "graphics/view/view.h"
 #include "js/js_register.h"
 #include "sound/effect.h"
 #include "sound/sound.h"
@@ -37,7 +37,7 @@ void figure_ballista::figure_action() {
     }
 
     base.map_figure_remove();
-    switch (g_camera.orientation) {
+    switch (map_view_orientation()) {
     case DIR_0_TOP_RIGHT:
         base.tile = b->tile;
         break;

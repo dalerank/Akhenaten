@@ -1,10 +1,10 @@
 #include "figure_javelin.h"
+#include "grid/orientation.h"
 
 #include "city/city_figures.h"
 #include "figure/formation.h"
 #include "figuretype/figure_native.h"
 #include "graphics/animkeys.h"
-#include "graphics/view/view.h"
 #include "grid/figure.h"
 #include "js/js_register.h"
 
@@ -170,7 +170,7 @@ void figure_javelin::figure_action() {
 
 void figure_javelin::main_image_update() {
     const auto &r = javelin_rules;
-    int dir = direction() - r.orientation_mult * g_camera.orientation;
+    int dir = direction() - r.orientation_mult * map_view_orientation();
     if (dir < 0) {
         dir += r.image_directions;
     }

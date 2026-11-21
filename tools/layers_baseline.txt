@@ -59,7 +59,6 @@ building/building_dike.cpp -> graphics/image.h
 building/building_dock.cpp -> graphics/elements/lang_text.h
 building/building_dock.cpp -> graphics/graphics.h
 building/building_dock.cpp -> graphics/image.h
-building/building_entertainment.cpp -> graphics/view/view.h
 building/building_farm.cpp -> graphics/elements/lang_text.h
 building/building_farm.cpp -> graphics/elements/panel.h
 building/building_farm.cpp -> graphics/graphics.h
@@ -69,7 +68,6 @@ building/building_farm.cpp -> graphics/view/view.h
 building/building_farm.cpp -> sound/sound_building.h
 building/building_farm.cpp -> window/building/common.h
 building/building_ferry.cpp -> graphics/image.h
-building/building_ferry.cpp -> graphics/view/view.h
 building/building_fishing_wharf.cpp -> dev/debug.h
 building/building_fishing_wharf.cpp -> graphics/elements/ui.h
 building/building_fishing_wharf.cpp -> graphics/graphics.h
@@ -159,7 +157,6 @@ building/building_shipyard.cpp -> widget/city/ornaments.h
 building/building_shipyard.cpp -> window/building/common.h
 building/building_shipyard.cpp -> window/building/figures.h
 building/building_static_params.cpp -> graphics/image.h
-building/building_static_params.cpp -> graphics/view/view.h
 building/building_static_params.h -> graphics/animation.h
 building/building_static_params.h -> sound/sound_city.h
 building/building_statue.cpp -> graphics/elements/lang_text.h
@@ -187,11 +184,9 @@ building/building_temple_complex_upgrade.cpp -> graphics/view/view.h
 building/building_tower.cpp -> graphics/elements/ui.h
 building/building_tower.cpp -> window/building/common.h
 building/building_wall.cpp -> graphics/image.h
-building/building_wall.cpp -> graphics/view/view.h
 building/building_water_lift.cpp -> graphics/elements/ui.h
 building/building_wharf.cpp -> graphics/graphics.h
 building/building_wharf.cpp -> graphics/image.h
-building/building_wharf.cpp -> graphics/view/view.h
 building/construction/build_planner.cpp -> editor/tool.h
 building/construction/build_planner.cpp -> graphics/graphics.h
 building/construction/build_planner.cpp -> graphics/image.h
@@ -201,7 +196,6 @@ building/construction/build_planner.cpp -> graphics/view/view.h
 building/construction/build_planner.cpp -> graphics/window.h
 building/construction/build_planner.cpp -> widget/widget_sidebar.h
 building/construction/build_planner.h -> graphics/color.h
-building/construction/build_planner.h -> graphics/view/view.h
 building/construction/clear.cpp -> graphics/window.h
 building/construction/clear.cpp -> window/popup_dialog.h
 building/construction/routed.cpp -> graphics/window.h
@@ -212,28 +206,23 @@ building/monument_abu_simbel.cpp -> graphics/view/lookup.h
 building/monument_abu_simbel.cpp -> graphics/view/view.h
 building/monument_alexandria_library.cpp -> graphics/color.h
 building/monument_alexandria_library.cpp -> graphics/view/lookup.h
-building/monument_alexandria_library.cpp -> graphics/view/view.h
 building/monument_caesareum.cpp -> graphics/color.h
 building/monument_caesareum.cpp -> graphics/view/lookup.h
-building/monument_caesareum.cpp -> graphics/view/view.h
 building/monument_mastaba.cpp -> graphics/elements/lang_text.h
 building/monument_mastaba.cpp -> graphics/elements/panel.h
 building/monument_mastaba.cpp -> graphics/graphics.h
 building/monument_mastaba.cpp -> graphics/image.h
 building/monument_mastaba.cpp -> graphics/view/lookup.h
-building/monument_mastaba.cpp -> graphics/view/view.h
 building/monument_mastaba.cpp -> widget/city/flat_draw.h
 building/monument_mastaba.cpp -> widget/city/tile_draw.h
 building/monument_mastaba.cpp -> widget/widget_city.h
 building/monument_mastaba.cpp -> window/building/common.h
 building/monument_mausoleum.cpp -> graphics/color.h
 building/monument_mausoleum.cpp -> graphics/view/lookup.h
-building/monument_mausoleum.cpp -> graphics/view/view.h
 building/monument_obelisk.cpp -> graphics/graphics.h
 building/monument_obelisk.cpp -> graphics/image.h
 building/monument_obelisk.h -> graphics/image_desc.h
 building/monument_pharos_lighthouse.cpp -> graphics/view/lookup.h
-building/monument_pharos_lighthouse.cpp -> graphics/view/view.h
 building/monument_pyramid.cpp -> dev/debug.h
 building/monument_pyramid.cpp -> graphics/elements/lang_text.h
 building/monument_pyramid.cpp -> graphics/elements/panel.h
@@ -241,12 +230,10 @@ building/monument_pyramid.cpp -> graphics/graphics.h
 building/monument_pyramid.cpp -> graphics/image.h
 building/monument_pyramid.cpp -> graphics/image_groups.h
 building/monument_pyramid.cpp -> graphics/view/lookup.h
-building/monument_pyramid.cpp -> graphics/view/view.h
 building/monument_pyramid.cpp -> widget/city/flat_draw.h
 building/monument_pyramid.cpp -> widget/city/tile_draw.h
 building/monument_pyramid.cpp -> widget/widget_city.h
 building/monument_pyramid.cpp -> window/building/common.h
-building/monument_pyramid_figure.cpp -> graphics/view/view.h
 building/monument_pyramid_ramp.cpp -> graphics/graphics.h
 building/monument_pyramid_ramp.cpp -> graphics/image.h
 building/monument_pyramid_ramp.cpp -> graphics/view/view.h
@@ -254,7 +241,6 @@ building/monument_pyramid_ramp.h -> graphics/painter.h
 building/monument_royal_tomb.cpp -> graphics/color.h
 building/monument_royal_tomb.cpp -> graphics/image.h
 building/monument_royal_tomb.cpp -> graphics/view/lookup.h
-building/monument_royal_tomb.cpp -> graphics/view/view.h
 building/monument_sphinx.cpp -> graphics/graphics.h
 building/monument_sphinx.cpp -> graphics/image.h
 building/monument_sphinx.cpp -> graphics/view/lookup.h
@@ -263,11 +249,9 @@ building/monument_sun_temple.cpp -> graphics/color.h
 building/monument_sun_temple.cpp -> graphics/graphics.h
 building/monument_sun_temple.cpp -> graphics/image.h
 building/monument_sun_temple.cpp -> graphics/view/lookup.h
-building/monument_sun_temple.cpp -> graphics/view/view.h
 building/monuments.cpp -> graphics/image.h
 building/monuments.cpp -> graphics/image_groups.h
 building/monuments.cpp -> graphics/view/view.h
-building/rotation.cpp -> graphics/view/view.h
 city/city.cpp -> dev/debug.h
 city/city.cpp -> graphics/elements/lang_text.h
 city/city.cpp -> graphics/image.h
@@ -373,7 +357,6 @@ figure/image.cpp -> graphics/animation.h
 figure/image.cpp -> graphics/image.h
 figure/image.cpp -> graphics/image_desc.h
 figure/image.cpp -> graphics/image_groups.h
-figure/image.cpp -> graphics/view/view.h
 figure/movement.cpp -> graphics/image_groups.h
 figure/sound.cpp -> sound/effect.h
 figuretype/animal_crocodile.cpp -> graphics/animation.h
@@ -386,19 +369,16 @@ figuretype/editor.cpp -> graphics/image_groups.h
 figuretype/figure_animal.cpp -> graphics/image.h
 figuretype/figure_animal.cpp -> graphics/image_desc.h
 figuretype/figure_animal.cpp -> graphics/image_groups.h
-figuretype/figure_animal.cpp -> graphics/view/view.h
 figuretype/figure_antelope.cpp -> graphics/animation.h
 figuretype/figure_antelope.cpp -> sound/effect.h
 figuretype/figure_ballista.cpp -> graphics/animkeys.h
 figuretype/figure_ballista.cpp -> graphics/image.h
-figuretype/figure_ballista.cpp -> graphics/view/view.h
 figuretype/figure_ballista.cpp -> sound/effect.h
 figuretype/figure_ballista.cpp -> sound/sound.h
 figuretype/figure_birds.cpp -> graphics/image.h
 figuretype/figure_birds.cpp -> graphics/image_groups.h
 figuretype/figure_birds.cpp -> sound/effect.h
 figuretype/figure_bolt.cpp -> graphics/animkeys.h
-figuretype/figure_bolt.cpp -> graphics/view/view.h
 figuretype/figure_bubbles.cpp -> graphics/animkeys.h
 figuretype/figure_caravan_donkey.cpp -> graphics/elements/lang_text.h
 figuretype/figure_caravan_donkey.cpp -> graphics/graphics.h
@@ -455,7 +435,6 @@ figuretype/figure_immigrant.cpp -> graphics/animation.h
 figuretype/figure_immigrant.cpp -> graphics/view/lookup.h
 figuretype/figure_immigrant.cpp -> widget/debug_console.h
 figuretype/figure_javelin.cpp -> graphics/animkeys.h
-figuretype/figure_javelin.cpp -> graphics/view/view.h
 figuretype/figure_kingdome_trader.cpp -> graphics/graphics.h
 figuretype/figure_kingdome_trader.cpp -> graphics/image.h
 figuretype/figure_kingdome_trader.cpp -> graphics/image_desc.h
@@ -543,7 +522,6 @@ grid/basin.cpp -> building/building_dike.h
 grid/basin.cpp -> game/game_config.h
 grid/basin.cpp -> scenario/map.h
 grid/bridge.cpp -> building/building_bridge.h
-grid/bridge.cpp -> graphics/view/view.h
 grid/bridge_grid.cpp -> graphics/image.h
 grid/bridge_grid.cpp -> graphics/image_desc.h
 grid/bridge_grid.cpp -> graphics/image_groups.h
@@ -574,7 +552,6 @@ grid/canals.cpp -> game/game_config.h
 grid/canals.cpp -> graphics/graphics.h
 grid/canals.cpp -> graphics/image.h
 grid/canals.cpp -> graphics/image_groups.h
-grid/canals.cpp -> graphics/view/view.h
 grid/canals.cpp -> scenario/map.h
 grid/clay.cpp -> scenario/map.h
 grid/copper.cpp -> dev/debug.h
@@ -622,7 +599,6 @@ grid/image.cpp -> graphics/image.h
 grid/image.h -> graphics/image_desc.h
 grid/image_context.cpp -> building/building_wall.h
 grid/image_context.cpp -> city/city_buildings.h
-grid/image_context.cpp -> graphics/view/view.h
 grid/image_context.cpp -> scenario/earthquake.h
 grid/irrigation_value.cpp -> building/building.h
 grid/irrigation_value.cpp -> building/building_irrigation_ditch.h
@@ -651,7 +627,6 @@ grid/orientation.cpp -> figuretype/wall.h
 grid/orientation.cpp -> game/undo.h
 grid/orientation.cpp -> graphics/image.h
 grid/orientation.cpp -> graphics/image_groups.h
-grid/orientation.cpp -> graphics/view/view.h
 grid/orientation.cpp -> scenario/earthquake.h
 grid/point.cpp -> scenario/map.h
 grid/ring.cpp -> scenario/map.h
@@ -678,7 +653,6 @@ grid/routing/routing_terrain.cpp -> city/city_buildings.h
 grid/routing/routing_terrain.cpp -> figure/route.h
 grid/routing/routing_terrain.cpp -> graphics/image.h
 grid/routing/routing_terrain.cpp -> graphics/image_groups.h
-grid/routing/routing_terrain.cpp -> graphics/view/view.h
 grid/routing/routing_terrain.cpp -> scenario/map.h
 grid/sandstone.cpp -> scenario/map.h
 grid/soldier_strength.cpp -> city/city_figures.h
@@ -696,7 +670,6 @@ grid/tiles.cpp -> city/city_floods.h
 grid/tiles.cpp -> city/map.h
 grid/tiles.cpp -> graphics/image.h
 grid/tiles.cpp -> graphics/image_groups.h
-grid/tiles.cpp -> graphics/view/view.h
 grid/tiles.cpp -> scenario/map.h
 grid/trees.cpp -> city/city.h
 grid/trees.cpp -> graphics/graphics.h
@@ -709,7 +682,6 @@ grid/vegetation.cpp -> game/game_config.h
 grid/vegetation.cpp -> scenario/scenario.h
 grid/wall_material.cpp -> scenario/map.h
 grid/water.cpp -> building/building.h
-grid/water.cpp -> graphics/view/view.h
 grid/water.cpp -> scenario/map.h
 grid/water.h -> figure/figure.h
 grid/water_supply.cpp -> building/building.h

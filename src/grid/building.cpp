@@ -137,7 +137,7 @@ adjust_orientation map_adjust_building_determine_orientation(tile2i tile, int si
     int y = tile.y();
 
     if (adjust_xy) {
-        switch (g_camera.orientation) {
+        switch (map_view_orientation()) {
         case DIR_0_TOP_RIGHT:
             break;
 

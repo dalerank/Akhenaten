@@ -1,4 +1,5 @@
 #include "monument_sun_temple.h"
+#include "grid/orientation.h"
 
 #include "building/monuments.h"
 #include "building/rotation.h"
@@ -20,7 +21,6 @@
 #include "graphics/graphics.h"
 #include "graphics/image.h"
 #include "graphics/view/lookup.h"
-#include "graphics/view/view.h"
 #include "grid/building.h"
 #include "grid/building_tiles.h"
 #include "grid/figure.h"
@@ -931,15 +931,15 @@ void building_sun_temple::refresh_part_images() {
 }
 
 int building_sun_temple::map_view() {
-    return g_camera.orientation;
+    return map_view_orientation();
 }
 
 int building_sun_temple::art_orient_idx() {
-    return (g_camera.orientation / 2) % 2;
+    return (map_view_orientation() / 2) % 2;
 }
 
 int building_sun_temple::camera_view() {
-    return (g_camera.orientation / 2) & 3;
+    return (map_view_orientation() / 2) & 3;
 }
 
 int building_sun_temple::temple_image_band(const base_params &params, int stage) {

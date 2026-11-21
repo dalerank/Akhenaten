@@ -1,4 +1,5 @@
 #include "monument_mausoleum.h"
+#include "grid/orientation.h"
 
 #include "building/monuments.h"
 #include "city/city.h"
@@ -15,7 +16,6 @@
 #include "game/undo.h"
 #include "graphics/color.h"
 #include "graphics/view/lookup.h"
-#include "graphics/view/view.h"
 #include "grid/building.h"
 #include "grid/building_tiles.h"
 #include "grid/figure.h"
@@ -308,8 +308,8 @@ vec2i building_mausoleum::box_extent(int orientation) {
 }
 
 tile2i building_mausoleum::origin_from_cursor(tile2i cursor) {
-    const vec2i e = box_extent(g_camera.orientation);
-    switch (g_camera.orientation) {
+    const vec2i e = box_extent(map_view_orientation());
+    switch (map_view_orientation()) {
     case DIR_2_BOTTOM_RIGHT:
         return cursor.shifted(-e.x + 1, 0);
     case DIR_4_BOTTOM_LEFT:
@@ -386,7 +386,7 @@ int building_mausoleum::block_index() const {
 }
 
 int building_mausoleum::camera_view() const {
-    return g_camera.orientation;
+    return map_view_orientation();
 }
 
 tile2i building_mausoleum::origin() const {
@@ -968,7 +968,7 @@ void building_mausoleum::remove_worker(figure_id fid) {
 }
 
 void building_mausoleum::preview::setup_preview_graphics(build_planner &planer) const {
-    const vec2i ext = box_extent(g_camera.orientation);
+    const vec2i ext = box_extent(map_view_orientation());
     planer.init_tiles(ext.x, ext.y);
 }
 
@@ -1003,7 +1003,7 @@ int building_mausoleum::preview::can_place(build_planner &p, tile2i /*tile*/, ti
     if (sandstone_need > 0 && yards_available(RESOURCE_SANDSTONE) < sandstone_need) {
         return CAN_NOT_PLACE;
     }
-    if (area_blocked_at(origin_from_cursor(end), box_extent(g_camera.orientation))) {
+    if (area_blocked_at(origin_from_cursor(end), box_extent(map_view_orientation()))) {
         return CAN_NOT_PLACE;
     }
     return CAN_PLACE;
@@ -1035,7 +1035,7 @@ int building_mausoleum::preview::finalize_check(build_planner &p, tile2i tile, t
 }
 
 void building_mausoleum::preview::ghost_preview(build_planner &planer, painter &ctx, tile2i /*start*/, tile2i end, vec2i /*pixel*/) const {
-    const vec2i ext = box_extent(g_camera.orientation);
+    const vec2i ext = box_extent(map_view_orientation());
     const tile2i org = origin_from_cursor(end);
     int sandstone_need = 0;
     for (const auto &pr : maus_params().placement_resources) {
@@ -1065,7 +1065,7 @@ void building_mausoleum::on_place(int orientation, int variant) {
 }
 
 void building_mausoleum::on_place_update_tiles(int /*orientation*/, int variant) {
-    const int view = g_camera.orientation;
+    const int view = map_view_orientation();
     const uint8_t skin = (uint8_t)((variant < 0 ? 0 : variant) % 3);
     tile2i org = tile();
 
@@ -1137,7 +1137,7 @@ void building_mausoleum::update_map_orientation(int /*map_orientation*/) {
     if (!m || !is_main()) {
         return;
     }
-    const int view = g_camera.orientation;
+    const int view = map_view_orientation();
     if (m->runtime_data().view == view) {
         refresh_part_images();
         return;

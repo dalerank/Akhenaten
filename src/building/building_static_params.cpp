@@ -1,11 +1,11 @@
 ﻿#include "building_static_params.h"
+#include "grid/orientation.h"
 
 #include "core/log.h"
 #include "grid/building.h"
 #include "city/city.h"
 #include "city/city_labor.h"
 #include "city/buildings.h"
-#include "graphics/view/view.h"
 #include "building/building.h"
 #include "graphics/image.h"
 #include "grid/building_tiles.h"
@@ -42,7 +42,7 @@ void building_static_params::initialize() {
 }
 
 void add_building(building *b, int orientation, int variant) {
-    int orientation_rel = g_camera.relative_orientation(orientation);
+    int orientation_rel = map_view_relative_orientation(orientation);
     const auto &params = b->params();
     switch (b->type) {
         // houses

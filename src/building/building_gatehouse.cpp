@@ -194,7 +194,7 @@ static void apply_gatehouse_footprint_images(tile2i main_tile, tile2i back_tile,
 }
 
 static void apply_gatehouse_tile_images(tile2i main_tile, tile2i back_tile, const building_static_params &bparams) {
-    const int city_orientation = g_camera.orientation / 2;
+    const int city_orientation = map_view_orientation() / 2;
     const int building_rotation = calc_general_direction(main_tile, back_tile) / 2;
 
     static const xstring txs[6] = {
@@ -342,7 +342,7 @@ void building_gatehouse::on_place_update_tiles(int orientation, int variant) {
 void building_gatehouse::on_place(int orientation, int variant) {
     building_impl::on_place(orientation, variant);
 
-    const int city_orientation = g_camera.orientation / 2;
+    const int city_orientation = map_view_orientation() / 2;
     back_tile_orientation back_tile = building_gatehouse::second_part_tile(g_city_planner, tile(), city_orientation);
 
     building *backside, *mainside;
@@ -584,7 +584,7 @@ tile2i building_decorative_gatehouse::footprint_anchor(tile2i end, int layout_or
     const int height = layout_orientation == 0 ? 2 : 5;
     tile2i anchor = end;
 
-    switch (g_camera.orientation) {
+    switch (map_view_orientation()) {
     case DIR_2_BOTTOM_RIGHT:
         anchor.set_x(anchor.x() - width + 1);
         break;

@@ -1,4 +1,5 @@
 #include "building/building_ferry.h"
+#include "grid/orientation.h"
 
 #include "city/city_labor.h"
 #include "city/city_buildings.h"
@@ -12,7 +13,6 @@
 #include "grid/road_access.h"
 #include "grid/grid.h"
 #include "graphics/image.h"
-#include "graphics/view/view.h"
 #include "js/js_game.h"
 #include "figure/route.h"
 #include "figuretype/figure_cartpusher.h"
@@ -52,7 +52,7 @@ void building_ferry::on_place_update_tiles(int orientation, int variant) {
 }
 
 void building_ferry::update_map_orientation(int orientation) {
-    int image_offset = g_camera.relative_orientation(base.orientation);
+    int image_offset = map_view_relative_orientation(base.orientation);
     int image_id = base_img() + image_offset;
     map_water_add_building(id(), tile(), size(), image_id);
 }

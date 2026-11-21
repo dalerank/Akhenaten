@@ -1,5 +1,4 @@
 ﻿#include "view.h"
-#include "building/construction/build_planner.h"
 
 #include <cmath>
 
@@ -410,7 +409,7 @@ void viewport_t::init() {
 
 void viewport_t::reset_orientation() {
     orientation = 0;
-    g_city_planner.set_view_orientation(orientation);
+    map_view_orientation_set(orientation);
 }
 
 void viewport_t::rotate_left() {
@@ -419,7 +418,7 @@ void viewport_t::rotate_left() {
     if (orientation < 0) {
         orientation = DIR_6_TOP_LEFT;
     }
-    g_city_planner.set_view_orientation(orientation);
+    map_view_orientation_set(orientation);
 
     if (center.valid()) {
         vec2i screen = tile_to_screen(center);
@@ -436,7 +435,7 @@ void viewport_t::rotate_right() {
     if (orientation > 6) {
         orientation = DIR_0_TOP_RIGHT;
     }
-    g_city_planner.set_view_orientation(orientation);
+    map_view_orientation_set(orientation);
 
     if (center.valid()) {
         vec2i screen = tile_to_screen(center);

@@ -131,7 +131,7 @@ void build_planner::add_building_tiles_from_list(int building_id, bool graphics_
             tile2i tile = tile_coord_cache[row][column];
 
             // correct for city orientation
-            switch (view_orientation_ / 2) {
+            switch (map_view_orientation() / 2) {
             case 0: tile.shift(0, -size + 1); break;
             case 1: break;
             case 2: tile.shift(-size + 1, 0); break;
@@ -810,7 +810,7 @@ void build_planner::update_special_case_orientations_check() {
             }
         }
 
-        dir_relative = ((4 + (result.orientation_absolute) - view_orientation_ / 2) % 4);
+        dir_relative = map_view_relative_orientation(result.orientation_absolute);
         if (!result.match) {
             immediate_warning = "#building_not_next_to_water";
             can_place = CAN_NOT_PLACE;
@@ -845,7 +845,7 @@ void build_planner::update_special_case_orientations_check() {
             can_place = CAN_NOT_PLACE;
         } else {
             int dir_absolute = (5 - (complex->runtime_data().variant / 2)) % 4;
-            dir_relative = ((4 + (dir_absolute)-view_orientation_ / 2) % 4);
+            dir_relative = map_view_relative_orientation(dir_absolute);
             relative_orientation = (1 + dir_relative) % 2;
             end = complex->tile();
             update_orientations(false);
@@ -930,7 +930,7 @@ void build_planner::update_tile_caches() {
     if (size.x < 1 || size.y < 1) {
         return;
     }
-    int orientation = view_orientation_ / 2;
+    int orientation = map_view_orientation() / 2;
     for (int row = 0; row < size.y; row++) {
         for (int column = 0; column < size.x; column++) {
             // get tile offset
@@ -995,7 +995,7 @@ void build_planner::update_orientations(bool check_if_changed) {
     relative_orientation = preview.update_relative_orientation(*this, end, relative_orientation);
     relative_orientation = relative_orientation % 4;
     // Absolute must be fresh before variant: temple (and others) derive variant from it.
-    absolute_orientation = ((4 + (relative_orientation) + view_orientation_ / 2) % 4);
+    absolute_orientation = map_view_absolute_orientation(relative_orientation);
     building_variant = preview.update_building_variant(*this);
 
     // do not refresh graphics if nothing changed
@@ -1122,7 +1122,7 @@ void build_planner::construction_update(tile2i tile) {
     case BUILDING_FORT_CHARIOTEERS:
     case BUILDING_FORT_INFANTRY:
         if (g_formations.num_batalions < formation_get_max_forts()) {
-            vec2i offset = FORT_OFFSET[building_fort::placement_rotation()][view_orientation_ / 2];
+            vec2i offset = FORT_OFFSET[building_fort::placement_rotation()][map_view_orientation() / 2];
             tile2i ground = tile.shifted(offset.x, offset.y);
             if (map_building_tiles_are_clear(tile, 3, TERRAIN_ALL)
                 && map_building_tiles_are_clear(ground, 4, TERRAIN_ALL)) {
@@ -1302,7 +1302,7 @@ void build_planner::draw_bridge(tile2i tile, vec2i pixel, int type, painter &ctx
     int length, direction;
     int end_grid_offset = map_bridge_calculate_length_direction(tile.x(), tile.y(), &length, &direction, is_ship);
 
-    int dir = direction - g_city_planner.view_orientation();
+    int dir = direction - map_view_orientation();
     if (dir < 0)
         dir += 8;
 
@@ -1370,7 +1370,7 @@ int build_planner::is_blocked_for_building(tile2i tile, int size, blocked_tile_v
         size = 6;
     }
 
-    const int orientation_index = g_city_planner.view_orientation() / 2;
+    const int orientation_index = map_view_orientation() / 2;
     int blocked = 0;
     for (int dy = 0; dy < size; dy++) {
         for (int dx = 0; dx < size; dx++) {
