@@ -1,5 +1,6 @@
 #include "io/gamestate/presentation_chunks.h"
 
+#include "building/construction/build_planner.h"
 #include "graphics/view/view.h"
 #include "io/io_buffer.h"
 
@@ -12,6 +13,8 @@ void city_view_orientation_chunk::bind_data(io_buffer* iob, size_t version) {
         data.orientation = 2 * (data.orientation / 2); // ensure even number
     else
         data.orientation = 0;
+
+    g_city_planner.set_view_orientation(data.orientation);
 }
 
 void city_view_camera_chunk::bind_data(io_buffer* iob, size_t version) {
