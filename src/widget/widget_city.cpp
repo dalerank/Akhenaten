@@ -166,12 +166,7 @@ static tile2i city_planner_cursor_tile_from_mouse() {
     return g_screen_city.update_city_view_coords({m.x, m.y});
 }
 
-// Runs before any render command of the frame, so the city draw only reads planner state.
-// An isolated-figure snapshot without overlay never drew the planner, so it skips the update too.
-static void city_planner_frame_update(int selected_figure_id) {
-    if (selected_figure_id && !g_city.overlay()) {
-        return;
-    }
+static void city_planner_frame_update() {
     g_city_planner.update(city_planner_cursor_tile_from_mouse());
 }
 
@@ -501,10 +496,6 @@ void screen_city_t::draw_without_overlay(painter &ctx, int selected_figure_id) {
     this->selected_figure_id = selected_figure_id;
 
     render_ctx.init();
-
-    // Mark tiles for deletion if the deletion tool is active at the current tile
-    // This ensures that buildings/tiles marked for deletion are visually indicated
-    g_city_planner.ghost_mark_deleting(current_tile);
 
     // Clear previous frame's rendering state
     // Reset all tile render flags and clear the command buffer for image drawing operations
@@ -1094,7 +1085,6 @@ void screen_city_t::draw_with_overlay(painter &ctx, int selected_figure_id) {
     map_render_clear();
     ImageDraw::clear_render_commands();
 
-    g_city_planner.ghost_mark_deleting(current_tile);
     g_camera.foreach_valid_map_tile(ctx, update_tile_coords);
 
     map_figure_sort_by_y();
@@ -1139,7 +1129,6 @@ void screen_city_t::draw(painter &ctx) {
     set_render_scale(ctx, g_zoom.get_scale());
     set_city_clip_rectangle(ctx);
 
-    city_planner_frame_update(0);
     if (g_city.overlay()) {
         draw_with_overlay(ctx, 0);
     } else {
@@ -1157,7 +1146,6 @@ void screen_city_t::draw_for_figure(painter &ctx, int figure_id) {
     set_city_clip_rectangle(ctx);
     const bool was_read_only = std::exchange(game.redraw_read_only, true);
 
-    city_planner_frame_update(figure_id);
     if (g_city.overlay()) {
         draw_with_overlay(ctx, figure_id);
     } else {
@@ -1965,6 +1953,9 @@ void screen_city_t::handle_input(const mouse* m, const hotkeys* h) {
     }
 
     handle_escape(h);
+
+    city_planner_frame_update();
+    g_city_planner.ghost_mark_deleting(current_tile);
 }
 
 xstring screen_city_t::get_overlay_tooltip(tooltip_context *c, tile2i tile) {
