@@ -138,7 +138,7 @@ void building_planer_renderer::ghost_blocked(build_planner &planer, painter &ctx
         for (int column = 0; column < planer.size.x; column++) {
             vec2i current_coord = planer.pixel_coord_offset(row, column);
             color color_mask = (planer.is_blocked_tile(row, column) || fully_blocked) ? COLOR_MASK_RED_30 : COLOR_MASK_GREEN_30;
-            planer.draw_flat_tile(current_coord, color_mask, ctx);
+            planer.draw_ground_tile(ctx, current_coord, color_mask);
         }
     }
 }

@@ -23,6 +23,8 @@ struct event_building_place_checks { building_id bid; };
 
 class building_impl {
 public:
+    static void draw_colored_tile(painter& ctx, vec2i pixel, color mask);
+
     using preview = building_planer_renderer;
 
     building_impl(building &b) : base(b) {}

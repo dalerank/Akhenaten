@@ -1296,14 +1296,6 @@ void build_planner::update(tile2i cursor_tile) {
     }
 }
 
-void build_planner::draw_flat_tile(vec2i pos, color color_mask, painter &ctx) {
-    auto &command = ImageDraw::create_command(ctx, render_command_t::ert_generic);
-    command.image_id = image_id_from_group(GROUP_TERRAIN_OVERLAY_COLORED);
-    command.pixel = pos;
-    command.mask = color_mask;
-    command.scale = 1.f;
-}
-
 void build_planner::draw_bridge(tile2i tile, vec2i pixel, int type, painter &ctx) {
     const bool is_ship = (type == BUILDING_UNUSED_SHIP_BRIDGE_83);
     int length, direction;

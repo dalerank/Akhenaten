@@ -657,3 +657,10 @@ void building_impl::on_tick(bool refresh_only) {
         }
     }
 }
+void building_impl::draw_colored_tile(painter& ctx, vec2i pixel, color mask) {
+    auto& command = ImageDraw::create_command(ctx, render_command_t::ert_generic);
+    command.image_id = image_id_from_group(GROUP_TERRAIN_OVERLAY_COLORED);
+    command.pixel = pixel;
+    command.mask = mask;
+    command.scale = 1.f;
+}
