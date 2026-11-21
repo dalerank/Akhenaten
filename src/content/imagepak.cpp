@@ -295,7 +295,7 @@ void isometric_clear_above_foot(color *pixels, int stride, int width, int height
     }
 }
 
-void isometric_clear_foot(color *pixels, int stride, int width, int height) {
+static void isometric_clear_foot(color* pixels, int stride, int width, int height) {
     for (int x = 0; x < width; ++x) {
         for (int y = isometric_foot_first_row(width, height, x); y < height; ++y) {
             pixels[y * stride + x] = 0;
@@ -307,21 +307,21 @@ static void isometric_clear_top_height(image_t &img) {
     isometric_clear_above_foot(img.temp.pixel_data, img.atlas.p_atlas->width, img.width, img.height);
 }
 
-static void isometric_clear_foot_bottom(image_t &img) {
-    for (int x = 0; x < img.width; ++x) {  // diagonals
-        int start_y = 15 * (img.width / 58) + ((x < img.width / 2) ? (x / 4) : ((img.width - x) / 4));
-        if (x < 4 || x > img.width - 4) {
+int isometric_split_top(color* pixels, int stride, int width, int height, bool footprint_high) {
+    if (footprint_high) {
+        isometric_clear_foot(pixels, stride, width, height);
+        return height - 15 * (width / 58);
+    }
+    for (int x = 0; x < width; ++x) {
+        int start_y = 15 * (width / 58) + ((x < width / 2) ? (x / 4) : ((width - x) / 4));
+        if (x < 4 || x > width - 4) {
             start_y += 4;
         }
-        for (int y = img.height - start_y; y < img.height; ++y) { // steps in the diagonal == y axis, too
-            int atlas_y = (y * img.atlas.p_atlas->width);
-            color &c = img.temp.pixel_data[atlas_y + x];
-            c = 0;
+        for (int y = std::max(height - start_y, 0); y < height; ++y) {
+            pixels[y * stride + x] = 0;
         }
     }
-
-    int start_y = 15 * (img.width / 58);
-    img.height = img.height - start_y;
+    return height - 15 * (width / 58);
 }
 
 static bool convert_image_data(buffer* buf, image_t &img, bool convert_fonts) {
@@ -345,10 +345,9 @@ static bool convert_image_data(buffer* buf, image_t &img, bool convert_fonts) {
         }
 
         if (img.is_isometric_top) {
-            if (img.isometric_top_height == 0 && img.isometric_box_height > 0) {
-                isometric_clear_foot(img.temp.pixel_data, img.atlas.p_atlas->width, img.width, img.height);
-            }
-            isometric_clear_foot_bottom(img);
+            const bool footprint_high = img.isometric_top_height == 0 && img.isometric_box_height > 0;
+            img.height = isometric_split_top(img.temp.pixel_data, img.atlas.p_atlas->width, img.width, img.height,
+              footprint_high);
         }
     } else if (img.is_fully_compressed) {
         convert_compressed(buf, img.data_length, img);

@@ -334,22 +334,31 @@ void run_archive_property_unit_tests() {
 
 void run_isometric_split_unit_tests() {
     const int sizes[][2] = { {58, 30}, {58, 40}, {118, 60}, {118, 75}, {178, 90}, {178, 120} };
+    bool keeps_diamond = true;
     bool partition = true;
     for (const auto &s : sizes) {
         const int w = s[0], h = s[1];
+        const int half = w / 2;
+        const int diamond_top = h - 30 * (w / 58);
+        for (int x = 0; x < w; ++x) {
+            const int diamond_row = diamond_top + ((x < half) ? (half - x) / 2 : (x - half + 1) / 2);
+            keeps_diamond &= isometric_foot_first_row(w, h, x) <= diamond_row;
+        }
+
         std::vector<color> foot(w * h, 0xffffffffu);
         std::vector<color> top(w * h, 0xffffffffu);
         isometric_clear_above_foot(foot.data(), w, w, h);
-        isometric_clear_foot(top.data(), w, w, h);
-        for (int i = 0; i < w * h; ++i) {
-            partition &= ((foot[i] != 0) != (top[i] != 0));
+        const int top_height = isometric_split_top(top.data(), w, w, h, true);
+        for (int y = 0; y < h; ++y) {
+            for (int x = 0; x < w; ++x) {
+                const bool in_foot = foot[y * w + x] != 0;
+                const bool in_top = y < top_height && top[y * w + x] != 0;
+                partition &= in_foot != in_top;
+            }
         }
     }
-    expect_true(partition, "isometric foot and footprint-high top split every pixel exactly once");
-
-    expect_true(isometric_foot_first_row(58, 30, 0) <= 15 && isometric_foot_first_row(58, 30, 57) <= 15
-                  && isometric_foot_first_row(58, 30, 29) <= 1,
-      "isometric foot keeps the footprint diamond");
+    expect_true(keeps_diamond, "isometric foot keeps every row of the footprint diamond");
+    expect_true(partition, "isometric foot and the footprint-high top as drawn hold every pixel exactly once");
 }
 
 void run_bvariant_unit_tests() {
