@@ -1489,7 +1489,7 @@ void screen_city_t::handle_input_military(const mouse *m, const hotkeys *h, int 
         return;
     }
 
-    if (m->is_touch) {
+    if (m->is_touch || h->escape_pressed) {
         const touch_t* t = g_touch.earliest();
         if (!t->in_use) {
             return;
@@ -1743,7 +1743,7 @@ void screen_city_t::handle_input_transport(const mouse *m, const hotkeys *h, int
         return;
     }
 
-    if (m->is_touch) {
+    if (m->is_touch || h->escape_pressed) {
         const touch_t* t = g_touch.earliest();
         if (!t->in_use) {
             return;
@@ -1806,7 +1806,7 @@ void screen_city_t::handle_input_warship(const mouse *m, const hotkeys *h, int w
         return;
     }
 
-    if (m->is_touch) {
+    if (m->is_touch || h->escape_pressed) {
         const touch_t* t = g_touch.earliest();
         if (!t->in_use) {
             return;
@@ -1846,8 +1846,8 @@ void screen_city_t::handle_input_warship(const mouse *m, const hotkeys *h, int w
 void screen_city_t::handle_mouse(const mouse* m) {
     current_tile = update_city_view_coords(*m);
 
-    if (g_city_planner.build_type && !g_city_planner.in_progress) {
-        g_city_planner.update_hover(current_tile);
+    if (g_city_planner.build_type) {
+        g_city_planner.update(current_tile);
     }
 
     const float old_zoom_target = g_zoom.ftarget();
@@ -1882,12 +1882,13 @@ void screen_city_t::handle_mouse(const mouse* m) {
         g_city_planner.construction_start(current_tile);
 
         build_move(current_tile);
-    } else if (m->left.is_down || g_city_planner.in_progress) {
+    } else if ((m->left.is_down || g_city_planner.in_progress) && !g_city_planner.draggable()) {
         build_move(current_tile);
     }
 
-    if (m->left.went_up) {
+    if (m->left.went_up && g_city_planner.in_progress) {
         build_end();
+        g_city_planner.update(current_tile);
     }
 
     if (!!game_features::gameopt_middle_mouse_camera_pan
@@ -1903,6 +1904,7 @@ void screen_city_t::handle_mouse(const mouse* m) {
     if (m->right.went_up && !action_in_warnings) {
         if (g_city_planner.construction_active()) {
             g_city_planner.construction_cancel();
+            g_city_planner.update(current_tile);
         } else {
             // Ctrl+RMB raises one building while flat view is On (no build tool).
             // Empty / invalid tile must fall through to building info.
@@ -1954,7 +1956,9 @@ void screen_city_t::handle_input(const mouse* m, const hotkeys* h) {
 
     handle_escape(h);
 
-    city_planner_frame_update();
+    if (m->is_touch || h->escape_pressed) {
+        city_planner_frame_update();
+    }
     g_city_planner.ghost_mark_deleting(current_tile);
 }
 
