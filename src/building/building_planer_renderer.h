@@ -3,12 +3,14 @@
 #include "building_type.h"
 #include "grid/point.h"
 #include "building_fwd.h"
+#include "building/construction/ghost_painter.h"
+#include "building/construction/placement_rules.h"
 #include "js/js_register.h"
 
 class build_planner;
 struct painter;
 
-struct building_planer_renderer {
+struct building_planer_renderer : placement_rules, ghost_painter {
     static const building_planer_renderer dummy;
     virtual bool ghost_allow_tile(build_planner &p, tile2i tile) const;
     virtual uint32_t ghost_ignore_terrain(build_planner &p, tile2i tile) const { return 0; }
@@ -38,3 +40,10 @@ protected:
         js_event(ev, building_name, func);
     }
 };
+inline const placement_rules& placement_rules_of(e_building_type e) {
+    return building_planer_renderer::get(e);
+}
+
+inline const ghost_painter& ghost_painter_of(e_building_type e) {
+    return building_planer_renderer::get(e);
+}

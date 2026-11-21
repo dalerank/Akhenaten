@@ -434,13 +434,13 @@ void build_planner::set_graphics_array(xspan<int> image_set, vec2i size) {
 }
 
 void build_planner::setup_building_variant(tile2i tile, e_building_type type) {
-    const auto &preview = building_planer_renderer::get(type);
+    const auto& preview = placement_rules_of(type);
     int random_value = tile.grid_offset();
     custom_building_variant = preview.setup_building_variant(type, tile, random_value);
 }
 
 void build_planner::next_building_variant() {
-    const auto &preview = building_planer_renderer::get(build_type);
+    const auto& preview = placement_rules_of(build_type);
     custom_building_variant = preview.next_building_variant(build_type, end, custom_building_variant);
     update_orientations();
 }
@@ -492,7 +492,7 @@ void build_planner::setup_build(e_building_type type) { // select building for c
     editor_tool_deactivate();
 
     const auto &params = building_static_params::get(type);
-    const auto &preview = building_planer_renderer::get(type);
+    const auto& preview = placement_rules_of(type);
     preview.setup_build(*this);
 
     setup_building_variant(end, build_type);
@@ -506,7 +506,7 @@ void build_planner::setup_build(e_building_type type) { // select building for c
 
 void build_planner::setup_build_flags() {
     const auto &params = building_static_params::get(build_type);
-    const auto &preview = building_planer_renderer::get(build_type);
+    const auto& preview = placement_rules_of(build_type);
 
     for (const auto flag: e_planner_rules.values) {
         const bool is_need = preview.is_need_flag(*this, flag.id);
@@ -591,7 +591,7 @@ void build_planner::setup_build_flags() {
 }
 
 void build_planner::setup_build_graphics() {
-    const auto &preview = building_planer_renderer::get(build_type);
+    const auto& preview = placement_rules_of(build_type);
     preview.setup_preview_graphics(*this);
 }
 
@@ -610,7 +610,7 @@ static bool is_tile_occupied_by_active_building(tile2i tile) {
 void build_planner::update_obstructions_check() {
     tiles_blocked_total = 0;
     const auto &params = building_static_params::get(build_type);
-    const auto &preview = building_planer_renderer::get(build_type);
+    const auto& preview = placement_rules_of(build_type);
     const bool edge_margin = !draggable() && !params.flags.no_map_edge_margin;
 
     for (int row = 0; row < size.y; row++) {
@@ -776,7 +776,7 @@ void build_planner::update_requirements_check() {
         }
     }
 
-    const auto &preview = building_planer_renderer::get(build_type);
+    const auto& preview = placement_rules_of(build_type);
     can_place = preview.can_place(*this, start, end, can_place);
 
     if (needRiverAccess()) {
@@ -990,7 +990,7 @@ void build_planner::update_orientations(bool check_if_changed) {
     int prev_variant = building_variant;
    //int global_rotation = building_rotation_global_rotation();
 
-    const auto &preview = building_planer_renderer::get(build_type);
+    const auto& preview = placement_rules_of(build_type);
 
     relative_orientation = preview.update_relative_orientation(*this, end, relative_orientation);
     relative_orientation = relative_orientation % 4;
@@ -1049,7 +1049,7 @@ void build_planner::construction_start(tile2i tile) {
     start = tile;
     end = tile;
 
-    const auto &preview = building_planer_renderer::get(build_type);
+    const auto& preview = placement_rules_of(build_type);
     if (game_undo_start_build(build_type)) {
         in_progress = true;
         const bool can_start = preview.can_construction_start(*this, start);
@@ -1093,7 +1093,7 @@ void build_planner::construction_update(tile2i tile) {
     int items_placed = 1;
 
     const auto &params = building_static_params::get(build_type);
-    const auto &preview = building_planer_renderer::get(build_type);
+    const auto& preview = placement_rules_of(build_type);
     switch (build_type) {
     case BUILDING_CLEAR_LAND:
         last_items_cleared = building_construction_clear_land(true, start, end);
@@ -1159,7 +1159,7 @@ void build_planner::construction_finalize() { // confirm final placement
 
     in_progress = false;
 
-    const auto &preview = building_planer_renderer::get(build_type);
+    const auto& preview = placement_rules_of(build_type);
     const auto &params = building_static_params::get(build_type);
     can_place = preview.finalize_check(*this, start, end, can_place);
 
@@ -1475,7 +1475,7 @@ void build_planner::draw_impl(painter &ctx) {
     }
 
     vec2i pixel = pixel_coord_offset(0, 0);
-    const auto &preview = building_planer_renderer::get(build_type);
+    const auto& preview = ghost_painter_of(build_type);
     if (can_place == CAN_NOT_PLACE) {
         // draw fully red (placement not allowed)
         preview.ghost_blocked(*this, ctx, start, end, pixel, /*fully_blocked*/true);
@@ -1529,7 +1529,7 @@ void build_planner::draw_graphics(painter &ctx) {
     // TODO: bring these all over the unified system
     // special graphics buildings
     vec2i pixel = pixel_coord_offset(0, 0);
-    const auto &preview = building_planer_renderer::get(build_type);
+    const auto& preview = ghost_painter_of(build_type);
     preview.ghost_preview(*this, ctx, start, end, pixel);
 }
 
@@ -1568,7 +1568,7 @@ bool build_planner::place() {
     // Some of the buildings below have specific warning messages (e.g. roadblocks)
     // that can't be easily put in `building_construction_can_place_on_terrain()`!
     const auto &params = building_static_params::get(build_type);
-    const auto &preview = building_planer_renderer::get(build_type);
+    const auto& preview = placement_rules_of(build_type);
     int placement_cost = params.get_cost();
     last_created_building = nullptr;
 
