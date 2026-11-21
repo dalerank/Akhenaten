@@ -5,7 +5,6 @@
 #include "building/building_road.h"
 #include "core/calc.h"
 #include "game/undo.h"
-#include "graphics/window.h"
 #include "grid/building.h"
 #include "grid/building_tiles.h"
 #include "grid/grid.h"

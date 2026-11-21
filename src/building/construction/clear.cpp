@@ -10,7 +10,6 @@
 #include "city/city_warnings.h"
 #include "figuretype/figure_homeless.h"
 #include "game/undo.h"
-#include "graphics/window.h"
 #include "grid/canals.h"
 #include "grid/bridge.h"
 #include "grid/gardens.h"
@@ -22,7 +21,6 @@
 #include "grid/terrain.h"
 #include "grid/tiles.h"
 #include "game/game_config.h"
-#include "window/popup_dialog.h"
 #include "building/building_burning_ruin.h"
 #include "grid/basin.h"
 
@@ -296,18 +294,18 @@ int building_construction_clear_land(bool measure_only, tile2i start, tile2i end
     confirm.cend = end;
 
     if (ask_confirm_fort) {
-        popup_dialog::show_yesno("#popup_dialog_delete_fort", [confirm] () mutable {
-            confirm.fort_confirmed = true;
-            clear_land_confirmed(0, confirm);
-        });
+        events::emit(event_clear_land_confirm{"#popup_dialog_delete_fort", [confirm]() mutable {
+                                                  confirm.fort_confirmed = true;
+                                                  clear_land_confirmed(0, confirm);
+                                              }});
         return -1;
     } 
     
     if (ask_confirm_bridge) {
-        popup_dialog::show_yesno("#popup_dialog_delete_bridge", [confirm] () mutable {
-            confirm.bridge_confirmed = true;
-            clear_land_confirmed(0, confirm);
-        });
+        events::emit(event_clear_land_confirm{"#popup_dialog_delete_bridge", [confirm]() mutable {
+                                                  confirm.bridge_confirmed = true;
+                                                  clear_land_confirmed(0, confirm);
+                                              }});
         return -1;
     }
 

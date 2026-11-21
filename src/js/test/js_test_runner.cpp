@@ -47,6 +47,8 @@
 #include <SDL.h>
 #include <algorithm>
 #include <cstdlib>
+#include "window/popup_dialog.h"
+
 #include <cstring>
 #include <fstream>
 #include <map>
@@ -972,3 +974,8 @@ int __test_city_data_record_value(int offset, int size) {
     return -1;
 }
 ANK_FUNCTION_2(__test_city_data_record_value);
+
+static bool __test_popup_dialog_is_open() {
+    return popup_dialog::is_open();
+}
+ANK_FUNCTION(__test_popup_dialog_is_open);

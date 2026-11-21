@@ -61,6 +61,9 @@ struct event_build_menu_submenu_changed {
 struct event_building_menu_update { xstring stage; };
 struct event_building_menu_changed { bool temp; };
 struct event_use_building { int type = 0; bool en = false; };
+struct event_build_tool_selected {
+    int type = 0;
+};
 
 class build_planner {
     // Large royal tomb footprint is 17×34 (bulk+entrance); keep headroom for rotation.

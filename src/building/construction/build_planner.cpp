@@ -4,12 +4,9 @@
 #include <algorithm>
 #include <cmath>
 
-#include "editor/tool.h"
-#include "graphics/view/lookup.h"
 #include "graphics/view/view.h"
 #include "grid/floodplain.h"
 #include "core/log.h"
-#include "widget/widget_sidebar.h"
 
 #include "building/building_dock.h"
 #include "building/building_road.h"
@@ -46,7 +43,6 @@
 #include "graphics/image.h"
 #include "graphics/image_groups.h"
 #include "graphics/graphics.h"
-#include "graphics/window.h"
 #include "grid/bridge.h"
 #include "grid/building.h"
 #include "grid/building_tiles.h"
@@ -493,9 +489,7 @@ void build_planner::setup_build(e_building_type type) { // select building for c
 
     build_type = type;
 
-    // selecting a real building cancels any active debug terrain-paint tool
-    // so the two placement modes can't both be armed at once
-    editor_tool_deactivate();
+    events::emit(event_build_tool_selected{type});
 
     const auto &params = building_static_params::get(type);
     const auto& preview = placement_rules_of(type);

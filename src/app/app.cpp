@@ -2,6 +2,9 @@
 
 #include "core/archive.h"
 #include "editor/editor.h"
+#include "editor/tool.h"
+#include "building/construction/build_planner.h"
+#include "building/construction/clear.h"
 #include "game/game.h"
 #include "game/game_config.h"
 #include "game/game_events.h"
@@ -183,6 +186,10 @@ void application_t::subscribe_events() {
     events::subscribe_permanent([](event_app_city_screenshot ev) { graphics_save_screenshot(SCREENSHOT_FULL_CITY); });
 
     events::subscribe_permanent([](event_request_exit ev) { app_post_event(USER_EVENT_QUIT); });
+
+    events::subscribe_permanent([](event_clear_land_confirm ev) { popup_dialog::show_yesno(ev.loc_id, ev.on_yes); });
+
+    events::subscribe_permanent([](event_build_tool_selected ev) { editor_tool_deactivate(); });
 
     events::subscribe_permanent([](event_display_options_apply_resolution ev) { app_window_resize({ev.w, ev.h}); });
 }
