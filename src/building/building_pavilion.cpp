@@ -63,14 +63,14 @@ void building_pavilion::preview::ghost_preview(build_planner &planer, painter &c
 
     if (!can_build) {
         for (int i = 0; i < params.building_size * params.building_size; i++) {
-            planer.draw_ground_tile(ctx, pixel + VIEW_OFFSETS[i], COLOR_MASK_RED);
+            ghost_draw::draw_ground_tile(ctx, pixel + VIEW_OFFSETS[i], COLOR_MASK_RED);
         }
     } else {
         int square_id = params.first_img(animkeys().square);
         for (int i = 0; i < params.building_size * params.building_size; i++) {
             const int x = ((i % params.building_size) - (i / params.building_size)) * 30;
             const int y = ((i % params.building_size) + (i / params.building_size)) * 15;
-            build_planner::draw_ground_isometric(ctx, square_id + i, pixel + vec2i{x, y}, COLOR_MASK_GREEN);
+            ghost_draw::draw_ground_isometric(ctx, square_id + i, pixel + vec2i{x, y}, COLOR_MASK_GREEN);
         }
         int stand_sn_n = params.first_img(animkeys().stand_sn_n);
         int stand_sn_s = params.first_img(animkeys().stand_sn_s);
@@ -78,10 +78,12 @@ void building_pavilion::preview::ghost_preview(build_planner &planer, painter &c
         int stand = params.base_img();
         const auto &preview_conf = current_params().preview_dir[orientation];
 
-        build_planner::draw_building_ghost(ctx, stand, pixel + preview_conf.stand, COLOR_MASK_GREEN);
-        build_planner::draw_building_ghost(ctx, stand_sn_n + preview_conf.stand_b_img, pixel + preview_conf.stand_b, COLOR_MASK_GREEN);
-        build_planner::draw_building_ghost(ctx, stand_sn_s + preview_conf.stand_e_img, pixel + preview_conf.stand_e, COLOR_MASK_GREEN);
-        build_planner::draw_building_ghost(ctx, booth, pixel + preview_conf.booth, COLOR_MASK_GREEN);
+        ghost_draw::draw_building_ghost(ctx, stand, pixel + preview_conf.stand, COLOR_MASK_GREEN);
+        ghost_draw::draw_building_ghost(ctx, stand_sn_n + preview_conf.stand_b_img, pixel + preview_conf.stand_b,
+          COLOR_MASK_GREEN);
+        ghost_draw::draw_building_ghost(ctx, stand_sn_s + preview_conf.stand_e_img, pixel + preview_conf.stand_e,
+          COLOR_MASK_GREEN);
+        ghost_draw::draw_building_ghost(ctx, booth, pixel + preview_conf.booth, COLOR_MASK_GREEN);
     }
 }
 

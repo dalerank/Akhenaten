@@ -1,4 +1,5 @@
 #include "js/test/js_test_common.h"
+#include "widget/city/placement_preview.h"
 
 #include "building/building.h"
 #include "building/building_delivery_path.h"
@@ -795,7 +796,7 @@ static int __test_planner_preview_red_tiles() {
     painter ctx = game.painter();
     ctx.command_buffer = &commands;
     ctx.subcommand_buffer = &subcommands;
-    g_city_planner.draw(ctx);
+    placement_preview::draw(ctx);
     int red = 0;
     for (const render_command_t& c : commands) {
         if (c.mask == COLOR_MASK_RED || c.mask == COLOR_MASK_RED_30) {

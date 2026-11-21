@@ -320,19 +320,19 @@ void building_gatehouse::update_map_orientation(int orientation) {
 
     update_image_set(base);
 
-    //if (orientation_index == 0 || orientation_index == 3) {
-    //    // draw fort first, then ground
-    //    int image_id = this->anim["base_n"].first_img();
-    //    int image_sec_id = this->anim["base_second_n"].first_img();
-    //    planer.draw_building_ghost(ctx, image_sec_id, ground_pixel);
-    //    planer.draw_building_ghost(ctx, image_id, main_pixel);
-    //} else {
-    //    // draw ground first, then fort
-    //    int image_id = this->anim["base_w"].first_img();
-    //    int image_sec_id = this->anim["base_second_w"].first_img();
-    //    planer.draw_building_ghost(ctx, image_sec_id, main_pixel);
-    //    planer.draw_building_ghost(ctx, image_id, ground_pixel);
-    //}
+    // if (orientation_index == 0 || orientation_index == 3) {
+    //     // draw fort first, then ground
+    //     int image_id = this->anim["base_n"].first_img();
+    //     int image_sec_id = this->anim["base_second_n"].first_img();
+    //     ghost_draw::draw_building_ghost(ctx, image_sec_id, ground_pixel);
+    //     ghost_draw::draw_building_ghost(ctx, image_id, main_pixel);
+    // } else {
+    //     // draw ground first, then fort
+    //     int image_id = this->anim["base_w"].first_img();
+    //     int image_sec_id = this->anim["base_second_w"].first_img();
+    //     ghost_draw::draw_building_ghost(ctx, image_sec_id, main_pixel);
+    //     ghost_draw::draw_building_ghost(ctx, image_id, ground_pixel);
+    // }
 }
 
 void building_gatehouse::on_place_update_tiles(int orientation, int variant) {

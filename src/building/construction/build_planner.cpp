@@ -4,7 +4,6 @@
 #include <algorithm>
 #include <cmath>
 
-#include "graphics/view/view.h"
 #include "grid/floodplain.h"
 #include "core/log.h"
 
@@ -40,9 +39,6 @@
 #include "clear.h"
 #include "figure/formation_batalion.h"
 #include "game/undo.h"
-#include "graphics/image.h"
-#include "graphics/image_groups.h"
-#include "graphics/graphics.h"
 #include "grid/bridge.h"
 #include "grid/building.h"
 #include "grid/building_tiles.h"
@@ -169,32 +165,6 @@ void build_planner::mark_construction(tile2i tile, vec2i size, int terrain, bool
     if (g_city_planner.can_be_placed() == CAN_PLACE
         && map_building_tiles_mark_construction(tile, size.x, size.y, terrain, absolute_xy)) {
         g_city_planner.draw_as_constructing = true;
-    }
-}
-
-void build_planner::draw_tile_graphics_array(painter &ctx, tile2i start, tile2i end, vec2i pixel) {
-    // go through the tiles DIAGONALLY to render footprint and top correctly
-    for (int dg_y = 0; dg_y < size.y + size.x - 1; dg_y++) {
-        for (int dg_x = fmax(0, dg_y - size.y + 1); dg_x < size.x && dg_x < dg_y + 1; dg_x++) {
-            // extract proper row and column index from the mess above
-            int row = dg_y - dg_x;
-            int column = dg_x;
-
-            int image_id = tile_graphics_array[row][column];
-            if (image_id > 0) {
-                auto& command = ImageDraw::create_command(ctx, render_command_t::ert_drawtile_full);
-                command.image_id = image_id;
-                command.pixel = pixel_coord_offset(row, column);
-                command.mask = COLOR_MASK_GREEN;
-                command.location = SOURCE_LOCATION;
-            } else if(image_id < 0) {
-                auto& command = ImageDraw::create_command(ctx, render_command_t::ert_drawtile);
-                command.image_id = image_id_from_group(GROUP_TERRAIN_BLACK);
-                command.pixel = pixel_coord_offset(row, column);
-                command.mask = COLOR_MASK_GREEN;
-                command.location = SOURCE_LOCATION;
-            }
-        }
     }
 }
 
@@ -912,20 +882,6 @@ void build_planner::update_unique_only_one_check() {
     }
 }
 
-vec2i build_planner::end_pixel() const {
-    return g_camera.lookup_tile_to_pixel(end);
-}
-
-vec2i build_planner::pixel_coord_offset(int row, int column) const {
-    vec2i view_tile = g_camera.lookup_tile_to_pixel(end);
-    if (view_tile.x == 0 && view_tile.y == 0) {
-        view_tile = g_camera.selected_tile;
-    }
-    const int x_offset = column - pivot.x;
-    const int y_offset = row - pivot.y;
-    return {view_tile.x + x_offset * 30 - y_offset * 30, view_tile.y + x_offset * 15 + y_offset * 15};
-}
-
 void build_planner::update_tile_caches() {
     if (size.x < 1 || size.y < 1) {
         return;
@@ -1298,68 +1254,6 @@ void build_planner::update(tile2i cursor_tile) {
     }
 }
 
-void build_planner::draw_bridge(tile2i tile, vec2i pixel, int type, painter &ctx) {
-    const bool is_ship = (type == BUILDING_UNUSED_SHIP_BRIDGE_83);
-    int length, direction;
-    int end_grid_offset = map_bridge_calculate_length_direction(tile.x(), tile.y(), &length, &direction, is_ship);
-
-    int dir = direction - map_view_orientation();
-    if (dir < 0)
-        dir += 8;
-
-    const int min_length = bridge_span_min_length(is_ship);
-    const int max_length = bridge_span_max_length(is_ship);
-
-    bool blocked = false;
-    if (length < min_length || length > max_length)
-        blocked = true;
-    else if (!end_grid_offset)
-        blocked = true;
-
-    if (g_city.finance.is_out_of_money())
-        blocked = true;
-
-    int x_delta, y_delta;
-    switch (dir) {
-    case DIR_0_TOP_RIGHT:
-        x_delta = 29;
-        y_delta = -15;
-        break;
-    case DIR_2_BOTTOM_RIGHT:
-        x_delta = 29;
-        y_delta = 15;
-        break;
-    case DIR_4_BOTTOM_LEFT:
-        x_delta = -29;
-        y_delta = 15;
-        break;
-    case DIR_6_TOP_LEFT:
-        x_delta = -29;
-        y_delta = -15;
-        break;
-    default:
-        return;
-    }
-    if (blocked) {
-        draw_ground_tile(ctx, pixel, length > 0 ? COLOR_MASK_GREEN : COLOR_MASK_RED);
-        if (length > 1)
-            draw_ground_tile(ctx, pixel + vec2i(x_delta * (length - 1), y_delta * (length - 1)), COLOR_MASK_RED);
-
-    } else {
-        if (dir == DIR_0_TOP_RIGHT || dir == DIR_6_TOP_LEFT) {
-            for (int i = length - 1; i >= 0; i--) {
-                int sprite_id = map_bridge_get_sprite_id(i, length, dir, type == BUILDING_UNUSED_SHIP_BRIDGE_83);
-                city_draw_bridge_tile(ctx, pixel.x + x_delta * i, pixel.y + y_delta * i, sprite_id, COLOR_MASK_GREEN);
-            }
-        } else {
-            for (int i = 0; i < length; i++) {
-                int sprite_id = map_bridge_get_sprite_id(i, length, dir, type == BUILDING_UNUSED_SHIP_BRIDGE_83);
-                city_draw_bridge_tile(ctx, pixel.x + x_delta * i, pixel.y + y_delta * i, sprite_id, COLOR_MASK_GREEN);
-            }
-        }
-    }
-}
-
 int build_planner::is_blocked_for_building(tile2i tile, int size, blocked_tile_vec &blocked_tiles, uint32_t restricted_terrain) {
     // TILE_GRID_OFFSETS_PH is only 5×5. Indexing it with size*size for a 6×6 (sphinx
     // part) reads off the end and paints tiles that are not in the footprint.
@@ -1406,163 +1300,8 @@ int build_planner::is_blocked_for_building(tile2i tile, int size, blocked_tile_v
     return blocked;
 }
 
-void build_planner::draw_partially_blocked(painter &ctx, int fully_blocked, const blocked_tile_vec &blocked_tiles) {
-    for (auto &tile : blocked_tiles) {
-        vec2i pixel = g_camera.lookup_tile_to_pixel(tile.tile);
-        draw_ground_tile(ctx, pixel, (fully_blocked || tile.blocked) ? COLOR_MASK_RED_30 : COLOR_MASK_GREEN_30);
-    }
-}
-
-void build_planner::draw_partially_blocked(painter& ctx, int fully_blocked,
-  const std::vector<blocked_tile>& blocked_tiles) {
-    for (auto& tile : blocked_tiles) {
-        vec2i pixel = g_camera.lookup_tile_to_pixel(tile.tile);
-        draw_ground_tile(ctx, pixel, (fully_blocked || tile.blocked) ? COLOR_MASK_RED_30 : COLOR_MASK_GREEN_30);
-    }
-}
-
 int build_planner::tile_grid_offset(int orientation, int y) {
     return TILE_GRID_OFFSETS_PH[orientation][y];
-}
-
-void build_planner::draw_ground_tile(painter& ctx, vec2i pixel, color color_mask) {
-    auto& command = ImageDraw::create_command(ctx, render_command_t::ert_generic);
-    command.layer = render_command_t::layer_ground;
-    command.image_id = image_id_from_group(GROUP_TERRAIN_OVERLAY_COLORED);
-    command.pixel = pixel;
-    command.mask = color_mask;
-    command.scale = 1.f;
-    command.location = SOURCE_LOCATION;
-}
-
-void build_planner::draw_ground_isometric(painter& ctx, int image_id, vec2i pixel, color color_mask) {
-    const image_t* img = image_get(image_id);
-    if (!img) {
-        return;
-    }
-    const int ydiff = img->isometric_size() * HALF_TILE_HEIGHT_PIXELS;
-    auto& base = ImageDraw::create_command(ctx, render_command_t::ert_drawtile);
-    base.layer = render_command_t::layer_ground;
-    base.image_id = image_id;
-    base.pixel = pixel + vec2i{0, ydiff};
-    base.use_sort_pixel = true;
-    base.sort_pixel = pixel;
-    base.mask = color_mask;
-    base.location = SOURCE_LOCATION;
-
-    auto& top = ImageDraw::create_command(ctx, render_command_t::ert_drawtile_top);
-    top.layer = render_command_t::layer_ground;
-    top.image_id = image_id;
-    top.pixel = pixel;
-    top.use_sort_pixel = true;
-    top.sort_pixel = pixel;
-    top.mask = color_mask;
-    top.location = SOURCE_LOCATION;
-}
-
-void build_planner::draw(painter &ctx) {
-    OZZY_PROFILER_FUNCTION();
-    struct restore_draw_ctx {
-        painter *&slot;
-        painter *previous;
-        ~restore_draw_ctx() { slot = previous; }
-    } restore{draw_ctx, draw_ctx};
-    draw_ctx = &ctx;
-    draw_impl(ctx);
-}
-
-void build_planner::draw_impl(painter &ctx) {
-    if (needBridge()) {
-        vec2i pixel = pixel_coord_offset(0, 0);
-        draw_bridge(end, pixel, build_type, ctx);
-        return;
-    }
-
-    // empty building
-    if (size.x < 1 || size.y < 1) {
-        return;
-    }
-
-    vec2i pixel = pixel_coord_offset(0, 0);
-    const auto& preview = ghost_painter_of(build_type);
-    if (can_place == CAN_NOT_PLACE) {
-        // draw fully red (placement not allowed)
-        preview.ghost_blocked(*this, ctx, start, end, pixel, /*fully_blocked*/true);
-    } else if (tiles_blocked_total > 0) {
-        // draw green blueprint with red (blocked) tiles
-        preview.ghost_blocked(*this, ctx, start, end, pixel, /*fully_blocked*/false);
-        draw_road_access_marker(ctx);
-    } else if (!draw_as_constructing) {
-        // draw normal building ghost (green)
-        draw_graphics(ctx);
-        draw_road_access_marker(ctx);
-    }
-}
-
-void build_planner::draw_building_ghost(painter &ctx, int image_id, vec2i pixel, color color_mask) {
-    auto& command = ImageDraw::create_command(ctx, render_command_t::ert_drawtile_full);
-    command.image_id = image_id;
-    command.pixel = pixel;
-    command.mask = color_mask;
-    command.location = SOURCE_LOCATION;
-}
-
-void build_planner::draw_ghost_overlay(painter &ctx, int image_id, vec2i pixel) {
-    auto& command = ImageDraw::create_subcommand(ctx, render_command_t::ert_generic);
-    command.image_id = image_id;
-    command.pixel = pixel;
-    command.mask = COLOR_MASK_GREEN;
-    command.scale = 1.f;
-    command.location = SOURCE_LOCATION;
-}
-
-void build_planner::draw_from_below(painter &ctx, int image_id, vec2i pixel, color color_mask) {
-    auto& command = ImageDraw::create_subcommand(ctx, render_command_t::ert_from_below);
-    command.image_id = image_id;
-    command.pixel = pixel;
-    command.mask = color_mask;
-    command.scale = 1.f;
-    command.location = SOURCE_LOCATION;
-}
-
-void build_planner::draw_overlay_tile(painter &ctx, int image_id, vec2i pixel, color color_mask, float scale) {
-    auto& command = ImageDraw::create_command(ctx, render_command_t::ert_generic);
-    command.image_id = image_id;
-    command.pixel = pixel;
-    command.mask = color_mask;
-    command.scale = scale;
-    command.location = SOURCE_LOCATION;
-}
-
-void build_planner::draw_graphics(painter &ctx) {
-    // TODO: bring these all over the unified system
-    // special graphics buildings
-    vec2i pixel = pixel_coord_offset(0, 0);
-    const auto& preview = ghost_painter_of(build_type);
-    preview.ghost_preview(*this, ctx, start, end, pixel);
-}
-
-void build_planner::draw_road_access_marker(painter &ctx) {
-    if (!game_features::gameui_show_building_road_access.to_bool()) {
-        return;
-    }
-    if (!building_type_ghost_road_access(build_type)) {
-        return;
-    }
-
-    const auto &params = building_static_params::get(build_type);
-    const int bsize = params.building_size > 0 ? params.building_size : size.x;
-    const bool assume = building_type_ghost_assume_occupied(build_type);
-    building_road_ports ports = building_road_ports_preview(end, build_type, bsize, absolute_orientation,
-        building_variant, assume);
-    if (!ports.valid) {
-        return;
-    }
-
-    // Dim when the access tile has no route to kingdom entry (last-tick distances).
-    const color mask = map_routing_distance(ports.tile) > 0 ? COLOR_MASK_AMBER : COLOR_MASK_AMBER_40;
-    vec2i access_pixel = g_camera.lookup_tile_to_pixel(ports.tile);
-    draw_building_ghost(ctx, image_id_from_group(GROUP_TERRAIN_OVERLAY_COLORED) + 23, access_pixel, mask);
 }
 
 bool build_planner::place() {

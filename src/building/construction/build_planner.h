@@ -99,8 +99,6 @@ class build_planner {
     void checks_generic_rules(building* b);
 
     void update_tile_caches();
-    void draw_graphics(painter &ctx);
-    void draw_road_access_marker(painter &ctx);
     int place_houses(bool measure_only, int x_start, int y_start, int x_end, int y_end);
 
 public:
@@ -195,39 +193,42 @@ public:
     void update_preview(tile2i cursor_tile);
     void update_hover(tile2i cursor_tile);
     void update(tile2i cursor_tile);
-    void draw(painter &ctx);
-    void draw_impl(painter &ctx);
     bool place();
 
     void set_tiles_building(int image_id, int size_xx);
     void update_tiles_building(int image_id);
     void init_tiles(int size_x, int size_y);
 
-    static void draw_building_ghost(painter &ctx, int image_id, vec2i pixel, color color_mask = COLOR_MASK_GREEN);
-    static void draw_ghost_overlay(painter &ctx, int image_id, vec2i pixel);
-    static void draw_from_below(painter &ctx, int image_id, vec2i pixel, color color_mask = COLOR_MASK_GREEN);
-    static void draw_overlay_tile(painter &ctx, int image_id, vec2i pixel, color color_mask, float scale = 1.f);
-    static void draw_ground_tile(painter& ctx, vec2i pixel, color color_mask);
-    static void draw_ground_isometric(painter& ctx, int image_id, vec2i pixel, color color_mask);
-    static int is_blocked_for_building(tile2i tile, int size, blocked_tile_vec &blocked_tiles, uint32_t restricted_terrain = TERRAIN_ALL);
-    static void draw_bridge(tile2i tile, vec2i pixel, int type, painter &ctx);
-    static void draw_partially_blocked(painter &ctx, int fully_blocked, const blocked_tile_vec &blocked_tiles);
-    static void draw_partially_blocked(painter& ctx, int fully_blocked, const std::vector<blocked_tile>& blocked_tiles);
+    static int is_blocked_for_building(tile2i tile, int size, blocked_tile_vec& blocked_tiles,
+      uint32_t restricted_terrain = TERRAIN_ALL);
     static int tile_grid_offset(int x, int y);
 
-    vec2i pixel_coord_offset(int row, int column) const;
-    vec2i end_pixel() const;
     int view_orientation() const { return map_view_orientation(); }
     bool is_blocked_tile(int row, int column) { return tile_blocked_array[row][column]; }
+    int tile_graphics(int row, int column) const { return tile_graphics_array[row][column]; }
+    int blocked_tiles_count() const { return tiles_blocked_total; }
 
     bool ghost_mark_deleting(tile2i tile);
     void next_building_variant();
     void setup_building_variant(tile2i tile, e_building_type type);
     void mark_construction(tile2i tile, vec2i size, int terrain, bool absolute_xy);
-    void draw_tile_graphics_array(painter &ctx, tile2i start, tile2i end, vec2i pixel);
 
     bool attach_temple_upgrade(int upgrade_param, int grid_offset);
 };
 
 extern build_planner g_city_planner;
+
+namespace ghost_draw {
+    void draw_building_ghost(painter& ctx, int image_id, vec2i pixel, color color_mask = COLOR_MASK_GREEN);
+    void draw_ghost_overlay(painter& ctx, int image_id, vec2i pixel);
+    void draw_from_below(painter& ctx, int image_id, vec2i pixel, color color_mask = COLOR_MASK_GREEN);
+    void draw_overlay_tile(painter& ctx, int image_id, vec2i pixel, color color_mask, float scale = 1.f);
+    void draw_ground_tile(painter& ctx, vec2i pixel, color color_mask);
+    void draw_ground_isometric(painter& ctx, int image_id, vec2i pixel, color color_mask);
+    void draw_partially_blocked(painter& ctx, int fully_blocked, const blocked_tile_vec& blocked_tiles);
+    void draw_partially_blocked(painter& ctx, int fully_blocked, const std::vector<blocked_tile>& blocked_tiles);
+    vec2i pixel_coord_offset(const build_planner& planner, int row, int column);
+    vec2i end_pixel(const build_planner& planner);
+    void draw_tile_graphics_array(const build_planner& planner, painter& ctx);
+} // namespace ghost_draw
 extern const vec2i VIEW_OFFSETS[];

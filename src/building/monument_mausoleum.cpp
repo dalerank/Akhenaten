@@ -1016,7 +1016,7 @@ void building_mausoleum::preview::ghost_preview(build_planner& planer, painter& 
     const bool short_of_sandstone = sandstone_need > 0 && yards_available(RESOURCE_SANDSTONE) < sandstone_need;
     const bool blocked = has_unfinished_mausoleum() || short_of_sandstone || planer.site_blocked;
     for (const auto& part : planer.site_parts) {
-        planer.draw_partially_blocked(ctx, blocked, part);
+        ghost_draw::draw_partially_blocked(ctx, blocked, part);
     }
 }
 

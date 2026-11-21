@@ -46,7 +46,7 @@ void building_temple_complex_altar::preview::ghost_preview(build_planner &planer
     }
 
     vec2i pixel_upgrade = g_camera.lookup_tile_to_pixel(upgrade_base->tile.shifted(offset));
-    planer.draw_building_ghost(ctx, image_id, pixel_upgrade);
+    ghost_draw::draw_building_ghost(ctx, image_id, pixel_upgrade);
 }
 
 int building_temple_complex_altar::preview::construction_place(build_planner &p, tile2i tile, tile2i end, int orientation, int variant) const {
@@ -88,7 +88,7 @@ void building_temple_complex_oracle::preview::ghost_preview(build_planner &plane
     }
 
     vec2i pixel_upgrade = g_camera.lookup_tile_to_pixel(upgrade_base->tile.shifted(offset));
-    planer.draw_building_ghost(ctx, image_id, pixel_upgrade);
+    ghost_draw::draw_building_ghost(ctx, image_id, pixel_upgrade);
 }
 
 int building_temple_complex_oracle::preview::construction_place(build_planner &p, tile2i tile, tile2i end, int orientation, int variant) const {

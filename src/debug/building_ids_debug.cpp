@@ -25,7 +25,8 @@ static void draw_building_ids_tile(vec2i pixel, tile2i point, painter &ctx) {
     }
 
     if (b->tile.grid_offset() == grid_offset) {
-        build_planner::draw_building_ghost(ctx, image_id_from_group(GROUP_TERRAIN_OVERLAY_COLORED) + 23, {x - 15, y}, COLOR_MASK_GREEN_30);
+        ghost_draw::draw_building_ghost(ctx, image_id_from_group(GROUP_TERRAIN_OVERLAY_COLORED) + 23, {x - 15, y},
+          COLOR_MASK_GREEN_30);
     }
 
     if (map_property_is_draw_tile(grid_offset)) {

@@ -783,9 +783,9 @@ void figure::draw_debug(painter &ctx) {
         // draw path
         if (routing_path_id) {
             vec2i coords = g_camera.lookup_tile_to_pixel(destination()->tile);
-            build_planner::draw_building_ghost(ctx, image_id_from_group(PACK_CUSTOM, 1) + 3, coords);
+            ghost_draw::draw_building_ghost(ctx, image_id_from_group(PACK_CUSTOM, 1) + 3, coords);
             coords = g_camera.lookup_tile_to_pixel(destination_tile);
-            build_planner::draw_building_ghost(ctx, image_id_from_group(PACK_CUSTOM, 1) + 3, coords);
+            ghost_draw::draw_building_ghost(ctx, image_id_from_group(PACK_CUSTOM, 1) + 3, coords);
             int tx = tile.x();
             int ty = tile.y();
             coords = g_camera.lookup_tile_to_pixel(tile);

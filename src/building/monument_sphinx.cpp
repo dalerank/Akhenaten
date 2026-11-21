@@ -521,7 +521,7 @@ void building_sphinx::preview::ghost_preview(build_planner& planer, painter& ctx
     const bool all_red = g_city.buildings.count_total(BUILDING_SPHINX) > 0;
     if (planer.site_blocked || all_red) {
         for (const auto& p : planer.site_parts) {
-            planer.draw_partially_blocked(ctx, all_red, p);
+            ghost_draw::draw_partially_blocked(ctx, all_red, p);
         }
         return;
     }
@@ -529,14 +529,14 @@ void building_sphinx::preview::ghost_preview(build_planner& planer, painter& ctx
     for (int p = 0; p < PARTS; ++p) {
         const tile2i anchor = anchor_from_origin(part_origin(origin, p), view);
         const vec2i px = (p == 0) ? pixel : g_camera.lookup_tile_to_pixel(anchor);
-        planer.draw_building_ghost(ctx, sphinx_part_image(p, STAGE_FIRST), px);
+        ghost_draw::draw_building_ghost(ctx, sphinx_part_image(p, STAGE_FIRST), px);
     }
 }
 
 void building_sphinx::preview::ghost_blocked(build_planner& planer, painter& ctx, tile2i /*start*/, tile2i end,
   vec2i /*pixel*/, bool fully_blocked) const {
     for (const auto& p : planer.site_parts) {
-        planer.draw_partially_blocked(ctx, fully_blocked, p);
+        ghost_draw::draw_partially_blocked(ctx, fully_blocked, p);
     }
 }
 

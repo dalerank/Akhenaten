@@ -136,9 +136,9 @@ void building_planer_renderer::ghost_blocked(build_planner &planer, painter &ctx
 
     for (int row = 0; row < planer.size.y; row++) {
         for (int column = 0; column < planer.size.x; column++) {
-            vec2i current_coord = planer.pixel_coord_offset(row, column);
+            vec2i current_coord = ghost_draw::pixel_coord_offset(planer, row, column);
             color color_mask = (planer.is_blocked_tile(row, column) || fully_blocked) ? COLOR_MASK_RED_30 : COLOR_MASK_GREEN_30;
-            planer.draw_ground_tile(ctx, current_coord, color_mask);
+            ghost_draw::draw_ground_tile(ctx, current_coord, color_mask);
         }
     }
 }
@@ -151,7 +151,7 @@ void building_planer_renderer::ghost_preview(build_planner &planer, painter &ctx
         return;
     }
 
-    planer.draw_tile_graphics_array(ctx, start, end, pixel);
+    ghost_draw::draw_tile_graphics_array(planer, ctx);
 }
 
 int building_planer_renderer::can_place(build_planner &planer, tile2i start, tile2i end, int state) const {
@@ -268,7 +268,8 @@ void building_planer_renderer::setup_preview_graphics(build_planner &planer) con
     img_id += params.planner_update_rule.relative_orientation * planer.relative_orientation;
     planer.set_tiles_building(img_id, params.building_size);
 
-    es_t(ghost_preview_ev{planer.start, planer.end, planer.end_pixel(), planer.in_progress}, params.name, __func__);
+    es_t(ghost_preview_ev{planer.start, planer.end, ghost_draw::end_pixel(planer), planer.in_progress}, params.name,
+      __func__);
 }
 
 int building_planer_renderer::setup_building_variant(e_building_type type, tile2i tile, int variant) const {

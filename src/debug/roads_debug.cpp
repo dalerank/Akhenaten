@@ -26,7 +26,8 @@ static void draw_roads_tile(vec2i pixel, tile2i point, painter &ctx) {
         debug_text(ctx, str, x0, y + 15, 0, "", b->road_access.y(), b->has_road_access ? COLOR_GREEN : COLOR_LIGHT_RED);
         if (b->has_road_access) {
             auto tile_coords = g_camera.lookup_tile_to_pixel(b->road_access);
-            build_planner::draw_building_ghost(ctx, image_id_from_group(GROUP_TERRAIN_OVERLAY_COLORED) + 23, tile_coords, COLOR_MASK_GREEN);
+            ghost_draw::draw_building_ghost(ctx, image_id_from_group(GROUP_TERRAIN_OVERLAY_COLORED) + 23, tile_coords,
+              COLOR_MASK_GREEN);
         }
     }
 

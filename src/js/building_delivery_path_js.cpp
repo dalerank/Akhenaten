@@ -31,7 +31,7 @@ static void draw_recorded_path_tiles(painter &ctx, const recorded_path_tiles_t &
     tile2i start((int)tiles[0]);
     if (start.valid()) {
         vec2i pixel = g_camera.lookup_tile_to_pixel(start) + pixel_offset;
-        build_planner::draw_building_ghost(ctx, base_img + k_path_dot_img_offset, pixel, mask);
+        ghost_draw::draw_building_ghost(ctx, base_img + k_path_dot_img_offset, pixel, mask);
     }
 
     for (size_t t = 1; t < tiles.size(); t++) {
@@ -54,7 +54,7 @@ static void draw_recorded_path_tiles(painter &ctx, const recorded_path_tiles_t &
             break;
         }
         vec2i pixel = g_camera.lookup_tile_to_pixel(to) + pixel_offset;
-        build_planner::draw_building_ghost(ctx, base_img + img_index, pixel, mask);
+        ghost_draw::draw_building_ghost(ctx, base_img + img_index, pixel, mask);
     }
 }
 
@@ -67,7 +67,7 @@ static void draw_recorded_path_dots(painter &ctx, const recorded_path_tiles_t &t
             continue;
         }
         vec2i pixel = g_camera.lookup_tile_to_pixel(tile) + pixel_offset;
-        build_planner::draw_building_ghost(ctx, dot_img, pixel, mask);
+        ghost_draw::draw_building_ghost(ctx, dot_img, pixel, mask);
     }
 }
 

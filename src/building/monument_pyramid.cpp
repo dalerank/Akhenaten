@@ -211,7 +211,7 @@ void draw_causeway_ghost(build_planner &planer, painter &ctx, const pyramid_caus
             if (!map_grid_is_inside(t, 1)) {
                 continue;
             }
-            planer.draw_ground_tile(ctx, g_camera.lookup_tile_to_pixel(t), mask);
+            ghost_draw::draw_ground_tile(ctx, g_camera.lookup_tile_to_pixel(t), mask);
         }
     }
 }

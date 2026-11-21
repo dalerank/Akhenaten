@@ -106,7 +106,7 @@ ANK_FUNCTION_1(__city_planner_update_tiles_building);
 
 void __city_planner_draw_tile_graphics_array(tile2i start, tile2i end, vec2i pixel) {
     painter ctx = planner_painter();
-    g_city_planner.draw_tile_graphics_array(ctx, start, end, pixel);
+    ghost_draw::draw_tile_graphics_array(g_city_planner, ctx);
 }
 ANK_FUNCTION_3(__city_planner_draw_tile_graphics_array);
 
@@ -135,25 +135,25 @@ ANK_FUNCTION(__city_planner_validate_last_created);
 
 void __city_planner_draw_blocked(vec2i pixel) {
     painter ctx = planner_painter();
-    g_city_planner.draw_ground_tile(ctx, pixel, COLOR_MASK_RED);
+    ghost_draw::draw_ground_tile(ctx, pixel, COLOR_MASK_RED);
 }
 ANK_FUNCTION_1(__city_planner_draw_blocked);
 
 void __city_planner_draw_ghost(vec2i pixel, int image_id) {
     painter ctx = planner_painter();
-    g_city_planner.draw_building_ghost(ctx, image_id, pixel);
+    ghost_draw::draw_building_ghost(ctx, image_id, pixel);
 }
 ANK_FUNCTION_2(__city_planner_draw_ghost);
 
 void __city_planner_draw_ghost_overlay(vec2i pixel, int image_id) {
     painter ctx = planner_painter();
-    build_planner::draw_ghost_overlay(ctx, image_id, pixel);
+    ghost_draw::draw_ghost_overlay(ctx, image_id, pixel);
 }
 ANK_FUNCTION_2(__city_planner_draw_ghost_overlay);
 
 void __city_planner_draw_from_below(vec2i pixel, int image_id) {
     painter ctx = planner_painter();
-    build_planner::draw_from_below(ctx, image_id, pixel, COLOR_MASK_GREEN);
+    ghost_draw::draw_from_below(ctx, image_id, pixel, COLOR_MASK_GREEN);
 }
 ANK_FUNCTION_2(__city_planner_draw_from_below);
 
@@ -169,26 +169,26 @@ ANK_FUNCTION_2(__map_venue_build_orientation);
 void __city_planner_draw_flat_tiles(vec2i pixel, int count) {
     painter ctx = planner_painter();
     for (int i = 0; i < count; i++) {
-        g_city_planner.draw_ground_tile(ctx, pixel + VIEW_OFFSETS[i], COLOR_MASK_RED);
+        ghost_draw::draw_ground_tile(ctx, pixel + VIEW_OFFSETS[i], COLOR_MASK_RED);
     }
 }
 ANK_FUNCTION_2(__city_planner_draw_flat_tiles);
 
 void __city_planner_draw_isometric_ghost(vec2i pixel, int image_id, color color_mask) {
     painter ctx = planner_painter();
-    build_planner::draw_ground_isometric(ctx, image_id, pixel, color_mask);
+    ghost_draw::draw_ground_isometric(ctx, image_id, pixel, color_mask);
 }
 ANK_FUNCTION_3(__city_planner_draw_isometric_ghost);
 
 void __city_planner_draw_overlay_tile(vec2i pixel, int image_id, color color_mask, float scale) {
     painter ctx = planner_painter();
-    build_planner::draw_overlay_tile(ctx, image_id, pixel, color_mask, scale);
+    ghost_draw::draw_overlay_tile(ctx, image_id, pixel, color_mask, scale);
 }
 ANK_FUNCTION_4(__city_planner_draw_overlay_tile);
 
 void __city_planner_draw_flat_tile(vec2i pixel, color color_mask) {
     painter ctx = planner_painter();
-    build_planner::draw_ground_tile(ctx, pixel, color_mask);
+    ghost_draw::draw_ground_tile(ctx, pixel, color_mask);
 }
 ANK_FUNCTION_2(__city_planner_draw_flat_tile);
 

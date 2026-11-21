@@ -187,10 +187,6 @@ building/building_wall.cpp -> graphics/image.h
 building/building_water_lift.cpp -> graphics/elements/ui.h
 building/building_wharf.cpp -> graphics/graphics.h
 building/building_wharf.cpp -> graphics/image.h
-building/construction/build_planner.cpp -> graphics/graphics.h
-building/construction/build_planner.cpp -> graphics/image.h
-building/construction/build_planner.cpp -> graphics/image_groups.h
-building/construction/build_planner.cpp -> graphics/view/view.h
 building/construction/build_planner.h -> graphics/color.h
 building/monument_abu_simbel.cpp -> graphics/color.h
 building/monument_abu_simbel.cpp -> graphics/graphics.h

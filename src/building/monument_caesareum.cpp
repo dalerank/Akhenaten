@@ -456,7 +456,7 @@ int building_caesareum::preview::construction_place(build_planner &planer, tile2
 void building_caesareum::preview::ghost_preview(build_planner &planer, painter &ctx, tile2i /*start*/, tile2i end,
   vec2i /*pixel*/) const {
     for (const auto& p : planer.site_parts) {
-        planer.draw_partially_blocked(ctx, false, p);
+        ghost_draw::draw_partially_blocked(ctx, false, p);
     }
 }
 

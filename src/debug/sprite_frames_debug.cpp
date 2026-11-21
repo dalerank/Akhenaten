@@ -37,7 +37,7 @@ static void draw_sprite_frames_tile(vec2i pixel, tile2i point, painter &ctx) {
     building *b = building_get(b_id);
 
     if (b_id && grid_offset == b->tile.grid_offset()) {
-        build_planner::draw_building_ghost(ctx, image_id_from_group(GROUP_SUNKEN_TILE) + 3, {x - 15, y}, COLOR_MASK_GREEN);
+        ghost_draw::draw_building_ghost(ctx, image_id_from_group(GROUP_SUNKEN_TILE) + 3, {x - 15, y}, COLOR_MASK_GREEN);
     }
     if (b_id && grid_offset == north_tile_grid_offset(b->tile.x(), b->tile.y())) {
         ctx.img_generic(image_id_from_group(GROUP_DEBUG_WIREFRAME_TILE) + 3, {x - 15, y}, COLOR_MASK_RED);

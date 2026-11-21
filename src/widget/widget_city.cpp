@@ -1,4 +1,5 @@
 #include "widget/widget_city.h"
+#include "widget/city/placement_preview.h"
 #include "core/draw_phase.h"
 
 #include "graphics/image.h"
@@ -324,7 +325,7 @@ void screen_city_t::draw_building_road_access_marker(painter &ctx) {
 
     const color mask = map_routing_distance(ports.tile) > 0 ? COLOR_MASK_AMBER : COLOR_MASK_AMBER_40;
     vec2i pixel = g_camera.lookup_tile_to_pixel(ports.tile);
-    build_planner::draw_building_ghost(ctx, image_id_from_group(GROUP_TERRAIN_OVERLAY_COLORED) + 23, pixel, mask);
+    ghost_draw::draw_building_ghost(ctx, image_id_from_group(GROUP_TERRAIN_OVERLAY_COLORED) + 23, pixel, mask);
 }
 
 void screen_city_t::draw_recorded_delivery_paths(painter &ctx) {
@@ -639,7 +640,7 @@ void screen_city_t::draw_without_overlay(painter &ctx, int selected_figure_id) {
     // Draw the city planner overlay (construction previews, ghost buildings) if no figure is selected
     // When a figure is selected, we skip the planner drawing to avoid visual clutter
     if (!selected_figure_id) {
-        g_city_planner.draw(ctx);
+        placement_preview::draw(ctx);
     }
 
     draw_building_road_access_marker(ctx);
@@ -1102,7 +1103,7 @@ void screen_city_t::draw_with_overlay(painter &ctx, int selected_figure_id) {
 
     ImageDraw::apply_render_commands(ctx, "draw_ornaments_figures_overlay");
 
-    g_city_planner.draw(ctx);
+    placement_preview::draw(ctx);
 
     draw_building_road_access_marker(ctx);
     draw_recorded_delivery_paths(ctx);

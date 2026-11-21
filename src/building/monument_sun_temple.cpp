@@ -1320,11 +1320,11 @@ void building_sun_temple::preview::ghost_preview(build_planner &planer, painter 
         const auto &d = part_desc(i);
         tile2i t = end.shifted(d.offset.x, d.offset.y);
         if (blocked) {
-            planer.draw_partially_blocked(ctx, true, planer.site_parts[i]);
+            ghost_draw::draw_partially_blocked(ctx, true, planer.site_parts[i]);
         } else if (d.kind == SUN_TEMPLE_PART_TEMPLE) {
-            planer.draw_building_ghost(ctx, img_body > 0 ? img_body : preview, g_camera.lookup_tile_to_pixel(t));
+            ghost_draw::draw_building_ghost(ctx, img_body > 0 ? img_body : preview, g_camera.lookup_tile_to_pixel(t));
         } else {
-            planer.draw_partially_blocked(ctx, false, planer.site_parts[i]);
+            ghost_draw::draw_partially_blocked(ctx, false, planer.site_parts[i]);
         }
     }
 }

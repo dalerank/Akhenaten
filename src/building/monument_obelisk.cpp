@@ -331,7 +331,7 @@ void building_obelisk::preview::ghost_preview(build_planner &planer, painter &ct
     if (img <= 0) {
         img = params.first_img("preview");
     }
-    planer.draw_building_ghost(ctx, img, pixel);
+    ghost_draw::draw_building_ghost(ctx, img, pixel);
 }
 
 void building_obelisk::on_place_update_tiles(int /*orientation*/, int /*variant*/) {

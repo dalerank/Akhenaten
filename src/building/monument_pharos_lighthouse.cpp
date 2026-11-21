@@ -62,7 +62,7 @@ namespace {
 
     void draw_site(painter& ctx, const build_planner& planer, bool fully_blocked) {
         for (const auto& part : planer.site_parts) {
-            build_planner::draw_partially_blocked(ctx, fully_blocked, part);
+            ghost_draw::draw_partially_blocked(ctx, fully_blocked, part);
         }
     }
 
