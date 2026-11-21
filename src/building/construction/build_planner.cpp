@@ -1,4 +1,5 @@
 #include "build_planner.h"
+#include "core/draw_phase.h"
 
 #include <algorithm>
 #include <cmath>
@@ -150,6 +151,7 @@ void build_planner::add_building_tiles_from_list(int building_id, bool graphics_
 }
 
 bool build_planner::ghost_mark_deleting(tile2i tile) {
+    draw_phase::check_write("build_planner");
     if (!game_features::gameui_visual_feedback_on_delete) {
         return false;
     }
@@ -449,6 +451,7 @@ void build_planner::next_building_variant() {
 }
 
 void build_planner::setup_build(e_building_type type) { // select building for construction, set up main terrain restrictions/requirements
+    draw_phase::check_write("build_planner");
     reset();
 
     // ignore empty building types
@@ -1041,6 +1044,7 @@ int build_planner::get_total_drag_size(int* x, int* y) {
 }
 
 void build_planner::construction_start(tile2i tile) {
+    draw_phase::check_write("build_planner");
     if (!tile.valid()) {
         return;
     }
@@ -1064,6 +1068,7 @@ void build_planner::construction_start(tile2i tile) {
 }
 
 void build_planner::construction_cancel(bool release_sidebar) {
+    draw_phase::check_write("build_planner");
     map_property_clear_constructing_and_deleted();
     if (in_progress && draggable()) {
         game_undo_restore_map(1);
@@ -1081,6 +1086,7 @@ void build_planner::construction_cancel(bool release_sidebar) {
 }
 
 void build_planner::construction_update(tile2i tile) {
+    draw_phase::check_write("build_planner");
     end = tile;
     if (!end.valid()) {
         return;
@@ -1156,6 +1162,7 @@ void build_planner::checks_generic_rules(building* b) {
 }
 
 void build_planner::construction_finalize() { // confirm final placement
+    draw_phase::check_write("build_planner");
     logs::info("[build-btn] finalize enter type=%d start=%d(%d,%d) end=%d(%d,%d) can_place=%d cost=%d",
                (int)build_type, start.grid_offset(), start.x(), start.y(), end.grid_offset(), end.x(), end.y(),
                (int)can_place, total_cost);
@@ -1289,6 +1296,7 @@ void build_planner::update_hover(tile2i cursor_tile) {
 }
 
 void build_planner::update(tile2i cursor_tile) {
+    draw_phase::check_write("build_planner");
     update_preview(cursor_tile);
 
     if (in_progress && draggable()) {

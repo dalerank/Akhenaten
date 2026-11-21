@@ -1,4 +1,5 @@
 ﻿#include "building_tiles.h"
+#include "core/draw_phase.h"
 #include "grid/orientation.h"
 
 #include "building/monuments.h"
@@ -324,6 +325,7 @@ void map_building_tiles_set_rubble(int building_id, tile2i tile, int size) {
 }
 
 bool map_building_tiles_mark_construction(tile2i tile, int size_x, int size_y, int terrain, bool absolute_xy) {
+    draw_phase::check_write("map_building_tiles_mark_construction");
     if (!absolute_xy) {
         adjust_to_absolute_xy(tile, size_x); // todo??
     }
@@ -359,6 +361,7 @@ bool map_building_tiles_mark_construction(tile2i tile, int size_x, int size_y, i
     return true;
 }
 void map_building_tiles_mark_deleting(int grid_offset) {
+    draw_phase::check_write("map_building_tiles_mark_deleting");
     int building_id = map_building_at(grid_offset);
     if (!building_id)
         map_bridge_remove(grid_offset, 1);

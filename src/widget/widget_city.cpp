@@ -1,4 +1,5 @@
 #include "widget/widget_city.h"
+#include "core/draw_phase.h"
 
 #include "graphics/image.h"
 #include "graphics/graphics.h"
@@ -108,6 +109,7 @@ struct water_frame_queue_t {
     }
 
     void apply() {
+        draw_phase::allow_writes water_frames_follow_og_timing;
         const int n = std::min(count.load(std::memory_order_relaxed), (int)entries.size());
         for (int i = 0; i < n; i++) {
             map_image_set(entries[i].grid_offset, entries[i].image_id);
@@ -1143,6 +1145,7 @@ void screen_city_t::draw(painter &ctx) {
 // figure-info icons. Follows draw() in honouring the active overlay, so a snapshot cannot show
 // a different city than the main view.
 void screen_city_t::draw_for_figure(painter &ctx, int figure_id) {
+    draw_phase::scope draw_scope;
     set_city_clip_rectangle(ctx);
     const bool was_read_only = std::exchange(game.redraw_read_only, true);
 

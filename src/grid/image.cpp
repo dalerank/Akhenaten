@@ -1,4 +1,5 @@
 #include "graphics/image.h"
+#include "core/draw_phase.h"
 
 #include "graphics/animation.h"
 #include "grid/point.h"
@@ -33,10 +34,12 @@ int map_image_alt_at(int grid_offset) {
 }
 
 void map_image_set(int grid_offset, int image_id) {
+    draw_phase::check_write("map_image_set");
     map_grid_set(image_grid_chunk::grid, grid_offset, image_id);
 }
 
 void map_image_set(tile2i tile, const animation_t &anim) {
+    draw_phase::check_write("map_image_set");
     const int image_id = anim.first_img();
     map_grid_set(image_grid_chunk::grid, tile.grid_offset(), image_id);
 }

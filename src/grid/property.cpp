@@ -1,4 +1,5 @@
 #include "property.h"
+#include "core/draw_phase.h"
 #include "grid/property_chunks.h"
 #include "io/io_buffer.h"
 
@@ -130,10 +131,12 @@ int map_property_is_constructing(int grid_offset) {
     return map_grid_get(bitfields_grid_chunk::grid, grid_offset) & BIT_CONSTRUCTION;
 }
 void map_property_mark_constructing(int grid_offset) {
+    draw_phase::check_write("map_property_mark_constructing");
     map_grid_or(bitfields_grid_chunk::grid, grid_offset, BIT_CONSTRUCTION);
 }
 
 void map_property_clear_constructing(int grid_offset) {
+    draw_phase::check_write("map_property_clear_constructing");
     map_grid_and(bitfields_grid_chunk::grid, grid_offset, BIT_NO_CONSTRUCTION);
 }
 
@@ -142,12 +145,15 @@ int map_property_is_deleted(int grid_offset) {
 }
 
 void map_property_mark_deleted(int grid_offset) {
+    draw_phase::check_write("map_property_mark_deleted");
     map_grid_or(bitfields_grid_chunk::grid, grid_offset, BIT_DELETED);
 }
 void map_property_clear_deleted(int grid_offset) {
+    draw_phase::check_write("map_property_clear_deleted");
     map_grid_and(bitfields_grid_chunk::grid, grid_offset, BIT_NO_DELETED);
 }
 void map_property_clear_constructing_and_deleted(void) {
+    draw_phase::check_write("map_property_clear_constructing_and_deleted");
     map_grid_and_all(bitfields_grid_chunk::grid, BIT_NO_CONSTRUCTION_AND_DELETED);
 }
 void map_property_clear(void) {

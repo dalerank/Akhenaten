@@ -1,4 +1,5 @@
 #include "game/game.h"
+#include "core/draw_phase.h"
 
 #include "game/video_capture_module.h"
 #include "building/construction/build_planner.h"
@@ -202,6 +203,7 @@ void game_t::frame_begin() {
     OZZY_PROFILER_FUNCTION();
     frame++;
     g_camera.frame_begin();
+    draw_phase::scope draw_scope;
     window_draw(false);
 }
 
