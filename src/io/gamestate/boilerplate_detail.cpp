@@ -87,6 +87,7 @@ void GamestateLoadDetail::pre_load() { // do we NEED this...?
     building_barracks_clear_tower_sentry_request();
     figure_name_init();
     grid_xx::clear_all_grids();
+    map_figure_draw_states_clear_all();
 
     map_image_context_init();
     map_random_init();

@@ -1,4 +1,5 @@
 #include "object_info.h"
+#include "grid/figure.h"
 #include "city/city_figures.h"
 
 #include "graphics/view/lookup.h"
@@ -22,7 +23,7 @@ void object_info::fill_figures_info(tile2i center) {
             figure *f = ::figure_get(figure_id);
             const bool valid_figure = std::find(forbidden_figure_types.begin(), forbidden_figure_types.end(), f->type) == forbidden_figure_types.end();
             const bool is_alive = f->state != FIGURE_STATE_DEAD && f->action_state != FIGURE_ACTION_149_CORPSE;
-            const bool in_radius = center_pos.dist(f->main_cached_pos) < fill_figure_radius();
+            const bool in_radius = center_pos.dist(map_figure_draw_state(f->id).main_pos) < fill_figure_radius();
             if (is_alive && valid_figure && in_radius) {
                 possible_figures.push_back(f);
             }
@@ -34,9 +35,9 @@ void object_info::fill_figures_info(tile2i center) {
         }
     }
 
-    std::sort(possible_figures.begin(), possible_figures.end(), [&] (const figure *lhs, const figure *rhs) {
-        float lhsa_sq = center_pos.dist_sq(lhs->main_cached_pos);
-        float rhsa_sq = center_pos.dist_sq(rhs->main_cached_pos);
+    std::sort(possible_figures.begin(), possible_figures.end(), [&](const figure* lhs, const figure* rhs) {
+        float lhsa_sq = center_pos.dist_sq(map_figure_draw_state(lhs->id).main_pos);
+        float rhsa_sq = center_pos.dist_sq(map_figure_draw_state(rhs->id).main_pos);
         return lhsa_sq < rhsa_sq;
     });
 

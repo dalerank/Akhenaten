@@ -1,4 +1,5 @@
 #include "figure_snapshot.h"
+#include "grid/figure.h"
 
 #include "city/city_figures.h"
 #include "figure/figure.h"
@@ -86,7 +87,7 @@ bool figure_snapshot::capture(int figure_id, int size, vec2i crop_offset, e_figu
         g_screen_city.draw_for_figure(ctx, mode == e_figure_snapshot_mode::figure_only ? figure_id : 0);
 
         // Outside the viewport after the snap (map edge / stale sort skip): keep what we had.
-        const vec2i coord = f->main_cached_pos;
+        const vec2i coord = map_figure_draw_state(f->id).main_pos;
         if (coord.x > 0 || coord.y > 0) {
             const vec2i crop = clamp_crop_to_viewport(coord + crop_offset, size);
             if (const int captured = graphics_save_to_texture(texture_id_, crop, {size, size})) {

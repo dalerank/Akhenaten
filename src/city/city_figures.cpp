@@ -1,4 +1,5 @@
 #include "city_figures.h"
+#include "grid/figure.h"
 
 #include "core/profiler.h"
 #include "city/city.h"
@@ -84,8 +85,7 @@ void city_figures_t::update() {
         // Stray tile from a bad save or a broken move: used to be dropped by the draw sort.
         if (figure->tile.x() >= GRID_LENGTH || figure->tile.y() >= GRID_LENGTH) {
             figure->tile = {-1, -1};
-            figure->main_cached_pos = {-1, -1};
-            figure->cart_cached_pos = {-1, -1};
+            map_figure_draw_state_reset(figure->id);
             figure->poof();
         }
         figure->action_perform();

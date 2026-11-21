@@ -150,9 +150,6 @@ public:
     short formation_id;
     uint8_t index_in_formation;
     uint8_t formation_at_rest;
-    bool is_main_drawn;
-    bool is_cart_drawn;
-    volatile bool mt_render_worker;
     uint8_t min_max_seen;
     uint8_t movement_ticks_watchdog;
     short leading_figure_id;
@@ -181,9 +178,6 @@ public:
     short attacker_id1;
     short attacker_id2;
     short opponent_id;
-    vec2i main_cached_pos;
-    vec2i main_sort_pixel;
-    vec2i cart_cached_pos;
 
     uint8_t routing_try_reroute_counter;
     uint16_t collecting_item_max;

@@ -249,7 +249,8 @@ void screen_city_t::draw_figures_on_flat_tiles(vec2i pixel, tile2i tile, painter
             continue;
         }
 
-        if (f.f->main_cached_pos.x < (pixel.x - TILE_WIDTH_PIXELS) || f.f->main_cached_pos.x >(pixel.x + TILE_WIDTH_PIXELS)) {
+        if (map_figure_draw_state(f.f->id).main_pos.x < (pixel.x - TILE_WIDTH_PIXELS)
+            || map_figure_draw_state(f.f->id).main_pos.x > (pixel.x + TILE_WIDTH_PIXELS)) {
             continue;
         }
 
@@ -369,12 +370,12 @@ void screen_city_t::draw_figures(vec2i pixel, tile2i tile, painter &ctx, [[maybe
     static constexpr int k_figure_pair_x_pad = 48;
     const int row_x0 = pixel.x - TILE_WIDTH_PIXELS;
     const int row_x1 = pixel.x + TILE_WIDTH_PIXELS;
-    const auto figure_x_overlaps_tile_band = [row_x0, row_x1](const figure *fig) {
-        int lo = fig->main_cached_pos.x;
+    const auto figure_x_overlaps_tile_band = [row_x0, row_x1](const figure* fig) {
+        int lo = map_figure_draw_state(fig->id).main_pos.x;
         int hi = lo;
         if (fig->has_cart()) {
-            lo = std::min(lo, fig->cart_cached_pos.x);
-            hi = std::max(hi, fig->cart_cached_pos.x);
+            lo = std::min(lo, map_figure_draw_state(fig->id).cart_pos.x);
+            hi = std::max(hi, map_figure_draw_state(fig->id).cart_pos.x);
             lo -= k_figure_pair_x_pad;
             hi += k_figure_pair_x_pad;
         }
@@ -406,7 +407,7 @@ void screen_city_t::draw_figures(vec2i pixel, tile2i tile, painter &ctx, [[maybe
             if (!figure_x_overlaps_tile_band(f.f)) {
                 continue;
             }
-            f.f->draw_cart_sprite(ctx, f.f->cart_cached_pos, 0);
+            f.f->draw_cart_sprite(ctx, map_figure_draw_state(f.f->id).cart_pos, 0);
         }
     }
 }
@@ -425,11 +426,12 @@ void screen_city_t::draw_figures_overlay(vec2i pixel, tile2i tile, painter &ctx)
             continue;
         }
 
-        if (f.f->is_main_drawn != 0) {
+        if (map_figure_draw_state(f.f->id).main_drawn.load(std::memory_order_relaxed)) {
             continue;
         }
 
-        if (f.f->main_cached_pos.x < (pixel.x - TILE_WIDTH_PIXELS) || f.f->main_cached_pos.x >(pixel.x + TILE_WIDTH_PIXELS)) {
+        if (map_figure_draw_state(f.f->id).main_pos.x < (pixel.x - TILE_WIDTH_PIXELS)
+            || map_figure_draw_state(f.f->id).main_pos.x > (pixel.x + TILE_WIDTH_PIXELS)) {
             continue;
         }
 
@@ -2008,7 +2010,7 @@ static const figure* get_figure_at_mouse(vec2i mouse_pos) {
         while (figure_id > 0) {
             figure *f = figure_get(figure_id);
             if (f && f->state != FIGURE_STATE_DEAD && f->action_state != FIGURE_ACTION_149_CORPSE) {
-                float dist_sq = center_pos.dist_sq(f->main_cached_pos);
+                float dist_sq = center_pos.dist_sq(map_figure_draw_state(f->id).main_pos);
                 if (dist_sq < closest_dist_sq) {
                     closest_dist_sq = dist_sq;
                     closest_figure = f;

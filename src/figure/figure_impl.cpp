@@ -1,4 +1,5 @@
 #include "figure/figure_impl.h"
+#include "grid/figure.h"
 
 #include "figure/figure.h"
 #include "figuretype/figure_cartpusher.h"
@@ -365,7 +366,7 @@ void figure_impl::advance_action(int action, tile2i t) {
 }
 
 void figure_impl::draw_main_sprite(painter &ctx, vec2i pixel, int highlight) {
-    base.draw_main_sprite(ctx, base.main_cached_pos, highlight);
+    base.draw_main_sprite(ctx, map_figure_draw_state(base.id).main_pos, highlight);
 }
 
 void figure_impl::poof() {

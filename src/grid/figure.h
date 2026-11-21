@@ -4,6 +4,8 @@
 #include "core/custom_span.hpp"
 #include "figure/figure.h"
 
+#include <atomic>
+
 enum {
     TEST_SEARCH_DEAD,
     TEST_SEARCH_ENEMY,
@@ -22,6 +24,18 @@ struct figure_draw {
     vec2i fpos;
     bool draw_cart = false;
 };
+
+struct figure_draw_state {
+    vec2i main_pos;
+    vec2i sort_pixel;
+    vec2i cart_pos;
+    std::atomic<bool> main_drawn{false};
+};
+
+figure_draw_state& map_figure_draw_state(int figure_id);
+void map_figure_draw_state_reset(int figure_id);
+void map_figure_draw_state_clear(int figure_id);
+void map_figure_draw_states_clear_all();
 
 int map_figure_id_get(int grid_offset);
 inline int map_figure_id_get(tile2i tile) { return map_figure_id_get(tile.grid_offset());  }

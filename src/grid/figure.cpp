@@ -9,11 +9,42 @@
 #include "city/city_figures.h"
 #include "core/profiler.h"
 
+#include <array>
 #include <assert.h>
 
 
 svector<figure_draw, 5000> g_figures_y_sort;
 static uint32_t g_figures_y_sort_generation = 0;
+static std::array<figure_draw_state, MAX_FIGURES> g_figure_draw_states;
+
+figure_draw_state& map_figure_draw_state(int figure_id) {
+    static figure_draw_state invalid;
+    if (figure_id < 0 || figure_id >= MAX_FIGURES) {
+        invalid.main_drawn.store(true, std::memory_order_relaxed);
+        return invalid;
+    }
+    return g_figure_draw_states[figure_id];
+}
+
+void map_figure_draw_state_reset(int figure_id) {
+    figure_draw_state& st = map_figure_draw_state(figure_id);
+    st.main_pos = {-1, -1};
+    st.cart_pos = {-1, -1};
+}
+
+void map_figure_draw_state_clear(int figure_id) {
+    figure_draw_state& st = map_figure_draw_state(figure_id);
+    st.main_pos = {};
+    st.sort_pixel = {};
+    st.cart_pos = {};
+    st.main_drawn.store(false, std::memory_order_relaxed);
+}
+
+void map_figure_draw_states_clear_all() {
+    for (int id = 0; id < MAX_FIGURES; ++id) {
+        map_figure_draw_state_clear(id);
+    }
+}
 
 bool map_has_figure_at(int grid_offset) {
     return map_grid_is_valid_offset(grid_offset) && map_grid_get(figure_grid_chunk::grid, grid_offset) > 0;
@@ -42,19 +73,17 @@ void map_figure_sort_by_y() {
             continue;
         }
 
-        f->main_cached_pos = draw_pos;
-        f->mt_render_worker = false;
-        f->main_cached_pos = f->adjust_pixel_offset(f->main_cached_pos);
-        f->main_sort_pixel = f->main_cached_pos - f->crowd_pixel_offset() - vec2i(29, 15 + 8);
-        f->is_main_drawn = false;
-        f->is_cart_drawn = false;
-        g_figures_y_sort.push_back({ f, f->main_cached_pos, false });
+        figure_draw_state& st = map_figure_draw_state(f->id);
+        st.main_pos = f->adjust_pixel_offset(draw_pos);
+        st.sort_pixel = st.main_pos - f->crowd_pixel_offset() - vec2i(29, 15 + 8);
+        st.main_drawn.store(false, std::memory_order_relaxed);
+        g_figures_y_sort.push_back({f, st.main_pos, false});
 
         if (f->has_cart()) {
-            f->cart_cached_pos = f->cart_sprite_pixel();
+            st.cart_pos = f->cart_sprite_pixel();
             const image_t *img = image_get(f->cart_image_id);
             int cart_y = img ? img->animation.sprite_offset.y : 0;
-            vec2i cart_bound_pos = f->cart_cached_pos;
+            vec2i cart_bound_pos = st.cart_pos;
             switch (f->direction) {
             case DIR_6_TOP_LEFT:
                 cart_bound_pos += vec2i(0, -cart_y / 2);
