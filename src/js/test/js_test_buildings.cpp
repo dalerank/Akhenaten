@@ -374,6 +374,15 @@ static xstring __test_building_slot_anim_key(int bid, int slot) {
 }
 ANK_FUNCTION_2(__test_building_slot_anim_key);
 
+static int __test_building_slot_anim_frame(int bid, int slot) {
+    building* b = building_get(bid);
+    if (!b || !b->is_valid() || slot < 0 || slot >= (int)b->anims.size()) {
+        return -1;
+    }
+    return b->anims[slot].current_frame();
+}
+ANK_FUNCTION_2(__test_building_slot_anim_frame);
+
 static xstring __test_building_anim_key(int bid) {
     building* b = building_get(bid);
     if (!b || !b->is_valid()) {
