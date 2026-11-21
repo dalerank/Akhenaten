@@ -186,13 +186,13 @@ void build_planner::draw_tile_graphics_array(painter &ctx, tile2i start, tile2i 
             if (image_id > 0) {
                 auto& command = ImageDraw::create_command(ctx, render_command_t::ert_drawtile_full);
                 command.image_id = image_id;
-                command.pixel = pixel_coords_cache[row][column];
+                command.pixel = pixel_coord_offset(row, column);
                 command.mask = COLOR_MASK_GREEN;
                 command.location = SOURCE_LOCATION;
             } else if(image_id < 0) {
                 auto& command = ImageDraw::create_command(ctx, render_command_t::ert_drawtile);
                 command.image_id = image_id_from_group(GROUP_TERRAIN_BLACK);
-                command.pixel = pixel_coords_cache[row][column];
+                command.pixel = pixel_coord_offset(row, column);
                 command.mask = COLOR_MASK_GREEN;
                 command.location = SOURCE_LOCATION;
             }
@@ -345,7 +345,6 @@ void build_planner::init_tiles(int size_x, int size_y) {
 
             // reset caches
             tile_coord_cache[row][column] = {0, 0};
-            pixel_coords_cache[row][column] = {0, 0};
         }
     }
 }
@@ -913,12 +912,28 @@ void build_planner::update_unique_only_one_check() {
     }
 }
 
-void build_planner::update_coord_caches() {
+vec2i build_planner::end_pixel() const {
+    return g_camera.lookup_tile_to_pixel(end);
+}
+
+int build_planner::view_orientation() const {
+    return g_camera.orientation;
+}
+
+vec2i build_planner::pixel_coord_offset(int row, int column) const {
     vec2i view_tile = g_camera.lookup_tile_to_pixel(end);
-    if (view_tile.x == 0 && view_tile.y == 0)
-        // this prevents graphics from being drawn on the top left corner
-        // of the screen when the current "end" tile isn't valid.
+    if (view_tile.x == 0 && view_tile.y == 0) {
         view_tile = g_camera.selected_tile;
+    }
+    const int x_offset = column - pivot.x;
+    const int y_offset = row - pivot.y;
+    return {view_tile.x + x_offset * 30 - y_offset * 30, view_tile.y + x_offset * 15 + y_offset * 15};
+}
+
+void build_planner::update_tile_caches() {
+    if (size.x < 1 || size.y < 1) {
+        return;
+    }
     int orientation = g_camera.orientation / 2;
     for (int row = 0; row < size.y; row++) {
         for (int column = 0; column < size.x; column++) {
@@ -943,13 +958,7 @@ void build_planner::update_coord_caches() {
                 break;
             }
 
-            // get tile pixel coords
-            int current_x = view_tile.x + x_offset * 30 - y_offset * 30;
-            int current_y = view_tile.y + x_offset * 15 + y_offset * 15;
-
-            // save values in cache
             tile_coord_cache[row][column] = tile;
-            pixel_coords_cache[row][column] = {current_x, current_y};
         }
     }
     switch (orientation) {
@@ -999,7 +1008,7 @@ void build_planner::update_orientations(bool check_if_changed) {
     }
 
     setup_build_graphics(); // reload graphics, tiles, etc.
-    update_coord_caches();  // refresh caches
+    update_tile_caches();   // refresh caches
 }
 
 void build_planner::dispatch_warnings() {
@@ -1241,7 +1250,7 @@ void build_planner::update_preview(tile2i cursor_tile) {
     }
 
     end = cursor_tile;
-    update_coord_caches();
+    update_tile_caches();
 
     immediate_warning = "";
     extra_warning = "";
@@ -1459,7 +1468,7 @@ void build_planner::draw(painter &ctx) {
 
 void build_planner::draw_impl(painter &ctx) {
     if (needBridge()) {
-        vec2i pixel = pixel_coords_cache[0][0];
+        vec2i pixel = pixel_coord_offset(0, 0);
         draw_bridge(end, pixel, build_type, ctx);
         return;
     }
@@ -1469,7 +1478,7 @@ void build_planner::draw_impl(painter &ctx) {
         return;
     }
 
-    vec2i pixel = pixel_coords_cache[0][0];
+    vec2i pixel = pixel_coord_offset(0, 0);
     const auto &preview = building_planer_renderer::get(build_type);
     if (can_place == CAN_NOT_PLACE) {
         // draw fully red (placement not allowed)
@@ -1523,7 +1532,7 @@ void build_planner::draw_overlay_tile(painter &ctx, int image_id, vec2i pixel, c
 void build_planner::draw_graphics(painter &ctx) {
     // TODO: bring these all over the unified system
     // special graphics buildings
-    vec2i pixel = pixel_coords_cache[0][0];
+    vec2i pixel = pixel_coord_offset(0, 0);
     const auto &preview = building_planer_renderer::get(build_type);
     preview.ghost_preview(*this, ctx, start, end, pixel);
 }

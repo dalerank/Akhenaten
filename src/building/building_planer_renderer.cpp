@@ -191,7 +191,7 @@ int building_planer_renderer::construction_place(build_planner &planer, tile2i s
     verify_no_crash(params.building_size > 0);
 
     // correct building placement for city orientations
-    switch (g_camera.orientation) {
+    switch (planer.view_orientation()) {
     case DIR_2_BOTTOM_RIGHT:
         end = end.shifted(-params.building_size + 1, 0);
         break;
@@ -248,7 +248,7 @@ int building_planer_renderer::construction_update(build_planner &planer, tile2i 
         return 0;
     }
 
-    int real_orientation = (g_camera.orientation / 2) % 2;
+    int real_orientation = (planer.view_orientation() / 2) % 2;
     if (real_orientation == 0) {
         planer.mark_construction(planer.north_tile, planer.size, TERRAIN_ALL, true);
     } else {
@@ -268,7 +268,7 @@ void building_planer_renderer::setup_preview_graphics(build_planner &planer) con
     img_id += params.planner_update_rule.relative_orientation * planer.relative_orientation;
     planer.set_tiles_building(img_id, params.building_size);
 
-    es_t(ghost_preview_ev{ planer.start, planer.end, g_camera.lookup_tile_to_pixel(planer.end), planer.in_progress }, params.name, __func__);
+    es_t(ghost_preview_ev{planer.start, planer.end, planer.end_pixel(), planer.in_progress}, params.name, __func__);
 }
 
 int building_planer_renderer::setup_building_variant(e_building_type type, tile2i tile, int variant) const {

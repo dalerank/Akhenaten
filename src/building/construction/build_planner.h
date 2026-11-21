@@ -70,7 +70,6 @@ class build_planner {
     int tiles_blocked_total = 0;
 
     tile2i tile_coord_cache[TILE_DIM][TILE_DIM];
-    vec2i pixel_coords_cache[TILE_DIM][TILE_DIM];
 
     int additional_req_param2 = -1;
     int additional_req_param3 = -1;
@@ -94,7 +93,7 @@ class build_planner {
     void dispatch_warnings();
     void checks_generic_rules(building* b);
 
-    void update_coord_caches();
+    void update_tile_caches();
     void draw_graphics(painter &ctx);
     void draw_road_access_marker(painter &ctx);
     int place_houses(bool measure_only, int x_start, int y_start, int x_end, int y_end);
@@ -203,7 +202,9 @@ public:
     static void draw_partially_blocked(painter &ctx, int fully_blocked, const blocked_tile_vec &blocked_tiles);
     static int tile_grid_offset(int x, int y);
 
-    vec2i pixel_coord_offset(int row, int column) { return pixel_coords_cache[row][column]; }
+    vec2i pixel_coord_offset(int row, int column) const;
+    vec2i end_pixel() const;
+    int view_orientation() const;
     bool is_blocked_tile(int row, int column) { return tile_blocked_array[row][column]; }
 
     bool ghost_mark_deleting(tile2i tile);
