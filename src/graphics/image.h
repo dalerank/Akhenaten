@@ -173,7 +173,6 @@ inline int image_iso_top_offset_y(const image_t *img) {
     return HALF_TILE_HEIGHT_PIXELS * (image_safe_width(img) / footprint_width);
 }
 
-// A footprint-high image (vacant lot sign) has isometric_top_height 0 but can still rise above the diamond.
 inline bool image_has_isometric_top_pixels(const image_t *img) {
     return img && (img->isometric_top_height > 0 || (img->has_isometric_top && img->isometric_box_height > 0));
 }

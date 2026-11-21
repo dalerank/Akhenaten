@@ -332,7 +332,6 @@ void run_archive_property_unit_tests() {
     }
 }
 
-// The foot keeps rows from isometric_foot_first_row down; a footprint-high top keeps exactly the rest.
 void run_isometric_split_unit_tests() {
     const int sizes[][2] = { {58, 30}, {58, 40}, {118, 60}, {118, 75}, {178, 90}, {178, 120} };
     bool partition = true;
@@ -348,7 +347,6 @@ void run_isometric_split_unit_tests() {
     }
     expect_true(partition, "isometric foot and footprint-high top split every pixel exactly once");
 
-    // A one-tile image keeps its whole diamond in the foot: the bottom vertex row and the left/right corners.
     expect_true(isometric_foot_first_row(58, 30, 0) <= 15 && isometric_foot_first_row(58, 30, 57) <= 15
                   && isometric_foot_first_row(58, 30, 29) <= 1,
       "isometric foot keeps the footprint diamond");

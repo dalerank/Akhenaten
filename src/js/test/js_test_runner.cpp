@@ -698,7 +698,6 @@ static int __test_building_sprite_frame(int bid) {
 }
 ANK_FUNCTION_1(__test_building_sprite_frame);
 
-// Frame (1..N) of the building's sprite animation for sprite_id, 0 when that sprite does not tick.
 static int __test_building_sprite_frame_of(int bid, int sprite_id) {
     building* b = building_get(bid);
     if (!b || !b->is_valid()) {

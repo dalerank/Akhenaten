@@ -25,7 +25,6 @@ function t567_place(type, ox, oy, roads) {
     return bid
 }
 
-// The map has no workforce: labor clears the staff before a day passes, so play_animation is set by hand.
 function t567_start_shows(bid, workers) {
     __test_building_set_workers(bid, workers)
     var e = city.get_entertainment_building(bid)
@@ -68,7 +67,6 @@ function t567_slot_frames(bid, keys) {
     return out
 }
 
-// The juggler sprite id is the image before its group (offset -1), which has no frame count of its own.
 function t567_check_juggler_config() {
     var venues = [['booth', building_booth], ['pavilion', building_pavilion]]
     for (var i = 0; i < venues.length; i++) {
@@ -114,7 +112,6 @@ function t567_run() {
     t567_start_shows(pavilion, 20)
     t567_start_shows(bandstand, 12)
 
-    // The bandstand sets its show slots while drawn.
     var pavilion_keys = ['juggler', 'musician_sn', 'musician_we', 'dancer']
     var bandstand_keys = ['juggler', 'musician_sn']
     __test_run_ticks(2)
@@ -123,7 +120,6 @@ function t567_run() {
     var booth0 = t567_sprite_frames(booth, BUILDING_BOOTH, ['juggler'])
     var pavilion0 = t567_sprite_frames(pavilion, BUILDING_PAVILLION, pavilion_keys)
     var bandstand0 = t567_slot_frames(bandstand, bandstand_keys)
-    // Fewer ticks than the shortest loop (11 frames), or a frame could wrap back to where it started.
     __test_run_ticks(7)
     __test_draw_frames(1)
     var booth1 = t567_sprite_frames(booth, BUILDING_BOOTH, ['juggler'])

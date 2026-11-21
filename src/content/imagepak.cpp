@@ -345,7 +345,6 @@ static bool convert_image_data(buffer* buf, image_t &img, bool convert_fonts) {
         }
 
         if (img.is_isometric_top) {
-            // The top of a footprint-high image is drawn over the tiles in front of it: keep only what the foot lost.
             if (img.isometric_top_height == 0 && img.isometric_box_height > 0) {
                 isometric_clear_foot(img.temp.pixel_data, img.atlas.p_atlas->width, img.width, img.height);
             }
