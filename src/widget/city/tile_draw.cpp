@@ -173,7 +173,7 @@ void draw_isometrics_overlay_flat(vec2i pixel, tile2i tile, painter &ctx) {
             command.location = SOURCE_LOCATION;
 
             const image_t* img = image_get(command.image_id);
-            map_render_set(tile, (img && img->isometric_top_height > 0) ? RENDER_TALL_TILE : 0);
+            map_render_set(tile, image_has_isometric_top_pixels(img) ? RENDER_TALL_TILE : 0);
 
         } else if (map_is_highlighted(tile)) {
             e_highlight_mode mode = map_is_highlighted(tile);
@@ -198,7 +198,7 @@ void draw_isometrics_overlay_flat(vec2i pixel, tile2i tile, painter &ctx) {
             command.location = SOURCE_LOCATION;
 
             const image_t* img = image_get(command.image_id);
-            map_render_set(tile, (img && img->isometric_top_height > 0) ? RENDER_TALL_TILE : 0);
+            map_render_set(tile, image_has_isometric_top_pixels(img) ? RENDER_TALL_TILE : 0);
         }
     }
 

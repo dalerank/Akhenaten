@@ -24,6 +24,7 @@
 #include "js/js_register.h"
 #include "js/js.h"
 
+#include <algorithm>
 #include <array>
 #include <unordered_set>
 #include <cinttypes>
@@ -280,15 +281,30 @@ static int isometric_calculate_top_height(image_t &img) {
     return top_height;
 }
 
-static void isometric_clear_top_height(image_t &img) {
-    for (int x = 0; x < img.width; ++x) {  // diagonals
-        int start_y = 15 * (img.width / 58) + ((x < img.width / 2) ? (x / 2) : ((img.width - x) / 2)) + 2;
-        for (int y = img.height - start_y; y >= 0; --y) { // steps in the diagonal == y axis, too
-            int atlas_y = (y * img.atlas.p_atlas->width);
-            color &c = img.temp.pixel_data[atlas_y + x];
-            c = 0;
+int isometric_foot_first_row(int width, int height, int x) {
+    const int start_y = 15 * (width / 58) + ((x < width / 2) ? (x / 2) : ((width - x) / 2)) + 2;
+    return std::clamp(height - start_y + 1, 0, height);
+}
+
+void isometric_clear_above_foot(color *pixels, int stride, int width, int height) {
+    for (int x = 0; x < width; ++x) {
+        const int first = isometric_foot_first_row(width, height, x);
+        for (int y = 0; y < first; ++y) {
+            pixels[y * stride + x] = 0;
         }
     }
+}
+
+void isometric_clear_foot(color *pixels, int stride, int width, int height) {
+    for (int x = 0; x < width; ++x) {
+        for (int y = isometric_foot_first_row(width, height, x); y < height; ++y) {
+            pixels[y * stride + x] = 0;
+        }
+    }
+}
+
+static void isometric_clear_top_height(image_t &img) {
+    isometric_clear_above_foot(img.temp.pixel_data, img.atlas.p_atlas->width, img.width, img.height);
 }
 
 static void isometric_clear_foot_bottom(image_t &img) {
@@ -329,6 +345,10 @@ static bool convert_image_data(buffer* buf, image_t &img, bool convert_fonts) {
         }
 
         if (img.is_isometric_top) {
+            // The top of a footprint-high image is drawn over the tiles in front of it: keep only what the foot lost.
+            if (img.isometric_top_height == 0 && img.isometric_box_height > 0) {
+                isometric_clear_foot(img.temp.pixel_data, img.atlas.p_atlas->width, img.width, img.height);
+            }
             isometric_clear_foot_bottom(img);
         }
     } else if (img.is_fully_compressed) {

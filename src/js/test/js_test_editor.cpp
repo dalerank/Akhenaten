@@ -1,6 +1,7 @@
 #include "js/test/js_test_common.h"
 
 #include "widget/widget_city.h"
+#include "widget/city/tile_draw.h"
 #include "grid/image.h"
 #include "graphics/image_groups.h"
 #include "graphics/image.h"
@@ -518,3 +519,8 @@ static int __test_map_image_at(int x, int y) {
     return map_image_at(tile2i(x, y));
 }
 ANK_FUNCTION_2(__test_map_image_at);
+
+static bool __test_map_render_tall(int x, int y) {
+    return map_render_isu(tile2i(x, y).grid_offset(), RENDER_TALL_TILE);
+}
+ANK_FUNCTION_2(__test_map_render_tall);

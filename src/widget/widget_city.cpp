@@ -846,7 +846,7 @@ void screen_city_t::draw_isometric_flat(vec2i pixel, tile2i tile, painter &ctx) 
         }
     }
 
-    map_render_set(tile, (!flatten && img->isometric_top_height > 0) ? RENDER_TALL_TILE : 0);
+    map_render_set(tile, (!flatten && image_has_isometric_top_pixels(img)) ? RENDER_TALL_TILE : 0);
 }
 
 void screen_city_t::draw_isometric_nonterrain_height(vec2i pixel, tile2i tile, color mask, painter &ctx) {
