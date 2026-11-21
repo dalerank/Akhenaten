@@ -243,6 +243,12 @@ void __test_mouse_right_click(int x, int y) {
 }
 ANK_FUNCTION_2(__test_mouse_right_click);
 
+void __test_mouse_move(int x, int y) {
+    push_mouse_motion(x, y);
+    test_pump(2);
+}
+ANK_FUNCTION_2(__test_mouse_move);
+
 void __test_signal_ready() {
     g_test_signal_ready = true;
 }
