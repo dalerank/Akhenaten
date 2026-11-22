@@ -223,3 +223,8 @@ static bool __test_animal_can_travel(int sx, int sy, int dx, int dy) {
     return map_routing_animal_can_travel(tile2i(sx, sy), tile2i(dx, dy));
 }
 ANK_FUNCTION_4(__test_animal_can_travel);
+
+static bool __test_citizen_road_by_ferry(int sx, int sy, int dx, int dy) {
+    return map_routing_citizen_can_travel_over_road(tile2i(sx, sy), tile2i(dx, dy), true);
+}
+ANK_FUNCTION_4(__test_citizen_road_by_ferry);

@@ -10,16 +10,32 @@ public:
     static constexpr int FERRY_QUEUE_CAPACITY = 32;
     static constexpr int FERRY_PASSENGER_SLOTS = 4;
 
+    enum e_ferry_link : int16_t {
+        FERRY_LINK_UNKNOWN = -2,
+        FERRY_LINK_NONE = -1,
+        FERRY_LINK_PENDING = 0,
+    };
+
     struct static_params : public building_static_params {
         uint16_t dock_wait_ticks_min;
         uint16_t dock_wait_ticks_max;
+        uint16_t route_max_length;
+        uint16_t route_fan_half_width;
     } BUILDING_STATIC_DATA_T;
 
     struct runtime_data_t {
         figure_id queue[FERRY_QUEUE_CAPACITY];
         uint8_t queue_head;
         uint8_t queue_count;
+        int16_t linked_building_id;
     } BUILDING_RUNTIME_DATA_T;
+
+    struct preview : building_planer_renderer {
+        virtual int can_place(build_planner& p, tile2i tile, tile2i end, int state) const override;
+        virtual int construction_place(build_planner& p, tile2i tile, tile2i end, int orientation,
+          int variant) const override;
+        virtual int finalize_cost(build_planner& p, int cost) const override;
+    };
 
     virtual building_ferry *dcast_ferry() override { return this; }
     virtual building_routeblock *dcast_routeblock() override { return this; }
@@ -38,6 +54,12 @@ public:
     virtual void spawn_figure() override;
 
     tile2i dock_tile() const;
+    building* partner();
+    int linked_building_id() const { return runtime_data().linked_building_id; }
+    void set_linked_building_id(int id) { runtime_data().linked_building_id = (int16_t)id; }
+
+    static void update_routes();
+    static void placement_cancel(build_planner& p);
 
     bool queue_is_full() const;
     int queue_size() const;
@@ -54,5 +76,6 @@ public:
 
 // OG figure_is_queued_for_ferry: true unless waiting (7) without a queue slot.
 bool figure_is_queued_for_ferry(figure_id fid);
-ANK_CONFIG_STRUCT(building_ferry::static_params, dock_wait_ticks_min, dock_wait_ticks_max)
-ANK_CONFIG_PROPERTY(building_ferry::runtime_data_t, queue_head, queue_count)
+ANK_CONFIG_STRUCT(building_ferry::static_params, dock_wait_ticks_min, dock_wait_ticks_max, route_max_length,
+  route_fan_half_width)
+ANK_CONFIG_PROPERTY(building_ferry::runtime_data_t, queue_head, queue_count, linked_building_id)

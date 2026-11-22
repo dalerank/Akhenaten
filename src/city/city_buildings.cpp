@@ -15,6 +15,7 @@
 #include "grid/building_tiles.h"
 #include "grid/routing/routing_terrain.h"
 #include "grid/crime.h"
+#include "building/building_ferry.h"
 #include "building/building_house.h"
 #include "building/building_wall.h"
 #include "building/monument_pyramid_engine.h"
@@ -363,6 +364,6 @@ void building_update_state() {
     }
 
     if (water_routes_recalc) {
-        map_routing_update_ferry_routes();
+        building_ferry::update_routes();
     }
 }

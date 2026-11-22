@@ -124,6 +124,7 @@ game_features {
     @gameplay_change_walker_phrases_remake {}
     @gameplay_change_protestor_hunt_nobles {}
     @gameplay_change_fishing_boat_remake {}
+    @gameplay_change_ferry_remake {}
     @gameplay_change_plagued_citizen_remake {}
     @gameplay_change_wood_cutter_single_gatherer {}
     @gameplay_change_irrigation_range_5x5 {}

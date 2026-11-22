@@ -519,6 +519,60 @@ function test_shoreline_building_place(type, building_size) {
     return 0
 }
 
+function test_ferry_try_place(x, y) {
+    city_planner.update(x, y)
+    if (city_planner.can_be_placed() != CAN_PLACE) {
+        return 0
+    }
+    city_planner.construction_start(x, y)
+    city_planner.construction_update(x, y)
+    city_planner.construction_finalize()
+    var bid = city_planner.last_created_building_id()
+    city_planner.validate_last_created()
+    if (bid && __building_type(bid) == BUILDING_FERRY) {
+        return bid
+    }
+    return 0
+}
+
+function test_ferry_pair_place() {
+    var cx = (__scenario_map.width / 2) | 0
+    var cy = (__scenario_map.height / 2) | 0
+    var river_len = 5
+    var start = test_prepare_bridge_channel(cx, cy, 5, river_len)
+    __test_set_scenario_river_points(start.x, start.y + 2, start.x, start.y + 2)
+    __test_map_routing_update_water()
+
+    if (!test_planner_enter_build_mode(BUILDING_FERRY)) {
+        return null
+    }
+
+    var north = 0
+    var north_cands = [{ x: cx - 1, y: cy - 1 }, { x: cx - 2, y: cy - 1 }, { x: cx, y: cy - 1 }]
+    for (var i = 0; i < north_cands.length && !north; i++) {
+        north = test_ferry_try_place(north_cands[i].x, north_cands[i].y)
+    }
+
+    var south_y = cy + river_len - 1
+    var south = 0
+    var south_cands = [
+        { x: cx - 1, y: south_y }, { x: cx - 2, y: south_y }, { x: cx, y: south_y },
+        { x: cx - 1, y: south_y + 1 }, { x: cx - 2, y: south_y + 1 }
+    ]
+    for (var j = 0; j < south_cands.length && north && !south; j++) {
+        south = test_ferry_try_place(south_cands[j].x, south_cands[j].y)
+    }
+
+    test_planner_exit_build_mode()
+    if (!north || !south) {
+        __log_info_native('[test_planner] ferry pair place failed north=' + north + ' south=' + south)
+        return null
+    }
+    test_log_building_placed(north)
+    test_log_building_placed(south)
+    return { first: north, second: south }
+}
+
 // OG mudbrick block engine: place → phase 2 → boost one masonry course per
 // footprint ring step → update_day → FINISHED.
 // opts: { tag, marker, type, total, nlayers, candidates, sleep_ms, prepare }

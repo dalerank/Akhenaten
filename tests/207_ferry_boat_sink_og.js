@@ -48,7 +48,7 @@ function run_test() {
     }
     __log_marker('test207_config_defaults')
 
-    var bid = test_shoreline_building_place(BUILDING_FERRY, 2)
+    var bid = (test_ferry_pair_place() || {}).first
     if (!bid) {
         return test207_fail('place ferry failed')
     }

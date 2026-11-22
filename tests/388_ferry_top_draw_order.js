@@ -11,7 +11,7 @@ function run_test() {
     __test_set_treasury(10000)
     __scenario_building_allow(BUILDING_FERRY, true)
 
-    var bid = test_shoreline_building_place(BUILDING_FERRY, 2)
+    var bid = (test_ferry_pair_place() || {}).first
     __test491.bid = bid
     if (!bid) {
         __log_marker('ferry_draw_place_fail')

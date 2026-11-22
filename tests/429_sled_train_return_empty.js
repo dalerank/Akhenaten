@@ -241,7 +241,7 @@ function t429_run_ferry() {
     game_features.set('gameplay_change_sled_return_empty', true)
     __test_set_treasury(500000)
     __scenario_building_allow(BUILDING_FERRY, true)
-    var landing = test_shoreline_building_place(BUILDING_FERRY, 2)
+    var landing = (test_ferry_pair_place() || {}).first
     if (!landing) {
         return 'ferry: place ferry'
     }

@@ -4,6 +4,7 @@
 #include "io/og_save/og_load.h"
 
 #include "building/construction/build_planner.h"
+#include "building/building_ferry.h"
 #include "building/building_granary.h"
 #include "building/building_storage.h"
 #include "building/building_wall.h"
@@ -467,7 +468,7 @@ void GamestateIO::start_loaded_file() {
     map_routing_update_all();
     figure_route_clean();
     g_city.map.update_road_network();
-    map_routing_update_ferry_routes();
+    building_ferry::update_routes();
     g_city.maintenance.check_kingdome_access();
 
     // tiles

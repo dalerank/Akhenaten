@@ -343,6 +343,7 @@ localization_fr = [
   { key:"#TR_CONFIG_TOMB_ROBBER_REMAKE", text:"Refonte des pilleurs de tombes : apparition mensuelle, fuite/arrestation, pénalité fixe au royaume (pas dans le Pharaon original)" }
   { key:"#TR_CONFIG_PROTESTOR_HUNT_NOBLES", text:"Les manifestants s'en prennent aux nobles et aux manoirs/domaines (pas dans le Pharaon original)" }
   { key:"#TR_CONFIG_FISHING_BOAT_REMAKE", text:"Refonte des bateaux de pêche : plus rapides avec personnel, demi-charge, zones fixes, perte du port en douceur (pas dans le Pharaon original)" }
+  { key:"#TR_CONFIG_FERRY_REMAKE", text:"Refonte des bacs : un embarcadère se relie au plus proche voisin au lieu de celui posé avec lui (pas dans le Pharaon original)" }
   { key:"#TR_CONFIG_BAZAAR_BUYER_SPAWN_TIMER", text:"Les acheteuses du bazar suivent le minuteur de main-d'œuvre au lieu du décalage original de 8 jours (pas dans le Pharaon original)" }
   { key:"#TR_CONFIG_BAZAAR_DEMAND_FROM_TRADER", text:"Demande de biens au bazar uniquement quand une vendeuse visite les maisons, au lieu du balayage original de rayon 10 (pas dans le Pharaon original)" }
   { key:"#TR_CONFIG_MARKET_DISTRIBUTE_REMAKE", text:"Refonte de la distribution du marché : un type de nourriture par visite, remplissage selon le multiplicateur de stock (pas dans le Pharaon original)" }

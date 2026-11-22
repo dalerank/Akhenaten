@@ -19,7 +19,6 @@
 #include "routing_grids.h"
 #include "routing.h"
 #include "scenario/map.h"
-#include "figure/route.h"
 #include "city/city_buildings.h"
 #include "js/js_register.h"
 #include <array>
@@ -469,67 +468,6 @@ void map_routing_update_land() {
     map_routing_update_land_citizen();
     map_routing_update_land_noncitizen();
     map_routing_update_amphibia();
-}
-
-void map_routing_update_ferry_routes() {
-    foreach_river_tile([] (int offset) {
-        if (map_terrain_is(offset, TERRAIN_WATER)
-            && map_terrain_is(offset, TERRAIN_FERRY_ROUTE)
-            && !map_terrain_is(offset, TERRAIN_BUILDING)) {
-            map_terrain_remove(offset, TERRAIN_FERRY_ROUTE);
-        }
-    });
-
-    svector<building *, 64> ferries;
-    buildings_get(ferries, BUILDING_FERRY);
-
-    using path_points = std::pair<tile2i, tile2i>;
-    auto mark_path = [] (path_points &ppoints) {
-        std::array<uint8_t, 500> path_data;
-        map_routing_calculate_distances_water_boat(ppoints.first);
-        int path_length = map_routing_get_path_on_water(path_data.data(), ppoints.second, false);
-
-        map_terrain_add(ppoints.first.grid_offset(), TERRAIN_FERRY_ROUTE);
-        map_terrain_add(ppoints.second.grid_offset(), TERRAIN_FERRY_ROUTE);
-        if (path_length > 0) {
-            auto path = make_span(path_data.data(), path_length);
-
-            int grid_offset = ppoints.first.grid_offset();
-            for (const auto &dir : path) {
-                map_terrain_add(grid_offset, TERRAIN_FERRY_ROUTE);
-                map_routing_adjust_tile_in_direction(dir, ppoints.first, grid_offset);
-            }
-        }
-    };
-
-    for (auto f1 = ferries.begin(); f1 != ferries.end(); ++f1) {
-        for (auto f2 = f1 + 1; f2 != ferries.end(); ++f2) {
-            // Check if ferries are close enough (difference in x or y not more than 2 tiles)
-            tile2i tile1 = (*f1)->tile;
-            tile2i tile2 = (*f2)->tile;
-            int dx = std::abs(tile1.x() - tile2.x());
-            int dy = std::abs(tile1.y() - tile2.y());
-
-            // Only connect ferries that are close (difference in x or y <= 2)
-            if (dx > 4 && dy > 4) {
-                continue;
-            }
-
-            water_access_tiles fpoints_begin = map_water_get_access_points(**f1, (*f1)->dcast()->get_orientation(), 1);
-            water_access_tiles fpoints_end = map_water_get_access_points(**f2, (*f2)->dcast()->get_orientation(), 1);
-
-            path_points possible_paths[] = {
-                {fpoints_begin.point_a, fpoints_end.point_a},
-                {fpoints_begin.point_a, fpoints_end.point_b},
-                {fpoints_begin.point_b, fpoints_end.point_a},
-                {fpoints_begin.point_b, fpoints_end.point_b},
-            };
-
-            for (auto &path : possible_paths) {
-                mark_path(path);
-            }
-        }
-    }
 }
 
 void map_routing_update_water(void) {

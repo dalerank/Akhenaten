@@ -15,7 +15,6 @@ void map_routing_update_land();
 void map_routing_update_land_citizen(void);
 void map_routing_update_water(void);
 void map_routing_update_walls(void);
-void map_routing_update_ferry_routes();
 
 bool map_routing_animal_passable(int grid_offset);
 bool map_routing_passable_by_usage(int terrain_usage, int grid_offset);

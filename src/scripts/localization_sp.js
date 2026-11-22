@@ -90,6 +90,7 @@ localization_sp = [
   {key:"#TR_CONFIG_TOMB_ROBBER_REMAKE", text:"Rehacer saqueadores de tumbas: aparición mensual, huida/arresto, golpe fijo al reino (no es Faraón original)"},
   {key:"#TR_CONFIG_PROTESTOR_HUNT_NOBLES", text:"Los manifestantes persiguen a ciudadanos nobles y a casas señoriales/haciendas (no es Faraón original)"},
   {key:"#TR_CONFIG_FISHING_BOAT_REMAKE", text:"Rehacer barcos de pesca: más rápidos con personal, media carga, puntos pegajosos, pérdida de casa suave (no es Faraón original)"},
+  {key:"#TR_CONFIG_FERRY_REMAKE", text:"Rehacer transbordadores: un embarcadero se une al más cercano en vez del colocado con él (no es Faraón original)"},
   {key:"#TR_CONFIG_BAZAAR_MULTI_BUYERS", text:"Los bazares pueden enviar dos compradores a la vez (comida + bienes)"},
   {key:"#TR_CONFIG_BAZAAR_BUYER_SPAWN_TIMER", text:"Los compradores del bazar usan el temporizador de aparición por mano de obra en lugar del escalonado original cada 8 días (no es Faraón original)"},
   {key:"#TR_CONFIG_BAZAAR_DEMAND_FROM_TRADER", text:"La demanda de bienes del bazar solo surge cuando un comerciante visita las casas, en lugar del escaneo original de radio 10 (no es Faraón original)"},

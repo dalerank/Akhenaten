@@ -8,8 +8,12 @@ function run_test() {
     __test_set_treasury(10000)
     __scenario_building_allow(BUILDING_FERRY, true)
 
-    var bid = test_shoreline_building_place(BUILDING_FERRY, 2)
-    if (!bid) {
+    var pair = test_ferry_pair_place()
+    var bid = pair ? pair.first : 0
+    if (pair) {
+        __test_building_release_slot(pair.second, 1)
+    }
+    if (!bid || __ferry_partner_id(bid) != 0) {
         __log_info_native('[test:140] shoreline place failed')
         __test_signal_ready()
         return

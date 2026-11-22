@@ -347,6 +347,8 @@ building_ferry {
   labor_category : LABOR_CATEGORY_GOVERNMENT
   dock_wait_ticks_min: 80
   dock_wait_ticks_max: 220
+  route_max_length: 40
+  route_fan_half_width: 5
   cost [8, 15, 30, 50, 100 ]
   desirability { value[-5], step[2], step_size[2], range[4] }
   laborers[5]

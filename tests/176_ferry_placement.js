@@ -7,7 +7,7 @@ function run_test() {
     test_reload_city_session('data/default.map')
     __test_set_treasury(10000)
     __scenario_building_allow(BUILDING_FERRY, true)
-    __test176_bid = test_shoreline_building_place(BUILDING_FERRY, 2)
+    __test176_bid = (test_ferry_pair_place() || {}).first
     if (!__test176_bid) {
         __log_info_native('[test:176] test_building_place failed')
     }

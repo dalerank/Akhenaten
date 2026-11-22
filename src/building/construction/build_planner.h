@@ -42,6 +42,12 @@ enum e_planner_rule : uint8_t {
 using e_planner_rules_t = token_holder<e_planner_rule, PLANNER_RULE_GROUNDWATER, PLANNER_RULE_MAX>;
 extern e_planner_rules_t e_planner_rules;
 
+enum e_ferry_placement : uint8_t {
+    FERRY_PLACEMENT_NONE = 0,
+    FERRY_PLACEMENT_FIRST_PLACED = 1,
+    FERRY_PLACEMENT_FIRST_EXISTING = 2,
+};
+
 enum e_place_action {
     CAN_PLACE = 0,
     CAN_NOT_PLACE = 1,
@@ -146,6 +152,8 @@ public:
     std::vector<std::vector<blocked_tile>> site_parts;
     bool site_blocked = false;
     int site_orientation = 0;
+    e_ferry_placement ferry_placement = FERRY_PLACEMENT_NONE;
+    int ferry_first = 0;
 
     template <typename Tiles>
     void add_site_part(const Tiles& tiles) {

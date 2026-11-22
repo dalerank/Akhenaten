@@ -4,6 +4,7 @@
 #include "building/building_bazaar.h"
 #include "building/building_entertainment.h"
 #include "building/building_farm.h"
+#include "building/building_ferry.h"
 #include "building/building_granary.h"
 #include "building/building_guild.h"
 #include "building/building_house.h"
@@ -211,7 +212,11 @@ namespace og {
                 complex->runtime_data().temple_complex_upgrades = og.data.temple_complex.upgrades;
                 return true;
             }
-            return b.type == BUILDING_WATER_LIFT || b.type == BUILDING_FERRY;
+            if (auto* ferry = b.dcast_ferry()) {
+                ferry->set_linked_building_id(og.linked_building_id);
+                return true;
+            }
+            return b.type == BUILDING_WATER_LIFT;
         }
 
     } // namespace

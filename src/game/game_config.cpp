@@ -85,6 +85,7 @@ namespace game_features {
     game_feature gameplay_change_protestor_hunt_nobles{ "gameplay_change_protestor_hunt_nobles", "#TR_CONFIG_PROTESTOR_HUNT_NOBLES", false, false };
     // Remake fishing boat: worker-scaled fish time, half load, sticky spot, soft lose-home. OG: 200 ticks, 100 fish, tile sidestep, sink.
     game_feature gameplay_change_fishing_boat_remake{ "gameplay_change_fishing_boat_remake", "#TR_CONFIG_FISHING_BOAT_REMAKE", false, false };
+    game_feature gameplay_change_ferry_remake{"gameplay_change_ferry_remake", "#TR_CONFIG_FERRY_REMAKE", false, false};
     // Remake plague carrier: one per infected house, cured near a herbalist / complex priest stop, corpse fades.
     // OG: one per outbreak, cured on a shared tile, corpse stays.
     game_feature gameplay_change_plagued_citizen_remake{

@@ -762,6 +762,10 @@ bool map_water_tile_next_to(tile2i building_tile, int size, tile2i &out) {
         if (!rt) {
             continue;
         }
+        const bool corner = (rt->x < 0 || rt->x >= size) && (rt->y < 0 || rt->y >= size);
+        if (corner) {
+            continue;
+        }
         const int tx = building_tile.x() + rt->x;
         const int ty = building_tile.y() + rt->y;
         if (!map_ring_is_inside_map(tx, ty)) {

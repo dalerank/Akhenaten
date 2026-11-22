@@ -97,6 +97,7 @@ localization_en = [
   {key:"#TR_CONFIG_PROTESTOR_HUNT_NOBLES", text:"Protestors hunt noble citizens and manor/estate houses (not original Pharaoh)"}
   {key:"#TR_CONFIG_PLAGUED_CITIZEN_REMAKE", text:"Plague carrier remake: one per sick house, cured near herbalists, corpse fades (not original Pharaoh)"}
   {key:"#TR_CONFIG_FISHING_BOAT_REMAKE", text:"Fishing-boat remake: faster with staff, half load, sticky spots, soft lose-home (not original Pharaoh)"}
+  {key:"#TR_CONFIG_FERRY_REMAKE", text:"Ferry remake: landings pair with the nearest landing nearby instead of the one placed with them (not original Pharaoh)"}
   {key:"#TR_CONFIG_BAZAAR_MULTI_BUYERS", text:"Bazaars can send two buyers at once (food + goods)"}
   {key:"#TR_CONFIG_BAZAAR_BUYER_SPAWN_TIMER", text:"Bazaar buyers use labor spawn timer instead of original every-8-days stagger (not original Pharaoh)"}
   {key:"#TR_CONFIG_BAZAAR_DEMAND_FROM_TRADER", text:"Bazaar goods demand only when a trader visits houses, instead of original radius-10 scan (not original Pharaoh)"}

@@ -42,7 +42,7 @@ function run_test() {
     __scenario_building_allow(BUILDING_FERRY, true)
     __scenario_building_allow(BUILDING_SMALL_MUDBRICK_PYRAMID, true)
 
-    var landing = test_shoreline_building_place(BUILDING_FERRY, 2)
+    var landing = (test_ferry_pair_place() || {}).first
     if (!landing) {
         return t422_fail('place ferry')
     }

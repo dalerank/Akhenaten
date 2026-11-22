@@ -292,7 +292,7 @@ void figure_ferry_boat::figure_action() {
     }
 
     auto *home_b = home_ferry->dcast_ferry();
-    building *partner = map_routing_ferry_partner(home_ferry);
+    building* partner = home_b->partner();
     auto *partner_b = partner ? partner->dcast_ferry() : nullptr;
 
     assert(base.allow_move_type == EMOVE_WATER);

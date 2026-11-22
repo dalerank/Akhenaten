@@ -1,12 +1,9 @@
 #include "routing.h"
 #include "core/xvalue.h"
 
-#include "building/building.h"
 #include "building/building_dike.h"
 #include "city/city.h"
 #include "city/city_animals.h"
-#include "city/city_buildings.h"
-#include "figure/route.h"
 #include "grid/vegetation.h"
 #include "routing_terrain.h"
 #include "core/profiler.h"
@@ -273,71 +270,6 @@ bool map_can_place_initial_road_or_canal(int grid_offset, int is_canal) {
         return false;
     }
     return true;
-}
-
-static bool ferry_water_path_exists(building &from, building &to) {
-    water_access_tiles begin = map_water_get_access_points(from, from.dcast()->get_orientation(), 1);
-    water_access_tiles end = map_water_get_access_points(to, to.dcast()->get_orientation(), 1);
-
-    const tile2i starts[] = { begin.point_a, begin.point_b };
-    const tile2i ends[] = { end.point_a, end.point_b };
-    std::array<uint8_t, 500> path_data;
-    for (tile2i start : starts) {
-        if (!start.valid()) {
-            continue;
-        }
-        map_routing_calculate_distances_water_boat(start);
-        for (tile2i dest : ends) {
-            if (!dest.valid()) {
-                continue;
-            }
-            if (map_routing_get_path_on_water(path_data.data(), dest, false) > 0) {
-                return true;
-            }
-        }
-    }
-    return false;
-}
-
-building *map_routing_ferry_partner(building *b) {
-    if (!b || b->type != BUILDING_FERRY) {
-        return nullptr;
-    }
-
-    svector<building *, 64> ferries;
-    buildings_get(ferries, BUILDING_FERRY);
-
-    building *best = nullptr;
-    int min_distance = 9999;
-    tile2i home = b->tile;
-
-    for (building *it : ferries) {
-        if (!it || it->id == b->id) {
-            continue;
-        }
-
-        const int dx = std::abs(home.x() - it->tile.x());
-        const int dy = std::abs(home.y() - it->tile.y());
-        if (dx > 4 && dy > 4) {
-            continue;
-        }
-
-        if (!ferry_water_path_exists(*it, *b)) {
-            continue;
-        }
-
-        const int distance = (int)home.dist_sq(it->tile);
-        if (distance < min_distance) {
-            min_distance = distance;
-            best = it;
-        }
-    }
-
-    return best;
-}
-
-bool map_routing_ferry_has_routes(building *b) {
-    return map_routing_ferry_partner(b) != nullptr;
 }
 
 bool map_routing_calculate_distances_for_building(e_routed_mode type, tile2i tile) {

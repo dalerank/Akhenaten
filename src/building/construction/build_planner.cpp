@@ -25,6 +25,7 @@
 #include "building/building_bridge.h"
 #include "building/building_mansion.h"
 #include "city/city_industry.h"
+#include "building/building_ferry.h"
 #include "building/building_fort.h"
 #include "building/building.h"
 #include "city/campaign_carry.h"
@@ -218,6 +219,8 @@ void build_planner::reset() {
     site_parts.clear();
     site_blocked = false;
     site_orientation = 0;
+    ferry_placement = FERRY_PLACEMENT_NONE;
+    ferry_first = 0;
     build_type = BUILDING_NONE;
     in_progress = false;
     draw_as_constructing = false;
@@ -363,6 +366,7 @@ void build_planner::next_building_variant() {
 
 void build_planner::setup_build(e_building_type type) { // select building for construction, set up main terrain restrictions/requirements
     draw_phase::check_write("build_planner");
+    building_ferry::placement_cancel(*this);
     reset();
 
     // ignore empty building types
@@ -780,6 +784,7 @@ void build_planner::construction_finalize() { // confirm final placement
 
     checks_generic_rules(last_created_building);
     bool should_recalc_ferry_routes = params.needs.shoreline;
+    total_cost = preview.finalize_cost(*this, total_cost);
 
     setup_building_variant(end, build_type);
     update_orientations(false);
@@ -817,7 +822,7 @@ void build_planner::construction_finalize() { // confirm final placement
     map_routing_update_walls();
 
     if (should_recalc_ferry_routes) {
-        map_routing_update_ferry_routes();
+        building_ferry::update_routes();
     }
 }
 
