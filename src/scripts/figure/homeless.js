@@ -26,6 +26,7 @@ figure_homeless = {
 	category: figure_category_citizen
 	max_damage : 20
 	terrain_usage : TERRAIN_USAGE_PREFER_ROADS
+	can_cross_ferry : true
 }
 
 function figure_homeless_gods_are_angry() {

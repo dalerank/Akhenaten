@@ -27,6 +27,7 @@ figure_funeral_walker {
 	category: figure_category_citizen
 	max_damage: 10
 	terrain_usage: TERRAIN_USAGE_ANY
+	can_cross_ferry: true
 	max_amount: 8
 }
 
