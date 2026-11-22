@@ -70,7 +70,6 @@ static void city_subscribe_events() {
     g_city.resource.subscribe_events();
     g_city.food_supply.subscribe_events();
     finance_system::subscribe_events([] { return g_city.finance_sys(); });
-    g_city.hotkeys_handler.subscribe_events();
 }
 static events::session_subscriber g_city_session(&city_subscribe_events);
 

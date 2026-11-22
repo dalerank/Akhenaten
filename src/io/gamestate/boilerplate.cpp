@@ -14,7 +14,6 @@
 #include "city/city.h"
 #include "city/map.h"
 #include "city/city_message.h"
-#include "city/city_hotkeys_handler.h"
 #include "city/campaign_carry.h"
 #include "city/military.h"
 #include "city/city_resource.h"

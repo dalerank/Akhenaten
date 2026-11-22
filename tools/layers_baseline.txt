@@ -252,9 +252,6 @@ city/city_animals.cpp -> dev/debug.h
 city/city_festival.cpp -> graphics/image_groups.h
 city/city_floods.cpp -> dev/debug.h
 city/city_health.cpp -> dev/debug.h
-city/city_hotkeys_handler.cpp -> graphics/window.h
-city/city_hotkeys_handler.cpp -> widget/city/flat_draw.h
-city/city_hotkeys_handler.cpp -> window/window_city.h
 city/city_industry.cpp -> graphics/image.h
 city/city_industry.cpp -> graphics/image_groups.h
 city/city_industry.cpp -> window/window_city.h
