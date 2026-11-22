@@ -578,7 +578,7 @@ building_house_modest_apartment {
   can_merge : true
   evolve_to : BUILDING_HOUSE_SPACIOUS_APARTMENT
   devolve_to : BUILDING_HOUSE_SPACIOUS_HOMESTEAD
-  merge_before_evolve : false
+  merge_before_evolve : true
   variants {
     _1 { pack: PACK_GENERAL, id: 30, offset:0 }
     _2 { pack: PACK_GENERAL, id: 30, offset:1 }
