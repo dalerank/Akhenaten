@@ -34,6 +34,11 @@ struct animation_t;
 constexpr int MAX_FIGURES = 2000;
 constexpr int MAX_CLOUD_IMAGE_OFFSETS = 19;
 
+// Set while loading a save when figure action states were converted from their legacy
+// (pre-linearisation) numbering; the save loader uses it to detect an older save that
+// should be migrated to the current format.
+extern bool legacy_figure_actions_remapped;
+
 enum e_nearby {
     NEARBY_ANY,
     NEARBY_ANIMAL,

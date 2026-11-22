@@ -2452,4 +2452,5 @@ localization_hu = [
   { key: "#western_desert", text: "NYUGATI-SIVATAG" }
   { key: "#lebanon", text: "LIBANON" }
   { key: "#canaan", text: "KÁNAÁN" }
+  { key: "#save_migration_message", text: "A mentés régi formátumú volt, ezért automatikusan átalakítottuk. Az eredeti fájl megmaradt, új neve:" }
 ]

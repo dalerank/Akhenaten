@@ -1759,4 +1759,5 @@ localization_de = [
   { key: "#western_desert", text: "WESTLICHE WÜSTE" }
   { key: "#lebanon", text: "LIBANON" }
   { key: "#canaan", text: "KANAAN" }
+  { key: "#save_migration_message", text: "Dein Spielstand hatte ein älteres Format und wurde automatisch umgewandelt. Die Originaldatei wurde gespeichert unter:" }
 ]

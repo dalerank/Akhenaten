@@ -1914,4 +1914,5 @@ localization_fr = [
   { key:"#western_desert", text:"DESERT OCCIDENTAL" }
   { key:"#lebanon", text:"LIBAN" }
   { key:"#canaan", text:"CANAAN" }
+  { key:"#save_migration_message", text:"Votre sauvegarde utilisait un ancien format et a été convertie automatiquement. Le fichier d'origine a été conservé sous le nom :" }
 ]
