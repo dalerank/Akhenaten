@@ -479,9 +479,6 @@ void monument_pyramid_engine::find_frontier(building *main, svector<building_id,
             if (ps->blocks == 0 || style == PYRAMID_STYLE_STEPPED) {
                 continue;
             }
-        } else if (!needs_main_material(*ps, style) && casing_total(head) == 0) {
-            // No casing in block_total — skip saturated main (remaining burn finishes).
-            continue;
         }
         int order = best ? frontier_order(*ps, *pyramid_part_state_get(best)) : -1;
         if (order > 0) {
