@@ -21,6 +21,26 @@
 #include "scenario/scenario.h"
 #include "scenario/scenario_event_manager.h"
 #include "scenario/types.h"
+#include "editor/tool.h"
+#include "window/editor/allowed_buildings.h"
+#include "window/editor/attributes.h"
+#include "window/editor/build_menu.h"
+#include "window/editor/demand_changes.h"
+#include "window/editor/edit_demand_change.h"
+#include "window/editor/edit_invasion.h"
+#include "window/editor/edit_price_change.h"
+#include "window/editor/edit_request.h"
+#include "window/editor/empire.h"
+#include "window/editor/invasions.h"
+#include "window/editor/price_changes.h"
+#include "window/editor/requests.h"
+#include "window/editor/special_events.h"
+#include "window/editor/start_year.h"
+#include "window/editor/starting_conditions.h"
+#include "window/editor/win_criteria.h"
+#include "window/editor/window_editor.h"
+
+#include <string_view>
 
 // ED4a: editor request slots ? EVENT_TYPE_REQUEST (tag 8000+slot).
 int __test_editor_request_roundtrip() {
@@ -524,3 +544,63 @@ static bool __test_map_render_tall(int x, int y) {
     return map_render_isu(tile2i(x, y).grid_offset(), RENDER_TALL_TILE);
 }
 ANK_FUNCTION_2(__test_map_render_tall);
+
+static bool __test_editor_show_window(pcstr name, int param) {
+    const std::string_view window = name ? name : "";
+    if (window == "map") {
+        window_editor_map_show();
+    } else if (window == "attributes") {
+        window_editor_attributes_show();
+    } else if (window == "allowed_buildings") {
+        window_editor_allowed_buildings_show();
+    } else if (window == "build_menu") {
+        window_editor_build_menu_show(param);
+    } else if (window == "demand_changes") {
+        window_editor_demand_changes_show();
+    } else if (window == "edit_demand_change") {
+        window_editor_edit_demand_change_show(param);
+    } else if (window == "edit_invasion") {
+        window_editor_edit_invasion_show(param);
+    } else if (window == "edit_price_change") {
+        window_editor_edit_price_change_show(param);
+    } else if (window == "edit_request") {
+        window_editor_edit_request_show(param);
+    } else if (window == "empire") {
+        window_editor_empire_show();
+    } else if (window == "invasions") {
+        window_editor_invasions_show();
+    } else if (window == "price_changes") {
+        window_editor_price_changes_show();
+    } else if (window == "requests") {
+        window_editor_requests_show();
+    } else if (window == "special_events") {
+        window_editor_special_events_show();
+    } else if (window == "start_year") {
+        window_editor_start_year_show();
+    } else if (window == "starting_conditions") {
+        window_editor_starting_conditions_show();
+    } else if (window == "win_criteria") {
+        window_editor_win_criteria_show();
+    } else {
+        return false;
+    }
+    return true;
+}
+ANK_FUNCTION_2(__test_editor_show_window);
+
+static void __test_editor_set_tool(int tool) {
+    editor_tool_set_type(tool);
+}
+ANK_FUNCTION_1(__test_editor_set_tool);
+
+static void __test_editor_fill_events() {
+    editor_request request{2, RESOURCE_CLAY, 10, 1, 8};
+    scenario_editor_request_save(0, &request);
+    editor_invasion invasion{3, 1, 4, 0, FORMATION_ATTACK_FOOD_CHAIN};
+    scenario_editor_invasion_save(0, &invasion);
+    editor_price_change price_change{4, RESOURCE_CLAY, 5, 1};
+    scenario_editor_price_change_save(0, &price_change);
+    editor_demand_change demand_change{5, RESOURCE_CLAY, 1, 1};
+    scenario_editor_demand_change_save(0, &demand_change);
+}
+ANK_FUNCTION(__test_editor_fill_events);

@@ -6,6 +6,7 @@
 #include "core/log.h"
 #include "platform/arguments.h"
 #include "graphics/render_device.h"
+#include "graphics/render_stats.h"
 #include "graphics/screen.h"
 #include "game/game.h"
 
@@ -246,6 +247,7 @@ void ImageDraw::clear_render_commands() {
 
 void ImageDraw::apply_render_commands(painter& ctx, std::string_view p) {
     OZZY_PROFILER_SECTION(_, p);
+    render_stats::recorded_scope recorded;
     {
         OZZY_PROFILER_SECTION(_, "sort");
         auto sort_less = [](const render_command_t& lhs, const render_command_t& rhs) {
@@ -335,6 +337,7 @@ void ImageDraw::apply_render_commands(painter& ctx, std::string_view p) {
 }
 
 void ImageDraw::finalize_render(painter &ctx) {
+    render_stats::recorded_scope recorded;
     for (const auto &command : g_render_debug_commands) {
         execute_render_command(ctx, command);
     }

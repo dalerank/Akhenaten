@@ -157,6 +157,7 @@ bool graphics_renderer_interface::save_screen_buffer(painter &ctx, color* pixels
 
 void graphics_renderer_interface::draw_line(vec2i start, vec2i end, color color) {
     flush_sprites();
+    render_stats::note_primitive();
     main_thread::check("graphics_renderer_interface::draw_line");
     auto &data = g_renderer_data;
     render_stats::note_break();
@@ -170,6 +171,7 @@ void graphics_renderer_interface::draw_line(vec2i start, vec2i end, color color)
 
 void graphics_renderer_interface::draw_pixel(vec2i pixel, color color) {
     flush_sprites();
+    render_stats::note_primitive();
     main_thread::check("graphics_renderer_interface::draw_pixel");
     auto &data = g_renderer_data;
     render_stats::note_break();
@@ -182,6 +184,7 @@ void graphics_renderer_interface::draw_pixel(vec2i pixel, color color) {
 }
 void graphics_renderer_interface::draw_rect(vec2i start, vec2i size, color color) {
     flush_sprites();
+    render_stats::note_primitive();
     main_thread::check("graphics_renderer_interface::draw_rect");
     auto &data = g_renderer_data;
     render_stats::note_break();
@@ -196,6 +199,7 @@ void graphics_renderer_interface::draw_rect(vec2i start, vec2i size, color color
 
 void graphics_renderer_interface::fill_rect(vec2i start, vec2i size, color color) {
     flush_sprites();
+    render_stats::note_primitive();
     main_thread::check("graphics_renderer_interface::fill_rect");
     auto &data = g_renderer_data;
     render_stats::note_break();

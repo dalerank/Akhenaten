@@ -16,6 +16,9 @@ namespace render_stats {
         int g_batch_linear = -1;
         int g_last_blend = -1;
 
+        bool g_in_window_draw = false;
+        int g_recorded_depth = 0;
+
         Uint64 g_frame_start = 0;
         Uint64 g_draw_done = 0;
         Uint64 g_prev_frame_start = 0;
@@ -25,10 +28,17 @@ namespace render_stats {
             return freq ? (double)ticks * 1000.0 / (double)freq : 0.0;
         }
 
+        void note_window_immediate() {
+            if (g_in_window_draw && g_recorded_depth == 0) {
+                ++g_current.window_immediate;
+            }
+        }
+
     } // namespace
 
     void note_draw(SDL_Texture* texture, int blend, bool linear, bool resident) {
         ++g_current.draws;
+        note_window_immediate();
         if (resident) {
             ++g_current.resident;
         }
@@ -58,6 +68,26 @@ namespace render_stats {
         note_break();
     }
 
+    void note_primitive() {
+        note_window_immediate();
+    }
+
+    void window_draw_begin() {
+        g_in_window_draw = true;
+    }
+
+    void window_draw_end() {
+        g_in_window_draw = false;
+    }
+
+    recorded_scope::recorded_scope() {
+        ++g_recorded_depth;
+    }
+
+    recorded_scope::~recorded_scope() {
+        --g_recorded_depth;
+    }
+
     void frame_begin() {
         const Uint64 now = SDL_GetPerformanceCounter();
         if (g_prev_frame_start != 0) {
@@ -83,6 +113,7 @@ namespace render_stats {
         g_sum.blend_switches += g_last.blend_switches;
         g_sum.batches += g_last.batches;
         g_sum.flushes += g_last.flushes;
+        g_sum.window_immediate += g_last.window_immediate;
         g_sum.frame_ms += g_last.frame_ms;
         g_sum.draw_ms += g_last.draw_ms;
         g_sum.present_ms += g_last.present_ms;
@@ -107,6 +138,7 @@ namespace render_stats {
             out.blend_switches = g_sum.blend_switches / n;
             out.batches = g_sum.batches / n;
             out.flushes = g_sum.flushes / n;
+            out.window_immediate = g_sum.window_immediate / n;
             out.frame_ms = g_sum.frame_ms / n;
             out.draw_ms = g_sum.draw_ms / n;
             out.present_ms = g_sum.present_ms / n;

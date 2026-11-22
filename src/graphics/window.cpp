@@ -6,6 +6,7 @@
 #include "input/scroll.h"
 #include "graphics/elements/ui.h"
 #include "graphics/render_device.h"
+#include "graphics/render_stats.h"
 #include "core/tokenum.h"
 #include "graphics/elements/ui_js.h"
 #include "game/game_events.h"
@@ -148,6 +149,7 @@ void window_draw(int force) {
         g_render.clear_screen();
     }
 
+    render_stats::window_draw_begin();
     {
         OZZY_PROFILER_SECTION(_, "Render/Frame/Window/Background");
         w->draw_background(UiFlags_None);
@@ -163,6 +165,7 @@ void window_draw(int force) {
         data.handle_tooltip(&mouse::get());
     }
 
+    render_stats::window_draw_end();
     ui::flush_commands();
 }
 

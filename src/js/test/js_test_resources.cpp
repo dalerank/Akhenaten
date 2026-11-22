@@ -308,6 +308,11 @@ static int __test_render_flushes() {
 }
 ANK_FUNCTION(__test_render_flushes);
 
+static int __test_render_window_immediate_draws() {
+    return (int)render_stats::last_frame().window_immediate;
+}
+ANK_FUNCTION(__test_render_window_immediate_draws);
+
 // Renderer try order for a request and a comma-separated driver list, joined by ','; "-" stands for SDL's own pick.
 static xstring __test_render_backend_order(pcstr requested, pcstr available) {
     svector<xstring, 8> drivers;

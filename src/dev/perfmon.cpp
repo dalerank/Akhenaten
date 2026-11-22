@@ -115,6 +115,10 @@ void game_perfmon_t::ensure_metrics() {
       Perfmon::Metric("sprite list flushes / frame", []() { return (double)render_stats::last_frame().flushes; },
         drawCountSettings, {50.0, 200.0, 500.0, 1000.0, 4000.0}));
 
+    widget.RegisterMetric(Perfmon::Metric("window draws outside commands / frame",
+      []() { return (double)render_stats::last_frame().window_immediate; }, drawCountSettings,
+      {1.0, 10.0, 100.0, 1000.0}));
+
     widget.RegisterMetric(
       Perfmon::Metric("texture switches / frame", []() { return (double)render_stats::last_frame().texture_switches; },
         drawCountSettings, {50.0, 200.0, 500.0, 1000.0, 4000.0}));
