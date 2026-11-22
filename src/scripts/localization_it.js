@@ -1869,4 +1869,6 @@ localization_it = [
   {key:"#western_desert", text:"DESERTO OCCIDENTALE"}
   {key:"#lebanon", text:"LIBANO"}
   {key:"#canaan", text:"CANAAN"}
+  {key:"#save_migration_title", text:"Salvataggio convertito"}
+  {key:"#save_migration_message", text:"Il tuo salvataggio usava un formato più vecchio ed è stato convertito automaticamente. Troverai il file originale con il nome {0}, se mai ti servisse."}
 ]

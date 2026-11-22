@@ -203,4 +203,6 @@ localization_pr = [
      { key: "#hunter_ostrich_city_is_amazing", text: "A melhor cidade para a qual já cacei. Que continue assim!" }
      { key: "#hunt_bird_birds_are_wily", text: "Estas aves são astutas!" }
      { key: "#hunt_bird_birds_ready_for_roasting", text: "Estas aves estão prontas para assar!" }
+     { key: "#save_migration_title", text: "Salvamento convertido" }
+     { key: "#save_migration_message", text: "Seu save usava um formato mais antigo e foi convertido automaticamente. Você encontrará o arquivo original com o nome {0}, caso precise." }
 ]

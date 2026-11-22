@@ -161,4 +161,6 @@ localization_en = [
      { key: "#finance_deben_unit_of_account", text: "deben-weight" },
      { key: "#finance_historical_economy_hint", text: "Debens measure value (metal-weight account). Part of labour is paid from granary grain when available." },
      { key: "#finance_wages_paid_in_grain", text: "Wages paid in grain (deben-eq)" },
+     { key: "#save_migration_title", text: "저장 파일 변환됨" },
+     { key: "#save_migration_message", text: "저장 파일이 이전 형식이라 자동으로 변환되었습니다. 원본 파일은 필요하실 경우 {0} 이름으로 찾으실 수 있습니다." },
 ]

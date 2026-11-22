@@ -25,6 +25,7 @@
 #include "empire/type.h"
 #include "empire/trade_prices.h"
 #include "figure/enemy_army.h"
+#include "figure/figure.h"
 #include "figure/figure_names.h"
 #include "figure/route.h"
 #include "empire/trader_handler.h"
@@ -94,6 +95,7 @@
 #include "core/profiler.h"
 #include "io/io.h"
 #include "io/chunk_serializer.h"
+#include "graphics/elements/lang_text.h"
 #include "js/js_register.h"
 #include "dev/debug.h"
 #include "window/popup_dialog.h"
@@ -304,7 +306,133 @@ bool GamestateIO::load_og_savegame(pcstr full_path, bool start_immediately) {
     return true;
 }
 
-static bool load_savegame_reader(vfs::reader savegame, e_file_format file_format, pcstr name, bool start_immediately) {
+// Reads the save-data version out of an .svx file: from the container header when
+// sectioned, else from the legacy positional header (mirrors the loader).
+static int read_save_version(pcstr full_path) {
+    auto reader = vfs::file_open(full_path);
+    if (!reader) {
+        return -1;
+    }
+
+    svx::scan_header hdr = {};
+    svx::section_list sections;
+    if (svx::scan(reader, 0, hdr, sections) == svx::SCAN_OK) {
+        return (int)hdr.save_data_version;
+    }
+    return GamestateLoadDetail::read_file_version(full_path, 0);
+}
+
+// Fills a banner body from a localized template that embeds the filename via a
+// "{0}" placeholder; templates without the placeholder get the name appended.
+static void save_migration_message_body(bstring512 &body, pcstr text, pcstr filename) {
+    const pcstr placeholder = strstr(text, "{0}");
+    if (!placeholder) {
+        body.printf("%s %s", text, filename);
+        return;
+    }
+    body.printf("%.*s%s%s", (int)(placeholder - text), text, filename, placeholder + 3);
+}
+
+// An older-format .svx is silently converted to the current format. The loaded
+// file is renamed to "<name>_v<old_version>.svx" and the live (already converted)
+// city state is written to the canonical "<name>.svx"; the original is never
+// overwritten, it only changes name. Returns false when the rename or the write
+// fails, so the caller can abort the load before the city starts (fail-fast).
+static bool migrate_legacy_save_file(pcstr relative_name, int file_version) {
+    // "Save/<player>/name" without the extension
+    vfs::path rel_stem(relative_name);
+    rel_stem.remove_extension();
+
+    // Canonical target of the converted copy: "Save/<player>/name.svx"
+    vfs::path rel_target = rel_stem;
+    rel_target.append_extension("svx");
+    const vfs::path abs_loaded = fullpath_saves(relative_name).resolve();
+
+    if (strcmp(fullpath_saves(rel_target).resolve().c_str(), abs_loaded.c_str()) != 0
+        && vfs::file_exists(fullpath_saves(rel_target))) {
+        const int target_ver = read_save_version(fullpath_saves(rel_target).c_str());
+        if (target_ver >= (int)latest_save_version) {
+            // A current-format save already lives under the canonical name; the loaded
+            // file is an older leftover, so there is nothing to convert.
+            logs::info("[save-migration] %s: canonical %s is already current (v%d), skipping",
+                       relative_name, rel_target.c_str(), target_ver);
+            return true;
+        }
+        // The canonical name is held by another, still-old file — write the converted
+        // copy to a unique version-tagged name instead of overwriting it.
+        rel_target = rel_stem;
+        bstring32 ver_tag;
+        ver_tag.printf("_v%d", (int)latest_save_version);
+        rel_target.append(ver_tag.c_str());
+        rel_target.append_extension("svx");
+    }
+    const vfs::path abs_target = fullpath_saves(rel_target).resolve();
+
+    // Unique relative name for the backup of the original file.
+    vfs::path rel_backup;
+    for (int n = 1; ; ++n) {
+        bstring64 tag;
+        if (n == 1) {
+            tag.printf("_v%d", file_version);
+        } else {
+            tag.printf("_v%d_%d", file_version, n);
+        }
+        rel_backup = rel_stem;
+        rel_backup.append(tag.c_str());
+        rel_backup.append_extension("svx");
+
+        const vfs::path abs_candidate = fullpath_saves(rel_backup).resolve();
+        if (strcmp(abs_candidate.c_str(), abs_target.c_str()) == 0) {
+            continue;
+        }
+        if (!vfs::file_exists(abs_candidate)) {
+            break;
+        }
+    }
+    const vfs::path abs_backup = fullpath_saves(rel_backup).resolve();
+
+    logs::info("[save-migration] %s: converting v%d save, keeping original as %s, writing %s",
+               relative_name, file_version, rel_backup.c_str(), rel_target.c_str());
+
+    if (!vfs::file_rename_os(abs_loaded, abs_backup)) {
+        logs::error("[save-migration] %s: could not rename %s to %s, aborting load",
+                    relative_name, abs_loaded.c_str(), abs_backup.c_str());
+        return false;
+    }
+
+    const bool ok = g_chunk_io.serialize(abs_target.c_str(), 0, FILE_FORMAT_SAVE_FILE_EXT,
+                                         save_data_version(), file_schema);
+    if (!ok) {
+        vfs::file_rename_os(abs_backup, abs_loaded);
+        logs::error("[save-migration] %s: could not write %s, restored %s, aborting load",
+                    relative_name, abs_target.c_str(), abs_loaded.c_str());
+        return false;
+    }
+
+    if (!autosave_module_t::is_monthly_filename(relative_name)) {
+        game_features::gameopt_last_save_filename = abs_target.c_str();
+        game_features::gameopt_last_player = game_features::gameopt_player_name.to_string();
+        game_features::save();
+    }
+
+    // Inform (not ask): the converted copy is now the canonical file, the original
+    // is kept under the version-tagged backup name. Deferred to frame end so the
+    // dialog opens on top of the city window the load flow has just shown.
+    bstring512 body;
+    save_migration_message_body(body, lang_text_from_key("#save_migration_message"), rel_backup.basename().c_str());
+    xstring title = lang_text_from_key("#save_migration_title");
+    xstring message = body.c_str();
+    game.add_frame_end_event([title, message] {
+        popup_dialog::show_ok(title, message);
+    });
+
+    logs::info("[test-marker] save_migrated:%s:to=%s:backup=%s",
+               relative_name, rel_target.c_str(), rel_backup.c_str());
+    return true;
+}
+
+static bool load_savegame_reader(vfs::reader savegame, e_file_format file_format, pcstr name,
+                                 bool start_immediately, bool migrate = false) {
     GamestateLoadDetail::pre_load();
     if (!g_chunk_io.unserialize(savegame, 0, file_format, GamestateLoadDetail::read_file_version, file_schema)) {
         return false;
@@ -313,6 +441,15 @@ static bool load_savegame_reader(vfs::reader savegame, e_file_format file_format
     game.session.last_loaded = e_session_save;
     game.session.last_loaded_mission = name;
     GamestateLoadDetail::post_load();
+
+    if (migrate) {
+        const int file_version = g_chunk_io.get_file_version();
+        if (file_version < (int)latest_save_version || legacy_figure_actions_remapped) {
+            if (!migrate_legacy_save_file(name, file_version)) {
+                return false;
+            }
+        }
+    }
 
     if (start_immediately) {
         GamestateIO::start_loaded_file();
@@ -334,7 +471,7 @@ bool GamestateIO::load_savegame(pcstr filename_short, bool start_immediately) {
     }
 
     return load_savegame_reader(vfs::file_open(full), get_format_from_file(filename_short), filename_short,
-      start_immediately);
+      start_immediately, /*migrate=*/true);
 }
 
 bool GamestateIO::write_savegame_memory(std::vector<uint8_t>& out) {

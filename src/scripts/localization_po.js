@@ -234,4 +234,6 @@ localization_po = [
  { key: "#hunter_ostrich_city_is_amazing", text: "Najlepsze miasto, dla którego polowałem. Oby tak zostało!" }
  { key: "#hunt_bird_birds_are_wily", text: "Te ptaki są przebiegłe!" }
  { key: "#hunt_bird_birds_ready_for_roasting", text: "Te ptaki są gotowe do pieczenia!" }
+ { key: "#save_migration_title", text: "Zapis przekonwertowany" }
+ { key: "#save_migration_message", text: "Twój zapis gry używał starszego formatu i został automatycznie przekonwertowany. Oryginalny plik znajdziesz pod nazwą {0}, gdyby był Ci potrzebny." }
 ]
