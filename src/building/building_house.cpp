@@ -23,6 +23,7 @@
 #include "grid/gardens.h"
 #include "grid/random.h"
 #include "grid/terrain.h"
+#include "grid/routing/routing_terrain.h"
 #include "game/game_config.h"
 #include "io/gamefiles/lang.h"
 #include "game/simulation.h"
@@ -1119,92 +1120,42 @@ const model_house &building_house::model() const {
     return get_model(house_level());
 }
 
-void building_house_common_manor::devolve_to_fancy_residence() {
-    int inventory_per_tile[INVENTORY_MAX];
-    int inventory_remainder[INVENTORY_MAX];
-    int foods_per_tile[INVENTORY_MAX];
-    int foods_remainder[INVENTORY_MAX];
-
+void building_house::devolve_to_smaller(e_building_type new_type, int new_size, int divisor, bool random_variant) {
     auto &housed = runtime_data();
-
-    for (int i = 0; i < INVENTORY_MAX; i++) {
-        inventory_per_tile[i] = housed.inventory[i] / 6;
-        inventory_remainder[i] = housed.inventory[i] % 6;
-        foods_per_tile[i] = housed.foods[i] / 6;
-        foods_remainder[i] = housed.foods[i] % 6;
-    }
-
-    int population_per_tile = house_population() / 6;
-    int population_remainder = house_population() % 6;
+    const int population = house_population();
 
     map_building_tiles_remove(id(), tile());
-
-    // main tile
-    base.type = BUILDING_HOUSE_FANCY_RESIDENCE;
-    base.size = 2;
-    housed.hsize = 2;
+    base.type = new_type;
+    base.size = new_size;
+    housed.hsize = new_size;
     housed.is_merged = false;
-    housed.population = population_per_tile + population_remainder;
+    housed.population = population / divisor + population % divisor;
     for (int i = 0; i < INVENTORY_MAX; i++) {
-        housed.inventory[i] = inventory_per_tile[i] + inventory_remainder[i];
-        housed.foods[i] = foods_per_tile[i] + foods_remainder[i];
+        housed.inventory[i] = housed.inventory[i] / divisor + housed.inventory[i] % divisor;
+        housed.foods[i] = housed.foods[i] / divisor + housed.foods[i] % divisor;
     }
     base.distance_from_entry = 0;
 
     int image_id = house_image_group<true>(house_level());
-    map_building_tiles_add(id(), tile(), size(), image_id + (map_random_get(tile()) & 1), TERRAIN_BUILDING);
+    if (random_variant) {
+        image_id += map_random_get(tile()) & 1;
+    }
+    map_building_tiles_add(id(), tile(), new_size, image_id, TERRAIN_BUILDING);
 
-    // the other tiles (new buildings)
-    image_id = house_image_group<true>(HOUSE_SPACIOUS_APARTMENT);
-    create_house_tile(BUILDING_HOUSE_SPACIOUS_APARTMENT, tile().shifted(2, 0), image_id, population_per_tile,inventory_per_tile, foods_per_tile);
-    create_house_tile(BUILDING_HOUSE_SPACIOUS_APARTMENT, tile().shifted(2, 1), image_id, population_per_tile, inventory_per_tile, foods_per_tile);
-    create_house_tile(BUILDING_HOUSE_SPACIOUS_APARTMENT, tile().shifted(0, 2), image_id, population_per_tile, inventory_per_tile, foods_per_tile);
-    create_house_tile(BUILDING_HOUSE_SPACIOUS_APARTMENT, tile().shifted(1, 2), image_id, population_per_tile, inventory_per_tile, foods_per_tile);
-    create_house_tile(BUILDING_HOUSE_SPACIOUS_APARTMENT, tile().shifted(2, 2), image_id, population_per_tile, inventory_per_tile, foods_per_tile);
+    for (int i = 0; i <= new_size; i++) {
+        map_terrain_add(tile().shifted(new_size, i), TERRAIN_GARDEN);
+        map_terrain_add(tile().shifted(i, new_size), TERRAIN_GARDEN);
+    }
+    map_tiles_gardens_update_all();
+    map_routing_update_land();
+}
+
+void building_house_common_manor::devolve_to_fancy_residence() {
+    devolve_to_smaller(BUILDING_HOUSE_FANCY_RESIDENCE, 2, 6, true);
 }
 
 void building_house_modest_estate::devolve_to_statel_manor() {
-    int inventory_per_tile[INVENTORY_MAX];
-    int inventory_remainder[INVENTORY_MAX];
-    int foods_per_tile[INVENTORY_MAX];
-    int foods_remainder[INVENTORY_MAX];
-
-    auto &housed = runtime_data();
-
-    for (int i = 0; i < INVENTORY_MAX; i++) {
-        inventory_per_tile[i] = housed.inventory[i] / 8;
-        inventory_remainder[i] = housed.inventory[i] % 8;
-        foods_per_tile[i] = housed.foods[i] / 8;
-        foods_remainder[i] = housed.foods[i] % 8;
-    }
-    int population_per_tile = house_population() / 8;
-    int population_remainder = house_population() % 8;
-
-    map_building_tiles_remove(id(), tile());
-
-    // main tile
-    base.type = BUILDING_HOUSE_STATELY_MANOR;
-    base.size = 3;
-    housed.hsize = 3;
-    housed.is_merged = false;
-    housed.population = population_per_tile + population_remainder;
-    for (int i = 0; i < INVENTORY_MAX; i++) {
-        housed.inventory[i] = inventory_per_tile[i] + inventory_remainder[i];
-    }
-    base.distance_from_entry = 0;
-
-    int image_id = house_image_group<true>(house_level());
-    map_building_tiles_add(id(), tile(), size(), image_id, TERRAIN_BUILDING);
-
-    // the other tiles (new buildings)
-    image_id = house_image_group<true>(HOUSE_SPACIOUS_APARTMENT);
-    create_house_tile(BUILDING_HOUSE_SPACIOUS_APARTMENT, tile().shifted(3, 0), image_id, population_per_tile, inventory_per_tile, foods_per_tile);
-    create_house_tile(BUILDING_HOUSE_SPACIOUS_APARTMENT, tile().shifted(3, 1), image_id, population_per_tile, inventory_per_tile, foods_per_tile);
-    create_house_tile(BUILDING_HOUSE_SPACIOUS_APARTMENT, tile().shifted(3, 2), image_id, population_per_tile, inventory_per_tile, foods_per_tile);
-    create_house_tile(BUILDING_HOUSE_SPACIOUS_APARTMENT, tile().shifted(0, 3), image_id, population_per_tile, inventory_per_tile, foods_per_tile);
-    create_house_tile(BUILDING_HOUSE_SPACIOUS_APARTMENT, tile().shifted(1, 3), image_id, population_per_tile, inventory_per_tile, foods_per_tile);
-    create_house_tile(BUILDING_HOUSE_SPACIOUS_APARTMENT, tile().shifted(2, 3), image_id, population_per_tile, inventory_per_tile, foods_per_tile);
-    create_house_tile(BUILDING_HOUSE_SPACIOUS_APARTMENT, tile().shifted(3, 3), image_id, population_per_tile, inventory_per_tile, foods_per_tile);
+    devolve_to_smaller(BUILDING_HOUSE_STATELY_MANOR, 3, 8, false);
 }
 
 void building_house::check_for_corruption() {

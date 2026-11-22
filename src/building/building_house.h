@@ -151,6 +151,7 @@ public:
     void consume_goods(int day);
     void consume_food_weekly();
     void split(int num_tiles);
+    void devolve_to_smaller(e_building_type new_type, int new_size, int divisor, bool random_variant);
     const model_house &model() const;
 
     e_house_progress check_evolve_desirability();
