@@ -32,12 +32,12 @@ bridge_styles = [
     pack: PACK_TERRAIN,
     id: 63,
     parts: [
-      { part: BRIDGE_PART_RAMP_DIR_0, tip: "ramp DIR_0", img: 3, pos: [15, -10] }
-      { part: BRIDGE_PART_RAMP_DIR_2, tip: "ramp DIR_2", img: 0, pos: [-1, -18] }
-      { part: BRIDGE_PART_RAMP_DIR_4, tip: "ramp DIR_4", img: 5, pos: [15, -8] }
-      { part: BRIDGE_PART_RAMP_DIR_6, tip: "ramp DIR_6", img: 2, pos: [3, -18] }
-      { part: BRIDGE_PART_MID_NE_SW, tip: "mid NE-SW", img: 4, pos: [10, -10] }
-      { part: BRIDGE_PART_MID_NW_SE, tip: "mid NW-SE", img: 1, pos: [0, -18] }
+      { part: BRIDGE_PART_RAMP_DIR_0, tip: "ramp DIR_0", img: 3, pos: [0, -30] }
+      { part: BRIDGE_PART_RAMP_DIR_2, tip: "ramp DIR_2", img: 0, pos: [0, -30] }
+      { part: BRIDGE_PART_RAMP_DIR_4, tip: "ramp DIR_4", img: 5, pos: [0, -30] }
+      { part: BRIDGE_PART_RAMP_DIR_6, tip: "ramp DIR_6", img: 2, pos: [0, -30] }
+      { part: BRIDGE_PART_MID_NE_SW, tip: "mid NE-SW", img: 4, pos: [0, -30] }
+      { part: BRIDGE_PART_MID_NW_SE, tip: "mid NW-SE", img: 1, pos: [0, -30] }
     ]
   }
 ]
