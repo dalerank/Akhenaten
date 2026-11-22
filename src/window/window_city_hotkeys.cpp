@@ -1,4 +1,5 @@
 #include "city/city.h"
+#include "overlays/city_overlay.h"
 #include "game/game_events.h"
 #include "graphics/window.h"
 #include "widget/city/flat_draw.h"
@@ -38,10 +39,10 @@ static void city_hotkeys_subscribe_events() {
             window_city_show();
         }
 
-        if (g_city.current_overlay == overlay) {
-            g_city.set_overlay(OVERLAY_NONE);
+        if (g_city_overlay.current == overlay) {
+            g_city_overlay.set(OVERLAY_NONE);
         } else {
-            g_city.set_overlay(overlay);
+            g_city_overlay.set(overlay);
         }
     });
 
@@ -49,7 +50,7 @@ static void city_hotkeys_subscribe_events() {
         if (g_window_manager.window_is("window_city_military")) {
             window_city_show();
         }
-        g_city.toggle_overlay();
+        g_city_overlay.toggle();
     });
 
     events::subscribe([](event_toggle_flat_buildings) {

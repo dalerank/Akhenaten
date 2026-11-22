@@ -45,7 +45,6 @@
 #include "city_warnings.h"
 #include "game/game_events.h"
 #include "empire/empire_object.h"
-#include "overlays/city_overlay.h"
 #include "grid/building.h"
 #include "building/construction/build_planner.h"
 #include "dev/debug.h"
@@ -450,30 +449,6 @@ void city_t::criminals_update_day() {
 void city_t::before_start_simulation() {
     events::emit(event_population_changed{ population.current });
     events::emit(event_finance_changed{ finance.treasury });
-}
-
-void city_t::reset_overlay() {
-    current_overlay = OVERLAY_NONE;
-    previous_overlay = OVERLAY_NONE;
-}
-
-void city_t::toggle_overlay() {
-    std::swap(previous_overlay, current_overlay);
-    map_clear_highlights();
-}
-
-void city_t::set_overlay(e_overlay overlay) {
-    if (overlay == OVERLAY_NONE) {
-        previous_overlay = current_overlay;
-    } else {
-        previous_overlay = OVERLAY_NONE;
-    }
-    current_overlay = overlay;
-    map_clear_highlights();
-}
-
-const city_overlay *city_t::overlay() {
-    return city_overlay::get(current_overlay);
 }
 
 void city_t::houses_reset_demands() {

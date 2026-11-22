@@ -156,7 +156,7 @@ void draw_isometrics_overlay_flat(vec2i pixel, tile2i tile, painter &ctx) {
         return;
     }
 
-    const auto overlay = g_city.overlay();
+    const auto overlay = g_city_overlay.get();
     if (overlay->draw_custom_footprint(pixel, tile, ctx)) {
         /*nothing*/
 
@@ -210,7 +210,7 @@ void draw_isometrics_overlay_height(vec2i pixel, tile2i point, painter &ctx) {
     //Planner.construction_record_view_position(pixel, point);
     constexpr uint32_t mode_highlighted[] = {0, COLOR_BLUE, COLOR_RED};
 
-    const auto overlay = g_city.overlay();
+    const auto overlay = g_city_overlay.get();
     if (grid_offset < 0) {
         // Outside map: draw black tile
         //ImageDraw::isometric_from_drawtile(ctx, image_id_from_group(GROUP_TERRAIN_BLACK), pixel, 0);
@@ -248,5 +248,5 @@ void draw_isometrics_overlay_height(vec2i pixel, tile2i point, painter &ctx) {
         //}
     }
 
-    g_city.overlay()->draw_custom_top(pixel, point, ctx);
+    g_city_overlay.get()->draw_custom_top(pixel, point, ctx);
 }

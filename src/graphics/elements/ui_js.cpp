@@ -421,7 +421,7 @@ ANK_FUNCTION(__ui_game_can_undo)
 
 pcstr __ui_sidebar_overlay_link_text() {
     static xstring storage;
-    if (const city_overlay *o = g_city.overlay()) {
+    if (const city_overlay* o = g_city_overlay.get()) {
         storage = o->title();
     } else {
         storage = ui::str(6, 4);

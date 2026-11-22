@@ -80,6 +80,19 @@ struct city_overlay {
 };
 ANK_CONFIG_STRUCT(city_overlay, id, walkers, buildings, column_type, column_anim, tooltips, building_tooltips)
 
+struct city_view_overlay {
+    e_overlay current = OVERLAY_NONE;
+    e_overlay previous = OVERLAY_NONE;
+
+    const city_overlay* get() const { return city_overlay::get(current); }
+    bool is(e_overlay o) const { return current == o; }
+    void set(e_overlay o);
+    void toggle();
+    void reset();
+};
+
+extern city_view_overlay g_city_overlay;
+
 template<e_overlay TYPE>
 struct city_overlay_t : public city_overlay {
     virtual e_overlay get_type() const override { return TYPE; }

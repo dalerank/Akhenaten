@@ -1,4 +1,5 @@
 #include "widget/city/flat_draw.h"
+#include "overlays/city_overlay.h"
 
 #include "building/building.h"
 #include "building/monuments.h"
@@ -158,7 +159,7 @@ bool city_flat_should_flatten_building(const building &b) {
     if (!city_flat_feature_enabled() || !g_screen_city.buildings_flat_view) {
         return false;
     }
-    if (g_city.current_overlay != OVERLAY_NONE) {
+    if (g_city_overlay.current != OVERLAY_NONE) {
         return false;
     }
     if (!city_flat_building_alive(b)) {

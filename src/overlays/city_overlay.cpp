@@ -125,42 +125,42 @@ const tooltips_t &city_overlay::get_tooltips(const xstring &level) const {
 }
 
 void __city_overlay_set_tooltip(pcstr text) {
-    if (const city_overlay *overlay = g_city.overlay()) {
+    if (const city_overlay* overlay = g_city_overlay.get()) {
         const_cast<city_overlay *>(overlay)->current_tooltip = lang_xtext_from_key(text);
     }
 }
 ANK_FUNCTION_1(__city_overlay_set_tooltip)
 
 void __city_overlay_set_column_height(int height) {
-    if (const city_overlay *overlay = g_city.overlay()) {
+    if (const city_overlay* overlay = g_city_overlay.get()) {
         const_cast<city_overlay *>(overlay)->current_column_height = height;
     }
 }
 ANK_FUNCTION_1(__city_overlay_set_column_height)
 
 void __city_overlay_set_column_color(int color) {
-    if (const city_overlay *overlay = g_city.overlay()) {
+    if (const city_overlay* overlay = g_city_overlay.get()) {
         const_cast<city_overlay *>(overlay)->current_column_color = color;
     }
 }
 ANK_FUNCTION_1(__city_overlay_set_column_color)
 
 void __city_overlay_set_show_figure(int show) {
-    if (const city_overlay *overlay = g_city.overlay()) {
+    if (const city_overlay* overlay = g_city_overlay.get()) {
         const_cast<city_overlay *>(overlay)->current_show_figure = (show != 0);
     }
 }
 ANK_FUNCTION_1(__city_overlay_set_show_figure)
 
 void __city_overlay_set_show_building(int show) {
-    if (const city_overlay *overlay = g_city.overlay()) {
+    if (const city_overlay* overlay = g_city_overlay.get()) {
         const_cast<city_overlay *>(overlay)->current_show_building = (show != 0);
     }
 }
 ANK_FUNCTION_1(__city_overlay_set_show_building)
 
 void __city_overlay_set_color_mask(int mask) {
-    if (const city_overlay *overlay = g_city.overlay()) {
+    if (const city_overlay* overlay = g_city_overlay.get()) {
         const_cast<city_overlay *>(overlay)->current_color_mask = (color)mask;
     }
 }
@@ -468,3 +468,38 @@ void city_overlay::draw_building_top(vec2i pixel, tile2i tile, painter &ctx) con
 
     draw_overlay_building_column(b, pixel, tile, ctx);
 }
+city_view_overlay g_city_overlay;
+
+void city_view_overlay::reset() {
+    current = OVERLAY_NONE;
+    previous = OVERLAY_NONE;
+}
+
+void city_view_overlay::toggle() {
+    std::swap(previous, current);
+    map_clear_highlights();
+}
+
+void city_view_overlay::set(e_overlay overlay) {
+    if (overlay == OVERLAY_NONE) {
+        previous = current;
+    } else {
+        previous = OVERLAY_NONE;
+    }
+    current = overlay;
+    map_clear_highlights();
+}
+
+void ANK_PERMANENT_CALLBACK(event_game_mission_pre_load, ev) {
+    g_city_overlay.reset();
+}
+
+int __city_get_current_overlay() {
+    return g_city_overlay.current;
+}
+ANK_FUNCTION(__city_get_current_overlay)
+
+void __city_set_current_overlay(int overlay) {
+    g_city_overlay.set((e_overlay)overlay);
+}
+ANK_FUNCTION_1(__city_set_current_overlay)

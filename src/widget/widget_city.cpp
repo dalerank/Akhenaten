@@ -420,7 +420,7 @@ void screen_city_t::draw_figures_overlay(vec2i pixel, tile2i tile, painter &ctx)
             continue; // Skip figures that render on flat tiles
         }
 
-        if (!g_city.overlay()->show_figure(f.f)) {
+        if (!g_city_overlay.get()->show_figure(f.f)) {
             continue;
         }
 
@@ -1060,9 +1060,9 @@ void screen_city_t::draw_ornaments_overlay(vec2i pixel, tile2i point, painter &c
 
     if (b_id) {
         const building *b = building_at(grid_offset);
-        if (g_city.overlay()->show_building(b)) {
+        if (g_city_overlay.get()->show_building(b)) {
             color save = force_mask;
-            force_mask = g_city.overlay()->color_mask_building_def(b);
+            force_mask = g_city_overlay.get()->color_mask_building_def(b);
             draw_ornaments_and_animations_height(pixel, point, ctx);
             force_mask = save;
         }
@@ -1079,7 +1079,7 @@ void screen_city_t::draw_with_overlay(painter &ctx, int selected_figure_id) {
     this->selected_figure_id = selected_figure_id;
     city_flat_prepare_draw();
 
-    const auto overlay = g_city.overlay();
+    const auto overlay = g_city_overlay.get();
     if (!overlay) {
         return;
     }
@@ -1132,7 +1132,7 @@ void screen_city_t::draw(painter &ctx) {
     set_render_scale(ctx, g_zoom.get_scale());
     set_city_clip_rectangle(ctx);
 
-    if (g_city.overlay()) {
+    if (g_city_overlay.get()) {
         draw_with_overlay(ctx, 0);
     } else {
         draw_without_overlay(ctx, 0);
@@ -1150,7 +1150,7 @@ void screen_city_t::draw_for_figure(painter &ctx, int figure_id) {
     set_city_clip_rectangle(ctx);
     const bool was_read_only = std::exchange(game.redraw_read_only, true);
 
-    if (g_city.overlay()) {
+    if (g_city_overlay.get()) {
         draw_with_overlay(ctx, figure_id);
     } else {
         draw_without_overlay(ctx, figure_id);
@@ -1967,7 +1967,7 @@ void screen_city_t::handle_input(const mouse* m, const hotkeys* h) {
 }
 
 xstring screen_city_t::get_overlay_tooltip(tooltip_context *c, tile2i tile) {
-    const auto overlay = g_city.overlay();
+    const auto overlay = g_city_overlay.get();
     if (!overlay) {
         return {};
     }
@@ -2039,7 +2039,7 @@ void screen_city_t::draw_tooltip(tooltip_context* c) {
     const figure* f = get_figure_at_mouse(c->mpos);
     f->draw_tooltip(c);
 
-    if (g_city.overlay()) {
+    if (g_city_overlay.get()) {
         c->high_priority = 1;
         c->text = get_overlay_tooltip(c, current_tile);
     }
