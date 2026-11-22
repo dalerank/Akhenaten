@@ -1,4 +1,5 @@
 #include "window_city.h"
+#include "window/message_dialog.h"
 
 #include "overlays/city_overlay.h"
 #include "building/construction/build_planner.h"
@@ -298,7 +299,7 @@ void window_city::draw_foreground(UiFlags flags) {
 
     window_city_draw_construction_cost_and_size();
     if (g_window_manager.window_is("window_city")) {
-        city_message_process_queue();
+        window_city_message_process_queue();
     }
 }
 

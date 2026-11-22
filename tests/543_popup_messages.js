@@ -21,7 +21,7 @@ function find_last_message_key(key) {
 
 function dismiss_message_dialog_if_open() {
     // Modal city message leaves a dialog on the stack; close so the next
-    // use_popup can hit show_message_popup (marks read) instead of enqueue.
+    // popup shows at once (marks read) instead of being queued.
     var i
     for (i = 0; i < 4; i++) {
         window_go_back()
@@ -109,10 +109,11 @@ function run_test() {
     __log_marker('popup_messages_banner_click_open_ok')
     dismiss_message_dialog_if_open()
 
-    // Modal path for same category with bit clear → show_message_popup marks read.
+    // Modal path for same category with bit clear: the popup marks it read.
     __popup_messages_set_banner(POPUP_MSG_EMPLOYEES, false)
     before = __city_message_count()
     ui.popup_message('message_employees_needed')
+    __test_process_events()
     __test_process_events()
     after = __city_message_count()
     idx = find_last_message_key('message_employees_needed')
@@ -130,6 +131,7 @@ function run_test() {
     game_features.gameopt_popup_messages = 0xffff
     before = __city_message_count()
     ui.popup_message('message_fire_in_the_village')
+    __test_process_events()
     __test_process_events()
     idx = find_last_message_key('message_fire_in_the_village')
     if (__city_message_count() != before + 1 || idx < 0 || !__city_message_is_read(idx)) {

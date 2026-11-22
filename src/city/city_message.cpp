@@ -1,4 +1,5 @@
 #include "city_message.h"
+#include "core/system_time.h"
 
 #include "io/io_buffer.h"
 #include "scenario/scenario_event_manager.h"
@@ -9,10 +10,8 @@
 #include "city/city_religion.h"
 #include "city/city_warnings.h"
 #include "figure/formation.h"
-#include "graphics/window.h"
 #include "graphics/image.h"
 #include "io/gamefiles/lang.h"
-#include "window/message_dialog.h"
 #include "game/game_events.h"
 #include "game/sound_effect.h"
 #include "game/simulation.h"
@@ -270,11 +269,6 @@ static void fill_from_event(city_message &msg, const event_ph_t *event, int pare
     }
 }
 
-static bool has_video(const lang_message& template_id) {
-    bstring256 path = ui::message_dialog_base::resolve_message_video_path(template_id);
-    return !path.empty() && vfs::file_exists(path);
-}
-
 static void enqueue_message(int sequence) {
     auto& data = g_message_manager;
     for (int i = 0; i < MAX_MESSAGES_QUEUE; i++) {
@@ -293,18 +287,14 @@ static void play_sound(const lang_message &template_id) {
     }
 }
 
-static void show_message_popup(int index) {
+void city_message_mark_shown(int index) {
     auto& data = g_message_manager;
-    city_message& msg = data.messages[index];
     data.consecutive_message_delay = 5;
-    msg.is_read = true;
-    const lang_message& message_template = lang_get_message(msg.MM_text_id);
-    if (!has_video(message_template)) {
-        play_sound(message_template);
-    }
+    data.messages[index].is_read = true;
+}
 
-    xstring message_uid = lang_get_message_id(msg.MM_text_id);
-    window_message_dialog_show_city_message(message_uid, index, msg.year, msg.month, msg.param1, msg.param2, message_template.advisor, true);
+void city_message_enqueue(int sequence) {
+    enqueue_message(sequence);
 }
 
 int city_message_find_index_by_sequence(int sequence) {
@@ -317,16 +307,6 @@ int city_message_find_index_by_sequence(int sequence) {
         }
     }
     return -1;
-}
-
-void city_message_show_from_archive(int message_index) {
-    if (message_index < 0 || message_index >= MAX_MESSAGES) {
-        return;
-    }
-    if (!g_message_manager.messages[message_index].MM_text_id) {
-        return;
-    }
-    show_message_popup(message_index);
 }
 
 static void show_message_banner_for_index(int index) {
@@ -352,10 +332,8 @@ static void apply_popup_delivery(bool use_popup, e_popup_message_category popup_
         should_play_sound = true;
         return;
     }
-    if (use_popup && g_window_manager.window_is("window_city")) {
-        show_message_popup(message_index);
-    } else if (use_popup) {
-        enqueue_message(g_message_manager.messages[message_index].sequence);
+    if (use_popup) {
+        events::emit(event_city_message_popup{message_index});
     } else if (should_play_sound) {
         const lang_message &mm_template = lang_get_message(sound_template_key);
         play_sound(mm_template);
@@ -463,11 +441,11 @@ void city_message_post_with_message_delay(e_mesage_category category, int use_po
     }
 }
 
-void city_message_process_queue() {
+int city_message_take_queued() {
     auto& data = g_message_manager;
     if (data.consecutive_message_delay > 0) {
         data.consecutive_message_delay--;
-        return;
+        return -1;
     }
     int sequence = 0;
     for (int i = 0; i < MAX_MESSAGES_QUEUE; i++) {
@@ -478,18 +456,20 @@ void city_message_process_queue() {
         }
     }
     if (sequence == 0)
-        return;
+        return -1;
     int message_id = -1;
     for (int i = 0; i < 999; i++) {
         if (!data.messages[i].MM_text_id)
-            return;
+            return -1;
         if (data.messages[i].sequence == sequence) {
             message_id = i;
             break;
         }
     }
-    if (message_id >= 0)
-        show_message_popup(message_id);
+    if (message_id >= 0) {
+        city_message_mark_shown(message_id);
+    }
+    return message_id;
 }
 
 void city_message_sort_and_compact(void) {

@@ -261,8 +261,6 @@ city/city_industry.cpp -> window/window_city.h
 city/city_industry.h -> graphics/graphics.h
 city/city_kingdome_relations.cpp -> dev/debug.h
 city/city_message.cpp -> graphics/image.h
-city/city_message.cpp -> graphics/window.h
-city/city_message.cpp -> window/message_dialog.h
 city/city_population.cpp -> dev/debug.h
 city/city_religion.cpp -> dev/debug.h
 city/city_religion.cpp -> sound/effect.h

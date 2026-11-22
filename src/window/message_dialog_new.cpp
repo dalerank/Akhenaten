@@ -1,4 +1,6 @@
 #include "message_dialog_new.h"
+#include "game/game_events.h"
+#include "game/sound_effect.h"
 #include "message_dialog_disaster.h"
 #include "message_dialog_imperial.h"
 #include "message_dialog_emigration.h"
@@ -714,3 +716,52 @@ void window_message_dialog_help() {
     }
 }
 
+
+static bool city_message_has_video(const lang_message& tmpl) {
+    bstring256 path = ui::message_dialog_base::resolve_message_video_path(tmpl);
+    return !path.empty() && vfs::file_exists(path);
+}
+
+static void city_message_open_dialog(int index) {
+    city_message& msg = g_message_manager.messages[index];
+    const lang_message& tmpl = lang_get_message(msg.MM_text_id);
+    if (!city_message_has_video(tmpl)) {
+        events::emit(event_sound_effect{tmpl.urgent ? SOUND_EFFECT_FANFARE_URGENT : SOUND_EFFECT_FANFARE});
+    }
+    window_message_dialog_show_city_message(lang_get_message_id(msg.MM_text_id), index, msg.year, msg.month, msg.param1,
+      msg.param2, tmpl.advisor, true);
+}
+
+void window_city_message_show(int index) {
+    if (index < 0 || index >= MAX_MESSAGES || !g_message_manager.messages[index].MM_text_id) {
+        return;
+    }
+    city_message_mark_shown(index);
+    city_message_open_dialog(index);
+}
+
+void window_city_message_process_queue() {
+    const int index = city_message_take_queued();
+    if (index >= 0) {
+        city_message_open_dialog(index);
+    }
+}
+
+void __city_message_show_from_archive(int message_index) {
+    window_city_message_show(message_index);
+}
+ANK_FUNCTION_1(__city_message_show_from_archive)
+
+static void city_message_popup_subscribe() {
+    events::subscribe([](event_city_message_popup ev) {
+        if (ev.index < 0 || ev.index >= MAX_MESSAGES) {
+            return;
+        }
+        if (!g_window_manager.window_is("window_city")) {
+            city_message_enqueue(g_message_manager.messages[ev.index].sequence);
+            return;
+        }
+        window_city_message_show(ev.index);
+    });
+}
+static events::session_subscriber g_city_message_popup_session(&city_message_popup_subscribe);

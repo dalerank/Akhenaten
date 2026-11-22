@@ -411,11 +411,6 @@ int __city_message_find_index_by_sequence(int sequence) {
 }
 ANK_FUNCTION_1(__city_message_find_index_by_sequence)
 
-void __city_message_show_from_archive(int message_index) {
-    city_message_show_from_archive(message_index);
-}
-ANK_FUNCTION_1(__city_message_show_from_archive)
-
 int __popup_message_category_for_key(xstring key) {
     return (int)popup_message_category_for_key(key);
 }

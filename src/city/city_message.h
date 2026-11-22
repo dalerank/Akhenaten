@@ -222,7 +222,12 @@ struct event_ph_t;
 void city_message_disable_sound_for_next_message(void);
 void city_message_apply_sound_interval(int category);
 // Open archive entry as modal dialog (used by message-banner click, I1).
-void city_message_show_from_archive(int message_index);
+void city_message_mark_shown(int index);
+void city_message_enqueue(int sequence);
+
+struct event_city_message_popup {
+    int index;
+};
 int city_message_find_index_by_sequence(int sequence);
 
 // OG city_message phrases[EVENT_PHRASE_DELIVERED_AMOUNT] / [EVENT_PHRASE_BUTTONS] (gift replies).
@@ -237,7 +242,7 @@ void city_message_post_full(bool use_popup, xstring template_id, const event_ph_
 city_message &city_message_post_with_popup_delay(e_mesage_category category, bool use_popup, xstring message, int param1, short param2);
 void city_message_post_with_message_delay(e_mesage_category category, int use_popup, xstring message_type, int delay);
 
-void city_message_process_queue();
+int city_message_take_queued();
 void city_message_sort_and_compact(void);
 
 int city_message_get_text_id(int message_id);

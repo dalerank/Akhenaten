@@ -38,4 +38,6 @@ void text_fill_in_tags(pcstr src, pstr dst, text_tag_substitution* tag_templates
 void window_message_setup_help_id(xstring helpid);
 void window_message_dialog_show(xstring text_id, int message_id, void (*background_callback)(void));
 void window_message_dialog_show_city_message(xstring text_id, int message_id, int year, int month, int param1, int param2, int message_advisor, bool use_popup);
+void window_city_message_show(int index);
+void window_city_message_process_queue();
 void window_message_dialog_show_with_video(pcstr video_path, pcstr title);

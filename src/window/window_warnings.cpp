@@ -1,4 +1,5 @@
 #include "window/window_warnings.h"
+#include "window/message_dialog.h"
 
 #include "building/building.h"
 #include "city/constants.h"
@@ -206,7 +207,7 @@ int window_warnings::handle_mouse(const mouse *m) {
                 const int msg_index = city_message_find_index_by_sequence(seq);
                 warnings.erase(warnings.begin() + i);
                 if (msg_index >= 0) {
-                    city_message_show_from_archive(msg_index);
+                    window_city_message_show(msg_index);
                 }
                 return true;
             }
