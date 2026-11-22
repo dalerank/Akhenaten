@@ -82,13 +82,13 @@ bool building_statue::guild_service_enabled() {
 void building_statue::on_create(int orientation) {
     base.orientation = orientation;
 
-    auto &d = runtime_data();
-    d.variant = g_city_planner.building_variant;
-    d.statue_offset = random_hash(g_simulation.simtime.absolute_tick(), id(), RANDOM_SALT_STATUE_OFFSET) % 4;
+    runtime_data().statue_offset
+      = random_hash(g_simulation.simtime.absolute_tick(), id(), RANDOM_SALT_STATUE_OFFSET) % 4;
 }
 
 void building_statue::on_place_update_tiles(int orientation, int variant) {
     base.orientation = orientation;
+    runtime_data().variant = variant;
     int orientation_rel = map_view_relative_orientation(orientation);
     int image_id = get_image(type(), orientation_rel, variant);
     map_building_tiles_add(id(), tile(), size(), image_id, TERRAIN_BUILDING);

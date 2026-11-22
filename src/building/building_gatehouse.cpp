@@ -39,7 +39,7 @@ inline void reader<building_decorative_gatehouse::static_params>(archive arch, b
 }
 } // namespace archive_helper
 
-building_gatehouse::back_tile_orientation building_gatehouse::second_part_tile(build_planner &planer, tile2i end, int city_orientation) {
+building_gatehouse::back_tile_orientation building_gatehouse::second_part_tile(tile2i end, int city_orientation) {
     struct candidate_t {
         tile2i tile;
         int orientation = -1;
@@ -53,7 +53,7 @@ building_gatehouse::back_tile_orientation building_gatehouse::second_part_tile(b
         c.tile = tile;
         c.orientation = orientation;
         blocked_tile_vec tmp_tiles;
-        c.ok = !planer.is_blocked_for_building(tile, 1, tmp_tiles, restricted_terrain);
+        c.ok = !build_planner::is_blocked_for_building(tile, 1, tmp_tiles, restricted_terrain);
         c.road = c.ok && map_terrain_is(tile, TERRAIN_ROAD);
         return c;
     };
@@ -343,7 +343,7 @@ void building_gatehouse::on_place(int orientation, int variant) {
     building_impl::on_place(orientation, variant);
 
     const int city_orientation = map_view_orientation() / 2;
-    back_tile_orientation back_tile = building_gatehouse::second_part_tile(g_city_planner, tile(), city_orientation);
+    back_tile_orientation back_tile = building_gatehouse::second_part_tile(tile(), city_orientation);
 
     building *backside, *mainside;
     bool bactile_is_main = false;
