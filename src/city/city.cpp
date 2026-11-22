@@ -1,4 +1,5 @@
 #include "city.h"
+#include "game/sim_schedule.h"
 
 #include "city/constants.h"
 #include "city/buildings.h"
@@ -116,52 +117,8 @@ void city_t::reload_objects() {
     figures.reload_objects();
 }
 
-void city_t::update_day(simulation_time_t simtime) {
-    sentiment.update_day();
-    criminals_update_day();
-    // After house-crime day update. Tomb-robber steal is figure-tick;
-    // funeral_done is never cleared by steal, so same-day race is harmless.
-    figure_funeral_walker::try_spawn_all(/*force_ignore_road=*/false);
-    plague_update_day();
-    figure_flotsam::spawn_update_day();
-    buildings.update_day();
-    figures_update_day();
-    population.update_day();
-}
-
-void city_t::update_week(simulation_time_t simtime) {
-    resource.consume_food_weekly(simtime);
-    industry.update_nearby_houses_weekly();
-}
-
 void city_t::update_month(simulation_time_t simtime) {
-    migration.update_month();
-    health.update_month();
-    finance.advance_month();
-    resource.consume_food_monthly();
-    resource.advance_month();
-    food_supply.advance_month();
-    update_allowed_foods();
-
-    population.record_monthly();
-
-    local_cults.advance_month();
-    festival.advance_month();
-    buildings.update_month();
-
-    // OG creates the fishing spots once at scenario start; respawning them every month is an Enhanced change.
-    if (game_features::gameplay_change_fishing_points_monthly_respawn.to_bool() && can_produce_resource(RESOURCE_FISH)
-        && !g_scenario.events.blood_river_sweep_active()) {
-        fishing_points.update_month();
-    }
-
-    kingdome.advance_month();
-
-    // Remake-only monthly tomb-robber threat (OG spawns from house crime).
-    if (game_features::gameplay_change_tomb_robber_remake.to_bool()) {
-        figure_tomb_robber::try_spawn(/*force_gates=*/false);
-        figure_tomb_robber::try_professional_wave();
-    }
+    sim_schedule_run(SIM_PHASE_MONTH_CITY, *this);
 }
 
 void city_t::init_custom_map() {
@@ -235,78 +192,9 @@ void city_t::change_happiness(int amount) {
     });
 }
 
-struct city_tick_slot {
-    int tick;
-    pcstr name;
-    void (*update)(city_t& city);
-};
-
-static const city_tick_slot city_tick_slots[] = {
-  {1, "religion", [](city_t& c) { c.religion.update(); }},
-  {1, "coverage", [](city_t& c) { c.coverage.update(); }},
-  {2, "tree_growth", [](city_t&) { map_tree_growth_update(); }},
-  {4, "kingdome", [](city_t& c) { c.kingdome.update(); }},
-  {5, "irrigation_value", [](city_t&) { g_irrigation_value.update(); }},
-  {5, "formations", [](city_t&) { formation_update_all(/*skip_morale*/ false); }},
-  {6, "natives_land", [](city_t&) { map_natives_check_land(); }},
-  {7, "road_network", [](city_t& c) { c.map.update_road_network(); }},
-  {8, "stocks", [](city_t&) { g_city.resource.calculate_stocks(); }},
-  {9, "house_service_decay", [](city_t& c) { c.house_decay_services(); }},
-  {10, "desirability", [](city_t&) { g_desirability.update(); }},
-  {11, "trade_export_keep", [](city_t&) { city_trade_update_export_keep(); }},
-  {12, "houses_covered_decay", [](city_t& c) { c.house_service_decay_houses_covered(); }},
-  {16, "storageyard_stocks", [](city_t&) { city_resource_calculate_storageyard_stocks(); }},
-  {17, "food_stocks", [](city_t&) { g_city.resource.calculate_food_stocks_and_supply_wheat(); }},
-  {18, "vegetation_growth", [](city_t&) { map_vegetation_growth_update(); }},
-  {19, "open_water_access", [](city_t& c) { c.buildings_update_open_water_access(); }},
-  {20, "industry_production", [](city_t& c) { c.industry.update_production(); }},
-  {21, "kingdome_access", [](city_t& c) { c.maintenance.check_kingdome_access(); }},
-  {22, "population_room", [](city_t& c) { c.population.update_room(); }},
-  {23, "migration", [](city_t& c) { c.migration.update(); }},
-  {23, "population_migration", [](city_t& c) { c.population.update_migration(); }},
-  {24, "evict_overcrowded", [](city_t& c) { c.population.evict_overcrowded(); }},
-  {25, "labor", [](city_t& c) { c.labor.update(); }},
-  {27, "water_supply", [](city_t& c) { c.buildings.update_water_supply(); }},
-  {28, "religion_supply", [](city_t& c) { c.buildings.update_religion_supply_houses(); }},
-  {29, "formations_skip_morale", [](city_t&) { formation_update_all(/*skip_morale*/ true); }},
-  {30, "crime", [](city_t&) { g_crime.update(); }},
-  {31, "tower_sentry_decay", [](city_t&) { building_barracks_decay_tower_sentry_request(); }},
-  {31, "generate_figures", [](city_t& c) { c.buildings_generate_figure(); }},
-  {32, "empire_traders", [](city_t&) { g_empire_traders.update(); }},
-  {32, "trade", [](city_t& c) { c.trade_update(); }},
-  {33, "building_counters", [](city_t& c) { c.buildings.update_counters(); }},
-  {33, "avg_coverage", [](city_t& c) { c.avg_coverage.update(); }},
-  {33, "health_coverage", [](city_t& c) { c.health.update_coverage(); }},
-  {33, "farms", [](city_t&) { building_industry_update_farms(); }},
-  {34, "distribute_treasury", [](city_t& c) { c.government_distribute_treasury(); }},
-  {35, "house_health", [](city_t& c) { c.house_service_update_health(); }},
-  {36, "culture_aggregates", [](city_t& c) { c.house_service_calculate_culture_aggregates(); }},
-  {37, "malaria_risk", [](city_t&) { g_malaria_risk.update(); }},
-  {38, "building_desirability", [](city_t&) { building_update_desirability(); }},
-  {39, "house_evolve", [](city_t& c) { c.house_process_evolve(); }},
-  {40, "building_state", [](city_t&) { building_update_state(); }},
-  {43, "burning_ruins", [](city_t&) { building_burning_ruin::update_all_ruins(); }},
-  {44, "building_destroying", [](city_t& c) { c.maintenance.check_building_destroying(); }},
-  {44, "reset_protesters", [](city_t& c) { c.sentiment.reset_protesters_criminals(); }},
-  {45, "criminals", [](city_t& c) { c.figures_generate_criminals(); }},
-  {46, "building_malaria_risk", [](city_t&) { building_update_malaria_risk(); }},
-  {48, "house_tax_coverage_decay", [](city_t& c) { c.house_decay_tax_coverage(); }},
-  {49, "avg_coverage", [](city_t& c) { c.avg_coverage.update(); }},
-};
-
 void city_t::update_tick(int simtick) {
-    for (const city_tick_slot& slot : city_tick_slots) {
-        if (slot.tick == simtick) {
-            slot.update(*this);
-        }
-    }
-
-    if (plagues.locusts_countdown > 0) {
-        plagues.locusts_countdown--;
-    }
-    if (plagues.frogs_countdown > 0) {
-        plagues.frogs_countdown--;
-    }
+    sim_schedule_run(SIM_PHASE_TICK_SLOT, *this, simtick);
+    sim_schedule_run(SIM_PHASE_TICK_CITY_END, *this);
 }
 
 bool city_t::generate_trader_from(empire_city &city) {

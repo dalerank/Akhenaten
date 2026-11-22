@@ -97,6 +97,8 @@ void minimap_window::subscribe_events() {
     events::subscribe([] (event_rotate_map_reset ev) {
         widget_minimap_invalidate();
     });
+
+    events::subscribe([](event_advance_day ev) { widget_minimap_invalidate(); });
 }
 
 vec2i minimap_window::get_mouse_relative_pos(const mouse *m, float &xx, float &yy) {

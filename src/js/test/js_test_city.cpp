@@ -1,5 +1,6 @@
 #include "js/test/js_test_common.h"
 
+#include "game/sim_schedule.h"
 #include "building/building_barracks.h"
 #include "building/building_bazaar.h"
 #include "building/building_fishing_wharf.h"
@@ -588,3 +589,14 @@ void __test_scenario_init_max_year() {
     scenario_criteria_init_max_year();
 }
 ANK_FUNCTION(__test_scenario_init_max_year);
+
+static pcstr __test_sim_schedule() {
+    static std::string out;
+    out.clear();
+    for (const sim_step& step : sim_schedule_steps()) {
+        out += sim_phase_name(step.phase);
+        out += ":" + std::to_string(step.slot) + ":" + step.name + ":" + std::to_string(step.writes) + ";";
+    }
+    return out.c_str();
+}
+ANK_FUNCTION(__test_sim_schedule);

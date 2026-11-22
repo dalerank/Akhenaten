@@ -10,7 +10,7 @@
 #include "dev/debug.h"
 #include "editor/editor.h"
 #include "platform/arguments.h"
-#include "widget/widget_minimap.h"
+#include "game/sim_schedule.h"
 #include "city/city_buildings.h"
 #include "grid/vegetation.h"
 #include "grid/trees.h"
@@ -101,23 +101,14 @@ void game_t::update_tick(int simtick) {
         stub_records_guard_check("between ticks");
     }
 
-    g_city.population.housing_type_counts_update();
-    random_generate_next();
-    game_undo_reduce_time_available();
-
-    g_floods.tick_update(false);
-
-    g_city.buildings.update_tick(game.paused);
-
+    sim_schedule_run(SIM_PHASE_TICK_BEGIN, g_city);
     g_city.update_tick(simtick);
 
     if (g_simulation.simtime.advance_tick()) {
         advance_day();
     }
 
-    g_city.figures.update();
-
-    g_scenario.update();
+    sim_schedule_run(SIM_PHASE_TICK_END, g_city);
 
     if (guard_stub_records) {
         stub_records_guard_check("during tick");
@@ -125,49 +116,16 @@ void game_t::update_tick(int simtick) {
 }
 
 void game_t::advance_year() {
-    scenario_empire_process_expansion();
-    game_undo_disable();
-    g_simulation.simtime.advance_year();
-    city_population_request_yearly_update();
-    g_city.finance.advance_year();
-    g_city.migration.advance_year();
-    g_city.monuments.advance_year();
-    g_empire.reset_yearly_trade_amounts();
-    g_city.ratings_update(/*yearly_update*/ true);
-    g_city.ra_temple_complex_yearly_favour();
-    g_city.buildings.update_year();
-    //    city_gods_reset_yearly_blessings();
+    sim_schedule_run(SIM_PHASE_YEAR, g_city);
 }
 
 void game_t::advance_week() {
-    g_city.update_week(g_simulation.simtime);
-
-    events::emit(event_advance_week::from_simtime(g_simulation.simtime));
+    sim_schedule_run(SIM_PHASE_WEEK, g_city);
 }
 
 void game_t::advance_month() {
-    g_city.update_month(g_simulation.simtime);
-    g_distant_battle.update_month();
-
-    random_generate_next();                  // TODO: find out the source / reason for this
-    g_empire.update_month();
-    g_scenario.events.process_random_events();
-    // OG tick.c advance_month: invasions are processed before the other events.
-    g_scenario.events.process_invasions();
-    g_scenario.events.process_events();
-    g_invasions.process_bind_resolutions();
-    // Julius: monthly — warning months_to_go tick + timed map invasions (KNGDOME/enemy/uprising).
-    scenario_invasion_process();
-
-    formation_update_monthly_morale_at_rest();
-    city_message_decrease_delays();
-
-    map_tiles_update_all_roads();
-    //    map_tiles_river_refresh_entire();
-    map_routing_update_land_citizen();
-    //    city_message_sort_and_compact();
-
-    figure_locust::update_month(g_simulation.simtime.month + 1);
+    sim_schedule_run(SIM_PHASE_MONTH_CITY, g_city);
+    sim_schedule_run(SIM_PHASE_MONTH, g_city);
 
     // OG advance_month: the yearly update recomputes the ratings, so December does not also run the monthly one.
     if (g_simulation.simtime.advance_month()) {
@@ -176,9 +134,7 @@ void game_t::advance_month() {
         g_city.ratings_update(/*yearly_update*/false);
     }
 
-    g_city.finance.update_estimate_taxes();
-
-    events::emit(event_advance_month::from_simtime(g_simulation.simtime));
+    sim_schedule_run(SIM_PHASE_MONTH_END, g_city);
 }
 
 void game_t::advance_day() {
@@ -194,16 +150,7 @@ void game_t::advance_day() {
         advance_week();
     }
 
-    g_distant_battle.update_day();
-    g_invasion_auto_resolve.update_day();
-
-    g_city.update_day(g_simulation.simtime);
-    g_city.victory.victory_check();
-    g_city.avg_coverage.update();
-
-    widget_minimap_invalidate();
-
-    events::emit(event_advance_day::from_simtime(g_simulation.simtime));
+    sim_schedule_run(SIM_PHASE_DAY, g_city);
 }
 
 void game_t::reload_objects() {

@@ -225,8 +225,6 @@ struct city_t {
     void change_happiness(int amount);
 
     void update_tick(int simtick);
-    void update_day(simulation_time_t t);
-    void update_week(simulation_time_t t);
     void update_month(simulation_time_t t);
 
     e_availability is_advisor_available(e_advisor advisor) const;

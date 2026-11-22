@@ -485,7 +485,6 @@ game/game.cpp -> dev/debug.h
 game/game.cpp -> editor/editor.h
 game/game.cpp -> graphics/view/view.h
 game/game.cpp -> platform/arguments.h
-game/game.cpp -> widget/widget_minimap.h
 game/game.h -> graphics/animation.h
 game/game.h -> graphics/painter.h
 game/game_config.cpp -> dev/debug.h
