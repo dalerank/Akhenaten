@@ -1572,3 +1572,23 @@ static tile2i __test_monument_access_point(int bid) {
     return mm ? mm->access_point() : tile2i::invalid;
 }
 ANK_FUNCTION_1(__test_monument_access_point);
+
+static void __test_pyramid_part_set_blocks(int bid, int stage, int blocks) {
+    auto* ps = pyramid_part_state_get(bid);
+    if (!ps) {
+        return;
+    }
+    ps->stage = (uint8_t)stage;
+    ps->blocks = (uint8_t)blocks;
+}
+ANK_FUNCTION_3(__test_pyramid_part_set_blocks);
+
+static int __test_pyramid_part_draw_image(int bid) {
+    building* b = building_get(bid);
+    building_pyramid* pyr = b ? b->dcast_pyramid() : nullptr;
+    if (!pyr) {
+        return -1;
+    }
+    return static_cast<building_stepped_pyramid*>(pyr)->height_part_image(b->tile);
+}
+ANK_FUNCTION_1(__test_pyramid_part_draw_image);

@@ -115,6 +115,8 @@ public:
     bool draw_ornaments_and_animations_hight_impl(painter &ctx, vec2i point, tile2i tile, color mask, const vec2i tiles_size);
     bool draw_unfinished_height_ornaments(painter &ctx, vec2i point, tile2i tile, color mask, const vec2i tiles_size);
     bool draw_completed_height_ornaments(painter &ctx, vec2i point, tile2i tile, color mask, const vec2i tiles_size);
+    int height_part_image(tile2i tile);
+    int remake_part_course(int layer, bool polished) const;
     virtual bool use_polish_sprites_for_layer(int layer) const { return false; }
     void draw_ornaments_and_animations_stairs_impl(painter &ctx, vec2i point, tile2i tile, color color_mask, const vec2i tiles_size);
     void change_parts_types_in_layer(tile2i begin, const vec2i layer_size, uint8_t layer);

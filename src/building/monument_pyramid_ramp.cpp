@@ -460,11 +460,18 @@ static building *pyramid_ramp_link_neighbor(building &part, const pyramid_part_s
 static vec2i pyramid_ramp_origin_for_part(building &part) {
     const tile2i anchor = pyramid_part_draw_anchor(part);
     const vec2i anchor_px = g_camera.lookup_tile_to_pixel(anchor);
-    int L = 0;
-    if (auto *mon = part.dcast_monument()) {
-        L = mon->runtime_data().layer;
+    building* head = part.main();
+    const e_pyramid_style style = head ? g_monument_pyramid_engine.style_of(head) : PYRAMID_STYLE_NONE;
+    const auto* ps = pyramid_part_state_get(part.id);
+    int lift = 0;
+    if (ps && style == PYRAMID_STYLE_BENT) {
+        lift = g_monument_pyramid_engine.bent_layer_pixel_height((int)ps->size_variant, (int)ps->layer);
+    } else if (ps && (style == PYRAMID_STYLE_TRUE || style == PYRAMID_STYLE_MUDBRICK)) {
+        lift = TILE_HEIGHT_PIXELS * 3 * (int)ps->layer;
+    } else if (auto* mon = part.dcast_monument()) {
+        lift = TILE_HEIGHT_PIXELS * 3 * (int)mon->runtime_data().layer;
     }
-    const vec2i pixel = anchor_px - vec2i{0, TILE_HEIGHT_PIXELS * 3 * L};
+    const vec2i pixel = anchor_px - vec2i{0, lift};
     return pixel + vec2i{HALF_TILE_WIDTH_PIXELS + 1, -HALF_TILE_HEIGHT_PIXELS};
 }
 
