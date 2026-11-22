@@ -9,6 +9,7 @@
 #include "graphics/image.h"
 #include "graphics/graphics.h"
 #include "graphics/elements/arrow_button.h"
+#include "graphics/elements/ui.h"
 #include "graphics/elements/generic_button.h"
 #include "graphics/elements/lang_text.h"
 #include "graphics/image_groups.h"
@@ -76,39 +77,38 @@ static vec2i map_viewport_psize() {
 }
 
 static void draw_paneling() {
-    auto &data = g_window_empire;
-    painter ctx = game.painter();
+    auto& data = g_window_empire;
     int image_base = image_id_from_group(GROUP_EDITOR_EMPIRE_PANELS);
     // bottom panel background
-    graphics_set_clip_rectangle(data.p_min, map_viewport_psize());
+    ui::push(ui::cmd_t::clip_set, ui::opt::Pos{data.p_min}, ui::opt::Size{map_viewport_psize()});
     for (int x = data.p_min.x; x < data.p_max.x; x += 70) {
-        ctx.img_generic(image_base + 3, vec2i{x, data.p_max.y - 120});
-        ctx.img_generic(image_base + 3, vec2i{x, data.p_max.y - 80});
-        ctx.img_generic(image_base + 3, vec2i{x, data.p_max.y - 40});
+        ui::eimage(image_base + 3, vec2i{x, data.p_max.y - 120});
+        ui::eimage(image_base + 3, vec2i{x, data.p_max.y - 80});
+        ui::eimage(image_base + 3, vec2i{x, data.p_max.y - 40});
     }
 
     // horizontal bar borders
     for (int x = data.p_min.x; x < data.p_max.x; x += 86) {
-        ctx.img_generic(image_base + 1, vec2i{x, data.p_min.y});
-        ctx.img_generic(image_base + 1, vec2i{x, data.p_max.y - 120});
-        ctx.img_generic(image_base + 1, vec2i{x, data.p_max.y - 16});
+        ui::eimage(image_base + 1, vec2i{x, data.p_min.y});
+        ui::eimage(image_base + 1, vec2i{x, data.p_max.y - 120});
+        ui::eimage(image_base + 1, vec2i{x, data.p_max.y - 16});
     }
 
     // vertical bar borders
     for (int y = data.p_min.y + 16; y < data.p_max.y; y += 86) {
-        ctx.img_generic(image_base, vec2i{data.p_min.x, y});
-        ctx.img_generic(image_base, vec2i{data.p_max.x - 16, y});
+        ui::eimage(image_base, vec2i{data.p_min.x, y});
+        ui::eimage(image_base, vec2i{data.p_max.x - 16, y});
     }
 
     // crossbars
-    ctx.img_generic(image_base + 2, vec2i{data.p_min.x, data.p_min.x});
-    ctx.img_generic(image_base + 2, vec2i{data.p_min.x, data.p_max.x - 120});
-    ctx.img_generic(image_base + 2, vec2i{data.p_min.x, data.p_max.x - 16});
-    ctx.img_generic(image_base + 2, vec2i{data.p_max.x - 16, data.p_min.y});
-    ctx.img_generic(image_base + 2, vec2i{data.p_max.x - 16, data.p_max.y - 120});
-    ctx.img_generic(image_base + 2, vec2i{data.p_max.x - 16, data.p_max.y - 16});
+    ui::eimage(image_base + 2, vec2i{data.p_min.x, data.p_min.x});
+    ui::eimage(image_base + 2, vec2i{data.p_min.x, data.p_max.x - 120});
+    ui::eimage(image_base + 2, vec2i{data.p_min.x, data.p_max.x - 16});
+    ui::eimage(image_base + 2, vec2i{data.p_max.x - 16, data.p_min.y});
+    ui::eimage(image_base + 2, vec2i{data.p_max.x - 16, data.p_max.y - 120});
+    ui::eimage(image_base + 2, vec2i{data.p_max.x - 16, data.p_max.y - 16});
 
-    graphics_reset_clip_rectangle();
+    ui::push(ui::cmd_t::clip_reset);
 }
 
 static void draw_background(int) {
@@ -135,8 +135,7 @@ static void draw_shadowed_number(int value, int x, int y, color color) {
 }
 
 static void draw_empire_object(int object_index, const empire_object &obj) {
-    auto &data = g_window_empire;
-    painter ctx = game.painter();
+    auto& data = g_window_empire;
     vec2i pos = obj.pos;
     int image_id = obj.image_id;
 
@@ -160,48 +159,59 @@ static void draw_empire_object(int object_index, const empire_object &obj) {
     } else if (obj.type == EMPIRE_OBJECT_KINGDOME_ARMY || obj.type == EMPIRE_OBJECT_ENEMY_ARMY) {
         draw_shadowed_number(obj.distant_battle_travel_months, data.draw_offset.x + pos.x + 7, data.draw_offset.y + pos.y - 9, obj.type == EMPIRE_OBJECT_KINGDOME_ARMY ? COLOR_WHITE : COLOR_FONT_RED);
     }
-    ctx.img_generic(image_id, vec2i{data.draw_offset.x + pos.x, data.draw_offset.y + pos.y});
+    ui::eimage(image_id, vec2i{data.draw_offset.x + pos.x, data.draw_offset.y + pos.y});
     const image_t* img = image_get(image_id);
     if (img->animation.speed_id) {
         int new_animation = g_empire.update_animation(object_index, obj, image_id);
-        ctx.img_generic(image_id + new_animation, data.draw_offset + pos + img->animation.sprite_offset);
+        ui::eimage(image_id + new_animation, data.draw_offset + pos + img->animation.sprite_offset);
     }
 }
 
 static void window_editor_draw_map() {
-    auto &data = g_window_empire;
-    painter ctx = game.painter();
+    auto& data = g_window_empire;
     int viewport_width = map_viewport_width();
     int viewport_height = map_viewport_height();
-    graphics_set_clip_rectangle({data.p_min.x + 16, data.p_min.y + 16}, {viewport_width, viewport_height});
+    ui::push(ui::cmd_t::clip_set, ui::opt::Pos{vec2i{data.p_min.x + 16, data.p_min.y + 16}},
+      ui::opt::Size{vec2i{viewport_width, viewport_height}});
 
     g_empire_map.set_viewport(vec2i(viewport_width, viewport_height));
 
     data.draw_offset.x = data.p_min.x + 16;
     data.draw_offset.y = data.p_min.y + 16;
     data.draw_offset = g_empire_map.adjust_scroll(data.draw_offset);
-    ctx.img_generic(image_id_from_group(GROUP_EDITOR_EMPIRE_MAP), data.draw_offset);
+    ui::eimage(image_id_from_group(GROUP_EDITOR_EMPIRE_MAP), data.draw_offset);
 
     g_empire.foreach_object([](int object_index, const empire_object &obj) { draw_empire_object(object_index, obj); });
 
-    graphics_reset_clip_rectangle();
+    ui::push(ui::cmd_t::clip_reset);
+}
+
+static void push_inset_rect(vec2i start, vec2i size) {
+    const vec2i end = start + size - vec2i{1, 1};
+    ui::push(ui::cmd_t::line, ui::opt::Pos{start}, ui::opt::Size{vec2i{end.x, start.y}},
+      ui::opt::TextColor{COLOR_INSET_DARK});
+    ui::push(ui::cmd_t::line, ui::opt::Pos{vec2i{end.x, start.y}}, ui::opt::Size{end},
+      ui::opt::TextColor{COLOR_INSET_LIGHT});
+    ui::push(ui::cmd_t::line, ui::opt::Pos{vec2i{start.x, end.y}}, ui::opt::Size{end},
+      ui::opt::TextColor{COLOR_INSET_LIGHT});
+    ui::push(ui::cmd_t::line, ui::opt::Pos{start}, ui::opt::Size{vec2i{start.x, end.y}},
+      ui::opt::TextColor{COLOR_INSET_DARK});
 }
 
 static void draw_resource(int resource, int trade_max, int x_offset, int y_offset) {
-    painter ctx = game.painter();
-    graphics_draw_inset_rect(vec2i{x_offset, y_offset}, vec2i{26, 26});
+    push_inset_rect(vec2i{x_offset, y_offset}, vec2i{26, 26});
     int image_id = resource + image_id_from_group(GROUP_EDITOR_EMPIRE_RESOURCES);
     int resource_offset = resource_image_offset(resource, RESOURCE_IMAGE_ICON);
-    ctx.img_generic(image_id + resource_offset, vec2i{x_offset + 1, y_offset + 1});
+    ui::eimage(image_id + resource_offset, vec2i{x_offset + 1, y_offset + 1});
     switch (trade_max) {
     case 15:
-        ctx.img_generic(image_id_from_group(GROUP_EDITOR_TRADE_AMOUNT), vec2i{x_offset + 21, y_offset - 1});
+        ui::eimage(image_id_from_group(GROUP_EDITOR_TRADE_AMOUNT), vec2i{x_offset + 21, y_offset - 1});
         break;
     case 25:
-        ctx.img_generic(image_id_from_group(GROUP_EDITOR_TRADE_AMOUNT) + 1, vec2i{x_offset + 17, y_offset - 1});
+        ui::eimage(image_id_from_group(GROUP_EDITOR_TRADE_AMOUNT) + 1, vec2i{x_offset + 17, y_offset - 1});
         break;
     case 40:
-        ctx.img_generic(image_id_from_group(GROUP_EDITOR_TRADE_AMOUNT) + 2, vec2i{x_offset + 13, y_offset - 1});
+        ui::eimage(image_id_from_group(GROUP_EDITOR_TRADE_AMOUNT) + 2, vec2i{x_offset + 13, y_offset - 1});
         break;
     }
 }
@@ -211,22 +221,22 @@ static void draw_city_info(const empire_city* city) {
     int x_offset = data.p_min.x + 28;
     int y_offset = data.p_max.y - 85;
 
-    int width = lang_text_draw(21, city->name_id, x_offset, y_offset, FONT_NORMAL_WHITE_ON_DARK);
+    int width = ui::text(ui::str(21, city->name_id), {x_offset, y_offset}, FONT_NORMAL_WHITE_ON_DARK);
 
     switch (city->type) {
     case EMPIRE_CITY_OURS:
     case EMPIRE_CITY_FOREIGN_TRADING:
-        lang_text_draw(47, 12, x_offset + 20 + width, y_offset, FONT_NORMAL_BLACK_ON_DARK);
+        ui::label(47, 12, {x_offset + 20 + width, y_offset}, FONT_NORMAL_BLACK_ON_DARK);
         break;
 
     case EMPIRE_CITY_EGYPTIAN_TRADING:
     case EMPIRE_CITY_EGYPTIAN:
     case EMPIRE_CITY_FOREIGN:
-        lang_text_draw(47, 0, x_offset + 20 + width, y_offset, FONT_NORMAL_BLACK_ON_DARK);
+        ui::label(47, 0, {x_offset + 20 + width, y_offset}, FONT_NORMAL_BLACK_ON_DARK);
         break;
 
     case EMPIRE_CITY_PHARAOH_TRADING: {
-        width += lang_text_draw(47, 1, x_offset + 20 + width, y_offset, FONT_NORMAL_BLACK_ON_DARK);
+        width += ui::text(ui::str(47, 1), {x_offset + 20 + width, y_offset}, FONT_NORMAL_BLACK_ON_DARK);
         int resource_x_offset = x_offset + 30 + width;
         for (e_resource r = RESOURCES_MIN; r < RESOURCES_MAX; ++r) {
             if (g_empire.city_sells_resource(city->empire_object_id, r, false)) {
@@ -237,7 +247,7 @@ static void draw_city_info(const empire_city* city) {
         break;
     }
     case EMPIRE_CITY_PHARAOH: {
-        width += lang_text_draw(47, 5, x_offset + 20 + width, y_offset, FONT_NORMAL_BLACK_ON_DARK);
+        width += ui::text(ui::str(47, 5), {x_offset + 20 + width, y_offset}, FONT_NORMAL_BLACK_ON_DARK);
         int resource_x_offset = x_offset + 30 + width;
         for (const auto &r: resource_list::all) {
             if (g_empire.city_sells_resource(city->empire_object_id, r.type, false)) {
@@ -247,7 +257,7 @@ static void draw_city_info(const empire_city* city) {
             }
         }
         resource_x_offset += 50;
-        resource_x_offset += lang_text_draw(47, 4, resource_x_offset, y_offset, FONT_NORMAL_BLACK_ON_DARK);
+        resource_x_offset += ui::text(ui::str(47, 4), {resource_x_offset, y_offset}, FONT_NORMAL_BLACK_ON_DARK);
         resource_x_offset += 10;
         for (const auto &r: resource_list::all) {
             if (g_empire.city_buys_resource(city->empire_object_id, r.type, false)) {
@@ -268,12 +278,13 @@ static void draw_panel_buttons(const empire_city* city) {
     if (city)
         draw_city_info(city);
     else {
-        lang_text_draw_centered(150, scenario_empire_id(), data.p_min.x, data.p_max.y - 85, data.p_max.x - data.p_min.x, FONT_NORMAL_BLACK_ON_DARK);
+        ui::label(150, scenario_empire_id(), {data.p_min.x, data.p_max.y - 85}, FONT_NORMAL_BLACK_ON_DARK,
+          UiFlags_AlignCentered, data.p_max.x - data.p_min.x);
     }
-    lang_text_draw(151, scenario_empire_id(), data.p_min.x + 220, data.p_max.y - 45, FONT_NORMAL_BLACK_ON_DARK);
+    ui::label(151, scenario_empire_id(), {data.p_min.x + 220, data.p_max.y - 45}, FONT_NORMAL_BLACK_ON_DARK);
 
-    button_border_draw({data.p_min.x + 104, data.p_max.y - 52}, {100, 24}, data.focus_button_id == 1 ? 1 : 0);
-    lang_text_draw_centered(44, 7, data.p_min.x + 104, data.p_max.y - 45, 100, FONT_NORMAL_BLACK_ON_DARK);
+    ui::button_border({data.p_min.x + 104, data.p_max.y - 52}, {100, 24}, data.focus_button_id == 1 ? 1 : 0);
+    ui::label(44, 7, {data.p_min.x + 104, data.p_max.y - 45}, FONT_NORMAL_BLACK_ON_DARK, UiFlags_AlignCentered, 100);
 }
 
 static void draw_foreground(int) {
