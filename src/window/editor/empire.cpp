@@ -161,7 +161,7 @@ static void draw_empire_object(int object_index, const empire_object &obj) {
     }
     ui::eimage(image_id, vec2i{data.draw_offset.x + pos.x, data.draw_offset.y + pos.y});
     const image_t* img = image_get(image_id);
-    if (img->animation.speed_id) {
+    if (img && img->animation.speed_id) {
         int new_animation = g_empire.update_animation(object_index, obj, image_id);
         ui::eimage(image_id + new_animation, data.draw_offset + pos + img->animation.sprite_offset);
     }
