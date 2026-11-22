@@ -76,10 +76,7 @@ static bool pyramid_style_draws_og_parts(e_pyramid_style style) {
     return style == PYRAMID_STYLE_BENT || style == PYRAMID_STYLE_TRUE || style == PYRAMID_STYLE_MUDBRICK;
 }
 
-// OG pyramid_part_update_image (finished stays blocks==0 on CASING):
-//   half  -> IMAGE_GROUP_BENT_PYRAMID (Bent_pyramid_00112+) row (blocks-1) / (5-blocks)
-//   else  -> IMAGE_GROUP_PYRAMID (Bent_pyramid_00001+, same art as Pyramid) row (blocks-1) / (11-blocks)
-int bent_og_part_image(building& part, const pyramid_part_state& ps, bool finished) {
+static int og_pyramid_part_image(building& part, const pyramid_part_state& ps, bool finished, e_pyramid_style style) {
     building* head = part.main();
     const e_building_type t = head ? head->type : part.type;
     const auto& params = building_static_params::get(t);
@@ -91,29 +88,11 @@ int bent_og_part_image(building& part, const pyramid_part_state& ps, bool finish
     const int bent0 = half_first > 0 ? half_first : pyramid0 + 111;
     int kind = g_monument_pyramid_engine.layout_kind(head, ps.subtype);
     kind = g_monument_pyramid_engine.rotated_kind(kind, map_view_orientation() / 2);
-    const bool half = g_monument_pyramid_engine.bent_is_half_layer((int)ps.size_variant, (int)ps.layer);
+    const bool half = style == PYRAMID_STYLE_BENT
+                      && g_monument_pyramid_engine.bent_is_half_layer((int)ps.size_variant, (int)ps.layer);
     if (finished || ps.stage == PYRAMID_STAGE_CASING) {
         const int blocks = finished ? 0 : (int)ps.blocks;
         return half ? bent0 + (5 - blocks) * 8 + kind : pyramid0 + (11 - blocks) * 8 + kind;
-    }
-    if (ps.blocks > 0) {
-        return (half ? bent0 : pyramid0) + (ps.blocks - 1) * 8 + kind;
-    }
-    return 0;
-}
-
-static int og_pyramid_part_image(building& part, const pyramid_part_state& ps, bool finished) {
-    building* head = part.main();
-    const e_building_type t = head ? head->type : part.type;
-    const int pyramid0 = building_static_params::get(t).first_img("corner_bricks");
-    if (pyramid0 <= 0) {
-        return 0;
-    }
-    int kind = g_monument_pyramid_engine.layout_kind(head, ps.subtype);
-    kind = g_monument_pyramid_engine.rotated_kind(kind, map_view_orientation() / 2);
-    if (finished || ps.stage == PYRAMID_STAGE_CASING) {
-        const int blocks = finished ? 0 : (int)ps.blocks;
-        return pyramid0 + (11 - blocks) * 8 + kind;
     }
     if (ps.blocks == 0) {
         return 0;
@@ -122,7 +101,7 @@ static int og_pyramid_part_image(building& part, const pyramid_part_state& ps, b
         const int variant = (map_random_get(part.tile) & 1) * pyramid_engine_config.blocks_per_layer;
         return pyramid0 + 95 + ps.blocks + variant;
     }
-    return pyramid0 + (ps.blocks - 1) * 8 + kind;
+    return (half ? bent0 : pyramid0) + (ps.blocks - 1) * 8 + kind;
 }
 
 struct pyramid_causeway_probe {
@@ -1166,9 +1145,9 @@ void building_stepped_pyramid::finish_block_construction() {
             int img = 0;
             // OG: map_building_tiles_add(casing face) — footprint draws the base;
             // empty_land leaves a grey well under raised bent half-layers.
-            if (finish_style == PYRAMID_STYLE_BENT) {
+            if (pyramid_style_draws_og_parts(finish_style)) {
                 if (auto* ps = pyramid_part_state_get(part->id)) {
-                    img = bent_og_part_image(*part, *ps, true);
+                    img = og_pyramid_part_image(*part, *ps, true, finish_style);
                 }
             }
             if (img <= 0) {
@@ -2287,8 +2266,7 @@ int building_stepped_pyramid::height_part_image(tile2i tile) {
     const e_pyramid_style style = pyramid_params().pyramide_type;
     auto* ps = pyramid_part_state_get(base.id);
     if (pyramid_style_draws_og_parts(style) && ps) {
-        return style == PYRAMID_STYLE_BENT ? bent_og_part_image(base, *ps, is_finished())
-                                           : og_pyramid_part_image(base, *ps, is_finished());
+        return og_pyramid_part_image(base, *ps, is_finished(), style);
     }
     const int L = runtime_data().layer;
     const int nlayers = std::max(1, footprint_params().init_tiles.x / 4);
@@ -2339,11 +2317,6 @@ bool building_stepped_pyramid::draw_completed_height_ornaments(painter &ctx, vec
     }
     const vec2i anchor_px = g_camera.lookup_tile_to_pixel(anchor);
 
-    // OG bent pyramid_part_draw (city_without_overlay draws pyramids only here):
-    //   height = bent_pixel_heights[layer]
-    //   draw_x/y = city tile + (half_w+1, -half_h) - height
-    //   height!=0 → image_draw + isometric_top; height==0 → isometric_top only
-    //   (footprint pass already drew the map image base — set on finish).
     if (pyramid_style_draws_og_parts(style) && ps) {
         const bool bent = style == PYRAMID_STYLE_BENT;
         const int img = height_part_image(tile);
@@ -2355,20 +2328,10 @@ bool building_stepped_pyramid::draw_completed_height_ornaments(painter &ctx, vec
                               : (int)ps->layer * TILE_HEIGHT_PIXELS * 3;
         // OG's (+half_w+1, -half_h) draw shift is already folded into drawtile here.
         const vec2i pixel = anchor_px - vec2i{0, lift};
-        if (lift != 0 || !bent) {
-            auto& full = ImageDraw::create_subcommand(ctx, render_command_t::ert_drawtile_full);
-            full.image_id = img;
-            full.pixel = pixel;
-            full.mask = color_mask;
-        } else {
-            // Map footprint already drew ert_drawtile base — only the top here.
-            auto& top = ImageDraw::create_subcommand(ctx, render_command_t::ert_drawtile_top);
-            top.image_id = img;
-            const image_t* im = image_get(img);
-            const int offset_y = im ? image_iso_top_offset_y(im) : 0;
-            top.pixel = pixel - vec2i{0, offset_y};
-            top.mask = color_mask;
-        }
+        auto& full = ImageDraw::create_subcommand(ctx, render_command_t::ert_drawtile_full);
+        full.image_id = img;
+        full.pixel = pixel;
+        full.mask = color_mask;
         fill_tiles_height(ctx, anchor, img);
         pyramid_engine_update_part_ramp_image(base.id);
         const vec2i ramp_origin = pixel + vec2i{HALF_TILE_WIDTH_PIXELS + 1, -HALF_TILE_HEIGHT_PIXELS};
