@@ -322,6 +322,17 @@ static int read_save_version(pcstr full_path) {
     return GamestateLoadDetail::read_file_version(full_path, 0);
 }
 
+// Fills a banner body from a localized template that embeds the filename via a
+// "{0}" placeholder; templates without the placeholder get the name appended.
+static void save_migration_message_body(bstring512 &body, pcstr text, pcstr filename) {
+    const pcstr placeholder = strstr(text, "{0}");
+    if (!placeholder) {
+        body.printf("%s %s", text, filename);
+        return;
+    }
+    body.printf("%.*s%s%s", (int)(placeholder - text), text, filename, placeholder + 3);
+}
+
 // An older-format .svx is silently converted to the current format. The loaded
 // file is renamed to "<name>_v<old_version>.svx" and the live (already converted)
 // city state is written to the canonical "<name>.svx"; the original is never
@@ -407,7 +418,7 @@ static bool migrate_legacy_save_file(pcstr relative_name, int file_version) {
     // Inform (not ask): the converted copy is now the canonical file, the original
     // is kept under the version-tagged backup name.
     bstring512 body;
-    body.printf("%s %s", lang_text_from_key("#save_migration_message"), rel_backup.c_str());
+    save_migration_message_body(body, lang_text_from_key("#save_migration_message"), rel_backup.c_str());
     g_warning_manager.show_message_banner(body.c_str());
 
     logs::info("[test-marker] save_migrated:%s:to=%s:backup=%s",

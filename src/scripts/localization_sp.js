@@ -2469,5 +2469,5 @@ localization_sp = [
   {key:"#antelope_hunter_hunting", text:"¡Los antílopes no son rival para nosotros!"},
   {key:"#antelope_hunter_back", text:"Esta noche habrá filetes para todos."},
   {key:"#antelope_hunter_city_is_good", text:"¡Esta ciudad es buena!"},
-  {key:"#save_migration_message", text:"Tu partida guardada usaba un formato antiguo y se ha convertido automáticamente. El archivo original se ha conservado como:"},
+  {key:"#save_migration_message", text:"Tu partida guardada usaba un formato antiguo y se ha convertido automáticamente. Encontrarás el archivo original con el nombre {0}, por si lo necesitas."},
 ]
