@@ -17,13 +17,36 @@ constexpr int MAX_TILES = 4;
 static const int X_VIEW_OFFSETS[MAX_TILES] = {0, -30, 30, 0};
 static const int Y_VIEW_OFFSETS[MAX_TILES] = {0, 15, 15, 30};
 
-static void draw_flat_tile_editor(vec2i pos, color color_mask) {
+static render_command_t& push_tool_command(render_command_t::e_render_type type, int image_id, vec2i pixel,
+  color mask) {
     painter ctx = game.painter();
+    render_command_t& command = ImageDraw::create_command(ctx, type);
+    command.image_id = image_id;
+    command.pixel = pixel;
+    command.mask = mask;
+    command.use_sort_pixel = true;
+    command.location = SOURCE_LOCATION;
+    return command;
+}
+
+static void draw_flat_tile_editor(vec2i pos, color color_mask) {
     if (color_mask == COLOR_MASK_GREEN && !g_scenario.is_desert())
-        ctx.img_generic(image_id_from_group(GROUP_TERRAIN_OVERLAY_COLORED), pos, ALPHA_MASK_SEMI_TRANSPARENT & color_mask);
+        push_tool_command(render_command_t::ert_generic, image_id_from_group(GROUP_TERRAIN_OVERLAY_COLORED), pos,
+          ALPHA_MASK_SEMI_TRANSPARENT & color_mask);
     else {
-        ctx.img_generic(image_id_from_group(GROUP_TERRAIN_OVERLAY_COLORED), pos, color_mask);
+        push_tool_command(render_command_t::ert_generic, image_id_from_group(GROUP_TERRAIN_OVERLAY_COLORED), pos,
+          color_mask);
     }
+}
+
+static void draw_isometric_editor(int image_id, vec2i pos) {
+    const image_t* img = image_get(image_id);
+    if (!img) {
+        return;
+    }
+    const int ydiff = img->isometric_size() * HALF_TILE_HEIGHT_PIXELS;
+    push_tool_command(render_command_t::ert_drawtile, image_id, pos + vec2i{0, ydiff}, COLOR_MASK_GREEN);
+    push_tool_command(render_command_t::ert_drawtile_top, image_id, pos, COLOR_MASK_GREEN);
 }
 
 static void draw_partially_blocked_editor(int x, int y, int num_tiles, int* blocked_tiles) {
@@ -39,15 +62,11 @@ static void draw_partially_blocked_editor(int x, int y, int num_tiles, int* bloc
 }
 
 static void draw_building_image(int image_id, int x, int y) {
-    painter ctx = game.painter();
-    ctx.img_isometric(image_id, vec2i{x, y}, COLOR_MASK_GREEN, 1.f, ImgFlag_None);
-    //    ImageDraw::isometric_top(image_id, x, y, COLOR_MASK_GREEN, city_view_get_scale_float());
+    draw_isometric_editor(image_id, vec2i{x, y});
 }
 
 static void draw_building(tile2i tile, int screen_x, int screen_y, e_building_type type) {
-    const auto &props = building_static_params::get(type);
-    painter ctx = game.painter();
-
+    const auto& props = building_static_params::get(type);
     int num_tiles = props.building_size * props.building_size;
     int blocked_tiles[MAX_TILES];
     int blocked = !editor_tool_can_place_building(tile, num_tiles, blocked_tiles);
@@ -59,7 +78,7 @@ static void draw_building(tile2i tile, int screen_x, int screen_y, e_building_ty
         for (int i = 0; i < num_tiles; i++) {
             int x_offset = screen_x + X_VIEW_OFFSETS[i];
             int y_offset = screen_y + Y_VIEW_OFFSETS[i];
-            ctx.img_isometric(image_id, vec2i{x_offset, y_offset}, COLOR_MASK_GREEN, 1.f, ImgFlag_None);
+            draw_isometric_editor(image_id, vec2i{x_offset, y_offset});
         }
     } else {
         int image_id;

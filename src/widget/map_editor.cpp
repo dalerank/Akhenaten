@@ -88,6 +88,7 @@ void widget_map_editor_draw() {
     ImageDraw::apply_render_commands(ctx, "editor_draw_height");
 
     map_editor_tool_draw(ctx, data.current_tile);
+    ImageDraw::apply_render_commands(ctx, "editor_draw_tool");
 
     graphics_reset_clip_rectangle();
     set_render_scale(ctx, 1.0f);
