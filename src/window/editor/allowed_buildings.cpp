@@ -3,6 +3,8 @@
 #include "graphics/graphics.h"
 #include "graphics/color.h"
 #include "graphics/elements/button.h"
+#include "graphics/elements/ui.h"
+#include "graphics/screen.h"
 #include "graphics/elements/generic_button.h"
 #include "graphics/elements/lang_text.h"
 #include "graphics/elements/panel.h"
@@ -80,12 +82,12 @@ void editor_check_zoo_resources(void) {
 
 static void draw_foreground(int) {
     editor_check_zoo_resources();
-    graphics_set_to_dialog();
+    ui::begin_widget(g_screen.dialog_offset);
 
-    outer_panel_draw(vec2i{16, 32}, 38, 26);
+    ui::panel(vec2i{16, 32}, {38, 26}, UiFlags_PanelOuter);
 
-    lang_text_draw(44, 47, 26, 42, FONT_LARGE_BLACK_ON_LIGHT);
-    lang_text_draw_centered(13, 3, 16, 424, 608, FONT_NORMAL_BLACK_ON_LIGHT);
+    ui::label(44, 47, {26, 42}, FONT_LARGE_BLACK_ON_LIGHT);
+    ui::label(13, 3, {16, 424}, FONT_NORMAL_BLACK_ON_LIGHT, UiFlags_AlignCentered, 608);
     for (int i = 1; i <= 47; i++) {
         int x, y;
         if (i <= 16) {
@@ -98,15 +100,15 @@ static void draw_foreground(int) {
             x = 423;
             y = 82 + 20 * (i - 33);
         }
-        button_border_draw({x, y}, {190, 18}, focus_button_id == i);
+        ui::button_border({x, y}, {190, 18}, focus_button_id == i);
         if (scenario_editor_is_building_allowed(i))
-            lang_text_draw_centered(67, i, x, y + 4, 190, FONT_NORMAL_BLACK_ON_LIGHT);
+            ui::label(67, i, {x, y + 4}, FONT_NORMAL_BLACK_ON_LIGHT, UiFlags_AlignCentered, 190);
         else {
-            lang_text_draw_centered_colored(67, i, x, y + 4, 190, FONT_SMALL_PLAIN, COLOR_FONT_RED);
+            ui::label_colored(ui::str(67, i), {x, y + 4}, FONT_SMALL_PLAIN, COLOR_FONT_RED, 190);
         }
     }
 
-    graphics_reset_dialog();
+    ui::end_widget();
 }
 
 static void handle_input(const mouse* m, const hotkeys* h) {

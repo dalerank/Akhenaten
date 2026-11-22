@@ -4,6 +4,8 @@
 #include "graphics/graphics.h"
 #include "graphics/image.h"
 #include "graphics/elements/button.h"
+#include "graphics/elements/ui.h"
+#include "graphics/screen.h"
 #include "graphics/elements/generic_button.h"
 #include "graphics/elements/lang_text.h"
 #include "graphics/elements/panel.h"
@@ -51,14 +53,12 @@ static void draw_background(int) {
 }
 
 static void draw_foreground(int) {
-    painter ctx = game.painter();
+    ui::begin_widget(g_screen.dialog_offset);
 
-    graphics_set_to_dialog();
-
-    outer_panel_draw(vec2i{0, 0}, 40, 30);
-    lang_text_draw(44, 95, 20, 12, FONT_LARGE_BLACK_ON_LIGHT);
-    lang_text_draw_centered(13, 3, 0, 456, 640, FONT_NORMAL_BLACK_ON_LIGHT);
-    lang_text_draw_multiline(152, 3, vec2i{32, 376}, 576, FONT_NORMAL_BLACK_ON_LIGHT);
+    ui::panel(vec2i{0, 0}, {40, 30}, UiFlags_PanelOuter);
+    ui::label(44, 95, {20, 12}, FONT_LARGE_BLACK_ON_LIGHT);
+    ui::label(13, 3, {0, 456}, FONT_NORMAL_BLACK_ON_LIGHT, UiFlags_AlignCentered, 640);
+    ui::text_multiline(ui::str(152, 3), vec2i{32, 376}, 576, FONT_NORMAL_BLACK_ON_LIGHT, 0);
 
     for (int i = 0; i < 20; i++) {
         int x, y;
@@ -69,23 +69,23 @@ static void draw_foreground(int) {
             x = 320;
             y = 42 + 30 * (i - 10);
         }
-        button_border_draw({x, y}, {290, 25}, focus_button_id == i + 1);
+        ui::button_border({x, y}, {290, 25}, focus_button_id == i + 1);
         editor_price_change price_change;
         scenario_editor_price_change_get(i, &price_change);
         if (price_change.year) {
-            text_draw_number(price_change.year, '+', " ", x + 10, y + 6, FONT_NORMAL_BLACK_ON_LIGHT);
-            lang_text_draw_year(g_scenario.start_year + price_change.year, x + 65, y + 6, FONT_NORMAL_BLACK_ON_LIGHT);
+            ui::label_number(price_change.year, '+', " ", {x + 10, y + 6}, FONT_NORMAL_BLACK_ON_LIGHT);
+            ui::label_year(g_scenario.start_year + price_change.year, {x + 65, y + 6}, FONT_NORMAL_BLACK_ON_LIGHT);
             int offset = price_change.resource + resource_image_offset(price_change.resource, RESOURCE_IMAGE_ICON);
-            ctx.img_generic(image_id_from_group(GROUP_EDITOR_RESOURCE_ICONS) + offset, vec2i{x + 140, y + 3});
+            ui::eimage(image_id_from_group(GROUP_EDITOR_RESOURCE_ICONS) + offset, vec2i{x + 140, y + 3});
             int width
-              = lang_text_draw(44, price_change.is_rise ? 104 : 103, x + 170, y + 6, FONT_NORMAL_BLACK_ON_LIGHT);
-            text_draw_number(price_change.amount, '@', " ", x + 170 + width, y + 6, FONT_NORMAL_BLACK_ON_LIGHT);
+              = ui::text(ui::str(44, price_change.is_rise ? 104 : 103), {x + 170, y + 6}, FONT_NORMAL_BLACK_ON_LIGHT);
+            ui::label_number(price_change.amount, '@', " ", {x + 170 + width, y + 6}, FONT_NORMAL_BLACK_ON_LIGHT);
         } else {
-            lang_text_draw_centered(44, 102, x, y + 6, 290, FONT_NORMAL_BLACK_ON_LIGHT);
+            ui::label(44, 102, {x, y + 6}, FONT_NORMAL_BLACK_ON_LIGHT, UiFlags_AlignCentered, 290);
         }
     }
 
-    graphics_reset_dialog();
+    ui::end_widget();
 }
 
 static void handle_input(const mouse* m, const hotkeys* h) {

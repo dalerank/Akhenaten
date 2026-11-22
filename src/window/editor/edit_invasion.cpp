@@ -2,6 +2,7 @@
 
 #include "graphics/graphics.h"
 #include "graphics/elements/button.h"
+#include "graphics/elements/ui.h"
 #include "graphics/elements/generic_button.h"
 #include "graphics/elements/lang_text.h"
 #include "graphics/elements/panel.h"
@@ -57,37 +58,37 @@ static void draw_background(int) {
 
 static void draw_foreground(int) {
     auto& data = g_edit_invasion_data;
-    graphics_set_to_dialog();
+    ui::begin_widget(g_screen.dialog_offset);
 
-    outer_panel_draw(vec2i{0, 100}, 38, 11);
-    lang_text_draw(44, 22, 14, 114, FONT_LARGE_BLACK_ON_LIGHT);
+    ui::panel(vec2i{0, 100}, {38, 11}, UiFlags_PanelOuter);
+    ui::label(44, 22, {14, 114}, FONT_LARGE_BLACK_ON_LIGHT);
 
-    button_border_draw({30, 152}, {60, 25}, data.focus_button_id == 1);
-    text_draw_number_centered_prefix(data.invasion.year, '+', 30, 158, 60, FONT_NORMAL_BLACK_ON_LIGHT);
-    lang_text_draw_year(g_scenario.start_year + data.invasion.year, 100, 158, FONT_NORMAL_BLACK_ON_LIGHT);
+    ui::button_border({30, 152}, {60, 25}, data.focus_button_id == 1);
+    ui::label_number_centered(data.invasion.year, '+', " ", {30, 158}, 60, FONT_NORMAL_BLACK_ON_LIGHT);
+    ui::label_year(g_scenario.start_year + data.invasion.year, {100, 158}, FONT_NORMAL_BLACK_ON_LIGHT);
 
-    button_border_draw({200, 152}, {80, 25}, data.focus_button_id == 2);
-    text_draw_number_centered(data.invasion.amount, 200, 158, 80, FONT_NORMAL_BLACK_ON_LIGHT);
+    ui::button_border({200, 152}, {80, 25}, data.focus_button_id == 2);
+    ui::label_number_centered(data.invasion.amount, '@', " ", {200, 158}, 80, FONT_NORMAL_BLACK_ON_LIGHT);
 
-    button_border_draw({320, 152}, {200, 25}, data.focus_button_id == 3);
-    lang_text_draw_centered(34, data.invasion.type, 320, 158, 200, FONT_NORMAL_BLACK_ON_LIGHT);
+    ui::button_border({320, 152}, {200, 25}, data.focus_button_id == 3);
+    ui::label(34, data.invasion.type, {320, 158}, FONT_NORMAL_BLACK_ON_LIGHT, UiFlags_AlignCentered, 200);
 
     if (data.invasion.type != INVASION_TYPE_DISTANT_BATTLE) {
-        lang_text_draw(44, 27, 40, 196, FONT_NORMAL_BLACK_ON_LIGHT);
-        button_border_draw({130, 190}, {190, 25}, data.focus_button_id == 4);
-        lang_text_draw_centered(35, data.invasion.from, 130, 196, 190, FONT_NORMAL_BLACK_ON_LIGHT);
+        ui::label(44, 27, {40, 196}, FONT_NORMAL_BLACK_ON_LIGHT);
+        ui::button_border({130, 190}, {190, 25}, data.focus_button_id == 4);
+        ui::label(35, data.invasion.from, {130, 196}, FONT_NORMAL_BLACK_ON_LIGHT, UiFlags_AlignCentered, 190);
 
-        button_border_draw({341, 190}, {220, 25}, data.focus_button_id == 5);
-        lang_text_draw_centered(36, data.invasion.attack_type, 341, 196, 220, FONT_NORMAL_BLACK_ON_LIGHT);
+        ui::button_border({341, 190}, {220, 25}, data.focus_button_id == 5);
+        ui::label(36, data.invasion.attack_type, {341, 196}, FONT_NORMAL_BLACK_ON_LIGHT, UiFlags_AlignCentered, 220);
     }
 
-    button_border_draw({310, 230}, {100, 25}, data.focus_button_id == 7);
-    lang_text_draw_centered(18, 3, 310, 236, 100, FONT_NORMAL_BLACK_ON_LIGHT);
+    ui::button_border({310, 230}, {100, 25}, data.focus_button_id == 7);
+    ui::label(18, 3, {310, 236}, FONT_NORMAL_BLACK_ON_LIGHT, UiFlags_AlignCentered, 100);
 
-    button_border_draw({20, 230}, {250, 25}, data.focus_button_id == 6);
-    lang_text_draw_centered(44, 26, 20, 236, 250, FONT_NORMAL_BLACK_ON_LIGHT);
+    ui::button_border({20, 230}, {250, 25}, data.focus_button_id == 6);
+    ui::label(44, 26, {20, 236}, FONT_NORMAL_BLACK_ON_LIGHT, UiFlags_AlignCentered, 250);
 
-    graphics_reset_dialog();
+    ui::end_widget();
 }
 
 static void handle_input(const mouse* m, const hotkeys* h) {

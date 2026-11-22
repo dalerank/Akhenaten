@@ -2,6 +2,8 @@
 
 #include "graphics/graphics.h"
 #include "graphics/elements/generic_button.h"
+#include "graphics/elements/ui.h"
+#include "graphics/screen.h"
 #include "graphics/elements/lang_text.h"
 #include "graphics/elements/panel.h"
 #include "graphics/text.h"
@@ -35,12 +37,12 @@ static void draw_background(int) {
 }
 
 static void draw_foreground(int) {
-    graphics_set_to_dialog();
+    ui::begin_widget(g_screen.dialog_offset);
 
-    outer_panel_draw(vec2i{0, 0}, 40, 30);
-    lang_text_draw(44, 15, 20, 12, FONT_LARGE_BLACK_ON_LIGHT);
-    lang_text_draw_centered(13, 3, 0, 456, 640, FONT_NORMAL_BLACK_ON_LIGHT);
-    lang_text_draw_multiline(152, 2, vec2i{32, 376}, 576, FONT_NORMAL_BLACK_ON_LIGHT);
+    ui::panel(vec2i{0, 0}, {40, 30}, UiFlags_PanelOuter);
+    ui::label(44, 15, {20, 12}, FONT_LARGE_BLACK_ON_LIGHT);
+    ui::label(13, 3, {0, 456}, FONT_NORMAL_BLACK_ON_LIGHT, UiFlags_AlignCentered, 640);
+    ui::text_multiline(ui::str(152, 2), vec2i{32, 376}, 576, FONT_NORMAL_BLACK_ON_LIGHT, 0);
 
     for (int i = 0; i < 20; i++) {
         int x, y;
@@ -51,23 +53,20 @@ static void draw_foreground(int) {
             x = 320;
             y = 42 + 30 * (i - 10);
         }
-        button_border_draw({x, y}, {290, 25}, focus_button_id == i + 1);
+        ui::button_border({x, y}, {290, 25}, focus_button_id == i + 1);
         editor_invasion invasion;
         scenario_editor_invasion_get(i, &invasion);
         if (invasion.type) {
-            text_draw_number(invasion.year, '+', " ", x + 6, y + 6, FONT_NORMAL_BLACK_ON_LIGHT);
-            lang_text_draw_year(g_scenario.start_year + invasion.year,
-                                x + 60,
-                                y + 6,
-                                FONT_NORMAL_BLACK_ON_LIGHT);
-            int width = text_draw_number(invasion.amount, '@', " ", x + 120, y + 6, FONT_NORMAL_BLACK_ON_LIGHT);
-            lang_text_draw(34, invasion.type, x + 115 + width, y + 6, FONT_NORMAL_BLACK_ON_LIGHT);
+            ui::label_number(invasion.year, '+', " ", {x + 6, y + 6}, FONT_NORMAL_BLACK_ON_LIGHT);
+            ui::label_year(g_scenario.start_year + invasion.year, {x + 60, y + 6}, FONT_NORMAL_BLACK_ON_LIGHT);
+            int width = ui::label_number(invasion.amount, '@', " ", {x + 120, y + 6}, FONT_NORMAL_BLACK_ON_LIGHT);
+            ui::label(34, invasion.type, {x + 115 + width, y + 6}, FONT_NORMAL_BLACK_ON_LIGHT);
         } else {
-            lang_text_draw_centered(44, 23, x, y + 6, 290, FONT_NORMAL_BLACK_ON_LIGHT);
+            ui::label(44, 23, {x, y + 6}, FONT_NORMAL_BLACK_ON_LIGHT, UiFlags_AlignCentered, 290);
         }
     }
 
-    graphics_reset_dialog();
+    ui::end_widget();
 }
 
 static void handle_input(const mouse* m, const hotkeys* h) {

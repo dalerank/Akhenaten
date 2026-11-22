@@ -2,6 +2,7 @@
 
 #include "graphics/graphics.h"
 #include "graphics/elements/button.h"
+#include "graphics/elements/ui.h"
 #include "graphics/elements/generic_button.h"
 #include "graphics/elements/lang_text.h"
 #include "graphics/elements/panel.h"
@@ -30,21 +31,22 @@ static void draw_background(int) {
 }
 
 static void draw_foreground(int) {
-    graphics_set_to_dialog();
+    ui::begin_widget(g_screen.dialog_offset);
 
-    outer_panel_draw(vec2i{128, 44}, 20, 10);
+    ui::panel(vec2i{128, 44}, {20, 10}, UiFlags_PanelOuter);
 
-    lang_text_draw_centered(44, 13, 138, 56, 320, FONT_LARGE_BLACK_ON_LIGHT);
-    lang_text_draw_centered(13, 3, 128, 178, 320, FONT_NORMAL_BLACK_ON_LIGHT);
+    ui::label(44, 13, {138, 56}, FONT_LARGE_BLACK_ON_LIGHT, UiFlags_AlignCentered, 320);
+    ui::label(13, 3, {128, 178}, FONT_NORMAL_BLACK_ON_LIGHT, UiFlags_AlignCentered, 320);
 
     int start_year = g_scenario.start_year;
-    button_border_draw({158, 100}, {100, 30}, focus_button_id == 1 ? 1 : 0);
-    lang_text_draw_centered(20, start_year >= 0 ? 1 : 0, 158, 110, 100, FONT_NORMAL_BLACK_ON_LIGHT);
+    ui::button_border({158, 100}, {100, 30}, focus_button_id == 1 ? 1 : 0);
+    ui::label(20, start_year >= 0 ? 1 : 0, {158, 110}, FONT_NORMAL_BLACK_ON_LIGHT, UiFlags_AlignCentered, 100);
 
-    button_border_draw({278, 100}, {120, 30}, focus_button_id == 2 ? 1 : 0);
-    text_draw_number_centered(start_year >= 0 ? start_year : -start_year, 278, 110, 120, FONT_NORMAL_BLACK_ON_LIGHT);
+    ui::button_border({278, 100}, {120, 30}, focus_button_id == 2 ? 1 : 0);
+    ui::label_number_centered(start_year >= 0 ? start_year : -start_year, '@', " ", {278, 110}, 120,
+      FONT_NORMAL_BLACK_ON_LIGHT);
 
-    graphics_reset_dialog();
+    ui::end_widget();
 }
 
 static void handle_input(const mouse* m, const hotkeys* h) {

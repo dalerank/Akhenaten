@@ -2,6 +2,7 @@
 
 #include "graphics/graphics.h"
 #include "graphics/elements/button.h"
+#include "graphics/elements/ui.h"
 #include "graphics/elements/generic_button.h"
 #include "graphics/elements/lang_text.h"
 #include "graphics/elements/panel.h"
@@ -48,78 +49,83 @@ static void draw_background(int) {
 }
 
 static void draw_foreground(int) {
-    graphics_set_to_dialog();
+    ui::begin_widget(g_screen.dialog_offset);
 
-    outer_panel_draw(vec2i{16, 32}, 30, 26);
+    ui::panel(vec2i{16, 32}, {30, 26}, UiFlags_PanelOuter);
 
-    lang_text_draw(38, 0, 32, 48, FONT_LARGE_BLACK_ON_LIGHT);
-    lang_text_draw_centered(13, 3, 16, 424, 480, FONT_NORMAL_BLACK_ON_LIGHT);
+    ui::label(38, 0, {32, 48}, FONT_LARGE_BLACK_ON_LIGHT);
+    ui::label(13, 3, {16, 424}, FONT_NORMAL_BLACK_ON_LIGHT, UiFlags_AlignCentered, 480);
 
     // table header
-    lang_text_draw(38, 11, 236, 92, FONT_SMALL_PLAIN);
-    lang_text_draw(38, 12, 346, 92, FONT_SMALL_PLAIN);
+    ui::label(38, 11, {236, 92}, FONT_SMALL_PLAIN);
+    ui::label(38, 12, {346, 92}, FONT_SMALL_PLAIN);
 
     // earthquake
-    lang_text_draw(38, 1, 36, 112, FONT_NORMAL_BLACK_ON_LIGHT);
-    button_border_draw({216, 106}, {100, 24}, focus_button_id == 1);
-    lang_text_draw_centered(40, scenario_editor_earthquake_severity(), 216, 112, 100, FONT_NORMAL_BLACK_ON_LIGHT);
+    ui::label(38, 1, {36, 112}, FONT_NORMAL_BLACK_ON_LIGHT);
+    ui::button_border({216, 106}, {100, 24}, focus_button_id == 1);
+    ui::label(40, scenario_editor_earthquake_severity(), {216, 112}, FONT_NORMAL_BLACK_ON_LIGHT, UiFlags_AlignCentered,
+      100);
 
-    button_border_draw({326, 106}, {150, 24}, focus_button_id == 2);
-    int width = text_draw_number(scenario_editor_earthquake_year(), '+', " ", 346, 112, FONT_NORMAL_BLACK_ON_LIGHT);
-    lang_text_draw_year(g_scenario.start_year + scenario_editor_earthquake_year(),
-                        356 + width,
-                        112,
-                        FONT_NORMAL_BLACK_ON_LIGHT);
+    ui::button_border({326, 106}, {150, 24}, focus_button_id == 2);
+    int width = ui::label_number(scenario_editor_earthquake_year(), '+', " ", {346, 112}, FONT_NORMAL_BLACK_ON_LIGHT);
+    ui::label_year(g_scenario.start_year + scenario_editor_earthquake_year(), {356 + width, 112},
+      FONT_NORMAL_BLACK_ON_LIGHT);
 
     // gladiator revolt
-    lang_text_draw(38, 2, 36, 142, FONT_NORMAL_BLACK_ON_LIGHT);
-    button_border_draw({216, 136}, {100, 24}, focus_button_id == 3);
-    lang_text_draw_centered(18, scenario_editor_gladiator_revolt_enabled(), 216, 142, 100, FONT_NORMAL_BLACK_ON_LIGHT);
+    ui::label(38, 2, {36, 142}, FONT_NORMAL_BLACK_ON_LIGHT);
+    ui::button_border({216, 136}, {100, 24}, focus_button_id == 3);
+    ui::label(18, scenario_editor_gladiator_revolt_enabled(), {216, 142}, FONT_NORMAL_BLACK_ON_LIGHT,
+      UiFlags_AlignCentered, 100);
 
-    button_border_draw({326, 136}, {150, 24}, focus_button_id == 4);
-    width = text_draw_number(scenario_editor_gladiator_revolt_year(), '+', " ", 346, 142, FONT_NORMAL_BLACK_ON_LIGHT);
-    lang_text_draw_year(g_scenario.start_year + scenario_editor_gladiator_revolt_year(),
-                        356 + width,
-                        142,
-                        FONT_NORMAL_BLACK_ON_LIGHT);
+    ui::button_border({326, 136}, {150, 24}, focus_button_id == 4);
+    width = ui::label_number(scenario_editor_gladiator_revolt_year(), '+', " ", {346, 142}, FONT_NORMAL_BLACK_ON_LIGHT);
+    ui::label_year(g_scenario.start_year + scenario_editor_gladiator_revolt_year(), {356 + width, 142},
+      FONT_NORMAL_BLACK_ON_LIGHT);
 
     // random events
-    lang_text_draw(38, 4, 36, 202, FONT_NORMAL_BLACK_ON_LIGHT);
-    button_border_draw({216, 196}, {100, 24}, focus_button_id == 5);
-    lang_text_draw_centered(18, scenario_editor_sea_trade_problem_enabled(), 216, 202, 100, FONT_NORMAL_BLACK_ON_LIGHT);
-    lang_text_draw(38, 13, 346, 204, FONT_SMALL_PLAIN);
+    ui::label(38, 4, {36, 202}, FONT_NORMAL_BLACK_ON_LIGHT);
+    ui::button_border({216, 196}, {100, 24}, focus_button_id == 5);
+    ui::label(18, scenario_editor_sea_trade_problem_enabled(), {216, 202}, FONT_NORMAL_BLACK_ON_LIGHT,
+      UiFlags_AlignCentered, 100);
+    ui::label(38, 13, {346, 204}, FONT_SMALL_PLAIN);
 
-    lang_text_draw(38, 5, 36, 232, FONT_NORMAL_BLACK_ON_LIGHT);
-    button_border_draw({216, 226}, {100, 24}, focus_button_id == 6);
-    lang_text_draw_centered(18, scenario_editor_land_trade_problem_enabled(), 216, 232, 100, FONT_NORMAL_BLACK_ON_LIGHT);
-    lang_text_draw(38, 13, 346, 234, FONT_SMALL_PLAIN);
+    ui::label(38, 5, {36, 232}, FONT_NORMAL_BLACK_ON_LIGHT);
+    ui::button_border({216, 226}, {100, 24}, focus_button_id == 6);
+    ui::label(18, scenario_editor_land_trade_problem_enabled(), {216, 232}, FONT_NORMAL_BLACK_ON_LIGHT,
+      UiFlags_AlignCentered, 100);
+    ui::label(38, 13, {346, 234}, FONT_SMALL_PLAIN);
 
-    lang_text_draw(38, 6, 36, 262, FONT_NORMAL_BLACK_ON_LIGHT);
-    button_border_draw({216, 256}, {100, 24}, focus_button_id == 7);
-    lang_text_draw_centered(18, scenario_editor_raise_wages_enabled(), 216, 262, 100, FONT_NORMAL_BLACK_ON_LIGHT);
-    lang_text_draw(38, 13, 346, 264, FONT_SMALL_PLAIN);
+    ui::label(38, 6, {36, 262}, FONT_NORMAL_BLACK_ON_LIGHT);
+    ui::button_border({216, 256}, {100, 24}, focus_button_id == 7);
+    ui::label(18, scenario_editor_raise_wages_enabled(), {216, 262}, FONT_NORMAL_BLACK_ON_LIGHT, UiFlags_AlignCentered,
+      100);
+    ui::label(38, 13, {346, 264}, FONT_SMALL_PLAIN);
 
-    lang_text_draw(38, 7, 36, 292, FONT_NORMAL_BLACK_ON_LIGHT);
-    button_border_draw({216, 286}, {100, 24}, focus_button_id == 8);
-    lang_text_draw_centered(18, scenario_editor_lower_wages_enabled(), 216, 292, 100, FONT_NORMAL_BLACK_ON_LIGHT);
-    lang_text_draw(38, 13, 346, 294, FONT_SMALL_PLAIN);
+    ui::label(38, 7, {36, 292}, FONT_NORMAL_BLACK_ON_LIGHT);
+    ui::button_border({216, 286}, {100, 24}, focus_button_id == 8);
+    ui::label(18, scenario_editor_lower_wages_enabled(), {216, 292}, FONT_NORMAL_BLACK_ON_LIGHT, UiFlags_AlignCentered,
+      100);
+    ui::label(38, 13, {346, 294}, FONT_SMALL_PLAIN);
 
-    lang_text_draw(38, 8, 36, 322, FONT_NORMAL_BLACK_ON_LIGHT);
-    button_border_draw({216, 316}, {100, 24}, focus_button_id == 9);
-    lang_text_draw_centered(18, scenario_editor_contaminated_water_enabled(), 216, 322, 100, FONT_NORMAL_BLACK_ON_LIGHT);
-    lang_text_draw(38, 13, 346, 324, FONT_SMALL_PLAIN);
+    ui::label(38, 8, {36, 322}, FONT_NORMAL_BLACK_ON_LIGHT);
+    ui::button_border({216, 316}, {100, 24}, focus_button_id == 9);
+    ui::label(18, scenario_editor_contaminated_water_enabled(), {216, 322}, FONT_NORMAL_BLACK_ON_LIGHT,
+      UiFlags_AlignCentered, 100);
+    ui::label(38, 13, {346, 324}, FONT_SMALL_PLAIN);
 
-    lang_text_draw(38, 9, 36, 352, FONT_NORMAL_BLACK_ON_LIGHT);
-    button_border_draw({216, 346}, {100, 24}, focus_button_id == 10);
-    lang_text_draw_centered(18, scenario_editor_iron_mine_collapse_enabled(), 216, 352, 100, FONT_NORMAL_BLACK_ON_LIGHT);
-    lang_text_draw(38, 13, 346, 354, FONT_SMALL_PLAIN);
+    ui::label(38, 9, {36, 352}, FONT_NORMAL_BLACK_ON_LIGHT);
+    ui::button_border({216, 346}, {100, 24}, focus_button_id == 10);
+    ui::label(18, scenario_editor_iron_mine_collapse_enabled(), {216, 352}, FONT_NORMAL_BLACK_ON_LIGHT,
+      UiFlags_AlignCentered, 100);
+    ui::label(38, 13, {346, 354}, FONT_SMALL_PLAIN);
 
-    lang_text_draw(38, 10, 36, 382, FONT_NORMAL_BLACK_ON_LIGHT);
-    button_border_draw({216, 376}, {100, 24}, focus_button_id == 11);
-    lang_text_draw_centered(18, scenario_editor_clay_pit_flooded_enabled(), 216, 382, 100, FONT_NORMAL_BLACK_ON_LIGHT);
-    lang_text_draw(38, 13, 346, 384, FONT_SMALL_PLAIN);
+    ui::label(38, 10, {36, 382}, FONT_NORMAL_BLACK_ON_LIGHT);
+    ui::button_border({216, 376}, {100, 24}, focus_button_id == 11);
+    ui::label(18, scenario_editor_clay_pit_flooded_enabled(), {216, 382}, FONT_NORMAL_BLACK_ON_LIGHT,
+      UiFlags_AlignCentered, 100);
+    ui::label(38, 13, {346, 384}, FONT_SMALL_PLAIN);
 
-    graphics_reset_dialog();
+    ui::end_widget();
 }
 
 static void handle_input(const mouse* m, const hotkeys* h) {

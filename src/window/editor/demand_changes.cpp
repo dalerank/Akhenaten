@@ -4,6 +4,8 @@
 #include "graphics/graphics.h"
 #include "graphics/image.h"
 #include "graphics/elements/button.h"
+#include "graphics/elements/ui.h"
+#include "graphics/screen.h"
 #include "graphics/elements/generic_button.h"
 #include "graphics/elements/lang_text.h"
 #include "graphics/elements/panel.h"
@@ -51,13 +53,11 @@ static void draw_background(int) {
 }
 
 static void draw_foreground(int) {
-    painter ctx = game.painter();
+    ui::begin_widget(g_screen.dialog_offset);
 
-    graphics_set_to_dialog();
-
-    outer_panel_draw(vec2i{0, 0}, 40, 23);
-    lang_text_draw(44, 94, 20, 14, FONT_LARGE_BLACK_ON_LIGHT);
-    lang_text_draw_centered(13, 3, 0, 342, 640, FONT_NORMAL_BLACK_ON_LIGHT);
+    ui::panel(vec2i{0, 0}, {40, 23}, UiFlags_PanelOuter);
+    ui::label(44, 94, {20, 14}, FONT_LARGE_BLACK_ON_LIGHT);
+    ui::label(13, 3, {0, 342}, FONT_NORMAL_BLACK_ON_LIGHT, UiFlags_AlignCentered, 640);
 
     for (int i = 0; i < 20; i++) {
         int x, y;
@@ -68,24 +68,24 @@ static void draw_foreground(int) {
             x = 320;
             y = 42 + 30 * (i - 10);
         }
-        button_border_draw({x, y}, {290, 25}, focus_button_id == i + 1);
+        ui::button_border({x, y}, {290, 25}, focus_button_id == i + 1);
         editor_demand_change demand_change;
         scenario_editor_demand_change_get(i, &demand_change);
         if (demand_change.year) {
-            text_draw_number(demand_change.year, '+', " ", x + 10, y + 6, FONT_NORMAL_BLACK_ON_LIGHT);
-            lang_text_draw_year(g_scenario.start_year + demand_change.year, x + 35, y + 6, FONT_NORMAL_BLACK_ON_LIGHT);
+            ui::label_number(demand_change.year, '+', " ", {x + 10, y + 6}, FONT_NORMAL_BLACK_ON_LIGHT);
+            ui::label_year(g_scenario.start_year + demand_change.year, {x + 35, y + 6}, FONT_NORMAL_BLACK_ON_LIGHT);
             int offset = demand_change.resource + resource_image_offset(demand_change.resource, RESOURCE_IMAGE_ICON);
-            ctx.img_generic(image_id_from_group(GROUP_EDITOR_RESOURCE_ICONS) + offset, vec2i{x + 115, y + 3});
-            int width = lang_text_draw(44, 97, x + 140, y + 6, FONT_NORMAL_BLACK_ON_LIGHT);
-            width
-              += text_draw_number(demand_change.route_id, '@', " ", x + 140 + width, y + 6, FONT_NORMAL_BLACK_ON_LIGHT);
-            lang_text_draw(44, demand_change.is_rise ? 99 : 98, x + 140 + width, y + 6, FONT_NORMAL_BLACK_ON_LIGHT);
+            ui::eimage(image_id_from_group(GROUP_EDITOR_RESOURCE_ICONS) + offset, vec2i{x + 115, y + 3});
+            int width = ui::text(ui::str(44, 97), {x + 140, y + 6}, FONT_NORMAL_BLACK_ON_LIGHT);
+            width += ui::label_number(demand_change.route_id, '@', " ", {x + 140 + width, y + 6},
+              FONT_NORMAL_BLACK_ON_LIGHT);
+            ui::label(44, demand_change.is_rise ? 99 : 98, {x + 140 + width, y + 6}, FONT_NORMAL_BLACK_ON_LIGHT);
         } else {
-            lang_text_draw_centered(44, 96, x, y + 6, 290, FONT_NORMAL_BLACK_ON_LIGHT);
+            ui::label(44, 96, {x, y + 6}, FONT_NORMAL_BLACK_ON_LIGHT, UiFlags_AlignCentered, 290);
         }
     }
 
-    graphics_reset_dialog();
+    ui::end_widget();
 }
 
 static void handle_input(const mouse* m, const hotkeys* h) {
