@@ -45,8 +45,6 @@ using namespace render_cmd;
 
 pool<figure::debug_lines_t, 64> debug_tooltip_lines;
 
-bool legacy_figure_actions_remapped = false;
-
 static const vec2i crowd_offsets[] = {
     {0, 0}, {3, 0}, {3, 3}, {-3, 6}, {-3, -3},
     {0, -6}, {6, 0}, {0, 6}, {-6, 0}, {3, -6},
@@ -974,54 +972,6 @@ void figure::bind(io_buffer* iob) {
     iob->bind(BIND_SIGNATURE_UINT8, &f->progress_inside_speed);
     iob->bind(BIND_SIGNATURE_INT16, &f->wait_ticks);                // 0
     iob->bind(BIND_SIGNATURE_INT16, &f->action_state);              // 9
-
-    // Entertainer/boat/fireman/soldier actions were renumbered into linear per-figure
-    // ranges (entertainers 13,90..96 -> 0..7; fireman 70..77 -> 0..7; fishing boat
-    // 190..198 -> 0..8; ferry 200..204 -> 0..4; soldier 80..91 -> 0..11). Older saves
-    // still carry the legacy values; without this remap those figures are left in an
-    // unhandled state (e.g. a juggler stuck walking in place) after loading.
-    if (iob->is_read_access()) {
-        switch (f->type) {
-        case FIGURE_JUGGLER:
-        case FIGURE_MUSICIAN:
-        case FIGURE_DANCER:
-        case FIGURE_SENET_PLAYER:
-            if (f->action_state >= 90 && f->action_state <= 96) {
-                f->action_state -= 90;
-                legacy_figure_actions_remapped = true;
-            } else if (f->action_state == 13) {
-                f->action_state = 7;
-                legacy_figure_actions_remapped = true;
-            }
-            break;
-        case FIGURE_FIREMAN:
-            if (f->action_state >= 70 && f->action_state <= 77) {
-                f->action_state -= 70;
-                legacy_figure_actions_remapped = true;
-            }
-            break;
-        case FIGURE_FISHING_BOAT:
-            if (f->action_state >= 190 && f->action_state <= 198) {
-                f->action_state -= 190;
-                legacy_figure_actions_remapped = true;
-            }
-            break;
-        case FIGURE_FERRY_BOAT:
-            if (f->action_state >= 200 && f->action_state <= 204) {
-                f->action_state -= 200;
-                legacy_figure_actions_remapped = true;
-            }
-            break;
-        case FIGURE_ARCHER:
-        case FIGURE_INFANTRY:
-        case FIGURE_FCHARIOTEER:
-            if (f->action_state >= 80 && f->action_state <= 91) {
-                f->action_state -= 80;
-                legacy_figure_actions_remapped = true;
-            }
-            break;
-        }
-    }
 
     iob->bind(BIND_SIGNATURE_INT16, &f->routing_path_id);           // 12
     iob->bind(BIND_SIGNATURE_INT16, &f->routing_path_current_tile); // 4

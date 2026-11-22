@@ -1045,6 +1045,4 @@ localization_ru_f = [
     { key: "#one_caesareum_only", group:19, id:243 }
     { key: "#abu_simbel_not_demolishable", text: "Абу-Симбел нельзя снести" }
     { key: "#monument_not_demolishable", text: "Монументы нельзя снести" }
-    { key: "#save_migration_title", text: "Сохраненіе преобразовано" }
-    { key: "#save_migration_message", text: "Ваше сохраненіе было въ старомъ форматѣ и автоматически преобразовано. Оригинальный файлъ вы найдёте подъ именемъ {0}, если онъ вамъ понадобится." }
 ]

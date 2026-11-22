@@ -59,11 +59,15 @@
 #include "scenario/scenario_chunks.h"
 #include "scenario/scenario_event_manager_chunks.h"
 #include "scenario/scenario_invasion_chunks.h"
+#include "io/save_layout.h"
 
 // Akhenaten .svx - sectioned container when g_chunk_io.is_sectioned(), else legacy
 // positional layout (keeps dead file_version/chunks_schema slots for old files).
 void file_schema_svx(const int file_version) {
     g_chunk_io.push_chunk<scenario_mission_index_chunk>(4, false);
+    if (g_chunk_io.is_sectioned()) {
+        g_chunk_io.push_chunk<save_layouts_chunk>(save_layouts_chunk::SIZE, false);
+    }
     if (!g_chunk_io.is_sectioned()) {
         // Two dead chunks that only the positional layout needs. file_version is
         // read into a static nobody uses, and chunks_schema writes 6004 zero bytes

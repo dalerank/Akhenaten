@@ -1821,6 +1821,4 @@ localization_ru = [
     { key: "#causeway_needs_water", group:19, id:212 }
     { key: "#one_caesareum_only", group:19, id:243 }
     { key: "#abu_simbel_not_demolishable", text: "Абу-Симбел нельзя снести" }
-    { key: "#save_migration_title", text: "Сохранение преобразовано" }
-    { key: "#save_migration_message", text: "Ваше сохранение было в старом формате и автоматически преобразовано. Оригинальный файл вы найдёте под именем {0}, если он вам понадобится." }
 ]

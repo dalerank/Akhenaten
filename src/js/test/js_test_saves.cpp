@@ -8,10 +8,6 @@
 #include <cstring>
 #include <vector>
 
-// Rewrites a saved .svx so it looks like a pre-linearisation save: the container
-// header drops to an old data version and entertainer/fireman/boat/soldier figure
-// action states are bumped back to their legacy numbering. Returns the number of
-// patched figure records, or a negative value on failure (-1 read, -2 layout).
 static int __test_legacyify_save(pcstr path) {
     vfs::path full = vfs::path(path).resolve();
     FILE *fp = vfs::file_open_os(full, "rb");
@@ -37,7 +33,7 @@ static int __test_legacyify_save(pcstr path) {
     int patched = 0;
     bool found_figures = false;
 
-    size_t pos = 24; // sizeof(file_header)
+    size_t pos = 24;
     while (pos + 44 <= data.size()) {
         char name[33] = {};
         memcpy(name, data.data() + pos, 32);
@@ -46,6 +42,13 @@ static int __test_legacyify_save(pcstr path) {
         const uint32_t crc_offset = pos + 40;
         const size_t payload_at = pos + 44;
         const size_t epilog_at = payload_at + payload_size;
+
+        if (strcmp(name, "layouts") == 0 && epilog_at + 34 <= data.size()) {
+            for (size_t at : {pos, epilog_at + 2}) {
+                memset(data.data() + at, 0, 32);
+                memcpy(data.data() + at, "layouts_hidden", 14);
+            }
+        }
 
         if (strcmp(name, "figures") == 0) {
             found_figures = true;

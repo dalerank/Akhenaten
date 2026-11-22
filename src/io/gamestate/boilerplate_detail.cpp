@@ -12,7 +12,6 @@
 #include "city/city_resource.h"
 #include "city/coverage.h"
 #include "city/map.h"
-#include "figure/figure.h"
 #include "content/vfs.h"
 #include "core/buffer.h"
 #include "core/profiler.h"
@@ -72,8 +71,6 @@ const int GamestateLoadDetail::read_file_version(const char* filename, int offse
 
 void GamestateLoadDetail::pre_load() { // do we NEED this...?
     OZZY_PROFILER_FUNCTION();
-    legacy_figure_actions_remapped = false;
-
     g_scenario.campaign_scenario_id = -1;
     grid_xx::init_all_grids();
 
