@@ -40,7 +40,6 @@ void app_window_resize(const vec2i& wsize) {
 
 void app_fullscreen(bool fullscreen) {
     app_post_event(fullscreen ? USER_EVENT_FULLSCREEN : USER_EVENT_WINDOWED);
-    game.set_fullscreen(fullscreen);
 }
 
 void app_post_event(int code) {

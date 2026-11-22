@@ -350,6 +350,8 @@ void Arguments::parse(int argc, char** argv) {
     }
 
     parse_cli_(argc, argv);
+    args_["window_size_from_cli"]
+      = bvariant(std::any_of(argv + 1, argv + argc, [](pcstr a) { return a && std::strcmp(a, "--size") == 0; }));
 
     // Apply save_debug_texture from args to game
     if (is("save_debug_texture", false)) {
@@ -461,6 +463,10 @@ const xstring& Arguments::get_str(const xstring& name) const {
 
 void Arguments::set_custom_font(pcstr value) {
     args_["custom_font"] = bvariant(xstring(value));
+}
+
+bool Arguments::window_size_from_cli() const {
+    return is("window_size_from_cli", false);
 }
 
 vec2i Arguments::get_window_size() const {

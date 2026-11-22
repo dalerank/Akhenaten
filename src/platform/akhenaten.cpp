@@ -405,7 +405,7 @@ static void setup() {
     if (!options_window_shown) {
         if (try_load_game_features(g_args.get_data_directory().c_str())) {
             const vec2i conf_size = game_features::gameopt_display_size.to_vec2i();
-            if (conf_size.x > 0 && conf_size.y > 0) {
+            if (conf_size.x > 0 && conf_size.y > 0 && !g_args.window_size_from_cli()) {
                 g_args.set_window_size(conf_size);
             }
         } else if (g_args.config_file_exists()) {
