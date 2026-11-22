@@ -74,6 +74,8 @@ static int init_sdl() {
     Uint32 SDL_flags = SDL_INIT_VIDEO;
     SDL_flags |= platform.sdl_init_flags();
 
+    SDL_SetHint(SDL_HINT_WINDOWS_DPI_AWARENESS, "permonitorv2");
+
     if (SDL_Init(SDL_flags) != 0) {
         logs::error("Could not initialize SDL: %s", SDL_GetError());
         return 0;
