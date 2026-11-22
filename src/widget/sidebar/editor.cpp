@@ -4,6 +4,7 @@
 #include "graphics/image.h"
 #include "graphics/graphics.h"
 #include "graphics/elements/image_button.h"
+#include "graphics/elements/ui.h"
 #include "graphics/view/view.h"
 #include "graphics/elements/lang_text.h"
 #include "graphics/elements/panel.h"
@@ -55,17 +56,17 @@ int sidebar_common_get_x_offset_expanded() {
 }
 
 static void draw_buttons(void) {
-    image_buttons_draw({sidebar_common_get_x_offset_expanded(), TOP_MENU_HEIGHT}, buttons_build, 17);
+    image_buttons_push_commands({sidebar_common_get_x_offset_expanded(), TOP_MENU_HEIGHT}, buttons_build, 17);
 }
 
 static void draw_status(void) {
     int x_offset = sidebar_common_get_x_offset_expanded();
-    inner_panel_draw({ x_offset + 1, 175 }, { 10, 7 });
+    ui::panel({x_offset + 1, 175}, {10, 7}, UiFlags_PanelInner);
     int text_offset = x_offset + 6;
 
     int selected_tool = editor_tool_type();
     int brush_size = editor_tool_brush_size() - 1;
-    lang_text_draw(49, selected_tool, text_offset, 178, FONT_NORMAL_WHITE_ON_DARK);
+    ui::label(49, selected_tool, {text_offset, 178}, FONT_NORMAL_WHITE_ON_DARK);
     switch (selected_tool) {
     case TOOL_GRASS:
     case TOOL_TREES:
@@ -75,7 +76,7 @@ static void draw_status(void) {
     case TOOL_MEADOW:
     case TOOL_RAISE_LAND:
     case TOOL_LOWER_LAND:
-        lang_text_draw(48, brush_size, text_offset, 194, FONT_NORMAL_BLACK_ON_DARK);
+        ui::label(48, brush_size, {text_offset, 194}, FONT_NORMAL_BLACK_ON_DARK);
         break;
     default:
         break;
@@ -93,51 +94,49 @@ static void draw_status(void) {
         people_text = 62;
         people_font = FONT_NORMAL_BLACK_ON_DARK;
     }
-    lang_text_draw(44, people_text, text_offset, 224, people_font);
+    ui::label(44, people_text, {text_offset, 224}, people_font);
 
     entry = scenario_map_river_entry();
     exit = scenario_map_river_exit();
     if (entry.x() != -1 || exit.x() != -1) {
         if (entry.x() == -1)
-            lang_text_draw(44, 137, text_offset, 239, FONT_NORMAL_YELLOW);
+            ui::label(44, 137, {text_offset, 239}, FONT_NORMAL_YELLOW);
         else if (exit.x() == -1)
-            lang_text_draw(44, 138, text_offset, 239, FONT_NORMAL_YELLOW);
+            ui::label(44, 138, {text_offset, 239}, FONT_NORMAL_YELLOW);
         else {
-            lang_text_draw(44, 67, text_offset, 239, FONT_NORMAL_BLACK_ON_DARK);
+            ui::label(44, 67, {text_offset, 239}, FONT_NORMAL_BLACK_ON_DARK);
         }
     }
 
     int invasion_points_land = scenario_editor_count_invasion_points();
     if (invasion_points_land == 1)
-        lang_text_draw(44, 64, text_offset, 254, FONT_NORMAL_BLACK_ON_DARK);
+        ui::label(44, 64, {text_offset, 254}, FONT_NORMAL_BLACK_ON_DARK);
     else if (invasion_points_land > 1) {
-        int width = text_draw_number(invasion_points_land, '@', " ", text_offset - 2, 254, FONT_NORMAL_BLACK_ON_DARK);
-        lang_text_draw(44, 65, text_offset + width - 8, 254, FONT_NORMAL_BLACK_ON_DARK);
+        int width = ui::label_number(invasion_points_land, '@', " ", {text_offset - 2, 254}, FONT_NORMAL_BLACK_ON_DARK);
+        ui::label(44, 65, {text_offset + width - 8, 254}, FONT_NORMAL_BLACK_ON_DARK);
     } else {
         editor_invasion first_invasion;
         scenario_editor_invasion_get(0, &first_invasion);
         if (first_invasion.type)
-            lang_text_draw(44, 63, text_offset, 254, FONT_NORMAL_YELLOW);
+            ui::label(44, 63, {text_offset, 254}, FONT_NORMAL_YELLOW);
     }
 
     if (scenario_editor_earthquake_severity() > 0) {
         tile2i earthquake = scenario_editor_earthquake_point();
         if (!earthquake.valid()) {
-            lang_text_draw(44, 57, text_offset, 269, FONT_NORMAL_YELLOW);
+            ui::label(44, 57, {text_offset, 269}, FONT_NORMAL_YELLOW);
         } else {
-            lang_text_draw(44, 58, text_offset, 269, FONT_NORMAL_BLACK_ON_DARK);
+            ui::label(44, 58, {text_offset, 269}, FONT_NORMAL_BLACK_ON_DARK);
         }
     }
 }
 
 void widget_sidebar_editor_draw_background() {
-    painter ctx = game.painter();
-
     image_desc side_panel{ PACK_GENERAL, 121 };
     image_desc relief_block{ PACK_GENERAL, 121, 4 };
     int image_base = side_panel.tid();
     int x_offset = sidebar_common_get_x_offset_expanded();
-    ctx.img_generic(image_base, { x_offset, TOP_MENU_HEIGHT });
+    ui::eimage(image_base, {x_offset, TOP_MENU_HEIGHT});
     draw_buttons();
     widget_minimap_draw({x_offset + MINIMAP_X_OFFSET, MINIMAP_Y_OFFSET}, 1);
     draw_status();

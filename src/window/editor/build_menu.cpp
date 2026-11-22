@@ -2,6 +2,7 @@
 
 #include "editor/tool.h"
 #include "graphics/elements/generic_button.h"
+#include "graphics/elements/ui.h"
 #include "graphics/elements/lang_text.h"
 #include "graphics/elements/panel.h"
 #include "graphics/view/view.h"
@@ -100,8 +101,10 @@ static void draw_menu_buttons(void) {
     auto& data = g_editor_build_menu_data;
     int x_offset = get_sidebar_x_offset();
     for (int i = 0; i < data.num_items; i++) {
-        small_panel_draw({ x_offset - 170, data.y_offset + 110 + 24 * i }, 10, data.focus_button_id == i + 1 ? 1 : 2);
-        lang_text_draw_centered(48, MENU_TYPES[data.selected_submenu][i], x_offset - 170, data.y_offset + 113 + 24 * i, 160, FONT_NORMAL_BLACK_ON_DARK);
+        ui::push(ui::cmd_t::small_panel, ui::opt::Pos{vec2i{x_offset - 170, data.y_offset + 110 + 24 * i}},
+          ui::opt::BoxWidth{10}, ui::opt::ImageId{data.focus_button_id == i + 1 ? 1 : 2});
+        ui::label(48, MENU_TYPES[data.selected_submenu][i], {x_offset - 170, data.y_offset + 113 + 24 * i},
+          FONT_NORMAL_BLACK_ON_DARK, UiFlags_AlignCentered, 160);
     }
 }
 

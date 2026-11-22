@@ -867,6 +867,18 @@ int ui::label_percent(int amount, vec2i pos, e_font font) {
     return number_abs(amount, '@', "%", g_state.offset() + pos, font);
 }
 
+int ui::label_number(int value, char prefix, pcstr postfix, vec2i pos, e_font font) {
+    return number_abs(value, prefix, postfix, g_state.offset() + pos, font);
+}
+
+void ui::label_number_centered(int value, char prefix, pcstr postfix, vec2i pos, int box_width, e_font font) {
+    number_centered_abs(value, prefix, postfix, g_state.offset() + pos, box_width, font);
+}
+
+int ui::text(pcstr str, vec2i pos, e_font font, color clr) {
+    return text_abs(str, g_state.offset() + pos, font, clr);
+}
+
 int ui::label_year(int year, vec2i pos, e_font font) {
     const vec2i offset = g_state.offset();
     push(cmd_t::lang_text_year, Pos{offset + pos}, Font{font}, opt::Year{year});

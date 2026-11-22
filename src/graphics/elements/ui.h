@@ -246,6 +246,10 @@ namespace ui {
     int label_amount(int group, int number, int amount, vec2i pos, e_font font = FONT_NORMAL_BLACK_ON_LIGHT,
       pcstr postfix = "");
     int label_percent(int amount, vec2i pos, e_font font = FONT_NORMAL_BLACK_ON_LIGHT);
+    int label_number(int value, char prefix, pcstr postfix, vec2i pos, e_font font = FONT_NORMAL_BLACK_ON_LIGHT);
+    void label_number_centered(int value, char prefix, pcstr postfix, vec2i pos, int box_width,
+      e_font font = FONT_NORMAL_BLACK_ON_LIGHT);
+    int text(pcstr str, vec2i pos, e_font font, color clr = 0);
     int label_year(int year, vec2i pos, e_font font = FONT_NORMAL_BLACK_ON_LIGHT);
     int label_colored(textid tx, vec2i pos, e_font font, color color, int box_width = 0);
     int label_colored(pcstr tx, vec2i pos, e_font font, color color, int box_width = 0);
