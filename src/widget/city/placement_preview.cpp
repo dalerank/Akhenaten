@@ -32,7 +32,7 @@ namespace {
         else if (!end_grid_offset)
             blocked = true;
 
-        if (finance_system::is_out_of_money(g_city.finance))
+        if (g_city.finance_sys().is_out_of_money())
             blocked = true;
 
         int x_delta, y_delta;

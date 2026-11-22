@@ -674,7 +674,7 @@ void build_planner::construction_update(tile2i tile) {
         return;
     }
 
-    if (!build_type || finance_system::is_out_of_money(g_city.finance)) {
+    if (!build_type || g_city.finance_sys().is_out_of_money()) {
         total_cost = 0;
         return;
     }
@@ -863,8 +863,8 @@ void build_planner::update_preview(tile2i cursor_tile) {
         const auto &params = building_static_params::get(build_type);
         const int min_length = bridge_span_min_length(is_ship);
         const int max_length = bridge_span_max_length(is_ship);
-        const bool blocked = !end_offset || length < min_length || length > max_length
-                             || finance_system::is_out_of_money(g_city.finance);
+        const bool blocked
+          = !end_offset || length < min_length || length > max_length || g_city.finance_sys().is_out_of_money();
         can_place = blocked ? CAN_NOT_PLACE : CAN_PLACE;
         total_cost = blocked ? 0 : (int)params.get_cost() * length;
     }

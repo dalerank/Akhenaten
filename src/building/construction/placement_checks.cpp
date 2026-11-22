@@ -126,7 +126,7 @@ void build_planner::update_requirements_check() {
     }
 
     // out of money!
-    if (finance_system::is_out_of_money(g_city.finance)) {
+    if (g_city.finance_sys().is_out_of_money()) {
         // TODO: no money needed if building has zero cost?
         immediate_warning = "#out_of_credit";
         can_place = CAN_NOT_PLACE;

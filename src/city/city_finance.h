@@ -159,25 +159,39 @@ struct finance_context {
     int debt_interest;
 };
 
-namespace finance_system {
-    void init(finance_state& f);
-    void subscribe_events(finance_state& f, finance_context (*make_context)());
-    bool is_out_of_money(const finance_state& f);
-    void update_estimate_taxes(finance_state& f, const finance_context& ctx);
-    void estimate_wages(finance_state& f, const finance_context& ctx);
-    void collect_monthly_taxes(finance_state& f, const finance_context& ctx);
-    int house_monthly_tax_units(const finance_context& ctx, building_house* house);
-    int apply_tax_rate(const finance_state& f, const finance_context& ctx, int amount);
-    int house_tax_income(const finance_state& f, const finance_context& ctx, int units);
-    int house_tax_units_from_income(const finance_state& f, const finance_context& ctx, int tax_income);
-    void advance_month(finance_state& f, const finance_context& ctx);
-    void pay_monthly_wages(finance_state& f, const finance_context& ctx);
-    void advance_year(finance_state& f, const finance_context& ctx);
-    void change_wages(finance_state& f, int amount);
-    int raise_wages_kingdome(finance_state& f);
-    int lower_wages_kingdome(finance_state& f);
-    void process_stolen(finance_state& f, int stolen);
-    void update_interest(finance_state& f);
-    void process_request(finance_state& f, const finance_context& ctx, event_finance_request request);
-    void calculate_totals(finance_state& f);
-} // namespace finance_system
+class finance_system {
+public:
+    finance_system(finance_state& state, const finance_context& ctx) : _state(state), _ctx(ctx) {}
+
+    static void subscribe_events(finance_system (*make)());
+
+    void init();
+    bool is_out_of_money() const;
+    void update_estimate_taxes();
+    void estimate_wages();
+    void collect_monthly_taxes();
+    int house_monthly_tax_units(building_house* house) const;
+    int apply_tax_rate(int amount) const;
+    int house_tax_income(int units) const;
+    int house_tax_units_from_income(int tax_income) const;
+    void advance_month();
+    void pay_monthly_wages();
+    void advance_year();
+    void change_wages(int amount);
+    int raise_wages_kingdome();
+    int lower_wages_kingdome();
+    void process_stolen(int stolen);
+    void update_interest();
+    void process_request(event_finance_request request);
+    void calculate_totals();
+
+private:
+    void pay_monthly_interest();
+    void pay_monthly_salary();
+    void reset_taxes();
+    void copy_amounts_to_last_year();
+    void pay_tribute();
+
+    finance_state& _state;
+    finance_context _ctx;
+};

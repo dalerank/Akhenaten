@@ -227,6 +227,7 @@ struct city_t {
     void update_tick(int simtick);
     void update_month(simulation_time_t t);
     finance_context finance_ctx();
+    finance_system finance_sys();
 
     e_availability is_advisor_available(e_advisor advisor) const;
     void set_advisor_available(e_advisor advisor, e_availability available);

@@ -492,7 +492,7 @@ ANK_FUNCTION_2(__test_coverage_set);
 
 static int __test_house_tax_units(int bid) {
     auto* house = building_get(bid)->dcast_house();
-    return house ? finance_system::house_monthly_tax_units(g_city.finance_ctx(), house) : -1;
+    return house ? g_city.finance_sys().house_monthly_tax_units(house) : -1;
 }
 ANK_FUNCTION_1(__test_house_tax_units);
 

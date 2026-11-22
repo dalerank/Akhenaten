@@ -160,8 +160,7 @@ static const sim_step k_sim_steps[] = {
 
   {SIM_PHASE_MONTH_CITY, -1, "migration_month", SIM_AREA_MIGRATION, [](city_t& c) { c.migration.update_month(); }},
   {SIM_PHASE_MONTH_CITY, -1, "health_month", SIM_AREA_HEALTH, [](city_t& c) { c.health.update_month(); }},
-  {SIM_PHASE_MONTH_CITY, -1, "finance_month", SIM_AREA_FINANCE,
-    [](city_t& c) { finance_system::advance_month(c.finance, c.finance_ctx()); }},
+  {SIM_PHASE_MONTH_CITY, -1, "finance_month", SIM_AREA_FINANCE, [](city_t& c) { c.finance_sys().advance_month(); }},
   {SIM_PHASE_MONTH_CITY, -1, "food_monthly", SIM_AREA_RESOURCES | SIM_AREA_HOUSES,
     [](city_t& c) { c.resource.consume_food_monthly(); }},
   {SIM_PHASE_MONTH_CITY, -1, "resource_month", SIM_AREA_RESOURCES, [](city_t& c) { c.resource.advance_month(); }},
@@ -208,7 +207,7 @@ static const sim_step k_sim_steps[] = {
     [](city_t&) { figure_locust::update_month(g_simulation.simtime.month + 1); }},
 
   {SIM_PHASE_MONTH_END, -1, "estimate_taxes", SIM_AREA_FINANCE,
-    [](city_t& c) { finance_system::update_estimate_taxes(c.finance, c.finance_ctx()); }},
+    [](city_t& c) { c.finance_sys().update_estimate_taxes(); }},
   {SIM_PHASE_MONTH_END, -1, "event_advance_month", SIM_AREA_EVENTS,
     [](city_t&) { events::emit(event_advance_month::from_simtime(g_simulation.simtime)); }},
 
@@ -217,8 +216,7 @@ static const sim_step k_sim_steps[] = {
   {SIM_PHASE_YEAR, -1, "simtime_year", SIM_AREA_TIME, [](city_t&) { g_simulation.simtime.advance_year(); }},
   {SIM_PHASE_YEAR, -1, "population_yearly_request", SIM_AREA_POPULATION,
     [](city_t&) { city_population_request_yearly_update(); }},
-  {SIM_PHASE_YEAR, -1, "finance_year", SIM_AREA_FINANCE,
-    [](city_t& c) { finance_system::advance_year(c.finance, c.finance_ctx()); }},
+  {SIM_PHASE_YEAR, -1, "finance_year", SIM_AREA_FINANCE, [](city_t& c) { c.finance_sys().advance_year(); }},
   {SIM_PHASE_YEAR, -1, "migration_year", SIM_AREA_MIGRATION, [](city_t& c) { c.migration.advance_year(); }},
   {SIM_PHASE_YEAR, -1, "monuments_year", SIM_AREA_MONUMENTS, [](city_t& c) { c.monuments.advance_year(); }},
   {SIM_PHASE_YEAR, -1, "yearly_trade_amounts", SIM_AREA_EMPIRE | SIM_AREA_TRADE,

@@ -13,10 +13,10 @@
 void window_advisors_prepare_opening() {
     g_city.labor.allocate_workers();
 
-    finance_system::estimate_wages(g_city.finance, g_city.finance_ctx());
-    finance_system::update_interest(g_city.finance);
-    finance_system::update_estimate_taxes(g_city.finance, g_city.finance_ctx());
-    finance_system::calculate_totals(g_city.finance);
+    g_city.finance_sys().estimate_wages();
+    g_city.finance_sys().update_interest();
+    g_city.finance_sys().update_estimate_taxes();
+    g_city.finance_sys().calculate_totals();
 
     g_city.migration.determine_reason();
 

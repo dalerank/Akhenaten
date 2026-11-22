@@ -225,7 +225,7 @@ void pay_bribe_deben(int cost) {
     uint16_t &disasters = g_city.finance.this_year.expenses.disasters;
     const int sum = (int)disasters + cost;
     disasters = (uint16_t)std::min(sum, 65535);
-    finance_system::calculate_totals(g_city.finance);
+    g_city.finance_sys().calculate_totals();
 }
 
 uint16_t resolve_seq(uint16_t seq) {
