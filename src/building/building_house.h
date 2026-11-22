@@ -3,6 +3,7 @@
 #include "building/building_house_demands.h"
 #include "building/building_house_model.h"
 #include "building/building.h"
+#include "city/city_buildings.h"
 #include "grid/building.h"
 #include "grid/grid.h"
 
@@ -768,12 +769,11 @@ ANK_CONFIG_STRUCT(building_house_palatial_estate::static_params, model, can_merg
 // gameplay systems (overlays, advisors, economy calculations).
 template<typename T>
 void buildings_house_do(T func) {
-    for (auto it = building_begin(), end = building_end(); it != end; ++it) {
-        auto house = it->dcast_house();
-        if (house) {
+    buildings_of_types_do(k_house_building_types, [&](building& b) {
+        if (auto house = b.dcast_house()) {
             func(house);
         }
-    }
+    });
 }
 
 template<typename T, typename Processed>

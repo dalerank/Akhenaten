@@ -4,6 +4,7 @@
 #include "core/custom_span.hpp"
 #include "core/svector.h"
 #include "core/hvector.h"
+#include "city/building_index.h"
 
 xspan<building> city_buildings();
 
@@ -62,22 +63,34 @@ void buildings_valid_do(T func) {
     }
 }
 
-template<typename T>
-void buildings_valid_do(T func, const std::initializer_list<e_building_type>& types) {
-    for (auto &b : city_buildings()) {
-        if (b.is_valid() && building_type_any_of(b, types)) {
+template <typename Types, typename F>
+void buildings_of_types_do(const Types& types, F func) {
+    building_id id = 0;
+    while ((id = g_building_index.next_after(types, id)) != 0) {
+        building& b = *building_get(id);
+        if (building_type_any_of(b.type, types)) {
             func(b);
         }
     }
 }
 
 template<typename T>
-void buildings_valid_do(T func, e_building_type type) {
-    for (auto &b : city_buildings()) {
-        if (b.is_valid() && (b.type == type)) {
+void buildings_valid_do(T func, const std::initializer_list<e_building_type>& types) {
+    buildings_of_types_do(types, [&](building& b) {
+        if (b.is_valid()) {
             func(b);
         }
-    }
+    });
+}
+
+template<typename T>
+void buildings_valid_do(T func, e_building_type type) {
+    const std::array<e_building_type, 1> types = {type};
+    buildings_of_types_do(types, [&](building& b) {
+        if (b.is_valid()) {
+            func(b);
+        }
+    });
 }
 
 template <typename T>
@@ -102,11 +115,17 @@ inline B *building_first_ex(T pred) {
     return nullptr;
 }
 
+inline building* building_first_of_type(e_building_type type) {
+    return building_next(1, type);
+}
+
 template <typename T>
 inline building *building_first_of_type(const T& types) {
-    for (auto &b : city_buildings()) {
-        if (b.is_valid() && building_type_any_of(b, types)) {
-            return &b;
+    building_id id = 0;
+    while ((id = g_building_index.next_after(types, id)) != 0) {
+        building* b = building_get(id);
+        if (b->is_valid() && building_type_any_of(b->type, types)) {
+            return b;
         }
     }
     return nullptr;

@@ -1,6 +1,7 @@
 #include "city_buildings.h"
 
 #include "city/city.h"
+#include "city/building_index.h"
 #include "game/undo.h"
 #include "core/custom_span.hpp"
 #include "core/profiler.h"
@@ -39,21 +40,19 @@ xspan<building> city_buildings() {
 }
 
 building *building_next(building_id bid, e_building_type type) {
-    for (; bid < MAX_BUILDINGS; ++bid) {
-        building *b = building_get(bid);
-        if (b->state == BUILDING_STATE_VALID && b->type == type)
+    building_id id = bid > 0 ? bid - 1 : 0;
+    while ((id = g_building_index.next_after(type, id)) != 0) {
+        building* b = building_get(id);
+        if (b->state == BUILDING_STATE_VALID && b->type == type) {
             return b;
+        }
     }
     return nullptr;
 }
 
 building_id building_id_first(e_building_type type) {
-    for (int i = 1; i < MAX_BUILDINGS; ++i) {
-        building *b = building_get(i);
-        if (b->state == BUILDING_STATE_VALID && b->type == type)
-            return i;
-    }
-    return 0;
+    building* b = building_next(1, type);
+    return b ? b->id : 0;
 }
 
 building_id building_id_random(e_building_type type) {
@@ -202,6 +201,7 @@ building *building_create(e_building_type type, tile2i tile, int orientation) {
 
     b->reset_slot(b->id);
     b->initialize(type, tile, orientation);
+    g_building_index.note(*b);
 
     events::emit(event_building_create{ b->id });
 
@@ -252,6 +252,7 @@ building *building_exists_at(tile2i tile) {
 void building_clear_all() {
     stub_records_guard_reset();
     pyramid_engine_clear_all();
+    g_building_index.clear();
     for (int i = 0; i < MAX_BUILDINGS; i++) {
         g_all_buildings[i].reset_slot(i);
     }

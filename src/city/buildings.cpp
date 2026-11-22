@@ -8,6 +8,7 @@
 #include "grid/terrain.h"
 #include "grid/routing/routing.h"
 #include "city/city.h"
+#include "city/building_index.h"
 #include "game/game_config.h"
 
 #include <algorithm>
@@ -176,6 +177,7 @@ void city_buildings_t::increase_industry_count(int resource, bool active) {
 }
 
 void city_buildings_t::on_post_load () {
+    g_building_index.rebuild();
     buildings_valid_do([] (building &b) {
         b.dcast()->on_post_load();
     });

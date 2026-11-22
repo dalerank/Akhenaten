@@ -371,6 +371,7 @@ public:
     bool is_ajacent_tile(tile2i t) const;
 
     void set_flag(e_building_flag flag, bool value) { flags.set(flag, value); }
+    void set_type(e_building_type new_type);
     bool get_flag(e_building_flag flag) const { return flags.is_set(flag); }
 
 public:

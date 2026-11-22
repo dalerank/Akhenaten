@@ -368,12 +368,12 @@ void building_mastaba::on_place(int orientation, int variant) {
     case 1: parts = bparams.config_east; break;
     case 2:
         parts = bparams.config_south;
-        base.type = mastaba_side_type(main_type);
+        base.set_type(mastaba_side_type(main_type));
         break;
 
     case 3:
         parts = bparams.config_west;
-        base.type = mastaba_side_type(main_type);
+        base.set_type(mastaba_side_type(main_type));
         break;
     }
 

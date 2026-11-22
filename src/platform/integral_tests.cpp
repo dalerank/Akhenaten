@@ -875,6 +875,12 @@ static std::string run_one_test(const xstring& name, const game_features::snapsh
         return "stub record written";
     }
 
+    if (test_log_contains("[building-index]")) {
+        logs::error("[test:%s] FAIL: a building changed type without updating the type index (see [building-index])",
+          name.c_str());
+        return "building type index out of date";
+    }
+
     if (js_vm_generation() != vm_generation) {
         // The rebuilt VM no longer has this test's globals; load the file again for check_valid().
         J = js_vm_state();

@@ -379,7 +379,7 @@ void building_house::change_to(building &b, e_building_type new_type, bool force
     }
 
     b.clear_impl(); // clear old impl
-    b.type = new_type;
+    b.set_type(new_type);
 
     auto house = b.dcast_house();
     int image_id = house_image_group<false>(house->house_level());
@@ -432,7 +432,7 @@ int16_t building_house::population_room() const {
 
 void building_house::change_to_vacant_lot() {
     auto &d = runtime_data();
-    base.type = BUILDING_HOUSE_VACANT_LOT;
+    base.set_type(BUILDING_HOUSE_VACANT_LOT);
 
     d.population = 0;
     d.frog_infest_days = 0;
@@ -1027,7 +1027,7 @@ static void split_size2(building* b, e_building_type new_type) {
     map_building_tiles_remove(b->id, b->tile);
 
     // main tile
-    b->type = new_type;
+    b->set_type(new_type);
     b->size = 1;
     housed.hsize = 1;
     housed.is_merged = false;
@@ -1068,7 +1068,7 @@ static void split_size3(building* b) {
     map_building_tiles_remove(b->id, b->tile);
 
     // main tile
-    b->type = BUILDING_HOUSE_SPACIOUS_APARTMENT;
+    b->set_type(BUILDING_HOUSE_SPACIOUS_APARTMENT);
     b->size = 1;
     housed.hsize = 1;
     housed.is_merged = false;
@@ -1125,7 +1125,7 @@ void building_house::devolve_to_smaller(e_building_type new_type, int new_size, 
     const int population = house_population();
 
     map_building_tiles_remove(id(), tile());
-    base.type = new_type;
+    base.set_type(new_type);
     base.size = new_size;
     housed.hsize = new_size;
     housed.is_merged = false;
@@ -1350,7 +1350,7 @@ void building_house_spacious_apartment::expand_to_common_residence() {
 
     auto &housed = runtime_data();
 
-    base.type = BUILDING_HOUSE_COMMON_RESIDENCE;
+    base.set_type(BUILDING_HOUSE_COMMON_RESIDENCE);
     base.size = 2;
     housed.hsize = 2;
     housed.population += g_merge_data.population;
@@ -1369,7 +1369,7 @@ void building_house_fancy_residence::expand_to_common_manor() {
     prepare_for_merge(id(), 9);
 
     auto &housed = runtime_data();
-    base.type = BUILDING_HOUSE_COMMON_MANOR;
+    base.set_type(BUILDING_HOUSE_COMMON_MANOR);
     base.size = 3;
     housed.hsize = 3;
     housed.population += g_merge_data.population;
@@ -1406,7 +1406,7 @@ void building_house_stately_manor::expand_to_modest_estate() {
 
     auto &housed = runtime_data();
 
-    base.type = BUILDING_HOUSE_MODEST_ESTATE;
+    base.set_type(BUILDING_HOUSE_MODEST_ESTATE);
     base.size = 4;
     housed.hsize = 4;
     housed.population += g_merge_data.population;

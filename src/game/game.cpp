@@ -11,6 +11,7 @@
 #include "editor/editor.h"
 #include "platform/arguments.h"
 #include "game/sim_schedule.h"
+#include "city/building_index.h"
 #include "city/city_buildings.h"
 #include "grid/vegetation.h"
 #include "grid/trees.h"
@@ -112,6 +113,7 @@ void game_t::update_tick(int simtick) {
 
     if (guard_stub_records) {
         stub_records_guard_check("during tick");
+        g_building_index.verify("during tick");
     }
 }
 

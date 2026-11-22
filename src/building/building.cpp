@@ -1,5 +1,6 @@
 #include "building.h"
 #include "game/sound_effect.h"
+#include "city/building_index.h"
 
 #include <new>
 
@@ -463,6 +464,11 @@ building* building::top_xy() {
 
 bool building::is_main() {
     return (prev_part_building_id == 0);
+}
+
+void building::set_type(e_building_type new_type) {
+    type = new_type;
+    g_building_index.note(*this);
 }
 
 void building::reset_slot(building_id slot_id) {

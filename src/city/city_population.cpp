@@ -522,22 +522,15 @@ void city_population_t::houses_demanding_goods_fill_from() {
 void city_population_t::housing_type_counts_update() {
     housing_type_counts.fill(0);
 
-    for (int i = 1; i < MAX_BUILDINGS; i++) {
-        auto house = building_get(i)->dcast_house();
-
-        if (!house) {
-            continue;
-        }
-
+    buildings_house_do([this](building_house* house) {
         if (house->state() == BUILDING_STATE_UNUSED || house->state() == BUILDING_STATE_UNDO
             || house->state() == BUILDING_STATE_DELETED_BY_GAME || house->state() == BUILDING_STATE_DELETED_BY_PLAYER) {
-            continue;
+            return;
         }
-
         if (house->house_population() > 0) {
             housing_type_counts[house->house_level()] += 1;
         }
-    }
+    });
 
     houses_demanding_goods_fill_from();
 }

@@ -71,7 +71,7 @@ namespace og {
             b.clear_impl();
             b.id = id;
             b.state = (e_building_state)og.state;
-            b.type = our_type(og.type);
+            b.set_type(our_type(og.type));
             b.size = og.size;
             b.tile = tile2i(og.x, og.y);
             b.orientation = og_orientation(og);

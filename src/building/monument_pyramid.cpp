@@ -2676,7 +2676,7 @@ void building_stepped_pyramid::change_parts_types_in_layer(tile2i begin, const v
 
     for (auto &part : parts) {
         part.b->clear_impl();
-        part.b->type = part.type;
+        part.b->set_type(part.type);
         auto *mon = part.b->dcast_monument();
         mon->runtime_data().layer = layer;
         mon->runtime_data().stair_index = 0xff;

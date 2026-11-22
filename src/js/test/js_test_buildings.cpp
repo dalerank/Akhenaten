@@ -866,3 +866,38 @@ static pcstr __test_houses_in_area(int x0, int y0, int x1, int y1) {
     return out.c_str();
 }
 ANK_FUNCTION_4(__test_houses_in_area);
+
+static pcstr __test_building_index_matches_scan() {
+    static std::string out;
+    out.clear();
+    for (int t = BUILDING_NONE + 1; t < BUILDING_MAX; ++t) {
+        const e_building_type type = (e_building_type)t;
+        std::vector<int> by_index;
+        buildings_valid_do([&](building& b) { by_index.push_back(b.id); }, type);
+        std::vector<int> by_scan;
+        for (int i = 1; i < MAX_BUILDINGS; ++i) {
+            building* b = building_get(i);
+            if (b->is_valid() && b->type == type) {
+                by_scan.push_back(i);
+            }
+        }
+        if (by_index != by_scan) {
+            out = "type " + std::to_string(t) + ": index " + std::to_string(by_index.size()) + " scan "
+                  + std::to_string(by_scan.size());
+            return out.c_str();
+        }
+    }
+    int houses_index = 0;
+    buildings_house_do([&](building_house*) { ++houses_index; });
+    int houses_scan = 0;
+    for (int i = 1; i < MAX_BUILDINGS; ++i) {
+        if (building_get(i)->dcast_house()) {
+            ++houses_scan;
+        }
+    }
+    if (houses_index != houses_scan) {
+        out = "houses: index " + std::to_string(houses_index) + " scan " + std::to_string(houses_scan);
+    }
+    return out.c_str();
+}
+ANK_FUNCTION(__test_building_index_matches_scan);

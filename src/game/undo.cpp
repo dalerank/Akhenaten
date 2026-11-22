@@ -3,6 +3,7 @@
 #include "building/building_storage_yard.h"
 #include "building/building_house.h"
 #include "city/city_finance.h"
+#include "city/building_index.h"
 #include "game/game_events.h"
 #include "city/city_resource.h"
 #include "city/city_buildings.h"
@@ -241,6 +242,7 @@ void game_undo_perform() {
                 } else {
                     memcpy(b, &data.buildings[i], sizeof(building));
                     b->reset_impl();
+                    g_building_index.note(*b);
                     if (b->type == BUILDING_STORAGE_YARD || b->type == BUILDING_GRANARY) {
                         if (!building_storage_restore(b->storage_id))
                             building_storage_reset_building_ids();
