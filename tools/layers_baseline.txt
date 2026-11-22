@@ -325,6 +325,7 @@ figure/cart_images.h -> graphics/image_desc.h
 figure/combat.cpp -> sound/sound.h
 figure/figure.cpp -> dev/debug.h
 figure/figure.cpp -> graphics/animkeys.h
+figure/figure.cpp -> graphics/elements/ui.h
 figure/figure.cpp -> graphics/elements/tooltip.h
 figure/figure.cpp -> graphics/view/view.h
 figure/figure.cpp -> sound/sound_walker.h

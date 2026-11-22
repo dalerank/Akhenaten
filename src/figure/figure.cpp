@@ -1,4 +1,5 @@
 #include "figure/figure.h"
+#include "graphics/elements/ui.h"
 
 #include "building/building.h"
 #include "city/city.h"
