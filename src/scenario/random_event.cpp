@@ -29,14 +29,14 @@ static const int RANDOM_EVENT_PROBABILITY[128]
 
 static void raise_wages(void) {
     if (g_scenario.random_events.raise_wages) {
-        if (g_city.finance.raise_wages_kingdome())
+        if (finance_system::raise_wages_kingdome(g_city.finance))
             events::emit(event_message{ true, "message_kingdome_raises_wages", 0, 0, SOURCE_LOCATION });
     }
 }
 
 static void lower_wages(void) {
     if (g_scenario.random_events.lower_wages) {
-        if (g_city.finance.lower_wages_kingdome())
+        if (finance_system::lower_wages_kingdome(g_city.finance))
             events::emit(event_message{ true, "message_kingdome_lowers_wages", 0, 0, SOURCE_LOCATION });
     }
 }

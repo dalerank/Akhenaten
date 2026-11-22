@@ -134,7 +134,7 @@ void steal_from_destination(figure &f) {
                 d.personal_savings_storage = 0;
             }
         }
-        g_city.finance.process_stolen(amount);
+        finance_system::process_stolen(g_city.finance, amount);
         show_robbery_warning("#thief_stole_savings");
         show_robbery_message("thief_stole_savings", amount, f.tile.grid_offset());
         return;
@@ -153,7 +153,7 @@ void steal_from_destination(figure &f) {
     } else {
         b->tax_income_or_storage = 0;
     }
-    g_city.finance.process_stolen(amount);
+    finance_system::process_stolen(g_city.finance, amount);
 
     pcstr warn = "#palace_robbed";
     switch (b->type) {
@@ -182,7 +182,7 @@ void remake_instant_steal_on_create(figure &f) {
             money_stolen = 400 - random_byte() / 2;
         }
         show_robbery_message("message_tutorial_crime", money_stolen, f.tile.grid_offset());
-        g_city.finance.process_stolen(money_stolen);
+        finance_system::process_stolen(g_city.finance, money_stolen);
         return;
     }
 
@@ -191,7 +191,7 @@ void remake_instant_steal_on_create(figure &f) {
         int money_stolen = (random_byte() / 2) % 100;
         if (money_stolen > 0) {
             show_robbery_message("message_tutorial_crime", money_stolen, f.tile.grid_offset());
-            g_city.finance.process_stolen(money_stolen);
+            finance_system::process_stolen(g_city.finance, money_stolen);
         }
     }
 }
@@ -249,7 +249,7 @@ void figure_robber::figure_action() {
         case ACTION_10_ROBBER_FLEEING:
             // Gold-cart flee works in remake too (OG supplement).
             if (++base.wait_ticks > 10) {
-                g_city.finance.process_stolen(100);
+                finance_system::process_stolen(g_city.finance, 100);
                 show_robbery_warning("#gold_miner_robbed");
                 show_robbery_message("message_tutorial_crime", 100, tile().grid_offset());
                 poof();
@@ -310,7 +310,7 @@ void figure_robber::figure_action() {
 
     case ACTION_10_ROBBER_FLEEING:
         if (++base.wait_ticks > 10) {
-            g_city.finance.process_stolen(100);
+            finance_system::process_stolen(g_city.finance, 100);
             show_robbery_warning("#gold_miner_robbed");
             show_robbery_message("message_tutorial_crime", 100, tile().grid_offset());
             poof();

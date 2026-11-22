@@ -52,7 +52,7 @@ struct city_t {
     e_availability advisors[ADVISOR_MAX];
     e_availability empire_screen = AVAILABLE;
 
-    city_finance_t finance;
+    finance_state finance;
     city_resources_t resource;
     city_food_supply_t food_supply;
     city_taxes_t taxes;
@@ -226,6 +226,7 @@ struct city_t {
 
     void update_tick(int simtick);
     void update_month(simulation_time_t t);
+    finance_context finance_ctx();
 
     e_availability is_advisor_available(e_advisor advisor) const;
     void set_advisor_available(e_advisor advisor, e_availability available);

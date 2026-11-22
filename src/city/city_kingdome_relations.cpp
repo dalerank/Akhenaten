@@ -76,7 +76,7 @@ void kingdome_relation_t::update_debt_state() {
     case e_debt_none:
         // provide bailout
         events::emit(event_finance_donation{ rescue_loan });
-        g_city.finance.calculate_totals();
+        finance_system::calculate_totals(g_city.finance);
 
         debt_state = e_debt_one_time;
         months_in_debt = 0;

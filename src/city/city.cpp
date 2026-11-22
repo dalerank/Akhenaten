@@ -69,7 +69,7 @@ static void city_subscribe_events() {
     g_city.maintenance.subscribe_events();
     g_city.resource.subscribe_events();
     g_city.food_supply.subscribe_events();
-    g_city.finance.subscribe_events();
+    finance_system::subscribe_events(g_city.finance, [] { return g_city.finance_ctx(); });
     g_city.hotkeys_handler.subscribe_events();
 }
 static events::session_subscriber g_city_session(&city_subscribe_events);
@@ -105,7 +105,7 @@ void city_t::init() {
     figure_clear_all();
     g_warning_manager.clear_all();
     sentiment.init();
-    finance.init();
+    finance_system::init(finance);
     empire_screen = AVAILABLE;
     bookmarks.reset();
     kingdome.init();
@@ -119,6 +119,11 @@ void city_t::reload_objects() {
 
 void city_t::update_month(simulation_time_t simtime) {
     sim_schedule_run(SIM_PHASE_MONTH_CITY, *this);
+}
+
+finance_context city_t::finance_ctx() {
+    return {taxes, population, labor, kingdome, g_simulation.simtime.month, g_scenario.city_tax_percentage(),
+      g_scenario.debt_interest()};
 }
 
 void city_t::init_custom_map() {

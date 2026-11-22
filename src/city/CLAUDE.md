@@ -59,7 +59,7 @@ Subscribers (UI, scripts) react without polling. Treasury wrapper auto-emits on 
 
 **Labor** — Fixed categories with priority-based allocation (OG: food…military). Buildings declare `labor_category` in static params. Enhanced flag `gameplay_enhanced_labor_category_split` moves storage yards/docks into `LABOR_CATEGORY_STORAGE`.
 
-**Finance** — `city_finance_t::treasury` emits events on change. Monthly: taxes, wages, tribute, interest, festival costs.
+**Finance** — `finance_state::treasury` emits events on change. Monthly: taxes, wages, tribute, interest, festival costs.
 
 **Religion** — 5 gods hardcoded. God effects: Osiris=double farms, Ra=trade bonuses, Seth=military buffs, Ptah=workshops, Bast=health/crime.
 

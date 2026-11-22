@@ -5,7 +5,7 @@
 #include "js/js_game.h"
 #include "js/js_global_object.h"
 
-void ank_global_obj_bind_field(js_State *J, js_StringNode name, city_finance_t::treasury_t *ptr) {
+void ank_global_obj_bind_field(js_State* J, js_StringNode name, finance_state::treasury_t* ptr) {
     J->bind_property(name, &ptr->value);
 }
 
@@ -24,7 +24,7 @@ ANK_GLOBAL_OBJECT(g_city.finance, __city_finance,
     wage_rate_paid_last_year);
 
 void __city_finance_pay_monthly_wages() {
-    g_city.finance.pay_monthly_wages();
+    finance_system::pay_monthly_wages(g_city.finance, g_city.finance_ctx());
 }
 ANK_FUNCTION(__city_finance_pay_monthly_wages)
 
@@ -47,17 +47,17 @@ std::optional<bvariant> __city_finance_overview(pcstr property, bool this_year) 
 ANK_FUNCTION_2(__city_finance_overview)
 
 void __city_finance_update_estimate_taxes() {
-    g_city.finance.update_estimate_taxes();
+    finance_system::update_estimate_taxes(g_city.finance, g_city.finance_ctx());
 }
 ANK_FUNCTION(__city_finance_update_estimate_taxes)
 
 void __city_finance_collect_monthly_taxes() {
-    g_city.finance.collect_monthly_taxes();
+    finance_system::collect_monthly_taxes(g_city.finance, g_city.finance_ctx());
 }
 ANK_FUNCTION(__city_finance_collect_monthly_taxes)
 
 void __city_finance_calculate_totals() {
-    g_city.finance.calculate_totals();
+    finance_system::calculate_totals(g_city.finance);
 }
 ANK_FUNCTION(__city_finance_calculate_totals)
 
@@ -67,6 +67,6 @@ std::optional<bvariant> __city_get_taxes_property(pcstr property) {
 ANK_FUNCTION_1(__city_get_taxes_property)
 
 bool __city_finance_is_out_of_money() {
-    return g_city.finance.is_out_of_money();
+    return finance_system::is_out_of_money(g_city.finance);
 }
 ANK_FUNCTION(__city_finance_is_out_of_money)

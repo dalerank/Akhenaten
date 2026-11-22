@@ -117,7 +117,7 @@ struct finance_tax_rules_t {
 ANK_CONFIG_STRUCT(finance_tax_rules_t, tax_percentage, house_tax_income_unit)
 extern finance_tax_rules_t finance_tax_rules;
 
-struct city_finance_t {
+struct finance_state {
     struct treasury_t {
         int value;
         treasury_t &change(int v);
@@ -143,30 +143,41 @@ struct city_finance_t {
     int32_t wage_rate_paid_last_year;
     int32_t crimes_this_month;
     int32_t gold_stolen_this_month;
-
-    void init();
-    void subscribe_events();
-    bool is_out_of_money() const;
-    void update_estimate_taxes();
-    void estimate_wages();
-    void collect_monthly_taxes();
-    int house_monthly_tax_units(building_house *house) const;
-    int apply_tax_rate(int amount) const;
-    int house_tax_income(int units) const;
-    int house_tax_units_from_income(int tax_income) const;
-    void advance_month();
-    void pay_monthly_wages();
-    void pay_monthly_interest();
-    void pay_monthly_salary();
-    void copy_amounts_to_last_year();
-    void pay_tribute();
-    void advance_year();
-    void change_wages(int amount);
-    int raise_wages_kingdome();
-    int lower_wages_kingdome();
-    void process_stolen(int stolen);
-    void update_interest();
-
-    void process_request(event_finance_request request);
-    void calculate_totals();
 };
+
+struct city_population_t;
+struct city_labor_t;
+struct kingdome_relation_t;
+
+struct finance_context {
+    city_taxes_t& taxes;
+    city_population_t& population;
+    const city_labor_t& labor;
+    kingdome_relation_t& kingdome;
+    int month;
+    int city_tax_percentage;
+    int debt_interest;
+};
+
+namespace finance_system {
+    void init(finance_state& f);
+    void subscribe_events(finance_state& f, finance_context (*make_context)());
+    bool is_out_of_money(const finance_state& f);
+    void update_estimate_taxes(finance_state& f, const finance_context& ctx);
+    void estimate_wages(finance_state& f, const finance_context& ctx);
+    void collect_monthly_taxes(finance_state& f, const finance_context& ctx);
+    int house_monthly_tax_units(const finance_context& ctx, building_house* house);
+    int apply_tax_rate(const finance_state& f, const finance_context& ctx, int amount);
+    int house_tax_income(const finance_state& f, const finance_context& ctx, int units);
+    int house_tax_units_from_income(const finance_state& f, const finance_context& ctx, int tax_income);
+    void advance_month(finance_state& f, const finance_context& ctx);
+    void pay_monthly_wages(finance_state& f, const finance_context& ctx);
+    void advance_year(finance_state& f, const finance_context& ctx);
+    void change_wages(finance_state& f, int amount);
+    int raise_wages_kingdome(finance_state& f);
+    int lower_wages_kingdome(finance_state& f);
+    void process_stolen(finance_state& f, int stolen);
+    void update_interest(finance_state& f);
+    void process_request(finance_state& f, const finance_context& ctx, event_finance_request request);
+    void calculate_totals(finance_state& f);
+} // namespace finance_system

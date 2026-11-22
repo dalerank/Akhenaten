@@ -1279,14 +1279,14 @@ void event_manager_t::process_event(int id, bool via_event_trigger, int chain_ac
         break;
 
     case EVENT_TYPE_WAGE_INCREASE:
-        g_city.finance.raise_wages_kingdome();
+        finance_system::raise_wages_kingdome(g_city.finance);
         city_message_post_full(true, "message_template_general", &event, caller_event_id,
                                PHRASE_wage_change_title_I, PHRASE_wage_change_initial_announcement_I,
                                PHRASE_wage_change_no_reason_I_A, id, 0, POPUP_MSG_WAGE);
         break;
 
     case EVENT_TYPE_WAGE_DECREASE:
-        g_city.finance.lower_wages_kingdome();
+        finance_system::lower_wages_kingdome(g_city.finance);
         city_message_post_full(true, "message_template_general", &event, caller_event_id,
                                PHRASE_wage_change_title_D, PHRASE_wage_change_initial_announcement_D,
                                PHRASE_wage_change_no_reason_D_A, id, 0, POPUP_MSG_WAGE);
