@@ -416,10 +416,15 @@ static bool migrate_legacy_save_file(pcstr relative_name, int file_version) {
     }
 
     // Inform (not ask): the converted copy is now the canonical file, the original
-    // is kept under the version-tagged backup name.
+    // is kept under the version-tagged backup name. Deferred to frame end so the
+    // dialog opens on top of the city window the load flow has just shown.
     bstring512 body;
-    save_migration_message_body(body, lang_text_from_key("#save_migration_message"), rel_backup.c_str());
-    g_warning_manager.show_message_banner(body.c_str());
+    save_migration_message_body(body, lang_text_from_key("#save_migration_message"), rel_backup.basename().c_str());
+    xstring title = lang_text_from_key("#save_migration_title");
+    xstring message = body.c_str();
+    game.add_frame_end_event([title, message] {
+        popup_dialog::show_ok(title, message);
+    });
 
     logs::info("[test-marker] save_migrated:%s:to=%s:backup=%s",
                relative_name, rel_target.c_str(), rel_backup.c_str());

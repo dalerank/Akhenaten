@@ -2558,5 +2558,6 @@ localization_en = [
   { key: "#western_desert", text: "WESTERN DESERT" }
   { key: "#lebanon", text: "LEBANON" }
   { key: "#canaan", text: "CANAAN" }
+  { key: "#save_migration_title", text: "Save converted" }
   { key: "#save_migration_message", text: "Your save file used an older format, so it was converted automatically. You'll find the original file under the name {0}, if you ever need it." }
 ]
