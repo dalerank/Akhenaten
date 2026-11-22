@@ -2333,7 +2333,6 @@ bool building_stepped_pyramid::draw_completed_height_ornaments(painter &ctx, vec
         full.image_id = img;
         full.pixel = pixel;
         full.mask = color_mask;
-        pyramid_engine_update_part_ramp_image(base.id);
         const vec2i ramp_origin = pixel + vec2i{HALF_TILE_WIDTH_PIXELS + 1, -HALF_TILE_HEIGHT_PIXELS};
         pyramid_ramp_draw_part(ctx, base, ramp_origin, color_mask);
         return true;
@@ -2371,7 +2370,6 @@ bool building_stepped_pyramid::draw_completed_height_ornaments(painter &ctx, vec
     command.pixel = pixel;
     command.mask = color_mask;
 
-    pyramid_engine_update_part_ramp_image(base.id);
     // pyramid_part_draw: draw_x = x + tile_half_width+1, draw_y = y - tile_half_height - layer.
     // Akhenaten tile pixel + layer lift maps to (x, y - layer); add the half-tile shift so
     // ramp_base/ramp_offsets land on the same origin image_draw used.

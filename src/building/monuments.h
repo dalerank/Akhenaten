@@ -70,10 +70,6 @@ struct pyramid_part_state {
     int16_t ramp_image_y1 = 0;
     int16_t ramp_image_x2 = 0;
     int16_t ramp_image_y2 = 0;
-    // Frame-local: ramp-link (draw this part's ramps on a closer neighbor).
-    building_id ramp_link_part_id = 0;
-    int32_t ramp_link_draw_x = 0;
-    int32_t ramp_link_draw_y = 0;
 };
 
 struct pyramid_main_state {
