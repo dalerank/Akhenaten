@@ -341,7 +341,7 @@ static void show_message_banner_for_index(int index) {
     if (title.empty()) {
         title = lang_get_message_id(msg.MM_text_id);
     }
-    g_warning_manager.show_message_banner(title.c_str(), msg.sequence);
+    events::emit(event_city_message_banner{title.c_str(), msg.sequence});
 }
 
 static void apply_popup_delivery(bool use_popup, e_popup_message_category popup_cat, int message_index, xstring sound_template_key) {

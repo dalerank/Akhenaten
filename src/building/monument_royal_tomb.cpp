@@ -1,4 +1,6 @@
 #include "monument_royal_tomb.h"
+#include "game/game_events.h"
+#include "building/construction/build_planner.h"
 #include "grid/orientation.h"
 
 #include "building/monuments.h"
@@ -933,12 +935,12 @@ int building_royal_tomb::preview::finalize_check(build_planner &p, tile2i tile, 
     }
     if (!can_place_at(p.build_type, end)) {
         p.set_warning("#entrance_on_clear_land");
-        g_warning_manager.show("#must_be_over_cliffs");
+        events::emit(event_city_warning{"#must_be_over_cliffs"});
         return CAN_NOT_PLACE;
     }
     if (has_unfinished_royal_tomb(p.build_type)) {
         p.set_warning("#only_one_building_of_this_type");
-        g_warning_manager.show("#only_one_building_of_this_type");
+        events::emit(event_city_warning{"#only_one_building_of_this_type"});
         return CAN_NOT_PLACE;
     }
     return CAN_PLACE;
@@ -963,7 +965,7 @@ void building_royal_tomb::preview::ghost_preview(build_planner &planer, painter 
                     continue;
                 }
                 const bool ok = connected && part_tile_allowed(l, i, t);
-                ghost_draw::draw_ground_tile(ctx, g_camera.lookup_tile_to_pixel(t),
+                ghost_draw::draw_ground_tile(ctx, ghost_draw::tile_pixel(t),
                   ok ? COLOR_MASK_GREEN_30 : COLOR_MASK_RED_30);
             }
         }

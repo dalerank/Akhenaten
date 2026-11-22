@@ -1,4 +1,6 @@
 #include "monument_pharos_lighthouse.h"
+#include "game/game_events.h"
+#include "building/construction/build_planner.h"
 #include "grid/orientation.h"
 
 #include "building/monuments.h"
@@ -417,7 +419,7 @@ int building_pharos_lighthouse::preview::finalize_check(build_planner& p, tile2i
         return state;
     }
     if (!site_fits(end)) {
-        g_warning_manager.show("#must_be_over_rocks");
+        events::emit(event_city_warning{"#must_be_over_rocks"});
         p.set_warning("#entrance_on_clear_land");
         return CAN_NOT_PLACE;
     }

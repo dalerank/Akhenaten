@@ -132,3 +132,7 @@ namespace ghost_draw {
     }
 
 } // namespace ghost_draw
+
+vec2i ghost_draw::tile_pixel(tile2i tile) {
+    return g_camera.lookup_tile_to_pixel(tile);
+}

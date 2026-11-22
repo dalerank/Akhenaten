@@ -81,7 +81,7 @@ declare_console_command_p(ra_no_trade) {
 
     g_city.religion.ra_no_traders_months_left = nomonth;
     g_city.religion.ra_harshly_reduced_trading_months_left = nomonth;
-    g_warning_manager.show_console_var("Ra no month trade %d", nomonth);
+    events::emit(event_city_console_text{bstring64("Ra no month trade ", nomonth).c_str()});
 }
 
 declare_console_command_p(reset_god_moods) {

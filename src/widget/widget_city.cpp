@@ -18,7 +18,7 @@
 #include "building/construction/build_planner.h"
 #include "building/monument_pyramid_ramp.h"
 #include "city/city_finance.h"
-#include "city/city_warnings.h"
+#include "window/window_warnings.h"
 #include "city/object_info.h"
 #include "core/calc.h"
 #include "core/string.h"

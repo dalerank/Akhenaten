@@ -1,4 +1,6 @@
 #include "monument_alexandria_library.h"
+#include "game/game_events.h"
+#include "building/construction/build_planner.h"
 #include "grid/orientation.h"
 
 #include "building/monuments.h"
@@ -890,7 +892,7 @@ bool building_alexandria_library::draw_ornaments_and_animations_height(painter &
         int max_y = point.y;
         for (const tile2i corner : {area.tmin(), tile2i(area.tmax().x(), area.tmin().y()),
                tile2i(area.tmin().x(), area.tmax().y()), area.tmax()}) {
-            max_y = std::max(max_y, g_camera.lookup_tile_to_pixel(corner).y);
+            max_y = std::max(max_y, ghost_draw::tile_pixel(corner).y);
         }
         auto &anchor = ImageDraw::create_command(ctx, render_command_t::ert_none);
         anchor.pixel = point;
@@ -1061,7 +1063,7 @@ int building_alexandria_library::preview::finalize_check(build_planner &p, tile2
     }
     if (has_unfinished_alexandria_library()) {
         p.set_warning("#one_library_only");
-        g_warning_manager.show("#one_library_only");
+        events::emit(event_city_warning{"#one_library_only"});
         return CAN_NOT_PLACE;
     }
     return can_place(p, tile, end, CAN_PLACE);
@@ -1090,7 +1092,7 @@ void building_alexandria_library::preview::ghost_preview(build_planner &planer, 
         if (blocked) {
             ghost_draw::draw_partially_blocked(ctx, true, planer.site_parts[i]);
         } else if (d.kind == 0) {
-            ghost_draw::draw_building_ghost(ctx, img_body > 0 ? img_body : preview, g_camera.lookup_tile_to_pixel(t));
+            ghost_draw::draw_building_ghost(ctx, img_body > 0 ? img_body : preview, ghost_draw::tile_pixel(t));
         } else {
             ghost_draw::draw_partially_blocked(ctx, false, planer.site_parts[i]);
         }

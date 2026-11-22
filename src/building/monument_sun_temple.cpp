@@ -1,4 +1,5 @@
 #include "monument_sun_temple.h"
+#include "building/construction/build_planner.h"
 #include "grid/orientation.h"
 
 #include "building/monuments.h"
@@ -1066,7 +1067,7 @@ bool building_sun_temple::draw_ornaments_and_animations_height(painter &ctx, vec
         int max_y = point.y;
         for (const tile2i corner : {area.tmin(), tile2i(area.tmax().x(), area.tmin().y()),
                tile2i(area.tmin().x(), area.tmax().y()), area.tmax()}) {
-            max_y = std::max(max_y, g_camera.lookup_tile_to_pixel(corner).y);
+            max_y = std::max(max_y, ghost_draw::tile_pixel(corner).y);
         }
         auto &anchor = ImageDraw::create_command(ctx, render_command_t::ert_none);
         anchor.pixel = point;
@@ -1293,7 +1294,7 @@ int building_sun_temple::preview::finalize_check(build_planner &p, tile2i tile, 
     }
     if (sandstone_need > 0 && yards_available(RESOURCE_SANDSTONE) < sandstone_need) {
         p.set_warning("#need_220_blocks_of_sandstone_for_sun_temple");
-        g_warning_manager.show("#need_220_blocks_of_sandstone_for_sun_temple");
+        events::emit(event_city_warning{"#need_220_blocks_of_sandstone_for_sun_temple"});
         return CAN_NOT_PLACE;
     }
     return can_place(p, tile, end, CAN_PLACE);
@@ -1322,7 +1323,7 @@ void building_sun_temple::preview::ghost_preview(build_planner &planer, painter 
         if (blocked) {
             ghost_draw::draw_partially_blocked(ctx, true, planer.site_parts[i]);
         } else if (d.kind == SUN_TEMPLE_PART_TEMPLE) {
-            ghost_draw::draw_building_ghost(ctx, img_body > 0 ? img_body : preview, g_camera.lookup_tile_to_pixel(t));
+            ghost_draw::draw_building_ghost(ctx, img_body > 0 ? img_body : preview, ghost_draw::tile_pixel(t));
         } else {
             ghost_draw::draw_partially_blocked(ctx, false, planer.site_parts[i]);
         }

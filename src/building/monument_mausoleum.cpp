@@ -1,4 +1,6 @@
 #include "monument_mausoleum.h"
+#include "game/game_events.h"
+#include "building/construction/build_planner.h"
 #include "grid/orientation.h"
 
 #include "building/monuments.h"
@@ -986,7 +988,7 @@ int building_mausoleum::preview::finalize_check(build_planner &p, tile2i tile, t
     }
     if (has_unfinished_mausoleum()) {
         p.set_warning("#only_one_building_of_this_type");
-        g_warning_manager.show("#only_one_building_of_this_type");
+        events::emit(event_city_warning{"#only_one_building_of_this_type"});
         return CAN_NOT_PLACE;
     }
     int sandstone_need = 0;
@@ -998,7 +1000,7 @@ int building_mausoleum::preview::finalize_check(build_planner &p, tile2i tile, t
     }
     if (sandstone_need > 0 && yards_available(RESOURCE_SANDSTONE) < sandstone_need) {
         p.set_warning("#mausoleum_needs_sandstone");
-        g_warning_manager.show("#mausoleum_needs_sandstone");
+        events::emit(event_city_warning{"#mausoleum_needs_sandstone"});
         return CAN_NOT_PLACE;
     }
     return can_place(p, tile, end, CAN_PLACE);

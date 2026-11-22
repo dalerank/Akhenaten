@@ -1,4 +1,5 @@
 #include "building.h"
+#include "io/gamefiles/lang.h"
 #include "game/sound_effect.h"
 #include "city/building_index.h"
 
@@ -758,7 +759,7 @@ xstring building::cls_name() const {
     }
 
     const auto &m = params.meta;
-    return ui::str(m.text_id, 0);
+    return lang_get_string(m.text_id, 0);
 }
 
 tile2i building::access_tile() {

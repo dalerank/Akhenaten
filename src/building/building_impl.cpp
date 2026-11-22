@@ -1,4 +1,5 @@
 #include "building_impl.h"
+#include "io/gamefiles/lang.h"
 #include "game/sound_effect.h"
 
 #include "building/building.h"
@@ -383,31 +384,36 @@ void building_impl::bind_dynamic(io_buffer *iob, size_t version) {
 
 const auto& get_properties() {
     static const svector<bproperty, 16> bproperties = {
-        { tags().stored, xstring("*"),
-            [] (building &b, const xstring &name) {
-                e_resource res = resource_type(name);
-                return bvariant(b.stored_amount(res));
-            }
-        },
+      {tags().stored, xstring("*"),
+        [](building& b, const xstring& name) {
+            e_resource res = resource_type(name);
+            return bvariant(b.stored_amount(res));
+        }},
 
-        { tags().text, xstring("*"),
-            [] (building &b, const xstring &name) {
-                 int id = atoi(name.c_str());
-                 const auto &m = building_static_params::get(b.type).meta;
-                 return bvariant(ui::str(m.text_id, id));
-            }
-        },
+      {tags().text, xstring("*"),
+        [](building& b, const xstring& name) {
+            int id = atoi(name.c_str());
+            const auto& m = building_static_params::get(b.type).meta;
+            return bvariant(lang_get_string(m.text_id, id));
+        }},
 
-        { tags().building, tags().name, [] (building &b, const xstring &) { return bvariant(b.cls_name()); }},
-        { tags().building, tags().num_workers, [] (building &b, const xstring &) { return bvariant(b.num_workers); }},
-        { tags().model, tags().laborers, [] (building &b, const xstring &) { return bvariant(b.max_workers); }},
-        { tags().building, tags().output_resource, [] (building &b, const xstring &) { return bvariant(resource_name(b.output.resource)); }},
-        { tags().building, tags().second_output_resource, [] (building &b, const xstring &) { return bvariant(resource_name(b.output.resource_second)); }},
-        { tags().building, tags().first_material, [] (building &b, const xstring &) { return bvariant(resource_name(b.input.resource)); }},
-        { tags().building, tags().first_material_stored, [] (building &b, const xstring &) { return bvariant(b.stored_amount(b.input.resource)); }},
-        { tags().building, tags().second_material, [] (building &b, const xstring &) { return bvariant(resource_name(b.input.resource_second)); }},
-        { tags().building, tags().second_material_stored, [] (building &b, const xstring &) { return bvariant(b.stored_amount(b.input.resource_second)); }},
-        { tags().farm, tags().fertility, [] (building &b, const xstring &) { return bvariant(map_get_fertility_for_farm(b.tile.grid_offset())); }},
+      {tags().building, tags().name, [](building& b, const xstring&) { return bvariant(b.cls_name()); }},
+      {tags().building, tags().num_workers, [](building& b, const xstring&) { return bvariant(b.num_workers); }},
+      {tags().model, tags().laborers, [](building& b, const xstring&) { return bvariant(b.max_workers); }},
+      {tags().building, tags().output_resource,
+        [](building& b, const xstring&) { return bvariant(resource_name(b.output.resource)); }},
+      {tags().building, tags().second_output_resource,
+        [](building& b, const xstring&) { return bvariant(resource_name(b.output.resource_second)); }},
+      {tags().building, tags().first_material,
+        [](building& b, const xstring&) { return bvariant(resource_name(b.input.resource)); }},
+      {tags().building, tags().first_material_stored,
+        [](building& b, const xstring&) { return bvariant(b.stored_amount(b.input.resource)); }},
+      {tags().building, tags().second_material,
+        [](building& b, const xstring&) { return bvariant(resource_name(b.input.resource_second)); }},
+      {tags().building, tags().second_material_stored,
+        [](building& b, const xstring&) { return bvariant(b.stored_amount(b.input.resource_second)); }},
+      {tags().farm, tags().fertility,
+        [](building& b, const xstring&) { return bvariant(map_get_fertility_for_farm(b.tile.grid_offset())); }},
     };
     return bproperties;
 }

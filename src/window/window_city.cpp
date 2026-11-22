@@ -5,7 +5,7 @@
 #include "city/city_message.h"
 #include "game/game_events.h"
 #include "city/city.h"
-#include "city/city_warnings.h"
+#include "window/window_warnings.h"
 #include "core/profiler.h"
 #include "dev/debug.h"
 #include "game/game.h"

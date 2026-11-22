@@ -103,7 +103,6 @@ void city_t::init() {
     local_cults.reset();
     buildings.init();
     figure_clear_all();
-    g_warning_manager.clear_all();
     sentiment.init();
     finance_sys().init();
     empire_screen = AVAILABLE;

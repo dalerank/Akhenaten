@@ -270,9 +270,6 @@ city/city_religion_properties.cpp -> widget/debug_console.h
 city/city_resource.cpp -> graphics/window.h
 city/city_resource.h -> dev/console_io.h
 city/city_resource_handle.cpp -> graphics/elements/ui.h
-city/city_warnings.cpp -> graphics/window.h
-city/city_warnings.cpp -> input/mouse.h
-city/city_warnings.h -> window/autoconfig_window.h
 city/object_info.cpp -> dev/debug.h
 city/object_info.cpp -> graphics/view/lookup.h
 city/ratings.cpp -> dev/debug.h

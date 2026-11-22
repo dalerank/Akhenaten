@@ -1,4 +1,5 @@
 #include "monument_obelisk.h"
+#include "building/construction/build_planner.h"
 
 #include "building/monuments.h"
 #include "city/city.h"
@@ -312,7 +313,7 @@ int building_obelisk::preview::finalize_check(build_planner &p, tile2i tile, til
     if (need > 0 && yards_available(RESOURCE_GRANITE) < need) {
         const xstring msg = granite_need_warning(p.build_type, need);
         p.set_warning(msg);
-        g_warning_manager.show_custom(msg.c_str());
+        events::emit(event_city_warning_text{msg.c_str()});
         return CAN_NOT_PLACE;
     }
     return CAN_PLACE;
