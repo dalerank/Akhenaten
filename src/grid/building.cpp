@@ -1,5 +1,6 @@
 ﻿#include "building.h"
 #include "io/io_buffer.h"
+#include "core/draw_phase.h"
 #include "grid/building_chunks.h"
 #include "js/js_register.h"
 
@@ -88,6 +89,7 @@ int map_building_height_at(int grid_offset) {
 }
 
 void map_building_height_set(int grid_offset, int8_t height) {
+    draw_phase::check_write("map_building_height_set");
     map_grid_set(g_height_building_grid, grid_offset, height);
 }
 

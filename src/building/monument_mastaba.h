@@ -89,6 +89,8 @@ public:
 
     static void update_images(building *b, int curr_phase, const vec2i size_b);
     virtual void sync_visuals() override;
+    virtual void on_post_load() override;
+    void update_tile_heights();
     static void finalize(building *b, const vec2i size_b);
     static int get_image(int orientation, tile2i tile, tile2i start, tile2i end);
     static const base_params &get_params(e_building_type type);
@@ -107,9 +109,8 @@ protected:
     void draw_flat_phase_bricks(painter &ctx, color color_mask, const vec2i tiles_size);
 
     using height_tiles = svector<tile2i, 21>;
-    void draw_height_phase_bricks(painter &ctx, color color_mask, const vec2i tiles_size, const vec2i city_offset, const height_tiles &tiles2draw);
-    void draw_height_phase_layers(painter &ctx, color color_mask, const vec2i tiles_size, const vec2i city_offset, const height_tiles &tiles2draw);
-    void draw_height_phase_complete(painter &ctx, color color_mask, const vec2i tiles_size, const vec2i city_offset, const height_tiles &tiles2draw);
+    void draw_height_bricks(painter &ctx, color color_mask, const vec2i city_offset, const height_tiles &tiles2draw);
+    int height_tile_image(tile2i tile) const;
     void draw_height_side_figures(painter &ctx);
 };
 

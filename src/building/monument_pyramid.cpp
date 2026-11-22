@@ -76,7 +76,8 @@ static bool pyramid_style_draws_og_parts(e_pyramid_style style) {
     return style == PYRAMID_STYLE_BENT || style == PYRAMID_STYLE_TRUE || style == PYRAMID_STYLE_MUDBRICK;
 }
 
-static int og_pyramid_part_image(building& part, const pyramid_part_state& ps, bool finished, e_pyramid_style style) {
+static int og_pyramid_part_image(building& part, const pyramid_part_state& ps, bool finished, e_pyramid_style style,
+  int view) {
     building* head = part.main();
     const e_building_type t = head ? head->type : part.type;
     const auto& params = building_static_params::get(t);
@@ -87,7 +88,7 @@ static int og_pyramid_part_image(building& part, const pyramid_part_state& ps, b
     const int half_first = params.first_img("half_bricks");
     const int bent0 = half_first > 0 ? half_first : pyramid0 + 111;
     int kind = g_monument_pyramid_engine.layout_kind(head, ps.subtype);
-    kind = g_monument_pyramid_engine.rotated_kind(kind, map_view_orientation() / 2);
+    kind = g_monument_pyramid_engine.rotated_kind(kind, view);
     const bool half = style == PYRAMID_STYLE_BENT
                       && g_monument_pyramid_engine.bent_is_half_layer((int)ps.size_variant, (int)ps.layer);
     if (finished || ps.stage == PYRAMID_STAGE_CASING) {
@@ -1035,6 +1036,11 @@ void building_stepped_pyramid::sync_footprint_layers(int done_blocks, int total_
 
 void building_stepped_pyramid::sync_visuals() {
     building_pyramid::sync_visuals();
+    sync_ring_layers();
+    update_tile_heights();
+}
+
+void building_stepped_pyramid::sync_ring_layers() {
     if (pyramid_params().pyramide_type == PYRAMID_STYLE_NONE || !is_main() || is_finished()) {
         return;
     }
@@ -1147,7 +1153,7 @@ void building_stepped_pyramid::finish_block_construction() {
             // empty_land leaves a grey well under raised bent half-layers.
             if (pyramid_style_draws_og_parts(finish_style)) {
                 if (auto* ps = pyramid_part_state_get(part->id)) {
-                    img = og_pyramid_part_image(*part, *ps, true, finish_style);
+                    img = og_pyramid_part_image(*part, *ps, true, finish_style, map_view_orientation() / 2);
                 }
             }
             if (img <= 0) {
@@ -1170,6 +1176,7 @@ void building_stepped_pyramid::finish_block_construction() {
     }
 
     building_pyramid::finish_block_construction();
+    update_tile_heights();
 }
 
 bool building_pyramid::need_bricklayers() {
@@ -1681,6 +1688,7 @@ void building_stepped_pyramid::on_post_load() {
     building_monument::on_post_load();
 
     assign_stair();
+    update_tile_heights();
 }
 
 void building_stepped_pyramid::on_destroy() {
@@ -2158,18 +2166,6 @@ bool building_stepped_pyramid::draw_ornaments_and_animations_hight_impl(painter 
     // Last schedule index = RESOURCE_NONE terminal (stepped S24/M32/L36; true adds polish first).
     const int terminal_phase = phases() - 1;
 
-    auto fill_tiles_height = [](painter & /*ctx*/, tile2i tile, int img) {
-        const image_t *image = image_get(img);
-        if (!image) {
-            return;
-        }
-        int iso_size = image->isometric_size() - 1;
-        grid_tiles tiles = map_grid_get_tiles(tile, tile.shifted(iso_size, iso_size));
-        for (auto &t : tiles) {
-            map_building_height_set(t.grid_offset(), image->isometric_top_height);
-        }
-    };
-
     // Finished / terminal marker — not mid-band phase numbers (24 on large is L3 work).
     if (is_finished() || ph == terminal_phase) {
         return draw_completed_height_ornaments(ctx, point, tile, color_mask, tiles_size);
@@ -2202,7 +2198,6 @@ bool building_stepped_pyramid::draw_ornaments_and_animations_hight_impl(painter 
             command.image_id = img;
             command.pixel = anchor_px - vec2i{0, TILE_HEIGHT_PIXELS * 3 * L};
             command.mask = color_mask;
-            fill_tiles_height(ctx, anchor, img);
         }
     } else if (building_L >= 0 && building_L < nlayers) {
         uint32_t progress = map_monuments_get_progress(tile);
@@ -2227,7 +2222,6 @@ bool building_stepped_pyramid::draw_ornaments_and_animations_hight_impl(painter 
             command.image_id = img;
             command.pixel = anchor_px - vec2i{0, TILE_HEIGHT_PIXELS * 3 * building_L};
             command.mask = color_mask;
-            fill_tiles_height(ctx, anchor, img);
         }
     }
 
@@ -2262,11 +2256,11 @@ int building_stepped_pyramid::remake_part_course(int layer, bool polished) const
     return std::clamp(ring_done * 6 / blocks_per_ring, 0, 5);
 }
 
-int building_stepped_pyramid::height_part_image(tile2i tile) {
+int building_stepped_pyramid::height_part_image(tile2i tile, int view) {
     const e_pyramid_style style = pyramid_params().pyramide_type;
     auto* ps = pyramid_part_state_get(base.id);
     if (pyramid_style_draws_og_parts(style) && ps) {
-        return og_pyramid_part_image(base, *ps, is_finished(), style);
+        return og_pyramid_part_image(base, *ps, is_finished(), style, view);
     }
     const int L = runtime_data().layer;
     const int nlayers = std::max(1, footprint_params().init_tiles.x / 4);
@@ -2277,6 +2271,26 @@ int building_stepped_pyramid::height_part_image(tile2i tile) {
     auto layer_area = get_layer_area(L);
     return get_masonry_image(base.orientation, tile, layer_area.begin, layer_area.end, remake_part_course(L, polished),
       polished);
+}
+
+void building_stepped_pyramid::update_tile_heights() {
+    if (!is_main()) {
+        return;
+    }
+    const bool built = is_finished() || phase() >= 2;
+    for (building* part = &base; part; part = part->has_next() ? part->next() : nullptr) {
+        building_pyramid* pyr = part->dcast_pyramid();
+        if (!pyr) {
+            continue;
+        }
+        const int img = built ? static_cast<building_stepped_pyramid*>(pyr)->height_part_image(part->tile, 0) : 0;
+        const image_t* image = img > 0 ? image_get(img) : nullptr;
+        const int8_t height = image ? (int8_t)image->isometric_top_height : 0;
+        grid_tiles tiles = map_grid_get_tiles(part, 0);
+        for (tile2i t : tiles) {
+            map_building_height_set(t.grid_offset(), height);
+        }
+    }
 }
 
 bool building_stepped_pyramid::draw_completed_height_ornaments(painter &ctx, vec2i point, tile2i tile, color color_mask, const vec2i tiles_size) {
@@ -2294,19 +2308,6 @@ bool building_stepped_pyramid::draw_completed_height_ornaments(painter &ctx, vec
 
     auto* ps = pyramid_part_state_get(base.id);
 
-    auto fill_tiles_height = [](painter & /*ctx*/, tile2i tile, int img) {
-        const image_t *image = image_get(img);
-        if (!image) {
-            return;
-        }
-        int iso_size = image->isometric_size() - 1;
-        grid_tiles tiles = map_grid_get_tiles(tile, tile.shifted(iso_size, iso_size));
-        for (auto &t : tiles) {
-            map_building_height_set(t.grid_offset(), image->isometric_top_height);
-        }
-    };
-
-    // Anchor to the orientation draw-tile of this 2×2 part (same as map_building_tiles_add),
     // not whatever city pass `point` is — keeps casing joined across rotates.
     tile2i anchor = base.tile;
     switch (map_view_orientation()) {
@@ -2319,7 +2320,7 @@ bool building_stepped_pyramid::draw_completed_height_ornaments(painter &ctx, vec
 
     if (pyramid_style_draws_og_parts(style) && ps) {
         const bool bent = style == PYRAMID_STYLE_BENT;
-        const int img = height_part_image(tile);
+        const int img = height_part_image(tile, map_view_orientation() / 2);
         if (img <= 0) {
             return true;
         }
@@ -2332,7 +2333,6 @@ bool building_stepped_pyramid::draw_completed_height_ornaments(painter &ctx, vec
         full.image_id = img;
         full.pixel = pixel;
         full.mask = color_mask;
-        fill_tiles_height(ctx, anchor, img);
         pyramid_engine_update_part_ramp_image(base.id);
         const vec2i ramp_origin = pixel + vec2i{HALF_TILE_WIDTH_PIXELS + 1, -HALF_TILE_HEIGHT_PIXELS};
         pyramid_ramp_draw_part(ctx, base, ramp_origin, color_mask);
@@ -2358,7 +2358,7 @@ bool building_stepped_pyramid::draw_completed_height_ornaments(painter &ctx, vec
         }
     }
 
-    const int img = height_part_image(tile);
+    const int img = height_part_image(tile, map_view_orientation() / 2);
     if (img <= 0) {
         return true;
     }
@@ -2371,7 +2371,6 @@ bool building_stepped_pyramid::draw_completed_height_ornaments(painter &ctx, vec
     command.pixel = pixel;
     command.mask = color_mask;
 
-    fill_tiles_height(ctx, anchor, img);
     pyramid_engine_update_part_ramp_image(base.id);
     // pyramid_part_draw: draw_x = x + tile_half_width+1, draw_y = y - tile_half_height - layer.
     // Akhenaten tile pixel + layer lift maps to (x, y - layer); add the half-tile shift so

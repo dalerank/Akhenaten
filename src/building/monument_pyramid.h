@@ -115,7 +115,8 @@ public:
     bool draw_ornaments_and_animations_hight_impl(painter &ctx, vec2i point, tile2i tile, color mask, const vec2i tiles_size);
     bool draw_unfinished_height_ornaments(painter &ctx, vec2i point, tile2i tile, color mask, const vec2i tiles_size);
     bool draw_completed_height_ornaments(painter &ctx, vec2i point, tile2i tile, color mask, const vec2i tiles_size);
-    int height_part_image(tile2i tile);
+    int height_part_image(tile2i tile, int view);
+    void update_tile_heights();
     int remake_part_course(int layer, bool polished) const;
     virtual bool use_polish_sprites_for_layer(int layer) const { return false; }
     void draw_ornaments_and_animations_stairs_impl(painter &ctx, vec2i point, tile2i tile, color color_mask, const vec2i tiles_size);
@@ -123,6 +124,7 @@ public:
 
     void sync_footprint_layers(int done_blocks, int total_blocks);
     virtual void sync_visuals() override;
+    void sync_ring_layers();
     virtual void finish_block_construction() override;
 
     void assign_stair();

@@ -233,3 +233,8 @@ static bool __test_citizen_land_route(int sx, int sy, int dx, int dy) {
     return map_routing_citizen_can_travel_over_land(tile2i(sx, sy), tile2i(dx, dy), false);
 }
 ANK_FUNCTION_4(__test_citizen_land_route);
+
+static int __test_map_building_height(int x, int y) {
+    return map_building_height_at(tile2i(x, y).grid_offset());
+}
+ANK_FUNCTION_2(__test_map_building_height);

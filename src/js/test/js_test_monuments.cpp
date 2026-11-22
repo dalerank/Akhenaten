@@ -40,6 +40,7 @@
 #include "figuretype/figure_worker.h"
 #include "game/resource.h"
 #include "grid/grid.h"
+#include "grid/orientation.h"
 #include "grid/road_access.h"
 #include "grid/routing/routing.h"
 #include "grid/terrain.h"
@@ -1589,6 +1590,6 @@ static int __test_pyramid_part_draw_image(int bid) {
     if (!pyr) {
         return -1;
     }
-    return static_cast<building_stepped_pyramid*>(pyr)->height_part_image(b->tile);
+    return static_cast<building_stepped_pyramid*>(pyr)->height_part_image(b->tile, map_view_orientation() / 2);
 }
 ANK_FUNCTION_1(__test_pyramid_part_draw_image);
