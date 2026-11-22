@@ -11,6 +11,7 @@
 #include "app/app.h"
 #include "platform/screen.h"
 #include "core/bstring.h"
+#include "core/buffer.h"
 #include "core/crc32.h"
 #include "core/system_time.h"
 #include "core/log.h"
@@ -979,3 +980,17 @@ static bool __test_popup_dialog_is_open() {
     return popup_dialog::is_open();
 }
 ANK_FUNCTION(__test_popup_dialog_is_open);
+
+static pcstr __test_buffer_roundtrip_i64(pcstr decimal) {
+    static bstring64 out;
+    const int64_t value = std::strtoll(decimal ? decimal : "0", nullptr, 10);
+    buffer buf(sizeof(int64_t) * 2);
+    buf.write_i64(value);
+    buf.write_u64((uint64_t)value);
+    buf.reset_offset();
+    const int64_t signed_back = buf.read_i64();
+    const uint64_t unsigned_back = buf.read_u64();
+    out.printf("%lld/%llu", (long long)signed_back, (unsigned long long)unsigned_back);
+    return out.c_str();
+}
+ANK_FUNCTION_1(__test_buffer_roundtrip_i64);

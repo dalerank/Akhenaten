@@ -102,7 +102,7 @@ uint32_t buffer::read_u32() {
 uint64_t buffer::read_u64() {
     uint64_t result = 0;
     if (is_valid(sizeof(result))) {
-        result = (uint64_t&)data.at(index);
+        memcpy(&result, &data.at(index), sizeof(result));
         index += sizeof(uint64_t);
     }
 
@@ -150,7 +150,7 @@ void buffer::read_t2i(tile2i &tile) {
 int64_t buffer::read_i64() {
     int64_t result = 0;
     if (is_valid(sizeof(result))) {
-        int64_t b0 = (int64_t&)data.at(index);
+        memcpy(&result, &data.at(index), sizeof(result));
         index += sizeof(int64_t);
     }
 
@@ -194,7 +194,7 @@ void buffer::write_u32(uint32_t value) {
 
 void buffer::write_u64(uint64_t value) {
     if (is_valid(sizeof(value))) {
-        (uint64_t &)data.at(index) = value;
+        memcpy(&data.at(index), &value, sizeof(value));
         index += sizeof(uint64_t);
     }
 }
@@ -228,7 +228,7 @@ void buffer::write_i32(int32_t value) {
 
 void buffer::write_i64(int64_t value) {
     if (is_valid(sizeof(value))) {
-        (int64_t &)data.at(index) = value;
+        memcpy(&data.at(index), &value, sizeof(value));
         index += sizeof(int64_t);
     }
 }
