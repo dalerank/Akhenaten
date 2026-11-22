@@ -536,43 +536,6 @@ int lang_text_draw_left_colored(int group, int number, int x_offset, int y_offse
     return text_draw(str, x_offset - text_get_width(str, font), y_offset, font, color);
 }
 
-void lang_text_draw_centered(int group, int number, int x_offset, int y_offset, int box_width, e_font font) {
-    pcstr str = lang_get_string(group, number);
-    text_draw_centered(str, x_offset, y_offset, box_width, font, 0);
-}
-
-void lang_text_draw_centered(textid text, int x_offset, int y_offset, int box_width, e_font font) {
-    pcstr str = lang_get_string(text);
-    text_draw_centered(str, x_offset, y_offset, box_width, font, 0);
-}
-
-void lang_text_draw_centered(pcstr text, int x_offset, int y_offset, int box_width, e_font font) {
-    text_draw_centered((const uint8_t *)text, x_offset, y_offset, box_width, font, 0);
-}
-
-void lang_text_draw_centered(xstring text, int x_offset, int y_offset, int box_width, e_font font) {
-    text_draw_centered((const uint8_t *)text.c_str(), x_offset, y_offset, box_width, font, 0);
-}
-
-void lang_text_draw_centered_colored(int group, int number, int x_offset, int y_offset, int box_width, e_font font, color color) {
-    pcstr str = lang_get_string(group, number);
-    text_draw_centered(str, x_offset, y_offset, box_width, font, color);
-}
-
-int lang_text_draw_amount(int group, int number, int amount, int x_offset, int y_offset, e_font font, const char* postfix) {
-    int amount_offset = 1;
-    if (amount == 1 || amount == -1)
-        amount_offset = 0;
-
-    int desc_offset_x;
-    if (amount >= 0) {
-        desc_offset_x = text_draw_number(amount, ' ', postfix, x_offset, y_offset, font);
-    } else {
-        desc_offset_x = text_draw_number(-amount, '-', postfix, x_offset, y_offset, font);
-    }
-    return desc_offset_x + lang_text_draw(group, number + amount_offset, x_offset + desc_offset_x, y_offset, font);
-}
-
 int lang_text_draw_year(int year, int x_offset, int y_offset, e_font font) {
     int width = 0;
     if (year >= 0) {
@@ -589,12 +552,4 @@ int lang_text_draw_year(int year, int x_offset, int y_offset, e_font font) {
         width += lang_text_draw(20, 0, x_offset + width, y_offset, font);
     }
     return width;
-}
-
-int lang_text_draw_multiline(int group, int number, vec2i offset, int box_width, e_font font) {
-    pcstr str = lang_get_string(group, number);
-    if (!str) {
-        return 0;
-    }
-    return text_draw_multiline(str, offset, box_width, font, 0);
 }

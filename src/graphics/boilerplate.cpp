@@ -17,24 +17,6 @@ extern vita2d_texture* tex_buffer_ui;
 extern vita2d_texture* tex_buffer_city;
 #endif
 
-static void set_translation(int x, int y) {
-    if (x != 0 || y != 0) {
-        g_render.set_viewport(x, y, screen_width() - x, screen_height() - y);
-    } else {
-        g_render.reset_viewport();
-    }
-}
-
-void graphics_set_to_dialog() {
-    set_translation(screen_dialog_offset_x(), screen_dialog_offset_y());
-}
-void graphics_in_dialog_with_size(int width, int height) {
-    set_translation((screen_width() - width) / 2, (screen_height() - height) / 2);
-}
-void graphics_reset_dialog() {
-    set_translation(0, 0);
-}
-
 void graphics_set_clip_rectangle(vec2i pos, vec2i size) {
     g_render.set_clip_rectangle(pos, size.x, size.y);
 }
@@ -49,14 +31,6 @@ rect graphics_clip_rectangle() {
 
 void graphics_reset_clip_rectangle() {
     g_render.reset_clip_rectangle();
-}
-
-void graphics_draw_inset_rect(vec2i start, vec2i size) {
-    vec2i end = start + size - vec2i{1, 1};
-    g_render.draw_line(start, vec2i{end.x, start.y}, COLOR_INSET_DARK);
-    g_render.draw_line(vec2i{end.x, start.y}, end, COLOR_INSET_LIGHT);
-    g_render.draw_line(vec2i{start.x, end.y}, end, COLOR_INSET_LIGHT);
-    g_render.draw_line(start, vec2i{start.x, end.y}, COLOR_INSET_DARK);
 }
 
 int graphics_save_to_texture(int image_id, vec2i pos, vec2i size) {

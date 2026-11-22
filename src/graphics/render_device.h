@@ -43,8 +43,6 @@ struct sprite_draw_t {
 
 struct graphics_renderer_interface {
     void clear_screen();
-    void set_viewport(int x, int y, int width, int height);
-    void reset_viewport();
     void set_clip_rectangle(vec2i pos, int width, int height);
     bool inside_clip_rectangle(vec2i pos);
     rect clip_rectangle();

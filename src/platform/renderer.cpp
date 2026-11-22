@@ -466,25 +466,6 @@ void graphics_renderer_interface::clear_screen(void) {
     SDL_RenderClear(data.renderer);
 }
 
-void graphics_renderer_interface::set_viewport(int x, int y, int width, int height) {
-    flush_sprites();
-    main_thread::check("graphics_renderer_interface::set_viewport");
-    auto &data = g_renderer_data;
-    render_stats::note_break();
-    SDL_Rect viewport = {x, y, width, height};
-    SDL_RenderSetViewport(data.renderer, &viewport);
-}
-
-void graphics_renderer_interface::reset_viewport(void) {
-    flush_sprites();
-    main_thread::check("graphics_renderer_interface::reset_viewport");
-    auto &data = g_renderer_data;
-    render_stats::note_break();
-    SDL_RenderSetViewport(data.renderer, NULL);
-    data.clip = {};
-    apply_clip(data.clip);
-}
-
 void graphics_renderer_interface::set_clip_rectangle(vec2i pos, int width, int height) {
     main_thread::check("graphics_renderer_interface::set_clip_rectangle");
     auto &data = g_renderer_data;

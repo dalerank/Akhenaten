@@ -439,18 +439,6 @@ int text_draw_number_colored(int value, char prefix, const char* postfix, int x_
     return text_draw(str, x_offset, y_offset, font, color);
 }
 
-void text_draw_number_centered(int value, int x_offset, int y_offset, int box_width, e_font font) {
-    uint8_t str[NUMBER_BUFFER_LENGTH];
-    number_to_string(str, value, '@', " ");
-    text_draw_centered(str, x_offset, y_offset, box_width, font, 0);
-}
-
-void text_draw_number_centered_prefix(int value, char prefix, int x_offset, int y_offset, int box_width, e_font font) {
-    uint8_t str[NUMBER_BUFFER_LENGTH];
-    number_to_string(str, value, prefix, " ");
-    text_draw_centered(str, x_offset, y_offset, box_width, font, 0);
-}
-
 void text_draw_number_centered_colored(int value, int x_offset, int y_offset, int box_width, e_font font, color color) {
     uint8_t str[NUMBER_BUFFER_LENGTH];
     number_to_string(str, value, '@', " ");

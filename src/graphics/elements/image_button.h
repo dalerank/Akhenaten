@@ -64,12 +64,6 @@ bool image_buttons_handle_mouse(const mouse *m, vec2i pos, T &buttons, int &focu
         : 0;
 }
 
-template<class T>
-void image_buttons_draw(vec2i pos, T &buttons, int starting_button = 0) {
-    image_buttons_draw(pos, std::begin(buttons), (int)std::size(buttons), starting_button);
-}
-
-void image_buttons_draw(vec2i pos, image_button *buttons, int num_buttons, int starting_button = 0);
 void image_buttons_push_commands(vec2i base_pos, image_button *buttons, int num_buttons, int starting_button = 0);
 bool image_buttons_handle_mouse(const mouse *m, vec2i pos, image_button *buttons, int num_buttons, int *focus_button_id);
 
