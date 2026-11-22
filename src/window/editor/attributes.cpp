@@ -171,7 +171,7 @@ static void draw_foreground(int) {
     ui::button_border({18, 278}, {184, 144}, 0);
     ui::eimage(image_id_from_group(GROUP_EDITOR_SCENARIO_IMAGE) + g_scenario.image_id, {20, 280});
 
-    arrow_buttons_draw(image_arrows, 2);
+    arrow_buttons_draw(image_arrows, 2, false, g_screen.dialog_offset);
 
     ui::end_widget();
 }
