@@ -186,7 +186,8 @@ void figure::advance_route_tile(int roaming_enabled) {
 
     if (is_ferry_route && !is_water_move && !is_deepwater_move && !is_amphibia_move && !can_cross_ferry()) {
         direction = DIR_FIGURE_REROUTE;
-    } else if (!is_deepwater_move && !is_water_move && !is_amphibia_move && !is_ferry_route && is_water_tile) {
+    } else if (!is_deepwater_move && !is_water_move && !is_amphibia_move && !is_ferry_route && is_water_tile
+               && !map_is_bridge(target_grid_offset)) {
         direction = DIR_FIGURE_REROUTE;
     } else if (is_water_move && !is_water_tile) { // boats can not travel on land
         direction = DIR_FIGURE_REROUTE;

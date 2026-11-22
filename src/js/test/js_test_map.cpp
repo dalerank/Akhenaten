@@ -228,3 +228,8 @@ static bool __test_citizen_road_by_ferry(int sx, int sy, int dx, int dy) {
     return map_routing_citizen_can_travel_over_road(tile2i(sx, sy), tile2i(dx, dy), true);
 }
 ANK_FUNCTION_4(__test_citizen_road_by_ferry);
+
+static bool __test_citizen_land_route(int sx, int sy, int dx, int dy) {
+    return map_routing_citizen_can_travel_over_land(tile2i(sx, sy), tile2i(dx, dy), false);
+}
+ANK_FUNCTION_4(__test_citizen_land_route);

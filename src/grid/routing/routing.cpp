@@ -12,6 +12,7 @@
 #include "grid/grid.h"
 #include "grid/road_canal.h"
 #include "grid/terrain.h"
+#include "grid/bridge.h"
 #include "grid/water.h"
 #include "queue.h"
 #include "routing_grids.h"
@@ -447,17 +448,16 @@ static void callback_travel_citizen_land(int next_offset, int dist) {
     if (map_terrain_is(next_offset, TERRAIN_FERRY_ROUTE)) {
         return;
     }
-    if (map_grid_get(routing_land_citizen, next_offset) >= CITIZEN_0_ROAD
-        && !has_fighting_friendly(next_offset)
-        && !map_terrain_is(next_offset, TERRAIN_WATER)) {
+    if (map_grid_get(routing_land_citizen, next_offset) >= CITIZEN_0_ROAD && !has_fighting_friendly(next_offset)
+        && (!map_terrain_is(next_offset, TERRAIN_WATER) || map_is_bridge(next_offset))) {
         enqueue(next_offset, dist);
     }
 }
 
 static void callback_travel_citizen_land_ferry(int next_offset, int dist) {
-    if (map_grid_get(routing_land_citizen, next_offset) >= CITIZEN_0_ROAD
-        && !has_fighting_friendly(next_offset)
-        && (!map_terrain_is(next_offset, TERRAIN_WATER) || map_terrain_is(next_offset, TERRAIN_FERRY_ROUTE))) {
+    if (map_grid_get(routing_land_citizen, next_offset) >= CITIZEN_0_ROAD && !has_fighting_friendly(next_offset)
+        && (!map_terrain_is(next_offset, TERRAIN_WATER) || map_terrain_is(next_offset, TERRAIN_FERRY_ROUTE)
+            || map_is_bridge(next_offset))) {
         enqueue(next_offset, dist);
     }
 }

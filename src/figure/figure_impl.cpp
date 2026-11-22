@@ -15,6 +15,7 @@
 #include "grid/grid.h"
 #include "grid/building.h"
 #include "grid/terrain.h"
+#include "grid/bridge.h"
 #include "building/building.h"
 #include "core/object_property.h"
 #include "core/profiler.h"
@@ -322,7 +323,7 @@ void figure_impl::drop_route_if_heading_into_non_ferry_water() {
     }
 
     const int next = tile().grid_offset() + map_grid_direction_delta(direction());
-    if (!map_terrain_is(next, TERRAIN_WATER)) {
+    if (!map_terrain_is(next, TERRAIN_WATER) || map_is_bridge(next)) {
         return;
     }
 
