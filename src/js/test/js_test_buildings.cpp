@@ -806,3 +806,63 @@ static int __test_planner_preview_red_tiles() {
     return red;
 }
 ANK_FUNCTION(__test_planner_preview_red_tiles);
+
+static int __test_house_expand(int bid) {
+    building* b = building_get(bid);
+    auto* house = b ? b->dcast_house() : nullptr;
+    if (!house) {
+        return -1;
+    }
+    const e_building_type before = b->type;
+    const bool expanded = house->evolve_expand();
+    if (b->type != before) {
+        b->clear_impl();
+    }
+    return expanded ? b->type : -1;
+}
+ANK_FUNCTION_1(__test_house_expand);
+
+static int __test_house_devolve(int bid) {
+    building* b = building_get(bid);
+    auto* house = b ? b->dcast_house() : nullptr;
+    if (!house) {
+        return -1;
+    }
+    const e_building_type before = b->type;
+    house->devolve_special();
+    if (b->type != before) {
+        b->clear_impl();
+    }
+    return b->type;
+}
+ANK_FUNCTION_1(__test_house_devolve);
+
+static void __test_house_set_goods(int bid, int food, int good) {
+    building* b = building_get(bid);
+    auto* house = b ? b->dcast_house() : nullptr;
+    if (!house) {
+        return;
+    }
+    house->runtime_data().foods[0] = (uint16_t)std::max(0, food);
+    house->runtime_data().inventory[INVENTORY_GOOD1] = (uint16_t)std::max(0, good);
+}
+ANK_FUNCTION_3(__test_house_set_goods);
+
+static pcstr __test_houses_in_area(int x0, int y0, int x1, int y1) {
+    static bstring1024 out;
+    out.clear();
+    for (int y = y0; y <= y1; ++y) {
+        for (int x = x0; x <= x1; ++x) {
+            building* b = building_at(tile2i(x, y));
+            auto* house = b ? b->dcast_house() : nullptr;
+            if (!house || !b->is_valid() || b->tile != tile2i(x, y)) {
+                continue;
+            }
+            const auto& d = house->runtime_data();
+            out.append_fmt("%d,%d:%d:%d:%d:%d:%d;", x, y, (int)b->type, (int)b->size, (int)d.population, (int)d.foods[0],
+              (int)d.inventory[INVENTORY_GOOD1]);
+        }
+    }
+    return out.c_str();
+}
+ANK_FUNCTION_4(__test_houses_in_area);
