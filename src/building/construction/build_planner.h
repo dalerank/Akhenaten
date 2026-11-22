@@ -183,7 +183,6 @@ public:
     void construction_cancel(bool release_sidebar = true);
     void construction_finalize();
 
-    void add_building_tiles_from_list(int building_id, bool graphics_only);
 
     void update_orientations(bool check_if_changed = true);
 

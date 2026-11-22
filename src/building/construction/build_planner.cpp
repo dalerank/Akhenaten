@@ -116,32 +116,6 @@ const int TILE_GRID_OFFSETS_PH[4][MAX_TILES] = {
    GRID_OFFSET(4, -2), GRID_OFFSET(2, -4), GRID_OFFSET(4, -3), GRID_OFFSET(3, -4), GRID_OFFSET(4, -4)},
 };
 
-void build_planner::add_building_tiles_from_list(int building_id, bool graphics_only) {
-    for (int row = 0; row < size.y; ++row) {
-        for (int column = 0; column < size.x; ++column) {
-            int image_id = tile_graphics_array[row][column];
-            int size = tile_sizes_array[row][column];
-            tile2i tile = tile_coord_cache[row][column];
-
-            // correct for city orientation
-            switch (map_view_orientation() / 2) {
-            case 0: tile.shift(0, -size + 1); break;
-            case 1: break;
-            case 2: tile.shift(-size + 1, 0); break;
-            case 3: tile.shift(-size + 1, -size + 1); break;
-            }
-
-            if (image_id > 0 && size > 0) {
-                if (!graphics_only) {
-                    map_building_tiles_add(building_id, tile, size, image_id, TERRAIN_BUILDING);
-                } else {
-                    map_image_set(tile.grid_offset(), image_id);
-                }
-            }
-        }
-    }
-}
-
 bool build_planner::ghost_mark_deleting(tile2i tile) {
     draw_phase::check_write("build_planner");
     if (!game_features::gameui_visual_feedback_on_delete) {

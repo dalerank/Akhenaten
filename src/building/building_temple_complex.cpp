@@ -15,6 +15,8 @@
 #include "building/rotation.h"
 #include "graphics/view/lookup.h"
 #include "construction/build_planner.h"
+
+#include <limits>
 #include "js/js_register.h"
 #include "game/game_pool.h"
 
@@ -181,7 +183,7 @@ void building_temple_complex::map_add_tiles(e_building_type type, tile2i north_t
     int statue1_image_id = image_id_from_group(packid, 5);
     int statue2_image_id = image_id_from_group(packid, 6);
 
-    int EMPTY______ = 0;
+    constexpr int EMPTY______ = std::numeric_limits<int>::min();
 
     // floor tiles
     int til_0 = flooring_image_id + 0;
@@ -396,7 +398,11 @@ building *add_temple_complex_element(tile2i tile, e_building_type type, int orie
 void building_temple_complex::on_place(int orientation, int variant) {
     building_impl::on_place(orientation, variant);
 
-    g_city_planner.add_building_tiles_from_list(id(), false);
+    auto& decorative_tiles = *runtime_data().decorative_tiles;
+    map_add_tiles(type(), tile(), orientation, decorative_tiles);
+    for (int grid_offset : decorative_tiles) {
+        map_building_tiles_add(id(), tile2i(grid_offset), 1, map_image_at(grid_offset), TERRAIN_BUILDING);
+    }
 
     tile2i offset = building_part_offset(orientation, 3);
 
