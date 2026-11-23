@@ -98,19 +98,40 @@ bool city_overlay_water::draw_custom_footprint(vec2i pixel, tile2i tile, painter
 }
 
 void city_overlay_water::get_tooltip(tooltip_context* c, tile2i tile, xstring &tooltip) {
-    int building_id = map_building_at(tile);
-    if (building_id && building_get(building_id)->is_house()) {
-        if (map_terrain_is(tile, TERRAIN_FOUNTAIN_RANGE)) {
-            tooltip = ui::str(66, 3);
-        } else {
-            tooltip = ui::str(66, 2);
+    enum {
+        tooltip_groundwater = 1,
+        tooltip_no_water = 2,
+        tooltip_well_water = 3,
+        tooltip_supply_full = 9,
+        tooltip_supply_good = 10,
+        tooltip_supply_low = 11,
+    };
+    constexpr int water_supply_full_from = 80;
+    constexpr int water_supply_good_from = 17;
+
+    const bool in_well_range = map_terrain_is(tile, TERRAIN_FOUNTAIN_RANGE);
+    building* b = building_at(tile);
+    auto house = b->dcast_house();
+    if (!house) {
+        if (in_well_range) {
+            tooltip = ui::str(66, tooltip_well_water);
+        } else if (map_terrain_is(tile, TERRAIN_GROUNDWATER)) {
+            tooltip = ui::str(66, tooltip_groundwater);
         }
-    } else if (map_terrain_is(tile, TERRAIN_GROUNDWATER)) {
-        if (map_terrain_is(tile, TERRAIN_FOUNTAIN_RANGE)) {
-            tooltip = ui::str(66, 3);
-        } else {
-            tooltip = ui::str(66, 1);
-        }
+        return;
+    }
+
+    const int water_supply = house->runtime_data().water_supply;
+    if (water_supply >= water_supply_full_from) {
+        tooltip = ui::str(66, tooltip_supply_full);
+    } else if (water_supply >= water_supply_good_from) {
+        tooltip = ui::str(66, tooltip_supply_good);
+    } else if (water_supply > 0) {
+        tooltip = ui::str(66, tooltip_supply_low);
+    } else if (in_well_range || b->has_well_access) {
+        tooltip = ui::str(66, tooltip_well_water);
+    } else {
+        tooltip = ui::str(66, tooltip_no_water);
     }
 }
 
