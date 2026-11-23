@@ -55,8 +55,8 @@ Sources are collected via `file(GLOB ...)` with **no `CONFIGURE_DEPENDS`**, so a
 --window              windowed mode
 --size WxH            window size, e.g. 800x600
 --pos X,Y             window position
---display-scale PCT   display scale, 50..500
---cursor-scale PCT    cursor scale, 100 / 150 / 200
+--display-scale N     display scale factor, 0.5..5 (e.g. 1.5; a percentage like 150 is out of range and aborts)
+--cursor-scale N      cursor scale factor, 1 / 1.5 / 2
 --render RENDERER     force renderer (direct3d11, opengl, direct3d, software); without it Windows tries
                       opengl -> direct3d11 -> direct3d -> software, other platforms SDL's pick -> software
 --font PATH           use custom TTF font (overrides the font from localization.js)
