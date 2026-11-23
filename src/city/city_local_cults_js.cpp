@@ -17,17 +17,17 @@ ANK_GLOBAL_OBJECT(g_city.local_cults, __city_local_cults,
     last_rite_index);
 
 void __city_local_cults_refresh() {
-    g_city.local_cults.refresh_active();
+    g_city.local_cults_sys().refresh_active();
 }
 ANK_FUNCTION(__city_local_cults_refresh)
 
 void __city_local_cults_unlock_all() {
-    g_city.local_cults.unlock_all();
+    g_city.local_cults_sys().unlock_all();
 }
 ANK_FUNCTION(__city_local_cults_unlock_all)
 
 void __city_local_cults_set_unlocked(int cult_id, bool unlocked) {
-    g_city.local_cults.set_unlocked((e_local_cult)cult_id, unlocked);
+    g_city.local_cults_sys().set_unlocked((e_local_cult)cult_id, unlocked);
 }
 ANK_FUNCTION_2(__city_local_cults_set_unlocked)
 
@@ -67,17 +67,17 @@ int __city_local_cults_count() {
 ANK_FUNCTION(__city_local_cults_count)
 
 void __city_local_cults_apply_theme(int theme, int months) {
-    g_city.local_cults.apply_theme((e_festival_theme)theme, months);
+    g_city.local_cults_sys().apply_theme((e_festival_theme)theme, months);
 }
 ANK_FUNCTION_2(__city_local_cults_apply_theme)
 
 void __city_local_cults_apply_cult_festival(int cult_id, int theme) {
-    g_city.local_cults.apply_cult_festival((e_local_cult)cult_id, (e_festival_theme)theme);
+    g_city.local_cults_sys().apply_cult_festival((e_local_cult)cult_id, (e_festival_theme)theme);
 }
 ANK_FUNCTION_2(__city_local_cults_apply_cult_festival)
 
 void __city_local_cults_advance_month() {
-    g_city.local_cults.advance_month();
+    g_city.local_cults_sys().advance_month();
 }
 ANK_FUNCTION(__city_local_cults_advance_month)
 

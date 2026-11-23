@@ -95,7 +95,7 @@ void city_t::init() {
     festival.months_since_festival = 1;
     g_distant_battle.clear();
     gods_sys().reset();
-    local_cults.reset();
+    local_cults_sys().reset();
     buildings.init();
     figure_clear_all();
     sentiment.init();
@@ -162,6 +162,14 @@ gods_context city_t::gods_ctx() {
 
 gods_system city_t::gods_sys() {
     return gods_system(gods, gods_ctx());
+}
+
+local_cults_context city_t::local_cults_ctx() {
+    return {gods, g_simulation.simtime.month, g_simulation.simtime.year};
+}
+
+local_cults_system city_t::local_cults_sys() {
+    return local_cults_system(local_cults, local_cults_ctx());
 }
 
 void city_t::init_custom_map() {

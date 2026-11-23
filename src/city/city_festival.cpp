@@ -71,20 +71,19 @@ void city_festival_t::execute_festival() {
     months_since_festival = 1;
 
     if (game_features::gameplay_enhanced_local_cults.to_bool()) {
-        g_city.local_cults.refresh_active();
+        g_city.local_cults_sys().refresh_active();
     }
     const bool cult_festival = g_city.local_cults.planned_cult != LOCAL_CULT_NONE
         && game_features::gameplay_enhanced_local_cults.to_bool()
         && g_city.local_cults.is_active((e_local_cult)g_city.local_cults.planned_cult);
     if (cult_festival) {
-        g_city.local_cults.apply_cult_festival(
-            (e_local_cult)g_city.local_cults.planned_cult,
-            (e_festival_theme)g_city.local_cults.planned_theme);
+        g_city.local_cults_sys().apply_cult_festival((e_local_cult)g_city.local_cults.planned_cult,
+          (e_festival_theme)g_city.local_cults.planned_theme);
     } else if (planned_god < MAX_GODS) {
         g_city.gods.gods[planned_god].months_since_festival = 0;
         if (game_features::gameplay_enhanced_festival_calendar.to_bool()
             || game_features::gameplay_enhanced_local_cults.to_bool()) {
-            g_city.local_cults.apply_theme((e_festival_theme)g_city.local_cults.planned_theme, 2);
+            g_city.local_cults_sys().apply_theme((e_festival_theme)g_city.local_cults.planned_theme, 2);
         }
     }
     switch (planned_size) {

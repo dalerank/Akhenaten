@@ -69,7 +69,7 @@ struct city_t {
     city_monuments_t monuments;
 
     city_festival_t festival;
-    city_local_cults_t local_cults;
+    local_cults_state local_cults;
     city_victory_t victory;
     city_coverage_t coverage;
 
@@ -227,6 +227,8 @@ struct city_t {
     health_system health_sys();
     gods_context gods_ctx();
     gods_system gods_sys();
+    local_cults_context local_cults_ctx();
+    local_cults_system local_cults_sys();
 
     e_availability is_advisor_available(e_advisor advisor) const;
     void set_advisor_available(e_advisor advisor, e_availability available);

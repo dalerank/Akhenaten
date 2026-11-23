@@ -341,7 +341,7 @@ void scenario_data_t::load_metadata(const mission_id_t &missionid, bool is_new_m
         }
 
         // Mission list is unlock source of truth; appeased/bonuses come from save chunk.
-        g_city.local_cults.load_mission_unlocks(arch.r_array_str("local_cults"));
+        g_city.local_cults_sys().load_mission_unlocks(arch.r_array_str("local_cults"));
 
         // Burial provisions: omit keys → keep pak. hide_pak_burial clears then JS list
         // replaces. On save load, required is overwritten from JS; dispatched is kept.
