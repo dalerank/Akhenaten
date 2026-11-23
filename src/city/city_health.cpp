@@ -17,35 +17,8 @@
 #include "scenario/scenario.h"
 #include "game/simulation.h"
 #include "js/js_register.h"
-#include "dev/debug.h"
 
 city_health_rules_t ANK_VARIABLE(city_health_rules)
-
-declare_console_command_p(plague_start) {
-    int plague_people = args.next_int(100);
-
-    int total_population = 0;
-    buildings_house_do([&] (building_house *house) {
-        if (!house->base.is_main() || house->house_population() <= 0) {
-            return;
-        }
-        total_population += house->house_population();
-    });
-    g_city.health.start_disease(total_population, true, plague_people);
-}
-
-declare_console_command_p(plague_no) {
-    buildings_house_do([&] (building_house *house) {
-        building &main = house->main()->base;
-        main.disease_days = 0;
-        main.has_plague = false;
-        if (house->house_population() > 0) {
-            main.common_health = 100;
-        }
-    });
-    g_city.figures.remove_figures(FIGURE_PLAGUED_CITIZEN);
-}
-
 
 void city_health_t::change(int amount) {
     value = calc_bound(value + amount, 0, 100);
@@ -216,7 +189,6 @@ void city_health_t::update_coverage() {
     coverage.physician = (uint8_t)calc_percentage(with_physician, population);
     coverage.dentist = (uint8_t)calc_percentage(with_dentist, population);
 }
-
 
 void city_health_t::update_month() {
     if (g_city.population.current < 200 || g_scenario.is_scenario_id(1, 2)) {

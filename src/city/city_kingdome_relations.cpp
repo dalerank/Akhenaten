@@ -16,29 +16,9 @@
 #include "scenario/criteria.h"
 #include "game/game_config.h"
 
-#include "dev/debug.h"
 #include <algorithm>
 
 kingdome_relation_t::static_params ANK_VARIABLE(kingdome_relation);
-
-declare_console_command_p(updatekingdome) {
-    int value = args.next_int(0);
-    if (!!value) {
-        g_city.kingdome.advance_year();
-    } else {
-        g_city.kingdome.advance_month();
-    }
-}
-
-declare_console_command_p(addkingdome) {
-    int amount = args.next_int(10);
-    g_city.kingdome.change(amount);
-}
-
-declare_console_command_p(addsavings) {
-    int amount = args.next_int(100);
-    g_city.kingdome.personal_savings += amount;
-}
 
 void kingdome_relation_t::load_scenario(int rank, int load_type) {
     rating = g_scenario.starting_kingdom();

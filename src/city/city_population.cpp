@@ -12,7 +12,6 @@
 #include "figuretype/figure_homeless.h"
 #include "core/profiler.h"
 #include "js/js_register.h"
-#include "dev/debug.h"
 
 #include <cstring>
 #include <numeric>
@@ -20,10 +19,6 @@
 #include <array>
 
 city_population_rules_t ANK_VARIABLE(city_population_rules)
-
-declare_console_command_p(show_pop_milestone) {
-    g_city.population.reached_milestone(true);
-}
 
 static const int DEATHS_PER_HEALTH_PER_AGE_DECENNIUM[11][10] = {{20, 10, 5, 10, 20, 30, 50, 85, 100, 100},
                                                                 {15, 8, 4, 8, 16, 25, 45, 70, 90, 100},
@@ -56,7 +51,6 @@ int city_population_t::add_to_houses(int num_people) {
     });
     return added;
 }
-
 
 int city_population_t::remove_from_houses(int num_people) {
     int removed = 0;

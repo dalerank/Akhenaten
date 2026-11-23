@@ -11,19 +11,6 @@
 #include "game/game.h"
 #include "js/js_register.h"
 
-#include "dev/debug.h"
-
-
-declare_console_command_p(addprosperity) {
-    int amount = args.next_int(10);
-    g_city.ratings.prosperity = calc_bound(g_city.ratings.prosperity + amount, 0, 100);
-}
-
-declare_console_command_p(addculture) {
-    int amount = args.next_int(10);
-    g_city.ratings.culture = calc_bound(g_city.ratings.culture + amount, 0, 100);
-};
-
 struct culture_rating_record {
     xstring coverage;
     svector<int, 8> points;

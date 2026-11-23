@@ -1,5 +1,6 @@
 #include "city/city_kingdome_relations.h"
 
+#include "dev/debug.h"
 #include "widget/debug_console.h"
 #include "imgui.h"
 #include "imgui_internal.h"
@@ -57,4 +58,23 @@ void config_show_kingdome_properties(bool header) {
     ImGui::EndTable();
 
     ImGui::TreePop();
+}
+
+declare_console_command_p(updatekingdome) {
+    int value = args.next_int(0);
+    if (!!value) {
+        g_city.kingdome.advance_year();
+    } else {
+        g_city.kingdome.advance_month();
+    }
+}
+
+declare_console_command_p(addkingdome) {
+    int amount = args.next_int(10);
+    g_city.kingdome.change(amount);
+}
+
+declare_console_command_p(addsavings) {
+    int amount = args.next_int(100);
+    g_city.kingdome.personal_savings += amount;
 }
