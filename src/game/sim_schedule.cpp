@@ -94,7 +94,7 @@ static const sim_step k_sim_steps[] = {
   {SIM_PHASE_TICK_SLOT, 33, "building_counters", SIM_AREA_BUILDINGS, [](city_t& c) { c.buildings.update_counters(); }},
   {SIM_PHASE_TICK_SLOT, 33, "avg_coverage", SIM_AREA_COVERAGE, [](city_t& c) { c.avg_coverage.update(); }},
   {SIM_PHASE_TICK_SLOT, 33, "health_coverage", SIM_AREA_COVERAGE | SIM_AREA_HEALTH,
-    [](city_t& c) { c.health.update_coverage(); }},
+    [](city_t& c) { c.health_sys().update_coverage(); }},
   {SIM_PHASE_TICK_SLOT, 33, "farms", SIM_AREA_BUILDINGS, [](city_t&) { building_industry_update_farms(); }},
   {SIM_PHASE_TICK_SLOT, 34, "distribute_treasury", SIM_AREA_FINANCE | SIM_AREA_BUILDINGS,
     [](city_t& c) { c.government_distribute_treasury(); }},
@@ -159,7 +159,7 @@ static const sim_step k_sim_steps[] = {
     [](city_t&) { events::emit(event_advance_week::from_simtime(g_simulation.simtime)); }},
 
   {SIM_PHASE_MONTH_CITY, -1, "migration_month", SIM_AREA_MIGRATION, [](city_t& c) { c.migration.update_month(); }},
-  {SIM_PHASE_MONTH_CITY, -1, "health_month", SIM_AREA_HEALTH, [](city_t& c) { c.health.update_month(); }},
+  {SIM_PHASE_MONTH_CITY, -1, "health_month", SIM_AREA_HEALTH, [](city_t& c) { c.health_sys().update_month(); }},
   {SIM_PHASE_MONTH_CITY, -1, "taxes_month", SIM_AREA_TAXES | SIM_AREA_FINANCE | SIM_AREA_POPULATION,
     [](city_t& c) { c.taxes_sys().collect_monthly(); }},
   {SIM_PHASE_MONTH_CITY, -1, "finance_month", SIM_AREA_FINANCE, [](city_t& c) { c.finance_sys().advance_month(); }},

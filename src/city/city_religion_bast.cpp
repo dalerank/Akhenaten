@@ -109,7 +109,7 @@ void god_bast_t::perform_malaria_plague() {
     // Bast minor curse: happiness hit + force city plague (plague carriers via start_disease).
     g_city.set_max_happiness(50);
     g_city.change_happiness(-5);
-    g_city.health.change(-10);
+    g_city.health_sys().change(-10);
     g_city.religion.bast_curse_active = true;
 
     int total_population = 0;
@@ -119,7 +119,7 @@ void god_bast_t::perform_malaria_plague() {
         }
     });
     // Immediate outbreak so the curse is visible; clears bast_curse_active inside start_disease.
-    g_city.health.start_disease(total_population, true, 0);
+    g_city.health_sys().start_disease(total_population, true, 0);
 }
 
 void god_bast_t::perform_minor_curse() {

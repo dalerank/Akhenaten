@@ -59,7 +59,7 @@ struct city_t {
     city_migration_t migration;
     city_sentiment_t sentiment;
 
-    city_health_t health;
+    health_state health;
     city_ratings_t ratings;
     city_average_coverage_t avg_coverage;
 
@@ -223,6 +223,8 @@ struct city_t {
     labor_system labor_sys();
     trade_context trade_ctx();
     trade_system trade_sys();
+    health_context health_ctx();
+    health_system health_sys();
 
     e_availability is_advisor_available(e_advisor advisor) const;
     void set_advisor_available(e_advisor advisor, e_availability available);

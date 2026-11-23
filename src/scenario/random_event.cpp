@@ -76,7 +76,7 @@ static void contaminate_water(void) {
             else {
                 change = -25;
             }
-            g_city.health.change(change);
+            g_city.health_sys().change(change);
             events::emit(event_message{ true, "message_tutorial_major_plagues", 0, 0, SOURCE_LOCATION });
         }
     }

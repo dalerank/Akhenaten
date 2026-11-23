@@ -30,16 +30,40 @@ struct city_health_rules_t {
 ANK_CONFIG_STRUCT(city_health_rules_t, coverage_factor, mortuary_points, physician_points, food_points,
   second_food_points, third_food_points, physician_and_food_points, monthly_step, plague_house_days, population_bonus)
 
-struct city_health_t {
+struct health_state {
     int32_t num_mortuary_workers;
     int32_t target_value;
     int32_t value;
+};
+
+struct city_population_t;
+struct city_religion_t;
+struct city_coverage_t;
+struct city_buildings_t;
+
+struct health_context {
+    const city_population_t& population;
+    city_religion_t& religion;
+    city_coverage_t& coverage;
+    city_buildings_t& buildings;
+    bool fixed_health_mission;
+    int absolute_day;
+};
+
+class health_system {
+public:
+    health_system(health_state& state, const health_context& ctx) : _state(state), _ctx(ctx) {}
+
+    static void infect_house(building& main);
 
     void change(int amount);
-    void infect_house(building& main);
     void start_disease(int total_people, bool force, int plague_people);
     void update_month();
     void reset_mortuary_workers();
     void add_mortuary_workers(int amount);
     void update_coverage();
+
+private:
+    health_state& _state;
+    health_context _ctx;
 };

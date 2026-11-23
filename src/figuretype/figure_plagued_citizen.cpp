@@ -153,7 +153,7 @@ int figure_plagued_citizen::provide_service() {
         if (main->house_population() == 0 || main->base.has_plague) {
             return;
         }
-        g_city.health.infect_house(main->base);
+        health_system::infect_house(main->base);
     });
     return 0;
 }

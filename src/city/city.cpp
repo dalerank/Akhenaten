@@ -147,6 +147,15 @@ trade_system city_t::trade_sys() {
     return trade_system(trade, trade_ctx());
 }
 
+health_context city_t::health_ctx() {
+    return {population, religion, coverage, buildings, g_scenario.is_scenario_id(1, 2),
+      g_simulation.simtime.absolute_day(true)};
+}
+
+health_system city_t::health_sys() {
+    return health_system(health, health_ctx());
+}
+
 void city_t::init_custom_map() {
     unused.faction_id = 1;
     unused.unknown_00a2 = 1;

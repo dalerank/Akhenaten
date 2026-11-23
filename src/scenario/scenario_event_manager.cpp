@@ -1302,7 +1302,7 @@ void event_manager_t::process_event(int id, bool via_event_trigger, int chain_ac
                 } else if (health_rate > 60) {
                     change = -40;
                 }
-                g_city.health.change(change);
+                g_city.health_sys().change(change);
             }
             city_message_post_full(true, "message_template_general", &event, caller_event_id,
                                    PHRASE_bad_water_title, PHRASE_bad_water_initial_announcement,

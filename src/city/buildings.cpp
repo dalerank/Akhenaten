@@ -115,7 +115,7 @@ void city_buildings_t::update_counters() {
     std::fill(industry.begin(), industry.end(), record{ 0, 0 });
 
     g_city.buildings.reset_tracked_buildings_counters();
-    g_city.health.reset_mortuary_workers();
+    g_city.health_sys().reset_mortuary_workers();
 
     buildings_valid_do([] (building &b) {
         b.dcast()->update_count();

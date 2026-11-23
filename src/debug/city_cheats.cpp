@@ -18,7 +18,7 @@ declare_console_command_p(plague_start) {
         }
         total_population += house->house_population();
     });
-    g_city.health.start_disease(total_population, true, plague_people);
+    g_city.health_sys().start_disease(total_population, true, plague_people);
 }
 
 declare_console_command_p(plague_no) {
