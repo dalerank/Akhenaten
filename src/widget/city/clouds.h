@@ -89,4 +89,4 @@ struct clouds_t {
 ANK_CONFIG_STRUCT(clouds_t::config_t, num_cloud_ellipses, cloud_alpha_increase, cloud_columns,
     cloud_rows, cloud_width, cloud_height, cloud_size_ratio, cloud_scale)
 
-extern clouds_t g_clouds;
+clouds_t& clouds();

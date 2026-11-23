@@ -4,9 +4,13 @@
 #include "core/calc.h"
 #include "core/profiler.h"
 #include "core/speed.h"
+#include "core/xvalue.h"
 #include "dev/debug.h"
 #include "game/game.h"
 #include "game/game_config.h"
+#include "game/simulation.h"
+#include "io/chunk_serializer.h"
+#include "io/gamestate/presentation_chunks.h"
 #include "graphics/color.h"
 #include "graphics/image.h"
 #include "graphics/view/view.h"
@@ -22,15 +26,17 @@
 #include <ctime>
 #include <random>
 
-clouds_t g_clouds;
+clouds_t& clouds() {
+    return xvalue<clouds_t>::ref();
+}
 
 e_cloud_status_tokens_t ANK_CONFIG_ENUM(e_cloud_status_tokens);
 
 void ANK_REGISTER_CONFIG_ITERATOR(config_load_clouds_config) {
-    auto &clouds_config = g_clouds.config;
+    auto& clouds_config = clouds().config;
     g_config_arch.r("clouds_config", clouds_config);
 
-    g_clouds.init_cloud_images();
+    clouds().init_cloud_images();
 }
 
 constexpr float PI = 3.14159265358979323846;
@@ -372,7 +378,15 @@ void clouds_t::draw_city(painter &ctx) {
 }
 
 // Cosmetic only (Enhanced): the chunk keeps the clouds where they were, nothing in the simulation reads it.
+class clouds_system : public sim_system {
+public:
+    const char* name() const override { return "clouds"; }
+    void push_save_sections(int file_version) override { g_chunk_io.push_chunk<clouds_chunk>(132, false); }
+};
+
 void ANK_REGISTER_APPLICATION_MODULE(register_city_clouds_module) {
-    g_screen_city.add_screen_space_effect([](painter &ctx) { g_clouds.draw_city(ctx); });
-    g_debug.add_render_handler("clouds", [](painter &ctx) { g_clouds.draw_debug(ctx); });
+    static clouds_system system;
+    g_simulation.register_system(&system);
+    g_screen_city.add_screen_space_effect([](painter& ctx) { clouds().draw_city(ctx); });
+    g_debug.add_render_handler("clouds", [](painter& ctx) { clouds().draw_debug(ctx); });
 }

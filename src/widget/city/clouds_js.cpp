@@ -6,37 +6,27 @@
 #include "mujs/mujs.h"
 
 void __clouds_reset() {
-    g_clouds.init_cloud_images();
+    clouds().init_cloud_images();
 }
 ANK_FUNCTION(__clouds_reset);
 
 int __clouds_count() {
-    return static_cast<int>(g_clouds.clouds.size());
+    return static_cast<int>(clouds().clouds.size());
 }
 ANK_FUNCTION(__clouds_count);
 
-ANK_GLOBAL_OBJECT(g_clouds.config, __clouds_config,
-    num_cloud_ellipses,
-    cloud_alpha_increase,
-    cloud_columns,
-    cloud_rows,
-    cloud_width,
-    cloud_height,
-    cloud_size_ratio,
-    cloud_scale,
-    cloud_min_creation_timeout,
-    cloud_max_creation_timeout,
-    pause_min_frames
-);
+ANK_GLOBAL_OBJECT(clouds().config, __clouds_config, num_cloud_ellipses, cloud_alpha_increase, cloud_columns, cloud_rows,
+  cloud_width, cloud_height, cloud_size_ratio, cloud_scale, cloud_min_creation_timeout, cloud_max_creation_timeout,
+  pause_min_frames);
 
 static void __clouds_cloud(js_State *J) {
     const int index = static_cast<int>(js_tointeger(J, 1));
-    if (index < 0 || index >= static_cast<int>(g_clouds.clouds.size())) {
+    if (index < 0 || index >= static_cast<int>(clouds().clouds.size())) {
         js_pushnull(J);
         return;
     }
 
-    cloud_t &cloud = g_clouds.clouds[index];
+    cloud_t& cloud = clouds().clouds[index];
     J->newobject();
     ank_global_obj_bind_field(J, js_intern("status"), &cloud.status);
     ank_global_obj_bind_field(J, js_intern("pos"), &cloud.pos);
