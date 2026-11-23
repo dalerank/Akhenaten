@@ -20,7 +20,6 @@
 #include "ratings.h"
 #include "scenario/scenario_invasion.h"
 #include "scenario/scenario.h"
-#include "sound/effect.h"
 #include "city_religion_seth.h"
 #include "city_religion_osiris.h"
 #include "city_religion_ra.h"
