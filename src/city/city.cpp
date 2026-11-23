@@ -75,10 +75,50 @@ void config_reload_city() {
     g_city.reload_system(g_city.animals);
 }
 
+template <typename T>
+static void zero_fill(T& part) {
+    memset((void*)&part, 0, sizeof(T));
+}
+
 void city_t::init() {
     buildings.shutdown();
 
-    memset(this, 0, sizeof(struct city_t));
+    zero_fill(buildings);
+    zero_fill(figures);
+    zero_fill(population);
+    zero_fill(houses);
+    zero_fill(kingdome);
+    zero_fill(military);
+    zero_fill(industry);
+    zero_fill(maintenance);
+    zero_fill(advisors);
+    zero_fill(empire_screen);
+    zero_fill(finance);
+    zero_fill(resource);
+    zero_fill(food_supply);
+    zero_fill(taxes);
+    zero_fill(labor);
+    zero_fill(migration);
+    zero_fill(sentiment);
+    zero_fill(health);
+    zero_fill(ratings);
+    zero_fill(avg_coverage);
+    zero_fill(gods);
+    zero_fill(entertainment);
+    zero_fill(monuments);
+    zero_fill(festival);
+    zero_fill(local_cults);
+    zero_fill(victory);
+    zero_fill(coverage);
+    zero_fill(sound);
+    zero_fill(trade);
+    zero_fill(animals);
+    zero_fill(map);
+    zero_fill(vegetation);
+    zero_fill(plagues);
+    zero_fill(mission);
+    zero_fill(fishing_points);
+    zero_fill(bookmarks);
 
     sentiment.value = 60;
     health.target_value = 50;
