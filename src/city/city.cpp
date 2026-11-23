@@ -139,6 +139,14 @@ labor_system city_t::labor_sys() {
     return labor_system(labor, labor_ctx());
 }
 
+trade_context city_t::trade_ctx() {
+    return {population, resource, g_empire, g_scenario};
+}
+
+trade_system city_t::trade_sys() {
+    return trade_system(trade, trade_ctx());
+}
+
 void city_t::init_custom_map() {
     unused.faction_id = 1;
     unused.unknown_00a2 = 1;
@@ -240,14 +248,14 @@ bool city_t::generate_trader_from(empire_city &city) {
         // generate ship
         const bool has_doks = g_city.buildings.has_working_dock();
         const bool has_river_entry = scenario_map_has_river_entry();
-        const bool can_sea_trade = !city_trade_has_sea_trade_problems();
+        const bool can_sea_trade = !g_city.trade.has_sea_problems();
         if (has_doks && has_river_entry && can_sea_trade) {
             g_empire_traders.create_trader(city.route_id, -1);
             return true;
         }
     } else {
         // generate caravan and donkeys
-        if (!city_trade_has_land_trade_problems()) {
+        if (!g_city.trade.has_land_problems()) {
             // caravan head
             g_empire_traders.create_trader(city.route_id, -1);
             return true;
@@ -564,7 +572,7 @@ void city_t::on_post_load() {
     buildings.on_post_load();
     figures.on_post_load();
     kingdome.on_post_load();
-    city_trade_update_export_keep();
+    trade_sys().update_export_keep();
 }
 
 void city_t::figures_update_day() {

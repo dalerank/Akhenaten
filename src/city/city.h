@@ -88,7 +88,7 @@ struct city_t {
         int8_t die_soldier;
     } sound;
 
-    city_trade_t trade;
+    trade_state trade;
     city_map_t map;
 
     // OG vegetation_growth_state gatherer reach flags (refreshed with daily growth).
@@ -221,6 +221,8 @@ struct city_t {
     taxes_system taxes_sys();
     labor_context labor_ctx();
     labor_system labor_sys();
+    trade_context trade_ctx();
+    trade_system trade_sys();
 
     e_availability is_advisor_available(e_advisor advisor) const;
     void set_advisor_available(e_advisor advisor, e_availability available);
@@ -230,7 +232,6 @@ struct city_t {
 
     bvariant get_property(xstring domain, xstring name) const;
     void on_post_load();
-    void trade_update();
 
     template <typename T>
     void reload_system(T &system) {

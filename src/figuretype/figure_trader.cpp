@@ -1,7 +1,7 @@
 #include "figure_trader.h"
 
 #include "core/calc.h"
-#include "city/city_trade.h"
+#include "city/city.h"
 #include "empire/empire_map.h"
 #include "empire/empire.h"
 #include "game/game.h"
@@ -74,14 +74,14 @@ bool figure_trader::can_sell(building* b, empire_city_handle city) const {
         return false;
 
     int can_import = 0;
-    e_resource resource = city_trade_current_caravan_import_resource();
+    e_resource resource = g_city.trade.current_caravan_import();
     if (!warehouse->is_not_accepting(resource)
         && !session.sell_full(resource)
         && g_empire.can_import_resource_from_city(city.handle, resource)) {
         can_import = 1;
     } else {
         for (int i = RESOURCES_MIN; i < RESOURCES_MAX; i++) {
-            resource = city_trade_next_caravan_import_resource();
+            resource = g_city.trade_sys().next_caravan_import();
             if (!warehouse->is_not_accepting(resource)
                 && !session.sell_full(resource)
                 && g_empire.can_import_resource_from_city(city.handle, resource)) {
@@ -179,11 +179,11 @@ int figure_trader::get_closest_storageyard(tile2i tile, empire_city_handle city,
 
             if (num_importable && num_imports_for_warehouse && !s->empty_all) {
                 for (e_resource r = RESOURCES_MIN; r < RESOURCES_MAX; ++r) {
-                    if (!warehouse->is_not_accepting(city_trade_next_caravan_import_resource()))
+                    if (!warehouse->is_not_accepting(g_city.trade_sys().next_caravan_import()))
                         break;
                 }
 
-                e_resource resource = city_trade_current_caravan_import_resource();
+                e_resource resource = g_city.trade.current_caravan_import();
                 if (!warehouse->is_not_accepting(resource) && importable[resource]) {
                     if (space->resource() == RESOURCE_NONE)
                         distance_penalty -= 16;

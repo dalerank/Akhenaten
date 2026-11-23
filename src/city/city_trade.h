@@ -2,7 +2,12 @@
 
 #include "game/resource.h"
 
-struct city_trade_t {
+struct city_population_t;
+struct city_resources_t;
+class empire_t;
+struct scenario_data_t;
+
+struct trade_state {
     int16_t num_land_routes;
     int16_t num_sea_routes;
     int16_t land_trade_problem_duration;
@@ -16,26 +21,42 @@ struct city_trade_t {
 
     // OG trade_export_keep: not saved, recomputed on load and once a day.
     int32_t export_keep[RESOURCES_MAX];
+
+    bool has_land_route() const { return num_land_routes > 0; }
+    bool has_sea_route() const { return num_sea_routes > 0; }
+    bool has_land_problems() const { return land_trade_problem_duration > 0; }
+    bool has_sea_problems() const { return sea_trade_problem_duration > 0; }
+    e_resource current_caravan_import() const { return caravan_import_resource; }
+    int keep_for_export(e_resource resource) const;
 };
 
-void city_trade_add_land_trade_route();
-void city_trade_add_sea_trade_route();
+struct trade_context {
+    const city_population_t& population;
+    city_resources_t& resource;
+    empire_t& empire;
+    const scenario_data_t& scenario;
+};
 
-int city_trade_has_land_trade_route();
-int city_trade_has_sea_trade_route();
+class trade_system {
+public:
+    trade_system(trade_state& state, const trade_context& ctx) : _state(state), _ctx(ctx) {}
 
-void city_trade_start_land_trade_problems(int duration);
-void city_trade_start_sea_trade_problems(int duration);
+    void update();
+    void update_export_keep();
+    void add_land_route();
+    void add_sea_route();
+    void start_land_problems(int duration);
+    void start_sea_problems(int duration);
+    e_resource next_caravan_import();
+    e_resource next_caravan_backup_import();
+    e_resource next_docker_import();
+    e_resource next_docker_export();
 
-int city_trade_has_land_trade_problems();
-int city_trade_has_sea_trade_problems();
+private:
+    int recommended_keep(int good_index) const;
+    int monument_need(e_resource resource) const;
+    int material_keep(e_resource resource) const;
 
-void city_trade_update_export_keep();
-int city_trade_export_keep(e_resource resource);
-
-e_resource city_trade_current_caravan_import_resource();
-e_resource city_trade_next_caravan_import_resource();
-e_resource city_trade_next_caravan_backup_import_resource();
-
-e_resource city_trade_next_docker_import_resource();
-e_resource city_trade_next_docker_export_resource();
+    trade_state& _state;
+    trade_context _ctx;
+};

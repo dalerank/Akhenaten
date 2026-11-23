@@ -325,9 +325,9 @@ building_dest figure_docker::get_closest_warehouse_for_import(tile2i pos, empire
         return { 0, tile2i::invalid };
     }
 
-    e_resource resource = city_trade_next_docker_import_resource();
+    e_resource resource = g_city.trade_sys().next_docker_import();
     for (e_resource i = RESOURCES_MIN; i < RESOURCES_MAX && !allowed(resource); ++i) {
-        resource = city_trade_next_docker_import_resource();
+        resource = g_city.trade_sys().next_docker_import();
     }
 
     if (!allowed(resource)) {
@@ -363,9 +363,9 @@ building_dest figure_docker::get_closest_warehouse_for_export(tile2i pos, empire
         return dock->is_trade_accepted(r);
     };
 
-    e_resource resource = city_trade_next_docker_export_resource();
+    e_resource resource = g_city.trade_sys().next_docker_export();
     for (int i = RESOURCES_MIN; i < RESOURCES_MAX && !allowed(resource); i++) {
-        resource = city_trade_next_docker_export_resource();
+        resource = g_city.trade_sys().next_docker_export();
     }
 
     if (!allowed(resource)) {

@@ -43,8 +43,8 @@ static void lower_wages(void) {
 
 static void disrupt_land_trade(void) {
     if (g_scenario.random_events.land_trade_problem) {
-        if (city_trade_has_land_trade_route()) {
-            city_trade_start_land_trade_problems(48);
+        if (g_city.trade.has_land_route()) {
+            g_city.trade_sys().start_land_problems(48);
             if (g_scenario.climate == CLIMATE_DESERT)
                 events::emit(event_message{ true, "message_land_trade_disrupted_sandstorms", 0, 0, SOURCE_LOCATION });
             else {
@@ -56,8 +56,8 @@ static void disrupt_land_trade(void) {
 
 static void disrupt_sea_trade(void) {
     if (g_scenario.random_events.sea_trade_problem) {
-        if (city_trade_has_sea_trade_route()) {
-            city_trade_start_sea_trade_problems(48);
+        if (g_city.trade.has_sea_route()) {
+            g_city.trade_sys().start_sea_problems(48);
             events::emit(event_message{ true, "message_sea_trade_disrupted", 0, 0, SOURCE_LOCATION });
         }
     }

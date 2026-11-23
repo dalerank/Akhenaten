@@ -14,33 +14,31 @@
 #include <algorithm>
 #include <array>
 
-void city_t::trade_update() {
+void trade_system::update() {
     OZZY_PROFILER_FUNCTION();
 
-    trade.num_sea_routes = 0;
-    trade.num_land_routes = 0;
-    resource.luxury_goods_kinds = g_empire.count_luxury_goods_kinds();
+    _state.num_sea_routes = 0;
+    _state.num_land_routes = 0;
+    _ctx.resource.luxury_goods_kinds = _ctx.empire.count_luxury_goods_kinds();
 
     // Update trade problems
-    if (trade.land_trade_problem_duration > 0) {
-        trade.land_trade_problem_duration--;
+    if (_state.land_trade_problem_duration > 0) {
+        _state.land_trade_problem_duration--;
     } else {
-        trade.land_trade_problem_duration = 0;
+        _state.land_trade_problem_duration = 0;
     }
 
-    if (trade.sea_trade_problem_duration > 0) {
-        trade.sea_trade_problem_duration--;
+    if (_state.sea_trade_problem_duration > 0) {
+        _state.sea_trade_problem_duration--;
     } else {
-        trade.sea_trade_problem_duration = 0;
+        _state.sea_trade_problem_duration = 0;
     }
 
-    g_empire.generate_traders();
+    _ctx.empire.generate_traders();
 }
 
-static auto &city_data = g_city;
-
-static int trade_recommended_keep(int good_index) {
-    const int population = g_city.population.current;
+int trade_system::recommended_keep(int good_index) const {
+    const int population = _ctx.population.current;
     for (const auto& row : empire_trade_rules.recommends) {
         if (row.population_below > 0 && population >= row.population_below) {
             continue;
@@ -82,7 +80,7 @@ static int trade_workshops_using(e_resource resource) {
     return count;
 }
 
-static int trade_monument_need(e_resource resource) {
+int trade_system::monument_need(e_resource resource) const {
     int total = 0;
     std::array<int, BUILDING_MAX> placed = {};
     buildings_valid_do([&](building& b) {
@@ -94,8 +92,8 @@ static int trade_monument_need(e_resource resource) {
         total += monument->remaining_resource_need(resource);
     });
 
-    for (
-      const int monument_id : {g_scenario.monuments.first, g_scenario.monuments.second, g_scenario.monuments.third}) {
+    for (const int monument_id :
+      {_ctx.scenario.monuments.first, _ctx.scenario.monuments.second, _ctx.scenario.monuments.third}) {
         const auto& needs = empire_trade_rules.monument_unplaced_needs;
         auto need = std::find_if(needs.begin(), needs.end(), [&](auto& n) { return n.monument == monument_id; });
         if (monument_id <= 0 || need == needs.end()) {
@@ -114,7 +112,7 @@ static int trade_monument_need(e_resource resource) {
     return total;
 }
 
-static int trade_material_keep(e_resource resource) {
+int trade_system::material_keep(e_resource resource) const {
     const auto& rules = empire_trade_rules;
     switch (resource) {
     case RESOURCE_REEDS:
@@ -133,7 +131,7 @@ static int trade_material_keep(e_resource resource) {
     case RESOURCE_BRICKS:
     case RESOURCE_GRANITE:
     case RESOURCE_SANDSTONE:
-        return trade_monument_need(resource) + rules.keep_monument_amount;
+        return monument_need(resource) + rules.keep_monument_amount;
 
     default:
         return rules.keep_other_amount;
@@ -165,7 +163,7 @@ static int trade_cap_amount(e_resource resource, int amount) {
     return std::min(amount, cap);
 }
 
-void city_trade_update_export_keep() {
+void trade_system::update_export_keep() {
     int requested[RESOURCES_MAX] = {};
     for (const auto& request : scenario_get_visible_requests()) {
         if (request.resource >= RESOURCES_MIN && request.resource < RESOURCES_MAX) {
@@ -173,88 +171,68 @@ void city_trade_update_export_keep() {
         }
     }
 
-    auto& keep = city_data.trade.export_keep;
+    auto& keep = _state.export_keep;
     keep[RESOURCE_NONE] = 0;
     for (e_resource r = RESOURCES_MIN; r < RESOURCES_MAX; ++r) {
-        const auto& provisions = g_scenario.monuments.burial_provisions[r];
+        const auto& provisions = _ctx.scenario.monuments.burial_provisions[r];
         const int amount = requested[r] + (provisions.required - provisions.dispatched) * 100;
         const int good_index = trade_recommended_good_index(r);
-        const int base = good_index >= 0 ? trade_recommended_keep(good_index) : trade_material_keep(r);
+        const int base = good_index >= 0 ? recommended_keep(good_index) : material_keep(r);
         keep[r] = trade_cap_amount(r, base + amount);
     }
 }
 
-int city_trade_export_keep(e_resource resource) {
+int trade_state::keep_for_export(e_resource resource) const {
     if (resource < RESOURCES_MIN || resource >= RESOURCES_MAX) {
         return 0;
     }
-    return city_data.trade.export_keep[resource];
+    return export_keep[resource];
 }
 
-void city_trade_add_land_trade_route() {
-    city_data.trade.num_land_routes++;
+void trade_system::add_land_route() {
+    _state.num_land_routes++;
 }
 
-void city_trade_add_sea_trade_route() {
-    city_data.trade.num_sea_routes++;
+void trade_system::add_sea_route() {
+    _state.num_sea_routes++;
 }
 
-int city_trade_has_land_trade_route() {
-    return city_data.trade.num_land_routes > 0;
+void trade_system::start_land_problems(int duration) {
+    _state.land_trade_problem_duration = duration;
 }
 
-int city_trade_has_sea_trade_route() {
-    return city_data.trade.num_sea_routes > 0;
+void trade_system::start_sea_problems(int duration) {
+    _state.sea_trade_problem_duration = duration;
 }
 
-void city_trade_start_land_trade_problems(int duration) {
-    city_data.trade.land_trade_problem_duration = duration;
+e_resource trade_system::next_caravan_import() {
+    _state.caravan_import_resource = (e_resource)(_state.caravan_import_resource + 1);
+    if (_state.caravan_import_resource >= RESOURCES_MAX)
+        _state.caravan_import_resource = RESOURCES_MIN;
+
+    return _state.caravan_import_resource;
 }
 
-void city_trade_start_sea_trade_problems(int duration) {
-    city_data.trade.sea_trade_problem_duration = duration;
+e_resource trade_system::next_caravan_backup_import() {
+    _state.caravan_backup_import_resource = (e_resource)(_state.caravan_backup_import_resource + 1);
+    if (_state.caravan_backup_import_resource >= RESOURCES_MAX)
+        _state.caravan_backup_import_resource = RESOURCES_MIN;
+
+    return _state.caravan_backup_import_resource;
 }
 
-int city_trade_has_land_trade_problems() {
-    return city_data.trade.land_trade_problem_duration > 0;
+e_resource trade_system::next_docker_import() {
+    _state.docker_import_resource = ++_state.docker_import_resource;
+    if (_state.docker_import_resource >= RESOURCES_MAX)
+        _state.docker_import_resource = RESOURCES_MIN;
+
+    return _state.docker_import_resource;
 }
 
-int city_trade_has_sea_trade_problems() {
-    return city_data.trade.sea_trade_problem_duration > 0;
-}
+e_resource trade_system::next_docker_export() {
+    _state.docker_export_resource = (e_resource)(_state.docker_export_resource + 1);
+    if (_state.docker_export_resource >= RESOURCES_MAX)
+        _state.docker_export_resource = RESOURCES_MIN;
 
-e_resource city_trade_current_caravan_import_resource() {
-    return city_data.trade.caravan_import_resource;
-}
-
-e_resource city_trade_next_caravan_import_resource() {
-    city_data.trade.caravan_import_resource = (e_resource)(city_data.trade.caravan_import_resource + 1);
-    if (city_data.trade.caravan_import_resource >= RESOURCES_MAX)
-        city_data.trade.caravan_import_resource = RESOURCES_MIN;
-
-    return city_data.trade.caravan_import_resource;
-}
-
-e_resource city_trade_next_caravan_backup_import_resource() {
-    city_data.trade.caravan_backup_import_resource = (e_resource)(city_data.trade.caravan_backup_import_resource + 1);
-    if (city_data.trade.caravan_backup_import_resource >= RESOURCES_MAX)
-        city_data.trade.caravan_backup_import_resource = RESOURCES_MIN;
-
-    return city_data.trade.caravan_backup_import_resource;
-}
-
-e_resource city_trade_next_docker_import_resource() {
-    city_data.trade.docker_import_resource = ++city_data.trade.docker_import_resource;
-    if (city_data.trade.docker_import_resource >= RESOURCES_MAX)
-        city_data.trade.docker_import_resource = RESOURCES_MIN;
-
-    return city_data.trade.docker_import_resource;
-}
-
-e_resource city_trade_next_docker_export_resource() {
-    city_data.trade.docker_export_resource = (e_resource)(city_data.trade.docker_export_resource + 1);
-    if (city_data.trade.docker_export_resource >= RESOURCES_MAX)
-        city_data.trade.docker_export_resource = RESOURCES_MIN;
-
-    return city_data.trade.docker_export_resource;
+    return _state.docker_export_resource;
 }
