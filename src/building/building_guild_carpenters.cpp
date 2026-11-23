@@ -5,7 +5,6 @@
 #include "city/city.h"
 #include "city/city_buildings.h"
 #include "core/random.h"
-#include "dev/debug.h"
 #include "figuretype/figure_carpenter.h"
 #include "game/game.h"
 #include "js/js_register.h"
@@ -13,7 +12,6 @@
 #include <initializer_list>
 
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_carpenters_guild);
-declare_console_command(add_timber, game_cheat_add_resource<RESOURCE_TIMBER>);
 
 namespace {
 bool monument_needs_carpenter(building &b) {

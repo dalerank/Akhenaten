@@ -11,7 +11,6 @@
 #include "city/city.h"
 #include "city/city_food_supply.h"
 #include "city/city_warnings.h"
-#include "graphics/window.h"
 #include "core/calc.h"
 #include "core/profiler.h"
 #include "empire/empire.h"

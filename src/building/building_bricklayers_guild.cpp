@@ -6,7 +6,6 @@
 #include "building/monuments.h"
 #include "city/city.h"
 #include "core/random.h"
-#include "dev/debug.h"
 #include "figuretype/figure_bricklayer.h"
 #include "game/game.h"
 #include "game/resource.h"
@@ -14,7 +13,6 @@
 
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_bricklayers_guild);
 
-declare_console_command(add_bricks, game_cheat_add_resource<RESOURCE_BRICKS>);
 
 building *building_bricklayers_guild::find_statue_task() {
     int min_service_value = 9999;

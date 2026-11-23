@@ -1,4 +1,5 @@
 #include "debug.h"
+#include "city/city_resource.h"
 
 #include <cmath>
 #include <vector>
@@ -54,6 +55,18 @@ const token_holder<e_debug_render, e_debug_render_none, e_debug_render_size> ANK
 
 declare_console_var_int(debugrender, 0);
 declare_console_var_int(debugbuildingid, 0);
+
+template<e_resource R>
+void game_cheat_add_resource(console_args &args, console_output &) {
+    int amount = args.next_int(100);
+    city_resource_add_items(R, amount);
+    city_resource_was_added_warning(R);
+}
+
+declare_console_command(add_beer, game_cheat_add_resource<RESOURCE_BEER>);
+declare_console_command(add_barley, game_cheat_add_resource<RESOURCE_BARLEY>);
+declare_console_command(add_bricks, game_cheat_add_resource<RESOURCE_BRICKS>);
+declare_console_command(add_timber, game_cheat_add_resource<RESOURCE_TIMBER>);
 
 static const uint8_t* font_test_str = (uint8_t*)(char*)"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890!\"%*()-+=:;'?\\/,._äáàâëéèêïíìîöóòôüúùûçñæßÄÉÜÑÆŒœÁÂÀÊÈÍÎÌÓÔÒÖÚÛÙ¡¿^°ÅØåø";
 static const uint8_t* font_test_str_ascii = (uint8_t*)(char*)"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890!\"%*()-+=:;'?\\/,._";

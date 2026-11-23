@@ -39,8 +39,6 @@ building/building_booth.cpp -> widget/city/flat_draw.h
 building/building_booth.cpp -> widget/city/ornaments.h
 building/building_booth.cpp -> window/building/common.h
 building/building_booth.cpp -> window/building/figures.h
-building/building_brewery.cpp -> dev/debug.h
-building/building_bricklayers_guild.cpp -> dev/debug.h
 building/building_bridge.cpp -> graphics/graphics.h
 building/building_bridge.cpp -> graphics/image.h
 building/building_bridge.h -> graphics/color.h
@@ -99,7 +97,6 @@ building/building_granary.cpp -> graphics/image_desc.h
 building/building_granary.cpp -> sound/effect.h
 building/building_granary.cpp -> widget/city/ornaments.h
 building/building_granary.h -> graphics/color.h
-building/building_guild_carpenters.cpp -> dev/debug.h
 building/building_house.cpp -> dev/debug.h
 building/building_house.cpp -> graphics/graphics.h
 building/building_house.cpp -> graphics/image.h
@@ -258,9 +255,6 @@ city/city_population.cpp -> dev/debug.h
 city/city_religion.cpp -> dev/debug.h
 city/city_religion.cpp -> sound/effect.h
 city/city_religion_properties.cpp -> widget/debug_console.h
-city/city_resource.cpp -> graphics/window.h
-city/city_resource.h -> dev/console_io.h
-city/city_resource_handle.cpp -> graphics/elements/ui.h
 city/object_info.cpp -> dev/debug.h
 city/object_info.cpp -> graphics/view/lookup.h
 city/ratings.cpp -> dev/debug.h

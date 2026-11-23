@@ -6,13 +6,10 @@
 #include "io/io_buffer.h"
 
 #include "js/js_register.h"
-#include "dev/debug.h"
 
 
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_brewery);
 
-declare_console_command(add_beer, game_cheat_add_resource<RESOURCE_BEER>);
-declare_console_command(add_barley, game_cheat_add_resource<RESOURCE_BARLEY>);
 
 int building_brewery::stored_amount(e_resource r) const {
     if (r == RESOURCE_WATER) {
