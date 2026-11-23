@@ -253,7 +253,7 @@ int __city_migration_percentage() {
 ANK_FUNCTION(__city_migration_percentage)
 
 int __city_migration_no_room_for_immigrants() {
-    return g_city.migration.no_room_for_immigrants() ? 1 : 0;
+    return g_city.migration_sys().no_room_for_immigrants() ? 1 : 0;
 }
 ANK_FUNCTION(__city_migration_no_room_for_immigrants)
 
@@ -264,7 +264,7 @@ ANK_FUNCTION(__city_migration_problems_cause)
 
 bvariant_map __city_migration_caps() {
     bvariant_map result;
-    for (const auto &[reason, cap] : g_city.migration.get_migration_caps()) {
+    for (const auto& [reason, cap] : migration_system::get_migration_caps()) {
         result[reason] = bvariant(cap);
     }
     return result;

@@ -242,7 +242,7 @@ void game_t::frame_end() {
 
 void game_t::init_state() {
     g_city.victory.reset();
-    g_city.migration.reset();
+    g_city.migration_sys().reset();
     map_ring_init();
 
     g_camera.reset_orientation();

@@ -196,6 +196,15 @@ population_system city_t::population_sys() {
     return population_system(population, population_ctx());
 }
 
+migration_context city_t::migration_ctx() {
+    return {
+      population, population_sys(), sentiment, labor, figures, g_simulation.simtime.year, g_simulation.simtime.month};
+}
+
+migration_system city_t::migration_sys() {
+    return migration_system(migration, migration_ctx());
+}
+
 void city_t::init_custom_map() {
     unused.faction_id = 1;
     unused.unknown_00a2 = 1;

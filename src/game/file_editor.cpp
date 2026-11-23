@@ -63,7 +63,7 @@ void game_file_editor_clear_data(void) {
     grid_xx::init_all_grids();
 
     g_city.victory.reset();
-    g_city.migration.reset();
+    g_city.migration_sys().reset();
     g_city_planner.reset();
     g_city.init();
     events::start_session();

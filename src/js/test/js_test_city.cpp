@@ -211,7 +211,7 @@ static void __test_sentiment_set(int value) {
 ANK_FUNCTION_1(__test_sentiment_set);
 
 static int __test_migration_update_status() {
-    g_city.migration.update_status();
+    g_city.migration_sys().update_status();
     return g_city.migration.percentage;
 }
 ANK_FUNCTION(__test_migration_update_status);

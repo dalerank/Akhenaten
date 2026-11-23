@@ -18,7 +18,7 @@ void window_advisors_prepare_opening() {
     g_city.taxes_sys().update_estimate();
     g_city.finance_sys().calculate_totals();
 
-    g_city.migration.determine_reason();
+    g_city.migration_sys().determine_reason();
 
     g_city.houses_calculate_culture_demands();
     g_city.avg_coverage.update();

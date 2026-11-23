@@ -76,7 +76,7 @@ void GamestateLoadDetail::pre_load() { // do we NEED this...?
 
     // clear data
     g_city.victory.reset();
-    g_city.migration.reset();
+    g_city.migration_sys().reset();
     g_city_planner.reset();
     g_city.init();
     events::start_session();

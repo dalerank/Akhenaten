@@ -57,7 +57,7 @@ struct city_t {
     taxes_state taxes;
 
     labor_state labor;
-    city_migration_t migration;
+    migration_state migration;
     sentiment_state sentiment;
 
     health_state health;
@@ -234,6 +234,8 @@ struct city_t {
     sentiment_system sentiment_sys();
     population_context population_ctx();
     population_system population_sys();
+    migration_context migration_ctx();
+    migration_system migration_sys();
 
     e_availability is_advisor_available(e_advisor advisor) const;
     void set_advisor_available(e_advisor advisor, e_availability available);
