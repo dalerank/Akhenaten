@@ -21,25 +21,25 @@ void __ui_city_planner_reset() {
 ANK_FUNCTION(__ui_city_planner_reset)
 
 bool __city_has_temple_complex() {
-    return g_city.buildings.has_temple_complex();
+    return g_city.temple_complexes_sys().has_any();
 }
 ANK_FUNCTION(__city_has_temple_complex)
 
 int __city_temple_complex_id(int type) {
     if (type <= 0) {
-        return g_city.buildings.temple_complex_id();
+        return g_city.temple_complexes_sys().any_id();
     }
-    return g_city.buildings.temple_complex_id((e_building_type)type);
+    return g_city.temple_complexes_sys().id((e_building_type)type);
 }
 ANK_FUNCTION_1(__city_temple_complex_id)
 
 int __city_temple_complex_types_count() {
-    return (int)g_city.buildings.temple_complex_types().size();
+    return (int)temple_complexes_system::types().size();
 }
 ANK_FUNCTION(__city_temple_complex_types_count)
 
 int __city_temple_complex_type_at(int idx) {
-    const auto types = g_city.buildings.temple_complex_types();
+    const auto types = temple_complexes_system::types();
     return (idx >= 0 && idx < (int)types.size()) ? (int)types[idx] : 0;
 }
 ANK_FUNCTION_1(__city_temple_complex_type_at)

@@ -28,13 +28,7 @@ declare_console_command_p(killfishboats) {
 namespace {
 
 bool temple_complex_osiris_has_oracle() {
-    const building_id complex_id = g_city.buildings.temple_complex_id(BUILDING_TEMPLE_COMPLEX_OSIRIS);
-    if (!complex_id) {
-        return false;
-    }
-    building *complex_b = building_get(complex_id);
-    auto *complex = complex_b ? complex_b->dcast_temple_complex() : nullptr;
-    return complex && complex->has_upgrade(etc_upgrade_oracle);
+    return g_city.temple_complexes_sys().has_upgrade(BUILDING_TEMPLE_COMPLEX_OSIRIS, etc_upgrade_oracle);
 }
 
 } // namespace

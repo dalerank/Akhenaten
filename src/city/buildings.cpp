@@ -251,48 +251,12 @@ void city_buildings_t::reload_objects() {
     });
 }
 
-building_id city_buildings_t::temple_complex_id(e_building_type type) {
-    const auto &complexes = tracked_buildings().at(type);
-    for (building_id id : complexes) {
-        building *b = building_get(id);
-        if (b && b->is_valid() && b->type == type) {
-            return id;
-        }
-    }
-    return 0;
-}
-
-building_id city_buildings_t::temple_complex_id() {
-    for (const e_building_type type : temple_complex_types()) {
-        const building_id id = temple_complex_id(type);
-        if (id) {
-            return id;
-        }
-    }
-    return 0;
-}
-
-bool city_buildings_t::has_temple_complex() {
-    return temple_complex_id() > 0;
-}
-
 bool city_buildings_t::has_palace() const {
     return palace_building_id > 0;
 }
 
 bool city_buildings_t::has_mansion() const {
     return mansion_building_id > 0;
-}
-
-span_const<e_building_type> city_buildings_t::temple_complex_types() {
-    static svector<e_building_type, 16> types;
-    types.clear();
-    for (int t = BUILDING_NONE + 1; t < BUILDING_MAX && types.size() < types.capacity(); ++t) {
-        if (building_static_params::get((e_building_type)t).flags.is_temple_complex) {
-            types.push_back((e_building_type)t);
-        }
-    }
-    return make_span(types);
 }
 
 void city_buildings_t::update_month() {

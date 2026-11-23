@@ -40,7 +40,7 @@ namespace {
 
     // OG: player->has_temple_complex, complex god Bast, upgrade 1 (altar).
     bool bast_complex_has_altar() {
-        building* b = building_get(g_city.buildings.temple_complex_id());
+        building* b = building_get(g_city.temple_complexes_sys().any_id());
         auto* complex = (b && b->type == BUILDING_TEMPLE_COMPLEX_BAST) ? b->dcast_temple_complex() : nullptr;
         return complex && complex->has_upgrade(etc_upgrade_altar);
     }

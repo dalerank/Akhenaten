@@ -63,10 +63,6 @@ struct city_buildings_t {
     void update_day();
     void reload_objects();
 
-    building_id temple_complex_id();
-    building_id temple_complex_id(e_building_type type);
-    bool has_temple_complex();
-    span_const<e_building_type> temple_complex_types();
 
     int get_palace_id() const { return palace_building_id; }
     bool has_palace() const;

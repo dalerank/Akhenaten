@@ -28,6 +28,7 @@
 #include "city/city_trade.h"
 #include "city/city_festival.h"
 #include "city/city_local_cults.h"
+#include "city/city_temple_complexes.h"
 #include "city/city_victory.h"
 #include "grid/desirability.h"
 #include "city/city_buildings.h"
@@ -198,7 +199,6 @@ struct city_t {
     void update_prosperity_rating();
     void calculate_max_prosperity();
     void ratings_update(bool is_yearly_update);
-    void ra_temple_complex_yearly_favour();
 
     bool determine_granary_get_foods(resource_list &foods, int road_network);
 
@@ -229,6 +229,7 @@ struct city_t {
     gods_system gods_sys();
     local_cults_context local_cults_ctx();
     local_cults_system local_cults_sys();
+    temple_complexes_system temple_complexes_sys();
 
     e_availability is_advisor_available(e_advisor advisor) const;
     void set_advisor_available(e_advisor advisor, e_availability available);

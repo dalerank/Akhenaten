@@ -39,13 +39,12 @@ struct health_state {
 struct city_population_t;
 struct gods_state;
 struct city_coverage_t;
-struct city_buildings_t;
 
 struct health_context {
     const city_population_t& population;
     gods_state& gods;
     city_coverage_t& coverage;
-    city_buildings_t& buildings;
+    bool bast_complex_has_altar;
     bool fixed_health_mission;
     int absolute_day;
 };

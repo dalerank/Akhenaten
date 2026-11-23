@@ -29,6 +29,7 @@
 #include "city/city_industry.h"
 #include "city/city_animals.h"
 #include "building/building_barracks.h"
+#include "building/building_temple_complex.h"
 #include "building/building_burning_ruin.h"
 #include "figure/figure.h"
 #include "figuretype/figure_native.h"
@@ -148,8 +149,9 @@ trade_system city_t::trade_sys() {
 }
 
 health_context city_t::health_ctx() {
-    return {
-      population, gods, coverage, buildings, g_scenario.is_scenario_id(1, 2), g_simulation.simtime.absolute_day(true)};
+    return {population, gods, coverage,
+      temple_complexes_sys().has_upgrade(BUILDING_TEMPLE_COMPLEX_BAST, etc_upgrade_altar),
+      g_scenario.is_scenario_id(1, 2), g_simulation.simtime.absolute_day(true)};
 }
 
 health_system city_t::health_sys() {
@@ -172,6 +174,10 @@ local_cults_system city_t::local_cults_sys() {
     return local_cults_system(local_cults, local_cults_ctx());
 }
 
+temple_complexes_system city_t::temple_complexes_sys() {
+    return temple_complexes_system({buildings, kingdome});
+}
+
 void city_t::init_custom_map() {
     unused.faction_id = 1;
     unused.unknown_00a2 = 1;
@@ -189,13 +195,6 @@ void city_t::ratings_update(bool is_yearly_update) {
 
     if (is_prosperity_update_month(g_simulation.simtime.month)) {
         update_prosperity_rating();
-    }
-}
-
-// OG temple_complex_ra_kingdom_bonus, right after the yearly ratings.
-void city_t::ra_temple_complex_yearly_favour() {
-    if (buildings.temple_complex_id(BUILDING_TEMPLE_COMPLEX_RA)) {
-        kingdome.change(kingdome_relation_t::params().ra_complex_yearly_bonus);
     }
 }
 

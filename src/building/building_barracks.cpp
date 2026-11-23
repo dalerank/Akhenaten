@@ -42,7 +42,7 @@ bool building_recruiter::static_params::is_unique_building() const {
 // OG city_military_training_bonus: academy present -> 25, Seth temple complex adds +10.
 static int city_military_training_bonus(int academy_id) {
     int extra = 0;
-    if (g_city.buildings.temple_complex_id(BUILDING_TEMPLE_COMPLEX_SETH)) {
+    if (g_city.temple_complexes_sys().id(BUILDING_TEMPLE_COMPLEX_SETH)) {
         extra = BATALION_SETH_TRAINING_BONUS;
     }
     return (academy_id != 0 ? BATALION_ACADEMY_EXPERIENCE : 0) + extra;

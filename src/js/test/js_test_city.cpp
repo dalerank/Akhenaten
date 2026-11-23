@@ -446,7 +446,7 @@ static void __test_city_ratings_update(int is_yearly_update) {
 ANK_FUNCTION_1(__test_city_ratings_update);
 
 static void __test_city_ra_yearly_favour() {
-    g_city.ra_temple_complex_yearly_favour();
+    g_city.temple_complexes_sys().ra_yearly_favour();
 }
 ANK_FUNCTION(__test_city_ra_yearly_favour);
 

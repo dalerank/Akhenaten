@@ -46,12 +46,9 @@ namespace {
 
     // OG TEMPLE_COMPLEX_RA_WAGE_BONUS is subtracted from the wage difference.
     int temple_complex_wage_bonus() {
-        const building_id complex_id = g_city.buildings.temple_complex_id(BUILDING_TEMPLE_COMPLEX_RA);
-        if (!complex_id) {
-            return 0;
-        }
-        auto* complex = building_get(complex_id)->dcast_temple_complex();
-        return (complex && complex->has_upgrade(etc_upgrade_oracle)) ? prosperity_rating.ra_oracle_wage_bonus : 0;
+        return g_city.temple_complexes_sys().has_upgrade(BUILDING_TEMPLE_COMPLEX_RA, etc_upgrade_oracle)
+                 ? prosperity_rating.ra_oracle_wage_bonus
+                 : 0;
     }
 
     bool is_og_pyramid_or_sphinx(e_building_type type) {
