@@ -15,6 +15,7 @@ uint32_t platform_init_sdl_flags() {
 
 void platform_post_hint_init() {
     SDL_SetHint(SDL_HINT_ANDROID_TRAP_BACK_BUTTON, "1");
+    SDL_SetHint(SDL_HINT_ORIENTATIONS, "LandscapeLeft LandscapeRight");
 }
 
 void platform_setup_begin() {
