@@ -3,7 +3,6 @@
 #include "city/city.h"
 #include "scenario/scenario.h"
 
-#include <cstring>
 #include <type_traits>
 
 // City state of the human player (OG city_players[1], tutankhamun city_player_types.h). Field order follows our
@@ -22,7 +21,6 @@ namespace og {
 
     void load_city_state(const savegame& s) {
         const city_player& p = s.player();
-        std::memcpy(g_city.unused.other_player, &s.players[0], sizeof(city_player));
 
         assign(g_city.buildings.unknown_value, p.building_reserved_id);
         assign(g_city.finance.tax_percentage, p.tax_percentage);

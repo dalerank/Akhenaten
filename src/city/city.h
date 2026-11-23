@@ -112,52 +112,6 @@ struct city_t {
         int32_t reserved_2;
     } mission;
 
-    struct {
-        int8_t other_player[18904];
-        int8_t unknown_00a0;
-        int8_t unknown_00a1;
-        int8_t unknown_00a2;
-        int8_t unknown_00a3;
-        int8_t unknown_00a4;
-        int8_t unknown_00a6;
-        int8_t unknown_00a7;
-        int32_t unknown_00c0;
-        int32_t unused_27d0;
-        uint16_t unused_27d0_short;
-        int32_t unknown_27e0[3];
-        int16_t unknown_27f0;
-        int16_t unknown_27f4[18];
-        int16_t unknown_2828;
-        int16_t unused_28ca;
-        int8_t unknown_2924[272];
-        int32_t unknown_2b6c;
-        int32_t unknown_2c20[1400];
-        int32_t houses_requiring_unknown_to_evolve[8];
-        int32_t unknown_4238[4];
-        int32_t unknown_4284;
-        int32_t unknown_4294[2];
-        int32_t unknown_4334;
-        int32_t unknown_4374[2];
-        int16_t unknown_439c[3];
-        int8_t padding_43b2[2];
-        int32_t unknown_43d8[4];
-        int32_t unknown_43f0;
-        int32_t unused_4454;
-        int32_t unknown_446c[4];
-        int32_t unused_4488;
-        int32_t unused_native_force_attack;
-        int32_t unused_44e0[2];
-        int32_t unused_44ec;
-        int32_t unused_44f8;
-        int32_t unused_4524[11];
-        uint8_t unknown_458e;
-        int8_t unused_45a5[6];
-        int8_t unknown_464c[232];
-        int32_t unknown_order;
-        int32_t faction_id;
-        int16_t faction_bytes[2];
-    } unused;
-
     city_fishing_points_t fishing_points;
     map_bookmarks_t bookmarks;
 

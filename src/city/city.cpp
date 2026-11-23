@@ -80,13 +80,9 @@ void city_t::init() {
 
     memset(this, 0, sizeof(struct city_t));
 
-    unused.faction_bytes[0] = 0;
-    unused.faction_bytes[1] = 0;
-
     sentiment.value = 60;
     health.target_value = 50;
     health.value = 50;
-    unused.unknown_00c0 = 3;
     finance.tax_percentage = 7;
     taxes.house_tax_bonus_percentage = 110;
     trade.caravan_import_resource = RESOURCES_MIN;
@@ -226,9 +222,6 @@ kingdome_system city_t::kingdome_sys() {
 }
 
 void city_t::init_custom_map() {
-    unused.faction_id = 1;
-    unused.unknown_00a2 = 1;
-    unused.unknown_00a3 = 1;
     finance.treasury = g_scenario.startup_funds();
     finance.last_year.balance = finance.treasury;
 }

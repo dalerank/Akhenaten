@@ -13,15 +13,15 @@
 static void city_data_bind_og_layout(io_buffer* iob) {
     auto& data = g_city;
     int tmp = 0;
-    iob->bind(BIND_SIGNATURE_RAW, &data.unused.other_player, 18904);
-    iob->bind(BIND_SIGNATURE_INT8, &data.unused.unknown_00a0);
-    iob->bind(BIND_SIGNATURE_INT8, &data.unused.unknown_00a1);
-    iob->bind(BIND_SIGNATURE_INT8, &data.unused.unknown_00a2);
-    iob->bind(BIND_SIGNATURE_INT8, &data.unused.unknown_00a3);
-    iob->bind(BIND_SIGNATURE_INT8, &data.unused.unknown_00a4);
+    iob->bind____skip(18904);
+    iob->bind____skip(1);
+    iob->bind____skip(1);
+    iob->bind____skip(1);
+    iob->bind____skip(1);
+    iob->bind____skip(1);
     iob->bind(BIND_SIGNATURE_INT8, &data.buildings.unknown_value);
-    iob->bind(BIND_SIGNATURE_INT8, &data.unused.unknown_00a7);
-    iob->bind(BIND_SIGNATURE_INT8, &data.unused.unknown_00a6);
+    iob->bind____skip(1);
+    iob->bind____skip(1);
     iob->bind(BIND_SIGNATURE_INT8, &data.finance.tax_percentage);
     iob->bind____skip(3);
     iob->bind(BIND_SIGNATURE_INT32, &data.finance.treasury.value);
@@ -77,26 +77,22 @@ static void city_data_bind_og_layout(io_buffer* iob) {
     iob->bind____skip(3);
     iob->bind(BIND_SIGNATURE_INT8, &data.migration.percentage);
     iob->bind____skip(3);
-    iob->bind(BIND_SIGNATURE_INT32, &data.unused.unused_27d0);
+    iob->bind____skip(4);
     iob->bind(BIND_SIGNATURE_UINT16, &data.migration.emigration_duration);
     iob->bind____skip(2);
     iob->bind(BIND_SIGNATURE_UINT16, &data.migration.immigration_duration);
     iob->bind____skip(2);
     iob->bind(BIND_SIGNATURE_UINT16, &data.migration.newcomers);
     iob->bind____skip(6);
-    for (int i = 0; i < 3; i++) {
-        iob->bind(BIND_SIGNATURE_INT32, &data.unused.unknown_27e0[i]);
-    }
-    iob->bind(BIND_SIGNATURE_INT16, &data.unused.unknown_27f0);
+    iob->bind____skip(12);
     iob->bind____skip(2);
-    for (int i = 0; i < 18; i++) {
-        iob->bind(BIND_SIGNATURE_INT16, &data.unused.unknown_27f4[i]);
-    }
+    iob->bind____skip(2);
+    iob->bind____skip(36);
     iob->bind(BIND_SIGNATURE_INT32, data.map.entry_point);
     iob->bind____skip(4);
     iob->bind(BIND_SIGNATURE_INT32, data.map.exit_point);
     iob->bind____skip(16);
-    iob->bind(BIND_SIGNATURE_INT16, &data.unused.unknown_2828);
+    iob->bind____skip(2);
     iob->bind____skip(2);
     for (int i = 0; i < RESOURCES_MAX; i++) {
         iob->bind(BIND_SIGNATURE_UINT16, &data.resource.space_in_storages[i + 1]);
@@ -114,7 +110,7 @@ static void city_data_bind_og_layout(io_buffer* iob) {
         iob->bind(BIND_SIGNATURE_UINT8, &data.resource.mothballed[i + 1]);
         iob->bind____skip(1);
     }
-    iob->bind(BIND_SIGNATURE_INT16, &data.unused.unused_28ca);
+    iob->bind____skip(2);
     iob->bind____skip(20);
     for (int i = 0; i < RESOURCES_MAX; i++)
         iob->bind(BIND_SIGNATURE_INT16, &data.resource.unk_00[i]);
@@ -142,7 +138,7 @@ static void city_data_bind_og_layout(io_buffer* iob) {
     iob->bind____skip(3);
     iob->bind(BIND_SIGNATURE_INT8, &data.finance.wages_kingdome);
     iob->bind____skip(3);
-    iob->bind(BIND_SIGNATURE_INT32, &data.unused.unknown_2b6c);
+    iob->bind____skip(4);
     iob->bind____skip(12);
     iob->bind(BIND_SIGNATURE_INT32, &data.taxes.taxed_citizens);
     iob->bind(BIND_SIGNATURE_INT32, &data.taxes.taxed_nobles);
@@ -288,8 +284,7 @@ static void city_data_bind_og_layout(io_buffer* iob) {
     iob->bind(BIND_SIGNATURE_UINT8, &data.gods.coverage[GOD_SETH]);
     iob->bind(BIND_SIGNATURE_UINT8, &data.gods.coverage[GOD_BAST]);
     iob->bind____skip(5376);
-    for (int i = 0; i < 8; i++)
-        iob->bind(BIND_SIGNATURE_INT32, &data.unused.houses_requiring_unknown_to_evolve[i]); // ????
+    iob->bind____skip(32);
     iob->bind(BIND_SIGNATURE_INT32, &data.trade.caravan_import_resource);
     iob->bind(BIND_SIGNATURE_INT32, &data.trade.caravan_backup_import_resource);
     iob->bind(BIND_SIGNATURE_INT32, &data.ratings.culture);
@@ -312,9 +307,7 @@ static void city_data_bind_og_layout(io_buffer* iob) {
     iob->bind(BIND_SIGNATURE_INT32, &data.houses.missing.dentist);
     iob->bind(BIND_SIGNATURE_INT32, &data.houses.missing.courthouse);
     iob->bind(BIND_SIGNATURE_INT32, &data.houses.missing.food);
-    for (int i = 0; i < 2; i++) {
-        iob->bind(BIND_SIGNATURE_INT32, &data.unused.unknown_4294[i]);
-    }
+    iob->bind____skip(8);
     iob->bind____skip(4);
     iob->bind(BIND_SIGNATURE_INT32, &data.houses.missing.health);
     iob->bind(BIND_SIGNATURE_INT32, &data.houses.missing.more_health);
@@ -554,11 +547,11 @@ void city_data_chunk::bind_data(io_buffer* iob, size_t version) {
 
 void city_data_extra_chunk::bind_data(io_buffer* iob, size_t version) {
     auto& data = g_city;
-    iob->bind(BIND_SIGNATURE_INT16, &data.unused.faction_bytes[0]);
-    iob->bind(BIND_SIGNATURE_INT16, &data.unused.faction_bytes[1]);
+    iob->bind____skip(2);
+    iob->bind____skip(2);
     iob->bind(BIND_SIGNATURE_XSTR, data.kingdome.player_name_adversary, MAX_PLAYER_NAME);
     iob->bind(BIND_SIGNATURE_XSTR, data.kingdome.player_name, MAX_PLAYER_NAME);
-    iob->bind(BIND_SIGNATURE_INT32, &data.unused.faction_id);
+    iob->bind____skip(4);
 }
 
 void labor_storage_priority_chunk::bind_data(io_buffer* iob, size_t version) {
@@ -600,9 +593,7 @@ void enhanced_religion_chunk::load_defaults(size_t version) {
 }
 
 void city_graph_order_chunk::bind_data(io_buffer* iob, size_t version) {
-    auto& data = g_city;
-    iob->bind(BIND_SIGNATURE_INT32, &data.unused.unknown_order);
-    iob->bind(BIND_SIGNATURE_INT32, &data.unused.unknown_order);
+    iob->bind____skip(8);
 }
 
 void bookmarks_chunk::bind_data(io_buffer* iob, size_t version) {
