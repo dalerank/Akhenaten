@@ -37,7 +37,7 @@ function test589_juggler_actions() {
 }
 
 function run_test() {
-    __log_info_native('[test:589] figure save layout 1 upgrades to the linear action numbers')
+    __log_info_native('[test:589] a save older than the minimum version is refused, the current layout round-trips')
     test_reload_city_session('data/default.map')
     __test_set_treasury(100000)
     game.dynasty_name = 'Apa'
@@ -79,19 +79,19 @@ function run_test() {
         test589_fail('legacyify patched ' + patched + ' figures')
         return
     }
-    if (!game.load_savegame(old_name)) {
-        test589_fail('old layout load failed')
+    if (game.load_savegame(old_name)) {
+        test589_fail('a save older than the minimum version loaded')
         return
     }
-    if (test589_juggler_actions() != expected) {
-        test589_fail('old layout actions ' + test589_juggler_actions() + ' != ' + expected)
+    if (!__test_find_inlog('is older than 199')) {
+        test589_fail('no refusal message for the old save')
         return
     }
     if (game.file_exists(SAVE_DIR + '/layout_old_v189.svx')) {
         test589_fail('loading an old save must not touch the player files')
         return
     }
-    __log_marker('save_layout_upgrade_ok')
+    __log_marker('save_old_version_refused')
 
     game.delete_savegame(current_name)
     game.delete_savegame(old_name)
@@ -103,5 +103,5 @@ function run_test() {
 function check_valid() {
     return __test589_ok
         && __test_find_inlog('[test-marker] save_layout_current_ok')
-        && __test_find_inlog('[test-marker] save_layout_upgrade_ok')
+        && __test_find_inlog('[test-marker] save_old_version_refused')
 }

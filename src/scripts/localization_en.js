@@ -544,6 +544,7 @@ localization_en = [
   {key: "#popup_dialog_delete_bridge", text:"Demolishing a bridge" }
   {key: "#popup_dialog_quit_without_saving", text:"Quit" }
   {key: "#popup_dialog_map_file_missing", text:"Map file missing" }
+  {key: "#popup_dialog_save_too_old", text:"This save is from an older version of the game and can no longer be loaded" }
   {key: "#popup_dialog_save_mods_differ", text:"Saved with other mods" }
   {key: "#exit_without_saving", text:"Exit without saving?" }
   {key: "#popup_dialog_no_festival_square", text:"Festival: No Festival Square." }

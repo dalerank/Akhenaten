@@ -365,6 +365,7 @@ localization_ru = [
     { key:"#popup_dialog_delete_bridge", text:"Снос моста" }
     { key:"#popup_dialog_quit_without_saving", text:"Выход" }
     { key:"#popup_dialog_map_file_missing", text:"Файл карты не найден" }
+    { key:"#popup_dialog_save_too_old", text:"Это сохранение сделано старой версией игры и больше не загружается" }
     { key:"#popup_dialog_save_mods_differ", text:"Сохранение сделано с другими модами" }
     { key:"#exit_without_saving", text:"Выйти без сохранения?" }
     { key:"#popup_dialog_no_festival_square", text:"Фестиваль: Нет площади для фестивалей." }

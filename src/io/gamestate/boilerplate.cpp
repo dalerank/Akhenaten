@@ -306,7 +306,14 @@ bool GamestateIO::load_og_savegame(pcstr full_path, bool start_immediately) {
 
 static bool load_savegame_reader(vfs::reader savegame, e_file_format file_format, pcstr name, bool start_immediately) {
     GamestateLoadDetail::pre_load();
-    if (!g_chunk_io.unserialize(savegame, 0, file_format, GamestateLoadDetail::read_file_version, file_schema)) {
+    g_chunk_io.min_file_version = (file_format == FILE_FORMAT_SAVE_FILE_EXT) ? (int)min_save_version : 0;
+    const bool loaded
+      = g_chunk_io.unserialize(savegame, 0, file_format, GamestateLoadDetail::read_file_version, file_schema);
+    g_chunk_io.min_file_version = 0;
+    if (!loaded) {
+        if (g_chunk_io.was_rejected_old_version()) {
+            popup_dialog::show_ok(lang_text_from_key("#popup_dialog_save_too_old"), name ? name : "");
+        }
         return false;
     }
 

@@ -456,6 +456,13 @@ bool ChunkSerializer::unserialize_sectioned(vfs::reader reader, void (*init_sche
     }
 
     file_version = (int)hdr.save_data_version;
+    if (file_version < min_file_version) {
+        logs::error("Unable to read file [%s], save version %d is older than %d.", file_path.c_str(), file_version,
+          min_file_version);
+        rejected_old_version = true;
+        clear();
+        return false;
+    }
     file_sectioned = true;
     init_schema(file_format, file_version);
 
@@ -512,6 +519,7 @@ bool ChunkSerializer::unserialize(vfs::reader reader, int offset, e_file_format 
 
     // first, clear up the manager data and set the new file info
     clear();
+    rejected_old_version = false;
     file_path = reader->debug_info();
     file_offset = offset;
     file_format = format;
@@ -541,6 +549,13 @@ bool ChunkSerializer::unserialize_legacy(vfs::reader reader,
         file_version = determine_file_version(file_path, file_offset);
         if (file_version == -1) {
             logs::info("Unable to read file [%s], file version/format is invalid ", file_path.c_str());
+            clear();
+            return false;
+        }
+        if (file_version < min_file_version) {
+            logs::error("Unable to read file [%s], save version %d is older than %d.", file_path.c_str(), file_version,
+              min_file_version);
+            rejected_old_version = true;
             clear();
             return false;
         }

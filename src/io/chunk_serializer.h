@@ -53,6 +53,7 @@ using chunk_snapshots = std::vector<chunk_snapshot>;
 class ChunkSerializer {
 private:
     bool loaded = false;
+    bool rejected_old_version = false;
     vfs::path file_path = "";
     int file_size = 0;
     int file_offset = 0;
@@ -83,6 +84,9 @@ private:
     bool unserialize_legacy(vfs::reader reader, const int (*determine_file_version)(pcstr _filename, int _offset),
                             void (*init_schema)(e_file_format _format, const int _version));
 public:
+    int min_file_version = 0;
+    bool was_rejected_old_version() const { return rejected_old_version; }
+
     // push parametric chunk onto the schema
     template <typename T>
     buffer* push_chunk(int size, bool compressed) {

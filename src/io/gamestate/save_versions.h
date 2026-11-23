@@ -50,3 +50,4 @@
 //  201 akhenaten: caesareum work spots (work + figure) on each of its 9 parts, sled count on the main part
 //  202 akhenaten: royal tombs in the OG part-chain layout (part, stage, work, worker, lamp stock per record)
 constexpr uint32_t latest_save_version = 202;
+constexpr uint32_t min_save_version = 199;
