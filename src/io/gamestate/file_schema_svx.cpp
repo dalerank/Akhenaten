@@ -74,6 +74,7 @@
 #include "grid/vegetation_chunks.h"
 #include "grid/wall_material_chunks.h"
 #include "io/gamestate/chunks.h"
+#include "game/simulation.h"
 #include "scenario/criteria_chunks.h"
 #include "scenario/invasion_auto_resolve_chunks.h"
 #include "scenario/scenario_chunks.h"
@@ -197,7 +198,6 @@ void file_schema_svx(const int file_version) {
     g_chunk_io.push_chunk<vegetation_growth_chunk>(51984, false); // todo: 1-byte grid
     g_chunk_io.push_chunk<junk14_chunk>(20, false);
     g_chunk_io.push_chunk<bizarre_ordered_fields_1_chunk>(528, false);
-    g_chunk_io.push_chunk<floodplain_settings_chunk>(36, false);       // floodplain_settings
     g_chunk_io.push_chunk<GRID03_32BIT_chunk>(51984 * 4, false);       // todo: 4-byte grid
     g_chunk_io.push_chunk<bizarre_ordered_fields_4_chunk>(312, false); // 71x 4-bytes emptiness
     g_chunk_io.push_chunk<junk16_chunk>(64, false);                    // 71x 4-bytes emptiness
@@ -287,4 +287,5 @@ void file_schema_svx(const int file_version) {
         // count + 16 x (int32 x, int32 y) = 132
         g_chunk_io.push_chunk<clouds_chunk>(132, false);
     }
+    g_simulation.push_save_sections(file_version);
 }

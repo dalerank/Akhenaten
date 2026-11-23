@@ -20,19 +20,33 @@
 #include <cmath>
 #include <cctype>
 #include "scenario/scenario.h"
-#include "game/sim_schedule.h"
-
-namespace {
-    floods_t g_floods_state;
-}
+#include "core/xvalue.h"
+#include "city/city_floods_chunks.h"
+#include "core/app_module.h"
+#include "io/chunk_serializer.h"
 
 floods_t& floods() {
-    return g_floods_state;
+    return xvalue<floods_t>::ref();
 }
 
-ANK_SIM_STEP(
-  {SIM_PHASE_TICK_BEGIN, -1, "floods", SIM_AREA_FLOODS | SIM_AREA_MAP, [](city_t&) { floods().tick_update(false); }},
-  "undo_time");
+class floods_system : public sim_system {
+public:
+    const char* name() const override { return "floods"; }
+    void on_tick() override { floods().tick_update(false); }
+
+    void on_load(e_load_phase phase) override {
+        if (phase == LOAD_PHASE_MAP_TILES) {
+            floods().init();
+        }
+    }
+
+    void push_save_sections(int file_version) override { g_chunk_io.push_chunk<floodplain_settings_chunk>(36, false); }
+};
+
+void ANK_REGISTER_APPLICATION_MODULE(register_floods_system) {
+    static floods_system system;
+    g_simulation.register_system(&system);
+}
 
 void floods_t::init() {
     season_default = season_initial;

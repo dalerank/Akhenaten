@@ -479,7 +479,7 @@ void GamestateIO::start_loaded_file() {
     g_city.maintenance.check_kingdome_access();
 
     // tiles
-    floods().init();
+    g_simulation.run_load(LOAD_PHASE_MAP_TILES);
     map_water_rebuild_shores();
     map_tiles_update_floodplain_images();
     map_tiles_river_refresh_entire();
