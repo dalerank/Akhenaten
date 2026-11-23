@@ -108,12 +108,12 @@ struct finance_state {
     int32_t gold_stolen_this_month;
 };
 
-struct city_population_t;
+struct population_state;
 struct labor_state;
 struct kingdome_relation_t;
 
 struct finance_context {
-    city_population_t& population;
+    population_state& population;
     const labor_state& labor;
     kingdome_relation_t& kingdome;
     int month;

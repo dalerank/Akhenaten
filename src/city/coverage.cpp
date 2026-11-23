@@ -104,7 +104,7 @@ void city_coverage_t::update() {
     zoo = std::min(calc_percentage(7500 * g_city.buildings.count_active(BUILDING_ZOO), pop), 100);
 
     // education
-    population.calculate_educational_age();
+    g_city.population_sys().calculate_educational_age();
 
     int active_schools = g_city.buildings.count_active(BUILDING_SCRIBAL_SCHOOL);
     const auto &school_config = building_static_params::get(BUILDING_SCRIBAL_SCHOOL);

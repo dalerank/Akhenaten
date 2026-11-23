@@ -28,14 +28,14 @@ struct sentiment_state {
     int32_t contribution_monuments;
 };
 
-struct city_population_t;
+struct population_state;
 struct finance_state;
 struct gods_state;
 struct labor_state;
 struct city_buildings_t;
 
 struct sentiment_context {
-    const city_population_t& population;
+    const population_state& population;
     const finance_state& finance;
     gods_state& gods;
     const labor_state& labor;

@@ -30,11 +30,11 @@ struct labor_state {
     int max_selectable_priority(int category) const;
 };
 
-struct city_population_t;
+struct population_state;
 struct city_resources_t;
 
 struct labor_context {
-    city_population_t& population;
+    population_state& population;
     const city_resources_t& resource;
 };
 

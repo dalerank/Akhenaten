@@ -7,7 +7,7 @@
 
 class building_house;
 struct finance_state;
-struct city_population_t;
+struct population_state;
 
 struct taxes_state {
     int32_t taxed_citizens;
@@ -48,7 +48,7 @@ extern finance_tax_rules_t finance_tax_rules;
 
 struct taxes_context {
     finance_state& finance;
-    city_population_t& population;
+    population_state& population;
     int month;
     int city_tax_percentage;
 };

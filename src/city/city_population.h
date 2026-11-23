@@ -19,7 +19,7 @@ struct city_population_rules_t {
 };
 ANK_CONFIG_STRUCT(city_population_rules_t, births_per_age_decennium, milestones);
 
-struct city_population_t {
+struct population_state {
     int32_t current;
     int32_t last_day_current;
     int32_t last_year;
@@ -59,6 +59,28 @@ struct city_population_t {
     int32_t last_used_house_add;
     int32_t last_used_house_remove;
 
+    int get_people_in_age_decennium(int decennium) const;
+
+    int get_people_of_working_age() const;
+    int get_people_aged_between(int min, int max) const;
+
+    int at_month(int max_months, int month) const;
+};
+
+struct health_state;
+struct labor_state;
+struct city_resources_t;
+
+struct population_context {
+    const health_state& health;
+    labor_state& labor;
+    const city_resources_t& resource;
+};
+
+class population_system {
+public:
+    population_system(population_state& state, const population_context& ctx) : _state(state), _ctx(ctx) {}
+
     void recalculate();
     void yearly_recalculate();
     void yearly_update();
@@ -71,8 +93,6 @@ struct city_population_t {
     void remove_for_troop_request(int num_people);
     void record_monthly();
     void update_day();
-    int get_people_in_age_decennium(int decennium);
-
     int add_to_houses(int num_people);
     int remove_from_houses(int num_people);
     int create_immigrants(int num_people);
@@ -82,18 +102,18 @@ struct city_population_t {
     void evict_overcrowded();
     void update_migration();
     void calculate_working_people();
-    int get_people_of_working_age();
-    int get_people_aged_between(int min, int max);
     void calculate_educational_age();
     void yearly_calculate_births();
     void houses_demanding_goods_fill_from();
     void housing_type_counts_update();
-
     void yearly_advance_ages_and_calculate_deaths();
-    int at_month(int max_months, int month);
+
+private:
+    population_state& _state;
+    population_context _ctx;
 };
 
-ANK_CONFIG_PROPERTY(city_population_t, current, people_in_shanties, people_in_manors, highest_ever)
+ANK_CONFIG_PROPERTY(population_state, current, people_in_shanties, people_in_manors, highest_ever)
 
 void city_population_clear_capacity();
 void city_population_add_capacity(int people_in_house, int max_people);

@@ -36,12 +36,12 @@ struct health_state {
     int32_t value;
 };
 
-struct city_population_t;
+struct population_state;
 struct gods_state;
 struct city_coverage_t;
 
 struct health_context {
-    const city_population_t& population;
+    const population_state& population;
     gods_state& gods;
     city_coverage_t& coverage;
     bool bast_complex_has_altar;

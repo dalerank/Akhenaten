@@ -188,6 +188,14 @@ sentiment_system city_t::sentiment_sys() {
     return sentiment_system(sentiment, sentiment_ctx());
 }
 
+population_context city_t::population_ctx() {
+    return {health, labor, resource};
+}
+
+population_system city_t::population_sys() {
+    return population_system(population, population_ctx());
+}
+
 void city_t::init_custom_map() {
     unused.faction_id = 1;
     unused.unknown_00a2 = 1;

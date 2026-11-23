@@ -183,7 +183,7 @@ int __city_total_housing_capacity() {
 ANK_FUNCTION(__city_total_housing_capacity)
 
 int __city_population_average_age() {
-    return g_city.population.average_age();
+    return g_city.population_sys().average_age();
 }
 ANK_FUNCTION(__city_population_average_age)
 

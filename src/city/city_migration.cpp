@@ -104,7 +104,7 @@ void city_migration_t::update_status() {
 }
 
 void city_migration_t::create_immigrants(int num_people) {
-    int immigrated = g_city.population.create_immigrants(num_people);
+    int immigrated = g_city.population_sys().create_immigrants(num_people);
     immigrated_today += immigrated;
     newcomers += immigrated_today;
     if (immigrated == 0) {
@@ -139,7 +139,7 @@ city_migration_defaults_t& city_migration_t::current_params() {
 }
 
 void city_migration_t::create_emigrants(int num_people) {
-    emigrated_today += g_city.population.create_emigrants(num_people);
+    emigrated_today += g_city.population_sys().create_emigrants(num_people);
 }
 
 void city_migration_t::create_migrants() {

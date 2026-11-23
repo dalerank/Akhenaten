@@ -332,7 +332,7 @@ void building_update_state() {
             } else if (b->state == BUILDING_STATE_RUBBLE) {
                 auto house = b->dcast_house();
                 if (house && house->runtime_data().hsize > 0) {
-                    g_city.population.remove_home_removed(house->house_population());
+                    g_city.population_sys().remove_home_removed(house->house_population());
                 }
 
                 building_delete_UNSAFE(b);

@@ -41,7 +41,7 @@ struct empire_city;
 struct city_t {
     city_buildings_t buildings;
     city_figures_t figures;
-    city_population_t population;
+    population_state population;
 
     house_demands houses;
     kingdome_relation_t kingdome;
@@ -232,6 +232,8 @@ struct city_t {
     temple_complexes_system temple_complexes_sys();
     sentiment_context sentiment_ctx();
     sentiment_system sentiment_sys();
+    population_context population_ctx();
+    population_system population_sys();
 
     e_availability is_advisor_available(e_advisor advisor) const;
     void set_advisor_available(e_advisor advisor, e_availability available);

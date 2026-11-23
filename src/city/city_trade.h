@@ -2,7 +2,7 @@
 
 #include "game/resource.h"
 
-struct city_population_t;
+struct population_state;
 struct city_resources_t;
 class empire_t;
 struct scenario_data_t;
@@ -31,7 +31,7 @@ struct trade_state {
 };
 
 struct trade_context {
-    const city_population_t& population;
+    const population_state& population;
     city_resources_t& resource;
     empire_t& empire;
     const scenario_data_t& scenario;

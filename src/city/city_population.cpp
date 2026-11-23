@@ -34,7 +34,7 @@ static const int DEATHS_PER_HEALTH_PER_AGE_DECENNIUM[11][10] = {{20, 10, 5, 10, 
 
 static auto &city_data = g_city;
 
-int city_population_t::add_to_houses(int num_people) {
+int population_system::add_to_houses(int num_people) {
     int added = 0;
     buildings_house_do([&] (building_house *house) {
         if (house->state() == BUILDING_STATE_VALID && house->distance_from_entry() > 0 && house->house_population() > 0) {
@@ -52,16 +52,16 @@ int city_population_t::add_to_houses(int num_people) {
     return added;
 }
 
-int city_population_t::remove_from_houses(int num_people) {
+int population_system::remove_from_houses(int num_people) {
     int removed = 0;
-    int building_id = g_city.population.last_used_house_remove;
+    int building_id = _state.last_used_house_remove;
     for (int i = 1; i < 4 * MAX_BUILDINGS && removed < num_people; i++) {
         if (++building_id >= MAX_BUILDINGS)
             building_id = 1;
 
         auto house = building_get(building_id)->dcast_house();
         if (house && house->state() == BUILDING_STATE_VALID && house->hsize()) {
-            g_city.population.last_used_house_remove = building_id;
+            _state.last_used_house_remove = building_id;
             if (house->house_population() > 0) {
                 ++removed;
                 --house->runtime_data().population;
@@ -71,7 +71,7 @@ int city_population_t::remove_from_houses(int num_people) {
     return removed;
 }
 
-void city_population_t::update_room() {
+void population_system::update_room() {
     OZZY_PROFILER_FUNCTION();
     city_population_clear_capacity();
 
@@ -94,7 +94,7 @@ void city_population_t::update_room() {
     });
 }
 
-int city_population_t::create_emigrants(int num_people) {
+int population_system::create_emigrants(int num_people) {
     // OG 0x00458B60: house levels 0..9 only (crude hut … spacious apartment), lowest first, groups ≤ 4
     svector<building_house *, 2000> houses;
     buildings_houses_get(houses);
@@ -141,8 +141,7 @@ int city_population_t::create_emigrants(int num_people) {
     return num_people - to_emigrate;
 }
 
-int city_population_t::create_immigrants(int num_people) {
-
+int population_system::create_immigrants(int num_people) {
     svector<building_house *, 2000> houses;
     buildings_houses_get(houses);
 
@@ -185,11 +184,11 @@ int city_population_t::create_immigrants(int num_people) {
     return num_people - to_immigrate;
 }
 
-void city_population_t::reached_milestone(bool force) {
+void population_system::reached_milestone(bool force) {
     xstring message;
 
     for (const auto& ms: city_population_rules.milestones) {
-        if (current >= ms.pop && (!city_message_mark_population_shown(ms.pop) || force)) {
+        if (_state.current >= ms.pop && (!city_message_mark_population_shown(ms.pop) || force)) {
             message = ms.message;
         }
     }
@@ -199,7 +198,7 @@ void city_population_t::reached_milestone(bool force) {
     }
 }
 
-void city_population_t::evict_overcrowded() {
+void population_system::evict_overcrowded() {
     OZZY_PROFILER_FUNCTION();
 
     buildings_house_do([] (building_house *house) {
@@ -219,7 +218,7 @@ void city_population_t::evict_overcrowded() {
     });
 }
 
-void city_population_t::update_migration() {
+void population_system::update_migration() {
     OZZY_PROFILER_FUNCTION();
 
     yearly_update();
@@ -228,7 +227,7 @@ void city_population_t::update_migration() {
     reached_milestone(false);
 }
 
-void city_population_t::calculate_working_people() {
+void population_system::calculate_working_people() {
     int num_peasants = 0;
     int num_nobles = 0;
 
@@ -241,13 +240,13 @@ void city_population_t::calculate_working_people() {
         counter += house->house_population();
     });
 
-    g_city.labor_sys().calculate_workers(num_peasants, num_nobles);
+    labor_system(_ctx.labor, {_state, _ctx.resource}).calculate_workers(num_peasants, num_nobles);
 }
 
-void city_population_t::recalculate() {
-    int save_value = current;
-    current = std::accumulate(std::begin(at_age), std::end(at_age), 0);
-    highest_ever = std::max(current, highest_ever);
+void population_system::recalculate() {
+    int save_value = _state.current;
+    _state.current = std::accumulate(std::begin(_state.at_age), std::end(_state.at_age), 0);
+    _state.highest_ever = std::max(_state.current, _state.highest_ever);
 }
 
 void city_population_clear_capacity(void) {
@@ -260,7 +259,7 @@ void city_population_add_capacity(int people_in_house, int max_people) {
     city_data.population.room_in_houses += max_people - people_in_house;
 }
 
-static void add_to_census(int num_people) {
+static void add_to_census(population_state& population, int num_people) {
     int odd = 0;
     int index = 0;
     for (int i = 0; i < num_people; i++, odd = 1 - odd) {
@@ -270,20 +269,20 @@ static void add_to_census(int num_people) {
         else if (age < 10 && odd)
             age += 20;
 
-        city_data.population.at_age[age]++;
+        population.at_age[age]++;
     }
 }
 
-static void remove_from_census(int num_people) {
+static void remove_from_census(population_state& population, int num_people) {
     int index = 0;
     int empty_buckets = 0;
     // remove people randomly up to age 63
     while (num_people > 0 && empty_buckets < 100) {
         int age = random_from_pool(index++) & 0x3f;
-        if (city_data.population.at_age[age] <= 0)
+        if (population.at_age[age] <= 0)
             empty_buckets++;
         else {
-            city_data.population.at_age[age]--;
+            population.at_age[age]--;
             num_people--;
             empty_buckets = 0;
         }
@@ -292,10 +291,10 @@ static void remove_from_census(int num_people) {
     empty_buckets = 0;
     int age = 10;
     while (num_people > 0 && empty_buckets < 100) {
-        if (city_data.population.at_age[age] <= 0)
+        if (population.at_age[age] <= 0)
             empty_buckets++;
         else {
-            city_data.population.at_age[age]--;
+            population.at_age[age]--;
             num_people--;
             empty_buckets = 0;
         }
@@ -305,14 +304,14 @@ static void remove_from_census(int num_people) {
     }
 }
 
-static void remove_from_census_in_age_decennium(int decennium, int num_people) {
+static void remove_from_census_in_age_decennium(population_state& population, int decennium, int num_people) {
     int empty_buckets = 0;
     int age = 0;
     while (num_people > 0 && empty_buckets < 10) {
-        if (city_data.population.at_age[10 * decennium + age] <= 0)
+        if (population.at_age[10 * decennium + age] <= 0)
             empty_buckets++;
         else {
-            city_data.population.at_age[10 * decennium + age]--;
+            population.at_age[10 * decennium + age]--;
             num_people--;
             empty_buckets = 0;
         }
@@ -322,93 +321,93 @@ static void remove_from_census_in_age_decennium(int decennium, int num_people) {
     }
 }
 
-int city_population_t::get_people_in_age_decennium(int decennium) {
+int population_state::get_people_in_age_decennium(int decennium) const {
     const int start = 10 * decennium;
     const int end = start + 10;
     return std::accumulate(at_age.begin() + start, at_age.begin() + end, 0);
 }
 
-int city_population_t::average_age() {
+int population_system::average_age() {
     recalculate();
-    if (!current) {
+    if (!_state.current) {
         return 0;
     }
 
     int age_sum = 0;
     for (int i = 0; i < 100; i++) {
-        age_sum += (at_age[i] * i);
+        age_sum += (_state.at_age[i] * i);
     }
-    return age_sum / current;
+    return age_sum / _state.current;
 }
 
-void city_population_t::add(int num_people) {
-    last_change = num_people;
-    add_to_census(num_people);
+void population_system::add(int num_people) {
+    _state.last_change = num_people;
+    add_to_census(_state, num_people);
     recalculate();
 }
 
-void city_population_t::remove(int num_people) {
-    last_change = -num_people;
-    remove_from_census(num_people);
+void population_system::remove(int num_people) {
+    _state.last_change = -num_people;
+    remove_from_census(_state, num_people);
     recalculate();
 }
 
-void city_population_t::add_homeless(int num_people) {
-    lost_homeless -= num_people;
-    add_to_census(num_people);
+void population_system::add_homeless(int num_people) {
+    _state.lost_homeless -= num_people;
+    add_to_census(_state, num_people);
     recalculate();
 }
 
-void city_population_t::remove_homeless(int num_people) {
-    lost_homeless += num_people;
-    remove_from_census(num_people);
+void population_system::remove_homeless(int num_people) {
+    _state.lost_homeless += num_people;
+    remove_from_census(_state, num_people);
     recalculate();
 }
 
-void city_population_t::remove_home_removed(int num_people) {
-    lost_removal += num_people;
-    remove_from_census(num_people);
+void population_system::remove_home_removed(int num_people) {
+    _state.lost_removal += num_people;
+    remove_from_census(_state, num_people);
     recalculate();
 }
 
-void city_population_t::remove_for_troop_request(int num_people) {
+void population_system::remove_for_troop_request(int num_people) {
     int removed = remove_from_houses(num_people);
-    remove_from_census(removed);
-    lost_troop_request += num_people;
+    remove_from_census(_state, removed);
+    _state.lost_troop_request += num_people;
     recalculate();
 }
 
-int city_population_t::get_people_of_working_age() {
+int population_state::get_people_of_working_age() const {
     const int start_age = 20;  // decennium 2
     const int end_age = !!game_features::gameplay_change_retire_at_60 ? 60 : 50;  // decennium 5 or 4
     return std::accumulate(at_age.begin() + start_age, at_age.begin() + end_age, 0);
 }
 
-int city_population_t::get_people_aged_between(int min, int max) {
+int population_state::get_people_aged_between(int min, int max) const {
     return std::accumulate(at_age.begin() + min, at_age.begin() + max, 0);
 }
 
-void city_population_t::calculate_educational_age() {
-    city_data.population.school_age = get_people_aged_between(0, 14);
-    city_data.population.academy_age = get_people_aged_between(14, 21);
+void population_system::calculate_educational_age() {
+    _state.school_age = _state.get_people_aged_between(0, 14);
+    _state.academy_age = _state.get_people_aged_between(14, 21);
 }
 
-void city_population_t::record_monthly() {
-    monthly.values[monthly.next_index++] = current;
-    if (monthly.next_index >= 2400)
-        monthly.next_index = 0;
+void population_system::record_monthly() {
+    _state.monthly.values[_state.monthly.next_index++] = _state.current;
+    if (_state.monthly.next_index >= 2400)
+        _state.monthly.next_index = 0;
 
-    ++monthly.count;
+    ++_state.monthly.count;
 }
 
-void city_population_t::update_day() {
-    if (last_day_current != current) {
-        events::emit(event_population_changed{ current });
+void population_system::update_day() {
+    if (_state.last_day_current != _state.current) {
+        events::emit(event_population_changed{_state.current});
     }
-    last_day_current = current;
+    _state.last_day_current = _state.current;
 }
 
-int city_population_t::at_month(int max_months, int month) {
+int population_state::at_month(int max_months, int month) const {
     int start_offset = 0;
     if (monthly.count > max_months) {
         start_offset = monthly.count + 2400 - max_months;
@@ -418,54 +417,54 @@ int city_population_t::at_month(int max_months, int month) {
     return monthly.values[index];
 }
 
-void city_population_t::yearly_advance_ages_and_calculate_deaths() {
-    int aged100 = at_age[99];
+void population_system::yearly_advance_ages_and_calculate_deaths() {
+    int aged100 = _state.at_age[99];
     for (int age = 99; age > 0; age--) {
-        at_age[age] = at_age[age - 1];
+        _state.at_age[age] = _state.at_age[age - 1];
     }
 
-    at_age[0] = 0;
-    yearly_deaths = 0;
+    _state.at_age[0] = 0;
+    _state.yearly_deaths = 0;
     for (int decennium = 9; decennium >= 0; decennium--) {
-        int people = get_people_in_age_decennium(decennium);
-        int death_percentage = DEATHS_PER_HEALTH_PER_AGE_DECENNIUM[city_data.health.value / 10][decennium];
+        int people = _state.get_people_in_age_decennium(decennium);
+        int death_percentage = DEATHS_PER_HEALTH_PER_AGE_DECENNIUM[_ctx.health.value / 10][decennium];
         int deaths = calc_adjust_with_percentage(people, death_percentage);
         int removed = remove_from_houses(deaths + aged100);
 
         if (!!game_features::gameplay_fix_100y_ghosts) {
-            remove_from_census_in_age_decennium(decennium, deaths);
+            remove_from_census_in_age_decennium(_state, decennium, deaths);
         } else {
             // Original engine removes both deaths and aged100, which creates "ghosts".
             // It should be deaths only; now aged100 are removed from census while
             // they weren't *in* the census anymore
-            remove_from_census_in_age_decennium(decennium, removed);
+            remove_from_census_in_age_decennium(_state, decennium, removed);
         }
 
-        yearly_deaths += removed;
+        _state.yearly_deaths += removed;
         aged100 = 0;
     }
 }
 
-void city_population_t::yearly_calculate_births() {
-    city_data.population.yearly_births = 0;
+void population_system::yearly_calculate_births() {
+    _state.yearly_births = 0;
     for (int decennium = 9; decennium >= 0; decennium--) {
-        int people = get_people_in_age_decennium(decennium);
+        int people = _state.get_people_in_age_decennium(decennium);
         int births = calc_adjust_with_percentage<int>(people, city_population_rules.births_per_age_decennium[decennium]);
-        int added = g_city.population.add_to_houses(births);
-        city_data.population.at_age[0] += added;
-        city_data.population.yearly_births += added;
+        int added = add_to_houses(births);
+        _state.at_age[0] += added;
+        _state.yearly_births += added;
     }
 }
 
-void city_population_t::yearly_recalculate() {
-    yearly_update_requested = 0;
-    last_year = current;
+void population_system::yearly_recalculate() {
+    _state.yearly_update_requested = 0;
+    _state.last_year = _state.current;
     recalculate();
 
-    lost_removal = 0;
-    total_all_years += current;
-    total_years++;
-    average_per_year = total_all_years / total_years;
+    _state.lost_removal = 0;
+    _state.total_all_years += _state.current;
+    _state.total_years++;
+    _state.average_per_year = _state.total_all_years / _state.total_years;
 }
 
 int calculate_total_housing_buildings(void) {
@@ -488,33 +487,33 @@ int calculate_total_housing_buildings(void) {
     return total;
 }
 
-void city_population_t::houses_demanding_goods_fill_from() {
+void population_system::houses_demanding_goods_fill_from() {
     for (int i = 0; i <= 3; i++) {
-        houses_demanding_goods[i] = 0;
+        _state.houses_demanding_goods[i] = 0;
     }
 
     for (int i = 0; i <= 19; i++) {
         const auto &model = building_house::get_model(i);
         if (model.pottery) {
-            houses_demanding_goods[0] += housing_type_counts[i];
+            _state.houses_demanding_goods[0] += _state.housing_type_counts[i];
         }
 
         if (model.jewelry) {
-            houses_demanding_goods[1] += housing_type_counts[i];
+            _state.houses_demanding_goods[1] += _state.housing_type_counts[i];
         }
 
         if (model.linen) {
-            houses_demanding_goods[2] += housing_type_counts[i];
+            _state.houses_demanding_goods[2] += _state.housing_type_counts[i];
         }
 
         if (model.beer) {
-            houses_demanding_goods[3] += housing_type_counts[i];
+            _state.houses_demanding_goods[3] += _state.housing_type_counts[i];
         }
     }
 }
 
-void city_population_t::housing_type_counts_update() {
-    housing_type_counts.fill(0);
+void population_system::housing_type_counts_update() {
+    _state.housing_type_counts.fill(0);
 
     buildings_house_do([this](building_house* house) {
         if (house->state() == BUILDING_STATE_UNUSED || house->state() == BUILDING_STATE_UNDO
@@ -522,7 +521,7 @@ void city_population_t::housing_type_counts_update() {
             return;
         }
         if (house->house_population() > 0) {
-            housing_type_counts[house->house_level()] += 1;
+            _state.housing_type_counts[house->house_level()] += 1;
         }
     });
 
@@ -577,8 +576,8 @@ void city_population_request_yearly_update(void) {
     calculate_people_per_house_type();
 }
 
-void city_population_t::yearly_update() {
-    if (yearly_update_requested) {
+void population_system::yearly_update() {
+    if (_state.yearly_update_requested) {
         yearly_advance_ages_and_calculate_deaths();
         yearly_calculate_births();
         yearly_recalculate();
@@ -588,7 +587,7 @@ void city_population_t::yearly_update() {
 void city_population_check_consistency(void) {
     int people_in_houses = calculate_people_per_house_type();
     if (people_in_houses < city_data.population.current)
-        remove_from_census(city_data.population.current - people_in_houses);
+        remove_from_census(city_data.population, city_data.population.current - people_in_houses);
 }
 
 int city_population_open_housing_capacity(void) {
