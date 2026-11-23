@@ -5,7 +5,6 @@
 #include "game/resource.h"
 #include "core/calc.h"
 #include "core/direction.h"
-#include "window/window_info.h"
 #include "city/city.h"
 #include "io/gamefiles/lang.h"
 #include "game/game.h"
@@ -20,7 +19,6 @@
 #include "core/log.h"
 #include "core/object_property.h"
 #include "core/profiler.h"
-#include "city/object_info.h"
 
 std::optional<bvariant> __city_get_figures_property(pcstr property) {
     return archive_helper::get(g_city.figures, property, true);
@@ -226,19 +224,6 @@ int __figure_phrase_advisor(int fid) {
     return (f && f->is_valid() && figure_phrase_is_og(f->type)) ? figure_phrase_advisor(*f) : 0;
 }
 ANK_FUNCTION_1(__figure_phrase_advisor)
-
-void __figure_info_set_help(int fid) {
-    figure *f = figure_get(fid);
-    if (!f || !f->is_valid()) {
-        return;
-    }
-    object_info &c = common_info_window::get_object_info();
-    const auto &meta = figure_static_params::get(f->type).meta;
-    c.help_link = meta.help_link;
-    c.help_id = 0;
-    c.group_id = meta.text_id;
-}
-ANK_FUNCTION_1(__figure_info_set_help)
 
 static js_Object *g_figure_proto = nullptr;
 

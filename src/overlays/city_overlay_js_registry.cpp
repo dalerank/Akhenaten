@@ -1,6 +1,7 @@
 #include "city_overlay.h"
 
 #include "core/log.h"
+#include "js/js_game.h"
 #include "js/js_register.h"
 #include "js/js_struct.h"
 
@@ -51,3 +52,11 @@ void register_es_city_overlay(pcstr name) {
 }
 
 ANK_REGISTER_ES_ITERATOR(city_overlay, register_es_city_overlay, clear_es_city_overlay);
+
+pcstr __city_get_overlay_title(int overlay) {
+    static xstring storage;
+    const city_overlay* o = city_overlay::get((e_overlay)overlay);
+    storage = o ? o->title() : xstring("unknown");
+    return storage.c_str();
+}
+ANK_FUNCTION_1(__city_get_overlay_title)

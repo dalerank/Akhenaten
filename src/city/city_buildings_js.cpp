@@ -10,8 +10,6 @@
 #include "core/calc.h"
 #include "core/log.h"
 #include "game/game_events.h"
-#include "city/object_info.h"
-#include "window/window_info.h"
 #include "building/building.h"
 #include "city_buildings.h"
 #include "game/resource.h"
