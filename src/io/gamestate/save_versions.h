@@ -49,5 +49,7 @@
 //  200 akhenaten: cloud positions in their own "clouds" chunk; building_list_small bytes 0..63 written as zero
 //  201 akhenaten: caesareum work spots (work + figure) on each of its 9 parts, sled count on the main part
 //  202 akhenaten: royal tombs in the OG part-chain layout (part, stage, work, worker, lamp stock per record)
-constexpr uint32_t latest_save_version = 202;
+//  203 akhenaten: city state in one section per area (city_finance, city_population, ...) instead of the OG city_player
+//  layout
+constexpr uint32_t latest_save_version = 203;
 constexpr uint32_t min_save_version = 199;

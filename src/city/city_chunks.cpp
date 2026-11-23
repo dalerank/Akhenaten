@@ -633,3 +633,17 @@ void building_list_large_chunk::bind_data(io_buffer* iob, size_t version) {
     iob->bind____skip(6000);
     g_scenario.bind_data(iob, version, 2000);
 }
+
+void city_mission_chunk::bind_data(io_buffer* iob, size_t version) {
+    auto& data = g_city;
+    iob->bind(BIND_SIGNATURE_UINT8, &data.mission.fired_message_shown);
+    iob->bind(BIND_SIGNATURE_UINT8, &data.mission.victory_message_shown);
+    verify_no_crash(iob->get_offset() == city_mission_chunk::size);
+}
+
+void city_sound_chunk::bind_data(io_buffer* iob, size_t version) {
+    auto& data = g_city;
+    iob->bind(BIND_SIGNATURE_INT8, &data.sound.march_enemy);
+    iob->bind(BIND_SIGNATURE_INT8, &data.sound.march_horse);
+    verify_no_crash(iob->get_offset() == city_sound_chunk::size);
+}

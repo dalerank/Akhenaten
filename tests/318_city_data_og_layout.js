@@ -1,5 +1,5 @@
-// Save version 199 writes the city_data chunk in OG's city_player layout (tutankhamun
-// city_player_types.h offsetof asserts). Probe values go into a few fields that used to sit 1 or 3 bytes
+// Saves 199..202 hold the city_data chunk in OG's city_player layout and are still read through that
+// bind (tutankhamun city_player_types.h offsetof asserts). Probe values go into a few fields that used to sit 1 or 3 bytes
 // off OG; a freshly written chunk must hold them at the OG offsets, and save -> load -> save must still
 // give identical chunks. Marker: [test-marker] city_data_og_layout_ok
 

@@ -28,3 +28,9 @@ struct scenario_map_name_chunk {
     static constexpr const char* name = "scenario_map_name";
     static void bind_data(io_buffer* iob, size_t version);
 };
+
+struct city_scenario_chunk {
+    static constexpr const char* name = "city_scenario";
+    static constexpr int size = 12;
+    static void bind_data(io_buffer* iob, size_t version);
+};

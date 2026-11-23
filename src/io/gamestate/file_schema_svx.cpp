@@ -14,6 +14,26 @@
 #include "city/city_floods_chunks.h"
 #include "city/city_message_chunks.h"
 #include "city/city_recorded_paths_chunks.h"
+#include "city/city_festival_chunks.h"
+#include "city/city_finance_chunks.h"
+#include "city/city_food_supply_chunks.h"
+#include "city/city_health_chunks.h"
+#include "city/city_houses_chunks.h"
+#include "city/city_kingdome_relations_chunks.h"
+#include "city/city_labor_chunks.h"
+#include "city/city_migration_chunks.h"
+#include "city/city_population_chunks.h"
+#include "city/city_religion_chunks.h"
+#include "city/city_resource_chunks.h"
+#include "city/city_sentiment_chunks.h"
+#include "city/city_taxes_chunks.h"
+#include "city/city_trade_chunks.h"
+#include "city/coverage_chunks.h"
+#include "city/entertainment_chunks.h"
+#include "city/map_chunks.h"
+#include "city/military_chunks.h"
+#include "city/ratings_chunks.h"
+#include "scenario/distant_battle_chunks.h"
 #include "io/gamestate/presentation_chunks.h"
 #include "core/random_chunks.h"
 #include "empire/empire_chunks.h"
@@ -96,8 +116,36 @@ void file_schema_svx(const int file_version) {
     g_chunk_io.push_chunk<route_paths_chunk>(500000, false);
     g_chunk_io.push_chunk<formations_chunk>(7200, false);
     g_chunk_io.push_chunk<formations_info_chunk>(12, false);
-    g_chunk_io.push_chunk<city_data_chunk>(37808, false);
-    g_chunk_io.push_chunk<city_data_extra_chunk>(72, false);
+    if (file_version < 203) {
+        g_chunk_io.push_chunk<city_data_chunk>(37808, false);
+        g_chunk_io.push_chunk<city_data_extra_chunk>(72, false);
+    } else {
+        g_chunk_io.push_chunk<city_buildings_chunk>(city_buildings_chunk::size, false);
+        g_chunk_io.push_chunk<city_finance_chunk>(city_finance_chunk::size, false);
+        g_chunk_io.push_chunk<city_sentiment_chunk>(city_sentiment_chunk::size, false);
+        g_chunk_io.push_chunk<city_health_chunk>(city_health_chunk::size, false);
+        g_chunk_io.push_chunk<city_population_chunk>(city_population_chunk::size, false);
+        g_chunk_io.push_chunk<city_migration_chunk>(city_migration_chunk::size, false);
+        g_chunk_io.push_chunk<city_map_chunk>(city_map_chunk::size, false);
+        g_chunk_io.push_chunk<city_resource_chunk>(city_resource_chunk::size, false);
+        g_chunk_io.push_chunk<city_labor_chunk>(city_labor_chunk::size, false);
+        g_chunk_io.push_chunk<city_taxes_chunk>(city_taxes_chunk::size, false);
+        g_chunk_io.push_chunk<city_kingdome_chunk>(city_kingdome_chunk::size, false);
+        g_chunk_io.push_chunk<city_figures_chunk>(city_figures_chunk::size, false);
+        g_chunk_io.push_chunk<city_military_chunk>(city_military_chunk::size, false);
+        g_chunk_io.push_chunk<city_gods_chunk>(city_gods_chunk::size, false);
+        g_chunk_io.push_chunk<city_ratings_chunk>(city_ratings_chunk::size, false);
+        g_chunk_io.push_chunk<city_distant_battle_chunk>(city_distant_battle_chunk::size, false);
+        g_chunk_io.push_chunk<city_trade_chunk>(city_trade_chunk::size, false);
+        g_chunk_io.push_chunk<city_houses_chunk>(city_houses_chunk::size, false);
+        g_chunk_io.push_chunk<city_entertainment_chunk>(city_entertainment_chunk::size, false);
+        g_chunk_io.push_chunk<city_avg_coverage_chunk>(city_avg_coverage_chunk::size, false);
+        g_chunk_io.push_chunk<city_festival_chunk>(city_festival_chunk::size, false);
+        g_chunk_io.push_chunk<city_scenario_chunk>(city_scenario_chunk::size, false);
+        g_chunk_io.push_chunk<city_sound_chunk>(city_sound_chunk::size, false);
+        g_chunk_io.push_chunk<city_mission_chunk>(city_mission_chunk::size, false);
+        g_chunk_io.push_chunk<city_food_supply_chunk>(city_food_supply_chunk::size, false);
+    }
     g_chunk_io.push_chunk<buildings_chunk>(1056000, false);
     g_chunk_io.push_chunk<city_view_orientation_chunk>(4, false);          // ok
     g_chunk_io.push_chunk<game_time_chunk>(20, false);                     // ok

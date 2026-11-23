@@ -6,6 +6,7 @@
 #include "building/monument_pyramid.h"
 #include "building/monuments.h"
 #include "city/city.h"
+#include "city/city_chunks.h"
 #include "city/object_info.h"
 #include "content/mods.h"
 #include "app/app.h"
@@ -951,11 +952,15 @@ void __test_city_data_set_probe() {
 }
 ANK_FUNCTION(__test_city_data_set_probe);
 
+static void city_data_og_schema(e_file_format, const int) {
+    g_chunk_io.push_chunk<city_data_chunk>(37808, false);
+}
+
 // Little-endian value of `size` bytes at `offset` of the city_player record (the second half of city_data)
-// in a city_data chunk written now; -1 when the chunk is missing.
+// in the city_data chunk the OG layout bind (the reader of 199..202 saves) produces now; -1 when missing.
 int __test_city_data_record_value(int offset, int size) {
     chunk_snapshots chunks;
-    if (!g_chunk_io.write_to_memory(FILE_FORMAT_SAVE_FILE_EXT, save_data_version(), file_schema, chunks)) {
+    if (!g_chunk_io.write_to_memory(FILE_FORMAT_SAVE_FILE_EXT, 202, city_data_og_schema, chunks)) {
         return -1;
     }
     for (const chunk_snapshot& chunk : chunks) {

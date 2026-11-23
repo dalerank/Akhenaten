@@ -161,3 +161,10 @@ void scenario_is_custom_chunk::bind_data(io_buffer* iob, size_t version) {
 void scenario_map_name_chunk::bind_data(io_buffer* iob, size_t version) {
     iob->bind(BIND_SIGNATURE_XSTR, g_scenario.scenario_name, MAX_SCENARIO_NAME);
 }
+
+void city_scenario_chunk::bind_data(io_buffer* iob, size_t version) {
+    iob->bind(BIND_SIGNATURE_INT32, &g_scenario.has_won);
+    iob->bind(BIND_SIGNATURE_INT32, &g_scenario.continue_months_left);
+    iob->bind(BIND_SIGNATURE_INT32, &g_scenario.continue_months_chosen);
+    verify_no_crash(iob->get_offset() == city_scenario_chunk::size);
+}
