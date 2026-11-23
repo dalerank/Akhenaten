@@ -30,8 +30,8 @@ culture_rating_params_t ANK_VARIABLE(culture_rating);
 
 namespace {
 
-    int culture_coverage_value(const xstring& coverage) {
-        const auto& c = g_city.coverage;
+    int culture_coverage_value(const ratings_context& ctx, const xstring& coverage) {
+        const auto& c = ctx.coverage;
         if (coverage == "jugglers")
             return c.booth;
         if (coverage == "musicians")
@@ -47,7 +47,7 @@ namespace {
         if (coverage == "library")
             return c.library;
         if (coverage == "religion")
-            return g_city.gods.coverage_common;
+            return ctx.gods.coverage_common;
         if (coverage == "dentist")
             return c.dentist;
         if (coverage == "physician")
@@ -77,40 +77,40 @@ namespace {
 
 } // namespace
 
-void city_ratings_t::reduce_prosperity_after_bailout() {
-    prosperity -= 3;
-    if (prosperity < 0) {
-        prosperity = 0;
+void ratings_system::reduce_prosperity_after_bailout() {
+    _state.prosperity -= 3;
+    if (_state.prosperity < 0) {
+        _state.prosperity = 0;
     }
 
-    prosperity_explanation = e_prosperity_reason_tribute_not_paid;
+    _state.prosperity_explanation = e_prosperity_reason_tribute_not_paid;
 }
 
-void city_ratings_t::monument_building_destroyed(e_building_type type) {
+void ratings_system::monument_building_destroyed(e_building_type type) {
     const auto &bparams = building_static_params::get(type);
     if (bparams.flags.is_monument) {
-        monument_destroyed_buildings++;
+        _state.monument_destroyed_buildings++;
     }
 
-    monument_destroyed_buildings = std::min(monument_destroyed_buildings, 12);
+    _state.monument_destroyed_buildings = std::min(_state.monument_destroyed_buildings, 12);
 }
 
-void city_ratings_t::monument_record_criminal() {
-    monument_num_criminals++;
+void ratings_system::monument_record_criminal() {
+    _state.monument_num_criminals++;
 }
 
-void city_ratings_t::monument_record_rioter() {
-    monument_num_rioters++;
-    monument_riot_cause = g_city.sentiment.low_mood_cause;
+void ratings_system::monument_record_rioter() {
+    _state.monument_num_rioters++;
+    _state.monument_riot_cause = _ctx.sentiment.low_mood_cause;
 }
 
-void city_ratings_t::update_culture_rating() {
+void ratings_system::update_culture_rating() {
     const auto& records = culture_rating.records;
     int lowest_points = 100;
     int lowest_index = 0;
     for (int i = 0; i < (int)records.size(); ++i) {
         const int points
-          = culture_points(records[i].points, records[i].limits, culture_coverage_value(records[i].coverage));
+          = culture_points(records[i].points, records[i].limits, culture_coverage_value(_ctx, records[i].coverage));
         if (points < lowest_points) {
             lowest_points = points;
             lowest_index = i;
@@ -121,19 +121,32 @@ void city_ratings_t::update_culture_rating() {
     // the 90-limit records (dentist, physician) can reach, at 90..99% coverage.
     int bonus = 0;
     for (const auto& r : records) {
-        const int points = culture_points(r.points, culture_rating.bonus_limits, culture_coverage_value(r.coverage));
+        const int points
+          = culture_points(r.points, culture_rating.bonus_limits, culture_coverage_value(_ctx, r.coverage));
         if (points + culture_rating.bonus_margin < lowest_points) {
             bonus += culture_rating.bonus_points;
         }
     }
 
-    culture = lowest_points + bonus;
+    _state.culture = lowest_points + bonus;
 
     if (!!game_features::gameplay_jewels_workshops_culture_bonus) {
-        const int active_jewels_workshops = g_city.buildings.buildings[BUILDING_JEWELS_WORKSHOP].active;
-        culture += active_jewels_workshops / 3;
+        const int active_jewels_workshops = _ctx.buildings.buildings[BUILDING_JEWELS_WORKSHOP].active;
+        _state.culture += active_jewels_workshops / 3;
     }
 
-    culture = calc_bound(culture, 0, 100);
-    culture_explanation = lowest_index;
+    _state.culture = calc_bound(_state.culture, 0, 100);
+    _state.culture_explanation = lowest_index;
+}
+
+void ratings_system::update(bool is_yearly_update) {
+    update_culture_rating();
+    if (is_yearly_update) {
+        _ctx.kingdome.advance_year();
+    }
+    calculate_max_prosperity();
+
+    if (is_prosperity_update_month(_ctx.month)) {
+        update_prosperity_rating();
+    }
 }

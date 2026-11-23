@@ -61,7 +61,7 @@ struct city_t {
     sentiment_state sentiment;
 
     health_state health;
-    city_ratings_t ratings;
+    ratings_state ratings;
     city_average_coverage_t avg_coverage;
 
     gods_state gods;
@@ -194,11 +194,6 @@ struct city_t {
     bool figures_has_security_breach();
     void figures_generate_criminals();
 
-    void update_prosperity_explanation();
-    bool is_prosperity_update_month(int month) const;
-    void update_prosperity_rating();
-    void calculate_max_prosperity();
-    void ratings_update(bool is_yearly_update);
 
     bool determine_granary_get_foods(resource_list &foods, int road_network);
 
@@ -236,6 +231,8 @@ struct city_t {
     population_system population_sys();
     migration_context migration_ctx();
     migration_system migration_sys();
+    ratings_context ratings_ctx();
+    ratings_system ratings_sys();
 
     e_availability is_advisor_available(e_advisor advisor) const;
     void set_advisor_available(e_advisor advisor, e_availability available);

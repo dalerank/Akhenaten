@@ -358,7 +358,7 @@ void figure_robber::create(building *b) {
         && figure_tomb_robber::og_possible();
     figure *f = figure_create(spawn_tomb ? FIGURE_TOMB_ROBER : FIGURE_ROBBER, road_tile, DIR_4_BOTTOM_LEFT);
     f->wait_ticks = 10 + (b->map_random_7bit & 0xf);
-    g_city.ratings.monument_record_criminal();
+    g_city.ratings_sys().monument_record_criminal();
 
     if (spawn_tomb) {
         f->advance_action(ACTION_8_TOMB_ROBBER_WAITING);

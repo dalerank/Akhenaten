@@ -133,7 +133,7 @@ void game_t::advance_month() {
     if (g_simulation.simtime.advance_month()) {
         advance_year();
     } else {
-        g_city.ratings_update(/*yearly_update*/false);
+        g_city.ratings_sys().update(/*yearly_update*/ false);
     }
 
     sim_schedule_run(SIM_PHASE_MONTH_END, g_city);

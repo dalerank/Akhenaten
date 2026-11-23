@@ -61,7 +61,7 @@ void kingdome_relation_t::update_debt_state() {
         debt_state = e_debt_one_time;
         months_in_debt = 0;
         messages::popup("message_out_of_money", 0, 0);
-        g_city.ratings.reduce_prosperity_after_bailout();
+        g_city.ratings_sys().reduce_prosperity_after_bailout();
         break;
 
     case e_debt_one_time:

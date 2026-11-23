@@ -205,24 +205,22 @@ migration_system city_t::migration_sys() {
     return migration_system(migration, migration_ctx());
 }
 
+ratings_context city_t::ratings_ctx() {
+    return {finance, labor, resource, population, entertainment, coverage, gods, sentiment, buildings, kingdome,
+      temple_complexes_sys().has_upgrade(BUILDING_TEMPLE_COMPLEX_RA, etc_upgrade_oracle), g_simulation.simtime.year,
+      g_simulation.simtime.month, g_scenario.start_year};
+}
+
+ratings_system city_t::ratings_sys() {
+    return ratings_system(ratings, ratings_ctx());
+}
+
 void city_t::init_custom_map() {
     unused.faction_id = 1;
     unused.unknown_00a2 = 1;
     unused.unknown_00a3 = 1;
     finance.treasury = g_scenario.startup_funds();
     finance.last_year.balance = finance.treasury;
-}
-
-void city_t::ratings_update(bool is_yearly_update) {
-    ratings.update_culture_rating();
-    if (is_yearly_update) {
-        kingdome.advance_year();
-    }
-    calculate_max_prosperity();
-
-    if (is_prosperity_update_month(g_simulation.simtime.month)) {
-        update_prosperity_rating();
-    }
 }
 
 void city_t::set_advisor_available(e_advisor advisor, e_availability available) {

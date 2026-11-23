@@ -228,7 +228,7 @@ static const sim_step k_sim_steps[] = {
   {SIM_PHASE_YEAR, -1, "monuments_year", SIM_AREA_MONUMENTS, [](city_t& c) { c.monuments.advance_year(); }},
   {SIM_PHASE_YEAR, -1, "yearly_trade_amounts", SIM_AREA_EMPIRE | SIM_AREA_TRADE,
     [](city_t&) { g_empire.reset_yearly_trade_amounts(); }},
-  {SIM_PHASE_YEAR, -1, "ratings_year", SIM_AREA_RATINGS, [](city_t& c) { c.ratings_update(true); }},
+  {SIM_PHASE_YEAR, -1, "ratings_year", SIM_AREA_RATINGS, [](city_t& c) { c.ratings_sys().update(true); }},
   {SIM_PHASE_YEAR, -1, "ra_yearly_favour", SIM_AREA_RELIGION,
     [](city_t& c) { c.temple_complexes_sys().ra_yearly_favour(); }},
   {SIM_PHASE_YEAR, -1, "buildings_year", SIM_AREA_BUILDINGS, [](city_t& c) { c.buildings.update_year(); }},

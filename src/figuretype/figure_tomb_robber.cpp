@@ -238,7 +238,7 @@ int create_one_robber(tile2i spawn, bool remake) {
     }
     f->wait_ticks = 10 + (random_byte() & 0xf);
     g_city.sentiment.criminals++;
-    g_city.ratings.monument_record_criminal();
+    g_city.ratings_sys().monument_record_criminal();
     g_city.figures.security_breach_duration = 10;
     return f->id;
 }

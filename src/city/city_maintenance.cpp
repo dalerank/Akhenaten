@@ -80,7 +80,7 @@ void city_maintenance_t::destroy_by_enemy(building *b) {
     tile2i tile = b->tile;
     if (b->state == BUILDING_STATE_VALID) {
         was_valid_building = true;
-        g_city.ratings.monument_building_destroyed(b->type);
+        g_city.ratings_sys().monument_building_destroyed(b->type);
         b->destroy_by_enemy();
     }
 

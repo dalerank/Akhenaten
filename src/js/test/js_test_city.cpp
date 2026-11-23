@@ -441,7 +441,7 @@ static void __test_simtime_set_month(int month) {
 ANK_FUNCTION_1(__test_simtime_set_month);
 
 static void __test_city_ratings_update(int is_yearly_update) {
-    g_city.ratings_update(is_yearly_update != 0);
+    g_city.ratings_sys().update(is_yearly_update != 0);
 }
 ANK_FUNCTION_1(__test_city_ratings_update);
 
@@ -451,12 +451,12 @@ static void __test_city_ra_yearly_favour() {
 ANK_FUNCTION(__test_city_ra_yearly_favour);
 
 static void __test_city_update_prosperity() {
-    g_city.update_prosperity_rating();
+    g_city.ratings_sys().update_prosperity_rating();
 }
 ANK_FUNCTION(__test_city_update_prosperity);
 
 static void __test_city_update_culture() {
-    g_city.ratings.update_culture_rating();
+    g_city.ratings_sys().update_culture_rating();
 }
 ANK_FUNCTION(__test_city_update_culture);
 
