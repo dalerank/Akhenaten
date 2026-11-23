@@ -51,6 +51,7 @@ enum e_sim_area : uint32_t {
     SIM_AREA_UNDO = 1u << 26,
     SIM_AREA_VICTORY = 1u << 27,
     SIM_AREA_EVENTS = 1u << 28,
+    SIM_AREA_TAXES = 1u << 29,
 };
 
 struct sim_step {

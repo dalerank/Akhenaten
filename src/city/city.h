@@ -8,6 +8,7 @@
 #include "city/city_industry.h"
 #include "city/city_population.h"
 #include "city/city_finance.h"
+#include "city/city_taxes.h"
 #include "city/city_labor.h"
 #include "city/buildings.h"
 #include "city/city_migration.h"
@@ -52,7 +53,7 @@ struct city_t {
     finance_state finance;
     city_resources_t resource;
     city_food_supply_t food_supply;
-    city_taxes_t taxes;
+    taxes_state taxes;
 
     city_labor_t labor;
     city_migration_t migration;
@@ -216,6 +217,8 @@ struct city_t {
     void update_month(simulation_time_t t);
     finance_context finance_ctx();
     finance_system finance_sys();
+    taxes_context taxes_ctx();
+    taxes_system taxes_sys();
 
     e_availability is_advisor_available(e_advisor advisor) const;
     void set_advisor_available(e_advisor advisor, e_availability available);

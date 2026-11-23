@@ -82,6 +82,7 @@ var T587_EXPECTED = [
     'week:-1:event_advance_week:268435456',
     'month_city:-1:migration_month:65536',
     'month_city:-1:health_month:256',
+    'month_city:-1:taxes_month:536870929',
     'month_city:-1:finance_month:16',
     'month_city:-1:food_monthly:34',
     'month_city:-1:resource_month:32',
@@ -107,12 +108,13 @@ var T587_EXPECTED = [
     'month:-1:roads_images:16384',
     'month:-1:land_citizen_routing:16384',
     'month:-1:locusts_month:8',
-    'month_end:-1:estimate_taxes:16',
+    'month_end:-1:estimate_taxes:536870928',
     'month_end:-1:event_advance_month:268435456',
     'year:-1:empire_expansion:524288',
     'year:-1:undo_disable:67108864',
     'year:-1:simtime_year:16777216',
     'year:-1:population_yearly_request:1',
+    'year:-1:taxes_year:536870930',
     'year:-1:finance_year:16',
     'year:-1:migration_year:65536',
     'year:-1:monuments_year:2097152',
@@ -133,7 +135,7 @@ function t587_fail(msg) {
 
 function t587_area_names(mask) {
     var names = {1: 'population', 2: 'houses', 4: 'buildings', 8: 'figures', 16: 'finance', 32: 'resources',
-        64: 'religion', 128: 'coverage', 256: 'health', 512: 'labor', 1024: 'trade', 2048: 'kingdom'}
+        64: 'religion', 128: 'coverage', 256: 'health', 512: 'labor', 1024: 'trade', 2048: 'kingdom', 536870912: 'taxes'}
     return names[mask] || ('' + mask)
 }
 

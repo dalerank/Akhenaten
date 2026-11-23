@@ -15,7 +15,7 @@ void window_advisors_prepare_opening() {
 
     g_city.finance_sys().estimate_wages();
     g_city.finance_sys().update_interest();
-    g_city.finance_sys().update_estimate_taxes();
+    g_city.taxes_sys().update_estimate();
     g_city.finance_sys().calculate_totals();
 
     g_city.migration.determine_reason();

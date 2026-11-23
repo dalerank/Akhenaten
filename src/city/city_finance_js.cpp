@@ -47,12 +47,12 @@ std::optional<bvariant> __city_finance_overview(pcstr property, bool this_year) 
 ANK_FUNCTION_2(__city_finance_overview)
 
 void __city_finance_update_estimate_taxes() {
-    g_city.finance_sys().update_estimate_taxes();
+    g_city.taxes_sys().update_estimate();
 }
 ANK_FUNCTION(__city_finance_update_estimate_taxes)
 
 void __city_finance_collect_monthly_taxes() {
-    g_city.finance_sys().collect_monthly_taxes();
+    g_city.taxes_sys().collect_monthly();
 }
 ANK_FUNCTION(__city_finance_collect_monthly_taxes)
 

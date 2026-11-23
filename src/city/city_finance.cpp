@@ -25,36 +25,10 @@
 using e_finance_value_tokens_t = token_holder<e_finance_value, e_finance_value_gold_delivered, e_finance_value_max>;
 const e_finance_value_tokens_t ANK_CONFIG_ENUM(e_finance_value_tokens);
 
-int finance_system::house_monthly_tax_units(building_house* house) const {
-    auto &housed = house->runtime_data();
-    int tax_mult = house->model().tax_multiplier;
-    // OG city_finance_collect_monthly_taxes: model tax × house_tax_bonus_percentage when tax_bonus set.
-    if (housed.tax_bonus) {
-        tax_mult = calc_adjust_with_percentage(tax_mult, _ctx.taxes.house_tax_bonus_percentage);
-    }
-    return housed.population * tax_mult;
-}
-
-int finance_system::apply_tax_rate(int amount) const {
-    return calc_adjust_with_percentage<int>(calc_adjust_with_percentage<int>(amount, _state.tax_percentage),
-      _ctx.city_tax_percentage);
-}
-
-// OG city_finance_collect_monthly_taxes: the house adds city share * tax rate * units.
-int finance_system::house_tax_income(int units) const {
-    return _ctx.city_tax_percentage * _state.tax_percentage * units;
-}
-
-int finance_system::house_tax_units_from_income(int tax_income) const {
-    const int scale = std::max(_ctx.city_tax_percentage * _state.tax_percentage, 1);
-    return tax_income / scale;
-}
-
 using e_finance_request_type_tokens_t = token_holder<e_finance_request_type, efinance_request_none, efinance_request_max>;
 const e_finance_request_type_tokens_t ANK_CONFIG_ENUM(e_finance_request_type_tokens);
 
 palace_treasury_shares_t ANK_VARIABLE(palace_treasury_shares);
-finance_tax_rules_t ANK_VARIABLE(finance_tax_rules);
 
 void finance_system::init() {
     _state.wages_kingdome = 30;
@@ -213,140 +187,6 @@ void finance_system::process_request(event_finance_request request) {
     }
 }
 
-void finance_system::update_estimate_taxes() {
-    auto& taxes = _ctx.taxes;
-    taxes.monthly.collected_citizens = 0;
-    taxes.monthly.collected_nobles = 0;
-    taxes.monthly.uncollected_citizens = 0;
-    taxes.monthly.uncollected_nobles = 0;
-
-    buildings_house_do([&taxes](auto house) {
-        if (!house->hsize()) {
-            return;
-        }
-
-        auto& housed = house->runtime_data();
-        const int tax = housed.population * house->model().tax_multiplier;
-
-        if (housed.tax_coverage) {
-            if (house->is_nobles()) {
-                taxes.monthly.collected_nobles += tax;
-            } else {
-                taxes.monthly.collected_citizens += tax;
-            }
-        } else {
-            if (house->is_nobles()) {
-                taxes.monthly.uncollected_nobles += tax;
-            } else {
-                taxes.monthly.uncollected_citizens += tax;
-            }
-        }
-    });
-
-    int monthly_patricians = apply_tax_rate(taxes.monthly.collected_nobles);
-    int monthly_plebs = apply_tax_rate(taxes.monthly.collected_citizens);
-    int estimated_rest_of_year = (12 - _ctx.month) * (monthly_patricians + monthly_plebs);
-
-    _state.this_year.income.taxes = taxes.yearly.collected_citizens + taxes.yearly.collected_nobles;
-    taxes.estimated_income = _state.this_year.income.taxes + estimated_rest_of_year;
-
-    int uncollected_patricians = apply_tax_rate(taxes.monthly.uncollected_nobles);
-    int uncollected_plebs = apply_tax_rate(taxes.monthly.uncollected_citizens);
-    int uncollected_rest_of_year = (12 - _ctx.month) * (uncollected_patricians + uncollected_plebs);
-    int uncollected_ytd = taxes.yearly.uncollected_citizens + taxes.yearly.uncollected_nobles;
-    taxes.estimated_uncollected = uncollected_ytd + uncollected_rest_of_year;
-    if (taxes.estimated_uncollected < 0) {
-        taxes.estimated_uncollected = 0;
-    }
-}
-
-void finance_system::collect_monthly_taxes() {
-    auto& taxes = _ctx.taxes;
-    taxes.taxed_citizens = 0;
-    taxes.taxed_nobles = 0;
-    taxes.untaxed_citizens = 0;
-    taxes.untaxed_nobles = 0;
-    taxes.monthly.uncollected_citizens = 0;
-    taxes.monthly.collected_citizens = 0;
-    taxes.monthly.uncollected_nobles = 0;
-    taxes.monthly.collected_nobles = 0;
-
-    for (int i = 0; i < HOUSE_LEVEL_MAX; i++) {
-        _ctx.population.at_level[i] = 0;
-    }
-
-    std::map<int, uint32_t> tax_collectors;
-    if (!!game_features::gameplay_change_new_tax_collection_system) {
-        svector<building*, 64> buildings;
-        buildings_get(buildings, BUILDING_TAX_COLLECTOR, BUILDING_TAX_COLLECTOR_UPGRADED);
-        for (auto& b : buildings) {
-            tax_collectors.insert({b->id, 0});
-        }
-    }
-
-    buildings_house_do([&](auto house) {
-        if (!house->hsize()) {
-            return;
-        }
-
-        auto& housed = house->runtime_data();
-        int is_nobles = (house->house_level() >= HOUSE_COMMON_MANOR);
-        int population = housed.population;
-        _ctx.population.at_level[house->house_level()] += population;
-
-        const int tax = house_monthly_tax_units(house);
-        if (housed.tax_coverage) {
-            if (is_nobles) {
-                taxes.taxed_nobles += population;
-                taxes.monthly.collected_nobles += tax;
-            } else {
-                taxes.taxed_citizens += population;
-                taxes.monthly.collected_citizens += tax;
-            }
-
-            if (!!game_features::gameplay_change_new_tax_collection_system) {
-                tax_collectors[housed.tax_collector_id] += tax;
-                housed.tax_collector_id = 0;
-            }
-
-            housed.tax_income += house_tax_income(tax);
-        } else {
-            if (is_nobles) {
-                taxes.untaxed_nobles += population;
-                taxes.monthly.uncollected_nobles += tax;
-            } else {
-                taxes.untaxed_citizens += population;
-                taxes.monthly.uncollected_citizens += tax;
-            }
-        }
-    });
-
-    int collected_nobles = apply_tax_rate(taxes.monthly.collected_nobles);
-    int collected_citizens = apply_tax_rate(taxes.monthly.collected_citizens);
-    int collected_total = collected_nobles + collected_citizens;
-
-    taxes.yearly.collected_nobles += collected_nobles;
-    taxes.yearly.collected_citizens += collected_citizens;
-    taxes.yearly.uncollected_nobles += apply_tax_rate(taxes.monthly.uncollected_nobles);
-    taxes.yearly.uncollected_citizens += apply_tax_rate(taxes.monthly.uncollected_citizens);
-
-    if (!!game_features::gameplay_change_new_tax_collection_system) {
-        for (auto& it : tax_collectors) {
-            building* b = building_get(it.first);
-            b->deben_storage += apply_tax_rate((int)it.second);
-        }
-    } else {
-        _state.treasury += collected_total;
-    }
-
-    int total_patricians = taxes.taxed_nobles + taxes.untaxed_nobles;
-    int total_plebs = taxes.taxed_citizens + taxes.untaxed_citizens;
-    taxes.percentage_taxed_nobles = calc_percentage(taxes.taxed_nobles, total_patricians);
-    taxes.percentage_taxed_citizens = calc_percentage(taxes.taxed_citizens, total_plebs);
-    taxes.percentage_taxed_people
-      = calc_percentage(taxes.taxed_nobles + taxes.taxed_citizens, total_patricians + total_plebs);
-}
-
 void finance_system::pay_monthly_wages() {
     int monthly_wages = _state.wages * _ctx.labor.workers_employed / 10 / 12;
     int treasury_pay = monthly_wages;
@@ -403,26 +243,9 @@ void finance_system::pay_monthly_salary() {
     building_mansion::update_money_values();
 }
 
-void finance_system::reset_taxes() {
-    _state.last_year.income.taxes = _ctx.taxes.yearly.collected_citizens + _ctx.taxes.yearly.collected_nobles;
-    _ctx.taxes.yearly.collected_citizens = 0;
-    _ctx.taxes.yearly.collected_nobles = 0;
-    _ctx.taxes.yearly.uncollected_citizens = 0;
-    _ctx.taxes.yearly.uncollected_nobles = 0;
-
-    // reset tax income in building list
-    for (int i = 1; i < MAX_BUILDINGS; i++) {
-        auto house = building_get(i)->dcast_house();
-        if (house && house->state() == BUILDING_STATE_VALID) {
-            house->runtime_data().tax_income = 0;
-        }
-    }
-}
-
 void finance_system::advance_month() {
     _state.crimes_this_month = 0;
     _state.gold_stolen_this_month = 0;
-    collect_monthly_taxes();
     pay_monthly_wages();
     pay_monthly_interest();
     pay_monthly_salary();
@@ -531,7 +354,6 @@ void finance_system::pay_tribute() {
 }
 
 void finance_system::advance_year() {
-    reset_taxes();
     copy_amounts_to_last_year();
     pay_tribute();
 }

@@ -72,33 +72,6 @@ ANK_CONFIG_PROPERTY(finance_overview::expenses_t,
     imports, wages, construction, interest, accountant_salary,
     stolen, tribute, festivals, kingdome, disasters, mayour_salary, total)
 
-struct city_taxes_t {
-    int32_t taxed_citizens;
-    int32_t taxed_nobles;
-    int32_t untaxed_citizens;
-    int32_t untaxed_nobles;
-    int32_t estimated_uncollected;
-    int32_t estimated_income;
-    int house_tax_bonus_percentage = 110;
-    int8_t percentage_taxed_citizens;
-    int8_t percentage_taxed_nobles;
-    int8_t percentage_taxed_people;
-    struct {
-        int32_t collected_citizens;
-        int32_t collected_nobles;
-        int32_t uncollected_citizens;
-        int32_t uncollected_nobles;
-    } yearly;
-    struct {
-        int32_t collected_citizens;
-        int32_t collected_nobles;
-        int32_t uncollected_citizens;
-        int32_t uncollected_nobles;
-    } monthly;
-};
-ANK_CONFIG_PROPERTY(city_taxes_t,
-    percentage_taxed_people, estimated_uncollected, estimated_income, house_tax_bonus_percentage)
-
 struct palace_treasury_shares_t {
     int tax_collector_weight = 2;
     int courthouse_weight = 3;
@@ -106,16 +79,6 @@ struct palace_treasury_shares_t {
 };
 ANK_CONFIG_STRUCT(palace_treasury_shares_t, tax_collector_weight, courthouse_weight, palace_weight)
 extern palace_treasury_shares_t palace_treasury_shares;
-
-// tax_percentage: per difficulty, the percent of the taxed amount the city keeps (OG
-// difficulty_tax_percentages); a mission may override it. house_tax_income_unit: a house's yearly tax
-// income is kept in 1/unit deben (OG HOUSE_TAX_INCOME_UNIT).
-struct finance_tax_rules_t {
-    int_dcy tax_percentage;
-    int house_tax_income_unit;
-};
-ANK_CONFIG_STRUCT(finance_tax_rules_t, tax_percentage, house_tax_income_unit)
-extern finance_tax_rules_t finance_tax_rules;
 
 struct finance_state {
     struct treasury_t {
@@ -150,12 +113,10 @@ struct city_labor_t;
 struct kingdome_relation_t;
 
 struct finance_context {
-    city_taxes_t& taxes;
     city_population_t& population;
     const city_labor_t& labor;
     kingdome_relation_t& kingdome;
     int month;
-    int city_tax_percentage;
     int debt_interest;
 };
 
@@ -167,13 +128,7 @@ public:
 
     void init();
     bool is_out_of_money() const;
-    void update_estimate_taxes();
     void estimate_wages();
-    void collect_monthly_taxes();
-    int house_monthly_tax_units(building_house* house) const;
-    int apply_tax_rate(int amount) const;
-    int house_tax_income(int units) const;
-    int house_tax_units_from_income(int tax_income) const;
     void advance_month();
     void pay_monthly_wages();
     void advance_year();
@@ -188,7 +143,6 @@ public:
 private:
     void pay_monthly_interest();
     void pay_monthly_salary();
-    void reset_taxes();
     void copy_amounts_to_last_year();
     void pay_tribute();
 

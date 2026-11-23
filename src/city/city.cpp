@@ -116,12 +116,19 @@ void city_t::update_month(simulation_time_t simtime) {
 }
 
 finance_context city_t::finance_ctx() {
-    return {taxes, population, labor, kingdome, g_simulation.simtime.month, g_scenario.city_tax_percentage(),
-      g_scenario.debt_interest()};
+    return {population, labor, kingdome, g_simulation.simtime.month, g_scenario.debt_interest()};
 }
 
 finance_system city_t::finance_sys() {
     return finance_system(finance, finance_ctx());
+}
+
+taxes_context city_t::taxes_ctx() {
+    return {finance, population, g_simulation.simtime.month, g_scenario.city_tax_percentage()};
+}
+
+taxes_system city_t::taxes_sys() {
+    return taxes_system(taxes, taxes_ctx());
 }
 
 void city_t::init_custom_map() {
