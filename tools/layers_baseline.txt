@@ -238,12 +238,8 @@ building/monument_sun_temple.cpp -> graphics/view/lookup.h
 building/monuments.cpp -> graphics/image.h
 building/monuments.cpp -> graphics/image_groups.h
 building/monuments.cpp -> graphics/view/view.h
-city/city.cpp -> dev/debug.h
-city/city.cpp -> graphics/elements/lang_text.h
 city/city.cpp -> graphics/image.h
 city/city.cpp -> graphics/image_groups.h
-city/city.cpp -> graphics/view/lookup.h
-city/city.cpp -> graphics/view/view.h
 city/city_animals.cpp -> dev/debug.h
 city/city_festival.cpp -> graphics/image_groups.h
 city/city_floods.cpp -> dev/debug.h
