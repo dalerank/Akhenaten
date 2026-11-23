@@ -38,14 +38,15 @@
 #include "scenario/scenario_invasion.h"
 
 #include <array>
+#include <algorithm>
+#include <cstring>
+#include <vector>
 
 static const sim_step k_sim_steps[] = {
   {SIM_PHASE_TICK_BEGIN, -1, "housing_type_counts", SIM_AREA_POPULATION,
     [](city_t& c) { c.population_sys().housing_type_counts_update(); }},
   {SIM_PHASE_TICK_BEGIN, -1, "random", SIM_AREA_RANDOM, [](city_t&) { random_generate_next(); }},
   {SIM_PHASE_TICK_BEGIN, -1, "undo_time", SIM_AREA_UNDO, [](city_t&) { game_undo_reduce_time_available(); }},
-  {SIM_PHASE_TICK_BEGIN, -1, "floods", SIM_AREA_FLOODS | SIM_AREA_MAP,
-    [](city_t&) { g_city.floods.tick_update(false); }},
   {SIM_PHASE_TICK_BEGIN, -1, "buildings_tick", SIM_AREA_BUILDINGS,
     [](city_t& c) { c.buildings.update_tick(game.paused); }},
 
@@ -235,12 +236,39 @@ static const sim_step k_sim_steps[] = {
   {SIM_PHASE_YEAR, -1, "buildings_year", SIM_AREA_BUILDINGS, [](city_t& c) { c.buildings.update_year(); }},
 };
 
+static std::vector<sim_step_registration>& sim_registrations() {
+    static std::vector<sim_step_registration> regs;
+    return regs;
+}
+
+bool sim_schedule_register(const sim_step_registration& reg) {
+    sim_registrations().push_back(reg);
+    return true;
+}
+
+static const std::vector<sim_step>& sim_steps() {
+    static const std::vector<sim_step> steps = [] {
+        std::vector<sim_step> out(std::begin(k_sim_steps), std::end(k_sim_steps));
+        std::vector<sim_step_registration> regs = sim_registrations();
+        std::sort(regs.begin(), regs.end(),
+          [](const auto& a, const auto& b) { return strcmp(a.step.name, b.step.name) > 0; });
+        for (const auto& reg : regs) {
+            auto it
+              = std::find_if(out.begin(), out.end(), [&](const sim_step& s) { return strcmp(s.name, reg.after) == 0; });
+            verify_no_crash(it != out.end());
+            out.insert(it + 1, reg.step);
+        }
+        return out;
+    }();
+    return steps;
+}
+
 span_const<sim_step> sim_schedule_steps() {
-    return make_span(k_sim_steps);
+    return make_span(sim_steps());
 }
 
 void sim_schedule_run(e_sim_phase phase, city_t& city, int slot) {
-    for (const sim_step& step : k_sim_steps) {
+    for (const sim_step& step : sim_steps()) {
         if (step.phase == phase && (phase != SIM_PHASE_TICK_SLOT || step.slot == slot)) {
             step.run(city);
         }

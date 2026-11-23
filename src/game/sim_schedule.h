@@ -63,5 +63,18 @@ struct sim_step {
 };
 
 span_const<sim_step> sim_schedule_steps();
+
+struct sim_step_registration {
+    sim_step step;
+    const char* after;
+};
+
+bool sim_schedule_register(const sim_step_registration& reg);
+
+#define ANK_SIM_STEP_CONCAT2(a, b) a##b
+#define ANK_SIM_STEP_CONCAT(a, b)  ANK_SIM_STEP_CONCAT2(a, b)
+#define ANK_SIM_STEP(...)                                                                                          \
+    static const bool ANK_SIM_STEP_CONCAT(g_sim_step_registered_, __LINE__) = sim_schedule_register({__VA_ARGS__})
+
 void sim_schedule_run(e_sim_phase phase, city_t& city, int slot = -1);
 const char* sim_phase_name(e_sim_phase phase);

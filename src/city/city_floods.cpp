@@ -20,6 +20,19 @@
 #include <cmath>
 #include <cctype>
 #include "scenario/scenario.h"
+#include "game/sim_schedule.h"
+
+namespace {
+    floods_t g_floods_state;
+}
+
+floods_t& floods() {
+    return g_floods_state;
+}
+
+ANK_SIM_STEP(
+  {SIM_PHASE_TICK_BEGIN, -1, "floods", SIM_AREA_FLOODS | SIM_AREA_MAP, [](city_t&) { floods().tick_update(false); }},
+  "undo_time");
 
 void floods_t::init() {
     season_default = season_initial;

@@ -107,7 +107,7 @@ void map_floodplain_sub_growth() {
 
 static void map_floodplain_update_inundation_row(int floodplain_is_flooding, int grid_offset, int order) {
     int randm = map_random_get(grid_offset);
-    int ticks = g_city.floods.fticks;
+    int ticks = floods().fticks;
     int local_tick_bound = calc_bound(ticks - order * 25, 0, 25);
     bool flooded = randm % 25 < local_tick_bound;
 
@@ -617,7 +617,7 @@ void map_floodplain_apply_basin_fertility_bonus(int grid_offset) {
     constexpr int BONUS_PCT_AT_NONE = 22;    // quality_current == 0
 
     const int fert = map_get_fertility(grid_offset, FERT_WITH_MALUS);
-    const int q = std::clamp(g_city.floods.quality_current, 0, 100);
+    const int q = std::clamp(floods().quality_current, 0, 100);
     const int pct = BONUS_PCT_AT_PERFECT + (100 - q) * (BONUS_PCT_AT_NONE - BONUS_PCT_AT_PERFECT) / 100;
     const int add = std::max(1, fert * pct / 100);
     map_update_tile_fertility(grid_offset, add);

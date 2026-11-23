@@ -46,7 +46,7 @@ private:
             if (guild_issue(BUILDING_WORK_CAMP, p[SUN_TEMPLE_PROGRESS_LABORERS], 13, 17, issue)) {
                 // OG: idle camp uses floodplain line when the Nile is rising.
                 if (issue.id == 17) {
-                    const int s = g_city.floods.state;
+                    const int s = floods().state;
                     if (s == FLOOD_STATE_IMMINENT || s == FLOOD_STATE_FLOODING || s == FLOOD_STATE_INUNDATED) {
                         return {k_lang, 51};
                     }

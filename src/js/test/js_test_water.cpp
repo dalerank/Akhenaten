@@ -378,18 +378,18 @@ static int __test_random_1_15bit() {
 ANK_FUNCTION(__test_random_1_15bit);
 
 static void __test_floods_set_quality(int initial, int next) {
-    g_city.floods.quality_initial = initial;
-    g_city.floods.quality_next = next;
+    floods().quality_initial = initial;
+    floods().quality_next = next;
 }
 ANK_FUNCTION_2(__test_floods_set_quality);
 
 static int __test_floods_quality_next() {
-    return g_city.floods.quality_next;
+    return floods().quality_next;
 }
 ANK_FUNCTION(__test_floods_quality_next);
 
 static void __test_floods_update_next_params() {
-    g_city.floods.update_next_flood_params();
+    floods().update_next_flood_params();
 }
 ANK_FUNCTION(__test_floods_update_next_params);
 

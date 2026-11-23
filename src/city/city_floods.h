@@ -64,6 +64,8 @@ struct floods_t {
 };
 
 
+floods_t& floods();
+
 constexpr int CYCLES_IN_A_YEAR = 392;
 
 

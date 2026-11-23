@@ -19,7 +19,7 @@ static void fill_canal_at(int /*is_flooding*/, int grid_offset, int /*row*/) {
 // OG floods_fill_canals. OG flood list L is floodplain row 29 - L here; progress 30 (no flood) falls back
 // to the shore row, so a canal on the shore row is wet all year.
 static void fill_canals_from_flood() {
-    const int progress = std::clamp(g_city.floods.flood_progress, 0, MAX_FLOODPLAIN_ROWS);
+    const int progress = std::clamp(floods().flood_progress, 0, MAX_FLOODPLAIN_ROWS);
     const int front_list = std::min(progress, MAX_FLOODPLAIN_ROWS - 1);
     foreach_floodplain_row(0, MAX_FLOODPLAIN_ROWS - 1 - front_list, fill_canal_at);
     for (int i = 1; i <= 2; i++) {

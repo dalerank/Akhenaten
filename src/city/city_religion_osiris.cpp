@@ -10,7 +10,7 @@
 god_osiris_t god_osiris;
 
 void god_osiris_t::perform_worse_flood() {
-    g_city.floods.adjust_next_quality((-2 - anti_scum_random_15bit() % 3) * 10);
+    floods().adjust_next_quality((-2 - anti_scum_random_15bit() % 3) * 10);
     messages::popup("message_wrath_of_osiris", 0, 0);
 }
 
@@ -50,7 +50,7 @@ void god_osiris_t::perform_lower_flood_quality() {
     if ((int)randm < 0) {
         randm = (randm - 1 | 0xfffffffc) + 1;
     }
-    g_city.floods.adjust_next_quality((-1 - randm) * 5);
+    floods().adjust_next_quality((-1 - randm) * 5);
     events::emit(event_message_god{ GOD_OSIRIS, "message_small_curse_osiris" });
 }
 
@@ -70,7 +70,7 @@ void god_osiris_t::perform_slightly_better_flood() {
     if ((int)randm < 0) {
         randm = (randm - 1 | 0xfffffffc) + 1;
     }
-    g_city.floods.adjust_next_quality(randm * 5 + 5);
+    floods().adjust_next_quality(randm * 5 + 5);
     messages::popup("message_small_blessing_from_osiris", 0, 0);
 }
 

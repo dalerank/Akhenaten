@@ -8,12 +8,12 @@
 #include "js/js_global_object.h"
 
 int __city_floods_expected_quality() {
-    return g_city.floods.expected_quality();
+    return floods().expected_quality();
 }
 ANK_FUNCTION(__city_floods_expected_quality)
 
 int __city_floods_expected_month() {
-    return g_city.floods.expected_month();
+    return floods().expected_month();
 }
 ANK_FUNCTION(__city_floods_expected_month)
 
@@ -28,9 +28,9 @@ void __map_floodplain_rebuild_shores() {
 ANK_FUNCTION(__map_floodplain_rebuild_shores)
 
 void __map_floodplain_update_inundation(int leading_row, int is_flooding) {
-    map_floodplain_update_inundation(leading_row, is_flooding, g_city.floods.fticks);
+    map_floodplain_update_inundation(leading_row, is_flooding, floods().fticks);
 }
 ANK_FUNCTION_2(__map_floodplain_update_inundation)
 
-ANK_GLOBAL_OBJECT(g_city.floods, __city_floods, state, has_floodplains, flood_progress, flood_progress_target,
+ANK_GLOBAL_OBJECT(floods(), __city_floods, state, has_floodplains, flood_progress, flood_progress_target,
   floodplain_width, quality_current, quality_next, quality_last, season, season_initial, duration, fticks);

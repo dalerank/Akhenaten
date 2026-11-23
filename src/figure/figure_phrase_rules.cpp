@@ -423,7 +423,7 @@ namespace {
             const building* home = home_of(f);
             switch (temple_god(home)) {
             case GOD_OSIRIS:
-                if (g_city.floods.quality_current < 60 && g_city.floods.has_floodplains) {
+                if (floods().quality_current < 60 && floods().has_floodplains) {
                     st.say(ADVISOR_CHIEF, 11);
                 }
                 break;

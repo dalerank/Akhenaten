@@ -1382,14 +1382,14 @@ void event_manager_t::process_event(int id, bool via_event_trigger, int chain_ac
 
     case EVENT_TYPE_FAILED_FLOOD:
         // OG floods.c floods_worsen_next_quality: -30..-100 in steps of 10, not a forced 0.
-        g_city.floods.adjust_next_quality((-3 - anti_scum_random_15bit() % 8) * 10);
+        floods().adjust_next_quality((-3 - anti_scum_random_15bit() % 8) * 10);
         city_message_post_full(true, "message_template_general", &event, caller_event_id,
                                PHRASE_flood_fails_title, PHRASE_flood_fails_initial_announcement,
                                PHRASE_flood_fails_no_reason_A, id, 0, POPUP_MSG_FLOOD);
         break;
 
     case EVENT_TYPE_PERFECT_FLOOD:
-        g_city.floods.adjust_next_quality((anti_scum_random_15bit() % 8 + 3) * 10);
+        floods().adjust_next_quality((anti_scum_random_15bit() % 8 + 3) * 10);
         city_message_post_full(true, "message_template_general", &event, caller_event_id,
                                PHRASE_perfect_flood_title, PHRASE_perfect_flood_initial_announcement,
                                PHRASE_perfect_flood_no_reason_A, id, 0, POPUP_MSG_FLOOD);
