@@ -27,6 +27,7 @@
 #include "building/building_granary.h"
 #include "building/building_house.h"
 #include "city/city_industry.h"
+#include "city/city_animals.h"
 #include "building/building_barracks.h"
 #include "building/building_burning_ruin.h"
 #include "figure/figure.h"
@@ -70,7 +71,7 @@ static events::session_subscriber g_city_session(&city_subscribe_events);
 
 ANK_DECLARE_CONFIG_ITERATOR(config_reload_city);
 void config_reload_city() {
-    g_city.reload_system(g_city.animals);
+    g_city.reload_system(g_animals);
 }
 
 void city_t::init() {
@@ -84,7 +85,6 @@ void city_t::init() {
     sentiment.value = 60;
     health.target_value = 50;
     health.value = 50;
-    animals.allow_spawn_ostrich = true;
     unused.unknown_00c0 = 3;
     finance.tax_percentage = 7;
     taxes.house_tax_bonus_percentage = 110;
@@ -103,7 +103,7 @@ void city_t::init() {
     empire_screen = AVAILABLE;
     bookmarks.reset();
     kingdome.init();
-    reload_system(animals);
+    reload_system(g_animals);
 }
 
 void city_t::reload_objects() {

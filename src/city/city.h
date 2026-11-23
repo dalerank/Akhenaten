@@ -13,7 +13,6 @@
 #include "city/city_migration.h"
 #include "city/city_sentiment.h"
 #include "city/city_health.h"
-#include "city/city_animals.h"
 #include "city/military.h"
 #include "city/city_resource.h"
 #include "city/city_food_supply.h"
@@ -158,7 +157,6 @@ struct city_t {
     } unused;
 
     city_fishing_points_t fishing_points;
-    city_animals_t animals;
     map_bookmarks_t bookmarks;
 
     void houses_reset_demands();

@@ -22,6 +22,8 @@
 #include "scenario/map.h"
 #include "scenario/scenario.h"
 
+animals_t g_animals;
+
 e_figure_type climate_prey_type() {
     switch (g_scenario.climate) {
     case CLIMATE_CENTRAL:
@@ -115,7 +117,7 @@ bool herd_can_travel_to(tile2i src, tile2i dst, e_figure_type herd_type) {
 
 } // namespace
 
-bool city_animals_t::is_herd_spawn_accessible(tile2i tile, e_figure_type herd_type) {
+bool animals_t::is_herd_spawn_accessible(tile2i tile, e_figure_type herd_type) {
     if (!tile.valid()) {
         return false;
     }
@@ -152,7 +154,7 @@ bool city_animals_t::is_herd_spawn_accessible(tile2i tile, e_figure_type herd_ty
     return false;
 }
 
-formation* city_animals_t::create_herd(tile2i tile, e_figure_type herd_type, int num_animals) {
+formation* animals_t::create_herd(tile2i tile, e_figure_type herd_type, int num_animals) {
     if (!is_herd_spawn_accessible(tile, herd_type)) {
         // Map points sit on the terrain the designer picked, which is not always walkable for
         // the climate animal (marsh for antelopes, dunes for hyenas). Nudge onto a neighbour
@@ -201,7 +203,7 @@ formation* city_animals_t::create_herd(tile2i tile, e_figure_type herd_type, int
     return formation;
 }
 
-void city_animals_t::create_herds() {
+void animals_t::create_herds() {
     map_routing_update_land();
 
     // Killer points hold predators and prey points hold prey on every map, Pharaoh and
@@ -230,7 +232,7 @@ void city_animals_t::create_herds() {
     emit(esid(__func__));
 }
 
-bool city_animals_t::get_free_tile(int x, int y, int allow_negative_desirability, tile2i &outtile) {
+bool animals_t::get_free_tile(int x, int y, int allow_negative_desirability, tile2i &outtile) {
     unsigned int disallowed_terrain = ~(TERRAIN_ACCESS_RAMP | TERRAIN_MEADOW);
     bool tile_found = false;
     tile2i tfound;
@@ -263,7 +265,7 @@ bool city_animals_t::get_free_tile(int x, int y, int allow_negative_desirability
     return tile_found;
 }
 
-bool city_animals_t::get_roaming_destination(int formation_id, int allow_negative_desirability, tile2i tile, int distance, int direction, tile2i &outtile) {
+bool animals_t::get_roaming_destination(int formation_id, int allow_negative_desirability, tile2i tile, int distance, int direction, tile2i &outtile) {
     int target_direction = (formation_id + random_byte()) & 6;
     if (direction) {
         target_direction = direction;
@@ -329,7 +331,7 @@ bool city_animals_t::get_roaming_destination(int formation_id, int allow_negativ
     return false;
 }
 
-void city_animals_t::add_animals_point(int index, int x, int y, e_figure_type ftype, int num) {
+void animals_t::add_animals_point(int index, int x, int y, e_figure_type ftype, int num) {
     if (index < 0 || index > UINT8_MAX) {
         return;
     }
@@ -360,14 +362,14 @@ void city_animals_t::add_animals_point(int index, int x, int y, e_figure_type ft
     points.push_back(hp);
 }
 
-void city_animals_t::set_animals_area(int index, int reseach_radius) {
+void animals_t::set_animals_area(int index, int reseach_radius) {
     formation *m = g_formations.get_from_herd(index);
     if (m->id > 0) {
         m->reseach_radius = reseach_radius;
     }
 }
 
-void city_animals_t::move_animals(const formation *m, int attacking_animals, int terrain_mask) {
+void animals_t::move_animals(const formation *m, int attacking_animals, int terrain_mask) {
     for (int i = 0; i < formation::max_figures_count; i++) {
         if (m->figures[i] <= 0)
             continue;
@@ -401,11 +403,11 @@ void city_animals_t::move_animals(const formation *m, int attacking_animals, int
     }
 }
 
-bool city_animals_t::can_spawn_ph_wolf(formation *m) {
+bool animals_t::can_spawn_ph_wolf(formation *m) {
     return false;
 }
 
-bool city_animals_t::can_spawn_ostrich(formation *m) {
+bool animals_t::can_spawn_ostrich(formation *m) {
     if (m->num_figures < m->max_figures && figure_is_prey(m->figure_type)) {
         m->herd_spawn_delay++;
         int delay = 4;
@@ -420,7 +422,7 @@ bool city_animals_t::can_spawn_ostrich(formation *m) {
     return false;
 }
 
-void city_animals_t::set_herd_figures_to_initial(const formation *m) {
+void animals_t::set_herd_figures_to_initial(const formation *m) {
     for (int i = 0; i < formation::max_figures_count; i++) {
         if (m->figures[i] > 0) {
             figure *f = figure_get(m->figures[i]);
@@ -433,7 +435,7 @@ void city_animals_t::set_herd_figures_to_initial(const formation *m) {
     }
 }
 
-void city_animals_t::update_herd_formation(formation *m) {
+void animals_t::update_herd_formation(formation *m) {
     if (can_spawn_ph_wolf(m)) {
         // spawn new wolf
         if (!map_terrain_is(m->tile, TERRAIN_IMPASSABLE_HYENA)) {
@@ -546,7 +548,7 @@ void city_animals_t::update_herd_formation(formation *m) {
     }
 }
 
-void city_animals_t::remove_all() {
+void animals_t::remove_all() {
     for (int i = 1; i < MAX_FORMATIONS; i++) {
         formation *m = formation_get(i);
         if (m->in_use && m->is_herd) {
@@ -567,7 +569,7 @@ void city_animals_t::remove_all() {
     g_scenario.herd_points_predator.clear();
 }
 
-void city_animals_t::update() {
+void animals_t::update() {
     const bool has_animals = g_scenario.env.has_animals || !!game_features::gameplay_change_hasanimals;
     if (!has_animals) {
         return;
@@ -584,7 +586,7 @@ void city_animals_t::update() {
     map_hyena_strength_update();
 }
 
-bool city_animals_t::breeding_ground_at(tile2i tile, int size) {
+bool animals_t::breeding_ground_at(tile2i tile, int size) {
     for (int i = 1; i < MAX_FORMATIONS; i++) {
         formation *m = formation_get(i);
         if (m->in_use && m->is_herd) {
@@ -595,7 +597,7 @@ bool city_animals_t::breeding_ground_at(tile2i tile, int size) {
     return false;
 }
 
-bool city_animals_t::herd_point_in_area(tile2i a, tile2i b) const {
+bool animals_t::herd_point_in_area(tile2i a, tile2i b) const {
     const int x_min = std::min(a.x(), b.x());
     const int x_max = std::max(a.x(), b.x());
     const int y_min = std::min(a.y(), b.y());

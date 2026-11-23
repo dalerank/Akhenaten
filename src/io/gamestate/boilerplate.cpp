@@ -12,6 +12,7 @@
 #include "game/game_config.h"
 #include "game/autosave_module.h"
 #include "city/city.h"
+#include "city/city_animals.h"
 #include "city/map.h"
 #include "city/city_message.h"
 #include "city/campaign_carry.h"
@@ -427,7 +428,7 @@ void GamestateIO::start_loaded_file() {
 
         //        map_natives_init();
         g_city.fishing_points.create();
-        g_city.animals.create_herds();
+        g_animals.create_herds();
 
         g_city.map.entry_point = scenario_map_entry();
         g_city.map.exit_point = scenario_map_exit();

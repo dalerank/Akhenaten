@@ -326,7 +326,7 @@ static int __test_climate_predator_type() {
 ANK_FUNCTION(__test_climate_predator_type);
 
 static void __test_create_herds() {
-    g_city.animals.create_herds();
+    g_animals.create_herds();
 }
 ANK_FUNCTION(__test_create_herds);
 
@@ -362,7 +362,7 @@ static int __test_find_accessible_herd_tile(int ftype) {
             if (!tile.valid()) {
                 continue;
             }
-            if (g_city.animals.is_herd_spawn_accessible(tile, herd_type)) {
+            if (g_animals.is_herd_spawn_accessible(tile, herd_type)) {
                 return (x << 16) | (y & 0xffff);
             }
         }
@@ -450,7 +450,7 @@ static int __test_fishing_spot_og_tick(int fid) {
 ANK_FUNCTION_1(__test_fishing_spot_og_tick);
 
 static int __test_create_herd(int x, int y, int ftype, int count) {
-    formation* m = g_city.animals.create_herd(tile2i(x, y), (e_figure_type)ftype, count);
+    formation* m = g_animals.create_herd(tile2i(x, y), (e_figure_type)ftype, count);
     return (m && m->id > 0) ? m->id : 0;
 }
 ANK_FUNCTION_4(__test_create_herd);
@@ -462,7 +462,7 @@ static void __test_herd_update(int formation_id) {
         return;
     }
     g_formations.calculate_figures();
-    g_city.animals.update_herd_formation(m);
+    g_animals.update_herd_formation(m);
 }
 ANK_FUNCTION_1(__test_herd_update);
 
