@@ -1,47 +1,4 @@
 #include "object_info.h"
-#include "grid/figure.h"
-#include "city/city_figures.h"
-
-#include "graphics/view/lookup.h"
-#include "dev/debug.h"
 #include "js/js_register.h"
 
-declare_console_var_int(fill_figure_radius, 30);
-
 const terrain_info_type_tokens_t ANK_CONFIG_ENUM(terrain_info_type_tokens);
-
-void object_info::fill_figures_info(tile2i center) {
-    figure_selected_index = 0;
-    figure_ids.clear();
-    vec2i center_pos = g_camera.lookup_tile_to_pixel(center) + vec2i{ HALF_TILE_WIDTH_PIXELS, HALF_TILE_HEIGHT_PIXELS };
-
-    grid_tiles tiles = map_grid_get_tiles(center.shifted(-1, -1), center.shifted(1, 1));
-    svector<figure*, 32> possible_figures;
-    for (const auto &tile : tiles) {
-        int figure_id = map_figure_id_get(tile);
-        while (figure_id > 0 && !possible_figures.full()) {
-            figure *f = ::figure_get(figure_id);
-            const bool valid_figure = std::find(forbidden_figure_types.begin(), forbidden_figure_types.end(), f->type) == forbidden_figure_types.end();
-            const bool is_alive = f->state != FIGURE_STATE_DEAD && f->action_state != FIGURE_ACTION_149_CORPSE;
-            const bool in_radius = center_pos.dist(map_figure_draw_state(f->id).main_pos) < fill_figure_radius();
-            if (is_alive && valid_figure && in_radius) {
-                possible_figures.push_back(f);
-            }
-            figure_id = (figure_id != f->next_figure) ? f->next_figure : 0;
-        }
-
-        if (possible_figures.full()) {
-            break;
-        }
-    }
-
-    std::sort(possible_figures.begin(), possible_figures.end(), [&](const figure* lhs, const figure* rhs) {
-        float lhsa_sq = center_pos.dist_sq(map_figure_draw_state(lhs->id).main_pos);
-        float rhsa_sq = center_pos.dist_sq(map_figure_draw_state(rhs->id).main_pos);
-        return lhsa_sq < rhsa_sq;
-    });
-
-    for (int i = 0, size = std::min<int>(figure_ids.capacity(), possible_figures.size()); i < size;  ++i) {
-        figure_ids.push_back(possible_figures[i]->id);
-    }
-}

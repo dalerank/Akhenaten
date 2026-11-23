@@ -249,8 +249,6 @@ city/city_kingdome_relations.cpp -> dev/debug.h
 city/city_message.cpp -> graphics/image.h
 city/city_population.cpp -> dev/debug.h
 city/city_religion.cpp -> dev/debug.h
-city/object_info.cpp -> dev/debug.h
-city/object_info.cpp -> graphics/view/lookup.h
 city/ratings.cpp -> dev/debug.h
 config/hotkeys.cpp -> input/hotkey.h
 config/hotkeys.cpp -> input/keyboard.h
