@@ -131,6 +131,14 @@ taxes_system city_t::taxes_sys() {
     return taxes_system(taxes, taxes_ctx());
 }
 
+labor_context city_t::labor_ctx() {
+    return {population, resource};
+}
+
+labor_system city_t::labor_sys() {
+    return labor_system(labor, labor_ctx());
+}
+
 void city_t::init_custom_map() {
     unused.faction_id = 1;
     unused.unknown_00a2 = 1;

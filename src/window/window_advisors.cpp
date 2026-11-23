@@ -11,7 +11,7 @@
 #include "js/js_game.h"
 
 void window_advisors_prepare_opening() {
-    g_city.labor.allocate_workers();
+    g_city.labor_sys().allocate_workers();
 
     g_city.finance_sys().estimate_wages();
     g_city.finance_sys().update_interest();

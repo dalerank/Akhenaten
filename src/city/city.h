@@ -55,7 +55,7 @@ struct city_t {
     city_food_supply_t food_supply;
     taxes_state taxes;
 
-    city_labor_t labor;
+    labor_state labor;
     city_migration_t migration;
     city_sentiment_t sentiment;
 
@@ -219,6 +219,8 @@ struct city_t {
     finance_system finance_sys();
     taxes_context taxes_ctx();
     taxes_system taxes_sys();
+    labor_context labor_ctx();
+    labor_system labor_sys();
 
     e_availability is_advisor_available(e_advisor advisor) const;
     void set_advisor_available(e_advisor advisor, e_availability available);

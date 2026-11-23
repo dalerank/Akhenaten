@@ -38,7 +38,7 @@ void building_static_params::initialize() {
     }
     if (max_storage_amount == 0) max_storage_amount = 200;
 
-    city_labor_t::set_category(type, labor_category);
+    labor_system::set_category(type, labor_category);
 }
 
 void add_building(building *b, int orientation, int variant) {

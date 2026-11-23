@@ -79,7 +79,7 @@ static const sim_step k_sim_steps[] = {
     [](city_t& c) { c.population.update_migration(); }},
   {SIM_PHASE_TICK_SLOT, 24, "evict_overcrowded", SIM_AREA_POPULATION | SIM_AREA_FIGURES,
     [](city_t& c) { c.population.evict_overcrowded(); }},
-  {SIM_PHASE_TICK_SLOT, 25, "labor", SIM_AREA_LABOR, [](city_t& c) { c.labor.update(); }},
+  {SIM_PHASE_TICK_SLOT, 25, "labor", SIM_AREA_LABOR, [](city_t& c) { c.labor_sys().update(); }},
   {SIM_PHASE_TICK_SLOT, 27, "water_supply", SIM_AREA_BUILDINGS, [](city_t& c) { c.buildings.update_water_supply(); }},
   {SIM_PHASE_TICK_SLOT, 28, "religion_supply", SIM_AREA_HOUSES,
     [](city_t& c) { c.buildings.update_religion_supply_houses(); }},

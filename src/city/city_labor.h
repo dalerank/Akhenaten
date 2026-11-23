@@ -15,7 +15,7 @@ struct labor_category {
 };
 ANK_CONFIG_PROPERTY(labor_category, workers_needed, workers_allocated, priority)
 
-struct city_labor_t {
+struct labor_state {
     int32_t workers_available;
     int32_t workers_employed;
     int32_t workers_unemployed;
@@ -25,7 +25,26 @@ struct city_labor_t {
     labor_category categories[LABOR_CATEGORY_SIZE];
 
     int workers_allocated(int category) const;
+    const labor_category* category(int category) const;
+    int priority_rank_max() const;
+    int max_selectable_priority(int category) const;
+};
+
+struct city_population_t;
+struct city_resources_t;
+
+struct labor_context {
+    city_population_t& population;
+    const city_resources_t& resource;
+};
+
+class labor_system {
+public:
+    labor_system(labor_state& state, const labor_context& ctx) : _state(state), _ctx(ctx) {}
+
     static int calc_fixed_workers_available(int num_plebs);
+    static void set_category(e_building_type type, int category);
+
     void calculate_workers(int num_plebs, int num_patricians);
     void calculate_workers_needed_per_category();
     void set_building_worker_weight();
@@ -37,11 +56,14 @@ struct city_labor_t {
     void allocate_workers();
     void update();
     void set_priority(int category, int new_priority);
-    int max_selectable_priority(int category);
-    int priority_rank_max() const;
     void clear_storage_priority_if_split_off();
-    const labor_category* category(int category);
-    static void set_category(e_building_type type, int category);
+
+private:
+    bool is_industry_disabled(building* b) const;
+    bool should_have_workers(building* b, int category, int check_access) const;
+
+    labor_state& _state;
+    labor_context _ctx;
 };
 
 e_labor_category category_for_building(building* b);
@@ -50,5 +72,5 @@ bool is_enhanced_storage_labor_type(e_building_type type);
 
 template<class T>
 void city_labor_set_category(const T &model) {
-    city_labor_t::set_category(model.TYPE, model.labor_category);
+    labor_system::set_category(model.TYPE, model.labor_category);
 }

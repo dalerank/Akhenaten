@@ -241,7 +241,7 @@ void city_population_t::calculate_working_people() {
         counter += house->house_population();
     });
 
-    g_city.labor.calculate_workers(num_peasants, num_nobles);
+    g_city.labor_sys().calculate_workers(num_peasants, num_nobles);
 }
 
 void city_population_t::recalculate() {

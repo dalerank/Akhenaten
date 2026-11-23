@@ -5,7 +5,7 @@
 #include "js/js_global_object.h"
 
 void __city_labor_set_priority(int category, int new_priority) {
-    g_city.labor.set_priority(category, new_priority);
+    g_city.labor_sys().set_priority(category, new_priority);
 }
 ANK_FUNCTION_2(__city_labor_set_priority)
 
@@ -25,17 +25,17 @@ bool __city_labor_category_split_enabled() {
 ANK_FUNCTION(__city_labor_category_split_enabled)
 
 int __city_labor_calc_fixed_workers_available(int num_plebs) {
-    return city_labor_t::calc_fixed_workers_available(num_plebs);
+    return labor_system::calc_fixed_workers_available(num_plebs);
 }
 ANK_FUNCTION_1(__city_labor_calc_fixed_workers_available)
 
 void __city_labor_calculate_workers(int num_plebs, int num_patricians) {
-    g_city.labor.calculate_workers(num_plebs, num_patricians);
+    g_city.labor_sys().calculate_workers(num_plebs, num_patricians);
 }
 ANK_FUNCTION_2(__city_labor_calculate_workers)
 
 void __city_labor_update() {
-    g_city.labor.update();
+    g_city.labor_sys().update();
 }
 ANK_FUNCTION(__city_labor_update)
 
