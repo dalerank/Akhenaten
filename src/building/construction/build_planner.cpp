@@ -754,6 +754,9 @@ void build_planner::construction_finalize() { // confirm final placement
 
     const auto& preview = placement_rules_of(build_type);
     const auto &params = building_static_params::get(build_type);
+    if (!params.planner_update_rule.is_draggable) {
+        update_preview(end);
+    }
     can_place = preview.finalize_check(*this, start, end, can_place);
 
     if (can_place != CAN_PLACE && !params.planner_update_rule.is_draggable) { // this is the FINAL check!
