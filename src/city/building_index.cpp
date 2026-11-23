@@ -4,8 +4,6 @@
 #include "city/city_buildings.h"
 #include "core/log.h"
 
-building_type_index g_building_index;
-
 void building_type_index::clear() {
     for (auto& ids : _by_type) {
         ids.clear();

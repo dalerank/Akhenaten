@@ -170,17 +170,17 @@ static void __test_update_malaria_risk() {
 ANK_FUNCTION(__test_update_malaria_risk);
 
 static int __test_recorded_path_acquire() {
-    return g_recorded_paths.acquire();
+    return g_city.recorded_paths.acquire();
 }
 ANK_FUNCTION(__test_recorded_path_acquire);
 
 static void __test_recorded_path_append(int path_id, int x, int y) {
-    g_recorded_paths.append(path_id, MAP_OFFSET(x, y));
+    g_city.recorded_paths.append(path_id, MAP_OFFSET(x, y));
 }
 ANK_FUNCTION_3(__test_recorded_path_append);
 
 static int __test_recorded_path_tile_count(int path_id) {
-    return (int)g_recorded_paths.tiles(path_id).size();
+    return (int)g_city.recorded_paths.tiles(path_id).size();
 }
 ANK_FUNCTION_1(__test_recorded_path_tile_count);
 
@@ -188,7 +188,7 @@ static int __test_recorded_path_used(int path_id) {
     if (path_id <= 0 || path_id >= RECORDED_PATH_POOL_SIZE) {
         return 0;
     }
-    return g_recorded_paths.slots[path_id].used ? 1 : 0;
+    return g_city.recorded_paths.slots[path_id].used ? 1 : 0;
 }
 ANK_FUNCTION_1(__test_recorded_path_used);
 

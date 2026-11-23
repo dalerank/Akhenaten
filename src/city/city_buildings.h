@@ -66,7 +66,7 @@ void buildings_valid_do(T func) {
 template <typename Types, typename F>
 void buildings_of_types_do(const Types& types, F func) {
     building_id id = 0;
-    while ((id = g_building_index.next_after(types, id)) != 0) {
+    while ((id = city_building_index().next_after(types, id)) != 0) {
         building& b = *building_get(id);
         if (building_type_any_of(b.type, types)) {
             func(b);
@@ -122,7 +122,7 @@ inline building* building_first_of_type(e_building_type type) {
 template <typename T>
 inline building *building_first_of_type(const T& types) {
     building_id id = 0;
-    while ((id = g_building_index.next_after(types, id)) != 0) {
+    while ((id = city_building_index().next_after(types, id)) != 0) {
         building* b = building_get(id);
         if (b->is_valid() && building_type_any_of(b->type, types)) {
             return b;

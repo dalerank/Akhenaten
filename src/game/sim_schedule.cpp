@@ -44,7 +44,8 @@ static const sim_step k_sim_steps[] = {
     [](city_t& c) { c.population_sys().housing_type_counts_update(); }},
   {SIM_PHASE_TICK_BEGIN, -1, "random", SIM_AREA_RANDOM, [](city_t&) { random_generate_next(); }},
   {SIM_PHASE_TICK_BEGIN, -1, "undo_time", SIM_AREA_UNDO, [](city_t&) { game_undo_reduce_time_available(); }},
-  {SIM_PHASE_TICK_BEGIN, -1, "floods", SIM_AREA_FLOODS | SIM_AREA_MAP, [](city_t&) { g_floods.tick_update(false); }},
+  {SIM_PHASE_TICK_BEGIN, -1, "floods", SIM_AREA_FLOODS | SIM_AREA_MAP,
+    [](city_t&) { g_city.floods.tick_update(false); }},
   {SIM_PHASE_TICK_BEGIN, -1, "buildings_tick", SIM_AREA_BUILDINGS,
     [](city_t& c) { c.buildings.update_tick(game.paused); }},
 

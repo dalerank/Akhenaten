@@ -21,8 +21,6 @@
 #include <cctype>
 #include "scenario/scenario.h"
 
-floods_t g_floods;
-
 void floods_t::init() {
     season_default = season_initial;
     duration_default = duration_initial;

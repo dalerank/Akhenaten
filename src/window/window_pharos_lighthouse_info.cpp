@@ -19,7 +19,7 @@ namespace {
     }
 
     textid no_peasants_text() {
-        const int s = g_floods.state;
+        const int s = g_city.floods.state;
         if (s == FLOOD_STATE_IMMINENT || s == FLOOD_STATE_FLOODING || s == FLOOD_STATE_INUNDATED) {
             return {178, 51};
         }

@@ -23,7 +23,7 @@ int random_15bit() {
 }
 
 int flood_month_before() {
-    const int month = g_floods.season_month - 1;
+    const int month = g_city.floods.season_month - 1;
     return month < 0 ? month + 12 : month;
 }
 

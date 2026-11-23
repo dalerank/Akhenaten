@@ -1,10 +1,11 @@
 #include "city/city_message_chunks.h"
+#include "city/city.h"
 
 #include "city/city_message.h"
 #include "io/io_buffer.h"
 
 void messages_chunk::bind_data(io_buffer* iob, size_t version) {
-    auto& data = g_message_manager;
+    auto& data = g_city.messages;
     for (int i = 0; i < MAX_MESSAGES; i++) {
         city_message& msg = data.messages[i];
 
@@ -42,11 +43,11 @@ void messages_chunk::bind_data(io_buffer* iob, size_t version) {
 }
 
 void messages_chunk::reset() {
-    g_message_manager.init();
+    g_city.messages.init();
 }
 
 void message_extra_chunk::bind_data(io_buffer* iob, size_t version) {
-    auto& data = g_message_manager;
+    auto& data = g_city.messages;
     iob->bind(BIND_SIGNATURE_INT32, &data.next_message_sequence);
     iob->bind(BIND_SIGNATURE_UINT16, &data.total_messages);
     iob->bind(BIND_SIGNATURE_UINT16, &data.reserved_1);

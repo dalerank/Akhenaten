@@ -137,7 +137,7 @@ static void request_check_compliance(event_ph_t& event) {
         return;
     }
     const bool deben = event.item.value == RESOURCE_DEBEN;
-    city_message& message = g_message_manager.post_common(true,
+    city_message& message = g_city.messages.post_common(true,
       deben ? "message_compliance_now_possible" : "message_storage_yards_ready_to_fulfill_request", event.event_id, 0,
       GOD_UNKNOWN, 0);
     message.req_amount = request.resource_amount();

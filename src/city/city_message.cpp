@@ -1,4 +1,5 @@
 #include "city_message.h"
+#include "city/city.h"
 #include "core/system_time.h"
 
 #include "io/io_buffer.h"
@@ -17,8 +18,6 @@
 #include "game/simulation.h"
 #include "game/game_config.h"
 #include "scenario/scenario.h"
-
-message_manager_t g_message_manager;
 
 static bool should_play_sound = true;
 
@@ -178,7 +177,7 @@ void message_manager_t::subscribe_events() {
 }
 
 static void message_manager_subscribe_events() {
-    g_message_manager.subscribe_events();
+    g_city.messages.subscribe_events();
 }
 static events::session_subscriber g_message_manager_session(&message_manager_subscribe_events);
 
@@ -270,7 +269,7 @@ static void fill_from_event(city_message &msg, const event_ph_t *event, int pare
 }
 
 static void enqueue_message(int sequence) {
-    auto& data = g_message_manager;
+    auto& data = g_city.messages;
     for (int i = 0; i < MAX_MESSAGES_QUEUE; i++) {
         if (!data.queue[i]) {
             data.queue[i] = sequence;
@@ -288,7 +287,7 @@ static void play_sound(const lang_message &template_id) {
 }
 
 void city_message_mark_shown(int index) {
-    auto& data = g_message_manager;
+    auto& data = g_city.messages;
     data.consecutive_message_delay = 5;
     data.messages[index].is_read = true;
 }
@@ -302,7 +301,7 @@ int city_message_find_index_by_sequence(int sequence) {
         return -1;
     }
     for (int i = 0; i < MAX_MESSAGES; i++) {
-        if (g_message_manager.messages[i].MM_text_id && g_message_manager.messages[i].sequence == sequence) {
+        if (g_city.messages.messages[i].MM_text_id && g_city.messages.messages[i].sequence == sequence) {
             return i;
         }
     }
@@ -310,7 +309,7 @@ int city_message_find_index_by_sequence(int sequence) {
 }
 
 static void show_message_banner_for_index(int index) {
-    city_message &msg = g_message_manager.messages[index];
+    city_message& msg = g_city.messages.messages[index];
     xstring title;
     if (msg.eventmsg_title_id >= 0) {
         title = g_scenario.events.msg_text(msg.eventmsg_title_id, 0);
@@ -346,7 +345,7 @@ void city_message_disable_sound_for_next_message(void) {
 }
 
 void city_message_apply_sound_interval(int category) {
-    auto& data = g_message_manager;
+    auto& data = g_city.messages;
     time_millis now = time_get_millis();
     if (now - data.last_sound_time[category] <= 15000) {
         city_message_disable_sound_for_next_message();
@@ -358,7 +357,7 @@ void city_message_apply_sound_interval(int category) {
 void city_message_post_full(bool use_popup, xstring template_id, const event_ph_t* event, int parent_event_id,
   int title_id, int body_id, int phrase_id, int param1, int param2, e_popup_message_category popup_cat,
   city_message_gift gift) {
-    auto& data = g_message_manager;
+    auto& data = g_city.messages;
     int id = data.alloc_message(template_id);
     if (id < 0) {
         return;
@@ -407,7 +406,7 @@ city_message &message_manager_t::post_common(bool use_popup, xstring mm_text, in
 }
 
 city_message &city_message_post_with_popup_delay(e_mesage_category category, bool force_popup, xstring text, int param1, short param2) {
-    auto& data = g_message_manager;
+    auto& data = g_city.messages;
     bool use_popup = false;
 
     if (data.message_delay[category] <= 0) {
@@ -423,7 +422,7 @@ city_message &city_message_post_with_popup_delay(e_mesage_category category, boo
 }
 
 void city_message_post_with_message_delay(e_mesage_category category, int use_popup, xstring message_type, int delay) {
-    auto& data = g_message_manager;
+    auto& data = g_city.messages;
     if (category == MESSAGE_CAT_FISHING_BLOCKED || category == MESSAGE_CAT_NO_WORKING_DOCK) {
         // bug in the original game: delays for 'fishing blocked' and 'no working dock'
         // are stored in message_count with manual countdown
@@ -442,7 +441,7 @@ void city_message_post_with_message_delay(e_mesage_category category, int use_po
 }
 
 int city_message_take_queued() {
-    auto& data = g_message_manager;
+    auto& data = g_city.messages;
     if (data.consecutive_message_delay > 0) {
         data.consecutive_message_delay--;
         return -1;
@@ -473,7 +472,7 @@ int city_message_take_queued() {
 }
 
 void city_message_sort_and_compact(void) {
-    auto& data = g_message_manager;
+    auto& data = g_city.messages;
     for (int i = 0; i < MAX_MESSAGES; i++) {
         for (int a = 0; a < MAX_MESSAGES - 1; a++) {
             int swap = 0;
@@ -504,20 +503,20 @@ int city_message_get_text_id(int message_id) {
 }
 
 void city_message_reset_category_count(e_mesage_category category) {
-    auto& data = g_message_manager;
+    auto& data = g_city.messages;
     data.message_count[category] = 0;
 }
 void city_message_increase_category_count(e_mesage_category category) {
-    auto& data = g_message_manager;
+    auto& data = g_city.messages;
     data.message_count[category]++;
 }
 int city_message_get_category_count(e_mesage_category category) {
-    auto& data = g_message_manager;
+    auto& data = g_city.messages;
     return data.message_count[category];
 }
 
 void city_message_decrease_delays(void) {
-    auto& data = g_message_manager;
+    auto& data = g_city.messages;
     for (int i = 0; i < MESSAGE_CAT_SIZE; i++) {
         if (data.message_delay[i] > 0)
             data.message_delay[i]--;
@@ -525,7 +524,7 @@ void city_message_decrease_delays(void) {
 }
 
 bool city_message_mark_population_shown(int population) {
-    auto& data = g_message_manager;
+    auto& data = g_city.messages;
     bool lastv = false;
     switch (population) {
     case 100: lastv = data.population_shown.pop500; data.population_shown.pop100 = true; return lastv;
@@ -544,28 +543,28 @@ bool city_message_mark_population_shown(int population) {
 }
 
 const city_message& city_message_get(int message_id) {
-    const auto& data = g_message_manager;
+    const auto& data = g_city.messages;
     return data.messages[message_id];
 }
 
 void city_message_mark_read(int message_id) {
-    auto& data = g_message_manager;
+    auto& data = g_city.messages;
     data.messages[message_id].is_read = 1;
 }
 
 void city_message_delete(int message_id) {
-    auto& data = g_message_manager;
+    auto& data = g_city.messages;
     data.messages[message_id].MM_text_id = 0;
     city_message_sort_and_compact();
 }
 
 int city_message_count() {
-    auto& data = g_message_manager;
+    auto& data = g_city.messages;
     return data.total_messages;
 }
 
 int city_message_problem_area_count() {
-    auto& data = g_message_manager;
+    auto& data = g_city.messages;
     return data.problem_count;
 }
 
@@ -587,7 +586,7 @@ int has_problem_area(const city_message* msg, int lang_msg_type) {
 }
 
 int city_message_next_problem_area_grid_offset() {
-    auto& data = g_message_manager;
+    auto& data = g_city.messages;
     time_millis now = time_get_millis();
     if (now - data.problem_last_click_time > 3000)
         data.problem_index = 0;
@@ -638,14 +637,14 @@ int city_message_next_problem_area_grid_offset() {
 }
 
 void city_message_clear_scroll(void) {
-    auto& data = g_message_manager;
+    auto& data = g_city.messages;
     data.scroll_position = 0;
 }
 int city_message_scroll_position(void) {
-    auto& data = g_message_manager;
+    auto& data = g_city.messages;
     return data.scroll_position;
 }
 void city_message_set_scroll_position(int scroll_position) {
-    auto& data = g_message_manager;
+    auto& data = g_city.messages;
     data.scroll_position = scroll_position;
 }

@@ -63,7 +63,6 @@ struct floods_t {
     void post_flood_prediction_message();
 };
 
-extern floods_t g_floods;
 
 constexpr int CYCLES_IN_A_YEAR = 392;
 

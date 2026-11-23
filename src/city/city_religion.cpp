@@ -584,7 +584,7 @@ void gods_system::perform_major_blessing(e_god god, bool force_construction) {
             return;
         } else {
             // better next flood quality
-            g_floods.adjust_next_quality((anti_scum_random_15bit() % 3 * 5 + 10) * 2);
+            g_city.floods.adjust_next_quality((anti_scum_random_15bit() % 3 * 5 + 10) * 2);
             messages::god(GOD_OSIRIS, "message_blessing_inundation_from_osiris" );
             return;
         }

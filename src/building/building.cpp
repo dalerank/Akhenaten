@@ -469,7 +469,7 @@ bool building::is_main() {
 
 void building::set_type(e_building_type new_type) {
     type = new_type;
-    g_building_index.note(*this);
+    g_city.building_index.note(*this);
 }
 
 void building::reset_slot(building_id slot_id) {
@@ -519,7 +519,7 @@ void building::clear_related_data() {
     }
 
     dcast()->on_destroy();
-    g_recorded_paths.building_clear(id);
+    g_city.recorded_paths.building_clear(id);
     clear_impl();
 }
 

@@ -84,15 +84,15 @@ static void cartpusher_handoff_visitor_path(figure &f, building *dest) {
     const bool dest_keeps = building_keeps_visitor_paths(dest_main);
 
     if (home_keeps && dest_keeps) {
-        const int copy = g_recorded_paths.duplicate(f.trail_path_id);
+        const int copy = g_city.recorded_paths.duplicate(f.trail_path_id);
         if (copy) {
-            g_recorded_paths.building_push(home_main->id, copy);
+            g_city.recorded_paths.building_push(home_main->id, copy);
         }
-        g_recorded_paths.handoff_to_building(f, dest_main->id);
+        g_city.recorded_paths.handoff_to_building(f, dest_main->id);
     } else if (dest_keeps) {
-        g_recorded_paths.handoff_to_building(f, dest_main->id);
+        g_city.recorded_paths.handoff_to_building(f, dest_main->id);
     } else if (home_keeps) {
-        g_recorded_paths.handoff_to_building(f, home_main->id);
+        g_city.recorded_paths.handoff_to_building(f, home_main->id);
     }
 }
 
@@ -594,7 +594,7 @@ void figure_cartpusher::figure_action() {
             poof();
         } else if (do_returnhome(TERRAIN_USAGE_ROADS)) {
             if (b->params().flags.keeps_visitor_paths) {
-                g_recorded_paths.handoff_to_building(base, b->main()->id);
+                g_city.recorded_paths.handoff_to_building(base, b->main()->id);
             }
         }
         break;

@@ -87,7 +87,7 @@ static void worker_handoff_path_to_camp(figure &f) {
     }
     building *main = h->main();
     if (main) {
-        g_recorded_paths.handoff_to_building(f, main->id);
+        g_city.recorded_paths.handoff_to_building(f, main->id);
     }
 }
 
@@ -140,7 +140,7 @@ namespace {
 
 // OG laborer_farm_work_waiting: floodplain farm has an open worker request.
 bool laborer_farm_work_waiting() {
-    if (!g_floods.state_is(FLOOD_STATE_FARMABLE)) {
+    if (!g_city.floods.state_is(FLOOD_STATE_FARMABLE)) {
         return false;
     }
     for (auto &b : city_buildings()) {
@@ -817,7 +817,7 @@ void figure_worker::find_work() {
 
     // OG: skip farms with no citizen road/garden path to road_access; retry so a nearer
     // unreachable farm does not kill the laborer (fall through to monuments if none left).
-    if (g_floods.state_is(FLOOD_STATE_FARMABLE)) {
+    if (g_city.floods.state_is(FLOOD_STATE_FARMABLE)) {
         svector<building_id, 500> unreachable_farms;
         for (;;) {
             best = nullptr;

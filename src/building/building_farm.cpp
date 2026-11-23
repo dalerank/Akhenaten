@@ -149,7 +149,7 @@ void building_farm::draw_workers(painter &ctx, building *b, tile2i tile, vec2i p
 
     pos += {30, -15};
     int direction = map_random_get(b->tile.grid_offset()) % 8;
-    const bool flood_imminent = b->is_floodplain_farm() && g_floods.state_is(FLOOD_STATE_IMMINENT);
+    const bool flood_imminent = b->is_floodplain_farm() && g_city.floods.state_is(FLOOD_STATE_IMMINENT);
 
     direction = (direction >= 0) ? direction : (g_simulation.simtime.absolute_tick() % 128 / 16);
     vec2i coords = farm_params().tile_coord(pos, d.worker_tile.x, d.worker_tile.y);
@@ -158,10 +158,10 @@ void building_farm::draw_workers(painter &ctx, building *b, tile2i tile, vec2i p
 
 bool building_farm::time_to_deliver(bool floodplains, int resource_id) {
     if (floodplains) {
-        float current_cycle = g_floods.current_cycle();
-        float start_cycle = g_floods.start_cycle();
+        float current_cycle = g_city.floods.current_cycle();
+        float start_cycle = g_city.floods.start_cycle();
         float harvest_cycle = start_cycle - 28.0f;
-        return g_floods.state_is(FLOOD_STATE_IMMINENT) && (current_cycle >= harvest_cycle);
+        return g_city.floods.state_is(FLOOD_STATE_IMMINENT) && (current_cycle >= harvest_cycle);
     } else {
         const auto &months = farm_params().month_harvest;
         const bool is_correct_month = std::count(months.begin(), months.end(), g_simulation.simtime.month) > 0;
@@ -272,7 +272,7 @@ void building_farm::on_tick(bool refresh) {
 
     auto &d = runtime_data();
     d.is_floodplain = base.is_floodplain_farm();
-    d.flood_imminent = (d.is_floodplain && g_floods.state_is(FLOOD_STATE_IMMINENT));
+    d.flood_imminent = (d.is_floodplain && g_city.floods.state_is(FLOOD_STATE_IMMINENT));
     restore_tiles_if_emerged();
 }
 

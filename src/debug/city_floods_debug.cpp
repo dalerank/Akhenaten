@@ -1,4 +1,5 @@
 #include "app/app.h"
+#include "city/city.h"
 #include "dev/debug.h"
 
 #include "city/city_floods.h"
@@ -26,12 +27,12 @@ static void draw_flood_order_ui(painter &ctx) {
     int y = 30;
     char str[300];
 
-    float _c_curr = g_floods.current_cycle();
-    float _c_start = g_floods.start_cycle();
-    float _c_end = g_floods.end_cycle();
+    float _c_curr = g_city.floods.current_cycle();
+    float _c_start = g_city.floods.start_cycle();
+    float _c_end = g_city.floods.end_cycle();
 
-    int _c_period_last = g_floods.period_length(false);
-    int _c_period_next = g_floods.period_length(true);
+    int _c_period_last = g_city.floods.period_length(false);
+    int _c_period_next = g_city.floods.period_length(true);
 
     float rc_curr = fmod(_c_curr, CYCLES_IN_A_YEAR);
     float rc_start = fmod(_c_start, CYCLES_IN_A_YEAR);
@@ -56,7 +57,7 @@ static void draw_flood_order_ui(painter &ctx) {
             || (i > rc_start + CYCLES_IN_A_YEAR && i < rc_end + CYCLES_IN_A_YEAR))
             text_draw(dot, x + i, y + 15, FONT_SMALL_PLAIN, COLOR_RED);
 
-        if (g_floods.debug_period() > 0) {
+        if (g_city.floods.debug_period() > 0) {
             if (abs_i > _c_start + _c_period_next && abs_i < _c_end - _c_period_next)
                 text_draw(dot, x + i, y + 15, FONT_SMALL_PLAIN, COLOR_GREEN);
         } else {
@@ -68,21 +69,21 @@ static void draw_flood_order_ui(painter &ctx) {
     text_draw(dot, x + rc_curr, y + 15, FONT_SMALL_OUTLINED, COLOR_FONT_YELLOW);
     text_draw(string_from_ascii("\'"), x + rc_curr, y + 25, FONT_SMALL_OUTLINED, COLOR_FONT_YELLOW);
     debug_text_float(x + rc_curr + 5, y + 25, 0, "", _c_curr);
-    debug_text(ctx, str, x + rc_curr + 54, y + 25, 5, ":", g_floods.state);
+    debug_text(ctx, str, x + rc_curr + 54, y + 25, 5, ":", g_city.floods.state);
 
-    debug_text(ctx, str, x, y + 35, 60, "debug:", g_floods.debug_period());
-    debug_text(ctx, str, x, y + 45, 60, "ftick:", g_floods.fticks);
+    debug_text(ctx, str, x, y + 35, 60, "debug:", g_city.floods.debug_period());
+    debug_text(ctx, str, x, y + 45, 60, "ftick:", g_city.floods.fticks);
 
     y += 50;
 
     int cl = 60;
     debug_text(ctx, str, x, y + 15, cl + 15, "CURRENT:", _c_curr);
-    debug_text(ctx, str, x + 105, y + 15, 10, "/", g_floods.current_subcycle());
+    debug_text(ctx, str, x + 105, y + 15, 10, "/", g_city.floods.current_subcycle());
     debug_text(ctx, str, x, y + 25, cl, "t-49:", _c_start - 49);
     debug_text(ctx, str, x, y + 35, cl, "t-28:", _c_start - 28);
     debug_text(ctx, str, x, y + 45, cl, "  START", _c_start);
 
-    if (g_floods.debug_period() > 0) {
+    if (g_city.floods.debug_period() > 0) {
         debug_text(ctx, str, x, y + 55, cl, "rest:", _c_start + _c_period_next);
         debug_text(ctx, str, x, y + 65, cl, "retract:", _c_end - _c_period_next);
     } else {
@@ -96,25 +97,25 @@ static void draw_flood_order_ui(painter &ctx) {
 
     cl = 100;
     y += 10;
-    debug_text(ctx, str, x, y + 105, cl, "season_initial:", g_floods.season_initial);
-    debug_text(ctx, str, x, y + 115, cl, "duration_initial:", g_floods.duration_initial);
-    debug_text(ctx, str, x, y + 125, cl, "quality_initial:", g_floods.quality_initial);
-    debug_text(ctx, str, x, y + 135, cl, "season:", g_floods.season);
-    debug_text(ctx, str, x, y + 145, cl, "duration:", g_floods.duration);
-    debug_text(ctx, str, x, y + 155, cl, "quality:", g_floods.quality_current);
-    debug_text(ctx, str, x, y + 165, cl, "(unk00):", g_floods.unk00);
-    debug_text(ctx, str, x, y + 175, cl, "quality_next:", g_floods.quality_next);
-    debug_text(ctx, str, x, y + 185, cl, "quality_last:", g_floods.quality_last);
+    debug_text(ctx, str, x, y + 105, cl, "season_initial:", g_city.floods.season_initial);
+    debug_text(ctx, str, x, y + 115, cl, "duration_initial:", g_city.floods.duration_initial);
+    debug_text(ctx, str, x, y + 125, cl, "quality_initial:", g_city.floods.quality_initial);
+    debug_text(ctx, str, x, y + 135, cl, "season:", g_city.floods.season);
+    debug_text(ctx, str, x, y + 145, cl, "duration:", g_city.floods.duration);
+    debug_text(ctx, str, x, y + 155, cl, "quality:", g_city.floods.quality_current);
+    debug_text(ctx, str, x, y + 165, cl, "(unk00):", g_city.floods.unk00);
+    debug_text(ctx, str, x, y + 175, cl, "quality_next:", g_city.floods.quality_next);
+    debug_text(ctx, str, x, y + 185, cl, "quality_last:", g_city.floods.quality_last);
 
     cl = 150;
-    debug_text(ctx, str, x, y + 205, cl, "progress:", g_floods.flood_progress);
-    debug_text(ctx, str, x, y + 215, cl, "season_month:", g_floods.season_month);
-    debug_text(ctx, str, x, y + 225, cl, "state:", g_floods.state);
-    debug_text(ctx, str, x, y + 235, cl, "width:", g_floods.floodplain_width);
-    debug_text(ctx, str, x, y + 245, cl, "hasplains:", g_floods.has_floodplains);
-    debug_text(ctx, str, x, y + 255, cl, "force_inundation:", g_floods.force_inundation);
-    debug_text(ctx, str, x, y + 265, cl, "flood_progress_tick:", g_floods.flood_progress_tick);
-    debug_text(ctx, str, x, y + 275, cl, "target_progress:", g_floods.flood_progress_target);
+    debug_text(ctx, str, x, y + 205, cl, "progress:", g_city.floods.flood_progress);
+    debug_text(ctx, str, x, y + 215, cl, "season_month:", g_city.floods.season_month);
+    debug_text(ctx, str, x, y + 225, cl, "state:", g_city.floods.state);
+    debug_text(ctx, str, x, y + 235, cl, "width:", g_city.floods.floodplain_width);
+    debug_text(ctx, str, x, y + 245, cl, "hasplains:", g_city.floods.has_floodplains);
+    debug_text(ctx, str, x, y + 255, cl, "force_inundation:", g_city.floods.force_inundation);
+    debug_text(ctx, str, x, y + 265, cl, "flood_progress_tick:", g_city.floods.flood_progress_tick);
+    debug_text(ctx, str, x, y + 275, cl, "target_progress:", g_city.floods.flood_progress_target);
 }
 
 static void draw_floodplain_shore_tile(vec2i pixel, tile2i point, painter &ctx) {
@@ -196,11 +197,11 @@ declare_console_command_p(startflood) {
     args.next(arg);
 
     if (arg == "+") {
-        g_floods.force_inundation++;
+        g_city.floods.force_inundation++;
     } else if (arg == "-") {
-        g_floods.force_inundation--;
+        g_city.floods.force_inundation--;
     } else {
-        g_floods.force_inundation = atoi(arg.empty() ? (pcstr) "0" : arg.c_str());
+        g_city.floods.force_inundation = atoi(arg.empty() ? (pcstr) "0" : arg.c_str());
     }
 }
 
@@ -213,8 +214,8 @@ declare_console_command_p(set_flood_start) {
     }
     // start_cycle = floor(season * 1.05 + 14.5)  =>  season = ceil((target - 14.5) / 1.05)
     const int season = std::clamp((int)std::ceil((target_cycle - 14.5f) / 1.05f), 0, 255);
-    g_floods.season_initial = season;
-    g_floods.season = season;
+    g_city.floods.season_initial = season;
+    g_city.floods.season = season;
 }
 
 declare_console_command_p(set_flood_end) {
@@ -224,30 +225,30 @@ declare_console_command_p(set_flood_end) {
     if (target_cycle < 0) {
         return;
     }
-    const int duration = std::max(0, target_cycle - g_floods.start_cycle() - g_floods.floodplain_width * 2);
-    g_floods.duration_initial = duration;
-    g_floods.duration = duration;
+    const int duration = std::max(0, target_cycle - g_city.floods.start_cycle() - g_city.floods.floodplain_width * 2);
+    g_city.floods.duration_initial = duration;
+    g_city.floods.duration = duration;
 }
 
 declare_console_command_p(set_flood_reset) {
-    g_floods.season_initial = g_floods.season_default;
-    g_floods.season = g_floods.season_default;
-    g_floods.duration_initial = g_floods.duration_default;
-    g_floods.duration = g_floods.duration_default;
+    g_city.floods.season_initial = g_city.floods.season_default;
+    g_city.floods.season = g_city.floods.season_default;
+    g_city.floods.duration_initial = g_city.floods.duration_default;
+    g_city.floods.duration = g_city.floods.duration_default;
 }
 
 declare_console_command_p(flood_dump) {
-    const int start = g_floods.start_cycle();
-    const int end = g_floods.end_cycle();
-    const int width = g_floods.floodplain_width;
-    const float period_last = g_floods.period_length(false);
-    logs::info("[flood_dump] season=%d (init=%d default=%d)  duration=%d (init=%d default=%d)", g_floods.season,
-      g_floods.season_initial, g_floods.season_default, g_floods.duration, g_floods.duration_initial,
-      g_floods.duration_default);
+    const int start = g_city.floods.start_cycle();
+    const int end = g_city.floods.end_cycle();
+    const int width = g_city.floods.floodplain_width;
+    const float period_last = g_city.floods.period_length(false);
+    logs::info("[flood_dump] season=%d (init=%d default=%d)  duration=%d (init=%d default=%d)", g_city.floods.season,
+      g_city.floods.season_initial, g_city.floods.season_default, g_city.floods.duration,
+      g_city.floods.duration_initial, g_city.floods.duration_default);
     logs::info("[flood_dump] floodplain_width=%d  start_cycle=%d  end_cycle=%d  total_flood=%d cycles", width, start,
       end, end - start);
     logs::info("[flood_dump] quality_current=%d  quality_last=%d  quality_next=%d  flooding_period=%.1f",
-      g_floods.quality_current, g_floods.quality_last, g_floods.quality_next, period_last);
-    logs::info("[flood_dump] state=%d  current_cycle=%d  flood_progress=%d/%d", (int)g_floods.state,
-      g_floods.current_cycle(), g_floods.flood_progress, g_floods.flood_progress_target);
+      g_city.floods.quality_current, g_city.floods.quality_last, g_city.floods.quality_next, period_last);
+    logs::info("[flood_dump] state=%d  current_cycle=%d  flood_progress=%d/%d", (int)g_city.floods.state,
+      g_city.floods.current_cycle(), g_city.floods.flood_progress, g_city.floods.flood_progress_target);
 }

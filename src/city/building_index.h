@@ -42,7 +42,7 @@ private:
     std::array<std::vector<building_id>, BUILDING_MAX> _by_type;
 };
 
-extern building_type_index g_building_index;
+building_type_index& city_building_index();
 
 inline constexpr std::array<e_building_type, 20> k_house_building_types = {BUILDING_HOUSE_CRUDE_HUT,
   BUILDING_HOUSE_STURDY_HUT, BUILDING_HOUSE_MEAGER_SHANTY, BUILDING_HOUSE_COMMON_SHANTY, BUILDING_HOUSE_ROUGH_COTTAGE,

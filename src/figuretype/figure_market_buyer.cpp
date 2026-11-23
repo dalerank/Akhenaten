@@ -70,7 +70,7 @@ void handoff_arrival_path(figure &f, building *dest) {
     if (dest && f.trail_path_id && dest->params().flags.keeps_visitor_paths) {
         building *main = dest->main();
         if (main) {
-            g_recorded_paths.handoff_to_building(f, main->id);
+            g_city.recorded_paths.handoff_to_building(f, main->id);
         }
     }
     if (!f.trail_path_id) {
@@ -205,7 +205,7 @@ void figure_market_buyer::figure_action() {
             if (h && h->params().flags.keeps_visitor_paths) {
                 building *main = h->main();
                 if (main) {
-                    g_recorded_paths.handoff_to_building(base, main->id);
+                    g_city.recorded_paths.handoff_to_building(base, main->id);
                 }
             }
             apply_return_home_spawn_cooldown();

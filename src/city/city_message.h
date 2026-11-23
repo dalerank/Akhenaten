@@ -216,7 +216,6 @@ struct message_manager_t {
     city_message& post_common(bool use_popup, xstring message, int param1, int param2, int god, int bg_img);
 };
 
-extern message_manager_t g_message_manager;
 struct event_ph_t;
 
 void city_message_disable_sound_for_next_message(void);

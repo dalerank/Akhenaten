@@ -113,7 +113,7 @@ void game_t::update_tick(int simtick) {
 
     if (guard_stub_records) {
         stub_records_guard_check("during tick");
-        g_building_index.verify("during tick");
+        g_city.building_index.verify("during tick");
     }
 }
 

@@ -1,11 +1,10 @@
 #include "city/city_recorded_paths.h"
+#include "city/city.h"
 
 #include "core/calc.h"
 #include "figure/figure.h"
 #include "grid/grid.h"
 #include "io/io_buffer.h"
-
-recorded_paths_t g_recorded_paths;
 
 void recorded_paths_t::clear() {
     for (int i = 0; i < RECORDED_PATH_POOL_SIZE; i++) {
@@ -138,14 +137,14 @@ void recorded_paths_t::handoff_to_building(figure &f, building_id bid) {
 
 void figure_recorded_path_acquire(figure &f) {
     if (f.trail_path_id > 0) {
-        g_recorded_paths.release(f.trail_path_id);
+        g_city.recorded_paths.release(f.trail_path_id);
         f.trail_path_id = 0;
     }
-    f.trail_path_id = (uint16_t)g_recorded_paths.acquire();
+    f.trail_path_id = (uint16_t)g_city.recorded_paths.acquire();
     if (f.trail_path_id) {
-        g_recorded_paths.slots[f.trail_path_id].figure_type = (uint16_t)f.type;
+        g_city.recorded_paths.slots[f.trail_path_id].figure_type = (uint16_t)f.type;
         if (f.tile.valid()) {
-            g_recorded_paths.append(f.trail_path_id, f.tile.grid_offset());
+            g_city.recorded_paths.append(f.trail_path_id, f.tile.grid_offset());
         }
     }
 }
@@ -154,13 +153,13 @@ void figure_recorded_path_append_tile(figure &f) {
     if (f.trail_path_id <= 0 || !f.tile.valid()) {
         return;
     }
-    g_recorded_paths.append(f.trail_path_id, f.tile.grid_offset());
+    g_city.recorded_paths.append(f.trail_path_id, f.tile.grid_offset());
 }
 
 void figure_recorded_path_release(figure &f) {
     if (f.trail_path_id <= 0) {
         return;
     }
-    g_recorded_paths.release(f.trail_path_id);
+    g_city.recorded_paths.release(f.trail_path_id);
     f.trail_path_id = 0;
 }

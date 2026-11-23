@@ -1,4 +1,5 @@
 #include "figure_entertainer.h"
+#include "city/city.h"
 
 #include "building/building_ferry.h"
 #include "core/calc.h"
@@ -248,7 +249,7 @@ void figure_entertainer::figure_action() {
             if (h && h->params().flags.keeps_visitor_paths) {
                 building *main = h->main();
                 if (main) {
-                    g_recorded_paths.handoff_to_building(base, main->id);
+                    g_city.recorded_paths.handoff_to_building(base, main->id);
                 }
             }
         }

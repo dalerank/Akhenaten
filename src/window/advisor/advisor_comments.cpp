@@ -750,8 +750,8 @@ advisor_city_state advisor_city_state_current() {
     s.gold_stolen_this_month = g_city.finance.gold_stolen_this_month;
     s.invasion_running = scenario_invasion_exists_upcoming() ? 1 : 0;
     gather_requests(s);
-    s.flood_quality = g_floods.expected_quality();
-    s.flood_month = g_floods.expected_month();
+    s.flood_quality = g_city.floods.expected_quality();
+    s.flood_month = g_city.floods.expected_month();
 
     for (const auto& [name, value] : g_state_override) {
         archive_helper::set(s, name, value, true);

@@ -135,7 +135,7 @@ static void __test_plagues_tick(int n) {
 ANK_FUNCTION_1(__test_plagues_tick);
 
 static int __test_floods_season_month() {
-    return g_floods.season_month;
+    return g_city.floods.season_month;
 }
 ANK_FUNCTION(__test_floods_season_month);
 

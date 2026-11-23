@@ -43,7 +43,6 @@ struct recorded_paths_t {
     void handoff_to_building(figure &f, building_id bid);
 };
 
-extern recorded_paths_t g_recorded_paths;
 
 void figure_recorded_path_acquire(figure &f);
 void figure_recorded_path_append_tile(figure &f);
