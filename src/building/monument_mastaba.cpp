@@ -827,53 +827,8 @@ bool building_mastaba::force_draw_flat_tile(painter &ctx, tile2i tile, vec2i pix
     return (monumentd.phase < MASTABA_PHASE_BRICKS);
 }
 
-void building_mastaba::bind_dynamic(io_buffer *iob, size_t version) {
-    if (version >= 196) {
-        bind_block_engine_state(iob, 0);
-        return;
-    }
-
-    auto &monumentd = runtime_data();
-
-    for (int i = 0; i < RESOURCES_MAX; i++) {
-        iob->bind(BIND_SIGNATURE_UINT8, &monumentd.burial_stock[i]);
-    }
-    iob->bind____skip(2); // was skip(38); 36 = burial_stock
-    iob->bind(BIND_SIGNATURE_UINT8, &base.orientation);
-    for (int i = 0; i < 5; i++) {
-        iob->bind(BIND_SIGNATURE_UINT16, &monumentd.workers[i]);
-    }
-    iob->bind(BIND_SIGNATURE_UINT8, &monumentd.phase);
-    iob->bind(BIND_SIGNATURE_UINT8, &monumentd.funeral_done); // was skip(1) statue_offset
-    iob->bind(BIND_SIGNATURE_UINT8, &monumentd.preexisting);  // was skip(1) temple_complex_attachments
-    iob->bind(BIND_SIGNATURE_UINT8, &monumentd.variant);
-
-    for (int i = 0; i < RESOURCES_MAX; i++) {
-        iob->bind(BIND_SIGNATURE_UINT8, &monumentd.resources_pct[i]);
-    }
-
-    auto &main = monumentd.og_main;
-    iob->bind_u8((uint8_t &)main.style);
-    iob->bind_u8(main.size_variant);
-    iob->bind_u16(main.remaining_blocks);
-    iob->bind_u8(main.block_phase_active);
-    iob->bind_u8(main.force_show_ramps);
-
-    auto &part = monumentd.og_part;
-    iob->bind_u8(part.size_variant);
-    iob->bind_u8(part.stage);
-    iob->bind_u8(part.blocks);
-    iob->bind_u8(part.layer);
-    iob->bind_u8(part.target_layers);
-    iob->bind_u8(part.subtype);
-    iob->bind_u16(part.worker_figure_id);
-    iob->bind_u8(part.ramp1_height);
-    iob->bind_u8(part.ramp2_height);
-    iob->bind_u32(part.ramp_image_id);
-    iob->bind_i16(part.ramp_image_x1);
-    iob->bind_i16(part.ramp_image_y1);
-    iob->bind_i16(part.ramp_image_x2);
-    iob->bind_i16(part.ramp_image_y2);
+void building_mastaba::bind_dynamic(io_buffer *iob, size_t /*version*/) {
+    bind_block_engine_state(iob, 0);
 }
 
 bool building_mastaba::get_route_citizen_land_type(int grid_offset, int &land_result) const {

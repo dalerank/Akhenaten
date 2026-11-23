@@ -759,21 +759,14 @@ tile2i building_sphinx::access_point() const {
     return t.shifted(PART_SIZE + 3, PART_SIZE);
 }
 
-void building_sphinx::bind_dynamic(io_buffer* iob, size_t version) {
+void building_sphinx::bind_dynamic(io_buffer* iob, size_t /*version*/) {
     auto& d = runtime_data();
 
-    // v193+: the 8 spots of this part (work, figure) take 32 of the formerly skipped 38 bytes.
-    if (version > 192) {
-        for (int i = 0; i < SPOTS_PER_PART; i++) {
-            iob->bind(BIND_SIGNATURE_UINT16, &d.spot_work[i]);
-            iob->bind(BIND_SIGNATURE_UINT16, &d.spot_figure[i]);
-        }
-        iob->bind____skip(6);
-    } else {
-        iob->bind____skip(38);
-        d.spot_work.fill(SPOT_WORK_UNSET);
-        d.spot_figure.fill(0);
+    for (int i = 0; i < SPOTS_PER_PART; i++) {
+        iob->bind(BIND_SIGNATURE_UINT16, &d.spot_work[i]);
+        iob->bind(BIND_SIGNATURE_UINT16, &d.spot_figure[i]);
     }
+    iob->bind____skip(6);
     iob->bind(BIND_SIGNATURE_UINT8, &base.orientation);
     for (int i = 0; i < 5; i++) {
         iob->bind(BIND_SIGNATURE_UINT16, &d.workers[i]);

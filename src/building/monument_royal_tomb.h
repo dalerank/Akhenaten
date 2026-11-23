@@ -44,8 +44,6 @@ public:
         // Main part only: OG completed (all done and the mission goals reached: the tomb is sealed).
         uint8_t sealed;
         uint8_t completion_shown;
-        // Not saved: set by a pre-v201 load, rebuilt in on_post_load.
-        uint8_t legacy_layout;
     } BUILDING_RUNTIME_DATA_T;
 
     struct base_params {
@@ -146,7 +144,6 @@ private:
     void advance_stage();
     int spot_table() const;
     tile2i entrance_access_tile() const;
-    void convert_legacy_layout();
 };
 ANK_CONFIG_PROPERTY(building_royal_tomb::runtime_data_t, variant)
 

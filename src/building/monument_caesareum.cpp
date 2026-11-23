@@ -596,23 +596,15 @@ tile2i building_caesareum::access_point() const {
     }
 }
 
-void building_caesareum::bind_dynamic(io_buffer *iob, size_t version) {
+void building_caesareum::bind_dynamic(io_buffer *iob, size_t /*version*/) {
     auto &d = runtime_data();
 
-    // v201+: the 3 spots of this part (work, figure) and the sled count take 13 of the formerly skipped 38 bytes.
-    if (version > 200) {
-        for (int i = 0; i < SPOTS_PER_PART; i++) {
-            iob->bind(BIND_SIGNATURE_UINT16, &d.spot_work[i]);
-            iob->bind(BIND_SIGNATURE_UINT16, &d.spot_figure[i]);
-        }
-        iob->bind(BIND_SIGNATURE_UINT8, &d.sleds);
-        iob->bind____skip(25);
-    } else {
-        iob->bind____skip(38);
-        d.spot_work.fill(SPOT_WORK_UNSET);
-        d.spot_figure.fill(0);
-        d.sleds = 0;
+    for (int i = 0; i < SPOTS_PER_PART; i++) {
+        iob->bind(BIND_SIGNATURE_UINT16, &d.spot_work[i]);
+        iob->bind(BIND_SIGNATURE_UINT16, &d.spot_figure[i]);
     }
+    iob->bind(BIND_SIGNATURE_UINT8, &d.sleds);
+    iob->bind____skip(25);
     iob->bind(BIND_SIGNATURE_UINT8, &base.orientation);
     for (int i = 0; i < 5; i++) {
         iob->bind(BIND_SIGNATURE_UINT16, &d.workers[i]);

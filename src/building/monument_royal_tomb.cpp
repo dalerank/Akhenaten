@@ -657,7 +657,6 @@ void building_royal_tomb::init_part(int index) {
                                              : (uint8_t)(map_random_get(tile()) % ROYAL_TOMB_CLOSED_VARIANTS);
     d.sealed = 0;
     d.completion_shown = 0;
-    d.legacy_layout = 0;
     d.lamp_stock = 0;
     d.phase = 0;
     d.variant = 0;
@@ -977,65 +976,11 @@ void building_royal_tomb::on_post_load() {
     if (!is_main()) {
         return;
     }
-    if (runtime_data().legacy_layout) {
-        convert_legacy_layout();
-        return;
-    }
     refresh_part_images();
 }
 
-// Pre-v201 royal tombs were one record over an 11x20-style cliff bulk with art phases. Rebuild them
-// as the OG part chain on the same corner; a finished one comes back sealed, an unfinished one starts over.
-void building_royal_tomb::convert_legacy_layout() {
-    auto& d = runtime_data();
-    const bool finished = d.phase == MONUMENT_FINISHED;
-    const bool preexisting = d.preexisting != 0;
-    const bool funeral = d.funeral_done != 0;
-    tile2i corner = tile();
-    for (int dy = -2; dy < 40; ++dy) {
-        for (int dx = -2; dx < 40; ++dx) {
-            tile2i t = corner.shifted(dx, dy);
-            if (map_grid_is_inside(t, 1) && map_building_at(t) == id()) {
-                map_building_tile_clear_at(t.grid_offset(), type());
-            }
-        }
-    }
-    const auto& l = layout();
-    int min_x = 0x7fff, min_y = 0x7fff;
-    for (int i = 0; i < l.part_count; ++i) {
-        min_x = std::min<int>(min_x, l.parts[i].dx);
-        min_y = std::min<int>(min_y, l.parts[i].dy);
-    }
-    base.tile = corner.shifted(-min_x, -min_y);
-    place_parts();
-    if (finished || preexisting) {
-        set_completed();
-    }
-    set_funeral_done(funeral);
-}
-
-void building_royal_tomb::bind_dynamic(io_buffer* iob, size_t version) {
+void building_royal_tomb::bind_dynamic(io_buffer* iob, size_t /*version*/) {
     auto &d = runtime_data();
-
-    if (version < 202) {
-        iob->bind(BIND_SIGNATURE_UINT16, &d.lamp_stock);
-        for (int i = 0; i < RESOURCES_MAX; i++) {
-            iob->bind(BIND_SIGNATURE_UINT8, &d.burial_stock[i]);
-        }
-        iob->bind(BIND_SIGNATURE_UINT8, &base.orientation);
-        for (int i = 0; i < 5; i++) {
-            iob->bind(BIND_SIGNATURE_UINT16, &d.workers[i]);
-        }
-        iob->bind(BIND_SIGNATURE_UINT8, &d.phase);
-        iob->bind(BIND_SIGNATURE_UINT8, &d.funeral_done);
-        iob->bind(BIND_SIGNATURE_UINT8, &d.preexisting);
-        iob->bind(BIND_SIGNATURE_UINT8, &d.variant);
-        for (int i = 0; i < RESOURCES_MAX; i++) {
-            iob->bind(BIND_SIGNATURE_UINT8, &d.resources_pct[i]);
-        }
-        d.legacy_layout = 1;
-        return;
-    }
 
     iob->bind(BIND_SIGNATURE_UINT16, &d.part);
     iob->bind(BIND_SIGNATURE_UINT8, &d.stage);
@@ -1056,5 +1001,4 @@ void building_royal_tomb::bind_dynamic(io_buffer* iob, size_t version) {
     for (int i = 0; i < RESOURCES_MAX; i++) {
         iob->bind(BIND_SIGNATURE_UINT8, &d.burial_stock[i]);
     }
-    d.legacy_layout = 0;
 }
