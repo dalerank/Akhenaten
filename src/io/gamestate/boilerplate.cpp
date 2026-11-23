@@ -435,7 +435,7 @@ void GamestateIO::start_loaded_file() {
 
         //        map_natives_init();
         g_city.fishing_points.create();
-        g_animals.create_herds();
+        g_city.animals_sys().create_herds();
 
         g_city.map.entry_point = scenario_map_entry();
         g_city.map.exit_point = scenario_map_exit();

@@ -72,7 +72,7 @@ static events::session_subscriber g_city_session(&city_subscribe_events);
 
 ANK_DECLARE_CONFIG_ITERATOR(config_reload_city);
 void config_reload_city() {
-    g_city.reload_system(g_animals);
+    g_city.reload_system(g_city.animals);
 }
 
 void city_t::init() {
@@ -100,7 +100,8 @@ void city_t::init() {
     empire_screen = AVAILABLE;
     bookmarks.reset();
     kingdome.init();
-    reload_system(g_animals);
+    animals.allow_spawn_ostrich = true;
+    reload_system(animals);
 }
 
 void city_t::reload_objects() {
@@ -219,6 +220,14 @@ kingdome_context city_t::kingdome_ctx() {
 
 kingdome_system city_t::kingdome_sys() {
     return kingdome_system(kingdome, kingdome_ctx());
+}
+
+animals_context city_t::animals_ctx() {
+    return {g_scenario};
+}
+
+animals_system city_t::animals_sys() {
+    return animals_system(animals, animals_ctx());
 }
 
 void city_t::init_custom_map() {
