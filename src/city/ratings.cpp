@@ -47,7 +47,7 @@ namespace {
         if (coverage == "library")
             return c.library;
         if (coverage == "religion")
-            return g_city.religion.coverage_common;
+            return g_city.gods.coverage_common;
         if (coverage == "dentist")
             return c.dentist;
         if (coverage == "physician")

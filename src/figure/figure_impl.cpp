@@ -230,7 +230,7 @@ figure_sound_t figure_impl::get_sound_reaction(xstring key) const {
 }
 
 sound_key figure_impl::default_phrase_key() const {
-    e_god_mood god_mood = g_city.religion.least_mood();
+    e_god_mood god_mood = g_city.gods.least_mood();
 
     if (city_resource_food_supply_months() <= 0) {
         return "def_no_food_in_city";

@@ -737,11 +737,11 @@ advisor_city_state advisor_city_state_current() {
     s.population = g_city.population.current;
     s.food_supply_percentage = g_city.food_supply.percentage();
     s.health = g_city.health.value;
-    s.god_mood0 = g_city.religion.gods[0].target_mood;
-    s.god_mood1 = g_city.religion.gods[1].target_mood;
-    s.god_mood2 = g_city.religion.gods[2].target_mood;
-    s.god_mood3 = g_city.religion.gods[3].target_mood;
-    s.god_mood4 = g_city.religion.gods[4].target_mood;
+    s.god_mood0 = g_city.gods.gods[0].target_mood;
+    s.god_mood1 = g_city.gods.gods[1].target_mood;
+    s.god_mood2 = g_city.gods.gods[2].target_mood;
+    s.god_mood3 = g_city.gods.gods[3].target_mood;
+    s.god_mood4 = g_city.gods.gods[4].target_mood;
     s.taxes_collected = g_city.taxes.yearly.collected_citizens + g_city.taxes.yearly.collected_nobles;
     s.taxes_uncollected = g_city.taxes.yearly.uncollected_citizens + g_city.taxes.yearly.uncollected_nobles;
     s.treasury = g_city.finance.treasury;

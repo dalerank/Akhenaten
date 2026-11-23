@@ -107,14 +107,14 @@ int city_sentiment_t::calc_contribution_religion_coverage() {
         return 0;
     }
 
-    const auto &known_gods = g_city.religion.known_gods();
+    const auto& known_gods = g_city.gods.known_gods();
     if (known_gods.size() <= 0) {
         return 0;
     }
 
     int average_coverage = 0;
     for (auto *god : known_gods) {
-        average_coverage += g_city.religion.coverage_avg(god->type);
+        average_coverage += g_city.gods.coverage_avg(god->type);
     }
 
     average_coverage /= (int)known_gods.size();

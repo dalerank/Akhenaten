@@ -247,8 +247,8 @@ static void city_data_bind_og_layout(io_buffer* iob) {
     iob->bind(BIND_SIGNATURE_UINT8, &data.kingdome.rating_cap);
     iob->bind____skip(3);
     iob->bind(BIND_SIGNATURE_INT32, &data.military.native_attack_duration);
-    iob->bind(BIND_SIGNATURE_INT32, &data.religion.bast_curse_active);
-    iob->bind(BIND_SIGNATURE_INT32, &data.religion.seth_crush_enemy_troops);
+    iob->bind(BIND_SIGNATURE_INT32, &data.gods.bast_curse_active);
+    iob->bind(BIND_SIGNATURE_INT32, &data.gods.seth_crush_enemy_troops);
     iob->bind(BIND_SIGNATURE_INT32, &data.ratings.monument_riot_cause);
     iob->bind(BIND_SIGNATURE_UINT16, &data.kingdome.invasion.duration_day_countdown);
     iob->bind(BIND_SIGNATURE_INT8, &data.kingdome.invasion.warnings_given);
@@ -281,12 +281,12 @@ static void city_data_bind_og_layout(io_buffer* iob) {
     iob->bind_u8(g_distant_battle.dispatched_army.position_index);
     iob->bind____skip(1);
     iob->bind_i16(g_distant_battle.source_request_event_id);
-    iob->bind(BIND_SIGNATURE_UINT8, &data.religion.coverage_common);
-    iob->bind(BIND_SIGNATURE_UINT8, &data.religion.coverage[GOD_OSIRIS]);
-    iob->bind(BIND_SIGNATURE_UINT8, &data.religion.coverage[GOD_RA]);
-    iob->bind(BIND_SIGNATURE_UINT8, &data.religion.coverage[GOD_PTAH]);
-    iob->bind(BIND_SIGNATURE_UINT8, &data.religion.coverage[GOD_SETH]);
-    iob->bind(BIND_SIGNATURE_UINT8, &data.religion.coverage[GOD_BAST]);
+    iob->bind(BIND_SIGNATURE_UINT8, &data.gods.coverage_common);
+    iob->bind(BIND_SIGNATURE_UINT8, &data.gods.coverage[GOD_OSIRIS]);
+    iob->bind(BIND_SIGNATURE_UINT8, &data.gods.coverage[GOD_RA]);
+    iob->bind(BIND_SIGNATURE_UINT8, &data.gods.coverage[GOD_PTAH]);
+    iob->bind(BIND_SIGNATURE_UINT8, &data.gods.coverage[GOD_SETH]);
+    iob->bind(BIND_SIGNATURE_UINT8, &data.gods.coverage[GOD_BAST]);
     iob->bind____skip(5376);
     for (int i = 0; i < 8; i++)
         iob->bind(BIND_SIGNATURE_INT32, &data.unused.houses_requiring_unknown_to_evolve[i]); // ????
@@ -339,23 +339,23 @@ static void city_data_bind_og_layout(io_buffer* iob) {
     iob->bind(BIND_SIGNATURE_INT8, &data.festival.months_since_festival); // ok
     iob->bind____skip(3);
     for (int i = 0; i < MAX_GODS; i++) {
-        iob->bind(BIND_SIGNATURE_UINT8, &data.religion.gods[i].target_mood);
+        iob->bind(BIND_SIGNATURE_UINT8, &data.gods.gods[i].target_mood);
     }
     iob->bind____skip(5);
     for (int i = 0; i < MAX_GODS; i++) {
-        iob->bind(BIND_SIGNATURE_UINT8, &data.religion.gods[i].mood);
+        iob->bind(BIND_SIGNATURE_UINT8, &data.gods.gods[i].mood);
     }
     iob->bind____skip(5);
     for (int i = 0; i < MAX_GODS; i++) {
-        iob->bind(BIND_SIGNATURE_UINT8, &data.religion.gods[i].wrath_bolts);
+        iob->bind(BIND_SIGNATURE_UINT8, &data.gods.gods[i].wrath_bolts);
     }
     iob->bind____skip(55);
     for (int i = 0; i < MAX_GODS; i++) {
-        iob->bind(BIND_SIGNATURE_UINT8, &data.religion.gods[i].months_since_festival);
+        iob->bind(BIND_SIGNATURE_UINT8, &data.gods.gods[i].months_since_festival);
         iob->bind____skip(3);
     }
     iob->bind____skip(20);
-    iob->bind(BIND_SIGNATURE_INT32, &data.religion.least_happy_god);
+    iob->bind(BIND_SIGNATURE_INT32, &data.gods.least_happy_god);
     iob->bind____skip(4);
     iob->bind(BIND_SIGNATURE_INT8, &data.migration.no_immigration_cause);
     iob->bind____skip(3);
@@ -435,9 +435,9 @@ static void city_data_bind_og_layout(io_buffer* iob) {
     iob->bind(BIND_SIGNATURE_INT32, &data.resource.granaries.not_operating);
     iob->bind(BIND_SIGNATURE_INT32, &data.resource.granaries.not_operating_with_food);
     iob->bind____skip(16);
-    iob->bind(BIND_SIGNATURE_UINT8, &data.religion.ra_150_export_profits_months_left);
+    iob->bind(BIND_SIGNATURE_UINT8, &data.gods.ra_150_export_profits_months_left);
     iob->bind____skip(11);
-    iob->bind(BIND_SIGNATURE_INT32, &data.religion.angry_message_delay);
+    iob->bind(BIND_SIGNATURE_INT32, &data.gods.angry_message_delay);
     iob->bind____skip(16);
     iob->bind(BIND_SIGNATURE_INT32, &data.taxes.estimated_income);
     iob->bind____skip(4);
@@ -522,10 +522,10 @@ static void city_data_bind_og_layout(io_buffer* iob) {
     iob->bind____skip(28);
     iob->bind(BIND_SIGNATURE_UINT32, data.buildings.festival_square);
     iob->bind____skip(16);
-    iob->bind(BIND_SIGNATURE_UINT8, &data.religion.ra_no_traders_months_left);
+    iob->bind(BIND_SIGNATURE_UINT8, &data.gods.ra_no_traders_months_left);
     iob->bind____skip(97);
     for (int i = 0; i < MAX_GODS; i++) {
-        iob->bind(BIND_SIGNATURE_UINT8, &data.religion.gods[i].happy_ankhs);
+        iob->bind(BIND_SIGNATURE_UINT8, &data.gods.gods[i].happy_ankhs);
     }
     iob->bind____skip(33);
     for (int i = 0; i < RESOURCES_FOODS_MAX; i++) {
@@ -533,17 +533,17 @@ static void city_data_bind_og_layout(io_buffer* iob) {
         iob->bind____skip(2);
     }
     iob->bind____skip(292);
-    iob->bind(BIND_SIGNATURE_UINT8, &data.religion.ra_slightly_increased_trading_months_left);
+    iob->bind(BIND_SIGNATURE_UINT8, &data.gods.ra_slightly_increased_trading_months_left);
     iob->bind____skip(1);
-    iob->bind(BIND_SIGNATURE_UINT8, &data.religion.ra_harshly_reduced_trading_months_left);
+    iob->bind(BIND_SIGNATURE_UINT8, &data.gods.ra_harshly_reduced_trading_months_left);
     iob->bind____skip(1);
-    iob->bind(BIND_SIGNATURE_UINT8, &data.religion.ra_slightly_reduced_trading_months_left);
+    iob->bind(BIND_SIGNATURE_UINT8, &data.gods.ra_slightly_reduced_trading_months_left);
     iob->bind____skip(3);
-    iob->bind(BIND_SIGNATURE_UINT8, &data.religion.seth_protect_player_troops_months);
+    iob->bind(BIND_SIGNATURE_UINT8, &data.gods.seth_protect_player_troops_months);
     iob->bind____skip(7);
-    iob->bind(BIND_SIGNATURE_UINT8, &data.religion.osiris_double_farm_yield_days);
+    iob->bind(BIND_SIGNATURE_UINT8, &data.gods.osiris_double_farm_yield_days);
     iob->bind____skip(3);
-    iob->bind(BIND_SIGNATURE_UINT8, &data.religion.osiris_flood_will_destroy_active);
+    iob->bind(BIND_SIGNATURE_UINT8, &data.gods.osiris_flood_will_destroy_active);
     iob->bind____skip(63);
     verify_no_crash(iob->get_offset() == 37808);
 }
@@ -878,17 +878,17 @@ void city_data_chunk::bind_data(io_buffer* iob, size_t version) {
     iob->bind____skip(3);
 
     for (int i = 0; i < MAX_GODS; i++) {
-        iob->bind(BIND_SIGNATURE_UINT8, &data.religion.gods[i].target_mood);
+        iob->bind(BIND_SIGNATURE_UINT8, &data.gods.gods[i].target_mood);
     }
 
     iob->bind____skip(5);
     for (int i = 0; i < MAX_GODS; i++) {
-        iob->bind(BIND_SIGNATURE_UINT8, &data.religion.gods[i].mood);
+        iob->bind(BIND_SIGNATURE_UINT8, &data.gods.gods[i].mood);
     }
 
     iob->bind____skip(5);
     for (int i = 0; i < MAX_GODS; i++) {
-        iob->bind(BIND_SIGNATURE_UINT8, &data.religion.gods[i].wrath_bolts);
+        iob->bind(BIND_SIGNATURE_UINT8, &data.gods.gods[i].wrath_bolts);
     }
 
     iob->bind____skip(20);
@@ -900,11 +900,11 @@ void city_data_chunk::bind_data(io_buffer* iob, size_t version) {
     //    for (int i = 0; i < MAX_GODS; i++)
     //        city_data.religion.gods[i].unused3 = main->read_i8();
     for (int i = 0; i < MAX_GODS; i++) {
-        iob->bind(BIND_SIGNATURE_UINT8, &data.religion.gods[i].months_since_festival);
+        iob->bind(BIND_SIGNATURE_UINT8, &data.gods.gods[i].months_since_festival);
         iob->bind____skip(3);
     }
 
-    iob->bind(BIND_SIGNATURE_INT32, &data.religion.least_happy_god);
+    iob->bind(BIND_SIGNATURE_INT32, &data.gods.least_happy_god);
     iob->bind(BIND_SIGNATURE_INT32, &data.unused.unknown_4334);
     iob->bind(BIND_SIGNATURE_INT8, &data.migration.no_immigration_cause);
     iob->bind____skip(3);
@@ -1063,13 +1063,13 @@ void city_data_chunk::bind_data(io_buffer* iob, size_t version) {
     iob->bind____skip(4);
     iob->bind____skip(4);
 
-    iob->bind(BIND_SIGNATURE_INT32, &data.religion.bast_curse_active);
+    iob->bind(BIND_SIGNATURE_INT32, &data.gods.bast_curse_active);
     iob->bind(BIND_SIGNATURE_INT32, &data.unused.unused_44ec);
-    iob->bind(BIND_SIGNATURE_UINT8, &data.religion.ra_150_export_profits_months_left);
+    iob->bind(BIND_SIGNATURE_UINT8, &data.gods.ra_150_export_profits_months_left);
     iob->bind____skip(3);
-    iob->bind(BIND_SIGNATURE_INT32, &data.religion.seth_crush_enemy_troops);
+    iob->bind(BIND_SIGNATURE_INT32, &data.gods.seth_crush_enemy_troops);
     iob->bind(BIND_SIGNATURE_INT32, &data.unused.unused_44f8);
-    iob->bind(BIND_SIGNATURE_INT32, &data.religion.angry_message_delay);
+    iob->bind(BIND_SIGNATURE_INT32, &data.gods.angry_message_delay);
     iob->bind____skip(4);
     iob->bind____skip(4);
     iob->bind____skip(4);
@@ -1182,14 +1182,14 @@ void city_data_chunk::bind_data(io_buffer* iob, size_t version) {
     iob->bind____skip(4);
     iob->bind____skip(8);
     iob->bind____skip(4);
-    iob->bind(BIND_SIGNATURE_UINT8, &data.religion.ra_no_traders_months_left);
+    iob->bind(BIND_SIGNATURE_UINT8, &data.gods.ra_no_traders_months_left);
     iob->bind____skip(3);
     iob->bind____skip(92);
     int reserved = 0;
     iob->bind(BIND_SIGNATURE_INT16, &reserved);
 
     for (int i = 0; i < MAX_GODS; i++) {
-        iob->bind(BIND_SIGNATURE_UINT8, &data.religion.gods[i].happy_ankhs);
+        iob->bind(BIND_SIGNATURE_UINT8, &data.gods.gods[i].happy_ankhs);
     }
 
     iob->bind____skip(33);
@@ -1197,23 +1197,23 @@ void city_data_chunk::bind_data(io_buffer* iob, size_t version) {
     iob->bind____skip(30);
     iob->bind____skip(2); // 400 --> 0      granary used (game meat)?
     iob->bind____skip(288);
-    iob->bind(BIND_SIGNATURE_UINT8, &data.religion.coverage_common);
-    iob->bind(BIND_SIGNATURE_UINT8, &data.religion.coverage[GOD_OSIRIS]);
-    iob->bind(BIND_SIGNATURE_UINT8, &data.religion.coverage[GOD_RA]);
-    iob->bind(BIND_SIGNATURE_UINT8, &data.religion.coverage[GOD_PTAH]);
-    iob->bind(BIND_SIGNATURE_UINT8, &data.religion.coverage[GOD_SETH]);
-    iob->bind(BIND_SIGNATURE_UINT8, &data.religion.coverage[GOD_BAST]);
-    iob->bind(BIND_SIGNATURE_UINT8, &data.religion.ra_slightly_increased_trading_months_left);
+    iob->bind(BIND_SIGNATURE_UINT8, &data.gods.coverage_common);
+    iob->bind(BIND_SIGNATURE_UINT8, &data.gods.coverage[GOD_OSIRIS]);
+    iob->bind(BIND_SIGNATURE_UINT8, &data.gods.coverage[GOD_RA]);
+    iob->bind(BIND_SIGNATURE_UINT8, &data.gods.coverage[GOD_PTAH]);
+    iob->bind(BIND_SIGNATURE_UINT8, &data.gods.coverage[GOD_SETH]);
+    iob->bind(BIND_SIGNATURE_UINT8, &data.gods.coverage[GOD_BAST]);
+    iob->bind(BIND_SIGNATURE_UINT8, &data.gods.ra_slightly_increased_trading_months_left);
     iob->bind____skip(1);
-    iob->bind(BIND_SIGNATURE_UINT8, &data.religion.ra_harshly_reduced_trading_months_left);
+    iob->bind(BIND_SIGNATURE_UINT8, &data.gods.ra_harshly_reduced_trading_months_left);
     iob->bind____skip(1);
-    iob->bind(BIND_SIGNATURE_UINT8, &data.religion.ra_slightly_reduced_trading_months_left);
+    iob->bind(BIND_SIGNATURE_UINT8, &data.gods.ra_slightly_reduced_trading_months_left);
     iob->bind____skip(3);
-    iob->bind(BIND_SIGNATURE_UINT8, &data.religion.seth_protect_player_troops_months);
+    iob->bind(BIND_SIGNATURE_UINT8, &data.gods.seth_protect_player_troops_months);
     iob->bind____skip(7);
-    iob->bind(BIND_SIGNATURE_UINT8, &data.religion.osiris_double_farm_yield_days);
+    iob->bind(BIND_SIGNATURE_UINT8, &data.gods.osiris_double_farm_yield_days);
     iob->bind____skip(3);
-    iob->bind(BIND_SIGNATURE_UINT8, &data.religion.osiris_flood_will_destroy_active);
+    iob->bind(BIND_SIGNATURE_UINT8, &data.gods.osiris_flood_will_destroy_active);
     iob->bind____skip(3);
     iob->bind____skip(57);
     verify_no_crash(iob->get_offset() == 37808);

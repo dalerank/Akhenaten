@@ -148,8 +148,9 @@ void GamestateLoadDetail::post_load() {
     g_city.avg_coverage.update();
     g_empire_traders.purge_dead();
 
-    g_city.religion.ra_no_traders_months_left = std::clamp<int>(g_city.religion.ra_no_traders_months_left, 0, 12);
-    g_city.religion.ra_harshly_reduced_trading_months_left = std::clamp<int>(g_city.religion.ra_harshly_reduced_trading_months_left, 0, 12);
+    g_city.gods.ra_no_traders_months_left = std::clamp<int>(g_city.gods.ra_no_traders_months_left, 0, 12);
+    g_city.gods.ra_harshly_reduced_trading_months_left
+      = std::clamp<int>(g_city.gods.ra_harshly_reduced_trading_months_left, 0, 12);
 
     // Save/map chunks already hold prices; reset only for a fresh mission start.
     if (is_new_mission) {

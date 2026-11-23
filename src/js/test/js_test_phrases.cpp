@@ -64,7 +64,7 @@ static void __test_city_problem_calm() {
         category.workers_allocated = 0;
         category.workers_needed = 0;
     }
-    for (auto& god : g_city.religion.gods) {
+    for (auto& god : g_city.gods.gods) {
         god.mood = 100;
     }
     g_city.kingdome.rating = 100;
@@ -95,7 +95,7 @@ static void __test_city_problem_set(xstring key, int value) {
     } else if (key == "workers_needed") {
         g_city.labor.workers_needed = value;
     } else if (key == "god_mood") {
-        for (auto& god : g_city.religion.gods) {
+        for (auto& god : g_city.gods.gods) {
             god.mood = (uint8_t)value;
         }
     }

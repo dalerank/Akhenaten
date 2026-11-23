@@ -195,18 +195,18 @@ namespace og {
         assign(g_city.houses.missing.entertainment, p.houses_missing_entertainment);
         assign(g_city.festival.months_since_festival, p.months_since_festival);
         for (int i = 0; i < 5; i++) {
-            assign(g_city.religion.gods[i].target_mood, p.god_target_mood[i]);
+            assign(g_city.gods.gods[i].target_mood, p.god_target_mood[i]);
         }
         for (int i = 0; i < 5; i++) {
-            assign(g_city.religion.gods[i].mood, p.god_mood[i]);
+            assign(g_city.gods.gods[i].mood, p.god_mood[i]);
         }
         for (int i = 0; i < 5; i++) {
-            assign(g_city.religion.gods[i].wrath_bolts, p.god_wrath_bolts[i]);
+            assign(g_city.gods.gods[i].wrath_bolts, p.god_wrath_bolts[i]);
         }
         for (int i = 0; i < 5; i++) {
-            assign(g_city.religion.gods[i].months_since_festival, p.god_months_since_festival[i]);
+            assign(g_city.gods.gods[i].months_since_festival, p.god_months_since_festival[i]);
         }
-        assign(g_city.religion.least_happy_god, p.least_happy_god);
+        assign(g_city.gods.least_happy_god, p.least_happy_god);
         assign(g_city.migration.no_immigration_cause, p.no_immigration_cause);
         assign(g_city.sentiment.protesters, p.protesters);
         assign(g_city.sentiment.criminals, p.thefts);
@@ -256,8 +256,8 @@ namespace og {
         assign(g_city.resource.granaries.understaffed, p.granaries_understaffed);
         assign(g_city.resource.granaries.not_operating, p.granaries_not_operating);
         assign(g_city.resource.granaries.not_operating_with_food, p.granaries_not_operating_with_food);
-        assign(g_city.religion.ra_150_export_profits_months_left, p.ra_exports_bonus_months);
-        assign(g_city.religion.angry_message_delay, p.gods_angry_message_delay);
+        assign(g_city.gods.ra_150_export_profits_months_left, p.ra_exports_bonus_months);
+        assign(g_city.gods.angry_message_delay, p.gods_angry_message_delay);
         assign(g_city.taxes.estimated_income, p.estimated_tax_income);
         g_city.buildings.distribution_center = tile2i(p.distribution_center_x, p.distribution_center_y);
         assign(g_city.buildings.distribution_center_building_id, p.distribution_center_building_id);
@@ -291,19 +291,19 @@ namespace og {
         assign(g_city.mission.victory_message_shown, p.victory_message_shown);
         assign(g_city.figures.attacking_natives, p.attacking_natives);
         g_city.buildings.festival_square = tile2i(p.festival_square_x, p.festival_square_y);
-        assign(g_city.religion.ra_no_traders_months_left, p.ra_no_traders_months);
+        assign(g_city.gods.ra_no_traders_months_left, p.ra_no_traders_months);
         for (int i = 0; i < 5; i++) {
-            assign(g_city.religion.gods[i].happy_ankhs, p.god_happy_bolts[i]);
+            assign(g_city.gods.gods[i].happy_ankhs, p.god_happy_bolts[i]);
         }
         for (int i = 0; i < 9; i++) {
             assign(g_city.resource.granary_food_stored[i], p.granary_food_stored[i]);
         }
-        assign(g_city.religion.ra_slightly_increased_trading_months_left, p.ra_trade_bonus_months);
-        assign(g_city.religion.ra_harshly_reduced_trading_months_left, p.ra_trade_penalty_months);
-        assign(g_city.religion.ra_slightly_reduced_trading_months_left, p.ra_trade_minor_penalty_months);
-        assign(g_city.religion.seth_protect_player_troops_months, p.seth_minor_blessing_months);
-        assign(g_city.religion.osiris_double_farm_yield_days, p.osiris_double_farm_yield);
-        assign(g_city.religion.osiris_flood_will_destroy_active, p.osiris_flood_destroys_farms);
+        assign(g_city.gods.ra_slightly_increased_trading_months_left, p.ra_trade_bonus_months);
+        assign(g_city.gods.ra_harshly_reduced_trading_months_left, p.ra_trade_penalty_months);
+        assign(g_city.gods.ra_slightly_reduced_trading_months_left, p.ra_trade_minor_penalty_months);
+        assign(g_city.gods.seth_protect_player_troops_months, p.seth_minor_blessing_months);
+        assign(g_city.gods.osiris_double_farm_yield_days, p.osiris_double_farm_yield);
+        assign(g_city.gods.osiris_flood_will_destroy_active, p.osiris_flood_destroys_farms);
     }
 
 } // namespace og

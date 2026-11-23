@@ -37,9 +37,11 @@ int trade_price_buy(e_resource resource) {
 int trade_price_sell(e_resource resource, int bonus_inclusion) {
     auto& prices = xvalue<trade_prices_t>::ref().prices;
     switch (bonus_inclusion) {
-    case PRICE_WITH_BONUS: return prices[resource].sell * (g_city.religion.ra_150_export_profits_months_left > 0 ? 1.5f : 1.0f);
+    case PRICE_WITH_BONUS:
+        return prices[resource].sell * (g_city.gods.ra_150_export_profits_months_left > 0 ? 1.5f : 1.0f);
     case PRICE_ONLY_BASE: return prices[resource].sell;
-    case PRICE_ONLY_BONUS: return prices[resource].sell * (g_city.religion.ra_150_export_profits_months_left > 0 ? 0.5f : 0.0f);
+    case PRICE_ONLY_BONUS:
+        return prices[resource].sell * (g_city.gods.ra_150_export_profits_months_left > 0 ? 0.5f : 0.0f);
     }
 
     return 999;

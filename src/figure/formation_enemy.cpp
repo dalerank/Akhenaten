@@ -357,7 +357,7 @@ formation_destination formation_enemy_move_formation_to(const formation* m, tile
 }
 
 void formation_seth_kill_enemies() {
-    int to_kill = g_city.religion.spirit_of_seth_power();
+    int to_kill = g_city.gods.spirit_of_seth_power();
     if (to_kill <= 0) {
         return;
     }
@@ -376,7 +376,7 @@ void formation_seth_kill_enemies() {
         }
     }
 
-    g_city.religion.spirit_of_seth_mark_used();
+    g_city.gods_sys().spirit_of_seth_mark_used();
     messages::popup("message_spirit_of_seth", 0, grid_offset);
 }
 

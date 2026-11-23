@@ -16,7 +16,7 @@ void scenario_info_chunk::bind_data(io_buffer* iob, size_t version) {
     iob->bind(BIND_SIGNATURE_INT16, &g_scenario.empire.id);
     iob->bind____skip(4);
     for (int i = 0; i < MAX_GODS; i++) {
-        iob->bind(BIND_SIGNATURE_UINT8, &g_city.religion.gods[i].is_known);
+        iob->bind(BIND_SIGNATURE_UINT8, &g_city.gods.gods[i].is_known);
         iob->bind____skip(1);
     }
     iob->bind____skip(10);

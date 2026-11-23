@@ -31,12 +31,12 @@ void health_system::infect_house(building& main) {
 void health_system::start_disease(int total_people, bool force, int plague_people) {
     if (!force && _state.value >= 40) {
         // Natural check blocked by good health — drop a leftover Bast force flag.
-        _ctx.religion.bast_curse_active = false;
+        _ctx.gods.bast_curse_active = false;
         return;
     }
 
     int chance_value = random_byte() & 0x3f;
-    const bool bast_forced = _ctx.religion.bast_curse_active;
+    const bool bast_forced = _ctx.gods.bast_curse_active;
     if (bast_forced) {
         // Force the roll; clear flag only after an outbreak outcome below.
         chance_value = 0;
@@ -53,7 +53,7 @@ void health_system::start_disease(int total_people, bool force, int plague_peopl
 
     if (sick_people <= 0) {
         if (bast_forced) {
-            _ctx.religion.bast_curse_active = false;
+            _ctx.gods.bast_curse_active = false;
         }
         return;
     }
@@ -61,7 +61,7 @@ void health_system::start_disease(int total_people, bool force, int plague_peopl
     int people_to_plague = sick_people - _state.num_mortuary_workers;
     if (people_to_plague <= 0) {
         if (bast_forced) {
-            _ctx.religion.bast_curse_active = false;
+            _ctx.gods.bast_curse_active = false;
         }
         change(10);
         city_message_post_with_popup_delay(MESSAGE_CAT_HEALTH_PROBLEM, false, "message_malaria", 0, 0);
@@ -128,13 +128,13 @@ void health_system::start_disease(int total_people, bool force, int plague_peopl
     // Nothing newly infected (all candidates already had plague) — no cooldown bump / spam.
     if (!warn_building) {
         if (bast_forced) {
-            _ctx.religion.bast_curse_active = false;
+            _ctx.gods.bast_curse_active = false;
         }
         return;
     }
 
     if (bast_forced) {
-        _ctx.religion.bast_curse_active = false;
+        _ctx.gods.bast_curse_active = false;
     }
 
     // OG city_health_start_plague_at_house: one carrier from the outbreak's house.

@@ -241,18 +241,18 @@ static void __test_crt_srand(int seed) {
 ANK_FUNCTION_1(__test_crt_srand);
 
 static int __test_ra_harsh_trade_months() {
-    return g_city.religion.ra_harshly_reduced_trading_months_left;
+    return g_city.gods.ra_harshly_reduced_trading_months_left;
 }
 ANK_FUNCTION(__test_ra_harsh_trade_months);
 
 static int __test_ra_no_traders_months() {
-    return g_city.religion.ra_no_traders_months_left;
+    return g_city.gods.ra_no_traders_months_left;
 }
 ANK_FUNCTION(__test_ra_no_traders_months);
 
 static void __test_ra_clear_curse_months() {
-    g_city.religion.ra_harshly_reduced_trading_months_left = 0;
-    g_city.religion.ra_no_traders_months_left = 0;
+    g_city.gods.ra_harshly_reduced_trading_months_left = 0;
+    g_city.gods.ra_no_traders_months_left = 0;
 }
 ANK_FUNCTION(__test_ra_clear_curse_months);
 
@@ -285,7 +285,7 @@ static void __test_set_god_status(int god, int status) {
     if (god < 0 || god >= MAX_GODS) {
         return;
     }
-    g_city.religion.set_god_known((e_god)god, (e_god_status)status);
+    g_city.gods_sys().set_god_known((e_god)god, (e_god_status)status);
 }
 ANK_FUNCTION_2(__test_set_god_status);
 
@@ -294,8 +294,8 @@ static int __test_god_coverage_total(int god) {
         return -1;
     }
     g_city.buildings.update_counters();
-    const auto& p = g_city.religion.gods[god].static_params();
-    return g_city.religion.god_coverage_total((e_god)god, p.shrine_type, p.temple_type, p.complex_type);
+    const auto& p = g_city.gods.gods[god].static_params();
+    return g_city.gods_sys().god_coverage_total((e_god)god, p.shrine_type, p.temple_type, p.complex_type);
 }
 ANK_FUNCTION_1(__test_god_coverage_total);
 
@@ -478,7 +478,7 @@ static void __test_coverage_set(pcstr field, int value) {
     else if (name == "library")
         c.library = value;
     else if (name == "religion")
-        g_city.religion.coverage_common = (uint8_t)value;
+        g_city.gods.coverage_common = (uint8_t)value;
     else if (name == "dentist")
         c.dentist = (uint8_t)value;
     else if (name == "physician")

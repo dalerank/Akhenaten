@@ -315,7 +315,7 @@ int building_farm::expected_produce() {
 
     // OG farm_harvest_loads: floodplain harvest doubles while the city Osiris flag is set.
     float modifier = 1.f;
-    if (base.is_floodplain_farm() && g_city.religion.osiris_double_farm_yield_days > 0) {
+    if (base.is_floodplain_farm() && g_city.gods.osiris_double_farm_yield_days > 0) {
         modifier = 2.f;
     }
 
@@ -341,8 +341,8 @@ void building_farm::spawn_figure_harvests() {
                 d.ready_production = 0;
             }
             // OG: any floodplain harvest under the blessing marks the flag used; clear after the wave.
-            if (g_city.religion.osiris_double_farm_yield_days > 0) {
-                g_city.religion.osiris_double_farm_yield_used = true;
+            if (g_city.gods.osiris_double_farm_yield_days > 0) {
+                g_city.gods.osiris_double_farm_yield_used = true;
             }
             const int primary = this->expected_produce();
             produced_resources(base.output.resource, primary);
@@ -505,7 +505,7 @@ int building_farm::food_warning() {
         if (amount < MIN_PRODUCE) {
             amount = MIN_PRODUCE;
         }
-        if (g_city.religion.osiris_double_farm_yield_days > 0) {
+        if (g_city.gods.osiris_double_farm_yield_days > 0) {
             amount += amount;
         }
         produced += amount;

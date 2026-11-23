@@ -141,10 +141,10 @@ static void map_floodplain_update_inundation_row(int floodplain_is_flooding, int
 
         // hide / destroy farm
         if (farm && farm->is_valid() && map_terrain_is(grid_offset, TERRAIN_BUILDING)) {
-            if (g_city.religion.osiris_flood_will_destroy_active > 0) { // destroy farm
+            if (g_city.gods.osiris_flood_will_destroy_active > 0) { // destroy farm
                 farm->deplete_soil();
                 farm->destroy_by_poof(/*clouds*/false);
-                g_city.religion.osiris_flood_will_destroy_active = 2;
+                g_city.gods.osiris_flood_will_destroy_active = 2;
                 for (int _y = farm->tiley(); _y < farm->tiley() + farm->size(); _y++) {
                     for (int _x = farm->tilex(); _x < farm->tilex() + farm->size(); _x++) {
                         int _offset = MAP_OFFSET(_x, _y);

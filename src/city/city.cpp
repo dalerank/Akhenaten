@@ -94,7 +94,7 @@ void city_t::init() {
     population.monthly.count = 0;
     festival.months_since_festival = 1;
     g_distant_battle.clear();
-    religion.reset();
+    gods_sys().reset();
     local_cults.reset();
     buildings.init();
     figure_clear_all();
@@ -148,12 +148,20 @@ trade_system city_t::trade_sys() {
 }
 
 health_context city_t::health_ctx() {
-    return {population, religion, coverage, buildings, g_scenario.is_scenario_id(1, 2),
-      g_simulation.simtime.absolute_day(true)};
+    return {
+      population, gods, coverage, buildings, g_scenario.is_scenario_id(1, 2), g_simulation.simtime.absolute_day(true)};
 }
 
 health_system city_t::health_sys() {
     return health_system(health, health_ctx());
+}
+
+gods_context city_t::gods_ctx() {
+    return {buildings, population, kingdome, g_scenario.env.gods_least_mood, g_simulation.simtime.day};
+}
+
+gods_system city_t::gods_sys() {
+    return gods_system(gods, gods_ctx());
 }
 
 void city_t::init_custom_map() {
@@ -233,7 +241,7 @@ void city_t::update_tick(int simtick) {
 }
 
 bool city_t::generate_trader_from(empire_city &city) {
-    if (g_city.religion.ra_no_traders_months_left > 0) {
+    if (g_city.gods.ra_no_traders_months_left > 0) {
         return false;
     }
 
@@ -432,9 +440,9 @@ void city_t::buildings_generate_figure() {
         }
     });
 
-    if (religion.osiris_double_farm_yield_used) {
-        religion.osiris_double_farm_yield_days = 0;
-        religion.osiris_double_farm_yield_used = false;
+    if (gods.osiris_double_farm_yield_used) {
+        gods.osiris_double_farm_yield_days = 0;
+        gods.osiris_double_farm_yield_used = false;
     }
 }
 

@@ -48,7 +48,7 @@ static const sim_step k_sim_steps[] = {
   {SIM_PHASE_TICK_BEGIN, -1, "buildings_tick", SIM_AREA_BUILDINGS,
     [](city_t& c) { c.buildings.update_tick(game.paused); }},
 
-  {SIM_PHASE_TICK_SLOT, 1, "religion", SIM_AREA_RELIGION, [](city_t& c) { c.religion.update(); }},
+  {SIM_PHASE_TICK_SLOT, 1, "religion", SIM_AREA_RELIGION, [](city_t& c) { c.gods_sys().update(); }},
   {SIM_PHASE_TICK_SLOT, 1, "coverage", SIM_AREA_COVERAGE, [](city_t& c) { c.coverage.update(); }},
   {SIM_PHASE_TICK_SLOT, 2, "tree_growth", SIM_AREA_MAP, [](city_t&) { map_tree_growth_update(); }},
   {SIM_PHASE_TICK_SLOT, 4, "kingdome", SIM_AREA_KINGDOM, [](city_t& c) { c.kingdome.update(); }},

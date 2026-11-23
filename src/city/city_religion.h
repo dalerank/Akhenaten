@@ -87,7 +87,7 @@ enum e_god_event {
     GOD_EVENT_MINOR_CURSE = 4
 };
 
-struct city_religion_t {
+struct gods_state {
     god_state gods[MAX_GODS];
     e_god least_happy_god;
     int32_t angry_message_delay;
@@ -108,42 +108,67 @@ struct city_religion_t {
 
     city_god *get(e_god god);
 
-    bool is_god_available(int mask, e_god g) { int god_mask = (1 << g); return ((mask & god_mask) == god_mask); };
-    void reset();
+    bool is_god_available(int mask, e_god g) {
+        int god_mask = (1 << g);
+        return ((mask & god_mask) == god_mask);
+    };
     int coverage_avg(e_god god);
+    e_god_status is_god_known(e_god god);
+    e_god_mood least_mood();
+    int god_happiness(e_god god_id);
+    int god_wrath_bolts(e_god god_id);
+    int god_happy_angels(e_god god_id);
+
+    int spirit_of_seth_power();
+
+    int months_since_last_festival();
+    int months_since_festival(e_god god_id);
+    e_god get_least_happy_god();
+
+    using god_states = svector<god_state*, MAX_GODS>;
+    god_states known_gods();
+};
+
+struct city_buildings_t;
+struct city_population_t;
+struct kingdome_relation_t;
+
+struct gods_context {
+    city_buildings_t& buildings;
+    const city_population_t& population;
+    kingdome_relation_t& kingdome;
+    uint8_t gods_least_mood;
+    int day;
+};
+
+class gods_system {
+public:
+    gods_system(gods_state& state, const gods_context& ctx) : _state(state), _ctx(ctx) {}
+
+    void reset();
     void calc_coverage();
     int god_coverage_total(e_god god, e_building_type shrine, e_building_type temple, e_building_type complex);
     void calculate_gods_mood_targets();
     void update();
     void update_mood(e_god randm_god);
     void update_monthly_data(e_god randm_god);
-    e_god_status is_god_known(e_god god);
     void set_god_known(e_god god, e_god_status v);
     bool calculate_least_happy_god();
-    e_god_mood least_mood();
-    int god_happiness(e_god god_id);
-    int god_wrath_bolts(e_god god_id);
-    int god_happy_angels(e_god god_id);
-
     bool PTAH_industry_restock();
     bool PTAH_warehouse_destruction();
     bool PTAH_warehouse_restock();
     bool PTAH_industry_destruction();
     bool BAST_houses_destruction();
-    int spirit_of_seth_power();
     void spirit_of_seth_mark_used();
-
     void perform_minor_blessing(e_god god, bool force_construction = false);
     void perform_minor_curse(e_god god);
     void perform_major_blessing(e_god god, bool force_construction = false);
     void perform_major_curse(e_god god);
     void update_curses_and_blessings(e_god randm_god, e_god_event force);
-    int months_since_last_festival();
-    int months_since_festival(e_god god_id);
-    e_god get_least_happy_god();
 
-    using god_states = svector<god_state *, MAX_GODS>;
-    god_states known_gods();
+private:
+    gods_state& _state;
+    gods_context _ctx;
 };
 
 template<typename ...Args>

@@ -37,13 +37,13 @@ struct health_state {
 };
 
 struct city_population_t;
-struct city_religion_t;
+struct gods_state;
 struct city_coverage_t;
 struct city_buildings_t;
 
 struct health_context {
     const city_population_t& population;
-    city_religion_t& religion;
+    gods_state& gods;
     city_coverage_t& coverage;
     city_buildings_t& buildings;
     bool fixed_health_mission;

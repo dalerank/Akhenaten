@@ -9,7 +9,7 @@
 god_ra_t god_ra;
 
 void god_ra_t::perform_reduced_trading() {
-    g_city.religion.ra_harshly_reduced_trading_months_left = 12;
+    g_city.gods.ra_harshly_reduced_trading_months_left = 12;
     messages::popup("message_wrath_of_ra_2", 0, 0);
 }
 
@@ -19,7 +19,7 @@ void god_ra_t::perform_lower_reputation() {
 }
 
 void god_ra_t::perform_no_traders() {
-    g_city.religion.ra_no_traders_months_left = 12;
+    g_city.gods.ra_no_traders_months_left = 12;
     messages::popup("message_wrath_of_ra_3", 0, 0);
 }
 
@@ -38,7 +38,7 @@ void god_ra_t::perform_major_curse() {
 }
 
 void god_ra_t::perform_slightly_reduced_trading() {
-    g_city.religion.ra_slightly_reduced_trading_months_left = 12;
+    g_city.gods.ra_slightly_reduced_trading_months_left = 12;
     events::emit(event_message_god{ GOD_RA, "message_ra_is_upset" });
 }
 
@@ -58,7 +58,7 @@ void god_ra_t::perform_minor_curse() {
 }
 
 void god_ra_t::perform_slightly_increased_trading() {
-    g_city.religion.ra_slightly_increased_trading_months_left = 12;
+    g_city.gods.ra_slightly_increased_trading_months_left = 12;
     messages::popup("message_minor_blessing_trading_from_ra", 0, 0);
 }
 

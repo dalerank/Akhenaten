@@ -81,7 +81,7 @@ void city_festival_t::execute_festival() {
             (e_local_cult)g_city.local_cults.planned_cult,
             (e_festival_theme)g_city.local_cults.planned_theme);
     } else if (planned_god < MAX_GODS) {
-        g_city.religion.gods[planned_god].months_since_festival = 0;
+        g_city.gods.gods[planned_god].months_since_festival = 0;
         if (game_features::gameplay_enhanced_festival_calendar.to_bool()
             || game_features::gameplay_enhanced_local_cults.to_bool()) {
             g_city.local_cults.apply_theme((e_festival_theme)g_city.local_cults.planned_theme, 2);
@@ -102,7 +102,7 @@ void city_festival_t::execute_festival() {
         if (!!game_features::gameplay_change_grandfestival
             && planned_god < MAX_GODS
             && !cult_festival) {
-            g_city.religion.gods[planned_god].blessing_done = 0;
+            g_city.gods.gods[planned_god].blessing_done = 0;
         }
 
         break;

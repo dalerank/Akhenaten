@@ -54,7 +54,7 @@ int bast_lion_raid_days() {
 } // namespace
 
 bool god_bast_t::perform_houses_destruction() {
-    return g_city.religion.BAST_houses_destruction();
+    return g_city.gods_sys().BAST_houses_destruction();
 }
 
 bool god_bast_t::perform_lions() {
@@ -110,7 +110,7 @@ void god_bast_t::perform_malaria_plague() {
     g_city.set_max_happiness(50);
     g_city.change_happiness(-5);
     g_city.health_sys().change(-10);
-    g_city.religion.bast_curse_active = true;
+    g_city.gods.bast_curse_active = true;
 
     int total_population = 0;
     buildings_house_do([&](building_house *house) {
@@ -135,9 +135,9 @@ void god_bast_t::perform_festival_for_other_gods() {
     g_city.festival.months_till_next = 1;
     g_city.festival.first_festival_effect_months = 1;
 
-    g_city.religion.gods[GOD_RA].months_since_festival = 0;
-    g_city.religion.gods[GOD_PTAH].months_since_festival = 0;
-    g_city.religion.gods[GOD_SETH].months_since_festival = 0;
+    g_city.gods.gods[GOD_RA].months_since_festival = 0;
+    g_city.gods.gods[GOD_PTAH].months_since_festival = 0;
+    g_city.gods.gods[GOD_SETH].months_since_festival = 0;
     messages::popup("message_small_blessing_from_bast", 0, 0);
 }
 

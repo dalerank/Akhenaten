@@ -63,7 +63,7 @@ struct city_t {
     city_ratings_t ratings;
     city_average_coverage_t avg_coverage;
 
-    city_religion_t religion;
+    gods_state gods;
     city_entertainment_t entertainment;
 
     city_monuments_t monuments;
@@ -225,6 +225,8 @@ struct city_t {
     trade_system trade_sys();
     health_context health_ctx();
     health_system health_sys();
+    gods_context gods_ctx();
+    gods_system gods_sys();
 
     e_availability is_advisor_available(e_advisor advisor) const;
     void set_advisor_available(e_advisor advisor, e_availability available);

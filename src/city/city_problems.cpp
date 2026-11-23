@@ -48,7 +48,7 @@ city_problem_inputs city_problem_gather_inputs() {
         in.workers_allocated += category.workers_allocated;
         in.workers_needed += category.workers_needed;
     }
-    for (const auto& god : g_city.religion.gods) {
+    for (const auto& god : g_city.gods.gods) {
         in.lowest_god_mood = std::min<int>(in.lowest_god_mood, god.mood);
     }
     in.kingdom_rating = g_city.kingdome.rating;

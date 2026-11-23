@@ -210,7 +210,7 @@ void scenario_data_t::apply_editor_allowed_buildings() {
         { BUILDING_TEMPLE_BAST, BUILDING_SHRINE_BAST, BUILDING_TEMPLE_COMPLEX_BAST },
     };
     for (int god = 0; god < MAX_GODS; god++) {
-        if (g_city.religion.gods[god].is_known != GOD_STATUS_UNKNOWN) {
+        if (g_city.gods.gods[god].is_known != GOD_STATUS_UNKNOWN) {
             for (const e_building_type t : god_buildings[god]) {
                 allowed_buildings[t] = true;
             }
