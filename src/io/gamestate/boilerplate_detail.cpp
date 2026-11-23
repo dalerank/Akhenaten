@@ -168,7 +168,7 @@ void GamestateLoadDetail::post_load() {
         g_city.init_campaign_mission();
         g_city.init_mission_resources(g_scenario.init_resources);
         // Pass JS player_rank from load_metadata � not campaign_scenario_id.
-        g_city.kingdome.load_scenario(g_city.kingdome.player_rank, game.session.last_loaded);
+        g_city.kingdome_sys().load_scenario(g_city.kingdome.player_rank, game.session.last_loaded);
         events::emit(event_building_menu_update{ "stage_normal" });
         break;
 
@@ -179,7 +179,7 @@ void GamestateLoadDetail::post_load() {
     case e_session_custom_map:
         g_city.init_custom_map();
         g_city.init_mission_resources(g_scenario.init_resources);
-        g_city.kingdome.load_scenario(g_city.kingdome.player_rank, game.session.last_loaded);
+        g_city.kingdome_sys().load_scenario(g_city.kingdome.player_rank, game.session.last_loaded);
         events::emit(event_building_menu_update{ "stage_normal" });
         break;
     }

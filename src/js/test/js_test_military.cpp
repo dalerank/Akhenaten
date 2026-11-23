@@ -485,7 +485,7 @@ static void __test_kingdome_invasion_reset() {
 ANK_FUNCTION(__test_kingdome_invasion_reset);
 
 static void __test_process_kingdome_invasion() {
-    g_city.kingdome.process_invasion();
+    g_city.kingdome_sys().process_invasion();
 }
 ANK_FUNCTION(__test_process_kingdome_invasion);
 

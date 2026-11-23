@@ -206,13 +206,23 @@ migration_system city_t::migration_sys() {
 }
 
 ratings_context city_t::ratings_ctx() {
-    return {finance, labor, resource, population, entertainment, coverage, gods, sentiment, buildings, kingdome,
+    return {finance, labor, resource, population, entertainment, coverage, gods, sentiment, buildings, kingdome_sys(),
       temple_complexes_sys().has_upgrade(BUILDING_TEMPLE_COMPLEX_RA, etc_upgrade_oracle), g_simulation.simtime.year,
       g_simulation.simtime.month, g_scenario.start_year};
 }
 
 ratings_system city_t::ratings_sys() {
     return ratings_system(ratings, ratings_ctx());
+}
+
+kingdome_context city_t::kingdome_ctx() {
+    return {finance_sys(), finance, ratings, figures, population, g_scenario.events, g_scenario.starting_kingdom(),
+      g_scenario.mode() != e_scenario_normal, g_scenario.rescue_loan(), g_scenario.is_open_play,
+      g_scenario.campaign_scenario_id, g_simulation.simtime.day, g_simulation.simtime.year};
+}
+
+kingdome_system city_t::kingdome_sys() {
+    return kingdome_system(kingdome, kingdome_ctx());
 }
 
 void city_t::init_custom_map() {

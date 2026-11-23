@@ -44,7 +44,7 @@ struct city_t {
     population_state population;
 
     house_demands houses;
-    kingdome_relation_t kingdome;
+    kingdome_state kingdome;
     city_military_t military;
     city_industry_t industry;
     city_maintenance_t maintenance;
@@ -233,6 +233,8 @@ struct city_t {
     migration_system migration_sys();
     ratings_context ratings_ctx();
     ratings_system ratings_sys();
+    kingdome_context kingdome_ctx();
+    kingdome_system kingdome_sys();
 
     e_availability is_advisor_available(e_advisor advisor) const;
     void set_advisor_available(e_advisor advisor, e_availability available);

@@ -54,6 +54,6 @@ bool temple_complexes_system::has_upgrade(e_building_type type, e_temple_compex_
 // OG temple_complex_ra_kingdom_bonus, right after the yearly ratings.
 void temple_complexes_system::ra_yearly_favour() {
     if (id(BUILDING_TEMPLE_COMPLEX_RA)) {
-        _ctx.kingdome.change(kingdome_relation_t::params().ra_complex_yearly_bonus);
+        _ctx.kingdome.change(kingdome_state::params().ra_complex_yearly_bonus);
     }
 }

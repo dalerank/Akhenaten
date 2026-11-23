@@ -862,7 +862,7 @@ void scenario_invasion_process() {
                 if (invasion_tile.valid()) {
                     // Scenario kingdom wave: kill tally via favour_only (no Caesar respect /
                     // pause-retreat). opts.size is difficulty-adjusted by start_invasion_impl.
-                    g_city.kingdome.begin_favour_army(opts.size);
+                    g_city.kingdome_sys().begin_favour_army(opts.size);
                     emit_local_invasion_attack_message("message_legion_attacks",
                         g_invasions.last_internal_invasion_id, invasion_tile.grid_offset());
                 }
@@ -955,7 +955,7 @@ int scenario_invasion_start(invasion_opts_t opts) {
                     data.last_internal_invasion_id, invasion_tile.grid_offset());
             }
             if (opts.kind == INVASION_KIND_KINGDOME) {
-                g_city.kingdome.begin_favour_army(opts.size);
+                g_city.kingdome_sys().begin_favour_army(opts.size);
             }
             return data.last_internal_invasion_id;
         }
@@ -966,7 +966,7 @@ int scenario_invasion_start(invasion_opts_t opts) {
         // Do not key off last_internal_invasion_id: failed spawns still bump the
         // counter before returning invalid (tile/seq failure).
         opts.kind = INVASION_KIND_KINGDOME;
-        if (!g_city.kingdome.force_attack(opts.size)) {
+        if (!g_city.kingdome_sys().force_attack(opts.size)) {
             return 0;
         }
         return data.last_internal_invasion_id;

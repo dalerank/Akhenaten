@@ -5,6 +5,7 @@
 #include "city/city_component.h"
 #include "city/constants.h"
 #include "core/archive.h"
+#include "city/city_finance.h"
 
 enum e_debt_state {
     e_debt_none = 0,
@@ -17,7 +18,7 @@ enum e_debt_state {
 struct event_send_gift_to_kingdome { int gift_size; };
 struct event_kingdome_update_gifts { int personal_savings; };
 
-struct kingdome_relation_t : city_component_t<kingdome_relation_t> {
+struct kingdome_state : city_component_t<kingdome_state> {
     int32_t months_since_gift;
     int32_t gift_overdose_penalty;
 
@@ -58,23 +59,9 @@ struct kingdome_relation_t : city_component_t<kingdome_relation_t> {
         uint8_t cheated;
     } invasion;
 
-    void load_scenario(int rank, int load_type);
-    void update_debt_state();
-    void process_invasion();
-    void update();
     void mark_soldier_killed();
     // Clear size/kills after player wipe; Caesar respect unless favour_only.
     void finish_army_defeated();
-    // Caesar wrath / console attack: count++, zeros days_until_invasion, enables respect popups.
-    // cheated=true skips pause/retreat (console).
-    void begin_invasion(int size, bool cheated);
-    // Mission favour / scenario KNGDOME wave: size+duration for kill tally (no Caesar respect).
-    // Does not bump invasion.count or reset days_until_invasion. Pause/retreat are Caesar-only.
-    void begin_favour_army(int size);
-    // Console / ATTACK_TYPE_KINGDOME. Returns false if spawn failed (no begin_invasion).
-    bool force_attack(int size);
-    void advance_month();
-    void advance_year();
 
     void change(int amount);
     void update_explanation();
@@ -108,11 +95,56 @@ struct kingdome_relation_t : city_component_t<kingdome_relation_t> {
 
     static const static_params &params();
 };
-ANK_CONFIG_PROPERTY(kingdome_relation_t, salary_rank, player_rank, kingdom_change, kingdom_salary_penalty,
-                    kingdom_milestone_penalty, kingdom_ignored_request_penalty)
 
-ANK_CONFIG_STRUCT(kingdome_relation_t::static_params, salary_ranks, gift_relation_change_first,
-  gift_relation_change_second, gift_relation_change_third, gift_relation_change_last, months_since_gift_locker,
-  tribute_not_paid_years_penalty, player_salary_above_king_penalty, player_salary_less_king_promotion,
-  first_debt_penalty, second_debt_penalty, last_debt_rating_cap, yearly_decay, yearly_decay_from_mission,
-  yearly_profit_bonus, ra_complex_yearly_bonus)
+struct finance_state;
+struct ratings_state;
+struct city_figures_t;
+struct population_state;
+struct event_manager_t;
+
+struct kingdome_context {
+    finance_system finance_sys;
+    const finance_state& finance;
+    ratings_state& ratings;
+    const city_figures_t& figures;
+    const population_state& population;
+    event_manager_t& scenario_events;
+    int starting_kingdom;
+    bool custom_scenario;
+    int rescue_loan;
+    bool open_play;
+    int campaign_scenario_id;
+    int day;
+    int year;
+};
+
+class kingdome_system {
+public:
+    kingdome_system(kingdome_state& state, const kingdome_context& ctx) : _state(state), _ctx(ctx) {}
+
+    void load_scenario(int rank, int load_type);
+    void update_debt_state();
+    void process_invasion();
+    void update();
+    // Caesar wrath / console attack: count++, zeros days_until_invasion, enables respect popups.
+    // cheated=true skips pause/retreat (console).
+    void begin_invasion(int size, bool cheated);
+    // Mission favour / scenario KNGDOME wave: size+duration for kill tally (no Caesar respect).
+    // Does not bump invasion.count or reset days_until_invasion. Pause/retreat are Caesar-only.
+    void begin_favour_army(int size);
+    // Console / ATTACK_TYPE_KINGDOME. Returns false if spawn failed (no begin_invasion).
+    bool force_attack(int size);
+    void advance_month();
+    void advance_year();
+
+private:
+    kingdome_state& _state;
+    kingdome_context _ctx;
+};
+ANK_CONFIG_PROPERTY(kingdome_state, salary_rank, player_rank, kingdom_change, kingdom_salary_penalty,
+  kingdom_milestone_penalty, kingdom_ignored_request_penalty)
+
+ANK_CONFIG_STRUCT(kingdome_state::static_params, salary_ranks, gift_relation_change_first, gift_relation_change_second,
+  gift_relation_change_third, gift_relation_change_last, months_since_gift_locker, tribute_not_paid_years_penalty,
+  player_salary_above_king_penalty, player_salary_less_king_promotion, first_debt_penalty, second_debt_penalty,
+  last_debt_rating_cap, yearly_decay, yearly_decay_from_mission, yearly_profit_bonus, ra_complex_yearly_bonus)

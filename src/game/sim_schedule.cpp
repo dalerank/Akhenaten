@@ -51,7 +51,7 @@ static const sim_step k_sim_steps[] = {
   {SIM_PHASE_TICK_SLOT, 1, "religion", SIM_AREA_RELIGION, [](city_t& c) { c.gods_sys().update(); }},
   {SIM_PHASE_TICK_SLOT, 1, "coverage", SIM_AREA_COVERAGE, [](city_t& c) { c.coverage.update(); }},
   {SIM_PHASE_TICK_SLOT, 2, "tree_growth", SIM_AREA_MAP, [](city_t&) { map_tree_growth_update(); }},
-  {SIM_PHASE_TICK_SLOT, 4, "kingdome", SIM_AREA_KINGDOM, [](city_t& c) { c.kingdome.update(); }},
+  {SIM_PHASE_TICK_SLOT, 4, "kingdome", SIM_AREA_KINGDOM, [](city_t& c) { c.kingdome_sys().update(); }},
   {SIM_PHASE_TICK_SLOT, 5, "irrigation_value", SIM_AREA_MAP, [](city_t&) { g_irrigation_value.update(); }},
   {SIM_PHASE_TICK_SLOT, 5, "formations", SIM_AREA_MILITARY, [](city_t&) { formation_update_all(false); }},
   {SIM_PHASE_TICK_SLOT, 6, "natives_land", SIM_AREA_MAP, [](city_t&) { map_natives_check_land(); }},
@@ -183,7 +183,7 @@ static const sim_step k_sim_steps[] = {
             c.fishing_points.update_month();
         }
     }},
-  {SIM_PHASE_MONTH_CITY, -1, "kingdome_month", SIM_AREA_KINGDOM, [](city_t& c) { c.kingdome.advance_month(); }},
+  {SIM_PHASE_MONTH_CITY, -1, "kingdome_month", SIM_AREA_KINGDOM, [](city_t& c) { c.kingdome_sys().advance_month(); }},
   {SIM_PHASE_MONTH_CITY, -1, "tomb_robbers_month", SIM_AREA_FIGURES,
     [](city_t&) {
         if (game_features::gameplay_change_tomb_robber_remake.to_bool()) {

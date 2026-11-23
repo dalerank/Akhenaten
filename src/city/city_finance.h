@@ -110,12 +110,12 @@ struct finance_state {
 
 struct population_state;
 struct labor_state;
-struct kingdome_relation_t;
+struct kingdome_state;
 
 struct finance_context {
     population_state& population;
     const labor_state& labor;
-    kingdome_relation_t& kingdome;
+    kingdome_state& kingdome;
     int month;
     int debt_interest;
 };

@@ -63,9 +63,9 @@ void config_show_kingdome_properties(bool header) {
 declare_console_command_p(updatekingdome) {
     int value = args.next_int(0);
     if (!!value) {
-        g_city.kingdome.advance_year();
+        g_city.kingdome_sys().advance_year();
     } else {
-        g_city.kingdome.advance_month();
+        g_city.kingdome_sys().advance_month();
     }
 }
 

@@ -3,6 +3,7 @@
 #include <cstdint>
 #include "building/building_type.h"
 #include "core/archive.h"
+#include "city/city_kingdome_relations.h"
 
 enum e_prosperity_trend {
     e_prosperity_rising = 0,
@@ -38,6 +39,8 @@ struct ratings_state {
 
     int32_t culture_explanation;
     int32_t prosperity_explanation;
+
+    void reduce_prosperity_after_bailout();
 };
 
 ANK_CONFIG_PROPERTY(ratings_state, culture, prosperity, monument, culture_explanation, prosperity_explanation,
@@ -52,7 +55,6 @@ struct city_coverage_t;
 struct gods_state;
 struct sentiment_state;
 struct city_buildings_t;
-struct kingdome_relation_t;
 
 struct ratings_context {
     const finance_state& finance;
@@ -64,7 +66,7 @@ struct ratings_context {
     const gods_state& gods;
     const sentiment_state& sentiment;
     const city_buildings_t& buildings;
-    kingdome_relation_t& kingdome;
+    kingdome_system kingdome_sys;
     bool ra_oracle;
     int year;
     int month;
@@ -82,7 +84,6 @@ public:
     void update_prosperity_rating();
     void update_prosperity_explanation();
     void calculate_max_prosperity();
-    void reduce_prosperity_after_bailout();
     void monument_building_destroyed(e_building_type type);
     void monument_record_criminal();
     void monument_record_rioter();

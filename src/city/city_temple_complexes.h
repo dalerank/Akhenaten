@@ -5,11 +5,11 @@
 
 enum e_temple_compex_upgrade : uint8_t;
 struct city_buildings_t;
-struct kingdome_relation_t;
+struct kingdome_state;
 
 struct temple_complexes_context {
     const city_buildings_t& buildings;
-    kingdome_relation_t& kingdome;
+    kingdome_state& kingdome;
 };
 
 class temple_complexes_system {

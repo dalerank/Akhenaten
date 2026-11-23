@@ -77,13 +77,13 @@ namespace {
 
 } // namespace
 
-void ratings_system::reduce_prosperity_after_bailout() {
-    _state.prosperity -= 3;
-    if (_state.prosperity < 0) {
-        _state.prosperity = 0;
+void ratings_state::reduce_prosperity_after_bailout() {
+    prosperity -= 3;
+    if (prosperity < 0) {
+        prosperity = 0;
     }
 
-    _state.prosperity_explanation = e_prosperity_reason_tribute_not_paid;
+    prosperity_explanation = e_prosperity_reason_tribute_not_paid;
 }
 
 void ratings_system::monument_building_destroyed(e_building_type type) {
@@ -142,7 +142,7 @@ void ratings_system::update_culture_rating() {
 void ratings_system::update(bool is_yearly_update) {
     update_culture_rating();
     if (is_yearly_update) {
-        _ctx.kingdome.advance_year();
+        _ctx.kingdome_sys.advance_year();
     }
     calculate_max_prosperity();
 
