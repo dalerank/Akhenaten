@@ -21,9 +21,6 @@
 #include "figure/formation_enemy.h"
 #include "scenario/map.h"
 #include "scenario/scenario.h"
-#include "dev/debug.h"
-
-declare_console_var_bool(allow_span_ostrich, true)
 
 e_figure_type climate_prey_type() {
     switch (g_scenario.climate) {
@@ -465,7 +462,7 @@ void city_animals_t::update_herd_formation(formation *m) {
         return;
     }
 
-    if (can_spawn_ostrich(m) && allow_span_ostrich()) {
+    if (can_spawn_ostrich(m) && allow_spawn_ostrich) {
         const int impassable = herd_impassable_mask(m->figure_type);
         bool is_passible = !map_terrain_is(m->tile, impassable);
         bool valid_tile = m->tile.valid();

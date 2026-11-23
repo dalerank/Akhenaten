@@ -84,6 +84,7 @@ void city_t::init() {
     sentiment.value = 60;
     health.target_value = 50;
     health.value = 50;
+    animals.allow_spawn_ostrich = true;
     unused.unknown_00c0 = 3;
     finance.tax_percentage = 7;
     taxes.house_tax_bonus_percentage = 110;

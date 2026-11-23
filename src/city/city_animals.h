@@ -7,6 +7,7 @@ struct city_animals_t : public game_system {
     ANK_ESID(city_animals)
 
     bool herd_migration;
+    bool allow_spawn_ostrich;
 
     void create_herds();
     formation* create_herd(tile2i tile, e_figure_type ftype, int num_animals);
