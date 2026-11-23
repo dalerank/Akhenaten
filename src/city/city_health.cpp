@@ -18,7 +18,7 @@
 #include "game/simulation.h"
 #include "js/js_register.h"
 
-city_health_rules_t ANK_VARIABLE(city_health_rules)
+city_health_rules_t ANK_VARIABLE(city_health_rules);
 
 void health_system::change(int amount) {
     _state.value = calc_bound(_state.value + amount, 0, 100);

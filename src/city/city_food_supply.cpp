@@ -13,7 +13,7 @@
 
 #include <algorithm>
 
-city_food_supply_rules_t ANK_VARIABLE(city_food_supply_rules)
+city_food_supply_rules_t ANK_VARIABLE(city_food_supply_rules);
 
 int food_supply_farm_expected_produce(int fertility, int laborers, bool blessed,
   const city_food_supply_rules_t& rules) {

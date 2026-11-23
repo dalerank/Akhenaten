@@ -11,10 +11,10 @@
 
 #include <algorithm>
 
-advisor_comment_rules_t ANK_VARIABLE(advisor_comment_rules)
-chief_advisor_rules_t ANK_VARIABLE(chief_advisor_rules)
+advisor_comment_rules_t ANK_VARIABLE(advisor_comment_rules);
+chief_advisor_rules_t ANK_VARIABLE(chief_advisor_rules);
 
-  const e_advisor_comment_topic_tokens_t ANK_CONFIG_ENUM(e_advisor_comment_topic_tokens);
+const e_advisor_comment_topic_tokens_t ANK_CONFIG_ENUM(e_advisor_comment_topic_tokens);
 const e_advisor_text_tone_tokens_t ANK_CONFIG_ENUM(e_advisor_text_tone_tokens);
 const e_chief_row_number_tokens_t ANK_CONFIG_ENUM(e_chief_row_number_tokens);
 

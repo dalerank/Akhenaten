@@ -18,7 +18,7 @@
 #include <algorithm>
 #include <array>
 
-city_population_rules_t ANK_VARIABLE(city_population_rules)
+city_population_rules_t ANK_VARIABLE(city_population_rules);
 
 static const int DEATHS_PER_HEALTH_PER_AGE_DECENNIUM[11][10] = {{20, 10, 5, 10, 20, 30, 50, 85, 100, 100},
                                                                 {15, 8, 4, 8, 16, 25, 45, 70, 90, 100},

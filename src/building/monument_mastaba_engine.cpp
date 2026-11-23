@@ -13,7 +13,7 @@
 
 #include <algorithm>
 
-monument_engine_config_t ANK_VARIABLE(monument_engine_config)
+monument_engine_config_t ANK_VARIABLE(monument_engine_config);
 monument_mastaba_engine g_monument_mastaba_engine;
 
 int monument_mastaba_engine::part_height(const pyramid_part_state &p) const {

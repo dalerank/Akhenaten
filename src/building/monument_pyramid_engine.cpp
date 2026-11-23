@@ -16,7 +16,7 @@
 
 #include <algorithm>
 
-pyramid_engine_config_t ANK_VARIABLE(pyramid_engine_config)
+pyramid_engine_config_t ANK_VARIABLE(pyramid_engine_config);
 monument_pyramid_engine g_monument_pyramid_engine;
 
 building *monument_pyramid_engine::chain_head(building *any_part) const {

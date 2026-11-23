@@ -45,7 +45,7 @@
 #include <utility>
 #include <mutex>
 
-object_info ANK_VARIABLE(def_object_info)
+object_info ANK_VARIABLE(def_object_info);
 std::vector<common_info_window *> *g_window_building_handlers = nullptr;
 std::vector<common_info_window *> *g_window_batalion_handlers = nullptr;
 std::vector<common_info_window *> *g_window_figure_handlers = nullptr;
