@@ -2506,74 +2506,8 @@ bool building_stepped_pyramid::force_draw_flat_tile(painter &ctx, tile2i tile, v
     return (phase() < 7);
 }
 
-void building_stepped_pyramid::bind_dynamic(io_buffer *iob, size_t version) {
-    if (version >= 196) {
-        bind_block_engine_state(iob, current_params().animations["basement"].first_img());
-        return;
-    }
-
-    auto &monumentd = runtime_data();
-
-    for (int i = 0; i < RESOURCES_MAX; i++) {
-        iob->bind_u8(monumentd.burial_stock[i]);
-    }
-    iob->bind_u16(monumentd.alt_image);
-    iob->bind_u8(base.orientation);
-    for (int i = 0; i < 5; i++) {
-        iob->bind_u16(monumentd.workers[i]);
-    }
-    iob->bind_i8(monumentd.phase);
-    iob->bind_u8(monumentd.layer);
-    iob->bind_u8(monumentd.stair_index);
-    iob->bind_u8(monumentd.variant);
-
-    for (int i = 0; i < RESOURCES_MAX; i++) {
-        iob->bind_u8(monumentd.resources_pct[i]);
-    }
-
-    // funeral_done appended (mastaba reclaims a former skip byte instead).
-    if (version >= 179) {
-        iob->bind_u8(monumentd.funeral_done);
-    } else {
-        monumentd.funeral_done = 0;
-    }
-    // Preexisting sealed tomb flag.
-    if (version >= 180) {
-        iob->bind_u8(monumentd.preexisting);
-    } else {
-        monumentd.preexisting = 0;
-    }
-    if (version >= 182) {
-        iob->bind_u8(monumentd.causeway_length);
-        iob->bind_u8(monumentd.causeway_dir);
-    } else {
-        monumentd.causeway_length = 0;
-        monumentd.causeway_dir = 0;
-    }
-    if (version >= 192) {
-        auto& main = monumentd.og_main;
-        iob->bind_u8((uint8_t&)main.style);
-        iob->bind_u8(main.size_variant);
-        iob->bind_u16(main.remaining_blocks);
-        iob->bind_u8(main.block_phase_active);
-        iob->bind_u8(main.force_show_ramps);
-
-        auto& part = monumentd.og_part;
-        iob->bind_u8(part.size_variant);
-        iob->bind_u8(part.stage);
-        iob->bind_u8(part.blocks);
-        iob->bind_u8(part.layer);
-        iob->bind_u8(part.target_layers);
-        iob->bind_u8(part.subtype);
-        iob->bind_u16(part.worker_figure_id);
-        iob->bind_u8(part.ramp1_height);
-        iob->bind_u8(part.ramp2_height);
-        iob->bind_u32(part.ramp_image_id);
-        iob->bind_i16(part.ramp_image_x1);
-        iob->bind_i16(part.ramp_image_y1);
-        iob->bind_i16(part.ramp_image_x2);
-        iob->bind_i16(part.ramp_image_y2);
-    }
+void building_stepped_pyramid::bind_dynamic(io_buffer *iob, size_t /*version*/) {
+    bind_block_engine_state(iob, current_params().animations["basement"].first_img());
 }
 
 int building_small_stepped_pyramid::building_image_get() const {
