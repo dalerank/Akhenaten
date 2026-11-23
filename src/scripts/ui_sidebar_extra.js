@@ -10,6 +10,8 @@ var EXTRA_INFO_HEIGHT_GAME_SPEED = 64
 var EXTRA_INFO_HEIGHT_UNEMPLOYMENT = 48
 var EXTRA_INFO_HEIGHT_RATINGS = 176
 var EXTRA_INFO_HEIGHT_NILOMETER = 36
+var REPORT_BUG_BUTTON_HEIGHT = 45
+var REPORT_BUG_BUTTON_GAP = 3
 // Must match extra_background / first extra widget Y in ui_sidebar_window.js.
 var SIDEBAR_EXTRA_START_Y = 480
 
@@ -88,8 +90,6 @@ function sidebar_extra_apply_nilometer_offsets(window, niloOn) {
 
     sidebar_extra_set_pos(window.kingdom_header, 11, base + 250 + dy)
     sidebar_extra_set_pos(window.kingdom_current, 11, base + 270 + dy)
-
-    sidebar_extra_set_pos(window.report_bug, 114, base + 258 + dy)
 }
 
 function sidebar_extra_apply_visibility(window, mask, niloOn) {
@@ -202,6 +202,11 @@ function sidebar_window_extra_ui_draw_foreground(window) {
     var embedPx = sidebar_extra_embed_height_px(collapsed, mask, niloOn)
     var blocksY = embedPx > 0 ? ((embedPx + 15) >> 4) : 0
     window.extra_background.size = { x: 10, y: blocksY }
+
+    var reportBugY = (mask & SIDEBAR_EXTRA_DISPLAY_RATINGS)
+        ? embedPx - REPORT_BUG_BUTTON_HEIGHT - REPORT_BUG_BUTTON_GAP
+        : embedPx + REPORT_BUG_BUTTON_GAP
+    sidebar_extra_set_pos(window.report_bug, 114, SIDEBAR_EXTRA_START_Y + reportBugY)
 
     sidebar_extra_update_nilometer(window, niloOn)
 
