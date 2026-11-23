@@ -99,7 +99,7 @@ void city_t::init() {
     local_cults_sys().reset();
     buildings.init();
     figure_clear_all();
-    sentiment.init();
+    sentiment_sys().init();
     finance_sys().init();
     empire_screen = AVAILABLE;
     bookmarks.reset();
@@ -176,6 +176,16 @@ local_cults_system city_t::local_cults_sys() {
 
 temple_complexes_system city_t::temple_complexes_sys() {
     return temple_complexes_system({buildings, kingdome});
+}
+
+sentiment_context city_t::sentiment_ctx() {
+    return {population, finance, gods, labor, buildings,
+      temple_complexes_sys().has_upgrade(BUILDING_TEMPLE_COMPLEX_BAST, etc_upgrade_oracle), g_simulation.simtime.day,
+      g_scenario.campaign_scenario_id};
+}
+
+sentiment_system city_t::sentiment_sys() {
+    return sentiment_system(sentiment, sentiment_ctx());
 }
 
 void city_t::init_custom_map() {
