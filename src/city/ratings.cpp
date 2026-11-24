@@ -158,8 +158,7 @@ class ratings_sim_system : public sim_system {
 public:
     const char* name() const override { return "ratings"; }
     void register_steps(sim_schedule_t& schedule) override {
-        schedule.add(
-          {sim_step_ratings_year, SIM_PHASE_YEAR, -1, SIM_AREA_RATINGS, [] { g_city.ratings_sys().update(true); }});
+        schedule.add({sim_step_ratings_year, SIM_PHASE_YEAR, -1, [] { g_city.ratings_sys().update(true); }});
     }
 };
 

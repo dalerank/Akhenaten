@@ -322,22 +322,17 @@ class buildings_system : public sim_system {
 public:
     const char* name() const override { return "buildings"; }
     void register_steps(sim_schedule_t& schedule) override {
-        schedule.add({sim_step_buildings_tick, SIM_PHASE_TICK_BEGIN, -1, SIM_AREA_BUILDINGS,
-          [] { g_city.buildings.update_tick(game.paused); }});
-        schedule.add({sim_step_open_water_access, SIM_PHASE_TICK_SLOT, 19, SIM_AREA_BUILDINGS,
-          [] { g_city.buildings_update_open_water_access(); }});
-        schedule.add({sim_step_water_supply, SIM_PHASE_TICK_SLOT, 27, SIM_AREA_BUILDINGS,
-          [] { g_city.buildings.update_water_supply(); }});
-        schedule.add({sim_step_religion_supply, SIM_PHASE_TICK_SLOT, 28, SIM_AREA_HOUSES,
+        schedule.add(
+          {sim_step_buildings_tick, SIM_PHASE_TICK_BEGIN, -1, [] { g_city.buildings.update_tick(game.paused); }});
+        schedule.add(
+          {sim_step_open_water_access, SIM_PHASE_TICK_SLOT, 19, [] { g_city.buildings_update_open_water_access(); }});
+        schedule.add({sim_step_water_supply, SIM_PHASE_TICK_SLOT, 27, [] { g_city.buildings.update_water_supply(); }});
+        schedule.add({sim_step_religion_supply, SIM_PHASE_TICK_SLOT, 28,
           [] { g_city.buildings.update_religion_supply_houses(); }});
-        schedule.add({sim_step_building_counters, SIM_PHASE_TICK_SLOT, 33, SIM_AREA_BUILDINGS,
-          [] { g_city.buildings.update_counters(); }});
-        schedule.add(
-          {sim_step_buildings_day, SIM_PHASE_DAY, -1, SIM_AREA_BUILDINGS, [] { g_city.buildings.update_day(); }});
-        schedule.add({sim_step_buildings_month, SIM_PHASE_MONTH_CITY, -1, SIM_AREA_BUILDINGS,
-          [] { g_city.buildings.update_month(); }});
-        schedule.add(
-          {sim_step_buildings_year, SIM_PHASE_YEAR, -1, SIM_AREA_BUILDINGS, [] { g_city.buildings.update_year(); }});
+        schedule.add({sim_step_building_counters, SIM_PHASE_TICK_SLOT, 33, [] { g_city.buildings.update_counters(); }});
+        schedule.add({sim_step_buildings_day, SIM_PHASE_DAY, -1, [] { g_city.buildings.update_day(); }});
+        schedule.add({sim_step_buildings_month, SIM_PHASE_MONTH_CITY, -1, [] { g_city.buildings.update_month(); }});
+        schedule.add({sim_step_buildings_year, SIM_PHASE_YEAR, -1, [] { g_city.buildings.update_year(); }});
     }
 };
 

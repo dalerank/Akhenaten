@@ -1004,10 +1004,9 @@ class scenario_invasion_system : public sim_system {
 public:
     const char* name() const override { return "scenario_invasion"; }
     void register_steps(sim_schedule_t& schedule) override {
-        schedule.add({sim_step_invasion_bind_resolutions, SIM_PHASE_MONTH, -1, SIM_AREA_MILITARY,
-          [] { g_invasions.process_bind_resolutions(); }});
-        schedule.add({sim_step_invasion_process, SIM_PHASE_MONTH, -1, SIM_AREA_SCENARIO | SIM_AREA_MILITARY,
-          [] { scenario_invasion_process(); }});
+        schedule.add(
+          {sim_step_invasion_bind_resolutions, SIM_PHASE_MONTH, -1, [] { g_invasions.process_bind_resolutions(); }});
+        schedule.add({sim_step_invasion_process, SIM_PHASE_MONTH, -1, [] { scenario_invasion_process(); }});
     }
 };
 

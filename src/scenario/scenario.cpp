@@ -506,7 +506,7 @@ class scenario_system : public sim_system {
 public:
     const char* name() const override { return "scenario"; }
     void register_steps(sim_schedule_t& schedule) override {
-        schedule.add({sim_step_scenario, SIM_PHASE_TICK_END, -1, SIM_AREA_SCENARIO, [] { g_scenario.update(); }});
+        schedule.add({sim_step_scenario, SIM_PHASE_TICK_END, -1, [] { g_scenario.update(); }});
     }
 };
 

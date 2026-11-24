@@ -779,7 +779,7 @@ class labor_sim_system : public sim_system {
 public:
     const char* name() const override { return "labor"; }
     void register_steps(sim_schedule_t& schedule) override {
-        schedule.add({sim_step_labor, SIM_PHASE_TICK_SLOT, 25, SIM_AREA_LABOR, [] { g_city.labor_sys().update(); }});
+        schedule.add({sim_step_labor, SIM_PHASE_TICK_SLOT, 25, [] { g_city.labor_sys().update(); }});
     }
 };
 

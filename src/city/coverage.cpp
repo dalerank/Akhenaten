@@ -131,13 +131,10 @@ class coverage_system : public sim_system {
 public:
     const char* name() const override { return "coverage"; }
     void register_steps(sim_schedule_t& schedule) override {
-        schedule.add({sim_step_coverage, SIM_PHASE_TICK_SLOT, 1, SIM_AREA_COVERAGE, [] { g_city.coverage.update(); }});
-        schedule.add(
-          {sim_step_avg_coverage_33, SIM_PHASE_TICK_SLOT, 33, SIM_AREA_COVERAGE, [] { g_city.avg_coverage.update(); }});
-        schedule.add(
-          {sim_step_avg_coverage_49, SIM_PHASE_TICK_SLOT, 49, SIM_AREA_COVERAGE, [] { g_city.avg_coverage.update(); }});
-        schedule.add(
-          {sim_step_avg_coverage_day, SIM_PHASE_DAY, -1, SIM_AREA_COVERAGE, [] { g_city.avg_coverage.update(); }});
+        schedule.add({sim_step_coverage, SIM_PHASE_TICK_SLOT, 1, [] { g_city.coverage.update(); }});
+        schedule.add({sim_step_avg_coverage_33, SIM_PHASE_TICK_SLOT, 33, [] { g_city.avg_coverage.update(); }});
+        schedule.add({sim_step_avg_coverage_49, SIM_PHASE_TICK_SLOT, 49, [] { g_city.avg_coverage.update(); }});
+        schedule.add({sim_step_avg_coverage_day, SIM_PHASE_DAY, -1, [] { g_city.avg_coverage.update(); }});
     }
 };
 

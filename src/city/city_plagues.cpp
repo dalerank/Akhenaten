@@ -13,8 +13,7 @@ class plagues_system : public sim_system {
 public:
     const char* name() const override { return "plagues"; }
     void register_steps(sim_schedule_t& schedule) override {
-        schedule.add({sim_step_plagues, SIM_PHASE_TICK_CITY_END, -1, SIM_AREA_HEALTH,
-          [] { city_plagues().decrease_countdowns(); }});
+        schedule.add({sim_step_plagues, SIM_PHASE_TICK_CITY_END, -1, [] { city_plagues().decrease_countdowns(); }});
     }
     void on_reset() override { city_plagues().reset(); }
 };

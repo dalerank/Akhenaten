@@ -76,9 +76,8 @@ class malaria_risk_system : public sim_system {
 public:
     const char* name() const override { return "malaria_risk"; }
     void register_steps(sim_schedule_t& schedule) override {
-        schedule.add({sim_step_malaria_risk, SIM_PHASE_TICK_SLOT, 37, SIM_AREA_MAP, [] { g_malaria_risk.update(); }});
-        schedule.add({sim_step_building_malaria_risk, SIM_PHASE_TICK_SLOT, 46, SIM_AREA_BUILDINGS,
-          [] { building_update_malaria_risk(); }});
+        schedule.add({sim_step_malaria_risk, SIM_PHASE_TICK_SLOT, 37, [] { g_malaria_risk.update(); }});
+        schedule.add({sim_step_building_malaria_risk, SIM_PHASE_TICK_SLOT, 46, [] { building_update_malaria_risk(); }});
     }
 };
 

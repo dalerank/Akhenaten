@@ -684,8 +684,7 @@ class city_system : public sim_system {
 public:
     const char* name() const override { return "city"; }
     void register_steps(sim_schedule_t& schedule) override {
-        schedule.add({sim_step_generate_figures, SIM_PHASE_TICK_SLOT, 31, SIM_AREA_FIGURES,
-          [] { g_city.buildings_generate_figure(); }});
+        schedule.add({sim_step_generate_figures, SIM_PHASE_TICK_SLOT, 31, [] { g_city.buildings_generate_figure(); }});
     }
 };
 

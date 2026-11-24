@@ -71,8 +71,8 @@ class temple_complexes_system : public sim_system {
 public:
     const char* name() const override { return "temple_complexes"; }
     void register_steps(sim_schedule_t& schedule) override {
-        schedule.add({sim_step_temple_complexes, SIM_PHASE_YEAR, -1, SIM_AREA_RELIGION,
-          [] { city_temple_complexes().ra_yearly_favour(); }});
+        schedule.add(
+          {sim_step_temple_complexes, SIM_PHASE_YEAR, -1, [] { city_temple_complexes().ra_yearly_favour(); }});
     }
 };
 

@@ -313,12 +313,10 @@ class migration_sim_system : public sim_system {
 public:
     const char* name() const override { return "migration"; }
     void register_steps(sim_schedule_t& schedule) override {
+        schedule.add({sim_step_migration, SIM_PHASE_TICK_SLOT, 23, [] { g_city.migration_sys().update(); }});
         schedule.add(
-          {sim_step_migration, SIM_PHASE_TICK_SLOT, 23, SIM_AREA_MIGRATION, [] { g_city.migration_sys().update(); }});
-        schedule.add({sim_step_migration_month, SIM_PHASE_MONTH_CITY, -1, SIM_AREA_MIGRATION,
-          [] { g_city.migration_sys().update_month(); }});
-        schedule.add({sim_step_migration_year, SIM_PHASE_YEAR, -1, SIM_AREA_MIGRATION,
-          [] { g_city.migration_sys().advance_year(); }});
+          {sim_step_migration_month, SIM_PHASE_MONTH_CITY, -1, [] { g_city.migration_sys().update_month(); }});
+        schedule.add({sim_step_migration_year, SIM_PHASE_YEAR, -1, [] { g_city.migration_sys().advance_year(); }});
     }
 };
 

@@ -19,8 +19,7 @@ class monuments_system : public sim_system {
 public:
     const char* name() const override { return "monuments"; }
     void register_steps(sim_schedule_t& schedule) override {
-        schedule.add(
-          {sim_step_monuments_year, SIM_PHASE_YEAR, -1, SIM_AREA_MONUMENTS, [] { g_city.monuments.advance_year(); }});
+        schedule.add({sim_step_monuments_year, SIM_PHASE_YEAR, -1, [] { g_city.monuments.advance_year(); }});
     }
 };
 

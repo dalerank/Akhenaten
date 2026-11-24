@@ -376,8 +376,7 @@ class building_states_system : public sim_system {
 public:
     const char* name() const override { return "building_states"; }
     void register_steps(sim_schedule_t& schedule) override {
-        schedule.add(
-          {sim_step_building_state, SIM_PHASE_TICK_SLOT, 40, SIM_AREA_BUILDINGS, [] { building_update_state(); }});
+        schedule.add({sim_step_building_state, SIM_PHASE_TICK_SLOT, 40, [] { building_update_state(); }});
     }
 };
 

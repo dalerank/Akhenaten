@@ -394,9 +394,8 @@ class undo_system : public sim_system {
 public:
     const char* name() const override { return "undo"; }
     void register_steps(sim_schedule_t& schedule) override {
-        schedule.add(
-          {sim_step_undo_time, SIM_PHASE_TICK_BEGIN, -1, SIM_AREA_UNDO, [] { game_undo_reduce_time_available(); }});
-        schedule.add({sim_step_undo_disable, SIM_PHASE_YEAR, -1, SIM_AREA_UNDO, [] { game_undo_disable(); }});
+        schedule.add({sim_step_undo_time, SIM_PHASE_TICK_BEGIN, -1, [] { game_undo_reduce_time_available(); }});
+        schedule.add({sim_step_undo_disable, SIM_PHASE_YEAR, -1, [] { game_undo_disable(); }});
     }
 };
 

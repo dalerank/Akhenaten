@@ -358,8 +358,8 @@ class funeral_walker_system : public sim_system {
 public:
     const char* name() const override { return "funeral_walker"; }
     void register_steps(sim_schedule_t& schedule) override {
-        schedule.add({sim_step_funeral_walkers, SIM_PHASE_DAY, -1, SIM_AREA_FIGURES,
-          [] { figure_funeral_walker::try_spawn_all(false); }});
+        schedule.add(
+          {sim_step_funeral_walkers, SIM_PHASE_DAY, -1, [] { figure_funeral_walker::try_spawn_all(false); }});
     }
 };
 

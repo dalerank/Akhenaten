@@ -31,12 +31,9 @@ class taxes_system : public sim_system {
 public:
     const char* name() const override { return "taxes"; }
     void register_steps(sim_schedule_t& schedule) override {
-        schedule.add({sim_step_taxes_month, SIM_PHASE_MONTH_CITY, -1, SIM_AREA_TAXES | SIM_AREA_FINANCE,
-          [] { city_taxes().collect_monthly(); }});
-        schedule.add({sim_step_estimate_taxes, SIM_PHASE_MONTH_END, -1, SIM_AREA_TAXES | SIM_AREA_FINANCE,
-          [] { city_taxes().update_estimate(); }});
-        schedule.add({sim_step_taxes_year, SIM_PHASE_YEAR, -1, SIM_AREA_TAXES | SIM_AREA_FINANCE | SIM_AREA_HOUSES,
-          [] { city_taxes().advance_year(); }});
+        schedule.add({sim_step_taxes_month, SIM_PHASE_MONTH_CITY, -1, [] { city_taxes().collect_monthly(); }});
+        schedule.add({sim_step_estimate_taxes, SIM_PHASE_MONTH_END, -1, [] { city_taxes().update_estimate(); }});
+        schedule.add({sim_step_taxes_year, SIM_PHASE_YEAR, -1, [] { city_taxes().advance_year(); }});
     }
     void on_reset() override { city_taxes().reset(); }
     void push_save_sections(int file_version) override {
