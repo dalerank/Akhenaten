@@ -4,6 +4,7 @@
 #include "city/campaign_carry.h"
 #include "city/city.h"
 #include "city/city_local_cults.h"
+#include "city/city_taxes.h"
 #include "city/city_resource.h"
 #include "core/custom_span.hpp"
 #include "empire/trade_route.h"

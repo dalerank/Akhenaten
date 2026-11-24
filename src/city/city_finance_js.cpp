@@ -1,6 +1,7 @@
 #include "city/city_finance.h"
 
 #include "city/city.h"
+#include "city/city_taxes.h"
 #include "core/profiler.h"
 #include "js/js_game.h"
 #include "js/js_global_object.h"
@@ -47,12 +48,12 @@ std::optional<bvariant> __city_finance_overview(pcstr property, bool this_year) 
 ANK_FUNCTION_2(__city_finance_overview)
 
 void __city_finance_update_estimate_taxes() {
-    g_city.taxes_sys().update_estimate();
+    city_taxes().update_estimate();
 }
 ANK_FUNCTION(__city_finance_update_estimate_taxes)
 
 void __city_finance_collect_monthly_taxes() {
-    g_city.taxes_sys().collect_monthly();
+    city_taxes().collect_monthly();
 }
 ANK_FUNCTION(__city_finance_collect_monthly_taxes)
 
@@ -62,7 +63,7 @@ void __city_finance_calculate_totals() {
 ANK_FUNCTION(__city_finance_calculate_totals)
 
 std::optional<bvariant> __city_get_taxes_property(pcstr property) {
-    return archive_helper::get(g_city.taxes, property, true);
+    return archive_helper::get(city_taxes(), property, true);
 }
 ANK_FUNCTION_1(__city_get_taxes_property)
 

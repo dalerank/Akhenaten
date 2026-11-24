@@ -1,6 +1,7 @@
 #include "city/city_chunks.h"
 
 #include "city/city.h"
+#include "city/city_taxes.h"
 #include "city/sound.h"
 #include "city/entertainment.h"
 #include "city/city_festival.h"
@@ -143,26 +144,26 @@ static void city_data_bind_og_layout(io_buffer* iob) {
     iob->bind____skip(3);
     iob->bind____skip(4);
     iob->bind____skip(12);
-    iob->bind(BIND_SIGNATURE_INT32, &data.taxes.taxed_citizens);
-    iob->bind(BIND_SIGNATURE_INT32, &data.taxes.taxed_nobles);
-    iob->bind(BIND_SIGNATURE_INT32, &data.taxes.untaxed_citizens);
-    iob->bind(BIND_SIGNATURE_INT32, &data.taxes.untaxed_nobles);
-    iob->bind(BIND_SIGNATURE_INT8, &data.taxes.percentage_taxed_citizens);
+    iob->bind(BIND_SIGNATURE_INT32, &city_taxes().taxed_citizens);
+    iob->bind(BIND_SIGNATURE_INT32, &city_taxes().taxed_nobles);
+    iob->bind(BIND_SIGNATURE_INT32, &city_taxes().untaxed_citizens);
+    iob->bind(BIND_SIGNATURE_INT32, &city_taxes().untaxed_nobles);
+    iob->bind(BIND_SIGNATURE_INT8, &city_taxes().percentage_taxed_citizens);
     iob->bind____skip(3);
-    iob->bind(BIND_SIGNATURE_INT8, &data.taxes.percentage_taxed_nobles);
+    iob->bind(BIND_SIGNATURE_INT8, &city_taxes().percentage_taxed_nobles);
     iob->bind____skip(3);
-    iob->bind(BIND_SIGNATURE_INT8, &data.taxes.percentage_taxed_people);
+    iob->bind(BIND_SIGNATURE_INT8, &city_taxes().percentage_taxed_people);
     iob->bind____skip(3);
-    iob->bind(BIND_SIGNATURE_INT32, &data.taxes.yearly.collected_citizens);
-    iob->bind(BIND_SIGNATURE_INT32, &data.taxes.yearly.collected_nobles);
-    iob->bind(BIND_SIGNATURE_INT32, &data.taxes.yearly.uncollected_citizens);
-    iob->bind(BIND_SIGNATURE_INT32, &data.taxes.yearly.uncollected_nobles);
+    iob->bind(BIND_SIGNATURE_INT32, &city_taxes().yearly.collected_citizens);
+    iob->bind(BIND_SIGNATURE_INT32, &city_taxes().yearly.collected_nobles);
+    iob->bind(BIND_SIGNATURE_INT32, &city_taxes().yearly.uncollected_citizens);
+    iob->bind(BIND_SIGNATURE_INT32, &city_taxes().yearly.uncollected_nobles);
     iob->bind(BIND_SIGNATURE_INT32, &data.finance.this_year.income.taxes);
     iob->bind(BIND_SIGNATURE_INT32, &data.finance.last_year.income.taxes);
-    iob->bind(BIND_SIGNATURE_INT32, &data.taxes.monthly.collected_citizens);
-    iob->bind(BIND_SIGNATURE_INT32, &data.taxes.monthly.uncollected_citizens);
-    iob->bind(BIND_SIGNATURE_INT32, &data.taxes.monthly.collected_nobles);
-    iob->bind(BIND_SIGNATURE_INT32, &data.taxes.monthly.uncollected_nobles);
+    iob->bind(BIND_SIGNATURE_INT32, &city_taxes().monthly.collected_citizens);
+    iob->bind(BIND_SIGNATURE_INT32, &city_taxes().monthly.uncollected_citizens);
+    iob->bind(BIND_SIGNATURE_INT32, &city_taxes().monthly.collected_nobles);
+    iob->bind(BIND_SIGNATURE_INT32, &city_taxes().monthly.uncollected_nobles);
     iob->bind(BIND_SIGNATURE_UINT16, &data.finance.this_year.income.exports);
     iob->bind____skip(2);
     iob->bind(BIND_SIGNATURE_UINT16, &data.finance.last_year.income.exports);
@@ -206,7 +207,7 @@ static void city_data_bind_og_layout(io_buffer* iob) {
     iob->bind____skip(4);
     iob->bind(BIND_SIGNATURE_INT32, &data.finance.cheated_money);
     iob->bind____skip(4);
-    iob->bind(BIND_SIGNATURE_INT32, &data.taxes.estimated_uncollected);
+    iob->bind(BIND_SIGNATURE_INT32, &city_taxes().estimated_uncollected);
     iob->bind____skip(4);
     iob->bind(BIND_SIGNATURE_UINT16, &data.finance.last_year.expenses.festivals);
     iob->bind(BIND_SIGNATURE_UINT16, &data.finance.this_year.expenses.festivals);
@@ -435,7 +436,7 @@ static void city_data_bind_og_layout(io_buffer* iob) {
     iob->bind____skip(11);
     iob->bind(BIND_SIGNATURE_INT32, &data.gods.angry_message_delay);
     iob->bind____skip(16);
-    iob->bind(BIND_SIGNATURE_INT32, &data.taxes.estimated_income);
+    iob->bind(BIND_SIGNATURE_INT32, &city_taxes().estimated_income);
     iob->bind____skip(4);
     iob->bind(BIND_SIGNATURE_UINT32, data.buildings.distribution_center);
     iob->bind____skip(4);

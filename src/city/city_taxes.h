@@ -6,10 +6,8 @@
 #include "game/difficulty.h"
 
 class building_house;
-struct finance_state;
-struct population_state;
 
-struct taxes_state {
+struct city_taxes_t {
     int32_t taxed_citizens;
     int32_t taxed_nobles;
     int32_t untaxed_citizens;
@@ -32,8 +30,17 @@ struct taxes_state {
         int32_t uncollected_citizens;
         int32_t uncollected_nobles;
     } monthly;
+
+    void reset();
+    void update_estimate();
+    void collect_monthly();
+    void advance_year();
+    int house_monthly_tax_units(building_house* house) const;
+    int apply_tax_rate(int amount) const;
+    int house_tax_income(int units) const;
+    int house_tax_units_from_income(int tax_income) const;
 };
-ANK_CONFIG_PROPERTY(taxes_state, percentage_taxed_people, estimated_uncollected, estimated_income,
+ANK_CONFIG_PROPERTY(city_taxes_t, percentage_taxed_people, estimated_uncollected, estimated_income,
   house_tax_bonus_percentage)
 
 // tax_percentage: per difficulty, the percent of the taxed amount the city keeps (OG
@@ -46,26 +53,4 @@ struct finance_tax_rules_t {
 ANK_CONFIG_STRUCT(finance_tax_rules_t, tax_percentage, house_tax_income_unit)
 extern finance_tax_rules_t finance_tax_rules;
 
-struct taxes_context {
-    finance_state& finance;
-    population_state& population;
-    int month;
-    int city_tax_percentage;
-};
-
-class taxes_system {
-public:
-    taxes_system(taxes_state& state, const taxes_context& ctx) : _state(state), _ctx(ctx) {}
-
-    void update_estimate();
-    void collect_monthly();
-    void advance_year();
-    int house_monthly_tax_units(building_house* house) const;
-    int apply_tax_rate(int amount) const;
-    int house_tax_income(int units) const;
-    int house_tax_units_from_income(int tax_income) const;
-
-private:
-    taxes_state& _state;
-    taxes_context _ctx;
-};
+city_taxes_t& city_taxes();

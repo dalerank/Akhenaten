@@ -4,6 +4,7 @@
 #include "building/building_dock.h"
 #include "building/building_temple_complex.h"
 #include "city/city.h"
+#include "city/city_taxes.h"
 #include "city/city_figures.h"
 #include "city/city_floods.h"
 #include "city/city_problems.h"
@@ -290,7 +291,7 @@ namespace {
             break;
 
         case FIGURE_TAX_COLLECTOR: {
-            const auto& fin = g_city.taxes;
+            const auto& fin = city_taxes();
             const int taxed = fin.taxed_nobles + fin.taxed_citizens;
             const int total = fin.untaxed_nobles + fin.untaxed_citizens + taxed;
             st.group = ADVISOR_FINANCIAL;

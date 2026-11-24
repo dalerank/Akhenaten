@@ -1,6 +1,7 @@
 #include "window/advisor/advisor_comments.h"
 
 #include "city/city.h"
+#include "city/city_taxes.h"
 #include "city/city_floods.h"
 #include "core/variant.h"
 #include "game/resource.h"
@@ -742,8 +743,8 @@ advisor_city_state advisor_city_state_current() {
     s.god_mood2 = g_city.gods.gods[2].target_mood;
     s.god_mood3 = g_city.gods.gods[3].target_mood;
     s.god_mood4 = g_city.gods.gods[4].target_mood;
-    s.taxes_collected = g_city.taxes.yearly.collected_citizens + g_city.taxes.yearly.collected_nobles;
-    s.taxes_uncollected = g_city.taxes.yearly.uncollected_citizens + g_city.taxes.yearly.uncollected_nobles;
+    s.taxes_collected = city_taxes().yearly.collected_citizens + city_taxes().yearly.collected_nobles;
+    s.taxes_uncollected = city_taxes().yearly.uncollected_citizens + city_taxes().yearly.uncollected_nobles;
     s.treasury = g_city.finance.treasury;
     s.balance_last_year = g_city.finance.last_year.balance;
     s.crimes_this_month = g_city.finance.crimes_this_month;

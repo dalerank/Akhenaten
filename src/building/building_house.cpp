@@ -2,6 +2,7 @@
 
 #include "building/building_temple_complex.h"
 #include "city/city.h"
+#include "city/city_taxes.h"
 #include "city/city_temple_complexes.h"
 #include "city/city_warnings.h"
 #include "city/city_population.h"
@@ -200,10 +201,10 @@ void building_house::bind_dynamic(io_buffer *iob, size_t version) {
     iob->bind_u16((uint16_t&)d.tax_collector_id);
     // Legacy tax units (people * model tax) for saves without the OG int32 above.
     int16_t legacy_tax_units
-      = (int16_t)std::min<int>(g_city.taxes_sys().house_tax_units_from_income(d.tax_income), INT16_MAX);
+      = (int16_t)std::min<int>(city_taxes().house_tax_units_from_income(d.tax_income), INT16_MAX);
     iob->bind_i16(legacy_tax_units);
     if (iob->is_read_access()) {
-        d.tax_income = og_tax_income ? og_tax_income : g_city.taxes_sys().house_tax_income(legacy_tax_units);
+        d.tax_income = og_tax_income ? og_tax_income : city_taxes().house_tax_income(legacy_tax_units);
     }
     iob->bind_u8(d.days_without_food);
     iob->bind_u8(d.hsize);

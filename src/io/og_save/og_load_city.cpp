@@ -1,6 +1,7 @@
 #include "io/og_save/og_load.h"
 
 #include "city/city.h"
+#include "city/city_taxes.h"
 #include "city/sound.h"
 #include "city/entertainment.h"
 #include "city/city_festival.h"
@@ -106,23 +107,23 @@ namespace og {
         assign(g_city.labor.workers_needed, p.workers_needed);
         assign(g_city.finance.wages, p.wages);
         assign(g_city.finance.wages_kingdome, p.wages_kingdom);
-        assign(g_city.taxes.taxed_citizens, p.taxed_plebs);
-        assign(g_city.taxes.taxed_nobles, p.taxed_nobles);
-        assign(g_city.taxes.untaxed_citizens, p.untaxed_plebs);
-        assign(g_city.taxes.untaxed_nobles, p.untaxed_nobles);
-        assign(g_city.taxes.percentage_taxed_citizens, p.percentage_taxed_plebs);
-        assign(g_city.taxes.percentage_taxed_nobles, p.percentage_taxed_nobles);
-        assign(g_city.taxes.percentage_taxed_people, p.percentage_taxed_people);
-        assign(g_city.taxes.yearly.collected_citizens, p.yearly_collected_plebs);
-        assign(g_city.taxes.yearly.collected_nobles, p.yearly_collected_nobles);
-        assign(g_city.taxes.yearly.uncollected_citizens, p.yearly_uncollected_plebs);
-        assign(g_city.taxes.yearly.uncollected_nobles, p.yearly_uncollected_nobles);
+        assign(city_taxes().taxed_citizens, p.taxed_plebs);
+        assign(city_taxes().taxed_nobles, p.taxed_nobles);
+        assign(city_taxes().untaxed_citizens, p.untaxed_plebs);
+        assign(city_taxes().untaxed_nobles, p.untaxed_nobles);
+        assign(city_taxes().percentage_taxed_citizens, p.percentage_taxed_plebs);
+        assign(city_taxes().percentage_taxed_nobles, p.percentage_taxed_nobles);
+        assign(city_taxes().percentage_taxed_people, p.percentage_taxed_people);
+        assign(city_taxes().yearly.collected_citizens, p.yearly_collected_plebs);
+        assign(city_taxes().yearly.collected_nobles, p.yearly_collected_nobles);
+        assign(city_taxes().yearly.uncollected_citizens, p.yearly_uncollected_plebs);
+        assign(city_taxes().yearly.uncollected_nobles, p.yearly_uncollected_nobles);
         assign(g_city.finance.this_year.income.taxes, p.taxes_this_year);
         assign(g_city.finance.last_year.income.taxes, p.taxes_last_year);
-        assign(g_city.taxes.monthly.collected_citizens, p.monthly_collected_plebs);
-        assign(g_city.taxes.monthly.uncollected_citizens, p.monthly_uncollected_plebs);
-        assign(g_city.taxes.monthly.collected_nobles, p.monthly_collected_nobles);
-        assign(g_city.taxes.monthly.uncollected_nobles, p.monthly_uncollected_nobles);
+        assign(city_taxes().monthly.collected_citizens, p.monthly_collected_plebs);
+        assign(city_taxes().monthly.uncollected_citizens, p.monthly_uncollected_plebs);
+        assign(city_taxes().monthly.collected_nobles, p.monthly_collected_nobles);
+        assign(city_taxes().monthly.uncollected_nobles, p.monthly_uncollected_nobles);
         assign(g_city.finance.this_year.income.exports, p.exports_this_year);
         assign(g_city.finance.last_year.income.exports, p.exports_last_year);
         assign(g_city.finance.this_year.expenses.imports, p.imports_this_year);
@@ -259,7 +260,7 @@ namespace og {
         assign(g_city.resource.granaries.not_operating_with_food, p.granaries_not_operating_with_food);
         assign(g_city.gods.ra_150_export_profits_months_left, p.ra_exports_bonus_months);
         assign(g_city.gods.angry_message_delay, p.gods_angry_message_delay);
-        assign(g_city.taxes.estimated_income, p.estimated_tax_income);
+        assign(city_taxes().estimated_income, p.estimated_tax_income);
         g_city.buildings.distribution_center = tile2i(p.distribution_center_x, p.distribution_center_y);
         assign(g_city.buildings.distribution_center_building_id, p.distribution_center_building_id);
         assign(g_city.buildings.distribution_center_placed, p.distribution_center_placed);

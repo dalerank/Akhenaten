@@ -3,44 +3,77 @@
 #include "building/building.h"
 #include "building/building_house.h"
 #include "city/buildings.h"
+#include "city/city.h"
 #include "city/city_finance.h"
 #include "city/city_population.h"
+#include "city/city_taxes_chunks.h"
+#include "core/app_module.h"
 #include "core/calc.h"
 #include "core/svector.h"
+#include "core/xvalue.h"
 #include "game/game_config.h"
+#include "game/simulation.h"
+#include "io/chunk_serializer.h"
 #include "js/js_register.h"
+#include "scenario/scenario.h"
 
 #include <map>
 
 finance_tax_rules_t ANK_VARIABLE(finance_tax_rules);
 
-int taxes_system::house_monthly_tax_units(building_house* house) const {
+city_taxes_t& city_taxes() {
+    return xvalue<city_taxes_t>::ref();
+}
+
+class taxes_system : public sim_system {
+public:
+    const char* name() const override { return "taxes"; }
+    void on_reset() override { city_taxes().reset(); }
+    void on_month() override { city_taxes().collect_monthly(); }
+    void on_year() override { city_taxes().advance_year(); }
+    void push_save_sections(int file_version) override {
+        if (file_version >= 203) {
+            g_chunk_io.push_chunk<city_taxes_chunk>(city_taxes_chunk::size, false);
+        }
+    }
+};
+
+void ANK_REGISTER_APPLICATION_MODULE(register_taxes_system) {
+    static taxes_system system;
+    g_simulation.register_system(&system);
+}
+
+void city_taxes_t::reset() {
+    *this = {};
+}
+
+int city_taxes_t::house_monthly_tax_units(building_house* house) const {
     auto& housed = house->runtime_data();
     int tax_mult = house->model().tax_multiplier;
     // OG city_finance_collect_monthly_taxes: model tax × house_tax_bonus_percentage when tax_bonus set.
     if (housed.tax_bonus) {
-        tax_mult = calc_adjust_with_percentage(tax_mult, _state.house_tax_bonus_percentage);
+        tax_mult = calc_adjust_with_percentage(tax_mult, house_tax_bonus_percentage);
     }
     return housed.population * tax_mult;
 }
 
-int taxes_system::apply_tax_rate(int amount) const {
-    return calc_adjust_with_percentage<int>(calc_adjust_with_percentage<int>(amount, _ctx.finance.tax_percentage),
-      _ctx.city_tax_percentage);
+int city_taxes_t::apply_tax_rate(int amount) const {
+    return calc_adjust_with_percentage<int>(calc_adjust_with_percentage<int>(amount, g_city.finance.tax_percentage),
+      g_scenario.city_tax_percentage());
 }
 
 // OG city_finance_collect_monthly_taxes: the house adds city share * tax rate * units.
-int taxes_system::house_tax_income(int units) const {
-    return _ctx.city_tax_percentage * _ctx.finance.tax_percentage * units;
+int city_taxes_t::house_tax_income(int units) const {
+    return g_scenario.city_tax_percentage() * g_city.finance.tax_percentage * units;
 }
 
-int taxes_system::house_tax_units_from_income(int tax_income) const {
-    const int scale = std::max(_ctx.city_tax_percentage * _ctx.finance.tax_percentage, 1);
+int city_taxes_t::house_tax_units_from_income(int tax_income) const {
+    const int scale = std::max(g_scenario.city_tax_percentage() * g_city.finance.tax_percentage, 1);
     return tax_income / scale;
 }
 
-void taxes_system::update_estimate() {
-    auto& taxes = _state;
+void city_taxes_t::update_estimate() {
+    auto& taxes = *this;
     taxes.monthly.collected_citizens = 0;
     taxes.monthly.collected_nobles = 0;
     taxes.monthly.uncollected_citizens = 0;
@@ -71,14 +104,14 @@ void taxes_system::update_estimate() {
 
     int monthly_patricians = apply_tax_rate(taxes.monthly.collected_nobles);
     int monthly_plebs = apply_tax_rate(taxes.monthly.collected_citizens);
-    int estimated_rest_of_year = (12 - _ctx.month) * (monthly_patricians + monthly_plebs);
+    int estimated_rest_of_year = (12 - g_simulation.simtime.month) * (monthly_patricians + monthly_plebs);
 
-    _ctx.finance.this_year.income.taxes = taxes.yearly.collected_citizens + taxes.yearly.collected_nobles;
-    taxes.estimated_income = _ctx.finance.this_year.income.taxes + estimated_rest_of_year;
+    g_city.finance.this_year.income.taxes = taxes.yearly.collected_citizens + taxes.yearly.collected_nobles;
+    taxes.estimated_income = g_city.finance.this_year.income.taxes + estimated_rest_of_year;
 
     int uncollected_patricians = apply_tax_rate(taxes.monthly.uncollected_nobles);
     int uncollected_plebs = apply_tax_rate(taxes.monthly.uncollected_citizens);
-    int uncollected_rest_of_year = (12 - _ctx.month) * (uncollected_patricians + uncollected_plebs);
+    int uncollected_rest_of_year = (12 - g_simulation.simtime.month) * (uncollected_patricians + uncollected_plebs);
     int uncollected_ytd = taxes.yearly.uncollected_citizens + taxes.yearly.uncollected_nobles;
     taxes.estimated_uncollected = uncollected_ytd + uncollected_rest_of_year;
     if (taxes.estimated_uncollected < 0) {
@@ -86,8 +119,8 @@ void taxes_system::update_estimate() {
     }
 }
 
-void taxes_system::collect_monthly() {
-    auto& taxes = _state;
+void city_taxes_t::collect_monthly() {
+    auto& taxes = *this;
     taxes.taxed_citizens = 0;
     taxes.taxed_nobles = 0;
     taxes.untaxed_citizens = 0;
@@ -98,7 +131,7 @@ void taxes_system::collect_monthly() {
     taxes.monthly.collected_nobles = 0;
 
     for (int i = 0; i < HOUSE_LEVEL_MAX; i++) {
-        _ctx.population.at_level[i] = 0;
+        g_city.population.at_level[i] = 0;
     }
 
     std::map<int, uint32_t> tax_collectors;
@@ -118,7 +151,7 @@ void taxes_system::collect_monthly() {
         auto& housed = house->runtime_data();
         int is_nobles = (house->house_level() >= HOUSE_COMMON_MANOR);
         int population = housed.population;
-        _ctx.population.at_level[house->house_level()] += population;
+        g_city.population.at_level[house->house_level()] += population;
 
         const int tax = house_monthly_tax_units(house);
         if (housed.tax_coverage) {
@@ -162,7 +195,7 @@ void taxes_system::collect_monthly() {
             b->deben_storage += apply_tax_rate((int)it.second);
         }
     } else {
-        _ctx.finance.treasury += collected_total;
+        g_city.finance.treasury += collected_total;
     }
 
     int total_patricians = taxes.taxed_nobles + taxes.untaxed_nobles;
@@ -173,12 +206,12 @@ void taxes_system::collect_monthly() {
       = calc_percentage(taxes.taxed_nobles + taxes.taxed_citizens, total_patricians + total_plebs);
 }
 
-void taxes_system::advance_year() {
-    _ctx.finance.last_year.income.taxes = _state.yearly.collected_citizens + _state.yearly.collected_nobles;
-    _state.yearly.collected_citizens = 0;
-    _state.yearly.collected_nobles = 0;
-    _state.yearly.uncollected_citizens = 0;
-    _state.yearly.uncollected_nobles = 0;
+void city_taxes_t::advance_year() {
+    g_city.finance.last_year.income.taxes = yearly.collected_citizens + yearly.collected_nobles;
+    yearly.collected_citizens = 0;
+    yearly.collected_nobles = 0;
+    yearly.uncollected_citizens = 0;
+    yearly.uncollected_nobles = 0;
 
     // reset tax income in building list
     for (int i = 1; i < MAX_BUILDINGS; i++) {

@@ -4,6 +4,7 @@
 #include "city/coverage.h"
 #include "city/city_finance.h"
 #include "city/city.h"
+#include "city/city_taxes.h"
 #include "city/city_labor.h"
 #include "city/city_migration.h"
 #include "city/city_resource.h"
@@ -15,7 +16,7 @@ void window_advisors_prepare_opening() {
 
     g_city.finance_sys().estimate_wages();
     g_city.finance_sys().update_interest();
-    g_city.taxes_sys().update_estimate();
+    city_taxes().update_estimate();
     g_city.finance_sys().calculate_totals();
 
     g_city.migration_sys().determine_reason();

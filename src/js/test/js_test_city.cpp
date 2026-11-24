@@ -17,6 +17,7 @@
 #include "building/monument_pyramid.h"
 #include "building/monument_royal_tomb.h"
 #include "city/city.h"
+#include "city/city_taxes.h"
 #include "city/entertainment.h"
 #include "city/city_temple_complexes.h"
 #include "city/city_message.h"
@@ -494,7 +495,7 @@ ANK_FUNCTION_2(__test_coverage_set);
 
 static int __test_house_tax_units(int bid) {
     auto* house = building_get(bid)->dcast_house();
-    return house ? g_city.taxes_sys().house_monthly_tax_units(house) : -1;
+    return house ? city_taxes().house_monthly_tax_units(house) : -1;
 }
 ANK_FUNCTION_1(__test_house_tax_units);
 

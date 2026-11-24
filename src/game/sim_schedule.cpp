@@ -5,6 +5,7 @@
 #include "building/building_granary.h"
 #include "city/buildings.h"
 #include "city/city.h"
+#include "city/city_taxes.h"
 #include "city/city_desirability.h"
 #include "city/city_floods.h"
 #include "city/city_industry.h"
@@ -154,8 +155,7 @@ static const sim_step k_sim_steps[] = {
   {SIM_PHASE_MONTH_CITY, -1, "migration_month", SIM_AREA_MIGRATION,
     [](city_t& c) { c.migration_sys().update_month(); }},
   {SIM_PHASE_MONTH_CITY, -1, "health_month", SIM_AREA_HEALTH, [](city_t& c) { c.health_sys().update_month(); }},
-  {SIM_PHASE_MONTH_CITY, -1, "taxes_month", SIM_AREA_TAXES | SIM_AREA_FINANCE | SIM_AREA_POPULATION,
-    [](city_t& c) { c.taxes_sys().collect_monthly(); }},
+  {SIM_PHASE_MONTH_CITY, -1, "taxes", SIM_AREA_TAXES | SIM_AREA_FINANCE | SIM_AREA_POPULATION, nullptr, SIM_CALL_MONTH},
   {SIM_PHASE_MONTH_CITY, -1, "finance_month", SIM_AREA_FINANCE, [](city_t& c) { c.finance_sys().advance_month(); }},
   {SIM_PHASE_MONTH_CITY, -1, "food_monthly", SIM_AREA_RESOURCES | SIM_AREA_HOUSES,
     [](city_t& c) { c.resource.consume_food_monthly(); }},
@@ -197,7 +197,7 @@ static const sim_step k_sim_steps[] = {
     [](city_t&) { figure_locust::update_month(g_simulation.simtime.month + 1); }},
 
   {SIM_PHASE_MONTH_END, -1, "estimate_taxes", SIM_AREA_TAXES | SIM_AREA_FINANCE,
-    [](city_t& c) { c.taxes_sys().update_estimate(); }},
+    [](city_t&) { city_taxes().update_estimate(); }},
   {SIM_PHASE_MONTH_END, -1, "event_advance_month", SIM_AREA_EVENTS,
     [](city_t&) { events::emit(event_advance_month::from_simtime(g_simulation.simtime)); }},
 
@@ -206,8 +206,7 @@ static const sim_step k_sim_steps[] = {
   {SIM_PHASE_YEAR, -1, "simtime_year", SIM_AREA_TIME, [](city_t&) { g_simulation.simtime.advance_year(); }},
   {SIM_PHASE_YEAR, -1, "population_yearly_request", SIM_AREA_POPULATION,
     [](city_t&) { city_population_request_yearly_update(); }},
-  {SIM_PHASE_YEAR, -1, "taxes_year", SIM_AREA_TAXES | SIM_AREA_FINANCE | SIM_AREA_HOUSES,
-    [](city_t& c) { c.taxes_sys().advance_year(); }},
+  {SIM_PHASE_YEAR, -1, "taxes", SIM_AREA_TAXES | SIM_AREA_FINANCE | SIM_AREA_HOUSES, nullptr, SIM_CALL_YEAR},
   {SIM_PHASE_YEAR, -1, "finance_year", SIM_AREA_FINANCE, [](city_t& c) { c.finance_sys().advance_year(); }},
   {SIM_PHASE_YEAR, -1, "migration_year", SIM_AREA_MIGRATION, [](city_t& c) { c.migration_sys().advance_year(); }},
   {SIM_PHASE_YEAR, -1, "monuments_year", SIM_AREA_MONUMENTS, [](city_t& c) { c.monuments.advance_year(); }},

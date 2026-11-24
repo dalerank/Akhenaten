@@ -32,6 +32,7 @@
 #include "city/city_festival.h"
 #include "city/entertainment.h"
 #include "city/city_plagues.h"
+#include "city/city_taxes.h"
 #include "city/city_victory.h"
 #include "city/sound.h"
 #include "city/city_local_cults.h"
@@ -99,7 +100,6 @@ void city_t::init() {
     zero_fill(finance);
     zero_fill(resource);
     zero_fill(food_supply);
-    zero_fill(taxes);
     zero_fill(labor);
     zero_fill(migration);
     zero_fill(sentiment);
@@ -117,7 +117,6 @@ void city_t::init() {
     health.target_value = 50;
     health.value = 50;
     finance.tax_percentage = 7;
-    taxes.house_tax_bonus_percentage = 110;
     trade.caravan_import_resource = RESOURCES_MIN;
     trade.caravan_backup_import_resource = RESOURCES_MIN;
     population.monthly.next_index = 0;
@@ -148,14 +147,6 @@ finance_context city_t::finance_ctx() {
 
 finance_system city_t::finance_sys() {
     return finance_system(finance, finance_ctx());
-}
-
-taxes_context city_t::taxes_ctx() {
-    return {finance, population, g_simulation.simtime.month, g_scenario.city_tax_percentage()};
-}
-
-taxes_system city_t::taxes_sys() {
-    return taxes_system(taxes, taxes_ctx());
 }
 
 labor_context city_t::labor_ctx() {
