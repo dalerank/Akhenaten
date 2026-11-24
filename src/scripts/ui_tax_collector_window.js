@@ -1,7 +1,7 @@
 log_info("akhenaten: ui_tax_collector_window.js loaded")
 
 function taxcollector_info_window_tax_level_text() {
-    return __loc("#tax_rate_of") + " " + city.finance.tax_percentage + "%"
+    return __loc("#tax_rate_of") + " " + city.taxes.tax_percentage + "%"
 }
 
 [es=building_info_window]

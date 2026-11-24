@@ -139,7 +139,7 @@ function ref_m001_place_building(row, state) {
 
 function ref_m001_run_row(row, state) {
     if (row.action == 'set_tax') {
-        city.finance.tax_percentage = row.value
+        __city_taxes.tax_percentage = row.value
         return ''
     }
 

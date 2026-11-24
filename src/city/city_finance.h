@@ -91,7 +91,6 @@ struct finance_state {
     } treasury;
     int8_t wages;
     int8_t wages_kingdome;
-    int8_t tax_percentage;
     int32_t estimated_wages;
     finance_overview last_year;
     finance_overview this_year;

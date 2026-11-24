@@ -27,7 +27,7 @@ namespace og {
         const city_player& p = s.player();
 
         assign(g_city.buildings.unknown_value, p.building_reserved_id);
-        assign(g_city.finance.tax_percentage, p.tax_percentage);
+        assign(city_taxes().tax_percentage, p.tax_percentage);
         assign(g_city.finance.treasury.value, p.treasury);
         assign(g_city.sentiment.value, p.sentiment);
         assign(g_city.health.target_value, p.health_target);

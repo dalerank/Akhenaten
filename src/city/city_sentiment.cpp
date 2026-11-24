@@ -6,6 +6,7 @@
 #include "city/buildings.h"
 #include "city/constants.h"
 #include "city/city.h"
+#include "city/city_taxes.h"
 #include "game/game_events.h"
 #include "city/city_message.h"
 #include "city/city_population.h"
@@ -188,7 +189,7 @@ void sentiment_system::update() {
     OZZY_PROFILER_FUNCTION();
     city_population_check_consistency();
 
-    _state.contribution_taxes = SENTIMENT_PER_TAX_RATE[_ctx.finance.tax_percentage];
+    _state.contribution_taxes = SENTIMENT_PER_TAX_RATE[city_taxes().tax_percentage];
     _state.contribution_wages = calc_sentiment_contribution_wages();
     _state.contribution_employment = calc_contribution_employment();
     _state.contribution_religion_coverage = calc_contribution_religion_coverage();

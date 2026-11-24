@@ -117,7 +117,6 @@ void city_t::init() {
     sentiment.value = 60;
     health.target_value = 50;
     health.value = 50;
-    finance.tax_percentage = 7;
     trade.caravan_import_resource = RESOURCES_MIN;
     trade.caravan_backup_import_resource = RESOURCES_MIN;
     population.monthly.next_index = 0;

@@ -26,7 +26,7 @@ static void city_data_bind_og_layout(io_buffer* iob) {
     iob->bind(BIND_SIGNATURE_INT8, &data.buildings.unknown_value);
     iob->bind____skip(1);
     iob->bind____skip(1);
-    iob->bind(BIND_SIGNATURE_INT8, &data.finance.tax_percentage);
+    iob->bind(BIND_SIGNATURE_INT8, &city_taxes().tax_percentage);
     iob->bind____skip(3);
     iob->bind(BIND_SIGNATURE_INT32, &data.finance.treasury.value);
     iob->bind(BIND_SIGNATURE_INT32, &data.sentiment.value);

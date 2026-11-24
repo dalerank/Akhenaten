@@ -20,14 +20,14 @@ function city_finance_clamp_tax_percentage(v) {
 }
 
 function city_finance_apply_tax_percentage(value) {
-    __city_finance.tax_percentage = city_finance_clamp_tax_percentage(value)
+    __city_taxes.tax_percentage = city_finance_clamp_tax_percentage(value)
     __city_finance_update_estimate_taxes()
     __city_finance_calculate_totals()
 }
 
 [es=event_finance_change_tax]
 function city_finance_on_change_tax(ev) {
-    city_finance_apply_tax_percentage(__city_finance.tax_percentage + ev.value)
+    city_finance_apply_tax_percentage(__city_taxes.tax_percentage + ev.value)
 }
 
 function make_finance_year(current) {

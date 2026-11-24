@@ -14,6 +14,7 @@ struct city_taxes_t {
     int32_t untaxed_nobles;
     int32_t estimated_uncollected;
     int32_t estimated_income;
+    int8_t tax_percentage = 7;
     int house_tax_bonus_percentage = 110;
     int8_t percentage_taxed_citizens;
     int8_t percentage_taxed_nobles;
@@ -43,7 +44,7 @@ struct city_taxes_t {
 private:
     int tax_rate_scale() const;
 };
-ANK_CONFIG_PROPERTY(city_taxes_t, percentage_taxed_people, estimated_uncollected, estimated_income,
+ANK_CONFIG_PROPERTY(city_taxes_t, tax_percentage, percentage_taxed_people, estimated_uncollected, estimated_income,
   house_tax_bonus_percentage)
 
 // tax_percentage: per difficulty, the percent of the taxed amount the city keeps (OG

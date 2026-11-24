@@ -1,7 +1,7 @@
 log_info("akhenaten: ui_palace_window.js loaded")
 
 function palace_info_window_tax_level_text() {
-    return __loc("#tax_rate_of") + " " + city.finance.tax_percentage + "%"
+    return __loc("#tax_rate_of") + " " + city.taxes.tax_percentage + "%"
 }
 
 function palace_employment_text(palace) {

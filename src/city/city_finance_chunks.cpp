@@ -1,11 +1,12 @@
 #include "city/city_finance_chunks.h"
+#include "city/city_taxes.h"
 
 #include "city/city.h"
 #include "io/io_buffer.h"
 
 void city_finance_chunk::bind_data(io_buffer* iob, size_t version) {
     auto& data = g_city;
-    iob->bind(BIND_SIGNATURE_INT8, &data.finance.tax_percentage);
+    iob->bind(BIND_SIGNATURE_INT8, &city_taxes().tax_percentage);
     iob->bind(BIND_SIGNATURE_INT32, &data.finance.treasury.value);
     iob->bind(BIND_SIGNATURE_INT8, &data.finance.wages);
     iob->bind(BIND_SIGNATURE_INT8, &data.finance.wages_kingdome);

@@ -23,7 +23,7 @@ function run_test() {
 
     house.tax_coverage = 50
     house.tax_bonus = 0
-    city.finance.tax_percentage = 10
+    __city_taxes.tax_percentage = 10
 
     var treasury0 = city.finance.treasury | 0
     __city_finance_collect_monthly_taxes()

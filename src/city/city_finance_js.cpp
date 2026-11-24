@@ -10,19 +10,11 @@ void ank_global_obj_bind_field(js_State* J, js_StringNode name, finance_state::t
     J->bind_property(name, &ptr->value);
 }
 
-ANK_GLOBAL_OBJECT(g_city.finance, __city_finance,
-    treasury,
-    wages,
-    wages_kingdome,
-    tax_percentage,
-    estimated_wages,
-    wages_so_far,
-    wages_grain_deben_so_far,
-    wages_grain_deben_last_year,
-    cheated_money,
-    tribute_not_paid_last_year,
-    wage_rate_paid_this_year,
-    wage_rate_paid_last_year);
+ANK_GLOBAL_OBJECT(g_city.finance, __city_finance, treasury, wages, wages_kingdome, estimated_wages, wages_so_far,
+  wages_grain_deben_so_far, wages_grain_deben_last_year, cheated_money, tribute_not_paid_last_year,
+  wage_rate_paid_this_year, wage_rate_paid_last_year);
+
+ANK_GLOBAL_OBJECT(city_taxes(), __city_taxes, tax_percentage);
 
 void __city_finance_pay_monthly_wages() {
     g_city.finance_sys().pay_monthly_wages();

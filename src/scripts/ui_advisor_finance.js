@@ -59,7 +59,7 @@ function advisor_financial_window_update(window) {
     }
     window.treasury.font = (ctreasury < 0) ? FONT_NORMAL_YELLOW : FONT_NORMAL_WHITE_ON_DARK
 
-    window.tax_value.text = city.finance.tax_percentage + "% " + __loc(60, 4) + " " + __loc("#debens") + " " + city.taxes.estimated_income
+    window.tax_value.text = city.taxes.tax_percentage + "% " + __loc(60, 4) + " " + __loc("#debens") + " " + city.taxes.estimated_income
     window.tax_payers.text = city.taxes.percentage_taxed_people + "% " + __loc(60, 5) + " " + __loc(60, 22) + " " + city.taxes.estimated_uncollected + " Db"
 }
 

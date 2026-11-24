@@ -29,7 +29,7 @@ function run_test() {
     }
 
     house.tax_coverage = 0
-    city.finance.tax_percentage = 10
+    __city_taxes.tax_percentage = 10
     __city_finance_update_estimate_taxes()
 
     var unc0 = city.taxes.estimated_uncollected | 0
@@ -65,7 +65,7 @@ function run_test() {
     __log_marker('finance_unc_covered_ok')
 
     house.tax_coverage = 0
-    city.finance.tax_percentage = 20
+    __city_taxes.tax_percentage = 20
     __city_finance_update_estimate_taxes()
     var unc_hi = city.taxes.estimated_uncollected | 0
     if (unc_hi <= unc0) {

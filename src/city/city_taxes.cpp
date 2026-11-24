@@ -58,11 +58,11 @@ int city_taxes_t::house_monthly_tax_units(building_house* house) const {
 }
 
 int city_taxes_t::tax_rate_scale() const {
-    return g_scenario.city_tax_percentage() * g_city.finance.tax_percentage;
+    return g_scenario.city_tax_percentage() * tax_percentage;
 }
 
 int city_taxes_t::apply_tax_rate(int amount) const {
-    return calc_adjust_with_percentage<int>(calc_adjust_with_percentage<int>(amount, g_city.finance.tax_percentage),
+    return calc_adjust_with_percentage<int>(calc_adjust_with_percentage<int>(amount, tax_percentage),
       g_scenario.city_tax_percentage());
 }
 

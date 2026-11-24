@@ -35,7 +35,7 @@ function run_test() {
     var house = city.get_house(hid)
     house.tax_coverage = 50
     house.tax_bonus = 0
-    city.finance.tax_percentage = 7
+    __city_taxes.tax_percentage = 7
     var difficulty0 = game.difficulty | 0
     __test_scenario_meta_tax('tax_percentage', -1)
     __test_scenario_meta_tax('house_tax_multipliers', -1)
