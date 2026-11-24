@@ -106,6 +106,10 @@ struct finance_state {
     int32_t wage_rate_paid_last_year;
     int32_t crimes_this_month;
     int32_t gold_stolen_this_month;
+
+    void collect_taxes(int amount) { treasury += amount; }
+    void set_tax_income_this_year(int amount) { this_year.income.taxes = amount; }
+    void close_tax_year(int amount) { last_year.income.taxes = amount; }
 };
 
 struct population_state;

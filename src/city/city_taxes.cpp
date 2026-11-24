@@ -109,8 +109,8 @@ void city_taxes_t::update_estimate() {
     int monthly_plebs = apply_tax_rate(monthly.collected_citizens);
     int estimated_rest_of_year = (12 - g_simulation.simtime.month) * (monthly_patricians + monthly_plebs);
 
-    g_city.finance.this_year.income.taxes = yearly.collected_citizens + yearly.collected_nobles;
-    estimated_income = g_city.finance.this_year.income.taxes + estimated_rest_of_year;
+    g_city.finance.set_tax_income_this_year(yearly.collected_citizens + yearly.collected_nobles);
+    estimated_income = yearly.collected_citizens + yearly.collected_nobles + estimated_rest_of_year;
 
     int uncollected_patricians = apply_tax_rate(monthly.uncollected_nobles);
     int uncollected_plebs = apply_tax_rate(monthly.uncollected_citizens);
@@ -131,10 +131,6 @@ void city_taxes_t::collect_monthly() {
     monthly.collected_citizens = 0;
     monthly.uncollected_nobles = 0;
     monthly.collected_nobles = 0;
-
-    for (int i = 0; i < HOUSE_LEVEL_MAX; i++) {
-        g_city.population.at_level[i] = 0;
-    }
 
     const bool collectors_keep_taxes = !!game_features::gameplay_change_new_tax_collection_system;
     svector<std::pair<building_id, uint32_t>, 256> collectors;
@@ -167,7 +163,6 @@ void city_taxes_t::collect_monthly() {
         auto& housed = house->runtime_data();
         const bool is_nobles = house->is_nobles();
         int population = housed.population;
-        g_city.population.at_level[house->house_level()] += population;
 
         const int tax = house_monthly_tax_units(house);
         if (housed.tax_coverage) {
@@ -212,7 +207,7 @@ void city_taxes_t::collect_monthly() {
             building_get(c.first)->deben_storage += apply_tax_rate((int)c.second);
         }
     } else {
-        g_city.finance.treasury += collected_total;
+        g_city.finance.collect_taxes(collected_total);
     }
 
     int total_patricians = taxed_nobles + untaxed_nobles;
@@ -223,7 +218,7 @@ void city_taxes_t::collect_monthly() {
 }
 
 void city_taxes_t::advance_year() {
-    g_city.finance.last_year.income.taxes = yearly.collected_citizens + yearly.collected_nobles;
+    g_city.finance.close_tax_year(yearly.collected_citizens + yearly.collected_nobles);
     yearly.collected_citizens = 0;
     yearly.collected_nobles = 0;
     yearly.uncollected_citizens = 0;

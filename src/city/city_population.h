@@ -106,6 +106,7 @@ public:
     void yearly_calculate_births();
     void houses_demanding_goods_fill_from();
     void housing_type_counts_update();
+    void count_at_levels();
     void yearly_advance_ages_and_calculate_deaths();
 
 private:

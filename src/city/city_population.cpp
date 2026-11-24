@@ -512,6 +512,16 @@ void population_system::houses_demanding_goods_fill_from() {
     }
 }
 
+void population_system::count_at_levels() {
+    _state.at_level.fill(0);
+    buildings_house_do([this](auto house) {
+        if (!house->hsize()) {
+            return;
+        }
+        _state.at_level[house->house_level()] += house->runtime_data().population;
+    });
+}
+
 void population_system::housing_type_counts_update() {
     _state.housing_type_counts.fill(0);
 
