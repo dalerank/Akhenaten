@@ -146,10 +146,10 @@ class crime_system : public sim_system {
 public:
     const char* name() const override { return "crime"; }
     void register_steps() override {
-        sim_schedule_add({SIM_PHASE_TICK_SLOT, 30, 280, "crime", SIM_AREA_CRIME, [] { g_crime.update(); }});
-        sim_schedule_add({SIM_PHASE_TICK_SLOT, 45, 470, "criminals", SIM_AREA_FIGURES | SIM_AREA_CRIME,
+        sim_schedule_add({sim_step_crime, SIM_PHASE_TICK_SLOT, 30, SIM_AREA_CRIME, [] { g_crime.update(); }});
+        sim_schedule_add({sim_step_criminals, SIM_PHASE_TICK_SLOT, 45, SIM_AREA_FIGURES | SIM_AREA_CRIME,
           [] { g_city.figures_generate_criminals(); }});
-        sim_schedule_add({SIM_PHASE_DAY, -1, 40, "criminals_day", SIM_AREA_CRIME | SIM_AREA_HOUSES,
+        sim_schedule_add({sim_step_criminals_day, SIM_PHASE_DAY, -1, SIM_AREA_CRIME | SIM_AREA_HOUSES,
           [] { g_city.criminals_update_day(); }});
     }
 };

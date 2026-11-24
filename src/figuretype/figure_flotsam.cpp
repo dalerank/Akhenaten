@@ -177,7 +177,7 @@ public:
     const char* name() const override { return "flotsam"; }
     void register_steps() override {
         sim_schedule_add(
-          {SIM_PHASE_DAY, -1, 70, "flotsam", SIM_AREA_FIGURES, [] { figure_flotsam::spawn_update_day(); }});
+          {sim_step_flotsam, SIM_PHASE_DAY, -1, SIM_AREA_FIGURES, [] { figure_flotsam::spawn_update_day(); }});
     }
 };
 

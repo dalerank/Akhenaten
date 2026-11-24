@@ -377,7 +377,7 @@ public:
     const char* name() const override { return "building_states"; }
     void register_steps() override {
         sim_schedule_add(
-          {SIM_PHASE_TICK_SLOT, 40, 430, "building_state", SIM_AREA_BUILDINGS, [] { building_update_state(); }});
+          {sim_step_building_state, SIM_PHASE_TICK_SLOT, 40, SIM_AREA_BUILDINGS, [] { building_update_state(); }});
     }
 };
 

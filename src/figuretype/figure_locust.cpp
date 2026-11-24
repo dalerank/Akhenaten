@@ -191,7 +191,7 @@ class locust_system : public sim_system {
 public:
     const char* name() const override { return "locust"; }
     void register_steps() override {
-        sim_schedule_add({SIM_PHASE_MONTH, -1, 130, "locusts_month", SIM_AREA_FIGURES,
+        sim_schedule_add({sim_step_locusts_month, SIM_PHASE_MONTH, -1, SIM_AREA_FIGURES,
           [] { figure_locust::update_month(g_simulation.simtime.month + 1); }});
     }
 };

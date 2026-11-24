@@ -623,21 +623,21 @@ class population_sim_system : public sim_system {
 public:
     const char* name() const override { return "population"; }
     void register_steps() override {
-        sim_schedule_add({SIM_PHASE_TICK_BEGIN, -1, 10, "housing_type_counts", SIM_AREA_POPULATION,
+        sim_schedule_add({sim_step_housing_type_counts, SIM_PHASE_TICK_BEGIN, -1, SIM_AREA_POPULATION,
           [] { g_city.population_sys().housing_type_counts_update(); }});
-        sim_schedule_add({SIM_PHASE_TICK_SLOT, 22, 200, "population_room", SIM_AREA_POPULATION,
+        sim_schedule_add({sim_step_population_room, SIM_PHASE_TICK_SLOT, 22, SIM_AREA_POPULATION,
           [] { g_city.population_sys().update_room(); }});
-        sim_schedule_add({SIM_PHASE_TICK_SLOT, 23, 220, "population_migration", SIM_AREA_POPULATION,
+        sim_schedule_add({sim_step_population_migration, SIM_PHASE_TICK_SLOT, 23, SIM_AREA_POPULATION,
           [] { g_city.population_sys().update_migration(); }});
-        sim_schedule_add({SIM_PHASE_TICK_SLOT, 24, 230, "evict_overcrowded", SIM_AREA_POPULATION | SIM_AREA_FIGURES,
+        sim_schedule_add({sim_step_evict_overcrowded, SIM_PHASE_TICK_SLOT, 24, SIM_AREA_POPULATION | SIM_AREA_FIGURES,
           [] { g_city.population_sys().evict_overcrowded(); }});
-        sim_schedule_add({SIM_PHASE_DAY, -1, 100, "population_day", SIM_AREA_POPULATION,
+        sim_schedule_add({sim_step_population_day, SIM_PHASE_DAY, -1, SIM_AREA_POPULATION,
           [] { g_city.population_sys().update_day(); }});
-        sim_schedule_add({SIM_PHASE_MONTH_CITY, -1, 30, "population_at_levels", SIM_AREA_POPULATION,
+        sim_schedule_add({sim_step_population_at_levels, SIM_PHASE_MONTH_CITY, -1, SIM_AREA_POPULATION,
           [] { g_city.population_sys().count_at_levels(); }});
-        sim_schedule_add({SIM_PHASE_MONTH_CITY, -1, 100, "population_record", SIM_AREA_POPULATION,
+        sim_schedule_add({sim_step_population_record, SIM_PHASE_MONTH_CITY, -1, SIM_AREA_POPULATION,
           [] { g_city.population_sys().record_monthly(); }});
-        sim_schedule_add({SIM_PHASE_YEAR, -1, 40, "population_yearly_request", SIM_AREA_POPULATION,
+        sim_schedule_add({sim_step_population_yearly_request, SIM_PHASE_YEAR, -1, SIM_AREA_POPULATION,
           [] { city_population_request_yearly_update(); }});
     }
 };

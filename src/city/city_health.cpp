@@ -281,12 +281,12 @@ class health_sim_system : public sim_system {
 public:
     const char* name() const override { return "health"; }
     void register_steps() override {
-        sim_schedule_add({SIM_PHASE_TICK_SLOT, 33, 350, "health_coverage", SIM_AREA_COVERAGE | SIM_AREA_HEALTH,
+        sim_schedule_add({sim_step_health_coverage, SIM_PHASE_TICK_SLOT, 33, SIM_AREA_COVERAGE | SIM_AREA_HEALTH,
           [] { g_city.health_sys().update_coverage(); }});
-        sim_schedule_add(
-          {SIM_PHASE_DAY, -1, 60, "plague_day", SIM_AREA_HEALTH | SIM_AREA_HOUSES, [] { g_city.plague_update_day(); }});
-        sim_schedule_add(
-          {SIM_PHASE_MONTH_CITY, -1, 20, "health_month", SIM_AREA_HEALTH, [] { g_city.health_sys().update_month(); }});
+        sim_schedule_add({sim_step_plague_day, SIM_PHASE_DAY, -1, SIM_AREA_HEALTH | SIM_AREA_HOUSES,
+          [] { g_city.plague_update_day(); }});
+        sim_schedule_add({sim_step_health_month, SIM_PHASE_MONTH_CITY, -1, SIM_AREA_HEALTH,
+          [] { g_city.health_sys().update_month(); }});
     }
 };
 

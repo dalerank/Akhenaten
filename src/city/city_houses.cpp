@@ -227,17 +227,17 @@ class houses_system : public sim_system {
 public:
     const char* name() const override { return "houses"; }
     void register_steps() override {
-        sim_schedule_add(
-          {SIM_PHASE_TICK_SLOT, 9, 100, "house_service_decay", SIM_AREA_HOUSES, [] { g_city.house_decay_services(); }});
-        sim_schedule_add({SIM_PHASE_TICK_SLOT, 12, 130, "houses_covered_decay", SIM_AREA_BUILDINGS,
+        sim_schedule_add({sim_step_house_service_decay, SIM_PHASE_TICK_SLOT, 9, SIM_AREA_HOUSES,
+          [] { g_city.house_decay_services(); }});
+        sim_schedule_add({sim_step_houses_covered_decay, SIM_PHASE_TICK_SLOT, 12, SIM_AREA_BUILDINGS,
           [] { g_city.house_service_decay_houses_covered(); }});
-        sim_schedule_add({SIM_PHASE_TICK_SLOT, 35, 380, "house_health", SIM_AREA_HOUSES,
+        sim_schedule_add({sim_step_house_health, SIM_PHASE_TICK_SLOT, 35, SIM_AREA_HOUSES,
           [] { g_city.house_service_update_health(); }});
-        sim_schedule_add({SIM_PHASE_TICK_SLOT, 36, 390, "culture_aggregates", SIM_AREA_HOUSES,
+        sim_schedule_add({sim_step_culture_aggregates, SIM_PHASE_TICK_SLOT, 36, SIM_AREA_HOUSES,
           [] { g_city.house_service_calculate_culture_aggregates(); }});
-        sim_schedule_add({SIM_PHASE_TICK_SLOT, 39, 420, "house_evolve",
+        sim_schedule_add({sim_step_house_evolve, SIM_PHASE_TICK_SLOT, 39,
           SIM_AREA_HOUSES | SIM_AREA_BUILDINGS | SIM_AREA_MAP, [] { g_city.house_process_evolve(); }});
-        sim_schedule_add({SIM_PHASE_TICK_SLOT, 48, 490, "house_tax_coverage_decay", SIM_AREA_HOUSES,
+        sim_schedule_add({sim_step_house_tax_coverage_decay, SIM_PHASE_TICK_SLOT, 48, SIM_AREA_HOUSES,
           [] { g_city.house_decay_tax_coverage(); }});
     }
 };

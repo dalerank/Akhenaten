@@ -44,7 +44,7 @@ class desirability_system : public sim_system {
 public:
     const char* name() const override { return "desirability"; }
     void register_steps() override {
-        sim_schedule_add({SIM_PHASE_TICK_SLOT, 38, 410, "building_desirability", SIM_AREA_BUILDINGS,
+        sim_schedule_add({sim_step_building_desirability, SIM_PHASE_TICK_SLOT, 38, SIM_AREA_BUILDINGS,
           [] { building_update_desirability(); }});
     }
 };

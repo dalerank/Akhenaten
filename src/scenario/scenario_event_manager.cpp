@@ -2031,12 +2031,12 @@ class scenario_event_manager_system : public sim_system {
 public:
     const char* name() const override { return "scenario_event_manager"; }
     void register_steps() override {
-        sim_schedule_add({SIM_PHASE_MONTH, -1, 40, "random_events", SIM_AREA_SCENARIO,
+        sim_schedule_add({sim_step_random_events, SIM_PHASE_MONTH, -1, SIM_AREA_SCENARIO,
           [] { g_scenario.events.process_random_events(); }});
-        sim_schedule_add({SIM_PHASE_MONTH, -1, 50, "invasions", SIM_AREA_SCENARIO | SIM_AREA_MILITARY,
+        sim_schedule_add({sim_step_invasions, SIM_PHASE_MONTH, -1, SIM_AREA_SCENARIO | SIM_AREA_MILITARY,
           [] { g_scenario.events.process_invasions(); }});
-        sim_schedule_add(
-          {SIM_PHASE_MONTH, -1, 60, "scenario_events", SIM_AREA_SCENARIO, [] { g_scenario.events.process_events(); }});
+        sim_schedule_add({sim_step_scenario_events, SIM_PHASE_MONTH, -1, SIM_AREA_SCENARIO,
+          [] { g_scenario.events.process_events(); }});
     }
 };
 

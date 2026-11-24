@@ -77,16 +77,16 @@ class simulation_time_system : public sim_system {
 public:
     const char* name() const override { return "simulation_time"; }
     void register_steps() override {
-        sim_schedule_add({SIM_PHASE_TICK_BEGIN, -1, 20, "random", SIM_AREA_RANDOM, [] { random_generate_next(); }});
-        sim_schedule_add({SIM_PHASE_DAY, -1, 130, "event_advance_day", SIM_AREA_EVENTS,
+        sim_schedule_add({sim_step_random, SIM_PHASE_TICK_BEGIN, -1, SIM_AREA_RANDOM, [] { random_generate_next(); }});
+        sim_schedule_add({sim_step_event_advance_day, SIM_PHASE_DAY, -1, SIM_AREA_EVENTS,
           [] { events::emit(event_advance_day::from_simtime(g_simulation.simtime)); }});
-        sim_schedule_add({SIM_PHASE_WEEK, -1, 30, "event_advance_week", SIM_AREA_EVENTS,
+        sim_schedule_add({sim_step_event_advance_week, SIM_PHASE_WEEK, -1, SIM_AREA_EVENTS,
           [] { events::emit(event_advance_week::from_simtime(g_simulation.simtime)); }});
-        sim_schedule_add({SIM_PHASE_MONTH, -1, 20, "random_month", SIM_AREA_RANDOM, [] { random_generate_next(); }});
-        sim_schedule_add({SIM_PHASE_MONTH_END, -1, 20, "event_advance_month", SIM_AREA_EVENTS,
+        sim_schedule_add({sim_step_random_month, SIM_PHASE_MONTH, -1, SIM_AREA_RANDOM, [] { random_generate_next(); }});
+        sim_schedule_add({sim_step_event_advance_month, SIM_PHASE_MONTH_END, -1, SIM_AREA_EVENTS,
           [] { events::emit(event_advance_month::from_simtime(g_simulation.simtime)); }});
         sim_schedule_add(
-          {SIM_PHASE_YEAR, -1, 30, "simtime_year", SIM_AREA_TIME, [] { g_simulation.simtime.advance_year(); }});
+          {sim_step_simtime_year, SIM_PHASE_YEAR, -1, SIM_AREA_TIME, [] { g_simulation.simtime.advance_year(); }});
     }
 };
 

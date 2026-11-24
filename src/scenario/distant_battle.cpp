@@ -583,8 +583,8 @@ public:
     const char* name() const override { return "distant_battle"; }
     void register_steps() override {
         sim_schedule_add(
-          {SIM_PHASE_DAY, -1, 10, "distant_battle", SIM_AREA_MILITARY, [] { g_distant_battle.update_day(); }});
-        sim_schedule_add({SIM_PHASE_MONTH, -1, 10, "distant_battle_month", SIM_AREA_MILITARY,
+          {sim_step_distant_battle, SIM_PHASE_DAY, -1, SIM_AREA_MILITARY, [] { g_distant_battle.update_day(); }});
+        sim_schedule_add({sim_step_distant_battle_month, SIM_PHASE_MONTH, -1, SIM_AREA_MILITARY,
           [] { g_distant_battle.update_month(); }});
     }
 };

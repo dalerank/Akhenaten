@@ -323,7 +323,7 @@ class empire_traders_system : public sim_system {
 public:
     const char* name() const override { return "empire_traders"; }
     void register_steps() override {
-        sim_schedule_add({SIM_PHASE_TICK_SLOT, 32, 310, "empire_traders", SIM_AREA_TRADE | SIM_AREA_FIGURES,
+        sim_schedule_add({sim_step_empire_traders, SIM_PHASE_TICK_SLOT, 32, SIM_AREA_TRADE | SIM_AREA_FIGURES,
           [] { g_empire_traders.update(); }});
     }
 };

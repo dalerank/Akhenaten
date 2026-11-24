@@ -1004,9 +1004,9 @@ class scenario_invasion_system : public sim_system {
 public:
     const char* name() const override { return "scenario_invasion"; }
     void register_steps() override {
-        sim_schedule_add({SIM_PHASE_MONTH, -1, 70, "invasion_bind_resolutions", SIM_AREA_MILITARY,
+        sim_schedule_add({sim_step_invasion_bind_resolutions, SIM_PHASE_MONTH, -1, SIM_AREA_MILITARY,
           [] { g_invasions.process_bind_resolutions(); }});
-        sim_schedule_add({SIM_PHASE_MONTH, -1, 80, "invasion_process", SIM_AREA_SCENARIO | SIM_AREA_MILITARY,
+        sim_schedule_add({sim_step_invasion_process, SIM_PHASE_MONTH, -1, SIM_AREA_SCENARIO | SIM_AREA_MILITARY,
           [] { scenario_invasion_process(); }});
     }
 };

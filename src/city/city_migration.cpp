@@ -314,10 +314,10 @@ public:
     const char* name() const override { return "migration"; }
     void register_steps() override {
         sim_schedule_add(
-          {SIM_PHASE_TICK_SLOT, 23, 210, "migration", SIM_AREA_MIGRATION, [] { g_city.migration_sys().update(); }});
-        sim_schedule_add({SIM_PHASE_MONTH_CITY, -1, 10, "migration_month", SIM_AREA_MIGRATION,
+          {sim_step_migration, SIM_PHASE_TICK_SLOT, 23, SIM_AREA_MIGRATION, [] { g_city.migration_sys().update(); }});
+        sim_schedule_add({sim_step_migration_month, SIM_PHASE_MONTH_CITY, -1, SIM_AREA_MIGRATION,
           [] { g_city.migration_sys().update_month(); }});
-        sim_schedule_add({SIM_PHASE_YEAR, -1, 70, "migration_year", SIM_AREA_MIGRATION,
+        sim_schedule_add({sim_step_migration_year, SIM_PHASE_YEAR, -1, SIM_AREA_MIGRATION,
           [] { g_city.migration_sys().advance_year(); }});
     }
 };

@@ -395,8 +395,8 @@ public:
     const char* name() const override { return "undo"; }
     void register_steps() override {
         sim_schedule_add(
-          {SIM_PHASE_TICK_BEGIN, -1, 30, "undo_time", SIM_AREA_UNDO, [] { game_undo_reduce_time_available(); }});
-        sim_schedule_add({SIM_PHASE_YEAR, -1, 20, "undo_disable", SIM_AREA_UNDO, [] { game_undo_disable(); }});
+          {sim_step_undo_time, SIM_PHASE_TICK_BEGIN, -1, SIM_AREA_UNDO, [] { game_undo_reduce_time_available(); }});
+        sim_schedule_add({sim_step_undo_disable, SIM_PHASE_YEAR, -1, SIM_AREA_UNDO, [] { game_undo_disable(); }});
     }
 };
 

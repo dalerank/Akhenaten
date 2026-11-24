@@ -159,7 +159,7 @@ public:
     const char* name() const override { return "ratings"; }
     void register_steps() override {
         sim_schedule_add(
-          {SIM_PHASE_YEAR, -1, 100, "ratings_year", SIM_AREA_RATINGS, [] { g_city.ratings_sys().update(true); }});
+          {sim_step_ratings_year, SIM_PHASE_YEAR, -1, SIM_AREA_RATINGS, [] { g_city.ratings_sys().update(true); }});
     }
 };
 

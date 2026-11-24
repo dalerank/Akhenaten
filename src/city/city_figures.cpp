@@ -206,8 +206,9 @@ class figures_system : public sim_system {
 public:
     const char* name() const override { return "figures"; }
     void register_steps() override {
-        sim_schedule_add({SIM_PHASE_TICK_END, -1, 10, "figures", SIM_AREA_FIGURES, [] { g_city.figures.update(); }});
-        sim_schedule_add({SIM_PHASE_DAY, -1, 90, "figures_day", SIM_AREA_FIGURES, [] { g_city.figures_update_day(); }});
+        sim_schedule_add({sim_step_figures, SIM_PHASE_TICK_END, -1, SIM_AREA_FIGURES, [] { g_city.figures.update(); }});
+        sim_schedule_add(
+          {sim_step_figures_day, SIM_PHASE_DAY, -1, SIM_AREA_FIGURES, [] { g_city.figures_update_day(); }});
     }
 };
 

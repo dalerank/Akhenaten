@@ -157,7 +157,7 @@ class fishing_points_system : public sim_system {
 public:
     const char* name() const override { return "fishing_points"; }
     void register_steps() override {
-        sim_schedule_add({SIM_PHASE_MONTH_CITY, -1, 140, "fishing_points", SIM_AREA_FIGURES, [] {
+        sim_schedule_add({sim_step_fishing_points, SIM_PHASE_MONTH_CITY, -1, SIM_AREA_FIGURES, [] {
                               if (game_features::gameplay_change_fishing_points_monthly_respawn.to_bool()
                                   && g_city.can_produce_resource(RESOURCE_FISH)
                                   && !g_scenario.events.blood_river_sweep_active()) {

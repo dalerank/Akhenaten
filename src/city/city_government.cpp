@@ -81,7 +81,7 @@ class government_system : public sim_system {
 public:
     const char* name() const override { return "government"; }
     void register_steps() override {
-        sim_schedule_add({SIM_PHASE_TICK_SLOT, 34, 370, "distribute_treasury", SIM_AREA_FINANCE | SIM_AREA_BUILDINGS,
+        sim_schedule_add({sim_step_distribute_treasury, SIM_PHASE_TICK_SLOT, 34, SIM_AREA_FINANCE | SIM_AREA_BUILDINGS,
           [] { g_city.government_distribute_treasury(); }});
     }
 };

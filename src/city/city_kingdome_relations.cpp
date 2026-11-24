@@ -419,8 +419,8 @@ public:
     const char* name() const override { return "kingdome_relations"; }
     void register_steps() override {
         sim_schedule_add(
-          {SIM_PHASE_TICK_SLOT, 4, 40, "kingdome", SIM_AREA_KINGDOM, [] { g_city.kingdome_sys().update(); }});
-        sim_schedule_add({SIM_PHASE_MONTH_CITY, -1, 150, "kingdome_month", SIM_AREA_KINGDOM,
+          {sim_step_kingdome, SIM_PHASE_TICK_SLOT, 4, SIM_AREA_KINGDOM, [] { g_city.kingdome_sys().update(); }});
+        sim_schedule_add({sim_step_kingdome_month, SIM_PHASE_MONTH_CITY, -1, SIM_AREA_KINGDOM,
           [] { g_city.kingdome_sys().advance_month(); }});
     }
 };

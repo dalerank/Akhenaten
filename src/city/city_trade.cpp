@@ -244,9 +244,9 @@ class trade_sim_system : public sim_system {
 public:
     const char* name() const override { return "trade"; }
     void register_steps() override {
-        sim_schedule_add({SIM_PHASE_TICK_SLOT, 11, 120, "trade_export_keep", SIM_AREA_TRADE,
+        sim_schedule_add({sim_step_trade_export_keep, SIM_PHASE_TICK_SLOT, 11, SIM_AREA_TRADE,
           [] { g_city.trade_sys().update_export_keep(); }});
-        sim_schedule_add({SIM_PHASE_TICK_SLOT, 32, 320, "trade", SIM_AREA_TRADE | SIM_AREA_FIGURES,
+        sim_schedule_add({sim_step_trade, SIM_PHASE_TICK_SLOT, 32, SIM_AREA_TRADE | SIM_AREA_FIGURES,
           [] { g_city.trade_sys().update(); }});
     }
 };

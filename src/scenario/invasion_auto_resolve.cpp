@@ -686,7 +686,7 @@ class invasion_auto_resolve_system : public sim_system {
 public:
     const char* name() const override { return "invasion_auto_resolve"; }
     void register_steps() override {
-        sim_schedule_add({SIM_PHASE_DAY, -1, 20, "invasion_auto_resolve", SIM_AREA_MILITARY,
+        sim_schedule_add({sim_step_invasion_auto_resolve, SIM_PHASE_DAY, -1, SIM_AREA_MILITARY,
           [] { g_invasion_auto_resolve.update_day(); }});
     }
 };

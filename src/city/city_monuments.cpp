@@ -20,7 +20,7 @@ public:
     const char* name() const override { return "monuments"; }
     void register_steps() override {
         sim_schedule_add(
-          {SIM_PHASE_YEAR, -1, 80, "monuments_year", SIM_AREA_MONUMENTS, [] { g_city.monuments.advance_year(); }});
+          {sim_step_monuments_year, SIM_PHASE_YEAR, -1, SIM_AREA_MONUMENTS, [] { g_city.monuments.advance_year(); }});
     }
 };
 

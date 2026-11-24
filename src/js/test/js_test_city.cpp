@@ -598,7 +598,7 @@ static pcstr __test_sim_schedule() {
     out.clear();
     for (const sim_step& step : sim_schedule_steps()) {
         out += sim_phase_name(step.phase);
-        out += ":" + std::to_string(step.slot) + ":" + step.name + ":" + std::to_string(step.writes) + ";";
+        out += ":" + std::to_string(step.slot) + ":" + sim_step_name(step.id) + ":" + std::to_string(step.writes) + ";";
     }
     return out.c_str();
 }

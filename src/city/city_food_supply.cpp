@@ -163,7 +163,7 @@ class food_supply_system : public sim_system {
 public:
     const char* name() const override { return "food_supply"; }
     void register_steps() override {
-        sim_schedule_add({SIM_PHASE_MONTH_CITY, -1, 80, "food_supply_month", SIM_AREA_RESOURCES,
+        sim_schedule_add({sim_step_food_supply_month, SIM_PHASE_MONTH_CITY, -1, SIM_AREA_RESOURCES,
           [] { g_city.food_supply.advance_month(); }});
     }
 };

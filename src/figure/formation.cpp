@@ -645,10 +645,10 @@ public:
     const char* name() const override { return "formation"; }
     void register_steps() override {
         sim_schedule_add(
-          {SIM_PHASE_TICK_SLOT, 5, 60, "formations", SIM_AREA_MILITARY, [] { formation_update_all(false); }});
-        sim_schedule_add({SIM_PHASE_TICK_SLOT, 29, 270, "formations_skip_morale", SIM_AREA_MILITARY,
+          {sim_step_formations, SIM_PHASE_TICK_SLOT, 5, SIM_AREA_MILITARY, [] { formation_update_all(false); }});
+        sim_schedule_add({sim_step_formations_skip_morale, SIM_PHASE_TICK_SLOT, 29, SIM_AREA_MILITARY,
           [] { formation_update_all(true); }});
-        sim_schedule_add({SIM_PHASE_MONTH, -1, 90, "morale_at_rest", SIM_AREA_MILITARY,
+        sim_schedule_add({sim_step_morale_at_rest, SIM_PHASE_MONTH, -1, SIM_AREA_MILITARY,
           [] { formation_update_monthly_morale_at_rest(); }});
     }
 };

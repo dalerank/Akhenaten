@@ -1009,7 +1009,7 @@ public:
     const char* name() const override { return "religion"; }
     void register_steps() override {
         sim_schedule_add(
-          {SIM_PHASE_TICK_SLOT, 1, 10, "religion", SIM_AREA_RELIGION, [] { g_city.gods_sys().update(); }});
+          {sim_step_religion, SIM_PHASE_TICK_SLOT, 1, SIM_AREA_RELIGION, [] { g_city.gods_sys().update(); }});
     }
 };
 

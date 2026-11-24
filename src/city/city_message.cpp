@@ -146,7 +146,7 @@ public:
     const char* name() const override { return "messages"; }
     void register_steps() override {
         sim_schedule_add(
-          {SIM_PHASE_MONTH, -1, 100, "messages", SIM_AREA_MESSAGES, [] { message_manager().decrease_delays(); }});
+          {sim_step_messages, SIM_PHASE_MONTH, -1, SIM_AREA_MESSAGES, [] { message_manager().decrease_delays(); }});
     }
 
     void push_save_sections(int file_version) override {

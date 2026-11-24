@@ -322,22 +322,22 @@ class buildings_system : public sim_system {
 public:
     const char* name() const override { return "buildings"; }
     void register_steps() override {
-        sim_schedule_add({SIM_PHASE_TICK_BEGIN, -1, 50, "buildings_tick", SIM_AREA_BUILDINGS,
+        sim_schedule_add({sim_step_buildings_tick, SIM_PHASE_TICK_BEGIN, -1, SIM_AREA_BUILDINGS,
           [] { g_city.buildings.update_tick(game.paused); }});
-        sim_schedule_add({SIM_PHASE_TICK_SLOT, 19, 170, "open_water_access", SIM_AREA_BUILDINGS,
+        sim_schedule_add({sim_step_open_water_access, SIM_PHASE_TICK_SLOT, 19, SIM_AREA_BUILDINGS,
           [] { g_city.buildings_update_open_water_access(); }});
-        sim_schedule_add({SIM_PHASE_TICK_SLOT, 27, 250, "water_supply", SIM_AREA_BUILDINGS,
+        sim_schedule_add({sim_step_water_supply, SIM_PHASE_TICK_SLOT, 27, SIM_AREA_BUILDINGS,
           [] { g_city.buildings.update_water_supply(); }});
-        sim_schedule_add({SIM_PHASE_TICK_SLOT, 28, 260, "religion_supply", SIM_AREA_HOUSES,
+        sim_schedule_add({sim_step_religion_supply, SIM_PHASE_TICK_SLOT, 28, SIM_AREA_HOUSES,
           [] { g_city.buildings.update_religion_supply_houses(); }});
-        sim_schedule_add({SIM_PHASE_TICK_SLOT, 33, 330, "building_counters", SIM_AREA_BUILDINGS,
+        sim_schedule_add({sim_step_building_counters, SIM_PHASE_TICK_SLOT, 33, SIM_AREA_BUILDINGS,
           [] { g_city.buildings.update_counters(); }});
         sim_schedule_add(
-          {SIM_PHASE_DAY, -1, 80, "buildings_day", SIM_AREA_BUILDINGS, [] { g_city.buildings.update_day(); }});
-        sim_schedule_add({SIM_PHASE_MONTH_CITY, -1, 130, "buildings_month", SIM_AREA_BUILDINGS,
+          {sim_step_buildings_day, SIM_PHASE_DAY, -1, SIM_AREA_BUILDINGS, [] { g_city.buildings.update_day(); }});
+        sim_schedule_add({sim_step_buildings_month, SIM_PHASE_MONTH_CITY, -1, SIM_AREA_BUILDINGS,
           [] { g_city.buildings.update_month(); }});
         sim_schedule_add(
-          {SIM_PHASE_YEAR, -1, 120, "buildings_year", SIM_AREA_BUILDINGS, [] { g_city.buildings.update_year(); }});
+          {sim_step_buildings_year, SIM_PHASE_YEAR, -1, SIM_AREA_BUILDINGS, [] { g_city.buildings.update_year(); }});
     }
 };
 

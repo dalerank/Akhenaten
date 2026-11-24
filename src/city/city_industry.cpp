@@ -296,11 +296,11 @@ class industry_system : public sim_system {
 public:
     const char* name() const override { return "industry"; }
     void register_steps() override {
-        sim_schedule_add({SIM_PHASE_TICK_SLOT, 20, 180, "industry_production", SIM_AREA_BUILDINGS,
+        sim_schedule_add({sim_step_industry_production, SIM_PHASE_TICK_SLOT, 20, SIM_AREA_BUILDINGS,
           [] { g_city.industry.update_production(); }});
         sim_schedule_add(
-          {SIM_PHASE_TICK_SLOT, 33, 360, "farms", SIM_AREA_BUILDINGS, [] { building_industry_update_farms(); }});
-        sim_schedule_add({SIM_PHASE_WEEK, -1, 20, "industry_nearby_houses", SIM_AREA_BUILDINGS,
+          {sim_step_farms, SIM_PHASE_TICK_SLOT, 33, SIM_AREA_BUILDINGS, [] { building_industry_update_farms(); }});
+        sim_schedule_add({sim_step_industry_nearby_houses, SIM_PHASE_WEEK, -1, SIM_AREA_BUILDINGS,
           [] { g_city.industry.update_nearby_houses_weekly(); }});
     }
 };

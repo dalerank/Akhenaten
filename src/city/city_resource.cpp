@@ -581,19 +581,19 @@ public:
     const char* name() const override { return "resource"; }
     void register_steps() override {
         sim_schedule_add(
-          {SIM_PHASE_TICK_SLOT, 8, 90, "stocks", SIM_AREA_RESOURCES, [] { g_city.resource.calculate_stocks(); }});
-        sim_schedule_add({SIM_PHASE_TICK_SLOT, 16, 140, "storageyard_stocks", SIM_AREA_RESOURCES,
+          {sim_step_stocks, SIM_PHASE_TICK_SLOT, 8, SIM_AREA_RESOURCES, [] { g_city.resource.calculate_stocks(); }});
+        sim_schedule_add({sim_step_storageyard_stocks, SIM_PHASE_TICK_SLOT, 16, SIM_AREA_RESOURCES,
           [] { city_resource_calculate_storageyard_stocks(); }});
-        sim_schedule_add({SIM_PHASE_TICK_SLOT, 17, 150, "food_stocks", SIM_AREA_RESOURCES,
+        sim_schedule_add({sim_step_food_stocks, SIM_PHASE_TICK_SLOT, 17, SIM_AREA_RESOURCES,
           [] { g_city.resource.calculate_food_stocks_and_supply_wheat(); }});
-        sim_schedule_add({SIM_PHASE_WEEK, -1, 10, "food_weekly", SIM_AREA_RESOURCES | SIM_AREA_HOUSES,
+        sim_schedule_add({sim_step_food_weekly, SIM_PHASE_WEEK, -1, SIM_AREA_RESOURCES | SIM_AREA_HOUSES,
           [] { g_city.resource.consume_food_weekly(g_simulation.simtime); }});
-        sim_schedule_add({SIM_PHASE_MONTH_CITY, -1, 60, "food_monthly", SIM_AREA_RESOURCES | SIM_AREA_HOUSES,
+        sim_schedule_add({sim_step_food_monthly, SIM_PHASE_MONTH_CITY, -1, SIM_AREA_RESOURCES | SIM_AREA_HOUSES,
           [] { g_city.resource.consume_food_monthly(); }});
-        sim_schedule_add({SIM_PHASE_MONTH_CITY, -1, 70, "resource_month", SIM_AREA_RESOURCES,
+        sim_schedule_add({sim_step_resource_month, SIM_PHASE_MONTH_CITY, -1, SIM_AREA_RESOURCES,
           [] { g_city.resource.advance_month(); }});
-        sim_schedule_add(
-          {SIM_PHASE_MONTH_CITY, -1, 90, "allowed_foods", SIM_AREA_RESOURCES, [] { g_city.update_allowed_foods(); }});
+        sim_schedule_add({sim_step_allowed_foods, SIM_PHASE_MONTH_CITY, -1, SIM_AREA_RESOURCES,
+          [] { g_city.update_allowed_foods(); }});
     }
 };
 

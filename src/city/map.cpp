@@ -63,19 +63,22 @@ class map_system : public sim_system {
 public:
     const char* name() const override { return "map"; }
     void register_steps() override {
-        sim_schedule_add({SIM_PHASE_TICK_SLOT, 2, 30, "tree_growth", SIM_AREA_MAP, [] { map_tree_growth_update(); }});
         sim_schedule_add(
-          {SIM_PHASE_TICK_SLOT, 5, 50, "irrigation_value", SIM_AREA_MAP, [] { g_irrigation_value.update(); }});
-        sim_schedule_add({SIM_PHASE_TICK_SLOT, 6, 70, "natives_land", SIM_AREA_MAP, [] { map_natives_check_land(); }});
+          {sim_step_tree_growth, SIM_PHASE_TICK_SLOT, 2, SIM_AREA_MAP, [] { map_tree_growth_update(); }});
         sim_schedule_add(
-          {SIM_PHASE_TICK_SLOT, 7, 80, "road_network", SIM_AREA_MAP, [] { g_city.map.update_road_network(); }});
-        sim_schedule_add({SIM_PHASE_TICK_SLOT, 10, 110, "desirability", SIM_AREA_MAP, [] { g_desirability.update(); }});
+          {sim_step_irrigation_value, SIM_PHASE_TICK_SLOT, 5, SIM_AREA_MAP, [] { g_irrigation_value.update(); }});
         sim_schedule_add(
-          {SIM_PHASE_TICK_SLOT, 18, 160, "vegetation_growth", SIM_AREA_MAP, [] { map_vegetation_growth_update(); }});
+          {sim_step_natives_land, SIM_PHASE_TICK_SLOT, 6, SIM_AREA_MAP, [] { map_natives_check_land(); }});
         sim_schedule_add(
-          {SIM_PHASE_MONTH, -1, 110, "roads_images", SIM_AREA_MAP, [] { map_tiles_update_all_roads(); }});
+          {sim_step_road_network, SIM_PHASE_TICK_SLOT, 7, SIM_AREA_MAP, [] { g_city.map.update_road_network(); }});
         sim_schedule_add(
-          {SIM_PHASE_MONTH, -1, 120, "land_citizen_routing", SIM_AREA_MAP, [] { map_routing_update_land_citizen(); }});
+          {sim_step_desirability, SIM_PHASE_TICK_SLOT, 10, SIM_AREA_MAP, [] { g_desirability.update(); }});
+        sim_schedule_add(
+          {sim_step_vegetation_growth, SIM_PHASE_TICK_SLOT, 18, SIM_AREA_MAP, [] { map_vegetation_growth_update(); }});
+        sim_schedule_add(
+          {sim_step_roads_images, SIM_PHASE_MONTH, -1, SIM_AREA_MAP, [] { map_tiles_update_all_roads(); }});
+        sim_schedule_add({sim_step_land_citizen_routing, SIM_PHASE_MONTH, -1, SIM_AREA_MAP,
+          [] { map_routing_update_land_citizen(); }});
     }
 };
 
