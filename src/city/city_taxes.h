@@ -39,6 +39,9 @@ struct city_taxes_t {
     int apply_tax_rate(int amount) const;
     int house_tax_income(int units) const;
     int house_tax_units_from_income(int tax_income) const;
+
+private:
+    int tax_rate_scale() const;
 };
 ANK_CONFIG_PROPERTY(city_taxes_t, percentage_taxed_people, estimated_uncollected, estimated_income,
   house_tax_bonus_percentage)

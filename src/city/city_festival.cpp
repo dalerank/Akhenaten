@@ -21,6 +21,7 @@
 #include "core/xvalue.h"
 #include "game/simulation.h"
 #include "io/chunk_serializer.h"
+#include "io/gamestate/save_versions.h"
 
 using e_festival_type_tokens = token_holder<e_festival_type, FESTIVAL_NONE, FESTIVAL_MAX>;
 e_festival_type_tokens ANK_CONFIG_ENUM(festival_type_tokens);
@@ -35,7 +36,7 @@ public:
     void on_reset() override { city_festival().reset(); }
     void on_month() override { city_festival().advance_month(); }
     void push_save_sections(int file_version) override {
-        if (file_version >= 203) {
+        if (file_version >= save_version_city_sections) {
             g_chunk_io.push_chunk<city_festival_chunk>(city_festival_chunk::size, false);
         }
     }

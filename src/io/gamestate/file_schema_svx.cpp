@@ -30,6 +30,7 @@
 #include "city/military_chunks.h"
 #include "city/ratings_chunks.h"
 #include "scenario/distant_battle_chunks.h"
+#include "io/gamestate/save_versions.h"
 #include "io/gamestate/presentation_chunks.h"
 #include "core/random_chunks.h"
 #include "empire/empire_chunks.h"
@@ -113,7 +114,7 @@ void file_schema_svx(const int file_version) {
     g_chunk_io.push_chunk<route_paths_chunk>(500000, false);
     g_chunk_io.push_chunk<formations_chunk>(7200, false);
     g_chunk_io.push_chunk<formations_info_chunk>(12, false);
-    if (file_version < 203) {
+    if (file_version < save_version_city_sections) {
         g_chunk_io.push_chunk<city_data_chunk>(37808, false);
         g_chunk_io.push_chunk<city_data_extra_chunk>(72, false);
     } else {
