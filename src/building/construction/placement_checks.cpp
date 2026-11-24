@@ -5,6 +5,7 @@
 #include "building/building_road.h"
 #include "building/building_temple_complex.h"
 #include "city/city.h"
+#include "city/city_temple_complexes.h"
 #include "game/game_config.h"
 #include "grid/building.h"
 #include "grid/figure.h"
@@ -326,7 +327,7 @@ void build_planner::update_unique_only_one_check() {
     case BUILDING_TEMPLE_COMPLEX_BAST:
         //        case BUILDING_TEMPLE_COMPLEX_ALTAR:
         //        case BUILDING_TEMPLE_COMPLEX_ORACLE:
-        if (g_city.temple_complexes_sys().has_any() && !game_features::gameplay_change_multiple_temple_complexes) {
+        if (city_temple_complexes().has_any() && !game_features::gameplay_change_multiple_temple_complexes) {
             unique_already_placed = true;
         }
         break;

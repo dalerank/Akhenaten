@@ -120,7 +120,7 @@ var T587_EXPECTED = [
     'year:-1:monuments_year:2097152',
     'year:-1:yearly_trade_amounts:525312',
     'year:-1:ratings_year:131072',
-    'year:-1:ra_yearly_favour:64',
+    'year:-1:temple_complexes:64',
     'year:-1:buildings_year:4',
 ]
 

@@ -2,7 +2,7 @@
 #include "building/building_temple_complex.h"
 #include "building/construction/build_planner.h"
 #include "graphics/window.h"
-#include "city/city.h"
+#include "city/city_temple_complexes.h"
 #include "city/buildings.h"
 #include "graphics/elements/lang_text.h"
 #include "js/js_game.h"
@@ -21,15 +21,15 @@ void __ui_city_planner_reset() {
 ANK_FUNCTION(__ui_city_planner_reset)
 
 bool __city_has_temple_complex() {
-    return g_city.temple_complexes_sys().has_any();
+    return city_temple_complexes().has_any();
 }
 ANK_FUNCTION(__city_has_temple_complex)
 
 int __city_temple_complex_id(int type) {
     if (type <= 0) {
-        return g_city.temple_complexes_sys().any_id();
+        return city_temple_complexes().any_id();
     }
-    return g_city.temple_complexes_sys().id((e_building_type)type);
+    return city_temple_complexes().id((e_building_type)type);
 }
 ANK_FUNCTION_1(__city_temple_complex_id)
 

@@ -17,6 +17,7 @@
 #include "building/monument_pyramid.h"
 #include "building/monument_royal_tomb.h"
 #include "city/city.h"
+#include "city/city_temple_complexes.h"
 #include "city/city_message.h"
 #include "core/random.h"
 #include "core/xstring.h"
@@ -446,7 +447,7 @@ static void __test_city_ratings_update(int is_yearly_update) {
 ANK_FUNCTION_1(__test_city_ratings_update);
 
 static void __test_city_ra_yearly_favour() {
-    g_city.temple_complexes_sys().ra_yearly_favour();
+    city_temple_complexes().ra_yearly_favour();
 }
 ANK_FUNCTION(__test_city_ra_yearly_favour);
 

@@ -29,6 +29,7 @@
 #include "city/city_industry.h"
 #include "city/city_animals.h"
 #include "city/city_local_cults.h"
+#include "city/city_temple_complexes.h"
 #include "building/building_barracks.h"
 #include "building/building_temple_complex.h"
 #include "building/building_burning_ruin.h"
@@ -180,7 +181,7 @@ trade_system city_t::trade_sys() {
 
 health_context city_t::health_ctx() {
     return {population, gods, coverage,
-      temple_complexes_sys().has_upgrade(BUILDING_TEMPLE_COMPLEX_BAST, etc_upgrade_altar),
+      city_temple_complexes().has_upgrade(BUILDING_TEMPLE_COMPLEX_BAST, etc_upgrade_altar),
       g_scenario.is_scenario_id(1, 2), g_simulation.simtime.absolute_day(true)};
 }
 
@@ -196,13 +197,9 @@ gods_system city_t::gods_sys() {
     return gods_system(gods, gods_ctx());
 }
 
-temple_complexes_system city_t::temple_complexes_sys() {
-    return temple_complexes_system({buildings, kingdome});
-}
-
 sentiment_context city_t::sentiment_ctx() {
     return {population, finance, gods, labor, buildings,
-      temple_complexes_sys().has_upgrade(BUILDING_TEMPLE_COMPLEX_BAST, etc_upgrade_oracle), g_simulation.simtime.day,
+      city_temple_complexes().has_upgrade(BUILDING_TEMPLE_COMPLEX_BAST, etc_upgrade_oracle), g_simulation.simtime.day,
       g_scenario.campaign_scenario_id};
 }
 
@@ -229,7 +226,7 @@ migration_system city_t::migration_sys() {
 
 ratings_context city_t::ratings_ctx() {
     return {finance, labor, resource, population, entertainment, coverage, gods, sentiment, buildings, kingdome_sys(),
-      temple_complexes_sys().has_upgrade(BUILDING_TEMPLE_COMPLEX_RA, etc_upgrade_oracle), g_simulation.simtime.year,
+      city_temple_complexes().has_upgrade(BUILDING_TEMPLE_COMPLEX_RA, etc_upgrade_oracle), g_simulation.simtime.year,
       g_simulation.simtime.month, g_scenario.start_year};
 }
 

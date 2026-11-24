@@ -13,6 +13,7 @@
 #include "grid/road_access.h"
 #include "game/game_config.h"
 #include "city/city.h"
+#include "city/city_temple_complexes.h"
 #include "game/game.h"
 #include "graphics/elements/ui.h"
 #include "graphics/graphics.h"
@@ -42,7 +43,7 @@ bool building_recruiter::static_params::is_unique_building() const {
 // OG city_military_training_bonus: academy present -> 25, Seth temple complex adds +10.
 static int city_military_training_bonus(int academy_id) {
     int extra = 0;
-    if (g_city.temple_complexes_sys().id(BUILDING_TEMPLE_COMPLEX_SETH)) {
+    if (city_temple_complexes().id(BUILDING_TEMPLE_COMPLEX_SETH)) {
         extra = BATALION_SETH_TRAINING_BONUS;
     }
     return (academy_id != 0 ? BATALION_ACADEMY_EXPERIENCE : 0) + extra;

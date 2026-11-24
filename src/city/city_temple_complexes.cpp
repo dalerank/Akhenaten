@@ -2,8 +2,26 @@
 
 #include "building/building_temple_complex.h"
 #include "city/buildings.h"
+#include "city/city.h"
 #include "city/city_kingdome_relations.h"
+#include "core/app_module.h"
 #include "core/svector.h"
+#include "game/simulation.h"
+
+temple_complexes_system city_temple_complexes() {
+    return temple_complexes_system({g_city.buildings, g_city.kingdome});
+}
+
+class temple_complexes_sim_system : public sim_system {
+public:
+    const char* name() const override { return "temple_complexes"; }
+    void on_year() override { city_temple_complexes().ra_yearly_favour(); }
+};
+
+void ANK_REGISTER_APPLICATION_MODULE(register_temple_complexes_system) {
+    static temple_complexes_sim_system system;
+    g_simulation.register_system(&system);
+}
 
 span_const<e_building_type> temple_complexes_system::types() {
     static svector<e_building_type, 16> types;

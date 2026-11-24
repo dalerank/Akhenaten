@@ -2,6 +2,7 @@
 
 #include "building/building_temple_complex.h"
 #include "city/city.h"
+#include "city/city_temple_complexes.h"
 #include "city/city_warnings.h"
 #include "city/city_population.h"
 #include "city/city_resource.h"
@@ -816,7 +817,7 @@ void building_house::decay_services() {
 
     // OG Bast complex: entertainers / educators / health providers last longer.
     bool decay_extended_services = true;
-    const building_id complex_id = g_city.temple_complexes_sys().id(BUILDING_TEMPLE_COMPLEX_BAST);
+    const building_id complex_id = city_temple_complexes().id(BUILDING_TEMPLE_COMPLEX_BAST);
     if (complex_id) {
         const auto &params = building_temple_complex_bast::current_params();
         if (params.service_decay_skip_odd_months && (g_simulation.simtime.month & 1)) {

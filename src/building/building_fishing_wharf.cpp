@@ -2,6 +2,7 @@
 #include "grid/orientation.h"
 
 #include "city/city.h"
+#include "city/city_temple_complexes.h"
 #include "grid/water.h"
 #include "grid/building.h"
 #include "city/buildings.h"
@@ -28,7 +29,7 @@ declare_console_command_p(killfishboats) {
 namespace {
 
 bool temple_complex_osiris_has_oracle() {
-    return g_city.temple_complexes_sys().has_upgrade(BUILDING_TEMPLE_COMPLEX_OSIRIS, etc_upgrade_oracle);
+    return city_temple_complexes().has_upgrade(BUILDING_TEMPLE_COMPLEX_OSIRIS, etc_upgrade_oracle);
 }
 
 } // namespace

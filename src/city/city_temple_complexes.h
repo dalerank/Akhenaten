@@ -27,3 +27,5 @@ public:
 private:
     temple_complexes_context _ctx;
 };
+
+temple_complexes_system city_temple_complexes();

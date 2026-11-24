@@ -4,6 +4,7 @@
 #include "building/building_static_params.h"
 #include "building/building_temple_complex.h"
 #include "city/city.h"
+#include "city/city_temple_complexes.h"
 #include "city/city_buildings.h"
 #include "city/city_resource.h"
 #include "empire/empire.h"
@@ -41,7 +42,7 @@ int food_supply_percentage(const food_supply_sources& s, const city_food_supply_
 // OG temple_complex.c city_food_consumption_percentage.
 int city_food_consumption_percentage() {
     const auto& rules = city_food_supply_rules;
-    building* complex = building_get(g_city.temple_complexes_sys().any_id());
+    building* complex = building_get(city_temple_complexes().any_id());
     if (!complex || !complex->is_valid()) {
         return rules.consumption_percentage;
     }

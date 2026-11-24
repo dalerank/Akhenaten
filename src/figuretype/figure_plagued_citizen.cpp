@@ -2,7 +2,8 @@
 
 #include "building/building_house.h"
 #include "building/building_temple_complex.h"
-#include "city/city.h"
+#include "city/city_temple_complexes.h"
+#include "city/city_figures.h"
 #include "city/buildings.h"
 #include "city/city_health.h"
 #include "figure/figure.h"
@@ -40,7 +41,7 @@ namespace {
 
     // OG: player->has_temple_complex, complex god Bast, upgrade 1 (altar).
     bool bast_complex_has_altar() {
-        building* b = building_get(g_city.temple_complexes_sys().any_id());
+        building* b = building_get(city_temple_complexes().any_id());
         auto* complex = (b && b->type == BUILDING_TEMPLE_COMPLEX_BAST) ? b->dcast_temple_complex() : nullptr;
         return complex && complex->has_upgrade(etc_upgrade_altar);
     }
