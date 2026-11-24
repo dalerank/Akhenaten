@@ -2,6 +2,30 @@
 
 #include "building/building_entertainment.h"
 #include "city/city.h"
+#include "city/entertainment_chunks.h"
+#include "core/app_module.h"
+#include "core/xvalue.h"
+#include "game/simulation.h"
+#include "io/chunk_serializer.h"
+
+city_entertainment_t& city_entertainment() {
+    return xvalue<city_entertainment_t>::ref();
+}
+
+class entertainment_system : public sim_system {
+public:
+    const char* name() const override { return "entertainment"; }
+    void push_save_sections(int file_version) override {
+        if (file_version >= 203) {
+            g_chunk_io.push_chunk<city_entertainment_chunk>(city_entertainment_chunk::size, false);
+        }
+    }
+};
+
+void ANK_REGISTER_APPLICATION_MODULE(register_entertainment_system) {
+    static entertainment_system system;
+    g_simulation.register_system(&system);
+}
 
 void city_entertainment_t::calculate_shows() {
     booth_shows = 0;

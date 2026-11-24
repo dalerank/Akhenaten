@@ -1,6 +1,7 @@
 #include "io/og_save/og_load.h"
 
 #include "city/city.h"
+#include "city/entertainment.h"
 #include "city/city_festival.h"
 #include "scenario/scenario.h"
 
@@ -181,15 +182,15 @@ namespace og {
         assign(g_city.houses.missing.second_religion, p.houses_missing_second_religion);
         assign(g_city.houses.missing.third_religion, p.houses_missing_third_religion);
         assign(g_city.houses.requiring.religion, p.houses_requiring_religion);
-        assign(g_city.entertainment.booth_shows, p.juggler_shows);
-        assign(g_city.entertainment.booth_no_shows_weighted, p.juggler_no_shows_weighted);
-        assign(g_city.entertainment.bandstand_shows, p.musician_shows);
-        assign(g_city.entertainment.bandstand_no_shows_weighted, p.musician_no_shows_weighted);
-        assign(g_city.entertainment.pavilion_shows, p.dancer_shows);
-        assign(g_city.entertainment.pavilion_no_shows_weighted, p.dancer_no_shows_weighted);
-        assign(g_city.entertainment.senet_house_plays, p.senet_shows);
-        assign(g_city.entertainment.senet_house_no_shows_weighted, p.senet_no_shows_weighted);
-        assign(g_city.entertainment.venue_needing_shows, p.venue_needing_shows);
+        assign(city_entertainment().booth_shows, p.juggler_shows);
+        assign(city_entertainment().booth_no_shows_weighted, p.juggler_no_shows_weighted);
+        assign(city_entertainment().bandstand_shows, p.musician_shows);
+        assign(city_entertainment().bandstand_no_shows_weighted, p.musician_no_shows_weighted);
+        assign(city_entertainment().pavilion_shows, p.dancer_shows);
+        assign(city_entertainment().pavilion_no_shows_weighted, p.dancer_no_shows_weighted);
+        assign(city_entertainment().senet_house_plays, p.senet_shows);
+        assign(city_entertainment().senet_house_no_shows_weighted, p.senet_no_shows_weighted);
+        assign(city_entertainment().venue_needing_shows, p.venue_needing_shows);
         assign(g_city.avg_coverage.average_entertainment, p.average_entertainment);
         assign(g_city.houses.missing.entertainment, p.houses_missing_entertainment);
         assign(city_festival().months_since_festival, p.months_since_festival);
@@ -285,7 +286,7 @@ namespace og {
         }
         assign(g_city.resource.luxury_goods_kinds, p.luxury_goods_kinds);
         assign(g_city.houses.missing.second_luxury, p.houses_missing_second_luxury);
-        assign(g_city.entertainment.senet_house_has_plays, p.senet_house_has_plays);
+        assign(city_entertainment().senet_house_has_plays, p.senet_house_has_plays);
         assign(g_city.mission.fired_message_shown, p.fired_message_shown);
         assign(g_city.mission.victory_message_shown, p.victory_message_shown);
         assign(g_city.figures.attacking_natives, p.attacking_natives);

@@ -30,6 +30,7 @@
 #include "city/city_animals.h"
 #include "city/city_bookmarks.h"
 #include "city/city_festival.h"
+#include "city/entertainment.h"
 #include "city/city_victory.h"
 #include "city/city_local_cults.h"
 #include "city/city_temple_complexes.h"
@@ -104,7 +105,7 @@ void city_t::init() {
     zero_fill(ratings);
     zero_fill(avg_coverage);
     zero_fill(gods);
-    zero_fill(entertainment);
+    city_entertainment() = {};
     zero_fill(monuments);
     city_victory() = {};
     zero_fill(coverage);
@@ -225,9 +226,9 @@ migration_system city_t::migration_sys() {
 }
 
 ratings_context city_t::ratings_ctx() {
-    return {finance, labor, resource, population, entertainment, coverage, gods, sentiment, buildings, kingdome_sys(),
-      city_temple_complexes().has_upgrade(BUILDING_TEMPLE_COMPLEX_RA, etc_upgrade_oracle), g_simulation.simtime.year,
-      g_simulation.simtime.month, g_scenario.start_year};
+    return {finance, labor, resource, population, city_entertainment(), coverage, gods, sentiment, buildings,
+      kingdome_sys(), city_temple_complexes().has_upgrade(BUILDING_TEMPLE_COMPLEX_RA, etc_upgrade_oracle),
+      g_simulation.simtime.year, g_simulation.simtime.month, g_scenario.start_year};
 }
 
 ratings_system city_t::ratings_sys() {

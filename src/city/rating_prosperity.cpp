@@ -1,4 +1,5 @@
 #include "city/city.h"
+#include "city/entertainment.h"
 
 #include "core/calc.h"
 #include "game/simulation.h"

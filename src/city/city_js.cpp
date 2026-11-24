@@ -293,7 +293,7 @@ int __scenario_requests_active_count() {
 ANK_FUNCTION(__scenario_requests_active_count)
 
 std::optional<bvariant> __city_get_entertainment_property(pcstr property) {
-    return archive_helper::get(g_city.entertainment, property, true);
+    return archive_helper::get(city_entertainment(), property, true);
 }
 ANK_FUNCTION_1(__city_get_entertainment_property)
 

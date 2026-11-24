@@ -38,7 +38,7 @@ void city_average_coverage_t::update() {
         average_health /= num_houses;
     }
 
-    g_city.entertainment.calculate_shows();
+    city_entertainment().calculate_shows();
 }
 
 void city_coverage_t::save(buffer *buf) {

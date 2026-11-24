@@ -26,7 +26,6 @@
 #include "city/city_taxes_chunks.h"
 #include "city/city_trade_chunks.h"
 #include "city/coverage_chunks.h"
-#include "city/entertainment_chunks.h"
 #include "city/map_chunks.h"
 #include "city/military_chunks.h"
 #include "city/ratings_chunks.h"
@@ -136,7 +135,6 @@ void file_schema_svx(const int file_version) {
         g_chunk_io.push_chunk<city_distant_battle_chunk>(city_distant_battle_chunk::size, false);
         g_chunk_io.push_chunk<city_trade_chunk>(city_trade_chunk::size, false);
         g_chunk_io.push_chunk<city_houses_chunk>(city_houses_chunk::size, false);
-        g_chunk_io.push_chunk<city_entertainment_chunk>(city_entertainment_chunk::size, false);
         g_chunk_io.push_chunk<city_avg_coverage_chunk>(city_avg_coverage_chunk::size, false);
         g_chunk_io.push_chunk<city_scenario_chunk>(city_scenario_chunk::size, false);
         g_chunk_io.push_chunk<city_sound_chunk>(city_sound_chunk::size, false);

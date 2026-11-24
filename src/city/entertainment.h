@@ -23,4 +23,7 @@ struct city_entertainment_t {
     int show_message_senet_house();
 };
 
-ANK_CONFIG_PROPERTY(city_entertainment_t, booth_shows, bandstand_shows, pavilion_shows, senet_house_plays, zoo_shows, venue_needing_shows)
+ANK_CONFIG_PROPERTY(city_entertainment_t, booth_shows, bandstand_shows, pavilion_shows, senet_house_plays, zoo_shows,
+  venue_needing_shows)
+
+city_entertainment_t& city_entertainment();

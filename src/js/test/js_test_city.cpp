@@ -17,6 +17,7 @@
 #include "building/monument_pyramid.h"
 #include "building/monument_royal_tomb.h"
 #include "city/city.h"
+#include "city/entertainment.h"
 #include "city/city_temple_complexes.h"
 #include "city/city_message.h"
 #include "core/random.h"
@@ -580,7 +581,7 @@ static void __test_finance_last_year_set(pcstr field, int value) {
     else if (name == "unemployment_percentage")
         g_city.labor.unemployment_percentage = (int8_t)value;
     else if (name == "senet_house_plays")
-        g_city.entertainment.senet_house_plays = value;
+        city_entertainment().senet_house_plays = value;
     else
         logs::error("[test] __test_finance_last_year_set: unknown field %s", field);
 }

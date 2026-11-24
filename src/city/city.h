@@ -4,7 +4,6 @@
 
 #include "city/city_kingdome_relations.h"
 #include "game/player_record.h"
-#include "city/entertainment.h"
 #include "city/city_industry.h"
 #include "city/city_population.h"
 #include "city/city_finance.h"
@@ -59,7 +58,6 @@ struct city_t {
     city_average_coverage_t avg_coverage;
 
     gods_state gods;
-    city_entertainment_t entertainment;
 
     city_monuments_t monuments;
 
