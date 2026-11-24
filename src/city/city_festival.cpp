@@ -34,7 +34,9 @@ public:
     const char* name() const override { return "festival"; }
     void on_month() override { city_festival().advance_month(); }
     void push_save_sections(int file_version) override {
-        g_chunk_io.push_chunk<city_festival_chunk>(city_festival_chunk::size, false);
+        if (file_version >= 203) {
+            g_chunk_io.push_chunk<city_festival_chunk>(city_festival_chunk::size, false);
+        }
     }
 };
 
