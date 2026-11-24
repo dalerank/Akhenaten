@@ -175,13 +175,7 @@ static const sim_step k_sim_steps[] = {
   {SIM_PHASE_MONTH_CITY, -1, "local_cults", SIM_AREA_RELIGION, nullptr, SIM_CALL_MONTH},
   {SIM_PHASE_MONTH_CITY, -1, "festival_month", SIM_AREA_FESTIVAL, [](city_t& c) { c.festival.advance_month(); }},
   {SIM_PHASE_MONTH_CITY, -1, "buildings_month", SIM_AREA_BUILDINGS, [](city_t& c) { c.buildings.update_month(); }},
-  {SIM_PHASE_MONTH_CITY, -1, "fishing_points_month", SIM_AREA_FIGURES,
-    [](city_t& c) {
-        if (game_features::gameplay_change_fishing_points_monthly_respawn.to_bool()
-            && c.can_produce_resource(RESOURCE_FISH) && !g_scenario.events.blood_river_sweep_active()) {
-            c.fishing_points.update_month();
-        }
-    }},
+  {SIM_PHASE_MONTH_CITY, -1, "fishing_points", SIM_AREA_FIGURES, nullptr, SIM_CALL_MONTH},
   {SIM_PHASE_MONTH_CITY, -1, "kingdome_month", SIM_AREA_KINGDOM, [](city_t& c) { c.kingdome_sys().advance_month(); }},
   {SIM_PHASE_MONTH_CITY, -1, "tomb_robbers_month", SIM_AREA_FIGURES,
     [](city_t&) {

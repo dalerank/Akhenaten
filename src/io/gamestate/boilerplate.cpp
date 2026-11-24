@@ -12,6 +12,7 @@
 #include "game/game_config.h"
 #include "game/autosave_module.h"
 #include "city/city.h"
+#include "city/city_fishing_points.h"
 #include "city/city_animals.h"
 #include "city/map.h"
 #include "city/city_message.h"
@@ -434,7 +435,7 @@ void GamestateIO::start_loaded_file() {
         map_canal_update_all_tiles(0);
 
         //        map_natives_init();
-        g_city.fishing_points.create();
+        city_fishing_points().create();
         city_animals().create_herds();
 
         g_city.map.entry_point = scenario_map_entry();

@@ -18,7 +18,6 @@
 #include "city/city_resource.h"
 #include "city/city_food_supply.h"
 #include "city/city_monuments.h"
-#include "city/city_fishing_points.h"
 #include "city/map.h"
 #include "city/coverage.h"
 #include "city/city_religion.h"
@@ -109,7 +108,6 @@ struct city_t {
         int32_t reserved_2;
     } mission;
 
-    city_fishing_points_t fishing_points;
     map_bookmarks_t bookmarks;
 
     void houses_reset_demands();

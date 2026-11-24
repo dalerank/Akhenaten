@@ -12,6 +12,7 @@
 #include "grid/tiles.h"
 #include "io/chunk_serializer.h"
 #include "city/city.h"
+#include "city/city_fishing_points.h"
 #include "city_message.h"
 #include "game/game_config.h"
 #include "core/log.h"
@@ -340,7 +341,7 @@ void floods_t::tick_update(bool calc_only) {
             // This is where the fertility gets restored in the OG game.
             // It has been re-implemented differently inside the tile flooding/update procedure.
         } else if (cycle == cycle_end + 1) {
-            g_city.fishing_points.reset();
+            city_fishing_points().reset();
         }
     }
 

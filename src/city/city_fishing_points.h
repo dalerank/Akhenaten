@@ -10,3 +10,5 @@ struct city_fishing_points_t {
     tile2i closest_fishing_point(tile2i pos, bool free_only, tile2i exclude_tile = tile2i::invalid);
     tile2i random_fishing_point(tile2i pos, bool free_only);
 };
+
+city_fishing_points_t& city_fishing_points();

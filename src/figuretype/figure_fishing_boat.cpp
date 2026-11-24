@@ -14,7 +14,8 @@
 #include "graphics/elements/ui.h"
 #include "graphics/image_desc.h"
 #include "building/building_fishing_wharf.h"
-#include "city/city.h"
+#include "city/city_buildings.h"
+#include "city/city_fishing_points.h"
 #include "city/city_warnings.h"
 #include "game/game_events.h"
 #include "js/js_register.h"
@@ -243,7 +244,7 @@ void figure_fishing_boat::figure_action_og() {
             break;
         }
         base.wait_ticks = 0;
-        tile2i fish_tile = g_city.fishing_points.closest_fishing_point(tile(), false);
+        tile2i fish_tile = city_fishing_points().closest_fishing_point(tile(), false);
         if (fish_tile.valid() && map_water_is_point_inside(fish_tile)) {
             advance_action(ACTION_1_FISHING_BOAT_GOING_TO_FISH);
             base.destination_tile = fish_tile;
@@ -424,7 +425,7 @@ void figure_fishing_boat::figure_action_remake() {
 
     case ACTION_6_FISHING_BOAT_RANDOM_FPOINT: {
         base.wait_ticks = 0;
-        tile2i fish_tile = g_city.fishing_points.random_fishing_point(tile(), true);
+        tile2i fish_tile = city_fishing_points().random_fishing_point(tile(), true);
         if (fish_tile.valid() && map_water_is_point_inside(fish_tile)) {
             runtime_data().fishing_point_check_attempts = 0;
             advance_action(ACTION_1_FISHING_BOAT_GOING_TO_FISH);
@@ -467,11 +468,11 @@ void figure_fishing_boat::figure_action_remake() {
 
                 if (!sticky_valid) {
                     tile2i exclude(rd.failed_tile_x, rd.failed_tile_y);
-                    fish_tile = g_city.fishing_points.closest_fishing_point(tile(), false, exclude);
+                    fish_tile = city_fishing_points().closest_fishing_point(tile(), false, exclude);
                     if (!fish_tile.valid()) {
                         rd.failed_tile_x = -1;
                         rd.failed_tile_y = -1;
-                        fish_tile = g_city.fishing_points.closest_fishing_point(tile(), false);
+                        fish_tile = city_fishing_points().closest_fishing_point(tile(), false);
                     }
                     rd.preferred_fishing_tile = fish_tile;
                 }

@@ -92,7 +92,7 @@ var T587_EXPECTED = [
     'month_city:-1:local_cults:64',
     'month_city:-1:festival_month:8388608',
     'month_city:-1:buildings_month:4',
-    'month_city:-1:fishing_points_month:8',
+    'month_city:-1:fishing_points:8',
     'month_city:-1:kingdome_month:2048',
     'month_city:-1:tomb_robbers_month:8',
     'month:-1:distant_battle_month:32768',

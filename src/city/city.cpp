@@ -112,7 +112,6 @@ void city_t::init() {
     zero_fill(vegetation);
     zero_fill(plagues);
     zero_fill(mission);
-    zero_fill(fishing_points);
     zero_fill(bookmarks);
 
     sentiment.value = 60;

@@ -4,6 +4,7 @@
 #include "scenario/map.h"
 #include "figuretype/figure_fishing_point.h"
 #include "figuretype/figure_seagulls.h"
+#include "city/city.h"
 #include "city/city_figures.h"
 #include "grid/water.h"
 #include "grid/figure.h"
@@ -12,7 +13,31 @@
 #include <algorithm>
 #include <random>
 #include "core/calc.h"
+#include "core/app_module.h"
 #include "core/random.h"
+#include "core/xvalue.h"
+#include "game/game_config.h"
+#include "game/simulation.h"
+
+city_fishing_points_t& city_fishing_points() {
+    return xvalue<city_fishing_points_t>::ref();
+}
+
+class fishing_points_system : public sim_system {
+public:
+    const char* name() const override { return "fishing_points"; }
+    void on_month() override {
+        if (game_features::gameplay_change_fishing_points_monthly_respawn.to_bool()
+            && g_city.can_produce_resource(RESOURCE_FISH) && !g_scenario.events.blood_river_sweep_active()) {
+            city_fishing_points().update_month();
+        }
+    }
+};
+
+void ANK_REGISTER_APPLICATION_MODULE(register_fishing_points_system) {
+    static fishing_points_system system;
+    g_simulation.register_system(&system);
+}
 
 void city_fishing_points_t::create() {
     scenario_map_foreach_fishing_point([] (tile2i tile) {

@@ -6,6 +6,7 @@
 #include "game/resource.h"
 #include "js/js_game.h"
 #include "city/city.h"
+#include "city/city_fishing_points.h"
 
 #include <cstdio>
 
@@ -44,9 +45,9 @@ void __city_resource_set_produce(int resource, bool val) {
     g_city.set_produce_resource((e_resource)resource, val);
     if ((e_resource)resource == RESOURCE_FISH) {
         if (val) {
-            g_city.fishing_points.reset();
+            city_fishing_points().reset();
         } else {
-            g_city.fishing_points.clear();
+            city_fishing_points().clear();
         }
     }
 }

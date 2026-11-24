@@ -7,7 +7,7 @@
 #include "building/building_fishing_wharf.h"
 #include "building/building_shipyard.h"
 #include "building/building_storage_yard.h"
-#include "city/city.h"
+#include "city/city_fishing_points.h"
 #include "city/city_figures.h"
 #include "city/object_info.h"
 #include "core/xstring.h"
@@ -116,12 +116,12 @@ static void __test_set_scenario_fishing_point(int index, int x, int y) {
 ANK_FUNCTION_3(__test_set_scenario_fishing_point);
 
 static void __test_fishing_points_create() {
-    g_city.fishing_points.create();
+    city_fishing_points().create();
 }
 ANK_FUNCTION(__test_fishing_points_create);
 
 static void __test_fishing_points_clear() {
-    g_city.fishing_points.clear();
+    city_fishing_points().clear();
 }
 ANK_FUNCTION(__test_fishing_points_clear);
 

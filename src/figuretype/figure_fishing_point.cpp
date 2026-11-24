@@ -2,7 +2,7 @@
 
 #include "js/js_register.h"
 #include "core/random.h"
-#include "city/city.h"
+#include "city/city_fishing_points.h"
 #include "dev/debug.h"
 #include "game/game_config.h"
 #include "grid/grid.h"
@@ -23,7 +23,7 @@ REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_fishing_point);
 declare_console_command_p(addfishpoints) {
     int count = args.next_int(0);
 
-    g_city.fishing_points.update_month(count);
+    city_fishing_points().update_month(count);
 }
 
 // OG boats.c figure_fishing_spot_action. Its frame/pause counters drive nothing visible here (the art runs on
