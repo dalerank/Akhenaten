@@ -4,6 +4,7 @@
 #include "building/building_storage.h"
 #include "building/building_wall.h"
 #include "city/city.h"
+#include "city/city_victory.h"
 #include "city/city_message.h"
 #include "game/game_events.h"
 #include "empire/empire_map.h"
@@ -62,7 +63,7 @@
 void game_file_editor_clear_data(void) {
     grid_xx::init_all_grids();
 
-    g_city.victory.reset();
+    city_victory().reset();
     g_city.migration_sys().reset();
     g_city_planner.reset();
     g_city.init();

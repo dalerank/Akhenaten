@@ -7,13 +7,31 @@
 #include "game/game_config.h"
 #include "io/gamestate/boilerplate.h"
 #include "js/js_register.h"
+#include "core/app_module.h"
 #include "core/profiler.h"
+#include "core/xvalue.h"
+#include "game/simulation.h"
 #include "scenario/criteria.h"
 #include "scenario/scenario.h"
 
 #include <algorithm>
 
 victory_rules_t ANK_VARIABLE(victory_rules);
+
+city_victory_t& city_victory() {
+    return xvalue<city_victory_t>::ref();
+}
+
+class victory_system : public sim_system {
+public:
+    const char* name() const override { return "victory"; }
+    void on_day() override { city_victory().victory_check(); }
+};
+
+void ANK_REGISTER_APPLICATION_MODULE(register_victory_system) {
+    static victory_system system;
+    g_simulation.register_system(&system);
+}
 
 void city_victory_t::reset() {
     state = e_victory_state_none;

@@ -464,30 +464,30 @@ ANK_GLOBAL_OBJECT(g_city.mission, __city_mission,
     victory_message_shown
     );
 
-ANK_GLOBAL_OBJECT(g_city.victory, __city_victory, state, force_win, force_lost, lost_by_population, lost_can_replay);
+ANK_GLOBAL_OBJECT(city_victory(), __city_victory, state, force_win, force_lost, lost_by_population, lost_can_replay);
 
 void __city_victory_reset() {
-    g_city.victory.reset();
+    city_victory().reset();
 }
 ANK_FUNCTION(__city_victory_reset)
 
 int __city_victory_determine_state(bool script_goals_met) {
-    return g_city.victory.determine_state(script_goals_met);
+    return city_victory().determine_state(script_goals_met);
 }
 ANK_FUNCTION_1(__city_victory_determine_state)
 
 void __city_victory_lost_cleanup() {
-    g_city.victory.lost_cleanup();
+    city_victory().lost_cleanup();
 }
 ANK_FUNCTION(__city_victory_lost_cleanup)
 
 int __city_victory_defeat_options() {
-    return g_city.victory.defeat_options();
+    return city_victory().defeat_options();
 }
 ANK_FUNCTION(__city_victory_defeat_options)
 
 void __city_victory_lower_difficulty() {
-    g_city.victory.lower_difficulty();
+    city_victory().lower_difficulty();
 }
 ANK_FUNCTION(__city_victory_lower_difficulty)
 

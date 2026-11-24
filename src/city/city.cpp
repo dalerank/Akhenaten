@@ -30,6 +30,7 @@
 #include "city/city_animals.h"
 #include "city/city_bookmarks.h"
 #include "city/city_festival.h"
+#include "city/city_victory.h"
 #include "city/city_local_cults.h"
 #include "city/city_temple_complexes.h"
 #include "building/building_barracks.h"
@@ -105,7 +106,7 @@ void city_t::init() {
     zero_fill(gods);
     zero_fill(entertainment);
     zero_fill(monuments);
-    zero_fill(victory);
+    city_victory() = {};
     zero_fill(coverage);
     zero_fill(sound);
     zero_fill(trade);

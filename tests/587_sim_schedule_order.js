@@ -74,7 +74,7 @@ var T587_EXPECTED = [
     'day:-1:buildings_day:4',
     'day:-1:figures_day:8',
     'day:-1:population_day:1',
-    'day:-1:victory_check:134217728',
+    'day:-1:victory:134217728',
     'day:-1:avg_coverage:128',
     'day:-1:event_advance_day:268435456',
     'week:-1:food_weekly:34',

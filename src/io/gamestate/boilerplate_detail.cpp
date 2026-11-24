@@ -7,6 +7,7 @@
 #include "building/monuments.h"
 #include "city/campaign_carry.h"
 #include "city/city.h"
+#include "city/city_victory.h"
 #include "city/city_message.h"
 #include "city/city_recorded_paths.h"
 #include "city/city_resource.h"
@@ -75,7 +76,7 @@ void GamestateLoadDetail::pre_load() { // do we NEED this...?
     grid_xx::init_all_grids();
 
     // clear data
-    g_city.victory.reset();
+    city_victory().reset();
     g_city.migration_sys().reset();
     g_city_planner.reset();
     g_city.init();

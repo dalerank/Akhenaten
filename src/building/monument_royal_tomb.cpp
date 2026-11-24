@@ -4,7 +4,8 @@
 #include "grid/orientation.h"
 
 #include "building/monuments.h"
-#include "city/city.h"
+#include "city/city_figures.h"
+#include "city/city_victory.h"
 #include "city/city_buildings.h"
 #include "city/city_message.h"
 #include "city/city_warnings.h"
@@ -491,7 +492,7 @@ bool building_royal_tomb::deliver_resource(e_resource resource, int amount) {
 }
 
 bool building_royal_tomb::goals_reached() {
-    return g_city.victory.state == e_victory_state_won || g_city.victory.force_win;
+    return city_victory().state == e_victory_state_won || city_victory().force_win;
 }
 
 void building_royal_tomb::seal_if_goals_reached() {

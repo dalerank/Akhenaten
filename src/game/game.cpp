@@ -27,6 +27,7 @@
 #include "scenario/scenario_invasion.h"
 #include "graphics/view/view.h"
 #include "city/city.h"
+#include "city/city_victory.h"
 #include "city/city_floods.h"
 #include "city/city_population.h"
 #include "city/city_desirability.h"
@@ -241,7 +242,7 @@ void game_t::frame_end() {
 }
 
 void game_t::init_state() {
-    g_city.victory.reset();
+    city_victory().reset();
     g_city.migration_sys().reset();
     map_ring_init();
 

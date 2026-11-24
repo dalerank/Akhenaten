@@ -147,7 +147,7 @@ static const sim_step k_sim_steps[] = {
   {SIM_PHASE_DAY, -1, "buildings_day", SIM_AREA_BUILDINGS, [](city_t& c) { c.buildings.update_day(); }},
   {SIM_PHASE_DAY, -1, "figures_day", SIM_AREA_FIGURES, [](city_t& c) { c.figures_update_day(); }},
   {SIM_PHASE_DAY, -1, "population_day", SIM_AREA_POPULATION, [](city_t& c) { c.population_sys().update_day(); }},
-  {SIM_PHASE_DAY, -1, "victory_check", SIM_AREA_VICTORY, [](city_t& c) { c.victory.victory_check(); }},
+  {SIM_PHASE_DAY, -1, "victory", SIM_AREA_VICTORY, nullptr, SIM_CALL_DAY},
   {SIM_PHASE_DAY, -1, "avg_coverage", SIM_AREA_COVERAGE, [](city_t& c) { c.avg_coverage.update(); }},
   {SIM_PHASE_DAY, -1, "event_advance_day", SIM_AREA_EVENTS,
     [](city_t&) { events::emit(event_advance_day::from_simtime(g_simulation.simtime)); }},
