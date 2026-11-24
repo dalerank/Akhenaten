@@ -325,7 +325,7 @@ void figure::figure_delete_UNSAFE() {
     }
 
     route_remove();
-    figure_recorded_path_release(*this);
+    recorded_paths().figure_release(*this);
     map_figure_remove();
 
     int figure_id = id;

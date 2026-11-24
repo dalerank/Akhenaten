@@ -35,7 +35,7 @@ void figure_water_carrier::figure_action() {
             if (h && h->params().flags.keeps_visitor_paths) {
                 building *main = h->main();
                 if (main) {
-                    g_city.recorded_paths.handoff_to_building(base, main->id);
+                    recorded_paths().handoff_to_building(base, main->id);
                 }
             }
         }

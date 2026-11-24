@@ -600,7 +600,7 @@ static void __test_building_push_recorded_path(int bid, int path_id) {
         return;
     }
     building* main = b->main();
-    g_city.recorded_paths.building_push(main ? main->id : bid, path_id);
+    recorded_paths().building_push(main ? main->id : bid, path_id);
 }
 ANK_FUNCTION_2(__test_building_push_recorded_path);
 
@@ -610,7 +610,7 @@ static int __test_building_recorded_path_at(int bid, int index) {
         return 0;
     }
     building* main = b->main();
-    return g_city.recorded_paths.building_path_at(main ? main->id : bid, index);
+    return recorded_paths().building_path_at(main ? main->id : bid, index);
 }
 ANK_FUNCTION_2(__test_building_recorded_path_at);
 

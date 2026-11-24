@@ -40,12 +40,11 @@ struct recorded_paths_t {
     void building_clear(building_id bid);
 
     // Transfer figure's trail to building; figure gets a fresh empty trail if still alive.
-    void handoff_to_building(figure &f, building_id bid);
+    void handoff_to_building(figure& f, building_id bid);
+
+    void figure_acquire(figure& f);
+    void figure_append_tile(figure& f);
+    void figure_release(figure& f);
 };
 
-
-void figure_recorded_path_acquire(figure &f);
-void figure_recorded_path_append_tile(figure &f);
-void figure_recorded_path_release(figure &f);
-
-void building_draw_usable_paths(int bid);
+recorded_paths_t& recorded_paths();

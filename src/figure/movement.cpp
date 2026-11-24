@@ -115,7 +115,7 @@ void figure::move_to_next_tile() {
     figure_combat_attack_figure_at(tile.grid_offset());
 
     if (params().record_path) {
-        figure_recorded_path_append_tile(*this);
+        recorded_paths().figure_append_tile(*this);
     }
 
     const int old_terrain = map_terrain_get(old);

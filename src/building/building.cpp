@@ -519,7 +519,7 @@ void building::clear_related_data() {
     }
 
     dcast()->on_destroy();
-    g_city.recorded_paths.building_clear(id);
+    recorded_paths().building_clear(id);
     clear_impl();
 }
 

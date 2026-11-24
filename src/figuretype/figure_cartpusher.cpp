@@ -84,15 +84,15 @@ static void cartpusher_handoff_visitor_path(figure &f, building *dest) {
     const bool dest_keeps = building_keeps_visitor_paths(dest_main);
 
     if (home_keeps && dest_keeps) {
-        const int copy = g_city.recorded_paths.duplicate(f.trail_path_id);
+        const int copy = recorded_paths().duplicate(f.trail_path_id);
         if (copy) {
-            g_city.recorded_paths.building_push(home_main->id, copy);
+            recorded_paths().building_push(home_main->id, copy);
         }
-        g_city.recorded_paths.handoff_to_building(f, dest_main->id);
+        recorded_paths().handoff_to_building(f, dest_main->id);
     } else if (dest_keeps) {
-        g_city.recorded_paths.handoff_to_building(f, dest_main->id);
+        recorded_paths().handoff_to_building(f, dest_main->id);
     } else if (home_keeps) {
-        g_city.recorded_paths.handoff_to_building(f, home_main->id);
+        recorded_paths().handoff_to_building(f, home_main->id);
     }
 }
 
@@ -127,7 +127,7 @@ void figure_cartpusher::do_deliver(bool warehouseman, int action_done, int actio
         if (resource == RESOURCE_NONE || carrying <= 0) {
             cartpusher_handoff_visitor_path(base, dest);
             if (!base.trail_path_id) {
-                figure_recorded_path_acquire(base);
+                recorded_paths().figure_acquire(base);
             }
             base.progress_inside_speed = 0;
             return advance_action(action_done);
@@ -214,7 +214,7 @@ void figure_cartpusher::do_deliver(bool warehouseman, int action_done, int actio
         // Re-read after dump ? locals above are stale once the last load is dropped.
         if (base.get_resource() == RESOURCE_NONE || base.get_carrying_amount() <= 0) {
             if (!base.trail_path_id) {
-                figure_recorded_path_acquire(base);
+                recorded_paths().figure_acquire(base);
             }
             base.progress_inside_speed = 0;
             return advance_action(action_done);
@@ -594,7 +594,7 @@ void figure_cartpusher::figure_action() {
             poof();
         } else if (do_returnhome(TERRAIN_USAGE_ROADS)) {
             if (b->params().flags.keeps_visitor_paths) {
-                g_city.recorded_paths.handoff_to_building(base, b->main()->id);
+                recorded_paths().handoff_to_building(base, b->main()->id);
             }
         }
         break;

@@ -73,12 +73,12 @@ void figure_impl::acquire(e_figure_type e, figure &f) {
 void figure_impl::on_create() {
     assert(base.tile.x() < GRID_LENGTH && base.tile.y() < GRID_LENGTH);
     if (current_params().record_path) {
-        figure_recorded_path_acquire(base);
+        recorded_paths().figure_acquire(base);
     }
 }
 
 void figure_impl::before_poof() {
-    figure_recorded_path_release(base);
+    recorded_paths().figure_release(base);
 }
 
 void figure_impl::on_post_load() {
@@ -217,7 +217,7 @@ void figure_impl::figure_roaming_action() {
             if (h && h->params().flags.keeps_visitor_paths) {
                 building *main = h->main();
                 if (main) {
-                    g_city.recorded_paths.handoff_to_building(base, main->id);
+                    recorded_paths().handoff_to_building(base, main->id);
                 }
             }
         }

@@ -12,7 +12,6 @@
 #include "city/city_buildings_chunks.h"
 #include "city/city_figures_chunks.h"
 #include "city/city_floods_chunks.h"
-#include "city/city_recorded_paths_chunks.h"
 #include "city/city_festival_chunks.h"
 #include "city/city_finance_chunks.h"
 #include "city/city_food_supply_chunks.h"
@@ -268,12 +267,6 @@ void file_schema_svx(const int file_version) {
     if (file_version > 186) {
         // local cults + festival calendar theme state (Enhanced PC2)
         g_chunk_io.push_chunk<enhanced_religion_chunk>(64, false);
-    }
-    if (file_version > 187) {
-        // recorded trails pool + per-building last-4 rings
-        // slot: used+len+tiles[254]+figure_type+reserved = 515 (same as old used+len+tiles[256])
-        // 512*515 + 4000*4*2 = 263680 + 32000 = 295680
-        g_chunk_io.push_chunk<recorded_paths_chunk>(295680, true);
     }
     if (file_version > 197) {
         // count + reserved + 32 * (id[48] + version[16]) = 2052

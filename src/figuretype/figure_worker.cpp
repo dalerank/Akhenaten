@@ -87,7 +87,7 @@ static void worker_handoff_path_to_camp(figure &f) {
     }
     building *main = h->main();
     if (main) {
-        g_city.recorded_paths.handoff_to_building(f, main->id);
+        recorded_paths().handoff_to_building(f, main->id);
     }
 }
 
