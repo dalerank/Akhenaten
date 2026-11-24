@@ -45,6 +45,12 @@ void simulation_t::call_system(const char* name, e_sim_call call) const {
     }
 }
 
+void simulation_t::reset_systems() const {
+    for (sim_system* system : systems) {
+        system->on_reset();
+    }
+}
+
 void simulation_t::run_load(e_load_phase phase) const {
     for (sim_system* system : systems) {
         system->on_load(phase);

@@ -32,6 +32,7 @@ city_festival_t& city_festival() {
 class festival_system : public sim_system {
 public:
     const char* name() const override { return "festival"; }
+    void on_reset() override { city_festival().reset(); }
     void on_month() override { city_festival().advance_month(); }
     void push_save_sections(int file_version) override {
         if (file_version >= 203) {

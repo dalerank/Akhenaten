@@ -5,6 +5,7 @@
 #include "building/building_house.h"
 #include "building/building_temple_complex.h"
 #include "city/city.h"
+#include "city/city_plagues.h"
 #include "city/city_animals.h"
 #include "city/city_buildings.h"
 #include "city/city_figures.h"
@@ -108,22 +109,22 @@ static int __test_frog_infest_house(int bid) {
 ANK_FUNCTION_1(__test_frog_infest_house);
 
 static int __test_plagues_locusts_countdown() {
-    return g_city.plagues.locusts_countdown;
+    return city_plagues().locusts_countdown;
 }
 ANK_FUNCTION(__test_plagues_locusts_countdown);
 
 static void __test_plagues_set_locusts_countdown(int v) {
-    g_city.plagues.locusts_countdown = v;
+    city_plagues().locusts_countdown = v;
 }
 ANK_FUNCTION_1(__test_plagues_set_locusts_countdown);
 
 static int __test_plagues_frogs_countdown() {
-    return g_city.plagues.frogs_countdown;
+    return city_plagues().frogs_countdown;
 }
 ANK_FUNCTION(__test_plagues_frogs_countdown);
 
 static int __test_plagues_mummies_max() {
-    return g_city.plagues.mummies_max;
+    return city_plagues().mummies_max;
 }
 ANK_FUNCTION(__test_plagues_mummies_max);
 

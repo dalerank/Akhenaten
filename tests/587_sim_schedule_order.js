@@ -61,7 +61,7 @@ var T587_EXPECTED = [
     'tick_slot:46:building_malaria_risk:4',
     'tick_slot:48:house_tax_coverage_decay:2',
     'tick_slot:49:avg_coverage:128',
-    'tick_city_end:-1:plague_countdowns:256',
+    'tick_city_end:-1:plagues:256',
     'tick_end:-1:figures:8',
     'tick_end:-1:scenario:1048576',
     'day:-1:distant_battle:32768',

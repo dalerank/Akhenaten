@@ -13,6 +13,7 @@ map_bookmarks_t& city_bookmarks() {
 class bookmarks_system : public sim_system {
 public:
     const char* name() const override { return "bookmarks"; }
+    void on_reset() override { city_bookmarks().reset(); }
     void push_save_sections(int file_version) override { g_chunk_io.push_chunk<bookmarks_chunk>(32, false); }
 };
 

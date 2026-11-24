@@ -31,6 +31,7 @@
 #include "city/city_bookmarks.h"
 #include "city/city_festival.h"
 #include "city/entertainment.h"
+#include "city/city_plagues.h"
 #include "city/city_victory.h"
 #include "city/sound.h"
 #include "city/city_local_cults.h"
@@ -106,15 +107,11 @@ void city_t::init() {
     zero_fill(ratings);
     zero_fill(avg_coverage);
     zero_fill(gods);
-    city_entertainment() = {};
     zero_fill(monuments);
-    city_victory() = {};
     zero_fill(coverage);
-    city_sound() = {};
     zero_fill(trade);
     zero_fill(map);
     zero_fill(vegetation);
-    zero_fill(plagues);
     zero_fill(mission);
 
     sentiment.value = 60;
@@ -126,18 +123,15 @@ void city_t::init() {
     trade.caravan_backup_import_resource = RESOURCES_MIN;
     population.monthly.next_index = 0;
     population.monthly.count = 0;
-    city_festival().reset();
+    g_simulation.reset_systems();
     g_distant_battle.clear();
     gods_sys().reset();
-    city_local_cults().reset();
     buildings.init();
     figure_clear_all();
     sentiment_sys().init();
     finance_sys().init();
     empire_screen = AVAILABLE;
-    city_bookmarks().reset();
     kingdome.init();
-    city_animals().reset();
 }
 
 void city_t::reload_objects() {

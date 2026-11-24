@@ -122,15 +122,7 @@ static const sim_step k_sim_steps[] = {
     [](city_t& c) { c.house_decay_tax_coverage(); }},
   {SIM_PHASE_TICK_SLOT, 49, "avg_coverage", SIM_AREA_COVERAGE, [](city_t& c) { c.avg_coverage.update(); }},
 
-  {SIM_PHASE_TICK_CITY_END, -1, "plague_countdowns", SIM_AREA_HEALTH,
-    [](city_t& c) {
-        if (c.plagues.locusts_countdown > 0) {
-            c.plagues.locusts_countdown--;
-        }
-        if (c.plagues.frogs_countdown > 0) {
-            c.plagues.frogs_countdown--;
-        }
-    }},
+  {SIM_PHASE_TICK_CITY_END, -1, "plagues", SIM_AREA_HEALTH, nullptr, SIM_CALL_TICK},
 
   {SIM_PHASE_TICK_END, -1, "figures", SIM_AREA_FIGURES, [](city_t& c) { c.figures.update(); }},
   {SIM_PHASE_TICK_END, -1, "scenario", SIM_AREA_SCENARIO, [](city_t&) { g_scenario.update(); }},

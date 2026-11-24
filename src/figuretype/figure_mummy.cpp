@@ -1,7 +1,8 @@
 #include "figuretype/figure_mummy.h"
 
 #include "building/building.h"
-#include "city/city.h"
+#include "city/city_plagues.h"
+#include "city/city_figures.h"
 #include "city/city_buildings.h"
 #include "core/log.h"
 #include "core/random.h"
@@ -63,7 +64,7 @@ bool figure_mummy::is_source_building(building& b) {
 }
 
 figure* figure_mummy::start_plague(int amount) {
-    g_city.plagues.mummies_max = amount;
+    city_plagues().mummies_max = amount;
     int count = 0;
     for (auto& b : city_buildings()) {
         if (is_source_building(b)) {
@@ -106,7 +107,7 @@ void figure_mummy::figure_action() {
 
     if (base.opponent_id > 0) {
         figure* victim = figure_get(base.opponent_id);
-        if (victim->is_dead() && count_mummies() < g_city.plagues.mummies_max) {
+        if (victim->is_dead() && count_mummies() < city_plagues().mummies_max) {
             figure* risen = figure_create(FIGURE_MUMMY, victim->tile, DIR_4_BOTTOM_LEFT);
             if (risen && risen->is_alive()) {
                 risen->wait_ticks = (int16_t)(random_15bit() % p.roam_spread + p.roam_min);

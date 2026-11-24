@@ -75,6 +75,7 @@ city_animals_t& city_animals() {
 class animals_sim_system : public sim_system {
 public:
     const char* name() const override { return "animals"; }
+    void on_reset() override { city_animals().reset(); }
     void on_reload_config() override { city_animals().reload_config(); }
 };
 

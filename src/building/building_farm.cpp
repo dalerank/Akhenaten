@@ -5,6 +5,7 @@
 #include "city/object_info.h"
 #include "city/city_resource.h"
 #include "city/city.h"
+#include "city/city_plagues.h"
 #include "city/city_warnings.h"
 #include "core/calc.h"
 #include "game/resource.h"
@@ -141,7 +142,7 @@ bool building_farm::requested_workers() const {
 }
 
 void building_farm::draw_workers(painter &ctx, building *b, tile2i tile, vec2i pos) {
-    if (b->num_workers == 0 || g_city.plagues.locusts_countdown > 0) {
+    if (b->num_workers == 0 || city_plagues().locusts_countdown > 0) {
         return;
     }
 

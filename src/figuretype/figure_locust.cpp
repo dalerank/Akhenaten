@@ -3,6 +3,7 @@
 #include "building/building.h"
 #include "building/building_farm.h"
 #include "city/city.h"
+#include "city/city_plagues.h"
 #include "city/city_buildings.h"
 #include "city/city_floods.h"
 #include "core/log.h"
@@ -83,7 +84,7 @@ void figure_locust::figure_action() {
         break;
 
     case ACTION_122_LOCUST_EATING: {
-        const int countdown = g_city.plagues.locusts_countdown;
+        const int countdown = city_plagues().locusts_countdown;
         const int cap = std::max(0, countdown - p.countdown_fly_off);
         if (field->progress > cap) {
             field->progress = (uint16_t)cap;
@@ -125,12 +126,12 @@ void figure_locust::main_image_update() {
 }
 
 void figure_locust::start_plague() {
-    g_city.plagues.locusts_countdown = -1;
+    city_plagues().locusts_countdown = -1;
     g_city.change_happiness(-current_params().happiness_loss);
 }
 
 void figure_locust::update_month(int month) {
-    if (g_city.plagues.locusts_countdown != -1) {
+    if (city_plagues().locusts_countdown != -1) {
         return;
     }
     const auto& p = current_params();
@@ -139,7 +140,7 @@ void figure_locust::update_month(int month) {
         return;
     }
 
-    g_city.plagues.locusts_countdown = p.countdown_after_plague;
+    city_plagues().locusts_countdown = p.countdown_after_plague;
     const int width = g_scenario.map.width;
     const int side = std::max<int>(1, p.square_side);
     int locusts = 0;
@@ -175,7 +176,7 @@ void figure_locust::update_month(int month) {
     }
 
     events::emit(event_sound_track{"plague_locusts"});
-    logs::info("[disaster] locusts hit the farms, locusts=%d countdown=%d", locusts, g_city.plagues.locusts_countdown);
+    logs::info("[disaster] locusts hit the farms, locusts=%d countdown=%d", locusts, city_plagues().locusts_countdown);
 }
 
 void __locust_start_plague() {

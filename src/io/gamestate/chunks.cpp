@@ -2,7 +2,7 @@
 #include "io/gamestate/chunks.h"
 
 #include "boilerplate.h"
-#include "city/city.h"
+#include "city/city_plagues.h"
 #include "io/chunk_serializer.h"
 #include "platform/platform.h"
 
@@ -83,7 +83,7 @@ void chunks_schema_chunk::bind_data(io_buffer* iob, size_t version) {
 // OG: saved_reserved_1, empire locked, 4 figure name counters, city_frogs_countdown, pyramid_speedup_countdown.
 void junk7a_chunk::bind_data(io_buffer* iob, size_t version) {
     iob->bind____skip(24);
-    iob->bind(BIND_SIGNATURE_INT32, &g_city.plagues.frogs_countdown);
+    iob->bind(BIND_SIGNATURE_INT32, &city_plagues().frogs_countdown);
     iob->bind____skip(4);
 }
 
@@ -201,7 +201,7 @@ void junk11_chunk::bind_data(io_buffer* iob, size_t version) {
 
 // OG: mummies_max, difficulty.
 void junk18_chunk::bind_data(io_buffer* iob, size_t version) {
-    iob->bind(BIND_SIGNATURE_INT32, &g_city.plagues.mummies_max);
+    iob->bind(BIND_SIGNATURE_INT32, &city_plagues().mummies_max);
     iob->bind____skip(4);
 }
 

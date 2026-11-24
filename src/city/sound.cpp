@@ -13,6 +13,7 @@ city_sound_t& city_sound() {
 class city_sound_system : public sim_system {
 public:
     const char* name() const override { return "city_sound"; }
+    void on_reset() override { city_sound().reset(); }
     void push_save_sections(int file_version) override {
         if (file_version >= 203) {
             g_chunk_io.push_chunk<city_sound_chunk>(city_sound_chunk::size, false);
@@ -23,6 +24,10 @@ public:
 void ANK_REGISTER_APPLICATION_MODULE(register_city_sound_system) {
     static city_sound_system system;
     g_simulation.register_system(&system);
+}
+
+void city_sound_t::reset() {
+    *this = {};
 }
 
 static int update_field(int8_t* field, int max_value) {

@@ -15,6 +15,7 @@ city_entertainment_t& city_entertainment() {
 class entertainment_system : public sim_system {
 public:
     const char* name() const override { return "entertainment"; }
+    void on_reset() override { city_entertainment().reset(); }
     void push_save_sections(int file_version) override {
         if (file_version >= 203) {
             g_chunk_io.push_chunk<city_entertainment_chunk>(city_entertainment_chunk::size, false);
@@ -25,6 +26,10 @@ public:
 void ANK_REGISTER_APPLICATION_MODULE(register_entertainment_system) {
     static entertainment_system system;
     g_simulation.register_system(&system);
+}
+
+void city_entertainment_t::reset() {
+    *this = {};
 }
 
 void city_entertainment_t::calculate_shows() {

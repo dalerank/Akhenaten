@@ -16,6 +16,7 @@ struct city_sound_t {
     int8_t die_citizen;
     int8_t die_soldier;
 
+    void reset();
     int update_march_enemy();
     int update_march_horse();
     int update_march_wolf();

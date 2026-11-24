@@ -18,6 +18,7 @@ struct city_entertainment_t {
     bool senet_house_message_shown;
     bool pavilion_message_shown;
 
+    void reset();
     void calculate_shows();
     int show_message_pavilion();
     int show_message_senet_house();

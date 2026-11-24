@@ -40,6 +40,7 @@ city_local_cults_t& city_local_cults() {
 class local_cults_sim_system : public sim_system {
 public:
     const char* name() const override { return "local_cults"; }
+    void on_reset() override { city_local_cults().reset(); }
     void on_month() override { city_local_cults().advance_month(); }
     void push_save_sections(int file_version) override { g_chunk_io.push_chunk<local_cults_chunk>(64, false); }
 };

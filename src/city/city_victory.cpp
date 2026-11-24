@@ -25,6 +25,7 @@ city_victory_t& city_victory() {
 class victory_system : public sim_system {
 public:
     const char* name() const override { return "victory"; }
+    void on_reset() override { city_victory().reset(); }
     void on_day() override { city_victory().victory_check(); }
 };
 

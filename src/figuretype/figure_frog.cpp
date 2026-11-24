@@ -3,6 +3,7 @@
 #include "building/building.h"
 #include "building/building_house.h"
 #include "city/city.h"
+#include "city/city_plagues.h"
 #include "city/city_message.h"
 #include "city/city_warnings.h"
 #include "core/calc.h"
@@ -118,13 +119,13 @@ void figure_frog::infest_house(building& b) {
     d.population = 0;
     // OG keeps the house sick for whole months of the frog countdown; our infestation counts days.
     const int months
-      = g_city.plagues.frogs_countdown / simulation_time_t::ticks_in_day / simulation_time_t::days_in_month;
+      = city_plagues().frogs_countdown / simulation_time_t::ticks_in_day / simulation_time_t::days_in_month;
     d.frog_infest_days = (uint8_t)calc_bound(std::max(1, months) * simulation_time_t::days_in_month, 1, 255);
 }
 
 void figure_frog::start_plague(int amount) {
     const auto& p = current_params();
-    g_city.plagues.frogs_countdown = amount * p.ticks_per_amount;
+    city_plagues().frogs_countdown = amount * p.ticks_per_amount;
 
     std::vector<building_house*> houses;
     int level = 0;
@@ -154,7 +155,7 @@ void figure_frog::start_plague(int amount) {
 
     events::emit(event_sound_track{"plague_frogs"});
     g_city.change_happiness(-p.happiness_loss);
-    logs::info("[disaster] frogs amount=%d countdown=%d target=%d", amount, g_city.plagues.frogs_countdown, target);
+    logs::info("[disaster] frogs amount=%d countdown=%d target=%d", amount, city_plagues().frogs_countdown, target);
 }
 
 void figure_frog::on_create() {
