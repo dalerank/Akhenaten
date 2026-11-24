@@ -98,9 +98,9 @@ int figure_rioter::collapse_building() {
             }
         }
 
-        city_message_apply_sound_interval(MESSAGE_CAT_RIOT_COLLAPSE);
+        message_manager().apply_sound_interval(MESSAGE_CAT_RIOT_COLLAPSE);
         messages::popup("message_collapsed_building", b->type, grid_offset);
-        city_message_increase_category_count(MESSAGE_CAT_RIOT_COLLAPSE);
+        message_manager().increase_category_count(MESSAGE_CAT_RIOT_COLLAPSE);
 
         auto bmain = b->main();
         bmain->destroy_by_fire();

@@ -501,8 +501,8 @@ void building_alexandria_library::finish_all() {
         }
     }
     refresh_part_images();
-    city_message &message = city_message_post_with_popup_delay(
-        MESSAGE_CAT_MONUMENTS, true, "alex_library_congratulations", type(), tile().grid_offset());
+    city_message& message = message_manager().post_with_popup_delay(MESSAGE_CAT_MONUMENTS, true,
+      "alex_library_congratulations", type(), tile().grid_offset());
     message.hide_img = true;
 }
 

@@ -1124,7 +1124,7 @@ void building_pyramid::post_completion_message() {
         congrats = "bent_pyramid_congratulations";
     }
     city_message& message
-      = city_message_post_with_popup_delay(MESSAGE_CAT_MONUMENTS, true, congrats, type(), tile().grid_offset());
+      = message_manager().post_with_popup_delay(MESSAGE_CAT_MONUMENTS, true, congrats, type(), tile().grid_offset());
     message.hide_img = true;
 }
 

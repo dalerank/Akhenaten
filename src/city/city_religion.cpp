@@ -322,7 +322,7 @@ bool gods_system::PTAH_warehouse_destruction() {
     if (max_building == nullptr) {
         return false;
     }
-    //    city_message_disable_sound_for_next_message();
+    //    message_manager().disable_sound_for_next_message();
     //    city_message_post(false, MESSAGE_FIRE, max_building->type, max_building->tile.grid_offset());
     max_building->base.destroy_by_fire();
     map_routing_update_land();

@@ -188,7 +188,7 @@ void population_system::reached_milestone(bool force) {
     xstring message;
 
     for (const auto& ms: city_population_rules.milestones) {
-        if (_state.current >= ms.pop && (!city_message_mark_population_shown(ms.pop) || force)) {
+        if (_state.current >= ms.pop && (!message_manager().mark_population_shown(ms.pop) || force)) {
             message = ms.message;
         }
     }

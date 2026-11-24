@@ -197,11 +197,11 @@ void __test_request_dispatch_by_tag(int tag) {
 ANK_FUNCTION_1(__test_request_dispatch_by_tag);
 
 int __test_last_message_eventmsg_phrase_id() {
-    const int n = city_message_count();
+    const int n = message_manager().count();
     if (n <= 0) {
         return -1;
     }
-    return city_message_get(n - 1).eventmsg_phrase_id;
+    return message_manager().get(n - 1).eventmsg_phrase_id;
 }
 ANK_FUNCTION(__test_last_message_eventmsg_phrase_id);
 

@@ -1117,8 +1117,8 @@ void building_mausoleum::update_day() {
     scrub_dead_workers(runtime_data().workers);
     if (get_progress(nullptr) >= 100) {
         finish_all();
-        city_message &message = city_message_post_with_popup_delay(
-            MESSAGE_CAT_MONUMENTS, true, "mausoleum_congratulations", type(), tile().grid_offset());
+        city_message& message = message_manager().post_with_popup_delay(MESSAGE_CAT_MONUMENTS, true,
+          "mausoleum_congratulations", type(), tile().grid_offset());
         message.hide_img = true;
     }
 }

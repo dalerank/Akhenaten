@@ -90,7 +90,7 @@ static int request_pharaoh_shift(const event_ph_t& event) {
 
 static void request_post(const event_ph_t& event, int caller_event_id, int body_p) {
     const int shift = request_pharaoh_shift(event);
-    city_message_post_full(true, "message_template_request", &event, caller_event_id,
+    message_manager().post_full(true, "message_template_request", &event, caller_event_id,
       PHRASE_general_request_title_P + shift, body_p + shift, PHRASE_general_request_no_reason_P_A + shift * 3,
       event.event_id, 0);
 }
@@ -300,8 +300,8 @@ static void troops_request_post(const event_ph_t& e, int phrase_offset) {
     const int base = city_asks ? PHRASE_egyptian_city_attacked_title_P : PHRASE_distant_battle_title_P;
     const int shift = request_pharaoh_shift(e);
     const int reason = city_asks ? PHRASE_egyptian_city_attacked_no_reason_P_A : PHRASE_distant_battle_no_reason_P_A;
-    city_message_post_full(true, city_asks ? "message_trade_city_under_siege" : "message_distant_battle_request", &e,
-      e.parent_id, base + shift, base + phrase_offset + shift, reason + shift, e.event_id, 0);
+    message_manager().post_full(true, city_asks ? "message_trade_city_under_siege" : "message_distant_battle_request",
+      &e, e.parent_id, base + shift, base + phrase_offset + shift, reason + shift, e.event_id, 0);
 }
 
 // OG scenario_events.c troops_request_waiting: the reminders before the troops must leave.

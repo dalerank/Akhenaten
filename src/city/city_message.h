@@ -163,6 +163,14 @@ inline void describe_into(bstring256 &s, const event_message &ev) {
     s.printf("message %s", ev.message_id.c_str());
 }
 
+struct event_ph_t;
+
+// OG city_message phrases[EVENT_PHRASE_DELIVERED_AMOUNT] / [EVENT_PHRASE_BUTTONS] (gift replies).
+struct city_message_gift {
+    int delivered_amount = 0;
+    uint8_t buttons = 0;
+};
+
 struct message_manager_t {
     city_message messages[MAX_MESSAGES];
 
@@ -204,6 +212,7 @@ struct message_manager_t {
     uint32_t problem_last_click_time;
 
     short scroll_position;
+    bool should_play_sound = true;
 
     void init();
     void subscribe_events();
@@ -214,56 +223,51 @@ struct message_manager_t {
     int alloc_message(xstring template_id);
 
     city_message& post_common(bool use_popup, xstring message, int param1, int param2, int god, int bg_img);
+    void post_full(bool use_popup, xstring template_id, const event_ph_t* event, int parent_event_id, int title_id,
+      int body_id, int phrase_id, int param1, int param2, e_popup_message_category popup_cat = POPUP_MSG_NONE,
+      city_message_gift gift = {});
+    city_message& post_with_popup_delay(e_mesage_category category, bool use_popup, xstring message, int param1,
+      short param2);
+    void post_with_message_delay(e_mesage_category category, int use_popup, xstring message_type, int delay);
+
+    void disable_sound_for_next_message();
+    void apply_sound_interval(int category);
+    // Open archive entry as modal dialog (used by message-banner click, I1).
+    void mark_shown(int index);
+    void enqueue(int sequence);
+    int find_index_by_sequence(int sequence);
+    int take_queued();
+    void sort_and_compact();
+
+    int get_text_id(int message_id);
+
+    void reset_category_count(e_mesage_category category);
+    void increase_category_count(e_mesage_category category);
+    int get_category_count(e_mesage_category category);
+    void decrease_delays();
+
+    bool mark_population_shown(int population);
+
+    const city_message& get(int message_id) const;
+    void mark_read(int message_id);
+    void remove(int message_id);
+    int count();
+
+    int problem_area_count();
+    int next_problem_area_grid_offset();
+
+    void clear_scroll();
+    int get_scroll_position();
+    void set_scroll_position(int scroll_position);
+
+private:
+    void show_message_banner_for_index(int index);
+    void apply_popup_delivery(bool use_popup, e_popup_message_category popup_cat, int message_index,
+      xstring sound_template_key);
 };
 
 message_manager_t& message_manager();
 
-struct event_ph_t;
-
-void city_message_disable_sound_for_next_message(void);
-void city_message_apply_sound_interval(int category);
-// Open archive entry as modal dialog (used by message-banner click, I1).
-void city_message_mark_shown(int index);
-void city_message_enqueue(int sequence);
-
 struct event_city_message_popup {
     int index;
 };
-int city_message_find_index_by_sequence(int sequence);
-
-// OG city_message phrases[EVENT_PHRASE_DELIVERED_AMOUNT] / [EVENT_PHRASE_BUTTONS] (gift replies).
-struct city_message_gift {
-    int delivered_amount = 0;
-    uint8_t buttons = 0;
-};
-void city_message_post_full(bool use_popup, xstring template_id, const event_ph_t* event, int parent_event_id,
-  int title_id, int body_id, int phrase_id, int param1, int param2, e_popup_message_category popup_cat = POPUP_MSG_NONE,
-  city_message_gift gift = {});
-
-city_message &city_message_post_with_popup_delay(e_mesage_category category, bool use_popup, xstring message, int param1, short param2);
-void city_message_post_with_message_delay(e_mesage_category category, int use_popup, xstring message_type, int delay);
-
-int city_message_take_queued();
-void city_message_sort_and_compact(void);
-
-int city_message_get_text_id(int message_id);
-
-void city_message_reset_category_count(e_mesage_category category);
-void city_message_increase_category_count(e_mesage_category category);
-int city_message_get_category_count(e_mesage_category category);
-void city_message_decrease_delays();
-
-bool city_message_mark_population_shown(int population);
-
-const city_message& city_message_get(int message_id);
-
-void city_message_mark_read(int message_id);
-void city_message_delete(int message_id);
-int city_message_count(void);
-
-int city_message_problem_area_count(void);
-int city_message_next_problem_area_grid_offset(void);
-
-void city_message_clear_scroll(void);
-int city_message_scroll_position(void);
-void city_message_set_scroll_position(int scroll_position);

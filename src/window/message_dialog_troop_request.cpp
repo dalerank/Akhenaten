@@ -15,7 +15,7 @@ void ui::message_dialog_troop_request::init_data(xstring text_id, int message_id
         return;
     }
 
-    const city_message &city_msg = city_message_get(message_id);
+    const city_message& city_msg = message_manager().get(message_id);
     image_desc img_desc;
     if (city_msg.background_img && city_msg.background_img == messages::IMAGE_FROM_SCHEME) {
         const lang_message &msg = lang_get_message(text_id);

@@ -19,7 +19,7 @@ void ui::message_dialog_imperial::draw_city_message_text(const lang_message& msg
     bstring1024 header;
     format_city_message_header(header);
 
-    const auto& city_msg = city_message_get(message_id);
+    const auto& city_msg = message_manager().get(message_id);
     bstring1024 full_text;
     int resource_image_id = resource_image(city_msg.req_resource);
 

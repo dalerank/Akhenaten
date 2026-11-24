@@ -185,7 +185,7 @@ void GamestateLoadDetail::post_load() {
     }
 
     // city messages
-    city_message_clear_scroll();
+    message_manager().clear_scroll();
 
     // city sounds
     sound_city_init();

@@ -13,7 +13,8 @@ ANK_GLOBAL_OBJECT(message_manager(), __city_messages, consecutive_message_delay,
   current_message_id, problem_count, problem_index);
 
 void __city_message_post_with_popup_delay(int category, bool force_popup, xstring text, int param1, int param2, bool hide_img, xstring help_link) {
-    city_message &msg = city_message_post_with_popup_delay((e_mesage_category)category, force_popup, text, param1, (short)param2);
+    city_message& msg
+      = message_manager().post_with_popup_delay((e_mesage_category)category, force_popup, text, param1, (short)param2);
     msg.hide_img = hide_img;
     if (!help_link.empty()) {
         msg.help_text_id = lang_get_message_uid(help_link);

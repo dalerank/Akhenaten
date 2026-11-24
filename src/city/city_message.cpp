@@ -27,8 +27,6 @@ message_manager_t& message_manager() {
     return xvalue<message_manager_t>::ref();
 }
 
-static bool should_play_sound = true;
-
 struct popup_key_map_entry {
     pcstr key;
     e_popup_message_category cat;
@@ -192,7 +190,7 @@ static events::session_subscriber g_message_manager_session(&message_manager_sub
 class messages_system : public sim_system {
 public:
     const char* name() const override { return "messages"; }
-    void on_month() override { city_message_decrease_delays(); }
+    void on_month() override { message_manager().decrease_delays(); }
 
     void push_save_sections(int file_version) override {
         g_chunk_io.push_chunk<messages_chunk>(48000, false);
@@ -292,16 +290,6 @@ static void fill_from_event(city_message &msg, const event_ph_t *event, int pare
     }
 }
 
-static void enqueue_message(int sequence) {
-    auto& data = message_manager();
-    for (int i = 0; i < MAX_MESSAGES_QUEUE; i++) {
-        if (!data.queue[i]) {
-            data.queue[i] = sequence;
-            break;
-        }
-    }
-}
-
 static void play_sound(const lang_message &template_id) {
     if (template_id.urgent) {
         events::emit(event_sound_effect{SOUND_EFFECT_FANFARE_URGENT});
@@ -310,30 +298,34 @@ static void play_sound(const lang_message &template_id) {
     }
 }
 
-void city_message_mark_shown(int index) {
-    auto& data = message_manager();
-    data.consecutive_message_delay = 5;
-    data.messages[index].is_read = true;
+void message_manager_t::mark_shown(int index) {
+    consecutive_message_delay = 5;
+    messages[index].is_read = true;
 }
 
-void city_message_enqueue(int sequence) {
-    enqueue_message(sequence);
+void message_manager_t::enqueue(int sequence) {
+    for (int i = 0; i < MAX_MESSAGES_QUEUE; i++) {
+        if (!queue[i]) {
+            queue[i] = sequence;
+            break;
+        }
+    }
 }
 
-int city_message_find_index_by_sequence(int sequence) {
+int message_manager_t::find_index_by_sequence(int sequence) {
     if (sequence < 0) {
         return -1;
     }
     for (int i = 0; i < MAX_MESSAGES; i++) {
-        if (message_manager().messages[i].MM_text_id && message_manager().messages[i].sequence == sequence) {
+        if (messages[i].MM_text_id && messages[i].sequence == sequence) {
             return i;
         }
     }
     return -1;
 }
 
-static void show_message_banner_for_index(int index) {
-    city_message& msg = message_manager().messages[index];
+void message_manager_t::show_message_banner_for_index(int index) {
+    city_message& msg = messages[index];
     xstring title;
     if (msg.eventmsg_title_id >= 0) {
         title = g_scenario.events.msg_text(msg.eventmsg_title_id, 0);
@@ -347,7 +339,8 @@ static void show_message_banner_for_index(int index) {
     events::emit(event_city_message_banner{title.c_str(), msg.sequence});
 }
 
-static void apply_popup_delivery(bool use_popup, e_popup_message_category popup_cat, int message_index, xstring sound_template_key) {
+void message_manager_t::apply_popup_delivery(bool use_popup, e_popup_message_category popup_cat, int message_index,
+  xstring sound_template_key) {
     if (use_popup && popup_messages_want_banner(popup_cat)) {
         show_message_banner_for_index(message_index);
         // I3: quiet UI chime instead of fanfare on banner path.
@@ -364,30 +357,28 @@ static void apply_popup_delivery(bool use_popup, e_popup_message_category popup_
     should_play_sound = true;
 }
 
-void city_message_disable_sound_for_next_message(void) {
+void message_manager_t::disable_sound_for_next_message() {
     should_play_sound = false;
 }
 
-void city_message_apply_sound_interval(int category) {
-    auto& data = message_manager();
+void message_manager_t::apply_sound_interval(int category) {
     time_millis now = time_get_millis();
-    if (now - data.last_sound_time[category] <= 15000) {
-        city_message_disable_sound_for_next_message();
+    if (now - last_sound_time[category] <= 15000) {
+        disable_sound_for_next_message();
     } else {
-        data.last_sound_time[category] = now;
+        last_sound_time[category] = now;
     }
 }
 
-void city_message_post_full(bool use_popup, xstring template_id, const event_ph_t* event, int parent_event_id,
+void message_manager_t::post_full(bool use_popup, xstring template_id, const event_ph_t* event, int parent_event_id,
   int title_id, int body_id, int phrase_id, int param1, int param2, e_popup_message_category popup_cat,
   city_message_gift gift) {
-    auto& data = message_manager();
-    int id = data.alloc_message(template_id);
+    int id = alloc_message(template_id);
     if (id < 0) {
         return;
     }
 
-    city_message &msg = data.messages[id];
+    city_message& msg = messages[id];
     msg.eventmsg_title_id = title_id;
     msg.eventmsg_body_id = body_id;
     msg.eventmsg_phrase_id = phrase_id;
@@ -429,52 +420,51 @@ city_message &message_manager_t::post_common(bool use_popup, xstring mm_text, in
     return msg;
 }
 
-city_message &city_message_post_with_popup_delay(e_mesage_category category, bool force_popup, xstring text, int param1, short param2) {
-    auto& data = message_manager();
+city_message& message_manager_t::post_with_popup_delay(e_mesage_category category, bool force_popup, xstring text,
+  int param1, short param2) {
     bool use_popup = false;
 
-    if (data.message_delay[category] <= 0) {
+    if (message_delay[category] <= 0) {
         use_popup = true;
-        data.message_delay[category] = 12;
+        message_delay[category] = 12;
     }
     use_popup |= force_popup;
 
-    city_message &message = data.post_common(use_popup, text, param1, param2, GOD_UNKNOWN, 0);
-    data.message_count[category]++;
+    city_message& message = post_common(use_popup, text, param1, param2, GOD_UNKNOWN, 0);
+    message_count[category]++;
 
     return message;
 }
 
-void city_message_post_with_message_delay(e_mesage_category category, int use_popup, xstring message_type, int delay) {
-    auto& data = message_manager();
+void message_manager_t::post_with_message_delay(e_mesage_category category, int use_popup, xstring message_type,
+  int delay) {
     if (category == MESSAGE_CAT_FISHING_BLOCKED || category == MESSAGE_CAT_NO_WORKING_DOCK) {
         // bug in the original game: delays for 'fishing blocked' and 'no working dock'
         // are stored in message_count with manual countdown
-        if (data.message_count[category] > 0) {
-            data.message_count[category]--;
+        if (message_count[category] > 0) {
+            message_count[category]--;
         } else {
-            data.message_count[category] = delay;
-            data.post_common(use_popup, message_type, 0, 0, GOD_UNKNOWN, 0);
+            message_count[category] = delay;
+            post_common(use_popup, message_type, 0, 0, GOD_UNKNOWN, 0);
         }
     } else {
-        if (data.message_delay[category] <= 0) {
-            data.message_delay[category] = delay;
-            data.post_common(use_popup, message_type, 0, 0, GOD_UNKNOWN, 0);
+        if (message_delay[category] <= 0) {
+            message_delay[category] = delay;
+            post_common(use_popup, message_type, 0, 0, GOD_UNKNOWN, 0);
         }
     }
 }
 
-int city_message_take_queued() {
-    auto& data = message_manager();
-    if (data.consecutive_message_delay > 0) {
-        data.consecutive_message_delay--;
+int message_manager_t::take_queued() {
+    if (consecutive_message_delay > 0) {
+        consecutive_message_delay--;
         return -1;
     }
     int sequence = 0;
     for (int i = 0; i < MAX_MESSAGES_QUEUE; i++) {
-        if (data.queue[i]) {
-            sequence = data.queue[i];
-            data.queue[i] = 0;
+        if (queue[i]) {
+            sequence = queue[i];
+            queue[i] = 0;
             break;
         }
     }
@@ -482,117 +472,136 @@ int city_message_take_queued() {
         return -1;
     int message_id = -1;
     for (int i = 0; i < 999; i++) {
-        if (!data.messages[i].MM_text_id)
+        if (!messages[i].MM_text_id)
             return -1;
-        if (data.messages[i].sequence == sequence) {
+        if (messages[i].sequence == sequence) {
             message_id = i;
             break;
         }
     }
     if (message_id >= 0) {
-        city_message_mark_shown(message_id);
+        mark_shown(message_id);
     }
     return message_id;
 }
 
-void city_message_sort_and_compact(void) {
-    auto& data = message_manager();
+void message_manager_t::sort_and_compact() {
     for (int i = 0; i < MAX_MESSAGES; i++) {
         for (int a = 0; a < MAX_MESSAGES - 1; a++) {
             int swap = 0;
-            if (data.messages[a].MM_text_id) {
-                if (data.messages[a].sequence < data.messages[a + 1].sequence) {
-                    if (data.messages[a + 1].MM_text_id)
+            if (messages[a].MM_text_id) {
+                if (messages[a].sequence < messages[a + 1].sequence) {
+                    if (messages[a + 1].MM_text_id)
                         swap = 1;
                 }
-            } else if (data.messages[a + 1].MM_text_id)
+            } else if (messages[a + 1].MM_text_id)
                 swap = 1;
 
             if (swap) {
-                city_message tmp_message = data.messages[a];
-                data.messages[a] = data.messages[a + 1];
-                data.messages[a + 1] = tmp_message;
+                city_message tmp_message = messages[a];
+                messages[a] = messages[a + 1];
+                messages[a + 1] = tmp_message;
             }
         }
     }
-    data.total_messages = 0;
+    total_messages = 0;
     for (int i = 0; i < MAX_MESSAGES; i++) {
-        if (data.messages[i].MM_text_id)
-            data.total_messages++;
+        if (messages[i].MM_text_id)
+            total_messages++;
     }
 }
 
-int city_message_get_text_id(int message_id) {
+int message_manager_t::get_text_id(int message_id) {
     return message_id;
 }
 
-void city_message_reset_category_count(e_mesage_category category) {
-    auto& data = message_manager();
-    data.message_count[category] = 0;
+void message_manager_t::reset_category_count(e_mesage_category category) {
+    message_count[category] = 0;
 }
-void city_message_increase_category_count(e_mesage_category category) {
-    auto& data = message_manager();
-    data.message_count[category]++;
+void message_manager_t::increase_category_count(e_mesage_category category) {
+    message_count[category]++;
 }
-int city_message_get_category_count(e_mesage_category category) {
-    auto& data = message_manager();
-    return data.message_count[category];
+int message_manager_t::get_category_count(e_mesage_category category) {
+    return message_count[category];
 }
 
-void city_message_decrease_delays(void) {
-    auto& data = message_manager();
+void message_manager_t::decrease_delays() {
     for (int i = 0; i < MESSAGE_CAT_SIZE; i++) {
-        if (data.message_delay[i] > 0)
-            data.message_delay[i]--;
+        if (message_delay[i] > 0)
+            message_delay[i]--;
     }
 }
 
-bool city_message_mark_population_shown(int population) {
-    auto& data = message_manager();
+bool message_manager_t::mark_population_shown(int population) {
     bool lastv = false;
     switch (population) {
-    case 100: lastv = data.population_shown.pop500; data.population_shown.pop100 = true; return lastv;
-    case 500: lastv = data.population_shown.pop500; data.population_shown.pop500 = true; return lastv;
-    case 1000: lastv = data.population_shown.pop1000; data.population_shown.pop1000 = true; return lastv;
-    case 2000: lastv = data.population_shown.pop2000; data.population_shown.pop2000 = true; return lastv;
-    case 3000: lastv = data.population_shown.pop3000; data.population_shown.pop3000 = true; return lastv;
-    case 5000: lastv = data.population_shown.pop5000; data.population_shown.pop5000 = true; return lastv;
-    case 10000: lastv = data.population_shown.pop10000; data.population_shown.pop10000 = true; return lastv;
-    case 15000: lastv = data.population_shown.pop15000; data.population_shown.pop15000 = true; return lastv;
-    case 20000: lastv = data.population_shown.pop20000; data.population_shown.pop20000 = true; return lastv;
-    case 25000: lastv = data.population_shown.pop25000; data.population_shown.pop25000 = true; return lastv;
+    case 100:
+        lastv = population_shown.pop500;
+        population_shown.pop100 = true;
+        return lastv;
+    case 500:
+        lastv = population_shown.pop500;
+        population_shown.pop500 = true;
+        return lastv;
+    case 1000:
+        lastv = population_shown.pop1000;
+        population_shown.pop1000 = true;
+        return lastv;
+    case 2000:
+        lastv = population_shown.pop2000;
+        population_shown.pop2000 = true;
+        return lastv;
+    case 3000:
+        lastv = population_shown.pop3000;
+        population_shown.pop3000 = true;
+        return lastv;
+    case 5000:
+        lastv = population_shown.pop5000;
+        population_shown.pop5000 = true;
+        return lastv;
+    case 10000:
+        lastv = population_shown.pop10000;
+        population_shown.pop10000 = true;
+        return lastv;
+    case 15000:
+        lastv = population_shown.pop15000;
+        population_shown.pop15000 = true;
+        return lastv;
+    case 20000:
+        lastv = population_shown.pop20000;
+        population_shown.pop20000 = true;
+        return lastv;
+    case 25000:
+        lastv = population_shown.pop25000;
+        population_shown.pop25000 = true;
+        return lastv;
     default:
         return false;
     }
 }
 
-const city_message& city_message_get(int message_id) {
-    const auto& data = message_manager();
-    return data.messages[message_id];
+const city_message& message_manager_t::get(int message_id) const {
+    return messages[message_id];
 }
 
-void city_message_mark_read(int message_id) {
-    auto& data = message_manager();
-    data.messages[message_id].is_read = 1;
+void message_manager_t::mark_read(int message_id) {
+    messages[message_id].is_read = 1;
 }
 
-void city_message_delete(int message_id) {
-    auto& data = message_manager();
-    data.messages[message_id].MM_text_id = 0;
-    city_message_sort_and_compact();
+void message_manager_t::remove(int message_id) {
+    messages[message_id].MM_text_id = 0;
+    sort_and_compact();
 }
 
-int city_message_count() {
-    auto& data = message_manager();
-    return data.total_messages;
+int message_manager_t::count() {
+    return total_messages;
 }
 
-int city_message_problem_area_count() {
-    auto& data = message_manager();
-    return data.problem_count;
+int message_manager_t::problem_area_count() {
+    return problem_count;
 }
 
-int has_problem_area(const city_message* msg, int lang_msg_type) {
+static int has_problem_area(const city_message* msg, int lang_msg_type) {
     if (lang_msg_type == MESSAGE_TYPE_DISASTER)
         return 1;
 
@@ -609,43 +618,42 @@ int has_problem_area(const city_message* msg, int lang_msg_type) {
     return 0;
 }
 
-int city_message_next_problem_area_grid_offset() {
-    auto& data = message_manager();
+int message_manager_t::next_problem_area_grid_offset() {
     time_millis now = time_get_millis();
-    if (now - data.problem_last_click_time > 3000)
-        data.problem_index = 0;
+    if (now - problem_last_click_time > 3000)
+        problem_index = 0;
 
-    data.problem_last_click_time = now;
+    problem_last_click_time = now;
 
-    city_message_sort_and_compact();
-    data.problem_count = 0;
+    sort_and_compact();
+    problem_count = 0;
     for (int i = 0; i < 999; i++) {
-        city_message* msg = &data.messages[i];
+        city_message* msg = &messages[i];
         if (msg->MM_text_id && msg->year >= g_simulation.simtime.year - 1) {
-            const lang_message& lang_msg = lang_get_message(city_message_get_text_id(msg->MM_text_id));
+            const lang_message& lang_msg = lang_get_message(get_text_id(msg->MM_text_id));
             int lang_msg_type = lang_msg.message_type;
             if (has_problem_area(msg, lang_msg_type))
-                data.problem_count++;
+                problem_count++;
         }
     }
-    if (data.problem_count <= 0) {
-        data.problem_index = 0;
+    if (problem_count <= 0) {
+        problem_index = 0;
         return 0;
     }
-    if (data.problem_index >= data.problem_count)
-        data.problem_index = 0;
+    if (problem_index >= problem_count)
+        problem_index = 0;
 
     int index = 0;
     int current_year = g_simulation.simtime.year;
     for (int i = 0; i < 999; i++) {
-        city_message* msg = &data.messages[i];
+        city_message* msg = &messages[i];
         if (msg->MM_text_id && msg->year >= current_year - 1) {
-            int text_id = city_message_get_text_id(msg->MM_text_id);
+            int text_id = get_text_id(msg->MM_text_id);
             int lang_msg_type = lang_get_message(text_id).message_type;
             if (has_problem_area(msg, lang_msg_type)) {
                 index++;
-                if (data.problem_index < index) {
-                    data.problem_index++;
+                if (problem_index < index) {
+                    problem_index++;
                     int grid_offset = msg->param2;
                     if (lang_msg_type == MESSAGE_TYPE_INVASION) {
                         int formation_grid_offset = formation_grid_offset_for_invasion(msg->param1);
@@ -660,15 +668,12 @@ int city_message_next_problem_area_grid_offset() {
     return 0;
 }
 
-void city_message_clear_scroll(void) {
-    auto& data = message_manager();
-    data.scroll_position = 0;
+void message_manager_t::clear_scroll() {
+    scroll_position = 0;
 }
-int city_message_scroll_position(void) {
-    auto& data = message_manager();
-    return data.scroll_position;
+int message_manager_t::get_scroll_position() {
+    return scroll_position;
 }
-void city_message_set_scroll_position(int scroll_position) {
-    auto& data = message_manager();
-    data.scroll_position = scroll_position;
+void message_manager_t::set_scroll_position(int scroll_position) {
+    scroll_position = scroll_position;
 }

@@ -43,7 +43,7 @@ void ui::message_dialog_god::init_data(xstring text_id, int message_id, void (*b
     message_dialog_base::init_data(text_id, message_id, background_callback);
 
     if (message_id != -1) {
-        const city_message& city_msg = city_message_get(message_id);
+        const city_message& city_msg = message_manager().get(message_id);
         if (city_msg.god != GOD_UNKNOWN) {
             god = (e_god)city_msg.god;
         }

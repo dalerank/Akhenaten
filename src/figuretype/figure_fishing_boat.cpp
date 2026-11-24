@@ -416,7 +416,8 @@ void figure_fishing_boat::figure_action_remake() {
             advance_action(ACTION_4_FISHING_BOAT_AT_WHARF);
             base.wait_ticks = 0;
         } else if (direction() == DIR_FIGURE_CAN_NOT_REACH) {
-            city_message_post_with_message_delay(MESSAGE_CAT_FISHING_BLOCKED, 1, "message_fishing_boats_cant_navigate", 12);
+            message_manager().post_with_message_delay(MESSAGE_CAT_FISHING_BLOCKED, 1,
+              "message_fishing_boats_cant_navigate", 12);
             poof();
         }
         break;

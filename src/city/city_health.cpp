@@ -64,7 +64,7 @@ void health_system::start_disease(int total_people, bool force, int plague_peopl
             _ctx.gods.bast_curse_active = false;
         }
         change(10);
-        city_message_post_with_popup_delay(MESSAGE_CAT_HEALTH_PROBLEM, false, "message_malaria", 0, 0);
+        message_manager().post_with_popup_delay(MESSAGE_CAT_HEALTH_PROBLEM, false, "message_malaria", 0, 0);
         return;
     }
 
@@ -148,9 +148,11 @@ void health_system::start_disease(int total_people, bool force, int plague_peopl
     e_building_type btype = warn_building->type;
     int grid_offset = warn_building->tile.grid_offset();
     if (_state.num_mortuary_workers > 0) {
-        city_message_post_with_popup_delay(MESSAGE_CAT_HEALTH_PROBLEM, force, "message_disease", btype, grid_offset);
+        message_manager().post_with_popup_delay(MESSAGE_CAT_HEALTH_PROBLEM, force, "message_disease", btype,
+          grid_offset);
     } else {
-        city_message_post_with_popup_delay(MESSAGE_CAT_HEALTH_PROBLEM, force, "message_disease_strikes", btype, grid_offset);
+        message_manager().post_with_popup_delay(MESSAGE_CAT_HEALTH_PROBLEM, force, "message_disease_strikes", btype,
+          grid_offset);
     }
 }
 

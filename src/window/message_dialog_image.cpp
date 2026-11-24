@@ -10,7 +10,7 @@ void ui::message_dialog_image::init_data(xstring text_id, int message_id, void (
 
     background_img = 0;
     if (message_id != -1) {
-        const city_message& city_msg = city_message_get(message_id);
+        const city_message& city_msg = message_manager().get(message_id);
         if (city_msg.background_img) {
             background_img = city_msg.background_img;
         }

@@ -28,16 +28,18 @@
 #include "game/difficulty.h"
 
 void fire_building(building *b) {
-    city_message_apply_sound_interval(MESSAGE_CAT_FIRE);
-    city_message_post_with_popup_delay(MESSAGE_CAT_FIRE, false, "message_fire_in_the_village", b->type, b->tile.grid_offset());
+    message_manager().apply_sound_interval(MESSAGE_CAT_FIRE);
+    message_manager().post_with_popup_delay(MESSAGE_CAT_FIRE, false, "message_fire_in_the_village", b->type,
+      b->tile.grid_offset());
 
     game_undo_disable();
     b->destroy_by_fire();
 }
 
 void city_maintenance_t::collapse_building(building *b) {
-    city_message_apply_sound_interval(MESSAGE_CAT_COLLAPSE);
-    city_message_post_with_popup_delay(MESSAGE_CAT_COLLAPSE, false, "message_collapsed_building", b->type, b->tile.grid_offset());
+    message_manager().apply_sound_interval(MESSAGE_CAT_COLLAPSE);
+    message_manager().post_with_popup_delay(MESSAGE_CAT_COLLAPSE, false, "message_collapsed_building", b->type,
+      b->tile.grid_offset());
 
     game_undo_disable();
     b->destroy_by_collapse();
@@ -111,8 +113,9 @@ void city_maintenance_t::destroy_by_enemy(building *b) {
 }
 
 void city_maintenance_t::flood_building(building *b) {
-    city_message_apply_sound_interval(MESSAGE_CAT_COLLAPSE);
-    city_message_post_with_popup_delay(MESSAGE_CAT_COLLAPSE, false, "message_flooded_building", b->type, b->tile.grid_offset());
+    message_manager().apply_sound_interval(MESSAGE_CAT_COLLAPSE);
+    message_manager().post_with_popup_delay(MESSAGE_CAT_COLLAPSE, false, "message_flooded_building", b->type,
+      b->tile.grid_offset());
 
     game_undo_disable();
     b->destroy_by_flooded();

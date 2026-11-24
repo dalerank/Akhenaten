@@ -334,9 +334,9 @@ void figure_trade_ship::figure_action() {
             route_remove();
         } else if (direction() == DIR_FIGURE_CAN_NOT_REACH) {
             poof();
-            if (!city_message_get_category_count(MESSAGE_CAT_BLOCKED_DOCK)) {
+            if (!message_manager().get_category_count(MESSAGE_CAT_BLOCKED_DOCK)) {
                 events::emit(event_message{ true, "message_navigation_impossible", 0, 0, SOURCE_LOCATION });
-                city_message_increase_category_count(MESSAGE_CAT_BLOCKED_DOCK);
+                message_manager().increase_category_count(MESSAGE_CAT_BLOCKED_DOCK);
             }
         }
 
@@ -425,7 +425,7 @@ void figure_trade_ship::figure_action() {
         }
 
         base.animctx.frame = 0;
-        city_message_reset_category_count(MESSAGE_CAT_BLOCKED_DOCK);
+        message_manager().reset_category_count(MESSAGE_CAT_BLOCKED_DOCK);
         break;
     }
 

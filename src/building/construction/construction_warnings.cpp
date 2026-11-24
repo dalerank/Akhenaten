@@ -228,7 +228,7 @@ namespace {
             if (shrine && map_has_road_access_nearby(b.tile, b.params().road_access_distance)) {
                 return;
             }
-            if (city_message_problem_area_count() >= rules.max_problem_messages) {
+            if (message_manager().problem_area_count() >= rules.max_problem_messages) {
                 return;
             }
             warn(shrine ? rules.shrine_road_access : rules.road_access);

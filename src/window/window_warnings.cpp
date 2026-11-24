@@ -204,7 +204,7 @@ int window_warnings::handle_mouse(const mouse *m) {
             if (m->x >= center - box_width / 2 && m->x <= center + box_width / 2
                 && m->y >= offset && m->y <= offset + message_width) {
                 const int seq = warnings[i].message_sequence;
-                const int msg_index = city_message_find_index_by_sequence(seq);
+                const int msg_index = message_manager().find_index_by_sequence(seq);
                 warnings.erase(warnings.begin() + i);
                 if (msg_index >= 0) {
                     window_city_message_show(msg_index);

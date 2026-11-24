@@ -656,7 +656,7 @@ void labor_system::check_employment() {
 
     // workers needed message
     if (!orig_needed && _state.workers_needed > 0) {
-        city_message_post_with_message_delay(MESSAGE_CAT_WORKERS_NEEDED, 1, "message_employees_needed", 6);
+        message_manager().post_with_message_delay(MESSAGE_CAT_WORKERS_NEEDED, 1, "message_employees_needed", 6);
     }
 }
 

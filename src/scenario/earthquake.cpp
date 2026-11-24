@@ -125,7 +125,7 @@ namespace {
         quake.ticks = 0;
         advance_earthquake_to_tile(quake.locations[0], quake.locations[1]);
         const int grid_offset = MAP_OFFSET(quake.locations[0], quake.locations[1]);
-        city_message_post_full(true, "message_earthquake", &e, -1, PHRASE_earthquake_title,
+        message_manager().post_full(true, "message_earthquake", &e, -1, PHRASE_earthquake_title,
           PHRASE_earthquake_initial_announcement, PHRASE_earthquake_no_reason_A, 0, grid_offset);
 
         logs::info("[earthquake] start event=%d at %d,%d", e.event_id, quake.locations[0], quake.locations[1]);

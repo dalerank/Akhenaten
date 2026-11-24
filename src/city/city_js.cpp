@@ -318,7 +318,10 @@ int __city_workers_diff() {
 }
 ANK_FUNCTION(__city_workers_diff)
 
-tile2i __city_message_next_problem_area_grid_offset() { return tile2i(city_message_next_problem_area_grid_offset()); } ANK_FUNCTION(__city_message_next_problem_area_grid_offset)
+tile2i __city_message_next_problem_area_grid_offset() {
+    return tile2i(message_manager().next_problem_area_grid_offset());
+}
+ANK_FUNCTION(__city_message_next_problem_area_grid_offset)
 
 int __city_map_entry_flag_offset() {
     return g_city.map.entry_flag.grid_offset();
@@ -330,66 +333,84 @@ int __city_map_exit_flag_offset() {
 }
 ANK_FUNCTION(__city_map_exit_flag_offset)
 
-void __city_message_sort_and_compact() { city_message_sort_and_compact(); }
+void __city_message_sort_and_compact() {
+    message_manager().sort_and_compact();
+}
 ANK_FUNCTION(__city_message_sort_and_compact)
 
-int __city_message_count() { return city_message_count(); }
+int __city_message_count() {
+    return message_manager().count();
+}
 ANK_FUNCTION(__city_message_count)
 
-int __city_message_problem_area_count() { return city_message_problem_area_count(); }
+int __city_message_problem_area_count() {
+    return message_manager().problem_area_count();
+}
 ANK_FUNCTION(__city_message_problem_area_count)
 
-int __city_message_month(int message_index) { return city_message_get(message_index).month; }
+int __city_message_month(int message_index) {
+    return message_manager().get(message_index).month;
+}
 ANK_FUNCTION_1(__city_message_month)
 
-int __city_message_year(int message_index) { return city_message_get(message_index).year; }
+int __city_message_year(int message_index) {
+    return message_manager().get(message_index).year;
+}
 ANK_FUNCTION_1(__city_message_year)
 
-bool __city_message_is_read(int message_index) { return city_message_get(message_index).is_read; }
+bool __city_message_is_read(int message_index) {
+    return message_manager().get(message_index).is_read;
+}
 ANK_FUNCTION_1(__city_message_is_read)
 
-int __city_message_eventmsg_body_id(int message_index) { return city_message_get(message_index).eventmsg_body_id; }
+int __city_message_eventmsg_body_id(int message_index) {
+    return message_manager().get(message_index).eventmsg_body_id;
+}
 ANK_FUNCTION_1(__city_message_eventmsg_body_id)
 
-int __city_message_eventmsg_title_id(int message_index) { return city_message_get(message_index).eventmsg_title_id; }
+int __city_message_eventmsg_title_id(int message_index) {
+    return message_manager().get(message_index).eventmsg_title_id;
+}
 ANK_FUNCTION_1(__city_message_eventmsg_title_id)
 
-int __city_message_mm_text_id(int message_index) { return city_message_get(message_index).MM_text_id; }
+int __city_message_mm_text_id(int message_index) {
+    return message_manager().get(message_index).MM_text_id;
+}
 ANK_FUNCTION_1(__city_message_mm_text_id)
 
 int __city_message_lang_category(int message_index) {
-    const int mm_id = city_message_get_text_id(message_index);
+    const int mm_id = message_manager().get_text_id(message_index);
     return (int)lang_get_message(mm_id).message_type;
 }
 ANK_FUNCTION_1(__city_message_lang_category)
 
 void __city_message_delete(int message_index) {
-    city_message_delete(message_index);
+    message_manager().remove(message_index);
 }
 ANK_FUNCTION_1(__city_message_delete)
 
 void __city_message_mark_read(int message_index) {
-    city_message_mark_read(message_index);
+    message_manager().mark_read(message_index);
 }
 ANK_FUNCTION_1(__city_message_mark_read)
 
 int __city_message_param1(int message_index) {
-    return city_message_get(message_index).param1;
+    return message_manager().get(message_index).param1;
 }
 ANK_FUNCTION_1(__city_message_param1)
 
 int __city_message_param2(int message_index) {
-    return city_message_get(message_index).param2;
+    return message_manager().get(message_index).param2;
 }
 ANK_FUNCTION_1(__city_message_param2)
 
 int __city_message_sequence(int message_index) {
-    return city_message_get(message_index).sequence;
+    return message_manager().get(message_index).sequence;
 }
 ANK_FUNCTION_1(__city_message_sequence)
 
 int __city_message_find_index_by_sequence(int sequence) {
-    return city_message_find_index_by_sequence(sequence);
+    return message_manager().find_index_by_sequence(sequence);
 }
 ANK_FUNCTION_1(__city_message_find_index_by_sequence)
 

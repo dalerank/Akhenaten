@@ -243,8 +243,8 @@ void campaign_carry_t::post_notice_if_needed() {
     }
 
     event_ph_t dummy{};
-    city_message_post_full(true, "message_template_general", &dummy, -1, PHRASE_troopcarryover_title,
-                           PHRASE_troopcarryover_initial_announcement, troop_carry_reason_phrase(mask), 0, 0);
+    message_manager().post_full(true, "message_template_general", &dummy, -1, PHRASE_troopcarryover_title,
+      PHRASE_troopcarryover_initial_announcement, troop_carry_reason_phrase(mask), 0, 0);
     notice_posted = 1;
 }
 

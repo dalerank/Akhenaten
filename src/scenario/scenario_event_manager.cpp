@@ -917,9 +917,8 @@ void event_manager_t::process_event_distant_battle(const event_ph_t& event, bool
   int chain_action_parent, int caller_event_id, int caller_event_var) {
     const int template_str = event.reasons[0];
     const int reason = event.reasons[1];
-    city_message_post_full(true, "message_distant_battle", &event, caller_event_id,
-        PHRASE_distant_battle_title_P, template_str, reason,
-        event.event_id, 0);
+    message_manager().post_full(true, "message_distant_battle", &event, caller_event_id, PHRASE_distant_battle_title_P,
+      template_str, reason, event.event_id, 0);
 
     g_distant_battle.init_distant_battle(event.amount.value);
     g_distant_battle.battle.city = event.city_id;
@@ -968,9 +967,9 @@ void event_manager_t::process_event_city_under_siege(const event_ph_t& event, bo
         reason = PHRASE_trade_city_siege_no_reason_A;
     }
 
-    city_message_post_full(true, "message_template_general", &copy_event, caller_event_id >= 0 ? caller_event_id : event.event_id,
-        PHRASE_trade_city_siege_title, PHRASE_trade_city_siege_announcement, reason,
-        event.event_id, cityid);
+    message_manager().post_full(true, "message_template_general", &copy_event,
+      caller_event_id >= 0 ? caller_event_id : event.event_id, PHRASE_trade_city_siege_title,
+      PHRASE_trade_city_siege_announcement, reason, event.event_id, cityid);
 }
 
 // OG building_storage.c building_storage_store_anywhere: yards and, for food, granaries take up to
@@ -1018,7 +1017,7 @@ static int gift_room(const event_ph_t& e) {
 
 static void gift_post(event_ph_t& e, int body_p, int body_c, city_message_gift gift) {
     const bool pharaoh = e.sender_faction != 0;
-    city_message_post_full(true, "message_template_gift", &e, e.parent_id,
+    message_manager().post_full(true, "message_template_gift", &e, e.parent_id,
       pharaoh ? PHRASE_gift_title_P : PHRASE_gift_title_C, pharaoh ? body_p : body_c,
       pharaoh ? PHRASE_gift_no_reason_P_A : PHRASE_gift_no_reason_C_A, e.event_id, 0, POPUP_MSG_NONE, gift);
 }
@@ -1248,9 +1247,9 @@ void event_manager_t::process_event(int id, bool via_event_trigger, int chain_ac
 
     case EVENT_TYPE_REPUTATION_INCREASE:
         g_city.kingdome.change(event.amount.value);
-        city_message_post_full(true, "message_template_general", &event, caller_event_id,
-                               PHRASE_rating_change_title_I, PHRASE_rating_change_initial_announcement_I, PHRASE_rating_change_reason_I_A,
-                               id, 0, POPUP_MSG_KINGDOM);
+        message_manager().post_full(true, "message_template_general", &event, caller_event_id,
+          PHRASE_rating_change_title_I, PHRASE_rating_change_initial_announcement_I, PHRASE_rating_change_reason_I_A,
+          id, 0, POPUP_MSG_KINGDOM);
         break;
 
     case EVENT_TYPE_SEA_TRADE_PROBLEM:
@@ -1258,9 +1257,8 @@ void event_manager_t::process_event(int id, bool via_event_trigger, int chain_ac
         if (g_city.trade.has_sea_route()) {
             g_city.trade_sys().start_sea_problems(48);
         }
-        city_message_post_full(true, "message_template_general", &event, caller_event_id,
-                               PHRASE_stormy_seas_title, PHRASE_stormy_seas_initial_announcement,
-                               PHRASE_stormy_seas_no_reason_A, id, 0);
+        message_manager().post_full(true, "message_template_general", &event, caller_event_id, PHRASE_stormy_seas_title,
+          PHRASE_stormy_seas_initial_announcement, PHRASE_stormy_seas_no_reason_A, id, 0);
         break;
 
     case EVENT_TYPE_LAND_TRADE_PROBLEM:
@@ -1268,28 +1266,26 @@ void event_manager_t::process_event(int id, bool via_event_trigger, int chain_ac
             g_city.trade_sys().start_land_problems(48);
         }
         if (g_scenario.climate == CLIMATE_DESERT) {
-            city_message_post_full(true, "message_template_general", &event, caller_event_id,
-                                   PHRASE_sandstorm_title, PHRASE_sandstorm_initial_announcement,
-                                   PHRASE_sandstorm_no_reason_A, id, 0);
+            message_manager().post_full(true, "message_template_general", &event, caller_event_id,
+              PHRASE_sandstorm_title, PHRASE_sandstorm_initial_announcement, PHRASE_sandstorm_no_reason_A, id, 0);
         } else {
-            city_message_post_full(true, "message_template_general", &event, caller_event_id,
-                                   PHRASE_landslide_title, PHRASE_landslide_initial_announcement,
-                                   PHRASE_landslide_no_reason_A, id, 0);
+            message_manager().post_full(true, "message_template_general", &event, caller_event_id,
+              PHRASE_landslide_title, PHRASE_landslide_initial_announcement, PHRASE_landslide_no_reason_A, id, 0);
         }
         break;
 
     case EVENT_TYPE_WAGE_INCREASE:
         g_city.finance_sys().raise_wages_kingdome();
-        city_message_post_full(true, "message_template_general", &event, caller_event_id,
-                               PHRASE_wage_change_title_I, PHRASE_wage_change_initial_announcement_I,
-                               PHRASE_wage_change_no_reason_I_A, id, 0, POPUP_MSG_WAGE);
+        message_manager().post_full(true, "message_template_general", &event, caller_event_id,
+          PHRASE_wage_change_title_I, PHRASE_wage_change_initial_announcement_I, PHRASE_wage_change_no_reason_I_A, id,
+          0, POPUP_MSG_WAGE);
         break;
 
     case EVENT_TYPE_WAGE_DECREASE:
         g_city.finance_sys().lower_wages_kingdome();
-        city_message_post_full(true, "message_template_general", &event, caller_event_id,
-                               PHRASE_wage_change_title_D, PHRASE_wage_change_initial_announcement_D,
-                               PHRASE_wage_change_no_reason_D_A, id, 0, POPUP_MSG_WAGE);
+        message_manager().post_full(true, "message_template_general", &event, caller_event_id,
+          PHRASE_wage_change_title_D, PHRASE_wage_change_initial_announcement_D, PHRASE_wage_change_no_reason_D_A, id,
+          0, POPUP_MSG_WAGE);
         break;
 
     case EVENT_TYPE_CONTAMINATED_WATER: {
@@ -1304,9 +1300,8 @@ void event_manager_t::process_event(int id, bool via_event_trigger, int chain_ac
                 }
                 g_city.health_sys().change(change);
             }
-            city_message_post_full(true, "message_template_general", &event, caller_event_id,
-                                   PHRASE_bad_water_title, PHRASE_bad_water_initial_announcement,
-                                   PHRASE_bad_water_no_reason_A, id, 0);
+            message_manager().post_full(true, "message_template_general", &event, caller_event_id,
+              PHRASE_bad_water_title, PHRASE_bad_water_initial_announcement, PHRASE_bad_water_no_reason_A, id, 0);
         }
         break;
 
@@ -1329,13 +1324,13 @@ void event_manager_t::process_event(int id, bool via_event_trigger, int chain_ac
                 }
             }
             if (is_rise) {
-                city_message_post_full(true, "message_template_general", &event, caller_event_id,
-                                       PHRASE_demand_change_title_I, PHRASE_demand_change_initial_announcement_I,
-                                       PHRASE_demand_change_no_reason_I_A, id, touched_city_id, POPUP_MSG_TRADE_LEVEL);
+                message_manager().post_full(true, "message_template_general", &event, caller_event_id,
+                  PHRASE_demand_change_title_I, PHRASE_demand_change_initial_announcement_I,
+                  PHRASE_demand_change_no_reason_I_A, id, touched_city_id, POPUP_MSG_TRADE_LEVEL);
             } else {
-                city_message_post_full(true, "message_template_general", &event, caller_event_id,
-                                       PHRASE_demand_change_title_D, PHRASE_demand_change_initial_announcement_D,
-                                       PHRASE_demand_change_no_reason_D_A, id, touched_city_id, POPUP_MSG_TRADE_LEVEL);
+                message_manager().post_full(true, "message_template_general", &event, caller_event_id,
+                  PHRASE_demand_change_title_D, PHRASE_demand_change_initial_announcement_D,
+                  PHRASE_demand_change_no_reason_D_A, id, touched_city_id, POPUP_MSG_TRADE_LEVEL);
             }
         }
         break;
@@ -1347,13 +1342,13 @@ void event_manager_t::process_event(int id, bool via_event_trigger, int chain_ac
             const bool is_rise = (event.type == EVENT_TYPE_PRICE_INCREASE);
             if (trade_price_change(resource, is_rise ? amount : -amount)) {
                 if (is_rise) {
-                    city_message_post_full(true, "message_template_general", &event, caller_event_id,
-                                           PHRASE_price_change_title_I, PHRASE_price_change_initial_announcement_I,
-                                           PHRASE_price_change_no_reason_I_A, id, 0, POPUP_MSG_PRICE);
+                    message_manager().post_full(true, "message_template_general", &event, caller_event_id,
+                      PHRASE_price_change_title_I, PHRASE_price_change_initial_announcement_I,
+                      PHRASE_price_change_no_reason_I_A, id, 0, POPUP_MSG_PRICE);
                 } else {
-                    city_message_post_full(true, "message_template_general", &event, caller_event_id,
-                                           PHRASE_price_change_title_D, PHRASE_price_change_initial_announcement_D,
-                                           PHRASE_price_change_no_reason_D_A, id, 0, POPUP_MSG_PRICE);
+                    message_manager().post_full(true, "message_template_general", &event, caller_event_id,
+                      PHRASE_price_change_title_D, PHRASE_price_change_initial_announcement_D,
+                      PHRASE_price_change_no_reason_D_A, id, 0, POPUP_MSG_PRICE);
                 }
             }
         }
@@ -1363,9 +1358,9 @@ void event_manager_t::process_event(int id, bool via_event_trigger, int chain_ac
             building *b = destroy_disaster_buildings(BUILDING_GOLD_MINE, event.amount.value,
                                                      e_disaster_destroy_mode::collapse);
             if (b) {
-                city_message_post_full(true, "message_template_general", &event, caller_event_id,
-                                       PHRASE_goldmine_cavein_title, PHRASE_goldmine_cavein_initial_announcement,
-                                       PHRASE_goldmine_cavein_no_reason_A, id, b->tile.grid_offset());
+                message_manager().post_full(true, "message_template_general", &event, caller_event_id,
+                  PHRASE_goldmine_cavein_title, PHRASE_goldmine_cavein_initial_announcement,
+                  PHRASE_goldmine_cavein_no_reason_A, id, b->tile.grid_offset());
             }
         }
         break;
@@ -1383,16 +1378,15 @@ void event_manager_t::process_event(int id, bool via_event_trigger, int chain_ac
     case EVENT_TYPE_FAILED_FLOOD:
         // OG floods.c floods_worsen_next_quality: -30..-100 in steps of 10, not a forced 0.
         floods().adjust_next_quality((-3 - anti_scum_random_15bit() % 8) * 10);
-        city_message_post_full(true, "message_template_general", &event, caller_event_id,
-                               PHRASE_flood_fails_title, PHRASE_flood_fails_initial_announcement,
-                               PHRASE_flood_fails_no_reason_A, id, 0, POPUP_MSG_FLOOD);
+        message_manager().post_full(true, "message_template_general", &event, caller_event_id, PHRASE_flood_fails_title,
+          PHRASE_flood_fails_initial_announcement, PHRASE_flood_fails_no_reason_A, id, 0, POPUP_MSG_FLOOD);
         break;
 
     case EVENT_TYPE_PERFECT_FLOOD:
         floods().adjust_next_quality((anti_scum_random_15bit() % 8 + 3) * 10);
-        city_message_post_full(true, "message_template_general", &event, caller_event_id,
-                               PHRASE_perfect_flood_title, PHRASE_perfect_flood_initial_announcement,
-                               PHRASE_perfect_flood_no_reason_A, id, 0, POPUP_MSG_FLOOD);
+        message_manager().post_full(true, "message_template_general", &event, caller_event_id,
+          PHRASE_perfect_flood_title, PHRASE_perfect_flood_initial_announcement, PHRASE_perfect_flood_no_reason_A, id,
+          0, POPUP_MSG_FLOOD);
         break;
 
     case EVENT_TYPE_FOREIGN_ARMY_ATTACK_WARNING: {
@@ -1400,7 +1394,7 @@ void event_manager_t::process_event(int id, bool via_event_trigger, int chain_ac
             const invader_phrases_t& phrases = invader_phrases(bedouin ? EVENT_INVADER_BEDUINS : EVENT_INVADER_ENEMY);
             const int announcement = event.reasons[0] ? event.reasons[0] : phrases.warnings[0];
             const int reason = event.reasons[1] ? event.reasons[1] : phrases.no_reason;
-            city_message_post_full(true, "message_template_general", &event, caller_event_id, phrases.title,
+            message_manager().post_full(true, "message_template_general", &event, caller_event_id, phrases.title,
               announcement, reason, id, 0);
         }
         break;
@@ -1412,9 +1406,8 @@ void event_manager_t::process_event(int id, bool via_event_trigger, int chain_ac
         break;
 
     case EVENT_TYPE_DISTANT_BATTLE_WON:
-        city_message_post_full(true, "message_template_distant_battle_won", &event, caller_event_id,
-            PHRASE_battle_won_title, PHRASE_battle_won_initial_announcement, PHRASE_battle_won_reason_A,
-            id, 0);
+        message_manager().post_full(true, "message_template_distant_battle_won", &event, caller_event_id,
+          PHRASE_battle_won_title, PHRASE_battle_won_initial_announcement, PHRASE_battle_won_reason_A, id, 0);
         break;
 
     case EVENT_TYPE_DISTANT_BATTLE:{
@@ -1424,9 +1417,9 @@ void event_manager_t::process_event(int id, bool via_event_trigger, int chain_ac
 
     case EVENT_TYPE_REPUTATION_DECREASE:
         g_city.kingdome.change(-event.amount.value);
-        city_message_post_full(true, "message_template_general", &event, caller_event_id,
-                               PHRASE_rating_change_title_I, PHRASE_rating_change_initial_announcement_I, PHRASE_rating_change_reason_I_A,
-                               id, 0);
+        message_manager().post_full(true, "message_template_general", &event, caller_event_id,
+          PHRASE_rating_change_title_I, PHRASE_rating_change_initial_announcement_I, PHRASE_rating_change_reason_I_A,
+          id, 0);
         break;
 
     case EVENT_TYPE_CITY_STATUS_CHANGE: {
@@ -1450,7 +1443,7 @@ void event_manager_t::process_event(int id, bool via_event_trigger, int chain_ac
                 if (full_empire_object* full = g_empire.ref_full_object(city->empire_object_id)) {
                     full->city_type = city->type;
                 }
-                city_message_post_full(true, "message_template_city_fell_to_enemy", &event, caller_event_id,
+                message_manager().post_full(true, "message_template_city_fell_to_enemy", &event, caller_event_id,
                   PHRASE_eg_city_falls_title, PHRASE_eg_city_falls_initial_announcement,
                   PHRASE_eg_city_falls_no_reason_A, id, city->name_id);
                 break;
@@ -1464,7 +1457,7 @@ void event_manager_t::process_event(int id, bool via_event_trigger, int chain_ac
                 if (full_empire_object* full = g_empire.ref_full_object(city->empire_object_id)) {
                     full->city_type = city->type;
                 }
-                city_message_post_full(true, "message_template_foreign_city_conquered", &event, caller_event_id,
+                message_manager().post_full(true, "message_template_foreign_city_conquered", &event, caller_event_id,
                   PHRASE_foreign_city_conquered_title, PHRASE_foreign_city_conquered_initial_announcement,
                   PHRASE_foreign_city_conquered_no_reason_A, id, city->name_id);
                 break;
@@ -1477,7 +1470,7 @@ void event_manager_t::process_event(int id, bool via_event_trigger, int chain_ac
                     full->trade_route_open = 1;
                     full->city_type = city->type;
                 }
-                city_message_post_full(true, "message_template_general", &event, caller_event_id,
+                message_manager().post_full(true, "message_template_general", &event, caller_event_id,
                   PHRASE_route_opened_title, PHRASE_route_opened_initial_announcement, PHRASE_route_opened_no_reason_A,
                   id, city->name_id);
                 break;
@@ -1488,7 +1481,7 @@ void event_manager_t::process_event(int id, bool via_event_trigger, int chain_ac
                 if (full_empire_object *full = g_empire.ref_full_object(city->empire_object_id)) {
                     full->trade_route_open = 0;
                 }
-                city_message_post_full(true, "message_template_general", &event, caller_event_id,
+                message_manager().post_full(true, "message_template_general", &event, caller_event_id,
                   PHRASE_route_closed_title, PHRASE_route_closed_initial_announcement, PHRASE_route_closed_no_reason_A,
                   id, city->name_id);
                 break;
@@ -1517,26 +1510,27 @@ void event_manager_t::process_event(int id, bool via_event_trigger, int chain_ac
             break;
 
         case EVENT_SUBTYPE_MSG_CITY_SAVED:
-            city_message_post_full(true, "message_template_city_saved", &event, caller_event_id,
+            message_manager().post_full(true, "message_template_city_saved", &event, caller_event_id,
               PHRASE_eg_city_saved_title, PHRASE_eg_city_saved_initial_announcement,
               message_phrase(PHRASE_eg_city_saved_no_reason_A), id, 0);
             break;
 
         case EVENT_SUBTYPE_MSG_BATTLE_WON:
-            city_message_post_full(true, "message_template_distant_battle_won", &event, caller_event_id,
+            message_manager().post_full(true, "message_template_distant_battle_won", &event, caller_event_id,
               PHRASE_battle_won_title, PHRASE_battle_won_initial_announcement,
               message_phrase(PHRASE_battle_won_no_reason_A), id, 0);
             break;
 
         case EVENT_SUBTYPE_MSG_DISTANT_BATTLE_LOST:
-            city_message_post_full(true, "message_template_general", &event, caller_event_id, PHRASE_battle_lost_title,
-              PHRASE_battle_lost_initial_announcement, message_phrase(PHRASE_battle_lost_no_reason_A), id, 0);
+            message_manager().post_full(true, "message_template_general", &event, caller_event_id,
+              PHRASE_battle_lost_title, PHRASE_battle_lost_initial_announcement,
+              message_phrase(PHRASE_battle_lost_no_reason_A), id, 0);
             break;
 
         case EVENT_SUBTYPE_MSG_ACKNOWLEDGEMENT:
-            city_message_post_full(true, "message_template_general", &event, caller_event_id,
-                                   PHRASE_acknowledgement_title, PHRASE_acknowledgement_initial_announcement,
-                                   message_phrase(PHRASE_acknowledgement_no_reason_A), id, 0);
+            message_manager().post_full(true, "message_template_general", &event, caller_event_id,
+              PHRASE_acknowledgement_title, PHRASE_acknowledgement_initial_announcement,
+              message_phrase(PHRASE_acknowledgement_no_reason_A), id, 0);
             break;
 
         default:
@@ -1663,8 +1657,8 @@ void post_invasion_warning(const event_ph_t &e, int w, bool popup) {
     const int invader = std::clamp<int>(e.item.value, EVENT_INVADER_ENEMY, EVENT_INVADER_BEDUINS);
     const invader_phrases_t& phrases = invader_phrases(invader);
     const int text = invasion_parent_by_favour(e) ? phrases.low_kingdom : phrases.no_reason;
-    city_message_post_full(popup, invasion_warning_rules()[w].message[invader - EVENT_INVADER_ENEMY], &e, e.parent_id,
-      phrases.title, phrases.warnings[w], text, e.event_id, 0);
+    message_manager().post_full(popup, invasion_warning_rules()[w].message[invader - EVENT_INVADER_ENEMY], &e,
+      e.parent_id, phrases.title, phrases.warnings[w], text, e.event_id, 0);
 }
 
 bool invasion_has_formation(int event_id) {
@@ -1769,7 +1763,7 @@ static void invasion_attack(event_ph_t &e) {
 
 void scenario_invasion_post_attack_alert(const event_ph_t &e, int invasion_sequence) {
     const invader_phrases_t& phrases = invader_phrases(e.item.value);
-    city_message_post_full(true, "message_attack_alert", &e, e.parent_id, phrases.title, phrases.city_attacked,
+    message_manager().post_full(true, "message_attack_alert", &e, e.parent_id, phrases.title, phrases.city_attacked,
       invasion_parent_by_favour(e) ? phrases.low_kingdom : phrases.no_reason, invasion_sequence, 0);
 }
 
@@ -1794,7 +1788,7 @@ void scenario_invasion_landing_message(int invasion_id, tile2i tile, int invasio
         return;
     }
     const int text = invasion_parent_by_favour(*e) ? phrases.low_kingdom : phrases.no_reason;
-    city_message_post_full(true, "message_attack_alert", e, e->parent_id, phrases.title, phrases.disembarked, text,
+    message_manager().post_full(true, "message_attack_alert", e, e->parent_id, phrases.title, phrases.disembarked, text,
       invasion_sequence, tile.grid_offset());
 }
 

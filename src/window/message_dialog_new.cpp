@@ -115,7 +115,7 @@ void ui::message_dialog_base::init_data(xstring text_id, int message_id, void (*
     this->message_id = message_id;
 
     if (message_id != -1) {
-        const city_message& city_msg = city_message_get(this->message_id);
+        const city_message& city_msg = message_manager().get(this->message_id);
         if (city_msg.eventmsg_body_id > 0) {
             is_eventmsg = true;
             title_text = g_scenario.events.msg_text(city_msg.eventmsg_title_id, 0);
@@ -161,7 +161,7 @@ void ui::message_dialog_base::init_data(xstring text_id, int message_id, void (*
 
     xstring help_target;
     if (message_id != -1) {
-        const city_message& city_msg = city_message_get(message_id);
+        const city_message& city_msg = message_manager().get(message_id);
         if (city_msg.help_text_id > 0) {
             help_target = lang_get_message_id(city_msg.help_text_id);
         }
@@ -305,7 +305,7 @@ void ui::message_dialog_base::set_city_message(int year, int month, int param1, 
 
 template<typename T>
 void ui::message_dialog_base::eventmsg_template_combine(pcstr template_ptr, T& buffer, bool phrase_modifier) {
-    const auto& msg = city_message_get(message_id);
+    const auto& msg = message_manager().get(message_id);
 
     bstring32 amount;
     bstring32 time; time.printf("%d", msg.req_months_left);
@@ -367,7 +367,7 @@ int ui::message_dialog_base::get_message_image_id(const lang_message& msg) {
 }
 
 void ui::message_dialog_base::draw_image(const lang_message& msg) {
-    const city_message& city_msg = city_message_get(message_id);
+    const city_message& city_msg = message_manager().get(message_id);
 
     int image_id = get_message_image_id(msg);
     const image_t* img = image_id ? image_get(image_id) : 0;
@@ -581,7 +581,7 @@ namespace ui {
 
         virtual void init_data(xstring text_id, int message_id, void (*background_callback)(void)) override {
             message_dialog_base::init_data(text_id, message_id, background_callback);
-            const uint8_t buttons = message_id >= 0 ? city_message_get(message_id).gift_buttons : 0;
+            const uint8_t buttons = message_id >= 0 ? message_manager().get(message_id).gift_buttons : 0;
             setup_button("button_refuse", buttons, GIFT_BUTTON_REFUSE);
             setup_button("button_later", buttons, GIFT_BUTTON_LATER);
             setup_button("button_accept", buttons, GIFT_BUTTON_ACCEPT);
@@ -623,7 +623,7 @@ static ui::message_dialog_base* create_message_dialog(xstring text_id, int messa
     const lang_message& msg = lang_get_message(text_id);
     
     if (message_id != -1) {
-        const city_message& city_msg = city_message_get(message_id);
+        const city_message& city_msg = message_manager().get(message_id);
         if (city_msg.god != GOD_UNKNOWN) {
             return &message_dialog_god_window;
         }
@@ -736,12 +736,12 @@ void window_city_message_show(int index) {
     if (index < 0 || index >= MAX_MESSAGES || !message_manager().messages[index].MM_text_id) {
         return;
     }
-    city_message_mark_shown(index);
+    message_manager().mark_shown(index);
     city_message_open_dialog(index);
 }
 
 void window_city_message_process_queue() {
-    const int index = city_message_take_queued();
+    const int index = message_manager().take_queued();
     if (index >= 0) {
         city_message_open_dialog(index);
     }
@@ -758,7 +758,7 @@ static void city_message_popup_subscribe() {
             return;
         }
         if (!g_window_manager.window_is("window_city")) {
-            city_message_enqueue(message_manager().messages[ev.index].sequence);
+            message_manager().enqueue(message_manager().messages[ev.index].sequence);
             return;
         }
         window_city_message_show(ev.index);
