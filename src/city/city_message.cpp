@@ -11,6 +11,8 @@
 #include "city/city_message_chunks.h"
 #include "city/city_religion.h"
 #include "core/app_module.h"
+#include "core/archive.h"
+#include "core/svector.h"
 #include "core/xvalue.h"
 #include "io/chunk_serializer.h"
 #include "city/city_warnings.h"
@@ -27,72 +29,23 @@ message_manager_t& message_manager() {
     return xvalue<message_manager_t>::ref();
 }
 
-struct popup_key_map_entry {
-    pcstr key;
-    e_popup_message_category cat;
+struct popup_message_category_t {
+    e_popup_message_category category;
+    xstring hint;
+    svector<xstring, 16> messages;
 };
-
-// Exact message keys → OG Popup Messages category (group 310).
-static const popup_key_map_entry POPUP_KEY_MAP[] = {
-    { "message_perfect_inundation", POPUP_MSG_FLOOD },
-    { "message_excellent_inundation", POPUP_MSG_FLOOD },
-    { "message_good_inundation", POPUP_MSG_FLOOD },
-    { "message_mediocre_inundation", POPUP_MSG_FLOOD },
-    { "message_poor_inundation", POPUP_MSG_FLOOD },
-    { "message_no_inundation", POPUP_MSG_FLOOD },
-    { "message_mediocre_inundation_seers", POPUP_MSG_FLOOD },
-    { "message_poor_inundation_seers", POPUP_MSG_FLOOD },
-
-    { "message_population_milestone_100", POPUP_MSG_POPULATION },
-    { "message_population_milestone_500", POPUP_MSG_POPULATION },
-    { "message_population_milestone_1000", POPUP_MSG_POPULATION },
-    { "message_population_milestone_2000", POPUP_MSG_POPULATION },
-    { "message_population_milestone_3000", POPUP_MSG_POPULATION },
-    { "message_population_milestone_5000", POPUP_MSG_POPULATION },
-    { "message_population_milestone_10000", POPUP_MSG_POPULATION },
-    { "message_population_milestone_15000", POPUP_MSG_POPULATION },
-    { "message_population_milestone_20000", POPUP_MSG_POPULATION },
-    { "message_population_milestone_25000", POPUP_MSG_POPULATION },
-
-    { "message_compliance_now_possible", POPUP_MSG_COMPLIANCE },
-    // Actual goods/deben "can fulfill request" post (request.cpp); same OG category.
-    { "message_storage_yards_ready_to_fulfill_request", POPUP_MSG_COMPLIANCE },
-
-    { "message_common_festival", POPUP_MSG_FESTIVALS },
-    { "message_lavish_festival", POPUP_MSG_FESTIVALS },
-    { "message_grand_festival", POPUP_MSG_FESTIVALS },
-
-    { "message_small_blessing_from_osiris", POPUP_MSG_MINOR_BLESSINGS },
-    { "message_minor_blessing_from_ra", POPUP_MSG_MINOR_BLESSINGS },
-    { "message_minor_blessing_from_ptah", POPUP_MSG_MINOR_BLESSINGS },
-    { "message_minor_blessing_from_seth", POPUP_MSG_MINOR_BLESSINGS },
-    { "message_small_blessing_from_bast", POPUP_MSG_MINOR_BLESSINGS },
-    { "message_minor_blessing_trading_from_ra", POPUP_MSG_MINOR_BLESSINGS },
-
-    { "message_price_increased", POPUP_MSG_PRICE },
-    { "message_price_decreased", POPUP_MSG_PRICE },
-
-    { "message_increased_trading", POPUP_MSG_TRADE_LEVEL },
-    { "message_decreased_trading", POPUP_MSG_TRADE_LEVEL },
-    { "message_trade_stopped", POPUP_MSG_TRADE_LEVEL },
-
-    { "message_kingdome_raises_wages", POPUP_MSG_WAGE },
-    { "message_kingdome_lowers_wages", POPUP_MSG_WAGE },
-
-    { "message_disease", POPUP_MSG_DISEASE },
-    { "message_disease_strikes", POPUP_MSG_DISEASE },
-    { "message_malaria", POPUP_MSG_MALARIA },
-    { "malaria_problem", POPUP_MSG_MALARIA }, // legacy key from city_health
-    { "message_employees_needed", POPUP_MSG_EMPLOYEES },
-};
+ANK_CONFIG_STRUCT(popup_message_category_t, category, hint, messages)
+svector<popup_message_category_t, POPUP_MSG_MAX> ANK_VARIABLE(popup_message_categories);
 
 e_popup_message_category popup_message_category_for_key(xstring message_key) {
     if (message_key.empty()) {
         return POPUP_MSG_NONE;
     }
-    for (const auto &e : POPUP_KEY_MAP) {
-        if (message_key == e.key) {
-            return e.cat;
+    for (const auto& category : popup_message_categories) {
+        for (const xstring& key : category.messages) {
+            if (message_key == key) {
+                return category.category;
+            }
         }
     }
     return POPUP_MSG_NONE;

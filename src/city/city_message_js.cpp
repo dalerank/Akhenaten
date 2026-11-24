@@ -9,6 +9,9 @@
 using e_mesage_category_tokens_t = token_holder<e_mesage_category, MESSAGE_CAT_RIOT, MESSAGE_CAT_SIZE>;
 const e_mesage_category_tokens_t ANK_CONFIG_ENUM(e_mesage_category_tokens);
 
+using e_popup_message_category_tokens_t = token_holder<e_popup_message_category, POPUP_MSG_FLOOD, POPUP_MSG_MAX>;
+const e_popup_message_category_tokens_t ANK_CONFIG_ENUM(e_popup_message_category_tokens);
+
 ANK_GLOBAL_OBJECT(message_manager(), __city_messages, consecutive_message_delay, next_message_sequence, total_messages,
   current_message_id, problem_count, problem_index);
 
