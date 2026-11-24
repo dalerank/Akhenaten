@@ -40,9 +40,3 @@ struct city_mission_chunk {
     static constexpr int size = 2;
     static void bind_data(io_buffer* iob, size_t version);
 };
-
-struct city_sound_chunk {
-    static constexpr const char* name = "city_sound";
-    static constexpr int size = 2;
-    static void bind_data(io_buffer* iob, size_t version);
-};

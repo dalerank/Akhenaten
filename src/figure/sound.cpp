@@ -54,9 +54,9 @@ void figure::play_die_sound() {
     }
 
     if (is_soldier) {
-        events::emit(event_sound_effect{SOUND_EFFECT_SOLDIER_DIE + city_sound_update_die_soldier()});
+        events::emit(event_sound_effect{SOUND_EFFECT_SOLDIER_DIE + city_sound().update_die_soldier()});
     } else if (is_citizen) {
-        events::emit(event_sound_effect{SOUND_EFFECT_CITIZEN_DIE + city_sound_update_die_citizen()});
+        events::emit(event_sound_effect{SOUND_EFFECT_CITIZEN_DIE + city_sound().update_die_citizen()});
     }
 
     if (is_enemy()) {
@@ -75,7 +75,7 @@ void figure::play_hit_sound() {
     switch (type) {
     case FIGURE_INFANTRY:
     case FIGURE_ENEMY_KINGDOME_INFANTRY:
-        if (city_sound_update_hit_soldier()) {
+        if (city_sound().update_hit_soldier()) {
             effect = SOUND_EFFECT_SWORD;
         }
         break;
@@ -87,30 +87,30 @@ void figure::play_hit_sound() {
     case FIGURE_ENEMY_EGYPTIAN_MOUNTED_ARCHER:
     case FIGURE_ENEMY_KINGDOME_MOUNTED:
     case FIGURE_BEDOUIN:
-        if (city_sound_update_hit_soldier())
+        if (city_sound().update_hit_soldier())
             effect = SOUND_EFFECT_SWORD_SWING;
         break;
 
     case FIGURE_ARCHER:
-        if (city_sound_update_hit_soldier())
+        if (city_sound().update_hit_soldier())
             effect = SOUND_EFFECT_LIGHT_SWORD;
         break;
 
     case FIGURE_ENEMY_EGYPTIAN_SPEAR:
     case FIGURE_ENEMY_KINGDOME_JAVELIN:
     //case FIGURE_ENEMY_EGYPTIAN_HEAVY_SPEAR:
-        if (city_sound_update_hit_spear())
-            effect = SOUND_EFFECT_SPEAR;
-        break;
+    if (city_sound().update_hit_spear())
+        effect = SOUND_EFFECT_SPEAR;
+    break;
 
     //case FIGURE_ENEMY_EGYPTIAN_FAST_SPEAR:
     case FIGURE_ENEMY_EGYPTIAN_HEAVY_SWORD:
-        if (city_sound_update_hit_club())
+        if (city_sound().update_hit_club())
             effect = SOUND_EFFECT_CLUB;
 
         break;
     case FIGURE_ENEMY_EGYPTIAN_AXE:
-        if (city_sound_update_hit_axe())
+        if (city_sound().update_hit_axe())
             effect = SOUND_EFFECT_AXE;
 
         break;
@@ -120,7 +120,7 @@ void figure::play_hit_sound() {
         break;
 
     case FIGURE_ENEMY_EGYPTIAN_ELEPHANT:
-        if (city_sound_update_hit_elephant())
+        if (city_sound().update_hit_elephant())
             effect = SOUND_EFFECT_ELEPHANT;
         else {
             effect = SOUND_EFFECT_ELEPHANT_HIT;
@@ -129,9 +129,9 @@ void figure::play_hit_sound() {
         // case FIGURE_DANCER:
         // sound_effect_play(SOUND_EFFECT_LION_ATTACK);
         // break;
-        // 
+        //
         // case FIGURE_WOLF:
-        //     if (city_sound_update_hit_wolf())
+        //     if (city_sound().update_hit_wolf())
         //         sound_effect_play(SOUND_EFFECT_WOLF_ATTACK);
 
         break;

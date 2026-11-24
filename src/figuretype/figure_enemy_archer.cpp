@@ -112,7 +112,7 @@ void figure_enemy_archer::enemy_initial(formation *m) {
             formation_record_missile_fired(m);
         }
 
-        if (missilet == FIGURE_ARROW && city_sound_update_shoot_arrow()) {
+        if (missilet == FIGURE_ARROW && city_sound().update_shoot_arrow()) {
             events::emit(event_sound_effect{SOUND_EFFECT_ARROW});
         }
 
@@ -129,10 +129,10 @@ void figure_enemy_archer::enemy_marching(formation *m) {
 
     if (!silent_on_march()) {
         if (is_mounted_archer()) {
-            if (city_sound_update_march_horse()) {
+            if (city_sound().update_march_horse()) {
                 events::emit(event_sound_effect{SOUND_EFFECT_HORSE_MOVING});
             }
-        } else if (city_sound_update_march_enemy()) {
+        } else if (city_sound().update_march_enemy()) {
             events::emit(event_sound_effect{SOUND_EFFECT_MARCHING});
         }
     }
@@ -169,10 +169,10 @@ void figure_enemy_archer::enemy_fighting(formation *m) {
 
     if (!silent_on_march()) {
         if (is_mounted_archer()) {
-            if (city_sound_update_march_horse()) {
+            if (city_sound().update_march_horse()) {
                 events::emit(event_sound_effect{SOUND_EFFECT_HORSE_MOVING});
             }
-        } else if (city_sound_update_march_enemy()) {
+        } else if (city_sound().update_march_enemy()) {
             events::emit(event_sound_effect{SOUND_EFFECT_MARCHING});
         }
     }

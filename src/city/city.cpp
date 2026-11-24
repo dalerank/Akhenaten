@@ -32,6 +32,7 @@
 #include "city/city_festival.h"
 #include "city/entertainment.h"
 #include "city/city_victory.h"
+#include "city/sound.h"
 #include "city/city_local_cults.h"
 #include "city/city_temple_complexes.h"
 #include "building/building_barracks.h"
@@ -109,7 +110,7 @@ void city_t::init() {
     zero_fill(monuments);
     city_victory() = {};
     zero_fill(coverage);
-    zero_fill(sound);
+    city_sound() = {};
     zero_fill(trade);
     zero_fill(map);
     zero_fill(vegetation);

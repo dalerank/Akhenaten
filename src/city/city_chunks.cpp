@@ -1,6 +1,7 @@
 #include "city/city_chunks.h"
 
 #include "city/city.h"
+#include "city/sound.h"
 #include "city/entertainment.h"
 #include "city/city_festival.h"
 #include "city/city_religion_osiris.h"
@@ -473,8 +474,8 @@ static void city_data_bind_og_layout(io_buffer* iob) {
     iob->bind(BIND_SIGNATURE_INT32, &data.buildings.trade_center_building_id);
     iob->bind(BIND_SIGNATURE_INT32, &data.figures.soldiers);
     iob->bind____skip(3);
-    iob->bind(BIND_SIGNATURE_INT8, &data.sound.march_enemy);
-    iob->bind(BIND_SIGNATURE_INT8, &data.sound.march_horse);
+    iob->bind(BIND_SIGNATURE_INT8, &city_sound().march_enemy);
+    iob->bind(BIND_SIGNATURE_INT8, &city_sound().march_horse);
     iob->bind____skip(10);
     iob->bind(BIND_SIGNATURE_INT8, &data.sentiment.include_huts);
     iob->bind____skip(16);
@@ -587,11 +588,4 @@ void city_mission_chunk::bind_data(io_buffer* iob, size_t version) {
     iob->bind(BIND_SIGNATURE_UINT8, &data.mission.fired_message_shown);
     iob->bind(BIND_SIGNATURE_UINT8, &data.mission.victory_message_shown);
     verify_no_crash(iob->get_offset() == city_mission_chunk::size);
-}
-
-void city_sound_chunk::bind_data(io_buffer* iob, size_t version) {
-    auto& data = g_city;
-    iob->bind(BIND_SIGNATURE_INT8, &data.sound.march_enemy);
-    iob->bind(BIND_SIGNATURE_INT8, &data.sound.march_horse);
-    verify_no_crash(iob->get_offset() == city_sound_chunk::size);
 }

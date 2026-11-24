@@ -120,11 +120,11 @@ void figure_enemy::enemy_fighting(formation *m) {
         if (type() == FIGURE_ENEMY_EGYPTIAN_CHARIOT
             || type() == FIGURE_ENEMY_EGYPTIAN_MOUNTED_ARCHER
             || type() == FIGURE_ENEMY_KINGDOME_MOUNTED) {
-            if (city_sound_update_march_horse())
+            if (city_sound().update_march_horse())
                 events::emit(event_sound_effect{SOUND_EFFECT_HORSE_MOVING});
 
         } else {
-            if (city_sound_update_march_enemy())
+            if (city_sound().update_march_enemy())
                 events::emit(event_sound_effect{SOUND_EFFECT_MARCHING});
         }
     }

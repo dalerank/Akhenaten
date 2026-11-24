@@ -1,6 +1,7 @@
 #include "io/og_save/og_load.h"
 
 #include "city/city.h"
+#include "city/sound.h"
 #include "city/entertainment.h"
 #include "city/city_festival.h"
 #include "scenario/scenario.h"
@@ -274,8 +275,8 @@ namespace og {
         assign(g_city.military.total_soldiers, p.total_soldiers);
         assign(g_city.buildings.trade_center_building_id, p.trade_center_building_id);
         assign(g_city.figures.soldiers, p.soldiers);
-        assign(g_city.sound.march_enemy, p.sound_march_enemy);
-        assign(g_city.sound.march_horse, p.sound_march_horse);
+        assign(city_sound().march_enemy, p.sound_march_enemy);
+        assign(city_sound().march_horse, p.sound_march_horse);
         assign(g_city.sentiment.include_huts, p.sentiment_food_toggle);
         assign(g_city.population.highest_ever, p.population_highest_ever);
         assign(g_city.finance.estimated_wages, p.estimated_wages);

@@ -63,21 +63,6 @@ struct city_t {
 
     city_coverage_t coverage;
 
-    struct {
-        int8_t march_enemy;
-        int8_t march_horse;
-        int8_t march_wolf;
-        int8_t shoot_arrow;
-        int8_t hit_soldier;
-        int8_t hit_spear;
-        int8_t hit_club;
-        int8_t hit_elephant;
-        int8_t hit_axe;
-        int8_t hit_wolf;
-        int8_t die_citizen;
-        int8_t die_soldier;
-    } sound;
-
     trade_state trade;
     city_map_t map;
 

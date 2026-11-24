@@ -90,7 +90,7 @@ void figure_enemy_spearman::enemy_initial(formation *m) {
             formation_record_missile_fired(m);
         }
 
-        if (missilet == FIGURE_ARROW && city_sound_update_shoot_arrow()) {
+        if (missilet == FIGURE_ARROW && city_sound().update_shoot_arrow()) {
             events::emit(event_sound_effect{SOUND_EFFECT_ARROW});
         }
 
@@ -138,7 +138,7 @@ void figure_enemy_spearman::enemy_fighting(formation *m) {
         advance_action(ACTION_151_ENEMY_SPEARMAN_INITIAL);
     }
 
-    if (city_sound_update_march_enemy()) {
+    if (city_sound().update_march_enemy()) {
         events::emit(event_sound_effect{SOUND_EFFECT_MARCHING});
     }
 

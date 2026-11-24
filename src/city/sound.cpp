@@ -1,8 +1,30 @@
 #include "sound.h"
 
-#include "city/city.h"
+#include "city/city_sound_chunks.h"
+#include "core/app_module.h"
+#include "core/xvalue.h"
+#include "game/simulation.h"
+#include "io/chunk_serializer.h"
 
-static auto &city_data = g_city;
+city_sound_t& city_sound() {
+    return xvalue<city_sound_t>::ref();
+}
+
+class city_sound_system : public sim_system {
+public:
+    const char* name() const override { return "city_sound"; }
+    void push_save_sections(int file_version) override {
+        if (file_version >= 203) {
+            g_chunk_io.push_chunk<city_sound_chunk>(city_sound_chunk::size, false);
+        }
+    }
+};
+
+void ANK_REGISTER_APPLICATION_MODULE(register_city_sound_system) {
+    static city_sound_system system;
+    g_simulation.register_system(&system);
+}
+
 static int update_field(int8_t* field, int max_value) {
     (*field)--;
     if (*field <= 0) {
@@ -13,63 +35,63 @@ static int update_field(int8_t* field, int max_value) {
     }
 }
 
-int city_sound_update_march_enemy(void) {
-    return update_field(&city_data.sound.march_enemy, 200);
+int city_sound_t::update_march_enemy() {
+    return update_field(&march_enemy, 200);
 }
 
-int city_sound_update_march_horse(void) {
-    return update_field(&city_data.sound.march_horse, 200);
+int city_sound_t::update_march_horse() {
+    return update_field(&march_horse, 200);
 }
 
-int city_sound_update_march_wolf(void) {
-    return update_field(&city_data.sound.march_wolf, 12);
+int city_sound_t::update_march_wolf() {
+    return update_field(&march_wolf, 12);
 }
 
-int city_sound_update_shoot_arrow(void) {
-    return update_field(&city_data.sound.shoot_arrow, 10);
+int city_sound_t::update_shoot_arrow() {
+    return update_field(&shoot_arrow, 10);
 }
 
-int city_sound_update_hit_wolf(void) {
-    return update_field(&city_data.sound.hit_wolf, 4);
+int city_sound_t::update_hit_wolf() {
+    return update_field(&hit_wolf, 4);
 }
 
-int city_sound_update_hit_soldier(void) {
-    return update_field(&city_data.sound.hit_soldier, 8);
+int city_sound_t::update_hit_soldier() {
+    return update_field(&hit_soldier, 8);
 }
 
-int city_sound_update_hit_axe(void) {
-    return update_field(&city_data.sound.hit_axe, 8);
+int city_sound_t::update_hit_axe() {
+    return update_field(&hit_axe, 8);
 }
 
-int city_sound_update_hit_club(void) {
-    return update_field(&city_data.sound.hit_club, 8);
+int city_sound_t::update_hit_club() {
+    return update_field(&hit_club, 8);
 }
 
-int city_sound_update_hit_spear(void) {
-    return update_field(&city_data.sound.hit_spear, 8);
+int city_sound_t::update_hit_spear() {
+    return update_field(&hit_spear, 8);
 }
 
-int city_sound_update_hit_elephant(void) {
-    if (city_data.sound.hit_elephant == 1)
-        city_data.sound.hit_elephant = 0;
-    else {
-        city_data.sound.hit_elephant = 1;
-    }
-    return city_data.sound.hit_elephant;
+int city_sound_t::update_hit_elephant() {
+    if (hit_elephant == 1)
+        hit_elephant = 0;
+    else
+        hit_elephant = 1;
+
+    return hit_elephant;
 }
 
-int city_sound_update_die_citizen(void) {
-    city_data.sound.die_citizen++;
-    if (city_data.sound.die_citizen >= 4)
-        city_data.sound.die_citizen = 0;
+int city_sound_t::update_die_citizen() {
+    die_citizen++;
+    if (die_citizen >= 4)
+        die_citizen = 0;
 
-    return city_data.sound.die_citizen;
+    return die_citizen;
 }
 
-int city_sound_update_die_soldier(void) {
-    city_data.sound.die_soldier++;
-    if (city_data.sound.die_soldier >= 4)
-        city_data.sound.die_soldier = 0;
+int city_sound_t::update_die_soldier() {
+    die_soldier++;
+    if (die_soldier >= 4)
+        die_soldier = 0;
 
-    return city_data.sound.die_soldier;
+    return die_soldier;
 }
