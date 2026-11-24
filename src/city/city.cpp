@@ -111,7 +111,6 @@ void city_t::init() {
     zero_fill(coverage);
     zero_fill(trade);
     zero_fill(map);
-    zero_fill(vegetation);
     zero_fill(mission);
 
     sentiment.value = 60;

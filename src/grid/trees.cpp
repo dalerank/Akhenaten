@@ -2,6 +2,7 @@
 
 #include "city/city.h"
 #include "core/profiler.h"
+#include "core/xvalue.h"
 #include "game/resource.h"
 #include "graphics/graphics.h"
 #include "graphics/image.h"
@@ -18,46 +19,53 @@
 #include "vegetation.h"
 #include "scenario/scenario.h"
 
-tile_cache trees_tiles_cache;
+struct map_trees_t {
+    tile_cache tiles;
+    bool reachable = false;
+};
+
+static map_trees_t& map_trees() {
+    return xvalue<map_trees_t>::ref();
+}
 
 bool map_trees_reachable() {
-    return g_city.vegetation.trees_reachable;
+    return map_trees().reachable;
 }
 
 void map_trees_set_reachable(bool reachable) {
-    g_city.vegetation.trees_reachable = reachable;
+    map_trees().reachable = reachable;
 }
 
 void map_trees_update_reachable() {
     // OG city-wide gate: one citizen reach pass from the map entry, not per wood cutter.
     const tile2i entry = g_city.map.entry_point;
     if (!entry.valid()) {
-        g_city.vegetation.trees_reachable = false;
+        map_trees().reachable = false;
         return;
     }
     const resource_tile tile = map_routing_citizen_found_timber(entry);
-    g_city.vegetation.trees_reachable = (tile.res == RESOURCE_TIMBER);
+    map_trees().reachable = (tile.res == RESOURCE_TIMBER);
 }
 
 void map_tree_clear() {
-    trees_tiles_cache.clear();
-    g_city.vegetation.trees_reachable = false;
+    map_trees().tiles.clear();
+    map_trees().reachable = false;
 }
 
 void map_tree_push_back(int grid_offset) {
-    trees_tiles_cache.push_back(grid_offset);
+    map_trees().tiles.push_back(grid_offset);
 }
 
 void map_tree_foreach_tile(void (*callback)(int grid_offset)) {
-    for (int i = 0; i < trees_tiles_cache.size(); i++) {
-        callback(trees_tiles_cache.at(i));
+    for (int i = 0; i < map_trees().tiles.size(); i++) {
+        callback(map_trees().tiles.at(i));
     }
 }
 
 void map_tree_growth_update() {
     OZZY_PROFILER_FUNCTION();
     const auto &opt = g_scenario.env.tree_grow;
-    for (int tile_offset : trees_tiles_cache) {
+    for (int tile_offset : map_trees().tiles) {
         vegetation_tile_update(tile_offset, opt);
     }
     map_trees_update_reachable();
