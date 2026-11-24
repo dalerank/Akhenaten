@@ -1,4 +1,5 @@
 #include "building_mansion.h"
+#include "city/city_sentiment.h"
 
 #include "city/city.h"
 #include "city/city_finance.h"
@@ -203,11 +204,11 @@ void building_mansion::check_theft_from_mansions() {
     if (!game_features::gameplay_change_robber_remake.to_bool()) {
         return;
     }
-    if (g_city.sentiment.criminals <= 0) {
+    if (city_sentiment().criminals <= 0) {
         return;
     }
 
-    int crime_chance = 100 - g_city.sentiment.value;
+    int crime_chance = 100 - city_sentiment().value;
     if (crime_chance < 10) {
         return;
     }
@@ -261,9 +262,9 @@ void building_mansion::check_theft_from_mansions() {
             g_city.finance_sys().process_stolen(steal_amount);
             update_money_values();
 
-            bool show_popup = (g_city.sentiment.last_mugger_message <= 0);
+            bool show_popup = (city_sentiment().last_mugger_message <= 0);
             if (show_popup) {
-                g_city.sentiment.last_mugger_message = 90;
+                city_sentiment().last_mugger_message = 90;
             }
             events::emit(event_message{show_popup, "thief_stole_savings", steal_amount, b->tile.grid_offset(), SOURCE_LOCATION});
             return;

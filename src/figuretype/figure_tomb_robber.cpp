@@ -1,4 +1,5 @@
 #include "figuretype/figure_tomb_robber.h"
+#include "city/city_sentiment.h"
 #include "game/simulation.h"
 #include "core/app_module.h"
 #include "game/sim_schedule.h"
@@ -240,7 +241,7 @@ int create_one_robber(tile2i spawn, bool remake) {
         f->advance_action(ACTION_8_TOMB_ROBBER_WAITING);
     }
     f->wait_ticks = 10 + (random_byte() & 0xf);
-    g_city.sentiment.criminals++;
+    city_sentiment().criminals++;
     g_city.ratings_sys().monument_record_criminal();
     g_city.figures.security_breach_duration = 10;
     return f->id;
@@ -638,7 +639,7 @@ int figure_tomb_robber::try_spawn(bool force_gates) {
             return 0;
         }
         if (!force_gates) {
-            const int sentiment = g_city.sentiment.value;
+            const int sentiment = city_sentiment().value;
             if (sentiment >= 30) {
                 return 0;
             }

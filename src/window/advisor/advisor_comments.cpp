@@ -1,4 +1,5 @@
 #include "window/advisor/advisor_comments.h"
+#include "city/city_sentiment.h"
 #include "city/city_health.h"
 #include "city/city_labor.h"
 
@@ -721,8 +722,8 @@ int advisor_city_state::god_mood(int god) const {
 
 advisor_city_state advisor_city_state_current() {
     advisor_city_state s;
-    s.sentiment = g_city.sentiment.value;
-    s.low_mood_cause = g_city.sentiment.low_mood_cause;
+    s.sentiment = city_sentiment().value;
+    s.low_mood_cause = city_sentiment().low_mood_cause;
     s.kingdom_soldiers = g_city.figures.kingdome_soldiers;
     s.enemies = g_city.figures.enemies;
     s.soldiers = g_city.figures.soldiers;

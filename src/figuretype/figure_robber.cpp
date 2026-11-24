@@ -1,4 +1,5 @@
 #include "figuretype/figure_robber.h"
+#include "city/city_sentiment.h"
 
 #include "building/building.h"
 #include "building/building_mansion.h"
@@ -62,8 +63,8 @@ void show_robbery_warning(pcstr key) {
 
 void show_robbery_message(pcstr key, int amount, int tile_offset) {
     bool show_popup = false;
-    if (g_city.sentiment.last_mugger_message <= 0) {
-        g_city.sentiment.last_mugger_message = 90;
+    if (city_sentiment().last_mugger_message <= 0) {
+        city_sentiment().last_mugger_message = 90;
         show_popup = true;
     }
     events::emit(event_message{show_popup, key, amount, tile_offset, SOURCE_LOCATION});
@@ -336,14 +337,14 @@ void figure_robber::update_animation() {
 }
 
 void figure_robber::create(building *b) {
-    g_city.sentiment.criminals++;
+    city_sentiment().criminals++;
     auto house = b->dcast_house();
     if (!house) {
         return;
     }
 
     auto &housed = house->runtime_data();
-    if (housed.criminal_active <= 60 || !g_city.sentiment.can_create_mugger) {
+    if (housed.criminal_active <= 60 || !city_sentiment().can_create_mugger) {
         return;
     }
 

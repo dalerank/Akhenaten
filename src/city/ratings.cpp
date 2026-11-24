@@ -1,4 +1,5 @@
 #include "ratings.h"
+#include "city/city_sentiment.h"
 #include "game/simulation.h"
 #include "core/app_module.h"
 #include "game/sim_schedule.h"

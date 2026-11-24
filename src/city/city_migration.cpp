@@ -1,4 +1,5 @@
 #include "city_migration.h"
+#include "city/city_sentiment.h"
 #include "core/app_module.h"
 #include "game/sim_schedule.h"
 

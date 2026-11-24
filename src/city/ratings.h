@@ -53,7 +53,7 @@ struct population_state;
 struct city_entertainment_t;
 struct city_coverage_t;
 struct gods_state;
-struct sentiment_state;
+struct city_sentiment_t;
 struct city_buildings_t;
 
 struct ratings_context {
@@ -64,7 +64,7 @@ struct ratings_context {
     const city_entertainment_t& entertainment;
     const city_coverage_t& coverage;
     const gods_state& gods;
-    const sentiment_state& sentiment;
+    const city_sentiment_t& sentiment;
     const city_buildings_t& buildings;
     kingdome_system kingdome_sys;
     bool ra_oracle;

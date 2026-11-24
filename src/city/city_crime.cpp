@@ -1,4 +1,5 @@
 #include "city/city.h"
+#include "city/city_sentiment.h"
 #include "game/simulation.h"
 #include "core/app_module.h"
 #include "game/sim_schedule.h"
@@ -22,7 +23,7 @@ static void generate_rioter(building* b) {
         return;
     }
 
-    g_city.sentiment.criminals++;
+    city_sentiment().criminals++;
     int people_in_mob;
     const int population = g_city.population.current;
     if (population <= 150)
@@ -73,10 +74,10 @@ static void generate_protestor(building* b) {
         return;
     }
 
-    g_city.sentiment.protesters++;
+    city_sentiment().protesters++;
 
     auto &housed = house->runtime_data();
-    if (housed.criminal_active > 30 && g_city.sentiment.can_create_protestor) {
+    if (housed.criminal_active > 30 && city_sentiment().can_create_protestor) {
         housed.criminal_active -= 30;
         tile2i road_tile = map_closest_road_within_radius(b->tile, b->size, 2);
         if (road_tile.valid()) {
@@ -109,7 +110,7 @@ void city_t::figures_generate_criminals() {
     });
 
     if (min_building) {
-        const int sentiment = g_city.sentiment.value;
+        const int sentiment = city_sentiment().value;
 
         if (sentiment < 30) {
             if (random_byte() >= sentiment + 50) {

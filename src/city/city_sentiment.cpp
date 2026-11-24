@@ -1,4 +1,10 @@
 #include "city_sentiment.h"
+#include "io/gamestate/save_versions.h"
+#include "io/chunk_serializer.h"
+#include "core/xvalue.h"
+#include "city/city_temple_complexes.h"
+#include "city/city_sentiment_chunks.h"
+#include "city/city_labor.h"
 #include "core/app_module.h"
 #include "game/sim_schedule.h"
 
@@ -24,20 +30,20 @@
 
 static const int SENTIMENT_PER_TAX_RATE[26] = {3, 2, 2, 2, 1, 1, 1, 0, 0, -1, -2, -2, -3, -3, -3, -5, -5, -5, -5, -6, -6, -6, -6, -6, -6, -6};
 
-void sentiment_system::reset_protesters_criminals() {
-    _state.protesters = 0;
-    _state.criminals = 0;
+void city_sentiment_t::reset_protesters_criminals() {
+    protesters = 0;
+    criminals = 0;
 }
 
-int sentiment_system::calc_penalty_for_hut_dwellers() {
+int city_sentiment_t::calc_penalty_for_hut_dwellers() {
     // alternate the penalty for every update
-    if (!_state.include_huts) {
-        _state.include_huts = true;
+    if (!include_huts) {
+        include_huts = true;
         return 0;
     }
 
-    _state.include_huts = false;
-    const auto& population = _ctx.population;
+    include_huts = false;
+    const auto& population = g_city.population;
 
     int penalty;
     int pct_tents = calc_percentage(population.people_in_huts, population.current);
@@ -81,10 +87,10 @@ int sentiment_system::calc_penalty_for_hut_dwellers() {
     return penalty;
 }
 
-int sentiment_system::calc_sentiment_contribution_wages() {
-    const auto& finance = _ctx.finance;
+int city_sentiment_t::calc_sentiment_contribution_wages() {
+    const auto& finance = g_city.finance;
 
-    _state.wages = finance.wages;
+    wages = finance.wages;
     int contribution = 0;
     int wage_diff = finance.wages - finance.wages_kingdome;
     if (wage_diff < 0) {
@@ -105,19 +111,19 @@ int sentiment_system::calc_sentiment_contribution_wages() {
     return contribution;
 }
 
-int sentiment_system::calc_contribution_religion_coverage() {
+int city_sentiment_t::calc_contribution_religion_coverage() {
     if (!game_features::gameplay_change_religion_coverage_influence_sentiment) {
         return 0;
     }
 
-    const auto& known_gods = _ctx.gods.known_gods();
+    const auto& known_gods = g_city.gods.known_gods();
     if (known_gods.size() <= 0) {
         return 0;
     }
 
     int average_coverage = 0;
     for (auto *god : known_gods) {
-        average_coverage += _ctx.gods.coverage_avg(god->type);
+        average_coverage += g_city.gods.coverage_avg(god->type);
     }
 
     average_coverage /= (int)known_gods.size();
@@ -131,32 +137,32 @@ int sentiment_system::calc_contribution_religion_coverage() {
     return religion_points;
 }
 
-int sentiment_system::calc_contribution_employment() {
-    _state.unemployment_pct = _ctx.labor.unemployment_percentage;
+int city_sentiment_t::calc_contribution_employment() {
+    unemployment_pct = city_labor().unemployment_percentage;
 
-    if (_state.unemployment_pct > 25)
+    if (unemployment_pct > 25)
         return -3;
-    else if (_state.unemployment_pct > 17)
+    else if (unemployment_pct > 17)
         return -2;
-    else if (_state.unemployment_pct > 10)
+    else if (unemployment_pct > 10)
         return -1;
-    else if (_state.unemployment_pct > 4)
+    else if (unemployment_pct > 4)
         return 0;
     else {
         return 1;
     }
 }
 
-int sentiment_system::calc_contribution_monuments() {
+int city_sentiment_t::calc_contribution_monuments() {
     if (!game_features::gameplay_change_monuments_influence_sentiment) {
         return 0;
     }
 
     auto types = {BUILDING_SHRINE_OSIRIS, BUILDING_SHRINE_RA, BUILDING_SHRINE_PTAH, BUILDING_SHRINE_SETH, BUILDING_SHRINE_BAST};
-    const int shrines = _ctx.buildings.count_active(types);
+    const int shrines = g_city.buildings.count_active(types);
 
     int shrine_points = 0;
-    const auto& population = _ctx.population;
+    const auto& population = g_city.population;
     if (population.current > 5000) {
         shrine_points = 5;
     } if (population.current > 1000) {
@@ -173,33 +179,33 @@ int sentiment_system::calc_contribution_monuments() {
     return monument_points;
 }
 
-void sentiment_system::update_day() {
-    _state.last_mugger_message = std::max<short>(0, _state.last_mugger_message--);
+void city_sentiment_t::update_day() {
+    last_mugger_message = std::max<short>(0, last_mugger_message--);
 
-    if (_ctx.day % 8 == 0) {
+    if (g_simulation.simtime.day % 8 == 0) {
         update();
     }
 }
 
-void sentiment_system::init() {
-    _state.can_create_mugger = (_ctx.campaign_scenario_id > 0);
-    _state.can_create_protestor = (_ctx.campaign_scenario_id > 1);
+void city_sentiment_t::init() {
+    can_create_mugger = (g_scenario.campaign_scenario_id > 0);
+    can_create_protestor = (g_scenario.campaign_scenario_id > 1);
 }
 
-void sentiment_system::update() {
+void city_sentiment_t::update() {
     OZZY_PROFILER_FUNCTION();
     city_population_check_consistency();
 
-    _state.contribution_taxes = SENTIMENT_PER_TAX_RATE[city_taxes().tax_percentage];
-    _state.contribution_wages = calc_sentiment_contribution_wages();
-    _state.contribution_employment = calc_contribution_employment();
-    _state.contribution_religion_coverage = calc_contribution_religion_coverage();
-    _state.contribution_monuments = calc_contribution_monuments();
-    _state.contribution_penalty_huts = calc_penalty_for_hut_dwellers();
+    contribution_taxes = SENTIMENT_PER_TAX_RATE[city_taxes().tax_percentage];
+    contribution_wages = calc_sentiment_contribution_wages();
+    contribution_employment = calc_contribution_employment();
+    contribution_religion_coverage = calc_contribution_religion_coverage();
+    contribution_monuments = calc_contribution_monuments();
+    contribution_penalty_huts = calc_penalty_for_hut_dwellers();
 
     // OG Hathor oracle on Bast complex: improve city sentiment.
     int contribution_hathor = 0;
-    if (_ctx.hathor_oracle) {
+    if (city_temple_complexes().has_upgrade(BUILDING_TEMPLE_COMPLEX_BAST, etc_upgrade_oracle)) {
         contribution_hathor = building_temple_complex_bast::current_params().hathor_sentiment_bonus;
     }
 
@@ -220,14 +226,14 @@ void sentiment_system::update() {
             return;
         }
 
-        if (_ctx.population.current < 300) {
+        if (g_city.population.current < 300) {
             // small town has no complaints
-            _state.contribution_employment = 0;
-            _state.contribution_taxes = 0;
-            _state.contribution_wages = 0;
+            contribution_employment = 0;
+            contribution_taxes = 0;
+            contribution_wages = 0;
 
             housed.house_happiness = default_sentiment;
-            if (_ctx.population.current < 200) {
+            if (g_city.population.current < 200) {
                 housed.house_happiness += 10;
             } else if (default_sentiment < 50 && !!game_features::gameplay_fix_immigration) {
                 // Fix very hard immigration bug: give a boost for Very Hard difficulty so that
@@ -240,22 +246,22 @@ void sentiment_system::update() {
         }
         // population >= 300
         houses_calculated++;
-        _state.contribution_food = 0;
-        _state.contribution_huts = 0;
+        contribution_food = 0;
+        contribution_huts = 0;
         if (!house->model().food_types) {
             // tents
             housed.days_without_food = 0;
-            _state.contribution_huts = _state.contribution_penalty_huts;
-            total_sentiment_penalty_huts += _state.contribution_penalty_huts;
+            contribution_huts = contribution_penalty_huts;
+            total_sentiment_penalty_huts += contribution_penalty_huts;
         } else {
             // shack+
             houses_needing_food++;
             if (housed.num_foods >= 2) {
-                _state.contribution_food = 2;
+                contribution_food = 2;
                 total_sentiment_contribution_food += 2;
                 housed.days_without_food = 0;
             } else if (housed.num_foods >= 1) {
-                _state.contribution_food = 1;
+                contribution_food = 1;
                 total_sentiment_contribution_food += 1;
                 housed.days_without_food = 0;
             } else {
@@ -263,17 +269,17 @@ void sentiment_system::update() {
                 if (housed.days_without_food < 3)
                     housed.days_without_food++;
 
-                _state.contribution_food = -housed.days_without_food;
+                contribution_food = -housed.days_without_food;
                 total_sentiment_contribution_food -= housed.days_without_food;
             }
         }
-        housed.house_happiness += _state.contribution_taxes;
-        housed.house_happiness += _state.contribution_wages;
-        housed.house_happiness += _state.contribution_employment;
-        housed.house_happiness += _state.contribution_food;
-        housed.house_happiness += _state.contribution_huts;
-        housed.house_happiness += _state.contribution_religion_coverage;
-        housed.house_happiness += _state.contribution_monuments;
+        housed.house_happiness += contribution_taxes;
+        housed.house_happiness += contribution_wages;
+        housed.house_happiness += contribution_employment;
+        housed.house_happiness += contribution_food;
+        housed.house_happiness += contribution_huts;
+        housed.house_happiness += contribution_religion_coverage;
+        housed.house_happiness += contribution_monuments;
         housed.house_happiness += contribution_hathor;
         housed.house_happiness = calc_bound(housed.house_happiness, 0, 100);
     });
@@ -297,19 +303,19 @@ void sentiment_system::update() {
         }
     });
 
-    _state.value = total_houses ? total_sentiment / total_houses : 60;
+    value = total_houses ? total_sentiment / total_houses : 60;
 
-    if (_state.message_delay) {
-        _state.message_delay--;
+    if (message_delay) {
+        message_delay--;
     }
 
-    if (_state.value < 48 && _state.value < _state.previous_value) {
-        if (_state.message_delay <= 0) {
-            _state.message_delay = 3;
+    if (value < 48 && value < previous_value) {
+        if (message_delay <= 0) {
+            message_delay = 3;
 
-            if (_state.value < 35) {
+            if (value < 35) {
                 events::emit(event_message{ false, "message_people_angry", 0, 0, SOURCE_LOCATION });
-            } else if (_state.value < 40) {
+            } else if (value < 40) {
                 events::emit(event_message{ false, "message_city_crime", 0, 0, SOURCE_LOCATION });
             } else {
                 events::emit(event_message{ false, "message_people_disgruntled", 0, 0, SOURCE_LOCATION });
@@ -318,45 +324,59 @@ void sentiment_system::update() {
     }
 
     int worst_sentiment = 0;
-    _state.low_mood_cause = LOW_MOOD_NONE;
+    low_mood_cause = LOW_MOOD_NONE;
     if (sentiment_contribution_food < worst_sentiment) {
         worst_sentiment = sentiment_contribution_food;
-        _state.low_mood_cause = LOW_MOOD_NO_FOOD;
+        low_mood_cause = LOW_MOOD_NO_FOOD;
     }
 
-    if (_state.contribution_employment < worst_sentiment) {
-        worst_sentiment = _state.contribution_employment;
-        _state.low_mood_cause = LOW_MOOD_NO_JOBS;
+    if (contribution_employment < worst_sentiment) {
+        worst_sentiment = contribution_employment;
+        low_mood_cause = LOW_MOOD_NO_JOBS;
     }
 
-    if (_state.contribution_taxes < worst_sentiment) {
-        worst_sentiment = _state.contribution_taxes;
-        _state.low_mood_cause = LOW_MOOD_HIGH_TAXES;
+    if (contribution_taxes < worst_sentiment) {
+        worst_sentiment = contribution_taxes;
+        low_mood_cause = LOW_MOOD_HIGH_TAXES;
     }
 
-    if (_state.contribution_wages < worst_sentiment) {
-        worst_sentiment = _state.contribution_wages;
-        _state.low_mood_cause = LOW_MOOD_LOW_WAGES;
+    if (contribution_wages < worst_sentiment) {
+        worst_sentiment = contribution_wages;
+        low_mood_cause = LOW_MOOD_LOW_WAGES;
     }
 
     if (sentiment_contribution_tents < worst_sentiment) {
-        _state.low_mood_cause = LOW_MOOD_MANY_TENTS;
+        low_mood_cause = LOW_MOOD_MANY_TENTS;
     }
 
-    _state.previous_value = _state.value;
+    previous_value = value;
+}
+
+city_sentiment_t& city_sentiment() {
+    return xvalue<city_sentiment_t>::ref();
+}
+
+void city_sentiment_t::reset() {
+    *this = {};
 }
 
 class sentiment_sim_system : public sim_system {
 public:
     const char* name() const override { return "sentiment"; }
+    void on_reset() override { city_sentiment().reset(); }
+    void push_save_sections(int file_version) override {
+        if (file_version >= save_version_city_sections) {
+            g_chunk_io.push_chunk<city_sentiment_chunk>(city_sentiment_chunk::size, false);
+        }
+    }
     void register_steps(sim_schedule_t& schedule) override {
         schedule.add({sim_step_reset_protesters, SIM_PHASE_TICK, [](int tick) {
                           if (tick != 44) {
                               return;
                           }
-                          g_city.sentiment_sys().reset_protesters_criminals();
+                          city_sentiment().reset_protesters_criminals();
                       }});
-        schedule.add({sim_step_sentiment, SIM_PHASE_DAY, [](int) { g_city.sentiment_sys().update_day(); }});
+        schedule.add({sim_step_sentiment, SIM_PHASE_DAY, [](int) { city_sentiment().update_day(); }});
     }
 };
 

@@ -1,4 +1,5 @@
 #include "js/test/js_test_common.h"
+#include "city/city_sentiment.h"
 #include "city/city_health.h"
 #include "city/city_labor.h"
 
@@ -211,7 +212,7 @@ int __test_last_message_eventmsg_phrase_id() {
 ANK_FUNCTION(__test_last_message_eventmsg_phrase_id);
 
 static void __test_sentiment_set(int value) {
-    g_city.sentiment.value = value;
+    city_sentiment().value = value;
 }
 ANK_FUNCTION_1(__test_sentiment_set);
 

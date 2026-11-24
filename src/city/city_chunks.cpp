@@ -1,4 +1,5 @@
 #include "city/city_chunks.h"
+#include "city/city_sentiment.h"
 #include "city/city_health.h"
 #include "city/city_labor.h"
 
@@ -31,7 +32,7 @@ static void city_data_bind_og_layout(io_buffer* iob) {
     iob->bind(BIND_SIGNATURE_INT8, &city_taxes().tax_percentage);
     iob->bind____skip(3);
     iob->bind(BIND_SIGNATURE_INT32, &data.finance.treasury.value);
-    iob->bind(BIND_SIGNATURE_INT32, &data.sentiment.value);
+    iob->bind(BIND_SIGNATURE_INT32, &city_sentiment().value);
     iob->bind(BIND_SIGNATURE_INT32, &city_health().target_value);
     iob->bind(BIND_SIGNATURE_INT32, &city_health().value);
     iob->bind(BIND_SIGNATURE_INT32, &city_health().num_mortuary_workers);
@@ -245,7 +246,7 @@ static void city_data_bind_og_layout(io_buffer* iob) {
     iob->bind(BIND_SIGNATURE_INT32, &data.kingdome.debt_state);
     iob->bind(BIND_SIGNATURE_INT32, &data.kingdome.months_in_debt);
     iob->bind(BIND_SIGNATURE_INT32, &data.population.lost_troop_request);
-    iob->bind(BIND_SIGNATURE_INT32, &data.sentiment.message_delay);
+    iob->bind(BIND_SIGNATURE_INT32, &city_sentiment().message_delay);
     iob->bind(BIND_SIGNATURE_UINT8, &data.kingdome.rating_cap);
     iob->bind____skip(3);
     iob->bind(BIND_SIGNATURE_INT32, &data.military.native_attack_duration);
@@ -358,8 +359,8 @@ static void city_data_bind_og_layout(io_buffer* iob) {
     iob->bind____skip(4);
     iob->bind(BIND_SIGNATURE_INT8, &data.migration.no_immigration_cause);
     iob->bind____skip(3);
-    iob->bind(BIND_SIGNATURE_INT32, &data.sentiment.protesters);
-    iob->bind(BIND_SIGNATURE_INT32, &data.sentiment.criminals);
+    iob->bind(BIND_SIGNATURE_INT32, &city_sentiment().protesters);
+    iob->bind(BIND_SIGNATURE_INT32, &city_sentiment().criminals);
     iob->bind(BIND_SIGNATURE_UINT8, &data.houses.health);
     iob->bind____skip(3);
     iob->bind(BIND_SIGNATURE_INT32, &data.houses.religion);
@@ -405,11 +406,11 @@ static void city_data_bind_og_layout(io_buffer* iob) {
     iob->bind____skip(3);
     iob->bind(BIND_SIGNATURE_UINT8, &city_festival().second_festival_effect_months);
     iob->bind____skip(7);
-    iob->bind(BIND_SIGNATURE_UINT8, &data.sentiment.unemployment_pct);
+    iob->bind(BIND_SIGNATURE_UINT8, &city_sentiment().unemployment_pct);
     iob->bind____skip(3);
-    iob->bind(BIND_SIGNATURE_INT32, &data.sentiment.previous_value); // ok
+    iob->bind(BIND_SIGNATURE_INT32, &city_sentiment().previous_value); // ok
     iob->bind____skip(4);
-    iob->bind(BIND_SIGNATURE_INT32, &data.sentiment.low_mood_cause);
+    iob->bind(BIND_SIGNATURE_INT32, &city_sentiment().low_mood_cause);
     iob->bind(BIND_SIGNATURE_INT32, &data.figures.security_breach_duration);
     iob->bind____skip(20);
     iob->bind(BIND_SIGNATURE_INT32, &data.kingdome.months_since_gift); // ok
@@ -451,7 +452,7 @@ static void city_data_bind_og_layout(io_buffer* iob) {
     iob->bind____skip(2);
     iob->bind(BIND_SIGNATURE_INT16, &data.figures.enemies);
     iob->bind____skip(2);
-    iob->bind(BIND_SIGNATURE_INT8, &data.sentiment.wages);
+    iob->bind(BIND_SIGNATURE_INT8, &city_sentiment().wages);
     iob->bind____skip(3);
     iob->bind(BIND_SIGNATURE_UINT16, &data.population.people_in_huts);
     iob->bind____skip(2);
@@ -480,7 +481,7 @@ static void city_data_bind_og_layout(io_buffer* iob) {
     iob->bind(BIND_SIGNATURE_INT8, &city_sound().march_enemy);
     iob->bind(BIND_SIGNATURE_INT8, &city_sound().march_horse);
     iob->bind____skip(10);
-    iob->bind(BIND_SIGNATURE_INT8, &data.sentiment.include_huts);
+    iob->bind(BIND_SIGNATURE_INT8, &city_sentiment().include_huts);
     iob->bind____skip(16);
     iob->bind(BIND_SIGNATURE_INT32, &data.population.highest_ever);
     iob->bind(BIND_SIGNATURE_INT32, &data.finance.estimated_wages);

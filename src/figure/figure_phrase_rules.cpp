@@ -1,4 +1,5 @@
 #include "figure/figure_phrase.h"
+#include "city/city_sentiment.h"
 #include "city/city_health.h"
 #include "city/city_labor.h"
 
@@ -245,7 +246,7 @@ namespace {
             break;
 
         case FIGURE_EMIGRANT:
-            switch (g_city.sentiment.low_mood_cause) {
+            switch (city_sentiment().low_mood_cause) {
             case LOW_MOOD_NO_FOOD:
                 st.say(ADVISOR_LABOR, 1);
                 break;
@@ -450,7 +451,7 @@ namespace {
                   = home ? const_cast<building*>(home)->dcast_temple_complex() : nullptr;
                 if (complex && complex->has_upgrade(etc_upgrade_oracle)) {
                     st.say(ADVISOR_HEALTH, 13);
-                } else if (g_city.sentiment.value < 60) {
+                } else if (city_sentiment().value < 60) {
                     st.say(ADVISOR_CHIEF, 11);
                 } else if (g_city.avg_coverage.average_entertainment < 60) {
                     st.say(ADVISOR_ENTERTAINMENT, 12);

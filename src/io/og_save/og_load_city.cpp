@@ -1,4 +1,5 @@
 #include "io/og_save/og_load.h"
+#include "city/city_sentiment.h"
 #include "city/city_health.h"
 #include "city/city_labor.h"
 
@@ -31,7 +32,7 @@ namespace og {
         assign(g_city.buildings.unknown_value, p.building_reserved_id);
         assign(city_taxes().tax_percentage, p.tax_percentage);
         assign(g_city.finance.treasury.value, p.treasury);
-        assign(g_city.sentiment.value, p.sentiment);
+        assign(city_sentiment().value, p.sentiment);
         assign(city_health().target_value, p.health_target);
         assign(city_health().value, p.health);
         assign(city_health().num_mortuary_workers, p.mortuary_workers);
@@ -212,8 +213,8 @@ namespace og {
         }
         assign(g_city.gods.least_happy_god, p.least_happy_god);
         assign(g_city.migration.no_immigration_cause, p.no_immigration_cause);
-        assign(g_city.sentiment.protesters, p.protesters);
-        assign(g_city.sentiment.criminals, p.thefts);
+        assign(city_sentiment().protesters, p.protesters);
+        assign(city_sentiment().criminals, p.thefts);
         assign(g_city.houses.health, p.health_demand);
         assign(g_city.houses.religion, p.religion_demand);
         assign(g_city.houses.education, p.education_demand);
@@ -242,9 +243,9 @@ namespace og {
         assign(g_city.avg_coverage.average_health, p.average_health);
         assign(city_festival().first_festival_effect_months, p.first_festival_effect_months);
         assign(city_festival().second_festival_effect_months, p.second_festival_effect_months);
-        assign(g_city.sentiment.unemployment_pct, p.sentiment_unemployment);
-        assign(g_city.sentiment.previous_value, p.sentiment_previous_value);
-        assign(g_city.sentiment.low_mood_cause, p.sentiment_low_mood_cause);
+        assign(city_sentiment().unemployment_pct, p.sentiment_unemployment);
+        assign(city_sentiment().previous_value, p.sentiment_previous_value);
+        assign(city_sentiment().low_mood_cause, p.sentiment_low_mood_cause);
         assign(g_city.figures.security_breach_duration, p.security_breach_duration);
         assign(g_city.kingdome.months_since_gift, p.months_since_gift);
         assign(g_city.kingdome.gift_overdose_penalty, p.gift_overdose_penalty);
@@ -268,7 +269,7 @@ namespace og {
         assign(g_city.buildings.distribution_center_placed, p.distribution_center_placed);
         assign(g_city.buildings.warships_requested, p.shipyard_boats_requested);
         assign(g_city.figures.enemies, p.enemies);
-        assign(g_city.sentiment.wages, p.sentiment_wages);
+        assign(city_sentiment().wages, p.sentiment_wages);
         assign(g_city.population.people_in_huts, p.people_in_huts);
         assign(g_city.population.people_in_residences, p.people_in_residences_and_up);
         assign(g_city.figures.kingdome_soldiers, p.kingdom_soldiers);
@@ -280,7 +281,7 @@ namespace og {
         assign(g_city.figures.soldiers, p.soldiers);
         assign(city_sound().march_enemy, p.sound_march_enemy);
         assign(city_sound().march_horse, p.sound_march_horse);
-        assign(g_city.sentiment.include_huts, p.sentiment_food_toggle);
+        assign(city_sentiment().include_huts, p.sentiment_food_toggle);
         assign(g_city.population.highest_ever, p.population_highest_ever);
         assign(g_city.finance.estimated_wages, p.estimated_wages);
         assign(g_city.ratings.prosperity_max, p.prosperity_max);

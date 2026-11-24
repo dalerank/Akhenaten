@@ -3,8 +3,8 @@
 #include "core/archive.h"
 #include <cstdint>
 
-struct sentiment_state {
-    int32_t value;
+struct city_sentiment_t {
+    int32_t value = 60;
     int32_t previous_value;
     int32_t message_delay;
 
@@ -26,28 +26,6 @@ struct sentiment_state {
     int32_t contribution_penalty_huts;
     int32_t contribution_religion_coverage;
     int32_t contribution_monuments;
-};
-
-struct population_state;
-struct finance_state;
-struct gods_state;
-struct city_labor_t;
-struct city_buildings_t;
-
-struct sentiment_context {
-    const population_state& population;
-    const finance_state& finance;
-    gods_state& gods;
-    const city_labor_t& labor;
-    city_buildings_t& buildings;
-    bool hathor_oracle;
-    int day;
-    int campaign_scenario_id;
-};
-
-class sentiment_system {
-public:
-    sentiment_system(sentiment_state& state, const sentiment_context& ctx) : _state(state), _ctx(ctx) {}
 
     void init();
     void update();
@@ -58,9 +36,8 @@ public:
     int calc_sentiment_contribution_wages();
     int calc_penalty_for_hut_dwellers();
     void reset_protesters_criminals();
-
-private:
-    sentiment_state& _state;
-    sentiment_context _ctx;
+    void reset();
 };
-ANK_CONFIG_PROPERTY(sentiment_state, value, criminals)
+ANK_CONFIG_PROPERTY(city_sentiment_t, value, criminals)
+
+city_sentiment_t& city_sentiment();

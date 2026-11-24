@@ -1,4 +1,5 @@
 #include "js/test/js_test_common.h"
+#include "city/city_sentiment.h"
 #include "city/city_health.h"
 #include "city/city_labor.h"
 #include "city/city.h"
@@ -75,7 +76,7 @@ static void __test_city_problem_calm() {
     city_labor().unemployment_percentage = 0;
     city_labor().workers_needed = 0;
     g_city.avg_coverage.average_entertainment = 100;
-    g_city.sentiment.value = 100;
+    city_sentiment().value = 100;
 }
 ANK_FUNCTION(__test_city_problem_calm)
 
@@ -89,9 +90,9 @@ static void __test_city_problem_set(xstring key, int value) {
     } else if (key == "entertainment") {
         g_city.avg_coverage.average_entertainment = value;
     } else if (key == "sentiment") {
-        g_city.sentiment.value = value;
+        city_sentiment().value = value;
     } else if (key == "low_mood_cause") {
-        g_city.sentiment.low_mood_cause = value;
+        city_sentiment().low_mood_cause = value;
     } else if (key == "unemployment_percentage") {
         city_labor().unemployment_percentage = (int8_t)value;
     } else if (key == "workers_needed") {

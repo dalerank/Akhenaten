@@ -1,4 +1,5 @@
 #include "js/test/js_test_common.h"
+#include "city/city_sentiment.h"
 #include "core/main_thread.h"
 
 #include "building/building.h"
@@ -947,7 +948,7 @@ void __test_city_data_set_probe() {
     g_city.buildings.trade_center_building_id = 0x3456;
     g_city.figures.soldiers = 0x4567;
     city_sound().march_enemy = 0x55;
-    g_city.sentiment.include_huts = true;
+    city_sentiment().include_huts = true;
     g_city.population.highest_ever = 0x6789;
     g_city.ratings.prosperity_max = 0x42;
 }

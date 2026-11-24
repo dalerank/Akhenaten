@@ -20,7 +20,6 @@
 #include "city/city_population_chunks.h"
 #include "city/city_religion_chunks.h"
 #include "city/city_resource_chunks.h"
-#include "city/city_sentiment_chunks.h"
 #include "city/city_taxes_chunks.h"
 #include "city/city_trade_chunks.h"
 #include "city/coverage_chunks.h"
@@ -118,7 +117,6 @@ void file_schema_svx(const int file_version) {
     } else {
         g_chunk_io.push_chunk<city_buildings_chunk>(city_buildings_chunk::size, false);
         g_chunk_io.push_chunk<city_finance_chunk>(city_finance_chunk::size, false);
-        g_chunk_io.push_chunk<city_sentiment_chunk>(city_sentiment_chunk::size, false);
         g_chunk_io.push_chunk<city_population_chunk>(city_population_chunk::size, false);
         g_chunk_io.push_chunk<city_migration_chunk>(city_migration_chunk::size, false);
         g_chunk_io.push_chunk<city_map_chunk>(city_map_chunk::size, false);

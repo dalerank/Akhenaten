@@ -1,4 +1,5 @@
 ﻿#include "js/js_game.h"
+#include "city/city_sentiment.h"
 #include "city/city_health.h"
 
 #include "building/building_type.h"
@@ -92,7 +93,7 @@ std::optional<bvariant> __city_get_avg_coverage_property(pcstr property) {
 ANK_FUNCTION_1(__city_get_avg_coverage_property)
 
 std::optional<bvariant> __city_get_sentiment_property(pcstr property) {
-    return archive_helper::get(g_city.sentiment, property, true);
+    return archive_helper::get(city_sentiment(), property, true);
 }
 ANK_FUNCTION_1(__city_get_sentiment_property)
 
