@@ -1,4 +1,5 @@
 #include "js/test/js_test_common.h"
+#include "city/city_migration.h"
 #include "city/city_sentiment.h"
 #include "city/city_health.h"
 #include "city/city_labor.h"
@@ -217,8 +218,8 @@ static void __test_sentiment_set(int value) {
 ANK_FUNCTION_1(__test_sentiment_set);
 
 static int __test_migration_update_status() {
-    g_city.migration_sys().update_status();
-    return g_city.migration.percentage;
+    city_migration().update_status();
+    return city_migration().percentage;
 }
 ANK_FUNCTION(__test_migration_update_status);
 

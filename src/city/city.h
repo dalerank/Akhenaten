@@ -8,7 +8,6 @@
 #include "city/city_population.h"
 #include "city/city_finance.h"
 #include "city/buildings.h"
-#include "city/city_migration.h"
 #include "city/military.h"
 #include "city/city_resource.h"
 #include "city/city_food_supply.h"
@@ -44,7 +43,6 @@ struct city_t {
     city_resources_t resource;
     city_food_supply_t food_supply;
 
-    migration_state migration;
 
     ratings_state ratings;
     city_average_coverage_t avg_coverage;
@@ -123,8 +121,6 @@ struct city_t {
     gods_system gods_sys();
     population_context population_ctx();
     population_system population_sys();
-    migration_context migration_ctx();
-    migration_system migration_sys();
     ratings_context ratings_ctx();
     ratings_system ratings_sys();
     kingdome_context kingdome_ctx();

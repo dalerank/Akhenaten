@@ -1,4 +1,5 @@
 ﻿#include "game.h"
+#include "city/city_migration.h"
 #include "game/simulation.h"
 
 #include "building/construction/build_planner.h"
@@ -244,7 +245,7 @@ void game_t::frame_end() {
 
 void game_t::init_state() {
     city_victory().reset();
-    g_city.migration_sys().reset();
+    city_migration().clear_conditions();
     map_ring_init();
 
     g_camera.reset_orientation();

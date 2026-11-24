@@ -106,7 +106,6 @@ void city_t::init() {
     zero_fill(finance);
     zero_fill(resource);
     zero_fill(food_supply);
-    zero_fill(migration);
     zero_fill(ratings);
     zero_fill(avg_coverage);
     zero_fill(gods);
@@ -170,15 +169,6 @@ population_context city_t::population_ctx() {
 
 population_system city_t::population_sys() {
     return population_system(population, population_ctx());
-}
-
-migration_context city_t::migration_ctx() {
-    return {population, population_sys(), city_sentiment(), city_labor(), figures, g_simulation.simtime.year,
-      g_simulation.simtime.month};
-}
-
-migration_system city_t::migration_sys() {
-    return migration_system(migration, migration_ctx());
 }
 
 ratings_context city_t::ratings_ctx() {

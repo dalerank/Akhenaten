@@ -1,4 +1,5 @@
 ﻿#include "js/js_game.h"
+#include "city/city_migration.h"
 #include "city/city_sentiment.h"
 #include "city/city_health.h"
 
@@ -98,7 +99,7 @@ std::optional<bvariant> __city_get_sentiment_property(pcstr property) {
 ANK_FUNCTION_1(__city_get_sentiment_property)
 
 std::optional<bvariant> __city_get_migration_property(pcstr property) {
-    return archive_helper::get(g_city.migration, property, true);
+    return archive_helper::get(city_migration(), property, true);
 }
 ANK_FUNCTION_1(__city_get_migration_property)
 
@@ -248,28 +249,28 @@ int __city_resource_food_consumed_last_month() {
 ANK_FUNCTION(__city_resource_food_consumed_last_month)
 
 int __city_migration_newcomers() {
-    return g_city.migration.newcomers;
+    return city_migration().newcomers;
 }
 ANK_FUNCTION(__city_migration_newcomers)
 
 int __city_migration_percentage() {
-    return g_city.migration.percentage;
+    return city_migration().percentage;
 }
 ANK_FUNCTION(__city_migration_percentage)
 
 int __city_migration_no_room_for_immigrants() {
-    return g_city.migration_sys().no_room_for_immigrants() ? 1 : 0;
+    return city_migration().no_room_for_immigrants() ? 1 : 0;
 }
 ANK_FUNCTION(__city_migration_no_room_for_immigrants)
 
 int __city_migration_problems_cause() {
-    return g_city.migration.problems_cause();
+    return city_migration().problems_cause();
 }
 ANK_FUNCTION(__city_migration_problems_cause)
 
 bvariant_map __city_migration_caps() {
     bvariant_map result;
-    for (const auto& [reason, cap] : migration_system::get_migration_caps()) {
+    for (const auto& [reason, cap] : city_migration().get_migration_caps()) {
         result[reason] = bvariant(cap);
     }
     return result;

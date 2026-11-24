@@ -26,7 +26,9 @@ ANK_CONFIG_STRUCT(city_migration_defaults_t,
     max_newcomers_per_update,
     max_leftovers_per_update)
 
-struct migration_state {
+struct city_migration_t {
+    using condition = std::function<void(city_migration_t&)>;
+
     uint8_t immigration_queue_size;
     uint8_t emigration_queue_size;
     uint16_t immigration_duration;
@@ -49,36 +51,20 @@ struct migration_state {
     bool invading_cap;
 
     int problems_cause() const { return no_immigration_cause; }
-};
-ANK_CONFIG_PROPERTY(migration_state, newcomers, percentage, no_immigration_cause)
 
-struct population_state;
-struct city_sentiment_t;
-struct city_labor_t;
-struct city_figures_t;
+    svector<condition, 16> conditions;
+    std::unordered_map<xstring, int> cap_reasons;
+    std::unordered_map<xstring, std::pair<int, int>> unemployment_cap_reasons;
 
-struct migration_context {
-    population_state& population;
-    population_system population_sys;
-    const city_sentiment_t& sentiment;
-    const city_labor_t& labor;
-    const city_figures_t& figures;
-    int year;
-    int month;
-};
-
-class migration_system {
-public:
-    migration_system(migration_state& state, const migration_context& ctx) : _state(state), _ctx(ctx) {}
-
-    using condition = std::function<void(migration_state&)>;
-    static void add_condition(condition);
-    static void set_migration_cap(xstring reason, int cap);
-    static void set_unemployments_cap(xstring reason, int min, int max);
-    static const std::unordered_map<xstring, int>& get_migration_caps();
     static city_migration_defaults_t& current_params();
 
+    void add_condition(condition cond);
+    void set_migration_cap(xstring reason, int cap);
+    void set_unemployments_cap(xstring reason, int min, int max);
+    const std::unordered_map<xstring, int>& get_migration_caps() const;
+
     void reset();
+    void clear_conditions();
     void update();
     void update_month();
     void update_conditions();
@@ -89,10 +75,9 @@ public:
     void create_immigrants(int num_people);
     void determine_reason();
     int no_room_for_immigrants();
-    void advance_year() { _state.nobles_leave_city_this_year = 0; }
-    void reset_newcomers() { _state.newcomers = 0; }
-
-private:
-    migration_state& _state;
-    migration_context _ctx;
+    void advance_year() { nobles_leave_city_this_year = 0; }
+    void reset_newcomers() { newcomers = 0; }
 };
+ANK_CONFIG_PROPERTY(city_migration_t, newcomers, percentage, no_immigration_cause)
+
+city_migration_t& city_migration();

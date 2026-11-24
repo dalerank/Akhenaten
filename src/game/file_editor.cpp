@@ -1,4 +1,5 @@
 ﻿#include "file_editor.h"
+#include "city/city_migration.h"
 
 #include "building/construction/build_planner.h"
 #include "building/building_storage.h"
@@ -64,7 +65,7 @@ void game_file_editor_clear_data(void) {
     grid_xx::init_all_grids();
 
     city_victory().reset();
-    g_city.migration_sys().reset();
+    city_migration().clear_conditions();
     g_city_planner.reset();
     g_city.init();
     events::start_session();

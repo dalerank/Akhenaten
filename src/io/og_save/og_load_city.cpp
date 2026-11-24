@@ -1,4 +1,5 @@
 #include "io/og_save/og_load.h"
+#include "city/city_migration.h"
 #include "city/city_sentiment.h"
 #include "city/city_health.h"
 #include "city/city_labor.h"
@@ -56,10 +57,10 @@ namespace og {
         assign(g_city.population.yearly_births, p.yearly_births);
         assign(g_city.population.yearly_deaths, p.yearly_deaths);
         assign(g_city.population.lost_removal, p.lost_removal);
-        assign(g_city.migration.immigration_amount_per_batch, p.immigration_amount_per_batch);
-        assign(g_city.migration.emigration_amount_per_batch, p.emigration_amount_per_batch);
-        assign(g_city.migration.emigration_queue_size, p.emigration_queue_size);
-        assign(g_city.migration.immigration_queue_size, p.immigration_queue_size);
+        assign(city_migration().immigration_amount_per_batch, p.immigration_amount_per_batch);
+        assign(city_migration().emigration_amount_per_batch, p.emigration_amount_per_batch);
+        assign(city_migration().emigration_queue_size, p.emigration_queue_size);
+        assign(city_migration().immigration_queue_size, p.immigration_queue_size);
         assign(g_city.population.lost_homeless, p.lost_homeless);
         assign(g_city.population.last_change, p.last_change);
         assign(g_city.population.average_per_year, p.average_per_year);
@@ -70,13 +71,13 @@ namespace og {
         assign(g_city.population.yearly_update_requested, p.yearly_update_requested);
         assign(g_city.population.last_used_house_add, p.last_used_house_add);
         assign(g_city.population.last_used_house_remove, p.last_used_house_remove);
-        assign(g_city.migration.immigrated_today, p.immigrated_today);
-        assign(g_city.migration.emigrated_today, p.emigrated_today);
-        assign(g_city.migration.refused_immigrants_today, p.refused_immigrants_today);
-        assign(g_city.migration.percentage, p.migration_percentage);
-        assign(g_city.migration.emigration_duration, p.emigration_duration);
-        assign(g_city.migration.immigration_duration, p.immigration_duration);
-        assign(g_city.migration.newcomers, p.migration_newcomers);
+        assign(city_migration().immigrated_today, p.immigrated_today);
+        assign(city_migration().emigrated_today, p.emigrated_today);
+        assign(city_migration().refused_immigrants_today, p.refused_immigrants_today);
+        assign(city_migration().percentage, p.migration_percentage);
+        assign(city_migration().emigration_duration, p.emigration_duration);
+        assign(city_migration().immigration_duration, p.immigration_duration);
+        assign(city_migration().newcomers, p.migration_newcomers);
         g_city.map.entry_point = tile2i(p.entry_point_x, p.entry_point_y);
         g_city.map.exit_point = tile2i(p.exit_point_x, p.exit_point_y);
         for (int i = 0; i < 36; i++) {
@@ -212,7 +213,7 @@ namespace og {
             assign(g_city.gods.gods[i].months_since_festival, p.god_months_since_festival[i]);
         }
         assign(g_city.gods.least_happy_god, p.least_happy_god);
-        assign(g_city.migration.no_immigration_cause, p.no_immigration_cause);
+        assign(city_migration().no_immigration_cause, p.no_immigration_cause);
         assign(city_sentiment().protesters, p.protesters);
         assign(city_sentiment().criminals, p.thefts);
         assign(g_city.houses.health, p.health_demand);

@@ -1,4 +1,5 @@
 #include "window/advisor/advisor_comments.h"
+#include "city/city_migration.h"
 #include "city/city_sentiment.h"
 #include "city/city_health.h"
 #include "city/city_labor.h"
@@ -727,11 +728,11 @@ advisor_city_state advisor_city_state_current() {
     s.kingdom_soldiers = g_city.figures.kingdome_soldiers;
     s.enemies = g_city.figures.enemies;
     s.soldiers = g_city.figures.soldiers;
-    s.newcomers = g_city.migration.newcomers;
-    s.refused_immigrants_today = g_city.migration.refused_immigrants_today;
+    s.newcomers = city_migration().newcomers;
+    s.refused_immigrants_today = city_migration().refused_immigrants_today;
     s.room_in_houses = g_city.population.room_in_houses;
-    s.migration_percentage = g_city.migration.percentage;
-    s.no_immigration_cause = g_city.migration.no_immigration_cause;
+    s.migration_percentage = city_migration().percentage;
+    s.no_immigration_cause = city_migration().no_immigration_cause;
     s.unemployment_percentage = city_labor().unemployment_percentage;
     s.workers_needed = city_labor().workers_needed;
     s.kingdom_supplies_grain = g_scenario.kingdom_supplies_grain;

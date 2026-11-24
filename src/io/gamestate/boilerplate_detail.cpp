@@ -1,4 +1,5 @@
 #include "boilerplate_detail.h"
+#include "city/city_migration.h"
 
 #include "building/building.h"
 #include "building/building_barracks.h"
@@ -77,7 +78,7 @@ void GamestateLoadDetail::pre_load() { // do we NEED this...?
 
     // clear data
     city_victory().reset();
-    g_city.migration_sys().reset();
+    city_migration().clear_conditions();
     g_city_planner.reset();
     g_city.init();
     events::start_session();
