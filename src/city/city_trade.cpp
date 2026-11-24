@@ -1,4 +1,5 @@
 #include "city_trade.h"
+#include "game/sim_schedule.h"
 
 #include "building/building_storage_yard.h"
 #include "city/constants.h"
@@ -235,4 +236,12 @@ e_resource trade_system::next_docker_export() {
         _state.docker_export_resource = RESOURCES_MIN;
 
     return _state.docker_export_resource;
+}
+
+ANK_SIM_STEP(trade_export_keep, SIM_PHASE_TICK_SLOT, 11, 120, SIM_AREA_TRADE) {
+    g_city.trade_sys().update_export_keep();
+}
+
+ANK_SIM_STEP(trade, SIM_PHASE_TICK_SLOT, 32, 320, SIM_AREA_TRADE | SIM_AREA_FIGURES) {
+    g_city.trade_sys().update();
 }

@@ -1,4 +1,5 @@
 #include "city_figures.h"
+#include "game/sim_schedule.h"
 #include "grid/figure.h"
 
 #include "core/profiler.h"
@@ -197,4 +198,12 @@ void figure_clear_all() {
         f->state = FIGURE_STATE_NONE;
         f->id = figure_id;
     }
+}
+
+ANK_SIM_STEP(figures, SIM_PHASE_TICK_END, -1, 10, SIM_AREA_FIGURES) {
+    g_city.figures.update();
+}
+
+ANK_SIM_STEP(figures_day, SIM_PHASE_DAY, -1, 90, SIM_AREA_FIGURES) {
+    g_city.figures_update_day();
 }

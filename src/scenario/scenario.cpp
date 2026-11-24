@@ -1,4 +1,5 @@
 #include "scenario.h"
+#include "game/sim_schedule.h"
 
 #include "io/io_buffer.h"
 #include "city/campaign_carry.h"
@@ -497,4 +498,8 @@ void scenario_data_t::update() {
     scenario_earthquake_process();
     events.update_tick();
     //scenario_slave_revolt_process();
+}
+
+ANK_SIM_STEP(scenario, SIM_PHASE_TICK_END, -1, 20, SIM_AREA_SCENARIO) {
+    g_scenario.update();
 }

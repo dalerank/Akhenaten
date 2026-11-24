@@ -1,4 +1,5 @@
 #include "city_industry.h"
+#include "game/sim_schedule.h"
 
 #include "building/building_type.h"
 #include "building/building_farm.h"
@@ -287,4 +288,16 @@ int building_get_workshop_for_raw_material(tile2i tile, e_resource resource, int
     }
 
     return 0;
+}
+
+ANK_SIM_STEP(industry_production, SIM_PHASE_TICK_SLOT, 20, 180, SIM_AREA_BUILDINGS) {
+    g_city.industry.update_production();
+}
+
+ANK_SIM_STEP(farms, SIM_PHASE_TICK_SLOT, 33, 360, SIM_AREA_BUILDINGS) {
+    building_industry_update_farms();
+}
+
+ANK_SIM_STEP(industry_nearby_houses, SIM_PHASE_WEEK, -1, 20, SIM_AREA_BUILDINGS) {
+    g_city.industry.update_nearby_houses_weekly();
 }

@@ -1,4 +1,5 @@
 #include "city_message.h"
+#include "game/sim_schedule.h"
 #include "city/city.h"
 #include "core/system_time.h"
 
@@ -143,7 +144,6 @@ static events::session_subscriber g_message_manager_session(&message_manager_sub
 class messages_system : public sim_system {
 public:
     const char* name() const override { return "messages"; }
-    void on_month() override { message_manager().decrease_delays(); }
 
     void push_save_sections(int file_version) override {
         g_chunk_io.push_chunk<messages_chunk>(48000, false);
@@ -629,4 +629,8 @@ int message_manager_t::get_scroll_position() {
 }
 void message_manager_t::set_scroll_position(int scroll_position) {
     scroll_position = scroll_position;
+}
+
+ANK_SIM_STEP(messages, SIM_PHASE_MONTH, -1, 100, SIM_AREA_MESSAGES) {
+    message_manager().decrease_delays();
 }

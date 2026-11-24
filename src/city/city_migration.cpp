@@ -1,4 +1,5 @@
 #include "city_migration.h"
+#include "game/sim_schedule.h"
 
 #include "building/building_house.h"
 #include "city/city.h"
@@ -305,4 +306,16 @@ int migration_system::no_room_for_immigrants() {
 
 void migration_system::add_condition(condition cond) {
     g_migration_conditions.push_back(cond);
+}
+
+ANK_SIM_STEP(migration, SIM_PHASE_TICK_SLOT, 23, 210, SIM_AREA_MIGRATION) {
+    g_city.migration_sys().update();
+}
+
+ANK_SIM_STEP(migration_month, SIM_PHASE_MONTH_CITY, -1, 10, SIM_AREA_MIGRATION) {
+    g_city.migration_sys().update_month();
+}
+
+ANK_SIM_STEP(migration_year, SIM_PHASE_YEAR, -1, 70, SIM_AREA_MIGRATION) {
+    g_city.migration_sys().advance_year();
 }

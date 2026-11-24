@@ -1,4 +1,5 @@
 #include "city_malaria_risk.h"
+#include "game/sim_schedule.h"
 
 #include "core/profiler.h"
 #include "core/calc.h"
@@ -69,3 +70,11 @@ int __malaria_risk_at_tile(int x, int y) {
 }
 ANK_FUNCTION_2(__malaria_risk_at_tile)
 
+
+ANK_SIM_STEP(malaria_risk, SIM_PHASE_TICK_SLOT, 37, 400, SIM_AREA_MAP) {
+    g_malaria_risk.update();
+}
+
+ANK_SIM_STEP(building_malaria_risk, SIM_PHASE_TICK_SLOT, 46, 480, SIM_AREA_BUILDINGS) {
+    building_update_malaria_risk();
+}

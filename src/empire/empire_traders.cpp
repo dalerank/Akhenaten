@@ -1,4 +1,5 @@
 #include "empire_traders.h"
+#include "game/sim_schedule.h"
 
 #include "empire/empire.h"
 #include "empire/empire_object.h"
@@ -315,4 +316,8 @@ vec2i empire_traders_manager::get_position_on_route(int route_id, int point_inde
         return route.points[point_index].p;
     }
     return vec2i{0, 0};
+}
+
+ANK_SIM_STEP(empire_traders, SIM_PHASE_TICK_SLOT, 32, 310, SIM_AREA_TRADE | SIM_AREA_FIGURES) {
+    g_empire_traders.update();
 }

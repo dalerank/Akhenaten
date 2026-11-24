@@ -1,4 +1,5 @@
 #include "figuretype/figure_funeral_walker.h"
+#include "game/sim_schedule.h"
 
 #include "building/monuments.h"
 #include "city/city.h"
@@ -349,4 +350,8 @@ int figure_funeral_walker::try_spawn_all(bool force_ignore_road) {
         }
     });
     return first_id;
+}
+
+ANK_SIM_STEP(funeral_walkers, SIM_PHASE_DAY, -1, 50, SIM_AREA_FIGURES) {
+    figure_funeral_walker::try_spawn_all(false);
 }

@@ -1,4 +1,5 @@
 #include "empire.h"
+#include "game/sim_schedule.h"
 
 #include "city/city_message.h"
 #include "empire/empire.h"
@@ -26,4 +27,8 @@ void scenario_empire_process_expansion() {
 
     g_scenario.empire.is_expanded = 1;
     messages::popup("message_empire_has_expanded", 0, 0);
+}
+
+ANK_SIM_STEP(empire_expansion, SIM_PHASE_YEAR, -1, 10, SIM_AREA_EMPIRE) {
+    scenario_empire_process_expansion();
 }

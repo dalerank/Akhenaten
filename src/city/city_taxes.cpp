@@ -1,4 +1,5 @@
 #include "city_taxes.h"
+#include "game/sim_schedule.h"
 
 #include "building/building.h"
 #include "building/building_house.h"
@@ -30,8 +31,6 @@ class taxes_system : public sim_system {
 public:
     const char* name() const override { return "taxes"; }
     void on_reset() override { city_taxes().reset(); }
-    void on_month() override { city_taxes().collect_monthly(); }
-    void on_year() override { city_taxes().advance_year(); }
     void push_save_sections(int file_version) override {
         if (file_version >= save_version_city_sections) {
             g_chunk_io.push_chunk<city_taxes_chunk>(city_taxes_chunk::size, false);
@@ -229,4 +228,16 @@ void city_taxes_t::advance_year() {
             house->runtime_data().tax_income = 0;
         }
     });
+}
+
+ANK_SIM_STEP(taxes_month, SIM_PHASE_MONTH_CITY, -1, 40, SIM_AREA_TAXES | SIM_AREA_FINANCE) {
+    city_taxes().collect_monthly();
+}
+
+ANK_SIM_STEP(estimate_taxes, SIM_PHASE_MONTH_END, -1, 10, SIM_AREA_TAXES | SIM_AREA_FINANCE) {
+    city_taxes().update_estimate();
+}
+
+ANK_SIM_STEP(taxes_year, SIM_PHASE_YEAR, -1, 50, SIM_AREA_TAXES | SIM_AREA_FINANCE | SIM_AREA_HOUSES) {
+    city_taxes().advance_year();
 }

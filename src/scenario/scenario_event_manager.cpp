@@ -1,4 +1,5 @@
 #include "scenario_event_manager.h"
+#include "game/sim_schedule.h"
 #include "core/xvalue.h"
 
 #include "building/building.h"
@@ -2023,4 +2024,16 @@ static bool is_line_standalone_group(pcstr start_of_line, int size) {
     //        return false;
     //
     //    return true;
+}
+
+ANK_SIM_STEP(random_events, SIM_PHASE_MONTH, -1, 40, SIM_AREA_SCENARIO) {
+    g_scenario.events.process_random_events();
+}
+
+ANK_SIM_STEP(invasions, SIM_PHASE_MONTH, -1, 50, SIM_AREA_SCENARIO | SIM_AREA_MILITARY) {
+    g_scenario.events.process_invasions();
+}
+
+ANK_SIM_STEP(scenario_events, SIM_PHASE_MONTH, -1, 60, SIM_AREA_SCENARIO) {
+    g_scenario.events.process_events();
 }

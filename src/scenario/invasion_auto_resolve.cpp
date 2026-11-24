@@ -1,4 +1,5 @@
 #include "invasion_auto_resolve.h"
+#include "game/sim_schedule.h"
 
 #include "city/city.h"
 #include "city/city_figures.h"
@@ -678,3 +679,7 @@ void __invasion_auto_resolve_sweep() {
     g_invasion_auto_resolve.sweep_vanished();
 }
 ANK_FUNCTION(__invasion_auto_resolve_sweep)
+
+ANK_SIM_STEP(invasion_auto_resolve, SIM_PHASE_DAY, -1, 20, SIM_AREA_MILITARY) {
+    g_invasion_auto_resolve.update_day();
+}

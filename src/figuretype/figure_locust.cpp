@@ -1,4 +1,6 @@
 #include "figuretype/figure_locust.h"
+#include "game/simulation.h"
+#include "game/sim_schedule.h"
 
 #include "building/building.h"
 #include "building/building_farm.h"
@@ -183,3 +185,7 @@ void __locust_start_plague() {
     figure_locust::start_plague();
 }
 ANK_FUNCTION(__locust_start_plague)
+
+ANK_SIM_STEP(locusts_month, SIM_PHASE_MONTH, -1, 130, SIM_AREA_FIGURES) {
+    figure_locust::update_month(g_simulation.simtime.month + 1);
+}

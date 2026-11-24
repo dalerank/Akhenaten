@@ -1,11 +1,10 @@
 #pragma once
 
 #include "core/custom_span.hpp"
-#include "game/sim_system.h"
+#include "core/app_module.h"
 
 #include <cstdint>
 
-class city_t;
 
 enum e_sim_phase : uint8_t {
     SIM_PHASE_TICK_BEGIN,
@@ -58,13 +57,23 @@ enum e_sim_area : uint32_t {
 struct sim_step {
     e_sim_phase phase;
     int slot;
+    int order;
     const char* name;
     uint32_t writes;
-    void (*run)(city_t& city);
-    e_sim_call call;
+    void (*run)();
 };
 
+void sim_schedule_add(const sim_step& step);
 span_const<sim_step> sim_schedule_steps();
 
-void sim_schedule_run(e_sim_phase phase, city_t& city, int slot = -1);
+void sim_schedule_run(e_sim_phase phase, int slot = -1);
 const char* sim_phase_name(e_sim_phase phase);
+
+#define ANK_SIM_STEP_NAMED(id, name, phase, slot, order, writes)             \
+    static void sim_step_##id();                                             \
+    void ANK_REGISTER_APPLICATION_MODULE(register_sim_step_##id) {           \
+        sim_schedule_add({phase, slot, order, name, writes, sim_step_##id}); \
+    }                                                                        \
+    static void sim_step_##id()
+
+#define ANK_SIM_STEP(id, phase, slot, order, writes) ANK_SIM_STEP_NAMED(id, #id, phase, slot, order, writes)

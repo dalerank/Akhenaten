@@ -1,4 +1,5 @@
 #include "figuretype/figure_flotsam.h"
+#include "game/sim_schedule.h"
 
 #include "city/city_figures.h"
 #include "core/random.h"
@@ -167,4 +168,8 @@ void figure_flotsam::main_image_update() {
     if (action_state() == ACTION_9_FLOTSAM_FLOATING) {
         base.set_flag(e_figure_flag_invisible, false);
     }
+}
+
+ANK_SIM_STEP(flotsam, SIM_PHASE_DAY, -1, 70, SIM_AREA_FIGURES) {
+    figure_flotsam::spawn_update_day();
 }

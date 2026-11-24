@@ -1,4 +1,6 @@
 #include "city_resource.h"
+#include "game/simulation.h"
+#include "game/sim_schedule.h"
 
 #include "building/building.h"
 #include "city/city_industry.h"
@@ -571,4 +573,32 @@ void city_resource_was_added_warning(e_resource res) {
     xstring text;
     text.printf("Added %s", resource_name(res));
     events::emit(event_city_warning{ text });
+}
+
+ANK_SIM_STEP(stocks, SIM_PHASE_TICK_SLOT, 8, 90, SIM_AREA_RESOURCES) {
+    g_city.resource.calculate_stocks();
+}
+
+ANK_SIM_STEP(storageyard_stocks, SIM_PHASE_TICK_SLOT, 16, 140, SIM_AREA_RESOURCES) {
+    city_resource_calculate_storageyard_stocks();
+}
+
+ANK_SIM_STEP(food_stocks, SIM_PHASE_TICK_SLOT, 17, 150, SIM_AREA_RESOURCES) {
+    g_city.resource.calculate_food_stocks_and_supply_wheat();
+}
+
+ANK_SIM_STEP(food_weekly, SIM_PHASE_WEEK, -1, 10, SIM_AREA_RESOURCES | SIM_AREA_HOUSES) {
+    g_city.resource.consume_food_weekly(g_simulation.simtime);
+}
+
+ANK_SIM_STEP(food_monthly, SIM_PHASE_MONTH_CITY, -1, 60, SIM_AREA_RESOURCES | SIM_AREA_HOUSES) {
+    g_city.resource.consume_food_monthly();
+}
+
+ANK_SIM_STEP(resource_month, SIM_PHASE_MONTH_CITY, -1, 70, SIM_AREA_RESOURCES) {
+    g_city.resource.advance_month();
+}
+
+ANK_SIM_STEP(allowed_foods, SIM_PHASE_MONTH_CITY, -1, 90, SIM_AREA_RESOURCES) {
+    g_city.update_allowed_foods();
 }

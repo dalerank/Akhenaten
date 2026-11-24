@@ -1,4 +1,5 @@
 #include "city_fishing_points.h"
+#include "game/sim_schedule.h"
 
 #include "scenario/scenario.h"
 #include "scenario/map.h"
@@ -21,22 +22,6 @@
 
 city_fishing_points_t& city_fishing_points() {
     return xvalue<city_fishing_points_t>::ref();
-}
-
-class fishing_points_system : public sim_system {
-public:
-    const char* name() const override { return "fishing_points"; }
-    void on_month() override {
-        if (game_features::gameplay_change_fishing_points_monthly_respawn.to_bool()
-            && g_city.can_produce_resource(RESOURCE_FISH) && !g_scenario.events.blood_river_sweep_active()) {
-            city_fishing_points().update_month();
-        }
-    }
-};
-
-void ANK_REGISTER_APPLICATION_MODULE(register_fishing_points_system) {
-    static fishing_points_system system;
-    g_simulation.register_system(&system);
 }
 
 void city_fishing_points_t::create() {
@@ -166,4 +151,11 @@ void city_fishing_points_t::update_month(int points_num) {
     }
 
     create();
+}
+
+ANK_SIM_STEP(fishing_points, SIM_PHASE_MONTH_CITY, -1, 140, SIM_AREA_FIGURES) {
+    if (game_features::gameplay_change_fishing_points_monthly_respawn.to_bool()
+        && g_city.can_produce_resource(RESOURCE_FISH) && !g_scenario.events.blood_river_sweep_active()) {
+        city_fishing_points().update_month();
+    }
 }

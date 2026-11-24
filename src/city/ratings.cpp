@@ -1,4 +1,5 @@
 #include "ratings.h"
+#include "game/sim_schedule.h"
 
 #include "building/building.h"
 #include "city/coverage.h"
@@ -149,4 +150,8 @@ void ratings_system::update(bool is_yearly_update) {
     if (is_prosperity_update_month(_ctx.month)) {
         update_prosperity_rating();
     }
+}
+
+ANK_SIM_STEP(ratings_year, SIM_PHASE_YEAR, -1, 100, SIM_AREA_RATINGS) {
+    g_city.ratings_sys().update(true);
 }

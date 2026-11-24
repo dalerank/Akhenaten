@@ -1,4 +1,5 @@
 #include "city.h"
+#include "city/city.h"
 #include "game/sim_schedule.h"
 
 #include "city/constants.h"
@@ -138,7 +139,7 @@ void city_t::reload_objects() {
 }
 
 void city_t::update_month(simulation_time_t simtime) {
-    sim_schedule_run(SIM_PHASE_MONTH_CITY, *this);
+    sim_schedule_run(SIM_PHASE_MONTH_CITY);
 }
 
 finance_context city_t::finance_ctx() {
@@ -280,8 +281,8 @@ void city_t::change_happiness(int amount) {
 }
 
 void city_t::update_tick(int simtick) {
-    sim_schedule_run(SIM_PHASE_TICK_SLOT, *this, simtick);
-    sim_schedule_run(SIM_PHASE_TICK_CITY_END, *this);
+    sim_schedule_run(SIM_PHASE_TICK_SLOT, simtick);
+    sim_schedule_run(SIM_PHASE_TICK_CITY_END);
 }
 
 bool city_t::generate_trader_from(empire_city &city) {
@@ -676,4 +677,8 @@ bool city_t::determine_granary_get_foods(resource_list &foods, int road_network)
     }, BUILDING_GRANARY);
 
     return foods.any();
+}
+
+ANK_SIM_STEP(generate_figures, SIM_PHASE_TICK_SLOT, 31, 300, SIM_AREA_FIGURES) {
+    g_city.buildings_generate_figure();
 }

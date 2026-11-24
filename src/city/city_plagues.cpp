@@ -1,4 +1,5 @@
 #include "city/city_plagues.h"
+#include "game/sim_schedule.h"
 
 #include "core/app_module.h"
 #include "core/xvalue.h"
@@ -12,7 +13,6 @@ class plagues_system : public sim_system {
 public:
     const char* name() const override { return "plagues"; }
     void on_reset() override { city_plagues().reset(); }
-    void on_tick() override { city_plagues().decrease_countdowns(); }
 };
 
 void ANK_REGISTER_APPLICATION_MODULE(register_plagues_system) {
@@ -31,4 +31,8 @@ void city_plagues_t::decrease_countdowns() {
     if (frogs_countdown > 0) {
         frogs_countdown--;
     }
+}
+
+ANK_SIM_STEP(plagues, SIM_PHASE_TICK_CITY_END, -1, 10, SIM_AREA_HEALTH) {
+    city_plagues().decrease_countdowns();
 }

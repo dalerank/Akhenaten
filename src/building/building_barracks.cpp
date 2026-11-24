@@ -1,4 +1,5 @@
 #include "building_barracks.h"
+#include "game/sim_schedule.h"
 
 #include "city/buildings.h"
 #include "city/military.h"
@@ -322,4 +323,8 @@ void building_recruiter::spawn_figure() {
 void building_recruiter::bind_dynamic(io_buffer *iob, size_t version) {
     auto &d = runtime_data();
     iob->bind(BIND_SIGNATURE_UINT8, &d.priority);
+}
+
+ANK_SIM_STEP(tower_sentry_decay, SIM_PHASE_TICK_SLOT, 31, 290, SIM_AREA_MILITARY) {
+    building_barracks_decay_tower_sentry_request();
 }

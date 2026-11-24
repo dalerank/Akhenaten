@@ -1,4 +1,5 @@
 #include "city_buildings.h"
+#include "game/sim_schedule.h"
 
 #include "city/city.h"
 #include "city/building_index.h"
@@ -367,4 +368,8 @@ void building_update_state() {
     if (water_routes_recalc) {
         building_ferry::update_routes();
     }
+}
+
+ANK_SIM_STEP(building_state, SIM_PHASE_TICK_SLOT, 40, 430, SIM_AREA_BUILDINGS) {
+    building_update_state();
 }

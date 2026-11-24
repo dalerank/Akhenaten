@@ -1,4 +1,5 @@
 #include "formation.h"
+#include "game/sim_schedule.h"
 #include "game/game_events.h"
 #include "game/sound_effect.h"
 
@@ -635,4 +636,16 @@ void formation_update_all(bool skip_morale) {
     g_formations.batalions_update();
     g_formations.enemy_update();
     city_animals().update();
+}
+
+ANK_SIM_STEP(formations, SIM_PHASE_TICK_SLOT, 5, 60, SIM_AREA_MILITARY) {
+    formation_update_all(false);
+}
+
+ANK_SIM_STEP(formations_skip_morale, SIM_PHASE_TICK_SLOT, 29, 270, SIM_AREA_MILITARY) {
+    formation_update_all(true);
+}
+
+ANK_SIM_STEP(morale_at_rest, SIM_PHASE_MONTH, -1, 90, SIM_AREA_MILITARY) {
+    formation_update_monthly_morale_at_rest();
 }

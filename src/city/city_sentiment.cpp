@@ -1,4 +1,5 @@
 #include "city_sentiment.h"
+#include "game/sim_schedule.h"
 
 #include "building/building_house.h"
 #include "building/building_temple_complex.h"
@@ -341,4 +342,12 @@ void sentiment_system::update() {
     }
 
     _state.previous_value = _state.value;
+}
+
+ANK_SIM_STEP(reset_protesters, SIM_PHASE_TICK_SLOT, 44, 460, SIM_AREA_SENTIMENT) {
+    g_city.sentiment_sys().reset_protesters_criminals();
+}
+
+ANK_SIM_STEP(sentiment, SIM_PHASE_DAY, -1, 30, SIM_AREA_SENTIMENT) {
+    g_city.sentiment_sys().update_day();
 }

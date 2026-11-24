@@ -1,4 +1,5 @@
 #include "undo.h"
+#include "game/sim_schedule.h"
 
 #include "building/building_storage_yard.h"
 #include "building/building_house.h"
@@ -385,4 +386,12 @@ void game_undo_reduce_time_available(void) {
             }
         }
     }
+}
+
+ANK_SIM_STEP(undo_time, SIM_PHASE_TICK_BEGIN, -1, 30, SIM_AREA_UNDO) {
+    game_undo_reduce_time_available();
+}
+
+ANK_SIM_STEP(undo_disable, SIM_PHASE_YEAR, -1, 20, SIM_AREA_UNDO) {
+    game_undo_disable();
 }

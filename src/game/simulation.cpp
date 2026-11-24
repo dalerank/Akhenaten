@@ -21,30 +21,6 @@ sim_system* simulation_t::find_system(const char* name) const {
     return nullptr;
 }
 
-void simulation_t::call_system(const char* name, e_sim_call call) const {
-    sim_system* system = find_system(name);
-    verify_no_crash(system != nullptr);
-    switch (call) {
-    case SIM_CALL_TICK:
-        system->on_tick();
-        break;
-    case SIM_CALL_DAY:
-        system->on_day();
-        break;
-    case SIM_CALL_WEEK:
-        system->on_week();
-        break;
-    case SIM_CALL_MONTH:
-        system->on_month();
-        break;
-    case SIM_CALL_YEAR:
-        system->on_year();
-        break;
-    case SIM_CALL_NONE:
-        break;
-    }
-}
-
 void simulation_t::reset_systems() const {
     for (sim_system* system : systems) {
         system->on_reset();

@@ -1,4 +1,5 @@
 #include "city_maintenance.h"
+#include "game/sim_schedule.h"
 
 #include "building/building_house.h"
 #include "building/building_temple_complex.h"
@@ -365,4 +366,12 @@ void city_maintenance_t::check_kingdome_access() {
         // TODO: TEMP
         //        city_view_go_to_grid_offset(problem_grid_offset);
     }
+}
+
+ANK_SIM_STEP(kingdome_access, SIM_PHASE_TICK_SLOT, 21, 190, SIM_AREA_BUILDINGS) {
+    g_city.maintenance.check_kingdome_access();
+}
+
+ANK_SIM_STEP(building_destroying, SIM_PHASE_TICK_SLOT, 44, 450, SIM_AREA_BUILDINGS) {
+    g_city.maintenance.check_building_destroying();
 }

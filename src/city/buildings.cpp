@@ -1,4 +1,6 @@
 #include "buildings.h"
+#include "game/game.h"
+#include "game/sim_schedule.h"
 
 #include "building/building_house.h"
 #include "building/building_shipyard.h"
@@ -312,4 +314,36 @@ void city_buildings_t::update_religion_supply_houses() {
     for (auto &s : shrines) {
         mark_shrine_access(s, 3);
     }
+}
+
+ANK_SIM_STEP(buildings_tick, SIM_PHASE_TICK_BEGIN, -1, 50, SIM_AREA_BUILDINGS) {
+    g_city.buildings.update_tick(game.paused);
+}
+
+ANK_SIM_STEP(open_water_access, SIM_PHASE_TICK_SLOT, 19, 170, SIM_AREA_BUILDINGS) {
+    g_city.buildings_update_open_water_access();
+}
+
+ANK_SIM_STEP(water_supply, SIM_PHASE_TICK_SLOT, 27, 250, SIM_AREA_BUILDINGS) {
+    g_city.buildings.update_water_supply();
+}
+
+ANK_SIM_STEP(religion_supply, SIM_PHASE_TICK_SLOT, 28, 260, SIM_AREA_HOUSES) {
+    g_city.buildings.update_religion_supply_houses();
+}
+
+ANK_SIM_STEP(building_counters, SIM_PHASE_TICK_SLOT, 33, 330, SIM_AREA_BUILDINGS) {
+    g_city.buildings.update_counters();
+}
+
+ANK_SIM_STEP(buildings_day, SIM_PHASE_DAY, -1, 80, SIM_AREA_BUILDINGS) {
+    g_city.buildings.update_day();
+}
+
+ANK_SIM_STEP(buildings_month, SIM_PHASE_MONTH_CITY, -1, 130, SIM_AREA_BUILDINGS) {
+    g_city.buildings.update_month();
+}
+
+ANK_SIM_STEP(buildings_year, SIM_PHASE_YEAR, -1, 120, SIM_AREA_BUILDINGS) {
+    g_city.buildings.update_year();
 }

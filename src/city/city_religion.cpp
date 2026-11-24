@@ -1,4 +1,5 @@
 #include "city_religion.h"
+#include "game/sim_schedule.h"
 
 #include "building/construction_blessing.h"
 #include "building/destruction.h"
@@ -999,4 +1000,8 @@ void gods_system::spirit_of_seth_mark_used() {
 
 const god_state::static_params_t &god_state::static_params() const {
     return gods_static_data[type];
+}
+
+ANK_SIM_STEP(religion, SIM_PHASE_TICK_SLOT, 1, 10, SIM_AREA_RELIGION) {
+    g_city.gods_sys().update();
 }

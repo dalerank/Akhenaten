@@ -1,4 +1,6 @@
 #include "city_finance.h"
+#include "city/city.h"
+#include "game/sim_schedule.h"
 
 #include "core/svector.h"
 #include "building/building.h"
@@ -365,4 +367,12 @@ finance_state::treasury_t& finance_state::treasury_t::change(int v) {
     value += v;
     events::emit(event_finance_changed{value});
     return *this;
+}
+
+ANK_SIM_STEP(finance_month, SIM_PHASE_MONTH_CITY, -1, 50, SIM_AREA_FINANCE) {
+    g_city.finance_sys().advance_month();
+}
+
+ANK_SIM_STEP(finance_year, SIM_PHASE_YEAR, -1, 60, SIM_AREA_FINANCE) {
+    g_city.finance_sys().advance_year();
 }

@@ -1,4 +1,5 @@
 #include "scenario_invasion.h"
+#include "game/sim_schedule.h"
 #include "scenario/scenario_invasion_chunks.h"
 
 #include "building/destruction.h"
@@ -996,4 +997,12 @@ int scenario_invasion_start(invasion_opts_t opts) {
 // Layout 1480: header 8 + 16×12 binds + 64×20 history.
 const enemy_properties_t &invasion_data_t::get_prop(e_enemy_type type) {
     return *g_enemy_properties[type];
+}
+
+ANK_SIM_STEP(invasion_bind_resolutions, SIM_PHASE_MONTH, -1, 70, SIM_AREA_MILITARY) {
+    g_invasions.process_bind_resolutions();
+}
+
+ANK_SIM_STEP(invasion_process, SIM_PHASE_MONTH, -1, 80, SIM_AREA_SCENARIO | SIM_AREA_MILITARY) {
+    scenario_invasion_process();
 }

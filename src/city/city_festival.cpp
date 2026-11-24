@@ -1,4 +1,5 @@
 #include "city_festival.h"
+#include "game/sim_schedule.h"
 
 #include <algorithm>
 
@@ -34,7 +35,6 @@ class festival_system : public sim_system {
 public:
     const char* name() const override { return "festival"; }
     void on_reset() override { city_festival().reset(); }
-    void on_month() override { city_festival().advance_month(); }
     void push_save_sections(int file_version) override {
         if (file_version >= save_version_city_sections) {
             g_chunk_io.push_chunk<city_festival_chunk>(city_festival_chunk::size, false);
@@ -169,4 +169,8 @@ void city_festival_t::advance_month() {
         months_till_next = 0;
         execute_festival();
     }
+}
+
+ANK_SIM_STEP(festival, SIM_PHASE_MONTH_CITY, -1, 120, SIM_AREA_FESTIVAL) {
+    city_festival().advance_month();
 }

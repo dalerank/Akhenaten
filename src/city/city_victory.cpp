@@ -1,4 +1,5 @@
 #include "city/city_victory.h"
+#include "game/sim_schedule.h"
 
 #include "building/building_type.h"
 #include "city/city.h"
@@ -26,7 +27,6 @@ class victory_system : public sim_system {
 public:
     const char* name() const override { return "victory"; }
     void on_reset() override { city_victory().reset(); }
-    void on_day() override { city_victory().victory_check(); }
 };
 
 void ANK_REGISTER_APPLICATION_MODULE(register_victory_system) {
@@ -236,4 +236,8 @@ int city_victory_score(int months, int monument_weight) {
     score = score + (double)(int)g_city.finance.treasury / (m * 0.03333333333333333);
     score = score * (((double)game_difficulty() + 1.0) * 0.3333333333333333);
     return (int)(int64_t)score;
+}
+
+ANK_SIM_STEP(victory, SIM_PHASE_DAY, -1, 110, SIM_AREA_VICTORY) {
+    city_victory().victory_check();
 }

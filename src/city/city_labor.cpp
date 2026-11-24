@@ -1,4 +1,5 @@
 #include "city_labor.h"
+#include "game/sim_schedule.h"
 
 #include "building/building.h"
 #include "building/building_farm.h"
@@ -770,4 +771,8 @@ int labor_state::max_selectable_priority(int category) const {
         ++max;
     }
     return max;
+}
+
+ANK_SIM_STEP(labor, SIM_PHASE_TICK_SLOT, 25, 240, SIM_AREA_LABOR) {
+    g_city.labor_sys().update();
 }

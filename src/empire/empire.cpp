@@ -1,4 +1,5 @@
 #include "empire.h"
+#include "game/sim_schedule.h"
 
 #include "core/profiler.h"
 #include "dev/debug.h"
@@ -503,4 +504,12 @@ int empire_t::random_city() {
     const uint32_t h
       = random_hash(g_simulation.simtime.absolute_day(true), (uint32_t)valid_cities.size(), RANDOM_SALT_EMPIRE_CITY);
     return valid_cities[h % valid_cities.size()]->name_id;
+}
+
+ANK_SIM_STEP(empire_month, SIM_PHASE_MONTH, -1, 30, SIM_AREA_EMPIRE) {
+    g_empire.update_month();
+}
+
+ANK_SIM_STEP(yearly_trade_amounts, SIM_PHASE_YEAR, -1, 90, SIM_AREA_EMPIRE | SIM_AREA_TRADE) {
+    g_empire.reset_yearly_trade_amounts();
 }

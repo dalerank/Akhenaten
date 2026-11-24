@@ -1,4 +1,5 @@
 #include "coverage.h"
+#include "game/sim_schedule.h"
 
 #include "building/building_house.h"
 #include "city/constants.h"
@@ -122,4 +123,20 @@ void city_coverage_t::update() {
 int city_average_coverage_t::calc_average_entertainment() {
     const auto &coverage = g_city.coverage;
     return (coverage.senet_house + coverage.pavilion + coverage.bandstand + coverage.booth + coverage.zoo) / 5;
+}
+
+ANK_SIM_STEP(coverage, SIM_PHASE_TICK_SLOT, 1, 20, SIM_AREA_COVERAGE) {
+    g_city.coverage.update();
+}
+
+ANK_SIM_STEP_NAMED(avg_coverage_33, "avg_coverage", SIM_PHASE_TICK_SLOT, 33, 340, SIM_AREA_COVERAGE) {
+    g_city.avg_coverage.update();
+}
+
+ANK_SIM_STEP_NAMED(avg_coverage_49, "avg_coverage", SIM_PHASE_TICK_SLOT, 49, 500, SIM_AREA_COVERAGE) {
+    g_city.avg_coverage.update();
+}
+
+ANK_SIM_STEP_NAMED(avg_coverage_day, "avg_coverage", SIM_PHASE_DAY, -1, 120, SIM_AREA_COVERAGE) {
+    g_city.avg_coverage.update();
 }

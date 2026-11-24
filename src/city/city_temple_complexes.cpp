@@ -1,4 +1,5 @@
 #include "city_temple_complexes.h"
+#include "game/sim_schedule.h"
 
 #include "building/building_temple_complex.h"
 #include "city/buildings.h"
@@ -11,17 +12,6 @@
 
 city_temple_complexes_t& city_temple_complexes() {
     return xvalue<city_temple_complexes_t>::ref();
-}
-
-class temple_complexes_sim_system : public sim_system {
-public:
-    const char* name() const override { return "temple_complexes"; }
-    void on_year() override { city_temple_complexes().ra_yearly_favour(); }
-};
-
-void ANK_REGISTER_APPLICATION_MODULE(register_temple_complexes_system) {
-    static temple_complexes_sim_system system;
-    g_simulation.register_system(&system);
 }
 
 span_const<e_building_type> city_temple_complexes_t::types() {
@@ -75,4 +65,8 @@ void city_temple_complexes_t::ra_yearly_favour() {
     if (id(BUILDING_TEMPLE_COMPLEX_RA)) {
         g_city.kingdome.change(kingdome_state::params().ra_complex_yearly_bonus);
     }
+}
+
+ANK_SIM_STEP(temple_complexes, SIM_PHASE_YEAR, -1, 110, SIM_AREA_RELIGION) {
+    city_temple_complexes().ra_yearly_favour();
 }

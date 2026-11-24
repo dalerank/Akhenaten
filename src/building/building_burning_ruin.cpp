@@ -1,4 +1,5 @@
 #include "building_burning_ruin.h"
+#include "game/sim_schedule.h"
 #include "core/xvalue.h"
 
 #include "game/undo.h"
@@ -180,4 +181,8 @@ bool building_burning_ruin::update() {
     }
 
     return false;
+}
+
+ANK_SIM_STEP(burning_ruins, SIM_PHASE_TICK_SLOT, 43, 440, SIM_AREA_BUILDINGS) {
+    building_burning_ruin::update_all_ruins();
 }

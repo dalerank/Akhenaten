@@ -1,4 +1,5 @@
 #include "distant_battle.h"
+#include "game/sim_schedule.h"
 
 #include "city/buildings.h"
 #include "city/map.h"
@@ -576,3 +577,11 @@ void distant_battles_t::update_time_traveled() {
     }
 }
 
+
+ANK_SIM_STEP(distant_battle, SIM_PHASE_DAY, -1, 10, SIM_AREA_MILITARY) {
+    g_distant_battle.update_day();
+}
+
+ANK_SIM_STEP(distant_battle_month, SIM_PHASE_MONTH, -1, 10, SIM_AREA_MILITARY) {
+    g_distant_battle.update_month();
+}

@@ -1,4 +1,5 @@
 #include "city_desirability.h"
+#include "game/sim_schedule.h"
 
 #include "core/profiler.h"
 #include "building/building.h"
@@ -35,4 +36,8 @@ void building_update_desirability(void) {
             break;
         }
     });
+}
+
+ANK_SIM_STEP(building_desirability, SIM_PHASE_TICK_SLOT, 38, 410, SIM_AREA_BUILDINGS) {
+    building_update_desirability();
 }

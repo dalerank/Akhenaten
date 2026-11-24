@@ -1,4 +1,5 @@
 #include "city/city.h"
+#include "game/sim_schedule.h"
 
 #include "core/profiler.h"
 #include "game/game_events.h"
@@ -137,4 +138,16 @@ void city_t::figures_generate_criminals() {
     
     // Check for theft from mansions
     building_mansion::check_theft_from_mansions();
+}
+
+ANK_SIM_STEP(crime, SIM_PHASE_TICK_SLOT, 30, 280, SIM_AREA_CRIME) {
+    g_crime.update();
+}
+
+ANK_SIM_STEP(criminals, SIM_PHASE_TICK_SLOT, 45, 470, SIM_AREA_FIGURES | SIM_AREA_CRIME) {
+    g_city.figures_generate_criminals();
+}
+
+ANK_SIM_STEP(criminals_day, SIM_PHASE_DAY, -1, 40, SIM_AREA_CRIME | SIM_AREA_HOUSES) {
+    g_city.criminals_update_day();
 }

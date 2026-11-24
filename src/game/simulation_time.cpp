@@ -1,4 +1,7 @@
 #include "simulation_time.h"
+#include "game/game_events.h"
+#include "core/random.h"
+#include "game/sim_schedule.h"
 
 #include "io/io_buffer.h"
 #include "scenario/scenario.h"
@@ -67,4 +70,28 @@ bool simulation_time_t::advance_month() {
 
 void simulation_time_t::advance_year() {
     ++year;
+}
+
+ANK_SIM_STEP(random, SIM_PHASE_TICK_BEGIN, -1, 20, SIM_AREA_RANDOM) {
+    random_generate_next();
+}
+
+ANK_SIM_STEP(event_advance_day, SIM_PHASE_DAY, -1, 130, SIM_AREA_EVENTS) {
+    events::emit(event_advance_day::from_simtime(g_simulation.simtime));
+}
+
+ANK_SIM_STEP(event_advance_week, SIM_PHASE_WEEK, -1, 30, SIM_AREA_EVENTS) {
+    events::emit(event_advance_week::from_simtime(g_simulation.simtime));
+}
+
+ANK_SIM_STEP(random_month, SIM_PHASE_MONTH, -1, 20, SIM_AREA_RANDOM) {
+    random_generate_next();
+}
+
+ANK_SIM_STEP(event_advance_month, SIM_PHASE_MONTH_END, -1, 20, SIM_AREA_EVENTS) {
+    events::emit(event_advance_month::from_simtime(g_simulation.simtime));
+}
+
+ANK_SIM_STEP(simtime_year, SIM_PHASE_YEAR, -1, 30, SIM_AREA_TIME) {
+    g_simulation.simtime.advance_year();
 }

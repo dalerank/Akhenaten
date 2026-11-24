@@ -1,4 +1,5 @@
 #include "city_health.h"
+#include "game/sim_schedule.h"
 
 #include "core/profiler.h"
 #include "core/calc.h"
@@ -273,4 +274,16 @@ void health_system::reset_mortuary_workers() {
 
 void health_system::add_mortuary_workers(int amount) {
     _state.num_mortuary_workers += amount;
+}
+
+ANK_SIM_STEP(health_coverage, SIM_PHASE_TICK_SLOT, 33, 350, SIM_AREA_COVERAGE | SIM_AREA_HEALTH) {
+    g_city.health_sys().update_coverage();
+}
+
+ANK_SIM_STEP(plague_day, SIM_PHASE_DAY, -1, 60, SIM_AREA_HEALTH | SIM_AREA_HOUSES) {
+    g_city.plague_update_day();
+}
+
+ANK_SIM_STEP(health_month, SIM_PHASE_MONTH_CITY, -1, 20, SIM_AREA_HEALTH) {
+    g_city.health_sys().update_month();
 }

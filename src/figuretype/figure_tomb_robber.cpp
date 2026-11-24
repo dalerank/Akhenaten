@@ -1,4 +1,5 @@
 #include "figuretype/figure_tomb_robber.h"
+#include "game/sim_schedule.h"
 
 #include "building/monuments.h"
 #include "city/city.h"
@@ -715,4 +716,11 @@ int figure_tomb_robber::try_professional_wave() {
         return 0;
     }
     return spawn_wave(2);
+}
+
+ANK_SIM_STEP(tomb_robbers_month, SIM_PHASE_MONTH_CITY, -1, 160, SIM_AREA_FIGURES) {
+    if (game_features::gameplay_change_tomb_robber_remake.to_bool()) {
+        figure_tomb_robber::try_spawn(false);
+        figure_tomb_robber::try_professional_wave();
+    }
 }

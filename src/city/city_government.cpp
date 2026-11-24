@@ -1,4 +1,5 @@
 #include "city/city.h"
+#include "game/sim_schedule.h"
 
 #include "building/building.h"
 #include "building/building_mansion.h"
@@ -72,4 +73,8 @@ void city_t::government_distribute_treasury() {
         }
         b.tax_income_or_storage = (int16_t)std::clamp(value, 0, (int)INT16_MAX);
     });
+}
+
+ANK_SIM_STEP(distribute_treasury, SIM_PHASE_TICK_SLOT, 34, 370, SIM_AREA_FINANCE | SIM_AREA_BUILDINGS) {
+    g_city.government_distribute_treasury();
 }

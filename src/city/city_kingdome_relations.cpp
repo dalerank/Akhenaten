@@ -1,4 +1,5 @@
 #include "city_kingdome_relations.h"
+#include "game/sim_schedule.h"
 
 #include "city/city.h"
 #include "core/calc.h"
@@ -409,4 +410,12 @@ void kingdome_state::reset() {
 
 const kingdome_state::static_params& kingdome_state::params() {
     return kingdome_relation;
+}
+
+ANK_SIM_STEP(kingdome, SIM_PHASE_TICK_SLOT, 4, 40, SIM_AREA_KINGDOM) {
+    g_city.kingdome_sys().update();
+}
+
+ANK_SIM_STEP(kingdome_month, SIM_PHASE_MONTH_CITY, -1, 150, SIM_AREA_KINGDOM) {
+    g_city.kingdome_sys().advance_month();
 }

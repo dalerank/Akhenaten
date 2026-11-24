@@ -1,4 +1,5 @@
 #include "city/city_food_supply.h"
+#include "game/sim_schedule.h"
 
 #include "building/building.h"
 #include "building/building_static_params.h"
@@ -155,3 +156,7 @@ int __city_food_supply_percentage() {
     return g_city.food_supply.percentage();
 }
 ANK_FUNCTION(__city_food_supply_percentage)
+
+ANK_SIM_STEP(food_supply_month, SIM_PHASE_MONTH_CITY, -1, 80, SIM_AREA_RESOURCES) {
+    g_city.food_supply.advance_month();
+}
