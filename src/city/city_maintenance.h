@@ -26,6 +26,7 @@ struct city_maintenance_t {
     void subscribe_events();
     void check_kingdome_access();
     void update_fire_direction();
+    void update_burning_ruins();
 
     int find_nearest_enemy_formation(tile2i tile);
 };

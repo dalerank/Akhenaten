@@ -1,5 +1,4 @@
 #include "building_burning_ruin.h"
-#include "game/sim_schedule.h"
 #include "core/xvalue.h"
 
 #include "game/undo.h"
@@ -115,25 +114,6 @@ xspan<uint16_t> building_burning_ruin::get_all() {
     return make_span(ruins.data(), ruins.size());
 }
 
-void building_burning_ruin::update_all_ruins() {
-    OZZY_PROFILER_FUNCTION();
-    bool recalculate_terrain = 0;
-
-    auto& ruins = xvalue<burning_ruins_t>::ref().ids;
-    ruins.clear();
-    buildings_valid_do(
-      [&recalculate_terrain, &ruins](building& b) {
-          auto ruin = b.dcast_burning_ruin();
-          ruins.push_back(b.id);
-          recalculate_terrain |= ruin->update();
-      },
-      BUILDING_BURNING_RUIN);
-
-    if (recalculate_terrain) {
-        map_routing_update_land();
-    }
-}
-
 bool building_burning_ruin::update() {
     if (base.state == BUILDING_STATE_RUBBLE) {
         return true;
@@ -181,8 +161,4 @@ bool building_burning_ruin::update() {
     }
 
     return false;
-}
-
-ANK_SIM_STEP(burning_ruins, SIM_PHASE_TICK_SLOT, 43, 440, SIM_AREA_BUILDINGS) {
-    building_burning_ruin::update_all_ruins();
 }

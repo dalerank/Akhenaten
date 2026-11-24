@@ -1,4 +1,6 @@
 #include "city_maintenance.h"
+#include "core/xvalue.h"
+#include "building/building_burning_ruin.h"
 #include "game/sim_schedule.h"
 
 #include "building/building_house.h"
@@ -368,8 +370,31 @@ void city_maintenance_t::check_kingdome_access() {
     }
 }
 
+void city_maintenance_t::update_burning_ruins() {
+    OZZY_PROFILER_FUNCTION();
+    bool recalculate_terrain = false;
+
+    auto& ruins = xvalue<burning_ruins_t>::ref().ids;
+    ruins.clear();
+    buildings_valid_do(
+      [&recalculate_terrain, &ruins](building& b) {
+          auto ruin = b.dcast_burning_ruin();
+          ruins.push_back(b.id);
+          recalculate_terrain |= ruin->update();
+      },
+      BUILDING_BURNING_RUIN);
+
+    if (recalculate_terrain) {
+        map_routing_update_land();
+    }
+}
+
 ANK_SIM_STEP(kingdome_access, SIM_PHASE_TICK_SLOT, 21, 190, SIM_AREA_BUILDINGS) {
     g_city.maintenance.check_kingdome_access();
+}
+
+ANK_SIM_STEP(burning_ruins, SIM_PHASE_TICK_SLOT, 43, 440, SIM_AREA_BUILDINGS) {
+    g_city.maintenance.update_burning_ruins();
 }
 
 ANK_SIM_STEP(building_destroying, SIM_PHASE_TICK_SLOT, 44, 450, SIM_AREA_BUILDINGS) {

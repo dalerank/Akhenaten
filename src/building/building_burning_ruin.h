@@ -32,7 +32,6 @@ public:
     void extinguish() { base.fire_duration = RUIN_BURN_DAYS + 1 - FIRE_OUT_DURATION; }
 
     static int initial_burned_days(const building& b) { return (b.map_random_7bit & 7) + 1; }
-    static void update_all_ruins();
     static xspan<uint16_t> get_all();
     static std::pair<int, tile2i> get_closest_from(tile2i tile);
 };
