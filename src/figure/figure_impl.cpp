@@ -1,4 +1,5 @@
 #include "figure/figure_impl.h"
+#include "city/city_labor.h"
 #include "grid/figure.h"
 
 #include "figure/figure.h"
@@ -236,12 +237,12 @@ sound_key figure_impl::default_phrase_key() const {
         return "def_no_food_in_city";
     }
 
-    const int unemployment_pct = g_city.labor.unemployment_percentage;
+    const int unemployment_pct = city_labor().unemployment_percentage;
     if (unemployment_pct >= 17) {
         return "def_too_much_unemployments";
     }
 
-    if (g_city.labor.workers_needed >= 10) {
+    if (city_labor().workers_needed >= 10) {
         return "def_need_more_workers";
     }
 

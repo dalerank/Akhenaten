@@ -1,4 +1,5 @@
 #include "figure/figure_phrase.h"
+#include "city/city_labor.h"
 
 #include "building/building.h"
 #include "building/building_dock.h"
@@ -283,9 +284,9 @@ namespace {
             break;
 
         case FIGURE_LABOR_SEEKER:
-            if (g_city.labor.unemployment_percentage > 5) {
+            if (city_labor().unemployment_percentage > 5) {
                 st.say(10);
-            } else if (g_city.labor.workers_needed > 5) {
+            } else if (city_labor().workers_needed > 5) {
                 st.say(11);
             }
             break;
@@ -434,7 +435,7 @@ namespace {
                 }
                 break;
             case GOD_PTAH:
-                if (g_city.labor.workers_needed > 10) {
+                if (city_labor().workers_needed > 10) {
                     st.say(ADVISOR_LABOR, 11);
                 }
                 break;

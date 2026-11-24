@@ -15,7 +15,7 @@ struct labor_category {
 };
 ANK_CONFIG_PROPERTY(labor_category, workers_needed, workers_allocated, priority)
 
-struct labor_state {
+struct city_labor_t {
     int32_t workers_available;
     int32_t workers_employed;
     int32_t workers_unemployed;
@@ -28,19 +28,6 @@ struct labor_state {
     const labor_category* category(int category) const;
     int priority_rank_max() const;
     int max_selectable_priority(int category) const;
-};
-
-struct population_state;
-struct city_resources_t;
-
-struct labor_context {
-    population_state& population;
-    const city_resources_t& resource;
-};
-
-class labor_system {
-public:
-    labor_system(labor_state& state, const labor_context& ctx) : _state(state), _ctx(ctx) {}
 
     static int calc_fixed_workers_available(int num_plebs);
     static void set_category(e_building_type type, int category);
@@ -58,13 +45,14 @@ public:
     void set_priority(int category, int new_priority);
     void clear_storage_priority_if_split_off();
 
+    void reset();
+
 private:
     bool is_industry_disabled(building* b) const;
     bool should_have_workers(building* b, int category, int check_access) const;
-
-    labor_state& _state;
-    labor_context _ctx;
 };
+
+city_labor_t& city_labor();
 
 e_labor_category category_for_building(building* b);
 bool labor_category_split_enabled();
@@ -72,5 +60,5 @@ bool is_enhanced_storage_labor_type(e_building_type type);
 
 template<class T>
 void city_labor_set_category(const T &model) {
-    labor_system::set_category(model.TYPE, model.labor_category);
+    city_labor_t::set_category(model.TYPE, model.labor_category);
 }

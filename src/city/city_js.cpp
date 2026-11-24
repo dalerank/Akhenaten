@@ -301,7 +301,7 @@ std::optional<bvariant> __city_get_labor_category_property(int index, pcstr prop
     if (index < 0 || index >= LABOR_CATEGORY_SIZE) {
         return {};
     }
-    return archive_helper::get(g_city.labor.categories[index], property, true);
+    return archive_helper::get(city_labor().categories[index], property, true);
 }
 ANK_FUNCTION_2(__city_get_labor_category_property)
 
@@ -319,7 +319,7 @@ e_resource __city_allowed_foods(int index) { return g_city.allowed_foods(index);
 ANK_FUNCTION_1(__city_allowed_foods)
 
 int __city_workers_diff() {
-    return g_city.labor.workers_unemployed - g_city.labor.workers_needed;
+    return city_labor().workers_unemployed - city_labor().workers_needed;
 }
 ANK_FUNCTION(__city_workers_diff)
 

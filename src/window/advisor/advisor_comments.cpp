@@ -1,4 +1,5 @@
 #include "window/advisor/advisor_comments.h"
+#include "city/city_labor.h"
 
 #include "city/city.h"
 #include "city/city_taxes.h"
@@ -729,8 +730,8 @@ advisor_city_state advisor_city_state_current() {
     s.room_in_houses = g_city.population.room_in_houses;
     s.migration_percentage = g_city.migration.percentage;
     s.no_immigration_cause = g_city.migration.no_immigration_cause;
-    s.unemployment_percentage = g_city.labor.unemployment_percentage;
-    s.workers_needed = g_city.labor.workers_needed;
+    s.unemployment_percentage = city_labor().unemployment_percentage;
+    s.workers_needed = city_labor().workers_needed;
     s.kingdom_supplies_grain = g_scenario.kingdom_supplies_grain;
     s.food_supply_months = g_city.resource.food_supply_months;
     s.food_stored_total = (int)g_city.resource.granary_total_stored;

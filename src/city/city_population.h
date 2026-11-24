@@ -68,12 +68,12 @@ struct population_state {
 };
 
 struct health_state;
-struct labor_state;
+struct city_labor_t;
 struct city_resources_t;
 
 struct population_context {
     const health_state& health;
-    labor_state& labor;
+    city_labor_t& labor;
     const city_resources_t& resource;
 };
 

@@ -1,4 +1,5 @@
 #include "js/test/js_test_common.h"
+#include "city/city_labor.h"
 #include "city/city.h"
 #include "city/city_problems.h"
 #include "core/bstring.h"
@@ -60,7 +61,7 @@ ANK_FUNCTION_1(__test_city_problem_other_loaded)
 static void __test_city_problem_calm() {
     g_city.health.value = 100;
     g_city.resource.food_supply_months = 12;
-    for (auto& category : g_city.labor.categories) {
+    for (auto& category : city_labor().categories) {
         category.workers_allocated = 0;
         category.workers_needed = 0;
     }
@@ -69,9 +70,9 @@ static void __test_city_problem_calm() {
     }
     g_city.kingdome.rating = 100;
     g_city.population.current = 0;
-    g_city.labor.workers_unemployed = 0;
-    g_city.labor.unemployment_percentage = 0;
-    g_city.labor.workers_needed = 0;
+    city_labor().workers_unemployed = 0;
+    city_labor().unemployment_percentage = 0;
+    city_labor().workers_needed = 0;
     g_city.avg_coverage.average_entertainment = 100;
     g_city.sentiment.value = 100;
 }
@@ -91,9 +92,9 @@ static void __test_city_problem_set(xstring key, int value) {
     } else if (key == "low_mood_cause") {
         g_city.sentiment.low_mood_cause = value;
     } else if (key == "unemployment_percentage") {
-        g_city.labor.unemployment_percentage = (int8_t)value;
+        city_labor().unemployment_percentage = (int8_t)value;
     } else if (key == "workers_needed") {
-        g_city.labor.workers_needed = value;
+        city_labor().workers_needed = value;
     } else if (key == "god_mood") {
         for (auto& god : g_city.gods.gods) {
             god.mood = (uint8_t)value;

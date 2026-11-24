@@ -31,14 +31,14 @@ struct sentiment_state {
 struct population_state;
 struct finance_state;
 struct gods_state;
-struct labor_state;
+struct city_labor_t;
 struct city_buildings_t;
 
 struct sentiment_context {
     const population_state& population;
     const finance_state& finance;
     gods_state& gods;
-    const labor_state& labor;
+    const city_labor_t& labor;
     city_buildings_t& buildings;
     bool hathor_oracle;
     int day;

@@ -1,4 +1,5 @@
 #include "city/city_problems.h"
+#include "city/city_labor.h"
 
 #include <algorithm>
 
@@ -44,7 +45,7 @@ city_problem_inputs city_problem_gather_inputs() {
     in.invasion_running = g_scenario.events.any_invasion_running();
     in.has_defenders = formation_get_num_forts() > 0 || city_own_warships() > 0;
     in.favour_army_sent = g_scenario.events.favour_invasion_fired();
-    for (const auto& category : g_city.labor.categories) {
+    for (const auto& category : city_labor().categories) {
         in.workers_allocated += category.workers_allocated;
         in.workers_needed += category.workers_needed;
     }
@@ -53,7 +54,7 @@ city_problem_inputs city_problem_gather_inputs() {
     }
     in.kingdom_rating = g_city.kingdome.rating;
     in.population = g_city.population.current;
-    in.workers_unemployed = g_city.labor.workers_unemployed;
+    in.workers_unemployed = city_labor().workers_unemployed;
     in.average_entertainment = g_city.avg_coverage.average_entertainment;
     return in;
 }

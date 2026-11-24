@@ -7,7 +7,6 @@
 #include "city/city_industry.h"
 #include "city/city_population.h"
 #include "city/city_finance.h"
-#include "city/city_labor.h"
 #include "city/buildings.h"
 #include "city/city_migration.h"
 #include "city/city_sentiment.h"
@@ -47,7 +46,6 @@ struct city_t {
     city_resources_t resource;
     city_food_supply_t food_supply;
 
-    labor_state labor;
     migration_state migration;
     sentiment_state sentiment;
 
@@ -123,8 +121,6 @@ struct city_t {
     void update_month(simulation_time_t t);
     finance_context finance_ctx();
     finance_system finance_sys();
-    labor_context labor_ctx();
-    labor_system labor_sys();
     trade_context trade_ctx();
     trade_system trade_sys();
     health_context health_ctx();

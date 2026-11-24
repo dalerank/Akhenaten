@@ -54,14 +54,14 @@ ANK_CONFIG_PROPERTY(migration_state, newcomers, percentage, no_immigration_cause
 
 struct population_state;
 struct sentiment_state;
-struct labor_state;
+struct city_labor_t;
 struct city_figures_t;
 
 struct migration_context {
     population_state& population;
     population_system population_sys;
     const sentiment_state& sentiment;
-    const labor_state& labor;
+    const city_labor_t& labor;
     const city_figures_t& figures;
     int year;
     int month;

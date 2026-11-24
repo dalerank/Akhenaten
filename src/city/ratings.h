@@ -47,7 +47,7 @@ ANK_CONFIG_PROPERTY(ratings_state, culture, prosperity, monument, culture_explan
   prosperity_max, prosperity_trend)
 
 struct finance_state;
-struct labor_state;
+struct city_labor_t;
 struct city_resources_t;
 struct population_state;
 struct city_entertainment_t;
@@ -58,7 +58,7 @@ struct city_buildings_t;
 
 struct ratings_context {
     const finance_state& finance;
-    const labor_state& labor;
+    const city_labor_t& labor;
     city_resources_t& resource;
     const population_state& population;
     const city_entertainment_t& entertainment;

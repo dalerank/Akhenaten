@@ -1,4 +1,5 @@
 #include "construction_warnings.h"
+#include "city/city_labor.h"
 
 #include "building/building.h"
 #include "city/city.h"
@@ -143,7 +144,7 @@ namespace {
             if (shown || listed(rules.workers_exempt, b.type) || b.max_workers <= 0) {
                 return;
             }
-            if (g_city.labor.workers_needed >= rules.min_workers_needed) {
+            if (city_labor().workers_needed >= rules.min_workers_needed) {
                 warn(rules.workers);
             }
         }
@@ -270,7 +271,7 @@ void construction_warnings_check_house_plots() {
         pass.warn(rules.eating_more_than_produced);
     }
     const bool first_mission = g_scenario.mode() == e_scenario_normal && g_scenario.campaign_scenario_id == 0;
-    if (!first_mission && g_city.labor.unemployment_percentage > rules.max_unemployment_percent) {
+    if (!first_mission && city_labor().unemployment_percentage > rules.max_unemployment_percent) {
         pass.warn(rules.too_few_jobs);
     }
     if ((int)g_city.resource.granary_total_stored <= g_city.resource.food_needed_per_month / 2) {

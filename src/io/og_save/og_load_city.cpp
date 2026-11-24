@@ -1,4 +1,5 @@
 #include "io/og_save/og_load.h"
+#include "city/city_labor.h"
 
 #include "city/city.h"
 #include "city/city_taxes.h"
@@ -92,19 +93,19 @@ namespace og {
         assign(g_city.resource.granaries.operating, p.granaries_operating);
         assign(g_city.population.percentage_plebs, p.percentage_plebs);
         assign(g_city.population.working_age, p.working_age);
-        assign(g_city.labor.workers_available, p.workers_available);
+        assign(city_labor().workers_available, p.workers_available);
         for (int i = 0; i < 10; i++) {
-            assign(g_city.labor.categories[i].workers_needed, p.labor_categories[i].workers_needed);
-            assign(g_city.labor.categories[i].workers_allocated, p.labor_categories[i].workers_allocated);
-            assign(g_city.labor.categories[i].total_houses_covered, p.labor_categories[i].total_houses_covered);
-            assign(g_city.labor.categories[i].buildings, p.labor_categories[i].buildings);
-            assign(g_city.labor.categories[i].priority, p.labor_categories[i].priority);
+            assign(city_labor().categories[i].workers_needed, p.labor_categories[i].workers_needed);
+            assign(city_labor().categories[i].workers_allocated, p.labor_categories[i].workers_allocated);
+            assign(city_labor().categories[i].total_houses_covered, p.labor_categories[i].total_houses_covered);
+            assign(city_labor().categories[i].buildings, p.labor_categories[i].buildings);
+            assign(city_labor().categories[i].priority, p.labor_categories[i].priority);
         }
-        assign(g_city.labor.workers_employed, p.workers_employed);
-        assign(g_city.labor.workers_unemployed, p.workers_unemployed);
-        assign(g_city.labor.unemployment_percentage, p.unemployment_percentage);
-        assign(g_city.labor.unemployment_percentage_for_goverment, p.unemployment_percentage_for_senate);
-        assign(g_city.labor.workers_needed, p.workers_needed);
+        assign(city_labor().workers_employed, p.workers_employed);
+        assign(city_labor().workers_unemployed, p.workers_unemployed);
+        assign(city_labor().unemployment_percentage, p.unemployment_percentage);
+        assign(city_labor().unemployment_percentage_for_goverment, p.unemployment_percentage_for_senate);
+        assign(city_labor().workers_needed, p.workers_needed);
         assign(g_city.finance.wages, p.wages);
         assign(g_city.finance.wages_kingdome, p.wages_kingdom);
         assign(city_taxes().taxed_citizens, p.taxed_plebs);

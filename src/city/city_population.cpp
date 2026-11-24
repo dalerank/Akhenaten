@@ -243,7 +243,7 @@ void population_system::calculate_working_people() {
         counter += house->house_population();
     });
 
-    labor_system(_ctx.labor, {_state, _ctx.resource}).calculate_workers(num_peasants, num_nobles);
+    _ctx.labor.calculate_workers(num_peasants, num_nobles);
 }
 
 void population_system::recalculate() {

@@ -1,4 +1,5 @@
 #include "city.h"
+#include "city/city_labor.h"
 #include "game/simulation.h"
 #include "core/app_module.h"
 #include "city/city.h"
@@ -103,7 +104,6 @@ void city_t::init() {
     zero_fill(finance);
     zero_fill(resource);
     zero_fill(food_supply);
-    zero_fill(labor);
     zero_fill(migration);
     zero_fill(sentiment);
     zero_fill(health);
@@ -144,19 +144,11 @@ void city_t::update_month(simulation_time_t simtime) {
 }
 
 finance_context city_t::finance_ctx() {
-    return {population, labor, kingdome, g_simulation.simtime.month, g_scenario.debt_interest()};
+    return {population, city_labor(), kingdome, g_simulation.simtime.month, g_scenario.debt_interest()};
 }
 
 finance_system city_t::finance_sys() {
     return finance_system(finance, finance_ctx());
-}
-
-labor_context city_t::labor_ctx() {
-    return {population, resource};
-}
-
-labor_system city_t::labor_sys() {
-    return labor_system(labor, labor_ctx());
 }
 
 trade_context city_t::trade_ctx() {
@@ -186,7 +178,7 @@ gods_system city_t::gods_sys() {
 }
 
 sentiment_context city_t::sentiment_ctx() {
-    return {population, finance, gods, labor, buildings,
+    return {population, finance, gods, city_labor(), buildings,
       city_temple_complexes().has_upgrade(BUILDING_TEMPLE_COMPLEX_BAST, etc_upgrade_oracle), g_simulation.simtime.day,
       g_scenario.campaign_scenario_id};
 }
@@ -196,7 +188,7 @@ sentiment_system city_t::sentiment_sys() {
 }
 
 population_context city_t::population_ctx() {
-    return {health, labor, resource};
+    return {health, city_labor(), resource};
 }
 
 population_system city_t::population_sys() {
@@ -204,8 +196,8 @@ population_system city_t::population_sys() {
 }
 
 migration_context city_t::migration_ctx() {
-    return {
-      population, population_sys(), sentiment, labor, figures, g_simulation.simtime.year, g_simulation.simtime.month};
+    return {population, population_sys(), sentiment, city_labor(), figures, g_simulation.simtime.year,
+      g_simulation.simtime.month};
 }
 
 migration_system city_t::migration_sys() {
@@ -213,7 +205,7 @@ migration_system city_t::migration_sys() {
 }
 
 ratings_context city_t::ratings_ctx() {
-    return {finance, labor, resource, population, city_entertainment(), coverage, gods, sentiment, buildings,
+    return {finance, city_labor(), resource, population, city_entertainment(), coverage, gods, sentiment, buildings,
       kingdome_sys(), city_temple_complexes().has_upgrade(BUILDING_TEMPLE_COMPLEX_RA, etc_upgrade_oracle),
       g_simulation.simtime.year, g_simulation.simtime.month, g_scenario.start_year};
 }
@@ -609,9 +601,9 @@ bvariant city_get_property(xstring domain, xstring name) {
       {tags().rating, tags().kingdom, [](const xstring&) { return bvariant(g_city.kingdome.rating); }},
       {tags().city, "months_since_festival",
         [](const xstring&) { return bvariant(city_festival().months_since_festival); }},
-      {tags().city, "workers_needed", [](const xstring&) { return bvariant(g_city.labor.workers_needed); }},
+      {tags().city, "workers_needed", [](const xstring&) { return bvariant(city_labor().workers_needed); }},
       {tags().city, "workers_diff",
-        [](const xstring&) { return bvariant(g_city.labor.workers_unemployed - g_city.labor.workers_needed); }},
+        [](const xstring&) { return bvariant(city_labor().workers_unemployed - city_labor().workers_needed); }},
     };
 
     for (const auto &prop : cproperties) {

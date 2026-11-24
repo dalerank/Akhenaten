@@ -1,4 +1,5 @@
 #include "js/test/js_test_common.h"
+#include "city/city_labor.h"
 
 #include "game/sim_schedule.h"
 #include "building/building_barracks.h"
@@ -578,9 +579,9 @@ static void __test_finance_last_year_set(pcstr field, int value) {
     else if (name == "tribute_not_paid_total_years")
         f.tribute_not_paid_total_years = (uint8_t)value;
     else if (name == "workers_needed")
-        g_city.labor.workers_needed = value;
+        city_labor().workers_needed = value;
     else if (name == "unemployment_percentage")
-        g_city.labor.unemployment_percentage = (int8_t)value;
+        city_labor().unemployment_percentage = (int8_t)value;
     else if (name == "senet_house_plays")
         city_entertainment().senet_house_plays = value;
     else

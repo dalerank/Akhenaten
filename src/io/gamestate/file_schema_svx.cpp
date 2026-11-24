@@ -17,7 +17,6 @@
 #include "city/city_health_chunks.h"
 #include "city/city_houses_chunks.h"
 #include "city/city_kingdome_relations_chunks.h"
-#include "city/city_labor_chunks.h"
 #include "city/city_migration_chunks.h"
 #include "city/city_population_chunks.h"
 #include "city/city_religion_chunks.h"
@@ -126,7 +125,6 @@ void file_schema_svx(const int file_version) {
         g_chunk_io.push_chunk<city_migration_chunk>(city_migration_chunk::size, false);
         g_chunk_io.push_chunk<city_map_chunk>(city_map_chunk::size, false);
         g_chunk_io.push_chunk<city_resource_chunk>(city_resource_chunk::size, false);
-        g_chunk_io.push_chunk<city_labor_chunk>(city_labor_chunk::size, false);
         g_chunk_io.push_chunk<city_taxes_chunk>(city_taxes_chunk::size, false);
         g_chunk_io.push_chunk<city_kingdome_chunk>(city_kingdome_chunk::size, false);
         g_chunk_io.push_chunk<city_figures_chunk>(city_figures_chunk::size, false);
@@ -254,10 +252,6 @@ void file_schema_svx(const int file_version) {
     if (file_version > 183) {
         // 8 monument slots � 12 = 96
         g_chunk_io.push_chunk<campaign_carry_monuments_chunk>(96, false);
-    }
-    if (file_version > 185) {
-        // STORAGE labor category priority (workers_* recomputed each tick)
-        g_chunk_io.push_chunk<labor_storage_priority_chunk>(4, false);
     }
     if (file_version > 197) {
         // count + reserved + 32 * (id[48] + version[16]) = 2052
