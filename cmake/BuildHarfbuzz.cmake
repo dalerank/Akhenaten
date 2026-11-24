@@ -27,6 +27,14 @@ if(DEFINED FREETYPE_ROOT)
     )
 endif()
 
+if(HARFBUZZ_IS_IOS AND DEFINED FREETYPE_ROOT)
+    set(HARFBUZZ_CMAKE_ARGS ${HARFBUZZ_CMAKE_ARGS}
+        -DFREETYPE_LIBRARY=${FREETYPE_LIBRARY}
+        -DFREETYPE_INCLUDE_DIR_ft2build=${FREETYPE_INCLUDE_DIR}
+        -DFREETYPE_INCLUDE_DIR_freetype2=${FREETYPE_INCLUDE_DIR}
+    )
+endif()
+
 if(HARFBUZZ_IS_MSVC)
     # Multi-config generator (Visual Studio)
     message(STATUS "Configuring harfbuzz...")
