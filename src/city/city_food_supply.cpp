@@ -1,4 +1,6 @@
 #include "city/city_food_supply.h"
+#include "game/simulation.h"
+#include "core/app_module.h"
 #include "game/sim_schedule.h"
 
 #include "building/building.h"
@@ -157,6 +159,16 @@ int __city_food_supply_percentage() {
 }
 ANK_FUNCTION(__city_food_supply_percentage)
 
-ANK_SIM_STEP(food_supply_month, SIM_PHASE_MONTH_CITY, -1, 80, SIM_AREA_RESOURCES) {
-    g_city.food_supply.advance_month();
+class food_supply_system : public sim_system {
+public:
+    const char* name() const override { return "food_supply"; }
+    void register_steps() override {
+        sim_schedule_add({SIM_PHASE_MONTH_CITY, -1, 80, "food_supply_month", SIM_AREA_RESOURCES,
+          [] { g_city.food_supply.advance_month(); }});
+    }
+};
+
+void ANK_REGISTER_APPLICATION_MODULE(register_food_supply_system) {
+    static food_supply_system system;
+    g_simulation.register_system(&system);
 }

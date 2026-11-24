@@ -1,4 +1,6 @@
 #include "figuretype/figure_funeral_walker.h"
+#include "game/simulation.h"
+#include "core/app_module.h"
 #include "game/sim_schedule.h"
 
 #include "building/monuments.h"
@@ -352,6 +354,16 @@ int figure_funeral_walker::try_spawn_all(bool force_ignore_road) {
     return first_id;
 }
 
-ANK_SIM_STEP(funeral_walkers, SIM_PHASE_DAY, -1, 50, SIM_AREA_FIGURES) {
-    figure_funeral_walker::try_spawn_all(false);
+class funeral_walker_system : public sim_system {
+public:
+    const char* name() const override { return "funeral_walker"; }
+    void register_steps() override {
+        sim_schedule_add({SIM_PHASE_DAY, -1, 50, "funeral_walkers", SIM_AREA_FIGURES,
+          [] { figure_funeral_walker::try_spawn_all(false); }});
+    }
+};
+
+void ANK_REGISTER_APPLICATION_MODULE(register_funeral_walker_system) {
+    static funeral_walker_system system;
+    g_simulation.register_system(&system);
 }

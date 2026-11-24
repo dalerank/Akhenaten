@@ -1,4 +1,5 @@
 #include "empire.h"
+#include "core/app_module.h"
 #include "game/sim_schedule.h"
 
 #include "core/profiler.h"
@@ -506,10 +507,17 @@ int empire_t::random_city() {
     return valid_cities[h % valid_cities.size()]->name_id;
 }
 
-ANK_SIM_STEP(empire_month, SIM_PHASE_MONTH, -1, 30, SIM_AREA_EMPIRE) {
-    g_empire.update_month();
-}
+class empire_system : public sim_system {
+public:
+    const char* name() const override { return "empire"; }
+    void register_steps() override {
+        sim_schedule_add({SIM_PHASE_MONTH, -1, 30, "empire_month", SIM_AREA_EMPIRE, [] { g_empire.update_month(); }});
+        sim_schedule_add({SIM_PHASE_YEAR, -1, 90, "yearly_trade_amounts", SIM_AREA_EMPIRE | SIM_AREA_TRADE,
+          [] { g_empire.reset_yearly_trade_amounts(); }});
+    }
+};
 
-ANK_SIM_STEP(yearly_trade_amounts, SIM_PHASE_YEAR, -1, 90, SIM_AREA_EMPIRE | SIM_AREA_TRADE) {
-    g_empire.reset_yearly_trade_amounts();
+void ANK_REGISTER_APPLICATION_MODULE(register_empire_system) {
+    static empire_system system;
+    g_simulation.register_system(&system);
 }

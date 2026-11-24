@@ -1,4 +1,6 @@
 #include "city_malaria_risk.h"
+#include "game/simulation.h"
+#include "core/app_module.h"
 #include "game/sim_schedule.h"
 
 #include "core/profiler.h"
@@ -70,11 +72,17 @@ int __malaria_risk_at_tile(int x, int y) {
 }
 ANK_FUNCTION_2(__malaria_risk_at_tile)
 
+class malaria_risk_system : public sim_system {
+public:
+    const char* name() const override { return "malaria_risk"; }
+    void register_steps() override {
+        sim_schedule_add({SIM_PHASE_TICK_SLOT, 37, 400, "malaria_risk", SIM_AREA_MAP, [] { g_malaria_risk.update(); }});
+        sim_schedule_add({SIM_PHASE_TICK_SLOT, 46, 480, "building_malaria_risk", SIM_AREA_BUILDINGS,
+          [] { building_update_malaria_risk(); }});
+    }
+};
 
-ANK_SIM_STEP(malaria_risk, SIM_PHASE_TICK_SLOT, 37, 400, SIM_AREA_MAP) {
-    g_malaria_risk.update();
-}
-
-ANK_SIM_STEP(building_malaria_risk, SIM_PHASE_TICK_SLOT, 46, 480, SIM_AREA_BUILDINGS) {
-    building_update_malaria_risk();
+void ANK_REGISTER_APPLICATION_MODULE(register_malaria_risk_system) {
+    static malaria_risk_system system;
+    g_simulation.register_system(&system);
 }

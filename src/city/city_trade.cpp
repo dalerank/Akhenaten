@@ -1,4 +1,6 @@
 #include "city_trade.h"
+#include "game/simulation.h"
+#include "core/app_module.h"
 #include "game/sim_schedule.h"
 
 #include "building/building_storage_yard.h"
@@ -238,10 +240,18 @@ e_resource trade_system::next_docker_export() {
     return _state.docker_export_resource;
 }
 
-ANK_SIM_STEP(trade_export_keep, SIM_PHASE_TICK_SLOT, 11, 120, SIM_AREA_TRADE) {
-    g_city.trade_sys().update_export_keep();
-}
+class trade_sim_system : public sim_system {
+public:
+    const char* name() const override { return "trade"; }
+    void register_steps() override {
+        sim_schedule_add({SIM_PHASE_TICK_SLOT, 11, 120, "trade_export_keep", SIM_AREA_TRADE,
+          [] { g_city.trade_sys().update_export_keep(); }});
+        sim_schedule_add({SIM_PHASE_TICK_SLOT, 32, 320, "trade", SIM_AREA_TRADE | SIM_AREA_FIGURES,
+          [] { g_city.trade_sys().update(); }});
+    }
+};
 
-ANK_SIM_STEP(trade, SIM_PHASE_TICK_SLOT, 32, 320, SIM_AREA_TRADE | SIM_AREA_FIGURES) {
-    g_city.trade_sys().update();
+void ANK_REGISTER_APPLICATION_MODULE(register_trade_system) {
+    static trade_sim_system system;
+    g_simulation.register_system(&system);
 }

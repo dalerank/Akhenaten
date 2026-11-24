@@ -1,4 +1,5 @@
 #include "distant_battle.h"
+#include "core/app_module.h"
 #include "game/sim_schedule.h"
 
 #include "city/buildings.h"
@@ -577,11 +578,18 @@ void distant_battles_t::update_time_traveled() {
     }
 }
 
+class distant_battle_system : public sim_system {
+public:
+    const char* name() const override { return "distant_battle"; }
+    void register_steps() override {
+        sim_schedule_add(
+          {SIM_PHASE_DAY, -1, 10, "distant_battle", SIM_AREA_MILITARY, [] { g_distant_battle.update_day(); }});
+        sim_schedule_add({SIM_PHASE_MONTH, -1, 10, "distant_battle_month", SIM_AREA_MILITARY,
+          [] { g_distant_battle.update_month(); }});
+    }
+};
 
-ANK_SIM_STEP(distant_battle, SIM_PHASE_DAY, -1, 10, SIM_AREA_MILITARY) {
-    g_distant_battle.update_day();
-}
-
-ANK_SIM_STEP(distant_battle_month, SIM_PHASE_MONTH, -1, 10, SIM_AREA_MILITARY) {
-    g_distant_battle.update_month();
+void ANK_REGISTER_APPLICATION_MODULE(register_distant_battle_system) {
+    static distant_battle_system system;
+    g_simulation.register_system(&system);
 }

@@ -1,4 +1,6 @@
 #include "map.h"
+#include "game/simulation.h"
+#include "core/app_module.h"
 #include "grid/routing/routing_terrain.h"
 #include "grid/tiles.h"
 #include "grid/vegetation.h"
@@ -57,34 +59,27 @@ tile2i city_map_t::closest_exit_tile_within_radius(int size, int radius) {
     return map_closest_road_within_radius(exit_point, size, radius, true);
 }
 
-ANK_SIM_STEP(tree_growth, SIM_PHASE_TICK_SLOT, 2, 30, SIM_AREA_MAP) {
-    map_tree_growth_update();
-}
+class map_system : public sim_system {
+public:
+    const char* name() const override { return "map"; }
+    void register_steps() override {
+        sim_schedule_add({SIM_PHASE_TICK_SLOT, 2, 30, "tree_growth", SIM_AREA_MAP, [] { map_tree_growth_update(); }});
+        sim_schedule_add(
+          {SIM_PHASE_TICK_SLOT, 5, 50, "irrigation_value", SIM_AREA_MAP, [] { g_irrigation_value.update(); }});
+        sim_schedule_add({SIM_PHASE_TICK_SLOT, 6, 70, "natives_land", SIM_AREA_MAP, [] { map_natives_check_land(); }});
+        sim_schedule_add(
+          {SIM_PHASE_TICK_SLOT, 7, 80, "road_network", SIM_AREA_MAP, [] { g_city.map.update_road_network(); }});
+        sim_schedule_add({SIM_PHASE_TICK_SLOT, 10, 110, "desirability", SIM_AREA_MAP, [] { g_desirability.update(); }});
+        sim_schedule_add(
+          {SIM_PHASE_TICK_SLOT, 18, 160, "vegetation_growth", SIM_AREA_MAP, [] { map_vegetation_growth_update(); }});
+        sim_schedule_add(
+          {SIM_PHASE_MONTH, -1, 110, "roads_images", SIM_AREA_MAP, [] { map_tiles_update_all_roads(); }});
+        sim_schedule_add(
+          {SIM_PHASE_MONTH, -1, 120, "land_citizen_routing", SIM_AREA_MAP, [] { map_routing_update_land_citizen(); }});
+    }
+};
 
-ANK_SIM_STEP(irrigation_value, SIM_PHASE_TICK_SLOT, 5, 50, SIM_AREA_MAP) {
-    g_irrigation_value.update();
-}
-
-ANK_SIM_STEP(natives_land, SIM_PHASE_TICK_SLOT, 6, 70, SIM_AREA_MAP) {
-    map_natives_check_land();
-}
-
-ANK_SIM_STEP(road_network, SIM_PHASE_TICK_SLOT, 7, 80, SIM_AREA_MAP) {
-    g_city.map.update_road_network();
-}
-
-ANK_SIM_STEP(desirability, SIM_PHASE_TICK_SLOT, 10, 110, SIM_AREA_MAP) {
-    g_desirability.update();
-}
-
-ANK_SIM_STEP(vegetation_growth, SIM_PHASE_TICK_SLOT, 18, 160, SIM_AREA_MAP) {
-    map_vegetation_growth_update();
-}
-
-ANK_SIM_STEP(roads_images, SIM_PHASE_MONTH, -1, 110, SIM_AREA_MAP) {
-    map_tiles_update_all_roads();
-}
-
-ANK_SIM_STEP(land_citizen_routing, SIM_PHASE_MONTH, -1, 120, SIM_AREA_MAP) {
-    map_routing_update_land_citizen();
+void ANK_REGISTER_APPLICATION_MODULE(register_map_system) {
+    static map_system system;
+    g_simulation.register_system(&system);
 }

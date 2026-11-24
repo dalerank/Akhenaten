@@ -1,4 +1,6 @@
 #include "undo.h"
+#include "game/simulation.h"
+#include "core/app_module.h"
 #include "game/sim_schedule.h"
 
 #include "building/building_storage_yard.h"
@@ -388,10 +390,17 @@ void game_undo_reduce_time_available(void) {
     }
 }
 
-ANK_SIM_STEP(undo_time, SIM_PHASE_TICK_BEGIN, -1, 30, SIM_AREA_UNDO) {
-    game_undo_reduce_time_available();
-}
+class undo_system : public sim_system {
+public:
+    const char* name() const override { return "undo"; }
+    void register_steps() override {
+        sim_schedule_add(
+          {SIM_PHASE_TICK_BEGIN, -1, 30, "undo_time", SIM_AREA_UNDO, [] { game_undo_reduce_time_available(); }});
+        sim_schedule_add({SIM_PHASE_YEAR, -1, 20, "undo_disable", SIM_AREA_UNDO, [] { game_undo_disable(); }});
+    }
+};
 
-ANK_SIM_STEP(undo_disable, SIM_PHASE_YEAR, -1, 20, SIM_AREA_UNDO) {
-    game_undo_disable();
+void ANK_REGISTER_APPLICATION_MODULE(register_undo_system) {
+    static undo_system system;
+    g_simulation.register_system(&system);
 }

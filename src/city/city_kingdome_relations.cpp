@@ -1,4 +1,6 @@
 #include "city_kingdome_relations.h"
+#include "game/simulation.h"
+#include "core/app_module.h"
 #include "game/sim_schedule.h"
 
 #include "city/city.h"
@@ -412,10 +414,18 @@ const kingdome_state::static_params& kingdome_state::params() {
     return kingdome_relation;
 }
 
-ANK_SIM_STEP(kingdome, SIM_PHASE_TICK_SLOT, 4, 40, SIM_AREA_KINGDOM) {
-    g_city.kingdome_sys().update();
-}
+class kingdome_relations_system : public sim_system {
+public:
+    const char* name() const override { return "kingdome_relations"; }
+    void register_steps() override {
+        sim_schedule_add(
+          {SIM_PHASE_TICK_SLOT, 4, 40, "kingdome", SIM_AREA_KINGDOM, [] { g_city.kingdome_sys().update(); }});
+        sim_schedule_add({SIM_PHASE_MONTH_CITY, -1, 150, "kingdome_month", SIM_AREA_KINGDOM,
+          [] { g_city.kingdome_sys().advance_month(); }});
+    }
+};
 
-ANK_SIM_STEP(kingdome_month, SIM_PHASE_MONTH_CITY, -1, 150, SIM_AREA_KINGDOM) {
-    g_city.kingdome_sys().advance_month();
+void ANK_REGISTER_APPLICATION_MODULE(register_kingdome_relations_system) {
+    static kingdome_relations_system system;
+    g_simulation.register_system(&system);
 }

@@ -1,4 +1,6 @@
 #include "city_maintenance.h"
+#include "game/simulation.h"
+#include "core/app_module.h"
 #include "core/xvalue.h"
 #include "building/building_burning_ruin.h"
 #include "game/sim_schedule.h"
@@ -389,14 +391,20 @@ void city_maintenance_t::update_burning_ruins() {
     }
 }
 
-ANK_SIM_STEP(kingdome_access, SIM_PHASE_TICK_SLOT, 21, 190, SIM_AREA_BUILDINGS) {
-    g_city.maintenance.check_kingdome_access();
-}
+class maintenance_system : public sim_system {
+public:
+    const char* name() const override { return "maintenance"; }
+    void register_steps() override {
+        sim_schedule_add({SIM_PHASE_TICK_SLOT, 21, 190, "kingdome_access", SIM_AREA_BUILDINGS,
+          [] { g_city.maintenance.check_kingdome_access(); }});
+        sim_schedule_add({SIM_PHASE_TICK_SLOT, 43, 440, "burning_ruins", SIM_AREA_BUILDINGS,
+          [] { g_city.maintenance.update_burning_ruins(); }});
+        sim_schedule_add({SIM_PHASE_TICK_SLOT, 44, 450, "building_destroying", SIM_AREA_BUILDINGS,
+          [] { g_city.maintenance.check_building_destroying(); }});
+    }
+};
 
-ANK_SIM_STEP(burning_ruins, SIM_PHASE_TICK_SLOT, 43, 440, SIM_AREA_BUILDINGS) {
-    g_city.maintenance.update_burning_ruins();
-}
-
-ANK_SIM_STEP(building_destroying, SIM_PHASE_TICK_SLOT, 44, 450, SIM_AREA_BUILDINGS) {
-    g_city.maintenance.check_building_destroying();
+void ANK_REGISTER_APPLICATION_MODULE(register_maintenance_system) {
+    static maintenance_system system;
+    g_simulation.register_system(&system);
 }

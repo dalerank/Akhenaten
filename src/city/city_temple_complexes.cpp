@@ -67,6 +67,16 @@ void city_temple_complexes_t::ra_yearly_favour() {
     }
 }
 
-ANK_SIM_STEP(temple_complexes, SIM_PHASE_YEAR, -1, 110, SIM_AREA_RELIGION) {
-    city_temple_complexes().ra_yearly_favour();
+class temple_complexes_system : public sim_system {
+public:
+    const char* name() const override { return "temple_complexes"; }
+    void register_steps() override {
+        sim_schedule_add({SIM_PHASE_YEAR, -1, 110, "temple_complexes", SIM_AREA_RELIGION,
+          [] { city_temple_complexes().ra_yearly_favour(); }});
+    }
+};
+
+void ANK_REGISTER_APPLICATION_MODULE(register_temple_complexes_system) {
+    static temple_complexes_system system;
+    g_simulation.register_system(&system);
 }

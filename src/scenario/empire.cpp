@@ -1,4 +1,5 @@
 #include "empire.h"
+#include "core/app_module.h"
 #include "game/sim_schedule.h"
 
 #include "city/city_message.h"
@@ -29,6 +30,16 @@ void scenario_empire_process_expansion() {
     messages::popup("message_empire_has_expanded", 0, 0);
 }
 
-ANK_SIM_STEP(empire_expansion, SIM_PHASE_YEAR, -1, 10, SIM_AREA_EMPIRE) {
-    scenario_empire_process_expansion();
+class scenario_empire_system : public sim_system {
+public:
+    const char* name() const override { return "scenario_empire"; }
+    void register_steps() override {
+        sim_schedule_add(
+          {SIM_PHASE_YEAR, -1, 10, "empire_expansion", SIM_AREA_EMPIRE, [] { scenario_empire_process_expansion(); }});
+    }
+};
+
+void ANK_REGISTER_APPLICATION_MODULE(register_scenario_empire_system) {
+    static scenario_empire_system system;
+    g_simulation.register_system(&system);
 }

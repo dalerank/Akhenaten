@@ -1,4 +1,6 @@
 #include "coverage.h"
+#include "game/simulation.h"
+#include "core/app_module.h"
 #include "game/sim_schedule.h"
 
 #include "building/building_house.h"
@@ -125,18 +127,21 @@ int city_average_coverage_t::calc_average_entertainment() {
     return (coverage.senet_house + coverage.pavilion + coverage.bandstand + coverage.booth + coverage.zoo) / 5;
 }
 
-ANK_SIM_STEP(coverage, SIM_PHASE_TICK_SLOT, 1, 20, SIM_AREA_COVERAGE) {
-    g_city.coverage.update();
-}
+class coverage_system : public sim_system {
+public:
+    const char* name() const override { return "coverage"; }
+    void register_steps() override {
+        sim_schedule_add({SIM_PHASE_TICK_SLOT, 1, 20, "coverage", SIM_AREA_COVERAGE, [] { g_city.coverage.update(); }});
+        sim_schedule_add(
+          {SIM_PHASE_TICK_SLOT, 33, 340, "avg_coverage", SIM_AREA_COVERAGE, [] { g_city.avg_coverage.update(); }});
+        sim_schedule_add(
+          {SIM_PHASE_TICK_SLOT, 49, 500, "avg_coverage", SIM_AREA_COVERAGE, [] { g_city.avg_coverage.update(); }});
+        sim_schedule_add(
+          {SIM_PHASE_DAY, -1, 120, "avg_coverage", SIM_AREA_COVERAGE, [] { g_city.avg_coverage.update(); }});
+    }
+};
 
-ANK_SIM_STEP_NAMED(avg_coverage_33, "avg_coverage", SIM_PHASE_TICK_SLOT, 33, 340, SIM_AREA_COVERAGE) {
-    g_city.avg_coverage.update();
-}
-
-ANK_SIM_STEP_NAMED(avg_coverage_49, "avg_coverage", SIM_PHASE_TICK_SLOT, 49, 500, SIM_AREA_COVERAGE) {
-    g_city.avg_coverage.update();
-}
-
-ANK_SIM_STEP_NAMED(avg_coverage_day, "avg_coverage", SIM_PHASE_DAY, -1, 120, SIM_AREA_COVERAGE) {
-    g_city.avg_coverage.update();
+void ANK_REGISTER_APPLICATION_MODULE(register_coverage_system) {
+    static coverage_system system;
+    g_simulation.register_system(&system);
 }

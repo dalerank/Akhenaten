@@ -30,6 +30,14 @@ city_taxes_t& city_taxes() {
 class taxes_system : public sim_system {
 public:
     const char* name() const override { return "taxes"; }
+    void register_steps() override {
+        sim_schedule_add({SIM_PHASE_MONTH_CITY, -1, 40, "taxes_month", SIM_AREA_TAXES | SIM_AREA_FINANCE,
+          [] { city_taxes().collect_monthly(); }});
+        sim_schedule_add({SIM_PHASE_MONTH_END, -1, 10, "estimate_taxes", SIM_AREA_TAXES | SIM_AREA_FINANCE,
+          [] { city_taxes().update_estimate(); }});
+        sim_schedule_add({SIM_PHASE_YEAR, -1, 50, "taxes_year", SIM_AREA_TAXES | SIM_AREA_FINANCE | SIM_AREA_HOUSES,
+          [] { city_taxes().advance_year(); }});
+    }
     void on_reset() override { city_taxes().reset(); }
     void push_save_sections(int file_version) override {
         if (file_version >= save_version_city_sections) {
@@ -228,16 +236,4 @@ void city_taxes_t::advance_year() {
             house->runtime_data().tax_income = 0;
         }
     });
-}
-
-ANK_SIM_STEP(taxes_month, SIM_PHASE_MONTH_CITY, -1, 40, SIM_AREA_TAXES | SIM_AREA_FINANCE) {
-    city_taxes().collect_monthly();
-}
-
-ANK_SIM_STEP(estimate_taxes, SIM_PHASE_MONTH_END, -1, 10, SIM_AREA_TAXES | SIM_AREA_FINANCE) {
-    city_taxes().update_estimate();
-}
-
-ANK_SIM_STEP(taxes_year, SIM_PHASE_YEAR, -1, 50, SIM_AREA_TAXES | SIM_AREA_FINANCE | SIM_AREA_HOUSES) {
-    city_taxes().advance_year();
 }

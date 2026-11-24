@@ -1,4 +1,6 @@
 #include "scenario.h"
+#include "game/simulation.h"
+#include "core/app_module.h"
 #include "game/sim_schedule.h"
 
 #include "io/io_buffer.h"
@@ -500,6 +502,15 @@ void scenario_data_t::update() {
     //scenario_slave_revolt_process();
 }
 
-ANK_SIM_STEP(scenario, SIM_PHASE_TICK_END, -1, 20, SIM_AREA_SCENARIO) {
-    g_scenario.update();
+class scenario_system : public sim_system {
+public:
+    const char* name() const override { return "scenario"; }
+    void register_steps() override {
+        sim_schedule_add({SIM_PHASE_TICK_END, -1, 20, "scenario", SIM_AREA_SCENARIO, [] { g_scenario.update(); }});
+    }
+};
+
+void ANK_REGISTER_APPLICATION_MODULE(register_scenario_system) {
+    static scenario_system system;
+    g_simulation.register_system(&system);
 }

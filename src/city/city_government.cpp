@@ -1,4 +1,6 @@
 #include "city/city.h"
+#include "game/simulation.h"
+#include "core/app_module.h"
 #include "game/sim_schedule.h"
 
 #include "building/building.h"
@@ -75,6 +77,16 @@ void city_t::government_distribute_treasury() {
     });
 }
 
-ANK_SIM_STEP(distribute_treasury, SIM_PHASE_TICK_SLOT, 34, 370, SIM_AREA_FINANCE | SIM_AREA_BUILDINGS) {
-    g_city.government_distribute_treasury();
+class government_system : public sim_system {
+public:
+    const char* name() const override { return "government"; }
+    void register_steps() override {
+        sim_schedule_add({SIM_PHASE_TICK_SLOT, 34, 370, "distribute_treasury", SIM_AREA_FINANCE | SIM_AREA_BUILDINGS,
+          [] { g_city.government_distribute_treasury(); }});
+    }
+};
+
+void ANK_REGISTER_APPLICATION_MODULE(register_government_system) {
+    static government_system system;
+    g_simulation.register_system(&system);
 }

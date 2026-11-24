@@ -1,4 +1,6 @@
 #include "city/city.h"
+#include "game/simulation.h"
+#include "core/app_module.h"
 #include "game/sim_schedule.h"
 
 #include "core/profiler.h"
@@ -140,14 +142,19 @@ void city_t::figures_generate_criminals() {
     building_mansion::check_theft_from_mansions();
 }
 
-ANK_SIM_STEP(crime, SIM_PHASE_TICK_SLOT, 30, 280, SIM_AREA_CRIME) {
-    g_crime.update();
-}
+class crime_system : public sim_system {
+public:
+    const char* name() const override { return "crime"; }
+    void register_steps() override {
+        sim_schedule_add({SIM_PHASE_TICK_SLOT, 30, 280, "crime", SIM_AREA_CRIME, [] { g_crime.update(); }});
+        sim_schedule_add({SIM_PHASE_TICK_SLOT, 45, 470, "criminals", SIM_AREA_FIGURES | SIM_AREA_CRIME,
+          [] { g_city.figures_generate_criminals(); }});
+        sim_schedule_add({SIM_PHASE_DAY, -1, 40, "criminals_day", SIM_AREA_CRIME | SIM_AREA_HOUSES,
+          [] { g_city.criminals_update_day(); }});
+    }
+};
 
-ANK_SIM_STEP(criminals, SIM_PHASE_TICK_SLOT, 45, 470, SIM_AREA_FIGURES | SIM_AREA_CRIME) {
-    g_city.figures_generate_criminals();
-}
-
-ANK_SIM_STEP(criminals_day, SIM_PHASE_DAY, -1, 40, SIM_AREA_CRIME | SIM_AREA_HOUSES) {
-    g_city.criminals_update_day();
+void ANK_REGISTER_APPLICATION_MODULE(register_crime_system) {
+    static crime_system system;
+    g_simulation.register_system(&system);
 }

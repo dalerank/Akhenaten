@@ -1,4 +1,6 @@
 #include "city_finance.h"
+#include "game/simulation.h"
+#include "core/app_module.h"
 #include "city/city.h"
 #include "game/sim_schedule.h"
 
@@ -369,10 +371,18 @@ finance_state::treasury_t& finance_state::treasury_t::change(int v) {
     return *this;
 }
 
-ANK_SIM_STEP(finance_month, SIM_PHASE_MONTH_CITY, -1, 50, SIM_AREA_FINANCE) {
-    g_city.finance_sys().advance_month();
-}
+class finance_sim_system : public sim_system {
+public:
+    const char* name() const override { return "finance"; }
+    void register_steps() override {
+        sim_schedule_add({SIM_PHASE_MONTH_CITY, -1, 50, "finance_month", SIM_AREA_FINANCE,
+          [] { g_city.finance_sys().advance_month(); }});
+        sim_schedule_add(
+          {SIM_PHASE_YEAR, -1, 60, "finance_year", SIM_AREA_FINANCE, [] { g_city.finance_sys().advance_year(); }});
+    }
+};
 
-ANK_SIM_STEP(finance_year, SIM_PHASE_YEAR, -1, 60, SIM_AREA_FINANCE) {
-    g_city.finance_sys().advance_year();
+void ANK_REGISTER_APPLICATION_MODULE(register_finance_system) {
+    static finance_sim_system system;
+    g_simulation.register_system(&system);
 }

@@ -1,4 +1,6 @@
 #include "city_figures.h"
+#include "game/simulation.h"
+#include "core/app_module.h"
 #include "game/sim_schedule.h"
 #include "grid/figure.h"
 
@@ -200,10 +202,16 @@ void figure_clear_all() {
     }
 }
 
-ANK_SIM_STEP(figures, SIM_PHASE_TICK_END, -1, 10, SIM_AREA_FIGURES) {
-    g_city.figures.update();
-}
+class figures_system : public sim_system {
+public:
+    const char* name() const override { return "figures"; }
+    void register_steps() override {
+        sim_schedule_add({SIM_PHASE_TICK_END, -1, 10, "figures", SIM_AREA_FIGURES, [] { g_city.figures.update(); }});
+        sim_schedule_add({SIM_PHASE_DAY, -1, 90, "figures_day", SIM_AREA_FIGURES, [] { g_city.figures_update_day(); }});
+    }
+};
 
-ANK_SIM_STEP(figures_day, SIM_PHASE_DAY, -1, 90, SIM_AREA_FIGURES) {
-    g_city.figures_update_day();
+void ANK_REGISTER_APPLICATION_MODULE(register_figures_system) {
+    static figures_system system;
+    g_simulation.register_system(&system);
 }

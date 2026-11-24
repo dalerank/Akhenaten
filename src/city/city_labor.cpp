@@ -1,4 +1,6 @@
 #include "city_labor.h"
+#include "game/simulation.h"
+#include "core/app_module.h"
 #include "game/sim_schedule.h"
 
 #include "building/building.h"
@@ -773,6 +775,15 @@ int labor_state::max_selectable_priority(int category) const {
     return max;
 }
 
-ANK_SIM_STEP(labor, SIM_PHASE_TICK_SLOT, 25, 240, SIM_AREA_LABOR) {
-    g_city.labor_sys().update();
+class labor_sim_system : public sim_system {
+public:
+    const char* name() const override { return "labor"; }
+    void register_steps() override {
+        sim_schedule_add({SIM_PHASE_TICK_SLOT, 25, 240, "labor", SIM_AREA_LABOR, [] { g_city.labor_sys().update(); }});
+    }
+};
+
+void ANK_REGISTER_APPLICATION_MODULE(register_labor_system) {
+    static labor_sim_system system;
+    g_simulation.register_system(&system);
 }

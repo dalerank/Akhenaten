@@ -1,4 +1,6 @@
 #include "figuretype/figure_tomb_robber.h"
+#include "game/simulation.h"
+#include "core/app_module.h"
 #include "game/sim_schedule.h"
 
 #include "building/monuments.h"
@@ -718,9 +720,20 @@ int figure_tomb_robber::try_professional_wave() {
     return spawn_wave(2);
 }
 
-ANK_SIM_STEP(tomb_robbers_month, SIM_PHASE_MONTH_CITY, -1, 160, SIM_AREA_FIGURES) {
-    if (game_features::gameplay_change_tomb_robber_remake.to_bool()) {
-        figure_tomb_robber::try_spawn(false);
-        figure_tomb_robber::try_professional_wave();
+class tomb_robber_system : public sim_system {
+public:
+    const char* name() const override { return "tomb_robber"; }
+    void register_steps() override {
+        sim_schedule_add({SIM_PHASE_MONTH_CITY, -1, 160, "tomb_robbers_month", SIM_AREA_FIGURES, [] {
+                              if (game_features::gameplay_change_tomb_robber_remake.to_bool()) {
+                                  figure_tomb_robber::try_spawn(false);
+                                  figure_tomb_robber::try_professional_wave();
+                              }
+                          }});
     }
+};
+
+void ANK_REGISTER_APPLICATION_MODULE(register_tomb_robber_system) {
+    static tomb_robber_system system;
+    g_simulation.register_system(&system);
 }

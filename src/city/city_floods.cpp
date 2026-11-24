@@ -34,6 +34,10 @@ floods_t& floods() {
 class floods_system : public sim_system {
 public:
     const char* name() const override { return "floods"; }
+    void register_steps() override {
+        sim_schedule_add({SIM_PHASE_TICK_BEGIN, -1, 40, "floods", SIM_AREA_FLOODS | SIM_AREA_MAP,
+          [] { floods().tick_update(false); }});
+    }
 
     void on_load(e_load_phase phase) override {
         if (phase == LOAD_PHASE_MAP_TILES) {
@@ -371,8 +375,4 @@ void floods_t::tick_update(bool calc_only) {
     }
 
     map_floodplain_sub_growth();
-}
-
-ANK_SIM_STEP(floods, SIM_PHASE_TICK_BEGIN, -1, 40, SIM_AREA_FLOODS | SIM_AREA_MAP) {
-    floods().tick_update(false);
 }

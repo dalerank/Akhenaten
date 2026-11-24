@@ -1,4 +1,5 @@
 #include "city_resource.h"
+#include "core/app_module.h"
 #include "game/simulation.h"
 #include "game/sim_schedule.h"
 
@@ -575,30 +576,28 @@ void city_resource_was_added_warning(e_resource res) {
     events::emit(event_city_warning{ text });
 }
 
-ANK_SIM_STEP(stocks, SIM_PHASE_TICK_SLOT, 8, 90, SIM_AREA_RESOURCES) {
-    g_city.resource.calculate_stocks();
-}
+class resource_system : public sim_system {
+public:
+    const char* name() const override { return "resource"; }
+    void register_steps() override {
+        sim_schedule_add(
+          {SIM_PHASE_TICK_SLOT, 8, 90, "stocks", SIM_AREA_RESOURCES, [] { g_city.resource.calculate_stocks(); }});
+        sim_schedule_add({SIM_PHASE_TICK_SLOT, 16, 140, "storageyard_stocks", SIM_AREA_RESOURCES,
+          [] { city_resource_calculate_storageyard_stocks(); }});
+        sim_schedule_add({SIM_PHASE_TICK_SLOT, 17, 150, "food_stocks", SIM_AREA_RESOURCES,
+          [] { g_city.resource.calculate_food_stocks_and_supply_wheat(); }});
+        sim_schedule_add({SIM_PHASE_WEEK, -1, 10, "food_weekly", SIM_AREA_RESOURCES | SIM_AREA_HOUSES,
+          [] { g_city.resource.consume_food_weekly(g_simulation.simtime); }});
+        sim_schedule_add({SIM_PHASE_MONTH_CITY, -1, 60, "food_monthly", SIM_AREA_RESOURCES | SIM_AREA_HOUSES,
+          [] { g_city.resource.consume_food_monthly(); }});
+        sim_schedule_add({SIM_PHASE_MONTH_CITY, -1, 70, "resource_month", SIM_AREA_RESOURCES,
+          [] { g_city.resource.advance_month(); }});
+        sim_schedule_add(
+          {SIM_PHASE_MONTH_CITY, -1, 90, "allowed_foods", SIM_AREA_RESOURCES, [] { g_city.update_allowed_foods(); }});
+    }
+};
 
-ANK_SIM_STEP(storageyard_stocks, SIM_PHASE_TICK_SLOT, 16, 140, SIM_AREA_RESOURCES) {
-    city_resource_calculate_storageyard_stocks();
-}
-
-ANK_SIM_STEP(food_stocks, SIM_PHASE_TICK_SLOT, 17, 150, SIM_AREA_RESOURCES) {
-    g_city.resource.calculate_food_stocks_and_supply_wheat();
-}
-
-ANK_SIM_STEP(food_weekly, SIM_PHASE_WEEK, -1, 10, SIM_AREA_RESOURCES | SIM_AREA_HOUSES) {
-    g_city.resource.consume_food_weekly(g_simulation.simtime);
-}
-
-ANK_SIM_STEP(food_monthly, SIM_PHASE_MONTH_CITY, -1, 60, SIM_AREA_RESOURCES | SIM_AREA_HOUSES) {
-    g_city.resource.consume_food_monthly();
-}
-
-ANK_SIM_STEP(resource_month, SIM_PHASE_MONTH_CITY, -1, 70, SIM_AREA_RESOURCES) {
-    g_city.resource.advance_month();
-}
-
-ANK_SIM_STEP(allowed_foods, SIM_PHASE_MONTH_CITY, -1, 90, SIM_AREA_RESOURCES) {
-    g_city.update_allowed_foods();
+void ANK_REGISTER_APPLICATION_MODULE(register_resource_system) {
+    static resource_system system;
+    g_simulation.register_system(&system);
 }

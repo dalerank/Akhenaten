@@ -1,4 +1,5 @@
 #include "empire_traders.h"
+#include "core/app_module.h"
 #include "game/sim_schedule.h"
 
 #include "empire/empire.h"
@@ -318,6 +319,16 @@ vec2i empire_traders_manager::get_position_on_route(int route_id, int point_inde
     return vec2i{0, 0};
 }
 
-ANK_SIM_STEP(empire_traders, SIM_PHASE_TICK_SLOT, 32, 310, SIM_AREA_TRADE | SIM_AREA_FIGURES) {
-    g_empire_traders.update();
+class empire_traders_system : public sim_system {
+public:
+    const char* name() const override { return "empire_traders"; }
+    void register_steps() override {
+        sim_schedule_add({SIM_PHASE_TICK_SLOT, 32, 310, "empire_traders", SIM_AREA_TRADE | SIM_AREA_FIGURES,
+          [] { g_empire_traders.update(); }});
+    }
+};
+
+void ANK_REGISTER_APPLICATION_MODULE(register_empire_traders_system) {
+    static empire_traders_system system;
+    g_simulation.register_system(&system);
 }

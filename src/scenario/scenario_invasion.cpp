@@ -1,4 +1,5 @@
 #include "scenario_invasion.h"
+#include "core/app_module.h"
 #include "game/sim_schedule.h"
 #include "scenario/scenario_invasion_chunks.h"
 
@@ -999,10 +1000,18 @@ const enemy_properties_t &invasion_data_t::get_prop(e_enemy_type type) {
     return *g_enemy_properties[type];
 }
 
-ANK_SIM_STEP(invasion_bind_resolutions, SIM_PHASE_MONTH, -1, 70, SIM_AREA_MILITARY) {
-    g_invasions.process_bind_resolutions();
-}
+class scenario_invasion_system : public sim_system {
+public:
+    const char* name() const override { return "scenario_invasion"; }
+    void register_steps() override {
+        sim_schedule_add({SIM_PHASE_MONTH, -1, 70, "invasion_bind_resolutions", SIM_AREA_MILITARY,
+          [] { g_invasions.process_bind_resolutions(); }});
+        sim_schedule_add({SIM_PHASE_MONTH, -1, 80, "invasion_process", SIM_AREA_SCENARIO | SIM_AREA_MILITARY,
+          [] { scenario_invasion_process(); }});
+    }
+};
 
-ANK_SIM_STEP(invasion_process, SIM_PHASE_MONTH, -1, 80, SIM_AREA_SCENARIO | SIM_AREA_MILITARY) {
-    scenario_invasion_process();
+void ANK_REGISTER_APPLICATION_MODULE(register_scenario_invasion_system) {
+    static scenario_invasion_system system;
+    g_simulation.register_system(&system);
 }

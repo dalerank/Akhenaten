@@ -1,4 +1,5 @@
 #include "city_sentiment.h"
+#include "core/app_module.h"
 #include "game/sim_schedule.h"
 
 #include "building/building_house.h"
@@ -345,10 +346,18 @@ void sentiment_system::update() {
     _state.previous_value = _state.value;
 }
 
-ANK_SIM_STEP(reset_protesters, SIM_PHASE_TICK_SLOT, 44, 460, SIM_AREA_SENTIMENT) {
-    g_city.sentiment_sys().reset_protesters_criminals();
-}
+class sentiment_sim_system : public sim_system {
+public:
+    const char* name() const override { return "sentiment"; }
+    void register_steps() override {
+        sim_schedule_add({SIM_PHASE_TICK_SLOT, 44, 460, "reset_protesters", SIM_AREA_SENTIMENT,
+          [] { g_city.sentiment_sys().reset_protesters_criminals(); }});
+        sim_schedule_add(
+          {SIM_PHASE_DAY, -1, 30, "sentiment", SIM_AREA_SENTIMENT, [] { g_city.sentiment_sys().update_day(); }});
+    }
+};
 
-ANK_SIM_STEP(sentiment, SIM_PHASE_DAY, -1, 30, SIM_AREA_SENTIMENT) {
-    g_city.sentiment_sys().update_day();
+void ANK_REGISTER_APPLICATION_MODULE(register_sentiment_system) {
+    static sentiment_sim_system system;
+    g_simulation.register_system(&system);
 }

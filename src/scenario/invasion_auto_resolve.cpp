@@ -1,4 +1,6 @@
 #include "invasion_auto_resolve.h"
+#include "game/simulation.h"
+#include "core/app_module.h"
 #include "game/sim_schedule.h"
 
 #include "city/city.h"
@@ -680,6 +682,16 @@ void __invasion_auto_resolve_sweep() {
 }
 ANK_FUNCTION(__invasion_auto_resolve_sweep)
 
-ANK_SIM_STEP(invasion_auto_resolve, SIM_PHASE_DAY, -1, 20, SIM_AREA_MILITARY) {
-    g_invasion_auto_resolve.update_day();
+class invasion_auto_resolve_system : public sim_system {
+public:
+    const char* name() const override { return "invasion_auto_resolve"; }
+    void register_steps() override {
+        sim_schedule_add({SIM_PHASE_DAY, -1, 20, "invasion_auto_resolve", SIM_AREA_MILITARY,
+          [] { g_invasion_auto_resolve.update_day(); }});
+    }
+};
+
+void ANK_REGISTER_APPLICATION_MODULE(register_invasion_auto_resolve_system) {
+    static invasion_auto_resolve_system system;
+    g_simulation.register_system(&system);
 }

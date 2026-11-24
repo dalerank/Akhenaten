@@ -1,4 +1,5 @@
 #include "figuretype/figure_locust.h"
+#include "core/app_module.h"
 #include "game/simulation.h"
 #include "game/sim_schedule.h"
 
@@ -186,6 +187,16 @@ void __locust_start_plague() {
 }
 ANK_FUNCTION(__locust_start_plague)
 
-ANK_SIM_STEP(locusts_month, SIM_PHASE_MONTH, -1, 130, SIM_AREA_FIGURES) {
-    figure_locust::update_month(g_simulation.simtime.month + 1);
+class locust_system : public sim_system {
+public:
+    const char* name() const override { return "locust"; }
+    void register_steps() override {
+        sim_schedule_add({SIM_PHASE_MONTH, -1, 130, "locusts_month", SIM_AREA_FIGURES,
+          [] { figure_locust::update_month(g_simulation.simtime.month + 1); }});
+    }
+};
+
+void ANK_REGISTER_APPLICATION_MODULE(register_locust_system) {
+    static locust_system system;
+    g_simulation.register_system(&system);
 }

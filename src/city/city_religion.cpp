@@ -1,4 +1,6 @@
 #include "city_religion.h"
+#include "game/simulation.h"
+#include "core/app_module.h"
 #include "game/sim_schedule.h"
 
 #include "building/construction_blessing.h"
@@ -1002,6 +1004,16 @@ const god_state::static_params_t &god_state::static_params() const {
     return gods_static_data[type];
 }
 
-ANK_SIM_STEP(religion, SIM_PHASE_TICK_SLOT, 1, 10, SIM_AREA_RELIGION) {
-    g_city.gods_sys().update();
+class religion_system : public sim_system {
+public:
+    const char* name() const override { return "religion"; }
+    void register_steps() override {
+        sim_schedule_add(
+          {SIM_PHASE_TICK_SLOT, 1, 10, "religion", SIM_AREA_RELIGION, [] { g_city.gods_sys().update(); }});
+    }
+};
+
+void ANK_REGISTER_APPLICATION_MODULE(register_religion_system) {
+    static religion_system system;
+    g_simulation.register_system(&system);
 }

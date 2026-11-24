@@ -26,6 +26,9 @@ city_victory_t& city_victory() {
 class victory_system : public sim_system {
 public:
     const char* name() const override { return "victory"; }
+    void register_steps() override {
+        sim_schedule_add({SIM_PHASE_DAY, -1, 110, "victory", SIM_AREA_VICTORY, [] { city_victory().victory_check(); }});
+    }
     void on_reset() override { city_victory().reset(); }
 };
 
@@ -236,8 +239,4 @@ int city_victory_score(int months, int monument_weight) {
     score = score + (double)(int)g_city.finance.treasury / (m * 0.03333333333333333);
     score = score * (((double)game_difficulty() + 1.0) * 0.3333333333333333);
     return (int)(int64_t)score;
-}
-
-ANK_SIM_STEP(victory, SIM_PHASE_DAY, -1, 110, SIM_AREA_VICTORY) {
-    city_victory().victory_check();
 }

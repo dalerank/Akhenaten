@@ -41,6 +41,10 @@ city_local_cults_t& city_local_cults() {
 class local_cults_sim_system : public sim_system {
 public:
     const char* name() const override { return "local_cults"; }
+    void register_steps() override {
+        sim_schedule_add({SIM_PHASE_MONTH_CITY, -1, 110, "local_cults", SIM_AREA_RELIGION,
+          [] { city_local_cults().advance_month(); }});
+    }
     void on_reset() override { city_local_cults().reset(); }
     void push_save_sections(int file_version) override { g_chunk_io.push_chunk<local_cults_chunk>(64, false); }
 };
@@ -231,8 +235,4 @@ void city_local_cults_t::advance_month() {
         }
         break;
     }
-}
-
-ANK_SIM_STEP(local_cults, SIM_PHASE_MONTH_CITY, -1, 110, SIM_AREA_RELIGION) {
-    city_local_cults().advance_month();
 }

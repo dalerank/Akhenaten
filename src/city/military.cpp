@@ -1,4 +1,6 @@
 #include "military.h"
+#include "game/simulation.h"
+#include "core/app_module.h"
 #include "game/sim_schedule.h"
 
 #include "city/buildings.h"
@@ -76,6 +78,16 @@ bool city_military_t::has_tower_sentry_request() const {
     return tower_sentry_request > 0;
 }
 
-ANK_SIM_STEP(tower_sentry_decay, SIM_PHASE_TICK_SLOT, 31, 290, SIM_AREA_MILITARY) {
-    g_city.military.decay_tower_sentry_request();
+class military_system : public sim_system {
+public:
+    const char* name() const override { return "military"; }
+    void register_steps() override {
+        sim_schedule_add({SIM_PHASE_TICK_SLOT, 31, 290, "tower_sentry_decay", SIM_AREA_MILITARY,
+          [] { g_city.military.decay_tower_sentry_request(); }});
+    }
+};
+
+void ANK_REGISTER_APPLICATION_MODULE(register_military_system) {
+    static military_system system;
+    g_simulation.register_system(&system);
 }

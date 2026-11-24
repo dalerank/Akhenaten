@@ -1,4 +1,6 @@
 #include "figuretype/figure_flotsam.h"
+#include "game/simulation.h"
+#include "core/app_module.h"
 #include "game/sim_schedule.h"
 
 #include "city/city_figures.h"
@@ -170,6 +172,16 @@ void figure_flotsam::main_image_update() {
     }
 }
 
-ANK_SIM_STEP(flotsam, SIM_PHASE_DAY, -1, 70, SIM_AREA_FIGURES) {
-    figure_flotsam::spawn_update_day();
+class flotsam_system : public sim_system {
+public:
+    const char* name() const override { return "flotsam"; }
+    void register_steps() override {
+        sim_schedule_add(
+          {SIM_PHASE_DAY, -1, 70, "flotsam", SIM_AREA_FIGURES, [] { figure_flotsam::spawn_update_day(); }});
+    }
+};
+
+void ANK_REGISTER_APPLICATION_MODULE(register_flotsam_system) {
+    static flotsam_system system;
+    g_simulation.register_system(&system);
 }

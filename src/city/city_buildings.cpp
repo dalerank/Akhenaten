@@ -1,4 +1,6 @@
 #include "city_buildings.h"
+#include "game/simulation.h"
+#include "core/app_module.h"
 #include "game/sim_schedule.h"
 
 #include "city/city.h"
@@ -370,6 +372,16 @@ void building_update_state() {
     }
 }
 
-ANK_SIM_STEP(building_state, SIM_PHASE_TICK_SLOT, 40, 430, SIM_AREA_BUILDINGS) {
-    building_update_state();
+class building_states_system : public sim_system {
+public:
+    const char* name() const override { return "building_states"; }
+    void register_steps() override {
+        sim_schedule_add(
+          {SIM_PHASE_TICK_SLOT, 40, 430, "building_state", SIM_AREA_BUILDINGS, [] { building_update_state(); }});
+    }
+};
+
+void ANK_REGISTER_APPLICATION_MODULE(register_building_states_system) {
+    static building_states_system system;
+    g_simulation.register_system(&system);
 }

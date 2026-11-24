@@ -1,4 +1,6 @@
 #include "city_population.h"
+#include "game/simulation.h"
+#include "core/app_module.h"
 #include "game/sim_schedule.h"
 
 #include "building/building_house.h"
@@ -617,35 +619,30 @@ int city_population_yearly_births() {
     return city_data.population.yearly_births;
 }
 
+class population_sim_system : public sim_system {
+public:
+    const char* name() const override { return "population"; }
+    void register_steps() override {
+        sim_schedule_add({SIM_PHASE_TICK_BEGIN, -1, 10, "housing_type_counts", SIM_AREA_POPULATION,
+          [] { g_city.population_sys().housing_type_counts_update(); }});
+        sim_schedule_add({SIM_PHASE_TICK_SLOT, 22, 200, "population_room", SIM_AREA_POPULATION,
+          [] { g_city.population_sys().update_room(); }});
+        sim_schedule_add({SIM_PHASE_TICK_SLOT, 23, 220, "population_migration", SIM_AREA_POPULATION,
+          [] { g_city.population_sys().update_migration(); }});
+        sim_schedule_add({SIM_PHASE_TICK_SLOT, 24, 230, "evict_overcrowded", SIM_AREA_POPULATION | SIM_AREA_FIGURES,
+          [] { g_city.population_sys().evict_overcrowded(); }});
+        sim_schedule_add({SIM_PHASE_DAY, -1, 100, "population_day", SIM_AREA_POPULATION,
+          [] { g_city.population_sys().update_day(); }});
+        sim_schedule_add({SIM_PHASE_MONTH_CITY, -1, 30, "population_at_levels", SIM_AREA_POPULATION,
+          [] { g_city.population_sys().count_at_levels(); }});
+        sim_schedule_add({SIM_PHASE_MONTH_CITY, -1, 100, "population_record", SIM_AREA_POPULATION,
+          [] { g_city.population_sys().record_monthly(); }});
+        sim_schedule_add({SIM_PHASE_YEAR, -1, 40, "population_yearly_request", SIM_AREA_POPULATION,
+          [] { city_population_request_yearly_update(); }});
+    }
+};
 
-ANK_SIM_STEP(housing_type_counts, SIM_PHASE_TICK_BEGIN, -1, 10, SIM_AREA_POPULATION) {
-    g_city.population_sys().housing_type_counts_update();
-}
-
-ANK_SIM_STEP(population_room, SIM_PHASE_TICK_SLOT, 22, 200, SIM_AREA_POPULATION) {
-    g_city.population_sys().update_room();
-}
-
-ANK_SIM_STEP(population_migration, SIM_PHASE_TICK_SLOT, 23, 220, SIM_AREA_POPULATION) {
-    g_city.population_sys().update_migration();
-}
-
-ANK_SIM_STEP(evict_overcrowded, SIM_PHASE_TICK_SLOT, 24, 230, SIM_AREA_POPULATION | SIM_AREA_FIGURES) {
-    g_city.population_sys().evict_overcrowded();
-}
-
-ANK_SIM_STEP(population_day, SIM_PHASE_DAY, -1, 100, SIM_AREA_POPULATION) {
-    g_city.population_sys().update_day();
-}
-
-ANK_SIM_STEP(population_at_levels, SIM_PHASE_MONTH_CITY, -1, 30, SIM_AREA_POPULATION) {
-    g_city.population_sys().count_at_levels();
-}
-
-ANK_SIM_STEP(population_record, SIM_PHASE_MONTH_CITY, -1, 100, SIM_AREA_POPULATION) {
-    g_city.population_sys().record_monthly();
-}
-
-ANK_SIM_STEP(population_yearly_request, SIM_PHASE_YEAR, -1, 40, SIM_AREA_POPULATION) {
-    city_population_request_yearly_update();
+void ANK_REGISTER_APPLICATION_MODULE(register_population_system) {
+    static population_sim_system system;
+    g_simulation.register_system(&system);
 }

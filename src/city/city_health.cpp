@@ -1,4 +1,5 @@
 #include "city_health.h"
+#include "core/app_module.h"
 #include "game/sim_schedule.h"
 
 #include "core/profiler.h"
@@ -276,14 +277,20 @@ void health_system::add_mortuary_workers(int amount) {
     _state.num_mortuary_workers += amount;
 }
 
-ANK_SIM_STEP(health_coverage, SIM_PHASE_TICK_SLOT, 33, 350, SIM_AREA_COVERAGE | SIM_AREA_HEALTH) {
-    g_city.health_sys().update_coverage();
-}
+class health_sim_system : public sim_system {
+public:
+    const char* name() const override { return "health"; }
+    void register_steps() override {
+        sim_schedule_add({SIM_PHASE_TICK_SLOT, 33, 350, "health_coverage", SIM_AREA_COVERAGE | SIM_AREA_HEALTH,
+          [] { g_city.health_sys().update_coverage(); }});
+        sim_schedule_add(
+          {SIM_PHASE_DAY, -1, 60, "plague_day", SIM_AREA_HEALTH | SIM_AREA_HOUSES, [] { g_city.plague_update_day(); }});
+        sim_schedule_add(
+          {SIM_PHASE_MONTH_CITY, -1, 20, "health_month", SIM_AREA_HEALTH, [] { g_city.health_sys().update_month(); }});
+    }
+};
 
-ANK_SIM_STEP(plague_day, SIM_PHASE_DAY, -1, 60, SIM_AREA_HEALTH | SIM_AREA_HOUSES) {
-    g_city.plague_update_day();
-}
-
-ANK_SIM_STEP(health_month, SIM_PHASE_MONTH_CITY, -1, 20, SIM_AREA_HEALTH) {
-    g_city.health_sys().update_month();
+void ANK_REGISTER_APPLICATION_MODULE(register_health_system) {
+    static health_sim_system system;
+    g_simulation.register_system(&system);
 }

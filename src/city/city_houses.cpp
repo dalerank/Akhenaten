@@ -1,4 +1,5 @@
 #include "city/city.h"
+#include "core/app_module.h"
 #include "game/sim_schedule.h"
 
 #include "core/random.h"
@@ -222,26 +223,26 @@ void city_t::house_service_calculate_culture_aggregates() {
     }
 }
 
-ANK_SIM_STEP(house_service_decay, SIM_PHASE_TICK_SLOT, 9, 100, SIM_AREA_HOUSES) {
-    g_city.house_decay_services();
-}
+class houses_system : public sim_system {
+public:
+    const char* name() const override { return "houses"; }
+    void register_steps() override {
+        sim_schedule_add(
+          {SIM_PHASE_TICK_SLOT, 9, 100, "house_service_decay", SIM_AREA_HOUSES, [] { g_city.house_decay_services(); }});
+        sim_schedule_add({SIM_PHASE_TICK_SLOT, 12, 130, "houses_covered_decay", SIM_AREA_BUILDINGS,
+          [] { g_city.house_service_decay_houses_covered(); }});
+        sim_schedule_add({SIM_PHASE_TICK_SLOT, 35, 380, "house_health", SIM_AREA_HOUSES,
+          [] { g_city.house_service_update_health(); }});
+        sim_schedule_add({SIM_PHASE_TICK_SLOT, 36, 390, "culture_aggregates", SIM_AREA_HOUSES,
+          [] { g_city.house_service_calculate_culture_aggregates(); }});
+        sim_schedule_add({SIM_PHASE_TICK_SLOT, 39, 420, "house_evolve",
+          SIM_AREA_HOUSES | SIM_AREA_BUILDINGS | SIM_AREA_MAP, [] { g_city.house_process_evolve(); }});
+        sim_schedule_add({SIM_PHASE_TICK_SLOT, 48, 490, "house_tax_coverage_decay", SIM_AREA_HOUSES,
+          [] { g_city.house_decay_tax_coverage(); }});
+    }
+};
 
-ANK_SIM_STEP(houses_covered_decay, SIM_PHASE_TICK_SLOT, 12, 130, SIM_AREA_BUILDINGS) {
-    g_city.house_service_decay_houses_covered();
-}
-
-ANK_SIM_STEP(house_health, SIM_PHASE_TICK_SLOT, 35, 380, SIM_AREA_HOUSES) {
-    g_city.house_service_update_health();
-}
-
-ANK_SIM_STEP(culture_aggregates, SIM_PHASE_TICK_SLOT, 36, 390, SIM_AREA_HOUSES) {
-    g_city.house_service_calculate_culture_aggregates();
-}
-
-ANK_SIM_STEP(house_evolve, SIM_PHASE_TICK_SLOT, 39, 420, SIM_AREA_HOUSES | SIM_AREA_BUILDINGS | SIM_AREA_MAP) {
-    g_city.house_process_evolve();
-}
-
-ANK_SIM_STEP(house_tax_coverage_decay, SIM_PHASE_TICK_SLOT, 48, 490, SIM_AREA_HOUSES) {
-    g_city.house_decay_tax_coverage();
+void ANK_REGISTER_APPLICATION_MODULE(register_houses_system) {
+    static houses_system system;
+    g_simulation.register_system(&system);
 }

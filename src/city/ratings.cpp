@@ -1,4 +1,6 @@
 #include "ratings.h"
+#include "game/simulation.h"
+#include "core/app_module.h"
 #include "game/sim_schedule.h"
 
 #include "building/building.h"
@@ -152,6 +154,16 @@ void ratings_system::update(bool is_yearly_update) {
     }
 }
 
-ANK_SIM_STEP(ratings_year, SIM_PHASE_YEAR, -1, 100, SIM_AREA_RATINGS) {
-    g_city.ratings_sys().update(true);
+class ratings_sim_system : public sim_system {
+public:
+    const char* name() const override { return "ratings"; }
+    void register_steps() override {
+        sim_schedule_add(
+          {SIM_PHASE_YEAR, -1, 100, "ratings_year", SIM_AREA_RATINGS, [] { g_city.ratings_sys().update(true); }});
+    }
+};
+
+void ANK_REGISTER_APPLICATION_MODULE(register_ratings_system) {
+    static ratings_sim_system system;
+    g_simulation.register_system(&system);
 }

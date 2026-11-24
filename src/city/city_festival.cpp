@@ -34,6 +34,10 @@ city_festival_t& city_festival() {
 class festival_system : public sim_system {
 public:
     const char* name() const override { return "festival"; }
+    void register_steps() override {
+        sim_schedule_add(
+          {SIM_PHASE_MONTH_CITY, -1, 120, "festival", SIM_AREA_FESTIVAL, [] { city_festival().advance_month(); }});
+    }
     void on_reset() override { city_festival().reset(); }
     void push_save_sections(int file_version) override {
         if (file_version >= save_version_city_sections) {
@@ -169,8 +173,4 @@ void city_festival_t::advance_month() {
         months_till_next = 0;
         execute_festival();
     }
-}
-
-ANK_SIM_STEP(festival, SIM_PHASE_MONTH_CITY, -1, 120, SIM_AREA_FESTIVAL) {
-    city_festival().advance_month();
 }

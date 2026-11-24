@@ -1,4 +1,6 @@
 #include "city.h"
+#include "game/simulation.h"
+#include "core/app_module.h"
 #include "city/city.h"
 #include "game/sim_schedule.h"
 
@@ -678,6 +680,16 @@ bool city_t::determine_granary_get_foods(resource_list &foods, int road_network)
     return foods.any();
 }
 
-ANK_SIM_STEP(generate_figures, SIM_PHASE_TICK_SLOT, 31, 300, SIM_AREA_FIGURES) {
-    g_city.buildings_generate_figure();
+class city_system : public sim_system {
+public:
+    const char* name() const override { return "city"; }
+    void register_steps() override {
+        sim_schedule_add({SIM_PHASE_TICK_SLOT, 31, 300, "generate_figures", SIM_AREA_FIGURES,
+          [] { g_city.buildings_generate_figure(); }});
+    }
+};
+
+void ANK_REGISTER_APPLICATION_MODULE(register_city_system) {
+    static city_system system;
+    g_simulation.register_system(&system);
 }

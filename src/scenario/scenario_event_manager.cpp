@@ -1,4 +1,5 @@
 #include "scenario_event_manager.h"
+#include "core/app_module.h"
 #include "game/sim_schedule.h"
 #include "core/xvalue.h"
 
@@ -2026,14 +2027,20 @@ static bool is_line_standalone_group(pcstr start_of_line, int size) {
     //    return true;
 }
 
-ANK_SIM_STEP(random_events, SIM_PHASE_MONTH, -1, 40, SIM_AREA_SCENARIO) {
-    g_scenario.events.process_random_events();
-}
+class scenario_event_manager_system : public sim_system {
+public:
+    const char* name() const override { return "scenario_event_manager"; }
+    void register_steps() override {
+        sim_schedule_add({SIM_PHASE_MONTH, -1, 40, "random_events", SIM_AREA_SCENARIO,
+          [] { g_scenario.events.process_random_events(); }});
+        sim_schedule_add({SIM_PHASE_MONTH, -1, 50, "invasions", SIM_AREA_SCENARIO | SIM_AREA_MILITARY,
+          [] { g_scenario.events.process_invasions(); }});
+        sim_schedule_add(
+          {SIM_PHASE_MONTH, -1, 60, "scenario_events", SIM_AREA_SCENARIO, [] { g_scenario.events.process_events(); }});
+    }
+};
 
-ANK_SIM_STEP(invasions, SIM_PHASE_MONTH, -1, 50, SIM_AREA_SCENARIO | SIM_AREA_MILITARY) {
-    g_scenario.events.process_invasions();
-}
-
-ANK_SIM_STEP(scenario_events, SIM_PHASE_MONTH, -1, 60, SIM_AREA_SCENARIO) {
-    g_scenario.events.process_events();
+void ANK_REGISTER_APPLICATION_MODULE(register_scenario_event_manager_system) {
+    static scenario_event_manager_system system;
+    g_simulation.register_system(&system);
 }

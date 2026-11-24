@@ -1,4 +1,6 @@
 #include "city_desirability.h"
+#include "game/simulation.h"
+#include "core/app_module.h"
 #include "game/sim_schedule.h"
 
 #include "core/profiler.h"
@@ -38,6 +40,16 @@ void building_update_desirability(void) {
     });
 }
 
-ANK_SIM_STEP(building_desirability, SIM_PHASE_TICK_SLOT, 38, 410, SIM_AREA_BUILDINGS) {
-    building_update_desirability();
+class desirability_system : public sim_system {
+public:
+    const char* name() const override { return "desirability"; }
+    void register_steps() override {
+        sim_schedule_add({SIM_PHASE_TICK_SLOT, 38, 410, "building_desirability", SIM_AREA_BUILDINGS,
+          [] { building_update_desirability(); }});
+    }
+};
+
+void ANK_REGISTER_APPLICATION_MODULE(register_desirability_system) {
+    static desirability_system system;
+    g_simulation.register_system(&system);
 }

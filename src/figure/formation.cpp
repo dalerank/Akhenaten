@@ -1,4 +1,6 @@
 #include "formation.h"
+#include "game/simulation.h"
+#include "core/app_module.h"
 #include "game/sim_schedule.h"
 #include "game/game_events.h"
 #include "game/sound_effect.h"
@@ -638,14 +640,20 @@ void formation_update_all(bool skip_morale) {
     city_animals().update();
 }
 
-ANK_SIM_STEP(formations, SIM_PHASE_TICK_SLOT, 5, 60, SIM_AREA_MILITARY) {
-    formation_update_all(false);
-}
+class formation_system : public sim_system {
+public:
+    const char* name() const override { return "formation"; }
+    void register_steps() override {
+        sim_schedule_add(
+          {SIM_PHASE_TICK_SLOT, 5, 60, "formations", SIM_AREA_MILITARY, [] { formation_update_all(false); }});
+        sim_schedule_add({SIM_PHASE_TICK_SLOT, 29, 270, "formations_skip_morale", SIM_AREA_MILITARY,
+          [] { formation_update_all(true); }});
+        sim_schedule_add({SIM_PHASE_MONTH, -1, 90, "morale_at_rest", SIM_AREA_MILITARY,
+          [] { formation_update_monthly_morale_at_rest(); }});
+    }
+};
 
-ANK_SIM_STEP(formations_skip_morale, SIM_PHASE_TICK_SLOT, 29, 270, SIM_AREA_MILITARY) {
-    formation_update_all(true);
-}
-
-ANK_SIM_STEP(morale_at_rest, SIM_PHASE_MONTH, -1, 90, SIM_AREA_MILITARY) {
-    formation_update_monthly_morale_at_rest();
+void ANK_REGISTER_APPLICATION_MODULE(register_formation_system) {
+    static formation_system system;
+    g_simulation.register_system(&system);
 }
