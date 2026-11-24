@@ -14,7 +14,6 @@
 mission135 { // Enkomi, custom mission
 	start_message : "message_enkomi"
     selection_title : "Enkomi"
-    selection_text : "This is an enkomi mission. You can build whatever you want."
 
 	env {
 		has_animals : true

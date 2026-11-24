@@ -30,8 +30,6 @@ log_info("akhenaten: mission 128 alexandria started")
 
 mission128 { // Alexandria.map — An Alexandrian Affair
 	selection_title : "Alexandria"
-	selection_subtitle : "An Alexandrian Affair"
-	selection_text : "Brief description of this map, for players. History, aims and tips etc."
 	player_rank : 10
 
 	// pak Normal funds=12000 loan=6000 debt_interest=5 → int_dcy around Normal.

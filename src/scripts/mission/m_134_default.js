@@ -14,7 +14,6 @@
 mission134 { // Default, custom mission
 	start_message : "message_default"
     selection_title : "Default"
-    selection_text : "This is a default mission. You can build whatever you want."
 
 	env {
 		has_animals : true

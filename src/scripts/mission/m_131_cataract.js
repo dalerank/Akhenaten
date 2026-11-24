@@ -15,7 +15,6 @@
 mission131 { // Cataract, custom mission
 	start_message : "message_cataract"
     selection_title : "Cataract"
-    selection_text : "The region has all the resources needed to complete the monument, and you won't be hounded by any outside distractions like requests for items.  Successful cities will have carefully planned roads and will make skillful use of the available land."
 
 	env {
 		has_animals : true
