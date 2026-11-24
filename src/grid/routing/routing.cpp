@@ -2,7 +2,6 @@
 #include "core/xvalue.h"
 
 #include "building/building_dike.h"
-#include "city/city.h"
 #include "city/city_animals.h"
 #include "grid/vegetation.h"
 #include "routing_terrain.h"
@@ -267,7 +266,7 @@ bool map_can_place_initial_road_or_canal(int grid_offset, int is_canal) {
     }
 
     // herd spawn points
-    if (g_city.animals_sys().breeding_ground_at(tile2i(grid_offset), 1)) {
+    if (city_animals().breeding_ground_at(tile2i(grid_offset), 1)) {
         return false;
     }
     return true;

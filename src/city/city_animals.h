@@ -43,6 +43,9 @@ public:
     void add_animals_point(int index, int x, int y, e_figure_type ftype, int num_animals);
     void set_animals_area(int index, int reseach_radius);
 
+    void reset();
+    void reload_config();
+
 private:
     animals_state& _state;
     animals_context _ctx;
@@ -53,5 +56,8 @@ e_figure_type climate_prey_type();
 // Cleopatra Killer Type: climate pair + alt_predator_type (hyena|scorpion / croc|lion / hippo|asp).
 e_figure_type climate_predator_type();
 bool scenario_has_prey_points();
+
+animals_state& city_animals_state();
+animals_system city_animals();
 
 ANK_CONFIG_STRUCT(animals_state, herd_migration)

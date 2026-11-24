@@ -24,5 +24,6 @@ public:
     virtual void on_month() {}
     virtual void on_year() {}
     virtual void on_load(e_load_phase phase) {}
+    virtual void on_reload_config() {}
     virtual void push_save_sections(int file_version) {}
 };

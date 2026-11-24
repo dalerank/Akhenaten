@@ -70,11 +70,6 @@ static void city_subscribe_events() {
 }
 static events::session_subscriber g_city_session(&city_subscribe_events);
 
-ANK_DECLARE_CONFIG_ITERATOR(config_reload_city);
-void config_reload_city() {
-    g_city.reload_system(g_city.animals);
-}
-
 template <typename T>
 static void zero_fill(T& part) {
     memset((void*)&part, 0, sizeof(T));
@@ -112,7 +107,6 @@ void city_t::init() {
     zero_fill(coverage);
     zero_fill(sound);
     zero_fill(trade);
-    zero_fill(animals);
     zero_fill(map);
     zero_fill(vegetation);
     zero_fill(plagues);
@@ -140,8 +134,7 @@ void city_t::init() {
     empire_screen = AVAILABLE;
     bookmarks.reset();
     kingdome.init();
-    animals.allow_spawn_ostrich = true;
-    reload_system(animals);
+    city_animals().reset();
 }
 
 void city_t::reload_objects() {
@@ -260,14 +253,6 @@ kingdome_context city_t::kingdome_ctx() {
 
 kingdome_system city_t::kingdome_sys() {
     return kingdome_system(kingdome, kingdome_ctx());
-}
-
-animals_context city_t::animals_ctx() {
-    return {g_scenario};
-}
-
-animals_system city_t::animals_sys() {
-    return animals_system(animals, animals_ctx());
 }
 
 void city_t::init_custom_map() {

@@ -599,7 +599,6 @@ grid/road_canal.cpp -> city/city_buildings.h
 grid/road_network.cpp -> city/city.h
 grid/road_network.cpp -> scenario/map.h
 grid/routing/routing.cpp -> building/building_dike.h
-grid/routing/routing.cpp -> city/city.h
 grid/routing/routing.cpp -> city/city_animals.h
 grid/routing/routing_terrain.cpp -> building/building.h
 grid/routing/routing_terrain.cpp -> building/monuments.h

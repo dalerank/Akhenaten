@@ -634,5 +634,5 @@ void formation_update_all(bool skip_morale) {
     set_legion_max_figures();
     g_formations.batalions_update();
     g_formations.enemy_update();
-    g_city.animals_sys().update();
+    city_animals().update();
 }

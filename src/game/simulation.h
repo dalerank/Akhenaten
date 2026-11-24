@@ -13,6 +13,7 @@ struct simulation_t {
     sim_system* find_system(const char* name) const;
     void call_system(const char* name, e_sim_call call) const;
     void run_load(e_load_phase phase) const;
+    void reload_config() const;
     void push_save_sections(int file_version) const;
 
 private:

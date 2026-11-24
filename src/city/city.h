@@ -26,7 +26,6 @@
 #include "city/ratings.h"
 #include "grid/point.h"
 #include "city/city_trade.h"
-#include "city/city_animals.h"
 #include "city/city_festival.h"
 #include "city/city_local_cults.h"
 #include "city/city_temple_complexes.h"
@@ -91,7 +90,6 @@ struct city_t {
     } sound;
 
     trade_state trade;
-    animals_state animals;
     city_map_t map;
 
     // OG vegetation_growth_state gatherer reach flags (refreshed with daily growth).
@@ -191,8 +189,6 @@ struct city_t {
     ratings_system ratings_sys();
     kingdome_context kingdome_ctx();
     kingdome_system kingdome_sys();
-    animals_context animals_ctx();
-    animals_system animals_sys();
 
     e_availability is_advisor_available(e_advisor advisor) const;
     void set_advisor_available(e_advisor advisor, e_availability available);

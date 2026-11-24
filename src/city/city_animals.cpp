@@ -1,10 +1,12 @@
 #include "city_animals.h"
 
 #include "building/building_temple_complex.h"
-#include "city/city.h"
 #include "city/city_buildings.h"
+#include "core/app_module.h"
+#include "core/archive.h"
 #include "core/log.h"
 #include "core/random.h"
+#include "core/xvalue.h"
 #include "figuretype/figure_animal.h"
 #include "figuretype/animal_predator.h"
 #include "figuretype/animal_hyena.h"
@@ -17,6 +19,7 @@
 #include "grid/routing/routing_terrain.h"
 #include "city/city_figures.h"
 #include "game/game_config.h"
+#include "game/simulation.h"
 #include "figure/figure.h"
 #include "figure/formation_enemy.h"
 #include "scenario/map.h"
@@ -63,6 +66,36 @@ e_figure_type climate_predator_type() {
     default:
         return FIGURE_NONE;
     }
+}
+
+animals_state& city_animals_state() {
+    return xvalue<animals_state>::ref();
+}
+
+animals_system city_animals() {
+    return animals_system(city_animals_state(), {g_scenario});
+}
+
+class animals_sim_system : public sim_system {
+public:
+    const char* name() const override { return "animals"; }
+    void on_reload_config() override { city_animals().reload_config(); }
+};
+
+void ANK_REGISTER_APPLICATION_MODULE(register_animals_system) {
+    static animals_sim_system system;
+    g_simulation.register_system(&system);
+}
+
+void animals_system::reload_config() {
+    const bool ok = g_config_arch.r(animals_state::esid(), _state);
+    verify_no_crash_var(ok, "Variable not exist in config: %s", animals_state::esid());
+}
+
+void animals_system::reset() {
+    _state = {};
+    _state.allow_spawn_ostrich = true;
+    reload_config();
 }
 
 namespace {

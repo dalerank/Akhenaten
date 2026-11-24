@@ -1,5 +1,6 @@
 #include "game/simulation.h"
 
+#include "core/archive.h"
 #include "core/core.h"
 
 #include <algorithm>
@@ -48,6 +49,17 @@ void simulation_t::run_load(e_load_phase phase) const {
     for (sim_system* system : systems) {
         system->on_load(phase);
     }
+}
+
+void simulation_t::reload_config() const {
+    for (sim_system* system : systems) {
+        system->on_reload_config();
+    }
+}
+
+ANK_DECLARE_CONFIG_ITERATOR(config_reload_systems);
+void config_reload_systems() {
+    g_simulation.reload_config();
 }
 
 void simulation_t::push_save_sections(int file_version) const {
