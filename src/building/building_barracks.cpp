@@ -1,5 +1,4 @@
 #include "building_barracks.h"
-#include "game/sim_schedule.h"
 
 #include "city/buildings.h"
 #include "city/military.h"
@@ -26,8 +25,6 @@
 #include <algorithm>
 
 #define INFINITE 10000
-
-int g_tower_sentry_request = 0;
 
 BUILDING_RUNTIME_DATA_IMPL(building_recruiter)
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_recruiter);
@@ -197,30 +194,6 @@ bool building_recruiter::create_soldier() {
     return true;
 }
 
-void building_barracks_request_tower_sentry() {
-    g_tower_sentry_request = 2;
-}
-
-void building_barracks_decay_tower_sentry_request() {
-    if (g_tower_sentry_request > 0)
-        g_tower_sentry_request--;
-}
-
-int building_barracks_has_tower_sentry_request() {
-    return g_tower_sentry_request;
-}
-
-void building_barracks_clear_tower_sentry_request() {
-    g_tower_sentry_request = 0;
-}
-
-void building_barracks_save_state(buffer* buf) {
-    buf->write_i32(g_tower_sentry_request);
-}
-void building_barracks_load_state(buffer* buf) {
-    g_tower_sentry_request = buf->read_i32();
-}
-
 int building_recruiter::get_priority() {
     return runtime_data().priority;
 }
@@ -230,7 +203,7 @@ void building_recruiter::set_priority(int v) {
 }
 
 bool building_recruiter::create_tower_sentry() {
-    if (g_tower_sentry_request <= 0)
+    if (!g_city.military.has_tower_sentry_request())
         return false;
 
     building* tower = 0;
@@ -323,8 +296,4 @@ void building_recruiter::spawn_figure() {
 void building_recruiter::bind_dynamic(io_buffer *iob, size_t version) {
     auto &d = runtime_data();
     iob->bind(BIND_SIGNATURE_UINT8, &d.priority);
-}
-
-ANK_SIM_STEP(tower_sentry_decay, SIM_PHASE_TICK_SLOT, 31, 290, SIM_AREA_MILITARY) {
-    building_barracks_decay_tower_sentry_request();
 }

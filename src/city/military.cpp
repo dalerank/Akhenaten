@@ -1,4 +1,5 @@
 #include "military.h"
+#include "game/sim_schedule.h"
 
 #include "city/buildings.h"
 #include "city/city.h"
@@ -60,4 +61,21 @@ static auto &city_data = g_city;
 
 int city_military_distant_battle_kingdome_months_traveled() {
     return g_distant_battle.battle.egyptian_months_traveled;
+}
+void city_military_t::request_tower_sentry() {
+    tower_sentry_request = 2;
+}
+
+void city_military_t::decay_tower_sentry_request() {
+    if (tower_sentry_request > 0) {
+        tower_sentry_request--;
+    }
+}
+
+bool city_military_t::has_tower_sentry_request() const {
+    return tower_sentry_request > 0;
+}
+
+ANK_SIM_STEP(tower_sentry_decay, SIM_PHASE_TICK_SLOT, 31, 290, SIM_AREA_MILITARY) {
+    g_city.military.decay_tower_sentry_request();
 }

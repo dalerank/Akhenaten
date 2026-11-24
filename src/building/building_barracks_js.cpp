@@ -1,4 +1,5 @@
 #include "building_barracks.h"
+#include "city/city.h"
 
 #include "figure/formation_batalion.h"
 #include "grid/building.h"
@@ -26,6 +27,6 @@ bool __formation_batalion_recruits_needed() {
 ANK_FUNCTION(__formation_batalion_recruits_needed)
 
 int __building_barracks_has_tower_sentry_request() {
-    return building_barracks_has_tower_sentry_request();
+    return g_city.military.tower_sentry_request;
 }
 ANK_FUNCTION(__building_barracks_has_tower_sentry_request)

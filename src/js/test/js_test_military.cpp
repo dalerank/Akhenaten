@@ -264,15 +264,13 @@ static int __test_mud_gatehouse_place_2x2(int x, int y) {
 }
 ANK_FUNCTION_2(__test_mud_gatehouse_place_2x2);
 
-extern int g_tower_sentry_request;
-
 static void __test_tower_sentry_request_clear() {
-    g_tower_sentry_request = 0;
+    g_city.military.tower_sentry_request = 0;
 }
 ANK_FUNCTION(__test_tower_sentry_request_clear);
 
 static int __test_tower_sentry_request_get() {
-    return building_barracks_has_tower_sentry_request();
+    return g_city.military.tower_sentry_request;
 }
 ANK_FUNCTION(__test_tower_sentry_request_get);
 
@@ -444,7 +442,7 @@ static int __test_formation_get_experience(int formation_id) {
 ANK_FUNCTION_1(__test_formation_get_experience);
 
 static void __test_barracks_request_tower_sentry() {
-    building_barracks_request_tower_sentry();
+    g_city.military.request_tower_sentry();
 }
 ANK_FUNCTION(__test_barracks_request_tower_sentry);
 

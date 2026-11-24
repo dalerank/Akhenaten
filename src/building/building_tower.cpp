@@ -1,4 +1,5 @@
 #include "building_tower.h"
+#include "city/city.h"
 
 #include "grid/terrain.h"
 #include "grid/road_access.h"
@@ -44,6 +45,6 @@ void building_tower::spawn_figure() {
     }
 
     if (!base.has_figure(0)) {
-        building_barracks_request_tower_sentry();
+        g_city.military.request_tower_sentry();
     }
 }
