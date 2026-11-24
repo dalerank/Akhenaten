@@ -30,7 +30,6 @@
 #include "grid/desirability.h"
 #include "city/city_buildings.h"
 #include "city/city_maintenance.h"
-#include "grid/bookmark.h"
 #include "building/building_house_demands.h"
 
 struct empire_city;
@@ -108,7 +107,6 @@ struct city_t {
         int32_t reserved_2;
     } mission;
 
-    map_bookmarks_t bookmarks;
 
     void houses_reset_demands();
     void houses_calculate_culture_demands();

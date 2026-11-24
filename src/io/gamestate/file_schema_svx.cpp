@@ -178,7 +178,6 @@ void file_schema_svx(const int file_version) {
     g_chunk_io.push_chunk<trade_routes_traded_chunk>(2880, false);     // ok
     g_chunk_io.push_chunk<junk8_chunk>(50, false);                     // unknown bytes
     g_chunk_io.push_chunk<scenario_map_name_chunk>(65, false);         // ok
-    g_chunk_io.push_chunk<bookmarks_chunk>(32, false);                 // ok
     g_chunk_io.push_chunk<junk9a_chunk>(12, false);                    // ok ????
     g_chunk_io.push_chunk<junk9b_chunk>(396, false);
     g_chunk_io.push_chunk<soil_fertility_grid_chunk>(51984, false);

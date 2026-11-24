@@ -34,7 +34,6 @@
 #include "graphics/image.h"
 #include "grid/canals.h"
 #include "grid/trees.h"
-#include "grid/bookmark.h"
 #include "grid/building.h"
 #include "grid/desirability.h"
 #include "grid/elevation.h"

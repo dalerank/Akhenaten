@@ -3,9 +3,7 @@
 #include "grid/point.h"
 
 struct map_bookmarks_t {
-    enum {
-        MAX_BOOKMARKS = 4
-    };
+    enum { MAX_BOOKMARKS = 4 };
 
     tile2i points[MAX_BOOKMARKS];
 
@@ -13,3 +11,5 @@ struct map_bookmarks_t {
     void set(int i, tile2i tile);
     void reset();
 };
+
+map_bookmarks_t& city_bookmarks();

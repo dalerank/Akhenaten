@@ -5,6 +5,7 @@
 #include "building/building_burning_ruin_chunks.h"
 #include "building/building_storage_chunks.h"
 #include "city/buildings_chunks.h"
+#include "city/city_bookmarks_chunks.h"
 #include "city/city_chunks.h"
 #include "city/city_buildings_chunks.h"
 #include "city/city_figures_chunks.h"

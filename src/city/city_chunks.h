@@ -25,11 +25,6 @@ struct city_graph_order_chunk {
     static void bind_data(io_buffer* iob, size_t version);
 };
 
-struct bookmarks_chunk {
-    static constexpr const char* name = "bookmarks";
-    static void bind_data(io_buffer* iob, size_t version);
-};
-
 struct building_list_small_chunk {
     static constexpr const char* name = "building_list_small";
     static void bind_data(io_buffer* iob, size_t version);

@@ -567,22 +567,6 @@ void city_graph_order_chunk::bind_data(io_buffer* iob, size_t version) {
     iob->bind____skip(8);
 }
 
-void bookmarks_chunk::bind_data(io_buffer* iob, size_t version) {
-    auto& data = g_city;
-    static_assert(data.bookmarks.MAX_BOOKMARKS == 4);
-    // OG layout: {int32 grid_offset, int32 unused} per bookmark; OG keeps the second at -1.
-    for (int i = 0; i < data.bookmarks.MAX_BOOKMARKS; i++) {
-        tile2i& point = data.bookmarks.points[i];
-        int32_t offset = point.valid() ? point.grid_offset() : -1;
-        int32_t unused = -1;
-        iob->bind(BIND_SIGNATURE_INT32, &offset);
-        iob->bind(BIND_SIGNATURE_INT32, &unused);
-        if (iob->is_read_access()) {
-            point = offset >= 0 ? tile2i(offset) : tile2i::invalid;
-        }
-    }
-}
-
 // The first 64 bytes held the 16 cloud positions; they live in the "clouds" chunk now (v200) and
 // these bytes are written as zero.
 void building_list_small_chunk::bind_data(io_buffer* iob, size_t version) {

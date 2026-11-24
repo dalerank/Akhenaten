@@ -28,6 +28,7 @@
 #include "building/building_house.h"
 #include "city/city_industry.h"
 #include "city/city_animals.h"
+#include "city/city_bookmarks.h"
 #include "city/city_local_cults.h"
 #include "city/city_temple_complexes.h"
 #include "building/building_barracks.h"
@@ -112,7 +113,6 @@ void city_t::init() {
     zero_fill(vegetation);
     zero_fill(plagues);
     zero_fill(mission);
-    zero_fill(bookmarks);
 
     sentiment.value = 60;
     health.target_value = 50;
@@ -132,7 +132,7 @@ void city_t::init() {
     sentiment_sys().init();
     finance_sys().init();
     empire_screen = AVAILABLE;
-    bookmarks.reset();
+    city_bookmarks().reset();
     kingdome.init();
     city_animals().reset();
 }

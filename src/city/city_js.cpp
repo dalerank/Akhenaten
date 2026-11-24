@@ -4,6 +4,7 @@
 #include "io/gamefiles/lang.h"
 #include "core/profiler.h"
 #include "city/city.h"
+#include "city/city_bookmarks.h"
 #include "city/city_floods.h"
 #include "city/entertainment.h"
 #include "city/city_labor.h"
@@ -304,10 +305,14 @@ std::optional<bvariant> __city_get_labor_category_property(int index, pcstr prop
 }
 ANK_FUNCTION_2(__city_get_labor_category_property)
 
-void __city_bookmark_set(int index, tile2i tile) { g_city.bookmarks.set(index, tile); }
+void __city_bookmark_set(int index, tile2i tile) {
+    city_bookmarks().set(index, tile);
+}
 ANK_FUNCTION_2(__city_bookmark_set)
 
-tile2i __city_bookmark_get(int index) { return g_city.bookmarks.get(index); }
+tile2i __city_bookmark_get(int index) {
+    return city_bookmarks().get(index);
+}
 ANK_FUNCTION_1(__city_bookmark_get)
 
 e_resource __city_allowed_foods(int index) { return g_city.allowed_foods(index); }
