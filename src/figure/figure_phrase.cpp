@@ -64,7 +64,12 @@ void ANK_PERMANENT_CALLBACK(event_synthesize_figure_phrase, ev) {
     cmd.printf("%s -l en -p \"%s\" -f %s -o \"%s\"",
         tts_cmd_exe, lang_text_from_key(phrase_text.c_str()), prefix.c_str(), out_rel.c_str());
 
-    if (std::system(cmd.c_str()) == 0) {
+#if defined(GAME_PLATFORM_IOS)
+    const bool generated = false;
+#else
+    const bool generated = std::system(cmd.c_str()) == 0;
+#endif
+    if (generated) {
         logs::info("Create file: %s", ev.path.c_str());
         events::emit(event_sound_speech{ev.path});
     } else {

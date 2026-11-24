@@ -1,0 +1,28 @@
+name: Akhenaten Build iOS
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: run on ios arm64
+    runs-on: macos-latest
+    steps:
+    - uses: actions/checkout@v6
+      with:
+        fetch-depth: 0
+
+    - name: build
+      run: bash packaging/ios/build_ios.sh build/ios
+
+    - uses: actions/upload-artifact@v6
+      with:
+        name: ios_build
+        path: build/ios/Akhenaten.ipa

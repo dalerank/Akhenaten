@@ -2,6 +2,8 @@
 # It should be called from the main CMakeLists.txt with: cmake -P BuildFreetype.cmake
 # Required variables: FREETYPE_SOURCE_DIR, FREETYPE_BUILD_DIR, FREETYPE_INSTALL_DIR, ZLIB_ROOT, FREETYPE_ADDITIONAL_CMAKE_ARGS
 
+string(REPLACE "|" ";" FREETYPE_ADDITIONAL_CMAKE_ARGS "${FREETYPE_ADDITIONAL_CMAKE_ARGS}")
+
 # Create build and install directories
 file(MAKE_DIRECTORY ${FREETYPE_BUILD_DIR})
 file(MAKE_DIRECTORY ${FREETYPE_INSTALL_DIR})

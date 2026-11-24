@@ -28,11 +28,24 @@ Preset families (each has a matching build preset of the same name):
   plus the short aliases `win-debug` / `win-relwithdebinfo` and `win-clang-cl-relwithdebinfo[-ninja]`
 - Linux: `linux-gcc-{debug,release,relwithdebinfo}-make`, `linux-clang-{debug,relwithdebinfo}-ninja`
 - macOS: `macos-clang-relwithdebinfo-{make,ninja}[-arm64|-x86_64]`
+- iOS / iPadOS (macOS host with Xcode): `ios-xcode-release`
 
 CI builds `linux-gcc-release-make`; that is the preset the integral-test gate runs against.
 All dependencies (SDL2, FreeType, Tracy, etc.) are auto-downloaded via CMake FetchContent — no manual DLL copying.
 
 Build output: `./build/`
+
+### iOS / iPadOS (macOS host only)
+```bash
+bash packaging/ios/build_ios.sh build/ios     # CMake -G Xcode -DCMAKE_SYSTEM_NAME=iOS, then xcodebuild
+```
+Produces `build/ios/Akhenaten.ipa` (arm64, iPhone + iPad, landscape, iOS 13.0+), unsigned unless
+`AKHENATEN_IOS_TEAM=<team ID>` is set (Xcode automatic signing). CI: `.github/workflows/akhenaten_ios.yml`.
+The bundle id is the cache variable `AKHENATEN_IOS_BUNDLE_ID`. On iOS, Tracy, curl (mods download, bug report,
+GitHub module), cpptrace, innoextract/unshield, OpenH264 recording, the updater, Discord RPC and the startup options
+window are off. The player copies the Pharaoh folder into the app's Documents through the Files app
+(On My iPhone / iPad > Akhenaten); Documents itself and each folder in it are searched for `campaign.txt`.
+Engine `data/` ships inside the app bundle. The iOS build cannot be built or run on Windows/Linux, only CI checks it.
 
 ### Useful CMake flags
 ```

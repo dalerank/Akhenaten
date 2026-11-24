@@ -34,6 +34,7 @@ SOFTWARE.
 #pragma endregion
 
 #include "imguifiledialog.h"
+#include "platform/platform.h"
 
 #ifdef __cplusplus
 
@@ -468,6 +469,8 @@ public:
                 std::string str = std::string("FS.mkdir('") + vName + "');";
                 emscripten_run_script(str.c_str());
                 res = true;
+#elif defined(GAME_PLATFORM_IOS)
+                res = mkdir(vName.c_str(), 0755) == 0;
 #elif defined(_IGFD_UNIX_)
                 char buffer[PATH_MAX] = {};
                 snprintf(buffer, PATH_MAX, "mkdir -p \"%s\"", vName.c_str());
@@ -630,6 +633,8 @@ public:
                 std::string str = std::string("FS.mkdir('") + vName + "');";
                 emscripten_run_script(str.c_str());
                 res = true;
+#elif defined(GAME_PLATFORM_IOS)
+                res = mkdir(vName.c_str(), 0755) == 0;
 #elif defined(_IGFD_UNIX_)
                 char buffer[PATH_MAX] = {};
                 snprintf(buffer, PATH_MAX, "mkdir -p \"%s\"", vName.c_str());

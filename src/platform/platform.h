@@ -14,9 +14,15 @@ int platform_sdl_version_at_least(int major, int minor, int patch);
 #define GAME_PLATFORM_WIN64
 #define GAME_PLATFORM_NAME "win64"
 #elif defined(__APPLE_CC__) || defined(__APPLE__) || defined(__APPLE_CPP__) || defined(__MACOS_CLASSIC__)
+#include <TargetConditionals.h>
 #define GAME_PLATFORM_UNIX
 #define GAME_PLATFORM_MACOSX
+#if TARGET_OS_IPHONE
+#define GAME_PLATFORM_IOS
+#define GAME_PLATFORM_NAME "ios"
+#else
 #define GAME_PLATFORM_NAME "macosx"
+#endif
 #elif defined(__FreeBSD__) || defined(__OpenBSD__)
 #define GAME_PLATFORM_UNIX
 #define GAME_PLATFORM_XBSD

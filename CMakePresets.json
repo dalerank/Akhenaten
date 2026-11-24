@@ -245,6 +245,17 @@
       }
     },
     {
+      "name": "ios-xcode-release",
+      "displayName": "iOS Xcode Release (arm64, iPhone and iPad)",
+      "inherits": "base-macos",
+      "generator": "Xcode",
+      "binaryDir": "${sourceDir}/build/ios",
+      "cacheVariables": {
+        "CMAKE_SYSTEM_NAME": "iOS",
+        "CMAKE_OSX_ARCHITECTURES": "arm64"
+      }
+    },
+    {
       "name": "win-msvc-debug-vs2019",
       "displayName": "Windows MSVC Debug (VS 2019)",
       "inherits": [
@@ -401,6 +412,12 @@
       "name": "macos-clang-relwithdebinfo-ninja-arm64",
       "configurePreset": "macos-clang-relwithdebinfo-ninja-arm64",
       "jobs": 0
+    },
+    {
+      "name": "ios-xcode-release",
+      "configurePreset": "ios-xcode-release",
+      "configuration": "Release",
+      "targets": [ "akhenaten" ]
     },
     {
       "name": "win-msvc-debug-vs2019",

@@ -11,11 +11,23 @@
 #include "content/vfs.h"
 #include <unistd.h>
 
+#if defined(GAME_PLATFORM_IOS)
+#include "platform/innoextract_util.h"
+
+#include <cstdlib>
+#include <filesystem>
+#include <string>
+#include <vector>
+#endif
+
 uint32_t platform_init_sdl_flags() {
     return 0;
 }
 
 void platform_post_hint_init() {
+#if defined(GAME_PLATFORM_IOS)
+    SDL_SetHint(SDL_HINT_ORIENTATIONS, "LandscapeLeft LandscapeRight");
+#endif
 }
 
 void platform_setup_begin() {
@@ -31,9 +43,45 @@ int platform_poll_event(CoreEvent* event) {
     return SDL_PollEvent(reinterpret_cast<SDL_Event*>(event));
 }
 
+#if defined(GAME_PLATFORM_IOS)
+pcstr platform_request_initial_data_directory() {
+    pcstr home = getenv("HOME");
+    if (!home || !*home) {
+        return nullptr;
+    }
+
+    namespace fs = std::filesystem;
+    const fs::path documents = fs::path(home) / "Documents";
+    std::vector<std::string> candidates{documents.string()};
+    std::error_code ec;
+    for (const auto& entry : fs::directory_iterator(documents, ec)) {
+        const std::string name = entry.path().filename().string();
+        if (entry.is_directory(ec) && !name.empty() && name[0] != '.') {
+            candidates.push_back(entry.path().string());
+        }
+    }
+
+    static bstring512 found;
+    for (const auto& dir : candidates) {
+        if (innoextract::has_required_game_files(dir.c_str())) {
+            found = dir.c_str();
+            return found.c_str();
+        }
+    }
+    for (const auto& dir : candidates) {
+        if (innoextract::has_pharaoh_data(dir.c_str())) {
+            found = dir.c_str();
+            return found.c_str();
+        }
+    }
+    logs::info("ios: no Pharaoh data in %s or its folders", documents.string().c_str());
+    return nullptr;
+}
+#else
 pcstr platform_request_initial_data_directory() {
     return nullptr;
 }
+#endif
 
 void platform_append_startup_log(pcstr message) {
 }
@@ -59,6 +107,15 @@ void platform_resolve_user_directory(bstring512& dir) {
     }
 }
 
+#if defined(GAME_PLATFORM_IOS)
+void platform_t::open_url(pcstr url, pcstr prefix) {
+    SDL_OpenURL(url);
+}
+
+pcstr platform_t::get_steam_path() {
+    return "";
+}
+#else
 void platform_t::open_url(pcstr url, pcstr prefix) {
     bstring256 command("open \"", url, "\" &");
     [[maybe_unused]] auto result = ::system(command.c_str());
@@ -78,13 +135,23 @@ pcstr platform_t::get_steam_path() {
 
     return steam_path.c_str();
 }
+#endif
 
 void platform_show_virtual_keyboard(const uint8_t *text, int max_length) {
     (void)text;
     (void)max_length;
+#if defined(GAME_PLATFORM_IOS)
+    SDL_StopTextInput();
+    SDL_StartTextInput();
+#endif
 }
 
 void platform_hide_virtual_keyboard(void) {
+#if defined(GAME_PLATFORM_IOS)
+    if (SDL_IsTextInputActive()) {
+        SDL_StopTextInput();
+    }
+#endif
 }
 
 #endif

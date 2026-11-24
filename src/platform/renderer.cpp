@@ -1200,7 +1200,7 @@ SDL_Texture* graphics_renderer_interface::create_texture_from_png_buffer(void *b
 }
 
 bool graphics_renderer_interface::is_fullscreen_only() {
-#if defined(GAME_PLATFORM_ANDROID) || defined(__SWITCH__) || defined(__vita__)
+#if defined(GAME_PLATFORM_ANDROID) || defined(GAME_PLATFORM_IOS) || defined(__SWITCH__) || defined(__vita__)
     return true;
 #else
     return false;

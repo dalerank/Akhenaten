@@ -2,6 +2,8 @@
 # It should be called from the main CMakeLists.txt with: cmake -P BuildHarfbuzz.cmake
 # Required variables: HARFBUZZ_SOURCE_DIR, HARFBUZZ_BUILD_DIR, HARFBUZZ_INSTALL_DIR, FREETYPE_ROOT, HARFBUZZ_ADDITIONAL_CMAKE_ARGS
 
+string(REPLACE "|" ";" HARFBUZZ_ADDITIONAL_CMAKE_ARGS "${HARFBUZZ_ADDITIONAL_CMAKE_ARGS}")
+
 # Create build and install directories
 file(MAKE_DIRECTORY ${HARFBUZZ_BUILD_DIR})
 file(MAKE_DIRECTORY ${HARFBUZZ_INSTALL_DIR})

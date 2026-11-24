@@ -2,6 +2,8 @@
 # It should be called from the main CMakeLists.txt with: cmake -P BuildSDL2_mixer.cmake
 # Required variables: SDL2_MIXER_SOURCE_DIR, SDL2_MIXER_BUILD_DIR, SDL2_MIXER_INSTALL_DIR, SDL2_ROOT, SDL2_MIXER_ADDITIONAL_CMAKE_ARGS
 
+string(REPLACE "|" ";" SDL2_MIXER_ADDITIONAL_CMAKE_ARGS "${SDL2_MIXER_ADDITIONAL_CMAKE_ARGS}")
+
 # Create build and install directories
 file(MAKE_DIRECTORY ${SDL2_MIXER_BUILD_DIR})
 file(MAKE_DIRECTORY ${SDL2_MIXER_INSTALL_DIR})

@@ -5,6 +5,17 @@ include(ExternalProject)
 
 set(CMAKE_BUILD_PLATFORM "default" CACHE STRING "Platform to cross-compile for. Options: android default")
 
+if(CMAKE_SYSTEM_NAME STREQUAL "iOS")
+    set(CMAKE_OSX_DEPLOYMENT_TARGET "13.0" CACHE STRING "Minimum iOS version")
+    set(CMAKE_OSX_ARCHITECTURES "arm64" CACHE STRING "iOS architecture")
+    set(OPTION_ENABLE_TRACY OFF CACHE BOOL "Enable Tracy profiler support")
+    set(OPTION_ENABLE_INNOEXTRACT OFF CACHE BOOL "Download innoextract helper for GOG/Inno Setup installers")
+    set(OPTION_ENABLE_VIDEO_RECORDING OFF CACHE BOOL "Build OpenH264 screen capture to MP4")
+    set(AKHENATEN_UPDATER OFF CACHE BOOL "The game updates itself from the nightly.link master builds (Windows, Linux, macOS)")
+    set(AKHENATEN_IOS_TEAM "" CACHE STRING "Apple developer team ID that signs the iOS app (empty: unsigned)")
+    set(AKHENATEN_IOS_BUNDLE_ID "mt.dalerank.akhenaten" CACHE STRING "iOS bundle identifier")
+endif()
+
 option(OPTION_ENABLE_TRACY "Enable Tracy profiler support" ON)
 option(OPTION_STEAMDECK "Force Steam Deck platform defaults (GAME_PLATFORM_STEAMDECK)" OFF)
 # Download prebuilt innoextract host tool (not linked into the game).
@@ -59,6 +70,17 @@ endif()
 
 set(GAME akhenaten)
 project(${GAME} C CXX)
+
+if(IOS)
+    set(BUILD_ADDITIONAL_CMAKE_ARGS
+        -DCMAKE_SYSTEM_NAME=iOS
+        -DCMAKE_OSX_SYSROOT=iphoneos
+        -DCMAKE_OSX_ARCHITECTURES=${CMAKE_OSX_ARCHITECTURES}
+        -DCMAKE_OSX_DEPLOYMENT_TARGET=${CMAKE_OSX_DEPLOYMENT_TARGET}
+        -DCMAKE_BUILD_TYPE=Release)
+    string(REPLACE ";" "|" BUILD_ADDITIONAL_CMAKE_ARGS "${BUILD_ADDITIONAL_CMAKE_ARGS}")
+    set(ENV{CMAKE_GENERATOR} "Unix Makefiles")
+endif()
 
 # Nested dependency builds do not inherit emcmake's toolchain; on Windows they would
 # otherwise fall back to the Visual Studio generator and build native libs.
@@ -119,7 +141,7 @@ set(PROJECT_VERSION "${GAME_VERSION_MAJOR}.${GAME_VERSION_MINOR}.${GAME_VERSION_
 # CppTrace
 #
 
-if(CMAKE_BUILD_TYPE STREQUAL "RelWithDebInfo" OR CMAKE_BUILD_TYPE STREQUAL "Debug")
+if(NOT IOS AND (CMAKE_BUILD_TYPE STREQUAL "RelWithDebInfo" OR CMAKE_BUILD_TYPE STREQUAL "Debug"))
     if (APPLE AND CMAKE_BUILD_TYPE STREQUAL "Debug") # Get meaningful trace on memory access errors etc.
         add_compile_options(-fsanitize=address)
         add_link_options(-fsanitize=address)
@@ -243,7 +265,7 @@ elseif(APPLE AND CMAKE_SYSTEM_PROCESSOR STREQUAL "x86_64")
     set(MACOS_X64_BUILD ON)
 endif()
 
-if(NOT WIN_EMSCRIPTEN AND NOT MACOS_X64_BUILD)
+if(NOT WIN_EMSCRIPTEN AND NOT MACOS_X64_BUILD AND NOT IOS)
     set(LOCAL_DEPS_ROOT "${CMAKE_CURRENT_SOURCE_DIR}/_deps")
     if (EXISTS "${LOCAL_DEPS_ROOT}/curl-src/CMakeLists.txt")
         set(FETCHCONTENT_SOURCE_DIR_CURL "${LOCAL_DEPS_ROOT}/curl-src")
@@ -465,6 +487,9 @@ if(NOT WIN_EMSCRIPTEN)
 
         get_filename_component(SDL2_LIBRARY "${SDL2_LIBRARY}" ABSOLUTE)
         get_filename_component(SDL2_MAIN_LIBRARY "${SDL2_MAIN_LIBRARY}" ABSOLUTE)
+    elseif(IOS)
+        set(SDL2_LIBRARY "${SDL2_INSTALL_DIR}/libSDL2-static.a")
+        set(SDL2_MAIN_LIBRARY "${SDL2_INSTALL_DIR}/lib/libSDL2main.a")
     else()
         set(SDL2_LIBRARY "${SDL2_INSTALL_DIR}/libSDL2-static.a")
         set(SDL2_MAIN_LIBRARY "")
@@ -529,6 +554,12 @@ if(NOT WIN_EMSCRIPTEN)
 
     # Build SDL2_mixer using execute_process (runs during configuration phase)
     message(STATUS "Building SDL2_mixer static library...")
+    set(SDL2_MIXER_EXTRA_CMAKE_ARGS "${BUILD_ADDITIONAL_CMAKE_ARGS}")
+    if(IOS)
+        string(APPEND SDL2_MIXER_EXTRA_CMAKE_ARGS
+            "|-DSDL2MIXER_MIDI=OFF|-DSDL2MIXER_MOD=OFF|-DSDL2MIXER_OPUS=OFF"
+            "|-DSDL2MIXER_WAVPACK=OFF|-DSDL2MIXER_GME=OFF|-DSDL2MIXER_CMD=OFF")
+    endif()
     set(SDL2_MIXER_BUILD_CMAKE_ARGS
         -DSDL2_MIXER_VERSION=${SDL2_MIXER_VERSION}
         -DSDL2_MIXER_SOURCE_DIR=${SDL2_MIXER_SOURCE_DIR}
@@ -537,7 +568,7 @@ if(NOT WIN_EMSCRIPTEN)
         -DSDL2_MIXER_BUILD_CONFIG=${SDL2_MIXER_BUILD_CONFIG}
         -DSDL2_MIXER_IS_MSVC=${MSVC}
         -DSDL2_ROOT=${SDL2_ROOT}
-        -DSDL2_MIXER_ADDITIONAL_CMAKE_ARGS=${BUILD_ADDITIONAL_CMAKE_ARGS}
+        -DSDL2_MIXER_ADDITIONAL_CMAKE_ARGS=${SDL2_MIXER_EXTRA_CMAKE_ARGS}
         -DSDL2_MIXER_BUILD_TYPE=${CMAKE_BUILD_TYPE}
     )
     execute_process(
@@ -985,7 +1016,9 @@ if(MSVC)
 endif()
 
 set(MACOSX_FILES "")
-if(APPLE)
+if(IOS)
+    set(MACOSX_FILES ${PROJECT_SOURCE_DIR}/packaging/ios/Assets.xcassets)
+elseif(APPLE)
     set(MACOSX_FILES ${PROJECT_SOURCE_DIR}/res/akhenaten.icns)
 endif()
 
@@ -1125,7 +1158,32 @@ if (MSVC)
     set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /ignore:4098")
 endif()
 
-if(APPLE)
+if(IOS)
+    set_source_files_properties(${PROJECT_SOURCE_DIR}/packaging/ios/Assets.xcassets PROPERTIES
+        MACOSX_PACKAGE_LOCATION "Resources")
+    set_target_properties(${GAME} PROPERTIES
+        MACOSX_BUNDLE TRUE
+        MACOSX_BUNDLE_INFO_PLIST "${PROJECT_SOURCE_DIR}/packaging/ios/Info.plist.in"
+        MACOSX_BUNDLE_BUNDLE_NAME Akhenaten
+        MACOSX_BUNDLE_GUI_IDENTIFIER ${AKHENATEN_IOS_BUNDLE_ID}
+        MACOSX_BUNDLE_BUNDLE_VERSION ${GAME_BUILD_NUMBER}
+        MACOSX_BUNDLE_SHORT_VERSION_STRING ${PROJECT_VERSION}
+        XCODE_ATTRIBUTE_PRODUCT_BUNDLE_IDENTIFIER ${AKHENATEN_IOS_BUNDLE_ID}
+        XCODE_ATTRIBUTE_TARGETED_DEVICE_FAMILY "1,2"
+        XCODE_ATTRIBUTE_IPHONEOS_DEPLOYMENT_TARGET ${CMAKE_OSX_DEPLOYMENT_TARGET}
+        XCODE_ATTRIBUTE_ASSETCATALOG_COMPILER_APPICON_NAME AppIcon)
+    if(AKHENATEN_IOS_TEAM)
+        set_target_properties(${GAME} PROPERTIES
+            XCODE_ATTRIBUTE_DEVELOPMENT_TEAM ${AKHENATEN_IOS_TEAM}
+            XCODE_ATTRIBUTE_CODE_SIGN_STYLE Automatic
+            XCODE_ATTRIBUTE_CODE_SIGN_IDENTITY "Apple Development")
+    else()
+        set_target_properties(${GAME} PROPERTIES
+            XCODE_ATTRIBUTE_CODE_SIGNING_ALLOWED NO
+            XCODE_ATTRIBUTE_CODE_SIGNING_REQUIRED NO
+            XCODE_ATTRIBUTE_CODE_SIGN_IDENTITY "")
+    endif()
+elseif(APPLE)
     add_custom_command(OUTPUT ${PROJECT_SOURCE_DIR}/res/akhenaten.icns
         COMMAND mkdir -p akhenaten.iconset
         COMMAND sips -z 16 16    akhenaten_72.png --out akhenaten.iconset/icon_16x16.png
@@ -1228,7 +1286,25 @@ endif()
 # Apple specific
 #
 
-if(APPLE)
+if(IOS)
+    target_link_libraries(${GAME}
+        "-framework UIKit"
+        "-framework Foundation"
+        "-framework CoreGraphics"
+        "-framework QuartzCore"
+        "-framework Metal"
+        "-framework OpenGLES"
+        "-framework AVFoundation"
+        "-framework AudioToolbox"
+        "-framework CoreAudio"
+        "-framework CoreMotion"
+        "-framework GameController"
+        "-framework CoreHaptics"
+        "-framework CoreBluetooth"
+        iconv
+        z
+    )
+elseif(APPLE)
     target_link_libraries(${GAME}
         "-framework Cocoa"
         "-framework Carbon"
@@ -1246,7 +1322,7 @@ if(APPLE)
     )
 endif()
 
-if(APPLE)
+if(APPLE AND NOT IOS)
     set(MACOS_DIR "${CMAKE_BINARY_DIR}/akhenaten.app/Contents/MacOS")
     set(DATA_SRC_DIR "${CMAKE_SOURCE_DIR}/data")
     set(LAUNCH_SCRIPT_SRC "${CMAKE_SOURCE_DIR}/res/macos/launch.sh")
@@ -1274,7 +1350,7 @@ endif()
 set(BUILD_NUMBER_SRC "${CMAKE_BINARY_DIR}/buildnumber.txt")
 
 
-if(APPLE)
+if(APPLE AND NOT IOS)
     set(MACOS_DIR "${CMAKE_BINARY_DIR}/akhenaten.app/Contents/MacOS")
     add_custom_command(TARGET ${GAME} POST_BUILD
         COMMAND ${CMAKE_COMMAND} -E copy
@@ -1327,6 +1403,10 @@ set(PNG_SHARED OFF CACHE BOOL "" FORCE)
 set(PNG_STATIC ON CACHE BOOL "" FORCE)
 set(PNG_TESTS OFF CACHE BOOL "" FORCE)
 set(PNG_USE_FIND_PACKAGE_ZLIB ON CACHE BOOL "" FORCE)
+if(IOS)
+    set(PNG_FRAMEWORK OFF CACHE BOOL "" FORCE)
+    set(PNG_TOOLS OFF CACHE BOOL "" FORCE)
+endif()
 
 FetchContent_Declare(
     libpng
@@ -1424,7 +1504,7 @@ if(OPTION_ENABLE_VIDEO_RECORDING)
     endif()
 endif()
 
-if(NOT WIN_EMSCRIPTEN AND NOT MACOS_X64_BUILD)
+if(NOT WIN_EMSCRIPTEN AND NOT MACOS_X64_BUILD AND NOT IOS)
     if(TARGET CURL::libcurl)
         target_link_libraries(${GAME} CURL::libcurl)
     else()
@@ -1513,7 +1593,7 @@ if(UNIX AND NOT APPLE AND NOT ANDROID AND NOT EMSCRIPTEN)
     install(DIRECTORY "${CMAKE_SOURCE_DIR}/data/maps" DESTINATION bin/data)
 endif()
 
-if(NOT ANDROID AND NOT EMSCRIPTEN)
+if(NOT ANDROID AND NOT EMSCRIPTEN AND NOT IOS)
     add_executable(check_layers EXCLUDE_FROM_ALL tools/check_layers.cpp)
     set_target_properties(check_layers PROPERTIES CXX_STANDARD 17 CXX_STANDARD_REQUIRED ON)
 endif()

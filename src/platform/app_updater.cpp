@@ -34,7 +34,7 @@
 #include <sys/xattr.h>
 #endif
 
-#if defined(GAME_UPDATER)                                                                          \
+#if defined(GAME_UPDATER) && !defined(GAME_PLATFORM_IOS)                                           \
   && (defined(GAME_PLATFORM_WIN) || defined(GAME_PLATFORM_LINUX) || defined(GAME_PLATFORM_MACOSX))
 #define GAME_UPDATER_ACTIVE 1
 #endif
@@ -110,6 +110,8 @@ e_updater_button updater::button_action(e_updater_state state) {
 e_updater_platform updater::current_platform() {
 #if defined(GAME_PLATFORM_WIN64)
     return UPDATER_PLATFORM_WINDOWS;
+#elif defined(GAME_PLATFORM_IOS)
+    return UPDATER_PLATFORM_NONE;
 #elif defined(GAME_PLATFORM_LINUX)
     return UPDATER_PLATFORM_LINUX;
 #elif defined(GAME_PLATFORM_MACOSX) && (defined(__aarch64__) || defined(__arm64__))

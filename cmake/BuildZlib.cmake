@@ -2,6 +2,8 @@
 # It should be called from the main CMakeLists.txt with: cmake -P BuildZlib.cmake
 # Required variables: ZLIB_SOURCE_DIR, ZLIB_BUILD_DIR, ZLIB_INSTALL_DIR, ZLIB_ADDITIONAL_CMAKE_ARGS, ZLIB_PLATFORM_EXTRA_ARGS, ZLIB_BUILD_TYPE
 
+string(REPLACE "|" ";" ZLIB_ADDITIONAL_CMAKE_ARGS "${ZLIB_ADDITIONAL_CMAKE_ARGS}")
+
 # Create build and install directories
 file(MAKE_DIRECTORY ${ZLIB_BUILD_DIR})
 file(MAKE_DIRECTORY ${ZLIB_INSTALL_DIR})
