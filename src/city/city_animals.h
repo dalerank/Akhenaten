@@ -3,24 +3,11 @@
 #include "figure/figure.h"
 #include "game/game_system.h"
 
-struct animals_state {
+struct city_animals_t : public game_system {
     ANK_ESID(city_animals)
 
     bool herd_migration;
     bool allow_spawn_ostrich;
-};
-
-struct scenario_data_t;
-
-struct animals_context {
-    scenario_data_t& scenario;
-};
-
-class animals_system : public game_system {
-public:
-    ANK_ESID(city_animals)
-
-    animals_system(animals_state& state, const animals_context& ctx) : _state(state), _ctx(ctx) {}
 
     void create_herds();
     formation* create_herd(tile2i tile, e_figure_type ftype, int num_animals);
@@ -45,10 +32,6 @@ public:
 
     void reset();
     void reload_config();
-
-private:
-    animals_state& _state;
-    animals_context _ctx;
 };
 
 // Climate prey animal for herd spawn points.
@@ -57,7 +40,6 @@ e_figure_type climate_prey_type();
 e_figure_type climate_predator_type();
 bool scenario_has_prey_points();
 
-animals_state& city_animals_state();
-animals_system city_animals();
+city_animals_t& city_animals();
 
-ANK_CONFIG_STRUCT(animals_state, herd_migration)
+ANK_CONFIG_STRUCT(city_animals_t, herd_migration)

@@ -6,7 +6,7 @@
 #include "city/city_buildings.h"
 #include "core/calc.h"
 
-declare_console_ref_bool(allow_span_ostrich, city_animals_state().allow_spawn_ostrich);
+declare_console_ref_bool(allow_span_ostrich, city_animals().allow_spawn_ostrich);
 
 declare_console_command_p(plague_start) {
     int plague_people = args.next_int(100);

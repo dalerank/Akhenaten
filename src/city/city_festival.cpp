@@ -104,18 +104,17 @@ void city_festival_t::execute_festival() {
     if (game_features::gameplay_enhanced_local_cults.to_bool()) {
         city_local_cults().refresh_active();
     }
-    const bool cult_festival
-      = city_local_cults_state().planned_cult != LOCAL_CULT_NONE
-        && game_features::gameplay_enhanced_local_cults.to_bool()
-        && city_local_cults_state().is_active((e_local_cult)city_local_cults_state().planned_cult);
+    const bool cult_festival = city_local_cults().planned_cult != LOCAL_CULT_NONE
+                               && game_features::gameplay_enhanced_local_cults.to_bool()
+                               && city_local_cults().is_active((e_local_cult)city_local_cults().planned_cult);
     if (cult_festival) {
-        city_local_cults().apply_cult_festival((e_local_cult)city_local_cults_state().planned_cult,
-          (e_festival_theme)city_local_cults_state().planned_theme);
+        city_local_cults().apply_cult_festival((e_local_cult)city_local_cults().planned_cult,
+          (e_festival_theme)city_local_cults().planned_theme);
     } else if (planned_god < MAX_GODS) {
         g_city.gods.gods[planned_god].months_since_festival = 0;
         if (game_features::gameplay_enhanced_festival_calendar.to_bool()
             || game_features::gameplay_enhanced_local_cults.to_bool()) {
-            city_local_cults().apply_theme((e_festival_theme)city_local_cults_state().planned_theme, 2);
+            city_local_cults().apply_theme((e_festival_theme)city_local_cults().planned_theme, 2);
         }
     }
     switch (planned_size) {
@@ -144,8 +143,8 @@ void city_festival_t::execute_festival() {
 
     planned_size = FESTIVAL_NONE;
     months_till_next = 0;
-    city_local_cults_state().planned_theme = FESTIVAL_THEME_NONE;
-    city_local_cults_state().planned_cult = LOCAL_CULT_NONE;
+    city_local_cults().planned_theme = FESTIVAL_THEME_NONE;
+    city_local_cults().planned_cult = LOCAL_CULT_NONE;
 }
 
 void city_festival_t::advance_month() {

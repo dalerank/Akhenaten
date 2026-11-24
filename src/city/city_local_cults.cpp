@@ -33,13 +33,8 @@ bool cult_building_present(e_building_type type) {
 
 } // namespace
 
-local_cults_state& city_local_cults_state() {
-    return xvalue<local_cults_state>::ref();
-}
-
-local_cults_system city_local_cults() {
-    return local_cults_system(city_local_cults_state(),
-      {g_city.gods, g_simulation.simtime.month, g_simulation.simtime.year});
+city_local_cults_t& city_local_cults() {
+    return xvalue<city_local_cults_t>::ref();
 }
 
 class local_cults_sim_system : public sim_system {
@@ -54,30 +49,30 @@ void ANK_REGISTER_APPLICATION_MODULE(register_local_cults_system) {
     g_simulation.register_system(&system);
 }
 
-void local_cults_system::reset() {
-    _state = {};
+void city_local_cults_t::reset() {
+    *this = {};
     unlock_all();
 }
 
-void local_cults_system::unlock_all() {
-    _state.mission_restricts = 0;
+void city_local_cults_t::unlock_all() {
+    mission_restricts = 0;
     for (int i = LOCAL_CULT_ANUBIS; i < LOCAL_CULT_MAX; ++i) {
-        _state.cults[i].unlocked = 1;
+        cults[i].unlocked = 1;
     }
 }
 
-void local_cults_system::load_mission_unlocks(const std::vector<xstring>& names) {
+void city_local_cults_t::load_mission_unlocks(const std::vector<xstring>& names) {
     if (names.empty()) {
         unlock_all();
     } else {
-        _state.mission_restricts = 1;
+        mission_restricts = 1;
         for (int i = 0; i < LOCAL_CULT_MAX; ++i) {
-            _state.cults[i].unlocked = 0;
+            cults[i].unlocked = 0;
         }
         for (const auto &name : names) {
             const e_local_cult id = local_cult_from_name(name.c_str());
             if (id > LOCAL_CULT_NONE && id < LOCAL_CULT_MAX) {
-                _state.cults[id].unlocked = 1;
+                cults[id].unlocked = 1;
             }
         }
     }
@@ -85,49 +80,49 @@ void local_cults_system::load_mission_unlocks(const std::vector<xstring>& names)
     refresh_active();
 }
 
-void local_cults_system::set_unlocked(e_local_cult id, bool unlocked) {
+void city_local_cults_t::set_unlocked(e_local_cult id, bool unlocked) {
     if (id <= LOCAL_CULT_NONE || id >= LOCAL_CULT_MAX) {
         return;
     }
-    _state.cults[id].unlocked = unlocked ? 1 : 0;
+    cults[id].unlocked = unlocked ? 1 : 0;
 }
 
-bool local_cults_state::is_unlocked(e_local_cult id) const {
+bool city_local_cults_t::is_unlocked(e_local_cult id) const {
     if (id <= LOCAL_CULT_NONE || id >= LOCAL_CULT_MAX) {
         return false;
     }
     return cults[id].unlocked != 0;
 }
 
-bool local_cults_state::is_active(e_local_cult id) const {
+bool city_local_cults_t::is_active(e_local_cult id) const {
     if (id <= LOCAL_CULT_NONE || id >= LOCAL_CULT_MAX) {
         return false;
     }
     return cults[id].unlocked != 0 && cults[id].active != 0;
 }
 
-int local_cults_state::appeased_months(e_local_cult id) const {
+int city_local_cults_t::appeased_months(e_local_cult id) const {
     if (id <= LOCAL_CULT_NONE || id >= LOCAL_CULT_MAX) {
         return 0;
     }
     return cults[id].appeased_months;
 }
 
-void local_cults_system::refresh_active() {
+void city_local_cults_t::refresh_active() {
     if (!game_features::gameplay_enhanced_local_cults.to_bool()) {
         for (int i = 0; i < LOCAL_CULT_MAX; ++i) {
-            _state.cults[i].active = 0;
+            cults[i].active = 0;
         }
         return;
     }
 
     for (int i = LOCAL_CULT_ANUBIS; i < LOCAL_CULT_MAX; ++i) {
         const auto &def = local_cult_static((e_local_cult)i);
-        _state.cults[i].active = (_state.cults[i].unlocked && cult_building_present(def.building_type)) ? 1 : 0;
+        cults[i].active = (cults[i].unlocked && cult_building_present(def.building_type)) ? 1 : 0;
     }
 }
 
-void local_cults_system::apply_theme(e_festival_theme theme, int months) {
+void city_local_cults_t::apply_theme(e_festival_theme theme, int months) {
     if (months < 1) {
         months = 1;
     }
@@ -135,27 +130,27 @@ void local_cults_system::apply_theme(e_festival_theme theme, int months) {
     const int capped = std::min(months, 60);
     switch (theme) {
     case FESTIVAL_THEME_HARVEST:
-        _state.farm_bonus_months = (uint8_t)std::max<int>(_state.farm_bonus_months, capped);
+        farm_bonus_months = (uint8_t)std::max<int>(farm_bonus_months, capped);
         break;
     case FESTIVAL_THEME_WAR:
-        _state.war_bonus_months = (uint8_t)std::max<int>(_state.war_bonus_months, capped);
+        war_bonus_months = (uint8_t)std::max<int>(war_bonus_months, capped);
         break;
     case FESTIVAL_THEME_CRAFT:
-        _state.craft_bonus_months = (uint8_t)std::max<int>(_state.craft_bonus_months, capped);
+        craft_bonus_months = (uint8_t)std::max<int>(craft_bonus_months, capped);
         break;
     default:
         break;
     }
 }
 
-void local_cults_system::apply_cult_festival(e_local_cult cult, e_festival_theme theme) {
+void city_local_cults_t::apply_cult_festival(e_local_cult cult, e_festival_theme theme) {
     if (!game_features::gameplay_enhanced_local_cults.to_bool()) {
         return;
     }
     if (cult <= LOCAL_CULT_NONE || cult >= LOCAL_CULT_MAX) {
         return;
     }
-    if (!_state.is_active(cult)) {
+    if (!is_active(cult)) {
         return;
     }
 
@@ -164,18 +159,18 @@ void local_cults_system::apply_cult_festival(e_local_cult cult, e_festival_theme
         return;
     }
 
-    _state.cults[cult].appeased_months = (uint8_t)std::max<int>(_state.cults[cult].appeased_months, 6);
+    cults[cult].appeased_months = (uint8_t)std::max<int>(cults[cult].appeased_months, 6);
     if (def.host_major_god < MAX_GODS) {
-        _ctx.gods.gods[def.host_major_god].months_since_festival = 0;
-        if (_ctx.gods.gods[def.host_major_god].mood < 100) {
-            _ctx.gods.gods[def.host_major_god].mood
-              = (uint8_t)std::min<int>(100, _ctx.gods.gods[def.host_major_god].mood + 5);
+        g_city.gods.gods[def.host_major_god].months_since_festival = 0;
+        if (g_city.gods.gods[def.host_major_god].mood < 100) {
+            g_city.gods.gods[def.host_major_god].mood
+              = (uint8_t)std::min<int>(100, g_city.gods.gods[def.host_major_god].mood + 5);
         }
     }
     apply_theme(theme, 2);
 }
 
-e_festival_theme local_cults_state::next_calendar_theme(int month) const {
+e_festival_theme city_local_cults_t::next_calendar_theme(int month) const {
     for (const auto &rite : g_calendar_rites) {
         if ((int)rite.month == month) {
             return rite.theme;
@@ -184,7 +179,7 @@ e_festival_theme local_cults_state::next_calendar_theme(int month) const {
     return FESTIVAL_THEME_NONE;
 }
 
-pcstr local_cults_state::next_calendar_rite_id(int month) const {
+pcstr city_local_cults_t::next_calendar_rite_id(int month) const {
     for (const auto &rite : g_calendar_rites) {
         if ((int)rite.month == month) {
             return rite.id;
@@ -193,21 +188,21 @@ pcstr local_cults_state::next_calendar_rite_id(int month) const {
     return "";
 }
 
-void local_cults_system::advance_month() {
+void city_local_cults_t::advance_month() {
     refresh_active();
 
-    if (_state.farm_bonus_months > 0) {
-        --_state.farm_bonus_months;
+    if (farm_bonus_months > 0) {
+        --farm_bonus_months;
     }
-    if (_state.war_bonus_months > 0) {
-        --_state.war_bonus_months;
+    if (war_bonus_months > 0) {
+        --war_bonus_months;
     }
-    if (_state.craft_bonus_months > 0) {
-        --_state.craft_bonus_months;
+    if (craft_bonus_months > 0) {
+        --craft_bonus_months;
     }
     for (int i = LOCAL_CULT_ANUBIS; i < LOCAL_CULT_MAX; ++i) {
-        if (_state.cults[i].appeased_months > 0) {
-            --_state.cults[i].appeased_months;
+        if (cults[i].appeased_months > 0) {
+            --cults[i].appeased_months;
         }
     }
 
@@ -215,24 +210,23 @@ void local_cults_system::advance_month() {
         return;
     }
 
-    const int month = _ctx.month;
-    const int year = _ctx.year;
+    const int month = g_simulation.simtime.month;
+    const int year = g_simulation.simtime.year;
     for (int ri = 0; ri < (int)std::size(g_calendar_rites); ++ri) {
         const auto &rite = g_calendar_rites[ri];
         if ((int)rite.month != month) {
             continue;
         }
-        if (_state.last_rite_year == year && _state.last_rite_month == month && _state.last_rite_index == (uint8_t)ri) {
+        if (last_rite_year == year && last_rite_month == month && last_rite_index == (uint8_t)ri) {
             continue;
         }
 
-        _state.last_rite_year = (int16_t)year;
-        _state.last_rite_month = (uint8_t)month;
-        _state.last_rite_index = (uint8_t)ri;
+        last_rite_year = (int16_t)year;
+        last_rite_month = (uint8_t)month;
+        last_rite_index = (uint8_t)ri;
         apply_theme(rite.theme, 2);
-        if (rite.cult != LOCAL_CULT_NONE && _state.is_active(rite.cult)) {
-            _state.cults[rite.cult].appeased_months
-              = (uint8_t)std::max<int>(_state.cults[rite.cult].appeased_months, 3);
+        if (rite.cult != LOCAL_CULT_NONE && is_active(rite.cult)) {
+            cults[rite.cult].appeased_months = (uint8_t)std::max<int>(cults[rite.cult].appeased_months, 3);
         }
         break;
     }

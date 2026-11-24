@@ -4,7 +4,7 @@
 #include "io/io_buffer.h"
 
 void local_cults_chunk::bind_data(io_buffer* iob, size_t version) {
-    auto& lc = city_local_cults_state();
+    auto& lc = city_local_cults();
     for (int i = 0; i < LOCAL_CULT_MAX; ++i) {
         iob->bind(BIND_SIGNATURE_UINT8, &lc.cults[i].unlocked);
         iob->bind(BIND_SIGNATURE_UINT8, &lc.cults[i].active);
@@ -28,5 +28,5 @@ void local_cults_chunk::bind_data(io_buffer* iob, size_t version) {
 }
 
 void local_cults_chunk::load_defaults(size_t version) {
-    city_local_cults_state() = {};
+    city_local_cults() = {};
 }

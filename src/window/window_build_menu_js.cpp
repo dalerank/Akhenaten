@@ -34,12 +34,12 @@ int __city_temple_complex_id(int type) {
 ANK_FUNCTION_1(__city_temple_complex_id)
 
 int __city_temple_complex_types_count() {
-    return (int)temple_complexes_system::types().size();
+    return (int)city_temple_complexes_t::types().size();
 }
 ANK_FUNCTION(__city_temple_complex_types_count)
 
 int __city_temple_complex_type_at(int idx) {
-    const auto types = temple_complexes_system::types();
+    const auto types = city_temple_complexes_t::types();
     return (idx >= 0 && idx < (int)types.size()) ? (int)types[idx] : 0;
 }
 ANK_FUNCTION_1(__city_temple_complex_type_at)

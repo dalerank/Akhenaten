@@ -4,7 +4,7 @@
 #include "game/local_cults.h"
 #include "js/js_game.h"
 
-ANK_GLOBAL_OBJECT(city_local_cults_state(), __city_local_cults, farm_bonus_months, war_bonus_months, craft_bonus_months,
+ANK_GLOBAL_OBJECT(city_local_cults(), __city_local_cults, farm_bonus_months, war_bonus_months, craft_bonus_months,
   planned_theme, planned_cult, mission_restricts, last_rite_month, last_rite_year, last_rite_index);
 
 void __city_local_cults_refresh() {
@@ -23,17 +23,17 @@ void __city_local_cults_set_unlocked(int cult_id, bool unlocked) {
 ANK_FUNCTION_2(__city_local_cults_set_unlocked)
 
 bool __city_local_cults_is_unlocked(int cult_id) {
-    return city_local_cults_state().is_unlocked((e_local_cult)cult_id);
+    return city_local_cults().is_unlocked((e_local_cult)cult_id);
 }
 ANK_FUNCTION_1(__city_local_cults_is_unlocked)
 
 bool __city_local_cults_is_active(int cult_id) {
-    return city_local_cults_state().is_active((e_local_cult)cult_id);
+    return city_local_cults().is_active((e_local_cult)cult_id);
 }
 ANK_FUNCTION_1(__city_local_cults_is_active)
 
 int __city_local_cults_appeased_months(int cult_id) {
-    return city_local_cults_state().appeased_months((e_local_cult)cult_id);
+    return city_local_cults().appeased_months((e_local_cult)cult_id);
 }
 ANK_FUNCTION_1(__city_local_cults_appeased_months)
 
@@ -73,11 +73,11 @@ void __city_local_cults_advance_month() {
 ANK_FUNCTION(__city_local_cults_advance_month)
 
 xstring __city_local_cults_next_rite_id(int month) {
-    return city_local_cults_state().next_calendar_rite_id(month);
+    return city_local_cults().next_calendar_rite_id(month);
 }
 ANK_FUNCTION_1(__city_local_cults_next_rite_id)
 
 int __city_local_cults_next_rite_theme(int month) {
-    return (int)city_local_cults_state().next_calendar_theme(month);
+    return (int)city_local_cults().next_calendar_theme(month);
 }
 ANK_FUNCTION_1(__city_local_cults_next_rite_theme)
