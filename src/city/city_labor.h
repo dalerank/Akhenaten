@@ -30,7 +30,6 @@ struct city_labor_t {
     int max_selectable_priority(int category) const;
 
     static int calc_fixed_workers_available(int num_plebs);
-    static void set_category(e_building_type type, int category);
 
     void calculate_workers(int num_plebs, int num_patricians);
     void calculate_workers_needed_per_category();
@@ -57,8 +56,3 @@ city_labor_t& city_labor();
 e_labor_category category_for_building(building* b);
 bool labor_category_split_enabled();
 bool is_enhanced_storage_labor_type(e_building_type type);
-
-template<class T>
-void city_labor_set_category(const T &model) {
-    city_labor_t::set_category(model.TYPE, model.labor_category);
-}

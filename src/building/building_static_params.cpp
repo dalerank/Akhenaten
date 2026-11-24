@@ -4,7 +4,6 @@
 #include "core/log.h"
 #include "grid/building.h"
 #include "city/city.h"
-#include "city/city_labor.h"
 #include "city/buildings.h"
 #include "building/building.h"
 #include "graphics/image.h"
@@ -36,9 +35,8 @@ void building_static_params::initialize() {
     if (flags.need_nearby_houses_for_work && nearby_houses_radius == 0) {
         nearby_houses_radius = 6;
     }
-    if (max_storage_amount == 0) max_storage_amount = 200;
-
-    city_labor_t::set_category(type, labor_category);
+    if (max_storage_amount == 0)
+        max_storage_amount = 200;
 }
 
 void add_building(building *b, int orientation, int variant) {
