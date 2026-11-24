@@ -1,4 +1,5 @@
 #include "io/og_save/og_load.h"
+#include "city/city_trade.h"
 #include "city/ratings.h"
 #include "city/city_migration.h"
 #include "city/city_sentiment.h"
@@ -159,8 +160,8 @@ namespace og {
         assign(g_city.finance.this_year.income.gold_delivered, p.gold_this_year);
         assign(g_city.finance.last_year.income.gold_delivered, p.gold_last_year);
         assign(g_city.kingdome.months_in_debt, p.months_in_debt);
-        assign(g_city.trade.caravan_import_resource, p.caravan_import_resource);
-        assign(g_city.trade.caravan_backup_import_resource, p.caravan_backup_import_resource);
+        assign(city_trade().caravan_import_resource, p.caravan_import_resource);
+        assign(city_trade().caravan_backup_import_resource, p.caravan_backup_import_resource);
         assign(city_ratings().culture, p.rating_culture);
         assign(city_ratings().prosperity, p.rating_prosperity);
         assign(city_ratings().monument, p.rating_monument);
@@ -229,8 +230,8 @@ namespace og {
         assign(g_city.finance.last_year.income.donated, p.donated_last_year);
         assign(g_city.finance.this_year.income.donated, p.donated_this_year);
         assign(g_city.figures.animals_number, p.animals);
-        assign(g_city.trade.docker_import_resource, p.docker_import_resource);
-        assign(g_city.trade.docker_export_resource, p.docker_export_resource);
+        assign(city_trade().docker_import_resource, p.docker_import_resource);
+        assign(city_trade().docker_export_resource, p.docker_export_resource);
         assign(g_scenario.has_won, p.mission_has_won);
         assign(g_scenario.continue_months_left, p.mission_continue_months_left);
         assign(g_scenario.continue_months_chosen, p.mission_continue_months_chosen);

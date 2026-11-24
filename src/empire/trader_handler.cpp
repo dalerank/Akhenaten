@@ -1,4 +1,5 @@
 #include "empire/trader_handler.h"
+#include "city/city_trade.h"
 
 #include "empire/empire.h"
 #include "empire/empire_traders.h"
@@ -161,13 +162,13 @@ e_resource empire_trader_handle::get_sell_resource(building* b, empire_city_hand
         return RESOURCE_NONE;
     }
 
-    e_resource resource_to_import = g_city.trade.current_caravan_import();
+    e_resource resource_to_import = city_trade().current_caravan_import();
     int imp = RESOURCES_MIN;
     while (imp < RESOURCES_MAX
            && (!g_empire.can_import_resource_from_city(city.handle, resource_to_import)
                || sell_full(resource_to_import))) {
         imp++;
-        resource_to_import = g_city.trade_sys().next_caravan_import();
+        resource_to_import = city_trade().next_caravan_import();
     }
 
     if (imp >= RESOURCES_MAX) {
@@ -179,7 +180,7 @@ e_resource empire_trader_handle::get_sell_resource(building* b, empire_city_hand
     while (space) {
         if (space->stored_amount(resource_to_import) > 0 && space->stored_amount(resource_to_import) < 400) {
             space->add_import(resource_to_import);
-            g_city.trade_sys().next_caravan_import();
+            city_trade().next_caravan_import();
             return resource_to_import;
         }
         space = space->next_room();
@@ -190,14 +191,14 @@ e_resource empire_trader_handle::get_sell_resource(building* b, empire_city_hand
     while (space) {
         if (!space->base.stored_first().type) {
             space->add_import(resource_to_import);
-            g_city.trade_sys().next_caravan_import();
+            city_trade().next_caravan_import();
             return resource_to_import;
         }
         space = space->next_room();
     }
     // find another importable resource that can be added to this warehouse
     for (int r = RESOURCES_MIN; r < RESOURCES_MAX; r++) {
-        resource_to_import = g_city.trade_sys().next_caravan_backup_import();
+        resource_to_import = city_trade().next_caravan_backup_import();
         if (g_empire.can_import_resource_from_city(city.handle, resource_to_import)
             && !sell_full(resource_to_import)) {
             space = warehouse->room();

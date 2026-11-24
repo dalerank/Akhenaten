@@ -17,7 +17,6 @@
 #include "city/city_religion.h"
 #include "city/city_figures.h"
 #include "grid/point.h"
-#include "city/city_trade.h"
 #include "grid/desirability.h"
 #include "city/city_buildings.h"
 #include "city/city_maintenance.h"
@@ -51,7 +50,6 @@ struct city_t {
 
     city_coverage_t coverage;
 
-    trade_state trade;
     city_map_t map;
 
     struct {
@@ -113,8 +111,6 @@ struct city_t {
     void update_month(simulation_time_t t);
     finance_context finance_ctx();
     finance_system finance_sys();
-    trade_context trade_ctx();
-    trade_system trade_sys();
     gods_context gods_ctx();
     gods_system gods_sys();
     population_context population_ctx();

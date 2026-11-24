@@ -1,4 +1,5 @@
 #include "city.h"
+#include "city/city_trade.h"
 #include "city/ratings.h"
 #include "city/city_sentiment.h"
 #include "city/city_health.h"
@@ -111,12 +112,9 @@ void city_t::init() {
     zero_fill(gods);
     zero_fill(monuments);
     zero_fill(coverage);
-    zero_fill(trade);
     zero_fill(map);
     zero_fill(mission);
 
-    trade.caravan_import_resource = RESOURCES_MIN;
-    trade.caravan_backup_import_resource = RESOURCES_MIN;
     population.monthly.next_index = 0;
     population.monthly.count = 0;
     g_simulation.reset_systems();
@@ -145,14 +143,6 @@ finance_context city_t::finance_ctx() {
 
 finance_system city_t::finance_sys() {
     return finance_system(finance, finance_ctx());
-}
-
-trade_context city_t::trade_ctx() {
-    return {population, resource, g_empire, g_scenario};
-}
-
-trade_system city_t::trade_sys() {
-    return trade_system(trade, trade_ctx());
 }
 
 gods_context city_t::gods_ctx() {
@@ -260,14 +250,14 @@ bool city_t::generate_trader_from(empire_city &city) {
         // generate ship
         const bool has_doks = g_city.buildings.has_working_dock();
         const bool has_river_entry = scenario_map_has_river_entry();
-        const bool can_sea_trade = !g_city.trade.has_sea_problems();
+        const bool can_sea_trade = !city_trade().has_sea_problems();
         if (has_doks && has_river_entry && can_sea_trade) {
             g_empire_traders.create_trader(city.route_id, -1);
             return true;
         }
     } else {
         // generate caravan and donkeys
-        if (!g_city.trade.has_land_problems()) {
+        if (!city_trade().has_land_problems()) {
             // caravan head
             g_empire_traders.create_trader(city.route_id, -1);
             return true;
@@ -584,7 +574,7 @@ void city_t::on_post_load() {
     buildings.on_post_load();
     figures.on_post_load();
     kingdome.on_post_load();
-    trade_sys().update_export_keep();
+    city_trade().update_export_keep();
 }
 
 void city_t::figures_update_day() {

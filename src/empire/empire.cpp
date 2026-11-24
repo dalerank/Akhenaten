@@ -343,9 +343,9 @@ void empire_t::generate_traders() {
                 continue;
             }
 
-            g_city.trade_sys().add_sea_route();
+            city_trade().add_sea_route();
         } else {
-            g_city.trade_sys().add_land_route();
+            city_trade().add_land_route();
         }
 
         if (g_city.generate_trader_from(city)) {
@@ -394,7 +394,7 @@ bool empire_t::can_export_resource_to_city(int city_id, e_resource resource) {
         break;
 
     case TRADE_STATUS_EXPORT_SURPLUS:
-        if (stored <= g_city.trade.keep_for_export(resource)) {
+        if (stored <= city_trade().keep_for_export(resource)) {
             return false;
         }
         break;
@@ -435,7 +435,7 @@ bool empire_t::can_import_resource_from_city(int city_id, e_resource resource) {
 int empire_t::import_stock_limit(e_resource resource) {
     city_resource_handle hresource{ resource };
     if (hresource.trade_status() == TRADE_STATUS_IMPORT_AS_NEEDED) {
-        return g_city.trade.keep_for_export(resource);
+        return city_trade().keep_for_export(resource);
     }
 
     return hresource.trading_amount();

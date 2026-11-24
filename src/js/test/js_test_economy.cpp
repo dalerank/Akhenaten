@@ -97,7 +97,7 @@ static void __test_city_set_trade(int resource, int status, int trading_amount) 
 ANK_FUNCTION_3(__test_city_set_trade);
 
 static void __test_trade_update_export_keep() {
-    g_city.trade_sys().update_export_keep();
+    city_trade().update_export_keep();
 }
 ANK_FUNCTION(__test_trade_update_export_keep);
 
@@ -110,7 +110,7 @@ static void __test_city_set_yards_stored(int resource, int amount) {
 ANK_FUNCTION_2(__test_city_set_yards_stored);
 
 static int __test_trade_export_keep(int resource) {
-    return g_city.trade.keep_for_export((e_resource)resource);
+    return city_trade().keep_for_export((e_resource)resource);
 }
 ANK_FUNCTION_1(__test_trade_export_keep);
 

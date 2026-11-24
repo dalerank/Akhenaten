@@ -1,4 +1,5 @@
 #include "city/city_chunks.h"
+#include "city/city_trade.h"
 #include "city/ratings.h"
 #include "city/city_migration.h"
 #include "city/city_sentiment.h"
@@ -294,8 +295,8 @@ static void city_data_bind_og_layout(io_buffer* iob) {
     iob->bind(BIND_SIGNATURE_UINT8, &data.gods.coverage[GOD_BAST]);
     iob->bind____skip(5376);
     iob->bind____skip(32);
-    iob->bind(BIND_SIGNATURE_INT32, &data.trade.caravan_import_resource);
-    iob->bind(BIND_SIGNATURE_INT32, &data.trade.caravan_backup_import_resource);
+    iob->bind(BIND_SIGNATURE_INT32, &city_trade().caravan_import_resource);
+    iob->bind(BIND_SIGNATURE_INT32, &city_trade().caravan_backup_import_resource);
     iob->bind(BIND_SIGNATURE_INT32, &city_ratings().culture);
     iob->bind(BIND_SIGNATURE_INT32, &city_ratings().prosperity);
     iob->bind(BIND_SIGNATURE_INT32, &city_ratings().monument);
@@ -382,8 +383,8 @@ static void city_data_bind_og_layout(io_buffer* iob) {
     iob->bind____skip(30);
     iob->bind(BIND_SIGNATURE_UINT8, &data.figures.animals_number);
     iob->bind____skip(21);
-    iob->bind(BIND_SIGNATURE_INT32, &data.trade.docker_import_resource);
-    iob->bind(BIND_SIGNATURE_INT32, &data.trade.docker_export_resource);
+    iob->bind(BIND_SIGNATURE_INT32, &city_trade().docker_import_resource);
+    iob->bind(BIND_SIGNATURE_INT32, &city_trade().docker_export_resource);
     iob->bind____skip(56);
     iob->bind(BIND_SIGNATURE_INT32, &g_scenario.has_won);
     iob->bind(BIND_SIGNATURE_INT32, &g_scenario.continue_months_left);

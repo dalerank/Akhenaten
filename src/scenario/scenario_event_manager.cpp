@@ -1257,16 +1257,16 @@ void event_manager_t::process_event(int id, bool via_event_trigger, int chain_ac
 
     case EVENT_TYPE_SEA_TRADE_PROBLEM:
         // Same duration as random_events sea disruption.
-        if (g_city.trade.has_sea_route()) {
-            g_city.trade_sys().start_sea_problems(48);
+        if (city_trade().has_sea_route()) {
+            city_trade().start_sea_problems(48);
         }
         message_manager().post_full(true, "message_template_general", &event, caller_event_id, PHRASE_stormy_seas_title,
           PHRASE_stormy_seas_initial_announcement, PHRASE_stormy_seas_no_reason_A, id, 0);
         break;
 
     case EVENT_TYPE_LAND_TRADE_PROBLEM:
-        if (g_city.trade.has_land_route()) {
-            g_city.trade_sys().start_land_problems(48);
+        if (city_trade().has_land_route()) {
+            city_trade().start_land_problems(48);
         }
         if (g_scenario.climate == CLIMATE_DESERT) {
             message_manager().post_full(true, "message_template_general", &event, caller_event_id,
