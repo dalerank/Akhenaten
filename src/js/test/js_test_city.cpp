@@ -1,4 +1,5 @@
 #include "js/test/js_test_common.h"
+#include "city/city_health.h"
 #include "city/city_labor.h"
 
 #include "game/sim_schedule.h"
@@ -271,7 +272,7 @@ static void __test_update_religion_supply_houses() {
 ANK_FUNCTION(__test_update_religion_supply_houses);
 
 static void __test_health_update_coverage() {
-    g_city.health_sys().update_coverage();
+    city_health().update_coverage();
 }
 ANK_FUNCTION(__test_health_update_coverage);
 

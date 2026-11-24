@@ -1,4 +1,5 @@
 #include "window_advisors.h"
+#include "city/city_health.h"
 
 #include "city/constants.h"
 #include "city/coverage.h"
@@ -23,7 +24,7 @@ void window_advisors_prepare_opening() {
 
     g_city.houses_calculate_culture_demands();
     g_city.avg_coverage.update();
-    g_city.health_sys().update_month();
+    city_health().update_month();
 
     g_city.resource.calculate_food_stocks_and_supply_wheat();
     g_formations.calculate_figures();

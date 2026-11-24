@@ -1,4 +1,5 @@
 #include "city.h"
+#include "city/city_health.h"
 #include "city/city_labor.h"
 #include "game/simulation.h"
 #include "core/app_module.h"
@@ -106,7 +107,6 @@ void city_t::init() {
     zero_fill(food_supply);
     zero_fill(migration);
     zero_fill(sentiment);
-    zero_fill(health);
     zero_fill(ratings);
     zero_fill(avg_coverage);
     zero_fill(gods);
@@ -117,8 +117,6 @@ void city_t::init() {
     zero_fill(mission);
 
     sentiment.value = 60;
-    health.target_value = 50;
-    health.value = 50;
     trade.caravan_import_resource = RESOURCES_MIN;
     trade.caravan_backup_import_resource = RESOURCES_MIN;
     population.monthly.next_index = 0;
@@ -159,16 +157,6 @@ trade_system city_t::trade_sys() {
     return trade_system(trade, trade_ctx());
 }
 
-health_context city_t::health_ctx() {
-    return {population, gods, coverage,
-      city_temple_complexes().has_upgrade(BUILDING_TEMPLE_COMPLEX_BAST, etc_upgrade_altar),
-      g_scenario.is_scenario_id(1, 2), g_simulation.simtime.absolute_day(true)};
-}
-
-health_system city_t::health_sys() {
-    return health_system(health, health_ctx());
-}
-
 gods_context city_t::gods_ctx() {
     return {buildings, population, kingdome, g_scenario.env.gods_least_mood, g_simulation.simtime.day};
 }
@@ -188,7 +176,7 @@ sentiment_system city_t::sentiment_sys() {
 }
 
 population_context city_t::population_ctx() {
-    return {health, city_labor(), resource};
+    return {city_health(), city_labor(), resource};
 }
 
 population_system city_t::population_sys() {

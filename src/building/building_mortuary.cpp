@@ -1,4 +1,5 @@
 #include "building_mortuary.h"
+#include "city/city_health.h"
 BUILDING_RUNTIME_DATA_IMPL(building_mortuary)
 
 
@@ -22,7 +23,7 @@ REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_mortuary);
 
 void building_mortuary::update_count() const {
     building_impl::update_count();
-    g_city.health_sys().add_mortuary_workers(num_workers());
+    city_health().add_mortuary_workers(num_workers());
 }
 
 void building_mortuary::update_month() {

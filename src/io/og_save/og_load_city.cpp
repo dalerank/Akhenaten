@@ -1,4 +1,5 @@
 #include "io/og_save/og_load.h"
+#include "city/city_health.h"
 #include "city/city_labor.h"
 
 #include "city/city.h"
@@ -31,9 +32,9 @@ namespace og {
         assign(city_taxes().tax_percentage, p.tax_percentage);
         assign(g_city.finance.treasury.value, p.treasury);
         assign(g_city.sentiment.value, p.sentiment);
-        assign(g_city.health.target_value, p.health_target);
-        assign(g_city.health.value, p.health);
-        assign(g_city.health.num_mortuary_workers, p.mortuary_workers);
+        assign(city_health().target_value, p.health_target);
+        assign(city_health().value, p.health);
+        assign(city_health().num_mortuary_workers, p.mortuary_workers);
         assign(g_city.population.current, p.population);
         assign(g_city.population.last_year, p.population_last_year);
         assign(g_city.population.school_age, p.school_age);

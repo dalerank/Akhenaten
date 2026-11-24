@@ -68,7 +68,7 @@ static void contaminate_water(void) {
         const int city_population = g_city.population.current;
         if (city_population > 200) {
             int change;
-            int health_rate = g_city.health.value;
+            int health_rate = city_health().value;
             if (health_rate > 80)
                 change = -50;
             else if (health_rate > 60)
@@ -76,7 +76,7 @@ static void contaminate_water(void) {
             else {
                 change = -25;
             }
-            g_city.health_sys().change(change);
+            city_health().change(change);
             events::emit(event_message{ true, "message_tutorial_major_plagues", 0, 0, SOURCE_LOCATION });
         }
     }

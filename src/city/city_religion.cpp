@@ -394,9 +394,9 @@ static bool BAST_refill_houses_and_bazaar() {
     // TODO
     //            city_sentiment_set_max_happiness(40);
     //            city_sentiment_change_happiness(-10);
-    //            if (city_data.health.value >= 80)
+    //            if (city_city_health().value >= 80)
     //                city_health_change(-50);
-    //            else if (city_data.health.value >= 60)
+    //            else if (city_city_health().value >= 60)
     //                city_health_change(-40);
     //            else
     //                city_health_change(-20);

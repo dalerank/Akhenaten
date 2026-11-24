@@ -1,4 +1,5 @@
 #include "city/city_chunks.h"
+#include "city/city_health.h"
 #include "city/city_labor.h"
 
 #include "city/city.h"
@@ -31,9 +32,9 @@ static void city_data_bind_og_layout(io_buffer* iob) {
     iob->bind____skip(3);
     iob->bind(BIND_SIGNATURE_INT32, &data.finance.treasury.value);
     iob->bind(BIND_SIGNATURE_INT32, &data.sentiment.value);
-    iob->bind(BIND_SIGNATURE_INT32, &data.health.target_value);
-    iob->bind(BIND_SIGNATURE_INT32, &data.health.value);
-    iob->bind(BIND_SIGNATURE_INT32, &data.health.num_mortuary_workers);
+    iob->bind(BIND_SIGNATURE_INT32, &city_health().target_value);
+    iob->bind(BIND_SIGNATURE_INT32, &city_health().value);
+    iob->bind(BIND_SIGNATURE_INT32, &city_health().num_mortuary_workers);
     iob->bind____skip(4);
     iob->bind(BIND_SIGNATURE_INT32, &data.population.current);
     iob->bind(BIND_SIGNATURE_INT32, &data.population.last_year);

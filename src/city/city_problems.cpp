@@ -1,4 +1,5 @@
 #include "city/city_problems.h"
+#include "city/city_health.h"
 #include "city/city_labor.h"
 
 #include <algorithm>
@@ -40,7 +41,7 @@ namespace {
 
 city_problem_inputs city_problem_gather_inputs() {
     city_problem_inputs in;
-    in.health = g_city.health.value;
+    in.health = city_health().value;
     in.food_supply_months = city_resource_food_supply_months();
     in.invasion_running = g_scenario.events.any_invasion_running();
     in.has_defenders = formation_get_num_forts() > 0 || city_own_warships() > 0;

@@ -1,4 +1,5 @@
 #include "scenario_event_manager.h"
+#include "city/city_health.h"
 #include "core/app_module.h"
 #include "game/sim_schedule.h"
 #include "core/xvalue.h"
@@ -1293,14 +1294,14 @@ void event_manager_t::process_event(int id, bool via_event_trigger, int chain_ac
     case EVENT_TYPE_CONTAMINATED_WATER: {
             const int city_population = g_city.population.current;
             if (city_population > 200) {
-                const int health_rate = g_city.health.value;
+                const int health_rate = city_health().value;
                 int change = -25;
                 if (health_rate > 80) {
                     change = -50;
                 } else if (health_rate > 60) {
                     change = -40;
                 }
-                g_city.health_sys().change(change);
+                city_health().change(change);
             }
             message_manager().post_full(true, "message_template_general", &event, caller_event_id,
               PHRASE_bad_water_title, PHRASE_bad_water_initial_announcement, PHRASE_bad_water_no_reason_A, id, 0);

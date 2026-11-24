@@ -1,4 +1,5 @@
 #include "buildings.h"
+#include "city/city_health.h"
 #include "game/simulation.h"
 #include "core/app_module.h"
 #include "game/game.h"
@@ -119,7 +120,7 @@ void city_buildings_t::update_counters() {
     std::fill(industry.begin(), industry.end(), record{ 0, 0 });
 
     g_city.buildings.reset_tracked_buildings_counters();
-    g_city.health_sys().reset_mortuary_workers();
+    city_health().reset_mortuary_workers();
 
     buildings_valid_do([] (building &b) {
         b.dcast()->update_count();

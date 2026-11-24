@@ -1,4 +1,9 @@
 #include "city_health.h"
+#include "io/gamestate/save_versions.h"
+#include "io/chunk_serializer.h"
+#include "core/xvalue.h"
+#include "city/city_temple_complexes.h"
+#include "city/city_health_chunks.h"
 #include "core/app_module.h"
 #include "game/sim_schedule.h"
 
@@ -22,29 +27,29 @@
 
 city_health_rules_t ANK_VARIABLE(city_health_rules);
 
-void health_system::change(int amount) {
-    _state.value = calc_bound(_state.value + amount, 0, 100);
+void city_health_t::change(int amount) {
+    value = calc_bound(value + amount, 0, 100);
 }
 
-void health_system::infect_house(building& main) {
+void city_health_t::infect_house(building& main) {
     main.mark_plague(city_health_rules.plague_house_days);
 }
 
-void health_system::start_disease(int total_people, bool force, int plague_people) {
-    if (!force && _state.value >= 40) {
+void city_health_t::start_disease(int total_people, bool force, int plague_people) {
+    if (!force && value >= 40) {
         // Natural check blocked by good health — drop a leftover Bast force flag.
-        _ctx.gods.bast_curse_active = false;
+        g_city.gods.bast_curse_active = false;
         return;
     }
 
     int chance_value = random_byte() & 0x3f;
-    const bool bast_forced = _ctx.gods.bast_curse_active;
+    const bool bast_forced = g_city.gods.bast_curse_active;
     if (bast_forced) {
         // Force the roll; clear flag only after an outbreak outcome below.
         chance_value = 0;
     }
 
-    if (!force && (chance_value > 40 - _state.value)) {
+    if (!force && (chance_value > 40 - value)) {
         return;
     }
 
@@ -55,15 +60,15 @@ void health_system::start_disease(int total_people, bool force, int plague_peopl
 
     if (sick_people <= 0) {
         if (bast_forced) {
-            _ctx.gods.bast_curse_active = false;
+            g_city.gods.bast_curse_active = false;
         }
         return;
     }
 
-    int people_to_plague = sick_people - _state.num_mortuary_workers;
+    int people_to_plague = sick_people - num_mortuary_workers;
     if (people_to_plague <= 0) {
         if (bast_forced) {
-            _ctx.gods.bast_curse_active = false;
+            g_city.gods.bast_curse_active = false;
         }
         change(10);
         message_manager().post_with_popup_delay(MESSAGE_CAT_HEALTH_PROBLEM, false, "message_malaria", 0, 0);
@@ -78,7 +83,7 @@ void health_system::start_disease(int total_people, bool force, int plague_peopl
         }
         warn_building = &main->base;
         people_to_plague -= house->house_population();
-        health_system::infect_house(main->base);
+        city_health_t::infect_house(main->base);
         if (!!game_features::gameplay_change_plagued_citizen_remake) {
             figure_plagued_citizen::create_at_house(main->base);
         }
@@ -130,13 +135,13 @@ void health_system::start_disease(int total_people, bool force, int plague_peopl
     // Nothing newly infected (all candidates already had plague) — no cooldown bump / spam.
     if (!warn_building) {
         if (bast_forced) {
-            _ctx.gods.bast_curse_active = false;
+            g_city.gods.bast_curse_active = false;
         }
         return;
     }
 
     if (bast_forced) {
-        _ctx.gods.bast_curse_active = false;
+        g_city.gods.bast_curse_active = false;
     }
 
     // OG city_health_start_plague_at_house: one carrier from the outbreak's house.
@@ -145,11 +150,11 @@ void health_system::start_disease(int total_people, bool force, int plague_peopl
     }
 
     change(10);
-    events::emit(event_city_disease{_ctx.absolute_day});
+    events::emit(event_city_disease{g_simulation.simtime.absolute_day(true)});
 
     e_building_type btype = warn_building->type;
     int grid_offset = warn_building->tile.grid_offset();
-    if (_state.num_mortuary_workers > 0) {
+    if (num_mortuary_workers > 0) {
         message_manager().post_with_popup_delay(MESSAGE_CAT_HEALTH_PROBLEM, force, "message_disease", btype,
           grid_offset);
     } else {
@@ -158,7 +163,7 @@ void health_system::start_disease(int total_people, bool force, int plague_peopl
     }
 }
 
-void health_system::update_coverage() {
+void city_health_t::update_coverage() {
     OZZY_PROFILER_FUNCTION();
     // OG culture_update_health_coverage: share of people in houses still visited by each service.
     int population = 0;
@@ -187,17 +192,17 @@ void health_system::update_coverage() {
         }
     });
 
-    auto& coverage = _ctx.coverage;
+    auto& coverage = g_city.coverage;
     coverage.apothecary = (uint8_t)calc_percentage(with_apothecary, population);
     coverage.mortuary = (uint8_t)calc_percentage(with_mortuary, population);
     coverage.physician = (uint8_t)calc_percentage(with_physician, population);
     coverage.dentist = (uint8_t)calc_percentage(with_dentist, population);
 }
 
-void health_system::update_month() {
-    if (_ctx.population.current < 200 || _ctx.fixed_health_mission) {
-        _state.value = 50;
-        _state.target_value = 50;
+void city_health_t::update_month() {
+    if (g_city.population.current < 200 || g_scenario.is_scenario_id(1, 2)) {
+        value = 50;
+        target_value = 50;
         return;
     }
 
@@ -237,58 +242,72 @@ void health_system::update_month() {
         healthy_population += (int)(coverage_pts * rules.coverage_factor * hpop);
     });
 
-    _state.target_value = calc_percentage(healthy_population, total_population);
-    const int pop = _ctx.population.current;
+    target_value = calc_percentage(healthy_population, total_population);
+    const int pop = g_city.population.current;
     for (const auto &entry : rules.population_bonus) {
         if (pop < entry.pop) {
-            _state.target_value += entry.bonus;
+            target_value += entry.bonus;
             break;
         }
     }
 
     // OG Isis altar on Bast complex: improve overall city health.
-    if (_ctx.bast_complex_has_altar) {
-        _state.target_value += building_temple_complex_bast::current_params().isis_health_bonus;
+    if (city_temple_complexes().has_upgrade(BUILDING_TEMPLE_COMPLEX_BAST, etc_upgrade_altar)) {
+        target_value += building_temple_complex_bast::current_params().isis_health_bonus;
     }
 
     const int step = rules.monthly_step;
-    if (_state.value < _state.target_value) {
-        _state.value += step;
-        if (_state.value > _state.target_value) {
-            _state.value = _state.target_value;
+    if (value < target_value) {
+        value += step;
+        if (value > target_value) {
+            value = target_value;
         }
 
-    } else if (_state.value > _state.target_value) {
-        _state.value -= step;
-        if (_state.value < _state.target_value) {
-            _state.value = _state.target_value;
+    } else if (value > target_value) {
+        value -= step;
+        if (value < target_value) {
+            value = target_value;
         }
     }
-    _state.value = calc_bound(_state.value, 0, 100);
+    value = calc_bound(value, 0, 100);
 
     start_disease(total_population, false, 0);
 }
 
-void health_system::reset_mortuary_workers() {
-    _state.num_mortuary_workers = 0;
+void city_health_t::reset_mortuary_workers() {
+    num_mortuary_workers = 0;
 }
 
-void health_system::add_mortuary_workers(int amount) {
-    _state.num_mortuary_workers += amount;
+void city_health_t::add_mortuary_workers(int amount) {
+    num_mortuary_workers += amount;
+}
+
+city_health_t& city_health() {
+    return xvalue<city_health_t>::ref();
+}
+
+void city_health_t::reset() {
+    *this = {};
 }
 
 class health_sim_system : public sim_system {
 public:
     const char* name() const override { return "health"; }
+    void on_reset() override { city_health().reset(); }
+    void push_save_sections(int file_version) override {
+        if (file_version >= save_version_city_sections) {
+            g_chunk_io.push_chunk<city_health_chunk>(city_health_chunk::size, false);
+        }
+    }
     void register_steps(sim_schedule_t& schedule) override {
         schedule.add({sim_step_health_coverage, SIM_PHASE_TICK, [](int tick) {
                           if (tick != 33) {
                               return;
                           }
-                          g_city.health_sys().update_coverage();
+                          city_health().update_coverage();
                       }});
         schedule.add({sim_step_plague_day, SIM_PHASE_DAY, [](int) { g_city.plague_update_day(); }});
-        schedule.add({sim_step_health_month, SIM_PHASE_MONTH_CITY, [](int) { g_city.health_sys().update_month(); }});
+        schedule.add({sim_step_health_month, SIM_PHASE_MONTH_CITY, [](int) { city_health().update_month(); }});
     }
 };
 

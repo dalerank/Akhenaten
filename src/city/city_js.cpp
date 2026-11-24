@@ -1,4 +1,5 @@
 ﻿#include "js/js_game.h"
+#include "city/city_health.h"
 
 #include "building/building_type.h"
 #include "io/gamefiles/lang.h"
@@ -35,7 +36,9 @@ ANK_FUNCTION(__city_rating_kingdom)
 int __city_population() { return g_city.population.current; }
 ANK_FUNCTION(__city_population)
 
-int __city_health_rating() { return g_city.health.value; }
+int __city_health_rating() {
+    return city_health().value;
+}
 ANK_FUNCTION(__city_health_rating)
 
 int __city_player_rank() { return g_city.kingdome.player_rank; }

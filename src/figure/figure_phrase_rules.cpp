@@ -1,4 +1,5 @@
 #include "figure/figure_phrase.h"
+#include "city/city_health.h"
 #include "city/city_labor.h"
 
 #include "building/building.h"
@@ -461,7 +462,7 @@ namespace {
         }
 
         case FIGURE_PHYSICIAN:
-            if (g_city.health.value < 40) {
+            if (city_health().value < 40) {
                 st.say(ADVISOR_HEALTH, 10);
             }
             break;
@@ -472,7 +473,7 @@ namespace {
             break;
 
         case FIGURE_EMBALMER:
-            if (g_city.health.value < 30) {
+            if (city_health().value < 30) {
                 st.say(ADVISOR_HEALTH, 10);
             }
             break;

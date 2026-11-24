@@ -67,12 +67,12 @@ struct population_state {
     int at_month(int max_months, int month) const;
 };
 
-struct health_state;
+struct city_health_t;
 struct city_labor_t;
 struct city_resources_t;
 
 struct population_context {
-    const health_state& health;
+    const city_health_t& health;
     city_labor_t& labor;
     const city_resources_t& resource;
 };

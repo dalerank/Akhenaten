@@ -1,4 +1,5 @@
 #include "dev/debug.h"
+#include "city/city_health.h"
 
 #include "building/building_house.h"
 #include "city/city.h"
@@ -18,7 +19,7 @@ declare_console_command_p(plague_start) {
         }
         total_population += house->house_population();
     });
-    g_city.health_sys().start_disease(total_population, true, plague_people);
+    city_health().start_disease(total_population, true, plague_people);
 }
 
 declare_console_command_p(plague_no) {

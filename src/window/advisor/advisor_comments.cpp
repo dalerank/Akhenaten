@@ -1,4 +1,5 @@
 #include "window/advisor/advisor_comments.h"
+#include "city/city_health.h"
 #include "city/city_labor.h"
 
 #include "city/city.h"
@@ -738,7 +739,7 @@ advisor_city_state advisor_city_state_current() {
     s.food_needed_per_month = g_city.resource.food_needed_per_month;
     s.population = g_city.population.current;
     s.food_supply_percentage = g_city.food_supply.percentage();
-    s.health = g_city.health.value;
+    s.health = city_health().value;
     s.god_mood0 = g_city.gods.gods[0].target_mood;
     s.god_mood1 = g_city.gods.gods[1].target_mood;
     s.god_mood2 = g_city.gods.gods[2].target_mood;

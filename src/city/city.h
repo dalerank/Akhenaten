@@ -10,7 +10,6 @@
 #include "city/buildings.h"
 #include "city/city_migration.h"
 #include "city/city_sentiment.h"
-#include "city/city_health.h"
 #include "city/military.h"
 #include "city/city_resource.h"
 #include "city/city_food_supply.h"
@@ -49,7 +48,6 @@ struct city_t {
     migration_state migration;
     sentiment_state sentiment;
 
-    health_state health;
     ratings_state ratings;
     city_average_coverage_t avg_coverage;
 
@@ -123,8 +121,6 @@ struct city_t {
     finance_system finance_sys();
     trade_context trade_ctx();
     trade_system trade_sys();
-    health_context health_ctx();
-    health_system health_sys();
     gods_context gods_ctx();
     gods_system gods_sys();
     sentiment_context sentiment_ctx();
