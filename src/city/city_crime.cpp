@@ -146,9 +146,19 @@ class crime_system : public sim_system {
 public:
     const char* name() const override { return "crime"; }
     void register_steps(sim_schedule_t& schedule) override {
-        schedule.add({sim_step_crime, SIM_PHASE_TICK_SLOT, 30, [] { g_crime.update(); }});
-        schedule.add({sim_step_criminals, SIM_PHASE_TICK_SLOT, 45, [] { g_city.figures_generate_criminals(); }});
-        schedule.add({sim_step_criminals_day, SIM_PHASE_DAY, -1, [] { g_city.criminals_update_day(); }});
+        schedule.add({sim_step_crime, SIM_PHASE_TICK, [](int tick) {
+                          if (tick != 30) {
+                              return;
+                          }
+                          g_crime.update();
+                      }});
+        schedule.add({sim_step_criminals, SIM_PHASE_TICK, [](int tick) {
+                          if (tick != 45) {
+                              return;
+                          }
+                          g_city.figures_generate_criminals();
+                      }});
+        schedule.add({sim_step_criminals_day, SIM_PHASE_DAY, [](int) { g_city.criminals_update_day(); }});
     }
 };
 

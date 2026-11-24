@@ -140,7 +140,7 @@ void city_t::reload_objects() {
 }
 
 void city_t::update_month(simulation_time_t simtime) {
-    g_simulation.schedule.run(SIM_PHASE_MONTH_CITY);
+    g_simulation.schedule.run(SIM_PHASE_MONTH_CITY, g_simulation.simtime.tick);
 }
 
 finance_context city_t::finance_ctx() {
@@ -282,8 +282,8 @@ void city_t::change_happiness(int amount) {
 }
 
 void city_t::update_tick(int simtick) {
-    g_simulation.schedule.run(SIM_PHASE_TICK_SLOT, simtick);
-    g_simulation.schedule.run(SIM_PHASE_TICK_CITY_END);
+    g_simulation.schedule.run(SIM_PHASE_TICK, simtick);
+    g_simulation.schedule.run(SIM_PHASE_TICK_CITY_END, simtick);
 }
 
 bool city_t::generate_trader_from(empire_city &city) {
@@ -684,7 +684,12 @@ class city_system : public sim_system {
 public:
     const char* name() const override { return "city"; }
     void register_steps(sim_schedule_t& schedule) override {
-        schedule.add({sim_step_generate_figures, SIM_PHASE_TICK_SLOT, 31, [] { g_city.buildings_generate_figure(); }});
+        schedule.add({sim_step_generate_figures, SIM_PHASE_TICK, [](int tick) {
+                          if (tick != 31) {
+                              return;
+                          }
+                          g_city.buildings_generate_figure();
+                      }});
     }
 };
 

@@ -511,9 +511,9 @@ class empire_system : public sim_system {
 public:
     const char* name() const override { return "empire"; }
     void register_steps(sim_schedule_t& schedule) override {
-        schedule.add({sim_step_empire_month, SIM_PHASE_MONTH, -1, [] { g_empire.update_month(); }});
+        schedule.add({sim_step_empire_month, SIM_PHASE_MONTH, [](int) { g_empire.update_month(); }});
         schedule.add(
-          {sim_step_yearly_trade_amounts, SIM_PHASE_YEAR, -1, [] { g_empire.reset_yearly_trade_amounts(); }});
+          {sim_step_yearly_trade_amounts, SIM_PHASE_YEAR, [](int) { g_empire.reset_yearly_trade_amounts(); }});
     }
 };
 

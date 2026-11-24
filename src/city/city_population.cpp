@@ -623,21 +623,33 @@ class population_sim_system : public sim_system {
 public:
     const char* name() const override { return "population"; }
     void register_steps(sim_schedule_t& schedule) override {
-        schedule.add({sim_step_housing_type_counts, SIM_PHASE_TICK_BEGIN, -1,
-          [] { g_city.population_sys().housing_type_counts_update(); }});
+        schedule.add({sim_step_housing_type_counts, SIM_PHASE_TICK_BEGIN,
+          [](int) { g_city.population_sys().housing_type_counts_update(); }});
+        schedule.add({sim_step_population_room, SIM_PHASE_TICK, [](int tick) {
+                          if (tick != 22) {
+                              return;
+                          }
+                          g_city.population_sys().update_room();
+                      }});
+        schedule.add({sim_step_population_migration, SIM_PHASE_TICK, [](int tick) {
+                          if (tick != 23) {
+                              return;
+                          }
+                          g_city.population_sys().update_migration();
+                      }});
+        schedule.add({sim_step_evict_overcrowded, SIM_PHASE_TICK, [](int tick) {
+                          if (tick != 24) {
+                              return;
+                          }
+                          g_city.population_sys().evict_overcrowded();
+                      }});
+        schedule.add({sim_step_population_day, SIM_PHASE_DAY, [](int) { g_city.population_sys().update_day(); }});
+        schedule.add({sim_step_population_at_levels, SIM_PHASE_MONTH_CITY,
+          [](int) { g_city.population_sys().count_at_levels(); }});
         schedule.add(
-          {sim_step_population_room, SIM_PHASE_TICK_SLOT, 22, [] { g_city.population_sys().update_room(); }});
+          {sim_step_population_record, SIM_PHASE_MONTH_CITY, [](int) { g_city.population_sys().record_monthly(); }});
         schedule.add(
-          {sim_step_population_migration, SIM_PHASE_TICK_SLOT, 23, [] { g_city.population_sys().update_migration(); }});
-        schedule.add(
-          {sim_step_evict_overcrowded, SIM_PHASE_TICK_SLOT, 24, [] { g_city.population_sys().evict_overcrowded(); }});
-        schedule.add({sim_step_population_day, SIM_PHASE_DAY, -1, [] { g_city.population_sys().update_day(); }});
-        schedule.add(
-          {sim_step_population_at_levels, SIM_PHASE_MONTH_CITY, -1, [] { g_city.population_sys().count_at_levels(); }});
-        schedule.add(
-          {sim_step_population_record, SIM_PHASE_MONTH_CITY, -1, [] { g_city.population_sys().record_monthly(); }});
-        schedule.add(
-          {sim_step_population_yearly_request, SIM_PHASE_YEAR, -1, [] { city_population_request_yearly_update(); }});
+          {sim_step_population_yearly_request, SIM_PHASE_YEAR, [](int) { city_population_request_yearly_update(); }});
     }
 };
 

@@ -395,12 +395,24 @@ class maintenance_system : public sim_system {
 public:
     const char* name() const override { return "maintenance"; }
     void register_steps(sim_schedule_t& schedule) override {
-        schedule.add(
-          {sim_step_kingdome_access, SIM_PHASE_TICK_SLOT, 21, [] { g_city.maintenance.check_kingdome_access(); }});
-        schedule.add(
-          {sim_step_burning_ruins, SIM_PHASE_TICK_SLOT, 43, [] { g_city.maintenance.update_burning_ruins(); }});
-        schedule.add({sim_step_building_destroying, SIM_PHASE_TICK_SLOT, 44,
-          [] { g_city.maintenance.check_building_destroying(); }});
+        schedule.add({sim_step_kingdome_access, SIM_PHASE_TICK, [](int tick) {
+                          if (tick != 21) {
+                              return;
+                          }
+                          g_city.maintenance.check_kingdome_access();
+                      }});
+        schedule.add({sim_step_burning_ruins, SIM_PHASE_TICK, [](int tick) {
+                          if (tick != 43) {
+                              return;
+                          }
+                          g_city.maintenance.update_burning_ruins();
+                      }});
+        schedule.add({sim_step_building_destroying, SIM_PHASE_TICK, [](int tick) {
+                          if (tick != 44) {
+                              return;
+                          }
+                          g_city.maintenance.check_building_destroying();
+                      }});
     }
 };
 

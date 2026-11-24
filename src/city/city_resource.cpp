@@ -580,16 +580,30 @@ class resource_system : public sim_system {
 public:
     const char* name() const override { return "resource"; }
     void register_steps(sim_schedule_t& schedule) override {
-        schedule.add({sim_step_stocks, SIM_PHASE_TICK_SLOT, 8, [] { g_city.resource.calculate_stocks(); }});
+        schedule.add({sim_step_stocks, SIM_PHASE_TICK, [](int tick) {
+                          if (tick != 8) {
+                              return;
+                          }
+                          g_city.resource.calculate_stocks();
+                      }});
+        schedule.add({sim_step_storageyard_stocks, SIM_PHASE_TICK, [](int tick) {
+                          if (tick != 16) {
+                              return;
+                          }
+                          city_resource_calculate_storageyard_stocks();
+                      }});
+        schedule.add({sim_step_food_stocks, SIM_PHASE_TICK, [](int tick) {
+                          if (tick != 17) {
+                              return;
+                          }
+                          g_city.resource.calculate_food_stocks_and_supply_wheat();
+                      }});
+        schedule.add({sim_step_food_weekly, SIM_PHASE_WEEK,
+          [](int) { g_city.resource.consume_food_weekly(g_simulation.simtime); }});
         schedule.add(
-          {sim_step_storageyard_stocks, SIM_PHASE_TICK_SLOT, 16, [] { city_resource_calculate_storageyard_stocks(); }});
-        schedule.add({sim_step_food_stocks, SIM_PHASE_TICK_SLOT, 17,
-          [] { g_city.resource.calculate_food_stocks_and_supply_wheat(); }});
-        schedule.add({sim_step_food_weekly, SIM_PHASE_WEEK, -1,
-          [] { g_city.resource.consume_food_weekly(g_simulation.simtime); }});
-        schedule.add({sim_step_food_monthly, SIM_PHASE_MONTH_CITY, -1, [] { g_city.resource.consume_food_monthly(); }});
-        schedule.add({sim_step_resource_month, SIM_PHASE_MONTH_CITY, -1, [] { g_city.resource.advance_month(); }});
-        schedule.add({sim_step_allowed_foods, SIM_PHASE_MONTH_CITY, -1, [] { g_city.update_allowed_foods(); }});
+          {sim_step_food_monthly, SIM_PHASE_MONTH_CITY, [](int) { g_city.resource.consume_food_monthly(); }});
+        schedule.add({sim_step_resource_month, SIM_PHASE_MONTH_CITY, [](int) { g_city.resource.advance_month(); }});
+        schedule.add({sim_step_allowed_foods, SIM_PHASE_MONTH_CITY, [](int) { g_city.update_allowed_foods(); }});
     }
 };
 

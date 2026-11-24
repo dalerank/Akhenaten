@@ -350,9 +350,13 @@ class sentiment_sim_system : public sim_system {
 public:
     const char* name() const override { return "sentiment"; }
     void register_steps(sim_schedule_t& schedule) override {
-        schedule.add({sim_step_reset_protesters, SIM_PHASE_TICK_SLOT, 44,
-          [] { g_city.sentiment_sys().reset_protesters_criminals(); }});
-        schedule.add({sim_step_sentiment, SIM_PHASE_DAY, -1, [] { g_city.sentiment_sys().update_day(); }});
+        schedule.add({sim_step_reset_protesters, SIM_PHASE_TICK, [](int tick) {
+                          if (tick != 44) {
+                              return;
+                          }
+                          g_city.sentiment_sys().reset_protesters_criminals();
+                      }});
+        schedule.add({sim_step_sentiment, SIM_PHASE_DAY, [](int) { g_city.sentiment_sys().update_day(); }});
     }
 };
 

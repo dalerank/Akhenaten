@@ -63,14 +63,44 @@ class map_system : public sim_system {
 public:
     const char* name() const override { return "map"; }
     void register_steps(sim_schedule_t& schedule) override {
-        schedule.add({sim_step_tree_growth, SIM_PHASE_TICK_SLOT, 2, [] { map_tree_growth_update(); }});
-        schedule.add({sim_step_irrigation_value, SIM_PHASE_TICK_SLOT, 5, [] { g_irrigation_value.update(); }});
-        schedule.add({sim_step_natives_land, SIM_PHASE_TICK_SLOT, 6, [] { map_natives_check_land(); }});
-        schedule.add({sim_step_road_network, SIM_PHASE_TICK_SLOT, 7, [] { g_city.map.update_road_network(); }});
-        schedule.add({sim_step_desirability, SIM_PHASE_TICK_SLOT, 10, [] { g_desirability.update(); }});
-        schedule.add({sim_step_vegetation_growth, SIM_PHASE_TICK_SLOT, 18, [] { map_vegetation_growth_update(); }});
-        schedule.add({sim_step_roads_images, SIM_PHASE_MONTH, -1, [] { map_tiles_update_all_roads(); }});
-        schedule.add({sim_step_land_citizen_routing, SIM_PHASE_MONTH, -1, [] { map_routing_update_land_citizen(); }});
+        schedule.add({sim_step_tree_growth, SIM_PHASE_TICK, [](int tick) {
+                          if (tick != 2) {
+                              return;
+                          }
+                          map_tree_growth_update();
+                      }});
+        schedule.add({sim_step_irrigation_value, SIM_PHASE_TICK, [](int tick) {
+                          if (tick != 5) {
+                              return;
+                          }
+                          g_irrigation_value.update();
+                      }});
+        schedule.add({sim_step_natives_land, SIM_PHASE_TICK, [](int tick) {
+                          if (tick != 6) {
+                              return;
+                          }
+                          map_natives_check_land();
+                      }});
+        schedule.add({sim_step_road_network, SIM_PHASE_TICK, [](int tick) {
+                          if (tick != 7) {
+                              return;
+                          }
+                          g_city.map.update_road_network();
+                      }});
+        schedule.add({sim_step_desirability, SIM_PHASE_TICK, [](int tick) {
+                          if (tick != 10) {
+                              return;
+                          }
+                          g_desirability.update();
+                      }});
+        schedule.add({sim_step_vegetation_growth, SIM_PHASE_TICK, [](int tick) {
+                          if (tick != 18) {
+                              return;
+                          }
+                          map_vegetation_growth_update();
+                      }});
+        schedule.add({sim_step_roads_images, SIM_PHASE_MONTH, [](int) { map_tiles_update_all_roads(); }});
+        schedule.add({sim_step_land_citizen_routing, SIM_PHASE_MONTH, [](int) { map_routing_update_land_citizen(); }});
     }
 };
 

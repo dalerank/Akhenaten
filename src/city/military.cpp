@@ -82,8 +82,12 @@ class military_system : public sim_system {
 public:
     const char* name() const override { return "military"; }
     void register_steps(sim_schedule_t& schedule) override {
-        schedule.add(
-          {sim_step_tower_sentry_decay, SIM_PHASE_TICK_SLOT, 31, [] { g_city.military.decay_tower_sentry_request(); }});
+        schedule.add({sim_step_tower_sentry_decay, SIM_PHASE_TICK, [](int tick) {
+                          if (tick != 31) {
+                              return;
+                          }
+                          g_city.military.decay_tower_sentry_request();
+                      }});
     }
 };
 

@@ -9,10 +9,7 @@ namespace {
     const token_holder<e_sim_step, sim_step_housing_type_counts, sim_step_count> sim_step_tokens;
 
     bool sim_step_runs_before(const sim_step& a, const sim_step& b) {
-        if (a.phase != b.phase) {
-            return a.phase < b.phase;
-        }
-        return a.slot <= b.slot;
+        return a.phase <= b.phase;
     }
 
 } // namespace
@@ -31,8 +28,8 @@ void sim_schedule_t::check() {
     for (int i = 0; i < sim_step_count; ++i) {
         verify_no_crash(_registered[i] && "simulation step is not registered by any system");
         if (i > 0) {
-            verify_no_crash(sim_step_runs_before(_steps[i - 1], _steps[i])
-                            && "e_sim_step order disagrees with the steps' phase and slot");
+            verify_no_crash(
+              sim_step_runs_before(_steps[i - 1], _steps[i]) && "e_sim_step order disagrees with the steps' phases");
         }
     }
 }
@@ -42,13 +39,13 @@ span_const<sim_step> sim_schedule_t::steps() {
     return make_span(_steps.data(), _steps.size());
 }
 
-void sim_schedule_t::run(e_sim_phase phase, int slot) {
+void sim_schedule_t::run(e_sim_phase phase, int tick) {
     check();
     for (const sim_step& step : _steps) {
-        if (step.phase != phase || (phase == SIM_PHASE_TICK_SLOT && step.slot != slot)) {
+        if (step.phase != phase) {
             continue;
         }
-        step.run();
+        step.run(tick);
     }
 }
 

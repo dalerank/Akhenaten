@@ -35,7 +35,7 @@ class festival_system : public sim_system {
 public:
     const char* name() const override { return "festival"; }
     void register_steps(sim_schedule_t& schedule) override {
-        schedule.add({sim_step_festival, SIM_PHASE_MONTH_CITY, -1, [] { city_festival().advance_month(); }});
+        schedule.add({sim_step_festival, SIM_PHASE_MONTH_CITY, [](int) { city_festival().advance_month(); }});
     }
     void on_reset() override { city_festival().reset(); }
     void push_save_sections(int file_version) override {

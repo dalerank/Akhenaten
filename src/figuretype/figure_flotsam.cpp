@@ -176,7 +176,7 @@ class flotsam_system : public sim_system {
 public:
     const char* name() const override { return "flotsam"; }
     void register_steps(sim_schedule_t& schedule) override {
-        schedule.add({sim_step_flotsam, SIM_PHASE_DAY, -1, [] { figure_flotsam::spawn_update_day(); }});
+        schedule.add({sim_step_flotsam, SIM_PHASE_DAY, [](int) { figure_flotsam::spawn_update_day(); }});
     }
 };
 

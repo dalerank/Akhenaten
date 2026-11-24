@@ -244,9 +244,18 @@ class trade_sim_system : public sim_system {
 public:
     const char* name() const override { return "trade"; }
     void register_steps(sim_schedule_t& schedule) override {
-        schedule.add(
-          {sim_step_trade_export_keep, SIM_PHASE_TICK_SLOT, 11, [] { g_city.trade_sys().update_export_keep(); }});
-        schedule.add({sim_step_trade, SIM_PHASE_TICK_SLOT, 32, [] { g_city.trade_sys().update(); }});
+        schedule.add({sim_step_trade_export_keep, SIM_PHASE_TICK, [](int tick) {
+                          if (tick != 11) {
+                              return;
+                          }
+                          g_city.trade_sys().update_export_keep();
+                      }});
+        schedule.add({sim_step_trade, SIM_PHASE_TICK, [](int tick) {
+                          if (tick != 32) {
+                              return;
+                          }
+                          g_city.trade_sys().update();
+                      }});
     }
 };
 

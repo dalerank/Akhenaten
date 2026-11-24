@@ -77,15 +77,15 @@ class simulation_time_system : public sim_system {
 public:
     const char* name() const override { return "simulation_time"; }
     void register_steps(sim_schedule_t& schedule) override {
-        schedule.add({sim_step_random, SIM_PHASE_TICK_BEGIN, -1, [] { random_generate_next(); }});
-        schedule.add({sim_step_event_advance_day, SIM_PHASE_DAY, -1,
-          [] { events::emit(event_advance_day::from_simtime(g_simulation.simtime)); }});
-        schedule.add({sim_step_event_advance_week, SIM_PHASE_WEEK, -1,
-          [] { events::emit(event_advance_week::from_simtime(g_simulation.simtime)); }});
-        schedule.add({sim_step_random_month, SIM_PHASE_MONTH, -1, [] { random_generate_next(); }});
-        schedule.add({sim_step_event_advance_month, SIM_PHASE_MONTH_END, -1,
-          [] { events::emit(event_advance_month::from_simtime(g_simulation.simtime)); }});
-        schedule.add({sim_step_simtime_year, SIM_PHASE_YEAR, -1, [] { g_simulation.simtime.advance_year(); }});
+        schedule.add({sim_step_random, SIM_PHASE_TICK_BEGIN, [](int) { random_generate_next(); }});
+        schedule.add({sim_step_event_advance_day, SIM_PHASE_DAY,
+          [](int) { events::emit(event_advance_day::from_simtime(g_simulation.simtime)); }});
+        schedule.add({sim_step_event_advance_week, SIM_PHASE_WEEK,
+          [](int) { events::emit(event_advance_week::from_simtime(g_simulation.simtime)); }});
+        schedule.add({sim_step_random_month, SIM_PHASE_MONTH, [](int) { random_generate_next(); }});
+        schedule.add({sim_step_event_advance_month, SIM_PHASE_MONTH_END,
+          [](int) { events::emit(event_advance_month::from_simtime(g_simulation.simtime)); }});
+        schedule.add({sim_step_simtime_year, SIM_PHASE_YEAR, [](int) { g_simulation.simtime.advance_year(); }});
     }
 };
 

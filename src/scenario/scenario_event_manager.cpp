@@ -2031,9 +2031,9 @@ class scenario_event_manager_system : public sim_system {
 public:
     const char* name() const override { return "scenario_event_manager"; }
     void register_steps(sim_schedule_t& schedule) override {
-        schedule.add({sim_step_random_events, SIM_PHASE_MONTH, -1, [] { g_scenario.events.process_random_events(); }});
-        schedule.add({sim_step_invasions, SIM_PHASE_MONTH, -1, [] { g_scenario.events.process_invasions(); }});
-        schedule.add({sim_step_scenario_events, SIM_PHASE_MONTH, -1, [] { g_scenario.events.process_events(); }});
+        schedule.add({sim_step_random_events, SIM_PHASE_MONTH, [](int) { g_scenario.events.process_random_events(); }});
+        schedule.add({sim_step_invasions, SIM_PHASE_MONTH, [](int) { g_scenario.events.process_invasions(); }});
+        schedule.add({sim_step_scenario_events, SIM_PHASE_MONTH, [](int) { g_scenario.events.process_events(); }});
     }
 };
 

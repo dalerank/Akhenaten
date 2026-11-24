@@ -227,15 +227,42 @@ class houses_system : public sim_system {
 public:
     const char* name() const override { return "houses"; }
     void register_steps(sim_schedule_t& schedule) override {
-        schedule.add({sim_step_house_service_decay, SIM_PHASE_TICK_SLOT, 9, [] { g_city.house_decay_services(); }});
-        schedule.add({sim_step_houses_covered_decay, SIM_PHASE_TICK_SLOT, 12,
-          [] { g_city.house_service_decay_houses_covered(); }});
-        schedule.add({sim_step_house_health, SIM_PHASE_TICK_SLOT, 35, [] { g_city.house_service_update_health(); }});
-        schedule.add({sim_step_culture_aggregates, SIM_PHASE_TICK_SLOT, 36,
-          [] { g_city.house_service_calculate_culture_aggregates(); }});
-        schedule.add({sim_step_house_evolve, SIM_PHASE_TICK_SLOT, 39, [] { g_city.house_process_evolve(); }});
-        schedule.add(
-          {sim_step_house_tax_coverage_decay, SIM_PHASE_TICK_SLOT, 48, [] { g_city.house_decay_tax_coverage(); }});
+        schedule.add({sim_step_house_service_decay, SIM_PHASE_TICK, [](int tick) {
+                          if (tick != 9) {
+                              return;
+                          }
+                          g_city.house_decay_services();
+                      }});
+        schedule.add({sim_step_houses_covered_decay, SIM_PHASE_TICK, [](int tick) {
+                          if (tick != 12) {
+                              return;
+                          }
+                          g_city.house_service_decay_houses_covered();
+                      }});
+        schedule.add({sim_step_house_health, SIM_PHASE_TICK, [](int tick) {
+                          if (tick != 35) {
+                              return;
+                          }
+                          g_city.house_service_update_health();
+                      }});
+        schedule.add({sim_step_culture_aggregates, SIM_PHASE_TICK, [](int tick) {
+                          if (tick != 36) {
+                              return;
+                          }
+                          g_city.house_service_calculate_culture_aggregates();
+                      }});
+        schedule.add({sim_step_house_evolve, SIM_PHASE_TICK, [](int tick) {
+                          if (tick != 39) {
+                              return;
+                          }
+                          g_city.house_process_evolve();
+                      }});
+        schedule.add({sim_step_house_tax_coverage_decay, SIM_PHASE_TICK, [](int tick) {
+                          if (tick != 48) {
+                              return;
+                          }
+                          g_city.house_decay_tax_coverage();
+                      }});
     }
 };
 

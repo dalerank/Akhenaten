@@ -1005,8 +1005,8 @@ public:
     const char* name() const override { return "scenario_invasion"; }
     void register_steps(sim_schedule_t& schedule) override {
         schedule.add(
-          {sim_step_invasion_bind_resolutions, SIM_PHASE_MONTH, -1, [] { g_invasions.process_bind_resolutions(); }});
-        schedule.add({sim_step_invasion_process, SIM_PHASE_MONTH, -1, [] { scenario_invasion_process(); }});
+          {sim_step_invasion_bind_resolutions, SIM_PHASE_MONTH, [](int) { g_invasions.process_bind_resolutions(); }});
+        schedule.add({sim_step_invasion_process, SIM_PHASE_MONTH, [](int) { scenario_invasion_process(); }});
     }
 };
 

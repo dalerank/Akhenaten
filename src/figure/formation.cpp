@@ -644,9 +644,20 @@ class formation_system : public sim_system {
 public:
     const char* name() const override { return "formation"; }
     void register_steps(sim_schedule_t& schedule) override {
-        schedule.add({sim_step_formations, SIM_PHASE_TICK_SLOT, 5, [] { formation_update_all(false); }});
-        schedule.add({sim_step_formations_skip_morale, SIM_PHASE_TICK_SLOT, 29, [] { formation_update_all(true); }});
-        schedule.add({sim_step_morale_at_rest, SIM_PHASE_MONTH, -1, [] { formation_update_monthly_morale_at_rest(); }});
+        schedule.add({sim_step_formations, SIM_PHASE_TICK, [](int tick) {
+                          if (tick != 5) {
+                              return;
+                          }
+                          formation_update_all(false);
+                      }});
+        schedule.add({sim_step_formations_skip_morale, SIM_PHASE_TICK, [](int tick) {
+                          if (tick != 29) {
+                              return;
+                          }
+                          formation_update_all(true);
+                      }});
+        schedule.add(
+          {sim_step_morale_at_rest, SIM_PHASE_MONTH, [](int) { formation_update_monthly_morale_at_rest(); }});
     }
 };
 

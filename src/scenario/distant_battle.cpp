@@ -582,8 +582,8 @@ class distant_battle_system : public sim_system {
 public:
     const char* name() const override { return "distant_battle"; }
     void register_steps(sim_schedule_t& schedule) override {
-        schedule.add({sim_step_distant_battle, SIM_PHASE_DAY, -1, [] { g_distant_battle.update_day(); }});
-        schedule.add({sim_step_distant_battle_month, SIM_PHASE_MONTH, -1, [] { g_distant_battle.update_month(); }});
+        schedule.add({sim_step_distant_battle, SIM_PHASE_DAY, [](int) { g_distant_battle.update_day(); }});
+        schedule.add({sim_step_distant_battle_month, SIM_PHASE_MONTH, [](int) { g_distant_battle.update_month(); }});
     }
 };
 

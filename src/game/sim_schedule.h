@@ -9,7 +9,7 @@
 
 enum e_sim_phase : uint8_t {
     SIM_PHASE_TICK_BEGIN,
-    SIM_PHASE_TICK_SLOT,
+    SIM_PHASE_TICK,
     SIM_PHASE_TICK_CITY_END,
     SIM_PHASE_TICK_END,
     SIM_PHASE_DAY,
@@ -146,15 +146,14 @@ enum e_sim_step : uint16_t {
 struct sim_step {
     e_sim_step id;
     e_sim_phase phase;
-    int slot;
-    void (*run)();
+    void (*run)(int tick);
 };
 
 class sim_schedule_t {
 public:
     void add(const sim_step& step);
     span_const<sim_step> steps();
-    void run(e_sim_phase phase, int slot = -1);
+    void run(e_sim_phase phase, int tick);
 
     static xstring phase_name(e_sim_phase phase);
     static xstring step_name(e_sim_step id);
