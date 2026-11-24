@@ -1,4 +1,5 @@
 #include "window_city.h"
+#include "city/city_finance.h"
 #include "window/message_dialog.h"
 
 #include "overlays/city_overlay.h"
@@ -260,7 +261,7 @@ bool window_city_draw_construction_cost_and_size() {
 
     if (cost) {
         color color;
-        if (cost <= g_city.finance.treasury) // Color blind friendly
+        if (cost <= city_finance().treasury) // Color blind friendly
             color = g_scenario.is_desert() ? COLOR_FONT_ORANGE : COLOR_FONT_ORANGE_LIGHT;
         else
             color = COLOR_FONT_RED;

@@ -43,7 +43,7 @@ void city_t::government_distribute_treasury() {
         total_weight -= tax_w * tax_count;
     }
 
-    const int treasury = finance.treasury;
+    const int treasury = city_finance().treasury;
 
     buildings_valid_do([&](building &b) {
         int weight = 0;

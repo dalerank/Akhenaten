@@ -96,15 +96,15 @@ struct kingdome_state : city_component_t<kingdome_state> {
     static const static_params &params();
 };
 
-struct finance_state;
+struct city_finance_t;
 struct city_ratings_t;
 struct city_figures_t;
 struct population_state;
 struct event_manager_t;
 
 struct kingdome_context {
-    finance_system finance_sys;
-    const finance_state& finance;
+    city_finance_t& finance_sys;
+    const city_finance_t& finance;
     city_ratings_t& ratings;
     const city_figures_t& figures;
     const population_state& population;

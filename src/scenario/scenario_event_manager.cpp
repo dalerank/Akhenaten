@@ -1057,8 +1057,8 @@ static void gift_finish(event_ph_t& e) {
     case GIFT_STATE_ACCEPTED:
         if (e.item.value == RESOURCE_DEBEN) {
             gift.delivered_amount = e.amount.value;
-            g_city.finance.treasury += e.amount.value;
-            g_city.finance.this_year.income.donated += e.amount.value;
+            city_finance().treasury += e.amount.value;
+            city_finance().this_year.income.donated += e.amount.value;
             gift_post(e, PHRASE_gift_cash_accepted_P, PHRASE_gift_cash_accepted_C, gift);
         } else {
             const int stored = gift_store_anywhere((e_resource)e.item.value, e.amount.value * 100, false);
@@ -1278,14 +1278,14 @@ void event_manager_t::process_event(int id, bool via_event_trigger, int chain_ac
         break;
 
     case EVENT_TYPE_WAGE_INCREASE:
-        g_city.finance_sys().raise_wages_kingdome();
+        city_finance().raise_wages_kingdome();
         message_manager().post_full(true, "message_template_general", &event, caller_event_id,
           PHRASE_wage_change_title_I, PHRASE_wage_change_initial_announcement_I, PHRASE_wage_change_no_reason_I_A, id,
           0, POPUP_MSG_WAGE);
         break;
 
     case EVENT_TYPE_WAGE_DECREASE:
-        g_city.finance_sys().lower_wages_kingdome();
+        city_finance().lower_wages_kingdome();
         message_manager().post_full(true, "message_template_general", &event, caller_event_id,
           PHRASE_wage_change_title_D, PHRASE_wage_change_initial_announcement_D, PHRASE_wage_change_no_reason_D_A, id,
           0, POPUP_MSG_WAGE);

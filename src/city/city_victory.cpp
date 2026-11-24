@@ -1,4 +1,5 @@
 #include "city/city_victory.h"
+#include "city/city_finance.h"
 #include "city/ratings.h"
 #include "game/sim_schedule.h"
 
@@ -237,7 +238,7 @@ int city_victory_score(int months, int monument_weight) {
     const double rating_part = (double)ratings * ((double)g_city.population.current * 0.002);
     const double monument_part = (weight / (m * m * 0.00015625)) * (weight * 20.0);
     double score = monument_part + rating_part;
-    score = score + (double)(int)g_city.finance.treasury / (m * 0.03333333333333333);
+    score = score + (double)(int)city_finance().treasury / (m * 0.03333333333333333);
     score = score * (((double)game_difficulty() + 1.0) * 0.3333333333333333);
     return (int)(int64_t)score;
 }

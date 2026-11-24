@@ -1,4 +1,5 @@
 #include "city_sentiment.h"
+#include "city/city_finance.h"
 #include "js/js_register.h"
 #include "core/svector.h"
 #include "io/gamestate/save_versions.h"
@@ -105,7 +106,7 @@ int city_sentiment_t::calc_penalty_for_hut_dwellers() {
 }
 
 int city_sentiment_t::calc_sentiment_contribution_wages() {
-    const auto& finance = g_city.finance;
+    const auto& finance = city_finance();
 
     wages = finance.wages;
     int contribution = 0;

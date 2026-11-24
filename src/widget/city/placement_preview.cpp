@@ -1,4 +1,5 @@
 #include "widget/city/placement_preview.h"
+#include "city/city_finance.h"
 
 #include "building/building_bridge.h"
 #include "building/construction/build_planner.h"
@@ -32,7 +33,7 @@ namespace {
         else if (!end_grid_offset)
             blocked = true;
 
-        if (g_city.finance_sys().is_out_of_money())
+        if (city_finance().is_out_of_money())
             blocked = true;
 
         int x_delta, y_delta;

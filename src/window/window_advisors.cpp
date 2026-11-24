@@ -15,10 +15,10 @@
 void window_advisors_prepare_opening() {
     city_labor().allocate_workers();
 
-    g_city.finance_sys().estimate_wages();
-    g_city.finance_sys().update_interest();
+    city_finance().estimate_wages();
+    city_finance().update_interest();
     city_taxes().update_estimate();
-    g_city.finance_sys().calculate_totals();
+    city_finance().calculate_totals();
 
     city_migration().determine_reason();
 

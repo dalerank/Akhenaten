@@ -80,7 +80,7 @@ struct palace_treasury_shares_t {
 ANK_CONFIG_STRUCT(palace_treasury_shares_t, tax_collector_weight, courthouse_weight, palace_weight)
 extern palace_treasury_shares_t palace_treasury_shares;
 
-struct finance_state {
+struct city_finance_t {
     struct treasury_t {
         int value;
         treasury_t &change(int v);
@@ -109,25 +109,8 @@ struct finance_state {
     void collect_taxes(int amount) { treasury += amount; }
     void set_tax_income_this_year(int amount) { this_year.income.taxes = amount; }
     void close_tax_year(int amount) { last_year.income.taxes = amount; }
-};
 
-struct population_state;
-struct city_labor_t;
-struct kingdome_state;
-
-struct finance_context {
-    population_state& population;
-    const city_labor_t& labor;
-    kingdome_state& kingdome;
-    int month;
-    int debt_interest;
-};
-
-class finance_system {
-public:
-    finance_system(finance_state& state, const finance_context& ctx) : _state(state), _ctx(ctx) {}
-
-    static void subscribe_events(finance_system (*make)());
+    static void subscribe_events();
 
     void init();
     bool is_out_of_money() const;
@@ -142,13 +125,13 @@ public:
     void update_interest();
     void process_request(event_finance_request request);
     void calculate_totals();
+    void reset();
 
 private:
     void pay_monthly_interest();
     void pay_monthly_salary();
     void copy_amounts_to_last_year();
     void pay_tribute();
-
-    finance_state& _state;
-    finance_context _ctx;
 };
+
+city_finance_t& city_finance();

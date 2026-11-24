@@ -1,4 +1,5 @@
 #include "window/advisor/advisor_comments.h"
+#include "city/city_finance.h"
 #include "city/city_migration.h"
 #include "city/city_sentiment.h"
 #include "city/city_health.h"
@@ -749,10 +750,10 @@ advisor_city_state advisor_city_state_current() {
     s.god_mood4 = g_city.gods.gods[4].target_mood;
     s.taxes_collected = city_taxes().yearly.collected_citizens + city_taxes().yearly.collected_nobles;
     s.taxes_uncollected = city_taxes().yearly.uncollected_citizens + city_taxes().yearly.uncollected_nobles;
-    s.treasury = g_city.finance.treasury;
-    s.balance_last_year = g_city.finance.last_year.balance;
-    s.crimes_this_month = g_city.finance.crimes_this_month;
-    s.gold_stolen_this_month = g_city.finance.gold_stolen_this_month;
+    s.treasury = city_finance().treasury;
+    s.balance_last_year = city_finance().last_year.balance;
+    s.crimes_this_month = city_finance().crimes_this_month;
+    s.gold_stolen_this_month = city_finance().gold_stolen_this_month;
     s.invasion_running = scenario_invasion_exists_upcoming() ? 1 : 0;
     gather_requests(s);
     s.flood_quality = floods().expected_quality();

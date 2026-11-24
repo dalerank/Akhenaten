@@ -6,7 +6,6 @@
 #include "game/player_record.h"
 #include "city/city_industry.h"
 #include "city/city_population.h"
-#include "city/city_finance.h"
 #include "city/buildings.h"
 #include "city/military.h"
 #include "city/city_resource.h"
@@ -37,7 +36,6 @@ struct city_t {
     e_availability advisors[ADVISOR_MAX];
     e_availability empire_screen = AVAILABLE;
 
-    finance_state finance;
     city_resources_t resource;
     city_food_supply_t food_supply;
 
@@ -109,8 +107,6 @@ struct city_t {
 
     void update_tick(int simtick);
     void update_month(simulation_time_t t);
-    finance_context finance_ctx();
-    finance_system finance_sys();
     gods_context gods_ctx();
     gods_system gods_sys();
     population_context population_ctx();

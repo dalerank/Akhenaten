@@ -97,7 +97,7 @@ static void request_post(const event_ph_t& event, int caller_event_id, int body_
 
 static bool request_can_comply(const event_ph_t& event) {
     if (event.item.value == RESOURCE_DEBEN) {
-        return g_city.finance.treasury >= event.amount.value;
+        return city_finance().treasury >= event.amount.value;
     }
     return g_city.resource.stored((e_resource)event.item.value) >= event.amount.value * 100;
 }

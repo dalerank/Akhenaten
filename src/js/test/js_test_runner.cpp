@@ -1,4 +1,5 @@
 #include "js/test/js_test_common.h"
+#include "city/city_finance.h"
 #include "city/ratings.h"
 #include "city/city_sentiment.h"
 #include "core/main_thread.h"
@@ -944,7 +945,7 @@ ANK_FUNCTION_1(__test_state_diff);
 
 // Puts distinct values into fields whose OG offsets test 343 checks in a freshly written city_data chunk.
 void __test_city_data_set_probe() {
-    g_city.finance.treasury.value = 0x1234567;
+    city_finance().treasury.value = 0x1234567;
     g_city.buildings.distribution_center_building_id = 0x2345;
     g_city.buildings.trade_center_building_id = 0x3456;
     g_city.figures.soldiers = 0x4567;

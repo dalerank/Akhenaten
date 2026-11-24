@@ -1,4 +1,5 @@
 #include "figuretype/figure_robber.h"
+#include "city/city_finance.h"
 #include "city/city_sentiment.h"
 
 #include "building/building.h"
@@ -73,7 +74,7 @@ void show_robbery_message(pcstr key, int amount, int tile_offset) {
 // OG criminal_find_rich_building: nearest mansion/palace/tax/court with money.
 int criminal_find_rich_building(figure &f) {
     const bool has_savings = g_city.kingdome.personal_savings > 0;
-    const bool has_treasury = g_city.finance.treasury > 0;
+    const bool has_treasury = city_finance().treasury > 0;
     if (!has_savings && !has_treasury) {
         return 0;
     }
@@ -135,7 +136,7 @@ void steal_from_destination(figure &f) {
                 d.personal_savings_storage = 0;
             }
         }
-        g_city.finance_sys().process_stolen(amount);
+        city_finance().process_stolen(amount);
         show_robbery_warning("#thief_stole_savings");
         show_robbery_message("thief_stole_savings", amount, f.tile.grid_offset());
         return;
@@ -154,7 +155,7 @@ void steal_from_destination(figure &f) {
     } else {
         b->tax_income_or_storage = 0;
     }
-    g_city.finance_sys().process_stolen(amount);
+    city_finance().process_stolen(amount);
 
     pcstr warn = "#palace_robbed";
     switch (b->type) {
@@ -176,23 +177,23 @@ void steal_from_destination(figure &f) {
 }
 
 void remake_instant_steal_on_create(figure &f) {
-    const int taxes_this_year = g_city.finance.this_year.income.taxes;
+    const int taxes_this_year = city_finance().this_year.income.taxes;
     if (taxes_this_year > 20) {
         int money_stolen = taxes_this_year / 4;
         if (money_stolen > 400) {
             money_stolen = 400 - random_byte() / 2;
         }
         show_robbery_message("message_tutorial_crime", money_stolen, f.tile.grid_offset());
-        g_city.finance_sys().process_stolen(money_stolen);
+        city_finance().process_stolen(money_stolen);
         return;
     }
 
-    const int treasury = g_city.finance.treasury;
+    const int treasury = city_finance().treasury;
     if (treasury > 0) {
         int money_stolen = (random_byte() / 2) % 100;
         if (money_stolen > 0) {
             show_robbery_message("message_tutorial_crime", money_stolen, f.tile.grid_offset());
-            g_city.finance_sys().process_stolen(money_stolen);
+            city_finance().process_stolen(money_stolen);
         }
     }
 }
@@ -250,7 +251,7 @@ void figure_robber::figure_action() {
         case ACTION_10_ROBBER_FLEEING:
             // Gold-cart flee works in remake too (OG supplement).
             if (++base.wait_ticks > 10) {
-                g_city.finance_sys().process_stolen(100);
+                city_finance().process_stolen(100);
                 show_robbery_warning("#gold_miner_robbed");
                 show_robbery_message("message_tutorial_crime", 100, tile().grid_offset());
                 poof();
@@ -311,7 +312,7 @@ void figure_robber::figure_action() {
 
     case ACTION_10_ROBBER_FLEEING:
         if (++base.wait_ticks > 10) {
-            g_city.finance_sys().process_stolen(100);
+            city_finance().process_stolen(100);
             show_robbery_warning("#gold_miner_robbed");
             show_robbery_message("message_tutorial_crime", 100, tile().grid_offset());
             poof();

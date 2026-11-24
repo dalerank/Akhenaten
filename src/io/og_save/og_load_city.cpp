@@ -1,4 +1,5 @@
 #include "io/og_save/og_load.h"
+#include "city/city_finance.h"
 #include "city/city_trade.h"
 #include "city/ratings.h"
 #include "city/city_migration.h"
@@ -34,7 +35,7 @@ namespace og {
 
         assign(g_city.buildings.unknown_value, p.building_reserved_id);
         assign(city_taxes().tax_percentage, p.tax_percentage);
-        assign(g_city.finance.treasury.value, p.treasury);
+        assign(city_finance().treasury.value, p.treasury);
         assign(city_sentiment().value, p.sentiment);
         assign(city_health().target_value, p.health_target);
         assign(city_health().value, p.health);
@@ -111,8 +112,8 @@ namespace og {
         assign(city_labor().unemployment_percentage, p.unemployment_percentage);
         assign(city_labor().unemployment_percentage_for_goverment, p.unemployment_percentage_for_senate);
         assign(city_labor().workers_needed, p.workers_needed);
-        assign(g_city.finance.wages, p.wages);
-        assign(g_city.finance.wages_kingdome, p.wages_kingdom);
+        assign(city_finance().wages, p.wages);
+        assign(city_finance().wages_kingdome, p.wages_kingdom);
         assign(city_taxes().taxed_citizens, p.taxed_plebs);
         assign(city_taxes().taxed_nobles, p.taxed_nobles);
         assign(city_taxes().untaxed_citizens, p.untaxed_plebs);
@@ -124,41 +125,41 @@ namespace og {
         assign(city_taxes().yearly.collected_nobles, p.yearly_collected_nobles);
         assign(city_taxes().yearly.uncollected_citizens, p.yearly_uncollected_plebs);
         assign(city_taxes().yearly.uncollected_nobles, p.yearly_uncollected_nobles);
-        assign(g_city.finance.this_year.income.taxes, p.taxes_this_year);
-        assign(g_city.finance.last_year.income.taxes, p.taxes_last_year);
+        assign(city_finance().this_year.income.taxes, p.taxes_this_year);
+        assign(city_finance().last_year.income.taxes, p.taxes_last_year);
         assign(city_taxes().monthly.collected_citizens, p.monthly_collected_plebs);
         assign(city_taxes().monthly.uncollected_citizens, p.monthly_uncollected_plebs);
         assign(city_taxes().monthly.collected_nobles, p.monthly_collected_nobles);
         assign(city_taxes().monthly.uncollected_nobles, p.monthly_uncollected_nobles);
-        assign(g_city.finance.this_year.income.exports, p.exports_this_year);
-        assign(g_city.finance.last_year.income.exports, p.exports_last_year);
-        assign(g_city.finance.this_year.expenses.imports, p.imports_this_year);
-        assign(g_city.finance.last_year.expenses.imports, p.imports_last_year);
-        assign(g_city.finance.interest_so_far, p.interest_so_far);
-        assign(g_city.finance.last_year.expenses.interest, p.interest_last_year);
-        assign(g_city.finance.this_year.expenses.interest, p.interest_this_year);
-        assign(g_city.finance.last_year.expenses.stolen, p.stolen_last_year);
-        assign(g_city.finance.this_year.expenses.stolen, p.stolen_this_year);
-        assign(g_city.finance.last_year.expenses.construction, p.construction_last_year);
-        assign(g_city.finance.this_year.expenses.construction, p.construction_this_year);
-        assign(g_city.finance.last_year.expenses.accountant_salary, p.salary_last_year);
-        assign(g_city.finance.this_year.expenses.accountant_salary, p.salary_this_year);
+        assign(city_finance().this_year.income.exports, p.exports_this_year);
+        assign(city_finance().last_year.income.exports, p.exports_last_year);
+        assign(city_finance().this_year.expenses.imports, p.imports_this_year);
+        assign(city_finance().last_year.expenses.imports, p.imports_last_year);
+        assign(city_finance().interest_so_far, p.interest_so_far);
+        assign(city_finance().last_year.expenses.interest, p.interest_last_year);
+        assign(city_finance().this_year.expenses.interest, p.interest_this_year);
+        assign(city_finance().last_year.expenses.stolen, p.stolen_last_year);
+        assign(city_finance().this_year.expenses.stolen, p.stolen_this_year);
+        assign(city_finance().last_year.expenses.construction, p.construction_last_year);
+        assign(city_finance().this_year.expenses.construction, p.construction_this_year);
+        assign(city_finance().last_year.expenses.accountant_salary, p.salary_last_year);
+        assign(city_finance().this_year.expenses.accountant_salary, p.salary_this_year);
         assign(g_city.kingdome.salary_amount, p.salary_amount);
         assign(g_city.kingdome.salary_rank, p.salary_rank);
-        assign(g_city.finance.this_year.expenses.mayour_salary, p.salary_so_far);
-        assign(g_city.finance.last_year.income.total, p.income_last_year);
-        assign(g_city.finance.this_year.income.total, p.income_this_year);
-        assign(g_city.finance.last_year.expenses.total, p.expenses_last_year);
-        assign(g_city.finance.this_year.expenses.total, p.expenses_this_year);
-        assign(g_city.finance.last_year.net_in_out, p.net_in_out_last_year);
-        assign(g_city.finance.this_year.net_in_out, p.net_in_out_this_year);
-        assign(g_city.finance.last_year.balance, p.balance_last_year);
-        assign(g_city.finance.this_year.balance, p.balance_this_year);
-        assign(g_city.finance.wages_so_far, p.wages_so_far);
-        assign(g_city.finance.this_year.expenses.wages, p.wages_this_year);
-        assign(g_city.finance.last_year.expenses.wages, p.wages_last_year);
-        assign(g_city.finance.this_year.income.gold_delivered, p.gold_this_year);
-        assign(g_city.finance.last_year.income.gold_delivered, p.gold_last_year);
+        assign(city_finance().this_year.expenses.mayour_salary, p.salary_so_far);
+        assign(city_finance().last_year.income.total, p.income_last_year);
+        assign(city_finance().this_year.income.total, p.income_this_year);
+        assign(city_finance().last_year.expenses.total, p.expenses_last_year);
+        assign(city_finance().this_year.expenses.total, p.expenses_this_year);
+        assign(city_finance().last_year.net_in_out, p.net_in_out_last_year);
+        assign(city_finance().this_year.net_in_out, p.net_in_out_this_year);
+        assign(city_finance().last_year.balance, p.balance_last_year);
+        assign(city_finance().this_year.balance, p.balance_this_year);
+        assign(city_finance().wages_so_far, p.wages_so_far);
+        assign(city_finance().this_year.expenses.wages, p.wages_this_year);
+        assign(city_finance().last_year.expenses.wages, p.wages_last_year);
+        assign(city_finance().this_year.income.gold_delivered, p.gold_this_year);
+        assign(city_finance().last_year.income.gold_delivered, p.gold_last_year);
         assign(g_city.kingdome.months_in_debt, p.months_in_debt);
         assign(city_trade().caravan_import_resource, p.caravan_import_resource);
         assign(city_trade().caravan_backup_import_resource, p.caravan_backup_import_resource);
@@ -227,17 +228,17 @@ namespace og {
         assign(city_ratings().prosperity_explanation, p.prosperity_explanation);
         assign(g_city.kingdome.player_rank, p.player_rank);
         assign(g_city.kingdome.personal_savings, p.personal_savings);
-        assign(g_city.finance.last_year.income.donated, p.donated_last_year);
-        assign(g_city.finance.this_year.income.donated, p.donated_this_year);
+        assign(city_finance().last_year.income.donated, p.donated_last_year);
+        assign(city_finance().this_year.income.donated, p.donated_this_year);
         assign(g_city.figures.animals_number, p.animals);
         assign(city_trade().docker_import_resource, p.docker_import_resource);
         assign(city_trade().docker_export_resource, p.docker_export_resource);
         assign(g_scenario.has_won, p.mission_has_won);
         assign(g_scenario.continue_months_left, p.mission_continue_months_left);
         assign(g_scenario.continue_months_chosen, p.mission_continue_months_chosen);
-        assign(g_city.finance.wage_rate_paid_this_year, p.wage_rate_paid_this_year);
-        assign(g_city.finance.tribute_not_paid_last_year, p.tribute_not_paid_last_year);
-        assign(g_city.finance.tribute_not_paid_total_years, p.tribute_not_paid_total_years);
+        assign(city_finance().wage_rate_paid_this_year, p.wage_rate_paid_this_year);
+        assign(city_finance().tribute_not_paid_last_year, p.tribute_not_paid_last_year);
+        assign(city_finance().tribute_not_paid_total_years, p.tribute_not_paid_total_years);
         assign(city_festival().planned_size, p.festival_planned_size);
         assign(city_festival().months_till_next, p.festival_planned_months_to_go);
         assign(city_festival().planned_god, p.festival_planned_god);
@@ -259,7 +260,7 @@ namespace og {
         assign(g_city.kingdome.kingdom_change, p.kingdom_change);
         assign(g_city.buildings.mission_post_operational, p.mission_post_operational);
         g_city.buildings.main_native_meeting = tile2i(p.main_native_meeting_x, p.main_native_meeting_y);
-        assign(g_city.finance.wage_rate_paid_last_year, p.wage_rate_paid_last_year);
+        assign(city_finance().wage_rate_paid_last_year, p.wage_rate_paid_last_year);
         assign(g_city.resource.food_needed_per_month, p.food_needed_per_month);
         assign(g_city.resource.granaries.understaffed, p.granaries_understaffed);
         assign(g_city.resource.granaries.not_operating, p.granaries_not_operating);
@@ -286,7 +287,7 @@ namespace og {
         assign(city_sound().march_horse, p.sound_march_horse);
         assign(city_sentiment().include_huts, p.sentiment_food_toggle);
         assign(g_city.population.highest_ever, p.population_highest_ever);
-        assign(g_city.finance.estimated_wages, p.estimated_wages);
+        assign(city_finance().estimated_wages, p.estimated_wages);
         assign(city_ratings().prosperity_max, p.prosperity_max);
         for (int i = 0; i < 10; i++) {
             assign(g_city.map.largest_road_networks[i].id, p.largest_road_networks[i].id);

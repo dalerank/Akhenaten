@@ -66,7 +66,7 @@ void building_mansion::on_before_collapse() {
             } else {
                 g_city.kingdome.personal_savings = 0;
             }
-            g_city.finance_sys().process_stolen(amount);
+            city_finance().process_stolen(amount);
             update_money_values();
             events::emit(event_city_warning{xstring("#thief_stole_savings")});
         }
@@ -259,7 +259,7 @@ void building_mansion::check_theft_from_mansions() {
             } else {
                 g_city.kingdome.personal_savings = 0;
             }
-            g_city.finance_sys().process_stolen(steal_amount);
+            city_finance().process_stolen(steal_amount);
             update_money_values();
 
             bool show_popup = (city_sentiment().last_mugger_message <= 0);

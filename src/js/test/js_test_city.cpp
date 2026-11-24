@@ -1,4 +1,5 @@
 #include "js/test/js_test_common.h"
+#include "city/city_finance.h"
 #include "city/ratings.h"
 #include "city/city_migration.h"
 #include "city/city_sentiment.h"
@@ -65,7 +66,7 @@
 #include <algorithm>
 
 void __test_set_treasury(int amount) {
-    g_city.finance.treasury = amount;
+    city_finance().treasury = amount;
 }
 ANK_FUNCTION_1(__test_set_treasury);
 
@@ -439,7 +440,7 @@ static int __test_gift_reply(int event_id, int button) {
 ANK_FUNCTION_2(__test_gift_reply);
 
 static int __test_treasury() {
-    return g_city.finance.treasury.value;
+    return city_finance().treasury.value;
 }
 ANK_FUNCTION(__test_treasury);
 
@@ -548,7 +549,7 @@ ANK_FUNCTION_3(__test_ratings_set);
 
 // Last year's finance and the other inputs the OG prosperity change reads.
 static void __test_finance_last_year_set(pcstr field, int value) {
-    auto& f = g_city.finance;
+    auto& f = city_finance();
     const xstring name(field);
     if (name == "taxes")
         f.last_year.income.taxes = value;

@@ -113,7 +113,7 @@ void city_taxes_t::update_estimate() {
     int monthly_plebs = apply_tax_rate(monthly.collected_citizens);
     int estimated_rest_of_year = (12 - g_simulation.simtime.month) * (monthly_patricians + monthly_plebs);
 
-    g_city.finance.set_tax_income_this_year(yearly.collected_citizens + yearly.collected_nobles);
+    city_finance().set_tax_income_this_year(yearly.collected_citizens + yearly.collected_nobles);
     estimated_income = yearly.collected_citizens + yearly.collected_nobles + estimated_rest_of_year;
 
     int uncollected_patricians = apply_tax_rate(monthly.uncollected_nobles);
@@ -211,7 +211,7 @@ void city_taxes_t::collect_monthly() {
             building_get(c.first)->deben_storage += apply_tax_rate((int)c.second);
         }
     } else {
-        g_city.finance.collect_taxes(collected_total);
+        city_finance().collect_taxes(collected_total);
     }
 
     int total_patricians = taxed_nobles + untaxed_nobles;
@@ -222,7 +222,7 @@ void city_taxes_t::collect_monthly() {
 }
 
 void city_taxes_t::advance_year() {
-    g_city.finance.close_tax_year(yearly.collected_citizens + yearly.collected_nobles);
+    city_finance().close_tax_year(yearly.collected_citizens + yearly.collected_nobles);
     yearly.collected_citizens = 0;
     yearly.collected_nobles = 0;
     yearly.uncollected_citizens = 0;

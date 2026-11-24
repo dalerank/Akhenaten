@@ -221,11 +221,11 @@ int clamp_bribe_cost(int cost_raw) {
 void pay_bribe_deben(int cost) {
     // Debit treasury in full. Saturate disasters uint16 so a full line never blocks bribe
     // and never wraps the advisor value.
-    g_city.finance.treasury -= cost;
-    uint16_t &disasters = g_city.finance.this_year.expenses.disasters;
+    city_finance().treasury -= cost;
+    uint16_t& disasters = city_finance().this_year.expenses.disasters;
     const int sum = (int)disasters + cost;
     disasters = (uint16_t)std::min(sum, 65535);
-    g_city.finance_sys().calculate_totals();
+    city_finance().calculate_totals();
 }
 
 uint16_t resolve_seq(uint16_t seq) {
@@ -280,7 +280,7 @@ int invasion_bribe_try(uint16_t seq) {
     if (cost <= 0) {
         return 0;
     }
-    if (g_city.finance.treasury < cost) {
+    if (city_finance().treasury < cost) {
         return 0;
     }
 

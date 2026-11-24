@@ -1,4 +1,5 @@
 #include "city.h"
+#include "city/city_finance.h"
 #include "city/city_trade.h"
 #include "city/ratings.h"
 #include "city/city_sentiment.h"
@@ -83,7 +84,7 @@ static void city_subscribe_events() {
     g_city.maintenance.subscribe_events();
     g_city.resource.subscribe_events();
     g_city.food_supply.subscribe_events();
-    finance_system::subscribe_events([] { return g_city.finance_sys(); });
+    city_finance_t::subscribe_events();
 }
 static events::session_subscriber g_city_session(&city_subscribe_events);
 
@@ -105,7 +106,6 @@ void city_t::init() {
     zero_fill(maintenance);
     zero_fill(advisors);
     zero_fill(empire_screen);
-    zero_fill(finance);
     zero_fill(resource);
     zero_fill(food_supply);
     zero_fill(avg_coverage);
@@ -123,7 +123,7 @@ void city_t::init() {
     buildings.init();
     figure_clear_all();
     city_sentiment().init();
-    finance_sys().init();
+    city_finance().init();
     empire_screen = AVAILABLE;
     kingdome.init();
 }
@@ -135,14 +135,6 @@ void city_t::reload_objects() {
 
 void city_t::update_month(simulation_time_t simtime) {
     g_simulation.schedule.run(SIM_PHASE_MONTH_CITY, g_simulation.simtime.tick);
-}
-
-finance_context city_t::finance_ctx() {
-    return {population, city_labor(), kingdome, g_simulation.simtime.month, g_scenario.debt_interest()};
-}
-
-finance_system city_t::finance_sys() {
-    return finance_system(finance, finance_ctx());
 }
 
 gods_context city_t::gods_ctx() {
@@ -162,7 +154,7 @@ population_system city_t::population_sys() {
 }
 
 kingdome_context city_t::kingdome_ctx() {
-    return {finance_sys(), finance, city_ratings(), figures, population, g_scenario.events,
+    return {city_finance(), city_finance(), city_ratings(), figures, population, g_scenario.events,
       g_scenario.starting_kingdom(), g_scenario.mode() != e_scenario_normal, g_scenario.rescue_loan(),
       g_scenario.is_open_play, g_scenario.campaign_scenario_id, g_simulation.simtime.day, g_simulation.simtime.year};
 }
@@ -172,8 +164,8 @@ kingdome_system city_t::kingdome_sys() {
 }
 
 void city_t::init_custom_map() {
-    finance.treasury = g_scenario.startup_funds();
-    finance.last_year.balance = finance.treasury;
+    city_finance().treasury = g_scenario.startup_funds();
+    city_finance().last_year.balance = city_finance().treasury;
 }
 
 void city_t::set_advisor_available(e_advisor advisor, e_availability available) {
@@ -185,9 +177,9 @@ e_availability city_t::is_advisor_available(e_advisor advisor) const {
 }
 
 void city_t::init_campaign_mission() {
-    finance.treasury = g_scenario.startup_funds();
-    finance.last_year.income.gold_delivered = 0;
-    finance.this_year.income.gold_delivered = 0;
+    city_finance().treasury = g_scenario.startup_funds();
+    city_finance().last_year.income.gold_delivered = 0;
+    city_finance().this_year.income.gold_delivered = 0;
 }
 
 void city_t::init_mission_resources(const resource_allow_vec& resources) {
@@ -470,7 +462,7 @@ void city_t::criminals_update_day() {
 
 void city_t::before_start_simulation() {
     events::emit(event_population_changed{ population.current });
-    events::emit(event_finance_changed{ finance.treasury });
+    events::emit(event_finance_changed{city_finance().treasury});
 }
 
 void city_t::houses_reset_demands() {
@@ -520,7 +512,7 @@ mission_result_t city_make_mission_result(int scenario_id) {
     result.rating_prosperity = city_ratings().prosperity;
     result.rating_kingdom = g_city.kingdome.rating;
     result.final_population = g_city.population.current;
-    result.final_funds = g_city.finance.treasury;
+    result.final_funds = city_finance().treasury;
     result.completion_months = (uint32_t)(g_simulation.simtime.years_since_start() * simulation_time_t::months_in_year
                                           + g_simulation.simtime.month + 1);
     result.difficulty = game_difficulty();
@@ -541,7 +533,7 @@ bvariant city_get_property(xstring domain, xstring name) {
       {tags().city, "population", [](const xstring&) { return bvariant(g_city.population.current); }},
       {tags().city, "population_kids", [](const xstring&) { return bvariant(g_city.population.school_age); }},
       {tags().city, "population_youngs", [](const xstring&) { return bvariant(g_city.population.academy_age); }},
-      {tags().city, "treasury", [](const xstring&) { return bvariant(g_city.finance.treasury); }},
+      {tags().city, "treasury", [](const xstring&) { return bvariant(city_finance().treasury); }},
       {tags().rating, tags().culture, [](const xstring&) { return bvariant(city_ratings().culture); }},
       {tags().rating, tags().prosperity, [](const xstring&) { return bvariant(city_ratings().prosperity); }},
       {tags().rating, tags().monument, [](const xstring&) { return bvariant(city_ratings().monument); }},

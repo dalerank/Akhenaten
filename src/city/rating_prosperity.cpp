@@ -1,4 +1,5 @@
 #include "city/city.h"
+#include "city/city_finance.h"
 #include "city/ratings.h"
 #include "city/city_temple_complexes.h"
 #include "city/city_labor.h"
@@ -116,11 +117,11 @@ namespace {
     };
 
     prosperity_inputs collect_prosperity_inputs() {
-        const auto& last = g_city.finance.last_year;
+        const auto& last = city_finance().last_year;
         prosperity_inputs in;
         in.income = last.income.gold_delivered + last.income.donated + last.income.taxes + last.income.exports;
         in.construction_last_year = last.expenses.construction;
-        in.construction_this_year = g_city.finance.this_year.expenses.construction;
+        in.construction_this_year = city_finance().this_year.expenses.construction;
         in.expenses = last.expenses.mayour_salary + last.expenses.interest + last.expenses.wages + last.expenses.imports
                       + in.construction_last_year;
         in.imports = last.expenses.imports;
@@ -128,11 +129,11 @@ namespace {
         in.workers_needed = city_labor().workers_needed >= 1;
         in.unemployment = city_labor().unemployment_percentage;
         in.food_types = g_city.resource.food_types_eaten_max();
-        in.wages = (g_city.finance.wage_rate_paid_last_year / 12) - g_city.finance.wages_kingdome
+        in.wages = (city_finance().wage_rate_paid_last_year / 12) - city_finance().wages_kingdome
                    - temple_complex_wage_bonus();
         in.huts_share = calc_percentage(g_city.population.people_in_shanties, g_city.population.current);
         in.manors_share = calc_percentage(g_city.population.people_in_manors, g_city.population.current);
-        in.tribute_not_paid = g_city.finance.tribute_not_paid_last_year;
+        in.tribute_not_paid = city_finance().tribute_not_paid_last_year;
         in.senet_shows = city_entertainment().senet_house_plays > 0;
         in.completed_monument = city_has_completed_monument();
         return in;
