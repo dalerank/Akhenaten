@@ -1495,3 +1495,13 @@ bool building_house::draw_ornaments_and_animations_height(painter &ctx, vec2i po
 bool building_house::target_route_tile_blocked(int grid_offset) const {
     return house_level() > 0 || house_population() > 0;
 }
+
+svector<e_building_type, BUILDING_MAX> building_house_types() {
+    svector<e_building_type, BUILDING_MAX> types;
+    for (int type = BUILDING_NONE + 1; type < BUILDING_MAX; ++type) {
+        if (building_static_params::get((e_building_type)type).flags.is_house) {
+            types.push_back((e_building_type)type);
+        }
+    }
+    return types;
+}

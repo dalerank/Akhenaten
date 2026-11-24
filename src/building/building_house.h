@@ -767,9 +767,11 @@ ANK_CONFIG_STRUCT(building_house_palatial_estate::static_params, model, can_merg
 // ----------------------------------------------------------------------
 // Helpers that iterate over all valid houses. They are used by various
 // gameplay systems (overlays, advisors, economy calculations).
+svector<e_building_type, BUILDING_MAX> building_house_types();
+
 template<typename T>
 void buildings_house_do(T func) {
-    buildings_of_types_do(k_house_building_types, [&](building& b) {
+    buildings_of_types_do(building_house_types(), [&](building& b) {
         if (auto house = b.dcast_house()) {
             func(house);
         }
