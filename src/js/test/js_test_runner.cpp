@@ -1,4 +1,5 @@
 #include "js/test/js_test_common.h"
+#include "city/ratings.h"
 #include "city/city_sentiment.h"
 #include "core/main_thread.h"
 
@@ -950,7 +951,7 @@ void __test_city_data_set_probe() {
     city_sound().march_enemy = 0x55;
     city_sentiment().include_huts = true;
     g_city.population.highest_ever = 0x6789;
-    g_city.ratings.prosperity_max = 0x42;
+    city_ratings().prosperity_max = 0x42;
 }
 ANK_FUNCTION(__test_city_data_set_probe);
 

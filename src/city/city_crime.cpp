@@ -1,4 +1,5 @@
 #include "city/city.h"
+#include "city/ratings.h"
 #include "city/city_sentiment.h"
 #include "game/simulation.h"
 #include "core/app_module.h"
@@ -60,7 +61,7 @@ static void generate_rioter(building* b) {
     auto bmain = b->main();
     bmain->destroy_by_fire();
 
-    g_city.ratings_sys().monument_record_rioter();
+    city_ratings().monument_record_rioter();
     g_city.change_happiness(20);
 
     message_manager().apply_sound_interval(MESSAGE_CAT_RIOT);
@@ -87,7 +88,7 @@ static void generate_protestor(building* b) {
                 f->advance_action(ACTION_8_PROTESTOR_WAITING);
                 f->set_flag(e_figure_flag_criminal, true);
             }
-            g_city.ratings_sys().monument_record_criminal();
+            city_ratings().monument_record_criminal();
         }
     }
 }

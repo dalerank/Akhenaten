@@ -1,4 +1,5 @@
 #include "io/og_save/og_load.h"
+#include "city/ratings.h"
 #include "city/city_migration.h"
 #include "city/city_sentiment.h"
 #include "city/city_health.h"
@@ -160,13 +161,13 @@ namespace og {
         assign(g_city.kingdome.months_in_debt, p.months_in_debt);
         assign(g_city.trade.caravan_import_resource, p.caravan_import_resource);
         assign(g_city.trade.caravan_backup_import_resource, p.caravan_backup_import_resource);
-        assign(g_city.ratings.culture, p.rating_culture);
-        assign(g_city.ratings.prosperity, p.rating_prosperity);
-        assign(g_city.ratings.monument, p.rating_monument);
+        assign(city_ratings().culture, p.rating_culture);
+        assign(city_ratings().prosperity, p.rating_prosperity);
+        assign(city_ratings().monument, p.rating_monument);
         assign(g_city.kingdome.rating, p.rating_kingdom);
-        assign(g_city.ratings.prosperity_trend, p.prosperity_trend);
-        assign(g_city.ratings.monument_num_criminals, p.monument_num_criminals);
-        assign(g_city.ratings.monument_num_rioters, p.monument_num_rioters);
+        assign(city_ratings().prosperity_trend, p.prosperity_trend);
+        assign(city_ratings().monument_num_criminals, p.monument_num_criminals);
+        assign(city_ratings().monument_num_rioters, p.monument_num_rioters);
         assign(g_city.houses.missing.fountain, p.houses_missing_water_supply);
         assign(g_city.houses.missing.well, p.houses_missing_well);
         assign(g_city.houses.missing.more_entertainment, p.houses_missing_more_entertainment);
@@ -221,8 +222,8 @@ namespace og {
         assign(g_city.houses.education, p.education_demand);
         assign(g_city.houses.entertainment, p.entertainment_demand);
         assign(g_city.figures.rioters, p.rioters);
-        assign(g_city.ratings.culture_explanation, p.culture_explanation);
-        assign(g_city.ratings.prosperity_explanation, p.prosperity_explanation);
+        assign(city_ratings().culture_explanation, p.culture_explanation);
+        assign(city_ratings().prosperity_explanation, p.prosperity_explanation);
         assign(g_city.kingdome.player_rank, p.player_rank);
         assign(g_city.kingdome.personal_savings, p.personal_savings);
         assign(g_city.finance.last_year.income.donated, p.donated_last_year);
@@ -274,7 +275,7 @@ namespace og {
         assign(g_city.population.people_in_huts, p.people_in_huts);
         assign(g_city.population.people_in_residences, p.people_in_residences_and_up);
         assign(g_city.figures.kingdome_soldiers, p.kingdom_soldiers);
-        assign(g_city.ratings.monument_destroyed_buildings, p.destroyed_buildings);
+        assign(city_ratings().monument_destroyed_buildings, p.destroyed_buildings);
         assign(g_city.military.total_batalions, p.total_legions);
         assign(g_city.military.kingdome_service_batalions, p.empire_service_legions);
         assign(g_city.military.total_soldiers, p.total_soldiers);
@@ -285,7 +286,7 @@ namespace og {
         assign(city_sentiment().include_huts, p.sentiment_food_toggle);
         assign(g_city.population.highest_ever, p.population_highest_ever);
         assign(g_city.finance.estimated_wages, p.estimated_wages);
-        assign(g_city.ratings.prosperity_max, p.prosperity_max);
+        assign(city_ratings().prosperity_max, p.prosperity_max);
         for (int i = 0; i < 10; i++) {
             assign(g_city.map.largest_road_networks[i].id, p.largest_road_networks[i].id);
             assign(g_city.map.largest_road_networks[i].size, p.largest_road_networks[i].size);

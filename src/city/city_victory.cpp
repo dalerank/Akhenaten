@@ -1,4 +1,5 @@
 #include "city/city_victory.h"
+#include "city/ratings.h"
 #include "game/sim_schedule.h"
 
 #include "building/building_type.h"
@@ -113,13 +114,13 @@ e_victory_state city_victory_t::determine_state(bool script_goals_met) {
     int goals = 0;
     if (wc.culture.enabled) {
         goals++;
-        if (g_city.ratings.culture < wc.culture.goal) {
+        if (city_ratings().culture < wc.culture.goal) {
             st = e_victory_state_none;
         }
     }
     if (wc.prosperity.enabled) {
         goals++;
-        if (g_city.ratings.prosperity < wc.prosperity.goal) {
+        if (city_ratings().prosperity < wc.prosperity.goal) {
             st = e_victory_state_none;
         }
     }
@@ -131,7 +132,7 @@ e_victory_state city_victory_t::determine_state(bool script_goals_met) {
     }
     if (wc.monuments.enabled) {
         goals++;
-        if (g_city.ratings.monument < wc.monuments.goal || !burial_provisions_complete()) {
+        if (city_ratings().monument < wc.monuments.goal || !burial_provisions_complete()) {
             st = e_victory_state_none;
         }
     }
@@ -232,7 +233,7 @@ void city_victory_t::lower_difficulty() {
 int city_victory_score(int months, int monument_weight) {
     const double m = std::max(months, 1);
     const double weight = monument_weight;
-    const int ratings = g_city.kingdome.rating + g_city.ratings.prosperity + g_city.ratings.culture;
+    const int ratings = g_city.kingdome.rating + city_ratings().prosperity + city_ratings().culture;
     const double rating_part = (double)ratings * ((double)g_city.population.current * 0.002);
     const double monument_part = (weight / (m * m * 0.00015625)) * (weight * 20.0);
     double score = monument_part + rating_part;

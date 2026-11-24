@@ -1,4 +1,5 @@
 #include "js/test/js_test_common.h"
+#include "city/ratings.h"
 #include "city/city_migration.h"
 #include "city/city_sentiment.h"
 #include "city/city_health.h"
@@ -448,7 +449,7 @@ static void __test_simtime_set_month(int month) {
 ANK_FUNCTION_1(__test_simtime_set_month);
 
 static void __test_city_ratings_update(int is_yearly_update) {
-    g_city.ratings_sys().update(is_yearly_update != 0);
+    city_ratings().update(is_yearly_update != 0);
 }
 ANK_FUNCTION_1(__test_city_ratings_update);
 
@@ -458,12 +459,12 @@ static void __test_city_ra_yearly_favour() {
 ANK_FUNCTION(__test_city_ra_yearly_favour);
 
 static void __test_city_update_prosperity() {
-    g_city.ratings_sys().update_prosperity_rating();
+    city_ratings().update_prosperity_rating();
 }
 ANK_FUNCTION(__test_city_update_prosperity);
 
 static void __test_city_update_culture() {
-    g_city.ratings_sys().update_culture_rating();
+    city_ratings().update_culture_rating();
 }
 ANK_FUNCTION(__test_city_update_culture);
 
@@ -539,9 +540,9 @@ static void __test_scenario_meta_tax(pcstr field, int value) {
 ANK_FUNCTION_2(__test_scenario_meta_tax);
 
 static void __test_ratings_set(int culture, int prosperity, int prosperity_max) {
-    g_city.ratings.culture = culture;
-    g_city.ratings.prosperity = prosperity;
-    g_city.ratings.prosperity_max = prosperity_max;
+    city_ratings().culture = culture;
+    city_ratings().prosperity = prosperity;
+    city_ratings().prosperity_max = prosperity_max;
 }
 ANK_FUNCTION_3(__test_ratings_set);
 

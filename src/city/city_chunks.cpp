@@ -1,4 +1,5 @@
 #include "city/city_chunks.h"
+#include "city/ratings.h"
 #include "city/city_migration.h"
 #include "city/city_sentiment.h"
 #include "city/city_health.h"
@@ -253,7 +254,7 @@ static void city_data_bind_og_layout(io_buffer* iob) {
     iob->bind(BIND_SIGNATURE_INT32, &data.military.native_attack_duration);
     iob->bind(BIND_SIGNATURE_INT32, &data.gods.bast_curse_active);
     iob->bind(BIND_SIGNATURE_INT32, &data.gods.seth_crush_enemy_troops);
-    iob->bind(BIND_SIGNATURE_INT32, &data.ratings.monument_riot_cause);
+    iob->bind(BIND_SIGNATURE_INT32, &city_ratings().monument_riot_cause);
     iob->bind(BIND_SIGNATURE_UINT16, &data.kingdome.invasion.duration_day_countdown);
     iob->bind(BIND_SIGNATURE_INT8, &data.kingdome.invasion.warnings_given);
     iob->bind____skip(1);
@@ -262,7 +263,7 @@ static void city_data_bind_og_layout(io_buffer* iob) {
     iob->bind(BIND_SIGNATURE_UINT8, &data.kingdome.invasion.favour_only);
     iob->bind(BIND_SIGNATURE_UINT8, &data.kingdome.invasion.cheated);
     iob->bind____skip(1);
-    iob->bind(BIND_SIGNATURE_UINT16, &data.ratings.monument_years_of_monument);
+    iob->bind(BIND_SIGNATURE_UINT16, &city_ratings().monument_years_of_monument);
     iob->bind(BIND_SIGNATURE_INT8, &g_distant_battle.battle.egyptian_months_to_travel_forth);
     iob->bind(BIND_SIGNATURE_INT8, &g_distant_battle.battle.city_foreign_months_left);
     iob->bind(BIND_SIGNATURE_INT8, &data.buildings.triumphal_obelisk_available);
@@ -295,15 +296,15 @@ static void city_data_bind_og_layout(io_buffer* iob) {
     iob->bind____skip(32);
     iob->bind(BIND_SIGNATURE_INT32, &data.trade.caravan_import_resource);
     iob->bind(BIND_SIGNATURE_INT32, &data.trade.caravan_backup_import_resource);
-    iob->bind(BIND_SIGNATURE_INT32, &data.ratings.culture);
-    iob->bind(BIND_SIGNATURE_INT32, &data.ratings.prosperity);
-    iob->bind(BIND_SIGNATURE_INT32, &data.ratings.monument);
+    iob->bind(BIND_SIGNATURE_INT32, &city_ratings().culture);
+    iob->bind(BIND_SIGNATURE_INT32, &city_ratings().prosperity);
+    iob->bind(BIND_SIGNATURE_INT32, &city_ratings().monument);
     iob->bind(BIND_SIGNATURE_INT32, &data.kingdome.rating);
     iob->bind____skip(8);
-    iob->bind(BIND_SIGNATURE_INT32, &data.ratings.prosperity_trend);
+    iob->bind(BIND_SIGNATURE_INT32, &city_ratings().prosperity_trend);
     iob->bind____skip(20);
-    iob->bind(BIND_SIGNATURE_INT32, &data.ratings.monument_num_criminals);
-    iob->bind(BIND_SIGNATURE_INT32, &data.ratings.monument_num_rioters);
+    iob->bind(BIND_SIGNATURE_INT32, &city_ratings().monument_num_criminals);
+    iob->bind(BIND_SIGNATURE_INT32, &city_ratings().monument_num_rioters);
     iob->bind(BIND_SIGNATURE_INT32, &data.houses.missing.fountain);
     iob->bind(BIND_SIGNATURE_INT32, &data.houses.missing.well);
     iob->bind(BIND_SIGNATURE_INT32, &data.houses.missing.more_entertainment);
@@ -369,8 +370,8 @@ static void city_data_bind_og_layout(io_buffer* iob) {
     iob->bind(BIND_SIGNATURE_INT32, &data.houses.entertainment);
     iob->bind(BIND_SIGNATURE_INT32, &data.figures.rioters);
     iob->bind____skip(4);
-    iob->bind(BIND_SIGNATURE_INT32, &data.ratings.culture_explanation);
-    iob->bind(BIND_SIGNATURE_INT32, &data.ratings.prosperity_explanation);
+    iob->bind(BIND_SIGNATURE_INT32, &city_ratings().culture_explanation);
+    iob->bind(BIND_SIGNATURE_INT32, &city_ratings().prosperity_explanation);
     iob->bind____skip(16);
     iob->bind(BIND_SIGNATURE_UINT8, &data.kingdome.player_rank);
     iob->bind____skip(3);
@@ -461,7 +462,7 @@ static void city_data_bind_og_layout(io_buffer* iob) {
     iob->bind____skip(2);
     iob->bind(BIND_SIGNATURE_UINT16, &data.figures.kingdome_soldiers);
     iob->bind____skip(18);
-    iob->bind(BIND_SIGNATURE_UINT8, &data.ratings.monument_destroyed_buildings);
+    iob->bind(BIND_SIGNATURE_UINT8, &city_ratings().monument_destroyed_buildings);
     iob->bind____skip(6);
     iob->bind(BIND_SIGNATURE_UINT8, &g_distant_battle.battle.city);
     iob->bind(BIND_SIGNATURE_UINT8, &g_distant_battle.battle.enemy_strength);
@@ -487,7 +488,7 @@ static void city_data_bind_og_layout(io_buffer* iob) {
     iob->bind(BIND_SIGNATURE_INT32, &data.population.highest_ever);
     iob->bind(BIND_SIGNATURE_INT32, &data.finance.estimated_wages);
     iob->bind(BIND_SIGNATURE_INT32, &data.resource.luxury_goods_kinds);
-    iob->bind(BIND_SIGNATURE_UINT8, &data.ratings.prosperity_max);
+    iob->bind(BIND_SIGNATURE_UINT8, &city_ratings().prosperity_max);
     iob->bind____skip(3);
     for (int i = 0; i < 10; i++) {
         iob->bind(BIND_SIGNATURE_INT32, &data.map.largest_road_networks[i].id); // ????

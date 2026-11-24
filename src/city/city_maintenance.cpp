@@ -1,4 +1,5 @@
 #include "city_maintenance.h"
+#include "city/ratings.h"
 #include "game/simulation.h"
 #include "core/app_module.h"
 #include "core/xvalue.h"
@@ -87,7 +88,7 @@ void city_maintenance_t::destroy_by_enemy(building *b) {
     tile2i tile = b->tile;
     if (b->state == BUILDING_STATE_VALID) {
         was_valid_building = true;
-        g_city.ratings_sys().monument_building_destroyed(b->type);
+        city_ratings().monument_building_destroyed(b->type);
         b->destroy_by_enemy();
     }
 

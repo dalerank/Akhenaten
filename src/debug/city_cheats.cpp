@@ -1,4 +1,5 @@
 #include "dev/debug.h"
+#include "city/ratings.h"
 #include "city/city_health.h"
 
 #include "building/building_house.h"
@@ -40,10 +41,10 @@ declare_console_command_p(show_pop_milestone) {
 
 declare_console_command_p(addprosperity) {
     int amount = args.next_int(10);
-    g_city.ratings.prosperity = calc_bound(g_city.ratings.prosperity + amount, 0, 100);
+    city_ratings().prosperity = calc_bound(city_ratings().prosperity + amount, 0, 100);
 }
 
 declare_console_command_p(addculture) {
     int amount = args.next_int(10);
-    g_city.ratings.culture = calc_bound(g_city.ratings.culture + amount, 0, 100);
+    city_ratings().culture = calc_bound(city_ratings().culture + amount, 0, 100);
 };

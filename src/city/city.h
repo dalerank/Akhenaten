@@ -16,7 +16,6 @@
 #include "city/coverage.h"
 #include "city/city_religion.h"
 #include "city/city_figures.h"
-#include "city/ratings.h"
 #include "grid/point.h"
 #include "city/city_trade.h"
 #include "grid/desirability.h"
@@ -44,7 +43,6 @@ struct city_t {
     city_food_supply_t food_supply;
 
 
-    ratings_state ratings;
     city_average_coverage_t avg_coverage;
 
     gods_state gods;
@@ -121,8 +119,6 @@ struct city_t {
     gods_system gods_sys();
     population_context population_ctx();
     population_system population_sys();
-    ratings_context ratings_ctx();
-    ratings_system ratings_sys();
     kingdome_context kingdome_ctx();
     kingdome_system kingdome_sys();
 

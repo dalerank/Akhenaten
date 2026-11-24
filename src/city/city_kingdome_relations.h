@@ -97,7 +97,7 @@ struct kingdome_state : city_component_t<kingdome_state> {
 };
 
 struct finance_state;
-struct ratings_state;
+struct city_ratings_t;
 struct city_figures_t;
 struct population_state;
 struct event_manager_t;
@@ -105,7 +105,7 @@ struct event_manager_t;
 struct kingdome_context {
     finance_system finance_sys;
     const finance_state& finance;
-    ratings_state& ratings;
+    city_ratings_t& ratings;
     const city_figures_t& figures;
     const population_state& population;
     event_manager_t& scenario_events;

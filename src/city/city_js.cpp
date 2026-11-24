@@ -1,4 +1,5 @@
 ﻿#include "js/js_game.h"
+#include "city/ratings.h"
 #include "city/city_migration.h"
 #include "city/city_sentiment.h"
 #include "city/city_health.h"
@@ -24,7 +25,9 @@
 #include "city/city_population.h"
 #include "city/city_victory.h"
 
-void __city_ratings_set_monument(int new_value) { g_city.ratings.monument = new_value; }
+void __city_ratings_set_monument(int new_value) {
+    city_ratings().monument = new_value;
+}
 ANK_FUNCTION_1(__city_ratings_set_monument)
 
 void __city_set_scenario_enemy_id(int enemy_id) {
@@ -79,12 +82,12 @@ std::optional<bvariant> __city_get_battalion_property(int fid, pcstr property) {
 ANK_FUNCTION_2(__city_get_battalion_property)
 
 std::optional<bvariant> __city_get_rating_property(pcstr property) {
-    return archive_helper::get(g_city.ratings, property, true);
+    return archive_helper::get(city_ratings(), property, true);
 }
 ANK_FUNCTION_1(__city_get_rating_property)
 
 void __city_rating_update_prosperity_explanation() {
-    g_city.ratings_sys().update_prosperity_explanation();
+    city_ratings().update_prosperity_explanation();
 }
 ANK_FUNCTION(__city_rating_update_prosperity_explanation)
 

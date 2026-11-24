@@ -1,4 +1,5 @@
 ﻿#include "game.h"
+#include "city/ratings.h"
 #include "city/city_migration.h"
 #include "game/simulation.h"
 
@@ -136,7 +137,7 @@ void game_t::advance_month() {
     if (g_simulation.simtime.advance_month()) {
         advance_year();
     } else {
-        g_city.ratings_sys().update(/*yearly_update*/ false);
+        city_ratings().update(/*yearly_update*/ false);
     }
 
     g_simulation.schedule.run(SIM_PHASE_MONTH_END, g_simulation.simtime.tick);

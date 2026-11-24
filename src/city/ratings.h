@@ -24,7 +24,7 @@ enum e_prosperity_reason {
     e_prosperity_reason_trade = 11,
 };
 
-struct ratings_state {
+struct city_ratings_t {
     int32_t culture;
     int32_t prosperity;
     int32_t monument;
@@ -41,41 +41,6 @@ struct ratings_state {
     int32_t prosperity_explanation;
 
     void reduce_prosperity_after_bailout();
-};
-
-ANK_CONFIG_PROPERTY(ratings_state, culture, prosperity, monument, culture_explanation, prosperity_explanation,
-  prosperity_max, prosperity_trend)
-
-struct finance_state;
-struct city_labor_t;
-struct city_resources_t;
-struct population_state;
-struct city_entertainment_t;
-struct city_coverage_t;
-struct gods_state;
-struct city_sentiment_t;
-struct city_buildings_t;
-
-struct ratings_context {
-    const finance_state& finance;
-    const city_labor_t& labor;
-    city_resources_t& resource;
-    const population_state& population;
-    const city_entertainment_t& entertainment;
-    const city_coverage_t& coverage;
-    const gods_state& gods;
-    const city_sentiment_t& sentiment;
-    const city_buildings_t& buildings;
-    kingdome_system kingdome_sys;
-    bool ra_oracle;
-    int year;
-    int month;
-    int start_year;
-};
-
-class ratings_system {
-public:
-    ratings_system(ratings_state& state, const ratings_context& ctx) : _state(state), _ctx(ctx) {}
 
     static bool is_prosperity_update_month(int month);
 
@@ -87,8 +52,10 @@ public:
     void monument_building_destroyed(e_building_type type);
     void monument_record_criminal();
     void monument_record_rioter();
-
-private:
-    ratings_state& _state;
-    ratings_context _ctx;
+    void reset();
 };
+
+ANK_CONFIG_PROPERTY(city_ratings_t, culture, prosperity, monument, culture_explanation, prosperity_explanation,
+  prosperity_max, prosperity_trend)
+
+city_ratings_t& city_ratings();

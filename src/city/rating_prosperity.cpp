@@ -1,4 +1,7 @@
 #include "city/city.h"
+#include "city/ratings.h"
+#include "city/city_temple_complexes.h"
+#include "city/city_labor.h"
 #include "city/entertainment.h"
 
 #include "core/calc.h"
@@ -46,8 +49,10 @@ prosperity_rating_params_t ANK_VARIABLE(prosperity_rating);
 namespace {
 
     // OG TEMPLE_COMPLEX_RA_WAGE_BONUS is subtracted from the wage difference.
-    int temple_complex_wage_bonus(const ratings_context& ctx) {
-        return ctx.ra_oracle ? prosperity_rating.ra_oracle_wage_bonus : 0;
+    int temple_complex_wage_bonus() {
+        return city_temple_complexes().has_upgrade(BUILDING_TEMPLE_COMPLEX_RA, etc_upgrade_oracle)
+                 ? prosperity_rating.ra_oracle_wage_bonus
+                 : 0;
     }
 
     bool is_og_pyramid_or_sphinx(e_building_type type) {
@@ -110,25 +115,25 @@ namespace {
         bool completed_monument;
     };
 
-    prosperity_inputs collect_prosperity_inputs(const ratings_context& city) {
-        const auto& last = city.finance.last_year;
+    prosperity_inputs collect_prosperity_inputs() {
+        const auto& last = g_city.finance.last_year;
         prosperity_inputs in;
         in.income = last.income.gold_delivered + last.income.donated + last.income.taxes + last.income.exports;
         in.construction_last_year = last.expenses.construction;
-        in.construction_this_year = city.finance.this_year.expenses.construction;
+        in.construction_this_year = g_city.finance.this_year.expenses.construction;
         in.expenses = last.expenses.mayour_salary + last.expenses.interest + last.expenses.wages + last.expenses.imports
                       + in.construction_last_year;
         in.imports = last.expenses.imports;
         in.exports = last.income.exports;
-        in.workers_needed = city.labor.workers_needed >= 1;
-        in.unemployment = city.labor.unemployment_percentage;
-        in.food_types = city.resource.food_types_eaten_max();
-        in.wages = (city.finance.wage_rate_paid_last_year / 12) - city.finance.wages_kingdome
-                   - temple_complex_wage_bonus(city);
-        in.huts_share = calc_percentage(city.population.people_in_shanties, city.population.current);
-        in.manors_share = calc_percentage(city.population.people_in_manors, city.population.current);
-        in.tribute_not_paid = city.finance.tribute_not_paid_last_year;
-        in.senet_shows = city.entertainment.senet_house_plays > 0;
+        in.workers_needed = city_labor().workers_needed >= 1;
+        in.unemployment = city_labor().unemployment_percentage;
+        in.food_types = g_city.resource.food_types_eaten_max();
+        in.wages = (g_city.finance.wage_rate_paid_last_year / 12) - g_city.finance.wages_kingdome
+                   - temple_complex_wage_bonus();
+        in.huts_share = calc_percentage(g_city.population.people_in_shanties, g_city.population.current);
+        in.manors_share = calc_percentage(g_city.population.people_in_manors, g_city.population.current);
+        in.tribute_not_paid = g_city.finance.tribute_not_paid_last_year;
+        in.senet_shows = city_entertainment().senet_house_plays > 0;
         in.completed_monument = city_has_completed_monument();
         return in;
     }
@@ -231,7 +236,7 @@ namespace {
 
 } // namespace
 
-bool ratings_system::is_prosperity_update_month(int month) {
+bool city_ratings_t::is_prosperity_update_month(int month) {
     for (const int m : prosperity_rating.months) {
         if (m == month) {
             return true;
@@ -240,56 +245,56 @@ bool ratings_system::is_prosperity_update_month(int month) {
     return false;
 }
 
-void ratings_system::update_prosperity_rating() {
-    const prosperity_inputs in = collect_prosperity_inputs(_ctx);
+void city_ratings_t::update_prosperity_rating() {
+    const prosperity_inputs in = collect_prosperity_inputs();
     const int change = prosperity_change(in, in.construction_last_year).change;
 
-    _state.prosperity += change;
-    if (_state.prosperity_max < _state.prosperity) {
-        _state.prosperity = _state.prosperity_max;
+    prosperity += change;
+    if (prosperity_max < prosperity) {
+        prosperity = prosperity_max;
     }
-    _state.prosperity = calc_bound(_state.prosperity, 0, 100);
+    prosperity = calc_bound(prosperity, 0, 100);
 
     update_prosperity_explanation();
 }
 
 // OG city_ratings_prosperity_explanation: the trend of the change and its most severe reason.
-void ratings_system::update_prosperity_explanation() {
-    const prosperity_inputs in = collect_prosperity_inputs(_ctx);
+void city_ratings_t::update_prosperity_explanation() {
+    const prosperity_inputs in = collect_prosperity_inputs();
     const prosperity_change_t c = prosperity_change(in, in.construction_this_year);
     const int change = c.change;
 
-    if (change == 0 || (_state.prosperity < 1 && _ctx.year == _ctx.start_year)) {
-        _state.prosperity_explanation = e_prosperity_reason_none;
-        _state.prosperity_trend = e_prosperity_same;
+    if (change == 0 || (prosperity < 1 && g_simulation.simtime.year == g_scenario.start_year)) {
+        prosperity_explanation = e_prosperity_reason_none;
+        prosperity_trend = e_prosperity_same;
         return;
     }
 
     if (change < 1) {
-        _state.prosperity_trend = e_prosperity_falling;
-        _state.prosperity_explanation = c.reason;
+        prosperity_trend = e_prosperity_falling;
+        prosperity_explanation = c.reason;
         return;
     }
 
-    _state.prosperity_trend = e_prosperity_rising;
-    const int max = _state.prosperity_max;
-    if ((_state.prosperity + change) <= max) {
-        _state.prosperity_explanation = (c.severity == 0) ? e_prosperity_reason_none : c.reason;
+    prosperity_trend = e_prosperity_rising;
+    const int max = prosperity_max;
+    if ((prosperity + change) <= max) {
+        prosperity_explanation = (c.severity == 0) ? e_prosperity_reason_none : c.reason;
         return;
     }
 
-    if (_state.prosperity <= max) {
-        _state.prosperity_trend = (max <= _state.prosperity) ? e_prosperity_same : e_prosperity_rising;
-        _state.prosperity_explanation = e_prosperity_reason_at_cap;
+    if (prosperity <= max) {
+        prosperity_trend = (max <= prosperity) ? e_prosperity_same : e_prosperity_rising;
+        prosperity_explanation = e_prosperity_reason_at_cap;
         return;
     }
 
-    _state.prosperity_trend = e_prosperity_falling;
-    _state.prosperity_explanation = e_prosperity_reason_at_cap;
+    prosperity_trend = e_prosperity_falling;
+    prosperity_explanation = e_prosperity_reason_at_cap;
 }
 
 // OG city_ratings_prosperity_cap: the house models' prosperity weighted by the people living in them.
-void ratings_system::calculate_max_prosperity() {
+void city_ratings_t::calculate_max_prosperity() {
     int total = 0;
     int people = 0;
     for (int i = 1; i < MAX_BUILDINGS; i++) {
@@ -301,5 +306,5 @@ void ratings_system::calculate_max_prosperity() {
         }
     }
 
-    _state.prosperity_max = (people > 0) ? (total / people) : 0;
+    prosperity_max = (people > 0) ? (total / people) : 0;
 }
