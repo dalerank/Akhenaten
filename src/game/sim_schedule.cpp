@@ -68,10 +68,10 @@ void sim_schedule_run(e_sim_phase phase, int slot) {
     }
 }
 
-const char* sim_phase_name(e_sim_phase phase) {
+xstring sim_phase_name(e_sim_phase phase) {
     return sim_phase_tokens.name(phase);
 }
 
-const char* sim_step_name(e_sim_step id) {
+xstring sim_step_name(e_sim_step id) {
     return sim_step_tokens.name(id);
 }

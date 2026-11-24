@@ -1,6 +1,7 @@
 #pragma once
 
 #include "core/custom_span.hpp"
+#include "core/xstring.h"
 
 #include <cstdint>
 
@@ -187,5 +188,5 @@ void sim_schedule_add(const sim_step& step);
 span_const<sim_step> sim_schedule_steps();
 
 void sim_schedule_run(e_sim_phase phase, int slot = -1);
-const char* sim_phase_name(e_sim_phase phase);
-const char* sim_step_name(e_sim_step id);
+xstring sim_phase_name(e_sim_phase phase);
+xstring sim_step_name(e_sim_step id);
