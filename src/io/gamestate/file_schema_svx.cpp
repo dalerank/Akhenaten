@@ -12,7 +12,6 @@
 #include "city/city_buildings_chunks.h"
 #include "city/city_figures_chunks.h"
 #include "city/city_floods_chunks.h"
-#include "city/city_message_chunks.h"
 #include "city/city_recorded_paths_chunks.h"
 #include "city/city_festival_chunks.h"
 #include "city/city_finance_chunks.h"
@@ -162,8 +161,6 @@ void file_schema_svx(const int file_version) {
     g_chunk_io.push_chunk<figure_names_chunk>(84, false);
     g_chunk_io.push_chunk<scenario_info_chunk>(1592, false);
     g_chunk_io.push_chunk<max_year_chunk>(4, false);
-    g_chunk_io.push_chunk<messages_chunk>(48000, false);               // 94000 + 533 --> 94532 + 4 = 94536
-    g_chunk_io.push_chunk<message_extra_chunk>(182, false);            // ok
     g_chunk_io.push_chunk<building_burning_list_info_chunk>(8, false); // ok
     g_chunk_io.push_chunk<figure_sequence_chunk>(4, false);            // ok
     g_chunk_io.push_chunk<scenario_carry_settings_chunk>(12, false);   // ok

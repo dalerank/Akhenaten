@@ -596,7 +596,7 @@ namespace ui {
             if (message_id < 0) {
                 return;
             }
-            city_message& msg = g_city.messages.messages[message_id];
+            city_message& msg = message_manager().messages[message_id];
 
             const int event_id = msg.param1;
             msg.gift_buttons = 0;
@@ -723,7 +723,7 @@ static bool city_message_has_video(const lang_message& tmpl) {
 }
 
 static void city_message_open_dialog(int index) {
-    city_message& msg = g_city.messages.messages[index];
+    city_message& msg = message_manager().messages[index];
     const lang_message& tmpl = lang_get_message(msg.MM_text_id);
     if (!city_message_has_video(tmpl)) {
         events::emit(event_sound_effect{tmpl.urgent ? SOUND_EFFECT_FANFARE_URGENT : SOUND_EFFECT_FANFARE});
@@ -733,7 +733,7 @@ static void city_message_open_dialog(int index) {
 }
 
 void window_city_message_show(int index) {
-    if (index < 0 || index >= MAX_MESSAGES || !g_city.messages.messages[index].MM_text_id) {
+    if (index < 0 || index >= MAX_MESSAGES || !message_manager().messages[index].MM_text_id) {
         return;
     }
     city_message_mark_shown(index);
@@ -758,7 +758,7 @@ static void city_message_popup_subscribe() {
             return;
         }
         if (!g_window_manager.window_is("window_city")) {
-            city_message_enqueue(g_city.messages.messages[ev.index].sequence);
+            city_message_enqueue(message_manager().messages[ev.index].sequence);
             return;
         }
         window_city_message_show(ev.index);

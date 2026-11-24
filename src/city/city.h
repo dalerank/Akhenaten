@@ -28,7 +28,6 @@
 #include "city/city_trade.h"
 #include "city/city_animals.h"
 #include "city/building_index.h"
-#include "city/city_message.h"
 #include "city/city_recorded_paths.h"
 #include "city/city_festival.h"
 #include "city/city_local_cults.h"
@@ -119,7 +118,6 @@ struct city_t {
 
     city_fishing_points_t fishing_points;
     map_bookmarks_t bookmarks;
-    message_manager_t messages;
     recorded_paths_t recorded_paths;
     building_type_index building_index;
 

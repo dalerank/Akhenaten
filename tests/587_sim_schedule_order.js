@@ -104,7 +104,7 @@ var T587_EXPECTED = [
     'month:-1:invasion_bind_resolutions:32768',
     'month:-1:invasion_process:1081344',
     'month:-1:morale_at_rest:32768',
-    'month:-1:message_delays:262144',
+    'month:-1:messages:262144',
     'month:-1:roads_images:16384',
     'month:-1:land_citizen_routing:16384',
     'month:-1:locusts_month:8',

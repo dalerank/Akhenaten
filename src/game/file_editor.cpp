@@ -68,7 +68,7 @@ void game_file_editor_clear_data(void) {
     g_city.init();
     events::start_session();
     g_city.init_custom_map();
-    g_city.messages.init();
+    message_manager().init();
     game.init_state();
     game.animation_timers_init();
     sound_city_init();

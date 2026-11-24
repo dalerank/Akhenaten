@@ -205,7 +205,7 @@ static const sim_step k_sim_steps[] = {
     [](city_t&) { scenario_invasion_process(); }},
   {SIM_PHASE_MONTH, -1, "morale_at_rest", SIM_AREA_MILITARY,
     [](city_t&) { formation_update_monthly_morale_at_rest(); }},
-  {SIM_PHASE_MONTH, -1, "message_delays", SIM_AREA_MESSAGES, [](city_t&) { city_message_decrease_delays(); }},
+  {SIM_PHASE_MONTH, -1, "messages", SIM_AREA_MESSAGES, nullptr, SIM_CALL_MONTH},
   {SIM_PHASE_MONTH, -1, "roads_images", SIM_AREA_MAP, [](city_t&) { map_tiles_update_all_roads(); }},
   {SIM_PHASE_MONTH, -1, "land_citizen_routing", SIM_AREA_MAP, [](city_t&) { map_routing_update_land_citizen(); }},
   {SIM_PHASE_MONTH, -1, "locusts_month", SIM_AREA_FIGURES,

@@ -118,7 +118,7 @@ void GamestateLoadDetail::post_load() {
     //    city_view_refresh_viewport();
 
     // problems / overlays
-    g_city.messages.init_problem_areas();
+    message_manager().init_problem_areas();
     game_undo_disable();
 
     g_distant_battle.determine_distant_battle_city();
