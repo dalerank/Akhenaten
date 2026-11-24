@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="182" height="46" viewBox="0 0 182 46">
+  <defs>
+    <linearGradient id="ga" x1="0" x2="0" y1="0" y2="1">
+      <stop offset="0%" stop-color="#1c1508"/>
+      <stop offset="100%" stop-color="#0e0c08"/>
+    </linearGradient>
+    <linearGradient id="gb" x1="0" x2="0" y1="0" y2="1">
+      <stop offset="0%" stop-color="#261c08"/>
+      <stop offset="100%" stop-color="#130f04"/>
+    </linearGradient>
+    <clipPath id="gc"><rect width="182" height="46" rx="5"/></clipPath>
+  </defs>
+  <g clip-path="url(#gc)">
+    <rect width="182" height="46" fill="url(#ga)"/>
+    <rect width="54" height="46" fill="url(#gb)"/>
+    <line x1="54" y1="7" x2="54" y2="39" stroke="#c9a84c" stroke-width="0.8" opacity="0.45"/>
+    <rect x="17" y="6" width="20" height="34" rx="4" fill="none" stroke="#c9a84c" stroke-width="2.2"/>
+    <rect x="21" y="11" width="12" height="21" rx="1" fill="#c9a84c" opacity="0.35"/>
+    <line x1="24" y1="8.5" x2="30" y2="8.5" stroke="#c9a84c" stroke-width="1.4" stroke-linecap="round"/>
+    <circle cx="27" cy="36" r="1.7" fill="#c9a84c"/>
+    <text x="118" y="27" text-anchor="middle"
+          font-family="'Segoe UI',system-ui,Arial,sans-serif"
+          font-size="13" font-weight="700" fill="#c9a84c" letter-spacing="1.2">iOS / iPAD</text>
+  </g>
+  <rect width="182" height="46" rx="5" fill="none" stroke="#c9a84c" stroke-width="1.2"/>
+</svg>

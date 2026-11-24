@@ -9,6 +9,7 @@
 [![Mac/Arm](res/badges/mac-arm.svg)](https://nightly.link/dalerank/Akhenaten/workflows/akhenaten_mac_arm/master/macos_arm_build.zip)
 [![Mac/x64](res/badges/mac-x64.svg)](https://nightly.link/dalerank/Akhenaten/workflows/akhenaten_mac_x64/master/macos_x64_build.zip)
 [![Android](res/badges/android.svg)](https://nightly.link/dalerank/Akhenaten/workflows/akhenaten_android/master/apk.zip)
+[![iOS](res/badges/ios.svg)](https://nightly.link/dalerank/Akhenaten/workflows/akhenaten_ios/master/ios_build.zip)
 [![Web](res/badges/web.svg)](https://dalerank.github.io/Akhenaten/play/)
 
 [![Tests](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/dalerank/28104123b52e0fc76b56b8df8ca345e7/raw/akhenaten-tests.json)](https://github.com/dalerank/Akhenaten/actions/workflows/akhenaten_integral_tests.yml)
@@ -34,6 +35,7 @@ For the official 2023 remake called _Pharaoh: A New Era_ (a separate project fro
 | Mac (arm)      | -              | [![Github Actions](https://github.com/dalerank/akhenaten/workflows/Akhenaten%20Build%20Mac/badge.svg)](https://nightly.link/dalerank/Akhenaten/workflows/akhenaten_mac_arm/master/macos_arm_build.zip)            |
 | Mac (x64)      | -              | [![Github Actions](https://github.com/dalerank/akhenaten/workflows/Akhenaten%20Build%20Mac%20x86_64/badge.svg)](https://nightly.link/dalerank/Akhenaten/workflows/akhenaten_mac_x64/master/macos_x64_build.zip)            |
 | Android        | -              | [![Github Actions](https://github.com/dalerank/akhenaten/workflows/Akhenaten%20Build%20Android/badge.svg)](https://nightly.link/dalerank/Akhenaten/workflows/akhenaten_android/master/apk.zip) |
+| iOS / iPadOS   | -              | [![Github Actions](https://github.com/dalerank/akhenaten/workflows/Akhenaten%20Build%20iOS/badge.svg)](https://nightly.link/dalerank/Akhenaten/workflows/akhenaten_ios/master/ios_build.zip) |
 | Flatpak        | -              | [![Github Actions](https://github.com/dalerank/akhenaten/workflows/Akhenaten%20Build%20Linux%20Flatpak/badge.svg)](https://nightly.link/dalerank/Akhenaten/workflows/akhenaten_flatpak/master/akhenaten.flatpak.zip) |
 | Bazzite        | -              | [![Github Actions](https://github.com/dalerank/akhenaten/workflows/Akhenaten%20Build%20Bazzite/badge.svg)](https://nightly.link/dalerank/Akhenaten/workflows/akhenaten_bazzite/master/bazzite_build.zip) |
 | Emscripten     | -              | [![Akhenaten Build Emscripten](https://github.com/dalerank/Akhenaten/actions/workflows/akhenaten_emscripten.yml/badge.svg)](https://github.com/dalerank/Akhenaten/actions/workflows/akhenaten_emscripten.yml) |
