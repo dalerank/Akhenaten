@@ -1,4 +1,6 @@
 #include "city_sentiment.h"
+#include "js/js_register.h"
+#include "core/svector.h"
 #include "io/gamestate/save_versions.h"
 #include "io/chunk_serializer.h"
 #include "core/xvalue.h"
@@ -28,7 +30,22 @@
 #include <numeric>
 #include "scenario/scenario.h"
 
-static const int SENTIMENT_PER_TAX_RATE[26] = {3, 2, 2, 2, 1, 1, 1, 0, 0, -1, -2, -2, -3, -3, -3, -5, -5, -5, -5, -6, -6, -6, -6, -6, -6, -6};
+struct sentiment_tax_rate_t {
+    int tax_rate;
+    int sentiment;
+};
+ANK_CONFIG_STRUCT(sentiment_tax_rate_t, tax_rate, sentiment)
+svector<sentiment_tax_rate_t, 32> ANK_VARIABLE(sentiment_per_tax_rate);
+
+static int sentiment_for_tax_rate(int tax_rate) {
+    int sentiment = 0;
+    for (const auto& row : sentiment_per_tax_rate) {
+        if (row.tax_rate <= tax_rate) {
+            sentiment = row.sentiment;
+        }
+    }
+    return sentiment;
+}
 
 void city_sentiment_t::reset_protesters_criminals() {
     protesters = 0;
@@ -196,7 +213,7 @@ void city_sentiment_t::update() {
     OZZY_PROFILER_FUNCTION();
     city_population_check_consistency();
 
-    contribution_taxes = SENTIMENT_PER_TAX_RATE[city_taxes().tax_percentage];
+    contribution_taxes = sentiment_for_tax_rate(city_taxes().tax_percentage);
     contribution_wages = calc_sentiment_contribution_wages();
     contribution_employment = calc_contribution_employment();
     contribution_religion_coverage = calc_contribution_religion_coverage();
