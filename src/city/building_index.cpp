@@ -3,6 +3,11 @@
 #include "building/building.h"
 #include "city/city_buildings.h"
 #include "core/log.h"
+#include "core/xvalue.h"
+
+building_type_index& building_index() {
+    return xvalue<building_type_index>::ref();
+}
 
 void building_type_index::clear() {
     for (auto& ids : _by_type) {

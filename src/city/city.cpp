@@ -270,10 +270,6 @@ animals_system city_t::animals_sys() {
     return animals_system(animals, animals_ctx());
 }
 
-building_type_index& city_building_index() {
-    return g_city.building_index;
-}
-
 void city_t::init_custom_map() {
     finance.treasury = g_scenario.startup_funds();
     finance.last_year.balance = finance.treasury;

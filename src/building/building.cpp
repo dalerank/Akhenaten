@@ -469,7 +469,7 @@ bool building::is_main() {
 
 void building::set_type(e_building_type new_type) {
     type = new_type;
-    g_city.building_index.note(*this);
+    building_index().note(*this);
 }
 
 void building::reset_slot(building_id slot_id) {

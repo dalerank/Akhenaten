@@ -177,7 +177,7 @@ void city_buildings_t::increase_industry_count(int resource, bool active) {
 }
 
 void city_buildings_t::on_post_load () {
-    g_city.building_index.rebuild();
+    building_index().rebuild();
     buildings_valid_do([] (building &b) {
         b.dcast()->on_post_load();
     });
