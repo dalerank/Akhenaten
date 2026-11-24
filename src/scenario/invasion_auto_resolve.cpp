@@ -685,8 +685,8 @@ ANK_FUNCTION(__invasion_auto_resolve_sweep)
 class invasion_auto_resolve_system : public sim_system {
 public:
     const char* name() const override { return "invasion_auto_resolve"; }
-    void register_steps() override {
-        sim_schedule_add({sim_step_invasion_auto_resolve, SIM_PHASE_DAY, -1, SIM_AREA_MILITARY,
+    void register_steps(sim_schedule_t& schedule) override {
+        schedule.add({sim_step_invasion_auto_resolve, SIM_PHASE_DAY, -1, SIM_AREA_MILITARY,
           [] { g_invasion_auto_resolve.update_day(); }});
     }
 };

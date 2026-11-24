@@ -643,12 +643,12 @@ void formation_update_all(bool skip_morale) {
 class formation_system : public sim_system {
 public:
     const char* name() const override { return "formation"; }
-    void register_steps() override {
-        sim_schedule_add(
+    void register_steps(sim_schedule_t& schedule) override {
+        schedule.add(
           {sim_step_formations, SIM_PHASE_TICK_SLOT, 5, SIM_AREA_MILITARY, [] { formation_update_all(false); }});
-        sim_schedule_add({sim_step_formations_skip_morale, SIM_PHASE_TICK_SLOT, 29, SIM_AREA_MILITARY,
+        schedule.add({sim_step_formations_skip_morale, SIM_PHASE_TICK_SLOT, 29, SIM_AREA_MILITARY,
           [] { formation_update_all(true); }});
-        sim_schedule_add({sim_step_morale_at_rest, SIM_PHASE_MONTH, -1, SIM_AREA_MILITARY,
+        schedule.add({sim_step_morale_at_rest, SIM_PHASE_MONTH, -1, SIM_AREA_MILITARY,
           [] { formation_update_monthly_morale_at_rest(); }});
     }
 };

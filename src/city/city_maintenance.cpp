@@ -394,12 +394,12 @@ void city_maintenance_t::update_burning_ruins() {
 class maintenance_system : public sim_system {
 public:
     const char* name() const override { return "maintenance"; }
-    void register_steps() override {
-        sim_schedule_add({sim_step_kingdome_access, SIM_PHASE_TICK_SLOT, 21, SIM_AREA_BUILDINGS,
+    void register_steps(sim_schedule_t& schedule) override {
+        schedule.add({sim_step_kingdome_access, SIM_PHASE_TICK_SLOT, 21, SIM_AREA_BUILDINGS,
           [] { g_city.maintenance.check_kingdome_access(); }});
-        sim_schedule_add({sim_step_burning_ruins, SIM_PHASE_TICK_SLOT, 43, SIM_AREA_BUILDINGS,
+        schedule.add({sim_step_burning_ruins, SIM_PHASE_TICK_SLOT, 43, SIM_AREA_BUILDINGS,
           [] { g_city.maintenance.update_burning_ruins(); }});
-        sim_schedule_add({sim_step_building_destroying, SIM_PHASE_TICK_SLOT, 44, SIM_AREA_BUILDINGS,
+        schedule.add({sim_step_building_destroying, SIM_PHASE_TICK_SLOT, 44, SIM_AREA_BUILDINGS,
           [] { g_city.maintenance.check_building_destroying(); }});
     }
 };

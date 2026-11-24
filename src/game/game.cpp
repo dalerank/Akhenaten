@@ -1,4 +1,5 @@
 ﻿#include "game.h"
+#include "game/simulation.h"
 
 #include "building/construction/build_planner.h"
 #include "building/building_barracks.h"
@@ -103,14 +104,14 @@ void game_t::update_tick(int simtick) {
         stub_records_guard_check("between ticks");
     }
 
-    sim_schedule_run(SIM_PHASE_TICK_BEGIN);
+    g_simulation.schedule.run(SIM_PHASE_TICK_BEGIN);
     g_city.update_tick(simtick);
 
     if (g_simulation.simtime.advance_tick()) {
         advance_day();
     }
 
-    sim_schedule_run(SIM_PHASE_TICK_END);
+    g_simulation.schedule.run(SIM_PHASE_TICK_END);
 
     if (guard_stub_records) {
         stub_records_guard_check("during tick");
@@ -119,16 +120,16 @@ void game_t::update_tick(int simtick) {
 }
 
 void game_t::advance_year() {
-    sim_schedule_run(SIM_PHASE_YEAR);
+    g_simulation.schedule.run(SIM_PHASE_YEAR);
 }
 
 void game_t::advance_week() {
-    sim_schedule_run(SIM_PHASE_WEEK);
+    g_simulation.schedule.run(SIM_PHASE_WEEK);
 }
 
 void game_t::advance_month() {
-    sim_schedule_run(SIM_PHASE_MONTH_CITY);
-    sim_schedule_run(SIM_PHASE_MONTH);
+    g_simulation.schedule.run(SIM_PHASE_MONTH_CITY);
+    g_simulation.schedule.run(SIM_PHASE_MONTH);
 
     // OG advance_month: the yearly update recomputes the ratings, so December does not also run the monthly one.
     if (g_simulation.simtime.advance_month()) {
@@ -137,7 +138,7 @@ void game_t::advance_month() {
         g_city.ratings_sys().update(/*yearly_update*/ false);
     }
 
-    sim_schedule_run(SIM_PHASE_MONTH_END);
+    g_simulation.schedule.run(SIM_PHASE_MONTH_END);
 }
 
 void game_t::advance_day() {
@@ -153,7 +154,7 @@ void game_t::advance_day() {
         advance_week();
     }
 
-    sim_schedule_run(SIM_PHASE_DAY);
+    g_simulation.schedule.run(SIM_PHASE_DAY);
 }
 
 void game_t::reload_objects() {

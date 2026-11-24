@@ -26,9 +26,8 @@ city_victory_t& city_victory() {
 class victory_system : public sim_system {
 public:
     const char* name() const override { return "victory"; }
-    void register_steps() override {
-        sim_schedule_add(
-          {sim_step_victory, SIM_PHASE_DAY, -1, SIM_AREA_VICTORY, [] { city_victory().victory_check(); }});
+    void register_steps(sim_schedule_t& schedule) override {
+        schedule.add({sim_step_victory, SIM_PHASE_DAY, -1, SIM_AREA_VICTORY, [] { city_victory().victory_check(); }});
     }
     void on_reset() override { city_victory().reset(); }
 };

@@ -2030,12 +2030,12 @@ static bool is_line_standalone_group(pcstr start_of_line, int size) {
 class scenario_event_manager_system : public sim_system {
 public:
     const char* name() const override { return "scenario_event_manager"; }
-    void register_steps() override {
-        sim_schedule_add({sim_step_random_events, SIM_PHASE_MONTH, -1, SIM_AREA_SCENARIO,
+    void register_steps(sim_schedule_t& schedule) override {
+        schedule.add({sim_step_random_events, SIM_PHASE_MONTH, -1, SIM_AREA_SCENARIO,
           [] { g_scenario.events.process_random_events(); }});
-        sim_schedule_add({sim_step_invasions, SIM_PHASE_MONTH, -1, SIM_AREA_SCENARIO | SIM_AREA_MILITARY,
+        schedule.add({sim_step_invasions, SIM_PHASE_MONTH, -1, SIM_AREA_SCENARIO | SIM_AREA_MILITARY,
           [] { g_scenario.events.process_invasions(); }});
-        sim_schedule_add({sim_step_scenario_events, SIM_PHASE_MONTH, -1, SIM_AREA_SCENARIO,
+        schedule.add({sim_step_scenario_events, SIM_PHASE_MONTH, -1, SIM_AREA_SCENARIO,
           [] { g_scenario.events.process_events(); }});
     }
 };

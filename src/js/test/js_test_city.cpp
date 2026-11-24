@@ -596,9 +596,9 @@ ANK_FUNCTION(__test_scenario_init_max_year);
 static pcstr __test_sim_schedule() {
     static std::string out;
     out.clear();
-    for (const sim_step& step : sim_schedule_steps()) {
-        out += sim_phase_name(step.phase).c_str();
-        out += ":" + std::to_string(step.slot) + ":" + sim_step_name(step.id).c_str() + ":"
+    for (const sim_step& step : g_simulation.schedule.steps()) {
+        out += sim_schedule_t::phase_name(step.phase).c_str();
+        out += ":" + std::to_string(step.slot) + ":" + sim_schedule_t::step_name(step.id).c_str() + ":"
                + std::to_string(step.writes) + ";";
     }
     return out.c_str();

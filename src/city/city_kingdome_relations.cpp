@@ -417,10 +417,10 @@ const kingdome_state::static_params& kingdome_state::params() {
 class kingdome_relations_system : public sim_system {
 public:
     const char* name() const override { return "kingdome_relations"; }
-    void register_steps() override {
-        sim_schedule_add(
+    void register_steps(sim_schedule_t& schedule) override {
+        schedule.add(
           {sim_step_kingdome, SIM_PHASE_TICK_SLOT, 4, SIM_AREA_KINGDOM, [] { g_city.kingdome_sys().update(); }});
-        sim_schedule_add({sim_step_kingdome_month, SIM_PHASE_MONTH_CITY, -1, SIM_AREA_KINGDOM,
+        schedule.add({sim_step_kingdome_month, SIM_PHASE_MONTH_CITY, -1, SIM_AREA_KINGDOM,
           [] { g_city.kingdome_sys().advance_month(); }});
     }
 };

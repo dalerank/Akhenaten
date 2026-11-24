@@ -3,6 +3,7 @@
 #include "core/custom_span.hpp"
 #include "core/xstring.h"
 
+#include <array>
 #include <cstdint>
 
 
@@ -184,9 +185,19 @@ struct sim_step {
     void (*run)();
 };
 
-void sim_schedule_add(const sim_step& step);
-span_const<sim_step> sim_schedule_steps();
+class sim_schedule_t {
+public:
+    void add(const sim_step& step);
+    span_const<sim_step> steps();
+    void run(e_sim_phase phase, int slot = -1);
 
-void sim_schedule_run(e_sim_phase phase, int slot = -1);
-xstring sim_phase_name(e_sim_phase phase);
-xstring sim_step_name(e_sim_step id);
+    static xstring phase_name(e_sim_phase phase);
+    static xstring step_name(e_sim_step id);
+
+private:
+    void check();
+
+    std::array<sim_step, sim_step_count> _steps{};
+    std::array<bool, sim_step_count> _registered{};
+    bool _checked = false;
+};

@@ -510,10 +510,9 @@ int empire_t::random_city() {
 class empire_system : public sim_system {
 public:
     const char* name() const override { return "empire"; }
-    void register_steps() override {
-        sim_schedule_add(
-          {sim_step_empire_month, SIM_PHASE_MONTH, -1, SIM_AREA_EMPIRE, [] { g_empire.update_month(); }});
-        sim_schedule_add({sim_step_yearly_trade_amounts, SIM_PHASE_YEAR, -1, SIM_AREA_EMPIRE | SIM_AREA_TRADE,
+    void register_steps(sim_schedule_t& schedule) override {
+        schedule.add({sim_step_empire_month, SIM_PHASE_MONTH, -1, SIM_AREA_EMPIRE, [] { g_empire.update_month(); }});
+        schedule.add({sim_step_yearly_trade_amounts, SIM_PHASE_YEAR, -1, SIM_AREA_EMPIRE | SIM_AREA_TRADE,
           [] { g_empire.reset_yearly_trade_amounts(); }});
     }
 };

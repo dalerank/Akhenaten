@@ -41,8 +41,8 @@ city_local_cults_t& city_local_cults() {
 class local_cults_sim_system : public sim_system {
 public:
     const char* name() const override { return "local_cults"; }
-    void register_steps() override {
-        sim_schedule_add({sim_step_local_cults, SIM_PHASE_MONTH_CITY, -1, SIM_AREA_RELIGION,
+    void register_steps(sim_schedule_t& schedule) override {
+        schedule.add({sim_step_local_cults, SIM_PHASE_MONTH_CITY, -1, SIM_AREA_RELIGION,
           [] { city_local_cults().advance_month(); }});
     }
     void on_reset() override { city_local_cults().reset(); }

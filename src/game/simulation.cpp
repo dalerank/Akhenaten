@@ -8,7 +8,7 @@
 
 void simulation_t::register_system(sim_system* system) {
     systems.push_back(system);
-    system->register_steps();
+    system->register_steps(schedule);
     std::sort(systems.begin(), systems.end(),
       [](const sim_system* a, const sim_system* b) { return strcmp(a->name(), b->name()) < 0; });
 }

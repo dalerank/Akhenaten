@@ -3,20 +3,7 @@
 #include "core/core.h"
 #include "core/tokenum.h"
 
-#include <array>
-
 namespace {
-
-    struct sim_schedule_t {
-        std::array<sim_step, sim_step_count> steps{};
-        std::array<bool, sim_step_count> registered{};
-        bool checked = false;
-    };
-
-    sim_schedule_t& sim_schedule() {
-        static sim_schedule_t schedule;
-        return schedule;
-    }
 
     const token_holder<e_sim_phase, SIM_PHASE_TICK_BEGIN, SIM_PHASE_COUNT> sim_phase_tokens;
     const token_holder<e_sim_step, sim_step_housing_type_counts, sim_step_count> sim_step_tokens;
@@ -28,39 +15,36 @@ namespace {
         return a.slot <= b.slot;
     }
 
-    void sim_schedule_check() {
-        auto& schedule = sim_schedule();
-        if (schedule.checked) {
-            return;
-        }
-        schedule.checked = true;
-        for (int i = 0; i < sim_step_count; ++i) {
-            verify_no_crash(schedule.registered[i] && "simulation step is not registered by any system");
-            if (i > 0) {
-                verify_no_crash(sim_step_runs_before(schedule.steps[i - 1], schedule.steps[i])
-                                && "e_sim_step order disagrees with the steps' phase and slot");
-            }
-        }
-    }
-
 } // namespace
 
-void sim_schedule_add(const sim_step& step) {
-    auto& schedule = sim_schedule();
-    verify_no_crash(step.id < sim_step_count && !schedule.registered[step.id] && "simulation step registered twice");
-    schedule.steps[step.id] = step;
-    schedule.registered[step.id] = true;
+void sim_schedule_t::add(const sim_step& step) {
+    verify_no_crash(step.id < sim_step_count && !_registered[step.id] && "simulation step registered twice");
+    _steps[step.id] = step;
+    _registered[step.id] = true;
 }
 
-span_const<sim_step> sim_schedule_steps() {
-    sim_schedule_check();
-    auto& steps = sim_schedule().steps;
-    return make_span(steps.data(), steps.size());
+void sim_schedule_t::check() {
+    if (_checked) {
+        return;
+    }
+    _checked = true;
+    for (int i = 0; i < sim_step_count; ++i) {
+        verify_no_crash(_registered[i] && "simulation step is not registered by any system");
+        if (i > 0) {
+            verify_no_crash(sim_step_runs_before(_steps[i - 1], _steps[i])
+                            && "e_sim_step order disagrees with the steps' phase and slot");
+        }
+    }
 }
 
-void sim_schedule_run(e_sim_phase phase, int slot) {
-    sim_schedule_check();
-    for (const sim_step& step : sim_schedule().steps) {
+span_const<sim_step> sim_schedule_t::steps() {
+    check();
+    return make_span(_steps.data(), _steps.size());
+}
+
+void sim_schedule_t::run(e_sim_phase phase, int slot) {
+    check();
+    for (const sim_step& step : _steps) {
         if (step.phase != phase || (phase == SIM_PHASE_TICK_SLOT && step.slot != slot)) {
             continue;
         }
@@ -68,10 +52,10 @@ void sim_schedule_run(e_sim_phase phase, int slot) {
     }
 }
 
-xstring sim_phase_name(e_sim_phase phase) {
+xstring sim_schedule_t::phase_name(e_sim_phase phase) {
     return sim_phase_tokens.name(phase);
 }
 
-xstring sim_step_name(e_sim_step id) {
+xstring sim_schedule_t::step_name(e_sim_step id) {
     return sim_step_tokens.name(id);
 }

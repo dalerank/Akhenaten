@@ -243,10 +243,10 @@ e_resource trade_system::next_docker_export() {
 class trade_sim_system : public sim_system {
 public:
     const char* name() const override { return "trade"; }
-    void register_steps() override {
-        sim_schedule_add({sim_step_trade_export_keep, SIM_PHASE_TICK_SLOT, 11, SIM_AREA_TRADE,
+    void register_steps(sim_schedule_t& schedule) override {
+        schedule.add({sim_step_trade_export_keep, SIM_PHASE_TICK_SLOT, 11, SIM_AREA_TRADE,
           [] { g_city.trade_sys().update_export_keep(); }});
-        sim_schedule_add({sim_step_trade, SIM_PHASE_TICK_SLOT, 32, SIM_AREA_TRADE | SIM_AREA_FIGURES,
+        schedule.add({sim_step_trade, SIM_PHASE_TICK_SLOT, 32, SIM_AREA_TRADE | SIM_AREA_FIGURES,
           [] { g_city.trade_sys().update(); }});
     }
 };

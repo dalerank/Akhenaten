@@ -62,22 +62,18 @@ tile2i city_map_t::closest_exit_tile_within_radius(int size, int radius) {
 class map_system : public sim_system {
 public:
     const char* name() const override { return "map"; }
-    void register_steps() override {
-        sim_schedule_add(
-          {sim_step_tree_growth, SIM_PHASE_TICK_SLOT, 2, SIM_AREA_MAP, [] { map_tree_growth_update(); }});
-        sim_schedule_add(
+    void register_steps(sim_schedule_t& schedule) override {
+        schedule.add({sim_step_tree_growth, SIM_PHASE_TICK_SLOT, 2, SIM_AREA_MAP, [] { map_tree_growth_update(); }});
+        schedule.add(
           {sim_step_irrigation_value, SIM_PHASE_TICK_SLOT, 5, SIM_AREA_MAP, [] { g_irrigation_value.update(); }});
-        sim_schedule_add(
-          {sim_step_natives_land, SIM_PHASE_TICK_SLOT, 6, SIM_AREA_MAP, [] { map_natives_check_land(); }});
-        sim_schedule_add(
+        schedule.add({sim_step_natives_land, SIM_PHASE_TICK_SLOT, 6, SIM_AREA_MAP, [] { map_natives_check_land(); }});
+        schedule.add(
           {sim_step_road_network, SIM_PHASE_TICK_SLOT, 7, SIM_AREA_MAP, [] { g_city.map.update_road_network(); }});
-        sim_schedule_add(
-          {sim_step_desirability, SIM_PHASE_TICK_SLOT, 10, SIM_AREA_MAP, [] { g_desirability.update(); }});
-        sim_schedule_add(
+        schedule.add({sim_step_desirability, SIM_PHASE_TICK_SLOT, 10, SIM_AREA_MAP, [] { g_desirability.update(); }});
+        schedule.add(
           {sim_step_vegetation_growth, SIM_PHASE_TICK_SLOT, 18, SIM_AREA_MAP, [] { map_vegetation_growth_update(); }});
-        sim_schedule_add(
-          {sim_step_roads_images, SIM_PHASE_MONTH, -1, SIM_AREA_MAP, [] { map_tiles_update_all_roads(); }});
-        sim_schedule_add({sim_step_land_citizen_routing, SIM_PHASE_MONTH, -1, SIM_AREA_MAP,
+        schedule.add({sim_step_roads_images, SIM_PHASE_MONTH, -1, SIM_AREA_MAP, [] { map_tiles_update_all_roads(); }});
+        schedule.add({sim_step_land_citizen_routing, SIM_PHASE_MONTH, -1, SIM_AREA_MAP,
           [] { map_routing_update_land_citizen(); }});
     }
 };

@@ -349,10 +349,10 @@ void sentiment_system::update() {
 class sentiment_sim_system : public sim_system {
 public:
     const char* name() const override { return "sentiment"; }
-    void register_steps() override {
-        sim_schedule_add({sim_step_reset_protesters, SIM_PHASE_TICK_SLOT, 44, SIM_AREA_SENTIMENT,
+    void register_steps(sim_schedule_t& schedule) override {
+        schedule.add({sim_step_reset_protesters, SIM_PHASE_TICK_SLOT, 44, SIM_AREA_SENTIMENT,
           [] { g_city.sentiment_sys().reset_protesters_criminals(); }});
-        sim_schedule_add(
+        schedule.add(
           {sim_step_sentiment, SIM_PHASE_DAY, -1, SIM_AREA_SENTIMENT, [] { g_city.sentiment_sys().update_day(); }});
     }
 };

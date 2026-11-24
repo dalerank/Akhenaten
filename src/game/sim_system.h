@@ -4,12 +4,14 @@ enum e_load_phase {
     LOAD_PHASE_MAP_TILES,
 };
 
+class sim_schedule_t;
+
 class sim_system {
 public:
     virtual ~sim_system() = default;
 
     virtual const char* name() const = 0;
-    virtual void register_steps() {}
+    virtual void register_steps(sim_schedule_t& schedule) {}
     virtual void on_reset() {}
     virtual void on_load(e_load_phase phase) {}
     virtual void on_reload_config() {}

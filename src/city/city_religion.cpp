@@ -1007,8 +1007,8 @@ const god_state::static_params_t &god_state::static_params() const {
 class religion_system : public sim_system {
 public:
     const char* name() const override { return "religion"; }
-    void register_steps() override {
-        sim_schedule_add(
+    void register_steps(sim_schedule_t& schedule) override {
+        schedule.add(
           {sim_step_religion, SIM_PHASE_TICK_SLOT, 1, SIM_AREA_RELIGION, [] { g_city.gods_sys().update(); }});
     }
 };

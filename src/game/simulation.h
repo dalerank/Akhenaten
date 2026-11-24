@@ -1,5 +1,6 @@
 #pragma once
 
+#include "game/sim_schedule.h"
 #include "game/sim_system.h"
 #include "game/simulation_time.h"
 
@@ -8,6 +9,7 @@
 struct simulation_t {
     simulation_time_t simtime;
     bool time_runs = false;
+    sim_schedule_t schedule;
 
     void register_system(sim_system* system);
     sim_system* find_system(const char* name) const;
