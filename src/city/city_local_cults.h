@@ -65,3 +65,6 @@ private:
     local_cults_state& _state;
     local_cults_context _ctx;
 };
+
+local_cults_state& city_local_cults_state();
+local_cults_system city_local_cults();

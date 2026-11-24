@@ -28,6 +28,7 @@
 #include "building/building_house.h"
 #include "city/city_industry.h"
 #include "city/city_animals.h"
+#include "city/city_local_cults.h"
 #include "building/building_barracks.h"
 #include "building/building_temple_complex.h"
 #include "building/building_burning_ruin.h"
@@ -102,7 +103,6 @@ void city_t::init() {
     zero_fill(entertainment);
     zero_fill(monuments);
     zero_fill(festival);
-    zero_fill(local_cults);
     zero_fill(victory);
     zero_fill(coverage);
     zero_fill(sound);
@@ -126,7 +126,7 @@ void city_t::init() {
     festival.months_since_festival = 1;
     g_distant_battle.clear();
     gods_sys().reset();
-    local_cults_sys().reset();
+    city_local_cults().reset();
     buildings.init();
     figure_clear_all();
     sentiment_sys().init();
@@ -194,14 +194,6 @@ gods_context city_t::gods_ctx() {
 
 gods_system city_t::gods_sys() {
     return gods_system(gods, gods_ctx());
-}
-
-local_cults_context city_t::local_cults_ctx() {
-    return {gods, g_simulation.simtime.month, g_simulation.simtime.year};
-}
-
-local_cults_system city_t::local_cults_sys() {
-    return local_cults_system(local_cults, local_cults_ctx());
 }
 
 temple_complexes_system city_t::temple_complexes_sys() {

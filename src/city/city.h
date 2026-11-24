@@ -27,7 +27,6 @@
 #include "grid/point.h"
 #include "city/city_trade.h"
 #include "city/city_festival.h"
-#include "city/city_local_cults.h"
 #include "city/city_temple_complexes.h"
 #include "city/city_victory.h"
 #include "grid/desirability.h"
@@ -70,7 +69,6 @@ struct city_t {
     city_monuments_t monuments;
 
     city_festival_t festival;
-    local_cults_state local_cults;
     city_victory_t victory;
     city_coverage_t coverage;
 
@@ -176,8 +174,6 @@ struct city_t {
     health_system health_sys();
     gods_context gods_ctx();
     gods_system gods_sys();
-    local_cults_context local_cults_ctx();
-    local_cults_system local_cults_sys();
     temple_complexes_system temple_complexes_sys();
     sentiment_context sentiment_ctx();
     sentiment_system sentiment_sys();

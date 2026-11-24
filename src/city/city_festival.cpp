@@ -7,6 +7,7 @@
 #include "buildings.h"
 #include "city/constants.h"
 #include "city/city.h"
+#include "city/city_local_cults.h"
 #include "city/city_message.h"
 #include "core/random.h"
 #include "figure/figure.h"
@@ -71,19 +72,20 @@ void city_festival_t::execute_festival() {
     months_since_festival = 1;
 
     if (game_features::gameplay_enhanced_local_cults.to_bool()) {
-        g_city.local_cults_sys().refresh_active();
+        city_local_cults().refresh_active();
     }
-    const bool cult_festival = g_city.local_cults.planned_cult != LOCAL_CULT_NONE
+    const bool cult_festival
+      = city_local_cults_state().planned_cult != LOCAL_CULT_NONE
         && game_features::gameplay_enhanced_local_cults.to_bool()
-        && g_city.local_cults.is_active((e_local_cult)g_city.local_cults.planned_cult);
+        && city_local_cults_state().is_active((e_local_cult)city_local_cults_state().planned_cult);
     if (cult_festival) {
-        g_city.local_cults_sys().apply_cult_festival((e_local_cult)g_city.local_cults.planned_cult,
-          (e_festival_theme)g_city.local_cults.planned_theme);
+        city_local_cults().apply_cult_festival((e_local_cult)city_local_cults_state().planned_cult,
+          (e_festival_theme)city_local_cults_state().planned_theme);
     } else if (planned_god < MAX_GODS) {
         g_city.gods.gods[planned_god].months_since_festival = 0;
         if (game_features::gameplay_enhanced_festival_calendar.to_bool()
             || game_features::gameplay_enhanced_local_cults.to_bool()) {
-            g_city.local_cults_sys().apply_theme((e_festival_theme)g_city.local_cults.planned_theme, 2);
+            city_local_cults().apply_theme((e_festival_theme)city_local_cults_state().planned_theme, 2);
         }
     }
     switch (planned_size) {
@@ -112,8 +114,8 @@ void city_festival_t::execute_festival() {
 
     planned_size = FESTIVAL_NONE;
     months_till_next = 0;
-    g_city.local_cults.planned_theme = FESTIVAL_THEME_NONE;
-    g_city.local_cults.planned_cult = LOCAL_CULT_NONE;
+    city_local_cults_state().planned_theme = FESTIVAL_THEME_NONE;
+    city_local_cults_state().planned_cult = LOCAL_CULT_NONE;
 }
 
 void city_festival_t::advance_month() {

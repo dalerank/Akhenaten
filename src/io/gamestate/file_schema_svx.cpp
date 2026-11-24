@@ -264,10 +264,6 @@ void file_schema_svx(const int file_version) {
         // STORAGE labor category priority (workers_* recomputed each tick)
         g_chunk_io.push_chunk<labor_storage_priority_chunk>(4, false);
     }
-    if (file_version > 186) {
-        // local cults + festival calendar theme state (Enhanced PC2)
-        g_chunk_io.push_chunk<enhanced_religion_chunk>(64, false);
-    }
     if (file_version > 197) {
         // count + reserved + 32 * (id[48] + version[16]) = 2052
         g_chunk_io.push_chunk<mods_chunk>(2052, false);

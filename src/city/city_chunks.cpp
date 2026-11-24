@@ -563,35 +563,6 @@ void labor_storage_priority_chunk::load_defaults(size_t version) {
     g_city.labor.categories[LABOR_CATEGORY_STORAGE].priority = 0;
 }
 
-void enhanced_religion_chunk::bind_data(io_buffer* iob, size_t version) {
-    auto& lc = g_city.local_cults;
-    for (int i = 0; i < LOCAL_CULT_MAX; ++i) {
-        iob->bind(BIND_SIGNATURE_UINT8, &lc.cults[i].unlocked);
-        iob->bind(BIND_SIGNATURE_UINT8, &lc.cults[i].active);
-        iob->bind(BIND_SIGNATURE_UINT8, &lc.cults[i].appeased_months);
-        iob->bind(BIND_SIGNATURE_UINT8, &lc.cults[i].reserved);
-    }
-    iob->bind(BIND_SIGNATURE_UINT8, &lc.mission_restricts);
-    iob->bind(BIND_SIGNATURE_UINT8, &lc.farm_bonus_months);
-    iob->bind(BIND_SIGNATURE_UINT8, &lc.war_bonus_months);
-    iob->bind(BIND_SIGNATURE_UINT8, &lc.craft_bonus_months);
-    iob->bind(BIND_SIGNATURE_UINT8, &lc.planned_theme);
-    iob->bind(BIND_SIGNATURE_UINT8, &lc.planned_cult);
-    iob->bind(BIND_SIGNATURE_UINT8, &lc.last_rite_month);
-    iob->bind(BIND_SIGNATURE_INT16, &lc.last_rite_year);
-    iob->bind(BIND_SIGNATURE_UINT8, &lc.last_rite_index);
-    iob->bind(BIND_SIGNATURE_UINT8, &lc.reserved_pad[0]);
-    iob->bind(BIND_SIGNATURE_UINT8, &lc.reserved_pad[1]);
-    iob->bind(BIND_SIGNATURE_UINT8, &lc.reserved_pad[2]);
-    // 4*4 + 13 = 29; pad to 64
-    iob->bind____skip(35);
-}
-
-void enhanced_religion_chunk::load_defaults(size_t version) {
-    // pre-Enhanced saves have no local cults and no festival calendar state
-    g_city.local_cults = {};
-}
-
 void city_graph_order_chunk::bind_data(io_buffer* iob, size_t version) {
     iob->bind____skip(8);
 }

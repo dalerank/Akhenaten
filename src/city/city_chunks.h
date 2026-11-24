@@ -20,12 +20,6 @@ struct labor_storage_priority_chunk {
     static void load_defaults(size_t version);
 };
 
-struct enhanced_religion_chunk {
-    static constexpr const char* name = "enhanced_religion";
-    static void bind_data(io_buffer* iob, size_t version);
-    static void load_defaults(size_t version);
-};
-
 struct city_graph_order_chunk {
     static constexpr const char* name = "city_graph_order";
     static void bind_data(io_buffer* iob, size_t version);

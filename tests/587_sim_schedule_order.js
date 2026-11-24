@@ -89,7 +89,7 @@ var T587_EXPECTED = [
     'month_city:-1:food_supply_month:32',
     'month_city:-1:allowed_foods:32',
     'month_city:-1:population_record:1',
-    'month_city:-1:local_cults_month:64',
+    'month_city:-1:local_cults:64',
     'month_city:-1:festival_month:8388608',
     'month_city:-1:buildings_month:4',
     'month_city:-1:fishing_points_month:8',

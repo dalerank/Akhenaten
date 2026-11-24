@@ -5,9 +5,13 @@
 
 #include "building/building.h"
 #include "city/city.h"
+#include "city/city_local_cults_chunks.h"
+#include "core/app_module.h"
+#include "core/xvalue.h"
 #include "game/simulation.h"
 #include "game/game_config.h"
 #include "game/simulation_time.h"
+#include "io/chunk_serializer.h"
 
 namespace {
 
@@ -29,19 +33,29 @@ bool cult_building_present(e_building_type type) {
 
 } // namespace
 
+local_cults_state& city_local_cults_state() {
+    return xvalue<local_cults_state>::ref();
+}
+
+local_cults_system city_local_cults() {
+    return local_cults_system(city_local_cults_state(),
+      {g_city.gods, g_simulation.simtime.month, g_simulation.simtime.year});
+}
+
+class local_cults_sim_system : public sim_system {
+public:
+    const char* name() const override { return "local_cults"; }
+    void on_month() override { city_local_cults().advance_month(); }
+    void push_save_sections(int file_version) override { g_chunk_io.push_chunk<local_cults_chunk>(64, false); }
+};
+
+void ANK_REGISTER_APPLICATION_MODULE(register_local_cults_system) {
+    static local_cults_sim_system system;
+    g_simulation.register_system(&system);
+}
+
 void local_cults_system::reset() {
-    for (int i = 0; i < LOCAL_CULT_MAX; ++i) {
-        _state.cults[i] = {};
-    }
-    _state.mission_restricts = 0;
-    _state.farm_bonus_months = 0;
-    _state.war_bonus_months = 0;
-    _state.craft_bonus_months = 0;
-    _state.planned_theme = FESTIVAL_THEME_NONE;
-    _state.planned_cult = LOCAL_CULT_NONE;
-    _state.last_rite_month = 255;
-    _state.last_rite_year = -1;
-    _state.last_rite_index = 255;
+    _state = {};
     unlock_all();
 }
 
