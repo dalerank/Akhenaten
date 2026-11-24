@@ -295,6 +295,9 @@ void finance_system::copy_amounts_to_last_year() {
     // donations
     last_year.income.donated = this_year.income.donated;
     this_year.income.donated = 0;
+
+    last_year.income.gold_delivered = this_year.income.gold_delivered;
+    this_year.income.gold_delivered = 0;
 }
 
 void finance_system::pay_tribute() {
