@@ -16,9 +16,37 @@
 #include "graphics/image_groups.h"
 #include "core/tokenum.h"
 #include "game/local_cults.h"
+#include "city/city_festival_chunks.h"
+#include "core/app_module.h"
+#include "core/xvalue.h"
+#include "game/simulation.h"
+#include "io/chunk_serializer.h"
 
 using e_festival_type_tokens = token_holder<e_festival_type, FESTIVAL_NONE, FESTIVAL_MAX>;
 e_festival_type_tokens ANK_CONFIG_ENUM(festival_type_tokens);
+
+city_festival_t& city_festival() {
+    return xvalue<city_festival_t>::ref();
+}
+
+class festival_system : public sim_system {
+public:
+    const char* name() const override { return "festival"; }
+    void on_month() override { city_festival().advance_month(); }
+    void push_save_sections(int file_version) override {
+        g_chunk_io.push_chunk<city_festival_chunk>(city_festival_chunk::size, false);
+    }
+};
+
+void ANK_REGISTER_APPLICATION_MODULE(register_festival_system) {
+    static festival_system system;
+    g_simulation.register_system(&system);
+}
+
+void city_festival_t::reset() {
+    *this = {};
+    months_since_festival = 1;
+}
 
 void city_festival_t::execute_festival() {
     tile2i square_pos = city_building_get_festival_square_position();

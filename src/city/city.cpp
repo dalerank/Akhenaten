@@ -29,6 +29,7 @@
 #include "city/city_industry.h"
 #include "city/city_animals.h"
 #include "city/city_bookmarks.h"
+#include "city/city_festival.h"
 #include "city/city_local_cults.h"
 #include "city/city_temple_complexes.h"
 #include "building/building_barracks.h"
@@ -104,7 +105,6 @@ void city_t::init() {
     zero_fill(gods);
     zero_fill(entertainment);
     zero_fill(monuments);
-    zero_fill(festival);
     zero_fill(victory);
     zero_fill(coverage);
     zero_fill(sound);
@@ -123,7 +123,7 @@ void city_t::init() {
     trade.caravan_backup_import_resource = RESOURCES_MIN;
     population.monthly.next_index = 0;
     population.monthly.count = 0;
-    festival.months_since_festival = 1;
+    city_festival().reset();
     g_distant_battle.clear();
     gods_sys().reset();
     city_local_cults().reset();
@@ -610,19 +610,22 @@ struct cproperty {
 
 bvariant city_get_property(xstring domain, xstring name) {
     static cproperty cproperties[] = {
-        { tags().city, "population", [] (const xstring&) { return bvariant(g_city.population.current); }},
-        { tags().city, "population_kids", [] (const xstring&) { return bvariant(g_city.population.school_age); }},
-        { tags().city, "population_youngs", [] (const xstring&) { return bvariant(g_city.population.academy_age); }},
-        { tags().city, "treasury", [] (const xstring&) { return bvariant(g_city.finance.treasury); }},
-        { tags().rating, tags().culture, [] (const xstring &) { return bvariant(g_city.ratings.culture); }},
-        { tags().rating, tags().prosperity, [] (const xstring &) { return bvariant(g_city.ratings.prosperity); }},
-        { tags().rating, tags().monument, [] (const xstring &) { return bvariant(g_city.ratings.monument); }},
-        { tags().rating, tags().kingdom, [] (const xstring &) { return bvariant(g_city.kingdome.rating); }},
-        //{ tags().player, "rank_name", [] (const xstring&) { return bvariant(ui::str(52, g_city.kingdome.salary_rank + 4)); }},
-        //{ tags().player, "salary_amount", [] (const xstring&) { return bvariant(g_city.kingdome.salary_amount); }},
-        { tags().city, "months_since_festival", [] (const xstring&) { return bvariant(g_city.festival.months_since_festival); }},
-        { tags().city, "workers_needed", [] (const xstring&) { return bvariant(g_city.labor.workers_needed); }},
-        { tags().city, "workers_diff", [] (const xstring&) { return bvariant(g_city.labor.workers_unemployed - g_city.labor.workers_needed); }},
+      {tags().city, "population", [](const xstring&) { return bvariant(g_city.population.current); }},
+      {tags().city, "population_kids", [](const xstring&) { return bvariant(g_city.population.school_age); }},
+      {tags().city, "population_youngs", [](const xstring&) { return bvariant(g_city.population.academy_age); }},
+      {tags().city, "treasury", [](const xstring&) { return bvariant(g_city.finance.treasury); }},
+      {tags().rating, tags().culture, [](const xstring&) { return bvariant(g_city.ratings.culture); }},
+      {tags().rating, tags().prosperity, [](const xstring&) { return bvariant(g_city.ratings.prosperity); }},
+      {tags().rating, tags().monument, [](const xstring&) { return bvariant(g_city.ratings.monument); }},
+      {tags().rating, tags().kingdom, [](const xstring&) { return bvariant(g_city.kingdome.rating); }},
+      //{ tags().player, "rank_name", [] (const xstring&) { return bvariant(ui::str(52, g_city.kingdome.salary_rank +
+      //4)); }}, { tags().player, "salary_amount", [] (const xstring&) { return bvariant(g_city.kingdome.salary_amount);
+      //}},
+      {tags().city, "months_since_festival",
+        [](const xstring&) { return bvariant(city_festival().months_since_festival); }},
+      {tags().city, "workers_needed", [](const xstring&) { return bvariant(g_city.labor.workers_needed); }},
+      {tags().city, "workers_diff",
+        [](const xstring&) { return bvariant(g_city.labor.workers_unemployed - g_city.labor.workers_needed); }},
     };
 
     for (const auto &prop : cproperties) {

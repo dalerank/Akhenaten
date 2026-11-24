@@ -30,6 +30,9 @@ struct city_festival_t : public game_system {
     bool entertainment_is_low() const { return months_since_festival > 6; }
     bool was_recent() const { return months_since_festival < 6; }
 
+    void reset();
     void execute_festival();
     void advance_month();
 };
+
+city_festival_t& city_festival();

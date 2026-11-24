@@ -3,6 +3,7 @@
 #include "building/building.h"
 #include "building/building_delivery_path.h"
 #include "city/city.h"
+#include "city/city_festival.h"
 #include "city/city_figures.h"
 #include "city/object_info.h"
 #include "core/xstring.h"
@@ -651,7 +652,7 @@ static int __test_figure_get_leading(int fid) {
 ANK_FUNCTION_1(__test_figure_get_leading);
 
 static void __test_festival_execute() {
-    g_city.festival.execute_festival();
+    city_festival().execute_festival();
 }
 ANK_FUNCTION(__test_festival_execute);
 

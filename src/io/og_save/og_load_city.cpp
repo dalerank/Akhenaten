@@ -1,6 +1,7 @@
 #include "io/og_save/og_load.h"
 
 #include "city/city.h"
+#include "city/city_festival.h"
 #include "scenario/scenario.h"
 
 #include <type_traits>
@@ -191,7 +192,7 @@ namespace og {
         assign(g_city.entertainment.venue_needing_shows, p.venue_needing_shows);
         assign(g_city.avg_coverage.average_entertainment, p.average_entertainment);
         assign(g_city.houses.missing.entertainment, p.houses_missing_entertainment);
-        assign(g_city.festival.months_since_festival, p.months_since_festival);
+        assign(city_festival().months_since_festival, p.months_since_festival);
         for (int i = 0; i < 5; i++) {
             assign(g_city.gods.gods[i].target_mood, p.god_target_mood[i]);
         }
@@ -228,14 +229,14 @@ namespace og {
         assign(g_city.finance.wage_rate_paid_this_year, p.wage_rate_paid_this_year);
         assign(g_city.finance.tribute_not_paid_last_year, p.tribute_not_paid_last_year);
         assign(g_city.finance.tribute_not_paid_total_years, p.tribute_not_paid_total_years);
-        assign(g_city.festival.planned_size, p.festival_planned_size);
-        assign(g_city.festival.months_till_next, p.festival_planned_months_to_go);
-        assign(g_city.festival.planned_god, p.festival_planned_god);
+        assign(city_festival().planned_size, p.festival_planned_size);
+        assign(city_festival().months_till_next, p.festival_planned_months_to_go);
+        assign(city_festival().planned_god, p.festival_planned_god);
         assign(g_city.avg_coverage.average_religion, p.average_religion);
         assign(g_city.avg_coverage.average_education, p.average_education);
         assign(g_city.avg_coverage.average_health, p.average_health);
-        assign(g_city.festival.first_festival_effect_months, p.first_festival_effect_months);
-        assign(g_city.festival.second_festival_effect_months, p.second_festival_effect_months);
+        assign(city_festival().first_festival_effect_months, p.first_festival_effect_months);
+        assign(city_festival().second_festival_effect_months, p.second_festival_effect_months);
         assign(g_city.sentiment.unemployment_pct, p.sentiment_unemployment);
         assign(g_city.sentiment.previous_value, p.sentiment_previous_value);
         assign(g_city.sentiment.low_mood_cause, p.sentiment_low_mood_cause);

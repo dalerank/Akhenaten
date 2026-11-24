@@ -130,10 +130,10 @@ void god_bast_t::perform_minor_curse() {
 
 void god_bast_t::perform_festival_for_other_gods() {
     // throws a festival for the other gods
-    g_city.festival.planned_god = GOD_OSIRIS;
-    g_city.festival.planned_size = FESTIVAL_BAST_SPECIAL;
-    g_city.festival.months_till_next = 1;
-    g_city.festival.first_festival_effect_months = 1;
+    city_festival().planned_god = GOD_OSIRIS;
+    city_festival().planned_size = FESTIVAL_BAST_SPECIAL;
+    city_festival().months_till_next = 1;
+    city_festival().first_festival_effect_months = 1;
 
     g_city.gods.gods[GOD_RA].months_since_festival = 0;
     g_city.gods.gods[GOD_PTAH].months_since_festival = 0;

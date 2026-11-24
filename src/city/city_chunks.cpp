@@ -1,6 +1,7 @@
 #include "city/city_chunks.h"
 
 #include "city/city.h"
+#include "city/city_festival.h"
 #include "city/city_religion_osiris.h"
 #include "io/io_buffer.h"
 #include "io/chunk_serializer.h"
@@ -329,7 +330,7 @@ static void city_data_bind_og_layout(io_buffer* iob) {
     iob->bind(BIND_SIGNATURE_INT32, &data.entertainment.venue_needing_shows);
     iob->bind(BIND_SIGNATURE_INT32, &data.avg_coverage.average_entertainment);
     iob->bind(BIND_SIGNATURE_INT32, &data.houses.missing.entertainment);
-    iob->bind(BIND_SIGNATURE_INT8, &data.festival.months_since_festival); // ok
+    iob->bind(BIND_SIGNATURE_INT8, &city_festival().months_since_festival); // ok
     iob->bind____skip(3);
     for (int i = 0; i < MAX_GODS; i++) {
         iob->bind(BIND_SIGNATURE_UINT8, &data.gods.gods[i].target_mood);
@@ -385,19 +386,19 @@ static void city_data_bind_og_layout(io_buffer* iob) {
     iob->bind____skip(3);
     iob->bind(BIND_SIGNATURE_UINT8, &data.finance.tribute_not_paid_total_years);
     iob->bind____skip(11);
-    iob->bind(BIND_SIGNATURE_UINT8, &data.festival.planned_size);
+    iob->bind(BIND_SIGNATURE_UINT8, &city_festival().planned_size);
     iob->bind____skip(3);
-    iob->bind(BIND_SIGNATURE_INT8, &data.festival.months_till_next);
+    iob->bind(BIND_SIGNATURE_INT8, &city_festival().months_till_next);
     iob->bind____skip(3);
-    iob->bind(BIND_SIGNATURE_UINT8, &data.festival.planned_god);
+    iob->bind(BIND_SIGNATURE_UINT8, &city_festival().planned_god);
     iob->bind____skip(23);
     iob->bind(BIND_SIGNATURE_INT32, &data.avg_coverage.average_religion);
     iob->bind(BIND_SIGNATURE_INT32, &data.avg_coverage.average_education);
     iob->bind(BIND_SIGNATURE_INT32, &data.avg_coverage.average_health);
     iob->bind____skip(4);
-    iob->bind(BIND_SIGNATURE_UINT8, &data.festival.first_festival_effect_months);
+    iob->bind(BIND_SIGNATURE_UINT8, &city_festival().first_festival_effect_months);
     iob->bind____skip(3);
-    iob->bind(BIND_SIGNATURE_UINT8, &data.festival.second_festival_effect_months);
+    iob->bind(BIND_SIGNATURE_UINT8, &city_festival().second_festival_effect_months);
     iob->bind____skip(7);
     iob->bind(BIND_SIGNATURE_UINT8, &data.sentiment.unemployment_pct);
     iob->bind____skip(3);
