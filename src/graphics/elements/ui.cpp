@@ -296,8 +296,8 @@ void ANK_REGISTER_CONFIG_ITERATOR(config_load_ui_options) {
 
 static ui::element::ptr create_element(const xstring type) {
     ui::element::ptr elm;
-#define _ crc32_str
-    switch (type.crc()) {
+#define _ str_hash
+    switch (type.hash()) {
     case _("outer_panel"):
         elm = std::make_shared<ui::eouter_panel>();
         break;

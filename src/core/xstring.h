@@ -14,7 +14,7 @@
 //#define XSTRING_USE_REFERENCE_COUNTING
 
 struct xstring_value {
-    uint32_t crc;
+    uint32_t hash;
 #ifdef XSTRING_USE_REFERENCE_COUNTING
     uint16_t reference;
 #endif
@@ -77,7 +77,9 @@ public:
     const xstring_value* _get() const { return _p; }
 
     [[nodiscard]]
-    const uint32_t crc() const { return _p ? _p->crc : UINT32_MAX; }
+    const uint32_t hash() const {
+        return _p ? _p->hash : UINT32_MAX;
+    }
 
 public:
     // construction
@@ -176,7 +178,7 @@ struct std::hash<xstring>
 
 using xstring_hash = uint32_t;
 
-inline xstring_hash str_hash(pcstr str) {
+inline constexpr xstring_hash str_hash(pcstr str) {
     if (str == nullptr) {
         return 0;
     }
@@ -186,10 +188,8 @@ inline xstring_hash str_hash(pcstr str) {
     constexpr uint32_t FNV_PRIME = 16777619u;
 
     uint32_t hash = FNV_OFFSET_BASIS;
-    const unsigned char* p = reinterpret_cast<const unsigned char*>(str);
-
-    while (*p) {
-        hash ^= *p++;
+    for (; *str; ++str) {
+        hash ^= static_cast<unsigned char>(*str);
         hash *= FNV_PRIME;
     }
 

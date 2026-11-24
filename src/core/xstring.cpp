@@ -1,7 +1,6 @@
 #include "xstring.h"
 
 #include "log.h"
-#include "crc32.h"
 #include "core/core.h"
 
 #include <cassert>
@@ -91,7 +90,7 @@ public:
 };
 
 struct xstring_container {
-    std::unordered_map<uint32_t, xstring_value *> data;
+    std::unordered_multimap<xstring_hash, xstring_value*> data;
     linear_allocator allocator;
 
     void verify();
@@ -112,10 +111,9 @@ void xstring_container::verify() {
     logs::info("strings verify started");
     for (const auto &it : data) {
         xstring_value *const p = it.second;
-        const auto crc = crc32(p->value.c_str(), p->length);
-        verify_no_crash(crc == p->crc);
+        verify_no_crash(str_hash(p->value.c_str()) == p->hash);
         verify_no_crash(p->length == p->value.length());
-        verify_no_crash(p->crc == it.first);
+        verify_no_crash(p->hash == it.first);
     }
     logs::info("strings verify completed");
 }
@@ -124,9 +122,9 @@ void xstring_container::dump(FILE *f) const {
     for (const auto &it : data) {
         xstring_value *const p = it.second;
 #ifdef XSTRING_USE_REFERENCE_COUNTING
-        fprintf(f, "ref[%4u]-len[%3u]-crc[%8X] : %s\n", p->reference, p->length, p->crc, p->value.c_str());
+        fprintf(f, "ref[%4u]-len[%3u]-hash[%8X] : %s\n", p->reference, p->length, p->hash, p->value.c_str());
 #else
-        fprintf(f, "len[%3u]-crc[%8X] : %s\n", p->length, p->crc, p->value.c_str());
+        fprintf(f, "len[%3u]-hash[%8X] : %s\n", p->length, p->hash, p->value.c_str());
 #endif
     }
 }
@@ -148,11 +146,12 @@ xstring_value *xstring_container::dock(pcstr value) {
     verify_no_crash(sizeof(xstring_value) + s_len_with_zero < (3 * 4096));
     verify_no_crash(s_len <= 65535u);
 
-    const std::uint32_t crc = crc32(value, static_cast<std::uint32_t>(s_len));
-    const auto it = g_xstring->data.find(crc);
-    if (it != g_xstring->data.end()) {
-        verify_no_crash((it->second->value == value) && "xstring intern CRC collision");
-        return it->second;
+    const xstring_hash hash = str_hash(value);
+    const auto range = g_xstring->data.equal_range(hash);
+    for (auto it = range.first; it != range.second; ++it) {
+        if (it->second->value == value) {
+            return it->second;
+        }
     }
 
     xstring_value *const new_xstr = g_xstring->allocator.allocate();
@@ -160,10 +159,10 @@ xstring_value *xstring_container::dock(pcstr value) {
     new_xstr->reference = 0;
 #endif
     new_xstr->length = static_cast<uint16_t>(s_len);
-    new_xstr->crc = crc;
+    new_xstr->hash = hash;
     new_xstr->value = value;
 
-    g_xstring->data.emplace(crc, new_xstr);
+    g_xstring->data.emplace(hash, new_xstr);
     return new_xstr;
 }
 
