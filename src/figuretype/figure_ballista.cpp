@@ -10,8 +10,7 @@
 #include "graphics/animkeys.h"
 #include "graphics/image.h"
 #include "js/js_register.h"
-#include "sound/effect.h"
-#include "sound/sound.h"
+#include "game/sound_effect.h"
 
 ballista_rules_t ANK_VARIABLE(ballista_rules);
 

@@ -16,7 +16,7 @@
 #include "grid/road_network.h"
 #include "game/game_config.h"
 #include "scenario/scenario.h"
-#include "sound/effect.h"
+#include "game/sound_effect.h"
 #include "graphics/image_desc.h"
 #include "graphics/color.h"
 #include "graphics/graphics.h"

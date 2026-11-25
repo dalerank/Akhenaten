@@ -16,7 +16,6 @@
 #include "figuretype/figure_tower_sentry.h"
 #include "grid/terrain.h"
 #include "game/game_config.h"
-#include "sound/sound.h"
 #include "city/city_figures.h"
 #include "game/game_events.h"
 

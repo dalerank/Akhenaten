@@ -15,7 +15,6 @@
 #include "game/game_config.h"
 #include "window/building/common.h"
 #include "window/building/figures.h"
-#include "sound/sound_building.h"
 #include "graphics/animation.h"
 #include "figuretype/figure_entertainer.h"
 #include "js/js_register.h"

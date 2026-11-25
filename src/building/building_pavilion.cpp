@@ -5,7 +5,6 @@
 #include "widget/city/ornaments.h"
 #include "window/building/common.h"
 #include "window/building/figures.h"
-#include "sound/sound_building.h"
 #include "graphics/elements/ui.h"
 #include "graphics/graphics.h"
 #include "city/city.h"

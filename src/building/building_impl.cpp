@@ -29,7 +29,6 @@
 #include "graphics/elements/tooltip.h"
 #include "grid/enemy_strength.h"
 #include "grid/tiles.h"
-#include "sound/sound.h"
 #include "js/js_register.h"
 #include "js/js_struct.h"
 #include "game/game_config.h"

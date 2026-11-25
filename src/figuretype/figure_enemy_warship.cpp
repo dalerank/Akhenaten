@@ -24,7 +24,6 @@
 #include "scenario/map.h"
 #include "scenario/scenario.h"
 #include "scenario/scenario_invasion.h"
-#include "sound/sound.h"
 #include "widget/widget_city.h"
 
 #include <algorithm>

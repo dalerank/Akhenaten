@@ -23,7 +23,7 @@
 #include "scenario/event_phrases.h"
 #include "core/log.h"
 #include <algorithm>
-#include "sound/effect.h"
+#include "game/sound_effect.h"
 
 static int can_advance_earthquake_to_tile(int x, int y) {
     if (map_terrain_is(MAP_OFFSET(x, y), TERRAIN_ELEVATION | TERRAIN_ROCK | TERRAIN_WATER))

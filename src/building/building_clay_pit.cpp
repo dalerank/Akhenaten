@@ -10,7 +10,6 @@
 #include "grid/clay.h"
 #include "grid/grid.h"
 #include "grid/terrain.h"
-#include "sound/sound.h"
 #include "city/city_maintenance.h"
 #include "building/construction/clear.h"
 

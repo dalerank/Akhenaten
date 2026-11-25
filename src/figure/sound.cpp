@@ -5,7 +5,7 @@
 
 #include "city/city.h"
 #include "city/sound.h"
-#include "sound/effect.h"
+#include "game/sound_effect.h"
 
 void figure::play_die_sound() {
 

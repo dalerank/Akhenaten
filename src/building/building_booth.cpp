@@ -19,7 +19,6 @@
 #include "window/building/figures.h"
 #include "widget/city/ornaments.h"
 #include "widget/city/flat_draw.h"
-#include "sound/sound_building.h"
 #include "figuretype/figure_entertainer.h"
 #include "city/city_labor.h"
 #include "figure/figure.h"

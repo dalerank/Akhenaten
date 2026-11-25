@@ -52,7 +52,6 @@
 #include "scenario/map.h"
 #include "scenario/scenario.h"
 #include "sound/sound_city.h"
-#include "sound/music.h"
 #include "game/game.h"
 #include "empire/empire_traders.h"
 

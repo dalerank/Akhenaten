@@ -43,7 +43,7 @@
 #include "scenario/scenario.h"
 #include "scenario/invasion_auto_resolve.h"
 #include "sound/sound_city.h"
-#include "sound/effect.h"
+#include "game/sound_effect.h"
 #include "sound/sound.h"
 #include "editor/tool.h"
 #include "widget/city/ornaments.h"

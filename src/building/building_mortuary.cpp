@@ -12,7 +12,6 @@ BUILDING_RUNTIME_DATA_IMPL(building_mortuary)
 #include "game/game_config.h"
 #include "window/building/common.h"
 #include "window/building/figures.h"
-#include "sound/sound_building.h"
 #include "city/city.h"
 #include "city/city_resource.h"
 #include "dev/debug.h"

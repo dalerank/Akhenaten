@@ -24,7 +24,6 @@
 #include "widget/city/ornaments.h"
 #include "widget/city/flat_draw.h"
 #include "figuretype/figure_entertainer.h"
-#include "sound/sound_building.h"
 #include "figure/figure.h"
 #include "grid/routing/routing_grids.h"
 #include "core/profiler.h"

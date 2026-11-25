@@ -4,8 +4,7 @@
 
 #include "graphics/view/lookup.h"
 #include "grid/figure.h"
-#include "sound/sound.h"
-#include "sound/effect.h"
+#include "game/sound_effect.h"
 #include "graphics/animkeys.h"
 #include "city/city_buildings.h"
 #include "city/city_figures.h"

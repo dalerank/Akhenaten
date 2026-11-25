@@ -32,7 +32,6 @@
 #include "game/game_config.h"
 #include "window/building/common.h"
 #include "construction/build_planner.h"
-#include "sound/sound_building.h"
 #include "figuretype/figure_worker.h"
 #include "grid/tiles.h"
 #include "figuretype/figure_cartpusher.h"

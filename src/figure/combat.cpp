@@ -1,4 +1,5 @@
 #include "combat.h"
+#include "game/sound_effect.h"
 
 #include "core/calc.h"
 #include "city/city_figures.h"
@@ -13,7 +14,6 @@
 #include "game/resource.h"
 #include "grid/figure.h"
 #include "grid/point.h"
-#include "sound/sound.h"
 #include "game/game_events.h"
 #include "scenario/invasion_auto_resolve.h"
 

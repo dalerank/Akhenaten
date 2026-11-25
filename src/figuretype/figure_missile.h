@@ -1,7 +1,7 @@
 #pragma once
 
 #include "figure/figure.h"
-#include "sound/effect.h"
+#include "game/sound_effect.h"
 #include "core/archive.h"
 
 struct formation;

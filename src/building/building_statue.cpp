@@ -13,7 +13,6 @@
 #include "game/simulation.h"
 #include "core/random.h"
 #include "window/building/common.h"
-#include "sound/sound_building.h"
 #include "core/svector.h"
 #include "grid/terrain.h"
 #include "grid/building_tiles.h"

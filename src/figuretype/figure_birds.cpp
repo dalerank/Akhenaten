@@ -13,7 +13,7 @@
 #include "grid/grid.h"
 #include "grid/terrain.h"
 #include "js/js_register.h"
-#include "sound/effect.h"
+#include "game/sound_effect.h"
 
 #include <algorithm>
 

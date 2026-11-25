@@ -78,7 +78,6 @@
 #include "scenario/price_change.h"
 #include "scenario/request.h"
 #include "scenario/scenario.h"
-#include "sound/sound_city.h"
 #include "js/js_register.h"
 #include "window/window_city.h"
 #include "window/file_dialog_common.h"

@@ -41,7 +41,6 @@
 #include "graphics/graphics.h"
 #include "monuments.h"
 #include "overlays/city_overlay.h"
-#include "sound/sound_building.h"
 #include "city/city.h"
 #include "city/city_buildings.h"
 #include "city/city_figures.h"
@@ -367,7 +366,7 @@ void building_impl::draw_overlay_anims(painter &ctx, vec2i point, color color_ma
 }
 
 xstring building_impl::get_sound() {
-    return snd::get_building_info_sound(type());
+    return building_static_params::get(type()).info_sound;
 }
 
 const int building_static_params::base_img() const { return first_img(animkeys().base); }
@@ -494,7 +493,7 @@ void building::reset_impl() {
 }
 
 xstring building::get_sound() {
-    return snd::get_building_info_sound(type);
+    return building_static_params::get(type).info_sound;
 }
 
 void building::clear_related_data() {

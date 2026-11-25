@@ -10,7 +10,6 @@
 #include "game/game_config.h"
 #include "window/building/common.h"
 #include "window/building/figures.h"
-#include "sound/sound_building.h"
 #include "grid/grid.h"
 #include "grid/terrain.h"
 #include "grid/tiles.h"

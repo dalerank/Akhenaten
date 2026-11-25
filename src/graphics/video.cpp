@@ -11,7 +11,6 @@
 #include "game/game_config.h"
 #include "screen.h"
 #include "sound/sound.h"
-#include "sound/music.h"
 
 #include <SDL.h>
 #include <cstring>

@@ -13,7 +13,6 @@
 #include "building/building_temple_complex.h"
 #include "core/random.h"
 #include "widget/city/ornaments.h"
-#include "sound/sound_building.h"
 #include "game/game.h"
 #include "graphics/elements/ui.h"
 #include "graphics/graphics.h"

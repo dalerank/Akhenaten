@@ -11,7 +11,6 @@
 #include "core/random.h"
 #include "game/game_config.h"
 #include "window/building/figures.h"
-#include "sound/sound_building.h"
 #include "widget/city/ornaments.h"
 #include "game/game.h"
 #include "js/js_register.h"

@@ -25,7 +25,6 @@ BUILDING_RUNTIME_DATA_IMPL(building_shipyard)
 #include "window/building/common.h"
 #include "window/building/figures.h"
 #include "widget/city/ornaments.h"
-#include "sound/sound_building.h"
 #include "grid/water.h"
 #include "grid/road_access.h"
 #include "grid/building.h"

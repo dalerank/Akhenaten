@@ -20,8 +20,7 @@
 #include "grid/water.h"
 #include "scenario/map.h"
 #include "scenario/scenario.h"
-#include "sound/effect.h"
-#include "sound/sound.h"
+#include "game/sound_effect.h"
 
 #include <algorithm>
 
