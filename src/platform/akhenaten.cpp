@@ -465,17 +465,16 @@ static void setup() {
         if (g_args.is_integral_tests()) {
             return;
         }
-        if (platform.is_android()) {
-            js_vm_add_scripts_folder(folder);
-            return;
-        }
-        if (!vfs::is_directory(folder.c_str())) {
+        if (!platform.is_android() && !vfs::is_directory(folder.c_str())) {
             return;
         }
         xstring version;
         if (vfs::scripts_folder_matches_build(folder.c_str(), version)) {
             js_vm_add_scripts_folder(folder);
             logs::info("[scripts] using unpacked scripts in %s", folder.c_str());
+            return;
+        }
+        if (platform.is_android() && version.empty()) {
             return;
         }
         logs::warn("[scripts] ignoring %s: unpacked by %s, this is %s; run --unpack_scripts again or use --mixed",

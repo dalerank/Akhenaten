@@ -7,6 +7,7 @@
 #include <iostream>
 #include <fstream>
 #include <filesystem>
+#include <string_view>
 
 CMRC_DECLARE(akhenaten);
 
@@ -123,13 +124,12 @@ namespace vfs {
 
     bool scripts_folder_matches_build(pcstr dir, xstring& found_version) {
         found_version = {};
-        std::ifstream stamp(fs::path(dir) / unpacked_version_file, std::ios::binary);
+        vfs::reader stamp = vfs::file_open(vfs::path(dir, "/", unpacked_version_file), "rt");
         if (!stamp) {
             return false;
         }
-        std::string version;
-        std::getline(stamp, version);
-        found_version = version.c_str();
+        const std::string_view text((pcstr)stamp->data(), stamp->size());
+        found_version = std::string(text.substr(0, text.find_first_of("\r\n"))).c_str();
         return found_version == get_version();
     }
 }
