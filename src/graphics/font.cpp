@@ -15,7 +15,7 @@
 #include "platform/platform.h"
 #include "window/autoconfig_window.h"
 #include "core/app_module.h"
-#include "graphics/elements/lang_text.h"
+#include "game/localization.h"
 
 #include <algorithm>
 #include <cstring>
@@ -300,9 +300,7 @@ void font_atlas_regenerate() {
     }
 
     game_language lang_font;
-    game_languages_vec languages;
-    g_config_arch.r("game_languages", languages);
-    for (const auto& l : languages) {
+    for (const auto& l : localization().languages()) {
         if (l.lang == locale_short) {
             lang_font = l;
             break;
