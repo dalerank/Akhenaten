@@ -382,45 +382,37 @@ namespace vfs {
             const unsigned int uncompressedSize = e.header.DataDescriptor.UncompressedSize;
             const unsigned int compressedSize = e.header.DataDescriptor.CompressedSize;
             std::vector<char> pBuf;
+            pBuf.reserve(uncompressedSize + 1);
             pBuf.resize(uncompressedSize);
 
             std::vector<char> pcData;
             pcData.resize(compressedSize);
-
-            if (pBuf.empty() || pcData.empty()) {
-                //Logger::warning( "Not enough memory for decompressing " + item( index ).fullpath.toString() );
-                return {};
-            }
 
             if (!_data->seek(e.Offset) || !_data->r(pcData.data(), compressedSize)) {
                 return {};
             }
 
             // Setup the inflate stream.
-            z_stream stream;
-            int err;
-
+            z_stream stream = {};
             stream.next_in = (Bytef *)pcData.data();
             stream.avail_in = (uInt)compressedSize;
             stream.next_out = (Bytef *)pBuf.data();
             stream.avail_out = uncompressedSize;
-            stream.zalloc = (alloc_func)0;
-            stream.zfree = (free_func)0;
 
             // Perform inflation. wbits < 0 indicates no zlib header inside the data.
-            err = inflateInit2(&stream, -MAX_WBITS);
+            int err = inflateInit2(&stream, -MAX_WBITS);
             if (err == Z_OK) {
                 err = inflate(&stream, Z_FINISH);
+                const uLong total_out = stream.total_out;
                 inflateEnd(&stream);
-
-                if (err == Z_STREAM_END)
-                    err = Z_OK;
-                err = Z_OK;
-                inflateEnd(&stream);
+                if (err == Z_STREAM_END && total_out != uncompressedSize) {
+                    err = Z_DATA_ERROR;
+                }
             }
 
-            if (err != Z_OK) {
-                //Logger::warning( "Error decompressing " + item( index ).fullpath.toString() );
+            if (err != Z_STREAM_END) {
+                logs::warn("zip: %s in %s is corrupt (inflate %d), ignored", _entries[index].c_str(), _filepath.c_str(),
+                  err);
                 return {};
             } else {
                 const size_t memsize = pBuf.size() + txr_limiter;
@@ -441,15 +433,11 @@ namespace vfs {
             const unsigned int uncompressedSize = e.header.DataDescriptor.UncompressedSize;
             const unsigned int compressedSize = e.header.DataDescriptor.CompressedSize;
             std::vector<char> pBuf;
+            pBuf.reserve(uncompressedSize + 1);
             pBuf.resize(uncompressedSize);
 
             std::vector<char> pcData;
             pcData.resize(compressedSize);
-
-            if (pBuf.empty() || pcData.empty()) {
-                //Logger::error( "Not enough memory for decompressing " + item( index ).fullpath.toString() );
-                return {};
-            }
 
             if (!_data->seek(e.Offset) || !_data->r(pcData.data(), compressedSize)) {
                 return {};
@@ -473,12 +461,14 @@ namespace vfs {
             bz_ctx.next_out = pBuf.data();
             bz_ctx.avail_out = uncompressedSize;
             err = BZ2_bzDecompress(&bz_ctx);
-            //err;
+            if (err == BZ_STREAM_END && bz_ctx.total_out_lo32 != uncompressedSize) {
+                err = BZ_DATA_ERROR;
+            }
+            BZ2_bzDecompressEnd(&bz_ctx);
 
-            err = BZ2_bzDecompressEnd(&bz_ctx);
-
-            if (err != BZ_OK) {
-                //Logger::error( "Error decompressing +" + item( index ).fullpath.toString() );
+            if (err != BZ_STREAM_END) {
+                logs::warn("zip: %s in %s is corrupt (bzip2 %d), ignored", _entries[index].c_str(), _filepath.c_str(),
+                  err);
                 return {};
             } else {
                 const size_t memsize = pBuf.size() + txr_limiter;
@@ -496,17 +486,13 @@ namespace vfs {
 
         case 14:
         {
-            unsigned int uncompressedSize = e.header.DataDescriptor.UncompressedSize;
+            const unsigned int uncompressedSize = e.header.DataDescriptor.UncompressedSize;
             const unsigned int compressedSize = e.header.DataDescriptor.CompressedSize;
             std::vector<char> pBuf;
             pBuf.resize(uncompressedSize);
 
             std::vector<char> pcData;
             pcData.resize(compressedSize);
-            if (pBuf.empty() || pcData.empty()) {
-                //Logger::error( "Not enough memory for decompressing " + item( index ).fullpath.toString() );
-                return {};
-            }
 
             if (!_data->seek(e.Offset) || !_data->r(pcData.data(), compressedSize)) {
                 return {};
@@ -514,22 +500,22 @@ namespace vfs {
 
             ELzmaStatus status;
             SizeT tmpDstSize = uncompressedSize;
-            SizeT tmpSrcSize = compressedSize;
 
             if (compressedSize < 4) {
                 return {};
             }
-            unsigned int propSize = (pcData[3] << 8) + pcData[2];
+            const unsigned int propSize = ((uint8_t)pcData[3] << 8) + (uint8_t)pcData[2];
             if (propSize + 4 > compressedSize) {
                 return {};
             }
-            int err = LzmaDecode((Byte *)pBuf.data(), &tmpDstSize,
-                (Byte *)pcData.data() + 4 + propSize, &tmpSrcSize,
-                (Byte *)pcData.data() + 4, propSize, e.header.GeneralBitFlag & 0x1 ? LZMA_FINISH_END : LZMA_FINISH_ANY, &status, &lzmaAlloc);
-            uncompressedSize = tmpDstSize; // may be different to expected value
+            SizeT tmpSrcSize = compressedSize - 4 - propSize;
+            int err = LzmaDecode((Byte*)pBuf.data(), &tmpDstSize, (Byte*)pcData.data() + 4 + propSize, &tmpSrcSize,
+              (Byte*)pcData.data() + 4, propSize, e.header.GeneralBitFlag & 0x1 ? LZMA_FINISH_END : LZMA_FINISH_ANY,
+              &status, &lzmaAlloc);
 
-            if (err != SZ_OK) {
-                //Logger::error( "Error decompressing " + item( index ).fullpath.toString() );
+            if (err != SZ_OK || tmpDstSize != uncompressedSize) {
+                logs::warn("zip: %s in %s is corrupt (lzma %d), ignored", _entries[index].c_str(), _filepath.c_str(),
+                  err);
                 return {};
             } else {
                 const size_t memsize = pBuf.size() + txr_limiter;
