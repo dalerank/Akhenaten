@@ -69,3 +69,5 @@ doc
 # Agent configuration: shared rules are committed, per-developer overrides are not
 /.claude/settings.local.json
 /.claude/*.local.json
+
+/tmp/
