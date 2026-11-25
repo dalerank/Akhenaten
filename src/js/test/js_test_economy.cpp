@@ -788,7 +788,7 @@ static int __test_bazaar_force_spawn(int bid) {
     }
     b.figure_spawn_delay = 0;
     // Align OG buyer stagger: pass index becomes 1 on spawn ? day % 8 == 1.
-    g_city.figures.bazaar_figure_pass_index = 0;
+    city_figures().bazaar_figure_pass_index = 0;
     if (!game_features::gameplay_change_bazaar_buyer_spawn_timer.to_bool()) {
         g_simulation.simtime.day = 1;
     }

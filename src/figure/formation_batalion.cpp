@@ -1,4 +1,5 @@
 #include "formation_batalion.h"
+#include "city/city_figures.h"
 
 #include "game/game_events.h"
 #include "city/military.h"
@@ -219,7 +220,7 @@ void formations_t::batalions_update() {
         }
 
         formation_decrease_monthly_counters(m);
-        if (g_city.figures.total_invading_enemies() <= 0) {
+        if (city_figures().total_invading_enemies() <= 0) {
             formation_clear_monthly_counters(m);
         }
 
@@ -242,7 +243,7 @@ void formations_t::batalions_update() {
             }
 
         } else if (m->layout == FORMATION_MOP_UP) {
-            if ((enemy_army_total_enemy_formations() + g_city.figures.rioters + g_city.figures.attacking_natives) > 0) {
+            if ((enemy_army_total_enemy_formations() + city_figures().rioters + city_figures().attacking_natives) > 0) {
                 for (int n = 0; n < formation::max_figures_count; n++) {
                     if (m->figures[n] != 0) {
                         figure* f = figure_get(m->figures[n]);

@@ -6,9 +6,9 @@
 #include "city/buildings.h"
 #include "city/map.h"
 #include "city/coverage.h"
-#include "city/city_figures.h"
 #include "grid/point.h"
 #include "grid/desirability.h"
+#include "city/city_figures.h"
 #include "city/city_buildings.h"
 
 struct empire_city;
@@ -16,7 +16,6 @@ struct simulation_time_t;
 
 struct city_t {
     city_buildings_t buildings;
-    city_figures_t figures;
 
 
     city_map_t map;
@@ -34,11 +33,6 @@ struct city_t {
     bool can_produce_resource(e_resource resource);
     void set_produce_resource(e_resource resource, bool v);
 
-    void figures_add_kingdome_soldier();
-    void figures_add_rioter(int is_attacking);
-    void figures_add_soldier();
-    void figures_update_day();
-    bool figures_has_security_breach();
     void figures_generate_criminals();
 
 

@@ -1,4 +1,5 @@
 #include "figure/figure.h"
+#include "city/city_figures.h"
 #include "game/sound_effect.h"
 #include "game/game_events.h"
 
@@ -60,7 +61,7 @@ void figure::play_die_sound() {
     }
 
     if (is_enemy()) {
-        if (g_city.figures.total_invading_enemies() == 1) {
+        if (city_figures().total_invading_enemies() == 1) {
             events::emit(event_sound_speech{"Wavs/sword_atk.wav"});
         }
     }

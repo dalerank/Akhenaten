@@ -1,4 +1,5 @@
 #include "animal_ostrich.h"
+#include "city/city_figures.h"
 #include "game/sound_effect.h"
 #include "game/game_events.h"
 
@@ -88,7 +89,7 @@ void figure_ostrich::start_flee() {
 }
 
 void figure_ostrich::figure_action() {
-    g_city.figures.add_animal();
+    city_figures().add_animal();
 
     base.terrain_usage = TERRAIN_USAGE_ANIMAL;
     base.use_cross_country = false;

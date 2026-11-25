@@ -1,4 +1,5 @@
 #include "figure_enemy.h"
+#include "city/city_figures.h"
 
 #include "city/city.h"
 #include "city/sound.h"
@@ -21,9 +22,9 @@ void figure_enemy::on_create() {
 
 void figure_enemy::count_as_city_invader() {
     if (figure_is_kingdome_army(type())) {
-        g_city.figures_add_kingdome_soldier();
+        city_figures().add_kingdome_soldier();
     } else {
-        g_city.figures.add_enemy();
+        city_figures().add_enemy();
     }
 }
 

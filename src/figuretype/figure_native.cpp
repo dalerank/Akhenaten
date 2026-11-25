@@ -1,4 +1,5 @@
 #include "figure_native.h"
+#include "city/city_figures.h"
 
 #include "building/building.h"
 #include "city/city.h"
@@ -49,7 +50,7 @@ void figure_native::figure_action() {
         base.terrain_usage = TERRAIN_USAGE_ENEMY;
         base.flags |= e_figure_flag_enemy;
         base.flags &= ~e_figure_flag_friendly;
-        g_city.figures.add_attacking_native();
+        city_figures().add_attacking_native();
         base.move_ticks(1);
         if (base.direction == DIR_FIGURE_NONE || base.direction == DIR_FIGURE_REROUTE
             || base.direction == DIR_FIGURE_CAN_NOT_REACH) {

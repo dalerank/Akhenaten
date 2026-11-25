@@ -1,4 +1,5 @@
 #include "city/city_fleet_advisor.h"
+#include "city/city_figures.h"
 
 #include "building/building.h"
 #include "building/building_warship_wharf.h"
@@ -99,10 +100,10 @@ namespace {
     }
 
     uint8_t threat_text() {
-        if (g_city.figures.kingdome_soldiers != 0) {
+        if (city_figures().kingdome_soldiers != 0) {
             return MILITARY_TEXT_KINGDOM_TROOPS_AT_GATES;
         }
-        if (g_city.figures.enemies != 0) {
+        if (city_figures().enemies != 0) {
             return MILITARY_TEXT_ENEMIES_IN_SIGHT;
         }
         return scenario_invasion_exists_upcoming() ? MILITARY_TEXT_ENEMIES_APPROACHING : MILITARY_TEXT_NO_THREATS;

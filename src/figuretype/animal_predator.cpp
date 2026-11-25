@@ -408,7 +408,7 @@ void figure_predator::figure_action() {
         frame_advanced = true;
     }
     base.terrain_usage = TERRAIN_USAGE_ANIMAL;
-    g_city.figures.add_animal();
+    city_figures().add_animal();
     base.allow_move_type = EMOVE_TERRAIN;
     base.use_cross_country = false;
     base.roam_wander_freely = false;

@@ -501,7 +501,7 @@ namespace {
             break;
 
         case FIGURE_TOWER_SENTRY: {
-            const int enemies = g_city.figures.enemies;
+            const int enemies = city_figures().enemies;
             if (enemies == 0) {
                 st.say(ADVISOR_MILITARY, 0);
             } else if (event_running) {
@@ -533,7 +533,7 @@ namespace {
             break;
 
         case FIGURE_TRANSPORT_SHIP: {
-            const int enemies = g_city.figures.enemies;
+            const int enemies = city_figures().enemies;
             st.group = ADVISOR_FLEET;
             if (enemies != 0 && action == ACTION_215_TRANSPORT_SHIP_EVADING) {
                 st.phrase = 0;
@@ -546,7 +546,7 @@ namespace {
         }
 
         case FIGURE_WARSHIP: {
-            const int enemies = g_city.figures.enemies;
+            const int enemies = city_figures().enemies;
             const bool hunting = action == ACTION_10_WARSHIP_HUNTING;
             const bool evading = action == ACTION_12_WARSHIP_EVADING;
             st.group = ADVISOR_FLEET;

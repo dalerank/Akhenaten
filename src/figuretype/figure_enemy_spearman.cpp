@@ -1,4 +1,5 @@
 #include "figure_enemy_spearman.h"
+#include "city/city_figures.h"
 #include "game/sound_effect.h"
 #include "game/game_events.h"
 
@@ -61,7 +62,7 @@ void figure_enemy_spearman::enemy_initial(formation *m) {
     target_figure target;
     if (base.wait_ticks_missile > missile_delay()) {
         base.wait_ticks_missile = 0;
-        target = figure_combat_get_missile_target_for_enemy(&base, 10, g_city.figures.soldiers < 4);
+        target = figure_combat_get_missile_target_for_enemy(&base, 10, city_figures().soldiers < 4);
         if (target.fid) {
             base.attack_image_offset = 1;
             base.direction = calc_missile_shooter_direction(tile(), target.tile);

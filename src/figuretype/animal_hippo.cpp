@@ -339,7 +339,7 @@ bool figure_hippo::find_prey_nearby() {
 
 void figure_hippo::figure_action() {
     OZZY_PROFILER_FUNCTION();
-    g_city.figures.add_animal();
+    city_figures().add_animal();
 
     base.allow_move_type = EMOVE_AMPHIBIAN;
     base.terrain_usage = TERRAIN_USAGE_AMPHIBIA;

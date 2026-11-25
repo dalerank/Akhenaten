@@ -1,4 +1,5 @@
 #include "building_house.h"
+#include "city/city_figures.h"
 
 #include "building/building_temple_complex.h"
 #include "city/city.h"
@@ -233,12 +234,12 @@ void building_house::spawn_figure() {
     }
 
     base.figure_spawn_delay++;
-    if (base.figure_spawn_delay <= 40 || g_city.figures.house_noble_spawned_this_tick) {
+    if (base.figure_spawn_delay <= 40 || city_figures().house_noble_spawned_this_tick) {
         return;
     }
 
     base.figure_spawn_delay = 0;
-    g_city.figures.house_noble_spawned_this_tick = true;
+    city_figures().house_noble_spawned_this_tick = true;
 
     tile2i spawn_tile = base.road_access.valid() ? base.road_access : base.tile;
     figure *f = figure_create(FIGURE_NOBLES, spawn_tile, DIR_4_BOTTOM_LEFT);

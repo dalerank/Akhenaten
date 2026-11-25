@@ -1,4 +1,5 @@
 #include "figure_soldier.h"
+#include "city/city_figures.h"
 #include "game/game_events.h"
 
 #include "city/city.h"
@@ -285,7 +286,7 @@ void figure_soldier::update_image(const formation* m, int &dir) {
 }
 
 bool figure_soldier::play_die_sound() {
-    if (g_city.figures.soldiers == 1) {
+    if (city_figures().soldiers == 1) {
         events::emit(event_sound_speech{"Wavs/sword_atk.wav"});
     }
 
@@ -300,7 +301,7 @@ void figure_soldier::acquire_attack() {
 void figure_soldier::figure_action() {
     // OG FIGURE_ACTION_SOLDIER_ON_SHIP: idle off-map while the transport sails.
     if (action_state() == ACTION_18_SOLDIER_ON_SHIP) {
-        g_city.figures_add_soldier();
+        city_figures().add_soldier();
         formation *m = formation_get(base.formation_id);
         if (!m || m->in_use != 1) {
             base.allow_move_type = EMOVE_TERRAIN;
@@ -315,7 +316,7 @@ void figure_soldier::figure_action() {
     base.set_flag(e_figure_flag_invisible, false);
 
     formation* m = formation_get(base.formation_id);
-    g_city.figures_add_soldier();
+    city_figures().add_soldier();
 
     if (m->in_use != 1) {
         base.kill();

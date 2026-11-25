@@ -1,4 +1,5 @@
 #include "music.h"
+#include "city/city_figures.h"
 
 #include "city/city.h"
 #include "city/city_population.h"
@@ -556,7 +557,7 @@ void sound_manager_t::music_fade_out() {
 // OG run.c game_run_update_music_and_ambient, once a frame: the battle music starts at 16 enemies or 5 enemy
 // warships and fades once both are below; otherwise the city music runs in the city window while nothing plays.
 void sound_manager_t::music_frame() {
-    if (g_city.figures.enemies < og_invasion_music_enemies && music_enemy_warships() < og_invasion_music_warships) {
+    if (city_figures().enemies < og_invasion_music_enemies && music_enemy_warships() < og_invasion_music_warships) {
         if (music.invasion_music_request) {
             music_fade_out();
             music.invasion_music_request = false;

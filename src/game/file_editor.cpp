@@ -1,4 +1,5 @@
 ﻿#include "file_editor.h"
+#include "city/city_figures.h"
 #include "city/city_migration.h"
 
 #include "building/construction/build_planner.h"
@@ -77,7 +78,7 @@ void game_file_editor_clear_data(void) {
     events::emit(event_building_menu_update{ "enable_all" });
     building_clear_all();
     building_storage_clear_all();
-    g_city.figures.init_figures();
+    city_figures().init_figures();
     g_enemy_armies.clear();
     figure_name_init();
     g_formations.clear_all();
@@ -119,7 +120,7 @@ static void create_blank_map(int size) {
 static void prepare_map_for_editing(void) {
     g_empire.init_cities();
 
-    g_city.figures.init_figures();
+    city_figures().init_figures();
     figure_create_editor_flags();
 
     map_tiles_update_all_elevation();

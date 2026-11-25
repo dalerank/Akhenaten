@@ -538,7 +538,7 @@ void formations_t::update_enemy_formation(formation* m, int* target_found) {
     }
 
     formation_decrease_monthly_counters(m);
-    if (g_city.figures.soldiers <= 0) {
+    if (city_figures().soldiers <= 0) {
         formation_clear_monthly_counters(m);
     }
 

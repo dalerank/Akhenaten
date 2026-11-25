@@ -18,7 +18,9 @@ struct city_figures_t {
     int bazaar_figure_pass_index;
 
     void reset();
+    void clear_tick_counters();
     void on_post_load();
+    void update_day();
     void update();
     void add_animal();
     void init_figures();
@@ -26,6 +28,10 @@ struct city_figures_t {
 
     void add_enemy();
     void add_attacking_native();
+    void add_kingdome_soldier();
+    void add_rioter(int is_attacking);
+    void add_soldier();
+    bool has_security_breach() const;
 
     void remove_figures(e_figure_type ftype);
 
@@ -33,6 +39,8 @@ struct city_figures_t {
 };
 ANK_CONFIG_PROPERTY(city_figures_t,
     enemies, kingdome_soldiers, rioters, soldiers)
+
+city_figures_t& city_figures();
 
 void figure_clear_all();
 

@@ -1,4 +1,5 @@
 #include "figuretype/figure_rioter.h"
+#include "city/city_figures.h"
 
 #include "figure/service.h"
 #include "city/city.h"
@@ -13,7 +14,7 @@ static const int CRIMINAL_OFFSETS[] = { 0, 0, 1, 2, 3, 4, 5, 6, 7, 7, 6, 5, 4, 3
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_rioter);
 
 void figure_rioter::figure_action() {
-    g_city.figures_add_rioter(!base.targeted_by_figure_id);
+    city_figures().add_rioter(!base.targeted_by_figure_id);
     //    terrain_usage = TERRAIN_USAGE_ENEMY;
     //    max_roam_length = 480;
     //    cart_image_id = 0;

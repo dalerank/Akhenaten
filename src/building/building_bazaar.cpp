@@ -1,4 +1,5 @@
 #include "building_bazaar.h"
+#include "city/city_figures.h"
 #include "city/city_resource.h"
 
 #include "figure/figure.h"
@@ -971,7 +972,7 @@ void building_bazaar::spawn_figure() {
     maintain_fancy_second_trader();
 
     // OG bazaar_index: counted for every road-connected bazaar in the generate pass.
-    g_city.figures.bazaar_figure_pass_index++;
+    city_figures().bazaar_figure_pass_index++;
 
     int spawn_delay = figure_spawn_timer();
     if (spawn_delay == -1) {
@@ -1006,7 +1007,7 @@ void building_bazaar::spawn_figure() {
     // OG: day % 8 == bazaar_index % 8. Remake flag: buyers share labor spawn_due.
     const bool buyers_due = remake_buyer_timer
                               ? spawn_due
-                              : ((g_simulation.simtime.day % 8) == (g_city.figures.bazaar_figure_pass_index % 8));
+                              : ((g_simulation.simtime.day % 8) == (city_figures().bazaar_figure_pass_index % 8));
 
     if (buyers_due) {
         if (multi) {

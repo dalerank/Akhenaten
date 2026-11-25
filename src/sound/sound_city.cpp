@@ -1,4 +1,5 @@
 #include "sound_city.h"
+#include "city/city_figures.h"
 #include "core/main_thread.h"
 
 #include "game/game_config.h"
@@ -159,7 +160,7 @@ int sound_city_building_channel(building* b) {
 
     e_building_type type = b->type;
     verify_no_crash(type <= BUILDING_MAX);
-    if (is_silent_venue(type) && (g_city.figures.enemies > 0 || b->num_workers < 1)) {
+    if (is_silent_venue(type) && (city_figures().enemies > 0 || b->num_workers < 1)) {
         return 0;
     }
     return building_type_to_channel(b);

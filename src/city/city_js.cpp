@@ -1,4 +1,5 @@
 ﻿#include "js/js_game.h"
+#include "city/city_figures.h"
 #include "city/city_resource.h"
 #include "city/city_houses.h"
 #include "city/coverage.h"
@@ -118,7 +119,7 @@ std::optional<bvariant> __city_get_migration_property(pcstr property) {
 ANK_FUNCTION_1(__city_get_migration_property)
 
 int __city_figures_total_invading_enemies() {
-    return g_city.figures.total_invading_enemies();
+    return city_figures().total_invading_enemies();
 }
 ANK_FUNCTION(__city_figures_total_invading_enemies)
 

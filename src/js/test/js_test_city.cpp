@@ -1,4 +1,5 @@
 #include "js/test/js_test_common.h"
+#include "city/city_figures.h"
 #include "city/city_houses.h"
 #include "city/coverage.h"
 #include "city/city_kingdome_relations.h"
@@ -81,7 +82,7 @@ void __test_set_city_population(int amount) {
 ANK_FUNCTION_1(__test_set_city_population);
 
 void __test_set_city_enemies(int count) {
-    g_city.figures.enemies = (int16_t)count;
+    city_figures().enemies = (int16_t)count;
 }
 ANK_FUNCTION_1(__test_set_city_enemies);
 

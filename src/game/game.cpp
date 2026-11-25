@@ -1,4 +1,5 @@
 ﻿#include "game.h"
+#include "city/city_figures.h"
 #include "city/ratings.h"
 #include "city/city_migration.h"
 #include "game/simulation.h"
@@ -97,7 +98,7 @@ void game_t::update_tick(int simtick) {
     OZZY_PROFILER_FUNCTION();
     if (editor_is_active()) {
         random_generate_next(); // update random to randomize native huts
-        g_city.figures.update(); // just update the flag figures
+        city_figures().update(); // just update the flag figures
         return;
     }
 

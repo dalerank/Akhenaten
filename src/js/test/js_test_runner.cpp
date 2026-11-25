@@ -1,4 +1,5 @@
 #include "js/test/js_test_common.h"
+#include "city/city_figures.h"
 #include "city/city_finance.h"
 #include "city/ratings.h"
 #include "city/city_sentiment.h"
@@ -949,7 +950,7 @@ void __test_city_data_set_probe() {
     city_finance().treasury.value = 0x1234567;
     g_city.buildings.distribution_center_building_id = 0x2345;
     g_city.buildings.trade_center_building_id = 0x3456;
-    g_city.figures.soldiers = 0x4567;
+    city_figures().soldiers = 0x4567;
     city_sound().march_enemy = 0x55;
     city_sentiment().include_huts = true;
     city_population().highest_ever = 0x6789;

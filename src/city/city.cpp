@@ -102,7 +102,6 @@ void city_t::init() {
     buildings.shutdown();
 
     zero_fill(buildings);
-    zero_fill(figures);
     zero_fill(map);
 
     g_simulation.reset_systems();
@@ -115,7 +114,7 @@ void city_t::init() {
 
 void city_t::reload_objects() {
     buildings.reload_objects();
-    figures.reload_objects();
+    city_figures().reload_objects();
 }
 
 void city_t::update_month(simulation_time_t simtime) {
@@ -257,8 +256,8 @@ bool city_t::available_resource(e_resource resource) {
 
 void city_t::buildings_generate_figure() {
     OZZY_PROFILER_FUNCTION();
-    figures.house_noble_spawned_this_tick = false;
-    figures.bazaar_figure_pass_index = 0;
+    city_figures().house_noble_spawned_this_tick = false;
+    city_figures().bazaar_figure_pass_index = 0;
     buildings_valid_do([] (building &b) {
         switch (b.type) {
         case BUILDING_UNUSED_NATIVE_HUT_88: {
@@ -440,15 +439,9 @@ bvariant city_t::get_property(xstring domain, xstring name) const {
 
 void city_t::on_post_load() {
     buildings.on_post_load();
-    figures.on_post_load();
+    city_figures().on_post_load();
     city_kingdome().on_post_load();
     city_trade().update_export_keep();
-}
-
-void city_t::figures_update_day() {
-    figure_valid_do([] (figure &f) {
-        f.dcast()->update_day();
-    });
 }
 
 bool city_t::determine_granary_get_foods(resource_list &foods, int road_network) {

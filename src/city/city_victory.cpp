@@ -1,4 +1,5 @@
 #include "city/city_victory.h"
+#include "city/city_figures.h"
 #include "city/city_kingdome_relations.h"
 #include "city/city_finance.h"
 #include "city/ratings.h"
@@ -188,7 +189,7 @@ e_victory_state city_victory_t::determine_state(bool script_goals_met) {
         }
     }
 
-    const auto& figures = g_city.figures;
+    const auto& figures = city_figures();
     const int invaders = figures.total_invading_enemies();
     const int fraction = std::max(1, victory_rules.lost_population_fraction);
     if (invaders > figures.soldiers + victory_rules.lost_population_extra_enemies

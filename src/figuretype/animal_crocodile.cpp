@@ -279,7 +279,7 @@ bool figure_crocodile::find_prey_nearby() {
 
 void figure_crocodile::figure_action() {
     OZZY_PROFILER_FUNCTION();
-    g_city.figures.add_animal();
+    city_figures().add_animal();
 
     base.allow_move_type = EMOVE_AMPHIBIAN;
     base.terrain_usage = TERRAIN_USAGE_AMPHIBIA;

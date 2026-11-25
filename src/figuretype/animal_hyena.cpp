@@ -261,7 +261,7 @@ bool figure_hyena::find_prey_nearby() {
 
 void figure_hyena::figure_action() {
     OZZY_PROFILER_FUNCTION();
-    g_city.figures.add_animal();
+    city_figures().add_animal();
 
     base.allow_move_type = EMOVE_TERRAIN;
     base.terrain_usage = TERRAIN_USAGE_ANIMAL;

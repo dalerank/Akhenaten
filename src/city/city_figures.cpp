@@ -2,6 +2,10 @@
 #include "game/simulation.h"
 #include "core/app_module.h"
 #include "game/sim_schedule.h"
+#include "city/city_figures_chunks.h"
+#include "core/xvalue.h"
+#include "io/chunk_serializer.h"
+#include "io/gamestate/save_versions.h"
 #include "grid/figure.h"
 
 #include "core/profiler.h"
@@ -34,7 +38,15 @@ struct figure_data_t {
 
 figure_data_t g_figure_data = { false };
 
+city_figures_t& city_figures() {
+    return xvalue<city_figures_t>::ref();
+}
+
 void city_figures_t::reset() {
+    *this = {};
+}
+
+void city_figures_t::clear_tick_counters() {
     enemies = 0;
     rioters = 0;
     attacking_natives = 0;
@@ -81,7 +93,7 @@ void city_figures_t::on_post_load() {
 
 void city_figures_t::update() {
     OZZY_PROFILER_FUNCTION();
-    reset();
+    clear_tick_counters();
     //g_city.entertainment.hippodrome_has_race = false;
 
     for (auto &figure: map_figures()) {
@@ -112,22 +124,26 @@ void city_figures_t::remove_figures(e_figure_type ftype) {
     }
 }
 
-void city_t::figures_add_kingdome_soldier() {
-    figures.kingdome_soldiers++;
+void city_figures_t::add_kingdome_soldier() {
+    kingdome_soldiers++;
 }
 
-void city_t::figures_add_rioter(int is_attacking) {
-    figures.rioters++;
+void city_figures_t::add_rioter(int is_attacking) {
+    rioters++;
     if (is_attacking)
-        figures.security_breach_duration = 10;
+        security_breach_duration = 10;
 }
 
-void city_t::figures_add_soldier() {
-    figures.soldiers++;
+void city_figures_t::add_soldier() {
+    soldiers++;
 }
 
-bool city_t::figures_has_security_breach() {
-    return figures.security_breach_duration > 0;
+bool city_figures_t::has_security_breach() const {
+    return security_breach_duration > 0;
+}
+
+void city_figures_t::update_day() {
+    figure_valid_do([](figure& f) { f.dcast()->update_day(); });
 }
 
 figure *figure_get(int id) {
@@ -205,9 +221,15 @@ void figure_clear_all() {
 class figures_system : public sim_system {
 public:
     const char* name() const override { return "figures"; }
+    void on_reset() override { city_figures().reset(); }
+    void push_save_sections(int file_version) override {
+        if (file_version >= save_version_city_sections) {
+            g_chunk_io.push_chunk<city_figures_chunk>(city_figures_chunk::size, false);
+        }
+    }
     void register_steps(sim_schedule_t& schedule) override {
-        schedule.add({sim_step_figures, SIM_PHASE_TICK_END, [](int) { g_city.figures.update(); }});
-        schedule.add({sim_step_figures_day, SIM_PHASE_DAY, [](int) { g_city.figures_update_day(); }});
+        schedule.add({sim_step_figures, SIM_PHASE_TICK_END, [](int) { city_figures().update(); }});
+        schedule.add({sim_step_figures_day, SIM_PHASE_DAY, [](int) { city_figures().update_day(); }});
     }
 };
 

@@ -30,7 +30,7 @@
 // Force figures.reset()+action_perform. Needed when --integraltests pumps
 // frames faster than tick_timer_ms (get_elapsed_ticks ? 0).
 static void __test_figures_update() {
-    g_city.figures.update();
+    city_figures().update();
 }
 ANK_FUNCTION(__test_figures_update);
 
@@ -343,7 +343,7 @@ static int __test_figure_get_formation_id(int fid) {
 ANK_FUNCTION_1(__test_figure_get_formation_id);
 
 static void __test_city_set_security_breach(int duration) {
-    g_city.figures.security_breach_duration = duration;
+    city_figures().security_breach_duration = duration;
 }
 ANK_FUNCTION_1(__test_city_set_security_breach);
 

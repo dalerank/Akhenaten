@@ -1,4 +1,5 @@
 #include "io/og_save/og_load.h"
+#include "city/city_figures.h"
 #include "city/city_resource.h"
 #include "city/city_houses.h"
 #include "city/military.h"
@@ -231,14 +232,14 @@ namespace og {
         assign(city_houses().religion, p.religion_demand);
         assign(city_houses().education, p.education_demand);
         assign(city_houses().entertainment, p.entertainment_demand);
-        assign(g_city.figures.rioters, p.rioters);
+        assign(city_figures().rioters, p.rioters);
         assign(city_ratings().culture_explanation, p.culture_explanation);
         assign(city_ratings().prosperity_explanation, p.prosperity_explanation);
         assign(city_kingdome().player_rank, p.player_rank);
         assign(city_kingdome().personal_savings, p.personal_savings);
         assign(city_finance().last_year.income.donated, p.donated_last_year);
         assign(city_finance().this_year.income.donated, p.donated_this_year);
-        assign(g_city.figures.animals_number, p.animals);
+        assign(city_figures().animals_number, p.animals);
         assign(city_trade().docker_import_resource, p.docker_import_resource);
         assign(city_trade().docker_export_resource, p.docker_export_resource);
         assign(g_scenario.has_won, p.mission_has_won);
@@ -258,7 +259,7 @@ namespace og {
         assign(city_sentiment().unemployment_pct, p.sentiment_unemployment);
         assign(city_sentiment().previous_value, p.sentiment_previous_value);
         assign(city_sentiment().low_mood_cause, p.sentiment_low_mood_cause);
-        assign(g_city.figures.security_breach_duration, p.security_breach_duration);
+        assign(city_figures().security_breach_duration, p.security_breach_duration);
         assign(city_kingdome().months_since_gift, p.months_since_gift);
         assign(city_kingdome().gift_overdose_penalty, p.gift_overdose_penalty);
         assign(city_kingdome().kingdom_salary_penalty, p.kingdom_salary_penalty);
@@ -280,17 +281,17 @@ namespace og {
         assign(g_city.buildings.distribution_center_building_id, p.distribution_center_building_id);
         assign(g_city.buildings.distribution_center_placed, p.distribution_center_placed);
         assign(g_city.buildings.warships_requested, p.shipyard_boats_requested);
-        assign(g_city.figures.enemies, p.enemies);
+        assign(city_figures().enemies, p.enemies);
         assign(city_sentiment().wages, p.sentiment_wages);
         assign(city_population().people_in_huts, p.people_in_huts);
         assign(city_population().people_in_residences, p.people_in_residences_and_up);
-        assign(g_city.figures.kingdome_soldiers, p.kingdom_soldiers);
+        assign(city_figures().kingdome_soldiers, p.kingdom_soldiers);
         assign(city_ratings().monument_destroyed_buildings, p.destroyed_buildings);
         assign(city_military().total_batalions, p.total_legions);
         assign(city_military().kingdome_service_batalions, p.empire_service_legions);
         assign(city_military().total_soldiers, p.total_soldiers);
         assign(g_city.buildings.trade_center_building_id, p.trade_center_building_id);
-        assign(g_city.figures.soldiers, p.soldiers);
+        assign(city_figures().soldiers, p.soldiers);
         assign(city_sound().march_enemy, p.sound_march_enemy);
         assign(city_sound().march_horse, p.sound_march_horse);
         assign(city_sentiment().include_huts, p.sentiment_food_toggle);
@@ -306,7 +307,7 @@ namespace og {
         assign(city_entertainment().senet_house_has_plays, p.senet_house_has_plays);
         assign(city_mission().fired_message_shown, p.fired_message_shown);
         assign(city_mission().victory_message_shown, p.victory_message_shown);
-        assign(g_city.figures.attacking_natives, p.attacking_natives);
+        assign(city_figures().attacking_natives, p.attacking_natives);
         g_city.buildings.festival_square = tile2i(p.festival_square_x, p.festival_square_y);
         assign(city_gods().ra_no_traders_months_left, p.ra_no_traders_months);
         for (int i = 0; i < 5; i++) {

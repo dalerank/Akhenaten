@@ -1,4 +1,5 @@
 #include "city/city.h"
+#include "city/city_figures.h"
 
 #include "figure/figure.h"
 #include "figure/figure_static_params.h"
@@ -21,11 +22,13 @@
 #include "core/profiler.h"
 
 std::optional<bvariant> __city_get_figures_property(pcstr property) {
-    return archive_helper::get(g_city.figures, property, true);
+    return archive_helper::get(city_figures(), property, true);
 }
 ANK_FUNCTION_1(__city_get_figures_property)
 
-void __city_remove_figures(int ftype) { g_city.figures.remove_figures((e_figure_type)ftype); }
+void __city_remove_figures(int ftype) {
+    city_figures().remove_figures((e_figure_type)ftype);
+}
 ANK_FUNCTION_1(__city_remove_figures)
 
 int __figure_get_type(int fid) {

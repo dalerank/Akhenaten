@@ -1,4 +1,5 @@
 #include "building_impl.h"
+#include "city/city_figures.h"
 #include "city/city_resource.h"
 #include "io/gamefiles/lang.h"
 #include "game/sound_effect.h"
@@ -328,7 +329,7 @@ void building_impl::draw_usable_paths(painter &ctx) {
 }
 
 bool building_impl::is_enemies_nearby() const {
-    if (g_city.figures.total_invading_enemies() > 0) {
+    if (city_figures().total_invading_enemies() > 0) {
         if (map_enemy_strength_get(base.tile) > 0) {
             // building can't work when enemy nearby
             return true;

@@ -1,4 +1,5 @@
 #include "window/advisor/advisor_comments.h"
+#include "city/city_figures.h"
 #include "city/city_resource.h"
 #include "city/city_food_supply.h"
 #include "city/city_religion.h"
@@ -730,9 +731,9 @@ advisor_city_state advisor_city_state_current() {
     advisor_city_state s;
     s.sentiment = city_sentiment().value;
     s.low_mood_cause = city_sentiment().low_mood_cause;
-    s.kingdom_soldiers = g_city.figures.kingdome_soldiers;
-    s.enemies = g_city.figures.enemies;
-    s.soldiers = g_city.figures.soldiers;
+    s.kingdom_soldiers = city_figures().kingdome_soldiers;
+    s.enemies = city_figures().enemies;
+    s.soldiers = city_figures().soldiers;
     s.newcomers = city_migration().newcomers;
     s.refused_immigrants_today = city_migration().refused_immigrants_today;
     s.room_in_houses = city_population().room_in_houses;

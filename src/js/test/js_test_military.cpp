@@ -356,7 +356,7 @@ static int __test_spearman_fire_initial_missile(int fid) {
     }
 
     const e_figure_type want = sp->missile_type();
-    auto target = figure_combat_get_missile_target_for_enemy(f, 10, g_city.figures.soldiers < 4);
+    auto target = figure_combat_get_missile_target_for_enemy(f, 10, city_figures().soldiers < 4);
     if (!target.fid || !target.tile.valid()) {
         return 0;
     }
@@ -459,7 +459,7 @@ static int __test_soldier_combat_target(int x, int y, int max_distance) {
 ANK_FUNCTION_3(__test_soldier_combat_target);
 
 static int __test_city_kingdome_soldiers() {
-    return g_city.figures.kingdome_soldiers;
+    return city_figures().kingdome_soldiers;
 }
 ANK_FUNCTION(__test_city_kingdome_soldiers);
 

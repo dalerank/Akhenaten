@@ -1,4 +1,5 @@
 #include "city/city_chunks.h"
+#include "city/city_figures.h"
 #include "city/city_resource.h"
 #include "city/city_houses.h"
 #include "city/military.h"
@@ -254,7 +255,7 @@ static void city_data_bind_og_layout(io_buffer* iob) {
     for (int i = 0; i < RESOURCES_FOODS_MAX; i++)
         iob->bind(BIND_SIGNATURE_UINT16, &city_resource().food_types_eaten[i]);
     iob->bind_u16(city_kingdome().campaign_carry_personal_savings); // savings carried over to next mission
-    iob->bind(BIND_SIGNATURE_UINT8, &data.figures.fish_number);
+    iob->bind(BIND_SIGNATURE_UINT8, &city_figures().fish_number);
     iob->bind____skip(3);
     iob->bind(BIND_SIGNATURE_INT32, &city_kingdome().debt_state);
     iob->bind(BIND_SIGNATURE_INT32, &city_kingdome().months_in_debt);
@@ -379,7 +380,7 @@ static void city_data_bind_og_layout(io_buffer* iob) {
     iob->bind(BIND_SIGNATURE_INT32, &city_houses().religion);
     iob->bind(BIND_SIGNATURE_INT32, &city_houses().education);
     iob->bind(BIND_SIGNATURE_INT32, &city_houses().entertainment);
-    iob->bind(BIND_SIGNATURE_INT32, &data.figures.rioters);
+    iob->bind(BIND_SIGNATURE_INT32, &city_figures().rioters);
     iob->bind____skip(4);
     iob->bind(BIND_SIGNATURE_INT32, &city_ratings().culture_explanation);
     iob->bind(BIND_SIGNATURE_INT32, &city_ratings().prosperity_explanation);
@@ -391,7 +392,7 @@ static void city_data_bind_og_layout(io_buffer* iob) {
     iob->bind(BIND_SIGNATURE_INT32, &city_finance().last_year.income.donated);
     iob->bind(BIND_SIGNATURE_INT32, &city_finance().this_year.income.donated);
     iob->bind____skip(30);
-    iob->bind(BIND_SIGNATURE_UINT8, &data.figures.animals_number);
+    iob->bind(BIND_SIGNATURE_UINT8, &city_figures().animals_number);
     iob->bind____skip(21);
     iob->bind(BIND_SIGNATURE_INT32, &city_trade().docker_import_resource);
     iob->bind(BIND_SIGNATURE_INT32, &city_trade().docker_export_resource);
@@ -424,7 +425,7 @@ static void city_data_bind_og_layout(io_buffer* iob) {
     iob->bind(BIND_SIGNATURE_INT32, &city_sentiment().previous_value); // ok
     iob->bind____skip(4);
     iob->bind(BIND_SIGNATURE_INT32, &city_sentiment().low_mood_cause);
-    iob->bind(BIND_SIGNATURE_INT32, &data.figures.security_breach_duration);
+    iob->bind(BIND_SIGNATURE_INT32, &city_figures().security_breach_duration);
     iob->bind____skip(20);
     iob->bind(BIND_SIGNATURE_INT32, &city_kingdome().months_since_gift); // ok
     iob->bind(BIND_SIGNATURE_INT32, &city_kingdome().gift_overdose_penalty);
@@ -463,7 +464,7 @@ static void city_data_bind_og_layout(io_buffer* iob) {
     iob->bind(BIND_SIGNATURE_INT8, &data.buildings.warships_requested);
     iob->bind(BIND_SIGNATURE_INT8, &data.buildings.transport_ships_requested);
     iob->bind____skip(2);
-    iob->bind(BIND_SIGNATURE_INT16, &data.figures.enemies);
+    iob->bind(BIND_SIGNATURE_INT16, &city_figures().enemies);
     iob->bind____skip(2);
     iob->bind(BIND_SIGNATURE_INT8, &city_sentiment().wages);
     iob->bind____skip(3);
@@ -471,7 +472,7 @@ static void city_data_bind_og_layout(io_buffer* iob) {
     iob->bind____skip(2);
     iob->bind(BIND_SIGNATURE_UINT16, &city_population().people_in_residences);
     iob->bind____skip(2);
-    iob->bind(BIND_SIGNATURE_UINT16, &data.figures.kingdome_soldiers);
+    iob->bind(BIND_SIGNATURE_UINT16, &city_figures().kingdome_soldiers);
     iob->bind____skip(18);
     iob->bind(BIND_SIGNATURE_UINT8, &city_ratings().monument_destroyed_buildings);
     iob->bind____skip(6);
@@ -489,7 +490,7 @@ static void city_data_bind_og_layout(io_buffer* iob) {
     iob->bind(BIND_SIGNATURE_UINT8, &city_military().total_soldiers);
     iob->bind____skip(4);
     iob->bind(BIND_SIGNATURE_INT32, &data.buildings.trade_center_building_id);
-    iob->bind(BIND_SIGNATURE_INT32, &data.figures.soldiers);
+    iob->bind(BIND_SIGNATURE_INT32, &city_figures().soldiers);
     iob->bind____skip(3);
     iob->bind(BIND_SIGNATURE_INT8, &city_sound().march_enemy);
     iob->bind(BIND_SIGNATURE_INT8, &city_sound().march_horse);
@@ -518,7 +519,7 @@ static void city_data_bind_og_layout(io_buffer* iob) {
     iob->bind____skip(3);
     iob->bind(BIND_SIGNATURE_UINT8, &city_mission().victory_message_shown);
     iob->bind____skip(15);
-    iob->bind(BIND_SIGNATURE_INT32, &data.figures.attacking_natives);
+    iob->bind(BIND_SIGNATURE_INT32, &city_figures().attacking_natives);
     iob->bind____skip(28);
     iob->bind(BIND_SIGNATURE_INT32, &city_houses().requiring.more_courthouse);
     iob->bind(BIND_SIGNATURE_INT32, &city_houses().missing.any_courthouse);

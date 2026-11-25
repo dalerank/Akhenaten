@@ -85,7 +85,8 @@ void figure_enemy_archer::enemy_initial(formation *m) {
     target_figure target;
     if (base.wait_ticks_missile > missile_delay()) {
         base.wait_ticks_missile = 0;
-        target = figure_combat_get_missile_target_for_enemy(&base, ENEMY_MISSILE_SCAN_RANGE, g_city.figures.soldiers < 4);
+        target
+          = figure_combat_get_missile_target_for_enemy(&base, ENEMY_MISSILE_SCAN_RANGE, city_figures().soldiers < 4);
         if (target.fid) {
             base.attack_image_offset = 1;
             base.direction = calc_missile_shooter_direction(tile(), target.tile);

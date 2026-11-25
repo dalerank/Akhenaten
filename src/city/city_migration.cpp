@@ -1,4 +1,5 @@
 #include "city_migration.h"
+#include "city/city_figures.h"
 #include "io/gamestate/save_versions.h"
 #include "io/chunk_serializer.h"
 #include "core/xvalue.h"
@@ -84,7 +85,7 @@ void city_migration_t::update_status() {
     migration_cap = false;
 
     // war scares immigrants away
-    if (g_city.figures.total_invading_enemies() > 3 && percentage > 0) {
+    if (city_figures().total_invading_enemies() > 3 && percentage > 0) {
         percentage = 0;
         invading_cap = true;
         return;

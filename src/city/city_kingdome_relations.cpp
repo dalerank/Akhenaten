@@ -96,7 +96,7 @@ void city_kingdome_t::update_debt_state() {
         if (months_in_debt >= 12) {
             debt_state = e_debt_latest;
             months_in_debt = 0;
-            if (!g_city.figures.kingdome_soldiers) {
+            if (!city_figures().kingdome_soldiers) {
                 messages::popup("message_wrath_of_the_emperor", 0, 0);
                 change(params().second_debt_penalty);
             }
@@ -117,7 +117,7 @@ void city_kingdome_t::update_debt_state() {
             debt_state = e_debt_not_allowed;
             months_in_debt = 0;
 
-            if (!g_city.figures.kingdome_soldiers) {
+            if (!city_figures().kingdome_soldiers) {
                 const uint8_t debt_ceiling = (uint8_t)std::clamp((int)params().last_debt_rating_cap, 0, 100);
                 rating = std::min(rating, debt_ceiling);
             }
@@ -130,7 +130,7 @@ void city_kingdome_t::update_debt_state() {
 }
 
 void city_kingdome_t::process_invasion() {
-    if (g_city.figures.kingdome_soldiers) {
+    if (city_figures().kingdome_soldiers) {
         // cheated (console force_attack): skip duration/pause/retreat only —
         // do NOT fall through to wipe or Caesar countdown while troops remain.
         if (!invasion.cheated) {
@@ -212,7 +212,7 @@ void city_kingdome_t::finish_army_defeated() {
 void city_kingdome_t::begin_invasion(int size, bool cheated) {
     // Live kingdom troops already on the map: grow kill tally, do not replace size
     // (force_attack / overlapping wrath would otherwise finish early while ghosts remain).
-    if (invasion.size > 0 && g_city.figures.kingdome_soldiers > 0) {
+    if (invasion.size > 0 && city_figures().kingdome_soldiers > 0) {
         invasion.size += size;
         invasion.favour_only = 0;
         invasion.cheated = cheated ? 1 : 0;
@@ -246,7 +246,7 @@ void city_kingdome_t::begin_favour_army(int size) {
     // otherwise a same-day gap after wipe (kills tallied, process_invasion not yet run)
     // would grow size onto a dead slot. Always mark favour_only: a favour wave joining
     // an active Caesar army must not pick up pause/retreat or Caesar respect on wipe.
-    if (invasion.size > 0 && g_city.figures.kingdome_soldiers > 0) {
+    if (invasion.size > 0 && city_figures().kingdome_soldiers > 0) {
         invasion.size += size;
         invasion.favour_only = 1;
         return;

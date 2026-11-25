@@ -1,4 +1,5 @@
 #include "figure_constable.h"
+#include "city/city_figures.h"
 
 #include "city/city.h"
 #include "core/calc.h"
@@ -71,7 +72,7 @@ void figure_constable::request_weapons_remake() {
 }
 
 bool figure_constable::fight_enemy() {
-    if (!g_city.figures_has_security_breach() && enemy_army_total_enemy_formations() <= 0) {
+    if (!city_figures().has_security_breach() && enemy_army_total_enemy_formations() <= 0) {
         return false;
     }
 

@@ -1,4 +1,5 @@
 #include "dev/debug.h"
+#include "city/city_figures.h"
 #include "city/ratings.h"
 #include "city/city_health.h"
 
@@ -33,7 +34,7 @@ declare_console_command_p(plague_no) {
             main.common_health = 100;
         }
     });
-    g_city.figures.remove_figures(FIGURE_PLAGUED_CITIZEN);
+    city_figures().remove_figures(FIGURE_PLAGUED_CITIZEN);
 }
 
 declare_console_command_p(show_pop_milestone) {
