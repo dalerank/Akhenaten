@@ -1171,7 +1171,7 @@ static void build_move(tile2i tile) {
 static void build_end(void) {
     if (g_city_planner.in_progress) {
         if (g_city_planner.build_type != BUILDING_NONE)
-            g_sound.play_effect(SOUND_EFFECT_BUILD);
+            sound_manager().play_effect(SOUND_EFFECT_BUILD);
 
         g_city_planner.construction_finalize();
     }

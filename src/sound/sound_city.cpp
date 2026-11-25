@@ -90,7 +90,7 @@ void sound_city_t::init() {
 }
 
 void sound_city_t::stop() {
-    g_sound.stop_city_channels();
+    sound_manager().stop_city_channels();
 }
 
 int sound_city_t::building_type_channel(building* b) {
@@ -200,7 +200,7 @@ static void sound_city_play_channel(int channel, int direction) {
         return;
     }
 
-    if (g_sound.is_channel_playing(channel)) {
+    if (sound_manager().is_channel_playing(channel)) {
         return;
     }
 
@@ -226,7 +226,8 @@ static void sound_city_play_channel(int channel, int direction) {
         break;
     }
 
-    g_sound.play_channel_panned(channel, game_features::gameopt_sound_city_volume.to_int(), left_pan, right_pan);
+    sound_manager().play_channel_panned(channel, game_features::gameopt_sound_city_volume.to_int(), left_pan,
+      right_pan);
 }
 
 void sound_city_t::play() {
@@ -331,7 +332,7 @@ namespace {
 void city_ambient_t::reset() {
     for (auto& v : voices) {
         if (v.active) {
-            g_sound.stop_city_channel(v.channel);
+            sound_manager().stop_city_channel(v.channel);
         }
         v = {};
     }
@@ -456,7 +457,7 @@ bool sound_city_t::ambient_play() {
         }
         v.gain = approach(v.gain, v.target, dt / (float)std::max(1, cfg.crossfade_ms));
         if (v.target <= 0.f && v.gain <= 0.f) {
-            g_sound.stop_city_channel(v.channel);
+            sound_manager().stop_city_channel(v.channel);
             v = {};
             continue;
         }
@@ -464,15 +465,15 @@ bool sound_city_t::ambient_play() {
         const int volume = (int)((float)city_volume * v.gain * a.duck);
         const int left = (int)(std::min(1.f, 2.f * (1.f - v.pan)) * 100.f);
         const int right = (int)(std::min(1.f, 2.f * v.pan) * 100.f);
-        if (g_sound.is_channel_playing(v.channel)) {
-            g_sound.set_channel_volume(v.channel, volume);
-            g_sound.set_channel_pan(v.channel, left, right);
+        if (sound_manager().is_channel_playing(v.channel)) {
+            sound_manager().set_channel_volume(v.channel, volume);
+            sound_manager().set_channel_pan(v.channel, left, right);
         } else if (v.next_play == ambient_replay_pending) {
             const int gap_min = std::max(0, cfg.gap_min_ms);
             const int gap_max = std::max(gap_min, cfg.gap_max_ms);
             v.next_play = now + (time_millis)std::uniform_int_distribution<int>(gap_min, gap_max)(a.rng);
         } else if (v.target > 0.f && city_volume > 0 && now >= v.next_play) {
-            g_sound.play_channel_panned(v.channel, volume, left, right);
+            sound_manager().play_channel_panned(v.channel, volume, left, right);
             v.next_play = ambient_replay_pending;
         }
 
@@ -486,7 +487,7 @@ bool sound_city_t::ambient_play() {
 
     if (summary != a.summary) {
         a.summary = summary;
-        if (g_sound.log_events()) {
+        if (sound_manager().log_events()) {
             logs::info("[sound] ambient voices %s", summary.empty() ? "-" : summary.c_str());
         }
     }

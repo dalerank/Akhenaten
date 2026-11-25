@@ -135,7 +135,7 @@ bool game_init(game_opts opts) {
     mods_remount();
 
     if (!!(opts & game_opt_sound)) {
-        g_sound.init();
+        sound_manager().init();
     }
 
     game.init_state();
@@ -230,7 +230,7 @@ void game_t::exit() {
     events::process();
     video_shutdown();
     game_features::save();
-    g_sound.shutdown();
+    sound_manager().shutdown();
 }
 
 void game_t::shutdown() {

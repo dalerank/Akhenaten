@@ -333,7 +333,7 @@ void widget_map_editor_handle_input(const mouse* m, const hotkeys* h) {
 
     if (m->left.went_up) {
         editor_tool_end_use(data.current_tile);
-        g_sound.play_effect(SOUND_EFFECT_BUILD);
+        sound_manager().play_effect(SOUND_EFFECT_BUILD);
     }
 }
 

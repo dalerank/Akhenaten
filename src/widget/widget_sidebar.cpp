@@ -75,7 +75,7 @@ void ui::sidebar_window_expanded_t::collapse() {
     slider.position = 0;
     speed_clear(slider.slide_speed);
     speed_set_target(slider.slide_speed, slider.slide_speed_x, slider.slide_acceleration_millis, 1);
-    g_sound.play_effect(SOUND_EFFECT_SIDEBAR);
+    sound_manager().play_effect(SOUND_EFFECT_SIDEBAR);
 }
 
 void ui::sidebar_window_expanded_t::expand() {
@@ -85,7 +85,7 @@ void ui::sidebar_window_expanded_t::expand() {
     slider.position = 0;
     speed_clear(slider.slide_speed);
     speed_set_target(slider.slide_speed, slider.slide_speed_x, slider.slide_acceleration_millis, 1);
-    g_sound.play_effect(SOUND_EFFECT_SIDEBAR);
+    sound_manager().play_effect(SOUND_EFFECT_SIDEBAR);
 }
 
 void ui::sidebar_window_expanded_t::ui_draw_relief(UiFlags flags) {
@@ -152,7 +152,7 @@ void ui::sidebar_window_collapsed_t::collapse() {
     slider.position = 0;
     speed_clear(slider.slide_speed);
     speed_set_target(slider.slide_speed, slider.slide_speed_x, slider.slide_acceleration_millis, 1);
-    g_sound.play_effect(SOUND_EFFECT_SIDEBAR);
+    sound_manager().play_effect(SOUND_EFFECT_SIDEBAR);
 }
 
 void ui::sidebar_window_collapsed_t::expand() {
@@ -162,7 +162,7 @@ void ui::sidebar_window_collapsed_t::expand() {
     slider.position = 0;
     speed_clear(slider.slide_speed);
     speed_set_target(slider.slide_speed, slider.slide_speed_x, slider.slide_acceleration_millis, 1);
-    g_sound.play_effect(SOUND_EFFECT_SIDEBAR);
+    sound_manager().play_effect(SOUND_EFFECT_SIDEBAR);
 }
 
 void ui::sidebar_window_collapsed_t::archive_load(archive arch) {
@@ -182,7 +182,7 @@ void ui::sidebar_window_collapsed_t::init() {
         slider.position = 0;
         speed_clear(slider.slide_speed);
         speed_set_target(slider.slide_speed, slider.slide_speed_x, slider.slide_acceleration_millis, 1);
-        g_sound.play_effect(SOUND_EFFECT_SIDEBAR);
+        sound_manager().play_effect(SOUND_EFFECT_SIDEBAR);
     });
 
     widget_minimap_init();

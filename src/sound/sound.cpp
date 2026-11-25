@@ -58,7 +58,7 @@ void ANK_REGISTER_CONFIG_ITERATOR(config_load_city_sounds) {
     g_config_arch.r_array("city_sounds", [&channel](archive arch) {
         sound_city().set_name(channel, arch.r_string("id"));
         xstring path = arch.r_string("p");
-        g_sound.update_channel(channel, path.c_str());
+        sound_manager().update_channel(channel, path.c_str());
         ++channel;
     });
 }
@@ -80,7 +80,9 @@ struct music_format {
     pcstr desc;
 };
 
-sound_manager_t g_sound;
+sound_manager_t& sound_manager() {
+    return xvalue<sound_manager_t>::ref();
+}
 
 // OG hands the 0..100 volume setting straight to Miles, whose scale is 0..127 (miles_sdl.c to_mixer_volume).
 static int settings_volume_to_mixer(int volume) {
@@ -877,7 +879,7 @@ void sound_video_stream_t::callback(void* dummy, Uint8* stream, int len) {
 
 void sound_video_stream_t::use_custom(int bitdepth, int num_channels, int rate, void* audio_data, int len) {
     // --nosound / failed mixer init: video may still play, but skip BIK audio path.
-    if (!g_sound.is_initialized()) {
+    if (!sound_manager().is_initialized()) {
         return;
     }
 
@@ -923,7 +925,7 @@ void sound_video_stream_t::write(void* audio_data, int len) {
 }
 
 void sound_video_stream_t::use_default() {
-    if (!g_sound.is_initialized()) {
+    if (!sound_manager().is_initialized()) {
         return;
     }
 
@@ -964,7 +966,7 @@ void ANK_PERMANENT_CALLBACK(event_sound_effect, ev) {
     if (g_args.is_log_sound_events()) {
         logs::info("[event] effect=%d sent from %s:%d", ev.effect, ev.source_file, ev.source_line);
     }
-    g_sound.on_sound_effect(ev);
+    sound_manager().on_sound_effect(ev);
 }
 
 void ANK_PERMANENT_CALLBACK(event_sound_track, ev) {
@@ -988,9 +990,9 @@ void ANK_PERMANENT_CALLBACK(event_music_update, ev) {
 const e_sound_effect_tokens_t ANK_CONFIG_ENUM(e_sound_effect_tokens);
 
 void ANK_REGISTER_CONFIG_ITERATOR(config_load_sound_effects) {
-    g_sound.clear_effect_files();
+    sound_manager().clear_effect_files();
     g_config_arch.r_array("sound_effect_files",
-      [](archive arch) { g_sound.set_effect_file(arch.r_int("effect"), arch.r_string("p")); });
+      [](archive arch) { sound_manager().set_effect_file(arch.r_int("effect"), arch.r_string("p")); });
 }
 
 bool sound_manager_t::log_events() const {

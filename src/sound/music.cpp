@@ -58,7 +58,7 @@ declare_console_command_p(playtrack) {
 }
 
 void sound_music_t::play_track(const xstring track, bool loop) {
-    g_sound.stop_music();
+    sound_manager().stop_music();
     track_once = false;
     finished_at = 0;
 
@@ -69,7 +69,7 @@ void sound_music_t::play_track(const xstring track, bool loop) {
         return;
     }
 
-    if (g_sound.log_events()) {
+    if (sound_manager().log_events()) {
         logs::info("[sound] music %s %s%s", track.c_str(), it->file.c_str(), loop ? " loop" : "");
     }
 
@@ -79,7 +79,7 @@ void sound_music_t::play_track(const xstring track, bool loop) {
         corrected_filename = vfs::path(vfs::content_audio, it->file.c_str());
     }
 
-    const bool played = g_sound.play_music(corrected_filename.resolve(), volume, loop);
+    const bool played = sound_manager().play_music(corrected_filename.resolve(), volume, loop);
 
     current_track = track;
     track_once = played && !loop;
@@ -406,9 +406,9 @@ void sound_music_t::update(bool force) {
     if (music_playlist_has_mission(mission)) {
         if (force) {
             og = {};
-            g_sound.stop_music();
+            sound_manager().stop_music();
         }
-        if (!g_sound.music_playing()) {
+        if (!sound_manager().music_playing()) {
             og_update(mission);
         }
         return;
@@ -478,15 +478,15 @@ static int music_enemy_warships() {
 }
 
 void sound_music_t::fade_out() {
-    if (g_sound.log_events()) {
+    if (sound_manager().log_events()) {
         logs::info("[sound] music fade %s", current_track.c_str());
     }
-    if (!g_sound.music_playing()) {
+    if (!sound_manager().music_playing()) {
         return;
     }
     // OG sound_stream_fade_down: 5 volume steps every 20 ms.
     const int volume = calc_bound(game_features::gameopt_sound_music_volume.to_int(), 0, 100);
-    g_sound.fade_out_music(std::max(20, volume / 5 * 20));
+    sound_manager().fade_out_music(std::max(20, volume / 5 * 20));
 }
 
 // OG run.c game_run_update_music_and_ambient, once a frame: the battle music starts at 16 enemies or 5 enemy
@@ -497,7 +497,7 @@ void sound_music_t::frame() {
             fade_out();
             invasion_music_request = false;
         }
-        if (!g_sound.music_playing() && g_window_manager.window_is("window_city")) {
+        if (!sound_manager().music_playing() && g_window_manager.window_is("window_city")) {
             city_frame();
         }
     } else if (!invasion_music_request && !!game_features::gameopt_sound_music_enabled) {
@@ -553,7 +553,7 @@ void sound_music_t::on_sound_track(event_sound_track ev) {
 
 
 void sound_music_t::stop() {
-    g_sound.stop_music();
+    sound_manager().stop_music();
     current_track = "";
     track_once = false;
     finished_at = 0;

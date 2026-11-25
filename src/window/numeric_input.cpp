@@ -128,7 +128,7 @@ static void input_number(int number) {
     if (data.num_digits < data.max_digits) {
         data.value = data.value * 10 + number;
         data.num_digits++;
-        g_sound.play_effect(SOUND_EFFECT_BUILD);
+        sound_manager().play_effect(SOUND_EFFECT_BUILD);
     }
 }
 

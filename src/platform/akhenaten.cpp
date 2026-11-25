@@ -566,7 +566,7 @@ static void run_and_draw() {
 
         {
             NANO_PROFILE_SCOPE("_SoundUpdate");
-            g_sound.begin_frame();
+            sound_manager().begin_frame();
         }
 
         {

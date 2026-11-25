@@ -327,7 +327,7 @@ int __test_music_load_playlist(pcstr text) {
 ANK_FUNCTION_1(__test_music_load_playlist);
 
 int __test_sound_play_effect(int effect) {
-    return g_sound.play_effect(effect);
+    return sound_manager().play_effect(effect);
 }
 ANK_FUNCTION_1(__test_sound_play_effect);
 

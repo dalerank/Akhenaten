@@ -110,7 +110,7 @@ bool sound_speech_t::file_exist(xstring filename, vfs::path& fs_path) {
 
 bool sound_speech_t::play_file(xstring filename) {
     // Without a mixer (--nosound) or data (--no-resource) the file probe is wasted and only spams warnings.
-    if (!g_sound.is_initialized() || !g_sound.data_available()) {
+    if (!sound_manager().is_initialized() || !sound_manager().data_available()) {
         return false;
     }
 
@@ -120,10 +120,10 @@ bool sound_speech_t::play_file(xstring filename) {
         return false;
     }
 
-    return g_sound.play_file_on_channel(fs_path, SOUND_CHANNEL_SPEECH,
+    return sound_manager().play_file_on_channel(fs_path, SOUND_CHANNEL_SPEECH,
       game_features::gameopt_sound_speech_volume.to_int());
 }
 
 void sound_speech_t::stop() {
-    g_sound.stop_channel(SOUND_CHANNEL_SPEECH);
+    sound_manager().stop_channel(SOUND_CHANNEL_SPEECH);
 }

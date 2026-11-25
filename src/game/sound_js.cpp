@@ -27,7 +27,7 @@ void __sound_city_stop() {
 ANK_FUNCTION(__sound_city_stop)
 
 int __sound_channel_count() {
-    return static_cast<int>(g_sound.channels().size());
+    return static_cast<int>(sound_manager().channels().size());
 }
 ANK_FUNCTION(__sound_channel_count)
 
@@ -42,7 +42,7 @@ static int sound_channel_this_index(js_State *J) {
 
 static sound_channel_t *sound_channel_this(js_State *J) {
     const int index = sound_channel_this_index(J);
-    const auto channels = g_sound.channels();
+    const auto channels = sound_manager().channels();
     if (index < 0 || index >= static_cast<int>(channels.size())) {
         return nullptr;
     }
@@ -50,7 +50,7 @@ static sound_channel_t *sound_channel_this(js_State *J) {
 }
 
 static void js_push_sound_channel(js_State *J, int index) {
-    const auto channels = g_sound.channels();
+    const auto channels = sound_manager().channels();
     if (index < 0 || index >= static_cast<int>(channels.size())) {
         index = 0;
     }

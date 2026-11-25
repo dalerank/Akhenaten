@@ -94,4 +94,4 @@ private:
     std::array<og_sample_t, SOUND_EFFECT_COUNT> _effect_files;
 };
 
-extern sound_manager_t g_sound;
+sound_manager_t& sound_manager();
