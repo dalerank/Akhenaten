@@ -64,6 +64,14 @@ city_sounds = [
 ]
 
 // Enhanced city ambience (gameplay_enhanced_city_ambient): the samples above become positional voices.
+zoo_ambient_bands = [
+  { min_population: 0,    channel: SOUND_CHANNEL_CITY_HOUSE_SLUM }
+  { min_population: 500,  channel: SOUND_CHANNEL_CITY_HOUSE_POOR }
+  { min_population: 2000, channel: SOUND_CHANNEL_CITY_HOUSE_MEDIUM }
+  { min_population: 5000, channel: SOUND_CHANNEL_CITY_HOUSE_GOOD }
+  { min_population: 8000, channel: SOUND_CHANNEL_CITY_HOUSE_POSH }
+]
+
 city_ambient = {
   max_voices: 4       // samples playing at once, loudest first
   min_gain_pct: 5     // quieter candidates are dropped

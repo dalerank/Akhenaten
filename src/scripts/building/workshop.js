@@ -1,6 +1,7 @@
 log_info("akhenaten: building workshop started")
 
 building_brewery {
+  sound_channel : SOUND_CHANNEL_CITY_BREWERY_WORKSHOP
   animations {
     preview { pack:PACK_GENERAL, id:116 },
     base { pack:PACK_GENERAL, id:116 },

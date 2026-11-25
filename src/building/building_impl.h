@@ -4,7 +4,7 @@
 #include "building_planer_renderer.h"
 #include "graphics/color.h"
 #include "overlays/city_overlay_fwd.h"
-#include "sound/sound_city.h"
+#include "game/sound_channel.h"
 #include "core/string.h"
 #include "figure/figure_type.h"
 #include "figure/action.h"
@@ -61,8 +61,6 @@ public:
     virtual bool is_enemies_nearby() const;
     virtual void update_count() const;
     virtual void update_map_orientation(int orientation);
-    virtual e_sound_channel_city sound_channel() const;
-    virtual void add_ambient_sound(int direction) const {}
     virtual int animation_speed(int speed) const { return speed; }
     virtual int get_fire_risk(int value) const { return value; }
     virtual textid get_tooltip() const { return { 0, 0 }; }

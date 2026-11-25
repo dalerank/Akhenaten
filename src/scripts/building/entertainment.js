@@ -110,6 +110,7 @@ function building_juggler_school_spawn_figure(ev) {
 }
 
 building_dancer_school {
+  sound_channel : SOUND_CHANNEL_CITY_DANCE_SCHOOL
   animations {
     _pack { pack: PACK_GENERAL }
     preview { id:52 }
@@ -135,6 +136,7 @@ building_dancer_school {
 }
 
 building_pavilion = {
+  sound_channel : SOUND_CHANNEL_CITY_PAVILION
   animations : {
     base : { pos:[0, 0], pack:PACK_GENERAL, id:48 },
     square : { pos:[0, 0], pack:PACK_GENERAL, id:50 },

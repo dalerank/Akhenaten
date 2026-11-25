@@ -1,6 +1,7 @@
 log_info("akhenaten: loading building_fishing_wharf")
 
 building_fishing_wharf {
+  sound_channel : SOUND_CHANNEL_CITY_WHARF
   animations {
     preview { pack:PACK_TERRAIN, id:18 },
     base { pack:PACK_TERRAIN, id:18 },

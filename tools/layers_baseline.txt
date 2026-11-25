@@ -9,7 +9,6 @@ building/building.cpp -> widget/city/ornaments.h
 building/building.h -> content/dir.h
 building/building.h -> graphics/animation.h
 building/building.h -> graphics/color.h
-building/building.h -> sound/sound_city.h
 building/building_animation.cpp -> graphics/image.h
 building/building_bandstand.cpp -> graphics/elements/lang_text.h
 building/building_bandstand.cpp -> graphics/elements/panel.h
@@ -99,7 +98,6 @@ building/building_impl.cpp -> graphics/graphics.h
 building/building_impl.cpp -> graphics/image.h
 building/building_impl.cpp -> widget/city/ornaments.h
 building/building_impl.h -> graphics/color.h
-building/building_impl.h -> sound/sound_city.h
 building/building_industry.cpp -> widget/debug_console.h
 building/building_industry_office.cpp -> graphics/image_groups.h
 building/building_industry_office.cpp -> graphics/text.h
@@ -142,7 +140,6 @@ building/building_shipyard.cpp -> window/building/common.h
 building/building_shipyard.cpp -> window/building/figures.h
 building/building_static_params.cpp -> graphics/image.h
 building/building_static_params.h -> graphics/animation.h
-building/building_static_params.h -> sound/sound_city.h
 building/building_statue.cpp -> graphics/elements/lang_text.h
 building/building_statue.cpp -> graphics/elements/panel.h
 building/building_statue.cpp -> graphics/graphics.h

@@ -25,7 +25,6 @@ public:
     virtual void update_count() const override;
     virtual int animation_speed(int speed) const override;
     virtual e_overlay get_overlay() const override { return OVERLAY_WATER; }
-    virtual e_sound_channel_city sound_channel() const override { return SOUND_CHANNEL_CITY_POLICE; }
     virtual void update_map_orientation(int orientation) override;
     virtual void bind_dynamic(io_buffer *iob, size_t version) override;
     virtual void update_graphic() override;

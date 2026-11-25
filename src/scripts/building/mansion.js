@@ -1,6 +1,7 @@
 log_info("akhenaten: building mansion started")
 
 building_personal_mansion {
+    sound_channel : SOUND_CHANNEL_CITY_MANSION
     animations {
       preview { pack:PACK_GENERAL, id:85 }
       base { pack:PACK_GENERAL, id:85 }
@@ -26,6 +27,7 @@ building_personal_mansion {
   }
 
   building_family_mansion {
+    sound_channel : SOUND_CHANNEL_CITY_MANSION
     animations {
       preview { pack:PACK_GENERAL, id:86 }
       base { pack:PACK_GENERAL, id:86 }
@@ -50,6 +52,7 @@ building_personal_mansion {
   }
 
   building_dynasty_mansion {
+    sound_channel : SOUND_CHANNEL_CITY_MANSION
     animations {
       preview { pack:PACK_GENERAL, id:87 }
       base { pack:PACK_GENERAL, id:87 }

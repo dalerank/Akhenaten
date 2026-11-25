@@ -29,6 +29,7 @@ build_planner_clear_land {
 }
 
 building_burning_ruin = {
+  sound_channel : SOUND_CHANNEL_CITY_BURNING_RUIN
   animations : {
     base0 : { pack:PACK_TERRAIN, id:36, offset:0 },
     fire0 : { pack:PACK_TERRAIN, id:36, offset:1, max_frames:8, duration:2 },
@@ -105,6 +106,7 @@ building_carpenters_guild = {
 }
 
 building_reed_gatherer {
+  sound_channel : SOUND_CHANNEL_CITY_CLAY_PIT
   animations {
     preview { pos : [0, 0], pack:PACK_GENERAL, id:24 }
     base { pos : [0, 0], pack:PACK_GENERAL, id:24 }
@@ -357,6 +359,7 @@ building_ferry {
 }
 
 building_shipyard = {
+  sound_channel : SOUND_CHANNEL_CITY_STORAGE_YARD
   animations : {
     preview : { pack: PACK_TERRAIN, id:26, max_frames:1 },
     base : { pack: PACK_TERRAIN, id:26, max_frames:1 },
@@ -414,6 +417,7 @@ building_plaza {
 }
 
 building_garden {
+  sound_channel : SOUND_CHANNEL_CITY_GARDEN
   animations {
     preview { pack:PACK_GENERAL, id:59 }
     base { pack:PACK_GENERAL, id:59 }
@@ -717,6 +721,7 @@ building_mud_wall = {
 }
 
 building_police_station = {
+  sound_channel : SOUND_CHANNEL_CITY_POLICE
   animations {
     preview { pack:PACK_GENERAL, id:64 },
     base { pack:PACK_GENERAL, id:64 },

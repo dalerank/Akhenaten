@@ -1,6 +1,7 @@
 log_info("akhenaten: building_booth started")
 
 building_booth {
+    sound_channel : SOUND_CHANNEL_CITY_BOOTH
     animations {
         booth { pack:PACK_GENERAL, id:114 },
         square { pack:PACK_GENERAL, id:112 },

@@ -6,7 +6,7 @@
 #include "mujs/jsbuiltin.h"
 #include "mujs/jsvalue.h"
 #include "mujs/mujs.h"
-#include "sound/channel.h"
+#include "game/sound_channel.h"
 #include "sound/sound.h"
 #include "sound/sound_city.h"
 

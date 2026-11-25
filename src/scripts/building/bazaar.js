@@ -27,6 +27,7 @@ city.get_bazaar = function(building_id) {
 }
 
 building_bazaar {
+  sound_channel : SOUND_CHANNEL_CITY_MARKET
   animations {
     preview {pack:PACK_GENERAL, id:22, }
     base {pack:PACK_GENERAL, id:22, }

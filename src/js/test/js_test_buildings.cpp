@@ -85,7 +85,7 @@ int __test_sound_city_mark_building(int bid, int views) {
     for (int i = 0; i < views; ++i) {
         sound_city_mark_building_view(b, SOUND_DIRECTION_CENTER);
     }
-    return b->dcast()->sound_channel();
+    return building_static_params::get(b->type).sound_channel;
 }
 ANK_FUNCTION_2(__test_sound_city_mark_building);
 

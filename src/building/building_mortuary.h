@@ -23,7 +23,6 @@ public:
     virtual void update_month() override;
     virtual void update_year() override;
     virtual e_overlay get_overlay() const override { return OVERLAY_MORTUARY; }
-    virtual e_sound_channel_city sound_channel() const override { return SOUND_CHANNEL_CITY_MORTUARY; }
     virtual int animation_speed(int speed) const override { return 3; }
     virtual void update_count() const override;
 };

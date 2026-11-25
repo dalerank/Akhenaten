@@ -356,10 +356,6 @@ void building_impl::update_count() const {
 void building_impl::update_map_orientation(int orientation) {
 }
 
-e_sound_channel_city building_impl::sound_channel() const {
-    return current_params().sound_channel;
-}
-
 void building_impl::draw_normal_anim(painter &ctx, vec2i pixel, tile2i tile, color mask) {
     if (!base.play_animation) {
         return;

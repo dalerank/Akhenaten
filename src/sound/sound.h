@@ -6,7 +6,7 @@
 #include "game/game_events.h"
 #include "content/dir.h"
 #include "content/vfs.h"
-#include "sound/channel.h"
+#include "game/sound_channel.h"
 #include "game/sound_effect.h"
 #include <array>
 #include <future>

@@ -24,7 +24,6 @@ public:
     virtual void spawn_figure() override;
     virtual void update_day() override;
     virtual void on_tick(bool refresh_only) override;
-    virtual e_sound_channel_city sound_channel() const override { return SOUND_CHANNEL_CITY_DANCE_SCHOOL; }
 
     /**
      * @brief Gets the number of conservatories currently helping this dance school.

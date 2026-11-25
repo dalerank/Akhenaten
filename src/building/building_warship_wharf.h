@@ -12,7 +12,6 @@ public:
     virtual void update_day() override;
     virtual void update_month() override;
     virtual void on_undo() override;
-    virtual e_sound_channel_city sound_channel() const override { return SOUND_CHANNEL_CITY_WHARF; }
 
 private:
     void clear_invalid_boat();

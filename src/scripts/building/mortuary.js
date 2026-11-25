@@ -21,6 +21,7 @@ city.get_mortuary = function(building_id) {
 }
 
 building_mortuary {
+  sound_channel : SOUND_CHANNEL_CITY_MORTUARY
   animations {
     preview { pack:PACK_GENERAL, id:175 },
     base { pack:PACK_GENERAL, id:175 },

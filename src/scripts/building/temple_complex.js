@@ -17,6 +17,7 @@ TempleComplex.prototype.has_upgrade = function(upgrade) {
 }
 
 building_temple_complex_osiris {
+    sound_channel : SOUND_CHANNEL_CITY_NONE
     animations : {
       _pack { pack:PACK_TEMPLE_NILE }
       preview { pack:PACK_GENERAL, id:42}
@@ -115,6 +116,7 @@ building_temple_complex_osiris {
   }
 
   building_temple_complex_seth {
+    sound_channel : SOUND_CHANNEL_CITY_NONE
     animations {
       _pack { pack:PACK_TEMPLE_SETH }
       preview { pack:PACK_GENERAL, id:42}
@@ -217,6 +219,7 @@ building_temple_complex_osiris {
   }
 
   building_temple_complex_ra {
+    sound_channel : SOUND_CHANNEL_CITY_NONE
     animations {
       _pack { pack:PACK_TEMPLE_RA }
       preview { pack:PACK_GENERAL, id:42}
@@ -319,6 +322,7 @@ building_temple_complex_osiris {
   }
 
   building_temple_complex_ptah {
+    sound_channel : SOUND_CHANNEL_CITY_NONE
     animations {
       _pack { pack:PACK_TEMPLE_PTAH }
       preview { pack:PACK_GENERAL, id:42}
@@ -419,6 +423,7 @@ building_temple_complex_osiris {
   }
 
   building_temple_complex_bast {
+    sound_channel : SOUND_CHANNEL_CITY_NONE
     animations {
       _pack { pack:PACK_TEMPLE_BAST }
       preview { pack:PACK_GENERAL, id:42}

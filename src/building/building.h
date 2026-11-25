@@ -20,7 +20,7 @@
 #include "grid/point.h"
 #include "grid/desirability.h"
 #include "grid/crime.h"
-#include "sound/sound_city.h"
+#include "game/sound_channel.h"
 #include "game/difficulty.h"
 #include "core/variant.h"
 #include "building_static_params.h"

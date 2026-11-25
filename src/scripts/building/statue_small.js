@@ -1,6 +1,7 @@
 log_info("akhenaten: building_small_statue started")
 
 building_small_statue = {
+    sound_channel : SOUND_CHANNEL_CITY_STATUE
     variants : [
       {pack: PACK_GENERAL, id: 61, offset:0}
       {pack: PACK_GENERAL, id: 61, offset:4}

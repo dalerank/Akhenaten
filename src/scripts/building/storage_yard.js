@@ -1,6 +1,7 @@
 log_info("akhenaten: building storage_yard started")
 
 building_storage_yard {
+    sound_channel : SOUND_CHANNEL_CITY_STORAGE_YARD
     animations {
         preview { pos: [0, 0], pack: PACK_GENERAL, id: 82 }
         base { pos: [0, 0], pack: PACK_GENERAL, id: 82 }
@@ -34,6 +35,7 @@ building_storage_yard {
 }
 
 building_storage_room {
+    sound_channel : SOUND_CHANNEL_CITY_STORAGE_YARD
     animations {
     }
 

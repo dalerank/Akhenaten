@@ -10,7 +10,7 @@
 #include "game/resource.h"
 #include "overlays/city_overlay_fwd.h"
 #include "core/xfunction.h"
-#include "sound/sound_city.h"
+#include "game/sound_channel.h"
 
 #include <unordered_map>
 

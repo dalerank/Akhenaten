@@ -55,9 +55,7 @@ public:
 
     building *get_altar() const;
     building *get_oracle() const;
-    building *get_upgrade(e_temple_compex_upgrade type) const;
-
-    virtual e_sound_channel_city sound_channel() const override { return SOUND_CHANNEL_CITY_NONE; }
+    building* get_upgrade(e_temple_compex_upgrade type) const;
     virtual void update_map_orientation(int orientation) override;
 
     void map_add_tiles(e_building_type type, tile2i north_tile, int orientation, building_temple_complex::decoraive_tiles_t &tiles_list);

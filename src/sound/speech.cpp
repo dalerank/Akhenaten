@@ -7,7 +7,7 @@
 #include "content/dir.h"
 #include "content/mods.h"
 #include "content/vfs.h"
-#include "sound/channel.h"
+#include "game/sound_channel.h"
 
 #include <cctype>
 #include <cstring>

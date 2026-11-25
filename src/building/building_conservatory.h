@@ -20,7 +20,6 @@ public:
     virtual void update_day() override;
     virtual void update_month() override;
     virtual void update_graphic() override;
-    virtual e_sound_channel_city sound_channel() const override { return SOUND_CHANNEL_CITY_CONSERVATORY; }
 
     building_id determine_dancer_school_destination();
     building_id find_square_in_city();

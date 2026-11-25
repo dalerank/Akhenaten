@@ -1,5 +1,7 @@
 #include "sound_city.h"
 #include "city/city_figures.h"
+#include "city/city_population.h"
+#include "core/svector.h"
 #include "core/main_thread.h"
 
 #include "game/game_config.h"
@@ -11,7 +13,8 @@
 #include "core/profiler.h"
 #include "graphics/view/view.h"
 #include "grid/terrain.h"
-#include "sound/channel.h"
+#include "game/sound_channel.h"
+#include "building/building_static_params.h"
 #include "sound/sound.h"
 #include "js/js_register.h"
 
@@ -61,61 +64,14 @@ void sound_city_stop() {
 }
 
 int building_type_to_channel(building *b) {
-    switch (b->type) {
-    default:
-        ; // nothing
-        break;
-
-    case BUILDING_HOUSE_CRUDE_HUT:
-        {
-            auto house = b->dcast_house();
-            if (house && house->house_population() <= 0) {
-                return 0;
-            }
+    if (b->type == BUILDING_HOUSE_CRUDE_HUT) {
+        auto house = b->dcast_house();
+        if (house && house->house_population() <= 0) {
+            return 0;
         }
-        // falltrougth
-    case BUILDING_HOUSE_STURDY_HUT:
-    case BUILDING_HOUSE_MEAGER_SHANTY:
-    case BUILDING_HOUSE_COMMON_SHANTY:
-        return SOUND_CHANNEL_CITY_HOUSE_SLUM;
-
-    case BUILDING_HOUSE_ROUGH_COTTAGE:
-    case BUILDING_HOUSE_ORDINARY_COTTAGE:
-    case BUILDING_HOUSE_MODEST_HOMESTEAD:
-    case BUILDING_HOUSE_SPACIOUS_HOMESTEAD:
-        return SOUND_CHANNEL_CITY_HOUSE_POOR;
-
-    case BUILDING_HOUSE_MODEST_APARTMENT:
-    case BUILDING_HOUSE_SPACIOUS_APARTMENT:
-    case BUILDING_HOUSE_COMMON_RESIDENCE:
-    case BUILDING_HOUSE_SPACIOUS_RESIDENCE:
-        return SOUND_CHANNEL_CITY_HOUSE_MEDIUM;
-
-    case BUILDING_HOUSE_ELEGANT_RESIDENCE:
-    case BUILDING_HOUSE_FANCY_RESIDENCE:
-    case BUILDING_HOUSE_COMMON_MANOR:
-    case BUILDING_HOUSE_SPACIOUS_MANOR:
-    case BUILDING_HOUSE_ELEGANT_MANOR:
-        return SOUND_CHANNEL_CITY_HOUSE_GOOD;
-
-    case BUILDING_HOUSE_STATELY_MANOR:
-    case BUILDING_HOUSE_MODEST_ESTATE:
-    case BUILDING_HOUSE_PALATIAL_ESTATE:
-        return SOUND_CHANNEL_CITY_HOUSE_POSH;
-
-    case BUILDING_TEMPLE_COMPLEX_OSIRIS:
-    case BUILDING_TEMPLE_COMPLEX_RA:
-    case BUILDING_TEMPLE_COMPLEX_PTAH:
-    case BUILDING_TEMPLE_COMPLEX_SETH:
-    case BUILDING_TEMPLE_COMPLEX_BAST:
-        return 0;
-
-    case BUILDING_LOW_BRIDGE:
-    case BUILDING_UNUSED_SHIP_BRIDGE_83:
-        return 0;
     }
 
-    return b->dcast()->sound_channel();
+    return building_static_params::get(b->type).sound_channel;
 }
 
 void sound_city_add_channel(int system_channel_index, int direction) {
@@ -167,13 +123,29 @@ int sound_city_building_channel(building* b) {
     return building_type_to_channel(b);
 }
 
+struct zoo_ambient_band_t {
+    int min_population;
+    e_sound_channel_city channel;
+};
+ANK_CONFIG_STRUCT(zoo_ambient_band_t, min_population, channel)
+svector<zoo_ambient_band_t, 8> ANK_VARIABLE(zoo_ambient_bands);
+
+static int zoo_ambient_channel() {
+    const int population = city_population().current;
+    int channel = SOUND_CHANNEL_CITY_NONE;
+    for (const auto& band : zoo_ambient_bands) {
+        if (population >= band.min_population) {
+            channel = band.channel;
+        }
+    }
+    return channel;
+}
+
 void sound_city_mark_building_view(building* b, int direction) {
     OZZY_PROFILER_FUNCTION()
 
-    if (b->state == BUILDING_STATE_VALID) {
-        if (building_impl *impl = b->dcast()) {
-            impl->add_ambient_sound(direction);
-        }
+    if (b->state == BUILDING_STATE_VALID && b->type == BUILDING_ZOO) {
+        sound_city_add_channel(zoo_ambient_channel(), direction);
     }
 
     const int system_channel_index = sound_city_building_channel(b);
