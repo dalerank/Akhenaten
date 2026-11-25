@@ -29,7 +29,12 @@ struct path : public bstring256 {
         for (; *c != 0; ++c) {
             if (*c == '/' && *mptr == '/') {
                 const bool keep_uri_separator = (mptr > data() && *(mptr - 1) == ':');
-                if (!keep_uri_separator) {
+#if defined(_WIN32)
+                const bool keep_unc_prefix = (mptr == data());
+#else
+                const bool keep_unc_prefix = false;
+#endif
+                if (!keep_uri_separator && !keep_unc_prefix) {
                     continue;
                 }
             }

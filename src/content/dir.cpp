@@ -42,8 +42,11 @@ static bool is_absolute_path(pcstr filepath) {
         return false;
     }
     if (platform.is_windows()) {
-        return std::isalpha(*filepath) && (*(filepath + 1) == ':')
-               && ((*(filepath + 2) == '/') || (*(filepath + 2) == '\\'));
+        const auto is_separator = [](char c) { return c == '/' || c == '\\'; };
+        if (is_separator(filepath[0]) && is_separator(filepath[1])) {
+            return true;
+        }
+        return std::isalpha(*filepath) && (*(filepath + 1) == ':') && is_separator(filepath[2]);
     }
     return (*filepath) == '/';
 }
