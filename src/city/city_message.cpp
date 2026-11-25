@@ -5,7 +5,7 @@
 
 #include "io/io_buffer.h"
 #include "scenario/scenario_event_manager.h"
-#include "content/vfs.h"
+#include "core/vfs/vfs.h"
 #include "core/encoding.h"
 #include "core/log.h"
 #include "core/string.h"

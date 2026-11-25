@@ -1,8 +1,8 @@
 #pragma once
 
-#include "content/dir.h"
-#include "content/reader.h"
-#include "content/content.h"
+#include "core/vfs/dir.h"
+#include "core/vfs/reader.h"
+#include "core/vfs/file_manager.h"
 
 #include <stdint.h>
 #include <stdio.h>

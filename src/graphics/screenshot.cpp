@@ -8,7 +8,7 @@
 #include "core/log.h"
 #include "color.h"
 #include "game/game_config.h"
-#include "content/vfs.h"
+#include "core/vfs/vfs.h"
 #include "grid/grid.h"
 #include "platform/arguments.h"
 #include "graphics/render_device.h"

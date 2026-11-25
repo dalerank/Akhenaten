@@ -1,6 +1,6 @@
 #include "platform/android/android.h"
 
-#include "content/content.h"
+#include "core/vfs/file_manager.h"
 #include "app/app.h"
 #include "core/log.h"
 #include "core/xvalue.h"

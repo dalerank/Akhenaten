@@ -9,7 +9,7 @@
 #include "core/vec2i.h"
 #include "core/core.h"
 #include "core/calc.h"
-#include "content/dir.h"
+#include "core/vfs/dir.h"
 #include "graphics/animation.h"
 #include "graphics/color.h"
 #include "building/building_type.h"

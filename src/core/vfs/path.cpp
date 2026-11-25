@@ -1,4 +1,4 @@
-#include "content/path.h"
+#include "core/vfs/path.h"
 
 #include "core/log.h"
 #include "core/string.h"

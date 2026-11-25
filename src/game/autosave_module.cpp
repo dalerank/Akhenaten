@@ -1,6 +1,6 @@
 #include "game/autosave_module.h"
 
-#include "content/vfs.h"
+#include "core/vfs/vfs.h"
 #include "core/app_module.h"
 #include "core/log.h"
 #include "core/xvalue.h"

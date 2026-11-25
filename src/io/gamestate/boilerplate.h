@@ -2,7 +2,7 @@
 
 #include <cstdint>
 #include <vector>
-#include "content/dir.h"
+#include "core/vfs/dir.h"
 #include "io/gamestate/save_versions.h"
 
 // Two numbers that are easy to confuse, so they get one accessor each:

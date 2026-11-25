@@ -6,9 +6,9 @@
 #include "core/bstring.h"
 #include "core/log.h"
 #include "game/game_config.h"
-#include "content/dir.h"
+#include "core/vfs/dir.h"
 #include "content/mods.h"
-#include "content/vfs.h"
+#include "core/vfs/vfs.h"
 #include "sound/channel.h"
 
 #include <cctype>

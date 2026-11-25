@@ -8,7 +8,7 @@
 #include "building/building_type.h"
 #include "city/city.h"
 #include "city/city_population.h"
-#include "content/vfs.h"
+#include "core/vfs/vfs.h"
 #include "game/game.h"
 #include "game/game_config.h"
 #include "io/gamestate/boilerplate.h"

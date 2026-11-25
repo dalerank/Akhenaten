@@ -1,6 +1,6 @@
 #include "js/test/js_test_common.h"
 
-#include "content/vfs.h"
+#include "core/vfs/vfs.h"
 #include "core/crc32.h"
 #include "figure/figure_type.h"
 

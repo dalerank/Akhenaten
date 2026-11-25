@@ -1,7 +1,7 @@
 #include "bink.h"
 
 #include "core/log.h"
-#include "content/vfs.h"
+#include "core/vfs/vfs.h"
 
 #include <SDL.h>
 

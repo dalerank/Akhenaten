@@ -1,9 +1,9 @@
 #include "integral_tests.h"
 
-#include "content/content.h"
-#include "content/dir.h"
+#include "core/vfs/file_manager.h"
+#include "core/vfs/dir.h"
 #include "content/imagepak.h"
-#include "content/vfs.h"
+#include "core/vfs/vfs.h"
 #include "app/app.h"
 #include "core/archive.h"
 #include "core/bstring.h"

@@ -1,8 +1,8 @@
 #include "js/test/js_test_common.h"
 
-#include "content/content.h"
-#include "content/dir.h"
-#include "content/vfs.h"
+#include "core/vfs/file_manager.h"
+#include "core/vfs/dir.h"
+#include "core/vfs/vfs.h"
 #include "graphics/image.h"
 #include "graphics/imagepak_holder.h"
 #include "graphics/render_stats.h"

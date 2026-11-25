@@ -6,7 +6,6 @@ building/building.cpp -> graphics/view/view.h
 building/building.cpp -> overlays/city_overlay.h
 building/building.cpp -> widget/city/flat_draw.h
 building/building.cpp -> widget/city/ornaments.h
-building/building.h -> content/dir.h
 building/building.h -> graphics/animation.h
 building/building.h -> graphics/color.h
 building/building_animation.cpp -> graphics/image.h
@@ -235,13 +234,11 @@ content/content_android.cpp -> platform/android/android.h
 content/content_vita.cpp -> platform/vita/vita.h
 content/imagepak.cpp -> platform/arguments.h
 content/imagepak.cpp -> platform/renderer.h
-content/vfs.cpp -> platform/android/android.h
 core/archive.cpp -> graphics/animation.h
 core/archive.cpp -> graphics/image_desc.h
 core/archive.h -> graphics/image_desc.h
 core/archive.h -> grid/point.h
 core/buffer.cpp -> grid/point.h
-core/buffer.h -> content/reader.h
 core/buffer.h -> grid/point.h
 core/calc.h -> grid/point.h
 core/encoding/korean.cpp -> graphics/image.h
@@ -283,7 +280,6 @@ figure/figure_impl.cpp -> dev/debug.h
 figure/figure_impl.cpp -> graphics/animkeys.h
 figure/figure_impl.cpp -> graphics/elements/ui.h
 figure/figure_impl.h -> sound/sound_walker.h
-figure/figure_phrase.cpp -> content/content.h
 figure/figure_properties.cpp -> widget/debug_console.h
 figure/figure_static_params.h -> graphics/animation.h
 figure/figure_static_params.h -> sound/sound_walker.h
@@ -418,7 +414,6 @@ game/game.cpp -> platform/arguments.h
 game/game.h -> graphics/animation.h
 game/game.h -> graphics/painter.h
 game/game_config.cpp -> dev/debug.h
-game/player_profile.h -> content/path.h
 game/resource.cpp -> graphics/image_groups.h
 game/tokens.cpp -> graphics/image_groups.h
 game/undo.cpp -> graphics/image.h
@@ -604,9 +599,7 @@ grid/water_supply.cpp -> graphics/image.h
 grid/water_supply.cpp -> graphics/image_groups.h
 grid/water_supply.cpp -> scenario/map.h
 grid/water_supply.cpp -> scenario/scenario.h
-io/chunk_container.h -> content/reader.h
 io/chunk_serializer.h -> content/file_formats.h
-io/gamefiles/lang.h -> content/dir.h
 io/gamefiles/smacker.h -> graphics/color.h
 io/gamestate/boilerplate.cpp -> dev/debug.h
 io/gamestate/boilerplate.cpp -> editor/editor.h
@@ -614,10 +607,7 @@ io/gamestate/boilerplate.cpp -> graphics/image.h
 io/gamestate/boilerplate.cpp -> window/file_dialog_common.h
 io/gamestate/boilerplate.cpp -> window/popup_dialog.h
 io/gamestate/boilerplate.cpp -> window/window_city.h
-io/gamestate/boilerplate.h -> content/dir.h
 io/gamestate/file_schemas.h -> content/file_formats.h
-io/io.cpp -> content/zipreader.hpp
-io/io.h -> content/dir.h
 overlays/city_overlay.cpp -> dev/debug.h
 resource/icons.cpp -> platform/renderer.h
 resource/icons.cpp -> platform/screen.h

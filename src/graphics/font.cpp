@@ -8,7 +8,7 @@
 #include "graphics/imagepak_holder.h"
 #include "graphics/render_device.h"
 #include "content/atlas_packer.h"
-#include "content/vfs.h"
+#include "core/vfs/vfs.h"
 #include "game/game_config.h"
 #include "game/game.h"
 #include "platform/arguments.h"

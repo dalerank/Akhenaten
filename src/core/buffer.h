@@ -5,7 +5,7 @@
 #include <vector>
 
 #include "grid/point.h"
-#include "content/reader.h"
+#include "core/vfs/reader.h"
 
 /**
  * @file

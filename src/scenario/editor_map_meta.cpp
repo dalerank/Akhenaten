@@ -1,6 +1,6 @@
 #include "editor_map_meta.h"
 
-#include "content/vfs.h"
+#include "core/vfs/vfs.h"
 #include "core/bstring.h"
 #include "game/game_environment.h"
 #include "game/resource.h"

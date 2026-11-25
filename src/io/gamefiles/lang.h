@@ -1,6 +1,6 @@
 #pragma once
 
-#include "content/dir.h"
+#include "core/vfs/dir.h"
 #include "core/string.h"
 #include "core/archive.h"
 #include "core/tokenum.h"

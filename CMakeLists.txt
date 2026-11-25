@@ -806,6 +806,7 @@ file(GLOB CORE_FILES ${PROJECT_SOURCE_DIR}/src/core/*.cpp)
 file(GLOB APP_FILES ${PROJECT_SOURCE_DIR}/src/app/*.cpp)
 file(GLOB NET_FILES ${PROJECT_SOURCE_DIR}/src/net/*.cpp)
 file(GLOB CORE_ENCODING_FILES ${PROJECT_SOURCE_DIR}/src/core/encoding/*.cpp)
+file(GLOB CORE_VFS_FILES ${PROJECT_SOURCE_DIR}/src/core/vfs/*.cpp)
 file(GLOB BUILDING_FILES ${PROJECT_SOURCE_DIR}/src/building/*.cpp)
 file(GLOB BUILDING_CONSTRUCTION_FILES ${PROJECT_SOURCE_DIR}/src/building/construction/*.cpp)
 file(GLOB CITY_FILES ${PROJECT_SOURCE_DIR}/src/city/*.cpp)
@@ -965,6 +966,7 @@ if(MSVC)
     source_group("app" FILES ${APP_FILES})
     source_group("net" FILES ${NET_FILES})
     source_group("core/encoding" FILES ${CORE_ENCODING_FILES})
+    source_group("core/vfs" FILES ${CORE_VFS_FILES})
     source_group("platform" FILES ${PLATFORM_FILES} )
     source_group("building" FILES ${BUILDING_FILES})
     source_group("building/construction" FILES ${BUILDING_CONSTRUCTION_FILES})
@@ -1056,6 +1058,7 @@ set(SOURCE_FILES
     ${GRAPHICS_ELEMENTS_FILES}
     ${BUILDING_CONSTRUCTION_FILES}
     ${CORE_ENCODING_FILES}
+    ${CORE_VFS_FILES}
     ${GRID_FILES}
     ${GRID_ROUTING_FILES}
     ${IMGUI_FILES}

@@ -1,6 +1,6 @@
 #include "file_formats.h"
 
-#include "content/vfs.h"
+#include "core/vfs/vfs.h"
 #include "core/bstring.h"
 
 struct format_alias {

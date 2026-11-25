@@ -1,10 +1,10 @@
 #include "asset_handler.h"
 
 #include "core/bstring.h"
-#include "content/vfs.h"
+#include "core/vfs/vfs.h"
 #include "platform/android/android.h"
 #include "platform/android/jni.h"
-#include "content/content.h"
+#include "core/vfs/file_manager.h"
 
 #include "android/asset_manager.h"
 #include "android/asset_manager_jni.h"

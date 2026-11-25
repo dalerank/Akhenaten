@@ -1,6 +1,6 @@
 #pragma once
 
-#include "content/vfs.h"
+#include "core/vfs/vfs.h"
 #include "core/svector.h"
 #include "core/xstring.h"
 

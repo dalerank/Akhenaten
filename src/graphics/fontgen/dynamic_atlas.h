@@ -5,7 +5,7 @@
 #include <string>
 #include "dynamic_font.h"
 #include "atlas_charset.h"
-#include "content/dir.h"
+#include "core/vfs/dir.h"
 
 namespace DynamicFont {
     struct Glyph {

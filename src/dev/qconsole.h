@@ -1,7 +1,7 @@
 #pragma once
 
 #include "dev/console_io.h"
-#include "content/path.h"
+#include "core/vfs/path.h"
 #include "core/xstring.h"
 
 #include <deque>

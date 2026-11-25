@@ -2,7 +2,7 @@
 
 #include "core/core.h"
 #include "core/xfunction.h"
-#include "content/path.h"
+#include "core/vfs/path.h"
 
 #include <vector>
 

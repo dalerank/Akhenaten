@@ -1,6 +1,6 @@
 #pragma once
 
-#include "content/path.h"
+#include "core/vfs/path.h"
 #include "core/xstring.h"
 #include "game/player_record.h"
 

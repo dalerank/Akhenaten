@@ -3,7 +3,7 @@
 #include "graphics/render_device.h"
 
 #include "content/file_formats.h"
-#include "content/vfs.h"
+#include "core/vfs/vfs.h"
 #include "core/string.h"
 #include "core/vec2i.h"
 #include "core/svector.h"

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "content/vfs.h"
+#include "core/vfs/vfs.h"
 #include "game/player_record.h"
 
 constexpr int MAX_HIGHSCORE_ENTRIES = 100;

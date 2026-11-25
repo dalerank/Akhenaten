@@ -5,7 +5,7 @@
 #include "graphics/text.h"
 #include "graphics/window.h"
 #include "graphics/elements/ui.h"
-#include "content/vfs.h"
+#include "core/vfs/vfs.h"
 #include "panel.h"
 #include <cstring>
 #include <cstdlib>

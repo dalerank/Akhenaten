@@ -8,7 +8,7 @@
 #include <SDL.h>
 
 #include "windows.h"
-#include "content/vfs.h"
+#include "core/vfs/vfs.h"
 
 uint32_t platform_init_sdl_flags() {
     return 0;

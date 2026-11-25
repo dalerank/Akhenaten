@@ -1,6 +1,6 @@
 #include "editor/editor.h"
 
-#include "content/vfs.h"
+#include "core/vfs/vfs.h"
 
 #define MAX_EDITOR_FILES 9
 

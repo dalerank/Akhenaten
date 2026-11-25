@@ -1,6 +1,6 @@
 #include "game_config.h"
 
-#include "content/vfs.h"
+#include "core/vfs/vfs.h"
 #include "core/log.h"
 #include "core/vec2i.h"
 

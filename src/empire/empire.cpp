@@ -26,7 +26,7 @@
 #include "core/log.h"
 #include "core/random.h"
 #include "game/simulation.h"
-#include "content/vfs.h"
+#include "core/vfs/vfs.h"
 #include <string>
 
 #include <algorithm>

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "content/vfs.h"
+#include "core/vfs/vfs.h"
 
 enum file_type {
     FILE_TYPE_SAVED_GAME = 0,

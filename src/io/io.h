@@ -1,7 +1,7 @@
 #pragma once
 
 #include "core/buffer.h"
-#include "content/dir.h"
+#include "core/vfs/dir.h"
 
 /**
  * @file

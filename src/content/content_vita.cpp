@@ -1,4 +1,4 @@
-#include "content.h"
+#include "core/vfs/file_manager.h"
 #include "platform/platform.h"
 
 #if defined(__vita__)

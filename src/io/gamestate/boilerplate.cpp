@@ -22,7 +22,7 @@
 #include "city/military.h"
 #include "city/city_resource.h"
 #include "core/bstring.h"
-#include "content/vfs.h"
+#include "core/vfs/vfs.h"
 #include "empire/empire.h"
 #include "empire/empire_map.h"
 #include "empire/type.h"

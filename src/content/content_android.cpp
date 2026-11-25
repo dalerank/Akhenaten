@@ -1,4 +1,4 @@
-#include "content.h"
+#include "core/vfs/file_manager.h"
 #include "platform/platform.h"
 
 #if defined(GAME_PLATFORM_ANDROID)
@@ -24,6 +24,18 @@ FILE *vfs::platform_file_manager_open_file(std::string_view filename, pcstr mode
 
 bool vfs::platform_file_manager_remove_file(const char *filename) {
     return android_remove_file(filename);
+}
+
+bool vfs::platform_file_manager_rename_file(pcstr from, pcstr to) {
+    return android_rename_file(from, to);
+}
+
+int vfs::platform_file_manager_create_directories(pcstr path) {
+    return android_create_directories(path);
+}
+
+int vfs::platform_file_manager_remove_directory(pcstr path) {
+    return android_remove_directory(path);
 }
 
 #endif

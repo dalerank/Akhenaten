@@ -1,10 +1,10 @@
-#include "content.h"
+#include "core/vfs/file_manager.h"
 
 #include "core/string.h"
 #include "core/log.h"
 #include "platform/platform.h"
-#include "content/vfs.h"
-#include "content/dir.h"
+#include "core/vfs/vfs.h"
+#include "core/vfs/dir.h"
 #include "platform/vita/vita.h"
 #include "platform/android/android.h"
 

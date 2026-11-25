@@ -1,7 +1,7 @@
 #pragma once
 
 #include "core/buffer.h"
-#include "content/vfs.h"
+#include "core/vfs/vfs.h"
 #include "content/file_formats.h"
 #include "io/io_buffer.h"
 #include "io/chunk_container.h"

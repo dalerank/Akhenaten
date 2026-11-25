@@ -17,7 +17,7 @@
 #include "graphics/image.h"
 #include "graphics/residency_atlas.h"
 #include "content/mods.h"
-#include "content/zipreader.hpp"
+#include "core/vfs/zipreader.hpp"
 
 #include "game/game.h"
 

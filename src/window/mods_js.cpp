@@ -1,7 +1,7 @@
 #include "content/mods.h"
 
 #include "core/profiler.h"
-#include "content/content.h"
+#include "core/vfs/file_manager.h"
 #include "js/js_game.h"
 
 int __mods_count() { return (int)g_mods.list.size(); } ANK_FUNCTION(__mods_count)

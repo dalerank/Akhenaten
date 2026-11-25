@@ -4,8 +4,8 @@
 #include "core/svector.h"
 #include "core/custom_span.hpp"
 #include "game/game_events.h"
-#include "content/dir.h"
-#include "content/vfs.h"
+#include "core/vfs/dir.h"
+#include "core/vfs/vfs.h"
 #include "sound/channel.h"
 #include "game/sound_effect.h"
 #include <array>

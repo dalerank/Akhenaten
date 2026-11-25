@@ -1,5 +1,5 @@
 // This file is part of CaesarIA.
-#include "zipreader.hpp"
+#include "core/vfs/zipreader.hpp"
 
 #include <zlib.h>
 #include "lzma/LzmaDec.h"

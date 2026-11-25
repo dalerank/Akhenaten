@@ -14,7 +14,7 @@
 #include "core/settings_vars.h"
 #include "game/game_config.h"
 #include "js/js_defines.h"
-#include "content/vfs.h"
+#include "core/vfs/vfs.h"
 
 #include <SDL.h>
 #include "imgui.h"

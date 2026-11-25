@@ -3,7 +3,7 @@
 #include "core/log.h"
 #include "core/buffer.h"
 #include "core/string.h"
-#include "content/vfs.h"
+#include "core/vfs/vfs.h"
 #include "io/io.h"
 #include "game/player_profile.h"
 #include "js/js_register.h"

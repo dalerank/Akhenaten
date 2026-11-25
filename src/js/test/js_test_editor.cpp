@@ -7,7 +7,7 @@
 #include "graphics/image.h"
 
 #include "building/building_delivery_path.h"
-#include "content/vfs.h"
+#include "core/vfs/vfs.h"
 #include "core/log.h"
 #include "figure/formation.h"
 #include "game/file_editor.h"

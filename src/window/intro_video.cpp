@@ -2,7 +2,7 @@
 #include "sound/sound_music.h"
 
 #include "core/log.h"
-#include "content/vfs.h"
+#include "core/vfs/vfs.h"
 #include "graphics/graphics.h"
 #include "graphics/elements/ui.h"
 #include "graphics/screen.h"

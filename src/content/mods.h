@@ -4,10 +4,10 @@
 #include <cstring>
 
 #include "core/xstring.h"
-#include "content/dir.h"
+#include "core/vfs/dir.h"
 #include <memory>
 #include <vector>
-#include "content/vfs.h"
+#include "core/vfs/vfs.h"
 #include "core/hvector.h"
 #include "core/archive.h"
 

@@ -2,7 +2,7 @@
 
 #include "input/hotkey.h"
 #include "input/keyboard.h"
-#include "content/vfs.h"
+#include "core/vfs/vfs.h"
 #include "core/log.h"
 #include "game/game_events.h"
 #include "js/js_register.h"

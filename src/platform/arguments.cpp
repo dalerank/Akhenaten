@@ -5,7 +5,7 @@
 #include "app/app.h"
 #include "core/bstring.h"
 #include "core/log.h"
-#include "content/vfs.h"
+#include "core/vfs/vfs.h"
 #include "game/game.h"
 
 #include <cstring>

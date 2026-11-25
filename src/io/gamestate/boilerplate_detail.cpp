@@ -17,7 +17,7 @@
 #include "city/city_resource.h"
 #include "city/coverage.h"
 #include "city/map.h"
-#include "content/vfs.h"
+#include "core/vfs/vfs.h"
 #include "core/buffer.h"
 #include "core/profiler.h"
 #include "empire/empire.h"

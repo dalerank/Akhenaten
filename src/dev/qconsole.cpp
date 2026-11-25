@@ -1,6 +1,6 @@
 #include "qconsole.h"
 
-#include "content/vfs.h"
+#include "core/vfs/vfs.h"
 #include "game/game_events_history.h"
 
 #include <climits>

@@ -1,7 +1,7 @@
 #pragma once
 
 #include "graphics/image.h"
-#include "content/vfs.h"
+#include "core/vfs/vfs.h"
 #include "core/xstring.h"
 #include "core/bstring.h"
 #include "core/custom_span.hpp"

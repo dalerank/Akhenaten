@@ -1,6 +1,6 @@
 #include "player_profile.h"
 
-#include "content/vfs.h"
+#include "core/vfs/vfs.h"
 #include "core/buffer.h"
 #include "core/log.h"
 #include "core/string.h"

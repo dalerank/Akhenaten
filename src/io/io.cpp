@@ -1,7 +1,7 @@
 #include "io.h"
 
-#include "content/vfs.h"
-#include "content/zipreader.hpp"
+#include "core/vfs/vfs.h"
+#include "core/vfs/zipreader.hpp"
 #include "platform/platform.h"
 
 #include <algorithm>

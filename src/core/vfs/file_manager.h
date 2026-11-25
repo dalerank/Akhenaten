@@ -55,6 +55,10 @@ FILE *platform_file_manager_open_file(std::string_view filename, pcstr mode);
  */
 bool platform_file_manager_remove_file(const char *filename);
 
+bool platform_file_manager_rename_file(pcstr from, pcstr to);
+int platform_file_manager_create_directories(pcstr path);
+int platform_file_manager_remove_directory(pcstr path);
+
 std::pair<void*, uint32_t> internal_file_open(pcstr path);
 std::pair<void*, uint32_t> internal_resource_open(pcstr path);
 xstring platform_unpack_scripts();

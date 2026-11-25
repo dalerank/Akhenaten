@@ -6,7 +6,7 @@
 #include "city/city_figures.h"
 #include "city/city_population.h"
 #include "city/city_buildings.h"
-#include "content/vfs.h"
+#include "core/vfs/vfs.h"
 #include "figure/figure.h"
 #include "io/gamestate/boilerplate.h"
 #include "io/og_save/og_save.h"

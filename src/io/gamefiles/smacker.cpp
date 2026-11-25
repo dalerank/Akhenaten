@@ -1,7 +1,7 @@
 #include "smacker.h"
 
 #include "core/log.h"
-#include "content/vfs.h"
+#include "core/vfs/vfs.h"
 
 #include <stdint.h>
 #include <stdlib.h>

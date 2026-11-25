@@ -6,7 +6,7 @@
 #include <unordered_map>
 #include <vector>
 
-#include "content/vfs.h"
+#include "core/vfs/vfs.h"
 #include "core/log.h"
 #include "js/js_game.h"
 #include "mujs/mujs.h"

@@ -1,7 +1,7 @@
 #include "js_folder_notifier.h"
 
-#include "content/dir.h"
-#include "content/vfs.h"
+#include "core/vfs/dir.h"
+#include "core/vfs/vfs.h"
 #include "core/log.h"
 #include "core/svector.h"
 #include "core/bstring.h"

@@ -2,7 +2,7 @@
 
 #include "core/core.h"
 #include "core/hvector.h"
-#include "content/reader.h"
+#include "core/vfs/reader.h"
 
 #include <cstdint>
 #include <cstdio>

@@ -1,9 +1,8 @@
-#include "dir.h"
+#include "core/vfs/dir.h"
 
-#include "content/vfs.h"
+#include "core/vfs/vfs.h"
 #include "core/string.h"
-#include "game/game_config.h"
-#include "content/content.h"
+#include "core/vfs/file_manager.h"
 #include "platform/platform.h"
 
 #include <stdlib.h>

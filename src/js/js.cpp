@@ -1,6 +1,6 @@
 #include "js.h"
 
-#include "content/dir.h"
+#include "core/vfs/dir.h"
 #include "core/log.h"
 #include "core/profiler.h"
 #include "graphics/window.h"

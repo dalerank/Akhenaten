@@ -1,7 +1,7 @@
 #pragma once
 
 #include "lame.h"
-#include "content/vfs.h"
+#include "core/vfs/vfs.h"
 
 struct lame_helper {
 	static const int PCM_SIZE = 4096;

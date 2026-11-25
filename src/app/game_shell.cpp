@@ -16,7 +16,7 @@
 #include "game/game_config.h"
 #include "config/hotkeys.h"
 #include "io/gamefiles/lang.h"
-#include "content/vfs.h"
+#include "core/vfs/vfs.h"
 #include "platform/arguments.h"
 #include "platform/platform.h"
 #include "game/mission.h"

@@ -1,4 +1,4 @@
-#include "content/vfs.h"
+#include "core/vfs/vfs.h"
 
 #include "cmrc/cmrc.hpp"
 #include "js/js_register.h"

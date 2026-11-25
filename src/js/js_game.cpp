@@ -1,7 +1,7 @@
 #include "js_game.h"
 #include "sound/sound_speech.h"
 
-#include "content/vfs.h"
+#include "core/vfs/vfs.h"
 #include "core/log.h"
 #include "core/settings_vars.h"
 #include "platform/arguments.h"

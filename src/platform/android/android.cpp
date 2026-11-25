@@ -1,11 +1,11 @@
 #include "android.h"
 
 #include "core/bstring.h"
-#include "content/dir.h"
-#include "content/vfs.h"
+#include "core/vfs/dir.h"
+#include "core/vfs/vfs.h"
 #include "platform/android/asset_handler.h"
 #include "platform/android/jni.h"
-#include "content/content.h"
+#include "core/vfs/file_manager.h"
 
 #include <SDL.h>
 #include <string.h>

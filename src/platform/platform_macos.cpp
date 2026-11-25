@@ -8,7 +8,7 @@
 #include <SDL.h>
 #include <pwd.h>
 
-#include "content/vfs.h"
+#include "core/vfs/vfs.h"
 #include <unistd.h>
 
 #if defined(GAME_PLATFORM_IOS)

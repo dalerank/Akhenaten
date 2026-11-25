@@ -1,7 +1,7 @@
 #include "figure_phrase.h"
 
 #include "io/gamefiles/lang.h"
-#include "content/content.h"
+#include "core/vfs/file_manager.h"
 #include "core/bstring.h"
 #include "core/log.h"
 #include "figure/figure.h"

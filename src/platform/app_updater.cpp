@@ -1,7 +1,7 @@
 #include "platform/app_updater.h"
 
-#include "content/vfs.h"
-#include "content/zipreader.hpp"
+#include "core/vfs/vfs.h"
+#include "core/vfs/zipreader.hpp"
 #include "app/app.h"
 #include "core/log.h"
 #include "game/game.h"

@@ -56,7 +56,6 @@ static const std::set<std::string> INFRASTRUCTURE = {
   "js/js_struct.h",
   "io/io_buffer.h",
   "platform/platform.h",
-  "content/vfs.h",
 };
 
 static const std::set<std::string> IGNORED_DIRS = {"mujs", "lame", "bzip", "lzma", "scripts"};

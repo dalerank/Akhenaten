@@ -1,10 +1,10 @@
-#include "vfs.h"
+#include "core/vfs/vfs.h"
 
 #include "core/string.h"
 #include "core/log.h"
 #include "platform/platform.h"
-#include "zipreader.hpp"
-#include "reader.h"
+#include "core/vfs/zipreader.hpp"
+#include "core/vfs/reader.h"
 
 #include <filesystem>
 #include <algorithm>
@@ -15,10 +15,6 @@
 #include <sstream>
 #include <memory>
 #include <string>
-
-#if defined(GAME_PLATFORM_ANDROID)
-#include "platform/android/android.h"
-#endif
 
 #if defined( __EMSCRIPTEN__ )
 #include <emscripten.h>
@@ -267,7 +263,7 @@ bool file_rename_os(path from, path to) {
     }
 
 #if defined(GAME_PLATFORM_ANDROID)
-    if (::android_rename_file(from.c_str(), to.c_str())) {
+    if (platform_file_manager_rename_file(from.c_str(), to.c_str())) {
         sync_em_fs();
         return true;
     }
@@ -382,7 +378,7 @@ bool mount_pack(path filename) {
 void create_folders(path folder_path) {
 #if defined(GAME_PLATFORM_ANDROID)
     if (!folder_path.empty()) {
-        ::android_create_directories(folder_path.c_str());
+        platform_file_manager_create_directories(folder_path.c_str());
     }
     return;
 #else
@@ -402,7 +398,7 @@ void sync_em_fs() {
 
 void remove_folder(path folder_path) {
 #if defined(GAME_PLATFORM_ANDROID)
-    ::android_remove_directory(folder_path.c_str());
+    platform_file_manager_remove_directory(folder_path.c_str());
 #else
     folder_path = content_path(folder_path);
     std::filesystem::remove_all(folder_path.c_str());

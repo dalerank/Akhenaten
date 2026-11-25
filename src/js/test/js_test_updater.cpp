@@ -1,6 +1,6 @@
 #include "js/test/js_test_common.h"
 
-#include "content/zipreader.hpp"
+#include "core/vfs/zipreader.hpp"
 #include "core/xstring.h"
 #include "platform/app_updater.h"
 

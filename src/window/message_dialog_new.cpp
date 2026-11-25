@@ -30,7 +30,7 @@
 #include "graphics/view/view.h"
 #include "graphics/window.h"
 #include "graphics/screen.h"
-#include "content/vfs.h"
+#include "core/vfs/vfs.h"
 #include "input/input.h"
 #include "input/mouse.h"
 #include "input/scroll.h"

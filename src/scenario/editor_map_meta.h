@@ -1,6 +1,6 @@
 #pragma once
 
-#include "content/vfs.h"
+#include "core/vfs/vfs.h"
 #include "scenario/editor.h"
 
 vfs::path editor_map_meta_path(pcstr map_path);

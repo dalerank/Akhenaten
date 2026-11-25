@@ -1,6 +1,6 @@
 #include "io/og_save/og_save.h"
 
-#include "content/vfs.h"
+#include "core/vfs/vfs.h"
 #include "core/zip.h"
 
 #include <cstdio>

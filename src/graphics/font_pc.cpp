@@ -1,5 +1,5 @@
 #include "graphics/font.h"
-#include "content/vfs.h"
+#include "core/vfs/vfs.h"
 #include "core/bstring.h"
 #include "core/log.h"
 #include "fontgen/dynamic_atlas.h"

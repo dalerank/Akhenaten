@@ -1,6 +1,6 @@
 #include "imgui_qconsole.h"
 
-#include "content/vfs.h"
+#include "core/vfs/vfs.h"
 #include "platform/platform.h"
 
 #include <algorithm>

@@ -3,7 +3,7 @@
 #include "core/encoding.h"
 #include "core/tokenum.h"
 #include "font_common.h"
-#include "content/dir.h"
+#include "core/vfs/dir.h"
 
 #include <stdint.h>
 #include <unordered_map>
