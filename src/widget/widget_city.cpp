@@ -120,7 +120,6 @@ struct water_frame_queue_t {
 };
 static water_frame_queue_t g_water_frame_queue;
 
-static sound_view_queue_t g_sound_view_queue;
 
 void screen_city_t::apply_water_frames() {
     g_water_frame_queue.apply();
@@ -144,7 +143,7 @@ void screen_city_t::update_zoom_level(painter &ctx) {
     if (g_zoom.update_value(&offset)) {
         g_camera.refresh_viewport();
         g_camera.go_to_pixel(offset, true);
-        sound_city_decay_views();
+        sound_city().decay_views();
     }
 }
 
@@ -156,7 +155,7 @@ void screen_city_t::scroll_map(const mouse* m) {
         // OG halves the views once per scrolled tile (city_view.c); pixel scrolling would halve them every
         // frame and keep the city silent while the camera moves.
         if (g_camera.tile_internal != before) {
-            sound_city_decay_views();
+            sound_city().decay_views();
         }
     }
 }
@@ -452,10 +451,10 @@ void screen_city_t::draw_isometric_mark_sound(int building_id, int grid_offset, 
         }
 
         if (!game.redraw_read_only) {
-            g_sound_view_queue.push(building_id, grid_offset, direction, pixel);
+            sound_city().view_queue.push(building_id, grid_offset, direction, pixel);
         }
     } else if (!game.redraw_read_only) {
-        g_sound_view_queue.push(0, grid_offset, direction, pixel);
+        sound_city().view_queue.push(0, grid_offset, direction, pixel);
     }
 }
 
@@ -529,7 +528,7 @@ void screen_city_t::draw_without_overlay(painter &ctx, int selected_figure_id) {
             draw_ornaments_flat
         );
         g_water_frame_queue.apply();
-        g_sound_view_queue.apply();
+        sound_city().view_queue.apply();
         g_camera.foreach_valid_map_tile(ctx,
             [this](vec2i pixel, tile2i tile, painter& ctx) { draw_isometric_terrain_height(pixel, tile, ctx); }
         );
@@ -566,7 +565,7 @@ void screen_city_t::draw_without_overlay(painter &ctx, int selected_figure_id) {
 
         // The height pass reads these tiles back, as it did when the flat pass wrote in place.
         g_water_frame_queue.apply();
-        g_sound_view_queue.apply();
+        sound_city().view_queue.apply();
 
         for (size_t blk = 0; blk < num_blocks; blk++) {
             const int y_start = block_start(blk);

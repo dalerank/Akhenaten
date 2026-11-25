@@ -58,7 +58,7 @@ static void update_zoom_level() {
     if (g_zoom.update_value(&offset)) {
         g_camera.refresh_viewport();
         g_camera.go_to_pixel(offset, true);
-        sound_city_decay_views();
+        sound_city().decay_views();
     }
 }
 
@@ -108,7 +108,7 @@ static void scroll_map(const mouse* m) {
     vec2i delta = g_scroll.get_delta(m, scroll_t::type::city);
     if (delta.x || delta.y) {
         g_camera.scroll(delta.x, delta.y);
-        sound_city_decay_views();
+        sound_city().decay_views();
     }
 }
 

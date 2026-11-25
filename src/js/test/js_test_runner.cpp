@@ -343,7 +343,7 @@ void __test_sound_emit_track(pcstr track) {
 ANK_FUNCTION_1(__test_sound_emit_track);
 
 pcstr __test_sound_ambient_summary() {
-    return sound_city_ambient_summary();
+    return sound_city().ambient_summary();
 }
 ANK_FUNCTION(__test_sound_ambient_summary);
 

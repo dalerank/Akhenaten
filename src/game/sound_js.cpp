@@ -14,10 +14,14 @@
 
 using sound_channel_t = sound_manager_t::channel_t;
 
-void __sound_city_init() { sound_city_init(); }
+void __sound_city_init() {
+    sound_city().init();
+}
 ANK_FUNCTION(__sound_city_init)
 
-void __sound_city_stop() { sound_city_stop(); }
+void __sound_city_stop() {
+    sound_city().stop();
+}
 ANK_FUNCTION(__sound_city_stop)
 
 int __sound_channel_count() {

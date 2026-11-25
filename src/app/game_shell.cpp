@@ -210,7 +210,7 @@ void game_t::frame_begin() {
 void game_t::city_sounds_frame_begin() {
     OZZY_PROFILER_FUNCTION();
     if (g_window_manager.current_window && g_window_manager.current_window->city_sounds) {
-        sound_city_play();
+        sound_city().play();
     }
 }
 

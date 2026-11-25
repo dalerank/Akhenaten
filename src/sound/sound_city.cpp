@@ -3,6 +3,7 @@
 #include "city/city_population.h"
 #include "core/svector.h"
 #include "core/main_thread.h"
+#include "core/xvalue.h"
 
 #include "game/game_config.h"
 
@@ -32,35 +33,33 @@
 // OG savegame city_sounds chunk holds 70 channels (8960 bytes); later channels are runtime-only.
 #define MAX_CHANNELS                ((int)std::tuple_size<decltype(city_sounds_t::channels)>::value)
 
-city_sounds_t g_city_sounds;
-
-void sound_city_clear_names() {
-    g_city_sounds.names.fill(xstring());
-    g_city_sounds.building_channels.fill(-1);
+sound_city_t& sound_city() {
+    return xvalue<sound_city_t>::ref();
 }
 
-void sound_city_set_name(int channel, xstring id) {
+void sound_city_t::clear_names() {
+    sounds.names.fill(xstring());
+    sounds.building_channels.fill(-1);
+}
+
+void sound_city_t::set_name(int channel, xstring id) {
     const int index = channel - SOUND_CHANNEL_CITY_MIN;
     if (index < 0 || index >= MAX_CHANNELS) {
         return;
     }
-    g_city_sounds.names[index] = id;
+    sounds.names[index] = id;
 }
 
-int sound_city_channel(const xstring& id) {
+int sound_city_t::channel(const xstring& id) const {
     if (id.empty()) {
         return 0;
     }
     for (int i = 0; i < MAX_CHANNELS; i++) {
-        if (g_city_sounds.names[i] == id) {
+        if (sounds.names[i] == id) {
             return SOUND_CHANNEL_CITY_MIN + i;
         }
     }
     return 0;
-}
-
-const city_sounds_t &sound_city_channels() {
-    return g_city_sounds;
 }
 
 // OG city_view.c is_silent_venue: quiet while enemies are in the city or when unstaffed.
@@ -69,17 +68,15 @@ static bool is_silent_venue(e_building_type type) {
            || type == BUILDING_PAVILLION || type == BUILDING_ZOO;
 }
 
-void sound_city_init();
-
 static void sound_city_subscribe_events() {
-    sound_city_init();
-    events::subscribe([](event_level_post_load) { sound_city_init(); });
+    sound_city().init();
+    events::subscribe([](event_level_post_load) { sound_city().init(); });
 }
 static events::session_subscriber g_sound_city_session(&sound_city_subscribe_events);
 
-void sound_city_init() {
-    auto &channels = g_city_sounds.channels;
-    g_city_sounds.last_update_time = time_get_millis();
+void sound_city_t::init() {
+    auto& channels = sounds.channels;
+    sounds.last_update_time = time_get_millis();
     memset(channels.data(), 0, channels.size() * sizeof(city_sound_channel));
 
     int i = SOUND_CHANNEL_CITY_MIN;
@@ -92,11 +89,11 @@ void sound_city_init() {
     }
 }
 
-void sound_city_stop() {
+void sound_city_t::stop() {
     g_sound.stop_city_channels();
 }
 
-int building_type_to_channel(building *b) {
+int sound_city_t::building_type_channel(building* b) {
     if (b->type == BUILDING_HOUSE_CRUDE_HUT) {
         auto house = b->dcast_house();
         if (house && house->house_population() <= 0) {
@@ -104,19 +101,19 @@ int building_type_to_channel(building *b) {
         }
     }
 
-    int16_t& channel = g_city_sounds.building_channels[b->type];
+    int16_t& channel = sounds.building_channels[b->type];
     if (channel < 0) {
-        channel = (int16_t)sound_city_channel(building_static_params::get(b->type).city_sound);
+        channel = (int16_t)this->channel(building_static_params::get(b->type).city_sound);
     }
     return channel;
 }
 
-void sound_city_add_channel(int system_channel_index, int direction) {
+void sound_city_t::add_channel(int system_channel_index, int direction) {
     main_thread::check("sound_city_add_channel");
     if (!system_channel_index) {
         return;
     }
-    auto& slot = g_city_sounds.channels[system_channel_index - SOUND_CHANNEL_CITY_MIN];
+    auto& slot = sounds.channels[system_channel_index - SOUND_CHANNEL_CITY_MIN];
     slot.available = 1;
     ++slot.total_views;
     ++slot.direction_views[direction];
@@ -130,19 +127,19 @@ struct terrain_sound_t {
 ANK_CONFIG_STRUCT(terrain_sound_t, terrain, sound)
 svector<terrain_sound_t, 16> ANK_VARIABLE(terrain_sounds);
 
-void sound_city_mark_terrain_view(int terrain, int grid_offset, int direction) {
+void sound_city_t::mark_terrain_view(int terrain, int grid_offset, int direction) {
     for (auto& t : terrain_sounds) {
         if (terrain & t.terrain) {
             if (t.channel < 0) {
-                t.channel = sound_city_channel(t.sound);
+                t.channel = this->channel(t.sound);
             }
-            sound_city_add_channel(t.channel, direction);
+            add_channel(t.channel, direction);
             return;
         }
     }
 }
 
-int sound_city_building_channel(building* b) {
+int sound_city_t::building_channel(building* b) {
     if (b->state != BUILDING_STATE_VALID) {
         return 0;
     }
@@ -152,7 +149,7 @@ int sound_city_building_channel(building* b) {
     if (is_silent_venue(type) && (city_figures().enemies > 0 || b->num_workers < 1)) {
         return 0;
     }
-    return building_type_to_channel(b);
+    return building_type_channel(b);
 }
 
 struct zoo_ambient_band_t {
@@ -163,13 +160,13 @@ struct zoo_ambient_band_t {
 ANK_CONFIG_STRUCT(zoo_ambient_band_t, min_population, sound)
 svector<zoo_ambient_band_t, 8> ANK_VARIABLE(zoo_ambient_bands);
 
-static int zoo_ambient_channel() {
+int sound_city_t::zoo_ambient_channel() {
     const int population = city_population().current;
     int channel = 0;
     for (auto& band : zoo_ambient_bands) {
         if (population >= band.min_population) {
             if (band.channel < 0) {
-                band.channel = sound_city_channel(band.sound);
+                band.channel = this->channel(band.sound);
             }
             channel = band.channel;
         }
@@ -177,19 +174,19 @@ static int zoo_ambient_channel() {
     return channel;
 }
 
-void sound_city_mark_building_view(building* b, int direction) {
+void sound_city_t::mark_building_view(building* b, int direction) {
     OZZY_PROFILER_FUNCTION()
 
     if (b->state == BUILDING_STATE_VALID && b->type == BUILDING_ZOO) {
-        sound_city_add_channel(zoo_ambient_channel(), direction);
+        add_channel(zoo_ambient_channel(), direction);
     }
 
-    const int system_channel_index = sound_city_building_channel(b);
-    sound_city_add_channel(system_channel_index, direction);
+    const int system_channel_index = building_channel(b);
+    add_channel(system_channel_index, direction);
 }
 
-void sound_city_decay_views(void) {
-    auto &channels = g_city_sounds.channels;
+void sound_city_t::decay_views() {
+    auto& channels = sounds.channels;
 
     for (int i = 0; i < MAX_CHANNELS; i++) {
         for (int d = 0; d < 5; d++)
@@ -232,14 +229,12 @@ static void sound_city_play_channel(int channel, int direction) {
     g_sound.play_channel_panned(channel, game_features::gameopt_sound_city_volume.to_int(), left_pan, right_pan);
 }
 
-static bool sound_city_ambient_play();
-
-void sound_city_play() {
-    if (sound_city_ambient_play()) {
+void sound_city_t::play() {
+    if (ambient_play()) {
         return;
     }
 
-    auto &channels = g_city_sounds.channels;
+    auto& channels = sounds.channels;
     time_millis now = time_get_millis();
     for (int i = 0; i < MAX_CHANNELS; i++) {
         channels[i].should_play = 0;
@@ -257,7 +252,7 @@ void sound_city_play() {
         }
     }
 
-    if (now - g_city_sounds.last_update_time < 2000) {
+    if (now - sounds.last_update_time < 2000) {
         // Only play 1 sound every 2 seconds
         return;
     }
@@ -291,7 +286,7 @@ void sound_city_play() {
     }
 
     sound_city_play_channel(channel, direction);
-    g_city_sounds.last_update_time = now;
+    sounds.last_update_time = now;
     channels[max_sound_id].last_played_time = now;
     channels[max_sound_id].total_views = 0;
     for (int d = 0; d < 5; d++) {
@@ -320,20 +315,6 @@ namespace {
     // next_play while the sample plays: the gap is drawn once it has ended.
     constexpr time_millis ambient_replay_pending = 0;
 
-    struct ambient_seen {
-        int tiles = 0;
-        float best_dist = 0.f;
-        int best_x = 0;
-    };
-
-    struct ambient_voice {
-        int channel = 0;
-        float gain = 0.f;
-        float target = 0.f;
-        float pan = 0.5f;
-        time_millis next_play = 0;
-        bool active = false;
-    };
 
     struct ambient_choice {
         int channel;
@@ -341,56 +322,40 @@ namespace {
         float pan;
     };
 
-    struct city_ambient_t {
-        std::array<ambient_seen, MAX_CHANNELS> seen;
-        std::array<ambient_voice, ambient_voice_slots> voices;
-        vec2i last_camera = {-1, -1};
-        vec2i view_offset = {0, 0};
-        vec2i view_size = {0, 0};
-        float duck = 1.f;
-        time_millis last_ms = 0;
-        bool running = false;
-        // Cosmetic: never the simulation LFSR, crt_rand or libc rand().
-        std::minstd_rand rng{std::random_device{}()};
-        std::string summary;
-
-        void reset() {
-            for (auto& v : voices) {
-                if (v.active) {
-                    g_sound.stop_city_channel(v.channel);
-                }
-                v = {};
-            }
-            seen.fill({});
-            last_camera = {-1, -1};
-            duck = 1.f;
-            running = false;
-            summary.clear();
-        }
-    };
-
-    city_ambient_t g_city_ambient;
-
     float approach(float value, float target, float step) {
         return value < target ? std::min(target, value + step) : std::max(target, value - step);
     }
 
 } // namespace
 
-void sound_city_ambient_note(int channel, vec2i pixel) {
+void city_ambient_t::reset() {
+    for (auto& v : voices) {
+        if (v.active) {
+            g_sound.stop_city_channel(v.channel);
+        }
+        v = {};
+    }
+    seen.fill({});
+    last_camera = {-1, -1};
+    duck = 1.f;
+    running = false;
+    summary.clear();
+}
+
+void sound_city_t::ambient_note(int channel, vec2i pixel) {
     main_thread::check("sound_city_ambient_note");
     const int index = channel - SOUND_CHANNEL_CITY_MIN;
     if (index < 0 || index >= MAX_CHANNELS) {
         return;
     }
 
-    auto& a = g_city_ambient;
+    auto& a = ambient;
     a.view_offset = g_camera.offset;
     a.view_size = g_camera.size_pixels;
     const float dx = (float)(pixel.x - (a.view_offset.x + a.view_size.x / 2));
     const float dy = (float)(pixel.y - (a.view_offset.y + a.view_size.y / 2));
     const float dist = std::sqrt(dx * dx + dy * dy);
-    ambient_seen& s = a.seen[index];
+    city_ambient_t::seen_t& s = a.seen[index];
     if (!s.tiles || dist < s.best_dist) {
         s.best_dist = dist;
         s.best_x = pixel.x;
@@ -398,20 +363,20 @@ void sound_city_ambient_note(int channel, vec2i pixel) {
     s.tiles++;
 }
 
-void sound_city_ambient_reset() {
-    g_city_ambient.reset();
+void sound_city_t::ambient_reset() {
+    ambient.reset();
 }
 
-const char* sound_city_ambient_summary() {
-    return g_city_ambient.summary.c_str();
+const char* sound_city_t::ambient_summary() const {
+    return ambient.summary.c_str();
 }
 
 // Enhanced model: every building drawn this frame is a source; per sample the nearest one sets the gain (by its
 // distance to the screen centre, scaled by how much of it is on screen) and the pan (its x). The loudest
 // max_voices samples play, gains crossfade when the set changes and duck while the camera moves; a voice
 // replays its sample after a random gap. Returns false when the feature is off, so the OG model runs.
-static bool sound_city_ambient_play() {
-    auto& a = g_city_ambient;
+bool sound_city_t::ambient_play() {
+    auto& a = ambient;
     if (!game_features::gameplay_enhanced_city_ambient) {
         if (a.running) {
             a.reset();
@@ -429,7 +394,7 @@ static bool sound_city_ambient_play() {
       = std::max(1.f, 0.5f * std::sqrt((float)(a.view_size.x * a.view_size.x + a.view_size.y * a.view_size.y)));
     std::vector<ambient_choice> chosen;
     for (int i = 0; i < MAX_CHANNELS; i++) {
-        const ambient_seen& s = a.seen[i];
+        const city_ambient_t::seen_t& s = a.seen[i];
         if (!s.tiles) {
             continue;
         }
@@ -464,11 +429,12 @@ static bool sound_city_ambient_play() {
     }
     for (const auto& c : chosen) {
         auto has = std::find_if(a.voices.begin(), a.voices.end(),
-          [&](const ambient_voice& v) { return v.active && v.channel == c.channel; });
+          [&](const city_ambient_t::voice_t& v) { return v.active && v.channel == c.channel; });
         if (has != a.voices.end()) {
             continue;
         }
-        auto slot = std::find_if(a.voices.begin(), a.voices.end(), [](const ambient_voice& v) { return !v.active; });
+        auto slot
+          = std::find_if(a.voices.begin(), a.voices.end(), [](const city_ambient_t::voice_t& v) { return !v.active; });
         if (slot == a.voices.end()) {
             continue;
         }

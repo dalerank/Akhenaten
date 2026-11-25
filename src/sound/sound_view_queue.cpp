@@ -21,14 +21,14 @@ void sound_view_queue_t::apply() {
         const entry& en = entries[i];
         if (en.building_id) {
             building* b = building_get(en.building_id);
-            sound_city_mark_building_view(b, en.direction);
+            sound_city().mark_building_view(b, en.direction);
             if (!!game_features::gameplay_enhanced_city_ambient) {
-                if (const int channel = sound_city_building_channel(b)) {
-                    sound_city_ambient_note(channel, en.pixel);
+                if (const int channel = sound_city().building_channel(b)) {
+                    sound_city().ambient_note(channel, en.pixel);
                 }
             }
         } else {
-            sound_city_mark_terrain_view(map_terrain_get(en.grid_offset), en.grid_offset, en.direction);
+            sound_city().mark_terrain_view(map_terrain_get(en.grid_offset), en.grid_offset, en.direction);
         }
     }
     count.store(0, std::memory_order_relaxed);

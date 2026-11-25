@@ -5,9 +5,12 @@
 #include "core/tokenum.h"
 #include "core/vec2i.h"
 #include "core/xstring.h"
+#include "sound/sound_view_queue.h"
 #include "building/building_type.h"
 
 #include <array>
+#include <random>
+#include <string>
 
 class building;
 
@@ -37,21 +40,61 @@ struct city_sounds_t {
     std::array<int16_t, BUILDING_MAX> building_channels;
 };
 
-void sound_city_init();
-void sound_city_clear_names();
-void sound_city_set_name(int channel, xstring id);
-int sound_city_channel(const xstring& id);
-void sound_city_stop();
-const city_sounds_t &sound_city_channels();
-void sound_city_add_channel(int system_channel_index, int direction);
-void sound_city_mark_building_view(building* b, int direction);
-void sound_city_mark_terrain_view(int terrain, int grid_offset, int direction);
-void sound_city_decay_views();
-void sound_city_play();
+struct city_ambient_t {
+    struct seen_t {
+        int tiles = 0;
+        float best_dist = 0.f;
+        int best_x = 0;
+    };
 
-// Enhanced city ambience (gameplay_enhanced_city_ambient). The city renderer reports each drawn tile of a
-// sounding building with its pixel; the audio side reads nothing of the simulation or the save.
-int sound_city_building_channel(building* b);
-void sound_city_ambient_note(int channel, vec2i pixel);
-void sound_city_ambient_reset();
-const char* sound_city_ambient_summary();
+    struct voice_t {
+        int channel = 0;
+        float gain = 0.f;
+        float target = 0.f;
+        float pan = 0.5f;
+        time_millis next_play = 0;
+        bool active = false;
+    };
+
+    std::array<seen_t, 96> seen;
+    std::array<voice_t, 8> voices;
+    vec2i last_camera = {-1, -1};
+    vec2i view_offset = {0, 0};
+    vec2i view_size = {0, 0};
+    float duck = 1.f;
+    time_millis last_ms = 0;
+    bool running = false;
+    // Cosmetic: never the simulation LFSR, crt_rand or libc rand().
+    std::minstd_rand rng{std::random_device{}()};
+    std::string summary;
+
+    void reset();
+};
+
+struct sound_city_t {
+    city_sounds_t sounds;
+    city_ambient_t ambient;
+    sound_view_queue_t view_queue;
+
+    void init();
+    void clear_names();
+    void set_name(int channel, xstring id);
+    int channel(const xstring& id) const;
+    void stop();
+    void add_channel(int system_channel_index, int direction);
+    void mark_building_view(building* b, int direction);
+    void mark_terrain_view(int terrain, int grid_offset, int direction);
+    void decay_views();
+    void play();
+    int building_channel(building* b);
+    void ambient_note(int channel, vec2i pixel);
+    void ambient_reset();
+    const char* ambient_summary() const;
+
+private:
+    int building_type_channel(building* b);
+    int zoo_ambient_channel();
+    bool ambient_play();
+};
+
+sound_city_t& sound_city();

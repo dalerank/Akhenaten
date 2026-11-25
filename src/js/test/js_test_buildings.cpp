@@ -84,19 +84,19 @@ int __test_sound_city_mark_building(int bid, int views) {
         return 0;
     }
     for (int i = 0; i < views; ++i) {
-        sound_city_mark_building_view(b, SOUND_DIRECTION_CENTER);
+        sound_city().mark_building_view(b, SOUND_DIRECTION_CENTER);
     }
-    return sound_city_channel(building_static_params::get(b->type).city_sound);
+    return sound_city().channel(building_static_params::get(b->type).city_sound);
 }
 ANK_FUNCTION_2(__test_sound_city_mark_building);
 
 int __test_sound_city_channel(pcstr id) {
-    return sound_city_channel(xstring(id));
+    return sound_city().channel(xstring(id));
 }
 ANK_FUNCTION_1(__test_sound_city_channel);
 
 int __test_sound_city_channel_views(int channel) {
-    const auto& channels = sound_city_channels().channels;
+    const auto& channels = sound_city().sounds.channels;
     const int slot = channel - SOUND_CHANNEL_CITY_MIN;
     if (slot < 0 || slot >= (int)channels.size()) {
         return -1;
@@ -106,7 +106,7 @@ int __test_sound_city_channel_views(int channel) {
 ANK_FUNCTION_1(__test_sound_city_channel_views);
 
 void __test_sound_city_decay_views() {
-    sound_city_decay_views();
+    sound_city().decay_views();
 }
 ANK_FUNCTION(__test_sound_city_decay_views);
 
