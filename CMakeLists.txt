@@ -794,14 +794,6 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(imgui)
 
-if (PLATFORM_ANDROID)
-    set(PROJECT_VERSION_MAJOR 0)
-    set(PROJECT_VERSION_MINOR 2)
-    set(PROJECT_VERSION_PATCH 2)
-    set(IS_RELEASE_VERSION FALSE)
-    set(VERSION_REVISION "")
-endif()
-
 if (PLATFORM_ANDROID OR WIN_EMSCRIPTEN OR APPLE)
 else()
     add_subdirectory(ext/gpupixel)

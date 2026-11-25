@@ -512,80 +512,66 @@ afterEvaluate {
 }
 
 task getVersion {
-    def cmakeFile = rootProject.file("../CMakeLists.txt").text
-    def versionMajor = (cmakeFile =~ /set\(PROJECT_VERSION_MAJOR (\d+)\)/)[0][1].toInteger()
-    def versionMinor = (cmakeFile =~ /set\(PROJECT_VERSION_MINOR (\d+)\)/)[0][1].toInteger()
-    def versionPatch = (cmakeFile =~ /set\(PROJECT_VERSION_PATCH (\d+)\)/)[0][1].toInteger()
-    def isRelease = (cmakeFile =~ /set\(IS_RELEASE_VERSION ([A-Z]+)\)/)[0][1].toBoolean()
-
-    def versionTweak = 0
-    def versionDetail
-    if (isRelease) {
-        versionDetail = ""
-    } else {
-        try {
-            def stdout = new ByteArrayOutputStream()
-            def stderr = new ByteArrayOutputStream()
-
-            def tweakResult = exec {
-                commandLine "git", "rev-list", "--count", "HEAD", "^tags/v${versionMajor}.${versionMinor}.${versionPatch}"
-                workingDir = "../.."
-                standardOutput = stdout
-                errorOutput = stderr
-                ignoreExitValue = true
-            }.exitValue
-
-            versionTweak = stdout.toString().trim().toInteger()
-            stdout.reset()
-
-            def lastCommitResult = exec {
-                commandLine "git", "rev-parse", "--short", "--verify", "HEAD"
-                workingDir "../.."
-                standardOutput = stdout
-                errorOutput = stderr
-                ignoreExitValue = true
-            }.exitValue
-            def versionCommit = stdout.toString().trim()
-
-            def isDirty = exec {
-                commandLine "git", "diff-index", "--quiet", "HEAD", "--"
-                workingDir "../.."
-                ignoreExitValue = true
-            }.exitValue
-
-            versionDetail = ""
-            if (tweakResult == 0) {
-                versionDetail += ".$versionTweak"
-            }
-            if (lastCommitResult == 0) {
-                versionDetail += "-$versionCommit"
-            }
-            if (isDirty) {
-                versionDetail += "-dirty"
-            }
-        } catch (ignored) {
-            versionDetail = " unknown development version"
-        }
-    }
-
+    def versionHeader = rootProject.file("../src/core/version.h").text
+    def versionMajor = (versionHeader =~ /#define GAME_VERSION_MAJOR (\d+)/)[0][1].toInteger()
+    def versionMinor = (versionHeader =~ /#define GAME_VERSION_MINOR (\d+)/)[0][1].toInteger()
+    def versionPatch = (versionHeader =~ /#define GAME_VERSION_REVSN (\d+)/)[0][1].toInteger()
     def versionNumber = "${versionMajor}.${versionMinor}.${versionPatch}"
 
-    ext.versionCode = versionMajor * 10000000 + versionMinor * 100000 + versionPatch * 1000 + versionTweak
+    def git = { List<String> args ->
+        def stdout = new ByteArrayOutputStream()
+        def result = exec {
+            commandLine(["git"] + args)
+            workingDir "../.."
+            standardOutput = stdout
+            errorOutput = new ByteArrayOutputStream()
+            ignoreExitValue = true
+        }
+        return result.exitValue == 0 ? stdout.toString().trim() : null
+    }
+
+    def versionTweak = 0
+    def versionDetail = ""
+    try {
+        def sinceTag = git(["rev-list", "--count", "HEAD", "^tags/v${versionNumber}".toString()])
+        if (sinceTag != null) {
+            versionTweak = sinceTag.toInteger()
+        }
+        def commit = git(["rev-parse", "--short", "--verify", "HEAD"])
+        if (versionTweak > 0) {
+            versionDetail += ".${versionTweak}"
+        }
+        if (commit != null && versionTweak > 0) {
+            versionDetail += "-${commit}"
+        }
+    } catch (ignored) {
+    }
+
+    if (versionTweak > 9999) {
+        throw new GradleException("${versionTweak} commits since v${versionNumber}: versionCode has room for 9999, bump src/core/version.h")
+    }
+    ext.versionCode = versionMajor * 100000000 + versionMinor * 1000000 + versionPatch * 10000 + versionTweak
     ext.versionName = versionNumber + versionDetail
 }
 
 android {
-    compileSdkVersion 35
+    compileSdkVersion 36
     buildToolsVersion "35.0.0"
     ndkVersion "27.2.12479018"
 
     defaultConfig {
         applicationId "com.github.dalerank.akhenaten"
         minSdkVersion 21
-        targetSdkVersion 35
+        targetSdkVersion 36
 
         versionName getVersion.versionName
         versionCode getVersion.versionCode
+
+        externalNativeBuild {
+            cmake {
+                arguments "-DANDROID_SUPPORT_FLEXIBLE_PAGE_SIZES=ON"
+            }
+        }
 
         ndk {
             if (project.hasProperty('targetAbi')) {
@@ -619,13 +605,13 @@ android {
         sourceCompatibility JavaVersion.VERSION_17
         targetCompatibility JavaVersion.VERSION_17
     }
+    def releaseStorePassword = System.getenv("ANDROID_KEYSTORE_PASSWORD")
     signingConfigs {
         release {
-            def isCI = System.getenv("CI") == "true"
-            if (isCI) {
-                storeFile file("../akhenaten.keystore")
-                storePassword System.getenv("ANDROID_KEYSTORE_PASSWORD")
-                keyAlias "akhenaten"
+            if (releaseStorePassword) {
+                storeFile file(System.getenv("ANDROID_KEYSTORE_FILE") ?: "../akhenaten.keystore")
+                storePassword releaseStorePassword
+                keyAlias System.getenv("ANDROID_KEY_ALIAS") ?: "akhenaten"
                 keyPassword System.getenv("ANDROID_KEYSTORE_KEY_PASSWORD")
             }
         }
@@ -638,7 +624,9 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            signingConfig signingConfigs.release
+            if (releaseStorePassword) {
+                signingConfig signingConfigs.release
+            }
         }
     }
     externalNativeBuild {
@@ -750,7 +738,6 @@ repositories {
 dependencies {
     implementation 'androidx.appcompat:appcompat:1.6.1'
     implementation 'androidx.documentfile:documentfile:1.0.1'
-    implementation 'com.google.firebase:firebase-firestore:24.10.0'
     
     // Нативные библиотеки через prefab (если доступны в репозиториях)
     // Пример для SDL2 (если доступен):
