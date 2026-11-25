@@ -1,4 +1,5 @@
 #include "js/test/js_test_common.h"
+#include "city/buildings.h"
 #include "city/military.h"
 #include "city/city_kingdome_relations.h"
 #include "city/city_religion.h"
@@ -529,12 +530,12 @@ static void __test_transport_wharf_update_month(int bid) {
 ANK_FUNCTION_1(__test_transport_wharf_update_month);
 
 static int __test_transport_ships_requested() {
-    return g_city.buildings.transport_ships_requested;
+    return city_building_stats().transport_ships_requested;
 }
 ANK_FUNCTION(__test_transport_ships_requested);
 
 static void __test_transport_ships_requested_set(int value) {
-    g_city.buildings.transport_ships_requested = (int8_t)value;
+    city_building_stats().transport_ships_requested = (int8_t)value;
 }
 ANK_FUNCTION_1(__test_transport_ships_requested_set);
 
@@ -569,12 +570,12 @@ static void __test_warship_wharf_update_month(int bid) {
 ANK_FUNCTION_1(__test_warship_wharf_update_month);
 
 static int __test_warships_requested() {
-    return g_city.buildings.warships_requested;
+    return city_building_stats().warships_requested;
 }
 ANK_FUNCTION(__test_warships_requested);
 
 static void __test_warships_requested_set(int value) {
-    g_city.buildings.warships_requested = (int8_t)value;
+    city_building_stats().warships_requested = (int8_t)value;
 }
 ANK_FUNCTION_1(__test_warships_requested_set);
 

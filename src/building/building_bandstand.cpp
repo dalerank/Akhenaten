@@ -1,4 +1,5 @@
 ﻿#include "building_bandstand.h"
+#include "city/buildings.h"
 
 #include "building/building.h"
 #include "city/object_info.h"
@@ -157,7 +158,7 @@ void building_bandstand::update_map_orientation(int map_orientation) {
 void building_bandstand::update_count() const {
     building_entertainment::update_count();
     if (base.num_workers > 0) {
-        g_city.buildings.increase_active(BUILDING_BOOTH);
+        city_building_stats().increase_active(BUILDING_BOOTH);
     }
 }
 

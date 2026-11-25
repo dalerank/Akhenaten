@@ -1,4 +1,5 @@
 #include "js/test/js_test_common.h"
+#include "city/buildings.h"
 #include "city/city_figures.h"
 #include "city/city_houses.h"
 #include "city/coverage.h"
@@ -277,7 +278,7 @@ static void __test_house_calculate_culture_aggregates() {
 ANK_FUNCTION(__test_house_calculate_culture_aggregates);
 
 static void __test_update_religion_supply_houses() {
-    g_city.buildings.update_religion_supply_houses();
+    city_building_stats().update_religion_supply_houses();
 }
 ANK_FUNCTION(__test_update_religion_supply_houses);
 
@@ -292,7 +293,7 @@ static void __test_government_distribute_treasury() {
 ANK_FUNCTION(__test_government_distribute_treasury);
 
 static int __test_city_has_palace() {
-    return g_city.buildings.has_palace() ? 1 : 0;
+    return city_building_stats().has_palace() ? 1 : 0;
 }
 ANK_FUNCTION(__test_city_has_palace);
 
@@ -308,7 +309,7 @@ static int __test_god_coverage_total(int god) {
     if (god < 0 || god >= MAX_GODS) {
         return -1;
     }
-    g_city.buildings.update_counters();
+    city_building_stats().update_counters();
     const auto& p = city_gods().gods[god].static_params();
     return city_gods().god_coverage_total((e_god)god, p.shrine_type, p.temple_type, p.complex_type);
 }

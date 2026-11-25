@@ -2,7 +2,6 @@
 
 #include "city/buildings.h"
 #include "io/io_buffer.h"
-#include "city/city.h"
 
 void building_count_industry_chunk::bind_data(io_buffer* iob, size_t version) {
     iob->bind____skip(sizeof(int32_t) * RESOURCES_MAX);
@@ -109,19 +108,18 @@ void building_count_industry_chunk::bind_data(io_buffer* iob, size_t version) {
 }
 
 void city_buildings_chunk::bind_data(io_buffer* iob, size_t version) {
-    auto& data = g_city;
-    iob->bind(BIND_SIGNATURE_INT8, &data.buildings.unknown_value);
-    iob->bind(BIND_SIGNATURE_INT8, &data.buildings.triumphal_obelisk_available);
-    iob->bind(BIND_SIGNATURE_INT8, &data.buildings.triumphal_obelisk_placed);
-    iob->bind(BIND_SIGNATURE_INT32, &data.buildings.mission_post_operational);
-    iob->bind(BIND_SIGNATURE_UINT32, data.buildings.main_native_meeting);
-    iob->bind(BIND_SIGNATURE_UINT32, data.buildings.distribution_center);
-    iob->bind(BIND_SIGNATURE_INT32, &data.buildings.distribution_center_building_id);
-    iob->bind(BIND_SIGNATURE_INT32, &data.buildings.distribution_center_placed);
-    iob->bind(BIND_SIGNATURE_INT8, &data.buildings.fishing_boats_requested);
-    iob->bind(BIND_SIGNATURE_INT8, &data.buildings.warships_requested);
-    iob->bind(BIND_SIGNATURE_INT8, &data.buildings.transport_ships_requested);
-    iob->bind(BIND_SIGNATURE_INT32, &data.buildings.trade_center_building_id);
-    iob->bind(BIND_SIGNATURE_UINT32, data.buildings.festival_square);
+    iob->bind(BIND_SIGNATURE_INT8, &city_building_stats().unknown_value);
+    iob->bind(BIND_SIGNATURE_INT8, &city_building_stats().triumphal_obelisk_available);
+    iob->bind(BIND_SIGNATURE_INT8, &city_building_stats().triumphal_obelisk_placed);
+    iob->bind(BIND_SIGNATURE_INT32, &city_building_stats().mission_post_operational);
+    iob->bind(BIND_SIGNATURE_UINT32, city_building_stats().main_native_meeting);
+    iob->bind(BIND_SIGNATURE_UINT32, city_building_stats().distribution_center);
+    iob->bind(BIND_SIGNATURE_INT32, &city_building_stats().distribution_center_building_id);
+    iob->bind(BIND_SIGNATURE_INT32, &city_building_stats().distribution_center_placed);
+    iob->bind(BIND_SIGNATURE_INT8, &city_building_stats().fishing_boats_requested);
+    iob->bind(BIND_SIGNATURE_INT8, &city_building_stats().warships_requested);
+    iob->bind(BIND_SIGNATURE_INT8, &city_building_stats().transport_ships_requested);
+    iob->bind(BIND_SIGNATURE_INT32, &city_building_stats().trade_center_building_id);
+    iob->bind(BIND_SIGNATURE_UINT32, city_building_stats().festival_square);
     verify_no_crash(iob->get_offset() == city_buildings_chunk::size);
 }

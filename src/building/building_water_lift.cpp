@@ -1,4 +1,5 @@
 #include "building_water_lift.h"
+#include "city/buildings.h"
 #include "grid/orientation.h"
 
 #include "grid/water.h"
@@ -53,7 +54,7 @@ void building_water_lift::update_day() {
 
 void building_water_lift::update_count() const {
     // OG working count: workers and water.
-    g_city.buildings.increase_count(base.type, num_workers() > 0 && base.has_water_access);
+    city_building_stats().increase_count(base.type, num_workers() > 0 && base.has_water_access);
 }
 
 int building_water_lift::animation_speed(int speed) const {

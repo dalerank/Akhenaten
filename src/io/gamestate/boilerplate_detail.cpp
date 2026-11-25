@@ -1,4 +1,5 @@
 #include "boilerplate_detail.h"
+#include "city/buildings.h"
 #include "city/city_kingdome_relations.h"
 #include "city/city_religion.h"
 #include "city/city_migration.h"
@@ -143,7 +144,7 @@ void GamestateLoadDetail::post_load() {
     // building counts / storage
     city_resource_determine_available();
     city_resource().update_allowed_foods();
-    g_city.buildings.update_counters();
+    city_building_stats().update_counters();
     g_city.on_post_load();
     city_resource().calculate_stocks();
     city_resource_calculate_storageyard_stocks();

@@ -160,7 +160,7 @@ cartpusher_deliveryman_prediction cartpusher_predict_deliveryman_destination(til
 
     // Gold → palace when staffed (OG upgraded-palace input: num_workers > 0).
     if (resource == RESOURCE_GOLD) {
-        const int senate_id = g_city.buildings.get_palace_id();
+        const int senate_id = city_building_stats().get_palace_id();
         building *palace = building_get(senate_id);
         if (senate_id && palace && palace->state == BUILDING_STATE_VALID && palace->num_workers > 0) {
             result.destination = (building_id)senate_id;

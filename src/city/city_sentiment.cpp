@@ -178,7 +178,7 @@ int city_sentiment_t::calc_contribution_monuments() {
     }
 
     auto types = {BUILDING_SHRINE_OSIRIS, BUILDING_SHRINE_RA, BUILDING_SHRINE_PTAH, BUILDING_SHRINE_SETH, BUILDING_SHRINE_BAST};
-    const int shrines = g_city.buildings.count_active(types);
+    const int shrines = city_building_stats().count_active(types);
 
     int shrine_points = 0;
     const auto& population = city_population();

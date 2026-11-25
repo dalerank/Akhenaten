@@ -1,4 +1,5 @@
 #include "empire_traders.h"
+#include "city/buildings.h"
 #include "core/app_module.h"
 #include "game/sim_schedule.h"
 
@@ -258,7 +259,7 @@ void empire_traders_manager::purge_dead() {
 
     int freed_dock = 0;
     auto free_stale_dock_ships = [&](e_building_type dock_type) {
-        for (building_id bid : g_city.buildings.track_buildings(dock_type)) {
+        for (building_id bid : city_building_stats().track_buildings(dock_type)) {
             building_dock* dock = building_get(bid)->dcast_dock();
             if (!dock) {
                 continue;

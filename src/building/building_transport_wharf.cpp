@@ -1,4 +1,5 @@
 #include "building_transport_wharf.h"
+#include "city/buildings.h"
 
 #include "city/city.h"
 #include "figure/figure.h"
@@ -43,7 +44,7 @@ void building_transport_wharf::update_month() {
     if (num_workers() > 0 && base.has_open_water_access) {
         const figure *boat = get_figure(BUILDING_SLOT_BOAT);
         if (!boat->is_valid()) {
-            g_city.buildings.request_transport_ship();
+            city_building_stats().request_transport_ship();
         }
     }
 

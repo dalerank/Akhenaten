@@ -4,6 +4,10 @@
 #include "core/app_module.h"
 #include "game/game.h"
 #include "game/sim_schedule.h"
+#include "city/buildings_chunks.h"
+#include "core/xvalue.h"
+#include "io/chunk_serializer.h"
+#include "io/gamestate/save_versions.h"
 
 #include "building/building_house.h"
 #include "building/building_shipyard.h"
@@ -40,73 +44,73 @@ void city_buildings_t::check_buildings_twins() {
 }
 
 bool city_buildings_has_distribution_center() {
-    return g_city.buildings.distribution_center_placed;
+    return city_building_stats().distribution_center_placed;
 }
 
 void city_buildings_add_distribution_center(building* center) {
-    g_city.buildings.distribution_center_placed = 1;
-    if (!g_city.buildings.distribution_center.grid_offset()) {
-        g_city.buildings.distribution_center_building_id = center->id;
-        g_city.buildings.distribution_center.set(center->tile.grid_offset());
+    city_building_stats().distribution_center_placed = 1;
+    if (!city_building_stats().distribution_center.grid_offset()) {
+        city_building_stats().distribution_center_building_id = center->id;
+        city_building_stats().distribution_center.set(center->tile.grid_offset());
     }
 }
 
 void city_buildings_remove_distribution_center(building* center) {
-    if (center->tile.grid_offset() == g_city.buildings.distribution_center.grid_offset()) {
-        g_city.buildings.distribution_center.set(0);
-        //        g_city.buildings.distribution_center.grid_offset() = 0;
-        //        g_city.buildings.distribution_center.x = 0;
-        //        g_city.buildings.distribution_center.y = 0;
-        g_city.buildings.distribution_center_placed = 0;
+    if (center->tile.grid_offset() == city_building_stats().distribution_center.grid_offset()) {
+        city_building_stats().distribution_center.set(0);
+        //        city_building_stats().distribution_center.grid_offset() = 0;
+        //        city_building_stats().distribution_center.x = 0;
+        //        city_building_stats().distribution_center.y = 0;
+        city_building_stats().distribution_center_placed = 0;
     }
 }
 
 int city_buildings_get_trade_center() {
-    return g_city.buildings.trade_center_building_id;
+    return city_building_stats().trade_center_building_id;
 }
 
 void city_buildings_set_trade_center(int building_id) {
-    g_city.buildings.trade_center_building_id = building_id;
+    city_building_stats().trade_center_building_id = building_id;
 }
 
 int city_buildings_triumphal_obelisk_available() {
-    return g_city.buildings.triumphal_obelisk_available > g_city.buildings.triumphal_obelisk_placed;
+    return city_building_stats().triumphal_obelisk_available > city_building_stats().triumphal_obelisk_placed;
 }
 
 void city_buildings_build_triumphal_obelisk() {
-    g_city.buildings.triumphal_obelisk_placed++;
+    city_building_stats().triumphal_obelisk_placed++;
 }
 
 void city_buildings_remove_triumphal_obelisk(void) {
-    if (g_city.buildings.triumphal_obelisk_placed > 0)
-        g_city.buildings.triumphal_obelisk_placed--;
+    if (city_building_stats().triumphal_obelisk_placed > 0)
+        city_building_stats().triumphal_obelisk_placed--;
 }
 
 void city_buildings_earn_triumphal_obelisk(void) {
-    g_city.buildings.triumphal_obelisk_available++;
+    city_building_stats().triumphal_obelisk_available++;
 }
 
 tile2i city_buildings_main_native_meeting_center() {
-    return g_city.buildings.main_native_meeting;
+    return city_building_stats().main_native_meeting;
 }
 void city_buildings_set_main_native_meeting_center(int x, int y) {
-    g_city.buildings.main_native_meeting.set(x, y);
+    city_building_stats().main_native_meeting.set(x, y);
 }
 
 int city_buildings_is_mission_post_operational(void) {
-    return g_city.buildings.mission_post_operational > 0;
+    return city_building_stats().mission_post_operational > 0;
 }
 
 void city_buildings_set_mission_post_operational(void) {
-    g_city.buildings.mission_post_operational = 1;
+    city_building_stats().mission_post_operational = 1;
 }
 
 tile2i city_building_get_festival_square_position() {
-    return g_city.buildings.festival_square;
+    return city_building_stats().festival_square;
 }
 
 int city_buildings_unknown_value() {
-    return g_city.buildings.unknown_value;
+    return city_building_stats().unknown_value;
 }
 
 void city_t::buildings_update_open_water_access() {
@@ -119,7 +123,7 @@ void city_buildings_t::update_counters() {
     std::fill(buildings.begin(), buildings.end(), record{ 0, 0 });
     std::fill(industry.begin(), industry.end(), record{ 0, 0 });
 
-    g_city.buildings.reset_tracked_buildings_counters();
+    city_building_stats().reset_tracked_buildings_counters();
     city_health().reset_mortuary_workers();
 
     buildings_valid_do([] (building &b) {
@@ -194,11 +198,13 @@ const city_buildings_t::tracked_buildings_t &city_buildings_t::tracked_buildings
     return g_tracked_buildings;
 }
 
-void city_buildings_t::init() {
-    building_shipyard_repair_queues_clear();
+city_buildings_t& city_building_stats() {
+    return xvalue<city_buildings_t>::ref();
 }
 
-void city_buildings_t::shutdown() {
+void city_buildings_t::reset() {
+    *this = city_buildings_t();
+    building_shipyard_repair_queues_clear();
 }
 
 void city_buildings_t::update_tick(bool refresh_only) {
@@ -322,9 +328,15 @@ void city_buildings_t::update_religion_supply_houses() {
 class buildings_system : public sim_system {
 public:
     const char* name() const override { return "buildings"; }
+    void on_reset() override { city_building_stats().reset(); }
+    void push_save_sections(int file_version) override {
+        if (file_version >= save_version_city_sections) {
+            g_chunk_io.push_chunk<city_buildings_chunk>(city_buildings_chunk::size, false);
+        }
+    }
     void register_steps(sim_schedule_t& schedule) override {
         schedule.add(
-          {sim_step_buildings_tick, SIM_PHASE_TICK_BEGIN, [](int) { g_city.buildings.update_tick(game.paused); }});
+          {sim_step_buildings_tick, SIM_PHASE_TICK_BEGIN, [](int) { city_building_stats().update_tick(game.paused); }});
         schedule.add({sim_step_open_water_access, SIM_PHASE_TICK, [](int tick) {
                           if (tick != 19) {
                               return;
@@ -335,23 +347,24 @@ public:
                           if (tick != 27) {
                               return;
                           }
-                          g_city.buildings.update_water_supply();
+                          city_building_stats().update_water_supply();
                       }});
         schedule.add({sim_step_religion_supply, SIM_PHASE_TICK, [](int tick) {
                           if (tick != 28) {
                               return;
                           }
-                          g_city.buildings.update_religion_supply_houses();
+                          city_building_stats().update_religion_supply_houses();
                       }});
         schedule.add({sim_step_building_counters, SIM_PHASE_TICK, [](int tick) {
                           if (tick != 33) {
                               return;
                           }
-                          g_city.buildings.update_counters();
+                          city_building_stats().update_counters();
                       }});
-        schedule.add({sim_step_buildings_day, SIM_PHASE_DAY, [](int) { g_city.buildings.update_day(); }});
-        schedule.add({sim_step_buildings_month, SIM_PHASE_MONTH_CITY, [](int) { g_city.buildings.update_month(); }});
-        schedule.add({sim_step_buildings_year, SIM_PHASE_YEAR, [](int) { g_city.buildings.update_year(); }});
+        schedule.add({sim_step_buildings_day, SIM_PHASE_DAY, [](int) { city_building_stats().update_day(); }});
+        schedule.add(
+          {sim_step_buildings_month, SIM_PHASE_MONTH_CITY, [](int) { city_building_stats().update_month(); }});
+        schedule.add({sim_step_buildings_year, SIM_PHASE_YEAR, [](int) { city_building_stats().update_year(); }});
     }
 };
 

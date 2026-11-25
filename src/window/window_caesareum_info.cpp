@@ -1,4 +1,5 @@
 #include "building/monument_caesareum.h"
+#include "city/buildings.h"
 #include "city/city_resource.h"
 
 #include "building/monuments.h"
@@ -33,11 +34,11 @@ namespace {
     constexpr int k_granite_loads = 2;
 
     bool built(e_building_type type) {
-        return g_city.buildings.count_total(type) > 0;
+        return city_building_stats().count_total(type) > 0;
     }
 
     bool working(e_building_type type) {
-        return g_city.buildings.count_active(type) > 0;
+        return city_building_stats().count_active(type) > 0;
     }
 
     // OG monument_blocked.

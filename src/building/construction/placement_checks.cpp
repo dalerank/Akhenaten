@@ -1,4 +1,5 @@
 #include "build_planner.h"
+#include "city/buildings.h"
 #include "city/city_resource.h"
 #include "city/city_finance.h"
 
@@ -317,7 +318,7 @@ void build_planner::update_unique_only_one_check() {
     const auto& params = building_static_params::get(build_type);
     bool is_unique_building = params.is_unique_building();
     if (is_unique_building) {
-        unique_already_placed = g_city.buildings.count_total(build_type);
+        unique_already_placed = city_building_stats().count_total(build_type);
     }
 
     // for unique buildings - only one can be placed inside the mission
@@ -337,7 +338,7 @@ void build_planner::update_unique_only_one_check() {
     case BUILDING_FAMILY_MANSION:
     case BUILDING_DYNASTY_MANSION:
         // OG mansion_placed: one mansion of any tier.
-        unique_already_placed = g_city.buildings.has_mansion();
+        unique_already_placed = city_building_stats().has_mansion();
         break;
     case BUILDING_VILLAGE_PALACE:
     case BUILDING_TOWN_PALACE:
@@ -345,12 +346,12 @@ void build_planner::update_unique_only_one_check() {
     case BUILDING_VILLAGE_PALACE_UP:
     case BUILDING_TOWN_PALACE_UP:
         // OG palace_placed: one palace of any tier.
-        unique_already_placed = g_city.buildings.has_palace();
+        unique_already_placed = city_building_stats().has_palace();
         break;
     case BUILDING_TAX_COLLECTOR:
     case BUILDING_TAX_COLLECTOR_UPGRADED:
         // OG: cannot place tax office without a palace.
-        if (!g_city.buildings.has_palace()) {
+        if (!city_building_stats().has_palace()) {
             immediate_warning = "#no_taxes_without_palace";
             can_place = CAN_NOT_PLACE;
             return;

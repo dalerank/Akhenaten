@@ -1,4 +1,5 @@
 #include "building_impl.h"
+#include "city/buildings.h"
 #include "city/city_figures.h"
 #include "city/city_resource.h"
 #include "io/gamefiles/lang.h"
@@ -350,7 +351,7 @@ void building_impl::update_count() const {
     const auto& params = current_params();
     const bool active
       = params.always_work ? map_has_road_access_nearby(base.tile, params.road_access_distance) : base.num_workers > 0;
-    g_city.buildings.increase_count(base.type, active);
+    city_building_stats().increase_count(base.type, active);
 }
 
 void building_impl::update_map_orientation(int orientation) {

@@ -1,4 +1,5 @@
 ﻿#include "building_farm.h"
+#include "city/buildings.h"
 #include "city/city_religion.h"
 
 #include "building/building_granary.h"
@@ -234,7 +235,7 @@ void building_farm::update_count() const {
         {BUILDING_HENNA_MEADOW_FARM, RESOURCE_HENNA}
     };
     auto it = std::find_if(std::begin(farms), std::end(farms), [btype = type()](auto &t) { return t.first == btype; });
-    g_city.buildings.increase_industry_count(it->second, num_workers() > 0);
+    city_building_stats().increase_industry_count(it->second, num_workers() > 0);
 }
 
 void building_farm::update_month() {

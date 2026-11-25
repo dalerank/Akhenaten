@@ -1,4 +1,5 @@
 #include "building/monument_pyramid.h"
+#include "city/buildings.h"
 
 #include "building/monuments.h"
 #include "city/city.h"
@@ -72,8 +73,8 @@ void info_window_pyramid::init(object_info &c) {
 
         if (d.phase < 2) {
             // Clear / level — work camps
-            int work_camps_num = g_city.buildings.count_total(BUILDING_WORK_CAMP);
-            int work_camps_active_num = g_city.buildings.count_active(BUILDING_WORK_CAMP);
+            int work_camps_num = city_building_stats().count_total(BUILDING_WORK_CAMP);
+            int work_camps_active_num = city_building_stats().count_active(BUILDING_WORK_CAMP);
             if (!work_camps_num) {
                 reason = {178, 13};
             } else if (!work_camps_active_num) {
@@ -88,12 +89,12 @@ void info_window_pyramid::init(object_info &c) {
         } else if ((is_true || is_mudbrick) && d.phase >= polish_begin) {
             reason = is_mudbrick ? textid{178, 35} : textid{178, 32};
         } else {
-            int carpenters_total = g_city.buildings.count_total(BUILDING_CARPENTERS_GUILD);
-            int carpenters_active = g_city.buildings.count_active(BUILDING_CARPENTERS_GUILD);
-            int masons_total = g_city.buildings.count_total(BUILDING_STONEMASONS_GUILD);
-            int masons_active = g_city.buildings.count_active(BUILDING_STONEMASONS_GUILD);
-            int bricklayers_total = g_city.buildings.count_total(BUILDING_BRICKLAYERS_GUILD);
-            int bricklayers_active = g_city.buildings.count_active(BUILDING_BRICKLAYERS_GUILD);
+            int carpenters_total = city_building_stats().count_total(BUILDING_CARPENTERS_GUILD);
+            int carpenters_active = city_building_stats().count_active(BUILDING_CARPENTERS_GUILD);
+            int masons_total = city_building_stats().count_total(BUILDING_STONEMASONS_GUILD);
+            int masons_active = city_building_stats().count_active(BUILDING_STONEMASONS_GUILD);
+            int bricklayers_total = city_building_stats().count_total(BUILDING_BRICKLAYERS_GUILD);
+            int bricklayers_active = city_building_stats().count_active(BUILDING_BRICKLAYERS_GUILD);
             bool stone_stockpiled = city_resource().is_stockpiled(RESOURCE_STONE);
             bool lime_stockpiled = city_resource().is_stockpiled(RESOURCE_LIMESTONE);
             bool bricks_stockpiled = city_resource().is_stockpiled(RESOURCE_BRICKS);

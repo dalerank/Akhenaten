@@ -1,4 +1,5 @@
 #include "grid/terrain.h"
+#include "city/buildings.h"
 #include "grid/property.h"
 #include "grid/road_canal.h"
 #include "grid/point.h"
@@ -300,7 +301,7 @@ ANK_FUNCTION_1(__map_canal_fill_from_offset);
 
 // City case 27: canals from dry, flood front, staffed lifts, lift irrigation.
 void __buildings_update_water_lifts_cycle() {
-    g_city.buildings.update_water_supply();
+    city_building_stats().update_water_supply();
 }
 ANK_FUNCTION(__buildings_update_water_lifts_cycle);
 

@@ -44,11 +44,11 @@ void building_fishing_wharf::update_count() const {
     if (num_workers() > 0 && base.has_open_water_access) {
         const figure *boat = get_figure(BUILDING_SLOT_BOAT);
         if (!boat->is_valid()) {
-            g_city.buildings.request_fishing_boat();
+            city_building_stats().request_fishing_boat();
         }
     }
 
-    g_city.buildings.increase_industry_count(RESOURCE_FISH, num_workers() > 0);
+    city_building_stats().increase_industry_count(RESOURCE_FISH, num_workers() > 0);
 }
 
 void building_fishing_wharf::update_day() {

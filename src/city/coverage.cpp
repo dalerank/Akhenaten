@@ -1,4 +1,5 @@
 #include "coverage.h"
+#include "city/buildings.h"
 #include "game/simulation.h"
 #include "core/app_module.h"
 #include "game/sim_schedule.h"
@@ -69,26 +70,26 @@ void city_coverage_t::update() {
     const int pop = population.current;
 
     // entertainment
-    const int active_booth = g_city.buildings.count_active(BUILDING_BOOTH);
+    const int active_booth = city_building_stats().count_active(BUILDING_BOOTH);
     booth = std::min(calc_percentage(400 * active_booth, pop), 100);
 
-    bandstand = std::min(calc_percentage(700 * g_city.buildings.count_active(BUILDING_BANDSTAND), pop), 100);
-    pavilion = std::min(calc_percentage(1200 * g_city.buildings.count_active(BUILDING_PAVILLION), pop), 100);
-    senet_house = g_city.buildings.count_active(BUILDING_SENET_HOUSE) <= 0 ? 0 : 100;
-    zoo = std::min(calc_percentage(7500 * g_city.buildings.count_active(BUILDING_ZOO), pop), 100);
+    bandstand = std::min(calc_percentage(700 * city_building_stats().count_active(BUILDING_BANDSTAND), pop), 100);
+    pavilion = std::min(calc_percentage(1200 * city_building_stats().count_active(BUILDING_PAVILLION), pop), 100);
+    senet_house = city_building_stats().count_active(BUILDING_SENET_HOUSE) <= 0 ? 0 : 100;
+    zoo = std::min(calc_percentage(7500 * city_building_stats().count_active(BUILDING_ZOO), pop), 100);
 
     // education
     city_population().calculate_educational_age();
 
-    int active_schools = g_city.buildings.count_active(BUILDING_SCRIBAL_SCHOOL);
+    int active_schools = city_building_stats().count_active(BUILDING_SCRIBAL_SCHOOL);
     const auto &school_config = building_static_params::get(BUILDING_SCRIBAL_SCHOOL);
     school = std::min(calc_percentage(school_config.max_service * active_schools, city_population().school_age), 100);
 
-    int active_libraries = g_city.buildings.count_active(BUILDING_LIBRARY);
+    int active_libraries = city_building_stats().count_active(BUILDING_LIBRARY);
     const auto &lib_config = building_static_params::get(BUILDING_LIBRARY);
     library = std::min(calc_percentage(lib_config.max_service * active_libraries, pop), 100);
 
-    int active_academy = g_city.buildings.count_active(BUILDING_ACADEMY);
+    int active_academy = city_building_stats().count_active(BUILDING_ACADEMY);
     const auto &academy_config = building_static_params::get(BUILDING_ACADEMY);
     academy
       = std::min(calc_percentage(academy_config.max_service * active_academy, city_population().academy_age), 100);

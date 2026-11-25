@@ -1,4 +1,5 @@
 ﻿#include "building/building_pavilion.h"
+#include "city/buildings.h"
 
 #include "graphics/image.h"
 #include "widget/city/ornaments.h"
@@ -169,8 +170,8 @@ bool building_pavilion::draw_ornaments_and_animations_height(painter &ctx, vec2i
 void building_pavilion::update_count() const {
     building_entertainment::update_count();
     if (base.num_workers > 0) {
-        g_city.buildings.increase_active(BUILDING_BOOTH);
-        g_city.buildings.increase_active(BUILDING_BANDSTAND);
+        city_building_stats().increase_active(BUILDING_BOOTH);
+        city_building_stats().increase_active(BUILDING_BANDSTAND);
     }
 }
 

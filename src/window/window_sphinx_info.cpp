@@ -1,4 +1,5 @@
 #include "building/monument_sphinx.h"
+#include "city/buildings.h"
 
 #include "building/monuments.h"
 #include "city/city.h"
@@ -38,10 +39,10 @@ namespace {
         if (!map_terrain_is(s.access_point(), TERRAIN_ROAD)) {
             return {k_lang_monuments, 149};
         }
-        if (!g_city.buildings.count_active(BUILDING_STONEMASONS_GUILD)) {
+        if (!city_building_stats().count_active(BUILDING_STONEMASONS_GUILD)) {
             return {k_lang_monuments, 14};
         }
-        if (!g_city.buildings.count_active(BUILDING_CARPENTERS_GUILD)) {
+        if (!city_building_stats().count_active(BUILDING_CARPENTERS_GUILD)) {
             return {k_lang_monuments, 16};
         }
         if (s.has_free_spot(FIGURE_STONEMASON) && !figure_heading_to_sphinx(FIGURE_STONEMASON)) {

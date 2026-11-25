@@ -1,4 +1,5 @@
 #include "js/test/js_test_common.h"
+#include "city/buildings.h"
 #include "city/city_houses.h"
 #include "city/city_maintenance.h"
 #include "widget/city/placement_preview.h"
@@ -578,12 +579,12 @@ static void __test_building_spawn_figure(int bid) {
 ANK_FUNCTION_1(__test_building_spawn_figure);
 
 static void __test_city_buildings_update_tick() {
-    g_city.buildings.update_tick(/*refresh_only*/ true);
+    city_building_stats().update_tick(/*refresh_only*/ true);
 }
 ANK_FUNCTION(__test_city_buildings_update_tick);
 
 static void __test_city_buildings_update_counters() {
-    g_city.buildings.update_counters();
+    city_building_stats().update_counters();
 }
 ANK_FUNCTION(__test_city_buildings_update_counters);
 

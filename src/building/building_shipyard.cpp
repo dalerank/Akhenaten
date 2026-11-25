@@ -534,37 +534,37 @@ void building_shipyard::update_day() {
     base.progress += delta;
     consume_resource(RESOURCE_TIMBER, resources);
 
-    if (d.process_type == FIGURE_WARSHIP && g_city.buildings.warships_requested > 0) {
-        g_city.buildings.warships_requested--;
+    if (d.process_type == FIGURE_WARSHIP && city_building_stats().warships_requested > 0) {
+        city_building_stats().warships_requested--;
         return;
     }
 
-    if (d.process_type == FIGURE_TRANSPORT_SHIP && g_city.buildings.transport_ships_requested > 0) {
-        g_city.buildings.transport_ships_requested--;
+    if (d.process_type == FIGURE_TRANSPORT_SHIP && city_building_stats().transport_ships_requested > 0) {
+        city_building_stats().transport_ships_requested--;
         return;
     }
 
-    if (d.process_type == FIGURE_FISHING_BOAT && g_city.buildings.fishing_boats_requested > 0) {
-        g_city.buildings.fishing_boats_requested--;
+    if (d.process_type == FIGURE_FISHING_BOAT && city_building_stats().fishing_boats_requested > 0) {
+        city_building_stats().fishing_boats_requested--;
         return;
     }
 
     if (d.process_type == FIGURE_NONE) {
-        if (g_city.buildings.warships_requested > 0 && timber_amount >= 100) {
+        if (city_building_stats().warships_requested > 0 && timber_amount >= 100) {
             d.process_type = FIGURE_WARSHIP;
-            g_city.buildings.warships_requested--;
+            city_building_stats().warships_requested--;
             return;
         }
 
-        if (g_city.buildings.transport_ships_requested > 0 && timber_amount >= 100) {
+        if (city_building_stats().transport_ships_requested > 0 && timber_amount >= 100) {
             d.process_type = FIGURE_TRANSPORT_SHIP;
-            g_city.buildings.transport_ships_requested--;
+            city_building_stats().transport_ships_requested--;
             return;
         }
 
-        if (g_city.buildings.fishing_boats_requested > 0) {
+        if (city_building_stats().fishing_boats_requested > 0) {
             d.process_type = FIGURE_FISHING_BOAT;
-            g_city.buildings.fishing_boats_requested--;
+            city_building_stats().fishing_boats_requested--;
             return;
         }
     }
@@ -609,5 +609,5 @@ void building_shipyard::update_graphic() {
 
 void building_shipyard::update_count() const {
     const bool is_active = (num_workers() > 0 && base.has_open_water_access);
-    g_city.buildings.track_building(base, is_active);
+    city_building_stats().track_building(base, is_active);
 }

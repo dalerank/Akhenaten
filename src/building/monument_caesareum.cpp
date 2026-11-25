@@ -1,4 +1,5 @@
 #include "monument_caesareum.h"
+#include "city/buildings.h"
 #include "grid/orientation.h"
 
 #include "building/monuments.h"
@@ -106,7 +107,7 @@ namespace {
     }
 
     bool any_caesareum_placed() {
-        return g_city.buildings.count_total(BUILDING_CAESAREUM) > 0;
+        return city_building_stats().count_total(BUILDING_CAESAREUM) > 0;
     }
 } // namespace
 

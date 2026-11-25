@@ -1,4 +1,5 @@
 #include "city_buildings.h"
+#include "city/buildings.h"
 #include "game/simulation.h"
 #include "core/app_module.h"
 #include "game/sim_schedule.h"
@@ -213,7 +214,7 @@ building *building_create(e_building_type type, tile2i tile, int orientation) {
     // line does. Counters are only ever written from that rebuild, so nothing drifts in between.
     // The rebuild is two passes over all 4000 slots plus a virtual call per building, and a drag
     // of houses or walls used to pay for it once per tile.
-    g_city.buildings.increase_count(b->type, false);
+    city_building_stats().increase_count(b->type, false);
 
     return b;
 }
@@ -348,7 +349,7 @@ void building_update_state() {
     }
 
     if (buildings_removed) {
-        g_city.buildings.update_counters();
+        city_building_stats().update_counters();
     }
 
     if (walls_recalc) {

@@ -1,4 +1,5 @@
 #include "js/js_game.h"
+#include "city/buildings.h"
 #include "city/city_resource.h"
 
 #include "city/city.h"
@@ -54,17 +55,17 @@ int __city_monuments_list_id_at(int index) {
 ANK_FUNCTION_1(__city_monuments_list_id_at)
 
 int __city_count_industry_active(int resource) {
-    return g_city.buildings.count_industry_active((e_resource)resource);
+    return city_building_stats().count_industry_active((e_resource)resource);
 }
 ANK_FUNCTION_1(__city_count_industry_active)
 
 int __city_count_industry_total(int resource) {
-    return g_city.buildings.count_industry_total((e_resource)resource);
+    return city_building_stats().count_industry_total((e_resource)resource);
 }
 ANK_FUNCTION_1(__city_count_industry_total)
 
 bool __city_buildings_ships_requested() {
-    return g_city.buildings.fishing_boats_requested > 0 || g_city.buildings.warships_requested > 0;
+    return city_building_stats().fishing_boats_requested > 0 || city_building_stats().warships_requested > 0;
 }
 ANK_FUNCTION(__city_buildings_ships_requested)
 
@@ -106,22 +107,22 @@ int __city_resource_trade_status(int resource) {
 ANK_FUNCTION_1(__city_resource_trade_status)
 
 int __city_count_active_buildings(int btype) {
-    return g_city.buildings.count_active((e_building_type)btype);
+    return city_building_stats().count_active((e_building_type)btype);
 }
 ANK_FUNCTION_1(__city_count_active_buildings);
 
 int __city_get_palace_id() {
-    return g_city.buildings.get_palace_id();
+    return city_building_stats().get_palace_id();
 }
 ANK_FUNCTION(__city_get_palace_id);
 
 int __city_get_mansion_id() {
-    return g_city.buildings.get_mansion_id();
+    return city_building_stats().get_mansion_id();
 }
 ANK_FUNCTION(__city_get_mansion_id);
 
 bool __city_palace_allows_tax_collectors() {
-    const int palace_id = g_city.buildings.get_palace_id();
+    const int palace_id = city_building_stats().get_palace_id();
     if (palace_id <= 0) {
         return false;
     }
@@ -140,7 +141,7 @@ bool __city_palace_allows_tax_collectors() {
 ANK_FUNCTION(__city_palace_allows_tax_collectors);
 
 int __city_count_total_buildings(int btype) {
-    return g_city.buildings.count_total((e_building_type)btype);
+    return city_building_stats().count_total((e_building_type)btype);
 }
 ANK_FUNCTION_1(__city_count_total_buildings);
 
@@ -266,6 +267,6 @@ hvector<building_id, 64> __city_find_manageable_industry(tile2i tile, int size, 
 ANK_FUNCTION_3(__city_find_manageable_industry)
 
 bool __city_has_high_fire_risk() {
-    return g_city.buildings.has_high_fire_risk;
+    return city_building_stats().has_high_fire_risk;
 }
 ANK_FUNCTION(__city_has_high_fire_risk)

@@ -1,4 +1,5 @@
 #include "building/monument_alexandria_library.h"
+#include "city/buildings.h"
 
 #include "building/monuments.h"
 #include "city/city.h"
@@ -37,9 +38,9 @@ void info_window_alexandria_library::init(object_info &c) {
     const int percent = m->get_progress(slots);
     const int stage = m->part_stage();
 
-    int work_camps = g_city.buildings.count_active(BUILDING_WORK_CAMP);
-    int carpenters = g_city.buildings.count_active(BUILDING_CARPENTERS_GUILD);
-    int stonemasons = g_city.buildings.count_active(BUILDING_STONEMASONS_GUILD);
+    int work_camps = city_building_stats().count_active(BUILDING_WORK_CAMP);
+    int carpenters = city_building_stats().count_active(BUILDING_CARPENTERS_GUILD);
+    int stonemasons = city_building_stats().count_active(BUILDING_STONEMASONS_GUILD);
 
     textid reason = {178, 110};
     if (stage < LIBRARY_STAGE_PREPARED && work_camps == 0) {

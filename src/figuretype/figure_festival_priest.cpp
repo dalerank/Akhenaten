@@ -1,4 +1,5 @@
 #include "figuretype/figure_festival_priest.h"
+#include "city/buildings.h"
 
 #include <algorithm>
 #include <array>
@@ -40,7 +41,7 @@ void figure_festival_priest::on_post_load() {
 
 void figure_festival_priest::figure_action() {
     auto& d = runtime_data();
-    const tile2i square = g_city.buildings.festival_square;
+    const tile2i square = city_building_stats().festival_square;
 
     switch (action_state()) {
     case ACTION_8_FESTIVAL_PRIEST_CREATED:

@@ -24,7 +24,7 @@ void city_t::government_distribute_treasury() {
     const int court_w = shares.courthouse_weight;
     const int palace_w = shares.palace_weight;
 
-    auto &blds = buildings;
+    auto& blds = city_building_stats();
     const int tax_count = blds.count_total(BUILDING_TAX_COLLECTOR)
         + blds.count_total(BUILDING_TAX_COLLECTOR_UPGRADED);
     const int court_count = blds.count_total(BUILDING_COURTHOUSE);

@@ -1,4 +1,5 @@
 #include "figuretype/figure_robber.h"
+#include "city/buildings.h"
 #include "city/city_kingdome_relations.h"
 #include "city/city_finance.h"
 #include "city/city_sentiment.h"
@@ -210,7 +211,7 @@ void figure_robber::figure_action() {
         switch (action_state()) {
         case ACTION_120_ROBBER_CREATED: {
             base.wait_ticks = 0;
-            int senate_id = g_city.buildings.get_palace_id();
+            int senate_id = city_building_stats().get_palace_id();
             building *b_dst = building_get(senate_id);
             tile2i road_tile = map_closest_road_within_radius(b_dst->tile, b_dst->size, 2);
             if (road_tile.valid()) {

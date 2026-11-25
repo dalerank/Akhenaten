@@ -26,7 +26,7 @@ span_const<e_building_type> city_temple_complexes_t::types() {
 }
 
 building_id city_temple_complexes_t::id(e_building_type type) const {
-    const auto& complexes = g_city.buildings.tracked_buildings().at(type);
+    const auto& complexes = city_building_stats().tracked_buildings().at(type);
     for (building_id id : complexes) {
         building* b = building_get(id);
         if (b && b->is_valid() && b->type == type) {

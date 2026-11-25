@@ -1,4 +1,5 @@
 #include "io/og_save/og_load.h"
+#include "city/buildings.h"
 #include "city/city_figures.h"
 #include "city/city_resource.h"
 #include "city/city_houses.h"
@@ -42,7 +43,7 @@ namespace og {
     void load_city_state(const savegame& s) {
         const city_player& p = s.player();
 
-        assign(g_city.buildings.unknown_value, p.building_reserved_id);
+        assign(city_building_stats().unknown_value, p.building_reserved_id);
         assign(city_taxes().tax_percentage, p.tax_percentage);
         assign(city_finance().treasury.value, p.treasury);
         assign(city_sentiment().value, p.sentiment);
@@ -267,8 +268,8 @@ namespace og {
         assign(city_kingdome().kingdom_ignored_request_penalty, p.kingdom_ignored_request_penalty);
         assign(city_kingdome().rating_last_year, p.kingdom_last_year);
         assign(city_kingdome().kingdom_change, p.kingdom_change);
-        assign(g_city.buildings.mission_post_operational, p.mission_post_operational);
-        g_city.buildings.main_native_meeting = tile2i(p.main_native_meeting_x, p.main_native_meeting_y);
+        assign(city_building_stats().mission_post_operational, p.mission_post_operational);
+        city_building_stats().main_native_meeting = tile2i(p.main_native_meeting_x, p.main_native_meeting_y);
         assign(city_finance().wage_rate_paid_last_year, p.wage_rate_paid_last_year);
         assign(city_resource().food_needed_per_month, p.food_needed_per_month);
         assign(city_resource().granaries.understaffed, p.granaries_understaffed);
@@ -277,10 +278,10 @@ namespace og {
         assign(city_gods().ra_150_export_profits_months_left, p.ra_exports_bonus_months);
         assign(city_gods().angry_message_delay, p.gods_angry_message_delay);
         assign(city_taxes().estimated_income, p.estimated_tax_income);
-        g_city.buildings.distribution_center = tile2i(p.distribution_center_x, p.distribution_center_y);
-        assign(g_city.buildings.distribution_center_building_id, p.distribution_center_building_id);
-        assign(g_city.buildings.distribution_center_placed, p.distribution_center_placed);
-        assign(g_city.buildings.warships_requested, p.shipyard_boats_requested);
+        city_building_stats().distribution_center = tile2i(p.distribution_center_x, p.distribution_center_y);
+        assign(city_building_stats().distribution_center_building_id, p.distribution_center_building_id);
+        assign(city_building_stats().distribution_center_placed, p.distribution_center_placed);
+        assign(city_building_stats().warships_requested, p.shipyard_boats_requested);
         assign(city_figures().enemies, p.enemies);
         assign(city_sentiment().wages, p.sentiment_wages);
         assign(city_population().people_in_huts, p.people_in_huts);
@@ -290,7 +291,7 @@ namespace og {
         assign(city_military().total_batalions, p.total_legions);
         assign(city_military().kingdome_service_batalions, p.empire_service_legions);
         assign(city_military().total_soldiers, p.total_soldiers);
-        assign(g_city.buildings.trade_center_building_id, p.trade_center_building_id);
+        assign(city_building_stats().trade_center_building_id, p.trade_center_building_id);
         assign(city_figures().soldiers, p.soldiers);
         assign(city_sound().march_enemy, p.sound_march_enemy);
         assign(city_sound().march_horse, p.sound_march_horse);
@@ -308,7 +309,7 @@ namespace og {
         assign(city_mission().fired_message_shown, p.fired_message_shown);
         assign(city_mission().victory_message_shown, p.victory_message_shown);
         assign(city_figures().attacking_natives, p.attacking_natives);
-        g_city.buildings.festival_square = tile2i(p.festival_square_x, p.festival_square_y);
+        city_building_stats().festival_square = tile2i(p.festival_square_x, p.festival_square_y);
         assign(city_gods().ra_no_traders_months_left, p.ra_no_traders_months);
         for (int i = 0; i < 5; i++) {
             assign(city_gods().gods[i].happy_ankhs, p.god_happy_bolts[i]);

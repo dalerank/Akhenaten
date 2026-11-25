@@ -99,20 +99,15 @@ static void zero_fill(T& part) {
 }
 
 void city_t::init() {
-    buildings.shutdown();
-
-    zero_fill(buildings);
-
     g_simulation.reset_systems();
     g_distant_battle.clear();
-    buildings.init();
     figure_clear_all();
     city_sentiment().init();
     city_finance().init();
 }
 
 void city_t::reload_objects() {
-    buildings.reload_objects();
+    city_building_stats().reload_objects();
     city_figures().reload_objects();
 }
 
@@ -185,7 +180,7 @@ bool city_t::generate_trader_from(empire_city &city) {
 
     if (city.is_sea_trade) {
         // generate ship
-        const bool has_doks = g_city.buildings.has_working_dock();
+        const bool has_doks = city_building_stats().has_working_dock();
         const bool has_river_entry = scenario_map_has_river_entry();
         const bool can_sea_trade = !city_trade().has_sea_problems();
         if (has_doks && has_river_entry && can_sea_trade) {
@@ -437,7 +432,7 @@ bvariant city_t::get_property(xstring domain, xstring name) const {
 }
 
 void city_t::on_post_load() {
-    buildings.on_post_load();
+    city_building_stats().on_post_load();
     city_figures().on_post_load();
     city_kingdome().on_post_load();
     city_trade().update_export_keep();

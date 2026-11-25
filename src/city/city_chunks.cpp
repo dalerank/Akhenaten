@@ -1,4 +1,5 @@
 #include "city/city_chunks.h"
+#include "city/buildings.h"
 #include "city/city_figures.h"
 #include "city/city_resource.h"
 #include "city/city_houses.h"
@@ -32,7 +33,6 @@
 // (offsets checked against its offsetof asserts). Our fields without an OG field live in OG reserved bytes:
 // in place where they already sat in a reserved range, otherwise packed from 0x2D14 inside OG reserved_13.
 static void city_data_bind_og_layout(io_buffer* iob) {
-    auto& data = g_city;
     int tmp = 0;
     iob->bind____skip(18904);
     iob->bind____skip(1);
@@ -40,7 +40,7 @@ static void city_data_bind_og_layout(io_buffer* iob) {
     iob->bind____skip(1);
     iob->bind____skip(1);
     iob->bind____skip(1);
-    iob->bind(BIND_SIGNATURE_INT8, &data.buildings.unknown_value);
+    iob->bind(BIND_SIGNATURE_INT8, &city_building_stats().unknown_value);
     iob->bind____skip(1);
     iob->bind____skip(1);
     iob->bind(BIND_SIGNATURE_INT8, &city_taxes().tax_percentage);
@@ -278,11 +278,11 @@ static void city_data_bind_og_layout(io_buffer* iob) {
     iob->bind(BIND_SIGNATURE_UINT16, &city_ratings().monument_years_of_monument);
     iob->bind(BIND_SIGNATURE_INT8, &g_distant_battle.battle.egyptian_months_to_travel_forth);
     iob->bind(BIND_SIGNATURE_INT8, &g_distant_battle.battle.city_foreign_months_left);
-    iob->bind(BIND_SIGNATURE_INT8, &data.buildings.triumphal_obelisk_available);
+    iob->bind(BIND_SIGNATURE_INT8, &city_building_stats().triumphal_obelisk_available);
     iob->bind(BIND_SIGNATURE_INT8, &g_distant_battle.battle.won_count);
     iob->bind(BIND_SIGNATURE_INT8, &g_distant_battle.battle.enemy_months_traveled);
     iob->bind(BIND_SIGNATURE_INT8, &g_distant_battle.battle.egyptian_months_traveled);
-    iob->bind(BIND_SIGNATURE_INT8, &data.buildings.triumphal_obelisk_placed);
+    iob->bind(BIND_SIGNATURE_INT8, &city_building_stats().triumphal_obelisk_placed);
     iob->bind____skip(3);
     iob->bind(BIND_SIGNATURE_INT32, &city_kingdome().invasion.count);
     iob->bind(BIND_SIGNATURE_INT32, &city_kingdome().invasion.size);
@@ -440,8 +440,8 @@ static void city_data_bind_og_layout(io_buffer* iob) {
     iob->bind____skip(3);
     iob->bind(BIND_SIGNATURE_UINT8, &city_kingdome().kingdom_change);
     iob->bind____skip(11);
-    iob->bind(BIND_SIGNATURE_INT32, &data.buildings.mission_post_operational);
-    iob->bind(BIND_SIGNATURE_UINT32, data.buildings.main_native_meeting);
+    iob->bind(BIND_SIGNATURE_INT32, &city_building_stats().mission_post_operational);
+    iob->bind(BIND_SIGNATURE_UINT32, city_building_stats().main_native_meeting);
     iob->bind____skip(4);
     iob->bind(BIND_SIGNATURE_INT32, &city_finance().wage_rate_paid_last_year);
     iob->bind(BIND_SIGNATURE_INT32, &city_resource().food_needed_per_month); // 62
@@ -455,14 +455,14 @@ static void city_data_bind_og_layout(io_buffer* iob) {
     iob->bind____skip(16);
     iob->bind(BIND_SIGNATURE_INT32, &city_taxes().estimated_income);
     iob->bind____skip(4);
-    iob->bind(BIND_SIGNATURE_UINT32, data.buildings.distribution_center);
+    iob->bind(BIND_SIGNATURE_UINT32, city_building_stats().distribution_center);
     iob->bind____skip(4);
-    iob->bind(BIND_SIGNATURE_INT32, &data.buildings.distribution_center_building_id);
-    iob->bind(BIND_SIGNATURE_INT32, &data.buildings.distribution_center_placed);
+    iob->bind(BIND_SIGNATURE_INT32, &city_building_stats().distribution_center_building_id);
+    iob->bind(BIND_SIGNATURE_INT32, &city_building_stats().distribution_center_placed);
     iob->bind____skip(43);
-    iob->bind(BIND_SIGNATURE_INT8, &data.buildings.fishing_boats_requested);
-    iob->bind(BIND_SIGNATURE_INT8, &data.buildings.warships_requested);
-    iob->bind(BIND_SIGNATURE_INT8, &data.buildings.transport_ships_requested);
+    iob->bind(BIND_SIGNATURE_INT8, &city_building_stats().fishing_boats_requested);
+    iob->bind(BIND_SIGNATURE_INT8, &city_building_stats().warships_requested);
+    iob->bind(BIND_SIGNATURE_INT8, &city_building_stats().transport_ships_requested);
     iob->bind____skip(2);
     iob->bind(BIND_SIGNATURE_INT16, &city_figures().enemies);
     iob->bind____skip(2);
@@ -489,7 +489,7 @@ static void city_data_bind_og_layout(io_buffer* iob) {
     iob->bind____skip(1);
     iob->bind(BIND_SIGNATURE_UINT8, &city_military().total_soldiers);
     iob->bind____skip(4);
-    iob->bind(BIND_SIGNATURE_INT32, &data.buildings.trade_center_building_id);
+    iob->bind(BIND_SIGNATURE_INT32, &city_building_stats().trade_center_building_id);
     iob->bind(BIND_SIGNATURE_INT32, &city_figures().soldiers);
     iob->bind____skip(3);
     iob->bind(BIND_SIGNATURE_INT8, &city_sound().march_enemy);
@@ -534,7 +534,7 @@ static void city_data_bind_og_layout(io_buffer* iob) {
     iob->bind(BIND_SIGNATURE_INT32, &city_food_supply().fish_last_month);
     iob->bind(BIND_SIGNATURE_INT32, &city_food_supply().fish_this_month);
     iob->bind____skip(28);
-    iob->bind(BIND_SIGNATURE_UINT32, data.buildings.festival_square);
+    iob->bind(BIND_SIGNATURE_UINT32, city_building_stats().festival_square);
     iob->bind____skip(16);
     iob->bind(BIND_SIGNATURE_UINT8, &city_gods().ra_no_traders_months_left);
     iob->bind____skip(97);
@@ -567,7 +567,6 @@ void city_data_chunk::bind_data(io_buffer* iob, size_t version) {
 }
 
 void city_data_extra_chunk::bind_data(io_buffer* iob, size_t version) {
-    auto& data = g_city;
     iob->bind____skip(2);
     iob->bind____skip(2);
     iob->bind(BIND_SIGNATURE_XSTR, city_kingdome().player_name_adversary, MAX_PLAYER_NAME);

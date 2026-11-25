@@ -1,4 +1,5 @@
 #include "monument_sphinx.h"
+#include "city/buildings.h"
 #include "graphics/view/view.h"
 #include "grid/orientation.h"
 
@@ -518,7 +519,7 @@ void building_sphinx::preview::ghost_preview(build_planner& planer, painter& ctx
     const int view = camera_view();
     const tile2i origin = origin_from_anchor(end, view);
 
-    const bool all_red = g_city.buildings.count_total(BUILDING_SPHINX) > 0;
+    const bool all_red = city_building_stats().count_total(BUILDING_SPHINX) > 0;
     if (planer.site_blocked || all_red) {
         for (const auto& p : planer.site_parts) {
             ghost_draw::draw_partially_blocked(ctx, all_red, p);
@@ -566,7 +567,7 @@ int building_sphinx::preview::can_place(build_planner& planer, tile2i /*start*/,
     if (state != CAN_PLACE && state != CAN_NOT_BUT_GREEN) {
         return state;
     }
-    if (g_city.buildings.count_total(BUILDING_SPHINX) > 0) {
+    if (city_building_stats().count_total(BUILDING_SPHINX) > 0) {
         planer.set_warning("#only_one_building_of_this_type");
         return CAN_NOT_PLACE;
     }

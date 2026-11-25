@@ -1,4 +1,5 @@
 #include "building/monument_royal_tomb.h"
+#include "city/buildings.h"
 
 #include "building/monuments.h"
 #include "city/city.h"
@@ -31,7 +32,7 @@ namespace {
     };
 
     int work_text(const building_royal_tomb& tomb, const building_royal_tomb::progress_report& r) {
-        auto& b = g_city.buildings;
+        auto& b = city_building_stats();
         if (!b.count_total(BUILDING_WORK_CAMP)) {
             return TEXT_NO_WORK_CAMP;
         }

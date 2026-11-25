@@ -1,4 +1,5 @@
 #include "building/monument_mausoleum.h"
+#include "city/buildings.h"
 
 #include "building/monuments.h"
 #include "city/city.h"
@@ -24,11 +25,11 @@ void apply_mausoleum_title(ui::widget &ui, building_monument *st) {
 }
 
 bool built(e_building_type type) {
-    return g_city.buildings.count_total(type) > 0;
+    return city_building_stats().count_total(type) > 0;
 }
 
 bool working(e_building_type type) {
-    return g_city.buildings.count_active(type) > 0;
+    return city_building_stats().count_active(type) > 0;
 }
 
 textid no_peasants_text() {

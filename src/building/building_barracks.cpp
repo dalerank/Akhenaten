@@ -34,7 +34,7 @@ bool building_recruiter::static_params::is_unique_building() const {
         return false;
     }
 
-    const bool exist = g_city.buildings.count_total(TYPE) > 0;
+    const bool exist = city_building_stats().count_total(TYPE) > 0;
     return exist;
 }
 
@@ -244,17 +244,17 @@ bool building_recruiter::create_tower_sentry() {
 }
 
 void building_recruiter::on_create(int orientation) {
-    g_city.buildings.track_building(base, false);
+    city_building_stats().track_building(base, false);
 }
 
 void building_recruiter::on_post_load() {
     building_impl::on_post_load();
-    g_city.buildings.track_building(base, true);
+    city_building_stats().track_building(base, true);
 }
 
 void building_recruiter::update_count() const {
     const bool is_active = (num_workers() > 0);
-    g_city.buildings.track_building(base, is_active);
+    city_building_stats().track_building(base, is_active);
 }
 
 void building_recruiter::spawn_figure() {

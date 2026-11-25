@@ -1,4 +1,5 @@
 ﻿#include "window_batalion_info.h"
+#include "city/buildings.h"
 
 #include "figure/formation.h"
 #include "city/object_info.h"
@@ -208,7 +209,7 @@ void batalion_info_window::init(object_info &c) {
         if (m->cursed_by_seth) {
             group_id = 89;
             text_id = 1;
-        } else if (g_city.buildings.count_active(BUILDING_RECRUITER)) {
+        } else if (city_building_stats().count_active(BUILDING_RECRUITER)) {
             group_id = 138;
             text_id = 10;
         } else {

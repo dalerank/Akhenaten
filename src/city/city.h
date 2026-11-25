@@ -15,9 +15,6 @@ struct empire_city;
 struct simulation_time_t;
 
 struct city_t {
-    city_buildings_t buildings;
-
-
     void init();
     void reload_objects();
 

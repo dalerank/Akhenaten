@@ -1,4 +1,5 @@
 #include "scenario_revolt.h"
+#include "city/buildings.h"
 
 #include "game/game_events.h"
 #include "city/city_message.h"
@@ -30,7 +31,7 @@ void scenario_revolt_process(void) {
 
     if (g_revolt.state == e_event_state_initial) {
         if (g_simulation.simtime.year == g_revolt.game_year && g_simulation.simtime.month == g_revolt.month) {
-            if (g_city.buildings.count_active(BUILDING_CONSERVATORY) > 0) {
+            if (city_building_stats().count_active(BUILDING_CONSERVATORY) > 0) {
                 g_revolt.state = e_event_state_in_progress;
                 events::emit(event_message{ true, "message_revolt_start", 0, 0, SOURCE_LOCATION });
             } else {

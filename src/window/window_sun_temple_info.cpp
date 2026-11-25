@@ -1,4 +1,5 @@
 #include "building/monument_sun_temple.h"
+#include "city/buildings.h"
 
 #include "building/monuments.h"
 #include "city/city.h"
@@ -23,11 +24,11 @@ private:
 
     // Missing building → `none`; idle guild + nobody on site → `idle`. Else false.
     static bool guild_issue(e_building_type type, int on_site, uint16_t none, uint16_t idle, textid &out) {
-        if (!g_city.buildings.count_total(type)) {
+        if (!city_building_stats().count_total(type)) {
             out = {k_lang, none};
             return true;
         }
-        if (!g_city.buildings.count_active(type) && on_site == 0) {
+        if (!city_building_stats().count_active(type) && on_site == 0) {
             out = {k_lang, idle};
             return true;
         }
@@ -80,16 +81,15 @@ private:
             if (p[SUN_TEMPLE_PROGRESS_PERCENT] >= 100) {
                 return {k_lang, 57};
             }
-            if (!g_city.buildings.count_total(BUILDING_WORK_CAMP)) {
+            if (!city_building_stats().count_total(BUILDING_WORK_CAMP)) {
                 return {k_lang, 13};
             }
-            if (!g_city.buildings.count_total(BUILDING_STONEMASONS_GUILD)) {
+            if (!city_building_stats().count_total(BUILDING_STONEMASONS_GUILD)) {
                 return {k_lang, 14};
             }
             const uint8_t flags = st.work_flags();
-            if (!g_city.buildings.count_active(BUILDING_WORK_CAMP)
-              && p[SUN_TEMPLE_PROGRESS_LABORERS] == 0
-              && !(flags & SUN_TEMPLE_COURTYARD_DONE)) {
+            if (!city_building_stats().count_active(BUILDING_WORK_CAMP) && p[SUN_TEMPLE_PROGRESS_LABORERS] == 0
+                && !(flags & SUN_TEMPLE_COURTYARD_DONE)) {
                 return {k_lang, 17};
             }
             const int masons = p[SUN_TEMPLE_PROGRESS_STONEMASONS];

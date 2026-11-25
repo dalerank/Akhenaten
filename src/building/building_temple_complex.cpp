@@ -1,4 +1,5 @@
 #include "building_temple_complex.h"
+#include "city/buildings.h"
 #include "grid/orientation.h"
 
 #include "city/city.h"
@@ -367,14 +368,14 @@ REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_temple_complex_bast);
 void building_temple_complex::on_create(int orientation) {
     runtime_data().variant = (10 - (2 * orientation)) % 8; // ugh!
     runtime_data().decorative_tiles = get_decorative_tiles_pool().allocate();
-    g_city.buildings.track_building(base, false);
+    city_building_stats().track_building(base, false);
 }
 
 void building_temple_complex::on_post_load() {
     building_impl::on_post_load();
 
     const bool is_active = num_workers() > 0;
-    g_city.buildings.track_building(base, is_active);
+    city_building_stats().track_building(base, is_active);
 
     // save decorative tiles to runtime_data
     const int city_orientation = map_view_orientation() / 2;
@@ -588,7 +589,7 @@ void building_temple_complex::map_tiles_add_temple_complex_parts(building *b) {
 
 void building_temple_complex::update_count() const {
     const bool is_active = num_workers() > 0;
-    g_city.buildings.track_building(base, is_active);
+    city_building_stats().track_building(base, is_active);
 }
 
 void building_temple_complex::on_destroy() {

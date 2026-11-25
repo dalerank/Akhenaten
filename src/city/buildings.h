@@ -1,6 +1,7 @@
 #pragma once
 
 #include "grid/point.h"
+#include "city/buildings.h"
 #include "core/custom_span.hpp"
 #include "core/svector.h"
 #include "building/building.h"
@@ -47,8 +48,7 @@ struct city_buildings_t {
     std::array<record, BUILDING_MAX> buildings;
     std::array<record, RESOURCES_MAX> industry;
 
-    void init();
-    void shutdown();
+    void reset();
 
     void update_tick(bool refresh_only);
     void update_water_supply();
@@ -100,6 +100,7 @@ struct city_buildings_t {
     void check_buildings_twins();
 };
 
+city_buildings_t& city_building_stats();
 
 bool city_buildings_has_distribution_center(void);
 void city_buildings_add_distribution_center(building* center);

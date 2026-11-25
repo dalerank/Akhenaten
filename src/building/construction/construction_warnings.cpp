@@ -1,4 +1,5 @@
 #include "construction_warnings.h"
+#include "city/buildings.h"
 #include "city/city_resource.h"
 #include "city/city_food_supply.h"
 #include "city/city_labor.h"
@@ -40,8 +41,10 @@ namespace {
             events::emit(event_construction_warning{id});
         }
 
-        int active(e_resource r) const { return r == RESOURCE_NONE ? 0 : g_city.buildings.count_industry_active(r); }
-        int total(e_resource r) const { return r == RESOURCE_NONE ? 0 : g_city.buildings.count_industry_total(r); }
+        int active(e_resource r) const {
+            return r == RESOURCE_NONE ? 0 : city_building_stats().count_industry_active(r);
+        }
+        int total(e_resource r) const { return r == RESOURCE_NONE ? 0 : city_building_stats().count_industry_total(r); }
         int stored(e_resource r) const { return r == RESOURCE_NONE ? 0 : city_resource().yards_stored(r); }
         bool can_produce(e_resource r) const { return r != RESOURCE_NONE && g_city.can_produce_resource(r); }
         bool can_import(e_resource r) const { return g_empire.can_import_resource(r, true); }
@@ -154,7 +157,7 @@ namespace {
 
         void check_requirements(e_building_type type) {
             for (const auto& r : rules.requires_building) {
-                if (r.building == type && !shown && g_city.buildings.count_active(r.needs) < 1) {
+                if (r.building == type && !shown && city_building_stats().count_active(r.needs) < 1) {
                     warn(r.warning);
                 }
             }
@@ -206,7 +209,7 @@ namespace {
 
         void check_venue_schools(e_building_type type) {
             for (const auto& s : rules.venue_schools) {
-                if (s.building == type && g_city.buildings.count_total(s.school) < 1) {
+                if (s.building == type && city_building_stats().count_total(s.school) < 1) {
                     warn(s.warning);
                 }
             }

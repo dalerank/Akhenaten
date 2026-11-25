@@ -1,4 +1,5 @@
 #include "building/building_industry.h"
+#include "city/buildings.h"
 
 #include "city/city_buildings.h"
 #include "core/calc.h"
@@ -266,11 +267,11 @@ void building_industry::update_count() const {
     building_impl::update_count();
 
     if (base.output.resource != RESOURCE_NONE) {
-        g_city.buildings.increase_industry_count(base.output.resource, num_workers() > 0);
+        city_building_stats().increase_industry_count(base.output.resource, num_workers() > 0);
     }
 
     if (base.output.resource_second != RESOURCE_NONE) {
-        g_city.buildings.increase_industry_count(base.output.resource_second, num_workers() > 0);
+        city_building_stats().increase_industry_count(base.output.resource_second, num_workers() > 0);
     }
 }
 

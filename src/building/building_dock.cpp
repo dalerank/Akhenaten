@@ -53,7 +53,7 @@ void building_dock::on_place(int orientation, int variant) {
 
 void building_dock::update_count() const {
     const bool is_active = num_workers() > 0 && base.has_open_water_access;
-    g_city.buildings.track_building(base, is_active);
+    city_building_stats().track_building(base, is_active);
 }
 
 void building_dock::update_month() {

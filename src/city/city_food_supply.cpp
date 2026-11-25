@@ -1,4 +1,5 @@
 #include "city/city_food_supply.h"
+#include "city/buildings.h"
 #include "game/simulation.h"
 #include "core/app_module.h"
 #include "game/sim_schedule.h"
@@ -113,10 +114,10 @@ void city_food_supply_t::subscribe_events() {
 }
 
 void city_food_supply_t::advance_month() {
-    hunting_lodges_working = g_city.buildings.count_industry_active(RESOURCE_GAMEMEAT);
+    hunting_lodges_working = city_building_stats().count_industry_active(RESOURCE_GAMEMEAT);
     game_meat_last_month = game_meat_this_month;
     game_meat_this_month = 0;
-    fishing_wharfs_working = g_city.buildings.count_industry_active(RESOURCE_FISH);
+    fishing_wharfs_working = city_building_stats().count_industry_active(RESOURCE_FISH);
     fish_last_month = fish_this_month;
     fish_this_month = 0;
 }
@@ -126,12 +127,12 @@ food_supply_sources city_food_supply_t::gather() const {
     food_supply_sources s;
 
     if (hunting_lodges_working != 0) {
-        s.hunting_food
-          = (game_meat_last_month / hunting_lodges_working) * g_city.buildings.count_industry_active(RESOURCE_GAMEMEAT);
+        s.hunting_food = (game_meat_last_month / hunting_lodges_working)
+                         * city_building_stats().count_industry_active(RESOURCE_GAMEMEAT);
     }
     if (fishing_wharfs_working != 0) {
         s.fishing_food
-          = (fish_last_month / fishing_wharfs_working) * g_city.buildings.count_industry_active(RESOURCE_FISH);
+          = (fish_last_month / fishing_wharfs_working) * city_building_stats().count_industry_active(RESOURCE_FISH);
     }
 
     buildings_valid_do([&](building& b) {

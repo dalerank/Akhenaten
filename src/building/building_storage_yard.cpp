@@ -529,7 +529,7 @@ storage_worker_task building_storageyard_deliver_weapons(building *b) {
         return { STORAGEYARD_TASK_NONE };
     }
 
-    if (g_city.buildings.count_active(BUILDING_RECRUITER) <= 0) {
+    if (city_building_stats().count_active(BUILDING_RECRUITER) <= 0) {
         return { STORAGEYARD_TASK_NONE };
     }
 
@@ -575,7 +575,8 @@ storage_worker_task building_storageyard_deliver_weapons(building *b) {
 }
 
 storage_worker_task building_storageyard_deliver_timber_to_shipyard_school(building * b) {
-    if (g_city.buildings.count_active(BUILDING_SHIPWRIGHT) <= 0 || city_resource().is_stockpiled(RESOURCE_TIMBER)) {
+    if (
+      city_building_stats().count_active(BUILDING_SHIPWRIGHT) <= 0 || city_resource().is_stockpiled(RESOURCE_TIMBER)) {
         return { STORAGEYARD_TASK_NONE };
     }
 
@@ -604,7 +605,7 @@ storage_worker_task building_storageyard_deliver_timber_to_shipyard_school(build
 }
 
 storage_worker_task building_storageyard_deliver_beer_to_senet_house(building *b) {
-    if (g_city.buildings.count_active(BUILDING_SENET_HOUSE) <= 0 || city_resource().is_stockpiled(RESOURCE_BEER)) {
+    if (city_building_stats().count_active(BUILDING_SENET_HOUSE) <= 0 || city_resource().is_stockpiled(RESOURCE_BEER)) {
         return { STORAGEYARD_TASK_NONE };
     }
 
@@ -637,7 +638,7 @@ storage_worker_task building_storageyard_deliver_beer_to_senet_house(building *b
 }
 
 storage_worker_task building_storageyard_deliver_resource_to_zoo(building *b) {
-    if (g_city.buildings.count_active(BUILDING_ZOO) <= 0) {
+    if (city_building_stats().count_active(BUILDING_ZOO) <= 0) {
         return { STORAGEYARD_TASK_NONE };
     }
 
@@ -693,7 +694,7 @@ storage_worker_task building_storageyard_deliver_papyrus_to_scribal_school(build
 
     const e_building_type consumers[] = { BUILDING_SCRIBAL_SCHOOL, BUILDING_LIBRARY, BUILDING_INDUSTRY_OFFICE };
     for (e_building_type consumer : consumers) {
-        if (g_city.buildings.count_active(consumer) <= 0) {
+        if (city_building_stats().count_active(consumer) <= 0) {
             continue;
         }
 

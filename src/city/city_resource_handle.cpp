@@ -1,4 +1,5 @@
 #include "city_resource_handle.h"
+#include "city/buildings.h"
 #include "city/city_resource.h"
 
 #include "empire/empire.h"
@@ -80,11 +81,11 @@ void city_resource_handle::cycle_trade_export() {
 }
 
 int city_resource_handle::industry_active() {
-    return g_city.buildings.count_industry_active(resource);
+    return city_building_stats().count_industry_active(resource);
 }
 
 int city_resource_handle::industry_total() {
-    return g_city.buildings.count_industry_total(resource);
+    return city_building_stats().count_industry_total(resource);
 }
 
 int city_resource_handle::yards_stored() {

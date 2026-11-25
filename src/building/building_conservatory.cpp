@@ -1,4 +1,5 @@
 #include "building/building_conservatory.h"
+#include "city/buildings.h"
 
 #include "building/building_dance_school.h"
 #include "building/building_festival_square.h"
@@ -64,8 +65,8 @@ void building_conservatory::update_month() {
 
 building_id building_conservatory::find_square_in_city() {
     // First check for festival square
-    if (g_city.buildings.festival_square.grid_offset() > 0) {
-        building* square = building_at(g_city.buildings.festival_square);
+    if (city_building_stats().festival_square.grid_offset() > 0) {
+        building* square = building_at(city_building_stats().festival_square);
         if (square && square->is_valid() && square->type == BUILDING_FESTIVAL_SQUARE) {
             return square->id;
         }

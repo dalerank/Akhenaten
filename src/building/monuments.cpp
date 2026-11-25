@@ -1,4 +1,5 @@
 #include "monuments.h"
+#include "city/buildings.h"
 #include "building/monuments_chunks.h"
 
 #include "building/building.h"
@@ -452,7 +453,7 @@ int building_monument_count_temple_complex(void) {
         BUILDING_TEMPLE_COMPLEX_BAST,
     };
 
-    const int count = g_city.buildings.count_active(temple_complex);
+    const int count = city_building_stats().count_active(temple_complex);
     return count;
 }
 

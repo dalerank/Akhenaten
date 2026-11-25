@@ -102,7 +102,6 @@ void file_schema_svx(const int file_version) {
         g_chunk_io.push_chunk<city_data_chunk>(37808, false);
         g_chunk_io.push_chunk<city_data_extra_chunk>(72, false);
     } else {
-        g_chunk_io.push_chunk<city_buildings_chunk>(city_buildings_chunk::size, false);
         g_chunk_io.push_chunk<city_taxes_chunk>(city_taxes_chunk::size, false);
         g_chunk_io.push_chunk<city_distant_battle_chunk>(city_distant_battle_chunk::size, false);
         g_chunk_io.push_chunk<city_scenario_chunk>(city_scenario_chunk::size, false);

@@ -1,4 +1,5 @@
 #include "ratings.h"
+#include "city/buildings.h"
 #include "city/city_kingdome_relations.h"
 #include "city/city_religion.h"
 #include "city/ratings.h"
@@ -142,7 +143,7 @@ void city_ratings_t::update_culture_rating() {
     culture = lowest_points + bonus;
 
     if (!!game_features::gameplay_jewels_workshops_culture_bonus) {
-        const int active_jewels_workshops = g_city.buildings.buildings[BUILDING_JEWELS_WORKSHOP].active;
+        const int active_jewels_workshops = city_building_stats().buildings[BUILDING_JEWELS_WORKSHOP].active;
         culture += active_jewels_workshops / 3;
     }
 

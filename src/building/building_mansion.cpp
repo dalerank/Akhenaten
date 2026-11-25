@@ -1,4 +1,5 @@
 #include "building_mansion.h"
+#include "city/buildings.h"
 #include "city/city_kingdome_relations.h"
 #include "city/city_sentiment.h"
 
@@ -43,7 +44,7 @@ constexpr int k_enemy_theft_pct[5] = {0, 15, 30, 60, 100};
 
 void building_mansion::on_place(int orientation, int variant) {
     building_impl::on_place(orientation, variant);
-    g_city.buildings.track_building(base, false);
+    city_building_stats().track_building(base, false);
     auto &d = runtime_data();
     d.personal_savings_storage = 0;
     update_money_values();
@@ -51,7 +52,7 @@ void building_mansion::on_place(int orientation, int variant) {
 
 void building_mansion::on_post_load() {
     building_impl::on_post_load();
-    g_city.buildings.track_building(base, true);
+    city_building_stats().track_building(base, true);
     update_money_values();
 }
 
@@ -77,7 +78,7 @@ void building_mansion::on_before_collapse() {
 
 void building_mansion::update_count() const {
     const bool is_active = (base.has_road_access);
-    g_city.buildings.track_building(base, is_active);
+    city_building_stats().track_building(base, is_active);
 }
 
 void building_mansion::spawn_figure() {
@@ -219,7 +220,7 @@ void building_mansion::check_theft_from_mansions() {
     }
 
     for (e_building_type type : k_mansion_types) {
-        const auto tracked = g_city.buildings.tracked_buildings()[type];
+        const auto tracked = city_building_stats().tracked_buildings()[type];
         for (auto id : tracked) {
             building *b = building_get(id);
             if (!b || !b->is_valid() || b->state != BUILDING_STATE_VALID) {
@@ -274,5 +275,5 @@ void building_mansion::check_theft_from_mansions() {
 }
 
 bool building_mansion::exist_in_city() {
-    return g_city.buildings.has_mansion();
+    return city_building_stats().has_mansion();
 }

@@ -1,4 +1,5 @@
 #include "clear.h"
+#include "city/buildings.h"
 
 #include "building/building_house.h"
 #include "building/building_farm.h"
@@ -263,7 +264,7 @@ static int clear_land_confirmed(bool measure_only, clear_confirm_t confirm) {
             building_update_state();
         }
         if (items_placed > 0) {
-            g_city.buildings.update_counters();
+            city_building_stats().update_counters();
         }
     }
     return items_placed;
