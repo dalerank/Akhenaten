@@ -71,9 +71,22 @@ vfs::path user_maps_folder() {
     return vfs::path(user_maps_folder().c_str(), filepath + prefix);
 }
 
+static vfs::path user_saves_path(pcstr filepath) {
+    const size_t prefix = strlen(SAVE_FOLDER);
+    if (g_user_data_folder.empty() || SDL_strncasecmp(filepath, SAVE_FOLDER, prefix) != 0
+        || (filepath[prefix] != '/' && filepath[prefix] != '\\')) {
+        return {};
+    }
+    return vfs::path(save_folder().c_str(), filepath + prefix);
+}
+
 vfs::path content_internal_path(pcstr path) {
     if (is_absolute_path(path)) {
         return vfs::path(path);
+    }
+    const vfs::path user_saves = user_saves_path(path);
+    if (!user_saves.empty()) {
+        return user_saves;
     }
     pcstr dir = platform_file_manager_get_base_path();
     vfs::path corrected_path(dir, "/", path);
@@ -349,6 +362,11 @@ vfs::path vfs::path::resolve() {
 
     if (is_absolute_path(filepath)) {
         return filepath;
+    }
+
+    const vfs::path from_saves = user_saves_path(filepath);
+    if (!from_saves.empty()) {
+        return from_saves;
     }
 
     const vfs::path from_user = user_maps_path(filepath);

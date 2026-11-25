@@ -131,7 +131,7 @@ vfs::path fullpath_player_folder(pcstr player_name) {
 
 vfs::path fullpath_saves(vfs::path filename) {
     if (strncasecmp(filename, "Save/", 5) == 0 || strncasecmp(filename, "Save\\", 5) == 0) {
-        return vfs::path(filename);
+        return vfs::path(vfs::save_folder().c_str(), filename.c_str() + strlen(vfs::SAVE_FOLDER));
     }
 
     const vfs::path folder = fullpath_player_folder(game_features::gameopt_player_name.to_string().c_str());
@@ -519,7 +519,7 @@ void GamestateIO::start_loaded_file() {
 }
 
 bool GamestateIO::delete_savegame(vfs::path filename_short) {
-    vfs::path full = fullpath_saves(filename_short);
+    vfs::path full = fullpath_saves(filename_short).resolve();
     return vfs::file_remove(full);
 }
 
