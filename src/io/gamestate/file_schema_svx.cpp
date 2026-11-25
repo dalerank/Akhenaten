@@ -61,22 +61,9 @@
 #include "scenario/scenario_invasion_chunks.h"
 #include "io/save_layout.h"
 
-// Akhenaten .svx - sectioned container when g_chunk_io.is_sectioned(), else legacy
-// positional layout (keeps dead file_version/chunks_schema slots for old files).
 void file_schema_svx(const int file_version) {
     g_chunk_io.push_chunk<scenario_mission_index_chunk>(4, false);
-    if (g_chunk_io.is_sectioned()) {
-        g_chunk_io.push_chunk<save_layouts_chunk>(save_layouts_chunk::SIZE, false);
-    }
-    if (!g_chunk_io.is_sectioned()) {
-        // Two dead chunks that only the positional layout needs. file_version is
-        // read into a static nobody uses, and chunks_schema writes 6004 zero bytes
-        // because chunks_in_used is never set. They must keep their slots for old
-        // .svx files - dropping them would shift every following chunk by 6008
-        // bytes - but the container carries the version in its header instead.
-        g_chunk_io.push_chunk<file_version_chunk>(4, false);
-        g_chunk_io.push_chunk<chunks_schema_chunk>(6004, false);
-    }
+    g_chunk_io.push_chunk<save_layouts_chunk>(save_layouts_chunk::SIZE, false);
     g_chunk_io.push_chunk<image_grid_chunk>(51984 * 4, false);        // (228�) * 4 <<
     g_chunk_io.push_chunk<edge_grid_chunk>(51984, false);             // (228�) * 1
     g_chunk_io.push_chunk<building_grid_chunk>(103968, false);        // (228�) * 2
@@ -108,8 +95,8 @@ void file_schema_svx(const int file_version) {
     g_chunk_io.push_chunk<city_view_camera_chunk>(8, false);               // ok
     g_chunk_io.push_chunk<city_graph_order_chunk>(8, false);               // I guess ????
     g_chunk_io.push_chunk<empire_map_params_chunk>(12, false);             // ok ???
-    // 106 bytes/city: classic 61�106=6466; v178+ 80�106=8480 (Cleopatra name ids 61+)
-    g_chunk_io.push_chunk<empire_cities_chunk>(file_version > 177 ? 8480 : 6466, false);
+    // 106 bytes per city
+    g_chunk_io.push_chunk<empire_cities_chunk>(8480, false);
     g_chunk_io.push_chunk<building_count_industry_chunk>(288, false); // 288 bytes ??????
     g_chunk_io.push_chunk<trade_prices_chunk>(288, false);
     g_chunk_io.push_chunk<figure_names_chunk>(84, false);
@@ -166,57 +153,33 @@ void file_schema_svx(const int file_version) {
     g_chunk_io.push_chunk<bizarre_ordered_fields_9_chunk>(1776, false);
     g_chunk_io.push_chunk<terrain_floodplain_growth_chunk>(51984, false);
     g_chunk_io.push_chunk<monuments_progress_chunk>(51984 * 4, false); // (228�) * 4
-    if (file_version > 167) {
-        g_chunk_io.push_chunk<rubble_type_grid_chunk>(51984, false); //  (228�) * 1
-        g_chunk_io.push_chunk<sandstone_grid_chunk>(103968, false);  // (228�) * 2
-        g_chunk_io.push_chunk<stone_grid_chunk>(103968, false);      // (228�) * 2
-        g_chunk_io.push_chunk<limestone_grid_chunk>(103968, false);  // (228�) * 2
-        g_chunk_io.push_chunk<granite_grid_chunk>(103968, false);    // (228�) * 2
-    }
-    if (file_version > 168) {
-        g_chunk_io.push_chunk<golden_grid_chunk>(103968, false);          // (228�) * 2
-        g_chunk_io.push_chunk<clay_grid_chunk>(103968, false);            // (228�) * 2
-        g_chunk_io.push_chunk<copper_grid_chunk>(103968, false);          // (228�) * 2
-        g_chunk_io.push_chunk<gems_grid_chunk>(103968, false);            // (228�) * 2
-        g_chunk_io.push_chunk<irrigation_value_grid_chunk>(51984, false); // (228�) * 1
-    }
-    if (file_version > 169) {
-        g_chunk_io.push_chunk<iob_enemy_armies_stats_chunk>(16384, false); // actual 15360 + 256 bytes
-    }
-    if (file_version > 170) {
-        g_chunk_io.push_chunk<bridge_part_grid_chunk>(103968, false); // (228�) * 2
-        g_chunk_io.push_chunk<bridge_type_grid_chunk>(103968, false); // (228�) * 2
-    }
-    if (file_version > 171) {
-        // v172 stub � keep schema position for old saves
-        g_chunk_io.push_chunk<invasion_event_pending_chunk>(272, false);
-    }
-    if (file_version > 172) {
-        // 8 + 16*12 + 64*20 = 1480
-        g_chunk_io.push_chunk<invasion_runtime_chunk>(1480, false);
-    }
-    if (file_version > 174) {
-        // 25 chars: a section name must fit svx::NAME_LEN (32)
-        g_chunk_io.push_chunk<storages_empty_all_backup_chunk>(BUILDING_STORAGE_EMPTY_ALL_BACKUP_CHUNK_SIZE, false);
-    }
-    if (file_version > 175) {
-        g_chunk_io.push_chunk<wall_material_grid_chunk>(51984, false); // (228�) * 1
-    }
-    if (file_version > 176) {
-        // count+head+8 order + 8*(bool+u16+u8+i16+bool+pad) + pad = 80
-        g_chunk_io.push_chunk<invasion_auto_resolve_chunk>(80, false);
-    }
-    if (file_version > 182) {
-        // 3 troop slots � 8 + notice + pad = 32
-        g_chunk_io.push_chunk<campaign_carry_troops_chunk>(32, false);
-    }
-    if (file_version > 183) {
-        // 8 monument slots � 12 = 96
-        g_chunk_io.push_chunk<campaign_carry_monuments_chunk>(96, false);
-    }
-    if (file_version > 197) {
-        // count + reserved + 32 * (id[48] + version[16]) = 2052
-        g_chunk_io.push_chunk<mods_chunk>(2052, false);
-    }
+    g_chunk_io.push_chunk<rubble_type_grid_chunk>(51984, false);       //  (228�) * 1
+    g_chunk_io.push_chunk<sandstone_grid_chunk>(103968, false);        // (228�) * 2
+    g_chunk_io.push_chunk<stone_grid_chunk>(103968, false);            // (228�) * 2
+    g_chunk_io.push_chunk<limestone_grid_chunk>(103968, false);        // (228�) * 2
+    g_chunk_io.push_chunk<granite_grid_chunk>(103968, false);          // (228�) * 2
+    g_chunk_io.push_chunk<golden_grid_chunk>(103968, false);           // (228�) * 2
+    g_chunk_io.push_chunk<clay_grid_chunk>(103968, false);             // (228�) * 2
+    g_chunk_io.push_chunk<copper_grid_chunk>(103968, false);           // (228�) * 2
+    g_chunk_io.push_chunk<gems_grid_chunk>(103968, false);             // (228�) * 2
+    g_chunk_io.push_chunk<irrigation_value_grid_chunk>(51984, false);  // (228�) * 1
+    g_chunk_io.push_chunk<iob_enemy_armies_stats_chunk>(16384, false); // actual 15360 + 256 bytes
+    g_chunk_io.push_chunk<bridge_part_grid_chunk>(103968, false);      // (228�) * 2
+    g_chunk_io.push_chunk<bridge_type_grid_chunk>(103968, false);      // (228�) * 2
+    // v172 stub � keep schema position for old saves
+    g_chunk_io.push_chunk<invasion_event_pending_chunk>(272, false);
+    // 8 + 16*12 + 64*20 = 1480
+    g_chunk_io.push_chunk<invasion_runtime_chunk>(1480, false);
+    // 25 chars: a section name must fit svx::NAME_LEN (32)
+    g_chunk_io.push_chunk<storages_empty_all_backup_chunk>(BUILDING_STORAGE_EMPTY_ALL_BACKUP_CHUNK_SIZE, false);
+    g_chunk_io.push_chunk<wall_material_grid_chunk>(51984, false); // (228�) * 1
+    // count+head+8 order + 8*(bool+u16+u8+i16+bool+pad) + pad = 80
+    g_chunk_io.push_chunk<invasion_auto_resolve_chunk>(80, false);
+    // 3 troop slots � 8 + notice + pad = 32
+    g_chunk_io.push_chunk<campaign_carry_troops_chunk>(32, false);
+    // 8 monument slots � 12 = 96
+    g_chunk_io.push_chunk<campaign_carry_monuments_chunk>(96, false);
+    // count + reserved + 32 * (id[48] + version[16]) = 2052
+    g_chunk_io.push_chunk<mods_chunk>(2052, false);
     g_simulation.push_save_sections(file_version);
 }

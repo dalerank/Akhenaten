@@ -98,14 +98,7 @@ public:
     const int get_file_version() {
         return file_version;
     }
-    const e_file_format get_file_format() {
-        return file_format;
-    }
-    // is the file being read/written a sectioned container? the schema needs this:
-    // the legacy .svx layout carries two dead chunks that the container drops
-    bool is_sectioned() const {
-        return file_sectioned;
-    }
+    const e_file_format get_file_format() { return file_format; }
 
     // write/read internal chunk cache (io_buffer sequence) to/from disk file
     bool serialize(pcstr filename, int offset, e_file_format format, const int version, void (*init_schema)(e_file_format _format, const int _version));

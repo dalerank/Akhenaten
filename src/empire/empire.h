@@ -57,7 +57,6 @@ public:
         // Classic Pharaoh saves serialize 61 slots (0..60). Cleopatra adds name ids
         // 61+ (Siwi, Maritis, …) — keep headroom for those lang ids as array indices.
         MAX_CITIES = 80,
-        MAX_CITIES_CLASSIC = 61,
         MAX_ROUTES = 20,
         MAX_MAP_OBJECTS = 200,
         MAX_ROUTE_OBJECTS = 50

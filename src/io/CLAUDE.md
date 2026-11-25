@@ -37,7 +37,7 @@ ChunkSerializer (g_chunk_io)  — push_chunk schema, fill buffers, apply state
 - `save_data_version()` / `latest_save_version` — **what** is inside chunks; drives `if (version > N)` in binds and schema gates.
 - `svx::CONTAINER_REV` / `svx_container_version()` — **how** `.svx` is laid out on disk; only the container cares.
 
-Current save data version: **189** (sectioned `.svx`; chunk field layout unchanged at that bump).
+Current and oldest accepted save data versions: `latest_save_version` and `min_save_version` in `gamestate/save_versions.h`.
 
 ### ChunkSerializer
 
@@ -48,8 +48,7 @@ g_chunk_io.unserialize(reader, 0, format, GamestateIO::read_file_version, file_s
 ```
 
 - Schema is built by `file_schema` in `gamestate/file_schemas.cpp`, with per-format
-  lists in `file_schema_map.cpp`, `file_schema_svx.cpp`; the family marker list is in `file_schemas.cpp`. Legacy positional `.svx` and sectioned `.svx` share
-  `file_schema_svx`; dead padding chunks are gated with `g_chunk_io.is_sectioned()`.
+  lists in `file_schema_map.cpp`, `file_schema_svx.cpp`; the family marker list is in `file_schemas.cpp`.
 - Writes go through `<path>.tmp` then rename (atomic when `offset == 0`).
 - `file_chunk_t::resize()` is the **only** place a chunk buffer may be reallocated (re-hooks `io_buffer`).
 
@@ -64,7 +63,7 @@ Self-describing sections: file header + per-section header/payload/epilog. Looku
 | Bad CRC / truncated / broken epilog | **refuse load** |
 | Unknown section in file | warn, skip |
 
-Legacy `.svx` (no magic) still loads via the positional path. Dead chunks `file_version` / `chunks_schema` stay in that path only (`is_sectioned()` false).
+Positional `.svx` (no magic) predates `min_save_version` and is refused.
 
 Shared payload layout: every piece is `[u32 prefix][body]`; the prefix is `svx::PAYLOAD_UNCOMPRESSED` (raw body) or the PKWare-imploded byte count. Writers always store raw; readers still explode compressed pieces from older saves (`svx::decompress_prefixed`).
 

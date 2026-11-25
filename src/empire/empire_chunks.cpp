@@ -2,12 +2,9 @@
 
 #include "empire/empire.h"
 #include "io/io_buffer.h"
-#include "io/chunk_serializer.h"
 
 void empire_cities_chunk::bind_data(io_buffer* iob, size_t version) {
-    // v178+: Cleopatra name ids 61+ need array slots. Older files keep classic 61.
-    const int city_count = (g_chunk_io.get_file_version() > 177) ? empire_t::MAX_CITIES : empire_t::MAX_CITIES_CLASSIC;
-    for (int i = 0; i < city_count; i++) {
+    for (int i = 0; i < empire_t::MAX_CITIES; i++) {
         empire_city& city = g_empire.get_cities()[i];
         city.lookup_id = i;
         iob->bind_u8(city.in_use);
