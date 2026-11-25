@@ -48,6 +48,7 @@ House.property.unreachable_ticks = { }
 House.property.days_without_food = { }
 
 House.property.population_room = { get: function() { return this.__population_room() } }
+House.property.tax_income_deben = { get: function() { return this.__tax_income_deben() } }
 House.property.level = { get: function() { return this.__house_level() } }
 House.property.model = { get: function() { return city.get_house_model(this.level) } }
 House.property.is_vacant_lot = { get: function() { return this.__is_vacant_lot() } }

@@ -52,7 +52,7 @@ function run_test() {
         __test_signal_ready()
     }
 
-    if (finance_tax_rules.tax_percentage.length !== 5 || finance_tax_rules.house_tax_income_unit !== 10000) {
+    if (finance_tax_rules.tax_percentage.length !== 5) {
         __log_info_native('[test:362] system tax config is not the OG default')
         finish()
         return

@@ -82,6 +82,11 @@ static void house_proto___property_getter(js_State *J) {
     J->push<std::optional<bvariant>>(opt);
 }
 
+static void house_proto___tax_income_deben(js_State* J) {
+    building_house* house = house_from_bid(house_this_id(J));
+    J->push(house ? house->tax_income_deben() : 0);
+}
+
 static void house_proto___population_room(js_State *J) {
     const int bid = house_this_id(J);
     building_house* house = house_from_bid(bid);
@@ -140,6 +145,7 @@ void js_register_house(js_State *J) {
 
     jsB_propf(J, js_intern("House.prototype.__property_getter"), house_proto___property_getter, 1);
     jsB_propf(J, js_intern("House.prototype.__population_room"), house_proto___population_room, 0);
+    jsB_propf(J, js_intern("House.prototype.__tax_income_deben"), house_proto___tax_income_deben, 0);
     jsB_propf(J, js_intern("House.prototype.__house_level"), house_proto___house_level, 0);
     jsB_propf(J, js_intern("House.prototype.__is_vacant_lot"), house_proto___is_vacant_lot, 0);
     jsB_propf(J, js_intern("House.prototype.get_inventory"), house_proto_get_inventory, 1);

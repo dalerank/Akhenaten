@@ -10,11 +10,6 @@ overlay_tax_income {
   column_anim: {pack:PACK_GENERAL, id:103}
 }
 
-function tax_income_denarii(house) {
-    var unit = finance_tax_rules.house_tax_income_unit
-    return Math.floor((house.tax_income + unit / 2) / unit)
-}
-
 [es=(overlay_tax_income, get_tooltip_for_building)]
 function tax_income_building_tooltip(ev) {
     var house = city.get_house(ev.bid)
@@ -23,7 +18,7 @@ function tax_income_building_tooltip(ev) {
         return
     }
 
-    var denarii = tax_income_denarii(house)
+    var denarii = house.tax_income_deben
     if (denarii > 0) {
         city.overlay_tooltip = denarii + __loc("#tax_income_collected")
         return
@@ -50,5 +45,5 @@ function tax_income_building_column_height(ev) {
         return
     }
 
-    city.overlay_column_height = Math.floor(tax_income_denarii(house) / 25)
+    city.overlay_column_height = Math.floor(house.tax_income_deben / 25)
 }

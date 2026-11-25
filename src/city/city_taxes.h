@@ -48,13 +48,11 @@ ANK_CONFIG_PROPERTY(city_taxes_t, tax_percentage, percentage_taxed_people, estim
   house_tax_bonus_percentage)
 
 // tax_percentage: per difficulty, the percent of the taxed amount the city keeps (OG
-// difficulty_tax_percentages); a mission may override it. house_tax_income_unit: a house's yearly tax
-// income is kept in 1/unit deben (OG HOUSE_TAX_INCOME_UNIT).
+// difficulty_tax_percentages); a mission may override it.
 struct finance_tax_rules_t {
     int_dcy tax_percentage;
-    int house_tax_income_unit;
 };
-ANK_CONFIG_STRUCT(finance_tax_rules_t, tax_percentage, house_tax_income_unit)
+ANK_CONFIG_STRUCT(finance_tax_rules_t, tax_percentage)
 extern finance_tax_rules_t finance_tax_rules;
 
 city_taxes_t& city_taxes();

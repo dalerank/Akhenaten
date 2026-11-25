@@ -421,6 +421,11 @@ void building_house::change_to(building &b, e_building_type new_type, bool force
     d.image_id = image_id;
 }
 
+int building_house::tax_income_deben() const {
+    constexpr int income_unit = 10000;
+    return (runtime_data().tax_income + income_unit / 2) / income_unit;
+}
+
 int16_t building_house::population_room() const {
     if (runtime_data().frog_infest_days > 0 || base.has_plague) {
         return 0;

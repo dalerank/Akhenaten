@@ -45,8 +45,7 @@ function house_tax_info(house) {
     if (!house.tax_coverage)
         return __loc(127, 23)
 
-    var pct = Math.floor((house.tax_income_or_storage / 2) * city.taxes.tax_percentage / 100)
-    return __loc(127, 24) + " " + pct + " " + __loc(127, 25)
+    return __loc(127, 24) + " " + house.tax_income_deben + " " + __loc(127, 25)
 }
 
 function house_happiness_text_id(house) {
