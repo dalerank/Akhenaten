@@ -11,26 +11,45 @@ namespace vfs {
     ZipArchive::ZipArchive(const vfs::path &file) : _filepath(file) {
         vfs::path ospath = vfs::path::resolve(file);
         _data = vfs::file_open(ospath, "rb");
+        if (!_data) {
+            return;
+        }
 
-        SZIPFileHeader header;
+        uint32_t sig = 0;
+        _data->r(&sig, 4);
 
-        _data->r(&header.Sig, 4);
-
-        const bool zip = (header.Sig == 0x04034b50);
-        _isGZip = ((header.Sig & 0xffff) == 0x8b1f); // gzip
+        const bool zip = (sig == 0x04034b50);
+        _isGZip = ((sig & 0xffff) == 0x8b1f); // gzip
 
         _data->seek(0);
-        if (_data && (zip || _isGZip)) {
+        if (zip || _isGZip) {
             if (_isGZip) {
-                while (scanGZipHeader()) {
+                while (!_corrupt && scanGZipHeader()) {
                     ; //
                 }
             } else {
-                while (scanZipHeader()) {
+                while (!_corrupt && scanZipHeader()) {
                     ; //
                 }
             }
         }
+
+        if (_data->failed() && !_corrupt) {
+            markCorrupt("truncated");
+        }
+
+        if (_corrupt) {
+            _files.clear();
+            _entries.clear();
+            _names.clear();
+        }
+    }
+
+    void ZipArchive::markCorrupt(pcstr reason) {
+        if (!_corrupt) {
+            logs::warn("zip: %s is corrupt (%s), ignored", _filepath.c_str(), reason);
+        }
+        _corrupt = true;
     }
 
     ZipArchive::~ZipArchive() {
@@ -58,7 +77,9 @@ namespace vfs {
 
         // read header
         SGZIPMemberHeader header;
-        _data->r(&header, sizeof(SGZIPMemberHeader));
+        if (!_data->r(&header, sizeof(SGZIPMemberHeader))) {
+            return false;
+        }
 
         // check header value
         if (header.sig != 0x8b1f) {
@@ -68,7 +89,7 @@ namespace vfs {
         // now get the file info
         if (header.flags & EGZF_EXTRA_FIELDS) {
             // read lenth of extra data
-            unsigned short dataLen;
+            unsigned short dataLen = 0;
 
             _data->r(&dataLen, 2);
 
@@ -79,7 +100,7 @@ namespace vfs {
         bstring512 ZipFileName;
 
         if (header.flags & EGZF_FILE_NAME) {
-            char c;
+            char c = 0;
             _data->r(&c, 1);
             while (c) {
                 ZipFileName.append(c);
@@ -107,6 +128,10 @@ namespace vfs {
 
         if (header.flags & EGZF_CRC16) {
             _data->advance(2);
+        }
+
+        if (_data->failed() || _data->elapsed() < 8) {
+            return false;
         }
 
         // we are now at the start of the data blocks
@@ -139,7 +164,9 @@ namespace vfs {
         entry.Offset = 0;
         memset(&entry.header, 0, sizeof(SZIPFileHeader));
 
-        _data->r(&entry.header, sizeof(SZIPFileHeader));
+        if (!_data->r(&entry.header, sizeof(SZIPFileHeader))) {
+            return false;
+        }
 
         if (entry.header.Sig != 0x04034b50) {
             return false; // local file headers end here.
@@ -148,22 +175,29 @@ namespace vfs {
         // read filename
         {
             char tmp[512] = { 0 };
-            verify_no_crash(entry.header.FilenameLength + 2 < sizeof(tmp));
-            _data->r(tmp, entry.header.FilenameLength);
+            if (entry.header.FilenameLength >= sizeof(tmp)) {
+                markCorrupt("file name too long");
+                return false;
+            }
+            if (!_data->r(tmp, entry.header.FilenameLength)) {
+                return false;
+            }
             tmp[entry.header.FilenameLength] = 0;
             entry_name = tmp;
         }
 
         // Skip extra field (AES encryption not supported)
-        if (entry.header.ExtraFieldLength) {
-            _data->advance(entry.header.ExtraFieldLength);
+        if (entry.header.ExtraFieldLength && !_data->advance(entry.header.ExtraFieldLength)) {
+            return false;
         }
 
         // if bit 3 was set, use CentralDirectory for setup
         if (!ignoreGPBits && entry.header.GeneralBitFlag & ZIP_INFO_IN_DATA_DESCRIPTOR) {
             SZIPFileCentralDirEnd dirEnd;
             // First place where the end record could be stored
-            _data->seek(_data->size() - 22);
+            if (!_data->seek(_data->size() - 22)) {
+                return false;
+            }
             const char endID[] = { 0x50, 0x4b, 0x05, 0x06, 0x0 };
             char tmp[5] = { '\0' };
             bool found = false;
@@ -188,14 +222,19 @@ namespace vfs {
                     seek = 7;
                     break;
                 }
-                _data->advance(-seek);
+                if (!_data->advance(-seek)) {
+                    break;
+                }
             }
-            _data->r(&dirEnd, sizeof(dirEnd));
+            if (!found) {
+                markCorrupt("no central directory");
+                return false;
+            }
+            if (!_data->r(&dirEnd, sizeof(dirEnd)) || !_data->seek(dirEnd.Offset)) {
+                return false;
+            }
 
-            //_files.resize(dirEnd.TotalEntries);
-            //_entries.resize(dirEnd.TotalEntries);
-            _data->seek(dirEnd.Offset);
-            while (scanCentralDirectoryHeader()) {
+            while (!_corrupt && scanCentralDirectoryHeader()) {
                 ; //
             }
             return false;
@@ -204,7 +243,9 @@ namespace vfs {
         // store position in file
         entry.Offset = _data->tell();
         // move forward length of data
-        _data->advance(entry.header.DataDescriptor.CompressedSize);
+        if (!_data->advance(entry.header.DataDescriptor.CompressedSize)) {
+            return false;
+        }
 
         _names.push_back(entry_name.c_str());
         _entries.push_back(entry_name.tolower().c_str());
@@ -231,9 +272,13 @@ namespace vfs {
 
         const long pos = _data->tell();
         const size_t scanned = _files.size();
-        _data->seek(entry.RelativeOffsetOfLocalHeader);
+        if (!_data->seek(entry.RelativeOffsetOfLocalHeader)) {
+            return false;
+        }
         scanZipHeader(true);
-        _data->seek(pos + entry.FilenameLength + entry.ExtraFieldLength + entry.FileCommentLength);
+        if (!_data->seek((int64_t)pos + entry.FilenameLength + entry.ExtraFieldLength + entry.FileCommentLength)) {
+            return false;
+        }
         // a streamed archive (bit 3) leaves the sizes of the local header at 0: the central directory has them
         if (_files.size() == scanned + 1) {
             _files.back().header.DataDescriptor.CompressedSize = entry.CompressedSize;
@@ -298,7 +343,16 @@ namespace vfs {
 
         const bool is_text_file = !!strstr(mode, "t");
         const int txr_limiter = is_text_file ? 1 : 0;
+        if (index >= _files.size()) {
+            return {};
+        }
         const SZipFileEntry &e = _files[index];
+        constexpr unsigned int max_entry_size = 256u << 20;
+        if (e.header.DataDescriptor.UncompressedSize > max_entry_size
+            || e.header.DataDescriptor.CompressedSize > (unsigned int)_data->size()) {
+            logs::warn("zip: %s in %s is too large", _entries[index].c_str(), _filepath.c_str());
+            return {};
+        }
 
         short actualCompressionMethod = e.header.CompressionMethod;
 
@@ -310,17 +364,18 @@ namespace vfs {
         switch (actualCompressionMethod) {
         case 0: // no compression
         {
-            _data->seek(e.Offset);
             const unsigned int uncompressedSize = e.header.DataDescriptor.UncompressedSize;
             const size_t memsize = uncompressedSize + txr_limiter;
             char *mem = (char*)malloc(memsize);
-            _data->r(mem, uncompressedSize);
+            if (!_data->seek(e.Offset) || !_data->r(mem, uncompressedSize)) {
+                free(mem);
+                return {};
+            }
             if (is_text_file) {
                 mem[uncompressedSize] = 0; // null-terminate the string
             }
             return std::make_shared<data_reader>(_entries[index].c_str(), mem, (int)memsize);
-        }
-        break;
+        } break;
 
         case 8:
         {
@@ -337,8 +392,9 @@ namespace vfs {
                 return {};
             }
 
-            _data->seek(e.Offset);
-            _data->r(pcData.data(), compressedSize);
+            if (!_data->seek(e.Offset) || !_data->r(pcData.data(), compressedSize)) {
+                return {};
+            }
 
             // Setup the inflate stream.
             z_stream stream;
@@ -395,8 +451,9 @@ namespace vfs {
                 return {};
             }
 
-            _data->seek(e.Offset);
-            _data->r(pcData.data(), compressedSize);
+            if (!_data->seek(e.Offset) || !_data->r(pcData.data(), compressedSize)) {
+                return {};
+            }
 
             bz_stream bz_ctx = { 0 };
             /* use BZIP2's default memory allocation
@@ -451,14 +508,21 @@ namespace vfs {
                 return {};
             }
 
-            _data->seek(e.Offset);
-            _data->r(pcData.data(), compressedSize);
+            if (!_data->seek(e.Offset) || !_data->r(pcData.data(), compressedSize)) {
+                return {};
+            }
 
             ELzmaStatus status;
             SizeT tmpDstSize = uncompressedSize;
             SizeT tmpSrcSize = compressedSize;
 
+            if (compressedSize < 4) {
+                return {};
+            }
             unsigned int propSize = (pcData[3] << 8) + pcData[2];
+            if (propSize + 4 > compressedSize) {
+                return {};
+            }
             int err = LzmaDecode((Byte *)pBuf.data(), &tmpDstSize,
                 (Byte *)pcData.data() + 4 + propSize, &tmpSrcSize,
                 (Byte *)pcData.data() + 4, propSize, e.header.GeneralBitFlag & 0x1 ? LZMA_FINISH_END : LZMA_FINISH_ANY, &status, &lzmaAlloc);

@@ -654,8 +654,20 @@ void mods_init(const mods_options& opts) {
             return;
         }
 
+        const vfs::path mod_path(dir, "/", file);
+        int png_count = 0;
+        if (!entry.folder) {
+            const vfs::ZipArchive archive(mod_path);
+            if (!archive.isValid()) {
+                logs::warn("[mods] %s is not a valid archive, skipped", file);
+                return;
+            }
+            png_count = (int)std::count_if(archive.entries().begin(), archive.entries().end(),
+              [](const xstring& e) { return vfs::file_has_extension(e.c_str(), "png"); });
+        }
+
         mod_info& mod = g_mods.add(mod_name);
-        mod.path = vfs::path(dir, "/", file);
+        mod.path = mod_path;
         mod.name = mod_name;
         mod.downloaded = true;
         mod.folder = entry.folder;
@@ -668,7 +680,7 @@ void mods_init(const mods_options& opts) {
 
         mod.useridx = imagepak::get_max_useridx() + 1;
         mod.start_index = imagepak::get_maxseen_imgid() + 1;
-        mod.entries_num = imagepak::get_entries_num(mod.path.c_str());
+        mod.entries_num = png_count;
 
         imagepak::useridx_update(mod.useridx);
         imagepak::update_max_imgid(mod.start_index + mod.entries_num);

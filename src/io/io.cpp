@@ -4,6 +4,8 @@
 #include "content/zipreader.hpp"
 #include "platform/platform.h"
 
+#include <algorithm>
+
 int io_read_sg3_entries_num(vfs::path filepath) {
     vfs::path fs_file = filepath.resolve();
     if (fs_file.empty()) {
@@ -25,12 +27,14 @@ int io_read_sg3_entries_num(vfs::path filepath) {
         uint32_t reserved;
     } sgx_header;
 
-    [[maybe_unused]] int bytesRead = fread(&sgx_header, sizeof(sgx_header_t), 1, fp);
+    const size_t headers_read = fread(&sgx_header, sizeof(sgx_header_t), 1, fp);
     vfs::file_close_os(fp);
 
-    sgx_header.entries_num += 1;
+    if (headers_read != 1 || sgx_header.entries_num >= UINT16_MAX) {
+        return 0;
+    }
 
-    return sgx_header.entries_num;
+    return sgx_header.entries_num + 1;
 }
 
 bool io_read_sg3_has_system_bmp(vfs::path filepath) {
@@ -109,9 +113,9 @@ int io_read_file_part_into_buffer(vfs::path  filepath, int localizable, buffer* 
     int bytes_read = 0;
     vfs::reader reader = vfs::file_open(fs_file, "rb");
     if (reader) {
-        reader->seek(offset_in_file);
-        buf->from_file((size_t)size, reader);
-        bytes_read = size;
+        if (size >= 0 && reader->seek(offset_in_file)) {
+            bytes_read = (int)buf->from_file((size_t)std::min(size, reader->elapsed()), reader);
+        }
     }
     return bytes_read;
 }

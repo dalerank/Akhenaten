@@ -55,6 +55,9 @@ static int convert_uncompressed(buffer* buf, const image_t &img) {
 static int convert_compressed(buffer* buf, int data_length, const image_t &img) {
     // int pixels_count = 0;
     atlas_data_t *p_atlas = img.atlas.p_atlas;
+    if (img.width <= 0) {
+        return 0;
+    }
     int atlas_dst = (img.atlas.offset.y * p_atlas->width) + img.atlas.offset.x;
     int y = 0;
     int x = 0;
@@ -72,6 +75,9 @@ static int convert_compressed(buffer* buf, int data_length, const image_t &img) 
             // control = number of concrete pixels
             for (int i = 0; i < control; i++) {
                 int dst = atlas_dst + y * p_atlas->width + x;
+                if (dst < 0 || dst >= p_atlas->bmp_size) {
+                    return 0;
+                }
                 p_atlas->temp.pixel_buffer[dst] = image_to_32_bit(buf->read_u16());
                 x++;
                 if (x >= img.width) {
@@ -503,18 +509,31 @@ bool imagepak::load_zip_pak(vfs::path pak, int starting_index) {
     archive arch = config::load(configname);
 
     global_image_index_offset = starting_index;
+    bool groups_valid = true;
+    int total_entries = 0;
     g_config_arch.r_array(pak.c_str(), [&](archive arch) {
         int start_index = arch.r_int("start_index");
         int finish_index = arch.r_int("finish_index");
         if (finish_index <= 0) {
             finish_index = start_index;
         }
-        verify_no_crash(finish_index >= start_index);
-        group_image_ids[groups_num] = entries_num;
+        if (!groups_valid || groups_num >= PAK_GROUPS_MAX || start_index < 0 || finish_index < start_index
+            || finish_index - start_index >= UINT16_MAX - total_entries) {
+            groups_valid = false;
+            return;
+        }
+        group_image_ids[groups_num] = total_entries;
         bmp_names[groups_num] = arch.r_string("name").c_str();
-        entries_num += (finish_index - start_index) + 1;
+        total_entries += (finish_index - start_index) + 1;
         ++groups_num;
     });
+
+    if (!groups_valid) {
+        logs::error("imagepak: %s has a bad group list (more than %d groups, a bad range or more than %d images)",
+          datafile.c_str(), (int)PAK_GROUPS_MAX, (int)UINT16_MAX - 1);
+        return false;
+    }
+    entries_num = total_entries;
 
     verify_no_crash(global_image_index_offset >= 25000);
     images_array.reserve(entries_num);
@@ -790,8 +809,16 @@ bool imagepak::load_pak(vfs::path pak_name, int starting_index) {
     version = pak_buf->read_u32();
     int unk02 = pak_buf->read_u32();
     int unk03 = pak_buf->read_u32(); // max num of img entries (225 spaces at the end left unused?)
-    entries_num = pak_buf->read_u32() + 1; // the first entry (id 0) in the pak is always empty, but necessary for the layout to get mapped properly
-    num_bmp_names = pak_buf->read_u32();
+    const uint32_t raw_entries_num = pak_buf->read_u32();
+    const uint32_t raw_bmp_names_num = pak_buf->read_u32();
+    if (raw_entries_num >= UINT16_MAX || raw_bmp_names_num > PAK_GROUPS_MAX) {
+        logs::error("imagepak: %s is corrupt (entries=%u, bitmaps=%u)", filename_sgx.c_str(), raw_entries_num,
+          raw_bmp_names_num);
+        return false;
+    }
+    entries_num = raw_entries_num + 1; // the first entry (id 0) in the pak is always empty, but necessary for the
+                                       // layout to get mapped properly
+    num_bmp_names = raw_bmp_names_num;
     int unk06 = pak_buf->read_u32(); // bmp group names minus 1?
     int unk07 = pak_buf->read_u32(); // sum of unk08 and unk09
     int unk08 = pak_buf->read_u32(); // .555 file size (off by 4 sometimes)
@@ -1062,7 +1089,13 @@ bool imagepak::load_pak(vfs::path pak_name, int starting_index) {
         }
 
         if (img.offset_mirror != 0) {
-            img.mirrored_img = &images_array.at(img.sgx_index + img.offset_mirror);
+            const int mirror_index = img.sgx_index + img.offset_mirror;
+            if (mirror_index >= 0 && mirror_index < (int)images_array.size()) {
+                img.mirrored_img = &images_array[mirror_index];
+            } else {
+                logs::error("imagepak: %s image %d mirrors missing image %d", pak_name.c_str(), img.sgx_index,
+                  mirror_index);
+            }
         }
 
         image_packer_rect& rect = packer.rects[img.rect_index];

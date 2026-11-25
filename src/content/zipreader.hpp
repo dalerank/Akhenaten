@@ -35,8 +35,8 @@ namespace vfs {
         short LastModFileTime;
         short LastModFileDate;
         SZIPFileDataDescriptor DataDescriptor;
-        short FilenameLength;
-        short ExtraFieldLength;
+        unsigned short FilenameLength;
+        unsigned short ExtraFieldLength;
         // filename (variable size)
         // extra field (variable size )
     } PACK_STRUCT;
@@ -145,6 +145,8 @@ namespace vfs {
 
         bool scanCentralDirectoryHeader();
 
+        void markCorrupt(pcstr reason);
+
         // holds extended info about files
         vfs::path _filepath;
         std::vector<SZipFileEntry> _files;
@@ -152,7 +154,8 @@ namespace vfs {
         std::vector<xstring> _names;
         reader _data;
 
-        bool _isGZip;
+        bool _isGZip = false;
+        bool _corrupt = false;
     };
 
 } // vfs

@@ -253,8 +253,7 @@ size_t buffer::from_file(size_t count, vfs::reader reader) {
     verify_no_crash(count <= size());
     size_t result = 0;
     if (count <= size()) {
-        reader->r(data.data(), count);
-        result = count;
+        result = reader->r(data.data(), count) ? count : 0;
     }
     return result;
 }

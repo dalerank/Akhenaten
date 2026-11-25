@@ -10,7 +10,7 @@
 namespace vfs {
 
 struct reader_base {
-    inline reader_base() : __data(nullptr), __pos(0) {}
+    inline reader_base() : __data(nullptr), __pos(0), __size(0) {}
     inline reader_base(pcstr _debug_info, const void *data, int size)
         : __data((const uint8_t *)data), __pos(0), __size(size) {
         __debug_info = _debug_info;
@@ -19,10 +19,15 @@ struct reader_base {
     inline int elapsed() const { return __size - __pos; };
     inline bool eof() const { return elapsed() <= 0; };
     inline int tell() const { return __pos; };
-    inline void seek(int ptr) {
-        __pos = ptr;
-        verify_no_crash((__pos <= __size) && (__pos >= 0));
+    inline bool seek(int64_t ptr) {
+        if (ptr < 0 || ptr > __size) {
+            __failed = true;
+            return false;
+        }
+        __pos = (int)ptr;
+        return true;
     };
+    inline bool failed() const { return __failed; }
     inline char *begin() { return (char*)__data; }
     inline char *end() { return (char*)(__data + __size); }
     inline const char *begin() const { return (const char*)__data; }
@@ -31,16 +36,20 @@ struct reader_base {
     inline int size() const { return __size; }
     inline void *data() const { return (void *)__data; };
     inline void *current_pointer() const { return (void *)(__data + __pos); };
-    inline void advance(size_t cnt) {
-        __pos += (int)cnt;
-        verify_no_crash((__pos <= __size) && (__pos >= 0));
-    };
+    inline bool advance(int64_t cnt) { return seek((int64_t)__pos + cnt); };
     inline void rewind() { seek(0); }
 
-    inline void r(void *p, int c) {
-        verify_no_crash(__pos + c <= __size);
-        memcpy(p, current_pointer(), c);
-        advance(c);
+    inline bool r(void* p, int64_t c) {
+        if (c < 0 || c > elapsed()) {
+            __failed = true;
+            if (c > 0) {
+                memset(p, 0, (size_t)c);
+            }
+            return false;
+        }
+        memcpy(p, current_pointer(), (size_t)c);
+        __pos += (int)c;
+        return true;
     }
 
     char *readline(char *buf, int n) {
@@ -74,47 +83,47 @@ struct reader_base {
     }
 
     inline uint64_t r_uint64_t() {
-        uint64_t *t = (uint64_t *)current_pointer();
-        advance(sizeof(*t));
-        return (*t);
+        uint64_t t = 0;
+        r(&t, sizeof(t));
+        return t;
     }
     inline uint32_t r_uint32_t() {
-        uint32_t *t = (uint32_t *)current_pointer();
-        advance(sizeof(*t));
-        return (*t);
+        uint32_t t = 0;
+        r(&t, sizeof(t));
+        return t;
     }
     inline uint16_t r_uint16_t() {
-        uint16_t *t = (uint16_t *)current_pointer();
-        advance(sizeof(*t));
-        return (*t);
+        uint16_t t = 0;
+        r(&t, sizeof(t));
+        return t;
     }
     inline uint8_t r_uint8_t() {
-        uint8_t *t = (uint8_t *)current_pointer();
-        advance(sizeof(*t));
-        return *t;
+        uint8_t t = 0;
+        r(&t, sizeof(t));
+        return t;
     }
     inline int64_t r_int64_t() {
-        int64_t *t = (int64_t *)current_pointer();
-        advance(sizeof(*t));
-        return (*t);
+        int64_t t = 0;
+        r(&t, sizeof(t));
+        return t;
     }
     inline int32_t r_int32_t() {
-        int32_t *t = (int32_t *)current_pointer();
-        advance(sizeof(*t));
-        return (*t);
+        int32_t t = 0;
+        r(&t, sizeof(t));
+        return t;
     }
     inline int16_t r_int16_t() {
-        int16_t *t = (int16_t *)current_pointer();
-        advance(sizeof(*t));
-        return (*t);
+        int16_t t = 0;
+        r(&t, sizeof(t));
+        return t;
     }
     inline int8_t r_int8_t() {
-        int8_t *t = (int8_t *)current_pointer();
-        advance(sizeof(*t));
-        return *t;
+        int8_t t = 0;
+        r(&t, sizeof(t));
+        return t;
     }
     inline float r_float() {
-        float t;
+        float t = 0.f;
         r(&t, sizeof(t));
         return t;
     }
@@ -129,6 +138,7 @@ protected:
         __data = (const uint8_t *)data;
         __size = size;
         __pos = pos;
+        __failed = false;
         __debug_info = _debug_info;
     }
 
@@ -144,6 +154,7 @@ protected:
     const uint8_t *__data;
     int __pos;
     int __size;
+    bool __failed = false;
 };
 
 class data_reader : public reader_base {

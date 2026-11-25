@@ -33,7 +33,7 @@ private:
     int version;
     size_t groups_num;
     std::array<bmp_name, PAK_GROUPS_MAX> bmp_names;
-    uint16_t num_bmp_names;
+    uint16_t num_bmp_names = 0;
     uint16_t group_image_ids[PAK_GROUPS_MAX];
 
     bool should_load_system_sprites;
