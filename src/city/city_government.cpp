@@ -1,4 +1,3 @@
-#include "city/city.h"
 #include "city/buildings.h"
 #include "city/city_buildings.h"
 #include "game/simulation.h"
@@ -14,7 +13,7 @@
 #include <algorithm>
 #include <cstdint>
 
-void city_t::government_distribute_treasury() {
+void city_finance_t::distribute_treasury() {
     OZZY_PROFILER_FUNCTION();
 
     building_mansion::update_money_values();
@@ -87,7 +86,7 @@ public:
                           if (tick != 34) {
                               return;
                           }
-                          g_city.government_distribute_treasury();
+                          city_finance().distribute_treasury();
                       }});
     }
 };

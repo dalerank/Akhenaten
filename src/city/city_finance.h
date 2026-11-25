@@ -125,6 +125,7 @@ struct city_finance_t {
     void update_interest();
     void process_request(event_finance_request request);
     void calculate_totals();
+    void distribute_treasury();
     void reset();
 
 private:

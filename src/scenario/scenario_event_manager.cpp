@@ -1,4 +1,5 @@
 #include "scenario_event_manager.h"
+#include "city/city_houses.h"
 #include "city/city_kingdome_relations.h"
 #include "city/city_health.h"
 #include "core/app_module.h"
@@ -834,7 +835,7 @@ static void city_hailstorm_start() {
         }
     }
     events::emit(event_sound_track{"plague_hailstorm"});
-    g_city.change_happiness(-DISASTER_HAPPINESS_LOSS);
+    city_houses().change_happiness(-DISASTER_HAPPINESS_LOSS);
     logs::info("[disaster] hailstorm killed=%d", killed);
 }
 
@@ -905,7 +906,7 @@ static void city_blood_river_start(event_ph_t& event) {
     }
     event.data.sweep.total = (int16_t)(amount * DISASTER_TICKS_PER_AMOUNT);
     event.data.sweep.countdown = event.data.sweep.total;
-    g_city.change_happiness(-DISASTER_HAPPINESS_LOSS);
+    city_houses().change_happiness(-DISASTER_HAPPINESS_LOSS);
     logs::info("[disaster] blood river amount=%d sweep=%d", amount, event.data.sweep.countdown);
 }
 

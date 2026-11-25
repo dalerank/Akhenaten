@@ -1,4 +1,6 @@
 #include "buildings.h"
+#include "scenario/scenario.h"
+#include "building/building_granary.h"
 #include "city/city_health.h"
 #include "game/simulation.h"
 #include "core/app_module.h"
@@ -113,7 +115,7 @@ int city_buildings_unknown_value() {
     return city_building_stats().unknown_value;
 }
 
-void city_t::buildings_update_open_water_access() {
+void city_buildings_t::update_open_water_access() {
     OZZY_PROFILER_FUNCTION();
 }
 
@@ -325,6 +327,44 @@ void city_buildings_t::update_religion_supply_houses() {
     }
 }
 
+bool city_buildings_t::determine_granary_get_foods(resource_list& foods, int road_network) {
+    if (g_scenario.kingdom_supplies_grain) {
+        return false;
+    }
+
+    foods.clear();
+    buildings_valid_do(
+      [&](building& b) {
+          building_granary* granary = b.dcast_granary();
+          verify_no_crash(granary);
+          if (!granary->has_road_access()) {
+              return;
+          }
+
+          if (!building_granary_touches_network(b, road_network)) {
+              return;
+          }
+
+          const int pct_workers = granary->worker_percentage();
+          if (pct_workers < 100 || granary->amount(RESOURCE_NONE) < 100) {
+              return;
+          }
+
+          if (!granary->is_empty_all()) {
+              return;
+          }
+
+          for (const auto& r : resource_list::foods) {
+              if (granary->is_getting(r.type)) {
+                  foods[r.type] = 1;
+              }
+          }
+      },
+      BUILDING_GRANARY);
+
+    return foods.any();
+}
+
 class buildings_system : public sim_system {
 public:
     const char* name() const override { return "buildings"; }
@@ -335,13 +375,19 @@ public:
         }
     }
     void register_steps(sim_schedule_t& schedule) override {
+        schedule.add({sim_step_generate_figures, SIM_PHASE_TICK, [](int tick) {
+                          if (tick != 31) {
+                              return;
+                          }
+                          city_building_stats().generate_figures();
+                      }});
         schedule.add(
           {sim_step_buildings_tick, SIM_PHASE_TICK_BEGIN, [](int) { city_building_stats().update_tick(game.paused); }});
         schedule.add({sim_step_open_water_access, SIM_PHASE_TICK, [](int tick) {
                           if (tick != 19) {
                               return;
                           }
-                          g_city.buildings_update_open_water_access();
+                          city_building_stats().update_open_water_access();
                       }});
         schedule.add({sim_step_water_supply, SIM_PHASE_TICK, [](int tick) {
                           if (tick != 27) {

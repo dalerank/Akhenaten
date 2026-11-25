@@ -46,7 +46,7 @@ namespace {
         }
         int total(e_resource r) const { return r == RESOURCE_NONE ? 0 : city_building_stats().count_industry_total(r); }
         int stored(e_resource r) const { return r == RESOURCE_NONE ? 0 : city_resource().yards_stored(r); }
-        bool can_produce(e_resource r) const { return r != RESOURCE_NONE && g_city.can_produce_resource(r); }
+        bool can_produce(e_resource r) const { return r != RESOURCE_NONE && g_empire.can_produce_resource(r); }
         bool can_import(e_resource r) const { return g_empire.can_import_resource(r, true); }
         bool could_import(e_resource r) const { return g_empire.can_import_resource(r, false); }
 

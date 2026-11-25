@@ -772,7 +772,7 @@ storage_worker_task building_storage_yard::deliver_food_to_gettingup_granary(bui
     }
 
     resource_list granary_resources;
-    if (!g_city.determine_granary_get_foods(granary_resources, warehouse->road_network())) {
+    if (!city_building_stats().determine_granary_get_foods(granary_resources, warehouse->road_network())) {
         return {STORAGEYARD_TASK_NONE};
     }
 

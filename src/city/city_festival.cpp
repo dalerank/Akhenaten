@@ -1,4 +1,5 @@
 #include "city_festival.h"
+#include "city/city_houses.h"
 #include "city/city_religion.h"
 #include "game/sim_schedule.h"
 
@@ -69,40 +70,40 @@ void city_festival_t::execute_festival() {
         first_festival_effect_months = 12;
         switch (planned_size) {
         case FESTIVAL_SMALL:
-            g_city.change_happiness(7);
+            city_houses().change_happiness(7);
             break;
         case FESTIVAL_LARGE:
-            g_city.change_happiness(9);
+            city_houses().change_happiness(9);
             break;
         case FESTIVAL_GRAND:
-            g_city.change_happiness(12);
+            city_houses().change_happiness(12);
             break;
         }
     } else if (second_festival_effect_months <= 0) {
         second_festival_effect_months = 12;
         switch (planned_size) {
         case FESTIVAL_SMALL:
-            g_city.change_happiness(2);
+            city_houses().change_happiness(2);
             break;
         case FESTIVAL_LARGE:
-            g_city.change_happiness(3);
+            city_houses().change_happiness(3);
             break;
         case FESTIVAL_GRAND:
-            g_city.change_happiness(5);
+            city_houses().change_happiness(5);
             break;
         }
     } else {
         switch (planned_size) {
         case FESTIVAL_SMALL:
-            g_city.change_happiness(1);
+            city_houses().change_happiness(1);
             break;
 
         case FESTIVAL_LARGE:
-            g_city.change_happiness(2);
+            city_houses().change_happiness(2);
             break;
 
         case FESTIVAL_GRAND:
-            g_city.change_happiness(3);
+            city_houses().change_happiness(3);
             break;
         }
     }

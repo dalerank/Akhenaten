@@ -501,7 +501,7 @@ void GamestateIO::start_loaded_file() {
         }
     }
 
-    g_city.before_start_simulation();
+    city_before_start_simulation();
     game.before_start_simulation();
     game.session.active = true;
 

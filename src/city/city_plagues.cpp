@@ -1,4 +1,6 @@
 #include "city/city_plagues.h"
+#include "building/building_house.h"
+#include "city/city_buildings.h"
 #include "game/sim_schedule.h"
 
 #include "core/app_module.h"
@@ -34,4 +36,22 @@ void city_plagues_t::decrease_countdowns() {
     if (frogs_countdown > 0) {
         frogs_countdown--;
     }
+}
+
+void city_plagues_t::update_day() {
+    buildings_house_do([](auto house) {
+        if (!house->hsize()) {
+            return;
+        }
+
+        if (house->base.has_plague && house->base.disease_days > 0) {
+            house->base.disease_days--;
+            house->base.has_plague = (house->base.disease_days > 0);
+        }
+
+        auto& housed = house->runtime_data();
+        if (housed.frog_infest_days > 0) {
+            housed.frog_infest_days--;
+        }
+    });
 }

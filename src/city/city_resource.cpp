@@ -251,7 +251,7 @@ void city_resources_t::update_allowed_foods() {
 
     for (e_resource resource = RESOURCES_MIN; resource < RESOURCES_FOODS_MAX; ++resource) {
         bool can_import_food = g_empire.can_import_resource(resource, false);
-        bool can_produce_food = g_city.can_produce_resource(resource);
+        bool can_produce_food = g_empire.can_produce_resource(resource);
         if (can_import_food || can_produce_food) {
             set_allowed_food(food_index, resource);
             food_index++;
@@ -345,14 +345,14 @@ void city_resource_determine_available() {
     g_available_data.market_goods.clear();
 
     for (const auto &r: resource_list::foods) {
-        if (g_city.can_produce_resource(r.type) || g_empire.can_import_resource(r.type, false)) {
+        if (g_empire.can_produce_resource(r.type) || g_empire.can_import_resource(r.type, false)) {
             g_available_data.foods[r.type] = 1;
             g_available_data.market_goods[r.type] = 1;
         }
     }
 
     for (const auto &r : resource_list::all) {
-        if (g_city.can_produce_resource(r.type) || g_empire.can_import_resource(r.type, false)) {
+        if (g_empire.can_produce_resource(r.type) || g_empire.can_import_resource(r.type, false)) {
             g_available_data.resources[r.type] = 1;
             switch (r.type) {
             case RESOURCE_POTTERY:
@@ -366,7 +366,7 @@ void city_resource_determine_available() {
 
         const e_resource raw = get_raw_resource(r.type);
         if (raw != r.type) {
-            if (g_city.can_produce_resource(raw) || g_empire.can_import_resource(raw, false)) {
+            if (g_empire.can_produce_resource(raw) || g_empire.can_import_resource(raw, false)) {
                 g_available_data.resources[r.type] = 1;
             }
         }

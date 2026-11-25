@@ -1,4 +1,5 @@
 #include "figuretype/figure_frog.h"
+#include "city/city_houses.h"
 
 #include "building/building.h"
 #include "building/building_house.h"
@@ -154,7 +155,7 @@ void figure_frog::start_plague(int amount) {
     }
 
     events::emit(event_sound_track{"plague_frogs"});
-    g_city.change_happiness(-p.happiness_loss);
+    city_houses().change_happiness(-p.happiness_loss);
     logs::info("[disaster] frogs amount=%d countdown=%d target=%d", amount, city_plagues().frogs_countdown, target);
 }
 

@@ -71,7 +71,7 @@ void editor_check_zoo_resources(void) {
         return;
     }
     // Straw ignores other cities' grain; only our city producing grain counts.
-    const bool straw = empire_city_sells(RESOURCE_STRAW) || g_city.can_produce_resource(RESOURCE_GRAIN);
+    const bool straw = empire_city_sells(RESOURCE_STRAW) || g_empire.can_produce_resource(RESOURCE_GRAIN);
     if (empire_city_sells(RESOURCE_GAMEMEAT) && straw) {
         return;
     }

@@ -1,4 +1,5 @@
 #include "city_health.h"
+#include "city/city_plagues.h"
 #include "city/city_religion.h"
 #include "io/gamestate/save_versions.h"
 #include "io/chunk_serializer.h"
@@ -308,7 +309,7 @@ public:
                           }
                           city_health().update_coverage();
                       }});
-        schedule.add({sim_step_plague_day, SIM_PHASE_DAY, [](int) { g_city.plague_update_day(); }});
+        schedule.add({sim_step_plague_day, SIM_PHASE_DAY, [](int) { city_plagues().update_day(); }});
         schedule.add({sim_step_health_month, SIM_PHASE_MONTH_CITY, [](int) { city_health().update_month(); }});
     }
 };

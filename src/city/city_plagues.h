@@ -10,6 +10,7 @@ struct city_plagues_t {
 
     void reset();
     void decrease_countdowns();
+    void update_day();
 };
 
 city_plagues_t& city_plagues();

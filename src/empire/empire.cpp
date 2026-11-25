@@ -1,4 +1,6 @@
 #include "empire.h"
+#include "empire/empire_object.h"
+#include "city/city_religion.h"
 #include "city/city_resource.h"
 #include "core/app_module.h"
 #include "game/sim_schedule.h"
@@ -67,7 +69,7 @@ declare_console_command_p(save_empire_routes) {
 
         int city_id = g_empire.get_city_for_trade_route(id);
         const empire_city& city = *g_empire.city(city_id);
-        const empire_city& ourcity = g_city.ourcity();
+        const empire_city& ourcity = g_empire.ourcity();
 
         fprintf(fp, "\tstart : \"%s\"\n", lang_get_string(21, city.name_id));
         fprintf(fp, "\told_name : \"%s\"\n", lang_get_string(195, city.name_id));
@@ -349,7 +351,7 @@ void empire_t::generate_traders() {
             city_trade().add_land_route();
         }
 
-        if (g_city.generate_trader_from(city)) {
+        if (generate_trader_from(city)) {
             break;
         }
     }
@@ -521,4 +523,81 @@ public:
 void ANK_REGISTER_APPLICATION_MODULE(register_empire_system) {
     static empire_system system;
     g_simulation.register_system(&system);
+}
+
+empire_city& empire_t::ourcity() {
+    auto const& cities = g_empire.get_cities();
+    auto it = std::find_if(cities.begin(), cities.end(),
+      [](auto& city) { return (city.in_use && (city.type == EMPIRE_CITY_OURS)); });
+
+    verify_no_crash(it != cities.end());
+    return *it;
+}
+
+bool empire_t::can_produce_resource(e_resource resource) {
+    auto& c = ourcity();
+    return c.sells_resource[resource];
+}
+
+void empire_t::set_produce_resource(e_resource resource, bool v) {
+    auto& c = ourcity();
+    c.sells_resource[resource] = v;
+}
+
+bool empire_t::available_resource(e_resource resource) {
+    e_resource raw_resource = get_raw_resource(resource);
+    // finished goods: check imports of raw materials
+    if (raw_resource != resource && g_empire.can_import_resource(raw_resource, false)) {
+        return true;
+    }
+
+    // check if we can produce the raw materials
+    return can_produce_resource(raw_resource);
+}
+
+void empire_t::init_mission_resources(const resource_allow_vec& resources) {
+    auto fobj = const_cast<full_empire_object*>(ourcity().get_full_empire_object());
+    for (const auto& r : resources) {
+        fobj->add_sell_resource(r.type);
+    }
+}
+
+bool empire_t::generate_trader_from(empire_city& city) {
+    if (city_gods().ra_no_traders_months_left > 0) {
+        return false;
+    }
+
+    if (city.free_trader_slot() < 0) {
+        return false;
+    }
+
+    if (city.trader_entry_delay > 0) {
+        city.trader_entry_delay--;
+        return false;
+    }
+
+    constexpr int sea_default_entry_delay = 30; // 2 in-game months at 16 days/month
+    constexpr int land_default_entry_delay = 4;
+    const int default_entry_delay = city.is_sea_trade ? sea_default_entry_delay : land_default_entry_delay;
+    city.trader_entry_delay
+      = city.trader_entry_delay_override != 0 ? city.trader_entry_delay_override : default_entry_delay;
+
+    if (city.is_sea_trade) {
+        // generate ship
+        const bool has_doks = city_building_stats().has_working_dock();
+        const bool has_river_entry = scenario_map_has_river_entry();
+        const bool can_sea_trade = !city_trade().has_sea_problems();
+        if (has_doks && has_river_entry && can_sea_trade) {
+            g_empire_traders.create_trader(city.route_id, -1);
+            return true;
+        }
+    } else {
+        // generate caravan and donkeys
+        if (!city_trade().has_land_problems()) {
+            // caravan head
+            g_empire_traders.create_trader(city.route_id, -1);
+            return true;
+        }
+    }
+    return false;
 }

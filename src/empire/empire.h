@@ -64,6 +64,12 @@ public:
     };
 
     void generate_traders();
+    empire_city& ourcity();
+    bool can_produce_resource(e_resource resource);
+    void set_produce_resource(e_resource resource, bool v);
+    bool available_resource(e_resource resource);
+    void init_mission_resources(const resource_allow_vec& resources);
+    bool generate_trader_from(empire_city& city);
     void clear_cities_data();
     bool can_import_resource(e_resource resource, bool check_if_open);
     bool can_export_resource(e_resource resource, bool check_if_open);

@@ -543,8 +543,7 @@ bool building_monument::has_required_resources_to_build() const {
     int phases = this->phases();
     for (int phase = 1; phase < phases; phase++) {
         for (e_resource r = RESOURCES_MIN; r < RESOURCES_MAX; ++r) {
-            if (needs_resource(r, phase) > 0 &&
-                !g_city.can_produce_resource(r)) {
+            if (needs_resource(r, phase) > 0 && !g_empire.can_produce_resource(r)) {
                 return false;
             }
         }

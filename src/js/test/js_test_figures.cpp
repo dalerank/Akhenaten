@@ -1,4 +1,5 @@
 #include "js/test/js_test_common.h"
+#include "city/buildings.h"
 
 #include "building/building.h"
 #include "building/building_delivery_path.h"
@@ -354,7 +355,7 @@ static int __test_figure_targeted_by(int fid) {
 ANK_FUNCTION_1(__test_figure_targeted_by);
 
 static void __test_buildings_generate_figures() {
-    g_city.buildings_generate_figure();
+    city_building_stats().generate_figures();
 }
 ANK_FUNCTION(__test_buildings_generate_figures);
 

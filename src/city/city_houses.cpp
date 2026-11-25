@@ -1,4 +1,5 @@
 #include "city/city_houses.h"
+#include "core/calc.h"
 #include "city/city.h"
 #include "city/city_buildings.h"
 #include "city/coverage.h"
@@ -273,6 +274,25 @@ void city_houses_t::reset_demands() {
     requiring.more_courthouse = 0;
     requiring.health = 0;
     requiring.religion = 0;
+}
+
+void city_houses_t::set_max_happiness(int max) {
+    buildings_house_do([max](auto house) {
+        if (house->hsize()) {
+            auto& housed = house->runtime_data();
+            housed.house_happiness = std::min<int>(housed.house_happiness, max);
+            housed.house_happiness = calc_bound(housed.house_happiness, 0, 100);
+        }
+    });
+}
+
+void city_houses_t::change_happiness(int amount) {
+    buildings_house_do([amount](auto house) {
+        if (house->hsize()) {
+            auto& housed = house->runtime_data();
+            housed.house_happiness = calc_bound(housed.house_happiness + amount, 0, 100);
+        }
+    });
 }
 
 class houses_system : public sim_system {

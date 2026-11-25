@@ -84,7 +84,6 @@
 #include <time.h>
 #include "scenario/map.h"
 
-city_t g_city;
 events::typed_queue g_city_events;
 
 static void city_subscribe_events() {
@@ -94,111 +93,6 @@ static void city_subscribe_events() {
     city_finance_t::subscribe_events();
 }
 static events::session_subscriber g_city_session(&city_subscribe_events);
-
-template <typename T>
-static void zero_fill(T& part) {
-    memset((void*)&part, 0, sizeof(T));
-}
-
-void city_t::init() {
-    g_simulation.reset_systems();
-    g_distant_battle.clear();
-    figure_clear_all();
-    city_sentiment().init();
-    city_finance().init();
-}
-
-void city_t::reload_objects() {
-    city_building_stats().reload_objects();
-    city_figures().reload_objects();
-}
-
-void city_t::update_month(simulation_time_t simtime) {
-    g_simulation.schedule.run(SIM_PHASE_MONTH_CITY, g_simulation.simtime.tick);
-}
-
-void city_t::init_custom_map() {
-    city_finance().treasury = g_scenario.startup_funds();
-    city_finance().last_year.balance = city_finance().treasury;
-}
-
-void city_t::init_campaign_mission() {
-    city_finance().treasury = g_scenario.startup_funds();
-    city_finance().last_year.income.gold_delivered = 0;
-    city_finance().this_year.income.gold_delivered = 0;
-}
-
-void city_t::init_mission_resources(const resource_allow_vec& resources) {
-    auto fobj = const_cast<full_empire_object*>(ourcity().get_full_empire_object());
-    for (const auto &r: resources) {
-        fobj->add_sell_resource(r.type);
-    }
-}
-
-void city_t::set_max_happiness(int max) {
-    buildings_house_do([max] (auto house) {
-        if (house->hsize()) {
-            auto &housed = house->runtime_data();
-            housed.house_happiness = std::min<int>(housed.house_happiness, max);
-            housed.house_happiness = calc_bound(housed.house_happiness, 0, 100);
-        }
-    });
-}
-
-void city_t::change_happiness(int amount) {
-    buildings_house_do([amount] (auto house) {
-        if (house->hsize()) {
-            auto &housed = house->runtime_data();
-            housed.house_happiness = calc_bound(housed.house_happiness + amount, 0, 100);
-        }
-    });
-}
-
-void city_t::update_tick(int simtick) {
-    g_simulation.schedule.run(SIM_PHASE_TICK, simtick);
-    g_simulation.schedule.run(SIM_PHASE_TICK_CITY_END, simtick);
-}
-
-bool city_t::generate_trader_from(empire_city &city) {
-    if (city_gods().ra_no_traders_months_left > 0) {
-        return false;
-    }
-
-    if (city.free_trader_slot() < 0) {
-        return false;
-    }
-
-    if (city.trader_entry_delay > 0) {
-        city.trader_entry_delay--;
-        return false;
-    }
-
-    constexpr int sea_default_entry_delay = 30;  // 2 in-game months at 16 days/month
-    constexpr int land_default_entry_delay = 4;
-    const int default_entry_delay = city.is_sea_trade ? sea_default_entry_delay : land_default_entry_delay;
-    city.trader_entry_delay = city.trader_entry_delay_override != 0
-                                ? city.trader_entry_delay_override
-                                : default_entry_delay;
-
-    if (city.is_sea_trade) {
-        // generate ship
-        const bool has_doks = city_building_stats().has_working_dock();
-        const bool has_river_entry = scenario_map_has_river_entry();
-        const bool can_sea_trade = !city_trade().has_sea_problems();
-        if (has_doks && has_river_entry && can_sea_trade) {
-            g_empire_traders.create_trader(city.route_id, -1);
-            return true;
-        }
-    } else {
-        // generate caravan and donkeys
-        if (!city_trade().has_land_problems()) {
-            // caravan head
-            g_empire_traders.create_trader(city.route_id, -1);
-            return true;
-        }
-    }
-    return false;
-}
 
 int stack_units_by_resource(int resource) {
     switch (resource) {
@@ -221,36 +115,7 @@ int stack_units_by_resource(int resource) {
     }
 }
 
-empire_city &city_t::ourcity() {
-    auto const &cities = g_empire.get_cities();
-    auto it = std::find_if(cities.begin(), cities.end(), [] (auto &city) { return (city.in_use && (city.type == EMPIRE_CITY_OURS)); });
-
-    verify_no_crash(it != cities.end());
-    return *it;
-}
-
-bool city_t::can_produce_resource(e_resource resource) {
-    auto &c = ourcity();
-    return c.sells_resource[resource];
-}
-
-void city_t::set_produce_resource(e_resource resource, bool v) {
-    auto &c = ourcity();
-    c.sells_resource[resource] = v;
-}
-
-bool city_t::available_resource(e_resource resource) {
-    e_resource raw_resource = get_raw_resource(resource);
-    // finished goods: check imports of raw materials
-    if (raw_resource != resource && g_empire.can_import_resource(raw_resource, false)) {
-        return true;
-    }
-
-    // check if we can produce the raw materials
-    return can_produce_resource(raw_resource);
-}
-
-void city_t::buildings_generate_figure() {
+void city_buildings_t::generate_figures() {
     OZZY_PROFILER_FUNCTION();
     city_figures().house_noble_spawned_this_tick = false;
     city_figures().bazaar_figure_pass_index = 0;
@@ -321,47 +186,42 @@ void city_t::buildings_generate_figure() {
     }
 }
 
-void city_t::plague_update_day() {
-    buildings_house_do([] (auto house) {
-        if (!house->hsize()) {
-            return;
-        }
-
-        if (house->base.has_plague && house->base.disease_days > 0) {
-            house->base.disease_days--;
-            house->base.has_plague = (house->base.disease_days > 0);
-        }
-
-        auto &housed = house->runtime_data();
-        if (housed.frog_infest_days > 0) {
-            housed.frog_infest_days--;
-        }
-    });
+void city_init() {
+    g_simulation.reset_systems();
+    g_distant_battle.clear();
+    figure_clear_all();
+    city_sentiment().init();
+    city_finance().init();
 }
 
-void city_t::criminals_update_day() {
-    buildings_house_do([] (auto house) {
-        if (!house->hsize()) {
-            return;
-        }
-
-        int delta;
-        auto &housed = house->runtime_data();
-        if (housed.house_happiness >= 50) {
-            delta = (housed.house_happiness - 50) / 30;
-        } else if (housed.house_happiness < 50) {
-            delta = -std::max<int>((50 - housed.house_happiness) / 10, 0);
-        }
-
-        housed.criminal_active += delta;
-        housed.criminal_active = std::clamp<int>(housed.criminal_active, 0, 100);
-    });
+void city_reload_objects() {
+    city_building_stats().reload_objects();
+    city_figures().reload_objects();
 }
 
-void city_t::before_start_simulation() {
+void city_on_post_load() {
+    city_building_stats().on_post_load();
+    city_figures().on_post_load();
+    city_kingdome().on_post_load();
+    city_trade().update_export_keep();
+}
+
+void city_before_start_simulation() {
     events::emit(event_population_changed{city_population().current});
     events::emit(event_finance_changed{city_finance().treasury});
 }
+
+void city_init_custom_map() {
+    city_finance().treasury = g_scenario.startup_funds();
+    city_finance().last_year.balance = city_finance().treasury;
+}
+
+void city_init_campaign_mission() {
+    city_finance().treasury = g_scenario.startup_funds();
+    city_finance().last_year.income.gold_delivered = 0;
+    city_finance().this_year.income.gold_delivered = 0;
+}
+
 
 pcstr city_player_name() {
     return city_kingdome().player_name.c_str();
@@ -427,69 +287,4 @@ bvariant city_get_property(xstring domain, xstring name) {
     }
 
     return bvariant();
-}
-
-bvariant city_t::get_property(xstring domain, xstring name) const {
-    return city_get_property(domain, name);
-}
-
-void city_t::on_post_load() {
-    city_building_stats().on_post_load();
-    city_figures().on_post_load();
-    city_kingdome().on_post_load();
-    city_trade().update_export_keep();
-}
-
-bool city_t::determine_granary_get_foods(resource_list &foods, int road_network) {
-    if (g_scenario.kingdom_supplies_grain) {
-        return false;
-    }
-
-    foods.clear();
-    buildings_valid_do([&] (building &b) {
-        building_granary *granary = b.dcast_granary();
-        verify_no_crash(granary);
-        if (!granary->has_road_access()) {
-            return;
-        }
-
-        if (!building_granary_touches_network(b, road_network)) {
-            return;
-        }
-
-        const int pct_workers = granary->worker_percentage();
-        if (pct_workers < 100 || granary->amount(RESOURCE_NONE) < 100) {
-            return;
-        }
-
-        if (!granary->is_empty_all()) {
-            return;
-        }
-
-        for (const auto &r: resource_list::foods) {
-            if (granary->is_getting(r.type)) {
-                foods[r.type] = 1;
-            }
-        }
-    }, BUILDING_GRANARY);
-
-    return foods.any();
-}
-
-class city_system : public sim_system {
-public:
-    const char* name() const override { return "city"; }
-    void register_steps(sim_schedule_t& schedule) override {
-        schedule.add({sim_step_generate_figures, SIM_PHASE_TICK, [](int tick) {
-                          if (tick != 31) {
-                              return;
-                          }
-                          g_city.buildings_generate_figure();
-                      }});
-    }
-};
-
-void ANK_REGISTER_APPLICATION_MODULE(register_city_system) {
-    static city_system system;
-    g_simulation.register_system(&system);
 }

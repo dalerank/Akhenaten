@@ -12,6 +12,8 @@ struct city_houses_t : house_demands {
     void decay_houses_covered();
     void calculate_culture_aggregates();
     void process_evolve();
+    void change_happiness(int amount);
+    void set_max_happiness(int max);
 };
 
 city_houses_t& city_houses();

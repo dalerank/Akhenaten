@@ -177,7 +177,7 @@ void empire_traders_manager::create_trader(int trade_route_id, int destination_c
     }
 
     if (destination_city_id == -1) {
-        destination_city_id = g_city.ourcity().name_id;
+        destination_city_id = g_empire.ourcity().name_id;
     }
 
     const map_route_object& route = g_empire.get_route_object(trade_route_id);

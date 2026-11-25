@@ -97,7 +97,7 @@ bool city_resource_handle::is_stockpiled() {
 }
 
 bool city_resource_handle::can_produce() {
-    return g_city.can_produce_resource(resource);
+    return g_empire.can_produce_resource(resource);
 }
 
 bool city_resource_handle::can_import(bool check_if_import) {

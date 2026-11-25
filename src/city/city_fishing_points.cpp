@@ -1,4 +1,5 @@
 #include "city_fishing_points.h"
+#include "empire/empire.h"
 #include "game/sim_schedule.h"
 
 #include "scenario/scenario.h"
@@ -159,7 +160,7 @@ public:
     void register_steps(sim_schedule_t& schedule) override {
         schedule.add({sim_step_fishing_points, SIM_PHASE_MONTH_CITY, [](int) {
                           if (game_features::gameplay_change_fishing_points_monthly_respawn.to_bool()
-                              && g_city.can_produce_resource(RESOURCE_FISH)
+                              && g_empire.can_produce_resource(RESOURCE_FISH)
                               && !g_scenario.events.blood_river_sweep_active()) {
                               city_fishing_points().update_month();
                           }

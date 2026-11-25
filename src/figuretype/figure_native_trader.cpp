@@ -1,4 +1,5 @@
 #include "figure_native_trader.h"
+#include "empire/empire.h"
 #include "building/building.h"
 
 #include "empire/trader_handler.h"
@@ -47,7 +48,7 @@ void figure_native_trader::figure_action() {
         if (base.wait_ticks > 10) {
             base.wait_ticks = 0;
             tile2i tile;
-            int building_id = get_closest_storageyard(tile, { g_city.ourcity().name_id }, -1, tile);
+            int building_id = get_closest_storageyard(tile, {g_empire.ourcity().name_id}, -1, tile);
             if (building_id) {
                 advance_action(ACTION_160_NATIVE_TRADER_GOING_TO_WAREHOUSE);
                 set_destination(building_id);
@@ -63,13 +64,14 @@ void figure_native_trader::figure_action() {
         base.wait_ticks++;
         if (base.wait_ticks > 10) {
             base.wait_ticks = 0;
-            if (can_buy(destination(), { g_city.ourcity().name_id })) {
-                e_resource resource = empire_trader().get_buy_resource(destination(), { g_city.ourcity().name_id }, 100);
+            if (can_buy(destination(), {g_empire.ourcity().name_id})) {
+                e_resource resource
+                  = empire_trader().get_buy_resource(destination(), {g_empire.ourcity().name_id}, 100);
                 empire_trader().record_bought_resource(resource);
                 runtime_data().amount_bought += 300;
             } else {
                 tile2i tile;
-                int building_id = get_closest_storageyard(tile, { g_city.ourcity().name_id }, -1, tile);
+                int building_id = get_closest_storageyard(tile, {g_empire.ourcity().name_id}, -1, tile);
                 if (building_id) {
                     advance_action(ACTION_160_NATIVE_TRADER_GOING_TO_WAREHOUSE);
                     set_destination(building_id);

@@ -1,4 +1,5 @@
 #include "city_religion_bast.h"
+#include "city/city_houses.h"
 #include "city/city_religion.h"
 
 #include "building/building.h"
@@ -109,8 +110,8 @@ void god_bast_t::perform_major_curse() {
 
 void god_bast_t::perform_malaria_plague() {
     // Bast minor curse: happiness hit + force city plague (plague carriers via start_disease).
-    g_city.set_max_happiness(50);
-    g_city.change_happiness(-5);
+    city_houses().set_max_happiness(50);
+    city_houses().change_happiness(-5);
     city_health().change(-10);
     city_gods().bast_curse_active = true;
 

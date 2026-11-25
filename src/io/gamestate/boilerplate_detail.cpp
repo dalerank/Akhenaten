@@ -83,7 +83,7 @@ void GamestateLoadDetail::pre_load() { // do we NEED this...?
     city_victory().reset();
     city_migration().clear_conditions();
     g_city_planner.reset();
-    g_city.init();
+    city_init();
     events::start_session();
     game.init_state();
     game.animation_timers_init();
@@ -145,7 +145,7 @@ void GamestateLoadDetail::post_load() {
     city_resource_determine_available();
     city_resource().update_allowed_foods();
     city_building_stats().update_counters();
-    g_city.on_post_load();
+    city_on_post_load();
     city_resource().calculate_stocks();
     city_resource_calculate_storageyard_stocks();
     building_storage_reset_building_ids();
@@ -169,8 +169,8 @@ void GamestateLoadDetail::post_load() {
 
     case e_session_mission:
         game_features::gameopt_game_speed.set( 80 );
-        g_city.init_campaign_mission();
-        g_city.init_mission_resources(g_scenario.init_resources);
+        city_init_campaign_mission();
+        g_empire.init_mission_resources(g_scenario.init_resources);
         // Pass JS player_rank from load_metadata � not campaign_scenario_id.
         city_kingdome().load_scenario(city_kingdome().player_rank, game.session.last_loaded);
         events::emit(event_building_menu_update{ "stage_normal" });
@@ -181,8 +181,8 @@ void GamestateLoadDetail::post_load() {
         break;
 
     case e_session_custom_map:
-        g_city.init_custom_map();
-        g_city.init_mission_resources(g_scenario.init_resources);
+        city_init_custom_map();
+        g_empire.init_mission_resources(g_scenario.init_resources);
         city_kingdome().load_scenario(city_kingdome().player_rank, game.session.last_loaded);
         events::emit(event_building_menu_update{ "stage_normal" });
         break;

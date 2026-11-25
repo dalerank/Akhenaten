@@ -288,7 +288,7 @@ static void __test_health_update_coverage() {
 ANK_FUNCTION(__test_health_update_coverage);
 
 static void __test_government_distribute_treasury() {
-    g_city.government_distribute_treasury();
+    city_finance().distribute_treasury();
 }
 ANK_FUNCTION(__test_government_distribute_treasury);
 
@@ -321,7 +321,7 @@ static void __test_scenario_var_set_string(pcstr name, pcstr value) {
 ANK_FUNCTION_2(__test_scenario_var_set_string);
 
 static void __test_city_update_month() {
-    g_city.update_month(g_simulation.simtime);
+    g_simulation.schedule.run(SIM_PHASE_MONTH_CITY, g_simulation.simtime.tick);
 }
 ANK_FUNCTION(__test_city_update_month);
 

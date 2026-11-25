@@ -1,4 +1,5 @@
 #include "figuretype/figure_locust.h"
+#include "city/city_houses.h"
 #include "core/app_module.h"
 #include "game/simulation.h"
 #include "game/sim_schedule.h"
@@ -131,7 +132,7 @@ void figure_locust::main_image_update() {
 
 void figure_locust::start_plague() {
     city_plagues().locusts_countdown = -1;
-    g_city.change_happiness(-current_params().happiness_loss);
+    city_houses().change_happiness(-current_params().happiness_loss);
 }
 
 void figure_locust::update_month(int month) {

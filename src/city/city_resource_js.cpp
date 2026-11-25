@@ -1,4 +1,5 @@
 #include "city/city_resource.h"
+#include "empire/empire.h"
 
 #include "city/city_resource_handle.h"
 #include "core/profiler.h"
@@ -42,7 +43,7 @@ e_resource __city_resource_at(int index) {
 ANK_FUNCTION_1(__city_resource_at)
 
 void __city_resource_set_produce(int resource, bool val) {
-    g_city.set_produce_resource((e_resource)resource, val);
+    g_empire.set_produce_resource((e_resource)resource, val);
     if ((e_resource)resource == RESOURCE_FISH) {
         if (val) {
             city_fishing_points().reset();

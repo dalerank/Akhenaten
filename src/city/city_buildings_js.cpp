@@ -92,7 +92,7 @@ int __map_rubble_building_type(int bid) {
 ANK_FUNCTION_1(__map_rubble_building_type)
 
 bool __city_resource_can_produce(int resource) {
-    return g_city.can_produce_resource((e_resource)resource);
+    return g_empire.can_produce_resource((e_resource)resource);
 }
 ANK_FUNCTION_1(__city_resource_can_produce)
 

@@ -98,6 +98,9 @@ struct city_buildings_t {
     int count_industry_total(e_resource resource);
 
     void check_buildings_twins();
+    void generate_figures();
+    void update_open_water_access();
+    bool determine_granary_get_foods(resource_list& foods, int road_network);
 };
 
 city_buildings_t& city_building_stats();

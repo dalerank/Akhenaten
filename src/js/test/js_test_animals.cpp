@@ -1,4 +1,5 @@
 #include "js/test/js_test_common.h"
+#include "game/simulation.h"
 
 #include "building/building.h"
 #include "building/building_delivery_path.h"
@@ -130,7 +131,8 @@ ANK_FUNCTION(__test_plagues_mummies_max);
 
 static void __test_plagues_tick(int n) {
     for (int i = 0; i < n; i++) {
-        g_city.update_tick(0);
+        g_simulation.schedule.run(SIM_PHASE_TICK, 0);
+        g_simulation.schedule.run(SIM_PHASE_TICK_CITY_END, 0);
     }
 }
 ANK_FUNCTION_1(__test_plagues_tick);

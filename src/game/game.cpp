@@ -108,7 +108,8 @@ void game_t::update_tick(int simtick) {
     }
 
     g_simulation.schedule.run(SIM_PHASE_TICK_BEGIN, simtick);
-    g_city.update_tick(simtick);
+    g_simulation.schedule.run(SIM_PHASE_TICK, simtick);
+    g_simulation.schedule.run(SIM_PHASE_TICK_CITY_END, simtick);
 
     if (g_simulation.simtime.advance_tick()) {
         advance_day();
@@ -161,7 +162,7 @@ void game_t::advance_day() {
 }
 
 void game_t::reload_objects() {
-    g_city.reload_objects();
+    city_reload_objects();
 
     events::emit(event_game_scripts_was_reloaded{});
 }

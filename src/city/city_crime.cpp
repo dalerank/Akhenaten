@@ -1,4 +1,7 @@
-#include "city/city.h"
+#include "city/city_crime.h"
+#include "city/city_houses.h"
+#include "city/city_buildings.h"
+#include "core/xvalue.h"
 #include "city/city_population.h"
 #include "city/ratings.h"
 #include "city/city_sentiment.h"
@@ -63,7 +66,7 @@ static void generate_rioter(building* b) {
     bmain->destroy_by_fire();
 
     city_ratings().monument_record_rioter();
-    g_city.change_happiness(20);
+    city_houses().change_happiness(20);
 
     message_manager().apply_sound_interval(MESSAGE_CAT_RIOT);
     message_manager().post_with_popup_delay(MESSAGE_CAT_RIOT, false, "message_riot", b->type, road_tile.grid_offset());
@@ -94,7 +97,11 @@ static void generate_protestor(building* b) {
     }
 }
 
-void city_t::figures_generate_criminals() {
+city_crime_t& city_crime() {
+    return xvalue<city_crime_t>::ref();
+}
+
+void city_crime_t::generate_criminals() {
     OZZY_PROFILER_FUNCTION();
     building* min_building = nullptr;
     int min_happiness = 50;
@@ -145,6 +152,25 @@ void city_t::figures_generate_criminals() {
     building_mansion::check_theft_from_mansions();
 }
 
+void city_crime_t::update_day() {
+    buildings_house_do([](auto house) {
+        if (!house->hsize()) {
+            return;
+        }
+
+        int delta;
+        auto& housed = house->runtime_data();
+        if (housed.house_happiness >= 50) {
+            delta = (housed.house_happiness - 50) / 30;
+        } else if (housed.house_happiness < 50) {
+            delta = -std::max<int>((50 - housed.house_happiness) / 10, 0);
+        }
+
+        housed.criminal_active += delta;
+        housed.criminal_active = std::clamp<int>(housed.criminal_active, 0, 100);
+    });
+}
+
 class crime_system : public sim_system {
 public:
     const char* name() const override { return "crime"; }
@@ -159,9 +185,9 @@ public:
                           if (tick != 45) {
                               return;
                           }
-                          g_city.figures_generate_criminals();
+                          city_crime().generate_criminals();
                       }});
-        schedule.add({sim_step_criminals_day, SIM_PHASE_DAY, [](int) { g_city.criminals_update_day(); }});
+        schedule.add({sim_step_criminals_day, SIM_PHASE_DAY, [](int) { city_crime().update_day(); }});
     }
 };
 

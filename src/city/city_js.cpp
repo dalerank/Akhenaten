@@ -1,4 +1,5 @@
 ﻿#include "js/js_game.h"
+#include "empire/empire.h"
 #include "city/city_figures.h"
 #include "city/city_resource.h"
 #include "city/city_houses.h"
@@ -479,7 +480,7 @@ std::optional<bvariant> __city_get_house_demands_missing_property(pcstr property
 ANK_FUNCTION_1(__city_get_house_demands_missing_property)
 
 bool __city_can_produce_resource(int resource) {
-    return g_city.can_produce_resource((e_resource)resource);
+    return g_empire.can_produce_resource((e_resource)resource);
 }
 ANK_FUNCTION_1(__city_can_produce_resource)
 
