@@ -102,7 +102,6 @@ void city_t::init() {
 
     zero_fill(buildings);
     zero_fill(figures);
-    zero_fill(houses);
     zero_fill(resource);
     zero_fill(map);
 
@@ -279,20 +278,6 @@ void city_t::update_allowed_foods() {
     }
 }
 
-void city_t::house_decay_tax_coverage() {
-    OZZY_PROFILER_FUNCTION();
-    buildings_house_do([&] (building_house *house) {
-        house->decay_tax_coverage();
-    });
-}
-
-void city_t::house_decay_services() {
-    OZZY_PROFILER_FUNCTION();
-    buildings_house_do([] (auto house) {
-        house->decay_services();
-    });
-}
-
 bool city_t::available_resource(e_resource resource) {
     e_resource raw_resource = get_raw_resource(resource);
     // finished goods: check imports of raw materials
@@ -415,33 +400,6 @@ void city_t::criminals_update_day() {
 void city_t::before_start_simulation() {
     events::emit(event_population_changed{city_population().current});
     events::emit(event_finance_changed{city_finance().treasury});
-}
-
-void city_t::houses_reset_demands() {
-    houses.missing.fountain = 0;
-    houses.missing.well = 0;
-    houses.missing.entertainment = 0;
-    houses.missing.more_entertainment = 0;
-    houses.missing.education = 0;
-    houses.missing.more_education = 0;
-    houses.missing.religion = 0;
-    houses.missing.second_religion = 0;
-    houses.missing.third_religion = 0;
-    houses.missing.dentist = 0;
-    houses.missing.courthouse = 0;
-    houses.missing.any_courthouse = 0;
-    houses.missing.health = 0;
-    houses.missing.more_health = 0;
-    houses.missing.food = 0;
-    // OG city_houses_reset_demands leaves houses_missing_second_luxury alone too.
-
-    houses.requiring.school = 0;
-    houses.requiring.library = 0;
-    houses.requiring.dentist = 0;
-    houses.requiring.courthouse = 0;
-    houses.requiring.more_courthouse = 0;
-    houses.requiring.health = 0;
-    houses.requiring.religion = 0;
 }
 
 pcstr city_player_name() {

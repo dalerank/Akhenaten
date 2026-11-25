@@ -1,4 +1,5 @@
 #include "io/og_save/og_load.h"
+#include "city/city_houses.h"
 #include "city/military.h"
 #include "city/coverage.h"
 #include "city/city_mission.h"
@@ -176,27 +177,27 @@ namespace og {
         assign(city_ratings().prosperity_trend, p.prosperity_trend);
         assign(city_ratings().monument_num_criminals, p.monument_num_criminals);
         assign(city_ratings().monument_num_rioters, p.monument_num_rioters);
-        assign(g_city.houses.missing.fountain, p.houses_missing_water_supply);
-        assign(g_city.houses.missing.well, p.houses_missing_well);
-        assign(g_city.houses.missing.more_entertainment, p.houses_missing_more_entertainment);
-        assign(g_city.houses.missing.more_education, p.houses_missing_more_education);
-        assign(g_city.houses.missing.education, p.houses_missing_education);
-        assign(g_city.houses.requiring.school, p.houses_requiring_school);
-        assign(g_city.houses.requiring.library, p.houses_requiring_library);
-        assign(g_city.houses.missing.dentist, p.houses_missing_dentist);
-        assign(g_city.houses.missing.courthouse, p.houses_missing_courthouse);
-        assign(g_city.houses.missing.any_courthouse, p.houses_missing_any_courthouse);
-        assign(g_city.houses.missing.food, p.houses_missing_food);
-        assign(g_city.houses.missing.health, p.houses_missing_health);
-        assign(g_city.houses.missing.more_health, p.houses_missing_more_health);
-        assign(g_city.houses.requiring.dentist, p.houses_requiring_dentist);
-        assign(g_city.houses.requiring.courthouse, p.houses_requiring_courthouse);
-        assign(g_city.houses.requiring.more_courthouse, p.houses_requiring_more_courthouse);
-        assign(g_city.houses.requiring.health, p.houses_requiring_health);
-        assign(g_city.houses.missing.religion, p.houses_missing_religion);
-        assign(g_city.houses.missing.second_religion, p.houses_missing_second_religion);
-        assign(g_city.houses.missing.third_religion, p.houses_missing_third_religion);
-        assign(g_city.houses.requiring.religion, p.houses_requiring_religion);
+        assign(city_houses().missing.fountain, p.houses_missing_water_supply);
+        assign(city_houses().missing.well, p.houses_missing_well);
+        assign(city_houses().missing.more_entertainment, p.houses_missing_more_entertainment);
+        assign(city_houses().missing.more_education, p.houses_missing_more_education);
+        assign(city_houses().missing.education, p.houses_missing_education);
+        assign(city_houses().requiring.school, p.houses_requiring_school);
+        assign(city_houses().requiring.library, p.houses_requiring_library);
+        assign(city_houses().missing.dentist, p.houses_missing_dentist);
+        assign(city_houses().missing.courthouse, p.houses_missing_courthouse);
+        assign(city_houses().missing.any_courthouse, p.houses_missing_any_courthouse);
+        assign(city_houses().missing.food, p.houses_missing_food);
+        assign(city_houses().missing.health, p.houses_missing_health);
+        assign(city_houses().missing.more_health, p.houses_missing_more_health);
+        assign(city_houses().requiring.dentist, p.houses_requiring_dentist);
+        assign(city_houses().requiring.courthouse, p.houses_requiring_courthouse);
+        assign(city_houses().requiring.more_courthouse, p.houses_requiring_more_courthouse);
+        assign(city_houses().requiring.health, p.houses_requiring_health);
+        assign(city_houses().missing.religion, p.houses_missing_religion);
+        assign(city_houses().missing.second_religion, p.houses_missing_second_religion);
+        assign(city_houses().missing.third_religion, p.houses_missing_third_religion);
+        assign(city_houses().requiring.religion, p.houses_requiring_religion);
         assign(city_entertainment().booth_shows, p.juggler_shows);
         assign(city_entertainment().booth_no_shows_weighted, p.juggler_no_shows_weighted);
         assign(city_entertainment().bandstand_shows, p.musician_shows);
@@ -207,7 +208,7 @@ namespace og {
         assign(city_entertainment().senet_house_no_shows_weighted, p.senet_no_shows_weighted);
         assign(city_entertainment().venue_needing_shows, p.venue_needing_shows);
         assign(city_avg_coverage().average_entertainment, p.average_entertainment);
-        assign(g_city.houses.missing.entertainment, p.houses_missing_entertainment);
+        assign(city_houses().missing.entertainment, p.houses_missing_entertainment);
         assign(city_festival().months_since_festival, p.months_since_festival);
         for (int i = 0; i < 5; i++) {
             assign(city_gods().gods[i].target_mood, p.god_target_mood[i]);
@@ -225,10 +226,10 @@ namespace og {
         assign(city_migration().no_immigration_cause, p.no_immigration_cause);
         assign(city_sentiment().protesters, p.protesters);
         assign(city_sentiment().criminals, p.thefts);
-        assign(g_city.houses.health, p.health_demand);
-        assign(g_city.houses.religion, p.religion_demand);
-        assign(g_city.houses.education, p.education_demand);
-        assign(g_city.houses.entertainment, p.entertainment_demand);
+        assign(city_houses().health, p.health_demand);
+        assign(city_houses().religion, p.religion_demand);
+        assign(city_houses().education, p.education_demand);
+        assign(city_houses().entertainment, p.entertainment_demand);
         assign(g_city.figures.rioters, p.rioters);
         assign(city_ratings().culture_explanation, p.culture_explanation);
         assign(city_ratings().prosperity_explanation, p.prosperity_explanation);
@@ -300,7 +301,7 @@ namespace og {
             assign(g_city.map.largest_road_networks[i].size, p.largest_road_networks[i].size);
         }
         assign(g_city.resource.luxury_goods_kinds, p.luxury_goods_kinds);
-        assign(g_city.houses.missing.second_luxury, p.houses_missing_second_luxury);
+        assign(city_houses().missing.second_luxury, p.houses_missing_second_luxury);
         assign(city_entertainment().senet_house_has_plays, p.senet_house_has_plays);
         assign(city_mission().fired_message_shown, p.fired_message_shown);
         assign(city_mission().victory_message_shown, p.victory_message_shown);

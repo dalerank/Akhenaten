@@ -1,4 +1,9 @@
+#include "city/city_houses.h"
 #include "city/city.h"
+#include "city/city_houses_chunks.h"
+#include "core/xvalue.h"
+#include "io/chunk_serializer.h"
+#include "io/gamestate/save_versions.h"
 #include "core/app_module.h"
 #include "game/sim_schedule.h"
 
@@ -10,7 +15,15 @@
 #include "grid/routing/routing_terrain.h"
 #include "building/building_house.h"
 
-void city_t::house_service_update_health() {
+city_houses_t& city_houses() {
+    return xvalue<city_houses_t>::ref();
+}
+
+void city_houses_t::reset() {
+    *this = {};
+}
+
+void city_houses_t::update_health() {
     OZZY_PROFILER_FUNCTION();
     buildings_house_do([] (auto house) {
         if (house->house_population() <= 0) {
@@ -40,61 +53,61 @@ void city_t::house_service_update_health() {
     });
 }
 
-void city_t::houses_calculate_culture_demands(void) {
+void city_houses_t::calculate_culture_demands() {
     // OG finance_estimates.c: the health advisor's demand (1 courthouse, 2 dentist, 3 health, 4 no courthouse at all).
-    houses.health = 0;
+    health = 0;
     int max = 0;
-    if (houses.missing.courthouse > 0 || houses.missing.any_courthouse > 0) {
-        if (houses.missing.courthouse < houses.missing.any_courthouse) {
-            houses.health = 4;
-            max = houses.missing.any_courthouse;
+    if (missing.courthouse > 0 || missing.any_courthouse > 0) {
+        if (missing.courthouse < missing.any_courthouse) {
+            health = 4;
+            max = missing.any_courthouse;
         } else {
-            houses.health = 1;
-            max = houses.missing.courthouse;
+            health = 1;
+            max = missing.courthouse;
         }
     }
 
-    if (max < houses.missing.dentist) {
-        houses.health = 2;
-        max = houses.missing.dentist;
+    if (max < missing.dentist) {
+        health = 2;
+        max = missing.dentist;
     }
 
-    if (max < houses.missing.health) {
-        houses.health = 3;
+    if (max < missing.health) {
+        health = 3;
     }
 
     // education
-    houses.education = 0;
-    if (houses.missing.more_education > houses.missing.education)
-        houses.education = 1; // schools(academies?)
-    else if (houses.missing.more_education < houses.missing.education)
-        houses.education = 2; // libraries
-    else if (houses.missing.more_education || houses.missing.education)
-        houses.education = 3; // more education
+    education = 0;
+    if (missing.more_education > missing.education)
+        education = 1; // schools(academies?)
+    else if (missing.more_education < missing.education)
+        education = 2; // libraries
+    else if (missing.more_education || missing.education)
+        education = 3; // more education
 
     // entertainment
-    houses.entertainment = 0;
-    if (houses.missing.entertainment > houses.missing.more_entertainment)
-        houses.entertainment = 1;
-    else if (houses.missing.more_entertainment)
-        houses.entertainment = 2;
+    entertainment = 0;
+    if (missing.entertainment > missing.more_entertainment)
+        entertainment = 1;
+    else if (missing.more_entertainment)
+        entertainment = 2;
 
     // religion
-    houses.religion = 0;
+    religion = 0;
     max = 0;
-    if (houses.missing.religion > max) {
-        houses.religion = 1;
-        max = houses.missing.religion;
+    if (missing.religion > max) {
+        religion = 1;
+        max = missing.religion;
     }
-    if (houses.missing.second_religion > max) {
-        houses.religion = 2;
-        max = houses.missing.second_religion;
+    if (missing.second_religion > max) {
+        religion = 2;
+        max = missing.second_religion;
     }
-    if (houses.missing.third_religion > max)
-        houses.religion = 3;
+    if (missing.third_religion > max)
+        religion = 3;
 }
 
-void city_t::house_service_decay_houses_covered() {
+void city_houses_t::decay_houses_covered() {
     OZZY_PROFILER_FUNCTION();
     for (int i = 1; i < MAX_BUILDINGS; i++) {
         building* b = building_get(i);
@@ -118,10 +131,10 @@ void city_t::house_service_decay_houses_covered() {
     }
 }
 
-void city_t::house_process_evolve() {
+void city_houses_t::process_evolve() {
     OZZY_PROFILER_FUNCTION();
-    g_city.houses_reset_demands();
-    house_demands &demands = g_city.houses;
+    reset_demands();
+    house_demands& demands = *this;
     bool has_expanded = false;
     const int day = g_simulation.simtime.day;
     buildings_house_do([&](building_house* house) {
@@ -145,7 +158,7 @@ void city_t::house_process_evolve() {
     }
 }
 
-void city_t::house_service_calculate_culture_aggregates() {
+void city_houses_t::calculate_culture_aggregates() {
     OZZY_PROFILER_FUNCTION();
     int base_entertainment = city_avg_coverage().calc_average_entertainment() / 5;
     for (int i = 1; i < MAX_BUILDINGS; i++) {
@@ -223,45 +236,88 @@ void city_t::house_service_calculate_culture_aggregates() {
     }
 }
 
+void city_houses_t::decay_tax_coverage() {
+    OZZY_PROFILER_FUNCTION();
+    buildings_house_do([&](building_house* house) { house->decay_tax_coverage(); });
+}
+
+void city_houses_t::decay_services() {
+    OZZY_PROFILER_FUNCTION();
+    buildings_house_do([](auto house) { house->decay_services(); });
+}
+
+void city_houses_t::reset_demands() {
+    missing.fountain = 0;
+    missing.well = 0;
+    missing.entertainment = 0;
+    missing.more_entertainment = 0;
+    missing.education = 0;
+    missing.more_education = 0;
+    missing.religion = 0;
+    missing.second_religion = 0;
+    missing.third_religion = 0;
+    missing.dentist = 0;
+    missing.courthouse = 0;
+    missing.any_courthouse = 0;
+    missing.health = 0;
+    missing.more_health = 0;
+    missing.food = 0;
+    // OG city_houses_reset_demands leaves houses_missing_second_luxury alone too.
+
+    requiring.school = 0;
+    requiring.library = 0;
+    requiring.dentist = 0;
+    requiring.courthouse = 0;
+    requiring.more_courthouse = 0;
+    requiring.health = 0;
+    requiring.religion = 0;
+}
+
 class houses_system : public sim_system {
 public:
     const char* name() const override { return "houses"; }
+    void on_reset() override { city_houses().reset(); }
+    void push_save_sections(int file_version) override {
+        if (file_version >= save_version_city_sections) {
+            g_chunk_io.push_chunk<city_houses_chunk>(city_houses_chunk::size, false);
+        }
+    }
     void register_steps(sim_schedule_t& schedule) override {
         schedule.add({sim_step_house_service_decay, SIM_PHASE_TICK, [](int tick) {
                           if (tick != 9) {
                               return;
                           }
-                          g_city.house_decay_services();
+                          city_houses().decay_services();
                       }});
         schedule.add({sim_step_houses_covered_decay, SIM_PHASE_TICK, [](int tick) {
                           if (tick != 12) {
                               return;
                           }
-                          g_city.house_service_decay_houses_covered();
+                          city_houses().decay_houses_covered();
                       }});
         schedule.add({sim_step_house_health, SIM_PHASE_TICK, [](int tick) {
                           if (tick != 35) {
                               return;
                           }
-                          g_city.house_service_update_health();
+                          city_houses().update_health();
                       }});
         schedule.add({sim_step_culture_aggregates, SIM_PHASE_TICK, [](int tick) {
                           if (tick != 36) {
                               return;
                           }
-                          g_city.house_service_calculate_culture_aggregates();
+                          city_houses().calculate_culture_aggregates();
                       }});
         schedule.add({sim_step_house_evolve, SIM_PHASE_TICK, [](int tick) {
                           if (tick != 39) {
                               return;
                           }
-                          g_city.house_process_evolve();
+                          city_houses().process_evolve();
                       }});
         schedule.add({sim_step_house_tax_coverage_decay, SIM_PHASE_TICK, [](int tick) {
                           if (tick != 48) {
                               return;
                           }
-                          g_city.house_decay_tax_coverage();
+                          city_houses().decay_tax_coverage();
                       }});
     }
 };

@@ -11,29 +11,17 @@
 #include "grid/point.h"
 #include "grid/desirability.h"
 #include "city/city_buildings.h"
-#include "building/building_house_demands.h"
 
 struct empire_city;
 
 struct city_t {
     city_buildings_t buildings;
     city_figures_t figures;
-    house_demands houses;
 
     city_resources_t resource;
 
 
     city_map_t map;
-
-
-    void houses_reset_demands();
-    void houses_calculate_culture_demands();
-    void house_service_update_health();
-    void house_decay_tax_coverage();
-    void house_decay_services();
-    void house_service_decay_houses_covered();
-    void house_service_calculate_culture_aggregates();
-    void house_process_evolve();
 
 
     void init();

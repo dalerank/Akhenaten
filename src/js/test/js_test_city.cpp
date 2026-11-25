@@ -1,4 +1,5 @@
 #include "js/test/js_test_common.h"
+#include "city/city_houses.h"
 #include "city/coverage.h"
 #include "city/city_kingdome_relations.h"
 #include "city/city_religion.h"
@@ -270,7 +271,7 @@ static void __test_ra_clear_curse_months() {
 ANK_FUNCTION(__test_ra_clear_curse_months);
 
 static void __test_house_calculate_culture_aggregates() {
-    g_city.house_service_calculate_culture_aggregates();
+    city_houses().calculate_culture_aggregates();
 }
 ANK_FUNCTION(__test_house_calculate_culture_aggregates);
 

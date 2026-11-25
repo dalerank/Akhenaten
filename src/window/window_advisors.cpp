@@ -1,4 +1,5 @@
 #include "window_advisors.h"
+#include "city/city_houses.h"
 #include "city/city_health.h"
 
 #include "city/constants.h"
@@ -22,7 +23,7 @@ void window_advisors_prepare_opening() {
 
     city_migration().determine_reason();
 
-    g_city.houses_calculate_culture_demands();
+    city_houses().calculate_culture_demands();
     city_avg_coverage().update();
     city_health().update_month();
 

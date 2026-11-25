@@ -1,4 +1,5 @@
 #include "js/test/js_test_common.h"
+#include "city/city_houses.h"
 #include "city/city_maintenance.h"
 #include "widget/city/placement_preview.h"
 
@@ -722,9 +723,9 @@ static int __test_house_evolve_day(int bid) {
     if (!house) {
         return -1;
     }
-    g_city.houses_reset_demands();
+    city_houses().reset_demands();
     const e_building_type save_type = house->type();
-    house->evolve(&g_city.houses);
+    house->evolve(&city_houses());
     if (house->type() != save_type) {
         house->base.clear_impl();
     }
@@ -738,8 +739,8 @@ static int __test_house_evolve_status(int bid) {
     if (!house) {
         return -100;
     }
-    g_city.houses_reset_demands();
-    return house->check_evolve_status(&g_city.houses);
+    city_houses().reset_demands();
+    return house->check_evolve_status(&city_houses());
 }
 ANK_FUNCTION_1(__test_house_evolve_status);
 
@@ -750,9 +751,9 @@ static int __test_house_has_requirements(int bid, int for_upgrade) {
     if (!house) {
         return -100;
     }
-    g_city.houses_reset_demands();
-    const int result = house->has_required_goods_and_services(for_upgrade, &g_city.houses);
-    g_city.houses_calculate_culture_demands();
+    city_houses().reset_demands();
+    const int result = house->has_required_goods_and_services(for_upgrade, &city_houses());
+    city_houses().calculate_culture_demands();
     return result;
 }
 ANK_FUNCTION_2(__test_house_has_requirements);
@@ -772,7 +773,7 @@ ANK_FUNCTION_2(__test_house_consume_goods);
 static void __test_city_house_process_evolve_on_day(int day) {
     const int saved_day = g_simulation.simtime.day;
     g_simulation.simtime.day = day;
-    g_city.house_process_evolve();
+    city_houses().process_evolve();
     g_simulation.simtime.day = saved_day;
 }
 ANK_FUNCTION_1(__test_city_house_process_evolve_on_day);

@@ -1,4 +1,5 @@
 #include "city/city_chunks.h"
+#include "city/city_houses.h"
 #include "city/military.h"
 #include "city/city_food_supply.h"
 #include "city/coverage.h"
@@ -314,28 +315,28 @@ static void city_data_bind_og_layout(io_buffer* iob) {
     iob->bind____skip(20);
     iob->bind(BIND_SIGNATURE_INT32, &city_ratings().monument_num_criminals);
     iob->bind(BIND_SIGNATURE_INT32, &city_ratings().monument_num_rioters);
-    iob->bind(BIND_SIGNATURE_INT32, &data.houses.missing.fountain);
-    iob->bind(BIND_SIGNATURE_INT32, &data.houses.missing.well);
-    iob->bind(BIND_SIGNATURE_INT32, &data.houses.missing.more_entertainment);
-    iob->bind(BIND_SIGNATURE_INT32, &data.houses.missing.more_education);
-    iob->bind(BIND_SIGNATURE_INT32, &data.houses.missing.education);
-    iob->bind(BIND_SIGNATURE_INT32, &data.houses.requiring.school);
-    iob->bind(BIND_SIGNATURE_INT32, &data.houses.requiring.library);
+    iob->bind(BIND_SIGNATURE_INT32, &city_houses().missing.fountain);
+    iob->bind(BIND_SIGNATURE_INT32, &city_houses().missing.well);
+    iob->bind(BIND_SIGNATURE_INT32, &city_houses().missing.more_entertainment);
+    iob->bind(BIND_SIGNATURE_INT32, &city_houses().missing.more_education);
+    iob->bind(BIND_SIGNATURE_INT32, &city_houses().missing.education);
+    iob->bind(BIND_SIGNATURE_INT32, &city_houses().requiring.school);
+    iob->bind(BIND_SIGNATURE_INT32, &city_houses().requiring.library);
     iob->bind____skip(4);
-    iob->bind(BIND_SIGNATURE_INT32, &data.houses.missing.dentist);
-    iob->bind(BIND_SIGNATURE_INT32, &data.houses.missing.courthouse);
-    iob->bind(BIND_SIGNATURE_INT32, &data.houses.missing.food);
+    iob->bind(BIND_SIGNATURE_INT32, &city_houses().missing.dentist);
+    iob->bind(BIND_SIGNATURE_INT32, &city_houses().missing.courthouse);
+    iob->bind(BIND_SIGNATURE_INT32, &city_houses().missing.food);
     iob->bind____skip(8);
     iob->bind____skip(4);
-    iob->bind(BIND_SIGNATURE_INT32, &data.houses.missing.health);
-    iob->bind(BIND_SIGNATURE_INT32, &data.houses.missing.more_health);
-    iob->bind(BIND_SIGNATURE_INT32, &data.houses.requiring.dentist);
-    iob->bind(BIND_SIGNATURE_INT32, &data.houses.requiring.courthouse);
-    iob->bind(BIND_SIGNATURE_INT32, &data.houses.requiring.health);
-    iob->bind(BIND_SIGNATURE_INT32, &data.houses.missing.religion);
-    iob->bind(BIND_SIGNATURE_INT32, &data.houses.missing.second_religion);
-    iob->bind(BIND_SIGNATURE_INT32, &data.houses.missing.third_religion);
-    iob->bind(BIND_SIGNATURE_INT32, &data.houses.requiring.religion);
+    iob->bind(BIND_SIGNATURE_INT32, &city_houses().missing.health);
+    iob->bind(BIND_SIGNATURE_INT32, &city_houses().missing.more_health);
+    iob->bind(BIND_SIGNATURE_INT32, &city_houses().requiring.dentist);
+    iob->bind(BIND_SIGNATURE_INT32, &city_houses().requiring.courthouse);
+    iob->bind(BIND_SIGNATURE_INT32, &city_houses().requiring.health);
+    iob->bind(BIND_SIGNATURE_INT32, &city_houses().missing.religion);
+    iob->bind(BIND_SIGNATURE_INT32, &city_houses().missing.second_religion);
+    iob->bind(BIND_SIGNATURE_INT32, &city_houses().missing.third_religion);
+    iob->bind(BIND_SIGNATURE_INT32, &city_houses().requiring.religion);
     iob->bind(BIND_SIGNATURE_INT32, &city_entertainment().booth_shows);
     iob->bind(BIND_SIGNATURE_INT32, &city_entertainment().booth_no_shows_weighted);
     iob->bind(BIND_SIGNATURE_INT32, &city_entertainment().bandstand_shows);
@@ -346,7 +347,7 @@ static void city_data_bind_og_layout(io_buffer* iob) {
     iob->bind(BIND_SIGNATURE_INT32, &city_entertainment().senet_house_no_shows_weighted);
     iob->bind(BIND_SIGNATURE_INT32, &city_entertainment().venue_needing_shows);
     iob->bind(BIND_SIGNATURE_INT32, &city_avg_coverage().average_entertainment);
-    iob->bind(BIND_SIGNATURE_INT32, &data.houses.missing.entertainment);
+    iob->bind(BIND_SIGNATURE_INT32, &city_houses().missing.entertainment);
     iob->bind(BIND_SIGNATURE_INT8, &city_festival().months_since_festival); // ok
     iob->bind____skip(3);
     for (int i = 0; i < MAX_GODS; i++) {
@@ -372,11 +373,11 @@ static void city_data_bind_og_layout(io_buffer* iob) {
     iob->bind____skip(3);
     iob->bind(BIND_SIGNATURE_INT32, &city_sentiment().protesters);
     iob->bind(BIND_SIGNATURE_INT32, &city_sentiment().criminals);
-    iob->bind(BIND_SIGNATURE_UINT8, &data.houses.health);
+    iob->bind(BIND_SIGNATURE_UINT8, &city_houses().health);
     iob->bind____skip(3);
-    iob->bind(BIND_SIGNATURE_INT32, &data.houses.religion);
-    iob->bind(BIND_SIGNATURE_INT32, &data.houses.education);
-    iob->bind(BIND_SIGNATURE_INT32, &data.houses.entertainment);
+    iob->bind(BIND_SIGNATURE_INT32, &city_houses().religion);
+    iob->bind(BIND_SIGNATURE_INT32, &city_houses().education);
+    iob->bind(BIND_SIGNATURE_INT32, &city_houses().entertainment);
     iob->bind(BIND_SIGNATURE_INT32, &data.figures.rioters);
     iob->bind____skip(4);
     iob->bind(BIND_SIGNATURE_INT32, &city_ratings().culture_explanation);
@@ -503,7 +504,7 @@ static void city_data_bind_og_layout(io_buffer* iob) {
         iob->bind(BIND_SIGNATURE_INT32, &data.map.largest_road_networks[i].id); // ????
         iob->bind(BIND_SIGNATURE_INT32, &data.map.largest_road_networks[i].size);
     }
-    iob->bind(BIND_SIGNATURE_INT32, &data.houses.missing.second_luxury);
+    iob->bind(BIND_SIGNATURE_INT32, &city_houses().missing.second_luxury);
     iob->bind____skip(4);
     iob->bind(BIND_SIGNATURE_UINT8, &city_entertainment().senet_house_has_plays);
     iob->bind____skip(6);
@@ -518,8 +519,8 @@ static void city_data_bind_og_layout(io_buffer* iob) {
     iob->bind____skip(15);
     iob->bind(BIND_SIGNATURE_INT32, &data.figures.attacking_natives);
     iob->bind____skip(28);
-    iob->bind(BIND_SIGNATURE_INT32, &data.houses.requiring.more_courthouse);
-    iob->bind(BIND_SIGNATURE_INT32, &data.houses.missing.any_courthouse);
+    iob->bind(BIND_SIGNATURE_INT32, &city_houses().requiring.more_courthouse);
+    iob->bind(BIND_SIGNATURE_INT32, &city_houses().missing.any_courthouse);
     iob->bind____skip(16);
     iob->bind(BIND_SIGNATURE_INT32, &city_finance().crimes_this_month);
     iob->bind(BIND_SIGNATURE_INT32, &city_finance().gold_stolen_this_month);

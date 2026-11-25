@@ -1,4 +1,5 @@
 ﻿#include "js/js_game.h"
+#include "city/city_houses.h"
 #include "city/coverage.h"
 #include "city/city_mission.h"
 #include "city/city_kingdome_relations.h"
@@ -457,17 +458,18 @@ std::optional<bvariant> __city_get_coverage_property(pcstr property) {
 ANK_FUNCTION_1(__city_get_coverage_property)
 
 std::optional<bvariant> __city_get_house_demands_property(pcstr property) {
-    return archive_helper::get(g_city.houses, property, true);
+    house_demands& demands = city_houses();
+    return archive_helper::get(demands, property, true);
 }
 ANK_FUNCTION_1(__city_get_house_demands_property)
 
 std::optional<bvariant> __city_get_house_demands_requiring_property(pcstr property) {
-    return archive_helper::get(g_city.houses.requiring, property, true);
+    return archive_helper::get(city_houses().requiring, property, true);
 }
 ANK_FUNCTION_1(__city_get_house_demands_requiring_property)
 
 std::optional<bvariant> __city_get_house_demands_missing_property(pcstr property) {
-    return archive_helper::get(g_city.houses.missing, property, true);
+    return archive_helper::get(city_houses().missing, property, true);
 }
 ANK_FUNCTION_1(__city_get_house_demands_missing_property)
 
