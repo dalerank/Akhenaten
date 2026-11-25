@@ -10,6 +10,8 @@ struct city_industry_t {
     void update_nearby_houses_weekly();
 };
 
+city_industry_t& city_industry();
+
 void building_industry_update_farms();
 
 struct delivery_destination {

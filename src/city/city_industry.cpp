@@ -1,4 +1,5 @@
 #include "city_industry.h"
+#include "core/xvalue.h"
 #include "game/simulation.h"
 #include "core/app_module.h"
 #include "game/sim_schedule.h"
@@ -86,6 +87,10 @@ float get_farm_produce_uptick_per_day(building &b) {
 //         }
 //     }
 // }
+
+city_industry_t& city_industry() {
+    return xvalue<city_industry_t>::ref();
+}
 
 void city_industry_t::update_production() {
     OZZY_PROFILER_FUNCTION();
@@ -300,7 +305,7 @@ public:
                           if (tick != 20) {
                               return;
                           }
-                          g_city.industry.update_production();
+                          city_industry().update_production();
                       }});
         schedule.add({sim_step_farms, SIM_PHASE_TICK, [](int tick) {
                           if (tick != 33) {
@@ -309,7 +314,7 @@ public:
                           building_industry_update_farms();
                       }});
         schedule.add({sim_step_industry_nearby_houses, SIM_PHASE_WEEK,
-          [](int) { g_city.industry.update_nearby_houses_weekly(); }});
+          [](int) { city_industry().update_nearby_houses_weekly(); }});
     }
 };
 

@@ -3,7 +3,6 @@
 #include <stdint.h>
 
 #include "game/player_record.h"
-#include "city/city_industry.h"
 #include "city/buildings.h"
 #include "city/military.h"
 #include "city/city_resource.h"
@@ -22,7 +21,6 @@ struct city_t {
     city_figures_t figures;
     house_demands houses;
     city_military_t military;
-    city_industry_t industry;
 
     city_resources_t resource;
 

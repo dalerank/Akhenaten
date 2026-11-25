@@ -104,7 +104,6 @@ void city_t::init() {
     zero_fill(figures);
     zero_fill(houses);
     zero_fill(military);
-    zero_fill(industry);
     zero_fill(resource);
     zero_fill(map);
 

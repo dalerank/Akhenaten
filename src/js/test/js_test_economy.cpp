@@ -237,12 +237,12 @@ static int __test_cartpusher_destination_wait_threshold() {
 ANK_FUNCTION(__test_cartpusher_destination_wait_threshold);
 
 static void __test_city_industry_update_production() {
-    g_city.industry.update_production();
+    city_industry().update_production();
 }
 ANK_FUNCTION(__test_city_industry_update_production);
 
 static void __test_city_industry_update_nearby_houses_weekly() {
-    g_city.industry.update_nearby_houses_weekly();
+    city_industry().update_nearby_houses_weekly();
 }
 ANK_FUNCTION(__test_city_industry_update_nearby_houses_weekly);
 
