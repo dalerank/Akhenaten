@@ -14,6 +14,7 @@
 #include "grid/tiles.h"
 #include "io/chunk_serializer.h"
 #include "city/city.h"
+#include "city/city_buildings.h"
 #include "city/city_fishing_points.h"
 #include "city_message.h"
 #include "game/game_config.h"

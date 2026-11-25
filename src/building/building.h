@@ -508,6 +508,3 @@ template <typename dest_type, typename r_type>
 inline r_type smart_cast(building *b) {
     return ::smart_cast<r_type>(b->dcast());
 }
-
-building *building_begin();
-building *building_end();
