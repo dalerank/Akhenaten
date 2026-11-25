@@ -21,11 +21,9 @@ void sound_view_queue_t::apply() {
         const entry& en = entries[i];
         if (en.building_id) {
             building* b = building_get(en.building_id);
-            sound_city().mark_building_view(b, en.direction);
-            if (!!game_features::gameplay_enhanced_city_ambient) {
-                if (const int channel = sound_city().building_channel(b)) {
-                    sound_city().ambient_note(channel, en.pixel);
-                }
+            const int channel = sound_city().mark_building_view(b, en.direction);
+            if (channel && !!game_features::gameplay_enhanced_city_ambient) {
+                sound_city().ambient_note(channel, en.pixel);
             }
         } else {
             sound_city().mark_terrain_view(map_terrain_get(en.grid_offset), en.grid_offset, en.direction);

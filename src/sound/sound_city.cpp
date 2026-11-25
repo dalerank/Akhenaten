@@ -174,7 +174,7 @@ int sound_city_t::zoo_ambient_channel() {
     return channel;
 }
 
-void sound_city_t::mark_building_view(building* b, int direction) {
+int sound_city_t::mark_building_view(building* b, int direction) {
     OZZY_PROFILER_FUNCTION()
 
     if (b->state == BUILDING_STATE_VALID && b->type == BUILDING_ZOO) {
@@ -183,6 +183,7 @@ void sound_city_t::mark_building_view(building* b, int direction) {
 
     const int system_channel_index = building_channel(b);
     add_channel(system_channel_index, direction);
+    return system_channel_index;
 }
 
 void sound_city_t::decay_views() {

@@ -82,16 +82,16 @@ struct sound_city_t {
     int channel(const xstring& id) const;
     void stop();
     void add_channel(int system_channel_index, int direction);
-    void mark_building_view(building* b, int direction);
+    int mark_building_view(building* b, int direction);
     void mark_terrain_view(int terrain, int grid_offset, int direction);
     void decay_views();
     void play();
-    int building_channel(building* b);
     void ambient_note(int channel, vec2i pixel);
     void ambient_reset();
     const char* ambient_summary() const;
 
 private:
+    int building_channel(building* b);
     int building_type_channel(building* b);
     int zoo_ambient_channel();
     bool ambient_play();
