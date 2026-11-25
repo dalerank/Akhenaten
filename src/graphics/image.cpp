@@ -122,6 +122,20 @@ bool image_pak_is_loaded(const xstring &name) {
     return image_pak_is_loaded(image_find_pak_id_by_name(name));
 }
 
+int image_pak_ids_end(int pak_id) {
+    if (!g_image_data || pak_id < 0 || pak_id >= static_cast<int>(g_image_data->pak_list.size())) {
+        return 0;
+    }
+    const int start = g_image_data->pak_list[pak_id].index;
+    int end = IMAGE_CACHE_SIZE;
+    for (const auto& pak : g_image_data->pak_list) {
+        if (!pak.name.empty() && pak.index > start && pak.index < end) {
+            end = pak.index;
+        }
+    }
+    return end;
+}
+
 int image_paks_loaded_count() {
     if (!g_image_data) {
         return 0;

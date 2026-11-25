@@ -75,6 +75,26 @@ namespace {
         return entries;
     }
 
+    struct mod_pack_slot {
+        int useridx = 0;
+        int start_index = 0;
+        int entries_num = 0;
+    };
+
+    bool mods_reserve_pack(pcstr name, int entries_num, mod_pack_slot& slot) {
+        const int useridx = imagepak::get_max_useridx() + 1;
+        const int start_index = imagepak::get_maxseen_imgid() + 1;
+        if (useridx >= IMAGE_PAK_SLOTS || start_index + entries_num > IMAGE_CACHE_SIZE) {
+            logs::error("[mods] %s does not fit: pak slot %d of %d, image ids %d..%d of %d", name, useridx,
+              IMAGE_PAK_SLOTS, start_index, start_index + entries_num, IMAGE_CACHE_SIZE);
+            return false;
+        }
+        slot = {useridx, start_index, entries_num};
+        imagepak::useridx_update(useridx);
+        imagepak::update_max_imgid(start_index + entries_num);
+        return true;
+    }
+
     const xstring* find_entry_nocase(const hvector<xstring, 32>& entries, pcstr name) {
         for (const auto& e : entries) {
             if (string_compare_case_insensitive(e.c_str(), name) == 0) {
@@ -522,21 +542,19 @@ void mods_download_mod_async(xstring name) {
             return;
         }
 
-        // Update mod info
+        const vfs::path mod_path(mods_directory(), "/", filename.c_str());
+        mod_pack_slot slot;
+        if (!mods_reserve_pack(name.c_str(), imagepak::get_entries_num(mod_path.c_str()), slot)) {
+            mod.download_progress = 0;
+            return;
+        }
+
         mod.downloaded = true;
         mod.download_progress = 100;
-        mod.path = vfs::path(mods_directory(), "/", filename.c_str());
-
-        // Initialize mod metadata (similar to mods_init)
-        mod.useridx = imagepak::get_max_useridx() + 1;
-        mod.start_index = imagepak::get_maxseen_imgid() + 1;
-
-        vfs::path full_path = mod.path.resolve();
-        if (!full_path.empty()) {
-            mod.entries_num = imagepak::get_entries_num(mod.path.c_str());
-            imagepak::useridx_update(mod.useridx);
-            imagepak::update_max_imgid(mod.start_index + mod.entries_num);
-        }
+        mod.path = mod_path;
+        mod.useridx = slot.useridx;
+        mod.start_index = slot.start_index;
+        mod.entries_num = slot.entries_num;
 
         logs::info("Successfully downloaded mod: %s", name.c_str());
 
@@ -655,15 +673,18 @@ void mods_init(const mods_options& opts) {
         }
 
         const vfs::path mod_path(dir, "/", file);
-        int png_count = 0;
+        mod_pack_slot slot;
         if (!entry.folder) {
             const vfs::ZipArchive archive(mod_path);
             if (!archive.isValid()) {
                 logs::warn("[mods] %s is not a valid archive, skipped", file);
                 return;
             }
-            png_count = (int)std::count_if(archive.entries().begin(), archive.entries().end(),
+            const int png_count = (int)std::count_if(archive.entries().begin(), archive.entries().end(),
               [](const xstring& e) { return vfs::file_has_extension(e.c_str(), "png"); });
+            if (!mods_reserve_pack(file, png_count, slot)) {
+                return;
+            }
         }
 
         mod_info& mod = g_mods.add(mod_name);
@@ -678,12 +699,9 @@ void mods_init(const mods_options& opts) {
             return;
         }
 
-        mod.useridx = imagepak::get_max_useridx() + 1;
-        mod.start_index = imagepak::get_maxseen_imgid() + 1;
-        mod.entries_num = png_count;
-
-        imagepak::useridx_update(mod.useridx);
-        imagepak::update_max_imgid(mod.start_index + mod.entries_num);
+        mod.useridx = slot.useridx;
+        mod.start_index = slot.start_index;
+        mod.entries_num = slot.entries_num;
 
         mod.fill_entries();
     };

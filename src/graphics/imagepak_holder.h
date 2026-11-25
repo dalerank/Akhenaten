@@ -39,6 +39,9 @@ struct stable_array_max_elements<imagepak_handle> {
     enum { max_elements = 192 };
 };
 
+constexpr int IMAGE_PAK_SLOTS = stable_array_max_elements<imagepak_handle>::max_elements;
+constexpr int IMAGE_CACHE_SIZE = 65 * 1024;
+
 template<>
 struct std::hash<imagepak_handle> {
     [[nodiscard]] size_t operator()(const imagepak_handle &h) const noexcept {

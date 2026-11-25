@@ -27,8 +27,8 @@ private:
     uint8_t pack;
     uint16_t useridx;
 
-    static uint16_t max_seen_imgid;
-    static uint16_t max_seen_useridx;
+    static int max_seen_imgid;
+    static int max_seen_useridx;
 
     int version;
     size_t groups_num;
@@ -68,11 +68,11 @@ public:
     inline uint8_t get_pack() const { return pack; }
     const image_t* get_image(int id, bool relative = false);
     bool loaded_system_sprites() const { return should_load_system_sprites; }
-    static void useridx_update(uint16_t index);
-    static uint16_t get_max_useridx() { return max_seen_useridx; }
+    static void useridx_update(int index);
+    static int get_max_useridx() { return max_seen_useridx; }
 
-    static void update_max_imgid(uint16_t imgid);
-    static uint16_t get_maxseen_imgid() { return max_seen_imgid; }
+    static void update_max_imgid(int imgid);
+    static int get_maxseen_imgid() { return max_seen_imgid; }
     static int get_entries_num(xstring pak_name, bool load_system_sprites = true, bool compact_system = false);
 
     void cleanup_and_destroy();

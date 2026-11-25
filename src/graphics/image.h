@@ -143,6 +143,7 @@ bool image_request_pak(int pak_id);
 bool image_request_pak(const xstring &name);
 bool image_pak_is_loaded(int pak_id);
 bool image_pak_is_loaded(const xstring &name);
+int image_pak_ids_end(int pak_id);
 int image_paks_loaded_count();
 bool image_ensure_pak_loaded(int pak_id);
 void image_paks_pump();

@@ -496,6 +496,10 @@ std::vector<vec2i> archive::r_array_vec2i(pcstr name, pcstr px, pcstr py) {
     return result;
 }
 
+void archive::log_slot_out_of_range(pcstr name, size_t slot, size_t slots) {
+    logs::error("[config] %s: id %lld is out of range, %u slots", name, (long long)(int64_t)slot, (unsigned)slots);
+}
+
 int archive::r_int(pcstr name, int def) {
     auto vm = (js_State *)state;
     get_prop(vm, name);

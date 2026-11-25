@@ -30,6 +30,7 @@ struct archive {
     xstring r_string(const xstring& name, pcstr def = "");
     std::vector<xstring> r_array_str(pcstr name);
     std::vector<xstring> to_array_str();
+    static void log_slot_out_of_range(pcstr name, size_t slot, size_t slots);
     int r_int(pcstr name, int def = 0);
     float r_float(pcstr name, float def = 0.f);
     uint32_t r_uint(pcstr name, uint32_t def = 0);
@@ -1072,7 +1073,12 @@ inline bool archive::r_stable_array_impl(pcstr name, T &arr) {
                 if (isnumber(-1)) {
                     double v = isnumber(-1) ? tonumber(-1) : 0.0;
                     value_type item = value_type(v);
-                    arr[std::hash<value_type>()(item)] = item;
+                    const size_t slot = std::hash<value_type>()(item);
+                    if (slot < arr.size()) {
+                        arr[slot] = item;
+                    } else {
+                        log_slot_out_of_range(name, slot, arr.size());
+                    }
                 }
                 pop(1);
             }
@@ -1083,7 +1089,12 @@ inline bool archive::r_stable_array_impl(pcstr name, T &arr) {
                 if (isobject(-1)) {
                     value_type item = value_type();
                     archive_helper::reader(*this, item);
-                    arr[std::hash<value_type>()(item)] = item;
+                    const size_t slot = std::hash<value_type>()(item);
+                    if (slot < arr.size()) {
+                        arr[slot] = item;
+                    } else {
+                        log_slot_out_of_range(name, slot, arr.size());
+                    }
                 }
                 pop(1);
             }

@@ -34,8 +34,8 @@
 SDL_Surface *IMG_LoadPNG_RW(SDL_RWops *src);
 image_packer packer;
 
-uint16_t imagepak::max_seen_imgid = 0;
-uint16_t imagepak::max_seen_useridx = 0;
+int imagepak::max_seen_imgid = 0;
+int imagepak::max_seen_useridx = 0;
 
 static int convert_uncompressed(buffer* buf, const image_t &img) {
     int pixels_count = 0;
@@ -759,9 +759,7 @@ bool imagepak::load_zip_pak(vfs::path pak, int starting_index) {
         platform_renderer_render();
     }
 
-    int max_imgid_this_pak = global_image_index_offset + entries_num;
-    verify_no_crash(max_imgid_this_pak < 0xffff);
-    update_max_imgid(max_imgid_this_pak);
+    update_max_imgid(global_image_index_offset + entries_num);
 
     return true;
 }
@@ -1179,9 +1177,7 @@ bool imagepak::load_pak(vfs::path pak_name, int starting_index) {
         platform_renderer_render();
     }
 
-    int max_imgid_this_pak = global_image_index_offset + entries_num;
-    verify_no_crash(max_imgid_this_pak < 0xffff);
-    update_max_imgid(max_imgid_this_pak);
+    update_max_imgid(global_image_index_offset + entries_num);
 
     return true;
 }
@@ -1229,11 +1225,11 @@ const image_t* imagepak::get_image(int id, bool relative) {
     return &images_array[id];
 }
 
-void imagepak::useridx_update(uint16_t index) {
+void imagepak::useridx_update(int index) {
     max_seen_useridx = std::max(max_seen_useridx, index);
 }
 
-void imagepak::update_max_imgid(uint16_t imgid) {
+void imagepak::update_max_imgid(int imgid) {
     max_seen_imgid = std::max(max_seen_imgid, imgid);
 }
 

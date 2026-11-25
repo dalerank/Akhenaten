@@ -341,6 +341,14 @@ void font_atlas_regenerate() {
         return;
     }
 
+    const int glyph_ids = std::max(0, image_pak_ids_end(PACK_CUSTOM_FONT) - font_pack.index);
+    const size_t max_symbols = font_configs.size() == 0 ? utf8_symbols.size() : glyph_ids / font_configs.size();
+    if (utf8_symbols.size() > max_symbols) {
+        logs::error("font: glyph ids do not fit in the %d ids from %d, %u of %u codepoints dropped", glyph_ids,
+          font_pack.index, (unsigned)(utf8_symbols.size() - max_symbols), (unsigned)utf8_symbols.size());
+        utf8_symbols.resize(max_symbols);
+    }
+
     image_invalidate_pak_cache(PACK_CUSTOM_FONT);
     for (auto &mbmap : g_font_data.mbsymbols) {
         mbmap.clear();
@@ -392,8 +400,6 @@ void font_atlas_regenerate() {
     }
 
     // Finish filling in image and atlas information.
-    // No magic upper bound here: the real safety check is `image_id < 0xffff`
-    // below, which keeps the font pak inside its reserved index range.
     for (int i = 0; i < font_pack.handle->images_array.size(); i++) {
         image_t &img = font_pack.handle->images_array.at(i);
 

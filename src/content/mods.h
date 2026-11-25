@@ -44,9 +44,9 @@ ANK_CONFIG_STRUCT(mods_config, mods_list)
 
 struct mod_info : public mod_entry {
     vfs::path path;
-    uint16_t useridx;
-    uint16_t start_index;
-    uint16_t entries_num;
+    int useridx = 0;
+    int start_index = 0;
+    int entries_num = 0;
     hvector<xstring, 32> scripts;
     hvector<xstring, 32> sounds;
     uint8_t download_progress = 0;
