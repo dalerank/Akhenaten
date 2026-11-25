@@ -12,7 +12,6 @@
 #include "city/city_monuments.h"
 #include "city/map.h"
 #include "city/coverage.h"
-#include "city/city_religion.h"
 #include "city/city_figures.h"
 #include "grid/point.h"
 #include "grid/desirability.h"
@@ -38,8 +37,6 @@ struct city_t {
 
 
     city_average_coverage_t avg_coverage;
-
-    gods_state gods;
 
     city_monuments_t monuments;
 
@@ -104,8 +101,6 @@ struct city_t {
 
     void update_tick(int simtick);
     void update_month(simulation_time_t t);
-    gods_context gods_ctx();
-    gods_system gods_sys();
     kingdome_context kingdome_ctx();
     kingdome_system kingdome_sys();
 

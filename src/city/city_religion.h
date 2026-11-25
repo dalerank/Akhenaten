@@ -87,7 +87,7 @@ enum e_god_event {
     GOD_EVENT_MINOR_CURSE = 4
 };
 
-struct gods_state {
+struct city_gods_t {
     god_state gods[MAX_GODS];
     e_god least_happy_god;
     int32_t angry_message_delay;
@@ -127,23 +127,6 @@ struct gods_state {
 
     using god_states = svector<god_state*, MAX_GODS>;
     god_states known_gods();
-};
-
-struct city_buildings_t;
-struct city_population_t;
-struct kingdome_state;
-
-struct gods_context {
-    city_buildings_t& buildings;
-    const city_population_t& population;
-    kingdome_state& kingdome;
-    uint8_t gods_least_mood;
-    int day;
-};
-
-class gods_system {
-public:
-    gods_system(gods_state& state, const gods_context& ctx) : _state(state), _ctx(ctx) {}
 
     void reset();
     void calc_coverage();
@@ -165,11 +148,9 @@ public:
     void perform_major_blessing(e_god god, bool force_construction = false);
     void perform_major_curse(e_god god);
     void update_curses_and_blessings(e_god randm_god, e_god_event force);
-
-private:
-    gods_state& _state;
-    gods_context _ctx;
 };
+
+city_gods_t& city_gods();
 
 template<typename ...Args>
 inline int make_gods_mask(Args... args) {

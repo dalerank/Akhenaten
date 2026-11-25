@@ -15,7 +15,6 @@
 #include "city/city_food_supply_chunks.h"
 #include "city/city_houses_chunks.h"
 #include "city/city_kingdome_relations_chunks.h"
-#include "city/city_religion_chunks.h"
 #include "city/city_resource_chunks.h"
 #include "city/city_taxes_chunks.h"
 #include "city/coverage_chunks.h"
@@ -117,7 +116,6 @@ void file_schema_svx(const int file_version) {
         g_chunk_io.push_chunk<city_kingdome_chunk>(city_kingdome_chunk::size, false);
         g_chunk_io.push_chunk<city_figures_chunk>(city_figures_chunk::size, false);
         g_chunk_io.push_chunk<city_military_chunk>(city_military_chunk::size, false);
-        g_chunk_io.push_chunk<city_gods_chunk>(city_gods_chunk::size, false);
         g_chunk_io.push_chunk<city_distant_battle_chunk>(city_distant_battle_chunk::size, false);
         g_chunk_io.push_chunk<city_houses_chunk>(city_houses_chunk::size, false);
         g_chunk_io.push_chunk<city_avg_coverage_chunk>(city_avg_coverage_chunk::size, false);

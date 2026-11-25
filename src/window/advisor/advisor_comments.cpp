@@ -1,4 +1,5 @@
 #include "window/advisor/advisor_comments.h"
+#include "city/city_religion.h"
 #include "city/city_finance.h"
 #include "city/city_migration.h"
 #include "city/city_sentiment.h"
@@ -744,11 +745,11 @@ advisor_city_state advisor_city_state_current() {
     s.population = city_population().current;
     s.food_supply_percentage = g_city.food_supply.percentage();
     s.health = city_health().value;
-    s.god_mood0 = g_city.gods.gods[0].target_mood;
-    s.god_mood1 = g_city.gods.gods[1].target_mood;
-    s.god_mood2 = g_city.gods.gods[2].target_mood;
-    s.god_mood3 = g_city.gods.gods[3].target_mood;
-    s.god_mood4 = g_city.gods.gods[4].target_mood;
+    s.god_mood0 = city_gods().gods[0].target_mood;
+    s.god_mood1 = city_gods().gods[1].target_mood;
+    s.god_mood2 = city_gods().gods[2].target_mood;
+    s.god_mood3 = city_gods().gods[3].target_mood;
+    s.god_mood4 = city_gods().gods[4].target_mood;
     s.taxes_collected = city_taxes().yearly.collected_citizens + city_taxes().yearly.collected_nobles;
     s.taxes_uncollected = city_taxes().yearly.uncollected_citizens + city_taxes().yearly.uncollected_nobles;
     s.treasury = city_finance().treasury;

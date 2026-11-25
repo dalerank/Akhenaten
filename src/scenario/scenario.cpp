@@ -1,4 +1,5 @@
 #include "scenario.h"
+#include "city/city_religion.h"
 #include "game/simulation.h"
 #include "core/app_module.h"
 #include "game/sim_schedule.h"
@@ -215,7 +216,7 @@ void scenario_data_t::apply_editor_allowed_buildings() {
         { BUILDING_TEMPLE_BAST, BUILDING_SHRINE_BAST, BUILDING_TEMPLE_COMPLEX_BAST },
     };
     for (int god = 0; god < MAX_GODS; god++) {
-        if (g_city.gods.gods[god].is_known != GOD_STATUS_UNKNOWN) {
+        if (city_gods().gods[god].is_known != GOD_STATUS_UNKNOWN) {
             for (const e_building_type t : god_buildings[god]) {
                 allowed_buildings[t] = true;
             }

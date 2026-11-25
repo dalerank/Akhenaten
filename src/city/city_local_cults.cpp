@@ -1,4 +1,5 @@
 #include "city/city_local_cults.h"
+#include "city/city_religion.h"
 #include "game/sim_schedule.h"
 
 #include <algorithm>
@@ -165,10 +166,10 @@ void city_local_cults_t::apply_cult_festival(e_local_cult cult, e_festival_theme
 
     cults[cult].appeased_months = (uint8_t)std::max<int>(cults[cult].appeased_months, 6);
     if (def.host_major_god < MAX_GODS) {
-        g_city.gods.gods[def.host_major_god].months_since_festival = 0;
-        if (g_city.gods.gods[def.host_major_god].mood < 100) {
-            g_city.gods.gods[def.host_major_god].mood
-              = (uint8_t)std::min<int>(100, g_city.gods.gods[def.host_major_god].mood + 5);
+        city_gods().gods[def.host_major_god].months_since_festival = 0;
+        if (city_gods().gods[def.host_major_god].mood < 100) {
+            city_gods().gods[def.host_major_god].mood
+              = (uint8_t)std::min<int>(100, city_gods().gods[def.host_major_god].mood + 5);
         }
     }
     apply_theme(theme, 2);

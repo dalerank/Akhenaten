@@ -1,4 +1,5 @@
 #include "city_religion_osiris.h"
+#include "city/city_religion.h"
 
 #include "city/city.h"
 #include "city/city_message.h"
@@ -40,7 +41,7 @@ void god_osiris_t::perform_major_curse() {
 }
 
 void god_osiris_t::perform_flood_will_destroy_farms() {
-    g_city.gods.osiris_flood_will_destroy_active = 1;
+    city_gods().osiris_flood_will_destroy_active = 1;
     events::emit(event_message_god{ GOD_OSIRIS, "message_small_curse_osiris" });
 }
 

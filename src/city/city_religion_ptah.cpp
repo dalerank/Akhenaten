@@ -1,4 +1,5 @@
 #include "city_religion_ptah.h"
+#include "city/city_religion.h"
 
 #include "building/building.h"
 #include "city/city.h"
@@ -53,7 +54,7 @@ int ptah_scorpion_raid_days() {
 } // namespace
 
 bool god_ptah_t::perform_industry_destruction() {
-    return g_city.gods_sys().PTAH_industry_destruction();
+    return city_gods().PTAH_industry_destruction();
 }
 
 void god_ptah_t::perform_frogs() {
@@ -117,7 +118,7 @@ void god_ptah_t::perform_major_curse() {
 }
 
 bool god_ptah_t::perform_warehouse_destruction() {
-    return g_city.gods_sys().PTAH_warehouse_destruction();
+    return city_gods().PTAH_warehouse_destruction();
 }
 
 void god_ptah_t::perform_minor_curse() {
@@ -131,7 +132,7 @@ void god_ptah_t::perform_minor_curse() {
 }
 
 bool god_ptah_t::perform_industry_restock() {
-    return g_city.gods_sys().PTAH_industry_restock();
+    return city_gods().PTAH_industry_restock();
 }
 
 void god_ptah_t::perform_minor_blessing() {

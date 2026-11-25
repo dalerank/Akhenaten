@@ -1,4 +1,5 @@
 #include "city.h"
+#include "city/city_religion.h"
 #include "city/city_finance.h"
 #include "city/city_trade.h"
 #include "city/ratings.h"
@@ -108,7 +109,6 @@ void city_t::init() {
     zero_fill(resource);
     zero_fill(food_supply);
     zero_fill(avg_coverage);
-    zero_fill(gods);
     zero_fill(monuments);
     zero_fill(coverage);
     zero_fill(map);
@@ -116,7 +116,6 @@ void city_t::init() {
 
     g_simulation.reset_systems();
     g_distant_battle.clear();
-    gods_sys().reset();
     buildings.init();
     figure_clear_all();
     city_sentiment().init();
@@ -132,14 +131,6 @@ void city_t::reload_objects() {
 
 void city_t::update_month(simulation_time_t simtime) {
     g_simulation.schedule.run(SIM_PHASE_MONTH_CITY, g_simulation.simtime.tick);
-}
-
-gods_context city_t::gods_ctx() {
-    return {buildings, city_population(), kingdome, g_scenario.env.gods_least_mood, g_simulation.simtime.day};
-}
-
-gods_system city_t::gods_sys() {
-    return gods_system(gods, gods_ctx());
 }
 
 kingdome_context city_t::kingdome_ctx() {
@@ -207,7 +198,7 @@ void city_t::update_tick(int simtick) {
 }
 
 bool city_t::generate_trader_from(empire_city &city) {
-    if (g_city.gods.ra_no_traders_months_left > 0) {
+    if (city_gods().ra_no_traders_months_left > 0) {
         return false;
     }
 
@@ -406,9 +397,9 @@ void city_t::buildings_generate_figure() {
         }
     });
 
-    if (gods.osiris_double_farm_yield_used) {
-        gods.osiris_double_farm_yield_days = 0;
-        gods.osiris_double_farm_yield_used = false;
+    if (city_gods().osiris_double_farm_yield_used) {
+        city_gods().osiris_double_farm_yield_days = 0;
+        city_gods().osiris_double_farm_yield_used = false;
     }
 }
 

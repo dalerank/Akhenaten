@@ -1,4 +1,5 @@
 #include "empire/empire.h"
+#include "city/city_religion.h"
 
 #include "trade_route.h"
 #include "io/io_buffer.h"
@@ -31,11 +32,11 @@ void trade_route::set_traded(e_resource resource, int traded) {
 
 int trade_route::limit(e_resource resource, int bonus_inclusion) const {
     int bonus_points = 0;
-    if (g_city.gods.ra_slightly_increased_trading_months_left > 0)
+    if (city_gods().ra_slightly_increased_trading_months_left > 0)
         bonus_points = 1;
-    if (g_city.gods.ra_harshly_reduced_trading_months_left > 0)
+    if (city_gods().ra_harshly_reduced_trading_months_left > 0)
         bonus_points -= 2;
-    else if (g_city.gods.ra_slightly_reduced_trading_months_left > 0)
+    else if (city_gods().ra_slightly_reduced_trading_months_left > 0)
         bonus_points -= 1;
 
     // just to be safe...

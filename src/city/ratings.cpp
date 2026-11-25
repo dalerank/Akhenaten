@@ -1,4 +1,5 @@
 #include "ratings.h"
+#include "city/city_religion.h"
 #include "city/ratings.h"
 #include "city/entertainment.h"
 #include "io/gamestate/save_versions.h"
@@ -57,7 +58,7 @@ namespace {
         if (coverage == "library")
             return c.library;
         if (coverage == "religion")
-            return g_city.gods.coverage_common;
+            return city_gods().coverage_common;
         if (coverage == "dentist")
             return c.dentist;
         if (coverage == "physician")

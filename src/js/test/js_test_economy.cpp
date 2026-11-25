@@ -1,4 +1,5 @@
 #include "js/test/js_test_common.h"
+#include "city/city_religion.h"
 
 #include "building/building.h"
 #include "building/building_barracks.h"
@@ -1263,8 +1264,8 @@ static void __test_storage_toggle_empty_all(int bid) {
 ANK_FUNCTION_1(__test_storage_toggle_empty_all);
 
 void __test_set_osiris_double_farm_yield(int active) {
-    g_city.gods.osiris_double_farm_yield_days = active ? 1 : 0;
-    g_city.gods.osiris_double_farm_yield_used = false;
+    city_gods().osiris_double_farm_yield_days = active ? 1 : 0;
+    city_gods().osiris_double_farm_yield_used = false;
 }
 ANK_FUNCTION_1(__test_set_osiris_double_farm_yield)
 
@@ -1276,9 +1277,9 @@ void __test_farm_harvest_and_clear_osiris(int bid) {
     }
     b->has_road_access = true;
     farm->spawn_figure_harvests();
-    if (g_city.gods.osiris_double_farm_yield_used) {
-        g_city.gods.osiris_double_farm_yield_days = 0;
-        g_city.gods.osiris_double_farm_yield_used = false;
+    if (city_gods().osiris_double_farm_yield_used) {
+        city_gods().osiris_double_farm_yield_days = 0;
+        city_gods().osiris_double_farm_yield_used = false;
     }
 }
 ANK_FUNCTION_1(__test_farm_harvest_and_clear_osiris)

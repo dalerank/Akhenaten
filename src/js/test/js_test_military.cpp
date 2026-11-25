@@ -1,4 +1,5 @@
 #include "js/test/js_test_common.h"
+#include "city/city_religion.h"
 
 #include <cstdio>
 #include <string>
@@ -1439,7 +1440,7 @@ static int __test_formation_num_figures(int formation_id) {
 ANK_FUNCTION_1(__test_formation_num_figures);
 
 static void __test_set_seth_protect_troops(int months) {
-    g_city.gods.seth_protect_player_troops_months = (uint8_t)months;
+    city_gods().seth_protect_player_troops_months = (uint8_t)months;
 }
 ANK_FUNCTION_1(__test_set_seth_protect_troops);
 

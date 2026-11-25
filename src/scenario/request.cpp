@@ -1,4 +1,5 @@
 #include "request.h"
+#include "city/city_religion.h"
 
 #include "building/building_storage_yard.h"
 #include "game/game_events.h"
@@ -238,7 +239,7 @@ static int troops_losses_by_surplus(int percent) {
 static bool troops_request_won(const event_ph_t& e) {
     const int strength = formation_request_strength(e.event_id, nullptr, nullptr);
     const int needed = e.amount.value;
-    uint8_t& seth = g_city.gods.seth_protect_player_troops_months;
+    uint8_t& seth = city_gods().seth_protect_player_troops_months;
     if (strength < needed && seth == 0) {
         formation_legions_request_losses(REQUEST_LOSSES_ALL, e.event_id);
         logs::info("[request] troops lost event=%d strength=%d needed=%d", e.event_id, strength, needed);

@@ -3,6 +3,10 @@
 #include "game/simulation.h"
 #include "core/app_module.h"
 #include "game/sim_schedule.h"
+#include "city/city_religion_chunks.h"
+#include "core/xvalue.h"
+#include "io/chunk_serializer.h"
+#include "io/gamestate/save_versions.h"
 
 #include "building/construction_blessing.h"
 #include "building/destruction.h"
@@ -53,28 +57,28 @@ e_god find_god_id_from_short_name(pcstr god_name) {
 declare_console_command_p(god_minor_blessing) {
     e_god god = find_god_id_from_short_name(args.next_str().c_str());
     if (god != GOD_UNKNOWN) {
-        g_city.gods_sys().perform_minor_blessing(god, /*force_construction=*/true);
+        city_gods().perform_minor_blessing(god, /*force_construction=*/true);
         events::emit(event_city_warning{ "Cheated minor blessing" });
     }
 }
 
 declare_console_command_p(god_major_blessing) {
     int god_id = args.next_int(0);
-    g_city.gods_sys().perform_major_blessing((e_god)god_id, /*force_construction=*/true);
+    city_gods().perform_major_blessing((e_god)god_id, /*force_construction=*/true);
 
     events::emit(event_city_warning{ "Casted major upset" });
 }
 
 declare_console_command_p(god_minor_curse) {
     int god_id = args.next_int(0);
-    g_city.gods_sys().perform_minor_curse((e_god)god_id);
+    city_gods().perform_minor_curse((e_god)god_id);
 
     events::emit(event_city_warning{ "Casted major upset" });
 }
 
 declare_console_command_p(god_major_curse) {
     int god_id = args.next_int(0);
-    g_city.gods_sys().perform_major_curse((e_god)god_id);
+    city_gods().perform_major_curse((e_god)god_id);
 
     events::emit(event_city_warning{ "Casted upset" });
 }
@@ -82,13 +86,13 @@ declare_console_command_p(god_major_curse) {
 declare_console_command_p(ra_no_trade) {
     int nomonth = args.next_int(0);
 
-    g_city.gods.ra_no_traders_months_left = nomonth;
-    g_city.gods.ra_harshly_reduced_trading_months_left = nomonth;
+    city_gods().ra_no_traders_months_left = nomonth;
+    city_gods().ra_harshly_reduced_trading_months_left = nomonth;
     events::emit(event_city_console_text{bstring64("Ra no month trade ", nomonth).c_str()});
 }
 
 declare_console_command_p(reset_god_moods) {
-    for (auto& god : g_city.gods.gods) {
+    for (auto& god : city_gods().gods) {
         god.target_mood = 50;
         god.mood = 50;
         god.wrath_bolts = 0;
@@ -101,7 +105,11 @@ declare_console_command_p(reset_god_moods) {
 
 stable_array<god_state::static_params_t> ANK_VARIABLE_N(gods_static_data, "gods");
 
-city_god* gods_state::get(e_god god) {
+city_gods_t& city_gods() {
+    return xvalue<city_gods_t>::ref();
+}
+
+city_god* city_gods_t::get(e_god god) {
     switch (god) {
     case GOD_OSIRIS: return &god_osiris;
     case GOD_RA: return &god_ra;
@@ -113,58 +121,49 @@ city_god* gods_state::get(e_god god) {
     return nullptr;
 }
 
-void gods_system::reset() {
-    for (auto& god : _state.gods) {
-        god.type = e_god(std::distance(_state.gods, &god));
+void city_gods_t::reset() {
+    *this = {};
+    for (auto& god : gods) {
+        god.type = e_god(std::distance(gods, &god));
         god.target_mood = 50;
         god.mood = 50;
-        god.wrath_bolts = 0;
-        god.blessing_done = false;
-        god.curse_done = false;
-        god.unused1 = 0;
-        god.unused2 = 0;
-        god.unused3 = 0;
-        god.months_since_festival = 0;
-        god.is_known = GOD_STATUS_UNKNOWN;
     }
-
-    _state.angry_message_delay = 0;
 }
 
-int gods_state::coverage_avg(e_god god) {
+int city_gods_t::coverage_avg(e_god god) {
     return coverage[god];
 }
 
-int gods_system::god_coverage_total(e_god god, e_building_type shrine, e_building_type temple,
+int city_gods_t::god_coverage_total(e_god god, e_building_type shrine, e_building_type temple,
   e_building_type complex) {
-    switch (_state.is_god_known(god)) {
+    switch (is_god_known(god)) {
     default:
         return 0;
 
     case GOD_STATUS_KNOWN: {
-        const int shrine_cov = 300 * _ctx.buildings.count_active(shrine);
-        const int temple_cov = 750 * _ctx.buildings.count_active(temple);
-        const int complex_cov = 8000 * _ctx.buildings.count_active(complex);
+        const int shrine_cov = 300 * g_city.buildings.count_active(shrine);
+        const int temple_cov = 750 * g_city.buildings.count_active(temple);
+        const int complex_cov = 8000 * g_city.buildings.count_active(complex);
         const int total_cov = shrine_cov + temple_cov + complex_cov;
         return total_cov;
     }
 
     case GOD_STATUS_PATRON: {
-        const int shrine_cov = 150 * _ctx.buildings.count_active(shrine);
-        const int temple_cov = 375 * _ctx.buildings.count_active(temple);
-        const int complex_cov = 8000 * _ctx.buildings.count_active(complex);
+        const int shrine_cov = 150 * g_city.buildings.count_active(shrine);
+        const int temple_cov = 375 * g_city.buildings.count_active(temple);
+        const int complex_cov = 8000 * g_city.buildings.count_active(complex);
         const int total_cov = shrine_cov + temple_cov + complex_cov;
         return total_cov;
     }
     }
 }
 
-void gods_system::calc_coverage() {
-    int pop = _ctx.population.current;
+void city_gods_t::calc_coverage() {
+    int pop = city_population().current;
 
     int known_gods_num = 0;
     for (e_god i = GOD_OSIRIS; i < MAX_GODS; ++i) {
-        if (_state.is_god_known((e_god)i) != GOD_STATUS_UNKNOWN) {
+        if (is_god_known((e_god)i) != GOD_STATUS_UNKNOWN) {
             known_gods_num++;
         }
     }
@@ -177,24 +176,22 @@ void gods_system::calc_coverage() {
         return std::min(calc_percentage(god_coverage_total(g, s, t, c), pop), 100);
     };
 
-    _state.coverage[GOD_OSIRIS]
+    coverage[GOD_OSIRIS]
       = god_coverage_pct(GOD_OSIRIS, BUILDING_SHRINE_OSIRIS, BUILDING_TEMPLE_OSIRIS, BUILDING_TEMPLE_COMPLEX_OSIRIS);
-    _state.coverage[GOD_RA]
-      = god_coverage_pct(GOD_RA, BUILDING_SHRINE_RA, BUILDING_TEMPLE_RA, BUILDING_TEMPLE_COMPLEX_RA);
-    _state.coverage[GOD_PTAH]
+    coverage[GOD_RA] = god_coverage_pct(GOD_RA, BUILDING_SHRINE_RA, BUILDING_TEMPLE_RA, BUILDING_TEMPLE_COMPLEX_RA);
+    coverage[GOD_PTAH]
       = god_coverage_pct(GOD_PTAH, BUILDING_SHRINE_PTAH, BUILDING_TEMPLE_PTAH, BUILDING_TEMPLE_COMPLEX_PTAH);
-    _state.coverage[GOD_SETH]
+    coverage[GOD_SETH]
       = god_coverage_pct(GOD_SETH, BUILDING_SHRINE_SETH, BUILDING_TEMPLE_SETH, BUILDING_TEMPLE_COMPLEX_SETH);
-    _state.coverage[GOD_BAST]
+    coverage[GOD_BAST]
       = god_coverage_pct(GOD_BAST, BUILDING_SHRINE_BAST, BUILDING_TEMPLE_BAST, BUILDING_TEMPLE_COMPLEX_BAST);
 
-    int result = _state.coverage[GOD_OSIRIS] + _state.coverage[GOD_RA] + _state.coverage[GOD_PTAH]
-                 + _state.coverage[GOD_SETH] + _state.coverage[GOD_BAST];
+    int result = coverage[GOD_OSIRIS] + coverage[GOD_RA] + coverage[GOD_PTAH] + coverage[GOD_SETH] + coverage[GOD_BAST];
 
-    _state.coverage_common = (result / known_gods_num);
+    coverage_common = (result / known_gods_num);
 }
 
-gods_state::god_states gods_state::known_gods() {
+city_gods_t::god_states city_gods_t::known_gods() {
     god_states r;
     for (e_god i = GOD_OSIRIS; i < MAX_GODS; ++i) {
         if (is_god_known((e_god)i) != GOD_STATUS_UNKNOWN) {
@@ -205,16 +202,16 @@ gods_state::god_states gods_state::known_gods() {
     return r;
 }
 
-e_god_status gods_state::is_god_known(e_god god) {
+e_god_status city_gods_t::is_god_known(e_god god) {
     return gods[god].is_known;
 }
 
-void gods_system::set_god_known(e_god god, e_god_status v) {
-    _state.gods[god].is_known = v;
+void city_gods_t::set_god_known(e_god god, e_god_status v) {
+    gods[god].is_known = v;
 }
 
 
-bool gods_system::PTAH_warehouse_restock() {
+bool city_gods_t::PTAH_warehouse_restock() {
     // fill warehouses with gems, clay, pottery, flax, linen, or jewelry
     e_resource resources[6] = {RESOURCE_GEMS, RESOURCE_CLAY, RESOURCE_POTTERY, RESOURCE_FLAX, RESOURCE_LINEN, RESOURCE_LUXURY_GOODS};
 
@@ -253,8 +250,8 @@ bool gods_system::PTAH_warehouse_restock() {
     return false;
 }
 
-bool gods_system::PTAH_industry_restock() {
-    if (!_state.is_god_known(GOD_PTAH)) {
+bool city_gods_t::PTAH_industry_restock() {
+    if (!is_god_known(GOD_PTAH)) {
         return false;
     }
 
@@ -265,9 +262,9 @@ bool gods_system::PTAH_industry_restock() {
     // search for industries
     int industries_found = 0;
     for (int i = 0; i < 3; ++i) {
-        if (_ctx.buildings.count_total(industries[i]) > 0
+        if (g_city.buildings.count_total(industries[i]) > 0
             || (industry_resource[i] != RESOURCE_NONE
-                && _ctx.buildings.count_industry_active(industry_resource[i]) > 0)) {
+                && g_city.buildings.count_industry_active(industry_resource[i]) > 0)) {
             industries_found++;
         } else {
             industries[i] = BUILDING_NONE;
@@ -298,8 +295,8 @@ bool gods_system::PTAH_industry_restock() {
     return false;
 }
 
-bool gods_system::PTAH_warehouse_destruction() {
-    if (!_state.is_god_known(GOD_PTAH)) {
+bool city_gods_t::PTAH_warehouse_destruction() {
+    if (!is_god_known(GOD_PTAH)) {
         return false;
     }
 
@@ -333,7 +330,7 @@ bool gods_system::PTAH_warehouse_destruction() {
     return true;
 }
 
-bool gods_system::PTAH_industry_destruction() {
+bool city_gods_t::PTAH_industry_destruction() {
     // destroys random industry, if found
     e_building_type industries[6] = {BUILDING_GOLD_MINE, BUILDING_GEMSTONE_MINE, BUILDING_CLAY_PIT, BUILDING_SHIPWRIGHT, BUILDING_WEAVER_WORKSHOP, BUILDING_JEWELS_WORKSHOP};
     e_resource industry_resource[6] = {RESOURCE_GOLD, RESOURCE_GEMS, RESOURCE_CLAY, RESOURCE_NONE, RESOURCE_LINEN, RESOURCE_LUXURY_GOODS};
@@ -341,9 +338,9 @@ bool gods_system::PTAH_industry_destruction() {
     // search for industries
     int industries_found = 0;
     for (int i = 0; i < 6; ++i) {
-        if (_ctx.buildings.count_total(industries[i]) > 0
+        if (g_city.buildings.count_total(industries[i]) > 0
             || (industry_resource[i] != RESOURCE_NONE
-                && _ctx.buildings.count_industry_active(industry_resource[i]) > 0)) {
+                && g_city.buildings.count_industry_active(industry_resource[i]) > 0)) {
             industries_found++;
         } else {
             industries[i] = BUILDING_NONE;
@@ -517,7 +514,7 @@ REDO:
     goto REDO;
 }
 
-bool gods_system::BAST_houses_destruction() {
+bool city_gods_t::BAST_houses_destruction() {
     int houses[20] = {0};
     int houses_found = 0;
     // first, find the first 20 houses
@@ -572,7 +569,7 @@ bool gods_system::BAST_houses_destruction() {
     return false;
 }
 
-void gods_system::perform_major_blessing(e_god god, bool force_construction) {
+void city_gods_t::perform_major_blessing(e_god god, bool force_construction) {
     if (maybe_construction_blessing(god, /*major=*/true, force_construction)) {
         return;
     }
@@ -582,8 +579,8 @@ void gods_system::perform_major_blessing(e_god god, bool force_construction) {
     case GOD_OSIRIS:
         if (anti_scum_random_bool()) {
             // OG: city flag until the next floodplain harvest wave (all floodplain farms).
-            _state.osiris_double_farm_yield_days = 1;
-            _state.osiris_double_farm_yield_used = false;
+            osiris_double_farm_yield_days = 1;
+            osiris_double_farm_yield_used = false;
             messages::god(GOD_OSIRIS, "message_blessing_from_osiris" );
             return;
         } else {
@@ -597,12 +594,12 @@ void gods_system::perform_major_blessing(e_god god, bool force_construction) {
     case GOD_RA:
         if (anti_scum_random_bool()) {
             // exports sell for 150% profits for the next 12 months
-            _state.ra_150_export_profits_months_left = 12;
+            ra_150_export_profits_months_left = 12;
             messages::god(GOD_RA, "message_blessing_trade_from_ra" );
             return;
         } else {
             // increased kingdom by 15
-            _ctx.kingdome.change(15);
+            g_city.kingdome.change(15);
             messages::god(GOD_RA, "message_blessing_ra_kingdom" );
             return;
         }
@@ -615,7 +612,7 @@ void gods_system::perform_major_blessing(e_god god, bool force_construction) {
         return;
 
     case GOD_SETH:
-        _state.seth_crush_enemy_troops = 10;
+        seth_crush_enemy_troops = 10;
         messages::god(GOD_SETH, "message_blessing_trade_from_seth");
         return;
 
@@ -627,41 +624,41 @@ void gods_system::perform_major_blessing(e_god god, bool force_construction) {
     }
 }
 
-void gods_system::perform_minor_blessing(e_god god, bool force_construction) {
+void city_gods_t::perform_minor_blessing(e_god god, bool force_construction) {
     if (maybe_construction_blessing(god, /*major=*/false, force_construction)) {
         return;
     }
 
-    auto god_ptr = _state.get(god);
+    auto god_ptr = get(god);
     if (god_ptr) {
         god_ptr->perform_minor_blessing();
     }
 }
 
-void gods_system::perform_major_curse(e_god god) {
-    auto god_ptr = _state.get(god);
+void city_gods_t::perform_major_curse(e_god god) {
+    auto god_ptr = get(god);
     if (god_ptr) {
         god_ptr->perform_major_curse();
     }
 }
 
-void gods_system::perform_minor_curse(e_god god) {
-    auto god_ptr = _state.get(god);
+void city_gods_t::perform_minor_curse(e_god god) {
+    auto god_ptr = get(god);
     if (god_ptr) {
         god_ptr->perform_minor_curse();
     }
 }
 
-void gods_system::update_curses_and_blessings(e_god randm_god, e_god_event force) {
+void city_gods_t::update_curses_and_blessings(e_god randm_god, e_god_event force) {
     if (randm_god >= MAX_GODS) {
         if (calculate_least_happy_god()) {
-            randm_god = (e_god)(_state.least_happy_god - 1);
+            randm_god = (e_god)(least_happy_god - 1);
         }
     }
 
     // perform curses/blessings
     if (randm_god < MAX_GODS) {
-        god_state* god = &_state.gods[randm_god];
+        god_state* god = &gods[randm_god];
 
         if (force == GOD_EVENT_MAJOR_BLESSING
             || (force == GED_EVENT_UNKNOWN && god->happy_ankhs == 50 && god->months_since_festival < 15)) {
@@ -691,19 +688,19 @@ void gods_system::update_curses_and_blessings(e_god randm_god, e_god_event force
     }
 }
 
-void gods_system::calculate_gods_mood_targets() {
-    const auto& known_gods = _state.known_gods();
-    if (_ctx.gods_least_mood > 0) {
-        for (auto *god: known_gods) {
-            god->target_mood = _ctx.gods_least_mood;
-            god->mood = _ctx.gods_least_mood;
+void city_gods_t::calculate_gods_mood_targets() {
+    const auto& known = known_gods();
+    if (g_scenario.env.gods_least_mood > 0) {
+        for (auto* god : known) {
+            god->target_mood = g_scenario.env.gods_least_mood;
+            god->mood = g_scenario.env.gods_least_mood;
         }
         return;
     }
 
     // base happiness: percentage of houses covered
-    for (auto *god: known_gods) {
-        god->target_mood = _state.coverage_avg(god->type);
+    for (auto* god : known) {
+        god->target_mood = coverage_avg(god->type);
     }
 
     int max_temples = 0;
@@ -712,23 +709,23 @@ void gods_system::calculate_gods_mood_targets() {
     int min_temples = 100000;
     e_god min_god = GOD_UNKNOWN;
 
-    for (auto *god: known_gods) {
+    for (auto* god : known) {
         int num_temples = 0;
         switch (god->type) {
         case GOD_OSIRIS:
-            num_temples = _ctx.buildings.count_total({BUILDING_TEMPLE_OSIRIS, BUILDING_TEMPLE_COMPLEX_OSIRIS});
+            num_temples = g_city.buildings.count_total({BUILDING_TEMPLE_OSIRIS, BUILDING_TEMPLE_COMPLEX_OSIRIS});
             break;
         case GOD_RA:
-            num_temples = _ctx.buildings.count_total({BUILDING_TEMPLE_RA, BUILDING_TEMPLE_COMPLEX_RA});
+            num_temples = g_city.buildings.count_total({BUILDING_TEMPLE_RA, BUILDING_TEMPLE_COMPLEX_RA});
             break;
         case GOD_PTAH:
-            num_temples = _ctx.buildings.count_total({BUILDING_TEMPLE_PTAH, BUILDING_TEMPLE_COMPLEX_PTAH});
+            num_temples = g_city.buildings.count_total({BUILDING_TEMPLE_PTAH, BUILDING_TEMPLE_COMPLEX_PTAH});
             break;
         case GOD_SETH:
-            num_temples = _ctx.buildings.count_total({BUILDING_TEMPLE_SETH, BUILDING_TEMPLE_COMPLEX_SETH});
+            num_temples = g_city.buildings.count_total({BUILDING_TEMPLE_SETH, BUILDING_TEMPLE_COMPLEX_SETH});
             break;
         case GOD_BAST:
-            num_temples = _ctx.buildings.count_total({BUILDING_TEMPLE_BAST, BUILDING_TEMPLE_COMPLEX_BAST});
+            num_temples = g_city.buildings.count_total({BUILDING_TEMPLE_BAST, BUILDING_TEMPLE_COMPLEX_BAST});
             break;
 
         default:
@@ -751,7 +748,7 @@ void gods_system::calculate_gods_mood_targets() {
     }
 
     // happiness factor based on months since festival (max 40)
-    for (auto *god: known_gods) {
+    for (auto* god : known) {
         int festival_penalty = god->months_since_festival;
         if (festival_penalty > 40)
             festival_penalty = 40;
@@ -770,25 +767,25 @@ void gods_system::calculate_gods_mood_targets() {
     //            city_data.religion.gods[min_god].target_mood -= 25;
     //    }
 
-    int points = calc_bound((_ctx.population.current - 350) / 50, 0, 5);
+    int points = calc_bound((city_population().current - 350) / 50, 0, 5);
     int min_mood = 50 - 10 * points;
     int max_mood = 50 + 10 * points;
 
-    for (auto *god: known_gods) {
+    for (auto* god : known) {
         god->target_mood = calc_bound(god->target_mood, min_mood, max_mood);
     }
 }
 
-void gods_system::update_mood(e_god randm_god) {
-    const auto& known_gods = _state.known_gods();
-    for (auto *god: known_gods) {
+void city_gods_t::update_mood(e_god randm_god) {
+    const auto& known = known_gods();
+    for (auto* god : known) {
         if (god->mood < god->target_mood) {
             god->mood++;
         } else if (god->mood > god->target_mood) {
             god->mood--;
         }
 
-        god->mood = std::max(god->mood, _ctx.gods_least_mood);
+        god->mood = std::max(god->mood, g_scenario.env.gods_least_mood);
 
         if (god->mood > 50) 
             god->curse_done = false;
@@ -799,9 +796,9 @@ void gods_system::update_mood(e_god randm_god) {
 
     // update anger/happiness/bolt icons/etc.
     const int difficulty = game.difficulty();
-    if (_state.is_god_known(randm_god) != GOD_STATUS_UNKNOWN) { // OG code checks "randm_god < MAX_GODS" which is
-                                                                // redundant.
-        god_state* god = &_state.gods[randm_god];
+    if (is_god_known(randm_god) != GOD_STATUS_UNKNOWN) { // OG code checks "randm_god < MAX_GODS" which is
+                                                         // redundant.
+        god_state* god = &gods[randm_god];
         if (god->mood > 50)
             god->wrath_bolts = 0;
 
@@ -848,10 +845,10 @@ void gods_system::update_mood(e_god randm_god) {
 template<typename T>
 void reduce_month(T &m) { if (m > 0) { m--; }};
 
-void gods_system::update_monthly_data(e_god randm_god) {
+void city_gods_t::update_monthly_data(e_god randm_god) {
     // update festival counter
-    const auto& known_gods = _state.known_gods();
-    for (auto *god: known_gods) {
+    const auto& known = known_gods();
+    for (auto* god : known) {
         god->months_since_festival++;
     }
 
@@ -861,30 +858,30 @@ void gods_system::update_monthly_data(e_god randm_god) {
 
     // post city message about the gods being angery
     int min_happiness = 100;
-    for (auto *god: known_gods) {
+    for (auto* god : known) {
         if (god->mood < min_happiness) {
            min_happiness = god->mood;
         }
     }
 
-    if (_state.angry_message_delay > 0) {
-        _state.angry_message_delay--;
+    if (angry_message_delay > 0) {
+        angry_message_delay--;
     } else if (min_happiness < 30) { // message delay = 0 and there's a god with mood < 30
-        _state.angry_message_delay = 20;
+        angry_message_delay = 20;
         if (min_happiness < 10) {
             messages::popup("message_gods_wrathful", 0, 0);
         }
     }
 
     // update status effects with limited durations
-    reduce_month(_state.ra_slightly_increased_trading_months_left);
-    reduce_month(_state.ra_harshly_reduced_trading_months_left);
-    reduce_month(_state.ra_slightly_reduced_trading_months_left);
-    reduce_month(_state.ra_150_export_profits_months_left);
-    reduce_month(_state.ra_no_traders_months_left);
+    reduce_month(ra_slightly_increased_trading_months_left);
+    reduce_month(ra_harshly_reduced_trading_months_left);
+    reduce_month(ra_slightly_reduced_trading_months_left);
+    reduce_month(ra_150_export_profits_months_left);
+    reduce_month(ra_no_traders_months_left);
 }
 
-void gods_system::update() {
+void city_gods_t::update() {
     OZZY_PROFILER_FUNCTION();
     calc_coverage();
     calculate_gods_mood_targets();
@@ -902,17 +899,17 @@ void gods_system::update() {
     //        BAST_houses_destruction();
 
     // at the start of every month
-    if (_ctx.day == 0) {
+    if (g_simulation.simtime.day == 0) {
         update_monthly_data(randm_god);
     }
 }
 
-bool gods_system::calculate_least_happy_god() {
+bool city_gods_t::calculate_least_happy_god() {
     e_god max_god = GOD_UNKNOWN;
     int max_wrath = 0;
     // first, check who's the most enraged (number of bolts)
-    const auto& known_gods = _state.known_gods();
-    for (auto *god: known_gods) {
+    const auto& known = known_gods();
+    for (auto* god : known) {
         if (god->wrath_bolts > max_wrath) {
             max_god = god->type;
             max_wrath = god->wrath_bolts;
@@ -920,39 +917,39 @@ bool gods_system::calculate_least_happy_god() {
     }
 
     if (max_god != GOD_UNKNOWN) {
-        _state.least_happy_god = max_god;
+        least_happy_god = max_god;
         return true;
     }
 
     int min_happiness = 40;
     // lastly, check who's the least happy
-    for (auto *god: known_gods) {
+    for (auto* god : known) {
         if (god->mood < min_happiness) {
             max_god = god->type;
             min_happiness = god->mood;
         }
     }
 
-    _state.least_happy_god = max_god;
+    least_happy_god = max_god;
     return max_god > 0;
 }
 
-int gods_state::god_happiness(e_god god_id) {
+int city_gods_t::god_happiness(e_god god_id) {
     return gods[god_id].mood;
 }
 
-int gods_state::god_wrath_bolts(e_god god_id) {
+int city_gods_t::god_wrath_bolts(e_god god_id) {
     return gods[god_id].wrath_bolts;
 }
 
-int gods_state::god_happy_angels(e_god god_id) {
+int city_gods_t::god_happy_angels(e_god god_id) {
     return gods[god_id].happy_ankhs;
 }
 
-e_god_mood gods_state::least_mood() {
+e_god_mood city_gods_t::least_mood() {
     int least_god_happiness = 100;
-    const auto &known_gods = this->known_gods();
-    for (auto *god: known_gods) {
+    const auto& known = known_gods();
+    for (auto* god : known) {
         int happiness = god_happiness(god->type);
         if (happiness < least_god_happiness) {
             least_god_happiness = happiness;
@@ -976,11 +973,11 @@ e_god_mood gods_state::least_mood() {
     }
 }
 
-int gods_state::months_since_festival(e_god god_id) {
+int city_gods_t::months_since_festival(e_god god_id) {
     return gods[god_id].months_since_festival;
 }
 
-int gods_state::months_since_last_festival() {
+int city_gods_t::months_since_last_festival() {
     uint32_t since_last_festival_months = 999;
     for (auto &g : gods) {
         since_last_festival_months = std::min<int>(since_last_festival_months, g.months_since_festival);
@@ -989,36 +986,42 @@ int gods_state::months_since_last_festival() {
     return since_last_festival_months;
 }
 
-e_god gods_state::get_least_happy_god() {
+e_god city_gods_t::get_least_happy_god() {
     return (e_god)(this->least_happy_god - 1);
 }
 
-int gods_state::spirit_of_seth_power() {
+int city_gods_t::spirit_of_seth_power() {
     return seth_crush_enemy_troops;
 }
 
-void gods_system::spirit_of_seth_mark_used() {
-    _state.seth_crush_enemy_troops = 0;
+void city_gods_t::spirit_of_seth_mark_used() {
+    seth_crush_enemy_troops = 0;
 }
 
 const god_state::static_params_t &god_state::static_params() const {
     return gods_static_data[type];
 }
 
-class religion_system : public sim_system {
+class gods_sim_system : public sim_system {
 public:
     const char* name() const override { return "religion"; }
+    void on_reset() override { city_gods().reset(); }
+    void push_save_sections(int file_version) override {
+        if (file_version >= save_version_city_sections) {
+            g_chunk_io.push_chunk<city_gods_chunk>(city_gods_chunk::size, false);
+        }
+    }
     void register_steps(sim_schedule_t& schedule) override {
         schedule.add({sim_step_religion, SIM_PHASE_TICK, [](int tick) {
                           if (tick != 1) {
                               return;
                           }
-                          g_city.gods_sys().update();
+                          city_gods().update();
                       }});
     }
 };
 
 void ANK_REGISTER_APPLICATION_MODULE(register_religion_system) {
-    static religion_system system;
+    static gods_sim_system system;
     g_simulation.register_system(&system);
 }

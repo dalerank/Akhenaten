@@ -1,4 +1,5 @@
 #include "city_religion_seth.h"
+#include "city/city_religion.h"
 
 #include "building/building.h"
 #include "building/building_fort.h"
@@ -204,7 +205,7 @@ void god_seth_t::perform_minor_curse() {
 }
 
 void god_seth_t::perform_protect_troops() {
-    g_city.gods.seth_protect_player_troops_months = 10;
+    city_gods().seth_protect_player_troops_months = 10;
     messages::god(GOD_SETH, "message_minor_blessing_from_seth");
 }
 

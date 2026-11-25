@@ -1,4 +1,5 @@
 #include "figure/figure_phrase.h"
+#include "game/gods.h"
 #include "city/city_sentiment.h"
 #include "city/city_health.h"
 #include "city/city_labor.h"

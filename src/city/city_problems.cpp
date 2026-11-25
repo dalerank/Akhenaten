@@ -1,4 +1,5 @@
 #include "city/city_problems.h"
+#include "city/city_religion.h"
 #include "city/city_health.h"
 #include "city/city_labor.h"
 
@@ -51,7 +52,7 @@ city_problem_inputs city_problem_gather_inputs() {
         in.workers_allocated += category.workers_allocated;
         in.workers_needed += category.workers_needed;
     }
-    for (const auto& god : g_city.gods.gods) {
+    for (const auto& god : city_gods().gods) {
         in.lowest_god_mood = std::min<int>(in.lowest_god_mood, god.mood);
     }
     in.kingdom_rating = g_city.kingdome.rating;

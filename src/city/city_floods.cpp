@@ -1,4 +1,5 @@
 #include "city_floods.h"
+#include "city/city_religion.h"
 #include "game/sim_schedule.h"
 
 #include "building/building.h"
@@ -332,7 +333,7 @@ void floods_t::tick_update(bool calc_only) {
             // Osiris "next flood destroys farms" also overruns perimeter dikes once.
             // Perfect/Excellent quality alone does NOT breach — that is a gift, not a disaster.
             if (!calc_only && game_features::gameplay_enhanced_flood_basins.to_bool()
-                && g_city.gods.osiris_flood_will_destroy_active > 0) {
+                && city_gods().osiris_flood_will_destroy_active > 0) {
                 const int max_tiles = 1 + (anti_scum_random_15bit() % 3); // 1..3
                 int first_offset = -1;
                 const int removed = map_basin_breach_perimeter(max_tiles, &first_offset);
@@ -351,7 +352,7 @@ void floods_t::tick_update(bool calc_only) {
     // update at the end of each day
     if (g_simulation.simtime.tick == 50) {
         if (state_is(FLOOD_STATE_INUNDATED)) {
-            g_city.gods.osiris_flood_will_destroy_active = 0;
+            city_gods().osiris_flood_will_destroy_active = 0;
         }
     }
 
@@ -374,4 +375,12 @@ void floods_t::tick_update(bool calc_only) {
     }
 
     map_floodplain_sub_growth();
+}
+
+bool floods_t::osiris_destroys_farms() const {
+    return city_gods().osiris_flood_will_destroy_active > 0;
+}
+
+void floods_t::osiris_farm_destroyed() {
+    city_gods().osiris_flood_will_destroy_active = 2;
 }

@@ -61,6 +61,8 @@ struct floods_t {
     void update_next_flood_params();
     void tick_update(bool calc_only);
     void post_flood_prediction_message();
+    bool osiris_destroys_farms() const;
+    void osiris_farm_destroyed();
 };
 
 
