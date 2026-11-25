@@ -41,7 +41,6 @@ namespace vfs {
      * @return Directory listing
      */
     const dir_listing* dir_find_all_subdirectories(pcstr dir);
-    std::vector<path> dir_find_all_subdirectories(vfs::path dir, bool);
     void dir_look_entries(pcstr path, xfunction<void(pcstr, bool)> fn);
 
     vfs::path content_path(pcstr filepath);
@@ -52,7 +51,6 @@ namespace vfs {
 
     bool is_directory(pcstr path);
 
-    void content_cache_real_file_paths(pcstr folder);
     void content_cache_paths();
     void content_clear_path_cache();
 

@@ -119,7 +119,7 @@ void js_game_load_text(js_State *J) {
         return;
     }
 
-    J->pushstring(ftext->begin());
+    J->pushstring((pcstr)ftext->data());
 }
 
 namespace js_helpers {

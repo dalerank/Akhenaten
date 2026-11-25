@@ -64,9 +64,7 @@ namespace vfs {
 
     bool mount_pack(path filename);
     void umount_pack(path filename);
-    bool is_pack_mounted(path filename);
 
-    bool mounted_entry_exists(path in_path);
     bool mounted_entry_resolve(path in_path, path& out_path);
 
     /**

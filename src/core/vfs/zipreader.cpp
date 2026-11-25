@@ -8,7 +8,7 @@
 
 namespace vfs {
 
-    ZipArchive::ZipArchive(const vfs::path &file) : _filepath(file) {
+    ZipArchive::ZipArchive(const vfs::path& file) : _filepath(file) {
         vfs::path ospath = vfs::path::resolve(file);
         _data = vfs::file_open(ospath, "rb");
         if (!_data) {
@@ -55,11 +55,7 @@ namespace vfs {
     ZipArchive::~ZipArchive() {
     }
 
-    bool ZipArchive::isGzip() const {
-        return _isGZip;
-    }
-
-    const std::vector<xstring> &ZipArchive::entries() const {
+    const std::vector<xstring>& ZipArchive::entries() const {
         return _entries;
     }
 
@@ -174,7 +170,7 @@ namespace vfs {
 
         // read filename
         {
-            char tmp[512] = { 0 };
+            char tmp[512] = {0};
             if (entry.header.FilenameLength >= sizeof(tmp)) {
                 markCorrupt("file name too long");
                 return false;
@@ -198,8 +194,8 @@ namespace vfs {
             if (!_data->seek(_data->size() - 22)) {
                 return false;
             }
-            const char endID[] = { 0x50, 0x4b, 0x05, 0x06, 0x0 };
-            char tmp[5] = { '\0' };
+            const char endID[] = {0x50, 0x4b, 0x05, 0x06, 0x0};
+            char tmp[5] = {'\0'};
             bool found = false;
             // search for the end record ID
             while (!found && _data->tell() > 0) {
@@ -289,7 +285,7 @@ namespace vfs {
     }
 
     //! opens a file by file name
-    reader ZipArchive::createAndOpenFile(const vfs::path &filename, pcstr mode) {
+    reader ZipArchive::createAndOpenFile(const vfs::path& filename, pcstr mode) {
         vfs::path wanted = filename;
         wanted.tolower();
         const auto it = std::find_if(_entries.begin(), _entries.end(),
@@ -310,44 +306,44 @@ namespace vfs {
 
     //! Used for LZMA decompression. The lib has no default memory management
     namespace {
-        void *SzAlloc(void *p, size_t size) {
-						(void)p;
-						return malloc(size);
-				}
-				void SzFree(void *p, void *address) {
-						(void)p;
-						free(address);
-				}
-        ISzAlloc lzmaAlloc = { SzAlloc, SzFree };
-    }
+        void* SzAlloc(void* p, size_t size) {
+            (void)p;
+            return malloc(size);
+        }
+        void SzFree(void* p, void* address) {
+            (void)p;
+            free(address);
+        }
+        ISzAlloc lzmaAlloc = {SzAlloc, SzFree};
+    } // namespace
 
     //! opens a file by index
     reader ZipArchive::createAndOpenFile(unsigned int index, pcstr mode) {
-        //Supports 0, 8, 12, 14, 99
-        //0 - The file is stored (no compression)
-        //1 - The file is Shrunk
-        //2 - The file is Reduced with compression factor 1
-        //3 - The file is Reduced with compression factor 2
-        //4 - The file is Reduced with compression factor 3
-        //5 - The file is Reduced with compression factor 4
-        //6 - The file is Imploded
-        //7 - Reserved for Tokenizing compression algorithm
-        //8 - The file is Deflated
-        //9 - Reserved for enhanced Deflating
-        //10 - PKWARE Date Compression Library Imploding
-        //12 - bzip2 - Compression Method from libbz2, WinZip 10
-        //14 - LZMA - Compression Method, WinZip 12
-        //96 - Jpeg compression - Compression Method, WinZip 12
-        //97 - WavPack - Compression Method, WinZip 11
-        //98 - PPMd - Compression Method, WinZip 10
-        //99 - AES encryption, WinZip 9
+        // Supports 0, 8, 12, 14, 99
+        // 0 - The file is stored (no compression)
+        // 1 - The file is Shrunk
+        // 2 - The file is Reduced with compression factor 1
+        // 3 - The file is Reduced with compression factor 2
+        // 4 - The file is Reduced with compression factor 3
+        // 5 - The file is Reduced with compression factor 4
+        // 6 - The file is Imploded
+        // 7 - Reserved for Tokenizing compression algorithm
+        // 8 - The file is Deflated
+        // 9 - Reserved for enhanced Deflating
+        // 10 - PKWARE Date Compression Library Imploding
+        // 12 - bzip2 - Compression Method from libbz2, WinZip 10
+        // 14 - LZMA - Compression Method, WinZip 12
+        // 96 - Jpeg compression - Compression Method, WinZip 12
+        // 97 - WavPack - Compression Method, WinZip 11
+        // 98 - PPMd - Compression Method, WinZip 10
+        // 99 - AES encryption, WinZip 9
 
         const bool is_text_file = !!strstr(mode, "t");
         const int txr_limiter = is_text_file ? 1 : 0;
         if (index >= _files.size()) {
             return {};
         }
-        const SZipFileEntry &e = _files[index];
+        const SZipFileEntry& e = _files[index];
         constexpr unsigned int max_entry_size = 256u << 20;
         if (e.header.DataDescriptor.UncompressedSize > max_entry_size
             || e.header.DataDescriptor.CompressedSize > (unsigned int)_data->size()) {
@@ -367,7 +363,7 @@ namespace vfs {
         {
             const unsigned int uncompressedSize = e.header.DataDescriptor.UncompressedSize;
             const size_t memsize = uncompressedSize + txr_limiter;
-            char *mem = (char*)malloc(memsize);
+            char* mem = (char*)malloc(memsize);
             if (!_data->seek(e.Offset) || !_data->r(mem, uncompressedSize)) {
                 free(mem);
                 return {};
@@ -378,8 +374,7 @@ namespace vfs {
             return std::make_shared<data_reader>(_entries[index].c_str(), mem, (int)memsize);
         } break;
 
-        case 8:
-        {
+        case 8: {
             const unsigned int uncompressedSize = e.header.DataDescriptor.UncompressedSize;
             const unsigned int compressedSize = e.header.DataDescriptor.CompressedSize;
             std::vector<char> pBuf;
@@ -395,9 +390,9 @@ namespace vfs {
 
             // Setup the inflate stream.
             z_stream stream = {};
-            stream.next_in = (Bytef *)pcData.data();
+            stream.next_in = (Bytef*)pcData.data();
             stream.avail_in = (uInt)compressedSize;
-            stream.next_out = (Bytef *)pBuf.data();
+            stream.next_out = (Bytef*)pBuf.data();
             stream.avail_out = uncompressedSize;
 
             // Perform inflation. wbits < 0 indicates no zlib header inside the data.
@@ -417,7 +412,7 @@ namespace vfs {
                 return {};
             } else {
                 const size_t memsize = pBuf.size() + txr_limiter;
-                char *mem = (char*)malloc(memsize);
+                char* mem = (char*)malloc(memsize);
                 memcpy(mem, pBuf.data(), pBuf.size());
                 if (is_text_file) {
                     mem[pBuf.size()] = 0; // null-terminate the string
@@ -426,11 +421,9 @@ namespace vfs {
                 auto r = std::make_shared<data_reader>(_entries[index].c_str(), mem, static_cast<int>(memsize));
                 return r;
             }
-        }
-        break;
+        } break;
 
-        case 12:
-        {
+        case 12: {
             const unsigned int uncompressedSize = e.header.DataDescriptor.UncompressedSize;
             const unsigned int compressedSize = e.header.DataDescriptor.CompressedSize;
             std::vector<char> pBuf;
@@ -444,7 +437,7 @@ namespace vfs {
                 return {};
             }
 
-            bz_stream bz_ctx = { 0 };
+            bz_stream bz_ctx = {0};
             /* use BZIP2's default memory allocation
             bz_ctx->bzalloc = NULL;
             bz_ctx->bzfree  = NULL;
@@ -452,11 +445,11 @@ namespace vfs {
             */
             int err = BZ2_bzDecompressInit(&bz_ctx, 0, 0); /* decompression */
             if (err != BZ_OK) {
-                //Logger::error( "bzip2 decompression failed. File cannot be read." );
+                // Logger::error( "bzip2 decompression failed. File cannot be read." );
                 return {};
             }
 
-            bz_ctx.next_in = (char *)pcData.data();
+            bz_ctx.next_in = (char*)pcData.data();
             bz_ctx.avail_in = compressedSize;
             /* pass all input to decompressor */
             bz_ctx.next_out = pBuf.data();
@@ -473,7 +466,7 @@ namespace vfs {
                 return {};
             } else {
                 const size_t memsize = pBuf.size() + txr_limiter;
-                char *mem = (char*)malloc(memsize);
+                char* mem = (char*)malloc(memsize);
                 memcpy(mem, pBuf.data(), pBuf.size());
                 if (is_text_file) {
                     mem[pBuf.size()] = 0; // null-terminate the string
@@ -482,11 +475,9 @@ namespace vfs {
                 auto r = std::make_shared<data_reader>(_entries[index].c_str(), mem, static_cast<int>(memsize));
                 return r;
             }
-        }
-        break;
+        } break;
 
-        case 14:
-        {
+        case 14: {
             const unsigned int uncompressedSize = e.header.DataDescriptor.UncompressedSize;
             const unsigned int compressedSize = e.header.DataDescriptor.CompressedSize;
             std::vector<char> pBuf;
@@ -520,7 +511,7 @@ namespace vfs {
                 return {};
             } else {
                 const size_t memsize = pBuf.size() + txr_limiter;
-                char *mem = (char*)malloc(memsize);
+                char* mem = (char*)malloc(memsize);
                 memcpy(mem, pBuf.data(), pBuf.size());
                 if (is_text_file) {
                     mem[pBuf.size()] = 0; // null-terminate the string
@@ -529,22 +520,19 @@ namespace vfs {
                 auto r = std::make_shared<data_reader>(_entries[index].c_str(), mem, static_cast<int>(memsize));
                 return r;
             }
-        }
-        break;
+        } break;
 
-        case 99:
-        {
+        case 99: {
             return {};
         }
 
-        default:
-        {
-            //Logger::error( "file {} has unsupported compression method", item( index ).fullpath.toCString() );
+        default: {
+            // Logger::error( "file {} has unsupported compression method", item( index ).fullpath.toCString() );
             return {};
         }
         }
 
-        //Logger::error( "Can't read file " + item( index ).fullpath.toString() );
+        // Logger::error( "Can't read file " + item( index ).fullpath.toString() );
         return {};
     }
-} // vfs
+} // namespace vfs

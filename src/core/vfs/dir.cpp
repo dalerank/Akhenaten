@@ -20,377 +20,352 @@ namespace fs = std::filesystem;
 
 namespace vfs {
 
-static bool is_absolute_path(pcstr filepath) {
-    if (!filepath || !*filepath) {
-        return false;
-    }
-    if (platform.is_windows()) {
-        const auto is_separator = [](char c) { return c == '/' || c == '\\'; };
-        if (is_separator(filepath[0]) && is_separator(filepath[1])) {
-            return true;
+    static bool is_absolute_path(pcstr filepath) {
+        if (!filepath || !*filepath) {
+            return false;
         }
-        return std::isalpha(*filepath) && (*(filepath + 1) == ':') && is_separator(filepath[2]);
-    }
-    return (*filepath) == '/';
-}
-
-void set_user_data_folder(pcstr absolute) {
-    vfs().user_data_folder = absolute ? absolute : "";
-}
-
-vfs::path save_folder() {
-    return vfs().user_data_folder.empty() ? vfs::path(SAVE_FOLDER)
-                                          : vfs::path(vfs().user_data_folder, "/", SAVE_FOLDER);
-}
-
-vfs::path user_maps_folder() {
-    return vfs().user_data_folder.empty() ? vfs::path() : vfs::path(vfs().user_data_folder, "/", MAPS_FOLDER);
-}
-
-[[maybe_unused]] static vfs::path user_maps_path(pcstr filepath) {
-    const size_t prefix = strlen(MAPS_FOLDER);
-    if (vfs().user_data_folder.empty() || SDL_strncasecmp(filepath, MAPS_FOLDER, prefix) != 0
-        || (filepath[prefix] != '/' && filepath[prefix] != '\\')) {
-        return {};
-    }
-    return vfs::path(user_maps_folder().c_str(), filepath + prefix);
-}
-
-static vfs::path user_saves_path(pcstr filepath) {
-    const size_t prefix = strlen(SAVE_FOLDER);
-    if (vfs().user_data_folder.empty() || SDL_strncasecmp(filepath, SAVE_FOLDER, prefix) != 0
-        || (filepath[prefix] != '/' && filepath[prefix] != '\\')) {
-        return {};
-    }
-    return vfs::path(save_folder().c_str(), filepath + prefix);
-}
-
-vfs::path content_internal_path(pcstr path) {
-    if (is_absolute_path(path)) {
-        return vfs::path(path);
-    }
-    const vfs::path user_saves = user_saves_path(path);
-    if (!user_saves.empty()) {
-        return user_saves;
-    }
-    pcstr dir = platform_file_manager_get_base_path();
-    vfs::path corrected_path(dir, "/", path);
-    return corrected_path;
-}
-
-void content_cache_real_file_paths(pcstr f) {
-    vfs::path folder = content_internal_path(f);
-    if (!fs::exists(folder.c_str()) || !fs::is_directory(folder.c_str())) {
-        return;
+        if (platform.is_windows()) {
+            const auto is_separator = [](char c) { return c == '/' || c == '\\'; };
+            if (is_separator(filepath[0]) && is_separator(filepath[1])) {
+                return true;
+            }
+            return std::isalpha(*filepath) && (*(filepath + 1) == ':') && is_separator(filepath[2]);
+        }
+        return (*filepath) == '/';
     }
 
-    vfs().cache_path(folder);
+    void set_user_data_folder(pcstr absolute) {
+        vfs().user_data_folder = absolute ? absolute : "";
+    }
 
-    for (const auto &entry : fs::directory_iterator(folder.c_str())) {
-        if (!fs::is_regular_file(entry.path())) {
-            continue;
+    vfs::path save_folder() {
+        return vfs().user_data_folder.empty() ? vfs::path(SAVE_FOLDER)
+                                              : vfs::path(vfs().user_data_folder, "/", SAVE_FOLDER);
+    }
+
+    vfs::path user_maps_folder() {
+        return vfs().user_data_folder.empty() ? vfs::path() : vfs::path(vfs().user_data_folder, "/", MAPS_FOLDER);
+    }
+
+    [[maybe_unused]] static vfs::path user_maps_path(pcstr filepath) {
+        const size_t prefix = strlen(MAPS_FOLDER);
+        if (vfs().user_data_folder.empty() || SDL_strncasecmp(filepath, MAPS_FOLDER, prefix) != 0
+            || (filepath[prefix] != '/' && filepath[prefix] != '\\')) {
+            return {};
+        }
+        return vfs::path(user_maps_folder().c_str(), filepath + prefix);
+    }
+
+    static vfs::path user_saves_path(pcstr filepath) {
+        const size_t prefix = strlen(SAVE_FOLDER);
+        if (vfs().user_data_folder.empty() || SDL_strncasecmp(filepath, SAVE_FOLDER, prefix) != 0
+            || (filepath[prefix] != '/' && filepath[prefix] != '\\')) {
+            return {};
+        }
+        return vfs::path(save_folder().c_str(), filepath + prefix);
+    }
+
+    vfs::path content_internal_path(pcstr path) {
+        if (is_absolute_path(path)) {
+            return vfs::path(path);
+        }
+        const vfs::path user_saves = user_saves_path(path);
+        if (!user_saves.empty()) {
+            return user_saves;
+        }
+        pcstr dir = platform_file_manager_get_base_path();
+        vfs::path corrected_path(dir, "/", path);
+        return corrected_path;
+    }
+
+    void content_cache_paths() {
+        // Cache every file and folder under the game directory recursively, so lookups such as
+        // "AUDIO/Wavs/CLAY.WAV" resolve on case-sensitive filesystems even when an install uses
+        // different casing (e.g. "Audio/Wavs/clay.wav" on CD / localized releases). Previously only
+        // a fixed list of exactly-cased folders was scanned, so such installs had no sound at all.
+        vfs::path root = content_internal_path("");
+        std::error_code ec;
+        if (!fs::is_directory(root.c_str(), ec)) {
+            return;
         }
 
-        vfs().cache_path(entry.path().string().c_str());
-    }
-}
-
-void content_cache_paths() {
-    // Cache every file and folder under the game directory recursively, so lookups such as
-    // "AUDIO/Wavs/CLAY.WAV" resolve on case-sensitive filesystems even when an install uses
-    // different casing (e.g. "Audio/Wavs/clay.wav" on CD / localized releases). Previously only
-    // a fixed list of exactly-cased folders was scanned, so such installs had no sound at all.
-    vfs::path root = content_internal_path("");
-    std::error_code ec;
-    if (!fs::is_directory(root.c_str(), ec)) {
-        return;
-    }
-
-    vfs().cache_path(root);
-    for (auto it = fs::recursive_directory_iterator(root.c_str(), fs::directory_options::skip_permission_denied, ec);
-         it != fs::recursive_directory_iterator(); it.increment(ec)) {
-        if (ec) {
-            break;
+        vfs().cache_path(root);
+        for (
+          auto it = fs::recursive_directory_iterator(root.c_str(), fs::directory_options::skip_permission_denied, ec);
+          it != fs::recursive_directory_iterator(); it.increment(ec)) {
+            if (ec) {
+                break;
+            }
+            vfs().cache_path(it->path().string().c_str());
         }
-        vfs().cache_path(it->path().string().c_str());
     }
-}
 
-static void allocate_listing_files(int min, int max) {
-    vfs_t& data = vfs();
-    for (int i = min; i < max; i++) {
-        data.listing.files[i] = (char *)malloc(MAX_FILE_NAME * sizeof(char));
-        data.listing.files[i][0] = 0;
-    }
-}
-
-static void clear_dir_listing() {
-    vfs_t& data = vfs();
-    data.listing.num_files = 0;
-    if (data.listing_capacity <= 0) {
-        data.listing.files = (char **)malloc(BASE_MAX_FILES * sizeof(char *));
-        allocate_listing_files(0, BASE_MAX_FILES);
-        data.listing_capacity = BASE_MAX_FILES;
-    } else {
-        for (int i = 0; i < data.listing_capacity; i++) {
+    static void allocate_listing_files(int min, int max) {
+        vfs_t& data = vfs();
+        for (int i = min; i < max; i++) {
+            data.listing.files[i] = (char*)malloc(MAX_FILE_NAME * sizeof(char));
             data.listing.files[i][0] = 0;
         }
     }
-}
 
-static void expand_dir_listing() {
-    vfs_t& data = vfs();
-    int old_max_files = data.listing_capacity;
-
-    data.listing_capacity = 2 * old_max_files;
-    data.listing.files = (char**)realloc(data.listing.files, data.listing_capacity * sizeof(char*));
-    allocate_listing_files(old_max_files, data.listing_capacity);
-}
-
-static int compare_lower(const void *va, const void *vb) {
-    // arguments are pointers to char*
-    return string_compare_case_insensitive(*(pcstr *)va, *(pcstr *)vb);
-}
-
-static int add_to_listing(pcstr filename) {
-    vfs_t& data = vfs();
-
-    if (data.listing.num_files >= data.listing_capacity)
-        expand_dir_listing();
-
-    strncpy(data.listing.files[data.listing.num_files], filename, MAX_FILE_NAME);
-    data.listing.files[data.listing.num_files][MAX_FILE_NAME - 1] = 0;
-    ++data.listing.num_files;
-    return LIST_CONTINUE;
-}
-
-const dir_listing *dir_find_files_with_extension(xstring dir, xstring extension) {
-    vfs_t& data = vfs();
-
-    clear_dir_listing();
-    platform_file_manager_list_directory_contents(dir.c_str(), TYPE_FILE, extension.c_str(), add_to_listing);
-    qsort(data.listing.files, data.listing.num_files, sizeof(char *), compare_lower);
-    return &data.listing;
-}
-
-const dir_listing *dir_find_all_subdirectories(pcstr dir) {
-    vfs_t& data = vfs();
-
-    clear_dir_listing();
-    platform_file_manager_list_directory_contents(dir, TYPE_DIR, 0, add_to_listing);
-    qsort(data.listing.files, data.listing.num_files, sizeof(char *), compare_lower);
-    return &data.listing;
-}
-
-
-std::vector<path> dir_find_all_subdirectories(vfs::path dir, bool) {
-    auto *listing = dir_find_all_subdirectories(dir.c_str());
-    std::vector<path> folders;
-    for (int i = 0; i < listing->num_files; i++) {
-         folders.push_back(listing->files[i]);
+    static void clear_dir_listing() {
+        vfs_t& data = vfs();
+        data.listing.num_files = 0;
+        if (data.listing_capacity <= 0) {
+            data.listing.files = (char**)malloc(BASE_MAX_FILES * sizeof(char*));
+            allocate_listing_files(0, BASE_MAX_FILES);
+            data.listing_capacity = BASE_MAX_FILES;
+        } else {
+            for (int i = 0; i < data.listing_capacity; i++) {
+                data.listing.files[i][0] = 0;
+            }
+        }
     }
-    return folders;
-}
 
-void content_clear_path_cache() {
-    vfs().path_cache.clear();
-    vfs().path_missing.clear();
-}
+    static void expand_dir_listing() {
+        vfs_t& data = vfs();
+        int old_max_files = data.listing_capacity;
+
+        data.listing_capacity = 2 * old_max_files;
+        data.listing.files = (char**)realloc(data.listing.files, data.listing_capacity * sizeof(char*));
+        allocate_listing_files(old_max_files, data.listing_capacity);
+    }
+
+    static int compare_lower(const void* va, const void* vb) {
+        // arguments are pointers to char*
+        return string_compare_case_insensitive(*(pcstr*)va, *(pcstr*)vb);
+    }
+
+    static int add_to_listing(pcstr filename) {
+        vfs_t& data = vfs();
+
+        if (data.listing.num_files >= data.listing_capacity)
+            expand_dir_listing();
+
+        strncpy(data.listing.files[data.listing.num_files], filename, MAX_FILE_NAME);
+        data.listing.files[data.listing.num_files][MAX_FILE_NAME - 1] = 0;
+        ++data.listing.num_files;
+        return LIST_CONTINUE;
+    }
+
+    const dir_listing* dir_find_files_with_extension(xstring dir, xstring extension) {
+        vfs_t& data = vfs();
+
+        clear_dir_listing();
+        platform_file_manager_list_directory_contents(dir.c_str(), TYPE_FILE, extension.c_str(), add_to_listing);
+        qsort(data.listing.files, data.listing.num_files, sizeof(char*), compare_lower);
+        return &data.listing;
+    }
+
+    const dir_listing* dir_find_all_subdirectories(pcstr dir) {
+        vfs_t& data = vfs();
+
+        clear_dir_listing();
+        platform_file_manager_list_directory_contents(dir, TYPE_DIR, 0, add_to_listing);
+        qsort(data.listing.files, data.listing.num_files, sizeof(char*), compare_lower);
+        return &data.listing;
+    }
+
+
+    void content_clear_path_cache() {
+        vfs().path_cache.clear();
+        vfs().path_missing.clear();
+    }
 
 #if !defined(GAME_PLATFORM_WIN) && !defined(GAME_PLATFORM_ANDROID)
-// Case-sensitive file systems: Pharaoh installs mix "Data"/"data", "SprMain.sg3"/"SPRMAIN.SG3", and the
-// game asks for one fixed spelling. Correct every component under the base dir, not just the files of
-// the folders content_cache_paths() pre-lists.
-static bool match_case_on_disk(const fs::path& cur, const std::vector<std::string>& parts, size_t index,
-  fs::path& out) {
-    if (index == parts.size()) {
-        out = cur;
-        return true;
-    }
-
-    std::error_code ec;
-    const std::string& part = parts[index];
-    const fs::path exact = cur / part;
-    if (fs::exists(exact, ec) && match_case_on_disk(exact, parts, index + 1, out)) {
-        return true;
-    }
-
-    for (const auto& entry : fs::directory_iterator(cur, ec)) {
-        const std::string name = entry.path().filename().string();
-        if (name != part && string_compare_case_insensitive(name.c_str(), part.c_str()) == 0
-            && match_case_on_disk(entry.path(), parts, index + 1, out)) {
+    // Case-sensitive file systems: Pharaoh installs mix "Data"/"data", "SprMain.sg3"/"SPRMAIN.SG3", and the
+    // game asks for one fixed spelling. Correct every component under the base dir, not just the files of
+    // the folders content_cache_paths() pre-lists.
+    static bool match_case_on_disk(const fs::path& cur, const std::vector<std::string>& parts, size_t index,
+      fs::path& out) {
+        if (index == parts.size()) {
+            out = cur;
             return true;
         }
-    }
-    return false;
-}
 
-static bool correct_case_on_disk(pcstr relative, vfs::path& out) {
-    fs::path base(platform_file_manager_get_base_path());
-    if (base.empty()) {
-        base = ".";
-    }
-
-    std::string rel(relative);
-    std::replace(rel.begin(), rel.end(), '\\', '/');
-    std::vector<std::string> parts;
-    size_t pos = 0;
-    while (pos <= rel.size()) {
-        const size_t slash = rel.find('/', pos);
-        std::string part = rel.substr(pos, slash == std::string::npos ? std::string::npos : slash - pos);
-        pos = (slash == std::string::npos) ? rel.size() + 1 : slash + 1;
-        if (!part.empty() && part != ".") {
-            parts.push_back(std::move(part));
+        std::error_code ec;
+        const std::string& part = parts[index];
+        const fs::path exact = cur / part;
+        if (fs::exists(exact, ec) && match_case_on_disk(exact, parts, index + 1, out)) {
+            return true;
         }
-    }
 
-    fs::path found;
-    if (!match_case_on_disk(base, parts, 0, found)) {
+        for (const auto& entry : fs::directory_iterator(cur, ec)) {
+            const std::string name = entry.path().filename().string();
+            if (name != part && string_compare_case_insensitive(name.c_str(), part.c_str()) == 0
+                && match_case_on_disk(entry.path(), parts, index + 1, out)) {
+                return true;
+            }
+        }
         return false;
     }
 
-    out = found.string().c_str();
-    return true;
-}
+    static bool correct_case_on_disk(pcstr relative, vfs::path& out) {
+        fs::path base(platform_file_manager_get_base_path());
+        if (base.empty()) {
+            base = ".";
+        }
+
+        std::string rel(relative);
+        std::replace(rel.begin(), rel.end(), '\\', '/');
+        std::vector<std::string> parts;
+        size_t pos = 0;
+        while (pos <= rel.size()) {
+            const size_t slash = rel.find('/', pos);
+            std::string part = rel.substr(pos, slash == std::string::npos ? std::string::npos : slash - pos);
+            pos = (slash == std::string::npos) ? rel.size() + 1 : slash + 1;
+            if (!part.empty() && part != ".") {
+                parts.push_back(std::move(part));
+            }
+        }
+
+        fs::path found;
+        if (!match_case_on_disk(base, parts, 0, found)) {
+            return false;
+        }
+
+        out = found.string().c_str();
+        return true;
+    }
 #endif
 
-vfs::path content_path(pcstr path) {
-    vfs::path uri_path = content_internal_path(path);
-    vfs::path orig_path = uri_path;
-    vfs::path lower = uri_path.tolower();
-    const size_t lhash = lower.hash();
+    vfs::path content_path(pcstr path) {
+        vfs::path uri_path = content_internal_path(path);
+        vfs::path orig_path = uri_path;
+        vfs::path lower = uri_path.tolower();
+        const size_t lhash = lower.hash();
 
-    if (const auto it = vfs().path_cache.find(lhash); it != vfs().path_cache.end()) {
-        if (strcmp(it->second.lowered.c_str(), uri_path.c_str()) == 0) {
-            return it->second.original;
+        if (const auto it = vfs().path_cache.find(lhash); it != vfs().path_cache.end()) {
+            if (strcmp(it->second.lowered.c_str(), uri_path.c_str()) == 0) {
+                return it->second.original;
+            }
         }
-    }
 
 #if !defined(GAME_PLATFORM_WIN) && !defined(GAME_PLATFORM_ANDROID)
-    std::error_code ec;
-    if (fs::exists(orig_path.c_str(), ec) || vfs().path_missing.count(lhash)) {
+        std::error_code ec;
+        if (fs::exists(orig_path.c_str(), ec) || vfs().path_missing.count(lhash)) {
+            return orig_path;
+        }
+
+        vfs::path corrected;
+        if (correct_case_on_disk(path, corrected)) {
+            vfs_t::path_uri uri;
+            uri.original = corrected;
+            uri.lowered = lower;
+            vfs().path_cache.insert({lhash, uri});
+            return corrected;
+        }
+        // A file created later gets this spelling, which the exists() check above finds first.
+        vfs().path_missing.insert(lhash);
+#endif
+
         return orig_path;
     }
 
-    vfs::path corrected;
-    if (correct_case_on_disk(path, corrected)) {
-        vfs_t::path_uri uri;
-        uri.original = corrected;
-        uri.lowered = lower;
-        vfs().path_cache.insert({lhash, uri});
-        return corrected;
-    }
-    // A file created later gets this spelling, which the exists() check above finds first.
-    vfs().path_missing.insert(lhash);
-#endif
-
-    return orig_path;
-}
-
-vfs_t::vfs_t() {
-    if (char* sdl_base = SDL_GetBasePath()) {
-        std::string s = sdl_base;
-        SDL_free(sdl_base);
-        while (!s.empty() && (s.back() == '/' || s.back() == '\\')) {
-            s.pop_back();
+    vfs_t::vfs_t() {
+        if (char* sdl_base = SDL_GetBasePath()) {
+            std::string s = sdl_base;
+            SDL_free(sdl_base);
+            while (!s.empty() && (s.back() == '/' || s.back() == '\\')) {
+                s.pop_back();
+            }
+            exe_dir = s.c_str();
         }
-        exe_dir = s.c_str();
     }
-}
 
-void vfs_t::cache_path(pcstr entry) {
-    path_uri uri;
-    uri.original = entry;
-    uri.original.replace('\\', '/');
-    uri.lowered = uri.original;
-    uri.lowered.tolower();
-    path_cache.insert({uri.lowered.hash(), uri});
-}
-
-vfs::path current_path(pcstr path) {
-    const vfs::path& base = vfs().exe_dir;
-
-    vfs::path result;
-    if (!base.empty()) {
-        result.concat(base.c_str(), "/", path);
+    void vfs_t::cache_path(pcstr entry) {
+        path_uri uri;
+        uri.original = entry;
+        uri.original.replace('\\', '/');
+        uri.lowered = uri.original;
+        uri.lowered.tolower();
+        path_cache.insert({uri.lowered.hash(), uri});
     }
-    return result;
-}
 
-void dir_look_entries(pcstr path, xfunction<void(pcstr, bool)> fn) {
-    namespace fs = std::filesystem;
-    std::error_code ec;
-    for (const auto& e : fs::directory_iterator(path, ec)) {
-        fn(e.path().string().c_str(), !e.is_regular_file());
+    vfs::path current_path(pcstr path) {
+        const vfs::path& base = vfs().exe_dir;
+
+        vfs::path result;
+        if (!base.empty()) {
+            result.concat(base.c_str(), "/", path);
+        }
+        return result;
     }
-}
 
-bool is_directory(pcstr path) {
-    std::error_code ec;
-    return fs::is_directory(path, ec);
-}
+    void dir_look_entries(pcstr path, xfunction<void(pcstr, bool)> fn) {
+        namespace fs = std::filesystem;
+        std::error_code ec;
+        for (const auto& e : fs::directory_iterator(path, ec)) {
+            fn(e.path().string().c_str(), !e.is_regular_file());
+        }
+    }
 
-vfs::path vfs::path::resolve() {
+    bool is_directory(pcstr path) {
+        std::error_code ec;
+        return fs::is_directory(path, ec);
+    }
+
+    vfs::path vfs::path::resolve() {
 #ifndef GAME_PLATFORM_ANDROID
-    pcstr filepath = data();
+        pcstr filepath = data();
 
-    if (is_absolute_path(filepath)) {
-        return filepath;
-    }
+        if (is_absolute_path(filepath)) {
+            return filepath;
+        }
 
-    const vfs::path from_saves = user_saves_path(filepath);
-    if (!from_saves.empty()) {
-        return from_saves;
-    }
+        const vfs::path from_saves = user_saves_path(filepath);
+        if (!from_saves.empty()) {
+            return from_saves;
+        }
 
-    const vfs::path from_user = user_maps_path(filepath);
-    if (!from_user.empty() && std::filesystem::exists(from_user.c_str())) {
-        return from_user;
-    }
+        const vfs::path from_user = user_maps_path(filepath);
+        if (!from_user.empty() && std::filesystem::exists(from_user.c_str())) {
+            return from_user;
+        }
 
-    vfs::path from_content = content_path(filepath);
-    if (std::filesystem::exists(from_content.c_str())) {
-        return from_content;
-    }
+        vfs::path from_content = content_path(filepath);
+        if (std::filesystem::exists(from_content.c_str())) {
+            return from_content;
+        }
 
-    vfs::path from_pwd = vfs::path("./", filepath);
-    if (std::filesystem::exists(from_pwd.c_str())) {
-        return std::filesystem::absolute(from_pwd.c_str()).string().c_str();
-    }
+        vfs::path from_pwd = vfs::path("./", filepath);
+        if (std::filesystem::exists(from_pwd.c_str())) {
+            return std::filesystem::absolute(from_pwd.c_str()).string().c_str();
+        }
 
-    vfs::path from_exe = current_path(filepath);
-    if (!from_exe.empty() && std::filesystem::exists(from_exe.c_str())) {
-        return from_exe;
-    }
+        vfs::path from_exe = current_path(filepath);
+        if (!from_exe.empty() && std::filesystem::exists(from_exe.c_str())) {
+            return from_exe;
+        }
 
 #if defined(GAME_PLATFORM_BROWSER)
-    // Engine data embedded at link time (--embed-file), outside the IDBFS game dir.
-    vfs::path from_engine("/engine/", filepath);
-    if (std::filesystem::exists(from_engine.c_str())) {
-        return from_engine;
-    }
+        // Engine data embedded at link time (--embed-file), outside the IDBFS game dir.
+        vfs::path from_engine("/engine/", filepath);
+        if (std::filesystem::exists(from_engine.c_str())) {
+            return from_engine;
+        }
 #endif
 
-    // Not found anywhere (new file) — return game-dir path so writes go to the right place.
-    return from_user.empty() ? from_content : from_user;
+        // Not found anywhere (new file) — return game-dir path so writes go to the right place.
+        return from_user.empty() ? from_content : from_user;
 #else
-    pcstr filepath = data();
-    vfs::path corrected_filename = content_path(filepath);
-    // Native absolute paths still pass through directly on Android.
-    if (!corrected_filename.empty() && corrected_filename.data()[0] == '/') {
-        return corrected_filename;
-    }
-    // SAF-backed paths stay relative and are resolved by the Java bridge.
-    return filepath;
+        pcstr filepath = data();
+        vfs::path corrected_filename = content_path(filepath);
+        // Native absolute paths still pass through directly on Android.
+        if (!corrected_filename.empty() && corrected_filename.data()[0] == '/') {
+            return corrected_filename;
+        }
+        // SAF-backed paths stay relative and are resolved by the Java bridge.
+        return filepath;
 #endif
-}
+    }
 
-const dir_listing *dir_append_files_with_extension(xstring dir, xstring extension) {
-    vfs_t& data = vfs();
+    const dir_listing* dir_append_files_with_extension(xstring dir, xstring extension) {
+        vfs_t& data = vfs();
 
-    platform_file_manager_list_directory_contents(dir.c_str(), TYPE_FILE, extension.c_str(), add_to_listing);
-    qsort(data.listing.files, data.listing.num_files, sizeof(char *), compare_lower);
-    return &data.listing;
-}
+        platform_file_manager_list_directory_contents(dir.c_str(), TYPE_FILE, extension.c_str(), add_to_listing);
+        qsort(data.listing.files, data.listing.num_files, sizeof(char*), compare_lower);
+        return &data.listing;
+    }
 
-} // vfs
+} // namespace vfs

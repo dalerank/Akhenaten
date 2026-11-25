@@ -18,7 +18,7 @@
 #include <memory>
 #include <string>
 
-#if defined( __EMSCRIPTEN__ )
+#if defined(__EMSCRIPTEN__)
 #include <emscripten.h>
 EM_ASYNC_JS(void, __sync_em_fs, (), {
     // clang-format off
@@ -345,25 +345,12 @@ bool mounted_entry_resolve(path in_path, path &out_path) {
     return false;
 }
 
-bool mounted_entry_exists(path in_path) {
-    path resolved;
-    return mounted_entry_resolve(in_path, resolved);
-}
-
-bool is_pack_mounted(path filename) {
-    if (filename.empty()) {
-        return false;
-    }
-
-    return vfs().find_archive(filename) != nullptr;
-}
-
 bool mount_pack(path filename) {
     if (filename.empty() || !file_exists(filename)) {
         return false;
     }
 
-    if (is_pack_mounted(filename)) {
+    if (vfs().find_archive(filename)) {
         return true;
     }
 

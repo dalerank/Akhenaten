@@ -130,7 +130,6 @@ namespace vfs {
         const std::vector<xstring>& names() const { return _names; }
         const vfs::path& filepath() const { return _filepath; }
 
-        bool isGzip() const;
         bool isValid() const { return !_files.empty(); }
 
     protected:
