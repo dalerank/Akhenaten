@@ -48,14 +48,27 @@ static bool is_absolute_path(pcstr filepath) {
     return (*filepath) == '/';
 }
 
-static vfs::path g_save_folder_override;
+static vfs::path g_user_data_folder;
 
-void set_save_folder(pcstr absolute) {
-    g_save_folder_override = absolute ? absolute : "";
+void set_user_data_folder(pcstr absolute) {
+    g_user_data_folder = absolute ? absolute : "";
 }
 
 vfs::path save_folder() {
-    return g_save_folder_override.empty() ? vfs::path(SAVE_FOLDER) : g_save_folder_override;
+    return g_user_data_folder.empty() ? vfs::path(SAVE_FOLDER) : vfs::path(g_user_data_folder, "/", SAVE_FOLDER);
+}
+
+vfs::path user_maps_folder() {
+    return g_user_data_folder.empty() ? vfs::path() : vfs::path(g_user_data_folder, "/", MAPS_FOLDER);
+}
+
+[[maybe_unused]] static vfs::path user_maps_path(pcstr filepath) {
+    const size_t prefix = strlen(MAPS_FOLDER);
+    if (g_user_data_folder.empty() || SDL_strncasecmp(filepath, MAPS_FOLDER, prefix) != 0
+        || (filepath[prefix] != '/' && filepath[prefix] != '\\')) {
+        return {};
+    }
+    return vfs::path(user_maps_folder().c_str(), filepath + prefix);
 }
 
 vfs::path content_internal_path(pcstr path) {
@@ -338,6 +351,11 @@ vfs::path vfs::path::resolve() {
         return filepath;
     }
 
+    const vfs::path from_user = user_maps_path(filepath);
+    if (!from_user.empty() && std::filesystem::exists(from_user.c_str())) {
+        return from_user;
+    }
+
     vfs::path from_content = content_path(filepath);
     if (std::filesystem::exists(from_content.c_str())) {
         return from_content;
@@ -362,7 +380,7 @@ vfs::path vfs::path::resolve() {
 #endif
 
     // Not found anywhere (new file) — return game-dir path so writes go to the right place.
-    return from_content;
+    return from_user.empty() ? from_content : from_user;
 #else
     pcstr filepath = data();
     vfs::path corrected_filename = content_path(filepath);

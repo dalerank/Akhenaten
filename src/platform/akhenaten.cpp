@@ -505,9 +505,10 @@ static void setup() {
 
     if (g_args.is_integral_tests()) {
         std::error_code ec;
-        const auto saves = std::filesystem::absolute(std::filesystem::path(platform.user_directory()) / "Save", ec);
-        vfs::set_save_folder(saves.generic_string().c_str());
-        logs::info("[integraltests] saves go to %s", saves.generic_string().c_str());
+        const auto user_data = std::filesystem::absolute(std::filesystem::path(platform.user_directory()), ec);
+        vfs::set_user_data_folder(user_data.generic_string().c_str());
+        logs::info("[integraltests] saves go to %s, editor maps to %s", vfs::save_folder().c_str(),
+          vfs::user_maps_folder().c_str());
     }
 
     if (!game_init(opts)) {

@@ -118,7 +118,8 @@ bool game_init(game_opts opts) {
         return (base && *base) ? vfs::path(base, "/", folder) : vfs::path(folder);
     };
     vfs::create_folders(vfs::content_path(vfs::save_folder().c_str()));
-    vfs::create_folders(data_folder(vfs::MAPS_FOLDER));
+    const vfs::path user_maps = vfs::user_maps_folder();
+    vfs::create_folders(user_maps.empty() ? data_folder(vfs::MAPS_FOLDER) : user_maps);
 
     if (!image_load_paks()) {
         logs::error("unable to load main graphics");

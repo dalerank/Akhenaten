@@ -50,7 +50,8 @@ void dir_look_entries(pcstr path, xfunction<void(pcstr, bool)> fn);
 
 vfs::path content_path(pcstr filepath);
 vfs::path save_folder();
-void set_save_folder(pcstr absolute);
+vfs::path user_maps_folder();
+void set_user_data_folder(pcstr absolute);
 vfs::path current_path(pcstr filepath);
 
 bool is_directory(pcstr path);

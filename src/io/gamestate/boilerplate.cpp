@@ -523,7 +523,7 @@ bool GamestateIO::delete_savegame(vfs::path filename_short) {
 }
 
 bool GamestateIO::delete_map(const char* filename_short) {
-    vfs::path full = fullpath_maps(filename_short);
+    vfs::path full = fullpath_maps(filename_short).resolve();
     // ED4b sidecar next to map (Maps/foo.map ? Maps/foo.meta.js).
     vfs::path meta = full;
     char *dot = std::strrchr(meta.data(), '.');
