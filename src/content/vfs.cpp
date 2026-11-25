@@ -401,7 +401,6 @@ void sync_em_fs() {
 #if defined( __EMSCRIPTEN__ )
     __sync_em_fs();
     logs::info("em fs synced");
-    g_verbose_log = true;
 #endif
 }
 
