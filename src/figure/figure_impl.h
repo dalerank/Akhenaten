@@ -48,7 +48,6 @@ public:
     void es_t(const T &ev, pcstr func) const;
 
     virtual int provide_service() { return 0; }
-    virtual bool play_die_sound() { return false; }
     virtual void play_attack_sound() {}
     // Plague carriers pass roadblocks freely (original Pharaoh).
     virtual bool ignores_roadblocks() const { return false; }

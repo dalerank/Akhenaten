@@ -633,11 +633,6 @@ void figure_hippo::acquire_attack() {
     base.set_flag(e_figure_flag_inattack);
 }
 
-bool figure_hippo::play_die_sound() {
-    events::emit(event_sound_speech{"Wavs/hippodie.wav"});
-    return true;
-}
-
 void figure_hippo::herd_moved() {
     advance_action(ACTION_8_HIPPO_CHOOSE);
 }

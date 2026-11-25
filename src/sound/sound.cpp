@@ -999,6 +999,10 @@ bool sound_manager_t::log_events() const {
     return g_args.is_integral_tests() || g_args.is_log_sound() || g_args.is_log_sound_events();
 }
 
+bool sound_manager_t::log_event_sources() const {
+    return g_args.is_log_sound_events();
+}
+
 bool sound_manager_t::data_available() const {
     return !g_args.no_resource();
 }
@@ -1017,12 +1021,7 @@ void sound_manager_t::set_effect_file(int effect, xstring file) {
 const vfs::path& sound_manager_t::og_sample_path(og_sample_t& sample) {
     if (!sample.probed) {
         sample.probed = true;
-        if (initialized && data_available() && !sample.file.empty()) {
-            vfs::path audio_path("AUDIO/", sample.file.c_str());
-            if (vfs::file_exists(audio_path)) {
-                sample.resolved = vfs::content_path(audio_path);
-            }
-        }
+        sample.resolved = audio_file_path(sample.file);
     }
     return sample.resolved;
 }
@@ -1075,4 +1074,35 @@ int sound_manager_t::play_effect(int effect) {
     init_channel(channel, path);
     play_channel(channel, calc_bound(game_features::gameopt_sound_effects_volume.to_int(), 0, 100));
     return channel;
+}
+
+vfs::path sound_manager_t::audio_file_path(const xstring& file) const {
+    if (!initialized || !data_available() || file.empty()) {
+        return {};
+    }
+    vfs::path audio_path("AUDIO/", file.c_str());
+    return vfs::file_exists(audio_path) ? vfs::content_path(audio_path) : vfs::path{};
+}
+
+int sound_manager_t::free_effect_channel(const vfs::path& filename) {
+    int free_channel = -1;
+    for (int c = SOUND_CHANNEL_EFFECTS_MIN; c <= SOUND_CHANNEL_EFFECTS_MAX; c++) {
+        const bool playing = is_channel_playing(c);
+        if (!filename.empty() && _channels[c].filename == filename) {
+            if (playing) {
+                return -1;
+            }
+            return c;
+        }
+        if (!playing && free_channel < 0) {
+            free_channel = c;
+        }
+    }
+    return free_channel;
+}
+
+void sound_manager_t::play_effect_panned(int channel, const vfs::path& filename, int volume_pct, int left_pct,
+  int right_pct) {
+    init_channel(channel, filename);
+    play_channel_panned(channel, volume_pct, left_pct, right_pct);
 }

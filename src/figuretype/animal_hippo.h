@@ -64,7 +64,6 @@ public:
     virtual void update_animation() override;
     virtual void main_image_update() override;
     virtual void acquire_attack() override;
-    virtual bool play_die_sound() override;
 
     virtual void herd_moved() override;
     virtual void herd_rest() override;

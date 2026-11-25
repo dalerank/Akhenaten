@@ -22,7 +22,6 @@ public:
     virtual void figure_action() override;
     virtual void update_animation() override;
     virtual void before_poof() override;
-    //virtual bool play_die_sound() override;
     //virtual void apply_damage(int hit_dmg, figure_id attacker_id) override;
 
     virtual e_minimap_figure_color minimap_color() const override { return FIGURE_COLOR_ANIMAL; }

@@ -83,6 +83,7 @@ struct viewport_t {
     bool contains_pixel(vec2i pixel) const;
     tile2i screen_to_tile(vec2i screen) const;
     vec2i tile_to_screen(tile2i point) const;
+    vec2i tile_to_pixel(tile2i point) const;
     void record_mappoint_pixelcoord(tile2i point, vec2i pixel);
     void clear_mappoint_pixelcoord();
     vec2i lookup_tile_to_pixel(tile2i point) const;

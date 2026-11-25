@@ -546,12 +546,17 @@ void viewport_t::foreach_valid_map_tile_rows(painter &ctx,
     }
 }
 
-void viewport_t::foreach_tile_in_range(painter &ctx, int grid_offset, int size, int radius, tile_draw_callback callback) {
-    vec2i screen = tile_to_screen(tile2i(grid_offset));
+vec2i viewport_t::tile_to_pixel(tile2i point) const {
+    const vec2i screen = tile_to_screen(point);
     vec2i pixel;
     pixel.x = (screen.x - tile_internal.x) * TILE_WIDTH_PIXELS - (screen.y & 1) * HALF_TILE_WIDTH_PIXELS + offset.x;
     pixel.y = (screen.y - tile_internal.y - 1) * HALF_TILE_HEIGHT_PIXELS + offset.y;
-    pixel -= camera_pixel_offset_internal;
+    return pixel - camera_pixel_offset_internal;
+}
+
+void viewport_t::foreach_tile_in_range(painter& ctx, int grid_offset, int size, int radius,
+  tile_draw_callback callback) {
+    vec2i pixel = tile_to_pixel(tile2i(grid_offset));
 
     int orientation_x = X_DIRECTION_FOR_ORIENTATION[orientation / 2];
     int orientation_y = Y_DIRECTION_FOR_ORIENTATION[orientation / 2];

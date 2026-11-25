@@ -64,3 +64,57 @@ enum e_sound_effect {
 
 using e_sound_effect_tokens_t = token_holder<e_sound_effect, SOUND_EFFECT_PANEL, SOUND_EFFECT_COUNT>;
 extern const e_sound_effect_tokens_t e_sound_effect_tokens;
+
+enum e_figure_sound {
+    FIGURE_SOUND_NONE = 0,
+    FIGURE_SOUND_HYENA,
+    FIGURE_SOUND_LION,
+    FIGURE_SOUND_SCORPION,
+    FIGURE_SOUND_ASP,
+    FIGURE_SOUND_OSTRICH,
+    FIGURE_SOUND_ANTELOPE,
+    FIGURE_SOUND_HIPPO,
+    FIGURE_SOUND_CROCODILE,
+    FIGURE_SOUND_BIRDS,
+    FIGURE_SOUND_TOWER_SENTRY,
+    FIGURE_SOUND_POLICE,
+    FIGURE_SOUND_ARCHER,
+    FIGURE_SOUND_INFANTRY,
+    FIGURE_SOUND_CHARIOT,
+    FIGURE_SOUND_HUNTER_ANTELOPE,
+    FIGURE_SOUND_HUNTER_OSTRICH,
+    FIGURE_SOUND_HUNTER_BIRDS,
+    FIGURE_SOUND_SHIP,
+    FIGURE_SOUND_ENEMY_ARCHER,
+    FIGURE_SOUND_ENEMY_SWORD,
+    FIGURE_SOUND_ENEMY_SPEAR,
+    FIGURE_SOUND_CITIZEN_1,
+    FIGURE_SOUND_CITIZEN_2,
+    FIGURE_SOUND_CITIZEN_3,
+    FIGURE_SOUND_CITIZEN_4,
+    FIGURE_SOUND_CITIZEN_5,
+    FIGURE_SOUND_CITIZEN_6,
+    FIGURE_SOUND_CITIZEN_7,
+    FIGURE_SOUND_CITIZEN_8,
+    FIGURE_SOUND_MARKET_TRADER_1,
+    FIGURE_SOUND_MARKET_TRADER_2,
+    FIGURE_SOUND_MARKET_TRADER_3,
+    FIGURE_SOUND_MARKET_TRADER_4,
+
+    FIGURE_SOUND_COUNT
+};
+using e_figure_sound_tokens_t = token_holder<e_figure_sound, FIGURE_SOUND_NONE, FIGURE_SOUND_COUNT>;
+extern const e_figure_sound_tokens_t e_figure_sound_tokens;
+
+enum e_figure_sound_variant {
+    FIGURE_SOUND_VARIANT_IDLE = 0,
+    FIGURE_SOUND_VARIANT_ROAM,
+    FIGURE_SOUND_VARIANT_ATTACK,
+    FIGURE_SOUND_VARIANT_DIE,
+    FIGURE_SOUND_VARIANT_RUN,
+
+    FIGURE_SOUND_VARIANT_COUNT
+};
+using e_figure_sound_variant_tokens_t
+  = token_holder<e_figure_sound_variant, FIGURE_SOUND_VARIANT_IDLE, FIGURE_SOUND_VARIANT_COUNT>;
+extern const e_figure_sound_variant_tokens_t e_figure_sound_variant_tokens;

@@ -595,11 +595,6 @@ void figure_predator::acquire_attack() {
     base.set_flag(e_figure_flag_inattack);
 }
 
-bool figure_predator::play_die_sound() {
-    base.play_sound_file(predator_config().die_sound);
-    return true;
-}
-
 void figure_predator::update_day() {
     figure_impl::update_day();
 

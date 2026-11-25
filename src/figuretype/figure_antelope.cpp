@@ -292,11 +292,6 @@ void figure_antelope::main_image_update() {
 void figure_antelope::before_poof() {
 }
 
-bool figure_antelope::play_die_sound() {
-    events::emit(event_sound_effect{SOUND_EFFECT_ZEBRA_DIE});
-    return true;
-}
-
 void figure_antelope::apply_damage(int hit_dmg, figure_id attacker_id) {
     figure_impl::apply_damage(hit_dmg, attacker_id);
     runtime_data().applied_damage += hit_dmg;

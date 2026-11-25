@@ -57,7 +57,6 @@ public:
     virtual void update_animation() override;
     virtual void main_image_update() override;
     virtual void before_poof() override;
-    virtual bool play_die_sound() override;
     virtual void apply_damage(int hit_dmg, figure_id attacker_id) override;
 
     virtual void herd_moved() override;

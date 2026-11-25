@@ -520,12 +520,6 @@ void figure_crocodile::acquire_attack() {
     base.set_flag(e_figure_flag_inattack);
 }
 
-bool figure_crocodile::play_die_sound() {
-    // OG FIGURE_SOUND_CROCODILE variant die → crocdie.wav
-    events::emit(event_sound_speech{"Wavs/crocdie.wav"});
-    return true;
-}
-
 void figure_crocodile::herd_moved() {
     advance_action(ACTION_8_CROCODILE_CHOOSE);
 }

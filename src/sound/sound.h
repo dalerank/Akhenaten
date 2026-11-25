@@ -50,8 +50,12 @@ public:
     void stop_music();
     void set_volume(int b, int e, int percentage);
     int play_effect(int effect);
+    int free_effect_channel(const vfs::path& filename);
+    void play_effect_panned(int channel, const vfs::path& filename, int volume_pct, int left_pct, int right_pct);
+    vfs::path audio_file_path(const xstring& file) const;
     // "[sound] ..." log lines of what plays, for --log-sound and the integral tests (no audio hardware needed).
     bool log_events() const;
+    bool log_event_sources() const;
     bool data_available() const;
     void set_effect_file(int effect, xstring file);
     void clear_effect_files();

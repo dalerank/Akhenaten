@@ -285,14 +285,6 @@ void figure_soldier::update_image(const formation* m, int &dir) {
     dir = base.figure_image_normalize_direction(dir);
 }
 
-bool figure_soldier::play_die_sound() {
-    if (city_figures().soldiers == 1) {
-        events::emit(event_sound_speech{"Wavs/sword_atk.wav"});
-    }
-
-    return true;
-}
-
 void figure_soldier::acquire_attack() {
     base.action_state = ACTION_10_SOLDIER_ATTACK;
     base.set_flag(e_figure_flag_inattack);

@@ -269,12 +269,6 @@ void figure_birds::main_image_update() {
 void figure_birds::before_poof() {
 }
 
-bool figure_birds::play_die_sound() {
-    // Match figure::play_die_sound FIGURE_BIRDS branch (SHEEP_DIE placeholder).
-    events::emit(event_sound_effect{SOUND_EFFECT_SHEEP_DIE});
-    return true;
-}
-
 void figure_birds::apply_damage(int hit_dmg, figure_id attacker_id) {
     figure_impl::apply_damage(hit_dmg, attacker_id);
     runtime_data().applied_damage += hit_dmg;

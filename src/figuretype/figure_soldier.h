@@ -34,7 +34,6 @@ public:
     virtual void before_poof() override;
     virtual void update_image(const formation *m, int &dir);
     virtual e_minimap_figure_color minimap_color() const override { return FIGURE_COLOR_SOLDIER; }
-    virtual bool play_die_sound() override;
     virtual void formation_reset_to_initial(const formation *m) override;
 
     virtual void going_to_standard();

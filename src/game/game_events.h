@@ -23,6 +23,14 @@ struct event_sound_speech {
     int source_line = __builtin_LINE();
 };
 
+struct event_sound_figure {
+    int figure_id;
+    int group;
+    int variant;
+    pcstr source_file = __builtin_FILE();
+    int source_line = __builtin_LINE();
+};
+
 struct event_music_update {
     bool force;
 };
