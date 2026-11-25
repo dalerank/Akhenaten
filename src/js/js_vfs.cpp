@@ -53,7 +53,13 @@ namespace vfs {
             if (entry.is_directory()) {
                 // Create subdirectory and recurse
                 fs::path subdir = output_base / filename;
-                fs::create_directories(subdir);
+                std::error_code ec;
+                fs::create_directories(subdir, ec);
+                if (ec) {
+                    logs::error("Failed to create directory: %s (%s)", subdir.string().c_str(), ec.message().c_str());
+                    files_failed++;
+                    continue;
+                }
                 logs::info("Created directory: %s", subdir.string().c_str());
 
                 // Recurse into subdirectory
@@ -76,6 +82,11 @@ namespace vfs {
 
                 out.write(file.begin(), file.size());
                 out.close();
+                if (!out) {
+                    logs::error("Failed to write file: %s", output_file.string().c_str());
+                    files_failed++;
+                    continue;
+                }
 
                 logs::info("Unpacked: %s (%zu bytes)", full_internal_path.c_str(), file.size());
                 files_unpacked++;
@@ -97,8 +108,17 @@ namespace vfs {
         }
 
         // Create output directory
-        fs::path output_dir = fs::path(base_path) / "Scripts";
-        fs::create_directories(output_dir);
+        const fs::path output_dir = fs::path(base_path) / "Scripts";
+        const fs::path stamp_path = output_dir / unpacked_version_file;
+        std::error_code ec;
+        fs::create_directories(output_dir, ec);
+        if (!ec) {
+            fs::remove(stamp_path, ec);
+        }
+        if (ec) {
+            logs::error("Failed to unpack scripts to %s: %s", output_dir.string().c_str(), ec.message().c_str());
+            return xstring{};
+        }
         logs::info("Output directory: %s", output_dir.string().c_str());
 
         // Unpack all scripts
@@ -108,16 +128,24 @@ namespace vfs {
 
         vfs::unpack_directory(filesystem, scripts_path, output_dir, files_unpacked, files_failed);
 
-        std::ofstream stamp(output_dir / unpacked_version_file, std::ios::binary | std::ios::trunc);
-        stamp << get_version().c_str();
-        if (!stamp) {
-            logs::error("Failed to write %s; the unpacked scripts will be ignored", unpacked_version_file);
-        }
-
         logs::info("=== Unpack complete! ===");
         logs::info("Files unpacked: %d", files_unpacked);
         logs::info("Files failed: %d", files_failed);
         logs::info("Location: %s", output_dir.string().c_str());
+
+        if (files_failed > 0) {
+            logs::error("Not all scripts were unpacked; %s is not written and the folder will be ignored",
+              unpacked_version_file);
+            return xstring{};
+        }
+
+        std::ofstream stamp(stamp_path, std::ios::binary | std::ios::trunc);
+        stamp << get_version().c_str();
+        stamp.close();
+        if (!stamp) {
+            logs::error("Failed to write %s; the unpacked scripts will be ignored", unpacked_version_file);
+            return xstring{};
+        }
 
         return xstring(output_dir.string().c_str());
     }
