@@ -1,6 +1,7 @@
 #pragma once
 
 #include "building/building_type.h"
+#include "city/city_food_supply.h"
 #include "core/archive.h"
 #include "core/svector.h"
 
@@ -54,10 +55,13 @@ struct city_food_supply_t {
     int32_t fish_last_month;
     int32_t fish_this_month;
 
-    void subscribe_events();
+    static void subscribe_events();
+    void reset();
     void advance_month();
     food_supply_sources gather() const;
     int percentage() const;
 };
 ANK_CONFIG_PROPERTY(city_food_supply_t, hunting_lodges_working, game_meat_last_month, game_meat_this_month,
   fishing_wharfs_working, fish_last_month, fish_this_month)
+
+city_food_supply_t& city_food_supply();

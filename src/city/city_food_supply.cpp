@@ -2,6 +2,10 @@
 #include "game/simulation.h"
 #include "core/app_module.h"
 #include "game/sim_schedule.h"
+#include "city/city_food_supply_chunks.h"
+#include "core/xvalue.h"
+#include "io/chunk_serializer.h"
+#include "io/gamestate/save_versions.h"
 
 #include "building/building.h"
 #include "building/building_static_params.h"
@@ -89,12 +93,21 @@ static int food_supply_imports() {
     return imports;
 }
 
+city_food_supply_t& city_food_supply() {
+    return xvalue<city_food_supply_t>::ref();
+}
+
+void city_food_supply_t::reset() {
+    *this = {};
+}
+
 void city_food_supply_t::subscribe_events() {
-    events::subscribe([this](event_produced_resources ev) {
+    events::subscribe([](event_produced_resources ev) {
+        auto& food_supply = city_food_supply();
         if (ev.resource == RESOURCE_GAMEMEAT) {
-            game_meat_this_month += city_food_supply_rules.food_per_cart;
+            food_supply.game_meat_this_month += city_food_supply_rules.food_per_cart;
         } else if (ev.resource == RESOURCE_FISH) {
-            fish_this_month += city_food_supply_rules.food_per_cart;
+            food_supply.fish_this_month += city_food_supply_rules.food_per_cart;
         }
     });
 }
@@ -155,16 +168,22 @@ int city_food_supply_t::percentage() const {
 }
 
 int __city_food_supply_percentage() {
-    return g_city.food_supply.percentage();
+    return city_food_supply().percentage();
 }
 ANK_FUNCTION(__city_food_supply_percentage)
 
 class food_supply_system : public sim_system {
 public:
     const char* name() const override { return "food_supply"; }
+    void on_reset() override { city_food_supply().reset(); }
+    void push_save_sections(int file_version) override {
+        if (file_version >= save_version_city_sections) {
+            g_chunk_io.push_chunk<city_food_supply_chunk>(city_food_supply_chunk::size, false);
+        }
+    }
     void register_steps(sim_schedule_t& schedule) override {
         schedule.add(
-          {sim_step_food_supply_month, SIM_PHASE_MONTH_CITY, [](int) { g_city.food_supply.advance_month(); }});
+          {sim_step_food_supply_month, SIM_PHASE_MONTH_CITY, [](int) { city_food_supply().advance_month(); }});
     }
 };
 

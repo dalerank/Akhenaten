@@ -1,4 +1,5 @@
 #include "construction_warnings.h"
+#include "city/city_food_supply.h"
 #include "city/city_labor.h"
 
 #include "building/building.h"
@@ -267,7 +268,7 @@ void construction_warnings_check_house_plots() {
         return;
     }
     const int produced
-      = calc_percentage<int>(g_city.food_supply.percentage(), g_city.resource.food_consumed_last_month());
+      = calc_percentage<int>(city_food_supply().percentage(), g_city.resource.food_consumed_last_month());
     if (!g_scenario.kingdom_supplies_grain && produced < rules.min_food_produced_percent) {
         pass.warn(rules.eating_more_than_produced);
     }

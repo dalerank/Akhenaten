@@ -7,7 +7,6 @@
 #include "city/buildings.h"
 #include "city/military.h"
 #include "city/city_resource.h"
-#include "city/city_food_supply.h"
 #include "city/map.h"
 #include "city/coverage.h"
 #include "city/city_figures.h"
@@ -26,7 +25,6 @@ struct city_t {
     city_industry_t industry;
 
     city_resources_t resource;
-    city_food_supply_t food_supply;
 
 
     city_map_t map;

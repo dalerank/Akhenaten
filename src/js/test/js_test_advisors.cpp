@@ -35,7 +35,7 @@ int __test_food_supply_farm_produce(int fertility, int laborers, bool blessed) {
 ANK_FUNCTION_3(__test_food_supply_farm_produce)
 
 bvariant_map __test_food_supply_sources() {
-    const food_supply_sources s = g_city.food_supply.gather();
+    const food_supply_sources s = city_food_supply().gather();
     bvariant_map m;
     m["floodplain_produce"] = bvariant(s.floodplain_produce);
     m["meadow_produce"] = bvariant(s.meadow_produce);

@@ -1,4 +1,5 @@
 #include "city/city_chunks.h"
+#include "city/city_food_supply.h"
 #include "city/coverage.h"
 #include "city/city_mission.h"
 #include "city/city_kingdome_relations.h"
@@ -522,12 +523,12 @@ static void city_data_bind_og_layout(io_buffer* iob) {
     iob->bind(BIND_SIGNATURE_INT32, &city_finance().crimes_this_month);
     iob->bind(BIND_SIGNATURE_INT32, &city_finance().gold_stolen_this_month);
     iob->bind____skip(4);
-    iob->bind(BIND_SIGNATURE_INT32, &data.food_supply.hunting_lodges_working);
-    iob->bind(BIND_SIGNATURE_INT32, &data.food_supply.game_meat_last_month);
-    iob->bind(BIND_SIGNATURE_INT32, &data.food_supply.game_meat_this_month);
-    iob->bind(BIND_SIGNATURE_INT32, &data.food_supply.fishing_wharfs_working);
-    iob->bind(BIND_SIGNATURE_INT32, &data.food_supply.fish_last_month);
-    iob->bind(BIND_SIGNATURE_INT32, &data.food_supply.fish_this_month);
+    iob->bind(BIND_SIGNATURE_INT32, &city_food_supply().hunting_lodges_working);
+    iob->bind(BIND_SIGNATURE_INT32, &city_food_supply().game_meat_last_month);
+    iob->bind(BIND_SIGNATURE_INT32, &city_food_supply().game_meat_this_month);
+    iob->bind(BIND_SIGNATURE_INT32, &city_food_supply().fishing_wharfs_working);
+    iob->bind(BIND_SIGNATURE_INT32, &city_food_supply().fish_last_month);
+    iob->bind(BIND_SIGNATURE_INT32, &city_food_supply().fish_this_month);
     iob->bind____skip(28);
     iob->bind(BIND_SIGNATURE_UINT32, data.buildings.festival_square);
     iob->bind____skip(16);
