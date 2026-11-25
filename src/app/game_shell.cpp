@@ -1,4 +1,5 @@
 #include "game/game.h"
+#include "sound/sound_music.h"
 #include "core/draw_phase.h"
 
 #include "game/video_capture_module.h"
@@ -150,7 +151,7 @@ bool game_init(game_opts opts) {
         if (!!game_features::gameui_show_intro_video && !g_args.no_intro()) {
             window_intro_video_show();
         } else {
-            g_sound.play_intro();
+            sound_music().play_intro();
             autoconfig_window::show("window_logo");
         }
     }

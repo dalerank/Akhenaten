@@ -1,4 +1,5 @@
 #include "intro_video.h"
+#include "sound/sound_music.h"
 
 #include "core/log.h"
 #include "content/vfs.h"
@@ -66,7 +67,7 @@ static int init(void) {
 }
 
 static void show_logo(void) {
-    g_sound.play_intro();
+    sound_music().play_intro();
     autoconfig_window::show("window_logo");
 }
 
@@ -101,7 +102,7 @@ static void handle_input(const mouse* m, const hotkeys* h) {
     }
 
     if (m->left.went_up || m->right.went_up || video_is_finished() || h->enter_pressed) {
-        g_sound.music_stop();
+        sound_music().stop();
         video_stop();
         data.video_started = 0;
         show_logo();

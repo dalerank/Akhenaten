@@ -1,4 +1,5 @@
 #include "video.h"
+#include "sound/sound_music.h"
 #include "sound/sound_speech.h"
 
 #include "core/log.h"
@@ -152,7 +153,7 @@ static int load_bik(const char* filename) {
 
 static void end_video(void) {
     g_sound.use_default_music_player();
-    g_sound.music_update(true);
+    sound_music().update(true);
     g_render.release_custom_texture_buffer(CUSTOM_IMAGE_VIDEO);
 }
 
@@ -169,7 +170,7 @@ bool video_start(const char* filename) {
     data.backend = VIDEO_BACKEND_NONE;
 
     if (load_smk(filename) || load_bik(filename)) {
-        g_sound.music_stop();
+        sound_music().stop();
         sound_speech().stop();
         g_render.create_custom_texture(CUSTOM_IMAGE_VIDEO, data.video.width, data.video.height);
         data.buffer.pixels = g_render.get_custom_texture_buffer(CUSTOM_IMAGE_VIDEO, &data.buffer.width);

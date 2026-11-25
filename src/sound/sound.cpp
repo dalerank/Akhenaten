@@ -3,6 +3,7 @@
 #include <SDL_mixer.h>
 
 #include "sound/sound.h"
+#include "sound/sound_music.h"
 #include "sound/sound_speech.h"
 #include "sound/channel.h"
 #include "sound/sound_city.h"
@@ -313,7 +314,7 @@ void sound_manager_t::begin_frame() {
         set_channel_volume(SOUND_CHANNEL_SPEECH, speech_volume);
     }
 
-    music_frame();
+    sound_music().frame();
 }
 
 bool sound_manager_t::music_playing() {
@@ -993,7 +994,7 @@ void ANK_PERMANENT_CALLBACK(event_sound_track, ev) {
     if (g_args.is_log_sound_events()) {
         logs::info("[event] track=%s sent from %s:%d", ev.track.c_str(), ev.source_file, ev.source_line);
     }
-    g_sound.on_sound_track(ev);
+    sound_music().on_sound_track(ev);
 }
 
 void ANK_PERMANENT_CALLBACK(event_sound_speech, ev) {
@@ -1004,7 +1005,7 @@ void ANK_PERMANENT_CALLBACK(event_sound_speech, ev) {
 }
 
 void ANK_PERMANENT_CALLBACK(event_music_update, ev) {
-    g_sound.music_update(ev.force);
+    sound_music().update(ev.force);
 }
 
 const e_sound_effect_tokens_t ANK_CONFIG_ENUM(e_sound_effect_tokens);

@@ -51,18 +51,10 @@ public:
     uint64_t custom_music_buffered_micros() const;
     bool play_music(pcstr filename, int volume_pct, bool loop = true);
     bool music_playing();
+    void fade_out_music(int ms);
     void stop_music();
     bool is_audio_stream_active();
     void set_volume(int b, int e, int percentage);
-    void music_update(bool forces);
-    void music_next_track();
-    void music_frame();
-    void music_city_frame();
-    int music_load_playlist_text(std::string_view text);
-    void play_intro();
-    void music_stop();
-    const xstring& music_current_track() const;
-    void play_track(const xstring track, bool loop = true);
     int play_effect(int effect);
     // "[sound] ..." log lines of what plays, for --log-sound and the integral tests (no audio hardware needed).
     bool log_events() const;
@@ -77,7 +69,6 @@ public:
 
 public:
     void on_sound_effect(event_sound_effect);
-    void on_sound_track(event_sound_track);
 
 private:
     void init_channel(int index, vfs::path filename);
@@ -87,9 +78,6 @@ private:
     void load_formats();
     void unload_formats();
     void set_channel_panning(int channel, int left, int right);
-    void og_music_update(int mission);
-    void music_fade_out();
-    void fade_out_music(int ms);
     void free_custom_audio_stream();
     bool create_custom_audio_stream(uint16_t src_format, uint8_t src_channels, int src_rate, uint16_t dst_format,
       uint8_t dst_channels, int dst_rate);

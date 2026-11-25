@@ -1,4 +1,5 @@
 #include "js/test/js_test_common.h"
+#include "sound/sound_music.h"
 #include "city/buildings.h"
 #include "city/city_figures.h"
 #include "city/city_finance.h"
@@ -311,17 +312,17 @@ void __test_end_city_session() {
 ANK_FUNCTION(__test_end_city_session);
 
 pcstr __test_music_current_track() {
-    return g_sound.music_current_track().c_str();
+    return sound_music().current_track_name().c_str();
 }
 ANK_FUNCTION(__test_music_current_track);
 
 void __test_music_next_track() {
-    g_sound.music_next_track();
+    sound_music().next_track();
 }
 ANK_FUNCTION(__test_music_next_track);
 
 int __test_music_load_playlist(pcstr text) {
-    return g_sound.music_load_playlist_text(text ? text : "");
+    return sound_music().load_playlist_text(text ? text : "");
 }
 ANK_FUNCTION_1(__test_music_load_playlist);
 
@@ -348,7 +349,7 @@ pcstr __test_sound_ambient_summary() {
 ANK_FUNCTION(__test_sound_ambient_summary);
 
 void __test_music_frame() {
-    g_sound.music_frame();
+    sound_music().frame();
 }
 ANK_FUNCTION(__test_music_frame);
 

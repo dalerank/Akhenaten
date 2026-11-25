@@ -1,4 +1,5 @@
 #include "core/profiler.h"
+#include "sound/sound_music.h"
 #include "sound/sound_speech.h"
 #include "js/js.h"
 #include "js/js_defines.h"
@@ -89,12 +90,12 @@ static void js_register_sound_channel_proto(js_State *J) {
 }
 
 static void js_sound_music_stop(js_State *J) {
-    g_sound.music_stop();
+    sound_music().stop();
     J->pushundefined();
 }
 
 static void js_sound_music_update(js_State *J) {
-    g_sound.music_update(!!js_tointeger(J, 1));
+    sound_music().update(!!js_tointeger(J, 1));
     J->pushundefined();
 }
 
@@ -109,7 +110,7 @@ static void js_sound_speech_play(js_State *J) {
 }
 
 static void js_sound_play_intro(js_State *J) {
-    g_sound.play_intro();
+    sound_music().play_intro();
     J->pushundefined();
 }
 
