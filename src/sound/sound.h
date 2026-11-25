@@ -44,16 +44,10 @@ public:
     void play_channel(int channel, int volume_pct);
     void play_channel_panned(int channel, int volume_pct, int left_pct, int right_pct);
     void update_channel(int channel, vfs::path filename);
-    void use_default_music_player();
-    void use_custom_music_player(int bitdepth, int num_channels, int rate, void *audio_data, int len);
-    void write_custom_music_data(void *audio_data, int len);
-    uint64_t custom_music_playback_micros() const;
-    uint64_t custom_music_buffered_micros() const;
     bool play_music(pcstr filename, int volume_pct, bool loop = true);
     bool music_playing();
     void fade_out_music(int ms);
     void stop_music();
-    bool is_audio_stream_active();
     void set_volume(int b, int e, int percentage);
     int play_effect(int effect);
     // "[sound] ..." log lines of what plays, for --log-sound and the integral tests (no audio hardware needed).
@@ -78,17 +72,11 @@ private:
     void load_formats();
     void unload_formats();
     void set_channel_panning(int channel, int left, int right);
-    void free_custom_audio_stream();
-    bool create_custom_audio_stream(uint16_t src_format, uint8_t src_channels, int src_rate, uint16_t dst_format,
-      uint8_t dst_channels, int dst_rate);
-    int get_custom_audio_stream(uint8_t *dst, int len);
-    static void custom_music_callback(void* dummy, uint8_t* stream, int len);
     void* load_chunk(pcstr filename, bool cache);
     void* chunk_from_reader(const vfs::reader& r);
     void start_channel(int channel);
     void request_channel(int channel);
     void poll_pending_chunks();
-    bool put_custom_audio_stream(uint8_t *audio_data, int len);
 
     struct og_sample_t {
         xstring file;

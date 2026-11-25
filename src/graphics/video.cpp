@@ -13,6 +13,7 @@
 #include "game/game_config.h"
 #include "screen.h"
 #include "sound/sound.h"
+#include "sound/sound_video_stream.h"
 
 #include <SDL.h>
 #include <cstring>
@@ -152,14 +153,14 @@ static int load_bik(const char* filename) {
 }
 
 static void end_video(void) {
-    g_sound.use_default_music_player();
+    sound_video_stream().use_default();
     sound_music().update(true);
     g_render.release_custom_texture_buffer(CUSTOM_IMAGE_VIDEO);
 }
 
 static void queue_bik_audio_chunk(void*, const void* audio_data, int len) {
     if (audio_data && len > 0) {
-        g_sound.write_custom_music_data(const_cast<void*>(audio_data), len);
+        sound_video_stream().write(const_cast<void*>(audio_data), len);
     }
 }
 
@@ -201,7 +202,8 @@ void video_init(void) {
             void* audio_data = data.backend == VIDEO_BACKEND_SMK
                 ? (void*)smacker_get_frame_audio(data.s, 0)
                 : (void*)bink_get_frame_audio(data.b);
-            g_sound.use_custom_music_player(data.audio.bitdepth, data.audio.channels, data.audio.rate, audio_data, audio_len);
+            sound_video_stream().use_custom(data.audio.bitdepth, data.audio.channels, data.audio.rate, audio_data,
+              audio_len);
         }
     }
 
@@ -250,7 +252,7 @@ static int get_next_frame(void) {
     time_millis now_millis = time_get_millis();
     int frame_no = (now_millis - data.video.start_render_millis) * 1000 / data.video.micros_per_frame;
     if (data.audio.has_audio) {
-        uint64_t played_micros = g_sound.custom_music_playback_micros();
+        uint64_t played_micros = sound_video_stream().playback_micros();
         if (played_micros > 0) {
             frame_no = (int)(played_micros / data.video.micros_per_frame);
         }
@@ -283,7 +285,7 @@ static int get_next_frame(void) {
                 void* audio_data = data.backend == VIDEO_BACKEND_SMK
                     ? (void*)smacker_get_frame_audio(data.s, 0)
                     : (void*)bink_get_frame_audio(data.b);
-                g_sound.write_custom_music_data(audio_data, audio_len);
+                sound_video_stream().write(audio_data, audio_len);
             }
         }
 
@@ -297,13 +299,10 @@ static int get_next_frame(void) {
 
         if (s_video_profile_logs < 20) {
             Uint32 decode_end = SDL_GetTicks();
-            logs::info(
-                "BIK profile: frame=%d decode_ms=%u target_frame=%d played_us=%llu buffered_us=%llu",
-                data.video.current_frame,
-                (unsigned)(decode_end - decode_begin),
-                frame_no,
-                (unsigned long long)g_sound.custom_music_playback_micros(),
-                (unsigned long long)g_sound.custom_music_buffered_micros());
+            logs::info("BIK profile: frame=%d decode_ms=%u target_frame=%d played_us=%llu buffered_us=%llu",
+              data.video.current_frame, (unsigned)(decode_end - decode_begin), frame_no,
+              (unsigned long long)sound_video_stream().playback_micros(),
+              (unsigned long long)sound_video_stream().buffered_micros());
             ++s_video_profile_logs;
         }
     }

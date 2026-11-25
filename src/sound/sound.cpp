@@ -3,6 +3,8 @@
 #include <SDL_mixer.h>
 
 #include "sound/sound.h"
+#include "sound/sound_video_stream.h"
+#include "core/xvalue.h"
 #include "sound/sound_music.h"
 #include "sound/sound_speech.h"
 #include "sound/channel.h"
@@ -61,26 +63,13 @@ void ANK_REGISTER_CONFIG_ITERATOR(config_load_city_sounds) {
     });
 }
 
+sound_video_stream_t& sound_video_stream() {
+    return xvalue<sound_video_stream_t>::ref();
+}
+
 struct music_player_t {
-    SDL_AudioFormat format;
-
-#ifdef USE_SDL_AUDIOSTREAM
-    SDL_AudioStream* stream;
-    int use_audiostream;
-#endif // USE_SDL_AUDIOSTREAM
-
-    SDL_AudioCVT cvt;
-    uint8_t* buffer;
-    int buffer_size;
-    int cur_read;
-    int cur_write;
-    std::atomic<uint64_t> custom_stream_bytes_written = 0;
-    std::atomic<uint64_t> custom_stream_bytes_read = 0;
-    std::mutex stream_mutex;
-    uint32_t custom_stream_bytes_per_second = 0;
     Mix_Music* music;
     vfs::reader current_music_data;
-    int custom_music_underrun_logs = 0;
 
     // Main thread only.
     std::map<std::string, vfs::reader> cached_chunks;
@@ -365,7 +354,7 @@ void sound_manager_t::allocate_channels() {
 
 void sound_manager_t::open() {
 #ifdef USE_SDL_AUDIOSTREAM
-    _music_player->use_audiostream = HAS_AUDIOSTREAM();
+    sound_video_stream().set_use_audiostream(HAS_AUDIOSTREAM());
 #endif
     if (0 == Mix_OpenAudio(AUDIO_RATE, AUDIO_FORMAT, AUDIO_CHANNELS, AUDIO_BUFFERS)) {
         init_channels();
@@ -699,216 +688,204 @@ void sound_manager_t::stop_city_channels() {
     }
 }
 
-void sound_manager_t::free_custom_audio_stream() {
-    if (!_music_player) {
-        return;
-    }
-
+void sound_video_stream_t::free_stream() {
 #ifdef USE_SDL_AUDIOSTREAM
-    if (_music_player->use_audiostream) {
-        if (_music_player->stream) {
-            SDL_FreeAudioStream(_music_player->stream);
-            _music_player->stream = nullptr;
+    if (use_audiostream) {
+        if (stream) {
+            SDL_FreeAudioStream(stream);
+            stream = nullptr;
         }
         return;
     }
 #endif // USE_SDL_AUDIOSTREAM
 
-    if (_music_player->buffer) {
-        free(_music_player->buffer);
-        _music_player->buffer = nullptr;
+    if (buffer) {
+        free(buffer);
+        buffer = nullptr;
     }
 }
 
-bool sound_manager_t::create_custom_audio_stream(uint16_t src_format, uint8_t src_channels, int src_rate, uint16_t dst_format, uint8_t dst_channels, int dst_rate) {
-    if (!_music_player) {
-        return false;
-    }
-
-    free_custom_audio_stream();
-    _music_player->custom_stream_bytes_written = 0;
-    _music_player->custom_stream_bytes_read = 0;
-    _music_player->custom_stream_bytes_per_second = dst_rate * dst_channels * (SDL_AUDIO_BITSIZE(dst_format) / 8);
-    _music_player->custom_music_underrun_logs = 0;
+bool sound_video_stream_t::create_stream(uint16_t src_format, uint8_t src_channels, int src_rate, uint16_t dst_format,
+  uint8_t dst_channels, int dst_rate) {
+    free_stream();
+    bytes_written = 0;
+    bytes_read = 0;
+    bytes_per_second = dst_rate * dst_channels * (SDL_AUDIO_BITSIZE(dst_format) / 8);
+    underrun_logs = 0;
 
 #ifdef USE_SDL_AUDIOSTREAM
-    if (_music_player->use_audiostream) {
-        _music_player->stream = SDL_NewAudioStream(src_format, src_channels, src_rate, dst_format, dst_channels, dst_rate);
-        return !!_music_player->stream;
+    if (use_audiostream) {
+        stream = SDL_NewAudioStream(src_format, src_channels, src_rate, dst_format, dst_channels, dst_rate);
+        return !!stream;
     }
 #endif
 
-    int result = SDL_BuildAudioCVT(&_music_player->cvt, src_format, src_channels, src_rate, dst_format, dst_channels, dst_rate);
+    int result = SDL_BuildAudioCVT(&cvt, src_format, src_channels, src_rate, dst_format, dst_channels, dst_rate);
     if (result < 0) {
         return false;
     }
 
     // Allocate buffer large enough for 2 seconds of 16-bit audio
-    _music_player->buffer_size = dst_rate * dst_channels * 2 * 2;
-    _music_player->buffer = (unsigned char*)malloc(_music_player->buffer_size);
-    if (!_music_player->buffer) {
+    buffer_size = dst_rate * dst_channels * 2 * 2;
+    buffer = (unsigned char*)malloc(buffer_size);
+    if (!buffer) {
         return false;
     }
 
-    _music_player->cur_read = 0;
-    _music_player->cur_write = 0;
+    cur_read = 0;
+    cur_write = 0;
     return true;
 }
 
-bool sound_manager_t::is_audio_stream_active() {
-    if (!_music_player) {
-        return false;
-    }
+bool sound_video_stream_t::is_active() {
 #ifdef USE_SDL_AUDIOSTREAM
-    if (_music_player->use_audiostream) {
-        return !!_music_player->stream;
+    if (use_audiostream) {
+        return !!stream;
     }
 #endif
-    return !!_music_player->buffer;
+    return !!buffer;
 }
 
-bool sound_manager_t::put_custom_audio_stream(uint8_t* audio_data, int len) {
-    if (!audio_data || len <= 0 || !is_audio_stream_active()) {
+bool sound_video_stream_t::put(uint8_t* audio_data, int len) {
+    if (!audio_data || len <= 0 || !is_active()) {
         return 0;
     }
 
 #ifdef USE_SDL_AUDIOSTREAM
-    if (_music_player->use_audiostream) {
-        std::unique_lock<std::mutex> lock(_music_player->stream_mutex);
-        int available_before = SDL_AudioStreamAvailable(_music_player->stream);
-        const bool put = SDL_AudioStreamPut(_music_player->stream, audio_data, len) == 0;
-        int available_after = SDL_AudioStreamAvailable(_music_player->stream);
+    if (use_audiostream) {
+        std::unique_lock<std::mutex> lock(mutex);
+        int available_before = SDL_AudioStreamAvailable(stream);
+        const bool put = SDL_AudioStreamPut(stream, audio_data, len) == 0;
+        int available_after = SDL_AudioStreamAvailable(stream);
         lock.unlock();
         if (put && available_after > available_before) {
-            _music_player->custom_stream_bytes_written += (uint64_t)(available_after - available_before);
+            bytes_written += (uint64_t)(available_after - available_before);
         }
         return put;
     }
 #endif
 
     // Convert audio to SDL format
-    _music_player->cvt.buf = (Uint8*)malloc((size_t)(len * _music_player->cvt.len_mult));
-    if (!_music_player->cvt.buf) {
+    cvt.buf = (Uint8*)malloc((size_t)(len * cvt.len_mult));
+    if (!cvt.buf) {
         return false;
     }
 
-    memcpy(_music_player->cvt.buf, audio_data, len);
-    _music_player->cvt.len = len;
-    SDL_ConvertAudio(&_music_player->cvt);
-    int converted_len = _music_player->cvt.len_cvt;
+    memcpy(cvt.buf, audio_data, len);
+    cvt.len = len;
+    SDL_ConvertAudio(&cvt);
+    int converted_len = cvt.len_cvt;
 
-    std::unique_lock<std::mutex> lock(_music_player->stream_mutex);
-    const uint64_t buffered = _music_player->custom_stream_bytes_written - _music_player->custom_stream_bytes_read;
-    const int free_bytes = (int)std::max<int64_t>(0, (int64_t)_music_player->buffer_size - (int64_t)buffered);
+    std::unique_lock<std::mutex> lock(mutex);
+    const uint64_t buffered = bytes_written - bytes_read;
+    const int free_bytes = (int)std::max<int64_t>(0, (int64_t)buffer_size - (int64_t)buffered);
     converted_len = std::min(converted_len, free_bytes);
 
-    if (converted_len + _music_player->cur_write <= _music_player->buffer_size) {
-        memcpy(&_music_player->buffer[_music_player->cur_write], _music_player->cvt.buf, converted_len);
+    if (converted_len + cur_write <= buffer_size) {
+        memcpy(&buffer[cur_write], cvt.buf, converted_len);
     } else {
-        int end_len = _music_player->buffer_size - _music_player->cur_write;
-        memcpy(&_music_player->buffer[_music_player->cur_write], _music_player->cvt.buf, end_len);
-        memcpy(_music_player->buffer, &_music_player->cvt.buf[end_len], converted_len - end_len);
+        int end_len = buffer_size - cur_write;
+        memcpy(&buffer[cur_write], cvt.buf, end_len);
+        memcpy(buffer, &cvt.buf[end_len], converted_len - end_len);
     }
-    _music_player->cur_write = (_music_player->cur_write + converted_len) % _music_player->buffer_size;
-    _music_player->custom_stream_bytes_written += converted_len;
+    cur_write = (cur_write + converted_len) % buffer_size;
+    bytes_written += converted_len;
     lock.unlock();
 
     // Clean up
-    free(_music_player->cvt.buf);
-    _music_player->cvt.buf = 0;
-    _music_player->cvt.len = 0;
+    free(cvt.buf);
+    cvt.buf = 0;
+    cvt.len = 0;
 
     return true;
 }
 
-int sound_manager_t::get_custom_audio_stream(Uint8* dst, int len) {
-    if (!dst || len <= 0 || !is_audio_stream_active()) {
+int sound_video_stream_t::get(Uint8* dst, int len) {
+    if (!dst || len <= 0 || !is_active()) {
         return 0;
     }
 
-    std::lock_guard<std::mutex> lock(_music_player->stream_mutex);
+    std::lock_guard<std::mutex> lock(mutex);
 #ifdef USE_SDL_AUDIOSTREAM
-    if (_music_player->use_audiostream) {
-        int bytes_copied = SDL_AudioStreamGet(_music_player->stream, dst, len);
+    if (use_audiostream) {
+        int bytes_copied = SDL_AudioStreamGet(stream, dst, len);
         if (bytes_copied > 0) {
-            _music_player->custom_stream_bytes_read += bytes_copied;
+            bytes_read += bytes_copied;
         }
         return bytes_copied;
     }
 #endif
 
     int bytes_copied = 0;
-    if (_music_player->cur_read < _music_player->cur_write) {
-        int bytes_available = _music_player->cur_write - _music_player->cur_read;
+    if (cur_read < cur_write) {
+        int bytes_available = cur_write - cur_read;
         int bytes_to_copy = bytes_available < len ? bytes_available : len;
-        memcpy(dst, &_music_player->buffer[_music_player->cur_read], bytes_to_copy);
+        memcpy(dst, &buffer[cur_read], bytes_to_copy);
         bytes_copied = bytes_to_copy;
     } else {
-        int bytes_available = _music_player->buffer_size - _music_player->cur_read;
+        int bytes_available = buffer_size - cur_read;
         int bytes_to_copy = bytes_available < len ? bytes_available : len;
-        memcpy(dst, &_music_player->buffer[_music_player->cur_read], bytes_to_copy);
+        memcpy(dst, &buffer[cur_read], bytes_to_copy);
         bytes_copied = bytes_to_copy;
         if (bytes_copied < len) {
             int second_part_len = len - bytes_copied;
-            bytes_available = _music_player->cur_write;
+            bytes_available = cur_write;
             bytes_to_copy = bytes_available < second_part_len ? bytes_available : second_part_len;
-            memcpy(&dst[bytes_copied], _music_player->buffer, bytes_to_copy);
+            memcpy(&dst[bytes_copied], buffer, bytes_to_copy);
             bytes_copied += bytes_to_copy;
         }
     }
-    _music_player->cur_read = (_music_player->cur_read + bytes_copied) % _music_player->buffer_size;
-    _music_player->custom_stream_bytes_read += bytes_copied;
+    cur_read = (cur_read + bytes_copied) % buffer_size;
+    bytes_read += bytes_copied;
 
     return bytes_copied;
 }
 
-uint64_t sound_manager_t::custom_music_playback_micros() const {
-    if (!_music_player || !_music_player->custom_stream_bytes_per_second) {
+uint64_t sound_video_stream_t::playback_micros() const {
+    if (!bytes_per_second) {
         return 0;
     }
-    return (_music_player->custom_stream_bytes_read * 1000000ull) / _music_player->custom_stream_bytes_per_second;
+    return (bytes_read * 1000000ull) / bytes_per_second;
 }
 
-uint64_t sound_manager_t::custom_music_buffered_micros() const {
-    if (!_music_player || !_music_player->custom_stream_bytes_per_second) {
+uint64_t sound_video_stream_t::buffered_micros() const {
+    if (!bytes_per_second) {
         return 0;
     }
 
     uint64_t buffered = 0;
-    if (_music_player->custom_stream_bytes_written >= _music_player->custom_stream_bytes_read) {
-        buffered = _music_player->custom_stream_bytes_written - _music_player->custom_stream_bytes_read;
+    if (bytes_written >= bytes_read) {
+        buffered = bytes_written - bytes_read;
     }
-    return (buffered * 1000000ull) / _music_player->custom_stream_bytes_per_second;
+    return (buffered * 1000000ull) / bytes_per_second;
 }
 
-void sound_manager_t::custom_music_callback(void* dummy, Uint8* stream, int len) {
-    int bytes_copied = g_sound.get_custom_audio_stream(stream, len);
+void sound_video_stream_t::callback(void* dummy, Uint8* stream, int len) {
+    int bytes_copied = sound_video_stream().get(stream, len);
 
     if (bytes_copied < len) {
-        if (g_sound._music_player->custom_music_underrun_logs < 20) {
-            logs::warn("BIK audio underrun: requested=%d copied=%d buffered_us=%llu played_us=%llu",
-                len,
-                bytes_copied,
-                (unsigned long long)g_sound.custom_music_buffered_micros(),
-                (unsigned long long)g_sound.custom_music_playback_micros());
-            ++g_sound._music_player->custom_music_underrun_logs;
+        if (sound_video_stream().underrun_logs < 20) {
+            logs::warn("BIK audio underrun: requested=%d copied=%d buffered_us=%llu played_us=%llu", len, bytes_copied,
+              (unsigned long long)sound_video_stream().buffered_micros(),
+              (unsigned long long)sound_video_stream().playback_micros());
+            ++sound_video_stream().underrun_logs;
         }
         // end of stream, write silence
         memset(&stream[bytes_copied], 0, len - bytes_copied);
     }
 }
 
-void sound_manager_t::use_custom_music_player(int bitdepth, int num_channels, int rate, void* audio_data, int len) {
+void sound_video_stream_t::use_custom(int bitdepth, int num_channels, int rate, void* audio_data, int len) {
     // --nosound / failed mixer init: video may still play, but skip BIK audio path.
-    if (!_music_player || !initialized) {
+    if (!g_sound.is_initialized()) {
         return;
     }
 
-    SDL_AudioFormat format;
+    SDL_AudioFormat sample_format;
     if (bitdepth == 8)
-        format = AUDIO_U8;
+        sample_format = AUDIO_U8;
     else if (bitdepth == 16)
-        format = AUDIO_S16;
+        sample_format = AUDIO_S16;
     else {
         logs::error("Custom music bitdepth not supported: %u", bitdepth);
         return;
@@ -917,41 +894,41 @@ void sound_manager_t::use_custom_music_player(int bitdepth, int num_channels, in
     Uint16 device_format;
     int device_channels;
     Mix_QuerySpec(&device_rate, &device_format, &device_channels);
-    _music_player->format = format;
+    format = sample_format;
 
-    int result = create_custom_audio_stream(format, num_channels, rate, device_format, device_channels, device_rate);
+    int result = create_stream(sample_format, num_channels, rate, device_format, device_channels, device_rate);
     if (!result) {
         return;
     }
 
-    write_custom_music_data(audio_data, len);
+    write(audio_data, len);
 
-    Mix_HookMusic(custom_music_callback, 0);
+    Mix_HookMusic(callback, 0);
 }
 
-void sound_manager_t::write_custom_music_data(void* audio_data, int len) {
-    if (!audio_data || len <= 0 || !is_audio_stream_active()) {
+void sound_video_stream_t::write(void* audio_data, int len) {
+    if (!audio_data || len <= 0 || !is_active()) {
         return;
     }
     // Mix audio to sound effect volume
     Uint8* mix_buffer = (Uint8*)malloc(len);
     if (!mix_buffer)
         return;
-    memset(mix_buffer, (_music_player->format == AUDIO_U8) ? 128 : 0, len);
-    SDL_MixAudioFormat(mix_buffer, (uint8_t*)audio_data, _music_player->format, len,
+    memset(mix_buffer, (format == AUDIO_U8) ? 128 : 0, len);
+    SDL_MixAudioFormat(mix_buffer, (uint8_t*)audio_data, format, len,
       settings_volume_to_mixer(calc_bound(game_features::gameopt_sound_effects_volume.to_int(), 0, 100)));
 
-    put_custom_audio_stream(mix_buffer, len);
+    put(mix_buffer, len);
     free(mix_buffer);
 }
 
-void sound_manager_t::use_default_music_player() {
-    if (!_music_player || !initialized) {
+void sound_video_stream_t::use_default() {
+    if (!g_sound.is_initialized()) {
         return;
     }
 
     Mix_HookMusic(0, 0);
-    free_custom_audio_stream();
+    free_stream();
 }
 
 void sound_manager_t::update_channel(int channel, vfs::path filename) {
