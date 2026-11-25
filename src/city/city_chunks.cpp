@@ -1,4 +1,5 @@
 #include "city/city_chunks.h"
+#include "city/coverage.h"
 #include "city/city_mission.h"
 #include "city/city_kingdome_relations.h"
 #include "city/city_religion.h"
@@ -342,7 +343,7 @@ static void city_data_bind_og_layout(io_buffer* iob) {
     iob->bind(BIND_SIGNATURE_INT32, &city_entertainment().senet_house_plays);
     iob->bind(BIND_SIGNATURE_INT32, &city_entertainment().senet_house_no_shows_weighted);
     iob->bind(BIND_SIGNATURE_INT32, &city_entertainment().venue_needing_shows);
-    iob->bind(BIND_SIGNATURE_INT32, &data.avg_coverage.average_entertainment);
+    iob->bind(BIND_SIGNATURE_INT32, &city_avg_coverage().average_entertainment);
     iob->bind(BIND_SIGNATURE_INT32, &data.houses.missing.entertainment);
     iob->bind(BIND_SIGNATURE_INT8, &city_festival().months_since_festival); // ok
     iob->bind____skip(3);
@@ -406,9 +407,9 @@ static void city_data_bind_og_layout(io_buffer* iob) {
     iob->bind____skip(3);
     iob->bind(BIND_SIGNATURE_UINT8, &city_festival().planned_god);
     iob->bind____skip(23);
-    iob->bind(BIND_SIGNATURE_INT32, &data.avg_coverage.average_religion);
-    iob->bind(BIND_SIGNATURE_INT32, &data.avg_coverage.average_education);
-    iob->bind(BIND_SIGNATURE_INT32, &data.avg_coverage.average_health);
+    iob->bind(BIND_SIGNATURE_INT32, &city_avg_coverage().average_religion);
+    iob->bind(BIND_SIGNATURE_INT32, &city_avg_coverage().average_education);
+    iob->bind(BIND_SIGNATURE_INT32, &city_avg_coverage().average_health);
     iob->bind____skip(4);
     iob->bind(BIND_SIGNATURE_UINT8, &city_festival().first_festival_effect_months);
     iob->bind____skip(3);

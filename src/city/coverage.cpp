@@ -2,6 +2,10 @@
 #include "game/simulation.h"
 #include "core/app_module.h"
 #include "game/sim_schedule.h"
+#include "city/coverage_chunks.h"
+#include "core/xvalue.h"
+#include "io/chunk_serializer.h"
+#include "io/gamestate/save_versions.h"
 
 #include "building/building_house.h"
 #include "city/constants.h"
@@ -12,6 +16,14 @@
 #include "core/calc.h"
 #include "core/profiler.h"
 #include "core/buffer.h"
+
+city_average_coverage_t& city_avg_coverage() {
+    return xvalue<city_average_coverage_t>::ref();
+}
+
+void city_average_coverage_t::reset() {
+    *this = {};
+}
 
 void city_average_coverage_t::update() {
     OZZY_PROFILER_FUNCTION();
@@ -138,23 +150,41 @@ public:
                           }
                           g_city.coverage.update();
                       }});
+    }
+};
+
+class avg_coverage_sim_system : public sim_system {
+public:
+    const char* name() const override { return "avg_coverage"; }
+    void on_reset() override { city_avg_coverage().reset(); }
+    void push_save_sections(int file_version) override {
+        if (file_version >= save_version_city_sections) {
+            g_chunk_io.push_chunk<city_avg_coverage_chunk>(city_avg_coverage_chunk::size, false);
+        }
+    }
+    void register_steps(sim_schedule_t& schedule) override {
         schedule.add({sim_step_avg_coverage_33, SIM_PHASE_TICK, [](int tick) {
                           if (tick != 33) {
                               return;
                           }
-                          g_city.avg_coverage.update();
+                          city_avg_coverage().update();
                       }});
         schedule.add({sim_step_avg_coverage_49, SIM_PHASE_TICK, [](int tick) {
                           if (tick != 49) {
                               return;
                           }
-                          g_city.avg_coverage.update();
+                          city_avg_coverage().update();
                       }});
-        schedule.add({sim_step_avg_coverage_day, SIM_PHASE_DAY, [](int) { g_city.avg_coverage.update(); }});
+        schedule.add({sim_step_avg_coverage_day, SIM_PHASE_DAY, [](int) { city_avg_coverage().update(); }});
     }
 };
 
 void ANK_REGISTER_APPLICATION_MODULE(register_coverage_system) {
     static coverage_system system;
+    g_simulation.register_system(&system);
+}
+
+void ANK_REGISTER_APPLICATION_MODULE(register_avg_coverage_system) {
+    static avg_coverage_sim_system system;
     g_simulation.register_system(&system);
 }

@@ -147,7 +147,7 @@ void city_t::house_process_evolve() {
 
 void city_t::house_service_calculate_culture_aggregates() {
     OZZY_PROFILER_FUNCTION();
-    int base_entertainment = avg_coverage.calc_average_entertainment() / 5;
+    int base_entertainment = city_avg_coverage().calc_average_entertainment() / 5;
     for (int i = 1; i < MAX_BUILDINGS; i++) {
         auto house = building_get(i)->dcast_house();
         if (!house || house->state() != BUILDING_STATE_VALID || !house->hsize())

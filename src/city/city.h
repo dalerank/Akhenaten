@@ -32,8 +32,6 @@ struct city_t {
     city_food_supply_t food_supply;
 
 
-    city_average_coverage_t avg_coverage;
-
     city_monuments_t monuments;
 
     city_coverage_t coverage;

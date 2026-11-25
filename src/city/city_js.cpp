@@ -1,4 +1,5 @@
 ﻿#include "js/js_game.h"
+#include "city/coverage.h"
 #include "city/city_mission.h"
 #include "city/city_kingdome_relations.h"
 #include "city/ratings.h"
@@ -100,7 +101,7 @@ void __city_rating_update_prosperity_explanation() {
 ANK_FUNCTION(__city_rating_update_prosperity_explanation)
 
 std::optional<bvariant> __city_get_avg_coverage_property(pcstr property) {
-    return archive_helper::get(g_city.avg_coverage, property, true);
+    return archive_helper::get(city_avg_coverage(), property, true);
 }
 ANK_FUNCTION_1(__city_get_avg_coverage_property)
 

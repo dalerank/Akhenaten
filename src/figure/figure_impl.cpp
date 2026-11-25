@@ -1,4 +1,5 @@
 #include "figure/figure_impl.h"
+#include "city/coverage.h"
 #include "city/city_religion.h"
 #include "city/city_labor.h"
 #include "grid/figure.h"
@@ -248,7 +249,7 @@ sound_key figure_impl::default_phrase_key() const {
         return "def_need_more_workers";
     }
 
-    if (g_city.avg_coverage.average_entertainment == 0) {
+    if (city_avg_coverage().average_entertainment == 0) {
         return "def_low_entertainment";
     }
 
@@ -256,7 +257,7 @@ sound_key figure_impl::default_phrase_key() const {
         return "def_gods_very_angry";
     }
 
-    if (g_city.avg_coverage.average_entertainment <= 10) {
+    if (city_avg_coverage().average_entertainment <= 10) {
         return "def_little_entertainment";
     }
 
@@ -264,12 +265,12 @@ sound_key figure_impl::default_phrase_key() const {
         return "def_gods_angry";
     }
 
-    if (g_city.avg_coverage.average_entertainment <= 20) {
+    if (city_avg_coverage().average_entertainment <= 20) {
         return "def_need_entertainment";
     }
 
-    if (city_resource_food_supply_months() >= 4 && unemployment_pct <= 5 &&
-        g_city.avg_coverage.average_health > 0 && g_city.avg_coverage.average_education > 0) {
+    if (city_resource_food_supply_months() >= 4 && unemployment_pct <= 5 && city_avg_coverage().average_health > 0
+        && city_avg_coverage().average_education > 0) {
         if (city_population().current < 500) {
             return "def_city_not_bad";
         }

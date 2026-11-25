@@ -1,4 +1,5 @@
 #include "city/city_problems.h"
+#include "city/coverage.h"
 #include "city/city_kingdome_relations.h"
 #include "city/city_religion.h"
 #include "city/city_health.h"
@@ -59,7 +60,7 @@ city_problem_inputs city_problem_gather_inputs() {
     in.kingdom_rating = city_kingdome().rating;
     in.population = city_population().current;
     in.workers_unemployed = city_labor().workers_unemployed;
-    in.average_entertainment = g_city.avg_coverage.average_entertainment;
+    in.average_entertainment = city_avg_coverage().average_entertainment;
     return in;
 }
 

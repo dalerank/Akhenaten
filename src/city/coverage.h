@@ -1,6 +1,7 @@
 #pragma once
 
 #include "core/archive.h"
+#include "city/coverage.h"
 
 class buffer;
 
@@ -33,8 +34,11 @@ struct city_average_coverage_t {
     int32_t average_education;
     int32_t average_health;
 
+    void reset();
     void update();
     int calc_average_entertainment();
 };
 
 ANK_CONFIG_PROPERTY(city_average_coverage_t, average_entertainment, average_religion, average_education, average_health)
+
+city_average_coverage_t& city_avg_coverage();

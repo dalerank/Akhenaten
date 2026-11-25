@@ -1,4 +1,5 @@
 #include "figure/figure_phrase.h"
+#include "city/coverage.h"
 #include "city/city_kingdome_relations.h"
 #include "game/gods.h"
 #include "city/city_sentiment.h"
@@ -455,7 +456,7 @@ namespace {
                     st.say(ADVISOR_HEALTH, 13);
                 } else if (city_sentiment().value < 60) {
                     st.say(ADVISOR_CHIEF, 11);
-                } else if (g_city.avg_coverage.average_entertainment < 60) {
+                } else if (city_avg_coverage().average_entertainment < 60) {
                     st.say(ADVISOR_ENTERTAINMENT, 12);
                 }
                 break;

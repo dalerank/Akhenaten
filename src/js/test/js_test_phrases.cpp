@@ -1,4 +1,5 @@
 #include "js/test/js_test_common.h"
+#include "city/coverage.h"
 #include "city/city_kingdome_relations.h"
 #include "city/city_religion.h"
 #include "city/city_sentiment.h"
@@ -78,7 +79,7 @@ static void __test_city_problem_calm() {
     city_labor().workers_unemployed = 0;
     city_labor().unemployment_percentage = 0;
     city_labor().workers_needed = 0;
-    g_city.avg_coverage.average_entertainment = 100;
+    city_avg_coverage().average_entertainment = 100;
     city_sentiment().value = 100;
 }
 ANK_FUNCTION(__test_city_problem_calm)
@@ -91,7 +92,7 @@ static void __test_city_problem_set(xstring key, int value) {
     } else if (key == "kingdom") {
         city_kingdome().rating = (uint8_t)value;
     } else if (key == "entertainment") {
-        g_city.avg_coverage.average_entertainment = value;
+        city_avg_coverage().average_entertainment = value;
     } else if (key == "sentiment") {
         city_sentiment().value = value;
     } else if (key == "low_mood_cause") {

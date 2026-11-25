@@ -148,7 +148,7 @@ void GamestateLoadDetail::post_load() {
     g_city.resource.calculate_stocks();
     city_resource_calculate_storageyard_stocks();
     building_storage_reset_building_ids();
-    g_city.avg_coverage.update();
+    city_avg_coverage().update();
     g_empire_traders.purge_dead();
 
     city_gods().ra_no_traders_months_left = std::clamp<int>(city_gods().ra_no_traders_months_left, 0, 12);

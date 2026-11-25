@@ -23,7 +23,7 @@ void window_advisors_prepare_opening() {
     city_migration().determine_reason();
 
     g_city.houses_calculate_culture_demands();
-    g_city.avg_coverage.update();
+    city_avg_coverage().update();
     city_health().update_month();
 
     g_city.resource.calculate_food_stocks_and_supply_wheat();
