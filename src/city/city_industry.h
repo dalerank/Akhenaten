@@ -1,7 +1,6 @@
 #pragma once
 
 #include "building/building.h"
-#include "graphics/graphics.h"
 #include "grid/point.h"
 
 struct city_industry_t {

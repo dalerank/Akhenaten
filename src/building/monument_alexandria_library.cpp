@@ -20,6 +20,7 @@
 #include "game/undo.h"
 #include "graphics/color.h"
 #include "graphics/view/lookup.h"
+#include "graphics/graphics.h"
 #include "grid/building.h"
 #include "grid/building_tiles.h"
 #include "grid/figure.h"
