@@ -611,7 +611,10 @@ void sound_manager_t::on_sound_effect(event_sound_effect ev) {
 }
 
 void sound_manager_t::on_sound_track(event_sound_track ev) {
-    play_track(ev.track);
+    if (!game_features::gameopt_sound_music_enabled) {
+        return;
+    }
+    play_track(ev.track, false);
 }
 
 const xstring& sound_manager_t::music_current_track() const {
