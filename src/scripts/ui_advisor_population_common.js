@@ -91,7 +91,7 @@ function advisor_population_print_society_info(window) {
 		__loc("#TR_ADVISOR_HOUSING_PROSPERITY_RATING") + " " + String(city.rating.prosperity_max),
 		__loc("#TR_ADVISOR_PERCENTAGE_IN_MANORS") + " " + String(Math.calc_percentage(city.population_stats.people_in_manors, city.population_stats.current)),
 		__loc("#TR_ADVISOR_PERCENTAGE_IN_SHANTIES") + " " + String(Math.calc_percentage(city.population_stats.people_in_shanties, city.population_stats.current)),
-		__loc("#TR_ADVISOR_AVERAGE_TAX") + " " + String(Math.floor(city.taxes.estimated_income / houses)),
+		__loc("#TR_ADVISOR_AVERAGE_TAX") + " " + String(houses > 0 ? Math.floor(city.taxes.estimated_income / houses) : 0),
 	])
 }
 
