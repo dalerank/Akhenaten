@@ -13,46 +13,10 @@ lame_helper::lame_helper() {
 lame_helper::~lame_helper() {
 }
 
-void lame_helper::write_16_bits_low_high(FILE * fp, int val)
-{
-    unsigned char bytes[2];
-    bytes[0] = (val & 0xff);
-    bytes[1] = ((val >> 8) & 0xff);
-    fwrite(bytes, 1, 2, fp);
-}
-
-void lame_helper::write_32_bits_low_high(FILE * fp, int val)
-{
-    unsigned char bytes[4];
-    bytes[0] = (val & 0xff);
-    bytes[1] = ((val >> 8) & 0xff);
-    bytes[2] = ((val >> 16) & 0xff);
-    bytes[3] = ((val >> 24) & 0xff);
-    fwrite(bytes, 1, 4, fp);
-}
-
-void lame_helper::write_wave_header(FILE * const fp, int pcmbytes, int freq, int channels, int bits)
-{
-    int     bytes = (bits + 7) / 8;
-    /* quick and dirty, but documented */
-    fwrite("RIFF", 1, 4, fp); /* label */
-    write_32_bits_low_high(fp, pcmbytes + 44 - 8); /* length in bytes without header */
-    fwrite("WAVEfmt ", 2, 4, fp); /* 2 labels */
-    write_32_bits_low_high(fp, 2 + 2 + 4 + 4 + 2 + 2); /* length of PCM format declaration area */
-    write_16_bits_low_high(fp, 1); /* is PCM? */
-    write_16_bits_low_high(fp, channels); /* number of channels */
-    write_32_bits_low_high(fp, freq); /* sample frequency in [Hz] */
-    write_32_bits_low_high(fp, freq * channels * bytes); /* bytes per second */
-    write_16_bits_low_high(fp, channels * bytes); /* bytes per sample time */
-    write_16_bits_low_high(fp, bits); /* bits per sample */
-    fwrite("data", 1, 4, fp); /* label */
-    write_32_bits_low_high(fp, pcmbytes); /* length in bytes of raw PCM data */
-}
-
 vfs::reader lame_helper::decode(const char* mp3_in) {
     vfs::reader mp3 = vfs::file_open(mp3_in, "rb");
     if (!mp3) {
-        logs::info("FATAL ERROR: file '%s' can't be opened for read. Aborting!", mp3_in);
+        logs::error("file '%s' can't be opened for read. Aborting!", mp3_in);
         return vfs::reader();
     }
 
@@ -63,7 +27,7 @@ vfs::reader lame_helper::decode(const char* mp3_in) {
     lame_t lame = lame_init();
     lame_set_decode_only(lame, 1);
     if (lame_init_params(lame) == -1) {
-        logs::info("FATAL ERROR: parameters failed to initialize properly in lame. Aborting!");
+        logs::error("parameters failed to initialize properly in lame. Aborting!");
         lame_close(lame);
         return vfs::reader();
     }
@@ -120,7 +84,7 @@ vfs::reader lame_helper::decode(const char* mp3_in) {
     lame_close(lame);
 
     if (channels <= 0 || sample_rate <= 0) {
-        logs::info("FATAL ERROR: unable to decode '%s' into PCM data", mp3_in);
+        logs::error("unable to decode '%s' into PCM data", mp3_in);
         return vfs::reader();
     }
 

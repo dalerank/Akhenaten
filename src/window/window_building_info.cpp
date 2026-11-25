@@ -200,7 +200,7 @@ void building_info_window::init(object_info &c) {
     c.help_link = correct_help;
 
     if (c.can_play_sound) {
-        g_sound.speech_play_file(b->get_sound(), 255);
+        g_sound.speech_play_file(b->get_sound());
         c.can_play_sound = 0;
     }
 

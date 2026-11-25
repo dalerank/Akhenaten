@@ -19,7 +19,6 @@ struct event_sound_track {
 
 struct event_sound_speech {
     xstring path;
-    int volume = 255;
     pcstr source_file = __builtin_FILE();
     int source_line = __builtin_LINE();
 };

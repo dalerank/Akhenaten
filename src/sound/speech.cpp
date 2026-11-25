@@ -58,16 +58,6 @@ vfs::path sound_manager_t::speech_normalize_rel(pcstr filename) const {
     return {};
 }
 
-vfs::path sound_manager_t::speech_filename(xstring filename) {
-    pcstr filename_str = filename.c_str();
-    vfs::path fs_path = filename_str;
-    if (strncmp(filename_str, vfs::content_audio, strlen(vfs::content_audio)) != 0) {
-        fs_path = vfs::path(vfs::content_audio, filename_str);
-    }
-
-    return fs_path.resolve();
-}
-
 bool sound_manager_t::speech_try_rel(pcstr rel, vfs::path &fs_path) {
     if (!rel || !*rel) {
         return false;
@@ -112,7 +102,7 @@ bool sound_manager_t::speech_file_exist(xstring filename, vfs::path &fs_path) {
     return speech_try_rel(rel.c_str(), fs_path);
 }
 
-bool sound_manager_t::speech_play_file(xstring filename, int volume) {
+bool sound_manager_t::speech_play_file(xstring filename) {
     // Without a mixer (--nosound) or data (--no-resource) the file probe is wasted and only spams warnings.
     if (!initialized || !data_available()) {
         return false;
@@ -124,7 +114,6 @@ bool sound_manager_t::speech_play_file(xstring filename, int volume) {
         return false;
     }
 
-    stop_channel(SOUND_CHANNEL_SPEECH);
     return play_file_on_channel(fs_path, SOUND_CHANNEL_SPEECH, game_features::gameopt_sound_speech_volume.to_int());
 }
 

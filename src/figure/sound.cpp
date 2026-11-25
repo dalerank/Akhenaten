@@ -35,10 +35,8 @@ void figure::play_die_sound() {
     case FIGURE_TOWER_SENTRY:
     case FIGURE_ENEMY_EGYPTIAN_SPEAR:
     case FIGURE_ENEMY_EGYPTIAN_HEAVY_SWORD:
-   // case FIGURE_ENEMY_EGYPTIAN_FAST_SPEAR:
     case FIGURE_ENEMY_EGYPTIAN_FAST_SWORD:
     case FIGURE_ENEMY_EGYPTIAN_SWORD:
-   // case FIGURE_ENEMY_EGYPTIAN_HEAVY_SPEAR:
     case FIGURE_ENEMY_EGYPTIAN_AXE:
     case FIGURE_ENEMY_KINGDOME_JAVELIN:
     case FIGURE_ENEMY_KINGDOME_INFANTRY:
@@ -99,12 +97,10 @@ void figure::play_hit_sound() {
 
     case FIGURE_ENEMY_EGYPTIAN_SPEAR:
     case FIGURE_ENEMY_KINGDOME_JAVELIN:
-    //case FIGURE_ENEMY_EGYPTIAN_HEAVY_SPEAR:
-    if (city_sound().update_hit_spear())
-        effect = SOUND_EFFECT_SPEAR;
-    break;
+        if (city_sound().update_hit_spear())
+            effect = SOUND_EFFECT_SPEAR;
+        break;
 
-    //case FIGURE_ENEMY_EGYPTIAN_FAST_SPEAR:
     case FIGURE_ENEMY_EGYPTIAN_HEAVY_SWORD:
         if (city_sound().update_hit_club())
             effect = SOUND_EFFECT_CLUB;
@@ -126,15 +122,6 @@ void figure::play_hit_sound() {
         else {
             effect = SOUND_EFFECT_ELEPHANT_HIT;
         }
-        break;
-        // case FIGURE_DANCER:
-        // sound_effect_play(SOUND_EFFECT_LION_ATTACK);
-        // break;
-        //
-        // case FIGURE_WOLF:
-        //     if (city_sound().update_hit_wolf())
-        //         sound_effect_play(SOUND_EFFECT_WOLF_ATTACK);
-
         break;
     default:
         break;

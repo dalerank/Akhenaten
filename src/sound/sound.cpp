@@ -233,9 +233,6 @@ void* sound_manager_t::load_chunk(pcstr filename, bool cache) {
 
         SDL_RWops* sdl_fp = SDL_RWFromFP(fp, SDL_TRUE);
         return Mix_LoadWAV_RW(sdl_fp, 1);
-#else
-        //verify_no_crash(false && "unsupported format");
-        //return Mix_LoadWAV_RW(SDL_RWFromFile(filename, "rb"), 1);
 #endif
     }
 
@@ -942,7 +939,7 @@ void sound_manager_t::use_default_music_player() {
 }
 
 void sound_manager_t::update_channel(int channel, vfs::path filename) {
-    if (filename.empty()) {
+    if (filename.empty() || channel < 0 || channel >= SOUND_CHANNEL_MAX) {
         return;
     }
 
@@ -988,7 +985,7 @@ void ANK_PERMANENT_CALLBACK(event_sound_speech, ev) {
     if (g_args.is_log_sound_events()) {
         logs::info("[event] speech=%s sent from %s:%d", ev.path.c_str(), ev.source_file, ev.source_line);
     }
-    g_sound.speech_play_file(ev.path, ev.volume);
+    g_sound.speech_play_file(ev.path);
 }
 
 void ANK_PERMANENT_CALLBACK(event_music_update, ev) {

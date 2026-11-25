@@ -3,8 +3,6 @@
 enum e_sound_channel {
     SOUND_CHANNEL_SPEECH = 0,
 
-    SOUND_MUSIC_AMBIENT = 1,
-
     // user interface effects
     SOUND_CHANNEL_EFFECTS_MIN = 2,
     SOUND_CHANNEL_EFFECTS_MAX = 44,

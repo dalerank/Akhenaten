@@ -83,11 +83,6 @@ static void js_register_sound_channel_proto(js_State *J) {
     js_defglobal(J, js_intern("SoundChannel"), JS_DONTENUM);
 }
 
-static void js_sound_set_volume(js_State *J) {
-    g_sound.set_volume(js_tointeger(J, 1), js_tointeger(J, 2), js_tointeger(J, 3));
-    J->pushundefined();
-}
-
 static void js_sound_music_stop(js_State *J) {
     g_sound.music_stop();
     J->pushundefined();
@@ -105,8 +100,7 @@ static void js_sound_speech_stop(js_State *J) {
 
 static void js_sound_speech_play(js_State *J) {
     const xstring path = js_toxstring(J, 1);
-    const int volume = J->gettop() > 2 ? js_tointeger(J, 2) : 255;
-    js_pushboolean(J, g_sound.speech_play_file(path.c_str(), volume));
+    js_pushboolean(J, g_sound.speech_play_file(path.c_str()));
 }
 
 static void js_sound_play_intro(js_State *J) {
@@ -125,7 +119,6 @@ void js_register_sound_object(js_State *J) {
     js_pop(J, 1);
 
     J->newobject();
-    REGISTER_FUNCTION(J, js_sound_set_volume, "set_volume", 3);
     REGISTER_FUNCTION(J, js_sound_music_stop, "music_stop", 0);
     REGISTER_FUNCTION(J, js_sound_music_update, "music_update", 1);
     REGISTER_FUNCTION(J, js_sound_speech_stop, "speech_stop", 0);

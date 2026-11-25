@@ -43,7 +43,7 @@ public:
     void init_channels();
     void begin_frame();
     inline xspan<channel_t> channels() { return make_span<channel_t>(_channels.data(), _channels.size()); }
-    bool speech_play_file(xstring filename, int volume);
+    bool speech_play_file(xstring filename);
     bool speech_file_exist(xstring filename, vfs::path &fs_path);
     void set_channel_volume(int channel, int volume_pct);
     void set_channel_pan(int channel, int left_pct, int right_pct);
@@ -67,8 +67,6 @@ public:
     void music_frame();
     void music_city_frame();
     int music_load_playlist_text(std::string_view text);
-    int music_playlist_size() const;
-    void play_editor();
     void play_intro();
     void music_stop();
     const xstring& music_current_track() const;
@@ -105,8 +103,7 @@ private:
     bool create_custom_audio_stream(uint16_t src_format, uint8_t src_channels, int src_rate, uint16_t dst_format,
       uint8_t dst_channels, int dst_rate);
     int get_custom_audio_stream(uint8_t *dst, int len);
-    static void custom_music_callback(void *dummy, uint8_t *stream, int len);
-    vfs::path speech_filename(xstring filename);
+    static void custom_music_callback(void* dummy, uint8_t* stream, int len);
     bool speech_try_rel(pcstr rel, vfs::path &fs_path);
     static bool speech_ieq_prefix(pcstr path, pcstr prefix);
     vfs::path speech_normalize_rel(pcstr filename) const;

@@ -151,12 +151,6 @@ void sound_manager_t::play_intro() {
     }
 }
 
-void sound_manager_t::play_editor() {
-    if (!!game_features::gameopt_sound_music_enabled) {
-        play_track("city_0");
-    }
-}
-
 static std::string_view music_file_basename(std::string_view file) {
     const size_t slash = file.find_last_of("/\\");
     return slash == std::string_view::npos ? file : file.substr(slash + 1);
@@ -259,10 +253,6 @@ int sound_manager_t::music_load_playlist_text(std::string_view text) {
         music.playlist.push_back(rule);
     }
 
-    return (int)music.playlist.size();
-}
-
-int sound_manager_t::music_playlist_size() const {
     return (int)music.playlist.size();
 }
 

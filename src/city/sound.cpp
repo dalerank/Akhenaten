@@ -49,16 +49,8 @@ int city_sound_t::update_march_horse() {
     return update_field(&march_horse, 200);
 }
 
-int city_sound_t::update_march_wolf() {
-    return update_field(&march_wolf, 12);
-}
-
 int city_sound_t::update_shoot_arrow() {
     return update_field(&shoot_arrow, 10);
-}
-
-int city_sound_t::update_hit_wolf() {
-    return update_field(&hit_wolf, 4);
 }
 
 int city_sound_t::update_hit_soldier() {
