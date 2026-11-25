@@ -229,7 +229,6 @@ city/city_religion.cpp -> dev/debug.h
 config/hotkeys.cpp -> input/hotkey.h
 config/hotkeys.cpp -> input/keyboard.h
 config/hotkeys.h -> input/keys.h
-content/content.cpp -> dev/dirent.h
 content/content.cpp -> platform/android/android.h
 content/content.cpp -> platform/vita/vita.h
 content/content_android.cpp -> platform/android/android.h

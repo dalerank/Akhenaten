@@ -67,9 +67,7 @@ namespace {
         }
         const dir_listing* folders = vfs::dir_find_all_subdirectories("mods");
         for (int i = 0; i < folders->num_files; ++i) {
-            if (strcmp(folders->files[i], ".") != 0 && strcmp(folders->files[i], "..") != 0) {
-                entries.push_back({folders->files[i], true});
-            }
+            entries.push_back({folders->files[i], true});
         }
         sort_entries(entries);
         return entries;
