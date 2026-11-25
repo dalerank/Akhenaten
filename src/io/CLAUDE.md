@@ -13,7 +13,7 @@ Chunk-based save/load and localization strings.
 | `gamestate/boilerplate_detail.h` | `GamestateLoadDetail` — pre/post load, version probe, raw map load |
 | `gamestate/save_versions.h` | `latest_save_version` changelog |
 | `gamestate/file_schemas.h` | Format schema entry points (`file_schema`, builders) |
-| `gamestate/file_schema_*.cpp` | Per-format `push_chunk` lists (map / sav / svx) |
+| `gamestate/file_schema_*.cpp` | Per-format `push_chunk` lists (map / svx) |
 | `gamestate/chunks.h` | Chunk types with no other owner (junk, bizarre fields, schema slots) |
 | `io.h` | Low-level file reads (`io_read_file_into_buffer`, sg3/sgx counts) |
 | `gamefiles/lang.h` | Localization string management |
@@ -26,7 +26,8 @@ GamestateIO::write_savegame / load_savegame / write_map / write_family_marker / 
 ChunkSerializer (g_chunk_io)  — push_chunk schema, fill buffers, apply state
         ↓
   .svx  → svx sectioned container (by name, CRC, defaulters)
-  .sav / .map → legacy positional stream (unchanged Pharaoh layouts)
+  .map  → positional stream (unchanged Pharaoh layout)
+  .sav  → read by io/og_save, never written as a city save
 ```
 
 `write_family_marker` writes a tiny positional `.sav` stub (`family_index`) so `Save/<player>/` exists when starting a dynasty — not a city save (no Ironwill / last_save).
@@ -47,8 +48,7 @@ g_chunk_io.unserialize(reader, 0, format, GamestateIO::read_file_version, file_s
 ```
 
 - Schema is built by `file_schema` in `gamestate/file_schemas.cpp`, with per-format
-  lists in `file_schema_map.cpp`, `file_schema_sav.cpp` (`.sav` + family marker),
-  `file_schema_svx.cpp`. Legacy positional `.svx` and sectioned `.svx` share
+  lists in `file_schema_map.cpp`, `file_schema_svx.cpp`; the family marker list is in `file_schemas.cpp`. Legacy positional `.svx` and sectioned `.svx` share
   `file_schema_svx`; dead padding chunks are gated with `g_chunk_io.is_sectioned()`.
 - Writes go through `<path>.tmp` then rename (atomic when `offset == 0`).
 - `file_chunk_t::resize()` is the **only** place a chunk buffer may be reallocated (re-hooks `io_buffer`).

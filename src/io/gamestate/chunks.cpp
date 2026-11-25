@@ -91,7 +91,7 @@ void junk7a_chunk::bind_data(io_buffer* iob, size_t version) {
 struct junk10_t {
     struct {
         bool in_use = false;
-        int large_data[56] = {0}; // 55 for versions < 149
+        int large_data[56] = {0};
         int small_data[11] = {0};
     } fields[MAX_JUNK10_FIELDS];
 };
@@ -113,7 +113,7 @@ void junk10a_chunk::bind_data(io_buffer* iob, size_t version) {
             fwrite(temp_string, strlen(temp_string), 1, debug_file);
         }
         // fill ints / print debug file
-        for (int j = 0; j < (version < 149 ? 55 : 56); ++j) {
+        for (int j = 0; j < 56; ++j) {
             iob->bind(BIND_SIGNATURE_UINT32, &field->large_data[j]);
             switch (j) {
             case 0:
