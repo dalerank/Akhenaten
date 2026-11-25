@@ -19,7 +19,7 @@ void config_show_kingdome_properties(bool header) {
 
     ImGui::BeginTable("Kingdome", 2, ImGuiTableFlags_BordersOuter | ImGuiTableFlags_Resizable);
 
-    auto &kingdome = g_city.kingdome;
+    auto& kingdome = city_kingdome();
 
     game_debug_show_property("rating", kingdome.rating);
     game_debug_show_property("rating_last_year", kingdome.rating_last_year);
@@ -63,18 +63,18 @@ void config_show_kingdome_properties(bool header) {
 declare_console_command_p(updatekingdome) {
     int value = args.next_int(0);
     if (!!value) {
-        g_city.kingdome_sys().advance_year();
+        city_kingdome().advance_year();
     } else {
-        g_city.kingdome_sys().advance_month();
+        city_kingdome().advance_month();
     }
 }
 
 declare_console_command_p(addkingdome) {
     int amount = args.next_int(10);
-    g_city.kingdome.change(amount);
+    city_kingdome().change(amount);
 }
 
 declare_console_command_p(addsavings) {
     int amount = args.next_int(100);
-    g_city.kingdome.personal_savings += amount;
+    city_kingdome().personal_savings += amount;
 }

@@ -1,4 +1,5 @@
 #include "city/city_victory.h"
+#include "city/city_kingdome_relations.h"
 #include "city/city_finance.h"
 #include "city/ratings.h"
 #include "game/sim_schedule.h"
@@ -140,7 +141,7 @@ e_victory_state city_victory_t::determine_state(bool script_goals_met) {
     }
     if (wc.kingdom.enabled) {
         goals++;
-        if (g_city.kingdome.rating < wc.kingdom.goal) {
+        if (city_kingdome().rating < wc.kingdom.goal) {
             st = e_victory_state_none;
         }
     }
@@ -235,7 +236,7 @@ void city_victory_t::lower_difficulty() {
 int city_victory_score(int months, int monument_weight) {
     const double m = std::max(months, 1);
     const double weight = monument_weight;
-    const int ratings = g_city.kingdome.rating + city_ratings().prosperity + city_ratings().culture;
+    const int ratings = city_kingdome().rating + city_ratings().prosperity + city_ratings().culture;
     const double rating_part = (double)ratings * ((double)city_population().current * 0.002);
     const double monument_part = (weight / (m * m * 0.00015625)) * (weight * 20.0);
     double score = monument_part + rating_part;

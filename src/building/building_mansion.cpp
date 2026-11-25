@@ -1,4 +1,5 @@
 #include "building_mansion.h"
+#include "city/city_kingdome_relations.h"
 #include "city/city_sentiment.h"
 
 #include "city/city.h"
@@ -59,12 +60,12 @@ void building_mansion::on_before_collapse() {
     if (base.destroy_reason == e_destroy_enemy) {
         const int diff = std::clamp<int>(game_difficulty(), 0, 4);
         const int pct = k_enemy_theft_pct[diff];
-        const int amount = calc_adjust_with_percentage<int>((int)g_city.kingdome.personal_savings, pct);
+        const int amount = calc_adjust_with_percentage<int>((int)city_kingdome().personal_savings, pct);
         if (amount > 0) {
-            if (g_city.kingdome.personal_savings >= (uint16_t)amount) {
-                g_city.kingdome.personal_savings -= (uint16_t)amount;
+            if (city_kingdome().personal_savings >= (uint16_t)amount) {
+                city_kingdome().personal_savings -= (uint16_t)amount;
             } else {
-                g_city.kingdome.personal_savings = 0;
+                city_kingdome().personal_savings = 0;
             }
             city_finance().process_stolen(amount);
             update_money_values();
@@ -176,7 +177,7 @@ void building_mansion::update_money_values() {
         total_weight += k_mansion_share_weight[i] * counts[i];
     }
 
-    const int savings = (int)g_city.kingdome.personal_savings;
+    const int savings = (int)city_kingdome().personal_savings;
     buildings_valid_do([&](building &b) {
         int idx = -1;
         for (int i = 0; i < 3; i++) {
@@ -234,11 +235,11 @@ void building_mansion::check_theft_from_mansions() {
                 continue;
             }
 
-            if (g_city.kingdome.personal_savings <= 0) {
+            if (city_kingdome().personal_savings <= 0) {
                 continue;
             }
 
-            int savings = (int)g_city.kingdome.personal_savings;
+            int savings = (int)city_kingdome().personal_savings;
             int steal_amount = savings * (10 + (random_byte() % 40)) / 100;
             if (steal_amount > 200) {
                 steal_amount = 200 - (random_byte() % 50);
@@ -254,10 +255,10 @@ void building_mansion::check_theft_from_mansions() {
                 continue;
             }
 
-            if (g_city.kingdome.personal_savings >= (uint16_t)steal_amount) {
-                g_city.kingdome.personal_savings -= (uint16_t)steal_amount;
+            if (city_kingdome().personal_savings >= (uint16_t)steal_amount) {
+                city_kingdome().personal_savings -= (uint16_t)steal_amount;
             } else {
-                g_city.kingdome.personal_savings = 0;
+                city_kingdome().personal_savings = 0;
             }
             city_finance().process_stolen(steal_amount);
             update_money_values();

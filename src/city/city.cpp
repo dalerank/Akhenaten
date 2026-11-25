@@ -1,4 +1,5 @@
 #include "city.h"
+#include "city/city_kingdome_relations.h"
 #include "city/city_religion.h"
 #include "city/city_finance.h"
 #include "city/city_trade.h"
@@ -100,7 +101,6 @@ void city_t::init() {
     zero_fill(buildings);
     zero_fill(figures);
     zero_fill(houses);
-    zero_fill(kingdome);
     zero_fill(military);
     zero_fill(industry);
     zero_fill(maintenance);
@@ -121,7 +121,6 @@ void city_t::init() {
     city_sentiment().init();
     city_finance().init();
     empire_screen = AVAILABLE;
-    kingdome.init();
 }
 
 void city_t::reload_objects() {
@@ -131,16 +130,6 @@ void city_t::reload_objects() {
 
 void city_t::update_month(simulation_time_t simtime) {
     g_simulation.schedule.run(SIM_PHASE_MONTH_CITY, g_simulation.simtime.tick);
-}
-
-kingdome_context city_t::kingdome_ctx() {
-    return {city_finance(), city_finance(), city_ratings(), figures, city_population(), g_scenario.events,
-      g_scenario.starting_kingdom(), g_scenario.mode() != e_scenario_normal, g_scenario.rescue_loan(),
-      g_scenario.is_open_play, g_scenario.campaign_scenario_id, g_simulation.simtime.day, g_simulation.simtime.year};
-}
-
-kingdome_system city_t::kingdome_sys() {
-    return kingdome_system(kingdome, kingdome_ctx());
 }
 
 void city_t::init_custom_map() {
@@ -473,15 +462,15 @@ void city_t::houses_reset_demands() {
 }
 
 pcstr city_player_name() {
-    return g_city.kingdome.player_name.c_str();
+    return city_kingdome().player_name.c_str();
 }
 
 void city_set_player_name(xstring name) {
-    g_city.kingdome.player_name = name;
+    city_kingdome().player_name = name;
 }
 
 void city_restore_campaign_player_name() {
-    g_city.kingdome.player_name = g_city.kingdome.campaign_player_name;
+    city_kingdome().player_name = city_kingdome().campaign_player_name;
 }
 
 mission_result_t city_make_mission_result(int scenario_id) {
@@ -490,13 +479,13 @@ mission_result_t city_make_mission_result(int scenario_id) {
     result.scenario_id = scenario_id;
     result.rating_culture = city_ratings().culture;
     result.rating_prosperity = city_ratings().prosperity;
-    result.rating_kingdom = g_city.kingdome.rating;
+    result.rating_kingdom = city_kingdome().rating;
     result.final_population = city_population().current;
     result.final_funds = city_finance().treasury;
     result.completion_months = (uint32_t)(g_simulation.simtime.years_since_start() * simulation_time_t::months_in_year
                                           + g_simulation.simtime.month + 1);
     result.difficulty = game_difficulty();
-    result.player_name = g_city.kingdome.player_name;
+    result.player_name = city_kingdome().player_name;
 
     return result;
 }
@@ -517,7 +506,7 @@ bvariant city_get_property(xstring domain, xstring name) {
       {tags().rating, tags().culture, [](const xstring&) { return bvariant(city_ratings().culture); }},
       {tags().rating, tags().prosperity, [](const xstring&) { return bvariant(city_ratings().prosperity); }},
       {tags().rating, tags().monument, [](const xstring&) { return bvariant(city_ratings().monument); }},
-      {tags().rating, tags().kingdom, [](const xstring&) { return bvariant(g_city.kingdome.rating); }},
+      {tags().rating, tags().kingdom, [](const xstring&) { return bvariant(city_kingdome().rating); }},
       {tags().city, "months_since_festival",
         [](const xstring&) { return bvariant(city_festival().months_since_festival); }},
       {tags().city, "workers_needed", [](const xstring&) { return bvariant(city_labor().workers_needed); }},
@@ -545,7 +534,7 @@ bvariant city_t::get_property(xstring domain, xstring name) const {
 void city_t::on_post_load() {
     buildings.on_post_load();
     figures.on_post_load();
-    kingdome.on_post_load();
+    city_kingdome().on_post_load();
     city_trade().update_export_keep();
 }
 

@@ -1,4 +1,5 @@
 #include "io/og_save/og_load.h"
+#include "city/city_kingdome_relations.h"
 #include "city/city_religion.h"
 #include "city/city_finance.h"
 #include "city/city_trade.h"
@@ -146,8 +147,8 @@ namespace og {
         assign(city_finance().this_year.expenses.construction, p.construction_this_year);
         assign(city_finance().last_year.expenses.accountant_salary, p.salary_last_year);
         assign(city_finance().this_year.expenses.accountant_salary, p.salary_this_year);
-        assign(g_city.kingdome.salary_amount, p.salary_amount);
-        assign(g_city.kingdome.salary_rank, p.salary_rank);
+        assign(city_kingdome().salary_amount, p.salary_amount);
+        assign(city_kingdome().salary_rank, p.salary_rank);
         assign(city_finance().this_year.expenses.mayour_salary, p.salary_so_far);
         assign(city_finance().last_year.income.total, p.income_last_year);
         assign(city_finance().this_year.income.total, p.income_this_year);
@@ -162,13 +163,13 @@ namespace og {
         assign(city_finance().last_year.expenses.wages, p.wages_last_year);
         assign(city_finance().this_year.income.gold_delivered, p.gold_this_year);
         assign(city_finance().last_year.income.gold_delivered, p.gold_last_year);
-        assign(g_city.kingdome.months_in_debt, p.months_in_debt);
+        assign(city_kingdome().months_in_debt, p.months_in_debt);
         assign(city_trade().caravan_import_resource, p.caravan_import_resource);
         assign(city_trade().caravan_backup_import_resource, p.caravan_backup_import_resource);
         assign(city_ratings().culture, p.rating_culture);
         assign(city_ratings().prosperity, p.rating_prosperity);
         assign(city_ratings().monument, p.rating_monument);
-        assign(g_city.kingdome.rating, p.rating_kingdom);
+        assign(city_kingdome().rating, p.rating_kingdom);
         assign(city_ratings().prosperity_trend, p.prosperity_trend);
         assign(city_ratings().monument_num_criminals, p.monument_num_criminals);
         assign(city_ratings().monument_num_rioters, p.monument_num_rioters);
@@ -228,8 +229,8 @@ namespace og {
         assign(g_city.figures.rioters, p.rioters);
         assign(city_ratings().culture_explanation, p.culture_explanation);
         assign(city_ratings().prosperity_explanation, p.prosperity_explanation);
-        assign(g_city.kingdome.player_rank, p.player_rank);
-        assign(g_city.kingdome.personal_savings, p.personal_savings);
+        assign(city_kingdome().player_rank, p.player_rank);
+        assign(city_kingdome().personal_savings, p.personal_savings);
         assign(city_finance().last_year.income.donated, p.donated_last_year);
         assign(city_finance().this_year.income.donated, p.donated_this_year);
         assign(g_city.figures.animals_number, p.animals);
@@ -253,13 +254,13 @@ namespace og {
         assign(city_sentiment().previous_value, p.sentiment_previous_value);
         assign(city_sentiment().low_mood_cause, p.sentiment_low_mood_cause);
         assign(g_city.figures.security_breach_duration, p.security_breach_duration);
-        assign(g_city.kingdome.months_since_gift, p.months_since_gift);
-        assign(g_city.kingdome.gift_overdose_penalty, p.gift_overdose_penalty);
-        assign(g_city.kingdome.kingdom_salary_penalty, p.kingdom_salary_penalty);
-        assign(g_city.kingdome.kingdom_milestone_penalty, p.kingdom_milestone_penalty);
-        assign(g_city.kingdome.kingdom_ignored_request_penalty, p.kingdom_ignored_request_penalty);
-        assign(g_city.kingdome.rating_last_year, p.kingdom_last_year);
-        assign(g_city.kingdome.kingdom_change, p.kingdom_change);
+        assign(city_kingdome().months_since_gift, p.months_since_gift);
+        assign(city_kingdome().gift_overdose_penalty, p.gift_overdose_penalty);
+        assign(city_kingdome().kingdom_salary_penalty, p.kingdom_salary_penalty);
+        assign(city_kingdome().kingdom_milestone_penalty, p.kingdom_milestone_penalty);
+        assign(city_kingdome().kingdom_ignored_request_penalty, p.kingdom_ignored_request_penalty);
+        assign(city_kingdome().rating_last_year, p.kingdom_last_year);
+        assign(city_kingdome().kingdom_change, p.kingdom_change);
         assign(g_city.buildings.mission_post_operational, p.mission_post_operational);
         g_city.buildings.main_native_meeting = tile2i(p.main_native_meeting_x, p.main_native_meeting_y);
         assign(city_finance().wage_rate_paid_last_year, p.wage_rate_paid_last_year);

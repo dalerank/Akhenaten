@@ -1,4 +1,5 @@
 #include "scenario.h"
+#include "city/city_kingdome_relations.h"
 #include "city/city_religion.h"
 #include "game/simulation.h"
 #include "core/app_module.h"
@@ -288,7 +289,7 @@ void scenario_data_t::load_metadata(const mission_id_t &missionid, bool is_new_m
 
         int rank = std::min(arch.r_int("player_rank", -1), 10);
         if (rank >= 0) {
-            g_city.kingdome.player_rank = rank;
+            city_kingdome().player_rank = rank;
         }
 
         memset(allowed_buildings, 0, sizeof(allowed_buildings));
@@ -307,7 +308,7 @@ void scenario_data_t::load_metadata(const mission_id_t &missionid, bool is_new_m
         carry_monuments = arch.r_bool("carry_monuments");
         reset_personal_savings = arch.r_bool("reset_personal_savings");
         if (is_new_mission && reset_personal_savings) {
-            g_city.kingdome.campaign_carry_personal_savings = 0;
+            city_kingdome().campaign_carry_personal_savings = 0;
         }
 
         arch.r("invasion_points_land", invasion_points_land);

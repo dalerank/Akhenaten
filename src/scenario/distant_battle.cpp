@@ -1,4 +1,5 @@
 #include "distant_battle.h"
+#include "city/city_kingdome_relations.h"
 #include "core/app_module.h"
 #include "game/sim_schedule.h"
 
@@ -459,7 +460,7 @@ void distant_battles_t::fight_distant_battle() {
         events::emit(event_message{ true, "message_distant_battle_lost_no_troops", 0, 0, SOURCE_LOCATION });
         dispatched_army.state = dispatched_army_t::state_returning;
         if (!request_linked) {
-            g_city.kingdome.change(-50);
+            city_kingdome().change(-50);
         }
         set_city_foreign();
         if (request_linked) {
@@ -468,7 +469,7 @@ void distant_battles_t::fight_distant_battle() {
     } else if (battle.egyptian_months_to_travel_forth > 2) {
         events::emit(event_message{ true, "message_distant_battle_lost_too_late", 0, 0, SOURCE_LOCATION });
         if (!request_linked) {
-            g_city.kingdome.change(-25);
+            city_kingdome().change(-25);
         }
         set_city_foreign();
         battle.egyptian_months_to_travel_back = battle.egyptian_months_traveled;
@@ -491,7 +492,7 @@ void distant_battles_t::fight_distant_battle() {
         if (!won) {
             events::emit(event_message{ true, "message_distant_battle_lost_too_weak", 0, 0, SOURCE_LOCATION });
             if (!request_linked) {
-                g_city.kingdome.change(-10);
+                city_kingdome().change(-10);
             }
             set_city_foreign();
             battle.egyptian_months_traveled = 0;
@@ -508,7 +509,7 @@ void distant_battles_t::fight_distant_battle() {
                     g_scenario.events.win_distant_battle(rtag, city->name_str.c_str(), city->get_empire_object()->pos);
                     g_scenario.events.execute_event(rtag);
                 }
-                g_city.kingdome.change(25);
+                city_kingdome().change(25);
                 city_buildings_earn_triumphal_obelisk();
             }
 

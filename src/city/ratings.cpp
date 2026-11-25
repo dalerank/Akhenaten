@@ -1,4 +1,5 @@
 #include "ratings.h"
+#include "city/city_kingdome_relations.h"
 #include "city/city_religion.h"
 #include "city/ratings.h"
 #include "city/entertainment.h"
@@ -152,7 +153,7 @@ void city_ratings_t::update_culture_rating() {
 void city_ratings_t::update(bool is_yearly_update) {
     update_culture_rating();
     if (is_yearly_update) {
-        g_city.kingdome_sys().advance_year();
+        city_kingdome().advance_year();
     }
     calculate_max_prosperity();
 

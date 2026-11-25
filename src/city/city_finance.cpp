@@ -167,7 +167,7 @@ void city_finance_t::process_request(event_finance_request request) {
 
     case efinance_request_personal_salary:
         this_year.expenses.mayour_salary += request.deben;
-        g_city.kingdome.personal_savings += request.deben;
+        city_kingdome().personal_savings += request.deben;
         treasury -= request.deben;
         break;
 
@@ -241,7 +241,7 @@ void city_finance_t::pay_monthly_salary() {
         return;
     }
 
-    int salary = g_city.kingdome.salary_amount;
+    int salary = city_kingdome().salary_amount;
     process_request({efinance_request_personal_salary, salary});
 
     building_mansion::update_money_values();

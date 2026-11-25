@@ -2,7 +2,6 @@
 
 #include <stdint.h>
 
-#include "city/city_kingdome_relations.h"
 #include "game/player_record.h"
 #include "city/city_industry.h"
 #include "city/buildings.h"
@@ -25,7 +24,6 @@ struct city_t {
     city_buildings_t buildings;
     city_figures_t figures;
     house_demands houses;
-    kingdome_state kingdome;
     city_military_t military;
     city_industry_t industry;
     city_maintenance_t maintenance;
@@ -101,8 +99,6 @@ struct city_t {
 
     void update_tick(int simtick);
     void update_month(simulation_time_t t);
-    kingdome_context kingdome_ctx();
-    kingdome_system kingdome_sys();
 
     e_availability is_advisor_available(e_advisor advisor) const;
     void set_advisor_available(e_advisor advisor, e_availability available);

@@ -1,4 +1,5 @@
 #include "figuretype/figure_tomb_robber.h"
+#include "city/city_kingdome_relations.h"
 #include "city/city_sentiment.h"
 #include "game/simulation.h"
 #include "core/app_module.h"
@@ -410,7 +411,7 @@ void figure_action_og(figure_tomb_robber &self) {
     case FIGURE_ACTION_149_CORPSE:
         if (!self.runtime_data().kill_bonus_done && base.opponent_id > 0) {
             self.runtime_data().kill_bonus_done = 1;
-            g_city.kingdome.change(1);
+            city_kingdome().change(1);
             events::emit(event_city_warning{"#tomb_robber_caught"});
         }
         break;
@@ -523,7 +524,7 @@ bool figure_tomb_robber::commit_plunder() {
     if (game_features::gameplay_change_tomb_robber_remake.to_bool()) {
         if (rd.threat_only || monument_is_preexisting(*tomb)) {
             rd.stole = 1;
-            g_city.kingdome.change(-k_preexisting_kingdom_penalty_remake);
+            city_kingdome().change(-k_preexisting_kingdom_penalty_remake);
             events::emit(event_city_warning{"#tomb_robbers_plundered"});
             return true;
         }
@@ -548,7 +549,7 @@ bool figure_tomb_robber::commit_plunder() {
 
         burial_provisions_sync_city_dispatched();
         rd.stole = 1;
-        g_city.kingdome.change(-k_steal_kingdom_penalty_remake);
+        city_kingdome().change(-k_steal_kingdom_penalty_remake);
         events::emit(event_city_warning{"#tomb_robbers_stole_provisions"});
         return true;
     }
@@ -560,7 +561,7 @@ bool figure_tomb_robber::commit_plunder() {
 
     if (unfinished) {
         rd.stole = 1;
-        g_city.kingdome.change(-penalty);
+        city_kingdome().change(-penalty);
         if (is_royal_tomb_type(tomb->type)) {
             events::emit(event_city_warning{"#tomb_robbers_plundered"});
         } else {
@@ -573,13 +574,13 @@ bool figure_tomb_robber::commit_plunder() {
         // Finished tomb without stock: still apply half kingdom hit (OG pyramid/finished path
         // always hits kingdom after attempt; steal is best-effort).
         rd.stole = 1;
-        g_city.kingdome.change(-penalty);
+        city_kingdome().change(-penalty);
         events::emit(event_city_warning{"#tomb_robbers_stole_provisions"});
         return true;
     }
 
     rd.stole = 1;
-    g_city.kingdome.change(-penalty);
+    city_kingdome().change(-penalty);
     events::emit(event_city_warning{"#tomb_robbers_stole_provisions"});
     return true;
 }

@@ -1,4 +1,5 @@
 #include "city_religion_ra.h"
+#include "city/city_kingdome_relations.h"
 #include "city/city_religion.h"
 
 #include "city/city.h"
@@ -15,7 +16,7 @@ void god_ra_t::perform_reduced_trading() {
 }
 
 void god_ra_t::perform_lower_reputation() {
-    g_city.kingdome.reduce_god_wrath(15);
+    city_kingdome().reduce_god_wrath(15);
     messages::popup("message_wrath_of_ra", 0, 0);
 }
 
@@ -44,7 +45,7 @@ void god_ra_t::perform_slightly_reduced_trading() {
 }
 
 void god_ra_t::perform_slightly_lower_reputation() {
-    g_city.kingdome.reduce_god_wrath(5);
+    city_kingdome().reduce_god_wrath(5);
     events::emit(event_message_god{ GOD_RA, "message_ra_is_upset_2" });
 }
 
@@ -64,7 +65,7 @@ void god_ra_t::perform_slightly_increased_trading() {
 }
 
 void god_ra_t::perform_slightly_increased_reputation() {
-    g_city.kingdome.increase_blessing_god(5);
+    city_kingdome().increase_blessing_god(5);
     messages::popup("message_minor_blessing_from_ra", 0, 0);
 }
 

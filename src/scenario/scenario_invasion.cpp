@@ -1,4 +1,5 @@
 #include "scenario_invasion.h"
+#include "city/city_kingdome_relations.h"
 #include "core/app_module.h"
 #include "game/sim_schedule.h"
 #include "scenario/scenario_invasion_chunks.h"
@@ -454,7 +455,7 @@ bool scenario_invasion_city_undefended() {
             break;
         }
     }
-    if (!running && g_city.kingdome.invasion.duration_day_countdown > 0) {
+    if (!running && city_kingdome().invasion.duration_day_countdown > 0) {
         running = true;
     }
     if (!running || formation_get_num_forts() > 0) {
@@ -864,7 +865,7 @@ void scenario_invasion_process() {
                 if (invasion_tile.valid()) {
                     // Scenario kingdom wave: kill tally via favour_only (no Caesar respect /
                     // pause-retreat). opts.size is difficulty-adjusted by start_invasion_impl.
-                    g_city.kingdome_sys().begin_favour_army(opts.size);
+                    city_kingdome().begin_favour_army(opts.size);
                     emit_local_invasion_attack_message("message_legion_attacks",
                         g_invasions.last_internal_invasion_id, invasion_tile.grid_offset());
                 }
@@ -957,7 +958,7 @@ int scenario_invasion_start(invasion_opts_t opts) {
                     data.last_internal_invasion_id, invasion_tile.grid_offset());
             }
             if (opts.kind == INVASION_KIND_KINGDOME) {
-                g_city.kingdome_sys().begin_favour_army(opts.size);
+                city_kingdome().begin_favour_army(opts.size);
             }
             return data.last_internal_invasion_id;
         }
@@ -968,7 +969,7 @@ int scenario_invasion_start(invasion_opts_t opts) {
         // Do not key off last_internal_invasion_id: failed spawns still bump the
         // counter before returning invalid (tile/seq failure).
         opts.kind = INVASION_KIND_KINGDOME;
-        if (!g_city.kingdome_sys().force_attack(opts.size)) {
+        if (!city_kingdome().force_attack(opts.size)) {
             return 0;
         }
         return data.last_internal_invasion_id;

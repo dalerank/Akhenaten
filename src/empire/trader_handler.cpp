@@ -1,4 +1,5 @@
 #include "empire/trader_handler.h"
+#include "city/city_finance.h"
 #include "city/city_trade.h"
 
 #include "empire/empire.h"

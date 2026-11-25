@@ -1,4 +1,5 @@
 #include "figuretype/figure_robber.h"
+#include "city/city_kingdome_relations.h"
 #include "city/city_finance.h"
 #include "city/city_sentiment.h"
 
@@ -73,7 +74,7 @@ void show_robbery_message(pcstr key, int amount, int tile_offset) {
 
 // OG criminal_find_rich_building: nearest mansion/palace/tax/court with money.
 int criminal_find_rich_building(figure &f) {
-    const bool has_savings = g_city.kingdome.personal_savings > 0;
+    const bool has_savings = city_kingdome().personal_savings > 0;
     const bool has_treasury = city_finance().treasury > 0;
     if (!has_savings && !has_treasury) {
         return 0;
@@ -96,7 +97,7 @@ int criminal_find_rich_building(figure &f) {
         }
         if (building_is_mansion_type(b.type)) {
             auto *m = b.dcast_mansion();
-            if (m && m->runtime_data().personal_savings_storage <= 0 && g_city.kingdome.personal_savings <= 0) {
+            if (m && m->runtime_data().personal_savings_storage <= 0 && city_kingdome().personal_savings <= 0) {
                 return;
             }
         }
@@ -119,14 +120,14 @@ void steal_from_destination(figure &f) {
 
     const int pct = steal_percentage();
     if (building_is_mansion_type(b->type)) {
-        const int amount = calc_adjust_with_percentage<int>(g_city.kingdome.personal_savings, pct);
+        const int amount = calc_adjust_with_percentage<int>(city_kingdome().personal_savings, pct);
         if (amount <= 0) {
             return;
         }
-        if (g_city.kingdome.personal_savings >= (uint16_t)amount) {
-            g_city.kingdome.personal_savings -= (uint16_t)amount;
+        if (city_kingdome().personal_savings >= (uint16_t)amount) {
+            city_kingdome().personal_savings -= (uint16_t)amount;
         } else {
-            g_city.kingdome.personal_savings = 0;
+            city_kingdome().personal_savings = 0;
         }
         if (auto *m = b->dcast_mansion()) {
             auto &d = m->runtime_data();

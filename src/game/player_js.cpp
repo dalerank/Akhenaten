@@ -1,16 +1,17 @@
 #include "player_profile.h"
+#include "city/city_kingdome_relations.h"
 
 #include "city/city.h"
 #include "game/highscores.h"
 #include "js/js_game.h"
 
 int __player_salary_rank() {
-    return g_city.kingdome.salary_rank;
+    return city_kingdome().salary_rank;
 }
 ANK_FUNCTION(__player_salary_rank)
 
 int __player_salary_amount() {
-    return g_city.kingdome.salary_amount;
+    return city_kingdome().salary_amount;
 }
 ANK_FUNCTION(__player_salary_amount)
 

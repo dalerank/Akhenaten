@@ -1,4 +1,5 @@
 #include "invasion_auto_resolve.h"
+#include "city/city_kingdome_relations.h"
 #include "game/simulation.h"
 #include "core/app_module.h"
 #include "game/sim_schedule.h"
@@ -426,14 +427,14 @@ bool invasion_auto_resolve_t::try_resolve_now(uint16_t seq) {
     // win gets OG respect via finish_army_defeated after despawn (avoids +25 then +10).
     // FOREIGN/PHARAOH keep the enhanced ±25/±10.
     const bool kingdom_seq = invasion_seq_is_kingdome_army(seq);
-    const bool favour_wave = kingdom_seq && g_city.kingdome.invasion.favour_only != 0;
+    const bool favour_wave = kingdom_seq && city_kingdome().invasion.favour_only != 0;
     const bool caesar_win = kingdom_seq && won && !favour_wave;
 
     if (!kingdom_seq) {
         if (won) {
-            g_city.kingdome.change(25);
+            city_kingdome().change(25);
         } else {
-            g_city.kingdome.change(-10);
+            city_kingdome().change(-10);
         }
     }
 
@@ -451,12 +452,12 @@ bool invasion_auto_resolve_t::try_resolve_now(uint16_t seq) {
     // Kingdom bookkeeping is a single global slot. Zero size before poof so this wave's
     // despawn does not tally as combat kills; after despawn, restore a slot if another
     // kingdom army is still on the map (accumulated favour/Caesar waves).
-    const uint8_t saved_favour = g_city.kingdome.invasion.favour_only;
-    const uint8_t saved_cheated = g_city.kingdome.invasion.cheated;
-    const int32_t saved_duration = g_city.kingdome.invasion.duration_day_countdown;
+    const uint8_t saved_favour = city_kingdome().invasion.favour_only;
+    const uint8_t saved_cheated = city_kingdome().invasion.cheated;
+    const int32_t saved_duration = city_kingdome().invasion.duration_day_countdown;
     if (kingdom_seq) {
-        g_city.kingdome.invasion.size = 0;
-        g_city.kingdome.invasion.soldiers_killed = 0;
+        city_kingdome().invasion.size = 0;
+        city_kingdome().invasion.soldiers_killed = 0;
     }
 
     invasion_despawn_by_seq(seq);
@@ -464,17 +465,17 @@ bool invasion_auto_resolve_t::try_resolve_now(uint16_t seq) {
     if (kingdom_seq) {
         const int left = count_alive_kingdome_army_figures();
         if (left > 0) {
-            g_city.kingdome.invasion.size = left;
-            g_city.kingdome.invasion.soldiers_killed = 0;
-            g_city.kingdome.invasion.favour_only = saved_favour;
-            g_city.kingdome.invasion.cheated = saved_cheated;
-            g_city.kingdome.invasion.duration_day_countdown = saved_duration;
+            city_kingdome().invasion.size = left;
+            city_kingdome().invasion.soldiers_killed = 0;
+            city_kingdome().invasion.favour_only = saved_favour;
+            city_kingdome().invasion.cheated = saved_cheated;
+            city_kingdome().invasion.duration_day_countdown = saved_duration;
         } else {
-            g_city.kingdome.invasion.favour_only = 0;
-            g_city.kingdome.invasion.cheated = 0;
-            g_city.kingdome.invasion.duration_day_countdown = 0;
+            city_kingdome().invasion.favour_only = 0;
+            city_kingdome().invasion.cheated = 0;
+            city_kingdome().invasion.duration_day_countdown = 0;
             if (caesar_win) {
-                g_city.kingdome.finish_army_defeated();
+                city_kingdome().finish_army_defeated();
             }
         }
     }

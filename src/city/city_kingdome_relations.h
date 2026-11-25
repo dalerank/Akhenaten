@@ -2,10 +2,8 @@
 
 #include <cstdint>
 #include "core/runtime_item.h"
-#include "city/city_component.h"
 #include "city/constants.h"
 #include "core/archive.h"
-#include "city/city_finance.h"
 
 enum e_debt_state {
     e_debt_none = 0,
@@ -18,7 +16,7 @@ enum e_debt_state {
 struct event_send_gift_to_kingdome { int gift_size; };
 struct event_kingdome_update_gifts { int personal_savings; };
 
-struct kingdome_state : city_component_t<kingdome_state> {
+struct city_kingdome_t {
     int32_t months_since_gift;
     int32_t gift_overdose_penalty;
 
@@ -70,10 +68,23 @@ struct kingdome_state : city_component_t<kingdome_state> {
     void increase_blessing_god(int value);
     void reduce_god_wrath(int value);
 
-    void init();
     void on_post_load();
     void reset();
 
+    void load_scenario(int rank, int load_type);
+    void update_debt_state();
+    void process_invasion();
+    void update();
+    // Caesar wrath / console attack: count++, zeros days_until_invasion, enables respect popups.
+    // cheated=true skips pause/retreat (console).
+    void begin_invasion(int size, bool cheated);
+    // Mission favour / scenario KNGDOME wave: size+duration for kill tally (no Caesar respect).
+    // Does not bump invasion.count or reset days_until_invasion. Pause/retreat are Caesar-only.
+    void begin_favour_army(int size);
+    // Console / ATTACK_TYPE_KINGDOME. Returns false if spawn failed (no begin_invasion).
+    bool force_attack(int size);
+    void advance_month();
+    void advance_year();
     struct static_params {
         svector<int, 16> salary_ranks;
         svector<uint8_t, 4> gift_relation_change_first;
@@ -96,55 +107,11 @@ struct kingdome_state : city_component_t<kingdome_state> {
     static const static_params &params();
 };
 
-struct city_finance_t;
-struct city_ratings_t;
-struct city_figures_t;
-struct city_population_t;
-struct event_manager_t;
-
-struct kingdome_context {
-    city_finance_t& finance_sys;
-    const city_finance_t& finance;
-    city_ratings_t& ratings;
-    const city_figures_t& figures;
-    const city_population_t& population;
-    event_manager_t& scenario_events;
-    int starting_kingdom;
-    bool custom_scenario;
-    int rescue_loan;
-    bool open_play;
-    int campaign_scenario_id;
-    int day;
-    int year;
-};
-
-class kingdome_system {
-public:
-    kingdome_system(kingdome_state& state, const kingdome_context& ctx) : _state(state), _ctx(ctx) {}
-
-    void load_scenario(int rank, int load_type);
-    void update_debt_state();
-    void process_invasion();
-    void update();
-    // Caesar wrath / console attack: count++, zeros days_until_invasion, enables respect popups.
-    // cheated=true skips pause/retreat (console).
-    void begin_invasion(int size, bool cheated);
-    // Mission favour / scenario KNGDOME wave: size+duration for kill tally (no Caesar respect).
-    // Does not bump invasion.count or reset days_until_invasion. Pause/retreat are Caesar-only.
-    void begin_favour_army(int size);
-    // Console / ATTACK_TYPE_KINGDOME. Returns false if spawn failed (no begin_invasion).
-    bool force_attack(int size);
-    void advance_month();
-    void advance_year();
-
-private:
-    kingdome_state& _state;
-    kingdome_context _ctx;
-};
-ANK_CONFIG_PROPERTY(kingdome_state, salary_rank, player_rank, kingdom_change, kingdom_salary_penalty,
+city_kingdome_t& city_kingdome();
+ANK_CONFIG_PROPERTY(city_kingdome_t, salary_rank, player_rank, kingdom_change, kingdom_salary_penalty,
   kingdom_milestone_penalty, kingdom_ignored_request_penalty)
 
-ANK_CONFIG_STRUCT(kingdome_state::static_params, salary_ranks, gift_relation_change_first, gift_relation_change_second,
+ANK_CONFIG_STRUCT(city_kingdome_t::static_params, salary_ranks, gift_relation_change_first, gift_relation_change_second,
   gift_relation_change_third, gift_relation_change_last, months_since_gift_locker, tribute_not_paid_years_penalty,
   player_salary_above_king_penalty, player_salary_less_king_promotion, first_debt_penalty, second_debt_penalty,
   last_debt_rating_cap, yearly_decay, yearly_decay_from_mission, yearly_profit_bonus, ra_complex_yearly_bonus)

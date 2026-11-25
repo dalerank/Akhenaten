@@ -1,4 +1,5 @@
 #include "city_religion.h"
+#include "city/city_kingdome_relations.h"
 #include "city/city_population.h"
 #include "game/simulation.h"
 #include "core/app_module.h"
@@ -599,7 +600,7 @@ void city_gods_t::perform_major_blessing(e_god god, bool force_construction) {
             return;
         } else {
             // increased kingdom by 15
-            g_city.kingdome.change(15);
+            city_kingdome().change(15);
             messages::god(GOD_RA, "message_blessing_ra_kingdom" );
             return;
         }

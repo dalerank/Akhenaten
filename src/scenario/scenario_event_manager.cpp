@@ -1,4 +1,5 @@
 #include "scenario_event_manager.h"
+#include "city/city_kingdome_relations.h"
 #include "city/city_health.h"
 #include "core/app_module.h"
 #include "game/sim_schedule.h"
@@ -1249,7 +1250,7 @@ void event_manager_t::process_event(int id, bool via_event_trigger, int chain_ac
         break;
 
     case EVENT_TYPE_REPUTATION_INCREASE:
-        g_city.kingdome.change(event.amount.value);
+        city_kingdome().change(event.amount.value);
         message_manager().post_full(true, "message_template_general", &event, caller_event_id,
           PHRASE_rating_change_title_I, PHRASE_rating_change_initial_announcement_I, PHRASE_rating_change_reason_I_A,
           id, 0, POPUP_MSG_KINGDOM);
@@ -1419,7 +1420,7 @@ void event_manager_t::process_event(int id, bool via_event_trigger, int chain_ac
         break;
 
     case EVENT_TYPE_REPUTATION_DECREASE:
-        g_city.kingdome.change(-event.amount.value);
+        city_kingdome().change(-event.amount.value);
         message_manager().post_full(true, "message_template_general", &event, caller_event_id,
           PHRASE_rating_change_title_I, PHRASE_rating_change_initial_announcement_I, PHRASE_rating_change_reason_I_A,
           id, 0);
@@ -1801,11 +1802,11 @@ void event_manager_t::process_invasion(event_ph_t &e) {
         return;
     }
 
-    if (invasion_parent_by_favour(e) && g_city.kingdome.rating >= invasion_bribe_kingdom) {
+    if (invasion_parent_by_favour(e) && city_kingdome().rating >= invasion_bribe_kingdom) {
         messages::popup("message_attack_called_off", 0, 0);
         e.is_active = false;
         e.event_state = e_event_state_already_fired;
-        logs::info("[invasion-event] called off event=%d rating=%d", e.event_id, g_city.kingdome.rating);
+        logs::info("[invasion-event] called off event=%d rating=%d", e.event_id, city_kingdome().rating);
         return;
     }
 
@@ -1864,7 +1865,7 @@ bool event_manager_t::invasion_runs_og(const event_ph_t& e) {
 }
 
 void event_manager_t::update_kingdom_favour() {
-    if (g_city.kingdome.rating != 0) {
+    if (city_kingdome().rating != 0) {
         return;
     }
     auto& events = scenario_events_data().event_list;

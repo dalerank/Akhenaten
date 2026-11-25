@@ -1,4 +1,5 @@
 #include "js/test/js_test_common.h"
+#include "city/city_kingdome_relations.h"
 #include "city/city_religion.h"
 #include "city/city_sentiment.h"
 #include "city/city_health.h"
@@ -72,7 +73,7 @@ static void __test_city_problem_calm() {
     for (auto& god : city_gods().gods) {
         god.mood = 100;
     }
-    g_city.kingdome.rating = 100;
+    city_kingdome().rating = 100;
     city_population().current = 0;
     city_labor().workers_unemployed = 0;
     city_labor().unemployment_percentage = 0;
@@ -88,7 +89,7 @@ static void __test_city_problem_set(xstring key, int value) {
     } else if (key == "food_months") {
         g_city.resource.food_supply_months = (uint8_t)value;
     } else if (key == "kingdom") {
-        g_city.kingdome.rating = (uint8_t)value;
+        city_kingdome().rating = (uint8_t)value;
     } else if (key == "entertainment") {
         g_city.avg_coverage.average_entertainment = value;
     } else if (key == "sentiment") {

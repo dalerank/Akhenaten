@@ -1,4 +1,5 @@
 #include "js/test/js_test_common.h"
+#include "city/city_kingdome_relations.h"
 #include "city/city_religion.h"
 
 #include <cstdio>
@@ -462,34 +463,34 @@ static int __test_city_kingdome_soldiers() {
 ANK_FUNCTION(__test_city_kingdome_soldiers);
 
 static int __test_kingdome_invasion_favour_only() {
-    return g_city.kingdome.invasion.favour_only;
+    return city_kingdome().invasion.favour_only;
 }
 ANK_FUNCTION(__test_kingdome_invasion_favour_only);
 
 static int __test_kingdome_invasion_size() {
-    return g_city.kingdome.invasion.size;
+    return city_kingdome().invasion.size;
 }
 ANK_FUNCTION(__test_kingdome_invasion_size);
 
 static int __test_kingdome_invasion_days_until() {
-    return g_city.kingdome.invasion.days_until_invasion;
+    return city_kingdome().invasion.days_until_invasion;
 }
 ANK_FUNCTION(__test_kingdome_invasion_days_until);
 
 // Tests share one city session, so a run that spawned a kingdome invasion leaves its
 // bookkeeping behind for whoever comes next.
 static void __test_kingdome_invasion_reset() {
-    g_city.kingdome.invasion = {};
+    city_kingdome().invasion = {};
 }
 ANK_FUNCTION(__test_kingdome_invasion_reset);
 
 static void __test_process_kingdome_invasion() {
-    g_city.kingdome_sys().process_invasion();
+    city_kingdome().process_invasion();
 }
 ANK_FUNCTION(__test_process_kingdome_invasion);
 
 static void __test_kingdome_set_kills_to_size() {
-    auto& inv = g_city.kingdome.invasion;
+    auto& inv = city_kingdome().invasion;
     if (inv.size > 0) {
         inv.soldiers_killed = inv.size;
     }

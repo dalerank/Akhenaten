@@ -1,4 +1,5 @@
 #include "boilerplate_detail.h"
+#include "city/city_kingdome_relations.h"
 #include "city/city_religion.h"
 #include "city/city_migration.h"
 
@@ -170,7 +171,7 @@ void GamestateLoadDetail::post_load() {
         g_city.init_campaign_mission();
         g_city.init_mission_resources(g_scenario.init_resources);
         // Pass JS player_rank from load_metadata � not campaign_scenario_id.
-        g_city.kingdome_sys().load_scenario(g_city.kingdome.player_rank, game.session.last_loaded);
+        city_kingdome().load_scenario(city_kingdome().player_rank, game.session.last_loaded);
         events::emit(event_building_menu_update{ "stage_normal" });
         break;
 
@@ -181,7 +182,7 @@ void GamestateLoadDetail::post_load() {
     case e_session_custom_map:
         g_city.init_custom_map();
         g_city.init_mission_resources(g_scenario.init_resources);
-        g_city.kingdome_sys().load_scenario(g_city.kingdome.player_rank, game.session.last_loaded);
+        city_kingdome().load_scenario(city_kingdome().player_rank, game.session.last_loaded);
         events::emit(event_building_menu_update{ "stage_normal" });
         break;
     }
@@ -206,7 +207,7 @@ bool GamestateLoadDetail::load_mission_map_raw(int scenario_id, const char *map_
     }
 
     // Map files do not store carry savings / troops / campaign rank; preserve across pre_load().
-    const uint16_t saved_carry = g_city.kingdome.campaign_carry_personal_savings;
+    const uint16_t saved_carry = city_kingdome().campaign_carry_personal_savings;
     const int32_t saved_rank = g_scenario.campaign_mission_rank;
     const campaign_carry_t saved_troops = g_campaign_carry;
 
@@ -217,7 +218,7 @@ bool GamestateLoadDetail::load_mission_map_raw(int scenario_id, const char *map_
         return false;
     }
 
-    g_city.kingdome.campaign_carry_personal_savings = saved_carry;
+    city_kingdome().campaign_carry_personal_savings = saved_carry;
     g_scenario.campaign_mission_rank = saved_rank;
     g_campaign_carry = saved_troops;
 

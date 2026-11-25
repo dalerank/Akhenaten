@@ -1,4 +1,5 @@
 #include "figure/figure_phrase.h"
+#include "city/city_kingdome_relations.h"
 #include "game/gods.h"
 #include "city/city_sentiment.h"
 #include "city/city_health.h"
@@ -433,7 +434,7 @@ namespace {
                 }
                 break;
             case GOD_RA:
-                if (g_city.kingdome.rating < 20) {
+                if (city_kingdome().rating < 20) {
                     st.say(ADVISOR_RATINGS, 11);
                 }
                 break;

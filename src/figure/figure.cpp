@@ -1,4 +1,5 @@
 #include "figure/figure.h"
+#include "city/city_kingdome_relations.h"
 #include "graphics/elements/ui.h"
 
 #include "building/building.h"
@@ -315,8 +316,8 @@ void figure::figure_delete_UNSAFE() {
     case FIGURE_ENEMY_KINGDOME_MOUNTED:
     case FIGURE_ENEMY_KINGDOME_INFANTRY:
         // Only count kills toward an active favour/kingdom invasion bookkeeping.
-        if (g_city.kingdome.invasion.size > 0) {
-            g_city.kingdome.mark_soldier_killed();
+        if (city_kingdome().invasion.size > 0) {
+            city_kingdome().mark_soldier_killed();
         }
         break;
 

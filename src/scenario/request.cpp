@@ -1,4 +1,5 @@
 #include "request.h"
+#include "city/city_kingdome_relations.h"
 #include "city/city_religion.h"
 
 #include "building/building_storage_yard.h"
@@ -178,7 +179,7 @@ static void request_active(event_ph_t& event, int caller_event_id) {
             event.event_state = e_event_state_overdue;
             event.is_overdue = true;
             request_post(event, caller_event_id, PHRASE_general_request_overdue_P);
-            g_city.kingdome.reduce_missed_request(scenario_request_rules.ignored_kingdom_penalty);
+            city_kingdome().reduce_missed_request(scenario_request_rules.ignored_kingdom_penalty);
             logs::info("[request] overdue event=%d", event.event_id);
         }
     } else if (event.event_state == e_event_state_overdue && months <= 0) {

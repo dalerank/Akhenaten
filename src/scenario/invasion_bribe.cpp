@@ -1,4 +1,5 @@
 #include "invasion_bribe.h"
+#include "city/city_kingdome_relations.h"
 
 #include "city/city.h"
 #include "city/city_finance.h"
@@ -285,7 +286,7 @@ int invasion_bribe_try(uint16_t seq) {
     }
 
     pay_bribe_deben(cost);
-    g_city.kingdome.change(-k_kingdom_penalty);
+    city_kingdome().change(-k_kingdom_penalty);
 
     // Clear bind / auto-resolve pending before despawn so month-tick cannot fake COMPLETED
     // and calculate_figures→sweep does not double-handle this seq.

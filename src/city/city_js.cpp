@@ -1,4 +1,5 @@
 ﻿#include "js/js_game.h"
+#include "city/city_kingdome_relations.h"
 #include "city/ratings.h"
 #include "city/city_migration.h"
 #include "city/city_sentiment.h"
@@ -35,7 +36,9 @@ void __city_set_scenario_enemy_id(int enemy_id) {
 }
 ANK_FUNCTION_1(__city_set_scenario_enemy_id)
 
-int __city_rating_kingdom() { return g_city.kingdome.rating; }
+int __city_rating_kingdom() {
+    return city_kingdome().rating;
+}
 ANK_FUNCTION(__city_rating_kingdom)
 
 int __city_population() {
@@ -48,7 +51,9 @@ int __city_health_rating() {
 }
 ANK_FUNCTION(__city_health_rating)
 
-int __city_player_rank() { return g_city.kingdome.player_rank; }
+int __city_player_rank() {
+    return city_kingdome().player_rank;
+}
 ANK_FUNCTION(__city_player_rank)
 
 pcstr __city_player_name() { return city_player_name(); }

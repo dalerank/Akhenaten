@@ -1,4 +1,5 @@
 #include "js/test/js_test_common.h"
+#include "city/city_kingdome_relations.h"
 #include "city/city_religion.h"
 #include "city/city_finance.h"
 #include "city/ratings.h"
@@ -228,12 +229,12 @@ static int __test_migration_update_status() {
 ANK_FUNCTION(__test_migration_update_status);
 
 static int __test_kingdom_rating() {
-    return g_city.kingdome.rating;
+    return city_kingdome().rating;
 }
 ANK_FUNCTION(__test_kingdom_rating);
 
 static void __test_kingdom_set_rating(int value) {
-    g_city.kingdome.rating = (uint8_t)std::clamp(value, 0, 100);
+    city_kingdome().rating = (uint8_t)std::clamp(value, 0, 100);
 }
 ANK_FUNCTION_1(__test_kingdom_set_rating);
 
