@@ -1,4 +1,5 @@
 #include "formation.h"
+#include "city/military.h"
 #include "game/simulation.h"
 #include "core/app_module.h"
 #include "game/sim_schedule.h"
@@ -225,7 +226,7 @@ bool formation::has_low_morale() {
 void formations_t::calculate_batalion_totals() {
     num_batalions = 0;
 
-    g_city.military.clear_infantry_batalions();
+    city_military().clear_infantry_batalions();
     for (int i = 1; i < MAX_FORMATIONS; i++) {
         formation* m = formation_get(i);
         if (!m->in_use) {
@@ -247,7 +248,7 @@ void formations_t::calculate_batalion_totals() {
 
             num_batalions++;
             if (m->figure_type == FIGURE_STANDARD_BEARER) {
-                g_city.military.add_infantry_batalion();
+                city_military().add_infantry_batalion();
             }
         }
 
@@ -562,7 +563,7 @@ void formations_t::calculate_figures() {
         }
     }
 
-    g_city.military.update_totals();
+    city_military().update_totals();
 
     // Army wiped (bribe / combat / cheat) while quick-battle pending — drop without COMPLETED.
     if (g_invasion_auto_resolve.has_pending()) {

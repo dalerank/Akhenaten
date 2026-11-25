@@ -203,7 +203,7 @@ void building_recruiter::set_priority(int v) {
 }
 
 bool building_recruiter::create_tower_sentry() {
-    if (!g_city.military.has_tower_sentry_request())
+    if (!city_military().has_tower_sentry_request())
         return false;
 
     building* tower = 0;

@@ -4,7 +4,6 @@
 
 #include "game/player_record.h"
 #include "city/buildings.h"
-#include "city/military.h"
 #include "city/city_resource.h"
 #include "city/map.h"
 #include "city/coverage.h"
@@ -20,7 +19,6 @@ struct city_t {
     city_buildings_t buildings;
     city_figures_t figures;
     house_demands houses;
-    city_military_t military;
 
     city_resources_t resource;
 

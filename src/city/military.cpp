@@ -2,6 +2,10 @@
 #include "game/simulation.h"
 #include "core/app_module.h"
 #include "game/sim_schedule.h"
+#include "city/military_chunks.h"
+#include "core/xvalue.h"
+#include "io/chunk_serializer.h"
+#include "io/gamestate/save_versions.h"
 
 #include "city/buildings.h"
 #include "city/city.h"
@@ -59,7 +63,13 @@ void city_military_t::decrease_native_attack_duration() {
         native_attack_duration--;
 }
 
-static auto &city_data = g_city;
+city_military_t& city_military() {
+    return xvalue<city_military_t>::ref();
+}
+
+void city_military_t::reset() {
+    *this = {};
+}
 
 int city_military_distant_battle_kingdome_months_traveled() {
     return g_distant_battle.battle.egyptian_months_traveled;
@@ -81,12 +91,18 @@ bool city_military_t::has_tower_sentry_request() const {
 class military_system : public sim_system {
 public:
     const char* name() const override { return "military"; }
+    void on_reset() override { city_military().reset(); }
+    void push_save_sections(int file_version) override {
+        if (file_version >= save_version_city_sections) {
+            g_chunk_io.push_chunk<city_military_chunk>(city_military_chunk::size, false);
+        }
+    }
     void register_steps(sim_schedule_t& schedule) override {
         schedule.add({sim_step_tower_sentry_decay, SIM_PHASE_TICK, [](int tick) {
                           if (tick != 31) {
                               return;
                           }
-                          g_city.military.decay_tower_sentry_request();
+                          city_military().decay_tower_sentry_request();
                       }});
     }
 };

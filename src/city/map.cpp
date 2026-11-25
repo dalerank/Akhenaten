@@ -1,4 +1,5 @@
 #include "map.h"
+#include "city/military.h"
 #include "game/simulation.h"
 #include "core/app_module.h"
 #include "grid/routing/routing_terrain.h"
@@ -79,7 +80,10 @@ public:
                           if (tick != 6) {
                               return;
                           }
-                          map_natives_check_land();
+                          city_military().decrease_native_attack_duration();
+                          if (map_natives_check_land()) {
+                              city_military().start_native_attack();
+                          }
                       }});
         schedule.add({sim_step_road_network, SIM_PHASE_TICK, [](int tick) {
                           if (tick != 7) {

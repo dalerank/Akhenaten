@@ -182,10 +182,10 @@ void map_natives_init_editor(void) {
     }
 }
 
-void map_natives_check_land(void) {
+bool map_natives_check_land() {
     OZZY_PROFILER_FUNCTION();
     map_property_clear_all_native_land();
-    g_city.military.decrease_native_attack_duration();
+    bool attack = false;
 
     for (int i = 1; i < MAX_BUILDINGS; i++) {
         building* b = building_get(i);
@@ -205,10 +205,11 @@ void map_natives_check_land(void) {
         if (b->sentiment.native_anger >= 100) {
             mark_native_land(b->tile.x(), b->tile.y(), size, radius);
             if (has_building_on_native_land(b->tile.x(), b->tile.y(), size, radius))
-                g_city.military.start_native_attack();
+                attack = true;
 
         } else {
             b->sentiment.native_anger++;
         }
     }
+    return attack;
 }

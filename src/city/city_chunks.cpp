@@ -1,4 +1,5 @@
 #include "city/city_chunks.h"
+#include "city/military.h"
 #include "city/city_food_supply.h"
 #include "city/coverage.h"
 #include "city/city_mission.h"
@@ -259,7 +260,7 @@ static void city_data_bind_og_layout(io_buffer* iob) {
     iob->bind(BIND_SIGNATURE_INT32, &city_sentiment().message_delay);
     iob->bind(BIND_SIGNATURE_UINT8, &city_kingdome().rating_cap);
     iob->bind____skip(3);
-    iob->bind(BIND_SIGNATURE_INT32, &data.military.native_attack_duration);
+    iob->bind(BIND_SIGNATURE_INT32, &city_military().native_attack_duration);
     iob->bind(BIND_SIGNATURE_INT32, &city_gods().bast_curse_active);
     iob->bind(BIND_SIGNATURE_INT32, &city_gods().seth_crush_enemy_troops);
     iob->bind(BIND_SIGNATURE_INT32, &city_ratings().monument_riot_cause);
@@ -283,7 +284,7 @@ static void city_data_bind_og_layout(io_buffer* iob) {
     iob->bind(BIND_SIGNATURE_INT32, &city_kingdome().invasion.count);
     iob->bind(BIND_SIGNATURE_INT32, &city_kingdome().invasion.size);
     iob->bind(BIND_SIGNATURE_UINT16, &city_kingdome().invasion.soldiers_killed);
-    iob->bind(BIND_SIGNATURE_UINT8, &data.military.infantry_batalions);
+    iob->bind(BIND_SIGNATURE_UINT8, &city_military().infantry_batalions);
     iob->bind____skip(1);
     iob->bind(BIND_SIGNATURE_INT8, &god_osiris.sank_ships);
     iob->bind(BIND_SIGNATURE_UINT8, &city_migration().percentage_by_sentiment);
@@ -480,10 +481,10 @@ static void city_data_bind_og_layout(io_buffer* iob) {
     iob->bind____skip(3);
     iob->bind(BIND_SIGNATURE_INT8, &g_distant_battle.battle.total_count);
     iob->bind____skip(4);
-    iob->bind(BIND_SIGNATURE_UINT8, &data.military.total_batalions);
-    iob->bind(BIND_SIGNATURE_UINT8, &data.military.kingdome_service_batalions);
+    iob->bind(BIND_SIGNATURE_UINT8, &city_military().total_batalions);
+    iob->bind(BIND_SIGNATURE_UINT8, &city_military().kingdome_service_batalions);
     iob->bind____skip(1);
-    iob->bind(BIND_SIGNATURE_UINT8, &data.military.total_soldiers);
+    iob->bind(BIND_SIGNATURE_UINT8, &city_military().total_soldiers);
     iob->bind____skip(4);
     iob->bind(BIND_SIGNATURE_INT32, &data.buildings.trade_center_building_id);
     iob->bind(BIND_SIGNATURE_INT32, &data.figures.soldiers);

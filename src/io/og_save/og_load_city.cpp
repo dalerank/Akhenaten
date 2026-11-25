@@ -1,4 +1,5 @@
 #include "io/og_save/og_load.h"
+#include "city/military.h"
 #include "city/coverage.h"
 #include "city/city_mission.h"
 #include "city/city_kingdome_relations.h"
@@ -283,9 +284,9 @@ namespace og {
         assign(city_population().people_in_residences, p.people_in_residences_and_up);
         assign(g_city.figures.kingdome_soldiers, p.kingdom_soldiers);
         assign(city_ratings().monument_destroyed_buildings, p.destroyed_buildings);
-        assign(g_city.military.total_batalions, p.total_legions);
-        assign(g_city.military.kingdome_service_batalions, p.empire_service_legions);
-        assign(g_city.military.total_soldiers, p.total_soldiers);
+        assign(city_military().total_batalions, p.total_legions);
+        assign(city_military().kingdome_service_batalions, p.empire_service_legions);
+        assign(city_military().total_soldiers, p.total_soldiers);
         assign(g_city.buildings.trade_center_building_id, p.trade_center_building_id);
         assign(g_city.figures.soldiers, p.soldiers);
         assign(city_sound().march_enemy, p.sound_march_enemy);

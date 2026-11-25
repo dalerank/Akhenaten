@@ -103,7 +103,6 @@ void city_t::init() {
     zero_fill(buildings);
     zero_fill(figures);
     zero_fill(houses);
-    zero_fill(military);
     zero_fill(resource);
     zero_fill(map);
 

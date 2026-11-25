@@ -3,6 +3,7 @@
 #include <cstdint>
 
 #include "core/archive.h"
+#include "city/military.h"
 
 struct city_military_t {
     uint8_t total_batalions;
@@ -23,6 +24,7 @@ struct city_military_t {
     void request_tower_sentry();
     void decay_tower_sentry_request();
     bool has_tower_sentry_request() const;
+    void reset();
 };
 ANK_CONFIG_PROPERTY(city_military_t,
     total_batalions,
@@ -30,5 +32,7 @@ ANK_CONFIG_PROPERTY(city_military_t,
     kingdome_service_batalions,
     infantry_batalions,
     native_attack_duration);
+
+city_military_t& city_military();
 
 int city_military_distant_battle_kingdome_months_traveled();

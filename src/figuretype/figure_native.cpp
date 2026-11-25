@@ -64,7 +64,7 @@ void figure_native::figure_action() {
         base.wait_ticks++;
         if (base.wait_ticks > NATIVE_WAIT_TICKS + (id() & NATIVE_WAIT_SPREAD)) {
             base.wait_ticks = 0;
-            if (!g_city.military.is_native_attack_active()) {
+            if (!city_military().is_native_attack_active()) {
                 building *meeting = building_get(b->native_meeting_center_id);
                 int x_tile = 0;
                 int y_tile = 0;
