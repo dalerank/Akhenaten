@@ -463,6 +463,10 @@ void sound_manager_t::music_update(bool force) {
 
     const int mission = music_current_mission();
     if (music_playlist_has_mission(mission)) {
+        if (force) {
+            music.og = {};
+            stop_music();
+        }
         if (!music_playing()) {
             og_music_update(mission);
         }
