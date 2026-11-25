@@ -132,16 +132,24 @@ vfs::path extract_pack_path(const vfs::path &path) {
     return result;
 }
 
-vfs::path extract_pack_name(const vfs::path &path) {
-    vfs::path result = extract_pack_path(path);
+static bool is_same_pack(const vfs::path &mounted, const vfs::path &wanted) {
+    if (mounted == wanted) {
+        return true;
+    }
+    const bool mounted_longer = mounted.len() > wanted.len();
+    const vfs::path tail("/", mounted_longer ? wanted.c_str() : mounted.c_str());
+    return (mounted_longer ? mounted : wanted).ends_with(tail.c_str());
+}
 
-    pcstr begin_packname = strstr_rev(result, "/");
-    if (begin_packname) {
-        result = begin_packname + 1; // in case of Windows backslash
-        return result;
+static ZipArchive *find_mounted_archive(const vfs::path &path) {
+    const vfs::path pack_path = extract_pack_path(path);
+    if (pack_path.empty()) {
+        return nullptr;
     }
 
-    return {};
+    const auto it = std::find_if(g_mounted_archives.begin(), g_mounted_archives.end(),
+      [&pack_path](const ZipArchive *arch) { return is_same_pack(arch->filepath(), pack_path); });
+    return (it == g_mounted_archives.end()) ? nullptr : *it;
 }
 
 reader file_open(path path, pcstr mode) {
@@ -151,16 +159,11 @@ reader file_open(path path, pcstr mode) {
     const char *is_sgx = strstr(path, ".sgx/");
 
     if (!path.empty() && (!!is_zip || !!is_sgx)) {
-        const vfs::path pack_name = extract_pack_name(path);
-        const auto it = std::find_if(g_mounted_archives.begin(), g_mounted_archives.end(), [&pack_name] (const ZipArchive *arch) {
-            return arch->filepath().ends_with(pack_name);
-        });
-
-        if (it == g_mounted_archives.end()) {
+        ZipArchive *archive = find_mounted_archive(path);
+        if (!archive) {
             return reader();
         }
 
-        auto archive = *it;
         pcstr path_pos = (is_zip ? is_zip : is_sgx);
         const vfs::path filename = (path_pos + 5);
         reader data = archive->createAndOpenFile(filename, mode);
@@ -318,19 +321,12 @@ bool mounted_entry_resolve(path in_path, path &out_path) {
         return false;
     }
 
-    const path pack_name = extract_pack_name(in_path);
-    if (pack_name.empty()) {
+    const ZipArchive *archive = find_mounted_archive(in_path);
+    if (!archive) {
         return false;
     }
 
-    const auto it = std::find_if(g_mounted_archives.begin(), g_mounted_archives.end(), [&pack_name] (const ZipArchive *arch) {
-        return arch->filepath().ends_with(pack_name);
-    });
-    if (it == g_mounted_archives.end()) {
-        return false;
-    }
-
-    const auto &entries = (*it)->entries();
+    const auto &entries = archive->entries();
     for (const auto &entry : entries) {
         if (entry.empty()) {
             continue;
@@ -340,7 +336,7 @@ bool mounted_entry_resolve(path in_path, path &out_path) {
         }
 
         // Rebuild URI with the pack path used at mount time + archive entry casing.
-        out_path = path((*it)->filepath().c_str(), "/", entry.c_str());
+        out_path = path(archive->filepath().c_str(), "/", entry.c_str());
         return true;
     }
 

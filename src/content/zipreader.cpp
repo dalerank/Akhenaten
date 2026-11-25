@@ -151,8 +151,8 @@ namespace vfs {
         _data->r(&entry.header.DataDescriptor.UncompressedSize, 4);
 
         // now we've filled all the fields, this is just a standard deflate block
-        _entries.push_back(ZipFileName.c_str());
         _names.push_back(ZipFileName.c_str());
+        _entries.push_back(ZipFileName.tolower().c_str());
         _files.push_back(entry);
         return true;
     }
@@ -290,9 +290,10 @@ namespace vfs {
 
     //! opens a file by file name
     reader ZipArchive::createAndOpenFile(const vfs::path &filename, pcstr mode) {
-        const auto it = std::find_if(_entries.begin(), _entries.end(), [&filename] (const xstring &entry) {
-            return !entry.empty() && entry == filename;
-        });
+        vfs::path wanted = filename;
+        wanted.tolower();
+        const auto it = std::find_if(_entries.begin(), _entries.end(),
+          [&wanted](const xstring& entry) { return !entry.empty() && entry == wanted; });
 
         if (it == _entries.end()) {
             logs::warn("File %s not found in archive %s", filename.c_str(), _filepath.c_str());
