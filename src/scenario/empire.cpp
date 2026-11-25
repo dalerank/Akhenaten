@@ -33,6 +33,7 @@ void scenario_empire_process_expansion() {
 class scenario_empire_system : public sim_system {
 public:
     const char* name() const override { return "scenario_empire"; }
+    void on_reset() override {}
     void register_steps(sim_schedule_t& schedule) override {
         schedule.add({sim_step_empire_expansion, SIM_PHASE_YEAR, [](int) { scenario_empire_process_expansion(); }});
     }

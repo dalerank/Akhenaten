@@ -645,6 +645,10 @@ void formation_update_all(bool skip_morale) {
 class formation_system : public sim_system {
 public:
     const char* name() const override { return "formation"; }
+    void on_reset() override {
+        g_formations.clear_all();
+        g_enemy_armies.clear();
+    }
     void register_steps(sim_schedule_t& schedule) override {
         schedule.add({sim_step_formations, SIM_PHASE_TICK, [](int tick) {
                           if (tick != 5) {

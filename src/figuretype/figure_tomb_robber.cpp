@@ -726,6 +726,7 @@ int figure_tomb_robber::try_professional_wave() {
 class tomb_robber_system : public sim_system {
 public:
     const char* name() const override { return "tomb_robber"; }
+    void on_reset() override {}
     void register_steps(sim_schedule_t& schedule) override {
         schedule.add({sim_step_tomb_robbers_month, SIM_PHASE_MONTH_CITY, [](int) {
                           if (game_features::gameplay_change_tomb_robber_remake.to_bool()) {

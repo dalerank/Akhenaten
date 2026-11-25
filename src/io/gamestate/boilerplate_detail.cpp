@@ -33,6 +33,7 @@
 #include "game/game.h"
 #include "game/game_config.h"
 #include "game/game_events.h"
+#include "game/simulation.h"
 #include "game/undo.h"
 #include "grid/bridge_grid.h"
 #include "grid/building.h"
@@ -60,7 +61,6 @@
 #include "scenario/invasion_auto_resolve.h"
 #include "scenario/scenario.h"
 #include "game/mission.h"
-#include "widget/widget_figure_follow.h"
 
 #include <algorithm>
 #include <cassert>
@@ -73,31 +73,22 @@ const int GamestateLoadDetail::read_file_version(const char* filename, int offse
     return version_probe_buf->read_i32();
 }
 
-void GamestateLoadDetail::pre_load() { // do we NEED this...?
+void GamestateLoadDetail::pre_load() {
     OZZY_PROFILER_FUNCTION();
-    g_scenario.campaign_scenario_id = -1;
     grid_xx::init_all_grids();
 
-    // clear data
-    city_victory().reset();
-    city_migration().clear_conditions();
-    g_city_planner.reset();
-    city_init();
+    g_simulation.reset_systems();
     events::start_session();
     game.init_state();
     game.animation_timers_init();
-    io_chunk::reset_all();
     figure_name_init();
     grid_xx::clear_all_grids();
-    map_figure_draw_states_clear_all();
 
     map_image_context_init();
     map_random_init();
 
     events::emit(event_game_mission_pre_load{});
     events::process();
-
-    g_figure_follow.stop();
 }
 
 void GamestateLoadDetail::post_load() {

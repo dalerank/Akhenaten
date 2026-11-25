@@ -510,6 +510,7 @@ void scenario_data_t::update() {
 class scenario_system : public sim_system {
 public:
     const char* name() const override { return "scenario"; }
+    void on_reset() override { g_scenario.campaign_scenario_id = -1; }
     void push_save_sections(int file_version) override {
         if (file_version >= save_version_city_sections) {
             g_chunk_io.push_chunk<city_scenario_chunk>(city_scenario_chunk::size, false);

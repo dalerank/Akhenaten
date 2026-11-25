@@ -77,6 +77,7 @@ enum e_place_reservoir {
 build_planner g_city_planner;
 
 static void city_planner_subscribe_events() {
+    g_city_planner.reset();
     g_city_planner.subscribe_events();
 }
 static events::session_subscriber g_city_planner_session(&city_planner_subscribe_events);

@@ -32,7 +32,3 @@ void iob_enemy_armies_stats_chunk::load_defaults(size_t version) {
     g_enemy_army_in_city = {};
     g_enemy_armies.clear();
 }
-
-void iob_enemy_armies_stats_chunk::reset() {
-    g_enemy_armies.clear();
-}

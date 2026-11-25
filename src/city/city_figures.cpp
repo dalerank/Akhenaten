@@ -1,4 +1,5 @@
 #include "city_figures.h"
+#include "figure/route.h"
 #include "game/simulation.h"
 #include "core/app_module.h"
 #include "game/sim_schedule.h"
@@ -220,7 +221,13 @@ void figure_clear_all() {
 class figures_system : public sim_system {
 public:
     const char* name() const override { return "figures"; }
-    void on_reset() override { city_figures().reset(); }
+    void on_reset() override {
+        city_figures().reset();
+        city_figures().init_figures();
+        figure_clear_all();
+        figure_route_clear_all();
+        map_figure_draw_states_clear_all();
+    }
     void push_save_sections(int file_version) override {
         if (file_version >= save_version_city_sections) {
             g_chunk_io.push_chunk<city_figures_chunk>(city_figures_chunk::size, false);

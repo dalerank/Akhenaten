@@ -376,6 +376,7 @@ void building_update_state() {
 class building_states_system : public sim_system {
 public:
     const char* name() const override { return "building_states"; }
+    void on_reset() override {}
     void register_steps(sim_schedule_t& schedule) override {
         schedule.add({sim_step_building_state, SIM_PHASE_TICK, [](int tick) {
                           if (tick != 40) {

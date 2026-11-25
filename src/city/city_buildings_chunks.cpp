@@ -140,10 +140,6 @@ void buildings_chunk::bind_data(io_buffer* iob, size_t version) {
     // building_extra_data.created_sequence = 0;
 }
 
-void buildings_chunk::reset() {
-    building_clear_all();
-}
-
 namespace {
     struct stub_records_guard_t {
         bool armed = false;

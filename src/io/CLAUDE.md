@@ -71,11 +71,11 @@ Chunk names are on-disk keys: max `svx::NAME_LEN` (32), no silent truncation.
 
 ### io_buffer
 
-Typed bind/read/write over a chunk buffer. `io_chunk_of<T>` adapts a chunk type to it: it registers one object per type the schemas use, calls `T::bind_data`, makes the chunk optional when `T::load_defaults` exists, and calls `T::reset()` before a load.
+Typed bind/read/write over a chunk buffer. `io_chunk_of<T>` adapts a chunk type to it: it registers one object per type the schemas use, calls `T::bind_data` and makes the chunk optional when `T::load_defaults` exists.
 
 ## Adding a New Save Chunk
 
-1. In `<module>_chunks.h` next to the module that owns the state, declare `struct short_name_chunk { static constexpr const char* name = "short_name"; static void bind_data(io_buffer* iob, size_t version); };`, adding `static void load_defaults(size_t version)` for a chunk older files may lack and `static void reset()` to clear the state before a load. Define them in the module's .cpp. A chunk that only holds a grid derives `grid_chunk<short_name_chunk, FS_UINT8>` (or `optional_grid_chunk` to clear it when older files lack it) and the module uses `short_name_chunk::grid`.
+1. In `<module>_chunks.h` next to the module that owns the state, declare `struct short_name_chunk { static constexpr const char* name = "short_name"; static void bind_data(io_buffer* iob, size_t version); };`, adding `static void load_defaults(size_t version)` for a chunk older files may lack. Define them in the module's .cpp. A chunk that only holds a grid derives `grid_chunk<short_name_chunk, FS_UINT8>` (or `optional_grid_chunk` to clear it when older files lack it) and the module uses `short_name_chunk::grid`.
 2. Include that `_chunks.h` in the schema and call `push_chunk<short_name_chunk>(size, compressed)` in `file_schema_svx.cpp` for `FILE_FORMAT_SAVE_FILE_EXT` (name ≤ 32 chars).
 3. Bump `latest_save_version` only if existing field layout/meaning changes — or when gating the new chunk with `if (file_version > N)` until the version cascade is cleaned up.
 4. Do not rename existing chunk names without an alias plan — names are part of the `.svx` format.

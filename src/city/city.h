@@ -4,7 +4,6 @@
 #include "core/xstring.h"
 #include "game/player_record.h"
 
-void city_init();
 void city_reload_objects();
 void city_on_post_load();
 void city_before_start_simulation();

@@ -174,6 +174,7 @@ void city_crime_t::update_day() {
 class crime_system : public sim_system {
 public:
     const char* name() const override { return "crime"; }
+    void on_reset() override {}
     void register_steps(sim_schedule_t& schedule) override {
         schedule.add({sim_step_crime, SIM_PHASE_TICK, [](int tick) {
                           if (tick != 30) {

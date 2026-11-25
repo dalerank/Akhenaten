@@ -588,6 +588,7 @@ void distant_battles_t::update_time_traveled() {
 class distant_battle_system : public sim_system {
 public:
     const char* name() const override { return "distant_battle"; }
+    void on_reset() override { g_distant_battle.clear(); }
     void push_save_sections(int file_version) override {
         if (file_version >= save_version_city_sections) {
             g_chunk_io.push_chunk<city_distant_battle_chunk>(city_distant_battle_chunk::size, false);

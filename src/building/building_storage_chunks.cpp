@@ -29,10 +29,6 @@ void building_storages_chunk::bind_data(io_buffer* iob, size_t version) {
     }
 }
 
-void building_storages_chunk::reset() {
-    building_storage_clear_all();
-}
-
 // Empty All order snapshot — appended chunk (save v175+), raw blob.
 void storages_empty_all_backup_chunk::bind_data(io_buffer* iob, size_t version) {
     auto& backups = xvalue<building_storages_t>::ref().empty_all_backups;

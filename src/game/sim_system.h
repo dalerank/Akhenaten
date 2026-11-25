@@ -12,7 +12,7 @@ public:
 
     virtual const char* name() const = 0;
     virtual void register_steps(sim_schedule_t& schedule) {}
-    virtual void on_reset() {}
+    virtual void on_reset() = 0;
     virtual void on_load(e_load_phase phase) {}
     virtual void on_reload_config() {}
     virtual void push_save_sections(int file_version) {}

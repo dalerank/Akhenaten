@@ -144,6 +144,7 @@ static events::session_subscriber g_message_manager_session(&message_manager_sub
 class messages_system : public sim_system {
 public:
     const char* name() const override { return "messages"; }
+    void on_reset() override { message_manager().init(); }
     void register_steps(sim_schedule_t& schedule) override {
         schedule.add({sim_step_messages, SIM_PHASE_MONTH, [](int) { message_manager().decrease_delays(); }});
     }

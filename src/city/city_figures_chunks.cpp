@@ -14,11 +14,6 @@ void figures_chunk::bind_data(io_buffer* iob, size_t version) {
     }
 }
 
-void figures_chunk::reset() {
-    stub_records_guard_reset();
-    city_figures().init_figures();
-}
-
 void figure_sequence_chunk::bind_data(io_buffer* iob, size_t version) {
     iob->bind____skip(4);
     // iob->bind(BIND_SIGNATURE_INT32, &g_figure_data.created_sequence);

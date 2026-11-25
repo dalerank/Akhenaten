@@ -157,6 +157,7 @@ void city_fishing_points_t::update_month(int points_num) {
 class fishing_points_system : public sim_system {
 public:
     const char* name() const override { return "fishing_points"; }
+    void on_reset() override {}
     void register_steps(sim_schedule_t& schedule) override {
         schedule.add({sim_step_fishing_points, SIM_PHASE_MONTH_CITY, [](int) {
                           if (game_features::gameplay_change_fishing_points_monthly_respawn.to_bool()

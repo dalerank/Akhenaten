@@ -17,6 +17,7 @@ recorded_paths_t& recorded_paths() {
 class recorded_paths_system : public sim_system {
 public:
     const char* name() const override { return "recorded_paths"; }
+    void on_reset() override { recorded_paths().clear(); }
     void push_save_sections(int file_version) override { g_chunk_io.push_chunk<recorded_paths_chunk>(295680, true); }
 };
 

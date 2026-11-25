@@ -249,9 +249,6 @@ public:
 
     bool is_optional() const { return presence == optional; }
     virtual void load_defaults(size_t version) {}
-    virtual void reset() {}
-
-    static void reset_all();
 
 private:
     e_presence presence;
@@ -267,11 +264,6 @@ struct io_chunk_has_defaults : std::false_type {};
 template <typename T>
 struct io_chunk_has_defaults<T, std::void_t<decltype(T::load_defaults(size_t(0)))>> : std::true_type {};
 
-template <typename T, typename = void>
-struct io_chunk_has_reset : std::false_type {};
-template <typename T>
-struct io_chunk_has_reset<T, std::void_t<decltype(T::reset())>> : std::true_type {};
-
 template <typename T>
 class io_chunk_of : public io_chunk {
 public:
@@ -280,12 +272,6 @@ public:
     void load_defaults(size_t version) override {
         if constexpr (io_chunk_has_defaults<T>::value) {
             T::load_defaults(version);
-        }
-    }
-
-    void reset() override {
-        if constexpr (io_chunk_has_reset<T>::value) {
-            T::reset();
         }
     }
 

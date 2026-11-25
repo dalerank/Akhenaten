@@ -47,9 +47,3 @@ io_chunk::io_chunk(const char* name, e_presence _presence) : presence(_presence)
     }
     chunk_registry().emplace_back(name, this);
 }
-
-void io_chunk::reset_all() {
-    for (const auto& [chunk_name, chunk] : chunk_registry()) {
-        chunk->reset();
-    }
-}

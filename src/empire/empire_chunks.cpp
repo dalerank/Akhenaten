@@ -42,7 +42,3 @@ void empire_cities_chunk::bind_data(io_buffer* iob, size_t version) {
         iob->bind____skip(7);
     }
 }
-
-void empire_cities_chunk::reset() {
-    g_empire.clear_cities_data();
-}

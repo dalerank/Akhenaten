@@ -379,7 +379,10 @@ void city_finance_t::reset() {
 class finance_sim_system : public sim_system {
 public:
     const char* name() const override { return "finance"; }
-    void on_reset() override { city_finance().reset(); }
+    void on_reset() override {
+        city_finance().reset();
+        city_finance().init();
+    }
     void push_save_sections(int file_version) override {
         if (file_version >= save_version_city_sections) {
             g_chunk_io.push_chunk<city_finance_chunk>(city_finance_chunk::size, false);

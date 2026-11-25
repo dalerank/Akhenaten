@@ -1,4 +1,5 @@
 #include "map.h"
+#include "grid/routing/routing.h"
 #include "grid/desirability.h"
 #include "city/military.h"
 #include "game/simulation.h"
@@ -76,7 +77,10 @@ tile2i city_map_t::closest_exit_tile_within_radius(int size, int radius) {
 class map_system : public sim_system {
 public:
     const char* name() const override { return "map"; }
-    void on_reset() override { city_map().reset(); }
+    void on_reset() override {
+        city_map().reset();
+        map_routing_stats_clear();
+    }
     void push_save_sections(int file_version) override {
         if (file_version >= save_version_city_sections) {
             g_chunk_io.push_chunk<city_map_chunk>(city_map_chunk::size, false);

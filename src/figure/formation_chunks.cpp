@@ -91,10 +91,6 @@ void formations_chunk::bind_data(io_buffer* iob, size_t version) {
     }
 }
 
-void formations_chunk::reset() {
-    g_formations.clear_all();
-}
-
 void formations_info_chunk::bind_data(io_buffer* iob, size_t version) {
     auto& data = g_formations.formations;
     int tmp = 0;

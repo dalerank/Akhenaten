@@ -27,6 +27,11 @@ declare_console_var_int(figure_follow_offset_y, 0)
 
 figure_follow_t g_figure_follow;
 
+static void figure_follow_session_start() {
+    g_figure_follow.stop();
+}
+static events::session_subscriber g_figure_follow_session(&figure_follow_session_start);
+
 namespace {
 
     constexpr int k_panel_pad = 8;

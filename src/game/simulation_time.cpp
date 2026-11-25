@@ -76,6 +76,7 @@ void simulation_time_t::advance_year() {
 class simulation_time_system : public sim_system {
 public:
     const char* name() const override { return "simulation_time"; }
+    void on_reset() override { g_simulation.simtime.init(2098); }
     void register_steps(sim_schedule_t& schedule) override {
         schedule.add({sim_step_random, SIM_PHASE_TICK_BEGIN, [](int) { random_generate_next(); }});
         schedule.add({sim_step_event_advance_day, SIM_PHASE_DAY,

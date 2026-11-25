@@ -81,6 +81,7 @@ void city_finance_t::distribute_treasury() {
 class government_system : public sim_system {
 public:
     const char* name() const override { return "government"; }
+    void on_reset() override {}
     void register_steps(sim_schedule_t& schedule) override {
         schedule.add({sim_step_distribute_treasury, SIM_PHASE_TICK, [](int tick) {
                           if (tick != 34) {

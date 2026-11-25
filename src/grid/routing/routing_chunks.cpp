@@ -18,7 +18,3 @@ void junk8_chunk::bind_data(io_buffer* iob, size_t version) {
     iob->bind____skip(2); // ??? something empire map related?
     iob->bind____skip(8); // ??? something storage related?
 }
-
-void junk8_chunk::reset() {
-    map_routing_stats_clear();
-}

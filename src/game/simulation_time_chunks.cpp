@@ -13,7 +13,3 @@ void game_time_chunk::bind_data(io_buffer* iob, size_t version) {
     iob->bind(BIND_SIGNATURE_INT32, &data.year);
     iob->bind(BIND_SIGNATURE_INT32, &data.total_days);
 }
-
-void game_time_chunk::reset() {
-    g_simulation.simtime.init(2098);
-}

@@ -616,7 +616,6 @@ io/gamestate/boilerplate.cpp -> window/file_dialog_common.h
 io/gamestate/boilerplate.cpp -> window/popup_dialog.h
 io/gamestate/boilerplate.cpp -> window/window_city.h
 io/gamestate/boilerplate.h -> content/dir.h
-io/gamestate/boilerplate_detail.cpp -> widget/widget_figure_follow.h
 io/gamestate/file_schemas.h -> content/file_formats.h
 io/io.cpp -> content/zipreader.hpp
 io/io.h -> content/dir.h

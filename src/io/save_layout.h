@@ -79,5 +79,4 @@ struct save_layouts_chunk {
     static constexpr int SIZE = 4 + MAX_ENTRIES * (NAME_LEN + 2);
     static void bind_data(io_buffer* iob, size_t version);
     static void load_defaults(size_t version);
-    static void reset();
 };

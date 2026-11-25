@@ -84,7 +84,3 @@ void save_layouts_chunk::bind_data(io_buffer* iob, size_t version) {
 void save_layouts_chunk::load_defaults(size_t version) {
     save_layouts::clear();
 }
-
-void save_layouts_chunk::reset() {
-    save_layouts::clear();
-}

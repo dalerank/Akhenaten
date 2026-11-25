@@ -43,6 +43,7 @@ void building_update_desirability(void) {
 class desirability_system : public sim_system {
 public:
     const char* name() const override { return "desirability"; }
+    void on_reset() override {}
     void register_steps(sim_schedule_t& schedule) override {
         schedule.add({sim_step_building_desirability, SIM_PHASE_TICK, [](int tick) {
                           if (tick != 38) {

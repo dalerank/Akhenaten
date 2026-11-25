@@ -358,6 +358,7 @@ int figure_funeral_walker::try_spawn_all(bool force_ignore_road) {
 class funeral_walker_system : public sim_system {
 public:
     const char* name() const override { return "funeral_walker"; }
+    void on_reset() override {}
     void register_steps(sim_schedule_t& schedule) override {
         schedule.add(
           {sim_step_funeral_walkers, SIM_PHASE_DAY, [](int) { figure_funeral_walker::try_spawn_all(false); }});

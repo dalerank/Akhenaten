@@ -18,6 +18,7 @@ void city_monuments_t::advance_year() {
 class monuments_system : public sim_system {
 public:
     const char* name() const override { return "monuments"; }
+    void on_reset() override {}
     void register_steps(sim_schedule_t& schedule) override {
         schedule.add({sim_step_monuments_year, SIM_PHASE_YEAR, [](int) { city_monuments().advance_year(); }});
     }

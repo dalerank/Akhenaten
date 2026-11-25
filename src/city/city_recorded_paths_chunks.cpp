@@ -68,7 +68,3 @@ void recorded_paths_chunk::load_defaults(size_t version) {
     // previous session's pool
     recorded_paths().clear();
 }
-
-void recorded_paths_chunk::reset() {
-    recorded_paths().clear();
-}

@@ -1,4 +1,6 @@
 #include "buildings.h"
+#include "city/city_buildings.h"
+#include "building/building_storage.h"
 #include "scenario/scenario.h"
 #include "building/building_granary.h"
 #include "city/city_health.h"
@@ -368,7 +370,11 @@ bool city_buildings_t::determine_granary_get_foods(resource_list& foods, int roa
 class buildings_system : public sim_system {
 public:
     const char* name() const override { return "buildings"; }
-    void on_reset() override { city_building_stats().reset(); }
+    void on_reset() override {
+        city_building_stats().reset();
+        building_storage_clear_all();
+        building_clear_all();
+    }
     void push_save_sections(int file_version) override {
         if (file_version >= save_version_city_sections) {
             g_chunk_io.push_chunk<city_buildings_chunk>(city_buildings_chunk::size, false);

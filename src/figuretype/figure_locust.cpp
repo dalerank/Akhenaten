@@ -192,6 +192,7 @@ ANK_FUNCTION(__locust_start_plague)
 class locust_system : public sim_system {
 public:
     const char* name() const override { return "locust"; }
+    void on_reset() override {}
     void register_steps(sim_schedule_t& schedule) override {
         schedule.add({sim_step_locusts_month, SIM_PHASE_MONTH,
           [](int) { figure_locust::update_month(g_simulation.simtime.month + 1); }});

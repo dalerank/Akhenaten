@@ -41,10 +41,6 @@ void messages_chunk::bind_data(io_buffer* iob, size_t version) {
     }
 }
 
-void messages_chunk::reset() {
-    message_manager().init();
-}
-
 void message_extra_chunk::bind_data(io_buffer* iob, size_t version) {
     auto& data = message_manager();
     iob->bind(BIND_SIGNATURE_INT32, &data.next_message_sequence);

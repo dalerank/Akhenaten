@@ -300,6 +300,7 @@ int building_get_workshop_for_raw_material(tile2i tile, e_resource resource, int
 class industry_system : public sim_system {
 public:
     const char* name() const override { return "industry"; }
+    void on_reset() override {}
     void register_steps(sim_schedule_t& schedule) override {
         schedule.add({sim_step_industry_production, SIM_PHASE_TICK, [](int tick) {
                           if (tick != 20) {

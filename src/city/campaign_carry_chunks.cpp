@@ -25,10 +25,6 @@ void campaign_carry_troops_chunk::load_defaults(size_t version) {
     g_campaign_carry.clear_troops();
 }
 
-void campaign_carry_troops_chunk::reset() {
-    g_campaign_carry.clear_troops();
-}
-
 void campaign_carry_monuments_chunk::bind_data(io_buffer* iob, size_t version) {
     for (int i = 0; i < CAMPAIGN_CARRY_MONUMENT_MAX; i++) {
         auto& s = g_campaign_carry.monuments[i];
@@ -43,9 +39,5 @@ void campaign_carry_monuments_chunk::bind_data(io_buffer* iob, size_t version) {
 }
 
 void campaign_carry_monuments_chunk::load_defaults(size_t version) {
-    g_campaign_carry.clear_monuments();
-}
-
-void campaign_carry_monuments_chunk::reset() {
     g_campaign_carry.clear_monuments();
 }

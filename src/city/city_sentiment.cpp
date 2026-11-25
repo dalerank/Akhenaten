@@ -382,7 +382,10 @@ void city_sentiment_t::reset() {
 class sentiment_sim_system : public sim_system {
 public:
     const char* name() const override { return "sentiment"; }
-    void on_reset() override { city_sentiment().reset(); }
+    void on_reset() override {
+        city_sentiment().reset();
+        city_sentiment().init();
+    }
     void push_save_sections(int file_version) override {
         if (file_version >= save_version_city_sections) {
             g_chunk_io.push_chunk<city_sentiment_chunk>(city_sentiment_chunk::size, false);

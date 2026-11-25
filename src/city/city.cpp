@@ -186,14 +186,6 @@ void city_buildings_t::generate_figures() {
     }
 }
 
-void city_init() {
-    g_simulation.reset_systems();
-    g_distant_battle.clear();
-    figure_clear_all();
-    city_sentiment().init();
-    city_finance().init();
-}
-
 void city_reload_objects() {
     city_building_stats().reload_objects();
     city_figures().reload_objects();

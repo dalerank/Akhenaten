@@ -513,6 +513,7 @@ int empire_t::random_city() {
 class empire_system : public sim_system {
 public:
     const char* name() const override { return "empire"; }
+    void on_reset() override { g_empire.clear_cities_data(); }
     void register_steps(sim_schedule_t& schedule) override {
         schedule.add({sim_step_empire_month, SIM_PHASE_MONTH, [](int) { g_empire.update_month(); }});
         schedule.add(
