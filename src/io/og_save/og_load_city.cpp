@@ -1,4 +1,5 @@
 #include "io/og_save/og_load.h"
+#include "city/city_mission.h"
 #include "city/city_kingdome_relations.h"
 #include "city/city_religion.h"
 #include "city/city_finance.h"
@@ -299,8 +300,8 @@ namespace og {
         assign(g_city.resource.luxury_goods_kinds, p.luxury_goods_kinds);
         assign(g_city.houses.missing.second_luxury, p.houses_missing_second_luxury);
         assign(city_entertainment().senet_house_has_plays, p.senet_house_has_plays);
-        assign(g_city.mission.fired_message_shown, p.fired_message_shown);
-        assign(g_city.mission.victory_message_shown, p.victory_message_shown);
+        assign(city_mission().fired_message_shown, p.fired_message_shown);
+        assign(city_mission().victory_message_shown, p.victory_message_shown);
         assign(g_city.figures.attacking_natives, p.attacking_natives);
         g_city.buildings.festival_square = tile2i(p.festival_square_x, p.festival_square_y);
         assign(city_gods().ra_no_traders_months_left, p.ra_no_traders_months);

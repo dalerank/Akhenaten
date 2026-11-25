@@ -1,4 +1,5 @@
 #include "city/city_chunks.h"
+#include "city/city_mission.h"
 #include "city/city_kingdome_relations.h"
 #include "city/city_religion.h"
 #include "city/city_finance.h"
@@ -508,9 +509,9 @@ static void city_data_bind_og_layout(io_buffer* iob) {
     iob->bind(BIND_SIGNATURE_UINT8, &city_entertainment().pavilion_message_shown);
     iob->bind____skip(3);
     iob->bind(BIND_SIGNATURE_UINT8, &city_migration().emigration_message_shown);
-    iob->bind(BIND_SIGNATURE_UINT8, &data.mission.fired_message_shown);
+    iob->bind(BIND_SIGNATURE_UINT8, &city_mission().fired_message_shown);
     iob->bind____skip(3);
-    iob->bind(BIND_SIGNATURE_UINT8, &data.mission.victory_message_shown);
+    iob->bind(BIND_SIGNATURE_UINT8, &city_mission().victory_message_shown);
     iob->bind____skip(15);
     iob->bind(BIND_SIGNATURE_INT32, &data.figures.attacking_natives);
     iob->bind____skip(28);
@@ -583,11 +584,4 @@ void building_list_small_chunk::bind_data(io_buffer* iob, size_t version) {
 void building_list_large_chunk::bind_data(io_buffer* iob, size_t version) {
     iob->bind____skip(6000);
     g_scenario.bind_data(iob, version, 2000);
-}
-
-void city_mission_chunk::bind_data(io_buffer* iob, size_t version) {
-    auto& data = g_city;
-    iob->bind(BIND_SIGNATURE_UINT8, &data.mission.fired_message_shown);
-    iob->bind(BIND_SIGNATURE_UINT8, &data.mission.victory_message_shown);
-    verify_no_crash(iob->get_offset() == city_mission_chunk::size);
 }

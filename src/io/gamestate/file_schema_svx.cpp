@@ -118,7 +118,6 @@ void file_schema_svx(const int file_version) {
         g_chunk_io.push_chunk<city_houses_chunk>(city_houses_chunk::size, false);
         g_chunk_io.push_chunk<city_avg_coverage_chunk>(city_avg_coverage_chunk::size, false);
         g_chunk_io.push_chunk<city_scenario_chunk>(city_scenario_chunk::size, false);
-        g_chunk_io.push_chunk<city_mission_chunk>(city_mission_chunk::size, false);
         g_chunk_io.push_chunk<city_food_supply_chunk>(city_food_supply_chunk::size, false);
     }
     g_chunk_io.push_chunk<buildings_chunk>(1056000, false);

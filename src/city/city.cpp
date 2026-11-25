@@ -112,7 +112,6 @@ void city_t::init() {
     zero_fill(monuments);
     zero_fill(coverage);
     zero_fill(map);
-    zero_fill(mission);
 
     g_simulation.reset_systems();
     g_distant_battle.clear();

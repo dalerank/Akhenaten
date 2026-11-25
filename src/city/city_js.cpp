@@ -1,4 +1,5 @@
 ﻿#include "js/js_game.h"
+#include "city/city_mission.h"
 #include "city/city_kingdome_relations.h"
 #include "city/ratings.h"
 #include "city/city_migration.h"
@@ -474,10 +475,7 @@ bool __city_can_produce_resource(int resource) {
 }
 ANK_FUNCTION_1(__city_can_produce_resource)
 
-ANK_GLOBAL_OBJECT(g_city.mission, __city_mission,
-    fired_message_shown,
-    victory_message_shown
-    );
+ANK_GLOBAL_OBJECT(city_mission(), __city_mission, fired_message_shown, victory_message_shown);
 
 ANK_GLOBAL_OBJECT(city_victory(), __city_victory, state, force_win, force_lost, lost_by_population, lost_can_replay);
 

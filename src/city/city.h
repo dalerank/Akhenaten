@@ -42,13 +42,6 @@ struct city_t {
 
     city_map_t map;
 
-    struct {
-        bool fired_message_shown;
-        bool victory_message_shown;
-        bool reserved;
-        int32_t reserved_2;
-    } mission;
-
 
     void houses_reset_demands();
     void houses_calculate_culture_demands();
