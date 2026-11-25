@@ -7,6 +7,8 @@ struct lame_helper {
 	static const int PCM_SIZE = 4096;
 	static const int MP3_SIZE = 4096;
 
+    static void init_decoder_tables();
+
     lame_helper();
 	~lame_helper();
 

@@ -13,6 +13,10 @@ lame_helper::lame_helper() {
 lame_helper::~lame_helper() {
 }
 
+void lame_helper::init_decoder_tables() {
+    hip_decode_exit(hip_decode_init());
+}
+
 vfs::reader lame_helper::decode(const char* mp3_in) {
     vfs::reader mp3 = vfs::file_open(mp3_in, "rb");
     if (!mp3) {
@@ -23,14 +27,6 @@ vfs::reader lame_helper::decode(const char* mp3_in) {
     short int pcm_l[PCM_SIZE], pcm_r[PCM_SIZE];
     unsigned char mp3_buffer[MP3_SIZE];
     std::vector<uint8_t> pcm_data;
-
-    lame_t lame = lame_init();
-    lame_set_decode_only(lame, 1);
-    if (lame_init_params(lame) == -1) {
-        logs::error("parameters failed to initialize properly in lame. Aborting!");
-        lame_close(lame);
-        return vfs::reader();
-    }
 
     hip_t hip = hip_decode_init();
     mp3data_struct mp3data;
@@ -81,7 +77,6 @@ vfs::reader lame_helper::decode(const char* mp3_in) {
     }
 
     hip_decode_exit(hip);
-    lame_close(lame);
 
     if (channels <= 0 || sample_rate <= 0) {
         logs::error("unable to decode '%s' into PCM data", mp3_in);

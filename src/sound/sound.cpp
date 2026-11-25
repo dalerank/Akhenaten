@@ -21,6 +21,8 @@
 #include <stdint.h>
 #include <vector>
 #include <map>
+#include <atomic>
+#include <mutex>
 
 #ifdef __vita__
 #include <psp2/io/fcntl.h>
@@ -66,8 +68,9 @@ struct music_player_t {
     int buffer_size;
     int cur_read;
     int cur_write;
-    uint64_t custom_stream_bytes_written = 0;
-    uint64_t custom_stream_bytes_read = 0;
+    std::atomic<uint64_t> custom_stream_bytes_written = 0;
+    std::atomic<uint64_t> custom_stream_bytes_read = 0;
+    std::mutex stream_mutex;
     uint32_t custom_stream_bytes_per_second = 0;
     Mix_Music* music;
     vfs::reader current_music_data;
@@ -133,6 +136,7 @@ void sound_manager_t::init() {
     open();
     allocate_channels();
     load_formats();
+    lame_helper::init_decoder_tables();
 }
 
 void sound_manager_t::set_volume(int b, int e, int percentage) {
@@ -764,15 +768,15 @@ bool sound_manager_t::put_custom_audio_stream(uint8_t* audio_data, int len) {
 
 #ifdef USE_SDL_AUDIOSTREAM
     if (_music_player->use_audiostream) {
+        std::unique_lock<std::mutex> lock(_music_player->stream_mutex);
         int available_before = SDL_AudioStreamAvailable(_music_player->stream);
-        if (SDL_AudioStreamPut(_music_player->stream, audio_data, len) == 0) {
-            int available_after = SDL_AudioStreamAvailable(_music_player->stream);
-            if (available_after > available_before) {
-                _music_player->custom_stream_bytes_written += (uint64_t)(available_after - available_before);
-            }
-            return true;
+        const bool put = SDL_AudioStreamPut(_music_player->stream, audio_data, len) == 0;
+        int available_after = SDL_AudioStreamAvailable(_music_player->stream);
+        lock.unlock();
+        if (put && available_after > available_before) {
+            _music_player->custom_stream_bytes_written += (uint64_t)(available_after - available_before);
         }
-        return false;
+        return put;
     }
 #endif
 
@@ -787,7 +791,11 @@ bool sound_manager_t::put_custom_audio_stream(uint8_t* audio_data, int len) {
     SDL_ConvertAudio(&_music_player->cvt);
     int converted_len = _music_player->cvt.len_cvt;
 
-    // Copy data to circular buffer
+    std::unique_lock<std::mutex> lock(_music_player->stream_mutex);
+    const uint64_t buffered = _music_player->custom_stream_bytes_written - _music_player->custom_stream_bytes_read;
+    const int free_bytes = (int)std::max<int64_t>(0, (int64_t)_music_player->buffer_size - (int64_t)buffered);
+    converted_len = std::min(converted_len, free_bytes);
+
     if (converted_len + _music_player->cur_write <= _music_player->buffer_size) {
         memcpy(&_music_player->buffer[_music_player->cur_write], _music_player->cvt.buf, converted_len);
     } else {
@@ -796,12 +804,13 @@ bool sound_manager_t::put_custom_audio_stream(uint8_t* audio_data, int len) {
         memcpy(_music_player->buffer, &_music_player->cvt.buf[end_len], converted_len - end_len);
     }
     _music_player->cur_write = (_music_player->cur_write + converted_len) % _music_player->buffer_size;
+    _music_player->custom_stream_bytes_written += converted_len;
+    lock.unlock();
 
     // Clean up
     free(_music_player->cvt.buf);
     _music_player->cvt.buf = 0;
     _music_player->cvt.len = 0;
-    _music_player->custom_stream_bytes_written += converted_len;
 
     return true;
 }
@@ -811,6 +820,7 @@ int sound_manager_t::get_custom_audio_stream(Uint8* dst, int len) {
         return 0;
     }
 
+    std::lock_guard<std::mutex> lock(_music_player->stream_mutex);
 #ifdef USE_SDL_AUDIOSTREAM
     if (_music_player->use_audiostream) {
         int bytes_copied = SDL_AudioStreamGet(_music_player->stream, dst, len);
