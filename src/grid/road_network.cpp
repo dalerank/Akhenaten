@@ -77,7 +77,7 @@ static int mark_road_network(int grid_offset, uint8_t network_id) {
 
 void city_map_t::update_road_network() {
     OZZY_PROFILER_FUNCTION();
-    g_city.map.clear_largest_road_networks();
+    city_map().clear_largest_road_networks();
     map_grid_clear(road_network);
     int network_id = 1;
     int grid_offset = scenario_map_data()->start_offset;
@@ -85,7 +85,7 @@ void city_map_t::update_road_network() {
         for (int x = 0; x < scenario_map_data()->width; x++, grid_offset++) {
             if (map_terrain_is(grid_offset, TERRAIN_ROAD) && !map_grid_get(road_network, grid_offset)) {
                 int size = mark_road_network(grid_offset, network_id);
-                g_city.map.add_to_largest_road_networks(network_id, size);
+                city_map().add_to_largest_road_networks(network_id, size);
                 network_id++;
             }
         }

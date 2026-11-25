@@ -121,7 +121,7 @@ void figure_enemy_fast_sword::figure_action() {
 }
 
 void figure_enemy_fast_sword::leave_city() {
-    base.destination_tile = g_city.map.exit_point;
+    base.destination_tile = city_map().exit_point;
     advance_action(ACTION_156_ENEMY_FAST_SWORD_LEAVING);
 }
 

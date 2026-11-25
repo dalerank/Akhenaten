@@ -109,9 +109,9 @@ static void city_data_bind_og_layout(io_buffer* iob) {
     iob->bind____skip(2);
     iob->bind____skip(2);
     iob->bind____skip(36);
-    iob->bind(BIND_SIGNATURE_INT32, data.map.entry_point);
+    iob->bind(BIND_SIGNATURE_INT32, city_map().entry_point);
     iob->bind____skip(4);
-    iob->bind(BIND_SIGNATURE_INT32, data.map.exit_point);
+    iob->bind(BIND_SIGNATURE_INT32, city_map().exit_point);
     iob->bind____skip(16);
     iob->bind____skip(2);
     iob->bind____skip(2);
@@ -503,8 +503,8 @@ static void city_data_bind_og_layout(io_buffer* iob) {
     iob->bind(BIND_SIGNATURE_UINT8, &city_ratings().prosperity_max);
     iob->bind____skip(3);
     for (int i = 0; i < 10; i++) {
-        iob->bind(BIND_SIGNATURE_INT32, &data.map.largest_road_networks[i].id); // ????
-        iob->bind(BIND_SIGNATURE_INT32, &data.map.largest_road_networks[i].size);
+        iob->bind(BIND_SIGNATURE_INT32, &city_map().largest_road_networks[i].id); // ????
+        iob->bind(BIND_SIGNATURE_INT32, &city_map().largest_road_networks[i].size);
     }
     iob->bind(BIND_SIGNATURE_INT32, &city_houses().missing.second_luxury);
     iob->bind____skip(4);

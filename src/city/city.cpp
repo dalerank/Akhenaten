@@ -102,7 +102,6 @@ void city_t::init() {
     buildings.shutdown();
 
     zero_fill(buildings);
-    zero_fill(map);
 
     g_simulation.reset_systems();
     g_distant_battle.clear();

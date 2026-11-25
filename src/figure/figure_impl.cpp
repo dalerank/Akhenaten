@@ -538,9 +538,9 @@ void figure_impl::start_follower_runaway() {
 void figure_impl::begin_runaway() {
     base.leading_figure_id = 0;
     route_remove();
-    base.destination_tile = g_city.map.exit_point;
+    base.destination_tile = city_map().exit_point;
     if (!base.destination_tile.valid()) {
-        base.destination_tile = g_city.map.closest_exit_tile_within_radius();
+        base.destination_tile = city_map().closest_exit_tile_within_radius();
     }
     base.routing_try_reroute_counter = 0;
     advance_action(FIGURE_ACTION_132_FOLLOWER_RUNAWAY);
@@ -559,9 +559,9 @@ void figure_impl::do_follower_runaway_tick() {
             return;
         }
         route_remove();
-        base.destination_tile = g_city.map.closest_exit_tile_within_radius();
+        base.destination_tile = city_map().closest_exit_tile_within_radius();
         if (!base.destination_tile.valid()) {
-            base.destination_tile = g_city.map.exit_point;
+            base.destination_tile = city_map().exit_point;
         }
         base.direction = DIR_0_TOP_RIGHT;
         advance_action(FIGURE_ACTION_132_FOLLOWER_RUNAWAY);

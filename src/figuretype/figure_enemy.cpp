@@ -179,7 +179,7 @@ void figure_enemy::enemy_leaving() {
         base.wait_ticks = 20;
         route_remove();
         base.state = FIGURE_STATE_ALIVE;
-        base.destination_tile = g_city.map.closest_exit_tile_within_radius();
+        base.destination_tile = city_map().closest_exit_tile_within_radius();
         base.direction = DIR_0_TOP_RIGHT;
     }
 }

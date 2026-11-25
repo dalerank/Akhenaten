@@ -90,8 +90,8 @@ namespace og {
         assign(city_migration().emigration_duration, p.emigration_duration);
         assign(city_migration().immigration_duration, p.immigration_duration);
         assign(city_migration().newcomers, p.migration_newcomers);
-        g_city.map.entry_point = tile2i(p.entry_point_x, p.entry_point_y);
-        g_city.map.exit_point = tile2i(p.exit_point_x, p.exit_point_y);
+        city_map().entry_point = tile2i(p.entry_point_x, p.entry_point_y);
+        city_map().exit_point = tile2i(p.exit_point_x, p.exit_point_y);
         for (int i = 0; i < 36; i++) {
             assign(city_resource().trade_status[i], p.trade_status[i]);
         }
@@ -299,8 +299,8 @@ namespace og {
         assign(city_finance().estimated_wages, p.estimated_wages);
         assign(city_ratings().prosperity_max, p.prosperity_max);
         for (int i = 0; i < 10; i++) {
-            assign(g_city.map.largest_road_networks[i].id, p.largest_road_networks[i].id);
-            assign(g_city.map.largest_road_networks[i].size, p.largest_road_networks[i].size);
+            assign(city_map().largest_road_networks[i].id, p.largest_road_networks[i].id);
+            assign(city_map().largest_road_networks[i].size, p.largest_road_networks[i].size);
         }
         assign(city_resource().luxury_goods_kinds, p.luxury_goods_kinds);
         assign(city_houses().missing.second_luxury, p.houses_missing_second_luxury);

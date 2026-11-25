@@ -244,7 +244,7 @@ void figure_soldier::start_charging() {
 }
 
 void figure_soldier::send_to_distant_battle() {
-    base.destination_tile = g_city.map.exit_point;
+    base.destination_tile = city_map().exit_point;
     advance_action(ACTION_7_SOLDIER_GOING_TO_DISTANT_BATTLE);
 }
 
@@ -591,7 +591,7 @@ void figure_soldier::figure_action() {
                 base.wait_ticks = 20;
                 route_remove();
                 base.state = FIGURE_STATE_ALIVE;
-                base.destination_tile = g_city.map.closest_exit_tile_within_radius();
+                base.destination_tile = city_map().closest_exit_tile_within_radius();
                 base.direction = DIR_0_TOP_RIGHT;
             }
 

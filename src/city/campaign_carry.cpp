@@ -272,7 +272,7 @@ bool campaign_carry_t::try_apply_to_fort(e_building_type fort_type, int formatio
 
     tile2i entry = scenario_map_entry();
     if (!entry.valid()) {
-        entry = g_city.map.entry_point;
+        entry = city_map().entry_point;
     }
 
     m->morale = slot.morale;

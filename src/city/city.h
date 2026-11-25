@@ -18,9 +18,6 @@ struct city_t {
     city_buildings_t buildings;
 
 
-    city_map_t map;
-
-
     void init();
     void reload_objects();
 

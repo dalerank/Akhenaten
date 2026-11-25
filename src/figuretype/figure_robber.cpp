@@ -225,7 +225,7 @@ void figure_robber::figure_action() {
         }
         case ACTION_123_ROBBER_LEAVING: {
             base.wait_ticks = 0;
-            tile2i exit = g_city.map.exit_point;
+            tile2i exit = city_map().exit_point;
             if (do_goto(exit, TERRAIN_USAGE_ANY)) {
                 poof();
             }

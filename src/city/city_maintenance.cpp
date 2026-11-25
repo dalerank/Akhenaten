@@ -252,7 +252,7 @@ void city_maintenance_t::check_building_destroying() {
 
 void city_maintenance_t::check_kingdome_access() {
     OZZY_PROFILER_FUNCTION();
-    tile2i entry_point = g_city.map.entry_point;
+    tile2i entry_point = city_map().entry_point;
     map_routing_calculate_distances(entry_point);
     int problem_grid_offset = 0;
     buildings_valid_do([&problem_grid_offset] (building &b) {

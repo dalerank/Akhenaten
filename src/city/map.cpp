@@ -9,11 +9,23 @@
 #include "grid/irrigation_value.h"
 #include "grid/trees.h"
 #include "game/sim_schedule.h"
+#include "city/map_chunks.h"
+#include "core/xvalue.h"
+#include "io/chunk_serializer.h"
+#include "io/gamestate/save_versions.h"
 
 #include "city/city.h"
 #include "core/profiler.h"
 #include "grid/road_access.h"
 #include "grid/grid.h"
+
+city_map_t& city_map() {
+    return xvalue<city_map_t>::ref();
+}
+
+void city_map_t::reset() {
+    *this = city_map_t();
+}
 
 tile2i city_map_t::set_entry_flag(tile2i tile) {
     entry_flag = tile;
@@ -63,6 +75,12 @@ tile2i city_map_t::closest_exit_tile_within_radius(int size, int radius) {
 class map_system : public sim_system {
 public:
     const char* name() const override { return "map"; }
+    void on_reset() override { city_map().reset(); }
+    void push_save_sections(int file_version) override {
+        if (file_version >= save_version_city_sections) {
+            g_chunk_io.push_chunk<city_map_chunk>(city_map_chunk::size, false);
+        }
+    }
     void register_steps(sim_schedule_t& schedule) override {
         schedule.add({sim_step_tree_growth, SIM_PHASE_TICK, [](int tick) {
                           if (tick != 2) {
@@ -89,7 +107,7 @@ public:
                           if (tick != 7) {
                               return;
                           }
-                          g_city.map.update_road_network();
+                          city_map().update_road_network();
                       }});
         schedule.add({sim_step_desirability, SIM_PHASE_TICK, [](int tick) {
                           if (tick != 10) {

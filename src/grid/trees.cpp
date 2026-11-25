@@ -38,7 +38,7 @@ void map_trees_set_reachable(bool reachable) {
 
 void map_trees_update_reachable() {
     // OG city-wide gate: one citizen reach pass from the map entry, not per wood cutter.
-    const tile2i entry = g_city.map.entry_point;
+    const tile2i entry = city_map().entry_point;
     if (!entry.valid()) {
         map_trees().reachable = false;
         return;

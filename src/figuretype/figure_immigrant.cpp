@@ -28,7 +28,7 @@ void ANK_PERMANENT_CALLBACK(event_create_immigrant, ev) {
         return;
     }
 
-    tile2i entry = g_city.map.entry_point;
+    tile2i entry = city_map().entry_point;
     figure *f = figure_create(FIGURE_IMMIGRANT, entry, DIR_0_TOP_RIGHT);
     if (!f || !f->id) {
         return;

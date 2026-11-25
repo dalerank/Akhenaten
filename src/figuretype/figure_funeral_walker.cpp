@@ -30,11 +30,11 @@ tile2i map_edge_spawn_tile() {
 }
 
 tile2i resolve_entry_tile() {
-    tile2i t = g_city.map.entry_point;
+    tile2i t = city_map().entry_point;
     if (t.valid()) {
         return t;
     }
-    t = g_city.map.exit_point;
+    t = city_map().exit_point;
     if (t.valid()) {
         return t;
     }

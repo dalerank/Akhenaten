@@ -122,7 +122,7 @@ void figure_homeless::figure_action() {
         if (base.wait_ticks > 51) {
             int building_id = find_closest_house_with_room(tile());
             if (building_id == 0) {
-                base.destination_tile = g_city.map.exit_point;
+                base.destination_tile = city_map().exit_point;
                 base.roam_length = 0;
                 base.wait_ticks = 0;
                 advance_action(ACTION_3_HOMELESS_LEAVING);
@@ -182,7 +182,7 @@ void figure_homeless::figure_action() {
     case LEGACY_HOMELESS_LEAVING:
         // OG action 11: walk to exit; ARRIVED → die; REROUTE → drop route; reseek every 30
         // Remake: CAN_NOT_REACH → ACTION_16 wander (retry leave) instead of immediate poof
-        base.destination_tile = g_city.map.exit_point;
+        base.destination_tile = city_map().exit_point;
         base.move_ticks(base.speed_multiplier);
         if (direction() == DIR_FIGURE_NONE) {
             poof();
@@ -197,7 +197,7 @@ void figure_homeless::figure_action() {
             base.wait_ticks = 20;
             route_remove();
             base.state = FIGURE_STATE_ALIVE;
-            base.destination_tile = g_city.map.closest_exit_tile_within_radius();
+            base.destination_tile = city_map().closest_exit_tile_within_radius();
             base.direction = DIR_0_TOP_RIGHT;
             advance_action(ACTION_16_HOMELESS_RANDOM);
             break;

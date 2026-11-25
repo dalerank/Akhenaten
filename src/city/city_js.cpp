@@ -351,12 +351,12 @@ tile2i __city_message_next_problem_area_grid_offset() {
 ANK_FUNCTION(__city_message_next_problem_area_grid_offset)
 
 int __city_map_entry_flag_offset() {
-    return g_city.map.entry_flag.grid_offset();
+    return city_map().entry_flag.grid_offset();
 }
 ANK_FUNCTION(__city_map_entry_flag_offset)
 
 int __city_map_exit_flag_offset() {
-    return g_city.map.exit_flag.grid_offset();
+    return city_map().exit_flag.grid_offset();
 }
 ANK_FUNCTION(__city_map_exit_flag_offset)
 

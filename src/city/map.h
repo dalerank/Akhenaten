@@ -22,5 +22,8 @@ struct city_map_t {
     void add_to_largest_road_networks(int network_id, int size);
 
     tile2i closest_exit_tile_within_radius(int size = 1, int radius = 2);
+
+    void reset();
 };
 
+city_map_t& city_map();

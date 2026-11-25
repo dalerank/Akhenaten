@@ -438,8 +438,8 @@ void GamestateIO::start_loaded_file() {
         city_fishing_points().create();
         city_animals().create_herds();
 
-        g_city.map.entry_point = scenario_map_entry();
-        g_city.map.exit_point = scenario_map_exit();
+        city_map().entry_point = scenario_map_entry();
+        city_map().exit_point = scenario_map_exit();
 
         g_simulation.simtime.init(g_scenario.start_year);
 
@@ -475,7 +475,7 @@ void GamestateIO::start_loaded_file() {
     // routing
     map_routing_update_all();
     figure_route_clean();
-    g_city.map.update_road_network();
+    city_map().update_road_network();
     building_ferry::update_routes();
     city_maintenance().check_kingdome_access();
 

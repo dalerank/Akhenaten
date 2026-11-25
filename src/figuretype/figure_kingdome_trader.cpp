@@ -41,7 +41,7 @@ const e_trade_caravan_action_tokens_t ANK_CONFIG_ENUM(e_trade_caravan_action_tok
 REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_trade_caravan);
 
 void ANK_PERMANENT_CALLBACK(event_trade_caravan_arrival, ev) {
-    tile2i entry = g_city.map.entry_point;
+    tile2i entry = city_map().entry_point;
     auto *emp_city = g_empire.city(ev.cid);
     
     if (!emp_city || !emp_city->in_use) {
@@ -93,7 +93,7 @@ void figure_trade_caravan::go_to_next_storageyard(tile2i src_tile, int distance_
         advance_action(ACTION_1_TRADE_CARAVAN_ARRIVING, dst);
     } else {
         base.state = FIGURE_STATE_ALIVE;
-        base.destination_tile = map_closest_road_within_radius(g_city.map.exit_point, 1, 2);
+        base.destination_tile = map_closest_road_within_radius(city_map().exit_point, 1, 2);
         base.direction = DIR_0_TOP_RIGHT;
         advance_action(ACTION_3_TRADE_CARAVAN_LEAVING);
     }
@@ -142,7 +142,7 @@ void figure_trade_caravan::figure_action() {
     if (city_figures().total_invading_enemies() > 0) {
         switch (action_state()) {
         default:
-            base.destination_tile = g_city.map.closest_exit_tile_within_radius();
+            base.destination_tile = city_map().closest_exit_tile_within_radius();
             base.direction = DIR_0_TOP_RIGHT;
             advance_action(ACTION_3_TRADE_CARAVAN_LEAVING);
             break;
@@ -238,7 +238,7 @@ void figure_trade_caravan::figure_action() {
     case ACTION_4_TRADE_CARAVAN_RECALC_LEAVING:
         if (direction() == DIR_FIGURE_CAN_NOT_REACH) {
             base.direction = DIR_0_TOP_RIGHT;
-            base.destination_tile = g_city.map.closest_exit_tile_within_radius();
+            base.destination_tile = city_map().closest_exit_tile_within_radius();
             advance_action(ACTION_3_TRADE_CARAVAN_LEAVING);
         }
         break;

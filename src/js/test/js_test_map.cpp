@@ -107,7 +107,7 @@ ANK_FUNCTION(__test_check_kingdome_access);
 static void __test_update_road_network() {
     map_tiles_update_all_roads();
     map_routing_update_land();
-    g_city.map.update_road_network();
+    city_map().update_road_network();
 }
 ANK_FUNCTION(__test_update_road_network);
 

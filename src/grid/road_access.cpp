@@ -89,7 +89,7 @@ bool map_road_find_minimum_tile_xy_classic(tile2i tile, int sizex, int sizey, in
             continue;
         }
 
-        int road_index = g_city.map.road_network_index(map_road_network_get(grid_offset));
+        int road_index = city_map().road_network_index(map_road_network_get(grid_offset));
         if (road_index < *min_value) {
             *min_value = road_index;
             *min_grid_offset = grid_offset;
@@ -395,7 +395,7 @@ tile2i map_road_to_largest_network_rotation(int rotation, tile2i tile, int size,
                 continue;
             }
             if (map_terrain_is(grid_offset, TERRAIN_ROAD) && map_routing_distance(grid_offset) > 0) {
-                int index = g_city.map.road_network_index(map_road_network_get(grid_offset));
+                int index = city_map().road_network_index(map_road_network_get(grid_offset));
                 if (index < min_index) {
                     min_index = index;
                     min_grid_offset = grid_offset;
@@ -445,7 +445,7 @@ static void check_road_to_largest_network_hippodrome(int x, int y, int* min_inde
     for (const int &tile_delta: offsets) {
         int grid_offset = base_offset + tile_delta;
         if (map_terrain_is(grid_offset, TERRAIN_ROAD) && map_routing_distance(grid_offset) > 0) {
-            int index = g_city.map.road_network_index(map_road_network_get(grid_offset));
+            int index = city_map().road_network_index(map_road_network_get(grid_offset));
             if (index < *min_index) {
                 *min_index = index;
                 *min_grid_offset = grid_offset;
@@ -682,7 +682,7 @@ static tile2i map_get_road_access_tile_maybe_assume(tile2i tile, int size, bool 
                 found = true;
             }
         } else {
-            int road_index = g_city.map.road_network_index(map_road_network_get(grid_offset));
+            int road_index = city_map().road_network_index(map_road_network_get(grid_offset));
             if (road_index < min_value) {
                 min_value = road_index;
                 min_grid_offset = grid_offset;

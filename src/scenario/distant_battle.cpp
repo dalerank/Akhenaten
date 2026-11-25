@@ -198,9 +198,11 @@ void distant_battles_t::update_day() {
                     dispatched_army.position_index = 0;
 
                     if (dispatched_army.state == dispatched_army_t::state_returning_win) {
-                        events::emit(event_message{ true, "message_troops_return_victorious", 0, g_city.map.exit_point.grid_offset(), SOURCE_LOCATION });
+                        events::emit(event_message{true, "message_troops_return_victorious", 0,
+                          city_map().exit_point.grid_offset(), SOURCE_LOCATION});
                     } else if (dispatched_army.state == dispatched_army_t::state_returning_lose || dispatched_army.state == dispatched_army_t::state_returning_destroyed) {
-                        events::emit(event_message{ true, "message_troops_return_failed", 0, g_city.map.exit_point.grid_offset(), SOURCE_LOCATION });
+                        events::emit(event_message{true, "message_troops_return_failed", 0,
+                          city_map().exit_point.grid_offset(), SOURCE_LOCATION});
                     }
 
                     dispatched_army.state = dispatched_army_t::state_inactive;

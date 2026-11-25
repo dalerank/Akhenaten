@@ -61,7 +61,7 @@ void figure_emigrant::figure_action() {
             tile2i road = map_closest_road_within_radius(tile(), 1, 5);
             // OG marks DEAD on no road then still enters action 9 with a stale dest.
             // Remake: still leave — cross-country toward entry when no road nearby.
-            tile2i dest = road.valid() ? road : g_city.map.entry_point;
+            tile2i dest = road.valid() ? road : city_map().entry_point;
             base.destination_tile = dest;
             base.roam_length = 0;
             base.use_cross_country = true;
@@ -76,7 +76,7 @@ void figure_emigrant::figure_action() {
         base.use_cross_country = true;
         base.set_flag(e_figure_flag_invisible, true);
         if (do_goto(base.destination_tile, TERRAIN_USAGE_ANY, ACTION_2_EMIGRANT_LEAVING)) {
-            base.destination_tile = g_city.map.entry_point;
+            base.destination_tile = city_map().entry_point;
             base.roam_length = 0;
             base.progress_on_tile = 15;
         }
@@ -88,7 +88,7 @@ void figure_emigrant::figure_action() {
         // OG action 10: walk to city entry; die on reached / reroute / lost
         base.use_cross_country = false;
         base.set_flag(e_figure_flag_invisible, false);
-        base.destination_tile = g_city.map.entry_point;
+        base.destination_tile = city_map().entry_point;
         base.move_ticks(base.speed_multiplier);
         if (direction() == DIR_FIGURE_NONE || direction() == DIR_FIGURE_REROUTE
             || direction() == DIR_FIGURE_CAN_NOT_REACH) {

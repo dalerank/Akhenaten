@@ -13,7 +13,6 @@
 #include "city/city_figures_chunks.h"
 #include "city/city_floods_chunks.h"
 #include "city/city_taxes_chunks.h"
-#include "city/map_chunks.h"
 #include "scenario/distant_battle_chunks.h"
 #include "io/gamestate/save_versions.h"
 #include "io/gamestate/presentation_chunks.h"
@@ -104,7 +103,6 @@ void file_schema_svx(const int file_version) {
         g_chunk_io.push_chunk<city_data_extra_chunk>(72, false);
     } else {
         g_chunk_io.push_chunk<city_buildings_chunk>(city_buildings_chunk::size, false);
-        g_chunk_io.push_chunk<city_map_chunk>(city_map_chunk::size, false);
         g_chunk_io.push_chunk<city_taxes_chunk>(city_taxes_chunk::size, false);
         g_chunk_io.push_chunk<city_distant_battle_chunk>(city_distant_battle_chunk::size, false);
         g_chunk_io.push_chunk<city_scenario_chunk>(city_scenario_chunk::size, false);
