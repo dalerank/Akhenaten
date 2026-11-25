@@ -485,10 +485,9 @@ xstring find_7z_binary() {
         logs::info("7z: using PATH %s", from_path.c_str());
         return from_path;
     }
-    const char *candidates[] = {
+    const char* candidates[] = {
       "C:\\Program Files\\7-Zip\\7z.exe",
       "C:\\Program Files (x86)\\7-Zip\\7z.exe",
-      "D:\\devtools\\7z.exe",
     };
     for (pcstr c : candidates) {
         if (path_is_executable(fs::path(c))) {
