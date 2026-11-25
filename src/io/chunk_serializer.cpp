@@ -48,6 +48,9 @@ void ChunkSerializer::clear() {
 }
 
 buffer* ChunkSerializer::push_chunk(int size, bool compressed, const char* name, io_chunk* iob) {
+    for (int i = 0; i < alloc_index; ++i) {
+        verify_no_crash(::strcmp(file_chunks.at(i).name, name) != 0 && "save section pushed twice");
+    }
     if (alloc_index >= file_chunks.size())
         file_chunks.push_back(file_chunk_t());
 

@@ -2,6 +2,9 @@
 #include "city/city_kingdome_relations.h"
 #include "core/app_module.h"
 #include "game/sim_schedule.h"
+#include "io/gamestate/save_versions.h"
+#include "io/chunk_serializer.h"
+#include "scenario/distant_battle_chunks.h"
 
 #include "city/buildings.h"
 #include "city/map.h"
@@ -585,6 +588,11 @@ void distant_battles_t::update_time_traveled() {
 class distant_battle_system : public sim_system {
 public:
     const char* name() const override { return "distant_battle"; }
+    void push_save_sections(int file_version) override {
+        if (file_version >= save_version_city_sections) {
+            g_chunk_io.push_chunk<city_distant_battle_chunk>(city_distant_battle_chunk::size, false);
+        }
+    }
     void register_steps(sim_schedule_t& schedule) override {
         schedule.add({sim_step_distant_battle, SIM_PHASE_DAY, [](int) { g_distant_battle.update_day(); }});
         schedule.add({sim_step_distant_battle_month, SIM_PHASE_MONTH, [](int) { g_distant_battle.update_month(); }});
