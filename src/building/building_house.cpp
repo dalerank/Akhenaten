@@ -353,9 +353,9 @@ void building_house::add_population(int num_people, bool as_homeless) {
     d.population += num_people;
     // OG migrant_enter_house: homeless → add_homeless, immigrant → add
     if (as_homeless) {
-        g_city.population_sys().add_homeless(num_people);
+        city_population().add_homeless(num_people);
     } else {
-        g_city.population_sys().add(num_people);
+        city_population().add(num_people);
     }
     base.remove_figure(2);
 }
@@ -1214,7 +1214,7 @@ void building_house::on_create(int orientation) {
 }
 
 void building_house::on_destroy() {
-    g_city.population_sys().remove_home_removed(house_population());
+    city_population().remove_home_removed(house_population());
 }
 
 void building_house::on_post_load() {

@@ -5,6 +5,7 @@
 #include <algorithm>
 
 #include "city/city.h"
+#include "city/city_population.h"
 #include "city/city_resource.h"
 #include "core/random.h"
 #include "figure/formation.h"
@@ -54,7 +55,7 @@ city_problem_inputs city_problem_gather_inputs() {
         in.lowest_god_mood = std::min<int>(in.lowest_god_mood, god.mood);
     }
     in.kingdom_rating = g_city.kingdome.rating;
-    in.population = g_city.population.current;
+    in.population = city_population().current;
     in.workers_unemployed = city_labor().workers_unemployed;
     in.average_entertainment = g_city.avg_coverage.average_entertainment;
     return in;

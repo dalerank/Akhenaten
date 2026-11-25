@@ -1,4 +1,5 @@
 #include "city/city.h"
+#include "city/city_population.h"
 #include "city/city_finance.h"
 #include "city/ratings.h"
 #include "city/city_temple_complexes.h"
@@ -131,8 +132,8 @@ namespace {
         in.food_types = g_city.resource.food_types_eaten_max();
         in.wages = (city_finance().wage_rate_paid_last_year / 12) - city_finance().wages_kingdome
                    - temple_complex_wage_bonus();
-        in.huts_share = calc_percentage(g_city.population.people_in_shanties, g_city.population.current);
-        in.manors_share = calc_percentage(g_city.population.people_in_manors, g_city.population.current);
+        in.huts_share = calc_percentage(city_population().people_in_shanties, city_population().current);
+        in.manors_share = calc_percentage(city_population().people_in_manors, city_population().current);
         in.tribute_not_paid = city_finance().tribute_not_paid_last_year;
         in.senet_shows = city_entertainment().senet_house_plays > 0;
         in.completed_monument = city_has_completed_monument();

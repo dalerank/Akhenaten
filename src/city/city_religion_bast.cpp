@@ -3,6 +3,7 @@
 #include "building/building.h"
 #include "building/building_house.h"
 #include "city/city.h"
+#include "city/city_population.h"
 #include "city/city_buildings.h"
 #include "city/city_festival.h"
 #include "city/city_health.h"
@@ -43,7 +44,7 @@ tile2i bast_lion_spawn_tile(building &b) {
 }
 
 int bast_lion_raid_count() {
-    return calc_bound(g_city.population.current / 400, 3, 8);
+    return calc_bound(city_population().current / 400, 3, 8);
 }
 
 int bast_lion_raid_days() {

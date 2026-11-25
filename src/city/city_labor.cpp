@@ -101,7 +101,7 @@ int city_labor_t::calc_fixed_workers_available(int num_plebs) {
 }
 
 void city_labor_t::calculate_workers(int num_plebs, int num_patricians) {
-    auto& population = g_city.population;
+    auto& population = city_population();
     population.percentage_plebs = calc_percentage(num_plebs, num_plebs + num_patricians);
 
     if (!!game_features::gameplay_change_fixed_workers) {

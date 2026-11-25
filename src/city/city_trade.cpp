@@ -12,6 +12,7 @@
 #include "building/monuments.h"
 #include "city/buildings.h"
 #include "city/city.h"
+#include "city/city_population.h"
 #include "core/profiler.h"
 #include "empire/empire.h"
 #include "game/game_config.h"
@@ -45,7 +46,7 @@ void city_trade_t::update() {
 }
 
 int city_trade_t::recommended_keep(int good_index) const {
-    const int population = g_city.population.current;
+    const int population = city_population().current;
     for (const auto& row : empire_trade_rules.recommends) {
         if (row.population_below > 0 && population >= row.population_below) {
             continue;

@@ -3,6 +3,7 @@
 #include "building/building.h"
 #include "building/building_fort.h"
 #include "city/city.h"
+#include "city/city_population.h"
 #include "city/city_buildings.h"
 #include "city/city_figures.h"
 #include "city/city_message.h"
@@ -49,7 +50,7 @@ tile2i seth_asp_spawn_tile(building &b) {
 }
 
 int seth_asp_raid_count() {
-    return calc_bound(g_city.population.current / 400, 3, 8);
+    return calc_bound(city_population().current / 400, 3, 8);
 }
 
 int seth_asp_raid_days() {

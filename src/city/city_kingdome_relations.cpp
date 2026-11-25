@@ -1,4 +1,5 @@
 #include "city_kingdome_relations.h"
+#include "city/city_population.h"
 #include "game/simulation.h"
 #include "core/app_module.h"
 #include "game/sim_schedule.h"

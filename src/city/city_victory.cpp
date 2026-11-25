@@ -5,6 +5,7 @@
 
 #include "building/building_type.h"
 #include "city/city.h"
+#include "city/city_population.h"
 #include "content/vfs.h"
 #include "game/game.h"
 #include "game/game_config.h"
@@ -67,7 +68,7 @@ int city_count_houses_at_least(int min_level) {
 
     int count = 0;
     for (int level = min_level; level < HOUSE_LEVEL_MAX; level++) {
-        count += g_city.population.housing_type_counts[level];
+        count += city_population().housing_type_counts[level];
     }
     return count;
 }
@@ -127,7 +128,7 @@ e_victory_state city_victory_t::determine_state(bool script_goals_met) {
     }
     if (wc.population.enabled) {
         goals++;
-        if (g_city.population.current < wc.population.goal) {
+        if (city_population().current < wc.population.goal) {
             st = e_victory_state_none;
         }
     }
@@ -190,11 +191,11 @@ e_victory_state city_victory_t::determine_state(bool script_goals_met) {
     const int invaders = figures.total_invading_enemies();
     const int fraction = std::max(1, victory_rules.lost_population_fraction);
     if (invaders > figures.soldiers + victory_rules.lost_population_extra_enemies
-        && g_city.population.current < g_city.population.highest_ever / fraction) {
+        && city_population().current < city_population().highest_ever / fraction) {
         st = e_victory_state_lost;
         lost_by_population = true;
     }
-    if (invaders > 0 && g_city.population.current <= 0) {
+    if (invaders > 0 && city_population().current <= 0) {
         st = e_victory_state_lost;
         lost_by_population = true;
     }
@@ -235,7 +236,7 @@ int city_victory_score(int months, int monument_weight) {
     const double m = std::max(months, 1);
     const double weight = monument_weight;
     const int ratings = g_city.kingdome.rating + city_ratings().prosperity + city_ratings().culture;
-    const double rating_part = (double)ratings * ((double)g_city.population.current * 0.002);
+    const double rating_part = (double)ratings * ((double)city_population().current * 0.002);
     const double monument_part = (weight / (m * m * 0.00015625)) * (weight * 20.0);
     double score = monument_part + rating_part;
     score = score + (double)(int)city_finance().treasury / (m * 0.03333333333333333);

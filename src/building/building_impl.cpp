@@ -9,6 +9,7 @@
 #include "city/city_warnings.h"
 #include "grid/road_access.h"
 #include "city/city.h"
+#include "city/city_population.h"
 #include "grid/image.h"
 #include "grid/building.h"
 #include "grid/water.h"
@@ -508,7 +509,7 @@ void building_impl::check_labor_problem() {
 }
 
 void building_impl::common_spawn_labor_seeker(int min_houses) {
-    if (g_city.population.current <= 0) {
+    if (city_population().current <= 0) {
         return;
     }
 

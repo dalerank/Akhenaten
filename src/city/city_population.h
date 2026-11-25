@@ -19,7 +19,7 @@ struct city_population_rules_t {
 };
 ANK_CONFIG_STRUCT(city_population_rules_t, births_per_age_decennium, milestones);
 
-struct population_state {
+struct city_population_t {
     int32_t current;
     int32_t last_day_current;
     int32_t last_year;
@@ -65,22 +65,9 @@ struct population_state {
     int get_people_aged_between(int min, int max) const;
 
     int at_month(int max_months, int month) const;
-};
+    int total_housing_buildings() const;
 
-struct city_health_t;
-struct city_labor_t;
-struct city_resources_t;
-
-struct population_context {
-    const city_health_t& health;
-    city_labor_t& labor;
-    const city_resources_t& resource;
-};
-
-class population_system {
-public:
-    population_system(population_state& state, const population_context& ctx) : _state(state), _ctx(ctx) {}
-
+    void reset();
     void recalculate();
     void yearly_recalculate();
     void yearly_update();
@@ -108,27 +95,18 @@ public:
     void housing_type_counts_update();
     void count_at_levels();
     void yearly_advance_ages_and_calculate_deaths();
+    void request_yearly_update();
+    void check_consistency();
 
 private:
-    population_state& _state;
-    population_context _ctx;
+    void clear_capacity();
+    void add_capacity(int people_in_house, int max_people);
+    void add_to_census(int num_people);
+    void remove_from_census(int num_people);
+    void remove_from_census_in_age_decennium(int decennium, int num_people);
+    int calculate_people_per_house_type();
 };
 
-ANK_CONFIG_PROPERTY(population_state, current, people_in_shanties, people_in_manors, highest_ever)
+ANK_CONFIG_PROPERTY(city_population_t, current, people_in_shanties, people_in_manors, highest_ever)
 
-void city_population_clear_capacity();
-void city_population_add_capacity(int people_in_house, int max_people);
-
-void city_population_request_yearly_update();
-
-void city_population_check_consistency();
-
-int city_population_open_housing_capacity();
-
-int calculate_total_housing_buildings();
-
-int city_population_total_housing_capacity();
-
-int city_population_yearly_deaths();
-
-int city_population_yearly_births();
+city_population_t& city_population();

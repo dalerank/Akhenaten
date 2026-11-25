@@ -23,6 +23,7 @@
 #include "building/monument_pyramid.h"
 #include "building/monument_royal_tomb.h"
 #include "city/city.h"
+#include "city/city_population.h"
 #include "city/city_taxes.h"
 #include "city/entertainment.h"
 #include "city/city_temple_complexes.h"
@@ -71,7 +72,7 @@ void __test_set_treasury(int amount) {
 ANK_FUNCTION_1(__test_set_treasury);
 
 void __test_set_city_population(int amount) {
-    g_city.population.current = amount;
+    city_population().current = amount;
 }
 ANK_FUNCTION_1(__test_set_city_population);
 

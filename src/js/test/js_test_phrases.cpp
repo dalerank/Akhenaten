@@ -3,6 +3,7 @@
 #include "city/city_health.h"
 #include "city/city_labor.h"
 #include "city/city.h"
+#include "city/city_population.h"
 #include "city/city_problems.h"
 #include "core/bstring.h"
 #include "core/xstring.h"
@@ -71,7 +72,7 @@ static void __test_city_problem_calm() {
         god.mood = 100;
     }
     g_city.kingdome.rating = 100;
-    g_city.population.current = 0;
+    city_population().current = 0;
     city_labor().workers_unemployed = 0;
     city_labor().unemployment_percentage = 0;
     city_labor().workers_needed = 0;

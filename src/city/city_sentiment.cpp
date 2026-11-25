@@ -61,7 +61,7 @@ int city_sentiment_t::calc_penalty_for_hut_dwellers() {
     }
 
     include_huts = false;
-    const auto& population = g_city.population;
+    const auto& population = city_population();
 
     int penalty;
     int pct_tents = calc_percentage(population.people_in_huts, population.current);
@@ -180,7 +180,7 @@ int city_sentiment_t::calc_contribution_monuments() {
     const int shrines = g_city.buildings.count_active(types);
 
     int shrine_points = 0;
-    const auto& population = g_city.population;
+    const auto& population = city_population();
     if (population.current > 5000) {
         shrine_points = 5;
     } if (population.current > 1000) {
@@ -212,7 +212,7 @@ void city_sentiment_t::init() {
 
 void city_sentiment_t::update() {
     OZZY_PROFILER_FUNCTION();
-    city_population_check_consistency();
+    city_population().check_consistency();
 
     contribution_taxes = sentiment_for_tax_rate(city_taxes().tax_percentage);
     contribution_wages = calc_sentiment_contribution_wages();
@@ -244,14 +244,14 @@ void city_sentiment_t::update() {
             return;
         }
 
-        if (g_city.population.current < 300) {
+        if (city_population().current < 300) {
             // small town has no complaints
             contribution_employment = 0;
             contribution_taxes = 0;
             contribution_wages = 0;
 
             housed.house_happiness = default_sentiment;
-            if (g_city.population.current < 200) {
+            if (city_population().current < 200) {
                 housed.house_happiness += 10;
             } else if (default_sentiment < 50 && !!game_features::gameplay_fix_immigration) {
                 // Fix very hard immigration bug: give a boost for Very Hard difficulty so that

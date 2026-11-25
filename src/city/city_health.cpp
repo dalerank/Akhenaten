@@ -14,6 +14,7 @@
 #include "building/destruction.h"
 #include "city/buildings.h"
 #include "city/city.h"
+#include "city/city_population.h"
 #include "city/city_figures.h"
 #include "game/game_config.h"
 #include "game/game_events.h"
@@ -200,7 +201,7 @@ void city_health_t::update_coverage() {
 }
 
 void city_health_t::update_month() {
-    if (g_city.population.current < 200 || g_scenario.is_scenario_id(1, 2)) {
+    if (city_population().current < 200 || g_scenario.is_scenario_id(1, 2)) {
         value = 50;
         target_value = 50;
         return;
@@ -243,7 +244,7 @@ void city_health_t::update_month() {
     });
 
     target_value = calc_percentage(healthy_population, total_population);
-    const int pop = g_city.population.current;
+    const int pop = city_population().current;
     for (const auto &entry : rules.population_bonus) {
         if (pop < entry.pop) {
             target_value += entry.bonus;

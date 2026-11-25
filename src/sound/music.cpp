@@ -341,13 +341,13 @@ static xstring music_random_city_track(const svector<xstring, 8>& pool, const xs
 // Maps music.txt does not list: a random track of the population pool, another than the current one.
 static music_pick music_choose_pool_track() {
     music_pick pick;
-    pick.key = music_random_city_track(music_city_tracks(g_city.population.current), music.current_track);
+    pick.key = music_random_city_track(music_city_tracks(city_population().current), music.current_track);
     pick.delay_sec = music.post_tune_delay_sec;
     return pick;
 }
 
 static bool music_pool_track_fits() {
-    const auto& pool = music_city_tracks(g_city.population.current);
+    const auto& pool = music_city_tracks(city_population().current);
     return std::find(pool.begin(), pool.end(), music.current_track) != pool.end();
 }
 
@@ -373,7 +373,7 @@ static bool music_track_holds(const music_data_t::playlist_rule* track, int popu
 // OG music.c sound_music_select_by_population.
 static void og_music_select_by_population(const music_rules& tracks, bool force) {
     auto& og = music.og;
-    const int population = g_city.population.current;
+    const int population = city_population().current;
     const int count = (int)tracks.size();
     const bool holds = og.next_track < count && music_track_holds(tracks[og.next_track], population);
     if (!holds || force) {

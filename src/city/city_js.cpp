@@ -38,7 +38,9 @@ ANK_FUNCTION_1(__city_set_scenario_enemy_id)
 int __city_rating_kingdom() { return g_city.kingdome.rating; }
 ANK_FUNCTION(__city_rating_kingdom)
 
-int __city_population() { return g_city.population.current; }
+int __city_population() {
+    return city_population().current;
+}
 ANK_FUNCTION(__city_population)
 
 int __city_health_rating() {
@@ -112,17 +114,17 @@ int __city_figures_total_invading_enemies() {
 ANK_FUNCTION(__city_figures_total_invading_enemies)
 
 std::optional<bvariant> __city_get_population_property(pcstr property) {
-    return archive_helper::get(g_city.population, property, true);
+    return archive_helper::get(city_population(), property, true);
 }
 ANK_FUNCTION_1(__city_get_population_property)
 
 int __city_population_monthly_count() {
-    return g_city.population.monthly.count;
+    return city_population().monthly.count;
 }
 ANK_FUNCTION(__city_population_monthly_count)
 
 int __city_population_at_month(int max_months, int month) {
-    return g_city.population.at_month(max_months, month);
+    return city_population().at_month(max_months, month);
 }
 ANK_FUNCTION_2(__city_population_at_month)
 
@@ -130,7 +132,7 @@ int __city_population_at_age(int index) {
     if (index < 0 || index >= 100) {
         return 0;
     }
-    return g_city.population.at_age[index];
+    return city_population().at_age[index];
 }
 ANK_FUNCTION_1(__city_population_at_age)
 
@@ -143,7 +145,7 @@ void __city_population_set_at_age(int index, int value) {
     } else if (value > 65535) {
         value = 65535;
     }
-    g_city.population.at_age[index] = (uint16_t)value;
+    city_population().at_age[index] = (uint16_t)value;
 }
 ANK_FUNCTION_2(__city_population_set_at_age)
 
@@ -151,12 +153,12 @@ int __city_population_at_level(int index) {
     if (index < 0 || index >= HOUSE_LEVEL_MAX) {
         return 0;
     }
-    return g_city.population.at_level[index];
+    return city_population().at_level[index];
 }
 ANK_FUNCTION_1(__city_population_at_level)
 
 int __city_total_housing_buildings() {
-    return calculate_total_housing_buildings();
+    return city_population().total_housing_buildings();
 }
 ANK_FUNCTION(__city_total_housing_buildings)
 
@@ -164,7 +166,7 @@ int __city_housing_type_count_at(int index) {
     if (index < 0 || index >= HOUSE_LEVEL_MAX) {
         return 0;
     }
-    return g_city.population.housing_type_counts[index];
+    return city_population().housing_type_counts[index];
 }
 ANK_FUNCTION_1(__city_housing_type_count_at)
 
@@ -177,32 +179,32 @@ int __city_houses_demanding_goods_at(int index) {
     if (index < 0 || index > 3) {
         return 0;
     }
-    return g_city.population.houses_demanding_goods[index];
+    return city_population().houses_demanding_goods[index];
 }
 ANK_FUNCTION_1(__city_houses_demanding_goods_at)
 
 int __city_open_housing_capacity() {
-    return city_population_open_housing_capacity();
+    return city_population().room_in_houses;
 }
 ANK_FUNCTION(__city_open_housing_capacity)
 
 int __city_total_housing_capacity() {
-    return city_population_total_housing_capacity();
+    return city_population().total_capacity;
 }
 ANK_FUNCTION(__city_total_housing_capacity)
 
 int __city_population_average_age() {
-    return g_city.population_sys().average_age();
+    return city_population().average_age();
 }
 ANK_FUNCTION(__city_population_average_age)
 
 int __city_population_yearly_births() {
-    return city_population_yearly_births();
+    return city_population().yearly_births;
 }
 ANK_FUNCTION(__city_population_yearly_births)
 
 int __city_population_yearly_deaths() {
-    return city_population_yearly_deaths();
+    return city_population().yearly_deaths;
 }
 ANK_FUNCTION(__city_population_yearly_deaths)
 

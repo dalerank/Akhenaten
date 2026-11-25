@@ -130,12 +130,12 @@ struct gods_state {
 };
 
 struct city_buildings_t;
-struct population_state;
+struct city_population_t;
 struct kingdome_state;
 
 struct gods_context {
     city_buildings_t& buildings;
-    const population_state& population;
+    const city_population_t& population;
     kingdome_state& kingdome;
     uint8_t gods_least_mood;
     int day;

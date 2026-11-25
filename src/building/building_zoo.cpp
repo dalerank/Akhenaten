@@ -1,6 +1,7 @@
 #include "building_zoo.h"
 
 #include "city/city.h"
+#include "city/city_population.h"
 #include "game/resource.h"
 #include "js/js_register.h"
 
@@ -8,7 +9,7 @@ REPLICATE_STATIC_PARAMS_FROM_CONFIG(building_zoo);
 
 void building_zoo::add_ambient_sound(int direction) const {
     // OG scores a zoo as housing ambient; the band follows population, apart from zoo_r.wav.
-    const int population = g_city.population.current;
+    const int population = city_population().current;
     int channel = SOUND_CHANNEL_CITY_HOUSE_SLUM;
     if (population >= 8000) {
         channel = SOUND_CHANNEL_CITY_HOUSE_POSH;

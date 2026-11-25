@@ -303,7 +303,7 @@ void city_finance_t::copy_amounts_to_last_year() {
 }
 
 void city_finance_t::pay_tribute() {
-    const int population = g_city.population.current;
+    const int population = city_population().current;
     int income
       = last_year.income.donated + last_year.income.taxes + last_year.income.exports + last_year.income.gold_delivered;
     int expenses = last_year.expenses.stolen + last_year.expenses.mayour_salary + last_year.expenses.accountant_salary

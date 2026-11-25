@@ -9,6 +9,7 @@
 #include "building/monument_pyramid.h"
 #include "building/monuments.h"
 #include "city/city.h"
+#include "city/city_population.h"
 #include "city/sound.h"
 #include "city/city_chunks.h"
 #include "city/object_info.h"
@@ -951,7 +952,7 @@ void __test_city_data_set_probe() {
     g_city.figures.soldiers = 0x4567;
     city_sound().march_enemy = 0x55;
     city_sentiment().include_huts = true;
-    g_city.population.highest_ever = 0x6789;
+    city_population().highest_ever = 0x6789;
     city_ratings().prosperity_max = 0x42;
 }
 ANK_FUNCTION(__test_city_data_set_probe);

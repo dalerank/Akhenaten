@@ -3,6 +3,7 @@
 
 #include "building/building.h"
 #include "city/city.h"
+#include "city/city_population.h"
 #include "city/city_message.h"
 #include "city/city_warnings.h"
 #include "city/constants.h"
@@ -261,7 +262,7 @@ void construction_warnings_check_road_access(building& b) {
 void construction_warnings_check_house_plots() {
     warnings_pass pass;
     const auto& rules = pass.rules;
-    const int population = g_city.population.current;
+    const int population = city_population().current;
     if (population < rules.min_population) {
         return;
     }

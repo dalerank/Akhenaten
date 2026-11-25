@@ -4,6 +4,7 @@
 
 #include "building/building_house.h"
 #include "city/city.h"
+#include "city/city_population.h"
 #include "city/city_animals.h"
 #include "city/city_buildings.h"
 #include "core/calc.h"
@@ -36,7 +37,7 @@ declare_console_command_p(plague_no) {
 }
 
 declare_console_command_p(show_pop_milestone) {
-    g_city.population_sys().reached_milestone(true);
+    city_population().reached_milestone(true);
 }
 
 declare_console_command_p(addprosperity) {

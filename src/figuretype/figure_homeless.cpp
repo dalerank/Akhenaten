@@ -18,7 +18,7 @@ REPLICATE_STATIC_PARAMS_FROM_CONFIG(figure_homeless);
 
 void ANK_PERMANENT_CALLBACK(event_create_homeless, ev) {
     // OG 0x00459020: remove_homeless, spawn at tile, action CREATED(=8), wait 0
-    g_city.population_sys().remove_homeless(ev.num_people);
+    city_population().remove_homeless(ev.num_people);
 
     figure *f = figure_create(FIGURE_HOMELESS, ev.tile, DIR_0_TOP_RIGHT);
     auto *homeless = (f && f->id) ? f->dcast_homeless() : nullptr;

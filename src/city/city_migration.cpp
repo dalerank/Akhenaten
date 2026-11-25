@@ -10,6 +10,7 @@
 
 #include "building/building_house.h"
 #include "city/city.h"
+#include "city/city_population.h"
 #include "city/city_message.h"
 #include "city/city_warnings.h"
 #include "core/calc.h"
@@ -72,9 +73,9 @@ void city_migration_t::update_status() {
         cur_population_cap = std::min(cur_population_cap, population_cap);
     }
 
-    if (cur_population_cap > 0 && g_city.population.current >= cur_population_cap) {
+    if (cur_population_cap > 0 && city_population().current >= cur_population_cap) {
         percentage = 0;
-        if (!migration_cap && g_city.population.room_in_houses > 0) {
+        if (!migration_cap && city_population().room_in_houses > 0) {
             events::emit(event_city_warning{ "#immigration_people_wont_come" });
         }
         migration_cap = true;
@@ -103,7 +104,7 @@ void city_migration_t::update_status() {
         // emigration
         if (immigration_duration) {
             immigration_duration--;
-        } else if (g_city.population.current > 100) {
+        } else if (city_population().current > 100) {
             emigration_amount_per_batch
               = calc_adjust_with_percentage<int>(params.max_leftovers_per_update, -percentage);
             emigration_duration = 2;
@@ -112,7 +113,7 @@ void city_migration_t::update_status() {
 }
 
 void city_migration_t::create_immigrants(int num_people) {
-    int immigrated = g_city.population_sys().create_immigrants(num_people);
+    int immigrated = city_population().create_immigrants(num_people);
     immigrated_today += immigrated;
     newcomers += immigrated_today;
     if (immigrated == 0) {
@@ -147,7 +148,7 @@ city_migration_defaults_t& city_migration_t::current_params() {
 }
 
 void city_migration_t::create_emigrants(int num_people) {
-    emigrated_today += g_city.population_sys().create_emigrants(num_people);
+    emigrated_today += city_population().create_emigrants(num_people);
 }
 
 void city_migration_t::create_migrants() {
@@ -246,8 +247,8 @@ void city_migration_t::update_month() {
     });
 
     logs::info("[migration] %d.%02d pop=%d room=%d/%d reachable_room=%d sentiment=%d unemp=%d%%",
-      g_simulation.simtime.year, g_simulation.simtime.month + 1, g_city.population.current,
-      g_city.population.room_in_houses, g_city.population.total_capacity, room_reachable, city_sentiment().value,
+      g_simulation.simtime.year, g_simulation.simtime.month + 1, city_population().current,
+      city_population().room_in_houses, city_population().total_capacity, room_reachable, city_sentiment().value,
       city_labor().unemployment_percentage);
     logs::info("[migration] pct=%d (sent=%d unemp=%d) queue=%d/%d batch=%d/%d duration=%d/%d", percentage,
       percentage_by_sentiment, percentage_by_unemployments, immigration_queue_size, emigration_queue_size,
@@ -276,7 +277,7 @@ void city_migration_t::update() {
     update_status();
     create_migrants();
 
-    events::emit(event_migration_update{g_city.population.current});
+    events::emit(event_migration_update{city_population().current});
 }
 
 void city_migration_t::determine_reason() {
@@ -303,7 +304,7 @@ void city_migration_t::determine_reason() {
 }
 
 int city_migration_t::no_room_for_immigrants() {
-    return refused_immigrants_today || g_city.population.room_in_houses <= 0;
+    return refused_immigrants_today || city_population().room_in_houses <= 0;
 }
 
 void city_migration_t::add_condition(condition cond) {

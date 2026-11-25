@@ -5,6 +5,7 @@
 #include "grid/road_access.h"
 #include "building/building_house.h"
 #include "city/city.h"
+#include "city/city_population.h"
 #include "game/game_events.h"
 #include "widget/debug_console.h"
 #include "js/js_register.h"
@@ -20,7 +21,7 @@ void ANK_PERMANENT_CALLBACK(event_create_emigrant, ev) {
     }
 
     // OG 0x00458D80: pop -n, shrink / vacant lot, spawn at house, action CREATED, wait 0
-    g_city.population_sys().remove(ev.num_people);
+    city_population().remove(ev.num_people);
     if (ev.num_people < house->house_population()) {
         house->change_population(-ev.num_people);
     } else {

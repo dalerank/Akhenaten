@@ -3,6 +3,7 @@
 #include "building/building.h"
 #include "city/city_labor.h"
 #include "city/city.h"
+#include "city/city_population.h"
 #include "graphics/image.h"
 #include "graphics/graphics.h"
 #include "graphics/elements/lang_text.h"
@@ -52,7 +53,7 @@ int window_building_get_vertical_offset(object_info* c, int new_window_height) {
 }
 
 pcstr get_employment_info_text_key(object_info* c, building* b, int consider_house_covering) {
-    const int city_population = g_city.population.current;
+    const int population = city_population().current;
 
     if (b->num_workers >= b->max_workers) {
         if (consider_house_covering && b->houses_covered < 40) {
@@ -60,7 +61,7 @@ pcstr get_employment_info_text_key(object_info* c, building* b, int consider_hou
         }
         return "";
     }
-    if (city_population <= 0) {
+    if (population <= 0) {
         return "#building_no_people_in_city";
     }
     if (!consider_house_covering) {

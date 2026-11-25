@@ -6,6 +6,7 @@
 #include "city/city_labor.h"
 
 #include "city/city.h"
+#include "city/city_population.h"
 #include "city/city_taxes.h"
 #include "city/city_floods.h"
 #include "core/variant.h"
@@ -731,7 +732,7 @@ advisor_city_state advisor_city_state_current() {
     s.soldiers = g_city.figures.soldiers;
     s.newcomers = city_migration().newcomers;
     s.refused_immigrants_today = city_migration().refused_immigrants_today;
-    s.room_in_houses = g_city.population.room_in_houses;
+    s.room_in_houses = city_population().room_in_houses;
     s.migration_percentage = city_migration().percentage;
     s.no_immigration_cause = city_migration().no_immigration_cause;
     s.unemployment_percentage = city_labor().unemployment_percentage;
@@ -740,7 +741,7 @@ advisor_city_state advisor_city_state_current() {
     s.food_supply_months = g_city.resource.food_supply_months;
     s.food_stored_total = (int)g_city.resource.granary_total_stored;
     s.food_needed_per_month = g_city.resource.food_needed_per_month;
-    s.population = g_city.population.current;
+    s.population = city_population().current;
     s.food_supply_percentage = g_city.food_supply.percentage();
     s.health = city_health().value;
     s.god_mood0 = g_city.gods.gods[0].target_mood;

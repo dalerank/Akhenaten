@@ -12,6 +12,7 @@
 #include "building/building_bazaar.h"
 #include "building/building_house.h"
 #include "city/city.h"
+#include "city/city_population.h"
 #include "city/city_food_supply.h"
 #include "city/city_warnings.h"
 #include "core/calc.h"
@@ -395,7 +396,7 @@ void city_resources_t::calculate_available_food() {
         food_types_available[i] = granary_food_stored[i] > 0 ? 1 : 0;
     }
 
-    food_needed_per_month = calc_adjust_with_percentage(g_city.population.current, city_food_consumption_percentage());
+    food_needed_per_month = calc_adjust_with_percentage(city_population().current, city_food_consumption_percentage());
     if (food_needed_per_month > 0) {
         food_supply_months = granary_total_stored / food_needed_per_month;
     } else {

@@ -5,7 +5,6 @@
 #include "city/city_kingdome_relations.h"
 #include "game/player_record.h"
 #include "city/city_industry.h"
-#include "city/city_population.h"
 #include "city/buildings.h"
 #include "city/military.h"
 #include "city/city_resource.h"
@@ -26,8 +25,6 @@ struct empire_city;
 struct city_t {
     city_buildings_t buildings;
     city_figures_t figures;
-    population_state population;
-
     house_demands houses;
     kingdome_state kingdome;
     city_military_t military;
@@ -109,8 +106,6 @@ struct city_t {
     void update_month(simulation_time_t t);
     gods_context gods_ctx();
     gods_system gods_sys();
-    population_context population_ctx();
-    population_system population_sys();
     kingdome_context kingdome_ctx();
     kingdome_system kingdome_sys();
 

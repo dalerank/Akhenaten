@@ -6,6 +6,7 @@
 #include "figuretype/figure_cartpusher.h"
 #include "game/game_config.h"
 #include "city/city.h"
+#include "city/city_population.h"
 #include "city/city_recorded_paths.h"
 #include "city/city_resource.h"
 #include "figure/figure_names.h"
@@ -268,7 +269,7 @@ sound_key figure_impl::default_phrase_key() const {
 
     if (city_resource_food_supply_months() >= 4 && unemployment_pct <= 5 &&
         g_city.avg_coverage.average_health > 0 && g_city.avg_coverage.average_education > 0) {
-        if (g_city.population.current < 500) {
+        if (city_population().current < 500) {
             return "def_city_not_bad";
         }
 

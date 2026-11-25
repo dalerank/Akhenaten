@@ -1,4 +1,5 @@
 #include "city/city.h"
+#include "city/city_population.h"
 #include "city/ratings.h"
 #include "city/city_sentiment.h"
 #include "game/simulation.h"
@@ -26,7 +27,7 @@ static void generate_rioter(building* b) {
 
     city_sentiment().criminals++;
     int people_in_mob;
-    const int population = g_city.population.current;
+    const int population = city_population().current;
     if (population <= 150)
         people_in_mob = 1;
     else if (population <= 300)

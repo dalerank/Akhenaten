@@ -3,6 +3,7 @@
 
 #include "building/building.h"
 #include "city/city.h"
+#include "city/city_population.h"
 #include "city/city_buildings.h"
 #include "content/vfs.h"
 #include "figure/figure.h"
@@ -188,7 +189,7 @@ static pcstr __test_city_og_summary() {
     for (int i = 1; i < MAX_FIGURES; ++i) {
         figures += figure_get(i)->state == FIGURE_STATE_ALIVE ? 1 : 0;
     }
-    result = "0," + std::to_string(city_finance().treasury.value) + "," + std::to_string(g_city.population.current)
+    result = "0," + std::to_string(city_finance().treasury.value) + "," + std::to_string(city_population().current)
              + "," + std::to_string(buildings) + "," + std::to_string(figures);
     return result.c_str();
 }

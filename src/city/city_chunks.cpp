@@ -8,6 +8,7 @@
 #include "city/city_labor.h"
 
 #include "city/city.h"
+#include "city/city_population.h"
 #include "city/city_taxes.h"
 #include "city/sound.h"
 #include "city/entertainment.h"
@@ -41,27 +42,27 @@ static void city_data_bind_og_layout(io_buffer* iob) {
     iob->bind(BIND_SIGNATURE_INT32, &city_health().value);
     iob->bind(BIND_SIGNATURE_INT32, &city_health().num_mortuary_workers);
     iob->bind____skip(4);
-    iob->bind(BIND_SIGNATURE_INT32, &data.population.current);
-    iob->bind(BIND_SIGNATURE_INT32, &data.population.last_year);
-    iob->bind(BIND_SIGNATURE_INT32, &data.population.school_age);
-    iob->bind(BIND_SIGNATURE_INT32, &data.population.academy_age);
-    iob->bind(BIND_SIGNATURE_INT32, &data.population.total_capacity);
-    iob->bind(BIND_SIGNATURE_INT32, &data.population.room_in_houses);
+    iob->bind(BIND_SIGNATURE_INT32, &city_population().current);
+    iob->bind(BIND_SIGNATURE_INT32, &city_population().last_year);
+    iob->bind(BIND_SIGNATURE_INT32, &city_population().school_age);
+    iob->bind(BIND_SIGNATURE_INT32, &city_population().academy_age);
+    iob->bind(BIND_SIGNATURE_INT32, &city_population().total_capacity);
+    iob->bind(BIND_SIGNATURE_INT32, &city_population().room_in_houses);
     for (int i = 0; i < 2400; i++) {
-        iob->bind(BIND_SIGNATURE_INT32, &data.population.monthly.values[i]);
+        iob->bind(BIND_SIGNATURE_INT32, &city_population().monthly.values[i]);
     }
-    iob->bind(BIND_SIGNATURE_INT32, &data.population.monthly.next_index);
-    iob->bind(BIND_SIGNATURE_INT32, &data.population.monthly.count);
+    iob->bind(BIND_SIGNATURE_INT32, &city_population().monthly.next_index);
+    iob->bind(BIND_SIGNATURE_INT32, &city_population().monthly.count);
     for (int i = 0; i < 100; i++) {
-        iob->bind(BIND_SIGNATURE_UINT16, &data.population.at_age[i]);
+        iob->bind(BIND_SIGNATURE_UINT16, &city_population().at_age[i]);
     }
     for (int i = 0; i < 20; i++) {
-        iob->bind(BIND_SIGNATURE_UINT16, &data.population.at_level[i]);
+        iob->bind(BIND_SIGNATURE_UINT16, &city_population().at_level[i]);
         iob->bind____skip(2);
     }
-    iob->bind(BIND_SIGNATURE_INT32, &data.population.yearly_births);
-    iob->bind(BIND_SIGNATURE_INT32, &data.population.yearly_deaths);
-    iob->bind(BIND_SIGNATURE_INT32, &data.population.lost_removal);
+    iob->bind(BIND_SIGNATURE_INT32, &city_population().yearly_births);
+    iob->bind(BIND_SIGNATURE_INT32, &city_population().yearly_deaths);
+    iob->bind(BIND_SIGNATURE_INT32, &city_population().lost_removal);
     iob->bind(BIND_SIGNATURE_UINT8, &city_migration().immigration_amount_per_batch);
     iob->bind____skip(3);
     iob->bind(BIND_SIGNATURE_UINT8, &city_migration().emigration_amount_per_batch);
@@ -70,16 +71,16 @@ static void city_data_bind_og_layout(io_buffer* iob) {
     iob->bind____skip(3);
     iob->bind(BIND_SIGNATURE_UINT8, &city_migration().immigration_queue_size);
     iob->bind____skip(3);
-    iob->bind(BIND_SIGNATURE_INT32, &data.population.lost_homeless);
-    iob->bind(BIND_SIGNATURE_INT32, &data.population.last_change);
-    iob->bind(BIND_SIGNATURE_INT32, &data.population.average_per_year);
-    iob->bind(BIND_SIGNATURE_INT32, &data.population.total_all_years);
-    iob->bind(BIND_SIGNATURE_INT32, &data.population.people_in_shanties);
-    iob->bind(BIND_SIGNATURE_INT32, &data.population.people_in_manors);
-    iob->bind(BIND_SIGNATURE_INT32, &data.population.total_years);
-    iob->bind(BIND_SIGNATURE_INT32, &data.population.yearly_update_requested);
-    iob->bind(BIND_SIGNATURE_INT32, &data.population.last_used_house_add);
-    iob->bind(BIND_SIGNATURE_INT32, &data.population.last_used_house_remove);
+    iob->bind(BIND_SIGNATURE_INT32, &city_population().lost_homeless);
+    iob->bind(BIND_SIGNATURE_INT32, &city_population().last_change);
+    iob->bind(BIND_SIGNATURE_INT32, &city_population().average_per_year);
+    iob->bind(BIND_SIGNATURE_INT32, &city_population().total_all_years);
+    iob->bind(BIND_SIGNATURE_INT32, &city_population().people_in_shanties);
+    iob->bind(BIND_SIGNATURE_INT32, &city_population().people_in_manors);
+    iob->bind(BIND_SIGNATURE_INT32, &city_population().total_years);
+    iob->bind(BIND_SIGNATURE_INT32, &city_population().yearly_update_requested);
+    iob->bind(BIND_SIGNATURE_INT32, &city_population().last_used_house_add);
+    iob->bind(BIND_SIGNATURE_INT32, &city_population().last_used_house_remove);
     iob->bind(BIND_SIGNATURE_UINT8, &city_migration().immigrated_today);
     iob->bind____skip(3);
     iob->bind(BIND_SIGNATURE_UINT8, &city_migration().emigrated_today);
@@ -130,8 +131,8 @@ static void city_data_bind_og_layout(io_buffer* iob) {
         iob->bind(BIND_SIGNATURE_INT32, &data.resource.stockpiled[i]);
     iob->bind(BIND_SIGNATURE_INT32, &data.resource.food_supply_months);
     iob->bind(BIND_SIGNATURE_INT32, &data.resource.granaries.operating);
-    iob->bind(BIND_SIGNATURE_INT32, &data.population.percentage_plebs);
-    iob->bind(BIND_SIGNATURE_INT32, &data.population.working_age);
+    iob->bind(BIND_SIGNATURE_INT32, &city_population().percentage_plebs);
+    iob->bind(BIND_SIGNATURE_INT32, &city_population().working_age);
     iob->bind(BIND_SIGNATURE_INT32, &city_labor().workers_available);
     for (int i = 0; i < LABOR_CATEGORY_SAVE_SLOTS; i++) {
         iob->bind(BIND_SIGNATURE_INT32, &city_labor().categories[i].workers_needed);
@@ -236,7 +237,7 @@ static void city_data_bind_og_layout(io_buffer* iob) {
     iob->bind____skip(2);
     iob->bind(BIND_SIGNATURE_UINT16, &city_finance().this_year.expenses.disasters);
     iob->bind(BIND_SIGNATURE_UINT16, &city_finance().last_year.expenses.disasters);
-    iob->bind(BIND_SIGNATURE_INT32, &data.population.last_day_current);
+    iob->bind(BIND_SIGNATURE_INT32, &city_population().last_day_current);
     iob->bind(BIND_SIGNATURE_UINT16, &city_migration().nobles_leave_city_this_year);
     iob->bind____skip(2);
     for (int i = 0; i < RESOURCES_FOODS_MAX; i++)
@@ -249,7 +250,7 @@ static void city_data_bind_og_layout(io_buffer* iob) {
     iob->bind____skip(3);
     iob->bind(BIND_SIGNATURE_INT32, &data.kingdome.debt_state);
     iob->bind(BIND_SIGNATURE_INT32, &data.kingdome.months_in_debt);
-    iob->bind(BIND_SIGNATURE_INT32, &data.population.lost_troop_request);
+    iob->bind(BIND_SIGNATURE_INT32, &city_population().lost_troop_request);
     iob->bind(BIND_SIGNATURE_INT32, &city_sentiment().message_delay);
     iob->bind(BIND_SIGNATURE_UINT8, &data.kingdome.rating_cap);
     iob->bind____skip(3);
@@ -458,9 +459,9 @@ static void city_data_bind_og_layout(io_buffer* iob) {
     iob->bind____skip(2);
     iob->bind(BIND_SIGNATURE_INT8, &city_sentiment().wages);
     iob->bind____skip(3);
-    iob->bind(BIND_SIGNATURE_UINT16, &data.population.people_in_huts);
+    iob->bind(BIND_SIGNATURE_UINT16, &city_population().people_in_huts);
     iob->bind____skip(2);
-    iob->bind(BIND_SIGNATURE_UINT16, &data.population.people_in_residences);
+    iob->bind(BIND_SIGNATURE_UINT16, &city_population().people_in_residences);
     iob->bind____skip(2);
     iob->bind(BIND_SIGNATURE_UINT16, &data.figures.kingdome_soldiers);
     iob->bind____skip(18);
@@ -487,7 +488,7 @@ static void city_data_bind_og_layout(io_buffer* iob) {
     iob->bind____skip(10);
     iob->bind(BIND_SIGNATURE_INT8, &city_sentiment().include_huts);
     iob->bind____skip(16);
-    iob->bind(BIND_SIGNATURE_INT32, &data.population.highest_ever);
+    iob->bind(BIND_SIGNATURE_INT32, &city_population().highest_ever);
     iob->bind(BIND_SIGNATURE_INT32, &city_finance().estimated_wages);
     iob->bind(BIND_SIGNATURE_INT32, &data.resource.luxury_goods_kinds);
     iob->bind(BIND_SIGNATURE_UINT8, &city_ratings().prosperity_max);
