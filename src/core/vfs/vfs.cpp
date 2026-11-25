@@ -5,6 +5,8 @@
 #include "platform/platform.h"
 #include "core/vfs/zipreader.hpp"
 #include "core/vfs/reader.h"
+#include "core/vfs/vfs_state.h"
+#include "core/xvalue.h"
 
 #include <filesystem>
 #include <algorithm>
@@ -31,13 +33,20 @@ EM_ASYNC_JS(void, __sync_em_fs, (), {
 
 namespace vfs{
 
-bool g_verbose_log = false;
+vfs_t &vfs() {
+    return xvalue<vfs_t>::ref();
+}
+
+ZipArchive *vfs_t::find_archive(const path &filepath) const {
+    const auto it = std::find_if(mounted_archives.begin(), mounted_archives.end(), [&filepath](const ZipArchive *arch) {
+        return arch->filepath() == filepath;
+    });
+    return it == mounted_archives.end() ? nullptr : *it;
+}
 
 FILE * file_open_os(path filename, pcstr mode) {
     return platform_file_manager_open_file(filename.c_str(), mode);
 }
-
-std::vector<ZipArchive*> g_mounted_archives;
 
 #if defined(GAME_PLATFORM_ANDROID)
 namespace {
@@ -82,7 +91,7 @@ namespace {
 
 template<typename ... Args>
 void log_io(pcstr fmt, Args ... args) {
-    if (!g_verbose_log) {
+    if (!vfs().verbose_log) {
        return;
     }
     logs::info(fmt, args...);
@@ -143,9 +152,10 @@ static ZipArchive *find_mounted_archive(const vfs::path &path) {
         return nullptr;
     }
 
-    const auto it = std::find_if(g_mounted_archives.begin(), g_mounted_archives.end(),
+    const auto &archives = vfs().mounted_archives;
+    const auto it = std::find_if(archives.begin(), archives.end(),
       [&pack_path](const ZipArchive *arch) { return is_same_pack(arch->filepath(), pack_path); });
-    return (it == g_mounted_archives.end()) ? nullptr : *it;
+    return (it == archives.end()) ? nullptr : *it;
 }
 
 reader file_open(path path, pcstr mode) {
@@ -290,18 +300,14 @@ void umount_pack(path filename) {
         return;
     }
 
-    const auto it = std::find_if(g_mounted_archives.begin(), g_mounted_archives.end(), [&filename] (const ZipArchive *arch) {
-        return arch->filepath() == filename;
-    });
-
-    if (it == g_mounted_archives.end()) {
+    ZipArchive *pack = vfs().find_archive(filename);
+    if (!pack) {
         return;
     }
 
-    auto *pack_to_umount = *it;
-    g_mounted_archives.erase(it);
-
-    delete pack_to_umount;
+    auto &archives = vfs().mounted_archives;
+    archives.erase(std::find(archives.begin(), archives.end(), pack));
+    delete pack;
 }
 
 bool mounted_entry_resolve(path in_path, path &out_path) {
@@ -349,10 +355,7 @@ bool is_pack_mounted(path filename) {
         return false;
     }
 
-    const auto it = std::find_if(g_mounted_archives.begin(), g_mounted_archives.end(), [&filename] (const ZipArchive *arch) {
-        return arch->filepath() == filename;
-    });
-    return it != g_mounted_archives.end();
+    return vfs().find_archive(filename) != nullptr;
 }
 
 bool mount_pack(path filename) {
@@ -370,7 +373,7 @@ bool mount_pack(path filename) {
         return false;
     }
 
-    g_mounted_archives.push_back(newzip);
+    vfs().mounted_archives.push_back(newzip);
 
     return true;
 }

@@ -5,14 +5,14 @@
 
 namespace vfs {
 
-#if defined(_MSC_VER) || defined(__BORLANDC__) || defined (__BCPLUSPLUS__)
-#	pragma pack( push, packing )
-#	pragma pack( 1 )
-#	define PACK_STRUCT
-#elif defined( __GNUC__ )
-#	define PACK_STRUCT	__attribute__((packed))
+#if defined(_MSC_VER) || defined(__BORLANDC__) || defined(__BCPLUSPLUS__)
+#pragma pack(push, packing)
+#pragma pack(1)
+#define PACK_STRUCT
+#elif defined(__GNUC__)
+#define PACK_STRUCT __attribute__((packed))
 #else
-#	error compiler not supported
+#error compiler not supported
 #endif
 
     // set if the file is encrypted
@@ -28,7 +28,7 @@ namespace vfs {
     } PACK_STRUCT;
 
     struct SZIPFileHeader {
-        unsigned int Sig;				// 'PK0304' little endian (0x04034b50)
+        unsigned int Sig; // 'PK0304' little endian (0x04034b50)
         short VersionToExtract;
         short GeneralBitFlag;
         short CompressionMethod;
@@ -42,7 +42,7 @@ namespace vfs {
     } PACK_STRUCT;
 
     struct SZIPFileCentralDirFileHeader {
-        unsigned int Sig;	// 'PK0102' (0x02014b50)
+        unsigned int Sig; // 'PK0102' (0x02014b50)
         unsigned short VersionMadeBy;
         unsigned short VersionToExtract;
         unsigned short GeneralBitFlag;
@@ -67,14 +67,14 @@ namespace vfs {
     } PACK_STRUCT;
 
     struct SZIPFileCentralDirEnd {
-        unsigned int Sig;			// 'PK0506' end_of central dir signature			// (0x06054b50)
-        unsigned short NumberDisk;		// number of this disk
-        unsigned short NumberStart;	// number of the disk with the start of the central directory
-        unsigned short TotalDisk;		// total number of entries in the central dir on this disk
-        unsigned short TotalEntries;	// total number of entries in the central dir
-        unsigned int Size;			// size of the central directory
-        unsigned int Offset;			// offset of start of centraldirectory with respect to the starting disk number
-        unsigned short CommentLength;	// zipfile comment length
+        unsigned int Sig;             // 'PK0506' end_of central dir signature			// (0x06054b50)
+        unsigned short NumberDisk;    // number of this disk
+        unsigned short NumberStart;   // number of the disk with the start of the central directory
+        unsigned short TotalDisk;     // total number of entries in the central dir on this disk
+        unsigned short TotalEntries;  // total number of entries in the central dir
+        unsigned int Size;            // size of the central directory
+        unsigned int Offset;          // offset of start of centraldirectory with respect to the starting disk number
+        unsigned short CommentLength; // zipfile comment length
         // zipfile comment (variable size)
     } PACK_STRUCT;
 
@@ -88,16 +88,16 @@ namespace vfs {
     };
 
     struct SGZIPMemberHeader {
-        unsigned short sig; // 0x8b1f
-        unsigned char  compressionMethod; // 8 = deflate
-        unsigned char  flags;
+        unsigned short sig;              // 0x8b1f
+        unsigned char compressionMethod; // 8 = deflate
+        unsigned char flags;
         unsigned int time;
-        unsigned char  extraFlags; // slow compress = 2, fast compress = 4
-        unsigned char  operatingSystem;
+        unsigned char extraFlags; // slow compress = 2, fast compress = 4
+        unsigned char operatingSystem;
     } PACK_STRUCT;
 
-#if defined(_MSC_VER) || defined(__BORLANDC__) || defined (__BCPLUSPLUS__)
-#	pragma pack( pop, packing )
+#if defined(_MSC_VER) || defined(__BORLANDC__) || defined(__BCPLUSPLUS__)
+#pragma pack(pop, packing)
 #endif
 
 #undef PACK_STRUCT
@@ -113,27 +113,27 @@ namespace vfs {
 
     class ZipArchive {
     public:
-        ZipArchive(const vfs::path &filename);
+        ZipArchive(const vfs::path& filename);
 
         //! destructor
         ~ZipArchive();
 
         //! opens a file by file name
-        reader createAndOpenFile(const vfs::path &filename, pcstr mode);
+        reader createAndOpenFile(const vfs::path& filename, pcstr mode);
 
         //! opens a file by index
         reader createAndOpenFile(unsigned int index, pcstr mode);
 
         //! returns the list of files
-        const std::vector<xstring> &entries() const;
+        const std::vector<xstring>& entries() const;
         //! the same entries as written in the archive, not lowercased
         const std::vector<xstring>& names() const { return _names; }
-        const vfs::path &filepath() const { return _filepath; }
+        const vfs::path& filepath() const { return _filepath; }
 
         bool isGzip() const;
         bool isValid() const { return !_files.empty(); }
-    protected:
 
+    protected:
         //! reads the next file header from a ZIP file, returns false if there are no more headers.
         /* if ignoreGPBits is set, the item will be read despite missing
            file information. This is used when reading items from the central
@@ -158,4 +158,4 @@ namespace vfs {
         bool _corrupt = false;
     };
 
-} // vfs
+} // namespace vfs

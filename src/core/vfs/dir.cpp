@@ -3,6 +3,7 @@
 #include "core/vfs/vfs.h"
 #include "core/string.h"
 #include "core/vfs/file_manager.h"
+#include "core/vfs/vfs_state.h"
 #include "platform/platform.h"
 
 #include <stdlib.h>
@@ -10,8 +11,6 @@
 #include <filesystem>
 #include <SDL.h>
 #include <algorithm>
-#include <map>
-#include <set>
 #include <string>
 #include <vector>
 
@@ -19,22 +18,7 @@ namespace fs = std::filesystem;
 
 #define BASE_MAX_FILES 100
 
-struct dir_data_t {
-    dir_listing listing;
-    int max_files;
-};
-
-dir_data_t g_dir_data;
-
 namespace vfs {
-
-struct path_uri {
-    vfs::path original;
-    vfs::path lowered;
-};
-
-std::map<size_t, path_uri> path_cache;
-std::set<size_t> path_missing;
 
 static bool is_absolute_path(pcstr filepath) {
     if (!filepath || !*filepath) {
@@ -50,23 +34,22 @@ static bool is_absolute_path(pcstr filepath) {
     return (*filepath) == '/';
 }
 
-static vfs::path g_user_data_folder;
-
 void set_user_data_folder(pcstr absolute) {
-    g_user_data_folder = absolute ? absolute : "";
+    vfs().user_data_folder = absolute ? absolute : "";
 }
 
 vfs::path save_folder() {
-    return g_user_data_folder.empty() ? vfs::path(SAVE_FOLDER) : vfs::path(g_user_data_folder, "/", SAVE_FOLDER);
+    return vfs().user_data_folder.empty() ? vfs::path(SAVE_FOLDER)
+                                          : vfs::path(vfs().user_data_folder, "/", SAVE_FOLDER);
 }
 
 vfs::path user_maps_folder() {
-    return g_user_data_folder.empty() ? vfs::path() : vfs::path(g_user_data_folder, "/", MAPS_FOLDER);
+    return vfs().user_data_folder.empty() ? vfs::path() : vfs::path(vfs().user_data_folder, "/", MAPS_FOLDER);
 }
 
 [[maybe_unused]] static vfs::path user_maps_path(pcstr filepath) {
     const size_t prefix = strlen(MAPS_FOLDER);
-    if (g_user_data_folder.empty() || SDL_strncasecmp(filepath, MAPS_FOLDER, prefix) != 0
+    if (vfs().user_data_folder.empty() || SDL_strncasecmp(filepath, MAPS_FOLDER, prefix) != 0
         || (filepath[prefix] != '/' && filepath[prefix] != '\\')) {
         return {};
     }
@@ -75,7 +58,7 @@ vfs::path user_maps_folder() {
 
 static vfs::path user_saves_path(pcstr filepath) {
     const size_t prefix = strlen(SAVE_FOLDER);
-    if (g_user_data_folder.empty() || SDL_strncasecmp(filepath, SAVE_FOLDER, prefix) != 0
+    if (vfs().user_data_folder.empty() || SDL_strncasecmp(filepath, SAVE_FOLDER, prefix) != 0
         || (filepath[prefix] != '/' && filepath[prefix] != '\\')) {
         return {};
     }
@@ -101,25 +84,14 @@ void content_cache_real_file_paths(pcstr f) {
         return;
     }
 
-    auto add_cached_path = [] (pcstr entry) {
-        path_uri uri;
-        uri.original = entry;
-        uri.original.replace('\\', '/');
-        uri.lowered = uri.original;
-        uri.lowered.tolower();
-        size_t lhash = uri.lowered.hash();
-
-        path_cache.insert({lhash, uri});
-    };
-
-    add_cached_path(folder);
+    vfs().cache_path(folder);
 
     for (const auto &entry : fs::directory_iterator(folder.c_str())) {
         if (!fs::is_regular_file(entry.path())) {
             continue;
         }
 
-        add_cached_path(entry.path().string().c_str());
+        vfs().cache_path(entry.path().string().c_str());
     }
 }
 
@@ -134,27 +106,18 @@ void content_cache_paths() {
         return;
     }
 
-    auto add_cached_path = [] (pcstr entry) {
-        path_uri uri;
-        uri.original = entry;
-        uri.original.replace('\\', '/');
-        uri.lowered = uri.original;
-        uri.lowered.tolower();
-        path_cache.insert({uri.lowered.hash(), uri});
-    };
-
-    add_cached_path(root);
+    vfs().cache_path(root);
     for (auto it = fs::recursive_directory_iterator(root.c_str(), fs::directory_options::skip_permission_denied, ec);
          it != fs::recursive_directory_iterator(); it.increment(ec)) {
         if (ec) {
             break;
         }
-        add_cached_path(it->path().string().c_str());
+        vfs().cache_path(it->path().string().c_str());
     }
 }
 
 static void allocate_listing_files(int min, int max) {
-    auto &data = g_dir_data;
+    vfs_t& data = vfs();
     for (int i = min; i < max; i++) {
         data.listing.files[i] = (char *)malloc(MAX_FILE_NAME * sizeof(char));
         data.listing.files[i][0] = 0;
@@ -162,26 +125,26 @@ static void allocate_listing_files(int min, int max) {
 }
 
 static void clear_dir_listing() {
-    auto &data = g_dir_data;
+    vfs_t& data = vfs();
     data.listing.num_files = 0;
-    if (data.max_files <= 0) {
+    if (data.listing_capacity <= 0) {
         data.listing.files = (char **)malloc(BASE_MAX_FILES * sizeof(char *));
         allocate_listing_files(0, BASE_MAX_FILES);
-        data.max_files = BASE_MAX_FILES;
+        data.listing_capacity = BASE_MAX_FILES;
     } else {
-        for (int i = 0; i < data.max_files; i++) {
+        for (int i = 0; i < data.listing_capacity; i++) {
             data.listing.files[i][0] = 0;
         }
     }
 }
 
 static void expand_dir_listing() {
-    auto &data = g_dir_data;
-    int old_max_files = data.max_files;
+    vfs_t& data = vfs();
+    int old_max_files = data.listing_capacity;
 
-    data.max_files = 2 * old_max_files;
-    data.listing.files = (char **)realloc(data.listing.files, data.max_files * sizeof(char *));
-    allocate_listing_files(old_max_files, data.max_files);
+    data.listing_capacity = 2 * old_max_files;
+    data.listing.files = (char**)realloc(data.listing.files, data.listing_capacity * sizeof(char*));
+    allocate_listing_files(old_max_files, data.listing_capacity);
 }
 
 static int compare_lower(const void *va, const void *vb) {
@@ -190,9 +153,9 @@ static int compare_lower(const void *va, const void *vb) {
 }
 
 static int add_to_listing(pcstr filename) {
-    auto &data = g_dir_data;
+    vfs_t& data = vfs();
 
-    if (data.listing.num_files >= data.max_files)
+    if (data.listing.num_files >= data.listing_capacity)
         expand_dir_listing();
 
     strncpy(data.listing.files[data.listing.num_files], filename, MAX_FILE_NAME);
@@ -202,7 +165,7 @@ static int add_to_listing(pcstr filename) {
 }
 
 const dir_listing *dir_find_files_with_extension(xstring dir, xstring extension) {
-    auto &data = g_dir_data;
+    vfs_t& data = vfs();
 
     clear_dir_listing();
     platform_file_manager_list_directory_contents(dir.c_str(), TYPE_FILE, extension.c_str(), add_to_listing);
@@ -211,7 +174,7 @@ const dir_listing *dir_find_files_with_extension(xstring dir, xstring extension)
 }
 
 const dir_listing *dir_find_all_subdirectories(pcstr dir) {
-    auto &data = g_dir_data;
+    vfs_t& data = vfs();
 
     clear_dir_listing();
     platform_file_manager_list_directory_contents(dir, TYPE_DIR, 0, add_to_listing);
@@ -230,8 +193,8 @@ std::vector<path> dir_find_all_subdirectories(vfs::path dir, bool) {
 }
 
 void content_clear_path_cache() {
-    path_cache.clear();
-    path_missing.clear();
+    vfs().path_cache.clear();
+    vfs().path_missing.clear();
 }
 
 #if !defined(GAME_PLATFORM_WIN) && !defined(GAME_PLATFORM_ANDROID)
@@ -297,7 +260,7 @@ vfs::path content_path(pcstr path) {
     vfs::path lower = uri_path.tolower();
     const size_t lhash = lower.hash();
 
-    if (const auto it = path_cache.find(lhash); it != path_cache.end()) {
+    if (const auto it = vfs().path_cache.find(lhash); it != vfs().path_cache.end()) {
         if (strcmp(it->second.lowered.c_str(), uri_path.c_str()) == 0) {
             return it->second.original;
         }
@@ -305,38 +268,47 @@ vfs::path content_path(pcstr path) {
 
 #if !defined(GAME_PLATFORM_WIN) && !defined(GAME_PLATFORM_ANDROID)
     std::error_code ec;
-    if (fs::exists(orig_path.c_str(), ec) || path_missing.count(lhash)) {
+    if (fs::exists(orig_path.c_str(), ec) || vfs().path_missing.count(lhash)) {
         return orig_path;
     }
 
     vfs::path corrected;
     if (correct_case_on_disk(path, corrected)) {
-        path_uri uri;
+        vfs_t::path_uri uri;
         uri.original = corrected;
         uri.lowered = lower;
-        path_cache.insert({lhash, uri});
+        vfs().path_cache.insert({lhash, uri});
         return corrected;
     }
     // A file created later gets this spelling, which the exists() check above finds first.
-    path_missing.insert(lhash);
+    vfs().path_missing.insert(lhash);
 #endif
 
     return orig_path;
 }
 
-vfs::path current_path(pcstr path) {
-    static const vfs::path base = [] {
-        vfs::path dir;
-        if (char* sdl_base = SDL_GetBasePath()) {
-            std::string s = sdl_base;
-            SDL_free(sdl_base);
-            while (!s.empty() && (s.back() == '/' || s.back() == '\\')) {
-                s.pop_back();
-            }
-            dir = s.c_str();
+vfs_t::vfs_t() {
+    if (char* sdl_base = SDL_GetBasePath()) {
+        std::string s = sdl_base;
+        SDL_free(sdl_base);
+        while (!s.empty() && (s.back() == '/' || s.back() == '\\')) {
+            s.pop_back();
         }
-        return dir;
-    }();
+        exe_dir = s.c_str();
+    }
+}
+
+void vfs_t::cache_path(pcstr entry) {
+    path_uri uri;
+    uri.original = entry;
+    uri.original.replace('\\', '/');
+    uri.lowered = uri.original;
+    uri.lowered.tolower();
+    path_cache.insert({uri.lowered.hash(), uri});
+}
+
+vfs::path current_path(pcstr path) {
+    const vfs::path& base = vfs().exe_dir;
 
     vfs::path result;
     if (!base.empty()) {
@@ -414,7 +386,7 @@ vfs::path vfs::path::resolve() {
 }
 
 const dir_listing *dir_append_files_with_extension(xstring dir, xstring extension) {
-    auto &data = g_dir_data;
+    vfs_t& data = vfs();
 
     platform_file_manager_list_directory_contents(dir.c_str(), TYPE_FILE, extension.c_str(), add_to_listing);
     qsort(data.listing.files, data.listing.num_files, sizeof(char *), compare_lower);
