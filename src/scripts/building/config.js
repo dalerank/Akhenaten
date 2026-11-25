@@ -106,7 +106,7 @@ building_carpenters_guild = {
 }
 
 building_reed_gatherer {
-  city_sound : "clay_pit"
+  city_sound : "reed_gatherer"
   animations {
     preview { pos : [0, 0], pack:PACK_GENERAL, id:24 }
     base { pos : [0, 0], pack:PACK_GENERAL, id:24 }
@@ -359,7 +359,7 @@ building_ferry {
 }
 
 building_shipyard = {
-  city_sound : "storage_yard"
+  city_sound : "shipyard"
   animations : {
     preview : { pack: PACK_TERRAIN, id:26, max_frames:1 },
     base : { pack: PACK_TERRAIN, id:26, max_frames:1 },

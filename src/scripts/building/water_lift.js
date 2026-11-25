@@ -1,7 +1,7 @@
 log_info("akhenaten: building_water_lift started")
 
 building_water_lift {
-  city_sound : "police"
+  city_sound : "water_lift"
   animations {
     _pack { pack:PACK_TERRAIN }
     preview { path: "pharaoh_terrain/transport_00029" }

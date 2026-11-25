@@ -76,6 +76,8 @@ city_sounds = [
   { id: "lamp_workshop", p: "Wavs/lampmaker_r.wav" }
   { id: "paint_workshop", p: "Wavs/paintmaker_r.wav" }
   { id: "artisans_guild", p: "Wavs/artisans_r.wav" }
+  { id: "water_lift", p: "Wavs/waterwheel.wav" }
+  { id: "reed_gatherer", p: "Wavs/reedfarm.wav" }
 ]
 
 terrain_sounds = [
