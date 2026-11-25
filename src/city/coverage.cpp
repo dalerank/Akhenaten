@@ -15,7 +15,6 @@
 #include "city/city_population.h"
 #include "core/calc.h"
 #include "core/profiler.h"
-#include "core/buffer.h"
 
 city_average_coverage_t& city_avg_coverage() {
     return xvalue<city_average_coverage_t>::ref();
@@ -56,52 +55,12 @@ void city_average_coverage_t::update() {
     city_entertainment().calculate_shows();
 }
 
-void city_coverage_t::save(buffer *buf) {
-    buf->write_u8(booth);
-    buf->write_u8(0);
-    buf->write_u16(0);
-    buf->write_i32(bandstand);
-    buf->write_i32(pavilion);
-    buf->write_u8(physician);
-    buf->write_u8(dentist);
-    buf->write_u8(apothecary);
-    buf->write_u8(0);
-    buf->write_i32(senet_house);
-
-    buf->write_i32(zoo);
-    buf->write_i32(0);
-    buf->write_i32(0);
-    buf->write_i32(0);
-    buf->write_i32(0);
-
-    buf->write_i32(oracle);
-    buf->write_i32(school);
-    buf->write_i32(library);
-    buf->write_i32(academy);
-    buf->write_i32(mortuary);
+city_coverage_t& city_coverage() {
+    return xvalue<city_coverage_t>::ref();
 }
 
-void city_coverage_t::load(buffer *buf) {
-    booth = buf->read_u8();
-    buf->read_u8();
-    buf->read_u16();
-    bandstand = buf->read_i32();
-    pavilion = buf->read_i32();
-    physician = buf->read_u8();
-    dentist = buf->read_u8();
-    apothecary = buf->read_u8();
-    int tmp = buf->read_u8();
-    senet_house = buf->read_i32();
-
-    // First reserved i32 is zoo; remaining 4 i32s stay unused (20 bytes total reserved).
-    zoo = buf->read_i32();
-    buf->skip(16);
-
-    oracle = buf->read_i32();
-    school = buf->read_i32();
-    library = buf->read_i32();
-    academy = buf->read_i32();
-    mortuary = buf->read_i32();
+void city_coverage_t::reset() {
+    *this = {};
 }
 
 void city_coverage_t::update() {
@@ -136,19 +95,20 @@ void city_coverage_t::update() {
 }
 
 int city_average_coverage_t::calc_average_entertainment() {
-    const auto &coverage = g_city.coverage;
+    const auto& coverage = city_coverage();
     return (coverage.senet_house + coverage.pavilion + coverage.bandstand + coverage.booth + coverage.zoo) / 5;
 }
 
 class coverage_system : public sim_system {
 public:
     const char* name() const override { return "coverage"; }
+    void on_reset() override { city_coverage().reset(); }
     void register_steps(sim_schedule_t& schedule) override {
         schedule.add({sim_step_coverage, SIM_PHASE_TICK, [](int tick) {
                           if (tick != 1) {
                               return;
                           }
-                          g_city.coverage.update();
+                          city_coverage().update();
                       }});
     }
 };

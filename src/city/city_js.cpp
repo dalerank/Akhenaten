@@ -452,7 +452,7 @@ void __popup_messages_set_banner(int cat, bool banner) {
 ANK_FUNCTION_2(__popup_messages_set_banner)
 
 std::optional<bvariant> __city_get_coverage_property(pcstr property) {
-    return archive_helper::get(g_city.coverage, property, true);
+    return archive_helper::get(city_coverage(), property, true);
 }
 ANK_FUNCTION_1(__city_get_coverage_property)
 

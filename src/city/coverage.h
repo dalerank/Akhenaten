@@ -3,8 +3,6 @@
 #include "core/archive.h"
 #include "city/coverage.h"
 
-class buffer;
-
 struct city_coverage_t {
     int booth;
     int bandstand;
@@ -20,13 +18,14 @@ struct city_coverage_t {
     int library;
     int oracle;
 
-    void save(buffer *buf);
-    void load(buffer *buf);
+    void reset();
     void update();
 };
 
 ANK_CONFIG_PROPERTY(city_coverage_t,
     booth, bandstand, pavilion, senet_house, zoo, physician, dentist, apothecary, mortuary, school, academy, library, oracle)
+
+city_coverage_t& city_coverage();
 
 struct city_average_coverage_t {
     int32_t average_entertainment;

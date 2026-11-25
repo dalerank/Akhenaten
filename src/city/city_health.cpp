@@ -194,7 +194,7 @@ void city_health_t::update_coverage() {
         }
     });
 
-    auto& coverage = g_city.coverage;
+    auto& coverage = city_coverage();
     coverage.apothecary = (uint8_t)calc_percentage(with_apothecary, population);
     coverage.mortuary = (uint8_t)calc_percentage(with_mortuary, population);
     coverage.physician = (uint8_t)calc_percentage(with_physician, population);

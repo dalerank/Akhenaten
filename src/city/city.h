@@ -34,7 +34,6 @@ struct city_t {
 
     city_monuments_t monuments;
 
-    city_coverage_t coverage;
 
     city_map_t map;
 

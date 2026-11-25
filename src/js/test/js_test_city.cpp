@@ -1,4 +1,5 @@
 #include "js/test/js_test_common.h"
+#include "city/coverage.h"
 #include "city/city_kingdome_relations.h"
 #include "city/city_religion.h"
 #include "city/city_finance.h"
@@ -473,7 +474,7 @@ static void __test_city_update_culture() {
 ANK_FUNCTION(__test_city_update_culture);
 
 static void __test_coverage_set(pcstr field, int value) {
-    auto& c = g_city.coverage;
+    auto& c = city_coverage();
     const xstring name(field);
     if (name == "booth")
         c.booth = value;

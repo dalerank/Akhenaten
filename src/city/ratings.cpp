@@ -43,7 +43,7 @@ culture_rating_params_t ANK_VARIABLE(culture_rating);
 namespace {
 
     int culture_coverage_value(const xstring& coverage) {
-        const auto& c = g_city.coverage;
+        const auto& c = city_coverage();
         if (coverage == "jugglers")
             return c.booth;
         if (coverage == "musicians")
