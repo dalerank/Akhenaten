@@ -1,7 +1,7 @@
 log_info("akhenaten: building_conservatory started")
 
 building_conservatory {
-  sound_channel : SOUND_CHANNEL_CITY_CONSERVATORY
+  city_sound : "conservatory"
   animations {
     preview { pack:PACK_GENERAL, id:51 }
     base { pack:PACK_GENERAL, id:51 }

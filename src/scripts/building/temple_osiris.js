@@ -13,7 +13,7 @@ building_temple_osiris {
     spawn_delays : [3, 7, 10, 15, 20]
     labor_category : LABOR_CATEGORY_RELIGION
     overlay : OVERLAY_RELIGION_OSIRIS
-    sound_channel : SOUND_CHANNEL_CITY_TEMPLE_OSIRIS
+    city_sound : "temple_osiris"
     building_size : 3
     meta { text_id: 92, help_link:"message_building_shrine_and_temple" }
     info_sound : "Wavs/tem_osiris_l.wav"

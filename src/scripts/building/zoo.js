@@ -43,7 +43,7 @@ building_zoo {
   desirability : { value:[-6], step:[1], step_size:[2], range: [3] }
   laborers:[30], fire_risk:[5, 5, 5, 5, 7], damage_risk: [5, 5, 5, 5, 7]
   min_houses_coverage : 51
-  sound_channel : SOUND_CHANNEL_CITY_ZOO
+  city_sound : "zoo"
   flags {
     is_entertainment: true
   }

@@ -1,7 +1,7 @@
 log_info("akhenaten: load houses started")
 
 building_house_crude_hut {
-  sound_channel : SOUND_CHANNEL_CITY_HOUSE_SLUM
+  city_sound : "house_slum"
   animations {
     _pack { pack: PACK_GENERAL }
     preview{ id: 36 }
@@ -85,7 +85,7 @@ building_house_crude_hut {
 }
 
 building_house_sturdy_hut {
-  sound_channel : SOUND_CHANNEL_CITY_HOUSE_SLUM
+  city_sound : "house_slum"
   animations {
     _pack { pack: PACK_GENERAL }
     house {id: 26, offset:2 }
@@ -156,7 +156,7 @@ building_house_sturdy_hut {
 }
 
 building_house_meager_shanty {
-  sound_channel : SOUND_CHANNEL_CITY_HOUSE_SLUM
+  city_sound : "house_slum"
   animations {
     _pack { pack: PACK_GENERAL }
     house{ id: 27 }
@@ -225,7 +225,7 @@ building_house_meager_shanty {
 }
 
 building_house_common_shanty {
-  sound_channel : SOUND_CHANNEL_CITY_HOUSE_SLUM
+  city_sound : "house_slum"
   animations {
     _pack { pack: PACK_GENERAL }
     house{id: 27, offset:2}
@@ -295,7 +295,7 @@ building_house_common_shanty {
 }
 
 building_house_rough_cottage {
-  sound_channel : SOUND_CHANNEL_CITY_HOUSE_POOR
+  city_sound : "house_poor"
   animations {
     _pack { pack: PACK_GENERAL }
     house{id: 28}
@@ -369,7 +369,7 @@ building_house_rough_cottage {
 }
 
 building_house_ordinary_cottage {
-  sound_channel : SOUND_CHANNEL_CITY_HOUSE_POOR
+  city_sound : "house_poor"
   animations {
     _pack { pack: PACK_GENERAL }
     house {id: 28, offset:2}
@@ -438,7 +438,7 @@ building_house_ordinary_cottage {
 }
 
 building_house_modest_homestead {
-  sound_channel : SOUND_CHANNEL_CITY_HOUSE_POOR
+  city_sound : "house_poor"
   animations {
     _pack { pack: PACK_GENERAL }
     house { id: 29, offset:0 }
@@ -509,7 +509,7 @@ building_house_modest_homestead {
 }
 
 building_house_spacious_homestead {
-  sound_channel : SOUND_CHANNEL_CITY_HOUSE_POOR
+  city_sound : "house_poor"
   animations {
     _pack { pack: PACK_GENERAL }
     house{id: 29, offset:2}
@@ -577,7 +577,7 @@ building_house_spacious_homestead {
 }
 
 building_house_modest_apartment {
-  sound_channel : SOUND_CHANNEL_CITY_HOUSE_MEDIUM
+  city_sound : "house_medium"
   animations {
     _pack { pack: PACK_GENERAL }
     house{id: 30}
@@ -645,7 +645,7 @@ building_house_modest_apartment {
 }
 
 building_house_spacious_apartment {
-  sound_channel : SOUND_CHANNEL_CITY_HOUSE_MEDIUM
+  city_sound : "house_medium"
   animations {
     _pack { pack: PACK_GENERAL }
     house{id: 30, offset:2}
@@ -713,7 +713,7 @@ building_house_spacious_apartment {
 }
 
 building_house_common_residence {
-  sound_channel : SOUND_CHANNEL_CITY_HOUSE_MEDIUM
+  city_sound : "house_medium"
   animations {
     _pack { pack: PACK_GENERAL }
     house{id: 31}
@@ -781,7 +781,7 @@ building_house_common_residence {
 }
 
 building_house_spacious_residence {
-  sound_channel : SOUND_CHANNEL_CITY_HOUSE_MEDIUM
+  city_sound : "house_medium"
   animations {
     _pack { pack: PACK_GENERAL }
     house{id: 31, offset:2}
@@ -849,7 +849,7 @@ building_house_spacious_residence {
 }
 
 building_house_elegant_residence {
-  sound_channel : SOUND_CHANNEL_CITY_HOUSE_GOOD
+  city_sound : "house_good"
   animations {
     _pack { pack: PACK_GENERAL }
     house{id: 32}
@@ -917,7 +917,7 @@ building_house_elegant_residence {
 }
 
 building_house_fancy_residence {
-  sound_channel : SOUND_CHANNEL_CITY_HOUSE_GOOD
+  city_sound : "house_good"
   animations {
     _pack { pack: PACK_GENERAL }
     house {id: 32, offset:2}
@@ -985,7 +985,7 @@ building_house_fancy_residence {
 }
 
 building_house_common_manor {
-  sound_channel : SOUND_CHANNEL_CITY_HOUSE_GOOD
+  city_sound : "house_good"
   animations {
     _pack { pack: PACK_GENERAL }
     house{id: 33}
@@ -1046,7 +1046,7 @@ building_house_common_manor {
 }
 
 building_house_spacious_manor {
-  sound_channel : SOUND_CHANNEL_CITY_HOUSE_GOOD
+  city_sound : "house_good"
   animations {
     _pack { pack: PACK_GENERAL }
     house{id: 33, offset:1}
@@ -1107,7 +1107,7 @@ building_house_spacious_manor {
 }
 
 building_house_elegant_manor {
-  sound_channel : SOUND_CHANNEL_CITY_HOUSE_GOOD
+  city_sound : "house_good"
   animations {
     _pack { pack: PACK_GENERAL }
     house{id: 34}
@@ -1169,7 +1169,7 @@ building_house_elegant_manor {
 }
 
 building_house_stately_manor {
-  sound_channel : SOUND_CHANNEL_CITY_HOUSE_POSH
+  city_sound : "house_posh"
   animations {
     _pack { pack: PACK_GENERAL }
     house{id: 34, offset:1}
@@ -1231,7 +1231,7 @@ building_house_stately_manor {
 }
 
 building_house_modest_estate {
-  sound_channel : SOUND_CHANNEL_CITY_HOUSE_POSH
+  city_sound : "house_posh"
   animations {
     _pack { pack: PACK_GENERAL }
     house{id: 35}
@@ -1293,7 +1293,7 @@ building_house_modest_estate {
 }
 
 building_house_palatial_estate {
-  sound_channel : SOUND_CHANNEL_CITY_HOUSE_POSH
+  city_sound : "house_posh"
   animations {
     _pack { pack: PACK_GENERAL }
     house{id: 35, offset:1}

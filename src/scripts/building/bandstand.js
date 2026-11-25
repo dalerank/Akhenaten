@@ -1,7 +1,7 @@
 log_info("akhenaten: building_bandstand started")
 
 building_bandstand {
-  sound_channel : SOUND_CHANNEL_CITY_BANDSTAND
+  city_sound : "bandstand"
   animations {
     _pack { pack: PACK_GENERAL }
     booth { id:114 }

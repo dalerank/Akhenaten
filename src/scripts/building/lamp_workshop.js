@@ -46,7 +46,7 @@ building_lamp_workshop {
   damage_risk [0]
   meta { text_id: 314, help_link:"message_building_lamp_maker" }
   info_sound : "Wavs/lampmaker_r.wav"
-  sound_channel : SOUND_CHANNEL_CITY_LAMP_WORKSHOP
+  city_sound : "lamp_workshop"
   info_advisors [ADVISOR_LABOR]
   flags {
     is_workshop: true

@@ -13,7 +13,7 @@
 #include "core/profiler.h"
 #include "graphics/view/view.h"
 #include "grid/terrain.h"
-#include "game/sound_channel.h"
+#include "sound/channel.h"
 #include "game/game_events.h"
 #include "scenario/scenario.h"
 #include "building/building_static_params.h"
@@ -33,8 +33,31 @@
 #define MAX_CHANNELS                ((int)std::tuple_size<decltype(city_sounds_t::channels)>::value)
 
 city_sounds_t g_city_sounds;
-const e_sound_channel_city_tokens_t ANK_CONFIG_ENUM(e_sound_channel_city_tokens);
-static_assert(SOUND_CHANNEL_CITY_COUNT - SOUND_CHANNEL_CITY_START <= MAX_CHANNELS, "city_sounds_t::channels too small");
+
+void sound_city_clear_names() {
+    g_city_sounds.names.fill(xstring());
+    g_city_sounds.building_channels.fill(-1);
+}
+
+void sound_city_set_name(int channel, xstring id) {
+    const int index = channel - SOUND_CHANNEL_CITY_MIN;
+    if (index < 0 || index >= MAX_CHANNELS) {
+        return;
+    }
+    g_city_sounds.names[index] = id;
+}
+
+int sound_city_channel(const xstring& id) {
+    if (id.empty()) {
+        return 0;
+    }
+    for (int i = 0; i < MAX_CHANNELS; i++) {
+        if (g_city_sounds.names[i] == id) {
+            return SOUND_CHANNEL_CITY_MIN + i;
+        }
+    }
+    return 0;
+}
 
 const city_sounds_t &sound_city_channels() {
     return g_city_sounds;
@@ -59,7 +82,7 @@ void sound_city_init() {
     g_city_sounds.last_update_time = time_get_millis();
     memset(channels.data(), 0, channels.size() * sizeof(city_sound_channel));
 
-    int i = SOUND_CHANNEL_CITY_START;
+    int i = SOUND_CHANNEL_CITY_MIN;
     for (auto &channel: channels) {
         channel.in_use = 1;
         channel.views_threshold = 200;
@@ -81,7 +104,11 @@ int building_type_to_channel(building *b) {
         }
     }
 
-    return building_static_params::get(b->type).sound_channel;
+    int16_t& channel = g_city_sounds.building_channels[b->type];
+    if (channel < 0) {
+        channel = (int16_t)sound_city_channel(building_static_params::get(b->type).city_sound);
+    }
+    return channel;
 }
 
 void sound_city_add_channel(int system_channel_index, int direction) {
@@ -89,35 +116,30 @@ void sound_city_add_channel(int system_channel_index, int direction) {
     if (!system_channel_index) {
         return;
     }
-    auto &slot = g_city_sounds.channels[system_channel_index - SOUND_CHANNEL_CITY_START];
+    auto& slot = g_city_sounds.channels[system_channel_index - SOUND_CHANNEL_CITY_MIN];
     slot.available = 1;
     ++slot.total_views;
     ++slot.direction_views[direction];
 }
 
-void sound_city_mark_terrain_view(int terrain, int grid_offset, int direction) {
-    int system_channel_index = 0;
-    if (terrain & TERRAIN_TREE) {
-        system_channel_index = SOUND_CHANNEL_CITY_TREE;
-    } else if (terrain & TERRAIN_ROCK) {
-        system_channel_index = SOUND_CHANNEL_CITY_ROCK;
-    } else if (terrain & TERRAIN_WATER) {
-        system_channel_index = SOUND_CHANNEL_CITY_WATER;
-    } else if (terrain & TERRAIN_SHRUB) {
-        system_channel_index = SOUND_CHANNEL_CITY_SHRUB;
-    } else if (terrain & TERRAIN_GARDEN) {
-        system_channel_index = SOUND_CHANNEL_CITY_GARDEN;
-    } else if (terrain & TERRAIN_CANAL) {
-        system_channel_index = SOUND_CHANNEL_CITY_CANAL;
-    } else if (terrain & TERRAIN_MEADOW) {
-        system_channel_index = SOUND_CHANNEL_CITY_MEADOW;
-    } else if (terrain & TERRAIN_FLOODPLAIN) {
-        system_channel_index = SOUND_CHANNEL_CITY_FLOODPLAIN;
-    } else if (terrain & TERRAIN_MARSHLAND) {
-        system_channel_index = SOUND_CHANNEL_CITY_MARSHLAND;
-    }
+struct terrain_sound_t {
+    int terrain;
+    xstring sound;
+    int channel = -1;
+};
+ANK_CONFIG_STRUCT(terrain_sound_t, terrain, sound)
+svector<terrain_sound_t, 16> ANK_VARIABLE(terrain_sounds);
 
-    sound_city_add_channel(system_channel_index, direction);
+void sound_city_mark_terrain_view(int terrain, int grid_offset, int direction) {
+    for (auto& t : terrain_sounds) {
+        if (terrain & t.terrain) {
+            if (t.channel < 0) {
+                t.channel = sound_city_channel(t.sound);
+            }
+            sound_city_add_channel(t.channel, direction);
+            return;
+        }
+    }
 }
 
 int sound_city_building_channel(building* b) {
@@ -135,16 +157,20 @@ int sound_city_building_channel(building* b) {
 
 struct zoo_ambient_band_t {
     int min_population;
-    e_sound_channel_city channel;
+    xstring sound;
+    int channel = -1;
 };
-ANK_CONFIG_STRUCT(zoo_ambient_band_t, min_population, channel)
+ANK_CONFIG_STRUCT(zoo_ambient_band_t, min_population, sound)
 svector<zoo_ambient_band_t, 8> ANK_VARIABLE(zoo_ambient_bands);
 
 static int zoo_ambient_channel() {
     const int population = city_population().current;
-    int channel = SOUND_CHANNEL_CITY_NONE;
-    for (const auto& band : zoo_ambient_bands) {
+    int channel = 0;
+    for (auto& band : zoo_ambient_bands) {
         if (population >= band.min_population) {
+            if (band.channel < 0) {
+                band.channel = sound_city_channel(band.sound);
+            }
             channel = band.channel;
         }
     }
@@ -353,7 +379,7 @@ namespace {
 
 void sound_city_ambient_note(int channel, vec2i pixel) {
     main_thread::check("sound_city_ambient_note");
-    const int index = channel - SOUND_CHANNEL_CITY_START;
+    const int index = channel - SOUND_CHANNEL_CITY_MIN;
     if (index < 0 || index >= MAX_CHANNELS) {
         return;
     }
@@ -413,7 +439,7 @@ static bool sound_city_ambient_play() {
             continue;
         }
         const float pan = std::clamp((float)(s.best_x - a.view_offset.x) / (float)std::max(1, a.view_size.x), 0.f, 1.f);
-        chosen.push_back({i + SOUND_CHANNEL_CITY_START, gain, pan});
+        chosen.push_back({i + SOUND_CHANNEL_CITY_MIN, gain, pan});
     }
     a.seen.fill({});
 

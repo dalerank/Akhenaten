@@ -10,7 +10,7 @@ building_apothecary {
     }
     labor_category : LABOR_CATEGORY_WATER_HEALTH
     overlay : OVERLAY_APOTHECARY
-    sound_channel : SOUND_CHANNEL_CITY_APOTHECARY
+    city_sound : "apothecary"
     min_houses_coverage : 50
     max_serve_clients : 100
     spawn_delays : [3, 7, 15, 29, 44]

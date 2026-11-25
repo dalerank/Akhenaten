@@ -13,7 +13,7 @@ building_temple_seth {
     spawn_delays : [3, 7, 10, 15, 20]
     labor_category : LABOR_CATEGORY_RELIGION
     overlay : OVERLAY_RELIGION_SETH
-    sound_channel : SOUND_CHANNEL_CITY_TEMPLE_SETH
+    city_sound : "temple_seth"
     building_size : 3
     meta { text_id: 95, help_link:"message_building_shrine_and_temple" }
     info_sound : "Wavs/tem_seth_l.wav"

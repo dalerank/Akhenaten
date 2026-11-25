@@ -55,17 +55,17 @@ function run_test() {
     }
     __log_marker('test296_og_footprint_and_inputs')
 
-    var views_before = __test_sound_city_channel_views(SOUND_CHANNEL_CITY_CHARIOTS_WORKSHOP)
+    var views_before = __test_sound_city_channel_views(__test_sound_city_channel("chariots_workshop"))
     var channel = __test_sound_city_mark_building(bid, 4)
-    if (channel != SOUND_CHANNEL_CITY_CHARIOTS_WORKSHOP) {
+    if (channel != __test_sound_city_channel("chariots_workshop")) {
         return test296_fail('sound channel=' + channel)
     }
-    var views_marked = __test_sound_city_channel_views(SOUND_CHANNEL_CITY_CHARIOTS_WORKSHOP)
+    var views_marked = __test_sound_city_channel_views(__test_sound_city_channel("chariots_workshop"))
     if (views_marked != views_before + 4) {
         return test296_fail('city sound views ' + views_before + ' -> ' + views_marked)
     }
     __test_sound_city_decay_views()
-    var views_decayed = __test_sound_city_channel_views(SOUND_CHANNEL_CITY_CHARIOTS_WORKSHOP)
+    var views_decayed = __test_sound_city_channel_views(__test_sound_city_channel("chariots_workshop"))
     if (views_decayed != ((views_marked / 2) | 0)) {
         return test296_fail('city sound decay skipped the channel: ' + views_marked + ' -> ' + views_decayed)
     }

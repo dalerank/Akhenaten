@@ -4,7 +4,6 @@
 #include "building_planer_renderer.h"
 #include "graphics/color.h"
 #include "overlays/city_overlay_fwd.h"
-#include "game/sound_channel.h"
 #include "core/string.h"
 #include "figure/figure_type.h"
 #include "figure/action.h"

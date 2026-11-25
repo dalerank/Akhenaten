@@ -34,7 +34,7 @@ building_well {
   building_size : 1
   meta { text_id:109, help_link:"message_building_well" }
   info_sound : "Wavs/WELL.WAV"
-  sound_channel : SOUND_CHANNEL_CITY_WELL
+  city_sound : "well"
   needs {
     groundwater : true
   }

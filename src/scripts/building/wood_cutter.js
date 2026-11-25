@@ -28,7 +28,7 @@ building_wood_cutter {
   building_size : 2
   meta { text_id:120, help_link:"message_building_woodcutter_and_reed_gatherer" }
   info_sound : "Wavs/lumber.wav"
-  sound_channel : SOUND_CHANNEL_CITY_NONE
+  city_sound : ""
   labor_category : LABOR_CATEGORY_INDUSTRY_COMMERCE
   min_houses_coverage : 100
   max_storage_amount : 200

@@ -31,7 +31,7 @@ building_cattle_ranch {
   building_size : 3
   meta { text_id:117, help_link:"message_building_cattle_ranch" }
   info_sound : "Wavs/cowfarm_r.wav"
-  sound_channel : SOUND_CHANNEL_CITY_COWFARM
+  city_sound : "cowfarm"
   labor_category : LABOR_CATEGORY_FOOD_PRODUCTION
   cost [ 15, 20, 30, 50, 80 ]
   desirability { value:[-4], step:[1], step_size:[1], range: [4] }

@@ -3,7 +3,8 @@
 #include <SDL_mixer.h>
 
 #include "sound/sound.h"
-#include "game/sound_channel.h"
+#include "sound/channel.h"
+#include "sound/sound_city.h"
 #include "content/file_formats.h"
 #include "core/log.h"
 #include "core/calc.h"
@@ -48,10 +49,13 @@ static struct {
 #endif
 
 void ANK_REGISTER_CONFIG_ITERATOR(config_load_city_sounds) {
-    g_config_arch.r_array("city_sounds", [] (archive arch) {
-        const int channel = arch.r_int("c");
+    sound_city_clear_names();
+    int channel = SOUND_CHANNEL_CITY_MIN;
+    g_config_arch.r_array("city_sounds", [&channel](archive arch) {
+        sound_city_set_name(channel, arch.r_string("id"));
         xstring path = arch.r_string("p");
         g_sound.update_channel(channel, path.c_str());
+        ++channel;
     });
 }
 

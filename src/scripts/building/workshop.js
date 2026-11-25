@@ -1,7 +1,7 @@
 log_info("akhenaten: building workshop started")
 
 building_brewery {
-  sound_channel : SOUND_CHANNEL_CITY_BREWERY_WORKSHOP
+  city_sound : "brewery_workshop"
   animations {
     preview { pack:PACK_GENERAL, id:116 },
     base { pack:PACK_GENERAL, id:116 },
@@ -103,7 +103,7 @@ building_jewels_workshop = {
   building_size : 2,
   meta : { text_id:125, help_link:"message_building_jeweler_and_luxury_goods" }
   info_sound : "Wavs/jewelry.wav"
-  sound_channel : SOUND_CHANNEL_CITY_JEWELS_WORKSHOP
+  city_sound : "jewels_workshop"
   labor_category : LABOR_CATEGORY_INDUSTRY_COMMERCE
   cost: [ 18, 30, 50, 100, 200 ]
   desirability : { value:[-2], step:[1], step_size:[1], range: [2] }

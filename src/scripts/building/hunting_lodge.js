@@ -29,7 +29,7 @@ building_hunting_lodge {
     meta { help_link:"message_building_hunting_lodge" }
     info_title_id : "#hunting_lodge"
     info_sound : "Wavs/lo_hunt.wav"
-    sound_channel : SOUND_CHANNEL_CITY_HUNTER_LOUDGE
+    city_sound : "hunter_lodge"
     building_size : 2
     min_houses_coverage : 100
     cost [ 5, 10, 25, 40, 60 ]

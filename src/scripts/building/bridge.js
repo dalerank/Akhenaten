@@ -1,7 +1,7 @@
 log_info("akhenaten: building bridge started")
 
 building_low_bridge {
-  sound_channel : SOUND_CHANNEL_CITY_NONE
+  city_sound : ""
   animations {
     _pack { pack:PACK_TERRAIN }
     preview { id:63 }
@@ -44,7 +44,7 @@ bridge_styles = [
 ]
 
 building_ship_bridge {
-  sound_channel : SOUND_CHANNEL_CITY_NONE
+  city_sound : ""
   animations {
     _pack { pack:PACK_TERRAIN }
     preview { id:63 }

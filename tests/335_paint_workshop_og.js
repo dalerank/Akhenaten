@@ -55,7 +55,7 @@ function run_test() {
         return
     }
     var channel = __test_sound_city_mark_building(bid, 4)
-    if (channel != SOUND_CHANNEL_CITY_PAINT_WORKSHOP) {
+    if (channel != __test_sound_city_channel("paint_workshop")) {
         test335_fail('sound channel=' + channel)
         return
     }

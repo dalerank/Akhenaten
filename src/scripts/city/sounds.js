@@ -1,75 +1,102 @@
 log_info("akhenaten: city sounds started")
 
 city_sounds = [
-  {c: SOUND_CHANNEL_CITY_HOUSE_SLUM,    p: "Ambient/HOUSING1.MP3"},
-  {c: SOUND_CHANNEL_CITY_HOUSE_POOR,    p: "Ambient/HOUSING2.MP3"},
-  {c: SOUND_CHANNEL_CITY_HOUSE_MEDIUM,  p: "Ambient/HOUSING3.MP3"},
-  {c: SOUND_CHANNEL_CITY_HOUSE_GOOD,    p: "Ambient/HOUSING4.MP3"},
-  {c: SOUND_CHANNEL_CITY_HOUSE_POSH,    p: "Ambient/HOUSING5.MP3"},
-  {c: SOUND_CHANNEL_CITY_CLAY_PIT,      p: "Wavs/CLAY.WAV"},
-  {c: SOUND_CHANNEL_CITY_BANDSTAND,     p: "Wavs/DANCE.WAV"},
-  {c: SOUND_CHANNEL_CITY_DANCE_SCHOOL,  p: "Wavs/dance_school.wav"},
-  {c: SOUND_CHANNEL_CITY_DOCK,          p: "Wavs/DOCK1.WAV"},
-  {c: SOUND_CHANNEL_CITY_APOTHECARY,    p: "Wavs/DOCTOR.WAV"},
-  {c: SOUND_CHANNEL_CITY_PHYSICIAN,     p: "Wavs/DOCTOR.WAV"},
-  {c: SOUND_CHANNEL_CITY_DENTIST,      p: "Wavs/DOCTOR.WAV"},
-  {c: SOUND_CHANNEL_CITY_MORTUARY,     p: "Wavs/EMBALM.WAV"},
-  {c: SOUND_CHANNEL_CITY_ENGINEERS_POST, p: "Wavs/ENG.WAV"},
-  {c: SOUND_CHANNEL_CITY_GRAIN_FARM,    p: "Wavs/wheatfarm.wav"},
-  {c: SOUND_CHANNEL_CITY_FIG_FARM,      p: "Wavs/FIGFARM.WAV"},
-  {c: SOUND_CHANNEL_CITY_GOLD_MINE,     p: "Wavs/GOLD.WAV"},
-  {c: SOUND_CHANNEL_CITY_GRANARY,       p: "Wavs/GRANARY1.WAV"},
-  {c: SOUND_CHANNEL_CITY_BOOTH,         p: "Wavs/JUGGLER.WAV"},
-  {c: SOUND_CHANNEL_CITY_JUGGLER_SCHOOL, p: "Wavs/juggler_school.wav"},
-  {c: SOUND_CHANNEL_CITY_HUNTER_LOUDGE, p: "Wavs/LO_HUNT.WAV"},
-  {c: SOUND_CHANNEL_CITY_MARKET,        p: "Wavs/MARKET.WAV"},
-  {c: SOUND_CHANNEL_CITY_CONSERVATORY,  p: "Wavs/MUSIC.WAV"},
-  {c: SOUND_CHANNEL_CITY_PALACE,        p: "Wavs/palace.wav"},
-  {c: SOUND_CHANNEL_CITY_POLICE,        p: "Wavs/POLICE.WAV"},
-  {c: SOUND_CHANNEL_CITY_POTTERY_WORKSHOP, p: "Wavs/POTTERY.WAV"},
-  {c: SOUND_CHANNEL_CITY_WEAPONS_WORKSHOP, p: "Wavs/weapon.wav"},
-  {c: SOUND_CHANNEL_CITY_BREWERY_WORKSHOP, p: "Wavs/brewery.wav"},
-  {c: SOUND_CHANNEL_CITY_WEAVER_WORKSHOP, p: "Wavs/weaver.wav"},
-  {c: SOUND_CHANNEL_CITY_JEWELS_WORKSHOP, p: "Wavs/jewelry.wav"},
-  {c: SOUND_CHANNEL_CITY_CHARIOTS_WORKSHOP, p: "Wavs/chariot.wav"},
-  {c: SOUND_CHANNEL_CITY_ROCK,          p: "Ambient/ROCK.MP3"},
-  {c: SOUND_CHANNEL_CITY_SHIPYARD,      p: "Wavs/SHIPYRD.WAV"},
-  {c: SOUND_CHANNEL_CITY_SHRINE_BAST,   p: "Wavs/SHR_BAST.WAV"},
-  {c: SOUND_CHANNEL_CITY_SHRINE_OSIRIS, p: "Wavs/shr_osiris.wav"},
-  {c: SOUND_CHANNEL_CITY_SHRINE_PTAH,   p: "Wavs/SHR_PTAH.WAV"},
-  {c: SOUND_CHANNEL_CITY_SHRINE_RA,     p: "Wavs/SHR_RA.WAV"},
-  {c: SOUND_CHANNEL_CITY_SHRINE_SETH,   p: "Wavs/SHR_SETH.WAV"},
-  {c: SOUND_CHANNEL_CITY_STATUE,        p: "Wavs/STATUE1.WAV"},
-  {c: SOUND_CHANNEL_CITY_TAX_COLLECTOR, p: "Wavs/TAXFARM.WAV"},
-  {c: SOUND_CHANNEL_CITY_TEMPLE_OSIRIS, p: "Wavs/tem_osiris_l.wav"},
-  {c: SOUND_CHANNEL_CITY_TEMPLE_RA,     p: "Wavs/TEM_RA_L.WAV"},
-  {c: SOUND_CHANNEL_CITY_TEMPLE_PTAH,   p: "Wavs/tem_ptah_l.wav"},
-  {c: SOUND_CHANNEL_CITY_TEMPLE_SETH,   p: "Wavs/tem_seth_l.wav"},
-  {c: SOUND_CHANNEL_CITY_TEMPLE_BAST,   p: "Wavs/tem_bast_l.wav"},
-  {c: SOUND_CHANNEL_CITY_STORAGE_YARD,  p: "Wavs/warehouse1.wav"},
-  {c: SOUND_CHANNEL_CITY_WELL,          p: "Wavs/WELL.WAV"},
-  {c: SOUND_CHANNEL_CITY_BURNING_RUIN,  p: "Wavs/FIRE.WAV"},
-  {c: SOUND_CHANNEL_CITY_WATER,         p: "Wavs/WATER1.WAV"},
-  {c: SOUND_CHANNEL_CITY_CANAL,         p: "Wavs/WATER1.WAV"},
-  {c: SOUND_CHANNEL_CITY_MEADOW,        p: "Ambient/MEADOW.MP3"},
-  {c: SOUND_CHANNEL_CITY_FLOODPLAIN,    p: "Ambient/floodplain.mp3"},
-  {c: SOUND_CHANNEL_CITY_MARSHLAND,     p: "Ambient/vegetation.mp3"},
-  {c: SOUND_CHANNEL_CITY_CHICKFARM,     p: "Wavs/chickfarm.wav"},
-  {c: SOUND_CHANNEL_CITY_COWFARM,       p: "Wavs/cowfarm_r.wav"},
-  {c: SOUND_CHANNEL_CITY_LETTUCE_FARM,  p: "Wavs/lettucefarm.wav"},
-  {c: SOUND_CHANNEL_CITY_ZOO,           p: "Wavs/zoo_r.wav"},
-  {c: SOUND_CHANNEL_CITY_LAMP_WORKSHOP, p: "Wavs/lampmaker_r.wav"},
-  {c: SOUND_CHANNEL_CITY_PAINT_WORKSHOP, p: "Wavs/paintmaker_r.wav"},
-  {c: SOUND_CHANNEL_CITY_ARTISANS_GUILD, p: "Wavs/artisans_r.wav"},
+  { id: "house_slum", p: "Ambient/HOUSING1.MP3" }
+  { id: "house_poor", p: "Ambient/HOUSING2.MP3" }
+  { id: "house_medium", p: "Ambient/HOUSING3.MP3" }
+  { id: "house_good", p: "Ambient/HOUSING4.MP3" }
+  { id: "house_posh", p: "Ambient/HOUSING5.MP3" }
+  { id: "booth", p: "Wavs/JUGGLER.WAV" }
+  { id: "bandstand", p: "Wavs/DANCE.WAV" }
+  { id: "pavilion" }
+  { id: "senet_house" }
+  { id: "juggler_school", p: "Wavs/juggler_school.wav" }
+  { id: "dance_school", p: "Wavs/dance_school.wav" }
+  { id: "conservatory", p: "Wavs/MUSIC.WAV" }
+  { id: "garden" }
+  { id: "apothecary", p: "Wavs/DOCTOR.WAV" }
+  { id: "physician", p: "Wavs/DOCTOR.WAV" }
+  { id: "mortuary", p: "Wavs/EMBALM.WAV" }
+  { id: "dentist", p: "Wavs/DOCTOR.WAV" }
+  { id: "fireman" }
+  { id: "tower" }
+  { id: "temple_osiris", p: "Wavs/tem_osiris_l.wav" }
+  { id: "temple_ra", p: "Wavs/TEM_RA_L.WAV" }
+  { id: "temple_ptah", p: "Wavs/tem_ptah_l.wav" }
+  { id: "temple_seth", p: "Wavs/tem_seth_l.wav" }
+  { id: "temple_bast", p: "Wavs/tem_bast_l.wav" }
+  { id: "shrine_osiris", p: "Wavs/shr_osiris.wav" }
+  { id: "shrine_ra", p: "Wavs/SHR_RA.WAV" }
+  { id: "shrine_ptah", p: "Wavs/SHR_PTAH.WAV" }
+  { id: "shrine_seth", p: "Wavs/SHR_SETH.WAV" }
+  { id: "shrine_bast", p: "Wavs/SHR_BAST.WAV" }
+  { id: "market", p: "Wavs/MARKET.WAV" }
+  { id: "granary", p: "Wavs/GRANARY1.WAV" }
+  { id: "storage_yard", p: "Wavs/warehouse1.wav" }
+  { id: "shipyard", p: "Wavs/SHIPYRD.WAV" }
+  { id: "dock", p: "Wavs/DOCK1.WAV" }
+  { id: "wharf" }
+  { id: "palace", p: "Wavs/palace.wav" }
+  { id: "engineers_post", p: "Wavs/ENG.WAV" }
+  { id: "forum" }
+  { id: "water_supply" }
+  { id: "well", p: "Wavs/WELL.WAV" }
+  { id: "burning_ruin", p: "Wavs/FIRE.WAV" }
+  { id: "grain_farm", p: "Wavs/wheatfarm.wav" }
+  { id: "fig_farm", p: "Wavs/FIGFARM.WAV" }
+  { id: "quarry" }
+  { id: "gold_mine", p: "Wavs/GOLD.WAV" }
+  { id: "timber_yard" }
+  { id: "clay_pit", p: "Wavs/CLAY.WAV" }
+  { id: "weapons_workshop", p: "Wavs/weapon.wav" }
+  { id: "pottery_workshop", p: "Wavs/POTTERY.WAV" }
+  { id: "brewery_workshop", p: "Wavs/brewery.wav" }
+  { id: "empty_land" }
+  { id: "river" }
+  { id: "hunter_lodge", p: "Wavs/LO_HUNT.WAV" }
+  { id: "police", p: "Wavs/POLICE.WAV" }
+  { id: "rock", p: "Ambient/ROCK.MP3" }
+  { id: "statue", p: "Wavs/STATUE1.WAV" }
+  { id: "tax_collector", p: "Wavs/TAXFARM.WAV" }
+  { id: "mansion" }
+  { id: "tree" }
+  { id: "water", p: "Wavs/WATER1.WAV" }
+  { id: "shrub" }
+  { id: "canal", p: "Wavs/WATER1.WAV" }
+  { id: "meadow", p: "Ambient/MEADOW.MP3" }
+  { id: "floodplain", p: "Ambient/floodplain.mp3" }
+  { id: "marshland", p: "Ambient/vegetation.mp3" }
+  { id: "chickfarm", p: "Wavs/chickfarm.wav" }
+  { id: "cowfarm", p: "Wavs/cowfarm_r.wav" }
+  { id: "lettuce_farm", p: "Wavs/lettucefarm.wav" }
+  { id: "weaver_workshop", p: "Wavs/weaver.wav" }
+  { id: "jewels_workshop", p: "Wavs/jewelry.wav" }
+  { id: "chariots_workshop", p: "Wavs/chariot.wav" }
+  { id: "zoo", p: "Wavs/zoo_r.wav" }
+  { id: "lamp_workshop", p: "Wavs/lampmaker_r.wav" }
+  { id: "paint_workshop", p: "Wavs/paintmaker_r.wav" }
+  { id: "artisans_guild", p: "Wavs/artisans_r.wav" }
+]
+
+terrain_sounds = [
+  { terrain: TERRAIN_TREE, sound: "tree" }
+  { terrain: TERRAIN_ROCK, sound: "rock" }
+  { terrain: TERRAIN_WATER, sound: "water" }
+  { terrain: TERRAIN_SHRUB, sound: "shrub" }
+  { terrain: TERRAIN_GARDEN, sound: "garden" }
+  { terrain: TERRAIN_CANAL, sound: "canal" }
+  { terrain: TERRAIN_MEADOW, sound: "meadow" }
+  { terrain: TERRAIN_FLOODPLAIN, sound: "floodplain" }
+  { terrain: TERRAIN_MARSHLAND, sound: "marshland" }
 ]
 
 // Enhanced city ambience (gameplay_enhanced_city_ambient): the samples above become positional voices.
 zoo_ambient_bands = [
-  { min_population: 0,    channel: SOUND_CHANNEL_CITY_HOUSE_SLUM }
-  { min_population: 500,  channel: SOUND_CHANNEL_CITY_HOUSE_POOR }
-  { min_population: 2000, channel: SOUND_CHANNEL_CITY_HOUSE_MEDIUM }
-  { min_population: 5000, channel: SOUND_CHANNEL_CITY_HOUSE_GOOD }
-  { min_population: 8000, channel: SOUND_CHANNEL_CITY_HOUSE_POSH }
+  { min_population: 0,    sound: "house_slum" }
+  { min_population: 500,  sound: "house_poor" }
+  { min_population: 2000, sound: "house_medium" }
+  { min_population: 5000, sound: "house_good" }
+  { min_population: 8000, sound: "house_posh" }
 ]
 
 city_ambient = {

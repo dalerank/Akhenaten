@@ -221,7 +221,7 @@ function test321_check_cycle() {
     }
     __log_marker('test321_animation_ok')
 
-    if (__test_sound_city_mark_building(bid, 4) != SOUND_CHANNEL_CITY_LAMP_WORKSHOP) {
+    if (__test_sound_city_mark_building(bid, 4) != __test_sound_city_channel("lamp_workshop")) {
         test321_fail('sound channel')
         return false
     }

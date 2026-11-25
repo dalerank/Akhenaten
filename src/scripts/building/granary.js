@@ -68,7 +68,7 @@ building_granary {
     min_workers_percent_for_accepting :75
     min_workers_percent_for_getting : 100
 
-    sound_channel : SOUND_CHANNEL_CITY_GRANARY
+    city_sound : "granary"
     overlay : OVERLAY_FOOD_STOCKS
 
     max_capacty_stored : 3200

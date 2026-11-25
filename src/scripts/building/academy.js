@@ -13,7 +13,7 @@ building_academy {
 
   overlay : OVERLAY_EDUCATION
   labor_category : LABOR_CATEGORY_EDUCATION
-  sound_channel : SOUND_CHANNEL_CITY_NONE
+  city_sound : ""
   building_size : 2
   min_houses_coverage : 50
   cost [ 200, 250, 300, 400, 500 ]

@@ -43,7 +43,7 @@ building_juggler_school {
   meta { text_id:77, help_link:"message_building_trading_centers" }
   info_sound : "Wavs/juggler_school.wav"
   overlay : OVERLAY_BOOTH
-  sound_channel : SOUND_CHANNEL_CITY_JUGGLER_SCHOOL
+  city_sound : "juggler_school"
 
   building_size : 2
   min_houses_coverage : 50
@@ -110,7 +110,7 @@ function building_juggler_school_spawn_figure(ev) {
 }
 
 building_dancer_school {
-  sound_channel : SOUND_CHANNEL_CITY_DANCE_SCHOOL
+  city_sound : "dance_school"
   animations {
     _pack { pack: PACK_GENERAL }
     preview { id:52 }
@@ -136,7 +136,7 @@ building_dancer_school {
 }
 
 building_pavilion = {
-  sound_channel : SOUND_CHANNEL_CITY_PAVILION
+  city_sound : "pavilion"
   animations : {
     base : { pos:[0, 0], pack:PACK_GENERAL, id:48 },
     square : { pos:[0, 0], pack:PACK_GENERAL, id:50 },

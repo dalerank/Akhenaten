@@ -35,7 +35,7 @@ building_paint_workshop {
   damage_risk [1]
   meta { text_id: 313, help_link:"message_mission_paint_maker" }
   info_sound : "Wavs/paintmaker_r.wav"
-  sound_channel : SOUND_CHANNEL_CITY_PAINT_WORKSHOP
+  city_sound : "paint_workshop"
   info_advisors [ADVISOR_LABOR]
   flags {
     is_workshop: true

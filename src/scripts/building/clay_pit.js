@@ -24,7 +24,7 @@ building_clay_pit {
   production_rate : 100,
   meta { text_id:121, help_link:"message_building_clay_pit" }
   info_sound : "Wavs/clay.wav"
-  sound_channel : SOUND_CHANNEL_CITY_CLAY_PIT
+  city_sound : "clay_pit"
   needs {
     nearby_water : true
   }

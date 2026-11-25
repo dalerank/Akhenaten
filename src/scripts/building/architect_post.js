@@ -11,7 +11,7 @@ building_architect_post {
     }
     labor_category : LABOR_CATEGORY_INFRASTRUCTURE
     overlay: OVERLAY_DAMAGE
-    sound_channel : SOUND_CHANNEL_CITY_ENGINEERS_POST
+    city_sound : "engineers_post"
     min_houses_coverage : 101
     building_size : 1
     meta { text_id: 104, help_link:"message_building_architect_post" }

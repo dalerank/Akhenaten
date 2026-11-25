@@ -1,9 +1,11 @@
 #pragma once
 
 #include "core/system_time.h"
-#include "game/sound_channel.h"
+#include "sound/channel.h"
 #include "core/tokenum.h"
 #include "core/vec2i.h"
+#include "core/xstring.h"
+#include "building/building_type.h"
 
 #include <array>
 
@@ -31,9 +33,14 @@ struct city_sound_channel {
 struct city_sounds_t {
     time_millis last_update_time;
     std::array<city_sound_channel, 96> channels;
+    std::array<xstring, 96> names;
+    std::array<int16_t, BUILDING_MAX> building_channels;
 };
 
 void sound_city_init();
+void sound_city_clear_names();
+void sound_city_set_name(int channel, xstring id);
+int sound_city_channel(const xstring& id);
 void sound_city_stop();
 const city_sounds_t &sound_city_channels();
 void sound_city_add_channel(int system_channel_index, int direction);

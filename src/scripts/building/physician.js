@@ -15,7 +15,7 @@ building_physician {
   spawn_delays : [3, 7, 15, 29, 44]
   overlay: OVERLAY_PHYSICIAN
   labor_category : LABOR_CATEGORY_WATER_HEALTH,
-  sound_channel : SOUND_CHANNEL_CITY_PHYSICIAN
+  city_sound : "physician"
   meta { text_id: 83, help_link:"message_building_physician" }
   info_sound : "Wavs/DOCTOR.WAV"
   building_size : 2

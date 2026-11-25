@@ -26,7 +26,7 @@ building_senet_house = {
   meta : { text_id:73, help_link:"message_building_senet_house" }
   building_size : 4
   labor_category : LABOR_CATEGORY_ENTERTAINMENT
-  sound_channel : SOUND_CHANNEL_CITY_SENET_HOUSE
+  city_sound : "senet_house"
   cost : [ 300, 400, 500, 700, 1000 ]
   desirability : { value:[-6], step:[1], step_size:[2], range: [3] }
   crime : { value:[5], step:[1], step_size:[1], range: [3] }

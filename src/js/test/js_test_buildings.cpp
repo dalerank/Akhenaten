@@ -41,6 +41,7 @@
 #include "grid/routing/routing.h"
 #include "scenario/scenario.h"
 #include "sound/sound_city.h"
+#include "sound/channel.h"
 
 #include <algorithm>
 #include <vector>
@@ -85,13 +86,18 @@ int __test_sound_city_mark_building(int bid, int views) {
     for (int i = 0; i < views; ++i) {
         sound_city_mark_building_view(b, SOUND_DIRECTION_CENTER);
     }
-    return building_static_params::get(b->type).sound_channel;
+    return sound_city_channel(building_static_params::get(b->type).city_sound);
 }
 ANK_FUNCTION_2(__test_sound_city_mark_building);
 
+int __test_sound_city_channel(pcstr id) {
+    return sound_city_channel(xstring(id));
+}
+ANK_FUNCTION_1(__test_sound_city_channel);
+
 int __test_sound_city_channel_views(int channel) {
     const auto& channels = sound_city_channels().channels;
-    const int slot = channel - SOUND_CHANNEL_CITY_START;
+    const int slot = channel - SOUND_CHANNEL_CITY_MIN;
     if (slot < 0 || slot >= (int)channels.size()) {
         return -1;
     }

@@ -41,7 +41,7 @@ building_chariots_workshop = {
   labor_category : LABOR_CATEGORY_MILITARY,
   meta { text_id:185, help_link:"message_building_weapongsmith_and_chariot_maker" }
   info_sound : "Wavs/chariot.wav"
-  sound_channel : SOUND_CHANNEL_CITY_CHARIOTS_WORKSHOP
+  city_sound : "chariots_workshop"
   building_size : 4,
   cost: [ 50, 200, 250, 300, 375 ]
   desirability : { value:[-6], step:[1], step_size:[1], range: [6] }

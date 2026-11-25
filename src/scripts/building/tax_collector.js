@@ -10,7 +10,7 @@ building_tax_collector {
   }
   labor_category : LABOR_CATEGORY_GOVERNMENT
   overlay : OVERLAY_TAX_INCOME
-  sound_channel : SOUND_CHANNEL_CITY_TAX_COLLECTOR
+  city_sound : "tax_collector"
   meta { text_id:106, help_link:"message_building_tax_collector" }
   info_sound : "Wavs/taxfarm.wav"
   building_size : 2

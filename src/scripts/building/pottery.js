@@ -36,7 +36,7 @@ building_pottery {
     building_size : 2
     meta { text_id:126, help_link:"message_potter_history" }
     info_sound : "Wavs/pottery.wav"
-    sound_channel : SOUND_CHANNEL_CITY_POTTERY_WORKSHOP
+    city_sound : "pottery_workshop"
     cost [ 12, 20, 30, 40, 50 ]
     desirability {
         value[-4]

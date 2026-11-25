@@ -1,7 +1,7 @@
 log_info("akhenaten: building health started")
 
 building_dentist {
-  sound_channel : SOUND_CHANNEL_CITY_DENTIST
+  city_sound : "dentist"
   animations {
     preview { pack:PACK_GENERAL, id:67 }
     base { pack:PACK_GENERAL, id:67 }

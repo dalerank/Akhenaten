@@ -1,7 +1,7 @@
 log_info("akhenaten: loading building_warship_wharf")
 
 building_warship_wharf = {
-  sound_channel : SOUND_CHANNEL_CITY_WHARF
+  city_sound : "wharf"
   flags : { no_map_edge_margin: true },
   animations : {
     preview : { pack:PACK_TERRAIN, id:28 },

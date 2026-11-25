@@ -235,7 +235,7 @@
         <details>
           <summary>C++ implementation — <code>src/building/building_clay_pit.h / .cpp</code></summary>
           <div class="details-body">
-            <p><span class="file-ref">src/building/building_clay_pit.h</span> declares <code>building_clay_pit</code> (inherits <code>building_industry</code>), registered with <code>BUILDING_METAINFO(BUILDING_CLAY_PIT, …)</code>. Its sound channel is <code>SOUND_CHANNEL_CITY_CLAY_PIT</code>. Notable overrides in <span class="file-ref">building_clay_pit.cpp</span>:</p>
+            <p><span class="file-ref">src/building/building_clay_pit.h</span> declares <code>building_clay_pit</code> (inherits <code>building_industry</code>), registered with <code>BUILDING_METAINFO(BUILDING_CLAY_PIT, …)</code>. Its city sound is <code>"clay_pit"</code>. Notable overrides in <span class="file-ref">building_clay_pit.cpp</span>:</p>
             <ul>
               <li><code>update_production()</code> — scans the footprint for the richest clay tile via <code>map_get_clay()</code>, runs the shared <code>building_industry</code> production, then depletes that deposit with <code>map_clay_deplete()</code> by the progress gained. Stops if no clay remains under the pit.</li>
               <li><code>on_before_flooded()</code> — sets <code>destroy_reason = e_destroy_flooded</code>, zeroes <code>num_workers</code> and progress; with <code>gameplay_change_random_mine_or_pit_collapses_take_money</code> enabled it emits a 250&nbsp;Db <code>event_finance_request</code>.</li>

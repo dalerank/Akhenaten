@@ -45,7 +45,7 @@ building_dock = {
   building_size : 3
   meta : { text_id:101, help_link:"message_building_dock" }
   info_sound : "Wavs/DOCK1.WAV"
-  sound_channel : SOUND_CHANNEL_CITY_DOCK
+  city_sound : "dock"
   needs : {
     water_access : true
     shoreline : true
